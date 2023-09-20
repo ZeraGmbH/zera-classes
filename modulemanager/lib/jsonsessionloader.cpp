@@ -5,6 +5,8 @@
 #include <QDir>
 #include <QDebug>
 
+QString JsonSessionLoader::m_configDirName = QString(MODMAN_CONFIG_PATH);
+
 JsonSessionLoader::JsonSessionLoader(QObject *parent) :
     QObject(parent)
 {
@@ -42,7 +44,7 @@ void JsonSessionLoader::loadSession(QString filePath)
 
 void JsonSessionLoader::parseModule(QJsonObject moduleObject)
 {
-    QString configFileNameFull = QDir::cleanPath(QString(MODMAN_CONFIG_PATH) + "/" + moduleObject.value("configFile").toString());
+    QString configFileNameFull = QDir::cleanPath(m_configDirName + "/" + moduleObject.value("configFile").toString());
     int moduleEntityId = moduleObject.value("id").toInt();
     QString tmpNameString = moduleObject.value("name").toString();
     QFile tmpXmlConfigFile(configFileNameFull);
