@@ -1,5 +1,6 @@
 {
   "deviceName" : "mt310s2",
+  "devMode" : false,
   "mt310s2" : {
     "availableSessions" : ["mt310s2-meas-session.json", "mt310s2-dc-session.json", "mt310s2-emob-session.json", "mt310s2-dc-session-dev.json", "mt310s2-ced-session.json"],
     "defaultSession" : "mt310s2-meas-session.json",
