@@ -69,6 +69,7 @@ add_definitions(-DZC_DEV_STATE_PATH="${CMAKE_INSTALL_SYSCONFDIR}/zera/states")
 macro(SET_MODULE_ENV MODULE_NAME)
     string(TOUPPER ${MODULE_NAME} MODULE_NAME_UPPER)
     set(MODULE_CONFIG_PATH "${CMAKE_CURRENT_SOURCE_DIR}/modules/modules/${MODULE_NAME}/configs")
+    set(MODULE_PLUGIN_BUILD_PATH "${MODULE_PLUGIN_BUILD_PATH} ${CMAKE_CURRENT_BINARY_DIR}/modules/modules/${MODULE_NAME}/module")
 
     # Pass source paths to configs for tests. This is module-global to allow e.g
     # scpimodule running tests with other modules
@@ -101,6 +102,7 @@ SET_MODULE_ENV(spm1module)
 SET_MODULE_ENV(statusmodule)
 SET_MODULE_ENV(thdnmodule)
 
+add_compile_definitions(MODULE_PLUGIN_BUILD_PATH="${MODULE_PLUGIN_BUILD_PATH}")
 
 enable_testing()
 # Inspired by

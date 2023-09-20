@@ -38,7 +38,7 @@ void test_modman_session::loadSession()
     VeinNet::TcpSystem *tcpSystem = new VeinNet::TcpSystem();
     LicenseSystemMock *licenseSystem = new LicenseSystemMock;
 
-    ZeraModules::ModuleManager *modMan = new ZeraModules::ModuleManager(availableSessionList);
+    ZeraModules::ModuleManager *modMan = new ModuleManagerTest(availableSessionList);
     modMan->setDemo(true);
 
     JsonSessionLoader *sessionLoader = new JsonSessionLoader();
