@@ -9,7 +9,7 @@ class ModuleEventHandler : public VeinEvent::EventHandler
 {
     Q_OBJECT
 public:
-    explicit ModuleEventHandler(QObject *t_parent = nullptr);
+    explicit ModuleEventHandler(QObject *parent = nullptr);
     /**
    * @brief sets the arbitration system, however the usage of the system depends on the define #ifdef DEVICE_ARBITRATION
    * @param t_arbitrationSystem

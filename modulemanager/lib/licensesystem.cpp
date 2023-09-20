@@ -15,7 +15,7 @@ QT_BEGIN_NAMESPACE
 #include <QDateTime>
 QT_END_NAMESPACE
 
-LicenseSystem::LicenseSystem(const QSet<QUrl> &t_licenseURLs, QObject *t_parent) : LicenseSystemInterface(t_parent),
+LicenseSystem::LicenseSystem(const QSet<QUrl> &t_licenseURLs, QObject *parent) : LicenseSystemInterface(parent),
     m_licenseURLs(t_licenseURLs),
     m_certData(loadCertData()),
     m_deviceSerial(QString("SERIAL NUMBER NOT FOUND!"))

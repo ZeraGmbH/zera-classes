@@ -30,7 +30,7 @@ public:
         CDS_QFILEDEVICE_FILEERROR_BEGIN = QFileDevice::ReadError //if the resultCode is >= CDS_QFILEDEVICE_FILEERROR_BEGIN then it is a QFileDevice::FileError
     };
 
-    explicit CustomerDataSystem(QObject *t_parent = nullptr);
+    explicit CustomerDataSystem(QObject *parent = nullptr);
 
     VF_COMPONENT(entityName, "EntityName", "Entity name")
     static constexpr QLatin1String s_entityName = modman_util::to_latin1("CustomerData");

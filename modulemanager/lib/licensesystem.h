@@ -14,7 +14,7 @@ class LicenseSystem : public LicenseSystemInterface
 {
     Q_OBJECT
 public:
-    LicenseSystem(const QSet<QUrl> &t_licenseURLs, QObject *t_parent = nullptr);
+    LicenseSystem(const QSet<QUrl> &t_licenseURLs, QObject *parent = nullptr);
 
     bool isSystemLicensed(const QString &uniqueModuleName) override;
     /**

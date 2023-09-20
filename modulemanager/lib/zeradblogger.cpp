@@ -35,8 +35,8 @@ class ZeraDBLoggerPrivate
     friend class ZeraDBLogger;
 };
 
-ZeraDBLogger::ZeraDBLogger(VeinLogger::DataSource *t_dataSource, VeinLogger::DBFactory t_factoryFunction, QObject *t_parent) :
-    VeinLogger::DatabaseLogger(t_dataSource, t_factoryFunction, t_parent),
+ZeraDBLogger::ZeraDBLogger(VeinLogger::DataSource *t_dataSource, VeinLogger::DBFactory t_factoryFunction, QObject *parent) :
+    VeinLogger::DatabaseLogger(t_dataSource, t_factoryFunction, parent),
     m_dPtr(new ZeraDBLoggerPrivate(this))
 {
     //create a database for validation
