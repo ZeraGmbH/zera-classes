@@ -13,6 +13,8 @@ signals:
     void sigLoadModule(QString uniqueModuleName, QString xmlPath, QByteArray xmlData, int moduleEntityId);
 public slots:
     void loadSession(QString filePath);
+protected:
+    static QString m_configDirName;
 
 private:
     void parseModule(QJsonObject moduleObject);
