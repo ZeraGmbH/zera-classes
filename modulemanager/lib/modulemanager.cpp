@@ -53,17 +53,17 @@ public:
 QString ModuleManager::m_sessionPath = MODMAN_SESSION_PATH;
 
 
-ModuleManager::ModuleManager(const QStringList &t_sessionList, QObject *t_parent) :
-    QObject(t_parent),
+ModuleManager::ModuleManager(const QStringList &sessionList, QObject *parent) :
+    QObject(parent),
     m_moduleStartLock(false)
 {
     m_timerAllModulesLoaded.start();
     QStringList entryList = QDir(m_sessionPath).entryList(QStringList({"*.json"}));
     QSet<QString> fileSet(entryList.begin(), entryList.end());
-    QSet<QString> expectedSet(t_sessionList.begin(), t_sessionList.end());
+    QSet<QString> expectedSet(sessionList.begin(), sessionList.end());
     if(fileSet.contains(expectedSet))
     {
-        m_sessionsAvailable = t_sessionList;
+        m_sessionsAvailable = sessionList;
     }
     else
     {

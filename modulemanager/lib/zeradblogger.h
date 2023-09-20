@@ -21,7 +21,7 @@ class ZeraDBLogger : public VeinLogger::DatabaseLogger
 {
     Q_OBJECT
 public:
-    ZeraDBLogger(VeinLogger::DataSource *t_dataSource, VeinLogger::DBFactory t_factoryFunction, QObject *t_parent=nullptr);
+    ZeraDBLogger(VeinLogger::DataSource *t_dataSource, VeinLogger::DBFactory t_factoryFunction, QObject *parent=nullptr);
     ~ZeraDBLogger() override;
 private:
     void processEvent(QEvent *t_event) override;

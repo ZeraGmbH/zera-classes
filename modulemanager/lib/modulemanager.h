@@ -31,7 +31,7 @@ class ModuleManager : public QObject
 {
     Q_OBJECT
 public:
-    explicit ModuleManager(const QStringList &t_sessionList, QObject *t_parent = nullptr);
+    explicit ModuleManager(const QStringList &sessionList, QObject *parent = nullptr);
     ~ModuleManager() override;
     bool loadModules();
     void loadScripts(VeinScript::ScriptSystem *t_scriptSystem);

@@ -16,7 +16,7 @@ public:
         PAS_UNAVAILABLE = 1 //priority level not available (e.g. because it is already set)
     };
 
-    explicit PriorityArbitrationSystem(QObject *t_parent = nullptr);
+    explicit PriorityArbitrationSystem(QObject *parent = nullptr);
 
 signals:
 

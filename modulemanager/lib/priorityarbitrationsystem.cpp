@@ -8,8 +8,8 @@
 
 #include <functional>
 
-PriorityArbitrationSystem::PriorityArbitrationSystem(QObject *t_parent) :
-    VeinEvent::EventSystem(t_parent),
+PriorityArbitrationSystem::PriorityArbitrationSystem(QObject *parent) :
+    VeinEvent::EventSystem(parent),
     m_remoteProcedures({
                        VF_RPC_BIND(arbitrationAdd, std::bind(&PriorityArbitrationSystem::arbitrationAdd, this, std::placeholders::_1, std::placeholders::_2)),
                        VF_RPC_BIND(arbitrationRemove, std::bind(&PriorityArbitrationSystem::arbitrationRemove, this, std::placeholders::_1, std::placeholders::_2))

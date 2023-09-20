@@ -66,8 +66,8 @@ const QSet<QString> CustomerDataSystem::s_writeProtectedComponents = {
     CustomerDataSystem::s_introspectionComponentName,
 };
 
-CustomerDataSystem::CustomerDataSystem(QObject *t_parent) :
-    VeinEvent::EventSystem(t_parent),
+CustomerDataSystem::CustomerDataSystem(QObject *parent) :
+    VeinEvent::EventSystem(parent),
     m_remoteProcedures{VF_RPC_BIND(customerDataAdd, std::bind(&CustomerDataSystem::customerDataAdd, this, std::placeholders::_1, std::placeholders::_2)),
                        VF_RPC_BIND(customerDataRemove, std::bind(&CustomerDataSystem::customerDataRemove, this, std::placeholders::_1, std::placeholders::_2)),
                        VF_RPC_BIND(customerDataSearch, std::bind(&CustomerDataSystem::customerDataSearch, this, std::placeholders::_1, std::placeholders::_2))}
