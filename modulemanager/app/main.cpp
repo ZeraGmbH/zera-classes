@@ -268,7 +268,7 @@ int main(int argc, char *argv[])
 
 
 
-    modulesFound = modMan->loadModules();
+    modulesFound = modMan->loadAllAvailableModulePlugins();
 
     if(!modulesFound)
     {
