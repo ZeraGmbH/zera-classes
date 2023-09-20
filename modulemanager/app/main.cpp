@@ -109,7 +109,7 @@ int main(int argc, char *argv[])
 #endif
 
     // setup vein modules
-    ModuleManagerController *mmController = new ModuleManagerController(&a);
+    ModuleManagerController *mmController = new ModuleManagerController(&a, mmConfig->isDevMode());
     VeinNet::IntrospectionSystem *introspectionSystem = new VeinNet::IntrospectionSystem(&a);
     VeinStorage::VeinHash *storSystem = new VeinStorage::VeinHash(&a);
     VeinNet::NetworkSystem *netSystem = new VeinNet::NetworkSystem(&a);

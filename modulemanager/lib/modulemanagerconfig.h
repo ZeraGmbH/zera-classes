@@ -17,6 +17,7 @@ public:
     const QString getDefaultSession();
     void setDefaultSession(QString session);
     bool containsDeviceName(QString devName);
+    bool isDevMode();
 protected:
     static QString m_configFileDir;
     static QString m_configFileName;

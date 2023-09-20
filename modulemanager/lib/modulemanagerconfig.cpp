@@ -76,6 +76,11 @@ bool ModulemanagerConfig::containsDeviceName(QString devName)
     return false;
 }
 
+bool ModulemanagerConfig::isDevMode()
+{
+    return m_jsonConfig["devMode"].toBool();
+}
+
 const QString ModulemanagerConfig::getDevNameFromUBoot()
 {
     QString strDeviceName;
