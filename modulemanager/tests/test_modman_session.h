@@ -7,9 +7,13 @@ class test_modman_session : public QObject
 {
     Q_OBJECT
 private slots:
+    void initTestCase();
+
     void loadModulePluginsInstalled();
     void loadModulePluginsOE();
     void startSession();
+
+    void keepCodeForNext();
 
 };
 

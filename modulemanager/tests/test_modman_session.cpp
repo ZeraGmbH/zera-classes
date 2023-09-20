@@ -15,6 +15,18 @@
 
 QTEST_MAIN(test_modman_session)
 
+static constexpr quint16 veinPort = 12001;
+
+void test_modman_session::initTestCase()
+{
+    qRegisterMetaTypeStreamOperators<QList<int> >("QList<int>");
+    qRegisterMetaTypeStreamOperators<QList<float> >("QList<float>");
+    qRegisterMetaTypeStreamOperators<QList<double> >("QList<double>");
+    qRegisterMetaTypeStreamOperators<QList<QString> >("QList<QString>");
+    qRegisterMetaTypeStreamOperators<QVector<QString> >("QVector<QString>");
+    qRegisterMetaTypeStreamOperators<QList<QVariantMap> >("QList<QVariantMap>");
+}
+
 void test_modman_session::loadModulePluginsInstalled()
 {
     if(!QString(OE_INSTALL_ROOT).isEmpty()) {
@@ -57,40 +69,93 @@ void test_modman_session::startSession()
     const QString defaultSessionFile = mmConfig->getDefaultSession();
     const QStringList availableSessionList = mmConfig->getAvailableSessions();
 
-    ModuleEventHandler *evHandler = new ModuleEventHandler;
+    ModuleEventHandler evHandler;
     // setup vein modules
-    ModuleManagerController *mmController = new ModuleManagerController();
-    VeinNet::IntrospectionSystem *introspectionSystem = new VeinNet::IntrospectionSystem();
-    VeinStorage::VeinHash *storSystem = new VeinStorage::VeinHash();
+    ModuleManagerController mmController;
+    VeinNet::IntrospectionSystem introspectionSystem;
+    VeinStorage::VeinHash storSystem;
 
-    VeinNet::NetworkSystem *netSystem = new VeinNet::NetworkSystem();
-    netSystem->setOperationMode(VeinNet::NetworkSystem::VNOM_SUBSCRIPTION);
+    LicenseSystemMock licenseSystem;
 
-    VeinNet::TcpSystem *tcpSystem = new VeinNet::TcpSystem();
-    LicenseSystemMock *licenseSystem = new LicenseSystemMock;
+    ModuleManagerTest modMan(availableSessionList);
+    modMan.setDemo(true);
 
-    ZeraModules::ModuleManager *modMan = new ModuleManagerTest(availableSessionList);
-    modMan->setDemo(true);
-
-    JsonSessionLoader *sessionLoader = new JsonSessionLoader();
+    JsonSessionLoader sessionLoader;
 
     QList<VeinEvent::EventSystem*> subSystems;
     //do not reorder
-    subSystems.append(mmController);
-    subSystems.append(introspectionSystem);
-    subSystems.append(storSystem);
-    subSystems.append(netSystem);
-    subSystems.append(tcpSystem);
-    subSystems.append(licenseSystem);
-    evHandler->setSubsystems(subSystems);
+    subSystems.append(&mmController);
+    subSystems.append(&introspectionSystem);
+    subSystems.append(&storSystem);
+    subSystems.append(&licenseSystem);
+    evHandler.setSubsystems(subSystems);
 
-    modMan->setStorage(storSystem);
-    modMan->setLicenseSystem(licenseSystem);
-    modMan->setEventHandler(evHandler);
-    mmController->setStorage(storSystem);
+    modMan.setStorage(&storSystem);
+    modMan.setLicenseSystem(&licenseSystem);
+    modMan.setEventHandler(&evHandler);
+    mmController.setStorage(&storSystem);
 
-    QObject::connect(sessionLoader, &JsonSessionLoader::sigLoadModule, modMan, &ZeraModules::ModuleManager::startModule);
-    QObject::connect(modMan, &ZeraModules::ModuleManager::sigSessionSwitched, sessionLoader, &JsonSessionLoader::loadSession);
+    QObject::connect(&sessionLoader, &JsonSessionLoader::sigLoadModule, &modMan, &ZeraModules::ModuleManager::startModule);
+    QObject::connect(&modMan, &ZeraModules::ModuleManager::sigSessionSwitched, &sessionLoader, &JsonSessionLoader::loadSession);
+
+    bool modulesFound = modMan.loadAllAvailableModulePlugins();
+    QVERIFY(modulesFound);
+
+    modMan.changeSessionFile(defaultSessionFile);
+    mmController.initOnce();
+
+    ModuleManagerTest::feedEventLoop();
+
+    QVERIFY(storSystem.hasStoredValue(0, "EntityName"));
+    QString actDevIface = storSystem.getStoredValue(9999, "ACT_DEV_IFACE").toString();
+    if(actDevIface.isEmpty()) // we have to make module resilient to this situation
+        qFatal("ACT_DEV_IFACE empty - local modulemanager running???");
+}
+
+void test_modman_session::keepCodeForNext()
+{
+    ModulemanagerConfigTest::enableTest();
+    ModulemanagerConfig::setDemoDevice("demo");
+    ModuleManagerTest::enableTest();
+
+    ModulemanagerConfig* mmConfig = ModulemanagerConfig::getInstance();
+    const QString defaultSessionFile = mmConfig->getDefaultSession();
+    const QStringList availableSessionList = mmConfig->getAvailableSessions();
+
+    ModuleEventHandler evHandler;
+    // setup vein modules
+    ModuleManagerController mmController;
+    VeinNet::IntrospectionSystem introspectionSystem;
+    VeinStorage::VeinHash storSystem;
+
+    VeinNet::NetworkSystem netSystem;
+    netSystem.setOperationMode(VeinNet::NetworkSystem::VNOM_SUBSCRIPTION);
+
+    VeinNet::TcpSystem tcpSystem;
+    LicenseSystemMock licenseSystem;
+
+    ModuleManagerTest modMan(availableSessionList);
+    modMan.setDemo(true);
+
+    JsonSessionLoader sessionLoader;
+
+    QList<VeinEvent::EventSystem*> subSystems;
+    //do not reorder
+    subSystems.append(&mmController);
+    subSystems.append(&introspectionSystem);
+    subSystems.append(&storSystem);
+    subSystems.append(&netSystem);
+    subSystems.append(&tcpSystem);
+    subSystems.append(&licenseSystem);
+    evHandler.setSubsystems(subSystems);
+
+    modMan.setStorage(&storSystem);
+    modMan.setLicenseSystem(&licenseSystem);
+    modMan.setEventHandler(&evHandler);
+    mmController.setStorage(&storSystem);
+
+    QObject::connect(&sessionLoader, &JsonSessionLoader::sigLoadModule, &modMan, &ZeraModules::ModuleManager::startModule);
+    QObject::connect(&modMan, &ZeraModules::ModuleManager::sigSessionSwitched, &sessionLoader, &JsonSessionLoader::loadSession);
 
     qRegisterMetaTypeStreamOperators<QList<int> >("QList<int>");
     qRegisterMetaTypeStreamOperators<QList<float> >("QList<float>");
@@ -99,10 +164,17 @@ void test_modman_session::startSession()
     qRegisterMetaTypeStreamOperators<QVector<QString> >("QVector<QString>");
     qRegisterMetaTypeStreamOperators<QList<QVariantMap> >("QList<QVariantMap>");
 
-    bool modulesFound = modMan->loadAllAvailableModulePlugins();
+    bool modulesFound = modMan.loadAllAvailableModulePlugins();
     QVERIFY(modulesFound);
 
-    modMan->changeSessionFile(defaultSessionFile);
-    mmController->initOnce();
-    tcpSystem->startServer(12000);
+    modMan.changeSessionFile(defaultSessionFile);
+    mmController.initOnce();
+    tcpSystem.startServer(veinPort);
+
+    ModuleManagerTest::feedEventLoop();
+
+    QVERIFY(storSystem.hasStoredValue(0, "EntityName"));
+    QString actDevIface = storSystem.getStoredValue(9999, "ACT_DEV_IFACE").toString();
+    if(actDevIface.isEmpty()) // we have to make module resilient to this situation
+        qFatal("ACT_DEV_IFACE empty - local modulemanager running???");
 }
