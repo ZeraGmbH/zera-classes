@@ -13,8 +13,6 @@ private slots:
     void loadModulePluginsOE();
     void startSession();
 
-    void keepCodeForNext();
-
 };
 
 #endif // TEST_MODMAN_SESSION_H
