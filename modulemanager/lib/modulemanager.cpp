@@ -107,9 +107,9 @@ bool ModuleManager::loadModules()
             m_factoryTable.insert(module->getFactoryName(), module);
         }
         else
-            qDebug() << "Error string:\n" << loader.errorString();
+            qWarning() << "Error string:\n" << loader.errorString();
     }
-    qInfo("All modules loaded after %llims", m_timerAllModulesLoaded.elapsed());
+    qInfo("Modules analysed after %llims", m_timerAllModulesLoaded.elapsed());
     return retVal;
 }
 
