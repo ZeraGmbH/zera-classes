@@ -1,5 +1,4 @@
 add_library(sourcemodule MODULE
-    ${XML_SCHEMA_RESOURCE_SOURCEMODULE}
     ${CMAKE_CURRENT_SOURCE_DIR}/sourcemodulefactory.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/sourcemodulefactory.h
     )

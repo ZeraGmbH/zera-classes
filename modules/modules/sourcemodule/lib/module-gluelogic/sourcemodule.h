@@ -1,7 +1,6 @@
 #ifndef SOURCEMODULE_H
 #define SOURCEMODULE_H
 
-#include "sourcemoduleconfiguration.h"
 #include "sourcemoduleprogram.h"
 #include <basemeasmodule.h>
 #include <vfmodulerpc.h>

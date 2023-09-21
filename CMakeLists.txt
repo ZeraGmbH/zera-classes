@@ -38,7 +38,6 @@ if(${JSONLINT} MATCHES ".*echo.*")
     message(WARNING "Program jsonlint-php not found. On Fedora install php-jsonlint")
 endif()
 
-pkg_check_modules(XERCES xerces-c REQUIRED)
 
 set(ZC_SERVICES_IP "" CACHE STRING "Services IP address - change to machine's address for debugging")
 

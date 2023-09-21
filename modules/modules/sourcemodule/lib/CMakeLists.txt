@@ -33,21 +33,6 @@ file(GLOB SOURCE_DEVINFO
     ${CMAKE_CURRENT_SOURCE_DIR}/deviceinfo/*.json
 )
 
-# auto-generate c++ xml access from xsd
-file(GLOB XSL
-    ${CMAKE_CURRENT_SOURCE_DIR}/../configs/*.xsd
-)
-
-add_custom_command(
-    OUTPUT
-        ${CMAKE_CURRENT_BINARY_DIR}/sourcemodule-config.hxx
-        ${CMAKE_CURRENT_BINARY_DIR}/sourcemodule-config.cxx
-    COMMAND
-        xsdcxx cxx-tree --std c++11 --generate-serialization --output-dir "${CMAKE_CURRENT_BINARY_DIR}" ${XSL}
-    DEPENDS
-        ${XSL}
-)
-
 # check for valid devinfo / display in qt-creator
 add_custom_target(source-deviceinfo-dont-forget-qrc ALL
     SOURCES ${SOURCE_DEVINFO}
@@ -64,15 +49,12 @@ foreach(sourceconfigfile ${SOURCE_DEVINFO})
 endforeach()
 
 set(COMMON_LIBS
-    ${XERCES_LIBRARIES}
     zera-basemodule
     serialportasyncblock
     Zera::zera-timers
     )
 
 add_library(sourcemodule-static STATIC
-    ${CMAKE_CURRENT_BINARY_DIR}/sourcemodule-config.cxx
-    ${CMAKE_CURRENT_BINARY_DIR}/sourcemodule-config.hxx
     ${SOURCES}
     ${HEADER}
     ${RESOURCES}
@@ -86,7 +68,6 @@ target_link_libraries(sourcemodule-static
 
 target_include_directories(sourcemodule-static
     PUBLIC
-    $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/io-device>
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/io-queue>
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/json>
