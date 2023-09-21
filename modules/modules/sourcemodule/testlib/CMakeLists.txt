@@ -1,4 +1,4 @@
-add_library(source-module-testhelpers STATIC
+add_library(sourcemodule-testlib STATIC
     test_globals.h
     test_globals.cpp
     sourcedeviceerrorinjection-forunittest.h
@@ -11,7 +11,7 @@ add_library(source-module-testhelpers STATIC
     sourcestateperiodicpollerfortest.h
     )
 
-target_link_libraries(source-module-testhelpers
+target_link_libraries(sourcemodule-testlib
     PUBLIC
     Qt5::Test
     sourcemodule-static
@@ -19,7 +19,7 @@ target_link_libraries(source-module-testhelpers
     Zera::zera-timers-testlib
     )
 
-target_include_directories(source-module-testhelpers
+target_include_directories(sourcemodule-testlib
     PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
     )

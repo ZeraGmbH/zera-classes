@@ -3,11 +3,9 @@
 #include <xmlconfigreader.h>
 #include "sourcemoduleconfiguration.h"
 
-
 SourceModuleConfiguration::SourceModuleConfiguration()
 {
 }
-
 
 void SourceModuleConfiguration::setConfiguration(QByteArray xmlString)
 {

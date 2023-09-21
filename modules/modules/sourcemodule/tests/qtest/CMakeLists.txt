@@ -1,4 +1,19 @@
-SETUP_QTESTS(
+function(SETUP_QTESTS_MODULE)
+    SETUP_QTESTS(${ARGN})
+    foreach(_testname ${ARGN})
+        target_sources(${_testname}
+            PRIVATE
+            ${XML_SCHEMA_RESOURCE_SOURCEMODULE}
+        )
+        target_link_libraries(${_testname}
+            PRIVATE
+            sourcemodule-static
+            sourcemodule-testlib
+        )
+    endforeach()
+endfunction()
+
+SETUP_QTESTS_MODULE(
    test_iodevice
    test_ioqueue
    test_iotransferdata
@@ -9,4 +24,5 @@ SETUP_QTESTS(
    test_sourceperiodicpollerstate
    test_sourceswitchjson
    test_sourcedevicefacade
+   test_source_config_load
 )

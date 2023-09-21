@@ -7,7 +7,6 @@ file(GLOB UNITTESTS
 
 add_executable(sourcemodule-unittest
     ${UNITTESTS}
-    ${CMAKE_CURRENT_BINARY_DIR}/../../sourcemodule-config.cxx
 )
 # constexpr / EXPECT_EQ -> linker problems for c++ < 17
 set_property(TARGET sourcemodule-unittest PROPERTY CXX_STANDARD 17)
