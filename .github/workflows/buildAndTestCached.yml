@@ -74,25 +74,6 @@ jobs:
             echo 'build-cache-files.tar.xz not found'
           fi
 
-      # Prepare last install files for incremental build
-      - name: Download install artifact
-        if: ${{ github.event_name != 'workflow_dispatch' && github.event_name != 'schedule' }}
-        uses: dawidd6/action-download-artifact@v2
-        with:
-          workflow: recreateBuildCaches.yml
-          name: install-cache-${{ matrix.compiler }}
-          check_artifacts: true
-        continue-on-error: true
-
-      - name: Untar install files
-        run: |
-          if [ -e install-cache-files.tar.xz ]; then
-            tar -xf install-cache-files.tar.xz -C /
-            rm install-cache-files.tar.xz
-          else
-            echo 'install-cache-files.tar.xz not found'
-          fi
-
       # Get zera-metaproject sysroot
       # * mandatory
       # * zera-metaproject's generator workflow name must be set
