@@ -1,5 +1,5 @@
 <RCC>
     <qresource prefix="/">
-        <file>src/power3module.xsd</file>
+        <file>power3module.xsd</file>
     </qresource>
 </RCC>
