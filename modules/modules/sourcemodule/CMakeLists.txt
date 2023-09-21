@@ -155,4 +155,5 @@ install(
         ${SET_ZC_CONFIG_PATH}
     )
 
+add_subdirectory(testlib)
 add_subdirectory(tests)
