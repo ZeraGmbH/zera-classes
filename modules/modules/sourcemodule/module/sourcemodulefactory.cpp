@@ -1,7 +1,6 @@
 #include "sourcemodulefactory.h"
 #include "sourcemodule.h"
 
-
 ZeraModules::VirtualModule* SourceModuleFactory::createModule(int entityId, VeinEvent::StorageSystem* storagesystem, bool demo, QObject* parent)
 {
     ZeraModules::VirtualModule *module = new SourceModule(m_ModuleList.count()+1, entityId, storagesystem, demo, parent);

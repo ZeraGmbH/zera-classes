@@ -100,6 +100,7 @@ SET_MODULE_ENV(samplemodule)
 SET_MODULE_ENV(scpimodule)
 SET_MODULE_ENV(sec1module)
 SET_MODULE_ENV(sem1module)
+SET_MODULE_ENV(sourcemodule)
 SET_MODULE_ENV(spm1module)
 SET_MODULE_ENV(statusmodule)
 SET_MODULE_ENV(thdnmodule)
@@ -125,7 +126,6 @@ function(SETUP_QTESTS)
             Zera::zera-i2c-devices-testlib
             service-interfaces-testlib
             module-tasks-testlib
-            source-module-testhelpers
             zera-meas-mode-management-testlib
             Zera::VfStorageHash
             )
