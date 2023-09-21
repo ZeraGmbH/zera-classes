@@ -41,7 +41,7 @@ jobs:
             tar -xf install_files.tar.xz -C /
             rm install_files.tar.xz
 
-      # Build & Unitttest
+      # Build
       - name: Build
         run: |
           mkdir -p "$HOME/targetbuild"
@@ -56,11 +56,6 @@ jobs:
            -DCMAKE_INSTALL_PREFIX:PATH="$HOME/install/usr" \
            -DCMAKE_INSTALL_SYSCONFDIR="$HOME/install/etc"
            make -j $(getconf _NPROCESSORS_ONLN)
-
-      - name: Unittest
-        run: |
-          cd "$HOME/targetbuild"
-          ctest -V
 
       # Keep sources for incremental checkout
       - name: Tar sources
