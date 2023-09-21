@@ -1,14 +1,14 @@
+file(GLOB SOURCES
+    ${CMAKE_CURRENT_SOURCE_DIR}/*.cpp
+    )
+
+file(GLOB HEADER
+    ${CMAKE_CURRENT_SOURCE_DIR}/*.h
+    )
+
 add_library(sourcemodule-testlib STATIC
-    test_globals.h
-    test_globals.cpp
-    sourcedeviceerrorinjection-forunittest.h
-    sourcedeviceerrorinjection-forunittest.cpp
-    sourcescannerwithinstancecount-forunittest.h
-    sourcescannerwithinstancecount-forunittest.cpp
-    veincomponentsetnotifier-forunittest.h
-    veincomponentsetnotifier-forunittest.cpp
-    sourcestateperiodicpollerfortest.cpp
-    sourcestateperiodicpollerfortest.h
+    ${SOURCES}
+    ${HEADER}
     )
 
 target_link_libraries(sourcemodule-testlib

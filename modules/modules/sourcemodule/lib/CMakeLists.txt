@@ -11,7 +11,6 @@ file(GLOB SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/vein/*.cpp
     )
 
-
 file(GLOB HEADER
     ${CMAKE_CURRENT_SOURCE_DIR}/io-device/*.h
     ${CMAKE_CURRENT_SOURCE_DIR}/io-queue/*.h
@@ -48,12 +47,6 @@ foreach(sourceconfigfile ${SOURCE_DEVINFO})
     endif()
 endforeach()
 
-set(COMMON_LIBS
-    zera-basemodule
-    serialportasyncblock
-    Zera::zera-timers
-    )
-
 add_library(sourcemodule-static STATIC
     ${SOURCES}
     ${HEADER}
@@ -63,7 +56,11 @@ add_library(sourcemodule-static STATIC
 target_link_libraries(sourcemodule-static
     PUBLIC
     vf-cpp-module-wrappers
-    ${COMMON_LIBS}
+    zera-basemodule
+    serialportasyncblock
+    Zera::zera-timers
+    # ask linker to help us finding unresolved symbols
+    "-Wl,--no-undefined"
     )
 
 target_include_directories(sourcemodule-static
@@ -79,4 +76,3 @@ target_include_directories(sourcemodule-static
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/transaction-ids>
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/vein>
     )
-
