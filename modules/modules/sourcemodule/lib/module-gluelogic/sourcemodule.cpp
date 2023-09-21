@@ -1,7 +1,8 @@
 #include "sourcemodule.h"
+#include "moduleconfigurationnull.h"
 
 SourceModule::SourceModule(quint8 modnr, int entityId, VeinEvent::StorageSystem* storagesystem, bool demo, QObject *parent)
-    :cBaseMeasModule(modnr, entityId, storagesystem, std::shared_ptr<cBaseModuleConfiguration>(new SourceModuleConfiguration()), demo, parent)
+    :cBaseMeasModule(modnr, entityId, storagesystem, std::make_shared<ModuleConfigurationNull>(), demo, parent)
 {
     m_rpcEventSystem = new VfModuleRpc(entityId);
     m_sModuleName = QString("%1%2").arg(BaseModuleName).arg(modnr);

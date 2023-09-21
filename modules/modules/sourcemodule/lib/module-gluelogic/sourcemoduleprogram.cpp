@@ -1,13 +1,11 @@
-#include <vfmoduleactvalue.h>
-#include <vfmoduleparameter.h>
-#include <intvalidator.h>
-#include <jsonparamvalidator.h>
-
-#include "basedspmeasprogram.h"
 #include "sourcemoduleprogram.h"
 #include "sourcemodule.h"
 #include "sourcedevicemanager.h"
 #include "sourcedevicefacade.h"
+#include <vfmoduleactvalue.h>
+#include <vfmoduleparameter.h>
+#include <intvalidator.h>
+#include <jsonparamvalidator.h>
 
 SourceModuleProgram::SourceModuleProgram(SourceModule* module, std::shared_ptr<cBaseModuleConfiguration> pConfiguration) :
     cBaseMeasWorkProgram(pConfiguration),
@@ -26,8 +24,7 @@ SourceModuleProgram::~SourceModuleProgram()
 void SourceModuleProgram::generateInterface()
 {
     // source manager
-    configuration* config = getConfigXMLWrapper();
-    int maxSources = config->max_count_sources();
+    int maxSources = 4;
     m_pSourceDeviceManager = new SourceDeviceManager(maxSources);
     connect(m_pSourceDeviceManager, &SourceDeviceManager::sigAllSlotsRemoved,
             this, &SourceModuleProgram::sigLastSourceRemoved);
@@ -41,7 +38,7 @@ void SourceModuleProgram::generateInterface()
     m_pVeinMaxCountAct = new VfModuleActvalue(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                                     QString("ACT_MaxSources"),
                                                     QString("Max source devices"),
-                                                    QVariant(config->max_count_sources()) );
+                                                    QVariant(maxSources) );
     m_pModule->veinModuleActvalueList.append(m_pVeinMaxCountAct); // auto delete / meta-data / scpi
 
     m_pVeinCountAct = new VfModuleActvalue(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
@@ -130,11 +127,6 @@ QVariant SourceModuleProgram::RPC_CloseSource(QVariantMap p_params)
     QUuid uuid = p_params[VeinComponent::RemoteProcedureData::s_callIdString].toUuid();
     m_pSourceDeviceManager->closeSource(deviceInfo, uuid);
     return true;
-}
-
-configuration *SourceModuleProgram::getConfigXMLWrapper()
-{
-    return static_cast<SourceModuleConfiguration*>(m_pConfiguration.get())->getConfigXMLWrapper();
 }
 
 void SourceModuleProgram::updateDemoCount()
