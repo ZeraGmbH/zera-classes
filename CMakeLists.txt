@@ -40,9 +40,6 @@ endif()
 
 pkg_check_modules(XERCES xerces-c REQUIRED)
 
-set(SET_ZC_CONFIG_PATH "${CMAKE_INSTALL_SYSCONFDIR}/zera/modules/")
-add_definitions(-DZC_CONFIG_PATH="${SET_ZC_CONFIG_PATH}")
-
 set(ZC_SERVICES_IP "" CACHE STRING "Services IP address - change to machine's address for debugging")
 
 set(OE_INSTALL_ROOT "" CACHE STRING "OE build install root - add 'add_definitions' only on test code")

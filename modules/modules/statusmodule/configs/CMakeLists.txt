@@ -15,6 +15,6 @@ add_custom_target(statusmodule-configs ALL
 
 install(
     FILES ${XML_CONFIGS}
-    DESTINATION ${SET_ZC_CONFIG_PATH}
+    DESTINATION ${SET_MODMAN_CONFIG_PATH}
     )
 
