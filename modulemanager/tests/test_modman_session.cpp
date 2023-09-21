@@ -111,3 +111,52 @@ void test_modman_session::startSession()
     if(actDevIface.isEmpty()) // we have to make module resilient to this situation
         qFatal("ACT_DEV_IFACE empty - local modulemanager running???");
 }
+
+void test_modman_session::changeSession()
+{
+    ModuleEventHandler evHandler;
+    ModuleManagerController mmController;
+    VeinNet::IntrospectionSystem introspectionSystem;
+    VeinStorage::VeinHash storSystem;
+    LicenseSystemMock licenseSystem;
+
+    QList<VeinEvent::EventSystem*> subSystems;
+    subSystems.append(&mmController);
+    subSystems.append(&introspectionSystem);
+    subSystems.append(&storSystem);
+    subSystems.append(&licenseSystem);
+    evHandler.setSubsystems(subSystems);
+
+    ModulemanagerConfig* mmConfig = ModulemanagerConfig::getInstance();
+    const QStringList availableSessionList = mmConfig->getAvailableSessions();
+
+    ModuleManagerTest modMan(availableSessionList);
+    modMan.setDemo(true);
+    modMan.loadAllAvailableModulePlugins();
+    modMan.setStorage(&storSystem);
+    modMan.setLicenseSystem(&licenseSystem);
+    modMan.setEventHandler(&evHandler);
+    mmController.setStorage(&storSystem);
+
+    JsonSessionLoader sessionLoader;
+
+    QObject::connect(&sessionLoader, &JsonSessionLoader::sigLoadModule, &modMan, &ZeraModules::ModuleManager::startModule);
+    QObject::connect(&modMan, &ZeraModules::ModuleManager::sigSessionSwitched, &sessionLoader, &JsonSessionLoader::loadSession);
+
+    QObject::connect(&modMan, &ZeraModules::ModuleManager::sigModulesLoaded, &mmController, &ModuleManagerController::initializeEntity);
+    QObject::connect(&mmController, &ModuleManagerController::sigChangeSession, &modMan, &ZeraModules::ModuleManager::changeSessionFile);
+    QObject::connect(&mmController, &ModuleManagerController::sigModulesPausedChanged, &modMan, &ZeraModules::ModuleManager::setModulesPaused);
+
+    const QString defaultSessionFile = mmConfig->getDefaultSession();
+    modMan.changeSessionFile(defaultSessionFile);
+    mmController.initOnce();
+
+    ModuleManagerTest::feedEventLoop();
+    QString currentSession = storSystem.getStoredValue(0, "Session").toString();
+    QCOMPARE(currentSession, "demo-session.json");
+
+    modMan.changeSessionFile("demo-session1.json");
+    ModuleManagerTest::feedEventLoop();
+    currentSession = storSystem.getStoredValue(0, "Session").toString();
+    QCOMPARE(currentSession, "demo-session1.json");
+}

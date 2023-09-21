@@ -12,6 +12,7 @@ private slots:
     void loadModulePluginsInstalled();
     void loadModulePluginsOE();
     void startSession();
+    void changeSession();
 
 };
 
