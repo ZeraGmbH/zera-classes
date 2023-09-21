@@ -81,27 +81,33 @@ void test_modman_session::startSession()
 
     ModuleManagerTest modMan(availableSessionList);
     modMan.setDemo(true);
+    QVERIFY(modMan.loadAllAvailableModulePlugins());
     modMan.setStorage(&storSystem);
     modMan.setLicenseSystem(&licenseSystem);
     modMan.setEventHandler(&evHandler);
     mmController.setStorage(&storSystem);
 
     JsonSessionLoader sessionLoader;
+
     QObject::connect(&sessionLoader, &JsonSessionLoader::sigLoadModule, &modMan, &ZeraModules::ModuleManager::startModule);
     QObject::connect(&modMan, &ZeraModules::ModuleManager::sigSessionSwitched, &sessionLoader, &JsonSessionLoader::loadSession);
 
-    bool modulesFound = modMan.loadAllAvailableModulePlugins();
-    QVERIFY(modulesFound);
+    QObject::connect(&modMan, &ZeraModules::ModuleManager::sigModulesLoaded, &mmController, &ModuleManagerController::initializeEntity);
+    QObject::connect(&mmController, &ModuleManagerController::sigChangeSession, &modMan, &ZeraModules::ModuleManager::changeSessionFile);
+    QObject::connect(&mmController, &ModuleManagerController::sigModulesPausedChanged, &modMan, &ZeraModules::ModuleManager::setModulesPaused);
 
     const QString defaultSessionFile = mmConfig->getDefaultSession();
     modMan.changeSessionFile(defaultSessionFile);
     mmController.initOnce();
 
     ModuleManagerTest::feedEventLoop();
+    QVERIFY(storSystem.hasEntity(0));
+    QVERIFY(storSystem.hasStoredValue(0, "Session"));
+    QString currentSession = storSystem.getStoredValue(0, "Session").toString();
+    QCOMPARE(currentSession, "demo-session.json");
 
     QVERIFY(storSystem.hasStoredValue(0, "EntityName"));
     QString actDevIface = storSystem.getStoredValue(9999, "ACT_DEV_IFACE").toString();
     if(actDevIface.isEmpty()) // we have to make module resilient to this situation
         qFatal("ACT_DEV_IFACE empty - local modulemanager running???");
 }
-
