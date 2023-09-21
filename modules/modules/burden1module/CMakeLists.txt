@@ -1,3 +1,4 @@
 add_subdirectory(configs)
 add_subdirectory(lib)
 add_subdirectory(module)
+add_subdirectory(tests)
