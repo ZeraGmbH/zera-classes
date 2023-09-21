@@ -76,11 +76,6 @@
         "id": 1300
       },
       {
-        "name" : "elburdenmodule",
-        "configFile" : "demo-electronicburdenmodule.xml",
-        "id": 1400
-      },
-      {
         "name" : "scpimodule",
         "configFile" : "demo-scpimodule.xml",
         "id": 9999
