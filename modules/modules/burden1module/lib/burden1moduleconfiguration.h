@@ -33,7 +33,7 @@ enum moduleconfigstate
 
 class cBurden1ModuleConfigData;
 
-const QString defaultXSDFile = "://src/burden1module.xsd";
+const QString defaultXSDFile = "://burden1module.xsd";
 
 // moduleconfiguration holds configuration data as well as parameter
 
