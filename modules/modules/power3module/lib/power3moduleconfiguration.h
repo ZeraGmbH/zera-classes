@@ -26,7 +26,7 @@ enum moduleconfigstate
 
 class cPower3ModuleConfigData;
 
-const QString defaultXSDFile = "://src/power3module.xsd";
+const QString defaultXSDFile = "://power3module.xsd";
 
 // moduleconfiguration holds configuration data as well as parameter
 
