@@ -13,7 +13,7 @@ void SourceModuleConfiguration::setConfiguration(QByteArray xmlString)
 
     // We feed xml contents so have to set xsd props for absolute path of xsd
     // That took a while to understand why we had to use flags xml_schema::flags::dont_validate
-    QString configPath = QStringLiteral(ZC_CONFIG_PATH);
+    QString configPath = QStringLiteral(MODMAN_CONFIG_PATH);
     if(!configPath.endsWith("/")) {
         configPath += "/";
     }
