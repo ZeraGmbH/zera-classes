@@ -237,18 +237,17 @@ private:
     ClientActiveComponent m_ClientActiveNotifier;
 
     // vars dealing with error measurement
-    bool m_brunning;
     QTimer m_ActualizeTimer; // after timed out we actualize progressvalue
-    double m_fResult; // error value in %
-    ECALCRESULT::enResultTypes m_eRating;
-    quint32 m_nTimerCountStart; // master time counts down
-    quint32 m_nEnergyCounterActual; // slave / energy counts up
-    quint32 m_nEnergyCounterFinal;
-    double m_fTimeSecondsActual; // slave2 time counts up
-    double m_fTimeSecondsFinal;
-    double m_fEnergy;
-    double m_fPower;
-    quint32 m_nIntReg;    
+    double m_fResult = 0.0; // error value in %
+    ECALCRESULT::enResultTypes m_eRating = ECALCRESULT::RESULT_PASSED;
+    quint32 m_nTimerCountStart = 0; // master time counts down
+    quint32 m_nEnergyCounterActual = 0; // slave / energy counts up
+    quint32 m_nEnergyCounterFinal = 0;
+    double m_fTimeSecondsActual = 0.0; // slave2 time counts up
+    double m_fTimeSecondsFinal = 0.0;
+    double m_fEnergy = 0.0;
+    double m_fPower = 0.0;
+    quint32 m_nIntReg = 0;
 
     // Some decisions - we have enough of configration params around
     static constexpr quint32 m_nActualizeIntervallLowFreq = 1000;
