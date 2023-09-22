@@ -32,7 +32,7 @@ enum moduleconfigstate
 
 class cEfficiency1ModuleConfigData;
 
-const QString defaultXSDFile = "://src/efficiency1module.xsd";
+const QString defaultXSDFile = "://efficiency1module.xsd";
 
 // moduleconfiguration holds configuration data as well as parameter
 
