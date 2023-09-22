@@ -25,6 +25,7 @@ void test_modman_session::initTestCase()
     qRegisterMetaTypeStreamOperators<QList<QString> >("QList<QString>");
     qRegisterMetaTypeStreamOperators<QVector<QString> >("QVector<QString>");
     qRegisterMetaTypeStreamOperators<QList<QVariantMap> >("QList<QVariantMap>");
+    qputenv("QT_FATAL_CRITICALS", "1"); \
 }
 
 void test_modman_session::loadModulePluginsInstalled()

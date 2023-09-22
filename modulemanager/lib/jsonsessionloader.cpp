@@ -33,13 +33,13 @@ void JsonSessionLoader::loadSession(QString filePath)
                 }
             }
             else
-                qWarning() << "Error parsing session file / invalid content:" << filePath;
+                qCritical() << "Error parsing session file / invalid content:" << filePath;
         }
         else
-            qWarning() << "Error parsing session file:" << filePath << "error:" << jsonError.errorString();
+            qCritical() << "Error parsing session file:" << filePath << "error:" << jsonError.errorString();
     }
     else
-        qWarning() << "Error opening session file:" << filePath;
+        qCritical() << "Error opening session file:" << filePath;
 }
 
 void JsonSessionLoader::parseModule(QJsonObject moduleObject)
@@ -54,5 +54,5 @@ void JsonSessionLoader::parseModule(QJsonObject moduleObject)
         emit sigLoadModule(tmpNameString, configFileNameFull, xmlConfigData, moduleEntityId);
     }
     else
-        qWarning() << "Error opening config file for module:" << tmpNameString << "path:" << configFileNameFull;
+        qCritical() << "Error opening config file for module:" << tmpNameString << "path:" << configFileNameFull;
 }
