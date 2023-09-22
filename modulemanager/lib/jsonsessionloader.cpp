@@ -44,15 +44,21 @@ void JsonSessionLoader::loadSession(QString filePath)
 
 void JsonSessionLoader::parseModule(QJsonObject moduleObject)
 {
-    QString configFileNameFull = QDir::cleanPath(m_configDirName + "/" + moduleObject.value("configFile").toString());
-    int moduleEntityId = moduleObject.value("id").toInt();
+    QString configFile = moduleObject.value("configFile").toString();
+    QString configFileNameFull = QDir::cleanPath(m_configDirName + "/" + configFile);
     QString tmpNameString = moduleObject.value("name").toString();
-    QFile tmpXmlConfigFile(configFileNameFull);
-    if(tmpXmlConfigFile.open(QIODevice::Unbuffered | QIODevice::ReadOnly)) {
-        QByteArray xmlConfigData = tmpXmlConfigFile.readAll();
-        tmpXmlConfigFile.close();
-        emit sigLoadModule(tmpNameString, configFileNameFull, xmlConfigData, moduleEntityId);
+    QByteArray xmlConfigData;
+    if(!configFile.isEmpty()) {
+        QFile tmpXmlConfigFile(configFileNameFull);
+        if(tmpXmlConfigFile.open(QIODevice::Unbuffered | QIODevice::ReadOnly)) {
+            xmlConfigData = tmpXmlConfigFile.readAll();
+            tmpXmlConfigFile.close();
+        }
+        else {
+            qCritical() << "Error opening config file for module:" << tmpNameString << "path:" << configFileNameFull;
+            return;
+        }
     }
-    else
-        qCritical() << "Error opening config file for module:" << tmpNameString << "path:" << configFileNameFull;
+    int moduleEntityId = moduleObject.value("id").toInt();
+    emit sigLoadModule(tmpNameString, configFileNameFull, xmlConfigData, moduleEntityId);
 }

@@ -169,10 +169,7 @@ void ModuleManager::startModule(const QString & uniqueModuleName, const QString 
             if(tmpModule)
             {
                 connect(tmpModule, &VirtualModule::addEventSystem, this, &ModuleManager::onModuleEventSystemAdded);
-                if(!t_xmlConfigData.isNull())
-                {
-                    tmpModule->setConfiguration(t_xmlConfigData);
-                }
+                tmpModule->setConfiguration(t_xmlConfigData);
                 connect(tmpModule, SIGNAL(moduleDeactivated()), this, SLOT(onModuleDelete()));
                 connect(tmpModule, &VirtualModule::moduleActivated, this, [this](){
                     m_moduleStartLock=false;
