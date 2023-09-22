@@ -120,7 +120,7 @@ void ModuleManager::loadScripts(VeinScript::ScriptSystem *t_scriptSystem)
     const QStringList scriptList = virtualFiles.entryList();
     for(const QString &scriptFilePath : scriptList)
     {
-        const QString dataLocation = QString("%1/%2").arg(virtualFiles.path()).arg(scriptFilePath);
+        const QString dataLocation = QString("%1/%2").arg(virtualFiles.path(), scriptFilePath);
         qDebug() << "Loading script:" << dataLocation;
         if(t_scriptSystem->loadScriptFromFile(dataLocation) == false)
         {
@@ -180,7 +180,7 @@ void ModuleManager::startModule(const QString & uniqueModuleName, const QString 
                 m_moduleStartLock = true;
                 tmpModule->startModule();
                 ModuleData *moduleData = new ModuleData(tmpModule, uniqueModuleName, t_xmlConfigPath, QByteArray(), moduleEntityId);
-                connect(tmpModule, &VirtualModule::parameterChanged, [this, moduleData](){
+                connect(tmpModule, &VirtualModule::parameterChanged, this, [this, moduleData](){
                     saveModuleConfig(moduleData);
                 });
                 m_moduleList.append(moduleData);
