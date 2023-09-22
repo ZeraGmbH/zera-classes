@@ -101,6 +101,7 @@ SET_MODULE_ENV(sourcemodule)
 SET_MODULE_ENV(spm1module)
 SET_MODULE_ENV(statusmodule)
 SET_MODULE_ENV(thdnmodule)
+SET_MODULE_ENV(transformer1module)
 
 add_compile_definitions(MODULE_PLUGIN_BUILD_PATH="${MODULE_PLUGIN_BUILD_PATH}")
 

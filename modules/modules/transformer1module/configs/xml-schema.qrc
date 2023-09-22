@@ -1,5 +1,5 @@
 <RCC>
     <qresource prefix="/">
-        <file>src/transformer1module.xsd</file>
+        <file>transformer1module.xsd</file>
     </qresource>
 </RCC>
