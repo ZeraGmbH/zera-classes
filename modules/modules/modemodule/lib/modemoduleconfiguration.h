@@ -30,7 +30,7 @@ enum moduleconfigstate
 
 class cModeModuleConfigData;
 
-const QString defaultXSDFile = "://src/modemodule.xsd";
+const QString defaultXSDFile = "://modemodule.xsd";
 
 // modemoduleconfiguration holds configuration data as well as parameter
 
