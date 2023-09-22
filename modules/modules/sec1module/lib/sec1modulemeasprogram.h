@@ -268,18 +268,18 @@ private:
     double m_dutConstantScalingMem = 1;
 
     // vars dealing with error measurement
-    bool m_bFirstMeas;
-    bool m_bMeasurementRunning = false;
     QTimer m_ActualizeTimer; // after timed out we actualize progressvalue
-    double m_fResult; // error value in %
-    ECALCRESULT::enResultTypes m_eRating;
-    quint32 m_nDUTPulseCounterStart;
-    quint32 m_nDUTPulseCounterActual;
-    quint32 m_nEnergyCounterFinal;
-    quint32 m_nEnergyCounterActual;
-    double m_fProgress; // progress value in %
-    double m_fEnergy;
-    quint32 m_nIntReg;
+    bool m_bFirstMeas = true;
+    bool m_bMeasurementRunning = false;
+    double m_fResult = 0.0; // error value in %
+    ECALCRESULT::enResultTypes m_eRating = ECALCRESULT::RESULT_PASSED;
+    quint32 m_nDUTPulseCounterStart = 0;
+    quint32 m_nDUTPulseCounterActual = 0;
+    quint32 m_nEnergyCounterFinal = 0;
+    quint32 m_nEnergyCounterActual = 0;
+    double m_fProgress = 0.0; // progress value in %
+    double m_fEnergy = 0.0;
+    quint32 m_nIntReg = 0;
 
     // Some decisions - we have enough of configration params around
     static constexpr quint32 m_nMulMeasStoredMax = 400;
