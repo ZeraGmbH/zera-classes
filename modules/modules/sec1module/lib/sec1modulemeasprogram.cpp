@@ -764,8 +764,18 @@ double cSec1ModuleMeasProgram::calculateDutConstant()
     if(dutConst > m_dutConstValidator->getMaxValue())
         dutConst = m_dutConstValidator->getMaxValue();
 
-    int precision = ceil(log10(1/m_dutConstValidator->getDelta()));
+    int precision;
+    if(m_sDutConstantUnit.contains(QString("/I")))
+        precision = 2;
+    else
+        precision = 1;
+
+    dutConst = QString::number(dutConst, 'g', 3).toDouble();
     dutConst = QString::number(dutConst, 'f', precision).toDouble();
+    //m_dutConstValidator->getMinValue() is 1e-6, which is not realistic meter constant
+    //@todo revise 'm_dutConstValidator->getMinValue()' to 0.01, may be?
+    if(dutConst == 0)
+        dutConst = 0.01;
 
     return dutConst;
 }
