@@ -26,8 +26,10 @@ QString SecMeasInputDictionary::getResource(QString inputName) const
 
 QString SecMeasInputDictionary::getAlias(QString inputName) const
 {
-    Q_ASSERT(m_aliasHash.contains(inputName));
-    return m_aliasHash[inputName];
+    if(m_aliasHash.contains(inputName))
+        return m_aliasHash[inputName];
+    qWarning("Alias for input name %s not found", qPrintable(inputName));
+    return QString("P");
 }
 
 QString SecMeasInputDictionary::getInputNameFromDisplayedName(QString displayName) const

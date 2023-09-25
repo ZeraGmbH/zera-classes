@@ -1,73 +1,3 @@
-get_directory_property( DirDefs DIRECTORY ${CMAKE_SOURCE_DIR} COMPILE_DEFINITIONS )
-foreach( d ${DirDefs} )
-    message( STATUS "Found Define: " ${d} )
-endforeach()
-
-set(SOURCES
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/modulemanager.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/moduleeventhandler.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/jsonsessionloader.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/licensesystem.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/customerdatasystem.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/priorityarbitrationsystem.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/zeradblogger.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/jsonloggercontentloader.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/modulemanagerconfig.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/diriteratorworker.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/jsonloggercontentsessionloader.cpp
-    )
-
-file(GLOB HEADER
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/*.h
-    )
-
-file(GLOB RESOURCES 
-    ${CMAKE_CURRENT_SOURCE_DIR}/*.qrc
-    )
-
-add_library(zera-modulemanager-lib STATIC
-    ${SOURCES}
-    ${HEADER}
-    )
-
-target_include_directories(zera-modulemanager-lib
-    PUBLIC
-    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
-    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src>
-    )
-
-target_link_libraries(zera-modulemanager-lib
-    PUBLIC
-    Qt5::Core
-    Qt5::Network
-    Qt5::Concurrent
-    Zera::VfEvent
-    Zera::VfComponent
-    Zera::VfStorageHash
-    Zera::VfNet2
-    Zera::VfTcp
-    Zera::VfQml
-    Zera::VfCpp
-    Zera::ModmanBase
-    Zera::VfCryptoBridge
-    VeinMeta::VfScript
-    VeinMeta::VfLogger
-    VeinMeta::VfExport
-    VeinMeta::VfFiles
-    module-qt-plugin-interface
-    zera-json-params
-    )
-
-add_executable(zera-modulemanager
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/main.cpp
-    ${RESOURCES}
-    )
-
-target_link_libraries(zera-modulemanager
-    PRIVATE
-    zera-modulemanager-lib
-)
-
 file(GLOB SESSION_FILES
     ${CMAKE_CURRENT_SOURCE_DIR}/sessions/*.json
 )
@@ -121,19 +51,6 @@ add_custom_target(zera-modulemanager-config ALL
     COMMAND ${JSONLINT} ${CONFIG_FILES}
     )
 
-target_include_directories(zera-modulemanager
-    PUBLIC
-    $<BUILD_INTERFACE:${MY_LIBRARY_SOURCE_DIR}/include>
-    $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/zera-modulemanager>
-    PRIVATE
-    ${CMAKE_CURRENT_SOURCE_DIR}
-    )
-
-install(TARGETS zera-modulemanager
-    EXPORT zera-modulemanagerExport
-    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
-    )
-
 install(
     FILES ${SESSION_FILES}
     DESTINATION ${SET_MODMAN_SESSION_PATH}
@@ -150,6 +67,9 @@ install(
     )
 
 enable_testing()
+add_subdirectory(app)
+add_subdirectory(lib)
 add_subdirectory(tests)
+add_subdirectory(testlib)
 
 feature_summary(WHAT ALL FATAL_ON_MISSING_REQUIRED_PACKAGES)

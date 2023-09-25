@@ -97,7 +97,7 @@ class cIEEE4882: public QObject
     Q_OBJECT
 
 public:
-    cIEEE4882(cSCPIClient* client, QString ident, quint16 errorqueuelen);
+    cIEEE4882(cSCPIClient* client, QString deviceFamilyFromConfig, quint16 errorqueuelen);
 
     void executeCmd(cSCPIClient* client, int cmdCode, const QString &sInput);
 
@@ -117,7 +117,7 @@ private:
 
     QVector<int> m_ErrEventQueue;
 
-    void setIdentification(QString ident); // ident: default from <device>-scpimodule.xml
+    void setIdentification(QString deviceFamilyFromConfig);
     QString RegOutput(quint8 reg);
     QString mGetScpiError();
 

@@ -1,0 +1,56 @@
+<?xml version="1.0"?>
+<sec1modconfpar>
+    <configuration>
+        <connectivity>
+            <ethernet>
+                <resourcemanager>
+                    <ip>127.0.0.1</ip>
+                    <port>6312</port>
+                </resourcemanager>
+                <pcbserver>
+                    <ip>127.0.0.1</ip>
+                    <port>6307</port>
+                </pcbserver>
+                <secserver>
+                    <ip>127.0.0.1</ip>
+                    <port>6305</port>
+                </secserver>
+            </ethernet>
+        </connectivity>
+        <measure>
+            <dutinput>
+                <n>2</n>
+                <inp1>sh0</inp1>
+                <inp2>hk0</inp2>
+            </dutinput>
+            <refinput>
+                <n>3</n>
+                <inp1>fo0</inp1>
+                <inp2>fo1</inp2>
+                <inp3>fo2</inp3>
+            </refinput>
+            <refinput_appends>
+                <append1> 1</append1>
+                <append2> 2</append2>
+                <append3> 3</append3>
+            </refinput_appends>
+        </measure>
+    </configuration>
+    <parameter>
+        <measure>
+            <dutinput>sh0</dutinput>
+            <refinput>fo0</refinput>
+            <mode>mrate</mode>
+            <dutconstant>10000</dutconstant>
+            <dutconstantunit>none</dutconstantunit>
+            <refconstant>5e+08</refconstant>
+            <target>500000</target>
+            <energy>0.001</energy>
+            <mrate>10</mrate>
+            <continous>0</continous>
+            <upperlimit>10.0</upperlimit>
+            <lowerlimit>-10.0</lowerlimit>
+            <resultunit>%</resultunit>
+        </measure>
+    </parameter>
+</sec1modconfpar>

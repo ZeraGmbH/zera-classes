@@ -43,7 +43,7 @@ cSCPIClient::cSCPIClient(cSCPIModule* module, cSCPIModuleConfigData &configdata,
     scpiOperMeasStatus = new cSCPIStatus(OperationMeasureSummary);
     m_SCPIStatusList.append(scpiOperMeasStatus);
 
-    m_pIEEE4882 = new cIEEE4882(this, m_ConfigData.m_sDeviceIdentification, 50);
+    m_pIEEE4882 = new cIEEE4882(this, m_ConfigData.m_sDeviceName, 50);
 
     // we connect the cascaded scpi operation status systems
     connect(scpiOperMeasStatus, &cSCPIStatus::event, scpiOperStatus, &cSCPIStatus::SetConditionBit);

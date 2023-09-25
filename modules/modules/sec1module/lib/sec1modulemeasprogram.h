@@ -8,6 +8,7 @@
 #include "secmeasinputdictionary.h"
 #include "secresourcetypelist.h"
 #include "secrefconstantobserver.h"
+#include <doublevalidator.h>
 #include <stringvalidator.h>
 #include <basemeasprogram.h>
 #include <QDateTime>
@@ -109,6 +110,7 @@ private slots:
     // vein change handlers
     void newStartStop(QVariant startstop);
     void newDutConstant(QVariant dutconst);
+    void newDutConstantAuto(QVariant dutConstAuto);
     void newDutConstantScale(QVariant uINumDenomValue, const QString componentName);
     void newDutConstantUnit(QVariant dutconstunit);
     void newRefConstant(QVariant refconst);
@@ -147,6 +149,8 @@ private:
     void actualizeRefConstant();
     quint32 getStatus();
     void setStatus(quint32 status);
+
+    double calculateDutConstant();
 
     cSec1Module* m_pModule; // the module we live in
     Zera::cSECInterface* m_pSECInterface;
@@ -227,6 +231,7 @@ private:
     VfModuleParameter* m_pRefInputPar;
     VfModuleParameter* m_pRefConstantPar;
     VfModuleParameter* m_pDutConstantPar;
+    VfModuleParameter* m_pDutConstantAuto;
     VfModuleParameter* m_pDutConstantUScaleDenom;
     VfModuleParameter* m_pDutConstantUScaleNum;
     VfModuleParameter* m_pDutConstantIScaleDenom;
@@ -263,18 +268,18 @@ private:
     double m_dutConstantScalingMem = 1;
 
     // vars dealing with error measurement
-    bool m_bFirstMeas;
-    bool m_bMeasurementRunning = false;
     QTimer m_ActualizeTimer; // after timed out we actualize progressvalue
-    double m_fResult; // error value in %
-    ECALCRESULT::enResultTypes m_eRating;
-    quint32 m_nDUTPulseCounterStart;
-    quint32 m_nDUTPulseCounterActual;
-    quint32 m_nEnergyCounterFinal;
-    quint32 m_nEnergyCounterActual;
-    double m_fProgress; // progress value in %
-    double m_fEnergy;
-    quint32 m_nIntReg;
+    bool m_bFirstMeas = true;
+    bool m_bMeasurementRunning = false;
+    double m_fResult = 0.0; // error value in %
+    ECALCRESULT::enResultTypes m_eRating = ECALCRESULT::RESULT_PASSED;
+    quint32 m_nDUTPulseCounterStart = 0;
+    quint32 m_nDUTPulseCounterActual = 0;
+    quint32 m_nEnergyCounterFinal = 0;
+    quint32 m_nEnergyCounterActual = 0;
+    double m_fProgress = 0.0; // progress value in %
+    double m_fEnergy = 0.0;
+    quint32 m_nIntReg = 0;
 
     // Some decisions - we have enough of configration params around
     static constexpr quint32 m_nMulMeasStoredMax = 400;
@@ -288,6 +293,7 @@ private:
     QDateTime m_WaitStartDateTime;
 
     MultipleResultHelper m_multipleResultHelper;
+    cDoubleValidator *m_dutConstValidator;
 };
 }
 

@@ -49,7 +49,6 @@ void cSCPIModuleConfiguration::validateAndSetConfig(QByteArray xmlString, QStrin
     m_ConfigXMLMap["scpimodconfpar:configuration:connectivity:serialdevice:device"] = setSerialDevice;
 
     m_ConfigXMLMap["scpimodconfpar:configuration:connectivity:device:name"] = setDeviceName;
-    m_ConfigXMLMap["scpimodconfpar:configuration:connectivity:device:identification"] = setDeviceIdentification;
 
     m_ConfigXMLMap["scpimodconfpar:configuration:connectivity:status:questionable:n"] = setQuestionableStatusBitCount;
     m_ConfigXMLMap["scpimodconfpar:configuration:connectivity:status:operation:n"] = setOperationStatusBitCount;

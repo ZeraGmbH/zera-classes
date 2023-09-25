@@ -14,8 +14,8 @@
 namespace SCPIMODULE
 {
 
-cSCPIMeasure::cSCPIMeasure(QMultiHash<QString, cSCPIMeasure*> *scpiMeasureHash, cSCPICmdInfo *scpicmdinfo, QObject *t_parent) :
-    QObject(t_parent),
+cSCPIMeasure::cSCPIMeasure(QMultiHash<QString, cSCPIMeasure*> *scpiMeasureHash, cSCPICmdInfo *scpicmdinfo, QObject *parent) :
+    QObject(parent),
     m_scpiMeasureHash(scpiMeasureHash),
     m_pSCPICmdInfo(scpicmdinfo)
 {
@@ -23,8 +23,8 @@ cSCPIMeasure::cSCPIMeasure(QMultiHash<QString, cSCPIMeasure*> *scpiMeasureHash, 
 }
 
 
-cSCPIMeasure::cSCPIMeasure(const cSCPIMeasure &obj, QObject *t_parent)
-  : QObject(t_parent)
+cSCPIMeasure::cSCPIMeasure(const cSCPIMeasure &obj, QObject *parent)
+  : QObject(parent)
 {
     m_scpiMeasureHash = obj.m_scpiMeasureHash;
     m_pSCPICmdInfo = new cSCPICmdInfo(*obj.m_pSCPICmdInfo);

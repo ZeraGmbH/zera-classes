@@ -99,8 +99,7 @@ void cSampleChannel::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant 
     case sendsamplechannelrmident:
         if (reply == ack) // we only continue if resource manager acknowledges
             emit activationContinue();
-        else
-        {
+        else {
             emit errMsg(tr(rmidentErrMSG));
             emit activationError();
         }
@@ -108,8 +107,7 @@ void cSampleChannel::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant 
     case readresourcetypessamplechannel:
         if ((reply == ack) && (answer.toString().contains("SAMPLE")))
             emit activationContinue();
-        else
-        {
+        else {
             emit errMsg((tr(resourcetypeErrMsg)));
             emit activationError();
         }
@@ -117,8 +115,7 @@ void cSampleChannel::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant 
     case readresourcesamplechannel:
         if ((reply == ack) && (answer.toString().contains(m_sName)))
             emit activationContinue();
-        else
-        {
+        else {
             emit errMsg((tr(resourceErrMsg)));
             emit activationError();
         }
@@ -126,44 +123,31 @@ void cSampleChannel::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant 
     case readresourceinfosamplechannel:
     {
         bool ok1, ok2, ok3;
-        int max, free;
-        QStringList sl;
-
-
-        sl = answer.toString().split(';');
-        if ((reply ==ack) && (sl.length() >= 4))
-        {
-            max = sl.at(0).toInt(&ok1); // fixed position
-            free = sl.at(1).toInt(&ok2);
+        QStringList sl = answer.toString().split(';');
+        if ((reply ==ack) && (sl.length() >= 4)) {
+            int max = sl.at(0).toInt(&ok1); // fixed position
+            int free = sl.at(1).toInt(&ok2);
             m_sDescription = sl.at(2);
             m_nPort = sl.at(3).toInt(&ok3);
 
             if (ok1 && ok2 && ok3 && ((max == free) == 1))
-            {
                 emit activationContinue();
-            }
-
-            else
-            {
+            else {
                 emit errMsg((tr(resourceInfoErrMsg)));
                 emit activationError();
             }
         }
-
-        else
-        {
+        else {
             emit errMsg((tr(resourceInfoErrMsg)));
             emit activationError();
         }
-
         break;
 
     }
     case claimresource:
         if (reply == ack)
             emit activationContinue();
-        else
-        {
+        else {
             emit errMsg((tr(claimresourceErrMsg)));
             emit activationError();
         }
@@ -171,32 +155,27 @@ void cSampleChannel::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant 
     case freeresource:
         if (reply == ack || reply == nack) // we accept nack here also
             emit deactivationContinue(); // maybe that resource was deleted by server and then it is no more set
-        else
-        {
+        else {
             emit errMsg((tr(freeresourceErrMsg)));
             emit deactivationError();
         }
         break;
     case readchnaliassamplechannel:
-        if (reply == ack)
-        {
+        if (reply == ack) {
             m_sAlias = answer.toString();
             emit activationContinue();
         }
-        else
-        {
+        else {
             emit errMsg((tr(readaliasErrMsg)));
             emit activationError();
         }
         break;
     case readrangelistsamplechannel:
-        if (reply == ack)
-        {
+        if (reply == ack) {
             m_RangeNameList = answer.toStringList();
             emit activationContinue();
         }
-        else
-        {
+        else {
             emit errMsg((tr(readrangelistErrMsg)));
             emit activationError();
         }
@@ -204,8 +183,7 @@ void cSampleChannel::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant 
     case setsamplechannelrange:
         if (reply == ack)
             m_sActRange = m_sNewRange;
-        else
-        {
+        else {
             emit errMsg((tr(setRangeErrMsg)));
             emit executionError();
         }; // perhaps some error output
@@ -216,9 +194,7 @@ void cSampleChannel::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant 
 
 void cSampleChannel::setRangeValidator()
 {
-    cStringValidator *sValidator;
-
-    sValidator = new cStringValidator(m_RangeNameList);
+    cStringValidator *sValidator = new cStringValidator(m_RangeNameList);
     m_pChannelRange->setValidator(sValidator);
 }
 

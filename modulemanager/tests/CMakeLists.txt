@@ -41,6 +41,7 @@ add_custom_target(json-test-session ALL
     )
 
 add_definitions(-DJSON_TEST_DIR="${CMAKE_CURRENT_SOURCE_DIR}/json-test-files")
+add_definitions(-DOE_INSTALL_ROOT="${OE_INSTALL_ROOT}")
 
 function(SETUP_TESTS)
     foreach(_testname ${ARGN})
@@ -59,6 +60,7 @@ function(SETUP_TESTS)
             PUBLIC
             testhelpers
             zera-modulemanager-lib
+            zera-modulemanager-testlib
             )
     endforeach()
 endfunction()
@@ -67,4 +69,6 @@ SETUP_TESTS(
     test_jsonloggercontentloader
     test_jsonconfigfiles
     test_loggercontentsessionloader
+    test_modman_config
+    test_modman_session
     )

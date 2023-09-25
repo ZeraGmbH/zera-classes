@@ -87,12 +87,12 @@
       },
       {
         "name" : "sec1module",
-        "configFile" : "com5003-sec1module.xml",
+        "configFile" : "com5003-sec1module-perphase.xml",
         "id": 1130
       },
       {
         "name" : "sec1module",
-        "configFile" : "com5003-sec1module2.xml",
+        "configFile" : "com5003-sec1module-perphase-energy-comparison.xml",
         "id": 1131
       },
       {
@@ -107,12 +107,11 @@
       },
       {
         "name" : "sem1module",
-        "configFile" : "com5003-sem1module.xml",
+        "configFile" : "com5003-sem1module-perphase.xml",
         "id": 1200
       },
       {
         "name" : "sourcemodule",
-        "configFile" : "sourcemodule.xml",
         "id": 1300
       },
       {

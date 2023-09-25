@@ -1,6 +1,7 @@
 #ifndef SCPIINTERFACE_H
 #define SCPIINTERFACE_H
 
+#include "scpi.h"
 #include <QObject>
 #include <QString>
 #include <QList>
@@ -39,6 +40,10 @@ private:
     void checkAllCmds();
     void waitForBlockingCmd(cSCPIClient *client);
 
+    void checkAmbiguousShortNames();
+
+private:
+    static ScpiAmbiguityMap ignoreAmbiguous(ScpiAmbiguityMap inMap);
     QString m_sName;
     cSCPI* m_pSCPICmdInterface;
     QQueue<cmdInfos> m_scpiCmdInExec;

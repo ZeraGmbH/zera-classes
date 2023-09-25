@@ -21,6 +21,11 @@
         "id": 1050
       },
       {
+        "name" : "fftmodule",
+        "configFile" : "mt310s2-fftmodule.xml",
+        "id": 1060
+      },
+      {
         "name" : "power1module",
         "configFile" : "mt310s2-power1module.xml",
         "id": 1070
@@ -39,6 +44,11 @@
         "name" : "power1module",
         "configFile" : "mt310s2-power1module4.xml",
         "id": 1073
+      },
+      {
+        "name" : "power3module",
+        "configFile" : "mt310s2-power3module.xml",
+        "id": 1100
       },
       {
         "name" : "thdnmodule",
@@ -62,13 +72,7 @@
       },
       {
         "name" : "sourcemodule",
-        "configFile" : "sourcemodule.xml",
         "id": 1300
-      },
-      {
-        "name" : "elburdenmodule",
-        "configFile" : "demo-electronicburdenmodule.xml",
-        "id": 1400
       },
       {
         "name" : "scpimodule",

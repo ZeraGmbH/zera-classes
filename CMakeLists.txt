@@ -38,33 +38,73 @@ if(${JSONLINT} MATCHES ".*echo.*")
     message(WARNING "Program jsonlint-php not found. On Fedora install php-jsonlint")
 endif()
 
-pkg_check_modules(XERCES xerces-c REQUIRED)
-
-set(SET_ZC_CONFIG_PATH "${CMAKE_INSTALL_SYSCONFDIR}/zera/modules/")
-add_definitions(-DZC_CONFIG_PATH="${SET_ZC_CONFIG_PATH}")
 
 set(ZC_SERVICES_IP "" CACHE STRING "Services IP address - change to machine's address for debugging")
 
-set(SET_ZC_DEV_STATE_PATH "${CMAKE_INSTALL_SYSCONFDIR}/zera/states")
-add_definitions(-DZC_DEV_STATE_PATH="${SET_ZC_DEV_STATE_PATH}")
-
+set(OE_INSTALL_ROOT "" CACHE STRING "OE build install root - add 'add_definitions' only on test code")
+set(OPERATOR_HOME "/home/operator" CACHE FILEPATH "Operator home path")
 set(SET_MODMAN_SESSION_PATH "${CMAKE_INSTALL_SYSCONFDIR}/zera/modules/sessions/")
 set(SET_MODMAN_CONFIG_PATH  "${CMAKE_INSTALL_SYSCONFDIR}/zera/modules/")
-set(SET_MODMAN_MODULE_PATH "${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_LIBDIR}/zera-modules/")
 set(SET_MODMAN_CONTENTSET_PATH "${CMAKE_INSTALL_SYSCONFDIR}/zera/logger-contentsets/")
-set(SET_MODMAN_CUSTOMERDATA_PATH "/home/operator/customerdata/" CACHE STRING "Customer data path")
 set(SET_MODMAN_AUTOMOUNT_PATH "/media/" CACHE STRING "Automount path")
-set(SET_MODMAN_LOGGER_LOCAL_PATH "/home/operator/logger" CACHE STRING "Logger local storage path")
 set(SET_MODMAN_DEFAULT_SESSION "modulemanager_config.json" CACHE STRING "Default session")
+set(SET_MODMAN_TEST_SESSION "modulemanager_config_dev.json")
 
+add_definitions(-DOPERATOR_HOME="${OPERATOR_HOME}")
 add_definitions(-DMODMAN_SESSION_PATH="${SET_MODMAN_SESSION_PATH}")
+add_definitions(-DMODMAN_DEFAULT_SESSION="${SET_MODMAN_DEFAULT_SESSION}")
+add_definitions(-DMODMAN_TEST_SESSION="${SET_MODMAN_TEST_SESSION}")
 add_definitions(-DMODMAN_CONFIG_PATH="${SET_MODMAN_CONFIG_PATH}")
-add_definitions(-DMODMAN_CONFIG_FILE="${SET_MODMAN_CONFIG_PATH}/${SET_MODMAN_DEFAULT_SESSION}")
-add_definitions(-DMODMAN_MODULE_PATH="${SET_MODMAN_MODULE_PATH}")
-add_definitions(-DMODMAN_CUSTOMERDATA_PATH="${SET_MODMAN_CUSTOMERDATA_PATH}")
+add_definitions(-DMODMAN_MODULE_PATH="${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_LIBDIR}/zera-modules/")
+add_definitions(-DMODMAN_CUSTOMERDATA_PATH="${OPERATOR_HOME}/customerdata/")
 add_definitions(-DMODMAN_CONTENTSET_PATH="${SET_MODMAN_CONTENTSET_PATH}")
 add_definitions(-DMODMAN_AUTOMOUNT_PATH="${SET_MODMAN_AUTOMOUNT_PATH}")
-add_definitions(-DMODMAN_LOGGER_LOCAL_PATH="${SET_MODMAN_LOGGER_LOCAL_PATH}")
+add_definitions(-DMODMAN_LOGGER_LOCAL_PATH="${OPERATOR_HOME}/logger")
+add_definitions(-DZC_DEV_STATE_PATH="${CMAKE_INSTALL_SYSCONFDIR}/zera/states")
+
+macro(SET_MODULE_ENV MODULE_NAME)
+    string(TOUPPER ${MODULE_NAME} MODULE_NAME_UPPER)
+    set(MODULE_CONFIG_PATH "${CMAKE_CURRENT_SOURCE_DIR}/modules/modules/${MODULE_NAME}/configs")
+    set(MODULE_PLUGIN_BUILD_PATH "${MODULE_PLUGIN_BUILD_PATH} ${CMAKE_CURRENT_BINARY_DIR}/modules/modules/${MODULE_NAME}/module")
+
+    # Pass source paths to configs for tests. This is module-global to allow e.g
+    # scpimodule running tests with other modules
+    add_compile_definitions(CONFIG_SOURCES_${MODULE_NAME_UPPER}="${MODULE_CONFIG_PATH}")
+
+    # xml-schema resources are required by modules and tests. If we put resource into
+    # our library both would need some call of Q_INIT_RESOURCE. So publish resource
+    # location and compile in where needed.
+    set(XML_SCHEMA_RESOURCE_${MODULE_NAME_UPPER} ${MODULE_CONFIG_PATH}/xml-schema.qrc)
+endmacro()
+
+# Notes
+# * SET_MODULE_ENV !MUST! be set before add_subdirectory
+# * Modules not added here don't support common module folder layout (yet)
+SET_MODULE_ENV(adjustmentmodule)
+SET_MODULE_ENV(burden1module)
+SET_MODULE_ENV(dftmodule)
+SET_MODULE_ENV(efficiency1module)
+SET_MODULE_ENV(fftmodule)
+SET_MODULE_ENV(lambdamodule)
+SET_MODULE_ENV(modemodule)
+SET_MODULE_ENV(oscimodule)
+SET_MODULE_ENV(power1module)
+SET_MODULE_ENV(power2module)
+SET_MODULE_ENV(power3module)
+SET_MODULE_ENV(rangemodule)
+SET_MODULE_ENV(referencemodule)
+SET_MODULE_ENV(rmsmodule)
+SET_MODULE_ENV(samplemodule)
+SET_MODULE_ENV(scpimodule)
+SET_MODULE_ENV(sec1module)
+SET_MODULE_ENV(sem1module)
+SET_MODULE_ENV(sourcemodule)
+SET_MODULE_ENV(spm1module)
+SET_MODULE_ENV(statusmodule)
+SET_MODULE_ENV(thdnmodule)
+SET_MODULE_ENV(transformer1module)
+
+add_compile_definitions(MODULE_PLUGIN_BUILD_PATH="${MODULE_PLUGIN_BUILD_PATH}")
 
 enable_testing()
 # Inspired by
@@ -85,7 +125,6 @@ function(SETUP_QTESTS)
             Zera::zera-i2c-devices-testlib
             service-interfaces-testlib
             module-tasks-testlib
-            source-module-testhelpers
             zera-meas-mode-management-testlib
             Zera::VfStorageHash
             )

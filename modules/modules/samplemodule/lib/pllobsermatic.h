@@ -32,10 +32,22 @@ public:
 public slots:
     virtual void ActionHandler(QVector<float>* actualValues); // entry after received actual values
     void catchChannelReply(quint32 msgnr);
+private slots:
+    void getPllMeasChannels();
+    void activationDone();
+
+    void deactivationInit();
+    void deactivationDone();
+
+    void newPllChannel(QVariant channel);
+    void newPllAuto(QVariant pllauto);
 private:
+    void pllAutomatic();
+    void setPllChannelValidator();
+    void sendPllChannel(QString channelRequested);
+
     cSampleModule *m_pModule;
     cSampleModuleConfigData& m_ConfPar;
-    QString m_sActPllChannel;
     QString m_sNewPllChannel;
     QVector<float> m_ActualValues; // here we find the actual values
 
@@ -57,21 +69,7 @@ private:
     // statemachine for deactivating
     QState m_deactivationInitState;
     QFinalState m_deactivationDoneState;
-
-    bool m_bPllAutomatic;
-    void pllAutomatic();
-
-    void setPllChannelValidator();
-
-private slots:
-    void getPllMeasChannels();
-    void activationDone();
-
-    void deactivationInit();
-    void deactivationDone();
-
-    void newPllChannel(QVariant channel);
-    void newPllAuto(QVariant pllauto);
+    QString adjustToValidPllChannel(QVariant channel);
 };
 
 }

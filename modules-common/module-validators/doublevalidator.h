@@ -9,6 +9,9 @@ public:
     cDoubleValidator() { }
     cDoubleValidator(double min, double max, double delta);
     cDoubleValidator(const cDoubleValidator& ref);
+    double getMinValue();
+    double getMaxValue();
+    double getDelta();
     bool isValidParam(QVariant& newValue) override;
     void exportMetaData(QJsonObject& jsObj) override;
 private:

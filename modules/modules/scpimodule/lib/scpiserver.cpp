@@ -25,7 +25,6 @@
 #include "interfaceinterface.h"
 #include "statusinterface.h"
 #include "ieee4882interface.h"
-#include "scpicmdinfo.h"
 #include "scpimoduleconfigdata.h"
 #include <sysinfo.h>
 
@@ -222,8 +221,10 @@ void cSCPIServer::setupTCPServer()
 
 void cSCPIServer::activationDone()
 {
-    QString xml;
+    m_pSCPIInterface->checkAmbiguousShortNames();
+
     QMap<QString, QString> modelListBaseEntry({{"RELEASE", SysInfo::getReleaseNr()}});
+    QString xml;
     m_pSCPIInterface->exportSCPIModelXML(xml, modelListBaseEntry);
     m_veinDevIface->setValue(xml);
     m_optionalScpiQueue->setValue(m_ConfigData.m_enableScpiQueue.m_nActive);

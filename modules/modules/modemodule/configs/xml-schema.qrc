@@ -1,0 +1,5 @@
+<RCC>
+    <qresource prefix="/">
+        <file>modemodule.xsd</file>
+    </qresource>
+</RCC>

@@ -1,0 +1,5 @@
+<RCC>
+    <qresource prefix="/">
+        <file>efficiency1module.xsd</file>
+    </qresource>
+</RCC>

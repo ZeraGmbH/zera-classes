@@ -959,9 +959,10 @@ void cOsciModuleMeasProgram::dataReadDSP()
 void cOsciModuleMeasProgram::newRefChannel(QVariant chn)
 {
     getConfData()->m_RefChannel.m_sPar = chn.toString();
-    m_pDSPInterFace->setVarData(m_pParameterDSP, QString("REFCHN:%1;").arg(m_measChannelInfoHash.value(getConfData()->m_RefChannel.m_sPar).dspChannelNr));
-    m_MsgNrCmdList[m_pDSPInterFace->dspMemoryWrite(m_pParameterDSP)] = writeparameter;
-
+    if(!m_pModule->m_demo) {
+        m_pDSPInterFace->setVarData(m_pParameterDSP, QString("REFCHN:%1;").arg(m_measChannelInfoHash.value(getConfData()->m_RefChannel.m_sPar).dspChannelNr));
+        m_MsgNrCmdList[m_pDSPInterFace->dspMemoryWrite(m_pParameterDSP)] = writeparameter;
+    }
     emit m_pModule->parameterChanged();
 }
 
