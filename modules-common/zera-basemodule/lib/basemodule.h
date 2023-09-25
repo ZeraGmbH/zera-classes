@@ -118,7 +118,7 @@ protected:
 
     virtual void doConfiguration(QByteArray xmlString) = 0; // here we have to do our configuration
     virtual void setupModule(); // after xml configuration we can setup and export our module
-    virtual void unsetModule(); // in case of reconfiguration we must unset module first
+    void unsetModule(); // in case of reconfiguration we must unset module first
     virtual void startMeas() =  0;
     virtual void stopMeas() = 0;
 
