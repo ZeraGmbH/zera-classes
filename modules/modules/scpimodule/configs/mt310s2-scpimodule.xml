@@ -1,6 +1,7 @@
 <?xml version="1.0"?>
 <scpimodconfpar>
     <configuration>
+        <scpiqueue>0</scpiqueue>
         <connectivity>
             <debuglevel>0</debuglevel>
             <ethernet>
