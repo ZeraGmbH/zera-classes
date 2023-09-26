@@ -7,8 +7,7 @@ class test_scpi_queue : public QObject
 {
     Q_OBJECT
 private slots:
-    void sendStandardCmdsQueueEnabled();
-    void sendOneStandardCmdsQueueDisabledAndEnabled();
+    void sendStandardCmdsQueueDisabledAndEnabled();
     void sendErroneousAndCorrectStandardCmds();
 
     void sendSubSystemAndStandardCommands();
