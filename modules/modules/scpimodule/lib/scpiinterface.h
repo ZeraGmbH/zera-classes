@@ -34,6 +34,7 @@ public:
     void addSCPICommand(ScpiBaseDelegate* delegate);
     bool executeCmd(cSCPIClient* client, QString cmd);
     void checkAmbiguousShortNames();
+    bool m_enableScpiQueue;
 
 private:
     static ScpiAmbiguityMap ignoreAmbiguous(ScpiAmbiguityMap inMap);
