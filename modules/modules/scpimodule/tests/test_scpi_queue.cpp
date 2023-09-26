@@ -163,12 +163,12 @@ void test_scpi_queue::disableAndEnableQueueWhileExecutingCmds()
 
     disableQueuing(client.getScpiInterface());
     client.sendScpiCmds("MEASURE:RNG1:UL1?|MEASURE:RNG1:UL2?|MEASURE:RNG1:UL3?|MEASURE:RNG1:IL1?|MEASURE:RNG1:IL2?|MEASURE:RNG1:IL3?|*OPC?|*IDN?");
-    ModuleManagerForTest::feedEventLoop();
     TimeMachineForTest::getInstance()->processTimers(100);
-    QCOMPARE(responses.count(), 2);
+    QCOMPARE(responses.count(), 2); //the 2 last cmds are quick
 
     enableQueuing(client.getScpiInterface());
-    TimeMachineForTest::getInstance()->processTimers(2000);
-
+    TimeMachineForTest::getInstance()->processTimers(399);
+    QCOMPARE(responses.count(), 2);
+    TimeMachineForTest::getInstance()->processTimers(1);
     QCOMPARE(responses.count(), 8);
 }
