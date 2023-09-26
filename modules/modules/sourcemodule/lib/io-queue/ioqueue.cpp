@@ -75,8 +75,10 @@ IoTransferDataSingle::Ptr IoQueue::getNextIoTransfer()
             m_nextPosInCurrGroup++;
         }
         else {
-            finishCurrentGroup();
-            nextIo = getNextIoTransfer();
+            if(!m_pendingGroups.isEmpty()) {
+                finishCurrentGroup();
+                nextIo = getNextIoTransfer();
+            }
         }
     }
     return nextIo;
