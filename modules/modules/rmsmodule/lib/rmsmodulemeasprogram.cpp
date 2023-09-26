@@ -156,24 +156,27 @@ void cRmsModuleMeasProgram::generateInterface()
     VfModuleActvalue *pActvalue;
     int n,p;
     n = p = 0; //
+    QString description;
     for (int i = 0; i < getConfData()->m_valueChannelList.count(); i++)
     {
         QStringList sl = getConfData()->m_valueChannelList.at(i).split('-');
         // we have 1 or 2 entries for each value
         if (sl.count() == 1) // in this case we have phase,neutral value
         {
+            if(sl.contains("m0") || sl.contains("m1") || sl.contains("m2") || sl.contains("m6")) //voltage channels
+                description = QString("Actual rms value phase/neutral");
+            else //current channels
+                description = QString("Actual rms value");
             pActvalue = new VfModuleActvalue(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                                 QString("ACT_RMSPN%1").arg(n+1),
-                                                QString("Actual rms value phase/neutral"),
+                                                description,
                                                 QVariant(0.0) );
             m_veinActValueList.append(pActvalue); // we add the component for our measurement
             m_pModule->veinModuleActvalueList.append(pActvalue); // and for the modules interface
 
             n++;
         }
-
         else
-
         {
             pActvalue = new VfModuleActvalue(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                                 QString("ACT_RMSPP%1").arg(p+1),
