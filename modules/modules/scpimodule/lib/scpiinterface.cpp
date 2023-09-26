@@ -110,6 +110,11 @@ ScpiAmbiguityMap cSCPIInterface::ignoreAmbiguous(ScpiAmbiguityMap inMap)
 }
 
 
+void cSCPIInterface::setEnableQueue(bool enable)
+{
+    m_enableScpiQueue = enable;
+}
+
 void cSCPIInterface::removeCommand(cSCPIClient *client)
 {
     client->disconnect(this);
