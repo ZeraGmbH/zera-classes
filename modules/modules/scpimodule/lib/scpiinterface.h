@@ -34,7 +34,7 @@ public:
     void addSCPICommand(ScpiBaseDelegate* delegate);
     bool executeCmd(cSCPIClient* client, QString cmd);
     void checkAmbiguousShortNames();
-    bool m_enableScpiQueue;
+    void setEnableQueue(bool enable);
 
 private:
     static ScpiAmbiguityMap ignoreAmbiguous(ScpiAmbiguityMap inMap);
@@ -46,6 +46,7 @@ private:
     cSCPI* m_pSCPICmdInterface;
     QQueue<cmdInfos> m_scpiCmdInExec;
     TimerTemplateQtPtr m_expCmd;
+    bool m_enableScpiQueue;
 };
 }
 
