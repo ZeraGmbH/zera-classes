@@ -22,6 +22,7 @@ void ScpiTestClient::sendScpiCmds(QString cmds)
 void ScpiTestClient::receiveAnswer(QString answ)
 {
     emit sigScpiAnswer(answ);
+    emit commandAnswered(this);
 }
 
 void ScpiTestClient::cmdInput()

@@ -14,6 +14,10 @@ namespace SCPIMODULE
 class ScpiBaseDelegate;
 class cSCPIClient;
 
+struct cmdInfos {
+    QString cmd;
+    cSCPIClient* client;
+};
 
 class cSCPIInterface: public QObject
 {
@@ -31,10 +35,15 @@ public:
 
 private:
     static ScpiAmbiguityMap ignoreAmbiguous(ScpiAmbiguityMap inMap);
+    void removeCommand(cSCPIClient *client);
+    void waiForAnswer();
+    bool checkAllCmds();
     QString m_sName;
     cSCPI* m_pSCPICmdInterface;
-};
+    QList<cmdInfos> m_scpiCmdInExec;
+    QList<cmdInfos> m_scpiCmdsWaiting;
 
+};
 }
 
 

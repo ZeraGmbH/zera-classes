@@ -24,6 +24,7 @@ void cSCPIEthClient::receiveAnswer(QString answ)
 {
     QByteArray ba = answ.toUtf8() + "\n";
     m_pSocket->write(ba);
+    emit commandAnswered(this);
 }
 
 QString cSCPIEthClient::getPeerAddress()
