@@ -168,6 +168,7 @@ void SourceDeviceFacade::resetVeinComponents()
         setVeinDeviceState(QJsonObject());
         disconnect(m_veinInterface, &SourceVeinInterface::sigNewLoadParams,
                    this, &SourceDeviceFacade::switchLoad);
+        m_veinInterface = nullptr;
     }
 }
 
