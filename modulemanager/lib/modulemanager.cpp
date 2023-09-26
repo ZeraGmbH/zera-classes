@@ -271,23 +271,31 @@ void ModuleManager::setModulesPaused(bool t_paused)
 void ModuleManager::onStartModuleDelete()
 {
     VirtualModule *toDelete = qobject_cast<VirtualModule*>(QObject::sender());
-    if(toDelete)
-    {
+    if(toDelete) {
         ModuleData *tmpData = ModuleData::findByReference(m_moduleList, toDelete);
-        if(tmpData)
-        {
-            m_moduleList.removeAll(tmpData);
-            qDebug() << "Deleted module:" << tmpData->m_uniqueName;
+        if(tmpData) {
+            qInfo() << "Start delete module:" << tmpData->m_uniqueName;
             connect(toDelete, &VirtualModule::destroyed, this, &ModuleManager::checkModuleList);
             toDelete->deleteLater();
-            delete tmpData;
         }
         else
-        {
             qWarning() << "Could not find data for VirtualModule" << toDelete;
+    }
+}
+
+void ModuleManager::checkModuleList(QObject *object)
+{
+    VirtualModule *toDelete = static_cast<VirtualModule*>(object);
+    if(toDelete) {
+        ModuleData *tmpData = ModuleData::findByReference(m_moduleList, toDelete);
+        if(tmpData) {
+            qInfo() << "Deleted module:" << tmpData->m_uniqueName;
+            m_moduleList.removeAll(tmpData);
+            delete tmpData;
         }
     }
-    checkModuleList();
+    if(m_moduleList.isEmpty())
+        onModuleStartNext();
 }
 
 void ModuleManager::delayedModuleStartNext()
@@ -317,16 +325,6 @@ void ModuleManager::onModuleStartNext()
 void ModuleManager::onModuleError(const QString &t_error)
 {
     qWarning() << "Module error:" << t_error;
-}
-
-
-void ModuleManager::checkModuleList()
-{
-    if(m_moduleList.isEmpty())
-    {
-        //start modules that were unable to start while shutting down
-        onModuleStartNext();
-    }
 }
 
 void ModuleManager::onModuleEventSystemAdded(VeinEvent::EventSystem *t_eventSystem)
