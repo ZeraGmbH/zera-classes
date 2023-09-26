@@ -49,12 +49,11 @@ bool SourceDeviceFacade::close(QUuid uuid)
     if(!m_closeRequested && !closeRequested) {
         closeRequested = true;
         enableCloseRequested(uuid);
-        if(m_switcher.getCurrLoadState().getOn()) {
+        m_statePoller->stopPeriodicPoll();
+        if(m_switcher.getCurrLoadState().getOn())
             m_switcher.switchOff();
-        }
-        else {
+        else
             doFinalCloseActivities();
-        }
     }
     return closeRequested;
 }
