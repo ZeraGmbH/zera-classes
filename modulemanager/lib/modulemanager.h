@@ -50,7 +50,7 @@ public slots:
     void setModulesPaused(bool t_paused);
 
 private slots:
-    void onModuleDelete();
+    void onStartModuleDelete();
     void delayedModuleStartNext();
     void onModuleStartNext();
     void onModuleError(const QString &t_error);

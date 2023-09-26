@@ -170,7 +170,7 @@ void ModuleManager::startModule(const QString & uniqueModuleName, const QString 
             {
                 connect(tmpModule, &VirtualModule::addEventSystem, this, &ModuleManager::onModuleEventSystemAdded);
                 tmpModule->setConfiguration(t_xmlConfigData);
-                connect(tmpModule, SIGNAL(moduleDeactivated()), this, SLOT(onModuleDelete()));
+                connect(tmpModule, SIGNAL(moduleDeactivated()), this, SLOT(onStartModuleDelete()));
                 connect(tmpModule, &VirtualModule::moduleActivated, this, [this](){
                     m_moduleStartLock=false;
                     delayedModuleStartNext();
@@ -268,7 +268,7 @@ void ModuleManager::setModulesPaused(bool t_paused)
     }
 }
 
-void ModuleManager::onModuleDelete()
+void ModuleManager::onStartModuleDelete()
 {
     VirtualModule *toDelete = qobject_cast<VirtualModule*>(QObject::sender());
     if(toDelete)
