@@ -39,7 +39,7 @@ private:
     bool tryStartDemoDeviceRemove(int slotNo);
     void checkHandleAllClosed();
     QVector<SourceDeviceFacade::Ptr> m_sourceControllers;
-    int m_activeSlotCount = 0;
+    QVector<bool> m_activeSlots;
 };
 
 #endif // CSOURCEDEVICEMANAGER_H
