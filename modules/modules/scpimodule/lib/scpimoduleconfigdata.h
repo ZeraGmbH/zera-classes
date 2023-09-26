@@ -37,6 +37,7 @@ public:
     QList<cStatusBitDescriptor> m_OperationStatDescriptorList;
     QList<cStatusBitDescriptor> m_OperationMeasureStatDescriptorList;
     serialDevice m_SerialDevice;
+    bool m_enableScpiQueue;
 };
 
 }
