@@ -39,7 +39,6 @@ private:
     bool tryStartDemoDeviceRemove(int slotNo);
     void checkHandleAllClosed();
     QVector<SourceDeviceFacade::Ptr> m_sourceControllers;
-    QVector<QUuid> m_PendingRemoveHashes;
     int m_activeSlotCount = 0;
 };
 
