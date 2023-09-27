@@ -97,7 +97,7 @@
       },
       {
         "name" : "lambdamodule",
-        "configFile" : "com5003-lambdamodule-perphase.xml",
+        "configFile" : "lambdamodule-with-own-powermodules.xml",
         "id": 1140
       },
       {
