@@ -69,10 +69,110 @@
             "Comment": "RangeModule"
         }
     ],
-    "ZeraSourceControl": [
+    "ZeraComparison": [
         {
-            "EntityId": 1300,
-            "Comment": "SourceModule"
+            "EntityId": 1130,
+            "Comment": "SECModule"
+        },
+        {
+            "EntityId": 1131,
+            "Comment": "SECModule"
+        },
+        {
+            "EntityId": 1200,
+            "Comment": "SEMModule"
+        },
+        {
+            "EntityId": 1210,
+            "Comment": "SPMModule"
+        },
+        {
+            "EntityId": 1020,
+            "Comment": "RangeModule"
+        },
+        {
+            "EntityId": 1040,
+            "Comment": "RMSModule"
+        },
+        {
+            "EntityId": 1050,
+            "Comment": "DFTModule"
+        },
+        {
+            "EntityId": 1110,
+            "Comment": "THDNModule"
+        },
+        {
+            "EntityId": 1111,
+            "Comment": "THDNModule"
+        },
+        {
+            "EntityId": 1070,
+            "Comment": "PowerModule"
+        },
+        {
+            "EntityId": 1071,
+            "Comment": "PowerModule"
+        },
+        {
+            "EntityId": 1072,
+            "Comment": "PowerModule"
+        },
+        {
+            "EntityId": 1090,
+            "Comment": "PowerModule CED"
+        },
+        {
+            "EntityId": 1020,
+            "Comment": "RangeModule"
+        },
+        {
+            "EntityId": 1140,
+            "Comment": "LambdaModule"
+        }
+    ],
+    "ZeraBurden": [
+        {
+            "EntityId": 1040,
+            "Comment": "RMSModule"
+        },
+        {
+            "EntityId": 1160,
+            "Comment": "BurdenModule"
+        },
+        {
+            "EntityId": 1161,
+            "Comment": "BurdenModule"
+        },
+        {
+            "EntityId": 1020,
+            "Comment": "RangeModule"
+        },
+        {
+            "EntityId": 1070,
+            "Comment": "PowerModule"
+        },
+        {
+            "EntityId": 1071,
+            "Comment": "PowerModule"
+        },
+        {
+            "EntityId": 1072,
+            "Comment": "PowerModule"
+        },
+        {
+            "EntityId": 1050,
+            "Comment": "DFTModule"
+        }
+    ],
+    "ZeraTransformer": [
+        {
+            "EntityId": 1170,
+            "Comment": "TransformerModule"
+        },
+        {
+            "EntityId": 1020,
+            "Comment": "RangeModule"
         }
     ]
 }
