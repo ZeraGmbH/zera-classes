@@ -57,12 +57,12 @@
       },
       {
         "name" : "power1module",
-        "configFile" : "com5003-power1modulePerPhaseLambdaActive.xml",
+        "configFile" : "power1moduleAllPhaseLambdaActive.xml",
         "id": 1074
       },
       {
         "name" : "power1module",
-        "configFile" : "com5003-power1modulePerPhaseLambdaApparent.xml",
+        "configFile" : "power1moduleAllPhaseLambdaApparent.xml",
         "id": 1075
       },
       {
