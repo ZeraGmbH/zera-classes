@@ -37,6 +37,9 @@ void cLambdaModuleConfiguration::setConfiguration(QByteArray xmlString)
     // initializing hash table for xml configuration
 
     m_ConfigXMLMap["lambdamodconfpar:configuration:connectivity:debuglevel"] = setDebugLevel;
+    m_ConfigXMLMap["lambdamodconfpar:configuration:measure:ActivePMeasuringMode:avail"] = setActivePMeasuringModeAvail;
+    m_ConfigXMLMap["lambdamodconfpar:configuration:measure:ActivePMeasuringMode:inputentity"] = setActivePMeasuringModeEntity;
+    m_ConfigXMLMap["lambdamodconfpar:configuration:measure:ActivePMeasuringMode:component"] = setActivePMeasuringModeComponent;
     m_ConfigXMLMap["lambdamodconfpar:configuration:measure:system:n"] = setSystemCount;
 
     if (m_pXMLReader->loadSchema(defaultXSDFile))
@@ -70,6 +73,15 @@ void cLambdaModuleConfiguration::configXMLInfo(QString key)
         {
         case setDebugLevel:
             m_pLambdaModulConfigData->m_nDebugLevel = m_pXMLReader->getValue(key).toInt(&ok);
+            break;
+        case setActivePMeasuringModeAvail:
+            m_pLambdaModulConfigData->m_activeMeasModeAvail = (m_pXMLReader->getValue(key).toInt(&ok) == 1);
+            break;
+        case setActivePMeasuringModeEntity:
+            m_pLambdaModulConfigData->m_activeMeasModeEntity = m_pXMLReader->getValue(key).toInt(&ok);
+            break;
+        case setActivePMeasuringModeComponent:
+            m_pLambdaModulConfigData->m_activeMeasModeComponent = m_pXMLReader->getValue(key);
             break;
         case setSystemCount:
         {

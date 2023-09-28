@@ -29,6 +29,9 @@ public:
     int m_nModuleId;
     QList<lambdasystemconfiguration> m_lambdaSystemConfigList;
     QStringList m_lambdaChannelList;
+    bool m_activeMeasModeAvail;
+    quint16 m_activeMeasModeEntity;
+    QString m_activeMeasModeComponent;
 };
 
 }
