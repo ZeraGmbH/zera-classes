@@ -83,30 +83,48 @@ void cLambdaModuleMeasProgram::searchActualValues()
 {
     bool error = false;
     QList<VfModuleComponentInput*> inputList;
-    for (int i = 0; i < getConfData()->m_nLambdaSystemCount; i++) {
-        // we first test that wanted input components exist
-        if ( (m_pModule->m_pStorageSystem->hasStoredValue(getConfData()->m_lambdaSystemConfigList.at(i).m_nInputPEntity, getConfData()->m_lambdaSystemConfigList.at(i).m_sInputP)) &&
-             (m_pModule->m_pStorageSystem->hasStoredValue(getConfData()->m_lambdaSystemConfigList.at(i).m_nInputSEntity, getConfData()->m_lambdaSystemConfigList.at(i).m_sInputS)) ) {
-            cLambdaMeasDelegate* cLMD;
-            if (i == (getConfData()->m_nLambdaSystemCount-1)) {
-                cLMD = new cLambdaMeasDelegate(m_veinActValueList.at(i), true);
-                connect(cLMD, &cLambdaMeasDelegate::measuring, this, &cLambdaModuleMeasProgram::setMeasureSignal);
-            }
-            else
-                cLMD = new cLambdaMeasDelegate(m_veinActValueList.at(i));
-            m_LambdaMeasDelegateList.append(cLMD);
+    VfModuleComponentInput *vmci;
 
-            VfModuleComponentInput *vmci = new VfModuleComponentInput(getConfData()->m_lambdaSystemConfigList.at(i).m_nInputPEntity, getConfData()->m_lambdaSystemConfigList.at(i).m_sInputP);
-            inputList.append(vmci);
-            connect(vmci, &VfModuleComponentInput::sigValueChanged, cLMD, &cLambdaMeasDelegate::actValueInput1);
-
-            vmci = new VfModuleComponentInput(getConfData()->m_lambdaSystemConfigList.at(i).m_nInputSEntity, getConfData()->m_lambdaSystemConfigList.at(i).m_sInputS);
-            inputList.append(vmci);
-            connect(vmci, &VfModuleComponentInput::sigValueChanged, cLMD, &cLambdaMeasDelegate::actValueInput2);
-        }
-        else
+    if (getConfData()->m_activeMeasModeAvail) {
+        if (!m_pModule->m_pStorageSystem->hasStoredValue(getConfData()->m_activeMeasModeEntity, getConfData()->m_activeMeasModeComponent))
             error = true;
     }
+
+    if (!error) {
+        for (int i = 0; i < getConfData()->m_nLambdaSystemCount; i++) {
+            // we first test that wanted input components exist
+            if ( (m_pModule->m_pStorageSystem->hasStoredValue(getConfData()->m_lambdaSystemConfigList.at(i).m_nInputPEntity, getConfData()->m_lambdaSystemConfigList.at(i).m_sInputP)) &&
+                 (m_pModule->m_pStorageSystem->hasStoredValue(getConfData()->m_lambdaSystemConfigList.at(i).m_nInputSEntity, getConfData()->m_lambdaSystemConfigList.at(i).m_sInputS)) ) {
+                cLambdaMeasDelegate* cLMD;
+                if (i == (getConfData()->m_nLambdaSystemCount-1)) {
+                    cLMD = new cLambdaMeasDelegate(m_veinActValueList.at(i), true);
+                    connect(cLMD, &cLambdaMeasDelegate::measuring, this, &cLambdaModuleMeasProgram::setMeasureSignal);
+                }
+                else {
+                    cLMD = new cLambdaMeasDelegate(m_veinActValueList.at(i));
+                    if (getConfData()->m_activeMeasModeAvail) {
+                        // If this config is enabled and the measurement mode is 3LW, lambda for individual phases are set to 'nan' and LAMBDA4 (PS/SS) is still valid.
+                        // The following connection, takes care of making lambda 'nan' for three phases. The sum is not changed.
+                        vmci = new VfModuleComponentInput(getConfData()->m_activeMeasModeEntity, getConfData()->m_activeMeasModeComponent);
+                        inputList.append(vmci);
+                        connect(vmci, &VfModuleComponentInput::sigValueChanged, cLMD, &cLambdaMeasDelegate::actValueActivePowerMeasMode);
+                    }
+                }
+                m_LambdaMeasDelegateList.append(cLMD);
+
+                vmci = new VfModuleComponentInput(getConfData()->m_lambdaSystemConfigList.at(i).m_nInputPEntity, getConfData()->m_lambdaSystemConfigList.at(i).m_sInputP);
+                inputList.append(vmci);
+                connect(vmci, &VfModuleComponentInput::sigValueChanged, cLMD, &cLambdaMeasDelegate::actValueInput1);
+
+                vmci = new VfModuleComponentInput(getConfData()->m_lambdaSystemConfigList.at(i).m_nInputSEntity, getConfData()->m_lambdaSystemConfigList.at(i).m_sInputS);
+                inputList.append(vmci);
+                connect(vmci, &VfModuleComponentInput::sigValueChanged, cLMD, &cLambdaMeasDelegate::actValueInput2);
+            }
+            else
+                error = true;
+        }
+    }
+
     if (error)
         emit activationError();
     else {
