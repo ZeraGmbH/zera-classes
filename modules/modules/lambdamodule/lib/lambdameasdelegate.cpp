@@ -33,12 +33,20 @@ void cLambdaMeasDelegate::actValueInput2(QVariant val)
         emit measuring(1);
 }
 
+void cLambdaMeasDelegate::actValueActivePowerMeasMode(QVariant val)
+{
+    m_MeasMode3LW = (val.toString() == "3LW");
+    computeOutput();
+}
+
 
 void cLambdaMeasDelegate::computeOutput()
 {
     double lambda;
 
-    if (input1 == 0)
+    if (m_MeasMode3LW)
+        lambda = qSNaN();
+    else if (input1 == 0)
         lambda = 0;
     else
     {

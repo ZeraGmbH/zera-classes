@@ -20,6 +20,7 @@ public:
 public slots:
     void actValueInput1(QVariant val);
     void actValueInput2(QVariant val);
+    void actValueActivePowerMeasMode(QVariant val);
 
 signals:
     void measuring(int);
@@ -29,6 +30,7 @@ private:
     bool m_bSignal;
     double input1;
     double input2;
+    bool m_MeasMode3LW = false;
 
     void computeOutput();
 };
