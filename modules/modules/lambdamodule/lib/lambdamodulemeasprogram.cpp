@@ -108,6 +108,8 @@ void cLambdaModuleMeasProgram::searchActualValues()
                         vmci = new VfModuleComponentInput(getConfData()->m_activeMeasModeEntity, getConfData()->m_activeMeasModeComponent);
                         inputList.append(vmci);
                         connect(vmci, &VfModuleComponentInput::sigValueChanged, cLMD, &cLambdaMeasDelegate::actValueActivePowerMeasMode);
+                        //set initial value
+                        cLMD->actValueActivePowerMeasMode(m_pModule->m_pStorageSystem->getStoredValue(getConfData()->m_activeMeasModeEntity, getConfData()->m_activeMeasModeComponent));
                     }
                 }
                 m_LambdaMeasDelegateList.append(cLMD);
