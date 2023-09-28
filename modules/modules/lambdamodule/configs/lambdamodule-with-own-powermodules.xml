@@ -5,6 +5,11 @@
             <debuglevel>0</debuglevel>
         </connectivity>
         <measure>
+            <ActivePMeasuringMode>
+                <avail>1</avail>
+                <inputentity>1070</inputentity>
+                <component>PAR_MeasuringMode</component>
+            </ActivePMeasuringMode>
             <system>
                 <n>4</n>
                 <lambda1>

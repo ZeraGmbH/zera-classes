@@ -46,8 +46,25 @@
     </xs:complexType>
 
 
+    <xs:simpleType name="yesnotype">
+        <xs:restriction base="xs:integer">
+            <xs:maxInclusive value='1'/>
+            <xs:minInclusive value='0'/>
+        </xs:restriction>
+    </xs:simpleType>
+
+
     <xs:complexType name="measuretype">
         <xs:sequence>
+            <xs:element name="ActivePMeasuringMode">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="avail" type="yesnotype"/>
+                        <xs:element name="inputentity" type="xs:integer" minOccurs="1" maxOccurs="1"/>
+                        <xs:element name="component" type="xs:string" minOccurs="1" maxOccurs="1"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
             <xs:element name="system">
                 <xs:complexType>
                     <xs:sequence>
