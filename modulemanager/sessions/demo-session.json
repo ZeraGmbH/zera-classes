@@ -81,6 +81,16 @@
         "id": 1140
       },
       {
+        "name" : "burden1module",
+        "configFile" : "mt310s2-burden1module.xml",
+        "id": 1160
+      },
+      {
+        "name" : "burden1module",
+        "configFile" : "mt310s2-burden1module2.xml",
+        "id": 1161
+      },
+      {
         "name" : "sourcemodule",
         "id": 1300
       },
