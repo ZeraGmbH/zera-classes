@@ -92,7 +92,7 @@
       },
       {
         "name" : "lambdamodule",
-        "configFile" : "mt310s2-lambdamodule.xml",
+        "configFile" : "lambdamodule-with-own-powermodules.xml",
         "id": 1140
       },
       {
