@@ -54,7 +54,12 @@ cModeModuleInit::cModeModuleInit(cModeModule* module, cModeModuleConfigData& con
     m_activationMachine.addState(&m_setSubDCState);
     m_activationMachine.addState(&m_setSamplingSystemState);
     m_activationMachine.addState(&m_activationDoneState);
-    m_activationMachine.setInitialState(&m_resourceManagerConnectState);
+
+    if(m_pModule->m_demo)
+        m_activationMachine.setInitialState(&m_activationDoneState);
+    else
+        m_activationMachine.setInitialState(&m_resourceManagerConnectState);
+
     connect(&m_resourceManagerConnectState, &QState::entered, this, &cModeModuleInit::resourceManagerConnect);
     connect(&m_IdentifyState, &QState::entered, this, &cModeModuleInit::sendRMIdent);
     connect(&m_readResourceTypesState, &QState::entered, this, &cModeModuleInit::readResourceTypes);
@@ -77,9 +82,14 @@ cModeModuleInit::cModeModuleInit(cModeModule* module, cModeModuleConfigData& con
     m_freeResourceState.addTransition(this, &cModeModuleInit::deactivationContinue, &m_deactivationDoneState);
     m_deactivationMachine.addState(&m_freeResourceState);
     m_deactivationMachine.addState(&m_deactivationDoneState);
-    m_deactivationMachine.setInitialState(&m_freeResourceState);
+
+    if(m_pModule->m_demo)
+        m_deactivationMachine.setInitialState(&m_deactivationDoneState);
+    else
+        m_deactivationMachine.setInitialState(&m_freeResourceState);
     connect(&m_freeResourceState, &QState::entered, this, &cModeModuleInit::freeResource);
     connect(&m_deactivationDoneState, &QState::entered, this, &cModeModuleInit::deactivationDone);
+
 }
 
 
