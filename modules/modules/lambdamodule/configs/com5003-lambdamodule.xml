@@ -5,12 +5,12 @@
             <debuglevel>0</debuglevel>
         </connectivity>
         <measure>
-            <ActivePMeasuringMode>
+            <activepmeasmode>
                 <avail>0</avail>
                 <inputentity>1070</inputentity>
                 <componentmeasmode>PAR_MeasuringMode</componentmeasmode>
                 <componentmeasmodephase>PAR_MeasModePhaseSelect</componentmeasmodephase>
-            </ActivePMeasuringMode>
+            </activepmeasmode>
             <system>
                 <n>4</n>
                 <lambda1>
