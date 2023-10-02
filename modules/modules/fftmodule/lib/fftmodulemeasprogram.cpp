@@ -731,12 +731,13 @@ void cFftModuleMeasProgram::handleDemoActualValues()
     QVector<float> demoValues(totalChannels * totalHarmonics * 2, 0.0);
 
     for (int i = 0; i < totalChannels; i++) {
+         double randomVal = (double)rand() / RAND_MAX ;
         int channelOffset = i * totalHarmonics * 2;
-        demoValues.insert(channelOffset, 0.5); //DC component, real part
+        demoValues.insert(channelOffset, randomVal*0.5); //DC component, real part
         if(m_veinActValueList.at(i)->getUnit() == "A")
-            demoValues.insert(channelOffset + 2, 10); //fundamental frequency component, real part
+            demoValues.insert(channelOffset + 2, randomVal*10); //fundamental frequency component, real part
         else {
-            demoValues.insert(channelOffset + 2, 230); //fundamental frequency component, real part
+            demoValues.insert(channelOffset + 2, randomVal*230); //fundamental frequency component, real part
         }
     }
 
