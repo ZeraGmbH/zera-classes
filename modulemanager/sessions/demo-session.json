@@ -91,6 +91,11 @@
         "id": 1161
       },
       {
+        "name" : "transformer1module",
+        "configFile" : "mt310s2-transformer1module.xml",
+        "id": 1170
+      },
+      {
         "name" : "sourcemodule",
         "id": 1300
       },
