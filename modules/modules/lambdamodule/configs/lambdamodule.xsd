@@ -61,7 +61,8 @@
                     <xs:sequence>
                         <xs:element name="avail" type="yesnotype"/>
                         <xs:element name="inputentity" type="xs:integer" minOccurs="1" maxOccurs="1"/>
-                        <xs:element name="component" type="xs:string" minOccurs="1" maxOccurs="1"/>
+                        <xs:element name="componentmeasmode" type="xs:string" minOccurs="1" maxOccurs="1"/>
+                        <xs:element name="componentmeasmodephase" type="xs:string" minOccurs="1" maxOccurs="1"/>
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>

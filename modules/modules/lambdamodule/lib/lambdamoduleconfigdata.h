@@ -32,6 +32,7 @@ public:
     bool m_activeMeasModeAvail;
     quint16 m_activeMeasModeEntity;
     QString m_activeMeasModeComponent;
+    QString m_activeMeasModePhaseComponent;
 };
 
 }
