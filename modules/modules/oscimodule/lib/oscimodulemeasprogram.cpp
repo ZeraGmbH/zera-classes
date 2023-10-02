@@ -684,10 +684,11 @@ void cOsciModuleMeasProgram::handleDemoActualValues()
     QVector<float> demoValues;
     float phase = 0.0;
     for (int i = 0; i < getConfData()->m_valueChannelList.count(); i++) {
+        double randomVal = (double)rand() / RAND_MAX ;
         if(m_veinActValueList.at(i)->getChannelName().contains("2")) //UL2,IL2
-            phase = M_PI/2;
+            phase = randomVal * M_PI/2;
         else if(m_veinActValueList.at(i)->getChannelName().contains("3")) //UL3,IL3
-            phase = -M_PI/2;
+            phase = randomVal * -M_PI/2;
         else
             phase = 0.0;
 
