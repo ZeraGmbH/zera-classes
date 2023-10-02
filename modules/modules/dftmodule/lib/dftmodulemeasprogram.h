@@ -117,6 +117,7 @@ private:
     QFinalState m_dataAcquisitionDoneState;
 
     void setActualValuesNames();
+    void setupDemoOperation();
     void setSCPIMeasInfo();
     void setRefChannelValidator();
     void initRFieldMeasurement();
