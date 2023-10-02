@@ -8,7 +8,8 @@
             <ActivePMeasuringMode>
                 <avail>0</avail>
                 <inputentity>1070</inputentity>
-                <component>PAR_MeasuringMode</component>
+                <componentmeasmode>PAR_MeasuringMode</componentmeasmode>
+                <componentmeasmodephase>PAR_MeasModePhaseSelect</componentmeasmodephase>
             </ActivePMeasuringMode>
             <system>
                 <n>4</n>

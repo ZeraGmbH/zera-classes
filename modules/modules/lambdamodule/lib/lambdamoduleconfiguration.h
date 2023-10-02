@@ -18,6 +18,7 @@ enum moduleconfigstate
     setActivePMeasuringModeAvail,
     setActivePMeasuringModeEntity,
     setActivePMeasuringModeComponent,
+    setActivePMeasModePhaseSelectComponent,
 
     setLambdaInputPEntity1 = 16, // we leave some place for additional cmds
     setLambdaInputSEntity1 =setLambdaInputPEntity1 +16,
