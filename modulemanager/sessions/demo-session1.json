@@ -6,6 +6,11 @@
         "id": 1150
       },
       {
+        "name" : "modemodule",
+        "configFile" : "mt310s2-modemoduleAC.xml",
+        "id": 1000
+      },
+      {
         "name" : "rangemodule",
         "configFile" : "mt310s2-rangemodule.xml",
         "id": 1020
