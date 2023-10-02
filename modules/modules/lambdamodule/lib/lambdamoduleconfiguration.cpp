@@ -37,10 +37,10 @@ void cLambdaModuleConfiguration::setConfiguration(QByteArray xmlString)
     // initializing hash table for xml configuration
 
     m_ConfigXMLMap["lambdamodconfpar:configuration:connectivity:debuglevel"] = setDebugLevel;
-    m_ConfigXMLMap["lambdamodconfpar:configuration:measure:ActivePMeasuringMode:avail"] = setActivePMeasuringModeAvail;
-    m_ConfigXMLMap["lambdamodconfpar:configuration:measure:ActivePMeasuringMode:inputentity"] = setActivePMeasuringModeEntity;
-    m_ConfigXMLMap["lambdamodconfpar:configuration:measure:ActivePMeasuringMode:componentmeasmode"] = setActivePMeasuringModeComponent;
-    m_ConfigXMLMap["lambdamodconfpar:configuration:measure:ActivePMeasuringMode:componentmeasmodephase"] = setActivePMeasModePhaseSelectComponent;
+    m_ConfigXMLMap["lambdamodconfpar:configuration:measure:activepmeasmode:avail"] = setActivePMeasModeAvail;
+    m_ConfigXMLMap["lambdamodconfpar:configuration:measure:activepmeasmode:inputentity"] = setActivePMeasModeEntity;
+    m_ConfigXMLMap["lambdamodconfpar:configuration:measure:activepmeasmode:componentmeasmode"] = setActivePMeasModeComponent;
+    m_ConfigXMLMap["lambdamodconfpar:configuration:measure:activepmeasmode:componentmeasmodephase"] = setActivePMeasModePhaseSelectComponent;
     m_ConfigXMLMap["lambdamodconfpar:configuration:measure:system:n"] = setSystemCount;
 
     if (m_pXMLReader->loadSchema(defaultXSDFile))
@@ -75,13 +75,13 @@ void cLambdaModuleConfiguration::configXMLInfo(QString key)
         case setDebugLevel:
             m_pLambdaModulConfigData->m_nDebugLevel = m_pXMLReader->getValue(key).toInt(&ok);
             break;
-        case setActivePMeasuringModeAvail:
+        case setActivePMeasModeAvail:
             m_pLambdaModulConfigData->m_activeMeasModeAvail = (m_pXMLReader->getValue(key).toInt(&ok) == 1);
             break;
-        case setActivePMeasuringModeEntity:
+        case setActivePMeasModeEntity:
             m_pLambdaModulConfigData->m_activeMeasModeEntity = m_pXMLReader->getValue(key).toInt(&ok);
             break;
-        case setActivePMeasuringModeComponent:
+        case setActivePMeasModeComponent:
             m_pLambdaModulConfigData->m_activeMeasModeComponent = m_pXMLReader->getValue(key);
             break;
         case setActivePMeasModePhaseSelectComponent:

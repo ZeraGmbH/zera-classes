@@ -56,7 +56,7 @@
 
     <xs:complexType name="measuretype">
         <xs:sequence>
-            <xs:element name="ActivePMeasuringMode">
+            <xs:element name="activepmeasmode">
                 <xs:complexType>
                     <xs:sequence>
                         <xs:element name="avail" type="yesnotype"/>
