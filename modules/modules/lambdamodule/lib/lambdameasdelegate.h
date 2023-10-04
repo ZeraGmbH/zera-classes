@@ -27,9 +27,9 @@ signals:
 
 private:
     VfModuleActvalue *m_pActValue;
-    bool m_bSignal;
-    double input1;
-    double input2;
+    bool m_bSignal = false;
+    double input1 = 0.0;
+    double input2 = 0.0;
     bool m_MeasMode3LW = false;
 
     void computeOutput();
