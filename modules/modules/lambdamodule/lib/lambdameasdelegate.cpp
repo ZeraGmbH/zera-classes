@@ -1,17 +1,20 @@
-#include <QDebug>
-#include <QtGlobal>
-
+#include "lambdameasdelegate.h"
+#include "measmodephasesetstrategy.h"
 #include <vfmoduleactvalue.h>
 #include <math.h>
-
-#include "lambdameasdelegate.h"
-
+#include <QDebug>
+#include <QtGlobal>
 
 namespace  LAMBDAMODULE
 {
 
 cLambdaMeasDelegate::cLambdaMeasDelegate(VfModuleActvalue *actvalue, bool withSignal)
     :m_pActValue(actvalue), m_bSignal(withSignal)
+{
+}
+
+cLambdaMeasDelegate::cLambdaMeasDelegate(VfModuleActvalue *actvalue, int phaseNumber)
+    :m_pActValue(actvalue), m_phaseNumber(phaseNumber)
 {
 }
 
@@ -39,12 +42,19 @@ void cLambdaMeasDelegate::actValueActivePowerMeasMode(QVariant val)
     computeOutput();
 }
 
+void cLambdaMeasDelegate::actValueActivePowerMeasPhases(QVariant val)
+{
+    MModePhaseMask currentPhaseSelection(val.toString().toStdString());
+    m_phaseActive = currentPhaseSelection[MeasPhaseCount - m_phaseNumber];
+    computeOutput();
+}
+
 
 void cLambdaMeasDelegate::computeOutput()
 {
     double lambda;
 
-    if (m_MeasMode3LW)
+    if (m_MeasMode3LW || !m_phaseActive)
         lambda = qSNaN();
     else if (input1 == 0)
         lambda = 0;
