@@ -52,13 +52,8 @@
       },
       {
         "name" : "power1module",
-        "configFile" : "power1moduleAllPhaseLambdaActive.xml",
-        "id": 1074
-      },
-      {
-        "name" : "power1module",
         "configFile" : "power1moduleAllPhaseLambdaApparent.xml",
-        "id": 1075
+        "id": 1074
       },
       {
         "name" : "power3module",
