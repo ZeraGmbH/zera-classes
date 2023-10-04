@@ -92,7 +92,7 @@
       },
       {
         "name" : "lambdamodule",
-        "configFile" : "lambdamodule-with-own-powermodules.xml",
+        "configFile" : "lambdamodule-with-own-apparentpowermodule.xml",
         "id": 1140
       },
       {
