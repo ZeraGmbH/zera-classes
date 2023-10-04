@@ -86,7 +86,8 @@ void cLambdaModuleMeasProgram::searchActualValues()
     VfModuleComponentInput *vmci;
 
     if (getConfData()->m_activeMeasModeAvail) {
-        if (!m_pModule->m_pStorageSystem->hasStoredValue(getConfData()->m_activeMeasModeEntity, getConfData()->m_activeMeasModeComponent))
+        if ((!m_pModule->m_pStorageSystem->hasStoredValue(getConfData()->m_activeMeasModeEntity, getConfData()->m_activeMeasModeComponent)) ||
+            (!m_pModule->m_pStorageSystem->hasStoredValue(getConfData()->m_activeMeasModeEntity, getConfData()->m_activeMeasModePhaseComponent)))
             error = true;
     }
 
@@ -101,15 +102,20 @@ void cLambdaModuleMeasProgram::searchActualValues()
                     connect(cLMD, &cLambdaMeasDelegate::measuring, this, &cLambdaModuleMeasProgram::setMeasureSignal);
                 }
                 else {
-                    cLMD = new cLambdaMeasDelegate(m_veinActValueList.at(i));
+                    cLMD = new cLambdaMeasDelegate(m_veinActValueList.at(i), i+1);
                     if (getConfData()->m_activeMeasModeAvail) {
-                        // If this config is enabled and the measurement mode is 3LW, lambda for individual phases are set to 'nan' and LAMBDA4 (PS/SS) is still valid.
+                        // If measurement mode is 3LW, lambda for individual phases are set to 'nan' and LAMBDA4 (PS/SS) is still valid.
                         // The following connection, takes care of making lambda 'nan' for three phases. The sum is not changed.
                         vmci = new VfModuleComponentInput(getConfData()->m_activeMeasModeEntity, getConfData()->m_activeMeasModeComponent);
                         inputList.append(vmci);
                         connect(vmci, &VfModuleComponentInput::sigValueChanged, cLMD, &cLambdaMeasDelegate::actValueActivePowerMeasMode);
-                        //set initial value
+                        // Phase lambda values are computed only for active/selected phases
+                        vmci = new VfModuleComponentInput(getConfData()->m_activeMeasModeEntity, getConfData()->m_activeMeasModePhaseComponent);
+                        inputList.append(vmci);
+                        connect(vmci, &VfModuleComponentInput::sigValueChanged, cLMD, &cLambdaMeasDelegate::actValueActivePowerMeasPhases);
+                        //set initial values
                         cLMD->actValueActivePowerMeasMode(m_pModule->m_pStorageSystem->getStoredValue(getConfData()->m_activeMeasModeEntity, getConfData()->m_activeMeasModeComponent));
+                        cLMD->actValueActivePowerMeasPhases(m_pModule->m_pStorageSystem->getStoredValue(getConfData()->m_activeMeasModeEntity, getConfData()->m_activeMeasModePhaseComponent));
                     }
                 }
                 m_LambdaMeasDelegateList.append(cLMD);
