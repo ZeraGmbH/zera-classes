@@ -19,7 +19,7 @@
                         <component>ACT_PQS1</component>
                     </p>
                     <s>
-                        <inputentity>1075</inputentity>
+                        <inputentity>1074</inputentity>
                         <component>ACT_PQS1</component>
                     </s>
                 </lambda1>
@@ -29,7 +29,7 @@
                         <component>ACT_PQS2</component>
                     </p>
                     <s>
-                        <inputentity>1075</inputentity>
+                        <inputentity>1074</inputentity>
                         <component>ACT_PQS2</component>
                     </s>
                 </lambda2>
@@ -39,7 +39,7 @@
                         <component>ACT_PQS3</component>
                     </p>
                     <s>
-                        <inputentity>1075</inputentity>
+                        <inputentity>1074</inputentity>
                         <component>ACT_PQS3</component>
                     </s>
                 </lambda3>
@@ -49,7 +49,7 @@
                         <component>ACT_PQS4</component>
                     </p>
                     <s>
-                        <inputentity>1075</inputentity>
+                        <inputentity>1074</inputentity>
                         <component>ACT_PQS4</component>
                     </s>
                 </lambda4>
