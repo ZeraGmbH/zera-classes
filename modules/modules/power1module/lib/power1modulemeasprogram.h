@@ -93,6 +93,7 @@ private:
     void setActualValuesNames();
     void setSCPIMeasInfo();
     void setFoutMetaInfo();
+    void setModeDisplayNamesComponent();
 
     QString getInitialPhaseOnOffVeinVal();
     MeasSystemChannels getMeasChannelUIPairs();
@@ -131,6 +132,7 @@ private:
     VfModuleActvalue *m_MModeMaxMeasSysCount;
     VfModuleParameter* m_pConstantParameter;
     VfModuleComponent* m_pMeasureSignal;
+    VfModuleComponent *m_MModesTypes;
 
     QList<QPair<VfModuleComponentInput*,VfModuleComponentInput*>> m_pScalingInputs; //scaling component list
 
