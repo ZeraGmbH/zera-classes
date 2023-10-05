@@ -15,8 +15,7 @@ class cLambdaMeasDelegate : public QObject
     Q_OBJECT
 
 public:
-    cLambdaMeasDelegate(VfModuleActvalue *actvalue, bool withSignal = false);
-    cLambdaMeasDelegate(VfModuleActvalue *actvalue, int phaseNumber);
+    cLambdaMeasDelegate(VfModuleActvalue *actvalue, bool withSignal, int phaseNumber);
 
 public slots:
     void actValueInput1(QVariant val);
