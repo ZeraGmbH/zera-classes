@@ -1419,7 +1419,7 @@ void cPower1ModuleMeasProgram::activateDSP()
     m_MsgNrCmdList[m_pDSPInterFace->activateInterface()] = activatedsp; // aktiviert die var- und cmd-listen im dsp
 }
 
-void POWER1MODULE::cPower1ModuleMeasProgram::setModeDisplayNamesComponent()
+void cPower1ModuleMeasProgram::setModeTypesComponent()
 {
     const QHash<QString, std::shared_ptr<MeasMode>> &measModes = m_measModeSelector.getModes();
     QStringList measModeTypes;
@@ -1445,7 +1445,7 @@ void cPower1ModuleMeasProgram::activateDSPdone()
     setActualValuesNames();
     setSCPIMeasInfo();
     setFoutMetaInfo();
-    setModeDisplayNamesComponent();
+    setModeTypesComponent();
     m_pMeasureSignal->setValue(QVariant(1));
 
     if (getConfData()->m_sIntegrationMode == "time")
