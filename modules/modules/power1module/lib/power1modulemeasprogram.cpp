@@ -1816,12 +1816,12 @@ void cPower1ModuleMeasProgram::setPhaseMaskValidator(std::shared_ptr<MeasMode> m
 void cPower1ModuleMeasProgram::updatePhaseMaskVeinComponents(std::shared_ptr<MeasMode> mode)
 {
     QString newPhaseMask = mode->getCurrentMask();
-    const cMeasModeInfo powerInfo = MeasModeCatalog::getInfo(getConfData()->m_sMeasuringMode.m_sValue);
+    const cMeasModeInfo modeInfo = MeasModeCatalog::getInfo(getConfData()->m_sMeasuringMode.m_sValue);
     setPhaseMaskValidator(mode);
     m_pMModePhaseSelectParameter->setValue(newPhaseMask);
     m_MModeCanChangePhaseMask->setValue(canChangePhaseMask(mode));
     m_MModeMaxMeasSysCount->setValue(mode->getMaxMeasSysCount());
-    m_MModePowerDisplayName->setValue(powerInfo.getActvalName());
+    m_MModePowerDisplayName->setValue(modeInfo.getActvalName());
 }
 
 bool cPower1ModuleMeasProgram::canChangePhaseMask(std::shared_ptr<MeasMode> mode)
