@@ -47,3 +47,8 @@ QString MeasModeSelector::getCurrentMask() const
 {
     return getCurrMode()->getCurrentMask();
 }
+
+const QHash<QString, std::shared_ptr<MeasMode> > &MeasModeSelector::getModes() const
+{
+    return m_modes;
+}

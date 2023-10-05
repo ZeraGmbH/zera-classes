@@ -15,6 +15,7 @@ public:
     bool canChangeMask(QString mask) const;
     void tryChangeMask(QString mask);
     QString getCurrentMask() const;
+    const QHash<QString, std::shared_ptr<MeasMode>> &getModes() const;
 signals:
     void sigTransactionOk();
     void sigTransactionFailed();
