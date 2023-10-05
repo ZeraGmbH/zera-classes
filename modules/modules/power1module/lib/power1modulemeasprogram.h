@@ -93,7 +93,7 @@ private:
     void setActualValuesNames();
     void setSCPIMeasInfo();
     void setFoutMetaInfo();
-    void setModeDisplayNamesComponent();
+    void setModeTypesComponent();
 
     QString getInitialPhaseOnOffVeinVal();
     MeasSystemChannels getMeasChannelUIPairs();
