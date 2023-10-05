@@ -402,6 +402,12 @@ void cPower1ModuleMeasProgram::generateInterface()
     m_veinActValueList.append(m_MModeMaxMeasSysCount); // we add the component for our measurement
     m_pModule->veinModuleActvalueList.append(m_MModeMaxMeasSysCount); // and for the modules interface
 
+    m_MModesTypes = new VfModuleComponent(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+                                          QString("INF_ModeTypes"),
+                                          QString("Display names (P/Q/S) of available modes"),
+                                          QVariant(QStringList()));
+    m_pModule->veinModuleComponentList.append(m_MModesTypes);
+
     QVariant val;
     QString s, unit;
     bool btime = (getConfData()->m_sIntegrationMode == "time");
@@ -1413,6 +1419,20 @@ void cPower1ModuleMeasProgram::activateDSP()
     m_MsgNrCmdList[m_pDSPInterFace->activateInterface()] = activatedsp; // aktiviert die var- und cmd-listen im dsp
 }
 
+void POWER1MODULE::cPower1ModuleMeasProgram::setModeDisplayNamesComponent()
+{
+    const QHash<QString, std::shared_ptr<MeasMode>> &measModes = m_measModeSelector.getModes();
+    QStringList measModeTypes;
+    for(auto iter=measModes.constBegin(); iter!=measModes.constEnd(); iter++) {
+        std::shared_ptr<MeasMode> measMode = iter.value();
+        const cMeasModeInfo modeInfo = MeasModeCatalog::getInfo(measMode->getName());
+        QString modeTypeName = modeInfo.getActvalName();
+        if(!measModeTypes.contains(modeTypeName))
+            measModeTypes.append(modeTypeName);
+    }
+    measModeTypes.sort();
+    m_MModesTypes->setValue(measModeTypes);
+}
 
 void cPower1ModuleMeasProgram::activateDSPdone()
 {
@@ -1425,6 +1445,7 @@ void cPower1ModuleMeasProgram::activateDSPdone()
     setActualValuesNames();
     setSCPIMeasInfo();
     setFoutMetaInfo();
+    setModeDisplayNamesComponent();
     m_pMeasureSignal->setValue(QVariant(1));
 
     if (getConfData()->m_sIntegrationMode == "time")
