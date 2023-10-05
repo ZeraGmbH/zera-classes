@@ -8,23 +8,16 @@
 namespace  LAMBDAMODULE
 {
 
-cLambdaMeasDelegate::cLambdaMeasDelegate(VfModuleActvalue *actvalue, bool withSignal)
-    :m_pActValue(actvalue), m_bSignal(withSignal)
+cLambdaMeasDelegate::cLambdaMeasDelegate(VfModuleActvalue *actvalue, bool withSignal, int phaseNumber)
+    :m_pActValue(actvalue), m_bSignal(withSignal), m_phaseNumber(phaseNumber)
 {
 }
-
-cLambdaMeasDelegate::cLambdaMeasDelegate(VfModuleActvalue *actvalue, int phaseNumber)
-    :m_pActValue(actvalue), m_phaseNumber(phaseNumber)
-{
-}
-
 
 void cLambdaMeasDelegate::actValueInput1(QVariant val)
 {
     input1 = val.toDouble();
     computeOutput();
 }
-
 
 void cLambdaMeasDelegate::actValueInput2(QVariant val)
 {
@@ -48,7 +41,6 @@ void cLambdaMeasDelegate::actValueActivePowerMeasPhases(QVariant val)
     m_phaseActive = currentPhaseSelection[MeasPhaseCount - m_phaseNumber];
     computeOutput();
 }
-
 
 void cLambdaMeasDelegate::computeOutput()
 {
