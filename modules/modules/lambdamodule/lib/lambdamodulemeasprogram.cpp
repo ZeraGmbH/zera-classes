@@ -83,7 +83,6 @@ void cLambdaModuleMeasProgram::searchActualValues()
 {
     bool error = false;
     QList<VfModuleComponentInput*> inputList;
-    VfModuleComponentInput *vmci;
 
     if (getConfData()->m_activeMeasModeAvail) {
         if ((!m_pModule->m_pStorageSystem->hasStoredValue(getConfData()->m_activeMeasModeEntity, getConfData()->m_activeMeasModeComponent)) ||
@@ -101,24 +100,34 @@ void cLambdaModuleMeasProgram::searchActualValues()
                 connect(cLMD, &cLambdaMeasDelegate::measuring, this, &cLambdaModuleMeasProgram::setMeasureSignal);
                 m_LambdaMeasDelegateList.append(cLMD);
 
-                vmci = new VfModuleComponentInput(getConfData()->m_lambdaSystemConfigList.at(i).m_nInputPEntity, getConfData()->m_lambdaSystemConfigList.at(i).m_sInputP);
-                inputList.append(vmci);
-                connect(vmci, &VfModuleComponentInput::sigValueChanged, cLMD, &cLambdaMeasDelegate::actValueInput1);
+                VfModuleComponentInput *inputPComponent = new VfModuleComponentInput(getConfData()->m_lambdaSystemConfigList.at(i).m_nInputPEntity, getConfData()->m_lambdaSystemConfigList.at(i).m_sInputP);
+                inputList.append(inputPComponent);
+                connect(inputPComponent, &VfModuleComponentInput::sigValueChanged, cLMD, &cLambdaMeasDelegate::actValueInput1);
 
-                vmci = new VfModuleComponentInput(getConfData()->m_lambdaSystemConfigList.at(i).m_nInputSEntity, getConfData()->m_lambdaSystemConfigList.at(i).m_sInputS);
-                inputList.append(vmci);
-                connect(vmci, &VfModuleComponentInput::sigValueChanged, cLMD, &cLambdaMeasDelegate::actValueInput2);
+                VfModuleComponentInput *inputSComponent = new VfModuleComponentInput(getConfData()->m_lambdaSystemConfigList.at(i).m_nInputSEntity, getConfData()->m_lambdaSystemConfigList.at(i).m_sInputS);
+                inputList.append(inputSComponent);
 
-                if ((getConfData()->m_activeMeasModeAvail) && (i != (getConfData()->m_nLambdaSystemCount-1))) {
-                    vmci = new VfModuleComponentInput(getConfData()->m_activeMeasModeEntity, getConfData()->m_activeMeasModeComponent);
-                    inputList.append(vmci);
-                    connect(vmci, &VfModuleComponentInput::sigValueChanged, cLMD, &cLambdaMeasDelegate::actValueActivePowerMeasMode);
-                    cLMD->actValueActivePowerMeasMode(m_pModule->m_pStorageSystem->getStoredValue(getConfData()->m_activeMeasModeEntity, getConfData()->m_activeMeasModeComponent));
+                if (!getConfData()->m_activeMeasModeAvail) {
+                    connect(inputSComponent, &VfModuleComponentInput::sigValueChanged, cLMD, &cLambdaMeasDelegate::actValueInput2);
+                }
+                else {
+                    VfModuleComponentInput *activeMeasModePhaseComponent = new VfModuleComponentInput(getConfData()->m_activeMeasModeEntity, getConfData()->m_activeMeasModePhaseComponent);
+                    inputList.append(activeMeasModePhaseComponent);
 
-                    vmci = new VfModuleComponentInput(getConfData()->m_activeMeasModeEntity, getConfData()->m_activeMeasModePhaseComponent);
-                    inputList.append(vmci);
-                    connect(vmci, &VfModuleComponentInput::sigValueChanged, cLMD, &cLambdaMeasDelegate::actValueActivePowerMeasPhases);
-                    cLMD->actValueActivePowerMeasPhases(m_pModule->m_pStorageSystem->getStoredValue(getConfData()->m_activeMeasModeEntity, getConfData()->m_activeMeasModePhaseComponent));
+                    if (i != (getConfData()->m_nLambdaSystemCount - 1)) {
+                        connect(inputSComponent, &VfModuleComponentInput::sigValueChanged, cLMD, &cLambdaMeasDelegate::actValueInput2);
+                        connect(inputSComponent, &VfModuleComponentInput::sigValueChanged, this, &cLambdaModuleMeasProgram::computeInput2Sum);
+
+                        VfModuleComponentInput *activeMeasModeComponent = new VfModuleComponentInput(getConfData()->m_activeMeasModeEntity, getConfData()->m_activeMeasModeComponent);
+                        inputList.append(activeMeasModeComponent);
+                        connect(activeMeasModeComponent, &VfModuleComponentInput::sigValueChanged, cLMD, &cLambdaMeasDelegate::actValueActivePowerMeasMode);
+                        cLMD->actValueActivePowerMeasMode(m_pModule->m_pStorageSystem->getStoredValue(getConfData()->m_activeMeasModeEntity, getConfData()->m_activeMeasModeComponent));
+
+                        connect(activeMeasModePhaseComponent, &VfModuleComponentInput::sigValueChanged, cLMD, &cLambdaMeasDelegate::actValueActivePowerMeasPhases);
+                        cLMD->actValueActivePowerMeasPhases(m_pModule->m_pStorageSystem->getStoredValue(getConfData()->m_activeMeasModeEntity, getConfData()->m_activeMeasModePhaseComponent));
+                    }
+                    else
+                        connect(activeMeasModePhaseComponent, &VfModuleComponentInput::sigValueChanged, this, &cLambdaModuleMeasProgram::computeInput2Sum);
                 }
             }
             else
@@ -156,6 +165,19 @@ void cLambdaModuleMeasProgram::deactivateMeasDone()
 void cLambdaModuleMeasProgram::setMeasureSignal(int signal)
 {
     m_pMeasureSignal->setValue(signal);
+}
+
+void cLambdaModuleMeasProgram::computeInput2Sum(QVariant value)
+{
+    double sum = 0.0;
+    QVariant phaseMask = m_pModule->m_pStorageSystem->getStoredValue(getConfData()->m_activeMeasModeEntity, getConfData()->m_activeMeasModePhaseComponent);
+
+    for(int i = 0; i < MeasPhaseCount; i++) {
+        if(cLambdaMeasDelegate::isPhaseActive(phaseMask, i))
+            sum += m_pModule->m_pStorageSystem->getStoredValue(getConfData()->m_lambdaSystemConfigList.at(i).m_nInputSEntity, getConfData()->m_lambdaSystemConfigList.at(i).m_sInputS).toDouble();
+    }
+
+    m_LambdaMeasDelegateList.at(getConfData()->m_nLambdaSystemCount - 1)->actValueInput2(sum);
 }
 
 }

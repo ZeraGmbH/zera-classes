@@ -113,6 +113,7 @@ private slots:
     void deactivateMeasDone();
 
     void setMeasureSignal(int signal);
+    void computeInput2Sum(QVariant value);
 };
 
 }
