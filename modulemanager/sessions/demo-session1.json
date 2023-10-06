@@ -16,6 +16,11 @@
         "id": 1020
       },
       {
+        "name" : "samplemodule",
+        "configFile" : "mt310s2-samplemodule-dc.xml",
+        "id": 1030
+      },
+      {
         "name" : "rmsmodule",
         "configFile" : "mt310s2-rmsmodule.xml",
         "id": 1040

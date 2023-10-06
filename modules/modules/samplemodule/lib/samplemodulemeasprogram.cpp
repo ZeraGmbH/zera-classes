@@ -6,6 +6,7 @@
 #include <errormessages.h>
 #include <reply.h>
 #include <proxy.h>
+#include <timerfactoryqt.h>
 
 namespace SAMPLEMODULE
 {
@@ -35,7 +36,10 @@ cSampleModuleMeasProgram::cSampleModuleMeasProgram(cSampleModule* module, std::s
     m_activationMachine.addState(&m_activateDSPState);
     m_activationMachine.addState(&m_loadDSPDoneState);
 
-    m_activationMachine.setInitialState(&resourceManagerConnectState);
+    if(m_pModule->m_demo)
+        m_activationMachine.setInitialState(&m_loadDSPDoneState);
+    else
+        m_activationMachine.setInitialState(&resourceManagerConnectState);
 
     connect(&resourceManagerConnectState, &QState::entered, this, &cSampleModuleMeasProgram::resourceManagerConnect);
     connect(&m_IdentifyState, &QState::entered, this, &cSampleModuleMeasProgram::sendRMIdent);
@@ -56,7 +60,10 @@ cSampleModuleMeasProgram::cSampleModuleMeasProgram(cSampleModule* module, std::s
     m_deactivationMachine.addState(&m_freeUSERMemState);
     m_deactivationMachine.addState(&m_unloadDSPDoneState);
 
-    m_deactivationMachine.setInitialState(&m_deactivateDSPState);
+    if(m_pModule->m_demo)
+        m_deactivationMachine.setInitialState(&m_unloadDSPDoneState);
+    else
+        m_deactivationMachine.setInitialState(&m_deactivateDSPState);
 
     connect(&m_deactivateDSPState, &QState::entered, this, &cSampleModuleMeasProgram::deactivateDSP);
     connect(&m_freePGRMemState, &QState::entered, this, &cSampleModuleMeasProgram::freePGRMem);
@@ -70,6 +77,12 @@ cSampleModuleMeasProgram::cSampleModuleMeasProgram(cSampleModule* module, std::s
     m_dataAcquisitionMachine.setInitialState(&m_dataAcquisitionState);
     connect(&m_dataAcquisitionState, &QState::entered, this, &cSampleModuleMeasProgram::dataAcquisitionDSP);
     connect(&m_dataAcquisitionDoneState, &QState::entered, this, &cSampleModuleMeasProgram::dataReadDSP);
+
+    if(m_pModule->m_demo) {
+        m_demoPeriodicTimer = TimerFactoryQt::createPeriodic(500);
+        connect(m_demoPeriodicTimer.get(), &TimerTemplateQt::sigExpired,this, &cSampleModuleMeasProgram::handleDemoActualValues);
+        m_demoPeriodicTimer->start();
+    }
 }
 
 
@@ -296,6 +309,20 @@ cSampleModuleConfigData *cSampleModuleMeasProgram::getConfData()
 void cSampleModuleMeasProgram::setInterfaceActualValues(QVector<float>)
 {
     // we have no interface ......
+}
+
+void cSampleModuleMeasProgram::handleDemoActualValues()
+{
+    QVector<float> demoValues;
+    int channelCount = getConfData()->m_ObsermaticConfPar.m_npllChannelCount;
+
+    for (int i = 0; i < channelCount; i++) {
+        float val = (float)rand() / RAND_MAX ;
+        demoValues.append(val);
+    }
+    m_ModuleActualValues = demoValues;
+    Q_ASSERT(demoValues.size() == m_ModuleActualValues.size());
+    emit actualValues(&m_ModuleActualValues);
 }
 
 

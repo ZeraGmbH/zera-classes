@@ -900,6 +900,7 @@ void cRangeMeasChannel::setActionErrorcount(int Count)
 
 void cRangeMeasChannel::setupDemoOperation()
 {
+    // Similar in cPllMeasChannel::setupDemoOperation()
     // Set dummy channel info
     bool isVoltagePhase = false;
     switch (m_nChannelNr)

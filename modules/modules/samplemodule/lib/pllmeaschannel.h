@@ -42,7 +42,7 @@ class cPllMeasChannel:public cBaseMeasChannel
 {
     Q_OBJECT
 public:
-    cPllMeasChannel(cSocket* rmsocket, cSocket* pcbsocket, QString name, quint8 chnnr);
+    cPllMeasChannel(cSocket* rmsocket, cSocket* pcbsocket, QString name, quint8 chnnr, bool demo);
     ~cPllMeasChannel();
     virtual void generateInterface(); // here we export our interface (entities)
     quint32 setyourself4PLL(QString samplesysname); // a statemachine gets started that returns cmdDone(quint32 cmdnr)
@@ -52,6 +52,9 @@ signals:
 protected slots:
     void catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant answer);
 private:
+    void setupDemoOperation();
+
+    bool m_demo;
     QStringList m_RangeNameList; // a list of all ranges
     QHash<QString, cRangeInfo> m_RangeInfoHash; // a list of available and selectable ranges, alias will be the key
     QString m_sActRange; // the actual range set (name)

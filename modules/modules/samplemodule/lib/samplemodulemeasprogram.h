@@ -7,6 +7,7 @@
 #include <QStateMachine>
 #include <QState>
 #include <QFinalState>
+#include <timerperiodicqt.h>
 
 namespace SAMPLEMODULE
 {
@@ -78,9 +79,11 @@ private:
     QFinalState m_dataAcquisitionDoneState;
 
     Zera::ProxyClientPtr m_rmClient;
+    TimerTemplateQtPtr m_demoPeriodicTimer;
 
 private slots:
     void setInterfaceActualValues(QVector<float>);
+    void handleDemoActualValues();
 
     void resourceManagerConnect();
     void sendRMIdent();

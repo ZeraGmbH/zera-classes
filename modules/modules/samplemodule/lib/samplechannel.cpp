@@ -41,7 +41,10 @@ cSampleChannel::cSampleChannel(cSampleModule* module, cSampleModuleConfigData& c
 
     m_activationMachine.addState(&m_readRangelistState);
     m_activationMachine.addState(&m_activationDoneState);
-    m_activationMachine.setInitialState(&m_rmConnectState);
+    if(!m_pModule->m_demo)
+        m_activationMachine.setInitialState(&m_rmConnectState);
+    else
+        m_activationMachine.setInitialState(&m_activationDoneState);
 
     connect(&m_rmConnectState, &QState::entered, this, &cSampleChannel::rmConnect);
     connect(&m_IdentifyState, &QState::entered, this, &cSampleChannel::sendRMIdent);
@@ -58,7 +61,10 @@ cSampleChannel::cSampleChannel(cSampleModule* module, cSampleModuleConfigData& c
     m_deactivationInitState.addTransition(this, &cSampleChannel::deactivationContinue, &m_deactivationDoneState);
     m_deactivationMachine.addState(&m_deactivationInitState);
     m_deactivationMachine.addState(&m_deactivationDoneState);
-    m_deactivationMachine.setInitialState(&m_deactivationInitState);
+    if(!m_pModule->m_demo)
+        m_deactivationMachine.setInitialState(&m_deactivationInitState);
+    else
+        m_deactivationMachine.setInitialState(&m_deactivationDoneState);
     connect(&m_deactivationInitState, &QState::entered, this, &cSampleChannel::deactivationInit);
     connect(&m_deactivationDoneState, &QState::entered, this, &cSampleChannel::deactivationDone);
 }

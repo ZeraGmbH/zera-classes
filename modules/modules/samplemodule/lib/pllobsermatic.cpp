@@ -11,7 +11,8 @@ namespace SAMPLEMODULE
 {
 
 cPllObsermatic::cPllObsermatic(cSampleModule* module, cSampleModuleConfigData& confData) :
-    m_pModule(module), m_ConfPar(confData)
+    m_pModule(module),
+    m_ConfPar(confData)
 {
     m_getPllMeasChannelsState.addTransition(this, &cPllObsermatic::activationContinue, &m_activationDoneState);
     m_activationMachine.addState(&m_getPllMeasChannelsState);
@@ -73,20 +74,24 @@ void cPllObsermatic::generateInterface()
 
 void cPllObsermatic::pllAutomatic()
 {
-    if (m_bActive && (m_ConfPar.m_ObsermaticConfPar.m_npllAutoAct.m_nActive == 1) ) { // was automatic configured
-        int i;
-        int n = m_ConfPar.m_ObsermaticConfPar.m_pllChannelList.count();
-        for (i = 0; i < n; i++) {
-            double urValue;
-            urValue = m_pllMeasChannelHash[ m_AliasHash[m_ConfPar.m_ObsermaticConfPar.m_pllChannelList.at(i)]]->getUrValue();
-            if (m_ActualValues[i] > urValue * 10.0 / 100.0)
-                break;
+    if(m_bActive && m_ConfPar.m_ObsermaticConfPar.m_npllAutoAct.m_nActive == 1) {
+        if(!m_pModule->m_demo) {
+            int i;
+            int n = m_ConfPar.m_ObsermaticConfPar.m_pllChannelList.count();
+            for (i = 0; i < n; i++) {
+                double urValue = m_pllMeasChannelHash[ m_AliasHash[m_ConfPar.m_ObsermaticConfPar.m_pllChannelList.at(i)]]->getUrValue();
+                if (m_ActualValues[i] > urValue * 10.0 / 100.0)
+                    break;
+            }
+            if (i == n)
+                i = 0; // if none of our channels has 10% attenuation we take the first channel
+            // now we set our new pll channel
+            newPllChannel(QVariant(m_AliasHash[m_ConfPar.m_ObsermaticConfPar.m_pllChannelList.at(i)]));
         }
-        if (i == n)
-            i = 0; // if none of our channels has 10% attenuation we take the first channel
-
-        // now we set our new pll channel
-        newPllChannel(QVariant(m_AliasHash[m_ConfPar.m_ObsermaticConfPar.m_pllChannelList.at(i)]));
+        else {
+            m_sNewPllChannel = "UL1";
+            setNewPLLChannel();
+        }
     }
 }
 
@@ -123,7 +128,8 @@ void cPllObsermatic::activationDone()
     connect(m_pPllChannel, &VfModuleParameter::sigValueChanged, this, &cPllObsermatic::newPllChannel);
 
     setPllChannelValidator();
-    sendPllChannel(m_ConfPar.m_ObsermaticConfPar.m_pllChannel.m_sPar);
+    if(!m_pModule->m_demo)
+        sendPllChannel(m_ConfPar.m_ObsermaticConfPar.m_pllChannel.m_sPar);
 
     m_bActive = true;
     emit activated();
@@ -145,7 +151,10 @@ void cPllObsermatic::sendPllChannel(QString channelRequested)
     channelRequested = adjustToValidPllChannel(channelRequested);
     m_sNewPllChannel = channelRequested;
     m_pPllSignal->setValue(QVariant(1)); // we signal that we are changing pll channel
-    m_MsgNrCmdList[m_pllMeasChannelHash[channelRequested]->setyourself4PLL(m_ConfPar.m_ObsermaticConfPar.m_sSampleSystem)] = setpll;
+    if(!m_pModule->m_demo)
+        m_MsgNrCmdList[m_pllMeasChannelHash[channelRequested]->setyourself4PLL(m_ConfPar.m_ObsermaticConfPar.m_sSampleSystem)] = setpll;
+    else
+        setNewPLLChannel();
 }
 
 QString cPllObsermatic::adjustToValidPllChannel(QVariant channel)
@@ -176,16 +185,21 @@ void cPllObsermatic::newPllAuto(QVariant pllauto)
     emit m_pModule->parameterChanged();
 }
 
+void SAMPLEMODULE::cPllObsermatic::setNewPLLChannel()
+{
+    m_pPllSignal->setValue(QVariant(0)); // pll change finished
+    m_pPllChannel->setValue(QVariant(m_sNewPllChannel));
+    m_ConfPar.m_ObsermaticConfPar.m_pllChannel.m_sPar = m_sNewPllChannel;
+    emit m_pModule->parameterChanged();
+}
+
 void cPllObsermatic::catchChannelReply(quint32 msgnr)
 {
     int cmd = m_MsgNrCmdList.take(msgnr);
     switch (cmd)
     {
     case setpll:
-        m_pPllSignal->setValue(QVariant(0)); // pll change finished
-        m_pPllChannel->setValue(QVariant(m_sNewPllChannel));
-        m_ConfPar.m_ObsermaticConfPar.m_pllChannel.m_sPar = m_sNewPllChannel;
-        emit m_pModule->parameterChanged();
+        setNewPLLChannel();
         break;
     }
 }

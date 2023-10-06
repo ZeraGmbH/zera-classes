@@ -45,6 +45,8 @@ private:
     void pllAutomatic();
     void setPllChannelValidator();
     void sendPllChannel(QString channelRequested);
+    QString adjustToValidPllChannel(QVariant channel);
+    void setNewPLLChannel();
 
     cSampleModule *m_pModule;
     cSampleModuleConfigData& m_ConfPar;
@@ -69,7 +71,6 @@ private:
     // statemachine for deactivating
     QState m_deactivationInitState;
     QFinalState m_deactivationDoneState;
-    QString adjustToValidPllChannel(QVariant channel);
 };
 
 }
