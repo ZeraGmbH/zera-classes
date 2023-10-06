@@ -97,7 +97,7 @@ void cLambdaModuleMeasProgram::searchActualValues()
             if ( (m_pModule->m_pStorageSystem->hasStoredValue(getConfData()->m_lambdaSystemConfigList.at(i).m_nInputPEntity, getConfData()->m_lambdaSystemConfigList.at(i).m_sInputP)) &&
                  (m_pModule->m_pStorageSystem->hasStoredValue(getConfData()->m_lambdaSystemConfigList.at(i).m_nInputSEntity, getConfData()->m_lambdaSystemConfigList.at(i).m_sInputS)) ) {
 
-                cLambdaMeasDelegate* cLMD = new cLambdaMeasDelegate(m_veinActValueList.at(i), (i == (getConfData()->m_nLambdaSystemCount-1)), i+1);
+                cLambdaMeasDelegate* cLMD = new cLambdaMeasDelegate(m_veinActValueList.at(i), (i == (getConfData()->m_nLambdaSystemCount-1)), i);
                 connect(cLMD, &cLambdaMeasDelegate::measuring, this, &cLambdaModuleMeasProgram::setMeasureSignal);
                 m_LambdaMeasDelegateList.append(cLMD);
 

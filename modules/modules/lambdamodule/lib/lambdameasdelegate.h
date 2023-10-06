@@ -1,6 +1,7 @@
 #ifndef LAMBDAMEASDELEGATE
 #define LAMBDAMEASDELEGATE
 
+#include "measmodephasesetstrategy.h"
 #include <QObject>
 #include <QVariant>
 #include <QList>
@@ -16,7 +17,7 @@ class cLambdaMeasDelegate : public QObject
 
 public:
     cLambdaMeasDelegate(VfModuleActvalue *actvalue, bool withSignal, int phaseNumber);
-
+    static bool isPhaseActive(QVariant activePhaseMask, int phaseNumber);
 public slots:
     void actValueInput1(QVariant val);
     void actValueInput2(QVariant val);

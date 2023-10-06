@@ -1,5 +1,4 @@
 #include "lambdameasdelegate.h"
-#include "measmodephasesetstrategy.h"
 #include <vfmoduleactvalue.h>
 #include <math.h>
 #include <QDebug>
@@ -11,6 +10,12 @@ namespace  LAMBDAMODULE
 cLambdaMeasDelegate::cLambdaMeasDelegate(VfModuleActvalue *actvalue, bool withSignal, int phaseNumber)
     :m_pActValue(actvalue), m_bSignal(withSignal), m_phaseNumber(phaseNumber)
 {
+}
+
+bool cLambdaMeasDelegate::isPhaseActive(QVariant activePhaseMask, int phaseNumber)
+{
+    MModePhaseMask currentPhaseSelection(activePhaseMask.toString().toStdString());
+    return currentPhaseSelection[MeasPhaseCount - 1 - phaseNumber];
 }
 
 void cLambdaMeasDelegate::actValueInput1(QVariant val)
@@ -37,8 +42,7 @@ void cLambdaMeasDelegate::actValueActivePowerMeasMode(QVariant val)
 
 void cLambdaMeasDelegate::actValueActivePowerMeasPhases(QVariant val)
 {
-    MModePhaseMask currentPhaseSelection(val.toString().toStdString());
-    m_phaseActive = currentPhaseSelection[MeasPhaseCount - m_phaseNumber];
+    m_phaseActive = isPhaseActive(val, m_phaseNumber);
     computeOutput();
 }
 
