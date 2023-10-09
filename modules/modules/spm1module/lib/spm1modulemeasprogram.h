@@ -80,6 +80,7 @@ private slots:
     void setpcbREFConstantNotifier();
     void setsecINTNotifier();
     void activationDone();
+    void setupDemoOperation();
 
     void stopECCalculator();
     void freeECalculator();
