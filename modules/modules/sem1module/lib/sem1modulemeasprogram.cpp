@@ -60,7 +60,10 @@ cSem1ModuleMeasProgram::cSem1ModuleMeasProgram(cSem1Module* module, std::shared_
     m_activationMachine.addState(&m_setsecINTNotifierState);
     m_activationMachine.addState(&m_activationDoneState);
 
-    m_activationMachine.setInitialState(&resourceManagerConnectState);
+    if(m_pModule->m_demo)
+        m_activationMachine.setInitialState(&m_activationDoneState);
+    else
+        m_activationMachine.setInitialState(&resourceManagerConnectState);
 
     connect(&resourceManagerConnectState, &QState::entered, this, &cSem1ModuleMeasProgram::resourceManagerConnect);
     connect(&m_IdentifyState, &QState::entered, this, &cSem1ModuleMeasProgram::sendRMIdent);
@@ -89,7 +92,10 @@ cSem1ModuleMeasProgram::cSem1ModuleMeasProgram(cSem1Module* module, std::shared_
     m_deactivationMachine.addState(&m_freeECResource);
     m_deactivationMachine.addState(&m_deactivationDoneState);
 
-    m_deactivationMachine.setInitialState(&m_stopECalculatorState);
+    if(m_pModule->m_demo)
+        m_deactivationMachine.setInitialState(&m_deactivationDoneState);
+    else
+        m_deactivationMachine.setInitialState(&m_stopECalculatorState);
 
     connect(&m_stopECalculatorState, &QState::entered, this, &cSem1ModuleMeasProgram::stopECCalculator);
     connect(&m_freeECalculatorState, &QState::entered, this, &cSem1ModuleMeasProgram::freeECalculator);
@@ -950,6 +956,8 @@ void cSem1ModuleMeasProgram::setsecINTNotifier()
 
 void cSem1ModuleMeasProgram::activationDone()
 {
+    if(m_pModule->m_demo)
+        setupDemoOperation();
     cSem1ModuleConfigData *confData = getConfData();
     for (int i = 0; i < confData->m_refInpList.count(); i++) {
         QString displayString = getRefInputDisplayString(confData->m_refInpList.at(i).inputName);
@@ -976,6 +984,35 @@ void cSem1ModuleMeasProgram::activationDone()
 
     m_bActive = true;
     emit activated();
+}
+
+void cSem1ModuleMeasProgram::setupDemoOperation()
+{
+    QStringList inputList;
+    for(const auto &input : qAsConst(getConfData()->m_refInpList))
+        inputList.append(input.inputName);
+
+    QHash<QString, QString> resourceTypeListToAdd;
+    for (int i = 0; i < inputList.count(); i++) {
+        if (inputList.at(i).contains("fi"))
+            resourceTypeListToAdd.insert(inputList.at(i), "FRQINPUT");
+
+        if (inputList.at(i).contains("fo"))
+            resourceTypeListToAdd.insert(inputList.at(i), "SOURCE");
+
+        if (inputList.at(i).contains("sh"))
+            resourceTypeListToAdd.insert(inputList.at(i), "SCHEAD");
+
+        if (inputList.at(i).contains("hk"))
+            resourceTypeListToAdd.insert(inputList.at(i), "HKEY");
+    }
+    for (int i = 0; i < getConfData()->m_refInpList.count(); i++) {
+        QString displayString = getConfData()->m_refInpList.at(i).inputName;
+        m_refInputDictionary.addReferenceInput(displayString, resourceTypeListToAdd[displayString]);
+    }
+    m_refInputDictionary.setAlias("fo1", "P");
+    m_refInputDictionary.setAlias("fo2", "Q");
+    m_refInputDictionary.setAlias("fo3", "S");
 }
 
 void cSem1ModuleMeasProgram::stopECCalculator()
