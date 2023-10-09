@@ -81,6 +81,11 @@
         "id": 1120
       },
       {
+        "name" : "sec1module",
+        "configFile" : "mt310s2-sec1module.xml",
+        "id": 1130
+      },
+      {
         "name" : "lambdamodule",
         "configFile" : "lambdamodule-with-own-apparentpowermodule.xml",
         "id": 1140
