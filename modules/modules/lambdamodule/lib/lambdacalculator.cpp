@@ -15,8 +15,14 @@ PhaseSumValues LambdaCalculator::calculateAllLambdas(const PhaseSumValues &activ
         if (info.isThreeWire())
             lambdas.phases[i] = qSNaN();
         else if (phaseMask.size() > i && phaseMask.at(i) == "1")
-            lambdas.phases[i] = activePower.phases[i] / apparentPower.phases[i];
+            if (apparentPower.phases[i] == 0)
+                lambdas.phases[i] = qSNaN();
+            else
+                lambdas.phases[i] = activePower.phases[i] / apparentPower.phases[i];
     }
-    lambdas.sum = activePower.sum / apparentPower.sum;
+    if (apparentPower.sum == 0)
+        lambdas.sum = qSNaN();
+    else
+        lambdas.sum = activePower.sum / apparentPower.sum;
     return lambdas;
 }
