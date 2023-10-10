@@ -438,15 +438,17 @@ void cRangeModuleMeasProgram::restartDspWachdog()
 
 void cRangeModuleMeasProgram::setInterfaceActualValues(QVector<float> *actualValues)
 {
-    int i;
-    if (m_bActive) // maybe we are deactivating !!!!
-    {
+    if (m_bActive) {// maybe we are deactivating !!!!
+        int i;
         for (i = 0; i < m_veinActValueList.count()-1; i++) // we set n peak values first
             m_veinActValueList.at(i)->setValue(QVariant((*actualValues)[i]));
         m_veinActValueList.at(i)->setValue(QVariant((*actualValues)[2*i]));
+
+        int rmsOffsetInActual = m_ChannelList.count();
+        for(int rmsNo=0; rmsNo<m_ChannelList.count(); rmsNo++)
+            m_veinRmsValueList.at(rmsNo)->setValue(QVariant((*actualValues)[rmsNo+rmsOffsetInActual]));
     }
 }
-
 
 void cRangeModuleMeasProgram::resourceManagerConnect()
 {
