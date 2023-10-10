@@ -17,12 +17,19 @@ PhaseSumValues LambdaCalculator::calculateAllLambdas(const PhaseSumValues &activ
         else if (phaseMask.size() > i && phaseMask.at(i) == "1")
             if (apparentPower.phases[i] == 0)
                 lambdas.phases[i] = qSNaN();
-            else
+            else {
                 lambdas.phases[i] = activePower.phases[i] / apparentPower.phases[i];
+                if(lambdas.phases[i] > 1)
+                    lambdas.phases[i] = 1.0;
+            }
     }
     if (apparentPower.sum == 0)
         lambdas.sum = qSNaN();
-    else
+    else {
         lambdas.sum = activePower.sum / apparentPower.sum;
+        if(lambdas.sum > 1)
+            lambdas.sum = 1.0;
+    }
+
     return lambdas;
 }
