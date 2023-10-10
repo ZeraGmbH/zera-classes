@@ -180,11 +180,6 @@ cBaseModule::~cBaseModule()
     delete m_pStateMachine;
 }
 
-QList<const QState *> cBaseModule::getActualStates() const
-{
-    return m_StateList;
-}
-
 void cBaseModule::setConfiguration(QByteArray xmlConfigData)
 {
     m_xmlconfString = xmlConfigData;
@@ -367,9 +362,6 @@ quint16 cBaseModule::getModuleNr()
 
 void cBaseModule::entryIdle()
 {
-    m_StateList.clear(); // we remove all states from list
-    m_StateList.append(m_pStateIdle); // but we are in idle now
-    m_nLastState = IDLE; // we keep track over our last state
 }
 
 void cBaseModule::entryIDLEIdle()
@@ -403,7 +395,6 @@ void cBaseModule::exitIdle()
 
 void cBaseModule::entryConfXML()
 {
-    m_StateList.append(m_pStateConfigure);
     m_nStatus = untouched; // after each conf. we behave as untouched
     doConfiguration(m_xmlconfString);
 }
@@ -415,7 +406,6 @@ void cBaseModule::entryConfSetup()
         setupModule();
         m_nStatus = setup;
     }
-    m_StateList.removeOne(m_pStateConfigure);
     emit sigConfDone();
 }
 
@@ -433,9 +423,6 @@ void cBaseModule::entryRunDone()
 {
     startMeas();
     m_nStatus = activated;
-    m_StateList.clear(); // we remove all states
-    m_StateList.append(m_pStateRun); // and add run now
-    m_nLastState = RUN; // we need this in case of reconfiguration
     emit moduleActivated();
 }
 
@@ -464,8 +451,5 @@ void cBaseModule::entryStopDone()
 {
     stopMeas();
     m_nStatus = activated;
-    m_StateList.clear(); // we remove all states
-    m_StateList.append(m_pStateStop); // and add run now
-    m_nLastState = STOP; // we need this in case of reconfiguration
     emit moduleActivated();
 }

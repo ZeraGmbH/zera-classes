@@ -18,7 +18,6 @@ namespace ZeraModules
   public:
     explicit VirtualModule(QObject *qObjParent=0) : QObject(qObjParent) {}
     virtual ~VirtualModule() {}
-    virtual QList<const QState*> getActualStates() const =0; // in case parallel working states
     virtual void setConfiguration(QByteArray xmlConfigData)=0; // here we set configuration and parameters
     virtual QByteArray getConfiguration() const =0;
     virtual bool isConfigured() const =0;
