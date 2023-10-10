@@ -596,8 +596,9 @@ QVector<float> cRangeModuleMeasProgram::demoChannelRms()
     double voltageBase = 230.0;
     double currentBase= 10.0;
     QVector<float> randomChannelRMS;
-    randomChannelRMS.resize(m_veinActValueList.count());
-    for (int channel=0; channel<m_veinActValueList.count(); ++channel) {
+    int channelCount = m_ChannelList.count();
+    randomChannelRMS.resize(channelCount);
+    for (int channel=0; channel<channelCount; ++channel) {
         bool isVoltage = demoChannelIsVoltage(channel);
         double baseRMS = isVoltage ? voltageBase : currentBase;
         double randPlusMinusOne = 2.0 * (double)rand() / RAND_MAX - 1.0;
@@ -608,26 +609,38 @@ QVector<float> cRangeModuleMeasProgram::demoChannelRms()
     return randomChannelRMS;
 }
 
+double cRangeModuleMeasProgram::demoFrequency()
+{
+    double freqBase= 50.0;
+    double randPlusMinusOne = 2.0 * (double)rand() / RAND_MAX - 1.0;
+    double randOffset = 0.02 * randPlusMinusOne;
+    double randRMS = (1+randOffset) * freqBase;
+    return randRMS;
+}
+
 void cRangeModuleMeasProgram::handleDemoPeriodicTimer()
 {
     QVector<float> randomChannelRMS = demoChannelRms();
     // values - see cRangeModule::setPeakRmsAndFrequencyValues:
     m_ModuleActualValues.clear();
+    int channelCount = m_ChannelList.count();
     // peak
-    for (int channel=0; channel<m_veinActValueList.count(); ++channel) {
+    for (int channel=0; channel<channelCount; ++channel) {
         double randPeak = randomChannelRMS[channel]*sqrt2;
-        m_veinActValueList.at(channel)->setValue(QVariant(randPeak)); // this should go??
         m_ModuleActualValues.append(randPeak);
+        m_veinActValueList.at(channel)->setValue(QVariant(randPeak)); // this should go??
     }
     // RMS
-    for (int channel=0; channel<m_veinActValueList.count(); ++channel)
-        m_ModuleActualValues.append(randomChannelRMS[channel]);
+    for (int channel=0; channel<channelCount; ++channel) {
+        double randPeak = randomChannelRMS[channel];
+        m_ModuleActualValues.append(randPeak);
+        m_veinRmsValueList.at(channel)->setValue(QVariant(randPeak)); // this should go??
+    }
     // frequency
-    m_ModuleActualValues.append(50.0);
+    m_ModuleActualValues.append(demoFrequency());
     // peak DC (no DC for now)
-    for (int channel=0; channel<m_veinActValueList.count(); ++channel) {
+    for (int channel=0; channel<channelCount; ++channel) {
         double randPeak = randomChannelRMS[channel]*sqrt2;
-        m_veinActValueList.at(channel)->setValue(QVariant(randPeak)); // this should go??
         m_ModuleActualValues.append(randPeak);
     }
     emit actualValues(&m_ModuleActualValues);
