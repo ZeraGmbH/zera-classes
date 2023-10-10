@@ -1,4 +1,5 @@
 #include "measmodeinfo.h"
+#include "measmodecatalog.h"
 
 cMeasModeInfo::cMeasModeInfo(QString name, QString actvalname, QString unitname, measmodes code) :
     m_sName(name),
@@ -31,4 +32,9 @@ QString cMeasModeInfo::getUnitName() const
 measmodes cMeasModeInfo::getCode() const
 {
     return m_nCode;
+}
+
+bool cMeasModeInfo::isThreeWire() const
+{
+    return MeasModeCatalog::getThreeWireModes().contains(m_nCode);
 }

@@ -10,6 +10,7 @@ private slots:
     void invalidIdReturnsInvalid();
     void invalidStringReturnsInvalid();
     void allModesHaveACatalogEntry();
+    void reminderForThreeWire();
 };
 
 #endif // TEST_MEASMODECATALOG_H

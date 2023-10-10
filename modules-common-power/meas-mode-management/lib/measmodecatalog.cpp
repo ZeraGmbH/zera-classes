@@ -2,6 +2,7 @@
 
 QHash<QString,cMeasModeInfo> MeasModeCatalog::m_modeInfoHashByString;
 QHash<measmodes,cMeasModeInfo> MeasModeCatalog::m_modeInfoHashById;
+QSet<measmodes> MeasModeCatalog::m_threeWireSet;
 
 std::function<void(QString mode)> MeasModeCatalog::m_warningHandler = [](QString name) {
     qWarning("Unknown measurement mode %s", qPrintable(name));
@@ -51,4 +52,13 @@ cMeasModeInfo MeasModeCatalog::getInfo(measmodes modeId)
     if(!m_modeInfoHashById.contains(modeId))
         return cMeasModeInfo(); // no warning - we test this
     return m_modeInfoHashById[modeId];
+}
+
+QSet<measmodes> MeasModeCatalog::getThreeWireModes()
+{
+    if(m_threeWireSet.isEmpty()) {
+        m_threeWireSet.insert(m3lw);
+        m_threeWireSet.insert(m3lb);
+    }
+    return m_threeWireSet;
 }

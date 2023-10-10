@@ -3,6 +3,7 @@
 
 #include "measmodeinfo.h"
 #include <QHash>
+#include <QSet>
 #include <functional>
 
 class MeasModeCatalog
@@ -10,6 +11,7 @@ class MeasModeCatalog
 public:
     static cMeasModeInfo getInfo(QString name);
     static cMeasModeInfo getInfo(measmodes modeId);
+    static QSet<measmodes> getThreeWireModes();
 protected:
     static std::function<void(QString mode)> m_warningHandler;
 private:
@@ -17,6 +19,7 @@ private:
     static QHash<measmodes,cMeasModeInfo> m_modeInfoHashById;
     static void setupHashes();
     static void addInfoToHashes(cMeasModeInfo info);
+    static QSet<measmodes> m_threeWireSet;
 };
 
 #endif // MEASMODECATALOG_H
