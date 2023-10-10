@@ -18,6 +18,9 @@ private slots:
     void powerFactorPhaseMask010();
     void powerFactorPhaseMask000();
     void powerFactorPhaseMaskEmpty();
+
+    void powerFactorActivePowerMeasMode4LW();
+    void powerFactorActivePowerMeasMode3LW();
 private:
     PhaseSumValues m_activePower;
     PhaseSumValues m_apparentPower;
