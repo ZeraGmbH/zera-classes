@@ -28,7 +28,6 @@ cBaseModule::cBaseModule(quint8 modnr, int entityId, VeinEvent::StorageSystem *s
     m_bConfCmd = m_bStartCmd = m_bStopCmd = m_bStateMachineStarted = false;
 
     m_nStatus = untouched;
-    m_pStateMachine = new QStateMachine(this);
 
     // our states from virtualmodule (interface)
     m_pStateIdle = new QState();
@@ -109,14 +108,14 @@ cBaseModule::cBaseModule(quint8 modnr, int entityId, VeinEvent::StorageSystem *s
     connect(m_pStateSTOPConfXML, &QState::entered, this, &cBaseModule::entryConfXML);
     connect(m_pStateSTOPConfSetup, &QState::entered, this, &cBaseModule::entryConfSetup);
 
-    m_pStateMachine->addState(m_pStateIdle);
-    m_pStateMachine->addState(m_pStateConfigure);
-    m_pStateMachine->addState(m_pStateRun);
-    m_pStateMachine->addState(m_pStateStop);
-    m_pStateMachine->addState(m_pStateFinished);
-    m_pStateMachine->setInitialState(m_pStateIdle);
+    m_stateMachine.addState(m_pStateIdle);
+    m_stateMachine.addState(m_pStateConfigure);
+    m_stateMachine.addState(m_pStateRun);
+    m_stateMachine.addState(m_pStateStop);
+    m_stateMachine.addState(m_pStateFinished);
+    m_stateMachine.setInitialState(m_pStateIdle);
 
-    m_pStateMachine->start();
+    m_stateMachine.start();
 
     // now we set up our machines for activating, deactivating a module
     m_ActivationStartState.addTransition(this, &cBaseModule::activationContinue, &m_ActivationExecState);
@@ -176,8 +175,6 @@ cBaseModule::~cBaseModule()
     delete m_pStateRun;
     delete m_pStateStop;
     delete m_pStateFinished;
-
-    delete m_pStateMachine;
 }
 
 void cBaseModule::setConfiguration(QByteArray xmlConfigData)

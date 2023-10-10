@@ -41,7 +41,7 @@ namespace ZeraModules
     void parameterChanged();
 
   protected:
-    QStateMachine *m_pStateMachine;
+    QStateMachine m_stateMachine;
 
     QState *m_pStateIdle;
     QState *m_pStateConfigure;
