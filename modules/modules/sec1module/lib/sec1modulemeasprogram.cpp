@@ -137,7 +137,10 @@ cSec1ModuleMeasProgram::cSec1ModuleMeasProgram(cSec1Module* module, std::shared_
     m_startMeasurementMachine.addState(&m_startMeasurementState);
     m_startMeasurementMachine.addState(&m_startMeasurementDoneState);
 
-    m_startMeasurementMachine.setInitialState(&m_setsyncState);
+    if(m_pModule->m_demo)
+        m_startMeasurementMachine.setInitialState(&m_startMeasurementState);
+    else
+        m_startMeasurementMachine.setInitialState(&m_setsyncState);
 
     connect(&m_setsyncState, &QState::entered, this, &cSec1ModuleMeasProgram::setSync);
     connect(&m_setMeaspulsesState, &QState::entered, this, &cSec1ModuleMeasProgram::setMeaspulses);
@@ -786,6 +789,39 @@ double cSec1ModuleMeasProgram::calculateDutConstant()
     return dutConst;
 }
 
+void cSec1ModuleMeasProgram::setProgress()
+{
+    quint32 status = getStatus();
+    if(m_bMeasurementRunning && (status & ECALCSTATUS::WAIT) == 0) {
+        m_nDUTPulseCounterActual = 0;
+        if (m_pDutInputPar->getValue().toString().contains("HK"))
+            m_nDUTPulseCounterStart = 1;
+        else
+            m_nDUTPulseCounterStart = m_pMRatePar->getValue().toLongLong();
+        m_fProgress = ((1.0 * m_nDUTPulseCounterStart - 1.0 * m_nDUTPulseCounterActual)/ m_nDUTPulseCounterStart)*100.0;
+        if (m_fProgress > 100.0)
+            m_fProgress = 100.0;
+        if(m_fProgress < 0.0)
+            m_fProgress = 0.0;
+        m_pProgressAct->setValue(QVariant(m_fProgress));
+    }
+}
+
+void cSec1ModuleMeasProgram::updateDemoMeasurementResults()
+{
+    setProgress();
+
+    setStatus(ECALCSTATUS::READY); //still need more thoughts on this
+
+    m_nEnergyCounterFinal = rand() % 10;
+    setECResult();
+
+    ++m_nMeasurementNo;
+    m_pMeasNumAct->setValue(m_nMeasurementNo);
+
+    stopMeasurement(false);
+}
+
 void cSec1ModuleMeasProgram::onRefConstantChanged(QString refInputName)
 {
     if(getConfData()->m_sRefInput.m_sPar == refInputName) {
@@ -1368,14 +1404,21 @@ void cSec1ModuleMeasProgram::startMeasurement()
     m_pProgressAct->setValue(QVariant(m_fProgress));
     m_bMeasurementRunning = true;
     // All preparations done: do start
-    m_MsgNrCmdList[m_pSECInterface->start(m_masterErrCalcName)] = startmeasurement;
+    if(!m_pModule->m_demo)
+        m_MsgNrCmdList[m_pSECInterface->start(m_masterErrCalcName)] = startmeasurement;
+    else {
+        updateDemoMeasurementResults();
+        emit setupContinue();
+    }
 }
 
 
 void cSec1ModuleMeasProgram::startMeasurementDone() // final state of m_startMeasurementMachine
 {
-    Actualize(); // we acualize at once after started
-    m_ActualizeTimer.start(); // and after current interval
+    if(!m_pModule->m_demo) {
+        Actualize(); // we acualize at once after started
+        m_ActualizeTimer.start(); // and after current interval
+    }
 }
 
 
@@ -1763,7 +1806,8 @@ void cSec1ModuleMeasProgram::stopMeasurement(bool bAbort)
     if(bAbort && m_bMeasurementRunning)
         setStatus(ECALCSTATUS::ABORT);
     m_bMeasurementRunning = false;
-    m_MsgNrCmdList[m_pSECInterface->stop(m_masterErrCalcName)] = stopmeas;
+    if(!m_pModule->m_demo)
+        m_MsgNrCmdList[m_pSECInterface->stop(m_masterErrCalcName)] = stopmeas;
     m_pStartStopPar->setValue(QVariant(0));
     m_ActualizeTimer.stop();
     m_WaitMultiTimer.stop();

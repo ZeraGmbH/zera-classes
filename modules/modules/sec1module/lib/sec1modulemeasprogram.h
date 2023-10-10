@@ -152,6 +152,8 @@ private:
     void setStatus(quint32 status);
 
     double calculateDutConstant();
+    void updateDemoMeasurementResults();
+    void setProgress();
 
     cSec1Module* m_pModule; // the module we live in
     Zera::cSECInterface* m_pSECInterface;
