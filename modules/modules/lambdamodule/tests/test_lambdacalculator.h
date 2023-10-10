@@ -4,7 +4,7 @@
 #include "lambdacalculator.h"
 #include <QObject>
 
-class test_lambda_calculator : public QObject
+class test_lambdacalculator : public QObject
 {
     Q_OBJECT
 private slots:
