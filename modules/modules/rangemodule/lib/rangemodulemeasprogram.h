@@ -97,6 +97,7 @@ private:
     void restartDspWachdog();
     bool demoChannelIsVoltage(int channel);
     QVector<float> demoChannelRms();
+    double demoFrequency();
 
 private slots:
     void setInterfaceActualValues(QVector<float> *actualValues);
