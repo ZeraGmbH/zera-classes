@@ -59,6 +59,7 @@ private:
 
     VfModuleComponent *m_pMeasureSignal;
     QList<VfModuleActvalue*> m_veinActValueList;
+    QList<VfModuleActvalue*> m_veinRmsValueList;
     QTimer m_dspWatchdogTimer;
 
     cDspMeasData* m_pTmpDataDsp;
