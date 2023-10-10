@@ -11,4 +11,5 @@ SETUP_QTESTS(
     test_measmodebroker
     test_measmodephasepersistency
     test_phasevalidatorstringgenerator
+    test_measmodeinfo
 )

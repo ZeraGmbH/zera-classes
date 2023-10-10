@@ -39,6 +39,7 @@ public:
     QString getActvalName() const;
     QString getUnitName() const;
     measmodes getCode() const;
+    bool isThreeWire() const;
 private:
     QString m_sName;
     QString m_sActvalName;

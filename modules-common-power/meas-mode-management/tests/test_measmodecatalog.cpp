@@ -26,3 +26,21 @@ void test_measmodecatalog::allModesHaveACatalogEntry()
         qInfo("Mode %s checked", qPrintable(info.getName()));
     }
 }
+
+void test_measmodecatalog::reminderForThreeWire()
+{
+    int expectedMeasModeCount = 16;
+    int expectedThreeWireModeCount = 2;
+
+    int threeWireModeCount = 0;
+    for(int modeId=MeasModeFirst; modeId<MeasModeCount; modeId++) {
+        cMeasModeInfo info = MeasModeCatalog::getInfo(measmodes(modeId));
+        if(info.isThreeWire())
+            threeWireModeCount++;
+    }
+
+    if(MeasModeCount != expectedMeasModeCount || expectedThreeWireModeCount != threeWireModeCount)
+        qWarning("Don't forget to update three wire mode into 'MeasModeCatalog::getThreeWireModes'.");
+    QCOMPARE(MeasModeCount, expectedMeasModeCount);
+    QCOMPARE(threeWireModeCount, expectedThreeWireModeCount);
+}
