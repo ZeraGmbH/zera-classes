@@ -145,14 +145,13 @@ void test_lambda_calculator::powerFactorApparentSum0()
 
 void test_lambda_calculator::powerFactorLimitedTo1()
 {
-    for(double &phasePower : m_activePower.phases)
-        phasePower = 2.0;
+    m_activePower.phases[0] = -2.0;
+    m_activePower.phases[1] = -0.5;
     m_activePower.sum = 3.0;
 
     PhaseSumValues lambdas = LambdaCalculator::calculateAllLambdas(m_activePower, m_apparentPower, "4LW", "111");
-    QCOMPARE(lambdas.phases.at(0), 1.0);
-    QCOMPARE(lambdas.phases.at(1), 1.0);
+    QCOMPARE(lambdas.phases.at(0), -1.0);
+    QCOMPARE(lambdas.phases.at(1), -0.5);
     QCOMPARE(lambdas.phases.at(2), 1.0);
     QCOMPARE(lambdas.sum, 1.0);
 }
-

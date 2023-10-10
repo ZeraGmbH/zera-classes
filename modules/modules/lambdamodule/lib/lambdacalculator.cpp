@@ -1,5 +1,6 @@
 #include "lambdacalculator.h"
 #include "measmodecatalog.h"
+#include <math.h>
 
 PhaseSumValues::PhaseSumValues() :
     phases(MeasPhaseCount, 0.0)
@@ -17,19 +18,21 @@ PhaseSumValues LambdaCalculator::calculateAllLambdas(const PhaseSumValues &activ
         else if (phaseMask.size() > i && phaseMask.at(i) == "1")
             if (apparentPower.phases[i] == 0)
                 lambdas.phases[i] = qSNaN();
-            else {
-                lambdas.phases[i] = activePower.phases[i] / apparentPower.phases[i];
-                if(lambdas.phases[i] > 1)
-                    lambdas.phases[i] = 1.0;
-            }
+            else
+                lambdas.phases[i] = limitValueToPlusMinusOne(activePower.phases[i] / apparentPower.phases[i]);
     }
     if (apparentPower.sum == 0)
         lambdas.sum = qSNaN();
-    else {
-        lambdas.sum = activePower.sum / apparentPower.sum;
-        if(lambdas.sum > 1)
-            lambdas.sum = 1.0;
-    }
+    else
+        lambdas.sum = limitValueToPlusMinusOne(activePower.sum / apparentPower.sum);
 
     return lambdas;
+}
+
+double LambdaCalculator::limitValueToPlusMinusOne(const double &value)
+{
+    if(fabs(value) > 1)
+        return std::signbit(value) ? -1.0 : 1.0;
+    else
+        return value;
 }
