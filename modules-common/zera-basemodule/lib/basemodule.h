@@ -11,11 +11,6 @@
 #include <ve_eventsystem.h>
 #include <ve_storagesystem.h>
 
-enum LastState
-{
-    IDLE, CONF, RUN, STOP
-};
-
 enum Status
 {
     untouched,  // we just got new configuration data that is not yet analyzed
@@ -32,7 +27,6 @@ Q_OBJECT
 public:
     cBaseModule(quint8 modnr, int entityId, VeinEvent::StorageSystem* storagesystem, std::shared_ptr<cBaseModuleConfiguration> modcfg, bool demo, QObject *parent = nullptr);
     virtual ~cBaseModule();
-    virtual QList<const QState*> getActualStates() const; // in case parallel working states
     virtual void setConfiguration(QByteArray xmlConfigData);
     virtual QString getModuleName();
     virtual QString getSCPIModuleName();
@@ -140,8 +134,6 @@ private:
     bool m_bStopCmd;
     bool m_bStateMachineStarted;
 
-    QList<const QState*> m_StateList;
-    int m_nLastState;
     int m_nStatus;
 private slots:
     void entryIdle();
