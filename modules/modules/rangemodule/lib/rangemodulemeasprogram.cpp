@@ -220,6 +220,7 @@ void cRangeModuleMeasProgram::setDspCmdList()
 
     m_pDSPInterFace->addCycListItem( s = "STARTCHAIN(0,1,0x0102)");
         m_pDSPInterFace->addCycListItem( s = "GETSTIME(TISTART)"); // set new system time
+        // The following is so assember-ish: We copy CHXPEAKF, CHXRMSF and FREQF here in one line!!!
         m_pDSPInterFace->addCycListItem( s = QString("CMPAVERAGE1(%1,FILTER,CHXPEAKF)").arg(2*m_ChannelList.count()+1));
         m_pDSPInterFace->addCycListItem( s = QString("CLEARN(%1,FILTER)").arg(2*(2*m_ChannelList.count()+1)+1) );
 
