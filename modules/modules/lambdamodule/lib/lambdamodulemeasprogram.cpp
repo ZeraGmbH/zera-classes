@@ -102,6 +102,8 @@ void cLambdaModuleMeasProgram::searchActualValues()
     if (!error) {
         m_lambdaCalcDelegate = new LambdaCalcDelegate(getConfData()->m_activeMeasModeAvail);
 
+        connect(m_lambdaCalcDelegate, &LambdaCalcDelegate::measuring, this, &cLambdaModuleMeasProgram::setMeasureSignal);
+
         VfModuleComponentInput *inputPComponent = new VfModuleComponentInput(getConfData()->m_lambdaSystemConfigList.at(0).m_nInputPEntity, getConfData()->m_lambdaSystemConfigList.at(0).m_sInputP);
         inputList.append(inputPComponent);
         connect(inputPComponent, &VfModuleComponentInput::sigValueChanged, m_lambdaCalcDelegate, &LambdaCalcDelegate::onActivePower1Change);
