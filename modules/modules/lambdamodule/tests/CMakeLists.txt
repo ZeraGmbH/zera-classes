@@ -15,5 +15,6 @@ endfunction()
 SETUP_QTESTS_MODULE(
     test_lambda_config_load
     test_lambdacalculator
+    test_lambdacalcdelegate
 )
 
