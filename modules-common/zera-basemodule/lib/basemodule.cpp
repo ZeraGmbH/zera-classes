@@ -263,27 +263,27 @@ void cBaseModule::unsetModule()
 {
     delete m_pModuleErrorComponent;
 
-    for (auto veinModuleMetaData : veinModuleMetaDataList) {
+    for (auto veinModuleMetaData : qAsConst(veinModuleMetaDataList)) {
         delete veinModuleMetaData;
     }
     veinModuleMetaDataList.clear();
 
-    for (auto veinModuleComponent : veinModuleComponentList) {
+    for (auto veinModuleComponent : qAsConst(veinModuleComponentList)) {
         delete veinModuleComponent;
     }
     veinModuleComponentList.clear();
 
-    for (auto veinModuleActvalue : veinModuleActvalueList) {
+    for (auto veinModuleActvalue : qAsConst(veinModuleActvalueList)) {
         delete veinModuleActvalue;
     }
     veinModuleActvalueList.clear();
 
-    for (auto scpiCommand : scpiCommandList) {
+    for (auto scpiCommand : qAsConst(scpiCommandList)) {
         delete scpiCommand;
     }
     scpiCommandList.clear();
 
-    for (auto veinModuleParameter : veinModuleParameterHash) {
+    for (auto veinModuleParameter : qAsConst(veinModuleParameterHash)) {
         delete veinModuleParameter;
     }
     veinModuleParameterHash.clear();
@@ -294,7 +294,7 @@ void cBaseModule::unsetModule()
     VeinEvent::CommandEvent *tmpEvent = new VeinEvent::CommandEvent(VeinEvent::CommandEvent::EventSubtype::NOTIFICATION, eData);
     emit m_pModuleEventSystem->sigSendEvent(tmpEvent);
 
-    for (auto ModuleActivist : m_ModuleActivistList) {
+    for (auto ModuleActivist : qAsConst(m_ModuleActivistList)) {
         delete ModuleActivist;
     }
     m_ModuleActivistList.clear();
