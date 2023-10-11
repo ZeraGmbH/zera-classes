@@ -22,6 +22,8 @@ public slots:
     void onApparentPowerSumChange(QVariant power);
     void onActivePowerMeasModeChange(QVariant measMode);
     void onActivePowerPhaseMaskChange(QVariant phaseMask);
+signals:
+    void measuring(int);
 private:
     void updateLambdaValues();
     bool m_activePowerMeasModeAvail = false;
