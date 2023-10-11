@@ -21,6 +21,7 @@ private slots:
 
     void powerFactorActivePowerMeasMode4LW();
     void powerFactorActivePowerMeasMode3LW();
+    void powerFactorActivePowerMeasMode2LW();
 
     void powerFactorPhase1Apparent0();
     void powerFactorPhase3Apparent0();
