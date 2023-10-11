@@ -18,9 +18,9 @@ cBaseModule::cBaseModule(quint8 modnr, int entityId, VeinEvent::StorageSystem *s
     ZeraModules::VirtualModule(parent),
     m_nEntityId(entityId),
     m_pStorageSystem(storagesystem),
+    m_demo(demo),
     m_pConfiguration(modcfg),
-    m_nModuleNr(modnr),
-    m_demo(demo)
+    m_nModuleNr(modnr)
 {
     QString s;
     setParent(parent);
