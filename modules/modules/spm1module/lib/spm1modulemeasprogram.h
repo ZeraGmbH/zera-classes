@@ -139,6 +139,7 @@ private:
     void setStatus(quint32 status);
 
     void handleSECInterrupt();
+    void updateDemoMeasurementResults();
 
     cSpm1Module* m_pModule; // the module we live in
     Zera::cSECInterface* m_pSECInterface;

@@ -128,7 +128,10 @@ cSpm1ModuleMeasProgram::cSpm1ModuleMeasProgram(cSpm1Module* module, std::shared_
     m_startMeasurementMachine.addState(&m_startMeasurementState);
     m_startMeasurementMachine.addState(&m_startMeasurementDoneState);
 
-    m_startMeasurementMachine.setInitialState(&m_setsyncState);
+    if(m_pModule->m_demo)
+        m_startMeasurementMachine.setInitialState(&m_startMeasurementState);
+    else
+        m_startMeasurementMachine.setInitialState(&m_setsyncState);
 
     connect(&m_setsyncState, &QState::entered, this, &cSpm1ModuleMeasProgram::setSync);
     connect(&m_setsync2State, &QState::entered, this, &cSpm1ModuleMeasProgram::setSync2);
@@ -820,6 +823,19 @@ void cSpm1ModuleMeasProgram::handleSECInterrupt()
     }
 }
 
+void cSpm1ModuleMeasProgram::updateDemoMeasurementResults()
+{
+    setStatus(ECALCSTATUS::READY); //still need more thoughts on this
+
+    m_nEnergyCounterFinal = rand() % 10; //random value between 0 and 9
+    m_fTimeSecondsFinal = rand() % 10 +1; //random value between 1 and 10
+
+    newRefConstant(QVariant(3600000));
+
+    setEMResult();
+    stopMeasurement(false);
+}
+
 void cSpm1ModuleMeasProgram::resourceManagerConnect()
 {
     // first we try to get a connection to resource manager over proxy
@@ -1134,15 +1150,22 @@ void cSpm1ModuleMeasProgram::enableInterrupt()
 
 void cSpm1ModuleMeasProgram::startMeasurement()
 {
-    m_MsgNrCmdList[m_pSECInterface->start(m_masterErrCalcName)] = startmeasurement;
+    if(!m_pModule->m_demo)
+        m_MsgNrCmdList[m_pSECInterface->start(m_masterErrCalcName)] = startmeasurement;
     setStatus(ECALCSTATUS::ARMED);
+    if(m_pModule->m_demo) {
+        updateDemoMeasurementResults();
+        emit setupContinue();
+    }
 }
 
 
 void cSpm1ModuleMeasProgram::startMeasurementDone()
 {
-    Actualize(); // we actualize at once after started
-    m_ActualizeTimer.start(); // and after current interval
+    if(!m_pModule->m_demo) {
+        Actualize(); // we actualize at once after started
+        m_ActualizeTimer.start(); // and after current interval
+    }
     m_fEnergy = 0.0;
     m_pEnergyAct->setValue(m_fEnergy);
     m_fPower = 0.0;
@@ -1364,7 +1387,8 @@ void cSpm1ModuleMeasProgram::stopMeasurement(bool bAbort)
 {
     if(bAbort)
         setStatus(ECALCSTATUS::ABORT);
-    m_MsgNrCmdList[m_pSECInterface->stop(m_masterErrCalcName)] = stopmeas;
+    if(!m_pModule->m_demo)
+        m_MsgNrCmdList[m_pSECInterface->stop(m_masterErrCalcName)] = stopmeas;
     m_pStartStopPar->setValue(QVariant(0));
     m_ActualizeTimer.stop();
 }
