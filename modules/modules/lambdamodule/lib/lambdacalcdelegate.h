@@ -2,6 +2,7 @@
 #define LAMBDACALCDELEGATE_H
 
 #include "lambdacalculator.h"
+#include <QVariant>
 #include <QObject>
 
 class LambdaCalcDelegate : public QObject
@@ -11,16 +12,16 @@ public:
     LambdaCalcDelegate(bool activePowerMeasModeAvail);
     PhaseSumValues getLambdaValues();
 public slots:
-    void onActivePower1Change(double power);
-    void onActivePower2Change(double power);
-    void onActivePower3Change(double power);
-    void onActivePowerSumChange(double power);
-    void onApparentPower1Change(double power);
-    void onApparentPower2Change(double power);
-    void onApparentPower3Change(double power);
-    void onApparentPowerSumChange(double power);
-    void onActivePowerMeasModeChange(QString measMode);
-    void onActivePowerPhaseMaskChange(QString phaseMask);
+    void onActivePower1Change(QVariant power);
+    void onActivePower2Change(QVariant power);
+    void onActivePower3Change(QVariant power);
+    void onActivePowerSumChange(QVariant power);
+    void onApparentPower1Change(QVariant power);
+    void onApparentPower2Change(QVariant power);
+    void onApparentPower3Change(QVariant power);
+    void onApparentPowerSumChange(QVariant power);
+    void onActivePowerMeasModeChange(QVariant measMode);
+    void onActivePowerPhaseMaskChange(QVariant phaseMask);
 private:
     void updateLambdaValues();
     bool m_activePowerMeasModeAvail = false;
