@@ -27,7 +27,7 @@ private slots:
     void powerFactorPhase3Apparent0();
     void powerFactorApparentSum0();
 
-    void powerFactorLimitedTo1();
+    void powerFactorLimitedToPlusMinusOne();
 private:
     PhaseSumValues m_activePower;
     PhaseSumValues m_apparentPower;
