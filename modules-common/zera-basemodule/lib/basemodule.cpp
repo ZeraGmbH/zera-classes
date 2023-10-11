@@ -231,7 +231,7 @@ void cBaseModule::setupModule()
     eData->setCommand(VeinComponent::EntityData::Command::ECMD_ADD);
     eData->setEntityId(m_nEntityId);
     VeinEvent::CommandEvent *tmpEvent = new VeinEvent::CommandEvent(VeinEvent::CommandEvent::EventSubtype::NOTIFICATION, eData);
-    m_pModuleEventSystem->sigSendEvent(tmpEvent);
+    emit m_pModuleEventSystem->sigSendEvent(tmpEvent);
 
     m_pModuleEntityName = new VfModuleComponent(m_nEntityId, m_pModuleEventSystem,
                                                    QString("EntityName"),
@@ -292,7 +292,7 @@ void cBaseModule::unsetModule()
     eData->setCommand(VeinComponent::EntityData::Command::ECMD_REMOVE);
     eData->setEntityId(m_nEntityId);
     VeinEvent::CommandEvent *tmpEvent = new VeinEvent::CommandEvent(VeinEvent::CommandEvent::EventSubtype::NOTIFICATION, eData);
-    m_pModuleEventSystem->sigSendEvent(tmpEvent);
+    emit m_pModuleEventSystem->sigSendEvent(tmpEvent);
 
     for (auto ModuleActivist : m_ModuleActivistList) {
         delete ModuleActivist;
