@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<pow1modconfpar xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+
+    <configuration>
+        <connectivity>
+            <ethernet>
+                <resourcemanager>
+                    <ip>127.0.0.1</ip>
+                    <port>6312</port>
+                </resourcemanager>
+                <pcbserver>
+                    <ip>127.0.0.1</ip>
+                    <port>6307</port>
+                </pcbserver>
+                <dspserver>
+                    <ip>127.0.0.1</ip>
+                    <port>6310</port>
+                </dspserver>
+            </ethernet>
+        </connectivity>
+        <measure>
+            <modes>
+                <n>1</n>
+                <m1>4LS</m1>
+            </modes>
+            <system>
+                <pms1>m0,m3</pms1>
+                <pms2>m1,m4</pms2>
+                <pms3>m2,m5</pms3>
+            </system>
+            <disablephaseselect>1</disablephaseselect>
+            <integrationmode>period</integrationmode>
+            <movingwindow>
+                <on>0</on>
+                <time>0.5</time>
+            </movingwindow>
+        </measure>
+        <frequencyoutput>
+            <frequency>200000</frequency>
+            <frequencyact>signalperiod</frequencyact>
+            <output>
+                <n>0</n>
+            </output>
+        </frequencyoutput>
+    </configuration>
+    <parameter>
+        <measuringmode>4LS</measuringmode>
+        <modePhases>
+            <n>0</n>
+        </modePhases>
+        <interval>
+            <time>4.0</time>
+            <period>200</period>
+        </interval>
+    </parameter>
+</pow1modconfpar>

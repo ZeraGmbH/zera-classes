@@ -51,6 +51,11 @@
         "id": 1072
       },
       {
+        "name" : "power1module",
+        "configFile" : "power1moduleAllPhaseLambdaApparentCED.xml",
+        "id": 1074
+      },
+      {
         "name" : "power2module",
         "configFile" : "mt310s2-power2moduleCED.xml",
         "id": 1090
@@ -77,7 +82,7 @@
       },
       {
         "name" : "lambdamodule",
-        "configFile" : "mt310s2-lambdamodule.xml",
+        "configFile" : "lambdamodule-with-own-apparentpowermodule.xml",
         "id": 1140
       },
       {
