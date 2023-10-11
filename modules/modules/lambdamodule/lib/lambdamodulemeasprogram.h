@@ -9,6 +9,7 @@
 #include <QFinalState>
 
 #include "lambdamoduleconfigdata.h"
+#include "lambdacalcdelegate.h"
 #include "basemeasworkprogram.h"
 
 class cBaseModule;
@@ -70,7 +71,6 @@ enum lambdamoduleCmds
 
 
 class cLambdaModuleConfigData;
-class cLambdaMeasDelegate;
 class cLambdaModule;
 
 
@@ -95,8 +95,7 @@ private:
     VfModuleMetaData* m_pLAMBDACountInfo; // the number of values we produce
     VfModuleComponent* m_pMeasureSignal;
 
-    QList<cLambdaMeasDelegate*> m_LambdaMeasDelegateList;
-
+    LambdaCalcDelegate *m_lambdaCalcDelegate;
     // statemachine for activating gets the following states
     QState m_searchActualValuesState;
     QFinalState m_activationDoneState;
@@ -113,7 +112,6 @@ private slots:
     void deactivateMeasDone();
 
     void setMeasureSignal(int signal);
-    void computeInput2Sum(QVariant value);
 };
 
 }
