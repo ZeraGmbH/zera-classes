@@ -7,7 +7,7 @@ PhaseSumValues::PhaseSumValues() :
 {
 }
 
-PhaseSumValues LambdaCalculator::calculateAllLambdas(const PhaseSumValues &activePower, const PhaseSumValues &apparentPower, QString measModeActivePower, QString phaseMask)
+PhaseSumValues LambdaCalculator::calculateAllLambdas(const PhaseSumValues &activePower, const PhaseSumValues &apparentPower, QString measModeActivePower, QString phaseMaskActivePower)
 {
     PhaseSumValues lambdas;
     cMeasModeInfo info = MeasModeCatalog::getInfo(measModeActivePower);
@@ -17,7 +17,7 @@ PhaseSumValues LambdaCalculator::calculateAllLambdas(const PhaseSumValues &activ
         lambdas = lambdaFor3LW(activePower.sum, apparentPower.sum);
     else {
         for(int i = 0; i < MeasPhaseCount; i++) {
-            if (phaseMask.size() > i && phaseMask.at(i) == "1") {
+            if (phaseMaskActivePower.size() > i && phaseMaskActivePower.at(i) == "1") {
                 if (apparentPower.phases[i] == 0)
                     lambdas.phases[i] = qSNaN();
                 else {

@@ -165,7 +165,7 @@ void test_lambdacalculator::powerFactorApparentSum0()
     QVERIFY(qIsNaN(lambdas.sum));
 }
 
-void test_lambdacalculator::powerFactorLimitedTo1()
+void test_lambdacalculator::powerFactorLimitedToPlusMinusOne()
 {
     m_activePower.phases[0] = -2.0;
     m_activePower.phases[1] = -0.5;
