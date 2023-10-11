@@ -9,6 +9,8 @@ class test_lambdacalcdelegate : public QObject
 private slots:
     void measModeAvail3LW();
     void measModeNotAvail3LW();
+    void measModeAvailPhaseMask110();
+    void measModeNotAvailPhaseMask110();
 
 };
 
