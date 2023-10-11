@@ -138,7 +138,6 @@ private:
 private slots:
     void entryIdle();
     void entryIDLEIdle();
-    void exitIdle();
 
     void entryConfXML();
     void entryConfSetup();
