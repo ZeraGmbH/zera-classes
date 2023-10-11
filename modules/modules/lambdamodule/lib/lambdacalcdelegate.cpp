@@ -37,19 +37,25 @@ void LambdaCalcDelegate::onActivePowerSumChange(QVariant power)
 void LambdaCalcDelegate::onApparentPower1Change(QVariant power)
 {
     m_apparentPowerValues.phases[0] = power.toDouble();
+    emit measuring(0);
     updateLambdaValues();
+    emit measuring(1);
 }
 
 void LambdaCalcDelegate::onApparentPower2Change(QVariant power)
 {
     m_apparentPowerValues.phases[1] = power.toDouble();
+    emit measuring(0);
     updateLambdaValues();
+    emit measuring(1);
 }
 
 void LambdaCalcDelegate::onApparentPower3Change(QVariant power)
 {
     m_apparentPowerValues.phases[2] = power.toDouble();
+    emit measuring(0);
     updateLambdaValues();
+    emit measuring(1);
 }
 
 void LambdaCalcDelegate::onApparentPowerSumChange(QVariant power)
