@@ -54,7 +54,6 @@ cBaseModule::cBaseModule(quint8 modnr, int entityId, VeinEvent::StorageSystem *s
     m_pStateIdle->setInitialState(m_pStateIDLEIdle);
     connect(m_pStateIDLEIdle, &QState::entered, this, &cBaseModule::entryIDLEIdle);
     connect(m_pStateIdle, &QState::entered, this, &cBaseModule::entryIdle);
-    connect(m_pStateIdle, &QState::exited, this, &cBaseModule::exitIdle);
     connect(m_pStateIDLEConfXML, &QState::entered, this, &cBaseModule::entryConfXML);
     connect(m_pStateIDLEConfSetup, &QState::entered, this, &cBaseModule::entryConfSetup);
 
@@ -381,13 +380,6 @@ void cBaseModule::entryIDLEIdle()
             }
         }
     }
-}
-
-void cBaseModule::exitIdle()
-{
-    // we don't remove state from state list:
-    // in case of entering configuration we are in IDLE, CONF
-    // in case of entering run or stop statelist is cleared first
 }
 
 void cBaseModule::entryConfXML()
