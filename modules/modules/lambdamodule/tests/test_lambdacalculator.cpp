@@ -119,6 +119,16 @@ void test_lambdacalculator::powerFactorActivePowerMeasMode3LW()
     QCOMPARE(lambdas.sum, 0.5);
 }
 
+void test_lambdacalculator::powerFactorActivePowerMeasMode2LW()
+{
+    m_activePower.sum = 1.0;
+    PhaseSumValues lambdas = LambdaCalculator::calculateAllLambdas(m_activePower, m_apparentPower, "2LW", "001");
+    QCOMPARE(lambdas.phases.at(0), 0.0);
+    QCOMPARE(lambdas.phases.at(1), 0.0);
+    QCOMPARE(lambdas.phases.at(2), 1.0);
+    QCOMPARE(lambdas.sum, 1.0);
+}
+
 void test_lambdacalculator::powerFactorPhase1Apparent0()
 {
     m_apparentPower.phases[0] = 0.0;
