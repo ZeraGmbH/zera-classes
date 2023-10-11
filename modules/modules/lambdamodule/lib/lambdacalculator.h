@@ -15,6 +15,7 @@ public:
     static PhaseSumValues calculateAllLambdas(const PhaseSumValues &activePower, const PhaseSumValues &apparentPower, QString measModeActivePower, QString phaseMask);
 private:
     static double limitValueToPlusMinusOne(const double &value);
+    static PhaseSumValues lambdaFor3LW(double activePowerSum, double apparentPowerSum);
 };
 
 #endif // LAMBDACALCULATOR_H
