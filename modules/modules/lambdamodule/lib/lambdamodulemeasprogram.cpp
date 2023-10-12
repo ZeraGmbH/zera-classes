@@ -83,65 +83,66 @@ void cLambdaModuleMeasProgram::searchActualValues()
 {
     bool error = false;
     QList<VfModuleComponentInput*> inputList;
+    VfModuleComponentInput *inputComponent, *inputPComponent, *inputSComponent;
 
-    if (getConfData()->m_activeMeasModeAvail) {
-        if ((!m_pModule->m_pStorageSystem->hasStoredValue(getConfData()->m_activeMeasModeEntity, getConfData()->m_activeMeasModeComponent)) ||
-            (!m_pModule->m_pStorageSystem->hasStoredValue(getConfData()->m_activeMeasModeEntity, getConfData()->m_activeMeasModePhaseComponent)))
-            error = true;
-    }
+    m_lambdaCalcDelegate = new LambdaCalcDelegate(getConfData()->m_activeMeasModeAvail, m_veinActValueList);
+    connect(m_lambdaCalcDelegate, &LambdaCalcDelegate::measuring, this, &cLambdaModuleMeasProgram::setMeasureSignal);
 
-    if (!error) {
-        for (int i = 0; i < getConfData()->m_nLambdaSystemCount; i++) {
-            // we first test that wanted input components exist
-            if (!(m_pModule->m_pStorageSystem->hasStoredValue(getConfData()->m_lambdaSystemConfigList.at(i).m_nInputPEntity, getConfData()->m_lambdaSystemConfigList.at(i).m_sInputP)) &&
-                 (m_pModule->m_pStorageSystem->hasStoredValue(getConfData()->m_lambdaSystemConfigList.at(i).m_nInputSEntity, getConfData()->m_lambdaSystemConfigList.at(i).m_sInputS)) )
-                error = true;
-        }
-    }
+    if ((m_pModule->m_pStorageSystem->hasStoredValue(getConfData()->m_activeMeasModeEntity, getConfData()->m_activeMeasModeComponent)) &&
+        (m_pModule->m_pStorageSystem->hasStoredValue(getConfData()->m_activeMeasModeEntity, getConfData()->m_activeMeasModePhaseComponent))) {
 
-    if (!error) {
-        m_lambdaCalcDelegate = new LambdaCalcDelegate(getConfData()->m_activeMeasModeAvail, m_veinActValueList);
-
-        connect(m_lambdaCalcDelegate, &LambdaCalcDelegate::measuring, this, &cLambdaModuleMeasProgram::setMeasureSignal);
-
-        VfModuleComponentInput *inputPComponent = new VfModuleComponentInput(getConfData()->m_lambdaSystemConfigList.at(0).m_nInputPEntity, getConfData()->m_lambdaSystemConfigList.at(0).m_sInputP);
-        inputList.append(inputPComponent);
-        connect(inputPComponent, &VfModuleComponentInput::sigValueChanged, m_lambdaCalcDelegate, &LambdaCalcDelegate::onActivePower1Change);
-        VfModuleComponentInput *inputSComponent = new VfModuleComponentInput(getConfData()->m_lambdaSystemConfigList.at(0).m_nInputSEntity, getConfData()->m_lambdaSystemConfigList.at(0).m_sInputS);
-        inputList.append(inputSComponent);
-        connect(inputSComponent, &VfModuleComponentInput::sigValueChanged, m_lambdaCalcDelegate, &LambdaCalcDelegate::onApparentPower1Change);
-
-        inputPComponent = new VfModuleComponentInput(getConfData()->m_lambdaSystemConfigList.at(1).m_nInputPEntity, getConfData()->m_lambdaSystemConfigList.at(1).m_sInputP);
-        inputList.append(inputPComponent);
-        connect(inputPComponent, &VfModuleComponentInput::sigValueChanged, m_lambdaCalcDelegate, &LambdaCalcDelegate::onActivePower2Change);
-        inputSComponent = new VfModuleComponentInput(getConfData()->m_lambdaSystemConfigList.at(1).m_nInputSEntity, getConfData()->m_lambdaSystemConfigList.at(1).m_sInputS);
-        inputList.append(inputSComponent);
-        connect(inputSComponent, &VfModuleComponentInput::sigValueChanged, m_lambdaCalcDelegate, &LambdaCalcDelegate::onApparentPower2Change);
-
-        inputPComponent = new VfModuleComponentInput(getConfData()->m_lambdaSystemConfigList.at(2).m_nInputPEntity, getConfData()->m_lambdaSystemConfigList.at(2).m_sInputP);
-        inputList.append(inputPComponent);
-        connect(inputPComponent, &VfModuleComponentInput::sigValueChanged, m_lambdaCalcDelegate, &LambdaCalcDelegate::onActivePower3Change);
-        inputSComponent = new VfModuleComponentInput(getConfData()->m_lambdaSystemConfigList.at(2).m_nInputSEntity, getConfData()->m_lambdaSystemConfigList.at(2).m_sInputS);
-        inputList.append(inputSComponent);
-        connect(inputSComponent, &VfModuleComponentInput::sigValueChanged, m_lambdaCalcDelegate, &LambdaCalcDelegate::onApparentPower3Change);
-
-        inputPComponent = new VfModuleComponentInput(getConfData()->m_lambdaSystemConfigList.at(3).m_nInputPEntity, getConfData()->m_lambdaSystemConfigList.at(3).m_sInputP);
-        inputList.append(inputPComponent);
-        connect(inputPComponent, &VfModuleComponentInput::sigValueChanged, m_lambdaCalcDelegate, &LambdaCalcDelegate::onActivePowerSumChange);
-        inputSComponent = new VfModuleComponentInput(getConfData()->m_lambdaSystemConfigList.at(3).m_nInputSEntity, getConfData()->m_lambdaSystemConfigList.at(3).m_sInputS);
-        inputList.append(inputSComponent);
-        connect(inputSComponent, &VfModuleComponentInput::sigValueChanged, m_lambdaCalcDelegate, &LambdaCalcDelegate::onApparentPowerSumChange);
-
-        VfModuleComponentInput *activeMeasModeComponent = new VfModuleComponentInput(getConfData()->m_activeMeasModeEntity, getConfData()->m_activeMeasModeComponent);
-        inputList.append(activeMeasModeComponent);
-        connect(activeMeasModeComponent, &VfModuleComponentInput::sigValueChanged, m_lambdaCalcDelegate, &LambdaCalcDelegate::onActivePowerMeasModeChange);
+        inputComponent = new VfModuleComponentInput(getConfData()->m_activeMeasModeEntity, getConfData()->m_activeMeasModeComponent);
+        inputList.append(inputComponent);
+        connect(inputComponent, &VfModuleComponentInput::sigValueChanged, m_lambdaCalcDelegate, &LambdaCalcDelegate::onActivePowerMeasModeChange);
         m_lambdaCalcDelegate->onActivePowerMeasModeChange(m_pModule->m_pStorageSystem->getStoredValue(getConfData()->m_activeMeasModeEntity, getConfData()->m_activeMeasModeComponent));
 
-        VfModuleComponentInput *activeMeasModePhaseComponent = new VfModuleComponentInput(getConfData()->m_activeMeasModeEntity, getConfData()->m_activeMeasModePhaseComponent);
-        inputList.append(activeMeasModePhaseComponent);
-        connect(activeMeasModePhaseComponent, &VfModuleComponentInput::sigValueChanged, m_lambdaCalcDelegate, &LambdaCalcDelegate::onActivePowerPhaseMaskChange);
+        inputComponent = new VfModuleComponentInput(getConfData()->m_activeMeasModeEntity, getConfData()->m_activeMeasModePhaseComponent);
+        inputList.append(inputComponent);
+        connect(inputComponent, &VfModuleComponentInput::sigValueChanged, m_lambdaCalcDelegate, &LambdaCalcDelegate::onActivePowerPhaseMaskChange);
         m_lambdaCalcDelegate->onActivePowerPhaseMaskChange(m_pModule->m_pStorageSystem->getStoredValue(getConfData()->m_activeMeasModeEntity, getConfData()->m_activeMeasModePhaseComponent));
+
+        for (int i = 0; i < getConfData()->m_nLambdaSystemCount; i++) {
+            if (!error) {
+                // we first test that wanted input components exist
+                if ((m_pModule->m_pStorageSystem->hasStoredValue(getConfData()->m_lambdaSystemConfigList.at(i).m_nInputPEntity, getConfData()->m_lambdaSystemConfigList.at(i).m_sInputP)) &&
+                    (m_pModule->m_pStorageSystem->hasStoredValue(getConfData()->m_lambdaSystemConfigList.at(i).m_nInputSEntity, getConfData()->m_lambdaSystemConfigList.at(i).m_sInputS)) ) {
+
+                    inputPComponent = new VfModuleComponentInput(getConfData()->m_lambdaSystemConfigList.at(i).m_nInputPEntity, getConfData()->m_lambdaSystemConfigList.at(i).m_sInputP);
+                    inputList.append(inputPComponent);
+                    inputSComponent = new VfModuleComponentInput(getConfData()->m_lambdaSystemConfigList.at(i).m_nInputSEntity, getConfData()->m_lambdaSystemConfigList.at(i).m_sInputS);
+                    inputList.append(inputSComponent);
+
+                    if (i == (getConfData()->m_nLambdaSystemCount - 1)) {
+                        connect(inputPComponent, &VfModuleComponentInput::sigValueChanged, m_lambdaCalcDelegate, &LambdaCalcDelegate::onActivePowerSumChange);
+                        connect(inputSComponent, &VfModuleComponentInput::sigValueChanged, m_lambdaCalcDelegate, &LambdaCalcDelegate::onApparentPowerSumChange);
+                    }
+                    else {
+                        switch(i) {
+                        case 0:
+                            connect(inputPComponent, &VfModuleComponentInput::sigValueChanged, m_lambdaCalcDelegate, &LambdaCalcDelegate::onActivePower1Change);
+                            connect(inputSComponent, &VfModuleComponentInput::sigValueChanged, m_lambdaCalcDelegate, &LambdaCalcDelegate::onApparentPower1Change);
+                            break;
+                        case 1:
+                            connect(inputPComponent, &VfModuleComponentInput::sigValueChanged, m_lambdaCalcDelegate, &LambdaCalcDelegate::onActivePower2Change);
+                            connect(inputSComponent, &VfModuleComponentInput::sigValueChanged, m_lambdaCalcDelegate, &LambdaCalcDelegate::onApparentPower2Change);
+                            break;
+                        case 2:
+                            connect(inputPComponent, &VfModuleComponentInput::sigValueChanged, m_lambdaCalcDelegate, &LambdaCalcDelegate::onActivePower3Change);
+                            connect(inputSComponent, &VfModuleComponentInput::sigValueChanged, m_lambdaCalcDelegate, &LambdaCalcDelegate::onApparentPower3Change);
+                            break;
+                        default:
+                            error = true;
+                            break;
+                        }
+                    }
+                }
+                else
+                    error = true;
+            }
+        }
     }
+    else
+        error = true;
 
     if (error)
         emit activationError();
