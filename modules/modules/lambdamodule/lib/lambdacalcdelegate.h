@@ -2,6 +2,7 @@
 #define LAMBDACALCDELEGATE_H
 
 #include "lambdacalculator.h"
+#include "vfmoduleactvalue.h"
 #include <QVariant>
 #include <QObject>
 
@@ -9,7 +10,7 @@ class LambdaCalcDelegate : public QObject
 {
     Q_OBJECT
 public:
-    LambdaCalcDelegate(bool activePowerMeasModeAvail);
+    LambdaCalcDelegate(bool activePowerMeasModeAvail, QList<VfModuleActvalue*> actvalue);
     PhaseSumValues getLambdaValues();
 public slots:
     void onActivePower1Change(QVariant power);
@@ -32,6 +33,7 @@ private:
     PhaseSumValues m_apparentPowerValues;
     QString m_activePowerMeasMode = "";
     QString m_activePowerPhaseMask = "111";
+    QList<VfModuleActvalue*> m_actValues;
 };
 
 #endif // LAMBDACALCDELEGATE_H
