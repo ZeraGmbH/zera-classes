@@ -51,14 +51,14 @@ void cLambdaMeasDelegate::computeOutput()
     double lambda;
 
     if (m_MeasMode3LW || !m_phaseActive)
-        lambda = qSNaN();
+        lambda = qQNaN();
     else if (input1 == 0)
         lambda = 0;
     else
     {
         if (input2 == 0)
         {
-            lambda = qSNaN();
+            lambda = qQNaN();
         }
         else
         {
