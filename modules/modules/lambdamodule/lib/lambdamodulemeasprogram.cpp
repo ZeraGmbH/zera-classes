@@ -100,7 +100,7 @@ void cLambdaModuleMeasProgram::searchActualValues()
     }
 
     if (!error) {
-        m_lambdaCalcDelegate = new LambdaCalcDelegate(getConfData()->m_activeMeasModeAvail);
+        m_lambdaCalcDelegate = new LambdaCalcDelegate(getConfData()->m_activeMeasModeAvail, m_veinActValueList);
 
         connect(m_lambdaCalcDelegate, &LambdaCalcDelegate::measuring, this, &cLambdaModuleMeasProgram::setMeasureSignal);
 

@@ -1,7 +1,7 @@
 #include "lambdacalcdelegate.h"
 
-LambdaCalcDelegate::LambdaCalcDelegate(bool activePowerMeasModeAvail)
-    : m_activePowerMeasModeAvail{activePowerMeasModeAvail}
+LambdaCalcDelegate::LambdaCalcDelegate(bool activePowerMeasModeAvail, QList<VfModuleActvalue *> actvalue)
+    : m_activePowerMeasModeAvail{activePowerMeasModeAvail}, m_actValues{actvalue}
 {
 }
 
@@ -83,4 +83,9 @@ void LambdaCalcDelegate::onActivePowerPhaseMaskChange(QVariant phaseMask)
 void LambdaCalcDelegate::updateLambdaValues()
 {
     m_lambdaValues = LambdaCalculator::calculateAllLambdas(m_activePowerValues, m_apparentPowerValues, m_activePowerMeasMode, m_activePowerPhaseMask);
+    if (!m_actValues.isEmpty()) {
+        m_actValues.last()->setValue(m_lambdaValues.sum);
+        for(int i = 0; i < m_actValues.count() - 1; i++)
+            m_actValues.at(i)->setValue(m_lambdaValues.phases.at(i));
+    }
 }
