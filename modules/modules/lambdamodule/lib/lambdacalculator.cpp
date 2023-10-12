@@ -25,6 +25,8 @@ PhaseSumValues LambdaCalculator::calculateAllLambdas(const PhaseSumValues &activ
                     apparentPowerSum += apparentPower.phases[i];
                 }
             }
+            else
+                lambdas.phases[i] = qSNaN();
         }
         if (activePower.sum == 0)
             //This is necessary if none of the phase is active, then activePower.sum and apparentPowerSum is also 0.

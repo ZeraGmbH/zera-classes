@@ -60,7 +60,7 @@ void test_lambdacalcdelegate::measModeAvailPhaseMask110()
 
     QCOMPARE(delegate.getLambdaValues().phases[0], 0.5);
     QCOMPARE(delegate.getLambdaValues().phases[1], 0.5);
-    QCOMPARE(delegate.getLambdaValues().phases[2], 0.0);
+    QVERIFY(qIsNaN(delegate.getLambdaValues().phases[2]));
     QCOMPARE(delegate.getLambdaValues().sum, 0.5);
 }
 
