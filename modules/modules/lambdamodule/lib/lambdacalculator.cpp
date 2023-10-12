@@ -19,21 +19,21 @@ PhaseSumValues LambdaCalculator::calculateAllLambdas(const PhaseSumValues &activ
         for(int i = 0; i < MeasPhaseCount; i++) {
             if (phaseMaskActivePower.size() > i && phaseMaskActivePower.at(i) == "1") {
                 if (apparentPower.phases[i] == 0)
-                    lambdas.phases[i] = qSNaN();
+                    lambdas.phases[i] = qQNaN();
                 else {
                     lambdas.phases[i] = limitValueToPlusMinusOne(activePower.phases[i] / apparentPower.phases[i]);
                     apparentPowerSum += apparentPower.phases[i];
                 }
             }
             else
-                lambdas.phases[i] = qSNaN();
+                lambdas.phases[i] = qQNaN();
         }
         if (activePower.sum == 0)
             //This is necessary if none of the phase is active, then activePower.sum and apparentPowerSum is also 0.
             //Todo: Then lambda of sum is 0?
             lambdas.sum = 0.0;
         else if (apparentPowerSum == 0)
-            lambdas.sum = qSNaN();
+            lambdas.sum = qQNaN();
         else
             lambdas.sum = limitValueToPlusMinusOne(activePower.sum / apparentPowerSum);
     }
@@ -52,9 +52,9 @@ PhaseSumValues LambdaCalculator::lambdaFor3LW(double activePowerSum, double appa
 {
     PhaseSumValues lambdas;
     for(double &phaseLambda : lambdas.phases)
-        phaseLambda = qSNaN();
+        phaseLambda = qQNaN();
     if (apparentPowerSum == 0)
-        lambdas.sum = qSNaN();
+        lambdas.sum = qQNaN();
     else
         lambdas.sum = limitValueToPlusMinusOne(activePowerSum / apparentPowerSum);
 
