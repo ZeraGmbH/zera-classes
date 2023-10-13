@@ -9,6 +9,7 @@
 #include "secmeasinputdictionary.h"
 #include <clientactivecomponent.h>
 #include <memory>
+#include <timerperiodicqt.h>
 
 namespace SEM1MODULE
 {
@@ -240,7 +241,7 @@ private:
     ClientActiveComponent m_ClientActiveNotifier;
 
     // vars dealing with error measurement
-    QTimer m_ActualizeTimer; // after timed out we actualize progressvalue
+    TimerTemplateQtPtr m_ActualizeTimer; // after timed out we actualize progressvalue
     double m_fResult = 0.0; // error value in %
     ECALCRESULT::enResultTypes m_eRating = ECALCRESULT::RESULT_PASSED;
     quint32 m_nTimerCountStart = 0; // master / time counts down
