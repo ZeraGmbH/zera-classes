@@ -797,18 +797,17 @@ double cSec1ModuleMeasProgram::calculateDutConstant()
 
 void cSec1ModuleMeasProgram::updateDemoMeasurementResults()
 {
-    quint32 dUTPulseCounterActual = 0;
+    int dUTPulseCounterActual = m_nDUTPulseCounterStart - m_demoTimeSinceStart.elapsed();
+
+    if(dUTPulseCounterActual >= 0) {
+        setStatus(ECALCSTATUS::STARTED);
+    }
+    else {
+        m_nEnergyCounterFinal = rand() % 10;
+        setECResultAndResetInt();
+        checkForRestart();
+    }
     updateProgress(dUTPulseCounterActual);
-
-    setStatus(ECALCSTATUS::READY); //still need more thoughts on this
-
-    m_nEnergyCounterFinal = rand() % 10;
-    setECResult();
-
-    ++m_nMeasurementNo;
-    m_pMeasNumAct->setValue(m_nMeasurementNo);
-
-    stopMeasurement(false);
 }
 
 void cSec1ModuleMeasProgram::onRefConstantChanged(QString refInputName)
@@ -959,9 +958,13 @@ void cSec1ModuleMeasProgram::startNext()
     // Notes on re-start:
     // * We don't need the whole start state machine here
     // * There is too much magic in startMeasurement so we cannnot use it here either
-    m_MsgNrCmdList[m_pSECInterface->stop(m_masterErrCalcName)] = stopmeas;
+    if(!m_pModule->m_demo)
+        m_MsgNrCmdList[m_pSECInterface->stop(m_masterErrCalcName)] = stopmeas;
     setStatus(ECALCSTATUS::ARMED | ECALCSTATUS::READY);
-    m_MsgNrCmdList[m_pSECInterface->start(m_masterErrCalcName)] = startmeasurement;
+    if(!m_pModule->m_demo)
+        m_MsgNrCmdList[m_pSECInterface->start(m_masterErrCalcName)] = startmeasurement;
+    else
+        m_demoTimeSinceStart.restart();
     startMeasurementDone();
 }
 
@@ -1343,7 +1346,8 @@ void cSec1ModuleMeasProgram::setMeaspulses()
         m_nDUTPulseCounterStart = 1;
     else
         m_nDUTPulseCounterStart = m_pMRatePar->getValue().toLongLong();
-    m_MsgNrCmdList[m_pSECInterface->writeRegister(m_masterErrCalcName, ECALCREG::MTCNTin, m_nDUTPulseCounterStart)] = setmeaspulses;
+    if(!m_pModule->m_demo)
+        m_MsgNrCmdList[m_pSECInterface->writeRegister(m_masterErrCalcName, ECALCREG::MTCNTin, m_nDUTPulseCounterStart)] = setmeaspulses;
 }
 
 
@@ -1396,6 +1400,8 @@ void cSec1ModuleMeasProgram::startMeasurement()
     if(!m_pModule->m_demo)
         m_MsgNrCmdList[m_pSECInterface->start(m_masterErrCalcName)] = startmeasurement;
     else {
+        m_demoTimeSinceStart.start();
+        setMeaspulses();
         updateDemoMeasurementResults();
         emit setupContinue();
     }
@@ -1491,7 +1497,8 @@ void cSec1ModuleMeasProgram::setECResultAndResetInt()
     }
 
     // enable next int
-    resetIntRegister();
+    if(!m_pModule->m_demo)
+        resetIntRegister();
 }
 
 void cSec1ModuleMeasProgram::checkForRestart()
@@ -1765,10 +1772,12 @@ void cSec1ModuleMeasProgram::newLowerLimit(QVariant limit)
 void cSec1ModuleMeasProgram::Actualize()
 {
     if(m_bMeasurementRunning) { // still running
-        if((getStatus() & ECALCSTATUS::WAIT) == 0 && !m_pModule->m_demo) { // measurement: next poll
-            m_MsgNrCmdList[m_pSECInterface->readRegister(m_masterErrCalcName, ECALCREG::STATUS)] = actualizestatus;
-            m_MsgNrCmdList[m_pSECInterface->readRegister(m_masterErrCalcName, ECALCREG::MTCNTact)] = actualizeprogress;
-            m_MsgNrCmdList[m_pSECInterface->readRegister(m_slaveErrCalcName, ECALCREG::MTCNTact)] = actualizeenergy;
+        if((getStatus() & ECALCSTATUS::WAIT) == 0) { // measurement: next poll
+            if(!m_pModule->m_demo) {
+                m_MsgNrCmdList[m_pSECInterface->readRegister(m_masterErrCalcName, ECALCREG::STATUS)] = actualizestatus;
+                m_MsgNrCmdList[m_pSECInterface->readRegister(m_masterErrCalcName, ECALCREG::MTCNTact)] = actualizeprogress;
+                m_MsgNrCmdList[m_pSECInterface->readRegister(m_slaveErrCalcName, ECALCREG::MTCNTact)] = actualizeenergy;
+            }
         }
         else { // wait: actualize progress
             double waitTimeMs = m_pMeasWait->getValue().toInt() * 1000;
@@ -1777,6 +1786,8 @@ void cSec1ModuleMeasProgram::Actualize()
             m_fProgress = elapsedMs / (waitTimeMs / 100+0);
             m_pProgressAct->setValue(QVariant(m_fProgress));
         }
+        if(m_pModule->m_demo)
+            updateDemoMeasurementResults();
     }
 }
 
