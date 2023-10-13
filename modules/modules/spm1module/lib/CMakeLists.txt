@@ -19,6 +19,7 @@ target_include_directories(spm1module-static
 target_link_libraries(spm1module-static
     zera-basemodule
     modules-common-sec
+    Zera::zera-timers
     # ask linker to help us finding unresolved symbols
     "-Wl,--no-undefined"
 )
