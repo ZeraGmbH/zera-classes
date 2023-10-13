@@ -1,6 +1,5 @@
 #include "lambdamodulemeasprogram.h"
 #include "lambdamodule.h"
-#include "lambdameasdelegate.h"
 #include "lambdamoduleconfiguration.h"
 #include <errormessages.h>
 #include <reply.h>
