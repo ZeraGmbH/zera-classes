@@ -154,7 +154,7 @@ private:
 
     double calculateDutConstant();
     void updateDemoMeasurementResults();
-    void setProgress();
+    void updateProgress(quint32 dUTPulseCounterActual);
 
     cSec1Module* m_pModule; // the module we live in
     Zera::cSECInterface* m_pSECInterface;
@@ -278,7 +278,6 @@ private:
     double m_fResult = 0.0; // error value in %
     ECALCRESULT::enResultTypes m_eRating = ECALCRESULT::RESULT_PASSED;
     quint32 m_nDUTPulseCounterStart = 0;
-    quint32 m_nDUTPulseCounterActual = 0;
     quint32 m_nEnergyCounterFinal = 0;
     quint32 m_nEnergyCounterActual = 0;
     double m_fProgress = 0.0; // progress value in %
