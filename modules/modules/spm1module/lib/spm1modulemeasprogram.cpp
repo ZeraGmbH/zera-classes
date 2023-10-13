@@ -9,6 +9,7 @@
 #include <proxy.h>
 #include <unithelper.h>
 #include <math.h>
+#include <timerfactoryqt.h>
 
 namespace SPM1MODULE
 {
@@ -181,7 +182,7 @@ cSpm1ModuleMeasProgram::cSpm1ModuleMeasProgram(cSpm1Module* module, std::shared_
     mPowerUnitFactorHash["kVA"] = 1.0;
     mPowerUnitFactorHash["VA"] = 0.001;
 
-    m_ActualizeTimer.setInterval(m_nActualizeIntervallLowFreq);
+    m_ActualizeTimer = TimerFactoryQt::createPeriodic(m_nActualizeIntervallLowFreq);
     m_resourceTypeList.addTypesFromConfig(getConfData()->m_refInpList);
 }
 
@@ -819,7 +820,7 @@ void cSpm1ModuleMeasProgram::handleSECInterrupt()
     if (!m_finalResultStateMachine.isRunning()) {
         m_finalResultStateMachine.setInitialState(&m_readIntRegisterState);
         m_finalResultStateMachine.start();
-        m_ActualizeTimer.stop();
+        m_ActualizeTimer->stop();
     }
 }
 
@@ -992,7 +993,7 @@ void cSpm1ModuleMeasProgram::activationDone()
         m_refInputDictionary.setDisplayedString(confData->m_refInpList.at(i).inputName, displayString);
     }
 
-    connect(&m_ActualizeTimer, &QTimer::timeout, this, &cSpm1ModuleMeasProgram::Actualize);
+    connect(m_ActualizeTimer.get(), &TimerTemplateQt::sigExpired, this, &cSpm1ModuleMeasProgram::Actualize);
 
     connect(m_pStartStopPar, &VfModuleParameter::sigValueChanged, this, &cSpm1ModuleMeasProgram::newStartStop);
     connect(m_pRefInputPar, &VfModuleParameter::sigValueChanged, this, &cSpm1ModuleMeasProgram::newRefInput);
@@ -1164,7 +1165,7 @@ void cSpm1ModuleMeasProgram::startMeasurementDone()
 {
     if(!m_pModule->m_demo) {
         Actualize(); // we actualize at once after started
-        m_ActualizeTimer.start(); // and after current interval
+        m_ActualizeTimer->start(); // and after current interval
     }
     m_fEnergy = 0.0;
     m_pEnergyAct->setValue(m_fEnergy);
@@ -1273,7 +1274,7 @@ void cSpm1ModuleMeasProgram::newStartStop(QVariant startstop)
         }
         else {
             m_MsgNrCmdList[m_pSECInterface->stop(m_masterErrCalcName)] = stopmeas;
-            m_ActualizeTimer.stop();
+            m_ActualizeTimer->stop();
             // if we are not "targeted" we handle pressing stop as if the
             // measurement became ready and an interrupt occured
             if (!m_finalResultStateMachine.isRunning()) {
@@ -1380,7 +1381,9 @@ void cSpm1ModuleMeasProgram::Actualize()
 void cSpm1ModuleMeasProgram::clientActivationChanged(bool bActive)
 {
     // Adjust our m_ActualizeTimer timeout to our client's needs
-    m_ActualizeTimer.setInterval(bActive ? m_nActualizeIntervallHighFreq : m_nActualizeIntervallLowFreq);
+    m_ActualizeTimer = TimerFactoryQt::createPeriodic(bActive ? m_nActualizeIntervallHighFreq : m_nActualizeIntervallLowFreq);
+    connect(m_ActualizeTimer.get(), &TimerTemplateQt::sigExpired, this, &cSpm1ModuleMeasProgram::Actualize);
+    m_ActualizeTimer->start();
 }
 
 void cSpm1ModuleMeasProgram::stopMeasurement(bool bAbort)
@@ -1390,7 +1393,7 @@ void cSpm1ModuleMeasProgram::stopMeasurement(bool bAbort)
     if(!m_pModule->m_demo)
         m_MsgNrCmdList[m_pSECInterface->stop(m_masterErrCalcName)] = stopmeas;
     m_pStartStopPar->setValue(QVariant(0));
-    m_ActualizeTimer.stop();
+    m_ActualizeTimer->stop();
 }
 
 bool cSpm1ModuleMeasProgram::found(QList<TRefInput> &list, QString searched)
