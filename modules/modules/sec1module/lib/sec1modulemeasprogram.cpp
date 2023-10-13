@@ -800,7 +800,10 @@ void cSec1ModuleMeasProgram::updateDemoMeasurementResults()
     int dUTPulseCounterActual = m_nDUTPulseCounterStart - m_demoTimeSinceStart.elapsed();
 
     if(dUTPulseCounterActual >= 0) {
-        setStatus(ECALCSTATUS::STARTED);
+        if(m_nMeasurementNo == 0)
+            setStatus(ECALCSTATUS::STARTED);
+        else
+            setStatus(ECALCSTATUS::STARTED | ECALCSTATUS::READY);
     }
     else {
         m_nEnergyCounterFinal = rand() % 10;
