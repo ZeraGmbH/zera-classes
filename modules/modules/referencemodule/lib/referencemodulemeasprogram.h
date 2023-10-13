@@ -3,6 +3,7 @@
 
 #include "referencemoduleconfigdata.h"
 #include <basedspmeasprogram.h>
+#include <timerperiodicqt.h>
 
 namespace REFERENCEMODULE
 {
@@ -74,6 +75,7 @@ private:
     QFinalState m_dataAcquisitionDoneState;
 
     Zera::ProxyClientPtr m_rmClient;
+    TimerTemplateQtPtr m_demoPeriodicTimer;
 
 private slots:
     void resourceManagerConnect();
@@ -93,6 +95,8 @@ private slots:
 
     void dataAcquisitionDSP();
     void dataReadDSP();
+
+    void handleDemoActualValues();
 
 };
 

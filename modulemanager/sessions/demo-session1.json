@@ -11,6 +11,11 @@
         "id": 1000
       },
       {
+        "name" : "referencemodule",
+        "configFile" : "com5003-referencemodule.xml",
+        "id": 1001
+      },
+      {
         "name" : "rangemodule",
         "configFile" : "mt310s2-rangemodule.xml",
         "id": 1020

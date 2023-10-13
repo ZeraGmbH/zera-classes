@@ -6,8 +6,9 @@
 namespace REFERENCEMODULE
 {
 
-cReferenceMeasChannel::cReferenceMeasChannel(cSocket* rmsocket, cSocket* pcbsocket, QString name, quint8 chnnr)
-    :cBaseMeasChannel(rmsocket, pcbsocket, name, chnnr)
+cReferenceMeasChannel::cReferenceMeasChannel(cSocket* rmsocket, cSocket* pcbsocket, QString name, quint8 chnnr, bool demo) :
+    cBaseMeasChannel(rmsocket, pcbsocket, name, chnnr),
+    m_demo(demo)
 {
     m_pPCBInterface = new Zera::cPCBInterface();
 
@@ -42,7 +43,12 @@ cReferenceMeasChannel::cReferenceMeasChannel(cSocket* rmsocket, cSocket* pcbsock
     m_activationMachine.addState(&m_readRangeProperties2State);
     m_activationMachine.addState(&m_readRangeProperties3State);
     m_activationMachine.addState(&m_activationDoneState);
-    m_activationMachine.setInitialState(&m_rmConnectState);
+
+    if(m_demo)
+        m_activationMachine.setInitialState(&m_activationDoneState);
+    else
+        m_activationMachine.setInitialState(&m_rmConnectState);
+
     connect(&m_rmConnectState, SIGNAL(entered()), SLOT(rmConnect()));
     connect(&m_IdentifyState, SIGNAL(entered()), SLOT(sendRMIdent()));
     connect(&m_readResourceTypesState, SIGNAL(entered()), SLOT(readResourceTypes()));
@@ -62,7 +68,12 @@ cReferenceMeasChannel::cReferenceMeasChannel(cSocket* rmsocket, cSocket* pcbsock
     m_deactivationInitState.addTransition(this, SIGNAL(deactivationContinue()), &m_deactivationDoneState);
     m_deactivationMachine.addState(&m_deactivationInitState);
     m_deactivationMachine.addState(&m_deactivationDoneState);
-    m_deactivationMachine.setInitialState(&m_deactivationInitState);
+
+    if(m_demo)
+        m_deactivationMachine.setInitialState(&m_deactivationDoneState);
+    else
+        m_deactivationMachine.setInitialState(&m_deactivationInitState);
+
     connect(&m_deactivationInitState, SIGNAL(entered()), SLOT(deactivationInit()));
     connect(&m_deactivationDoneState, SIGNAL(entered()), SLOT(deactivationDone()));
 
@@ -103,10 +114,13 @@ cReferenceMeasChannel::~cReferenceMeasChannel()
 
 quint32 cReferenceMeasChannel::setRange(QString range)
 {
+    quint32 msgnr = 0;
     m_sNewRange = range;
     m_sActRange = m_sNewRange;
-    quint32 msgnr = m_pPCBInterface->setRange(m_sName, m_RangeInfoHash[range].name);
-    m_MsgNrCmdList[msgnr] = setmeaschannelrange;
+    if(!m_demo) {
+        msgnr = m_pPCBInterface->setRange(m_sName, m_RangeInfoHash[range].name);
+        m_MsgNrCmdList[msgnr] = setmeaschannelrange;
+    }
     return msgnr;
 }
 
@@ -399,6 +413,75 @@ void cReferenceMeasChannel::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QV
     }
 }
 
+void cReferenceMeasChannel::setupDemoOperation()
+{
+    // Stolen from cRangeMeasChannel::setupDemoOperation()
+    // Set dummy channel info
+    bool isVoltagePhase = false;
+    switch (m_nChannelNr)
+    {
+    case 1:
+        m_sAlias = "UL1";
+        isVoltagePhase = true;
+        break;
+    case 2:
+        m_sAlias = "UL2";
+        isVoltagePhase = true;
+        break;
+    case 3:
+        m_sAlias = "UL3";
+        isVoltagePhase = true;
+        break;
+    case 4:
+        m_sAlias = "IL1";
+        break;
+    case 5:
+        m_sAlias = "IL2";
+        break;
+    case 6:
+        m_sAlias = "IL3";
+        break;
+    case 7:
+        m_sAlias = "UAUX";
+        isVoltagePhase = true;
+        break;
+    case 8:
+        m_sAlias = "IAUX";
+        break;
+    }
+    QVector<double> nominalRanges;
+    if(isVoltagePhase) {
+        m_sUnit = "V";
+        nominalRanges = QVector<double>() << 480.0 << 240.0 << 120.0 << 60.0 << 0.5;
+    }
+    else {
+        m_sUnit = "A";
+        nominalRanges = QVector<double>() << 1000.0 << 100.0 << 10.0 << 1.0 << 0.1 << 0.01 << 0.001;
+    }
+    for(auto rangeVal : qAsConst(nominalRanges)) {
+        cRangeInfo rangeInfo;
+        QString unitPrefix;
+        double rangeValDisplay = rangeVal;
+        if(rangeVal < 1) {
+            unitPrefix = "m";
+            rangeValDisplay *= 1000.0;
+        }
+        rangeInfo.alias.setNum(int(rangeValDisplay));
+        rangeInfo.alias += unitPrefix+m_sUnit;
+        if(m_sActRange.isEmpty()) {
+            m_sActRange = rangeInfo.alias;
+        }
+        rangeInfo.avail = true;
+        rangeInfo.urvalue = rangeVal;
+        rangeInfo.rejection = 1.0;
+        rangeInfo.ovrejection = 1.25;
+        // ?? name
+        rangeInfo.type = 1;
+        m_RangeInfoHash[rangeInfo.alias] = rangeInfo;
+    }
+    //setRangeListAlias();
+}
+
 
 void cReferenceMeasChannel::rmConnect()
 {
@@ -513,6 +596,8 @@ void cReferenceMeasChannel::readRangeProperties3()
 
 void cReferenceMeasChannel::activationDone()
 {
+    if(m_demo)
+        setupDemoOperation();
     QHash<QString, cRangeInfo>::iterator it = m_RangeInfoHash.begin();
     while (it != m_RangeInfoHash.end()) // we delete all unused ranges
     {

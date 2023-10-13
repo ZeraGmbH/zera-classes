@@ -46,7 +46,7 @@ class cReferenceMeasChannel:public cBaseMeasChannel
     Q_OBJECT
 
 public:
-    cReferenceMeasChannel(cSocket* rmsocket, cSocket* pcbsocket, QString name, quint8 chnnr);
+    cReferenceMeasChannel(cSocket* rmsocket, cSocket* pcbsocket, QString name, quint8 chnnr, bool demo);
     ~cReferenceMeasChannel();
     virtual void generateInterface(); // here we export our interface (entities)
 
@@ -62,6 +62,8 @@ protected slots:
     void catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant answer);
 
 private:
+    void setupDemoOperation();
+
     QStringList m_RangeNameList; // a list of all ranges
     QHash<QString, cRangeInfo> m_RangeInfoHash; // a list of available and selectable ranges, alias will be the key
     QString m_sNewRange;
@@ -70,6 +72,7 @@ private:
     double m_fPhaseCorrection;
     double m_fOffsetCorrection;
     quint32 m_nStatus;
+    bool m_demo;
 
     // statemachine for activating a referencemeaschannel
     QState m_rmConnectState; // we must connect first to resource manager

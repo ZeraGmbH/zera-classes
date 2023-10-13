@@ -6,6 +6,7 @@
 #include <proxy.h>
 #include <proxyclient.h>
 #include <reply.h>
+#include <timerfactoryqt.h>
 
 namespace REFERENCEMODULE
 {
@@ -35,7 +36,10 @@ cReferenceModuleMeasProgram::cReferenceModuleMeasProgram(cReferenceModule* modul
     m_activationMachine.addState(&m_activateDSPState);
     m_activationMachine.addState(&m_loadDSPDoneState);
 
-    m_activationMachine.setInitialState(&resourceManagerConnectState);
+    if(m_pModule->m_demo)
+        m_activationMachine.setInitialState(&m_loadDSPDoneState);
+    else
+        m_activationMachine.setInitialState(&resourceManagerConnectState);
 
     connect(&resourceManagerConnectState, SIGNAL(entered()), SLOT(resourceManagerConnect()));
     connect(&m_IdentifyState, SIGNAL(entered()), SLOT(sendRMIdent()));
@@ -56,7 +60,10 @@ cReferenceModuleMeasProgram::cReferenceModuleMeasProgram(cReferenceModule* modul
     m_deactivationMachine.addState(&m_freeUSERMemState);
     m_deactivationMachine.addState(&m_unloadDSPDoneState);
 
-    m_deactivationMachine.setInitialState(&m_deactivateDSPState);
+    if(m_pModule->m_demo)
+        m_deactivationMachine.setInitialState(&m_unloadDSPDoneState);
+    else
+        m_deactivationMachine.setInitialState(&m_deactivateDSPState);
 
     connect(&m_deactivateDSPState, SIGNAL(entered()), SLOT(deactivateDSP()));
     connect(&m_freePGRMemState, SIGNAL(entered()), SLOT(freePGRMem()));
@@ -70,6 +77,12 @@ cReferenceModuleMeasProgram::cReferenceModuleMeasProgram(cReferenceModule* modul
     m_dataAcquisitionMachine.setInitialState(&m_dataAcquisitionState);
     connect(&m_dataAcquisitionState, SIGNAL(entered()), SLOT(dataAcquisitionDSP()));
     connect(&m_dataAcquisitionDoneState, SIGNAL(entered()), SLOT(dataReadDSP()));
+
+    if(m_pModule->m_demo) {
+        m_demoPeriodicTimer = TimerFactoryQt::createPeriodic(500);
+        connect(m_demoPeriodicTimer.get(), &TimerTemplateQt::sigExpired,this, &cReferenceModuleMeasProgram::handleDemoActualValues);
+        m_demoPeriodicTimer->start();
+    }
 }
 
 
@@ -422,9 +435,18 @@ void cReferenceModuleMeasProgram::dataReadDSP()
     }
 }
 
+void cReferenceModuleMeasProgram::handleDemoActualValues()
+{
+    QVector<float> demoValues;
+
+    for (int i = 0; i < m_ChannelList.count(); i++) {
+        float val = (float)rand() / RAND_MAX ;
+        demoValues.append(val);
+    }
+    m_ModuleActualValues = demoValues;
+    //Q_ASSERT(demoValues.size() == m_ModuleActualValues.size());
+    emit actualValues(&m_ModuleActualValues);
+
 }
 
-
-
-
-
+}
