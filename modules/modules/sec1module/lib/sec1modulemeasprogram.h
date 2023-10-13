@@ -12,6 +12,7 @@
 #include <stringvalidator.h>
 #include <basemeasprogram.h>
 #include <QDateTime>
+#include <timerperiodicqt.h>
 
 namespace SEC1MODULE
 {
@@ -271,7 +272,7 @@ private:
     double m_dutConstantScalingMem = 1;
 
     // vars dealing with error measurement
-    QTimer m_ActualizeTimer; // after timed out we actualize progressvalue
+    TimerTemplateQtPtr m_ActualizeTimer; // after timed out we actualize progressvalue
     bool m_bFirstMeas = true;
     bool m_bMeasurementRunning = false;
     double m_fResult = 0.0; // error value in %

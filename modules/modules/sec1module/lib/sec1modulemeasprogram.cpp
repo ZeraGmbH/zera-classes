@@ -13,6 +13,8 @@
 #include <reply.h>
 #include <QJsonDocument>
 #include <math.h>
+#include <timerfactoryqt.h>
+
 
 namespace SEC1MODULE
 {
@@ -1219,8 +1221,8 @@ void cSec1ModuleMeasProgram::activationDone()
         m_dutInputDictionary.setDisplayedString(confData->m_dutInpList.at(i), alias);
     }
 
-    m_ActualizeTimer.setInterval(m_nActualizeIntervallLowFreq);
-    connect(&m_ActualizeTimer, &QTimer::timeout, this, &cSec1ModuleMeasProgram::Actualize);
+    m_ActualizeTimer = TimerFactoryQt::createPeriodic(m_nActualizeIntervallLowFreq);
+    connect(m_ActualizeTimer.get(), &TimerTemplateQt::sigExpired, this, &cSec1ModuleMeasProgram::Actualize);
     m_WaitMultiTimer.setSingleShot(true);
     connect(&m_WaitMultiTimer, &QTimer::timeout, this, &cSec1ModuleMeasProgram::startNext);
 
@@ -1417,7 +1419,7 @@ void cSec1ModuleMeasProgram::startMeasurementDone() // final state of m_startMea
 {
     if(!m_pModule->m_demo) {
         Actualize(); // we acualize at once after started
-        m_ActualizeTimer.start(); // and after current interval
+        m_ActualizeTimer->start(); // and after current interval
     }
 }
 
@@ -1796,7 +1798,9 @@ void cSec1ModuleMeasProgram::Actualize()
 void cSec1ModuleMeasProgram::clientActivationChanged(bool bActive)
 {
     // Adjust our m_ActualizeTimer timeout to our client's needs
-    m_ActualizeTimer.setInterval(bActive ? m_nActualizeIntervallHighFreq : m_nActualizeIntervallLowFreq);
+    m_ActualizeTimer = TimerFactoryQt::createPeriodic(bActive ? m_nActualizeIntervallHighFreq : m_nActualizeIntervallLowFreq);
+    connect(m_ActualizeTimer.get(), &TimerTemplateQt::sigExpired, this, &cSec1ModuleMeasProgram::Actualize);
+    m_ActualizeTimer->start();
 }
 
 void cSec1ModuleMeasProgram::stopMeasurement(bool bAbort)
@@ -1809,7 +1813,7 @@ void cSec1ModuleMeasProgram::stopMeasurement(bool bAbort)
     if(!m_pModule->m_demo)
         m_MsgNrCmdList[m_pSECInterface->stop(m_masterErrCalcName)] = stopmeas;
     m_pStartStopPar->setValue(QVariant(0));
-    m_ActualizeTimer.stop();
+    m_ActualizeTimer->stop();
     m_WaitMultiTimer.stop();
 }
 
