@@ -91,7 +91,7 @@ void cReferenceModule::setupModule()
     {
         cReferenceMeasChannel* pchn = new cReferenceMeasChannel(&(pConfData->m_RMSocket),
                                                                 &(pConfData->m_PCBServerSocket),
-                                                                pConfData->m_referenceChannelList.at(i), i+1);
+                                                                pConfData->m_referenceChannelList.at(i), i+1, m_demo);
         m_ReferenceMeasChannelList.append(pchn);
         m_ModuleActivistList.append(pchn);
         connect(pchn, SIGNAL(activated()), this, SIGNAL(activationContinue()));

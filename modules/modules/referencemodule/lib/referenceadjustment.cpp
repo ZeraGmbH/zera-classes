@@ -26,7 +26,12 @@ cReferenceAdjustment::cReferenceAdjustment(cReferenceModule* module, cReferenceM
     m_activationMachine.addState(&m_set0VRangeState);
     m_activationMachine.addState(&m_dspserverConnectState);
     m_activationMachine.addState(&m_activationDoneState);
-    m_activationMachine.setInitialState(&m_pcbserverConnectState);
+
+    if(m_pModule->m_demo)
+        m_activationMachine.setInitialState(&m_activationDoneState);
+    else
+        m_activationMachine.setInitialState(&m_pcbserverConnectState);
+
     connect(&m_pcbserverConnectState, SIGNAL(entered()), SLOT(pcbserverConnect()));
     connect(&m_set0VRangeState, SIGNAL(entered()), SLOT(set0VRange()));
     connect(&m_dspserverConnectState, SIGNAL(entered()), SLOT(dspserverConnect()));
@@ -35,7 +40,12 @@ cReferenceAdjustment::cReferenceAdjustment(cReferenceModule* module, cReferenceM
     m_deactivationInitState.addTransition(this, SIGNAL(deactivationContinue()), &m_deactivationDoneState);
     m_deactivationMachine.addState(&m_deactivationInitState);
     m_deactivationMachine.addState(&m_deactivationDoneState);
-    m_deactivationMachine.setInitialState(&m_deactivationInitState);
+
+    if(m_pModule->m_demo)
+        m_deactivationMachine.setInitialState(&m_deactivationDoneState);
+    else
+        m_deactivationMachine.setInitialState(&m_deactivationInitState);
+
     connect(&m_deactivationInitState, SIGNAL(entered()), SLOT(deactivationInit()));
     connect(&m_deactivationDoneState, SIGNAL(entered()), SLOT(deactivationDone()));
 
@@ -48,7 +58,12 @@ cReferenceAdjustment::cReferenceAdjustment(cReferenceModule* module, cReferenceM
     m_referenceAdjustMachine.addState(&m_writeOffsetAdjustmentState);
     m_referenceAdjustMachine.addState(&m_set10VRangeState);
     m_referenceAdjustMachine.addState(&m_referenceAdjustDoneState);
-    m_referenceAdjustMachine.setInitialState(&m_readGainCorrState);
+
+    if(m_pModule->m_demo)
+        m_referenceAdjustMachine.setInitialState(&m_referenceAdjustDoneState);
+    else
+        m_referenceAdjustMachine.setInitialState(&m_readGainCorrState);
+
     connect(&m_readGainCorrState, SIGNAL(entered()), SLOT(readGainCorr()));
     connect(&m_readOffset2CorrState, SIGNAL(entered()), SLOT(readOffset2Corr()));
     connect(&m_writeOffsetAdjustmentState, SIGNAL(entered()), SLOT(writeOffsetAdjustment()));
@@ -76,7 +91,8 @@ void cReferenceAdjustment::ActionHandler(QVector<float> *actualValues)
         // m_bactive in case measurement is faster than adjusting
         // adjustMachine.isRunning in caae actual values come faster than adjustment process duration
         if (m_bActive && !m_bAdjustmentDone && !m_referenceAdjustMachine.isRunning())
-            m_referenceAdjustMachine.start();
+            if(!m_pModule->m_demo)
+                m_referenceAdjustMachine.start();
 }
 
 
@@ -124,20 +140,22 @@ void cReferenceAdjustment::activationDone()
 {
     // we fetch a handle for gain correction and offset2 correction for
     // all possible channels because we do not know which channels become active
+    if(!m_pModule->m_demo) {
+        m_pGainCorrectionDSP = m_pDSPInterFace->getMemHandle("GainCorrection");
+        m_pGainCorrectionDSP->addVarItem( new cDspVar("GAINCORRECTION",32, DSPDATA::vDspIntVar));
+        m_fGainCorr = m_pDSPInterFace->data(m_pGainCorrectionDSP, "GAINCORRECTION");
 
-    m_pGainCorrectionDSP = m_pDSPInterFace->getMemHandle("GainCorrection");
-    m_pGainCorrectionDSP->addVarItem( new cDspVar("GAINCORRECTION",32, DSPDATA::vDspIntVar));
-    m_fGainCorr = m_pDSPInterFace->data(m_pGainCorrectionDSP, "GAINCORRECTION");
-
-    m_pOffset2CorrectionDSP = m_pDSPInterFace->getMemHandle("OffsetCorrection");
-    m_pOffset2CorrectionDSP->addVarItem( new cDspVar("OFFSETCORRECTION2",32, DSPDATA::vDspIntVar));
-    m_fOffset2Corr = m_pDSPInterFace->data(m_pOffset2CorrectionDSP, "OFFSETCORRECTION2");
+        m_pOffset2CorrectionDSP = m_pDSPInterFace->getMemHandle("OffsetCorrection");
+        m_pOffset2CorrectionDSP->addVarItem( new cDspVar("OFFSETCORRECTION2",32, DSPDATA::vDspIntVar));
+        m_fOffset2Corr = m_pDSPInterFace->data(m_pOffset2CorrectionDSP, "OFFSETCORRECTION2");
+    }
 
     m_nIgnoreCount = m_pConfigData->m_nIgnore;
     m_bAdjustmentDone = false;
 
     m_bActive = true;
-    // emit activated();
+    if(m_pModule->m_demo)
+        emit activated();
     // we will emit activated after reference measurement adjustment is done
 }
 
