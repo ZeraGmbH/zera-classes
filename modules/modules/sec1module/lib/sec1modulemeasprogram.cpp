@@ -475,6 +475,20 @@ void cSec1ModuleMeasProgram::generateInterface()
 }
 
 
+void cSec1ModuleMeasProgram::updateProgress(quint32 dUTPulseCounterActual)
+{
+    if(m_bMeasurementRunning && (getStatus() & ECALCSTATUS::WAIT) == 0) {
+        m_fProgress = ((1.0 * m_nDUTPulseCounterStart - 1.0 * dUTPulseCounterActual)/ m_nDUTPulseCounterStart)*100.0;
+        if (m_fProgress > 100.0) {
+            m_fProgress = 100.0;
+        }
+        if(m_fProgress < 0.0) {
+            m_fProgress = 0.0;
+        }
+        m_pProgressAct->setValue(QVariant(m_fProgress));
+    }
+}
+
 void cSec1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant answer)
 {
     bool ok;
@@ -593,17 +607,7 @@ void cSec1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, Q
             {
                 if (reply == ack) {
                     // Still running and not waiting for next?
-                    if(m_bMeasurementRunning && (getStatus() & ECALCSTATUS::WAIT) == 0) {
-                        m_nDUTPulseCounterActual = answer.toUInt(&ok);
-                        m_fProgress = ((1.0 * m_nDUTPulseCounterStart - 1.0 * m_nDUTPulseCounterActual)/ m_nDUTPulseCounterStart)*100.0;
-                        if (m_fProgress > 100.0) {
-                            m_fProgress = 100.0;
-                        }
-                        if(m_fProgress < 0.0) {
-                            m_fProgress = 0.0;
-                        }
-                        m_pProgressAct->setValue(QVariant(m_fProgress));
-                    }
+                    updateProgress(answer.toUInt());
                 }
                 else
                     notifyExecutionError(readsecregisterErrMsg);
@@ -791,27 +795,10 @@ double cSec1ModuleMeasProgram::calculateDutConstant()
     return dutConst;
 }
 
-void cSec1ModuleMeasProgram::setProgress()
-{
-    quint32 status = getStatus();
-    if(m_bMeasurementRunning && (status & ECALCSTATUS::WAIT) == 0) {
-        m_nDUTPulseCounterActual = 0;
-        if (m_pDutInputPar->getValue().toString().contains("HK"))
-            m_nDUTPulseCounterStart = 1;
-        else
-            m_nDUTPulseCounterStart = m_pMRatePar->getValue().toLongLong();
-        m_fProgress = ((1.0 * m_nDUTPulseCounterStart - 1.0 * m_nDUTPulseCounterActual)/ m_nDUTPulseCounterStart)*100.0;
-        if (m_fProgress > 100.0)
-            m_fProgress = 100.0;
-        if(m_fProgress < 0.0)
-            m_fProgress = 0.0;
-        m_pProgressAct->setValue(QVariant(m_fProgress));
-    }
-}
-
 void cSec1ModuleMeasProgram::updateDemoMeasurementResults()
 {
-    setProgress();
+    quint32 dUTPulseCounterActual = 0;
+    updateProgress(dUTPulseCounterActual);
 
     setStatus(ECALCSTATUS::READY); //still need more thoughts on this
 
@@ -1417,10 +1404,8 @@ void cSec1ModuleMeasProgram::startMeasurement()
 
 void cSec1ModuleMeasProgram::startMeasurementDone() // final state of m_startMeasurementMachine
 {
-    if(!m_pModule->m_demo) {
-        Actualize(); // we acualize at once after started
-        m_ActualizeTimer->start(); // and after current interval
-    }
+    Actualize(); // we acualize at once after started
+    m_ActualizeTimer->start(); // and after current interval
 }
 
 
@@ -1780,7 +1765,7 @@ void cSec1ModuleMeasProgram::newLowerLimit(QVariant limit)
 void cSec1ModuleMeasProgram::Actualize()
 {
     if(m_bMeasurementRunning) { // still running
-        if((getStatus() & ECALCSTATUS::WAIT) == 0) { // measurement: next poll
+        if((getStatus() & ECALCSTATUS::WAIT) == 0 && !m_pModule->m_demo) { // measurement: next poll
             m_MsgNrCmdList[m_pSECInterface->readRegister(m_masterErrCalcName, ECALCREG::STATUS)] = actualizestatus;
             m_MsgNrCmdList[m_pSECInterface->readRegister(m_masterErrCalcName, ECALCREG::MTCNTact)] = actualizeprogress;
             m_MsgNrCmdList[m_pSECInterface->readRegister(m_slaveErrCalcName, ECALCREG::MTCNTact)] = actualizeenergy;
