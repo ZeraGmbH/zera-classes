@@ -13,6 +13,7 @@
 #include <basemeasprogram.h>
 #include <QDateTime>
 #include <timerperiodicqt.h>
+#include <QElapsedTimer>
 
 namespace SEC1MODULE
 {
@@ -297,6 +298,8 @@ private:
 
     MultipleResultHelper m_multipleResultHelper;
     cDoubleValidator *m_dutConstValidator;
+
+    QElapsedTimer m_demoTimeSinceStart;
 };
 }
 
