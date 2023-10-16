@@ -12,9 +12,10 @@
 #include "errormessages.h"
 
 AdjustmentModuleActivator::AdjustmentModuleActivator(QStringList configuredChannels,
-                                                     AdjustmentModuleCommonPtr activationData) :
+                                                     AdjustmentModuleCommonPtr activationData, bool demo) :
     m_configuredChannels(configuredChannels),
-    m_commonObjects(activationData)
+    m_commonObjects(activationData),
+    m_demo(demo)
 {
     connect(&m_activationTasks,   &TaskTemplate::sigFinish, this, &AdjustmentModuleActivator::onActivateContinue);
     connect(&m_deactivationTasks, &TaskTemplate::sigFinish, this, &AdjustmentModuleActivator::onDeactivateContinue);
@@ -39,7 +40,8 @@ void AdjustmentModuleActivator::onActivateContinue(bool ok)
 
 void AdjustmentModuleActivator::deactivate()
 {
-    m_deactivationTasks.addSub(getDeactivationTasks());
+    if(!m_demo)
+        m_deactivationTasks.addSub(getDeactivationTasks());
     m_deactivationTasks.start();
 }
 
@@ -63,22 +65,26 @@ void AdjustmentModuleActivator::onReloadRanges(bool ok)
 
 void AdjustmentModuleActivator::addStaticActivationTasks()
 {
-    m_activationTasks.addSub(TaskServerConnectionStart::create(
-                                 m_commonObjects->m_pcbClient,
-                                 CONNECTION_TIMEOUT));
-    m_activationTasks.addSub(TaskChannelsCheckAvail::create(
-                                 m_commonObjects->m_pcbInterface,
-                                 m_configuredChannels,
-                                 TRANSACTION_TIMEOUT,[&]{ emit errMsg(resourceErrMsg); }));
+    if(!m_demo) {
+        m_activationTasks.addSub(TaskServerConnectionStart::create(
+                                     m_commonObjects->m_pcbClient,
+                                     CONNECTION_TIMEOUT));
+        m_activationTasks.addSub(TaskChannelsCheckAvail::create(
+                                     m_commonObjects->m_pcbInterface,
+                                     m_configuredChannels,
+                                     TRANSACTION_TIMEOUT,[&]{ emit errMsg(resourceErrMsg); }));
+    }
 }
 
 void AdjustmentModuleActivator::addDynChannelActivationTasks()
 {
+    if(!m_demo) {
     m_activationTasks.addSub(TaskLambdaRunner::create([&](){
         m_activationTasks.addSub(getChannelsReadTasks());
         m_activationTasks.addSub(getChannelsRegisterNotifyTasks());
         return true;
     }));
+    }
 }
 
 TaskTemplatePtr AdjustmentModuleActivator::getChannelsReadTasks()

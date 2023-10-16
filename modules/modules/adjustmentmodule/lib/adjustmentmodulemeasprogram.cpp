@@ -15,9 +15,10 @@ cAdjustmentModuleMeasProgram::cAdjustmentModuleMeasProgram(cAdjustmentModule* mo
     cBaseMeasWorkProgram(pConfiguration),
     m_pModule(module),
     m_commonObjects(std::make_shared<AdjustmentModuleCommon>()),
-    m_activator(getConfData()->m_AdjChannelList, m_commonObjects)
+    m_activator(getConfData()->m_AdjChannelList, m_commonObjects, m_pModule->m_demo)
 {
-    openPcbConnection();
+    if(!m_pModule->m_demo)
+        openPcbConnection();
 
     connect(&m_activator, &AdjustmentModuleActivator::sigActivationReady, this, &cAdjustmentModuleMeasProgram::onActivationReady);
     connect(&m_activator, &AdjustmentModuleActivator::sigDeactivationReady, this, &cAdjustmentModuleMeasProgram::onDeactivationReady);
@@ -32,7 +33,11 @@ cAdjustmentModuleMeasProgram::cAdjustmentModuleMeasProgram(cAdjustmentModule* mo
     m_computationStartState.addTransition(this, &cAdjustmentModuleMeasProgram::computationContinue, &m_computationFinishState);
     m_computationMachine.addState(&m_computationStartState);
     m_computationMachine.addState(&m_computationFinishState);
-    m_computationMachine.setInitialState(&m_computationStartState);
+
+    if(m_pModule->m_demo)
+        m_computationMachine.setInitialState(&m_computationFinishState);
+    else
+        m_computationMachine.setInitialState(&m_computationStartState);
 
     connect(&m_computationStartState, &QState::entered, this, &cAdjustmentModuleMeasProgram::computationStart);
     connect(&m_computationFinishState, &QState::entered, this, &cAdjustmentModuleMeasProgram::computationFinished);
@@ -40,7 +45,11 @@ cAdjustmentModuleMeasProgram::cAdjustmentModuleMeasProgram(cAdjustmentModule* mo
     m_storageStartState.addTransition(this, &cAdjustmentModuleMeasProgram::storageContinue, &m_storageFinishState);
     m_storageMachine.addState(&m_storageStartState);
     m_storageMachine.addState(&m_storageFinishState);
-    m_storageMachine.setInitialState(&m_storageStartState);
+
+    if(m_pModule->m_demo)
+        m_storageMachine.setInitialState(&m_storageFinishState);
+    else
+        m_storageMachine.setInitialState(&m_storageStartState);
 
     connect(&m_storageStartState, &QState::entered, this, &cAdjustmentModuleMeasProgram::storageStart);
     connect(&m_storageFinishState, &QState::entered, this, &cAdjustmentModuleMeasProgram::storageFinished);
@@ -52,7 +61,11 @@ cAdjustmentModuleMeasProgram::cAdjustmentModuleMeasProgram(cAdjustmentModule* mo
     m_adjustAmplitudeMachine.addState(&m_adjustamplitudeGetCorrState);
     m_adjustAmplitudeMachine.addState(&m_adjustamplitudeSetNodeState);
     m_adjustAmplitudeMachine.addState(&m_adjustamplitudeFinishState);
-    m_adjustAmplitudeMachine.setInitialState(&m_adjustamplitudeGetCorrState);
+
+    if(m_pModule->m_demo)
+        m_adjustAmplitudeMachine.setInitialState(&m_adjustamplitudeFinishState);
+    else
+        m_adjustAmplitudeMachine.setInitialState(&m_adjustamplitudeGetCorrState);
 
     connect(&m_adjustamplitudeGetCorrState, &QState::entered, this, &cAdjustmentModuleMeasProgram::adjustamplitudeGetCorr);
     connect(&m_adjustamplitudeSetNodeState, &QState::entered, this, &cAdjustmentModuleMeasProgram::adjustamplitudeSetNode);
@@ -64,7 +77,11 @@ cAdjustmentModuleMeasProgram::cAdjustmentModuleMeasProgram(cAdjustmentModule* mo
     m_adjustPhaseMachine.addState(&m_adjustphaseGetCorrState);
     m_adjustPhaseMachine.addState(&m_adjustphaseSetNodeState);
     m_adjustPhaseMachine.addState(&m_adjustphaseFinishState);
-    m_adjustPhaseMachine.setInitialState(&m_adjustphaseGetCorrState);
+
+    if(m_pModule->m_demo)
+        m_adjustPhaseMachine.setInitialState(&m_adjustphaseFinishState);
+    else
+        m_adjustPhaseMachine.setInitialState(&m_adjustphaseGetCorrState);
 
     connect(&m_adjustphaseGetCorrState, &QState::entered, this, &cAdjustmentModuleMeasProgram::adjustphaseGetCorr);
     connect(&m_adjustphaseSetNodeState, &QState::entered, this, &cAdjustmentModuleMeasProgram::adjustphaseSetNode);
