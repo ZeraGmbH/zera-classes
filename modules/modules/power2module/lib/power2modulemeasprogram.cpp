@@ -12,6 +12,7 @@
 #include <proxy.h>
 #include <errormessages.h>
 #include <math.h>
+#include <timerfactoryqt.h>
 
 namespace POWER2MODULE
 {
@@ -115,7 +116,10 @@ cPower2ModuleMeasProgram::cPower2ModuleMeasProgram(cPower2Module* module, std::s
     m_activationMachine.addState(&m_activateDSPState);
     m_activationMachine.addState(&m_loadDSPDoneState);
 
-    m_activationMachine.setInitialState(&m_resourceManagerConnectState);
+    if(m_pModule->m_demo)
+        m_activationMachine.setInitialState(&m_loadDSPDoneState);
+    else
+        m_activationMachine.setInitialState(&m_resourceManagerConnectState);
 
     connect(&m_resourceManagerConnectState, &QAbstractState::entered, this, &cPower2ModuleMeasProgram::resourceManagerConnect);
     connect(&m_IdentifyState, &QAbstractState::entered, this, &cPower2ModuleMeasProgram::sendRMIdent);
@@ -191,7 +195,10 @@ cPower2ModuleMeasProgram::cPower2ModuleMeasProgram(cPower2Module* module, std::s
 
     m_deactivationMachine.addState(&m_unloadDSPDoneState);
 
-    m_deactivationMachine.setInitialState(&m_deactivateDSPState);
+    if(m_pModule->m_demo)
+        m_deactivationMachine.setInitialState(&m_unloadDSPDoneState);
+    else
+        m_deactivationMachine.setInitialState(&m_deactivateDSPState);
 
     connect(&m_deactivateDSPState, &QAbstractState::entered, this, &cPower2ModuleMeasProgram::deactivateDSP);
     connect(&m_freePGRMemState, &QAbstractState::entered, this, &cPower2ModuleMeasProgram::freePGRMem);
@@ -230,6 +237,11 @@ cPower2ModuleMeasProgram::cPower2ModuleMeasProgram(cPower2Module* module, std::s
     connect(&m_readUrvalueState, &QAbstractState::entered, this, &cPower2ModuleMeasProgram::readUrvalue);
     connect(&m_readUrvalueDoneState, &QAbstractState::entered, this, &cPower2ModuleMeasProgram::readUrvalueDone);
     connect(&m_foutParamsToDsp, &QAbstractState::entered, this, &cPower2ModuleMeasProgram::foutParamsToDsp);
+
+    if(m_pModule->m_demo) {
+        m_demoPeriodicTimer = TimerFactoryQt::createPeriodic(500);
+        connect(m_demoPeriodicTimer.get(), &TimerTemplateQt::sigExpired,this, &cPower2ModuleMeasProgram::handleDemoActualValues);
+    }
 }
 
 
@@ -1499,7 +1511,7 @@ void cPower2ModuleMeasProgram::activateDSPdone()
     connect(&m_measModeSelector, &MeasModeSelector::sigTransactionOk,
             this, &cPower2ModuleMeasProgram::onModeTransactionOk);
     readUrvalueList = m_measChannelInfoHash.keys(); // once we read all actual range urvalues
-    if (!m_readUpperRangeValueMachine.isRunning())
+    if (!m_readUpperRangeValueMachine.isRunning() && !m_pModule->m_demo)
         m_readUpperRangeValueMachine.start();
 
     emit activated();
@@ -1818,6 +1830,23 @@ void cPower2ModuleMeasProgram::onModeTransactionOk()
     getConfData()->m_sMeasuringMode.m_sValue = newMeasMode;
     handleMModeParamChange();
     updatesForMModeChange();
+}
+
+void cPower2ModuleMeasProgram::handleDemoActualValues()
+{
+    QVector<float> valuesDemo;
+    int current = 10;
+    int voltage = 230;
+    for(int phase=0; phase<MeasPhaseCount; phase++) {
+        double val = 0.0;
+        double randPlusMinusOne = 2.0 * (double)rand() / RAND_MAX - 1.0;
+        val = current*voltage + randPlusMinusOne;
+        valuesDemo.append(val);
+    }
+    valuesDemo.append(valuesDemo[0] + valuesDemo[1] + valuesDemo[2]);
+    Q_ASSERT(valuesDemo.size() == m_ModuleActualValues.size());
+    m_ModuleActualValues = valuesDemo;
+    emit actualValues(&m_ModuleActualValues);
 }
 
 }

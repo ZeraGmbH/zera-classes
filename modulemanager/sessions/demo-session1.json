@@ -66,6 +66,11 @@
         "id": 1074
       },
       {
+        "name" : "power2module",
+        "configFile" : "mt310s2-power2moduleCED.xml",
+        "id": 1090
+      },
+      {
         "name" : "power3module",
         "configFile" : "mt310s2-power3module.xml",
         "id": 1100
