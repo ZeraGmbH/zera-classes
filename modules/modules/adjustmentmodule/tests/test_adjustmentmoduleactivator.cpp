@@ -27,5 +27,5 @@ void test_adjustmentmoduleactivator::instantiate()
     cSocket rmSocket;
     cSocket pcbSocket;
     AdjustmentModuleActivator obj(QStringList() << "m0" << "m1"  << "m2",
-                                  activationData);
+                                  activationData, true);
 }
