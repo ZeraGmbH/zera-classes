@@ -37,3 +37,6 @@ libs/
 #ignore the doc directory
 doc/*
 doc/
+
+#ignore scpi-doc html files
+scpi-doc-playground/html-output/*

@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html>
+<body>
+    <ul>
+        <li><b>*CLS :</b>
+            <p>
+                The Clear Status command clears the device’s status structures. This includes the following:<br/>
+                - all event registers summarised in the Status Byte, including<br/>
+                - the Standard Event Status register<br/>
+                - the Operation Event register<br/>
+                - the Questionable Event register<br/>
+                - the Error/Event Queue<br/>
+                - sets the device in the Operation Complete Command Idle state<br/>
+                - sets the device in the Operation Complete Query Idle state<br/>
+            </p>
+        </li>
+        <li><b>*ESE &lt;NRf&gt;:</b>
+            <p>
+                The Standard Event Status Enable command specifies the bit values of the Standard
+                Event Status Enable register. This register determines which events from the
+                Standard Event Status register are summarised in bit 5, the Event Summary Bit
+                (ESB) of the Status Byte register.<br/>
+                A bit value of 1 in the Standard Event Status Enable register selects the event at the
+                corresponding bit position in the Standard Event Status register to be reported in the
+                Event Summary Bit.<br/>
+                The parameter associated with the "ESE command is to be specified as a decimal
+                using the NRf format. When rounded to an integer value and expressed in base 2
+                (binary), the parameter represents the bit values of the Standard Event Status
+                Enable register.<br/>
+                <b>Note:</b> Formally, a non-decimal numeric value is not allowed. However, rather than
+                generating a Command Error, instruments may accept a non-decimal numeric value
+                as a legal parameter data type. Because register bit settings can be best expressed
+                as a hexadecimal value, this is a more user-friendly programming practice.
+            </p>
+        </li>
+        <li><b>*ESE? :</b>
+            <p>
+                The Standard Event Status Enable query returns a decimal value, which reflects the
+                bit values of the Standard Event Status Enable register when expressed in base 2.
+                The returned value is a NR1 response data type.
+            </p>
+        </li>
+        <li><b>*ESR? :</b>
+            <p>
+                The Standard Event Status Register query returns a decimal value, which reflects the
+                bit values of the Standard Event Status Register when expressed in base 2. The
+                returned value is a NR1 response data type. The *ESR? query causes the Standard
+                Event Status register to be cleared.
+            </p>
+        </li>
+        <li><b>*IDN? :</b>
+            <p>
+                The Identification query is used to identify the instrument within a system. The
+                response to the *IDN? is an &lt;instrument_identifier&gt; which is organised into four fields
+                separated by commas (, 2Chex).
+                The overall length of the response is less than 72 characters. The returned fields
+                may use any ASCII characters in the range 20hex to 7Ehex, except commas (,2Chex)
+                and semicolons (;3Bhex)
+            </p>
+            <p>
+                <b>&lt;instrument-identifier&gt; = &lt;manufacturer&gt;, &lt;model&gt;,
+                                                   &lt;serial_number&gt;, &lt;firmware_number&gt;</b>
+            </p>
+            <table class="DataTable">
+                <!-- table header -->
+                <tr>
+                  <th>Field</th>
+                  <th>Description</th>
+                </tr>
+                <!-- table data -->
+                <tr>
+                    <td>&lt;manufacturer&gt;</td>
+                    <td>Name of the manufacturer of the instrument.
+                        This field is identical for all devices produced by a single company.</td>
+                </tr>
+                <tr>
+                    <td>&lt;model&gt;</td>
+                    <td>The type or model number of the instrument.</td>
+                </tr>
+                <tr>
+                    <td>&lt;serial_number&gt;</td>
+                    <td>The serial number of the instrument. Instruments may omit this
+                        field. If omitted, a string "unkown" is returned.</td>
+                </tr>
+                <tr>
+                    <td>&lt;firmware_number&gt;</td>
+                    <td>The firmware number (release number) of the instrument. This field contains
+                        information about all revisable subsystems. Instruments may omit
+                        this field. If omitted, a string "unkown" is returned.</td>
+                </tr>
+            </table><br/>
+        </li>
+        <li><b>*OPC :</b>
+            <p>
+                The Operation Complete command allows for message synchronisation between a
+                controller and one or more devices. The receipt of the <b>*OPC</b> command causes the
+                instrument to set the Operation Complete bit (OPC, bit 0) in the Standard Event
+                Status register to True when all selected pending operations are terminated. This
+                implies that all device operations initiated by previously executed programming
+                commands have been entirely completed or aborted. A power-on cycle, a 'device
+                clear active state' message, a <b>*CLS</b> or a <b>*RST</b> will reset the OPC signalling
+                mechanism.<br/>
+                The <b>*OPC</b> command is to be sent as the last message unit in a terminated program
+                message. The <b>*OPC</b>  operation may not function properly if other commands follow
+                the <b>*OPC</b> command.
+            </p>
+        </li>
+        <li><b>*OPC?:</b>
+            <p>
+                This is a serial device, that means <b>*OPC</b> query always returns the ASCII character 1.
+                In a non serial device the Operation Complete query allows for message
+                synchronisation between a controller and one or more devices. The receipt of the
+                <b>*OPC</b> query causes the instrument to place the ASCII character 1 (31hex) in the
+                Output Queue when all selected pending operations are terminated. This implies that
+                all device operations initiated by previously executed programming commands have
+                been entirely completed or aborted. A power-on cycle, a 'device clear active state'
+                message, a <b>*CLS</b> or a <b>*RST</b> will reset the OPC signalling mechanism.
+            </p>
+        </li>
+        <li><b>*RST:</b>
+            <p>The reset command sets the device in fixed reset conditions.</p>
+        </li>
+        <li><b>*SRE &lt;NRf&gt; :</b>
+            <p>
+                The Service Request Enable command specifies the bit values of the Service
+                Request Enable register. This register determines which conditions from the Status
+                Byte register:<br/>
+                - will cause a Service Request (SRQ) interrupt<br/>
+                - are summarised in the Master Summary Status (MSS, bit 6) of the status Byte
+                register<br/>
+                A bit value of 1 in the Service Request Enable register selects the condition in the
+                corresponding Status Byte register position which will cause the SRQ interrupt and is
+                summarised in the MSS bit. The value of bit position 6 in the Status Byte register
+                (RQS/ MSS) is ignored.<br/>
+                The parameter associated with the *SRE command is specified as a decimal using
+                the NRf format. When rounded to an integer value and expressed in base 2 (binary),
+                this parameter represents the bit value of the Standard Event Status Enable register.<br/>
+                <b>Note:</b>  Formally, a non-decimal numeric value is not allowed. However, rather than
+                generating a Command Error, instruments may accept a non-decimal numeric value
+                as a legal parameter data type. Because register bit settings can be best expressed
+                as a hexadecimal value, this is a more user-friendly programming practice.
+            </p>
+        </li>
+        <li><b>*SRE?:</b>
+            <p>
+                The Service Request Enable query returns a decimal value, which reflects the bit
+                values of the Service Request Enable register when expressed in base 2. The
+                returned value is an NR1 response data type. The value of bit position 6 is always set
+                to 0. SCPI instruments may implement the FORMat:SREGister command to allow for
+                the selection of other response data types.
+            </p>
+        </li>
+        <li><b>*STB?:</b>
+            <p>
+                The Read Status Byte query returns a decimal value, which reflects the bit values of
+                the Status Byte register when expressed in base 2. At bit position 6, the Master
+                Summary Status (MSS) is returned. The returned result is an NR1 response data
+                type. Executing the <b>*STB?</b> query does not directly affect the contents of the Status
+                Byte register. SCPI instruments may implement the FORMat:SREGister command to
+                allow for the selection of other response data types.
+            </p>
+            <p>
+                <b>Note:</b>  Formally, a non-decimal numeric value is not allowed. However, rather than
+                generating a Command Error, instruments may accept a non-decimal numeric value
+                as a legal parameter data type. Because register bit settings can be best expressed
+                as a hexadecimal value, this is a more user friendly programming practice.
+            </p>
+        </li>
+        <li><b>*TST?:</b>
+            <p>
+                The SeIf-Test query allows the user to perform an internal self-test of the instrument
+                and to retrieve the test result. The execution of the self-test does not require any
+                interaction with a local operator.<br/>
+                The response to the <b>*TST?</b> query is a decimal numeric, using the NR1 data type. A
+                returned value of zero (0) indicates that the test successfully completed without any
+                errors detected. A returned non-zero value indicates that the test did not complete or
+                did complete with errors detected.
+            </p>
+        </li>
+    </ul>
+</body>
+</html>

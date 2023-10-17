@@ -1,0 +1,903 @@
+<!DOCTYPE SCPIModel>
+<MODELLIST>
+ <DEVICE>COM5003</DEVICE>
+ <RELEASE>release-4.3.16</RELEASE>
+ <MODELS>
+  <SENSE Type="Model,Node">
+   <RNG1 Type="Node">
+    <UL1 Type="Node">
+     <RANGE Description="Channel's range" Type="Query,Command+Par" ScpiPath="SENSE:RNG1:UL1:RANGE" DataType="STRING" ValidPar="480V,240V,120V,60V,12V,5V">
+      <CATALOG Type="Query" ScpiPath="SENSE:RNG1:UL1:RANGE:CATALOG"/>
+     </RANGE>
+    </UL1>
+    <UL2 Type="Node">
+     <RANGE Description="Channel's range" Type="Query,Command+Par" ScpiPath="SENSE:RNG1:UL2:RANGE" DataType="STRING" ValidPar="480V,240V,120V,60V,12V,5V">
+      <CATALOG Type="Query" ScpiPath="SENSE:RNG1:UL2:RANGE:CATALOG"/>
+     </RANGE>
+    </UL2>
+    <UL3 Type="Node">
+     <RANGE Description="Channel's range" Type="Query,Command+Par" ScpiPath="SENSE:RNG1:UL3:RANGE" DataType="STRING" ValidPar="480V,240V,120V,60V,12V,5V">
+      <CATALOG Type="Query" ScpiPath="SENSE:RNG1:UL3:RANGE:CATALOG"/>
+     </RANGE>
+    </UL3>
+    <IL1 Type="Node">
+     <RANGE Description="Channel's range" Type="Query,Command+Par" ScpiPath="SENSE:RNG1:IL1:RANGE" DataType="STRING" ValidPar="200A,100A,50A,25A,10A,5A,2.5A,1.0A,500mA,250mA,100mA,50mA,25mA,10mA,5mA">
+      <CATALOG Type="Query" ScpiPath="SENSE:RNG1:IL1:RANGE:CATALOG"/>
+     </RANGE>
+    </IL1>
+    <IL2 Type="Node">
+     <RANGE Description="Channel's range" Type="Query,Command+Par" ScpiPath="SENSE:RNG1:IL2:RANGE" DataType="STRING" ValidPar="200A,100A,50A,25A,10A,5A,2.5A,1.0A,500mA,250mA,100mA,50mA,25mA,10mA,5mA">
+      <CATALOG Type="Query" ScpiPath="SENSE:RNG1:IL2:RANGE:CATALOG"/>
+     </RANGE>
+    </IL2>
+    <IL3 Type="Node">
+     <RANGE Description="Channel's range" Type="Query,Command+Par" ScpiPath="SENSE:RNG1:IL3:RANGE" DataType="STRING" ValidPar="200A,100A,50A,25A,10A,5A,2.5A,1.0A,500mA,250mA,100mA,50mA,25mA,10mA,5mA">
+      <CATALOG Type="Query" ScpiPath="SENSE:RNG1:IL3:RANGE:CATALOG"/>
+     </RANGE>
+    </IL3>
+    <OVERLOAD Description="Overload (reset=0)" Type="Query,Command+Par" ScpiPath="SENSE:RNG1:OVERLOAD" Max="1" Min="0"/>
+   </RNG1>
+  </SENSE>
+  <MEASURE Type="Model,Node,Query" ScpiPath="MEASURE">
+   <RNG1 Type="Node,Query" ScpiPath="MEASURE:RNG1">
+    <UL1 Description="Actual peak value" Type="Query" ScpiPath="MEASURE:RNG1:UL1" Unit="V"/>
+    <UL2 Description="Actual peak value" Type="Query" ScpiPath="MEASURE:RNG1:UL2" Unit="V"/>
+    <UL3 Description="Actual peak value" Type="Query" ScpiPath="MEASURE:RNG1:UL3" Unit="V"/>
+    <IL1 Description="Actual peak value" Type="Query" ScpiPath="MEASURE:RNG1:IL1" Unit="A"/>
+    <IL2 Description="Actual peak value" Type="Query" ScpiPath="MEASURE:RNG1:IL2" Unit="A"/>
+    <IL3 Description="Actual peak value" Type="Query" ScpiPath="MEASURE:RNG1:IL3" Unit="A"/>
+    <F Description="Actual frequency" Type="Query" ScpiPath="MEASURE:RNG1:F" Unit="Hz"/>
+   </RNG1>
+   <FFT1 Type="Node,Query" ScpiPath="MEASURE:FFT1">
+    <UL1 Description="FFT actual values" Type="Query" ScpiPath="MEASURE:FFT1:UL1" Unit="V"/>
+    <UL1_DC Description="DC actual value" Type="Query" ScpiPath="MEASURE:FFT1:UL1_DC" Unit="V"/>
+    <UL2 Description="FFT actual values" Type="Query" ScpiPath="MEASURE:FFT1:UL2" Unit="V"/>
+    <UL2_DC Description="DC actual value" Type="Query" ScpiPath="MEASURE:FFT1:UL2_DC" Unit="V"/>
+    <UL3 Description="FFT actual values" Type="Query" ScpiPath="MEASURE:FFT1:UL3" Unit="V"/>
+    <UL3_DC Description="DC actual value" Type="Query" ScpiPath="MEASURE:FFT1:UL3_DC" Unit="V"/>
+    <IL1 Description="FFT actual values" Type="Query" ScpiPath="MEASURE:FFT1:IL1" Unit="A"/>
+    <IL1_DC Description="DC actual value" Type="Query" ScpiPath="MEASURE:FFT1:IL1_DC" Unit="A"/>
+    <IL2 Description="FFT actual values" Type="Query" ScpiPath="MEASURE:FFT1:IL2" Unit="A"/>
+    <IL2_DC Description="DC actual value" Type="Query" ScpiPath="MEASURE:FFT1:IL2_DC" Unit="A"/>
+    <IL3 Description="FFT actual values" Type="Query" ScpiPath="MEASURE:FFT1:IL3" Unit="A"/>
+    <IL3_DC Description="DC actual value" Type="Query" ScpiPath="MEASURE:FFT1:IL3_DC" Unit="A"/>
+   </FFT1>
+   <POW1 Type="Node,Query" ScpiPath="MEASURE:POW1">
+    <P1 Description="Actual power value phase 1" Type="Query" ScpiPath="MEASURE:POW1:P1" Unit="W"/>
+    <P2 Description="Actual power value phase 2" Type="Query" ScpiPath="MEASURE:POW1:P2" Unit="W"/>
+    <P3 Description="Actual power value phase 3" Type="Query" ScpiPath="MEASURE:POW1:P3" Unit="W"/>
+    <PS Description="Actual power value sum all phases" Type="Query" ScpiPath="MEASURE:POW1:PS" Unit="W"/>
+   </POW1>
+   <POW2 Type="Node,Query" ScpiPath="MEASURE:POW2">
+    <P1 Description="Actual power value phase 1" Type="Query" ScpiPath="MEASURE:POW2:P1" Unit="W"/>
+    <P2 Description="Actual power value phase 2" Type="Query" ScpiPath="MEASURE:POW2:P2" Unit="W"/>
+    <P3 Description="Actual power value phase 3" Type="Query" ScpiPath="MEASURE:POW2:P3" Unit="W"/>
+    <PS Description="Actual power value sum all phases" Type="Query" ScpiPath="MEASURE:POW2:PS" Unit="W"/>
+   </POW2>
+   <PW31 Type="Node,Query" ScpiPath="MEASURE:PW31">
+    <P1 Description="Harmonic power active values" Type="Query" ScpiPath="MEASURE:PW31:P1" Unit="W"/>
+    <Q1 Description="Harmonic power reactive values" Type="Query" ScpiPath="MEASURE:PW31:Q1" Unit="Var"/>
+    <S1 Description="Harmonic power apparent values" Type="Query" ScpiPath="MEASURE:PW31:S1" Unit="VA"/>
+    <P2 Description="Harmonic power active values" Type="Query" ScpiPath="MEASURE:PW31:P2" Unit="W"/>
+    <Q2 Description="Harmonic power reactive values" Type="Query" ScpiPath="MEASURE:PW31:Q2" Unit="Var"/>
+    <S2 Description="Harmonic power apparent values" Type="Query" ScpiPath="MEASURE:PW31:S2" Unit="VA"/>
+    <P3 Description="Harmonic power active values" Type="Query" ScpiPath="MEASURE:PW31:P3" Unit="W"/>
+    <Q3 Description="Harmonic power reactive values" Type="Query" ScpiPath="MEASURE:PW31:Q3" Unit="Var"/>
+    <S3 Description="Harmonic power apparent values" Type="Query" ScpiPath="MEASURE:PW31:S3" Unit="VA"/>
+   </PW31>
+   <OSC1 Type="Node,Query" ScpiPath="MEASURE:OSC1">
+    <UL1 Description="Measures samples" Type="Query" ScpiPath="MEASURE:OSC1:UL1" Unit="V"/>
+    <UL2 Description="Measures samples" Type="Query" ScpiPath="MEASURE:OSC1:UL2" Unit="V"/>
+    <UL3 Description="Measures samples" Type="Query" ScpiPath="MEASURE:OSC1:UL3" Unit="V"/>
+    <IL1 Description="Measures samples" Type="Query" ScpiPath="MEASURE:OSC1:IL1" Unit="A"/>
+    <IL2 Description="Measures samples" Type="Query" ScpiPath="MEASURE:OSC1:IL2" Unit="A"/>
+    <IL3 Description="Measures samples" Type="Query" ScpiPath="MEASURE:OSC1:IL3" Unit="A"/>
+   </OSC1>
+   <RMS1 Type="Node,Query" ScpiPath="MEASURE:RMS1">
+    <UL1 Description="Actual rms value phase/neutral" Type="Query" ScpiPath="MEASURE:RMS1:UL1" Unit="V"/>
+    <UL2 Description="Actual rms value phase/neutral" Type="Query" ScpiPath="MEASURE:RMS1:UL2" Unit="V"/>
+    <UL3 Description="Actual rms value phase/neutral" Type="Query" ScpiPath="MEASURE:RMS1:UL3" Unit="V"/>
+    <UL1MINUSUL2 Description="Actual rms value phase/phase" Type="Query" ScpiPath="MEASURE:RMS1:UL1-UL2" Unit="V"/>
+    <UL3MINUSUL2 Description="Actual rms value phase/phase" Type="Query" ScpiPath="MEASURE:RMS1:UL3-UL2" Unit="V"/>
+    <UL3MINUSUL1 Description="Actual rms value phase/phase" Type="Query" ScpiPath="MEASURE:RMS1:UL3-UL1" Unit="V"/>
+    <IL1 Description="Actual rms value phase/neutral" Type="Query" ScpiPath="MEASURE:RMS1:IL1" Unit="A"/>
+    <IL2 Description="Actual rms value phase/neutral" Type="Query" ScpiPath="MEASURE:RMS1:IL2" Unit="A"/>
+    <IL3 Description="Actual rms value phase/neutral" Type="Query" ScpiPath="MEASURE:RMS1:IL3" Unit="A"/>
+   </RMS1>
+   <POW3 Type="Node,Query" ScpiPath="MEASURE:POW3">
+    <P1 Description="Actual power value phase 1" Type="Query" ScpiPath="MEASURE:POW3:P1" Unit="W"/>
+    <P2 Description="Actual power value phase 2" Type="Query" ScpiPath="MEASURE:POW3:P2" Unit="W"/>
+    <P3 Description="Actual power value phase 3" Type="Query" ScpiPath="MEASURE:POW3:P3" Unit="W"/>
+    <PS Description="Actual power value sum all phases" Type="Query" ScpiPath="MEASURE:POW3:PS" Unit="W"/>
+   </POW3>
+   <POW4 Type="Node,Query" ScpiPath="MEASURE:POW4">
+    <P1 Description="Actual power value phase 1" Type="Query" ScpiPath="MEASURE:POW4:P1" Unit="W"/>
+    <P2 Description="Actual power value phase 2" Type="Query" ScpiPath="MEASURE:POW4:P2" Unit="W"/>
+    <P3 Description="Actual power value phase 3" Type="Query" ScpiPath="MEASURE:POW4:P3" Unit="W"/>
+    <PS Description="Actual power value sum all phases" Type="Query" ScpiPath="MEASURE:POW4:PS" Unit="W"/>
+   </POW4>
+   <POW5 Type="Node,Query" ScpiPath="MEASURE:POW5">
+    <P1 Description="Actual power value phase 1" Type="Query" ScpiPath="MEASURE:POW5:P1" Unit="W"/>
+    <P2 Description="Actual power value phase 2" Type="Query" ScpiPath="MEASURE:POW5:P2" Unit="W"/>
+    <P3 Description="Actual power value phase 3" Type="Query" ScpiPath="MEASURE:POW5:P3" Unit="W"/>
+    <PS Description="Actual power value sum all phases" Type="Query" ScpiPath="MEASURE:POW5:PS" Unit="W"/>
+   </POW5>
+   <POW6 Type="Node,Query" ScpiPath="MEASURE:POW6">
+    <S1 Description="Actual power value phase 1" Type="Query" ScpiPath="MEASURE:POW6:S1" Unit="VA"/>
+    <S2 Description="Actual power value phase 2" Type="Query" ScpiPath="MEASURE:POW6:S2" Unit="VA"/>
+    <S3 Description="Actual power value phase 3" Type="Query" ScpiPath="MEASURE:POW6:S3" Unit="VA"/>
+    <SS Description="Actual power value sum all phases" Type="Query" ScpiPath="MEASURE:POW6:SS" Unit="VA"/>
+   </POW6>
+   <THD1 Type="Node,Query" ScpiPath="MEASURE:THD1">
+    <UL1 Description="THDn actual value" Type="Query" ScpiPath="MEASURE:THD1:UL1" Unit="%"/>
+    <UL2 Description="THDn actual value" Type="Query" ScpiPath="MEASURE:THD1:UL2" Unit="%"/>
+    <UL3 Description="THDn actual value" Type="Query" ScpiPath="MEASURE:THD1:UL3" Unit="%"/>
+    <IL1 Description="THDn actual value" Type="Query" ScpiPath="MEASURE:THD1:IL1" Unit="%"/>
+    <IL2 Description="THDn actual value" Type="Query" ScpiPath="MEASURE:THD1:IL2" Unit="%"/>
+    <IL3 Description="THDn actual value" Type="Query" ScpiPath="MEASURE:THD1:IL3" Unit="%"/>
+   </THD1>
+   <THD2 Type="Node,Query" ScpiPath="MEASURE:THD2">
+    <UL1 Description="THDr actual value" Type="Query" ScpiPath="MEASURE:THD2:UL1" Unit="%"/>
+    <UL2 Description="THDr actual value" Type="Query" ScpiPath="MEASURE:THD2:UL2" Unit="%"/>
+    <UL3 Description="THDr actual value" Type="Query" ScpiPath="MEASURE:THD2:UL3" Unit="%"/>
+    <IL1 Description="THDr actual value" Type="Query" ScpiPath="MEASURE:THD2:IL1" Unit="%"/>
+    <IL2 Description="THDr actual value" Type="Query" ScpiPath="MEASURE:THD2:IL2" Unit="%"/>
+    <IL3 Description="THDr actual value" Type="Query" ScpiPath="MEASURE:THD2:IL3" Unit="%"/>
+   </THD2>
+   <DFT1 Type="Node,Query" ScpiPath="MEASURE:DFT1">
+    <UL1 Description="Actual value phase/neutral" Type="Query" ScpiPath="MEASURE:DFT1:UL1" Unit="V"/>
+    <UL2 Description="Actual value phase/neutral" Type="Query" ScpiPath="MEASURE:DFT1:UL2" Unit="V"/>
+    <UL3 Description="Actual value phase/neutral" Type="Query" ScpiPath="MEASURE:DFT1:UL3" Unit="V"/>
+    <UL1MINUSUL2 Description="Actual value phase/phase" Type="Query" ScpiPath="MEASURE:DFT1:UL1-UL2" Unit="V"/>
+    <UL3MINUSUL2 Description="Actual value phase/phase" Type="Query" ScpiPath="MEASURE:DFT1:UL3-UL2" Unit="V"/>
+    <UL3MINUSUL1 Description="Actual value phase/phase" Type="Query" ScpiPath="MEASURE:DFT1:UL3-UL1" Unit="V"/>
+    <IL1 Description="Actual value phase/neutral" Type="Query" ScpiPath="MEASURE:DFT1:IL1" Unit="A"/>
+    <IL2 Description="Actual value phase/neutral" Type="Query" ScpiPath="MEASURE:DFT1:IL2" Unit="A"/>
+    <IL3 Description="Actual value phase/neutral" Type="Query" ScpiPath="MEASURE:DFT1:IL3" Unit="A"/>
+    <RFIELD Description="Phase sequence" Type="Query" ScpiPath="MEASURE:DFT1:RFIELD"/>
+   </DFT1>
+   <LAM1 Type="Node,Query" ScpiPath="MEASURE:LAM1">
+    <LAMBDA1 Description="Actual lambda value" Type="Query" ScpiPath="MEASURE:LAM1:LAMBDA1"/>
+    <LAMBDA2 Description="Actual lambda value" Type="Query" ScpiPath="MEASURE:LAM1:LAMBDA2"/>
+    <LAMBDA3 Description="Actual lambda value" Type="Query" ScpiPath="MEASURE:LAM1:LAMBDA3"/>
+    <LAMBDA4 Description="Actual lambda value" Type="Query" ScpiPath="MEASURE:LAM1:LAMBDA4"/>
+   </LAM1>
+  </MEASURE>
+  <CONFIGURE Type="Model,Node,Command" ScpiPath="CONFIGURE">
+   <RNG1 Type="Node,Command" ScpiPath="CONFIGURE:RNG1">
+    <UL1 Description="Actual peak value" Type="Command" ScpiPath="CONFIGURE:RNG1:UL1" Unit="V"/>
+    <UL2 Description="Actual peak value" Type="Command" ScpiPath="CONFIGURE:RNG1:UL2" Unit="V"/>
+    <UL3 Description="Actual peak value" Type="Command" ScpiPath="CONFIGURE:RNG1:UL3" Unit="V"/>
+    <IL1 Description="Actual peak value" Type="Command" ScpiPath="CONFIGURE:RNG1:IL1" Unit="A"/>
+    <IL2 Description="Actual peak value" Type="Command" ScpiPath="CONFIGURE:RNG1:IL2" Unit="A"/>
+    <IL3 Description="Actual peak value" Type="Command" ScpiPath="CONFIGURE:RNG1:IL3" Unit="A"/>
+    <F Description="Actual frequency" Type="Command" ScpiPath="CONFIGURE:RNG1:F" Unit="Hz"/>
+   </RNG1>
+   <FFT1 Type="Node,Command" ScpiPath="CONFIGURE:FFT1">
+    <UL1 Description="FFT actual values" Type="Command" ScpiPath="CONFIGURE:FFT1:UL1" Unit="V"/>
+    <UL1_DC Description="DC actual value" Type="Command" ScpiPath="CONFIGURE:FFT1:UL1_DC" Unit="V"/>
+    <UL2 Description="FFT actual values" Type="Command" ScpiPath="CONFIGURE:FFT1:UL2" Unit="V"/>
+    <UL2_DC Description="DC actual value" Type="Command" ScpiPath="CONFIGURE:FFT1:UL2_DC" Unit="V"/>
+    <UL3 Description="FFT actual values" Type="Command" ScpiPath="CONFIGURE:FFT1:UL3" Unit="V"/>
+    <UL3_DC Description="DC actual value" Type="Command" ScpiPath="CONFIGURE:FFT1:UL3_DC" Unit="V"/>
+    <IL1 Description="FFT actual values" Type="Command" ScpiPath="CONFIGURE:FFT1:IL1" Unit="A"/>
+    <IL1_DC Description="DC actual value" Type="Command" ScpiPath="CONFIGURE:FFT1:IL1_DC" Unit="A"/>
+    <IL2 Description="FFT actual values" Type="Command" ScpiPath="CONFIGURE:FFT1:IL2" Unit="A"/>
+    <IL2_DC Description="DC actual value" Type="Command" ScpiPath="CONFIGURE:FFT1:IL2_DC" Unit="A"/>
+    <IL3 Description="FFT actual values" Type="Command" ScpiPath="CONFIGURE:FFT1:IL3" Unit="A"/>
+    <IL3_DC Description="DC actual value" Type="Command" ScpiPath="CONFIGURE:FFT1:IL3_DC" Unit="A"/>
+   </FFT1>
+   <POW1 Type="Node,Command" ScpiPath="CONFIGURE:POW1">
+    <P1 Description="Actual power value phase 1" Type="Command" ScpiPath="CONFIGURE:POW1:P1" Unit="W"/>
+    <P2 Description="Actual power value phase 2" Type="Command" ScpiPath="CONFIGURE:POW1:P2" Unit="W"/>
+    <P3 Description="Actual power value phase 3" Type="Command" ScpiPath="CONFIGURE:POW1:P3" Unit="W"/>
+    <PS Description="Actual power value sum all phases" Type="Command" ScpiPath="CONFIGURE:POW1:PS" Unit="W"/>
+   </POW1>
+   <POW2 Type="Node,Command" ScpiPath="CONFIGURE:POW2">
+    <P1 Description="Actual power value phase 1" Type="Command" ScpiPath="CONFIGURE:POW2:P1" Unit="W"/>
+    <P2 Description="Actual power value phase 2" Type="Command" ScpiPath="CONFIGURE:POW2:P2" Unit="W"/>
+    <P3 Description="Actual power value phase 3" Type="Command" ScpiPath="CONFIGURE:POW2:P3" Unit="W"/>
+    <PS Description="Actual power value sum all phases" Type="Command" ScpiPath="CONFIGURE:POW2:PS" Unit="W"/>
+   </POW2>
+   <PW31 Type="Node,Command" ScpiPath="CONFIGURE:PW31">
+    <P1 Description="Harmonic power active values" Type="Command" ScpiPath="CONFIGURE:PW31:P1" Unit="W"/>
+    <Q1 Description="Harmonic power reactive values" Type="Command" ScpiPath="CONFIGURE:PW31:Q1" Unit="Var"/>
+    <S1 Description="Harmonic power apparent values" Type="Command" ScpiPath="CONFIGURE:PW31:S1" Unit="VA"/>
+    <P2 Description="Harmonic power active values" Type="Command" ScpiPath="CONFIGURE:PW31:P2" Unit="W"/>
+    <Q2 Description="Harmonic power reactive values" Type="Command" ScpiPath="CONFIGURE:PW31:Q2" Unit="Var"/>
+    <S2 Description="Harmonic power apparent values" Type="Command" ScpiPath="CONFIGURE:PW31:S2" Unit="VA"/>
+    <P3 Description="Harmonic power active values" Type="Command" ScpiPath="CONFIGURE:PW31:P3" Unit="W"/>
+    <Q3 Description="Harmonic power reactive values" Type="Command" ScpiPath="CONFIGURE:PW31:Q3" Unit="Var"/>
+    <S3 Description="Harmonic power apparent values" Type="Command" ScpiPath="CONFIGURE:PW31:S3" Unit="VA"/>
+   </PW31>
+   <OSC1 Type="Node,Command" ScpiPath="CONFIGURE:OSC1">
+    <UL1 Description="Measures samples" Type="Command" ScpiPath="CONFIGURE:OSC1:UL1" Unit="V"/>
+    <UL2 Description="Measures samples" Type="Command" ScpiPath="CONFIGURE:OSC1:UL2" Unit="V"/>
+    <UL3 Description="Measures samples" Type="Command" ScpiPath="CONFIGURE:OSC1:UL3" Unit="V"/>
+    <IL1 Description="Measures samples" Type="Command" ScpiPath="CONFIGURE:OSC1:IL1" Unit="A"/>
+    <IL2 Description="Measures samples" Type="Command" ScpiPath="CONFIGURE:OSC1:IL2" Unit="A"/>
+    <IL3 Description="Measures samples" Type="Command" ScpiPath="CONFIGURE:OSC1:IL3" Unit="A"/>
+   </OSC1>
+   <RMS1 Type="Node,Command" ScpiPath="CONFIGURE:RMS1">
+    <UL1 Description="Actual rms value phase/neutral" Type="Command" ScpiPath="CONFIGURE:RMS1:UL1" Unit="V"/>
+    <UL2 Description="Actual rms value phase/neutral" Type="Command" ScpiPath="CONFIGURE:RMS1:UL2" Unit="V"/>
+    <UL3 Description="Actual rms value phase/neutral" Type="Command" ScpiPath="CONFIGURE:RMS1:UL3" Unit="V"/>
+    <UL1MINUSUL2 Description="Actual rms value phase/phase" Type="Command" ScpiPath="CONFIGURE:RMS1:UL1-UL2" Unit="V"/>
+    <UL3MINUSUL2 Description="Actual rms value phase/phase" Type="Command" ScpiPath="CONFIGURE:RMS1:UL3-UL2" Unit="V"/>
+    <UL3MINUSUL1 Description="Actual rms value phase/phase" Type="Command" ScpiPath="CONFIGURE:RMS1:UL3-UL1" Unit="V"/>
+    <IL1 Description="Actual rms value phase/neutral" Type="Command" ScpiPath="CONFIGURE:RMS1:IL1" Unit="A"/>
+    <IL2 Description="Actual rms value phase/neutral" Type="Command" ScpiPath="CONFIGURE:RMS1:IL2" Unit="A"/>
+    <IL3 Description="Actual rms value phase/neutral" Type="Command" ScpiPath="CONFIGURE:RMS1:IL3" Unit="A"/>
+   </RMS1>
+   <POW3 Type="Node,Command" ScpiPath="CONFIGURE:POW3">
+    <P1 Description="Actual power value phase 1" Type="Command" ScpiPath="CONFIGURE:POW3:P1" Unit="W"/>
+    <P2 Description="Actual power value phase 2" Type="Command" ScpiPath="CONFIGURE:POW3:P2" Unit="W"/>
+    <P3 Description="Actual power value phase 3" Type="Command" ScpiPath="CONFIGURE:POW3:P3" Unit="W"/>
+    <PS Description="Actual power value sum all phases" Type="Command" ScpiPath="CONFIGURE:POW3:PS" Unit="W"/>
+   </POW3>
+   <POW4 Type="Node,Command" ScpiPath="CONFIGURE:POW4">
+    <P1 Description="Actual power value phase 1" Type="Command" ScpiPath="CONFIGURE:POW4:P1" Unit="W"/>
+    <P2 Description="Actual power value phase 2" Type="Command" ScpiPath="CONFIGURE:POW4:P2" Unit="W"/>
+    <P3 Description="Actual power value phase 3" Type="Command" ScpiPath="CONFIGURE:POW4:P3" Unit="W"/>
+    <PS Description="Actual power value sum all phases" Type="Command" ScpiPath="CONFIGURE:POW4:PS" Unit="W"/>
+   </POW4>
+   <POW5 Type="Node,Command" ScpiPath="CONFIGURE:POW5">
+    <P1 Description="Actual power value phase 1" Type="Command" ScpiPath="CONFIGURE:POW5:P1" Unit="W"/>
+    <P2 Description="Actual power value phase 2" Type="Command" ScpiPath="CONFIGURE:POW5:P2" Unit="W"/>
+    <P3 Description="Actual power value phase 3" Type="Command" ScpiPath="CONFIGURE:POW5:P3" Unit="W"/>
+    <PS Description="Actual power value sum all phases" Type="Command" ScpiPath="CONFIGURE:POW5:PS" Unit="W"/>
+   </POW5>
+   <POW6 Type="Node,Command" ScpiPath="CONFIGURE:POW6">
+    <S1 Description="Actual power value phase 1" Type="Command" ScpiPath="CONFIGURE:POW6:S1" Unit="VA"/>
+    <S2 Description="Actual power value phase 2" Type="Command" ScpiPath="CONFIGURE:POW6:S2" Unit="VA"/>
+    <S3 Description="Actual power value phase 3" Type="Command" ScpiPath="CONFIGURE:POW6:S3" Unit="VA"/>
+    <SS Description="Actual power value sum all phases" Type="Command" ScpiPath="CONFIGURE:POW6:SS" Unit="VA"/>
+   </POW6>
+   <THD1 Type="Node,Command" ScpiPath="CONFIGURE:THD1">
+    <UL1 Description="THDn actual value" Type="Command" ScpiPath="CONFIGURE:THD1:UL1" Unit="%"/>
+    <UL2 Description="THDn actual value" Type="Command" ScpiPath="CONFIGURE:THD1:UL2" Unit="%"/>
+    <UL3 Description="THDn actual value" Type="Command" ScpiPath="CONFIGURE:THD1:UL3" Unit="%"/>
+    <IL1 Description="THDn actual value" Type="Command" ScpiPath="CONFIGURE:THD1:IL1" Unit="%"/>
+    <IL2 Description="THDn actual value" Type="Command" ScpiPath="CONFIGURE:THD1:IL2" Unit="%"/>
+    <IL3 Description="THDn actual value" Type="Command" ScpiPath="CONFIGURE:THD1:IL3" Unit="%"/>
+   </THD1>
+   <THD2 Type="Node,Command" ScpiPath="CONFIGURE:THD2">
+    <UL1 Description="THDr actual value" Type="Command" ScpiPath="CONFIGURE:THD2:UL1" Unit="%"/>
+    <UL2 Description="THDr actual value" Type="Command" ScpiPath="CONFIGURE:THD2:UL2" Unit="%"/>
+    <UL3 Description="THDr actual value" Type="Command" ScpiPath="CONFIGURE:THD2:UL3" Unit="%"/>
+    <IL1 Description="THDr actual value" Type="Command" ScpiPath="CONFIGURE:THD2:IL1" Unit="%"/>
+    <IL2 Description="THDr actual value" Type="Command" ScpiPath="CONFIGURE:THD2:IL2" Unit="%"/>
+    <IL3 Description="THDr actual value" Type="Command" ScpiPath="CONFIGURE:THD2:IL3" Unit="%"/>
+   </THD2>
+   <DFT1 Type="Node,Command" ScpiPath="CONFIGURE:DFT1">
+    <UL1 Description="Actual value phase/neutral" Type="Command" ScpiPath="CONFIGURE:DFT1:UL1" Unit="V"/>
+    <UL2 Description="Actual value phase/neutral" Type="Command" ScpiPath="CONFIGURE:DFT1:UL2" Unit="V"/>
+    <UL3 Description="Actual value phase/neutral" Type="Command" ScpiPath="CONFIGURE:DFT1:UL3" Unit="V"/>
+    <UL1MINUSUL2 Description="Actual value phase/phase" Type="Command" ScpiPath="CONFIGURE:DFT1:UL1-UL2" Unit="V"/>
+    <UL3MINUSUL2 Description="Actual value phase/phase" Type="Command" ScpiPath="CONFIGURE:DFT1:UL3-UL2" Unit="V"/>
+    <UL3MINUSUL1 Description="Actual value phase/phase" Type="Command" ScpiPath="CONFIGURE:DFT1:UL3-UL1" Unit="V"/>
+    <IL1 Description="Actual value phase/neutral" Type="Command" ScpiPath="CONFIGURE:DFT1:IL1" Unit="A"/>
+    <IL2 Description="Actual value phase/neutral" Type="Command" ScpiPath="CONFIGURE:DFT1:IL2" Unit="A"/>
+    <IL3 Description="Actual value phase/neutral" Type="Command" ScpiPath="CONFIGURE:DFT1:IL3" Unit="A"/>
+    <RFIELD Description="Phase sequence" Type="Command" ScpiPath="CONFIGURE:DFT1:RFIELD"/>
+   </DFT1>
+   <LAM1 Type="Node,Command" ScpiPath="CONFIGURE:LAM1">
+    <LAMBDA1 Description="Actual lambda value" Type="Command" ScpiPath="CONFIGURE:LAM1:LAMBDA1"/>
+    <LAMBDA2 Description="Actual lambda value" Type="Command" ScpiPath="CONFIGURE:LAM1:LAMBDA2"/>
+    <LAMBDA3 Description="Actual lambda value" Type="Command" ScpiPath="CONFIGURE:LAM1:LAMBDA3"/>
+    <LAMBDA4 Description="Actual lambda value" Type="Command" ScpiPath="CONFIGURE:LAM1:LAMBDA4"/>
+   </LAM1>
+  </CONFIGURE>
+  <READ Type="Model,Node,Query" ScpiPath="READ">
+   <RNG1 Type="Node,Query" ScpiPath="READ:RNG1">
+    <UL1 Description="Actual peak value" Type="Query" ScpiPath="READ:RNG1:UL1" Unit="V"/>
+    <UL2 Description="Actual peak value" Type="Query" ScpiPath="READ:RNG1:UL2" Unit="V"/>
+    <UL3 Description="Actual peak value" Type="Query" ScpiPath="READ:RNG1:UL3" Unit="V"/>
+    <IL1 Description="Actual peak value" Type="Query" ScpiPath="READ:RNG1:IL1" Unit="A"/>
+    <IL2 Description="Actual peak value" Type="Query" ScpiPath="READ:RNG1:IL2" Unit="A"/>
+    <IL3 Description="Actual peak value" Type="Query" ScpiPath="READ:RNG1:IL3" Unit="A"/>
+    <F Description="Actual frequency" Type="Query" ScpiPath="READ:RNG1:F" Unit="Hz"/>
+   </RNG1>
+   <FFT1 Type="Node,Query" ScpiPath="READ:FFT1">
+    <UL1 Description="FFT actual values" Type="Query" ScpiPath="READ:FFT1:UL1" Unit="V"/>
+    <UL1_DC Description="DC actual value" Type="Query" ScpiPath="READ:FFT1:UL1_DC" Unit="V"/>
+    <UL2 Description="FFT actual values" Type="Query" ScpiPath="READ:FFT1:UL2" Unit="V"/>
+    <UL2_DC Description="DC actual value" Type="Query" ScpiPath="READ:FFT1:UL2_DC" Unit="V"/>
+    <UL3 Description="FFT actual values" Type="Query" ScpiPath="READ:FFT1:UL3" Unit="V"/>
+    <UL3_DC Description="DC actual value" Type="Query" ScpiPath="READ:FFT1:UL3_DC" Unit="V"/>
+    <IL1 Description="FFT actual values" Type="Query" ScpiPath="READ:FFT1:IL1" Unit="A"/>
+    <IL1_DC Description="DC actual value" Type="Query" ScpiPath="READ:FFT1:IL1_DC" Unit="A"/>
+    <IL2 Description="FFT actual values" Type="Query" ScpiPath="READ:FFT1:IL2" Unit="A"/>
+    <IL2_DC Description="DC actual value" Type="Query" ScpiPath="READ:FFT1:IL2_DC" Unit="A"/>
+    <IL3 Description="FFT actual values" Type="Query" ScpiPath="READ:FFT1:IL3" Unit="A"/>
+    <IL3_DC Description="DC actual value" Type="Query" ScpiPath="READ:FFT1:IL3_DC" Unit="A"/>
+   </FFT1>
+   <POW1 Type="Node,Query" ScpiPath="READ:POW1">
+    <P1 Description="Actual power value phase 1" Type="Query" ScpiPath="READ:POW1:P1" Unit="W"/>
+    <P2 Description="Actual power value phase 2" Type="Query" ScpiPath="READ:POW1:P2" Unit="W"/>
+    <P3 Description="Actual power value phase 3" Type="Query" ScpiPath="READ:POW1:P3" Unit="W"/>
+    <PS Description="Actual power value sum all phases" Type="Query" ScpiPath="READ:POW1:PS" Unit="W"/>
+   </POW1>
+   <POW2 Type="Node,Query" ScpiPath="READ:POW2">
+    <P1 Description="Actual power value phase 1" Type="Query" ScpiPath="READ:POW2:P1" Unit="W"/>
+    <P2 Description="Actual power value phase 2" Type="Query" ScpiPath="READ:POW2:P2" Unit="W"/>
+    <P3 Description="Actual power value phase 3" Type="Query" ScpiPath="READ:POW2:P3" Unit="W"/>
+    <PS Description="Actual power value sum all phases" Type="Query" ScpiPath="READ:POW2:PS" Unit="W"/>
+   </POW2>
+   <PW31 Type="Node,Query" ScpiPath="READ:PW31">
+    <P1 Description="Harmonic power active values" Type="Query" ScpiPath="READ:PW31:P1" Unit="W"/>
+    <Q1 Description="Harmonic power reactive values" Type="Query" ScpiPath="READ:PW31:Q1" Unit="Var"/>
+    <S1 Description="Harmonic power apparent values" Type="Query" ScpiPath="READ:PW31:S1" Unit="VA"/>
+    <P2 Description="Harmonic power active values" Type="Query" ScpiPath="READ:PW31:P2" Unit="W"/>
+    <Q2 Description="Harmonic power reactive values" Type="Query" ScpiPath="READ:PW31:Q2" Unit="Var"/>
+    <S2 Description="Harmonic power apparent values" Type="Query" ScpiPath="READ:PW31:S2" Unit="VA"/>
+    <P3 Description="Harmonic power active values" Type="Query" ScpiPath="READ:PW31:P3" Unit="W"/>
+    <Q3 Description="Harmonic power reactive values" Type="Query" ScpiPath="READ:PW31:Q3" Unit="Var"/>
+    <S3 Description="Harmonic power apparent values" Type="Query" ScpiPath="READ:PW31:S3" Unit="VA"/>
+   </PW31>
+   <OSC1 Type="Node,Query" ScpiPath="READ:OSC1">
+    <UL1 Description="Measures samples" Type="Query" ScpiPath="READ:OSC1:UL1" Unit="V"/>
+    <UL2 Description="Measures samples" Type="Query" ScpiPath="READ:OSC1:UL2" Unit="V"/>
+    <UL3 Description="Measures samples" Type="Query" ScpiPath="READ:OSC1:UL3" Unit="V"/>
+    <IL1 Description="Measures samples" Type="Query" ScpiPath="READ:OSC1:IL1" Unit="A"/>
+    <IL2 Description="Measures samples" Type="Query" ScpiPath="READ:OSC1:IL2" Unit="A"/>
+    <IL3 Description="Measures samples" Type="Query" ScpiPath="READ:OSC1:IL3" Unit="A"/>
+   </OSC1>
+   <RMS1 Type="Node,Query" ScpiPath="READ:RMS1">
+    <UL1 Description="Actual rms value phase/neutral" Type="Query" ScpiPath="READ:RMS1:UL1" Unit="V"/>
+    <UL2 Description="Actual rms value phase/neutral" Type="Query" ScpiPath="READ:RMS1:UL2" Unit="V"/>
+    <UL3 Description="Actual rms value phase/neutral" Type="Query" ScpiPath="READ:RMS1:UL3" Unit="V"/>
+    <UL1MINUSUL2 Description="Actual rms value phase/phase" Type="Query" ScpiPath="READ:RMS1:UL1-UL2" Unit="V"/>
+    <UL3MINUSUL2 Description="Actual rms value phase/phase" Type="Query" ScpiPath="READ:RMS1:UL3-UL2" Unit="V"/>
+    <UL3MINUSUL1 Description="Actual rms value phase/phase" Type="Query" ScpiPath="READ:RMS1:UL3-UL1" Unit="V"/>
+    <IL1 Description="Actual rms value phase/neutral" Type="Query" ScpiPath="READ:RMS1:IL1" Unit="A"/>
+    <IL2 Description="Actual rms value phase/neutral" Type="Query" ScpiPath="READ:RMS1:IL2" Unit="A"/>
+    <IL3 Description="Actual rms value phase/neutral" Type="Query" ScpiPath="READ:RMS1:IL3" Unit="A"/>
+   </RMS1>
+   <POW3 Type="Node,Query" ScpiPath="READ:POW3">
+    <P1 Description="Actual power value phase 1" Type="Query" ScpiPath="READ:POW3:P1" Unit="W"/>
+    <P2 Description="Actual power value phase 2" Type="Query" ScpiPath="READ:POW3:P2" Unit="W"/>
+    <P3 Description="Actual power value phase 3" Type="Query" ScpiPath="READ:POW3:P3" Unit="W"/>
+    <PS Description="Actual power value sum all phases" Type="Query" ScpiPath="READ:POW3:PS" Unit="W"/>
+   </POW3>
+   <POW4 Type="Node,Query" ScpiPath="READ:POW4">
+    <P1 Description="Actual power value phase 1" Type="Query" ScpiPath="READ:POW4:P1" Unit="W"/>
+    <P2 Description="Actual power value phase 2" Type="Query" ScpiPath="READ:POW4:P2" Unit="W"/>
+    <P3 Description="Actual power value phase 3" Type="Query" ScpiPath="READ:POW4:P3" Unit="W"/>
+    <PS Description="Actual power value sum all phases" Type="Query" ScpiPath="READ:POW4:PS" Unit="W"/>
+   </POW4>
+   <POW5 Type="Node,Query" ScpiPath="READ:POW5">
+    <P1 Description="Actual power value phase 1" Type="Query" ScpiPath="READ:POW5:P1" Unit="W"/>
+    <P2 Description="Actual power value phase 2" Type="Query" ScpiPath="READ:POW5:P2" Unit="W"/>
+    <P3 Description="Actual power value phase 3" Type="Query" ScpiPath="READ:POW5:P3" Unit="W"/>
+    <PS Description="Actual power value sum all phases" Type="Query" ScpiPath="READ:POW5:PS" Unit="W"/>
+   </POW5>
+   <POW6 Type="Node,Query" ScpiPath="READ:POW6">
+    <S1 Description="Actual power value phase 1" Type="Query" ScpiPath="READ:POW6:S1" Unit="VA"/>
+    <S2 Description="Actual power value phase 2" Type="Query" ScpiPath="READ:POW6:S2" Unit="VA"/>
+    <S3 Description="Actual power value phase 3" Type="Query" ScpiPath="READ:POW6:S3" Unit="VA"/>
+    <SS Description="Actual power value sum all phases" Type="Query" ScpiPath="READ:POW6:SS" Unit="VA"/>
+   </POW6>
+   <THD1 Type="Node,Query" ScpiPath="READ:THD1">
+    <UL1 Description="THDn actual value" Type="Query" ScpiPath="READ:THD1:UL1" Unit="%"/>
+    <UL2 Description="THDn actual value" Type="Query" ScpiPath="READ:THD1:UL2" Unit="%"/>
+    <UL3 Description="THDn actual value" Type="Query" ScpiPath="READ:THD1:UL3" Unit="%"/>
+    <IL1 Description="THDn actual value" Type="Query" ScpiPath="READ:THD1:IL1" Unit="%"/>
+    <IL2 Description="THDn actual value" Type="Query" ScpiPath="READ:THD1:IL2" Unit="%"/>
+    <IL3 Description="THDn actual value" Type="Query" ScpiPath="READ:THD1:IL3" Unit="%"/>
+   </THD1>
+   <THD2 Type="Node,Query" ScpiPath="READ:THD2">
+    <UL1 Description="THDr actual value" Type="Query" ScpiPath="READ:THD2:UL1" Unit="%"/>
+    <UL2 Description="THDr actual value" Type="Query" ScpiPath="READ:THD2:UL2" Unit="%"/>
+    <UL3 Description="THDr actual value" Type="Query" ScpiPath="READ:THD2:UL3" Unit="%"/>
+    <IL1 Description="THDr actual value" Type="Query" ScpiPath="READ:THD2:IL1" Unit="%"/>
+    <IL2 Description="THDr actual value" Type="Query" ScpiPath="READ:THD2:IL2" Unit="%"/>
+    <IL3 Description="THDr actual value" Type="Query" ScpiPath="READ:THD2:IL3" Unit="%"/>
+   </THD2>
+   <DFT1 Type="Node,Query" ScpiPath="READ:DFT1">
+    <UL1 Description="Actual value phase/neutral" Type="Query" ScpiPath="READ:DFT1:UL1" Unit="V"/>
+    <UL2 Description="Actual value phase/neutral" Type="Query" ScpiPath="READ:DFT1:UL2" Unit="V"/>
+    <UL3 Description="Actual value phase/neutral" Type="Query" ScpiPath="READ:DFT1:UL3" Unit="V"/>
+    <UL1MINUSUL2 Description="Actual value phase/phase" Type="Query" ScpiPath="READ:DFT1:UL1-UL2" Unit="V"/>
+    <UL3MINUSUL2 Description="Actual value phase/phase" Type="Query" ScpiPath="READ:DFT1:UL3-UL2" Unit="V"/>
+    <UL3MINUSUL1 Description="Actual value phase/phase" Type="Query" ScpiPath="READ:DFT1:UL3-UL1" Unit="V"/>
+    <IL1 Description="Actual value phase/neutral" Type="Query" ScpiPath="READ:DFT1:IL1" Unit="A"/>
+    <IL2 Description="Actual value phase/neutral" Type="Query" ScpiPath="READ:DFT1:IL2" Unit="A"/>
+    <IL3 Description="Actual value phase/neutral" Type="Query" ScpiPath="READ:DFT1:IL3" Unit="A"/>
+    <RFIELD Description="Phase sequence" Type="Query" ScpiPath="READ:DFT1:RFIELD"/>
+   </DFT1>
+   <LAM1 Type="Node,Query" ScpiPath="READ:LAM1">
+    <LAMBDA1 Description="Actual lambda value" Type="Query" ScpiPath="READ:LAM1:LAMBDA1"/>
+    <LAMBDA2 Description="Actual lambda value" Type="Query" ScpiPath="READ:LAM1:LAMBDA2"/>
+    <LAMBDA3 Description="Actual lambda value" Type="Query" ScpiPath="READ:LAM1:LAMBDA3"/>
+    <LAMBDA4 Description="Actual lambda value" Type="Query" ScpiPath="READ:LAM1:LAMBDA4"/>
+   </LAM1>
+  </READ>
+  <INIT Type="Model,Node,Command" ScpiPath="INIT">
+   <RNG1 Type="Node,Command" ScpiPath="INIT:RNG1">
+    <UL1 Description="Actual peak value" Type="Command" ScpiPath="INIT:RNG1:UL1" Unit="V"/>
+    <UL2 Description="Actual peak value" Type="Command" ScpiPath="INIT:RNG1:UL2" Unit="V"/>
+    <UL3 Description="Actual peak value" Type="Command" ScpiPath="INIT:RNG1:UL3" Unit="V"/>
+    <IL1 Description="Actual peak value" Type="Command" ScpiPath="INIT:RNG1:IL1" Unit="A"/>
+    <IL2 Description="Actual peak value" Type="Command" ScpiPath="INIT:RNG1:IL2" Unit="A"/>
+    <IL3 Description="Actual peak value" Type="Command" ScpiPath="INIT:RNG1:IL3" Unit="A"/>
+    <F Description="Actual frequency" Type="Command" ScpiPath="INIT:RNG1:F" Unit="Hz"/>
+   </RNG1>
+   <FFT1 Type="Node,Command" ScpiPath="INIT:FFT1">
+    <UL1 Description="FFT actual values" Type="Command" ScpiPath="INIT:FFT1:UL1" Unit="V"/>
+    <UL1_DC Description="DC actual value" Type="Command" ScpiPath="INIT:FFT1:UL1_DC" Unit="V"/>
+    <UL2 Description="FFT actual values" Type="Command" ScpiPath="INIT:FFT1:UL2" Unit="V"/>
+    <UL2_DC Description="DC actual value" Type="Command" ScpiPath="INIT:FFT1:UL2_DC" Unit="V"/>
+    <UL3 Description="FFT actual values" Type="Command" ScpiPath="INIT:FFT1:UL3" Unit="V"/>
+    <UL3_DC Description="DC actual value" Type="Command" ScpiPath="INIT:FFT1:UL3_DC" Unit="V"/>
+    <IL1 Description="FFT actual values" Type="Command" ScpiPath="INIT:FFT1:IL1" Unit="A"/>
+    <IL1_DC Description="DC actual value" Type="Command" ScpiPath="INIT:FFT1:IL1_DC" Unit="A"/>
+    <IL2 Description="FFT actual values" Type="Command" ScpiPath="INIT:FFT1:IL2" Unit="A"/>
+    <IL2_DC Description="DC actual value" Type="Command" ScpiPath="INIT:FFT1:IL2_DC" Unit="A"/>
+    <IL3 Description="FFT actual values" Type="Command" ScpiPath="INIT:FFT1:IL3" Unit="A"/>
+    <IL3_DC Description="DC actual value" Type="Command" ScpiPath="INIT:FFT1:IL3_DC" Unit="A"/>
+   </FFT1>
+   <POW1 Type="Node,Command" ScpiPath="INIT:POW1">
+    <P1 Description="Actual power value phase 1" Type="Command" ScpiPath="INIT:POW1:P1" Unit="W"/>
+    <P2 Description="Actual power value phase 2" Type="Command" ScpiPath="INIT:POW1:P2" Unit="W"/>
+    <P3 Description="Actual power value phase 3" Type="Command" ScpiPath="INIT:POW1:P3" Unit="W"/>
+    <PS Description="Actual power value sum all phases" Type="Command" ScpiPath="INIT:POW1:PS" Unit="W"/>
+   </POW1>
+   <POW2 Type="Node,Command" ScpiPath="INIT:POW2">
+    <P1 Description="Actual power value phase 1" Type="Command" ScpiPath="INIT:POW2:P1" Unit="W"/>
+    <P2 Description="Actual power value phase 2" Type="Command" ScpiPath="INIT:POW2:P2" Unit="W"/>
+    <P3 Description="Actual power value phase 3" Type="Command" ScpiPath="INIT:POW2:P3" Unit="W"/>
+    <PS Description="Actual power value sum all phases" Type="Command" ScpiPath="INIT:POW2:PS" Unit="W"/>
+   </POW2>
+   <PW31 Type="Node,Command" ScpiPath="INIT:PW31">
+    <P1 Description="Harmonic power active values" Type="Command" ScpiPath="INIT:PW31:P1" Unit="W"/>
+    <Q1 Description="Harmonic power reactive values" Type="Command" ScpiPath="INIT:PW31:Q1" Unit="Var"/>
+    <S1 Description="Harmonic power apparent values" Type="Command" ScpiPath="INIT:PW31:S1" Unit="VA"/>
+    <P2 Description="Harmonic power active values" Type="Command" ScpiPath="INIT:PW31:P2" Unit="W"/>
+    <Q2 Description="Harmonic power reactive values" Type="Command" ScpiPath="INIT:PW31:Q2" Unit="Var"/>
+    <S2 Description="Harmonic power apparent values" Type="Command" ScpiPath="INIT:PW31:S2" Unit="VA"/>
+    <P3 Description="Harmonic power active values" Type="Command" ScpiPath="INIT:PW31:P3" Unit="W"/>
+    <Q3 Description="Harmonic power reactive values" Type="Command" ScpiPath="INIT:PW31:Q3" Unit="Var"/>
+    <S3 Description="Harmonic power apparent values" Type="Command" ScpiPath="INIT:PW31:S3" Unit="VA"/>
+   </PW31>
+   <OSC1 Type="Node,Command" ScpiPath="INIT:OSC1">
+    <UL1 Description="Measures samples" Type="Command" ScpiPath="INIT:OSC1:UL1" Unit="V"/>
+    <UL2 Description="Measures samples" Type="Command" ScpiPath="INIT:OSC1:UL2" Unit="V"/>
+    <UL3 Description="Measures samples" Type="Command" ScpiPath="INIT:OSC1:UL3" Unit="V"/>
+    <IL1 Description="Measures samples" Type="Command" ScpiPath="INIT:OSC1:IL1" Unit="A"/>
+    <IL2 Description="Measures samples" Type="Command" ScpiPath="INIT:OSC1:IL2" Unit="A"/>
+    <IL3 Description="Measures samples" Type="Command" ScpiPath="INIT:OSC1:IL3" Unit="A"/>
+   </OSC1>
+   <RMS1 Type="Node,Command" ScpiPath="INIT:RMS1">
+    <UL1 Description="Actual rms value phase/neutral" Type="Command" ScpiPath="INIT:RMS1:UL1" Unit="V"/>
+    <UL2 Description="Actual rms value phase/neutral" Type="Command" ScpiPath="INIT:RMS1:UL2" Unit="V"/>
+    <UL3 Description="Actual rms value phase/neutral" Type="Command" ScpiPath="INIT:RMS1:UL3" Unit="V"/>
+    <UL1MINUSUL2 Description="Actual rms value phase/phase" Type="Command" ScpiPath="INIT:RMS1:UL1-UL2" Unit="V"/>
+    <UL3MINUSUL2 Description="Actual rms value phase/phase" Type="Command" ScpiPath="INIT:RMS1:UL3-UL2" Unit="V"/>
+    <UL3MINUSUL1 Description="Actual rms value phase/phase" Type="Command" ScpiPath="INIT:RMS1:UL3-UL1" Unit="V"/>
+    <IL1 Description="Actual rms value phase/neutral" Type="Command" ScpiPath="INIT:RMS1:IL1" Unit="A"/>
+    <IL2 Description="Actual rms value phase/neutral" Type="Command" ScpiPath="INIT:RMS1:IL2" Unit="A"/>
+    <IL3 Description="Actual rms value phase/neutral" Type="Command" ScpiPath="INIT:RMS1:IL3" Unit="A"/>
+   </RMS1>
+   <POW3 Type="Node,Command" ScpiPath="INIT:POW3">
+    <P1 Description="Actual power value phase 1" Type="Command" ScpiPath="INIT:POW3:P1" Unit="W"/>
+    <P2 Description="Actual power value phase 2" Type="Command" ScpiPath="INIT:POW3:P2" Unit="W"/>
+    <P3 Description="Actual power value phase 3" Type="Command" ScpiPath="INIT:POW3:P3" Unit="W"/>
+    <PS Description="Actual power value sum all phases" Type="Command" ScpiPath="INIT:POW3:PS" Unit="W"/>
+   </POW3>
+   <POW4 Type="Node,Command" ScpiPath="INIT:POW4">
+    <P1 Description="Actual power value phase 1" Type="Command" ScpiPath="INIT:POW4:P1" Unit="W"/>
+    <P2 Description="Actual power value phase 2" Type="Command" ScpiPath="INIT:POW4:P2" Unit="W"/>
+    <P3 Description="Actual power value phase 3" Type="Command" ScpiPath="INIT:POW4:P3" Unit="W"/>
+    <PS Description="Actual power value sum all phases" Type="Command" ScpiPath="INIT:POW4:PS" Unit="W"/>
+   </POW4>
+   <POW5 Type="Node,Command" ScpiPath="INIT:POW5">
+    <P1 Description="Actual power value phase 1" Type="Command" ScpiPath="INIT:POW5:P1" Unit="W"/>
+    <P2 Description="Actual power value phase 2" Type="Command" ScpiPath="INIT:POW5:P2" Unit="W"/>
+    <P3 Description="Actual power value phase 3" Type="Command" ScpiPath="INIT:POW5:P3" Unit="W"/>
+    <PS Description="Actual power value sum all phases" Type="Command" ScpiPath="INIT:POW5:PS" Unit="W"/>
+   </POW5>
+   <POW6 Type="Node,Command" ScpiPath="INIT:POW6">
+    <S1 Description="Actual power value phase 1" Type="Command" ScpiPath="INIT:POW6:S1" Unit="VA"/>
+    <S2 Description="Actual power value phase 2" Type="Command" ScpiPath="INIT:POW6:S2" Unit="VA"/>
+    <S3 Description="Actual power value phase 3" Type="Command" ScpiPath="INIT:POW6:S3" Unit="VA"/>
+    <SS Description="Actual power value sum all phases" Type="Command" ScpiPath="INIT:POW6:SS" Unit="VA"/>
+   </POW6>
+   <THD1 Type="Node,Command" ScpiPath="INIT:THD1">
+    <UL1 Description="THDn actual value" Type="Command" ScpiPath="INIT:THD1:UL1" Unit="%"/>
+    <UL2 Description="THDn actual value" Type="Command" ScpiPath="INIT:THD1:UL2" Unit="%"/>
+    <UL3 Description="THDn actual value" Type="Command" ScpiPath="INIT:THD1:UL3" Unit="%"/>
+    <IL1 Description="THDn actual value" Type="Command" ScpiPath="INIT:THD1:IL1" Unit="%"/>
+    <IL2 Description="THDn actual value" Type="Command" ScpiPath="INIT:THD1:IL2" Unit="%"/>
+    <IL3 Description="THDn actual value" Type="Command" ScpiPath="INIT:THD1:IL3" Unit="%"/>
+   </THD1>
+   <THD2 Type="Node,Command" ScpiPath="INIT:THD2">
+    <UL1 Description="THDr actual value" Type="Command" ScpiPath="INIT:THD2:UL1" Unit="%"/>
+    <UL2 Description="THDr actual value" Type="Command" ScpiPath="INIT:THD2:UL2" Unit="%"/>
+    <UL3 Description="THDr actual value" Type="Command" ScpiPath="INIT:THD2:UL3" Unit="%"/>
+    <IL1 Description="THDr actual value" Type="Command" ScpiPath="INIT:THD2:IL1" Unit="%"/>
+    <IL2 Description="THDr actual value" Type="Command" ScpiPath="INIT:THD2:IL2" Unit="%"/>
+    <IL3 Description="THDr actual value" Type="Command" ScpiPath="INIT:THD2:IL3" Unit="%"/>
+   </THD2>
+   <DFT1 Type="Node,Command" ScpiPath="INIT:DFT1">
+    <UL1 Description="Actual value phase/neutral" Type="Command" ScpiPath="INIT:DFT1:UL1" Unit="V"/>
+    <UL2 Description="Actual value phase/neutral" Type="Command" ScpiPath="INIT:DFT1:UL2" Unit="V"/>
+    <UL3 Description="Actual value phase/neutral" Type="Command" ScpiPath="INIT:DFT1:UL3" Unit="V"/>
+    <UL1MINUSUL2 Description="Actual value phase/phase" Type="Command" ScpiPath="INIT:DFT1:UL1-UL2" Unit="V"/>
+    <UL3MINUSUL2 Description="Actual value phase/phase" Type="Command" ScpiPath="INIT:DFT1:UL3-UL2" Unit="V"/>
+    <UL3MINUSUL1 Description="Actual value phase/phase" Type="Command" ScpiPath="INIT:DFT1:UL3-UL1" Unit="V"/>
+    <IL1 Description="Actual value phase/neutral" Type="Command" ScpiPath="INIT:DFT1:IL1" Unit="A"/>
+    <IL2 Description="Actual value phase/neutral" Type="Command" ScpiPath="INIT:DFT1:IL2" Unit="A"/>
+    <IL3 Description="Actual value phase/neutral" Type="Command" ScpiPath="INIT:DFT1:IL3" Unit="A"/>
+    <RFIELD Description="Phase sequence" Type="Command" ScpiPath="INIT:DFT1:RFIELD"/>
+   </DFT1>
+   <LAM1 Type="Node,Command" ScpiPath="INIT:LAM1">
+    <LAMBDA1 Description="Actual lambda value" Type="Command" ScpiPath="INIT:LAM1:LAMBDA1"/>
+    <LAMBDA2 Description="Actual lambda value" Type="Command" ScpiPath="INIT:LAM1:LAMBDA2"/>
+    <LAMBDA3 Description="Actual lambda value" Type="Command" ScpiPath="INIT:LAM1:LAMBDA3"/>
+    <LAMBDA4 Description="Actual lambda value" Type="Command" ScpiPath="INIT:LAM1:LAMBDA4"/>
+   </LAM1>
+  </INIT>
+  <FETCH Type="Model,Node,Query" ScpiPath="FETCH">
+   <RNG1 Type="Node,Query" ScpiPath="FETCH:RNG1">
+    <UL1 Description="Actual peak value" Type="Query" ScpiPath="FETCH:RNG1:UL1" Unit="V"/>
+    <UL2 Description="Actual peak value" Type="Query" ScpiPath="FETCH:RNG1:UL2" Unit="V"/>
+    <UL3 Description="Actual peak value" Type="Query" ScpiPath="FETCH:RNG1:UL3" Unit="V"/>
+    <IL1 Description="Actual peak value" Type="Query" ScpiPath="FETCH:RNG1:IL1" Unit="A"/>
+    <IL2 Description="Actual peak value" Type="Query" ScpiPath="FETCH:RNG1:IL2" Unit="A"/>
+    <IL3 Description="Actual peak value" Type="Query" ScpiPath="FETCH:RNG1:IL3" Unit="A"/>
+    <F Description="Actual frequency" Type="Query" ScpiPath="FETCH:RNG1:F" Unit="Hz"/>
+   </RNG1>
+   <FFT1 Type="Node,Query" ScpiPath="FETCH:FFT1">
+    <UL1 Description="FFT actual values" Type="Query" ScpiPath="FETCH:FFT1:UL1" Unit="V"/>
+    <UL1_DC Description="DC actual value" Type="Query" ScpiPath="FETCH:FFT1:UL1_DC" Unit="V"/>
+    <UL2 Description="FFT actual values" Type="Query" ScpiPath="FETCH:FFT1:UL2" Unit="V"/>
+    <UL2_DC Description="DC actual value" Type="Query" ScpiPath="FETCH:FFT1:UL2_DC" Unit="V"/>
+    <UL3 Description="FFT actual values" Type="Query" ScpiPath="FETCH:FFT1:UL3" Unit="V"/>
+    <UL3_DC Description="DC actual value" Type="Query" ScpiPath="FETCH:FFT1:UL3_DC" Unit="V"/>
+    <IL1 Description="FFT actual values" Type="Query" ScpiPath="FETCH:FFT1:IL1" Unit="A"/>
+    <IL1_DC Description="DC actual value" Type="Query" ScpiPath="FETCH:FFT1:IL1_DC" Unit="A"/>
+    <IL2 Description="FFT actual values" Type="Query" ScpiPath="FETCH:FFT1:IL2" Unit="A"/>
+    <IL2_DC Description="DC actual value" Type="Query" ScpiPath="FETCH:FFT1:IL2_DC" Unit="A"/>
+    <IL3 Description="FFT actual values" Type="Query" ScpiPath="FETCH:FFT1:IL3" Unit="A"/>
+    <IL3_DC Description="DC actual value" Type="Query" ScpiPath="FETCH:FFT1:IL3_DC" Unit="A"/>
+   </FFT1>
+   <POW1 Type="Node,Query" ScpiPath="FETCH:POW1">
+    <P1 Description="Actual power value phase 1" Type="Query" ScpiPath="FETCH:POW1:P1" Unit="W"/>
+    <P2 Description="Actual power value phase 2" Type="Query" ScpiPath="FETCH:POW1:P2" Unit="W"/>
+    <P3 Description="Actual power value phase 3" Type="Query" ScpiPath="FETCH:POW1:P3" Unit="W"/>
+    <PS Description="Actual power value sum all phases" Type="Query" ScpiPath="FETCH:POW1:PS" Unit="W"/>
+   </POW1>
+   <POW2 Type="Node,Query" ScpiPath="FETCH:POW2">
+    <P1 Description="Actual power value phase 1" Type="Query" ScpiPath="FETCH:POW2:P1" Unit="W"/>
+    <P2 Description="Actual power value phase 2" Type="Query" ScpiPath="FETCH:POW2:P2" Unit="W"/>
+    <P3 Description="Actual power value phase 3" Type="Query" ScpiPath="FETCH:POW2:P3" Unit="W"/>
+    <PS Description="Actual power value sum all phases" Type="Query" ScpiPath="FETCH:POW2:PS" Unit="W"/>
+   </POW2>
+   <PW31 Type="Node,Query" ScpiPath="FETCH:PW31">
+    <P1 Description="Harmonic power active values" Type="Query" ScpiPath="FETCH:PW31:P1" Unit="W"/>
+    <Q1 Description="Harmonic power reactive values" Type="Query" ScpiPath="FETCH:PW31:Q1" Unit="Var"/>
+    <S1 Description="Harmonic power apparent values" Type="Query" ScpiPath="FETCH:PW31:S1" Unit="VA"/>
+    <P2 Description="Harmonic power active values" Type="Query" ScpiPath="FETCH:PW31:P2" Unit="W"/>
+    <Q2 Description="Harmonic power reactive values" Type="Query" ScpiPath="FETCH:PW31:Q2" Unit="Var"/>
+    <S2 Description="Harmonic power apparent values" Type="Query" ScpiPath="FETCH:PW31:S2" Unit="VA"/>
+    <P3 Description="Harmonic power active values" Type="Query" ScpiPath="FETCH:PW31:P3" Unit="W"/>
+    <Q3 Description="Harmonic power reactive values" Type="Query" ScpiPath="FETCH:PW31:Q3" Unit="Var"/>
+    <S3 Description="Harmonic power apparent values" Type="Query" ScpiPath="FETCH:PW31:S3" Unit="VA"/>
+   </PW31>
+   <OSC1 Type="Node,Query" ScpiPath="FETCH:OSC1">
+    <UL1 Description="Measures samples" Type="Query" ScpiPath="FETCH:OSC1:UL1" Unit="V"/>
+    <UL2 Description="Measures samples" Type="Query" ScpiPath="FETCH:OSC1:UL2" Unit="V"/>
+    <UL3 Description="Measures samples" Type="Query" ScpiPath="FETCH:OSC1:UL3" Unit="V"/>
+    <IL1 Description="Measures samples" Type="Query" ScpiPath="FETCH:OSC1:IL1" Unit="A"/>
+    <IL2 Description="Measures samples" Type="Query" ScpiPath="FETCH:OSC1:IL2" Unit="A"/>
+    <IL3 Description="Measures samples" Type="Query" ScpiPath="FETCH:OSC1:IL3" Unit="A"/>
+   </OSC1>
+   <RMS1 Type="Node,Query" ScpiPath="FETCH:RMS1">
+    <UL1 Description="Actual rms value phase/neutral" Type="Query" ScpiPath="FETCH:RMS1:UL1" Unit="V"/>
+    <UL2 Description="Actual rms value phase/neutral" Type="Query" ScpiPath="FETCH:RMS1:UL2" Unit="V"/>
+    <UL3 Description="Actual rms value phase/neutral" Type="Query" ScpiPath="FETCH:RMS1:UL3" Unit="V"/>
+    <UL1MINUSUL2 Description="Actual rms value phase/phase" Type="Query" ScpiPath="FETCH:RMS1:UL1-UL2" Unit="V"/>
+    <UL3MINUSUL2 Description="Actual rms value phase/phase" Type="Query" ScpiPath="FETCH:RMS1:UL3-UL2" Unit="V"/>
+    <UL3MINUSUL1 Description="Actual rms value phase/phase" Type="Query" ScpiPath="FETCH:RMS1:UL3-UL1" Unit="V"/>
+    <IL1 Description="Actual rms value phase/neutral" Type="Query" ScpiPath="FETCH:RMS1:IL1" Unit="A"/>
+    <IL2 Description="Actual rms value phase/neutral" Type="Query" ScpiPath="FETCH:RMS1:IL2" Unit="A"/>
+    <IL3 Description="Actual rms value phase/neutral" Type="Query" ScpiPath="FETCH:RMS1:IL3" Unit="A"/>
+   </RMS1>
+   <POW3 Type="Node,Query" ScpiPath="FETCH:POW3">
+    <P1 Description="Actual power value phase 1" Type="Query" ScpiPath="FETCH:POW3:P1" Unit="W"/>
+    <P2 Description="Actual power value phase 2" Type="Query" ScpiPath="FETCH:POW3:P2" Unit="W"/>
+    <P3 Description="Actual power value phase 3" Type="Query" ScpiPath="FETCH:POW3:P3" Unit="W"/>
+    <PS Description="Actual power value sum all phases" Type="Query" ScpiPath="FETCH:POW3:PS" Unit="W"/>
+   </POW3>
+   <POW4 Type="Node,Query" ScpiPath="FETCH:POW4">
+    <P1 Description="Actual power value phase 1" Type="Query" ScpiPath="FETCH:POW4:P1" Unit="W"/>
+    <P2 Description="Actual power value phase 2" Type="Query" ScpiPath="FETCH:POW4:P2" Unit="W"/>
+    <P3 Description="Actual power value phase 3" Type="Query" ScpiPath="FETCH:POW4:P3" Unit="W"/>
+    <PS Description="Actual power value sum all phases" Type="Query" ScpiPath="FETCH:POW4:PS" Unit="W"/>
+   </POW4>
+   <POW5 Type="Node,Query" ScpiPath="FETCH:POW5">
+    <P1 Description="Actual power value phase 1" Type="Query" ScpiPath="FETCH:POW5:P1" Unit="W"/>
+    <P2 Description="Actual power value phase 2" Type="Query" ScpiPath="FETCH:POW5:P2" Unit="W"/>
+    <P3 Description="Actual power value phase 3" Type="Query" ScpiPath="FETCH:POW5:P3" Unit="W"/>
+    <PS Description="Actual power value sum all phases" Type="Query" ScpiPath="FETCH:POW5:PS" Unit="W"/>
+   </POW5>
+   <POW6 Type="Node,Query" ScpiPath="FETCH:POW6">
+    <S1 Description="Actual power value phase 1" Type="Query" ScpiPath="FETCH:POW6:S1" Unit="VA"/>
+    <S2 Description="Actual power value phase 2" Type="Query" ScpiPath="FETCH:POW6:S2" Unit="VA"/>
+    <S3 Description="Actual power value phase 3" Type="Query" ScpiPath="FETCH:POW6:S3" Unit="VA"/>
+    <SS Description="Actual power value sum all phases" Type="Query" ScpiPath="FETCH:POW6:SS" Unit="VA"/>
+   </POW6>
+   <THD1 Type="Node,Query" ScpiPath="FETCH:THD1">
+    <UL1 Description="THDn actual value" Type="Query" ScpiPath="FETCH:THD1:UL1" Unit="%"/>
+    <UL2 Description="THDn actual value" Type="Query" ScpiPath="FETCH:THD1:UL2" Unit="%"/>
+    <UL3 Description="THDn actual value" Type="Query" ScpiPath="FETCH:THD1:UL3" Unit="%"/>
+    <IL1 Description="THDn actual value" Type="Query" ScpiPath="FETCH:THD1:IL1" Unit="%"/>
+    <IL2 Description="THDn actual value" Type="Query" ScpiPath="FETCH:THD1:IL2" Unit="%"/>
+    <IL3 Description="THDn actual value" Type="Query" ScpiPath="FETCH:THD1:IL3" Unit="%"/>
+   </THD1>
+   <THD2 Type="Node,Query" ScpiPath="FETCH:THD2">
+    <UL1 Description="THDr actual value" Type="Query" ScpiPath="FETCH:THD2:UL1" Unit="%"/>
+    <UL2 Description="THDr actual value" Type="Query" ScpiPath="FETCH:THD2:UL2" Unit="%"/>
+    <UL3 Description="THDr actual value" Type="Query" ScpiPath="FETCH:THD2:UL3" Unit="%"/>
+    <IL1 Description="THDr actual value" Type="Query" ScpiPath="FETCH:THD2:IL1" Unit="%"/>
+    <IL2 Description="THDr actual value" Type="Query" ScpiPath="FETCH:THD2:IL2" Unit="%"/>
+    <IL3 Description="THDr actual value" Type="Query" ScpiPath="FETCH:THD2:IL3" Unit="%"/>
+   </THD2>
+   <DFT1 Type="Node,Query" ScpiPath="FETCH:DFT1">
+    <UL1 Description="Actual value phase/neutral" Type="Query" ScpiPath="FETCH:DFT1:UL1" Unit="V"/>
+    <UL2 Description="Actual value phase/neutral" Type="Query" ScpiPath="FETCH:DFT1:UL2" Unit="V"/>
+    <UL3 Description="Actual value phase/neutral" Type="Query" ScpiPath="FETCH:DFT1:UL3" Unit="V"/>
+    <UL1MINUSUL2 Description="Actual value phase/phase" Type="Query" ScpiPath="FETCH:DFT1:UL1-UL2" Unit="V"/>
+    <UL3MINUSUL2 Description="Actual value phase/phase" Type="Query" ScpiPath="FETCH:DFT1:UL3-UL2" Unit="V"/>
+    <UL3MINUSUL1 Description="Actual value phase/phase" Type="Query" ScpiPath="FETCH:DFT1:UL3-UL1" Unit="V"/>
+    <IL1 Description="Actual value phase/neutral" Type="Query" ScpiPath="FETCH:DFT1:IL1" Unit="A"/>
+    <IL2 Description="Actual value phase/neutral" Type="Query" ScpiPath="FETCH:DFT1:IL2" Unit="A"/>
+    <IL3 Description="Actual value phase/neutral" Type="Query" ScpiPath="FETCH:DFT1:IL3" Unit="A"/>
+    <RFIELD Description="Phase sequence" Type="Query" ScpiPath="FETCH:DFT1:RFIELD"/>
+   </DFT1>
+   <LAM1 Type="Node,Query" ScpiPath="FETCH:LAM1">
+    <LAMBDA1 Description="Actual lambda value" Type="Query" ScpiPath="FETCH:LAM1:LAMBDA1"/>
+    <LAMBDA2 Description="Actual lambda value" Type="Query" ScpiPath="FETCH:LAM1:LAMBDA2"/>
+    <LAMBDA3 Description="Actual lambda value" Type="Query" ScpiPath="FETCH:LAM1:LAMBDA3"/>
+    <LAMBDA4 Description="Actual lambda value" Type="Query" ScpiPath="FETCH:LAM1:LAMBDA4"/>
+   </LAM1>
+  </FETCH>
+  <CONFIGURATION Type="Model,Node">
+   <RNG1 Type="Node">
+    <RNGAUTO Description="Range automatic on/off" Type="Query,Command+Par" ScpiPath="CONFIGURATION:RNG1:RNGAUTO" Max="1" Min="0"/>
+    <GROUPING Description="Channel grouping on/off" Type="Query,Command+Par" ScpiPath="CONFIGURATION:RNG1:GROUPING" Max="1" Min="0"/>
+   </RNG1>
+   <SAM1 Type="Node">
+    <PLLAUTO Description="PLL automatic on/off" Type="Query,Command+Par" ScpiPath="CONFIGURATION:SAM1:PLLAUTO" Max="1" Min="0"/>
+    <SRANGE Description="Sampling channel's range" Type="Query,Command+Par" ScpiPath="CONFIGURATION:SAM1:SRANGE" DataType="STRING" ValidPar="F50Hz,F20Hz"/>
+    <PLLREFERENCE Description="PLL reference channel" Type="Query,Command+Par" ScpiPath="CONFIGURATION:SAM1:PLLREFERENCE" DataType="STRING" ValidPar="UL1,UL2,UL3,IL1,IL2,IL3"/>
+   </SAM1>
+   <FFT1 Type="Node">
+    <REFCHANNEL Description="Reference channel" Type="Query,Command+Par" ScpiPath="CONFIGURATION:FFT1:REFCHANNEL" DataType="STRING" ValidPar="m0,m1,m2,m3,m4,m5"/>
+    <TINTEGRATION Description="Integration time" Type="Query,Command+Par" ScpiPath="CONFIGURATION:FFT1:TINTEGRATION" DataType="DOUBLE" Max="100" Min="1" Unit="s"/>
+   </FFT1>
+   <POW1 Type="Node">
+    <M0OUT Description="Frequency output name" Type="Query" ScpiPath="CONFIGURATION:POW1:M0OUT"/>
+    <MMODE Description="Measuring mode" Type="Query,Command+Par" ScpiPath="CONFIGURATION:POW1:MMODE" DataType="STRING" ValidPar="2LW,2LB,2LS"/>
+    <TINTEGRATION Description="Integration time" Type="Query,Command+Par" ScpiPath="CONFIGURATION:POW1:TINTEGRATION" DataType="DOUBLE" Max="100" Min="1" Unit="s"/>
+    <M0CONSTANT Description="Frequency output constant" Type="Query" ScpiPath="CONFIGURATION:POW1:M0CONSTANT"/>
+    <MMODEPHASESELECT Description="Active phases selection mask" Type="Query,Command+Par" ScpiPath="CONFIGURATION:POW1:MMODEPHASESELECT" DataType="STRING" ValidPar="100"/>
+   </POW1>
+   <POW2 Type="Node">
+    <M0OUT Description="Frequency output name" Type="Query" ScpiPath="CONFIGURATION:POW2:M0OUT"/>
+    <MMODE Description="Measuring mode" Type="Query,Command+Par" ScpiPath="CONFIGURATION:POW2:MMODE" DataType="STRING" ValidPar="2LW,2LB,2LS"/>
+    <TINTEGRATION Description="Integration time" Type="Query,Command+Par" ScpiPath="CONFIGURATION:POW2:TINTEGRATION" DataType="DOUBLE" Max="100" Min="1" Unit="s"/>
+    <M0CONSTANT Description="Frequency output constant" Type="Query" ScpiPath="CONFIGURATION:POW2:M0CONSTANT"/>
+    <MMODEPHASESELECT Description="Active phases selection mask" Type="Query,Command+Par" ScpiPath="CONFIGURATION:POW2:MMODEPHASESELECT" DataType="STRING" ValidPar="010"/>
+   </POW2>
+   <OSC1 Type="Node">
+    <REFCHANNEL Description="Reference channel" Type="Query,Command+Par" ScpiPath="CONFIGURATION:OSC1:REFCHANNEL" DataType="STRING" ValidPar="m0,m1,m2,m3,m4,m5"/>
+   </OSC1>
+   <RMS1 Type="Node">
+    <TINTEGRATION Description="Integration time" Type="Query,Command+Par" ScpiPath="CONFIGURATION:RMS1:TINTEGRATION" DataType="DOUBLE" Max="100" Min="1" Unit="s"/>
+   </RMS1>
+   <EC01 Type="Node">
+    <N_0001 Type="Node">
+     <DUTCONSTANTUSCALENUM Description="Scale the dut constant in case tranformers are used (U fraction numerator)" Type="Query,Command+Par" ScpiPath="CONFIGURATION:EC01:0001:DUTCONSTANTUSCALENUM" RegEx="^[1-9][0-9]*(\/sqrt\(3\))?$" DataType="STRING"/>
+     <DUTCONSTANTUSCALEDENOM Description="Scale the dut constant in case tranformers are used (U fraction denominator)" Type="Query,Command+Par" ScpiPath="CONFIGURATION:EC01:0001:DUTCONSTANTUSCALEDENOM" RegEx="^[1-9][0-9]*(\/sqrt\(3\))?$" DataType="STRING"/>
+     <DUTCONSTANTISCALENUM Description="Scale the dut constant in case tranformers are used (I fraction numerator)" Type="Query,Command+Par" ScpiPath="CONFIGURATION:EC01:0001:DUTCONSTANTISCALENUM" RegEx="^[1-9][0-9]*$" DataType="STRING"/>
+     <DUTCONSTANTMEASUREPOINT Description="Scale the dut constant in case tranformers are used (Measurement point selection)" Type="Query,Command+Par" ScpiPath="CONFIGURATION:EC01:0001:DUTCONSTANTMEASUREPOINT" DataType="STRING" ValidPar="CpIpUp,CpIsUs,CsIpUp,CsIsUs"/>
+     <DUTCONSTANTISCALEDENOM Description="Scale the dut constant in case tranformers are used (I fraction denominator)" Type="Query,Command+Par" ScpiPath="CONFIGURATION:EC01:0001:DUTCONSTANTISCALEDENOM" RegEx="^[1-9][0-9]*?$" DataType="STRING"/>
+    </N_0001>
+    <N_0002 Type="Node">
+     <DUTCONSTANTUSCALENUM Description="Scale the dut constant in case tranformers are used (U fraction numerator)" Type="Query,Command+Par" ScpiPath="CONFIGURATION:EC01:0002:DUTCONSTANTUSCALENUM" RegEx="^[1-9][0-9]*(\/sqrt\(3\))?$" DataType="STRING"/>
+     <DUTCONSTANTUSCALEDENOM Description="Scale the dut constant in case tranformers are used (U fraction denominator)" Type="Query,Command+Par" ScpiPath="CONFIGURATION:EC01:0002:DUTCONSTANTUSCALEDENOM" RegEx="^[1-9][0-9]*(\/sqrt\(3\))?$" DataType="STRING"/>
+     <DUTCONSTANTISCALENUM Description="Scale the dut constant in case tranformers are used (I fraction numerator)" Type="Query,Command+Par" ScpiPath="CONFIGURATION:EC01:0002:DUTCONSTANTISCALENUM" RegEx="^[1-9][0-9]*$" DataType="STRING"/>
+     <DUTCONSTANTMEASUREPOINT Description="Scale the dut constant in case tranformers are used (Measurement point selection)" Type="Query,Command+Par" ScpiPath="CONFIGURATION:EC01:0002:DUTCONSTANTMEASUREPOINT" DataType="STRING" ValidPar="CpIpUp,CpIsUs,CsIpUp,CsIsUs"/>
+     <DUTCONSTANTISCALEDENOM Description="Scale the dut constant in case tranformers are used (I fraction denominator)" Type="Query,Command+Par" ScpiPath="CONFIGURATION:EC01:0002:DUTCONSTANTISCALEDENOM" RegEx="^[1-9][0-9]*?$" DataType="STRING"/>
+    </N_0002>
+   </EC01>
+   <POW3 Type="Node">
+    <M0OUT Description="Frequency output name" Type="Query" ScpiPath="CONFIGURATION:POW3:M0OUT"/>
+    <MMODE Description="Measuring mode" Type="Query,Command+Par" ScpiPath="CONFIGURATION:POW3:MMODE" DataType="STRING" ValidPar="2LW,2LB,2LS"/>
+    <TINTEGRATION Description="Integration time" Type="Query,Command+Par" ScpiPath="CONFIGURATION:POW3:TINTEGRATION" DataType="DOUBLE" Max="100" Min="1" Unit="s"/>
+    <M0CONSTANT Description="Frequency output constant" Type="Query" ScpiPath="CONFIGURATION:POW3:M0CONSTANT"/>
+    <MMODEPHASESELECT Description="Active phases selection mask" Type="Query,Command+Par" ScpiPath="CONFIGURATION:POW3:MMODEPHASESELECT" DataType="STRING" ValidPar="001"/>
+   </POW3>
+   <POW4 Type="Node">
+    <M0OUT Description="Frequency output name" Type="Query" ScpiPath="CONFIGURATION:POW4:M0OUT"/>
+    <MMODE Description="Measuring mode" Type="Query,Command+Par" ScpiPath="CONFIGURATION:POW4:MMODE" DataType="STRING" ValidPar="2LW,2LB,2LS"/>
+    <TINTEGRATION Description="Integration time" Type="Query,Command+Par" ScpiPath="CONFIGURATION:POW4:TINTEGRATION" DataType="DOUBLE" Max="100" Min="1" Unit="s"/>
+    <M0CONSTANT Description="Frequency output constant" Type="Query" ScpiPath="CONFIGURATION:POW4:M0CONSTANT"/>
+    <MMODEPHASESELECT Description="Active phases selection mask" Type="Query,Command+Par" ScpiPath="CONFIGURATION:POW4:MMODEPHASESELECT" DataType="STRING" ValidPar="000,100,010,001"/>
+   </POW4>
+   <POW5 Type="Node">
+    <MMODE Description="Measuring mode" Type="Query,Command+Par" ScpiPath="CONFIGURATION:POW5:MMODE" DataType="STRING" ValidPar="4LW"/>
+    <TINTEGRATION Description="Integration time" Type="Query,Command+Par" ScpiPath="CONFIGURATION:POW5:TINTEGRATION" DataType="DOUBLE" Max="100" Min="1" Unit="s"/>
+    <MMODEPHASESELECT Description="Active phases selection mask" Type="Query,Command+Par" ScpiPath="CONFIGURATION:POW5:MMODEPHASESELECT" DataType="STRING" ValidPar="111"/>
+   </POW5>
+   <POW6 Type="Node">
+    <MMODE Description="Measuring mode" Type="Query,Command+Par" ScpiPath="CONFIGURATION:POW6:MMODE" DataType="STRING" ValidPar="4LS"/>
+    <TINTEGRATION Description="Integration time" Type="Query,Command+Par" ScpiPath="CONFIGURATION:POW6:TINTEGRATION" DataType="DOUBLE" Max="100" Min="1" Unit="s"/>
+    <MMODEPHASESELECT Description="Active phases selection mask" Type="Query,Command+Par" ScpiPath="CONFIGURATION:POW6:MMODEPHASESELECT" DataType="STRING" ValidPar="111"/>
+   </POW6>
+   <THD1 Type="Node">
+    <TINTEGRATION Description="Integration time" Type="Query,Command+Par" ScpiPath="CONFIGURATION:THD1:TINTEGRATION" DataType="DOUBLE" Max="100" Min="1" Unit="s"/>
+   </THD1>
+   <THD2 Type="Node">
+    <TINTEGRATION Description="Integration time" Type="Query,Command+Par" ScpiPath="CONFIGURATION:THD2:TINTEGRATION" DataType="DOUBLE" Max="100" Min="1" Unit="s"/>
+   </THD2>
+   <DFT1 Type="Node">
+    <REFCHANNEL Description="Reference channel" Type="Query,Command+Par" ScpiPath="CONFIGURATION:DFT1:REFCHANNEL" DataType="STRING" ValidPar="UL2,UL3,IL1,IL2,IL3,UL1"/>
+    <TINTEGRATION Description="Integration time" Type="Query,Command+Par" ScpiPath="CONFIGURATION:DFT1:TINTEGRATION" DataType="DOUBLE" Max="100" Min="1" Unit="s"/>
+   </DFT1>
+  </CONFIGURATION>
+  <STATUS Type="Model,Node">
+   <DEV1 Type="Node">
+    <VERSION Type="Node">
+     <DSP Description="DSP software version" Type="Query" ScpiPath="STATUS:DEV1:VERSION:DSP"/>
+     <PCBSERVER Description="PCB-server version" Type="Query" ScpiPath="STATUS:DEV1:VERSION:PCBSERVER"/>
+     <FPGA Description="FPGA version" Type="Query" ScpiPath="STATUS:DEV1:VERSION:FPGA"/>
+     <CONTROLER Description="Controller version" Type="Query" ScpiPath="STATUS:DEV1:VERSION:CONTROLER"/>
+     <PCB Description="PCB version" Type="Query" ScpiPath="STATUS:DEV1:VERSION:PCB"/>
+     <DSPSERVER Description="DSP-server version" Type="Query" ScpiPath="STATUS:DEV1:VERSION:DSPSERVER"/>
+    </VERSION>
+    <DEVTYPE Description="Device type" Type="Query" ScpiPath="STATUS:DEV1:DEVTYPE"/>
+    <AUTHORIZATION Description="Adjustment values write permission" Type="Query" ScpiPath="STATUS:DEV1:AUTHORIZATION"/>
+    <CPUINFO Description="CPU/SOM info" Type="Query" ScpiPath="STATUS:DEV1:CPUINFO"/>
+    <RELEASE Description="Release number" Type="Query" ScpiPath="STATUS:DEV1:RELEASE"/>
+    <ADJCHKSUM Description="Adjustment data checksum device" Type="Query" ScpiPath="STATUS:DEV1:ADJCHKSUM"/>
+    <SERIAL Description="Serial number" Type="Query,Command+Par" ScpiPath="STATUS:DEV1:SERIAL" RegEx="^\d{9}$" DataType="STRING"/>
+    <ADJUSTMENT Description="Adjustment information" Type="Query" ScpiPath="STATUS:DEV1:ADJUSTMENT"/>
+   </DEV1>
+   <QUESTIONABLE Type="Node">
+    <CONDITION Type="Query" ScpiPath="STATUS:QUESTIONABLE:CONDITION"/>
+    <PTRANSITION Type="Query,Command+Par" ScpiPath="STATUS:QUESTIONABLE:PTRANSITION"/>
+    <NTRANSITION Type="Query,Command+Par" ScpiPath="STATUS:QUESTIONABLE:NTRANSITION"/>
+    <EVENT Type="Query" ScpiPath="STATUS:QUESTIONABLE:EVENT"/>
+    <ENABLE Type="Query,Command+Par" ScpiPath="STATUS:QUESTIONABLE:ENABLE"/>
+   </QUESTIONABLE>
+   <OPERATION Type="Node">
+    <CONDITION Type="Query" ScpiPath="STATUS:OPERATION:CONDITION"/>
+    <PTRANSITION Type="Query,Command+Par" ScpiPath="STATUS:OPERATION:PTRANSITION"/>
+    <NTRANSITION Type="Query,Command+Par" ScpiPath="STATUS:OPERATION:NTRANSITION"/>
+    <EVENT Type="Query" ScpiPath="STATUS:OPERATION:EVENT"/>
+    <ENABLE Type="Query,Command+Par" ScpiPath="STATUS:OPERATION:ENABLE"/>
+    <MEASURE Type="Node">
+     <CONDITION Type="Query" ScpiPath="STATUS:OPERATION:MEASURE:CONDITION"/>
+     <PTRANSITION Type="Query,Command+Par" ScpiPath="STATUS:OPERATION:MEASURE:PTRANSITION"/>
+     <NTRANSITION Type="Query,Command+Par" ScpiPath="STATUS:OPERATION:MEASURE:NTRANSITION"/>
+     <EVENT Type="Query" ScpiPath="STATUS:OPERATION:MEASURE:EVENT"/>
+     <ENABLE Type="Query,Command+Par" ScpiPath="STATUS:OPERATION:MEASURE:ENABLE"/>
+    </MEASURE>
+   </OPERATION>
+  </STATUS>
+  <CALCULATE Type="Model,Node">
+   <EM01 Type="Node">
+    <N_0001 Type="Node">
+     <UPLIMIT Description="Error limit: upper" Type="Query,Command+Par" ScpiPath="CALCULATE:EM01:0001:UPLIMIT" DataType="DOUBLE" Max="100" Min="-100" Unit="%"/>
+     <START Description="Start/stop measurement" Type="Query,Command+Par" ScpiPath="CALCULATE:EM01:0001:START" DataType="INTEGER" Max="1" Min="0"/>
+     <TXUNIT Description="Energy unit" Type="Query,Command+Par" ScpiPath="CALCULATE:EM01:0001:TXUNIT" DataType="STRING" ValidPar="MWh,kWh,Wh"/>
+     <POWER Description="Mean power since last start" Type="Query" ScpiPath="CALCULATE:EM01:0001:POWER" Unit="kW"/>
+     <T1INPUT Description="Final energy value" Type="Query,Command+Par" ScpiPath="CALCULATE:EM01:0001:T1INPUT" DataType="DOUBLE" Max="1e+07" Min="0" Unit="kWh"/>
+     <TIME Description="Measurement time" Type="Query" ScpiPath="CALCULATE:EM01:0001:TIME" Unit="s"/>
+     <REFFREQINPUT Description="Reference frequency input to find power module" Type="Query" ScpiPath="CALCULATE:EM01:0001:REFFREQINPUT"/>
+     <MODE Description="Stop mode" Type="Query,Command+Par" ScpiPath="CALCULATE:EM01:0001:MODE" DataType="INTEGER" Max="1" Min="0"/>
+     <RATING Description="Evaluation for the last measurement" Type="Query" ScpiPath="CALCULATE:EM01:0001:RATING"/>
+     <STATUS Description="State: 0:Idle 1:First pulse wait 2:Started 4:Ready 8:Aborted" Type="Query" ScpiPath="CALCULATE:EM01:0001:STATUS"/>
+     <T0INPUT Description="Start energy value" Type="Query,Command+Par" ScpiPath="CALCULATE:EM01:0001:T0INPUT" DataType="DOUBLE" Max="1e+07" Min="0" Unit="kWh"/>
+     <RESULT Description="Result of last measurement" Type="Query" ScpiPath="CALCULATE:EM01:0001:RESULT" Unit="%"/>
+     <REFSOURCE Description="Ref input" Type="Query,Command+Par" ScpiPath="CALCULATE:EM01:0001:REFSOURCE" DataType="STRING" ValidPar="P,P,P"/>
+     <ENERGY Description="Energy since last start" Type="Query" ScpiPath="CALCULATE:EM01:0001:ENERGY" Unit="kWh"/>
+     <MTIME Description="Measurement time" Type="Query,Command+Par" ScpiPath="CALCULATE:EM01:0001:MTIME" DataType="INTEGER" Max="4294967" Min="1" Unit="s"/>
+     <LOLIMIT Description="Error limit: lower" Type="Query,Command+Par" ScpiPath="CALCULATE:EM01:0001:LOLIMIT" DataType="DOUBLE" Max="100" Min="-100" Unit="%"/>
+     <REFCONSTANT Description="Reference meter constant" Type="Query" ScpiPath="CALCULATE:EM01:0001:REFCONSTANT"/>
+    </N_0001>
+   </EM01>
+   <ADJ1 Type="Node">
+    <INIT Description="Initialize adjustment data" Type="Query,Command+Par" ScpiPath="CALCULATE:ADJ1:INIT"/>
+    <COMPUTATION Description="Start computation of adjustment coefficients" Type="Query,Command+Par" ScpiPath="CALCULATE:ADJ1:COMPUTATION" DataType="INTEGER" Max="1" Min="0"/>
+    <STORAGE Description="Save adjustment data" Type="Query,Command+Par" ScpiPath="CALCULATE:ADJ1:STORAGE" DataType="INTEGER" Max="2" Min="1"/>
+    <OFFSET Description="One offset adjustment node" Type="Query,Command+Par" ScpiPath="CALCULATE:ADJ1:OFFSET"/>
+    <PHASE Description="One phase adjustment node" Type="Query,Command+Par" ScpiPath="CALCULATE:ADJ1:PHASE"/>
+    <SEND Description="Send command to specified port" Type="Query" ScpiPath="CALCULATE:ADJ1:SEND"/>
+    <PCB Description="Get and set pcb adjustment data" Type="Query" ScpiPath="CALCULATE:ADJ1:PCB"/>
+    <GSTATUS Description="Gain adjustment status" Type="Query,Command+Par" ScpiPath="CALCULATE:ADJ1:GSTATUS"/>
+    <OSTATUS Description="Offset adjustment status" Type="Query,Command+Par" ScpiPath="CALCULATE:ADJ1:OSTATUS"/>
+    <AMPLITUDE Description="One amplitude adjustment node" Type="Query,Command+Par" ScpiPath="CALCULATE:ADJ1:AMPLITUDE"/>
+    <CLAMP Description="Get and set clamp adjustment data" Type="Query" ScpiPath="CALCULATE:ADJ1:CLAMP"/>
+    <PSTATUS Description="Phase adjustment status" Type="Query,Command+Par" ScpiPath="CALCULATE:ADJ1:PSTATUS"/>
+   </ADJ1>
+   <EC01 Type="Node">
+    <N_0001 Type="Node">
+     <ENFINAL Description="Energy of last measurement" Type="Query" ScpiPath="CALCULATE:EC01:0001:ENFINAL" Unit="kWh"/>
+     <UPLIMIT Description="Error limit: upper" Type="Query,Command+Par" ScpiPath="CALCULATE:EC01:0001:UPLIMIT" DataType="DOUBLE" Max="100" Min="-100" Unit="%"/>
+     <START Description="Start/stop measurement" Type="Query,Command+Par" ScpiPath="CALCULATE:EC01:0001:START" DataType="INTEGER" Max="1" Min="0"/>
+     <MRATE Description="Pulses to measure" Type="Query,Command+Par" ScpiPath="CALCULATE:EC01:0001:MRATE" DataType="INTEGER" Max="4294967295" Min="1"/>
+     <REFFREQINPUT Description="Reference frequency input to find power module" Type="Query" ScpiPath="CALCULATE:EC01:0001:REFFREQINPUT"/>
+     <RATING Description="Evaluation last measurement" Type="Query" ScpiPath="CALCULATE:EC01:0001:RATING"/>
+     <PROGRESS Description="Progress information" Type="Query" ScpiPath="CALCULATE:EC01:0001:PROGRESS"/>
+     <DCUNIT Description="DUT constant unit" Type="Query,Command+Par" ScpiPath="CALCULATE:EC01:0001:DCUNIT" DataType="STRING" ValidPar="I/kWh,Wh/I"/>
+     <RESULTUNIT Description="Result unit" Type="Query,Command+Par" ScpiPath="CALCULATE:EC01:0001:RESULTUNIT" DataType="STRING" ValidPar="%,ppm"/>
+     <MCOUNT Description="Multiple measurements: Number of measurements" Type="Query,Command+Par" ScpiPath="CALCULATE:EC01:0001:MCOUNT" DataType="INTEGER" Max="400" Min="1"/>
+     <STATUS Description="Status: 0:Idle 1:Waiting for first pulse 2:Started 4:Ready 8:Aborted" Type="Query" ScpiPath="CALCULATE:EC01:0001:STATUS"/>
+     <MWAIT Description="Multiple measurements: Seconds to wait between measurements" Type="Query,Command+Par" ScpiPath="CALCULATE:EC01:0001:MWAIT" DataType="INTEGER" Max="2147483" Min="0" Unit="s"/>
+     <STJARRAY Description="Multiple measurements: JSON result array / statistics" Type="Query" ScpiPath="CALCULATE:EC01:0001:STJARRAY"/>
+     <RESULT Description="Result of last measurement" Type="Query" ScpiPath="CALCULATE:EC01:0001:RESULT"/>
+     <MULCOUNT Description="Multiple measurements: Count stored" Type="Query" ScpiPath="CALCULATE:EC01:0001:MULCOUNT"/>
+     <MEASNUM Description="Multiple measurements: Count" Type="Query" ScpiPath="CALCULATE:EC01:0001:MEASNUM"/>
+     <REFSOURCE Description="REF input" Type="Query,Command+Par" ScpiPath="CALCULATE:EC01:0001:REFSOURCE" DataType="STRING" ValidPar="P,P,P"/>
+     <DUTCONSTANT Description="DUT constant" Type="Query,Command+Par" ScpiPath="CALCULATE:EC01:0001:DUTCONSTANT" DataType="DOUBLE" Max="1e+20" Min="1e-06"/>
+     <ENERGY Description="Energy since last start" Type="Query" ScpiPath="CALCULATE:EC01:0001:ENERGY" Unit="kWh"/>
+     <TARGET Description="REF pulses for 0% error - set automatically" Type="Query,Command+Par" ScpiPath="CALCULATE:EC01:0001:TARGET" DataType="INTEGER" Max="4294967295" Min="1"/>
+     <LOLIMIT Description="Error limit: lower" Type="Query,Command+Par" ScpiPath="CALCULATE:EC01:0001:LOLIMIT" DataType="DOUBLE" Max="100" Min="-100" Unit="%"/>
+     <CONTINUOUS Description="Enables/disable continuous measurement" Type="Query,Command+Par" ScpiPath="CALCULATE:EC01:0001:CONTINUOUS" DataType="INTEGER" Max="1" Min="0"/>
+     <PARENERGY Description="Energy value" Type="Query,Command+Par" ScpiPath="CALCULATE:EC01:0001:PARENERGY" DataType="DOUBLE" Max="1e+07" Min="0" Unit="kWh"/>
+     <REFCONSTANT Description="Reference meter constant" Type="Query,Command+Par" ScpiPath="CALCULATE:EC01:0001:REFCONSTANT"/>
+     <DUTSOURCE Description="DUT input" Type="Query,Command+Par" ScpiPath="CALCULATE:EC01:0001:DUTSOURCE" DataType="STRING" ValidPar="SC1,HK1"/>
+    </N_0001>
+    <N_0002 Type="Node">
+     <ENFINAL Description="Energy of last measurement" Type="Query" ScpiPath="CALCULATE:EC01:0002:ENFINAL" Unit="kWh"/>
+     <UPLIMIT Description="Error limit: upper" Type="Query,Command+Par" ScpiPath="CALCULATE:EC01:0002:UPLIMIT" DataType="DOUBLE" Max="100" Min="-100" Unit="%"/>
+     <START Description="Start/stop measurement" Type="Query,Command+Par" ScpiPath="CALCULATE:EC01:0002:START" DataType="INTEGER" Max="1" Min="0"/>
+     <MRATE Description="Pulses to measure" Type="Query,Command+Par" ScpiPath="CALCULATE:EC01:0002:MRATE" DataType="INTEGER" Max="4294967295" Min="1"/>
+     <REFFREQINPUT Description="Reference frequency input to find power module" Type="Query" ScpiPath="CALCULATE:EC01:0002:REFFREQINPUT"/>
+     <RATING Description="Evaluation last measurement" Type="Query" ScpiPath="CALCULATE:EC01:0002:RATING"/>
+     <PROGRESS Description="Progress information" Type="Query" ScpiPath="CALCULATE:EC01:0002:PROGRESS"/>
+     <DCUNIT Description="DUT constant unit" Type="Query,Command+Par" ScpiPath="CALCULATE:EC01:0002:DCUNIT" DataType="STRING" ValidPar="I/kWh,Wh/I"/>
+     <RESULTUNIT Description="Result unit" Type="Query,Command+Par" ScpiPath="CALCULATE:EC01:0002:RESULTUNIT" DataType="STRING" ValidPar="%,ppm"/>
+     <MCOUNT Description="Multiple measurements: Number of measurements" Type="Query,Command+Par" ScpiPath="CALCULATE:EC01:0002:MCOUNT" DataType="INTEGER" Max="400" Min="1"/>
+     <STATUS Description="Status: 0:Idle 1:Waiting for first pulse 2:Started 4:Ready 8:Aborted" Type="Query" ScpiPath="CALCULATE:EC01:0002:STATUS"/>
+     <MWAIT Description="Multiple measurements: Seconds to wait between measurements" Type="Query,Command+Par" ScpiPath="CALCULATE:EC01:0002:MWAIT" DataType="INTEGER" Max="2147483" Min="0" Unit="s"/>
+     <STJARRAY Description="Multiple measurements: JSON result array / statistics" Type="Query" ScpiPath="CALCULATE:EC01:0002:STJARRAY"/>
+     <RESULT Description="Result of last measurement" Type="Query" ScpiPath="CALCULATE:EC01:0002:RESULT"/>
+     <MULCOUNT Description="Multiple measurements: Count stored" Type="Query" ScpiPath="CALCULATE:EC01:0002:MULCOUNT"/>
+     <MEASNUM Description="Multiple measurements: Count" Type="Query" ScpiPath="CALCULATE:EC01:0002:MEASNUM"/>
+     <REFSOURCE Description="REF input" Type="Query,Command+Par" ScpiPath="CALCULATE:EC01:0002:REFSOURCE" DataType="STRING" ValidPar="P,P,P"/>
+     <DUTCONSTANT Description="DUT constant" Type="Query,Command+Par" ScpiPath="CALCULATE:EC01:0002:DUTCONSTANT" DataType="DOUBLE" Max="1e+20" Min="1e-06"/>
+     <ENERGY Description="Energy since last start" Type="Query" ScpiPath="CALCULATE:EC01:0002:ENERGY" Unit="kWh"/>
+     <TARGET Description="REF pulses for 0% error - set automatically" Type="Query,Command+Par" ScpiPath="CALCULATE:EC01:0002:TARGET" DataType="INTEGER" Max="4294967295" Min="1"/>
+     <LOLIMIT Description="Error limit: lower" Type="Query,Command+Par" ScpiPath="CALCULATE:EC01:0002:LOLIMIT" DataType="DOUBLE" Max="100" Min="-100" Unit="%"/>
+     <CONTINUOUS Description="Enables/disable continuous measurement" Type="Query,Command+Par" ScpiPath="CALCULATE:EC01:0002:CONTINUOUS" DataType="INTEGER" Max="1" Min="0"/>
+     <PARENERGY Description="Energy value" Type="Query,Command+Par" ScpiPath="CALCULATE:EC01:0002:PARENERGY" DataType="DOUBLE" Max="1e+07" Min="0" Unit="kWh"/>
+     <REFCONSTANT Description="Reference meter constant" Type="Query,Command+Par" ScpiPath="CALCULATE:EC01:0002:REFCONSTANT"/>
+     <DUTSOURCE Description="DUT input" Type="Query,Command+Par" ScpiPath="CALCULATE:EC01:0002:DUTSOURCE" DataType="STRING" ValidPar="Fin1,Fin2,Fin3,Fin4"/>
+    </N_0002>
+   </EC01>
+  </CALCULATE>
+  <DEVICE Type="Model,Node">
+   <IFACE Type="Query" ScpiPath="DEVICE:IFACE"/>
+  </DEVICE>
+  <MULOPC Description="OPeration Complete" Type="Model,Query,Command" ScpiPath="*OPC"/>
+  <MULESE Description="Event Status Enable" Type="Model,Query,Command+Par" ScpiPath="*ESE"/>
+  <MULSRE Description="Service Request Enable" Type="Model,Query,Command+Par" ScpiPath="*SRE"/>
+  <MULCLS Description="Clear Status" Type="Model,Command" ScpiPath="*CLS"/>
+  <MULRST Description="Reset" Type="Model,Command" ScpiPath="*RST"/>
+  <MULIDN Description="Identification query" Type="Model,Query" ScpiPath="*IDN"/>
+  <MULESR Description="Event Status Register" Type="Model,Query" ScpiPath="*ESR"/>
+  <MULSTB Description="Status Byte query" Type="Model,Query" ScpiPath="*STB"/>
+  <MULTST Description="Self-Test query" Type="Model,Query" ScpiPath="*TST"/>
+  <SYSTEM Type="Model,Node">
+   <ERROR Description="Queries one error of internal error list" Type="Node,Query" ScpiPath="SYSTEM:ERROR">
+    <COUNT Description="Queries the number of error messages of internal error list" Type="Query" ScpiPath="SYSTEM:ERROR:COUNT"/>
+    <ALL Description="Queries all error stored in internal error list" Type="Query" ScpiPath="SYSTEM:ERROR:ALL"/>
+   </ERROR>
+  </SYSTEM>
+ </MODELS>
+</MODELLIST>

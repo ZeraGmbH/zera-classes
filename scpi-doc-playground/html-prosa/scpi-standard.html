@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<body>
+    <p>
+        The <b>S</b>tandard <b>C</b>ommands for <b>P</b>rogrammable <b>I</b>nstruments (SCPI) defines
+        syntax and commands to control test and measurement devices. While originally created for
+        IEEE-488 (GPIB), it can also be used with RS232, USB, Ethernet etc.<br/>
+        SCPI is organized as a hierarchical tree of nodes. Root nodes are called instrument models.
+    </p>
+    Some specifications of SCPI standard are as below: <br/>
+    <ul>
+        <li>
+            The short form of the node name is usually the first four characters of the long form command header.
+            The exception to this is when the long form consists of more than four characters and the fourth character is a vowel.
+            In such cases, the vowel is dropped and the short form becomes the first three characters of the long form.
+            <br/>
+            Examples: SENSE -> SENS; DEVICE -> DEV;
+        </li>
+        <br/>
+        <li>
+            The <b>colon</b> (:) is a path hierarchy separator.
+        </li>
+        <br/>
+        <li>
+            A <b>semicolon</b> (;) indicates end of a command with parameter(s).
+        </li>
+        <br/>
+        <li>
+            <b>Queries</b> (?) will instruct the instrument to send a response message.
+            Queries return either measured values or internal instrument settings.<br/>
+            <b>Caution:</b> If you send two query commands without reading the response of the first
+            query, the first response will get lost as the device recognizes an interrupted action.
+            In this case the query error bit in the standard event status register will also be set.
+        </li>
+        <br/>
+        <li>
+            A <b>comma</b> (,) is used to separate parameters if a command requires more than one
+            parameter.
+        </li>
+        <br/>
+        <li>
+            <b>Whitespace</b> (space) must be used to separate a parameter from a command
+            keyword.
+        </li>
+        <br/>
+        <li>
+            <b>Common Commands</b> (*) follow the IEEE-488.2 interface standard. These
+            commands are used to control reset, self-test, and status operations in a device.
+        </li>
+        <br/>
+        <li> 
+            <b>Input Message Terminators</b>: Program messages sent to a SCPI instrument must
+            terminate with a &lt;linefeed&gt; character. The IEEE-488 EOI signal is interpreted
+            as a &lt;linefeed&gt; character.
+        </li>
+    </ul>
+</body>
+</html>

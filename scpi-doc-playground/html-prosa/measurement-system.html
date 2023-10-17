@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<body>
+    <p>
+        There are three <b>atomic</b> measurement node-types available:
+        <ol>
+            <li>
+                <b>CONF</b>igure: Intended to configure nodes. No functionality implemeneted on Zera devices -
+                available just for compatibility.
+            </li>
+            <li><b>INIT</b>iate: Initializes the measurement.</li>
+            <li>
+                <b>FETC</b>h?: This query returns the requested result. When executed multiple times, it will
+                return same result unless <b>INIT</b>iate is called.
+            </li>
+        </ol>
+    </p>
+    <p>
+        There are two <b>composite</b> measurement node-types available:
+        <ol>
+            <li><b>READ</b>: It is a sequence of <b>INIT</b>iate and <b>FETC</b>h.</li>
+            <li>
+                <b>MEAS</b>ure?: It is a sequence of <b>CONF</b>igure, <b>INIT</b>iate and <b>FETC</b>h.
+            </li>
+        </ol>
+    </p>
+
+    <p>
+        In the tables below, <b>MEAS</b>ure commands are mentioned for illustration. To use other nodes,
+        for example replace <b>MEAS</b>ure by <b>READ</b> .
+    </p>
+
+    <p>
+        Several measurement modules generate actual values. 
+        <ul>
+            <li>
+                To read out dedicated single values, the node must be fully specified within the command.
+                For example, to read out the voltage for channel UL1 the associated command is MEASure:RMS1:UL1? 
+                Output format is RMS1:UL1:[V]:value; 
+            </li>
+            <li>
+                To read out group of values, parent nodes can be specified within the command.
+                For example, MEAS:RMS1? reads out all the RMS values.
+            </li>
+            <li>
+                To read out all measurement values from the device, use <b>MEAS</b>ure? command.
+            </li>
+        </ul>
+    </p>
+
+    <p>
+        Following sections explain the measuring systems supported by this device. Each measurement section has two tables:
+        <ul>
+            <li>
+                <b>Configuration:</b> Lists all possible configurations/settings available for that measurement system.
+                These configurations can be read and modified.
+            </li>
+            <li><b>Values:</b> These SCPI-queries provide measured values.</li>
+        </ul>
+    </p>
+
+</body>
+</html>
