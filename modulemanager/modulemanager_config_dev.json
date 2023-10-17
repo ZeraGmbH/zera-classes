@@ -10,10 +10,5 @@
     "availableSessions" : ["com5003-meas-session.json", "com5003-ced-session.json", "com5003-ref-session.json", "com5003-perphase-session.json"],
     "defaultSession" : "com5003-perphase-session.json",
     "customerdataSystemEnabled" : true
-  },
-  "demo" : {
-    "availableSessions" : ["demo-session.json", "demo-session1.json"],
-    "defaultSession" : "demo-session.json",
-    "customerdataSystemEnabled" : true
   }
 }

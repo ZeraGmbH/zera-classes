@@ -18,7 +18,7 @@ void test_modman_session::initTestCase()
     JsonSessionLoaderTest::enableTests();
     ModulemanagerConfigTest::enableTest();
     ModuleManagerTest::enableTest();
-    ModulemanagerConfig::setDemoDevice("demo");
+    ModulemanagerConfig::setDemoDevice("mt310s2");
     qRegisterMetaTypeStreamOperators<QList<int> >("QList<int>");
     qRegisterMetaTypeStreamOperators<QList<float> >("QList<float>");
     qRegisterMetaTypeStreamOperators<QList<double> >("QList<double>");
@@ -105,7 +105,7 @@ void test_modman_session::startSession()
     QVERIFY(storSystem.hasEntity(0));
     QVERIFY(storSystem.hasStoredValue(0, "Session"));
     QString currentSession = storSystem.getStoredValue(0, "Session").toString();
-    QCOMPARE(currentSession, "demo-session.json");
+    QCOMPARE(currentSession, "mt310s2-meas-session.json");
 
     QVERIFY(storSystem.hasStoredValue(0, "EntityName"));
     QString actDevIface = storSystem.getStoredValue(9999, "ACT_DEV_IFACE").toString();
@@ -154,10 +154,10 @@ void test_modman_session::changeSession()
 
     ModuleManagerTest::feedEventLoop();
     QString currentSession = storSystem.getStoredValue(0, "Session").toString();
-    QCOMPARE(currentSession, "demo-session.json");
+    QCOMPARE(currentSession, "mt310s2-meas-session.json");
 
-    modMan.changeSessionFile("demo-session1.json");
+    modMan.changeSessionFile("mt310s2-emob-session.json");
     ModuleManagerTest::feedEventLoop();
     currentSession = storSystem.getStoredValue(0, "Session").toString();
-    QCOMPARE(currentSession, "demo-session1.json");
+    QCOMPARE(currentSession, "mt310s2-emob-session.json");
 }

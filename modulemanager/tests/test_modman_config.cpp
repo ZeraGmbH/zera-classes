@@ -7,14 +7,16 @@ QTEST_MAIN(test_modman_config)
 void test_modman_config::loadDevConfig()
 {
     ModulemanagerConfigTest::enableTest();
-    ModulemanagerConfig::setDemoDevice("demo");
+    ModulemanagerConfig::setDemoDevice("mt310s2");
 
     ModulemanagerConfig* mmConfig = ModulemanagerConfig::getInstance();
     QStringList availSessions = mmConfig->getAvailableSessions();
 
     QVERIFY(mmConfig->isValid());
-    QCOMPARE(availSessions.count(), 2);
-    QVERIFY(availSessions.contains("demo-session.json"));
-    QVERIFY(availSessions.contains("demo-session1.json"));
-    QCOMPARE(mmConfig->getDefaultSession(), "demo-session.json");
+    QCOMPARE(availSessions.count(), 5);
+    QVERIFY(availSessions.contains("mt310s2-meas-session.json"));
+    QVERIFY(availSessions.contains("mt310s2-dc-session.json"));
+    QVERIFY(availSessions.contains("mt310s2-emob-session.json"));
+    QVERIFY(availSessions.contains("mt310s2-ced-session.json"));
+    QCOMPARE(mmConfig->getDefaultSession(), "mt310s2-meas-session.json");
 }
