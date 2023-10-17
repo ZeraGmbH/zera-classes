@@ -8,6 +8,7 @@ class test_scpi_doc_playground : public QObject
     Q_OBJECT
 private slots:
     void createAlHtmlsExists();
+    void runCreateAlHtmls();
 };
 
 #endif // TEST_SCPI_DOC_PLAYGROUND_H
