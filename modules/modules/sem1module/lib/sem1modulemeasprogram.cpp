@@ -1025,9 +1025,9 @@ void cSem1ModuleMeasProgram::setupDemoOperation()
         QString displayString = getConfData()->m_refInpList.at(i).inputName;
         m_refInputDictionary.addReferenceInput(displayString, resourceTypeListToAdd[displayString]);
     }
-    m_refInputDictionary.setAlias("fo1", "P");
-    m_refInputDictionary.setAlias("fo2", "Q");
-    m_refInputDictionary.setAlias("fo3", "S");
+    m_refInputDictionary.setAlias("fo0", "P");
+    m_refInputDictionary.setAlias("fo1", "Q");
+    m_refInputDictionary.setAlias("fo2", "S");
 }
 
 void cSem1ModuleMeasProgram::stopECCalculator()
