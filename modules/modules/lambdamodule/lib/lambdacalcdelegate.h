@@ -31,7 +31,7 @@ private:
     PhaseSumValues m_lambdaValues;
     PhaseSumValues m_activePowerValues;
     PhaseSumValues m_apparentPowerValues;
-    QString m_activePowerMeasMode = "";
+    QString m_activePowerMeasMode = "4LW";
     QString m_activePowerPhaseMask = "111";
     QList<VfModuleActvalue*> m_actValues;
 };
