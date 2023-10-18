@@ -97,8 +97,7 @@ void test_modman_session::startSession()
     QObject::connect(&mmController, &ModuleManagerController::sigChangeSession, &modMan, &ZeraModules::ModuleManager::changeSessionFile);
     QObject::connect(&mmController, &ModuleManagerController::sigModulesPausedChanged, &modMan, &ZeraModules::ModuleManager::setModulesPaused);
 
-    const QString defaultSessionFile = mmConfig->getDefaultSession();
-    modMan.changeSessionFile(defaultSessionFile);
+    modMan.changeSessionFile("mt310s2-meas-session.json");
     mmController.initOnce();
 
     ModuleManagerTest::feedEventLoop();
@@ -148,8 +147,7 @@ void test_modman_session::changeSession()
     QObject::connect(&mmController, &ModuleManagerController::sigChangeSession, &modMan, &ZeraModules::ModuleManager::changeSessionFile);
     QObject::connect(&mmController, &ModuleManagerController::sigModulesPausedChanged, &modMan, &ZeraModules::ModuleManager::setModulesPaused);
 
-    const QString defaultSessionFile = mmConfig->getDefaultSession();
-    modMan.changeSessionFile(defaultSessionFile);
+    modMan.changeSessionFile("mt310s2-meas-session.json");
     mmController.initOnce();
 
     ModuleManagerTest::feedEventLoop();
