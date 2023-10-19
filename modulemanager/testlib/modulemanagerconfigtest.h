@@ -7,6 +7,7 @@ class ModulemanagerConfigTest : public ModulemanagerConfig
 {
 public:
     static void enableTest();
+    static void setConfigFile(QString configFile);
 };
 
 #endif // MODULEMANAGERCONFIGTEST_H

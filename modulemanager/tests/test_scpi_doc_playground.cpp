@@ -47,6 +47,7 @@ void test_scpi_doc_playground::createDevIfaceXml()
     ModulemanagerConfigTest::enableTest();
     ModuleManagerTest::enableTest();
     ModulemanagerConfig::setDemoDevice("mt310s2");
+    ModulemanagerConfigTest::setConfigFile(MODMAN_DEFAULT_SESSION);
     qRegisterMetaTypeStreamOperators<QList<int> >("QList<int>");
     qRegisterMetaTypeStreamOperators<QList<float> >("QList<float>");
     qRegisterMetaTypeStreamOperators<QList<double> >("QList<double>");
