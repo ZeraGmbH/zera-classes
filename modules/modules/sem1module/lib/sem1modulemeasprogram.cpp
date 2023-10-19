@@ -1003,6 +1003,31 @@ void cSem1ModuleMeasProgram::activationDone()
 
 void cSem1ModuleMeasProgram::setupDemoOperation()
 {
+    if((getConfData()->m_sRefInput.m_sPar).contains("fo0") && getConfData()->m_nRefInpCount == 3) {
+        m_refInputDictionary.setAlias("fo0", "P");
+        m_refInputDictionary.setAlias("fo1", "Q");
+        m_refInputDictionary.setAlias("fo2", "S");
+    }
+    else {
+        switch(getConfData()->m_nRefInpCount)
+        {
+        case 2:
+            m_refInputDictionary.setAlias("fo1", "P");
+            m_refInputDictionary.setAlias("fo0", "P");
+            break;
+        case 3:
+            m_refInputDictionary.setAlias("fo1", "P");
+            m_refInputDictionary.setAlias("fo2", "Q");
+            m_refInputDictionary.setAlias("fo3", "S");
+            break;
+        case 4:
+            m_refInputDictionary.setAlias("fo0", "P");
+            m_refInputDictionary.setAlias("fo1", "P");
+            m_refInputDictionary.setAlias("fo2", "P");
+            m_refInputDictionary.setAlias("fo3", "P");
+            break;
+        }
+    }
     QStringList inputList;
     for(const auto &input : qAsConst(getConfData()->m_refInpList))
         inputList.append(input.inputName);
@@ -1025,9 +1050,6 @@ void cSem1ModuleMeasProgram::setupDemoOperation()
         QString displayString = getConfData()->m_refInpList.at(i).inputName;
         m_refInputDictionary.addReferenceInput(displayString, resourceTypeListToAdd[displayString]);
     }
-    m_refInputDictionary.setAlias("fo0", "P");
-    m_refInputDictionary.setAlias("fo1", "Q");
-    m_refInputDictionary.setAlias("fo2", "S");
 }
 
 void cSem1ModuleMeasProgram::stopECCalculator()
