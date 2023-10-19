@@ -14,40 +14,16 @@
 
 QTEST_MAIN(test_scpi_doc_playground)
 
-void test_scpi_doc_playground::createAlHtmlsExists()
-{
-    QFile script(QStringLiteral(SCPI_DOC_PLAYGROUND_PATH) + "/create-all-htmls");
-    QVERIFY(script.exists());
-}
-
-void test_scpi_doc_playground::runCreateAlHtmls()
-{
-    QProcess sh;
-    sh.start("/bin/sh", QStringList() << QStringLiteral(SCPI_DOC_PLAYGROUND_PATH) + "/create-all-htmls");
-    sh.waitForFinished();
-    qInfo() << sh.readAll();
-
-    QDir htmlOutput(QStringLiteral(SCPI_DOC_PLAYGROUND_PATH) + "/html-output");
-    QVERIFY(htmlOutput.exists());
-    htmlOutput.setFilter(QDir::AllEntries | QDir::NoDotAndDotDot);
-    //uncomment these tests after xmlstarlet is installed in CI container
-/*
-    QCOMPARE(htmlOutput.count(), 10);
-    QDirIterator outputDir(htmlOutput, QDirIterator::Subdirectories);
-    while (outputDir.hasNext()) {
-        QFile html(outputDir.next());
-        QVERIFY(html.size() > 0);
-    }
-*/
-}
-
-void test_scpi_doc_playground::createDevIfaceXml()
+void test_scpi_doc_playground::generateDeviceXmls(QString deviceName)
 {
     JsonSessionLoaderTest::enableTests();
     ModulemanagerConfigTest::enableTest();
     ModuleManagerTest::enableTest();
-    ModulemanagerConfig::setDemoDevice("mt310s2");
+    ModulemanagerConfig::setDemoDevice(deviceName);
     ModulemanagerConfigTest::setConfigFile(MODMAN_DEFAULT_SESSION);
+    // In this test file, tests are executed for mt and com, both devices.
+    // Since ModulemanagerConfig is a singleton, we need extra interface to change device during test.
+    ModulemanagerConfigTest::setDeviceName(deviceName);
     qRegisterMetaTypeStreamOperators<QList<int> >("QList<int>");
     qRegisterMetaTypeStreamOperators<QList<float> >("QList<float>");
     qRegisterMetaTypeStreamOperators<QList<double> >("QList<double>");
@@ -69,7 +45,7 @@ void test_scpi_doc_playground::createDevIfaceXml()
     subSystems.append(&licenseSystem);
     evHandler.setSubsystems(subSystems);
 
-    ModulemanagerConfig* mmConfig = ModulemanagerConfig::getInstance();
+    ModulemanagerConfig *mmConfig = ModulemanagerConfig::getInstance();
     const QStringList availableSessionList = mmConfig->getAvailableSessions();
 
     ModuleManagerTest modMan(availableSessionList);
@@ -111,4 +87,42 @@ void test_scpi_doc_playground::createDevIfaceXml()
         data << actDevIface;
         QVERIFY(xmlFile.size() > 0);
     }
+}
+
+
+void test_scpi_doc_playground::createAlHtmlsExists()
+{
+    QFile script(QStringLiteral(SCPI_DOC_PLAYGROUND_PATH) + "/create-all-htmls");
+    QVERIFY(script.exists());
+}
+
+void test_scpi_doc_playground::runCreateAlHtmls()
+{
+    QProcess sh;
+    sh.start("/bin/sh", QStringList() << QStringLiteral(SCPI_DOC_PLAYGROUND_PATH) + "/create-all-htmls");
+    sh.waitForFinished();
+    qInfo() << sh.readAll();
+
+    QDir htmlOutput(QStringLiteral(SCPI_DOC_PLAYGROUND_PATH) + "/html-output");
+    QVERIFY(htmlOutput.exists());
+    htmlOutput.setFilter(QDir::AllEntries | QDir::NoDotAndDotDot);
+    //uncomment these tests after xmlstarlet is installed in CI container
+/*
+    QCOMPARE(htmlOutput.count(), 10);
+    QDirIterator outputDir(htmlOutput, QDirIterator::Subdirectories);
+    while (outputDir.hasNext()) {
+        QFile html(outputDir.next());
+        QVERIFY(html.size() > 0);
+    }
+*/
+}
+
+void test_scpi_doc_playground::createMt310s2Xmls()
+{
+    generateDeviceXmls("mt310s2");
+}
+
+void test_scpi_doc_playground::createCom5003Xmls()
+{
+    generateDeviceXmls("com5003");
 }
