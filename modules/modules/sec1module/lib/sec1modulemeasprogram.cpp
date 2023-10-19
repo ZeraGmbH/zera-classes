@@ -1263,9 +1263,31 @@ void cSec1ModuleMeasProgram::activationDone()
 
 void cSec1ModuleMeasProgram::setupDemoOperation()
 {
-    m_refInputDictionary.setAlias("fo0", "P");
-    m_refInputDictionary.setAlias("fo1", "Q");
-    m_refInputDictionary.setAlias("fo2", "S");
+    if((getConfData()->m_sRefInput.m_sPar).contains("fo0") && getConfData()->m_nRefInpCount == 3) {
+        m_refInputDictionary.setAlias("fo0", "P");
+        m_refInputDictionary.setAlias("fo1", "Q");
+        m_refInputDictionary.setAlias("fo2", "S");
+    }
+    else {
+        switch(getConfData()->m_nRefInpCount)
+        {
+        case 2:
+            m_refInputDictionary.setAlias("fo1", "P");
+            m_refInputDictionary.setAlias("fo0", "P");
+            break;
+        case 3:
+            m_refInputDictionary.setAlias("fo1", "P");
+            m_refInputDictionary.setAlias("fo2", "Q");
+            m_refInputDictionary.setAlias("fo3", "S");
+            break;
+        case 4:
+            m_refInputDictionary.setAlias("fo0", "P");
+            m_refInputDictionary.setAlias("fo1", "P");
+            m_refInputDictionary.setAlias("fo2", "P");
+            m_refInputDictionary.setAlias("fo3", "P");
+            break;
+        }
+    }
 
     m_dutInputDictionary.setAlias("fi0", "FIN1");
     m_dutInputDictionary.setAlias("fi1", "FIN2");
