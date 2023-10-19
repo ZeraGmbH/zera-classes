@@ -11,3 +11,8 @@ void ModulemanagerConfigTest::setConfigFile(QString configFile)
 {
     m_configFileName = configFile;
 }
+
+void ModulemanagerConfigTest::setDeviceName(QString deviceName)
+{
+    m_deviceName = deviceName;
+}

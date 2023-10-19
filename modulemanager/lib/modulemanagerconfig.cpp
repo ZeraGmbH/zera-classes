@@ -9,6 +9,7 @@
 ModulemanagerConfig* ModulemanagerConfig::m_instance = nullptr;
 std::once_flag ModulemanagerConfig::m_onceflag;
 QString ModulemanagerConfig::m_demoDevice;
+QString ModulemanagerConfig::m_deviceName;
 QString ModulemanagerConfig::m_configFileName = MODMAN_DEFAULT_SESSION;
 QString ModulemanagerConfig::m_configFileDir = MODMAN_CONFIG_PATH;
 

@@ -21,6 +21,7 @@ public:
 protected:
     static QString m_configFileDir;
     static QString m_configFileName;
+    static QString m_deviceName;
 private:
     ModulemanagerConfig();
     const QString getDevNameFromUBoot();
@@ -31,7 +32,6 @@ private:
     static std::once_flag m_onceflag;
     static QString m_demoDevice;
     QJsonObject m_jsonConfig;
-    QString m_deviceName;
 };
 
 #endif // MODULEMANAGERCONFIG_H
