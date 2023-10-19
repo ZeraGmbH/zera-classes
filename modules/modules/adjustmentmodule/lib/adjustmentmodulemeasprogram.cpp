@@ -183,8 +183,9 @@ double cAdjustmentModuleMeasProgram::symAngle(double ang)
 
 void cAdjustmentModuleMeasProgram::onActivationReady()
 {
-    connect(m_commonObjects->m_pcbInterface.get(), &Zera::cPCBInterface::serverAnswer,
-            this, &cAdjustmentModuleMeasProgram::catchInterfaceAnswer);
+    if(!m_pModule->m_demo)
+        connect(m_commonObjects->m_pcbInterface.get(), &Zera::cPCBInterface::serverAnswer,
+                this, &cAdjustmentModuleMeasProgram::catchInterfaceAnswer);
     setInterfaceValidation();
 
     m_bActive = true;
