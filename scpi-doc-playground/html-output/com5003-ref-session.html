@@ -1,0 +1,1185 @@
+<html>
+<title>COM5003 SCPI commands</title>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<style>
+      :root {
+      /*default: light-theme*/
+          --color-bg: #fbf8f8;
+          --color-fg: black;
+          --color-table-tr: #dddddd;
+          --color-table-tr-btm: #f3f3f3;
+          --color-table-border: white;
+          --color-table-border-btm: #206040;
+          --color-table-border-thickness: 2px;
+      }
+      .dark-theme {
+          --color-bg: #484343;
+          --color-fg: white;
+          --color-table-tr: #666565;
+          --color-table-tr-btm: #666565;
+          --color-table-border: #808080;
+          --color-table-border-btm: #808080;
+      }
+      body {
+          font-family: Verdana, sans-serif;
+          color: var(--color-fg);
+          background-color: var(--color-bg);
+          margin: 0px;
+          padding: 0px;
+      }
+      .content {
+          padding: 20px;
+      }
+      html {
+          scroll-padding-top: 4rem;
+      }
+      h1 {
+          color: #25915b;
+          font-weight: bold;
+          padding-bottom: 10px;
+          padding-top: 30px;
+      }
+      h2 {
+          color: #25915b;
+          font-weight: bold;
+      }
+      h3 {
+          color: #25915b;
+          font-weight: bold;
+      }
+
+      /*Table of contents*/
+      .toc {
+          padding-bottom: 10px;
+      }
+      .toc a {
+          color: var(--color-fg);
+          text-decoration: none;
+          border-bottom: 1px solid;
+      }
+      .toc ul li {
+          font-size: 18;
+          line-height: 1.5;
+          list-style-type: none;
+      }
+
+      /*SCPI Commands tables*/
+      .DataTableDiv {
+          box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+          padding: 10px 0 15px 15px;
+          margin-top: 15px;
+          margin-bottom: 15px;
+      }  
+      .DataTableName {
+          font-size: large;
+      }
+      .DataTable {
+          border-collapse: collapse;
+          font-size: medium;
+          min-width: 300px;
+          text-align: left;
+          border: thin solid var(--color-table-border);
+      }
+      .DataTable tr th{
+          background-color: #206040;
+          color: #ffffff;
+          padding: 12px 15px;
+      }
+      .DataTable tr td{
+          padding: 12px 15px;
+      }
+      .DataTable tbody tr:nth-of-type(odd) {
+          background-color: var(--color-table-tr)
+      }
+      .DataTable tbody tr:last-of-type {
+          border-bottom: var(--color-table-border-thickness, thin) solid var(--color-table-border-btm);
+      }
+
+      /*header*/
+      .logo {
+          height: 50px;
+          margin-top: 5px;
+          margin-bottom: 5px;
+      }
+      header {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          background-color: #c4c4c4;
+          position: sticky;
+          color: black;
+          top: 0;
+          font-weight: bold;
+          font-size: 200%;
+          font-family: "Ubuntu", Arial, Helvetica, sans-serif;
+      }
+      .toggleThemeButton {
+          border: 1px solid var(--color-fg);
+          padding: .5rem;
+          background: var(--color-fg);
+          border-radius: 10px;
+          color: var(--color-bg);
+          margin-right: .5rem;
+          cursor: pointer;
+      }
+      .toggleThemeButton:hover {
+          opacity: 0.7;
+      }
+      @media print {
+          #toggleThemeButton {
+          display: none;
+          }
+      }
+
+      footer {
+          position: fixed;
+          left: 0;
+          bottom: 0;
+          width: 100%;
+          background-color: #c4c4c4;
+          color: black;
+          text-align: left;
+          font-size: 75%;
+      }
+    </style>
+</head>
+<body>
+<header><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" class="logo" version="1.1" id="Ebene_1" x="0px" y="0px" viewBox="0 0 243.8 70.9" style="enable-background:new 0 0 243.8 70.9;" xml:space="preserve">
+
+      <style type="text/css">
+          .st0{fill:#105E43;}
+      </style>
+
+      <g>
+          <path class="st0" d="M55,63.2H8.5v-7.6l25.1-36.9H8.5v-0.8L12,8.8h44.9v7.6l-25.2,37h26.8v0.7L55,63.2z"></path>
+          <path class="st0" d="M108.5,63.2H64.7V8.8h43.1l0,9.1v0.7H84.4v12.2H102v9.6H84.4v13h24.2v0.7L108.5,63.2z"></path>
+          <path class="st0" d="M149.5,63.2l-10.9-18.5c-1.3-1.6-2.2-1.8-3.6-1.8v20.2h-19.7V8.8h28.5c17.3,0,24.7,4.7,24.7,14.8 c0,8.2-5.4,13.4-12.7,15.9l15.4,23v0.7H149.5z M139.7,18.3H135V34c9.2,0,13.2-1.7,13.2-8.2C148.1,20.5,144.4,18.3,139.7,18.3z"></path>
+          <path class="st0" d="M215.6,63.2l-3.5-9.9h-19.3l-3.4,9.9h-16.5l0-0.7l20.9-53.7h22.4l19,53.7v0.7H215.6z M202.7,23.8L195.8,44 h13.1L202.7,23.8z"></path>
+      </g>
+
+    </svg>COM5003 SCPI commands<button id="toggleThemeButton" class="toggleThemeButton" onclick="toggleTheme()">Toggle theme</button></header><footer><i>Last updated on <b>19-Oct-2023</b></i></footer><script>
+  function toggleTheme() {
+    var element = document.body;
+    element.classList.toggle("dark-theme");
+  }
+  </script><div class="content">
+<p>This document was created with operating system version: <b></b>.</p>
+<div class="toc">
+<h1 style="padding-top:0px;">Contents</h1>
+<ul>
+<li><a href="#ScpiStandard">1. SCPI Standard</a></li>
+<li><a href="#DeviceConnection">2. Device connection</a></li>
+<li><a href="#DeviceInfo">3. Device information</a></li>
+<li><a href="#DevIface">4. Device interface</a></li>
+<li><a href="#ScpiStandardCmds">5. Standard SCPI commands</a></li>
+<li><a href="#MeasSystems">6. Measurement systems</a></li>
+<ul>
+<li><a href="#PhaseValues">6.1 Phase amplitudes and angles</a></li>
+<li><a href="#PowerMeasurement">6.2 Power measurement</a></li>
+</ul>
+<li><a href="#Ranges">7. Ranges</a></li>
+<li><a href="#ErrorCalculators">8. Comparison Measurements</a></li>
+</ul>
+</div>
+<h1 id="ScpiStandard">1. SCPI Standard</h1>
+<p><html>
+<body>
+    <p>
+        The <b>S</b>tandard <b>C</b>ommands for <b>P</b>rogrammable <b>I</b>nstruments (SCPI) defines
+        syntax and commands to control test and measurement devices. While originally created for
+        IEEE-488 (GPIB), it can also be used with RS232, USB, Ethernet etc.<br>
+        SCPI is organized as a hierarchical tree of nodes. Root nodes are called instrument models.
+    </p>
+    Some specifications of SCPI standard are as below: <br>
+    <ul>
+        <li>
+            The short form of the node name is usually the first four characters of the long form command header.
+            The exception to this is when the long form consists of more than four characters and the fourth character is a vowel.
+            In such cases, the vowel is dropped and the short form becomes the first three characters of the long form.
+            <br>
+            Examples: SENSE -&gt; SENS; DEVICE -&gt; DEV;
+        </li>
+        <br>
+        <li>
+            The <b>colon</b> (:) is a path hierarchy separator.
+        </li>
+        <br>
+        <li>
+            A <b>semicolon</b> (;) indicates end of a command with parameter(s).
+        </li>
+        <br>
+        <li>
+            <b>Queries</b> (?) will instruct the instrument to send a response message.
+            Queries return either measured values or internal instrument settings.<br>
+            <b>Caution:</b> If you send two query commands without reading the response of the first
+            query, the first response will get lost as the device recognizes an interrupted action.
+            In this case the query error bit in the standard event status register will also be set.
+        </li>
+        <br>
+        <li>
+            A <b>comma</b> (,) is used to separate parameters if a command requires more than one
+            parameter.
+        </li>
+        <br>
+        <li>
+            <b>Whitespace</b> (space) must be used to separate a parameter from a command
+            keyword.
+        </li>
+        <br>
+        <li>
+            <b>Common Commands</b> (*) follow the IEEE-488.2 interface standard. These
+            commands are used to control reset, self-test, and status operations in a device.
+        </li>
+        <br>
+        <li> 
+            <b>Input Message Terminators</b>: Program messages sent to a SCPI instrument must
+            terminate with a &lt;linefeed&gt; character. The IEEE-488 EOI signal is interpreted
+            as a &lt;linefeed&gt; character.
+        </li>
+    </ul>
+</body>
+</html></p>
+<h1 id="DeviceConnection">2. Device connection</h1>
+<p><html>
+<body>
+    <p>
+        The device uses an Ethernet connection and/or an optional serial device for scpi communication.<br>
+        <ul>
+            <li>For Ethernet connection, the IP address can be found in device's GUI/settings/Network Settings/Info button.
+            The associated port is 6320.</li>
+            <li>For Serial connection, the configuration is 9600 baud, 8 data bits, 1 stop bit and no parity.</li>
+        </ul>
+    </p>
+</body>
+</html></p>
+<h1 id="DeviceInfo">3. Device information</h1>
+<div class="DataTableDiv">
+<p class="DataTableName"><b>Status information</b></p>
+<table class="DataTable">
+<tr>
+<th>Description</th>
+<th>SCPI query</th>
+</tr>
+<tr>
+<td>Adjustment data checksum device</td>
+<td>STATUS:DEV1:ADJCHKSUM?</td>
+</tr>
+<tr>
+<td>Adjustment information</td>
+<td>STATUS:DEV1:ADJUSTMENT?</td>
+</tr>
+<tr>
+<td>Adjustment values write permission</td>
+<td>STATUS:DEV1:AUTHORIZATION?</td>
+</tr>
+<tr>
+<td>CPU/SOM info</td>
+<td>STATUS:DEV1:CPUINFO?</td>
+</tr>
+<tr>
+<td>Controller version</td>
+<td>STATUS:DEV1:VERSION:CONTROLER?</td>
+</tr>
+<tr>
+<td>DSP software version</td>
+<td>STATUS:DEV1:VERSION:DSP?</td>
+</tr>
+<tr>
+<td>DSP-server version</td>
+<td>STATUS:DEV1:VERSION:DSPSERVER?</td>
+</tr>
+<tr>
+<td>Device type</td>
+<td>STATUS:DEV1:DEVTYPE?</td>
+</tr>
+<tr>
+<td>FPGA version</td>
+<td>STATUS:DEV1:VERSION:FPGA?</td>
+</tr>
+<tr>
+<td>PCB version</td>
+<td>STATUS:DEV1:VERSION:PCB?</td>
+</tr>
+<tr>
+<td>PCB-server version</td>
+<td>STATUS:DEV1:VERSION:PCBSERVER?</td>
+</tr>
+<tr>
+<td>Release number</td>
+<td>STATUS:DEV1:RELEASE?</td>
+</tr>
+<tr>
+<td>Serial number</td>
+<td>STATUS:DEV1:SERIAL?</td>
+</tr>
+</table>
+</div>
+<h1 id="DevIface">4. Device interface</h1>
+<p><html>
+<body>
+    <p>This command queries all SCPI commands possible on this device. The output is all SCPI commands in an xml notation.</p>
+</body>
+</html></p>
+<div class="DataTableDiv"><table class="DataTable">
+<tr><th>SCPI query</th></tr>
+<tr><td>DEVICE:IFACE?</td></tr>
+</table></div>
+<h1 id="ScpiStandardCmds">5. Standard SCPI commands</h1>
+<div class="DataTableDiv"><table class="DataTable">
+<tr>
+<th>SCPI path</th>
+<th>SCPI command type</th>
+<th>Description</th>
+</tr>
+<tr>
+<td>*CLS</td>
+<td>Command</td>
+<td>Clear Status</td>
+</tr>
+<tr>
+<td>*ESE</td>
+<td>Query,Command+Par</td>
+<td>Event Status Enable</td>
+</tr>
+<tr>
+<td>*ESR</td>
+<td>Query</td>
+<td>Event Status Register</td>
+</tr>
+<tr>
+<td>*IDN</td>
+<td>Query</td>
+<td>Identification query</td>
+</tr>
+<tr>
+<td>*OPC</td>
+<td>Query,Command</td>
+<td>OPeration Complete</td>
+</tr>
+<tr>
+<td>*RST</td>
+<td>Command</td>
+<td>Reset</td>
+</tr>
+<tr>
+<td>*SRE</td>
+<td>Query,Command+Par</td>
+<td>Service Request Enable</td>
+</tr>
+<tr>
+<td>*STB</td>
+<td>Query</td>
+<td>Status Byte query</td>
+</tr>
+<tr>
+<td>*TST</td>
+<td>Query</td>
+<td>Self-Test query</td>
+</tr>
+</table></div>
+<div class="DataTableDiv">
+<p class="DataTableName"><b>Error information</b></p>
+<table class="DataTable">
+<tr>
+<th>SCPI query</th>
+<th>Description</th>
+</tr>
+<tr>
+<td>SYSTEM:ERROR?</td>
+<td>Queries one error of internal error list</td>
+</tr>
+<tr>
+<td>SYSTEM:ERROR:COUNT?</td>
+<td>Queries the number of error messages of internal error list</td>
+</tr>
+<tr>
+<td>SYSTEM:ERROR:ALL?</td>
+<td>Queries all error stored in internal error list</td>
+</tr>
+</table>
+</div>
+<h1 id="MeasSystems">6. Measurement systems</h1>
+<p><html>
+<body>
+    <p>
+        There are three <b>atomic</b> measurement node-types available:
+        <ol>
+            <li>
+                <b>CONF</b>igure: Intended to configure nodes. No functionality implemeneted on Zera devices -
+                available just for compatibility.
+            </li>
+            <li>
+<b>INIT</b>iate: Initializes the measurement.</li>
+            <li>
+                <b>FETC</b>h?: This query returns the requested result. When executed multiple times, it will
+                return same result unless <b>INIT</b>iate is called.
+            </li>
+        </ol>
+    </p>
+    <p>
+        There are two <b>composite</b> measurement node-types available:
+        <ol>
+            <li>
+<b>READ</b>: It is a sequence of <b>INIT</b>iate and <b>FETC</b>h.</li>
+            <li>
+                <b>MEAS</b>ure?: It is a sequence of <b>CONF</b>igure, <b>INIT</b>iate and <b>FETC</b>h.
+            </li>
+        </ol>
+    </p>
+
+    <p>
+        In the tables below, <b>MEAS</b>ure commands are mentioned for illustration. To use other nodes,
+        for example replace <b>MEAS</b>ure by <b>READ</b> .
+    </p>
+
+    <p>
+        Several measurement modules generate actual values. 
+        <ul>
+            <li>
+                To read out dedicated single values, the node must be fully specified within the command.
+                For example, to read out the voltage for channel UL1 the associated command is MEASure:RMS1:UL1? 
+                Output format is RMS1:UL1:[V]:value; 
+            </li>
+            <li>
+                To read out group of values, parent nodes can be specified within the command.
+                For example, MEAS:RMS1? reads out all the RMS values.
+            </li>
+            <li>
+                To read out all measurement values from the device, use <b>MEAS</b>ure? command.
+            </li>
+        </ul>
+    </p>
+
+    <p>
+        Following sections explain the measuring systems supported by this device. Each measurement section has two tables:
+        <ul>
+            <li>
+                <b>Configuration:</b> Lists all possible configurations/settings available for that measurement system.
+                These configurations can be read and modified.
+            </li>
+            <li>
+<b>Values:</b> These SCPI-queries provide measured values.</li>
+        </ul>
+    </p>
+
+</body>
+</html></p>
+<h2 id="PhaseValues">6.1 Phase amplitudes and angles</h2>
+<p><html>
+<body>
+    <p>
+        Each result is a vector, with a real part and an imaginary part. 
+        MEAS:DFT1? Reads out vectors for all available channels.
+    </p>
+</body>
+</html></p>
+<div class="DataTableDiv">
+<p class="DataTableName"><b>Configuration</b></p>
+<table class="DataTable">
+<tr>
+<th>Description</th>
+<th>SCPI path</th>
+<th>Min / Max</th>
+<th>Valid strings</th>
+<th>Data Type</th>
+<th>Unit</th>
+</tr>
+<tr>
+<td>Integration time</td>
+<td>CONFIGURATION:DFT1:TINTEGRATION</td>
+<td>1 / 100</td>
+<td></td>
+<td>DOUBLE</td>
+<td>s</td>
+</tr>
+<tr>
+<td>Reference channel</td>
+<td>CONFIGURATION:DFT1:REFCHANNEL</td>
+<td></td>
+<td>UL3,UL1,IL2,IL1,IL3,UL2</td>
+<td>STRING</td>
+<td></td>
+</tr>
+</table>
+</div>
+<div class="DataTableDiv">
+<p class="DataTableName"><b>Catalog</b></p>
+<table class="DataTable"><tr><th>SCPI query</th></tr></table>
+</div>
+<div class="DataTableDiv">
+<p class="DataTableName"><b>Values</b></p>
+<table class="DataTable">
+<tr>
+<th>Description</th>
+<th>SCPI query</th>
+<th>Unit</th>
+</tr>
+<tr>
+<td>Actual value phase/neutral</td>
+<td>MEASURE:DFT1:UL1?</td>
+<td>V</td>
+</tr>
+<tr>
+<td>Actual value phase/neutral</td>
+<td>MEASURE:DFT1:UL2?</td>
+<td>V</td>
+</tr>
+<tr>
+<td>Actual value phase/neutral</td>
+<td>MEASURE:DFT1:UL3?</td>
+<td>V</td>
+</tr>
+<tr>
+<td>Actual value phase/neutral</td>
+<td>MEASURE:DFT1:IL1?</td>
+<td>A</td>
+</tr>
+<tr>
+<td>Actual value phase/neutral</td>
+<td>MEASURE:DFT1:IL2?</td>
+<td>A</td>
+</tr>
+<tr>
+<td>Actual value phase/neutral</td>
+<td>MEASURE:DFT1:IL3?</td>
+<td>A</td>
+</tr>
+<tr>
+<td>Phase sequence</td>
+<td>MEASURE:DFT1:RFIELD?</td>
+<td></td>
+</tr>
+</table>
+</div>
+<h2 id="PowerMeasurement">6.2 Power measurement</h2>
+<h3>Power 1</h3>
+<div class="DataTableDiv">
+<p class="DataTableName"><b>Configuration</b></p>
+<table class="DataTable">
+<tr>
+<th>Description</th>
+<th>SCPI path</th>
+<th>Min / Max</th>
+<th>Valid strings</th>
+<th>Data Type</th>
+<th>Unit</th>
+</tr>
+<tr>
+<td>Measuring mode</td>
+<td>CONFIGURATION:POW1:MMODE</td>
+<td></td>
+<td>QREF</td>
+<td>STRING</td>
+<td></td>
+</tr>
+<tr>
+<td>Frequency output constant</td>
+<td>CONFIGURATION:POW1:M0CONSTANT</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Integration time</td>
+<td>CONFIGURATION:POW1:TINTEGRATION</td>
+<td>1 / 100</td>
+<td></td>
+<td>DOUBLE</td>
+<td>s</td>
+</tr>
+<tr>
+<td>Frequency output name</td>
+<td>CONFIGURATION:POW1:M0OUT</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Active phases selection mask</td>
+<td>CONFIGURATION:POW1:MEASMODEPHASESELECT</td>
+<td></td>
+<td>111</td>
+<td>STRING</td>
+<td></td>
+</tr>
+</table>
+</div>
+<div class="DataTableDiv">
+<p class="DataTableName"><b>Catalog</b></p>
+<table class="DataTable">
+<tr><th>SCPI query</th></tr>
+<tr><td>CONFIGURATION:POW1:MMODE:CATALOG?</td></tr>
+</table>
+</div>
+<div class="DataTableDiv">
+<p class="DataTableName"><b>Values</b></p>
+<table class="DataTable">
+<tr>
+<th>Description</th>
+<th>SCPI query</th>
+<th>Unit</th>
+</tr>
+<tr>
+<td>Actual power value phase 1</td>
+<td>MEASURE:POW1:P1?</td>
+<td>W</td>
+</tr>
+<tr>
+<td>Actual power value phase 2</td>
+<td>MEASURE:POW1:P2?</td>
+<td>W</td>
+</tr>
+<tr>
+<td>Actual power value phase 3</td>
+<td>MEASURE:POW1:P3?</td>
+<td>W</td>
+</tr>
+<tr>
+<td>Actual power value sum all phases</td>
+<td>MEASURE:POW1:PS?</td>
+<td>W</td>
+</tr>
+</table>
+</div>
+<h1 id="Ranges">7. Ranges</h1>
+<p><html>
+<body>
+    <p>
+        On this model, the user can:
+        <ul>
+            <li>
+<b>Select</b> and read out voltage/current ranges</li>
+            <li> Query <b>Catalog</b>: get all ranges for the measurement channel</li>
+            <li>Reset <b>overload</b>
+</li>
+            <li>Change <b>configuration</b>: range automatic and range grouping for phase 1 to 3</li>
+            <li>
+<b>Measure</b>: fetch actual peak values and frequency</li>
+        </ul>
+    </p>
+    <p>
+        <b>Note:</b> Values in 'Valid string' may vary. To get the current, use channel's 'Catalog' queries.
+    </p>
+</body>
+</html></p>
+<div class="DataTableDiv">
+<p class="DataTableName"><b>Selection</b></p>
+<table class="DataTable">
+<tr>
+<th>Description</th>
+<th>SCPI path</th>
+<th>Valid strings</th>
+<th>Data Type</th>
+<th>Unit</th>
+</tr>
+<tr>
+<td>Channel's range</td>
+<td>SENSE:RNG1:UL1:RANGE</td>
+<td>480V,240V,120V,60V,500mV</td>
+<td>STRING</td>
+<td></td>
+</tr>
+<tr>
+<td>Channel's range</td>
+<td>SENSE:RNG1:UL2:RANGE</td>
+<td>480V,240V,120V,60V,500mV</td>
+<td>STRING</td>
+<td></td>
+</tr>
+<tr>
+<td>Channel's range</td>
+<td>SENSE:RNG1:UL3:RANGE</td>
+<td>480V,240V,120V,60V,500mV</td>
+<td>STRING</td>
+<td></td>
+</tr>
+<tr>
+<td>Channel's range</td>
+<td>SENSE:RNG1:IL1:RANGE</td>
+<td>1000A,100A,10A,1A,100mA,10mA,1mA</td>
+<td>STRING</td>
+<td></td>
+</tr>
+<tr>
+<td>Channel's range</td>
+<td>SENSE:RNG1:IL2:RANGE</td>
+<td>1000A,100A,10A,1A,100mA,10mA,1mA</td>
+<td>STRING</td>
+<td></td>
+</tr>
+<tr>
+<td>Channel's range</td>
+<td>SENSE:RNG1:IL3:RANGE</td>
+<td>1000A,100A,10A,1A,100mA,10mA,1mA</td>
+<td>STRING</td>
+<td></td>
+</tr>
+</table>
+</div>
+<div class="DataTableDiv">
+<p class="DataTableName"><b>Catalog</b></p>
+<table class="DataTable">
+<tr><th>SCPI query</th></tr>
+<tr><td>SENSE:RNG1:UL1:RANGE:CATALOG?</td></tr>
+<tr><td>SENSE:RNG1:UL2:RANGE:CATALOG?</td></tr>
+<tr><td>SENSE:RNG1:UL3:RANGE:CATALOG?</td></tr>
+<tr><td>SENSE:RNG1:IL1:RANGE:CATALOG?</td></tr>
+<tr><td>SENSE:RNG1:IL2:RANGE:CATALOG?</td></tr>
+<tr><td>SENSE:RNG1:IL3:RANGE:CATALOG?</td></tr>
+</table>
+</div>
+<div class="DataTableDiv">
+<p class="DataTableName"><b>Overload</b></p>
+<p><html>
+<body>
+    <p>
+        This command will repsond with '1' if there is an overload condition on any measurement channel.
+        To reset this overload, send '0'.
+    </p>
+</body>
+</html></p>
+<table class="DataTable">
+<tr>
+<th>Description</th>
+<th>SCPI path</th>
+<th>Min / Max</th>
+</tr>
+<tr>
+<td>Overload</td>
+<td>SENSE:RNG1:OVERLOAD</td>
+<td>0 / 1</td>
+</tr>
+</table>
+</div>
+<div class="DataTableDiv">
+<p class="DataTableName"><b>Configuration</b></p>
+<table class="DataTable">
+<tr>
+<th>Description</th>
+<th>SCPI path</th>
+<th>Min / Max</th>
+<th>Valid strings</th>
+<th>Data Type</th>
+<th>Unit</th>
+</tr>
+<tr>
+<td>Range automatic on/off</td>
+<td>CONFIGURATION:RNG1:RNGAUTO</td>
+<td>0 / 1</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Channel grouping on/off</td>
+<td>CONFIGURATION:RNG1:GROUPING</td>
+<td>0 / 1</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</table>
+</div>
+<div class="DataTableDiv">
+<p class="DataTableName"><b>Catalog</b></p>
+<table class="DataTable"><tr><th>SCPI query</th></tr></table>
+</div>
+<div class="DataTableDiv">
+<p class="DataTableName"><b>Values</b></p>
+<table class="DataTable">
+<tr>
+<th>Description</th>
+<th>SCPI query</th>
+<th>Unit</th>
+</tr>
+<tr>
+<td>Actual peak value</td>
+<td>MEASURE:RNG1:UL1?</td>
+<td>V</td>
+</tr>
+<tr>
+<td>Actual peak value</td>
+<td>MEASURE:RNG1:UL2?</td>
+<td>V</td>
+</tr>
+<tr>
+<td>Actual peak value</td>
+<td>MEASURE:RNG1:UL3?</td>
+<td>V</td>
+</tr>
+<tr>
+<td>Actual peak value</td>
+<td>MEASURE:RNG1:IL1?</td>
+<td>A</td>
+</tr>
+<tr>
+<td>Actual peak value</td>
+<td>MEASURE:RNG1:IL2?</td>
+<td>A</td>
+</tr>
+<tr>
+<td>Actual peak value</td>
+<td>MEASURE:RNG1:IL3?</td>
+<td>A</td>
+</tr>
+<tr>
+<td>Actual frequency</td>
+<td>MEASURE:RNG1:F?</td>
+<td>Hz</td>
+</tr>
+</table>
+</div>
+<h1 id="ErrorCalculators">8. Comparison Measurements</h1>
+<p><html>
+<body>
+    <p>
+        The following commands are available:
+    </p>
+    <ul>
+        <li>
+<b>Status:</b>
+            <p>
+                Querying the error calculators status will give the following result. For more details, refer to the
+                status line in the table below.<br>
+            </p>
+        </li>
+        <li>
+<b>Progress:</b>
+            <p>
+                When a measurement is running, its progress can be read. The value is between
+                0[%] and 100[%] .
+            </p>
+        </li>
+        <li>
+<b>Result:</b>
+            <p>
+                When the device is in READY state a valid result in [%] can be read.
+            </p>
+        </li>
+        <li>
+<b>REF source:</b>
+            <p>
+                The source of the reference meter (the device itself) can be queried and selected.
+                Valid parameters are P (active power), Q (reactive power) and S (apparent power).
+            </p>
+        </li>
+        <li>
+<b>MRate:</b>
+            <p>
+                The number of scanning head impulses for meter error measurement can be queried
+                and set. Values can be up to 2<sup>32</sup> - 1.
+            </p>
+        </li>
+        <li>
+<b>DUT source:</b>
+            <p>
+                The source of the device under test can be queried and selected. Valid parameters are
+                <b>SC1</b> and <b>HK1</b>.
+            </p>
+        </li>
+        <li>
+<b>DUT constant:</b>
+            <p>
+                The meter constant of the device under test can be queried an set here. It's a floating point value.
+                For active power measurement the device assumes the unit 1/kwh, for reactive power 1/kVarh and
+                for apparent power 1/kVAh.
+            </p>
+        </li>
+        <li>
+<b>Start:</b>
+            <p>
+                With this command the measurement can be started and stopped as well.
+                Writing a 1 starts the measurement, writing a 0 stops the measurement.
+            </p>
+        </li>
+    </ul>
+</body>
+</html></p>
+<h2>Pulse comparison</h2>
+<p><html>
+<body>
+    <h3>
+        Meter test
+    </h3>
+</body>
+</html></p>
+<div class="DataTableDiv"><table class="DataTable">
+<tr>
+<th>Description</th>
+<th>SCPI path</th>
+<th>Min / Max</th>
+<th>Valid strings</th>
+<th>Data Type</th>
+<th>Unit</th>
+</tr>
+<tr>
+<td>Calculate DUT constant to get ~0% error</td>
+<td>CALCULATE:EC01:0001:AUTODUTCONSTANT</td>
+<td>0 / 1</td>
+<td></td>
+<td>INTEGER</td>
+<td></td>
+</tr>
+<tr>
+<td>DUT constant</td>
+<td>CALCULATE:EC01:0001:DUTCONSTANT</td>
+<td>1e-06 / 1e+20</td>
+<td></td>
+<td>DOUBLE</td>
+<td></td>
+</tr>
+<tr>
+<td>DUT constant unit</td>
+<td>CALCULATE:EC01:0001:DCUNIT</td>
+<td></td>
+<td>I/kWh,Wh/I</td>
+<td>STRING</td>
+<td></td>
+</tr>
+<tr>
+<td>DUT input</td>
+<td>CALCULATE:EC01:0001:DUTSOURCE</td>
+<td></td>
+<td>FIN1,FIN2,FIN3,FIN4</td>
+<td>STRING</td>
+<td></td>
+</tr>
+<tr>
+<td>Enables/disable continuous measurement</td>
+<td>CALCULATE:EC01:0001:CONTINUOUS</td>
+<td>0 / 1</td>
+<td></td>
+<td>INTEGER</td>
+<td></td>
+</tr>
+<tr>
+<td>Energy of last measurement</td>
+<td>CALCULATE:EC01:0001:ENFINAL</td>
+<td></td>
+<td></td>
+<td></td>
+<td>kWh</td>
+</tr>
+<tr>
+<td>Energy since last start</td>
+<td>CALCULATE:EC01:0001:ENERGY</td>
+<td></td>
+<td></td>
+<td></td>
+<td>kWh</td>
+</tr>
+<tr>
+<td>Energy value</td>
+<td>CALCULATE:EC01:0001:PARENERGY</td>
+<td>0 / 10000000</td>
+<td></td>
+<td>DOUBLE</td>
+<td>kWh</td>
+</tr>
+<tr>
+<td>Error limit: lower</td>
+<td>CALCULATE:EC01:0001:LOLIMIT</td>
+<td>-100 / 100</td>
+<td></td>
+<td>DOUBLE</td>
+<td>%</td>
+</tr>
+<tr>
+<td>Error limit: upper</td>
+<td>CALCULATE:EC01:0001:UPLIMIT</td>
+<td>-100 / 100</td>
+<td></td>
+<td>DOUBLE</td>
+<td>%</td>
+</tr>
+<tr>
+<td>Evaluation last measurement</td>
+<td>CALCULATE:EC01:0001:RATING</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Multiple measurements: Count</td>
+<td>CALCULATE:EC01:0001:MEASNUM</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Multiple measurements: Count stored</td>
+<td>CALCULATE:EC01:0001:MULCOUNT</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Multiple measurements: JSON result array / statistics</td>
+<td>CALCULATE:EC01:0001:STJARRAY</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Multiple measurements: Number of measurements</td>
+<td>CALCULATE:EC01:0001:MCOUNT</td>
+<td>1 / 400</td>
+<td></td>
+<td>INTEGER</td>
+<td></td>
+</tr>
+<tr>
+<td>Multiple measurements: Seconds to wait between measurements</td>
+<td>CALCULATE:EC01:0001:MWAIT</td>
+<td>0 / 2147483</td>
+<td></td>
+<td>INTEGER</td>
+<td>s</td>
+</tr>
+<tr>
+<td>Progress information</td>
+<td>CALCULATE:EC01:0001:PROGRESS</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Pulses to measure</td>
+<td>CALCULATE:EC01:0001:MRATE</td>
+<td>1 / 4294967295</td>
+<td></td>
+<td>INTEGER</td>
+<td></td>
+</tr>
+<tr>
+<td>REF input</td>
+<td>CALCULATE:EC01:0001:REFSOURCE</td>
+<td></td>
+<td>P</td>
+<td>STRING</td>
+<td></td>
+</tr>
+<tr>
+<td>REF pulses for 0% error - set automatically</td>
+<td>CALCULATE:EC01:0001:TARGET</td>
+<td>1 / 4294967295</td>
+<td></td>
+<td>INTEGER</td>
+<td></td>
+</tr>
+<tr>
+<td>Reference frequency input to find power module</td>
+<td>CALCULATE:EC01:0001:REFFREQINPUT</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Reference meter constant</td>
+<td>CALCULATE:EC01:0001:REFCONSTANT</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Result of last measurement</td>
+<td>CALCULATE:EC01:0001:RESULT</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Result unit</td>
+<td>CALCULATE:EC01:0001:RESULTUNIT</td>
+<td></td>
+<td>%,ppm</td>
+<td>STRING</td>
+<td></td>
+</tr>
+<tr>
+<td>Start/stop measurement</td>
+<td>CALCULATE:EC01:0001:START</td>
+<td>0 / 1</td>
+<td></td>
+<td>INTEGER</td>
+<td></td>
+</tr>
+<tr>
+<td>Status: 0:Idle 1:Waiting for first pulse 2:Started 4:Ready 8:Aborted</td>
+<td>CALCULATE:EC01:0001:STATUS</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</table></div>
+<div class="DataTableDiv">
+<p class="DataTableName"><b>Configuration</b></p>
+<p><html>
+<body>
+    <p>
+        Scale the DUT constant in case tranformers are used.<br>
+        A <b>Regular Expression (RegEx)</b> is used to validate the input parameters in these configurations.
+        It is a way to describe a pattern. <a href="https://regex101.com/">https://regex101.com/</a> can be useful to get more information on RegEx.
+    </p>
+</body>
+</html></p>
+<table class="DataTable">
+<tr>
+<th>Description</th>
+<th>SCPI path</th>
+<th>Valid strings</th>
+<th>RegEx</th>
+<th>Data Type</th>
+</tr>
+<tr>
+<td>I fraction denominator</td>
+<td>CONFIGURATION:EC01:0001:DUTCONSTANTISCALEDENOM</td>
+<td></td>
+<td>^[1-9][0-9]*?$</td>
+<td>STRING</td>
+</tr>
+<tr>
+<td>I fraction numerator</td>
+<td>CONFIGURATION:EC01:0001:DUTCONSTANTISCALENUM</td>
+<td></td>
+<td>^[1-9][0-9]*$</td>
+<td>STRING</td>
+</tr>
+<tr>
+<td>Measurement point selection</td>
+<td>CONFIGURATION:EC01:0001:DUTCONSTANTMEASUREPOINT</td>
+<td>CpIpUp,CpIsUs,CsIpUp,CsIsUs</td>
+<td></td>
+<td>STRING</td>
+</tr>
+<tr>
+<td>U fraction denominator</td>
+<td>CONFIGURATION:EC01:0001:DUTCONSTANTUSCALEDENOM</td>
+<td></td>
+<td>^[1-9][0-9]*(\/sqrt\(3\))?$</td>
+<td>STRING</td>
+</tr>
+<tr>
+<td>U fraction numerator</td>
+<td>CONFIGURATION:EC01:0001:DUTCONSTANTUSCALENUM</td>
+<td></td>
+<td>^[1-9][0-9]*(\/sqrt\(3\))?$</td>
+<td>STRING</td>
+</tr>
+</table>
+</div>
+</div>
+</body>
+</html>
