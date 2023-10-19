@@ -1271,6 +1271,9 @@ void cSec1ModuleMeasProgram::setupDemoOperation()
     else {
         switch(getConfData()->m_nRefInpCount)
         {
+        case 1:
+            m_refInputDictionary.setAlias("fo0", "P");
+            break;
         case 2:
             m_refInputDictionary.setAlias("fo1", "P");
             m_refInputDictionary.setAlias("fo0", "P");
