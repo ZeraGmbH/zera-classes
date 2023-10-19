@@ -67,7 +67,7 @@ void test_scpi_doc_playground::generateDeviceXmls(QString deviceName)
 
     mmController.initOnce();
 
-    QDir().mkdir(QStringLiteral(SCPI_DOC_PLAYGROUND_PATH) + "/scpi-xmls2");
+    QDir().mkdir(QStringLiteral(SCPI_DOC_PLAYGROUND_PATH) + "/scpi-xmls");
 
     for(const QString &session: availableSessionList) {
         modMan.changeSessionFile(session);
@@ -79,7 +79,7 @@ void test_scpi_doc_playground::generateDeviceXmls(QString deviceName)
         if(actDevIface.isEmpty()) // we have to make module resilient to this situation
             qFatal("ACT_DEV_IFACE empty - local modulemanager running???");
 
-        QString xmlFileName = QStringLiteral(SCPI_DOC_PLAYGROUND_PATH) + "/scpi-xmls2/" + session;
+        QString xmlFileName = QStringLiteral(SCPI_DOC_PLAYGROUND_PATH) + "/scpi-xmls/" + session;
         xmlFileName.replace("json", "xml");
         QFile xmlFile(xmlFileName);
         QVERIFY(xmlFile.open(QIODevice::ReadWrite));
@@ -108,7 +108,7 @@ void test_scpi_doc_playground::runCreateAlHtmls()
     htmlOutput.setFilter(QDir::AllEntries | QDir::NoDotAndDotDot);
     //uncomment these tests after xmlstarlet is installed in CI container
 /*
-    QCOMPARE(htmlOutput.count(), 10);
+    QCOMPARE(htmlOutput.count(), 8);
     QDirIterator outputDir(htmlOutput, QDirIterator::Subdirectories);
     while (outputDir.hasNext()) {
         QFile html(outputDir.next());

@@ -40,3 +40,4 @@ doc/
 
 #ignore scpi-doc html files
 scpi-doc-playground/html-output/*
+scpi-doc-playground/scpi-xmls/*
