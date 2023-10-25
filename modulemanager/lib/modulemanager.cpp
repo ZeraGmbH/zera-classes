@@ -316,8 +316,10 @@ void ModuleManager::onModuleStartNext()
         delete tmpData;
     }
     else {
-        ModulemanagerConfig *mmConfig = ModulemanagerConfig::getInstance();
-        mmConfig->setDefaultSession(m_sessionFile);
+        if(!m_runningInTest) {
+            ModulemanagerConfig *mmConfig = ModulemanagerConfig::getInstance();
+            mmConfig->setDefaultSession(m_sessionFile);
+        }
         qInfo("All modules started within %llims", m_timerAllModulesLoaded.elapsed());
         emit sigModulesLoaded(m_sessionFile, m_sessionsAvailable);
     }
@@ -335,10 +337,8 @@ void ModuleManager::onModuleEventSystemAdded(VeinEvent::EventSystem *t_eventSyst
 
 void ModuleManager::saveModuleConfig(ModuleData *t_moduleData)
 {
-    if(m_runningInTest) {
-        qInfo("We must not write configs in tests: OE build will fail post modifying installed files!!!");
+    if(m_runningInTest)
         return;
-    }
     QByteArray configData = t_moduleData->m_reference->getConfiguration();
 
     if(configData.isEmpty() == false)
