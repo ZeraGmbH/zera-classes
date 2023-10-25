@@ -1,18 +1,18 @@
 #!/bin/sh
 
 BASEPATH=`dirname $0`
-mkdir -p "${BASEPATH}/html-output"
+mkdir -p "$1/html-output"
 createAdjustmentOutput='true'
-ADJUSTMENT_HTMLFILE="${BASEPATH}/html-output/adjustment.html"
+ADJUSTMENT_HTMLFILE="$1/html-output/adjustment.html"
 
-for XMLFILE in `find "${BASEPATH}/scpi-xmls" -name '*.xml'`; do
+for XMLFILE in `find "$1/scpi-xmls" -name '*.xml'`; do
     HTMLFILE=`echo "$XMLFILE" | sed '-e s:\.xml:\.html:g' '-e s:scpi-xmls:html-output:g'`
     echo "Writing $HTMLFILE"
-    xmlstarlet tr ${BASEPATH}/scpi-to-html.xsl -s sessionXml="$XMLFILE" "$XMLFILE" > "$HTMLFILE"
+    xmlstarlet tr ${BASEPATH}/xsl-files/scpi-to-html.xsl -s sessionXml="$XMLFILE" "$XMLFILE" > "$HTMLFILE"
     if [ $createAdjustmentOutput == true ]
     then
         echo "Writing $ADJUSTMENT_HTMLFILE"
-        xmlstarlet tr ${BASEPATH}/scpi-to-html.xsl -s sessionXml="$XMLFILE" -s adjustmentOutput="$createAdjustmentOutput" "$XMLFILE" > "$ADJUSTMENT_HTMLFILE"
+        xmlstarlet tr ${BASEPATH}/xsl-files/scpi-to-html.xsl -s sessionXml="$XMLFILE" -s adjustmentOutput="$createAdjustmentOutput" "$XMLFILE" > "$ADJUSTMENT_HTMLFILE"
         createAdjustmentOutput=false
     fi
 done

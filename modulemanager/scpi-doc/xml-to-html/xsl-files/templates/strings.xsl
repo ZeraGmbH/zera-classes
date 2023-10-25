@@ -12,7 +12,7 @@
 <xsl:variable name="MinMax" select="'Min / Max'"/>
 <xsl:variable name="ValidPar" select="'Valid strings'"/>
 <xsl:variable name="RegEx" select="'RegEx'"/>
-<xsl:variable name="ProsaFolder" select="'html-prosa/'"/>
+<xsl:variable name="ProsaFolder" select="'../html-prosa/'"/>
 <xsl:variable name="Configuration" select="'Configuration'"/>
 <xsl:variable name="Values" select="'Values'"/>
 <xsl:variable name="Unit" select="'Unit'"/>
