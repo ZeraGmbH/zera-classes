@@ -1,23 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 
-<xsl:include href="xsl-templates/strings.xsl"/>
+<xsl:include href="templates/strings.xsl"/>
 
 <!-- Template names follow file names -->
-<xsl:include href="xsl-templates/zera-logo.xsl"/>
-<xsl:include href="xsl-templates/header-global.xsl"/>
-<xsl:include href="xsl-templates/current-date.xsl"/>
-<xsl:include href="xsl-templates/device-info.xsl"/>
-<xsl:include href="xsl-templates/error-calculators.xsl"/>
-<xsl:include href="xsl-templates/measurement.xsl"/>
-<xsl:include href="xsl-templates/sense-range.xsl"/>
-<xsl:include href="xsl-templates/system-info.xsl"/>
-<xsl:include href="xsl-templates/sampling-configs.xsl"/>
-<xsl:include href="xsl-templates/scpi-standard-cmds.xsl"/>
-<xsl:include href="xsl-templates/dev-iface.xsl"/>
-<xsl:include href="xsl-templates/pow-meas-prosa.xsl"/>
-<xsl:include href="xsl-templates/chapter-number.xsl"/>
-<xsl:include href="xsl-templates/adjustment.xsl"/>
+<xsl:include href="templates/zera-logo.xsl"/>
+<xsl:include href="templates/header-global.xsl"/>
+<xsl:include href="templates/current-date.xsl"/>
+<xsl:include href="templates/device-info.xsl"/>
+<xsl:include href="templates/error-calculators.xsl"/>
+<xsl:include href="templates/measurement.xsl"/>
+<xsl:include href="templates/sense-range.xsl"/>
+<xsl:include href="templates/system-info.xsl"/>
+<xsl:include href="templates/sampling-configs.xsl"/>
+<xsl:include href="templates/scpi-standard-cmds.xsl"/>
+<xsl:include href="templates/dev-iface.xsl"/>
+<xsl:include href="templates/pow-meas-prosa.xsl"/>
+<xsl:include href="templates/chapter-number.xsl"/>
+<xsl:include href="templates/adjustment.xsl"/>
 
 <xsl:param name="sessionXml"/>
 <xsl:param name="adjustmentOutput"/>
