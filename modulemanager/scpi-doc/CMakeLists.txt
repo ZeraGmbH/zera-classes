@@ -8,3 +8,5 @@ target_link_libraries(scpi-doc-generator
     PRIVATE
     zera-modulemanager-testlib
 )
+
+add_subdirectory(xml-to-html)
