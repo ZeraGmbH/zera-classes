@@ -1,4 +1,5 @@
-add_definitions(-DSCPI_DOC_PLAYGROUND_PATH="${CMAKE_CURRENT_BINARY_DIR}/scpi-xmls")
+add_definitions(-DSCPI_DOC_BUILD_PATH="${CMAKE_CURRENT_BINARY_DIR}")
+add_definitions(-DSCPI_DOC_SOURCE_PATH="${CMAKE_CURRENT_SOURCE_DIR}")
 
 add_executable(scpi-doc-generator
     ${CMAKE_CURRENT_SOURCE_DIR}/main.cpp
