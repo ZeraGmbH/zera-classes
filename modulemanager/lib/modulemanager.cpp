@@ -51,6 +51,7 @@ public:
 };
 
 QString ModuleManager::m_sessionPath = MODMAN_SESSION_PATH;
+bool ModuleManager::m_runningInTest = false;
 
 
 ModuleManager::ModuleManager(const QStringList &sessionList, QObject *parent) :
@@ -334,6 +335,10 @@ void ModuleManager::onModuleEventSystemAdded(VeinEvent::EventSystem *t_eventSyst
 
 void ModuleManager::saveModuleConfig(ModuleData *t_moduleData)
 {
+    if(m_runningInTest) {
+        qInfo("We must not write configs in tests: OE build will fail post modifying installed files!!!");
+        return;
+    }
     QByteArray configData = t_moduleData->m_reference->getConfiguration();
 
     if(configData.isEmpty() == false)

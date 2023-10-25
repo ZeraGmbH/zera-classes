@@ -59,6 +59,7 @@ private slots:
 
 protected:
     static QString m_sessionPath;
+    static bool m_runningInTest;
 
 private:
     void saveModuleConfig(ModuleData *t_moduleData);
