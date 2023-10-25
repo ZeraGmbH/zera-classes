@@ -1,7 +1,3 @@
-file(GLOB SESSION_FILES
-    ${SET_SESSION_FILES_SOURCE_PATH}/*.json
-)
-
 set(CONFIG_FILES
     ${CMAKE_CURRENT_SOURCE_DIR}/modulemanager_config.json
     ${CMAKE_CURRENT_SOURCE_DIR}/modulemanager_config_dev.json

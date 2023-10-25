@@ -14,9 +14,6 @@ target_link_libraries(testhelpers
     Qt5::Test
     )
 
-list(JOIN SESSION_FILES "," C_SESSION_FILES)
-add_definitions(-DSESSION_FILES="${C_SESSION_FILES}")
-
 list(JOIN LOGGER_CONFIG_FILES "," C_LOGGER_CONFIG_FILES)
 add_definitions(-DLOGGER_CONFIG_FILES="${C_LOGGER_CONFIG_FILES}")
 
