@@ -18,10 +18,7 @@ int main(int argc, char *argv[])
     JsonSessionLoaderTest::enableTests();
     ModulemanagerConfigTest::enableTest();
     ModuleManagerTest::pointToSourceSessionFiles();
-    ModulemanagerConfig::setDemoDevice("mt310s2");
-    // In this test file, tests are executed for mt and com, both devices.
-    // Since ModulemanagerConfig is a singleton, we need extra interface to change device during test.
-    //ModulemanagerConfigTest::setDeviceName("");
+
     qRegisterMetaTypeStreamOperators<QList<int> >("QList<int>");
     qRegisterMetaTypeStreamOperators<QList<float> >("QList<float>");
     qRegisterMetaTypeStreamOperators<QList<double> >("QList<double>");

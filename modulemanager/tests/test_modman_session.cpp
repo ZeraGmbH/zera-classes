@@ -18,7 +18,6 @@ void test_modman_session::initTestCase()
     JsonSessionLoaderTest::enableTests();
     ModulemanagerConfigTest::enableTest();
     ModuleManagerTest::enableTest();
-    ModulemanagerConfig::setDemoDevice("mt310s2");
     qRegisterMetaTypeStreamOperators<QList<int> >("QList<int>");
     qRegisterMetaTypeStreamOperators<QList<float> >("QList<float>");
     qRegisterMetaTypeStreamOperators<QList<double> >("QList<double>");
