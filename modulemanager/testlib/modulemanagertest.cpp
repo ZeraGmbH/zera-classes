@@ -10,6 +10,11 @@ void ModuleManagerTest::enableTest()
                 QString(MODMAN_SESSION_PATH));
 }
 
+void ModuleManagerTest::pointToSourceSessionFiles()
+{
+    m_sessionPath = QDir::cleanPath(QString(SESSION_FILES_SOURCE_PATH));
+}
+
 void ModuleManagerTest::feedEventLoop()
 {
     while(QCoreApplication::eventDispatcher()->processEvents(QEventLoop::AllEvents));

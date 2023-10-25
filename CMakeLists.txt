@@ -49,6 +49,7 @@ set(SET_MODMAN_CONTENTSET_PATH "${CMAKE_INSTALL_SYSCONFDIR}/zera/logger-contents
 set(SET_MODMAN_AUTOMOUNT_PATH "/media/" CACHE STRING "Automount path")
 set(SET_MODMAN_DEFAULT_SESSION "modulemanager_config.json" CACHE STRING "Default session")
 set(SET_MODMAN_TEST_SESSION "modulemanager_config_dev.json")
+set(SET_SESSION_FILES_SOURCE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/modulemanager/sessions/")
 
 add_definitions(-DOPERATOR_HOME="${OPERATOR_HOME}")
 add_definitions(-DMODMAN_SESSION_PATH="${SET_MODMAN_SESSION_PATH}")
@@ -61,6 +62,7 @@ add_definitions(-DMODMAN_CONTENTSET_PATH="${SET_MODMAN_CONTENTSET_PATH}")
 add_definitions(-DMODMAN_AUTOMOUNT_PATH="${SET_MODMAN_AUTOMOUNT_PATH}")
 add_definitions(-DMODMAN_LOGGER_LOCAL_PATH="${OPERATOR_HOME}/logger")
 add_definitions(-DZC_DEV_STATE_PATH="${CMAKE_INSTALL_SYSCONFDIR}/zera/states")
+add_definitions(-DSESSION_FILES_SOURCE_PATH="${CMAKE_CURRENT_SOURCE_DIR}/modulemanager/sessions/")
 
 macro(SET_MODULE_ENV MODULE_NAME)
     string(TOUPPER ${MODULE_NAME} MODULE_NAME_UPPER)
