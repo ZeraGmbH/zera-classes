@@ -5,6 +5,7 @@
 
 void ModuleManagerTest::enableTest()
 {
+    m_runningInTest = true;
     m_sessionPath = QDir::cleanPath(
                 QString(OE_INSTALL_ROOT) + "/" +
                 QString(MODMAN_SESSION_PATH));
