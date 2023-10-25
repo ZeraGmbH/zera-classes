@@ -8,15 +8,12 @@
 #include "moduleeventhandler.h"
 #include <QDataStream>
 #include <QCoreApplication>
-#include <QCommandLineParser>
 #include <QDir>
 #include <QProcess>
 
 int main(int argc, char *argv[])
 {
     QCoreApplication a(argc, argv);
-
-    QCommandLineParser parser;
 
     JsonSessionLoaderTest::enableTests();
     ModulemanagerConfigTest::enableTest();
