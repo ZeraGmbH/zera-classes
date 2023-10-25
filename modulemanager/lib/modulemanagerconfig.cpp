@@ -61,7 +61,8 @@ const QString ModulemanagerConfig::getDefaultSession()
 
 void ModulemanagerConfig::setDefaultSession(QString session)
 {
-    if(getDefaultSession() != session && getAvailableSessions().contains(session)) {
+    // m_demoDevice: Do not modify installed config file by running tests
+    if(getDefaultSession() != session && getAvailableSessions().contains(session) && m_demoDevice.isEmpty()) {
         QJsonObject devJson = getDeviceJson();
         devJson["defaultSession"] = session;
         setDeviceJson(devJson);
