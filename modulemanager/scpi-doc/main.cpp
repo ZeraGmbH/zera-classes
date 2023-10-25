@@ -46,10 +46,11 @@ int main(int argc, char *argv[])
     subSystems.append(&licenseSystem);
     evHandler.setSubsystems(subSystems);
 
-    ModulemanagerConfig *mmConfig = ModulemanagerConfig::getInstance();
-    const QStringList availableSessionList = mmConfig->getAvailableSessions();
-
-    ModuleManagerTest modMan(availableSessionList);
+    QStringList sessionFileList = QString(SESSION_FILES).split(",");
+    for(QString &session: sessionFileList) {
+        session = session.section('/', -1);
+    }
+    ModuleManagerTest modMan(sessionFileList);
     modMan.setDemo(true);
     modMan.loadAllAvailableModulePlugins();
     modMan.setStorage(&storSystem);
@@ -70,7 +71,7 @@ int main(int argc, char *argv[])
 
     QDir().mkdir(QStringLiteral(SCPI_DOC_PLAYGROUND_PATH));
 
-    for(const QString &session: availableSessionList) {
+    for(const QString &session: qAsConst(sessionFileList)) {
         modMan.changeSessionFile(session);
         ModuleManagerTest::feedEventLoop();
 
