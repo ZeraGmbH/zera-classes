@@ -91,5 +91,5 @@ int main(int argc, char *argv[])
     QProcess sh;
     sh.start("/bin/sh", QStringList() << QStringLiteral(SCPI_DOC_SOURCE_PATH) + "/xml-to-html/create-all-htmls" << QStringLiteral(SCPI_DOC_BUILD_PATH));
     sh.waitForFinished();
-    fprintf(stdout, sh.readAll());
+    printf("%s", qPrintable(sh.readAll()));
 }
