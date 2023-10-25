@@ -10,6 +10,7 @@
 #include <QCoreApplication>
 #include <QCommandLineParser>
 #include <QDir>
+#include <QProcess>
 
 int main(int argc, char *argv[])
 {
@@ -69,7 +70,7 @@ int main(int argc, char *argv[])
 
     mmController.initOnce();
 
-    QDir().mkdir(QStringLiteral(SCPI_DOC_PLAYGROUND_PATH));
+    QDir().mkdir(QStringLiteral(SCPI_DOC_BUILD_PATH) + "/scpi-xmls");
 
     for(const QString &session: qAsConst(sessionFileList)) {
         modMan.changeSessionFile(session);
@@ -79,11 +80,16 @@ int main(int argc, char *argv[])
         if(actDevIface.isEmpty()) // we have to make module resilient to this situation
             qFatal("ACT_DEV_IFACE empty - local modulemanager running???");
 
-        QString xmlFileName = QStringLiteral(SCPI_DOC_PLAYGROUND_PATH) + "/" + session;
+        QString xmlFileName = QStringLiteral(SCPI_DOC_BUILD_PATH) + "/scpi-xmls/" + session;
         xmlFileName.replace("json", "xml");
         QFile xmlFile(xmlFileName);
         xmlFile.open(QFile::ReadWrite);
         QTextStream data(&xmlFile);
         data << actDevIface;
     }
+
+    QProcess sh;
+    sh.start("/bin/sh", QStringList() << QStringLiteral(SCPI_DOC_SOURCE_PATH) + "/xml-to-html/create-all-htmls" << QStringLiteral(SCPI_DOC_BUILD_PATH));
+    sh.waitForFinished();
+    fprintf(stdout, sh.readAll());
 }
