@@ -1,5 +1,5 @@
 file(GLOB SESSION_FILES
-    ${CMAKE_CURRENT_SOURCE_DIR}/sessions/*.json
+    ${SET_SESSION_FILES_SOURCE_PATH}/*.json
 )
 
 set(CONFIG_FILES
@@ -69,6 +69,7 @@ install(
 enable_testing()
 add_subdirectory(app)
 add_subdirectory(lib)
+add_subdirectory(scpi-doc)
 add_subdirectory(tests)
 add_subdirectory(testlib)
 
