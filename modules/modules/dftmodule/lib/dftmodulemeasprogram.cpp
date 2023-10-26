@@ -653,11 +653,16 @@ void cDftModuleMeasProgram::setupDemoOperation()
 {
     m_measChannelInfoHash.clear();
     cMeasChannelInfo mi;
+
     for (int i = 0; i < getConfData()->m_valueChannelList.count(); i++)
     {
-        QString channelName = getConfData()->m_valueChannelList.at(i);
-        if (!m_measChannelInfoHash.contains(channelName))
-            m_measChannelInfoHash[channelName] = mi;
+        QStringList sl = getConfData()->m_valueChannelList.at(i).split('-');
+        for (int j = 0; j < sl.count(); j++)
+        {
+            QString channelName = sl.at(j);
+            if (!m_measChannelInfoHash.contains(channelName))
+                m_measChannelInfoHash[channelName] = mi;
+        }
     }
     QList<QString> channelInfoList = m_measChannelInfoHash.keys();
     foreach (QString channelInfo, channelInfoList) {
@@ -697,8 +702,8 @@ void cDftModuleMeasProgram::setupDemoOperation()
         else {
         }
         m_measChannelInfoHash[channelInfo] = mi;
-    }}
-
+    }
+}
 
 void cDftModuleMeasProgram::setSCPIMeasInfo()
 {
