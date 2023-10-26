@@ -299,6 +299,9 @@ void cSampleChannel::readRangelist()
 
 void cSampleChannel::activationDone()
 {
+    if(m_pModule->m_demo) {
+        m_RangeNameList << "F50Hz" << "F20Hz";
+    }
     setChannelNameMetaInfo(); // we set our real name now
     setRangeValidator(); // and the list of possible ranges
 
