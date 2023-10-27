@@ -1292,10 +1292,10 @@ void cSec1ModuleMeasProgram::setupDemoOperation()
         }
     }
 
-    m_dutInputDictionary.setAlias("fi0", "FIN1");
-    m_dutInputDictionary.setAlias("fi1", "FIN2");
-    m_dutInputDictionary.setAlias("fi2", "FIN3");
-    m_dutInputDictionary.setAlias("fi3", "FIN4");
+    m_dutInputDictionary.setAlias("fi0", "Fin1");
+    m_dutInputDictionary.setAlias("fi1", "Fin2");
+    m_dutInputDictionary.setAlias("fi2", "Fin3");
+    m_dutInputDictionary.setAlias("fi3", "Fin4");
     m_dutInputDictionary.setAlias("sh0", "SC1");
     m_dutInputDictionary.setAlias("hk0", "HK1");
 
