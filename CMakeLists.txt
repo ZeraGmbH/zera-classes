@@ -27,6 +27,7 @@ find_package(VfFiles REQUIRED)
 find_package(zera-json-params REQUIRED)
 find_package(SCPI REQUIRED)
 find_package(serialportasyncblock REQUIRED)
+find_package(ZenuxLegacyComponents REQUIRED)
 
 find_program (JSONSCHEMA NAMES jsonschema REQUIRED)
 # Note 1: In OE we do not (yet) have jsonlint-php so it must be optional
