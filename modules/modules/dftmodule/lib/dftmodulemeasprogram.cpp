@@ -665,43 +665,77 @@ void cDftModuleMeasProgram::setupDemoOperation()
         }
     }
     QList<QString> channelInfoList = m_measChannelInfoHash.keys();
-    foreach (QString channelInfo, channelInfoList) {
-        mi = m_measChannelInfoHash.take(channelInfo);
-        if (channelInfo == "m0") {
-            mi.alias = "UL1";
-            mi.unit = "V";
+
+    if(getConfData()->m_valueChannelList.count() == 6) {
+        //com reference session
+        foreach (QString channelInfo, channelInfoList) {
+            mi = m_measChannelInfoHash.take(channelInfo);
+            if (channelInfo == "m0") {
+                mi.alias = "REF1";
+                mi.unit = "V";
+            }
+            else if (channelInfo == "m1") {
+                mi.alias = "REF2";
+                mi.unit = "V";
+            }
+            else if (channelInfo == "m2") {
+                mi.alias = "REF3";
+                mi.unit = "V";
+            }
+            else if (channelInfo == "m3") {
+                mi.alias = "REF4";
+                mi.unit = "V";
+            }
+            else if (channelInfo == "m4") {
+                mi.alias = "REF5";
+                mi.unit = "V";
+            }
+            else if (channelInfo == "m5") {
+                mi.alias = "REF6";
+                mi.unit = "V";
+            }
+            m_measChannelInfoHash[channelInfo] = mi;
         }
-        else if (channelInfo == "m1") {
-            mi.alias = "UL2";
-            mi.unit = "V";
+    }
+    else {
+        foreach (QString channelInfo, channelInfoList) {
+            mi = m_measChannelInfoHash.take(channelInfo);
+            if (channelInfo == "m0") {
+                mi.alias = "UL1";
+                mi.unit = "V";
+            }
+            else if (channelInfo == "m1") {
+                mi.alias = "UL2";
+                mi.unit = "V";
+            }
+            else if (channelInfo == "m2") {
+                mi.alias = "UL3";
+                mi.unit = "V";
+            }
+            else if (channelInfo == "m3") {
+                mi.alias = "IL1";
+                mi.unit = "A";
+            }
+            else if (channelInfo == "m4") {
+                mi.alias = "IL2";
+                mi.unit = "A";
+            }
+            else if (channelInfo == "m5") {
+                mi.alias = "IL3";
+                mi.unit = "A";
+            }
+            else if (channelInfo == "m6") {
+                mi.alias = "UAUX";
+                mi.unit = "V";
+            }
+            else if (channelInfo == "m7") {
+                mi.alias = "IAUX";
+                mi.unit = "A";
+            }
+            else {
+            }
+            m_measChannelInfoHash[channelInfo] = mi;
         }
-        else if (channelInfo == "m2") {
-            mi.alias = "UL3";
-            mi.unit = "V";
-        }
-        else if (channelInfo == "m3") {
-            mi.alias = "IL1";
-            mi.unit = "A";
-        }
-        else if (channelInfo == "m4") {
-            mi.alias = "IL2";
-            mi.unit = "A";
-        }
-        else if (channelInfo == "m5") {
-            mi.alias = "IL3";
-            mi.unit = "A";
-        }
-        else if (channelInfo == "m6") {
-            mi.alias = "UAUX";
-            mi.unit = "V";
-        }
-        else if (channelInfo == "m7") {
-            mi.alias = "IAUX";
-            mi.unit = "A";
-        }
-        else {
-        }
-        m_measChannelInfoHash[channelInfo] = mi;
     }
 }
 
