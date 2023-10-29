@@ -21,7 +21,7 @@ void cTransformer1MeasDelegate::actValueInput1(QVariant val)
     list = val.value<QList<double> >();
     if (list.count() >= 2) // normaly this is true, but we test to avoid crashing
     {
-        inp1 = complex(list.at(0), list.at(1));
+        inp1 = std::complex<double>(list.at(0), list.at(1));
 
         // we forward primary input value
         m_pActINSecondary->setValue(fabs(inp1) * c1_sqrt2);
@@ -40,7 +40,7 @@ void cTransformer1MeasDelegate::actValueInput2(QVariant val)
     list = val.value<QList<double> >();
     if (list.count() >= 2) // normaly this is true, but we test to avoid crashing
     {
-        inp2 = complex(list.at(0), list.at(1));
+        inp2 = std::complex<double>(list.at(0), list.at(1));
 
         // we forward secondary input value
         m_pActIXSecondary->setValue(fabs(inp2) * c1_sqrt2);
@@ -106,7 +106,7 @@ void cTransformer1MeasDelegate::computeOutput()
     double dError = ((target - dRatio) / target) * 100.0;
     m_pActTransformerError->setValue(dError);
 
-    double dAngleError = userAtan(m_fPrimVector.im(), m_fPrimVector.re()) - userAtan(m_fSecVector.im(), m_fSecVector.re());
+    double dAngleError = userAtan(m_fPrimVector.imag(), m_fPrimVector.real()) - userAtan(m_fSecVector.imag(), m_fSecVector.real());
     m_pActTransformerAngleError->setValue(dAngleError);
 
     double IXPrim = fabs(inp2) * dRatio * c1_sqrt2;
