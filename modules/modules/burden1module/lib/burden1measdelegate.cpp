@@ -23,7 +23,7 @@ void cBurden1MeasDelegate::actValueInput1(QVariant val)
     if (list.count() >= 2) // normaly this is true, but we test to avoid crashing
     {
         // we compute vector as complex primary actual values
-        m_fVoltageVector = complex(list.at(0), list.at(1));
+        m_fVoltageVector = std::complex<double>(list.at(0), list.at(1));
         computeOutput();
     }
 }
@@ -36,7 +36,7 @@ void cBurden1MeasDelegate::actValueInput2(QVariant val)
     if (list.count() >= 2) // normaly this is true, but we test to avoid crashing
     {
         // we compute vector as complex primary actual values
-        m_fCurrentVector = complex(list.at(0), list.at(1));
+        m_fCurrentVector = std::complex<double>(list.at(0), list.at(1));
         if (m_bSignal)
             emit measuring(0);
 
@@ -107,7 +107,7 @@ void cBurden1MeasDelegate::computeOutput()
         m_fActBurden = (nominalRange * nominalRange) * ((ueff/ieff) + Rwire);
     }
 
-    double deltaW = userAtan(m_fCurrentVector.im(), m_fCurrentVector.re()) - userAtan(m_fVoltageVector.im(), m_fVoltageVector.re());
+    double deltaW = userAtan(m_fCurrentVector.imag(), m_fCurrentVector.real()) - userAtan(m_fVoltageVector.imag(), m_fVoltageVector.real());
     deltaW = deltaW * 3.1415926 / 180.0;
 
     m_fActPowerFactor = cos(deltaW);
