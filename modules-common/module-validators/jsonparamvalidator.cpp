@@ -1,5 +1,4 @@
 #include "jsonparamvalidator.h"
-#include <complex.h>
 #include <QFile>
 
 cJsonParamValidator::cJsonParamValidator()
