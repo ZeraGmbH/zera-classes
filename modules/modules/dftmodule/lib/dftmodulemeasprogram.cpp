@@ -11,7 +11,7 @@
 #include <stringvalidator.h>
 #include <doublevalidator.h>
 #include <math.h>
-#include <complex.h>
+#include <complex>
 #include <useratan.h>
 
 namespace DFTMODULE
@@ -780,7 +780,7 @@ void cDftModuleMeasProgram::setInterfaceActualValues(QVector<float> *actualValue
 void cDftModuleMeasProgram::handleDemoActualValues()
 {
     QVector<float> valuesDemo;
-    QHash<QString, complex> DftActValuesHash;
+    QHash<QString, std::complex<double>> DftActValuesHash;
 
     for (int i = 0; i < 2*m_veinActValueList.count(); i++) {
         double randomVal = (double)rand() / RAND_MAX ;
@@ -800,7 +800,7 @@ void cDftModuleMeasProgram::handleDemoActualValues()
     }
     if (getConfData()->m_bRefChannelOn) {
         for (int i = 0; i < getConfData()->m_valueChannelList.count(); i++)
-          DftActValuesHash[getConfData()->m_valueChannelList.at(i)] = complex(m_ModuleActualValues[i*2], m_ModuleActualValues[i*2+1]);
+            DftActValuesHash[getConfData()->m_valueChannelList.at(i)] = std::complex<double>(m_ModuleActualValues[i*2], m_ModuleActualValues[i*2+1]);
 
         for (int i = 0; i < getConfData()->m_valueChannelList.count(); i++) {
             QString key;
@@ -812,8 +812,8 @@ void cDftModuleMeasProgram::handleDemoActualValues()
                 DftActValuesHash.remove(key);
                 DftActValuesHash[key] = DftActValuesHash[sl.at(0)] - DftActValuesHash[sl.at(1)];
             }
-            m_ModuleActualValues.replace(i*2, DftActValuesHash[key].re());
-            m_ModuleActualValues.replace(i*2+1, DftActValuesHash[key].im());
+            m_ModuleActualValues.replace(i*2, DftActValuesHash[key].real());
+            m_ModuleActualValues.replace(i*2+1, DftActValuesHash[key].imag());
         }
     }
 
@@ -1074,7 +1074,7 @@ void cDftModuleMeasProgram::dataAcquisitionDSP()
 
 void cDftModuleMeasProgram::dataReadDSP()
 {
-    QHash<QString, complex> DftActValuesHash;
+    QHash<QString, std::complex<double>> DftActValuesHash;
     if (m_bActive)
     {
         //double corr;
@@ -1131,21 +1131,21 @@ void cDftModuleMeasProgram::dataReadDSP()
                 //QHash<QString, complex> DftActValuesHash;
 
                 for (int i = 0; i < getConfData()->m_valueChannelList.count(); i++)
-                  DftActValuesHash[getConfData()->m_valueChannelList.at(i)] = complex(m_ModuleActualValues[i*2], m_ModuleActualValues[i*2+1]);
+                    DftActValuesHash[getConfData()->m_valueChannelList.at(i)] = std::complex<double>(m_ModuleActualValues[i*2], m_ModuleActualValues[i*2+1]);
 
                 // the complex reference vector
-                complex complexRef = DftActValuesHash.value(m_ChannelSystemNameHash.value(getConfData()->m_sRefChannel.m_sPar));
+                std::complex<double> complexRef = DftActValuesHash.value(m_ChannelSystemNameHash.value(getConfData()->m_sRefChannel.m_sPar));
 
-                double tanRef = complexRef.im() / complexRef.re();
+                double tanRef = complexRef.imag() / complexRef.real();
                 double divisor = sqrt(1.0+(tanRef * tanRef));
                 // the turnvector has the negative reference angle
                 // computing in complex is more acurate, but we have to keep in mind the
                 // point of discontinuity of the arctan function
-                complex turnVector;
-                if (complexRef.re() < 0)
-                    turnVector = complex(-(1.0 / divisor), (tanRef / divisor));
+                std::complex<double> turnVector;
+                if (complexRef.real() < 0)
+                    turnVector = std::complex<double>(-(1.0 / divisor), (tanRef / divisor));
                 else
-                    turnVector = complex((1.0 / divisor), -(tanRef / divisor));
+                    turnVector = std::complex<double>((1.0 / divisor), -(tanRef / divisor));
 
                 // this method is alternative ... but it is not so accurate as the above one
                 //double phiRef = userAtan(complexRef.im(), complexRef.re());
@@ -1155,10 +1155,10 @@ void cDftModuleMeasProgram::dataReadDSP()
                 {
                     QString key;
                     key = getConfData()->m_valueChannelList.at(i);
-                    complex newDft = DftActValuesHash.take(key);
+                    std::complex<double> newDft = DftActValuesHash.take(key);
                     newDft *= turnVector;
-                    if (fabs(newDft.im()) < 1e-8)
-                        newDft = complex(newDft.re(), 0.0);
+                    if (fabs(newDft.imag()) < 1e-8)
+                        newDft = std::complex<double>(newDft.real(), 0.0);
                     DftActValuesHash[key] = newDft;
                 }
 
@@ -1179,8 +1179,8 @@ void cDftModuleMeasProgram::dataReadDSP()
                         DftActValuesHash[key] = DftActValuesHash[sl.at(0)] - DftActValuesHash[sl.at(1)];
                     }
 
-                    m_ModuleActualValues.replace(i*2, DftActValuesHash[key].re());
-                    m_ModuleActualValues.replace(i*2+1, DftActValuesHash[key].im());
+                    m_ModuleActualValues.replace(i*2, DftActValuesHash[key].real());
+                    m_ModuleActualValues.replace(i*2+1, DftActValuesHash[key].imag());
                 }
             }
         }
