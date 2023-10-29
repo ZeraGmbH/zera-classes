@@ -4,7 +4,7 @@
 #include <QObject>
 #include <QVariant>
 #include <QList>
-#include <complex.h>
+#include <complex>
 
 class VfModuleActvalue;
 
@@ -45,10 +45,10 @@ private:
 
     bool m_bSignal;
 
-    complex inp1, inp2;
+    std::complex<double> inp1, inp2;
 
-    complex m_fPrimVector;
-    complex m_fSecVector;
+    std::complex<double> m_fPrimVector;
+    std::complex<double> m_fSecVector;
     double m_fDutPrim;
     double m_fDutSec;
     double m_fPrimClampPrim;
