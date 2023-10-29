@@ -4,7 +4,7 @@
 #include <QObject>
 #include <QVariant>
 #include <QList>
-#include <complex.h>
+#include <complex>
 
 class VfModuleActvalue;
 
@@ -38,8 +38,8 @@ private:
 
     bool m_bSignal;
 
-    complex m_fVoltageVector;
-    complex m_fCurrentVector;
+    std::complex<double> m_fVoltageVector;
+    std::complex<double> m_fCurrentVector;
     double m_fNominalBurden;
     double m_fNominalRange;
     QString m_sNominalRangeFactor;
