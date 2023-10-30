@@ -75,6 +75,7 @@ void cRangeModule::setupModule()
                                                         &(pConfData->m_PCBServerSocket),
                                                         pConfData->m_senseChannelList.at(i),
                                                         i+1,
+                                                        pConfData->m_session.m_sPar,
                                                         demo);
         m_rangeMeasChannelList.append(pchn);
         m_ModuleActivistList.append(pchn);
