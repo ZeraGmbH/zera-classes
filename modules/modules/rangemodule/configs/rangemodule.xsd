@@ -34,6 +34,7 @@
 	
     <xs:complexType name="connectivitytype">
         <xs:sequence>
+            <xs:element name="session" type="xs:string" minOccurs="0" maxOccurs="1"/>
             <xs:element name="debuglevel" type="debugtype"/>
             <xs:element name="ethernet">
                 <xs:complexType>

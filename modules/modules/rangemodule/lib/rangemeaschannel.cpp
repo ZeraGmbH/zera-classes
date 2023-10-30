@@ -8,8 +8,9 @@
 namespace RANGEMODULE
 {
 
-cRangeMeasChannel::cRangeMeasChannel(cSocket* rmsocket, cSocket* pcbsocket, QString name, quint8 chnnr, bool demo) :
+cRangeMeasChannel::cRangeMeasChannel(cSocket* rmsocket, cSocket* pcbsocket, QString name, quint8 chnnr, QString session, bool demo) :
     cBaseMeasChannel(rmsocket, pcbsocket, name, chnnr),
+    m_session(session),
     m_demo(demo),
     m_preScaling(1)
 {
@@ -903,28 +904,55 @@ void cRangeMeasChannel::setupDemoOperation()
     // Similar in cPllMeasChannel::setupDemoOperation()
     // Set dummy channel info
     bool isVoltagePhase = false;
+    bool isRefSession = false;
+
+    if(m_session == "ref")
+        isRefSession = true;
+
     switch (m_nChannelNr)
     {
     case 1:
-        m_sAlias = "UL1";
-        isVoltagePhase = true;
+        if(isRefSession)
+            m_sAlias = "REF1";
+        else {
+            m_sAlias = "UL1";
+            isVoltagePhase = true;
+        }
         break;
     case 2:
-        m_sAlias = "UL2";
-        isVoltagePhase = true;
+        if(isRefSession)
+            m_sAlias = "REF2";
+        else {
+            m_sAlias = "UL2";
+            isVoltagePhase = true;
+        }
         break;
     case 3:
-        m_sAlias = "UL3";
-        isVoltagePhase = true;
+        if(isRefSession) {
+            m_sAlias = "REF3";
+        }
+        else {
+            m_sAlias = "UL3";
+            isVoltagePhase = true;
+        }
         break;
     case 4:
-        m_sAlias = "IL1";
+        if(isRefSession)
+            m_sAlias = "REF4";
+        else
+            m_sAlias = "IL1";
         break;
     case 5:
-        m_sAlias = "IL2";
+        if(isRefSession)
+            m_sAlias = "REF5";
+        else
+            m_sAlias = "IL2";
         break;
     case 6:
-        m_sAlias = "IL3";
+        if(isRefSession)
+            m_sAlias = "REF6";
+        else
+            m_sAlias = "IL3";
         break;
     case 7:
         m_sAlias = "UAUX";
@@ -935,7 +963,13 @@ void cRangeMeasChannel::setupDemoOperation()
         break;
     }
     QVector<double> nominalRanges;
-    if(isVoltagePhase) {
+    QVector<QString> nominalRefRanges;
+
+    if(isRefSession) {
+        m_sUnit = "V";
+        nominalRefRanges = QVector<QString>() << "R10" << "R0";
+    }
+    else if(isVoltagePhase) {
         m_sUnit = "V";
         nominalRanges = QVector<double>() << 480.0 << 240.0 << 120.0 << 60.0 << 0.5;
     }
@@ -943,26 +977,45 @@ void cRangeMeasChannel::setupDemoOperation()
         m_sUnit = "A";
         nominalRanges = QVector<double>() << 1000.0 << 100.0 << 10.0 << 1.0 << 0.1 << 0.01 << 0.001;
     }
-    for(auto rangeVal : qAsConst(nominalRanges)) {
-        cRangeInfo rangeInfo;
-        QString unitPrefix;
-        double rangeValDisplay = rangeVal;
-        if(rangeVal < 1) {
-            unitPrefix = "m";
-            rangeValDisplay *= 1000.0;
+    if(isRefSession) {
+        for (const auto &refRangeVal : qAsConst(nominalRefRanges)) {
+            cRangeInfo rangeInfo;
+            rangeInfo.alias = refRangeVal;
+            rangeInfo.alias += m_sUnit;
+            if(m_sActRange.isEmpty()) {
+                m_sActRange = rangeInfo.alias;
+            }
+            rangeInfo.avail = true;
+            rangeInfo.urvalue = 250;
+            rangeInfo.rejection = 1.0;
+            rangeInfo.ovrejection = 1.25;
+            // ?? name
+            rangeInfo.type = 1;
+            m_RangeInfoHash[rangeInfo.alias] = rangeInfo;
         }
-        rangeInfo.alias.setNum(int(rangeValDisplay));
-        rangeInfo.alias += unitPrefix+m_sUnit;
-        if(m_sActRange.isEmpty()) {
-            m_sActRange = rangeInfo.alias;
+    }
+    else {
+        for(auto rangeVal : qAsConst(nominalRanges)) {
+            cRangeInfo rangeInfo;
+            QString unitPrefix;
+            double rangeValDisplay = rangeVal;
+            if(rangeVal < 1) {
+                unitPrefix = "m";
+                rangeValDisplay *= 1000.0;
+            }
+            rangeInfo.alias.setNum(int(rangeValDisplay));
+            rangeInfo.alias += unitPrefix+m_sUnit;
+            if(m_sActRange.isEmpty()) {
+                m_sActRange = rangeInfo.alias;
+            }
+            rangeInfo.avail = true;
+            rangeInfo.urvalue = rangeVal;
+            rangeInfo.rejection = 1.0;
+            rangeInfo.ovrejection = 1.25;
+            // ?? name
+            rangeInfo.type = 1;
+            m_RangeInfoHash[rangeInfo.alias] = rangeInfo;
         }
-        rangeInfo.avail = true;
-        rangeInfo.urvalue = rangeVal;
-        rangeInfo.rejection = 1.0;
-        rangeInfo.ovrejection = 1.25;
-        // ?? name
-        rangeInfo.type = 1;
-        m_RangeInfoHash[rangeInfo.alias] = rangeInfo;
     }
     setRangeListAlias();
 }
