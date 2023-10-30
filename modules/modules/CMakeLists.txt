@@ -1,4 +1,5 @@
 add_subdirectory(adjustmentmodule)
+add_subdirectory(blemodule)
 add_subdirectory(burden1module)
 add_subdirectory(dftmodule)
 add_subdirectory(efficiency1module)
