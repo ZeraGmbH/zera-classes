@@ -1003,10 +1003,25 @@ void cSem1ModuleMeasProgram::activationDone()
 
 void cSem1ModuleMeasProgram::setupDemoOperation()
 {
-    if((getConfData()->m_sRefInput.m_sPar).contains("fo0") && getConfData()->m_nRefInpCount == 3) {
-        m_refInputDictionary.setAlias("fo0", "P");
-        m_refInputDictionary.setAlias("fo1", "Q");
-        m_refInputDictionary.setAlias("fo2", "S");
+    QList<TRefInput> refInputList = getConfData()->m_refInpList;
+    bool isPerPhase = false;
+    bool isMt310s2 = false;
+    for(const auto &input : refInputList ) {
+        if(input.inputName == "fo3")
+            isMt310s2 = true;
+    }
+    for(const auto &input : refInputList ) {
+        if(!input.nameAppend.isEmpty() && !isMt310s2) {
+            m_refInputDictionary.setAlias(input.inputName, "P");
+            isPerPhase = true;
+        }
+    }
+    if(!isMt310s2) {  //com5003 case
+        if(!isPerPhase) {
+            m_refInputDictionary.setAlias("fo0", "P");
+            m_refInputDictionary.setAlias("fo1", "Q");
+            m_refInputDictionary.setAlias("fo2", "S");
+        }
     }
     else {
         switch(getConfData()->m_nRefInpCount)
