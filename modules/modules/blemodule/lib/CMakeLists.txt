@@ -21,6 +21,7 @@ target_link_libraries(blemodule-static
     zera-basemodule
     zera-meas-mode-management
     Zera::zera-math
+    Zera::ble-sensors
     # ask linker to help us finding unresolved symbols
     "-Wl,--no-undefined"
     )

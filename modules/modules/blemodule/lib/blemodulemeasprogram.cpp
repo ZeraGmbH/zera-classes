@@ -40,8 +40,14 @@ cBleModuleConfigData *cBleModuleMeasProgram::getConfData()
 
 void cBleModuleMeasProgram::generateInterface()
 {
-    VfModuleActvalue *pActvalue;
+    QString key;
+    m_pTemperatureCAct = new VfModuleActvalue(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+                                              key = QString("ACT_TemperatureC"),
+                                              QString("Current temperature in degree celsius"),
+                                              QVariant((double)qQNaN()));
 
+    //m_pTemperatureCAct->setSCPIInfo(new cSCPIInfo("CALCULATE", QString("%1:POWER").arg(modNr), "2", m_pTemperatureCAct->getName(), "0", ""));
+    m_pModule->veinModuleActvalueList.append(m_pTemperatureCAct); // and for the modules interface
 }
 
 void cBleModuleMeasProgram::activateDone()
