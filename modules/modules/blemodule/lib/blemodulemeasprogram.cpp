@@ -7,8 +7,10 @@
 namespace BLEMODULE
 {
 
-cBleModuleMeasProgram::cBleModuleMeasProgram(cBleModule* module, std::shared_ptr<cBaseModuleConfiguration> pConfiguration)
-    :cBaseMeasWorkProgram(pConfiguration), m_pModule(module)
+cBleModuleMeasProgram::cBleModuleMeasProgram(cBleModule* module, std::shared_ptr<cBaseModuleConfiguration> pConfiguration) :
+    cBaseMeasWorkProgram(pConfiguration),
+    m_pModule(module),
+    m_efentoSensor(std::make_shared<EfentoEnvironmentSensor>())
 {
     m_activationMachine.addState(&m_activationDoneState);
     m_activationMachine.setInitialState(&m_activationDoneState);
@@ -52,6 +54,17 @@ void cBleModuleMeasProgram::generateInterface()
 
 void cBleModuleMeasProgram::activateDone()
 {
+    m_efentoSensor->setBluetoothAddress(QBluetoothAddress("28:2C:02:41:8C:B1")); // TODO from component/settings
+    m_bluetoothDispatcher.addBleDecoder(m_efentoSensor);
+    connect(m_efentoSensor.get(), &EfentoEnvironmentSensor::sigChangeConnectState,
+            this, &cBleModuleMeasProgram::onChangeConnectState);
+    connect(m_efentoSensor.get(), &EfentoEnvironmentSensor::sigNewValues,
+            this, &cBleModuleMeasProgram::onNewValues);
+    connect(m_efentoSensor.get(), &EfentoEnvironmentSensor::sigNewWarnings,
+            this, &cBleModuleMeasProgram::onNewWarnings);
+    connect(m_efentoSensor.get(), &EfentoEnvironmentSensor::sigNewErrors,
+            this, &cBleModuleMeasProgram::onNewErrors);
+    m_bluetoothDispatcher.start();
     m_bActive = true;
     emit activated();
 }
@@ -59,6 +72,26 @@ void cBleModuleMeasProgram::activateDone()
 void cBleModuleMeasProgram::deactivateMeasDone()
 {
     emit deactivated();
+}
+
+void cBleModuleMeasProgram::onChangeConnectState()
+{
+
+}
+
+void cBleModuleMeasProgram::onNewValues()
+{
+    m_pTemperatureCAct->setValue(m_efentoSensor->getTemperaturInC());
+}
+
+void cBleModuleMeasProgram::onNewWarnings()
+{
+
+}
+
+void cBleModuleMeasProgram::onNewErrors()
+{
+
 }
 
 }
