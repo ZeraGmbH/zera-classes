@@ -8,6 +8,7 @@
 #include <QState>
 #include <QFinalState>
 
+
 namespace BLEMODULE
 {
 
@@ -23,7 +24,6 @@ public:
     cBleModuleMeasProgram(cBleModule* module, std::shared_ptr<cBaseModuleConfiguration> pConfiguration);
     virtual ~cBleModuleMeasProgram();
     void generateInterface() override; // here we export our interface (entities)
-
 public slots:
     void start() override; // difference between start and stop is that actual values
     void stop() override; // in interface are not updated when stop
@@ -40,9 +40,12 @@ private:
     // statemachine for deactivating
     QFinalState m_deactivateDoneState;
 
+    VfModuleActvalue* m_pTemperatureCAct;
+
 private slots:
     void activateDone();
     void deactivateMeasDone();
+
 };
 
 }

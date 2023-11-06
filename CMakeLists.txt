@@ -29,6 +29,7 @@ find_package(SCPI REQUIRED)
 find_package(serialportasyncblock REQUIRED)
 find_package(ZenuxLegacyComponents REQUIRED)
 find_package(ZenuxServices REQUIRED)
+find_package(BlePlayground REQUIRED)
 
 find_program (JSONSCHEMA NAMES jsonschema REQUIRED)
 # Note 1: In OE we do not (yet) have jsonlint-php so it must be optional
