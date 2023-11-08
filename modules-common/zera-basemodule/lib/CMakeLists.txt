@@ -17,7 +17,7 @@ target_link_libraries(zera-basemodule
     module-qt-plugin-interface
     vf-moduleinterface
     Zera::zera-xmlconfig
-    service-interfaces
+    Zera::service-interfaces
     # ask linker to help us finding unresolved symbols
     "-Wl,--no-undefined"
     )

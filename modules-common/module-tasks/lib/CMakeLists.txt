@@ -17,7 +17,7 @@ add_library(module-tasks SHARED
 target_link_libraries(module-tasks
     PUBLIC
     Zera::zera-tasks-base
-    service-interfaces
+    Zera::service-interfaces
     )
 
 target_include_directories(module-tasks

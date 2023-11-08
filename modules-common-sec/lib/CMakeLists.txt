@@ -14,8 +14,8 @@ add_library(modules-common-sec SHARED
 target_link_libraries(modules-common-sec
     PUBLIC
     Zera::zera-tasks-base
+    Zera::service-interfaces
     module-tasks
-    service-interfaces
     # ask linker to help us finding unresolved symbols
     "-Wl,--no-undefined"
     )
