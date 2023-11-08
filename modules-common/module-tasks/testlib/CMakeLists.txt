@@ -18,7 +18,7 @@ target_link_libraries(module-tasks-testlib
     Qt5::Network
     Qt5::Test
     module-tasks
-    service-interfaces
+    Zera::service-interfaces
     Zera::zera-tasks-base
     Zera::zera-timers-testlib
     Zera::tasks-base-testlib

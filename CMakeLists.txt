@@ -28,6 +28,7 @@ find_package(zera-json-params REQUIRED)
 find_package(SCPI REQUIRED)
 find_package(serialportasyncblock REQUIRED)
 find_package(ZenuxLegacyComponents REQUIRED)
+find_package(ZenuxServices REQUIRED)
 
 find_program (JSONSCHEMA NAMES jsonschema REQUIRED)
 # Note 1: In OE we do not (yet) have jsonlint-php so it must be optional
@@ -127,14 +128,14 @@ function(SETUP_QTESTS)
             )
         target_link_libraries(${_testname}
             PUBLIC
+            module-tasks-testlib
+            zera-meas-mode-management-testlib
             Qt5::Test
+            Zera::VfStorageHash
             Zera::tasks-base-testlib
             Zera::zera-timers-testlib
             Zera::zera-i2c-devices-testlib
-            service-interfaces-testlib
-            module-tasks-testlib
-            zera-meas-mode-management-testlib
-            Zera::VfStorageHash
+            Zera::service-interfaces-testlib
             )
     endforeach()
 endfunction()
