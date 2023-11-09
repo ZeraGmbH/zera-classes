@@ -33,6 +33,7 @@ private slots:
     void onNewValues();
     void onNewWarnings();
     void onNewErrors();
+    void onMacAddressChanged(QVariant macAddress);
 private:
     cBleModuleConfigData* getConfData();
 
