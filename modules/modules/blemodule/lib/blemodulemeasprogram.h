@@ -4,6 +4,7 @@
 #include "blemoduleconfigdata.h"
 #include "basemeasworkprogram.h"
 #include "vfmoduleactvalue.h"
+#include "vfmoduleparameter.h"
 #include <bledeviceinfodispatcher.h>
 #include <efentoenvironmentsensor.h>
 #include <QStateMachine>
@@ -46,6 +47,12 @@ private:
     BleDeviceInfoDispatcher m_bluetoothDispatcher;
     std::shared_ptr<EfentoEnvironmentSensor> m_efentoSensor;
     VfModuleActvalue* m_pTemperatureCAct;
+    VfModuleActvalue* m_pTemperatureFAct;
+    VfModuleActvalue* m_pHumidityAct;
+    VfModuleActvalue* m_pAirPressureAct;
+    VfModuleActvalue* m_pErrorFlagsAct;
+    VfModuleActvalue* m_pWarningFlagsAct;
+    VfModuleParameter* m_pMacAddress;
 };
 
 }
