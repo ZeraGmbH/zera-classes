@@ -6,6 +6,7 @@
 #include "vfmoduleactvalue.h"
 #include "vfmoduleparameter.h"
 #include <bledeviceinfodispatcher.h>
+#include <bledevicedisoverer.h>
 #include <efentoenvironmentsensor.h>
 #include <QStateMachine>
 #include <QState>
@@ -36,6 +37,7 @@ private slots:
     void onMacAddressChanged(QVariant macAddress);
 private:
     cBleModuleConfigData* getConfData();
+    void makeValueInvalid();
 
     cBleModule* m_pModule;
     QList<VfModuleActvalue*> m_veinActValueList; // the list of actual values we work on
@@ -45,8 +47,10 @@ private:
     // statemachine for deactivating
     QFinalState m_deactivateDoneState;
 
-    BleDeviceInfoDispatcher m_bluetoothDispatcher;
-    std::shared_ptr<EfentoEnvironmentSensor> m_efentoSensor;
+    BleDeviceDisoverer m_bleDiscoverer;
+    BleDeviceInfoDispatcher m_bleDispatcher;
+    BleDispatcherId m_bleDispatcherId;
+
     VfModuleActvalue* m_pTemperatureCAct;
     VfModuleActvalue* m_pTemperatureFAct;
     VfModuleActvalue* m_pHumidityAct;
