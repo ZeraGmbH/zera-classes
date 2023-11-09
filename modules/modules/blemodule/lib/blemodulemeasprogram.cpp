@@ -1,6 +1,7 @@
 #include "blemodulemeasprogram.h"
 #include "blemodule.h"
 #include "blemoduleconfiguration.h"
+#include <regexvalidator.h>
 #include <errormessages.h>
 #include <reply.h>
 
@@ -90,6 +91,8 @@ void cBleModuleMeasProgram::generateInterface()
                                           key = QString("PAR_MacAddress"),
                                           QString("MAC address of environment sensor"),
                                           QVariant(""));
+    m_pMacAddress->setValidator(new cRegExValidator("^([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})$|^$"));
+    m_pModule->veinModuleParameterHash[key] = m_pMacAddress;
 }
 
 void cBleModuleMeasProgram::activateDone()
@@ -104,6 +107,8 @@ void cBleModuleMeasProgram::activateDone()
             this, &cBleModuleMeasProgram::onNewWarnings);
     connect(m_efentoSensor.get(), &EfentoEnvironmentSensor::sigNewErrors,
             this, &cBleModuleMeasProgram::onNewErrors);
+    connect(m_pMacAddress, &VfModuleComponent::sigValueChanged,
+            this, &cBleModuleMeasProgram::onMacAddressChanged);
     m_bluetoothDispatcher.start();
     m_bActive = true;
     emit activated();
@@ -137,6 +142,11 @@ void cBleModuleMeasProgram::onNewWarnings()
 void cBleModuleMeasProgram::onNewErrors()
 {
 
+}
+
+void cBleModuleMeasProgram::onMacAddressChanged(QVariant macAddress)
+{
+    qInfo("New Mac address: %s", qPrintable(macAddress.toString()));
 }
 
 }
