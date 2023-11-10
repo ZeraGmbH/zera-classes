@@ -155,6 +155,7 @@ void cBleModuleMeasProgram::onNewErrors()
 void cBleModuleMeasProgram::onMacAddressChanged(QVariant macAddress)
 {
     makeValueInvalid();
+    m_bleDispatcher.removeBleDecoder(m_bleDispatcherId);
     if(!macAddress.toString().isEmpty()) {
         std::shared_ptr<EfentoEnvironmentSensor> sensor = std::make_shared<EfentoEnvironmentSensor>();
         sensor->setBluetoothAddress(QBluetoothAddress(macAddress.toString()));
@@ -168,8 +169,6 @@ void cBleModuleMeasProgram::onMacAddressChanged(QVariant macAddress)
                 this, &cBleModuleMeasProgram::onNewErrors);
         m_bleDispatcherId = m_bleDispatcher.addBleDecoder(sensor);
     }
-    else
-        m_bleDispatcher.removeBleDecoder(m_bleDispatcherId);
 }
 
 }
