@@ -28,6 +28,7 @@ target_link_libraries(scpimodule-static
     zera-basemodule
     Zera::SCPI
     Zera::zera-timers
+    Zera::zenuxservicecommon
     # ask linker to help us finding unresolved symbols
     "-Wl,--no-undefined"
     )

@@ -1,11 +1,11 @@
-#include <scpi.h>
-
 #include "scpiclient.h"
 #include "interfaceinterface.h"
 #include "scpiinterface.h"
 #include "scpiinfo.h"
 #include "scpimodule.h"
 #include "scpiinterfacedelegate.h"
+#include <scpi.h>
+#include <zscpi_response_definitions.h>
 #include <sysinfo.h>
 
 namespace SCPIMODULE
@@ -57,7 +57,7 @@ void cInterfaceInterface::executeCmd(cSCPIClient *client, int cmdCode, const QSt
             client->receiveAnswer(xml);
         }
         else
-            client->receiveStatus(SCPI::nak);
+            client->receiveStatus(ZSCPI::nak);
         break;
     }
 

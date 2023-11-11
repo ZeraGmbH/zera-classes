@@ -2,6 +2,7 @@
 #include "scpieventsystem.h"
 #include "scpiclient.h"
 #include <scpicommand.h>
+#include <zscpi_response_definitions.h>
 #include <vcmp_componentdata.h>
 
 namespace SCPIMODULE {
@@ -61,7 +62,7 @@ void cSCPIParameterDelegate::executeSCPI(cSCPIClient *client, QString &sInput)
         m_pModule->m_pSCPIEventSystem->sigSendEvent(event);
     }
     else
-        client->receiveStatus(SCPI::nak);
+        client->receiveStatus(ZSCPI::nak);
 }
 
 }

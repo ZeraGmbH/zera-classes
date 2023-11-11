@@ -1,8 +1,8 @@
 #include "scpimeasuredelegate.h"
-#include "scpimeasurecollector.h"
 #include "moduleinterface.h"
 #include "scpimeasure.h"
 #include "scpiclient.h"
+#include <zscpi_response_definitions.h>
 
 namespace SCPIMODULE {
 
@@ -43,7 +43,7 @@ void cSCPIMeasureDelegate::executeSCPI(cSCPIClient *client, QString &sInput)
         client->m_SCPIMeasureDelegateHash[this]->executeClient(client);
     }
     else
-        client->receiveStatus(SCPI::nak);
+        client->receiveStatus(ZSCPI::nak);
 }
 
 void cSCPIMeasureDelegate::executeClient(cSCPIClient *client)
@@ -86,7 +86,7 @@ void cSCPIMeasureDelegate::executeClient(cSCPIClient *client)
         }
     }
     else
-        client->receiveStatus(SCPI::nak);
+        client->receiveStatus(ZSCPI::nak);
 }
 
 void cSCPIMeasureDelegate::addscpimeasureObject(cSCPIMeasure *measureobject)
@@ -100,7 +100,7 @@ void cSCPIMeasureDelegate::receiveDone()
     disconnect(measure,0,this,0);
     m_nPending--;
     if (m_nPending == 0)
-        m_pClient->receiveStatus(SCPI::ack);
+        m_pClient->receiveStatus(ZSCPI::ack);
 }
 
 void cSCPIMeasureDelegate::receiveAnswer(QString s)

@@ -1,14 +1,3 @@
-#include <QCoreApplication>
-#include <QEvent>
-#include <QHash>
-#include <QMultiHash>
-
-#include <scpi.h>
-#include <ve_commandevent.h>
-#include <ve_storagesystem.h>
-#include <vcmp_componentdata.h>
-#include <vcmp_errordata.h>
-
 #include "scpieventsystem.h"
 #include "scpimodule.h"
 #include "scpiclient.h"
@@ -17,7 +6,16 @@
 #include "scpimeasure.h"
 #include "scpiserver.h"
 #include "moduleinterface.h"
-
+#include <scpi.h>
+#include <zscpi_response_definitions.h>
+#include <ve_commandevent.h>
+#include <ve_storagesystem.h>
+#include <vcmp_componentdata.h>
+#include <vcmp_errordata.h>
+#include <QCoreApplication>
+#include <QEvent>
+#include <QHash>
+#include <QMultiHash>
 
 namespace SCPIMODULE
 {
@@ -79,7 +77,7 @@ void cSCPIEventSystem::processCommandEvent(VeinEvent::CommandEvent *commandEvent
                             if (clientinfo->parCmdType() == SCPIMODULE::parcmd)
                             {
                                 cSCPIClient* client = clientinfo->getClient();
-                                client->receiveStatus(SCPI::ack);
+                                client->receiveStatus(ZSCPI::ack);
                             }
                             else
                             {
@@ -148,7 +146,7 @@ void cSCPIEventSystem::processCommandEvent(VeinEvent::CommandEvent *commandEvent
                             emit clientinfoSignal(cName);
                             disconnect(myConn);
                             cSCPIClient* client = clientinfo->getClient();
-                            client->receiveStatus(SCPI::errval);
+                            client->receiveStatus(ZSCPI::errval);
                             break;
                         }
                     }

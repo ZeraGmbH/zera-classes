@@ -1,5 +1,6 @@
 #include "scpipropertydelegate.h"
 #include "scpiclient.h"
+#include <zscpi_response_definitions.h>
 #include <vcmp_componentdata.h>
 #include <QJsonDocument>
 #include <QJsonObject>
@@ -25,7 +26,7 @@ void cSCPIPropertyDelegate::executeSCPI(cSCPIClient *client, QString &sInput)
     if (cmd.isQuery() && ((scpiCmdType & SCPI::isQuery) > 0))// test if we got an allowed query
         client->receiveAnswer(m_sAnswer);
     else
-        client->receiveStatus(SCPI::nak);
+        client->receiveStatus(ZSCPI::nak);
 }
 
 void cSCPIPropertyDelegate::setOutput(cSCPICmdInfo *scpicmdinfo)

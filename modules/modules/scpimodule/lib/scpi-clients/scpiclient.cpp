@@ -1,10 +1,3 @@
-#include <QTcpSocket>
-#include <QJsonDocument>
-#include <QJsonObject>
-
-#include <scpi.h>
-#include <ve_storagesystem.h>
-
 #include "scpimodule.h"
 #include "ieee488-2.h"
 #include "scpiclient.h"
@@ -13,11 +6,14 @@
 #include "scpimoduleconfigdata.h"
 #include "signalconnectiondelegate.h"
 #include "statusbitdescriptor.h"
-#include "scpieventsystem.h"
 #include "scpiserver.h"
 #include "moduleinterface.h"
 #include "scpimeasuredelegate.h"
 #include "scpimeasure.h"
+#include <scpi.h>
+#include <zscpi_response_definitions.h>
+#include <ve_storagesystem.h>
+#include <QJsonDocument>
 
 namespace SCPIMODULE
 {
@@ -187,15 +183,15 @@ void cSCPIClient::receiveStatus(quint8 stat)
 {
     switch (stat)
     {
-    case SCPI::ack:
+    case ZSCPI::ack:
         break;
-    case SCPI::nak:
+    case ZSCPI::nak:
         m_pIEEE4882->AddEventError(CommandError);
         break;
-    case SCPI::errval:
+    case ZSCPI::errval:
         m_pIEEE4882->AddEventError(NumericDataError);
         break;
-    case SCPI::erraut:
+    case ZSCPI::erraut:
         m_pIEEE4882->AddEventError(CommandProtected);
         break;
     default:
