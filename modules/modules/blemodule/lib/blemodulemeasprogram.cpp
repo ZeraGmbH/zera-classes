@@ -21,9 +21,6 @@ cBleModuleMeasProgram::cBleModuleMeasProgram(cBleModule* module, std::shared_ptr
     m_deactivationMachine.setInitialState(&m_deactivateDoneState);
 
     connect(&m_deactivateDoneState, &QState::entered, this, &cBleModuleMeasProgram::deactivateMeasDone);
-
-    connect(&m_bleDiscoverer, &BleDeviceDisoverer::sigDeviceDiscovered,
-            &m_bleDispatcher, &BleDeviceInfoDispatcher::onDeviceDiscovered);
 }
 
 cBleModuleMeasProgram::~cBleModuleMeasProgram()
@@ -101,7 +98,7 @@ void cBleModuleMeasProgram::generateInterface()
 
 void cBleModuleMeasProgram::activateDone()
 {
-    m_bleDiscoverer.start();
+    m_bluetooth.start();
     m_bActive = true;
     emit activated();
 }
@@ -118,7 +115,7 @@ void cBleModuleMeasProgram::onChangeConnectState()
 
 void cBleModuleMeasProgram::onNewValues()
 {
-    BluetoothDeviceInfoDecoderPtr decoder = m_bleDispatcher.findBleDecoder(m_bleDispatcherId);
+    BluetoothDeviceInfoDecoderPtr decoder = m_bluetooth.findBleDecoder(m_bleDispatcherId);
     if(decoder) {
         EfentoEnvironmentSensor* sensor = static_cast<EfentoEnvironmentSensor*>(decoder.get());
         m_pTemperatureCAct->setValue(sensor->getTemperaturInC());
@@ -155,7 +152,7 @@ void cBleModuleMeasProgram::onNewErrors()
 void cBleModuleMeasProgram::onMacAddressChanged(QVariant macAddress)
 {
     makeValueInvalid();
-    m_bleDispatcher.removeBleDecoder(m_bleDispatcherId);
+    m_bluetooth.removeBleDecoder(m_bleDispatcherId);
     if(!macAddress.toString().isEmpty()) {
         std::shared_ptr<EfentoEnvironmentSensor> sensor = std::make_shared<EfentoEnvironmentSensor>();
         sensor->setBluetoothAddress(QBluetoothAddress(macAddress.toString()));
@@ -167,7 +164,7 @@ void cBleModuleMeasProgram::onMacAddressChanged(QVariant macAddress)
                 this, &cBleModuleMeasProgram::onNewWarnings);
         connect(sensor.get(), &EfentoEnvironmentSensor::sigNewErrors,
                 this, &cBleModuleMeasProgram::onNewErrors);
-        m_bleDispatcherId = m_bleDispatcher.addBleDecoder(sensor);
+        m_bleDispatcherId = m_bluetooth.addBleDecoder(sensor);
     }
 }
 

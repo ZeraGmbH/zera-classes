@@ -5,8 +5,7 @@
 #include "basemeasworkprogram.h"
 #include "vfmoduleactvalue.h"
 #include "vfmoduleparameter.h"
-#include <bledeviceinfodispatcher.h>
-#include <bledevicedisoverer.h>
+#include <bluetoothconveniencefacade.h>
 #include <efentoenvironmentsensor.h>
 #include <QStateMachine>
 #include <QState>
@@ -47,8 +46,7 @@ private:
     // statemachine for deactivating
     QFinalState m_deactivateDoneState;
 
-    BleDeviceDisoverer m_bleDiscoverer;
-    BleDeviceInfoDispatcher m_bleDispatcher;
+    BluetoothConvenienceFacade m_bluetooth;
     BleDispatcherId m_bleDispatcherId;
 
     VfModuleActvalue* m_pTemperatureCAct;
