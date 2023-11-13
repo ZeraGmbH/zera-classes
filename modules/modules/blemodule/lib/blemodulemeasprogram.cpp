@@ -15,12 +15,10 @@ cBleModuleMeasProgram::cBleModuleMeasProgram(cBleModule* module, std::shared_ptr
 {
     m_activationMachine.addState(&m_activationDoneState);
     m_activationMachine.setInitialState(&m_activationDoneState);
-
     connect(&m_activationDoneState, &QState::entered, this, &cBleModuleMeasProgram::activateDone);
 
     m_deactivationMachine.addState(&m_deactivateDoneState);
     m_deactivationMachine.setInitialState(&m_deactivateDoneState);
-
     connect(&m_deactivateDoneState, &QState::entered, this, &cBleModuleMeasProgram::deactivateMeasDone);
 }
 
