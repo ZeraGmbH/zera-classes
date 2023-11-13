@@ -33,10 +33,12 @@ private slots:
     void onNewValues();
     void onNewWarnings();
     void onNewErrors();
-    void onMacAddressChanged(QVariant macAddress);
+    void onBluetoothStatusChanged(bool on);
+    void onVeinBluetoothOnChanged(QVariant on);
+    void onVeinMacAddressChanged(QVariant macAddress);
 private:
     cBleModuleConfigData* getConfData();
-    void makeValueInvalid();
+    void makeValuesInvalid();
 
     cBleModule* m_pModule;
     QList<VfModuleActvalue*> m_veinActValueList; // the list of actual values we work on
@@ -55,6 +57,7 @@ private:
     VfModuleActvalue* m_pAirPressureAct;
     VfModuleActvalue* m_pErrorFlagsAct;
     VfModuleActvalue* m_pWarningFlagsAct;
+    VfModuleParameter* m_pBluetoothOnOff;
     VfModuleParameter* m_pMacAddress;
 };
 
