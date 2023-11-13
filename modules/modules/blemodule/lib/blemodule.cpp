@@ -39,30 +39,23 @@ cBleModule::cBleModule(quint8 modnr, int entityId, VeinEvent::StorageSystem* sto
     connect(&m_DeactivationExecState, &QState::entered, this, &cBleModule::deactivationExec);
     connect(&m_DeactivationDoneState, &QState::entered, this, &cBleModule::deactivationDone);
     connect(&m_DeactivationFinishedState, &QState::entered, this, &cBleModule::deactivationFinished);
-
 }
-
 
 QByteArray cBleModule::getConfiguration() const
 {
     return m_pConfiguration->exportConfiguration();
 }
 
-
-
 void cBleModule::doConfiguration(QByteArray xmlConfigData)
 {
     m_pConfiguration->setConfiguration(xmlConfigData);
 }
 
-
 void cBleModule::setupModule()
 {
     emit addEventSystem(m_pModuleValidator);
-
     cBaseMeasModule::setupModule();
 
-    // we need some program that does the measuring on dsp
     m_pMeasProgram = new cBleModuleMeasProgram(this, m_pConfiguration);
     m_ModuleActivistList.append(m_pMeasProgram);
     connect(m_pMeasProgram, &cBleModuleMeasProgram::activated, this, &cBleModule::activationContinue);
@@ -70,23 +63,19 @@ void cBleModule::setupModule()
     connect(m_pMeasProgram, &cBleModuleMeasProgram::errMsg, m_pModuleErrorComponent, &VfModuleErrorComponent::setValue);
 
     emit addEventSystem(m_pMeasProgram->getEventSystem());
-
     for (int i = 0; i < m_ModuleActivistList.count(); i++)
         m_ModuleActivistList.at(i)->generateInterface();
 }
-
 
 void cBleModule::startMeas()
 {
     m_pMeasProgram->start();
 }
 
-
 void cBleModule::stopMeas()
 {
     m_pMeasProgram->stop();
 }
-
 
 void cBleModule::activationStart()
 {
@@ -94,12 +83,10 @@ void cBleModule::activationStart()
     emit activationContinue();
 }
 
-
 void cBleModule::activationExec()
 {
     m_ModuleActivistList.at(m_nActivationIt)->activate();
 }
-
 
 void cBleModule::activationDone()
 {
@@ -111,7 +98,6 @@ void cBleModule::activationDone()
         emit activationContinue();
 }
 
-
 void cBleModule::activationFinished()
 {
     m_pModuleValidator->setParameterHash(veinModuleParameterHash);
@@ -122,19 +108,16 @@ void cBleModule::activationFinished()
     emit activationReady();
 }
 
-
 void cBleModule::deactivationStart()
 {
     m_nActivationIt = 0; // we start with the first
     emit deactivationContinue();
 }
 
-
 void cBleModule::deactivationExec()
 {
     m_ModuleActivistList.at(m_nActivationIt)->deactivate();
 }
-
 
 void cBleModule::deactivationDone()
 {
@@ -145,7 +128,6 @@ void cBleModule::deactivationDone()
     else
         emit deactivationContinue();
 }
-
 
 void cBleModule::deactivationFinished()
 {
