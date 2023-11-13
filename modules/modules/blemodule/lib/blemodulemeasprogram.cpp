@@ -1,6 +1,7 @@
 #include "blemodulemeasprogram.h"
 #include "blemodule.h"
 #include "blemoduleconfiguration.h"
+#include <boolvalidator.h>
 #include <regexvalidator.h>
 #include <errormessages.h>
 #include <reply.h>
@@ -86,6 +87,15 @@ void cBleModuleMeasProgram::generateInterface()
                                             QString("Current error flags"),
                                             QVariant((quint32)qQNaN()));
 
+    m_pBluetoothOnOff = new VfModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+                                key = QString("PAR_BluetoothOn"),
+                                QString("Bluetooth on"),
+                                QVariant(int(m_bluetooth.isOn()))); // bool validator ruins true/false
+    m_pBluetoothOnOff->setValidator(new cBoolValidator);
+    m_pModule->veinModuleParameterHash[key] = m_pBluetoothOnOff;
+    connect(m_pBluetoothOnOff, &VfModuleComponent::sigValueChanged,
+            this, &cBleModuleMeasProgram::onVeinBluetoothOnChanged);
+
     m_pMacAddress = new VfModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                           key = QString("PAR_MacAddress"),
                                           QString("MAC address of environment sensor"),
@@ -93,11 +103,13 @@ void cBleModuleMeasProgram::generateInterface()
     m_pMacAddress->setValidator(new cRegExValidator("^([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})$|^$"));
     m_pModule->veinModuleParameterHash[key] = m_pMacAddress;
     connect(m_pMacAddress, &VfModuleComponent::sigValueChanged,
-            this, &cBleModuleMeasProgram::onMacAddressChanged);
+            this, &cBleModuleMeasProgram::onVeinMacAddressChanged);
 }
 
 void cBleModuleMeasProgram::activateDone()
 {
+    connect(&m_bluetooth, &BluetoothConvenienceFacade::sigOnOff,
+            this, &cBleModuleMeasProgram::onBluetoothStatusChanged);
     m_bluetooth.start();
     m_bActive = true;
     emit activated();
@@ -126,10 +138,10 @@ void cBleModuleMeasProgram::onNewValues()
         m_pErrorFlagsAct->setValue(sensor->getErrorFlags());
     }
     else
-        makeValueInvalid();
+        makeValuesInvalid();
 }
 
-void cBleModuleMeasProgram::makeValueInvalid()
+void cBleModuleMeasProgram::makeValuesInvalid()
 {
     m_pTemperatureCAct->setValue(qQNaN());
     m_pTemperatureFAct->setValue(qQNaN());
@@ -149,9 +161,24 @@ void cBleModuleMeasProgram::onNewErrors()
 
 }
 
-void cBleModuleMeasProgram::onMacAddressChanged(QVariant macAddress)
+void cBleModuleMeasProgram::onBluetoothStatusChanged(bool on)
 {
-    makeValueInvalid();
+    if(!on)
+        makeValuesInvalid();
+    m_pBluetoothOnOff->setValue(int(on));
+}
+
+void cBleModuleMeasProgram::onVeinBluetoothOnChanged(QVariant on)
+{
+    if(on.toBool())
+        m_bluetooth.start();
+    else
+        m_bluetooth.stop();
+}
+
+void cBleModuleMeasProgram::onVeinMacAddressChanged(QVariant macAddress)
+{
+    makeValuesInvalid();
     m_bluetooth.removeBleDecoder(m_bleDispatcherId);
     if(!macAddress.toString().isEmpty()) {
         std::shared_ptr<EfentoEnvironmentSensor> sensor = std::make_shared<EfentoEnvironmentSensor>();
