@@ -2,6 +2,7 @@
 #define MODULELOADER_H
 
 #include "licensesysteminterface.h"
+#include "mockmt310s2facade.h"
 #include <virtualmodule.h>
 #include <QVariant>
 #include <QHash>
@@ -79,6 +80,8 @@ private:
 
     bool m_moduleStartLock;
     QElapsedTimer m_timerAllModulesLoaded;
+
+    std::unique_ptr<MockMt310s2Facade> m_mockMt310s2Facade;
 };
 }
 
