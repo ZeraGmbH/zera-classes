@@ -29,7 +29,11 @@ cPower1ModuleMeasProgram::cPower1ModuleMeasProgram(cPower1Module* module, std::s
 {
     m_pDSPInterFace = new Zera::cDSPInterface();
 
-    m_IdentifyState.addTransition(this, &cModuleActivist::activationContinue, &m_readResourceTypesState);
+    if(m_pModule->m_demo) //skip SENSE resource & DSP server. Mock facade does't have SENSE resource & mock DSP server yet !
+        m_IdentifyState.addTransition(this, &cModuleActivist::activationContinue, &m_readResourceSourceState);
+    else
+        m_IdentifyState.addTransition(this, &cModuleActivist::activationContinue, &m_readResourceTypesState);
+
     m_readResourceTypesState.addTransition(this, &cModuleActivist::activationContinue, &m_readResourceSenseState);
 
     m_readResourceSenseState.addTransition(this, &cModuleActivist::activationContinue, &m_readResourceSenseInfosState);
@@ -51,7 +55,12 @@ cPower1ModuleMeasProgram::cPower1ModuleMeasProgram(cPower1Module* module, std::s
     m_claimResourceSourceDoneState.addTransition(this, &cModuleActivist::activationLoop, &m_claimResourceSourceState);
     m_pcbserverConnectState4measChannels.addTransition(this, &cModuleActivist::activationContinue, &m_pcbserverConnectState4freqChannels);
     m_pcbserverConnectState4freqChannels.addTransition(this, &cModuleActivist::activationContinue, &m_readSampleRateState);
-    m_readSampleRateState.addTransition(this, &cModuleActivist::activationContinue, &m_readSenseChannelInformationState);
+
+    if(m_pModule->m_demo) //skip SENSE resource & DSP server. Mock facade does't have SENSE resource & mock DSP server yet !
+        m_readSampleRateState.addTransition(this, &cModuleActivist::activationContinue, &m_readSourceChannelInformationState);
+    else
+        m_readSampleRateState.addTransition(this, &cModuleActivist::activationContinue, &m_readSenseChannelInformationState);
+
     m_readSenseChannelInformationState.addTransition(this, &cModuleActivist::activationContinue, &m_readSenseChannelAliasState);
     m_readSenseChannelAliasState.addTransition(this, &cModuleActivist::activationContinue, &m_readSenseChannelUnitState);
     m_readSenseChannelUnitState.addTransition(this, &cModuleActivist::activationContinue, &m_readSenseDspChannelState);
@@ -60,12 +69,21 @@ cPower1ModuleMeasProgram::cPower1ModuleMeasProgram(cPower1Module* module, std::s
     m_readSenseChannelInformationDoneState.addTransition(this, &cModuleActivist::activationLoop, &m_readSenseChannelAliasState);
 
     m_readSourceChannelInformationState.addTransition(this, &cModuleActivist::activationContinue, &m_readSourceChannelAliasState);
-    m_readSourceChannelInformationState.addTransition(this, &cModuleActivist::activationSkip, &m_dspserverConnectState);
+
+    if(m_pModule->m_demo) //skip SENSE resource & DSP server. Mock facade does't have SENSE resource & mock DSP server yet !
+        m_readSourceChannelInformationState.addTransition(this, &cModuleActivist::activationSkip, &m_loadDSPDoneState);
+    else
+        m_readSourceChannelInformationState.addTransition(this, &cModuleActivist::activationSkip, &m_dspserverConnectState);
+
     m_readSourceChannelAliasState.addTransition(this, &cModuleActivist::activationContinue, &m_readSourceDspChannelState);
     m_readSourceDspChannelState.addTransition(this, &cModuleActivist::activationContinue, &m_readSourceFormFactorState);
     m_readSourceFormFactorState.addTransition(this, &cModuleActivist::activationContinue, &m_readSourceChannelInformationDoneState);
-    m_readSourceChannelInformationDoneState.addTransition(this, &cModuleActivist::activationContinue, &m_setSenseChannelRangeNotifiersState);
     m_readSourceChannelInformationDoneState.addTransition(this, &cModuleActivist::activationLoop, &m_readSourceChannelAliasState);
+
+    if(m_pModule->m_demo) //skip SENSE resource & DSP server. Mock facade does't have SENSE resource & mock DSP server yet !
+        m_readSourceChannelInformationDoneState.addTransition(this, &cModuleActivist::activationContinue, &m_loadDSPDoneState);
+    else
+        m_readSourceChannelInformationDoneState.addTransition(this, &cModuleActivist::activationContinue, &m_setSenseChannelRangeNotifiersState);
 
     m_setSenseChannelRangeNotifiersState.addTransition(this, &cModuleActivist::activationContinue, &m_setSenseChannelRangeNotifierState);
     m_setSenseChannelRangeNotifierState.addTransition(this, &cModuleActivist::activationContinue, &m_setSenseChannelRangeNotifierDoneState);
@@ -123,10 +141,7 @@ cPower1ModuleMeasProgram::cPower1ModuleMeasProgram(cPower1Module* module, std::s
     m_activationMachine.addState(&m_activateDSPState);
     m_activationMachine.addState(&m_loadDSPDoneState);
 
-    if(m_pModule->m_demo)
-        m_activationMachine.setInitialState(&m_loadDSPDoneState);
-    else
-        m_activationMachine.setInitialState(&m_resourceManagerConnectState);
+    m_activationMachine.setInitialState(&m_resourceManagerConnectState);
 
     connect(&m_resourceManagerConnectState, &QAbstractState::entered, this, &cPower1ModuleMeasProgram::resourceManagerConnect);
     connect(&m_IdentifyState, &QAbstractState::entered, this, &cPower1ModuleMeasProgram::sendRMIdent);
@@ -203,7 +218,7 @@ cPower1ModuleMeasProgram::cPower1ModuleMeasProgram(cPower1Module* module, std::s
     m_deactivationMachine.addState(&m_unloadDSPDoneState);
 
     if(m_pModule->m_demo)
-        m_deactivationMachine.setInitialState(&m_unloadDSPDoneState);
+        m_deactivationMachine.setInitialState(&m_freeFreqOutputsState);
     else
         m_deactivationMachine.setInitialState(&m_deactivateDSPState);
 
