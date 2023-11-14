@@ -152,6 +152,11 @@ void ModuleManager::setEventHandler(ModuleEventHandler *t_eventHandler)
 void ModuleManager::setDemo(bool demo)
 {
     m_demo = demo;
+    if(m_demo) {
+        ModulemanagerConfig *mmConfig = ModulemanagerConfig::getInstance();
+        if(mmConfig->getDeviceName() == "mt310s2")
+            m_mockMt310s2Facade = std::make_unique<MockMt310s2Facade>(MODMAN_SYSROOT);
+    }
 }
 
 void ModuleManager::startModule(const QString & uniqueModuleName, const QString & t_xmlConfigPath, const QByteArray &t_xmlConfigData, int moduleEntityId)
