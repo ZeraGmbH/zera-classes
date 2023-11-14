@@ -110,6 +110,10 @@ void test_modman_session::startSession()
     QString actDevIface = storSystem.getStoredValue(9999, "ACT_DEV_IFACE").toString();
     if(actDevIface.isEmpty()) // we have to make module resilient to this situation
         qFatal("ACT_DEV_IFACE empty - local modulemanager running???");
+
+    evHandler.clearSystems();
+    modMan.destroyModules();
+    ModuleManagerTest::feedEventLoop();
 }
 
 void test_modman_session::changeSession()
@@ -159,4 +163,8 @@ void test_modman_session::changeSession()
     ModuleManagerTest::feedEventLoop();
     currentSession = storSystem.getStoredValue(0, "Session").toString();
     QCOMPARE(currentSession, "mt310s2-emob-session.json");
+
+    evHandler.clearSystems();
+    modMan.destroyModules();
+    ModuleManagerTest::feedEventLoop();
 }
