@@ -100,6 +100,11 @@
         "id": 1300
       },
       {
+        "name" : "blemodule",
+        "configFile" : "blemodule.xml",
+        "id": 1400
+      },
+      {
         "name" : "scpimodule",
         "configFile" : "mt310s2-scpimodule.xml",
         "id": 9999
