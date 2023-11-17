@@ -1,5 +1,6 @@
 <?xml version="1.0"?>
 <blemodconfpar>
-    <configuration>
-    </configuration>
+    <parameter>
+        <bluetoothon>0</bluetoothon>
+    </parameter>
 </blemodconfpar>

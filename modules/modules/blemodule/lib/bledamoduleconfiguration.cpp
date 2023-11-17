@@ -34,6 +34,7 @@ void cBleModuleConfiguration::setConfiguration(QByteArray xmlString)
 
     // so now we can set up
     // initializing hash table for xml configuration
+    m_ConfigXMLMap["blemodconfpar:parameter:bluetoothon"] = setBluetoothOn;
 
     if (m_pXMLReader->loadSchema(defaultXSDFile))
         m_pXMLReader->loadXMLFromString(QString::fromUtf8(xmlString.data(), xmlString.size()));
@@ -44,6 +45,9 @@ void cBleModuleConfiguration::setConfiguration(QByteArray xmlString)
 
 QByteArray cBleModuleConfiguration::exportConfiguration()
 {
+    boolParameter *bPar = &m_pBleModulConfigData->m_bluetoothOn;
+    m_pXMLReader->setValue(bPar->m_sKey, QString("%1").arg(bPar->m_nActive));
+
     return m_pXMLReader->getXMLConfig().toUtf8();
 }
 
@@ -61,6 +65,10 @@ void cBleModuleConfiguration::configXMLInfo(QString key)
         int cmd = m_ConfigXMLMap[key];
         switch (cmd)
         {
+        case setBluetoothOn:
+            m_pBleModulConfigData->m_bluetoothOn.m_sKey = key;
+            m_pBleModulConfigData->m_bluetoothOn.m_nActive = (m_pXMLReader->getValue(key).toInt(&ok) == 1);
+            break;
         }
         m_bConfigError |= !ok;
     }

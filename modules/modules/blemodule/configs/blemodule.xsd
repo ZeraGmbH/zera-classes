@@ -1,11 +1,25 @@
 <?xml version="1.0" encoding="ISO-8859-1" ?>
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+    <xs:simpleType name="yesnotype">
+        <xs:restriction base="xs:integer">
+            <xs:maxInclusive value='1'/>
+            <xs:minInclusive value='0'/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:complexType name="parametertype">
+        <xs:sequence>
+            <xs:element name="bluetoothon" type="yesnotype" minOccurs="1" maxOccurs="1"/>
+        </xs:sequence>
+    </xs:complexType>
+
     <xs:element name="blemodconfpar">
         <xs:complexType>
             <xs:sequence>
-                <xs:element name="configuration">
-                </xs:element>
+                <xs:element name="parameter" type="parametertype"/>
             </xs:sequence>
         </xs:complexType>
     </xs:element>
+
 </xs:schema>

@@ -88,7 +88,7 @@ void cBleModuleMeasProgram::generateInterface()
     m_pBluetoothOnOff = new VfModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                 key = QString("PAR_BluetoothOn"),
                                 QString("Bluetooth on"),
-                                QVariant(int(m_bluetooth.isOn()))); // bool validator ruins true/false
+                                QVariant(getConfData()->m_bluetoothOn.m_nActive)); // bool validator ruins true/false
     m_pBluetoothOnOff->setValidator(new cBoolValidator);
     m_pModule->veinModuleParameterHash[key] = m_pBluetoothOnOff;
     connect(m_pBluetoothOnOff, &VfModuleComponent::sigValueChanged,
@@ -108,7 +108,10 @@ void cBleModuleMeasProgram::activateDone()
 {
     connect(&m_bluetooth, &BluetoothConvenienceFacade::sigOnOff,
             this, &cBleModuleMeasProgram::onBluetoothStatusChanged);
-    m_bluetooth.start();
+    if(m_pBluetoothOnOff->getValue().toBool())
+        m_bluetooth.start();
+    else
+        m_bluetooth.stop();
     m_bActive = true;
     emit activated();
 }
@@ -172,6 +175,8 @@ void cBleModuleMeasProgram::onVeinBluetoothOnChanged(QVariant on)
         m_bluetooth.start();
     else
         m_bluetooth.stop();
+    getConfData()->m_bluetoothOn.m_nActive = on.toInt();
+    emit m_pModule->parameterChanged();
 }
 
 void cBleModuleMeasProgram::onVeinMacAddressChanged(QVariant macAddress)
