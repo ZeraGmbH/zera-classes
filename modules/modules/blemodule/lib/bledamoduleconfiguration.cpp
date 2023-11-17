@@ -35,6 +35,7 @@ void cBleModuleConfiguration::setConfiguration(QByteArray xmlString)
     // so now we can set up
     // initializing hash table for xml configuration
     m_ConfigXMLMap["blemodconfpar:parameter:bluetoothon"] = setBluetoothOn;
+    m_ConfigXMLMap["blemodconfpar:parameter:macaddress"] = setMacAddress;
 
     if (m_pXMLReader->loadSchema(defaultXSDFile))
         m_pXMLReader->loadXMLFromString(QString::fromUtf8(xmlString.data(), xmlString.size()));
@@ -47,6 +48,8 @@ QByteArray cBleModuleConfiguration::exportConfiguration()
 {
     boolParameter *bPar = &m_pBleModulConfigData->m_bluetoothOn;
     m_pXMLReader->setValue(bPar->m_sKey, QString("%1").arg(bPar->m_nActive));
+    stringParameter *sPar = &m_pBleModulConfigData->m_macAddress;
+    m_pXMLReader->setValue(sPar->m_sKey, sPar->m_sPar);
 
     return m_pXMLReader->getXMLConfig().toUtf8();
 }
@@ -68,6 +71,10 @@ void cBleModuleConfiguration::configXMLInfo(QString key)
         case setBluetoothOn:
             m_pBleModulConfigData->m_bluetoothOn.m_sKey = key;
             m_pBleModulConfigData->m_bluetoothOn.m_nActive = (m_pXMLReader->getValue(key).toInt(&ok) == 1);
+            break;
+        case setMacAddress:
+            m_pBleModulConfigData->m_macAddress.m_sKey = key;
+            m_pBleModulConfigData->m_macAddress.m_sPar = m_pXMLReader->getValue(key);
             break;
         }
         m_bConfigError |= !ok;

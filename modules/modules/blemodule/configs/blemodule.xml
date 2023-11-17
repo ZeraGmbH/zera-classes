@@ -2,5 +2,6 @@
 <blemodconfpar>
     <parameter>
         <bluetoothon>0</bluetoothon>
+        <macaddress>00:00:00:00:00:00</macaddress>
     </parameter>
 </blemodconfpar>
