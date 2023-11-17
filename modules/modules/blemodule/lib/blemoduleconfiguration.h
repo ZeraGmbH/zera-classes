@@ -9,7 +9,8 @@ namespace BLEMODULE
 
 enum moduleconfigstate
 {
-    setBluetoothOn
+    setBluetoothOn,
+    setMacAddress
 };
 
 // moduleconfiguration holds configuration data as well as parameter

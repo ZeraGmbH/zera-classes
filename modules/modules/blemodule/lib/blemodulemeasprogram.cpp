@@ -97,7 +97,7 @@ void cBleModuleMeasProgram::generateInterface()
     m_pMacAddress = new VfModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                           key = QString("PAR_MacAddress"),
                                           QString("MAC address of environment sensor"),
-                                          QVariant(""));
+                                          QVariant(getConfData()->m_macAddress.m_sPar));
     m_pMacAddress->setValidator(new cRegExValidator("^([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})$|^$"));
     m_pModule->veinModuleParameterHash[key] = m_pMacAddress;
     connect(m_pMacAddress, &VfModuleComponent::sigValueChanged,
@@ -195,6 +195,8 @@ void cBleModuleMeasProgram::onVeinMacAddressChanged(QVariant macAddress)
         connect(sensor.get(), &EfentoEnvironmentSensor::sigNewErrors,
                 this, &cBleModuleMeasProgram::onNewErrors);
         m_bleDispatcherId = m_bluetooth.addBleDecoder(sensor);
+        getConfData()->m_macAddress.m_sPar = macAddress.toString();
+        emit m_pModule->parameterChanged();
     }
 }
 

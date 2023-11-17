@@ -8,9 +8,16 @@
         </xs:restriction>
     </xs:simpleType>
 
+    <xs:simpleType name="macadresstype">
+        <xs:restriction base="xs:string">
+            <xs:pattern value = '([0-9A-Fa-f]{2}:){5}([0-9A-Fa-f]{2})'/>
+        </xs:restriction>
+    </xs:simpleType>
+
     <xs:complexType name="parametertype">
         <xs:sequence>
             <xs:element name="bluetoothon" type="yesnotype" minOccurs="1" maxOccurs="1"/>
+            <xs:element name="macaddress" type="macadresstype" minOccurs="1" maxOccurs="1"/>
         </xs:sequence>
     </xs:complexType>
 
