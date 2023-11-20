@@ -10,7 +10,7 @@
 
     <xs:simpleType name="macadresstype">
         <xs:restriction base="xs:string">
-            <xs:pattern value = '([0-9A-Fa-f]{2}:){5}([0-9A-Fa-f]{2})'/>
+             <xs:pattern value = '((([0-9A-Fa-f]{2}:){5})|(([0-9A-Fa-f]{2}){5}))([0-9A-Fa-f]{2})'/>
         </xs:restriction>
     </xs:simpleType>
 
