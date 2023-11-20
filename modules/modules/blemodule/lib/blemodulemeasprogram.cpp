@@ -97,7 +97,7 @@ void cBleModuleMeasProgram::generateInterface()
     m_pMacAddress = new VfModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                           key = QString("PAR_MacAddress"),
                                           QString("MAC address of environment sensor"),
-                                          QVariant(getConfData()->m_macAddress.m_sPar));
+                                          QVariant("00:00:00:00:00:00"));
     m_pMacAddress->setValidator(new cRegExValidator("^([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})$|^$"));
     m_pModule->veinModuleParameterHash[key] = m_pMacAddress;
     connect(m_pMacAddress, &VfModuleComponent::sigValueChanged,
@@ -108,10 +108,9 @@ void cBleModuleMeasProgram::activateDone()
 {
     connect(&m_bluetooth, &BluetoothConvenienceFacade::sigOnOff,
             this, &cBleModuleMeasProgram::onBluetoothStatusChanged);
-    if(m_pBluetoothOnOff->getValue().toBool())
-        m_bluetooth.start();
-    else
-        m_bluetooth.stop();
+    switchBluetooth(m_pBluetoothOnOff->getValue().toBool());
+    m_pMacAddress->setValue(getConfData()->m_macAddress.m_sPar);
+    onVeinMacAddressChanged(m_pMacAddress->getValue());
     m_bActive = true;
     emit activated();
 }
@@ -169,12 +168,17 @@ void cBleModuleMeasProgram::onBluetoothStatusChanged(bool on)
     m_pBluetoothOnOff->setValue(int(on));
 }
 
-void cBleModuleMeasProgram::onVeinBluetoothOnChanged(QVariant on)
+void BLEMODULE::cBleModuleMeasProgram::switchBluetooth(bool on)
 {
-    if(on.toBool())
+    if(on)
         m_bluetooth.start();
     else
         m_bluetooth.stop();
+}
+
+void cBleModuleMeasProgram::onVeinBluetoothOnChanged(QVariant on)
+{
+    switchBluetooth(on.toBool());
     getConfData()->m_bluetoothOn.m_nActive = on.toInt();
     emit m_pModule->parameterChanged();
 }
