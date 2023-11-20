@@ -98,7 +98,8 @@ void cBleModuleMeasProgram::generateInterface()
                                           key = QString("PAR_MacAddress"),
                                           QString("MAC address of environment sensor"),
                                           QVariant("00:00:00:00:00:00"));
-    m_pMacAddress->setValidator(new cRegExValidator("^([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})$|^$"));
+    m_pMacAddress->setValidator(new cRegExValidator("^((([0-9A-Fa-f]{2}:){5})|(([0-9A-Fa-f]{2}){5})([0-9A-Fa-f]{2})$|^$)"));
+
     m_pModule->veinModuleParameterHash[key] = m_pMacAddress;
     connect(m_pMacAddress, &VfModuleComponent::sigValueChanged,
             this, &cBleModuleMeasProgram::onVeinMacAddressChanged);
