@@ -8,7 +8,7 @@
 class MockMt310s2Facade
 {
 public:
-    MockMt310s2Facade(QString sysroot);
+    MockMt310s2Facade();
 private:
     ResmanRunFacade m_resman;
     MockMt310s2d m_mockmt310s2d;
