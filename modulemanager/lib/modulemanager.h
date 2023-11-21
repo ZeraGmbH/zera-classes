@@ -3,6 +3,7 @@
 
 #include "licensesysteminterface.h"
 #include "mockmt310s2facade.h"
+#include "mockcom5003facade.h"
 #include <virtualmodule.h>
 #include <QVariant>
 #include <QHash>
@@ -82,6 +83,7 @@ private:
     QElapsedTimer m_timerAllModulesLoaded;
 
     std::unique_ptr<MockMt310s2Facade> m_mockMt310s2Facade;
+    std::unique_ptr<MockCom5003Facade> m_mockCom5003Facade;
 };
 }
 

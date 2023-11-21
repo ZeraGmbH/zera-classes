@@ -156,6 +156,8 @@ void ModuleManager::setDemo(bool demo)
         ModulemanagerConfig *mmConfig = ModulemanagerConfig::getInstance();
         if(mmConfig->getDeviceName() == "mt310s2")
             m_mockMt310s2Facade = std::make_unique<MockMt310s2Facade>(MODMAN_SYSROOT);
+        else if(mmConfig->getDeviceName() == "com5003")
+            m_mockCom5003Facade = std::make_unique<MockCom5003Facade>(MODMAN_SYSROOT);
     }
 }
 
