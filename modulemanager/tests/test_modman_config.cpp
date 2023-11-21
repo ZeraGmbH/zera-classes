@@ -13,10 +13,13 @@ void test_modman_config::loadDevConfig()
     QStringList availSessions = mmConfig->getAvailableSessions();
 
     QVERIFY(mmConfig->isValid());
-    QCOMPARE(availSessions.count(), 5);
+    QCOMPARE(availSessions.count(), 7);
     QVERIFY(availSessions.contains("mt310s2-meas-session.json"));
     QVERIFY(availSessions.contains("mt310s2-dc-session.json"));
     QVERIFY(availSessions.contains("mt310s2-emob-session.json"));
+    QVERIFY(availSessions.contains("mt310s2-emob-session-ac.json"));
+    QVERIFY(availSessions.contains("mt310s2-emob-session-dc.json"));
+    QVERIFY(availSessions.contains("mt310s2-dc-session-dev.json"));
     QVERIFY(availSessions.contains("mt310s2-ced-session.json"));
     QCOMPARE(mmConfig->getDefaultSession(), "mt310s2-meas-session.json");
 }
