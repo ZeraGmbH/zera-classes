@@ -8,7 +8,7 @@
 class MockCom5003Facade
 {
 public:
-    MockCom5003Facade(QString sysroot);
+    MockCom5003Facade();
 private:
     ResmanRunFacade m_resman;
     MockCom5003d m_mockcom5003d;
