@@ -51,11 +51,6 @@
         "id": 1072
       },
       {
-        "name" : "power1module",
-        "configFile" : "mt310s2-power1module_ph4_fo0.xml",
-        "id": 1073
-      },
-      {
         "name" : "thdnmodule",
         "configFile" : "mt310s2-thdnmodule.xml",
         "id": 1110
@@ -72,7 +67,7 @@
       },
       {
         "name" : "sec1module",
-        "configFile" : "mt310s2-sec1module-emob.xml",
+        "configFile" : "mt310s2-sec1module-emob-ac.xml",
         "id": 1130
       },
       {
@@ -82,12 +77,12 @@
       },
       {
         "name" : "adjustmentmodule",
-        "configFile" : "mt310s2-adjustmentmodule-dc-emob.xml",
+        "configFile" : "mt310s2-adjustmentmodule-emob-ac.xml",
         "id": 1190
       },
       {
         "name" : "sem1module",
-        "configFile" : "mt310s2-sem1module-emob.xml",
+        "configFile" : "mt310s2-sem1module-emob-ac.xml",
         "id": 1200
       },
       {

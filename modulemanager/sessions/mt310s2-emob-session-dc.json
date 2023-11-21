@@ -26,29 +26,9 @@
         "id": 1040
       },
       {
-        "name" : "dftmodule",
-        "configFile" : "mt310s2-dftmodule.xml",
-        "id": 1050
-      },
-      {
         "name" : "fftmodule",
         "configFile" : "mt310s2-fftmodule.xml",
         "id": 1060
-      },
-      {
-        "name" : "power1module",
-        "configFile" : "mt310s2-power1module-4WA-only.xml",
-        "id": 1070
-      },
-      {
-        "name" : "power1module",
-        "configFile" : "mt310s2-power1module-4WR-only.xml",
-        "id": 1071
-      },
-      {
-        "name" : "power1module",
-        "configFile" : "mt310s2-power1module-4WAP-only.xml",
-        "id": 1072
       },
       {
         "name" : "power1module",
@@ -72,22 +52,17 @@
       },
       {
         "name" : "sec1module",
-        "configFile" : "mt310s2-sec1module-emob.xml",
+        "configFile" : "mt310s2-sec1module-emob-dc.xml",
         "id": 1130
       },
       {
-        "name" : "lambdamodule",
-        "configFile" : "mt310s2-lambdamodule.xml",
-        "id": 1140
-      },
-      {
         "name" : "adjustmentmodule",
-        "configFile" : "mt310s2-adjustmentmodule-dc-emob.xml",
+        "configFile" : "mt310s2-adjustmentmodule-emob-ac.xml",
         "id": 1190
       },
       {
         "name" : "sem1module",
-        "configFile" : "mt310s2-sem1module-emob.xml",
+        "configFile" : "mt310s2-sem1module-emob-dc.xml",
         "id": 1200
       },
       {
