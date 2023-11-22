@@ -22,7 +22,11 @@ cPower2ModuleMeasProgram::cPower2ModuleMeasProgram(cPower2Module* module, std::s
 {
     m_pDSPInterFace = new Zera::cDSPInterface();
 
-    m_IdentifyState.addTransition(this, &cPower2ModuleMeasProgram::activationContinue, &m_readResourceTypesState);
+    if(m_pModule->m_demo) //skip SENSE resource & DSP server. Mock facade does't have SENSE resource & mock DSP server yet !
+        m_IdentifyState.addTransition(this, &cPower2ModuleMeasProgram::activationContinue, &m_readResourceSourceState);
+    else
+        m_IdentifyState.addTransition(this, &cPower2ModuleMeasProgram::activationContinue, &m_readResourceTypesState);
+
     m_readResourceTypesState.addTransition(this, &cPower2ModuleMeasProgram::activationContinue, &m_readResourceSenseState);
 
     m_readResourceSenseState.addTransition(this, &cPower2ModuleMeasProgram::activationContinue, &m_readResourceSenseInfosState);
@@ -44,7 +48,12 @@ cPower2ModuleMeasProgram::cPower2ModuleMeasProgram(cPower2Module* module, std::s
     m_claimResourceSourceDoneState.addTransition(this, &cPower2ModuleMeasProgram::activationLoop, &m_claimResourceSourceState);
     m_pcbserverConnectState4measChannels.addTransition(this, &cPower2ModuleMeasProgram::activationContinue, &m_pcbserverConnectState4freqChannels);
     m_pcbserverConnectState4freqChannels.addTransition(this, &cPower2ModuleMeasProgram::activationContinue, &m_readSampleRateState);
-    m_readSampleRateState.addTransition(this, &cPower2ModuleMeasProgram::activationContinue, &m_readSenseChannelInformationState);
+
+    if(m_pModule->m_demo) //skip SENSE resource & DSP server. Mock facade does't have SENSE resource & mock DSP server yet !
+        m_readSampleRateState.addTransition(this, &cPower2ModuleMeasProgram::activationContinue, &m_readSourceChannelInformationState);
+    else
+        m_readSampleRateState.addTransition(this, &cPower2ModuleMeasProgram::activationContinue, &m_readSenseChannelInformationState);
+
     m_readSenseChannelInformationState.addTransition(this, &cPower2ModuleMeasProgram::activationContinue, &m_readSenseChannelAliasState);
     m_readSenseChannelAliasState.addTransition(this, &cPower2ModuleMeasProgram::activationContinue, &m_readSenseChannelUnitState);
     m_readSenseChannelUnitState.addTransition(this, &cPower2ModuleMeasProgram::activationContinue, &m_readSenseDspChannelState);
@@ -53,12 +62,21 @@ cPower2ModuleMeasProgram::cPower2ModuleMeasProgram(cPower2Module* module, std::s
     m_readSenseChannelInformationDoneState.addTransition(this, &cPower2ModuleMeasProgram::activationLoop, &m_readSenseChannelAliasState);
 
     m_readSourceChannelInformationState.addTransition(this, &cPower2ModuleMeasProgram::activationContinue, &m_readSourceChannelAliasState);
-    m_readSourceChannelInformationState.addTransition(this, &cPower2ModuleMeasProgram::activationSkip, &m_dspserverConnectState);
+
+    if(m_pModule->m_demo) //skip SENSE resource & DSP server. Mock facade does't have SENSE resource & mock DSP server yet !
+        m_readSourceChannelInformationState.addTransition(this, &cPower2ModuleMeasProgram::activationSkip, &m_loadDSPDoneState);
+    else
+        m_readSourceChannelInformationState.addTransition(this, &cPower2ModuleMeasProgram::activationSkip, &m_dspserverConnectState);
+
     m_readSourceChannelAliasState.addTransition(this, &cPower2ModuleMeasProgram::activationContinue, &m_readSourceDspChannelState);
     m_readSourceDspChannelState.addTransition(this, &cPower2ModuleMeasProgram::activationContinue, &m_readSourceFormFactorState);
     m_readSourceFormFactorState.addTransition(this, &cPower2ModuleMeasProgram::activationContinue, &m_readSourceChannelInformationDoneState);
-    m_readSourceChannelInformationDoneState.addTransition(this, &cPower2ModuleMeasProgram::activationContinue, &m_setSenseChannelRangeNotifiersState);
     m_readSourceChannelInformationDoneState.addTransition(this, &cPower2ModuleMeasProgram::activationLoop, &m_readSourceChannelAliasState);
+
+    if(m_pModule->m_demo) //skip SENSE resource & DSP server. Mock facade does't have SENSE resource & mock DSP server yet !
+        m_readSourceChannelInformationDoneState.addTransition(this, &cPower2ModuleMeasProgram::activationContinue, &m_loadDSPDoneState);
+    else
+        m_readSourceChannelInformationDoneState.addTransition(this, &cPower2ModuleMeasProgram::activationContinue, &m_setSenseChannelRangeNotifiersState);
 
     m_setSenseChannelRangeNotifiersState.addTransition(this, &cPower2ModuleMeasProgram::activationContinue, &m_setSenseChannelRangeNotifierState);
     m_setSenseChannelRangeNotifierState.addTransition(this, &cPower2ModuleMeasProgram::activationContinue, &m_setSenseChannelRangeNotifierDoneState);
@@ -116,10 +134,7 @@ cPower2ModuleMeasProgram::cPower2ModuleMeasProgram(cPower2Module* module, std::s
     m_activationMachine.addState(&m_activateDSPState);
     m_activationMachine.addState(&m_loadDSPDoneState);
 
-    if(m_pModule->m_demo)
-        m_activationMachine.setInitialState(&m_loadDSPDoneState);
-    else
-        m_activationMachine.setInitialState(&m_resourceManagerConnectState);
+    m_activationMachine.setInitialState(&m_resourceManagerConnectState);
 
     connect(&m_resourceManagerConnectState, &QAbstractState::entered, this, &cPower2ModuleMeasProgram::resourceManagerConnect);
     connect(&m_IdentifyState, &QAbstractState::entered, this, &cPower2ModuleMeasProgram::sendRMIdent);
@@ -196,7 +211,7 @@ cPower2ModuleMeasProgram::cPower2ModuleMeasProgram(cPower2Module* module, std::s
     m_deactivationMachine.addState(&m_unloadDSPDoneState);
 
     if(m_pModule->m_demo)
-        m_deactivationMachine.setInitialState(&m_unloadDSPDoneState);
+        m_deactivationMachine.setInitialState(&m_freeFreqOutputsState);
     else
         m_deactivationMachine.setInitialState(&m_deactivateDSPState);
 
@@ -232,13 +247,17 @@ cPower2ModuleMeasProgram::cPower2ModuleMeasProgram(cPower2Module* module, std::s
     m_readUpperRangeValueMachine.addState(&m_foutParamsToDsp);
     m_readUpperRangeValueMachine.addState(&m_setFoutConstantState);
 
-    m_readUpperRangeValueMachine.setInitialState(&m_readUrvalueState);
+    if(m_pModule->m_demo) //skip SENSE resource & DSP server. Mock facade does't have SENSE resource & mock DSP server yet !
+        m_readUpperRangeValueMachine.setInitialState(&m_foutParamsToDsp);
+    else
+        m_readUpperRangeValueMachine.setInitialState(&m_readUrvalueState);
 
     connect(&m_readUrvalueState, &QAbstractState::entered, this, &cPower2ModuleMeasProgram::readUrvalue);
     connect(&m_readUrvalueDoneState, &QAbstractState::entered, this, &cPower2ModuleMeasProgram::readUrvalueDone);
     connect(&m_foutParamsToDsp, &QAbstractState::entered, this, &cPower2ModuleMeasProgram::foutParamsToDsp);
 
     if(m_pModule->m_demo) {
+        setDspVarList();
         m_demoPeriodicTimer = TimerFactoryQt::createPeriodic(500);
         connect(m_demoPeriodicTimer.get(), &TimerTemplateQt::sigExpired,this, &cPower2ModuleMeasProgram::handleDemoActualValues);
     }
@@ -260,6 +279,8 @@ void cPower2ModuleMeasProgram::start()
     }
     else
         connect(this, &cPower2ModuleMeasProgram::actualValues, this, &cPower2ModuleMeasProgram::setInterfaceActualValues);
+    if(m_pModule->m_demo)
+        m_demoPeriodicTimer->start();
 }
 
 
@@ -267,6 +288,8 @@ void cPower2ModuleMeasProgram::stop()
 {
     disconnect(this, &cPower2ModuleMeasProgram::actualValues, 0, 0);
     disconnect(&m_movingwindowFilter, &cMovingwindowFilter::actualValues, this, 0);
+    if(m_pModule->m_demo)
+        m_demoPeriodicTimer->stop();
 }
 
 
@@ -1497,7 +1520,9 @@ void cPower2ModuleMeasProgram::activateDSP()
 void cPower2ModuleMeasProgram::activateDSPdone()
 {
     m_bActive = true;
-
+    if(m_pModule->m_demo)
+        // in demo not reached by claimPGRMem() (TODO move to constructor?)
+        setDspCmdList();
     setActualValuesNames();
     setSCPIMeasInfo();
     m_pMeasureSignal->setValue(QVariant(1));
@@ -1511,7 +1536,7 @@ void cPower2ModuleMeasProgram::activateDSPdone()
     connect(&m_measModeSelector, &MeasModeSelector::sigTransactionOk,
             this, &cPower2ModuleMeasProgram::onModeTransactionOk);
     readUrvalueList = m_measChannelInfoHash.keys(); // once we read all actual range urvalues
-    if (!m_readUpperRangeValueMachine.isRunning() && !m_pModule->m_demo)
+    if (!m_readUpperRangeValueMachine.isRunning())
         m_readUpperRangeValueMachine.start();
 
     emit activated();
@@ -1665,6 +1690,10 @@ cPower2ModuleMeasProgram::RangeMaxVals cPower2ModuleMeasProgram::calcMaxRangeVal
 
 void cPower2ModuleMeasProgram::foutParamsToDsp()
 {
+    if(m_pModule->m_demo) {
+        setFoutPowerModes();
+        return;
+    }
     std::shared_ptr<MeasMode> mode = m_measModeSelector.getCurrMode();
     RangeMaxVals maxVals = calcMaxRangeValues(mode);
     double cfak = mode->getActiveMeasSysCount();
@@ -1741,6 +1770,8 @@ void cPower2ModuleMeasProgram::setFoutPowerModes()
 
 void cPower2ModuleMeasProgram::dspSetParamsTiMModePhase(int tiTimeOrPeriods)
 {
+    if(m_pModule->m_demo)
+        return;
     QString strVarData = QString("TIPAR:%1;TISTART:0;MMODE:%2")
                              .arg(tiTimeOrPeriods)
                              .arg(m_measModeSelector.getCurrMode()->getDspSelectCode());
@@ -1837,13 +1868,15 @@ void cPower2ModuleMeasProgram::handleDemoActualValues()
     QVector<float> valuesDemo;
     int current = 10;
     int voltage = 230;
-    for(int phase=0; phase<MeasPhaseCount; phase++) {
-        double val = 0.0;
-        double randPlusMinusOne = 2.0 * (double)rand() / RAND_MAX - 1.0;
-        val = current*voltage + randPlusMinusOne;
-        valuesDemo.append(val);
+    for(int powerType=0; powerType<3; powerType++) {
+        for(int phase=0; phase<MeasPhaseCount; phase++) {
+            double val = 0.0;
+            double randPlusMinusOne = 2.0 * (double)rand() / RAND_MAX - 1.0;
+            val = current*voltage + randPlusMinusOne;
+            valuesDemo.append(val);
+        }
+        valuesDemo.append(valuesDemo[0] + valuesDemo[1] + valuesDemo[2]);
     }
-    valuesDemo.append(valuesDemo[0] + valuesDemo[1] + valuesDemo[2]);
     Q_ASSERT(valuesDemo.size() == m_ModuleActualValues.size());
     m_ModuleActualValues = valuesDemo;
     emit actualValues(&m_ModuleActualValues);
