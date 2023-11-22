@@ -48,7 +48,10 @@ cSec1ModuleMeasProgram::cSec1ModuleMeasProgram(cSec1Module* module, std::shared_
     m_readDUTInputsState.addTransition(this, &cSec1ModuleMeasProgram::activationContinue, &m_readDUTInputAliasState);
     m_readDUTInputAliasState.addTransition(this, &cSec1ModuleMeasProgram::activationContinue, &m_readDUTInputDoneState);
     m_readDUTInputDoneState.addTransition(this, &cSec1ModuleMeasProgram::activationLoop, &m_readDUTInputAliasState);
-    m_readDUTInputDoneState.addTransition(this, &cSec1ModuleMeasProgram::activationContinue, &m_setpcbREFConstantNotifierState);
+    if(m_pModule->m_demo)
+        m_readDUTInputDoneState.addTransition(this, &cSec1ModuleMeasProgram::activationContinue, &m_activationDoneState);
+    else
+        m_readDUTInputDoneState.addTransition(this, &cSec1ModuleMeasProgram::activationContinue, &m_setpcbREFConstantNotifierState);
 
     m_setpcbREFConstantNotifierState.addTransition(this, &cSec1ModuleMeasProgram::activationContinue, &m_setsecINTNotifierState);
     m_setsecINTNotifierState.addTransition(this, &cSec1ModuleMeasProgram::activationContinue, &m_activationDoneState);
@@ -73,10 +76,7 @@ cSec1ModuleMeasProgram::cSec1ModuleMeasProgram(cSec1Module* module, std::shared_
     m_activationMachine.addState(&m_setsecINTNotifierState);
     m_activationMachine.addState(&m_activationDoneState);
 
-    if(m_pModule->m_demo)
-        m_activationMachine.setInitialState(&m_activationDoneState);
-    else
-        m_activationMachine.setInitialState(&resourceManagerConnectState);
+    m_activationMachine.setInitialState(&resourceManagerConnectState);
 
     connect(&resourceManagerConnectState, &QState::entered, this, &cSec1ModuleMeasProgram::resourceManagerConnect);
     connect(&m_IdentifyState, &QState::entered, this, &cSec1ModuleMeasProgram::sendRMIdent);
@@ -108,10 +108,7 @@ cSec1ModuleMeasProgram::cSec1ModuleMeasProgram(cSec1Module* module, std::shared_
     m_deactivationMachine.addState(&m_freeECResource);
     m_deactivationMachine.addState(&m_deactivationDoneState);
 
-    if(m_pModule->m_demo)
-        m_deactivationMachine.setInitialState(&m_deactivationDoneState);
-    else
-        m_deactivationMachine.setInitialState(&m_stopECalculatorState);
+    m_deactivationMachine.setInitialState(&m_stopECalculatorState);
 
     connect(&m_stopECalculatorState, &QState::entered, this, &cSec1ModuleMeasProgram::stopECCalculator);
     connect(&m_freeECalculatorState, &QState::entered, this, &cSec1ModuleMeasProgram::freeECalculator);
@@ -1199,8 +1196,6 @@ void cSec1ModuleMeasProgram::setsecINTNotifier()
 
 void cSec1ModuleMeasProgram::activationDone()
 {
-    if(m_pModule->m_demo)
-        setupDemoOperation();
     cSec1ModuleConfigData *confData = getConfData();
     for (int i = 0; i < confData->m_refInpList.count(); i++) {
         QString displayString = getRefInputDisplayString(confData->m_refInpList.at(i).inputName);
@@ -1259,89 +1254,6 @@ void cSec1ModuleMeasProgram::activationDone()
 
     m_bActive = true;
     emit activated();
-}
-
-void cSec1ModuleMeasProgram::setupDemoOperation()
-{
-    QList<TRefInput> refInputList = getConfData()->m_refInpList;
-    bool isPerPhase = false;
-    bool isMt310s2 = false;
-    for(const auto &input : refInputList ) {
-        if(input.inputName == "fo3")
-            isMt310s2 = true;
-    }
-    for(const auto &input : refInputList ) {
-        if(!input.nameAppend.isEmpty() && !isMt310s2) {
-            m_refInputDictionary.setAlias(input.inputName, "P");
-            isPerPhase = true;
-        }
-    }
-    if(!isMt310s2) {  //com5003 case
-        if(!isPerPhase) {
-            m_refInputDictionary.setAlias("fo0", "P");
-            m_refInputDictionary.setAlias("fo1", "Q");
-            m_refInputDictionary.setAlias("fo2", "S");
-        }
-    }
-    else { //mt310s2 case
-        switch(getConfData()->m_nRefInpCount)
-        {
-        case 1:
-            m_refInputDictionary.setAlias("fo0", "P");
-            break;
-        case 2:
-            m_refInputDictionary.setAlias("fo1", "P");
-            m_refInputDictionary.setAlias("fo0", "P");
-            break;
-        case 3:
-            m_refInputDictionary.setAlias("fo1", "P");
-            m_refInputDictionary.setAlias("fo2", "Q");
-            m_refInputDictionary.setAlias("fo3", "S");
-            break;
-        case 4:
-            m_refInputDictionary.setAlias("fo0", "P");
-            m_refInputDictionary.setAlias("fo1", "P");
-            m_refInputDictionary.setAlias("fo2", "P");
-            m_refInputDictionary.setAlias("fo3", "P");
-            break;
-        }
-    }
-
-    m_dutInputDictionary.setAlias("fi0", "Fin1");
-    m_dutInputDictionary.setAlias("fi1", "Fin2");
-    m_dutInputDictionary.setAlias("fi2", "Fin3");
-    m_dutInputDictionary.setAlias("fi3", "Fin4");
-    m_dutInputDictionary.setAlias("sh0", "SC1");
-    m_dutInputDictionary.setAlias("hk0", "HK1");
-
-
-    QStringList inputList;
-    for(const auto &input : qAsConst(getConfData()->m_refInpList))
-        inputList.append(input.inputName);
-    inputList.append(getConfData()->m_dutInpList);
-
-    QHash<QString, QString> resourceTypeListToAdd;
-    for (int i = 0; i < inputList.count(); i++) {
-        if (inputList.at(i).contains("fi"))
-            resourceTypeListToAdd.insert(inputList.at(i), "FRQINPUT");
-
-        if (inputList.at(i).contains("fo"))
-            resourceTypeListToAdd.insert(inputList.at(i), "SOURCE");
-
-        if (inputList.at(i).contains("sh"))
-            resourceTypeListToAdd.insert(inputList.at(i), "SCHEAD");
-
-        if (inputList.at(i).contains("hk"))
-            resourceTypeListToAdd.insert(inputList.at(i), "HKEY");
-    }
-    for (int i = 0; i < getConfData()->m_refInpList.count(); i++) {
-        QString displayString = getConfData()->m_refInpList.at(i).inputName;
-        m_refInputDictionary.addReferenceInput(displayString, resourceTypeListToAdd[displayString]);
-    }
-    for (int i = 0; i < getConfData()->m_dutInpList.count(); i++) {
-        QString displayString = getConfData()->m_dutInpList.at(i);
-        m_dutInputDictionary.addReferenceInput(displayString, resourceTypeListToAdd[displayString]);
-    }
 }
 
 void cSec1ModuleMeasProgram::stopECCalculator()
@@ -1854,8 +1766,7 @@ void cSec1ModuleMeasProgram::stopMeasurement(bool bAbort)
     if(bAbort && m_bMeasurementRunning)
         setStatus(ECALCSTATUS::ABORT);
     m_bMeasurementRunning = false;
-    if(!m_pModule->m_demo)
-        m_MsgNrCmdList[m_pSECInterface->stop(m_masterErrCalcName)] = stopmeas;
+    m_MsgNrCmdList[m_pSECInterface->stop(m_masterErrCalcName)] = stopmeas;
     m_pStartStopPar->setValue(QVariant(0));
     m_ActualizeTimer->stop();
     m_WaitMultiTimer.stop();
