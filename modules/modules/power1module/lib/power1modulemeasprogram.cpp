@@ -252,7 +252,10 @@ cPower1ModuleMeasProgram::cPower1ModuleMeasProgram(cPower1Module* module, std::s
     m_readUpperRangeValueMachine.addState(&m_readUrvalueDoneState);
     m_readUpperRangeValueMachine.addState(&m_foutParamsToDsp);
 
-    m_readUpperRangeValueMachine.setInitialState(&m_readUrvalueState);
+    if(m_pModule->m_demo)
+        m_readUpperRangeValueMachine.setInitialState(&m_foutParamsToDsp);
+    else
+        m_readUpperRangeValueMachine.setInitialState(&m_readUrvalueState);
 
     connect(&m_readUrvalueState, &QAbstractState::entered, this, &cPower1ModuleMeasProgram::readUrvalue);
     connect(&m_readUrvalueDoneState, &QAbstractState::entered, this, &cPower1ModuleMeasProgram::readUrvalueDone);
@@ -1393,9 +1396,8 @@ void cPower1ModuleMeasProgram::activateDSPdone()
             this, &cPower1ModuleMeasProgram::onModeTransactionOk);
 
     readUrvalueList = m_measChannelInfoHash.keys(); // once we read all actual range urvalues
-    if(!m_pModule->m_demo)
-        if (!m_readUpperRangeValueMachine.isRunning())
-            m_readUpperRangeValueMachine.start();
+    if (!m_readUpperRangeValueMachine.isRunning())
+        m_readUpperRangeValueMachine.start();
 
     emit activated();
 }
@@ -1548,8 +1550,10 @@ cPower1ModuleMeasProgram::RangeMaxVals cPower1ModuleMeasProgram::calcMaxRangeVal
 
 void cPower1ModuleMeasProgram::foutParamsToDsp()
 {
-    if(m_pModule->m_demo)
+    if(m_pModule->m_demo) {
+        setFoutPowerModes();
         return;
+    }
     std::shared_ptr<MeasMode> mode = m_measModeSelector.getCurrMode();
     RangeMaxVals maxVals = calcMaxRangeValues(mode);
     double cfak = mode->getActiveMeasSysCount();
