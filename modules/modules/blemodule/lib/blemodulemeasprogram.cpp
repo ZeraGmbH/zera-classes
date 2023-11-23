@@ -46,8 +46,8 @@ void cBleModuleMeasProgram::generateInterface()
                                               key = QString("ACT_TemperatureC"),
                                               QString("Current temperature in degree Celsius"),
                                               QVariant((double)qQNaN()));
-    m_pTemperatureCAct->setSCPIInfo(new cSCPIInfo("MEASURE", "TEMP_C", "8", m_pTemperatureCAct->getName(), "0", m_pTemperatureCAct->getUnit()));
     m_pTemperatureCAct->setUnit("°C");
+    m_pTemperatureCAct->setSCPIInfo(new cSCPIInfo("MEASURE", "TEMP_C", "8", m_pTemperatureCAct->getName(), "0", m_pTemperatureCAct->getUnit()));
     m_pModule->veinModuleActvalueList.append(m_pTemperatureCAct); // and for the modules interface
 
     m_pTemperatureFAct = new VfModuleActvalue(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
