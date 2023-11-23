@@ -46,7 +46,7 @@ void cBleModuleMeasProgram::generateInterface()
                                               key = QString("ACT_TemperatureC"),
                                               QString("Current temperature in degree Celsius"),
                                               QVariant((double)qQNaN()));
-    //m_pTemperatureCAct->setSCPIInfo(new cSCPIInfo("CALCULATE", QString("%1:POWER").arg(modNr), "2", m_pTemperatureCAct->getName(), "0", ""));
+    m_pTemperatureCAct->setSCPIInfo(new cSCPIInfo("MEASURE", "TEMP_C", "8", m_pTemperatureCAct->getName(), "0", m_pTemperatureCAct->getUnit()));
     m_pTemperatureCAct->setUnit("°C");
     m_pModule->veinModuleActvalueList.append(m_pTemperatureCAct); // and for the modules interface
 
@@ -55,7 +55,7 @@ void cBleModuleMeasProgram::generateInterface()
                                              QString("Current temperature in degree Fahrenheit"),
                                              QVariant((double)qQNaN()));
     m_pTemperatureFAct->setUnit("°F");
-    // SCPI ToDo
+    m_pTemperatureFAct->setSCPIInfo(new cSCPIInfo("MEASURE", "TEMP_F", "8", m_pTemperatureFAct->getName(), "0", m_pTemperatureFAct->getUnit()));
     m_pModule->veinModuleActvalueList.append((m_pTemperatureFAct));
 
     m_pHumidityAct = new VfModuleActvalue(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
@@ -63,7 +63,7 @@ void cBleModuleMeasProgram::generateInterface()
                                           QString("Current relative humidity in percent"),
                                           QVariant((double)qQNaN()));
     m_pHumidityAct->setUnit("%");   // todo: make this problems?
-    // SCPI ToDo
+    m_pHumidityAct->setSCPIInfo(new cSCPIInfo("MEASURE", "HUMID", "8", m_pHumidityAct->getName(), "0", m_pHumidityAct->getUnit()));
     m_pModule->veinModuleActvalueList.append(m_pHumidityAct);
 
     m_pAirPressureAct = new VfModuleActvalue(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
@@ -71,7 +71,7 @@ void cBleModuleMeasProgram::generateInterface()
                                              QString("Current atmospheric pressure in hPa"),
                                              QVariant((double)qQNaN()));
     m_pAirPressureAct->setUnit("hPa");
-    // SCPI ToDo
+    m_pAirPressureAct->setSCPIInfo(new cSCPIInfo("MEASURE", "AIRPR", "8", m_pAirPressureAct->getName(), "0", m_pAirPressureAct->getUnit()));
     m_pModule->veinModuleActvalueList.append(m_pAirPressureAct);
 
     m_pWarningFlagsAct = new VfModuleActvalue(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
