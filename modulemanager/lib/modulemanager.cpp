@@ -161,6 +161,11 @@ void ModuleManager::setDemo(bool demo)
     }
 }
 
+bool ModuleManager::areAllModulesShutdown()
+{
+    return !m_moduleStartLock;
+}
+
 void ModuleManager::startModule(const QString & uniqueModuleName, const QString & t_xmlConfigPath, const QByteArray &t_xmlConfigData, int moduleEntityId)
 {
     // do not allow starting until all modules are shut down

@@ -68,7 +68,9 @@ int main(int argc, char *argv[])
 
     for(const QString &session: qAsConst(sessionFileList)) {
         modMan.changeSessionFile(session);
-        ModuleManagerTest::feedEventLoop();
+        do
+            ModuleManagerTest::feedEventLoop();
+        while(!modMan.areAllModulesShutdown());
 
         QString actDevIface = storSystem.getStoredValue(9999, "ACT_DEV_IFACE").toString();
         if(actDevIface.isEmpty()) // we have to make module resilient to this situation
