@@ -113,7 +113,9 @@ void test_modman_session::startSession()
 
     evHandler.clearSystems();
     modMan.destroyModules();
-    ModuleManagerTest::feedEventLoop();
+    do
+        ModuleManagerTest::feedEventLoop();
+    while(!modMan.areAllModulesShutdown());
 }
 
 void test_modman_session::changeSession()
@@ -160,11 +162,15 @@ void test_modman_session::changeSession()
     QCOMPARE(currentSession, "mt310s2-meas-session.json");
 
     modMan.changeSessionFile("mt310s2-emob-session.json");
-    ModuleManagerTest::feedEventLoop();
+    do
+        ModuleManagerTest::feedEventLoop();
+    while(!modMan.areAllModulesShutdown());
     currentSession = storSystem.getStoredValue(0, "Session").toString();
     QCOMPARE(currentSession, "mt310s2-emob-session.json");
 
     evHandler.clearSystems();
     modMan.destroyModules();
-    ModuleManagerTest::feedEventLoop();
+    do
+        ModuleManagerTest::feedEventLoop();
+    while(!modMan.areAllModulesShutdown());
 }
