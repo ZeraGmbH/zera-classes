@@ -715,12 +715,17 @@ void cSem1ModuleMeasProgram::setInterfaceComponents()
     m_pLowerLimitPar->setValue(QVariant(getConfData()->m_fLowerLimit.m_fPar));
 }
 
+void cSem1ModuleMeasProgram::setInputUnitValidator()
+{
+    cStringValidator *sValidator = new cStringValidator(getEnergyUnitValidator());
+    m_pInputUnitPar->setValidator(sValidator);
+}
+
 void cSem1ModuleMeasProgram::setValidators()
 {
     cStringValidator *sValidator = new cStringValidator(m_REFAliasList);
     m_pRefInputPar->setValidator(sValidator);
-    sValidator = new cStringValidator(getEnergyUnitValidator());
-    m_pInputUnitPar->setValidator(sValidator);
+    setInputUnitValidator();
 }
 
 void cSem1ModuleMeasProgram::setUnits()
