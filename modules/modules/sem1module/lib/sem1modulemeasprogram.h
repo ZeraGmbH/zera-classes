@@ -132,6 +132,7 @@ private:
     void setUnits();
 
     QStringList getEnergyUnitValidator();
+    void setInputUnitValidator();
     QString getEnergyUnit();
     QStringList getPowerUnitValidator();
     QString getPowerUnit();
