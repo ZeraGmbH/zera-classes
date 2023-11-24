@@ -159,10 +159,10 @@ void test_modman_session::changeSession()
     QString currentSession = storSystem.getStoredValue(0, "Session").toString();
     QCOMPARE(currentSession, "mt310s2-meas-session.json");
 
-    modMan.changeSessionFile("mt310s2-emob-session.json");
+    modMan.changeSessionFile("mt310s2-emob-session-dc.json");
     ModuleManagerTest::feedEventLoop();
     currentSession = storSystem.getStoredValue(0, "Session").toString();
-    QCOMPARE(currentSession, "mt310s2-emob-session.json");
+    QCOMPARE(currentSession, "mt310s2-emob-session-dc.json");
 
     evHandler.clearSystems();
     modMan.destroyModules();
