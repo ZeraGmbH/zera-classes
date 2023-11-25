@@ -1,16 +1,9 @@
 #include "power1modulemeasprogram.h"
 #include "power1module.h"
-#include "power1moduleconfigdata.h"
 #include "power1moduleconfiguration.h"
-#include "power1dspcmdgenerator.h"
 #include "power1dspmodefunctioncatalog.h"
 #include "veinvalidatorphasestringgenerator.h"
 #include "measmodephasepersistency.h"
-#include "measmodephasesetstrategy4wire.h"
-#include "measmodephasesetstrategyphasesfixed.h"
-#include "measmodephasesetstrategyphasesvar.h"
-#include "measmodephasesetstrategy2wire.h"
-#include "measmodephasesetstrategy2wirefixedphase.h"
 #include <timerfactoryqt.h>
 #include <errormessages.h>
 #include <reply.h>

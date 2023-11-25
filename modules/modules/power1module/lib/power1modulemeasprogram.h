@@ -1,11 +1,11 @@
 #ifndef POWERMODULEMEASPROGRAM_H
 #define POWERMODULEMEASPROGRAM_H
 
+#include "basedspmeasprogram.h"
 #include "power1moduleconfigdata.h"
-#include "measmodebroker.h"
 #include "power1dspvargenerator.h"
+#include "dspchainidgen.h"
 #include <stringvalidator.h>
-#include <basedspmeasprogram.h>
 #include <measchannelinfo.h>
 #include <measmodeselector.h>
 #include <meassytemchannels.h>
