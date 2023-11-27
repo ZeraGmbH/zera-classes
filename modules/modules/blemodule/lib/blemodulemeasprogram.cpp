@@ -64,7 +64,7 @@ void cBleModuleMeasProgram::generateInterface()
                                           QString("Current relative humidity in percent"),
                                           QVariant((double)qQNaN()));
     m_pHumidityAct->setUnit("%");   // todo: make this problems?
-    m_pHumidityAct->setSCPIInfo(new cSCPIInfo("SENSE", "HUMID", "8", m_pHumidityAct->getName(), "0", m_pHumidityAct->getUnit()));
+    m_pHumidityAct->setSCPIInfo(new cSCPIInfo("SENSE", "HUMID", "2", m_pHumidityAct->getName(), "0", m_pHumidityAct->getUnit()));
     m_pModule->veinModuleActvalueList.append(m_pHumidityAct);
 
     m_pAirPressureAct = new VfModuleActvalue(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
@@ -72,7 +72,7 @@ void cBleModuleMeasProgram::generateInterface()
                                              QString("Current atmospheric pressure in hPa"),
                                              QVariant((double)qQNaN()));
     m_pAirPressureAct->setUnit("hPa");
-    m_pAirPressureAct->setSCPIInfo(new cSCPIInfo("SENSE", "AIRPR", "8", m_pAirPressureAct->getName(), "0", m_pAirPressureAct->getUnit()));
+    m_pAirPressureAct->setSCPIInfo(new cSCPIInfo("SENSE", "AIRPR", "2", m_pAirPressureAct->getName(), "0", m_pAirPressureAct->getUnit()));
     m_pModule->veinModuleActvalueList.append(m_pAirPressureAct);
 
     m_pWarningFlagsAct = new VfModuleActvalue(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
