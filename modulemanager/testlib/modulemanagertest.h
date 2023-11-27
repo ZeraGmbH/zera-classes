@@ -10,6 +10,7 @@ public:
     static void enableTest();
     static void pointToSourceSessionFiles();
     static void feedEventLoop();
+    void changeMockServices(QString deviceName);
 private:
     virtual QStringList getModuleFileNames() override;
 };

@@ -61,6 +61,8 @@ private slots:
     void onModuleEventSystemAdded(VeinEvent::EventSystem *t_eventSystem);
 
 protected:
+    void setMockServices(QString deviceName);
+
     static QString m_sessionPath;
     static bool m_runningInTest;
 
