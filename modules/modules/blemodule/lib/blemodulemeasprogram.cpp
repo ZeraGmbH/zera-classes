@@ -47,7 +47,7 @@ void cBleModuleMeasProgram::generateInterface()
                                               QString("Current temperature in degree Celsius"),
                                               QVariant((double)qQNaN()));
     m_pTemperatureCAct->setUnit("°C");
-    m_pTemperatureCAct->setSCPIInfo(new cSCPIInfo("SENSE", "TEMP_C", "8", m_pTemperatureCAct->getName(), "0", m_pTemperatureCAct->getUnit()));
+    m_pTemperatureCAct->setSCPIInfo(new cSCPIInfo("SENSE", "TEMP_C", "2", m_pTemperatureCAct->getName(), "0", m_pTemperatureCAct->getUnit()));
 
     m_pModule->veinModuleActvalueList.append(m_pTemperatureCAct); // and for the modules interface
 
@@ -56,7 +56,7 @@ void cBleModuleMeasProgram::generateInterface()
                                              QString("Current temperature in degree Fahrenheit"),
                                              QVariant((double)qQNaN()));
     m_pTemperatureFAct->setUnit("°F");
-    m_pTemperatureFAct->setSCPIInfo(new cSCPIInfo("SENSE", "TEMP_F", "8", m_pTemperatureFAct->getName(), "0", m_pTemperatureFAct->getUnit()));
+    m_pTemperatureFAct->setSCPIInfo(new cSCPIInfo("SENSE", "TEMP_F", "2", m_pTemperatureFAct->getName(), "0", m_pTemperatureFAct->getUnit()));
     m_pModule->veinModuleActvalueList.append((m_pTemperatureFAct));
 
     m_pHumidityAct = new VfModuleActvalue(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
