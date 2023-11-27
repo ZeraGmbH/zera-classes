@@ -154,10 +154,7 @@ void ModuleManager::setDemo(bool demo)
     m_demo = demo;
     if(m_demo) {
         ModulemanagerConfig *mmConfig = ModulemanagerConfig::getInstance();
-        if(mmConfig->getDeviceName() == "mt310s2")
-            m_mockMt310s2Facade = std::make_unique<MockMt310s2Facade>();
-        else if(mmConfig->getDeviceName() == "com5003")
-            m_mockCom5003Facade = std::make_unique<MockCom5003Facade>();
+        setMockServices(mmConfig->getDeviceName());
     }
 }
 
@@ -346,6 +343,18 @@ void ModuleManager::onModuleEventSystemAdded(VeinEvent::EventSystem *t_eventSyst
 {
     m_eventHandler->addSystem(t_eventSystem);
 }
+
+void ModuleManager::setMockServices(QString deviceName)
+{
+    if (m_mockCom5003Facade) delete m_mockCom5003Facade.release();
+    if (m_mockMt310s2Facade) delete m_mockMt310s2Facade.release();
+
+    if(deviceName == "mt310s2")
+        m_mockMt310s2Facade = std::make_unique<MockMt310s2Facade>();
+    else if(deviceName == "com5003")
+        m_mockCom5003Facade = std::make_unique<MockCom5003Facade>();
+}
+
 
 void ModuleManager::saveModuleConfig(ModuleData *t_moduleData)
 {

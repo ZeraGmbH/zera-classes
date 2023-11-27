@@ -21,6 +21,11 @@ void ModuleManagerTest::feedEventLoop()
     while(QCoreApplication::eventDispatcher()->processEvents(QEventLoop::AllEvents));
 }
 
+void ModuleManagerTest::changeMockServices(QString deviceName)
+{
+    setMockServices(deviceName);
+}
+
 ModuleManagerTest::ModuleManagerTest(const QStringList &sessionList, QObject *parent) :
     ModuleManager(sessionList, parent)
 {
