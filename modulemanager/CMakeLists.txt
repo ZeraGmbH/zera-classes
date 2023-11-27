@@ -1,3 +1,5 @@
+add_definitions(-DZC_SERVICES_IP="${ZC_SERVICES_IP}")
+
 set(CONFIG_FILES
     ${CMAKE_CURRENT_SOURCE_DIR}/modulemanager_config.json
     ${CMAKE_CURRENT_SOURCE_DIR}/modulemanager_config_dev.json
