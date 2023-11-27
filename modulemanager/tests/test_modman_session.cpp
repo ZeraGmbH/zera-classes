@@ -15,6 +15,8 @@ QTEST_MAIN(test_modman_session)
 
 void test_modman_session::initTestCase()
 {
+    if(!QString(ZC_SERVICES_IP).isEmpty())
+        qFatal("Running in demo mode and ZC_SERIVCES_IP is set to %s. ZC_SERIVCES_IP must be empty in demo mode!\n", ZC_SERVICES_IP);
     JsonSessionLoaderTest::enableTests();
     ModulemanagerConfigTest::enableTest();
     ModuleManagerTest::enableTest();
