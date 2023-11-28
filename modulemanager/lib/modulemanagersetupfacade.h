@@ -1,6 +1,7 @@
 #ifndef MODULEMANAGERSETUPFACADE_H
 #define MODULEMANAGERSETUPFACADE_H
 
+#include "licensesysteminterface.h"
 #include "moduleeventhandler.h"
 #include "modulemanagercontroller.h"
 #include "vn_introspectionsystem.h"
@@ -10,17 +11,19 @@ class ModuleManagerSetupFacade : public QObject
 {
     Q_OBJECT
 public:
-    ModuleManagerSetupFacade(QObject *parent = nullptr, bool devMode = false);
+    ModuleManagerSetupFacade(LicenseSystemInterface *licenseSystem, bool devMode = false, QObject *parent = nullptr);
     void addSubsystem(VeinEvent::EventSystem* subsystem);
     void addSystem(VeinEvent::EventSystem* system);
     void clearSystems();
     ModuleManagerController *getModuleManagerController();
     VeinStorage::VeinHash *getStorageSystem();
+    LicenseSystemInterface *getLicenseSystem();
 private:
     ModuleEventHandler m_eventHandler;
     VeinStorage::VeinHash m_storSystem;
     ModuleManagerController m_mmController;
     VeinNet::IntrospectionSystem m_introspectionSystem;
+    LicenseSystemInterface *m_licenseSystem = nullptr;
 };
 
 #endif // MODULEMANAGERSETUPFACADE_H

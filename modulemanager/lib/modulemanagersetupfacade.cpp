@@ -1,14 +1,16 @@
 #include "modulemanagersetupfacade.h"
 
-ModuleManagerSetupFacade::ModuleManagerSetupFacade(QObject *parent, bool devMode) :
+ModuleManagerSetupFacade::ModuleManagerSetupFacade(LicenseSystemInterface *licenseSystem, bool devMode, QObject *parent) :
     m_eventHandler(this),
     m_mmController(this, devMode),
     m_introspectionSystem(this),
-    m_storSystem(this)
+    m_storSystem(this),
+    m_licenseSystem(licenseSystem)
 {
     m_eventHandler.addSubsystem(&m_mmController);
     m_eventHandler.addSubsystem(&m_introspectionSystem);
     m_eventHandler.addSubsystem(&m_storSystem);
+    m_eventHandler.addSubsystem(m_licenseSystem);
     m_mmController.setStorage(&m_storSystem);
 }
 
@@ -35,4 +37,9 @@ ModuleManagerController *ModuleManagerSetupFacade::getModuleManagerController()
 VeinStorage::VeinHash *ModuleManagerSetupFacade::getStorageSystem()
 {
     return &m_storSystem;
+}
+
+LicenseSystemInterface *ModuleManagerSetupFacade::getLicenseSystem()
+{
+    return m_licenseSystem;
 }
