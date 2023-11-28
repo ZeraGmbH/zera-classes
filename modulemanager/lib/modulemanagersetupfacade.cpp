@@ -1,13 +1,9 @@
 #include "modulemanagersetupfacade.h"
 
-ModuleManagerSetupFacade::ModuleManagerSetupFacade()
+ModuleManagerSetupFacade::ModuleManagerSetupFacade(bool demo) :
+    m_mmController(this, demo)
 {
-
-}
-
-void ModuleManagerSetupFacade::setSubsystems(QList<VeinEvent::EventSystem *> subsystems)
-{
-    m_eventHandler.setSubsystems(subsystems);
+    m_eventHandler.addSubsystem(&m_mmController);
 }
 
 void ModuleManagerSetupFacade::addSubsystem(VeinEvent::EventSystem *subsystem)
@@ -23,4 +19,9 @@ void ModuleManagerSetupFacade::addModuleSystem(VeinEvent::EventSystem *system)
 void ModuleManagerSetupFacade::clearEventHandlerSystems()
 {
     m_eventHandler.clearSystems();
+}
+
+ModuleManagerController *ModuleManagerSetupFacade::getModuleManagerController()
+{
+    return &m_mmController;
 }

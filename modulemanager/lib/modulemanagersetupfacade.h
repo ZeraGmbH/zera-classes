@@ -2,17 +2,20 @@
 #define MODULEMANAGERSETUPFACADE_H
 
 #include "moduleeventhandler.h"
+#include "modulemanagercontroller.h"
 
-class ModuleManagerSetupFacade
+class ModuleManagerSetupFacade : public QObject
 {
+    Q_OBJECT
 public:
-    ModuleManagerSetupFacade();
-    void setSubsystems(QList<VeinEvent::EventSystem*> subsystems);
+    ModuleManagerSetupFacade(bool demo = false);
     void addSubsystem(VeinEvent::EventSystem* subsystem);
     void addModuleSystem(VeinEvent::EventSystem* system);
     void clearEventHandlerSystems();
+    ModuleManagerController *getModuleManagerController();
 private:
     ModuleEventHandler m_eventHandler;
+    ModuleManagerController m_mmController;
 };
 
 #endif // MODULEMANAGERSETUPFACADE_H

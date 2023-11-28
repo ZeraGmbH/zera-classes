@@ -1,7 +1,6 @@
 #include "jsonsessionloadertest.h"
 #include "modulemanagerconfigtest.h"
 #include "modulemanagertest.h"
-#include "modulemanagercontroller.h"
 #include "vn_introspectionsystem.h"
 #include "vs_veinhash.h"
 #include "licensesystemmock.h"
@@ -46,18 +45,14 @@ int main(int argc, char *argv[])
     qputenv("QT_FATAL_CRITICALS", "1"); \
 
     ModuleManagerSetupFacade modManSetupFacade;
-    ModuleManagerController mmController;
+    ModuleManagerController *mmController = modManSetupFacade.getModuleManagerController();
     VeinNet::IntrospectionSystem introspectionSystem;
     VeinStorage::VeinHash storSystem;
     LicenseSystemMock licenseSystem;
 
-    QList<VeinEvent::EventSystem*> subSystems;
-
-    subSystems.append(&mmController);
-    subSystems.append(&introspectionSystem);
-    subSystems.append(&storSystem);
-    subSystems.append(&licenseSystem);
-    modManSetupFacade.setSubsystems(subSystems);
+    modManSetupFacade.addSubsystem(&introspectionSystem);
+    modManSetupFacade.addSubsystem(&storSystem);
+    modManSetupFacade.addSubsystem(&licenseSystem);
 
     QStringList mtSessions, comSessions;
     QStringList allSessions = QString(SESSION_FILES).split(",");
@@ -74,18 +69,18 @@ int main(int argc, char *argv[])
     modMan.loadAllAvailableModulePlugins();
     modMan.setStorage(&storSystem);
     modMan.setLicenseSystem(&licenseSystem);
-    mmController.setStorage(&storSystem);
+    mmController->setStorage(&storSystem);
 
     JsonSessionLoader sessionLoader;
 
     QObject::connect(&sessionLoader, &JsonSessionLoader::sigLoadModule, &modMan, &ZeraModules::ModuleManager::startModule);
     QObject::connect(&modMan, &ZeraModules::ModuleManager::sigSessionSwitched, &sessionLoader, &JsonSessionLoader::loadSession);
 
-    QObject::connect(&modMan, &ZeraModules::ModuleManager::sigModulesLoaded, &mmController, &ModuleManagerController::initializeEntity);
-    QObject::connect(&mmController, &ModuleManagerController::sigChangeSession, &modMan, &ZeraModules::ModuleManager::changeSessionFile);
-    QObject::connect(&mmController, &ModuleManagerController::sigModulesPausedChanged, &modMan, &ZeraModules::ModuleManager::setModulesPaused);
+    QObject::connect(&modMan, &ZeraModules::ModuleManager::sigModulesLoaded, mmController, &ModuleManagerController::initializeEntity);
+    QObject::connect(mmController, &ModuleManagerController::sigChangeSession, &modMan, &ZeraModules::ModuleManager::changeSessionFile);
+    QObject::connect(mmController, &ModuleManagerController::sigModulesPausedChanged, &modMan, &ZeraModules::ModuleManager::setModulesPaused);
 
-    mmController.initOnce();
+    mmController->initOnce();
 
     QDir().mkdir(QStringLiteral(SCPI_DOC_BUILD_PATH) + "/scpi-xmls");
 

@@ -1,6 +1,5 @@
 #include "modulemanager.h"
 #include "jsonsessionloader.h"
-#include "modulemanagercontroller.h"
 #include "modulemanagerconfig.h"
 #include "customerdatasystem.h"
 #include "priorityarbitrationsystem.h"
@@ -109,8 +108,9 @@ int main(int argc, char *argv[])
     evHandler->setArbitrationSystem(arbitrationSystem);
 #endif
 
+    ModuleManagerSetupFacade modManSetupFacade(mmConfig->isDevMode());
     // setup vein modules
-    ModuleManagerController *mmController = new ModuleManagerController(&a, mmConfig->isDevMode());
+    ModuleManagerController *mmController = modManSetupFacade.getModuleManagerController();
     VeinNet::IntrospectionSystem *introspectionSystem = new VeinNet::IntrospectionSystem(&a);
     VeinStorage::VeinHash *storSystem = new VeinStorage::VeinHash(&a);
     VeinNet::NetworkSystem *netSystem = new VeinNet::NetworkSystem(&a);
@@ -135,7 +135,7 @@ int main(int argc, char *argv[])
     VeinLogger::QmlLogger::setJsonEnvironment(MODMAN_CONTENTSET_PATH, std::make_shared<JsonLoggerContentLoader>());
     VeinLogger::QmlLogger::setJsonEnvironment(MODMAN_SESSION_PATH, std::make_shared<JsonLoggerContentSessionLoader>());
 
-    ModuleManagerSetupFacade modManSetupFacade;
+
     ZeraModules::ModuleManager *modMan = new ZeraModules::ModuleManager(availableSessionList, &modManSetupFacade, &a);
     JsonSessionLoader *sessionLoader = new JsonSessionLoader(&a);
 
@@ -172,19 +172,15 @@ int main(int argc, char *argv[])
     };
     QObject::connect(dataLoggerSystem, &VeinLogger::DatabaseLogger::sigDatabaseError, errorReportFunction);
 
-
-    QList<VeinEvent::EventSystem*> subSystems;
     //do not reorder
-    subSystems.append(mmController);
-    subSystems.append(introspectionSystem);
-    subSystems.append(storSystem);
-    subSystems.append(netSystem);
-    subSystems.append(tcpSystem);
-    subSystems.append(qmlSystem);
-    subSystems.append(scriptSystem);
-    subSystems.append(licenseSystem);
+    modManSetupFacade.addSubsystem(introspectionSystem);
+    modManSetupFacade.addSubsystem(storSystem);
+    modManSetupFacade.addSubsystem(netSystem);
+    modManSetupFacade.addSubsystem(tcpSystem);
+    modManSetupFacade.addSubsystem(qmlSystem);
+    modManSetupFacade.addSubsystem(scriptSystem);
+    modManSetupFacade.addSubsystem(licenseSystem);
 
-    modManSetupFacade.setSubsystems(subSystems);
     // files entity
     qInfo("Starting vf-files...");
     modManSetupFacade.addSubsystem(filesModule->getVeinEntity());
