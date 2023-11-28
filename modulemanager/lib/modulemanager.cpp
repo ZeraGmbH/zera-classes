@@ -221,6 +221,7 @@ void ModuleManager::startModule(const QString & uniqueModuleName, const QString 
 
 void ModuleManager::destroyModules()
 {
+    m_eventHandler->clearSystems();
     if(!m_moduleList.isEmpty()) {
         m_moduleStartLock = true;
         QElapsedTimer destroyTimer;
@@ -245,7 +246,6 @@ void ModuleManager::changeSessionFile(const QString &newSessionFile)
         if(QFile::exists(sessionFileNameFull)) {
             if(m_moduleStartLock == false) { // do not mess up the state machines
                 m_sessionFile = newSessionFile;
-                m_eventHandler->clearSystems();
                 destroyModules();
                 emit sigSessionSwitched(sessionFileNameFull);
             }
