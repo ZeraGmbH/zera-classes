@@ -52,12 +52,12 @@ private:
     BluetoothConvenienceFacade m_bluetooth;
     BleDispatcherId m_bleDispatcherId;
 
-    VfModuleActvalue* m_pTemperatureCAct;
-    VfModuleActvalue* m_pTemperatureFAct;
-    VfModuleActvalue* m_pHumidityAct;
-    VfModuleActvalue* m_pAirPressureAct;
-    VfModuleActvalue* m_pErrorFlagsAct;
-    VfModuleActvalue* m_pWarningFlagsAct;
+    VfModuleParameter* m_pTemperatureCAct;
+    VfModuleParameter* m_pTemperatureFAct;
+    VfModuleParameter* m_pHumidityAct;
+    VfModuleParameter* m_pAirPressureAct;
+    VfModuleParameter* m_pErrorFlagsAct;
+    VfModuleParameter* m_pWarningFlagsAct;
     VfModuleParameter* m_pBluetoothOnOff;
     VfModuleParameter* m_pMacAddress;
 };
