@@ -5,7 +5,6 @@
 #include "vn_introspectionsystem.h"
 #include "vs_veinhash.h"
 #include "licensesystemmock.h"
-#include "moduleeventhandler.h"
 #include <QDataStream>
 #include <QCoreApplication>
 #include <QDir>
@@ -53,19 +52,16 @@ int main(int argc, char *argv[])
     qRegisterMetaTypeStreamOperators<QList<QVariantMap> >("QList<QVariantMap>");
     qputenv("QT_FATAL_CRITICALS", "1"); \
 
-    ModuleEventHandler evHandler;
+    ModuleManagerSetupFacade modManSetupFacade(&a);
     ModuleManagerController mmController;
     VeinNet::IntrospectionSystem introspectionSystem;
     VeinStorage::VeinHash storSystem;
     LicenseSystemMock licenseSystem;
 
-    QList<VeinEvent::EventSystem*> subSystems;
-
-    subSystems.append(&mmController);
-    subSystems.append(&introspectionSystem);
-    subSystems.append(&storSystem);
-    subSystems.append(&licenseSystem);
-    evHandler.setSubsystems(subSystems);
+    modManSetupFacade.addSubsystem(&mmController);
+    modManSetupFacade.addSubsystem(&introspectionSystem);
+    modManSetupFacade.addSubsystem(&storSystem);
+    modManSetupFacade.addSubsystem(&licenseSystem);
 
     QStringList mtSessions, comSessions;
     QStringList allSessions = QString(SESSION_FILES).split(",");
@@ -77,12 +73,11 @@ int main(int argc, char *argv[])
             comSessions.append(session);
     }
 
-    ModuleManagerTest modMan(allSessions);
+    ModuleManagerTest modMan(allSessions, &modManSetupFacade);
     modMan.setDemo(true);
     modMan.loadAllAvailableModulePlugins();
     modMan.setStorage(&storSystem);
     modMan.setLicenseSystem(&licenseSystem);
-    modMan.setEventHandler(&evHandler);
     mmController.setStorage(&storSystem);
 
     JsonSessionLoader sessionLoader;

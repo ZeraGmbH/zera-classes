@@ -1,7 +1,6 @@
 #include "test_modman_session.h"
 #include "jsonsessionloadertest.h"
 #include "licensesystemmock.h"
-#include "moduleeventhandler.h"
 #include "modulemanager.h"
 #include "modulemanagerconfigtest.h"
 #include "modulemanagertest.h"
@@ -41,7 +40,7 @@ void test_modman_session::loadModulePluginsInstalled()
         return;
     }
     const QStringList emptyAvailableSessionList;
-    ZeraModules::ModuleManager modMan(emptyAvailableSessionList);
+    ZeraModules::ModuleManager modMan(emptyAvailableSessionList, nullptr);
     modMan.setDemo(true);
 
     bool modulesFound = modMan.loadAllAvailableModulePlugins();
@@ -55,7 +54,7 @@ void test_modman_session::loadModulePluginsInstalled()
 void test_modman_session::loadModulePluginsOE()
 {
     const QStringList emptyAvailableSessionList;
-    ModuleManagerTest modMan(emptyAvailableSessionList);
+    ModuleManagerTest modMan(emptyAvailableSessionList, nullptr);
     modMan.setDemo(true);
 
     bool modulesFound = modMan.loadAllAvailableModulePlugins();
@@ -64,28 +63,25 @@ void test_modman_session::loadModulePluginsOE()
 
 void test_modman_session::startSession()
 {
-    ModuleEventHandler evHandler;
+    ModuleManagerSetupFacade modManSetupFacade;
     ModuleManagerController mmController;
     VeinNet::IntrospectionSystem introspectionSystem;
     VeinStorage::VeinHash storSystem;
     LicenseSystemMock licenseSystem;
 
-    QList<VeinEvent::EventSystem*> subSystems;
-    subSystems.append(&mmController);
-    subSystems.append(&introspectionSystem);
-    subSystems.append(&storSystem);
-    subSystems.append(&licenseSystem);
-    evHandler.setSubsystems(subSystems);
+    modManSetupFacade.addSubsystem(&mmController);
+    modManSetupFacade.addSubsystem(&introspectionSystem);
+    modManSetupFacade.addSubsystem(&storSystem);
+    modManSetupFacade.addSubsystem(&licenseSystem);
 
     ModulemanagerConfig* mmConfig = ModulemanagerConfig::getInstance();
     const QStringList availableSessionList = mmConfig->getAvailableSessions();
 
-    ModuleManagerTest modMan(availableSessionList);
+    ModuleManagerTest modMan(availableSessionList, &modManSetupFacade);
     modMan.setDemo(true);
     QVERIFY(modMan.loadAllAvailableModulePlugins());
     modMan.setStorage(&storSystem);
     modMan.setLicenseSystem(&licenseSystem);
-    modMan.setEventHandler(&evHandler);
     mmController.setStorage(&storSystem);
 
     JsonSessionLoader sessionLoader;
@@ -120,28 +116,25 @@ void test_modman_session::startSession()
 
 void test_modman_session::changeSession()
 {
-    ModuleEventHandler evHandler;
+    ModuleManagerSetupFacade modManSetupFacade;
     ModuleManagerController mmController;
     VeinNet::IntrospectionSystem introspectionSystem;
     VeinStorage::VeinHash storSystem;
     LicenseSystemMock licenseSystem;
 
-    QList<VeinEvent::EventSystem*> subSystems;
-    subSystems.append(&mmController);
-    subSystems.append(&introspectionSystem);
-    subSystems.append(&storSystem);
-    subSystems.append(&licenseSystem);
-    evHandler.setSubsystems(subSystems);
+    modManSetupFacade.addSubsystem(&mmController);
+    modManSetupFacade.addSubsystem(&introspectionSystem);
+    modManSetupFacade.addSubsystem(&storSystem);
+    modManSetupFacade.addSubsystem(&licenseSystem);
 
     ModulemanagerConfig* mmConfig = ModulemanagerConfig::getInstance();
     const QStringList availableSessionList = mmConfig->getAvailableSessions();
 
-    ModuleManagerTest modMan(availableSessionList);
+    ModuleManagerTest modMan(availableSessionList, &modManSetupFacade);
     modMan.setDemo(true);
     modMan.loadAllAvailableModulePlugins();
     modMan.setStorage(&storSystem);
     modMan.setLicenseSystem(&licenseSystem);
-    modMan.setEventHandler(&evHandler);
     mmController.setStorage(&storSystem);
 
     JsonSessionLoader sessionLoader;

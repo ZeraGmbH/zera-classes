@@ -1,6 +1,7 @@
 #ifndef MODULELOADER_H
 #define MODULELOADER_H
 
+#include "modulemanagersetupfacade.h"
 #include "licensesysteminterface.h"
 #include "mockmt310s2facade.h"
 #include "mockcom5003facade.h"
@@ -22,7 +23,6 @@ namespace VeinScript
 class ScriptSystem;
 }
 
-class ModuleEventHandler;
 class MeasurementModuleFactory;
 
 namespace ZeraModules
@@ -33,13 +33,12 @@ class ModuleManager : public QObject
 {
     Q_OBJECT
 public:
-    explicit ModuleManager(const QStringList &sessionList, QObject *parent = nullptr);
+    explicit ModuleManager(const QStringList &sessionList, ModuleManagerSetupFacade *setupFacade, QObject *parent = nullptr);
     ~ModuleManager() override;
     bool loadAllAvailableModulePlugins();
     void loadScripts(VeinScript::ScriptSystem *t_scriptSystem);
     void setStorage(VeinEvent::StorageSystem *t_storage);
     void setLicenseSystem(LicenseSystemInterface *t_licenseSystem);
-    void setEventHandler(ModuleEventHandler *t_eventHandler);
     void setDemo(bool demo);
     bool areAllModulesShutdown();
 signals:
@@ -70,13 +69,13 @@ private:
     void saveModuleConfig(ModuleData *t_moduleData);
     virtual QStringList getModuleFileNames();
 
+    ModuleManagerSetupFacade *m_setupFacade;
     QHash<QString, MeasurementModuleFactory*> m_factoryTable;
     QList<ModuleData *> m_moduleList;
     QQueue<ModuleData *> m_deferredStartList;
 
     bool m_demo;
     VeinEvent::StorageSystem *m_storage=nullptr;
-    ModuleEventHandler *m_eventHandler=nullptr;
     LicenseSystemInterface *m_licenseSystem=nullptr;
 
     QString m_sessionFile;
