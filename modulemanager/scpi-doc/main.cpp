@@ -42,8 +42,7 @@ int main(int argc, char *argv[])
         return -ENODEV;
     }
 
-    JsonSessionLoaderTest::enableTests();
-    ModulemanagerConfigTest::enableTest();
+    ModuleManagerTest::enableTest();
     ModuleManagerTest::pointToSourceSessionFiles();
 
     qRegisterMetaTypeStreamOperators<QList<int> >("QList<int>");
