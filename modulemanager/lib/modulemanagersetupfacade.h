@@ -4,6 +4,7 @@
 #include "moduleeventhandler.h"
 #include "modulemanagercontroller.h"
 #include "vn_introspectionsystem.h"
+#include "vs_veinhash.h"
 
 class ModuleManagerSetupFacade : public QObject
 {
@@ -14,8 +15,10 @@ public:
     void addSystem(VeinEvent::EventSystem* system);
     void clearSystems();
     ModuleManagerController *getModuleManagerController();
+    VeinStorage::VeinHash *getStorageSystem();
 private:
     ModuleEventHandler m_eventHandler;
+    VeinStorage::VeinHash m_storSystem;
     ModuleManagerController m_mmController;
     VeinNet::IntrospectionSystem m_introspectionSystem;
 };

@@ -52,10 +52,8 @@ int main(int argc, char *argv[])
 
     ModuleManagerSetupFacade modManSetupFacade(&a);
     ModuleManagerController *mmController = modManSetupFacade.getModuleManagerController();
-    VeinStorage::VeinHash storSystem;
     LicenseSystemMock licenseSystem;
 
-    modManSetupFacade.addSubsystem(&storSystem);
     modManSetupFacade.addSubsystem(&licenseSystem);
 
     QStringList mtSessions, comSessions;
@@ -71,9 +69,7 @@ int main(int argc, char *argv[])
     ModuleManagerTest modMan(allSessions, &modManSetupFacade);
     modMan.setDemo(true);
     modMan.loadAllAvailableModulePlugins();
-    modMan.setStorage(&storSystem);
     modMan.setLicenseSystem(&licenseSystem);
-    mmController->setStorage(&storSystem);
 
     JsonSessionLoader sessionLoader;
 
@@ -85,13 +81,13 @@ int main(int argc, char *argv[])
 
     QDir().mkdir(QStringLiteral(SCPI_DOC_BUILD_PATH) + "/scpi-xmls");
 
-    generateDevIfaceForAllSessions(mtSessions, &modMan, &storSystem);
+    generateDevIfaceForAllSessions(mtSessions, &modMan, modManSetupFacade.getStorageSystem());
     modMan.destroyModules();
     do
         ModuleManagerTest::feedEventLoop();
     while(!modMan.areAllModulesShutdown());
     modMan.changeMockServices("com5003");
-    generateDevIfaceForAllSessions(comSessions, &modMan, &storSystem);
+    generateDevIfaceForAllSessions(comSessions, &modMan, modManSetupFacade.getStorageSystem());
 
     QProcess sh;
     sh.start("/bin/sh", QStringList() << QStringLiteral(SCPI_DOC_SOURCE_PATH) + "/xml-to-html/create-all-htmls" << QStringLiteral(SCPI_DOC_BUILD_PATH));
