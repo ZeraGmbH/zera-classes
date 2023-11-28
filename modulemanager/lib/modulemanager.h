@@ -37,7 +37,6 @@ public:
     ~ModuleManager() override;
     bool loadAllAvailableModulePlugins();
     void loadScripts(VeinScript::ScriptSystem *t_scriptSystem);
-    void setStorage(VeinEvent::StorageSystem *t_storage);
     void setLicenseSystem(LicenseSystemInterface *t_licenseSystem);
     void setDemo(bool demo);
     bool areAllModulesShutdown();
@@ -75,7 +74,6 @@ private:
     QQueue<ModuleData *> m_deferredStartList;
 
     bool m_demo;
-    VeinEvent::StorageSystem *m_storage=nullptr;
     LicenseSystemInterface *m_licenseSystem=nullptr;
 
     QString m_sessionFile;

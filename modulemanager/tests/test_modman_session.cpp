@@ -56,10 +56,8 @@ void test_modman_session::startSession()
 {
     ModuleManagerSetupFacade modManSetupFacade;
     ModuleManagerController *mmController = modManSetupFacade.getModuleManagerController();
-    VeinStorage::VeinHash storSystem;
     LicenseSystemMock licenseSystem;
 
-    modManSetupFacade.addSubsystem(&storSystem);
     modManSetupFacade.addSubsystem(&licenseSystem);
 
     ModulemanagerConfig* mmConfig = ModulemanagerConfig::getInstance();
@@ -68,9 +66,7 @@ void test_modman_session::startSession()
     ModuleManagerTest modMan(availableSessionList, &modManSetupFacade);
     modMan.setDemo(true);
     QVERIFY(modMan.loadAllAvailableModulePlugins());
-    modMan.setStorage(&storSystem);
     modMan.setLicenseSystem(&licenseSystem);
-    mmController->setStorage(&storSystem);
 
     JsonSessionLoader sessionLoader;
 
@@ -86,13 +82,13 @@ void test_modman_session::startSession()
     mmController->initOnce();
 
     ModuleManagerTest::feedEventLoop();
-    QVERIFY(storSystem.hasEntity(0));
-    QVERIFY(storSystem.hasStoredValue(0, "Session"));
-    QString currentSession = storSystem.getStoredValue(0, "Session").toString();
+    QVERIFY(modManSetupFacade.getStorageSystem()->hasEntity(0));
+    QVERIFY(modManSetupFacade.getStorageSystem()->hasStoredValue(0, "Session"));
+    QString currentSession = modManSetupFacade.getStorageSystem()->getStoredValue(0, "Session").toString();
     QCOMPARE(currentSession, "mt310s2-meas-session.json");
 
-    QVERIFY(storSystem.hasStoredValue(0, "EntityName"));
-    QString actDevIface = storSystem.getStoredValue(9999, "ACT_DEV_IFACE").toString();
+    QVERIFY(modManSetupFacade.getStorageSystem()->hasStoredValue(0, "EntityName"));
+    QString actDevIface = modManSetupFacade.getStorageSystem()->getStoredValue(9999, "ACT_DEV_IFACE").toString();
     if(actDevIface.isEmpty()) // we have to make module resilient to this situation
         qFatal("ACT_DEV_IFACE empty - local modulemanager running???");
 
@@ -106,10 +102,8 @@ void test_modman_session::changeSession()
 {
     ModuleManagerSetupFacade modManSetupFacade;
     ModuleManagerController *mmController = modManSetupFacade.getModuleManagerController();
-    VeinStorage::VeinHash storSystem;
     LicenseSystemMock licenseSystem;
 
-    modManSetupFacade.addSubsystem(&storSystem);
     modManSetupFacade.addSubsystem(&licenseSystem);
 
     ModulemanagerConfig* mmConfig = ModulemanagerConfig::getInstance();
@@ -118,9 +112,7 @@ void test_modman_session::changeSession()
     ModuleManagerTest modMan(availableSessionList, &modManSetupFacade);
     modMan.setDemo(true);
     modMan.loadAllAvailableModulePlugins();
-    modMan.setStorage(&storSystem);
     modMan.setLicenseSystem(&licenseSystem);
-    mmController->setStorage(&storSystem);
 
     JsonSessionLoader sessionLoader;
 
@@ -136,14 +128,14 @@ void test_modman_session::changeSession()
     mmController->initOnce();
 
     ModuleManagerTest::feedEventLoop();
-    QString currentSession = storSystem.getStoredValue(0, "Session").toString();
+    QString currentSession = modManSetupFacade.getStorageSystem()->getStoredValue(0, "Session").toString();
     QCOMPARE(currentSession, "mt310s2-meas-session.json");
 
     modMan.changeSessionFile("mt310s2-emob-session.json");
     do
         ModuleManagerTest::feedEventLoop();
     while(!modMan.areAllModulesShutdown());
-    currentSession = storSystem.getStoredValue(0, "Session").toString();
+    currentSession = modManSetupFacade.getStorageSystem()->getStoredValue(0, "Session").toString();
     QCOMPARE(currentSession, "mt310s2-emob-session.json");
 
     modMan.destroyModules();

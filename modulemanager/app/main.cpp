@@ -110,12 +110,11 @@ int main(int argc, char *argv[])
     ModuleManagerSetupFacade modManSetupFacade(mmConfig->isDevMode());
     // setup vein modules
     ModuleManagerController *mmController = modManSetupFacade.getModuleManagerController();
-    VeinStorage::VeinHash *storSystem = new VeinStorage::VeinHash(&a);
     VeinNet::NetworkSystem *netSystem = new VeinNet::NetworkSystem(&a);
     VeinNet::TcpSystem *tcpSystem = new VeinNet::TcpSystem(&a);
     VeinScript::ScriptSystem *scriptSystem = new VeinScript::ScriptSystem(&a);
     VeinApiQml::VeinQml *qmlSystem = new VeinApiQml::VeinQml(&a);
-    ZeraDBLogger *dataLoggerSystem = new ZeraDBLogger(new VeinLogger::DataSource(storSystem, &a), sqliteFactory, &a); //takes ownership of DataSource
+    ZeraDBLogger *dataLoggerSystem = new ZeraDBLogger(new VeinLogger::DataSource(modManSetupFacade.getStorageSystem(), &a), sqliteFactory, &a); //takes ownership of DataSource
     CustomerDataSystem *customerDataSystem = nullptr;
     QString licenseUrl = QString("file://%1/license-keys").arg(OPERATOR_HOME);
     LicenseSystem *licenseSystem = new LicenseSystem({QUrl(licenseUrl)}, &a);
@@ -171,7 +170,6 @@ int main(int argc, char *argv[])
     QObject::connect(dataLoggerSystem, &VeinLogger::DatabaseLogger::sigDatabaseError, errorReportFunction);
 
     //do not reorder
-    modManSetupFacade.addSubsystem(storSystem);
     modManSetupFacade.addSubsystem(netSystem);
     modManSetupFacade.addSubsystem(tcpSystem);
     modManSetupFacade.addSubsystem(qmlSystem);
@@ -240,9 +238,7 @@ int main(int argc, char *argv[])
         }
     });
 
-    modMan->setStorage(storSystem);
     modMan->setLicenseSystem(licenseSystem);
-    mmController->setStorage(storSystem);
 
     QObject::connect(sessionLoader, &JsonSessionLoader::sigLoadModule, modMan, &ZeraModules::ModuleManager::startModule);
     QObject::connect(modMan, &ZeraModules::ModuleManager::sigSessionSwitched, sessionLoader, &JsonSessionLoader::loadSession);
