@@ -106,7 +106,10 @@ int main(int argc, char *argv[])
     PriorityArbitrationSystem *arbitrationSystem = new PriorityArbitrationSystem(&a);
     evHandler->setArbitrationSystem(arbitrationSystem);
 #endif
-    ModuleManagerSetupFacade modManSetupFacade(&a, mmConfig->isDevMode());
+
+    QString licenseUrl = QString("file://%1/license-keys").arg(OPERATOR_HOME);
+    LicenseSystem *licenseSystem = new LicenseSystem({QUrl(licenseUrl)}, &a);
+    ModuleManagerSetupFacade modManSetupFacade(licenseSystem, mmConfig->isDevMode(), &a);
     // setup vein modules
     ModuleManagerController *mmController = modManSetupFacade.getModuleManagerController();
     VeinNet::NetworkSystem *netSystem = new VeinNet::NetworkSystem(&a);
@@ -115,8 +118,6 @@ int main(int argc, char *argv[])
     VeinApiQml::VeinQml *qmlSystem = new VeinApiQml::VeinQml(&a);
     ZeraDBLogger *dataLoggerSystem = new ZeraDBLogger(new VeinLogger::DataSource(modManSetupFacade.getStorageSystem(), &a), sqliteFactory, &a); //takes ownership of DataSource
     CustomerDataSystem *customerDataSystem = nullptr;
-    QString licenseUrl = QString("file://%1/license-keys").arg(OPERATOR_HOME);
-    LicenseSystem *licenseSystem = new LicenseSystem({QUrl(licenseUrl)}, &a);
     vfExport::vf_export *exportModule=new vfExport::vf_export();
 
     QStringList allowedFolders{QStringLiteral(MODMAN_CUSTOMERDATA_PATH),
@@ -173,7 +174,6 @@ int main(int argc, char *argv[])
     modManSetupFacade.addSubsystem(tcpSystem);
     modManSetupFacade.addSubsystem(qmlSystem);
     modManSetupFacade.addSubsystem(scriptSystem);
-    modManSetupFacade.addSubsystem(licenseSystem);
 
     // files entity
     qInfo("Starting vf-files...");
@@ -237,7 +237,7 @@ int main(int argc, char *argv[])
         }
     });
 
-    modMan->setLicenseSystem(licenseSystem);
+    modMan->setLicenseSystem();
 
     QObject::connect(sessionLoader, &JsonSessionLoader::sigLoadModule, modMan, &ZeraModules::ModuleManager::startModule);
     QObject::connect(modMan, &ZeraModules::ModuleManager::sigSessionSwitched, sessionLoader, &JsonSessionLoader::loadSession);

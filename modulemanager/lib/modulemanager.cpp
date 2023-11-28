@@ -130,13 +130,12 @@ void ModuleManager::loadScripts(VeinScript::ScriptSystem *t_scriptSystem)
     }
 }
 
-void ModuleManager::setLicenseSystem(LicenseSystemInterface *t_licenseSystem)
+void ModuleManager::setLicenseSystem()
 {
     ///@todo move to constructor as the ModuleManager depends on the LicenseSystem
-    Q_ASSERT(t_licenseSystem != nullptr);
-    m_licenseSystem = t_licenseSystem;
+    Q_ASSERT(m_setupFacade->getLicenseSystem() != nullptr);
     //start the next module as soon as the PAR_SerialNr component is avaiable
-    connect(m_licenseSystem, &LicenseSystem::sigSerialNumberInitialized, this, &ModuleManager::delayedModuleStartNext);
+    connect(m_setupFacade->getLicenseSystem(), &LicenseSystem::sigSerialNumberInitialized, this, &ModuleManager::delayedModuleStartNext);
 }
 
 void ModuleManager::setDemo(bool demo)
@@ -169,7 +168,7 @@ void ModuleManager::startModule(const QString & uniqueModuleName, const QString 
         MeasurementModuleFactory *tmpFactory=nullptr;
 
         tmpFactory=m_factoryTable.value(uniqueModuleName);
-        if(tmpFactory && m_licenseSystem->isSystemLicensed(uniqueModuleName))
+        if(tmpFactory && m_setupFacade->getLicenseSystem()->isSystemLicensed(uniqueModuleName))
         {
             qDebug() << "Creating module:" << uniqueModuleName << "with id:" << moduleEntityId << "with config file:" << t_xmlConfigPath;
             VirtualModule *tmpModule = tmpFactory->createModule(moduleEntityId, m_setupFacade->getStorageSystem(), m_demo, this);
@@ -193,7 +192,7 @@ void ModuleManager::startModule(const QString & uniqueModuleName, const QString 
                 m_moduleList.append(moduleData);
             }
         }
-        else if(m_licenseSystem->serialNumberIsInitialized())
+        else if(m_setupFacade->getLicenseSystem()->serialNumberIsInitialized())
         {
             if(tmpFactory != nullptr) {
                 qWarning() << "Skipping module:" << uniqueModuleName << "No license found!";
@@ -307,7 +306,7 @@ void ModuleManager::checkModuleList(QObject *object)
 
 void ModuleManager::delayedModuleStartNext()
 {
-    if(m_licenseSystem->serialNumberIsInitialized() == true && m_moduleStartLock == false)
+    if(m_setupFacade->getLicenseSystem()->serialNumberIsInitialized() == true && m_moduleStartLock == false)
     {
         onModuleStartNext();
     }
