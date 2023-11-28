@@ -100,7 +100,6 @@ int main(int argc, char *argv[])
     QDir().mkdir(QStringLiteral(SCPI_DOC_BUILD_PATH) + "/scpi-xmls");
 
     generateDevIfaceForAllSessions(mtSessions, &modMan, &storSystem);
-    evHandler.clearSystems();
     modMan.destroyModules();
     do
         ModuleManagerTest::feedEventLoop();
