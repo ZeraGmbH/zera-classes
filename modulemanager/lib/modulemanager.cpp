@@ -130,11 +130,6 @@ void ModuleManager::loadScripts(VeinScript::ScriptSystem *t_scriptSystem)
     }
 }
 
-void ModuleManager::setStorage(VeinEvent::StorageSystem *t_storage)
-{
-    m_storage = t_storage;
-}
-
 void ModuleManager::setLicenseSystem(LicenseSystemInterface *t_licenseSystem)
 {
     ///@todo move to constructor as the ModuleManager depends on the LicenseSystem
@@ -177,7 +172,7 @@ void ModuleManager::startModule(const QString & uniqueModuleName, const QString 
         if(tmpFactory && m_licenseSystem->isSystemLicensed(uniqueModuleName))
         {
             qDebug() << "Creating module:" << uniqueModuleName << "with id:" << moduleEntityId << "with config file:" << t_xmlConfigPath;
-            VirtualModule *tmpModule = tmpFactory->createModule(moduleEntityId, m_storage, m_demo, this);
+            VirtualModule *tmpModule = tmpFactory->createModule(moduleEntityId, m_setupFacade->getStorageSystem(), m_demo, this);
             if(tmpModule)
             {
                 connect(tmpModule, &VirtualModule::addEventSystem, this, &ModuleManager::onModuleEventSystemAdded);
