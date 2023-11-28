@@ -1,4 +1,6 @@
 #include "modulemanagertest.h"
+#include "modulemanagerconfigtest.h"
+#include "jsonsessionloadertest.h"
 #include <QDir>
 #include <QCoreApplication>
 #include <QAbstractEventDispatcher>
@@ -6,9 +8,15 @@
 void ModuleManagerTest::enableTest()
 {
     m_runningInTest = true;
+    JsonSessionLoaderTest::enableTests();
+    ModulemanagerConfigTest::enableTest();
+}
+
+void ModuleManagerTest::pointToInstalledSessionFiles()
+{
     m_sessionPath = QDir::cleanPath(
-                QString(OE_INSTALL_ROOT) + "/" +
-                QString(MODMAN_SESSION_PATH));
+                    QString(OE_INSTALL_ROOT) + "/" +
+                    QString(MODMAN_SESSION_PATH));
 }
 
 void ModuleManagerTest::pointToSourceSessionFiles()
