@@ -54,11 +54,9 @@ void test_modman_session::loadModulePluginsOE()
 
 void test_modman_session::startSession()
 {
-    ModuleManagerSetupFacade modManSetupFacade;
-    ModuleManagerController *mmController = modManSetupFacade.getModuleManagerController();
     LicenseSystemMock licenseSystem;
-
-    modManSetupFacade.addSubsystem(&licenseSystem);
+    ModuleManagerSetupFacade modManSetupFacade(&licenseSystem);
+    ModuleManagerController *mmController = modManSetupFacade.getModuleManagerController();
 
     ModulemanagerConfig* mmConfig = ModulemanagerConfig::getInstance();
     const QStringList availableSessionList = mmConfig->getAvailableSessions();
@@ -66,7 +64,7 @@ void test_modman_session::startSession()
     ModuleManagerTest modMan(availableSessionList, &modManSetupFacade);
     modMan.setDemo(true);
     QVERIFY(modMan.loadAllAvailableModulePlugins());
-    modMan.setLicenseSystem(&licenseSystem);
+    modMan.setLicenseSystem();
 
     JsonSessionLoader sessionLoader;
 
@@ -100,11 +98,9 @@ void test_modman_session::startSession()
 
 void test_modman_session::changeSession()
 {
-    ModuleManagerSetupFacade modManSetupFacade;
-    ModuleManagerController *mmController = modManSetupFacade.getModuleManagerController();
     LicenseSystemMock licenseSystem;
-
-    modManSetupFacade.addSubsystem(&licenseSystem);
+    ModuleManagerSetupFacade modManSetupFacade(&licenseSystem);
+    ModuleManagerController *mmController = modManSetupFacade.getModuleManagerController();
 
     ModulemanagerConfig* mmConfig = ModulemanagerConfig::getInstance();
     const QStringList availableSessionList = mmConfig->getAvailableSessions();
@@ -112,7 +108,7 @@ void test_modman_session::changeSession()
     ModuleManagerTest modMan(availableSessionList, &modManSetupFacade);
     modMan.setDemo(true);
     modMan.loadAllAvailableModulePlugins();
-    modMan.setLicenseSystem(&licenseSystem);
+    modMan.setLicenseSystem();
 
     JsonSessionLoader sessionLoader;
 

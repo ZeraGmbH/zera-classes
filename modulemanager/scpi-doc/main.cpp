@@ -43,11 +43,9 @@ int main(int argc, char *argv[])
     ModuleManagerTest::pointToSourceSessionFiles();
     qputenv("QT_FATAL_CRITICALS", "1"); \
 
-    ModuleManagerSetupFacade modManSetupFacade;
-    ModuleManagerController *mmController = modManSetupFacade.getModuleManagerController();
     LicenseSystemMock licenseSystem;
-
-    modManSetupFacade.addSubsystem(&licenseSystem);
+    ModuleManagerSetupFacade modManSetupFacade(&licenseSystem);
+    ModuleManagerController *mmController = modManSetupFacade.getModuleManagerController();
 
     QStringList mtSessions, comSessions;
     QStringList allSessions = QString(SESSION_FILES).split(",");
@@ -62,7 +60,7 @@ int main(int argc, char *argv[])
     ModuleManagerTest modMan(allSessions, &modManSetupFacade);
     modMan.setDemo(true);
     modMan.loadAllAvailableModulePlugins();
-    modMan.setLicenseSystem(&licenseSystem);
+    modMan.setLicenseSystem();
 
     JsonSessionLoader sessionLoader;
 
