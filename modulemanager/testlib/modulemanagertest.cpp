@@ -1,14 +1,23 @@
 #include "modulemanagertest.h"
+#include "modulemanagerconfigtest.h"
+#include "jsonsessionloadertest.h"
 #include <QDir>
 #include <QCoreApplication>
 #include <QAbstractEventDispatcher>
+#include <QDataStream>
 
 void ModuleManagerTest::enableTest()
 {
     m_runningInTest = true;
+    JsonSessionLoaderTest::enableTests();
+    ModulemanagerConfigTest::enableTest();
+}
+
+void ModuleManagerTest::pointToInstalledSessionFiles()
+{
     m_sessionPath = QDir::cleanPath(
-                QString(OE_INSTALL_ROOT) + "/" +
-                QString(MODMAN_SESSION_PATH));
+                    QString(OE_INSTALL_ROOT) + "/" +
+                    QString(MODMAN_SESSION_PATH));
 }
 
 void ModuleManagerTest::pointToSourceSessionFiles()
@@ -29,6 +38,12 @@ void ModuleManagerTest::changeMockServices(QString deviceName)
 ModuleManagerTest::ModuleManagerTest(const QStringList &sessionList, QObject *parent) :
     ModuleManager(sessionList, parent)
 {
+    qRegisterMetaTypeStreamOperators<QList<int> >("QList<int>");
+    qRegisterMetaTypeStreamOperators<QList<float> >("QList<float>");
+    qRegisterMetaTypeStreamOperators<QList<double> >("QList<double>");
+    qRegisterMetaTypeStreamOperators<QList<QString> >("QList<QString>");
+    qRegisterMetaTypeStreamOperators<QVector<QString> >("QVector<QString>");
+    qRegisterMetaTypeStreamOperators<QList<QVariantMap> >("QList<QVariantMap>");
 }
 
 QStringList ModuleManagerTest::getModuleFileNames()
