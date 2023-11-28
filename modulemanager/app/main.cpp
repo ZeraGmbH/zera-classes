@@ -1,7 +1,6 @@
 #include "modulemanager.h"
 #include "jsonsessionloader.h"
 #include "modulemanagercontroller.h"
-#include "moduleeventhandler.h"
 #include "modulemanagerconfig.h"
 #include "customerdatasystem.h"
 #include "priorityarbitrationsystem.h"
@@ -104,8 +103,6 @@ int main(int argc, char *argv[])
     };
 
 
-    ModuleEventHandler *evHandler = new ModuleEventHandler(&a);
-
 #ifdef DEVICE_ARBITRATION
     //priority based arbitration
     PriorityArbitrationSystem *arbitrationSystem = new PriorityArbitrationSystem(&a);
@@ -138,7 +135,8 @@ int main(int argc, char *argv[])
     VeinLogger::QmlLogger::setJsonEnvironment(MODMAN_CONTENTSET_PATH, std::make_shared<JsonLoggerContentLoader>());
     VeinLogger::QmlLogger::setJsonEnvironment(MODMAN_SESSION_PATH, std::make_shared<JsonLoggerContentSessionLoader>());
 
-    ZeraModules::ModuleManager *modMan = new ZeraModules::ModuleManager(availableSessionList, &a);
+    ModuleManagerSetupFacade modManSetupFacade;
+    ZeraModules::ModuleManager *modMan = new ZeraModules::ModuleManager(availableSessionList, &modManSetupFacade, &a);
     JsonSessionLoader *sessionLoader = new JsonSessionLoader(&a);
 
     bool demoMode = parser.isSet(demo);
@@ -186,10 +184,10 @@ int main(int argc, char *argv[])
     subSystems.append(scriptSystem);
     subSystems.append(licenseSystem);
 
-    evHandler->setSubsystems(subSystems);
+    modManSetupFacade.setSubsystems(subSystems);
     // files entity
     qInfo("Starting vf-files...");
-    evHandler->addSubsystem(filesModule->getVeinEntity());
+    modManSetupFacade.addSubsystem(filesModule->getVeinEntity());
     filesModule->initOnce();
     filesModule->addMountToWatch(
                 QStringLiteral("AutoMountedPaths"),
@@ -221,7 +219,7 @@ int main(int argc, char *argv[])
                 customerDataSystem = new CustomerDataSystem(&a);
                 QObject::connect(customerDataSystem, &CustomerDataSystem::sigCustomerDataError, errorReportFunction);
                 qDebug() << "CustomerDataSystem is enabled";
-                evHandler->addSubsystem(customerDataSystem);
+                modManSetupFacade.addSubsystem(customerDataSystem);
                 customerDataSystem->initializeEntity();
             }
         });
@@ -234,11 +232,11 @@ int main(int argc, char *argv[])
             {
                 dataLoggerSystemInitialized = true;
                 qInfo("Starting DataLoggerSystem...");
-                evHandler->addSubsystem(dataLoggerSystem);
+                modManSetupFacade.addSubsystem(dataLoggerSystem);
 
                 // exports entity
                 qInfo("Starting vf-export...");
-                evHandler->addSubsystem(exportModule->getVeinEntity());
+                modManSetupFacade.addSubsystem(exportModule->getVeinEntity());
                 exportModule->initOnce();
 
                 // subscribe those entitities our magic logger QML script
@@ -251,7 +249,6 @@ int main(int argc, char *argv[])
 
     modMan->setStorage(storSystem);
     modMan->setLicenseSystem(licenseSystem);
-    modMan->setEventHandler(evHandler);
     mmController->setStorage(storSystem);
 
     QObject::connect(sessionLoader, &JsonSessionLoader::sigLoadModule, modMan, &ZeraModules::ModuleManager::startModule);
