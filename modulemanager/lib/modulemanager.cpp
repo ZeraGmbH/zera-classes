@@ -1,6 +1,5 @@
 #include "modulemanager.h"
 #include "modulemanagerconfig.h"
-#include "moduleeventhandler.h"
 #include "licensesystem.h"
 
 #include <ve_eventsystem.h>
@@ -54,9 +53,10 @@ QString ModuleManager::m_sessionPath = MODMAN_SESSION_PATH;
 bool ModuleManager::m_runningInTest = false;
 
 
-ModuleManager::ModuleManager(const QStringList &sessionList, QObject *parent) :
+ModuleManager::ModuleManager(const QStringList &sessionList, ModuleManagerSetupFacade *setupFacade, QObject *parent) :
     QObject(parent),
-    m_moduleStartLock(false)
+    m_moduleStartLock(false),
+    m_setupFacade(setupFacade)
 {
     m_timerAllModulesLoaded.start();
     QStringList entryList = QDir(m_sessionPath).entryList(QStringList({"*.json"}));
@@ -144,11 +144,6 @@ void ModuleManager::setLicenseSystem(LicenseSystemInterface *t_licenseSystem)
     connect(m_licenseSystem, &LicenseSystem::sigSerialNumberInitialized, this, &ModuleManager::delayedModuleStartNext);
 }
 
-void ModuleManager::setEventHandler(ModuleEventHandler *t_eventHandler)
-{
-    m_eventHandler = t_eventHandler;
-}
-
 void ModuleManager::setDemo(bool demo)
 {
     m_demo = demo;
@@ -221,7 +216,7 @@ void ModuleManager::startModule(const QString & uniqueModuleName, const QString 
 
 void ModuleManager::destroyModules()
 {
-    m_eventHandler->clearSystems();
+    m_setupFacade->clearSystems();
     if(!m_moduleList.isEmpty()) {
         m_moduleStartLock = true;
         QElapsedTimer destroyTimer;
@@ -341,7 +336,7 @@ void ModuleManager::onModuleError(const QString &t_error)
 
 void ModuleManager::onModuleEventSystemAdded(VeinEvent::EventSystem *t_eventSystem)
 {
-    m_eventHandler->addSystem(t_eventSystem);
+    m_setupFacade->addSystem(t_eventSystem);
 }
 
 void ModuleManager::setMockServices(QString deviceName)
