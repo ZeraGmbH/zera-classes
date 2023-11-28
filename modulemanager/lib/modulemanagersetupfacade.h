@@ -3,6 +3,7 @@
 
 #include "moduleeventhandler.h"
 #include "modulemanagercontroller.h"
+#include "vn_introspectionsystem.h"
 
 class ModuleManagerSetupFacade : public QObject
 {
@@ -16,6 +17,7 @@ public:
 private:
     ModuleEventHandler m_eventHandler;
     ModuleManagerController m_mmController;
+    VeinNet::IntrospectionSystem m_introspectionSystem;
 };
 
 #endif // MODULEMANAGERSETUPFACADE_H

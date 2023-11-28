@@ -4,7 +4,6 @@
 #include "modulemanagertest.h"
 #include "modulemanagerconfigtest.h"
 #include "jsonsessionloadertest.h"
-#include "vn_introspectionsystem.h"
 #include "vs_veinhash.h"
 #include <QTest>
 
@@ -57,11 +56,9 @@ void test_modman_session::startSession()
 {
     ModuleManagerSetupFacade modManSetupFacade;
     ModuleManagerController *mmController = modManSetupFacade.getModuleManagerController();
-    VeinNet::IntrospectionSystem introspectionSystem;
     VeinStorage::VeinHash storSystem;
     LicenseSystemMock licenseSystem;
 
-    modManSetupFacade.addSubsystem(&introspectionSystem);
     modManSetupFacade.addSubsystem(&storSystem);
     modManSetupFacade.addSubsystem(&licenseSystem);
 
@@ -109,11 +106,9 @@ void test_modman_session::changeSession()
 {
     ModuleManagerSetupFacade modManSetupFacade;
     ModuleManagerController *mmController = modManSetupFacade.getModuleManagerController();
-    VeinNet::IntrospectionSystem introspectionSystem;
     VeinStorage::VeinHash storSystem;
     LicenseSystemMock licenseSystem;
 
-    modManSetupFacade.addSubsystem(&introspectionSystem);
     modManSetupFacade.addSubsystem(&storSystem);
     modManSetupFacade.addSubsystem(&licenseSystem);
 

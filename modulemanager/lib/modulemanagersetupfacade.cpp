@@ -4,6 +4,7 @@ ModuleManagerSetupFacade::ModuleManagerSetupFacade(bool demo) :
     m_mmController(this, demo)
 {
     m_eventHandler.addSubsystem(&m_mmController);
+    m_eventHandler.addSubsystem(&m_introspectionSystem);
 }
 
 void ModuleManagerSetupFacade::addSubsystem(VeinEvent::EventSystem *subsystem)
