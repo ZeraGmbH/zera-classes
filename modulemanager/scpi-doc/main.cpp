@@ -1,4 +1,3 @@
-#include "jsonsessionloadertest.h"
 #include "modulemanagerconfigtest.h"
 #include "modulemanagertest.h"
 #include "vs_veinhash.h"
@@ -66,11 +65,7 @@ int main(int argc, char *argv[])
     ModuleManagerTest modMan(allSessions, &modManSetupFacade, true);
     modMan.loadAllAvailableModulePlugins();
     modMan.setupLicenseSystem();
-
-    JsonSessionLoader sessionLoader;
-
-    QObject::connect(&sessionLoader, &JsonSessionLoader::sigLoadModule, &modMan, &ZeraModules::ModuleManager::startModule);
-    QObject::connect(&modMan, &ZeraModules::ModuleManager::sigSessionSwitched, &sessionLoader, &JsonSessionLoader::loadSession);
+    modMan.setupJsonSessionLoader();
     modMan.setupModuleManagerController();
 
     QDir().mkdir(QStringLiteral(SCPI_DOC_BUILD_PATH) + "/scpi-xmls");

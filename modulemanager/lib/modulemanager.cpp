@@ -146,6 +146,12 @@ bool ModuleManager::areAllModulesShutdown()
     return !m_moduleStartLock;
 }
 
+void ModuleManager::setupJsonSessionLoader()
+{
+    QObject::connect(&m_sessionLoader, &JsonSessionLoader::sigLoadModule, this, &ZeraModules::ModuleManager::startModule);
+    QObject::connect(this, &ZeraModules::ModuleManager::sigSessionSwitched, &m_sessionLoader, &JsonSessionLoader::loadSession);
+}
+
 void ModuleManager::setupModuleManagerController()
 {
     m_setupFacade->getModuleManagerController()->initOnce();

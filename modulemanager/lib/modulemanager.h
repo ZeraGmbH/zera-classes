@@ -1,6 +1,7 @@
 #ifndef MODULELOADER_H
 #define MODULELOADER_H
 
+#include "jsonsessionloader.h"
 #include "modulemanagersetupfacade.h"
 #include "licensesysteminterface.h"
 #include "mockmt310s2facade.h"
@@ -39,6 +40,7 @@ public:
     void loadScripts(VeinScript::ScriptSystem *t_scriptSystem);
     void setupLicenseSystem();
     bool areAllModulesShutdown();
+    void setupJsonSessionLoader();
     void setupModuleManagerController();
 signals:
     void sigSessionSwitched(const QString &newSessionFile);
@@ -69,6 +71,7 @@ private:
     virtual QStringList getModuleFileNames();
 
     ModuleManagerSetupFacade *m_setupFacade;
+    JsonSessionLoader m_sessionLoader;
     QHash<QString, MeasurementModuleFactory*> m_factoryTable;
     QList<ModuleData *> m_moduleList;
     QQueue<ModuleData *> m_deferredStartList;
