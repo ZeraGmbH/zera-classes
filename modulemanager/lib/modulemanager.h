@@ -33,12 +33,11 @@ class ModuleManager : public QObject
 {
     Q_OBJECT
 public:
-    explicit ModuleManager(const QStringList &sessionList, ModuleManagerSetupFacade *setupFacade, QObject *parent = nullptr);
+    explicit ModuleManager(const QStringList &sessionList, ModuleManagerSetupFacade *setupFacade, bool demo = false, QObject *parent = nullptr);
     ~ModuleManager() override;
     bool loadAllAvailableModulePlugins();
     void loadScripts(VeinScript::ScriptSystem *t_scriptSystem);
     void setLicenseSystem();
-    void setDemo(bool demo);
     bool areAllModulesShutdown();
     void setupModuleManagerController();
 signals:

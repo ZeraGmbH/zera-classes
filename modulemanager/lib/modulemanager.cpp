@@ -53,10 +53,11 @@ QString ModuleManager::m_sessionPath = MODMAN_SESSION_PATH;
 bool ModuleManager::m_runningInTest = false;
 
 
-ModuleManager::ModuleManager(const QStringList &sessionList, ModuleManagerSetupFacade *setupFacade, QObject *parent) :
+ModuleManager::ModuleManager(const QStringList &sessionList, ModuleManagerSetupFacade *setupFacade, bool demo, QObject *parent) :
     QObject(parent),
     m_moduleStartLock(false),
-    m_setupFacade(setupFacade)
+    m_setupFacade(setupFacade),
+    m_demo(demo)
 {
     m_timerAllModulesLoaded.start();
     QStringList entryList = QDir(m_sessionPath).entryList(QStringList({"*.json"}));
@@ -73,6 +74,10 @@ ModuleManager::ModuleManager(const QStringList &sessionList, ModuleManagerSetupF
         qCritical() << "Missing session file(s)" << missingSessions;
     }
     qDebug() << "sessions available:" << m_sessionsAvailable;
+    if(m_demo) {
+        ModulemanagerConfig *mmConfig = ModulemanagerConfig::getInstance();
+        setMockServices(mmConfig->getDeviceName());
+    }
 }
 
 ModuleManager::~ModuleManager()
@@ -136,15 +141,6 @@ void ModuleManager::setLicenseSystem()
     Q_ASSERT(m_setupFacade->getLicenseSystem() != nullptr);
     //start the next module as soon as the PAR_SerialNr component is avaiable
     connect(m_setupFacade->getLicenseSystem(), &LicenseSystem::sigSerialNumberInitialized, this, &ModuleManager::delayedModuleStartNext);
-}
-
-void ModuleManager::setDemo(bool demo)
-{
-    m_demo = demo;
-    if(m_demo) {
-        ModulemanagerConfig *mmConfig = ModulemanagerConfig::getInstance();
-        setMockServices(mmConfig->getDeviceName());
-    }
 }
 
 bool ModuleManager::areAllModulesShutdown()
