@@ -158,6 +158,13 @@ bool ModuleManager::areAllModulesShutdown()
     return !m_moduleStartLock;
 }
 
+void ModuleManager::setModuleManagerControllerConnections()
+{
+    QObject::connect(this, &ZeraModules::ModuleManager::sigModulesLoaded, m_setupFacade->getModuleManagerController(), &ModuleManagerController::initializeEntity);
+    QObject::connect(m_setupFacade->getModuleManagerController(), &ModuleManagerController::sigChangeSession, this, &ZeraModules::ModuleManager::changeSessionFile);
+    QObject::connect(m_setupFacade->getModuleManagerController(), &ModuleManagerController::sigModulesPausedChanged, this, &ZeraModules::ModuleManager::setModulesPaused);
+}
+
 void ModuleManager::startModule(const QString & uniqueModuleName, const QString & t_xmlConfigPath, const QByteArray &t_xmlConfigData, int moduleEntityId)
 {
     // do not allow starting until all modules are shut down

@@ -1,8 +1,10 @@
 #include "modulemanagersetupfacade.h"
 
-ModuleManagerSetupFacade::ModuleManagerSetupFacade(QObject *parent) :
-    m_eventHandler(this)
+ModuleManagerSetupFacade::ModuleManagerSetupFacade(QObject *parent, bool devMode) :
+    m_eventHandler(this),
+    m_mmController(this, devMode)
 {
+    m_eventHandler.addSubsystem(&m_mmController);
 }
 
 void ModuleManagerSetupFacade::addSubsystem(VeinEvent::EventSystem *subsystem)
@@ -18,4 +20,9 @@ void ModuleManagerSetupFacade::addSystem(VeinEvent::EventSystem *system)
 void ModuleManagerSetupFacade::clearSystems()
 {
     m_eventHandler.clearSystems();
+}
+
+ModuleManagerController *ModuleManagerSetupFacade::getModuleManagerController()
+{
+    return &m_mmController;
 }

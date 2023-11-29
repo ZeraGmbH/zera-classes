@@ -41,6 +41,7 @@ public:
     void setLicenseSystem(LicenseSystemInterface *t_licenseSystem);
     void setDemo(bool demo);
     bool areAllModulesShutdown();
+    void setModuleManagerControllerConnections();
 signals:
     void sigSessionSwitched(const QString &newSessionFile);
     void sigModulesLoaded(const QString &t_sessionPath, const QStringList &t_sessionsAvailable);

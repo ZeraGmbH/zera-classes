@@ -1,6 +1,5 @@
 #include "modulemanager.h"
 #include "jsonsessionloader.h"
-#include "modulemanagercontroller.h"
 #include "modulemanagerconfig.h"
 #include "customerdatasystem.h"
 #include "priorityarbitrationsystem.h"
@@ -108,9 +107,9 @@ int main(int argc, char *argv[])
     PriorityArbitrationSystem *arbitrationSystem = new PriorityArbitrationSystem(&a);
     evHandler->setArbitrationSystem(arbitrationSystem);
 #endif
-
+    ModuleManagerSetupFacade modManSetupFacade(&a, mmConfig->isDevMode());
     // setup vein modules
-    ModuleManagerController *mmController = new ModuleManagerController(&a, mmConfig->isDevMode());
+    ModuleManagerController *mmController = modManSetupFacade.getModuleManagerController();
     VeinNet::IntrospectionSystem *introspectionSystem = new VeinNet::IntrospectionSystem(&a);
     VeinStorage::VeinHash *storSystem = new VeinStorage::VeinHash(&a);
     VeinNet::NetworkSystem *netSystem = new VeinNet::NetworkSystem(&a);
@@ -135,7 +134,6 @@ int main(int argc, char *argv[])
     VeinLogger::QmlLogger::setJsonEnvironment(MODMAN_CONTENTSET_PATH, std::make_shared<JsonLoggerContentLoader>());
     VeinLogger::QmlLogger::setJsonEnvironment(MODMAN_SESSION_PATH, std::make_shared<JsonLoggerContentSessionLoader>());
 
-    ModuleManagerSetupFacade modManSetupFacade(&a);
     ZeraModules::ModuleManager *modMan = new ZeraModules::ModuleManager(availableSessionList, &modManSetupFacade, &a);
     JsonSessionLoader *sessionLoader = new JsonSessionLoader(&a);
 
@@ -174,7 +172,6 @@ int main(int argc, char *argv[])
 
 
     //do not reorder
-    modManSetupFacade.addSubsystem(mmController);
     modManSetupFacade.addSubsystem(introspectionSystem);
     modManSetupFacade.addSubsystem(storSystem);
     modManSetupFacade.addSubsystem(netSystem);
@@ -280,9 +277,6 @@ int main(int argc, char *argv[])
         mmController->initOnce();
         tcpSystem->startServer(12000);
     }
-    QObject::connect(modMan, &ZeraModules::ModuleManager::sigModulesLoaded, mmController, &ModuleManagerController::initializeEntity);
-    QObject::connect(mmController, &ModuleManagerController::sigChangeSession, modMan, &ZeraModules::ModuleManager::changeSessionFile);
-    QObject::connect(mmController, &ModuleManagerController::sigModulesPausedChanged, modMan, &ZeraModules::ModuleManager::setModulesPaused);
-
+    modMan->setModuleManagerControllerConnections();
     return a.exec();
 }

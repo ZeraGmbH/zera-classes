@@ -4,7 +4,6 @@
 #include "modulemanager.h"
 #include "modulemanagerconfigtest.h"
 #include "modulemanagertest.h"
-#include "modulemanagercontroller.h"
 #include "vn_introspectionsystem.h"
 #include "vs_veinhash.h"
 #include <QDataStream>
@@ -64,12 +63,11 @@ void test_modman_session::loadModulePluginsOE()
 void test_modman_session::startSession()
 {
     ModuleManagerSetupFacade modManSetupFacade;
-    ModuleManagerController mmController;
+    ModuleManagerController *mmController = modManSetupFacade.getModuleManagerController();
     VeinNet::IntrospectionSystem introspectionSystem;
     VeinStorage::VeinHash storSystem;
     LicenseSystemMock licenseSystem;
 
-    modManSetupFacade.addSubsystem(&mmController);
     modManSetupFacade.addSubsystem(&introspectionSystem);
     modManSetupFacade.addSubsystem(&storSystem);
     modManSetupFacade.addSubsystem(&licenseSystem);
@@ -82,20 +80,17 @@ void test_modman_session::startSession()
     QVERIFY(modMan.loadAllAvailableModulePlugins());
     modMan.setStorage(&storSystem);
     modMan.setLicenseSystem(&licenseSystem);
-    mmController.setStorage(&storSystem);
+    mmController->setStorage(&storSystem);
 
     JsonSessionLoader sessionLoader;
 
     QObject::connect(&sessionLoader, &JsonSessionLoader::sigLoadModule, &modMan, &ZeraModules::ModuleManager::startModule);
     QObject::connect(&modMan, &ZeraModules::ModuleManager::sigSessionSwitched, &sessionLoader, &JsonSessionLoader::loadSession);
-
-    QObject::connect(&modMan, &ZeraModules::ModuleManager::sigModulesLoaded, &mmController, &ModuleManagerController::initializeEntity);
-    QObject::connect(&mmController, &ModuleManagerController::sigChangeSession, &modMan, &ZeraModules::ModuleManager::changeSessionFile);
-    QObject::connect(&mmController, &ModuleManagerController::sigModulesPausedChanged, &modMan, &ZeraModules::ModuleManager::setModulesPaused);
+    modMan.setModuleManagerControllerConnections();
 
     const QString defaultSessionFile = mmConfig->getDefaultSession();
     modMan.changeSessionFile(defaultSessionFile);
-    mmController.initOnce();
+    mmController->initOnce();
 
     ModuleManagerTest::feedEventLoop();
     QVERIFY(storSystem.hasEntity(0));
@@ -117,12 +112,11 @@ void test_modman_session::startSession()
 void test_modman_session::changeSession()
 {
     ModuleManagerSetupFacade modManSetupFacade;
-    ModuleManagerController mmController;
+    ModuleManagerController *mmController = modManSetupFacade.getModuleManagerController();
     VeinNet::IntrospectionSystem introspectionSystem;
     VeinStorage::VeinHash storSystem;
     LicenseSystemMock licenseSystem;
 
-    modManSetupFacade.addSubsystem(&mmController);
     modManSetupFacade.addSubsystem(&introspectionSystem);
     modManSetupFacade.addSubsystem(&storSystem);
     modManSetupFacade.addSubsystem(&licenseSystem);
@@ -135,20 +129,17 @@ void test_modman_session::changeSession()
     modMan.loadAllAvailableModulePlugins();
     modMan.setStorage(&storSystem);
     modMan.setLicenseSystem(&licenseSystem);
-    mmController.setStorage(&storSystem);
+    mmController->setStorage(&storSystem);
 
     JsonSessionLoader sessionLoader;
 
     QObject::connect(&sessionLoader, &JsonSessionLoader::sigLoadModule, &modMan, &ZeraModules::ModuleManager::startModule);
     QObject::connect(&modMan, &ZeraModules::ModuleManager::sigSessionSwitched, &sessionLoader, &JsonSessionLoader::loadSession);
-
-    QObject::connect(&modMan, &ZeraModules::ModuleManager::sigModulesLoaded, &mmController, &ModuleManagerController::initializeEntity);
-    QObject::connect(&mmController, &ModuleManagerController::sigChangeSession, &modMan, &ZeraModules::ModuleManager::changeSessionFile);
-    QObject::connect(&mmController, &ModuleManagerController::sigModulesPausedChanged, &modMan, &ZeraModules::ModuleManager::setModulesPaused);
+    modMan.setModuleManagerControllerConnections();
 
     const QString defaultSessionFile = mmConfig->getDefaultSession();
     modMan.changeSessionFile(defaultSessionFile);
-    mmController.initOnce();
+    mmController->initOnce();
 
     ModuleManagerTest::feedEventLoop();
     QString currentSession = storSystem.getStoredValue(0, "Session").toString();
