@@ -52,7 +52,6 @@ int main(int argc, char *argv[])
 
     LicenseSystemMock licenseSystem;
     ModuleManagerSetupFacade modManSetupFacade(&licenseSystem);
-    ModuleManagerController *mmController = modManSetupFacade.getModuleManagerController();
 
     QStringList mtSessions, comSessions;
     QStringList allSessions = QString(SESSION_FILES).split(",");
@@ -73,9 +72,7 @@ int main(int argc, char *argv[])
 
     QObject::connect(&sessionLoader, &JsonSessionLoader::sigLoadModule, &modMan, &ZeraModules::ModuleManager::startModule);
     QObject::connect(&modMan, &ZeraModules::ModuleManager::sigSessionSwitched, &sessionLoader, &JsonSessionLoader::loadSession);
-    modMan.setModuleManagerControllerConnections();
-
-    mmController->initOnce();
+    modMan.setupModuleManagerController();
 
     QDir().mkdir(QStringLiteral(SCPI_DOC_BUILD_PATH) + "/scpi-xmls");
 

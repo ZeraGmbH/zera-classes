@@ -63,7 +63,6 @@ void test_modman_session::startSession()
 {
     LicenseSystemMock licenseSystem;
     ModuleManagerSetupFacade modManSetupFacade(&licenseSystem);
-    ModuleManagerController *mmController = modManSetupFacade.getModuleManagerController();
 
     ModulemanagerConfig* mmConfig = ModulemanagerConfig::getInstance();
     const QStringList availableSessionList = mmConfig->getAvailableSessions();
@@ -77,11 +76,10 @@ void test_modman_session::startSession()
 
     QObject::connect(&sessionLoader, &JsonSessionLoader::sigLoadModule, &modMan, &ZeraModules::ModuleManager::startModule);
     QObject::connect(&modMan, &ZeraModules::ModuleManager::sigSessionSwitched, &sessionLoader, &JsonSessionLoader::loadSession);
-    modMan.setModuleManagerControllerConnections();
+    modMan.setupModuleManagerController();
 
     const QString defaultSessionFile = mmConfig->getDefaultSession();
     modMan.changeSessionFile(defaultSessionFile);
-    mmController->initOnce();
 
     ModuleManagerTest::feedEventLoop();
     QVERIFY(modManSetupFacade.getStorageSystem()->hasEntity(0));
@@ -104,7 +102,6 @@ void test_modman_session::changeSession()
 {
     LicenseSystemMock licenseSystem;
     ModuleManagerSetupFacade modManSetupFacade(&licenseSystem);
-    ModuleManagerController *mmController = modManSetupFacade.getModuleManagerController();
 
     ModulemanagerConfig* mmConfig = ModulemanagerConfig::getInstance();
     const QStringList availableSessionList = mmConfig->getAvailableSessions();
@@ -118,11 +115,10 @@ void test_modman_session::changeSession()
 
     QObject::connect(&sessionLoader, &JsonSessionLoader::sigLoadModule, &modMan, &ZeraModules::ModuleManager::startModule);
     QObject::connect(&modMan, &ZeraModules::ModuleManager::sigSessionSwitched, &sessionLoader, &JsonSessionLoader::loadSession);
-    modMan.setModuleManagerControllerConnections();
+    modMan.setupModuleManagerController();
 
     const QString defaultSessionFile = mmConfig->getDefaultSession();
     modMan.changeSessionFile(defaultSessionFile);
-    mmController->initOnce();
 
     ModuleManagerTest::feedEventLoop();
     QString currentSession = modManSetupFacade.getStorageSystem()->getStoredValue(0, "Session").toString();
