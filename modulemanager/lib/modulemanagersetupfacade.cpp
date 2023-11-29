@@ -7,6 +7,7 @@ ModuleManagerSetupFacade::ModuleManagerSetupFacade(LicenseSystemInterface *licen
     m_storSystem(this),
     m_licenseSystem(licenseSystem)
 {
+    Q_ASSERT(m_licenseSystem != nullptr);
     m_eventHandler.addSubsystem(&m_mmController);
     m_eventHandler.addSubsystem(&m_introspectionSystem);
     m_eventHandler.addSubsystem(&m_storSystem);
