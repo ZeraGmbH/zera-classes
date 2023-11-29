@@ -111,7 +111,6 @@ int main(int argc, char *argv[])
     LicenseSystem *licenseSystem = new LicenseSystem({QUrl(licenseUrl)}, &a);
     ModuleManagerSetupFacade modManSetupFacade(licenseSystem, mmConfig->isDevMode(), &a);
     // setup vein modules
-    ModuleManagerController *mmController = modManSetupFacade.getModuleManagerController();
     VeinNet::NetworkSystem *netSystem = new VeinNet::NetworkSystem(&a);
     VeinNet::TcpSystem *tcpSystem = new VeinNet::TcpSystem(&a);
     VeinScript::ScriptSystem *scriptSystem = new VeinScript::ScriptSystem(&a);
@@ -267,9 +266,8 @@ int main(int argc, char *argv[])
     else
     {
         modMan->changeSessionFile(defaultSessionFile);
-        mmController->initOnce();
         tcpSystem->startServer(12000);
     }
-    modMan->setModuleManagerControllerConnections();
+    modMan->setupModuleManagerController();
     return a.exec();
 }

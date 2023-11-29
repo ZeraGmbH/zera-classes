@@ -152,8 +152,9 @@ bool ModuleManager::areAllModulesShutdown()
     return !m_moduleStartLock;
 }
 
-void ModuleManager::setModuleManagerControllerConnections()
+void ModuleManager::setupModuleManagerController()
 {
+    m_setupFacade->getModuleManagerController()->initOnce();
     QObject::connect(this, &ZeraModules::ModuleManager::sigModulesLoaded, m_setupFacade->getModuleManagerController(), &ModuleManagerController::initializeEntity);
     QObject::connect(m_setupFacade->getModuleManagerController(), &ModuleManagerController::sigChangeSession, this, &ZeraModules::ModuleManager::changeSessionFile);
     QObject::connect(m_setupFacade->getModuleManagerController(), &ModuleManagerController::sigModulesPausedChanged, this, &ZeraModules::ModuleManager::setModulesPaused);
