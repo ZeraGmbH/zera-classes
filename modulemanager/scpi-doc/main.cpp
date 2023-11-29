@@ -2,7 +2,6 @@
 #include "modulemanagertest.h"
 #include "vs_veinhash.h"
 #include "licensesystemmock.h"
-#include <QDataStream>
 #include <QCoreApplication>
 #include <QDir>
 #include <QProcess>
@@ -40,13 +39,6 @@ int main(int argc, char *argv[])
 
     ModuleManagerTest::enableTest();
     ModuleManagerTest::pointToSourceSessionFiles();
-
-    qRegisterMetaTypeStreamOperators<QList<int> >("QList<int>");
-    qRegisterMetaTypeStreamOperators<QList<float> >("QList<float>");
-    qRegisterMetaTypeStreamOperators<QList<double> >("QList<double>");
-    qRegisterMetaTypeStreamOperators<QList<QString> >("QList<QString>");
-    qRegisterMetaTypeStreamOperators<QVector<QString> >("QVector<QString>");
-    qRegisterMetaTypeStreamOperators<QList<QVariantMap> >("QList<QVariantMap>");
     qputenv("QT_FATAL_CRITICALS", "1"); \
 
     LicenseSystemMock licenseSystem;

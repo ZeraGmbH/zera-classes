@@ -29,7 +29,6 @@
 
 #include <QLoggingCategory>
 #include <QStringList>
-#include <QDataStream>
 
 #include <QJsonDocument>
 #include <QJsonObject>
@@ -237,16 +236,7 @@ int main(int argc, char *argv[])
         dataLoggerSystem->setLoggingEnabled(false);
     });
 
-    bool modulesFound;
-
-    qRegisterMetaTypeStreamOperators<QList<int> >("QList<int>");
-    qRegisterMetaTypeStreamOperators<QList<float> >("QList<float>");
-    qRegisterMetaTypeStreamOperators<QList<double> >("QList<double>");
-    qRegisterMetaTypeStreamOperators<QList<QString> >("QList<QString>");
-    qRegisterMetaTypeStreamOperators<QVector<QString> >("QVector<QString>");
-    qRegisterMetaTypeStreamOperators<QList<QVariantMap> >("QList<QVariantMap>");
-
-    modulesFound = modMan->loadAllAvailableModulePlugins();
+    bool modulesFound = modMan->loadAllAvailableModulePlugins();
 
     if(!modulesFound)
     {

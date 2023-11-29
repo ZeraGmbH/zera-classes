@@ -1,4 +1,6 @@
 #include "modulemanagersetupfacade.h"
+#include "qcoreapplication.h"
+#include <QDataStream>
 
 ModuleManagerSetupFacade::ModuleManagerSetupFacade(LicenseSystemInterface *licenseSystem, bool devMode, QObject *parent) :
     m_eventHandler(this),
@@ -44,3 +46,15 @@ LicenseSystemInterface *ModuleManagerSetupFacade::getLicenseSystem()
 {
     return m_licenseSystem;
 }
+
+void registerStreamOperators()
+{
+    qRegisterMetaTypeStreamOperators<QList<int> >("QList<int>");
+    qRegisterMetaTypeStreamOperators<QList<float> >("QList<float>");
+    qRegisterMetaTypeStreamOperators<QList<double> >("QList<double>");
+    qRegisterMetaTypeStreamOperators<QList<QString> >("QList<QString>");
+    qRegisterMetaTypeStreamOperators<QVector<QString> >("QVector<QString>");
+    qRegisterMetaTypeStreamOperators<QList<QVariantMap> >("QList<QVariantMap>");
+}
+
+Q_COREAPP_STARTUP_FUNCTION(registerStreamOperators);
