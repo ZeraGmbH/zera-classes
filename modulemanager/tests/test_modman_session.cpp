@@ -37,7 +37,7 @@ void test_modman_session::loadModulePluginsInstalled()
         return;
     }
     const QStringList emptyAvailableSessionList;
-    ZeraModules::ModuleManager modMan(emptyAvailableSessionList, nullptr, true);
+    ZeraModules::ModuleManager modMan(nullptr, true);
 
     bool modulesFound = modMan.loadAllAvailableModulePlugins();
     QVERIFY(modulesFound);
@@ -50,7 +50,7 @@ void test_modman_session::loadModulePluginsInstalled()
 void test_modman_session::loadModulePluginsOE()
 {
     const QStringList emptyAvailableSessionList;
-    ModuleManagerTest modMan(emptyAvailableSessionList, nullptr, true);
+    ModuleManagerTest modMan(nullptr, true);
 
     bool modulesFound = modMan.loadAllAvailableModulePlugins();
     QVERIFY(modulesFound);
@@ -61,15 +61,10 @@ void test_modman_session::startSession()
     LicenseSystemMock licenseSystem;
     ModuleManagerSetupFacade modManSetupFacade(&licenseSystem);
 
-    ModulemanagerConfig* mmConfig = ModulemanagerConfig::getInstance();
-    const QStringList availableSessionList = mmConfig->getAvailableSessions();
-
-    ModuleManagerTest modMan(availableSessionList, &modManSetupFacade, true);
+    ModuleManagerTest modMan(&modManSetupFacade, true);
     QVERIFY(modMan.loadAllAvailableModulePlugins());
     modMan.setupConnections();
-
-    const QString defaultSessionFile = mmConfig->getDefaultSession();
-    modMan.changeSessionFile(defaultSessionFile);
+    modMan.loadDefaultSession();
 
     ModuleManagerTest::feedEventLoop();
     QVERIFY(modManSetupFacade.getStorageSystem()->hasEntity(0));
@@ -93,15 +88,10 @@ void test_modman_session::changeSession()
     LicenseSystemMock licenseSystem;
     ModuleManagerSetupFacade modManSetupFacade(&licenseSystem);
 
-    ModulemanagerConfig* mmConfig = ModulemanagerConfig::getInstance();
-    const QStringList availableSessionList = mmConfig->getAvailableSessions();
-
-    ModuleManagerTest modMan(availableSessionList, &modManSetupFacade, true);
+    ModuleManagerTest modMan(&modManSetupFacade, true);
     modMan.loadAllAvailableModulePlugins();
     modMan.setupConnections();
-
-    const QString defaultSessionFile = mmConfig->getDefaultSession();
-    modMan.changeSessionFile(defaultSessionFile);
+    modMan.loadDefaultSession();
 
     ModuleManagerTest::feedEventLoop();
     QString currentSession = modManSetupFacade.getStorageSystem()->getStoredValue(0, "Session").toString();

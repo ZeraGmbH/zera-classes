@@ -34,8 +34,8 @@ void ModuleManagerTest::changeMockServices(QString deviceName)
     setMockServices(deviceName);
 }
 
-ModuleManagerTest::ModuleManagerTest(const QStringList &sessionList, ModuleManagerSetupFacade *setupFacade, bool demo, QObject *parent) :
-    ModuleManager(sessionList, setupFacade, demo, parent)
+ModuleManagerTest::ModuleManagerTest(ModuleManagerSetupFacade *setupFacade, bool demo, QObject *parent) :
+    ModuleManager(setupFacade, demo, parent)
 {
 }
 
