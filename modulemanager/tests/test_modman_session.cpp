@@ -1,5 +1,4 @@
 #include "test_modman_session.h"
-#include "jsonsessionloadertest.h"
 #include "licensesystemmock.h"
 #include "modulemanager.h"
 #include "modulemanagerconfigtest.h"
@@ -68,11 +67,7 @@ void test_modman_session::startSession()
     ModuleManagerTest modMan(availableSessionList, &modManSetupFacade, true);
     QVERIFY(modMan.loadAllAvailableModulePlugins());
     modMan.setupLicenseSystem();
-
-    JsonSessionLoader sessionLoader;
-
-    QObject::connect(&sessionLoader, &JsonSessionLoader::sigLoadModule, &modMan, &ZeraModules::ModuleManager::startModule);
-    QObject::connect(&modMan, &ZeraModules::ModuleManager::sigSessionSwitched, &sessionLoader, &JsonSessionLoader::loadSession);
+    modMan.setupJsonSessionLoader();
     modMan.setupModuleManagerController();
 
     const QString defaultSessionFile = mmConfig->getDefaultSession();
@@ -106,11 +101,7 @@ void test_modman_session::changeSession()
     ModuleManagerTest modMan(availableSessionList, &modManSetupFacade, true);
     modMan.loadAllAvailableModulePlugins();
     modMan.setupLicenseSystem();
-
-    JsonSessionLoader sessionLoader;
-
-    QObject::connect(&sessionLoader, &JsonSessionLoader::sigLoadModule, &modMan, &ZeraModules::ModuleManager::startModule);
-    QObject::connect(&modMan, &ZeraModules::ModuleManager::sigSessionSwitched, &sessionLoader, &JsonSessionLoader::loadSession);
+    modMan.setupJsonSessionLoader();
     modMan.setupModuleManagerController();
 
     const QString defaultSessionFile = mmConfig->getDefaultSession();

@@ -1,5 +1,4 @@
 #include "modulemanager.h"
-#include "jsonsessionloader.h"
 #include "modulemanagerconfig.h"
 #include "customerdatasystem.h"
 #include "priorityarbitrationsystem.h"
@@ -132,7 +131,6 @@ int main(int argc, char *argv[])
     VeinLogger::QmlLogger::setJsonEnvironment(MODMAN_SESSION_PATH, std::make_shared<JsonLoggerContentSessionLoader>());
 
     ZeraModules::ModuleManager *modMan = new ZeraModules::ModuleManager(availableSessionList, &modManSetupFacade, parser.isSet(demo), &a);
-    JsonSessionLoader *sessionLoader = new JsonSessionLoader(&a);
 
     bool initQmlSystemOnce = false;
     QObject::connect(qmlSystem, &VeinApiQml::VeinQml::sigStateChanged, [&](VeinApiQml::VeinQml::ConnectionState t_state){
@@ -234,9 +232,7 @@ int main(int argc, char *argv[])
     });
 
     modMan->setupLicenseSystem();
-
-    QObject::connect(sessionLoader, &JsonSessionLoader::sigLoadModule, modMan, &ZeraModules::ModuleManager::startModule);
-    QObject::connect(modMan, &ZeraModules::ModuleManager::sigSessionSwitched, sessionLoader, &JsonSessionLoader::loadSession);
+    modMan->setupJsonSessionLoader();
     QObject::connect(modMan, &ZeraModules::ModuleManager::sigSessionSwitched, [&dataLoggerSystem]() {
         //disable logging to prevent data logging between session switching
         dataLoggerSystem->setLoggingEnabled(false);
@@ -250,8 +246,6 @@ int main(int argc, char *argv[])
     qRegisterMetaTypeStreamOperators<QList<QString> >("QList<QString>");
     qRegisterMetaTypeStreamOperators<QVector<QString> >("QVector<QString>");
     qRegisterMetaTypeStreamOperators<QList<QVariantMap> >("QList<QVariantMap>");
-
-
 
     modulesFound = modMan->loadAllAvailableModulePlugins();
 
