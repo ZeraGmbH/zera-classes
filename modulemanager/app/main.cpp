@@ -231,8 +231,7 @@ int main(int argc, char *argv[])
         }
     });
 
-    modMan->setupLicenseSystem();
-    modMan->setupJsonSessionLoader();
+    modMan->setupConnections();
     QObject::connect(modMan, &ZeraModules::ModuleManager::sigSessionSwitched, [&dataLoggerSystem]() {
         //disable logging to prevent data logging between session switching
         dataLoggerSystem->setLoggingEnabled(false);
@@ -259,6 +258,6 @@ int main(int argc, char *argv[])
         modMan->changeSessionFile(defaultSessionFile);
         tcpSystem->startServer(12000);
     }
-    modMan->setupModuleManagerController();
+
     return a.exec();
 }

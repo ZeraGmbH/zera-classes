@@ -66,9 +66,7 @@ void test_modman_session::startSession()
 
     ModuleManagerTest modMan(availableSessionList, &modManSetupFacade, true);
     QVERIFY(modMan.loadAllAvailableModulePlugins());
-    modMan.setupLicenseSystem();
-    modMan.setupJsonSessionLoader();
-    modMan.setupModuleManagerController();
+    modMan.setupConnections();
 
     const QString defaultSessionFile = mmConfig->getDefaultSession();
     modMan.changeSessionFile(defaultSessionFile);
@@ -100,9 +98,7 @@ void test_modman_session::changeSession()
 
     ModuleManagerTest modMan(availableSessionList, &modManSetupFacade, true);
     modMan.loadAllAvailableModulePlugins();
-    modMan.setupLicenseSystem();
-    modMan.setupJsonSessionLoader();
-    modMan.setupModuleManagerController();
+    modMan.setupConnections();
 
     const QString defaultSessionFile = mmConfig->getDefaultSession();
     modMan.changeSessionFile(defaultSessionFile);
