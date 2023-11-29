@@ -3,7 +3,6 @@
 
 #include "jsonsessionloader.h"
 #include "modulemanagersetupfacade.h"
-#include "licensesysteminterface.h"
 #include "mockmt310s2facade.h"
 #include "mockcom5003facade.h"
 #include <virtualmodule.h>
@@ -38,10 +37,8 @@ public:
     ~ModuleManager() override;
     bool loadAllAvailableModulePlugins();
     void loadScripts(VeinScript::ScriptSystem *t_scriptSystem);
-    void setupLicenseSystem();
     bool areAllModulesShutdown();
-    void setupJsonSessionLoader();
-    void setupModuleManagerController();
+    void setupConnections();
 signals:
     void sigSessionSwitched(const QString &newSessionFile);
     void sigModulesLoaded(const QString &t_sessionPath, const QStringList &t_sessionsAvailable);

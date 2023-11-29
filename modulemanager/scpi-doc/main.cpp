@@ -64,9 +64,7 @@ int main(int argc, char *argv[])
 
     ModuleManagerTest modMan(allSessions, &modManSetupFacade, true);
     modMan.loadAllAvailableModulePlugins();
-    modMan.setupLicenseSystem();
-    modMan.setupJsonSessionLoader();
-    modMan.setupModuleManagerController();
+    modMan.setupConnections();
 
     QDir().mkdir(QStringLiteral(SCPI_DOC_BUILD_PATH) + "/scpi-xmls");
 

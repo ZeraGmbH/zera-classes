@@ -135,25 +135,19 @@ void ModuleManager::loadScripts(VeinScript::ScriptSystem *t_scriptSystem)
     }
 }
 
-void ModuleManager::setupLicenseSystem()
-{
-    //start the next module as soon as the PAR_SerialNr component is avaiable
-    connect(m_setupFacade->getLicenseSystem(), &LicenseSystem::sigSerialNumberInitialized, this, &ModuleManager::delayedModuleStartNext);
-}
-
 bool ModuleManager::areAllModulesShutdown()
 {
     return !m_moduleStartLock;
 }
 
-void ModuleManager::setupJsonSessionLoader()
+void ModuleManager::setupConnections()
 {
+    //start the next module as soon as the PAR_SerialNr component is avaiable
+    connect(m_setupFacade->getLicenseSystem(), &LicenseSystem::sigSerialNumberInitialized, this, &ModuleManager::delayedModuleStartNext);
+
     QObject::connect(&m_sessionLoader, &JsonSessionLoader::sigLoadModule, this, &ZeraModules::ModuleManager::startModule);
     QObject::connect(this, &ZeraModules::ModuleManager::sigSessionSwitched, &m_sessionLoader, &JsonSessionLoader::loadSession);
-}
 
-void ModuleManager::setupModuleManagerController()
-{
     m_setupFacade->getModuleManagerController()->initOnce();
     QObject::connect(this, &ZeraModules::ModuleManager::sigModulesLoaded, m_setupFacade->getModuleManagerController(), &ModuleManagerController::initializeEntity);
     QObject::connect(m_setupFacade->getModuleManagerController(), &ModuleManagerController::sigChangeSession, this, &ZeraModules::ModuleManager::changeSessionFile);
