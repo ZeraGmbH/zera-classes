@@ -135,10 +135,8 @@ void ModuleManager::loadScripts(VeinScript::ScriptSystem *t_scriptSystem)
     }
 }
 
-void ModuleManager::setLicenseSystem()
+void ModuleManager::setupLicenseSystem()
 {
-    ///@todo move to constructor as the ModuleManager depends on the LicenseSystem
-    Q_ASSERT(m_setupFacade->getLicenseSystem() != nullptr);
     //start the next module as soon as the PAR_SerialNr component is avaiable
     connect(m_setupFacade->getLicenseSystem(), &LicenseSystem::sigSerialNumberInitialized, this, &ModuleManager::delayedModuleStartNext);
 }

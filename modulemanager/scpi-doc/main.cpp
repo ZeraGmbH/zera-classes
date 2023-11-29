@@ -65,7 +65,7 @@ int main(int argc, char *argv[])
 
     ModuleManagerTest modMan(allSessions, &modManSetupFacade, true);
     modMan.loadAllAvailableModulePlugins();
-    modMan.setLicenseSystem();
+    modMan.setupLicenseSystem();
 
     JsonSessionLoader sessionLoader;
 

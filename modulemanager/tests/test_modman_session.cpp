@@ -67,7 +67,7 @@ void test_modman_session::startSession()
 
     ModuleManagerTest modMan(availableSessionList, &modManSetupFacade, true);
     QVERIFY(modMan.loadAllAvailableModulePlugins());
-    modMan.setLicenseSystem();
+    modMan.setupLicenseSystem();
 
     JsonSessionLoader sessionLoader;
 
@@ -105,7 +105,7 @@ void test_modman_session::changeSession()
 
     ModuleManagerTest modMan(availableSessionList, &modManSetupFacade, true);
     modMan.loadAllAvailableModulePlugins();
-    modMan.setLicenseSystem();
+    modMan.setupLicenseSystem();
 
     JsonSessionLoader sessionLoader;
 

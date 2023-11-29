@@ -233,7 +233,7 @@ int main(int argc, char *argv[])
         }
     });
 
-    modMan->setLicenseSystem();
+    modMan->setupLicenseSystem();
 
     QObject::connect(sessionLoader, &JsonSessionLoader::sigLoadModule, modMan, &ZeraModules::ModuleManager::startModule);
     QObject::connect(modMan, &ZeraModules::ModuleManager::sigSessionSwitched, sessionLoader, &JsonSessionLoader::loadSession);

@@ -37,7 +37,7 @@ public:
     ~ModuleManager() override;
     bool loadAllAvailableModulePlugins();
     void loadScripts(VeinScript::ScriptSystem *t_scriptSystem);
-    void setLicenseSystem();
+    void setupLicenseSystem();
     bool areAllModulesShutdown();
     void setupModuleManagerController();
 signals:
