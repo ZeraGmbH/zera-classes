@@ -14,7 +14,6 @@
 #include <vcmp_componentdata.h>
 #include <vn_networksystem.h>
 #include <vn_tcpsystem.h>
-#include <vn_introspectionsystem.h>
 #include <vs_veinhash.h>
 #include <vsc_scriptsystem.h>
 #include <veinqml.h>
@@ -110,7 +109,6 @@ int main(int argc, char *argv[])
     ModuleManagerSetupFacade modManSetupFacade(&a, mmConfig->isDevMode());
     // setup vein modules
     ModuleManagerController *mmController = modManSetupFacade.getModuleManagerController();
-    VeinNet::IntrospectionSystem *introspectionSystem = new VeinNet::IntrospectionSystem(&a);
     VeinStorage::VeinHash *storSystem = new VeinStorage::VeinHash(&a);
     VeinNet::NetworkSystem *netSystem = new VeinNet::NetworkSystem(&a);
     VeinNet::TcpSystem *tcpSystem = new VeinNet::TcpSystem(&a);
@@ -172,7 +170,6 @@ int main(int argc, char *argv[])
 
 
     //do not reorder
-    modManSetupFacade.addSubsystem(introspectionSystem);
     modManSetupFacade.addSubsystem(storSystem);
     modManSetupFacade.addSubsystem(netSystem);
     modManSetupFacade.addSubsystem(tcpSystem);

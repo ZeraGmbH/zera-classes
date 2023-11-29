@@ -1,7 +1,6 @@
 #include "jsonsessionloadertest.h"
 #include "modulemanagerconfigtest.h"
 #include "modulemanagertest.h"
-#include "vn_introspectionsystem.h"
 #include "vs_veinhash.h"
 #include "licensesystemmock.h"
 #include <QDataStream>
@@ -53,11 +52,9 @@ int main(int argc, char *argv[])
 
     ModuleManagerSetupFacade modManSetupFacade(&a);
     ModuleManagerController *mmController = modManSetupFacade.getModuleManagerController();
-    VeinNet::IntrospectionSystem introspectionSystem;
     VeinStorage::VeinHash storSystem;
     LicenseSystemMock licenseSystem;
 
-    modManSetupFacade.addSubsystem(&introspectionSystem);
     modManSetupFacade.addSubsystem(&storSystem);
     modManSetupFacade.addSubsystem(&licenseSystem);
 
