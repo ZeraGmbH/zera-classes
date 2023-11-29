@@ -2,9 +2,11 @@
 
 ModuleManagerSetupFacade::ModuleManagerSetupFacade(QObject *parent, bool devMode) :
     m_eventHandler(this),
-    m_mmController(this, devMode)
+    m_mmController(this, devMode),
+    m_introspectionSystem(this)
 {
     m_eventHandler.addSubsystem(&m_mmController);
+    m_eventHandler.addSubsystem(&m_introspectionSystem);
 }
 
 void ModuleManagerSetupFacade::addSubsystem(VeinEvent::EventSystem *subsystem)
