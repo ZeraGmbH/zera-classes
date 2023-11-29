@@ -6,7 +6,7 @@
 class ModuleManagerTest : public ZeraModules::ModuleManager
 {
 public:
-    explicit ModuleManagerTest(const QStringList &sessionList, ModuleManagerSetupFacade *setupFacade, bool demo = false, QObject *parent = nullptr);
+    explicit ModuleManagerTest(ModuleManagerSetupFacade *setupFacade, bool demo = false, QObject *parent = nullptr);
     static void enableTest();
     static void pointToInstalledSessionFiles();
     static void pointToSourceSessionFiles();

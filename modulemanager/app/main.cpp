@@ -130,7 +130,7 @@ int main(int argc, char *argv[])
     VeinLogger::QmlLogger::setJsonEnvironment(MODMAN_CONTENTSET_PATH, std::make_shared<JsonLoggerContentLoader>());
     VeinLogger::QmlLogger::setJsonEnvironment(MODMAN_SESSION_PATH, std::make_shared<JsonLoggerContentSessionLoader>());
 
-    ZeraModules::ModuleManager *modMan = new ZeraModules::ModuleManager(availableSessionList, &modManSetupFacade, parser.isSet(demo), &a);
+    ZeraModules::ModuleManager *modMan = new ZeraModules::ModuleManager(&modManSetupFacade, parser.isSet(demo), &a);
 
     bool initQmlSystemOnce = false;
     QObject::connect(qmlSystem, &VeinApiQml::VeinQml::sigStateChanged, [&](VeinApiQml::VeinQml::ConnectionState t_state){
@@ -255,7 +255,7 @@ int main(int argc, char *argv[])
     }
     else
     {
-        modMan->changeSessionFile(defaultSessionFile);
+        modMan->loadDefaultSession();
         tcpSystem->startServer(12000);
     }
 

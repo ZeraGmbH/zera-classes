@@ -53,13 +53,17 @@ QString ModuleManager::m_sessionPath = MODMAN_SESSION_PATH;
 bool ModuleManager::m_runningInTest = false;
 
 
-ModuleManager::ModuleManager(const QStringList &sessionList, ModuleManagerSetupFacade *setupFacade, bool demo, QObject *parent) :
+ModuleManager::ModuleManager(ModuleManagerSetupFacade *setupFacade, bool demo, QObject *parent) :
     QObject(parent),
     m_moduleStartLock(false),
     m_setupFacade(setupFacade),
     m_demo(demo)
 {
     m_timerAllModulesLoaded.start();
+
+    ModulemanagerConfig *mmConfig = ModulemanagerConfig::getInstance();
+    QStringList sessionList = mmConfig->getAvailableSessions();
+
     QStringList entryList = QDir(m_sessionPath).entryList(QStringList({"*.json"}));
     QSet<QString> fileSet(entryList.begin(), entryList.end());
     QSet<QString> expectedSet(sessionList.begin(), sessionList.end());
@@ -74,10 +78,8 @@ ModuleManager::ModuleManager(const QStringList &sessionList, ModuleManagerSetupF
         qCritical() << "Missing session file(s)" << missingSessions;
     }
     qDebug() << "sessions available:" << m_sessionsAvailable;
-    if(m_demo) {
-        ModulemanagerConfig *mmConfig = ModulemanagerConfig::getInstance();
+    if(m_demo)
         setMockServices(mmConfig->getDeviceName());
-    }
 }
 
 ModuleManager::~ModuleManager()
@@ -152,6 +154,12 @@ void ModuleManager::setupConnections()
     QObject::connect(this, &ZeraModules::ModuleManager::sigModulesLoaded, m_setupFacade->getModuleManagerController(), &ModuleManagerController::initializeEntity);
     QObject::connect(m_setupFacade->getModuleManagerController(), &ModuleManagerController::sigChangeSession, this, &ZeraModules::ModuleManager::changeSessionFile);
     QObject::connect(m_setupFacade->getModuleManagerController(), &ModuleManagerController::sigModulesPausedChanged, this, &ZeraModules::ModuleManager::setModulesPaused);
+}
+
+void ModuleManager::loadDefaultSession()
+{
+    ModulemanagerConfig *mmConfig = ModulemanagerConfig::getInstance();
+    changeSessionFile(mmConfig->getDefaultSession());
 }
 
 void ModuleManager::startModule(const QString & uniqueModuleName, const QString & t_xmlConfigPath, const QByteArray &t_xmlConfigData, int moduleEntityId)
