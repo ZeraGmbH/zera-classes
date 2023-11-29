@@ -38,8 +38,7 @@ void test_modman_session::loadModulePluginsInstalled()
         return;
     }
     const QStringList emptyAvailableSessionList;
-    ZeraModules::ModuleManager modMan(emptyAvailableSessionList, nullptr);
-    modMan.setDemo(true);
+    ZeraModules::ModuleManager modMan(emptyAvailableSessionList, nullptr, true);
 
     bool modulesFound = modMan.loadAllAvailableModulePlugins();
     QVERIFY(modulesFound);
@@ -52,8 +51,7 @@ void test_modman_session::loadModulePluginsInstalled()
 void test_modman_session::loadModulePluginsOE()
 {
     const QStringList emptyAvailableSessionList;
-    ModuleManagerTest modMan(emptyAvailableSessionList, nullptr);
-    modMan.setDemo(true);
+    ModuleManagerTest modMan(emptyAvailableSessionList, nullptr, true);
 
     bool modulesFound = modMan.loadAllAvailableModulePlugins();
     QVERIFY(modulesFound);
@@ -67,8 +65,7 @@ void test_modman_session::startSession()
     ModulemanagerConfig* mmConfig = ModulemanagerConfig::getInstance();
     const QStringList availableSessionList = mmConfig->getAvailableSessions();
 
-    ModuleManagerTest modMan(availableSessionList, &modManSetupFacade);
-    modMan.setDemo(true);
+    ModuleManagerTest modMan(availableSessionList, &modManSetupFacade, true);
     QVERIFY(modMan.loadAllAvailableModulePlugins());
     modMan.setLicenseSystem();
 
@@ -106,8 +103,7 @@ void test_modman_session::changeSession()
     ModulemanagerConfig* mmConfig = ModulemanagerConfig::getInstance();
     const QStringList availableSessionList = mmConfig->getAvailableSessions();
 
-    ModuleManagerTest modMan(availableSessionList, &modManSetupFacade);
-    modMan.setDemo(true);
+    ModuleManagerTest modMan(availableSessionList, &modManSetupFacade, true);
     modMan.loadAllAvailableModulePlugins();
     modMan.setLicenseSystem();
 

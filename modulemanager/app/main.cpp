@@ -131,11 +131,8 @@ int main(int argc, char *argv[])
     VeinLogger::QmlLogger::setJsonEnvironment(MODMAN_CONTENTSET_PATH, std::make_shared<JsonLoggerContentLoader>());
     VeinLogger::QmlLogger::setJsonEnvironment(MODMAN_SESSION_PATH, std::make_shared<JsonLoggerContentSessionLoader>());
 
-    ZeraModules::ModuleManager *modMan = new ZeraModules::ModuleManager(availableSessionList, &modManSetupFacade, &a);
+    ZeraModules::ModuleManager *modMan = new ZeraModules::ModuleManager(availableSessionList, &modManSetupFacade, parser.isSet(demo), &a);
     JsonSessionLoader *sessionLoader = new JsonSessionLoader(&a);
-
-    bool demoMode = parser.isSet(demo);
-    modMan->setDemo(demoMode);
 
     bool initQmlSystemOnce = false;
     QObject::connect(qmlSystem, &VeinApiQml::VeinQml::sigStateChanged, [&](VeinApiQml::VeinQml::ConnectionState t_state){

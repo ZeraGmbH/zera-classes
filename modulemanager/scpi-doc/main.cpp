@@ -63,8 +63,7 @@ int main(int argc, char *argv[])
             comSessions.append(session);
     }
 
-    ModuleManagerTest modMan(allSessions, &modManSetupFacade);
-    modMan.setDemo(true);
+    ModuleManagerTest modMan(allSessions, &modManSetupFacade, true);
     modMan.loadAllAvailableModulePlugins();
     modMan.setLicenseSystem();
 
