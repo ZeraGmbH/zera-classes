@@ -1,7 +1,6 @@
 #include "modulemanager.h"
 #include "modulemanagerconfig.h"
 #include "customerdatasystem.h"
-#include "priorityarbitrationsystem.h"
 #include "zeradblogger.h"
 #include "licensesystem.h"
 #include "jsonloggercontentloader.h"
@@ -26,16 +25,7 @@
 #include <vf_files.h>
 
 #include <QDebug>
-
-#include <QLoggingCategory>
-#include <QStringList>
 #include <QDataStream>
-
-#include <QJsonDocument>
-#include <QJsonObject>
-#include <QJsonArray>
-
-#include <QRegExp>
 #include <QCommandLineParser>
 
 int main(int argc, char *argv[])

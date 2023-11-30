@@ -1,7 +1,6 @@
 #include "test_modman_session.h"
 #include "licensesystemmock.h"
 #include "modulemanager.h"
-#include "modulemanagerconfigtest.h"
 #include "modulemanagertest.h"
 #include "vs_veinhash.h"
 #include <QDataStream>
