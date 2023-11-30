@@ -36,10 +36,6 @@ int main(int argc, char *argv[])
     parser.addOption(demo);
     parser.process(a);
     if(parser.isSet(demo)) {
-        if(!QString(ZC_SERVICES_IP).isEmpty()) {
-            fprintf(stderr, "Running in demo mode and ZC_SERIVCES_IP is set to %s. ZC_SERIVCES_IP must be empty in demo mode!\n", ZC_SERVICES_IP);
-            return -ENODEV;
-        }
         QString demoDeviceName = parser.value(demo);
         ModulemanagerConfig::setDemoDevice(demoDeviceName);
     }

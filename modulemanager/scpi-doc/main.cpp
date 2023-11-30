@@ -30,11 +30,6 @@ int main(int argc, char *argv[])
 {
     QCoreApplication a(argc, argv);
 
-    if(!QString(ZC_SERVICES_IP).isEmpty()) {
-        fprintf(stderr, "Running in demo mode and ZC_SERIVCES_IP is set to %s. ZC_SERIVCES_IP must be empty in demo mode!\n", ZC_SERVICES_IP);
-        return -ENODEV;
-    }
-
     ModuleManagerTest::enableTest();
     ModuleManagerTest::pointToSourceSessionFiles();
     ModuleManagerSetupFacade::registerMetaTypeStreamOperators();
