@@ -12,6 +12,7 @@ class ModuleManagerSetupFacade : public QObject
     Q_OBJECT
 public:
     ModuleManagerSetupFacade(LicenseSystemInterface *licenseSystem, bool devMode = false, QObject *parent = nullptr);
+    static void registerMetaTypeStreamOperators();
     void addSubsystem(VeinEvent::EventSystem* subsystem);
     void addSystem(VeinEvent::EventSystem* system);
     void clearSystems();

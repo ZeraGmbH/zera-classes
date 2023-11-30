@@ -25,7 +25,6 @@
 #include <vf_files.h>
 
 #include <QDebug>
-#include <QDataStream>
 #include <QCommandLineParser>
 
 int main(int argc, char *argv[])
@@ -74,6 +73,8 @@ int main(int argc, char *argv[])
         fprintf(stderr, "No default session found for device %s", qPrintable(deviceName));
         return -ENODEV;
     }
+
+    ModuleManagerSetupFacade::registerMetaTypeStreamOperators();
 
     QStringList loggingFilters = QStringList() << QString("%1.debug=false").arg(VEIN_EVENT().categoryName()) <<
                                                   QString("%1.debug=false").arg(VEIN_NET_VERBOSE().categoryName()) <<
@@ -227,16 +228,7 @@ int main(int argc, char *argv[])
         dataLoggerSystem->setLoggingEnabled(false);
     });
 
-    bool modulesFound;
-
-    qRegisterMetaTypeStreamOperators<QList<int> >("QList<int>");
-    qRegisterMetaTypeStreamOperators<QList<float> >("QList<float>");
-    qRegisterMetaTypeStreamOperators<QList<double> >("QList<double>");
-    qRegisterMetaTypeStreamOperators<QList<QString> >("QList<QString>");
-    qRegisterMetaTypeStreamOperators<QVector<QString> >("QVector<QString>");
-    qRegisterMetaTypeStreamOperators<QList<QVariantMap> >("QList<QVariantMap>");
-
-    modulesFound = modMan->loadAllAvailableModulePlugins();
+    bool modulesFound = modMan->loadAllAvailableModulePlugins();
 
     if(!modulesFound)
     {
