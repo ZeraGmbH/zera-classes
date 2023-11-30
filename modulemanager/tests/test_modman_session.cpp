@@ -53,8 +53,8 @@ void test_modman_session::startSession()
     QVERIFY(modMan.loadAllAvailableModulePlugins());
     modMan.setupConnections();
     modMan.loadDefaultSession();
-
     ModuleManagerTest::feedEventLoop();
+
     QVERIFY(modManSetupFacade.getStorageSystem()->hasEntity(0));
     QVERIFY(modManSetupFacade.getStorageSystem()->hasStoredValue(0, "Session"));
     QString currentSession = modManSetupFacade.getStorageSystem()->getStoredValue(0, "Session").toString();
@@ -65,10 +65,7 @@ void test_modman_session::startSession()
     if(actDevIface.isEmpty()) // we have to make module resilient to this situation
         qFatal("ACT_DEV_IFACE empty - local modulemanager running???");
 
-    modMan.destroyModules();
-    do
-        ModuleManagerTest::feedEventLoop();
-    while(!modMan.areAllModulesShutdown());
+    modMan.destroyModulesAndWaitUntilAllShutdown();
 }
 
 void test_modman_session::changeSession()
@@ -80,20 +77,15 @@ void test_modman_session::changeSession()
     modMan.loadAllAvailableModulePlugins();
     modMan.setupConnections();
     modMan.loadDefaultSession();
-
     ModuleManagerTest::feedEventLoop();
+
     QString currentSession = modManSetupFacade.getStorageSystem()->getStoredValue(0, "Session").toString();
     QCOMPARE(currentSession, "mt310s2-meas-session.json");
 
     modMan.changeSessionFile("mt310s2-emob-session.json");
-    do
-        ModuleManagerTest::feedEventLoop();
-    while(!modMan.areAllModulesShutdown());
+    modMan.destroyModulesAndWaitUntilAllShutdown();
     currentSession = modManSetupFacade.getStorageSystem()->getStoredValue(0, "Session").toString();
     QCOMPARE(currentSession, "mt310s2-emob-session.json");
 
-    modMan.destroyModules();
-    do
-        ModuleManagerTest::feedEventLoop();
-    while(!modMan.areAllModulesShutdown());
+    modMan.destroyModulesAndWaitUntilAllShutdown();
 }

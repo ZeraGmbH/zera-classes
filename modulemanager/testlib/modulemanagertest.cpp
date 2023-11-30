@@ -29,14 +29,22 @@ void ModuleManagerTest::feedEventLoop()
     while(QCoreApplication::eventDispatcher()->processEvents(QEventLoop::AllEvents));
 }
 
+ModuleManagerTest::ModuleManagerTest(ModuleManagerSetupFacade *setupFacade, bool demo, QObject *parent) :
+    ModuleManager(setupFacade, demo, parent)
+{
+}
+
 void ModuleManagerTest::changeMockServices(QString deviceName)
 {
     setMockServices(deviceName);
 }
 
-ModuleManagerTest::ModuleManagerTest(ModuleManagerSetupFacade *setupFacade, bool demo, QObject *parent) :
-    ModuleManager(setupFacade, demo, parent)
+void ModuleManagerTest::destroyModulesAndWaitUntilAllShutdown()
 {
+    destroyModules();
+    do
+        feedEventLoop();
+    while(!areAllModulesShutdown());
 }
 
 QStringList ModuleManagerTest::getModuleFileNames()
