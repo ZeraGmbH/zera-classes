@@ -78,8 +78,14 @@ ModuleManager::ModuleManager(ModuleManagerSetupFacade *setupFacade, bool demo, Q
         qCritical() << "Missing session file(s)" << missingSessions;
     }
     qDebug() << "sessions available:" << m_sessionsAvailable;
-    if(m_demo)
+
+    if(m_demo) {
+        if(!QString(ZC_SERVICES_IP).isEmpty()) {
+            qWarning() << "Running in demo mode, so ZC_SERIVCES_IP must be empty! It is set to:" << ZC_SERVICES_IP;
+            Q_ASSERT(false);
+        }
         setMockServices(mmConfig->getDeviceName());
+    }
 }
 
 ModuleManager::~ModuleManager()
