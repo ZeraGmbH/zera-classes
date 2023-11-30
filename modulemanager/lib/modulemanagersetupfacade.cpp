@@ -1,4 +1,5 @@
 #include "modulemanagersetupfacade.h"
+#include <QDataStream>
 
 ModuleManagerSetupFacade::ModuleManagerSetupFacade(LicenseSystemInterface *licenseSystem, bool devMode, QObject *parent) :
     m_eventHandler(this),
@@ -13,6 +14,16 @@ ModuleManagerSetupFacade::ModuleManagerSetupFacade(LicenseSystemInterface *licen
     m_eventHandler.addSubsystem(&m_storSystem);
     m_eventHandler.addSubsystem(m_licenseSystem);
     m_mmController.setStorage(&m_storSystem);
+}
+
+void ModuleManagerSetupFacade::registerMetaTypeStreamOperators()
+{
+    qRegisterMetaTypeStreamOperators<QList<int> >("QList<int>");
+    qRegisterMetaTypeStreamOperators<QList<float> >("QList<float>");
+    qRegisterMetaTypeStreamOperators<QList<double> >("QList<double>");
+    qRegisterMetaTypeStreamOperators<QList<QString> >("QList<QString>");
+    qRegisterMetaTypeStreamOperators<QVector<QString> >("QVector<QString>");
+    qRegisterMetaTypeStreamOperators<QList<QVariantMap> >("QList<QVariantMap>");
 }
 
 void ModuleManagerSetupFacade::addSubsystem(VeinEvent::EventSystem *subsystem)

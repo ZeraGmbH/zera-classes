@@ -2,8 +2,6 @@
 #include "licensesystemmock.h"
 #include "modulemanager.h"
 #include "modulemanagertest.h"
-#include "vs_veinhash.h"
-#include <QDataStream>
 #include <QTest>
 
 QTEST_MAIN(test_modman_session)
@@ -12,14 +10,9 @@ void test_modman_session::initTestCase()
 {
     if(!QString(ZC_SERVICES_IP).isEmpty())
         qFatal("Running in demo mode and ZC_SERIVCES_IP is set to %s. ZC_SERIVCES_IP must be empty in demo mode!\n", ZC_SERVICES_IP);
+    ModuleManagerSetupFacade::registerMetaTypeStreamOperators();
     ModuleManagerTest::enableTest();
     ModuleManagerTest::pointToInstalledSessionFiles();
-    qRegisterMetaTypeStreamOperators<QList<int> >("QList<int>");
-    qRegisterMetaTypeStreamOperators<QList<float> >("QList<float>");
-    qRegisterMetaTypeStreamOperators<QList<double> >("QList<double>");
-    qRegisterMetaTypeStreamOperators<QList<QString> >("QList<QString>");
-    qRegisterMetaTypeStreamOperators<QVector<QString> >("QVector<QString>");
-    qRegisterMetaTypeStreamOperators<QList<QVariantMap> >("QList<QVariantMap>");
     qputenv("QT_FATAL_CRITICALS", "1"); \
 }
 
