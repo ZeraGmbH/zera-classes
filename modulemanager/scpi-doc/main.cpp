@@ -1,6 +1,4 @@
-#include "modulemanagerconfigtest.h"
 #include "modulemanagertest.h"
-#include "vs_veinhash.h"
 #include "licensesystemmock.h"
 #include <QDataStream>
 #include <QCoreApplication>
