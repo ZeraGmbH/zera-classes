@@ -1,8 +1,7 @@
 #include "modulemanagerfortest.h"
+#include <timemachineobject.h>
 #include <QFile>
 #include <QFileInfo>
-#include <QCoreApplication>
-#include <QAbstractEventDispatcher>
 
 ModuleManagerForTest::ModuleManagerForTest()
 {
@@ -20,9 +19,9 @@ void ModuleManagerForTest::addModule(cBaseModule *module, QString configFileFull
     qInfo("Add %s with configfile: %s...", qPrintable(module->getModuleName()), qPrintable(tmpXmlConfigFile.fileName()));
     tmpXmlConfigFile.open(QIODevice::Unbuffered | QIODevice::ReadOnly);
     module->setConfiguration(tmpXmlConfigFile.readAll());
-    feedEventLoop();
+    TimeMachineObject::feedEventLoop();
     module->startModule();
-    feedEventLoop();
+    TimeMachineObject::feedEventLoop();
 }
 
 VeinStorage::VeinHash *ModuleManagerForTest::getStorageSystem()
@@ -39,9 +38,4 @@ void ModuleManagerForTest::addSystem(VeinEvent::EventSystem *subsystem)
         m_addedSubsystems.insert(subsystem);
         m_eventHandler.addSubsystem(subsystem);
     }
-}
-
-void ModuleManagerForTest::feedEventLoop()
-{
-    while(QCoreApplication::eventDispatcher()->processEvents(QEventLoop::AllEvents));
 }

@@ -20,6 +20,7 @@ target_link_libraries(zera-modules-testlib
     PUBLIC
     zera-basemodule
     Zera::VfStorageHash
+    Zera::zera-timers-testlib
 )
 
 set_target_properties(zera-modules-testlib PROPERTIES VERSION ${PROJECT_VERSION})

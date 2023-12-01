@@ -10,7 +10,6 @@ public:
     static void enableTest();
     static void pointToInstalledSessionFiles();
     static void pointToSourceSessionFiles();
-    static void feedEventLoop();
     void changeMockServices(QString deviceName);
     void destroyModulesAndWaitUntilAllShutdown();
 private:

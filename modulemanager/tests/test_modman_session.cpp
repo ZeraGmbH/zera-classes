@@ -2,6 +2,7 @@
 #include "licensesystemmock.h"
 #include "modulemanager.h"
 #include "modulemanagertest.h"
+#include <timemachineobject.h>
 #include <QTest>
 
 QTEST_MAIN(test_modman_session)
@@ -11,7 +12,7 @@ void test_modman_session::initTestCase()
     ModuleManagerSetupFacade::registerMetaTypeStreamOperators();
     ModuleManagerTest::enableTest();
     ModuleManagerTest::pointToInstalledSessionFiles();
-    qputenv("QT_FATAL_CRITICALS", "1"); \
+    qputenv("QT_FATAL_CRITICALS", "1");
 }
 
 void test_modman_session::loadModulePluginsInstalled()
@@ -53,7 +54,7 @@ void test_modman_session::startSession()
     QVERIFY(modMan.loadAllAvailableModulePlugins());
     modMan.setupConnections();
     modMan.loadDefaultSession();
-    ModuleManagerTest::feedEventLoop();
+    TimeMachineObject::feedEventLoop();
 
     QVERIFY(modManSetupFacade.getStorageSystem()->hasEntity(0));
     QVERIFY(modManSetupFacade.getStorageSystem()->hasStoredValue(0, "Session"));
@@ -77,7 +78,7 @@ void test_modman_session::changeSession()
     modMan.loadAllAvailableModulePlugins();
     modMan.setupConnections();
     modMan.loadDefaultSession();
-    ModuleManagerTest::feedEventLoop();
+    TimeMachineObject::feedEventLoop();
 
     QString currentSession = modManSetupFacade.getStorageSystem()->getStoredValue(0, "Session").toString();
     QCOMPARE(currentSession, "mt310s2-meas-session.json");

@@ -14,8 +14,6 @@ public:
     ModuleManagerForTest();
     void addModule(cBaseModule* module, QString configFileFullPath);
     VeinStorage::VeinHash* getStorageSystem();
-    static void feedEventLoop();
-
 private:
     void addSystem(VeinEvent::EventSystem* subsystem);
 

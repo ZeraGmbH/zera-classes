@@ -1,9 +1,8 @@
 #include "modulemanagertest.h"
 #include "modulemanagerconfigtest.h"
 #include "jsonsessionloadertest.h"
+#include <timemachineobject.h>
 #include <QDir>
-#include <QCoreApplication>
-#include <QAbstractEventDispatcher>
 
 void ModuleManagerTest::enableTest()
 {
@@ -24,11 +23,6 @@ void ModuleManagerTest::pointToSourceSessionFiles()
     m_sessionPath = QDir::cleanPath(QString(SESSION_FILES_SOURCE_PATH));
 }
 
-void ModuleManagerTest::feedEventLoop()
-{
-    while(QCoreApplication::eventDispatcher()->processEvents(QEventLoop::AllEvents));
-}
-
 ModuleManagerTest::ModuleManagerTest(ModuleManagerSetupFacade *setupFacade, bool demo, QObject *parent) :
     ModuleManager(setupFacade, demo, parent)
 {
@@ -43,7 +37,7 @@ void ModuleManagerTest::destroyModulesAndWaitUntilAllShutdown()
 {
     destroyModules();
     do
-        feedEventLoop();
+        TimeMachineObject::feedEventLoop();
     while(!areAllModulesShutdown());
 }
 

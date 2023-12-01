@@ -91,7 +91,7 @@ void test_scpi_queue::sendSubSystemAndStandardCommands()
 
     disableQueuing(client.getScpiInterface());
     client.sendScpiCmds("MEASURE:RNG1:F?|MEASURE:RNG1:UL1?|MEASURE:RNG1:UL2?|*OPC?");
-    ModuleManagerForTest::feedEventLoop();
+    TimeMachineObject::feedEventLoop();
     TimeMachineForTest::getInstance()->processTimers(2000);
 
     QCOMPARE(responses.count(), 4);
@@ -101,7 +101,7 @@ void test_scpi_queue::sendSubSystemAndStandardCommands()
     responses.clear();
     enableQueuing(client.getScpiInterface());
     client.sendScpiCmds("MEASURE:RNG1:F?|MEASURE:RNG1:UL1?|MEASURE:RNG1:UL2?|*OPC?");
-    ModuleManagerForTest::feedEventLoop();
+    TimeMachineObject::feedEventLoop();
     TimeMachineForTest::getInstance()->processTimers(2000);
 
     QCOMPARE(responses.count(), 4);
@@ -130,7 +130,7 @@ void test_scpi_queue::enableAndDisableQueueWhileExecutingCmds()
 
     enableQueuing(client.getScpiInterface());
     client.sendScpiCmds("MEASURE:RNG1:UL1?|MEASURE:RNG1:UL2?|MEASURE:RNG1:UL3?|MEASURE:RNG1:IL1?|MEASURE:RNG1:IL2?|MEASURE:RNG1:IL3?|*OPC?|*IDN?");
-    ModuleManagerForTest::feedEventLoop();
+    TimeMachineObject::feedEventLoop();
     TimeMachineForTest::getInstance()->processTimers(1500);
     QCOMPARE(responses.count(), 3);
 

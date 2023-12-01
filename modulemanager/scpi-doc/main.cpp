@@ -1,5 +1,6 @@
 #include "modulemanagertest.h"
 #include "licensesystemmock.h"
+#include <timemachineobject.h>
 #include <QCoreApplication>
 #include <QDir>
 #include <QProcess>
@@ -9,7 +10,7 @@ void generateDevIfaceForAllSessions(QStringList sessionsList, ModuleManagerTest 
     for(const QString &session: qAsConst(sessionsList)) {
         modMan->changeSessionFile(session);
         do
-            ModuleManagerTest::feedEventLoop();
+            TimeMachineObject::feedEventLoop();
         while(!modMan->areAllModulesShutdown());
 
         QString actDevIface = storSystem->getStoredValue(9999, "ACT_DEV_IFACE").toString();

@@ -1,5 +1,6 @@
 #include "test_scpi_cmds_in_session.h"
 #include "modulemanagerfortest.h"
+#include <timemachineobject.h>
 #include <scpimodule.h>
 #include <scpimodulefortest.h>
 #include <scpitestclient.h>
@@ -105,10 +106,10 @@ void test_scpi_cmds_in_session::initialScpiCommandsOnOtherModules()
     // feeding.
     client.sendScpiCmds("*STB?");
     client.sendScpiCmds("STATUS:DEV1:SERIAL?");
-    ModuleManagerForTest::feedEventLoop();
+    TimeMachineObject::feedEventLoop();
     client.sendScpiCmds("*STB?");
     client.sendScpiCmds("STATUS:DEV1:SERIAL?");
-    ModuleManagerForTest::feedEventLoop();
+    TimeMachineObject::feedEventLoop();
     client.sendScpiCmds("*STB?");
 
     QCOMPARE(responses.count(), 5);
@@ -146,7 +147,7 @@ void test_scpi_cmds_in_session::multiReadDoubleDeleteCrasher()
     client.sendScpiCmds("SENSE:RNG1:UL1:RANGE?");
     client.sendScpiCmds("SENSE:RNG1:UL2:RANGE?");
     client.sendScpiCmds("SENSE:RNG1:UL3:RANGE?");
-    ModuleManagerForTest::feedEventLoop();
+    TimeMachineObject::feedEventLoop();
     QCOMPARE(responses.count(), 5);
     QCOMPARE(responses[0], "0");
     QCOMPARE(responses[1], "1");
@@ -164,7 +165,7 @@ void test_scpi_cmds_in_session::devIfaceVeinComponent()
     QList<QString> componentList = storageHash->getEntityComponents(entityList[0]);
     QVERIFY(componentList.contains("ACT_DEV_IFACE"));
 
-    ModuleManagerForTest::feedEventLoop(); // for setup SCPI from vein
+    TimeMachineObject::feedEventLoop(); // for setup SCPI from vein
 
     SCPIMODULE::ScpiTestClient client(&scpiModule, *scpiModule.getConfigData(), scpiModule.getScpiInterface());
     scpiModule.getSCPIServer()->appendClient(&client);
@@ -193,7 +194,7 @@ void test_scpi_cmds_in_session::devIfaceVeinComponentMultipleEntities()
     modman.addModule(&scpiModule, QStringLiteral(CONFIG_SOURCES_SCPIMODULE) + "/" + "demo-scpimodule.xml");
     QCOMPARE(getEntityCount(&modman), 3);
 
-    ModuleManagerForTest::feedEventLoop(); // for setup SCPI from vein
+    TimeMachineObject::feedEventLoop(); // for setup SCPI from vein
 
     SCPIMODULE::ScpiTestClient client(&scpiModule, *scpiModule.getConfigData(), scpiModule.getScpiInterface());
     scpiModule.getSCPIServer()->appendClient(&client);
@@ -224,7 +225,7 @@ void test_scpi_cmds_in_session::devIfaceVeinComponentMultipleEntitiesForLongXml(
     SCPIMODULE::ScpiModuleForTest scpiModule(1, 9999, modman.getStorageSystem(), true);
     modman.addModule(&scpiModule, QStringLiteral(CONFIG_SOURCES_SCPIMODULE) + "/" + "demo-scpimodule.xml");
 
-    ModuleManagerForTest::feedEventLoop(); // for setup SCPI from vein
+    TimeMachineObject::feedEventLoop(); // for setup SCPI from vein
 
     SCPIMODULE::ScpiTestClient client(&scpiModule, *scpiModule.getConfigData(), scpiModule.getScpiInterface());
     scpiModule.getSCPIServer()->appendClient(&client);
