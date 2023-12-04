@@ -163,7 +163,7 @@ private slots:
     void registerPCBVersionNotifier();
     void getSchnubbelStatus();
     void getAccumulatorStatus();
-    void getAccumulatorSoc();
+    void getAccuStateOfCharge();
 
     void activationDone();
     void deactivationDone();

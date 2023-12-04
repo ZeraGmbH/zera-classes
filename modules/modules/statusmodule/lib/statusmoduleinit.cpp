@@ -82,7 +82,7 @@ cStatusModuleInit::cStatusModuleInit(cStatusModule* module, cStatusModuleConfigD
     connect(&m_pcbserverRegisterAccumulatorStatusNotifierState, &QState::entered, this, &cStatusModuleInit::registerAccumulatorStatusNotifier);
     connect(&m_pcbserverReadInitialAccumulatorStatus, &QState::entered, this, &cStatusModuleInit::getAccumulatorStatus);
     connect(&m_pcbserverRegisterAccumulatorSocNotifierState, &QState::entered, this, &cStatusModuleInit::registerAccumulatorSocNotifier);
-    connect(&m_pcbserverReadInitialAccumulatorSoc, &QState::entered, this, &cStatusModuleInit::getAccumulatorSoc);
+    connect(&m_pcbserverReadInitialAccumulatorSoc, &QState::entered, this, &cStatusModuleInit::getAccuStateOfCharge);
     connect(&m_pcbserverRegisterCtrlVersionChange, &QState::entered, this, &cStatusModuleInit::registerCtrlVersionsChangedNotifier);
     connect(&m_activationDoneState, &QState::entered, this, &cStatusModuleInit::activationDone);
 
@@ -280,7 +280,7 @@ void cStatusModuleInit::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVaria
                 getAccumulatorStatus();
                 break;
             case STATUSMODINIT::accumulatorSocNotifierID:
-                getAccumulatorSoc();
+                getAccuStateOfCharge();
                 break;
             case STATUSMODINIT::ctrlVersionChangeID:
                 pcbserverReadCtrlVersion();
@@ -597,9 +597,9 @@ void cStatusModuleInit::getAccumulatorStatus()
     m_MsgNrCmdList[m_pPCBInterface->getAccumulatorStatus()] = STATUSMODINIT::readPCBServerAccumulatorStatus;
 }
 
-void cStatusModuleInit::getAccumulatorSoc()
+void cStatusModuleInit::getAccuStateOfCharge()
 {
-    m_MsgNrCmdList[m_pPCBInterface->getAccumulatorSoc()] = STATUSMODINIT::readPCBServerAccumulatorSoc;
+    m_MsgNrCmdList[m_pPCBInterface->getAccuStateOfCharge()] = STATUSMODINIT::readPCBServerAccumulatorSoc;
 }
 
 void cStatusModuleInit::setInterfaceComponents()
