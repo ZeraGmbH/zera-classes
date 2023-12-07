@@ -427,7 +427,7 @@ void cSec1ModuleMeasProgram::generateInterface()
     m_pLowerLimitPar = new VfModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                                 key = QString("PAR_Lolimit"),
                                                 QString("Error limit: lower"),
-                                                QVariant(getConfData()->m_fUpperLimit.m_fPar));
+                                                QVariant(getConfData()->m_fLowerLimit.m_fPar));
     m_pLowerLimitPar->setSCPIInfo(new cSCPIInfo("CALCULATE",  QString("%1:LOLIMIT").arg(modNr), "10", m_pLowerLimitPar->getName(), "0", "%"));
     m_pModule->veinModuleParameterHash[key] = m_pLowerLimitPar; // for modules use
     dValidator = new cDoubleValidator(-100.0, 100.0, 1e-6);
