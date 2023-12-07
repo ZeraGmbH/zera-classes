@@ -1711,7 +1711,6 @@ void cSec1ModuleMeasProgram::newUpperLimit(QVariant limit)
 {
     bool ok;
     getConfData()->m_fUpperLimit.m_fPar = limit.toDouble(&ok);
-    getConfData()->m_fLowerLimit.m_fPar = - limit.toDouble(&ok);
     setInterfaceComponents();
     setRating();
 
