@@ -20,7 +20,7 @@
         </connectivity>
         <sample>
             <system>s0</system>
-            <withpllautomatic>1</withpllautomatic>
+            <withpllautomatic>0</withpllautomatic>
             <pllchannel>
                 <n>8</n>
                 <ch1>m0</ch1>
