@@ -11,3 +11,7 @@ target_link_libraries(scpi-doc-generator
 )
 
 add_subdirectory(xml-to-html)
+
+install(TARGETS scpi-doc-generator
+    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+    )
