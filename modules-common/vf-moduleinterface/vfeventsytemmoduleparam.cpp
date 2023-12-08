@@ -18,7 +18,10 @@ void VfEventSytemModuleParam::processCommandEvent(VeinEvent::CommandEvent *comma
             auto hashIter = m_parameterHash.find(cName);
             if(hashIter != m_parameterHash.end()) {
                 // we only take new values if the old values are equal
-                if (cData->oldValue() == m_storageSystem->getStoredValue(m_entityId, cName)) {
+                double oldValue = cData->oldValue().toDouble();
+                double newValue = m_storageSystem->getStoredValue(m_entityId, cName).toDouble();
+                if (cData->oldValue() == m_storageSystem->getStoredValue(m_entityId, cName) ||
+                        (qIsNaN(oldValue) && qIsNaN(newValue))) {
                     VfModuleParameter *param = hashIter.value();
                     param->transaction(commandEvent->peerId(), cData->newValue(), cData->oldValue(), cData->eventCommand());
                     commandEvent->accept(); // it is an event for us ... the parameter will do the rest
