@@ -22,7 +22,7 @@ public:
     static constexpr const char* BaseSCPIModuleName = "PW2";
 
     cPower2Module(quint8 modnr, int entityId, VeinEvent::StorageSystem* storagesystem, bool demo);
-    virtual QByteArray getConfiguration() const;
+    QByteArray getConfiguration() const override;
 
 protected:
     cPower2ModuleMeasProgram *m_pMeasProgram; // our measuring program, lets say the working horse

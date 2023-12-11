@@ -22,7 +22,7 @@ public:
     static constexpr const char* BaseSCPIModuleName = "TR1";
 
     cTransformer1Module(quint8 modnr, int entityId, VeinEvent::StorageSystem* storagesystem, bool demo);
-    virtual QByteArray getConfiguration() const;
+    QByteArray getConfiguration() const override;
 
 protected:
     cTransformer1ModuleObservation *m_pTransformer1ModuleObservation;

@@ -14,7 +14,7 @@ public:
     static constexpr const char* BaseSCPIModuleName = "EF1";
 
     cEfficiency1Module(quint8 modnr, int entityId, VeinEvent::StorageSystem* storagesystem, bool demo);
-    virtual QByteArray getConfiguration() const;
+    QByteArray getConfiguration() const override;
 
 protected:
     cEfficiency1ModuleMeasProgram *m_pMeasProgram; // our measuring program, lets say the working horse

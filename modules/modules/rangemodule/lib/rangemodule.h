@@ -25,7 +25,7 @@ public:
     static constexpr const char* BaseModuleName = "RangeModule";
     static constexpr const char* BaseSCPIModuleName = "RNG";
     cRangeModule(quint8 modnr, int entityId, VeinEvent::StorageSystem* storagesystem, bool demo);
-    virtual QByteArray getConfiguration() const;
+    QByteArray getConfiguration() const override;
     virtual cRangeMeasChannel* getMeasChannel(QString name); // also used for callback
 
 protected:

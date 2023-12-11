@@ -17,7 +17,7 @@ public:
     static constexpr const char* BaseSCPIModuleName = "PW3";
 
     cPower3Module(quint8 modnr, int entityId, VeinEvent::StorageSystem* storagesystem, bool demo);
-    virtual QByteArray getConfiguration() const;
+    QByteArray getConfiguration() const override;
 protected:
     cPower3ModuleMeasProgram *m_pMeasProgram; // our measuring program, lets say the working horse
     virtual void doConfiguration(QByteArray xmlConfigData); // here we have to do our configuration

@@ -17,7 +17,7 @@ public:
     static constexpr const char* BaseSCPIModuleName = "PM01";
 
     cSpm1Module(quint8 modnr, int entityId, VeinEvent::StorageSystem* storagesystem, bool demo);
-    virtual QByteArray getConfiguration() const;
+    QByteArray getConfiguration() const override;
 protected:
     cSpm1ModuleMeasProgram *m_pMeasProgram; // our measuring program, lets say the working horse
     virtual void doConfiguration(QByteArray xmlConfigData); // here we have to do our configuration

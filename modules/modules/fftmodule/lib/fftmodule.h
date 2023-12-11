@@ -21,7 +21,7 @@ public:
     static constexpr const char* BaseSCPIModuleName = "FFT";
 
     cFftModule(quint8 modnr, int entityId, VeinEvent::StorageSystem* storagesystem, bool demo);
-    virtual QByteArray getConfiguration() const;
+    QByteArray getConfiguration() const override;
 
 protected:
     cFftModuleMeasProgram *m_pMeasProgram; // our measuring program, lets say the working horse

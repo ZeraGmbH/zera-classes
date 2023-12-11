@@ -31,7 +31,6 @@ public:
     virtual QString getModuleName();
     virtual QString getSCPIModuleName();
     virtual quint16 getModuleNr();
-    virtual QByteArray getConfiguration() const = 0;
     virtual bool isConfigured() const;
     virtual void startModule();
     virtual void stopModule();
