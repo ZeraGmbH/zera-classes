@@ -63,6 +63,7 @@ protected:
 
     static QString m_sessionPath;
     static bool m_runningInTest;
+    QList<ModuleData *> m_moduleList;
 
 private:
     void saveModuleConfig(ModuleData *t_moduleData);
@@ -71,7 +72,6 @@ private:
     ModuleManagerSetupFacade *m_setupFacade;
     JsonSessionLoader m_sessionLoader;
     QHash<QString, MeasurementModuleFactory*> m_factoryTable;
-    QList<ModuleData *> m_moduleList;
     QQueue<ModuleData *> m_deferredStartList;
 
     bool m_demo;
