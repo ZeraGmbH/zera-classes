@@ -171,18 +171,13 @@ void ModuleManager::loadDefaultSession()
 void ModuleManager::startModule(const QString & uniqueModuleName, const QString & t_xmlConfigPath, const QByteArray &t_xmlConfigData, int moduleEntityId)
 {
     // do not allow starting until all modules are shut down
-    if(m_moduleStartLock == false)
-    {
+    if(m_moduleStartLock == false) {
         qInfo("Starting module %s...", qPrintable(uniqueModuleName));
-        MeasurementModuleFactory *tmpFactory=nullptr;
-
-        tmpFactory=m_factoryTable.value(uniqueModuleName);
-        if(tmpFactory && m_setupFacade->getLicenseSystem()->isSystemLicensed(uniqueModuleName))
-        {
+        MeasurementModuleFactory *tmpFactory = m_factoryTable.value(uniqueModuleName);
+        if(tmpFactory && m_setupFacade->getLicenseSystem()->isSystemLicensed(uniqueModuleName)) {
             qDebug() << "Creating module:" << uniqueModuleName << "with id:" << moduleEntityId << "with config file:" << t_xmlConfigPath;
             VirtualModule *tmpModule = tmpFactory->createModule(moduleEntityId, m_setupFacade->getStorageSystem(), m_demo, this);
-            if(tmpModule)
-            {
+            if(tmpModule) {
                 connect(tmpModule, &VirtualModule::addEventSystem, this, &ModuleManager::onModuleEventSystemAdded);
                 tmpModule->setConfiguration(t_xmlConfigData);
                 connect(tmpModule, SIGNAL(moduleDeactivated()), this, SLOT(onStartModuleDelete()));
@@ -201,24 +196,19 @@ void ModuleManager::startModule(const QString & uniqueModuleName, const QString 
                 m_moduleList.append(moduleData);
             }
         }
-        else if(m_setupFacade->getLicenseSystem()->serialNumberIsInitialized())
-        {
-            if(tmpFactory != nullptr) {
+        else if(m_setupFacade->getLicenseSystem()->serialNumberIsInitialized()) {
+            if(tmpFactory != nullptr)
                 qWarning() << "Skipping module:" << uniqueModuleName << "No license found!";
-            }
-            else {
+            else
                 qWarning() << "Could not create module:" << uniqueModuleName << "!";
-            }
             onModuleStartNext();
         }
-        else //wait for serial number initialization
-        {
+        else {//wait for serial number initialization
             qInfo("No serialno - enqueue module %s...", qPrintable(uniqueModuleName));
             m_deferredStartList.enqueue(new ModuleData(nullptr, uniqueModuleName, t_xmlConfigPath, t_xmlConfigData, moduleEntityId));
         }
     }
-    else
-    {
+    else {
         qInfo("Locked - enqueue module %s...", qPrintable(uniqueModuleName));
         m_deferredStartList.enqueue(new ModuleData(nullptr, uniqueModuleName, t_xmlConfigPath, t_xmlConfigData, moduleEntityId));
     }
