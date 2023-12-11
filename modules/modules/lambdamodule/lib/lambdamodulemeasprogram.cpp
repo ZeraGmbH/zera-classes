@@ -54,7 +54,7 @@ void cLambdaModuleMeasProgram::generateInterface()
     VfModuleActvalue *pActvalue;
     cSCPIInfo* pSCPIInfo;
     for (int i = 0; i < getConfData()->m_nLambdaSystemCount; i++) {
-        pActvalue = new VfModuleActvalue(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+        pActvalue = new VfModuleActvalue(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
                                             QString("ACT_Lambda%1").arg(i+1),
                                             QString("Actual lambda value"),
                                             QVariant(0.0) );
@@ -71,7 +71,7 @@ void cLambdaModuleMeasProgram::generateInterface()
     m_pLAMBDACountInfo = new VfModuleMetaData(QString("LambdaCount"), QVariant(getConfData()->m_nLambdaSystemCount));
     m_pModule->veinModuleMetaDataList.append(m_pLAMBDACountInfo);
 
-    m_pMeasureSignal = new VfModuleComponent(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+    m_pMeasureSignal = new VfModuleComponent(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
                                                 QString("SIG_Measuring"),
                                                 QString("Signal indicating measurement activity"),
                                                 QVariant(0));

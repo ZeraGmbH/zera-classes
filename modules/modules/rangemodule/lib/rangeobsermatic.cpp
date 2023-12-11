@@ -96,7 +96,7 @@ void cRangeObsermatic::generateInterface()
 
     for (int i = 0; i < m_ChannelNameList.count(); i++) {
 
-        pParameter = new VfModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+        pParameter = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
                                               key = QString("PAR_Channel%1Range").arg(i+1),
                                               QString("Channel's range"),
                                               QVariant(s = "Unkown"),
@@ -110,7 +110,7 @@ void cRangeObsermatic::generateInterface()
         m_ChannelAliasList.append(s); // also a list for alias names
         m_RangeMeasChannelList.append(m_pModule->getMeasChannel(m_ChannelNameList.at(i)));
 
-        pComponent = new VfModuleComponent(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+        pComponent = new VfModuleComponent(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
                                               QString("SIG_Channel%1OVL").arg(i+1),
                                               QString("Channels overload status"),
                                               QVariant(int(0)) );
@@ -118,7 +118,7 @@ void cRangeObsermatic::generateInterface()
         m_RangeOVLComponentList.append(pComponent);
         m_pModule->veinModuleComponentList.append(pComponent);
 
-        pComponent = new VfModuleComponent(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+        pComponent = new VfModuleComponent(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
                                               QString("INF_Channel%1OVLREJ").arg(i+1),
                                               QString("Channel's maximum range peak rejection"),
                                               QVariant(double(0.0)) );
@@ -126,7 +126,7 @@ void cRangeObsermatic::generateInterface()
         m_RangeOVLRejectionComponentList.append(pComponent);
         m_pModule->veinModuleComponentList.append(pComponent);
 
-        pComponent = new VfModuleComponent(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+        pComponent = new VfModuleComponent(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
                                               QString("INF_Channel%1ActREJ").arg(i+1),
                                               QString("Channel's actual rejection"),
                                               QVariant(double(0.0)) );
@@ -134,7 +134,7 @@ void cRangeObsermatic::generateInterface()
         m_RangeActRejectionComponentList.append(pComponent);
         m_pModule->veinModuleComponentList.append(pComponent);
 
-        pComponent = new VfModuleComponent(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+        pComponent = new VfModuleComponent(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
                                               QString("INF_Channel%1ActOVLREJ").arg(i+1),
                                               QString("Channel's actual range peak rejection"),
                                               QVariant(double(0.0)) );
@@ -150,7 +150,7 @@ void cRangeObsermatic::generateInterface()
 
     for(int i=0; i < m_GroupList.length();++i) {
 
-        pParameter = new VfModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+        pParameter = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
                                              key = QString("PAR_PreScalingGroup%1").arg(i),
                                              QString("Scaling factor for group k (see configuration)"),
                                              QVariant("1/1"),
@@ -164,7 +164,7 @@ void cRangeObsermatic::generateInterface()
         m_pModule->veinModuleParameterHash[key] = pParameter;
 
         // activate preScaling for U and I
-        pParameter = new VfModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+        pParameter = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
                                              key = QString("PAR_PreScalingEnabledGroup%1").arg(i),
                                              QString("Enable prescaling for group"),
                                              QVariant(0),
@@ -176,7 +176,7 @@ void cRangeObsermatic::generateInterface()
         m_RangeGroupPreScalingEnabledList.append(pParameter);
         m_pModule->veinModuleParameterHash[key] = pParameter;
 
-        pComponent = new VfModuleComponent(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+        pComponent = new VfModuleComponent(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
                                               QString("INF_PreScalingInfoGroup%1").arg(i),
                                               QString("Channel's actual range peak rejection"),
                                               QVariant(double(1.0)) );
@@ -198,35 +198,35 @@ void cRangeObsermatic::generateInterface()
         }
     }
 
-    m_pParRangeAutomaticOnOff = new VfModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+    m_pParRangeAutomaticOnOff = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
                                                          QString("PAR_RangeAutomatic"),
                                                          QString("Range automatic on/off"),
                                                          QVariant(0));
 
     m_pModule->veinModuleParameterHash["PAR_RangeAutomatic"] = m_pParRangeAutomaticOnOff; // for modules use
 
-    m_pParGroupingOnOff = new VfModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+    m_pParGroupingOnOff = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
                                                    QString("PAR_ChannelGrouping"),
                                                    QString("Channel grouping on/off"),
                                                    QVariant(0));
 
     m_pModule->veinModuleParameterHash["PAR_ChannelGrouping"] = m_pParGroupingOnOff; // for modules use
 
-    m_pParOverloadOnOff = new VfModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+    m_pParOverloadOnOff = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
                                                    QString("PAR_Overload"),
                                                    QString("Overload"),
                                                    QVariant(0));
 
     m_pModule->veinModuleParameterHash["PAR_Overload"] = m_pParOverloadOnOff; // for modules use
 
-    m_pComponentOverloadMax = new VfModuleComponent(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+    m_pComponentOverloadMax = new VfModuleComponent(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
                                                        QString("INF_OverloadMax"),
                                                        QString("Maximum range overload condition"),
                                                        QVariant(0));
 
     m_pModule->veinModuleComponentList.append(m_pComponentOverloadMax);
 
-    m_pRangingSignal = new VfModuleComponent(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+    m_pRangingSignal = new VfModuleComponent(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
                                                 QString("SIG_Ranging"),
                                                 QString("Signal on changing ranges"),
                                                 QVariant(0));

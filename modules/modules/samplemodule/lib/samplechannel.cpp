@@ -82,7 +82,7 @@ void cSampleChannel::generateInterface()
     QString key;
     cSCPIInfo *scpiInfo;
 
-    m_pChannelRange = new VfModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+    m_pChannelRange = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
                                                key = QString("PAR_ChannelRange"),
                                                QString("Sampling channel's range"),
                                                QVariant(m_ConfigData.m_ObsermaticConfPar.m_pllRange.m_sPar));

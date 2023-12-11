@@ -123,7 +123,7 @@ void cRangeModuleMeasProgram::generateInterface()
     VfModuleActvalue *pActvalue;
 
     for (int i = 0; i < m_ChannelList.count(); i++) {
-        pActvalue = new VfModuleActvalue(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+        pActvalue = new VfModuleActvalue(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
                                             QString("ACT_Channel%1Peak").arg(i+1),
                                             QString("Actual peak value"),
                                             QVariant(0.0) );
@@ -131,7 +131,7 @@ void cRangeModuleMeasProgram::generateInterface()
         m_pModule->veinModuleActvalueList.append(pActvalue); // and for the modules interface
     }
 
-    pActvalue = new VfModuleActvalue(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+    pActvalue = new VfModuleActvalue(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
                                         QString("ACT_Frequency"),
                                         QString("Actual frequency"),
                                         QVariant(0.0) );
@@ -143,7 +143,7 @@ void cRangeModuleMeasProgram::generateInterface()
     m_pModule->veinModuleActvalueList.append(pActvalue); // and for the modules interface
 
     for (int i = 0; i < m_ChannelList.count(); i++) {
-        pActvalue = new VfModuleActvalue(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+        pActvalue = new VfModuleActvalue(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
                                             QString("ACT_Channel%1Rms").arg(i+1),
                                             QString("Actual RMS value"),
                                             QVariant(0.0) );
@@ -152,7 +152,7 @@ void cRangeModuleMeasProgram::generateInterface()
     }
 
 
-    m_pMeasureSignal = new VfModuleComponent(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+    m_pMeasureSignal = new VfModuleComponent(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
                                                 QString("SIG_Measuring"),
                                                 QString("Signal indicating measurement activity"),
                                                 QVariant(0) );

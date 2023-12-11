@@ -42,7 +42,7 @@ void cPllObsermatic::ActionHandler(QVector<float> *actualValues)
 void cPllObsermatic::generateInterface()
 {
     QString key;
-    m_pPllChannel = new VfModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+    m_pPllChannel = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
                                              key = QString("PAR_PllChannel"),
                                              QString("PLL reference channel"),
                                              QVariant(m_ConfPar.m_ObsermaticConfPar.m_pllChannel.m_sPar));
@@ -53,7 +53,7 @@ void cPllObsermatic::generateInterface()
     cSCPIInfo *scpiInfo = new cSCPIInfo("CONFIGURATION", "PLLREFERENCE", "10", m_pPllChannel->getName(), "0", "");
     m_pPllChannel->setSCPIInfo(scpiInfo);
 
-    m_pParPllAutomaticOnOff = new VfModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+    m_pParPllAutomaticOnOff = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
                                                        key = QString("PAR_PllAutomaticOnOff"),
                                                        QString("PLL automatic on/off"),
                                                        QVariant(m_ConfPar.m_ObsermaticConfPar.m_npllAutoAct.m_nActive));
@@ -64,7 +64,7 @@ void cPllObsermatic::generateInterface()
     scpiInfo = new cSCPIInfo("CONFIGURATION", "PLLAUTO", "10", m_pParPllAutomaticOnOff->getName(), "0", "");
     m_pParPllAutomaticOnOff->setSCPIInfo(scpiInfo);
 
-    m_pPllSignal = new VfModuleComponent(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+    m_pPllSignal = new VfModuleComponent(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
                                             QString("SIG_PLL"),
                                             QString("Signal on pll channel changing"),
                                             QVariant(0));

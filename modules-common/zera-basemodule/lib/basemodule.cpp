@@ -216,22 +216,22 @@ void cBaseModule::setupModule()
 {
     VeinComponent::EntityData *eData = new VeinComponent::EntityData();
     eData->setCommand(VeinComponent::EntityData::Command::ECMD_ADD);
-    eData->setEntityId(m_nEntityId);
+    eData->setEntityId(getEntityId());
     VeinEvent::CommandEvent *tmpEvent = new VeinEvent::CommandEvent(VeinEvent::CommandEvent::EventSubtype::NOTIFICATION, eData);
     emit m_pModuleEventSystem->sigSendEvent(tmpEvent);
 
-    m_pModuleEntityName = new VfModuleComponent(m_nEntityId, m_pModuleEventSystem,
+    m_pModuleEntityName = new VfModuleComponent(getEntityId(), m_pModuleEventSystem,
                                                    QString("EntityName"),
                                                    QString("Module's name"),
                                                    QVariant(m_sModuleName));
 
     veinModuleComponentList.append(m_pModuleEntityName);
 
-    m_pModuleErrorComponent = new VfModuleErrorComponent(m_nEntityId, m_pModuleEventSystem,
+    m_pModuleErrorComponent = new VfModuleErrorComponent(getEntityId(), m_pModuleEventSystem,
                                                             QString("Error_Messages"),
                                                             m_sModuleName);
 
-    m_pModuleInterfaceComponent = new VfModuleComponent(m_nEntityId, m_pModuleEventSystem,
+    m_pModuleInterfaceComponent = new VfModuleComponent(getEntityId(), m_pModuleEventSystem,
                                                            QString("INF_ModuleInterface"),
                                                            QString("Module's interface details"),
                                                            QByteArray());
@@ -277,7 +277,7 @@ void cBaseModule::unsetModule()
 
     VeinComponent::EntityData *eData = new VeinComponent::EntityData();
     eData->setCommand(VeinComponent::EntityData::Command::ECMD_REMOVE);
-    eData->setEntityId(m_nEntityId);
+    eData->setEntityId(getEntityId());
     VeinEvent::CommandEvent *tmpEvent = new VeinEvent::CommandEvent(VeinEvent::CommandEvent::EventSubtype::NOTIFICATION, eData);
     emit m_pModuleEventSystem->sigSendEvent(tmpEvent);
 
