@@ -4,9 +4,9 @@
 namespace BLEMODULE
 {
 
-ZeraModules::VirtualModule* BleModuleFactory::createModule(int entityId, VeinEvent::StorageSystem* storagesystem, bool demo, QObject* parent)
+ZeraModules::VirtualModule* BleModuleFactory::createModule(int entityId, VeinEvent::StorageSystem* storagesystem, bool demo)
 {
-    ZeraModules::VirtualModule *module = new cBleModule(m_ModuleList.count()+1, entityId, storagesystem, demo, parent);
+    ZeraModules::VirtualModule *module = new cBleModule(m_ModuleList.count()+1, entityId, storagesystem, demo);
     m_ModuleList.append(module);
     return module;
 }

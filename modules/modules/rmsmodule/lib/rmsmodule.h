@@ -14,7 +14,7 @@ public:
     static constexpr const char* BaseModuleName = "RMSModule";
     static constexpr const char* BaseSCPIModuleName = "RMS";
 
-    cRmsModule(quint8 modnr, int entityId, VeinEvent::StorageSystem* storagesystem, bool demo, QObject* parent = nullptr);
+    cRmsModule(quint8 modnr, int entityId, VeinEvent::StorageSystem* storagesystem, bool demo);
     virtual QByteArray getConfiguration() const;
 
 protected:

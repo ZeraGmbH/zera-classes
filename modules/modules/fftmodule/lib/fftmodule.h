@@ -20,7 +20,7 @@ public:
     static constexpr const char* BaseModuleName = "FFTModule";
     static constexpr const char* BaseSCPIModuleName = "FFT";
 
-    cFftModule(quint8 modnr, int entityId, VeinEvent::StorageSystem* storagesystem, bool demo, QObject* parent = nullptr);
+    cFftModule(quint8 modnr, int entityId, VeinEvent::StorageSystem* storagesystem, bool demo);
     virtual QByteArray getConfiguration() const;
 
 protected:

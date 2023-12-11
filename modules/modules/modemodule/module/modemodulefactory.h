@@ -17,7 +17,7 @@ class ModeModuleFactory : public QObject, public MeasurementModuleFactory
   
 public:
     ModeModuleFactory(){}
-    ZeraModules::VirtualModule *createModule(int entityId, VeinEvent::StorageSystem* storagesystem, bool demo, QObject* qObjParent = nullptr) override;
+    ZeraModules::VirtualModule *createModule(int entityId, VeinEvent::StorageSystem* storagesystem, bool demo) override;
     void destroyModule(ZeraModules::VirtualModule *module) override;
     QList<ZeraModules::VirtualModule *> listModules() const override;
     QString getFactoryName() const override;

@@ -21,7 +21,7 @@ public:
     static constexpr const char* BaseModuleName = "Transformer1Module";
     static constexpr const char* BaseSCPIModuleName = "TR1";
 
-    cTransformer1Module(quint8 modnr, int entityId, VeinEvent::StorageSystem* storagesystem, bool demo, QObject* parent = nullptr);
+    cTransformer1Module(quint8 modnr, int entityId, VeinEvent::StorageSystem* storagesystem, bool demo);
     virtual QByteArray getConfiguration() const;
 
 protected:

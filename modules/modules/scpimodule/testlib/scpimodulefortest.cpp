@@ -4,8 +4,8 @@
 
 namespace SCPIMODULE {
 
-ScpiModuleForTest::ScpiModuleForTest(quint8 modnr, int entityId, VeinEvent::StorageSystem *storagesystem, bool demo, QObject *parent) :
-    cSCPIModule(modnr, entityId, storagesystem, demo, parent)
+ScpiModuleForTest::ScpiModuleForTest(quint8 modnr, int entityId, VeinEvent::StorageSystem *storagesystem, bool demo) :
+    cSCPIModule(modnr, entityId, storagesystem, demo)
 {
 }
 

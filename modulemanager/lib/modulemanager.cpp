@@ -176,7 +176,7 @@ void ModuleManager::startModule(const QString & uniqueModuleName, const QString 
         MeasurementModuleFactory *tmpFactory = m_factoryTable.value(uniqueModuleName);
         if(tmpFactory && m_setupFacade->getLicenseSystem()->isSystemLicensed(uniqueModuleName)) {
             qDebug() << "Creating module:" << uniqueModuleName << "with id:" << moduleEntityId << "with config file:" << t_xmlConfigPath;
-            VirtualModule *tmpModule = tmpFactory->createModule(moduleEntityId, m_setupFacade->getStorageSystem(), m_demo, this);
+            VirtualModule *tmpModule = tmpFactory->createModule(moduleEntityId, m_setupFacade->getStorageSystem(), m_demo);
             if(tmpModule) {
                 connect(tmpModule, &VirtualModule::addEventSystem, this, &ModuleManager::onModuleEventSystemAdded);
                 tmpModule->setConfiguration(t_xmlConfigData);

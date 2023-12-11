@@ -16,7 +16,7 @@ namespace ZeraModules
   {
     Q_OBJECT
   public:
-    explicit VirtualModule(QObject *qObjParent=0) : QObject(qObjParent) {}
+    explicit VirtualModule() {}
     virtual ~VirtualModule() {}
     virtual void setConfiguration(QByteArray xmlConfigData)=0; // here we set configuration and parameters
     virtual QByteArray getConfiguration() const =0;

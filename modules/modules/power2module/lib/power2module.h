@@ -21,7 +21,7 @@ public:
     static constexpr const char* BaseModuleName = "POWER2Module";
     static constexpr const char* BaseSCPIModuleName = "PW2";
 
-    cPower2Module(quint8 modnr, int entityId, VeinEvent::StorageSystem* storagesystem, bool demo, QObject* parent = nullptr);
+    cPower2Module(quint8 modnr, int entityId, VeinEvent::StorageSystem* storagesystem, bool demo);
     virtual QByteArray getConfiguration() const;
 
 protected:

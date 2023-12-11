@@ -4,9 +4,9 @@
 namespace REFERENCEMODULE
 {
 
-ZeraModules::VirtualModule* ReferenceModuleFactory::createModule(int entityId, VeinEvent::StorageSystem* storagesystem, bool demo, QObject* parent)
+ZeraModules::VirtualModule* ReferenceModuleFactory::createModule(int entityId, VeinEvent::StorageSystem* storagesystem, bool demo)
 {
-    ZeraModules::VirtualModule *module = new cReferenceModule(m_ModuleList.count()+1, entityId, storagesystem, demo, parent);
+    ZeraModules::VirtualModule *module = new cReferenceModule(m_ModuleList.count()+1, entityId, storagesystem, demo);
     m_ModuleList.append(module);
     return module;
 }

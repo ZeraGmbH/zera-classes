@@ -20,7 +20,7 @@ public:
     static constexpr const char* BaseModuleName = "THDNModule";
     static constexpr const char* BaseSCPIModuleName = "THD";
 
-    cThdnModule(quint8 modnr, int entityId, VeinEvent::StorageSystem* storagesystem, bool demo, QObject* parent = nullptr);
+    cThdnModule(quint8 modnr, int entityId, VeinEvent::StorageSystem* storagesystem, bool demo);
     virtual QByteArray getConfiguration() const;
 
 protected:

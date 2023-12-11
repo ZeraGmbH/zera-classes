@@ -12,8 +12,8 @@
 namespace SAMPLEMODULE
 {
 
-cSampleModule::cSampleModule(quint8 modnr, int entityId, VeinEvent::StorageSystem *storagesystem, bool demo, QObject *parent)
-    :cBaseMeasModule(modnr, entityId, storagesystem, std::shared_ptr<cBaseModuleConfiguration>(new cSampleModuleConfiguration()), demo, parent)
+cSampleModule::cSampleModule(quint8 modnr, int entityId, VeinEvent::StorageSystem *storagesystem, bool demo)
+    :cBaseMeasModule(modnr, entityId, storagesystem, std::shared_ptr<cBaseModuleConfiguration>(new cSampleModuleConfiguration()), demo)
 {
     m_sModuleName = QString("%1%2").arg(BaseModuleName).arg(modnr);
     m_sModuleDescription = QString("This module is responsible for pll range setting\n, pll channel selection and automatic");

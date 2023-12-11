@@ -10,8 +10,8 @@
 namespace TRANSFORMER1MODULE
 {
 
-cTransformer1Module::cTransformer1Module(quint8 modnr, int entityId, VeinEvent::StorageSystem* storagesystem, bool demo, QObject* parent) :
-    cBaseMeasModule(modnr, entityId, storagesystem, std::shared_ptr<cBaseModuleConfiguration>(new cTransformer1ModuleConfiguration()), demo, parent)
+cTransformer1Module::cTransformer1Module(quint8 modnr, int entityId, VeinEvent::StorageSystem* storagesystem, bool demo) :
+    cBaseMeasModule(modnr, entityId, storagesystem, std::shared_ptr<cBaseModuleConfiguration>(new cTransformer1ModuleConfiguration()), demo)
 {
     m_sModuleName = QString("%1%2").arg(BaseModuleName).arg(modnr);
     m_sModuleDescription = QString("This module measures configured number transformer errors from configured input dft values");

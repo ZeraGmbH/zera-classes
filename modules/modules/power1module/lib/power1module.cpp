@@ -7,8 +7,8 @@
 namespace POWER1MODULE
 {
 
-cPower1Module::cPower1Module(quint8 modnr, int entityId, VeinEvent::StorageSystem* storagesystem, bool demo, QObject* parent) :
-    cBaseMeasModule(modnr, entityId, storagesystem, std::shared_ptr<cBaseModuleConfiguration>(new cPower1ModuleConfiguration()), demo, parent)
+cPower1Module::cPower1Module(quint8 modnr, int entityId, VeinEvent::StorageSystem* storagesystem, bool demo) :
+    cBaseMeasModule(modnr, entityId, storagesystem, std::shared_ptr<cBaseModuleConfiguration>(new cPower1ModuleConfiguration()), demo)
 {
     m_inputComponentEventSystem = new VfEventSystemInputComponents;
     m_sModuleName = QString("%1%2").arg(BaseModuleName).arg(modnr);

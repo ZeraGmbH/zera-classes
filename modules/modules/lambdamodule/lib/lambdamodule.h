@@ -13,7 +13,7 @@ public:
     static constexpr const char* BaseModuleName = "LambdaModule";
     static constexpr const char* BaseSCPIModuleName = "LAM";
 
-    cLambdaModule(quint8 modnr, int entityId, VeinEvent::StorageSystem* storagesystem, bool demo, QObject* parent = nullptr);
+    cLambdaModule(quint8 modnr, int entityId, VeinEvent::StorageSystem* storagesystem, bool demo);
     virtual QByteArray getConfiguration() const;
 
 protected:

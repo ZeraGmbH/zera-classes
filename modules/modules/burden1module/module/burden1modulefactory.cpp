@@ -4,9 +4,9 @@
 namespace BURDEN1MODULE
 {
 
-ZeraModules::VirtualModule* Burden1ModuleFactory::createModule(int entityId, VeinEvent::StorageSystem* storagesystem, bool demo, QObject* parent)
+ZeraModules::VirtualModule* Burden1ModuleFactory::createModule(int entityId, VeinEvent::StorageSystem* storagesystem, bool demo)
 {
-    ZeraModules::VirtualModule *module = new cBurden1Module(m_ModuleList.count()+1, entityId, storagesystem, demo, parent);
+    ZeraModules::VirtualModule *module = new cBurden1Module(m_ModuleList.count()+1, entityId, storagesystem, demo);
     m_ModuleList.append(module);
     return module;
 }
