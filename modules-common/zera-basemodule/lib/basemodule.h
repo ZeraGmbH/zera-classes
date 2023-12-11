@@ -28,8 +28,8 @@ public:
     cBaseModule(quint16 moduleNo, int entityId, VeinEvent::StorageSystem* storagesystem, std::shared_ptr<cBaseModuleConfiguration> modcfg, bool demo);
     virtual ~cBaseModule();
     virtual void setConfiguration(QByteArray xmlConfigData);
-    virtual QString getModuleName();
-    virtual QString getSCPIModuleName();
+    QString getModuleName();
+    QString getSCPIModuleName();
     virtual bool isConfigured() const;
     virtual void startModule();
     virtual void stopModule();
