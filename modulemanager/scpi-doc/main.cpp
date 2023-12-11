@@ -64,4 +64,7 @@ int main(int argc, char *argv[])
     sh.start("/bin/sh", QStringList() << QStringLiteral(SCPI_DOC_SOURCE_PATH) + "/xml-to-html/create-all-htmls" << QStringLiteral(SCPI_DOC_BUILD_PATH));
     sh.waitForFinished();
     printf("%s", qPrintable(sh.readAll()));
+
+    QDir dir(QStringLiteral(SCPI_DOC_BUILD_PATH) + "/scpi-xmls");
+    dir.removeRecursively();
 }
