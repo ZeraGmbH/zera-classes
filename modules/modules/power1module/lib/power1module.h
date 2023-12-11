@@ -24,7 +24,7 @@ public:
     static constexpr const char* BaseSCPIModuleName = "POW";
 
     cPower1Module(quint8 modnr, int entityId, VeinEvent::StorageSystem* storagesystem, bool demo);
-    virtual QByteArray getConfiguration() const;
+    QByteArray getConfiguration() const override;
 
     VfEventSystemInputComponents *getPEventSystem() const;
 

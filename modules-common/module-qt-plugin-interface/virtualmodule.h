@@ -19,8 +19,8 @@ namespace ZeraModules
     explicit VirtualModule() {}
     virtual ~VirtualModule() {}
     virtual void setConfiguration(QByteArray xmlConfigData)=0; // here we set configuration and parameters
-    virtual QByteArray getConfiguration() const =0;
-    virtual bool isConfigured() const =0;
+    virtual QByteArray getConfiguration() const = 0;
+    virtual bool isConfigured() const = 0;
 
     virtual void startModule()=0;
     virtual void stopModule()=0;

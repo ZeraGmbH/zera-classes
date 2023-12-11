@@ -15,7 +15,7 @@ public:
     static constexpr const char* BaseSCPIModuleName = "RMS";
 
     cRmsModule(quint8 modnr, int entityId, VeinEvent::StorageSystem* storagesystem, bool demo);
-    virtual QByteArray getConfiguration() const;
+    QByteArray getConfiguration() const override;
 
 protected:
     cRmsModuleMeasProgram *m_pMeasProgram; // our measuring program, lets say the working horse

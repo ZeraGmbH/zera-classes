@@ -17,7 +17,7 @@ public:
     static constexpr const char* BaseSCPIModuleName = "SAM";
 
     cSampleModule(quint8 modnr, int entityId, VeinEvent::StorageSystem* storagesystem, bool demo);
-    virtual QByteArray getConfiguration() const;
+    QByteArray getConfiguration() const override;
     cPllMeasChannel* getPllMeasChannel(QString name);
 
 protected:
