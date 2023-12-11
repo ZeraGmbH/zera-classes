@@ -14,12 +14,12 @@
 #include <QJsonDocument>
 #include <QFile>
 
-cBaseModule::cBaseModule(quint8 modnr, int entityId, VeinEvent::StorageSystem *storagesystem, std::shared_ptr<cBaseModuleConfiguration> modcfg, bool demo) :
+cBaseModule::cBaseModule(quint16 moduleNo, int entityId, VeinEvent::StorageSystem *storagesystem, std::shared_ptr<cBaseModuleConfiguration> modcfg, bool demo) :
+    ZeraModules::VirtualModule(moduleNo),
     m_nEntityId(entityId),
     m_pStorageSystem(storagesystem),
     m_demo(demo),
-    m_pConfiguration(modcfg),
-    m_nModuleNr(modnr)
+    m_pConfiguration(modcfg)
 {
     QString s;
 
@@ -347,11 +347,6 @@ void cBaseModule::exportMetaData()
     ba = jsonDoc.toJson();
 
     m_pModuleInterfaceComponent->setValue(QVariant(ba));
-}
-
-quint16 cBaseModule::getModuleNr()
-{
-    return m_nModuleNr;
 }
 
 void cBaseModule::entryIdle()

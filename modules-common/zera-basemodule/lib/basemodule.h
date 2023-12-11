@@ -25,12 +25,11 @@ class cBaseModule : public ZeraModules::VirtualModule
 Q_OBJECT
 
 public:
-    cBaseModule(quint8 modnr, int entityId, VeinEvent::StorageSystem* storagesystem, std::shared_ptr<cBaseModuleConfiguration> modcfg, bool demo);
+    cBaseModule(quint16 moduleNo, int entityId, VeinEvent::StorageSystem* storagesystem, std::shared_ptr<cBaseModuleConfiguration> modcfg, bool demo);
     virtual ~cBaseModule();
     virtual void setConfiguration(QByteArray xmlConfigData);
     virtual QString getModuleName();
     virtual QString getSCPIModuleName();
-    virtual quint16 getModuleNr();
     virtual bool isConfigured() const;
     virtual void startModule();
     virtual void stopModule();
@@ -101,7 +100,6 @@ protected:
     QString m_sModuleName;
     QString m_sModuleDescription;
     QString m_sSCPIModuleName;
-    quint8 m_nModuleNr;
 
     VfModuleMetaData *m_pModuleName;
     VfModuleMetaData *m_pModuleDescription;
