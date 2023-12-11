@@ -15,8 +15,7 @@
 #include <QFile>
 
 cBaseModule::cBaseModule(quint16 moduleNo, int entityId, VeinEvent::StorageSystem *storagesystem, std::shared_ptr<cBaseModuleConfiguration> modcfg, bool demo) :
-    ZeraModules::VirtualModule(moduleNo),
-    m_nEntityId(entityId),
+    ZeraModules::VirtualModule(moduleNo, entityId),
     m_pStorageSystem(storagesystem),
     m_demo(demo),
     m_pConfiguration(modcfg)
@@ -183,16 +182,6 @@ void cBaseModule::setConfiguration(QByteArray xmlConfigData)
     else {
         m_bConfCmd = true; // otherwise we keep in mind that we should configure when machine starts
     }
-}
-
-QString cBaseModule::getModuleName()
-{
-    return m_sModuleName;
-}
-
-QString cBaseModule::getSCPIModuleName()
-{
-    return m_sSCPIModuleName;
 }
 
 bool cBaseModule::isConfigured() const

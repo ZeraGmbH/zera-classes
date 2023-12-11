@@ -15,9 +15,15 @@ class VirtualModule : public QObject
 {
     Q_OBJECT
 public:
-    explicit VirtualModule(quint16 moduleNo) : m_moduleNo(moduleNo) {}
+    explicit VirtualModule(quint16 moduleNo, int entityId) :
+        m_nEntityId(entityId),
+        m_moduleNo(moduleNo)
+    {}
     virtual ~VirtualModule() = default;
-    virtual quint16 getModuleNr() { return m_moduleNo; }
+    int getEntityId() { return m_nEntityId; }
+    quint16 getModuleNr() { return m_moduleNo; }
+    QString getVeinModuleName() { return m_sModuleName; };
+    QString getSCPIModuleName() { return m_sSCPIModuleName; };
 
     virtual void setConfiguration(QByteArray xmlConfigData) = 0; // here we set configuration and parameters
     virtual QByteArray getConfiguration() const = 0;
@@ -28,6 +34,7 @@ public:
 
     QStateMachine m_ActivationMachine; // we use statemachine for module activation
     QStateMachine m_DeactivationMachine; // and deactivation
+    int m_nEntityId;
 signals:
     // signals to be used by activation and deactivation statemachine when ready
     void activationReady();
@@ -48,6 +55,9 @@ protected:
     QState *m_pStateRun;
     QState *m_pStateStop;
     QFinalState *m_pStateFinished;
+
+    QString m_sModuleName;
+    QString m_sSCPIModuleName;
 private:
     quint16 m_moduleNo;
 };
