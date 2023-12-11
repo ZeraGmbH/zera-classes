@@ -4,8 +4,8 @@
 #include "adjustmentmodulemeasprogram.h"
 #include <errormessages.h>
 
-cAdjustmentModule::cAdjustmentModule(quint8 modnr, int entityId, VeinEvent::StorageSystem* storagesystem, bool demo, QObject* parent) :
-    cBaseMeasModule(modnr, entityId, storagesystem, std::shared_ptr<cBaseModuleConfiguration>(new cAdjustmentModuleConfiguration()), demo, parent)
+cAdjustmentModule::cAdjustmentModule(quint8 modnr, int entityId, VeinEvent::StorageSystem* storagesystem, bool demo) :
+    cBaseMeasModule(modnr, entityId, storagesystem, std::shared_ptr<cBaseModuleConfiguration>(new cAdjustmentModuleConfiguration()), demo)
 {
     m_sModuleName = QString("%1%2").arg(BaseModuleName).arg(modnr);
     m_sModuleDescription = QString("This module supports commands for adjustment for a configured number of measuring channels");

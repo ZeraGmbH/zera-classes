@@ -14,8 +14,8 @@
 namespace RANGEMODULE
 {
 
-cRangeModule::cRangeModule(quint8 modnr, int entityId, VeinEvent::StorageSystem* storagesystem, bool demo, QObject *parent)
-    :cBaseMeasModule(modnr, entityId, storagesystem, std::shared_ptr<cBaseModuleConfiguration>(new cRangeModuleConfiguration()), demo, parent)
+cRangeModule::cRangeModule(quint8 modnr, int entityId, VeinEvent::StorageSystem* storagesystem, bool demo)
+    :cBaseMeasModule(modnr, entityId, storagesystem, std::shared_ptr<cBaseModuleConfiguration>(new cRangeModuleConfiguration()), demo)
 {
     m_sModuleName = QString("%1%2").arg(BaseModuleName).arg(modnr);
     m_sModuleDescription = QString("This module is responsible for range handling,\n range setting, automatic, adjustment and scaling");

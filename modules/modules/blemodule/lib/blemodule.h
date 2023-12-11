@@ -13,7 +13,7 @@ public:
     static constexpr const char* BaseModuleName = "BleModule";
     static constexpr const char* BaseSCPIModuleName = "BLE";
 
-    cBleModule(quint8 modnr, int entityId, VeinEvent::StorageSystem* storagesystem, bool demo, QObject* parent = nullptr);
+    cBleModule(quint8 modnr, int entityId, VeinEvent::StorageSystem* storagesystem, bool demo);
     virtual QByteArray getConfiguration() const;
 
 protected:

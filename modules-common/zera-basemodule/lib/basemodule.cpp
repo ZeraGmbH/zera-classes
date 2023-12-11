@@ -14,8 +14,7 @@
 #include <QJsonDocument>
 #include <QFile>
 
-cBaseModule::cBaseModule(quint8 modnr, int entityId, VeinEvent::StorageSystem *storagesystem, std::shared_ptr<cBaseModuleConfiguration> modcfg, bool demo, QObject* parent) :
-    ZeraModules::VirtualModule(parent),
+cBaseModule::cBaseModule(quint8 modnr, int entityId, VeinEvent::StorageSystem *storagesystem, std::shared_ptr<cBaseModuleConfiguration> modcfg, bool demo) :
     m_nEntityId(entityId),
     m_pStorageSystem(storagesystem),
     m_demo(demo),
@@ -23,7 +22,6 @@ cBaseModule::cBaseModule(quint8 modnr, int entityId, VeinEvent::StorageSystem *s
     m_nModuleNr(modnr)
 {
     QString s;
-    setParent(parent);
 
     m_bConfCmd = m_bStartCmd = m_bStopCmd = m_bStateMachineStarted = false;
 

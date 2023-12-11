@@ -7,8 +7,8 @@
 namespace DFTMODULE
 {
 
-cDftModule::cDftModule(quint8 modnr, int entityId, VeinEvent::StorageSystem* storagesystem, bool demo, QObject* parent) :
-    cBaseMeasModule(modnr, entityId, storagesystem, std::shared_ptr<cBaseModuleConfiguration>(new cDftModuleConfiguration()), demo, parent)
+cDftModule::cDftModule(quint8 modnr, int entityId, VeinEvent::StorageSystem* storagesystem, bool demo) :
+    cBaseMeasModule(modnr, entityId, storagesystem, std::shared_ptr<cBaseModuleConfiguration>(new cDftModuleConfiguration()), demo)
 {
     m_sModuleName = QString("%1%2").arg(BaseModuleName).arg(modnr);
     m_sModuleDescription = QString("This module measures configured order dft values for configured channels");

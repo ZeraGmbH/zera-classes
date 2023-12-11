@@ -20,7 +20,7 @@ public:
     static constexpr const char* BaseModuleName = "ModeModule";
     static constexpr const char* BaseSCPIModuleName = "MOD";
 
-    cModeModule(quint8 modnr, int entityId, VeinEvent::StorageSystem *storagesystem, bool demo, QObject* parent = nullptr);
+    cModeModule(quint8 modnr, int entityId, VeinEvent::StorageSystem *storagesystem, bool demo);
     virtual QByteArray getConfiguration() const;
 
 protected:

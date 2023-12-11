@@ -24,7 +24,7 @@ class cRangeModule : public cBaseMeasModule
 public:
     static constexpr const char* BaseModuleName = "RangeModule";
     static constexpr const char* BaseSCPIModuleName = "RNG";
-    cRangeModule(quint8 modnr, int entityId, VeinEvent::StorageSystem* storagesystem, bool demo, QObject* parent = nullptr);
+    cRangeModule(quint8 modnr, int entityId, VeinEvent::StorageSystem* storagesystem, bool demo);
     virtual QByteArray getConfiguration() const;
     virtual cRangeMeasChannel* getMeasChannel(QString name); // also used for callback
 

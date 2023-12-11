@@ -9,8 +9,8 @@
 namespace SPM1MODULE
 {
 
-cSpm1Module::cSpm1Module(quint8 modnr, int entityId, VeinEvent::StorageSystem *storagesystem, bool demo, QObject *parent) :
-    cBaseMeasModule(modnr, entityId, storagesystem, std::shared_ptr<cBaseModuleConfiguration>(new cSpm1ModuleConfiguration()), demo, parent)
+cSpm1Module::cSpm1Module(quint8 modnr, int entityId, VeinEvent::StorageSystem *storagesystem, bool demo) :
+    cBaseMeasModule(modnr, entityId, storagesystem, std::shared_ptr<cBaseModuleConfiguration>(new cSpm1ModuleConfiguration()), demo)
 {
     m_sModuleName = QString("%1%2").arg(BaseModuleName).arg(modnr);
     m_sModuleDescription = QString("This module povides a configurable error calculator");

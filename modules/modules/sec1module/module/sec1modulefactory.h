@@ -17,7 +17,7 @@ class Sec1ModuleFactory : public QObject, public MeasurementModuleFactory
   
 public:
     Sec1ModuleFactory(){}
-    ZeraModules::VirtualModule *createModule(int entityId, VeinEvent::StorageSystem* storagesystem, bool demo, QObject* parent = nullptr);
+    ZeraModules::VirtualModule *createModule(int entityId, VeinEvent::StorageSystem* storagesystem, bool demo);
     void destroyModule(ZeraModules::VirtualModule *module); //override;
     QList<ZeraModules::VirtualModule *> listModules() const; //override;
     QString getFactoryName() const; //override;

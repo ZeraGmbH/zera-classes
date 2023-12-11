@@ -9,8 +9,8 @@
 namespace MODEMODULE
 {
 
-cModeModule::cModeModule(quint8 modnr, int entityId, VeinEvent::StorageSystem* storagesystem, bool demo, QObject *parent) :
-    cBaseMeasModule(modnr, entityId, storagesystem, std::shared_ptr<cBaseModuleConfiguration>(new cModeModuleConfiguration()), demo, parent)
+cModeModule::cModeModule(quint8 modnr, int entityId, VeinEvent::StorageSystem* storagesystem, bool demo) :
+    cBaseMeasModule(modnr, entityId, storagesystem, std::shared_ptr<cBaseModuleConfiguration>(new cModeModuleConfiguration()), demo)
 {
     m_sModuleName = QString("%1%2").arg(BaseModuleName).arg(modnr);
     m_sModuleDescription = QString("This module is responsible for setting measuring mode and resetting dsp adjustment data");

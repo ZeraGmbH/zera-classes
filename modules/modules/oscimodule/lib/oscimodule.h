@@ -20,7 +20,7 @@ public:
     static constexpr const char* BaseModuleName = "OSCIModule";
     static constexpr const char* BaseSCPIModuleName = "OSC";
 
-    cOsciModule(quint8 modnr, int entityId, VeinEvent::StorageSystem* storagesystem, bool demo, QObject* parent = nullptr);
+    cOsciModule(quint8 modnr, int entityId, VeinEvent::StorageSystem* storagesystem, bool demo);
     virtual QByteArray getConfiguration() const;
 
 protected:

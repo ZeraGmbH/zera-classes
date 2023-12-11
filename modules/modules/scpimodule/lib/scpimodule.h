@@ -32,7 +32,7 @@ public:
     static constexpr const char* BaseModuleName = "SCPIModule";
     static constexpr const char* BaseSCPIModuleName = "SCP";
 
-    cSCPIModule(quint8 modnr, int entityId, VeinEvent::StorageSystem *storagesystem, bool demo, QObject* parent = nullptr);
+    cSCPIModule(quint8 modnr, int entityId, VeinEvent::StorageSystem *storagesystem, bool demo);
     QByteArray getConfiguration() const override;
     cSCPIServer* getSCPIServer();
 

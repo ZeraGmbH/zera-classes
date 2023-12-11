@@ -13,7 +13,7 @@ public:
     static constexpr const char* BaseModuleName = "Burden1Module";
     static constexpr const char* BaseSCPIModuleName = "BD1";
 
-    cBurden1Module(quint8 modnr, int entityId, VeinEvent::StorageSystem* storagesystem, bool demo, QObject* parent = nullptr);
+    cBurden1Module(quint8 modnr, int entityId, VeinEvent::StorageSystem* storagesystem, bool demo);
     virtual QByteArray getConfiguration() const;
 
 protected:

@@ -16,7 +16,7 @@ public:
     // and each energy measurement  will have an additional scpi parent with its number 0001 .. 9999
     static constexpr const char* BaseSCPIModuleName = "PM01";
 
-    cSpm1Module(quint8 modnr, int entityId, VeinEvent::StorageSystem* storagesystem, bool demo, QObject* parent = nullptr);
+    cSpm1Module(quint8 modnr, int entityId, VeinEvent::StorageSystem* storagesystem, bool demo);
     virtual QByteArray getConfiguration() const;
 protected:
     cSpm1ModuleMeasProgram *m_pMeasProgram; // our measuring program, lets say the working horse

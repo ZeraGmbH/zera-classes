@@ -1,9 +1,9 @@
 #include "adjustmentmodulefactory.h"
 #include "adjustmentmodule.h"
 
-ZeraModules::VirtualModule* AdjustmentModuleFactory::createModule(int entityId, VeinEvent::StorageSystem* storagesystem, bool demo, QObject* parent)
+ZeraModules::VirtualModule* AdjustmentModuleFactory::createModule(int entityId, VeinEvent::StorageSystem* storagesystem, bool demo)
 {
-    ZeraModules::VirtualModule *module = new cAdjustmentModule(m_ModuleList.count()+1, entityId, storagesystem, demo, parent);
+    ZeraModules::VirtualModule *module = new cAdjustmentModule(m_ModuleList.count()+1, entityId, storagesystem, demo);
     m_ModuleList.append(module);
     return module;
 }

@@ -11,7 +11,7 @@ class cAdjustmentModule : public cBaseMeasModule
 public:
     static constexpr const char* BaseModuleName = "AdjustmentModule";
     static constexpr const char* BaseSCPIModuleName = "ADJ";
-    cAdjustmentModule(quint8 modnr, int entityId, VeinEvent::StorageSystem* storagesystem, bool demo, QObject* parent = nullptr);
+    cAdjustmentModule(quint8 modnr, int entityId, VeinEvent::StorageSystem* storagesystem, bool demo);
     virtual QByteArray getConfiguration() const;
 protected:
     cAdjustmentModuleMeasProgram *m_pMeasProgram; // our measuring program, lets say the working horse

@@ -25,7 +25,7 @@ class cBaseModule : public ZeraModules::VirtualModule
 Q_OBJECT
 
 public:
-    cBaseModule(quint8 modnr, int entityId, VeinEvent::StorageSystem* storagesystem, std::shared_ptr<cBaseModuleConfiguration> modcfg, bool demo, QObject *parent = nullptr);
+    cBaseModule(quint8 modnr, int entityId, VeinEvent::StorageSystem* storagesystem, std::shared_ptr<cBaseModuleConfiguration> modcfg, bool demo);
     virtual ~cBaseModule();
     virtual void setConfiguration(QByteArray xmlConfigData);
     virtual QString getModuleName();

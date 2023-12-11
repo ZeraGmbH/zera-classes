@@ -19,7 +19,7 @@ public:
     static constexpr const char* BaseModuleName = "REFERENCEModule";
     static constexpr const char* BaseSCPIModuleName = "REF";
 
-    cReferenceModule(quint8 modnr, int entityId, VeinEvent::StorageSystem* storagesystem, bool demo, QObject* parent = nullptr);
+    cReferenceModule(quint8 modnr, int entityId, VeinEvent::StorageSystem* storagesystem, bool demo);
     virtual QByteArray getConfiguration() const;
     virtual cReferenceMeasChannel* getMeasChannel(QString name); // also used for callback
 protected:

@@ -17,7 +17,7 @@ public:
     // and each ec will have an additional scpi parent with its number 0001 .. 9999
     static constexpr const char* BaseSCPIModuleName = "EC01";
 
-    cSec1Module(quint8 modnr, int entityId, VeinEvent::StorageSystem* storagesystem, bool demo, QObject* parent = nullptr);
+    cSec1Module(quint8 modnr, int entityId, VeinEvent::StorageSystem* storagesystem, bool demo);
     virtual QByteArray getConfiguration() const;
 protected:
     virtual void doConfiguration(QByteArray xmlConfigData); // here we have to do our configuration
