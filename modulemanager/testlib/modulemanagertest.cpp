@@ -41,6 +41,11 @@ void ModuleManagerTest::destroyModulesAndWaitUntilAllShutdown()
     while(!areAllModulesShutdown());
 }
 
+QList<ZeraModules::ModuleData *> ModuleManagerTest::getModuleList()
+{
+    return m_moduleList;
+}
+
 QStringList ModuleManagerTest::getModuleFileNames()
 {
     QString strBuildPath = MODULE_PLUGIN_BUILD_PATH;

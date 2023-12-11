@@ -1,5 +1,6 @@
 #include "modulemanager.h"
 #include "modulemanagerconfig.h"
+#include "moduledata.h"
 #include "licensesystem.h"
 
 #include <ve_eventsystem.h>
@@ -14,40 +15,7 @@
 #include <QCoreApplication>
 #include <QDebug>
 
-namespace ZeraModules
-{
-class ModuleData {
-public:
-    ModuleData(VirtualModule *t_ref, const QString &t_name, const QString &t_confPath, const QByteArray &t_confData, int moduleEntityId) :
-        m_reference(t_ref),
-        m_uniqueName(t_name),
-        m_configPath(t_confPath),
-        m_configData(t_confData),
-        m_moduleId(moduleEntityId)
-    {}
-
-    ~ModuleData() {}
-
-    static ModuleData *findByReference(QList<ModuleData*> t_list, VirtualModule *t_ref)
-    {
-        ModuleData *retVal = nullptr;
-        foreach(ModuleData *tmpData, t_list)
-        {
-            if(tmpData->m_reference == t_ref)
-            {
-                retVal = tmpData;
-                break;
-            }
-        }
-        return retVal;
-    }
-
-    VirtualModule *m_reference;
-    const QString m_uniqueName;
-    const QString m_configPath;
-    QByteArray m_configData;
-    int m_moduleId;
-};
+namespace ZeraModules {
 
 QString ModuleManager::m_sessionPath = MODMAN_SESSION_PATH;
 bool ModuleManager::m_runningInTest = false;
