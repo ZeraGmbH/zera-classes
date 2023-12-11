@@ -55,9 +55,9 @@ bool ModuleManager::m_runningInTest = false;
 
 ModuleManager::ModuleManager(ModuleManagerSetupFacade *setupFacade, bool demo, QObject *parent) :
     QObject(parent),
-    m_moduleStartLock(false),
     m_setupFacade(setupFacade),
-    m_demo(demo)
+    m_demo(demo),
+    m_moduleStartLock(false)
 {
     m_timerAllModulesLoaded.start();
 
