@@ -177,11 +177,28 @@ void BLEMODULE::cBleModuleMeasProgram::switchBluetooth(bool on)
         m_bluetooth.stop();
 }
 
+void cBleModuleMeasProgram::handleDemoActualValues()
+{
+    m_pTemperatureCAct->setValue("22.1");
+    m_pTemperatureFAct->setValue("71.78");
+    m_pHumidityAct->setValue("34.0");
+    m_pAirPressureAct->setValue("990.9");
+    m_pWarningFlagsAct->setValue(0);
+    m_pErrorFlagsAct->setValue(0);
+}
+
 void cBleModuleMeasProgram::onVeinBluetoothOnChanged(QVariant on)
 {
     switchBluetooth(on.toBool());
     getConfData()->m_bluetoothOn.m_nActive = on.toInt();
     emit m_pModule->parameterChanged();
+
+    if(m_pModule->m_demo) {
+        if(on.toBool() && m_macAddressForDemo.contains(m_pMacAddress->getValue().toString()))
+            handleDemoActualValues();
+        else
+            makeValuesInvalid();
+    }
 }
 
 void cBleModuleMeasProgram::onVeinMacAddressChanged(QVariant macAddress)
@@ -202,6 +219,10 @@ void cBleModuleMeasProgram::onVeinMacAddressChanged(QVariant macAddress)
         m_bleDispatcherId = m_bluetooth.addBleDecoder(sensor);
         getConfData()->m_macAddress.m_sPar = macAddress.toString();
         emit m_pModule->parameterChanged();
+    }
+    if(m_pModule->m_demo && m_pBluetoothOnOff->getValue() != 0) {
+        if(m_macAddressForDemo.contains(macAddress.toString()))
+            handleDemoActualValues();
     }
 }
 
