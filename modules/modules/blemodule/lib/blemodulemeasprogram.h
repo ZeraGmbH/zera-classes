@@ -10,6 +10,7 @@
 #include <QStateMachine>
 #include <QState>
 #include <QFinalState>
+#include <QStringList>
 
 namespace BLEMODULE
 {
@@ -40,6 +41,7 @@ private:
     cBleModuleConfigData* getConfData();
     void makeValuesInvalid();
     void switchBluetooth(bool on);
+    void handleDemoActualValues();
 
     cBleModule* m_pModule;
     QList<VfModuleActvalue*> m_veinActValueList; // the list of actual values we work on
@@ -60,6 +62,8 @@ private:
     VfModuleParameter* m_pWarningFlagsAct;
     VfModuleParameter* m_pBluetoothOnOff;
     VfModuleParameter* m_pMacAddress;
+
+    QStringList m_macAddressForDemo = {"11:22:33:44:55:66", "AA:BB:CC:DD:EE:FF"};
 };
 
 }
