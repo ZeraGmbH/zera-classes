@@ -41,6 +41,11 @@ void ModuleManagerTest::destroyModulesAndWaitUntilAllShutdown()
     while(!areAllModulesShutdown());
 }
 
+QStringList ModuleManagerTest::getSessionFiles()
+{
+    return QDir(m_sessionPath).entryList(QStringList({"*.json"}));
+}
+
 QStringList ModuleManagerTest::getModuleFileNames()
 {
     QString strBuildPath = MODULE_PLUGIN_BUILD_PATH;

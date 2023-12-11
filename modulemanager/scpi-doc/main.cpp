@@ -32,15 +32,16 @@ int main(int argc, char *argv[])
     QCoreApplication a(argc, argv);
 
     ModuleManagerTest::enableTest();
-    ModuleManagerTest::pointToSourceSessionFiles();
+    ModuleManagerTest::pointToInstalledSessionFiles();
     ModuleManagerSetupFacade::registerMetaTypeStreamOperators();
     qputenv("QT_FATAL_CRITICALS", "1"); \
 
     LicenseSystemMock licenseSystem;
     ModuleManagerSetupFacade modManSetupFacade(&licenseSystem);
+    ModuleManagerTest modMan(&modManSetupFacade, true);
 
     QStringList mtSessions, comSessions;
-    QStringList allSessions = QString(SESSION_FILES).split(",");
+    QStringList allSessions = modMan.getSessionFiles();
     for(QString &session: allSessions) {
         session = session.section('/', -1);
         if(session.contains("mt310s2"))
@@ -49,7 +50,6 @@ int main(int argc, char *argv[])
             comSessions.append(session);
     }
 
-    ModuleManagerTest modMan(&modManSetupFacade, true);
     modMan.loadAllAvailableModulePlugins();
     modMan.setupConnections();
 

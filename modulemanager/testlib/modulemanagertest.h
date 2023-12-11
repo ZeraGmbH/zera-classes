@@ -12,6 +12,7 @@ public:
     static void pointToSourceSessionFiles();
     void changeMockServices(QString deviceName);
     void destroyModulesAndWaitUntilAllShutdown();
+    QStringList getSessionFiles();
 private:
     virtual QStringList getModuleFileNames() override;
 };
