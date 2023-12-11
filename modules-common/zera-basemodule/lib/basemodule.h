@@ -28,14 +28,11 @@ public:
     cBaseModule(quint16 moduleNo, int entityId, VeinEvent::StorageSystem* storagesystem, std::shared_ptr<cBaseModuleConfiguration> modcfg, bool demo);
     virtual ~cBaseModule();
     virtual void setConfiguration(QByteArray xmlConfigData);
-    QString getModuleName();
-    QString getSCPIModuleName();
     virtual bool isConfigured() const;
     virtual void startModule();
     virtual void stopModule();
     virtual void exportMetaData();
 
-    int m_nEntityId;
     VeinEvent::StorageSystem* m_pStorageSystem;
     bool m_demo;
 
@@ -97,9 +94,7 @@ protected:
     QByteArray m_xmlconfString;
     QList<cModuleActivist*> m_ModuleActivistList;
     std::shared_ptr<cBaseModuleConfiguration> m_pConfiguration; // our xml configuration
-    QString m_sModuleName;
     QString m_sModuleDescription;
-    QString m_sSCPIModuleName;
 
     VfModuleMetaData *m_pModuleName;
     VfModuleMetaData *m_pModuleDescription;

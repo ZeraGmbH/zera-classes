@@ -16,7 +16,7 @@ void ModuleManagerForTest::addModule(cBaseModule *module, QString configFileFull
 
     QFileInfo fileInfo(configFileFullPath);
     QFile tmpXmlConfigFile(fileInfo.absoluteFilePath());
-    qInfo("Add %s with configfile: %s...", qPrintable(module->getModuleName()), qPrintable(tmpXmlConfigFile.fileName()));
+    qInfo("Add %s with configfile: %s...", qPrintable(module->getVeinModuleName()), qPrintable(tmpXmlConfigFile.fileName()));
     tmpXmlConfigFile.open(QIODevice::Unbuffered | QIODevice::ReadOnly);
     module->setConfiguration(tmpXmlConfigFile.readAll());
     TimeMachineObject::feedEventLoop();
