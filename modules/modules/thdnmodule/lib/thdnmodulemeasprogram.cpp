@@ -184,7 +184,7 @@ void cThdnModuleMeasProgram::generateInterface()
 
     for (int i = 0; i < n; i++)
     {
-        pActvalue = new VfModuleActvalue(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+        pActvalue = new VfModuleActvalue(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
                                             QString("ACT_THD%1%2").arg(getConfData()->m_sTHDType).arg(i+1),
                                             QString("THD%1 actual value").arg(getConfData()->m_sTHDType.toLower()),
                                             QVariant(0.0) );
@@ -195,7 +195,7 @@ void cThdnModuleMeasProgram::generateInterface()
     m_pThdnCountInfo = new VfModuleMetaData(QString("THD%1Count").arg(getConfData()->m_sTHDType), QVariant(n));
     m_pModule->veinModuleMetaDataList.append(m_pThdnCountInfo);
 
-    m_pIntegrationTimeParameter = new VfModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+    m_pIntegrationTimeParameter = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
                                                            key = QString("PAR_Interval"),
                                                            QString("Integration time"),
                                                            QVariant(getConfData()->m_fMeasInterval.m_fValue));
@@ -208,7 +208,7 @@ void cThdnModuleMeasProgram::generateInterface()
     dValidator = new cDoubleValidator(1.0, 100.0, 0.5);
     m_pIntegrationTimeParameter->setValidator(dValidator);
 
-    m_pMeasureSignal = new VfModuleComponent(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+    m_pMeasureSignal = new VfModuleComponent(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
                                                 QString("SIG_Measuring"),
                                                 QString("Signal indicating measurement activity"),
                                                 QVariant(0));

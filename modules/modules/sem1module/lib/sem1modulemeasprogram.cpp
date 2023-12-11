@@ -211,21 +211,21 @@ void cSem1ModuleMeasProgram::generateInterface()
 
     QString modNr = QString("%1").arg(m_pModule->getModuleNr(),4,10,QChar('0'));
 
-    m_pRefInputPar = new VfModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+    m_pRefInputPar = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
                                               key = QString("PAR_RefInput"),
                                               QString("Ref input"),
                                               QVariant(s = "Unknown"));
     m_pRefInputPar->setSCPIInfo(new cSCPIInfo("CALCULATE", QString("%1:REFSOURCE").arg(modNr), "10", m_pRefInputPar->getName(), "0", ""));
     m_pModule->veinModuleParameterHash[key] = m_pRefInputPar; // for modules use
 
-    m_pRefConstantPar = new VfModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+    m_pRefConstantPar = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
                                                  key = QString("PAR_RefConstant"),
                                                  QString("Reference meter constant"),
                                                  QVariant((double)0.0));
     m_pRefConstantPar->setSCPIInfo(new cSCPIInfo("CALCULATE", QString("%1:REFCONSTANT").arg(modNr ), "2", m_pRefConstantPar->getName(), "0", ""));
     m_pModule->veinModuleParameterHash[key] = m_pRefConstantPar; // for modules use
 
-    m_pTargetedPar = new VfModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+    m_pTargetedPar = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
                                               key = QString("PAR_Targeted"),
                                               QString("Stop mode"),
                                               QVariant((int)0));
@@ -235,7 +235,7 @@ void cSem1ModuleMeasProgram::generateInterface()
     iValidator = new cIntValidator(0,1,1);
     m_pTargetedPar->setValidator(iValidator);
 
-    m_pMeasTimePar = new VfModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+    m_pMeasTimePar = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
                                               key = QString("PAR_MeasTime"),
                                               QString("Measurement time"),
                                               QVariant((uint)10));
@@ -245,7 +245,7 @@ void cSem1ModuleMeasProgram::generateInterface()
     m_pMeasTimePar->setValidator(iValidator);
     m_pMeasTimePar->setUnit("s");
 
-    m_pT0InputPar = new VfModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+    m_pT0InputPar = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
                                              key = QString("PAR_T0Input"),
                                              QString("Start energy value"),
                                              QVariant((double)0.0));
@@ -254,7 +254,7 @@ void cSem1ModuleMeasProgram::generateInterface()
     cDoubleValidator *dValidator = new cDoubleValidator(0.0, 1.0e7, 1e-7);
     m_pT0InputPar->setValidator(dValidator);
 
-    m_pT1InputPar = new VfModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+    m_pT1InputPar = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
                                              key = QString("PAR_T1input"),
                                              QString("Final energy value"),
                                              QVariant((double)0.0));
@@ -263,14 +263,14 @@ void cSem1ModuleMeasProgram::generateInterface()
     dValidator = new cDoubleValidator(0.0, 1.0e7, 1e-7);
     m_pT1InputPar->setValidator(dValidator);
 
-    m_pInputUnitPar = new VfModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+    m_pInputUnitPar = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
                                                key = QString("PAR_TXUNIT"),
                                                QString("Energy unit"),
                                                QVariant("Unknown"));
     m_pInputUnitPar->setSCPIInfo(new cSCPIInfo("CALCULATE",  QString("%1:TXUNIT").arg(modNr), "10", m_pInputUnitPar->getName(), "0", ""));
     m_pModule->veinModuleParameterHash[key] = m_pInputUnitPar; // for modules use
 
-    m_pStartStopPar = new VfModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+    m_pStartStopPar = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
                                                key = QString("PAR_StartStop"),
                                                QString("Start/stop measurement"),
                                                QVariant((int)0));
@@ -279,14 +279,14 @@ void cSem1ModuleMeasProgram::generateInterface()
     iValidator = new cIntValidator(0, 1, 1);
     m_pStartStopPar->setValidator(iValidator);
 
-    m_pStatusAct = new VfModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+    m_pStatusAct = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
                                             key = QString("ACT_Status"),
                                             QString("State: 0:Idle 1:First pulse wait 2:Started 4:Ready 8:Aborted"),
                                             QVariant((int)0) );
     m_pModule->veinModuleParameterHash[key] =  m_pStatusAct; // and for the modules interface
     m_pStatusAct->setSCPIInfo(new cSCPIInfo("CALCULATE",  QString("%1:STATUS").arg(modNr), "2", m_pStatusAct->getName(), "0", ""));
 
-    m_pTimeAct = new VfModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+    m_pTimeAct = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
                                           key = QString("ACT_Time"),
                                           QString("Measurement time"),
                                           QVariant((double) 0.0));
@@ -294,21 +294,21 @@ void cSem1ModuleMeasProgram::generateInterface()
     m_pTimeAct->setSCPIInfo(new cSCPIInfo("CALCULATE", QString("%1:TIME").arg(modNr), "2", m_pTimeAct->getName(), "0", "s"));
     m_pTimeAct->setUnit("s");
 
-    m_pEnergyAct = new VfModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+    m_pEnergyAct = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
                                             key = QString("ACT_Energy"),
                                             QString("Energy since last start"),
                                             QVariant((double) 0.0));
     m_pModule->veinModuleParameterHash[key] = m_pEnergyAct; // and for the modules interface
     m_pEnergyAct->setSCPIInfo(new cSCPIInfo("CALCULATE", QString("%1:ENERGY").arg(modNr), "2", m_pEnergyAct->getName(), "0", ""));
 
-    m_pPowerAct = new VfModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+    m_pPowerAct = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
                                            key = QString("ACT_Power"),
                                            QString("Mean power since last start"),
                                            QVariant((double) 0.0));
     m_pModule->veinModuleParameterHash[key] = m_pPowerAct; // and for the modules interface
     m_pPowerAct->setSCPIInfo(new cSCPIInfo("CALCULATE", QString("%1:POWER").arg(modNr), "2", m_pPowerAct->getName(), "0", ""));
 
-    m_pResultAct = new VfModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+    m_pResultAct = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
                                             key = QString("ACT_Result"),
                                             QString("Result of last measurement"),
                                             QVariant((double) 0.0));
@@ -316,14 +316,14 @@ void cSem1ModuleMeasProgram::generateInterface()
     m_pResultAct->setSCPIInfo(new cSCPIInfo("CALCULATE",  QString("%1:RESULT").arg(modNr), "2", m_pResultAct->getName(), "0", "%"));
     m_pResultAct->setUnit("%");
 
-    m_pRefFreqInput = new VfModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+    m_pRefFreqInput = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
                                             key = QString("ACT_RefFreqInput"),
                                             QString("Reference frequency input to find power module"),
                                             QVariant(getConfData()->m_sRefInput.m_sPar));
     m_pModule->veinModuleParameterHash[key] = m_pRefFreqInput; // and for the modules interface
     m_pRefFreqInput->setSCPIInfo(new cSCPIInfo("CALCULATE",  QString("%1:REFFREQINPUT").arg(modNr), "2", m_pRefFreqInput->getName(), "0", ""));
 
-    m_pUpperLimitPar = new VfModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+    m_pUpperLimitPar = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
                                                 key = QString("PAR_Uplimit"),
                                                 QString("Error limit: upper"),
                                                 QVariant(getConfData()->m_fUpperLimit.m_fPar));
@@ -333,7 +333,7 @@ void cSem1ModuleMeasProgram::generateInterface()
     m_pUpperLimitPar->setValidator(dValidator);
     m_pUpperLimitPar->setUnit("%");
 
-    m_pLowerLimitPar = new VfModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+    m_pLowerLimitPar = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
                                                 key = QString("PAR_Lolimit"),
                                                 QString("Error limit: lower"),
                                                 QVariant(getConfData()->m_fLowerLimit.m_fPar));
@@ -343,14 +343,14 @@ void cSem1ModuleMeasProgram::generateInterface()
     m_pLowerLimitPar->setValidator(dValidator);
     m_pLowerLimitPar->setUnit("%");
 
-    m_pRatingAct = new VfModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+    m_pRatingAct = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
                                                key = QString("ACT_Rating"),
                                                QString("Evaluation for the last measurement"),
                                                QVariant((int) -1));
     m_pModule->veinModuleParameterHash[key] = m_pRatingAct; // and for the modules interface
     m_pRatingAct->setSCPIInfo(new cSCPIInfo("CALCULATE",  QString("%1:RATING").arg(modNr), "2", m_pRatingAct->getName(), "0", ""));
 
-    m_pClientNotifierPar = new VfModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+    m_pClientNotifierPar = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
                                            key = QString("PAR_ClientActiveNotify"),
                                            QString("By changing this component, a client asks us for max actualize performance"),
                                            QVariant((quint32)0));

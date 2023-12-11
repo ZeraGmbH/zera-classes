@@ -198,28 +198,28 @@ void cSec1ModuleMeasProgram::generateInterface()
 
     QString modNr = QString("%1").arg(m_pModule->getModuleNr(),4,10,QChar('0'));
 
-    m_pDutInputPar = new VfModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+    m_pDutInputPar = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
                                               key = QString("PAR_DutInput"),
                                               QString("DUT input"),
                                               QVariant(s = "Unknown"));
     m_pDutInputPar->setSCPIInfo(new cSCPIInfo("CALCULATE", QString("%1:DUTSOURCE").arg(modNr), "10", m_pDutInputPar->getName(), "0", ""));
     m_pModule->veinModuleParameterHash[key] = m_pDutInputPar; // for modules use
 
-    m_pRefInputPar = new VfModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+    m_pRefInputPar = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
                                               key = QString("PAR_RefInput"),
                                               QString("REF input"),
                                               QVariant(s = "Unknown"));
     m_pRefInputPar->setSCPIInfo(new cSCPIInfo("CALCULATE", QString("%1:REFSOURCE").arg(modNr), "10", m_pRefInputPar->getName(), "0", ""));
     m_pModule->veinModuleParameterHash[key] = m_pRefInputPar; // for modules use
 
-    m_pRefConstantPar = new VfModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+    m_pRefConstantPar = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
                                                  key = QString("PAR_RefConstant"),
                                                  QString("Reference meter constant"),
                                                  QVariant((double)0.0));
     m_pRefConstantPar->setSCPIInfo(new cSCPIInfo("CALCULATE", QString("%1:REFCONSTANT").arg(modNr ), "10", m_pRefConstantPar->getName(), "0", ""));
     m_pModule->veinModuleParameterHash[key] = m_pRefConstantPar; // for modules use
 
-    m_pDutConstantPar = new VfModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+    m_pDutConstantPar = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
                                                  key = QString("PAR_DutConstant"),
                                                  QString("DUT constant"),
                                                  QVariant((double)0.0));
@@ -228,7 +228,7 @@ void cSec1ModuleMeasProgram::generateInterface()
     m_dutConstValidator = new cDoubleValidator(1e-6, 1.0e20, 1e-6);
     m_pDutConstantPar->setValidator(m_dutConstValidator);
 
-    m_pDutConstantAuto = new VfModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+    m_pDutConstantAuto = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
                                             key = QString("PAR_DutConstantAuto"),
                                             QString("Calculate DUT constant to get ~0% error"),
                                             QVariant((int)0));
@@ -238,7 +238,7 @@ void cSec1ModuleMeasProgram::generateInterface()
     iValidator = new cIntValidator(0, 1, 1);
     m_pDutConstantAuto->setValidator(iValidator);
 
-    m_pDutConstantUScaleNum = new VfModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+    m_pDutConstantUScaleNum = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
                                                  key = QString("PAR_DutConstantUScaleNum"),
                                                  QString("Scale the dut constant in case tranformers are used (U fraction numerator)"),
                                                  QVariant("1"));
@@ -248,7 +248,7 @@ void cSec1ModuleMeasProgram::generateInterface()
     m_pDutConstantUScaleNum->setValidator(new cRegExValidator("^[1-9][0-9]*(\\/sqrt\\(3\\))?$"));
 
 
-    m_pDutConstantUScaleDenom = new VfModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+    m_pDutConstantUScaleDenom = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
                                                  key = QString("PAR_DutConstantUScaleDenom"),
                                                  QString("Scale the dut constant in case tranformers are used (U fraction denominator)"),
                                                  QVariant("1"));
@@ -257,7 +257,7 @@ void cSec1ModuleMeasProgram::generateInterface()
     //Match x or x/sqrt(3)
     m_pDutConstantUScaleDenom->setValidator(new cRegExValidator("^[1-9][0-9]*(\\/sqrt\\(3\\))?$"));
 
-    m_pDutConstantIScaleNum = new VfModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+    m_pDutConstantIScaleNum = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
                                                  key = QString("PAR_DutConstantIScaleNum"),
                                                  QString("Scale the dut constant in case tranformers are used (I fraction numerator)"),
                                                  QVariant("1"));
@@ -267,7 +267,7 @@ void cSec1ModuleMeasProgram::generateInterface()
     m_pDutConstantIScaleNum->setValidator(new cRegExValidator("^[1-9][0-9]*$"));
 
 
-    m_pDutConstantIScaleDenom = new VfModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+    m_pDutConstantIScaleDenom = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
                                                  key = QString("PAR_DutConstantIScaleDenom"),
                                                  QString("Scale the dut constant in case tranformers are used (I fraction denominator)"),
                                                  QVariant("1"));
@@ -277,7 +277,7 @@ void cSec1ModuleMeasProgram::generateInterface()
     m_pDutConstantIScaleDenom->setValidator(new cRegExValidator("^[1-9][0-9]*?$"));
 
 
-    m_pDutTypeMeasurePoint = new VfModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+    m_pDutTypeMeasurePoint = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
                                                  key = QString("PAR_DutTypeMeasurePoint"),
                                                  QString("Scale the dut constant in case tranformers are used (Measurement point selection)"),
                                                  QVariant("CsIsUs"));
@@ -288,14 +288,14 @@ void cSec1ModuleMeasProgram::generateInterface()
 
 
 
-    m_pDutConstantUnitPar = new VfModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+    m_pDutConstantUnitPar = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
                                                      key = QString("PAR_DUTConstUnit"),
                                                      QString("DUT constant unit"),
                                                      QVariant(s = "Unknown"));
     m_pDutConstantUnitPar->setSCPIInfo(new cSCPIInfo("CALCULATE", QString("%1:DCUNIT").arg(modNr), "10", m_pDutConstantUnitPar->getName(), "0", ""));
     m_pModule->veinModuleParameterHash[key] = m_pDutConstantUnitPar; // for modules use
 
-    m_pMRatePar = new VfModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+    m_pMRatePar = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
                                            key = QString("PAR_MRate"),
                                            QString("Pulses to measure"),
                                            QVariant((double)0.0));
@@ -304,7 +304,7 @@ void cSec1ModuleMeasProgram::generateInterface()
     iValidator = new cIntValidator(1, 4294967295, 1);
     m_pMRatePar->setValidator(iValidator);
 
-    m_pTargetPar = new VfModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+    m_pTargetPar = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
                                             key = QString("PAR_Target"),
                                             QString("REF pulses for 0% error - set automatically"),
                                             QVariant((double)0.0));
@@ -313,7 +313,7 @@ void cSec1ModuleMeasProgram::generateInterface()
     iValidator = new cIntValidator(1, 4294967295, 1);
     m_pTargetPar->setValidator(iValidator);
 
-    m_pEnergyPar = new VfModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+    m_pEnergyPar = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
                                             key = QString("PAR_Energy"),
                                             QString("Energy value"),
                                             QVariant((double)0.0));
@@ -323,7 +323,7 @@ void cSec1ModuleMeasProgram::generateInterface()
     dValidator = new cDoubleValidator(0.0, 1.0e7, 1e-5);
     m_pEnergyPar->setValidator(dValidator);
 
-    m_pStartStopPar = new VfModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+    m_pStartStopPar = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
                                                key = QString("PAR_StartStop"),
                                                QString("Start/stop measurement"),
                                                QVariant((int)0));
@@ -332,7 +332,7 @@ void cSec1ModuleMeasProgram::generateInterface()
     iValidator = new cIntValidator(0, 1, 1);
     m_pStartStopPar->setValidator(iValidator);
 
-    m_pContinuousPar = new VfModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+    m_pContinuousPar = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
                                                 key = QString("PAR_Continuous"),
                                                 QString("Enables/disable continuous measurement"),
                                                 QVariant(int(0)));
@@ -340,7 +340,7 @@ void cSec1ModuleMeasProgram::generateInterface()
     m_pModule->veinModuleParameterHash[key] =  m_pContinuousPar; // for modules use
     iValidator = new cIntValidator(0, 1, 1);
     m_pContinuousPar->setValidator(iValidator);
-    m_pMeasCountPar = new VfModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+    m_pMeasCountPar = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
                                            key = QString("PAR_MeasCount"),
                                            QString("Multiple measurements: Number of measurements"),
                                            QVariant((int)1));
@@ -349,7 +349,7 @@ void cSec1ModuleMeasProgram::generateInterface()
     iValidator = new cIntValidator(1, m_nMulMeasStoredMax, 1);
     m_pMeasCountPar->setValidator(iValidator);
 
-    m_pMeasWait = new VfModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+    m_pMeasWait = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
                                            key = QString("PAR_MeasWait"),
                                            QString("Multiple measurements: Seconds to wait between measurements"),
                                            QVariant((int)0));
@@ -359,7 +359,7 @@ void cSec1ModuleMeasProgram::generateInterface()
     m_pMeasWait->setValidator(iValidator);
     m_pMeasWait->setUnit("s");
 
-    m_pClientNotifierPar = new VfModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+    m_pClientNotifierPar = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
                                            key = QString("PAR_ClientActiveNotify"),
                                            QString("By changing this component, a client asks us for max actualize performance"),
                                            QVariant((quint32)0));
@@ -371,21 +371,21 @@ void cSec1ModuleMeasProgram::generateInterface()
 
     // after configuration we still have to set the string validators
 
-    m_pStatusAct = new VfModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+    m_pStatusAct = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
                                             key = QString("ACT_Status"),
                                             QString("Status: 0:Idle 1:Waiting for first pulse 2:Started 4:Ready 8:Aborted"),
                                             QVariant((int)0) );
     m_pModule->veinModuleParameterHash[key] =  m_pStatusAct; // for modules use
     m_pStatusAct->setSCPIInfo(new cSCPIInfo("CALCULATE",  QString("%1:STATUS").arg(modNr), "2", m_pStatusAct->getName(), "0", ""));
 
-    m_pProgressAct = new VfModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+    m_pProgressAct = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
                                               key = QString("ACT_Progress"),
                                               QString("Progress information"),
                                               QVariant((double) 0.0));
     m_pModule->veinModuleParameterHash[key] = m_pProgressAct; // and for the modules interface
     m_pProgressAct->setSCPIInfo(new cSCPIInfo("CALCULATE", QString("%1:PROGRESS").arg(modNr), "2", m_pProgressAct->getName(), "0", ""));
 
-    m_pEnergyAct = new VfModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+    m_pEnergyAct = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
                                             key = QString("ACT_Energy"),
                                             QString("Energy since last start"),
                                             QVariant((double) 0.0));
@@ -393,28 +393,28 @@ void cSec1ModuleMeasProgram::generateInterface()
     m_pEnergyAct->setSCPIInfo(new cSCPIInfo("CALCULATE", QString("%1:ENERGY").arg(modNr), "2", m_pEnergyAct->getName(), "0", ""));
 
 
-    m_pEnergyFinalAct = new VfModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+    m_pEnergyFinalAct = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
                                                  key = QString("ACT_EnergyFinal"),
                                                  QString("Energy of last measurement"),
                                                  QVariant((double) 0.0));
     m_pModule->veinModuleParameterHash[key] = m_pEnergyFinalAct; // and for the modules interface
     m_pEnergyFinalAct->setSCPIInfo(new cSCPIInfo("CALCULATE", QString("%1:ENFINAL").arg(modNr), "2", m_pEnergyFinalAct->getName(), "0", ""));
 
-    m_pResultAct = new VfModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+    m_pResultAct = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
                                             key = QString("ACT_Result"),
                                             QString("Result of last measurement"),
                                             QVariant((double) 0.0));
     m_pModule->veinModuleParameterHash[key] = m_pResultAct; // and for the modules interface
     m_pResultAct->setSCPIInfo(new cSCPIInfo("CALCULATE",  QString("%1:RESULT").arg(modNr), "2", m_pResultAct->getName(), "0", ""));
 
-    m_pRefFreqInput = new VfModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+    m_pRefFreqInput = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
                                             key = QString("ACT_RefFreqInput"),
                                             QString("Reference frequency input to find power module"),
                                             QVariant(getConfData()->m_sRefInput.m_sPar));
     m_pModule->veinModuleParameterHash[key] = m_pRefFreqInput; // and for the modules interface
     m_pRefFreqInput->setSCPIInfo(new cSCPIInfo("CALCULATE",  QString("%1:REFFREQINPUT").arg(modNr), "2", m_pRefFreqInput->getName(), "0", ""));
 
-    m_pUpperLimitPar = new VfModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+    m_pUpperLimitPar = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
                                                 key = QString("PAR_Uplimit"),
                                                 QString("Error limit: upper"),
                                                 QVariant(getConfData()->m_fUpperLimit.m_fPar));
@@ -424,7 +424,7 @@ void cSec1ModuleMeasProgram::generateInterface()
     m_pUpperLimitPar->setValidator(dValidator);
     m_pUpperLimitPar->setUnit("%");
 
-    m_pLowerLimitPar = new VfModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+    m_pLowerLimitPar = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
                                                 key = QString("PAR_Lolimit"),
                                                 QString("Error limit: lower"),
                                                 QVariant(getConfData()->m_fLowerLimit.m_fPar));
@@ -434,7 +434,7 @@ void cSec1ModuleMeasProgram::generateInterface()
     m_pLowerLimitPar->setValidator(dValidator);
     m_pLowerLimitPar->setUnit("%");
 
-    m_pResultUnit = new VfModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+    m_pResultUnit = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
                                               key = QString("PAR_ResultUnit"),
                                               QString("Result unit"),
                                               QVariant(s = "%"));
@@ -442,28 +442,28 @@ void cSec1ModuleMeasProgram::generateInterface()
     m_pModule->veinModuleParameterHash[key] = m_pResultUnit; // for modules use
     m_pResultUnit->setValidator(new cStringValidator((QStringList() << "%" << "ppm" )));
 
-    m_pRatingAct = new VfModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+    m_pRatingAct = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
                                                key = QString("ACT_Rating"),
                                                QString("Evaluation last measurement"),
                                                QVariant((int) -1));
     m_pModule->veinModuleParameterHash[key] = m_pRatingAct; // and for the modules interface
     m_pRatingAct->setSCPIInfo(new cSCPIInfo("CALCULATE",  QString("%1:RATING").arg(modNr), "2", m_pRatingAct->getName(), "0", ""));
 
-    m_pMeasNumAct = new VfModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+    m_pMeasNumAct = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
                                                key = QString("ACT_MeasNum"),
                                                QString("Multiple measurements: Count"),
                                                QVariant((int) 0));
     m_pModule->veinModuleParameterHash[key] = m_pMeasNumAct; // and for the modules interface
     m_pMeasNumAct->setSCPIInfo(new cSCPIInfo("CALCULATE",  QString("%1:MEASNUM").arg(modNr), "2", m_pMeasNumAct->getName(), "0", ""));
 
-    m_pMulCountAct = new VfModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+    m_pMulCountAct = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
                                                key = QString("ACT_MulCount"),
                                                QString("Multiple measurements: Count stored"),
                                                QVariant((int) 0));
     m_pModule->veinModuleParameterHash[key] = m_pMulCountAct; // and for the modules interface
     m_pMulCountAct->setSCPIInfo(new cSCPIInfo("CALCULATE",  QString("%1:MULCOUNT").arg(modNr), "2", m_pMulCountAct->getName(), "0", ""));
 
-    m_pMulResultArray = new VfModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+    m_pMulResultArray = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
                                                key = QString("ACT_MulResult"),
                                                QString("Multiple measurements: JSON result array / statistics"),
                                                QVariant(multiResultToJson()));

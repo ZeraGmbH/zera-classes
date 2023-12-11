@@ -167,7 +167,7 @@ void cRmsModuleMeasProgram::generateInterface()
                 description = QString("Actual rms value phase/neutral");
             else //current channels
                 description = QString("Actual rms value");
-            pActvalue = new VfModuleActvalue(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+            pActvalue = new VfModuleActvalue(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
                                                 QString("ACT_RMSPN%1").arg(n+1),
                                                 description,
                                                 QVariant(0.0) );
@@ -178,7 +178,7 @@ void cRmsModuleMeasProgram::generateInterface()
         }
         else
         {
-            pActvalue = new VfModuleActvalue(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+            pActvalue = new VfModuleActvalue(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
                                                 QString("ACT_RMSPP%1").arg(p+1),
                                                 QString("Actual rms value phase/phase"),
                                                 QVariant(0.0) );
@@ -214,7 +214,7 @@ void cRmsModuleMeasProgram::generateInterface()
         unit = QString("period");
     }
 
-    m_pIntegrationParameter = new VfModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+    m_pIntegrationParameter = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
                                                            key = QString("PAR_Interval"),
                                                            s,
                                                            val);
@@ -237,7 +237,7 @@ void cRmsModuleMeasProgram::generateInterface()
 
     m_pModule->veinModuleParameterHash[key] = m_pIntegrationParameter; // for modules use
 
-    m_pMeasureSignal = new VfModuleComponent(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+    m_pMeasureSignal = new VfModuleComponent(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
                                                 QString("SIG_Measuring"),
                                                 QString("Signal indicating measurement activity"),
                                                 QVariant(0));

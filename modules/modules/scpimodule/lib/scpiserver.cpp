@@ -81,7 +81,7 @@ cSCPIServer::~cSCPIServer()
 void cSCPIServer::generateInterface()
 {
     QString key;
-    m_pVeinParamSerialOn = new VfModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+    m_pVeinParamSerialOn = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
                                                        key = QString("PAR_SerialScpiActive"),
                                                        QString("Enable/disable serial SCPI"),
                                                        QVariant(m_bSerialScpiActive));
@@ -89,19 +89,19 @@ void cSCPIServer::generateInterface()
     connect(m_pVeinParamSerialOn, &VfModuleParameter::sigValueChanged, this, &cSCPIServer::newSerialOn);
     m_pModule->veinModuleParameterHash[key] = m_pVeinParamSerialOn; // auto delete / meta-data / scpi
 
-    m_pVeinSerialScpiDevFileName = new VfModuleActvalue(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+    m_pVeinSerialScpiDevFileName = new VfModuleActvalue(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
                                                     QString("ACT_SerialScpiDeviceFile"),
                                                     QString("Device file name for serial SCPI"),
                                                     QVariant(m_ConfigData.m_SerialDevice.m_sDevice) );
     m_pModule->veinModuleActvalueList.append(m_pVeinSerialScpiDevFileName); // auto delete / meta-data / scpi
 
-    m_veinDevIface = new VfModuleActvalue(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+    m_veinDevIface = new VfModuleActvalue(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
                                                      QString("ACT_DEV_IFACE"),
                                                      QString("SCPI interface description for current session"),
                                                      QVariant("") );
     m_pModule->veinModuleActvalueList.append(m_veinDevIface); // auto delete / meta-data / scpi
 
-    m_optionalScpiQueue = new VfModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+    m_optionalScpiQueue = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
                                                          key = QString("PAR_OptionalScpiQueue"),
                                                          QString("Enable/disable order for SCPI commands"),
                                                          QVariant(m_ConfigData.m_enableScpiQueue.m_nActive));

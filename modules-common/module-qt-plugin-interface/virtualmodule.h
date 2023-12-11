@@ -34,7 +34,6 @@ public:
 
     QStateMachine m_ActivationMachine; // we use statemachine for module activation
     QStateMachine m_DeactivationMachine; // and deactivation
-    int m_nEntityId;
 signals:
     // signals to be used by activation and deactivation statemachine when ready
     void activationReady();
@@ -59,6 +58,7 @@ protected:
     QString m_sModuleName;
     QString m_sSCPIModuleName;
 private:
+    int m_nEntityId;
     quint16 m_moduleNo;
 };
 }

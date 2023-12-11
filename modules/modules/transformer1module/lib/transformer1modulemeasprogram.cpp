@@ -78,7 +78,7 @@ void cTransformer1ModuleMeasProgram::generateInterface()
 
     for (int i = 0; i < getConfData()->m_nTransformerSystemCount; i++)
     {
-        pActvalue = new VfModuleActvalue(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+        pActvalue = new VfModuleActvalue(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
                                             QString("ACT_Error%1").arg(i+1),
                                             QString("Transformer transmission error value"),
                                             QVariant(0.0) );
@@ -91,7 +91,7 @@ void cTransformer1ModuleMeasProgram::generateInterface()
         m_veinActValueList.append(pActvalue); // we add the component for our measurement
         m_pModule->veinModuleActvalueList.append(pActvalue); // and for the modules interface
 
-        pActvalue = new VfModuleActvalue(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+        pActvalue = new VfModuleActvalue(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
                                             QString("ACT_Angle%1").arg(i+1),
                                             QString("Transformer angle deviation value"),
                                             QVariant(0.0) );
@@ -104,7 +104,7 @@ void cTransformer1ModuleMeasProgram::generateInterface()
         m_veinActValueList.append(pActvalue); // we add the component for our measurement
         m_pModule->veinModuleActvalueList.append(pActvalue); // and for the modules interface
 
-        pActvalue = new VfModuleActvalue(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+        pActvalue = new VfModuleActvalue(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
                                             QString("ACT_Ratio%1").arg(i+1),
                                             QString("Transformer ratio value"),
                                             QVariant(0.0) );
@@ -117,7 +117,7 @@ void cTransformer1ModuleMeasProgram::generateInterface()
         m_veinActValueList.append(pActvalue); // we add the component for our measurement
         m_pModule->veinModuleActvalueList.append(pActvalue); // and for the modules interface
 
-        pActvalue = new VfModuleActvalue(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+        pActvalue = new VfModuleActvalue(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
                                             QString("ACT_INSecondary%1").arg(i+1),
                                             QString("Reference N secondary input"),
                                             QVariant(0.0) );
@@ -130,7 +130,7 @@ void cTransformer1ModuleMeasProgram::generateInterface()
         m_veinActValueList.append(pActvalue); // we add the component for our measurement
         m_pModule->veinModuleActvalueList.append(pActvalue); // and for the modules interface
 
-        pActvalue = new VfModuleActvalue(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+        pActvalue = new VfModuleActvalue(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
                                             QString("ACT_IXSecondary%1").arg(i+1),
                                             QString("DUT secondary input"),
                                             QVariant(0.0) );
@@ -143,7 +143,7 @@ void cTransformer1ModuleMeasProgram::generateInterface()
         m_veinActValueList.append(pActvalue); // we add the component for our measurement
         m_pModule->veinModuleActvalueList.append(pActvalue); // and for the modules interface
 
-        pActvalue = new VfModuleActvalue(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+        pActvalue = new VfModuleActvalue(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
                                             QString("ACT_IXPrimary%1").arg(i+1),
                                             QString("DUT test primary input"),
                                             QVariant(0.0) );
@@ -157,7 +157,7 @@ void cTransformer1ModuleMeasProgram::generateInterface()
         m_pModule->veinModuleActvalueList.append(pActvalue); // and for the modules interface
     }
 
-    m_pPrimClampPrimParameter = new VfModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+    m_pPrimClampPrimParameter = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
                                                          key = QString("PAR_PrimClampPrim"),
                                                          QString("Clamp primary value"),
                                                          QVariant(getConfData()->primClampPrim.m_fValue));
@@ -171,7 +171,7 @@ void cTransformer1ModuleMeasProgram::generateInterface()
 
     m_pModule->veinModuleParameterHash[key] = m_pPrimClampPrimParameter; // for modules use
 
-    m_pPrimClampSecParameter = new VfModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+    m_pPrimClampSecParameter = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
                                                         key = QString("PAR_PrimClampSec"),
                                                         QString("Primary clamp secondary value"),
                                                         QVariant(getConfData()->primClampSec.m_fValue));
@@ -184,7 +184,7 @@ void cTransformer1ModuleMeasProgram::generateInterface()
 
     m_pModule->veinModuleParameterHash[key] = m_pPrimClampSecParameter; // for modules use
 
-    m_pSecClampPrimParameter = new VfModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+    m_pSecClampPrimParameter = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
                                                         key = QString("PAR_SecClampPrim"),
                                                         QString("Secondary clamp primary value"),
                                                         QVariant(getConfData()->secClampPrim.m_fValue));
@@ -197,7 +197,7 @@ void cTransformer1ModuleMeasProgram::generateInterface()
 
     m_pModule->veinModuleParameterHash[key] = m_pSecClampPrimParameter; // for modules use
 
-    m_pSecClampSecParameter = new VfModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+    m_pSecClampSecParameter = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
                                                        key = QString("PAR_SecClampSec"),
                                                        QString("Secondary clamp secondary value"),
                                                        QVariant(getConfData()->secClampSec.m_fValue));
@@ -210,7 +210,7 @@ void cTransformer1ModuleMeasProgram::generateInterface()
 
     m_pModule->veinModuleParameterHash[key] = m_pSecClampSecParameter; // for modules use
 
-    m_pPrimDutParameter = new VfModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+    m_pPrimDutParameter = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
                                                    key = QString("PAR_DutPrimary"),
                                                    QString("DUT primary value"),
                                                    QVariant(getConfData()->dutPrim.m_fValue));
@@ -223,7 +223,7 @@ void cTransformer1ModuleMeasProgram::generateInterface()
 
     m_pModule->veinModuleParameterHash[key] = m_pPrimDutParameter; // for modules use
 
-    m_pSecDutParameter = new VfModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+    m_pSecDutParameter = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
                                                   key = QString("PAR_DutSecondary"),
                                                   QString("DUT secondary value"),
                                                   QVariant(getConfData()->dutSec.m_fValue));
@@ -239,7 +239,7 @@ void cTransformer1ModuleMeasProgram::generateInterface()
     m_pTRSCountInfo = new VfModuleMetaData(QString("TRSCount"), QVariant(getConfData()->m_nTransformerSystemCount));
     m_pModule->veinModuleMetaDataList.append(m_pTRSCountInfo);
 
-    m_pMeasureSignal = new VfModuleComponent(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+    m_pMeasureSignal = new VfModuleComponent(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
                                                 QString("SIG_Measuring"),
                                                 QString("Signal indicating measurement activity"),
                                                 QVariant(0));

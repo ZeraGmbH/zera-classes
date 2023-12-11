@@ -153,7 +153,7 @@ void cOsciModuleMeasProgram::generateInterface()
 
     for (int i = 0; i < n; i++)
     {
-        pActvalue = new VfModuleActvalue(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+        pActvalue = new VfModuleActvalue(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
                                             QString("ACT_OSCI%1").arg(i+1),
                                             QString("Measures samples"),
                                             QVariant(0.0) );
@@ -164,7 +164,7 @@ void cOsciModuleMeasProgram::generateInterface()
     m_pOsciCountInfo = new VfModuleMetaData(QString("OSCICount"), QVariant(n));
     m_pModule->veinModuleMetaDataList.append(m_pOsciCountInfo);
 
-    m_pRefChannelParameter = new VfModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+    m_pRefChannelParameter = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
                                                       key = QString("PAR_RefChannel"),
                                                       QString("Reference channel"),
                                                       QVariant(getConfData()->m_RefChannel.m_sPar));
@@ -177,7 +177,7 @@ void cOsciModuleMeasProgram::generateInterface()
     sValidator = new cStringValidator(getConfData()->m_valueChannelList);
     m_pRefChannelParameter->setValidator(sValidator);
 
-    m_pMeasureSignal = new VfModuleComponent(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+    m_pMeasureSignal = new VfModuleComponent(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
                                                 QString("SIG_Measuring"),
                                                 QString("Signal indicating measurement activity"),
                                                 QVariant(0));

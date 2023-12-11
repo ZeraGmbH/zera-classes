@@ -61,7 +61,7 @@ void cEfficiency1ModuleMeasProgram::generateInterface()
     VfModuleActvalue *pActvalue;
     cSCPIInfo* pSCPIInfo;
 
-    pActvalue = new VfModuleActvalue(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+    pActvalue = new VfModuleActvalue(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
                                         QString("ACT_EFC1"),
                                         QString("Efficiency actual values"),
                                         QVariant(0.0) );
@@ -77,7 +77,7 @@ void cEfficiency1ModuleMeasProgram::generateInterface()
     m_pEFFCountInfo = new VfModuleMetaData(QString("EFCCount"), QVariant(1));
     m_pModule->veinModuleMetaDataList.append(m_pEFFCountInfo);
 
-    m_pMeasureSignal = new VfModuleComponent(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+    m_pMeasureSignal = new VfModuleComponent(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
                                                 QString("SIG_Measuring"),
                                                 QString("Signal indicating measurement activity"),
                                                 QVariant(0));

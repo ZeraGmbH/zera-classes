@@ -170,7 +170,7 @@ void cDftModuleMeasProgram::generateInterface()
         // we have 1 or 2 entries for each value
         if (sl.count() == 1) // in this case we have phase,neutral value
         {
-            pActvalue = new VfModuleActvalue(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+            pActvalue = new VfModuleActvalue(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
                                                 QString("ACT_DFTPN%1").arg(n+1),
                                                 QString("Actual value phase/neutral"),
                                                 QVariant(0.0) );
@@ -183,7 +183,7 @@ void cDftModuleMeasProgram::generateInterface()
         else
 
         {
-            pActvalue = new VfModuleActvalue(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+            pActvalue = new VfModuleActvalue(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
                                                 QString("ACT_DFTPP%1").arg(p+1),
                                                 QString("Actual value phase/phase"),
                                                 QVariant(0.0) );
@@ -194,7 +194,7 @@ void cDftModuleMeasProgram::generateInterface()
         }
     }
 
-    m_pRFieldActualValue = new VfModuleActvalue(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+    m_pRFieldActualValue = new VfModuleActvalue(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
                                                    QString("ACT_RFIELD"),
                                                    QString("Phase sequence"),
                                                    QVariant("") );
@@ -209,7 +209,7 @@ void cDftModuleMeasProgram::generateInterface()
 
 
 
-    m_pIntegrationTimeParameter = new VfModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+    m_pIntegrationTimeParameter = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
                                                            key = QString("PAR_Interval"),
                                                            QString("Integration time"),
                                                            QVariant(getConfData()->m_fMeasInterval.m_fValue));
@@ -222,7 +222,7 @@ void cDftModuleMeasProgram::generateInterface()
     dValidator = new cDoubleValidator(1.0, 100.0, 0.5);
     m_pIntegrationTimeParameter->setValidator(dValidator);
 
-    m_pRefChannelParameter = new VfModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+    m_pRefChannelParameter = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
                                                       key = QString("PAR_RefChannel"),
                                                       QString("Reference channel"),
                                                       QVariant(getConfData()->m_sRefChannel.m_sPar));
@@ -232,7 +232,7 @@ void cDftModuleMeasProgram::generateInterface()
     m_pModule->veinModuleParameterHash[key] = m_pRefChannelParameter; // for modules use
     // we must set validator after activation because we don't know the channel names here
 
-    m_pMeasureSignal = new VfModuleComponent(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+    m_pMeasureSignal = new VfModuleComponent(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
                                                 QString("SIG_Measuring"),
                                                 QString("Signal indicating measurement activity"),
                                                 QVariant(0));

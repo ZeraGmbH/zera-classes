@@ -156,14 +156,14 @@ void cFftModuleMeasProgram::generateInterface()
     VfModuleActvalue *pActvalue;
     int n = getConfData()->m_valueChannelList.count();
     for (int i = 0; i < n; i++) {
-        pActvalue = new VfModuleActvalue(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+        pActvalue = new VfModuleActvalue(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
                                             QString("ACT_FFT%1").arg(i+1),
                                             QString("FFT actual values"),
                                             QVariant(0.0) );
         m_veinActValueList.append(pActvalue); // we add the component for our measurement
         m_pModule->veinModuleActvalueList.append(pActvalue); // and for the modules interface
 
-        pActvalue = new VfModuleActvalue(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+        pActvalue = new VfModuleActvalue(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
                                             QString("ACT_DC%1").arg(i+1),
                                             QString("DC actual value"),
                                             QVariant(0.0) );
@@ -176,7 +176,7 @@ void cFftModuleMeasProgram::generateInterface()
     m_pFFTOrderInfo = new VfModuleMetaData(QString("FFTOrder"), QVariant(getConfData()->m_nFftOrder));
     m_pModule->veinModuleMetaDataList.append(m_pFFTOrderInfo);
 
-    m_pIntegrationTimeParameter = new VfModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+    m_pIntegrationTimeParameter = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
                                                            key = QString("PAR_Interval"),
                                                            QString("Integration time"),
                                                            QVariant(getConfData()->m_fMeasInterval.m_fValue));
@@ -189,7 +189,7 @@ void cFftModuleMeasProgram::generateInterface()
     dValidator = new cDoubleValidator(1.0, 100.0, 0.5);
     m_pIntegrationTimeParameter->setValidator(dValidator);
 
-    m_pRefChannelParameter = new VfModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+    m_pRefChannelParameter = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
                                                       key = QString("PAR_RefChannel"),
                                                       QString("Reference channel"),
                                                       QVariant(getConfData()->m_RefChannel.m_sPar));
@@ -201,7 +201,7 @@ void cFftModuleMeasProgram::generateInterface()
     m_pRefChannelParameter->setSCPIInfo(new cSCPIInfo("CONFIGURATION","REFCHANNEL", "10", "PAR_RefChannel", "0", ""));
     m_pModule->veinModuleParameterHash[key] = m_pRefChannelParameter; // for modules use
 
-    m_pMeasureSignal = new VfModuleComponent(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+    m_pMeasureSignal = new VfModuleComponent(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
                                                 QString("SIG_Measuring"),
                                                 QString("Signal indicating measurement activity"),
                                                 QVariant(0));
