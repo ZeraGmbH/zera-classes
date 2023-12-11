@@ -1,8 +1,6 @@
 add_definitions(-DSCPI_DOC_BUILD_PATH="${CMAKE_INSTALL_PREFIX}/..")
 add_definitions(-DSCPI_DOC_SOURCE_PATH="${CMAKE_CURRENT_SOURCE_DIR}")
 
-set(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
-
 add_executable(scpi-doc-generator
     ${CMAKE_CURRENT_SOURCE_DIR}/main.cpp
     )
