@@ -29,9 +29,8 @@ private:
     void save();
     static ModulemanagerConfig *m_instance;
     static std::once_flag m_onceflag;
-    static QString m_demoDevice;
+    static QString m_deviceName;
     QJsonObject m_jsonConfig;
-    QString m_deviceName;
 };
 
 #endif // MODULEMANAGERCONFIG_H
