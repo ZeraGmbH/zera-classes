@@ -6,7 +6,7 @@ namespace POWER3MODULE
 
 ZeraModules::VirtualModule* Power3ModuleFactory::createModule(int entityId, VeinEvent::StorageSystem* storagesystem, bool demo, int moduleNum)
 {
-    ZeraModules::VirtualModule *module = new cPower3Module(m_ModuleList.count()+1, entityId, storagesystem, demo);
+    ZeraModules::VirtualModule *module = new cPower3Module(moduleNum, entityId, storagesystem, demo);
     m_ModuleList.append(module);
     return module;
 }
