@@ -133,7 +133,7 @@ void ModuleManager::loadDefaultSession()
     changeSessionFile(mmConfig->getDefaultSession());
 }
 
-void ModuleManager::startModule(const QString & uniqueModuleName, const QString & t_xmlConfigPath, const QByteArray &t_xmlConfigData, int moduleEntityId)
+void ModuleManager::startModule(const QString & uniqueModuleName, const QString & t_xmlConfigPath, const QByteArray &t_xmlConfigData, int moduleEntityId, int moduleNum)
 {
     // do not allow starting until all modules are shut down
     if(m_moduleStartLock == false) {
@@ -154,7 +154,7 @@ void ModuleManager::startModule(const QString & uniqueModuleName, const QString 
 
                 m_moduleStartLock = true;
                 tmpModule->startModule();
-                ModuleData *moduleData = new ModuleData(tmpModule, uniqueModuleName, t_xmlConfigPath, QByteArray(), moduleEntityId);
+                ModuleData *moduleData = new ModuleData(tmpModule, uniqueModuleName, t_xmlConfigPath, QByteArray(), moduleEntityId, moduleNum);
                 connect(tmpModule, &VirtualModule::parameterChanged, this, [this, moduleData](){
                     saveModuleConfig(moduleData);
                 });
@@ -170,12 +170,12 @@ void ModuleManager::startModule(const QString & uniqueModuleName, const QString 
         }
         else {//wait for serial number initialization
             qInfo("No serialno - enqueue module %s...", qPrintable(uniqueModuleName));
-            m_deferredStartList.enqueue(new ModuleData(nullptr, uniqueModuleName, t_xmlConfigPath, t_xmlConfigData, moduleEntityId));
+            m_deferredStartList.enqueue(new ModuleData(nullptr, uniqueModuleName, t_xmlConfigPath, t_xmlConfigData, moduleEntityId, moduleNum));
         }
     }
     else {
         qInfo("Locked - enqueue module %s...", qPrintable(uniqueModuleName));
-        m_deferredStartList.enqueue(new ModuleData(nullptr, uniqueModuleName, t_xmlConfigPath, t_xmlConfigData, moduleEntityId));
+        m_deferredStartList.enqueue(new ModuleData(nullptr, uniqueModuleName, t_xmlConfigPath, t_xmlConfigData, moduleEntityId, moduleNum));
     }
 }
 
@@ -281,7 +281,7 @@ void ModuleManager::onModuleStartNext()
     m_moduleStartLock = false;
     if(m_deferredStartList.length() > 0) {
         ModuleData *tmpData = m_deferredStartList.dequeue();
-        startModule(tmpData->m_uniqueName, tmpData->m_configPath, tmpData->m_configData, tmpData->m_moduleId);
+        startModule(tmpData->m_uniqueName, tmpData->m_configPath, tmpData->m_configData, tmpData->m_moduleId, tmpData->m_moduleNum);
         delete tmpData;
     }
     else {
