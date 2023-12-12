@@ -40,6 +40,7 @@ public:
     bool areAllModulesShutdown();
     void setupConnections();
     void loadDefaultSession();
+    void setMockServices(QString deviceName);
 signals:
     void sigSessionSwitched(const QString &newSessionFile);
     void sigModulesLoaded(const QString &t_sessionPath, const QStringList &t_sessionsAvailable);
@@ -59,8 +60,6 @@ private slots:
     void onModuleEventSystemAdded(VeinEvent::EventSystem *t_eventSystem);
 
 protected:
-    void setMockServices(QString deviceName);
-
     static QString m_sessionPath;
     static bool m_runningInTest;
 
