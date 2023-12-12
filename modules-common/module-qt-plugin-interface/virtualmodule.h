@@ -58,8 +58,8 @@ protected:
     QString m_sModuleName;
     QString m_sSCPIModuleName;
 private:
-    int m_nEntityId;
-    quint16 m_moduleNo;
+    const int m_nEntityId;
+    const quint16 m_moduleNo;
 };
 }
 
