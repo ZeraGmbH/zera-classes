@@ -122,6 +122,7 @@
       },
       {
         "name" : "sourcemodule",
+        "configFile" : "",
         "id": 1300
       },
       {

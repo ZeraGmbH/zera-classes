@@ -41,7 +41,7 @@ endforeach()
 add_custom_target(session-files ALL
     SOURCES ${SESSION_FILES}
     COMMAND ${JSONLINT} ${SESSION_FILES}
-    #${SESSION_SCHEMA_CMDS}
+    ${SESSION_SCHEMA_CMDS}
     )
 
 add_custom_target(zera-modulemanager-config ALL
