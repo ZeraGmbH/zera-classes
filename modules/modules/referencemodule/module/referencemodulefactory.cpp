@@ -6,7 +6,7 @@ namespace REFERENCEMODULE
 
 ZeraModules::VirtualModule* ReferenceModuleFactory::createModule(int entityId, VeinEvent::StorageSystem* storagesystem, bool demo, int moduleNum)
 {
-    ZeraModules::VirtualModule *module = new cReferenceModule(m_ModuleList.count()+1, entityId, storagesystem, demo);
+    ZeraModules::VirtualModule *module = new cReferenceModule(moduleNum, entityId, storagesystem, demo);
     m_ModuleList.append(module);
     return module;
 }

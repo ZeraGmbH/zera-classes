@@ -7,7 +7,7 @@ namespace STATUSMODULE
 
 ZeraModules::VirtualModule* StatusModuleFactory::createModule(int entityId, VeinEvent::StorageSystem* storagesystem, bool demo, int moduleNum)
 {
-    ZeraModules::VirtualModule *module = new cStatusModule(m_ModuleList.count()+1, entityId, storagesystem, demo);
+    ZeraModules::VirtualModule *module = new cStatusModule(moduleNum, entityId, storagesystem, demo);
     m_ModuleList.append(module);
     return module;
 }

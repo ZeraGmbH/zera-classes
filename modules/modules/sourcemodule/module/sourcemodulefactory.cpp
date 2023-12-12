@@ -3,7 +3,7 @@
 
 ZeraModules::VirtualModule* SourceModuleFactory::createModule(int entityId, VeinEvent::StorageSystem* storagesystem, bool demo, int moduleNum)
 {
-    ZeraModules::VirtualModule *module = new SourceModule(m_ModuleList.count()+1, entityId, storagesystem, demo);
+    ZeraModules::VirtualModule *module = new SourceModule(moduleNum, entityId, storagesystem, demo);
     m_ModuleList.append(module);
     return module;
 }

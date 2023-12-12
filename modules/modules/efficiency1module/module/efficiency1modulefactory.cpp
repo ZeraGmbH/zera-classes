@@ -6,7 +6,7 @@ namespace EFFICIENCY1MODULE
 
 ZeraModules::VirtualModule* Efficiency1ModuleFactory::createModule(int entityId, VeinEvent::StorageSystem* storagesystem, bool demo, int moduleNum)
 {
-    ZeraModules::VirtualModule *module = new cEfficiency1Module(m_ModuleList.count()+1, entityId, storagesystem, demo);
+    ZeraModules::VirtualModule *module = new cEfficiency1Module(moduleNum, entityId, storagesystem, demo);
     m_ModuleList.append(module);
     return module;
 }

@@ -6,7 +6,7 @@ namespace OSCIMODULE
 
 ZeraModules::VirtualModule* OsciModuleFactory::createModule(int entityId, VeinEvent::StorageSystem *storagesystem, bool demo, int moduleNum)
 {
-    ZeraModules::VirtualModule *module = new cOsciModule(m_ModuleList.count()+1, entityId, storagesystem, demo);
+    ZeraModules::VirtualModule *module = new cOsciModule(moduleNum, entityId, storagesystem, demo);
     m_ModuleList.append(module);
     return module;
 }

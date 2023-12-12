@@ -3,7 +3,7 @@
 
 ZeraModules::VirtualModule* AdjustmentModuleFactory::createModule(int entityId, VeinEvent::StorageSystem* storagesystem, bool demo, int moduleNum)
 {
-    ZeraModules::VirtualModule *module = new cAdjustmentModule(m_ModuleList.count()+1, entityId, storagesystem, demo);
+    ZeraModules::VirtualModule *module = new cAdjustmentModule(moduleNum, entityId, storagesystem, demo);
     m_ModuleList.append(module);
     return module;
 }
