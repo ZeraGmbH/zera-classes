@@ -118,6 +118,8 @@ int main(int argc, char *argv[])
     VeinLogger::QmlLogger::setJsonEnvironment(MODMAN_SESSION_PATH, std::make_shared<JsonLoggerContentSessionLoader>());
 
     ZeraModules::ModuleManager *modMan = new ZeraModules::ModuleManager(&modManSetupFacade, parser.isSet(demo), &a);
+    if(parser.isSet(demo))
+        modMan->setMockServices(parser.value(demo));
 
     bool initQmlSystemOnce = false;
     QObject::connect(qmlSystem, &VeinApiQml::VeinQml::sigStateChanged, [&](VeinApiQml::VeinQml::ConnectionState t_state){
