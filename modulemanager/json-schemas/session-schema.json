@@ -4,13 +4,16 @@
     "$defs": {
         "arrentry": {
             "type": "object",
-            "required": [ "name", "configFile", "id" ],
+            "required": [ "name", "configFile", "module_num", "id" ],
             "properties": {
                 "name": {
                     "type": "string"
                 },
                 "configFile": {
                     "type": "string"
+                },
+                "module_num": {
+                    "type": "integer"
                 },
                 "id": {
                     "type": "integer"
