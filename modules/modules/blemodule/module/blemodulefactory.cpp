@@ -20,12 +20,6 @@ void BleModuleFactory::destroyModule(ZeraModules::VirtualModule *module)
 }
 
 
-QList<ZeraModules::VirtualModule *> BleModuleFactory::listModules() const
-{
-    return m_ModuleList;
-}
-
-
 QString BleModuleFactory::getFactoryName() const
 {
     return QString(cBleModule::BaseModuleName).toLower();

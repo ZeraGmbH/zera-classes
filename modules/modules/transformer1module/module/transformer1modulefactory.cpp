@@ -20,12 +20,6 @@ void Transformer1ModuleFactory::destroyModule(ZeraModules::VirtualModule *module
 }
 
 
-QList<ZeraModules::VirtualModule *> Transformer1ModuleFactory::listModules() const
-{
-    return m_ModuleList;
-}
-
-
 QString Transformer1ModuleFactory::getFactoryName() const
 {
     return QString(cTransformer1Module::BaseModuleName).toLower();

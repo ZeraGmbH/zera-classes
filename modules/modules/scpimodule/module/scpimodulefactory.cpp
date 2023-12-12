@@ -20,12 +20,6 @@ void SCPIModuleFactory::destroyModule(ZeraModules::VirtualModule *module)
 }
 
 
-QList<ZeraModules::VirtualModule *> SCPIModuleFactory::listModules() const
-{
-    return m_ModuleList;
-}
-
-
 QString SCPIModuleFactory::getFactoryName() const
 {
     return QString(cSCPIModule::BaseModuleName).toLower();
