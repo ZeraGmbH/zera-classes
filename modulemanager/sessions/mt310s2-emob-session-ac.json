@@ -3,101 +3,121 @@
       {
         "name" : "statusmodule",
         "configFile" : "mt310s2-statusmodule.xml",
+        "module_num" : 1,
         "id": 1150
       },
       {
         "name" : "modemodule",
         "configFile" : "mt310s2-modemoduleAC.xml",
+        "module_num" : 1,
         "id": 1000
       },
       {
         "name" : "rangemodule",
         "configFile" : "mt310s2-rangemodule-ac3-dc1.xml",
+        "module_num" : 1,
         "id": 1020
       },
       {
         "name" : "samplemodule",
         "configFile" : "mt310s2-samplemodule.xml",
+        "module_num" : 1,
         "id": 1030
       },
       {
         "name" : "rmsmodule",
         "configFile" : "mt310s2-rmsmodule.xml",
+        "module_num" : 1,
         "id": 1040
       },
       {
         "name" : "dftmodule",
         "configFile" : "mt310s2-dftmodule.xml",
+        "module_num" : 1,
         "id": 1050
       },
       {
         "name" : "fftmodule",
         "configFile" : "mt310s2-fftmodule.xml",
+        "module_num" : 1,
         "id": 1060
       },
       {
         "name" : "power1module",
         "configFile" : "mt310s2-power1module-4WA-only.xml",
+        "module_num" : 1,
         "id": 1070
       },
       {
         "name" : "power1module",
         "configFile" : "mt310s2-power1module-4WR-only.xml",
+        "module_num" : 2,
         "id": 1071
       },
       {
         "name" : "power1module",
         "configFile" : "mt310s2-power1module-4WAP-only.xml",
+        "module_num" : 3,
         "id": 1072
       },
       {
         "name" : "thdnmodule",
         "configFile" : "mt310s2-thdnmodule.xml",
+        "module_num" : 1,
         "id": 1110
       },
       {
         "name" : "thdnmodule",
         "configFile" : "mt310s2-thdnmodule2.xml",
+        "module_num" : 2,
         "id": 1111
       },
       {
         "name" : "oscimodule",
         "configFile" : "mt310s2-oscimodule.xml",
+        "module_num" : 1,
         "id": 1120
       },
       {
         "name" : "sec1module",
         "configFile" : "mt310s2-sec1module-emob-ac.xml",
+        "module_num" : 1,
         "id": 1130
       },
       {
         "name" : "lambdamodule",
         "configFile" : "mt310s2-lambdamodule.xml",
+        "module_num" : 1,
         "id": 1140
       },
       {
         "name" : "adjustmentmodule",
         "configFile" : "mt310s2-adjustmentmodule-emob-ac.xml",
+        "module_num" : 1,
         "id": 1190
       },
       {
         "name" : "sem1module",
         "configFile" : "mt310s2-sem1module-emob-ac.xml",
+        "module_num" : 1,
         "id": 1200
       },
       {
         "name" : "sourcemodule",
         "configFile" : "",
+        "module_num" : 1,
         "id": 1300
       },
       {
         "name" : "blemodule",
         "configFile" : "blemodule.xml",
+        "module_num" : 1,
         "id": 1400
       },
       {
         "name" : "scpimodule",
         "configFile" : "mt310s2-scpimodule.xml",
+        "module_num" : 1,
         "id": 9999
       }
     ]
