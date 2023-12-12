@@ -20,12 +20,6 @@ void Spm1ModuleFactory::destroyModule(ZeraModules::VirtualModule *module)
 }
 
 
-QList<ZeraModules::VirtualModule *> Spm1ModuleFactory::listModules() const
-{
-    return m_ModuleList;
-}
-
-
 QString Spm1ModuleFactory::getFactoryName() const
 {
     return QString(cSpm1Module::BaseModuleName).toLower();

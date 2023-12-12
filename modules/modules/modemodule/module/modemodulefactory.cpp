@@ -22,12 +22,6 @@ void ModeModuleFactory::destroyModule(ZeraModules::VirtualModule *module)
 }
 
 
-QList<ZeraModules::VirtualModule *> ModeModuleFactory::listModules() const
-{
-    return m_ModuleList;
-}
-
-
 QString ModeModuleFactory::getFactoryName() const
 {
     return QString(cModeModule::BaseModuleName).toLower();

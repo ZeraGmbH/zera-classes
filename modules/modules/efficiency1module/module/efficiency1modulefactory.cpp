@@ -20,12 +20,6 @@ void Efficiency1ModuleFactory::destroyModule(ZeraModules::VirtualModule *module)
 }
 
 
-QList<ZeraModules::VirtualModule *> Efficiency1ModuleFactory::listModules() const
-{
-    return m_ModuleList;
-}
-
-
 QString Efficiency1ModuleFactory::getFactoryName() const
 {
     return QString(cEfficiency1Module::BaseModuleName).toLower();

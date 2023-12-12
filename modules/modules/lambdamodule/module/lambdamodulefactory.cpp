@@ -20,12 +20,6 @@ void LambdaModuleFactory::destroyModule(ZeraModules::VirtualModule *module)
 }
 
 
-QList<ZeraModules::VirtualModule *> LambdaModuleFactory::listModules() const
-{
-    return m_ModuleList;
-}
-
-
 QString LambdaModuleFactory::getFactoryName() const
 {
     return QString(cLambdaModule::BaseModuleName).toLower();

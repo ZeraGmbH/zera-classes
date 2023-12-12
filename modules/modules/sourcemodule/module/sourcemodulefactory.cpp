@@ -18,12 +18,6 @@ void SourceModuleFactory::destroyModule(ZeraModules::VirtualModule *module)
 }
 
 
-QList<ZeraModules::VirtualModule *> SourceModuleFactory::listModules() const
-{
-    return m_ModuleList;
-}
-
-
 QString SourceModuleFactory::getFactoryName() const
 {
     return QString(SourceModule::BaseModuleName).toLower();

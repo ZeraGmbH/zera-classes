@@ -20,12 +20,6 @@ void Power3ModuleFactory::destroyModule(ZeraModules::VirtualModule *module)
 }
 
 
-QList<ZeraModules::VirtualModule *> Power3ModuleFactory::listModules() const
-{
-    return m_ModuleList;
-}
-
-
 QString Power3ModuleFactory::getFactoryName() const
 {
     return QString(cPower3Module::BaseModuleName).toLower();

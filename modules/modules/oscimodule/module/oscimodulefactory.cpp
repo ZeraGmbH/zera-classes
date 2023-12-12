@@ -20,12 +20,6 @@ void OsciModuleFactory::destroyModule(ZeraModules::VirtualModule *module)
 }
 
 
-QList<ZeraModules::VirtualModule *> OsciModuleFactory::listModules() const
-{
-    return m_ModuleList;
-}
-
-
 QString OsciModuleFactory::getFactoryName() const
 {
     return QString(cOsciModule::BaseModuleName).toLower();

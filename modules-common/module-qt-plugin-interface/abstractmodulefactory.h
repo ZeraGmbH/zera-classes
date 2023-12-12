@@ -16,7 +16,6 @@ public:
     virtual ~MeasurementModuleFactory() = default;
     virtual ZeraModules::VirtualModule *createModule(int entityId, VeinEvent::StorageSystem* storagesystem, bool demo, int moduleNum) = 0;
     virtual void destroyModule(ZeraModules::VirtualModule *module) = 0;
-    virtual QList<ZeraModules::VirtualModule*> listModules() const = 0;
     virtual QString getFactoryName() const = 0;
 };
 

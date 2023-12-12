@@ -20,12 +20,6 @@ void Burden1ModuleFactory::destroyModule(ZeraModules::VirtualModule *module)
 }
 
 
-QList<ZeraModules::VirtualModule *> Burden1ModuleFactory::listModules() const
-{
-    return m_ModuleList;
-}
-
-
 QString Burden1ModuleFactory::getFactoryName() const
 {
     return QString(cBurden1Module::BaseModuleName).toLower();

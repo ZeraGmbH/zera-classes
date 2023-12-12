@@ -20,12 +20,6 @@ void ThdnModuleFactory::destroyModule(ZeraModules::VirtualModule *module)
 }
 
 
-QList<ZeraModules::VirtualModule *> ThdnModuleFactory::listModules() const
-{
-    return m_ModuleList;
-}
-
-
 QString ThdnModuleFactory::getFactoryName() const
 {
     return QString(cThdnModule::BaseModuleName).toLower();

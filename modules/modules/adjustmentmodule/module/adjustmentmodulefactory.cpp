@@ -17,12 +17,6 @@ void AdjustmentModuleFactory::destroyModule(ZeraModules::VirtualModule *module)
 }
 
 
-QList<ZeraModules::VirtualModule *> AdjustmentModuleFactory::listModules() const
-{
-    return m_ModuleList;
-}
-
-
 QString AdjustmentModuleFactory::getFactoryName() const
 {
     return QString(cAdjustmentModule::BaseModuleName).toLower();

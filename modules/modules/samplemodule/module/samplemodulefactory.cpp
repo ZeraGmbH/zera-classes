@@ -20,12 +20,6 @@ void SampleModuleFactory::destroyModule(ZeraModules::VirtualModule *module)
 }
 
 
-QList<ZeraModules::VirtualModule *> SampleModuleFactory::listModules() const
-{
-    return m_ModuleList;
-}
-
-
 QString SampleModuleFactory::getFactoryName() const
 {
     return QString(cSampleModule::BaseModuleName).toLower();

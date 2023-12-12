@@ -20,12 +20,6 @@ void Sec1ModuleFactory::destroyModule(ZeraModules::VirtualModule *module)
 }
 
 
-QList<ZeraModules::VirtualModule *> Sec1ModuleFactory::listModules() const
-{
-    return m_ModuleList;
-}
-
-
 QString Sec1ModuleFactory::getFactoryName() const
 {
     return QString(cSec1Module::BaseModuleName).toLower();

@@ -21,12 +21,6 @@ void DftModuleFactory::destroyModule(ZeraModules::VirtualModule *module)
 }
 
 
-QList<ZeraModules::VirtualModule *> DftModuleFactory::listModules() const
-{
-    return m_ModuleList;
-}
-
-
 QString DftModuleFactory::getFactoryName() const
 {
     return QString(cDftModule::BaseModuleName).toLower();
