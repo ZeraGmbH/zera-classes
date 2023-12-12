@@ -8,7 +8,7 @@
 
 ModulemanagerConfig* ModulemanagerConfig::m_instance = nullptr;
 std::once_flag ModulemanagerConfig::m_onceflag;
-QString ModulemanagerConfig::m_demoDevice;
+QString ModulemanagerConfig::m_deviceName;
 QString ModulemanagerConfig::m_configFileName = MODMAN_DEFAULT_SESSION;
 QString ModulemanagerConfig::m_configFileDir = MODMAN_CONFIG_PATH;
 
@@ -20,7 +20,7 @@ ModulemanagerConfig *ModulemanagerConfig::getInstance()
 
 void ModulemanagerConfig::setDemoDevice(QString demoDevice)
 {
-    m_demoDevice = demoDevice;
+    m_deviceName = demoDevice;
     m_configFileName = MODMAN_TEST_SESSION;
 }
 
@@ -120,9 +120,7 @@ void ModulemanagerConfig::save()
 ModulemanagerConfig::ModulemanagerConfig()
 {
     m_jsonConfig = cJsonFileLoader::loadJsonFile(getConfigFileNameFull());
-    if(!m_demoDevice.isEmpty())
-        m_deviceName = m_demoDevice;
-    else {
+    if(m_deviceName.isEmpty()) {
         m_deviceName = getDevNameFromUBoot();
         if(m_deviceName.isEmpty() && isValid()) {
             m_deviceName = m_jsonConfig["deviceName"].toString();
