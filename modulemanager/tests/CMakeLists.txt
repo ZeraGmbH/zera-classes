@@ -68,4 +68,6 @@ SETUP_TESTS(
     test_loggercontentsessionloader
     test_modman_config
     test_modman_session
+    test_modman_session_entities
     )
+
