@@ -4,7 +4,7 @@
 namespace DFTMODULE
 {
 
-ZeraModules::VirtualModule* DftModuleFactory::createModule(int entityId, VeinEvent::StorageSystem* storagesystem, bool demo)
+ZeraModules::VirtualModule* DftModuleFactory::createModule(int entityId, VeinEvent::StorageSystem* storagesystem, bool demo, int moduleNum)
 {
     ZeraModules::VirtualModule *module = new cDftModule(m_ModuleList.count()+1, entityId, storagesystem, demo);
     m_ModuleList.append(module);

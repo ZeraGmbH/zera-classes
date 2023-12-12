@@ -4,7 +4,7 @@
 namespace SEC1MODULE
 {
 
-ZeraModules::VirtualModule* Sec1ModuleFactory::createModule(int entityId, VeinEvent::StorageSystem *storagesystem, bool demo)
+ZeraModules::VirtualModule* Sec1ModuleFactory::createModule(int entityId, VeinEvent::StorageSystem *storagesystem, bool demo, int moduleNum)
 {
     ZeraModules::VirtualModule *module = new cSec1Module(m_ModuleList.count()+1, entityId, storagesystem, demo);
     m_ModuleList.append(module);

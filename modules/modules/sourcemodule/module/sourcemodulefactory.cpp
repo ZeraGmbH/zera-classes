@@ -1,7 +1,7 @@
 #include "sourcemodulefactory.h"
 #include "sourcemodule.h"
 
-ZeraModules::VirtualModule* SourceModuleFactory::createModule(int entityId, VeinEvent::StorageSystem* storagesystem, bool demo)
+ZeraModules::VirtualModule* SourceModuleFactory::createModule(int entityId, VeinEvent::StorageSystem* storagesystem, bool demo, int moduleNum)
 {
     ZeraModules::VirtualModule *module = new SourceModule(m_ModuleList.count()+1, entityId, storagesystem, demo);
     m_ModuleList.append(module);

@@ -6,7 +6,7 @@
 namespace RMSMODULE
 {
 
-ZeraModules::VirtualModule* RmsModuleFactory::createModule(int entityId, VeinEvent::StorageSystem* storagesystem, bool demo)
+ZeraModules::VirtualModule* RmsModuleFactory::createModule(int entityId, VeinEvent::StorageSystem* storagesystem, bool demo, int moduleNum)
 {
     ZeraModules::VirtualModule *module = new cRmsModule(m_ModuleList.count()+1, entityId, storagesystem, demo);
     m_ModuleList.append(module);
