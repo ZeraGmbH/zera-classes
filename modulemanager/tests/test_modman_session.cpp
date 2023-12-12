@@ -54,6 +54,7 @@ void test_modman_session::startSession()
     QVERIFY(modMan.loadAllAvailableModulePlugins());
     modMan.setupConnections();
     modMan.loadDefaultSession();
+    modMan.setMockServices("mt310s2");
     TimeMachineObject::feedEventLoop();
 
     QVERIFY(modManSetupFacade.getStorageSystem()->hasEntity(0));
@@ -78,6 +79,7 @@ void test_modman_session::changeSession()
     modMan.loadAllAvailableModulePlugins();
     modMan.setupConnections();
     modMan.loadDefaultSession();
+    modMan.setMockServices("mt310s2");
     TimeMachineObject::feedEventLoop();
 
     QString currentSession = modManSetupFacade.getStorageSystem()->getStoredValue(0, "Session").toString();

@@ -28,11 +28,6 @@ ModuleManagerTest::ModuleManagerTest(ModuleManagerSetupFacade *setupFacade, bool
 {
 }
 
-void ModuleManagerTest::changeMockServices(QString deviceName)
-{
-    setMockServices(deviceName);
-}
-
 void ModuleManagerTest::destroyModulesAndWaitUntilAllShutdown()
 {
     destroyModules();

@@ -55,9 +55,10 @@ int main(int argc, char *argv[])
 
     QDir().mkdir(QStringLiteral(SCPI_DOC_BUILD_PATH) + "/scpi-xmls");
 
+    modMan.setMockServices("mt310s2");
     generateDevIfaceForAllSessions(mtSessions, &modMan, modManSetupFacade.getStorageSystem());
     modMan.destroyModulesAndWaitUntilAllShutdown();
-    modMan.changeMockServices("com5003");
+    modMan.setMockServices("com5003");
     generateDevIfaceForAllSessions(comSessions, &modMan, modManSetupFacade.getStorageSystem());
 
     QProcess sh;
