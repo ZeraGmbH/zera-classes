@@ -60,5 +60,6 @@ void JsonSessionLoader::parseModule(QJsonObject moduleObject)
         }
     }
     int moduleEntityId = moduleObject.value("id").toInt();
-    emit sigLoadModule(tmpNameString, configFileNameFull, xmlConfigData, moduleEntityId);
+    int moduleNum = moduleObject.value("module_num").toInt();
+    emit sigLoadModule(tmpNameString, configFileNameFull, xmlConfigData, moduleEntityId, moduleNum);
 }

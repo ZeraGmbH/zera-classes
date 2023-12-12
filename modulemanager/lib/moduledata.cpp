@@ -2,12 +2,13 @@
 
 namespace ZeraModules {
 
-ModuleData::ModuleData(VirtualModule *t_ref, const QString &t_name, const QString &t_confPath, const QByteArray &t_confData, int moduleEntityId) :
+ModuleData::ModuleData(VirtualModule *t_ref, const QString &t_name, const QString &t_confPath, const QByteArray &t_confData, int moduleEntityId, int moduleNum) :
     m_reference(t_ref),
     m_uniqueName(t_name),
     m_configPath(t_confPath),
     m_configData(t_confData),
-    m_moduleId(moduleEntityId)
+    m_moduleId(moduleEntityId),
+    m_moduleNum(moduleNum)
 {
 }
 

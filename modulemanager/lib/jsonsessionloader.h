@@ -10,7 +10,7 @@ public:
     explicit JsonSessionLoader(QObject *parent = nullptr);
     const QString &getSessionFilePath() const;
 signals:
-    void sigLoadModule(QString uniqueModuleName, QString xmlPath, QByteArray xmlData, int moduleEntityId);
+    void sigLoadModule(QString uniqueModuleName, QString xmlPath, QByteArray xmlData, int moduleEntityId, int moduleNum);
 public slots:
     void loadSession(QString filePath);
 protected:
