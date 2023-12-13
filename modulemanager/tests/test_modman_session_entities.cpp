@@ -808,8 +808,8 @@ void test_modman_session_entities::regressionMt310s2EmobDc()
     QCOMPARE(modules[6]->m_reference->getSCPIModuleName(), "FFT1");
 
     QCOMPARE(modules[7]->m_moduleId, 1073);
-    QCOMPARE(modules[7]->m_reference->getVeinModuleName(), "POWER1Module1");
-    QCOMPARE(modules[7]->m_reference->getSCPIModuleName(), "POW1");
+    QCOMPARE(modules[7]->m_reference->getVeinModuleName(), "POWER1Module4");
+    QCOMPARE(modules[7]->m_reference->getSCPIModuleName(), "POW4");
 
     QCOMPARE(modules[8]->m_moduleId, 1110);
     QCOMPARE(modules[8]->m_reference->getVeinModuleName(), "THDNModule1");
