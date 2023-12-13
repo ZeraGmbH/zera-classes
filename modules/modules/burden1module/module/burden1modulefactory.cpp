@@ -6,14 +6,12 @@ namespace BURDEN1MODULE
 
 ZeraModules::VirtualModule* Burden1ModuleFactory::createModule(int entityId, VeinEvent::StorageSystem* storagesystem, bool demo, int moduleNum)
 {
-    ZeraModules::VirtualModule *module = new cBurden1Module(moduleNum, entityId, storagesystem, demo);
-    m_ModuleList.append(module);
-    return module;
+    return new cBurden1Module(m_moduleGroupNumerator->requestModuleNum(moduleNum), entityId, storagesystem, demo);
 }
 
 void Burden1ModuleFactory::destroyModule(ZeraModules::VirtualModule *module)
 {
-    m_ModuleList.removeAll(module);
+    m_moduleGroupNumerator->freeModuleNum(module->getModuleNr());
     connect(module, &ZeraModules::VirtualModule::deactivationReady, module, &ZeraModules::VirtualModule::moduleDeactivated);
     if (!module->m_DeactivationMachine.isRunning())
         module->m_DeactivationMachine.start();

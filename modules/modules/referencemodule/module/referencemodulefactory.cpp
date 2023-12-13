@@ -6,14 +6,12 @@ namespace REFERENCEMODULE
 
 ZeraModules::VirtualModule* ReferenceModuleFactory::createModule(int entityId, VeinEvent::StorageSystem* storagesystem, bool demo, int moduleNum)
 {
-    ZeraModules::VirtualModule *module = new cReferenceModule(moduleNum, entityId, storagesystem, demo);
-    m_ModuleList.append(module);
-    return module;
+    return new cReferenceModule(m_moduleGroupNumerator->requestModuleNum(moduleNum), entityId, storagesystem, demo);
 }
 
 void ReferenceModuleFactory::destroyModule(ZeraModules::VirtualModule *module)
 {
-    m_ModuleList.removeAll(module);
+    m_moduleGroupNumerator->freeModuleNum(module->getModuleNr());
     connect(module, SIGNAL(deactivationReady()), module, SIGNAL(moduleDeactivated()));
     if (!module->m_DeactivationMachine.isRunning())
         module->m_DeactivationMachine.start();
