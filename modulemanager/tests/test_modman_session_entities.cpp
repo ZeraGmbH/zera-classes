@@ -80,13 +80,29 @@ QStringList test_modman_session_entities::generateCodeLinesForDeviceSession(QStr
 
 void test_modman_session_entities::loadAllSessionsAndOutputRegressionTestCodeCom5003()
 {
-    QCOMPARE(generateCodeLists("com5003"), 4);
+    int sessionCount = generateCodeLists("com5003");
+    constexpr int sessionCountCom5003 = 4;
+    if(sessionCount != sessionCountCom5003)
+        qFatal("Seems sessions changed for Com5003. Read comment below howto update regression tests");
 }
 
 void test_modman_session_entities::loadAllSessionsAndOutputRegressionTestCodeMt310s2()
 {
-    QCOMPARE(generateCodeLists("mt310s2"), 6);
+    int sessionCount = generateCodeLists("mt310s2");
+    constexpr int sessionCountMt310s2 = 6;
+    if(sessionCount != sessionCountMt310s2)
+        qFatal("Seems sessions changed for MT310s2. Read comment below howto update regression tests");
 }
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////
+// Contents of functions below are auto-generated
+// To update them:
+// 1. If number of sessions for a device changed: Adjust numbers in
+//    loadAllSessionsAndOutputRegressionTestCode<device> above
+// 2. If a session was added for a device: Add a new (empty) regression test
+// 3. Run test_modman_session_entities in qt-creator - should pass with 1-2.
+// 4. Copy matching (warning) log from loadAllSessionsAndOutputRegressionTestCode<device>
+//    in session/device matching test below
 
 void test_modman_session_entities::regressionCom5003Ced()
 {
