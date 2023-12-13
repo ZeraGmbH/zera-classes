@@ -82,6 +82,7 @@ bool ModuleManager::loadAllAvailableModulePlugins()
         MeasurementModuleFactory *module = qobject_cast<MeasurementModuleFactory *>(loader.instance());
         qDebug() << "Analyzing:" << loader.fileName() << "\nfile is a library?" << QLibrary::isLibrary(fileName) << "loaded:" << loader.isLoaded();
         if (module) {
+            module->setModuleNumerator(std::make_unique<ModuleGroupNumerator>());
             retVal=true;
             m_factoryTable.insert(module->getFactoryName(), module);
         }
