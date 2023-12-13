@@ -1,6 +1,7 @@
 #ifndef TEST_MODMAN_SESSION_ENTITITIES_H
 #define TEST_MODMAN_SESSION_ENTITITIES_H
 
+#include "modulemanagertest.h"
 #include <QObject>
 
 class test_modman_session_entities : public QObject
@@ -26,6 +27,7 @@ private slots:
 
 private:
     int generateCodeLists(QString device);
+    QStringList generateCodeLinesForDeviceSession(QString device, QString session, ModuleManagerTest &modMan);
 };
 
 #endif // TEST_MODMAN_SESSION_ENTITITIES_H

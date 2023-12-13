@@ -1,7 +1,6 @@
 #include "test_modman_session_entities.h"
 #include "licensesystemmock.h"
 #include "modulemanager.h"
-#include "modulemanagertest.h"
 #include "moduledata.h"
 #include "modulemanagerconfigtest.h"
 #include <timemachineobject.h>
@@ -35,42 +34,48 @@ int test_modman_session_entities::generateCodeLists(QString device)
         do
             TimeMachineObject::feedEventLoop();
         while(!modMan.areAllModulesShutdown());
+
         QString actDevIface = modManSetupFacade.getStorageSystem()->getStoredValue(9999, "ACT_DEV_IFACE").toString();
         if(actDevIface.isEmpty()) // we have to make module resilient to this situation
             qFatal("ACT_DEV_IFACE empty - local modulemanager running???");
 
-        QStringList codeLines;
-        codeLines.append(QString("// ------ Start auto generated code for %1 ----").arg(session));
-        codeLines.append("LicenseSystemMock licenseSystem;");
-        codeLines.append("ModuleManagerSetupFacade modManSetupFacade(&licenseSystem);");
-        codeLines.append("");
-        codeLines.append("ModuleManagerTest modMan(&modManSetupFacade, true);");
-        codeLines.append("modMan.loadAllAvailableModulePlugins();");
-        codeLines.append("modMan.setupConnections();");
-        codeLines.append("modMan.setMockServices(\"" + device + "\");");
-        codeLines.append("modMan.changeSessionFile(\"" + session + "\");");
-        codeLines.append("TimeMachineObject::feedEventLoop();");
-        codeLines.append("");
-        codeLines.append("QList<ZeraModules::ModuleData *> modules = modMan.getModuleList();");
-
-        QList<ZeraModules::ModuleData *> modules = modMan.getModuleList();
-        codeLines.append(QString("QCOMPARE(modules.count(), %1);").arg(modules.count()));
-        for(int i=0; i<modules.count(); i++) {
-            codeLines.append("");
-            codeLines.append(QString("QCOMPARE(modules[%1]->m_moduleId, %2);").arg(i).arg(modules[i]->m_moduleId));
-            codeLines.append(QString("QCOMPARE(modules[%1]->m_reference->getVeinModuleName(), \"%2\");").arg(i).arg(qPrintable(modules[i]->m_reference->getVeinModuleName())));
-            codeLines.append(QString("QCOMPARE(modules[%1]->m_reference->getSCPIModuleName(), \"%2\");").arg(i).arg(qPrintable(modules[i]->m_reference->getSCPIModuleName())));
-        }
-        codeLines.append("");
-        codeLines.append("modMan.destroyModulesAndWaitUntilAllShutdown();");
-        codeLines.append("// ------ end auto generated code ----");
-        codeLines.append("");
-
+        QStringList codeLines = generateCodeLinesForDeviceSession(device, session, modMan);
         qWarning("%s", qPrintable(codeLines.join("\n")));
 
         modMan.destroyModulesAndWaitUntilAllShutdown();
     }
     return sessions.count();
+}
+
+QStringList test_modman_session_entities::generateCodeLinesForDeviceSession(QString device, QString session, ModuleManagerTest &modMan)
+{
+    QStringList codeLines;
+    codeLines.append(QString("// ------ Start auto generated code for %1 ----").arg(session));
+    codeLines.append("LicenseSystemMock licenseSystem;");
+    codeLines.append("ModuleManagerSetupFacade modManSetupFacade(&licenseSystem);");
+    codeLines.append("");
+    codeLines.append("ModuleManagerTest modMan(&modManSetupFacade, true);");
+    codeLines.append("modMan.loadAllAvailableModulePlugins();");
+    codeLines.append("modMan.setupConnections();");
+    codeLines.append("modMan.setMockServices(\"" + device + "\");");
+    codeLines.append("modMan.changeSessionFile(\"" + session + "\");");
+    codeLines.append("TimeMachineObject::feedEventLoop();");
+    codeLines.append("");
+    codeLines.append("QList<ZeraModules::ModuleData *> modules = modMan.getModuleList();");
+
+    QList<ZeraModules::ModuleData *> modules = modMan.getModuleList();
+    codeLines.append(QString("QCOMPARE(modules.count(), %1);").arg(modules.count()));
+    for(int i=0; i<modules.count(); i++) {
+        codeLines.append("");
+        codeLines.append(QString("QCOMPARE(modules[%1]->m_moduleId, %2);").arg(i).arg(modules[i]->m_moduleId));
+        codeLines.append(QString("QCOMPARE(modules[%1]->m_reference->getVeinModuleName(), \"%2\");").arg(i).arg(qPrintable(modules[i]->m_reference->getVeinModuleName())));
+        codeLines.append(QString("QCOMPARE(modules[%1]->m_reference->getSCPIModuleName(), \"%2\");").arg(i).arg(qPrintable(modules[i]->m_reference->getSCPIModuleName())));
+    }
+    codeLines.append("");
+    codeLines.append("modMan.destroyModulesAndWaitUntilAllShutdown();");
+    codeLines.append("// ------ end auto generated code ----");
+    codeLines.append("");
+    return codeLines;
 }
 
 void test_modman_session_entities::loadAllSessionsAndOutputRegressionTestCodeCom5003()
