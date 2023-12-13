@@ -6,9 +6,10 @@ ModuleGroupNumerator::ModuleGroupNumerator()
 
 int ModuleGroupNumerator::requestModuleNum(int moduleNumLargerThan0)
 {
-    if(!m_requestedModuleNums.contains(moduleNumLargerThan0)) {
-        m_requestedModuleNums.insert(moduleNumLargerThan0);
-        return moduleNumLargerThan0;
+    int nextModuleNo = m_requestedModuleNums.count() + 1;
+    if(!m_requestedModuleNums.contains(nextModuleNo)) {
+        m_requestedModuleNums.insert(nextModuleNo);
+        return nextModuleNo;
     }
     return -1;
 }
