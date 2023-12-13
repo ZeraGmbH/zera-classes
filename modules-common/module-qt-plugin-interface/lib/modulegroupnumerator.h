@@ -2,6 +2,7 @@
 #define MODULEGROUPNUMERATOR_H
 
 #include <QSet>
+#include <memory>
 
 class ModuleGroupNumerator
 {
@@ -12,5 +13,7 @@ public:
 private:
     QSet<int> m_requestedModuleNums;
 };
+
+typedef std::unique_ptr<ModuleGroupNumerator> ModuleGroupNumeratorPtr;
 
 #endif // MODULEGROUPNUMERATOR_H
