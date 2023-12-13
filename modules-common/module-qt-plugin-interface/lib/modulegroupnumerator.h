@@ -7,10 +7,11 @@
 class ModuleGroupNumerator
 {
 public:
-    ModuleGroupNumerator();
-    int requestModuleNum(int moduleNumLargerThan0);
+    static constexpr int NoNumRequest = 0;
+    int requestModuleNum(int moduleNumRequested);
     void freeModuleNum(int moduleNum);
 private:
+    int tryAddNewNum(int newNum);
     QSet<int> m_requestedModuleNums;
 };
 

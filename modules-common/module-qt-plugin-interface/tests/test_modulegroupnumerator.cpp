@@ -9,10 +9,31 @@ void test_modulegroupnumerator::initTestCase()
     qputenv("QT_FATAL_CRITICALS", "1");
 }
 
-void test_modulegroupnumerator::requestThreeZeros()
+void test_modulegroupnumerator::requestThreeZeroModuleNumbers()
 {
     ModuleGroupNumerator numerator;
-    QCOMPARE(numerator.requestModuleNum(0), 1);
-    QCOMPARE(numerator.requestModuleNum(0), 2);
-    QCOMPARE(numerator.requestModuleNum(0), 3);
+    QCOMPARE(numerator.requestModuleNum(ModuleGroupNumerator::NoNumRequest), 1);
+    QCOMPARE(numerator.requestModuleNum(ModuleGroupNumerator::NoNumRequest), 2);
+    QCOMPARE(numerator.requestModuleNum(ModuleGroupNumerator::NoNumRequest), 3);
+}
+
+void test_modulegroupnumerator::requestOneFourModuleNumber()
+{
+    ModuleGroupNumerator numerator;
+    QCOMPARE(numerator.requestModuleNum(4), 4);
+}
+
+void test_modulegroupnumerator::requestOneTwoModuleNumberAndTwoZeroModuleNumber()
+{
+    ModuleGroupNumerator numerator;
+    QCOMPARE(numerator.requestModuleNum(2), 2);
+    QCOMPARE(numerator.requestModuleNum(ModuleGroupNumerator::NoNumRequest), 1);
+    QCOMPARE(numerator.requestModuleNum(ModuleGroupNumerator::NoNumRequest), 3);
+}
+
+void test_modulegroupnumerator::requestTwoOneModuleNumbers()
+{
+    ModuleGroupNumerator numerator;
+    QCOMPARE(numerator.requestModuleNum(1), 1);
+    QCOMPARE(numerator.requestModuleNum(1), -1);
 }
