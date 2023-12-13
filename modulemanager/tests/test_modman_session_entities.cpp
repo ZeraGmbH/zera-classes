@@ -16,6 +16,7 @@ void test_modman_session_entities::initTestCase()
     ModuleManagerTest::pointToInstalledSessionFiles();
     ModulemanagerConfigTest::enableTest();
     qputenv("QT_FATAL_CRITICALS", "1");
+    qputenv("QT_LOGGING_RULES", "*.debug=false;*.info=false");
 }
 
 int test_modman_session_entities::generateCodeLists(QString device)
@@ -65,8 +66,7 @@ int test_modman_session_entities::generateCodeLists(QString device)
         codeLines.append("// ------ end auto generated code ----");
         codeLines.append("");
 
-        qWarning("%s vvvvvvvvvvvvvvvvvvvv", qPrintable(session));
-        qInfo("%s", qPrintable(codeLines.join("\n")));
+        qWarning("%s", qPrintable(codeLines.join("\n")));
 
         modMan.destroyModulesAndWaitUntilAllShutdown();
     }
