@@ -38,6 +38,7 @@
       {
         "name" : "power1module",
         "configFile" : "mt310s2-power1module_ph4_fo0.xml",
+        "module_num": 4,
         "id": 1073
       },
       {
