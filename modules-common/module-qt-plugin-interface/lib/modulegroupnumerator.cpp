@@ -1,20 +1,26 @@
 #include "modulegroupnumerator.h"
 
-ModuleGroupNumerator::ModuleGroupNumerator()
+int ModuleGroupNumerator::requestModuleNum(int moduleNumRequested)
 {
-}
-
-int ModuleGroupNumerator::requestModuleNum(int moduleNumLargerThan0)
-{
-    int nextModuleNo = m_requestedModuleNums.count() + 1;
-    if(!m_requestedModuleNums.contains(nextModuleNo)) {
-        m_requestedModuleNums.insert(nextModuleNo);
-        return nextModuleNo;
+    if(moduleNumRequested > 0)
+        return tryAddNewNum(moduleNumRequested);
+    for(int newNum = 1; ; newNum++) {
+        if(!m_requestedModuleNums.contains(newNum))
+            return tryAddNewNum(newNum);
     }
-    return -1;
+    return tryAddNewNum(m_requestedModuleNums.count() + 1);
 }
 
 void ModuleGroupNumerator::freeModuleNum(int moduleNum)
 {
     m_requestedModuleNums.remove(moduleNum);
+}
+
+int ModuleGroupNumerator::tryAddNewNum(int newNum)
+{
+    if(!m_requestedModuleNums.contains(newNum)) {
+        m_requestedModuleNums.insert(newNum);
+        return newNum;
+    }
+    return -1;
 }

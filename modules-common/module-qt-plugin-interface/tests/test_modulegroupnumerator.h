@@ -8,8 +8,10 @@ class test_modulegroupnumerator : public QObject
     Q_OBJECT
 private slots:
     void initTestCase();
-    void requestThreeZeros();
-
+    void requestThreeZeroModuleNumbers();
+    void requestOneFourModuleNumber();
+    void requestOneTwoModuleNumberAndTwoZeroModuleNumber();
+    void requestTwoOneModuleNumbers();
 };
 
 #endif // TEST_MODULEGROUPNUMERATOR_H
