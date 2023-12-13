@@ -3,19 +3,16 @@
         {
           "name" : "statusmodule",
           "configFile" : "com5003-statusmodule.xml",
-          "module_num" : 1,
           "id": 1150
         },
         {
           "name" : "modemodule",
           "configFile" : "com5003-modemoduleAC.xml",
-          "module_num" : 1,
           "id": 1000
         },
         {
           "name" : "rangemodule",
           "configFile" : "com5003-rangemodule.xml",
-          "module_num" : 3,
           "id": 1020
         }
     ]

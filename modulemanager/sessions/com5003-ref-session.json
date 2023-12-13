@@ -3,49 +3,41 @@
       {
         "name" : "statusmodule",
         "configFile" : "com5003-statusmodule.xml",
-        "module_num" : 1,
         "id": 1150
       } ,
       {
         "name" : "modemodule",
         "configFile" : "com5003-modemoduleREF.xml",
-        "module_num" : 1,
         "id": 1000
       },
       {
         "name" : "referencemodule",
         "configFile" : "com5003-referencemodule.xml",
-        "module_num" : 1,
         "id": 1001
       },
       {
         "name" : "rangemodule",
         "configFile" : "com5003-rangemoduleREF.xml",
-        "module_num" : 1,
         "id": 1020
       },
       {
         "name" : "dftmodule",
         "configFile" : "com5003-dftmoduleREF.xml",
-        "module_num" : 1,
         "id": 1050
       },
       {
         "name" : "power1module",
         "configFile" : "com5003-power1moduleREF.xml",
-        "module_num" : 1,
         "id": 1070
       },
       {
         "name" : "sec1module",
         "configFile" : "com5003-sec1module-ref.xml",
-        "module_num" : 1,
         "id": 1130
       },
       {
         "name" : "scpimodule",
         "configFile" : "com5003-scpimodule.xml",
-        "module_num" : 1,
         "id": 9999
       }
   ]

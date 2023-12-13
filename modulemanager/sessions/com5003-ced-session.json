@@ -3,121 +3,101 @@
       {
         "name" : "statusmodule",
         "configFile" : "com5003-statusmodule.xml",
-        "module_num" : 1,
         "id": 1150
       } ,
       {
         "name" : "modemodule",
         "configFile" : "com5003-modemoduleAC.xml",
-        "module_num" : 1,
         "id": 1000
       },
       {
         "name" : "rangemodule",
         "configFile" : "com5003-rangemodule.xml",
-        "module_num" : 1,
         "id": 1020
       },
       {
         "name" : "samplemodule",
         "configFile" : "com5003-samplemodule.xml",
-        "module_num" : 1,
         "id": 1030
       },
       {
         "name" : "rmsmodule",
         "configFile" : "com5003-rmsmoduleCED.xml",
-        "module_num" : 1,
         "id": 1040
       },
       {
         "name" : "dftmodule",
         "configFile" : "com5003-dftmodule.xml",
-        "module_num" : 1,
         "id": 1050
       },
       {
         "name" : "fftmodule",
         "configFile" : "com5003-fftmodule.xml",
-        "module_num" : 1,
         "id": 1060
       },
       {
         "name" : "power1module",
         "configFile" : "com5003-power1moduleCED.xml",
-        "module_num" : 1,
         "id": 1070
       },
       {
         "name" : "power1module",
         "configFile" : "com5003-power1module2CED.xml",
-        "module_num" : 2,
         "id": 1071
       },
       {
         "name" : "power1module",
         "configFile" : "com5003-power1module3CED.xml",
-        "module_num" : 3,
         "id": 1072
       },
       {
         "name" : "power1module",
         "configFile" : "power1moduleAllPhaseLambdaApparentCED.xml",
-        "module_num" : 4,
         "id": 1074
       },
       {
         "name" : "power2module",
         "configFile" : "com5003-power2moduleCED.xml",
-        "module_num" : 1,
         "id": 1090
       },
       {
         "name" : "thdnmodule",
         "configFile" : "com5003-thdnmodule.xml",
-        "module_num" : 1,
         "id": 1110
       },
       {
         "name" : "thdnmodule",
         "configFile" : "com5003-thdnmodule2.xml",
-        "module_num" : 2,
         "id": 1111
       },
       {
         "name" : "oscimodule",
         "configFile" : "com5003-oscimodule.xml",
-        "module_num" : 1,
         "id": 1120
       },
       {
         "name" : "sec1module",
         "configFile" : "com5003-sec1module.xml",
-        "module_num" : 1,
         "id": 1130
       },
       {
         "name" : "sec1module",
         "configFile" : "com5003-sec1module-energy-comparison.xml",
-        "module_num" : 2,
         "id": 1131
       },
       {
         "name" : "lambdamodule",
         "configFile" : "lambdamodule-with-own-apparentpowermodule.xml",
-        "module_num" : 1,
         "id": 1140
       },
       {
         "name" : "sourcemodule",
         "configFile" : "",
-        "module_num" : 1,
         "id": 1300
       },
       {
         "name" : "scpimodule",
         "configFile" : "com5003-scpimodule.xml",
-        "module_num" : 1,
         "id": 9999
       }
     ]
