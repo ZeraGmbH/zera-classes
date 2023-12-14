@@ -31,9 +31,7 @@ int test_modman_session_entities::generateCodeLists(QString device)
     modMan.setMockServices(device);
     for(const auto &session : sessions) {
         modMan.changeSessionFile(session);
-        do
-            TimeMachineObject::feedEventLoop();
-        while(!modMan.modulesReady());
+        modMan.waitUntilModulesAreReady();
 
         QString actDevIface = modManSetupFacade.getStorageSystem()->getStoredValue(9999, "ACT_DEV_IFACE").toString();
         if(actDevIface.isEmpty()) // we have to make module resilient to this situation

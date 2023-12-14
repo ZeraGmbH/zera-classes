@@ -9,9 +9,7 @@ void generateDevIfaceForAllSessions(QStringList sessionsList, ModuleManagerTest 
 {
     for(const QString &session: qAsConst(sessionsList)) {
         modMan->changeSessionFile(session);
-        do
-            TimeMachineObject::feedEventLoop();
-        while(!modMan->modulesReady());
+        modMan->waitUntilModulesAreReady();
 
         QString actDevIface = storSystem->getStoredValue(9999, "ACT_DEV_IFACE").toString();
         if(actDevIface.isEmpty()) // we have to make module resilient to this situation
