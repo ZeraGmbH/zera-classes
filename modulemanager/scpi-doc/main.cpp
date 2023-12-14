@@ -26,7 +26,7 @@ void generateDevIfaceXmls(QString deviceName)
         if(actDevIface.isEmpty()) // we have to make module resilient to this situation
             qFatal("ACT_DEV_IFACE empty - local modulemanager running???");
 
-        QString xmlFileName = QStringLiteral(SCPI_DOC_BUILD_PATH) + "/scpi-xmls/" + session;
+        QString xmlFileName = QStringLiteral(HTML_DOCS_PATH) + "/scpi-xmls/" + session;
         xmlFileName.replace("json", "xml");
         QFile xmlFile(xmlFileName);
         xmlFile.open(QFile::ReadWrite);
@@ -46,15 +46,15 @@ int main(int argc, char *argv[])
     ModuleManagerSetupFacade::registerMetaTypeStreamOperators();
     qputenv("QT_FATAL_CRITICALS", "1"); \
 
-    QDir().mkdir(QStringLiteral(SCPI_DOC_BUILD_PATH) + "/scpi-xmls");
+    QDir().mkdir(QStringLiteral(HTML_DOCS_PATH) + "/scpi-xmls");
     generateDevIfaceXmls("mt310s2");
     generateDevIfaceXmls("com5003");
 
     QProcess sh;
-    sh.start("/bin/sh", QStringList() << QStringLiteral(SCPI_DOC_SOURCE_PATH) + "/xml-to-html/create-all-htmls" << QStringLiteral(SCPI_DOC_BUILD_PATH));
+    sh.start("/bin/sh", QStringList() << QStringLiteral(SCPI_DOC_SOURCE_PATH) + "/xml-to-html/create-all-htmls" << QStringLiteral(HTML_DOCS_PATH));
     sh.waitForFinished();
     printf("%s", qPrintable(sh.readAll()));
 
-    QDir dir(QStringLiteral(SCPI_DOC_BUILD_PATH) + "/scpi-xmls");
+    QDir dir(QStringLiteral(HTML_DOCS_PATH) + "/scpi-xmls");
     dir.removeRecursively();
 }
