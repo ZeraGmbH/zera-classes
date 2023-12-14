@@ -33,7 +33,7 @@ int test_modman_session_entities::generateCodeLists(QString device)
         modMan.changeSessionFile(session);
         do
             TimeMachineObject::feedEventLoop();
-        while(!modMan.areAllModulesShutdown());
+        while(!modMan.modulesReady());
 
         QString actDevIface = modManSetupFacade.getStorageSystem()->getStoredValue(9999, "ACT_DEV_IFACE").toString();
         if(actDevIface.isEmpty()) // we have to make module resilient to this situation

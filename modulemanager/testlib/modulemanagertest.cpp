@@ -33,7 +33,7 @@ void ModuleManagerTest::destroyModulesAndWaitUntilAllShutdown()
     destroyModules();
     do
         TimeMachineObject::feedEventLoop();
-    while(!areAllModulesShutdown());
+    while(!modulesReady());
 }
 
 QList<ZeraModules::ModuleData *> ModuleManagerTest::getModuleList()

@@ -109,7 +109,7 @@ void ModuleManager::loadScripts(VeinScript::ScriptSystem *t_scriptSystem)
     }
 }
 
-bool ModuleManager::areAllModulesShutdown()
+bool ModuleManager::modulesReady()
 {
     return !m_moduleStartLock;
 }
