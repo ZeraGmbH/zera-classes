@@ -1,4 +1,4 @@
-#include "test_modman_session_entities.h"
+#include "test_modman_regression_all_sessions.h"
 #include "licensesystemmock.h"
 #include "modulemanager.h"
 #include "moduledata.h"
@@ -6,9 +6,9 @@
 #include <timemachineobject.h>
 #include <QTest>
 
-QTEST_MAIN(test_modman_session_entities)
+QTEST_MAIN(test_modman_regression_all_sessions)
 
-void test_modman_session_entities::initTestCase()
+void test_modman_regression_all_sessions::initTestCase()
 {
     ModuleManagerSetupFacade::registerMetaTypeStreamOperators();
     ModuleManagerTest::enableTest();
@@ -18,7 +18,34 @@ void test_modman_session_entities::initTestCase()
     qputenv("QT_LOGGING_RULES", "*.debug=false;*.info=false");
 }
 
-int test_modman_session_entities::generateCodeLists(QString device)
+void test_modman_regression_all_sessions::checkScpiPortOpenedProperlyByVeinDevIface(ModuleManagerSetupFacade &modManFacade)
+{
+    QString actDevIface = modManFacade.getStorageSystem()->getStoredValue(9999, "ACT_DEV_IFACE").toString();
+    if(actDevIface.isEmpty()) // we have to make module resilient to this situation
+        qFatal("ACT_DEV_IFACE empty - local modulemanager running???");
+}
+
+void test_modman_regression_all_sessions::checkVeinModuleEntityNames(ModuleManagerTest &modMan, ModuleManagerSetupFacade &modManFacade, QString device, QString session)
+{
+    QList<ZeraModules::ModuleData *> modules = modMan.getModuleList();
+    bool allEntitiesOk = true;
+    for(int i=0; i<modules.count(); i++) {
+        ZeraModules::ModuleData * module = modules[i];
+        QString moduleNameExpected = module->m_reference->getVeinModuleName();
+        QString veinModuleNameFound = modManFacade.getStorageSystem()->getStoredValue(module->m_moduleId, "EntityName").toString();
+        if(moduleNameExpected != veinModuleNameFound) {
+            allEntitiesOk = false;
+            qWarning("Vein entity name incorrect: Device: '%s' / Session '%s' / Expected: '%s' / Received: '%s'",
+                     qPrintable(device),
+                     qPrintable(session),
+                     qPrintable(moduleNameExpected),
+                     qPrintable(veinModuleNameFound));
+        }
+    }
+    QVERIFY(allEntitiesOk);
+}
+
+int test_modman_regression_all_sessions::generateCodeLists(QString device)
 {
     ModulemanagerConfig::setDemoDevice(device);
     ModulemanagerConfig* mmConfig = ModulemanagerConfig::getInstance();
@@ -33,9 +60,8 @@ int test_modman_session_entities::generateCodeLists(QString device)
         modMan.changeSessionFile(session);
         modMan.waitUntilModulesAreReady();
 
-        QString actDevIface = modManSetupFacade.getStorageSystem()->getStoredValue(9999, "ACT_DEV_IFACE").toString();
-        if(actDevIface.isEmpty()) // we have to make module resilient to this situation
-            qFatal("ACT_DEV_IFACE empty - local modulemanager running???");
+        checkScpiPortOpenedProperlyByVeinDevIface(modManSetupFacade);
+        checkVeinModuleEntityNames(modMan, modManSetupFacade, device, session);
 
         QStringList codeLines = generateCodeLinesForDeviceSession(device, session, modMan);
         qWarning("%s", qPrintable(codeLines.join("\n")));
@@ -45,7 +71,7 @@ int test_modman_session_entities::generateCodeLists(QString device)
     return sessions.count();
 }
 
-QStringList test_modman_session_entities::generateCodeLinesForDeviceSession(QString device, QString session, ModuleManagerTest &modMan)
+QStringList test_modman_regression_all_sessions::generateCodeLinesForDeviceSession(QString device, QString session, ModuleManagerTest &modMan)
 {
     QStringList codeLines;
     codeLines.append(QString("// ------ Start auto generated code for %1 ----").arg(session));
@@ -76,7 +102,7 @@ QStringList test_modman_session_entities::generateCodeLinesForDeviceSession(QStr
     return codeLines;
 }
 
-void test_modman_session_entities::loadAllSessionsAndOutputRegressionTestCodeCom5003()
+void test_modman_regression_all_sessions::loadAllSessionsAndOutputRegressionTestCodeCom5003()
 {
     int sessionCount = generateCodeLists("com5003");
     constexpr int sessionCountCom5003 = 4;
@@ -84,7 +110,7 @@ void test_modman_session_entities::loadAllSessionsAndOutputRegressionTestCodeCom
         qFatal("Seems sessions changed for Com5003. Read comment below howto update regression tests");
 }
 
-void test_modman_session_entities::loadAllSessionsAndOutputRegressionTestCodeMt310s2()
+void test_modman_regression_all_sessions::loadAllSessionsAndOutputRegressionTestCodeMt310s2()
 {
     int sessionCount = generateCodeLists("mt310s2");
     constexpr int sessionCountMt310s2 = 6;
@@ -98,11 +124,11 @@ void test_modman_session_entities::loadAllSessionsAndOutputRegressionTestCodeMt3
 // 1. If number of sessions for a device changed: Adjust numbers in
 //    loadAllSessionsAndOutputRegressionTestCode<device> above
 // 2. If a session was added for a device: Add a new (empty) regression test
-// 3. Run test_modman_session_entities in qt-creator - should pass with 1-2.
+// 3. Run test_modman_regression_all_sessions in qt-creator - should pass with 1-2.
 // 4. Copy matching (warning) log from loadAllSessionsAndOutputRegressionTestCode<device>
 //    in session/device matching test below
 
-void test_modman_session_entities::regressionCom5003Ced()
+void test_modman_regression_all_sessions::regressionCom5003Ced()
 {
     // ------ Start auto generated code for com5003-ced-session.json ----
     LicenseSystemMock licenseSystem;
@@ -202,7 +228,7 @@ void test_modman_session_entities::regressionCom5003Ced()
     // ------ end auto generated code ----
 }
 
-void test_modman_session_entities::regressionCom5003Meas()
+void test_modman_regression_all_sessions::regressionCom5003Meas()
 {
     // ------ Start auto generated code for com5003-meas-session.json ----
     LicenseSystemMock licenseSystem;
@@ -314,7 +340,7 @@ void test_modman_session_entities::regressionCom5003Meas()
     // ------ end auto generated code ----
 }
 
-void test_modman_session_entities::regressionCom5003PerPhase()
+void test_modman_regression_all_sessions::regressionCom5003PerPhase()
 {
     // ------ Start auto generated code for com5003-perphase-session.json ----
     LicenseSystemMock licenseSystem;
@@ -430,7 +456,7 @@ void test_modman_session_entities::regressionCom5003PerPhase()
     // ------ end auto generated code ----
 }
 
-void test_modman_session_entities::regressionCom5003Ref()
+void test_modman_regression_all_sessions::regressionCom5003Ref()
 {
     // ------ Start auto generated code for com5003-ref-session.json ----
     LicenseSystemMock licenseSystem;
@@ -482,7 +508,7 @@ void test_modman_session_entities::regressionCom5003Ref()
     // ------ end auto generated code ----
 }
 
-void test_modman_session_entities::regressionMt310s2Ced()
+void test_modman_regression_all_sessions::regressionMt310s2Ced()
 {
     // ------ Start auto generated code for mt310s2-ced-session.json ----
     LicenseSystemMock licenseSystem;
@@ -578,7 +604,7 @@ void test_modman_session_entities::regressionMt310s2Ced()
     // ------ end auto generated code ----
 }
 
-void test_modman_session_entities::regressionMt310s2Dc()
+void test_modman_regression_all_sessions::regressionMt310s2Dc()
 {
     // ------ Start auto generated code for mt310s2-dc-session.json ----
     LicenseSystemMock licenseSystem;
@@ -682,7 +708,7 @@ void test_modman_session_entities::regressionMt310s2Dc()
     // ------ end auto generated code ----
 }
 
-void test_modman_session_entities::regressionMt310s2EmobAc()
+void test_modman_regression_all_sessions::regressionMt310s2EmobAc()
 {
     // ------ Start auto generated code for mt310s2-emob-session-ac.json ----
     LicenseSystemMock licenseSystem;
@@ -782,7 +808,7 @@ void test_modman_session_entities::regressionMt310s2EmobAc()
     // ------ end auto generated code ----
 }
 
-void test_modman_session_entities::regressionMt310s2EmobDc()
+void test_modman_regression_all_sessions::regressionMt310s2EmobDc()
 {
     // ------ Start auto generated code for mt310s2-emob-session-dc.json ----
     LicenseSystemMock licenseSystem;
@@ -870,7 +896,7 @@ void test_modman_session_entities::regressionMt310s2EmobDc()
     // ------ end auto generated code ----
 }
 
-void test_modman_session_entities::regressionMt310s2EmobAcDc()
+void test_modman_regression_all_sessions::regressionMt310s2EmobAcDc()
 {
     // ------ Start auto generated code for mt310s2-emob-session.json ----
     LicenseSystemMock licenseSystem;
@@ -974,7 +1000,7 @@ void test_modman_session_entities::regressionMt310s2EmobAcDc()
     // ------ end auto generated code ----
 }
 
-void test_modman_session_entities::regressionMt310s2Meas()
+void test_modman_regression_all_sessions::regressionMt310s2Meas()
 {
     // ------ Start auto generated code for mt310s2-meas-session.json ----
     LicenseSystemMock licenseSystem;
