@@ -1,10 +1,10 @@
-#ifndef TEST_MODMAN_SESSION_ENTITITIES_H
-#define TEST_MODMAN_SESSION_ENTITITIES_H
+#ifndef TEST_MODMAN_REGRESSION_ALL_ENTITITIES_H
+#define TEST_MODMAN_REGRESSION_ALL_ENTITITIES_H
 
 #include "modulemanagertest.h"
 #include <QObject>
 
-class test_modman_session_entities : public QObject
+class test_modman_regression_all_sessions : public QObject
 {
     Q_OBJECT
 private slots:
@@ -28,6 +28,8 @@ private slots:
 private:
     int generateCodeLists(QString device);
     QStringList generateCodeLinesForDeviceSession(QString device, QString session, ModuleManagerTest &modMan);
+    void checkScpiPortOpenedProperlyByVeinDevIface(ModuleManagerSetupFacade &modManFacade);
+    void checkVeinModuleEntityNames(ModuleManagerTest &modMan, ModuleManagerSetupFacade &modManFacade, QString device, QString session);
 };
 
-#endif // TEST_MODMAN_SESSION_ENTITITIES_H
+#endif // TEST_MODMAN_REGRESSION_ALL_ENTITITIES_H
