@@ -11,6 +11,7 @@ public:
     static void pointToInstalledSessionFiles();
     static void pointToSourceSessionFiles();
     void destroyModulesAndWaitUntilAllShutdown();
+    void waitUntilModulesAreReady();
     QList<ZeraModules::ModuleData *> getModuleList();
 private:
     virtual QStringList getModuleFileNames() override;

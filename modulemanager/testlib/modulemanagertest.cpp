@@ -31,6 +31,11 @@ ModuleManagerTest::ModuleManagerTest(ModuleManagerSetupFacade *setupFacade, bool
 void ModuleManagerTest::destroyModulesAndWaitUntilAllShutdown()
 {
     destroyModules();
+    waitUntilModulesAreReady();
+}
+
+void ModuleManagerTest::waitUntilModulesAreReady()
+{
     do
         TimeMachineObject::feedEventLoop();
     while(!modulesReady());
