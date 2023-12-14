@@ -37,7 +37,7 @@ public:
     ~ModuleManager() override;
     bool loadAllAvailableModulePlugins();
     void loadScripts(VeinScript::ScriptSystem *t_scriptSystem);
-    bool areAllModulesShutdown();
+    bool modulesReady();
     void setupConnections();
     void loadDefaultSession();
     void setMockServices(QString deviceName);
