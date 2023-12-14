@@ -63,7 +63,7 @@ private:
     VfModuleParameter* m_pBluetoothOnOff;
     VfModuleParameter* m_pMacAddress;
 
-    QStringList m_macAddressForDemo = {"11:22:33:44:55:66", "AA:BB:CC:DD:EE:FF"};
+    QStringList m_macAddressForDemo = {"11:22:33:44:55:66", "AA:BB:CC:DD:EE:FF", "00:00:00:00:00:01"};
 };
 
 }
