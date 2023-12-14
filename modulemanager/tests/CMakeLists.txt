@@ -67,7 +67,7 @@ SETUP_TESTS(
     test_jsonconfigfiles
     test_loggercontentsessionloader
     test_modman_config
-    test_modman_session
+    test_plugin_load
     test_modman_regression_all_sessions
     )
 
