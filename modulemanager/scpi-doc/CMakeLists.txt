@@ -1,4 +1,4 @@
-add_definitions(-DSCPI_DOC_BUILD_PATH="${CMAKE_INSTALL_PREFIX}/..")
+add_definitions(-DHTML_DOCS_PATH="${CMAKE_INSTALL_PREFIX}/../../")
 add_definitions(-DSCPI_DOC_SOURCE_PATH="${CMAKE_CURRENT_SOURCE_DIR}")
 
 add_executable(scpi-doc-generator
