@@ -1,17 +1,28 @@
-#include "modulemanagertest.h"
+#include "modulemanager.h"
 #include "licensesystemmock.h"
+#include "modulemanagerconfig.h"
 #include <timemachineobject.h>
 #include <QCoreApplication>
 #include <QDir>
 #include <QProcess>
 
-void generateDevIfaceForAllSessions(QStringList sessionsList, ModuleManagerTest *modMan, VeinStorage::VeinHash *storSystem)
+void generateDevIfaceXmls(QString deviceName)
 {
-    for(const QString &session: qAsConst(sessionsList)) {
-        modMan->changeSessionFile(session);
-        modMan->waitUntilModulesAreReady();
-
-        QString actDevIface = storSystem->getStoredValue(9999, "ACT_DEV_IFACE").toString();
+    ModulemanagerConfig::setDemoDevice(deviceName);
+    ModulemanagerConfig* mmConfig = ModulemanagerConfig::getInstance();
+    QStringList sessions = mmConfig->getAvailableSessions();
+    LicenseSystemMock licenseSystem;
+    ModuleManagerSetupFacade modManSetupFacade(&licenseSystem);
+    ZeraModules::ModuleManager modMan(&modManSetupFacade, true);
+    modMan.loadAllAvailableModulePlugins();
+    modMan.setupConnections();
+    modMan.setMockServices(deviceName);
+    for(const QString &session: qAsConst(sessions)) {
+        modMan.changeSessionFile(session);
+        do
+            TimeMachineObject::feedEventLoop();
+        while(!modMan.modulesReady());
+        QString actDevIface = modManSetupFacade.getStorageSystem()->getStoredValue(9999, "ACT_DEV_IFACE").toString();
         if(actDevIface.isEmpty()) // we have to make module resilient to this situation
             qFatal("ACT_DEV_IFACE empty - local modulemanager running???");
 
@@ -22,42 +33,22 @@ void generateDevIfaceForAllSessions(QStringList sessionsList, ModuleManagerTest 
         QTextStream data(&xmlFile);
         data << actDevIface;
     }
-
+    modMan.destroyModules();
+    do
+        TimeMachineObject::feedEventLoop();
+    while(!modMan.modulesReady());
 }
 
 int main(int argc, char *argv[])
 {
     QCoreApplication a(argc, argv);
 
-    ModuleManagerTest::enableTest();
-    ModuleManagerTest::pointToSourceSessionFiles();
     ModuleManagerSetupFacade::registerMetaTypeStreamOperators();
     qputenv("QT_FATAL_CRITICALS", "1"); \
 
-    LicenseSystemMock licenseSystem;
-    ModuleManagerSetupFacade modManSetupFacade(&licenseSystem);
-
-    QStringList mtSessions, comSessions;
-    QStringList allSessions = QString(SESSION_FILES).split(",");
-    for(QString &session: allSessions) {
-        session = session.section('/', -1);
-        if(session.contains("mt310s2"))
-            mtSessions.append(session);
-        if(session.contains("com5003"))
-            comSessions.append(session);
-    }
-
-    ModuleManagerTest modMan(&modManSetupFacade, true);
-    modMan.loadAllAvailableModulePlugins();
-    modMan.setupConnections();
-
     QDir().mkdir(QStringLiteral(SCPI_DOC_BUILD_PATH) + "/scpi-xmls");
-
-    modMan.setMockServices("mt310s2");
-    generateDevIfaceForAllSessions(mtSessions, &modMan, modManSetupFacade.getStorageSystem());
-    modMan.destroyModulesAndWaitUntilAllShutdown();
-    modMan.setMockServices("com5003");
-    generateDevIfaceForAllSessions(comSessions, &modMan, modManSetupFacade.getStorageSystem());
+    generateDevIfaceXmls("mt310s2");
+    generateDevIfaceXmls("com5003");
 
     QProcess sh;
     sh.start("/bin/sh", QStringList() << QStringLiteral(SCPI_DOC_SOURCE_PATH) + "/xml-to-html/create-all-htmls" << QStringLiteral(SCPI_DOC_BUILD_PATH));
