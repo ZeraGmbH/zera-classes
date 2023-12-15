@@ -1,0 +1,43 @@
+name: Generate SCPI docs
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    container:
+      image: schnitzeltony/fedora-qt5:32
+    steps:
+      - name: Echo github environment
+        run: |
+          echo "Home: $HOME"
+          echo "Workspace: $GITHUB_WORKSPACE"
+
+      - name: Checkout git
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Download zera-metaproject's install artifact
+        uses: dawidd6/action-download-artifact@v2
+        with:
+          repo: ZeraGmbH/zera-metaproject
+          name: install-artifact
+          workflow: buildAndExportArtifact.yml
+
+      - name: Untar zera-metaproject's install artifact
+        run: |
+            tar -xf install_files.tar.xz -C /
+            rm install_files.tar.xz
+
+      - name: run scpi-doc-generator
+        run: |
+          export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$HOME/install/usr/lib64
+          cd $HOME/install/usr/bin/
+          ./scpi-doc-generator
+
+      - name: list html-docs
+        run: |
+          ls $HOME
+          echo
+          ls $HOME/html-docs
