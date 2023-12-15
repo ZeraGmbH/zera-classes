@@ -3,7 +3,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  run scpi-doc-generator:
+  run:
     runs-on: ubuntu-latest
     container:
       image: schnitzeltony/fedora-qt5:32
