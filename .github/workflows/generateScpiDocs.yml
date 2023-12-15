@@ -12,12 +12,54 @@ jobs:
         run: |
           echo "Home: $HOME"
           echo "Workspace: $GITHUB_WORKSPACE"
+          echo "CPUs: $(getconf _NPROCESSORS_ONLN)"
+
+      # Prepare source code for incremental build
+      - name: Download source artifact last build
+        uses: dawidd6/action-download-artifact@v2
+        with:
+          workflow: recreateBuildCaches.yml
+          name: source-cache-gcc
+          check_artifacts: true
+        continue-on-error: true
+
+      - name: Untar source files last build
+        run: |
+          mkdir -p "$GITHUB_WORKSPACE"
+          if [ -e source-cache-files.tar.xz ]; then
+            tar -xf source-cache-files.tar.xz -C /
+            rm source-cache-files.tar.xz
+          else
+            echo 'source-cache-files.tar.xz not found'
+          fi
 
       - name: Checkout git
         uses: actions/checkout@v4
         with:
           submodules: recursive
 
+      # Prepare last build files for incremental build
+      - name: Download build artifact
+        uses: dawidd6/action-download-artifact@v2
+        with:
+          workflow: recreateBuildCaches.yml
+          name: build-cache-gcc
+          check_artifacts: true
+        continue-on-error: true
+
+      - name: Untar build files
+        run: |
+          mkdir -p "$HOME/targetbuild"
+          if [ -e build-cache-files.tar.xz ]; then
+            tar -xf build-cache-files.tar.xz -C /
+            rm build-cache-files.tar.xz
+          else
+            echo 'build-cache-files.tar.xz not found'
+          fi
+
+      # Get zera-metaproject sysroot
+      # * mandatory
+      # * zera-metaproject's generator workflow name must be set
       - name: Download zera-metaproject's install artifact
         uses: dawidd6/action-download-artifact@v2
         with:
@@ -30,14 +72,23 @@ jobs:
             tar -xf install_files.tar.xz -C /
             rm install_files.tar.xz
 
+      - name: Build
+        run: |
+          mkdir -p "$HOME/targetbuild"
+          cd "$HOME/targetbuild"
+
+          cmake $GITHUB_WORKSPACE \
+           -DCMAKE_PREFIX_PATH="$HOME/install/usr;/usr" \
+           -DCMAKE_INSTALL_PREFIX:PATH="$HOME/install/usr" \
+           -DCMAKE_INSTALL_SYSCONFDIR="$HOME/install/etc"
+           make -j $(getconf _NPROCESSORS_ONLN)
+           make -j $(getconf _NPROCESSORS_ONLN) install
+
       - name: run scpi-doc-generator
         run: |
-          export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$HOME/install/usr/lib64
-          cd $HOME/install/usr/bin/
+          cd $HOME/targetbuild/modulemanager/scpi-doc
           ./scpi-doc-generator
 
       - name: list html-docs
         run: |
-          ls $HOME
-          echo
-          ls $HOME/html-docs
+          ls -la $HOME/targetbuild/modulemanager/scpi-doc/html-docs
