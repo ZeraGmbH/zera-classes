@@ -88,7 +88,15 @@ jobs:
         run: |
           cd $HOME/targetbuild/modulemanager/scpi-doc
           ./scpi-doc-generator
+          mv $HOME/targetbuild/modulemanager/scpi-doc/html-docs $HOME/html-docs
 
-      - name: list html-docs
+      - name: Tar scpi-docs
         run: |
-          ls -la $HOME/targetbuild/modulemanager/scpi-doc/html-docs
+          tar -c -I 'xz -T0' -f $HOME/scpi_docs.tar.xz "$HOME/html-docs"
+
+      - name: 'Upload scpi_docs artifact'
+        uses: actions/upload-artifact@v3
+        with:
+          name: scpi-docs-artifact
+          path: /github/home/scpi_docs.tar.xz
+          retention-days: 1
