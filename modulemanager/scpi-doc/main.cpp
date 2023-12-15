@@ -50,17 +50,10 @@ int main(int argc, char *argv[])
     generateDevIfaceXmls("mt310s2");
     generateDevIfaceXmls("com5003");
 
-    printf("Supporting files location: %s\n", qPrintable(SCPI_DOC_SOURCE_PATH));
-    QString createAllHtmls = QStringLiteral(SCPI_DOC_SOURCE_PATH) + "/xml-to-html/create-all-htmls";
-    if (QFile::exists(createAllHtmls)) {
-        printf("create-all-htmls found !\n");
-        QProcess sh;
-        sh.start("/bin/sh", QStringList() << QStringLiteral(SCPI_DOC_SOURCE_PATH) + "/xml-to-html/create-all-htmls" << QStringLiteral(HTML_DOCS_PATH));
-        sh.waitForFinished();
-        printf("%s", qPrintable(sh.readAll()));
-    }
-    else
-        printf("create-all-htmls not found\n");
+    QProcess sh;
+    sh.start("/bin/sh", QStringList() << QStringLiteral(SCPI_DOC_SOURCE_PATH) + "/xml-to-html/create-all-htmls" << QStringLiteral(HTML_DOCS_PATH));
+    sh.waitForFinished();
+    printf("%s", qPrintable(sh.readAll()));
 
     QDir dir(QStringLiteral(HTML_DOCS_PATH) + "/scpi-xmls");
     dir.removeRecursively();
