@@ -36,7 +36,6 @@
 #define registerpcbnotifierErrMsg "PCB register notifier failed"
 #define unregisterpcbnotifierErrMsg "PCB unregister notifier failed"
 #define setPllErrMsg "PCB set pll failed"
-#define readmuxchannelErrMsg "PCB muxchannel read failed"
 #define readrefconstantErrMsg "PCB reference constant read failed"
 #define readadjstatusErrMsg "PCB adjustment status read failed"
 #define readschnubbelstatusErrMsg "PCB authorization status read failed"
@@ -58,8 +57,6 @@
 #define adjustcomputationPCBErrMSG "PCB adjustment computation failed"
 #define adjuststoragePCBErrMSG "PCB adjustment storage failed"
 #define adjuststatusPCBErrMSG "PCB adjustment status setting failed"
-#define adjustinitPCBErrMSG "PCB adjustment init failed"
-#define readauthorizationErrMSG "PCB authorization status read failed"
 
 #define readdspgaincorrErrMsg "DSP read gain correction failed"
 #define readdspphasecorrErrMsg "DSP read phase correction failed"
@@ -90,11 +87,6 @@
 
 #define interfacejsonErrMsg "Interface JSON Document strange"
 #define interfaceETHErrMsg "Ethernet interface listen failed"
-#define interfaceSerialErrMsg "Serial interface not connected"
-
-#define transparentServerCmdErrMSG "Sending transparent server command failed"
-
-#define moduleActValueErrMsg "Actual Values not found"
 
 #define releaseNumberErrMsg "Release number not found"
 
