@@ -112,4 +112,5 @@ jobs:
           repo: zenux-data
           github_token: ${{ secrets.G_TRIGGER_WORKFLOW }}
           workflow_file_name: uploadScpiDocs.yml
+          inputs: '{"version" : "${{ github.event.inputs.version}}"}'
           ref: main
