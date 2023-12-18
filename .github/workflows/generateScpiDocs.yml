@@ -1,6 +1,11 @@
 name: Generate SCPI docs
 on:
   workflow_dispatch:
+    inputs:
+      version:
+        description: release/snapshot version
+        required: true
+        type: string
 
 jobs:
   run:
