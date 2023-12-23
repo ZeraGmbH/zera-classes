@@ -125,18 +125,6 @@ quint32 cReferenceMeasChannel::setRange(QString range)
 }
 
 
-double cReferenceMeasChannel::getUrValue()
-{
-    return m_RangeInfoHash[m_sActRange].urvalue;
-}
-
-
-double cReferenceMeasChannel::getRejection()
-{
-    return m_RangeInfoHash[m_sActRange].rejection;
-}
-
-
 void cReferenceMeasChannel::generateInterface()
 {
     // we have no interface
@@ -302,43 +290,6 @@ void cReferenceMeasChannel::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QV
             emit activationError();
         }
         break;
-    case readurvalue:
-        if (reply == ack)
-        {
-            ri.urvalue = answer.toDouble(&ok);
-            emit activationContinue();
-        }
-        else
-        {
-            emit errMsg((tr(readrangeurvalueErrMsg)));
-            emit activationError();
-        }
-        break;
-
-    case readrejection:
-        if (reply == ack)
-        {
-            ri.rejection = answer.toDouble(&ok);
-            emit activationContinue();
-        }
-        else
-        {
-            emit errMsg((tr(readrangerejectionErrMsg)));
-            emit activationError();
-        }
-        break;
-    case readovrejection:
-        if (reply == ack)
-        {
-            ri.ovrejection = answer.toDouble(&ok);
-            emit activationContinue();
-        }
-        else
-        {
-            emit errMsg((tr(readrangeovrejectionErrMsg)));
-            emit activationError();
-        }
-        break;
     case readisavail:
         if (reply == ack)
         {
@@ -459,7 +410,7 @@ void cReferenceMeasChannel::setupDemoOperation()
         nominalRanges = QVector<double>() << 1000.0 << 100.0 << 10.0 << 1.0 << 0.1 << 0.01 << 0.001;
     }
     for(auto rangeVal : qAsConst(nominalRanges)) {
-        cRangeInfo rangeInfo;
+        cRangeInfoBase rangeInfo;
         QString unitPrefix;
         double rangeValDisplay = rangeVal;
         if(rangeVal < 1) {
@@ -472,9 +423,6 @@ void cReferenceMeasChannel::setupDemoOperation()
             m_sActRange = rangeInfo.alias;
         }
         rangeInfo.avail = true;
-        rangeInfo.urvalue = rangeVal;
-        rangeInfo.rejection = 1.0;
-        rangeInfo.ovrejection = 1.25;
         // ?? name
         rangeInfo.type = 1;
         m_RangeInfoHash[rangeInfo.alias] = rangeInfo;
@@ -598,7 +546,7 @@ void cReferenceMeasChannel::activationDone()
 {
     if(m_demo)
         setupDemoOperation();
-    QHash<QString, cRangeInfo>::iterator it = m_RangeInfoHash.begin();
+    QHash<QString, cRangeInfoBase>::iterator it = m_RangeInfoHash.begin();
     while (it != m_RangeInfoHash.end()) // we delete all unused ranges
     {
         ri = it.value();
@@ -638,25 +586,6 @@ void cReferenceMeasChannel::readType()
 {
     m_MsgNrCmdList[m_pPCBInterface->getType(m_sName, m_RangeNameList.at(m_RangeQueryIt))] = readtype;
 }
-
-
-void cReferenceMeasChannel::readUrvalue()
-{
-    m_MsgNrCmdList[m_pPCBInterface->getUrvalue(m_sName, m_RangeNameList.at(m_RangeQueryIt))] = readurvalue;
-}
-
-
-void cReferenceMeasChannel::readRejection()
-{
-   m_MsgNrCmdList[m_pPCBInterface->getRejection(m_sName, m_RangeNameList.at(m_RangeQueryIt))] = readrejection;
-}
-
-
-void cReferenceMeasChannel::readOVRejection()
-{
-    m_MsgNrCmdList[m_pPCBInterface->getOVRejection(m_sName, m_RangeNameList.at(m_RangeQueryIt))] = readovrejection;
-}
-
 
 void cReferenceMeasChannel::readisAvail()
 {

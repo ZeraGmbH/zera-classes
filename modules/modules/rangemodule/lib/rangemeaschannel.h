@@ -105,8 +105,8 @@ private:
     bool m_demo;
     QString m_session;
     QStringList m_RangeNameList; // a list of all ranges
-    QHash<QString, cRangeInfo> m_RangeInfoHash; // a list of available and selectable ranges, alias will be the key
-    QHash<QString, cRangeInfo> m_RangeInfoHashWorking;
+    QHash<QString, cRangeInfoWithConstantValues> m_RangeInfoHash; // a list of available and selectable ranges, alias will be the key
+    QHash<QString, cRangeInfoWithConstantValues> m_RangeInfoHashWorking;
     QHash<int, int> m_ActionErrorcountHash;
     QString m_sNewRange;
     QString m_sActRange; // the actual range set (alias)
@@ -158,7 +158,7 @@ private:
     QFinalState m_rangeQueryDoneState;
 
     qint32 m_RangeQueryIt;
-    cRangeInfo m_CurrRangeInfo;
+    cRangeInfoWithConstantValues m_CurrRangeInfo;
 
     Zera::ProxyClientPtr m_rmClient;
     Zera::ProxyClient* m_pPCBClient;

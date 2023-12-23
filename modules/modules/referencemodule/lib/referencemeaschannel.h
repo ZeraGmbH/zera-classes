@@ -28,9 +28,6 @@ enum rangemeaschannelCmds
 
     readrngalias,
     readtype,
-    readurvalue,
-    readrejection,
-    readovrejection,
     readisavail,
 
     setmeaschannelrange,
@@ -52,9 +49,6 @@ public:
 
     quint32 setRange(QString range); // a statemachine gets started that returns cmdDone(quint32 cmdnr)
 
-    double getUrValue();
-    double getRejection(); // return nominal (100%) rejection of actual range
-
 signals:
     void cmdDone(quint32 cmdnr); // to signal we are ready
 
@@ -65,7 +59,7 @@ private:
     void setupDemoOperation();
 
     QStringList m_RangeNameList; // a list of all ranges
-    QHash<QString, cRangeInfo> m_RangeInfoHash; // a list of available and selectable ranges, alias will be the key
+    QHash<QString, cRangeInfoBase> m_RangeInfoHash; // a list of available and selectable ranges, alias will be the key
     QString m_sNewRange;
     QString m_sActRange; // the actual range set (alias)
     double m_fGainCorrection;
@@ -111,7 +105,7 @@ private:
     QFinalState m_freeResourceDoneState;
 
     qint32 m_RangeQueryIt;
-    cRangeInfo ri;
+    cRangeInfoBase ri;
 
     Zera::ProxyClientPtr m_rmClient;
     Zera::ProxyClient* m_pPCBClient;
@@ -138,9 +132,6 @@ private slots:
     // the slots for querying a measchannels range properties
     void readRngAlias();
     void readType();
-    void readUrvalue();
-    void readRejection();
-    void readOVRejection();
     void readisAvail();
     void rangeQueryDone();
 };

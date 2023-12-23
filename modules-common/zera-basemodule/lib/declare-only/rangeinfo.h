@@ -17,17 +17,23 @@ enum SensorType
     Clamp = 0x200
 };
 
-class cRangeInfo
+class cRangeInfoBase
 {
 public:
     QString name;
     qint32 type;
     bool avail;
     QString alias;
+};
+
+class cRangeInfoWithConstantValues : public cRangeInfoBase
+{
+public:
     double urvalue;
     double rejection;
     double ovrejection;
     double adcrejection;
 };
+
 
 #endif // RANGEINFO_H
