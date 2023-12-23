@@ -56,7 +56,7 @@ private:
 
     bool m_demo;
     QStringList m_RangeNameList; // a list of all ranges
-    QHash<QString, cRangeInfo> m_RangeInfoHash; // a list of available and selectable ranges, alias will be the key
+    QHash<QString, cRangeInfoWithConstantValues> m_RangeInfoHash; // a list of available and selectable ranges, alias will be the key
     QString m_sActRange; // the actual range set (name)
 
     // statemachine for activating a rangemeaschannel
@@ -98,7 +98,7 @@ private:
     QFinalState m_freeResourceDoneState;
 
     qint32 m_RangeQueryIt;
-    cRangeInfo ri;
+    cRangeInfoWithConstantValues ri;
 
     Zera::ProxyClientPtr m_rmClient;
     Zera::ProxyClient* m_pPCBClient;

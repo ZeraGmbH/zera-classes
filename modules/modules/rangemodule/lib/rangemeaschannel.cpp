@@ -223,7 +223,7 @@ bool cRangeMeasChannel::isPossibleRange(QString range)
 
 bool cRangeMeasChannel::isRMSOverload(double ampl)
 {
-    cRangeInfo& ri = m_RangeInfoHash[m_sActRange];
+    cRangeInfoWithConstantValues& ri = m_RangeInfoHash[m_sActRange];
     double ovrRejectionFactor = ri.ovrejection / ri.rejection;
     return ((ri.urvalue * ovrRejectionFactor) < ampl);
 }
@@ -231,7 +231,7 @@ bool cRangeMeasChannel::isRMSOverload(double ampl)
 
 bool cRangeMeasChannel::isADCOverload(double ampl)
 {
-    cRangeInfo& ri = m_RangeInfoHash[m_sActRange];
+    cRangeInfoWithConstantValues& ri = m_RangeInfoHash[m_sActRange];
     return (fabs(ri.adcrejection - ampl) < 8.0);
 }
 
@@ -250,7 +250,7 @@ QString cRangeMeasChannel::getOptRange(double rms, QString rngAlias)
         }
     }
 
-    QList<cRangeInfo> riList = m_RangeInfoHash.values();
+    QList<cRangeInfoWithConstantValues> riList = m_RangeInfoHash.values();
     double newAmpl = 1e32;
     int i, p = -1;
 
@@ -269,7 +269,7 @@ QString cRangeMeasChannel::getOptRange(double rms, QString rngAlias)
     const double enterRangeLimit = 0.95;
 
     for (i = 0; i < riList.count(); i++) {
-        const cRangeInfo& ri = riList.at(i);
+        const cRangeInfoWithConstantValues& ri = riList.at(i);
         double newUrvalue = ri.urvalue;
         double ovrRejectionFactor = ri.ovrejection / ri.rejection; // typically 1.25
         // actual range?
@@ -300,7 +300,7 @@ QString cRangeMeasChannel::getOptRange(double rms, QString rngAlias)
 
 QString cRangeMeasChannel::getMaxRange()
 {
-    QList<cRangeInfo> riList = m_RangeInfoHash.values();
+    QList<cRangeInfoWithConstantValues> riList = m_RangeInfoHash.values();
     double newAmpl = -1.0;
     double newUrvalue;
     int i, p = -1;
@@ -331,12 +331,12 @@ QString cRangeMeasChannel::getMaxRange(QString rngAlias)
         }
     }
 
-    QList<cRangeInfo> riList = m_RangeInfoHash.values();
+    QList<cRangeInfoWithConstantValues> riList = m_RangeInfoHash.values();
     double newAmpl = -1.0;
     int i, p = -1;
 
     for (i = 0; i < riList.count(); i++) {
-        const cRangeInfo& ri = riList.at(i);
+        const cRangeInfoWithConstantValues& ri = riList.at(i);
         double newUrvalue = ri.urvalue;
         if (actRngType >=0) {
             if ((newUrvalue > newAmpl) && (ri.type == actRngType)) {
@@ -855,7 +855,7 @@ void cRangeMeasChannel::setPreScaling(double preScaling)
 void cRangeMeasChannel::setRangeListAlias()
 {
     QString s;
-    QList<cRangeInfo> riList = m_RangeInfoHash.values();
+    QList<cRangeInfoWithConstantValues> riList = m_RangeInfoHash.values();
     int riLen;
 
     if ( (riLen = riList.count()) > 1) {// nothing to sort if we only have 1 range
@@ -979,7 +979,7 @@ void cRangeMeasChannel::setupDemoOperation()
     }
     if(isRefSession) {
         for (const auto &refRangeVal : qAsConst(nominalRefRanges)) {
-            cRangeInfo rangeInfo;
+            cRangeInfoWithConstantValues rangeInfo;
             rangeInfo.alias = refRangeVal;
             rangeInfo.alias += m_sUnit;
             if(m_sActRange.isEmpty()) {
@@ -996,7 +996,7 @@ void cRangeMeasChannel::setupDemoOperation()
     }
     else {
         for(auto rangeVal : qAsConst(nominalRanges)) {
-            cRangeInfo rangeInfo;
+            cRangeInfoWithConstantValues rangeInfo;
             QString unitPrefix;
             double rangeValDisplay = rangeVal;
             if(rangeVal < 1) {
@@ -1224,7 +1224,7 @@ void cRangeMeasChannel::rangeQueryLoop()
         emit activationLoop();
     }
     else {
-        QHash<QString, cRangeInfo>::iterator it = m_RangeInfoHashWorking.begin();
+        QHash<QString, cRangeInfoWithConstantValues>::iterator it = m_RangeInfoHashWorking.begin();
         while (it != m_RangeInfoHashWorking.end()) { // we delete all unused ranges
             m_CurrRangeInfo= it.value();
             if (m_CurrRangeInfo.avail) {

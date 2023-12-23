@@ -437,7 +437,7 @@ void cPllMeasChannel::setupDemoOperation()
         nominalRanges = QVector<double>() << 1000.0 << 100.0 << 10.0 << 1.0 << 0.1 << 0.01 << 0.001;
     }
     for(auto rangeVal : qAsConst(nominalRanges)) {
-        cRangeInfo rangeInfo;
+        cRangeInfoWithConstantValues rangeInfo;
         QString unitPrefix;
         double rangeValDisplay = rangeVal;
         if(rangeVal < 1) {
@@ -582,7 +582,7 @@ void cPllMeasChannel::activationDone()
 {
     if(m_demo)
         setupDemoOperation();
-    QHash<QString, cRangeInfo>::iterator it = m_RangeInfoHash.begin();
+    QHash<QString, cRangeInfoWithConstantValues>::iterator it = m_RangeInfoHash.begin();
     while (it != m_RangeInfoHash.end()) // we delete all unused ranges
     {
         ri = it.value();
