@@ -64,7 +64,6 @@ enum lambdamoduleCmds
     freeresourcesource,
     unregisterrangenotifiers,
 
-    readurvalue,
     setfrequencyscales,
     setchannelrangenotifier
 };

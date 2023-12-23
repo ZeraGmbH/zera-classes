@@ -50,7 +50,6 @@ enum power3moduleCmds
     freeresourcesource,
     unregisterrangenotifiers,
 
-    readurvalue,
     setfrequencyscales,
     setchannelrangenotifier
 };
