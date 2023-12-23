@@ -51,7 +51,6 @@ enum Burden1moduleCmds
     freeresourcesource,
     unregisterrangenotifiers,
 
-    readurvalue,
     setfrequencyscales,
     setchannelrangenotifier
 };
