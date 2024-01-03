@@ -19,6 +19,7 @@
 <xsl:include href="templates/chapter-number.xsl"/>
 <xsl:include href="templates/adjustment.xsl"/>
 
+<xsl:param name="zenuxVersion"/>
 <xsl:param name="sessionXml"/>
 <xsl:param name="adjustmentOutput"/>
 
@@ -340,7 +341,7 @@
   <xsl:variable name="SamplingConfigsHeading" select="concat($MeasSystemsChapterNo, '.', $SAMChapterNo, ' ', $SamplingConfigs)"/>
   
   <div class="content">
-    <p>This document was created with operating system version: <b><xsl:value-of select="RELEASE"/></b>.</p>
+    <p>This document was created with operating system version: <b><xsl:value-of select="$zenuxVersion"/></b>.</p>
     <!--Table of contents.-->
     <div class="toc">
       <h1 style="padding-top:0px;">Contents</h1>

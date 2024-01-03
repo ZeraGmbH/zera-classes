@@ -92,7 +92,7 @@ jobs:
       - name: run scpi-doc-generator
         run: |
           cd $HOME/targetbuild/modulemanager/scpi-doc
-          ./scpi-doc-generator
+          ./scpi-doc-generator -z${{ github.event.inputs.version}}
           mv $HOME/targetbuild/modulemanager/scpi-doc/html-docs $HOME/html-docs
 
       - name: Tar scpi-docs
