@@ -15,7 +15,7 @@ void NotificationContainer::addNotification(NotificationPtr notif)
     m_notifList.insert(notif->getId(), notif->getMsg());
     connect(notif.get(), &Notification::removeNotif,
             this, &NotificationContainer::onNotifRemoved);
-    emit notificationAdded();
+    emit notificationAdded(notif->getMsg());
 }
 
 void NotificationContainer::removeNotificationMsg(NotificationPtr notif)
