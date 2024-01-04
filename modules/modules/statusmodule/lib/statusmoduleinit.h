@@ -2,6 +2,7 @@
 #define STATUSMODULEINIT_H
 
 #include "statusmoduleconfigdata.h"
+#include "notificationcontainer.h"
 #include <moduleactivist.h>
 #include <vfmoduleparameter.h>
 #include <dspinterface.h>
@@ -66,6 +67,7 @@ private:
     cStatusModuleConfigData& m_ConfigData;
 
     QHash<quint32, int> m_MsgNrCmdList;
+    NotificationContainer *m_NotifContainer;
 
     Zera::cPCBInterface *m_pPCBInterface;
     Zera::ProxyClient *m_pPCBClient;
@@ -118,6 +120,7 @@ private:
     QString m_sDeviceType;
     QString m_sCPUInfo;
 
+    VfModuleParameter *m_pNotificationAdded;
     VfModuleParameter *m_pPCBServerVersion;
     VfModuleParameter *m_pPCBVersion;
     VfModuleParameter *m_pCtrlVersion;
@@ -169,6 +172,7 @@ private slots:
     void deactivationDone();
 
     void newSerialNumber(QVariant serialNr);
+    void onNotifAdded(QString msg);
 
 };
 

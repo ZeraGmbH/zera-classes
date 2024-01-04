@@ -107,6 +107,8 @@ cStatusModuleInit::cStatusModuleInit(cStatusModule* module, cStatusModuleConfigD
     connect(&m_pcbserverReReadAdjChksumState, &QState::entered, this, &cStatusModuleInit::pcbserverReadAdjChksum);
     connect(&m_pcbserverReReadDoneState, &QState::entered, this, &cStatusModuleInit::setInterfaceComponents);
 
+    m_NotifContainer = NotificationContainer::getInstance();
+    connect(m_NotifContainer, &NotificationContainer::notificationAdded, this, &cStatusModuleInit::onNotifAdded);
 }
 
 
@@ -120,6 +122,13 @@ cStatusModuleInit::~cStatusModuleInit()
 void cStatusModuleInit::generateInterface()
 {
     QString key;
+    m_pNotificationAdded= new VfModuleParameter(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
+                                                key = QString("INF_NotifList"),
+                                                QString("Notification List"),
+                                                QByteArray());
+
+    m_pModule->veinModuleParameterHash[key] = m_pNotificationAdded;
+
     m_pPCBServerVersion = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
                                                    key = QString("INF_PCBServerVersion"),
                                                    QString("PCB-server version"),
@@ -746,6 +755,13 @@ void cStatusModuleInit::newSerialNumber(QVariant serialNr)
 {
     wantedSerialNr = serialNr;
     m_MsgNrCmdList[m_pPCBInterface->writeSerialNr(serialNr.toString())] = STATUSMODINIT::writePCBServerSerialNumber;
+}
+
+void cStatusModuleInit::onNotifAdded(QString msg)
+{
+    QStringList NotifList;
+    NotifList.append(msg);
+    m_pNotificationAdded->setValue(QVariant(NotifList));
 }
 
 }
