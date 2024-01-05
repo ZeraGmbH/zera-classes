@@ -6,6 +6,7 @@
 #include <regexvalidator.h>
 #include <sysinfo.h>
 #include <QFile>
+#include <QJsonDocument>
 
 namespace STATUSMODULE
 {
@@ -757,13 +758,31 @@ void cStatusModuleInit::newSerialNumber(QVariant serialNr)
     m_MsgNrCmdList[m_pPCBInterface->writeSerialNr(serialNr.toString())] = STATUSMODINIT::writePCBServerSerialNumber;
 }
 
+void cStatusModuleInit::updateJsonNotifList()
+{
+    QJsonDocument jsonDoc;
+    jsonDoc.setObject(m_NotifList);
 
+    QByteArray ba;
+    ba = jsonDoc.toJson();
+
+    m_pNotificationAdded->setValue(QVariant(ba));
+}
 
 void cStatusModuleInit::onNotifAdded(int id, QString msg)
 {
+    QString sid = QString::fromStdString(std::to_string(id));
 
+    if(m_NotifList.isEmpty())
+        m_NotifList.insert(sid, msg);
+
+    else {
+        for(int it = 0 ; it < m_NotifList.size(); it ++){
+            QString sit = QString::fromStdString(std::to_string(it));
+            if(m_NotifList.value(sit) != msg)
+                m_NotifList.insert(sid, msg);
+        }
+    }
+    updateJsonNotifList();
 }
-
-
-
 }
