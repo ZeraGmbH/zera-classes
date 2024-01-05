@@ -6,6 +6,7 @@
 #include <regexvalidator.h>
 #include <sysinfo.h>
 #include <QFile>
+#include <intvalidator.h>
 #include <QJsonDocument>
 
 namespace STATUSMODULE
@@ -110,6 +111,7 @@ cStatusModuleInit::cStatusModuleInit(cStatusModule* module, cStatusModuleConfigD
 
     m_NotifContainer = NotificationContainer::getInstance();
     connect(m_NotifContainer, &NotificationContainer::notificationAdded, this, &cStatusModuleInit::onNotifAdded);
+    connect(m_NotifContainer, &NotificationContainer::sigNotifRemoved, this,  &cStatusModuleInit::onNotifRemoved);
 }
 
 
@@ -255,9 +257,11 @@ void cStatusModuleInit::generateInterface()
     m_pAccumulatorSoc = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
                                                key = QString("INF_AccumulatorSoc"),
                                                QString("Accumulator state of charge"),
-                                               QVariant(0));
+                                               QVariant(int(0)));
 
     m_pModule->veinModuleParameterHash[key] = m_pAccumulatorSoc;
+    m_pAccumulatorSoc->setValidator(new cIntValidator());
+
     if (m_ConfigData.m_accumulator)
         m_pAccumulatorSoc->setSCPIInfo(new cSCPIInfo("STATUS", "ACCUSOC", "2", key, "0", ""));
 }
@@ -783,6 +787,12 @@ void cStatusModuleInit::onNotifAdded(int id, QString msg)
                 m_NotifList.insert(sid, msg);
         }
     }
+    updateJsonNotifList();
+}
+void cStatusModuleInit::onNotifRemoved(int id)
+{
+    QString sid = QString::fromStdString(std::to_string(id));
+    m_NotifList.remove(sid);
     updateJsonNotifList();
 }
 }
