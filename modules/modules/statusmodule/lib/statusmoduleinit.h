@@ -68,6 +68,7 @@ private:
 
     QHash<quint32, int> m_MsgNrCmdList;
     NotificationContainer *m_NotifContainer;
+    QJsonObject m_NotifList;
 
     Zera::cPCBInterface *m_pPCBInterface;
     Zera::ProxyClient *m_pPCBClient;
@@ -137,12 +138,13 @@ private:
     VfModuleParameter *m_pAccumulatorStatus;
     VfModuleParameter *m_pAccumulatorSoc;
 
+    QVariant wantedSerialNr;
+
     QString findReleaseNr();
     QString findDeviceType();
     QString findCpuInfo();
     void setupDemoOperation();
-
-    QVariant wantedSerialNr;
+    void updateJsonNotifList();
 
 private slots:
     void setInterfaceComponents();
