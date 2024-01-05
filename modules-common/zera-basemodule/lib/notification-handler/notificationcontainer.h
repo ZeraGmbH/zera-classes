@@ -17,6 +17,7 @@ public:
 
 signals:
     void notificationAdded(int id, QString msg);
+    void sigNotifRemoved(int id);
 
 private slots:
     void onNotifRemoved(int id);

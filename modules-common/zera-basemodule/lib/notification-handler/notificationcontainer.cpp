@@ -31,6 +31,7 @@ int NotificationContainer::NotificationsListSize()
 void NotificationContainer::onNotifRemoved(int id)
 {
     m_notifList.remove(id);
+    emit sigNotifRemoved(id);
 }
 
 NotificationContainer::NotificationContainer()
