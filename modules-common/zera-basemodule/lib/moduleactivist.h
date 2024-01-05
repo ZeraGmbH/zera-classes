@@ -2,6 +2,7 @@
 #define MODULEACTIVIST_H
 
 #include "vfmoduleerrorcomponent.h"
+#include "notificationfactory.h"
 #include <QObject>
 #include <QJsonArray>
 #include <QStateMachine>
@@ -37,6 +38,7 @@ public slots:
     virtual void activate(); // here we query our properties and activate ourself
     virtual void deactivate(); // what do you think ? yes you're right
     virtual void generateInterface() = 0; // here we export our interface (entities)
+    void createNotification(QVariant msg, bool priority);
 protected:
     void notifyActivationError(QVariant value, int dest = globalDest);
     void notifyDeactivationError(QVariant value, int dest = globalDest);
@@ -47,6 +49,7 @@ protected:
     QStateMachine m_activationMachine;
     QStateMachine m_deactivationMachine;
     QHash<int, std::function<void(quint8 reply, QVariant answer)>> m_cmdFinishCallbacks;
+    NotificationFactory *m_notificationFactory;
 };
 
 #endif // MODULEACITIVIST_H
