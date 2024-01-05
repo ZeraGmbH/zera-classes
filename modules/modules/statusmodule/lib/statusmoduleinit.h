@@ -175,6 +175,7 @@ private slots:
 
     void newSerialNumber(QVariant serialNr);
     void onNotifAdded(int id, QString msg);
+    void onNotifRemoved(int id);
 
 };
 
