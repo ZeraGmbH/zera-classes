@@ -521,6 +521,7 @@ void cStatusModuleInit::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVaria
                     if (reply == ack)
                     {
                        m_pAccumulatorSoc->setValue(QVariant(answer.toInt()));
+                       onAccumatorSocChanged(QVariant(answer.toInt()));
                        emit activationContinue();
                     }
                     else
@@ -606,6 +607,13 @@ void cStatusModuleInit::getAccumulatorStatus()
 void cStatusModuleInit::getAccuStateOfCharge()
 {
     m_MsgNrCmdList[m_pPCBInterface->getAccuStateOfCharge()] = STATUSMODINIT::readPCBServerAccumulatorSoc;
+}
+
+void cStatusModuleInit::onAccumatorSocChanged(QVariant value)
+{
+    if(m_ConfigData.m_accumulator && m_pAccumulatorStatus->getValue() == 1 )
+        if(value.toInt() < 10)
+            createNotification("Battery low !\nPlease charge the device before it turns down", true);
 }
 
 void cStatusModuleInit::setInterfaceComponents()
