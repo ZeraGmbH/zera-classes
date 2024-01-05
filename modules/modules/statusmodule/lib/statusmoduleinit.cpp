@@ -757,11 +757,13 @@ void cStatusModuleInit::newSerialNumber(QVariant serialNr)
     m_MsgNrCmdList[m_pPCBInterface->writeSerialNr(serialNr.toString())] = STATUSMODINIT::writePCBServerSerialNumber;
 }
 
-void cStatusModuleInit::onNotifAdded(QString msg)
+
+
+void cStatusModuleInit::onNotifAdded(int id, QString msg)
 {
-    QStringList NotifList;
-    NotifList.append(msg);
-    m_pNotificationAdded->setValue(QVariant(NotifList));
+
 }
+
+
 
 }

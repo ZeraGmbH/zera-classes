@@ -172,7 +172,7 @@ private slots:
     void deactivationDone();
 
     void newSerialNumber(QVariant serialNr);
-    void onNotifAdded(QString msg);
+    void onNotifAdded(int id, QString msg);
 
 };
 

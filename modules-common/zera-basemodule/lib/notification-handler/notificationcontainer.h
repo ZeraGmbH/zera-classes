@@ -16,7 +16,7 @@ public:
     int NotificationsListSize();
 
 signals:
-    void notificationAdded(QString msg);
+    void notificationAdded(int id, QString msg);
 
 private slots:
     void onNotifRemoved(int id);
