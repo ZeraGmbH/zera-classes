@@ -503,6 +503,7 @@ void cStatusModuleInit::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVaria
                    if (reply == ack)
                     {
                       m_pAccumulatorStatus->setValue(QVariant(answer.toInt()));
+                      onAccumulatorStatusChanged(QVariant(answer.toInt()));
                       emit activationContinue();
                     }
                     else
@@ -614,6 +615,19 @@ void cStatusModuleInit::onAccumatorSocChanged(QVariant value)
     if(m_ConfigData.m_accumulator && m_pAccumulatorStatus->getValue() == 1 )
         if(value.toInt() < 10)
             createNotification("Battery low !\nPlease charge the device before it turns down", true);
+}
+
+void cStatusModuleInit::onAccumulatorStatusChanged(QVariant value)
+{
+    if(m_ConfigData.m_accumulator && value.toInt() == 3) {
+        for(int i = 0 ; i < m_NotifList.size(); i ++) {
+            QString key = QString::fromStdString(std::to_string(i));
+            QString text = m_NotifList.value(key).toString();
+            if(text.contains("Battery low")) {
+                removeNotification(key.toInt());
+            }
+        }
+    }
 }
 
 void cStatusModuleInit::setInterfaceComponents()
