@@ -32,7 +32,7 @@ void test_notificationmanager::addOnePriorityNotif()
     notificationCtr->addNotification(notif);
 
     QCOMPARE(notificationCtr->NotificationsListSize(), 1);
-    notificationCtr->removeNotificationMsg(notif);
+    notificationCtr->notifRemoved(notif->getId());
 
     QCOMPARE(notificationCtr->NotificationsListSize(), 0);
 }
@@ -51,7 +51,7 @@ void test_notificationmanager::addOnePriorityOneNonPriorityNotif()
     TimeMachineForTest::getInstance()->processTimers(500);
     QCOMPARE(notificationCtr->NotificationsListSize(), 1);
 
-    notificationCtr->removeNotificationMsg(notif);
+    notificationCtr->notifRemoved(notif->getId());
     QCOMPARE(notificationCtr->NotificationsListSize(), 0);
 }
 
@@ -79,10 +79,10 @@ void test_notificationmanager::addTwoPriorityNotifs()
 
     QCOMPARE(notificationCtr->NotificationsListSize(), 2);
 
-    notificationCtr->removeNotificationMsg(notif);
+    notificationCtr->notifRemoved(notif->getId());
     QCOMPARE(notificationCtr->NotificationsListSize(), 1);
 
-    notificationCtr->removeNotificationMsg(notif2);
+    notificationCtr->notifRemoved(notif2->getId());
     QCOMPARE(notificationCtr->NotificationsListSize(), 0);
 
 }

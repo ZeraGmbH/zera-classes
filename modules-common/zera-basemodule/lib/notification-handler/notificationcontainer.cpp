@@ -14,13 +14,8 @@ void NotificationContainer::addNotification(NotificationPtr notif)
 {
     m_notifList.insert(notif->getId(), notif->getMsg());
     connect(notif.get(), &Notification::removeNotif,
-            this, &NotificationContainer::onNotifRemoved);
+            this, &NotificationContainer::notifRemoved);
     emit notificationAdded(notif->getId(), notif->getMsg());
-}
-
-void NotificationContainer::removeNotificationMsg(NotificationPtr notif)
-{
-    m_notifList.remove(notif->getId());
 }
 
 int NotificationContainer::NotificationsListSize()
@@ -28,7 +23,7 @@ int NotificationContainer::NotificationsListSize()
     return m_notifList.size();
 }
 
-void NotificationContainer::onNotifRemoved(int id)
+void NotificationContainer::notifRemoved(int id)
 {
     m_notifList.remove(id);
     emit sigNotifRemoved(id);

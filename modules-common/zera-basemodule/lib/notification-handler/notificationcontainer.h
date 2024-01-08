@@ -12,15 +12,14 @@ class NotificationContainer : public QObject
 public:
     static NotificationContainer* getInstance();
     void addNotification(NotificationPtr notif);
-    void removeNotificationMsg(NotificationPtr notif);
     int NotificationsListSize();
 
 signals:
     void notificationAdded(int id, QString msg);
     void sigNotifRemoved(int id);
 
-private slots:
-    void onNotifRemoved(int id);
+public slots:
+    void notifRemoved(int id);
 
 private:
     NotificationContainer();
