@@ -128,7 +128,7 @@ void cStatusModuleInit::generateInterface()
     m_pNotificationAdded= new VfModuleParameter(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
                                                 key = QString("INF_NotifList"),
                                                 QString("Notification List"),
-                                                QByteArray());
+                                                QVariant(QString("")));
 
     m_pModule->veinModuleParameterHash[key] = m_pNotificationAdded;
 
@@ -772,13 +772,9 @@ void cStatusModuleInit::newSerialNumber(QVariant serialNr)
 
 void cStatusModuleInit::updateJsonNotifList()
 {
-    QJsonDocument jsonDoc;
-    jsonDoc.setObject(m_NotifList);
-
-    QByteArray ba;
-    ba = jsonDoc.toJson();
-
-    m_pNotificationAdded->setValue(QVariant(ba));
+    QJsonDocument jsonDoc(m_NotifList);
+    QString jsonAsString = QString::fromUtf8(jsonDoc.toJson(QJsonDocument::Compact));
+    m_pNotificationAdded->setValue(jsonAsString);
 }
 
 void cStatusModuleInit::onNotifAdded(int id, QString msg)
