@@ -18,3 +18,8 @@ void NotificationFactory::createNotification(QVariant msg, bool priority)
 
     NotificationContainer::getInstance()->addNotification(notification);
 }
+
+void NotificationFactory::removeNotification(int id)
+{
+    NotificationContainer::getInstance()->notifRemoved(id);
+}
