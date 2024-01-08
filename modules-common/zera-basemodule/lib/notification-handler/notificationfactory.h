@@ -9,6 +9,7 @@ class NotificationFactory
 public:
     NotificationFactory();
     void createNotification(QVariant msg, bool priority);
+    void removeNotification(int id);
 };
 
 #endif // NOTIFICATIONFACTORY_H

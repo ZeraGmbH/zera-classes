@@ -39,6 +39,7 @@ public slots:
     virtual void deactivate(); // what do you think ? yes you're right
     virtual void generateInterface() = 0; // here we export our interface (entities)
     void createNotification(QVariant msg, bool priority);
+    void removeNotification(int id);
 protected:
     void notifyActivationError(QVariant value, int dest = globalDest);
     void notifyDeactivationError(QVariant value, int dest = globalDest);

@@ -15,6 +15,11 @@ void cModuleActivist::createNotification(QVariant msg, bool priority)
     m_notificationFactory->createNotification(msg, priority);
 }
 
+void cModuleActivist::removeNotification(int id)
+{
+    m_notificationFactory->removeNotification(id);
+}
+
 void cModuleActivist::notifyActivationError(QVariant value, int dest)
 {
     emit errMsg(value, dest);
