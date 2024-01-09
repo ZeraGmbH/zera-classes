@@ -53,6 +53,13 @@ const QStringList ModulemanagerConfig::getAvailableSessions()
     return tmpAvailList.toStringList();
 }
 
+const QStringList ModulemanagerConfig::getSessionDisplayStrings()
+{
+    QJsonObject devJson = getDeviceJson();
+    const QVariant tmpAvailList = devJson.value("sessionDisplayStrings").toArray().toVariantList();
+    return tmpAvailList.toStringList();
+}
+
 const QString ModulemanagerConfig::getDefaultSession()
 {
     QJsonObject devJson = getDeviceJson();
