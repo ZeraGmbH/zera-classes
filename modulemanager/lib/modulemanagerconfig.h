@@ -14,6 +14,7 @@ public:
     const QString getDeviceName();
     bool getCustomerDataEnabled();
     const QStringList getAvailableSessions();
+    const QStringList getSessionDisplayStrings();
     const QString getDefaultSession();
     void setDefaultSession(QString session);
     bool containsDeviceName(QString devName);
