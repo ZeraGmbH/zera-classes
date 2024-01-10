@@ -9,7 +9,7 @@ QTEST_MAIN(test_modman_config)
 void test_modman_config::loadDevConfig()
 {
     ModulemanagerConfigTest::enableTest();
-    ModulemanagerConfig::setDemoDevice("mt310s2");
+    ModulemanagerConfig::setDemoDevice("mt310s2", true);
 
     ModulemanagerConfig* mmConfig = ModulemanagerConfig::getInstance();
     QStringList availSessions = mmConfig->getAvailableSessions();

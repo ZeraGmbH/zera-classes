@@ -37,7 +37,7 @@ int main(int argc, char *argv[])
     parser.process(a);
     if(parser.isSet(demo)) {
         QString demoDeviceName = parser.value(demo);
-        ModulemanagerConfig::setDemoDevice(demoDeviceName);
+        ModulemanagerConfig::setDemoDevice(demoDeviceName, true);
     }
     ModulemanagerConfig* mmConfig = ModulemanagerConfig::getInstance();
     QString configFileName = mmConfig->getConfigFileNameFull();

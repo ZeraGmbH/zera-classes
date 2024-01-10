@@ -47,7 +47,7 @@ void test_modman_regression_all_sessions::checkVeinModuleEntityNames(ModuleManag
 
 int test_modman_regression_all_sessions::generateCodeLists(QString device)
 {
-    ModulemanagerConfig::setDemoDevice(device);
+    ModulemanagerConfig::setDemoDevice(device, true);
     ModulemanagerConfig* mmConfig = ModulemanagerConfig::getInstance();
     QStringList sessions = mmConfig->getAvailableSessions();
     LicenseSystemMock licenseSystem;

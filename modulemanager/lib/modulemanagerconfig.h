@@ -8,7 +8,7 @@ class ModulemanagerConfig
 {
 public:
     static ModulemanagerConfig *getInstance();
-    static void setDemoDevice(QString demoDevice);
+    static void setDemoDevice(QString demoDevice, bool useDevSessions);
     static QString getConfigFileNameFull();
     bool isValid();
     const QString getDeviceName();

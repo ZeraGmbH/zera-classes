@@ -18,10 +18,10 @@ ModulemanagerConfig *ModulemanagerConfig::getInstance()
     return m_instance;
 }
 
-void ModulemanagerConfig::setDemoDevice(QString demoDevice)
+void ModulemanagerConfig::setDemoDevice(QString demoDevice, bool useDevSessions)
 {
     m_deviceName = demoDevice;
-    m_configFileName = MODMAN_TEST_SESSION;
+    m_configFileName = useDevSessions ? MODMAN_TEST_SESSION : MODMAN_DEFAULT_SESSION;
 }
 
 QString ModulemanagerConfig::getConfigFileNameFull()
