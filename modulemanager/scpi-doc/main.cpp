@@ -9,7 +9,7 @@
 
 void generateDevIfaceXmls(QString deviceName)
 {
-    ModulemanagerConfig::setDemoDevice(deviceName);
+    ModulemanagerConfig::setDemoDevice(deviceName, false);
     ModulemanagerConfig* mmConfig = ModulemanagerConfig::getInstance();
     QStringList sessions = mmConfig->getAvailableSessions();
     LicenseSystemMock licenseSystem;
