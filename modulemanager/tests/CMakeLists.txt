@@ -69,5 +69,6 @@ SETUP_TESTS(
     test_modman_config
     test_plugin_load
     test_modman_regression_all_sessions
+    test_sessionnamesmappingjson
     )
 
