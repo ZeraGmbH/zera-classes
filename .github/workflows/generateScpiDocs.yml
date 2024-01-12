@@ -94,10 +94,12 @@ jobs:
           cd $HOME/targetbuild/modulemanager/scpi-doc
           ./scpi-doc-generator -z${{ github.event.inputs.version}}
           mv $HOME/targetbuild/modulemanager/scpi-doc/html-docs $HOME/html-docs
+          mv $HOME/targetbuild/modulemanager/scpi-doc/SessionNamesMapping.json $HOME
+          ls $HOME/
 
       - name: Tar scpi-docs
         run: |
-          tar -c -I 'xz -T0' -f $HOME/scpi_docs.tar.xz "$HOME/html-docs"
+          tar -c -I 'xz -T0' -f $HOME/scpi_docs.tar.xz "$HOME/html-docs" "$HOME/SessionNamesMapping.json"
 
       - name: 'Upload scpi_docs artifact'
         uses: actions/upload-artifact@v3
