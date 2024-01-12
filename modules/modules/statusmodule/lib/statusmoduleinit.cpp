@@ -110,7 +110,7 @@ cStatusModuleInit::cStatusModuleInit(cStatusModule* module, cStatusModuleConfigD
     connect(&m_pcbserverReReadDoneState, &QState::entered, this, &cStatusModuleInit::setInterfaceComponents);
 
     m_NotifContainer = NotificationContainer::getInstance();
-    connect(m_NotifContainer, &NotificationContainer::notificationAdded, this, &cStatusModuleInit::onNotifAdded);
+    connect(m_NotifContainer, &NotificationContainer::sigNotificationAdded, this, &cStatusModuleInit::onNotifAdded);
     connect(m_NotifContainer, &NotificationContainer::sigNotifRemoved, this,  &cStatusModuleInit::onNotifRemoved);
 }
 
