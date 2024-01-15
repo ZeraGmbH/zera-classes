@@ -7,6 +7,7 @@
 #include <vfmoduleparameter.h>
 #include <dspinterface.h>
 #include <pcbinterface.h>
+#include <timerperiodicqt.h>
 #include <QFinalState>
 #include <QVariantMap>
 
@@ -122,7 +123,7 @@ private:
     QString m_sDeviceType;
     QString m_sCPUInfo;
 
-    VfModuleParameter *m_pNotificationAdded;
+    VfModuleParameter *m_pExpiringNotifications;
     VfModuleParameter *m_pPCBServerVersion;
     VfModuleParameter *m_pPCBVersion;
     VfModuleParameter *m_pCtrlVersion;
@@ -140,12 +141,12 @@ private:
     VfModuleParameter *m_pAccumulatorSoc;
 
     QVariant wantedSerialNr;
+    TimerTemplateQtPtr m_notifPeriodicTimer;
 
     QString findReleaseNr();
     QString findDeviceType();
     QString findCpuInfo();
     void setupDemoOperation();
-    void updateJsonNotifList();
 
 private slots:
     void setInterfaceComponents();
@@ -179,7 +180,7 @@ private slots:
     void newSerialNumber(QVariant serialNr);
     void onNotifAdded(int id, QString msg);
     void onNotifRemoved(int id);
-
+    void removeFirstNotifFromExpiringNotifList();
 };
 
 }
