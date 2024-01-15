@@ -5,6 +5,7 @@
 #include <errormessages.h>
 #include <regexvalidator.h>
 #include <sysinfo.h>
+#include <timerfactoryqt.h>
 #include <QFile>
 #include <intvalidator.h>
 #include <QJsonDocument>
@@ -125,12 +126,15 @@ cStatusModuleInit::~cStatusModuleInit()
 void cStatusModuleInit::generateInterface()
 {
     QString key;
-    m_pNotificationAdded= new VfModuleParameter(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
-                                                key = QString("INF_NotifList"),
-                                                QString("Notification List"),
-                                                QVariant(QString("")));
+    m_pExpiringNotifications = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
+                                                    key = QString("INF_ExpiringNotifList"),
+                                                    QString("Expiring Notification List"),
+                                                    QVariant(QString("")));
+    m_pModule->veinModuleParameterHash[key] = m_pExpiringNotifications;
 
-    m_pModule->veinModuleParameterHash[key] = m_pNotificationAdded;
+    m_notifPeriodicTimer = TimerFactoryQt::createPeriodic(10000);
+    connect(m_notifPeriodicTimer.get(), &TimerTemplateQt::sigExpired,this, &cStatusModuleInit::removeFirstNotifFromExpiringNotifList);
+    m_notifPeriodicTimer->start();
 
     m_pPCBServerVersion = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
                                                    key = QString("INF_PCBServerVersion"),
@@ -783,11 +787,13 @@ void cStatusModuleInit::newSerialNumber(QVariant serialNr)
     m_MsgNrCmdList[m_pPCBInterface->writeSerialNr(serialNr.toString())] = STATUSMODINIT::writePCBServerSerialNumber;
 }
 
-void cStatusModuleInit::updateJsonNotifList()
+void cStatusModuleInit::removeFirstNotifFromExpiringNotifList()
 {
-    QJsonDocument jsonDoc(m_NotifList);
-    QString jsonAsString = QString::fromUtf8(jsonDoc.toJson(QJsonDocument::Compact));
-    m_pNotificationAdded->setValue(jsonAsString);
+    if(!m_NotifMap.isEmpty()) {
+        auto it = m_NotifMap.begin();
+        m_NotifMap.erase(it);
+    }
+    m_pExpiringNotifications->setValue(QJsonObject::fromVariantMap(m_NotifMap));
 }
 
 void cStatusModuleInit::onNotifAdded(int id, QString msg)
@@ -801,12 +807,13 @@ void cStatusModuleInit::onNotifAdded(int id, QString msg)
         if(m_NotifMap.value(sid) != msg)
             m_NotifMap.insert(sid, msg);
     }
-    updateJsonNotifList();
+    m_pExpiringNotifications->setValue(QJsonObject::fromVariantMap(m_NotifMap));
 }
+
 void cStatusModuleInit::onNotifRemoved(int id)
 {
     QString sid = QString::fromStdString(std::to_string(id));
     m_NotifMap.remove(sid);
-    updateJsonNotifList();
+    m_pExpiringNotifications->setValue(QJsonObject::fromVariantMap(m_NotifMap));
 }
 }
