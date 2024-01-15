@@ -8,6 +8,7 @@
 #include <dspinterface.h>
 #include <pcbinterface.h>
 #include <QFinalState>
+#include <QVariantMap>
 
 namespace STATUSMODULE
 {
@@ -68,7 +69,7 @@ private:
 
     QHash<quint32, int> m_MsgNrCmdList;
     NotificationContainer *m_NotifContainer;
-    QJsonObject m_NotifList;
+    QVariantMap m_NotifMap;
 
     Zera::cPCBInterface *m_pPCBInterface;
     Zera::ProxyClient *m_pPCBClient;
