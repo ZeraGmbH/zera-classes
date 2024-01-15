@@ -619,9 +619,9 @@ void cStatusModuleInit::onAccumatorSocChanged(QVariant value)
 
 void cStatusModuleInit::onAccumulatorStatusChanged(QVariant value)
 {
-    if(m_ConfigData.m_accumulator && !m_NotifList.isEmpty() &&value.toInt() == 3) {
-        foreach (const QString &key, m_NotifList.keys()) {
-            QString text = m_NotifList.value(key).toString();
+    if(m_ConfigData.m_accumulator && !m_NotifMap.isEmpty() &&value.toInt() == 3) {
+        foreach (const QString &key, m_NotifMap.keys()) {
+            QString text = m_NotifMap.value(key).toString();
             if(text.contains("Battery low")) {
                 removeNotification(key.toInt());
             }
@@ -794,22 +794,19 @@ void cStatusModuleInit::onNotifAdded(int id, QString msg)
 {
     QString sid = QString::fromStdString(std::to_string(id));
 
-    if(m_NotifList.isEmpty())
-        m_NotifList.insert(sid, msg);
+    if(m_NotifMap.isEmpty())
+        m_NotifMap.insert(sid, msg);
 
     else {
-        foreach (const QString &key, m_NotifList.keys()) {
-            QString value = m_NotifList.value(key).toString();
-            if(value != msg)
-                m_NotifList.insert(sid, msg);
-        }
+        if(m_NotifMap.value(sid) != msg)
+            m_NotifMap.insert(sid, msg);
     }
     updateJsonNotifList();
 }
 void cStatusModuleInit::onNotifRemoved(int id)
 {
     QString sid = QString::fromStdString(std::to_string(id));
-    m_NotifList.remove(sid);
+    m_NotifMap.remove(sid);
     updateJsonNotifList();
 }
 }
