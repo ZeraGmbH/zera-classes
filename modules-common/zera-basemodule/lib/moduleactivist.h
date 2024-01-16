@@ -38,7 +38,7 @@ public slots:
     virtual void activate(); // here we query our properties and activate ourself
     virtual void deactivate(); // what do you think ? yes you're right
     virtual void generateInterface() = 0; // here we export our interface (entities)
-    void createNotification(QVariant msg, bool priority);
+    void createNotification(QVariant msg);
     void removeNotification(int id);
 protected:
     void notifyActivationError(QVariant value, int dest = globalDest);

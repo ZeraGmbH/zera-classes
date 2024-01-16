@@ -10,9 +10,9 @@ void cModuleActivist::deactivate()
     m_deactivationMachine.start();
 }
 
-void cModuleActivist::createNotification(QVariant msg, bool priority)
+void cModuleActivist::createNotification(QVariant msg)
 {
-    m_notificationFactory->createNotification(msg, priority);
+    m_notificationFactory->createNotification(msg);
 }
 
 void cModuleActivist::removeNotification(int id)

@@ -11,8 +11,6 @@ public:
     Notification(QString msg);
     int getId();
     QString getMsg();
-signals:
-    void removeNotif(int id);
 protected:
     int m_id;
 private:

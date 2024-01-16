@@ -618,7 +618,7 @@ void cStatusModuleInit::onAccumatorSocChanged(QVariant value)
 {
     if(m_ConfigData.m_accumulator && m_pAccumulatorStatus->getValue() == 1 )
         if(value.toInt() < 10)
-            createNotification("Battery low !\nPlease charge the device before it turns down", true);
+            createNotification("Battery low !\nPlease charge the device before it turns down");
 }
 
 void cStatusModuleInit::onAccumulatorStatusChanged(QVariant value)
