@@ -13,13 +13,12 @@ public:
     static NotificationContainer* getInstance();
     void addNotification(NotificationPtr notif);
     int NotificationsListSize();
+    void removeNotification(int id);
 
 signals:
     void sigNotificationAdded(int id, QString msg);
     void sigNotifRemoved(int id);
 
-public slots:
-    void notifRemoved(int id);
 
 private:
     NotificationContainer();

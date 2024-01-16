@@ -16,5 +16,5 @@ void NotificationFactory::createNotification(QVariant msg)
 
 void NotificationFactory::removeNotification(int id)
 {
-    NotificationContainer::getInstance()->notifRemoved(id);
+    NotificationContainer::getInstance()->removeNotification(id);
 }
