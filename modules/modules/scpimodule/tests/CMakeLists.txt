@@ -14,7 +14,6 @@ function(SETUP_QTESTS_MODULE)
             statusmodule-static
             rangemodule-static
             scpimodule-testlib
-            zera-modules-testlib
             zera-modulemanager-testlib
             Zera::xml-compare-testlib
             Zera::zera-timers-testlib
