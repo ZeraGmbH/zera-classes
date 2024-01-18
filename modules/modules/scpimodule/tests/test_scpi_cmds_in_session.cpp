@@ -1,5 +1,7 @@
 #include "test_scpi_cmds_in_session.h"
-#include "modulemanagerfortest.h"
+#include "licensesystemmock.h"
+#include "modulemanagertest.h"
+#include "scpimoduleclientblocked.h"
 #include <timemachineobject.h>
 #include <scpimodule.h>
 #include <scpimodulefortest.h>
@@ -13,290 +15,147 @@
 
 QTEST_MAIN(test_scpi_cmds_in_session)
 
-static int getEntityCount(ModuleManagerForTest *modman)
+void test_scpi_cmds_in_session::initTestCase()
 {
-    VeinStorage::VeinHash* storageHash = modman->getStorageSystem();
-    QList<int> entityList = storageHash->getEntityList();
-    return entityList.count();
+    ModuleManagerTest::enableTest();
+}
+
+void test_scpi_cmds_in_session::cleanup()
+{
+    m_modMan->destroyModulesAndWaitUntilAllShutdown();
+    m_modMan = nullptr;
+    m_modmanFacade = nullptr;
+    m_licenseSystem = nullptr;
 }
 
 void test_scpi_cmds_in_session::initialSession()
-{   // First test on ModuleManagerForTest to know it works as expected
-    ModuleManagerForTest modman;
+{
+    setupServices(":/session-scpi-only.json");
 
-    SCPIMODULE::cSCPIModule scpiModule(1, 9999, modman.getStorageSystem(), true);
-    modman.addModule(&scpiModule, QStringLiteral(CONFIG_SOURCES_SCPIMODULE) + "/" + "demo-scpimodule.xml");
-
-    QCOMPARE(getEntityCount(&modman), 1);
-    VeinStorage::VeinHash* storageHash = modman.getStorageSystem();
+    VeinStorage::VeinHash* storageHash = m_modmanFacade->getStorageSystem();
     QList<int> entityList = storageHash->getEntityList();
-    QList<QString> componentList = storageHash->getEntityComponents(entityList[0]);
-    QCOMPARE(componentList.count(), 6); // EntitiyName / Metadata / PAR_SerialScpiActive / ACT_SerialScpiDeviceFile / ACT_DEV_IFACE / PAR_OptionalScpiQueue
+    QCOMPARE(entityList.count(), 2);
+
+    QList<QString> componentList = storageHash->getEntityComponents(9999);
+    QCOMPARE(componentList.count(), 6); // EntitiyName / Metadata / PAR_SerialScpiActive / ACT_SerialScpiDeviceFile / ACT_DEV_IFACE / PAR_OptionalScpiQueue*/
 }
 
 void test_scpi_cmds_in_session::initialTestClient()
 {
-    ModuleManagerForTest modman;
-    SCPIMODULE::ScpiModuleForTest scpiModule(1, 9999, modman.getStorageSystem(), true);
-    modman.addModule(&scpiModule, QStringLiteral(CONFIG_SOURCES_SCPIMODULE) + "/" + "demo-scpimodule.xml");
-    QCOMPARE(getEntityCount(&modman), 1);
+    setupServices(":/session-scpi-only.json");
 
-    SCPIMODULE::ScpiTestClient client(&scpiModule, *scpiModule.getConfigData(), scpiModule.getScpiInterface());
-    scpiModule.getSCPIServer()->appendClient(&client);
+    ScpiModuleClientBlocked client;
+    QString receive1 = client.sendReceive("*STB?");
+    QString receive2 = client.sendReceive("*STB?");
 
-    QStringList responses;
-    connect(&client, &SCPIMODULE::ScpiTestClient::sigScpiAnswer, &client, [&responses] (QString response) {
-        responses.append(response);
-    });
-
-    client.sendScpiCmds("*STB?");
-    client.sendScpiCmds("*STB?");
-
-    QCOMPARE(responses.count(), 2);
-    QCOMPARE(responses[0], "+0");
-    QCOMPARE(responses[1], "+0");
+    QCOMPARE(receive1, "+0");
+    QCOMPARE(receive2, "+0");
 }
 
 void test_scpi_cmds_in_session::minScpiDevIface()
 {
-    ModuleManagerForTest modman;
-    SCPIMODULE::ScpiModuleForTest scpiModule(1, 9999, modman.getStorageSystem(), true);
-    modman.addModule(&scpiModule, QStringLiteral(CONFIG_SOURCES_SCPIMODULE) + "/" + "demo-scpimodule.xml");
-    QCOMPARE(getEntityCount(&modman), 1);
+    setupServices(":/session-scpi-only.json");
 
-    SCPIMODULE::ScpiTestClient client(&scpiModule, *scpiModule.getConfigData(), scpiModule.getScpiInterface());
-    scpiModule.getSCPIServer()->appendClient(&client);
+    ScpiModuleClientBlocked client;
+    QString receive = client.sendReceive("dev:iface?", false);
 
-    QStringList responses;
-    connect(&client, &SCPIMODULE::ScpiTestClient::sigScpiAnswer, &client, [&responses] (QString response) {
-        responses.append(response);
-    });
-
-    client.sendScpiCmds("dev:iface?");
-    QCOMPARE(responses.count(), 1);
     QFile ifaceBaseXmlFile("://dev-iface-basic.xml");
     QVERIFY(ifaceBaseXmlFile.open(QIODevice::Unbuffered | QIODevice::ReadOnly));
     XmlDocumentCompare compare;
-    qInfo("%s", qPrintable(responses[0]));
-    QVERIFY(compare.compareXml(responses[0], ifaceBaseXmlFile.readAll(), true));
+    qInfo("%s", qPrintable(receive));
+    QVERIFY(compare.compareXml(receive, ifaceBaseXmlFile.readAll(), true));
 }
 
 void test_scpi_cmds_in_session::initialScpiCommandsOnOtherModules()
 {
-    ModuleManagerForTest modman;
-    // !!! Pitfall: modules handled by scpimodule must be added first
-    // Maybe a bit far fetched but: how about adding modulemanager in
-    // zera-classes and use (demo) session files...
-    STATUSMODULE::cStatusModule statusModule(1, 1150, modman.getStorageSystem(), true);
-    modman.addModule(&statusModule, QStringLiteral(CONFIG_SOURCES_STATUSMODULE) + "/" + "demo-statusmodule.xml");
-    SCPIMODULE::ScpiModuleForTest scpiModule(1, 9999, modman.getStorageSystem(), true);
-    modman.addModule(&scpiModule, QStringLiteral(CONFIG_SOURCES_SCPIMODULE) + "/" + "demo-scpimodule.xml");
-    QCOMPARE(getEntityCount(&modman), 2);
+    setupServices(":/session-two-modules.json");
 
-    SCPIMODULE::ScpiTestClient client(&scpiModule, *scpiModule.getConfigData(), scpiModule.getScpiInterface());
-    scpiModule.getSCPIServer()->appendClient(&client);
+    ScpiModuleClientBlocked client;
+    QString receive1 = client.sendReceive("*STB?");
+    QString receive2 = client.sendReceive("STATUS:DEV1:SERIAL?");
+    QString receive3 = client.sendReceive("*STB?");
+    QString receive4 = client.sendReceive("STATUS:DEV1:SERIAL?");
+    QString receive5 = client.sendReceive("*STB?");
 
-    QStringList responses;
-    connect(&client, &SCPIMODULE::ScpiTestClient::sigScpiAnswer, &client, [&responses] (QString response) {
-        responses.append(response);
-    });
-
-    // UUhh more pitfall: SCPI base commands as "*STB?" are fired immediately.
-    // Command on other modules but scpimodule - passing vein - require event loop
-    // feeding.
-    client.sendScpiCmds("*STB?");
-    client.sendScpiCmds("STATUS:DEV1:SERIAL?");
-    TimeMachineObject::feedEventLoop();
-    client.sendScpiCmds("*STB?");
-    client.sendScpiCmds("STATUS:DEV1:SERIAL?");
-    TimeMachineObject::feedEventLoop();
-    client.sendScpiCmds("*STB?");
-
-    QCOMPARE(responses.count(), 5);
-    QCOMPARE(responses[0], "+0");
-    QCOMPARE(responses[1], "123456789");
-    QCOMPARE(responses[2], "+0");
-    QCOMPARE(responses[3], "123456789");
-    QCOMPARE(responses[4], "+0");
+    QCOMPARE(receive1, "+0");
+    QCOMPARE(receive2, "Unknown");
+    QCOMPARE(receive3, "+0");
+    QCOMPARE(receive4, "Unknown");
+    QCOMPARE(receive5, "+0");
 }
 
 void test_scpi_cmds_in_session::multiReadDoubleDeleteCrasher()
 {
     // * double delete fixed by 3766814ec0fae75ad7f18c7f71c34a767675e6e4.
     // * tested by reverting fix -> crashed
-    ModuleManagerForTest modman;
-    STATUSMODULE::cStatusModule statusModule(1, 1150, modman.getStorageSystem(), true);
-    modman.addModule(&statusModule, QStringLiteral(CONFIG_SOURCES_STATUSMODULE) + "/" + "demo-statusmodule.xml");
-    RANGEMODULE::cRangeModule rangeModule(1, 1020, modman.getStorageSystem(), true);
-    modman.addModule(&rangeModule, QStringLiteral(CONFIG_SOURCES_RANGEMODULE) + "/" + "mt310s2-rangemodule.xml");
-    SCPIMODULE::ScpiModuleForTest scpiModule(1, 9999, modman.getStorageSystem(), true);
-    modman.addModule(&scpiModule, QStringLiteral(CONFIG_SOURCES_SCPIMODULE) + "/" + "demo-scpimodule.xml");
-    QCOMPARE(getEntityCount(&modman), 3);
-
-    SCPIMODULE::ScpiTestClient client(&scpiModule, *scpiModule.getConfigData(), scpiModule.getScpiInterface());
-    scpiModule.getSCPIServer()->appendClient(&client);
-
-    QStringList responses;
-    connect(&client, &SCPIMODULE::ScpiTestClient::sigScpiAnswer, &client, [&responses] (QString response) {
-        responses.append(response);
-    });
+    setupServices(":/session-three-modules.json");
 
     // multi read to cause double delete crasher
-    client.sendScpiCmds("CONFIGURATION:RNG1:RNGAUTO?");
-    client.sendScpiCmds("CONFIGURATION:RNG1:GROUPING?");
-    client.sendScpiCmds("SENSE:RNG1:UL1:RANGE?");
-    client.sendScpiCmds("SENSE:RNG1:UL2:RANGE?");
-    client.sendScpiCmds("SENSE:RNG1:UL3:RANGE?");
-    TimeMachineObject::feedEventLoop();
-    QCOMPARE(responses.count(), 5);
-    QCOMPARE(responses[0], "0");
-    QCOMPARE(responses[1], "1");
+    ScpiModuleClientBlocked client;
+    QString receive1 = client.sendReceive("CONFIGURATION:RNG1:RNGAUTO?");
+    QString receive2 = client.sendReceive("CONFIGURATION:RNG1:GROUPING?");
+    client.sendReceive("SENSE:RNG1:UL1:RANGE?");
+    client.sendReceive("SENSE:RNG1:UL2:RANGE?");
+    client.sendReceive("SENSE:RNG1:UL3:RANGE?");
+
+    QCOMPARE(receive1, "0");
+    QCOMPARE(receive2, "1");
 }
 
 void test_scpi_cmds_in_session::devIfaceVeinComponent()
 {
-    ModuleManagerForTest modman;
-    SCPIMODULE::ScpiModuleForTest scpiModule(1, 9999, modman.getStorageSystem(), true);
-    modman.addModule(&scpiModule, QStringLiteral(CONFIG_SOURCES_SCPIMODULE) + "/" + "demo-scpimodule.xml");
-    QCOMPARE(getEntityCount(&modman), 1);
+    setupServices(":/session-scpi-only.json");
 
-    VeinStorage::VeinHash* storageHash = modman.getStorageSystem();
-    QList<int> entityList = storageHash->getEntityList();
-    QList<QString> componentList = storageHash->getEntityComponents(entityList[0]);
+    VeinStorage::VeinHash* storageHash = m_modmanFacade->getStorageSystem();
+    QList<QString> componentList = storageHash->getEntityComponents(9999);
     QVERIFY(componentList.contains("ACT_DEV_IFACE"));
 
-    TimeMachineObject::feedEventLoop(); // for setup SCPI from vein
-
-    SCPIMODULE::ScpiTestClient client(&scpiModule, *scpiModule.getConfigData(), scpiModule.getScpiInterface());
-    scpiModule.getSCPIServer()->appendClient(&client);
-
-    QStringList responses;
-    connect(&client, &SCPIMODULE::ScpiTestClient::sigScpiAnswer, &client, [&responses] (QString response) {
-        responses.append(response);
-    });
-
-    client.sendScpiCmds("dev:iface?");
+    ScpiModuleClientBlocked client;
+    QString receive = client.sendReceive("dev:iface?");
     QString actDevIface = storageHash->getStoredValue(9999, "ACT_DEV_IFACE").toString();
     if(actDevIface.isEmpty()) // we have to make module resilient to this situation
         qFatal("ACT_DEV_IFACE empty - local modulemanager running???");
     XmlDocumentCompare compare;
-    QVERIFY(compare.compareXml(actDevIface, responses[0], true));
+    QVERIFY(compare.compareXml(actDevIface, receive, true));
 }
 
 void test_scpi_cmds_in_session::devIfaceVeinComponentMultipleEntities()
 {
-    ModuleManagerForTest modman;
-    STATUSMODULE::cStatusModule statusModule(1, 1150, modman.getStorageSystem(), true);
-    modman.addModule(&statusModule, QStringLiteral(CONFIG_SOURCES_STATUSMODULE) + "/" + "demo-statusmodule.xml");
-    RANGEMODULE::cRangeModule rangeModule(1, 1020, modman.getStorageSystem(), true);
-    modman.addModule(&rangeModule, QStringLiteral(CONFIG_SOURCES_RANGEMODULE) + "/" + "mt310s2-rangemodule.xml");
-    SCPIMODULE::ScpiModuleForTest scpiModule(1, 9999, modman.getStorageSystem(), true);
-    modman.addModule(&scpiModule, QStringLiteral(CONFIG_SOURCES_SCPIMODULE) + "/" + "demo-scpimodule.xml");
-    QCOMPARE(getEntityCount(&modman), 3);
+    setupServices(":/session-three-modules.json");
 
-    TimeMachineObject::feedEventLoop(); // for setup SCPI from vein
+    ScpiModuleClientBlocked client;
+    QString receive = client.sendReceive("dev:iface?");
 
-    SCPIMODULE::ScpiTestClient client(&scpiModule, *scpiModule.getConfigData(), scpiModule.getScpiInterface());
-    scpiModule.getSCPIServer()->appendClient(&client);
-
-    QStringList responses;
-    connect(&client, &SCPIMODULE::ScpiTestClient::sigScpiAnswer, &client, [&responses] (QString response) {
-        responses.append(response);
-    });
-
-    client.sendScpiCmds("dev:iface?");
-    VeinStorage::VeinHash* storageHash = modman.getStorageSystem();
+    VeinStorage::VeinHash* storageHash = m_modmanFacade->getStorageSystem();
     QVariant xmlDevIface = storageHash->getStoredValue(9999, "ACT_DEV_IFACE");
     XmlDocumentCompare compare;
-    QVERIFY(compare.compareXml(xmlDevIface.toString(), responses[0], true));
+    QVERIFY(compare.compareXml(xmlDevIface.toString(), receive, true));
 }
 
 void test_scpi_cmds_in_session::devIfaceVeinComponentMultipleEntitiesForLongXml()
 {
-    ModuleManagerForTest modman;
-    STATUSMODULE::cStatusModule statusModule(1, 1150, modman.getStorageSystem(), true);
-    modman.addModule(&statusModule, QStringLiteral(CONFIG_SOURCES_STATUSMODULE) + "/" + "demo-statusmodule.xml");
+    setupServices(":/session-many-modules.json");
 
-    std::vector<std::unique_ptr<RANGEMODULE::cRangeModule>> ptrList;
-    for(int i=1; i<=9; i++) { // remember >=10 makes short names ambiguous
-        ptrList.push_back(std::make_unique<RANGEMODULE::cRangeModule>(i, 1019+i, modman.getStorageSystem(), true));
-        modman.addModule(ptrList.back().get(), QStringLiteral(CONFIG_SOURCES_RANGEMODULE) + "/" + "mt310s2-rangemodule.xml");
-    }
-    SCPIMODULE::ScpiModuleForTest scpiModule(1, 9999, modman.getStorageSystem(), true);
-    modman.addModule(&scpiModule, QStringLiteral(CONFIG_SOURCES_SCPIMODULE) + "/" + "demo-scpimodule.xml");
+    ScpiModuleClientBlocked client;
+    QString receive = client.sendReceive("dev:iface?");
 
-    TimeMachineObject::feedEventLoop(); // for setup SCPI from vein
-
-    SCPIMODULE::ScpiTestClient client(&scpiModule, *scpiModule.getConfigData(), scpiModule.getScpiInterface());
-    scpiModule.getSCPIServer()->appendClient(&client);
-
-    QStringList responses;
-    connect(&client, &SCPIMODULE::ScpiTestClient::sigScpiAnswer, &client, [&responses] (QString response) {
-        responses.append(response);
-    });
-
-    client.sendScpiCmds("dev:iface?");
-    VeinStorage::VeinHash* storageHash = modman.getStorageSystem();
+    VeinStorage::VeinHash* storageHash = m_modmanFacade->getStorageSystem();
     QVariant xmlDevIface = storageHash->getStoredValue(9999, "ACT_DEV_IFACE");
     // testing this on target / vf-debugger cutted string of len 67395 characters
     QVERIFY(xmlDevIface.toString().size() >= 67395);
     qInfo("%i", xmlDevIface.toString().size());
     XmlDocumentCompare compare;
-    QVERIFY(compare.compareXml(xmlDevIface.toString(), responses[0], true));
+    QVERIFY(compare.compareXml(xmlDevIface.toString(), receive, true));
 }
 
-/*void test_scpi_cmds_in_session::workWithRangemodule()
+void test_scpi_cmds_in_session::setupServices(QString sessionFileName)
 {
-    ModuleManagerForTest modman;
-    RANGEMODULE::cRangeModule rangeModule(1, 1020, modman.getStorageSystem());
-    modman.addModule(&rangeModule, QStringLiteral(CONFIG_SOURCES_RANGEMODULE) + "/" + "mt310s2-rangemodule.xml");
-    SCPIMODULE::ScpiModuleForTest scpiModule(1, 9999, modman.getStorageSystem());
-    modman.addModule(&scpiModule, QStringLiteral(CONFIG_SOURCES_SCPIMODULE) + "/" + "demo-scpimodule.xml");
-    QCOMPARE(getEntityCount(&modman), 2);
-
-    SCPIMODULE::ScpiTestClient client(&scpiModule, *scpiModule.getConfigData(), scpiModule.getScpiInterface());
-    scpiModule.getSCPIServer()->appendClient(&client);
-
-    QStringList responses;
-    connect(&client, &SCPIMODULE::ScpiTestClient::sigScpiAnswer, &client, [&responses] (QString response) {
-        responses.append(response);
-    });
-
-    // check initial state
-    client.sendScpiCmds("CONFIGURATION:RNG1:RNGAUTO?");
-    client.sendScpiCmds("CONFIGURATION:RNG1:GROUPING?");
-    client.sendScpiCmds("SENSE:RNG1:UL1:RANGE?");
-    client.sendScpiCmds("SENSE:RNG1:UL2:RANGE?");
-    client.sendScpiCmds("SENSE:RNG1:UL3:RANGE?");
-    ModuleManagerForTest::feedEventLoop();
-    QCOMPARE(responses.count(), 5);
-    QCOMPARE(responses[0], "0"); // rngauto
-    QCOMPARE(responses[1], "1"); // grouping
-    QCOMPARE(responses[2], "480V");
-    QCOMPARE(responses[3], "480V");
-    QCOMPARE(responses[4], "480V");
-
-    // change some
-    client.sendScpiCmds("CONFIGURATION:RNG1:GROUPING 0;");
-    client.sendScpiCmds("SENSE:RNG1:UL1:RANGE 240V;");
-    client.sendScpiCmds("SENSE:RNG1:UL3:RANGE 60V;");
-    client.sendScpiCmds("SENSE:RNG1:UL2:RANGE 120V;");
-    ModuleManagerForTest::feedEventLoop();
-
-    // check changes
-    responses.clear();
-    client.sendScpiCmds("CONFIGURATION:RNG1:RNGAUTO?");
-    client.sendScpiCmds("CONFIGURATION:RNG1:GROUPING?");
-    client.sendScpiCmds("SENSE:RNG1:UL1:RANGE?");
-    client.sendScpiCmds("SENSE:RNG1:UL2:RANGE?");
-    client.sendScpiCmds("SENSE:RNG1:UL3:RANGE?");
-    ModuleManagerForTest::feedEventLoop(); // pitfall see initialScpiCommandsOnOtherModules on details
-    client.sendScpiCmds("*STB?");
-    QCOMPARE(responses.count(), 6);
-    QCOMPARE(responses[5], "+0");
-    QCOMPARE(responses[0], "0"); // rngauto
-    QCOMPARE(responses[1], "0"); // grouping
-    QCOMPARE(responses[2], "240V");
-    QCOMPARE(responses[3], "120V");
-    QCOMPARE(responses[4], "60V");
-}*/
+    m_licenseSystem = std::make_unique<LicenseSystemMock>();
+    m_modmanFacade = std::make_unique<ModuleManagerSetupFacade>(m_licenseSystem.get());
+    m_modMan = std::make_unique<ModuleManagerTest>(m_modmanFacade.get(), true);
+    m_modMan->loadAllAvailableModulePlugins();
+    m_modMan->setupConnections();
+    m_modMan->setMockServices("mt310s2");
+    m_modMan->loadTestSession(sessionFileName);
+    TimeMachineObject::feedEventLoop();
+}

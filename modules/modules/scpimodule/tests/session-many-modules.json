@@ -1,0 +1,59 @@
+{
+    "modules" : [
+      {
+        "name" : "statusmodule",
+        "configFile" : "demo-statusmodule.xml",
+        "id": 1150
+      },
+      {
+        "name" : "rangemodule",
+        "configFile" : "mt310s2-rangemodule.xml",
+        "id": 1021
+      },
+      {
+        "name" : "rangemodule",
+        "configFile" : "mt310s2-rangemodule.xml",
+        "id": 1022
+      },
+      {
+        "name" : "rangemodule",
+        "configFile" : "mt310s2-rangemodule.xml",
+        "id": 1023
+      },
+      {
+        "name" : "rangemodule",
+        "configFile" : "mt310s2-rangemodule.xml",
+        "id": 1024
+      },
+      {
+        "name" : "rangemodule",
+        "configFile" : "mt310s2-rangemodule.xml",
+        "id": 1025
+      },
+      {
+        "name" : "rangemodule",
+        "configFile" : "mt310s2-rangemodule.xml",
+        "id": 1026
+      },
+      {
+        "name" : "rangemodule",
+        "configFile" : "mt310s2-rangemodule.xml",
+        "id": 1027
+      },
+      {
+        "name" : "rangemodule",
+        "configFile" : "mt310s2-rangemodule.xml",
+        "id": 1028
+      },
+      {
+        "name" : "rangemodule",
+        "configFile" : "mt310s2-rangemodule.xml",
+        "id": 1029
+      },
+      {
+        "name" : "scpimodule",
+        "configFile" : "demo-scpimodule.xml",
+        "id": 9999
+      }
+    ]
+}

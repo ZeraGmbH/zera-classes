@@ -1,0 +1,19 @@
+{
+    "modules" : [
+      {
+        "name" : "statusmodule",
+        "configFile" : "demo-statusmodule.xml",
+        "id": 1150
+      },
+      {
+        "name" : "rangemodule",
+        "configFile" : "mt310s2-rangemodule.xml",
+        "id": 1020
+      },
+      {
+        "name" : "scpimodule",
+        "configFile" : "demo-scpimodule.xml",
+        "id": 9999
+      }
+    ]
+}
