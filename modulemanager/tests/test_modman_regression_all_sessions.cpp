@@ -11,8 +11,8 @@ QTEST_MAIN(test_modman_regression_all_sessions)
 void test_modman_regression_all_sessions::initTestCase()
 {
     ModuleManagerSetupFacade::registerMetaTypeStreamOperators();
-    ModuleManagerTest::enableTest();
-    ModuleManagerTest::pointToInstalledSessionFiles();
+    ModuleManagerTestFullMockedSevices::enableTest();
+    ModuleManagerTestFullMockedSevices::pointToInstalledSessionFiles();
     ModulemanagerConfigTest::enableTest();
     qputenv("QT_FATAL_CRITICALS", "1");
     qputenv("QT_LOGGING_RULES", "*.debug=false;*.info=false");
@@ -25,7 +25,7 @@ void test_modman_regression_all_sessions::checkScpiPortOpenedProperlyByVeinDevIf
         qFatal("ACT_DEV_IFACE empty - local modulemanager running???");
 }
 
-void test_modman_regression_all_sessions::checkVeinModuleEntityNames(ModuleManagerTest &modMan, ModuleManagerSetupFacade &modManFacade, QString device, QString session)
+void test_modman_regression_all_sessions::checkVeinModuleEntityNames(ModuleManagerTestFullMockedSevices &modMan, ModuleManagerSetupFacade &modManFacade, QString device, QString session)
 {
     QList<ZeraModules::ModuleData *> modules = modMan.getModuleList();
     bool allEntitiesOk = true;
@@ -52,7 +52,7 @@ int test_modman_regression_all_sessions::generateCodeLists(QString device)
     QStringList sessions = mmConfig->getAvailableSessions();
     LicenseSystemMock licenseSystem;
     ModuleManagerSetupFacade modManSetupFacade(&licenseSystem);
-    ModuleManagerTest modMan(&modManSetupFacade, true);
+    ModuleManagerTestFullMockedSevices modMan(&modManSetupFacade, true);
     modMan.loadAllAvailableModulePlugins();
     modMan.setupConnections();
     modMan.setMockServices(device);
@@ -71,7 +71,7 @@ int test_modman_regression_all_sessions::generateCodeLists(QString device)
     return sessions.count();
 }
 
-QStringList test_modman_regression_all_sessions::generateCodeLinesForDeviceSession(QString device, QString session, ModuleManagerTest &modMan)
+QStringList test_modman_regression_all_sessions::generateCodeLinesForDeviceSession(QString device, QString session, ModuleManagerTestFullMockedSevices &modMan)
 {
     QStringList codeLines;
     codeLines.append(QString("// ------ Start auto generated code for %1 ----").arg(session));
@@ -134,7 +134,7 @@ void test_modman_regression_all_sessions::regressionCom5003Ced()
     LicenseSystemMock licenseSystem;
     ModuleManagerSetupFacade modManSetupFacade(&licenseSystem);
 
-    ModuleManagerTest modMan(&modManSetupFacade, true);
+    ModuleManagerTestFullMockedSevices modMan(&modManSetupFacade, true);
     modMan.loadAllAvailableModulePlugins();
     modMan.setupConnections();
     modMan.setMockServices("com5003");
@@ -234,7 +234,7 @@ void test_modman_regression_all_sessions::regressionCom5003Meas()
     LicenseSystemMock licenseSystem;
     ModuleManagerSetupFacade modManSetupFacade(&licenseSystem);
 
-    ModuleManagerTest modMan(&modManSetupFacade, true);
+    ModuleManagerTestFullMockedSevices modMan(&modManSetupFacade, true);
     modMan.loadAllAvailableModulePlugins();
     modMan.setupConnections();
     modMan.setMockServices("com5003");
@@ -346,7 +346,7 @@ void test_modman_regression_all_sessions::regressionCom5003PerPhase()
     LicenseSystemMock licenseSystem;
     ModuleManagerSetupFacade modManSetupFacade(&licenseSystem);
 
-    ModuleManagerTest modMan(&modManSetupFacade, true);
+    ModuleManagerTestFullMockedSevices modMan(&modManSetupFacade, true);
     modMan.loadAllAvailableModulePlugins();
     modMan.setupConnections();
     modMan.setMockServices("com5003");
@@ -462,7 +462,7 @@ void test_modman_regression_all_sessions::regressionCom5003Ref()
     LicenseSystemMock licenseSystem;
     ModuleManagerSetupFacade modManSetupFacade(&licenseSystem);
 
-    ModuleManagerTest modMan(&modManSetupFacade, true);
+    ModuleManagerTestFullMockedSevices modMan(&modManSetupFacade, true);
     modMan.loadAllAvailableModulePlugins();
     modMan.setupConnections();
     modMan.setMockServices("com5003");
@@ -514,7 +514,7 @@ void test_modman_regression_all_sessions::regressionMt310s2Ced()
     LicenseSystemMock licenseSystem;
     ModuleManagerSetupFacade modManSetupFacade(&licenseSystem);
 
-    ModuleManagerTest modMan(&modManSetupFacade, true);
+    ModuleManagerTestFullMockedSevices modMan(&modManSetupFacade, true);
     modMan.loadAllAvailableModulePlugins();
     modMan.setupConnections();
     modMan.setMockServices("mt310s2");
@@ -610,7 +610,7 @@ void test_modman_regression_all_sessions::regressionMt310s2Dc()
     LicenseSystemMock licenseSystem;
     ModuleManagerSetupFacade modManSetupFacade(&licenseSystem);
 
-    ModuleManagerTest modMan(&modManSetupFacade, true);
+    ModuleManagerTestFullMockedSevices modMan(&modManSetupFacade, true);
     modMan.loadAllAvailableModulePlugins();
     modMan.setupConnections();
     modMan.setMockServices("mt310s2");
@@ -714,7 +714,7 @@ void test_modman_regression_all_sessions::regressionMt310s2EmobAc()
     LicenseSystemMock licenseSystem;
     ModuleManagerSetupFacade modManSetupFacade(&licenseSystem);
 
-    ModuleManagerTest modMan(&modManSetupFacade, true);
+    ModuleManagerTestFullMockedSevices modMan(&modManSetupFacade, true);
     modMan.loadAllAvailableModulePlugins();
     modMan.setupConnections();
     modMan.setMockServices("mt310s2");
@@ -814,7 +814,7 @@ void test_modman_regression_all_sessions::regressionMt310s2EmobDc()
     LicenseSystemMock licenseSystem;
     ModuleManagerSetupFacade modManSetupFacade(&licenseSystem);
 
-    ModuleManagerTest modMan(&modManSetupFacade, true);
+    ModuleManagerTestFullMockedSevices modMan(&modManSetupFacade, true);
     modMan.loadAllAvailableModulePlugins();
     modMan.setupConnections();
     modMan.setMockServices("mt310s2");
@@ -902,7 +902,7 @@ void test_modman_regression_all_sessions::regressionMt310s2EmobAcDc()
     LicenseSystemMock licenseSystem;
     ModuleManagerSetupFacade modManSetupFacade(&licenseSystem);
 
-    ModuleManagerTest modMan(&modManSetupFacade, true);
+    ModuleManagerTestFullMockedSevices modMan(&modManSetupFacade, true);
     modMan.loadAllAvailableModulePlugins();
     modMan.setupConnections();
     modMan.setMockServices("mt310s2");
@@ -1006,7 +1006,7 @@ void test_modman_regression_all_sessions::regressionMt310s2Meas()
     LicenseSystemMock licenseSystem;
     ModuleManagerSetupFacade modManSetupFacade(&licenseSystem);
 
-    ModuleManagerTest modMan(&modManSetupFacade, true);
+    ModuleManagerTestFullMockedSevices modMan(&modManSetupFacade, true);
     modMan.loadAllAvailableModulePlugins();
     modMan.setupConnections();
     modMan.setMockServices("mt310s2");

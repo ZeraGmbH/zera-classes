@@ -1,6 +1,6 @@
 #include "test_plugin_load.h"
 #include "modulemanager.h"
-#include "modulemanagertest.h"
+#include "modulemanagertestfullmockedsevices.h"
 #include <timemachineobject.h>
 #include <QTest>
 
@@ -9,8 +9,8 @@ QTEST_MAIN(test_plugin_load)
 void test_plugin_load::initTestCase()
 {
     ModuleManagerSetupFacade::registerMetaTypeStreamOperators();
-    ModuleManagerTest::enableTest();
-    ModuleManagerTest::pointToInstalledSessionFiles();
+    ModuleManagerTestFullMockedSevices::enableTest();
+    ModuleManagerTestFullMockedSevices::pointToInstalledSessionFiles();
     qputenv("QT_FATAL_CRITICALS", "1");
 }
 
@@ -34,7 +34,7 @@ void test_plugin_load::loadModulePluginsInstalled()
 
 void test_plugin_load::loadModulePluginsSources()
 {
-    ModuleManagerTest modMan(nullptr, true);
+    ModuleManagerTestFullMockedSevices modMan(nullptr, true);
 
     bool modulesFound = modMan.loadAllAvailableModulePlugins();
     QVERIFY(modulesFound);
