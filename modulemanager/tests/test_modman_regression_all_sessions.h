@@ -1,7 +1,7 @@
 #ifndef TEST_MODMAN_REGRESSION_ALL_ENTITITIES_H
 #define TEST_MODMAN_REGRESSION_ALL_ENTITITIES_H
 
-#include "modulemanagertest.h"
+#include "modulemanagertestfullmockedsevices.h"
 #include <QObject>
 
 class test_modman_regression_all_sessions : public QObject
@@ -27,9 +27,9 @@ private slots:
 
 private:
     int generateCodeLists(QString device);
-    QStringList generateCodeLinesForDeviceSession(QString device, QString session, ModuleManagerTest &modMan);
+    QStringList generateCodeLinesForDeviceSession(QString device, QString session, ModuleManagerTestFullMockedSevices &modMan);
     void checkScpiPortOpenedProperlyByVeinDevIface(ModuleManagerSetupFacade &modManFacade);
-    void checkVeinModuleEntityNames(ModuleManagerTest &modMan, ModuleManagerSetupFacade &modManFacade, QString device, QString session);
+    void checkVeinModuleEntityNames(ModuleManagerTestFullMockedSevices &modMan, ModuleManagerSetupFacade &modManFacade, QString device, QString session);
 };
 
 #endif // TEST_MODMAN_REGRESSION_ALL_ENTITITIES_H
