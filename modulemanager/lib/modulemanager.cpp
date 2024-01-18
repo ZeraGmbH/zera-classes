@@ -200,25 +200,31 @@ void ModuleManager::destroyModules()
     }
 }
 
+bool ZeraModules::ModuleManager::loadSession(const QString sessionFileNameFull)
+{
+    bool sessionSwitched = false;
+    if(QFile::exists(sessionFileNameFull)) {
+        if(m_moduleStartLock == false) { // do not mess up the state machines
+            sessionSwitched = true;
+            destroyModules();
+            emit sigSessionSwitched(sessionFileNameFull);
+        }
+        else
+            qWarning() << "Cannot switch sessions while session change already is in progress";
+    }
+    else
+        qWarning() << "Session file not found:" << sessionFileNameFull << "Search path:" << m_sessionPath;
+    return sessionSwitched;
+}
+
 void ModuleManager::changeSessionFile(const QString &newSessionFile)
 {
     if(m_sessionFile != newSessionFile) {
         const QString sessionFileNameFull = QDir::cleanPath(QString("%1/%2").arg(m_sessionPath, newSessionFile));
-        if(QFile::exists(sessionFileNameFull)) {
-            if(m_moduleStartLock == false) { // do not mess up the state machines
-                m_sessionFile = newSessionFile;
-                destroyModules();
-                emit sigSessionSwitched(sessionFileNameFull);
-            }
-            else {
-                qWarning() << "Cannot switch sessions while session change already is in progress";
-                Q_ASSERT(false);
-            }
-        }
-        else {
-            qWarning() << "Session file not found:" << sessionFileNameFull << "Search path:" << m_sessionPath;
-            Q_ASSERT(false);
-        }
+        if(loadSession(sessionFileNameFull))
+            m_sessionFile = newSessionFile;
+        else
+            qFatal("loadSession failed!!!");
     }
 }
 

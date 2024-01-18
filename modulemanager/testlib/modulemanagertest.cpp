@@ -23,6 +23,11 @@ void ModuleManagerTest::pointToSourceSessionFiles()
     m_sessionPath = QDir::cleanPath(QString(SESSION_FILES_SOURCE_PATH));
 }
 
+bool ModuleManagerTest::loadTestSession(const QString sessionFileNameFull)
+{
+    return loadSession(sessionFileNameFull);
+}
+
 ModuleManagerTest::ModuleManagerTest(ModuleManagerSetupFacade *setupFacade, bool demo, QObject *parent) :
     ModuleManager(setupFacade, demo, parent)
 {
