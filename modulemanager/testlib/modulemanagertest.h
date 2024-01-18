@@ -10,6 +10,7 @@ public:
     static void enableTest();
     static void pointToInstalledSessionFiles();
     static void pointToSourceSessionFiles();
+    bool loadTestSession(const QString sessionFileNameFull);
     void destroyModulesAndWaitUntilAllShutdown();
     void waitUntilModulesAreReady();
     QList<ZeraModules::ModuleData *> getModuleList();

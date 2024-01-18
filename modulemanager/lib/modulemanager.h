@@ -64,6 +64,8 @@ protected:
     static bool m_runningInTest;
     QList<ModuleData *> m_moduleList;
 
+    bool loadSession(const QString sessionFileNameFull);
+
 private:
     void saveModuleConfig(ModuleData *t_moduleData);
     virtual QStringList getModuleFileNames();
