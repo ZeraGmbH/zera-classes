@@ -1,5 +1,5 @@
 #include "test_scpi_queue.h"
-#include "modulemanagerfortest.h"
+#include "modulemanagertestscpiqueue.h"
 #include <rangemodule.h>
 #include <scpitestclient.h>
 #include <scpiserver.h>
@@ -22,7 +22,7 @@ void disableQueuing(SCPIMODULE::cSCPIInterface* interface)
 
 void test_scpi_queue::sendStandardCmdsQueueDisabledAndEnabled()
 {
-    ModuleManagerForTest modman;
+    ModuleManagerTestScpiQueue modman;
     SCPIMODULE::ScpiModuleForTest scpiModule(1, 9999, modman.getStorageSystem(), true);
     modman.addModule(&scpiModule, QStringLiteral(CONFIG_SOURCES_SCPIMODULE) + "/" + "demo-scpimodule.xml");
 
@@ -50,7 +50,7 @@ void test_scpi_queue::sendStandardCmdsQueueDisabledAndEnabled()
 
 void test_scpi_queue::sendErroneousAndCorrectStandardCmds()
 {
-    ModuleManagerForTest modman;
+    ModuleManagerTestScpiQueue modman;
     SCPIMODULE::ScpiModuleForTest scpiModule(1, 9999, modman.getStorageSystem(), true);
     modman.addModule(&scpiModule, QStringLiteral(CONFIG_SOURCES_SCPIMODULE) + "/" + "demo-scpimodule.xml");
 
@@ -74,7 +74,7 @@ void test_scpi_queue::sendSubSystemAndStandardCommands()
 {
     TimerFactoryQtForTest::enableTest();
 
-    ModuleManagerForTest modman;
+    ModuleManagerTestScpiQueue modman;
     RANGEMODULE::cRangeModule rangeModule(1, 1020, modman.getStorageSystem(), true);
     modman.addModule(&rangeModule, QStringLiteral(CONFIG_SOURCES_RANGEMODULE) + "/" + "mt310s2-rangemodule.xml");
 
@@ -113,7 +113,7 @@ void test_scpi_queue::enableAndDisableQueueWhileExecutingCmds()
 {
     TimerFactoryQtForTest::enableTest();
 
-    ModuleManagerForTest modman;
+    ModuleManagerTestScpiQueue modman;
     RANGEMODULE::cRangeModule rangeModule(1, 1020, modman.getStorageSystem(), true);
     modman.addModule(&rangeModule, QStringLiteral(CONFIG_SOURCES_RANGEMODULE) + "/" + "mt310s2-rangemodule.xml");
 
@@ -146,7 +146,7 @@ void test_scpi_queue::disableAndEnableQueueWhileExecutingCmds()
 {
     TimerFactoryQtForTest::enableTest();
 
-    ModuleManagerForTest modman;
+    ModuleManagerTestScpiQueue modman;
     RANGEMODULE::cRangeModule rangeModule(1, 1020, modman.getStorageSystem(), true);
     modman.addModule(&rangeModule, QStringLiteral(CONFIG_SOURCES_RANGEMODULE) + "/" + "mt310s2-rangemodule.xml");
 

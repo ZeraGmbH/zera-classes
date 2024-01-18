@@ -20,6 +20,9 @@ target_link_libraries(scpimodule-testlib
     PUBLIC
     scpimodule-static
     Zera::zera-timers-testlib
+    Zera::VfStorageHash
+    Zera::zera-timers-testlib
+    zera-basemodule
 )
 
 set_target_properties(scpimodule-testlib PROPERTIES VERSION ${PROJECT_VERSION})

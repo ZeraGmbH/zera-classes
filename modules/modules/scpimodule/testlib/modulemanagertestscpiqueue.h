@@ -1,5 +1,5 @@
-#ifndef MODULEMANAGERFORTEST_H
-#define MODULEMANAGERFORTEST_H
+#ifndef MODULEMANAGERTESTSCPIQUEUE_H
+#define MODULEMANAGERTESTSCPIQUEUE_H
 
 #include "basemodule.h"
 #include <ve_eventhandler.h>
@@ -7,11 +7,11 @@
 #include <QObject>
 #include <QSet>
 
-class ModuleManagerForTest : public QObject
+class ModuleManagerTestScpiQueue : public QObject
 {
     Q_OBJECT
 public:
-    ModuleManagerForTest();
+    ModuleManagerTestScpiQueue();
     void addModule(cBaseModule* module, QString configFileFullPath);
     VeinStorage::VeinHash* getStorageSystem();
 private:
@@ -22,4 +22,4 @@ private:
     QSet<VeinEvent::EventSystem*> m_addedSubsystems;
 };
 
-#endif // MODULEMANAGERFORTEST_H
+#endif // MODULEMANAGERTESTSCPIQUEUE_H

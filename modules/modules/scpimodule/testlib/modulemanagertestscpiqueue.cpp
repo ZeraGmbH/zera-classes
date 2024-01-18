@@ -1,14 +1,14 @@
-#include "modulemanagerfortest.h"
+#include "modulemanagertestscpiqueue.h"
 #include <timemachineobject.h>
 #include <QFile>
 #include <QFileInfo>
 
-ModuleManagerForTest::ModuleManagerForTest()
+ModuleManagerTestScpiQueue::ModuleManagerTestScpiQueue()
 {
     addSystem(&m_storageSystem);
 }
 
-void ModuleManagerForTest::addModule(cBaseModule *module, QString configFileFullPath)
+void ModuleManagerTestScpiQueue::addModule(cBaseModule *module, QString configFileFullPath)
 {
     connect(module, &ZeraModules::VirtualModule::addEventSystem, this, [&] (VeinEvent::EventSystem *eventSystem) {
         addSystem(eventSystem);
@@ -24,12 +24,12 @@ void ModuleManagerForTest::addModule(cBaseModule *module, QString configFileFull
     TimeMachineObject::feedEventLoop();
 }
 
-VeinStorage::VeinHash *ModuleManagerForTest::getStorageSystem()
+VeinStorage::VeinHash *ModuleManagerTestScpiQueue::getStorageSystem()
 {
     return &m_storageSystem;
 }
 
-void ModuleManagerForTest::addSystem(VeinEvent::EventSystem *subsystem)
+void ModuleManagerTestScpiQueue::addSystem(VeinEvent::EventSystem *subsystem)
 {
     if(!m_addedSubsystems.contains(subsystem)) {
         // On startup modules can emit addEventSystem multiple times for some
