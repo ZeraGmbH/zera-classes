@@ -1,0 +1,14 @@
+{
+    "modules" : [
+      {
+        "name" : "statusmodule",
+        "configFile" : "demo-statusmodule.xml",
+        "id": 1150
+      },
+      {
+        "name" : "scpimodule",
+        "configFile" : "demo-scpimodule.xml",
+        "id": 9999
+      }
+    ]
+}

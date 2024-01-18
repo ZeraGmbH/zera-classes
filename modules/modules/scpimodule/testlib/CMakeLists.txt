@@ -19,6 +19,7 @@ target_include_directories(scpimodule-testlib
 target_link_libraries(scpimodule-testlib
     PUBLIC
     scpimodule-static
+    Zera::zera-timers-testlib
 )
 
 set_target_properties(scpimodule-testlib PROPERTIES VERSION ${PROJECT_VERSION})

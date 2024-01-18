@@ -58,11 +58,7 @@ cStatusModuleInit::cStatusModuleInit(cStatusModule* module, cStatusModuleConfigD
     m_activationMachine.addState(&m_pcbserverReadInitialAccumulatorSoc);
     m_activationMachine.addState(&m_pcbserverRegisterCtrlVersionChange);
     m_activationMachine.addState(&m_activationDoneState);
-    if(!m_pModule->m_demo) {
-        m_activationMachine.setInitialState(&m_pcbserverConnectionState);
-    } else {
-        m_activationMachine.setInitialState(&m_activationDoneState);
-    }
+    m_activationMachine.setInitialState(&m_pcbserverConnectionState);
 
     connect(&m_pcbserverConnectionState, &QState::entered, this, &cStatusModuleInit::pcbserverConnect);
     connect(&m_pcbserverReadVersionState, &QState::entered, this, &cStatusModuleInit::pcbserverReadVersion);
@@ -88,11 +84,7 @@ cStatusModuleInit::cStatusModuleInit(cStatusModule* module, cStatusModuleConfigD
 
     m_deactivationMachine.addState(&m_pcbserverUnregisterNotifiersState);
     m_deactivationMachine.addState(&m_deactivationDoneState);
-    if(!m_pModule->m_demo) {
-        m_deactivationMachine.setInitialState(&m_pcbserverUnregisterNotifiersState);
-    } else {
-        m_deactivationMachine.setInitialState(&m_deactivationDoneState);
-    }
+    m_deactivationMachine.setInitialState(&m_pcbserverUnregisterNotifiersState);
 
     connect(&m_pcbserverUnregisterNotifiersState, &QState::entered, this, &cStatusModuleInit::unregisterNotifiers);
     connect(&m_deactivationDoneState, &QState::entered, this, &cStatusModuleInit::deactivationDone);
@@ -729,18 +721,11 @@ void cStatusModuleInit::registerPCBVersionNotifier()
 
 void cStatusModuleInit::activationDone()
 {
-    if(!m_pModule->m_demo) {
-        m_sReleaseNumber = findReleaseNr();
-        m_sDeviceType = findDeviceType();
-        m_sCPUInfo = findCpuInfo();
-    }
-    else {
-        setupDemoOperation();
-    }
+    m_sReleaseNumber = findReleaseNr();
+    m_sDeviceType = findDeviceType();
+    m_sCPUInfo = findCpuInfo();
     setInterfaceComponents();
-    if(!m_pModule->m_demo) {
-        connect(m_pSerialNumber, &VfModuleParameter::sigValueChanged, this, &cStatusModuleInit::newSerialNumber);
-    }
+    connect(m_pSerialNumber, &VfModuleParameter::sigValueChanged, this, &cStatusModuleInit::newSerialNumber);
     m_bActive = true;
     emit activated();
 }
