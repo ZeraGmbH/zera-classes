@@ -20,7 +20,7 @@ namespace STATUSMODINIT
 enum statusmoduleinitCmds
 {
     readPCBServerVersion,
-    readPCBVersion,
+    readPCBInfo,
     readPCBServerCtrlVersion,
     readPCBServerFPGAVersion,
     readPCBServerSerialNumber,
