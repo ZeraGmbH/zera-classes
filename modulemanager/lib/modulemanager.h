@@ -3,8 +3,8 @@
 
 #include "jsonsessionloader.h"
 #include "modulemanagersetupfacade.h"
-#include "mockmt310s2facade.h"
-#include "mockcom5003facade.h"
+#include "demosystemcom5003.h"
+#include "demosystemmt310s2.h"
 #include <virtualmodule.h>
 #include <QVariant>
 #include <QHash>
@@ -83,8 +83,8 @@ private:
     bool m_moduleStartLock;
     QElapsedTimer m_timerAllModulesLoaded;
 
-    std::unique_ptr<MockMt310s2Facade> m_mockMt310s2Facade;
-    std::unique_ptr<MockCom5003Facade> m_mockCom5003Facade;
+    std::unique_ptr<DemoSystemCom5003> m_demoSystemCom5003;
+    std::unique_ptr<DemoSystemMt310s2> m_demoSystemMt310s2;
 };
 }
 
