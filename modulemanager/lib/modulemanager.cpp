@@ -313,13 +313,13 @@ void ModuleManager::onModuleEventSystemAdded(VeinEvent::EventSystem *t_eventSyst
 
 void ModuleManager::setMockServices(QString deviceName)
 {
-    if (m_mockCom5003Facade) delete m_mockCom5003Facade.release();
-    if (m_mockMt310s2Facade) delete m_mockMt310s2Facade.release();
+    if (m_demoSystemCom5003) delete m_demoSystemCom5003.release();
+    if (m_demoSystemMt310s2) delete m_demoSystemMt310s2.release();
 
     if(deviceName == "mt310s2")
-        m_mockMt310s2Facade = std::make_unique<MockMt310s2Facade>();
+        m_demoSystemMt310s2 = std::make_unique<DemoSystemMt310s2>();
     else if(deviceName == "com5003")
-        m_mockCom5003Facade = std::make_unique<MockCom5003Facade>();
+        m_demoSystemCom5003 = std::make_unique<DemoSystemCom5003>();
 }
 
 

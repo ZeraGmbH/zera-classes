@@ -30,8 +30,6 @@ target_link_libraries(zera-modulemanager-lib
     Zera::VfCpp
     Zera::ModmanBase
     Zera::VfCryptoBridge
-    Zera::resman-lib
-    Zera::zera-timers-demolib
     Zera::zenuxservicecommon-demolib
     VeinMeta::VfScript
     VeinMeta::VfLogger
