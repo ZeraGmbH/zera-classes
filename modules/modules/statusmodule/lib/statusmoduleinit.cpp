@@ -365,7 +365,7 @@ void cStatusModuleInit::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVaria
                 }
                 break;
 
-            case STATUSMODINIT::readPCBVersion:
+            case STATUSMODINIT::readPCBInfo:
                 if (reply == ack)
                 {
                     m_sPCBVersion = answer.toString();
@@ -374,7 +374,7 @@ void cStatusModuleInit::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVaria
                 }
                 else
                 {
-                    emit errMsg((tr(readPCBVersionErrMsg)));
+                    emit errMsg((tr(readPCBInfoErrMsg)));
                     emit activationError();
                 }
                 break;
@@ -668,7 +668,7 @@ void cStatusModuleInit::pcbserverReadVersion()
 
 void cStatusModuleInit::pcbReadVersion()
 {
-    m_MsgNrCmdList[m_pPCBInterface->readPCBVersion()] = STATUSMODINIT::readPCBVersion;
+    m_MsgNrCmdList[m_pPCBInterface->readPCBInfo()] = STATUSMODINIT::readPCBInfo;
 }
 
 void cStatusModuleInit::pcbserverReadCtrlVersion()
