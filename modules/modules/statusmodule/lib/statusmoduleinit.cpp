@@ -787,13 +787,21 @@ void cStatusModuleInit::newSerialNumber(QVariant serialNr)
     m_MsgNrCmdList[m_pPCBInterface->writeSerialNr(serialNr.toString())] = STATUSMODINIT::writePCBServerSerialNumber;
 }
 
+void cStatusModuleInit::setNotifList()
+{
+    QJsonObject jsonObj = QJsonObject::fromVariantMap(m_NotifMap);
+    QJsonDocument doc(jsonObj);
+    QString strJson(doc.toJson(QJsonDocument::Compact));
+    m_pExpiringNotifications->setValue(strJson);
+}
+
 void cStatusModuleInit::removeFirstNotifFromExpiringNotifList()
 {
     if(!m_NotifMap.isEmpty()) {
         auto it = m_NotifMap.begin();
         m_NotifMap.erase(it);
     }
-    m_pExpiringNotifications->setValue(QJsonObject::fromVariantMap(m_NotifMap));
+    setNotifList();
 }
 
 void cStatusModuleInit::onNotifAdded(int id, QString msg)
@@ -804,16 +812,17 @@ void cStatusModuleInit::onNotifAdded(int id, QString msg)
         m_NotifMap.insert(sid, msg);
 
     else {
-        if(m_NotifMap.value(sid) != msg)
+        QString text = m_NotifMap.key(msg);
+        if(text.isNull())
             m_NotifMap.insert(sid, msg);
     }
-    m_pExpiringNotifications->setValue(QJsonObject::fromVariantMap(m_NotifMap));
+    setNotifList();
 }
 
 void cStatusModuleInit::onNotifRemoved(int id)
 {
     QString sid = QString::fromStdString(std::to_string(id));
     m_NotifMap.remove(sid);
-    m_pExpiringNotifications->setValue(QJsonObject::fromVariantMap(m_NotifMap));
+    setNotifList();
 }
 }
