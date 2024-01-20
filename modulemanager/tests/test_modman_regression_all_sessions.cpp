@@ -55,7 +55,7 @@ int test_modman_regression_all_sessions::generateCodeLists(QString device)
     ModuleManagerTestFullMockedSevices modMan(&modManSetupFacade, true);
     modMan.loadAllAvailableModulePlugins();
     modMan.setupConnections();
-    modMan.setMockServices(device);
+    modMan.setDemoServices(device);
     for(const auto &session : sessions) {
         modMan.changeSessionFile(session);
         modMan.waitUntilModulesAreReady();
@@ -81,7 +81,7 @@ QStringList test_modman_regression_all_sessions::generateCodeLinesForDeviceSessi
     codeLines.append("ModuleManagerTest modMan(&modManSetupFacade, true);");
     codeLines.append("modMan.loadAllAvailableModulePlugins();");
     codeLines.append("modMan.setupConnections();");
-    codeLines.append("modMan.setMockServices(\"" + device + "\");");
+    codeLines.append("modMan.setDemoServices(\"" + device + "\");");
     codeLines.append("modMan.changeSessionFile(\"" + session + "\");");
     codeLines.append("TimeMachineObject::feedEventLoop();");
     codeLines.append("");
@@ -137,7 +137,7 @@ void test_modman_regression_all_sessions::regressionCom5003Ced()
     ModuleManagerTestFullMockedSevices modMan(&modManSetupFacade, true);
     modMan.loadAllAvailableModulePlugins();
     modMan.setupConnections();
-    modMan.setMockServices("com5003");
+    modMan.setDemoServices("com5003");
     modMan.changeSessionFile("com5003-ced-session.json");
     TimeMachineObject::feedEventLoop();
 
@@ -237,7 +237,7 @@ void test_modman_regression_all_sessions::regressionCom5003Meas()
     ModuleManagerTestFullMockedSevices modMan(&modManSetupFacade, true);
     modMan.loadAllAvailableModulePlugins();
     modMan.setupConnections();
-    modMan.setMockServices("com5003");
+    modMan.setDemoServices("com5003");
     modMan.changeSessionFile("com5003-meas-session.json");
     TimeMachineObject::feedEventLoop();
 
@@ -349,7 +349,7 @@ void test_modman_regression_all_sessions::regressionCom5003PerPhase()
     ModuleManagerTestFullMockedSevices modMan(&modManSetupFacade, true);
     modMan.loadAllAvailableModulePlugins();
     modMan.setupConnections();
-    modMan.setMockServices("com5003");
+    modMan.setDemoServices("com5003");
     modMan.changeSessionFile("com5003-perphase-session.json");
     TimeMachineObject::feedEventLoop();
 
@@ -465,7 +465,7 @@ void test_modman_regression_all_sessions::regressionCom5003Ref()
     ModuleManagerTestFullMockedSevices modMan(&modManSetupFacade, true);
     modMan.loadAllAvailableModulePlugins();
     modMan.setupConnections();
-    modMan.setMockServices("com5003");
+    modMan.setDemoServices("com5003");
     modMan.changeSessionFile("com5003-ref-session.json");
     TimeMachineObject::feedEventLoop();
 
@@ -517,7 +517,7 @@ void test_modman_regression_all_sessions::regressionMt310s2Ced()
     ModuleManagerTestFullMockedSevices modMan(&modManSetupFacade, true);
     modMan.loadAllAvailableModulePlugins();
     modMan.setupConnections();
-    modMan.setMockServices("mt310s2");
+    modMan.setDemoServices("mt310s2");
     modMan.changeSessionFile("mt310s2-ced-session.json");
     TimeMachineObject::feedEventLoop();
 
@@ -613,7 +613,7 @@ void test_modman_regression_all_sessions::regressionMt310s2Dc()
     ModuleManagerTestFullMockedSevices modMan(&modManSetupFacade, true);
     modMan.loadAllAvailableModulePlugins();
     modMan.setupConnections();
-    modMan.setMockServices("mt310s2");
+    modMan.setDemoServices("mt310s2");
     modMan.changeSessionFile("mt310s2-dc-session.json");
     TimeMachineObject::feedEventLoop();
 
@@ -717,7 +717,7 @@ void test_modman_regression_all_sessions::regressionMt310s2EmobAc()
     ModuleManagerTestFullMockedSevices modMan(&modManSetupFacade, true);
     modMan.loadAllAvailableModulePlugins();
     modMan.setupConnections();
-    modMan.setMockServices("mt310s2");
+    modMan.setDemoServices("mt310s2");
     modMan.changeSessionFile("mt310s2-emob-session-ac.json");
     TimeMachineObject::feedEventLoop();
 
@@ -817,7 +817,7 @@ void test_modman_regression_all_sessions::regressionMt310s2EmobDc()
     ModuleManagerTestFullMockedSevices modMan(&modManSetupFacade, true);
     modMan.loadAllAvailableModulePlugins();
     modMan.setupConnections();
-    modMan.setMockServices("mt310s2");
+    modMan.setDemoServices("mt310s2");
     modMan.changeSessionFile("mt310s2-emob-session-dc.json");
     TimeMachineObject::feedEventLoop();
 
@@ -905,7 +905,7 @@ void test_modman_regression_all_sessions::regressionMt310s2EmobAcDc()
     ModuleManagerTestFullMockedSevices modMan(&modManSetupFacade, true);
     modMan.loadAllAvailableModulePlugins();
     modMan.setupConnections();
-    modMan.setMockServices("mt310s2");
+    modMan.setDemoServices("mt310s2");
     modMan.changeSessionFile("mt310s2-emob-session.json");
     TimeMachineObject::feedEventLoop();
 
@@ -1009,7 +1009,7 @@ void test_modman_regression_all_sessions::regressionMt310s2Meas()
     ModuleManagerTestFullMockedSevices modMan(&modManSetupFacade, true);
     modMan.loadAllAvailableModulePlugins();
     modMan.setupConnections();
-    modMan.setMockServices("mt310s2");
+    modMan.setDemoServices("mt310s2");
     modMan.changeSessionFile("mt310s2-meas-session.json");
     TimeMachineObject::feedEventLoop();
 

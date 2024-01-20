@@ -119,7 +119,7 @@ int main(int argc, char *argv[])
 
     ZeraModules::ModuleManager *modMan = new ZeraModules::ModuleManager(&modManSetupFacade, parser.isSet(demo), &a);
     if(parser.isSet(demo))
-        modMan->setMockServices(parser.value(demo));
+        modMan->setDemoServices(parser.value(demo));
 
     bool initQmlSystemOnce = false;
     QObject::connect(qmlSystem, &VeinApiQml::VeinQml::sigStateChanged, [&](VeinApiQml::VeinQml::ConnectionState t_state){

@@ -311,7 +311,7 @@ void ModuleManager::onModuleEventSystemAdded(VeinEvent::EventSystem *t_eventSyst
     m_setupFacade->addSystem(t_eventSystem);
 }
 
-void ModuleManager::setMockServices(QString deviceName)
+void ModuleManager::setDemoServices(QString deviceName)
 {
     if (m_demoSystemCom5003) delete m_demoSystemCom5003.release();
     if (m_demoSystemMt310s2) delete m_demoSystemMt310s2.release();

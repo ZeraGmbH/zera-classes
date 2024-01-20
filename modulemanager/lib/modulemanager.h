@@ -40,7 +40,7 @@ public:
     bool modulesReady();
     void setupConnections();
     void loadDefaultSession();
-    void setMockServices(QString deviceName);
+    void setDemoServices(QString deviceName);
 signals:
     void sigSessionSwitched(const QString &newSessionFile);
     void sigModulesLoaded(const QString &t_sessionPath, const QStringList &t_sessionsAvailable);
