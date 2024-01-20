@@ -24,7 +24,7 @@ set(JSON_CONFIG_LOADER_TEST_FILES
 add_custom_target(json-test-logger ALL
     SOURCES ${JSON_CONFIG_LOADER_TEST_FILES}
     COMMAND ${JSONLINT} ${JSON_CONFIG_LOADER_TEST_FILES}
-    COMMAND ${JSONSCHEMA} -i ${JSON_CONFIG_LOADER_TEST_FILES} ${LOGGER_CONFIGS_SCHEMA} || (echo \"Error: Schema validation failed in '${JSON_CONFIG_LOADER_TEST_FILES}'\" 1>&2$<SEMICOLON> exit 1)
+    COMMAND export PYTHONWARNINGS='ignore' && ${JSONSCHEMA} -i ${JSON_CONFIG_LOADER_TEST_FILES} ${LOGGER_CONFIGS_SCHEMA} || (echo \"Error: Schema validation failed in '${JSON_CONFIG_LOADER_TEST_FILES}'\" 1>&2$<SEMICOLON> exit 1)
     )
 
 set(JSON_SESSION_TEST_FILES
@@ -34,7 +34,7 @@ set(JSON_SESSION_TEST_FILES
 add_custom_target(json-test-session ALL
     SOURCES ${JSON_SESSION_TEST_FILES}
     COMMAND ${JSONLINT} ${JSON_SESSION_TEST_FILES}
-    COMMAND ${JSONSCHEMA} -i ${JSON_SESSION_TEST_FILES} ${SESSION_SCHEMA} || (echo \"Error: Schema validation failed in '${JSON_SESSION_TEST_FILES}'\" 1>&2$<SEMICOLON> exit 1)
+    COMMAND export PYTHONWARNINGS='ignore' && ${JSONSCHEMA} -i ${JSON_SESSION_TEST_FILES} ${SESSION_SCHEMA} || (echo \"Error: Schema validation failed in '${JSON_SESSION_TEST_FILES}'\" 1>&2$<SEMICOLON> exit 1)
     )
 
 add_definitions(-DJSON_TEST_DIR="${CMAKE_CURRENT_SOURCE_DIR}/json-test-files")

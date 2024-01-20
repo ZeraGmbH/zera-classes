@@ -31,7 +31,10 @@ find_package(ZenuxLegacyComponents REQUIRED)
 find_package(ZenuxServices REQUIRED)
 find_package(BlePlayground REQUIRED)
 
+# As long as there is no smart way to get 'check-jsonschema' on all parts
+# of our pipeline, python warnings are hacked away at users of JSONSCHEMA
 find_program (JSONSCHEMA NAMES jsonschema REQUIRED)
+
 # Note 1: In OE we do not (yet) have jsonlint-php so it must be optional
 # Note 2: In case we make COMMAND in target below conditional on JSONLINT,
 #         qt-creator does not display source-capabilities. That's what the
