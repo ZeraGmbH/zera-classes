@@ -78,9 +78,9 @@ void test_scpi_cmds_in_session::initialScpiCommandsOnOtherModules()
     QString receive5 = client.sendReceive("*STB?");
 
     QCOMPARE(receive1, "+0");
-    QCOMPARE(receive2, "Unknown");
+    QCOMPARE(receive2, "Serial number");
     QCOMPARE(receive3, "+0");
-    QCOMPARE(receive4, "Unknown");
+    QCOMPARE(receive4, "Serial number");
     QCOMPARE(receive5, "+0");
 }
 
