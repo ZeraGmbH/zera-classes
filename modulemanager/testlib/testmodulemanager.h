@@ -1,12 +1,12 @@
-#ifndef MODULEMANAGERTESTFULLMOCKEDSEVICES_H
-#define MODULEMANAGERTESTFULLMOCKEDSEVICES_H
+#ifndef TESTMODULEMANAGER_H
+#define TESTMODULEMANAGER_H
 
 #include <modulemanager.h>
 
-class ModuleManagerTestFullMockedSevices : public ZeraModules::ModuleManager
+class TestModuleManager : public ZeraModules::ModuleManager
 {
 public:
-    explicit ModuleManagerTestFullMockedSevices(ModuleManagerSetupFacade *setupFacade, bool demo = false, QObject *parent = nullptr);
+    explicit TestModuleManager(ModuleManagerSetupFacade *setupFacade, bool demo = false, QObject *parent = nullptr);
     static void enableTest();
     static void pointToInstalledSessionFiles();
     static void pointToSourceSessionFiles();
@@ -18,4 +18,4 @@ private:
     virtual QStringList getModuleFileNames() override;
 };
 
-#endif // MODULEMANAGERTESTFULLMOCKEDSEVICES_H
+#endif // TESTMODULEMANAGER_H

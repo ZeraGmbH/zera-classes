@@ -3,7 +3,7 @@
 
 #include "licensesystemmock.h"
 #include "modulemanagersetupfacade.h"
-#include "modulemanagertestfullmockedsevices.h"
+#include "testmodulemanager.h"
 #include <QObject>
 #include <memory>
 
@@ -28,7 +28,7 @@ private:
 
     std::unique_ptr<LicenseSystemMock> m_licenseSystem;
     std::unique_ptr<ModuleManagerSetupFacade> m_modmanFacade;
-    std::unique_ptr<ModuleManagerTestFullMockedSevices> m_modMan;
+    std::unique_ptr<TestModuleManager> m_modMan;
 };
 
 #endif // TEST_SCPI_CMDS_IN_SESSION_H

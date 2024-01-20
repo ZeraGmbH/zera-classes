@@ -1,6 +1,6 @@
 #include "test_scpi_cmds_in_session.h"
 #include "licensesystemmock.h"
-#include "modulemanagertestfullmockedsevices.h"
+#include "testmodulemanager.h"
 #include "scpimoduleclientblocked.h"
 #include <timemachineobject.h>
 #include <scpimodule.h>
@@ -17,7 +17,7 @@ QTEST_MAIN(test_scpi_cmds_in_session)
 
 void test_scpi_cmds_in_session::initTestCase()
 {
-    ModuleManagerTestFullMockedSevices::enableTest();
+    TestModuleManager::enableTest();
 }
 
 void test_scpi_cmds_in_session::cleanup()
@@ -152,7 +152,7 @@ void test_scpi_cmds_in_session::setupServices(QString sessionFileName)
 {
     m_licenseSystem = std::make_unique<LicenseSystemMock>();
     m_modmanFacade = std::make_unique<ModuleManagerSetupFacade>(m_licenseSystem.get());
-    m_modMan = std::make_unique<ModuleManagerTestFullMockedSevices>(m_modmanFacade.get(), true);
+    m_modMan = std::make_unique<TestModuleManager>(m_modmanFacade.get(), true);
     m_modMan->loadAllAvailableModulePlugins();
     m_modMan->setupConnections();
     m_modMan->setDemoServices("mt310s2");
