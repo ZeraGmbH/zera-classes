@@ -1,57 +1,57 @@
-#include "modulemanagertestfullmockedsevices.h"
+#include "testmodulemanager.h"
 #include "modulemanagerconfigtest.h"
 #include "jsonsessionloadertest.h"
 #include <timemachineobject.h>
 #include <QDir>
 
-void ModuleManagerTestFullMockedSevices::enableTest()
+void TestModuleManager::enableTest()
 {
     m_runningInTest = true;
     JsonSessionLoaderTest::enableTests();
     ModulemanagerConfigTest::enableTest();
 }
 
-void ModuleManagerTestFullMockedSevices::pointToInstalledSessionFiles()
+void TestModuleManager::pointToInstalledSessionFiles()
 {
     m_sessionPath = QDir::cleanPath(
                     QString(OE_INSTALL_ROOT) + "/" +
                     QString(MODMAN_SESSION_PATH));
 }
 
-void ModuleManagerTestFullMockedSevices::pointToSourceSessionFiles()
+void TestModuleManager::pointToSourceSessionFiles()
 {
     m_sessionPath = QDir::cleanPath(QString(SESSION_FILES_SOURCE_PATH));
 }
 
-bool ModuleManagerTestFullMockedSevices::loadTestSession(const QString sessionFileNameFull)
+bool TestModuleManager::loadTestSession(const QString sessionFileNameFull)
 {
     return loadSession(sessionFileNameFull);
 }
 
-ModuleManagerTestFullMockedSevices::ModuleManagerTestFullMockedSevices(ModuleManagerSetupFacade *setupFacade, bool demo, QObject *parent) :
+TestModuleManager::TestModuleManager(ModuleManagerSetupFacade *setupFacade, bool demo, QObject *parent) :
     ModuleManager(setupFacade, demo, parent)
 {
 }
 
-void ModuleManagerTestFullMockedSevices::destroyModulesAndWaitUntilAllShutdown()
+void TestModuleManager::destroyModulesAndWaitUntilAllShutdown()
 {
     destroyModules();
     waitUntilModulesAreReady();
 }
 
-void ModuleManagerTestFullMockedSevices::waitUntilModulesAreReady()
+void TestModuleManager::waitUntilModulesAreReady()
 {
     do
         TimeMachineObject::feedEventLoop();
     while(!modulesReady());
 }
 
-QList<ZeraModules::ModuleData *> ModuleManagerTestFullMockedSevices::getModuleList()
+QList<ZeraModules::ModuleData *> TestModuleManager::getModuleList()
 {
     return m_moduleList;
 }
 
-QStringList ModuleManagerTestFullMockedSevices::getModuleFileNames()
+QStringList TestModuleManager::getModuleFileNames()
 {
     QString strBuildPath = MODULE_PLUGIN_BUILD_PATH;
     QStringList buildPaths = strBuildPath.split(" ", Qt::SkipEmptyParts);
