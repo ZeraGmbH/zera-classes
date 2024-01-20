@@ -3,8 +3,7 @@
 
 #include "jsonsessionloader.h"
 #include "modulemanagersetupfacade.h"
-#include "demosystemcom5003.h"
-#include "demosystemmt310s2.h"
+#include "abstractmockallservices.h"
 #include <virtualmodule.h>
 #include <QVariant>
 #include <QHash>
@@ -63,6 +62,7 @@ protected:
     static QString m_sessionPath;
     static bool m_runningInTest;
     QList<ModuleData *> m_moduleList;
+    std::unique_ptr<AbstractMockAllServices> m_mockAllServices;
 
     bool loadSession(const QString sessionFileNameFull);
 
@@ -83,8 +83,6 @@ private:
     bool m_moduleStartLock;
     QElapsedTimer m_timerAllModulesLoaded;
 
-    std::unique_ptr<DemoSystemCom5003> m_demoSystemCom5003;
-    std::unique_ptr<DemoSystemMt310s2> m_demoSystemMt310s2;
 };
 }
 

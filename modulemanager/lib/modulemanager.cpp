@@ -2,6 +2,8 @@
 #include "modulemanagerconfig.h"
 #include "moduledata.h"
 #include "licensesystem.h"
+#include "demoallservicescom5003.h"
+#include "demoallservicesmt310s2.h"
 
 #include <ve_eventsystem.h>
 #include <vsc_scriptsystem.h>
@@ -313,13 +315,13 @@ void ModuleManager::onModuleEventSystemAdded(VeinEvent::EventSystem *t_eventSyst
 
 void ModuleManager::setDemoServices(QString deviceName)
 {
-    if (m_demoSystemCom5003) delete m_demoSystemCom5003.release();
-    if (m_demoSystemMt310s2) delete m_demoSystemMt310s2.release();
+    if (m_mockAllServices)
+        m_mockAllServices = nullptr;
 
     if(deviceName == "mt310s2")
-        m_demoSystemMt310s2 = std::make_unique<DemoSystemMt310s2>();
+        m_mockAllServices = std::make_unique<DemoAllServicesMt310s2>();
     else if(deviceName == "com5003")
-        m_demoSystemCom5003 = std::make_unique<DemoSystemCom5003>();
+        m_mockAllServices = std::make_unique<DemoAllServicesCom5003>();
 }
 
 
