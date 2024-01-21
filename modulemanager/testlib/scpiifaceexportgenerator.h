@@ -2,7 +2,7 @@
 #define SCPIIFACEEXPORTGENERATOR_H
 
 #include "licensesystemmock.h"
-#include "modulemanager.h"
+#include "testmodulemanager.h"
 #include "modulemanagerconfig.h"
 
 class ScpiIfaceExportGenerator
@@ -19,7 +19,7 @@ private:
     LicenseSystemMock m_licenseSystem;
     ModulemanagerConfig *m_modmanConfig;
     ModuleManagerSetupFacade *m_modmanSetupFacade;
-    ZeraModules::ModuleManager *m_modman;
+    TestModuleManager *m_modman;
     QString m_device;
 };
 

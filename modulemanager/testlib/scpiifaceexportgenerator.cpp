@@ -8,7 +8,7 @@ ScpiIfaceExportGenerator::ScpiIfaceExportGenerator()
     ModulemanagerConfig::setDemoDevice("mt310s2", false);
     m_modmanConfig = ModulemanagerConfig::getInstance();
     m_modmanSetupFacade = new ModuleManagerSetupFacade(&m_licenseSystem, m_modmanConfig->isDevMode());
-    m_modman = new ZeraModules::ModuleManager(m_modmanSetupFacade, true);
+    m_modman = new TestModuleManager(m_modmanSetupFacade, true);
     m_modman->loadAllAvailableModulePlugins();
     m_modman->setupConnections();
 }
@@ -25,7 +25,7 @@ void ScpiIfaceExportGenerator::setDevice(QString device)
     if(m_device != device) {
         shutdownModules();
         ModulemanagerConfig::setDemoDevice(device, false);
-        m_modman->setDemoServices(device);
+        m_modman->setTestServices(device);
         m_device = device;
     }
 }

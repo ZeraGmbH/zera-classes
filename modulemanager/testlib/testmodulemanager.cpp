@@ -1,4 +1,6 @@
 #include "testmodulemanager.h"
+#include "testallservicescom5003.h"
+#include "testallservicesmt310s2.h"
 #include "modulemanagerconfigtest.h"
 #include "jsonsessionloadertest.h"
 #include <timemachineobject.h>
@@ -21,6 +23,17 @@ void TestModuleManager::pointToInstalledSessionFiles()
 void TestModuleManager::pointToSourceSessionFiles()
 {
     m_sessionPath = QDir::cleanPath(QString(SESSION_FILES_SOURCE_PATH));
+}
+
+void TestModuleManager::setTestServices(QString deviceName)
+{
+    if (m_mockAllServices)
+        m_mockAllServices = nullptr;
+
+    if(deviceName == "mt310s2")
+        m_mockAllServices = std::make_unique<TestAllServicesMt310s2>();
+    else if(deviceName == "com5003")
+        m_mockAllServices = std::make_unique<TestAllServicesCom5003>();
 }
 
 bool TestModuleManager::loadTestSession(const QString sessionFileNameFull)
