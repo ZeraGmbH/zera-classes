@@ -22,6 +22,7 @@ target_link_libraries(zera-modulemanager-testlib
     PUBLIC
     Qt5::Core
     Zera::zera-timers-testlib
+    Zera::zenuxservicecommon-testlib
     zera-modulemanager-lib
 )
 
