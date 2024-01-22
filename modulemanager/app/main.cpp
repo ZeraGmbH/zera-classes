@@ -6,7 +6,7 @@
 #include "jsonloggercontentloader.h"
 #include "jsonloggercontentsessionloader.h"
 
-#include <QCoreApplication>
+#include <QGuiApplication>
 
 #include <ve_commandevent.h>
 #include <vcmp_componentdata.h>
@@ -27,18 +27,52 @@
 #include <QDebug>
 #include <QCommandLineParser>
 
+
+static QString getDemoDeviceName(int argc, char *argv[])
+{
+    // QCommandLineParser freaked out without application object
+    // so try oldschool
+    QString demoDeviceName;
+    for(int i=0; i<argc; i++) {
+        if(QString(argv[i]).startsWith("-d")) {
+            demoDeviceName = argv[i];
+            demoDeviceName = demoDeviceName.replace("-d", "");
+            demoDeviceName = demoDeviceName.simplified().remove(' ');
+            break;
+        }
+    }
+    return demoDeviceName;
+}
+
+static int exec(bool demo)
+{
+    if(demo)
+        return QGuiApplication::exec();
+    else
+        return QCoreApplication::exec();
+}
+
+static void quit(bool demo)
+{
+    if(demo)
+        QGuiApplication::quit();
+    else
+        QCoreApplication::quit();
+}
+
 int main(int argc, char *argv[])
 {
-    QCoreApplication a(argc, argv);
+    QString demoDeviceName = getDemoDeviceName(argc, argv);
+    bool demoMode = !demoDeviceName.isEmpty();
 
-    QCommandLineParser parser;
-    QCommandLineOption demo("d", "Specify a value after -d", "value");
-    parser.addOption(demo);
-    parser.process(a);
-    if(parser.isSet(demo)) {
-        QString demoDeviceName = parser.value(demo);
+    std::unique_ptr<QCoreApplication> app;
+    if(demoMode) {
+        app = std::make_unique<QGuiApplication>(argc, argv);
         ModulemanagerConfig::setDemoDevice(demoDeviceName, true);
     }
+    else
+        app = std::make_unique<QCoreApplication>(argc, argv);
+
     ModulemanagerConfig* mmConfig = ModulemanagerConfig::getInstance();
     QString configFileName = mmConfig->getConfigFileNameFull();
     qInfo() << "Moduleamanger configuration file:" << configFileName;
@@ -86,22 +120,26 @@ int main(int argc, char *argv[])
         return new VeinLogger::SQLiteDB();
     };
 
-
 #ifdef DEVICE_ARBITRATION
     //priority based arbitration
-    PriorityArbitrationSystem *arbitrationSystem = new PriorityArbitrationSystem(&a);
+    PriorityArbitrationSystem *arbitrationSystem = new PriorityArbitrationSystem(app.get());
     evHandler->setArbitrationSystem(arbitrationSystem);
 #endif
 
     QString licenseUrl = QString("file://%1/license-keys").arg(OPERATOR_HOME);
-    LicenseSystem *licenseSystem = new LicenseSystem({QUrl(licenseUrl)}, &a);
-    ModuleManagerSetupFacade modManSetupFacade(licenseSystem, mmConfig->isDevMode(), &a);
+    LicenseSystem *licenseSystem = new LicenseSystem({QUrl(licenseUrl)}, app.get());
+    ModuleManagerSetupFacade modManSetupFacade(licenseSystem, mmConfig->isDevMode(), app.get());
+
+    ZeraModules::ModuleManager *modMan = new ZeraModules::ModuleManager(&modManSetupFacade, demoMode, app.get());
+    if(demoMode)
+        modMan->setDemoServices(demoDeviceName);
+
     // setup vein modules
-    VeinNet::NetworkSystem *netSystem = new VeinNet::NetworkSystem(&a);
-    VeinNet::TcpSystem *tcpSystem = new VeinNet::TcpSystem(&a);
-    VeinScript::ScriptSystem *scriptSystem = new VeinScript::ScriptSystem(&a);
-    VeinApiQml::VeinQml *qmlSystem = new VeinApiQml::VeinQml(&a);
-    ZeraDBLogger *dataLoggerSystem = new ZeraDBLogger(new VeinLogger::DataSource(modManSetupFacade.getStorageSystem(), &a), sqliteFactory, &a); //takes ownership of DataSource
+    VeinNet::NetworkSystem *netSystem = new VeinNet::NetworkSystem(app.get());
+    VeinNet::TcpSystem *tcpSystem = new VeinNet::TcpSystem(app.get());
+    VeinScript::ScriptSystem *scriptSystem = new VeinScript::ScriptSystem(app.get());
+    VeinApiQml::VeinQml *qmlSystem = new VeinApiQml::VeinQml(app.get());
+    ZeraDBLogger *dataLoggerSystem = new ZeraDBLogger(new VeinLogger::DataSource(modManSetupFacade.getStorageSystem(), app.get()), sqliteFactory, app.get()); //takes ownership of DataSource
     CustomerDataSystem *customerDataSystem = nullptr;
     vfExport::vf_export *exportModule=new vfExport::vf_export();
 
@@ -116,10 +154,6 @@ int main(int argc, char *argv[])
     VeinLogger::QmlLogger::setStaticLogger(dataLoggerSystem);
     VeinLogger::QmlLogger::setJsonEnvironment(MODMAN_CONTENTSET_PATH, std::make_shared<JsonLoggerContentLoader>());
     VeinLogger::QmlLogger::setJsonEnvironment(MODMAN_SESSION_PATH, std::make_shared<JsonLoggerContentSessionLoader>());
-
-    ZeraModules::ModuleManager *modMan = new ZeraModules::ModuleManager(&modManSetupFacade, parser.isSet(demo), &a);
-    if(parser.isSet(demo))
-        modMan->setDemoServices(parser.value(demo));
 
     bool initQmlSystemOnce = false;
     QObject::connect(qmlSystem, &VeinApiQml::VeinQml::sigStateChanged, [&](VeinApiQml::VeinQml::ConnectionState t_state){
@@ -189,7 +223,7 @@ int main(int argc, char *argv[])
             if(licenseSystem->isSystemLicensed(CustomerDataSystem::s_entityName) && !customerDataSystemInitialized)
             {
                 customerDataSystemInitialized = true;
-                customerDataSystem = new CustomerDataSystem(&a);
+                customerDataSystem = new CustomerDataSystem(app.get());
                 QObject::connect(customerDataSystem, &CustomerDataSystem::sigCustomerDataError, errorReportFunction);
                 qDebug() << "CustomerDataSystem is enabled";
                 modManSetupFacade.addSubsystem(customerDataSystem);
@@ -227,17 +261,13 @@ int main(int argc, char *argv[])
     });
 
     bool modulesFound = modMan->loadAllAvailableModulePlugins();
-
-    if(!modulesFound)
-    {
+    if(!modulesFound) {
         qCritical() << "[Zera-Module-Manager] No modules found";
-        a.quit();
+        quit(demoMode);
     }
-    else
-    {
+    else {
         modMan->loadDefaultSession();
         tcpSystem->startServer(12000);
     }
-
-    return a.exec();
+    return exec(demoMode);
 }
