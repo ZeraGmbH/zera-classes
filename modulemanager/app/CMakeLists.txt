@@ -9,6 +9,7 @@ add_executable(zera-modulemanager
 
 target_link_libraries(zera-modulemanager
     PRIVATE
+    Qt5::Gui
     zera-modulemanager-lib
 )
 
