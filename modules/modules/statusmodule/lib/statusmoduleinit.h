@@ -172,7 +172,6 @@ private slots:
     void getSchnubbelStatus();
     void getAccumulatorStatus();
     void getAccuStateOfCharge();
-    void onAccumatorSocChanged(QVariant value);
     void onAccumulatorStatusChanged(QVariant value);
 
     void activationDone();
