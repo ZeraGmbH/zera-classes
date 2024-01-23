@@ -1,5 +1,6 @@
 #include "statusmoduleinit.h"
 #include "statusmodule.h"
+#include "accustatusflags.h"
 #include <reply.h>
 #include <proxy.h>
 #include <errormessages.h>
@@ -526,7 +527,6 @@ void cStatusModuleInit::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVaria
                     if (reply == ack)
                     {
                        m_pAccumulatorSoc->setValue(QVariant(answer.toInt()));
-                       onAccumatorSocChanged(QVariant(answer.toInt()));
                        emit activationContinue();
                     }
                     else
@@ -614,20 +614,19 @@ void cStatusModuleInit::getAccuStateOfCharge()
     m_MsgNrCmdList[m_pPCBInterface->getAccuStateOfCharge()] = STATUSMODINIT::readPCBServerAccumulatorSoc;
 }
 
-void cStatusModuleInit::onAccumatorSocChanged(QVariant value)
-{
-    if(m_ConfigData.m_accumulator && m_pAccumulatorStatus->getValue() == 1 )
-        if(value.toInt() < 10)
-            createNotification("Battery low !\nPlease charge the device before it turns down");
-}
-
 void cStatusModuleInit::onAccumulatorStatusChanged(QVariant value)
 {
-    if(m_ConfigData.m_accumulator && !m_NotifMap.isEmpty() &&value.toInt() == 3) {
-        foreach (const QString &key, m_NotifMap.keys()) {
-            QString text = m_NotifMap.value(key).toString();
-            if(text.contains("Battery low")) {
-                removeNotification(key.toInt());
+    int accuStateMask = value.toInt();
+    if(accuStateMask & (1<<bp_Battery_Present)) {
+        if( accuStateMask & (1<<bp_Battery_Low_SoC_Warning))
+            createNotification("Battery low !\nPlease charge the device before it turns down");
+
+        if(!m_NotifMap.isEmpty() && (accuStateMask & (1<<bp_Battery_is_Charging)) ) {
+            foreach (const QString &key, m_NotifMap.keys()) {
+                QString text = m_NotifMap.value(key).toString();
+                if(text.contains("Battery low")) {
+                    removeNotification(key.toInt());
+                }
             }
         }
     }

@@ -19,5 +19,6 @@ target_include_directories(statusmodule-static
 target_link_libraries(statusmodule-static
     zera-basemodule
     Zera::zera-timers
+    Zera::zenuxservicecommon
 )
 
