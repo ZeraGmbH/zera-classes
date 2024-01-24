@@ -14,7 +14,7 @@ class AdjustmentModuleActivator : public QObject
     Q_OBJECT
 public:
     AdjustmentModuleActivator(QStringList configuredChannels,
-                              AdjustmentModuleCommonPtr activationData, bool demo);
+                              AdjustmentModuleCommonPtr activationData);
     void activate();
     void deactivate();
     void reloadRanges();
@@ -44,7 +44,6 @@ private:
     TaskContainerSequence m_reloadRangesTasks;
 
     AdjustmentModuleCommonPtr m_commonObjects;
-    bool m_demo;
 };
 
 #endif // ADJUSTMENTMODULEACTIVATOR_H

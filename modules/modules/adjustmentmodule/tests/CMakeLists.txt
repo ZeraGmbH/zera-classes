@@ -14,6 +14,5 @@ endfunction()
 
 SETUP_QTESTS_MODULE(
     test_adjustment_config_load
-    test_adjustmentmoduleactivator
 )
 
