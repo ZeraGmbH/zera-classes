@@ -93,9 +93,6 @@ private:
     QStateMachine m_rangeQueryMachine;
     QState m_readRngAliasState;
     QState m_readTypeState;
-    QState m_readUrvalueState;
-    QState m_readRejectionState;
-    QState m_readOVRejectionState;
     QState m_readisAvailState;
     QFinalState m_rangeQueryDoneState;
 
