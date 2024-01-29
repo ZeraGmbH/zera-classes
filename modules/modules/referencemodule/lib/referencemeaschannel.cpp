@@ -79,17 +79,11 @@ cReferenceMeasChannel::cReferenceMeasChannel(cSocket* rmsocket, cSocket* pcbsock
 
     // setting up statemachine for querying the meas channels ranges properties
     m_readRngAliasState.addTransition(this, &cReferenceMeasChannel::activationContinue, &m_readTypeState);
-    m_readTypeState.addTransition(this, &cReferenceMeasChannel::activationContinue, &m_readUrvalueState);
-    m_readUrvalueState.addTransition(this, &cReferenceMeasChannel::activationContinue, &m_readRejectionState);
-    m_readRejectionState.addTransition(this, &cReferenceMeasChannel::activationContinue, &m_readOVRejectionState);
-    m_readOVRejectionState.addTransition(this, &cReferenceMeasChannel::activationContinue, &m_readisAvailState);
+    m_readTypeState.addTransition(this, &cReferenceMeasChannel::activationContinue, &m_readisAvailState);
     m_readisAvailState.addTransition(this, &cReferenceMeasChannel::activationContinue, &m_rangeQueryDoneState);
 
     m_rangeQueryMachine.addState(&m_readRngAliasState);
     m_rangeQueryMachine.addState(&m_readTypeState);
-    m_rangeQueryMachine.addState(&m_readUrvalueState);
-    m_rangeQueryMachine.addState(&m_readRejectionState);
-    m_rangeQueryMachine.addState(&m_readOVRejectionState);
     m_rangeQueryMachine.addState(&m_readisAvailState);
     m_rangeQueryMachine.addState(&m_rangeQueryDoneState);
 
