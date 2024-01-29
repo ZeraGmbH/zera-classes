@@ -21,7 +21,7 @@ cReferenceAdjustment::cReferenceAdjustment(cReferenceModule* module, cReferenceM
         m_ChannelList.append(m_pModule->getMeasChannel(m_pConfigData->m_referenceChannelList.at(i)));
 
     // and then set up our state machines
-    m_set0VRangeState.addTransition(this, SIGNAL(activationContinue()), &m_dspserverConnectState);
+    m_set0VRangeState.addTransition(this, &cReferenceAdjustment::activationContinue, &m_dspserverConnectState);
     m_activationMachine.addState(&m_pcbserverConnectState);
     m_activationMachine.addState(&m_set0VRangeState);
     m_activationMachine.addState(&m_dspserverConnectState);
@@ -32,12 +32,12 @@ cReferenceAdjustment::cReferenceAdjustment(cReferenceModule* module, cReferenceM
     else
         m_activationMachine.setInitialState(&m_pcbserverConnectState);
 
-    connect(&m_pcbserverConnectState, SIGNAL(entered()), SLOT(pcbserverConnect()));
-    connect(&m_set0VRangeState, SIGNAL(entered()), SLOT(set0VRange()));
-    connect(&m_dspserverConnectState, SIGNAL(entered()), SLOT(dspserverConnect()));
-    connect(&m_activationDoneState, SIGNAL(entered()), SLOT(activationDone()));
+    connect(&m_pcbserverConnectState, &QState::entered, this, &cReferenceAdjustment::pcbserverConnect);
+    connect(&m_set0VRangeState, &QState::entered, this, &cReferenceAdjustment::set0VRange);
+    connect(&m_dspserverConnectState, &QState::entered, this, &cReferenceAdjustment::dspserverConnect);
+    connect(&m_activationDoneState, &QState::entered, this, &cReferenceAdjustment::activationDone);
 
-    m_deactivationInitState.addTransition(this, SIGNAL(deactivationContinue()), &m_deactivationDoneState);
+    m_deactivationInitState.addTransition(this, &cReferenceAdjustment::deactivationContinue, &m_deactivationDoneState);
     m_deactivationMachine.addState(&m_deactivationInitState);
     m_deactivationMachine.addState(&m_deactivationDoneState);
 
@@ -46,13 +46,13 @@ cReferenceAdjustment::cReferenceAdjustment(cReferenceModule* module, cReferenceM
     else
         m_deactivationMachine.setInitialState(&m_deactivationInitState);
 
-    connect(&m_deactivationInitState, SIGNAL(entered()), SLOT(deactivationInit()));
-    connect(&m_deactivationDoneState, SIGNAL(entered()), SLOT(deactivationDone()));
+    connect(&m_deactivationInitState, &QState::entered, this, &cReferenceAdjustment::deactivationInit);
+    connect(&m_deactivationDoneState, &QState::entered, this, &cReferenceAdjustment::deactivationDone);
 
-    m_readGainCorrState.addTransition(this, SIGNAL(adjustContinue()), &m_readOffset2CorrState);
-    m_readOffset2CorrState.addTransition(this, SIGNAL(adjustContinue()), &m_writeOffsetAdjustmentState);
-    m_writeOffsetAdjustmentState.addTransition(this, SIGNAL(adjustContinue()), &m_set10VRangeState);
-    m_set10VRangeState.addTransition(this, SIGNAL(adjustContinue()), &m_referenceAdjustDoneState);
+    m_readGainCorrState.addTransition(this, &cReferenceAdjustment::adjustContinue, &m_readOffset2CorrState);
+    m_readOffset2CorrState.addTransition(this, &cReferenceAdjustment::adjustContinue, &m_writeOffsetAdjustmentState);
+    m_writeOffsetAdjustmentState.addTransition(this, &cReferenceAdjustment::adjustContinue, &m_set10VRangeState);
+    m_set10VRangeState.addTransition(this, &cReferenceAdjustment::adjustContinue, &m_referenceAdjustDoneState);
     m_referenceAdjustMachine.addState(&m_readGainCorrState);
     m_referenceAdjustMachine.addState(&m_readOffset2CorrState);
     m_referenceAdjustMachine.addState(&m_writeOffsetAdjustmentState);
@@ -64,11 +64,11 @@ cReferenceAdjustment::cReferenceAdjustment(cReferenceModule* module, cReferenceM
     else
         m_referenceAdjustMachine.setInitialState(&m_readGainCorrState);
 
-    connect(&m_readGainCorrState, SIGNAL(entered()), SLOT(readGainCorr()));
-    connect(&m_readOffset2CorrState, SIGNAL(entered()), SLOT(readOffset2Corr()));
-    connect(&m_writeOffsetAdjustmentState, SIGNAL(entered()), SLOT(writeOffsetAdjustment()));
-    connect(&m_set10VRangeState, SIGNAL(entered()), SLOT(set10VRange()));
-    connect(&m_referenceAdjustDoneState, SIGNAL(entered()), SLOT(referenceAdjustDone()));
+    connect(&m_readGainCorrState, &QState::entered, this, &cReferenceAdjustment::readGainCorr);
+    connect(&m_readOffset2CorrState, &QState::entered, this, &cReferenceAdjustment::readOffset2Corr);
+    connect(&m_writeOffsetAdjustmentState, &QState::entered, this, &cReferenceAdjustment::writeOffsetAdjustment);
+    connect(&m_set10VRangeState, &QState::entered, this, &cReferenceAdjustment::set10VRange);
+    connect(&m_referenceAdjustDoneState, &QState::entered, this, &cReferenceAdjustment::referenceAdjustDone);
 }
 
 
@@ -106,10 +106,10 @@ void cReferenceAdjustment::pcbserverConnect()
 {
     cSocket sock = m_pConfigData->m_PCBServerSocket;
     m_pPCBClient = Zera::Proxy::getInstance()->getConnection(sock.m_sIP, sock.m_nPort);
-    m_pcbserverConnectState.addTransition(m_pPCBClient, SIGNAL(connected()), &m_set0VRangeState);
+    m_pcbserverConnectState.addTransition(m_pPCBClient, &Zera::ProxyClient::connected, &m_set0VRangeState);
 
     m_pPCBInterface->setClient(m_pPCBClient);
-    connect(m_pPCBInterface, SIGNAL(serverAnswer(quint32, quint8, QVariant)), this, SLOT(catchInterfaceAnswer(quint32, quint8, QVariant)));
+    connect(m_pPCBInterface, &Zera::cPCBInterface::serverAnswer, this, &cReferenceAdjustment::catchInterfaceAnswer);
     Zera::Proxy::getInstance()->startConnection(m_pPCBClient);
 }
 
@@ -130,8 +130,8 @@ void cReferenceAdjustment::dspserverConnect()
     cSocket sock = m_pConfigData->m_DSPServerSocket;
     m_pDspClient = Zera::Proxy::getInstance()->getConnection(sock.m_sIP, sock.m_nPort);
     m_pDSPInterFace->setClient(m_pDspClient);
-    m_dspserverConnectState.addTransition(m_pDspClient, SIGNAL(connected()), &m_activationDoneState);
-    connect(m_pDSPInterFace, SIGNAL(serverAnswer(quint32, quint8, QVariant)), this, SLOT(catchInterfaceAnswer(quint32, quint8, QVariant)));
+    m_dspserverConnectState.addTransition(m_pDspClient, &Zera::ProxyClient::connected, &m_activationDoneState);
+    connect(m_pDSPInterFace, &Zera::cDSPInterface::serverAnswer, this, &cReferenceAdjustment::catchInterfaceAnswer);
     Zera::Proxy::getInstance()->startConnection(m_pDspClient);
 }
 

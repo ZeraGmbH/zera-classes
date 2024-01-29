@@ -13,8 +13,8 @@ static const char* defaultXSDFile = "://referencemodule.xsd";
 cReferenceModuleConfiguration::cReferenceModuleConfiguration()
 {
     m_pReferenceModulConfigData = 0;
-    connect(m_pXMLReader, SIGNAL(valueChanged(const QString&)), this, SLOT(configXMLInfo(const QString&)));
-    connect(m_pXMLReader, SIGNAL(finishedParsingXML(bool)), this, SLOT(completeConfiguration(bool)));
+    connect(m_pXMLReader, &Zera::XMLConfig::cReader::valueChanged, this, &cReferenceModuleConfiguration::configXMLInfo);
+    connect(m_pXMLReader, &Zera::XMLConfig::cReader::finishedParsingXML, this, &cReferenceModuleConfiguration::completeConfiguration);
 }
 
 

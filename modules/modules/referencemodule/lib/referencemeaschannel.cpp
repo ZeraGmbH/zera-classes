@@ -14,20 +14,20 @@ cReferenceMeasChannel::cReferenceMeasChannel(cSocket* rmsocket, cSocket* pcbsock
 
     // setting up statemachine for "activating" reference meas channel
     // m_rmConnectState.addTransition is done in rmConnect
-    m_IdentifyState.addTransition(this, SIGNAL(activationContinue()), &m_readResourceTypesState);
-    m_readResourceTypesState.addTransition(this, SIGNAL(activationContinue()), &m_readResourceState);
-    m_readResourceState.addTransition(this, SIGNAL(activationContinue()), &m_readResourceInfoState);
-    m_readResourceInfoState.addTransition(this, SIGNAL(activationContinue()), &m_pcbConnectionState);
+    m_IdentifyState.addTransition(this, &cReferenceMeasChannel::activationContinue, &m_readResourceTypesState);
+    m_readResourceTypesState.addTransition(this, &cReferenceMeasChannel::activationContinue, &m_readResourceState);
+    m_readResourceState.addTransition(this, &cReferenceMeasChannel::activationContinue, &m_readResourceInfoState);
+    m_readResourceInfoState.addTransition(this, &cReferenceMeasChannel::activationContinue, &m_pcbConnectionState);
     // m_pcbConnectionState.addTransition is done in pcbConnection
-    m_readDspChannelState.addTransition(this, SIGNAL(activationContinue()), &m_readChnAliasState);
-    m_readChnAliasState.addTransition(this, SIGNAL(activationContinue()), &m_readSampleRateState);
-    m_readSampleRateState.addTransition(this, SIGNAL(activationContinue()), &m_readUnitState);
-    m_readUnitState.addTransition(this, SIGNAL(activationContinue()), &m_readRangelistState);
-    m_readRangelistState.addTransition(this, SIGNAL(activationContinue()), &m_readRangeProperties1State);
-    m_readRangeProperties1State.addTransition(this, SIGNAL(activationContinue()), &m_readRangeProperties2State);
-    m_readRangeProperties2State.addTransition(&m_rangeQueryMachine, SIGNAL(finished()), &m_readRangeProperties3State);
-    m_readRangeProperties3State.addTransition(this, SIGNAL(activationLoop()), &m_readRangeProperties1State);
-    m_readRangeProperties3State.addTransition(this, SIGNAL(activationContinue()), &m_activationDoneState);
+    m_readDspChannelState.addTransition(this, &cReferenceMeasChannel::activationContinue, &m_readChnAliasState);
+    m_readChnAliasState.addTransition(this, &cReferenceMeasChannel::activationContinue, &m_readSampleRateState);
+    m_readSampleRateState.addTransition(this, &cReferenceMeasChannel::activationContinue, &m_readUnitState);
+    m_readUnitState.addTransition(this, &cReferenceMeasChannel::activationContinue, &m_readRangelistState);
+    m_readRangelistState.addTransition(this, &cReferenceMeasChannel::activationContinue, &m_readRangeProperties1State);
+    m_readRangeProperties1State.addTransition(this, &cReferenceMeasChannel::activationContinue, &m_readRangeProperties2State);
+    m_readRangeProperties2State.addTransition(&m_rangeQueryMachine, &QStateMachine::finished, &m_readRangeProperties3State);
+    m_readRangeProperties3State.addTransition(this, &cReferenceMeasChannel::activationLoop, &m_readRangeProperties1State);
+    m_readRangeProperties3State.addTransition(this, &cReferenceMeasChannel::activationContinue, &m_activationDoneState);
     m_activationMachine.addState(&m_rmConnectState);
     m_activationMachine.addState(&m_IdentifyState);
     m_activationMachine.addState(&m_readResourceTypesState);
@@ -49,23 +49,23 @@ cReferenceMeasChannel::cReferenceMeasChannel(cSocket* rmsocket, cSocket* pcbsock
     else
         m_activationMachine.setInitialState(&m_rmConnectState);
 
-    connect(&m_rmConnectState, SIGNAL(entered()), SLOT(rmConnect()));
-    connect(&m_IdentifyState, SIGNAL(entered()), SLOT(sendRMIdent()));
-    connect(&m_readResourceTypesState, SIGNAL(entered()), SLOT(readResourceTypes()));
-    connect(&m_readResourceState, SIGNAL(entered()), SLOT(readResource()));
-    connect(&m_readResourceInfoState, SIGNAL(entered()), SLOT(readResourceInfo()));
-    connect(&m_pcbConnectionState, SIGNAL(entered()), SLOT(pcbConnection()));
-    connect(&m_readDspChannelState, SIGNAL(entered()), SLOT(readDspChannel()));
-    connect(&m_readChnAliasState, SIGNAL(entered()), SLOT(readChnAlias()));
-    connect(&m_readSampleRateState, SIGNAL(entered()), SLOT(readSampleRate()));
-    connect(&m_readUnitState, SIGNAL(entered()), SLOT(readUnit()));
-    connect(&m_readRangelistState, SIGNAL(entered()), SLOT(readRangelist()));
-    connect(&m_readRangeProperties1State, SIGNAL(entered()), SLOT(readRangeProperties1()));
-    connect(&m_readRangeProperties3State, SIGNAL(entered()), SLOT(readRangeProperties3()));
-    connect(&m_activationDoneState, SIGNAL(entered()), SLOT(activationDone()));
+    connect(&m_rmConnectState, &QState::entered, this, &cReferenceMeasChannel::rmConnect);
+    connect(&m_IdentifyState, &QState::entered, this, &cReferenceMeasChannel::sendRMIdent);
+    connect(&m_readResourceTypesState, &QState::entered, this, &cReferenceMeasChannel::readResourceTypes);
+    connect(&m_readResourceState, &QState::entered, this, &cReferenceMeasChannel::readResource);
+    connect(&m_readResourceInfoState, &QState::entered, this, &cReferenceMeasChannel::readResourceInfo);
+    connect(&m_pcbConnectionState, &QState::entered, this, &cReferenceMeasChannel::pcbConnection);
+    connect(&m_readDspChannelState, &QState::entered, this, &cReferenceMeasChannel::readDspChannel);
+    connect(&m_readChnAliasState, &QState::entered, this, &cReferenceMeasChannel::readChnAlias);
+    connect(&m_readSampleRateState, &QState::entered, this, &cReferenceMeasChannel::readSampleRate);
+    connect(&m_readUnitState, &QState::entered, this, &cReferenceMeasChannel::readUnit);
+    connect(&m_readRangelistState, &QState::entered, this, &cReferenceMeasChannel::readRangelist);
+    connect(&m_readRangeProperties1State, &QState::entered, this, &cReferenceMeasChannel::readRangeProperties1);
+    connect(&m_readRangeProperties3State, &QState::entered, this, &cReferenceMeasChannel::readRangeProperties3);
+    connect(&m_activationDoneState, &QState::entered, this, &cReferenceMeasChannel::activationDone);
 
     // setting up statemachine for "deactivating" meas channel
-    m_deactivationInitState.addTransition(this, SIGNAL(deactivationContinue()), &m_deactivationDoneState);
+    m_deactivationInitState.addTransition(this, &cReferenceMeasChannel::deactivationContinue, &m_deactivationDoneState);
     m_deactivationMachine.addState(&m_deactivationInitState);
     m_deactivationMachine.addState(&m_deactivationDoneState);
 
@@ -74,16 +74,16 @@ cReferenceMeasChannel::cReferenceMeasChannel(cSocket* rmsocket, cSocket* pcbsock
     else
         m_deactivationMachine.setInitialState(&m_deactivationInitState);
 
-    connect(&m_deactivationInitState, SIGNAL(entered()), SLOT(deactivationInit()));
-    connect(&m_deactivationDoneState, SIGNAL(entered()), SLOT(deactivationDone()));
+    connect(&m_deactivationInitState, &QState::entered, this, &cReferenceMeasChannel::deactivationInit);
+    connect(&m_deactivationDoneState, &QState::entered, this, &cReferenceMeasChannel::deactivationDone);
 
     // setting up statemachine for querying the meas channels ranges properties
-    m_readRngAliasState.addTransition(this, SIGNAL(activationContinue()), &m_readTypeState);
-    m_readTypeState.addTransition(this, SIGNAL(activationContinue()), &m_readUrvalueState);
-    m_readUrvalueState.addTransition(this, SIGNAL(activationContinue()), &m_readRejectionState);
-    m_readRejectionState.addTransition(this, SIGNAL(activationContinue()), &m_readOVRejectionState);
-    m_readOVRejectionState.addTransition(this, SIGNAL(activationContinue()), &m_readisAvailState);
-    m_readisAvailState.addTransition(this, SIGNAL(activationContinue()), &m_rangeQueryDoneState);
+    m_readRngAliasState.addTransition(this, &cReferenceMeasChannel::activationContinue, &m_readTypeState);
+    m_readTypeState.addTransition(this, &cReferenceMeasChannel::activationContinue, &m_readUrvalueState);
+    m_readUrvalueState.addTransition(this, &cReferenceMeasChannel::activationContinue, &m_readRejectionState);
+    m_readRejectionState.addTransition(this, &cReferenceMeasChannel::activationContinue, &m_readOVRejectionState);
+    m_readOVRejectionState.addTransition(this, &cReferenceMeasChannel::activationContinue, &m_readisAvailState);
+    m_readisAvailState.addTransition(this, &cReferenceMeasChannel::activationContinue, &m_rangeQueryDoneState);
 
     m_rangeQueryMachine.addState(&m_readRngAliasState);
     m_rangeQueryMachine.addState(&m_readTypeState);
@@ -95,14 +95,10 @@ cReferenceMeasChannel::cReferenceMeasChannel(cSocket* rmsocket, cSocket* pcbsock
 
     m_rangeQueryMachine.setInitialState(&m_readRngAliasState);
 
-    connect(&m_readRngAliasState, SIGNAL(entered()), SLOT(readRngAlias()));
-    connect(&m_readTypeState, SIGNAL(entered()), SLOT(readType()));
-    connect(&m_readUrvalueState, SIGNAL(entered()), SLOT(readUrvalue()));
-    connect(&m_readRejectionState, SIGNAL(entered()), SLOT(readRejection()));
-    connect(&m_readOVRejectionState, SIGNAL(entered()), SLOT(readOVRejection()));
-    connect(&m_readisAvailState, SIGNAL(entered()), SLOT(readisAvail()));
-    connect(&m_rangeQueryDoneState, SIGNAL(entered()), SLOT(rangeQueryDone()));
-
+    connect(&m_readRngAliasState, &QState::entered, this, &cReferenceMeasChannel::readRngAlias);
+    connect(&m_readTypeState, &QState::entered, this, &cReferenceMeasChannel::readType);
+    connect(&m_readisAvailState, &QState::entered, this, &cReferenceMeasChannel::readisAvail);
+    connect(&m_rangeQueryDoneState, &QState::entered, this, &cReferenceMeasChannel::rangeQueryDone);
 }
 
 
@@ -436,12 +432,12 @@ void cReferenceMeasChannel::rmConnect()
     // we instantiate a working resource manager interface first
     // so first we try to get a connection to resource manager over proxy
     m_rmClient = Zera::Proxy::getInstance()->getConnectionSmart(m_pRMSocket->m_sIP, m_pRMSocket->m_nPort);
-    m_rmConnectState.addTransition(m_rmClient.get(), SIGNAL(connected()), &m_IdentifyState);
+    m_rmConnectState.addTransition(m_rmClient.get(), &Zera::ProxyClient::connected, &m_IdentifyState);
     // and then we set connection resource manager interface's connection
     m_rmInterface.setClientSmart(m_rmClient); //
     // todo insert timer for timeout
 
-    connect(&m_rmInterface, SIGNAL(serverAnswer(quint32, quint8, QVariant)), this, SLOT(catchInterfaceAnswer(quint32, quint8, QVariant)));
+    connect(&m_rmInterface, &Zera::cRMInterface::serverAnswer, this, &cReferenceMeasChannel::catchInterfaceAnswer);
     Zera::Proxy::getInstance()->startConnectionSmart(m_rmClient);
     // resource manager liste sense abfragen
     // bin ich da drin ?
@@ -486,10 +482,10 @@ void cReferenceMeasChannel::readResourceInfo()
 void cReferenceMeasChannel::pcbConnection()
 {
     m_pPCBClient = Zera::Proxy::getInstance()->getConnection(m_pPCBServerSocket->m_sIP, m_nPort);
-    m_pcbConnectionState.addTransition(m_pPCBClient, SIGNAL(connected()), &m_readDspChannelState);
+    m_pcbConnectionState.addTransition(m_pPCBClient, &Zera::ProxyClient::connected, &m_readDspChannelState);
 
     m_pPCBInterface->setClient(m_pPCBClient);
-    connect(m_pPCBInterface, SIGNAL(serverAnswer(quint32, quint8, QVariant)), this, SLOT(catchInterfaceAnswer(quint32, quint8, QVariant)));
+    connect(m_pPCBInterface, &Zera::cPCBInterface::serverAnswer, this, &cReferenceMeasChannel::catchInterfaceAnswer);
     Zera::Proxy::getInstance()->startConnection(m_pPCBClient);
 }
 
