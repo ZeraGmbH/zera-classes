@@ -148,7 +148,7 @@ void ModuleManager::startModule(const QString & uniqueModuleName, const QString 
             if(tmpModule) {
                 connect(tmpModule, &VirtualModule::addEventSystem, this, &ModuleManager::onModuleEventSystemAdded);
                 tmpModule->setConfiguration(t_xmlConfigData);
-                connect(tmpModule, SIGNAL(moduleDeactivated()), this, SLOT(onStartModuleDelete()));
+                connect(tmpModule, &VirtualModule::moduleDeactivated, this, &ModuleManager::onStartModuleDelete);
                 connect(tmpModule, &VirtualModule::moduleActivated, this, [this](){
                     m_moduleStartLock=false;
                     delayedModuleStartNext();
