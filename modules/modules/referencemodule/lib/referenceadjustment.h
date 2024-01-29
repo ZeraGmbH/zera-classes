@@ -72,7 +72,8 @@ private:
     cDspMeasData* m_pOffset2CorrectionDSP; // copy of dsp internal correction data (set 2)
     float* m_fGainCorr;
     float* m_fOffset2Corr;
-
+public slots:
+    void catchChannelReply(quint32 msgnr);
 private slots:
     void pcbserverConnect();
     void set0VRange();
@@ -89,7 +90,6 @@ private slots:
     void referenceAdjustDone();
 
     void catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant);
-    void catchChannelReply(quint32 msgnr);
 };
 
 }

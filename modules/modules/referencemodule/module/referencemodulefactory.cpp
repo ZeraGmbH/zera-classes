@@ -12,7 +12,7 @@ ZeraModules::VirtualModule* ReferenceModuleFactory::createModule(int entityId, V
 void ReferenceModuleFactory::destroyModule(ZeraModules::VirtualModule *module)
 {
     m_moduleGroupNumerator->freeModuleNum(module->getModuleNr());
-    connect(module, SIGNAL(deactivationReady()), module, SIGNAL(moduleDeactivated()));
+    connect(module, &ZeraModules::VirtualModule::deactivationReady, module, &ZeraModules::VirtualModule::moduleDeactivated);
     if (!module->m_DeactivationMachine.isRunning())
         module->m_DeactivationMachine.start();
 }
