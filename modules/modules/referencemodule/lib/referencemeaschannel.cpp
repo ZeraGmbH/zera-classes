@@ -258,7 +258,7 @@ void cReferenceMeasChannel::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QV
     case readrngalias:
         if (reply == ack)
         {
-            ri.alias = answer.toString();
+            m_rangeInfo.alias = answer.toString();
             emit activationContinue();
         }
         else
@@ -271,7 +271,7 @@ void cReferenceMeasChannel::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QV
     case readtype:
         if (reply == ack)
         {
-            ri.type = answer.toInt(&ok);
+            m_rangeInfo.type = answer.toInt(&ok);
             emit activationContinue();
         }
         else
@@ -283,7 +283,7 @@ void cReferenceMeasChannel::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QV
     case readisavail:
         if (reply == ack)
         {
-            ri.avail = answer.toBool();
+            m_rangeInfo.avail = answer.toBool();
             emit activationContinue();
         }
         else
@@ -539,8 +539,8 @@ void cReferenceMeasChannel::activationDone()
     QHash<QString, cRangeInfoBase>::iterator it = m_RangeInfoHash.begin();
     while (it != m_RangeInfoHash.end()) // we delete all unused ranges
     {
-        ri = it.value();
-        if (!ri.avail || ((ri.type & 1) == 1)) // in case range is not avail or virtual
+        m_rangeInfo = it.value();
+        if (!m_rangeInfo.avail || ((m_rangeInfo.type & 1) == 1)) // in case range is not avail or virtual
             it = m_RangeInfoHash.erase(it);
         else
             ++it;
@@ -585,8 +585,8 @@ void cReferenceMeasChannel::readisAvail()
 
 void cReferenceMeasChannel::rangeQueryDone()
 {
-    ri.name = m_RangeNameList.at(m_RangeQueryIt);
-    m_RangeInfoHash[ri.alias] = ri; // for each range we append cRangeinfo per alias
+    m_rangeInfo.name = m_RangeNameList.at(m_RangeQueryIt);
+    m_RangeInfoHash[m_rangeInfo.alias] = m_rangeInfo; // for each range we append cRangeinfo per alias
 }
 
 }
