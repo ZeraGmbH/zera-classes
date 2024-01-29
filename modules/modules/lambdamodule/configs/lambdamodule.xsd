@@ -26,14 +26,22 @@
 
     <xs:complexType name="lambdatype">
         <xs:sequence>
-            <xs:element name="p">
-                <xs:complexType>
-                    <xs:sequence>
-                        <xs:element name="inputentity" type="xs:integer" minOccurs="1" maxOccurs="1"/>
-                        <xs:element name="component" type="xs:string" minOccurs="1" maxOccurs="1"/>
-                    </xs:sequence>
-                </xs:complexType>
-            </xs:element>
+        <xs:element name="p">
+            <xs:complexType>
+                <xs:sequence>
+                    <xs:element name="inputentity" type="xs:integer" minOccurs="1" maxOccurs="1"/>
+                    <xs:element name="component" type="xs:string" minOccurs="1" maxOccurs="1"/>
+                </xs:sequence>
+            </xs:complexType>
+        </xs:element>
+        <xs:element name="q">
+            <xs:complexType>
+                <xs:sequence>
+                    <xs:element name="inputentity" type="xs:integer" minOccurs="1" maxOccurs="1"/>
+                    <xs:element name="component" type="xs:string" minOccurs="1" maxOccurs="1"/>
+                </xs:sequence>
+            </xs:complexType>
+        </xs:element>
             <xs:element name="s">
                 <xs:complexType>
                     <xs:sequence>

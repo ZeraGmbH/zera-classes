@@ -93,6 +93,8 @@ void cLambdaModuleConfiguration::configXMLInfo(QString key)
 
             lsc.m_nInputPEntity = 1006; // some default
             lsc.m_sInputP = "ACT_PQS1";
+            lsc.m_nInputQEntity = 1006;
+            lsc.m_sInputQ = "ACT_PQS1";
             lsc.m_nInputSEntity = 1006;
             lsc.m_sInputS = "ACT_PQS1";
 
@@ -102,6 +104,8 @@ void cLambdaModuleConfiguration::configXMLInfo(QString key)
             {
                 m_ConfigXMLMap[QString("lambdamodconfpar:configuration:measure:system:lambda%1:p:inputentity").arg(i+1)] = setLambdaInputPEntity1 + i;
                 m_ConfigXMLMap[QString("lambdamodconfpar:configuration:measure:system:lambda%1:p:component").arg(i+1)] = setLambdaInputPComponent1 + i;
+                m_ConfigXMLMap[QString("lambdamodconfpar:configuration:measure:system:lambda%1:q:inputentity").arg(i+1)] = setLambdaInputQEntity1 + i;
+                m_ConfigXMLMap[QString("lambdamodconfpar:configuration:measure:system:lambda%1:q:component").arg(i+1)] = setLambdaInputQComponent1 + i;
                 m_ConfigXMLMap[QString("lambdamodconfpar:configuration:measure:system:lambda%1:s:inputentity").arg(i+1)] = setLambdaInputSEntity1 + i;
                 m_ConfigXMLMap[QString("lambdamodconfpar:configuration:measure:system:lambda%1:s:component").arg(i+1)] = setLambdaInputSComponent1 + i;
 
@@ -123,6 +127,16 @@ void cLambdaModuleConfiguration::configXMLInfo(QString key)
                 m_pLambdaModulConfigData->m_lambdaSystemConfigList.replace(cmd, lsc);
             }
             else
+                if ((cmd >= setLambdaInputQEntity1) && (cmd < setLambdaInputQEntity1 + 12))
+                {
+                    cmd -= setLambdaInputQEntity1;
+                    // it is command for setting measuring mode
+
+                    lambdasystemconfiguration lsc = m_pLambdaModulConfigData->m_lambdaSystemConfigList.at(cmd);
+                    lsc.m_nInputQEntity = m_pXMLReader->getValue(key).toInt();
+                    m_pLambdaModulConfigData->m_lambdaSystemConfigList.replace(cmd, lsc);
+                }
+            else
                 if ((cmd >= setLambdaInputSEntity1) && (cmd < setLambdaInputSEntity1 + 12))
                 {
                     cmd -= setLambdaInputSEntity1;
@@ -143,15 +157,25 @@ void cLambdaModuleConfiguration::configXMLInfo(QString key)
                         m_pLambdaModulConfigData->m_lambdaSystemConfigList.replace(cmd, lsc);
                     }
                     else
-                        if ((cmd >= setLambdaInputSComponent1) && (cmd < setLambdaInputSComponent1 + 12))
+                        if ((cmd >= setLambdaInputQComponent1) && (cmd < setLambdaInputQComponent1 + 12))
                         {
-                            cmd -= setLambdaInputSComponent1;
+                            cmd -= setLambdaInputQComponent1;
                             // it is command for setting measuring mode
 
                             lambdasystemconfiguration lsc = m_pLambdaModulConfigData->m_lambdaSystemConfigList.at(cmd);
-                            lsc.m_sInputS = m_pXMLReader->getValue(key);
+                            lsc.m_sInputQ = m_pXMLReader->getValue(key);
                             m_pLambdaModulConfigData->m_lambdaSystemConfigList.replace(cmd, lsc);
                         }
+                        else
+                            if ((cmd >= setLambdaInputSComponent1) && (cmd < setLambdaInputSComponent1 + 12))
+                            {
+                                cmd -= setLambdaInputSComponent1;
+                                // it is command for setting measuring mode
+
+                                lambdasystemconfiguration lsc = m_pLambdaModulConfigData->m_lambdaSystemConfigList.at(cmd);
+                                lsc.m_sInputS = m_pXMLReader->getValue(key);
+                                m_pLambdaModulConfigData->m_lambdaSystemConfigList.replace(cmd, lsc);
+                            }
 
         }
         m_bConfigError |= !ok;
