@@ -21,9 +21,11 @@ enum moduleconfigstate
     setActivePMeasModePhaseSelectComponent,
 
     setLambdaInputPEntity1 = 16, // we leave some place for additional cmds
-    setLambdaInputSEntity1 =setLambdaInputPEntity1 +16,
+    setLambdaInputQEntity1 =setLambdaInputPEntity1 +16,
+    setLambdaInputSEntity1 =setLambdaInputQEntity1 +16,
     setLambdaInputPComponent1 = setLambdaInputSEntity1 + 16,
-    setLambdaInputSComponent1 = setLambdaInputPComponent1 +16
+    setLambdaInputQComponent1 = setLambdaInputPComponent1 +16,
+    setLambdaInputSComponent1 = setLambdaInputQComponent1 +16
 };
 
 

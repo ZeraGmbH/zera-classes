@@ -14,6 +14,8 @@ struct lambdasystemconfiguration
 {
     quint16 m_nInputPEntity; // entity for p input
     QString m_sInputP; // component name for p input
+    quint16 m_nInputQEntity; // entity for q input
+    QString m_sInputQ; // component name for q input
     quint16 m_nInputSEntity; // entity for s input
     QString m_sInputS; // component name for current input
 };
