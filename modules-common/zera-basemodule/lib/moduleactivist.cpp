@@ -10,16 +10,6 @@ void cModuleActivist::deactivate()
     m_deactivationMachine.start();
 }
 
-void cModuleActivist::createNotification(QVariant msg)
-{
-    m_notificationFactory->createNotification(msg);
-}
-
-void cModuleActivist::removeNotification(int id)
-{
-    m_notificationFactory->removeNotification(id);
-}
-
 void cModuleActivist::notifyActivationError(QVariant value, int dest)
 {
     emit errMsg(value, dest);
