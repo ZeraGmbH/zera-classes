@@ -223,10 +223,10 @@ QStringList Power1DspCmdGenerator::getCmdsMModeXLB(int dspSelectCode, MeasSystem
 
         cmdList.append(QString("DFT(1,MEASSIGNAL1,TEMP1)"));
         cmdList.append(QString("DFT(1,MEASSIGNAL2,TEMP2)"));
-        cmdList.append(QString("MULVVV(TEMP1,TEMP2+1,VALPQS+%1)").arg(phase));
-        cmdList.append(QString("MULVVV(TEMP2,TEMP1+1,TEMP1)"));
-        cmdList.append(QString("SUBVVV(TEMP1,VALPQS+%1,VALPQS+%2)").arg(phase).arg(phase));
-        cmdList.append(QString("MULVVV(FAK,VALPQS+%1,VALPQS+%2)").arg(phase).arg(phase));
+        cmdList.append(QString("MULVVV(TEMP1,TEMP2+1,VALPQS+%1)").arg(phase));              // VALPQS = Ure*Iim
+        cmdList.append(QString("MULVVV(TEMP2,TEMP1+1,TEMP1)"));                             // TEMP1  = Ire*Uim
+        cmdList.append(QString("SUBVVV(TEMP1,VALPQS+%1,VALPQS+%2)").arg(phase).arg(phase)); // VALPQS = Ire*Uim - Ure*Iim
+        cmdList.append(QString("MULVVV(FAK,VALPQS+%1,VALPQS+%2)").arg(phase).arg(phase));   // VALPQS = FAK * (Ire*Uim - Ure*Iim)
         //cmdList.append("ROTATE(MEASSIGNAL2,270.0)");
         //cmdList.append(QString("MULCCV(MEASSIGNAL1,MEASSIGNAL2,VALPQS+%1)").arg(phase));
 
