@@ -1,3 +1,2 @@
-SETUP_QTESTS(
-    test_notificationmanager
+SETUP_QTESTS (
 )

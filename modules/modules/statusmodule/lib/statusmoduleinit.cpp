@@ -1,6 +1,5 @@
 #include "statusmoduleinit.h"
 #include "statusmodule.h"
-#include "accustatusflags.h"
 #include <reply.h>
 #include <proxy.h>
 #include <errormessages.h>
@@ -110,10 +109,6 @@ cStatusModuleInit::cStatusModuleInit(cStatusModule* module, cStatusModuleConfigD
     connect(&m_pcbserverReReadAdjStatusState, &QState::entered, this, &cStatusModuleInit::pcbserverReadAdjStatus);
     connect(&m_pcbserverReReadAdjChksumState, &QState::entered, this, &cStatusModuleInit::pcbserverReadAdjChksum);
     connect(&m_pcbserverReReadDoneState, &QState::entered, this, &cStatusModuleInit::setInterfaceComponents);
-
-    m_NotifContainer = NotificationContainer::getInstance();
-    connect(m_NotifContainer, &NotificationContainer::sigNotificationAdded, this, &cStatusModuleInit::onNotifAdded);
-    connect(m_NotifContainer, &NotificationContainer::sigNotifRemoved, this,  &cStatusModuleInit::onNotifRemoved);
 }
 
 
@@ -127,15 +122,6 @@ cStatusModuleInit::~cStatusModuleInit()
 void cStatusModuleInit::generateInterface()
 {
     QString key;
-    m_pExpiringNotifications = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
-                                                    key = QString("INF_ExpiringNotifList"),
-                                                    QString("Expiring Notification List"),
-                                                    QVariant(QString("")));
-    m_pModule->veinModuleParameterHash[key] = m_pExpiringNotifications;
-
-    m_notifPeriodicTimer = TimerFactoryQt::createPeriodic(10000);
-    connect(m_notifPeriodicTimer.get(), &TimerTemplateQt::sigExpired,this, &cStatusModuleInit::removeFirstNotifFromExpiringNotifList);
-    m_notifPeriodicTimer->start();
 
     m_pPCBServerVersion = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
                                                    key = QString("INF_PCBServerVersion"),
@@ -505,7 +491,6 @@ void cStatusModuleInit::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVaria
                    if (reply == ack)
                     {
                       m_pAccumulatorStatus->setValue(QVariant(answer.toInt()));
-                      onAccumulatorStatusChanged(QVariant(answer.toInt()));
                       emit activationContinue();
                     }
                     else
@@ -609,24 +594,6 @@ void cStatusModuleInit::getAccumulatorStatus()
 void cStatusModuleInit::getAccuStateOfCharge()
 {
     m_MsgNrCmdList[m_pPCBInterface->getAccuStateOfCharge()] = STATUSMODINIT::readPCBServerAccumulatorSoc;
-}
-
-void cStatusModuleInit::onAccumulatorStatusChanged(QVariant value)
-{
-    int accuStateMask = value.toInt();
-    if(accuStateMask & (1<<bp_Battery_Present)) {
-        if( accuStateMask & (1<<bp_Battery_Low_SoC_Warning))
-            createNotification("Battery low !\nPlease charge the device before it turns down");
-
-        if(!m_NotifMap.isEmpty() && (accuStateMask & (1<<bp_Battery_is_Charging)) ) {
-            foreach (const QString &key, m_NotifMap.keys()) {
-                QString text = m_NotifMap.value(key).toString();
-                if(text.contains("Battery low")) {
-                    removeNotification(key.toInt());
-                }
-            }
-        }
-    }
 }
 
 void cStatusModuleInit::setInterfaceComponents()
@@ -781,44 +748,5 @@ void cStatusModuleInit::newSerialNumber(QVariant serialNr)
 {
     wantedSerialNr = serialNr;
     m_MsgNrCmdList[m_pPCBInterface->writeSerialNr(serialNr.toString())] = STATUSMODINIT::writePCBServerSerialNumber;
-}
-
-void cStatusModuleInit::setNotifList()
-{
-    QJsonObject jsonObj = QJsonObject::fromVariantMap(m_NotifMap);
-    QJsonDocument doc(jsonObj);
-    QString strJson(doc.toJson(QJsonDocument::Compact));
-    m_pExpiringNotifications->setValue(strJson);
-}
-
-void cStatusModuleInit::removeFirstNotifFromExpiringNotifList()
-{
-    if(!m_NotifMap.isEmpty()) {
-        auto it = m_NotifMap.begin();
-        m_NotifMap.erase(it);
-    }
-    setNotifList();
-}
-
-void cStatusModuleInit::onNotifAdded(int id, QString msg)
-{
-    QString sid = QString::fromStdString(std::to_string(id));
-
-    if(m_NotifMap.isEmpty())
-        m_NotifMap.insert(sid, msg);
-
-    else {
-        QString text = m_NotifMap.key(msg);
-        if(text.isNull())
-            m_NotifMap.insert(sid, msg);
-    }
-    setNotifList();
-}
-
-void cStatusModuleInit::onNotifRemoved(int id)
-{
-    QString sid = QString::fromStdString(std::to_string(id));
-    m_NotifMap.remove(sid);
-    setNotifList();
 }
 }
