@@ -91,7 +91,7 @@ void cLambdaModuleMeasProgram::searchActualValues()
 {
     bool error = false;
     QList<VfModuleComponentInput*> inputList;
-    VfModuleComponentInput *inputComponent, *inputPComponent, *inputSComponent;
+    VfModuleComponentInput *inputComponent, *inputPComponent, *inputQComponent, *inputSComponent;
 
     m_lambdaCalcDelegate = new LambdaCalcDelegate(getConfData()->m_activeMeasModeAvail, m_veinActValueList);
     connect(m_lambdaCalcDelegate, &LambdaCalcDelegate::measuring, this, &cLambdaModuleMeasProgram::setMeasureSignal);
@@ -113,29 +113,36 @@ void cLambdaModuleMeasProgram::searchActualValues()
             if (!error) {
                 // we first test that wanted input components exist
                 if ((m_pModule->m_pStorageSystem->hasStoredValue(getConfData()->m_lambdaSystemConfigList.at(i).m_nInputPEntity, getConfData()->m_lambdaSystemConfigList.at(i).m_sInputP)) &&
+                    (m_pModule->m_pStorageSystem->hasStoredValue(getConfData()->m_lambdaSystemConfigList.at(i).m_nInputQEntity, getConfData()->m_lambdaSystemConfigList.at(i).m_sInputQ)) &&
                     (m_pModule->m_pStorageSystem->hasStoredValue(getConfData()->m_lambdaSystemConfigList.at(i).m_nInputSEntity, getConfData()->m_lambdaSystemConfigList.at(i).m_sInputS)) ) {
 
                     inputPComponent = new VfModuleComponentInput(getConfData()->m_lambdaSystemConfigList.at(i).m_nInputPEntity, getConfData()->m_lambdaSystemConfigList.at(i).m_sInputP);
                     inputList.append(inputPComponent);
+                    inputQComponent = new VfModuleComponentInput(getConfData()->m_lambdaSystemConfigList.at(i).m_nInputQEntity, getConfData()->m_lambdaSystemConfigList.at(i).m_sInputQ);
+                    inputList.append(inputQComponent);
                     inputSComponent = new VfModuleComponentInput(getConfData()->m_lambdaSystemConfigList.at(i).m_nInputSEntity, getConfData()->m_lambdaSystemConfigList.at(i).m_sInputS);
                     inputList.append(inputSComponent);
 
                     if (i == (getConfData()->m_nLambdaSystemCount - 1)) {
                         connect(inputPComponent, &VfModuleComponentInput::sigValueChanged, m_lambdaCalcDelegate, &LambdaCalcDelegate::onActivePowerSumChange);
+                        connect(inputQComponent, &VfModuleComponentInput::sigValueChanged, this, &cLambdaModuleMeasProgram::onReactivePowerSumChanged);
                         connect(inputSComponent, &VfModuleComponentInput::sigValueChanged, m_lambdaCalcDelegate, &LambdaCalcDelegate::onApparentPowerSumChange);
                     }
                     else {
                         switch(i) {
                         case 0:
                             connect(inputPComponent, &VfModuleComponentInput::sigValueChanged, m_lambdaCalcDelegate, &LambdaCalcDelegate::onActivePower1Change);
+                            connect(inputQComponent, &VfModuleComponentInput::sigValueChanged, this, &cLambdaModuleMeasProgram::onReactivePower1Changed);
                             connect(inputSComponent, &VfModuleComponentInput::sigValueChanged, m_lambdaCalcDelegate, &LambdaCalcDelegate::onApparentPower1Change);
                             break;
                         case 1:
                             connect(inputPComponent, &VfModuleComponentInput::sigValueChanged, m_lambdaCalcDelegate, &LambdaCalcDelegate::onActivePower2Change);
+                            connect(inputQComponent, &VfModuleComponentInput::sigValueChanged, this, &cLambdaModuleMeasProgram::onReactivePower2Changed);
                             connect(inputSComponent, &VfModuleComponentInput::sigValueChanged, m_lambdaCalcDelegate, &LambdaCalcDelegate::onApparentPower2Change);
                             break;
                         case 2:
                             connect(inputPComponent, &VfModuleComponentInput::sigValueChanged, m_lambdaCalcDelegate, &LambdaCalcDelegate::onActivePower3Change);
+                            connect(inputQComponent, &VfModuleComponentInput::sigValueChanged, this, &cLambdaModuleMeasProgram::onReactivePower3Changed);
                             connect(inputSComponent, &VfModuleComponentInput::sigValueChanged, m_lambdaCalcDelegate, &LambdaCalcDelegate::onApparentPower3Change);
                             break;
                         default:
@@ -181,6 +188,38 @@ void cLambdaModuleMeasProgram::deactivateMeasDone()
 void cLambdaModuleMeasProgram::setMeasureSignal(int signal)
 {
     m_pMeasureSignal->setValue(signal);
+}
+
+void cLambdaModuleMeasProgram::onReactivePower1Changed(QVariant power)
+{
+    if(power.toFloat() >= 0)
+        m_veinLoadTypeList[0]->setValue("load inductive");
+    else
+        m_veinLoadTypeList[0]->setValue("load capacitive");
+}
+
+void cLambdaModuleMeasProgram::onReactivePower2Changed(QVariant power)
+{
+    if(power.toFloat() >= 0)
+        m_veinLoadTypeList[1]->setValue("load inductive");
+    else
+        m_veinLoadTypeList[1]->setValue("load capacitive");
+}
+
+void cLambdaModuleMeasProgram::onReactivePower3Changed(QVariant power)
+{
+    if(power.toFloat() >= 0)
+        m_veinLoadTypeList[2]->setValue("load inductive");
+    else
+        m_veinLoadTypeList[2]->setValue("load capacitive");
+}
+
+void cLambdaModuleMeasProgram::onReactivePowerSumChanged(QVariant power)
+{
+    if(power.toFloat() >= 0)
+        m_veinLoadTypeList[3]->setValue("load inductive");
+    else
+        m_veinLoadTypeList[3]->setValue("load capacitive");
 }
 
 }
