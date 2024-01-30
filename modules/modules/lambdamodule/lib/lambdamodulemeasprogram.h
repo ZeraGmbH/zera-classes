@@ -112,6 +112,11 @@ private slots:
     void deactivateMeasDone();
 
     void setMeasureSignal(int signal);
+
+    void onReactivePower1Changed(QVariant power);
+    void onReactivePower2Changed(QVariant power);
+    void onReactivePower3Changed(QVariant power);
+    void onReactivePowerSumChanged(QVariant power);
 };
 
 }
