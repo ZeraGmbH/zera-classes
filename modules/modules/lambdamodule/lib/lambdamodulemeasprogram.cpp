@@ -76,6 +76,15 @@ void cLambdaModuleMeasProgram::generateInterface()
                                                 QString("Signal indicating measurement activity"),
                                                 QVariant(0));
     m_pModule->veinModuleComponentList.append(m_pMeasureSignal);
+
+    for (int i = 0; i < getConfData()->m_nLambdaSystemCount; i++) {
+        pActvalue = new VfModuleActvalue(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
+                                            QString("ACT_Load%1").arg(i+1),
+                                            QString("load type"),
+                                            QVariant(QString()));
+        m_veinLoadTypeList.append(pActvalue);
+        m_pModule->veinModuleComponentList.append(pActvalue);
+    }
 }
 
 void cLambdaModuleMeasProgram::searchActualValues()
