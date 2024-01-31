@@ -51,6 +51,11 @@
         "id": 1072
       },
       {
+        "name" : "power1module",
+        "configFile" : "power1moduleAllPhaseLambdaReactive.xml",
+        "id": 1076
+      },
+      {
         "name" : "thdnmodule",
         "configFile" : "mt310s2-thdnmodule.xml",
         "id": 1110
