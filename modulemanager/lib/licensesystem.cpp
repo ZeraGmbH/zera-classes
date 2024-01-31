@@ -15,6 +15,15 @@ QT_BEGIN_NAMESPACE
 #include <QDateTime>
 QT_END_NAMESPACE
 
+
+static const char* s_systemNameDescriptor = "uniqueSystemName";
+static const char* s_expiresDescriptor = "expires";
+static const char* s_expiresNeverDescriptor = "never";
+static const char* s_deviceSerialDescriptor = "deviceSerial";
+static const char* s_universalLicenseDescriptor = "universalLicense";
+static const char* s_universalSerialDescriptor = "universalSerial";
+
+
 LicenseSystem::LicenseSystem(const QSet<QUrl> &t_licenseURLs, QObject *parent) : LicenseSystemInterface(parent),
     m_licenseURLs(t_licenseURLs),
     m_certData(loadCertData()),
@@ -222,12 +231,3 @@ void LicenseSystem::processEvent(QEvent *t_event)
         }
     }
 }
-
-//constexpr definition, see: https://stackoverflow.com/questions/8016780/undefined-reference-to-static-constexpr-char
-constexpr QLatin1String LicenseSystem::s_systemNameDescriptor;
-constexpr QLatin1String LicenseSystem::s_expiresDescriptor;
-constexpr QLatin1String LicenseSystem::s_expiresNeverDescriptor;
-constexpr QLatin1String LicenseSystem::s_deviceSerialDescriptor;
-constexpr QLatin1String LicenseSystem::s_universalLicenseDescriptor;
-constexpr QLatin1String LicenseSystem::s_universalSerialDescriptor;
-
