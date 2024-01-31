@@ -193,33 +193,33 @@ void cLambdaModuleMeasProgram::setMeasureSignal(int signal)
 void cLambdaModuleMeasProgram::onReactivePower1Changed(QVariant power)
 {
     if(power.toFloat() >= 0)
-        m_veinLoadTypeList[0]->setValue("load inductive");
+        m_veinLoadTypeList[0]->setValue("Ind");
     else
-        m_veinLoadTypeList[0]->setValue("load capacitive");
+        m_veinLoadTypeList[0]->setValue("Cap");
 }
 
 void cLambdaModuleMeasProgram::onReactivePower2Changed(QVariant power)
 {
     if(power.toFloat() >= 0)
-        m_veinLoadTypeList[1]->setValue("load inductive");
+        m_veinLoadTypeList[1]->setValue("Ind");
     else
-        m_veinLoadTypeList[1]->setValue("load capacitive");
+        m_veinLoadTypeList[1]->setValue("Cap");
 }
 
 void cLambdaModuleMeasProgram::onReactivePower3Changed(QVariant power)
 {
     if(power.toFloat() >= 0)
-        m_veinLoadTypeList[2]->setValue("load inductive");
+        m_veinLoadTypeList[2]->setValue("Ind");
     else
-        m_veinLoadTypeList[2]->setValue("load capacitive");
+        m_veinLoadTypeList[2]->setValue("Cap");
 }
 
 void cLambdaModuleMeasProgram::onReactivePowerSumChanged(QVariant power)
 {
     if(power.toFloat() >= 0)
-        m_veinLoadTypeList[3]->setValue("load inductive");
+        m_veinLoadTypeList[3]->setValue("Ind");
     else
-        m_veinLoadTypeList[3]->setValue("load capacitive");
+        m_veinLoadTypeList[3]->setValue("Cap");
 }
 
 }
