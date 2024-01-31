@@ -66,6 +66,11 @@
         "id": 1075
       },
       {
+        "name" : "power1module",
+        "configFile" : "power1moduleAllPhaseLambdaReactive.xml",
+        "id": 1076
+      },
+      {
         "name" : "power3module",
         "configFile" : "com5003-power3module.xml",
         "id": 1100
