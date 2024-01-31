@@ -128,9 +128,9 @@ int main(int argc, char *argv[])
 
     QString licenseUrl = QString("file://%1/license-keys").arg(OPERATOR_HOME);
     LicenseSystem *licenseSystem = new LicenseSystem({QUrl(licenseUrl)}, app.get());
-    ModuleManagerSetupFacade modManSetupFacade(licenseSystem, mmConfig->isDevMode(), app.get());
+    ModuleManagerSetupFacade *modManSetupFacade = new ModuleManagerSetupFacade(licenseSystem, mmConfig->isDevMode(), app.get());
 
-    ZeraModules::ModuleManager *modMan = new ZeraModules::ModuleManager(&modManSetupFacade, demoMode, app.get());
+    ZeraModules::ModuleManager *modMan = new ZeraModules::ModuleManager(modManSetupFacade, demoMode, app.get());
     if(demoMode)
         modMan->setDemoServices(demoDeviceName);
 
@@ -139,7 +139,7 @@ int main(int argc, char *argv[])
     VeinNet::TcpSystem *tcpSystem = new VeinNet::TcpSystem(app.get());
     VeinScript::ScriptSystem *scriptSystem = new VeinScript::ScriptSystem(app.get());
     VeinApiQml::VeinQml *qmlSystem = new VeinApiQml::VeinQml(app.get());
-    ZeraDBLogger *dataLoggerSystem = new ZeraDBLogger(new VeinLogger::DataSource(modManSetupFacade.getStorageSystem(), app.get()), sqliteFactory, app.get()); //takes ownership of DataSource
+    ZeraDBLogger *dataLoggerSystem = new ZeraDBLogger(new VeinLogger::DataSource(modManSetupFacade->getStorageSystem(), app.get()), sqliteFactory, app.get()); //takes ownership of DataSource
     CustomerDataSystem *customerDataSystem = nullptr;
     vfExport::vf_export *exportModule=new vfExport::vf_export();
 
@@ -187,14 +187,14 @@ int main(int argc, char *argv[])
 
 
     //do not reorder
-    modManSetupFacade.addSubsystem(netSystem);
-    modManSetupFacade.addSubsystem(tcpSystem);
-    modManSetupFacade.addSubsystem(qmlSystem);
-    modManSetupFacade.addSubsystem(scriptSystem);
+    modManSetupFacade->addSubsystem(netSystem);
+    modManSetupFacade->addSubsystem(tcpSystem);
+    modManSetupFacade->addSubsystem(qmlSystem);
+    modManSetupFacade->addSubsystem(scriptSystem);
 
     // files entity
     qInfo("Starting vf-files...");
-    modManSetupFacade.addSubsystem(filesModule->getVeinEntity());
+    modManSetupFacade->addSubsystem(filesModule->getVeinEntity());
     filesModule->initOnce();
     filesModule->addMountToWatch(
                 QStringLiteral("AutoMountedPaths"),
@@ -226,7 +226,7 @@ int main(int argc, char *argv[])
                 customerDataSystem = new CustomerDataSystem(app.get());
                 QObject::connect(customerDataSystem, &CustomerDataSystem::sigCustomerDataError, errorReportFunction);
                 qDebug() << "CustomerDataSystem is enabled";
-                modManSetupFacade.addSubsystem(customerDataSystem);
+                modManSetupFacade->addSubsystem(customerDataSystem);
                 customerDataSystem->initializeEntity();
             }
         });
@@ -239,11 +239,11 @@ int main(int argc, char *argv[])
             {
                 dataLoggerSystemInitialized = true;
                 qInfo("Starting DataLoggerSystem...");
-                modManSetupFacade.addSubsystem(dataLoggerSystem);
+                modManSetupFacade->addSubsystem(dataLoggerSystem);
 
                 // exports entity
                 qInfo("Starting vf-export...");
-                modManSetupFacade.addSubsystem(exportModule->getVeinEntity());
+                modManSetupFacade->addSubsystem(exportModule->getVeinEntity());
                 exportModule->initOnce();
 
                 // subscribe those entitities our magic logger QML script
