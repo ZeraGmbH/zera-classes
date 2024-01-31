@@ -82,13 +82,6 @@ private:
     bool m_universalLicenseFound=false;
     bool m_serialNumberInitialized=false;
 
-    static constexpr QLatin1String s_systemNameDescriptor = modman_util::to_latin1("uniqueSystemName");
-    static constexpr QLatin1String s_expiresDescriptor = modman_util::to_latin1("expires");
-    static constexpr QLatin1String s_expiresNeverDescriptor = modman_util::to_latin1("never");
-    static constexpr QLatin1String s_deviceSerialDescriptor = modman_util::to_latin1("deviceSerial");
-    static constexpr QLatin1String s_universalLicenseDescriptor = modman_util::to_latin1("universalLicense");
-    static constexpr QLatin1String s_universalSerialDescriptor = modman_util::to_latin1("universalSerial");
-
 };
 
 #endif // LICENSESYSTEM_H
