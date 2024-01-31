@@ -2,10 +2,8 @@
 #include <QDataStream>
 
 ModuleManagerSetupFacade::ModuleManagerSetupFacade(LicenseSystemInterface *licenseSystem, bool devMode, QObject *parent) :
-    m_eventHandler(this),
-    m_mmController(this, devMode),
-    m_introspectionSystem(this),
-    m_storSystem(this),
+    QObject(parent),
+    m_mmController(nullptr, devMode),
     m_licenseSystem(licenseSystem)
 {
     Q_ASSERT(m_licenseSystem != nullptr);
