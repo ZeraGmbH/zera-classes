@@ -505,14 +505,14 @@ void cAdjustmentModuleMeasProgram::adjustamplitudeSetNode()
     // we will not crash if the user forgot to initialize the iterators
     // but we will get error messages from server if the iterator becomes
     // greater than adjustment order
-    cAdjustIterators *pits;
+    cAdjustIterators *adjPhaseGainIterators;
     if (m_adjustIteratorHash.contains(m_sAdjustChannel))
-        pits = m_adjustIteratorHash[m_sAdjustChannel];
+        adjPhaseGainIterators = m_adjustIteratorHash[m_sAdjustChannel];
     else
-        m_adjustIteratorHash[m_sAdjustChannel] = pits = new cAdjustIterators();
+        m_adjustIteratorHash[m_sAdjustChannel] = adjPhaseGainIterators = new cAdjustIterators();
     double Corr = m_AdjustTargetValue * m_AdjustCorrection / m_AdjustActualValue ; // we simlpy correct the actualvalue before calculating corr
-    m_MsgNrCmdList[m_commonObjects->m_pcbInterface->setGainNode(m_sAdjustSysName, m_sAdjustRange, pits->m_nAdjustGainIt, Corr, m_AdjustTargetValue)] = setgainnode;
-    pits->m_nAdjustGainIt++;
+    m_MsgNrCmdList[m_commonObjects->m_pcbInterface->setGainNode(m_sAdjustSysName, m_sAdjustRange, adjPhaseGainIterators->m_nAdjustGainIt, Corr, m_AdjustTargetValue)] = setgainnode;
+    adjPhaseGainIterators->m_nAdjustGainIt++;
 }
 
 void cAdjustmentModuleMeasProgram::setAdjustPhaseStartCommand(QVariant var)
@@ -532,14 +532,14 @@ void cAdjustmentModuleMeasProgram::adjustphaseGetCorr()
 
 void cAdjustmentModuleMeasProgram::adjustphaseSetNode()
 {
-    cAdjustIterators *pits;
+    cAdjustIterators *adjPhaseGainIterators;
     if (m_adjustIteratorHash.contains(m_sAdjustChannel))
-        pits = m_adjustIteratorHash[m_sAdjustChannel];
+        adjPhaseGainIterators = m_adjustIteratorHash[m_sAdjustChannel];
     else
-        m_adjustIteratorHash[m_sAdjustChannel] = pits = new cAdjustIterators();
+        m_adjustIteratorHash[m_sAdjustChannel] = adjPhaseGainIterators = new cAdjustIterators();
     double Corr = symAngle((m_AdjustActualValue + m_AdjustCorrection) - m_AdjustTargetValue); // we simlpy correct the actualvalue before calculating corr
-    m_MsgNrCmdList[m_commonObjects->m_pcbInterface->setPhaseNode(m_sAdjustSysName, m_sAdjustRange, pits->m_nAdjustPhaseIt, Corr, m_AdjustFrequency)] = setphasenode;
-    pits->m_nAdjustPhaseIt++;
+    m_MsgNrCmdList[m_commonObjects->m_pcbInterface->setPhaseNode(m_sAdjustSysName, m_sAdjustRange, adjPhaseGainIterators->m_nAdjustPhaseIt, Corr, m_AdjustFrequency)] = setphasenode;
+    adjPhaseGainIterators->m_nAdjustPhaseIt++;
 }
 
 void cAdjustmentModuleMeasProgram::setAdjustOffsetStartCommand(QVariant var)
