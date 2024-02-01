@@ -67,10 +67,7 @@ cDftModuleMeasProgram::cDftModuleMeasProgram(cDftModule* module, std::shared_ptr
     m_activationMachine.addState(&m_activateDSPState);
     m_activationMachine.addState(&m_loadDSPDoneState);
 
-    if(m_pModule->m_demo)
-        m_activationMachine.setInitialState(&m_loadDSPDoneState);
-    else
-        m_activationMachine.setInitialState(&m_resourceManagerConnectState);
+    m_activationMachine.setInitialState(&m_resourceManagerConnectState);
 
     connect(&m_resourceManagerConnectState, &QState::entered, this, &cDftModuleMeasProgram::resourceManagerConnect);
     connect(&m_IdentifyState, &QState::entered, this, &cDftModuleMeasProgram::sendRMIdent);
@@ -103,10 +100,7 @@ cDftModuleMeasProgram::cDftModuleMeasProgram(cDftModule* module, std::shared_ptr
     m_deactivationMachine.addState(&m_freeUSERMemState);
     m_deactivationMachine.addState(&m_unloadDSPDoneState);
 
-    if(m_pModule->m_demo)
-        m_deactivationMachine.setInitialState(&m_unloadDSPDoneState);
-    else
-        m_deactivationMachine.setInitialState(&m_deactivateDSPState);
+    m_deactivationMachine.setInitialState(&m_deactivateDSPState);
 
     connect(&m_deactivateDSPState, &QState::entered, this, &cDftModuleMeasProgram::deactivateDSP);
     connect(&m_freePGRMemState, &QState::entered, this, &cDftModuleMeasProgram::freePGRMem);
@@ -238,9 +232,6 @@ void cDftModuleMeasProgram::generateInterface()
                                                 QVariant(0));
 
     m_pModule->veinModuleComponentList.append(m_pMeasureSignal);
-
-    if(m_pModule->m_demo)
-        setDspVarList();
 }
 
 

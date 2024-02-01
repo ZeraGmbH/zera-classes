@@ -59,10 +59,7 @@ cRmsModuleMeasProgram::cRmsModuleMeasProgram(cRmsModule* module, std::shared_ptr
     m_activationMachine.addState(&m_activateDSPState);
     m_activationMachine.addState(&m_loadDSPDoneState);
 
-    if(m_pModule->m_demo)
-        m_activationMachine.setInitialState(&m_loadDSPDoneState);
-    else
-        m_activationMachine.setInitialState(&m_resourceManagerConnectState);
+    m_activationMachine.setInitialState(&m_resourceManagerConnectState);
 
     connect(&m_resourceManagerConnectState, &QAbstractState::entered, this, &cRmsModuleMeasProgram::resourceManagerConnect);
     connect(&m_IdentifyState, &QAbstractState::entered, this, &cRmsModuleMeasProgram::sendRMIdent);
@@ -95,10 +92,7 @@ cRmsModuleMeasProgram::cRmsModuleMeasProgram(cRmsModule* module, std::shared_ptr
     m_deactivationMachine.addState(&m_freeUSERMemState);
     m_deactivationMachine.addState(&m_unloadDSPDoneState);
 
-    if(m_pModule->m_demo)
-        m_deactivationMachine.setInitialState(&m_unloadDSPDoneState);
-    else
-        m_deactivationMachine.setInitialState(&m_deactivateDSPState);
+    m_deactivationMachine.setInitialState(&m_deactivateDSPState);
 
     connect(&m_deactivateDSPState, &QAbstractState::entered, this, &cRmsModuleMeasProgram::deactivateDSP);
     connect(&m_freePGRMemState, &QAbstractState::entered, this, &cRmsModuleMeasProgram::freePGRMem);
