@@ -64,8 +64,15 @@ void cLambdaModuleMeasProgram::generateInterface()
         pSCPIInfo = new cSCPIInfo("MEASURE", pActvalue->getChannelName(), "8", pActvalue->getName(), "0", pActvalue->getUnit());
         pActvalue->setSCPIInfo(pSCPIInfo);
 
-        m_veinActValueList.append(pActvalue); // we add the component for our measurement
+        m_veinLambdaActValues.append(pActvalue); // we add the component for our measurement
         m_pModule->veinModuleActvalueList.append(pActvalue); // and for the modules interface
+
+        pActvalue = new VfModuleActvalue(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
+                                         QString("ACT_Load%1").arg(i+1),
+                                         QString("load type"),
+                                         QVariant(QString()));
+        m_veinLoadTypeList.append(pActvalue);
+        m_pModule->veinModuleComponentList.append(pActvalue);
     }
 
     m_pLAMBDACountInfo = new VfModuleMetaData(QString("LambdaCount"), QVariant(getConfData()->m_nLambdaSystemCount));
@@ -76,15 +83,6 @@ void cLambdaModuleMeasProgram::generateInterface()
                                                 QString("Signal indicating measurement activity"),
                                                 QVariant(0));
     m_pModule->veinModuleComponentList.append(m_pMeasureSignal);
-
-    for (int i = 0; i < getConfData()->m_nLambdaSystemCount; i++) {
-        pActvalue = new VfModuleActvalue(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
-                                            QString("ACT_Load%1").arg(i+1),
-                                            QString("load type"),
-                                            QVariant(QString()));
-        m_veinLoadTypeList.append(pActvalue);
-        m_pModule->veinModuleComponentList.append(pActvalue);
-    }
 }
 
 void cLambdaModuleMeasProgram::searchActualValues()
@@ -93,7 +91,7 @@ void cLambdaModuleMeasProgram::searchActualValues()
     QList<VfModuleComponentInput*> inputList;
     VfModuleComponentInput *inputComponent, *inputPComponent, *inputQComponent, *inputSComponent;
 
-    m_lambdaCalcDelegate = new LambdaCalcDelegate(getConfData()->m_activeMeasModeAvail, m_veinActValueList);
+    m_lambdaCalcDelegate = new LambdaCalcDelegate(getConfData()->m_activeMeasModeAvail, m_veinLambdaActValues);
     connect(m_lambdaCalcDelegate, &LambdaCalcDelegate::measuring, this, &cLambdaModuleMeasProgram::setMeasureSignal);
 
     if ((m_pModule->m_pStorageSystem->hasStoredValue(getConfData()->m_activeMeasModeEntity, getConfData()->m_activeMeasModeComponent)) &&

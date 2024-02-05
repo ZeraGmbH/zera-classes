@@ -91,7 +91,7 @@ private:
     void handleReactivePowerChange(QVariant power, VfModuleActvalue* veinActValue);
 
     cLambdaModule* m_pModule;
-    QList<VfModuleActvalue*> m_veinActValueList; // the list of actual values we work on
+    QList<VfModuleActvalue*> m_veinLambdaActValues;
     QList<VfModuleActvalue*> m_veinLoadTypeList;
     VfModuleMetaData* m_pLAMBDACountInfo; // the number of values we produce
     VfModuleComponent* m_pMeasureSignal;
