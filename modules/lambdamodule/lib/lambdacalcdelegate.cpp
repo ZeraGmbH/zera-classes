@@ -69,7 +69,7 @@ void LambdaCalcDelegate::onActivePowerPhaseMaskChange(QVariant phaseMask)
 
 void LambdaCalcDelegate::updateLambdaValues()
 {
-    m_lambdaValues = LambdaCalculator::calculateAllLambdas(m_activePowerValues,
+    m_lambdaValues = LambdaCalculator::calculateLambdaValues(m_activePowerValues,
                                                            m_reactivePowerValues,
                                                            m_apparentPowerValues,
                                                            m_activePowerMeasMode,
