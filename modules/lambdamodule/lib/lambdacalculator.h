@@ -12,7 +12,11 @@ struct PhaseSumValues{
 class LambdaCalculator
 {
 public:
-    static PhaseSumValues calculateAllLambdas(const PhaseSumValues &activePower, const PhaseSumValues &apparentPower, QString measModeActivePower, QString phaseMaskActivePower);
+    static PhaseSumValues calculateAllLambdas(const QVector<double> &activePower,
+                                              const QVector<double> &reactivePower,
+                                              const QVector<double> &apparentPower,
+                                              QString measModeActivePower,
+                                              QString phaseMaskActivePower);
 private:
     static double limitValueToPlusMinusOne(const double &value);
     static PhaseSumValues lambdaFor3LW(double activePowerSum, double apparentPowerSum);
