@@ -79,4 +79,9 @@ void LambdaCalcDelegate::updateLambdaValues()
         for(int i = 0; i < m_veinLambdaActValues.count() - 1; i++)
             m_veinLambdaActValues.at(i)->setValue(m_lambdaValues.phases.at(i));
     }
+    if(!m_veinLoadTypeValues.isEmpty()) {
+        m_veinLoadTypeValues.last()->setValue(m_lambdaValues.sumLoadType);
+        for(int i = 0; i < m_veinLoadTypeValues.count() - 1; i++)
+            m_veinLoadTypeValues.at(i)->setValue(m_lambdaValues.phaseLoadTypes.at(i));
+    }
 }
