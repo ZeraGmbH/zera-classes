@@ -10,58 +10,36 @@ PhaseSumValues LambdaCalcDelegate::getLambdaValues()
     return m_lambdaValues;
 }
 
-void LambdaCalcDelegate::onActivePower1Change(QVariant power)
+void LambdaCalcDelegate::handleActivePowerChange(int phaseOrSum, QVariant power)
 {
-    m_activePowerValues.phases[0] = power.toDouble();
-    updateLambdaValues();
+    if(phaseOrSum >= 0 && phaseOrSum < m_activePowerValues.phases.size()) {
+        m_activePowerValues.phases[phaseOrSum] = power.toDouble();
+        updateLambdaValues();
+    }
+    else if(phaseOrSum >= 0 && phaseOrSum == m_activePowerValues.phases.size()) {
+        m_activePowerValues.sum = power.toDouble();
+        updateLambdaValues();
+    }
+    else
+        qWarning("handleActivePowerChange: Phase out of limits: %i", phaseOrSum);
 }
 
-void LambdaCalcDelegate::onActivePower2Change(QVariant power)
+void LambdaCalcDelegate::handleApparentPowerChange(int phaseOrSum, QVariant power)
 {
-    m_activePowerValues.phases[1] = power.toDouble();
-    updateLambdaValues();
-}
-
-void LambdaCalcDelegate::onActivePower3Change(QVariant power)
-{
-    m_activePowerValues.phases[2] = power.toDouble();
-    updateLambdaValues();
-}
-
-void LambdaCalcDelegate::onActivePowerSumChange(QVariant power)
-{
-    m_activePowerValues.sum = power.toDouble();
-    updateLambdaValues();
-}
-
-void LambdaCalcDelegate::onApparentPower1Change(QVariant power)
-{
-    m_apparentPowerValues.phases[0] = power.toDouble();
-    emit measuring(0);
-    updateLambdaValues();
-    emit measuring(1);
-}
-
-void LambdaCalcDelegate::onApparentPower2Change(QVariant power)
-{
-    m_apparentPowerValues.phases[1] = power.toDouble();
-    emit measuring(0);
-    updateLambdaValues();
-    emit measuring(1);
-}
-
-void LambdaCalcDelegate::onApparentPower3Change(QVariant power)
-{
-    m_apparentPowerValues.phases[2] = power.toDouble();
-    emit measuring(0);
-    updateLambdaValues();
-    emit measuring(1);
-}
-
-void LambdaCalcDelegate::onApparentPowerSumChange(QVariant power)
-{
-    m_apparentPowerValues.sum = power.toDouble();
-    updateLambdaValues();
+    if(phaseOrSum >= 0 && phaseOrSum < m_apparentPowerValues.phases.size()) {
+        m_apparentPowerValues.phases[phaseOrSum] = power.toDouble();
+        emit measuring(0);
+        updateLambdaValues();
+        emit measuring(1);
+    }
+    else if(phaseOrSum >= 0 && phaseOrSum == m_apparentPowerValues.phases.size()) {
+        m_apparentPowerValues.sum = power.toDouble();
+        emit measuring(0);
+        updateLambdaValues();
+        emit measuring(1);
+    }
+    else
+        qWarning("handleApparentPowerChange: Phase out of limits: %i", phaseOrSum);
 }
 
 void LambdaCalcDelegate::onActivePowerMeasModeChange(QVariant measMode)
