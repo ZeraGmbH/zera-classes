@@ -3,24 +3,32 @@
 #include <math.h>
 
 PhaseSumValues::PhaseSumValues() :
-    phases(MeasPhaseCount, 0.0)
+    phases(MeasPhaseCount, 0.0),
+    phaseLoadTypes(MeasPhaseCount, "")
 {
 }
 
 constexpr int sumIndex = MeasPhaseCount;
 
-PhaseSumValues LambdaCalculator::calculateAllLambdas(const QVector<double> &activePower,
-                                                     const QVector<double> &reactivePower,
-                                                     const QVector<double> &apparentPower,
-                                                     QString measModeActivePower,
-                                                     QString phaseMaskActivePower)
+QString LambdaCalculator::IndText = "ind";
+QString LambdaCalculator::CapText = "cap";
+
+
+PhaseSumValues LambdaCalculator::calculateLambdaValues(const QVector<double> &activePower,
+                                                       const QVector<double> &reactivePower,
+                                                       const QVector<double> &apparentPower,
+                                                       QString measModeActivePower,
+                                                       QString phaseMaskActivePower)
 {
     PhaseSumValues lambdas;
     cMeasModeInfo info = MeasModeCatalog::getInfo(measModeActivePower);
     double apparentPowerSum = 0.0;
 
-    if (info.isThreeWire())
+    if (info.isThreeWire()) {
         lambdas = lambdaFor3LW(activePower[sumIndex], apparentPower[sumIndex]);
+        if(fabs(lambdas.sum) < MaxPowerFactorForTypeText)
+            lambdas.sumLoadType = reactivePower[sumIndex] > 0 ? IndText : CapText;
+    }
     else {
         for(int i = 0; i < MeasPhaseCount; i++) {
             if (phaseMaskActivePower.size() > i && phaseMaskActivePower.at(i) == "1") {
@@ -33,6 +41,8 @@ PhaseSumValues LambdaCalculator::calculateAllLambdas(const QVector<double> &acti
             }
             else
                 lambdas.phases[i] = qQNaN();
+            if(fabs(lambdas.phases[i]) < MaxPowerFactorForTypeText)
+                lambdas.phaseLoadTypes[i] = reactivePower[i] > 0 ? IndText : CapText;
         }
         if (activePower[sumIndex] == 0)
             //This is necessary if none of the phase is active, then activePower.sum and apparentPowerSum is also 0.
@@ -40,8 +50,11 @@ PhaseSumValues LambdaCalculator::calculateAllLambdas(const QVector<double> &acti
             lambdas.sum = 0.0;
         else if (apparentPowerSum == 0)
             lambdas.sum = qQNaN();
-        else
+        else {
             lambdas.sum = limitValueToPlusMinusOne(activePower[sumIndex] / apparentPowerSum);
+            if(fabs(lambdas.sum) < MaxPowerFactorForTypeText)
+                lambdas.sumLoadType = reactivePower[sumIndex] > 0 ? IndText : CapText;
+        }
     }
     return lambdas;
 }
