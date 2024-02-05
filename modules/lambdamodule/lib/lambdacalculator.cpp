@@ -7,35 +7,41 @@ PhaseSumValues::PhaseSumValues() :
 {
 }
 
-PhaseSumValues LambdaCalculator::calculateAllLambdas(const PhaseSumValues &activePower, const PhaseSumValues &apparentPower, QString measModeActivePower, QString phaseMaskActivePower)
+constexpr int sumIndex = MeasPhaseCount;
+
+PhaseSumValues LambdaCalculator::calculateAllLambdas(const QVector<double> &activePower,
+                                                     const QVector<double> &reactivePower,
+                                                     const QVector<double> &apparentPower,
+                                                     QString measModeActivePower,
+                                                     QString phaseMaskActivePower)
 {
     PhaseSumValues lambdas;
     cMeasModeInfo info = MeasModeCatalog::getInfo(measModeActivePower);
     double apparentPowerSum = 0.0;
 
     if (info.isThreeWire())
-        lambdas = lambdaFor3LW(activePower.sum, apparentPower.sum);
+        lambdas = lambdaFor3LW(activePower[sumIndex], apparentPower[sumIndex]);
     else {
         for(int i = 0; i < MeasPhaseCount; i++) {
             if (phaseMaskActivePower.size() > i && phaseMaskActivePower.at(i) == "1") {
-                if (abs(apparentPower.phases[i]) < 1e-10)
+                if (abs(apparentPower[i]) < 1e-10)
                     lambdas.phases[i] = qQNaN();
                 else {
-                    lambdas.phases[i] = limitValueToPlusMinusOne(activePower.phases[i] / apparentPower.phases[i]);
-                    apparentPowerSum += apparentPower.phases[i];
+                    lambdas.phases[i] = limitValueToPlusMinusOne(activePower[i] / apparentPower[i]);
+                    apparentPowerSum += apparentPower[i];
                 }
             }
             else
                 lambdas.phases[i] = qQNaN();
         }
-        if (activePower.sum == 0)
+        if (activePower[sumIndex] == 0)
             //This is necessary if none of the phase is active, then activePower.sum and apparentPowerSum is also 0.
             //Todo: Then lambda of sum is 0?
             lambdas.sum = 0.0;
         else if (apparentPowerSum == 0)
             lambdas.sum = qQNaN();
         else
-            lambdas.sum = limitValueToPlusMinusOne(activePower.sum / apparentPowerSum);
+            lambdas.sum = limitValueToPlusMinusOne(activePower[sumIndex] / apparentPowerSum);
     }
     return lambdas;
 }

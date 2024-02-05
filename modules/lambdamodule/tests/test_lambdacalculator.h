@@ -1,7 +1,7 @@
 #ifndef TEST_LAMBDA_CALCULATOR_H
 #define TEST_LAMBDA_CALCULATOR_H
 
-#include "lambdacalculator.h"
+#include "measmodeinfo.h"
 #include <QObject>
 
 class test_lambdacalculator : public QObject
@@ -29,8 +29,9 @@ private slots:
 
     void powerFactorLimitedToPlusMinusOne();
 private:
-    PhaseSumValues m_activePower;
-    PhaseSumValues m_apparentPower;
+    QVector<double> m_activePower = QVector<double>(MeasPhaseCount+SumValueCount, 0.0);
+    QVector<double> m_reactivePower = QVector<double>(MeasPhaseCount+SumValueCount, 0.0);
+    QVector<double> m_apparentPower = QVector<double>(MeasPhaseCount+SumValueCount, 0.0);
 };
 
 #endif // TEST_LAMBDA_CALCULATOR_H
