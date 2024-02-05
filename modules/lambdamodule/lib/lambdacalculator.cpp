@@ -18,7 +18,7 @@ PhaseSumValues LambdaCalculator::calculateAllLambdas(const PhaseSumValues &activ
     else {
         for(int i = 0; i < MeasPhaseCount; i++) {
             if (phaseMaskActivePower.size() > i && phaseMaskActivePower.at(i) == "1") {
-                if (abs(apparentPower.phases[i]) <= pow(10, -10))
+                if (abs(apparentPower.phases[i]) < 1e-10)
                     lambdas.phases[i] = qQNaN();
                 else {
                     lambdas.phases[i] = limitValueToPlusMinusOne(activePower.phases[i] / apparentPower.phases[i]);
