@@ -1,8 +1,11 @@
 #include "lambdacalcdelegate.h"
 
-LambdaCalcDelegate::LambdaCalcDelegate(bool activePowerMeasModeAvail, QList<VfModuleActvalue *> veinLambdaActValues) :
+LambdaCalcDelegate::LambdaCalcDelegate(bool activePowerMeasModeAvail,
+                                       QList<VfModuleActvalue *> veinLambdaActValues,
+                                       QList<VfModuleActvalue *> veinLoadTypeValues) :
     m_activePowerMeasModeAvail(activePowerMeasModeAvail),
-    m_veinLambdaActValues(veinLambdaActValues)
+    m_veinLambdaActValues(veinLambdaActValues),
+    m_veinLoadTypeValues(veinLoadTypeValues)
 {
 }
 
@@ -23,6 +26,25 @@ void LambdaCalcDelegate::handleActivePowerChange(int phaseOrSum, QVariant power)
     }
     else
         qWarning("handleActivePowerChange: Phase out of limits: %i", phaseOrSum);
+}
+
+void LambdaCalcDelegate::handleReactivePowerChange(int phaseOrSum, QVariant power)
+{
+    if(power.toFloat() >= 0)
+        m_veinLoadTypeValues[phaseOrSum]->setValue("Ind");
+    else
+        m_veinLoadTypeValues[phaseOrSum]->setValue("Cap");
+
+    /*if(phaseOrSum >= 0 && phaseOrSum < m_reactivePowerValues.phases.size()) {
+        m_reactivePowerValues.phases[phaseOrSum] = power.toDouble();
+        updateLambdaValues();
+    }
+    else if(phaseOrSum >= 0 && phaseOrSum == m_reactivePowerValues.phases.size()) {
+        m_reactivePowerValues.sum = power.toDouble();
+        updateLambdaValues();
+    }
+    else
+        qWarning("handleActivePowerChange: Phase out of limits: %i", phaseOrSum);*/
 }
 
 void LambdaCalcDelegate::handleApparentPowerChange(int phaseOrSum, QVariant power)

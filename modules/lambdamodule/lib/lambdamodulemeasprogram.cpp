@@ -91,7 +91,7 @@ void cLambdaModuleMeasProgram::searchActualValues()
     QList<VfModuleComponentInput*> inputList;
     VfModuleComponentInput *inputComponent, *inputPComponent, *inputQComponent, *inputSComponent;
 
-    m_lambdaCalcDelegate = new LambdaCalcDelegate(getConfData()->m_activeMeasModeAvail, m_veinLambdaActValues);
+    m_lambdaCalcDelegate = new LambdaCalcDelegate(getConfData()->m_activeMeasModeAvail, m_veinLambdaActValues, m_veinLoadTypeList);
     connect(m_lambdaCalcDelegate, &LambdaCalcDelegate::measuring, this, &cLambdaModuleMeasProgram::setMeasureSignal);
 
     if ((m_pModule->m_pStorageSystem->hasStoredValue(getConfData()->m_activeMeasModeEntity, getConfData()->m_activeMeasModeComponent)) &&
@@ -124,29 +124,12 @@ void cLambdaModuleMeasProgram::searchActualValues()
                     connect(inputPComponent, &VfModuleComponentInput::sigValueChanged, m_lambdaCalcDelegate, [=](QVariant value){
                         m_lambdaCalcDelegate->handleActivePowerChange(i, value);
                     });
+                    connect(inputQComponent, &VfModuleComponentInput::sigValueChanged, m_lambdaCalcDelegate, [=](QVariant value){
+                        m_lambdaCalcDelegate->handleReactivePowerChange(i, value);
+                    });
                     connect(inputSComponent, &VfModuleComponentInput::sigValueChanged, m_lambdaCalcDelegate, [=](QVariant value){
                         m_lambdaCalcDelegate->handleApparentPowerChange(i, value);
                     });
-
-                    if (i == (getConfData()->m_nLambdaSystemCount - 1)) {
-                        connect(inputQComponent, &VfModuleComponentInput::sigValueChanged, this, &cLambdaModuleMeasProgram::onReactivePowerSumChanged);
-                    }
-                    else {
-                        switch(i) {
-                        case 0:
-                            connect(inputQComponent, &VfModuleComponentInput::sigValueChanged, this, &cLambdaModuleMeasProgram::onReactivePower1Changed);
-                            break;
-                        case 1:
-                            connect(inputQComponent, &VfModuleComponentInput::sigValueChanged, this, &cLambdaModuleMeasProgram::onReactivePower2Changed);
-                            break;
-                        case 2:
-                            connect(inputQComponent, &VfModuleComponentInput::sigValueChanged, this, &cLambdaModuleMeasProgram::onReactivePower3Changed);
-                            break;
-                        default:
-                            error = true;
-                            break;
-                        }
-                    }
                 }
                 else
                     error = true;
@@ -185,34 +168,6 @@ void cLambdaModuleMeasProgram::deactivateMeasDone()
 void cLambdaModuleMeasProgram::setMeasureSignal(int signal)
 {
     m_pMeasureSignal->setValue(signal);
-}
-
-void cLambdaModuleMeasProgram::onReactivePower1Changed(QVariant power)
-{
-    handleReactivePowerChange(power, m_veinLoadTypeList[0]);
-}
-
-void cLambdaModuleMeasProgram::onReactivePower2Changed(QVariant power)
-{
-    handleReactivePowerChange(power, m_veinLoadTypeList[1]);
-}
-
-void cLambdaModuleMeasProgram::onReactivePower3Changed(QVariant power)
-{
-    handleReactivePowerChange(power, m_veinLoadTypeList[2]);
-}
-
-void cLambdaModuleMeasProgram::onReactivePowerSumChanged(QVariant power)
-{
-    handleReactivePowerChange(power, m_veinLoadTypeList[3]);
-}
-
-void cLambdaModuleMeasProgram::handleReactivePowerChange(QVariant power, VfModuleActvalue *veinActValue)
-{
-    if(power.toFloat() >= 0)
-        veinActValue->setValue("Ind");
-    else
-        veinActValue->setValue("Cap");
 }
 
 }
