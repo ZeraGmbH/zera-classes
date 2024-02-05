@@ -192,34 +192,30 @@ void cLambdaModuleMeasProgram::setMeasureSignal(int signal)
 
 void cLambdaModuleMeasProgram::onReactivePower1Changed(QVariant power)
 {
-    if(power.toFloat() >= 0)
-        m_veinLoadTypeList[0]->setValue("Ind");
-    else
-        m_veinLoadTypeList[0]->setValue("Cap");
+    handleReactivePowerChange(power, m_veinLoadTypeList[0]);
 }
 
 void cLambdaModuleMeasProgram::onReactivePower2Changed(QVariant power)
 {
-    if(power.toFloat() >= 0)
-        m_veinLoadTypeList[1]->setValue("Ind");
-    else
-        m_veinLoadTypeList[1]->setValue("Cap");
+    handleReactivePowerChange(power, m_veinLoadTypeList[1]);
 }
 
 void cLambdaModuleMeasProgram::onReactivePower3Changed(QVariant power)
 {
-    if(power.toFloat() >= 0)
-        m_veinLoadTypeList[2]->setValue("Ind");
-    else
-        m_veinLoadTypeList[2]->setValue("Cap");
+    handleReactivePowerChange(power, m_veinLoadTypeList[2]);
 }
 
 void cLambdaModuleMeasProgram::onReactivePowerSumChanged(QVariant power)
 {
+    handleReactivePowerChange(power, m_veinLoadTypeList[3]);
+}
+
+void cLambdaModuleMeasProgram::handleReactivePowerChange(QVariant power, VfModuleActvalue *veinActValue)
+{
     if(power.toFloat() >= 0)
-        m_veinLoadTypeList[3]->setValue("Ind");
+        veinActValue->setValue("Ind");
     else
-        m_veinLoadTypeList[3]->setValue("Cap");
+        veinActValue->setValue("Cap");
 }
 
 }

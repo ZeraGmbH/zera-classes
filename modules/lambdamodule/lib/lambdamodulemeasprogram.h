@@ -88,6 +88,7 @@ public slots:
 
 private:
     cLambdaModuleConfigData* getConfData();
+    void handleReactivePowerChange(QVariant power, VfModuleActvalue* veinActValue);
 
     cLambdaModule* m_pModule;
     QList<VfModuleActvalue*> m_veinActValueList; // the list of actual values we work on
