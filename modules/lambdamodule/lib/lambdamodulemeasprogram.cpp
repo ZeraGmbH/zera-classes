@@ -123,27 +123,26 @@ void cLambdaModuleMeasProgram::searchActualValues()
                     inputSComponent = new VfModuleComponentInput(getConfData()->m_lambdaSystemConfigList.at(i).m_nInputSEntity, getConfData()->m_lambdaSystemConfigList.at(i).m_sInputS);
                     inputList.append(inputSComponent);
 
+                    connect(inputPComponent, &VfModuleComponentInput::sigValueChanged, m_lambdaCalcDelegate, [=](QVariant value){
+                        m_lambdaCalcDelegate->handleActivePowerChange(i, value);
+                    });
+                    connect(inputSComponent, &VfModuleComponentInput::sigValueChanged, m_lambdaCalcDelegate, [=](QVariant value){
+                        m_lambdaCalcDelegate->handleApparentPowerChange(i, value);
+                    });
+
                     if (i == (getConfData()->m_nLambdaSystemCount - 1)) {
-                        connect(inputPComponent, &VfModuleComponentInput::sigValueChanged, m_lambdaCalcDelegate, &LambdaCalcDelegate::onActivePowerSumChange);
                         connect(inputQComponent, &VfModuleComponentInput::sigValueChanged, this, &cLambdaModuleMeasProgram::onReactivePowerSumChanged);
-                        connect(inputSComponent, &VfModuleComponentInput::sigValueChanged, m_lambdaCalcDelegate, &LambdaCalcDelegate::onApparentPowerSumChange);
                     }
                     else {
                         switch(i) {
                         case 0:
-                            connect(inputPComponent, &VfModuleComponentInput::sigValueChanged, m_lambdaCalcDelegate, &LambdaCalcDelegate::onActivePower1Change);
                             connect(inputQComponent, &VfModuleComponentInput::sigValueChanged, this, &cLambdaModuleMeasProgram::onReactivePower1Changed);
-                            connect(inputSComponent, &VfModuleComponentInput::sigValueChanged, m_lambdaCalcDelegate, &LambdaCalcDelegate::onApparentPower1Change);
                             break;
                         case 1:
-                            connect(inputPComponent, &VfModuleComponentInput::sigValueChanged, m_lambdaCalcDelegate, &LambdaCalcDelegate::onActivePower2Change);
                             connect(inputQComponent, &VfModuleComponentInput::sigValueChanged, this, &cLambdaModuleMeasProgram::onReactivePower2Changed);
-                            connect(inputSComponent, &VfModuleComponentInput::sigValueChanged, m_lambdaCalcDelegate, &LambdaCalcDelegate::onApparentPower2Change);
                             break;
                         case 2:
-                            connect(inputPComponent, &VfModuleComponentInput::sigValueChanged, m_lambdaCalcDelegate, &LambdaCalcDelegate::onActivePower3Change);
                             connect(inputQComponent, &VfModuleComponentInput::sigValueChanged, this, &cLambdaModuleMeasProgram::onReactivePower3Changed);
-                            connect(inputSComponent, &VfModuleComponentInput::sigValueChanged, m_lambdaCalcDelegate, &LambdaCalcDelegate::onApparentPower3Change);
                             break;
                         default:
                             error = true;

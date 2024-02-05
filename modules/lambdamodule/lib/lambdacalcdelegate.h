@@ -12,15 +12,9 @@ class LambdaCalcDelegate : public QObject
 public:
     LambdaCalcDelegate(bool activePowerMeasModeAvail, QList<VfModuleActvalue*> actvalue);
     PhaseSumValues getLambdaValues();
+    void handleActivePowerChange(int phaseOrSum, QVariant power);
+    void handleApparentPowerChange(int phaseOrSum, QVariant power);
 public slots:
-    void onActivePower1Change(QVariant power);
-    void onActivePower2Change(QVariant power);
-    void onActivePower3Change(QVariant power);
-    void onActivePowerSumChange(QVariant power);
-    void onApparentPower1Change(QVariant power);
-    void onApparentPower2Change(QVariant power);
-    void onApparentPower3Change(QVariant power);
-    void onApparentPowerSumChange(QVariant power);
     void onActivePowerMeasModeChange(QVariant measMode);
     void onActivePowerPhaseMaskChange(QVariant phaseMask);
 signals:

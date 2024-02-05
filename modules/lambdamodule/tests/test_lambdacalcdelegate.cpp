@@ -8,14 +8,14 @@ void test_lambdacalcdelegate::measModeAvail3LW()
 {
     LambdaCalcDelegate delegate(true, QList<VfModuleActvalue *>());
 
-    delegate.onActivePower1Change(1.0);
-    delegate.onActivePower2Change(0.0);
-    delegate.onActivePower3Change(1.0);
-    delegate.onActivePowerSumChange(2.0);
-    delegate.onApparentPower1Change(1.0);
-    delegate.onApparentPower2Change(2.0);
-    delegate.onApparentPower3Change(1.0);
-    delegate.onApparentPowerSumChange(8.0);
+    delegate.handleActivePowerChange(0, 1.0);
+    delegate.handleActivePowerChange(1, 0.0);
+    delegate.handleActivePowerChange(2, 1.0);
+    delegate.handleActivePowerChange(3, 2.0);
+    delegate.handleApparentPowerChange(0, 1.0);
+    delegate.handleApparentPowerChange(1, 2.0);
+    delegate.handleApparentPowerChange(2, 1.0);
+    delegate.handleApparentPowerChange(3, 8.0);
     delegate.onActivePowerMeasModeChange("3LW");
 
     QVERIFY(qIsNaN(delegate.getLambdaValues().phases[0]));
@@ -28,14 +28,14 @@ void test_lambdacalcdelegate::measModeNotAvail3LW()
 {
     LambdaCalcDelegate delegate(false, QList<VfModuleActvalue *>());
 
-    delegate.onActivePower1Change(1.0);
-    delegate.onActivePower2Change(0.0);
-    delegate.onActivePower3Change(1.0);
-    delegate.onActivePowerSumChange(2.0);
-    delegate.onApparentPower1Change(1.0);
-    delegate.onApparentPower2Change(2.0);
-    delegate.onApparentPower3Change(1.0);
-    delegate.onApparentPowerSumChange(8.0);
+    delegate.handleActivePowerChange(0, 1.0);
+    delegate.handleActivePowerChange(1, 0.0);
+    delegate.handleActivePowerChange(2, 1.0);
+    delegate.handleActivePowerChange(3, 2.0);
+    delegate.handleApparentPowerChange(0, 1.0);
+    delegate.handleApparentPowerChange(1, 2.0);
+    delegate.handleApparentPowerChange(2, 1.0);
+    delegate.handleApparentPowerChange(3, 8.0);
     delegate.onActivePowerMeasModeChange("3LW");
 
     QCOMPARE(delegate.getLambdaValues().phases[0], 1.0);
@@ -48,14 +48,14 @@ void test_lambdacalcdelegate::measModeAvailPhaseMask110()
 {
     LambdaCalcDelegate delegate(true, QList<VfModuleActvalue *>());
 
-    delegate.onActivePower1Change(1.0);
-    delegate.onActivePower2Change(1.0);
-    delegate.onActivePower3Change(0.0);
-    delegate.onActivePowerSumChange(2.0);
-    delegate.onApparentPower1Change(2.0);
-    delegate.onApparentPower2Change(2.0);
-    delegate.onApparentPower3Change(4.0);
-    delegate.onApparentPowerSumChange(8.0);
+    delegate.handleActivePowerChange(0, 1.0);
+    delegate.handleActivePowerChange(1, 1.0);
+    delegate.handleActivePowerChange(2, 0.0);
+    delegate.handleActivePowerChange(3, 2.0);
+    delegate.handleApparentPowerChange(0, 2.0);
+    delegate.handleApparentPowerChange(1, 2.0);
+    delegate.handleApparentPowerChange(2, 4.0);
+    delegate.handleApparentPowerChange(3, 8.0);
     delegate.onActivePowerPhaseMaskChange("110");
 
     QCOMPARE(delegate.getLambdaValues().phases[0], 0.5);
@@ -68,14 +68,14 @@ void test_lambdacalcdelegate::measModeNotAvailPhaseMask110()
 {
     LambdaCalcDelegate delegate(false, QList<VfModuleActvalue *>());
 
-    delegate.onActivePower1Change(1.0);
-    delegate.onActivePower2Change(1.0);
-    delegate.onActivePower3Change(0.0);
-    delegate.onActivePowerSumChange(2.0);
-    delegate.onApparentPower1Change(2.0);
-    delegate.onApparentPower2Change(2.0);
-    delegate.onApparentPower3Change(4.0);
-    delegate.onApparentPowerSumChange(10.0);
+    delegate.handleActivePowerChange(0, 1.0);
+    delegate.handleActivePowerChange(1, 1.0);
+    delegate.handleActivePowerChange(2, 0.0);
+    delegate.handleActivePowerChange(3, 2.0);
+    delegate.handleApparentPowerChange(0, 2.0);
+    delegate.handleApparentPowerChange(1, 2.0);
+    delegate.handleApparentPowerChange(2, 4.0);
+    delegate.handleApparentPowerChange(3, 10.0);
     delegate.onActivePowerPhaseMaskChange("110");
 
     QCOMPARE(delegate.getLambdaValues().phases[0], 0.5);
