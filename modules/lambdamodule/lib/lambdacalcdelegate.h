@@ -10,7 +10,7 @@ class LambdaCalcDelegate : public QObject
 {
     Q_OBJECT
 public:
-    LambdaCalcDelegate(bool activePowerMeasModeAvail, QList<VfModuleActvalue*> actvalue);
+    LambdaCalcDelegate(bool activePowerMeasModeAvail, QList<VfModuleActvalue*> veinLambdaActValues);
     PhaseSumValues getLambdaValues();
     void handleActivePowerChange(int phaseOrSum, QVariant power);
     void handleApparentPowerChange(int phaseOrSum, QVariant power);
@@ -27,7 +27,7 @@ private:
     PhaseSumValues m_apparentPowerValues;
     QString m_activePowerMeasMode = "4LW";
     QString m_activePowerPhaseMask = "111";
-    QList<VfModuleActvalue*> m_actValues;
+    QList<VfModuleActvalue*> m_veinLambdaActValues;
 };
 
 #endif // LAMBDACALCDELEGATE_H
