@@ -32,7 +32,7 @@ PhaseSumValues LambdaCalculator::calculateLambdaValues(const QVector<double> &ac
     else {
         for(int i = 0; i < MeasPhaseCount; i++) {
             if (phaseMaskActivePower.size() > i && phaseMaskActivePower.at(i) == "1") {
-                if (abs(apparentPower[i]) < 1e-10)
+                if (abs(apparentPower[i]) < 1e-15)
                     lambdas.phases[i] = qQNaN();
                 else {
                     lambdas.phases[i] = limitValueToPlusMinusOne(activePower[i] / apparentPower[i]);
