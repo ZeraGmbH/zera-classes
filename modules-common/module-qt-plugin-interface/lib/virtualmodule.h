@@ -40,7 +40,6 @@ signals:
     void deactivationReady();
 
     // signals for modulemanager notification
-    void moduleError(QString errorString);
     void moduleActivated();
     void moduleDeactivated();
     void addEventSystem(VeinEvent::EventSystem*);
