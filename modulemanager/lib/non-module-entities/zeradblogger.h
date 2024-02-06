@@ -2,10 +2,6 @@
 #define ZERADBLOGGER_H
 
 #include <vl_databaselogger.h>
-#include <QHash>
-#include <QUuid>
-
-#include "modman_util.h"
 
 namespace VeinLogger
 {

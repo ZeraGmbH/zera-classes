@@ -1,9 +1,11 @@
 file(GLOB SOURCES
-    ${CMAKE_CURRENT_SOURCE_DIR}/*.cpp
+    *.cpp
+    non-module-entities/*.cpp
     )
 
 file(GLOB HEADER
-    ${CMAKE_CURRENT_SOURCE_DIR}/*.h
+    *.h
+    non-module-entities/*.h
     )
 
 add_library(zera-modulemanager-lib STATIC
@@ -14,6 +16,7 @@ add_library(zera-modulemanager-lib STATIC
 target_include_directories(zera-modulemanager-lib
     PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/non-module-entities>
     )
 
 target_link_libraries(zera-modulemanager-lib
