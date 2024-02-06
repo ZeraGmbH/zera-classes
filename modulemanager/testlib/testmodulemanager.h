@@ -13,7 +13,9 @@ public:
     void destroyModulesAndWaitUntilAllShutdown();
     void waitUntilModulesAreReady();
     QList<ZeraModules::ModuleData *> getModuleList();
+
 private:
+    bool modulesReady();
     QStringList getModuleFileNames() override;
     // Avoid file write in install area on tests (OE tests turn 'ff')
     void saveModuleConfig(ZeraModules::ModuleData *) override {};

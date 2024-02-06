@@ -49,6 +49,11 @@ QList<ZeraModules::ModuleData *> TestModuleManager::getModuleList()
     return m_moduleList;
 }
 
+bool TestModuleManager::modulesReady()
+{
+    return !m_moduleStartLock;
+}
+
 QStringList TestModuleManager::getModuleFileNames()
 {
     QString strBuildPath = MODULE_PLUGIN_BUILD_PATH;
