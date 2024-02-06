@@ -6,13 +6,6 @@
 #include <timemachineobject.h>
 #include <QDir>
 
-void TestModuleManager::enableTest()
-{
-    m_runningInTest = true;
-    JsonSessionLoaderTest::enableTests();
-    ModulemanagerConfigTest::enableTest();
-}
-
 void TestModuleManager::pointToInstalledSessionFiles()
 {
     m_sessionPath = QDir::cleanPath(
@@ -20,14 +13,12 @@ void TestModuleManager::pointToInstalledSessionFiles()
                     QString(MODMAN_SESSION_PATH));
 }
 
-void TestModuleManager::pointToSourceSessionFiles()
-{
-    m_sessionPath = QDir::cleanPath(QString(SESSION_FILES_SOURCE_PATH));
-}
-
 TestModuleManager::TestModuleManager(ModuleManagerSetupFacade *setupFacade, bool demo, QObject *parent) :
     ModuleManager(setupFacade, demo, parent)
 {
+    m_runningInTest = true;
+    JsonSessionLoaderTest::enableTests();
+    ModulemanagerConfigTest::enableTest();
 }
 
 void TestModuleManager::setTestServices(QString deviceName)

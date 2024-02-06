@@ -15,11 +15,6 @@
 
 QTEST_MAIN(test_scpi_cmds_in_session)
 
-void test_scpi_cmds_in_session::initTestCase()
-{
-    TestModuleManager::enableTest();
-}
-
 void test_scpi_cmds_in_session::cleanup()
 {
     m_modMan->destroyModulesAndWaitUntilAllShutdown();

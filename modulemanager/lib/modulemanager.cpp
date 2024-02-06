@@ -20,8 +20,6 @@
 namespace ZeraModules {
 
 QString ModuleManager::m_sessionPath = MODMAN_SESSION_PATH;
-bool ModuleManager::m_runningInTest = false;
-
 
 ModuleManager::ModuleManager(ModuleManagerSetupFacade *setupFacade, bool demo, QObject *parent) :
     QObject(parent),
