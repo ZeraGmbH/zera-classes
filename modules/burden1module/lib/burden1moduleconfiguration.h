@@ -1,12 +1,9 @@
 #ifndef BURDEN1MODULECONFIGURATION_H
 #define BURDEN1MODULECONFIGURATION_H
 
-
-#include <QStringList>
-#include <QByteArray>
-#include <QHash>
-
 #include "basemoduleconfiguration.h"
+#include "burden1moduleconfigdata.h"
+#include <QByteArray>
 
 namespace BURDEN1MODULE
 {
@@ -28,14 +25,6 @@ enum moduleconfigstate
 
     setnext = setMeasSystem1 + 16
 };
-
-
-
-class cBurden1ModuleConfigData;
-
-const QString defaultXSDFile = "://burden1module.xsd";
-
-// moduleconfiguration holds configuration data as well as parameter
 
 class cBurden1ModuleConfiguration: public cBaseModuleConfiguration
 {
