@@ -12,48 +12,6 @@
 namespace POWER3MODULE
 {
 
-enum power3moduleCmds
-{
-    resourcemanagerconnect,
-    sendrmident,
-    readresourcetypes,
-    readresourcesense,
-    readresourcesenseinfos,
-    readresourcesenseinfo,
-
-    readresourcesource,
-    readresourcessourceinfos,
-    readresourcesourceinfo,
-    claimresourcesource,
-
-    pcbserverconnect,
-    readsamplerate,
-
-    readsensechannelalias,
-    readsensechannelunit,
-    readsensechanneldspchannel,
-
-    readsourcechannelalias,
-    readsourcechanneldspchannel,
-    readsourceformfactor,
-
-    claimpgrmem,
-    claimusermem,
-    varlist2dsp,
-    cmdlist2dsp,
-    activatedsp,
-    deactivatedsp,
-    dataaquistion,
-    writeparameter,
-    freepgrmem,
-    freeusermem,
-    freeresourcesource,
-    unregisterrangenotifiers,
-
-    setfrequencyscales,
-    setchannelrangenotifier
-};
-
 class cPower3Module;
 
 class cPower3ModuleMeasProgram: public cBaseMeasWorkProgram

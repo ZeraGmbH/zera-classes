@@ -10,8 +10,6 @@
 
 #include "efficiency1moduleconfigdata.h"
 #include "basemeasworkprogram.h"
-#include "measchannelinfo.h"
-#include "foutinfo.h"
 
 
 class cBaseModule;
@@ -19,57 +17,8 @@ class VfModuleActvalue;
 class VfModuleMetaData;
 class VfModuleComponent;
 
-
-class QStateMachine;
-class QState;
-class QFinalState;
-
-
 namespace EFFICIENCY1MODULE
 {
-
-enum power3moduleCmds
-{
-    resourcemanagerconnect,
-    sendrmident,
-    readresourcetypes,
-    readresourcesense,
-    readresourcesenseinfos,
-    readresourcesenseinfo,
-
-    readresourcesource,
-    readresourcessourceinfos,
-    readresourcesourceinfo,
-    claimresourcesource,
-
-    pcbserverconnect,
-    readsamplerate,
-
-    readsensechannelalias,
-    readsensechannelunit,
-    readsensechanneldspchannel,
-
-    readsourcechannelalias,
-    readsourcechanneldspchannel,
-    readsourceformfactor,
-
-    claimpgrmem,
-    claimusermem,
-    varlist2dsp,
-    cmdlist2dsp,
-    activatedsp,
-    deactivatedsp,
-    dataaquistion,
-    writeparameter,
-    freepgrmem,
-    freeusermem,
-    freeresourcesource,
-    unregisterrangenotifiers,
-
-    setfrequencyscales,
-    setchannelrangenotifier
-};
-
 
 class cEfficiency1ModuleConfigData;
 class cEfficiency1MeasDelegate;
@@ -79,7 +28,6 @@ class cEfficiency1Module;
 class cEfficiency1ModuleMeasProgram: public cBaseMeasWorkProgram
 {
     Q_OBJECT
-
 public:
     cEfficiency1ModuleMeasProgram(cEfficiency1Module* module, std::shared_ptr<cBaseModuleConfiguration> pConfiguration);
     virtual ~cEfficiency1ModuleMeasProgram();

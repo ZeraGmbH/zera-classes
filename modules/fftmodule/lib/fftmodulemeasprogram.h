@@ -18,13 +18,10 @@ namespace FFTMODULE
 
 enum fftmoduleCmds
 {
-    resourcemanagerconnect,
     sendrmident,
     readresourcetypes,
     readresource,
-    readresourceinfos,
     readresourceinfo,
-    pcbserverconnect,
     readsamplerate,
     readalias,
     readunit,

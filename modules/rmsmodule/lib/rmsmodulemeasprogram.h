@@ -13,13 +13,10 @@ namespace RMSMODULE
 
 enum rmsmoduleCmds
 {
-    resourcemanagerconnect,
     sendrmident,
     readresourcetypes,
     readresource,
-    readresourceinfos,
     readresourceinfo,
-    pcbserverconnect,
     readsamplerate,
     readalias,
     readunit,
@@ -47,10 +44,10 @@ class cRmsModuleMeasProgram: public cBaseDspMeasProgram
 public:
     cRmsModuleMeasProgram(cRmsModule* module, std::shared_ptr<cBaseModuleConfiguration> pConfiguration);
     virtual ~cRmsModuleMeasProgram();
-    virtual void generateInterface(); // here we export our interface (entities)
+    virtual void generateInterface() override; // here we export our interface (entities)
 public slots:
-    virtual void start(); // difference between start and stop is that actual values
-    virtual void stop(); // in interface are not updated when stop
+    virtual void start() override; // difference between start and stop is that actual values
+    virtual void stop() override; // in interface are not updated when stop
 protected slots:
     virtual void catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant answer);
 private:

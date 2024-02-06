@@ -12,13 +12,10 @@ namespace OSCIMODULE
 
 enum oscimoduleCmds
 {
-    resourcemanagerconnect,
     sendrmident,
     readresourcetypes,
     readresource,
-    readresourceinfos,
     readresourceinfo,
-    pcbserverconnect,
     readsamplerate,
     readalias,
     readunit,

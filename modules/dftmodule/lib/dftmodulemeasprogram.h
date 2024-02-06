@@ -16,13 +16,10 @@ namespace DFTMODULE
 
 enum dftmoduleCmds
 {
-    resourcemanagerconnect,
     sendrmident,
     readresourcetypes,
     readresource,
-    readresourceinfos,
     readresourceinfo,
-    pcbserverconnect,
     readsamplerate,
     readalias,
     readunit,

@@ -29,13 +29,10 @@ namespace THDNMODULE
 
 enum thdnmoduleCmds
 {
-    resourcemanagerconnect,
     sendrmident,
     readresourcetypes,
     readresource,
-    readresourceinfos,
     readresourceinfo,
-    pcbserverconnect,
     readsamplerate,
     readalias,
     readunit,
