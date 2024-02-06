@@ -14,7 +14,6 @@ public:
     void getAllSessionsScpiIfaceXmls(QString device, QString xmlDir);
 private:
     void setDevice(QString device);
-    void shutdownModules();
     void createXml(QString completeFileName, QString contents);
     LicenseSystemMock m_licenseSystem;
     ModulemanagerConfig *m_modmanConfig;

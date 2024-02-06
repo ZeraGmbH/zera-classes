@@ -35,7 +35,6 @@ public:
     ~ModuleManager() override;
     bool loadAllAvailableModulePlugins();
     void loadScripts(VeinScript::ScriptSystem *t_scriptSystem);
-    bool modulesReady();
     void setupConnections();
     void loadDefaultSession();
     virtual void startAllServiceMocks(QString deviceName);
@@ -61,6 +60,7 @@ private slots:
 protected:
     static QString m_sessionPath;
     QList<ModuleData *> m_moduleList;
+    bool m_moduleStartLock;
     std::unique_ptr<AbstractMockAllServices> m_mockAllServices;
 
 private:
@@ -78,7 +78,6 @@ private:
     QString m_sessionFile;
     QList<QString> m_sessionsAvailable;
 
-    bool m_moduleStartLock;
     QElapsedTimer m_timerAllModulesLoaded;
 
 };

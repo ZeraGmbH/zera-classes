@@ -109,11 +109,6 @@ void ModuleManager::loadScripts(VeinScript::ScriptSystem *t_scriptSystem)
     }
 }
 
-bool ModuleManager::modulesReady()
-{
-    return !m_moduleStartLock;
-}
-
 void ModuleManager::setupConnections()
 {
     //start the next module as soon as the PAR_SerialNr component is avaiable

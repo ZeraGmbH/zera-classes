@@ -1,5 +1,4 @@
 #include "scpiifaceexportgenerator.h"
-#include <timemachineobject.h>
 #include <QFile>
 
 ScpiIfaceExportGenerator::ScpiIfaceExportGenerator()
@@ -15,7 +14,7 @@ ScpiIfaceExportGenerator::ScpiIfaceExportGenerator()
 
 ScpiIfaceExportGenerator::~ScpiIfaceExportGenerator()
 {
-    shutdownModules();
+    m_modman->destroyModulesAndWaitUntilAllShutdown();
     delete m_modman;
     delete m_modmanSetupFacade;
 }
@@ -23,19 +22,11 @@ ScpiIfaceExportGenerator::~ScpiIfaceExportGenerator()
 void ScpiIfaceExportGenerator::setDevice(QString device)
 {
     if(m_device != device) {
-        shutdownModules();
+        m_modman->destroyModulesAndWaitUntilAllShutdown();
         ModulemanagerConfig::setDemoDevice(device, false);
         m_modman->startAllServiceMocks(device);
         m_device = device;
     }
-}
-
-void ScpiIfaceExportGenerator::shutdownModules()
-{
-    m_modman->destroyModules();
-    do
-        TimeMachineObject::feedEventLoop();
-    while(!m_modman->modulesReady());
 }
 
 QString ScpiIfaceExportGenerator::getSessionScpiIface(QString device, QString session)
@@ -44,9 +35,7 @@ QString ScpiIfaceExportGenerator::getSessionScpiIface(QString device, QString se
     setDevice(device);
     if(m_modmanConfig->getAvailableSessions().contains(session)) {
         m_modman->changeSessionFile(session);
-        do
-            TimeMachineObject::feedEventLoop();
-        while(!m_modman->modulesReady());
+        m_modman->waitUntilModulesAreReady();
         scpiIface = m_modmanSetupFacade->getStorageSystem()->getStoredValue(9999, "ACT_DEV_IFACE").toString();
     }
     return scpiIface;
