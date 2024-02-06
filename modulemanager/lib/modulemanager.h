@@ -3,6 +3,7 @@
 
 #include "jsonsessionloader.h"
 #include "modulemanagersetupfacade.h"
+#include "moduledata.h"
 #include "abstractmockallservices.h"
 #include <virtualmodule.h>
 #include <QVariant>
@@ -26,8 +27,6 @@ class MeasurementModuleFactory;
 
 namespace ZeraModules
 {
-class ModuleData;
-
 class ModuleManager : public QObject
 {
     Q_OBJECT
@@ -39,7 +38,7 @@ public:
     bool modulesReady();
     void setupConnections();
     void loadDefaultSession();
-    void setDemoServices(QString deviceName);
+    virtual void startAllServiceMocks(QString deviceName);
 signals:
     void sigSessionSwitched(const QString &newSessionFile);
     void sigModulesLoaded(const QString &t_sessionPath, const QStringList &t_sessionsAvailable);
@@ -61,12 +60,12 @@ private slots:
 
 protected:
     static QString m_sessionPath;
-    bool m_runningInTest = false;
     QList<ModuleData *> m_moduleList;
     std::unique_ptr<AbstractMockAllServices> m_mockAllServices;
 
 private:
-    void saveModuleConfig(ModuleData *t_moduleData);
+    virtual void saveModuleConfig(ModuleData *moduleData);
+    virtual void saveDefaultSession();
     virtual QStringList getModuleFileNames();
 
     ModuleManagerSetupFacade *m_setupFacade;

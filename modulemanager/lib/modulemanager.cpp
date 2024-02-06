@@ -283,6 +283,12 @@ void ModuleManager::delayedModuleStartNext()
     }
 }
 
+void ZeraModules::ModuleManager::saveDefaultSession()
+{
+    ModulemanagerConfig *mmConfig = ModulemanagerConfig::getInstance();
+    mmConfig->setDefaultSession(m_sessionFile);
+}
+
 void ModuleManager::onModuleStartNext()
 {
     m_moduleStartLock = false;
@@ -292,10 +298,7 @@ void ModuleManager::onModuleStartNext()
         delete tmpData;
     }
     else {
-        if(!m_runningInTest) {
-            ModulemanagerConfig *mmConfig = ModulemanagerConfig::getInstance();
-            mmConfig->setDefaultSession(m_sessionFile);
-        }
+        saveDefaultSession();
         qInfo("All modules started within %llims", m_timerAllModulesLoaded.elapsed());
         emit sigModulesLoaded(m_sessionFile, m_sessionsAvailable);
     }
@@ -311,7 +314,7 @@ void ModuleManager::onModuleEventSystemAdded(VeinEvent::EventSystem *t_eventSyst
     m_setupFacade->addSystem(t_eventSystem);
 }
 
-void ModuleManager::setDemoServices(QString deviceName)
+void ModuleManager::startAllServiceMocks(QString deviceName)
 {
     if (m_mockAllServices)
         m_mockAllServices = nullptr;
@@ -323,18 +326,16 @@ void ModuleManager::setDemoServices(QString deviceName)
 }
 
 
-void ModuleManager::saveModuleConfig(ModuleData *t_moduleData)
+void ModuleManager::saveModuleConfig(ModuleData *moduleData)
 {
-    if(m_runningInTest)
-        return;
-    QByteArray configData = t_moduleData->m_reference->getConfiguration();
+    QByteArray configData = moduleData->m_reference->getConfiguration();
 
     if(configData.isEmpty() == false)
     {
         QSaveFile f; //if the application is closed while writing it will not end up with empty files due to truncate
 
-        f.setFileName(t_moduleData->m_configPath);
-        //qDebug() << "Storing configuration for module:" << t_moduleData->m_uniqueName << "in file:" << f.fileName();
+        f.setFileName(moduleData->m_configPath);
+        //qDebug() << "Storing configuration for module:" << moduleData->m_uniqueName << "in file:" << f.fileName();
         f.open(QIODevice::WriteOnly | QIODevice::Truncate | QIODevice::Unbuffered);
         if(f.isOpen() && f.isWritable())
         {
@@ -348,7 +349,7 @@ void ModuleManager::saveModuleConfig(ModuleData *t_moduleData)
     }
     else
     {
-        qWarning() << "Configuration could not be retrieved from module:" << t_moduleData->m_uniqueName;
+        qWarning() << "Configuration could not be retrieved from module:" << moduleData->m_uniqueName;
     }
 }
 

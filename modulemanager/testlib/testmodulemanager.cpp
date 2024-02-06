@@ -16,12 +16,11 @@ void TestModuleManager::pointToInstalledSessionFiles()
 TestModuleManager::TestModuleManager(ModuleManagerSetupFacade *setupFacade, bool demo, QObject *parent) :
     ModuleManager(setupFacade, demo, parent)
 {
-    m_runningInTest = true;
     JsonSessionLoaderTest::enableTests();
     ModulemanagerConfigTest::enableTest();
 }
 
-void TestModuleManager::setTestServices(QString deviceName)
+void TestModuleManager::startAllServiceMocks(QString deviceName)
 {
     if (m_mockAllServices)
         m_mockAllServices = nullptr;
