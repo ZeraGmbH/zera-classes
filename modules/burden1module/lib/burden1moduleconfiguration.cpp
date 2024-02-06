@@ -1,10 +1,8 @@
-#include <QPoint>
+#include "burden1moduleconfiguration.h"
 #include <QString>
 #include <xmlconfigreader.h>
 
-#include "burden1moduleconfiguration.h"
-#include "burden1moduleconfigdata.h"
-#include "socket.h"
+static const char* defaultXSDFile = "://burden1module.xsd";
 
 namespace BURDEN1MODULE
 {
@@ -16,12 +14,10 @@ cBurden1ModuleConfiguration::cBurden1ModuleConfiguration()
     connect(m_pXMLReader, &Zera::XMLConfig::cReader::finishedParsingXML, this, &cBurden1ModuleConfiguration::completeConfiguration);
 }
 
-
 cBurden1ModuleConfiguration::~cBurden1ModuleConfiguration()
 {
     if (m_pBurden1ModulConfigData) delete m_pBurden1ModulConfigData;
 }
-
 
 void cBurden1ModuleConfiguration::setConfiguration(QByteArray xmlString)
 {
@@ -53,12 +49,10 @@ void cBurden1ModuleConfiguration::setConfiguration(QByteArray xmlString)
         m_bConfigError = true;
 }
 
-
 QByteArray cBurden1ModuleConfiguration::exportConfiguration()
 {
     return m_pXMLReader->getXMLConfig().toUtf8();
 }
-
 
 cBurden1ModuleConfigData *cBurden1ModuleConfiguration::getConfigurationData()
 {
@@ -144,7 +138,6 @@ void cBurden1ModuleConfiguration::configXMLInfo(QString key)
     else
         m_bConfigError = true;
 }
-
 
 void cBurden1ModuleConfiguration::completeConfiguration(bool ok)
 {

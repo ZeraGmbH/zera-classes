@@ -42,16 +42,6 @@ cBurden1ModuleMeasProgram::~cBurden1ModuleMeasProgram()
     // we delete burden meas delegates on deactivation of module
 }
 
-
-void cBurden1ModuleMeasProgram::start()
-{
-}
-
-
-void cBurden1ModuleMeasProgram::stop()
-{
-}
-
 cBurden1ModuleConfigData *cBurden1ModuleMeasProgram::getConfData()
 {
     return qobject_cast<cBurden1ModuleConfiguration*>(m_pConfiguration.get())->getConfigurationData();
