@@ -23,19 +23,15 @@ namespace POWER1MODULE
 
 enum power1moduleCmds
 {
-    resourcemanagerconnect,
     sendrmident,
     readresourcetypes,
     readresourcesense,
-    readresourcesenseinfos,
     readresourcesenseinfo,
 
     readresourcesource,
-    readresourcessourceinfos,
     readresourcesourceinfo,
     claimresourcesource,
 
-    pcbserverconnect,
     readsamplerate,
 
     readsensechannelalias,

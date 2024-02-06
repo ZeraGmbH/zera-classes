@@ -1,80 +1,22 @@
 #ifndef TRANSFORMER1MODULEMEASPROGRAM_H
 #define TRANSFORMER1MODULEMEASPROGRAM_H
 
-#include <QObject>
-#include <QList>
-#include <QHash>
-#include <QStateMachine>
-#include <QState>
-#include <QFinalState>
-
 #include "transformer1moduleconfigdata.h"
 #include "basemeasworkprogram.h"
-#include "measchannelinfo.h"
-#include "foutinfo.h"
+#include <QList>
+#include <QFinalState>
 
-
-class cBaseModule;
 class VfModuleActvalue;
 class VfModuleMetaData;
 class VfModuleComponent;
 class VfModuleParameter;
 
-class QStateMachine;
-class QState;
-class QFinalState;
-
-
 namespace TRANSFORMER1MODULE
 {
-
-enum transformer1moduleCmds
-{
-    resourcemanagerconnect,
-    sendrmident,
-    readresourcetypes,
-    readresourcesense,
-    readresourcesenseinfos,
-    readresourcesenseinfo,
-
-    readresourcesource,
-    readresourcessourceinfos,
-    readresourcesourceinfo,
-    claimresourcesource,
-
-    pcbserverconnect,
-    readsamplerate,
-
-    readsensechannelalias,
-    readsensechannelunit,
-    readsensechanneldspchannel,
-
-    readsourcechannelalias,
-    readsourcechanneldspchannel,
-    readsourceformfactor,
-
-    claimpgrmem,
-    claimusermem,
-    varlist2dsp,
-    cmdlist2dsp,
-    activatedsp,
-    deactivatedsp,
-    dataaquistion,
-    writeparameter,
-    freepgrmem,
-    freeusermem,
-    freeresourcesource,
-    unregisterrangenotifiers,
-
-    setfrequencyscales,
-    setchannelrangenotifier
-};
-
 
 class cTransformer1ModuleConfigData;
 class cTransformer1MeasDelegate;
 class cTransformer1Module;
-
 
 class cTransformer1ModuleMeasProgram: public cBaseMeasWorkProgram
 {

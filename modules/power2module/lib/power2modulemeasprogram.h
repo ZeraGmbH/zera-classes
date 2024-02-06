@@ -15,19 +15,15 @@ namespace POWER2MODULE
 
 enum power2moduleCmds
 {
-    resourcemanagerconnect,
     sendrmident,
     readresourcetypes,
     readresourcesense,
-    readresourcesenseinfos,
     readresourcesenseinfo,
 
     readresourcesource,
-    readresourcessourceinfos,
     readresourcesourceinfo,
     claimresourcesource,
 
-    pcbserverconnect,
     readsamplerate,
 
     readsensechannelalias,
