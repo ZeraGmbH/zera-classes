@@ -6,17 +6,17 @@
 class TestModuleManager : public ZeraModules::ModuleManager
 {
 public:
-    explicit TestModuleManager(ModuleManagerSetupFacade *setupFacade, bool demo = false, QObject *parent = nullptr);
     static void enableTest();
     static void pointToInstalledSessionFiles();
     static void pointToSourceSessionFiles();
+
+    explicit TestModuleManager(ModuleManagerSetupFacade *setupFacade, bool demo = false, QObject *parent = nullptr);
     void setTestServices(QString deviceName);
-    bool loadTestSession(const QString sessionFileNameFull);
     void destroyModulesAndWaitUntilAllShutdown();
     void waitUntilModulesAreReady();
     QList<ZeraModules::ModuleData *> getModuleList();
 private:
-    virtual QStringList getModuleFileNames() override;
+    QStringList getModuleFileNames() override;
 };
 
 #endif // TESTMODULEMANAGER_H

@@ -45,9 +45,10 @@ signals:
     void sigModulesLoaded(const QString &t_sessionPath, const QStringList &t_sessionsAvailable);
 
 public slots:
+    bool loadSession(const QString sessionFileNameFull);
+    void changeSessionFile(const QString &newSessionFile);
     void startModule(const QString &t_uniqueName, const QString &t_xmlConfigPath, const QByteArray &t_xmlConfigData, int moduleEntityId, int moduleNum);
     void destroyModules();
-    void changeSessionFile(const QString &newSessionFile);
     void setModulesPaused(bool t_paused);
 
 private slots:
@@ -63,8 +64,6 @@ protected:
     static bool m_runningInTest;
     QList<ModuleData *> m_moduleList;
     std::unique_ptr<AbstractMockAllServices> m_mockAllServices;
-
-    bool loadSession(const QString sessionFileNameFull);
 
 private:
     void saveModuleConfig(ModuleData *t_moduleData);
