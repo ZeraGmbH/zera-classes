@@ -156,6 +156,6 @@ void test_scpi_cmds_in_session::setupServices(QString sessionFileName)
     m_modMan->loadAllAvailableModulePlugins();
     m_modMan->setupConnections();
     m_modMan->setTestServices("mt310s2");
-    m_modMan->loadTestSession(sessionFileName);
+    m_modMan->loadSession(sessionFileName);
     TimeMachineObject::feedEventLoop();
 }

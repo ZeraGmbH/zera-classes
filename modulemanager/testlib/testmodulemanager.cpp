@@ -25,6 +25,11 @@ void TestModuleManager::pointToSourceSessionFiles()
     m_sessionPath = QDir::cleanPath(QString(SESSION_FILES_SOURCE_PATH));
 }
 
+TestModuleManager::TestModuleManager(ModuleManagerSetupFacade *setupFacade, bool demo, QObject *parent) :
+    ModuleManager(setupFacade, demo, parent)
+{
+}
+
 void TestModuleManager::setTestServices(QString deviceName)
 {
     if (m_mockAllServices)
@@ -34,16 +39,6 @@ void TestModuleManager::setTestServices(QString deviceName)
         m_mockAllServices = std::make_unique<TestAllServicesMt310s2>();
     else if(deviceName == "com5003")
         m_mockAllServices = std::make_unique<TestAllServicesCom5003>();
-}
-
-bool TestModuleManager::loadTestSession(const QString sessionFileNameFull)
-{
-    return loadSession(sessionFileNameFull);
-}
-
-TestModuleManager::TestModuleManager(ModuleManagerSetupFacade *setupFacade, bool demo, QObject *parent) :
-    ModuleManager(setupFacade, demo, parent)
-{
 }
 
 void TestModuleManager::destroyModulesAndWaitUntilAllShutdown()
