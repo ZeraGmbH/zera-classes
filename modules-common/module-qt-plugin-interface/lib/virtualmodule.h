@@ -1,7 +1,6 @@
 #ifndef MODULEOBJECT_H
 #define MODULEOBJECT_H
-#include <QObject>
-#include <QList>
+
 #include <QStateMachine>
 #include <QFinalState>
 
