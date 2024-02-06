@@ -4,7 +4,6 @@
 #include "virtualmodule.h"
 #include "modulegroupnumerator.h"
 #include <QtPlugin>
-#include <QList>
 
 namespace VeinEvent
 {
