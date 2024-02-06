@@ -2,7 +2,7 @@
 #include "licensesystemmock.h"
 #include "modulemanager.h"
 #include "moduledata.h"
-#include "modulemanagerconfigtest.h"
+#include "modulemanagerconfig.h"
 #include <timemachineobject.h>
 #include <QTest>
 
@@ -11,9 +11,7 @@ QTEST_MAIN(test_modman_regression_all_sessions)
 void test_modman_regression_all_sessions::initTestCase()
 {
     ModuleManagerSetupFacade::registerMetaTypeStreamOperators();
-    TestModuleManager::enableTest();
     TestModuleManager::pointToInstalledSessionFiles();
-    ModulemanagerConfigTest::enableTest();
     qputenv("QT_FATAL_CRITICALS", "1");
     qputenv("QT_LOGGING_RULES", "*.debug=false;*.info=false");
 }

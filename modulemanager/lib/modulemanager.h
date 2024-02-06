@@ -61,7 +61,7 @@ private slots:
 
 protected:
     static QString m_sessionPath;
-    static bool m_runningInTest;
+    bool m_runningInTest = false;
     QList<ModuleData *> m_moduleList;
     std::unique_ptr<AbstractMockAllServices> m_mockAllServices;
 
