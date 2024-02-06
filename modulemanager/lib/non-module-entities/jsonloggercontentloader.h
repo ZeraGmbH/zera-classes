@@ -4,7 +4,6 @@
 #include <vf_loggercontenthandler.h>
 #include <QJsonObject>
 
-
 class JsonLoggerContentLoader : public LoggerContentHandler
 {
 public:
