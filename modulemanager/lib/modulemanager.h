@@ -67,6 +67,7 @@ private:
     virtual void saveModuleConfig(ModuleData *moduleData);
     virtual void saveDefaultSession();
     virtual QStringList getModuleFileNames();
+    void handleFinalModuleLoaded();
 
     ModuleManagerSetupFacade *m_setupFacade;
     JsonSessionLoader m_sessionLoader;

@@ -74,6 +74,13 @@ QStringList ModuleManager::getModuleFileNames()
     return fullNames;
 }
 
+void ZeraModules::ModuleManager::handleFinalModuleLoaded()
+{
+    saveDefaultSession();
+    qInfo("All modules started within %llims", m_timerAllModulesLoaded.elapsed());
+    emit sigModulesLoaded(m_sessionFile, m_sessionsAvailable);
+}
+
 bool ModuleManager::loadAllAvailableModulePlugins()
 {
     bool retVal = false;
@@ -292,11 +299,8 @@ void ModuleManager::onModuleStartNext()
         startModule(tmpData->m_uniqueName, tmpData->m_configPath, tmpData->m_configData, tmpData->m_moduleId, tmpData->m_moduleNum);
         delete tmpData;
     }
-    else {
-        saveDefaultSession();
-        qInfo("All modules started within %llims", m_timerAllModulesLoaded.elapsed());
-        emit sigModulesLoaded(m_sessionFile, m_sessionsAvailable);
-    }
+    else
+        handleFinalModuleLoaded();
 }
 
 void ModuleManager::onModuleError(const QString &t_error)
