@@ -3,7 +3,8 @@
 
 #include <QVector>
 
-struct PhaseSumValues{
+struct PhaseSumValues
+{
     PhaseSumValues();
     QVector<double> phases;
     double sum = 0.0;

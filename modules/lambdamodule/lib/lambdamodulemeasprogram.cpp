@@ -32,18 +32,6 @@ cLambdaModuleMeasProgram::cLambdaModuleMeasProgram(cLambdaModule* module, std::s
     connect(&m_deactivateDoneState, &QState::entered, this, &cLambdaModuleMeasProgram::deactivateMeasDone);
 }
 
-cLambdaModuleMeasProgram::~cLambdaModuleMeasProgram()
-{
-}
-
-void cLambdaModuleMeasProgram::start()
-{
-}
-
-void cLambdaModuleMeasProgram::stop()
-{
-}
-
 cLambdaModuleConfigData *cLambdaModuleMeasProgram::getConfData()
 {
     return qobject_cast<cLambdaModuleConfiguration*>(m_pConfiguration.get())->getConfigurationData();

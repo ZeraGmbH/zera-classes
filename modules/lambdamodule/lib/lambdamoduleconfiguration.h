@@ -1,12 +1,9 @@
 #ifndef LAMBDAMODULECONFIGURATION_H
 #define LAMBDAMODULECONFIGURATION_H
 
-
-#include <QStringList>
-#include <QByteArray>
-#include <QHash>
-
 #include "basemoduleconfiguration.h"
+#include "lambdamoduleconfigdata.h"
+#include <QByteArray>
 
 namespace LAMBDAMODULE
 {
@@ -28,26 +25,19 @@ enum moduleconfigstate
     setLambdaInputSComponent1 = setLambdaInputQComponent1 +16
 };
 
-
-
-class cLambdaModuleConfigData;
-
-// moduleconfiguration holds configuration data as well as parameter
-
 class cLambdaModuleConfiguration: public cBaseModuleConfiguration
 {
     Q_OBJECT
 public:
     cLambdaModuleConfiguration();
     ~cLambdaModuleConfiguration();
-    virtual void setConfiguration(QByteArray xmlString);
-    virtual QByteArray exportConfiguration(); // exports conf. and parameters to xml
+    void setConfiguration(QByteArray xmlString) override;
+    QByteArray exportConfiguration() override; // exports conf. and parameters to xml
     cLambdaModuleConfigData* getConfigurationData();
 
 protected slots:
-    virtual void configXMLInfo(QString key);
-    virtual void completeConfiguration(bool ok);
-
+    void configXMLInfo(QString key) override;
+    void completeConfiguration(bool ok);
 private:
     cLambdaModuleConfigData *m_pLambdaModulConfigData;  // configuration
 };

@@ -3,9 +3,6 @@
 
 #include <QString>
 #include <QStringList>
-#include <QList>
-
-#include "socket.h"
 
 namespace LAMBDAMODULE
 {
