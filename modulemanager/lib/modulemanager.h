@@ -53,7 +53,6 @@ private slots:
     void onStartModuleDelete();
     void delayedModuleStartNext();
     void onModuleStartNext();
-    void onModuleError(const QString &t_error);
     void checkModuleList(QObject *object);
     void onModuleEventSystemAdded(VeinEvent::EventSystem *t_eventSystem);
 

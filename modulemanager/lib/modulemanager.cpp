@@ -153,8 +153,6 @@ void ModuleManager::startModule(const QString & uniqueModuleName, const QString 
                     m_moduleStartLock=false;
                     delayedModuleStartNext();
                 });
-                connect(tmpModule, &VirtualModule::moduleError, this, &ModuleManager::onModuleError);
-
                 m_moduleStartLock = true;
                 tmpModule->startModule();
                 ModuleData *moduleData = new ModuleData(tmpModule, uniqueModuleName, t_xmlConfigPath, QByteArray(), moduleEntityId, moduleNum);
@@ -301,11 +299,6 @@ void ModuleManager::onModuleStartNext()
     }
     else
         handleFinalModuleLoaded();
-}
-
-void ModuleManager::onModuleError(const QString &t_error)
-{
-    qWarning() << "Module error:" << t_error;
 }
 
 void ModuleManager::onModuleEventSystemAdded(VeinEvent::EventSystem *t_eventSystem)
