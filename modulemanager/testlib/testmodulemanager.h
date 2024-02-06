@@ -9,12 +9,15 @@ public:
     static void pointToInstalledSessionFiles();
 
     explicit TestModuleManager(ModuleManagerSetupFacade *setupFacade, bool demo = false, QObject *parent = nullptr);
-    void setTestServices(QString deviceName);
+    void startAllServiceMocks(QString deviceName) override;
     void destroyModulesAndWaitUntilAllShutdown();
     void waitUntilModulesAreReady();
     QList<ZeraModules::ModuleData *> getModuleList();
 private:
     QStringList getModuleFileNames() override;
+    // Avoid file write in install area on tests (OE tests turn 'ff')
+    void saveModuleConfig(ZeraModules::ModuleData *) override {};
+    void saveDefaultSession() override {};
 };
 
 #endif // TESTMODULEMANAGER_H

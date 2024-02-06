@@ -132,7 +132,7 @@ int main(int argc, char *argv[])
 
     ZeraModules::ModuleManager *modMan = new ZeraModules::ModuleManager(modManSetupFacade, demoMode, app.get());
     if(demoMode)
-        modMan->setDemoServices(demoDeviceName);
+        modMan->startAllServiceMocks(demoDeviceName);
 
     // setup vein modules
     VeinNet::NetworkSystem *netSystem = new VeinNet::NetworkSystem(app.get());
