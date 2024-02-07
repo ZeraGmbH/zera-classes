@@ -1,10 +1,7 @@
 #ifndef TRANSFORMER1MODULE_H
 #define TRANSFORMER1MODULE_H
 
-#include "abstractmodulefactory.h"
 #include "basemeasmodule.h"
-#include <QStateMachine>
-#include <QState>
 #include <QFinalState>
 #include <QList>
 

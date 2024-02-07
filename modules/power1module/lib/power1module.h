@@ -1,14 +1,9 @@
 #ifndef POWER1MODULE_H
 #define POWER1MODULE_H
 
-#include "abstractmodulefactory.h"
 #include "basemeasmodule.h"
 #include <vfeventsysteminputcomponents.h>
-#include <QObject>
-#include <QStateMachine>
-#include <QState>
 #include <QFinalState>
-#include <QList>
 #include <memory>
 
 namespace POWER1MODULE {

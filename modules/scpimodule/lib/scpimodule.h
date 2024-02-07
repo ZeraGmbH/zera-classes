@@ -1,15 +1,10 @@
 #ifndef SCPIMODULE_H
 #define SCPIMODULE_H
 
-#include "abstractmodulefactory.h"
 #include "scpiclientinfo.h"
 #include "basemodule.h"
 #include "vfeventsytemmoduleparam.h"
-#include <QStateMachine>
-#include <QState>
 #include <QFinalState>
-#include <QHash>
-#include <QMultiHash>
 
 namespace VeinEvent
 {

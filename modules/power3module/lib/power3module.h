@@ -1,10 +1,8 @@
 #ifndef POWER3MODULE_H
 #define POWER3MODULE_H
 
-#include "abstractmodulefactory.h"
 #include "power3modulemeasprogram.h"
 #include <basemeasmodule.h>
-#include <QList>
 
 class cModuleError;
 

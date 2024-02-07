@@ -1,12 +1,8 @@
 #ifndef OSCIMODULE_H
 #define OSCIMODULE_H
 
-#include "abstractmodulefactory.h"
 #include "basemeasmodule.h"
-#include <QStateMachine>
-#include <QState>
 #include <QFinalState>
-#include <QList>
 
 namespace OSCIMODULE {
 

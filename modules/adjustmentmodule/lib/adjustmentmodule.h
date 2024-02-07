@@ -1,7 +1,6 @@
 #ifndef ADJUSTMENTMODULE_H
 #define ADJUSTMENTMODULE_H
 
-#include "abstractmodulefactory.h"
 #include <basemeasmodule.h>
 
 class cAdjustmentModuleMeasProgram;

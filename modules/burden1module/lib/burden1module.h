@@ -1,7 +1,6 @@
 #ifndef BURDEN1MODULE_H
 #define BURDEN1MODULE_H
 
-#include "abstractmodulefactory.h"
 #include "burden1modulemeasprogram.h"
 #include <basemeasmodule.h>
 

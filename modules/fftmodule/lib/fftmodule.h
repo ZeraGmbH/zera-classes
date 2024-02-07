@@ -1,12 +1,8 @@
 #ifndef FFTMODULE_H
 #define FFTMODULE_H
 
-#include "abstractmodulefactory.h"
 #include "basemeasmodule.h"
-#include <QStateMachine>
-#include <QState>
 #include <QFinalState>
-#include <QList>
 
 namespace FFTMODULE {
 

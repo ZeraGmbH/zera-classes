@@ -1,12 +1,7 @@
 #ifndef RANGEMODULE_H
 #define RANGEMODULE_H
 
-#include "abstractmodulefactory.h"
 #include "basemeasmodule.h"
-#include <QStateMachine>
-#include <QState>
-#include <QFinalState>
-#include <QList>
 
 class VfModuleMetaData;
 

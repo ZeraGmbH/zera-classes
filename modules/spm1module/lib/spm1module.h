@@ -1,7 +1,6 @@
 #ifndef SPM1MODULE_H
 #define SPM1MODULE_H
 
-#include "abstractmodulefactory.h"
 #include "spm1modulemeasprogram.h"
 #include <basemeasmodule.h>
 

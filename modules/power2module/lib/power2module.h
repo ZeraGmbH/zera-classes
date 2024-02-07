@@ -1,12 +1,8 @@
 #ifndef POWER2MODULE_H
 #define POWER2MODULE_H
 
-#include "abstractmodulefactory.h"
 #include "basemeasmodule.h"
-#include <QStateMachine>
-#include <QState>
 #include <QFinalState>
-#include <QList>
 
 namespace POWER2MODULE
 {
