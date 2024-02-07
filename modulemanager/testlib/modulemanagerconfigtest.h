@@ -6,7 +6,7 @@
 class ModulemanagerConfigTest : public ModulemanagerConfig
 {
 public:
-    static void enableTest();
+    static void supportOeTests();
 };
 
 #endif // MODULEMANAGERCONFIGTEST_H

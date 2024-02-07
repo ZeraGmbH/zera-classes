@@ -6,6 +6,12 @@
 #include <timemachineobject.h>
 #include <QDir>
 
+void TestModuleManager::supportOeTests()
+{
+    JsonSessionLoaderTest::supportOeTests();
+    ModulemanagerConfigTest::supportOeTests();
+}
+
 void TestModuleManager::pointToInstalledSessionFiles()
 {
     m_sessionPath = QDir::cleanPath(
@@ -16,8 +22,8 @@ void TestModuleManager::pointToInstalledSessionFiles()
 TestModuleManager::TestModuleManager(ModuleManagerSetupFacade *setupFacade, bool demo, QObject *parent) :
     ModuleManager(setupFacade, demo, parent)
 {
-    JsonSessionLoaderTest::enableTests();
-    ModulemanagerConfigTest::enableTest();
+    JsonSessionLoaderTest::supportOeTests();
+    ModulemanagerConfigTest::supportOeTests();
 }
 
 void TestModuleManager::startAllServiceMocks(QString deviceName)

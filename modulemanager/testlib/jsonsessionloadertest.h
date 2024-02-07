@@ -6,7 +6,7 @@
 class JsonSessionLoaderTest : public JsonSessionLoader
 {
 public:
-    static void enableTests();
+    static void supportOeTests();
 };
 
 #endif // JSONSESSIONLOADERTEST_H
