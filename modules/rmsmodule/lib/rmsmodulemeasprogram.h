@@ -110,7 +110,6 @@ private:
 
     void setActualValuesNames();
     void setSCPIMeasInfo();
-    void setupDemoOperation();
 
     cMovingwindowSqare m_movingwindowFilter;
     TimerTemplateQtPtr m_demoPeriodicTimer;

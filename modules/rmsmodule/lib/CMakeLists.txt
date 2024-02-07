@@ -9,7 +9,7 @@ file(GLOB HEADER
 add_library(rmsmodule-static STATIC
     ${SOURCES}
     ${HEADER}
-    )
+)
 
 target_include_directories(rmsmodule-static
     PUBLIC
