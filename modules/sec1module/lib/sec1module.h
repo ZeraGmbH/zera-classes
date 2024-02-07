@@ -1,7 +1,6 @@
 #ifndef SEC1MODULE_H
 #define SEC1MODULE_H
 
-#include "abstractmodulefactory.h"
 #include <basemeasmodule.h>
 
 namespace SEC1MODULE

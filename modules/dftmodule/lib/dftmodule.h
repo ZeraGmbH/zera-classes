@@ -1,12 +1,8 @@
 #ifndef DFTMODULE_H
 #define DFTMODULE_H
 
-#include "abstractmodulefactory.h"
 #include "basemeasmodule.h"
-#include <QStateMachine>
-#include <QState>
 #include <QFinalState>
-#include <QList>
 
 namespace DFTMODULE {
 

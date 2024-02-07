@@ -1,7 +1,6 @@
 #ifndef BLEMODULE_H
 #define BLEMODULE_H
 
-#include "abstractmodulefactory.h"
 #include "blemodulemeasprogram.h"
 #include <basemeasmodule.h>
 

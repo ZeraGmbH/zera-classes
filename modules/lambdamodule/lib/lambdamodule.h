@@ -1,7 +1,6 @@
 #ifndef LAMBDAMODULE_H
 #define LAMBDAMODULE_H
 
-#include "abstractmodulefactory.h"
 #include "lambdamodulemeasprogram.h"
 #include <basemeasmodule.h>
 

@@ -1,15 +1,11 @@
 #ifndef REFERENCEMODULE_H
 #define REFERENCEMODULE_H
 
-#include "abstractmodulefactory.h"
 #include "referencemeaschannel.h"
 #include "referencemodulemeasprogram.h"
 #include "referenceadjustment.h"
 #include <basemeasmodule.h>
-#include <QStateMachine>
-#include <QState>
 #include <QFinalState>
-#include <QList>
 
 namespace REFERENCEMODULE
 {

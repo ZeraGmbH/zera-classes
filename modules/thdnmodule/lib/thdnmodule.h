@@ -1,12 +1,8 @@
 #ifndef THDNMODULE_H
 #define THDNMODULE_H
 
-#include "abstractmodulefactory.h"
 #include "basemeasmodule.h"
-#include <QStateMachine>
-#include <QState>
 #include <QFinalState>
-#include <QList>
 
 namespace THDNMODULE {
 

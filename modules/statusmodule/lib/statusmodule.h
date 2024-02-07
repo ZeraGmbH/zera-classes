@@ -1,13 +1,9 @@
 #ifndef STATUSMODULE_H
 #define STATUSMODULE_H
 
-#include "abstractmodulefactory.h"
 #include "statusmoduleinit.h"
 #include <basemeasmodule.h>
-#include <QStateMachine>
-#include <QState>
 #include <QFinalState>
-#include <QList>
 
 namespace STATUSMODULE
 {

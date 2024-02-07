@@ -1,7 +1,6 @@
 #ifndef SEM1MODULE_H
 #define SEM1MODULE_H
 
-#include "abstractmodulefactory.h"
 #include "sem1modulemeasprogram.h"
 #include <basemeasmodule.h>
 

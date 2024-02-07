@@ -1,7 +1,6 @@
 #ifndef SAMPLEMODULE_H
 #define SAMPLEMODULE_H
 
-#include "abstractmodulefactory.h"
 #include "samplemodulemeasprogram.h"
 #include "samplechannel.h"
 #include "pllmeaschannel.h"

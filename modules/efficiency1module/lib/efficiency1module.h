@@ -1,7 +1,6 @@
 #ifndef EFFICIENCY1MODULE_H
 #define EFFICIENCY1MODULE_H
 
-#include "abstractmodulefactory.h"
 #include "efficiency1modulemeasprogram.h"
 #include <basemeasmodule.h>
 

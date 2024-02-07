@@ -1,7 +1,6 @@
 #ifndef RMSMODULE_H
 #define RMSMODULE_H
 
-#include "abstractmodulefactory.h"
 #include "rmsmodulemeasprogram.h"
 #include <basemeasmodule.h>
 #include <QFinalState>
