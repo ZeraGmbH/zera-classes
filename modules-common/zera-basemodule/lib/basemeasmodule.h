@@ -10,11 +10,7 @@ class cBaseMeasModule : public cBaseModule
 {
     Q_OBJECT
 public:
-    cBaseMeasModule(quint8 modnr,
-                    int entityId,
-                    VeinEvent::StorageSystem* storagesystem,
-                    std::shared_ptr<cBaseModuleConfiguration> modcfg,
-                    bool demo);
+    cBaseMeasModule(MeasurementModuleFactoryParam moduleParam, std::shared_ptr<cBaseModuleConfiguration> modcfg);
     VfEventSytemModuleParam* m_pModuleValidator;
 };
 

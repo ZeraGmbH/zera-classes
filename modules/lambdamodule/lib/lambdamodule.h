@@ -1,6 +1,7 @@
 #ifndef LAMBDAMODULE_H
 #define LAMBDAMODULE_H
 
+#include "abstractmodulefactory.h"
 #include "lambdamodulemeasprogram.h"
 #include <basemeasmodule.h>
 
@@ -13,7 +14,7 @@ public:
     static constexpr const char* BaseModuleName = "LambdaModule";
     static constexpr const char* BaseSCPIModuleName = "LAM";
 
-    cLambdaModule(quint8 modnr, int entityId, VeinEvent::StorageSystem* storagesystem, bool demo);
+    cLambdaModule(MeasurementModuleFactoryParam moduleParam);
     QByteArray getConfiguration() const override;
 protected:
     cLambdaModuleMeasProgram *m_pMeasProgram; // our measuring program, lets say the working horse

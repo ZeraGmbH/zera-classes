@@ -95,7 +95,7 @@ void cEfficiency1ModuleMeasProgram::searchActualValues()
     for (int i = 0; i < getConfData()->m_PowerInputConfiguration.m_nPowerSystemCount; i++)
     {
         // we first test that wanted input components exist
-        if (!m_pModule->m_pStorageSystem->hasStoredValue(getConfData()->m_PowerInputConfiguration.m_nModuleId,
+        if (!m_pModule->getStorageSystem()->hasStoredValue(getConfData()->m_PowerInputConfiguration.m_nModuleId,
                                                         getConfData()->m_PowerInputConfiguration.powerInputList.at(i)))
             error = true;
     }
@@ -103,7 +103,7 @@ void cEfficiency1ModuleMeasProgram::searchActualValues()
     for (int i = 0; i < getConfData()->m_PowerOutputConfiguration.m_nPowerSystemCount; i++)
     {
         // we first test that wanted input components exist
-        if (!m_pModule->m_pStorageSystem->hasStoredValue(getConfData()->m_PowerOutputConfiguration.m_nModuleId,
+        if (!m_pModule->getStorageSystem()->hasStoredValue(getConfData()->m_PowerOutputConfiguration.m_nModuleId,
                                                         getConfData()->m_PowerOutputConfiguration.powerInputList.at(i)))
             error = true;
     }

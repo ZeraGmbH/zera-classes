@@ -1,6 +1,7 @@
 #ifndef RMSMODULE_H
 #define RMSMODULE_H
 
+#include "abstractmodulefactory.h"
 #include "rmsmodulemeasprogram.h"
 #include <basemeasmodule.h>
 #include <QFinalState>
@@ -14,7 +15,7 @@ public:
     static constexpr const char* BaseModuleName = "RMSModule";
     static constexpr const char* BaseSCPIModuleName = "RMS";
 
-    cRmsModule(quint8 modnr, int entityId, VeinEvent::StorageSystem* storagesystem, bool demo);
+    cRmsModule(MeasurementModuleFactoryParam moduleParam);
     QByteArray getConfiguration() const override;
 
 protected:

@@ -4,9 +4,9 @@
 namespace DFTMODULE
 {
 
-ZeraModules::VirtualModule* DftModuleFactory::createModule(int entityId, VeinEvent::StorageSystem* storagesystem, bool demo, int moduleNum)
+ZeraModules::VirtualModule* DftModuleFactory::createModule(MeasurementModuleFactoryParam moduleParam)
 {
-    return new cDftModule(m_moduleGroupNumerator->requestModuleNum(moduleNum), entityId, storagesystem, demo);
+    return new cDftModule(moduleParam.getAdjustedParam(m_moduleGroupNumerator.get()));
 }
 
 

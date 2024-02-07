@@ -1,18 +1,17 @@
 #include "burden1module.h"
 #include "burden1moduleconfiguration.h"
-#include "burden1moduleconfigdata.h"
 #include "burden1modulemeasprogram.h"
 #include <errormessages.h>
 
 namespace BURDEN1MODULE
 {
 
-cBurden1Module::cBurden1Module(quint8 modnr, int entityId, VeinEvent::StorageSystem* storagesystem, bool demo) :
-    cBaseMeasModule(modnr, entityId, storagesystem, std::shared_ptr<cBaseModuleConfiguration>(new cBurden1ModuleConfiguration()), demo)
+cBurden1Module::cBurden1Module(MeasurementModuleFactoryParam moduleParam) :
+    cBaseMeasModule(moduleParam, std::shared_ptr<cBaseModuleConfiguration>(new cBurden1ModuleConfiguration()))
 {
-    m_sModuleName = QString("%1%2").arg(BaseModuleName).arg(modnr);
+    m_sModuleName = QString("%1%2").arg(BaseModuleName).arg(moduleParam.m_moduleNum);
     m_sModuleDescription = QString("This module measures configured number burden and powerfactor from configured input dft values");
-    m_sSCPIModuleName = QString("%1%2").arg(BaseSCPIModuleName).arg(modnr);
+    m_sSCPIModuleName = QString("%1%2").arg(BaseSCPIModuleName).arg(moduleParam.m_moduleNum);
 
     m_ActivationStartState.addTransition(this, &cBurden1Module::activationContinue, &m_ActivationExecState);
     m_ActivationExecState.addTransition(this, &cBurden1Module::activationContinue, &m_ActivationDoneState);

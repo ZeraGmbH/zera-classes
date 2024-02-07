@@ -124,8 +124,8 @@ void cPower3ModuleMeasProgram::searchActualValues()
     for (int i = 0; i < getConfData()->m_nPowerSystemCount; i++)
     {
         // we first test that wanted input components exist
-        if ( (m_pModule->m_pStorageSystem->hasStoredValue(getConfData()->m_nModuleId, getConfData()->m_powerSystemConfigList.at(i).m_sInputU)) &&
-             (m_pModule->m_pStorageSystem->hasStoredValue(getConfData()->m_nModuleId, getConfData()->m_powerSystemConfigList.at(i).m_sInputI)) )
+        if ( (m_pModule->getStorageSystem()->hasStoredValue(getConfData()->m_nModuleId, getConfData()->m_powerSystemConfigList.at(i).m_sInputU)) &&
+             (m_pModule->getStorageSystem()->hasStoredValue(getConfData()->m_nModuleId, getConfData()->m_powerSystemConfigList.at(i).m_sInputI)) )
         {
             cPower3MeasDelegate* cPMD;
             VfModuleComponentInput *vmci;

@@ -1,6 +1,7 @@
 #ifndef BURDEN1MODULE_H
 #define BURDEN1MODULE_H
 
+#include "abstractmodulefactory.h"
 #include "burden1modulemeasprogram.h"
 #include <basemeasmodule.h>
 
@@ -13,7 +14,7 @@ public:
     static constexpr const char* BaseModuleName = "Burden1Module";
     static constexpr const char* BaseSCPIModuleName = "BD1";
 
-    cBurden1Module(quint8 modnr, int entityId, VeinEvent::StorageSystem* storagesystem, bool demo);
+    cBurden1Module(MeasurementModuleFactoryParam moduleParam);
     QByteArray getConfiguration() const override;
 
 protected:

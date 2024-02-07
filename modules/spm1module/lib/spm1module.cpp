@@ -1,6 +1,5 @@
 #include "spm1module.h"
 #include "spm1moduleconfiguration.h"
-#include "spm1moduleconfigdata.h"
 #include "spm1modulemeasprogram.h"
 #include <vfmodulecomponent.h>
 #include <vfmoduleerrorcomponent.h>
@@ -9,10 +8,10 @@
 namespace SPM1MODULE
 {
 
-cSpm1Module::cSpm1Module(quint8 modnr, int entityId, VeinEvent::StorageSystem *storagesystem, bool demo) :
-    cBaseMeasModule(modnr, entityId, storagesystem, std::shared_ptr<cBaseModuleConfiguration>(new cSpm1ModuleConfiguration()), demo)
+cSpm1Module::cSpm1Module(MeasurementModuleFactoryParam moduleParam) :
+    cBaseMeasModule(moduleParam, std::shared_ptr<cBaseModuleConfiguration>(new cSpm1ModuleConfiguration()))
 {
-    m_sModuleName = QString("%1%2").arg(BaseModuleName).arg(modnr);
+    m_sModuleName = QString("%1%2").arg(BaseModuleName).arg(moduleParam.m_moduleNum);
     m_sModuleDescription = QString("This module povides a configurable error calculator");
     m_sSCPIModuleName = QString(BaseSCPIModuleName);
 

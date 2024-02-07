@@ -1,18 +1,17 @@
 #include "power3module.h"
 #include "power3moduleconfiguration.h"
-#include "power3moduleconfigdata.h"
 #include "power3modulemeasprogram.h"
 #include <errormessages.h>
 
 namespace POWER3MODULE
 {
 
-cPower3Module::cPower3Module(quint8 modnr, int entityId, VeinEvent::StorageSystem* storagesystem, bool demo) :
-    cBaseMeasModule(modnr, entityId, storagesystem, std::shared_ptr<cBaseModuleConfiguration>(new cPower3ModuleConfiguration()), demo)
+cPower3Module::cPower3Module(MeasurementModuleFactoryParam moduleParam) :
+    cBaseMeasModule(moduleParam, std::shared_ptr<cBaseModuleConfiguration>(new cPower3ModuleConfiguration()))
 {
-    m_sModuleName = QString("%1%2").arg(BaseModuleName).arg(modnr);
+    m_sModuleName = QString("%1%2").arg(BaseModuleName).arg(moduleParam.m_moduleNum);
     m_sModuleDescription = QString("This module measures configured number of harmonic power values from configured input values");
-    m_sSCPIModuleName = QString("%1%2").arg(BaseSCPIModuleName).arg(modnr);
+    m_sSCPIModuleName = QString("%1%2").arg(BaseSCPIModuleName).arg(moduleParam.m_moduleNum);
 
     m_ActivationStartState.addTransition(this, &cPower3Module::activationContinue, &m_ActivationExecState);
     m_ActivationExecState.addTransition(this, &cPower3Module::activationContinue, &m_ActivationDoneState);

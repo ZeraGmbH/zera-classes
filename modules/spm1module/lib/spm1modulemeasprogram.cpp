@@ -38,7 +38,7 @@ cSpm1ModuleMeasProgram::cSpm1ModuleMeasProgram(cSpm1Module* module, std::shared_
     m_readREFInputsState.addTransition(this, &cSpm1ModuleMeasProgram::activationContinue, &m_readREFInputAliasState);
     m_readREFInputAliasState.addTransition(this, &cSpm1ModuleMeasProgram::activationContinue, &m_readREFInputDoneState);
     m_readREFInputDoneState.addTransition(this, &cSpm1ModuleMeasProgram::activationLoop, &m_readREFInputAliasState);
-    if(m_pModule->m_demo)
+    if(m_pModule->getDemo())
         m_readREFInputDoneState.addTransition(this, &cSpm1ModuleMeasProgram::activationContinue, &m_activationDoneState);
     else
         m_readREFInputDoneState.addTransition(this, &cSpm1ModuleMeasProgram::activationContinue, &m_setpcbREFConstantNotifierState);
@@ -126,7 +126,7 @@ cSpm1ModuleMeasProgram::cSpm1ModuleMeasProgram(cSpm1Module* module, std::shared_
     m_startMeasurementMachine.addState(&m_startMeasurementState);
     m_startMeasurementMachine.addState(&m_startMeasurementDoneState);
 
-    if(m_pModule->m_demo)
+    if(m_pModule->getDemo())
         m_startMeasurementMachine.setInitialState(&m_startMeasurementState);
     else
         m_startMeasurementMachine.setInitialState(&m_setsyncState);
@@ -1116,10 +1116,10 @@ void cSpm1ModuleMeasProgram::enableInterrupt()
 
 void cSpm1ModuleMeasProgram::startMeasurement()
 {
-    if(!m_pModule->m_demo)
+    if(!m_pModule->getDemo())
         m_MsgNrCmdList[m_pSECInterface->start(m_masterErrCalcName)] = startmeasurement;
     setStatus(ECALCSTATUS::ARMED);
-    if(m_pModule->m_demo) {
+    if(m_pModule->getDemo()) {
         updateDemoMeasurementResults();
         emit setupContinue();
     }
@@ -1336,7 +1336,7 @@ void cSpm1ModuleMeasProgram::newLowerLimit(QVariant limit)
 
 void cSpm1ModuleMeasProgram::Actualize()
 {
-    if(!m_pModule->m_demo) {
+    if(!m_pModule->getDemo()) {
         m_MsgNrCmdList[m_pSECInterface->readRegister(m_masterErrCalcName, ECALCREG::STATUS)] = actualizestatus;
         m_MsgNrCmdList[m_pSECInterface->readRegister(m_slaveErrCalcName, ECALCREG::MTCNTact)] = actualizeenergy;
         m_MsgNrCmdList[m_pSECInterface->readRegister(m_slave2ErrCalcName, ECALCREG::MTCNTact)] = actualizepower;

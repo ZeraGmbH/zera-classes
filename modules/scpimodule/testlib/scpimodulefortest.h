@@ -11,7 +11,7 @@ class ScpiModuleForTest : public cSCPIModule
 {
     Q_OBJECT
 public:
-    ScpiModuleForTest(quint8 modnr, int entityId, VeinEvent::StorageSystem *storagesystem, bool demo);
+    ScpiModuleForTest(MeasurementModuleFactoryParam moduleParam);
     cSCPIModuleConfigData *getConfigData() const;
     cSCPIInterface* getScpiInterface() const;
 };

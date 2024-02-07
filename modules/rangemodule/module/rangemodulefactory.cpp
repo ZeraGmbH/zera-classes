@@ -4,9 +4,9 @@
 namespace RANGEMODULE
 {
 
-ZeraModules::VirtualModule* RangeModuleFactory::createModule(int entityId, VeinEvent::StorageSystem* storagesystem, bool demo, int moduleNum)
+ZeraModules::VirtualModule* RangeModuleFactory::createModule(MeasurementModuleFactoryParam moduleParam)
 {
-    return new cRangeModule(m_moduleGroupNumerator->requestModuleNum(moduleNum), entityId, storagesystem, demo);
+    return new cRangeModule(moduleParam.getAdjustedParam(m_moduleGroupNumerator.get()));
 }
 
 

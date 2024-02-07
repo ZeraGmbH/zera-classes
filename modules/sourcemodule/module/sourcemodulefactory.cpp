@@ -1,9 +1,9 @@
 #include "sourcemodulefactory.h"
 #include "sourcemodule.h"
 
-ZeraModules::VirtualModule* SourceModuleFactory::createModule(int entityId, VeinEvent::StorageSystem* storagesystem, bool demo, int moduleNum)
+ZeraModules::VirtualModule* SourceModuleFactory::createModule(MeasurementModuleFactoryParam moduleParam)
 {
-    return new SourceModule(m_moduleGroupNumerator->requestModuleNum(moduleNum), entityId, storagesystem, demo);
+    return new SourceModule(moduleParam.getAdjustedParam(m_moduleGroupNumerator.get()));
 }
 
 

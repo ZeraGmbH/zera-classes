@@ -6,12 +6,12 @@
 namespace STATUSMODULE
 {
 
-cStatusModule::cStatusModule(quint8 modnr, int entityId, VeinEvent::StorageSystem* storagesystem, bool demo) :
-    cBaseMeasModule(modnr, entityId, storagesystem, std::shared_ptr<cBaseModuleConfiguration>(new cStatusModuleConfiguration()), demo)
+cStatusModule::cStatusModule(MeasurementModuleFactoryParam moduleParam) :
+    cBaseMeasModule(moduleParam, std::shared_ptr<cBaseModuleConfiguration>(new cStatusModuleConfiguration()))
 {
-    m_sModuleName = QString("%1%2").arg(BaseModuleName).arg(modnr);
+    m_sModuleName = QString("%1%2").arg(BaseModuleName).arg(moduleParam.m_moduleNum);
     m_sModuleDescription = QString("This module is responsible for reading and providing system Status information");
-    m_sSCPIModuleName = QString("%1%2").arg(BaseSCPIModuleName).arg(modnr);
+    m_sSCPIModuleName = QString("%1%2").arg(BaseSCPIModuleName).arg(moduleParam.m_moduleNum);
 
     m_ActivationStartState.addTransition(this, &cStatusModule::activationContinue, &m_ActivationExecState);
     m_ActivationExecState.addTransition(this, &cStatusModule::activationContinue, &m_ActivationDoneState);

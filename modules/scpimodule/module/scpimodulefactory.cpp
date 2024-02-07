@@ -4,9 +4,9 @@
 namespace SCPIMODULE
 {
 
-ZeraModules::VirtualModule *SCPIModuleFactory::createModule(int entityId, VeinEvent::StorageSystem *storagesystem, bool demo, int moduleNum)
+ZeraModules::VirtualModule *SCPIModuleFactory::createModule(MeasurementModuleFactoryParam moduleParam)
 {
-    return new cSCPIModule(m_moduleGroupNumerator->requestModuleNum(moduleNum), entityId, storagesystem, demo);
+    return new cSCPIModule(moduleParam.getAdjustedParam(m_moduleGroupNumerator.get()));
 }
 
 void SCPIModuleFactory::destroyModule(ZeraModules::VirtualModule *module)

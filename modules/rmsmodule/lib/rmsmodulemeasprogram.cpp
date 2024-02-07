@@ -107,7 +107,7 @@ cRmsModuleMeasProgram::cRmsModuleMeasProgram(cRmsModule* module, std::shared_ptr
     connect(&m_dataAcquisitionState, &QAbstractState::entered, this, &cRmsModuleMeasProgram::dataAcquisitionDSP);
     connect(&m_dataAcquisitionDoneState, &QAbstractState::entered, this, &cRmsModuleMeasProgram::dataReadDSP);
 
-    if(m_pModule->m_demo){
+    if(m_pModule->getDemo()){
         m_demoPeriodicTimer = TimerFactoryQt::createPeriodic(500);
         connect(m_demoPeriodicTimer.get(), &TimerTemplateQt::sigExpired,this, &cRmsModuleMeasProgram::handleDemoActualValues);
     }
@@ -129,7 +129,7 @@ void cRmsModuleMeasProgram::start()
     }
     else
         connect(this, &cBaseMeasProgram::actualValues, this, &cRmsModuleMeasProgram::setInterfaceActualValues);
-    if(m_pModule->m_demo)
+    if(m_pModule->getDemo())
         m_demoPeriodicTimer->start();
 }
 
@@ -138,7 +138,7 @@ void cRmsModuleMeasProgram::stop()
 {
     disconnect(this, &cRmsModuleMeasProgram::actualValues, 0, 0);
     disconnect(&m_movingwindowFilter, &cMovingwindowSqare::actualValues, 0, 0);
-    if(m_pModule->m_demo)
+    if(m_pModule->getDemo())
         m_demoPeriodicTimer->stop();
 }
 
@@ -984,7 +984,7 @@ void cRmsModuleMeasProgram::newIntegrationtime(QVariant ti)
             m_movingwindowFilter.setIntegrationtime(getConfData()->m_fMeasIntervalTime.m_fValue);
         else
         {
-            if(!m_pModule->m_demo) {
+            if(!m_pModule->getDemo()) {
                 m_pDSPInterFace->setVarData(m_pParameterDSP, QString("TIPAR:%1;TISTART:%2;").arg(getConfData()->m_fMeasIntervalTime.m_fValue*1000)
                                                                                     .arg(0), DSPDATA::dInt);
                 m_MsgNrCmdList[m_pDSPInterFace->dspMemoryWrite(m_pParameterDSP)] = writeparameter;
@@ -1003,7 +1003,7 @@ void cRmsModuleMeasProgram::newIntegrationPeriod(QVariant period)
     getConfData()->m_nMeasIntervalPeriod.m_nValue = period.toInt(&ok);
     if (getConfData()->m_sIntegrationMode == "period")
     {
-        if(!m_pModule->m_demo) {
+        if(!m_pModule->getDemo()) {
             m_pDSPInterFace->setVarData(m_pParameterDSP, QString("TIPAR:%1;TISTART:%2;").arg(getConfData()->m_nMeasIntervalPeriod.m_nValue)
                                     .arg(0), DSPDATA::dInt);
             m_MsgNrCmdList[m_pDSPInterFace->dspMemoryWrite(m_pParameterDSP)] = writeparameter;

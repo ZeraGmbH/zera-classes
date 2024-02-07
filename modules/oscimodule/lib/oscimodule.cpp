@@ -1,18 +1,17 @@
 #include "oscimodule.h"
 #include "oscimoduleconfiguration.h"
-#include "oscimoduleconfigdata.h"
 #include "oscimodulemeasprogram.h"
 #include <errormessages.h>
 
 namespace OSCIMODULE
 {
 
-cOsciModule::cOsciModule(quint8 modnr, int entityId, VeinEvent::StorageSystem* storagesystem, bool demo) :
-    cBaseMeasModule(modnr, entityId, storagesystem, std::shared_ptr<cBaseModuleConfiguration>(new cOsciModuleConfiguration()), demo)
+cOsciModule::cOsciModule(MeasurementModuleFactoryParam moduleParam) :
+    cBaseMeasModule(moduleParam, std::shared_ptr<cBaseModuleConfiguration>(new cOsciModuleConfiguration()))
 {
-    m_sModuleName = QString("%1%2").arg(BaseModuleName).arg(modnr);
+    m_sModuleName = QString("%1%2").arg(BaseModuleName).arg(moduleParam.m_moduleNum);
     m_sModuleDescription = QString("This module measures oscillograms for configured channels");
-    m_sSCPIModuleName = QString("%1%2").arg(BaseSCPIModuleName).arg(modnr);
+    m_sSCPIModuleName = QString("%1%2").arg(BaseSCPIModuleName).arg(moduleParam.m_moduleNum);
 
     m_ActivationStartState.addTransition(this, &cOsciModule::activationContinue, &m_ActivationExecState);
     m_ActivationExecState.addTransition(this, &cOsciModule::activationContinue, &m_ActivationDoneState);

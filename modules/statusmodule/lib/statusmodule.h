@@ -1,6 +1,7 @@
 #ifndef STATUSMODULE_H
 #define STATUSMODULE_H
 
+#include "abstractmodulefactory.h"
 #include "statusmoduleinit.h"
 #include <basemeasmodule.h>
 #include <QStateMachine>
@@ -18,7 +19,7 @@ public:
     static constexpr const char* BaseModuleName = "StatusModule";
     static constexpr const char* BaseSCPIModuleName = "DEV";
 
-    cStatusModule(quint8 modnr, int entityId, VeinEvent::StorageSystem *storagesystem, bool demo);
+    cStatusModule(MeasurementModuleFactoryParam moduleParam);
     QByteArray getConfiguration() const override;
 
 protected:

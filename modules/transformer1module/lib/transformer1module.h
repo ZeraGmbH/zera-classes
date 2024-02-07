@@ -1,8 +1,8 @@
 #ifndef TRANSFORMER1MODULE_H
 #define TRANSFORMER1MODULE_H
 
+#include "abstractmodulefactory.h"
 #include "basemeasmodule.h"
-#include "dspinterface.h"
 #include <QStateMachine>
 #include <QState>
 #include <QFinalState>
@@ -21,7 +21,7 @@ public:
     static constexpr const char* BaseModuleName = "Transformer1Module";
     static constexpr const char* BaseSCPIModuleName = "TR1";
 
-    cTransformer1Module(quint8 modnr, int entityId, VeinEvent::StorageSystem* storagesystem, bool demo);
+    cTransformer1Module(MeasurementModuleFactoryParam moduleParam);
     QByteArray getConfiguration() const override;
 
 protected:

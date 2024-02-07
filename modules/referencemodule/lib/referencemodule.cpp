@@ -11,12 +11,12 @@
 namespace REFERENCEMODULE
 {
 
-cReferenceModule::cReferenceModule(quint8 modnr, int entityId, VeinEvent::StorageSystem *storagesystem, bool demo) :
-    cBaseMeasModule(modnr, entityId, storagesystem, std::shared_ptr<cBaseModuleConfiguration>(new cReferenceModuleConfiguration()), demo)
+cReferenceModule::cReferenceModule(MeasurementModuleFactoryParam moduleParam) :
+    cBaseMeasModule(moduleParam, std::shared_ptr<cBaseModuleConfiguration>(new cReferenceModuleConfiguration()))
 {
-    m_sModuleName = QString("%1%2").arg(BaseModuleName).arg(modnr);
+    m_sModuleName = QString("%1%2").arg(BaseModuleName).arg(moduleParam.m_moduleNum);
     m_sModuleDescription = QString("This module measures reference actual values for configured channels");
-    m_sSCPIModuleName = QString("%1%2").arg(BaseSCPIModuleName).arg(modnr);
+    m_sSCPIModuleName = QString("%1%2").arg(BaseSCPIModuleName).arg(moduleParam.m_moduleNum);
 
     m_ActivationStartState.addTransition(this, &cReferenceModule::activationContinue, &m_ActivationExecState);
     m_ActivationExecState.addTransition(this, &cReferenceModule::activationContinue, &m_ActivationDoneState);
@@ -90,7 +90,7 @@ void cReferenceModule::setupModule()
     {
         cReferenceMeasChannel* pchn = new cReferenceMeasChannel(&(pConfData->m_RMSocket),
                                                                 &(pConfData->m_PCBServerSocket),
-                                                                pConfData->m_referenceChannelList.at(i), i+1, m_demo);
+                                                                pConfData->m_referenceChannelList.at(i), i+1, getDemo());
         m_ReferenceMeasChannelList.append(pchn);
         m_ModuleActivistList.append(pchn);
         connect(pchn, &cReferenceMeasChannel::activated, this, &cReferenceModule::activationContinue);

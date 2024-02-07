@@ -108,7 +108,7 @@ cFftModuleMeasProgram::cFftModuleMeasProgram(cFftModule* module, std::shared_ptr
     connect(&m_dataAcquisitionState, &QState::entered, this, &cFftModuleMeasProgram::dataAcquisitionDSP);
     connect(&m_dataAcquisitionDoneState, &QState::entered, this, &cFftModuleMeasProgram::dataReadDSP);
 
-    if(m_pModule->m_demo){
+    if(m_pModule->getDemo()){
         m_demoPeriodicTimer = TimerFactoryQt::createPeriodic(500);
         connect(m_demoPeriodicTimer.get(), &TimerTemplateQt::sigExpired,this, &cFftModuleMeasProgram::handleDemoActualValues);
     }
@@ -130,7 +130,7 @@ void cFftModuleMeasProgram::start()
     }
     else
         connect(this, &cFftModuleMeasProgram::actualValues, this, &cFftModuleMeasProgram::setInterfaceActualValues);
-    if(m_pModule->m_demo)
+    if(m_pModule->getDemo())
         m_demoPeriodicTimer->start();
 }
 
@@ -139,7 +139,7 @@ void cFftModuleMeasProgram::stop()
 {
     disconnect(this, &cFftModuleMeasProgram::actualValues, 0, 0);
     disconnect(&m_movingwindowFilter, &cMovingwindowFilter::actualValues, this, 0);
-    if(m_pModule->m_demo)
+    if(m_pModule->getDemo())
         m_demoPeriodicTimer->stop();
 }
 
@@ -868,7 +868,7 @@ void cFftModuleMeasProgram::activateDSPdone()
 {
     m_bActive = true;
 
-    if(m_pModule->m_demo)
+    if(m_pModule->getDemo())
         setupDemoOperation();
 
     setActualValuesNames();
@@ -987,7 +987,7 @@ void cFftModuleMeasProgram::newIntegrationtime(QVariant ti)
         m_movingwindowFilter.setIntegrationtime(getConfData()->m_fMeasInterval.m_fValue);
     else
     {
-        if(!m_pModule->m_demo) {
+        if(!m_pModule->getDemo()) {
             m_pDSPInterFace->setVarData(m_pParameterDSP, QString("TIPAR:%1;TISTART:%2;").arg(getConfData()->m_fMeasInterval.m_fValue*1000)
                                                                                 .arg(0), DSPDATA::dInt);
             m_MsgNrCmdList[m_pDSPInterFace->dspMemoryWrite(m_pParameterDSP)] = writeparameter;
@@ -1001,7 +1001,7 @@ void cFftModuleMeasProgram::newIntegrationtime(QVariant ti)
 void cFftModuleMeasProgram::newRefChannel(QVariant chn)
 {
     getConfData()->m_RefChannel.m_sPar = chn.toString();
-    if(!m_pModule->m_demo) {
+    if(!m_pModule->getDemo()) {
         m_pDSPInterFace->setVarData(m_pParameterDSP, QString("REFCHN:%1;").arg(m_measChannelInfoHash.value(getConfData()->m_RefChannel.m_sPar).dspChannelNr));
         m_MsgNrCmdList[m_pDSPInterFace->dspMemoryWrite(m_pParameterDSP)] = writeparameter;
     }

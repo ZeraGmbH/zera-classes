@@ -75,7 +75,7 @@ cThdnModuleMeasProgram::cThdnModuleMeasProgram(cThdnModule *module, std::shared_
     m_activationMachine.addState(&m_activateDSPState);
     m_activationMachine.addState(&m_loadDSPDoneState);
 
-    if(m_pModule->m_demo)
+    if(m_pModule->getDemo())
         m_activationMachine.setInitialState(&m_loadDSPDoneState);
     else
         m_activationMachine.setInitialState(&m_resourceManagerConnectState);
@@ -111,7 +111,7 @@ cThdnModuleMeasProgram::cThdnModuleMeasProgram(cThdnModule *module, std::shared_
     m_deactivationMachine.addState(&m_freeUSERMemState);
     m_deactivationMachine.addState(&m_unloadDSPDoneState);
 
-    if(m_pModule->m_demo)
+    if(m_pModule->getDemo())
         m_deactivationMachine.setInitialState(&m_unloadDSPDoneState);
     else
         m_deactivationMachine.setInitialState(&m_deactivateDSPState);
@@ -129,7 +129,7 @@ cThdnModuleMeasProgram::cThdnModuleMeasProgram(cThdnModule *module, std::shared_
     connect(&m_dataAcquisitionState, &QAbstractState::entered, this, &cThdnModuleMeasProgram::dataAcquisitionDSP);
     connect(&m_dataAcquisitionDoneState, &QAbstractState::entered, this, &cThdnModuleMeasProgram::dataReadDSP);
 
-    if(m_pModule->m_demo){
+    if(m_pModule->getDemo()){
         m_demoPeriodicTimer = TimerFactoryQt::createPeriodic(500);
         connect(m_demoPeriodicTimer.get(), &TimerTemplateQt::sigExpired,this, &cThdnModuleMeasProgram::handleDemoActualValues);
     }
@@ -160,7 +160,7 @@ void cThdnModuleMeasProgram::start()
     }
     else
         connect(this, &cBaseMeasProgram::actualValues, this, &cThdnModuleMeasProgram::setInterfaceActualValues);
-    if(m_pModule->m_demo)
+    if(m_pModule->getDemo())
         m_demoPeriodicTimer->start();
 }
 
@@ -169,7 +169,7 @@ void cThdnModuleMeasProgram::stop()
 {
     disconnect(this, &cThdnModuleMeasProgram::actualValues, 0, 0);
     disconnect(&m_movingwindowFilter, &cMovingwindowFilter::actualValues, 0, 0);
-    if(m_pModule->m_demo)
+    if(m_pModule->getDemo())
         m_demoPeriodicTimer->stop();
 }
 
@@ -871,7 +871,7 @@ void cThdnModuleMeasProgram::activateDSPdone()
 {
     m_bActive = true;
 
-    if(m_pModule->m_demo)
+    if(m_pModule->getDemo())
         setupDemoOperation();
 
     setActualValuesNames();
@@ -955,7 +955,7 @@ void cThdnModuleMeasProgram::newIntegrationtime(QVariant ti)
         m_movingwindowFilter.setIntegrationtime(getConfData()->m_fMeasInterval.m_fValue);
     else
     {
-        if(!m_pModule->m_demo) {
+        if(!m_pModule->getDemo()) {
             m_pDSPInterFace->setVarData(m_pParameterDSP, QString("TIPAR:%1;TISTART:%2;").arg(getConfData()->m_fMeasInterval.m_fValue*1000)
                                                                                     .arg(0), DSPDATA::dInt);
             m_MsgNrCmdList[m_pDSPInterFace->dspMemoryWrite(m_pParameterDSP)] = writeparameter;

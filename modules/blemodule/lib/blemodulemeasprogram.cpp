@@ -193,7 +193,7 @@ void cBleModuleMeasProgram::onVeinBluetoothOnChanged(QVariant on)
     getConfData()->m_bluetoothOn.m_nActive = on.toInt();
     emit m_pModule->parameterChanged();
 
-    if(m_pModule->m_demo) {
+    if(m_pModule->getDemo()) {
         if(on.toBool() && m_macAddressForDemo.contains(m_pMacAddress->getValue().toString()))
             handleDemoActualValues();
         else
@@ -220,7 +220,7 @@ void cBleModuleMeasProgram::onVeinMacAddressChanged(QVariant macAddress)
         getConfData()->m_macAddress.m_sPar = macAddress.toString();
         emit m_pModule->parameterChanged();
     }
-    if(m_pModule->m_demo && m_pBluetoothOnOff->getValue() != 0) {
+    if(m_pModule->getDemo() && m_pBluetoothOnOff->getValue() != 0) {
         if(m_macAddressForDemo.contains(macAddress.toString()))
             handleDemoActualValues();
     }

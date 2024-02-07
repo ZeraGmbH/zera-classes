@@ -4,9 +4,9 @@
 namespace SPM1MODULE
 {
 
-ZeraModules::VirtualModule* Spm1ModuleFactory::createModule(int entityId, VeinEvent::StorageSystem *storagesystem, bool demo, int moduleNum)
+ZeraModules::VirtualModule* Spm1ModuleFactory::createModule(MeasurementModuleFactoryParam moduleParam)
 {
-    return new cSpm1Module(m_moduleGroupNumerator->requestModuleNum(moduleNum), entityId, storagesystem, demo);
+    return new cSpm1Module(moduleParam.getAdjustedParam(m_moduleGroupNumerator.get()));
 }
 
 void Spm1ModuleFactory::destroyModule(ZeraModules::VirtualModule *module)

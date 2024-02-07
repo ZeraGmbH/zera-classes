@@ -4,9 +4,9 @@
 namespace SEC1MODULE
 {
 
-ZeraModules::VirtualModule* Sec1ModuleFactory::createModule(int entityId, VeinEvent::StorageSystem *storagesystem, bool demo, int moduleNum)
+ZeraModules::VirtualModule* Sec1ModuleFactory::createModule(MeasurementModuleFactoryParam moduleParam)
 {
-    return new cSec1Module(m_moduleGroupNumerator->requestModuleNum(moduleNum), entityId, storagesystem, demo);
+    return new cSec1Module(moduleParam.getAdjustedParam(m_moduleGroupNumerator.get()));
 }
 
 void Sec1ModuleFactory::destroyModule(ZeraModules::VirtualModule *module)

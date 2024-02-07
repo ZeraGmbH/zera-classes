@@ -82,25 +82,25 @@ void cLambdaModuleMeasProgram::searchActualValues()
     m_lambdaCalcDelegate = new LambdaCalcDelegate(getConfData()->m_activeMeasModeAvail, m_veinLambdaActValues, m_veinLoadTypeList);
     connect(m_lambdaCalcDelegate, &LambdaCalcDelegate::measuring, this, &cLambdaModuleMeasProgram::setMeasureSignal);
 
-    if ((m_pModule->m_pStorageSystem->hasStoredValue(getConfData()->m_activeMeasModeEntity, getConfData()->m_activeMeasModeComponent)) &&
-        (m_pModule->m_pStorageSystem->hasStoredValue(getConfData()->m_activeMeasModeEntity, getConfData()->m_activeMeasModePhaseComponent))) {
+    if ((m_pModule->getStorageSystem()->hasStoredValue(getConfData()->m_activeMeasModeEntity, getConfData()->m_activeMeasModeComponent)) &&
+        (m_pModule->getStorageSystem()->hasStoredValue(getConfData()->m_activeMeasModeEntity, getConfData()->m_activeMeasModePhaseComponent))) {
 
         inputComponent = new VfModuleComponentInput(getConfData()->m_activeMeasModeEntity, getConfData()->m_activeMeasModeComponent);
         inputList.append(inputComponent);
         connect(inputComponent, &VfModuleComponentInput::sigValueChanged, m_lambdaCalcDelegate, &LambdaCalcDelegate::onActivePowerMeasModeChange);
-        m_lambdaCalcDelegate->onActivePowerMeasModeChange(m_pModule->m_pStorageSystem->getStoredValue(getConfData()->m_activeMeasModeEntity, getConfData()->m_activeMeasModeComponent));
+        m_lambdaCalcDelegate->onActivePowerMeasModeChange(m_pModule->getStorageSystem()->getStoredValue(getConfData()->m_activeMeasModeEntity, getConfData()->m_activeMeasModeComponent));
 
         inputComponent = new VfModuleComponentInput(getConfData()->m_activeMeasModeEntity, getConfData()->m_activeMeasModePhaseComponent);
         inputList.append(inputComponent);
         connect(inputComponent, &VfModuleComponentInput::sigValueChanged, m_lambdaCalcDelegate, &LambdaCalcDelegate::onActivePowerPhaseMaskChange);
-        m_lambdaCalcDelegate->onActivePowerPhaseMaskChange(m_pModule->m_pStorageSystem->getStoredValue(getConfData()->m_activeMeasModeEntity, getConfData()->m_activeMeasModePhaseComponent));
+        m_lambdaCalcDelegate->onActivePowerPhaseMaskChange(m_pModule->getStorageSystem()->getStoredValue(getConfData()->m_activeMeasModeEntity, getConfData()->m_activeMeasModePhaseComponent));
 
         for (int i = 0; i < getConfData()->m_nLambdaSystemCount; i++) {
             if (!error) {
                 // we first test that wanted input components exist
-                if ((m_pModule->m_pStorageSystem->hasStoredValue(getConfData()->m_lambdaSystemConfigList.at(i).m_nInputPEntity, getConfData()->m_lambdaSystemConfigList.at(i).m_sInputP)) &&
-                    (m_pModule->m_pStorageSystem->hasStoredValue(getConfData()->m_lambdaSystemConfigList.at(i).m_nInputQEntity, getConfData()->m_lambdaSystemConfigList.at(i).m_sInputQ)) &&
-                    (m_pModule->m_pStorageSystem->hasStoredValue(getConfData()->m_lambdaSystemConfigList.at(i).m_nInputSEntity, getConfData()->m_lambdaSystemConfigList.at(i).m_sInputS)) ) {
+                if ((m_pModule->getStorageSystem()->hasStoredValue(getConfData()->m_lambdaSystemConfigList.at(i).m_nInputPEntity, getConfData()->m_lambdaSystemConfigList.at(i).m_sInputP)) &&
+                    (m_pModule->getStorageSystem()->hasStoredValue(getConfData()->m_lambdaSystemConfigList.at(i).m_nInputQEntity, getConfData()->m_lambdaSystemConfigList.at(i).m_sInputQ)) &&
+                    (m_pModule->getStorageSystem()->hasStoredValue(getConfData()->m_lambdaSystemConfigList.at(i).m_nInputSEntity, getConfData()->m_lambdaSystemConfigList.at(i).m_sInputS)) ) {
 
                     inputPComponent = new VfModuleComponentInput(getConfData()->m_lambdaSystemConfigList.at(i).m_nInputPEntity, getConfData()->m_lambdaSystemConfigList.at(i).m_sInputP);
                     inputList.append(inputPComponent);

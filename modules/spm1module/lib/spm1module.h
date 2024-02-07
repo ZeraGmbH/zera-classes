@@ -1,6 +1,7 @@
 #ifndef SPM1MODULE_H
 #define SPM1MODULE_H
 
+#include "abstractmodulefactory.h"
 #include "spm1modulemeasprogram.h"
 #include <basemeasmodule.h>
 
@@ -16,7 +17,7 @@ public:
     // and each energy measurement  will have an additional scpi parent with its number 0001 .. 9999
     static constexpr const char* BaseSCPIModuleName = "PM01";
 
-    cSpm1Module(quint8 modnr, int entityId, VeinEvent::StorageSystem* storagesystem, bool demo);
+    cSpm1Module(MeasurementModuleFactoryParam moduleParam);
     QByteArray getConfiguration() const override;
 protected:
     cSpm1ModuleMeasProgram *m_pMeasProgram; // our measuring program, lets say the working horse

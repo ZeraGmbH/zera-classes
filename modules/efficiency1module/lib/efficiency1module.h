@@ -1,6 +1,7 @@
 #ifndef EFFICIENCY1MODULE_H
 #define EFFICIENCY1MODULE_H
 
+#include "abstractmodulefactory.h"
 #include "efficiency1modulemeasprogram.h"
 #include <basemeasmodule.h>
 
@@ -13,7 +14,7 @@ public:
     static constexpr const char* BaseModuleName = "Efficiency1Module";
     static constexpr const char* BaseSCPIModuleName = "EF1";
 
-    cEfficiency1Module(quint8 modnr, int entityId, VeinEvent::StorageSystem* storagesystem, bool demo);
+    cEfficiency1Module(MeasurementModuleFactoryParam moduleParam);
     QByteArray getConfiguration() const override;
 
 protected:

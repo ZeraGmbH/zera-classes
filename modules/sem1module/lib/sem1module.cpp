@@ -1,6 +1,5 @@
 #include "sem1module.h"
 #include "sem1moduleconfiguration.h"
-#include "sem1moduleconfigdata.h"
 #include "sem1modulemeasprogram.h"
 #include <vfmodulecomponent.h>
 #include <vfmoduleerrorcomponent.h>
@@ -9,10 +8,10 @@
 namespace SEM1MODULE
 {
 
-cSem1Module::cSem1Module(quint8 modnr, int entityId, VeinEvent::StorageSystem *storagesystem, bool demo)
-    :cBaseMeasModule(modnr, entityId, storagesystem, std::shared_ptr<cBaseModuleConfiguration>(new cSem1ModuleConfiguration()), demo)
+cSem1Module::cSem1Module(MeasurementModuleFactoryParam moduleParam) :
+    cBaseMeasModule(moduleParam, std::shared_ptr<cBaseModuleConfiguration>(new cSem1ModuleConfiguration()))
 {
-    m_sModuleName = QString("%1%2").arg(BaseModuleName).arg(modnr);
+    m_sModuleName = QString("%1%2").arg(BaseModuleName).arg(moduleParam.m_moduleNum);
     m_sModuleDescription = QString("This module povides a configurable error calculator");
     m_sSCPIModuleName = QString(BaseSCPIModuleName);
 

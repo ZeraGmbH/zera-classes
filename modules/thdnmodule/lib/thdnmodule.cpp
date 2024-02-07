@@ -1,8 +1,6 @@
 #include "thdnmodule.h"
 #include "thdnmoduleconfiguration.h"
-#include "thdnmoduleconfigdata.h"
 #include "thdnmodulemeasprogram.h"
-#include "errormessages.h"
 #include <vfmodulecomponent.h>
 #include <vfmoduleerrorcomponent.h>
 #include <vfmodulemetadata.h>
@@ -15,12 +13,12 @@
 namespace THDNMODULE
 {
 
-cThdnModule::cThdnModule(quint8 modnr, int entityId, VeinEvent::StorageSystem *storagesystem, bool demo) :
-    cBaseMeasModule(modnr, entityId, storagesystem, std::shared_ptr<cBaseModuleConfiguration>(new cThdnModuleConfiguration()), demo)
+cThdnModule::cThdnModule(MeasurementModuleFactoryParam moduleParam) :
+    cBaseMeasModule(moduleParam, std::shared_ptr<cBaseModuleConfiguration>(new cThdnModuleConfiguration()))
 {
-    m_sModuleName = QString("%1%2").arg(BaseModuleName).arg(modnr);
+    m_sModuleName = QString("%1%2").arg(BaseModuleName).arg(moduleParam.m_moduleNum);
     m_sModuleDescription = QString("This module measures thdn values for configured channels");
-    m_sSCPIModuleName = QString("%1%2").arg(BaseSCPIModuleName).arg(modnr);
+    m_sSCPIModuleName = QString("%1%2").arg(BaseSCPIModuleName).arg(moduleParam.m_moduleNum);
 
     m_ActivationStartState.addTransition(this, &cThdnModule::activationContinue, &m_ActivationExecState);
     m_ActivationExecState.addTransition(this, &cThdnModule::activationContinue, &m_ActivationDoneState);

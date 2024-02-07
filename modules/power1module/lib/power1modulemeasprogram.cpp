@@ -22,7 +22,7 @@ cPower1ModuleMeasProgram::cPower1ModuleMeasProgram(cPower1Module* module, std::s
 {
     m_pDSPInterFace = new Zera::cDSPInterface();
 
-    if(m_pModule->m_demo) //skip SENSE resource & DSP server. Mock facade does't have SENSE resource & mock DSP server yet !
+    if(m_pModule->getDemo()) //skip SENSE resource & DSP server. Mock facade does't have SENSE resource & mock DSP server yet !
         m_IdentifyState.addTransition(this, &cModuleActivist::activationContinue, &m_readResourceSourceState);
     else
         m_IdentifyState.addTransition(this, &cModuleActivist::activationContinue, &m_readResourceTypesState);
@@ -49,7 +49,7 @@ cPower1ModuleMeasProgram::cPower1ModuleMeasProgram(cPower1Module* module, std::s
     m_pcbserverConnectState4measChannels.addTransition(this, &cModuleActivist::activationContinue, &m_pcbserverConnectState4freqChannels);
     m_pcbserverConnectState4freqChannels.addTransition(this, &cModuleActivist::activationContinue, &m_readSampleRateState);
 
-    if(m_pModule->m_demo) //skip SENSE resource & DSP server. Mock facade does't have SENSE resource & mock DSP server yet !
+    if(m_pModule->getDemo()) //skip SENSE resource & DSP server. Mock facade does't have SENSE resource & mock DSP server yet !
         m_readSampleRateState.addTransition(this, &cModuleActivist::activationContinue, &m_readSourceChannelInformationState);
     else
         m_readSampleRateState.addTransition(this, &cModuleActivist::activationContinue, &m_readSenseChannelInformationState);
@@ -63,7 +63,7 @@ cPower1ModuleMeasProgram::cPower1ModuleMeasProgram(cPower1Module* module, std::s
 
     m_readSourceChannelInformationState.addTransition(this, &cModuleActivist::activationContinue, &m_readSourceChannelAliasState);
 
-    if(m_pModule->m_demo) //skip SENSE resource & DSP server. Mock facade does't have SENSE resource & mock DSP server yet !
+    if(m_pModule->getDemo()) //skip SENSE resource & DSP server. Mock facade does't have SENSE resource & mock DSP server yet !
         m_readSourceChannelInformationState.addTransition(this, &cModuleActivist::activationSkip, &m_loadDSPDoneState);
     else
         m_readSourceChannelInformationState.addTransition(this, &cModuleActivist::activationSkip, &m_dspserverConnectState);
@@ -73,7 +73,7 @@ cPower1ModuleMeasProgram::cPower1ModuleMeasProgram(cPower1Module* module, std::s
     m_readSourceFormFactorState.addTransition(this, &cModuleActivist::activationContinue, &m_readSourceChannelInformationDoneState);
     m_readSourceChannelInformationDoneState.addTransition(this, &cModuleActivist::activationLoop, &m_readSourceChannelAliasState);
 
-    if(m_pModule->m_demo) //skip SENSE resource & DSP server. Mock facade does't have SENSE resource & mock DSP server yet !
+    if(m_pModule->getDemo()) //skip SENSE resource & DSP server. Mock facade does't have SENSE resource & mock DSP server yet !
         m_readSourceChannelInformationDoneState.addTransition(this, &cModuleActivist::activationContinue, &m_loadDSPDoneState);
     else
         m_readSourceChannelInformationDoneState.addTransition(this, &cModuleActivist::activationContinue, &m_setSenseChannelRangeNotifiersState);
@@ -210,7 +210,7 @@ cPower1ModuleMeasProgram::cPower1ModuleMeasProgram(cPower1Module* module, std::s
 
     m_deactivationMachine.addState(&m_unloadDSPDoneState);
 
-    if(m_pModule->m_demo) //skip SENSE resource & DSP server. Mock facade does't have SENSE resource & mock DSP server yet !
+    if(m_pModule->getDemo()) //skip SENSE resource & DSP server. Mock facade does't have SENSE resource & mock DSP server yet !
         m_deactivationMachine.setInitialState(&m_freeFreqOutputsState);
     else
         m_deactivationMachine.setInitialState(&m_deactivateDSPState);
@@ -245,7 +245,7 @@ cPower1ModuleMeasProgram::cPower1ModuleMeasProgram(cPower1Module* module, std::s
     m_readUpperRangeValueMachine.addState(&m_readUrvalueDoneState);
     m_readUpperRangeValueMachine.addState(&m_foutParamsToDsp);
 
-    if(m_pModule->m_demo) //skip SENSE resource & DSP server. Mock facade does't have SENSE resource & mock DSP server yet !
+    if(m_pModule->getDemo()) //skip SENSE resource & DSP server. Mock facade does't have SENSE resource & mock DSP server yet !
         m_readUpperRangeValueMachine.setInitialState(&m_foutParamsToDsp);
     else
         m_readUpperRangeValueMachine.setInitialState(&m_readUrvalueState);
@@ -254,7 +254,7 @@ cPower1ModuleMeasProgram::cPower1ModuleMeasProgram(cPower1Module* module, std::s
     connect(&m_readUrvalueDoneState, &QAbstractState::entered, this, &cPower1ModuleMeasProgram::readUrvalueDone);
     connect(&m_foutParamsToDsp, &QAbstractState::entered, this, &cPower1ModuleMeasProgram::foutParamsToDsp);
 
-    if(m_pModule->m_demo){
+    if(m_pModule->getDemo()){
         setDspVarList();
         m_demoPeriodicTimer = TimerFactoryQt::createPeriodic(500);
         connect(m_demoPeriodicTimer.get(), &TimerTemplateQt::sigExpired,this, &cPower1ModuleMeasProgram::handleDemoActualValues);
@@ -277,7 +277,7 @@ void cPower1ModuleMeasProgram::start()
     }
     else
         connect(this, &cPower1ModuleMeasProgram::actualValues, this, &cPower1ModuleMeasProgram::setInterfaceActualValues);
-    if(m_pModule->m_demo)
+    if(m_pModule->getDemo())
         m_demoPeriodicTimer->start();
 }
 
@@ -286,7 +286,7 @@ void cPower1ModuleMeasProgram::stop()
 {
     disconnect(this, &cPower1ModuleMeasProgram::actualValues, 0, 0);
     disconnect(&m_movingwindowFilter, &cMovingwindowFilter::actualValues, this, 0);
-    if(m_pModule->m_demo)
+    if(m_pModule->getDemo())
         m_demoPeriodicTimer->stop();
 }
 
@@ -1368,7 +1368,7 @@ void cPower1ModuleMeasProgram::setModeTypesComponent()
 void cPower1ModuleMeasProgram::activateDSPdone()
 {
     m_bActive = true;
-    if(m_pModule->m_demo)
+    if(m_pModule->getDemo())
         // in demo not reached by claimPGRMem() (TODO move to constructor?)
         setDspCmdList();
     std::shared_ptr<MeasMode> mode = m_measModeSelector.getCurrMode();
@@ -1543,7 +1543,7 @@ cPower1ModuleMeasProgram::RangeMaxVals cPower1ModuleMeasProgram::calcMaxRangeVal
 
 void cPower1ModuleMeasProgram::foutParamsToDsp()
 {
-    if(m_pModule->m_demo) {
+    if(m_pModule->getDemo()) {
         setFoutPowerModes();
         return;
     }
@@ -1654,7 +1654,7 @@ QString cPower1ModuleMeasProgram::dspGetSetPhasesVar()
 
 void cPower1ModuleMeasProgram::dspSetParamsTiMModePhase(int tiTimeOrPeriods)
 {
-    if(m_pModule->m_demo)
+    if(m_pModule->getDemo())
         return;
     QString strVarData = QString("TIPAR:%1;TISTART:0;MMODE:%2")
                              .arg(tiTimeOrPeriods)

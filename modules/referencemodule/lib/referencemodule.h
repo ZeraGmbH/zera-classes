@@ -1,6 +1,7 @@
 #ifndef REFERENCEMODULE_H
 #define REFERENCEMODULE_H
 
+#include "abstractmodulefactory.h"
 #include "referencemeaschannel.h"
 #include "referencemodulemeasprogram.h"
 #include "referenceadjustment.h"
@@ -19,7 +20,7 @@ public:
     static constexpr const char* BaseModuleName = "REFERENCEModule";
     static constexpr const char* BaseSCPIModuleName = "REF";
 
-    cReferenceModule(quint8 modnr, int entityId, VeinEvent::StorageSystem* storagesystem, bool demo);
+    cReferenceModule(MeasurementModuleFactoryParam moduleParam);
     QByteArray getConfiguration() const override;
     virtual cReferenceMeasChannel* getMeasChannel(QString name); // also used for callback
 protected:

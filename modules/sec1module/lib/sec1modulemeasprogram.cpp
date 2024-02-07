@@ -48,7 +48,7 @@ cSec1ModuleMeasProgram::cSec1ModuleMeasProgram(cSec1Module* module, std::shared_
     m_readDUTInputsState.addTransition(this, &cSec1ModuleMeasProgram::activationContinue, &m_readDUTInputAliasState);
     m_readDUTInputAliasState.addTransition(this, &cSec1ModuleMeasProgram::activationContinue, &m_readDUTInputDoneState);
     m_readDUTInputDoneState.addTransition(this, &cSec1ModuleMeasProgram::activationLoop, &m_readDUTInputAliasState);
-    if(m_pModule->m_demo)
+    if(m_pModule->getDemo())
         m_readDUTInputDoneState.addTransition(this, &cSec1ModuleMeasProgram::activationContinue, &m_activationDoneState);
     else
         m_readDUTInputDoneState.addTransition(this, &cSec1ModuleMeasProgram::activationContinue, &m_setpcbREFConstantNotifierState);
@@ -136,7 +136,7 @@ cSec1ModuleMeasProgram::cSec1ModuleMeasProgram(cSec1Module* module, std::shared_
     m_startMeasurementMachine.addState(&m_startMeasurementState);
     m_startMeasurementMachine.addState(&m_startMeasurementDoneState);
 
-    if(m_pModule->m_demo)
+    if(m_pModule->getDemo())
         m_startMeasurementMachine.setInitialState(&m_startMeasurementState);
     else
         m_startMeasurementMachine.setInitialState(&m_setsyncState);
@@ -958,10 +958,10 @@ void cSec1ModuleMeasProgram::startNext()
     // Notes on re-start:
     // * We don't need the whole start state machine here
     // * There is too much magic in startMeasurement so we cannnot use it here either
-    if(!m_pModule->m_demo)
+    if(!m_pModule->getDemo())
         m_MsgNrCmdList[m_pSECInterface->stop(m_masterErrCalcName)] = stopmeas;
     setStatus(ECALCSTATUS::ARMED | ECALCSTATUS::READY);
-    if(!m_pModule->m_demo)
+    if(!m_pModule->getDemo())
         m_MsgNrCmdList[m_pSECInterface->start(m_masterErrCalcName)] = startmeasurement;
     else
         m_demoTimeSinceStart.restart();
@@ -1306,7 +1306,7 @@ void cSec1ModuleMeasProgram::setMeaspulses()
         m_nDUTPulseCounterStart = 1;
     else
         m_nDUTPulseCounterStart = m_pMRatePar->getValue().toLongLong();
-    if(!m_pModule->m_demo)
+    if(!m_pModule->getDemo())
         m_MsgNrCmdList[m_pSECInterface->writeRegister(m_masterErrCalcName, ECALCREG::MTCNTin, m_nDUTPulseCounterStart)] = setmeaspulses;
 }
 
@@ -1357,7 +1357,7 @@ void cSec1ModuleMeasProgram::startMeasurement()
     m_pProgressAct->setValue(QVariant(m_fProgress));
     m_bMeasurementRunning = true;
     // All preparations done: do start
-    if(!m_pModule->m_demo)
+    if(!m_pModule->getDemo())
         m_MsgNrCmdList[m_pSECInterface->start(m_masterErrCalcName)] = startmeasurement;
     else {
         m_demoTimeSinceStart.start();
@@ -1457,7 +1457,7 @@ void cSec1ModuleMeasProgram::setECResultAndResetInt()
     }
 
     // enable next int
-    if(!m_pModule->m_demo)
+    if(!m_pModule->getDemo())
         resetIntRegister();
 }
 
@@ -1733,7 +1733,7 @@ void cSec1ModuleMeasProgram::Actualize()
 {
     if(m_bMeasurementRunning) { // still running
         if((getStatus() & ECALCSTATUS::WAIT) == 0) { // measurement: next poll
-            if(!m_pModule->m_demo) {
+            if(!m_pModule->getDemo()) {
                 m_MsgNrCmdList[m_pSECInterface->readRegister(m_masterErrCalcName, ECALCREG::STATUS)] = actualizestatus;
                 m_MsgNrCmdList[m_pSECInterface->readRegister(m_masterErrCalcName, ECALCREG::MTCNTact)] = actualizeprogress;
                 m_MsgNrCmdList[m_pSECInterface->readRegister(m_slaveErrCalcName, ECALCREG::MTCNTact)] = actualizeenergy;
@@ -1746,7 +1746,7 @@ void cSec1ModuleMeasProgram::Actualize()
             m_fProgress = elapsedMs / (waitTimeMs / 100+0);
             m_pProgressAct->setValue(QVariant(m_fProgress));
         }
-        if(m_pModule->m_demo)
+        if(m_pModule->getDemo())
             updateDemoMeasurementResults();
     }
 }

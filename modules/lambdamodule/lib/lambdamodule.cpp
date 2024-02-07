@@ -1,17 +1,16 @@
 #include "lambdamodule.h"
 #include "lambdamoduleconfiguration.h"
-#include "lambdamoduleconfigdata.h"
 #include <errormessages.h>
 
 namespace LAMBDAMODULE
 {
 
-cLambdaModule::cLambdaModule(quint8 modnr, int entityId, VeinEvent::StorageSystem* storagesystem, bool demo) :
-    cBaseMeasModule(modnr, entityId, storagesystem, std::shared_ptr<cBaseModuleConfiguration>(new cLambdaModuleConfiguration()), demo)
+cLambdaModule::cLambdaModule(MeasurementModuleFactoryParam moduleParam) :
+    cBaseMeasModule(moduleParam,std::shared_ptr<cBaseModuleConfiguration>(new cLambdaModuleConfiguration()))
 {
-    m_sModuleName = QString("%1%2").arg(BaseModuleName).arg(modnr);
+    m_sModuleName = QString("%1%2").arg(BaseModuleName).arg(moduleParam.m_moduleNum);
     m_sModuleDescription = QString("This module measures configured number of harmonic power values from configured input values");
-    m_sSCPIModuleName = QString("%1%2").arg(BaseSCPIModuleName).arg(modnr);
+    m_sSCPIModuleName = QString("%1%2").arg(BaseSCPIModuleName).arg(moduleParam.m_moduleNum);
 
     m_ActivationStartState.addTransition(this, &cLambdaModule::activationContinue, &m_ActivationExecState);
     m_ActivationExecState.addTransition(this, &cLambdaModule::activationContinue, &m_ActivationDoneState);

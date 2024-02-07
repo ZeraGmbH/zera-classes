@@ -104,7 +104,7 @@ void SourceModuleProgram::generateInterface()
     m_pVeinDemoSourceCount->setValidator(new cIntValidator(0, maxSources));
     connect(m_pVeinDemoSourceCount, &VfModuleParameter::sigValueChanged, this, &SourceModuleProgram::newDemoSourceCount);
     m_pModule->veinModuleParameterHash[key] = m_pVeinDemoSourceCount; // auto delete / meta-data / scpi
-    newDemoSourceCount(QVariant(m_pModule->m_demo ? maxSources : 0));
+    newDemoSourceCount(QVariant(m_pModule->getDemo() ? maxSources : 0));
 }
 
 void SourceModuleProgram::startDestroy()

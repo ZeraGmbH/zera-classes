@@ -4,9 +4,9 @@
 namespace LAMBDAMODULE
 {
 
-ZeraModules::VirtualModule* LambdaModuleFactory::createModule(int entityId, VeinEvent::StorageSystem* storagesystem, bool demo, int moduleNum)
+ZeraModules::VirtualModule* LambdaModuleFactory::createModule(MeasurementModuleFactoryParam moduleParam)
 {
-    return new cLambdaModule(m_moduleGroupNumerator->requestModuleNum(moduleNum), entityId, storagesystem, demo);
+    return new cLambdaModule(moduleParam.getAdjustedParam(m_moduleGroupNumerator.get()));
 }
 
 void LambdaModuleFactory::destroyModule(ZeraModules::VirtualModule *module)

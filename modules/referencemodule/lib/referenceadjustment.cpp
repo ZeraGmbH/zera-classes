@@ -27,7 +27,7 @@ cReferenceAdjustment::cReferenceAdjustment(cReferenceModule* module, cReferenceM
     m_activationMachine.addState(&m_dspserverConnectState);
     m_activationMachine.addState(&m_activationDoneState);
 
-    if(m_pModule->m_demo)
+    if(m_pModule->getDemo())
         m_activationMachine.setInitialState(&m_activationDoneState);
     else
         m_activationMachine.setInitialState(&m_pcbserverConnectState);
@@ -41,7 +41,7 @@ cReferenceAdjustment::cReferenceAdjustment(cReferenceModule* module, cReferenceM
     m_deactivationMachine.addState(&m_deactivationInitState);
     m_deactivationMachine.addState(&m_deactivationDoneState);
 
-    if(m_pModule->m_demo)
+    if(m_pModule->getDemo())
         m_deactivationMachine.setInitialState(&m_deactivationDoneState);
     else
         m_deactivationMachine.setInitialState(&m_deactivationInitState);
@@ -59,7 +59,7 @@ cReferenceAdjustment::cReferenceAdjustment(cReferenceModule* module, cReferenceM
     m_referenceAdjustMachine.addState(&m_set10VRangeState);
     m_referenceAdjustMachine.addState(&m_referenceAdjustDoneState);
 
-    if(m_pModule->m_demo)
+    if(m_pModule->getDemo())
         m_referenceAdjustMachine.setInitialState(&m_referenceAdjustDoneState);
     else
         m_referenceAdjustMachine.setInitialState(&m_readGainCorrState);
@@ -91,7 +91,7 @@ void cReferenceAdjustment::ActionHandler(QVector<float> *actualValues)
         // m_bactive in case measurement is faster than adjusting
         // adjustMachine.isRunning in caae actual values come faster than adjustment process duration
         if (m_bActive && !m_bAdjustmentDone && !m_referenceAdjustMachine.isRunning())
-            if(!m_pModule->m_demo)
+            if(!m_pModule->getDemo())
                 m_referenceAdjustMachine.start();
 }
 
@@ -140,7 +140,7 @@ void cReferenceAdjustment::activationDone()
 {
     // we fetch a handle for gain correction and offset2 correction for
     // all possible channels because we do not know which channels become active
-    if(!m_pModule->m_demo) {
+    if(!m_pModule->getDemo()) {
         m_pGainCorrectionDSP = m_pDSPInterFace->getMemHandle("GainCorrection");
         m_pGainCorrectionDSP->addVarItem( new cDspVar("GAINCORRECTION",32, DSPDATA::vDspIntVar));
         m_fGainCorr = m_pDSPInterFace->data(m_pGainCorrectionDSP, "GAINCORRECTION");
@@ -154,7 +154,7 @@ void cReferenceAdjustment::activationDone()
     m_bAdjustmentDone = false;
 
     m_bActive = true;
-    if(m_pModule->m_demo)
+    if(m_pModule->getDemo())
         emit activated();
     // we will emit activated after reference measurement adjustment is done
 }

@@ -63,7 +63,7 @@ cRangeModuleMeasProgram::cRangeModuleMeasProgram(cRangeModule* module, std::shar
     connect(&m_freeUSERMemState, &QState::entered, this, &cRangeModuleMeasProgram::freeUSERMem);
     connect(&m_unloadDSPDoneState, &QState::entered, this, &cRangeModuleMeasProgram::deactivateDSPdone);
 
-    if(!m_pModule->m_demo) {
+    if(!m_pModule->getDemo()) {
         m_activationMachine.setInitialState(&resourceManagerConnectState);
         m_deactivationMachine.setInitialState(&m_deactivateDSPState);
     }
@@ -81,7 +81,7 @@ cRangeModuleMeasProgram::cRangeModuleMeasProgram(cRangeModule* module, std::shar
     connect(&m_dataAcquisitionDoneState, &QState::entered, this, &cRangeModuleMeasProgram::dataReadDSP);
 
     connect(&m_dspWatchdogTimer, &QTimer::timeout, this, &cRangeModuleMeasProgram::onDspWatchdogTimeout);
-    if(m_pModule->m_demo) {
+    if(m_pModule->getDemo()) {
         // Demo timer for dummy actual values
         m_demoPeriodicTimer = TimerFactoryQt::createPeriodic(500);
         connect(m_demoPeriodicTimer.get(), &TimerTemplateQt::sigExpired, this, &cRangeModuleMeasProgram::handleDemoPeriodicTimer);
@@ -99,14 +99,14 @@ void cRangeModuleMeasProgram::start()
 {
     disconnect(this, &cRangeModuleMeasProgram::actualValues, this, 0);
     connect(this, &cRangeModuleMeasProgram::actualValues, this, &cRangeModuleMeasProgram::setInterfaceActualValues);
-    if(m_pModule->m_demo)
+    if(m_pModule->getDemo())
         m_demoPeriodicTimer->start();
 }
 
 
 void cRangeModuleMeasProgram::stop()
 {
-    if(m_pModule->m_demo)
+    if(m_pModule->getDemo())
         m_demoPeriodicTimer->stop();
 }
 
@@ -518,7 +518,7 @@ void cRangeModuleMeasProgram::activateDSPdone()
     setActualValuesNames();
     setSCPIMeasInfo();
     m_pMeasureSignal->setValue(QVariant(1));
-    if(!m_pModule->m_demo)
+    if(!m_pModule->getDemo())
         restartDspWachdog();
     emit activated();
 }

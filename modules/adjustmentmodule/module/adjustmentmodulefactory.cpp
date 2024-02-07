@@ -1,9 +1,9 @@
 #include "adjustmentmodulefactory.h"
 #include "adjustmentmodule.h"
 
-ZeraModules::VirtualModule* AdjustmentModuleFactory::createModule(int entityId, VeinEvent::StorageSystem* storagesystem, bool demo, int moduleNum)
+ZeraModules::VirtualModule* AdjustmentModuleFactory::createModule(MeasurementModuleFactoryParam moduleParam)
 {
-    return new cAdjustmentModule(m_moduleGroupNumerator->requestModuleNum(moduleNum), entityId, storagesystem, demo);
+    return new cAdjustmentModule(moduleParam.getAdjustedParam(m_moduleGroupNumerator.get()));
 }
 
 void AdjustmentModuleFactory::destroyModule(ZeraModules::VirtualModule *module)

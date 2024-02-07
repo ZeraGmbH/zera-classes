@@ -1,18 +1,17 @@
 #include "efficiency1module.h"
 #include "efficiency1moduleconfiguration.h"
-#include "efficiency1moduleconfigdata.h"
 #include "efficiency1modulemeasprogram.h"
 #include <errormessages.h>
 
 namespace EFFICIENCY1MODULE
 {
 
-cEfficiency1Module::cEfficiency1Module(quint8 modnr, int entityId, VeinEvent::StorageSystem* storagesystem, bool demo) :
-    cBaseMeasModule(modnr, entityId, storagesystem, std::shared_ptr<cBaseModuleConfiguration>(new cEfficiency1ModuleConfiguration()), demo)
+cEfficiency1Module::cEfficiency1Module(MeasurementModuleFactoryParam moduleParam) :
+    cBaseMeasModule(moduleParam, std::shared_ptr<cBaseModuleConfiguration>(new cEfficiency1ModuleConfiguration()))
 {
-    m_sModuleName = QString("%1%2").arg(BaseModuleName).arg(modnr);
+    m_sModuleName = QString("%1%2").arg(BaseModuleName).arg(moduleParam.m_moduleNum);
     m_sModuleDescription = QString("This module measures configured number of harmonic power values from configured input values");
-    m_sSCPIModuleName = QString("%1%2").arg(BaseSCPIModuleName).arg(modnr);
+    m_sSCPIModuleName = QString("%1%2").arg(BaseSCPIModuleName).arg(moduleParam.m_moduleNum);
 
     m_ActivationStartState.addTransition(this, &cEfficiency1Module::activationContinue, &m_ActivationExecState);
     m_ActivationExecState.addTransition(this, &cEfficiency1Module::activationContinue, &m_ActivationDoneState);
@@ -41,7 +40,6 @@ cEfficiency1Module::cEfficiency1Module(quint8 modnr, int entityId, VeinEvent::St
     connect(&m_DeactivationExecState, &QState::entered, this, &cEfficiency1Module::deactivationExec);
     connect(&m_DeactivationDoneState, &QState::entered, this, &cEfficiency1Module::deactivationDone);
     connect(&m_DeactivationFinishedState, &QState::entered, this, &cEfficiency1Module::deactivationFinished);
-
 }
 
 

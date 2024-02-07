@@ -207,7 +207,7 @@ void cSCPIClient::setSignalConnections(cSCPIStatus* scpiStatus, QList<cStatusBit
     if ((n = dList.count()) > 0) {
 
         QList<int> entityIdList;
-        entityIdList = m_pModule->m_pStorageSystem->getEntityList();
+        entityIdList = m_pModule->getStorageSystem()->getEntityList();
         int entityIdCount = entityIdList.count();
         // we iterate over all statusbitdescriptors
         for (int i = 0; i < n; i++) {
@@ -218,8 +218,8 @@ void cSCPIClient::setSignalConnections(cSCPIStatus* scpiStatus, QList<cStatusBit
                 // we parse over all moduleinterface components
                 for (int j = 0; j < entityIdCount; j++) {
                     entityID = entityIdList.at(j);
-                    if (m_pModule->m_pStorageSystem->hasStoredValue(entityID, QString("INF_ModuleInterface"))) {
-                        QJsonDocument jsonDoc = QJsonDocument::fromJson(m_pModule->m_pStorageSystem->getStoredValue(entityID, QString("INF_ModuleInterface")).toByteArray());
+                    if (m_pModule->getStorageSystem()->hasStoredValue(entityID, QString("INF_ModuleInterface"))) {
+                        QJsonDocument jsonDoc = QJsonDocument::fromJson(m_pModule->getStorageSystem()->getStoredValue(entityID, QString("INF_ModuleInterface")).toByteArray());
                         if ( !jsonDoc.isNull() && jsonDoc.isObject() ) {
                             QJsonObject jsonObj = jsonDoc.object();
                             jsonObj = jsonObj["SCPIInfo"].toObject();
@@ -232,7 +232,7 @@ void cSCPIClient::setSignalConnections(cSCPIStatus* scpiStatus, QList<cStatusBit
                     }
                 }
                 if (moduleFound) {
-                    if (m_pModule->m_pStorageSystem->hasStoredValue(entityID, des.m_sComponentName)) {
+                    if (m_pModule->getStorageSystem()->hasStoredValue(entityID, des.m_sComponentName)) {
                         // if we found the searched component, we generate a signal connection delegate
                         // we need an eventsystem to look for notifications with these components
                         // that lets the signal connection delegate  do his job

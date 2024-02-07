@@ -1,13 +1,13 @@
 #include "sourcemodule.h"
 #include "moduleconfigurationnull.h"
 
-SourceModule::SourceModule(quint8 modnr, int entityId, VeinEvent::StorageSystem* storagesystem, bool demo)
-    :cBaseMeasModule(modnr, entityId, storagesystem, std::make_shared<ModuleConfigurationNull>(), demo)
+SourceModule::SourceModule(MeasurementModuleFactoryParam moduleParam) :
+    cBaseMeasModule(moduleParam, std::make_shared<ModuleConfigurationNull>())
 {
-    m_rpcEventSystem = new VfModuleRpc(entityId);
-    m_sModuleName = QString("%1%2").arg(BaseModuleName).arg(modnr);
+    m_rpcEventSystem = new VfModuleRpc(moduleParam.m_entityId);
+    m_sModuleName = QString("%1%2").arg(BaseModuleName).arg(moduleParam.m_moduleNum);
     m_sModuleDescription = QString("Module to access voltage and current sources");
-    m_sSCPIModuleName = QString("%1%2").arg(BaseSCPIModuleName).arg(modnr);
+    m_sSCPIModuleName = QString("%1%2").arg(BaseSCPIModuleName).arg(moduleParam.m_moduleNum);
 
     m_ActivationMachine.setInitialState(&m_ActivationFinishedState);
     Q_INIT_RESOURCE(resource);

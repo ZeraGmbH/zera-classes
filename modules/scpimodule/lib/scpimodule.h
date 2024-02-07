@@ -1,9 +1,9 @@
 #ifndef SCPIMODULE_H
 #define SCPIMODULE_H
 
+#include "abstractmodulefactory.h"
 #include "scpiclientinfo.h"
 #include "basemodule.h"
-#include "dspinterface.h"
 #include "vfeventsytemmoduleparam.h"
 #include <QStateMachine>
 #include <QState>
@@ -32,7 +32,7 @@ public:
     static constexpr const char* BaseModuleName = "SCPIModule";
     static constexpr const char* BaseSCPIModuleName = "SCP";
 
-    cSCPIModule(quint8 modnr, int entityId, VeinEvent::StorageSystem *storagesystem, bool demo);
+    cSCPIModule(MeasurementModuleFactoryParam moduleParam);
     QByteArray getConfiguration() const override;
     cSCPIServer* getSCPIServer();
 

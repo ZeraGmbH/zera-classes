@@ -4,9 +4,9 @@
 namespace BURDEN1MODULE
 {
 
-ZeraModules::VirtualModule* Burden1ModuleFactory::createModule(int entityId, VeinEvent::StorageSystem* storagesystem, bool demo, int moduleNum)
+ZeraModules::VirtualModule* Burden1ModuleFactory::createModule(MeasurementModuleFactoryParam moduleParam)
 {
-    return new cBurden1Module(m_moduleGroupNumerator->requestModuleNum(moduleNum), entityId, storagesystem, demo);
+    return new cBurden1Module(moduleParam.getAdjustedParam(m_moduleGroupNumerator.get()));
 }
 
 void Burden1ModuleFactory::destroyModule(ZeraModules::VirtualModule *module)

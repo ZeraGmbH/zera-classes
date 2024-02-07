@@ -4,9 +4,9 @@
 namespace THDNMODULE
 {
 
-ZeraModules::VirtualModule* ThdnModuleFactory::createModule(int entityId, VeinEvent::StorageSystem *storagesystem, bool demo, int moduleNum)
+ZeraModules::VirtualModule* ThdnModuleFactory::createModule(MeasurementModuleFactoryParam moduleParam)
 {
-    return new cThdnModule(m_moduleGroupNumerator->requestModuleNum(moduleNum), entityId, storagesystem, demo);
+    return new cThdnModule(moduleParam.getAdjustedParam(m_moduleGroupNumerator.get()));
 }
 
 void ThdnModuleFactory::destroyModule(ZeraModules::VirtualModule *module)

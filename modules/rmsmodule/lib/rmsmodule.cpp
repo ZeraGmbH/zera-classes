@@ -1,17 +1,16 @@
 #include "rmsmodule.h"
 #include "rmsmoduleconfiguration.h"
-#include "rmsmoduleconfigdata.h"
 #include <errormessages.h>
 
 namespace RMSMODULE
 {
 
-cRmsModule::cRmsModule(quint8 modnr, int entityId, VeinEvent::StorageSystem* storagesystem, bool demo) :
-    cBaseMeasModule(modnr, entityId, storagesystem, std::shared_ptr<cBaseModuleConfiguration>(new cRmsModuleConfiguration()), demo)
+cRmsModule::cRmsModule(MeasurementModuleFactoryParam moduleParam) :
+    cBaseMeasModule(moduleParam, std::shared_ptr<cBaseModuleConfiguration>(new cRmsModuleConfiguration()))
 {
-    m_sModuleName = QString("%1%2").arg(BaseModuleName).arg(modnr);
+    m_sModuleName = QString("%1%2").arg(BaseModuleName).arg(moduleParam.m_moduleNum);
     m_sModuleDescription = QString("This module measures true rms values for configured channels");
-    m_sSCPIModuleName = QString("%1%2").arg(BaseSCPIModuleName).arg(modnr);
+    m_sSCPIModuleName = QString("%1%2").arg(BaseSCPIModuleName).arg(moduleParam.m_moduleNum);
 
     m_ActivationStartState.addTransition(this, &cRmsModule::activationContinue, &m_ActivationExecState);
     m_ActivationExecState.addTransition(this, &cRmsModule::activationContinue, &m_ActivationDoneState);

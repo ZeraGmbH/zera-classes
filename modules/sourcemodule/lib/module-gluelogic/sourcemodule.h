@@ -1,6 +1,7 @@
 #ifndef SOURCEMODULE_H
 #define SOURCEMODULE_H
 
+#include "abstractmodulefactory.h"
 #include "sourcemoduleprogram.h"
 #include <basemeasmodule.h>
 #include <vfmodulerpc.h>
@@ -12,7 +13,7 @@ public:
     static constexpr const char* BaseModuleName = "SourceModule";
     static constexpr const char* BaseSCPIModuleName = "SRC";
 
-    SourceModule(quint8 modnr, int entityId, VeinEvent::StorageSystem *storagesystem, bool demo);
+    SourceModule(MeasurementModuleFactoryParam moduleParam);
     QByteArray getConfiguration() const override;
     VfModuleRpc *getRpcEventSystem() const;
 

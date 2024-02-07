@@ -31,7 +31,7 @@ void cSCPIPropertyDelegate::executeSCPI(cSCPIClient *client, QString &sInput)
 
 void cSCPIPropertyDelegate::setOutput(cSCPICmdInfo *scpicmdinfo)
 {
-    QVariant ModInterface = m_pModule->m_pStorageSystem->getStoredValue(scpicmdinfo->entityId, QString("INF_ModuleInterface"));
+    QVariant ModInterface = m_pModule->getStorageSystem()->getStoredValue(scpicmdinfo->entityId, QString("INF_ModuleInterface"));
     setOutput(ModInterface);
 }
 
