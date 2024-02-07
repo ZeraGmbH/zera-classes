@@ -77,7 +77,7 @@ QStringList test_modman_regression_all_sessions::generateCodeLinesForDeviceSessi
     codeLines.append("LicenseSystemMock licenseSystem;");
     codeLines.append("ModuleManagerSetupFacade modManSetupFacade(&licenseSystem);");
     codeLines.append("");
-    codeLines.append("ModuleManagerTest modMan(&modManSetupFacade, true);");
+    codeLines.append("TestModuleManager modMan(&modManSetupFacade, true);");
     codeLines.append("modMan.loadAllAvailableModulePlugins();");
     codeLines.append("modMan.setupConnections();");
     codeLines.append("modMan.startAllServiceMocks(\"" + device + "\");");
@@ -106,7 +106,7 @@ void test_modman_regression_all_sessions::loadAllSessionsAndOutputRegressionTest
     int sessionCount = generateCodeLists("com5003");
     constexpr int sessionCountCom5003 = 4;
     if(sessionCount != sessionCountCom5003)
-        qFatal("Seems sessions changed for Com5003. Read comment below howto update regression tests");
+        qFatal("Seems sessions (found %i) changed for Com5003. Read comment below howto update regression tests", sessionCount);
 }
 
 void test_modman_regression_all_sessions::loadAllSessionsAndOutputRegressionTestCodeMt310s2()
@@ -114,7 +114,7 @@ void test_modman_regression_all_sessions::loadAllSessionsAndOutputRegressionTest
     int sessionCount = generateCodeLists("mt310s2");
     constexpr int sessionCountMt310s2 = 6;
     if(sessionCount != sessionCountMt310s2)
-        qFatal("Seems sessions changed for MT310s2. Read comment below howto update regression tests");
+        qFatal("Seems sessions (found %i) changed for MT310s2. Read comment below howto update regression tests", sessionCount);
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////
