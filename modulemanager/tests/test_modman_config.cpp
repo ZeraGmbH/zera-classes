@@ -8,7 +8,7 @@ QTEST_MAIN(test_modman_config)
 
 void test_modman_config::loadDevConfig()
 {
-    ModulemanagerConfigTest::enableTest();
+    ModulemanagerConfigTest::supportOeTests();
     ModulemanagerConfig::setDemoDevice("mt310s2", true);
 
     ModulemanagerConfig* mmConfig = ModulemanagerConfig::getInstance();
@@ -27,7 +27,7 @@ void test_modman_config::loadDevConfig()
 
 void test_modman_config::verifySessionsCount()
 {
-    ModulemanagerConfigTest::enableTest();
+    ModulemanagerConfigTest::supportOeTests();
     QString configDirName = QDir::cleanPath(QString(OE_INSTALL_ROOT) + "/" + QString(MODMAN_CONFIG_PATH));
 
     QString configFile = configDirName + "/" + MODMAN_DEFAULT_SESSION;

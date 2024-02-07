@@ -11,6 +11,7 @@ QTEST_MAIN(test_modman_regression_all_sessions)
 void test_modman_regression_all_sessions::initTestCase()
 {
     ModuleManagerSetupFacade::registerMetaTypeStreamOperators();
+    TestModuleManager::supportOeTests();
     TestModuleManager::pointToInstalledSessionFiles();
     qputenv("QT_FATAL_CRITICALS", "1");
     qputenv("QT_LOGGING_RULES", "*.debug=false;*.info=false");

@@ -6,6 +6,7 @@
 class TestModuleManager : public ZeraModules::ModuleManager
 {
 public:
+    static void supportOeTests();
     static void pointToInstalledSessionFiles();
 
     explicit TestModuleManager(ModuleManagerSetupFacade *setupFacade, bool demo = false, QObject *parent = nullptr);

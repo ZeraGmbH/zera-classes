@@ -8,7 +8,7 @@ QTEST_MAIN(test_sessionnamesmappingjson)
 
 void test_sessionnamesmappingjson::testMt310s2Sessions()
 {
-    ModulemanagerConfigTest::enableTest();
+    ModulemanagerConfigTest::supportOeTests();
     ModulemanagerConfig::setDemoDevice("mt310s2", false);
     ModulemanagerConfig* mmConfig = ModulemanagerConfig::getInstance();
     QJsonObject jsonData = SessionNamesMappingJson::createSessionNamesMappingJson(ModulemanagerConfig::getConfigFileNameFull(), "mt310s2");
@@ -18,7 +18,7 @@ void test_sessionnamesmappingjson::testMt310s2Sessions()
 
 void test_sessionnamesmappingjson::testMt310s2Com5003Sessions()
 {
-    ModulemanagerConfigTest::enableTest();
+    ModulemanagerConfigTest::supportOeTests();
     ModulemanagerConfig::setDemoDevice("mt310s2", false);
     ModulemanagerConfig* mmConfig = ModulemanagerConfig::getInstance();
     QJsonObject jsonData = SessionNamesMappingJson::createSessionNamesMappingJsonAllDevices(ModulemanagerConfig::getConfigFileNameFull());
