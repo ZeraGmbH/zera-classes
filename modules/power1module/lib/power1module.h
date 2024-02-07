@@ -1,15 +1,15 @@
 #ifndef POWER1MODULE_H
 #define POWER1MODULE_H
 
+#include "abstractmodulefactory.h"
 #include "basemeasmodule.h"
-#include "dspinterface.h"
 #include <vfeventsysteminputcomponents.h>
 #include <QObject>
 #include <QStateMachine>
 #include <QState>
 #include <QFinalState>
 #include <QList>
-#include <memory> // std header for smart pointer
+#include <memory>
 
 namespace POWER1MODULE {
 
@@ -23,7 +23,7 @@ public:
     static constexpr const char* BaseModuleName = "POWER1Module";
     static constexpr const char* BaseSCPIModuleName = "POW";
 
-    cPower1Module(quint8 modnr, int entityId, VeinEvent::StorageSystem* storagesystem, bool demo);
+    cPower1Module(MeasurementModuleFactoryParam moduleParam);
     QByteArray getConfiguration() const override;
 
     VfEventSystemInputComponents *getPEventSystem() const;

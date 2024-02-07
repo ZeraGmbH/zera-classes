@@ -6,9 +6,9 @@
 namespace RMSMODULE
 {
 
-ZeraModules::VirtualModule* RmsModuleFactory::createModule(int entityId, VeinEvent::StorageSystem* storagesystem, bool demo, int moduleNum)
+ZeraModules::VirtualModule* RmsModuleFactory::createModule(MeasurementModuleFactoryParam moduleParam)
 {
-    return new cRmsModule(m_moduleGroupNumerator->requestModuleNum(moduleNum), entityId, storagesystem, demo);
+    return new cRmsModule(moduleParam.getAdjustedParam(m_moduleGroupNumerator.get()));
 }
 
 

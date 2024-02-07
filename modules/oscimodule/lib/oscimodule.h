@@ -1,8 +1,8 @@
 #ifndef OSCIMODULE_H
 #define OSCIMODULE_H
 
+#include "abstractmodulefactory.h"
 #include "basemeasmodule.h"
-#include "dspinterface.h"
 #include <QStateMachine>
 #include <QState>
 #include <QFinalState>
@@ -20,7 +20,7 @@ public:
     static constexpr const char* BaseModuleName = "OSCIModule";
     static constexpr const char* BaseSCPIModuleName = "OSC";
 
-    cOsciModule(quint8 modnr, int entityId, VeinEvent::StorageSystem* storagesystem, bool demo);
+    cOsciModule(MeasurementModuleFactoryParam moduleParam);
     QByteArray getConfiguration() const override;
 
 protected:

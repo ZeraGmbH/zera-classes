@@ -3,6 +3,7 @@
 
 #include "moduleactivist.h"
 #include "basemoduleconfiguration.h"
+#include "abstractmodulefactory.h"
 #include "vfmodulemetadata.h"
 #include <vfmoduleactvalue.h>
 #include <vfmoduleparameter.h>
@@ -25,7 +26,7 @@ class cBaseModule : public ZeraModules::VirtualModule
 Q_OBJECT
 
 public:
-    cBaseModule(quint16 moduleNo, int entityId, VeinEvent::StorageSystem* storagesystem, std::shared_ptr<cBaseModuleConfiguration> modcfg, bool demo);
+    cBaseModule(MeasurementModuleFactoryParam moduleParam, std::shared_ptr<cBaseModuleConfiguration> modcfg);
     virtual ~cBaseModule();
     virtual void setConfiguration(QByteArray xmlConfigData);
     virtual bool isConfigured() const;
@@ -33,8 +34,8 @@ public:
     virtual void stopModule();
     virtual void exportMetaData();
 
-    VeinEvent::StorageSystem* m_pStorageSystem;
-    bool m_demo;
+    VeinEvent::StorageSystem* getStorageSystem();
+    bool getDemo();
 
     QList<VfModuleMetaData*> veinModuleMetaDataList; // only meta information
     QList<VfModuleComponent*> veinModuleComponentList; // for components that need no scpi interface
@@ -121,6 +122,7 @@ protected slots:
     virtual void deactivationDone() = 0;
     virtual void deactivationFinished() = 0;
 private:
+    const MeasurementModuleFactoryParam m_moduleParam;
     bool m_bConfCmd;
     bool m_bStartCmd;
     bool m_bStopCmd;

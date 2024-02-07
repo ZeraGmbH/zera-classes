@@ -4,9 +4,9 @@
 namespace SEM1MODULE
 {
 
-ZeraModules::VirtualModule* Sem1ModuleFactory::createModule(int entityId, VeinEvent::StorageSystem *storagesystem, bool demo, int moduleNum)
+ZeraModules::VirtualModule* Sem1ModuleFactory::createModule(MeasurementModuleFactoryParam moduleParam)
 {
-    return new cSem1Module(m_moduleGroupNumerator->requestModuleNum(moduleNum), entityId, storagesystem, demo);
+    return new cSem1Module(moduleParam.getAdjustedParam(m_moduleGroupNumerator.get()));
 }
 
 void Sem1ModuleFactory::destroyModule(ZeraModules::VirtualModule *module)

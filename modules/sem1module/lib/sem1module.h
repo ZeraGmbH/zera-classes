@@ -1,6 +1,7 @@
 #ifndef SEM1MODULE_H
 #define SEM1MODULE_H
 
+#include "abstractmodulefactory.h"
 #include "sem1modulemeasprogram.h"
 #include <basemeasmodule.h>
 
@@ -16,7 +17,7 @@ public:
     // and each energy measurement  will have an additional scpi parent with its number 0001 .. 9999
     static constexpr const char* BaseSCPIModuleName = "EM01";
 
-    cSem1Module(quint8 modnr, int entityId, VeinEvent::StorageSystem* storagesystem, bool demo);
+    cSem1Module(MeasurementModuleFactoryParam moduleParam);
     QByteArray getConfiguration() const override;
 protected:
     virtual void doConfiguration(QByteArray xmlConfigData); // here we have to do our configuration

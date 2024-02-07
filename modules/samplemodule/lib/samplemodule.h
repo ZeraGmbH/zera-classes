@@ -1,6 +1,7 @@
 #ifndef SAMPLEMODULE_H
 #define SAMPLEMODULE_H
 
+#include "abstractmodulefactory.h"
 #include "samplemodulemeasprogram.h"
 #include "samplechannel.h"
 #include "pllmeaschannel.h"
@@ -16,7 +17,7 @@ public:
     static constexpr const char* BaseModuleName = "SampleModule";
     static constexpr const char* BaseSCPIModuleName = "SAM";
 
-    cSampleModule(quint8 modnr, int entityId, VeinEvent::StorageSystem* storagesystem, bool demo);
+    cSampleModule(MeasurementModuleFactoryParam moduleParam);
     QByteArray getConfiguration() const override;
     cPllMeasChannel* getPllMeasChannel(QString name);
 

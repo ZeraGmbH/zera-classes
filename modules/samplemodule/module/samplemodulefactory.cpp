@@ -4,9 +4,9 @@
 namespace SAMPLEMODULE
 {
 
-ZeraModules::VirtualModule* SampleModuleFactory::createModule(int entityId, VeinEvent::StorageSystem *storagesystem, bool demo, int moduleNum)
+ZeraModules::VirtualModule* SampleModuleFactory::createModule(MeasurementModuleFactoryParam moduleParam)
 {
-    return new cSampleModule(m_moduleGroupNumerator->requestModuleNum(moduleNum), entityId, storagesystem, demo);
+    return new cSampleModule(moduleParam.getAdjustedParam(m_moduleGroupNumerator.get()));
 }
 
 void SampleModuleFactory::destroyModule(ZeraModules::VirtualModule *module)

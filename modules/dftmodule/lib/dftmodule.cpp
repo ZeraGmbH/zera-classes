@@ -1,18 +1,17 @@
 #include "dftmodule.h"
 #include "dftmoduleconfiguration.h"
-#include "dftmoduleconfigdata.h"
 #include "dftmodulemeasprogram.h"
 #include <errormessages.h>
 
 namespace DFTMODULE
 {
 
-cDftModule::cDftModule(quint8 modnr, int entityId, VeinEvent::StorageSystem* storagesystem, bool demo) :
-    cBaseMeasModule(modnr, entityId, storagesystem, std::shared_ptr<cBaseModuleConfiguration>(new cDftModuleConfiguration()), demo)
+cDftModule::cDftModule(MeasurementModuleFactoryParam moduleParam) :
+    cBaseMeasModule(moduleParam, std::shared_ptr<cBaseModuleConfiguration>(new cDftModuleConfiguration()))
 {
-    m_sModuleName = QString("%1%2").arg(BaseModuleName).arg(modnr);
+    m_sModuleName = QString("%1%2").arg(BaseModuleName).arg(moduleParam.m_moduleNum);
     m_sModuleDescription = QString("This module measures configured order dft values for configured channels");
-    m_sSCPIModuleName = QString("%1%2").arg(BaseSCPIModuleName).arg(modnr);
+    m_sSCPIModuleName = QString("%1%2").arg(BaseSCPIModuleName).arg(moduleParam.m_moduleNum);
 
     m_ActivationStartState.addTransition(this, &cDftModule::activationContinue, &m_ActivationExecState);
     m_ActivationExecState.addTransition(this, &cDftModule::activationContinue, &m_ActivationDoneState);

@@ -1,8 +1,8 @@
 #ifndef DFTMODULE_H
 #define DFTMODULE_H
 
+#include "abstractmodulefactory.h"
 #include "basemeasmodule.h"
-#include "dspinterface.h"
 #include <QStateMachine>
 #include <QState>
 #include <QFinalState>
@@ -20,7 +20,7 @@ public:
     static constexpr const char* BaseModuleName = "DFTModule";
     static constexpr const char* BaseSCPIModuleName = "DFT";
 
-    cDftModule(quint8 modnr, int entityId, VeinEvent::StorageSystem* storagesystem, bool demo);
+    cDftModule(MeasurementModuleFactoryParam moduleParam);
     QByteArray getConfiguration() const override;
 
 protected:

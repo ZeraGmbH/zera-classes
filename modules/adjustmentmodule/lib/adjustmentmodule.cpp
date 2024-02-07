@@ -1,15 +1,14 @@
 #include "adjustmentmodule.h"
 #include "adjustmentmoduleconfiguration.h"
-#include "adjustmentmoduleconfigdata.h"
 #include "adjustmentmodulemeasprogram.h"
 #include <errormessages.h>
 
-cAdjustmentModule::cAdjustmentModule(quint8 modnr, int entityId, VeinEvent::StorageSystem* storagesystem, bool demo) :
-    cBaseMeasModule(modnr, entityId, storagesystem, std::shared_ptr<cBaseModuleConfiguration>(new cAdjustmentModuleConfiguration()), demo)
+cAdjustmentModule::cAdjustmentModule(MeasurementModuleFactoryParam moduleParam) :
+    cBaseMeasModule(moduleParam, std::shared_ptr<cBaseModuleConfiguration>(new cAdjustmentModuleConfiguration()))
 {
-    m_sModuleName = QString("%1%2").arg(BaseModuleName).arg(modnr);
+    m_sModuleName = QString("%1%2").arg(BaseModuleName).arg(moduleParam.m_moduleNum);
     m_sModuleDescription = QString("This module supports commands for adjustment for a configured number of measuring channels");
-    m_sSCPIModuleName = QString("%1%2").arg(BaseSCPIModuleName).arg(modnr);
+    m_sSCPIModuleName = QString("%1%2").arg(BaseSCPIModuleName).arg(moduleParam.m_moduleNum);
 
     m_ActivationStartState.addTransition(this, &cAdjustmentModule::activationContinue, &m_ActivationExecState);
     m_ActivationExecState.addTransition(this, &cAdjustmentModule::activationContinue, &m_ActivationDoneState);

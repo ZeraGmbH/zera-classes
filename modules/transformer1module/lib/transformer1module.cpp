@@ -1,8 +1,6 @@
 #include "transformer1module.h"
 #include "transformer1moduleconfiguration.h"
-#include "transformer1moduleconfigdata.h"
 #include "transformer1modulemeasprogram.h"
-#include "errormessages.h"
 #include <vfmodulecomponent.h>
 #include <vfmoduleerrorcomponent.h>
 #include <vfmodulemetadata.h>
@@ -10,12 +8,12 @@
 namespace TRANSFORMER1MODULE
 {
 
-cTransformer1Module::cTransformer1Module(quint8 modnr, int entityId, VeinEvent::StorageSystem* storagesystem, bool demo) :
-    cBaseMeasModule(modnr, entityId, storagesystem, std::shared_ptr<cBaseModuleConfiguration>(new cTransformer1ModuleConfiguration()), demo)
+cTransformer1Module::cTransformer1Module(MeasurementModuleFactoryParam moduleParam) :
+    cBaseMeasModule(moduleParam, std::shared_ptr<cBaseModuleConfiguration>(new cTransformer1ModuleConfiguration()))
 {
-    m_sModuleName = QString("%1%2").arg(BaseModuleName).arg(modnr);
+    m_sModuleName = QString("%1%2").arg(BaseModuleName).arg(moduleParam.m_moduleNum);
     m_sModuleDescription = QString("This module measures configured number transformer errors from configured input dft values");
-    m_sSCPIModuleName = QString("%1%2").arg(BaseSCPIModuleName).arg(modnr);
+    m_sSCPIModuleName = QString("%1%2").arg(BaseSCPIModuleName).arg(moduleParam.m_moduleNum);
 
     m_ActivationStartState.addTransition(this, &cTransformer1Module::activationContinue, &m_ActivationExecState);
     m_ActivationExecState.addTransition(this, &cTransformer1Module::activationContinue, &m_ActivationDoneState);

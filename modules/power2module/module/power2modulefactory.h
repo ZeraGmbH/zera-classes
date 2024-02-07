@@ -17,7 +17,7 @@ class Power2ModuleFactory : public QObject, public MeasurementModuleFactory
   
 public:
     Power2ModuleFactory(){}
-    ZeraModules::VirtualModule *createModule(int entityId, VeinEvent::StorageSystem* storagesystem, bool demo, int moduleNum) override;
+    ZeraModules::VirtualModule *createModule(MeasurementModuleFactoryParam moduleParam) override;
     void destroyModule(ZeraModules::VirtualModule *module) override;
     QString getFactoryName() const override;
 };

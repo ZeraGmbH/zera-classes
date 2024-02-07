@@ -112,10 +112,10 @@ bool cAdjustmentModuleMeasProgram::checkExternalVeinComponents()
 {
     bool ok = true;
     adjInfoType adjInfo = getConfData()->m_ReferenceAngle;
-    if (!m_pModule->m_pStorageSystem->hasStoredValue(adjInfo.m_nEntity, adjInfo.m_sComponent))
+    if (!m_pModule->getStorageSystem()->hasStoredValue(adjInfo.m_nEntity, adjInfo.m_sComponent))
         ok = false;
     adjInfo = getConfData()->m_ReferenceFrequency;
-    if (!m_pModule->m_pStorageSystem->hasStoredValue(adjInfo.m_nEntity, adjInfo.m_sComponent))
+    if (!m_pModule->getStorageSystem()->hasStoredValue(adjInfo.m_nEntity, adjInfo.m_sComponent))
         ok = false;
 
     for (int i = 0; ok && i<getConfData()->m_nAdjustmentChannelCount; i++) {
@@ -123,17 +123,17 @@ bool cAdjustmentModuleMeasProgram::checkExternalVeinComponents()
         QString chn = getConfData()->m_AdjChannelList.at(i);
         adjInfo = getConfData()->m_AdjChannelInfoHash[chn]->amplitudeAdjInfo;
         const QString errMagTemplate = "Entity %1 / componen %2 not found";
-        if (adjInfo.m_bAvail && !m_pModule->m_pStorageSystem->hasStoredValue(adjInfo.m_nEntity, adjInfo.m_sComponent)) {
+        if (adjInfo.m_bAvail && !m_pModule->getStorageSystem()->hasStoredValue(adjInfo.m_nEntity, adjInfo.m_sComponent)) {
             emit errMsg(errMagTemplate.arg(adjInfo.m_nEntity).arg(adjInfo.m_sComponent));
             ok = false;
         }
         adjInfo = getConfData()->m_AdjChannelInfoHash[chn]->phaseAdjInfo;
-        if (adjInfo.m_bAvail && !m_pModule->m_pStorageSystem->hasStoredValue(adjInfo.m_nEntity, adjInfo.m_sComponent)) {
+        if (adjInfo.m_bAvail && !m_pModule->getStorageSystem()->hasStoredValue(adjInfo.m_nEntity, adjInfo.m_sComponent)) {
             emit errMsg(errMagTemplate.arg(adjInfo.m_nEntity).arg(adjInfo.m_sComponent));
             ok = false;
         }
         adjInfo = getConfData()->m_AdjChannelInfoHash[chn]->offsetAdjInfo;
-        if (adjInfo.m_bAvail && !m_pModule->m_pStorageSystem->hasStoredValue(adjInfo.m_nEntity, adjInfo.m_sComponent)) {
+        if (adjInfo.m_bAvail && !m_pModule->getStorageSystem()->hasStoredValue(adjInfo.m_nEntity, adjInfo.m_sComponent)) {
             emit errMsg(errMagTemplate.arg(adjInfo.m_nEntity).arg(adjInfo.m_sComponent));
             ok = false;
         }
@@ -496,7 +496,7 @@ void cAdjustmentModuleMeasProgram::setAdjustAmplitudeStartCommand(QVariant var)
 
 void cAdjustmentModuleMeasProgram::adjustamplitudeGetCorr()
 {
-    m_AdjustActualValue = m_pModule->m_pStorageSystem->getStoredValue(m_AdjustEntity, m_AdjustComponent).toDouble();
+    m_AdjustActualValue = m_pModule->getStorageSystem()->getStoredValue(m_AdjustEntity, m_AdjustComponent).toDouble();
     m_MsgNrCmdList[m_commonObjects->m_pcbInterface->getAdjGainCorrection(m_sAdjustSysName, m_sAdjustRange, m_AdjustActualValue)] = getadjgaincorrection;
 }
 
@@ -525,8 +525,8 @@ void cAdjustmentModuleMeasProgram::setAdjustPhaseStartCommand(QVariant var)
 
 void cAdjustmentModuleMeasProgram::adjustphaseGetCorr()
 {
-    m_AdjustActualValue = cmpPhase(m_pModule->m_pStorageSystem->getStoredValue(m_AdjustEntity, m_AdjustComponent));
-    m_AdjustFrequency = m_pModule->m_pStorageSystem->getStoredValue(getConfData()->m_ReferenceFrequency.m_nEntity, getConfData()->m_ReferenceFrequency.m_sComponent).toDouble();
+    m_AdjustActualValue = cmpPhase(m_pModule->getStorageSystem()->getStoredValue(m_AdjustEntity, m_AdjustComponent));
+    m_AdjustFrequency = m_pModule->getStorageSystem()->getStoredValue(getConfData()->m_ReferenceFrequency.m_nEntity, getConfData()->m_ReferenceFrequency.m_sComponent).toDouble();
     m_MsgNrCmdList[m_commonObjects->m_pcbInterface->getAdjPhaseCorrection(m_sAdjustSysName, m_sAdjustRange, m_AdjustFrequency)] = getadjphasecorrection;
 }
 
@@ -547,7 +547,7 @@ void cAdjustmentModuleMeasProgram::setAdjustOffsetStartCommand(QVariant var)
     setAdjustEnvironment(var);
     int adjustEntity = getConfData()->m_AdjChannelInfoHash[m_sAdjustSysName]->offsetAdjInfo.m_nEntity;
     QString adjustComponent = getConfData()->m_AdjChannelInfoHash[m_sAdjustSysName]->offsetAdjInfo.m_sComponent;
-    double adjustActualValue = m_pModule->m_pStorageSystem->getStoredValue(adjustEntity, adjustComponent).toDouble();
+    double adjustActualValue = m_pModule->getStorageSystem()->getStoredValue(adjustEntity, adjustComponent).toDouble();
     m_offsetTasks.addSub(TaskOffset::create(m_commonObjects->m_pcbInterface,
                                             m_sAdjustSysName, m_sAdjustRange,
                                             adjustActualValue, m_AdjustTargetValue,

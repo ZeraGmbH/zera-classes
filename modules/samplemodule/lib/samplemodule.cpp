@@ -12,12 +12,12 @@
 namespace SAMPLEMODULE
 {
 
-cSampleModule::cSampleModule(quint8 modnr, int entityId, VeinEvent::StorageSystem *storagesystem, bool demo)
-    :cBaseMeasModule(modnr, entityId, storagesystem, std::shared_ptr<cBaseModuleConfiguration>(new cSampleModuleConfiguration()), demo)
+cSampleModule::cSampleModule(MeasurementModuleFactoryParam moduleParam) :
+    cBaseMeasModule(moduleParam, std::shared_ptr<cBaseModuleConfiguration>(new cSampleModuleConfiguration()))
 {
-    m_sModuleName = QString("%1%2").arg(BaseModuleName).arg(modnr);
+    m_sModuleName = QString("%1%2").arg(BaseModuleName).arg(moduleParam.m_moduleNum);
     m_sModuleDescription = QString("This module is responsible for pll range setting\n, pll channel selection and automatic");
-    m_sSCPIModuleName = QString("%1%2").arg(BaseSCPIModuleName).arg(modnr);
+    m_sSCPIModuleName = QString("%1%2").arg(BaseSCPIModuleName).arg(moduleParam.m_moduleNum);
 
     m_ActivationStartState.addTransition(this, &cSampleModule::activationContinue, &m_ActivationExecState);
     m_ActivationExecState.addTransition(this, &cSampleModule::activationContinue, &m_ActivationDoneState);
@@ -90,7 +90,7 @@ void cSampleModule::setupModule()
                                                       &(pConfData->m_PCBServerSocket),
                                                       pConfData->m_ObsermaticConfPar.m_pllChannelList.at(i),
                                                       i+1,
-                                                      m_demo);
+                                                      getDemo());
         m_pllMeasChannelList.append(pllchn);
         m_ModuleActivistList.append(pllchn);
         connect(pllchn, &cPllMeasChannel::activated, this, &cSampleModule::activationContinue);

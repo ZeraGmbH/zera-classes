@@ -60,7 +60,7 @@ cOsciModuleMeasProgram::cOsciModuleMeasProgram(cOsciModule* module, std::shared_
     m_activationMachine.addState(&m_activateDSPState);
     m_activationMachine.addState(&m_loadDSPDoneState);
 
-    if(m_pModule->m_demo)
+    if(m_pModule->getDemo())
         m_activationMachine.setInitialState(&m_loadDSPDoneState);
     else
         m_activationMachine.setInitialState(&m_resourceManagerConnectState);
@@ -96,7 +96,7 @@ cOsciModuleMeasProgram::cOsciModuleMeasProgram(cOsciModule* module, std::shared_
     m_deactivationMachine.addState(&m_freeUSERMemState);
     m_deactivationMachine.addState(&m_unloadDSPDoneState);
 
-    if(m_pModule->m_demo)
+    if(m_pModule->getDemo())
         m_deactivationMachine.setInitialState(&m_unloadDSPDoneState);
     else
         m_deactivationMachine.setInitialState(&m_deactivateDSPState);
@@ -114,7 +114,7 @@ cOsciModuleMeasProgram::cOsciModuleMeasProgram(cOsciModule* module, std::shared_
     connect(&m_dataAcquisitionState, &QState::entered, this, &cOsciModuleMeasProgram::dataAcquisitionDSP);
     connect(&m_dataAcquisitionDoneState, &QState::entered, this, &cOsciModuleMeasProgram::dataReadDSP);
 
-    if(m_pModule->m_demo){
+    if(m_pModule->getDemo()){
         m_demoPeriodicTimer = TimerFactoryQt::createPeriodic(500);
         connect(m_demoPeriodicTimer.get(), &TimerTemplateQt::sigExpired,this, &cOsciModuleMeasProgram::handleDemoActualValues);
     }
@@ -130,7 +130,7 @@ cOsciModuleMeasProgram::~cOsciModuleMeasProgram()
 void cOsciModuleMeasProgram::start()
 {
     connect(this, &cOsciModuleMeasProgram::actualValues, this, &cOsciModuleMeasProgram::setInterfaceActualValues);
-    if(m_pModule->m_demo)
+    if(m_pModule->getDemo())
         m_demoPeriodicTimer->start();
 }
 
@@ -138,7 +138,7 @@ void cOsciModuleMeasProgram::start()
 void cOsciModuleMeasProgram::stop()
 {
     disconnect(this, &cOsciModuleMeasProgram::actualValues, this, 0);
-    if(m_pModule->m_demo)
+    if(m_pModule->getDemo())
         m_demoPeriodicTimer->stop();
 }
 
@@ -884,7 +884,7 @@ void cOsciModuleMeasProgram::activateDSPdone()
 {
     m_bActive = true;
 
-    if(m_pModule->m_demo){
+    if(m_pModule->getDemo()){
         setupDemoOperation();
     }
     setActualValuesNames();
@@ -960,7 +960,7 @@ void cOsciModuleMeasProgram::dataReadDSP()
 void cOsciModuleMeasProgram::newRefChannel(QVariant chn)
 {
     getConfData()->m_RefChannel.m_sPar = chn.toString();
-    if(!m_pModule->m_demo) {
+    if(!m_pModule->getDemo()) {
         m_pDSPInterFace->setVarData(m_pParameterDSP, QString("REFCHN:%1;").arg(m_measChannelInfoHash.value(getConfData()->m_RefChannel.m_sPar).dspChannelNr));
         m_MsgNrCmdList[m_pDSPInterFace->dspMemoryWrite(m_pParameterDSP)] = writeparameter;
     }

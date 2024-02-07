@@ -1,6 +1,7 @@
 #ifndef POWER3MODULE_H
 #define POWER3MODULE_H
 
+#include "abstractmodulefactory.h"
 #include "power3modulemeasprogram.h"
 #include <basemeasmodule.h>
 #include <QList>
@@ -16,7 +17,7 @@ public:
     static constexpr const char* BaseModuleName = "Power3Module";
     static constexpr const char* BaseSCPIModuleName = "PW3";
 
-    cPower3Module(quint8 modnr, int entityId, VeinEvent::StorageSystem* storagesystem, bool demo);
+    cPower3Module(MeasurementModuleFactoryParam moduleParam);
     QByteArray getConfiguration() const override;
 protected:
     cPower3ModuleMeasProgram *m_pMeasProgram; // our measuring program, lets say the working horse

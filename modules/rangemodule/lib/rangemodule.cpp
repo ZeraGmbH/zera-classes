@@ -14,12 +14,12 @@
 namespace RANGEMODULE
 {
 
-cRangeModule::cRangeModule(quint8 modnr, int entityId, VeinEvent::StorageSystem* storagesystem, bool demo)
-    :cBaseMeasModule(modnr, entityId, storagesystem, std::shared_ptr<cBaseModuleConfiguration>(new cRangeModuleConfiguration()), demo)
+cRangeModule::cRangeModule(MeasurementModuleFactoryParam moduleParam) :
+    cBaseMeasModule(moduleParam, std::shared_ptr<cBaseModuleConfiguration>(new cRangeModuleConfiguration()))
 {
-    m_sModuleName = QString("%1%2").arg(BaseModuleName).arg(modnr);
+    m_sModuleName = QString("%1%2").arg(BaseModuleName).arg(moduleParam.m_moduleNum);
     m_sModuleDescription = QString("This module is responsible for range handling,\n range setting, automatic, adjustment and scaling");
-    m_sSCPIModuleName = QString("%1%2").arg(BaseSCPIModuleName).arg(modnr);
+    m_sSCPIModuleName = QString("%1%2").arg(BaseSCPIModuleName).arg(moduleParam.m_moduleNum);
 }
 
 
@@ -64,7 +64,6 @@ void cRangeModule::setupModule()
     veinModuleMetaDataList.append(m_pGroupCountInfo);
 
 
-    bool demo = m_demo;
     // first we build a list of our meas channels
     for (int i = 0; i < pConfData->m_nChannelCount; i ++)
     {
@@ -76,7 +75,7 @@ void cRangeModule::setupModule()
                                                         pConfData->m_senseChannelList.at(i),
                                                         i+1,
                                                         pConfData->m_session.m_sPar,
-                                                        demo);
+                                                        getDemo());
         m_rangeMeasChannelList.append(pchn);
         m_ModuleActivistList.append(pchn);
         connect(pchn, &cRangeMeasChannel::activated, this, &cRangeModule::activationContinue);
@@ -91,7 +90,7 @@ void cRangeModule::setupModule()
                                               pConfData->m_GroupList,
                                               pConfData->m_senseChannelList,
                                               pConfData->m_ObsermaticConfPar,
-                                              demo);
+                                              getDemo());
     m_ModuleActivistList.append(m_pRangeObsermatic);
     connect(m_pRangeObsermatic, &cRangeObsermatic::activated, this, &cRangeModule::activationContinue);
     connect(m_pRangeObsermatic, &cRangeObsermatic::deactivated, this, &cRangeModule::deactivationContinue);
@@ -106,7 +105,7 @@ void cRangeModule::setupModule()
         connect(pchn, &cRangeMeasChannel::cmdDone, m_pRangeObsermatic, &cRangeObsermatic::catchChannelReply);
     }
 
-    if(!demo) {
+    if(!getDemo()) {
         // we also need some program for adjustment
         m_pAdjustment = new cAdjustManagement(this, &(pConfData->m_DSPServerSocket), &pConfData->m_PCBServerSocket, pConfData->m_senseChannelList, pConfData->m_subdcChannelList, pConfData->m_fAdjInterval);
         m_ModuleActivistList.append(m_pAdjustment);

@@ -17,7 +17,7 @@ class SampleModuleFactory : public QObject, public MeasurementModuleFactory
   
 public:
     SampleModuleFactory(){}
-    ZeraModules::VirtualModule *createModule(int entityId, VeinEvent::StorageSystem* storagesystem, bool demo, int moduleNum) override;
+    ZeraModules::VirtualModule *createModule(MeasurementModuleFactoryParam moduleParam) override;
     void destroyModule(ZeraModules::VirtualModule *module) override;
     QString getFactoryName() const override;
 };

@@ -4,9 +4,9 @@
 namespace OSCIMODULE
 {
 
-ZeraModules::VirtualModule* OsciModuleFactory::createModule(int entityId, VeinEvent::StorageSystem *storagesystem, bool demo, int moduleNum)
+ZeraModules::VirtualModule* OsciModuleFactory::createModule(MeasurementModuleFactoryParam moduleParam)
 {
-    return new cOsciModule(m_moduleGroupNumerator->requestModuleNum(moduleNum), entityId, storagesystem, demo);
+    return new cOsciModule(moduleParam.getAdjustedParam(m_moduleGroupNumerator.get()));
 }
 
 void OsciModuleFactory::destroyModule(ZeraModules::VirtualModule *module)

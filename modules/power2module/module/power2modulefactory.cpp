@@ -4,9 +4,9 @@
 namespace POWER2MODULE
 {
 
-ZeraModules::VirtualModule* Power2ModuleFactory::createModule(int entityId, VeinEvent::StorageSystem* storagesystem, bool demo, int moduleNum)
+ZeraModules::VirtualModule* Power2ModuleFactory::createModule(MeasurementModuleFactoryParam moduleParam)
 {
-    return new cPower2Module(m_moduleGroupNumerator->requestModuleNum(moduleNum), entityId, storagesystem, demo);
+    return new cPower2Module(moduleParam.getAdjustedParam(m_moduleGroupNumerator.get()));
 }
 
 void Power2ModuleFactory::destroyModule(ZeraModules::VirtualModule *module)

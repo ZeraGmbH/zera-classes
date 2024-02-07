@@ -182,8 +182,8 @@ void cBurden1ModuleMeasProgram::searchActualValues()
     for (int i = 0; i < getConfData()->m_nBurdenSystemCount; i++)
     {
         // we first test that wanted input components exist
-        if ( (m_pModule->m_pStorageSystem->hasStoredValue(getConfData()->m_nModuleId, getConfData()->m_BurdenSystemConfigList.at(i).m_sInputVoltageVector)) &&
-             (m_pModule->m_pStorageSystem->hasStoredValue(getConfData()->m_nModuleId, getConfData()->m_BurdenSystemConfigList.at(i).m_sInputCurrentVector)) )
+        if ( (m_pModule->getStorageSystem()->hasStoredValue(getConfData()->m_nModuleId, getConfData()->m_BurdenSystemConfigList.at(i).m_sInputVoltageVector)) &&
+             (m_pModule->getStorageSystem()->hasStoredValue(getConfData()->m_nModuleId, getConfData()->m_BurdenSystemConfigList.at(i).m_sInputCurrentVector)) )
         {
             cBurden1MeasDelegate* cBMD;
             VfModuleComponentInput* vmci;

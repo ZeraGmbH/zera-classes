@@ -2,7 +2,6 @@
 #include "scpimoduleconfiguration.h"
 #include "scpimoduleconfigdata.h"
 #include "scpiserver.h"
-#include "vfmodulecomponent.h"
 #include "vfmoduleerrorcomponent.h"
 #include "scpieventsystem.h"
 #include <vfmodulemetadata.h>
@@ -21,15 +20,15 @@
 namespace SCPIMODULE
 {
 
-cSCPIModule::cSCPIModule(quint8 modnr, int entityId, VeinEvent::StorageSystem* storagesystem, bool demo) :
-    cBaseModule(modnr, entityId, storagesystem, std::shared_ptr<cBaseModuleConfiguration>(new cSCPIModuleConfiguration()), demo)
+cSCPIModule::cSCPIModule(MeasurementModuleFactoryParam moduleParam) :
+    cBaseModule(moduleParam, std::shared_ptr<cBaseModuleConfiguration>(new cSCPIModuleConfiguration()))
 {
-    m_sModuleName = QString("%1%2").arg(BaseModuleName).arg(modnr);
+    m_sModuleName = QString("%1%2").arg(BaseModuleName).arg(moduleParam.m_moduleNum);
     m_sModuleDescription = QString("This module provides a scpi interface depending on the actual session running");
-    m_sSCPIModuleName = QString("%1%2").arg(BaseSCPIModuleName).arg(modnr);
+    m_sSCPIModuleName = QString("%1%2").arg(BaseSCPIModuleName).arg(moduleParam.m_moduleNum);
 
     m_pSCPIEventSystem = new cSCPIEventSystem(this);
-    m_pModuleValidator = new VfEventSytemModuleParam(entityId, storagesystem);
+    m_pModuleValidator = new VfEventSytemModuleParam(moduleParam.m_entityId, moduleParam.m_storagesystem);
 }
 
 

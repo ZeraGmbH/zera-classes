@@ -1,18 +1,17 @@
 #include "power2module.h"
 #include "power2moduleconfiguration.h"
-#include "power2moduleconfigdata.h"
 #include "power2modulemeasprogram.h"
 #include <errormessages.h>
 
 namespace POWER2MODULE
 {
 
-cPower2Module::cPower2Module(quint8 modnr, int entityId, VeinEvent::StorageSystem* storagesystem, bool demo) :
-    cBaseMeasModule(modnr, entityId, storagesystem, std::shared_ptr<cBaseModuleConfiguration>(new cPower2ModuleConfiguration()), demo)
+cPower2Module::cPower2Module(MeasurementModuleFactoryParam moduleParam) :
+    cBaseMeasModule(moduleParam, std::shared_ptr<cBaseModuleConfiguration>(new cPower2ModuleConfiguration()))
 {
-    m_sModuleName = QString("%1%2").arg(BaseModuleName).arg(modnr);
+    m_sModuleName = QString("%1%2").arg(BaseModuleName).arg(moduleParam.m_moduleNum);
     m_sModuleDescription = QString("This module measures +/- power with configured measuring and integration modes");
-    m_sSCPIModuleName = QString("%1%2").arg(BaseSCPIModuleName).arg(modnr);
+    m_sSCPIModuleName = QString("%1%2").arg(BaseSCPIModuleName).arg(moduleParam.m_moduleNum);
 
     m_ActivationStartState.addTransition(this, &cPower2Module::activationContinue, &m_ActivationExecState);
     m_ActivationExecState.addTransition(this, &cPower2Module::activationContinue, &m_ActivationDoneState);

@@ -258,8 +258,8 @@ void cTransformer1ModuleMeasProgram::searchActualValues()
     for (int i = 0; i < getConfData()->m_nTransformerSystemCount; i++)
     {
         // we first test that wanted input components exist
-        if ( (m_pModule->m_pStorageSystem->hasStoredValue(getConfData()->m_nModuleId, getConfData()->m_transformerSystemConfigList.at(i).m_sInputPrimaryVector)) &&
-             (m_pModule->m_pStorageSystem->hasStoredValue(getConfData()->m_nModuleId, getConfData()->m_transformerSystemConfigList.at(i).m_sInputSecondaryVector)) )
+        if ( (m_pModule->getStorageSystem()->hasStoredValue(getConfData()->m_nModuleId, getConfData()->m_transformerSystemConfigList.at(i).m_sInputPrimaryVector)) &&
+             (m_pModule->getStorageSystem()->hasStoredValue(getConfData()->m_nModuleId, getConfData()->m_transformerSystemConfigList.at(i).m_sInputSecondaryVector)) )
         {
             cTransformer1MeasDelegate *cTMD;
             VfModuleComponentInput *vmci;

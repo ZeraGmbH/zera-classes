@@ -115,7 +115,7 @@ cDftModuleMeasProgram::cDftModuleMeasProgram(cDftModule* module, std::shared_ptr
     connect(&m_dataAcquisitionState, &QState::entered, this, &cDftModuleMeasProgram::dataAcquisitionDSP);
     connect(&m_dataAcquisitionDoneState, &QState::entered, this, &cDftModuleMeasProgram::dataReadDSP);
 
-    if(m_pModule->m_demo){
+    if(m_pModule->getDemo()){
         m_demoPeriodicTimer = TimerFactoryQt::createPeriodic(500);
         connect(m_demoPeriodicTimer.get(), &TimerTemplateQt::sigExpired,this, &cDftModuleMeasProgram::handleDemoActualValues);
     }
@@ -137,7 +137,7 @@ void cDftModuleMeasProgram::start()
     }
     else
         connect(this, &cDftModuleMeasProgram::actualValues, this, &cDftModuleMeasProgram::setInterfaceActualValues);
-    if(m_pModule->m_demo)
+    if(m_pModule->getDemo())
         m_demoPeriodicTimer->start();
 }
 
@@ -146,7 +146,7 @@ void cDftModuleMeasProgram::stop()
 {
     disconnect(this, &cDftModuleMeasProgram::actualValues, 0, 0);
     disconnect(&m_movingwindowFilter, &cMovingwindowFilter::actualValues, 0, 0);
-    if(m_pModule->m_demo)
+    if(m_pModule->getDemo())
         m_demoPeriodicTimer->stop();
 }
 
@@ -984,7 +984,7 @@ void cDftModuleMeasProgram::activateDSPdone()
 {
     m_bActive = true;
 
-    if(m_pModule->m_demo)
+    if(m_pModule->getDemo())
         setupDemoOperation();
 
     setActualValuesNames();
@@ -1179,7 +1179,7 @@ void cDftModuleMeasProgram::newIntegrationtime(QVariant ti)
         m_movingwindowFilter.setIntegrationtime(getConfData()->m_fMeasInterval.m_fValue);
     else
     {
-        if(!m_pModule->m_demo) {
+        if(!m_pModule->getDemo()) {
             m_pDSPInterFace->setVarData(m_pParameterDSP, QString("TIPAR:%1;TISTART:%2;").arg(getConfData()->m_fMeasInterval.m_fValue*1000)
                                                                                 .arg(0), DSPDATA::dInt);
             m_MsgNrCmdList[m_pDSPInterFace->dspMemoryWrite(m_pParameterDSP)] = writeparameter;

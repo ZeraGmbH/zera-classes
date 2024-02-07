@@ -1,6 +1,7 @@
 #ifndef BLEMODULE_H
 #define BLEMODULE_H
 
+#include "abstractmodulefactory.h"
 #include "blemodulemeasprogram.h"
 #include <basemeasmodule.h>
 
@@ -13,7 +14,7 @@ public:
     static constexpr const char* BaseModuleName = "BleModule";
     static constexpr const char* BaseSCPIModuleName = "BLE";
 
-    cBleModule(quint8 modnr, int entityId, VeinEvent::StorageSystem* storagesystem, bool demo);
+    cBleModule(MeasurementModuleFactoryParam moduleParam);
     QByteArray getConfiguration() const override;
 
 protected:

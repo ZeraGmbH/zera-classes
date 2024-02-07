@@ -4,9 +4,9 @@
 namespace REFERENCEMODULE
 {
 
-ZeraModules::VirtualModule* ReferenceModuleFactory::createModule(int entityId, VeinEvent::StorageSystem* storagesystem, bool demo, int moduleNum)
+ZeraModules::VirtualModule* ReferenceModuleFactory::createModule(MeasurementModuleFactoryParam moduleParam)
 {
-    return new cReferenceModule(m_moduleGroupNumerator->requestModuleNum(moduleNum), entityId, storagesystem, demo);
+    return new cReferenceModule(moduleParam.getAdjustedParam(m_moduleGroupNumerator.get()));
 }
 
 void ReferenceModuleFactory::destroyModule(ZeraModules::VirtualModule *module)

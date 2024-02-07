@@ -40,11 +40,11 @@ cModuleInterface::~cModuleInterface()
 bool cModuleInterface::setupInterface()
 {
     bool ok = true;
-    QList<int> entityIdList = m_pModule->m_pStorageSystem->getEntityList();
+    QList<int> entityIdList = m_pModule->getStorageSystem()->getEntityList();
     for(auto entityID : entityIdList) {
         // we parse over all moduleinterface components
-        if (m_pModule->m_pStorageSystem->hasStoredValue(entityID, QString("INF_ModuleInterface"))) {
-            QJsonDocument jsonDoc = QJsonDocument::fromJson(m_pModule->m_pStorageSystem->getStoredValue(entityID, QString("INF_ModuleInterface")).toByteArray());
+        if (m_pModule->getStorageSystem()->hasStoredValue(entityID, QString("INF_ModuleInterface"))) {
+            QJsonDocument jsonDoc = QJsonDocument::fromJson(m_pModule->getStorageSystem()->getStoredValue(entityID, QString("INF_ModuleInterface")).toByteArray());
             if ( !jsonDoc.isNull() && jsonDoc.isObject() ) {
                 const QJsonObject jsonObj = jsonDoc.object();
                 const QJsonObject jsonScpiInfo = jsonObj["SCPIInfo"].toObject();

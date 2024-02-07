@@ -1,6 +1,7 @@
 #ifndef ADJUSTMENTMODULE_H
 #define ADJUSTMENTMODULE_H
 
+#include "abstractmodulefactory.h"
 #include <basemeasmodule.h>
 
 class cAdjustmentModuleMeasProgram;
@@ -11,7 +12,7 @@ class cAdjustmentModule : public cBaseMeasModule
 public:
     static constexpr const char* BaseModuleName = "AdjustmentModule";
     static constexpr const char* BaseSCPIModuleName = "ADJ";
-    cAdjustmentModule(quint8 modnr, int entityId, VeinEvent::StorageSystem* storagesystem, bool demo);
+    cAdjustmentModule(MeasurementModuleFactoryParam moduleParam);
     QByteArray getConfiguration() const override;
 protected:
     cAdjustmentModuleMeasProgram *m_pMeasProgram; // our measuring program, lets say the working horse

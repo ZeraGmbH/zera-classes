@@ -4,9 +4,9 @@
 namespace FFTMODULE
 {
 
-ZeraModules::VirtualModule* FftModuleFactory::createModule(int entityId, VeinEvent::StorageSystem *storagesystem, bool demo, int moduleNum)
+ZeraModules::VirtualModule* FftModuleFactory::createModule(MeasurementModuleFactoryParam moduleParam)
 {
-    return new cFftModule(m_moduleGroupNumerator->requestModuleNum(moduleNum), entityId, storagesystem, demo);
+    return new cFftModule(moduleParam.getAdjustedParam(m_moduleGroupNumerator.get()));
 }
 
 void FftModuleFactory::destroyModule(ZeraModules::VirtualModule *module)

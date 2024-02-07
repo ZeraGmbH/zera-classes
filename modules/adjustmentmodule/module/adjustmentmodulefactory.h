@@ -13,7 +13,7 @@ class AdjustmentModuleFactory : public QObject, public MeasurementModuleFactory
     Q_INTERFACES(MeasurementModuleFactory)
 public:
     AdjustmentModuleFactory(){}
-    ZeraModules::VirtualModule *createModule(int entityId, VeinEvent::StorageSystem* storagesystem, bool demo, int moduleNum) override;
+    ZeraModules::VirtualModule *createModule(MeasurementModuleFactoryParam moduleParam) override;
     void destroyModule(ZeraModules::VirtualModule *module) override;
     QString getFactoryName() const override;
 };

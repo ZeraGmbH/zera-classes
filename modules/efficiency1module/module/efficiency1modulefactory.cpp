@@ -4,9 +4,9 @@
 namespace EFFICIENCY1MODULE
 {
 
-ZeraModules::VirtualModule* Efficiency1ModuleFactory::createModule(int entityId, VeinEvent::StorageSystem* storagesystem, bool demo, int moduleNum)
+ZeraModules::VirtualModule* Efficiency1ModuleFactory::createModule(MeasurementModuleFactoryParam moduleParam)
 {
-    return new cEfficiency1Module(m_moduleGroupNumerator->requestModuleNum(moduleNum), entityId, storagesystem, demo);
+    return new cEfficiency1Module(moduleParam.getAdjustedParam(m_moduleGroupNumerator.get()));
 }
 
 void Efficiency1ModuleFactory::destroyModule(ZeraModules::VirtualModule *module)

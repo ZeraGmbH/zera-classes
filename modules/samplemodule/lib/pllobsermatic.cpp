@@ -75,7 +75,7 @@ void cPllObsermatic::generateInterface()
 void cPllObsermatic::pllAutomatic()
 {
     if(m_bActive && m_ConfPar.m_ObsermaticConfPar.m_npllAutoAct.m_nActive == 1) {
-        if(!m_pModule->m_demo) {
+        if(!m_pModule->getDemo()) {
             int i;
             int n = m_ConfPar.m_ObsermaticConfPar.m_pllChannelList.count();
             for (i = 0; i < n; i++) {
@@ -128,7 +128,7 @@ void cPllObsermatic::activationDone()
     connect(m_pPllChannel, &VfModuleParameter::sigValueChanged, this, &cPllObsermatic::newPllChannel);
 
     setPllChannelValidator();
-    if(!m_pModule->m_demo)
+    if(!m_pModule->getDemo())
         sendPllChannel(m_ConfPar.m_ObsermaticConfPar.m_pllChannel.m_sPar);
 
     m_bActive = true;
@@ -151,7 +151,7 @@ void cPllObsermatic::sendPllChannel(QString channelRequested)
     channelRequested = adjustToValidPllChannel(channelRequested);
     m_sNewPllChannel = channelRequested;
     m_pPllSignal->setValue(QVariant(1)); // we signal that we are changing pll channel
-    if(!m_pModule->m_demo)
+    if(!m_pModule->getDemo())
         m_MsgNrCmdList[m_pllMeasChannelHash[channelRequested]->setyourself4PLL(m_ConfPar.m_ObsermaticConfPar.m_sSampleSystem)] = setpll;
     else
         setNewPLLChannel();

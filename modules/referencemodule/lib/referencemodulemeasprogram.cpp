@@ -36,7 +36,7 @@ cReferenceModuleMeasProgram::cReferenceModuleMeasProgram(cReferenceModule* modul
     m_activationMachine.addState(&m_activateDSPState);
     m_activationMachine.addState(&m_loadDSPDoneState);
 
-    if(m_pModule->m_demo)
+    if(m_pModule->getDemo())
         m_activationMachine.setInitialState(&m_loadDSPDoneState);
     else
         m_activationMachine.setInitialState(&resourceManagerConnectState);
@@ -60,7 +60,7 @@ cReferenceModuleMeasProgram::cReferenceModuleMeasProgram(cReferenceModule* modul
     m_deactivationMachine.addState(&m_freeUSERMemState);
     m_deactivationMachine.addState(&m_unloadDSPDoneState);
 
-    if(m_pModule->m_demo)
+    if(m_pModule->getDemo())
         m_deactivationMachine.setInitialState(&m_unloadDSPDoneState);
     else
         m_deactivationMachine.setInitialState(&m_deactivateDSPState);
@@ -78,7 +78,7 @@ cReferenceModuleMeasProgram::cReferenceModuleMeasProgram(cReferenceModule* modul
     connect(&m_dataAcquisitionState, &QState::entered, this, &cReferenceModuleMeasProgram::dataAcquisitionDSP);
     connect(&m_dataAcquisitionDoneState, &QState::entered, this, &cReferenceModuleMeasProgram::dataReadDSP);
 
-    if(m_pModule->m_demo) {
+    if(m_pModule->getDemo()) {
         m_demoPeriodicTimer = TimerFactoryQt::createPeriodic(500);
         connect(m_demoPeriodicTimer.get(), &TimerTemplateQt::sigExpired,this, &cReferenceModuleMeasProgram::handleDemoActualValues);
         m_demoPeriodicTimer->start();

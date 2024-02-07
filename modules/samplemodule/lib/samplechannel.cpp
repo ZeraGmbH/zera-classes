@@ -41,7 +41,7 @@ cSampleChannel::cSampleChannel(cSampleModule* module, cSampleModuleConfigData& c
 
     m_activationMachine.addState(&m_readRangelistState);
     m_activationMachine.addState(&m_activationDoneState);
-    if(!m_pModule->m_demo)
+    if(!m_pModule->getDemo())
         m_activationMachine.setInitialState(&m_rmConnectState);
     else
         m_activationMachine.setInitialState(&m_activationDoneState);
@@ -61,7 +61,7 @@ cSampleChannel::cSampleChannel(cSampleModule* module, cSampleModuleConfigData& c
     m_deactivationInitState.addTransition(this, &cSampleChannel::deactivationContinue, &m_deactivationDoneState);
     m_deactivationMachine.addState(&m_deactivationInitState);
     m_deactivationMachine.addState(&m_deactivationDoneState);
-    if(!m_pModule->m_demo)
+    if(!m_pModule->getDemo())
         m_deactivationMachine.setInitialState(&m_deactivationInitState);
     else
         m_deactivationMachine.setInitialState(&m_deactivationDoneState);
@@ -299,7 +299,7 @@ void cSampleChannel::readRangelist()
 
 void cSampleChannel::activationDone()
 {
-    if(m_pModule->m_demo) {
+    if(m_pModule->getDemo()) {
         m_RangeNameList << "F50Hz" << "F20Hz";
     }
     setChannelNameMetaInfo(); // we set our real name now
