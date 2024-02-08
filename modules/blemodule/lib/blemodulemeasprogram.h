@@ -51,7 +51,7 @@ private:
     // statemachine for deactivating
     QFinalState m_deactivateDoneState;
 
-    BluetoothConvenienceFacade m_bluetooth;
+    BluetoothConvenienceFacade *m_bluetooth;
     BleDispatcherId m_bleDispatcherId;
 
     VfModuleParameter* m_pTemperatureCAct;
