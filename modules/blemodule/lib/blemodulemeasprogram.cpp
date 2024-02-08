@@ -25,6 +25,7 @@ cBleModuleMeasProgram::cBleModuleMeasProgram(cBleModule* module, std::shared_ptr
 
 cBleModuleMeasProgram::~cBleModuleMeasProgram()
 {
+    m_bluetooth->removeBleDecoder(m_bleDispatcherId);
 }
 
 void cBleModuleMeasProgram::start()
