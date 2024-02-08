@@ -26,7 +26,9 @@ void MultipleResultHelper::append(const double fResult,
                                   const ECALCRESULT::enResultTypes eRating,
                                   const double fLowerLimit,
                                   const double fUpperLimit,
-                                  const double fMaxError)
+                                  const double fMaxError,
+                                  const QString startTime,
+                                  const QString endTime)
 {
     // limits
     // note: limits are not results of a calculation so we can comape on equality
@@ -40,13 +42,11 @@ void MultipleResultHelper::append(const double fResult,
         m_fLastLowerLimit = fLowerLimit;
         m_fLastUpperLimit = fUpperLimit;
     }
-    // results - short names / date/time format to reduce size
-    QDateTime now = QDateTime::currentDateTime();
-    QString dtString = now.toString("yyyyMMddhhmmss");
     QJsonObject jsonObjectValue {
         { "V", fResult },
         { "R", int(eRating) },
-        { "T", dtString }
+        { "S", startTime },
+        { "T", endTime }
     };
     m_jsonResultArray.append(jsonObjectValue);
     // some statistics
