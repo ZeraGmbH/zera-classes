@@ -14,19 +14,12 @@ public:
      * @brief clear: Clear resulr array / reset statistics
      */
     void clear();
-    /**
-     * @brief append: Add a reault to our array / update statistics
-     * @param fResult: Result value
-     * @param eRating: Result evaluation - see ECALCRESULT::enResultTypes
-     * @param fLowerLimit: Lower limit, the result was caclulated with
-     * @param fUpperLimit: Upper limit, the result was caclulated with
-     * @param fMaxError: Max error to set for e.g NaN
-     */
     void append(const double fResult,
                 const enum ECALCRESULT::enResultTypes eRating,
                 const double fLowerLimit,
                 const double fUpperLimit,
-                const double fMaxError);
+                const double fMaxError,
+                const QString startTime, const QString endTime);
     /**
      * @brief getCountTotal
      * @return Number of results in array
