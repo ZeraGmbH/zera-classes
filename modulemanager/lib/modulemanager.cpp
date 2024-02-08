@@ -39,29 +39,21 @@ ModuleManager::ModuleManager(ModuleManagerSetupFacade *setupFacade,
     QSet<QString> fileSet(entryList.begin(), entryList.end());
     QSet<QString> expectedSet(sessionList.begin(), sessionList.end());
     if(fileSet.contains(expectedSet))
-    {
         m_sessionsAvailable = sessionList;
-    }
-    else
-    {
+    else {
         QSet<QString> missingSessions = expectedSet;
         missingSessions.subtract(fileSet);
         qCritical() << "Missing session file(s)" << missingSessions;
     }
-    qDebug() << "sessions available:" << m_sessionsAvailable;
-
-    if(m_demo && !QString(ZC_SERVICES_IP).isEmpty()) {
-        qWarning() << "Running in demo mode, so ZC_SERIVCES_IP must be empty! It is set to:" << ZC_SERVICES_IP;
-        Q_ASSERT(false);
-    }
+    if(m_demo && !QString(ZC_SERVICES_IP).isEmpty())
+        qFatal("Running in demo mode, so ZC_SERIVCES_IP must be empty! It is set to: " ZC_SERVICES_IP);
 }
 
 ModuleManager::~ModuleManager()
 {
-    foreach(ModuleData *toDelete, m_moduleList)
-    {
-        m_factoryTable.value(toDelete->m_uniqueName)->destroyModule(toDelete->m_reference);
-        delete toDelete;
+    for(ModuleData *module : qAsConst(m_moduleList)) {
+        m_factoryTable.value(module->m_uniqueName)->destroyModule(module->m_reference);
+        delete module;
     }
     m_moduleList.clear();
 }
@@ -113,9 +105,7 @@ void ModuleManager::loadScripts(VeinScript::ScriptSystem *t_scriptSystem)
         const QString dataLocation = QString("%1/%2").arg(virtualFiles.path(), scriptFilePath);
         qDebug() << "Loading script:" << dataLocation;
         if(t_scriptSystem->loadScriptFromFile(dataLocation) == false)
-        {
             qWarning() << "Error loading script file:" << scriptFilePath;
-        }
     }
 }
 
@@ -238,18 +228,11 @@ void ModuleManager::changeSessionFile(const QString &newSessionFile)
 
 void ModuleManager::setModulesPaused(bool t_paused)
 {
-    for(ModuleData *module : qAsConst(m_moduleList))
-    {
+    for(ModuleData *module : qAsConst(m_moduleList)) {
         if(t_paused)
-        {
-            qDebug() << "pausing module:" << module->m_uniqueName;
             module->m_reference->stopModule();
-        }
         else
-        {
-            qDebug() << "unpausing module:" << module->m_uniqueName;
             module->m_reference->startModule();
-        }
     }
 }
 
@@ -286,9 +269,7 @@ void ModuleManager::checkModuleList(QObject *object)
 void ModuleManager::delayedModuleStartNext()
 {
     if(m_setupFacade->getLicenseSystem()->serialNumberIsInitialized() == true && m_moduleStartLock == false)
-    {
         onModuleStartNext();
-    }
 }
 
 void ZeraModules::ModuleManager::saveDefaultSession()
@@ -318,7 +299,6 @@ void ModuleManager::startAllServiceMocks(QString deviceName)
 {
     if (m_mockAllServices)
         m_mockAllServices = nullptr;
-
     if(deviceName == "mt310s2")
         m_mockAllServices = std::make_unique<DemoAllServicesMt310s2>();
     else if(deviceName == "com5003")
@@ -329,28 +309,19 @@ void ModuleManager::startAllServiceMocks(QString deviceName)
 void ModuleManager::saveModuleConfig(ModuleData *moduleData)
 {
     QByteArray configData = moduleData->m_reference->getConfiguration();
-
-    if(configData.isEmpty() == false)
-    {
+    if(configData.isEmpty() == false) {
         QSaveFile f; //if the application is closed while writing it will not end up with empty files due to truncate
-
         f.setFileName(moduleData->m_configPath);
-        //qDebug() << "Storing configuration for module:" << moduleData->m_uniqueName << "in file:" << f.fileName();
         f.open(QIODevice::WriteOnly | QIODevice::Truncate | QIODevice::Unbuffered);
-        if(f.isOpen() && f.isWritable())
-        {
+        if(f.isOpen() && f.isWritable()) {
             f.write(configData);
             f.commit(); //writes into the permanent file and closes the file descriptors
         }
         else
-        {
             qWarning() << "Failed to write configuration file:" << f.fileName() << "error:" << f.errorString();
-        }
     }
     else
-    {
         qWarning() << "Configuration could not be retrieved from module:" << moduleData->m_uniqueName;
-    }
 }
 
 }
