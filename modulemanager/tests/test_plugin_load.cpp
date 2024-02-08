@@ -1,5 +1,6 @@
-#include "test_plugin_load.h"
 #include "modulemanager.h"
+#include "test_plugin_load.h"
+#include "testfactoryactualvaluegenerator.h"
 #include "testmodulemanager.h"
 #include <timemachineobject.h>
 #include <QTest>
@@ -26,7 +27,7 @@ void test_plugin_load::loadModulePluginsInstalled()
         qInfo("Skipping test_plugin_load::loadModulePluginsInstalled in OE");
         return;
     }
-    ZeraModules::ModuleManager modMan(nullptr, true);
+    ZeraModules::ModuleManager modMan(nullptr, std::make_shared<TestFactoryActualValueGenerator>(), true);
 
     bool modulesFound = modMan.loadAllAvailableModulePlugins();
     QVERIFY(modulesFound);

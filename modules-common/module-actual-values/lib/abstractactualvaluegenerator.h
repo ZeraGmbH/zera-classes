@@ -10,8 +10,10 @@ class AbstractActualValueGenerator : public QObject
 public:
     virtual void start() = 0;
     virtual void stop() = 0;
+public slots:
+    virtual void onNewActualValues(QVector<float>* values) = 0; // the modules want us so...
 signals:
-    void sigNewActualValues(QVector<float> demoValues);
+    void sigNewActualValues(QVector<float>* values);
 };
 
 typedef std::unique_ptr<AbstractActualValueGenerator> AbstractActualValueGeneratorPtr;

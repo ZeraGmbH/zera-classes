@@ -21,11 +21,14 @@ namespace ZeraModules {
 
 QString ModuleManager::m_sessionPath = MODMAN_SESSION_PATH;
 
-ModuleManager::ModuleManager(ModuleManagerSetupFacade *setupFacade, bool demo, QObject *parent) :
+ModuleManager::ModuleManager(ModuleManagerSetupFacade *setupFacade,
+                             AbstractFactoryActualValueGeneratorPtr actualValueFactory,
+                             bool demo, QObject *parent) :
     QObject(parent),
+    m_moduleStartLock(false),
     m_setupFacade(setupFacade),
-    m_demo(demo),
-    m_moduleStartLock(false)
+    m_actualValueFactory(actualValueFactory),
+    m_demo(demo)
 {
     m_timerAllModulesLoaded.start();
 
@@ -144,7 +147,11 @@ void ModuleManager::startModule(const QString & uniqueModuleName, const QString 
         MeasurementModuleFactory *tmpFactory = m_factoryTable.value(uniqueModuleName);
         if(tmpFactory && m_setupFacade->getLicenseSystem()->isSystemLicensed(uniqueModuleName)) {
             qDebug() << "Creating module:" << uniqueModuleName << "with id:" << moduleEntityId << "with config file:" << t_xmlConfigPath;
-            MeasurementModuleFactoryParam moduleParam(moduleEntityId, moduleNum, m_setupFacade->getStorageSystem(), m_demo);
+            MeasurementModuleFactoryParam moduleParam(moduleEntityId,
+                                                      moduleNum,
+                                                      m_actualValueFactory,
+                                                      m_setupFacade->getStorageSystem(),
+                                                      m_demo);
             VirtualModule *tmpModule = tmpFactory->createModule(moduleParam);
             if(tmpModule) {
                 connect(tmpModule, &VirtualModule::addEventSystem, this, &ModuleManager::onModuleEventSystemAdded);

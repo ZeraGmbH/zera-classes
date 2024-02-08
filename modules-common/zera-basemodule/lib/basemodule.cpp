@@ -342,6 +342,11 @@ VeinEvent::StorageSystem *cBaseModule::getStorageSystem()
     return m_moduleParam.m_storagesystem;
 }
 
+AbstractFactoryActualValueGeneratorPtr cBaseModule::getActualValueFactory()
+{
+    return m_moduleParam.m_actualValueFactory;
+}
+
 bool cBaseModule::getDemo()
 {
     return m_moduleParam.m_demo;

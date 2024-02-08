@@ -40,4 +40,6 @@ target_link_libraries(zera-modulemanager-lib
     VeinMeta::VfFiles
     module-qt-plugin-interface
     zera-json-params
+    module-actual-values
+    module-actual-values-demolib
     )

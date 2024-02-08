@@ -1,3 +1,5 @@
+#include "demofactoryactualvaluegenerator.h"
+#include "factoryactualvaluegenerator.h"
 #include "modulemanager.h"
 #include "modulemanagerconfig.h"
 #include "customerdatasystem.h"
@@ -130,7 +132,16 @@ int main(int argc, char *argv[])
     LicenseSystem *licenseSystem = new LicenseSystem({QUrl(licenseUrl)}, app.get());
     ModuleManagerSetupFacade *modManSetupFacade = new ModuleManagerSetupFacade(licenseSystem, mmConfig->isDevMode(), app.get());
 
-    ZeraModules::ModuleManager *modMan = new ZeraModules::ModuleManager(modManSetupFacade, demoMode, app.get());
+    AbstractFactoryActualValueGeneratorPtr actualValueFactory;
+    if(demoMode)
+        actualValueFactory = std::make_shared<DemoFactoryActualValueGenerator>();
+    else
+        actualValueFactory = std::make_shared<FactoryActualValueGenerator>();
+    ZeraModules::ModuleManager *modMan = new ZeraModules::ModuleManager(
+        modManSetupFacade,
+        actualValueFactory,
+        demoMode,
+        app.get());
     if(demoMode)
         modMan->startAllServiceMocks(demoDeviceName);
 

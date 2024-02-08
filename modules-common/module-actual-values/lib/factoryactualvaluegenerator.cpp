@@ -1,8 +1,8 @@
 #include "factoryactualvaluegenerator.h"
-#include "actualvaluegeneratorrms.h"
+#include "actualvaluegeneratorstartstop.h"
 
 AbstractActualValueGeneratorPtr FactoryActualValueGenerator::getActValGeneratorRms(QStringList valueChannelList)
 {
     Q_UNUSED(valueChannelList)
-    return std::make_unique<ActualValueGeneratorRms>();
+    return std::make_unique<ActualValueGeneratorStartStop>();
 }

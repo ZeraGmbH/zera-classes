@@ -3,6 +3,7 @@
 #include "testallservicesmt310s2.h"
 #include "modulemanagerconfigtest.h"
 #include "jsonsessionloadertest.h"
+#include "testfactoryactualvaluegenerator.h"
 #include <timemachineobject.h>
 #include <QDir>
 
@@ -20,7 +21,11 @@ void TestModuleManager::pointToInstalledSessionFiles()
 }
 
 TestModuleManager::TestModuleManager(ModuleManagerSetupFacade *setupFacade, bool demo, QObject *parent) :
-    ModuleManager(setupFacade, demo, parent)
+    ModuleManager(
+        setupFacade,
+        std::make_shared<TestFactoryActualValueGenerator>(),
+        demo,
+        parent)
 {
     JsonSessionLoaderTest::supportOeTests();
     ModulemanagerConfigTest::supportOeTests();

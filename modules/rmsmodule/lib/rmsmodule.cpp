@@ -39,7 +39,6 @@ cRmsModule::cRmsModule(MeasurementModuleFactoryParam moduleParam) :
     connect(&m_DeactivationExecState, &QAbstractState::entered, this, &cRmsModule::deactivationExec);
     connect(&m_DeactivationDoneState, &QAbstractState::entered, this, &cRmsModule::deactivationDone);
     connect(&m_DeactivationFinishedState, &QAbstractState::entered, this, &cRmsModule::deactivationFinished);
-
 }
 
 

@@ -35,7 +35,9 @@ public:
     virtual void exportMetaData();
 
     VeinEvent::StorageSystem* getStorageSystem();
+    AbstractFactoryActualValueGeneratorPtr getActualValueFactory();
     bool getDemo();
+
 
     QList<VfModuleMetaData*> veinModuleMetaDataList; // only meta information
     QList<VfModuleComponent*> veinModuleComponentList; // for components that need no scpi interface
