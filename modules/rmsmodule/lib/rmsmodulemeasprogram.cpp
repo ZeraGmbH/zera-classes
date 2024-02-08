@@ -145,40 +145,33 @@ void cRmsModuleMeasProgram::generateInterface()
         connect(m_actValueHandler.get(), &AbstractActualValueGenerator::sigNewActualValues,
                 this, &cRmsModuleMeasProgram::setInterfaceActualValues);
 
-    QString key;
-
     VfModuleActvalue *pActvalue;
     int n,p;
     n = p = 0; //
-    QString description;
-    for (int i = 0; i < getConfData()->m_valueChannelList.count(); i++)
-    {
+    QString channelDescription;
+    for (int i = 0; i < getConfData()->m_valueChannelList.count(); i++) {
         QStringList sl = getConfData()->m_valueChannelList.at(i).split('-');
         // we have 1 or 2 entries for each value
-        if (sl.count() == 1) // in this case we have phase,neutral value
-        {
+        if (sl.count() == 1) { // in this case we have phase,neutral value
             if(sl.contains("m0") || sl.contains("m1") || sl.contains("m2") || sl.contains("m6")) //voltage channels
-                description = QString("Actual rms value phase/neutral");
+                channelDescription = QString("Actual rms value phase/neutral");
             else //current channels
-                description = QString("Actual rms value");
+                channelDescription = QString("Actual rms value");
             pActvalue = new VfModuleActvalue(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
-                                                QString("ACT_RMSPN%1").arg(n+1),
-                                                description,
-                                                QVariant(0.0) );
+                                             QString("ACT_RMSPN%1").arg(n+1),
+                                             channelDescription,
+                                             QVariant(0.0) );
             m_veinActValueList.append(pActvalue); // we add the component for our measurement
             m_pModule->veinModuleActvalueList.append(pActvalue); // and for the modules interface
-
             n++;
         }
-        else
-        {
+        else {
             pActvalue = new VfModuleActvalue(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
                                                 QString("ACT_RMSPP%1").arg(p+1),
                                                 QString("Actual rms value phase/phase"),
                                                 QVariant(0.0) );
             m_veinActValueList.append(pActvalue); // we add the component for our measurement
             m_pModule->veinModuleActvalueList.append(pActvalue); // and for the modules interface
-
             p++;
         }
     }
@@ -188,54 +181,42 @@ void cRmsModuleMeasProgram::generateInterface()
     m_pRMSPPCountInfo = new VfModuleMetaData(QString("RMSPPCount"), QVariant(p));
     m_pModule->veinModuleMetaDataList.append(m_pRMSPPCountInfo);
 
-
     QVariant val;
-    QString s, unit;
-    bool btime;
+    QString intervalDescription, unit;
 
-    btime = (getConfData()->m_sIntegrationMode == "time");
-
-    if (btime)
-    {
+    bool timeIntegration = (getConfData()->m_sIntegrationMode == "time");
+    if (timeIntegration) {
         val = QVariant(getConfData()->m_fMeasIntervalTime.m_fValue);
-        s = QString("Integration time");
+        intervalDescription = QString("Integration time");
         unit = QString("s");
     }
-    else
-    {
+    else {
         val = QVariant(getConfData()->m_nMeasIntervalPeriod.m_nValue);
-        s = QString("Integration period");
+        intervalDescription = QString("Integration period");
         unit = QString("period");
     }
-
+    QString key;
     m_pIntegrationParameter = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
                                                            key = QString("PAR_Interval"),
-                                                           s,
+                                                           intervalDescription,
                                                            val);
     m_pIntegrationParameter->setUnit(unit);
-
-    if (btime)
-    {
+    if (timeIntegration) {
         m_pIntegrationParameter->setSCPIInfo(new cSCPIInfo("CONFIGURATION","TINTEGRATION", "10", "PAR_Interval", "0", "s"));
-        cDoubleValidator *dValidator;
-        dValidator = new cDoubleValidator(1.0, 100.0, 0.5);
+        cDoubleValidator *dValidator = new cDoubleValidator(1.0, 100.0, 0.5);
         m_pIntegrationParameter->setValidator(dValidator);
     }
-    else
-    {
+    else {
         m_pIntegrationParameter->setSCPIInfo(new cSCPIInfo("CONFIGURATION","TPERIOD", "10", "PAR_Interval", "0", ""));
-        cIntValidator *iValidator;
-        iValidator = new cIntValidator(5, 5000, 1);
+        cIntValidator *iValidator = new cIntValidator(5, 5000, 1);
         m_pIntegrationParameter->setValidator(iValidator);
     }
-
     m_pModule->veinModuleParameterHash[key] = m_pIntegrationParameter; // for modules use
 
     m_pMeasureSignal = new VfModuleComponent(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
                                                 QString("SIG_Measuring"),
                                                 QString("Signal indicating measurement activity"),
                                                 QVariant(0));
-
     m_pModule->veinModuleComponentList.append(m_pMeasureSignal);
 }
 
