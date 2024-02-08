@@ -3,7 +3,8 @@
 
 DemoActualValueGeneratorRms::DemoActualValueGeneratorRms(QStringList valueChannelList) :
     m_valueChannelList(valueChannelList),
-    m_periodicTimerActGen(TimerFactoryQt::createPeriodic(500))
+    m_periodicTimerActGen(TimerFactoryQt::createPeriodic(500)),
+    m_demoValues(m_valueChannelList.count())
 {
     connect(m_periodicTimerActGen.get(), &TimerTemplateQt::sigExpired,
             this, &DemoActualValueGeneratorRms::onNewActValues);
@@ -21,7 +22,6 @@ void DemoActualValueGeneratorRms::stop()
 
 void DemoActualValueGeneratorRms::onNewActValues()
 {
-    QVector<float> demoValues;
     for (int i = 0; i < m_valueChannelList.count(); i++) {
         QStringList sl = m_valueChannelList.at(i).split('-');
         double val = 0;
@@ -32,8 +32,8 @@ void DemoActualValueGeneratorRms::onNewActValues()
         else {
             val = 20 * randPlusMinusOne;
         }
-        demoValues.append(val);
+        m_demoValues[i] = val;
     }
-    emit sigNewActualValues(demoValues);
+    emit sigNewActualValues(&m_demoValues);
 }
 

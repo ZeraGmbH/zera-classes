@@ -12,7 +12,8 @@ namespace RMSMODULE
 {
 
 cRmsModuleMeasProgram::cRmsModuleMeasProgram(cRmsModule* module, std::shared_ptr<cBaseModuleConfiguration> pConfiguration) :
-    cBaseDspMeasProgram(pConfiguration), m_pModule(module)
+    cBaseDspMeasProgram(pConfiguration),
+    m_pModule(module)
 {
     m_pDSPInterFace = new Zera::cDSPInterface();
 
@@ -106,11 +107,6 @@ cRmsModuleMeasProgram::cRmsModuleMeasProgram(cRmsModule* module, std::shared_ptr
     m_dataAcquisitionMachine.setInitialState(&m_dataAcquisitionState);
     connect(&m_dataAcquisitionState, &QAbstractState::entered, this, &cRmsModuleMeasProgram::dataAcquisitionDSP);
     connect(&m_dataAcquisitionDoneState, &QAbstractState::entered, this, &cRmsModuleMeasProgram::dataReadDSP);
-
-    if(m_pModule->getDemo()){
-        m_demoPeriodicTimer = TimerFactoryQt::createPeriodic(500);
-        connect(m_demoPeriodicTimer.get(), &TimerTemplateQt::sigExpired,this, &cRmsModuleMeasProgram::handleDemoActualValues);
-    }
 }
 
 
@@ -122,29 +118,33 @@ cRmsModuleMeasProgram::~cRmsModuleMeasProgram()
 
 void cRmsModuleMeasProgram::start()
 {
-    if (getConfData()->m_bmovingWindow) {
-        m_movingwindowFilter.setIntegrationtime(getConfData()->m_fMeasIntervalTime.m_fValue);
-        connect(this, &cRmsModuleMeasProgram::actualValues, &m_movingwindowFilter, &cMovingwindowFilter::receiveActualValues);
-        connect(&m_movingwindowFilter, &cMovingwindowFilter::actualValues, this, &cRmsModuleMeasProgram::setInterfaceActualValues);
-    }
-    else
-        connect(this, &cBaseMeasProgram::actualValues, this, &cRmsModuleMeasProgram::setInterfaceActualValues);
-    if(m_pModule->getDemo())
-        m_demoPeriodicTimer->start();
+    m_actValueHandler->start();
 }
 
 
 void cRmsModuleMeasProgram::stop()
 {
-    disconnect(this, &cRmsModuleMeasProgram::actualValues, 0, 0);
-    disconnect(&m_movingwindowFilter, &cMovingwindowSqare::actualValues, 0, 0);
-    if(m_pModule->getDemo())
-        m_demoPeriodicTimer->stop();
+    m_actValueHandler->stop();
 }
 
 
 void cRmsModuleMeasProgram::generateInterface()
 {
+    // Here is the first time configuration is loaded
+    m_actValueHandler = m_pModule->getActualValueFactory()->getActValGeneratorRms(getConfData()->m_valueChannelList);
+    connect(this, &cRmsModuleMeasProgram::actualValues,
+            m_actValueHandler.get(), &AbstractActualValueGenerator::onNewActualValues);
+    if (getConfData()->m_bmovingWindow) {
+        m_movingwindowFilter.setIntegrationtime(getConfData()->m_fMeasIntervalTime.m_fValue);
+        connect(m_actValueHandler.get(), &AbstractActualValueGenerator::sigNewActualValues,
+                &m_movingwindowFilter, &cMovingwindowFilter::receiveActualValues);
+        connect(&m_movingwindowFilter, &cMovingwindowFilter::actualValues,
+                this, &cRmsModuleMeasProgram::setInterfaceActualValues);
+    }
+    else
+        connect(m_actValueHandler.get(), &AbstractActualValueGenerator::sigNewActualValues,
+                this, &cRmsModuleMeasProgram::setInterfaceActualValues);
+
     QString key;
 
     VfModuleActvalue *pActvalue;
@@ -697,26 +697,6 @@ void cRmsModuleMeasProgram::setInterfaceActualValues(QVector<float> *actualValue
     }
 }
 
-void cRmsModuleMeasProgram::handleDemoActualValues()
-{
-    QVector<float> demoValues;
-    for (int i = 0; i < getConfData()->m_valueChannelList.count(); i++) {
-        QStringList sl = getConfData()->m_valueChannelList.at(i).split('-');
-        double val = 0;
-        double randPlusMinusOne = 2.0 * (double)rand() / RAND_MAX - 1.0;
-        if (sl.count() == 1) {
-            val = 10 * randPlusMinusOne;
-        }
-        else {
-            val = 20 * randPlusMinusOne;
-        }
-        demoValues.append(val);
-    }
-    m_ModuleActualValues = demoValues;
-    emit actualValues(&m_ModuleActualValues);
-}
-
-
 void cRmsModuleMeasProgram::resourceManagerConnect()
 {
     // as this is our entry point when activating the module, we do some initialization first
@@ -984,13 +964,10 @@ void cRmsModuleMeasProgram::newIntegrationtime(QVariant ti)
             m_movingwindowFilter.setIntegrationtime(getConfData()->m_fMeasIntervalTime.m_fValue);
         else
         {
-            if(!m_pModule->getDemo()) {
-                m_pDSPInterFace->setVarData(m_pParameterDSP, QString("TIPAR:%1;TISTART:%2;").arg(getConfData()->m_fMeasIntervalTime.m_fValue*1000)
-                                                                                    .arg(0), DSPDATA::dInt);
-                m_MsgNrCmdList[m_pDSPInterFace->dspMemoryWrite(m_pParameterDSP)] = writeparameter;
-            }
+            m_pDSPInterFace->setVarData(m_pParameterDSP, QString("TIPAR:%1;TISTART:%2;").arg(getConfData()->m_fMeasIntervalTime.m_fValue*1000)
+                                                                                .arg(0), DSPDATA::dInt);
+            m_MsgNrCmdList[m_pDSPInterFace->dspMemoryWrite(m_pParameterDSP)] = writeparameter;
         }
-
         emit m_pModule->parameterChanged();
 
     }  
@@ -1003,11 +980,9 @@ void cRmsModuleMeasProgram::newIntegrationPeriod(QVariant period)
     getConfData()->m_nMeasIntervalPeriod.m_nValue = period.toInt(&ok);
     if (getConfData()->m_sIntegrationMode == "period")
     {
-        if(!m_pModule->getDemo()) {
-            m_pDSPInterFace->setVarData(m_pParameterDSP, QString("TIPAR:%1;TISTART:%2;").arg(getConfData()->m_nMeasIntervalPeriod.m_nValue)
-                                    .arg(0), DSPDATA::dInt);
-            m_MsgNrCmdList[m_pDSPInterFace->dspMemoryWrite(m_pParameterDSP)] = writeparameter;
-        }
+        m_pDSPInterFace->setVarData(m_pParameterDSP, QString("TIPAR:%1;TISTART:%2;").arg(getConfData()->m_nMeasIntervalPeriod.m_nValue)
+                                .arg(0), DSPDATA::dInt);
+        m_MsgNrCmdList[m_pDSPInterFace->dspMemoryWrite(m_pParameterDSP)] = writeparameter;
     }
 
     emit m_pModule->parameterChanged();
