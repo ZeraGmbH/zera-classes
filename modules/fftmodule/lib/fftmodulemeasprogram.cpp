@@ -755,32 +755,17 @@ void cFftModuleMeasProgram::readResourceInfoDone()
 
 void cFftModuleMeasProgram::pcbserverConnect()
 {
-    // we have to connect to all ports....
-    channelInfoReadList = m_measChannelInfoHash.keys(); // so first we look for our different pcb sockets
-    m_nConnectionCount = channelInfoReadList.count();
-    for (int i = 0; i < channelInfoReadList.count(); i++)
-    {
-        QString key = channelInfoReadList.at(i);
-        cMeasChannelInfo mi = m_measChannelInfoHash.take(key);
-        cSocket sock = mi.pcbServersocket;
-        Zera::ProxyClient* pcbClient = Zera::Proxy::getInstance()->getConnection(sock.m_sIP, sock.m_nPort);
-        m_pcbClientList.append(pcbClient);
-        Zera::cPCBInterface* pcbIFace = new Zera::cPCBInterface();
-        m_pcbIFaceList.append(pcbIFace);
-        pcbIFace->setClient(pcbClient);
-        mi.pcbIFace = pcbIFace;
-        m_measChannelInfoHash[key] = mi;
-        connect(pcbClient, &Zera::ProxyClient::connected, this, &cFftModuleMeasProgram::monitorConnection); // here we wait until all connections are established
-        connect(pcbIFace, &Zera::cPCBInterface::serverAnswer, this, &cFftModuleMeasProgram::catchInterfaceAnswer);
-        Zera::Proxy::getInstance()->startConnection(pcbClient);
-    }
+    m_pcbClient = Zera::Proxy::getInstance()->getConnectionSmart(getConfData()->m_PCBServerSocket.m_sIP, getConfData()->m_PCBServerSocket.m_nPort);
+    m_pcbInterface->setClientSmart(m_pcbClient);
+    connect(m_pcbClient.get(), &Zera::ProxyClient::connected, this, &cBaseMeasProgram::activationContinue);
+    connect(m_pcbInterface.get(), &AbstractServerInterface::serverAnswer, this, &cFftModuleMeasProgram::catchInterfaceAnswer);
+    Zera::Proxy::getInstance()->startConnectionSmart(m_pcbClient);
 }
 
 
 void cFftModuleMeasProgram::readSampleRate()
 {
-    // we always take the sample count from the first channels pcb server
-    m_MsgNrCmdList[m_pcbIFaceList.at(0)->getSampleRate()] = readsamplerate;
+    m_MsgNrCmdList[m_pcbInterface->getSampleRate()] = readsamplerate;
 }
 
 
@@ -794,28 +779,26 @@ void cFftModuleMeasProgram::readChannelInformation()
 void cFftModuleMeasProgram::readChannelAlias()
 {
     channelInfoRead = channelInfoReadList.takeFirst();
-    m_MsgNrCmdList[m_measChannelInfoHash[channelInfoRead].pcbIFace->getAlias(channelInfoRead)] = readalias;
+    m_MsgNrCmdList[m_pcbInterface->getAlias(channelInfoRead)] = readalias;
 }
 
 
 void cFftModuleMeasProgram::readChannelUnit()
 {
-   m_MsgNrCmdList[m_measChannelInfoHash[channelInfoRead].pcbIFace->getUnit(channelInfoRead)] = readunit;
+    m_MsgNrCmdList[m_pcbInterface->getUnit(channelInfoRead)] = readunit;
 }
 
 
 void cFftModuleMeasProgram::readDspChannel()
 {
-    m_MsgNrCmdList[m_measChannelInfoHash[channelInfoRead].pcbIFace->getDSPChannel(channelInfoRead)] = readdspchannel;
+    m_MsgNrCmdList[m_pcbInterface->getDSPChannel(channelInfoRead)] = readdspchannel;
 }
 
 
 void cFftModuleMeasProgram::readDspChannelDone()
 {
     if (channelInfoReadList.isEmpty())
-    {
         emit activationContinue();
-    }
     else
         emit activationLoop();
 }
@@ -906,20 +889,9 @@ void cFftModuleMeasProgram::freeUSERMem()
 
 void cFftModuleMeasProgram::deactivateDSPdone()
 {
-    if (m_pcbIFaceList.count() > 0)
-    {
-        for (int i = 0; i < m_pcbIFaceList.count(); i++)
-        {
-            Zera::Proxy::getInstance()->releaseConnection(m_pcbClientList.at(i));
-            delete m_pcbIFaceList.at(i);
-        }
-        m_pcbClientList.clear();
-        m_pcbIFaceList.clear();
-    }
-
     disconnect(&m_rmInterface, 0, this, 0);
     disconnect(m_pDSPInterFace, 0, this, 0);
-
+    disconnect(m_pcbInterface.get(), 0, this, 0);
     emit deactivated();
 }
 
@@ -961,9 +933,6 @@ void cFftModuleMeasProgram::dataReadDSP()
                 // as our Fft produces math positive values, we correct them to technical positive values (*-1.0)
                 // also we change real and imag. parts because we are interested in sine rather than cosine
 
-                //re = (m_ModuleActualValues.at((i * offs) + (middle << 1) - j) + m_ModuleActualValues.at((i * offs) + j)) * scale;
-                //im = -1.0 * (m_ModuleActualValues.at((i * offs) + (middle << 1) +j) - m_ModuleActualValues.at((i * offs) + (middle << 2) - j) ) * scale;
-
                 im = -1.0 * (m_ModuleActualValues.at((i * offs) + (middle << 1) - j) + m_ModuleActualValues.at((i * offs) + j)) * scale;
                 re = -1.0 * (m_ModuleActualValues.at((i * offs) + (middle << 1) +j) - m_ModuleActualValues.at((i * offs) + (middle << 2) - j) ) * scale;
 
@@ -1003,8 +972,3 @@ void cFftModuleMeasProgram::newRefChannel(QVariant chn)
     emit m_pModule->parameterChanged();
 }
 }
-
-
-
-
-
