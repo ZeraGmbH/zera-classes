@@ -746,35 +746,18 @@ void cRmsModuleMeasProgram::readResourceInfoDone()
         emit activationLoop();
 }
 
-
 void cRmsModuleMeasProgram::pcbserverConnect()
 {
-    // we have to connect to all ports....
-    channelInfoReadList = m_measChannelInfoHash.keys(); // so first we look for our different pcb sockets
-    m_nConnectionCount = channelInfoReadList.count();
-    for (int i = 0; i < channelInfoReadList.count(); i++)
-    {
-        QString key = channelInfoReadList.at(i);
-        cMeasChannelInfo mi = m_measChannelInfoHash.take(key);
-        cSocket sock = mi.pcbServersocket;
-        Zera::ProxyClient* pcbClient = Zera::Proxy::getInstance()->getConnection(sock.m_sIP, sock.m_nPort);
-        m_pcbClientList.append(pcbClient);
-        Zera::cPCBInterface* pcbIFace = new Zera::cPCBInterface();
-        m_pcbIFaceList.append(pcbIFace);
-        pcbIFace->setClient(pcbClient);
-        mi.pcbIFace = pcbIFace;
-        m_measChannelInfoHash[key] = mi;
-        connect(pcbClient, &Zera::ProxyClient::connected, this, &cBaseMeasProgram::monitorConnection); // here we wait until all connections are established
-        connect(pcbIFace, &AbstractServerInterface::serverAnswer, this, &cRmsModuleMeasProgram::catchInterfaceAnswer);
-        Zera::Proxy::getInstance()->startConnection(pcbClient);
-    }
+    m_pcbClient = Zera::Proxy::getInstance()->getConnectionSmart(getConfData()->m_PCBServerSocket.m_sIP, getConfData()->m_PCBServerSocket.m_nPort);
+    m_pcbInterface->setClientSmart(m_pcbClient);
+    connect(m_pcbClient.get(), &Zera::ProxyClient::connected, this, &cBaseMeasProgram::activationContinue);
+    connect(m_pcbInterface.get(), &AbstractServerInterface::serverAnswer, this, &cRmsModuleMeasProgram::catchInterfaceAnswer);
+    Zera::Proxy::getInstance()->startConnectionSmart(m_pcbClient);
 }
-
 
 void cRmsModuleMeasProgram::readSampleRate()
 {
-    // we always take the sample count from the first channels pcb server
-    m_MsgNrCmdList[m_pcbIFaceList.at(0)->getSampleRate()] = readsamplerate;
+    m_MsgNrCmdList[m_pcbInterface->getSampleRate()] = readsamplerate;
 }
 
 
@@ -788,19 +771,19 @@ void cRmsModuleMeasProgram::readChannelInformation()
 void cRmsModuleMeasProgram::readChannelAlias()
 {
     channelInfoRead = channelInfoReadList.takeFirst();
-    m_MsgNrCmdList[m_measChannelInfoHash[channelInfoRead].pcbIFace->getAlias(channelInfoRead)] = readalias;
+    m_MsgNrCmdList[m_pcbInterface->getAlias(channelInfoRead)] = readalias;
 }
 
 
 void cRmsModuleMeasProgram::readChannelUnit()
 {
-    m_MsgNrCmdList[m_measChannelInfoHash[channelInfoRead].pcbIFace->getUnit(channelInfoRead)] = readunit;
+    m_MsgNrCmdList[m_pcbInterface->getUnit(channelInfoRead)] = readunit;
 }
 
 
 void cRmsModuleMeasProgram::readDspChannel()
 {
-    m_MsgNrCmdList[m_measChannelInfoHash[channelInfoRead].pcbIFace->getDSPChannel(channelInfoRead)] = readdspchannel;
+    m_MsgNrCmdList[m_pcbInterface->getDSPChannel(channelInfoRead)] = readdspchannel;
 }
 
 
@@ -898,20 +881,9 @@ void cRmsModuleMeasProgram::freeUSERMem()
 
 void cRmsModuleMeasProgram::deactivateDSPdone()
 {
-    if (m_pcbIFaceList.count() > 0)
-    {
-        for (int i = 0; i < m_pcbIFaceList.count(); i++)
-        {
-            Zera::Proxy::getInstance()->releaseConnection(m_pcbClientList.at(i));
-            delete m_pcbIFaceList.at(i);
-        }
-        m_pcbClientList.clear();
-        m_pcbIFaceList.clear();
-    }
-
     disconnect(&m_rmInterface, 0, this, 0);
     disconnect(m_pDSPInterFace, 0, this, 0);
-
+    disconnect(m_pcbInterface.get(), 0, this, 0);
     emit deactivated();
 }
 
@@ -930,7 +902,6 @@ void cRmsModuleMeasProgram::dataReadDSP()
         m_pDSPInterFace->getData(m_pActualValuesDSP, m_ModuleActualValues); // we fetch our actual values
         emit actualValues(&m_ModuleActualValues); // and send them
         m_pMeasureSignal->setValue(QVariant(1)); // signal measuring
-
     }
 }
 

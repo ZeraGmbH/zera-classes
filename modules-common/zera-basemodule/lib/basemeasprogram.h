@@ -2,9 +2,8 @@
 #define BASEMEASPROGRAM_H
 
 #include "basemoduleconfiguration.h"
-#include "basemodule.h"
-#include "socket.h"
 #include "moduleactivist.h"
+#include "basemodule.h"
 #include <pcbinterface.h>
 #include <rminterface.h>
 
@@ -24,15 +23,19 @@ protected:
     std::shared_ptr<cBaseModuleConfiguration> m_pConfiguration;
     Zera::cRMInterface m_rmInterface;
     Zera::ProxyClientPtr m_rmClient;
+
+    Zera::PcbInterfacePtr m_pcbInterface;
+    Zera::ProxyClientPtr m_pcbClient;
+
     // we hold an interface for every channel because it could be possible that our measuring
     // channels are spread over several pcb's
     QList<Zera::cPCBInterface*> m_pcbIFaceList; // our interface(s) to pcb
     // so we must also keep a list of pcb client's we can
     QList<Zera::ProxyClient*> m_pcbClientList; // our clients for pcb interfaces
+    quint8 m_nConnectionCount;
 
     QVector<float> m_ModuleActualValues; // a modules actual values
     QHash<quint32, int> m_MsgNrCmdList;
-    quint8 m_nConnectionCount;
 };
 
 
