@@ -1177,13 +1177,10 @@ void cDftModuleMeasProgram::newIntegrationtime(QVariant ti)
 
     if (getConfData()->m_bmovingWindow)
         m_movingwindowFilter.setIntegrationtime(getConfData()->m_fMeasInterval.m_fValue);
-    else
-    {
-        if(!m_pModule->getDemo()) {
-            m_pDSPInterFace->setVarData(m_pParameterDSP, QString("TIPAR:%1;TISTART:%2;").arg(getConfData()->m_fMeasInterval.m_fValue*1000)
-                                                                                .arg(0), DSPDATA::dInt);
-            m_MsgNrCmdList[m_pDSPInterFace->dspMemoryWrite(m_pParameterDSP)] = writeparameter;
-        }
+    else {
+        m_pDSPInterFace->setVarData(m_pParameterDSP, QString("TIPAR:%1;TISTART:%2;").arg(getConfData()->m_fMeasInterval.m_fValue*1000)
+                                                                            .arg(0), DSPDATA::dInt);
+        m_MsgNrCmdList[m_pDSPInterFace->dspMemoryWrite(m_pParameterDSP)] = writeparameter;
     }
 
     emit m_pModule->parameterChanged();
