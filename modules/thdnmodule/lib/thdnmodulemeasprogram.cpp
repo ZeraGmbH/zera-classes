@@ -865,10 +865,9 @@ void cThdnModuleMeasProgram::deactivateDSP()
 
 void cThdnModuleMeasProgram::freePGRMem()
 {
-    //deleteDspVarList();
-    //deleteDspCmdList();
-    // we always destroy the whole interface even in case of new configuration while running
-    // so the list are gone anyway
+    Zera::Proxy::getInstance()->releaseConnection(m_pDspClient); // no async. messages anymore
+    deleteDspVarList(); // so we can destroy our actual var list
+    deleteDspCmdList(); // and command list
 
     m_MsgNrCmdList[m_rmInterface.freeResource("DSP1", "PGRMEMC")] = freepgrmem;
 }
