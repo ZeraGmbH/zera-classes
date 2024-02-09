@@ -6,9 +6,8 @@
 namespace SAMPLEMODULE
 {
 
-cPllMeasChannel::cPllMeasChannel(cSocket* rmsocket, cSocket* pcbsocket, QString name, quint8 chnnr, bool demo) :
-    cBaseMeasChannel(rmsocket, pcbsocket, name, chnnr),
-    m_demo(demo)
+cPllMeasChannel::cPllMeasChannel(cSocket* rmsocket, cSocket* pcbsocket, QString name, quint8 chnnr) :
+    cBaseMeasChannel(rmsocket, pcbsocket, name, chnnr)
 {
     m_pPCBInterface = new Zera::cPCBInterface();
 
@@ -45,10 +44,9 @@ cPllMeasChannel::cPllMeasChannel(cSocket* rmsocket, cSocket* pcbsocket, QString 
     m_activationMachine.addState(&m_readRangeProperties3State);
     m_activationMachine.addState((&m_setSenseChannelRangeNotifierState));
     m_activationMachine.addState(&m_activationDoneState);
-    if(!m_demo)
-        m_activationMachine.setInitialState(&m_rmConnectState);
-    else
-        m_activationMachine.setInitialState(&m_activationDoneState);
+
+    m_activationMachine.setInitialState(&m_rmConnectState);
+
     connect(&m_rmConnectState, &QState::entered, this, &cPllMeasChannel::rmConnect);
     connect(&m_IdentifyState, &QState::entered, this, &cPllMeasChannel::sendRMIdent);
     connect(&m_readResourceTypesState, &QState::entered, this, &cPllMeasChannel::readResourceTypes);
@@ -69,10 +67,9 @@ cPllMeasChannel::cPllMeasChannel(cSocket* rmsocket, cSocket* pcbsocket, QString 
     m_deactivationInitState.addTransition(this, &cPllMeasChannel::deactivationContinue, &m_deactivationDoneState);
     m_deactivationMachine.addState(&m_deactivationInitState);
     m_deactivationMachine.addState(&m_deactivationDoneState);
-    if(!m_demo)
-        m_deactivationMachine.setInitialState(&m_deactivationInitState);
-    else
-        m_deactivationMachine.setInitialState(&m_deactivationDoneState);
+
+    m_deactivationMachine.setInitialState(&m_deactivationInitState);
+
     connect(&m_deactivationInitState, &QState::entered, this, &cPllMeasChannel::deactivationInit);
     connect(&m_deactivationDoneState, &QState::entered, this, &cPllMeasChannel::deactivationDone);
 
@@ -391,76 +388,6 @@ void cPllMeasChannel::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant
     }
 }
 
-void cPllMeasChannel::setupDemoOperation()
-{
-    // Stolen from cRangeMeasChannel::setupDemoOperation()
-    // Set dummy channel info
-    bool isVoltagePhase = false;
-    switch (m_nChannelNr)
-    {
-    case 1:
-        m_sAlias = "UL1";
-        isVoltagePhase = true;
-        break;
-    case 2:
-        m_sAlias = "UL2";
-        isVoltagePhase = true;
-        break;
-    case 3:
-        m_sAlias = "UL3";
-        isVoltagePhase = true;
-        break;
-    case 4:
-        m_sAlias = "IL1";
-        break;
-    case 5:
-        m_sAlias = "IL2";
-        break;
-    case 6:
-        m_sAlias = "IL3";
-        break;
-    case 7:
-        m_sAlias = "UAUX";
-        isVoltagePhase = true;
-        break;
-    case 8:
-        m_sAlias = "IAUX";
-        break;
-    }
-    QVector<double> nominalRanges;
-    if(isVoltagePhase) {
-        m_sUnit = "V";
-        nominalRanges = QVector<double>() << 480.0 << 240.0 << 120.0 << 60.0 << 0.5;
-    }
-    else {
-        m_sUnit = "A";
-        nominalRanges = QVector<double>() << 1000.0 << 100.0 << 10.0 << 1.0 << 0.1 << 0.01 << 0.001;
-    }
-    for(auto rangeVal : qAsConst(nominalRanges)) {
-        cRangeInfoWithConstantValues rangeInfo;
-        QString unitPrefix;
-        double rangeValDisplay = rangeVal;
-        if(rangeVal < 1) {
-            unitPrefix = "m";
-            rangeValDisplay *= 1000.0;
-        }
-        rangeInfo.alias.setNum(int(rangeValDisplay));
-        rangeInfo.alias += unitPrefix+m_sUnit;
-        if(m_sActRange.isEmpty()) {
-            m_sActRange = rangeInfo.alias;
-        }
-        rangeInfo.avail = true;
-        rangeInfo.urvalue = rangeVal;
-        rangeInfo.rejection = 1.0;
-        rangeInfo.ovrejection = 1.25;
-        // ?? name
-        rangeInfo.type = 1;
-        m_RangeInfoHash[rangeInfo.alias] = rangeInfo;
-    }
-    //setRangeListAlias();
-}
-
-
 void cPllMeasChannel::rmConnect()
 {
     // we instantiate a working resource manager interface first
@@ -580,8 +507,6 @@ void cPllMeasChannel::setSenseChannelRangeNotifier()
 
 void cPllMeasChannel::activationDone()
 {
-    if(m_demo)
-        setupDemoOperation();
     QHash<QString, cRangeInfoWithConstantValues>::iterator it = m_RangeInfoHash.begin();
     while (it != m_RangeInfoHash.end()) // we delete all unused ranges
     {
@@ -592,8 +517,7 @@ void cPllMeasChannel::activationDone()
             ++it;
     }
 
-    if(!m_demo)
-        readRange(); // we read the actual range once here, afterwards via notifier
+    readRange(); // we read the actual range once here, afterwards via notifier
     m_bActive = true;
     emit activated();
 }
@@ -668,6 +592,4 @@ void cPllMeasChannel::readRange()
 
 
 }
-
-
 

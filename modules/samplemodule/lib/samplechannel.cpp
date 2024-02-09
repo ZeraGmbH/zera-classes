@@ -41,10 +41,8 @@ cSampleChannel::cSampleChannel(cSampleModule* module, cSampleModuleConfigData& c
 
     m_activationMachine.addState(&m_readRangelistState);
     m_activationMachine.addState(&m_activationDoneState);
-    if(!m_pModule->getDemo())
-        m_activationMachine.setInitialState(&m_rmConnectState);
-    else
-        m_activationMachine.setInitialState(&m_activationDoneState);
+
+    m_activationMachine.setInitialState(&m_rmConnectState);
 
     connect(&m_rmConnectState, &QState::entered, this, &cSampleChannel::rmConnect);
     connect(&m_IdentifyState, &QState::entered, this, &cSampleChannel::sendRMIdent);
@@ -61,10 +59,9 @@ cSampleChannel::cSampleChannel(cSampleModule* module, cSampleModuleConfigData& c
     m_deactivationInitState.addTransition(this, &cSampleChannel::deactivationContinue, &m_deactivationDoneState);
     m_deactivationMachine.addState(&m_deactivationInitState);
     m_deactivationMachine.addState(&m_deactivationDoneState);
-    if(!m_pModule->getDemo())
-        m_deactivationMachine.setInitialState(&m_deactivationInitState);
-    else
-        m_deactivationMachine.setInitialState(&m_deactivationDoneState);
+
+    m_deactivationMachine.setInitialState(&m_deactivationInitState);
+
     connect(&m_deactivationInitState, &QState::entered, this, &cSampleChannel::deactivationInit);
     connect(&m_deactivationDoneState, &QState::entered, this, &cSampleChannel::deactivationDone);
 }
@@ -299,9 +296,6 @@ void cSampleChannel::readRangelist()
 
 void cSampleChannel::activationDone()
 {
-    if(m_pModule->getDemo()) {
-        m_RangeNameList << "F50Hz" << "F20Hz";
-    }
     setChannelNameMetaInfo(); // we set our real name now
     setRangeValidator(); // and the list of possible ranges
 

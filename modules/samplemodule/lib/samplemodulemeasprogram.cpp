@@ -36,10 +36,7 @@ cSampleModuleMeasProgram::cSampleModuleMeasProgram(cSampleModule* module, std::s
     m_activationMachine.addState(&m_activateDSPState);
     m_activationMachine.addState(&m_loadDSPDoneState);
 
-    if(m_pModule->getDemo())
-        m_activationMachine.setInitialState(&m_loadDSPDoneState);
-    else
-        m_activationMachine.setInitialState(&resourceManagerConnectState);
+    m_activationMachine.setInitialState(&resourceManagerConnectState);
 
     connect(&resourceManagerConnectState, &QState::entered, this, &cSampleModuleMeasProgram::resourceManagerConnect);
     connect(&m_IdentifyState, &QState::entered, this, &cSampleModuleMeasProgram::sendRMIdent);
@@ -60,10 +57,7 @@ cSampleModuleMeasProgram::cSampleModuleMeasProgram(cSampleModule* module, std::s
     m_deactivationMachine.addState(&m_freeUSERMemState);
     m_deactivationMachine.addState(&m_unloadDSPDoneState);
 
-    if(m_pModule->getDemo())
-        m_deactivationMachine.setInitialState(&m_unloadDSPDoneState);
-    else
-        m_deactivationMachine.setInitialState(&m_deactivateDSPState);
+    m_deactivationMachine.setInitialState(&m_deactivateDSPState);
 
     connect(&m_deactivateDSPState, &QState::entered, this, &cSampleModuleMeasProgram::deactivateDSP);
     connect(&m_freePGRMemState, &QState::entered, this, &cSampleModuleMeasProgram::freePGRMem);

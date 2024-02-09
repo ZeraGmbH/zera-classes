@@ -75,23 +75,17 @@ void cPllObsermatic::generateInterface()
 void cPllObsermatic::pllAutomatic()
 {
     if(m_bActive && m_ConfPar.m_ObsermaticConfPar.m_npllAutoAct.m_nActive == 1) {
-        if(!m_pModule->getDemo()) {
-            int i;
-            int n = m_ConfPar.m_ObsermaticConfPar.m_pllChannelList.count();
-            for (i = 0; i < n; i++) {
-                double urValue = m_pllMeasChannelHash[ m_AliasHash[m_ConfPar.m_ObsermaticConfPar.m_pllChannelList.at(i)]]->getUrValue();
-                if (m_ActualValues[i] > urValue * 10.0 / 100.0)
-                    break;
-            }
-            if (i == n)
-                i = 0; // if none of our channels has 10% attenuation we take the first channel
-            // now we set our new pll channel
-            newPllChannel(QVariant(m_AliasHash[m_ConfPar.m_ObsermaticConfPar.m_pllChannelList.at(i)]));
+        int i;
+        int n = m_ConfPar.m_ObsermaticConfPar.m_pllChannelList.count();
+        for (i = 0; i < n; i++) {
+            double urValue = m_pllMeasChannelHash[ m_AliasHash[m_ConfPar.m_ObsermaticConfPar.m_pllChannelList.at(i)]]->getUrValue();
+            if (m_ActualValues[i] > urValue * 10.0 / 100.0)
+                break;
         }
-        else {
-            m_sNewPllChannel = "UL1";
-            setNewPLLChannel();
-        }
+        if (i == n)
+            i = 0; // if none of our channels has 10% attenuation we take the first channel
+        // now we set our new pll channel
+        newPllChannel(QVariant(m_AliasHash[m_ConfPar.m_ObsermaticConfPar.m_pllChannelList.at(i)]));
     }
 }
 
@@ -128,8 +122,7 @@ void cPllObsermatic::activationDone()
     connect(m_pPllChannel, &VfModuleParameter::sigValueChanged, this, &cPllObsermatic::newPllChannel);
 
     setPllChannelValidator();
-    if(!m_pModule->getDemo())
-        sendPllChannel(m_ConfPar.m_ObsermaticConfPar.m_pllChannel.m_sPar);
+    sendPllChannel(m_ConfPar.m_ObsermaticConfPar.m_pllChannel.m_sPar);
 
     m_bActive = true;
     emit activated();
@@ -151,10 +144,7 @@ void cPllObsermatic::sendPllChannel(QString channelRequested)
     channelRequested = adjustToValidPllChannel(channelRequested);
     m_sNewPllChannel = channelRequested;
     m_pPllSignal->setValue(QVariant(1)); // we signal that we are changing pll channel
-    if(!m_pModule->getDemo())
-        m_MsgNrCmdList[m_pllMeasChannelHash[channelRequested]->setyourself4PLL(m_ConfPar.m_ObsermaticConfPar.m_sSampleSystem)] = setpll;
-    else
-        setNewPLLChannel();
+    m_MsgNrCmdList[m_pllMeasChannelHash[channelRequested]->setyourself4PLL(m_ConfPar.m_ObsermaticConfPar.m_sSampleSystem)] = setpll;
 }
 
 QString cPllObsermatic::adjustToValidPllChannel(QVariant channel)

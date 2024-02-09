@@ -89,8 +89,7 @@ void cSampleModule::setupModule()
         cPllMeasChannel* pllchn = new cPllMeasChannel(&(pConfData->m_RMSocket),
                                                       &(pConfData->m_PCBServerSocket),
                                                       pConfData->m_ObsermaticConfPar.m_pllChannelList.at(i),
-                                                      i+1,
-                                                      getDemo());
+                                                      i+1);
         m_pllMeasChannelList.append(pllchn);
         m_ModuleActivistList.append(pllchn);
         connect(pllchn, &cPllMeasChannel::activated, this, &cSampleModule::activationContinue);
