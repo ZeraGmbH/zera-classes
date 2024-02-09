@@ -871,32 +871,17 @@ void cDftModuleMeasProgram::readResourceInfoDone()
 
 void cDftModuleMeasProgram::pcbserverConnect()
 {
-    // we have to connect to all ports....
-    channelInfoReadList = m_measChannelInfoHash.keys(); // so first we look for our different pcb sockets
-    m_nConnectionCount = channelInfoReadList.count();
-    for (int i = 0; i < channelInfoReadList.count(); i++)
-    {
-        QString key = channelInfoReadList.at(i);
-        cMeasChannelInfo mi = m_measChannelInfoHash.take(key);
-        cSocket sock = mi.pcbServersocket;
-        Zera::ProxyClient* pcbClient = Zera::Proxy::getInstance()->getConnection(sock.m_sIP, sock.m_nPort);
-        m_pcbClientList.append(pcbClient);
-        Zera::cPCBInterface* pcbIFace = new Zera::cPCBInterface();
-        m_pcbIFaceList.append(pcbIFace);
-        pcbIFace->setClient(pcbClient);
-        mi.pcbIFace = pcbIFace;
-        m_measChannelInfoHash[key] = mi;
-        connect(pcbClient, &Zera::ProxyClient::connected, this, &cDftModuleMeasProgram::monitorConnection); // here we wait until all connections are established
-        connect(pcbIFace, &Zera::cPCBInterface::serverAnswer, this, &cDftModuleMeasProgram::catchInterfaceAnswer);
-        Zera::Proxy::getInstance()->startConnection(pcbClient);
-    }
+    m_pcbClient = Zera::Proxy::getInstance()->getConnectionSmart(getConfData()->m_PCBServerSocket.m_sIP, getConfData()->m_PCBServerSocket.m_nPort);
+    m_pcbInterface->setClientSmart(m_pcbClient);
+    connect(m_pcbClient.get(), &Zera::ProxyClient::connected, this, &cBaseMeasProgram::activationContinue);
+    connect(m_pcbInterface.get(), &AbstractServerInterface::serverAnswer, this, &cDftModuleMeasProgram::catchInterfaceAnswer);
+    Zera::Proxy::getInstance()->startConnectionSmart(m_pcbClient);
 }
 
 
 void cDftModuleMeasProgram::readSampleRate()
 {
-    // we always take the sample count from the first channels pcb server
-    m_MsgNrCmdList[m_pcbIFaceList.at(0)->getSampleRate()] = readsamplerate;
+    m_MsgNrCmdList[m_pcbInterface->getSampleRate()] = readsamplerate;
 }
 
 
@@ -910,32 +895,28 @@ void cDftModuleMeasProgram::readChannelInformation()
 void cDftModuleMeasProgram::readChannelAlias()
 {
     channelInfoRead = channelInfoReadList.takeFirst();
-    m_MsgNrCmdList[m_measChannelInfoHash[channelInfoRead].pcbIFace->getAlias(channelInfoRead)] = readalias;
+    m_MsgNrCmdList[m_pcbInterface->getAlias(channelInfoRead)] = readalias;
 }
 
 
 void cDftModuleMeasProgram::readChannelUnit()
 {
-   m_MsgNrCmdList[m_measChannelInfoHash[channelInfoRead].pcbIFace->getUnit(channelInfoRead)] = readunit;
+    m_MsgNrCmdList[m_pcbInterface->getUnit(channelInfoRead)] = readunit;
 }
 
 
 void cDftModuleMeasProgram::readDspChannel()
 {
-    m_MsgNrCmdList[m_measChannelInfoHash[channelInfoRead].pcbIFace->getDSPChannel(channelInfoRead)] = readdspchannel;
+    m_MsgNrCmdList[m_pcbInterface->getDSPChannel(channelInfoRead)] = readdspchannel;
 }
-
 
 void cDftModuleMeasProgram::readDspChannelDone()
 {
     if (channelInfoReadList.isEmpty())
-    {
         emit activationContinue();
-    }
     else
         emit activationLoop();
 }
-
 
 void cDftModuleMeasProgram::dspserverConnect()
 {
@@ -1025,20 +1006,9 @@ void cDftModuleMeasProgram::freeUSERMem()
 
 void cDftModuleMeasProgram::deactivateDSPdone()
 {
-    if (m_pcbIFaceList.count() > 0)
-    {
-        for (int i = 0; i < m_pcbIFaceList.count(); i++)
-        {
-            Zera::Proxy::getInstance()->releaseConnection(m_pcbClientList.at(i));
-            delete m_pcbIFaceList.at(i); // our signals are also gone
-        }
-        m_pcbIFaceList.clear();
-        m_pcbClientList.clear();
-    }
-
     disconnect(&m_rmInterface, 0, this, 0); // but we must disconnect this 2 manually
     disconnect(m_pDSPInterFace, 0, this, 0);
-
+    disconnect(m_pcbInterface.get(), 0, this, 0);
     emit deactivated();
 }
 
@@ -1057,26 +1027,6 @@ void cDftModuleMeasProgram::dataReadDSP()
     {
         //double corr;
         m_pDSPInterFace->getData(m_pActualValuesDSP, m_ModuleActualValues); // we fetch our actual values
-
-        /*
-        // dft(0) is a speciality. sin and cos in dsp are set so that we get amplitude rather than energy.
-        // so dc is multiplied  by sqrt(2) * sqrt(2) = 2
-        if (getConfData()->m_nDftOrder == 0)
-            corr = 0.5; // so we correct this here
-        else
-            corr = 1.0;
-
-        // as our dft produces math positive values, we correct them to technical positive values
-        for (int i = 0; i < m_veinActValueList.count(); i++)
-        {
-            double im, re;
-            im = m_ModuleActualValues[i*2+1] * -1.0;
-            m_ModuleActualValues.replace(i*2+1, im);
-            re = m_ModuleActualValues[i*2] * corr;
-            m_ModuleActualValues.replace(i*2, re);
-        }
-        */
-
 
         // dft(0) is a speciality. sin and cos in dsp are set so that we get amplitude rather than energy.
         // so dc is multiplied  by sqrt(2) * sqrt(2) = 2
