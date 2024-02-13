@@ -182,8 +182,9 @@ void cPllObsermatic::newPllChannel(QVariant channelAlias)
     // Isn't this obsolete? Vein transfers changes only.
     QString channelAliasRequested = adjustToValidPllChannel(channelAlias.toString());
     QString systemName = m_pllMeasChannelHash[channelAliasRequested]->getName();
-    if (systemName != m_ConfPar.m_ObsermaticConfPar.m_pllSystemChannel.m_sPar)
-        sendPllChannel(systemName);
+    if(systemName != m_ConfPar.m_ObsermaticConfPar.m_pllSystemChannel.m_sPar)
+        if(!m_ConfPar.m_ObsermaticConfPar.m_bpllFixed)
+            sendPllChannel(systemName);
 }
 
 // called when pll automatic becomes on or off
