@@ -134,6 +134,18 @@ quint32 cPllMeasChannel::setyourself4PLL(QString samplesysname)
         return 1;
 }
 
+quint32 cPllMeasChannel::setPLLMode(QString samplesysname, QString mode)
+{
+    if (m_bActive)
+    {
+        quint32 msgnr = m_pPCBInterface->setPLLChannel(samplesysname, mode);
+        m_MsgNrCmdList[msgnr] = set4PLL;
+        return msgnr;
+    }
+    else
+        return 1;
+}
+
 
 void cPllMeasChannel::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant answer)
 {

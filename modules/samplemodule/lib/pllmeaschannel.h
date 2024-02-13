@@ -46,6 +46,7 @@ public:
     ~cPllMeasChannel();
     virtual void generateInterface(); // here we export our interface (entities)
     quint32 setyourself4PLL(QString samplesysname); // a statemachine gets started that returns cmdDone(quint32 cmdnr)
+    quint32 setPLLMode(QString samplesysname, QString mode);
     double getUrValue(); // returns upper range of actual range
 signals:
     void cmdDone(quint32 cmdnr); // to signal we are ready
