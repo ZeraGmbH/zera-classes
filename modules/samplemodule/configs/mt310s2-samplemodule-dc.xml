@@ -41,7 +41,7 @@
     <parameter>
         <sample>
             <pllauto>0</pllauto>
-            <pllchannel>m3</pllchannel>
+            <pllchannel>fix13</pllchannel>
             <range>F70Hz</range>
         </sample>
     </parameter>

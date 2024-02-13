@@ -46,7 +46,7 @@ private:
     void pllAutomatic();
     void setPllChannelValidator();
     void sendPllChannel(QString systemChannelRequested);
-    QString adjustToValidPllChannel(QVariant channel);
+    QString adjustToValidPllChannel(QString channel);
     void setNewPLLChannel();
 
     cSampleModule *m_pModule;
