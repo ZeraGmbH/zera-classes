@@ -29,6 +29,7 @@ public:
     cPllObsermatic(cSampleModule* module, cSampleModuleConfigData& confData);
     virtual ~cPllObsermatic();
     virtual void generateInterface(); // here we export our interface (entities)
+    QString getAliasFromSystemName(QString systemName);
 public slots:
     virtual void ActionHandler(QVector<float>* actualValues); // entry after received actual values
     void catchChannelReply(quint32 msgnr);
@@ -39,18 +40,18 @@ private slots:
     void deactivationInit();
     void deactivationDone();
 
-    void newPllChannel(QVariant channel);
+    void newPllChannel(QVariant channelAlias);
     void newPllAuto(QVariant pllauto);
 private:
     void pllAutomatic();
     void setPllChannelValidator();
-    void sendPllChannel(QString channelRequested);
+    void sendPllChannel(QString systemChannelRequested);
     QString adjustToValidPllChannel(QVariant channel);
     void setNewPLLChannel();
 
     cSampleModule *m_pModule;
     cSampleModuleConfigData& m_ConfPar;
-    QString m_sNewPllChannel;
+    QString m_sNewPllChannelAlias;
     QVector<float> m_ActualValues; // here we find the actual values
 
     // we build up 2 hashtables for pll meas channel access
@@ -58,7 +59,7 @@ private:
     QHash<QString,QString> m_AliasHash; // systemname -> alias
 
     // we need some entities for our interface
-    VfModuleParameter* m_pPllChannel;
+    VfModuleParameter* m_pVeinPllChannelAlias;
     VfModuleParameter* m_pParPllAutomaticOnOff;
     VfModuleComponent* m_pPllFixed;
     VfModuleComponent* m_pPllSignal; // we make the signal public for easy connection within module

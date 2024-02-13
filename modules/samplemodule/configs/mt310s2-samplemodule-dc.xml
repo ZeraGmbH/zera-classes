@@ -41,7 +41,7 @@
     <parameter>
         <sample>
             <pllauto>0</pllauto>
-            <pllchannel>IL1</pllchannel>
+            <pllchannel>m3</pllchannel>
             <range>F70Hz</range>
         </sample>
     </parameter>
