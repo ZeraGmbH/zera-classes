@@ -21,6 +21,7 @@
         <sample>
             <system>s0</system>
             <withpllautomatic>0</withpllautomatic>
+            <pllfixed>1</pllfixed>
             <pllchannel>
                 <n>8</n>
                 <ch1>m0</ch1>

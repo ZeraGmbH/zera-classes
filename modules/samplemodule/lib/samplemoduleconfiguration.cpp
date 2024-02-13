@@ -46,6 +46,7 @@ void cSampleModuleConfiguration::setConfiguration(QByteArray xmlString)
 
     m_ConfigXMLMap["samplemodconfpar:configuration:sample:system"] = setSampleSystem;
     m_ConfigXMLMap["samplemodconfpar:configuration:sample:withpllautomatic"] = setPllAutomaticBool;
+    m_ConfigXMLMap["samplemodconfpar:configuration:sample:pllfixed"] = setPllFixedBool;
 
     m_ConfigXMLMap["samplemodconfpar:configuration:sample:pllchannel:n"] = setPllChannelCount;
     // delegates for setting channels itself are generated dynamically
@@ -134,6 +135,9 @@ void cSampleModuleConfiguration::configXMLInfo(QString key)
             break;
         case setPllAutomaticBool:
             m_pSampleModulConfigData->m_ObsermaticConfPar.m_bpllAuto = (m_pXMLReader->getValue(key).toInt(&ok) == 1);
+            break;
+        case setPllFixedBool:
+            m_pSampleModulConfigData->m_ObsermaticConfPar.m_bpllFixed = (m_pXMLReader->getValue(key).toInt(&ok) == 1);
             break;
         case setPllChannel:
             m_pSampleModulConfigData->m_ObsermaticConfPar.m_pllChannel.m_sKey = key;

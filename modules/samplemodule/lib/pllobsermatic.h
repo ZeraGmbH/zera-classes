@@ -60,6 +60,7 @@ private:
     // we need some entities for our interface
     VfModuleParameter* m_pPllChannel;
     VfModuleParameter* m_pParPllAutomaticOnOff;
+    VfModuleComponent* m_pPllFixed;
     VfModuleComponent* m_pPllSignal; // we make the signal public for easy connection within module
 
     QHash<quint32, int> m_MsgNrCmdList;
