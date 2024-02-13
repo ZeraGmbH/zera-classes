@@ -21,6 +21,7 @@ enum moduleconfigstate
     setDSPServerIp,
     setDSPServerPort,
     setPllAutomaticBool,
+    setPllFixedBool,
     setPllAutomatic,
     setMeasureInterval,
     setSampleSystem, // we only support 1 system

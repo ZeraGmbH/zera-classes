@@ -130,6 +130,7 @@
                                 <xs:sequence>
                                     <xs:element name="system" type="xs:string" minOccurs="1" maxOccurs="1"/>
                                     <xs:element name="withpllautomatic" type="yesnotype" minOccurs="1" maxOccurs="1"/>
+                                    <xs:element name="pllfixed" type="yesnotype" minOccurs="1" maxOccurs="1"/>
                                     <xs:element name="pllchannel" type="pllchanneltype"/>
                                 </xs:sequence>
                             </xs:complexType>

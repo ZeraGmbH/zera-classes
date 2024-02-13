@@ -64,6 +64,13 @@ void cPllObsermatic::generateInterface()
     scpiInfo = new cSCPIInfo("CONFIGURATION", "PLLAUTO", "10", m_pParPllAutomaticOnOff->getName(), "0", "");
     m_pParPllAutomaticOnOff->setSCPIInfo(scpiInfo);
 
+    m_pPllFixed = new VfModuleComponent(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
+                                       QString("ACT_PllFixed"),
+                                       QString("PLL fixed channel / mode"),
+                                       QVariant(m_ConfPar.m_ObsermaticConfPar.m_bpllFixed));
+
+    m_pModule->veinModuleComponentList.append(m_pPllFixed);
+
     m_pPllSignal = new VfModuleComponent(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
                                             QString("SIG_PLL"),
                                             QString("Signal on pll channel changing"),
