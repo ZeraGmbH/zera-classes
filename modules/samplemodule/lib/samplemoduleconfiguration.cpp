@@ -71,7 +71,7 @@ QByteArray cSampleModuleConfiguration::exportConfiguration()
     m_pXMLReader->setValue(bPar->m_sKey, QString("%1").arg(bPar->m_nActive));
 
     stringParameter* sPar;
-    sPar = &m_pSampleModulConfigData->m_ObsermaticConfPar.m_pllChannel;
+    sPar = &m_pSampleModulConfigData->m_ObsermaticConfPar.m_pllSystemChannel;
     m_pXMLReader->setValue(sPar->m_sKey, sPar->m_sPar);
     sPar = &m_pSampleModulConfigData->m_ObsermaticConfPar.m_pllRange;
     m_pXMLReader->setValue(sPar->m_sKey, sPar->m_sPar);
@@ -140,8 +140,8 @@ void cSampleModuleConfiguration::configXMLInfo(QString key)
             m_pSampleModulConfigData->m_ObsermaticConfPar.m_bpllFixed = (m_pXMLReader->getValue(key).toInt(&ok) == 1);
             break;
         case setPllChannel:
-            m_pSampleModulConfigData->m_ObsermaticConfPar.m_pllChannel.m_sKey = key;
-            m_pSampleModulConfigData->m_ObsermaticConfPar.m_pllChannel.m_sPar = m_pXMLReader->getValue(key);
+            m_pSampleModulConfigData->m_ObsermaticConfPar.m_pllSystemChannel.m_sKey = key;
+            m_pSampleModulConfigData->m_ObsermaticConfPar.m_pllSystemChannel.m_sPar = m_pXMLReader->getValue(key);
             break;
         case setSampleSystemRange:
             m_pSampleModulConfigData->m_ObsermaticConfPar.m_pllRange.m_sKey = key;

@@ -42,16 +42,16 @@ void cPllObsermatic::ActionHandler(QVector<float> *actualValues)
 void cPllObsermatic::generateInterface()
 {
     QString key;
-    m_pPllChannel = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
+    m_pVeinPllChannelAlias = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
                                              key = QString("PAR_PllChannel"),
                                              QString("PLL reference channel"),
-                                             QVariant(m_ConfPar.m_ObsermaticConfPar.m_pllChannel.m_sPar));
+                                             QVariant(""));
 
-    m_pModule->veinModuleParameterHash[key] = m_pPllChannel; // for modules use
+    m_pModule->veinModuleParameterHash[key] = m_pVeinPllChannelAlias; // for modules use
 
     // later we have to set the validator for m_pPLLChannel
-    cSCPIInfo *scpiInfo = new cSCPIInfo("CONFIGURATION", "PLLREFERENCE", "10", m_pPllChannel->getName(), "0", "");
-    m_pPllChannel->setSCPIInfo(scpiInfo);
+    cSCPIInfo *scpiInfo = new cSCPIInfo("CONFIGURATION", "PLLREFERENCE", "10", m_pVeinPllChannelAlias->getName(), "0", "");
+    m_pVeinPllChannelAlias->setSCPIInfo(scpiInfo);
 
     m_pParPllAutomaticOnOff = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
                                                        key = QString("PAR_PllAutomaticOnOff"),
@@ -79,6 +79,11 @@ void cPllObsermatic::generateInterface()
     m_pModule->veinModuleComponentList.append(m_pPllSignal);
 }
 
+QString cPllObsermatic::getAliasFromSystemName(QString systemName)
+{
+    return m_AliasHash[systemName];
+}
+
 void cPllObsermatic::pllAutomatic()
 {
     if(m_bActive && m_ConfPar.m_ObsermaticConfPar.m_npllAutoAct.m_nActive == 1) {
@@ -103,7 +108,7 @@ void cPllObsermatic::setPllChannelValidator()
         sl.append(m_AliasHash[m_ConfPar.m_ObsermaticConfPar.m_pllChannelList.at(i)]);
 
     cStringValidator *sValidator = new cStringValidator(sl);
-    m_pPllChannel->setValidator(sValidator);
+    m_pVeinPllChannelAlias->setValidator(sValidator);
 }
 
 void cPllObsermatic::getPllMeasChannels()
@@ -118,6 +123,7 @@ void cPllObsermatic::getPllMeasChannels()
         m_pllMeasChannelHash[alias] = pllchn;
         m_AliasHash[sysName] = alias;
     }
+    m_pVeinPllChannelAlias->setValue(getAliasFromSystemName(m_ConfPar.m_ObsermaticConfPar.m_pllSystemChannel.m_sPar));
     emit activationContinue();
 }
 
@@ -126,10 +132,10 @@ void cPllObsermatic::activationDone()
     m_pParPllAutomaticOnOff->setValue(m_ConfPar.m_ObsermaticConfPar.m_npllAutoAct.m_nActive);
 
     connect(m_pParPllAutomaticOnOff, &VfModuleParameter::sigValueChanged, this, &cPllObsermatic::newPllAuto);
-    connect(m_pPllChannel, &VfModuleParameter::sigValueChanged, this, &cPllObsermatic::newPllChannel);
+    connect(m_pVeinPllChannelAlias, &VfModuleParameter::sigValueChanged, this, &cPllObsermatic::newPllChannel);
 
     setPllChannelValidator();
-    sendPllChannel(m_ConfPar.m_ObsermaticConfPar.m_pllChannel.m_sPar);
+    sendPllChannel(m_ConfPar.m_ObsermaticConfPar.m_pllSystemChannel.m_sPar);
 
     m_bActive = true;
     emit activated();
@@ -146,12 +152,13 @@ void cPllObsermatic::deactivationDone()
     emit deactivated();
 }
 
-void cPllObsermatic::sendPllChannel(QString channelRequested)
+void cPllObsermatic::sendPllChannel(QString systemChannelRequested)
 {
-    channelRequested = adjustToValidPllChannel(channelRequested);
-    m_sNewPllChannel = channelRequested;
+    QString aliasChannel = getAliasFromSystemName(systemChannelRequested);
+    aliasChannel = adjustToValidPllChannel(aliasChannel);
+    m_sNewPllChannelAlias = aliasChannel;
     m_pPllSignal->setValue(QVariant(1)); // we signal that we are changing pll channel
-    m_MsgNrCmdList[m_pllMeasChannelHash[channelRequested]->setyourself4PLL(m_ConfPar.m_ObsermaticConfPar.m_sSampleSystem)] = setpll;
+    m_MsgNrCmdList[m_pllMeasChannelHash[aliasChannel]->setyourself4PLL(m_ConfPar.m_ObsermaticConfPar.m_sSampleSystem)] = setpll;
 }
 
 QString cPllObsermatic::adjustToValidPllChannel(QVariant channel)
@@ -162,12 +169,13 @@ QString cPllObsermatic::adjustToValidPllChannel(QVariant channel)
     return channelRequested;
 }
 
-void cPllObsermatic::newPllChannel(QVariant channel)
+void cPllObsermatic::newPllChannel(QVariant channelAlias)
 {
     // Isn't this obsolete? Vein transfers changes only.
-    QString channelRequested = adjustToValidPllChannel(channel);
-    if (channelRequested != m_ConfPar.m_ObsermaticConfPar.m_pllChannel.m_sPar)
-        sendPllChannel(channelRequested);
+    QString channelAliasRequested = adjustToValidPllChannel(channelAlias);
+    QString systemName = m_pllMeasChannelHash[channelAliasRequested]->getName();
+    if (systemName != m_ConfPar.m_ObsermaticConfPar.m_pllSystemChannel.m_sPar)
+        sendPllChannel(systemName);
 }
 
 // called when pll automatic becomes on or off
@@ -182,11 +190,13 @@ void cPllObsermatic::newPllAuto(QVariant pllauto)
     emit m_pModule->parameterChanged();
 }
 
-void SAMPLEMODULE::cPllObsermatic::setNewPLLChannel()
+void cPllObsermatic::setNewPLLChannel()
 {
     m_pPllSignal->setValue(QVariant(0)); // pll change finished
-    m_pPllChannel->setValue(QVariant(m_sNewPllChannel));
-    m_ConfPar.m_ObsermaticConfPar.m_pllChannel.m_sPar = m_sNewPllChannel;
+    m_pVeinPllChannelAlias->setValue(QVariant(m_sNewPllChannelAlias));
+
+    QString systemName = m_pllMeasChannelHash[m_sNewPllChannelAlias]->getName();
+    m_ConfPar.m_ObsermaticConfPar.m_pllSystemChannel.m_sPar = systemName;
     emit m_pModule->parameterChanged();
 }
 

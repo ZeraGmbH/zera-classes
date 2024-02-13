@@ -32,7 +32,7 @@ struct cObsermaticConfPar
     boolParameter m_npllAutoAct; // pll automatic active or not 1,0
     quint8 m_npllChannelCount; // how many channels for pll setting
     QStringList m_pllChannelList; // a list of channel system names the pll can be set to
-    stringParameter m_pllChannel;
+    stringParameter m_pllSystemChannel;
     stringParameter m_pllRange;
 };
 
