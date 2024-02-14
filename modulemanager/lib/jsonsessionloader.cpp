@@ -46,6 +46,8 @@ void JsonSessionLoader::parseModule(QJsonObject moduleObject)
 {
     QString configFile = moduleObject.value("configFile").toString();
     QString configFileNameFull = QDir::cleanPath(m_configDirName + "/" + configFile);
+    if(configFile.startsWith(":/"))
+        configFileNameFull = configFile;
     QString tmpNameString = moduleObject.value("name").toString();
     QByteArray xmlConfigData;
     if(!configFile.isEmpty()) {
