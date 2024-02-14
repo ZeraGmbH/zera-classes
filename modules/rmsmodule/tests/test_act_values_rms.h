@@ -11,9 +11,12 @@ class test_act_values_rms : public QObject
 {
     Q_OBJECT
 private slots:
+    void initTestCase();
     void cleanup();
 
     void minimalSession();
+    void moduleConfigFromResource();
+    void veinDumpInitial();
 private:
     void setupServices(QString sessionFileName);
 

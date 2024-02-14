@@ -131,7 +131,7 @@ void cRmsModuleMeasProgram::stop()
 void cRmsModuleMeasProgram::generateInterface()
 {
     // Here is the first time configuration is loaded
-    m_actValueHandler = m_pModule->getActualValueFactory()->getActValGeneratorRms(getConfData()->m_valueChannelList);
+    m_actValueHandler = m_pModule->getActualValueFactory()->getActValGeneratorRms(m_pModule->getEntityId(), getConfData()->m_valueChannelList);
     connect(this, &cRmsModuleMeasProgram::actualValues,
             m_actValueHandler.get(), &AbstractActualValueGenerator::onNewActualValues);
     if (getConfData()->m_bmovingWindow) {

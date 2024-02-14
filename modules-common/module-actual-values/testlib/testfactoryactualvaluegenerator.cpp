@@ -1,8 +1,10 @@
 #include "testfactoryactualvaluegenerator.h"
 #include "testactualvaluegeneratorrms.h"
 
-AbstractActualValueGeneratorPtr TestFactoryActualValueGenerator::getActValGeneratorRms(QStringList valueChannelList)
+AbstractActualValueGeneratorPtr TestFactoryActualValueGenerator::getActValGeneratorRms(int entityId, QStringList valueChannelList)
 {
     Q_UNUSED(valueChannelList)
-    return std::make_unique<TestActualValueGeneratorRms>();
+    if(!m_ActValGenerators.contains(entityId))
+        m_ActValGenerators[entityId] = std::make_shared<TestActualValueGeneratorRms>();
+    return m_ActValGenerators[entityId];
 }

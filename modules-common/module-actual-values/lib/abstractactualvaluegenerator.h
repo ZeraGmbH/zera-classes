@@ -16,6 +16,6 @@ signals:
     void sigNewActualValues(QVector<float>* values);
 };
 
-typedef std::unique_ptr<AbstractActualValueGenerator> AbstractActualValueGeneratorPtr;
+typedef std::shared_ptr<AbstractActualValueGenerator> AbstractActualValueGeneratorPtr;
 
 #endif // ABSTRACTACTUALVALUEGENERATOR_H

@@ -6,7 +6,7 @@
 class AbstractFactoryActualValueGenerator
 {
 public:
-    virtual AbstractActualValueGeneratorPtr getActValGeneratorRms(QStringList valueChannelList) = 0;
+    virtual AbstractActualValueGeneratorPtr getActValGeneratorRms(int entityId, QStringList valueChannelList) = 0;
 };
 
 typedef std::shared_ptr<AbstractFactoryActualValueGenerator> AbstractFactoryActualValueGeneratorPtr;
