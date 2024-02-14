@@ -7,6 +7,7 @@ function(SETUP_QTESTS_MODULE)
         )
         target_link_libraries(${_testname}
             PRIVATE
+            zera-modulemanager-testlib
             rmsmodule-static
         )
     endforeach()
@@ -14,5 +15,11 @@ endfunction()
 
 SETUP_QTESTS_MODULE(
     test_rms_config_load
+    test_act_values_rms
+)
+
+target_sources(test_act_values_rms
+  PRIVATE
+    test-data/test-data.qrc
 )
 
