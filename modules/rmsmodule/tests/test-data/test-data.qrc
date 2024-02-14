@@ -1,5 +1,8 @@
 <RCC>
     <qresource prefix="/">
-        <file>minimal-session-rms.json</file>
+        <file>dumpInitial.json</file>
+        <file>mt310s2-rmsmodule.xml</file>
+        <file>session-minimal.json</file>
+        <file>session-rms-moduleconfig-from-resource.json</file>
     </qresource>
 </RCC>

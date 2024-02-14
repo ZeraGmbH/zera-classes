@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<rmsmodconfpar xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+
+    <configuration>
+        <connectivity>
+            <debuglevel>0</debuglevel>
+            <ethernet>
+                <resourcemanager>
+                    <ip>127.0.0.1</ip>
+                    <port>6312</port>
+                </resourcemanager>
+                <pcbserver>
+                    <ip>127.0.0.1</ip>
+                    <port>6307</port>
+                </pcbserver>
+                <dspserver>
+                    <ip>127.0.0.1</ip>
+                    <port>6310</port>
+                </dspserver>
+            </ethernet>
+        </connectivity>
+        <measure>
+            <values>
+                <n>11</n>
+                <val1>m0</val1>
+                <val2>m1</val2>
+                <val3>m2</val3>
+                <val4>m0-m1</val4>
+                <val5>m2-m1</val5>
+                <val6>m2-m0</val6>
+                <val7>m3</val7>
+                <val8>m4</val8>
+                <val9>m5</val9>
+                <val10>m6</val10>
+                <val11>m7</val11>
+            </values>
+            <integrationmode>time</integrationmode>
+            <movingwindow>
+                <on>0</on>
+                <time>0.5</time>
+            </movingwindow>
+        </measure>
+    </configuration>
+
+    <parameter>
+        <interval>
+            <time>1</time>
+            <period>200</period>
+        </interval>
+    </parameter>
+</rmsmodconfpar>

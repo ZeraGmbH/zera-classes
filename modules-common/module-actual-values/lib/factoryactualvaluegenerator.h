@@ -6,7 +6,7 @@
 class FactoryActualValueGenerator : public AbstractFactoryActualValueGenerator
 {
 public:
-    AbstractActualValueGeneratorPtr getActValGeneratorRms(QStringList valueChannelList) override;
+    AbstractActualValueGeneratorPtr getActValGeneratorRms(int entityId, QStringList valueChannelList) override;
 };
 
 #endif // FACTORYACTUALVALUEGENERATOR_H

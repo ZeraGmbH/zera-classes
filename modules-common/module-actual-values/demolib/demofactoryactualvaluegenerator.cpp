@@ -1,7 +1,7 @@
 #include "demofactoryactualvaluegenerator.h"
 #include "demoactualvaluegeneratorrms.h"
 
-AbstractActualValueGeneratorPtr DemoFactoryActualValueGenerator::getActValGeneratorRms(QStringList valueChannelList)
+AbstractActualValueGeneratorPtr DemoFactoryActualValueGenerator::getActValGeneratorRms(int entityId, QStringList valueChannelList)
 {
-    return std::make_unique<DemoActualValueGeneratorRms>(valueChannelList);
+    return std::make_shared<DemoActualValueGeneratorRms>(valueChannelList);
 }
