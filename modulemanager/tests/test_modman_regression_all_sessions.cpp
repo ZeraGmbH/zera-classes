@@ -3,6 +3,7 @@
 #include "modulemanager.h"
 #include "moduledata.h"
 #include "modulemanagerconfig.h"
+#include "testfactoryactualvaluegenerator.h"
 #include <timemachineobject.h>
 #include <QTest>
 
@@ -51,7 +52,7 @@ int test_modman_regression_all_sessions::generateCodeLists(QString device)
     QStringList sessions = mmConfig->getAvailableSessions();
     LicenseSystemMock licenseSystem;
     ModuleManagerSetupFacade modManSetupFacade(&licenseSystem);
-    TestModuleManager modMan(&modManSetupFacade, true);
+    TestModuleManager modMan(&modManSetupFacade, std::make_shared<TestFactoryActualValueGenerator>(), true);
     modMan.loadAllAvailableModulePlugins();
     modMan.setupConnections();
     modMan.startAllServiceMocks(device);
@@ -77,7 +78,7 @@ QStringList test_modman_regression_all_sessions::generateCodeLinesForDeviceSessi
     codeLines.append("LicenseSystemMock licenseSystem;");
     codeLines.append("ModuleManagerSetupFacade modManSetupFacade(&licenseSystem);");
     codeLines.append("");
-    codeLines.append("TestModuleManager modMan(&modManSetupFacade, true);");
+    codeLines.append("TestModuleManager modMan(&modManSetupFacade, std::make_shared<TestFactoryActualValueGenerator>(), true);");
     codeLines.append("modMan.loadAllAvailableModulePlugins();");
     codeLines.append("modMan.setupConnections();");
     codeLines.append("modMan.startAllServiceMocks(\"" + device + "\");");
@@ -133,7 +134,7 @@ void test_modman_regression_all_sessions::regressionCom5003Ced()
     LicenseSystemMock licenseSystem;
     ModuleManagerSetupFacade modManSetupFacade(&licenseSystem);
 
-    TestModuleManager modMan(&modManSetupFacade, true);
+    TestModuleManager modMan(&modManSetupFacade, std::make_shared<TestFactoryActualValueGenerator>(), true);
     modMan.loadAllAvailableModulePlugins();
     modMan.setupConnections();
     modMan.startAllServiceMocks("com5003");
@@ -237,7 +238,7 @@ void test_modman_regression_all_sessions::regressionCom5003Meas()
     LicenseSystemMock licenseSystem;
     ModuleManagerSetupFacade modManSetupFacade(&licenseSystem);
 
-    TestModuleManager modMan(&modManSetupFacade, true);
+    TestModuleManager modMan(&modManSetupFacade, std::make_shared<TestFactoryActualValueGenerator>(), true);
     modMan.loadAllAvailableModulePlugins();
     modMan.setupConnections();
     modMan.startAllServiceMocks("com5003");
@@ -353,7 +354,7 @@ void test_modman_regression_all_sessions::regressionCom5003PerPhase()
     LicenseSystemMock licenseSystem;
     ModuleManagerSetupFacade modManSetupFacade(&licenseSystem);
 
-    TestModuleManager modMan(&modManSetupFacade, true);
+    TestModuleManager modMan(&modManSetupFacade, std::make_shared<TestFactoryActualValueGenerator>(), true);
     modMan.loadAllAvailableModulePlugins();
     modMan.setupConnections();
     modMan.startAllServiceMocks("com5003");
@@ -473,7 +474,7 @@ void test_modman_regression_all_sessions::regressionCom5003Ref()
     LicenseSystemMock licenseSystem;
     ModuleManagerSetupFacade modManSetupFacade(&licenseSystem);
 
-    TestModuleManager modMan(&modManSetupFacade, true);
+    TestModuleManager modMan(&modManSetupFacade, std::make_shared<TestFactoryActualValueGenerator>(), true);
     modMan.loadAllAvailableModulePlugins();
     modMan.setupConnections();
     modMan.startAllServiceMocks("com5003");
@@ -525,7 +526,7 @@ void test_modman_regression_all_sessions::regressionMt310s2Ced()
     LicenseSystemMock licenseSystem;
     ModuleManagerSetupFacade modManSetupFacade(&licenseSystem);
 
-    TestModuleManager modMan(&modManSetupFacade, true);
+    TestModuleManager modMan(&modManSetupFacade, std::make_shared<TestFactoryActualValueGenerator>(), true);
     modMan.loadAllAvailableModulePlugins();
     modMan.setupConnections();
     modMan.startAllServiceMocks("mt310s2");
@@ -625,7 +626,7 @@ void test_modman_regression_all_sessions::regressionMt310s2Dc()
     LicenseSystemMock licenseSystem;
     ModuleManagerSetupFacade modManSetupFacade(&licenseSystem);
 
-    TestModuleManager modMan(&modManSetupFacade, true);
+    TestModuleManager modMan(&modManSetupFacade, std::make_shared<TestFactoryActualValueGenerator>(), true);
     modMan.loadAllAvailableModulePlugins();
     modMan.setupConnections();
     modMan.startAllServiceMocks("mt310s2");
@@ -733,7 +734,7 @@ void test_modman_regression_all_sessions::regressionMt310s2EmobAc()
     LicenseSystemMock licenseSystem;
     ModuleManagerSetupFacade modManSetupFacade(&licenseSystem);
 
-    TestModuleManager modMan(&modManSetupFacade, true);
+    TestModuleManager modMan(&modManSetupFacade, std::make_shared<TestFactoryActualValueGenerator>(), true);
     modMan.loadAllAvailableModulePlugins();
     modMan.setupConnections();
     modMan.startAllServiceMocks("mt310s2");
@@ -837,7 +838,7 @@ void test_modman_regression_all_sessions::regressionMt310s2EmobDc()
     LicenseSystemMock licenseSystem;
     ModuleManagerSetupFacade modManSetupFacade(&licenseSystem);
 
-    TestModuleManager modMan(&modManSetupFacade, true);
+    TestModuleManager modMan(&modManSetupFacade, std::make_shared<TestFactoryActualValueGenerator>(), true);
     modMan.loadAllAvailableModulePlugins();
     modMan.setupConnections();
     modMan.startAllServiceMocks("mt310s2");
@@ -925,7 +926,7 @@ void test_modman_regression_all_sessions::regressionMt310s2EmobAcDc()
     LicenseSystemMock licenseSystem;
     ModuleManagerSetupFacade modManSetupFacade(&licenseSystem);
 
-    TestModuleManager modMan(&modManSetupFacade, true);
+    TestModuleManager modMan(&modManSetupFacade, std::make_shared<TestFactoryActualValueGenerator>(), true);
     modMan.loadAllAvailableModulePlugins();
     modMan.setupConnections();
     modMan.startAllServiceMocks("mt310s2");
@@ -1033,7 +1034,7 @@ void test_modman_regression_all_sessions::regressionMt310s2Meas()
     LicenseSystemMock licenseSystem;
     ModuleManagerSetupFacade modManSetupFacade(&licenseSystem);
 
-    TestModuleManager modMan(&modManSetupFacade, true);
+    TestModuleManager modMan(&modManSetupFacade, std::make_shared<TestFactoryActualValueGenerator>(), true);
     modMan.loadAllAvailableModulePlugins();
     modMan.setupConnections();
     modMan.startAllServiceMocks("mt310s2");
