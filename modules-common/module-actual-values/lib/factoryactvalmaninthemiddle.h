@@ -6,6 +6,7 @@
 class FactoryActValManInTheMiddle : public AbstractFactoryActValManInTheMiddle
 {
 public:
+    AbstractActValManInTheMiddlePtr getActValGeneratorDft(int entityId, QStringList valueChannelList) override;
     AbstractActValManInTheMiddlePtr getActValGeneratorRms(int entityId, QStringList valueChannelList) override;
 };
 

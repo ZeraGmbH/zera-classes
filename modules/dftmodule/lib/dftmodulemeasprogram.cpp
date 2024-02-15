@@ -114,11 +114,6 @@ cDftModuleMeasProgram::cDftModuleMeasProgram(cDftModule* module, std::shared_ptr
     m_dataAcquisitionMachine.setInitialState(&m_dataAcquisitionState);
     connect(&m_dataAcquisitionState, &QState::entered, this, &cDftModuleMeasProgram::dataAcquisitionDSP);
     connect(&m_dataAcquisitionDoneState, &QState::entered, this, &cDftModuleMeasProgram::dataReadDSP);
-
-    if(m_pModule->getDemo()){
-        m_demoPeriodicTimer = TimerFactoryQt::createPeriodic(500);
-        connect(m_demoPeriodicTimer.get(), &TimerTemplateQt::sigExpired,this, &cDftModuleMeasProgram::handleDemoActualValues);
-    }
 }
 
 
@@ -130,60 +125,62 @@ cDftModuleMeasProgram::~cDftModuleMeasProgram()
 
 void cDftModuleMeasProgram::start()
 {
-    if (getConfData()->m_bmovingWindow) {
-        m_movingwindowFilter.setIntegrationtime(getConfData()->m_fMeasInterval.m_fValue);
-        connect(this, &cDftModuleMeasProgram::actualValues, &m_movingwindowFilter, &cMovingwindowFilter::receiveActualValues);
-        connect(&m_movingwindowFilter, &cMovingwindowFilter::actualValues, this, &cDftModuleMeasProgram::setInterfaceActualValues);
-    }
-    else
-        connect(this, &cDftModuleMeasProgram::actualValues, this, &cDftModuleMeasProgram::setInterfaceActualValues);
-    if(m_pModule->getDemo())
-        m_demoPeriodicTimer->start();
+    m_actValueHandler->start();
 }
 
 
 void cDftModuleMeasProgram::stop()
 {
-    disconnect(this, &cDftModuleMeasProgram::actualValues, 0, 0);
-    disconnect(&m_movingwindowFilter, &cMovingwindowFilter::actualValues, 0, 0);
-    if(m_pModule->getDemo())
-        m_demoPeriodicTimer->stop();
+    m_actValueHandler->stop();
 }
 
 
 void cDftModuleMeasProgram::generateInterface()
 {
-    QString key;
+    // Here is the first time configuration is loaded
+    m_actValueHandler = m_pModule->getActualValueFactory()->getActValGeneratorDft(m_pModule->getEntityId(), getConfData()->m_valueChannelList);
+    connect(this, &cDftModuleMeasProgram::actualValues,
+            m_actValueHandler.get(), &AbstractActValManInTheMiddle::onNewActualValues);
+    if (getConfData()->m_bmovingWindow) {
+        m_movingwindowFilter.setIntegrationtime(getConfData()->m_fMeasInterval.m_fValue);
+        connect(m_actValueHandler.get(), &AbstractActValManInTheMiddle::sigNewActualValues,
+                &m_movingwindowFilter, &cMovingwindowFilter::receiveActualValues);
+        connect(&m_movingwindowFilter, &cMovingwindowFilter::actualValues,
+                this, &cDftModuleMeasProgram::setInterfaceActualValues);
+    }
+    else
+        connect(m_actValueHandler.get(), &AbstractActValManInTheMiddle::sigNewActualValues,
+                this, &cDftModuleMeasProgram::setInterfaceActualValues);
+
 
     VfModuleActvalue *pActvalue;
     int n,p;
     n = p = 0; //
+    QString channelDescription;
     for (int i = 0; i < getConfData()->m_valueChannelList.count(); i++)
     {
         QStringList sl = getConfData()->m_valueChannelList.at(i).split('-');
         // we have 1 or 2 entries for each value
-        if (sl.count() == 1) // in this case we have phase,neutral value
-        {
+        if (sl.count() == 1) { // in this case we have phase,neutral value
+            if(sl.contains("m0") || sl.contains("m1") || sl.contains("m2") || sl.contains("m6")) //voltage channels
+                channelDescription = QString("Actual value phase/neutral");
+            else //current channels
+                channelDescription = QString("Actual value");
             pActvalue = new VfModuleActvalue(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
                                                 QString("ACT_DFTPN%1").arg(n+1),
-                                                QString("Actual value phase/neutral"),
+                                                channelDescription,
                                                 QVariant(0.0) );
             m_veinActValueList.append(pActvalue); // we add the component for our measurement
             m_pModule->veinModuleActvalueList.append(pActvalue); // and for the modules interface
-
             n++;
         }
-
-        else
-
-        {
+        else {
             pActvalue = new VfModuleActvalue(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
                                                 QString("ACT_DFTPP%1").arg(p+1),
                                                 QString("Actual value phase/phase"),
                                                 QVariant(0.0) );
             m_veinActValueList.append(pActvalue); // we add the component for our measurement
             m_pModule->veinModuleActvalueList.append(pActvalue); // and for the modules interface
-
             p++;
         }
     }
@@ -201,8 +198,7 @@ void cDftModuleMeasProgram::generateInterface()
     m_pModule->veinModuleMetaDataList.append(m_pDFTPPCountInfo);
     m_pDFTOrderInfo = new VfModuleMetaData(QString("DFTOrder"), QVariant(getConfData()->m_nDftOrder));
 
-
-
+    QString key;
     m_pIntegrationTimeParameter = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
                                                            key = QString("PAR_Interval"),
                                                            QString("Integration time"),
@@ -593,96 +589,6 @@ void cDftModuleMeasProgram::setActualValuesNames()
     }
 }
 
-void cDftModuleMeasProgram::setupDemoOperation()
-{
-    m_measChannelInfoHash.clear();
-    cMeasChannelInfo mi;
-
-    for (int i = 0; i < getConfData()->m_valueChannelList.count(); i++)
-    {
-        QStringList sl = getConfData()->m_valueChannelList.at(i).split('-');
-        for (int j = 0; j < sl.count(); j++)
-        {
-            QString channelName = sl.at(j);
-            if (!m_measChannelInfoHash.contains(channelName))
-                m_measChannelInfoHash[channelName] = mi;
-        }
-    }
-    QList<QString> channelInfoList = m_measChannelInfoHash.keys();
-
-    if(getConfData()->m_valueChannelList.count() == 6) {
-        //com reference session
-        foreach (QString channelInfo, channelInfoList) {
-            mi = m_measChannelInfoHash.take(channelInfo);
-            if (channelInfo == "m0") {
-                mi.alias = "REF1";
-                mi.unit = "V";
-            }
-            else if (channelInfo == "m1") {
-                mi.alias = "REF2";
-                mi.unit = "V";
-            }
-            else if (channelInfo == "m2") {
-                mi.alias = "REF3";
-                mi.unit = "V";
-            }
-            else if (channelInfo == "m3") {
-                mi.alias = "REF4";
-                mi.unit = "V";
-            }
-            else if (channelInfo == "m4") {
-                mi.alias = "REF5";
-                mi.unit = "V";
-            }
-            else if (channelInfo == "m5") {
-                mi.alias = "REF6";
-                mi.unit = "V";
-            }
-            m_measChannelInfoHash[channelInfo] = mi;
-        }
-    }
-    else {
-        foreach (QString channelInfo, channelInfoList) {
-            mi = m_measChannelInfoHash.take(channelInfo);
-            if (channelInfo == "m0") {
-                mi.alias = "UL1";
-                mi.unit = "V";
-            }
-            else if (channelInfo == "m1") {
-                mi.alias = "UL2";
-                mi.unit = "V";
-            }
-            else if (channelInfo == "m2") {
-                mi.alias = "UL3";
-                mi.unit = "V";
-            }
-            else if (channelInfo == "m3") {
-                mi.alias = "IL1";
-                mi.unit = "A";
-            }
-            else if (channelInfo == "m4") {
-                mi.alias = "IL2";
-                mi.unit = "A";
-            }
-            else if (channelInfo == "m5") {
-                mi.alias = "IL3";
-                mi.unit = "A";
-            }
-            else if (channelInfo == "m6") {
-                mi.alias = "UAUX";
-                mi.unit = "V";
-            }
-            else if (channelInfo == "m7") {
-                mi.alias = "IAUX";
-                mi.unit = "A";
-            }
-            else {
-            }
-            m_measChannelInfoHash[channelInfo] = mi;
-        }
-    }
-}
-
 void cDftModuleMeasProgram::setSCPIMeasInfo()
 {
     cSCPIInfo* pSCPIInfo;
@@ -754,50 +660,6 @@ void cDftModuleMeasProgram::setInterfaceActualValues(QVector<float> *actualValue
             m_pRFieldActualValue->setValue("132");
     }
 }
-
-void cDftModuleMeasProgram::handleDemoActualValues()
-{
-    QVector<float> valuesDemo;
-    QHash<QString, std::complex<double>> DftActValuesHash;
-
-    for (int i = 0; i < 2*m_veinActValueList.count(); i++) {
-        double randomVal = (double)rand() / RAND_MAX ;
-        valuesDemo.append(randomVal);
-    }
-    m_ModuleActualValues = valuesDemo;
-
-    //this part is copied from dataReadDsp for better simulated values
-    for (int i = 0; i < m_veinActValueList.count(); i++)
-    {
-        double im;
-        for (int i = 0; i < m_veinActValueList.count(); i++)
-        {
-            im = m_ModuleActualValues[i*2+1] * -1.0;
-            m_ModuleActualValues.replace(i*2+1, im);
-        }
-    }
-    if (getConfData()->m_bRefChannelOn) {
-        for (int i = 0; i < getConfData()->m_valueChannelList.count(); i++)
-            DftActValuesHash[getConfData()->m_valueChannelList.at(i)] = std::complex<double>(m_ModuleActualValues[i*2], m_ModuleActualValues[i*2+1]);
-
-        for (int i = 0; i < getConfData()->m_valueChannelList.count(); i++) {
-            QString key;
-            QStringList sl;
-            key = getConfData()->m_valueChannelList.at(i);
-            sl = key.split('-');
-            // we have 2 entries
-            if (sl.count() == 2) {
-                DftActValuesHash.remove(key);
-                DftActValuesHash[key] = DftActValuesHash[sl.at(0)] - DftActValuesHash[sl.at(1)];
-            }
-            m_ModuleActualValues.replace(i*2, DftActValuesHash[key].real());
-            m_ModuleActualValues.replace(i*2+1, DftActValuesHash[key].imag());
-        }
-    }
-
-    emit actualValues(&m_ModuleActualValues);
-}
-
 
 void cDftModuleMeasProgram::resourceManagerConnect()
 {
@@ -965,9 +827,6 @@ void cDftModuleMeasProgram::activateDSPdone()
 {
     m_bActive = true;
 
-    if(m_pModule->getDemo())
-        setupDemoOperation();
-
     setActualValuesNames();
     setSCPIMeasInfo();
     setRefChannelValidator();
@@ -1079,8 +938,7 @@ void cDftModuleMeasProgram::dataReadDSP()
                 //double phiRef = userAtan(complexRef.im(), complexRef.re());
                 //complex turnVector = complex(cos(-phiRef*0.017453292), sin(-phiRef*0.017453292));
 
-                for (int i = 0; i < getConfData()->m_valueChannelList.count(); i++)
-                {
+                for (int i = 0; i < getConfData()->m_valueChannelList.count(); i++) {
                     QString key;
                     key = getConfData()->m_valueChannelList.at(i);
                     std::complex<double> newDft = DftActValuesHash.take(key);
@@ -1090,32 +948,23 @@ void cDftModuleMeasProgram::dataReadDSP()
                     DftActValuesHash[key] = newDft;
                 }
 
-
                 // now we have to compute the difference vectors and store all new values
-                for (int i = 0; i < getConfData()->m_valueChannelList.count(); i++)
-                {
-                    QString key;
-                    QStringList sl;
-
-                    key = getConfData()->m_valueChannelList.at(i);
-                    sl = key.split('-');
+                for (int i = 0; i < getConfData()->m_valueChannelList.count(); i++) {
+                    QString key = getConfData()->m_valueChannelList.at(i);
+                    QStringList sl = key.split('-');
 
                     // we have 2 entries
-                    if (sl.count() == 2)
-                    {
+                    if (sl.count() == 2) {
                         DftActValuesHash.remove(key);
                         DftActValuesHash[key] = DftActValuesHash[sl.at(0)] - DftActValuesHash[sl.at(1)];
                     }
-
                     m_ModuleActualValues.replace(i*2, DftActValuesHash[key].real());
                     m_ModuleActualValues.replace(i*2+1, DftActValuesHash[key].imag());
                 }
             }
         }
-
         emit actualValues(&m_ModuleActualValues); // and send them
         m_pMeasureSignal->setValue(QVariant(1)); // signal measuring
-
     }
 }
 
