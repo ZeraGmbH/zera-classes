@@ -44,10 +44,10 @@ class cDftModuleMeasProgram: public cBaseDspMeasProgram
 public:
     cDftModuleMeasProgram(cDftModule* module, std::shared_ptr<cBaseModuleConfiguration> pConfiguration);
     virtual ~cDftModuleMeasProgram();
-    virtual void generateInterface(); // here we export our interface (components)
+    virtual void generateInterface() override; // here we export our interface (components)
 public slots:
-    virtual void start(); // difference between start and stop is that actual values
-    virtual void stop(); // in interface are not updated when stop
+    virtual void start() override; // difference between start and stop is that actual values
+    virtual void stop() override; // in interface are not updated when stop
 protected slots:
     virtual void catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant answer);
 private:
@@ -58,6 +58,7 @@ private:
     void deleteDspCmdList();
 
     cDftModule* m_pModule;
+    AbstractActValManInTheMiddlePtr m_actValueHandler;
     QList<VfModuleActvalue*> m_veinActValueList; // the list of actual values we work on
     VfModuleActvalue* m_pRFieldActualValue;
     QHash<QString, cMeasChannelInfo> m_measChannelInfoHash;
@@ -114,17 +115,14 @@ private:
     QFinalState m_dataAcquisitionDoneState;
 
     void setActualValuesNames();
-    void setupDemoOperation();
     void setSCPIMeasInfo();
     void setRefChannelValidator();
     void initRFieldMeasurement();
 
     cMovingwindowFilter m_movingwindowFilter;
-    TimerTemplateQtPtr m_demoPeriodicTimer;
 
 private slots:
     void setInterfaceActualValues(QVector<float> *actualValues);
-    void handleDemoActualValues();
 
     void resourceManagerConnect();
     void sendRMIdent();

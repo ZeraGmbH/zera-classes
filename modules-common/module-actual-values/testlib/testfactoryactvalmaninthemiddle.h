@@ -10,6 +10,8 @@ class TestFactoryActValManInTheMiddle : public AbstractFactoryActValManInTheMidd
 public:
     AbstractActValManInTheMiddlePtr getActValGeneratorRms(int entityId, QStringList valueChannelList = QStringList()) override;
     TestActValManInTheMiddlePtr getActValGeneratorRmsTest(int entityId);
+    AbstractActValManInTheMiddlePtr getActValGeneratorDft(int entityId, QStringList valueChannelList = QStringList()) override;
+    TestActValManInTheMiddlePtr getActValGeneratorDftTest(int entityId);
 private:
     QHash<int, TestActValManInTheMiddlePtr> m_ActValGenerators;
 };

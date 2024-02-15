@@ -17,3 +17,13 @@ TestActValManInTheMiddlePtr TestFactoryActValManInTheMiddle::getActValGeneratorR
         qFatal("Do not create value men in the middle from tests!");
     return m_ActValGenerators[entityId];
 }
+
+AbstractActValManInTheMiddlePtr TestFactoryActValManInTheMiddle::getActValGeneratorDft(int entityId, QStringList valueChannelList)
+{
+    return getActValGeneratorRms(entityId, valueChannelList);
+}
+
+TestActValManInTheMiddlePtr TestFactoryActValManInTheMiddle::getActValGeneratorDftTest(int entityId)
+{
+    return getActValGeneratorRmsTest(entityId);
+}

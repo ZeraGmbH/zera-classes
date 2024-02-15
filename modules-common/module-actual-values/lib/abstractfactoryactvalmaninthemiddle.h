@@ -6,6 +6,7 @@
 class AbstractFactoryActValManInTheMiddle
 {
 public:
+    virtual AbstractActValManInTheMiddlePtr getActValGeneratorDft(int entityId, QStringList valueChannelList) = 0;
     virtual AbstractActValManInTheMiddlePtr getActValGeneratorRms(int entityId, QStringList valueChannelList) = 0;
 };
 
