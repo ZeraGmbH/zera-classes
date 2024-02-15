@@ -1,24 +1,4 @@
 {
-    "0": {
-        "DevMode": false,
-        "Entities": [
-            0,
-            1040
-        ],
-        "EntityName": "_System",
-        "Error_Messages": null,
-        "LoggedComponents": {
-        },
-        "ModulesPaused": false,
-        "Session": "",
-        "SessionsAvailable": [
-            "mt310s2-meas-session.json",
-            "mt310s2-emob-session.json",
-            "mt310s2-emob-session-ac.json",
-            "mt310s2-emob-session-dc.json",
-            "mt310s2-dc-session.json"
-        ]
-    },
     "1040": {
         "ACT_RMSPN1": 0,
         "ACT_RMSPN2": 0,
