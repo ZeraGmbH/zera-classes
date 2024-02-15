@@ -14,44 +14,6 @@ void test_act_values_rms::cleanup()
     m_licenseSystem = nullptr;
 }
 
-void test_act_values_rms::minimalSession()
-{
-    setupServices(":/session-minimal.json");
-    VeinStorage::VeinHash* storageHash = m_modmanFacade->getStorageSystem();
-    QList<int> entityList = storageHash->getEntityList();
-    QCOMPARE(entityList.count(), 2);
-    QVERIFY(storageHash->hasEntity(1040));
-}
-
-void test_act_values_rms::moduleConfigFromResource()
-{
-    setupServices(":/session-rms-moduleconfig-from-resource.json");
-    VeinStorage::VeinHash* storageHash = m_modmanFacade->getStorageSystem();
-    QList<int> entityList = storageHash->getEntityList();
-    QCOMPARE(entityList.count(), 2);
-    QVERIFY(storageHash->hasEntity(1040));
-}
-
-void test_act_values_rms::veinDumpInitial()
-{
-    QFile file(":/dumpInitial.json");
-    QVERIFY(file.open(QFile::ReadOnly));
-    QString jsonExpected = file.readAll();
-
-    setupServices(":/session-rms-moduleconfig-from-resource.json");
-    VeinStorage::VeinHash* storageHash = m_modmanFacade->getStorageSystem();
-    QByteArray jsonDumped;
-    QBuffer buff(&jsonDumped);
-    storageHash->dumpToFile(&buff, QList<int>() << 1040);
-
-    if(jsonExpected != jsonDumped) {
-        qWarning("Expected storage hash:");
-        qInfo("%s", qPrintable(jsonExpected));
-        qWarning("Dumped storage hash:");
-        qInfo("%s", qPrintable(jsonDumped));
-        QCOMPARE(jsonExpected, jsonDumped);
-    }
-}
 
 void test_act_values_rms::setupServices(QString sessionFileName)
 {

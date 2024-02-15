@@ -1,5 +1,5 @@
-#ifndef TEST_ACT_VALUES_RMS_H
-#define TEST_ACT_VALUES_RMS_H
+#ifndef TEST_REGRESSION_VEIN_MODULE_RMS_H
+#define TEST_REGRESSION_VEIN_MODULE_RMS_H
 
 #include "licensesystemmock.h"
 #include "modulemanagersetupfacade.h"
@@ -7,12 +7,15 @@
 #include <QObject>
 #include <memory>
 
-class test_act_values_rms : public QObject
+class test_regression_vein_module_rms : public QObject
 {
     Q_OBJECT
 private slots:
     void cleanup();
 
+    void minimalSession();
+    void moduleConfigFromResource();
+    void veinDumpInitial();
 private:
     void setupServices(QString sessionFileName);
 
@@ -21,4 +24,4 @@ private:
     std::unique_ptr<TestModuleManager> m_modMan;
 };
 
-#endif // TEST_ACT_VALUES_RMS_H
+#endif // TEST_REGRESSION_VEIN_MODULE_RMS_H
