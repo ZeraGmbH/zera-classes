@@ -2,7 +2,7 @@
 #define MODULEINTERFACE_H
 
 #include "virtualmodule.h"
-#include "abstractfactoryactualvaluegenerator.h"
+#include "abstractfactoryactvalmaninthemiddle.h"
 #include "modulegroupnumerator.h"
 #include <QtPlugin>
 
@@ -15,20 +15,20 @@ struct MeasurementModuleFactoryParam
 {
     MeasurementModuleFactoryParam(int entityId,
                                   int moduleNum,
-                                  AbstractFactoryActualValueGeneratorPtr actualValueFactory,
+                                  AbstractFactoryActValManInTheMiddlePtr actualValueFactory,
                                   VeinEvent::StorageSystem* storagesystem,
                                   bool demo);
     MeasurementModuleFactoryParam getAdjustedParam(ModuleGroupNumerator* groupNumerator);
     const int m_entityId;
     const int m_moduleNum;
-    AbstractFactoryActualValueGeneratorPtr m_actualValueFactory;
+    AbstractFactoryActValManInTheMiddlePtr m_actualValueFactory;
     VeinEvent::StorageSystem* m_storagesystem;
     const bool m_demo;
 };
 
 inline MeasurementModuleFactoryParam::MeasurementModuleFactoryParam(int entityId,
                                                                     int moduleNum,
-                                                                    AbstractFactoryActualValueGeneratorPtr actualValueFactory,
+                                                                    AbstractFactoryActValManInTheMiddlePtr actualValueFactory,
                                                                     VeinEvent::StorageSystem *storagesystem,
                                                                     bool demo) :
     m_entityId(entityId),

@@ -35,7 +35,7 @@ public:
     virtual void exportMetaData();
 
     VeinEvent::StorageSystem* getStorageSystem();
-    AbstractFactoryActualValueGeneratorPtr getActualValueFactory();
+    AbstractFactoryActValManInTheMiddlePtr getActualValueFactory();
     bool getDemo();
 
 

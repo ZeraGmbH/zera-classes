@@ -1,5 +1,5 @@
-#include "demofactoryactualvaluegenerator.h"
-#include "factoryactualvaluegenerator.h"
+#include "demofactoryactvalmaninthemiddle.h"
+#include "factoryactvalmaninthemiddle.h"
 #include "modulemanager.h"
 #include "modulemanagerconfig.h"
 #include "customerdatasystem.h"
@@ -132,11 +132,11 @@ int main(int argc, char *argv[])
     LicenseSystem *licenseSystem = new LicenseSystem({QUrl(licenseUrl)}, app.get());
     ModuleManagerSetupFacade *modManSetupFacade = new ModuleManagerSetupFacade(licenseSystem, mmConfig->isDevMode(), app.get());
 
-    AbstractFactoryActualValueGeneratorPtr actualValueFactory;
+    AbstractFactoryActValManInTheMiddlePtr actualValueFactory;
     if(demoMode)
-        actualValueFactory = std::make_shared<DemoFactoryActualValueGenerator>();
+        actualValueFactory = std::make_shared<DemoFactoryActValManInTheMiddle>();
     else
-        actualValueFactory = std::make_shared<FactoryActualValueGenerator>();
+        actualValueFactory = std::make_shared<FactoryActValManInTheMiddle>();
     ZeraModules::ModuleManager *modMan = new ZeraModules::ModuleManager(
         modManSetupFacade,
         actualValueFactory,

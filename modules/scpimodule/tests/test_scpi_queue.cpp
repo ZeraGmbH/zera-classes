@@ -1,6 +1,6 @@
 #include "test_scpi_queue.h"
 #include "modulemanagertestscpiqueue.h"
-#include "testfactoryactualvaluegenerator.h"
+#include "testfactoryactvalmaninthemiddle.h"
 #include <rangemodule.h>
 #include <scpitestclient.h>
 #include <scpiserver.h>
@@ -24,7 +24,7 @@ void disableQueuing(SCPIMODULE::cSCPIInterface* interface)
 void test_scpi_queue::sendStandardCmdsQueueDisabledAndEnabled()
 {
     ModuleManagerTestScpiQueue modman;
-    AbstractFactoryActualValueGeneratorPtr actValGen = std::make_shared<TestFactoryActualValueGenerator>();
+    AbstractFactoryActValManInTheMiddlePtr actValGen = std::make_shared<TestFactoryActValManInTheMiddle>();
     SCPIMODULE::ScpiModuleForTest scpiModule(MeasurementModuleFactoryParam(9999, 1, actValGen, modman.getStorageSystem(), true) );
     modman.addModule(&scpiModule, QStringLiteral(CONFIG_SOURCES_SCPIMODULE) + "/" + "demo-scpimodule.xml");
 
@@ -53,7 +53,7 @@ void test_scpi_queue::sendStandardCmdsQueueDisabledAndEnabled()
 void test_scpi_queue::sendErroneousAndCorrectStandardCmds()
 {
     ModuleManagerTestScpiQueue modman;
-    AbstractFactoryActualValueGeneratorPtr actValGen = std::make_shared<TestFactoryActualValueGenerator>();
+    AbstractFactoryActValManInTheMiddlePtr actValGen = std::make_shared<TestFactoryActValManInTheMiddle>();
     SCPIMODULE::ScpiModuleForTest scpiModule(MeasurementModuleFactoryParam(9999, 1, actValGen, modman.getStorageSystem(), true) );
     modman.addModule(&scpiModule, QStringLiteral(CONFIG_SOURCES_SCPIMODULE) + "/" + "demo-scpimodule.xml");
 
@@ -78,7 +78,7 @@ void test_scpi_queue::sendSubSystemAndStandardCommands()
     TimerFactoryQtForTest::enableTest();
 
     ModuleManagerTestScpiQueue modman;
-    AbstractFactoryActualValueGeneratorPtr actValGen = std::make_shared<TestFactoryActualValueGenerator>();
+    AbstractFactoryActValManInTheMiddlePtr actValGen = std::make_shared<TestFactoryActValManInTheMiddle>();
     RANGEMODULE::cRangeModule rangeModule( MeasurementModuleFactoryParam(1020, 1, actValGen, modman.getStorageSystem(), true) );
     modman.addModule(&rangeModule, QStringLiteral(CONFIG_SOURCES_RANGEMODULE) + "/" + "mt310s2-rangemodule.xml");
 
@@ -118,7 +118,7 @@ void test_scpi_queue::enableAndDisableQueueWhileExecutingCmds()
     TimerFactoryQtForTest::enableTest();
 
     ModuleManagerTestScpiQueue modman;
-    AbstractFactoryActualValueGeneratorPtr actValGen = std::make_shared<TestFactoryActualValueGenerator>();
+    AbstractFactoryActValManInTheMiddlePtr actValGen = std::make_shared<TestFactoryActValManInTheMiddle>();
     RANGEMODULE::cRangeModule rangeModule( MeasurementModuleFactoryParam(1020, 1, actValGen, modman.getStorageSystem(), true) );
     modman.addModule(&rangeModule, QStringLiteral(CONFIG_SOURCES_RANGEMODULE) + "/" + "mt310s2-rangemodule.xml");
 
@@ -152,7 +152,7 @@ void test_scpi_queue::disableAndEnableQueueWhileExecutingCmds()
     TimerFactoryQtForTest::enableTest();
 
     ModuleManagerTestScpiQueue modman;
-    AbstractFactoryActualValueGeneratorPtr actValGen = std::make_shared<TestFactoryActualValueGenerator>();
+    AbstractFactoryActValManInTheMiddlePtr actValGen = std::make_shared<TestFactoryActValManInTheMiddle>();
     RANGEMODULE::cRangeModule rangeModule( MeasurementModuleFactoryParam(1020, 1, actValGen, modman.getStorageSystem(), true) );
     modman.addModule(&rangeModule, QStringLiteral(CONFIG_SOURCES_RANGEMODULE) + "/" + "mt310s2-rangemodule.xml");
 

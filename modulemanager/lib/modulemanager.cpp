@@ -22,7 +22,7 @@ namespace ZeraModules {
 QString ModuleManager::m_sessionPath = MODMAN_SESSION_PATH;
 
 ModuleManager::ModuleManager(ModuleManagerSetupFacade *setupFacade,
-                             AbstractFactoryActualValueGeneratorPtr actualValueFactory,
+                             AbstractFactoryActValManInTheMiddlePtr actualValueFactory,
                              bool demo, QObject *parent) :
     QObject(parent),
     m_moduleStartLock(false),

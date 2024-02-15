@@ -20,7 +20,7 @@ void TestModuleManager::pointToInstalledSessionFiles()
 }
 
 TestModuleManager::TestModuleManager(ModuleManagerSetupFacade *setupFacade,
-                                     AbstractFactoryActualValueGeneratorPtr actualValueFactory,
+                                     AbstractFactoryActValManInTheMiddlePtr actualValueFactory,
                                      bool demo) :
     ModuleManager(
         setupFacade,

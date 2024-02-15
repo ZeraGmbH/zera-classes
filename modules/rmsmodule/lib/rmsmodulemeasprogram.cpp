@@ -133,16 +133,16 @@ void cRmsModuleMeasProgram::generateInterface()
     // Here is the first time configuration is loaded
     m_actValueHandler = m_pModule->getActualValueFactory()->getActValGeneratorRms(m_pModule->getEntityId(), getConfData()->m_valueChannelList);
     connect(this, &cRmsModuleMeasProgram::actualValues,
-            m_actValueHandler.get(), &AbstractActualValueGenerator::onNewActualValues);
+            m_actValueHandler.get(), &AbstractActValManInTheMiddle::onNewActualValues);
     if (getConfData()->m_bmovingWindow) {
         m_movingwindowFilter.setIntegrationtime(getConfData()->m_fMeasIntervalTime.m_fValue);
-        connect(m_actValueHandler.get(), &AbstractActualValueGenerator::sigNewActualValues,
+        connect(m_actValueHandler.get(), &AbstractActValManInTheMiddle::sigNewActualValues,
                 &m_movingwindowFilter, &cMovingwindowFilter::receiveActualValues);
         connect(&m_movingwindowFilter, &cMovingwindowFilter::actualValues,
                 this, &cRmsModuleMeasProgram::setInterfaceActualValues);
     }
     else
-        connect(m_actValueHandler.get(), &AbstractActualValueGenerator::sigNewActualValues,
+        connect(m_actValueHandler.get(), &AbstractActValManInTheMiddle::sigNewActualValues,
                 this, &cRmsModuleMeasProgram::setInterfaceActualValues);
 
     VfModuleActvalue *pActvalue;
