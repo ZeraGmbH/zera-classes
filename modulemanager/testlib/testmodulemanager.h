@@ -9,7 +9,9 @@ public:
     static void supportOeTests();
     static void pointToInstalledSessionFiles();
 
-    explicit TestModuleManager(ModuleManagerSetupFacade *setupFacade, bool demo = false, QObject *parent = nullptr);
+    explicit TestModuleManager(ModuleManagerSetupFacade *setupFacade,
+                               AbstractFactoryActualValueGeneratorPtr actualValueFactory,
+                               bool demo = false);
     void startAllServiceMocks(QString deviceName) override;
     void destroyModulesAndWaitUntilAllShutdown();
     void waitUntilModulesAreReady();

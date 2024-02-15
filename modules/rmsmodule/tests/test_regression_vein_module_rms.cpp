@@ -1,4 +1,5 @@
 #include "test_regression_vein_module_rms.h"
+#include "testfactoryactualvaluegenerator.h"
 #include <timemachineobject.h>
 #include <QBuffer>
 #include <QTest>
@@ -57,7 +58,7 @@ void test_regression_vein_module_rms::setupServices(QString sessionFileName)
 {
     m_licenseSystem = std::make_unique<LicenseSystemMock>();
     m_modmanFacade = std::make_unique<ModuleManagerSetupFacade>(m_licenseSystem.get());
-    m_modMan = std::make_unique<TestModuleManager>(m_modmanFacade.get(), true);
+    m_modMan = std::make_unique<TestModuleManager>(m_modmanFacade.get(), std::make_shared<TestFactoryActualValueGenerator>(), true);
     m_modMan->loadAllAvailableModulePlugins();
     m_modMan->setupConnections();
     m_modMan->startAllServiceMocks("mt310s2");
