@@ -599,7 +599,7 @@ void cDftModuleMeasProgram::setSCPIMeasInfo()
         m_veinActValueList.at(i)->setSCPIInfo(pSCPIInfo);
     }
 
-    pSCPIInfo = pSCPIInfo = new cSCPIInfo("MEASURE", "RFIELD", "8", m_pRFieldActualValue->getName(), "0", "");
+    pSCPIInfo = new cSCPIInfo("MEASURE", "RFIELD", "8", m_pRFieldActualValue->getName(), "0", "");
     m_pRFieldActualValue->setSCPIInfo(pSCPIInfo);
 }
 
@@ -871,103 +871,87 @@ void cDftModuleMeasProgram::deactivateDSPdone()
     emit deactivated();
 }
 
-
 void cDftModuleMeasProgram::dataAcquisitionDSP()
 {
     m_pMeasureSignal->setValue(QVariant(0));
     m_MsgNrCmdList[m_pDSPInterFace->dataAcquisition(m_pActualValuesDSP)] = dataaquistion; // we start our data aquisition now
 }
 
+void cDftModuleMeasProgram::turnVectorsToRefChannel()
+{
+    QHash<QString, std::complex<double>> DftActValuesHash;
+    for (int i = 0; i < getConfData()->m_valueChannelList.count(); i++)
+        DftActValuesHash[getConfData()->m_valueChannelList.at(i)] = std::complex<double>(m_ModuleActualValues[i*2], m_ModuleActualValues[i*2+1]);
+
+    // the complex reference vector
+    std::complex<double> complexRef = DftActValuesHash.value(m_ChannelSystemNameHash.value(getConfData()->m_sRefChannel.m_sPar));
+
+    double tanRef = complexRef.imag() / complexRef.real();
+    double divisor = sqrt(1.0+(tanRef * tanRef));
+    // the turnvector has the negative reference angle
+    // computing in complex is more acurate, but we have to keep in mind the
+    // point of discontinuity of the arctan function
+    std::complex<double> turnVector;
+    if (complexRef.real() < 0)
+        turnVector = std::complex<double>(-(1.0 / divisor), (tanRef / divisor));
+    else
+        turnVector = std::complex<double>((1.0 / divisor), -(tanRef / divisor));
+
+    // this method is alternative ... but it is not so accurate as the above one
+    //double phiRef = userAtan(complexRef.im(), complexRef.re());
+    //complex turnVector = complex(cos(-phiRef*0.017453292), sin(-phiRef*0.017453292));
+
+    for (int i = 0; i < getConfData()->m_valueChannelList.count(); i++) {
+        QString key;
+        key = getConfData()->m_valueChannelList.at(i);
+        std::complex<double> newDft = DftActValuesHash.take(key);
+        newDft *= turnVector;
+        if (fabs(newDft.imag()) < 1e-8)
+            newDft = std::complex<double>(newDft.real(), 0.0);
+        DftActValuesHash[key] = newDft;
+    }
+
+    // now we have to compute the difference vectors and store all new values
+    for (int i = 0; i < getConfData()->m_valueChannelList.count(); i++) {
+        QString key = getConfData()->m_valueChannelList.at(i);
+        QStringList sl = key.split('-');
+
+        // we have 2 entries
+        if (sl.count() == 2) {
+            DftActValuesHash.remove(key);
+            DftActValuesHash[key] = DftActValuesHash[sl.at(0)] - DftActValuesHash[sl.at(1)];
+        }
+        m_ModuleActualValues.replace(i*2, DftActValuesHash[key].real());
+        m_ModuleActualValues.replace(i*2+1, DftActValuesHash[key].imag());
+    }
+}
 
 void cDftModuleMeasProgram::dataReadDSP()
 {
-    QHash<QString, std::complex<double>> DftActValuesHash;
-    if (m_bActive)
-    {
-        //double corr;
+    if (m_bActive) {
         m_pDSPInterFace->getData(m_pActualValuesDSP, m_ModuleActualValues); // we fetch our actual values
-
         // dft(0) is a speciality. sin and cos in dsp are set so that we get amplitude rather than energy.
         // so dc is multiplied  by sqrt(2) * sqrt(2) = 2
-        if (getConfData()->m_nDftOrder == 0)
-        {
-            double re;
-            for (int i = 0; i < m_veinActValueList.count(); i++)
-            {
-                re = m_ModuleActualValues[i*2] * 0.5;
+        // used in COM5003 ref session
+        if (getConfData()->m_nDftOrder == 0) {
+            for (int i = 0; i < m_veinActValueList.count(); i++) {
+                double re = m_ModuleActualValues[i*2] * 0.5;
                 m_ModuleActualValues.replace(i*2, re);
             }
         }
-        else
-        {
+        else {
             // as our dft produces math positive values, we correct them to technical positive values (im * -1)
-            for (int i = 0; i < m_veinActValueList.count(); i++)
-            {
-                double im;
-                for (int i = 0; i < m_veinActValueList.count(); i++)
-                {
-                    im = m_ModuleActualValues[i*2+1] * -1.0;
-                    m_ModuleActualValues.replace(i*2+1, im);
-                }
+            for (int i = 0; i < m_veinActValueList.count(); i++) {
+                double im = m_ModuleActualValues[i*2+1] * -1.0;
+                m_ModuleActualValues.replace(i*2+1, im);
             }
-
-            // first we test if reference channel is configured
             if (getConfData()->m_bRefChannelOn)
-            {
-                // if so ....
-                //QHash<QString, complex> DftActValuesHash;
-
-                for (int i = 0; i < getConfData()->m_valueChannelList.count(); i++)
-                    DftActValuesHash[getConfData()->m_valueChannelList.at(i)] = std::complex<double>(m_ModuleActualValues[i*2], m_ModuleActualValues[i*2+1]);
-
-                // the complex reference vector
-                std::complex<double> complexRef = DftActValuesHash.value(m_ChannelSystemNameHash.value(getConfData()->m_sRefChannel.m_sPar));
-
-                double tanRef = complexRef.imag() / complexRef.real();
-                double divisor = sqrt(1.0+(tanRef * tanRef));
-                // the turnvector has the negative reference angle
-                // computing in complex is more acurate, but we have to keep in mind the
-                // point of discontinuity of the arctan function
-                std::complex<double> turnVector;
-                if (complexRef.real() < 0)
-                    turnVector = std::complex<double>(-(1.0 / divisor), (tanRef / divisor));
-                else
-                    turnVector = std::complex<double>((1.0 / divisor), -(tanRef / divisor));
-
-                // this method is alternative ... but it is not so accurate as the above one
-                //double phiRef = userAtan(complexRef.im(), complexRef.re());
-                //complex turnVector = complex(cos(-phiRef*0.017453292), sin(-phiRef*0.017453292));
-
-                for (int i = 0; i < getConfData()->m_valueChannelList.count(); i++) {
-                    QString key;
-                    key = getConfData()->m_valueChannelList.at(i);
-                    std::complex<double> newDft = DftActValuesHash.take(key);
-                    newDft *= turnVector;
-                    if (fabs(newDft.imag()) < 1e-8)
-                        newDft = std::complex<double>(newDft.real(), 0.0);
-                    DftActValuesHash[key] = newDft;
-                }
-
-                // now we have to compute the difference vectors and store all new values
-                for (int i = 0; i < getConfData()->m_valueChannelList.count(); i++) {
-                    QString key = getConfData()->m_valueChannelList.at(i);
-                    QStringList sl = key.split('-');
-
-                    // we have 2 entries
-                    if (sl.count() == 2) {
-                        DftActValuesHash.remove(key);
-                        DftActValuesHash[key] = DftActValuesHash[sl.at(0)] - DftActValuesHash[sl.at(1)];
-                    }
-                    m_ModuleActualValues.replace(i*2, DftActValuesHash[key].real());
-                    m_ModuleActualValues.replace(i*2+1, DftActValuesHash[key].imag());
-                }
-            }
+                turnVectorsToRefChannel();
         }
         emit actualValues(&m_ModuleActualValues); // and send them
         m_pMeasureSignal->setValue(QVariant(1)); // signal measuring
     }
 }
-
 
 void cDftModuleMeasProgram::newIntegrationtime(QVariant ti)
 {
@@ -985,7 +969,6 @@ void cDftModuleMeasProgram::newIntegrationtime(QVariant ti)
     emit m_pModule->parameterChanged();
 }
 
-
 void cDftModuleMeasProgram::newRefChannel(QVariant refchn)
 {
     getConfData()->m_sRefChannel.m_sPar = refchn.toString();
@@ -993,8 +976,3 @@ void cDftModuleMeasProgram::newRefChannel(QVariant refchn)
 }
 
 }
-
-
-
-
-

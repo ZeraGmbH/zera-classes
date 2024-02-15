@@ -37,24 +37,4 @@ void DemoActValManInTheMiddleDft::onNewActValues()
         m_demoValues.replace(i*2+1, im);
     }
     emit sigNewActualValues(&m_demoValues);
-
-    /*QHash<QString, std::complex<double>> DftActValuesHash;
-    if (getConfData()->m_bRefChannelOn) {
-        for (int i = 0; i < getConfData()->m_valueChannelList.count(); i++)
-            DftActValuesHash[getConfData()->m_valueChannelList.at(i)] = std::complex<double>(m_ModuleActualValues[i*2], m_ModuleActualValues[i*2+1]);
-
-        for (int i = 0; i < getConfData()->m_valueChannelList.count(); i++) {
-            QString key;
-            QStringList sl;
-            key = getConfData()->m_valueChannelList.at(i);
-            sl = key.split('-');
-            // we have 2 entries
-            if (sl.count() == 2) {
-                DftActValuesHash.remove(key);
-                DftActValuesHash[key] = DftActValuesHash[sl.at(0)] - DftActValuesHash[sl.at(1)];
-            }
-            m_ModuleActualValues.replace(i*2, DftActValuesHash[key].real());
-            m_ModuleActualValues.replace(i*2+1, DftActValuesHash[key].imag());
-        }
-    }*/
 }
