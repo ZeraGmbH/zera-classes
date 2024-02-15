@@ -5,13 +5,6 @@
 
 QTEST_MAIN(test_act_values_rms)
 
-void test_act_values_rms::initTestCase()
-{
-    ModuleManagerSetupFacade::registerMetaTypeStreamOperators();
-    TestModuleManager::supportOeTests();
-    TestModuleManager::pointToInstalledSessionFiles();
-}
-
 void test_act_values_rms::cleanup()
 {
     m_modMan->destroyModulesAndWaitUntilAllShutdown();
