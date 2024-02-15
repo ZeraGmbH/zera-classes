@@ -44,16 +44,12 @@ void test_act_values_rms::veinDumpInitial()
     QFile file(":/dumpInitial.json");
     QVERIFY(file.open(QFile::ReadOnly));
     QString jsonExpected = file.readAll();
-    /*QJsonDocument docExpected = QJsonDocument::fromJson(jsonExpected.toUtf8());
-    QVariantMap mapExpected = docExpected.object().toVariantMap();*/
 
     setupServices(":/session-rms-moduleconfig-from-resource.json");
     VeinStorage::VeinHash* storageHash = m_modmanFacade->getStorageSystem();
     QByteArray jsonDumped;
     QBuffer buff(&jsonDumped);
-    storageHash->dumpToFile(&buff);
-    /*QJsonDocument docDumped = QJsonDocument::fromJson(QString(jsonDumped).toUtf8());
-    QVariantMap mapDumped = docDumped.object().toVariantMap();*/
+    storageHash->dumpToFile(&buff, QList<int>() << 1040);
 
     if(jsonExpected != jsonDumped) {
         qWarning("Expected storage hash:");
