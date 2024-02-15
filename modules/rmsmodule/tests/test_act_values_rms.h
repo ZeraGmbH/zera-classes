@@ -11,7 +11,6 @@ class test_act_values_rms : public QObject
 {
     Q_OBJECT
 private slots:
-    void initTestCase();
     void cleanup();
 
     void minimalSession();
