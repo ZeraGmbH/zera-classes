@@ -45,6 +45,7 @@ public:
     cDftModuleMeasProgram(cDftModule* module, std::shared_ptr<cBaseModuleConfiguration> pConfiguration);
     virtual ~cDftModuleMeasProgram();
     virtual void generateInterface() override; // here we export our interface (components)
+
 public slots:
     virtual void start() override; // difference between start and stop is that actual values
     virtual void stop() override; // in interface are not updated when stop
@@ -56,6 +57,7 @@ private:
     void deleteDspVarList();
     void setDspCmdList();
     void deleteDspCmdList();
+    void turnVectorsToRefChannel();
 
     cDftModule* m_pModule;
     AbstractActValManInTheMiddlePtr m_actValueHandler;
