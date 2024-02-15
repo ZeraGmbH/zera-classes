@@ -15,16 +15,10 @@ endfunction()
 
 SETUP_QTESTS_MODULE(
     test_rms_config_load
-    test_act_values_rms
-    test_regression_vein_module_rms
+    test_rms_module_regression
 )
 
-target_sources(test_act_values_rms
-  PRIVATE
-    test-data/test-data.qrc
-)
-
-target_sources(test_regression_vein_module_rms
+target_sources(test_rms_module_regression
   PRIVATE
     test-data/test-data.qrc
 )
