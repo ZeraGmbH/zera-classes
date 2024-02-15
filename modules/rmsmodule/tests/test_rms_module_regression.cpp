@@ -1,5 +1,5 @@
 #include "test_rms_module_regression.h"
-#include "testfactoryactualvaluegenerator.h"
+#include "testfactoryactvalmaninthemiddle.h"
 #include <timemachineobject.h>
 #include <QBuffer>
 #include <QTest>
@@ -67,7 +67,7 @@ void test_rms_module_regression::checkActualValueCount()
 {
     setupServices(":/session-rms-moduleconfig-from-resource.json");
 
-    TestActualValueGeneratorRmsPtr actValueGenerator = m_factoryActualValueGen->getActValGeneratorRmsTest(rmsEntityId);
+    TestActValManInTheMiddlePtr actValueGenerator = m_factoryActualValueGen->getActValGeneratorRmsTest(rmsEntityId);
     QStringList actValName = actValueGenerator->getValueChannelList();
     QCOMPARE(actValName.count(), rmsResultCount);
 }
@@ -76,7 +76,7 @@ void test_rms_module_regression::injectActualValues()
 {
     setupServices(":/session-rms-moduleconfig-from-resource.json");
 
-    TestActualValueGeneratorRmsPtr actValueGenerator = m_factoryActualValueGen->getActValGeneratorRmsTest(rmsEntityId);
+    TestActValManInTheMiddlePtr actValueGenerator = m_factoryActualValueGen->getActValGeneratorRmsTest(rmsEntityId);
     QVector<float> actValues(rmsResultCount);
     for(int i = 0; i<rmsResultCount; i++)
         actValues[i] = i;
@@ -105,7 +105,7 @@ void test_rms_module_regression::injectActualTwice()
 {
     setupServices(":/session-rms-moduleconfig-from-resource.json");
     QVector<float> actValues(rmsResultCount);
-    TestActualValueGeneratorRmsPtr actValueGenerator = m_factoryActualValueGen->getActValGeneratorRmsTest(rmsEntityId);
+    TestActValManInTheMiddlePtr actValueGenerator = m_factoryActualValueGen->getActValGeneratorRmsTest(rmsEntityId);
 
     actValues[1] = 37;
     actValueGenerator->onNewActualValues(&actValues);
@@ -125,7 +125,7 @@ void test_rms_module_regression::setupServices(QString sessionFileName)
 {
     m_licenseSystem = std::make_unique<LicenseSystemMock>();
     m_modmanFacade = std::make_unique<ModuleManagerSetupFacade>(m_licenseSystem.get());
-    m_factoryActualValueGen = std::make_shared<TestFactoryActualValueGenerator>();
+    m_factoryActualValueGen = std::make_shared<TestFactoryActValManInTheMiddle>();
     m_modMan = std::make_unique<TestModuleManager>(m_modmanFacade.get(), m_factoryActualValueGen, true);
     m_modMan->loadAllAvailableModulePlugins();
     m_modMan->setupConnections();

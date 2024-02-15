@@ -1,7 +1,7 @@
 #ifndef MODULELOADER_H
 #define MODULELOADER_H
 
-#include "abstractfactoryactualvaluegenerator.h"
+#include "abstractfactoryactvalmaninthemiddle.h"
 #include "jsonsessionloader.h"
 #include "modulemanagersetupfacade.h"
 #include "moduledata.h"
@@ -33,7 +33,7 @@ class ModuleManager : public QObject
     Q_OBJECT
 public:
     explicit ModuleManager(ModuleManagerSetupFacade *setupFacade,
-                           AbstractFactoryActualValueGeneratorPtr actualValueFactory,
+                           AbstractFactoryActValManInTheMiddlePtr actualValueFactory,
                            bool demo = false,
                            QObject *parent = nullptr);
     ~ModuleManager() override;
@@ -73,7 +73,7 @@ private:
     void handleFinalModuleLoaded();
 
     ModuleManagerSetupFacade *m_setupFacade;
-    AbstractFactoryActualValueGeneratorPtr m_actualValueFactory;
+    AbstractFactoryActValManInTheMiddlePtr m_actualValueFactory;
     JsonSessionLoader m_sessionLoader;
     QHash<QString, MeasurementModuleFactory*> m_factoryTable;
     QQueue<ModuleData *> m_deferredStartList;

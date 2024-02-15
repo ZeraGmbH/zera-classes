@@ -1,15 +1,15 @@
-#ifndef DEMOACTUALVALUEGENERATORRMS_H
-#define DEMOACTUALVALUEGENERATORRMS_H
+#ifndef DEMOACTVALMANINTHEMIDDLERMS_H
+#define DEMOACTVALMANINTHEMIDDLERMS_H
 
-#include "abstractactualvaluegenerator.h"
+#include "abstractactvalmaninthemiddle.h"
 #include <timertemplateqt.h>
 #include <QStringList>
 
-class DemoActualValueGeneratorRms : public AbstractActualValueGenerator
+class DemoActValManInTheMiddleRms : public AbstractActValManInTheMiddle
 {
     Q_OBJECT
 public:
-    DemoActualValueGeneratorRms(QStringList valueChannelList);
+    DemoActValManInTheMiddleRms(QStringList valueChannelList);
     void onNewActualValues(QVector<float> *) override { };
     void start() override;
     void stop() override;
@@ -22,4 +22,4 @@ private:
     QVector<float> m_demoValues;
 };
 
-#endif // DEMOACTUALVALUEGENERATORRMS_H
+#endif // DEMOACTVALMANINTHEMIDDLERMS_H

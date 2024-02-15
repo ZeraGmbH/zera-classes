@@ -1,10 +1,10 @@
-#ifndef ABSTRACTACTUALVALUEGENERATOR_H
-#define ABSTRACTACTUALVALUEGENERATOR_H
+#ifndef ABSTRACTACTVALMANINTHEMIDDLE_H
+#define ABSTRACTACTVALMANINTHEMIDDLE_H
 
 #include <QObject>
 #include <memory>
 
-class AbstractActualValueGenerator : public QObject
+class AbstractActValManInTheMiddle : public QObject
 {
     Q_OBJECT
 public:
@@ -16,6 +16,6 @@ signals:
     void sigNewActualValues(QVector<float>* values);
 };
 
-typedef std::shared_ptr<AbstractActualValueGenerator> AbstractActualValueGeneratorPtr;
+typedef std::shared_ptr<AbstractActValManInTheMiddle> AbstractActValManInTheMiddlePtr;
 
-#endif // ABSTRACTACTUALVALUEGENERATOR_H
+#endif // ABSTRACTACTVALMANINTHEMIDDLE_H

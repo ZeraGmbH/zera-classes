@@ -1,26 +1,26 @@
-#include "demoactualvaluegeneratorrms.h"
+#include "demoactvalmaninthemiddlerms.h"
 #include <timerfactoryqt.h>
 
-DemoActualValueGeneratorRms::DemoActualValueGeneratorRms(QStringList valueChannelList) :
+DemoActValManInTheMiddleRms::DemoActValManInTheMiddleRms(QStringList valueChannelList) :
     m_valueChannelList(valueChannelList),
     m_periodicTimerActGen(TimerFactoryQt::createPeriodic(500)),
     m_demoValues(m_valueChannelList.count())
 {
     connect(m_periodicTimerActGen.get(), &TimerTemplateQt::sigExpired,
-            this, &DemoActualValueGeneratorRms::onNewActValues);
+            this, &DemoActValManInTheMiddleRms::onNewActValues);
 }
 
-void DemoActualValueGeneratorRms::start()
+void DemoActValManInTheMiddleRms::start()
 {
     m_periodicTimerActGen->start();
 }
 
-void DemoActualValueGeneratorRms::stop()
+void DemoActValManInTheMiddleRms::stop()
 {
     m_periodicTimerActGen->stop();
 }
 
-void DemoActualValueGeneratorRms::onNewActValues()
+void DemoActValManInTheMiddleRms::onNewActValues()
 {
     for (int i = 0; i < m_valueChannelList.count(); i++) {
         QStringList sl = m_valueChannelList.at(i).split('-');

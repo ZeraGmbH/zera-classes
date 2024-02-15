@@ -58,7 +58,7 @@ private:
     void deleteDspCmdList();
 
     cRmsModule* m_pModule;
-    AbstractActualValueGeneratorPtr m_actValueHandler;
+    AbstractActValManInTheMiddlePtr m_actValueHandler;
     QList<VfModuleActvalue*> m_veinActValueList; // the list of actual values we work on
     QHash<QString, cMeasChannelInfo> m_measChannelInfoHash;
     QList<QString> channelInfoReadList; // a list of all channel info we have to read
