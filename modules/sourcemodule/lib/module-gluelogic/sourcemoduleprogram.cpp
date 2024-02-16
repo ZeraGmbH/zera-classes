@@ -93,7 +93,7 @@ void SourceModuleProgram::generateInterface()
         jsonValidator = new cJsonParamValidator();
         sourceVeinInterface->setVeinDeviceParameterValidator(jsonValidator);
         pVeinParam->setValidator(jsonValidator);
-        m_pModule->veinModuleParameterHash[key] = pVeinParam; // auto delete / meta-data / scpi
+        m_pModule->m_veinModuleParameterMap[key] = pVeinParam; // auto delete / meta-data / scpi
 
         m_arrVeinIoInterfaces.append(sourceVeinInterface);
     }
@@ -103,7 +103,7 @@ void SourceModuleProgram::generateInterface()
                                                    QVariant(int(0)));
     m_pVeinDemoSourceCount->setValidator(new cIntValidator(0, maxSources));
     connect(m_pVeinDemoSourceCount, &VfModuleParameter::sigValueChanged, this, &SourceModuleProgram::newDemoSourceCount);
-    m_pModule->veinModuleParameterHash[key] = m_pVeinDemoSourceCount; // auto delete / meta-data / scpi
+    m_pModule->m_veinModuleParameterMap[key] = m_pVeinDemoSourceCount; // auto delete / meta-data / scpi
     newDemoSourceCount(QVariant(m_pModule->getDemo() ? maxSources : 0));
 }
 

@@ -31,7 +31,7 @@ void VfEventSytemModuleParam::processCommandEvent(VeinEvent::CommandEvent *comma
     }
 }
 
-void VfEventSytemModuleParam::setParameterHash(const QHash<QString, VfModuleParameter *> &parameterHash)
+void VfEventSytemModuleParam::setParameterMap(const QMap<QString, VfModuleParameter *> &parameterHash)
 {
     m_parameterHash = parameterHash;
 }

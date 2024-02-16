@@ -342,7 +342,7 @@ void cPower2ModuleMeasProgram::generateInterface()
     m_pMeasuringmodeParameter->setSCPIInfo(new cSCPIInfo("CONFIGURATION","MMODE", "10", "PAR_MeasuringMode", "0", ""));
     cStringValidator *sValidator = new cStringValidator(getConfData()->m_sMeasmodeList);
     m_pMeasuringmodeParameter->setValidator(sValidator);
-    m_pModule->veinModuleParameterHash[key] = m_pMeasuringmodeParameter; // for modules use
+    m_pModule->m_veinModuleParameterMap[key] = m_pMeasuringmodeParameter; // for modules use
 
     QVariant val;
     QString s, unit;
@@ -379,7 +379,7 @@ void cPower2ModuleMeasProgram::generateInterface()
         m_pIntegrationParameter->setValidator(iValidator);
     }
 
-    m_pModule->veinModuleParameterHash[key] = m_pIntegrationParameter; // for modules use
+    m_pModule->m_veinModuleParameterMap[key] = m_pIntegrationParameter; // for modules use
 
     m_pMeasureSignal = new VfModuleComponent(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
                                                 QString("SIG_Measuring"),

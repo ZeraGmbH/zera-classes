@@ -328,7 +328,7 @@ void cPower1ModuleMeasProgram::generateInterface()
         pFoutParameter->setSCPIInfo(new cSCPIInfo("CONFIGURATION",QString("M%1CONSTANT").arg(i), "2", pFoutParameter->getName(), "0", ""));
 
         m_FoutConstParameterList.append(pFoutParameter);
-        m_pModule->veinModuleParameterHash[key] = pFoutParameter; // for modules use
+        m_pModule->m_veinModuleParameterMap[key] = pFoutParameter; // for modules use
 
         QString foutName =  getConfData()->m_FreqOutputConfList.at(i).m_sPlug;
         pFoutParameter = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
@@ -337,7 +337,7 @@ void cPower1ModuleMeasProgram::generateInterface()
                                                           QVariant(foutName));
         pFoutParameter->setSCPIInfo(new cSCPIInfo("CONFIGURATION",QString("M%1OUT").arg(i), "2", pFoutParameter->getName(), "0", ""));
 
-        m_pModule->veinModuleParameterHash[key] = pFoutParameter; // for modules use
+        m_pModule->m_veinModuleParameterMap[key] = pFoutParameter; // for modules use
 
         // This code seems to identify fout channels using the list positions.
         // If no scaling Information is provided we will add null pointers to keep the positions correct
@@ -381,7 +381,7 @@ void cPower1ModuleMeasProgram::generateInterface()
 
     sValidator = new cStringValidator(getConfData()->m_sMeasmodeList);
     m_pMeasuringmodeParameter->setValidator(sValidator);
-    m_pModule->veinModuleParameterHash[key] = m_pMeasuringmodeParameter; // for modules use
+    m_pModule->m_veinModuleParameterMap[key] = m_pMeasuringmodeParameter; // for modules use
 
     m_pModule->scpiCommandList.append(new cSCPIInfo("CONFIGURATION", QString("MMODE:CATALOG"), "2", m_pMeasuringmodeParameter->getName(), "1", ""));
 
@@ -392,7 +392,7 @@ void cPower1ModuleMeasProgram::generateInterface()
     m_pMModePhaseSelectParameter->setSCPIInfo(new cSCPIInfo("CONFIGURATION","MEASMODEPHASESELECT", "10", "PAR_MeasModePhaseSelect", "0", ""));
     m_MModePhaseSelectValidator = new cStringValidator("");
     m_pMModePhaseSelectParameter->setValidator(m_MModePhaseSelectValidator);
-    m_pModule->veinModuleParameterHash[key] = m_pMModePhaseSelectParameter; // for modules use
+    m_pModule->m_veinModuleParameterMap[key] = m_pMModePhaseSelectParameter; // for modules use
 
     m_MModeCanChangePhaseMask = new VfModuleActvalue(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
                                      QString("ACT_CanChangePhaseMask"),
@@ -456,7 +456,7 @@ void cPower1ModuleMeasProgram::generateInterface()
         m_pIntegrationParameter->setValidator(iValidator);
     }
 
-    m_pModule->veinModuleParameterHash[key] = m_pIntegrationParameter; // for modules use
+    m_pModule->m_veinModuleParameterMap[key] = m_pIntegrationParameter; // for modules use
 
     m_pMeasureSignal = new VfModuleComponent(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
                                                 QString("SIG_Measuring"),

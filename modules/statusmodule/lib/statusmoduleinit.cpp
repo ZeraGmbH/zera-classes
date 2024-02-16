@@ -128,7 +128,7 @@ void cStatusModuleInit::generateInterface()
                                                    QString("PCB-server version"),
                                                    QVariant(QString("")) );
 
-    m_pModule->veinModuleParameterHash[key] = m_pPCBServerVersion; // for modules use
+    m_pModule->m_veinModuleParameterMap[key] = m_pPCBServerVersion; // for modules use
     m_pPCBServerVersion->setSCPIInfo(new cSCPIInfo("STATUS", "VERSION:PCBSERVER", "2", key , "0", ""));
 
 
@@ -137,7 +137,7 @@ void cStatusModuleInit::generateInterface()
                                                    QString("PCB version"),
                                                    QVariant(QString("")) );
 
-    m_pModule->veinModuleParameterHash[key] = m_pPCBVersion;
+    m_pModule->m_veinModuleParameterMap[key] = m_pPCBVersion;
     m_pPCBVersion->setSCPIInfo(new cSCPIInfo("STATUS", "VERSION:PCB", "2", key , "0", ""));
 
 
@@ -146,7 +146,7 @@ void cStatusModuleInit::generateInterface()
                                               QString("Controller version"),
                                               QVariant(QString("") ));
 
-    m_pModule->veinModuleParameterHash[key] = m_pCtrlVersion;
+    m_pModule->m_veinModuleParameterMap[key] = m_pCtrlVersion;
     m_pCtrlVersion->setSCPIInfo(new cSCPIInfo("STATUS", "VERSION:CONTROLER", "2", key, "0", ""));
 
 
@@ -155,7 +155,7 @@ void cStatusModuleInit::generateInterface()
                                               QString("FPGA version"),
                                               QVariant(QString("") ));
 
-    m_pModule->veinModuleParameterHash[key] = m_pFPGAVersion;
+    m_pModule->m_veinModuleParameterMap[key] = m_pFPGAVersion;
     m_pFPGAVersion->setSCPIInfo(new cSCPIInfo("STATUS", "VERSION:FPGA", "2", key, "0", ""));
 
 
@@ -164,7 +164,7 @@ void cStatusModuleInit::generateInterface()
                                                QString("Serial number"),
                                                QVariant(QString("") ), true, false); // we select deferred notification
 
-    m_pModule->veinModuleParameterHash[key] = m_pSerialNumber;
+    m_pModule->m_veinModuleParameterMap[key] = m_pSerialNumber;
     m_pSerialNumber->setSCPIInfo(new cSCPIInfo("STATUS", "SERIAL", "10", key, "0", ""));
     cRegExValidator *regValidator;
     regValidator = new cRegExValidator("^\\d{9}$");
@@ -175,7 +175,7 @@ void cStatusModuleInit::generateInterface()
                                                    QString("DSP-server version"),
                                                    QVariant(QString("") ));
 
-    m_pModule->veinModuleParameterHash[key] = m_pDSPServerVersion;
+    m_pModule->m_veinModuleParameterMap[key] = m_pDSPServerVersion;
     m_pDSPServerVersion->setSCPIInfo(new cSCPIInfo("STATUS", "VERSION:DSPSERVER", "2", key, "0", ""));
 
 
@@ -184,7 +184,7 @@ void cStatusModuleInit::generateInterface()
                                                     QString("DSP software version"),
                                                     QVariant(QString("") ));
 
-    m_pModule->veinModuleParameterHash[key] = m_pDSPProgramVersion;
+    m_pModule->m_veinModuleParameterMap[key] = m_pDSPProgramVersion;
     m_pDSPProgramVersion->setSCPIInfo(new cSCPIInfo("STATUS", "VERSION:DSP", "2", key, "0", ""));
 
 
@@ -193,7 +193,7 @@ void cStatusModuleInit::generateInterface()
                                                 QString("Release number"),
                                                 QVariant(QString("") ));
 
-    m_pModule->veinModuleParameterHash[key] = m_pReleaseNumber;
+    m_pModule->m_veinModuleParameterMap[key] = m_pReleaseNumber;
     m_pReleaseNumber->setSCPIInfo(new cSCPIInfo("STATUS", "RELEASE", "2", key, "0", ""));
 
     m_pDeviceType = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
@@ -201,7 +201,7 @@ void cStatusModuleInit::generateInterface()
                                                 QString("Device type"),
                                                 QVariant(QString()));
 
-    m_pModule->veinModuleParameterHash[key] = m_pDeviceType;
+    m_pModule->m_veinModuleParameterMap[key] = m_pDeviceType;
     m_pDeviceType->setSCPIInfo(new cSCPIInfo("STATUS", "DEVTYPE", "2", key, "0", ""));
 
     m_pCPUInfo = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
@@ -209,7 +209,7 @@ void cStatusModuleInit::generateInterface()
                                                 QString("CPU/SOM info"),
                                                 QVariant(QString("")));
 
-    m_pModule->veinModuleParameterHash[key] = m_pCPUInfo;
+    m_pModule->m_veinModuleParameterMap[key] = m_pCPUInfo;
     m_pCPUInfo->setSCPIInfo(new cSCPIInfo("STATUS", "CPUINFO", "2", key, "0", ""));
 
     m_pAdjustmentStatus = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
@@ -217,7 +217,7 @@ void cStatusModuleInit::generateInterface()
                                                    QString("Adjustment information"),
                                                    QVariant(0));
 
-    m_pModule->veinModuleParameterHash[key] = m_pAdjustmentStatus;
+    m_pModule->m_veinModuleParameterMap[key] = m_pAdjustmentStatus;
     m_pAdjustmentStatus->setSCPIInfo(new cSCPIInfo("STATUS", "ADJUSTMENT", "2", key, "0", ""));
 
     m_pAdjustmentChksum = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
@@ -225,7 +225,7 @@ void cStatusModuleInit::generateInterface()
                                                    QString("Adjustment data checksum device"),
                                                    QVariant(0));
 
-    m_pModule->veinModuleParameterHash[key] = m_pAdjustmentChksum;
+    m_pModule->m_veinModuleParameterMap[key] = m_pAdjustmentChksum;
     m_pAdjustmentChksum->setSCPIInfo(new cSCPIInfo("STATUS", "ADJCHKSUM", "2", key, "0", ""));
 
     m_pSchnubbelStatus = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
@@ -233,7 +233,7 @@ void cStatusModuleInit::generateInterface()
                                                QString("Adjustment values write permission"),
                                                QVariant(0));
 
-    m_pModule->veinModuleParameterHash[key] = m_pSchnubbelStatus;
+    m_pModule->m_veinModuleParameterMap[key] = m_pSchnubbelStatus;
     m_pSchnubbelStatus->setSCPIInfo(new cSCPIInfo("STATUS", "AUTHORIZATION", "2", key, "0", ""));
 
     m_pAccumulatorStatus = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
@@ -241,13 +241,13 @@ void cStatusModuleInit::generateInterface()
                                                QString("Accumulator status"),
                                                QVariant(0));
 
-    m_pModule->veinModuleParameterHash[key] = m_pAccumulatorStatus;
+    m_pModule->m_veinModuleParameterMap[key] = m_pAccumulatorStatus;
     m_pAccumulatorSoc = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
                                                key = QString("INF_AccumulatorSoc"),
                                                QString("Accumulator state of charge"),
                                                QVariant(int(0)));
 
-    m_pModule->veinModuleParameterHash[key] = m_pAccumulatorSoc;
+    m_pModule->m_veinModuleParameterMap[key] = m_pAccumulatorSoc;
     if (m_ConfigData.m_accumulator) {
         m_pAccumulatorSoc->setSCPIInfo(new cSCPIInfo("STATUS", "ACCUSOC", "2", key, "0", ""));
         m_pAccumulatorStatus->setSCPIInfo(new cSCPIInfo("STATUS", "ACCUSTATUS", "2", key, "0", ""));

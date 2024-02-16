@@ -269,10 +269,10 @@ void cBaseModule::unsetModule()
     }
     scpiCommandList.clear();
 
-    for (auto veinModuleParameter : qAsConst(veinModuleParameterHash)) {
+    for (auto veinModuleParameter : qAsConst(m_veinModuleParameterMap)) {
         delete veinModuleParameter;
     }
-    veinModuleParameterHash.clear();
+    m_veinModuleParameterMap.clear();
 
     VeinComponent::EntityData *eData = new VeinComponent::EntityData();
     eData->setCommand(VeinComponent::EntityData::Command::ECMD_REMOVE);
@@ -306,9 +306,9 @@ void cBaseModule::exportMetaData()
     }
 
     QList<QString> keyList;
-    keyList = veinModuleParameterHash.keys();
+    keyList = m_veinModuleParameterMap.keys();
     for (int i = 0; i < keyList.count(); i++)
-        veinModuleParameterHash[keyList.at(i)]->exportMetaData(jsonObj3);
+        m_veinModuleParameterMap[keyList.at(i)]->exportMetaData(jsonObj3);
     jsonObj.insert("ComponentInfo", jsonObj3);
 
     QJsonArray jsonArr;
@@ -321,7 +321,7 @@ void cBaseModule::exportMetaData()
     }
 
     for (int i = 0; i < keyList.count(); i++) {
-        veinModuleParameterHash[keyList.at(i)]->exportSCPIInfo(jsonArr);
+        m_veinModuleParameterMap[keyList.at(i)]->exportSCPIInfo(jsonArr);
     }
 
     QJsonObject jsonObj4;

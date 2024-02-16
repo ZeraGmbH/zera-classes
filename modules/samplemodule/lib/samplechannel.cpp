@@ -84,7 +84,7 @@ void cSampleChannel::generateInterface()
                                                QString("Sampling channel's range"),
                                                QVariant(m_ConfigData.m_ObsermaticConfPar.m_pllRange.m_sPar));
 
-    m_pModule->veinModuleParameterHash[key] = m_pChannelRange; // for modules use
+    m_pModule->m_veinModuleParameterMap[key] = m_pChannelRange; // for modules use
 
     scpiInfo = new cSCPIInfo("CONFIGURATION", "SRANGE", "10", m_pChannelRange->getName(), "0", "");
     m_pChannelRange->setSCPIInfo(scpiInfo);
