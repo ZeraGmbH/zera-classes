@@ -63,7 +63,7 @@ private:
     AbstractActValManInTheMiddlePtr m_actValueHandler;
     QList<VfModuleActvalue*> m_veinActValueList; // the list of actual values we work on
     VfModuleActvalue* m_pRFieldActualValue;
-    QHash<QString, cMeasChannelInfo> m_measChannelInfoHash;
+    QMap<QString, cMeasChannelInfo> m_measChannelInfoHash;
     QHash<QString, QString> m_ChannelSystemNameHash; // a hash for fast access to the system name with key = alias
     QList<QString> channelInfoReadList; // a list of all channel info we have to read
     QList<int> rfieldActvalueIndexList; // an index list for access to configured actual values

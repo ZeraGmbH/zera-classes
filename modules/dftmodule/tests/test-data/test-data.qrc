@@ -1,0 +1,9 @@
+<RCC>
+    <qresource prefix="/">
+        <file>dumpActual.json</file>
+        <file>dumpInitial.json</file>
+        <file>mt310s2-dftmodule-no-movingwindow.xml</file>
+        <file>session-dft-moduleconfig-from-resource.json</file>
+        <file>session-minimal.json</file>
+    </qresource>
+</RCC>

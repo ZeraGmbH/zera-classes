@@ -30,7 +30,7 @@ void DemoActValManInTheMiddleDft::onNewActValues()
         m_demoValues[i] = randomVal;
     }
 
-    // this part is copied from dataReadDsp for better simulated values
+    // this part is copied from dataReadDSP for better simulated values
     double im;
     for (int i = 0; i < m_valueChannelList.count(); i++) {
         im = m_demoValues[i*2+1] * -1.0;
