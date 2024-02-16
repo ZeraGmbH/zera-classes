@@ -16,6 +16,7 @@
 #include <intvalidator.h>
 #include <rminterface.h>
 #include <dspinterface.h>
+#include <dspinterfacecmddecoder.h>
 #include <pcbinterface.h>
 #include <math.h>
 #include <QString>
@@ -922,7 +923,7 @@ void cThdnModuleMeasProgram::newIntegrationtime(QVariant ti)
     if (getConfData()->m_bmovingWindow)
         m_movingwindowFilter.setIntegrationtime(getConfData()->m_fMeasInterval.m_fValue);
     else {
-        m_pDSPInterFace->setVarData(m_pParameterDSP, QString("TIPAR:%1;TISTART:%2;").arg(getConfData()->m_fMeasInterval.m_fValue*1000)
+        DspInterfaceCmdDecoder::setVarData(m_pParameterDSP, QString("TIPAR:%1;TISTART:%2;").arg(getConfData()->m_fMeasInterval.m_fValue*1000)
                                                                                 .arg(0), DSPDATA::dInt);
         m_MsgNrCmdList[m_pDSPInterFace->dspMemoryWrite(m_pParameterDSP)] = writeparameter;
     }

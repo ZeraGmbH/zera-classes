@@ -8,6 +8,7 @@
 #include <stringvalidator.h>
 #include <doublevalidator.h>
 #include <intvalidator.h>
+#include <dspinterfacecmddecoder.h>
 #include <reply.h>
 #include <proxy.h>
 #include <errormessages.h>
@@ -1716,7 +1717,7 @@ void cPower2ModuleMeasProgram::foutParamsToDsp()
         }
         datalist.resize(datalist.size()-1);
         datalist += ";";
-        m_pDSPInterFace->setVarData(m_pfreqScaleDSP, datalist);
+        DspInterfaceCmdDecoder::setVarData(m_pfreqScaleDSP, datalist);
         m_MsgNrCmdList[m_pDSPInterFace->dspMemoryWrite(m_pfreqScaleDSP)] = writeparameter;
     }
     setFoutPowerModes();
@@ -1741,7 +1742,7 @@ void cPower2ModuleMeasProgram::foutParamsToDsp()
 
     double pmax = maxVals.maxU * maxVals.maxI; // MQREF
     QString datalist = QString("NOMPOWER:%1;").arg(pmax, 0, 'g', 7);
-    m_pDSPInterFace->setVarData(m_pNomPower, datalist);
+    DspInterfaceCmdDecoder::setVarData(m_pNomPower, datalist);
     m_MsgNrCmdList[m_pDSPInterFace->dspMemoryWrite(m_pNomPower)] = setqrefnominalpower;
 }
 
@@ -1778,7 +1779,7 @@ void cPower2ModuleMeasProgram::dspSetParamsTiMModePhase(int tiTimeOrPeriods)
     /*QString phaseVarSet = dspGetSetPhasesVar();
     if(!phaseVarSet.isEmpty())
         strVarData += ";" + dspGetSetPhasesVar();*/
-    m_pDSPInterFace->setVarData(m_pParameterDSP, strVarData, DSPDATA::dInt);
+    DspInterfaceCmdDecoder::setVarData(m_pParameterDSP, strVarData, DSPDATA::dInt);
     m_MsgNrCmdList[m_pDSPInterFace->dspMemoryWrite(m_pParameterDSP)] = writeparameter;
 }
 

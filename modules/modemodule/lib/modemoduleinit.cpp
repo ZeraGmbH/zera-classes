@@ -8,6 +8,7 @@
 #include <rminterface.h>
 #include <pcbinterface.h>
 #include <dspinterface.h>
+#include <dspinterfacecmddecoder.h>
 
 namespace MODEMODULE
 {
@@ -417,7 +418,7 @@ void cModeModuleInit::setSubDC()
     // here we can set if sub dc or not
     cDspMeasData* pSubDCMaskDSP = m_pDSPInterface->getMemHandle("SubDC");
     pSubDCMaskDSP->addVarItem( new cDspVar("SUBDC",1, DSPDATA::vDspIntVar, DSPDATA::dInt));
-    m_pDSPInterface->setVarData(pSubDCMaskDSP, QString("SUBDC:%1;").arg(subdc), DSPDATA::dInt);
+    DspInterfaceCmdDecoder::setVarData(pSubDCMaskDSP, QString("SUBDC:%1;").arg(subdc), DSPDATA::dInt);
     m_MsgNrCmdList[m_pDSPInterface->dspMemoryWrite(pSubDCMaskDSP)] = MODEMODINIT::subdcdsp;
 }
 
