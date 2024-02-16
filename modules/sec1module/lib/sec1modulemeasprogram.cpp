@@ -484,6 +484,13 @@ void cSec1ModuleMeasProgram::generateInterface()
                                              QVariant(QDateTime()));
     m_pModule->veinModuleParameterHash[key] = m_pMeasEndTime; // and for the modules interface
     m_pMeasEndTime->setSCPIInfo(new cSCPIInfo("CALCULATE",  QString("%1:ENDTIME").arg(modNr), "2", m_pMeasEndTime->getName(), "0", ""));
+
+    m_pMeasTime = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
+                                             key = QString("ACT_MeasTime"),
+                                             QString("measurement time (dd-MM-yyyy  HH:mm:ss)"),
+                                             QVariant(int(0)));
+    m_pModule->veinModuleParameterHash[key] = m_pMeasTime; // and for the modules interface
+    m_pMeasTime->setSCPIInfo(new cSCPIInfo("CALCULATE",  QString("%1:MMEASTIME").arg(modNr), "2", m_pMeasTime->getName(), "0", ""));
 }
 
 
@@ -506,6 +513,12 @@ void cSec1ModuleMeasProgram::setDateTimeNow(QDateTime &var, VfModuleParameter *v
 void cSec1ModuleMeasProgram::setDateTime(QDateTime var, VfModuleParameter *veinParam)
 {
     veinParam->setValue(var.toString("dd-MM-yyyy  HH:mm:ss"));
+}
+
+void cSec1ModuleMeasProgram::calculateMeasTime()
+{
+    m_MeasTime = m_MeasStartDateTime.msecsTo(m_MeasEndDateTime);
+    m_pMeasTime->setValue(m_MeasTime);
 }
 
 void cSec1ModuleMeasProgram::updateProgress(quint32 dUTPulseCounterActual)
@@ -1487,6 +1500,7 @@ void cSec1ModuleMeasProgram::setECResultAndResetInt()
             // seperate module/library/?
 
             setDateTimeNow(m_MeasEndDateTime, m_pMeasEndTime);
+            calculateMeasTime();
             // append to our result list
             m_multipleResultHelper.append(m_fResult,
                                           m_eRating,
