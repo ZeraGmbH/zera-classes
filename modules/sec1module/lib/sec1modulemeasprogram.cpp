@@ -473,21 +473,21 @@ void cSec1ModuleMeasProgram::generateInterface()
 
     m_pMeasStartTime = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
                                              key = QString("ACT_StartTime"),
-                                             QString("Current measurement start time (yyyyMMddhhmmss)"),
+                                             QString("Current measurement start time (dd-MM-yyyy  HH:mm:ss)"),
                                              QVariant(QDateTime()));
     m_pModule->veinModuleParameterHash[key] = m_pMeasStartTime; // and for the modules interface
     m_pMeasStartTime->setSCPIInfo(new cSCPIInfo("CALCULATE",  QString("%1:STRTTIME").arg(modNr), "2", m_pMeasStartTime->getName(), "0", ""));
 
     m_pMeasEndTime = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
                                              key = QString("ACT_EndTime"),
-                                             QString("Current measurement end time (yyyyMMddhhmmss)"),
+                                             QString("Current measurement end time (dd-MM-yyyy  HH:mm:ss)"),
                                              QVariant(QDateTime()));
     m_pModule->veinModuleParameterHash[key] = m_pMeasEndTime; // and for the modules interface
     m_pMeasEndTime->setSCPIInfo(new cSCPIInfo("CALCULATE",  QString("%1:ENDTIME").arg(modNr), "2", m_pMeasEndTime->getName(), "0", ""));
 }
 
 
-void SEC1MODULE::cSec1ModuleMeasProgram::deduceMeasStartTime(quint32 dUTPulseCounterActual)
+void cSec1ModuleMeasProgram::deduceMeasStartTime(quint32 dUTPulseCounterActual)
 {
     if(dUTPulseCounterActual > m_lastProgress) { // counts downwards
         setDateTimeNow(m_MeasStartDateTime, m_pMeasStartTime);
@@ -505,7 +505,7 @@ void cSec1ModuleMeasProgram::setDateTimeNow(QDateTime &var, VfModuleParameter *v
 
 void cSec1ModuleMeasProgram::setDateTime(QDateTime var, VfModuleParameter *veinParam)
 {
-    veinParam->setValue(var.toString("yyyyMMddhhmmss"));
+    veinParam->setValue(var.toString("dd-MM-yyyy  HH:mm:ss"));
 }
 
 void cSec1ModuleMeasProgram::updateProgress(quint32 dUTPulseCounterActual)
