@@ -4,6 +4,7 @@
 #include <stringvalidator.h>
 #include <intvalidator.h>
 #include <errormessages.h>
+#include <dspinterfacecmddecoder.h>
 #include <reply.h>
 #include <proxy.h>
 #include <timerfactoryqt.h>
@@ -927,7 +928,7 @@ void cOsciModuleMeasProgram::dataReadDSP()
 void cOsciModuleMeasProgram::newRefChannel(QVariant chn)
 {
     getConfData()->m_RefChannel.m_sPar = chn.toString();
-    m_pDSPInterFace->setVarData(m_pParameterDSP, QString("REFCHN:%1;").arg(m_measChannelInfoHash.value(getConfData()->m_RefChannel.m_sPar).dspChannelNr));
+    DspInterfaceCmdDecoder::setVarData(m_pParameterDSP, QString("REFCHN:%1;").arg(m_measChannelInfoHash.value(getConfData()->m_RefChannel.m_sPar).dspChannelNr));
     m_MsgNrCmdList[m_pDSPInterFace->dspMemoryWrite(m_pParameterDSP)] = writeparameter;
     emit m_pModule->parameterChanged();
 }

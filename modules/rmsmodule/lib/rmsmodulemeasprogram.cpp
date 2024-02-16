@@ -4,6 +4,7 @@
 #include <errormessages.h>
 #include <reply.h>
 #include <proxy.h>
+#include <dspinterfacecmddecoder.h>
 #include <doublevalidator.h>
 #include <intvalidator.h>
 #include <timerfactoryqt.h>
@@ -915,7 +916,7 @@ void cRmsModuleMeasProgram::newIntegrationtime(QVariant ti)
             m_movingwindowFilter.setIntegrationtime(getConfData()->m_fMeasIntervalTime.m_fValue);
         else
         {
-            m_pDSPInterFace->setVarData(m_pParameterDSP, QString("TIPAR:%1;TISTART:%2;").arg(getConfData()->m_fMeasIntervalTime.m_fValue*1000)
+            DspInterfaceCmdDecoder::setVarData(m_pParameterDSP, QString("TIPAR:%1;TISTART:%2;").arg(getConfData()->m_fMeasIntervalTime.m_fValue*1000)
                                                                                 .arg(0), DSPDATA::dInt);
             m_MsgNrCmdList[m_pDSPInterFace->dspMemoryWrite(m_pParameterDSP)] = writeparameter;
         }
@@ -931,7 +932,7 @@ void cRmsModuleMeasProgram::newIntegrationPeriod(QVariant period)
     getConfData()->m_nMeasIntervalPeriod.m_nValue = period.toInt(&ok);
     if (getConfData()->m_sIntegrationMode == "period")
     {
-        m_pDSPInterFace->setVarData(m_pParameterDSP, QString("TIPAR:%1;TISTART:%2;").arg(getConfData()->m_nMeasIntervalPeriod.m_nValue)
+        DspInterfaceCmdDecoder::setVarData(m_pParameterDSP, QString("TIPAR:%1;TISTART:%2;").arg(getConfData()->m_nMeasIntervalPeriod.m_nValue)
                                 .arg(0), DSPDATA::dInt);
         m_MsgNrCmdList[m_pDSPInterFace->dspMemoryWrite(m_pParameterDSP)] = writeparameter;
     }
