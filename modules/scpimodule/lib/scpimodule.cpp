@@ -114,7 +114,7 @@ void cSCPIModule::activationDone()
 
 void cSCPIModule::activationFinished()
 {
-    m_pModuleValidator->setParameterHash(veinModuleParameterHash);
+    m_pModuleValidator->setParameterMap(m_veinModuleParameterMap);
 
     // we post meta information once again because it's complete now
     exportMetaData();

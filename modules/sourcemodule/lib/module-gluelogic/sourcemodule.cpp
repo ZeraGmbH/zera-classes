@@ -62,7 +62,7 @@ void SourceModule::stopMeas()
 void SourceModule::activationFinished()
 {
     // now we still have to export the json interface information, then we are ready
-    m_pModuleValidator->setParameterHash(veinModuleParameterHash);
+    m_pModuleValidator->setParameterMap(m_veinModuleParameterMap);
     exportMetaData();
 
     emit activationReady();

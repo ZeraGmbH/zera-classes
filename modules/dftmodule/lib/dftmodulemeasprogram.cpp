@@ -206,7 +206,7 @@ void cDftModuleMeasProgram::generateInterface()
     m_pIntegrationTimeParameter->setUnit("s");
     m_pIntegrationTimeParameter->setSCPIInfo(new cSCPIInfo("CONFIGURATION","TINTEGRATION", "10", "PAR_Interval", "0", "s"));
 
-    m_pModule->veinModuleParameterHash[key] = m_pIntegrationTimeParameter; // for modules use
+    m_pModule->m_veinModuleParameterMap[key] = m_pIntegrationTimeParameter; // for modules use
 
     cDoubleValidator *dValidator;
     dValidator = new cDoubleValidator(1.0, 100.0, 0.5);
@@ -219,7 +219,7 @@ void cDftModuleMeasProgram::generateInterface()
 
     m_pRefChannelParameter->setSCPIInfo(new cSCPIInfo("CONFIGURATION","REFCHANNEL", "10", "PAR_RefChannel", "0", ""));
 
-    m_pModule->veinModuleParameterHash[key] = m_pRefChannelParameter; // for modules use
+    m_pModule->m_veinModuleParameterMap[key] = m_pRefChannelParameter; // for modules use
     // we must set validator after activation because we don't know the channel names here
 
     m_pMeasureSignal = new VfModuleComponent(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,

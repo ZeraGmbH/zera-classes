@@ -211,7 +211,7 @@ void cRmsModuleMeasProgram::generateInterface()
         cIntValidator *iValidator = new cIntValidator(5, 5000, 1);
         m_pIntegrationParameter->setValidator(iValidator);
     }
-    m_pModule->veinModuleParameterHash[key] = m_pIntegrationParameter; // for modules use
+    m_pModule->m_veinModuleParameterMap[key] = m_pIntegrationParameter; // for modules use
 
     m_pMeasureSignal = new VfModuleComponent(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
                                                 QString("SIG_Measuring"),

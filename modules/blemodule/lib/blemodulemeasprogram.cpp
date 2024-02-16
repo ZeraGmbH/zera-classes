@@ -51,7 +51,7 @@ void cBleModuleMeasProgram::generateInterface()
     m_pTemperatureCAct->setUnit("°C");
     m_pTemperatureCAct->setSCPIInfo(new cSCPIInfo("STATUS", "TEMP:CELSIUS", "2", m_pTemperatureCAct->getName(), "0", m_pTemperatureCAct->getUnit()));
 
-    m_pModule->veinModuleParameterHash[key] = m_pTemperatureCAct; // and for the modules interface
+    m_pModule->m_veinModuleParameterMap[key] = m_pTemperatureCAct; // and for the modules interface
 
     m_pTemperatureFAct = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
                                              key = QString("ACT_TemperatureF"),
@@ -59,7 +59,7 @@ void cBleModuleMeasProgram::generateInterface()
                                              QVariant((double)qQNaN()));
     m_pTemperatureFAct->setUnit("°F");
     m_pTemperatureFAct->setSCPIInfo(new cSCPIInfo("STATUS", "TEMP:FAHRENHEIT", "2", m_pTemperatureFAct->getName(), "0", m_pTemperatureFAct->getUnit()));
-    m_pModule->veinModuleParameterHash[key] = m_pTemperatureFAct;
+    m_pModule->m_veinModuleParameterMap[key] = m_pTemperatureFAct;
 
     m_pHumidityAct = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
                                           key = QString("ACT_Humidity"),
@@ -67,7 +67,7 @@ void cBleModuleMeasProgram::generateInterface()
                                           QVariant((double)qQNaN()));
     m_pHumidityAct->setUnit("%");
     m_pHumidityAct->setSCPIInfo(new cSCPIInfo("STATUS", "HUMID", "2", m_pHumidityAct->getName(), "0", m_pHumidityAct->getUnit()));
-    m_pModule->veinModuleParameterHash[key] = m_pHumidityAct;
+    m_pModule->m_veinModuleParameterMap[key] = m_pHumidityAct;
 
     m_pAirPressureAct = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
                                              key = QString("ACT_AirPressure"),
@@ -75,7 +75,7 @@ void cBleModuleMeasProgram::generateInterface()
                                              QVariant((double)qQNaN()));
     m_pAirPressureAct->setUnit("hPa");
     m_pAirPressureAct->setSCPIInfo(new cSCPIInfo("STATUS", "AIRPR", "2", m_pAirPressureAct->getName(), "0", m_pAirPressureAct->getUnit()));
-    m_pModule->veinModuleParameterHash[key] = m_pAirPressureAct;
+    m_pModule->m_veinModuleParameterMap[key] = m_pAirPressureAct;
 
     m_pWarningFlagsAct = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
                                               key = QString("ACT_WarningFlags"),
@@ -92,7 +92,7 @@ void cBleModuleMeasProgram::generateInterface()
                                 QString("Bluetooth on"),
                                 QVariant(getConfData()->m_bluetoothOn.m_nActive)); // bool validator ruins true/false
     m_pBluetoothOnOff->setValidator(new cBoolValidator);
-    m_pModule->veinModuleParameterHash[key] = m_pBluetoothOnOff;
+    m_pModule->m_veinModuleParameterMap[key] = m_pBluetoothOnOff;
     connect(m_pBluetoothOnOff, &VfModuleComponent::sigValueChanged,
             this, &cBleModuleMeasProgram::onVeinBluetoothOnChanged);
 
@@ -102,7 +102,7 @@ void cBleModuleMeasProgram::generateInterface()
                                           QVariant("00:00:00:00:00:00"));
     m_pMacAddress->setValidator(new cRegExValidator("^((([0-9A-Fa-f]{2}:){5})|(([0-9A-Fa-f]{2}){5})([0-9A-Fa-f]{2})$|^$)"));
 
-    m_pModule->veinModuleParameterHash[key] = m_pMacAddress;
+    m_pModule->m_veinModuleParameterMap[key] = m_pMacAddress;
     connect(m_pMacAddress, &VfModuleComponent::sigValueChanged,
             this, &cBleModuleMeasProgram::onVeinMacAddressChanged);
 }

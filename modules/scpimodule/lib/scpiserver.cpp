@@ -87,7 +87,7 @@ void cSCPIServer::generateInterface()
                                                        QVariant(m_bSerialScpiActive));
     m_pVeinParamSerialOn->setValidator(new cBoolValidator());
     connect(m_pVeinParamSerialOn, &VfModuleParameter::sigValueChanged, this, &cSCPIServer::newSerialOn);
-    m_pModule->veinModuleParameterHash[key] = m_pVeinParamSerialOn; // auto delete / meta-data / scpi
+    m_pModule->m_veinModuleParameterMap[key] = m_pVeinParamSerialOn; // auto delete / meta-data / scpi
 
     m_pVeinSerialScpiDevFileName = new VfModuleActvalue(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
                                                     QString("ACT_SerialScpiDeviceFile"),
@@ -106,7 +106,7 @@ void cSCPIServer::generateInterface()
                                                          QString("Enable/disable order for SCPI commands"),
                                                          QVariant(m_ConfigData.m_enableScpiQueue.m_nActive));
     m_optionalScpiQueue->setValidator(new cBoolValidator());
-    m_pModule->veinModuleParameterHash[key] = m_optionalScpiQueue;
+    m_pModule->m_veinModuleParameterMap[key] = m_optionalScpiQueue;
 }
 
 cModuleInterface *cSCPIServer::getModuleInterface()
