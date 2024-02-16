@@ -169,7 +169,7 @@ void cTransformer1ModuleMeasProgram::generateInterface()
     dValidator = new cDoubleValidator(0.000001, 1000000.0, 0.000001);
     m_pPrimClampPrimParameter->setValidator(dValidator);
 
-    m_pModule->veinModuleParameterHash[key] = m_pPrimClampPrimParameter; // for modules use
+    m_pModule->m_veinModuleParameterMap[key] = m_pPrimClampPrimParameter; // for modules use
 
     m_pPrimClampSecParameter = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
                                                         key = QString("PAR_PrimClampSec"),
@@ -182,7 +182,7 @@ void cTransformer1ModuleMeasProgram::generateInterface()
     dValidator = new cDoubleValidator(0.000001, 1000000.0, 0.000001);
     m_pPrimClampSecParameter->setValidator(dValidator);
 
-    m_pModule->veinModuleParameterHash[key] = m_pPrimClampSecParameter; // for modules use
+    m_pModule->m_veinModuleParameterMap[key] = m_pPrimClampSecParameter; // for modules use
 
     m_pSecClampPrimParameter = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
                                                         key = QString("PAR_SecClampPrim"),
@@ -195,7 +195,7 @@ void cTransformer1ModuleMeasProgram::generateInterface()
     dValidator = new cDoubleValidator(0.000001, 1000000.0, 0.000001);
     m_pSecClampPrimParameter->setValidator(dValidator);
 
-    m_pModule->veinModuleParameterHash[key] = m_pSecClampPrimParameter; // for modules use
+    m_pModule->m_veinModuleParameterMap[key] = m_pSecClampPrimParameter; // for modules use
 
     m_pSecClampSecParameter = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
                                                        key = QString("PAR_SecClampSec"),
@@ -208,7 +208,7 @@ void cTransformer1ModuleMeasProgram::generateInterface()
     dValidator = new cDoubleValidator(0.000001, 1000000.0, 0.000001);
     m_pSecClampSecParameter->setValidator(dValidator);
 
-    m_pModule->veinModuleParameterHash[key] = m_pSecClampSecParameter; // for modules use
+    m_pModule->m_veinModuleParameterMap[key] = m_pSecClampSecParameter; // for modules use
 
     m_pPrimDutParameter = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
                                                    key = QString("PAR_DutPrimary"),
@@ -221,7 +221,7 @@ void cTransformer1ModuleMeasProgram::generateInterface()
     dValidator = new cDoubleValidator(0.000001, 1000000.0, 0.000001);
     m_pPrimDutParameter->setValidator(dValidator);
 
-    m_pModule->veinModuleParameterHash[key] = m_pPrimDutParameter; // for modules use
+    m_pModule->m_veinModuleParameterMap[key] = m_pPrimDutParameter; // for modules use
 
     m_pSecDutParameter = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
                                                   key = QString("PAR_DutSecondary"),
@@ -234,7 +234,7 @@ void cTransformer1ModuleMeasProgram::generateInterface()
     dValidator = new cDoubleValidator(0.000001, 1000000.0, 0.000001);
     m_pSecDutParameter->setValidator(dValidator);
 
-    m_pModule->veinModuleParameterHash[key] = m_pSecDutParameter; // for modules use
+    m_pModule->m_veinModuleParameterMap[key] = m_pSecDutParameter; // for modules use
 
     m_pTRSCountInfo = new VfModuleMetaData(QString("TRSCount"), QVariant(getConfData()->m_nTransformerSystemCount));
     m_pModule->veinModuleMetaDataList.append(m_pTRSCountInfo);

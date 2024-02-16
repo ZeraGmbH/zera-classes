@@ -179,7 +179,7 @@ void cRangeModule::activationFinished()
         cRangeMeasChannel* pchn = m_rangeMeasChannelList.at(i);
         connect(pchn, &cRangeMeasChannel::newRangeList, m_pRangeObsermatic, &cRangeObsermatic::catchChannelNewRangeList);
     }
-    m_pModuleValidator->setParameterHash(veinModuleParameterHash);
+    m_pModuleValidator->setParameterMap(m_veinModuleParameterMap);
 
     // now we still have to export the json interface information
     exportMetaData();

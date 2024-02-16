@@ -103,7 +103,7 @@ void cRangeObsermatic::generateInterface()
                                               true); // we prefer deferred notification for synchronization purpose
 
         m_RangeParameterList.append(pParameter); // for internal use
-        m_pModule->veinModuleParameterHash[key] = pParameter; // for modules use
+        m_pModule->m_veinModuleParameterMap[key] = pParameter; // for modules use
 
         m_actChannelRangeList.append(s); // here we also fill our internal actual channel range list
         m_actChannelRangeNotifierList.append(QString(""));
@@ -161,7 +161,7 @@ void cRangeObsermatic::generateInterface()
 
 
         m_RangeGroupPreScalingList.append(pParameter);
-        m_pModule->veinModuleParameterHash[key] = pParameter;
+        m_pModule->m_veinModuleParameterMap[key] = pParameter;
 
         // activate preScaling for U and I
         pParameter = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
@@ -174,7 +174,7 @@ void cRangeObsermatic::generateInterface()
         pParameter->setUnit("");
 
         m_RangeGroupPreScalingEnabledList.append(pParameter);
-        m_pModule->veinModuleParameterHash[key] = pParameter;
+        m_pModule->m_veinModuleParameterMap[key] = pParameter;
 
         pComponent = new VfModuleComponent(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
                                               QString("INF_PreScalingInfoGroup%1").arg(i),
@@ -203,21 +203,21 @@ void cRangeObsermatic::generateInterface()
                                                          QString("Range automatic on/off"),
                                                          QVariant(0));
 
-    m_pModule->veinModuleParameterHash["PAR_RangeAutomatic"] = m_pParRangeAutomaticOnOff; // for modules use
+    m_pModule->m_veinModuleParameterMap["PAR_RangeAutomatic"] = m_pParRangeAutomaticOnOff; // for modules use
 
     m_pParGroupingOnOff = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
                                                    QString("PAR_ChannelGrouping"),
                                                    QString("Channel grouping on/off"),
                                                    QVariant(0));
 
-    m_pModule->veinModuleParameterHash["PAR_ChannelGrouping"] = m_pParGroupingOnOff; // for modules use
+    m_pModule->m_veinModuleParameterMap["PAR_ChannelGrouping"] = m_pParGroupingOnOff; // for modules use
 
     m_pParOverloadOnOff = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
                                                    QString("PAR_Overload"),
                                                    QString("Overload"),
                                                    QVariant(0));
 
-    m_pModule->veinModuleParameterHash["PAR_Overload"] = m_pParOverloadOnOff; // for modules use
+    m_pModule->m_veinModuleParameterMap["PAR_Overload"] = m_pParOverloadOnOff; // for modules use
 
     m_pComponentOverloadMax = new VfModuleComponent(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
                                                        QString("INF_OverloadMax"),

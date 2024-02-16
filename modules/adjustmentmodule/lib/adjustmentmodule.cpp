@@ -112,7 +112,7 @@ void cAdjustmentModule::activationDone()
 
 void cAdjustmentModule::activationFinished()
 {
-    m_pModuleValidator->setParameterHash(veinModuleParameterHash);
+    m_pModuleValidator->setParameterMap(m_veinModuleParameterMap);
 
     // now we still have to export the json interface information
     exportMetaData();

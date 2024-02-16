@@ -107,7 +107,7 @@ void cBurden1ModuleMeasProgram::generateInterface()
     cDoubleValidator *dValidator;
     dValidator = new cDoubleValidator(1.0, 300.0, 0.1);
     m_pNominalRangeParameter->setValidator(dValidator);
-    m_pModule->veinModuleParameterHash[key] = m_pNominalRangeParameter; // for modules use
+    m_pModule->m_veinModuleParameterMap[key] = m_pNominalRangeParameter; // for modules use
 
     m_pNominalRangeFactorParameter = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
                                                               key = QString("PAR_NominalRangeFactor"),
@@ -118,7 +118,7 @@ void cBurden1ModuleMeasProgram::generateInterface()
     cStringValidator *sValidator;
     sValidator = new cStringValidator(QString("1;sqrt(3);1/sqrt(3);1/3"));
     m_pNominalRangeFactorParameter->setValidator(sValidator);
-    m_pModule->veinModuleParameterHash[key] = m_pNominalRangeFactorParameter; // for modules use
+    m_pModule->m_veinModuleParameterMap[key] = m_pNominalRangeFactorParameter; // for modules use
 
 
     m_pNominalBurdenParameter = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
@@ -132,7 +132,7 @@ void cBurden1ModuleMeasProgram::generateInterface()
     dValidator = new cDoubleValidator(0.1, 500.0, 0.1);
     m_pNominalBurdenParameter->setValidator(dValidator);
 
-    m_pModule->veinModuleParameterHash[key] = m_pNominalBurdenParameter; // for modules use
+    m_pModule->m_veinModuleParameterMap[key] = m_pNominalBurdenParameter; // for modules use
 
     m_pWireLengthParameter = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
                                                       key = QString("PAR_WireLength"),
@@ -145,7 +145,7 @@ void cBurden1ModuleMeasProgram::generateInterface()
     dValidator = new cDoubleValidator(0.0, 100.0, 0.1);
     m_pWireLengthParameter->setValidator(dValidator);
 
-    m_pModule->veinModuleParameterHash[key] = m_pWireLengthParameter; // for modules use
+    m_pModule->m_veinModuleParameterMap[key] = m_pWireLengthParameter; // for modules use
 
     m_pWireCrosssectionParameter = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
                                                             key = QString("PAR_WCrosssection"),
@@ -158,7 +158,7 @@ void cBurden1ModuleMeasProgram::generateInterface()
     dValidator = new cDoubleValidator(0.1, 100.0, 0.1);
     m_pWireCrosssectionParameter->setValidator(dValidator);
 
-    m_pModule->veinModuleParameterHash[key] = m_pWireCrosssectionParameter; // for modules use
+    m_pModule->m_veinModuleParameterMap[key] = m_pWireCrosssectionParameter; // for modules use
 
     m_pBRSCountInfo = new VfModuleMetaData(QString("BRSCount"), QVariant(getConfData()->m_nBurdenSystemCount));
     m_pModule->veinModuleMetaDataList.append(m_pBRSCountInfo);

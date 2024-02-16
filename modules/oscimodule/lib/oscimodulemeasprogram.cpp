@@ -165,7 +165,7 @@ void cOsciModuleMeasProgram::generateInterface()
 
     m_pRefChannelParameter->setSCPIInfo(new cSCPIInfo("CONFIGURATION","REFCHANNEL", "10", "PAR_RefChannel", "0", ""));
 
-    m_pModule->veinModuleParameterHash[key] = m_pRefChannelParameter; // for modules use
+    m_pModule->m_veinModuleParameterMap[key] = m_pRefChannelParameter; // for modules use
 
     cStringValidator *sValidator;
     sValidator = new cStringValidator(getConfData()->m_valueChannelList);

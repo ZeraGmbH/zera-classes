@@ -47,7 +47,7 @@ void cPllObsermatic::generateInterface()
                                              QString("PLL reference channel"),
                                              QVariant(""));
 
-    m_pModule->veinModuleParameterHash[key] = m_pVeinPllChannelAlias; // for modules use
+    m_pModule->m_veinModuleParameterMap[key] = m_pVeinPllChannelAlias; // for modules use
 
     // later we have to set the validator for m_pPLLChannel
     cSCPIInfo *scpiInfo = new cSCPIInfo("CONFIGURATION", "PLLREFERENCE", "10", m_pVeinPllChannelAlias->getName(), "0", "");
@@ -58,7 +58,7 @@ void cPllObsermatic::generateInterface()
                                                        QString("PLL automatic on/off"),
                                                        QVariant(m_ConfPar.m_ObsermaticConfPar.m_npllAutoAct.m_nActive));
 
-    m_pModule->veinModuleParameterHash[key] = m_pParPllAutomaticOnOff; // for modules use
+    m_pModule->m_veinModuleParameterMap[key] = m_pParPllAutomaticOnOff; // for modules use
 
     m_pParPllAutomaticOnOff->setValidator(new cBoolValidator());
     scpiInfo = new cSCPIInfo("CONFIGURATION", "PLLAUTO", "10", m_pParPllAutomaticOnOff->getName(), "0", "");
