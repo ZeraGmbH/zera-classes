@@ -158,6 +158,7 @@ private:
     void deduceMeasStartTime(quint32 dUTPulseCounterActual);
     void setDateTimeNow(QDateTime &var, VfModuleParameter* veinParam);
     void setDateTime(QDateTime var, VfModuleParameter* veinParam);
+    void calculateMeasTime();
 
     cSec1Module* m_pModule; // the module we live in
     Zera::cSECInterface* m_pSECInterface;
@@ -266,6 +267,8 @@ private:
     VfModuleParameter* m_pMulResultArray;
     VfModuleParameter* m_pMeasStartTime;
     VfModuleParameter* m_pMeasEndTime;
+    VfModuleParameter* m_pMeasTime;
+
 
     VfModuleParameter* m_pClientNotifierPar;
     ClientActiveComponent m_ClientActiveNotifier;
@@ -302,6 +305,7 @@ private:
     quint32 m_lastProgress = 0;
     QDateTime m_MeasStartDateTime;
     QDateTime m_MeasEndDateTime;
+    quint64 m_MeasTime;
 
     MultipleResultHelper m_multipleResultHelper;
     cDoubleValidator *m_dutConstValidator;
