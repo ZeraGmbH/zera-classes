@@ -564,9 +564,8 @@ void cRangeModuleMeasProgram::dataAcquisitionDSP()
 
 void cRangeModuleMeasProgram::dataReadDSP()
 {
-    if (m_bActive)
-    {
-        m_pDSPInterFace->getData(m_pActualValuesDSP, m_ModuleActualValues);
+    if (m_bActive) {
+        m_ModuleActualValues = m_pActualValuesDSP->getData();
         emit actualValues(&m_ModuleActualValues); // and send them
         m_pMeasureSignal->setValue(QVariant(1)); // signal measuring
     }

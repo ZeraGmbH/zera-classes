@@ -428,14 +428,9 @@ void cSampleModuleMeasProgram::dataAcquisitionDSP()
 void cSampleModuleMeasProgram::dataReadDSP()
 {
     if (m_bActive) {
-        m_pDSPInterFace->getData(m_pActualValuesDSP, m_ModuleActualValues);
+        m_ModuleActualValues = m_pActualValuesDSP->getData();
         emit actualValues(&m_ModuleActualValues); // and send them
     }
 }
 
 }
-
-
-
-
-

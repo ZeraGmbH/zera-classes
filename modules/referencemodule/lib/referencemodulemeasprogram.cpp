@@ -425,11 +425,9 @@ void cReferenceModuleMeasProgram::dataAcquisitionDSP()
 
 void cReferenceModuleMeasProgram::dataReadDSP()
 {
-    if (m_bActive)
-    {
-        m_pDSPInterFace->getData(m_pActualValuesDSP, m_ModuleActualValues);
+    if (m_bActive) {
+        m_ModuleActualValues = m_pActualValuesDSP->getData();
         emit actualValues(&m_ModuleActualValues); // and send them
-
     }
 }
 

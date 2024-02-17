@@ -607,7 +607,7 @@ void cRangeObsermatic::readGainCorr()
     // qInfo() << "readGainCorr";
     m_pGainCorrection2DSP = m_pDSPInterFace->getMemHandle("SCALEMEM");
     m_pGainCorrection2DSP->addVarItem( new cDspVar("GAINCORRECTION2",32, DSPDATA::vDspIntVar));
-    m_pfScale =  m_pDSPInterFace->data(m_pGainCorrection2DSP, "GAINCORRECTION2");
+    m_pfScale =  m_pGainCorrection2DSP->data("GAINCORRECTION2");
     m_MsgNrCmdList[m_pDSPInterFace->dspMemoryRead(m_pGainCorrection2DSP)] = readgain2corr;
 }
 

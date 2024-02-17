@@ -929,7 +929,7 @@ void cDftModuleMeasProgram::turnVectorsToRefChannel()
 void cDftModuleMeasProgram::dataReadDSP()
 {
     if (m_bActive) {
-        m_pDSPInterFace->getData(m_pActualValuesDSP, m_ModuleActualValues); // we fetch our actual values
+        m_ModuleActualValues = m_pActualValuesDSP->getData();
         // dft(0) is a speciality. sin and cos in dsp are set so that we get amplitude rather than energy.
         // so dc is multiplied  by sqrt(2) * sqrt(2) = 2
         // used in COM5003 ref session

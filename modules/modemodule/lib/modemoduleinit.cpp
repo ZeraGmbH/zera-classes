@@ -331,7 +331,7 @@ void cModeModuleInit::writeGainCorr()
 {
     m_pCorrectionDSP = m_pDSPInterface->getMemHandle("GainCorrection");
     m_pCorrectionDSP->addVarItem( new cDspVar("GAINCORRECTION",32, DSPDATA::vDspIntVar));
-    float* data = m_pDSPInterface->data(m_pCorrectionDSP, "GAINCORRECTION");
+    float* data = m_pCorrectionDSP->data("GAINCORRECTION");
     for (int i = 0; i < 32; i++) {
         data[i] = 1.0;
     }
@@ -345,7 +345,7 @@ void cModeModuleInit::writeGainCorr2()
 
     m_pCorrectionDSP = m_pDSPInterface->getMemHandle("GainCorrection");
     m_pCorrectionDSP->addVarItem( new cDspVar("GAINCORRECTION2",32, DSPDATA::vDspIntVar));
-    float* data = m_pDSPInterface->data(m_pCorrectionDSP, "GAINCORRECTION2");
+    float* data = m_pCorrectionDSP->data("GAINCORRECTION2");
     for (int i = 0; i < 32; i++) {
         data[i] = 1.0;
     }
@@ -359,7 +359,7 @@ void cModeModuleInit::writePhaseCorr()
 
     m_pCorrectionDSP = m_pDSPInterface->getMemHandle("PhaseCorrection");
     m_pCorrectionDSP->addVarItem( new cDspVar("PHASECORRECTION",32, DSPDATA::vDspIntVar));
-    float* data = m_pDSPInterface->data(m_pCorrectionDSP, "PHASECORRECTION");
+    float* data = m_pCorrectionDSP->data("PHASECORRECTION");
     for (int i = 0; i < 32; i++) {
         data[i] = 0.0;
     }
@@ -373,7 +373,7 @@ void cModeModuleInit::writePhaseCorr2()
 
     m_pCorrectionDSP = m_pDSPInterface->getMemHandle("PhaseCorrection");
     m_pCorrectionDSP->addVarItem( new cDspVar("PHASECORRECTION2",32, DSPDATA::vDspIntVar));
-    float* data = m_pDSPInterface->data(m_pCorrectionDSP, "PHASECORRECTION2");
+    float* data = m_pCorrectionDSP->data("PHASECORRECTION2");
     for (int i = 0; i < 32; i++) {
         data[i] = 0.0;
     }
@@ -387,7 +387,7 @@ void cModeModuleInit::writeOffsetCorr()
 
     m_pCorrectionDSP = m_pDSPInterface->getMemHandle("OffsetCorrection");
     m_pCorrectionDSP->addVarItem( new cDspVar("OFFSETCORRECTION",32, DSPDATA::vDspIntVar));
-    float* data = m_pDSPInterface->data(m_pCorrectionDSP, "OFFSETCORRECTION");
+    float* data = m_pCorrectionDSP->data("OFFSETCORRECTION");
     for (int i = 0; i < 32; i++) {
         data[i] = 0.0;
     }
@@ -401,7 +401,7 @@ void cModeModuleInit::writeOffsetCorr2()
 
     m_pCorrectionDSP = m_pDSPInterface->getMemHandle("OffsetCorrection");
     m_pCorrectionDSP->addVarItem( new cDspVar("OFFSETCORRECTION2",32, DSPDATA::vDspIntVar));
-    float* data = m_pDSPInterface->data(m_pCorrectionDSP, "OFFSETCORRECTION2");
+    float* data = m_pCorrectionDSP->data("OFFSETCORRECTION2");
     for (int i = 0; i < 32; i++) {
         data[i] = 0.0;
     }
