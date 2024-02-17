@@ -153,15 +153,15 @@ void cAdjustManagement::readGainCorr()
 
     m_pGainCorrectionDSP = m_pDSPInterFace->getMemHandle("GainCorrection");
     m_pGainCorrectionDSP->addVarItem( new cDspVar("GAINCORRECTION",32, DSPDATA::vDspIntVar));
-    m_fGainCorr = m_pDSPInterFace->data(m_pGainCorrectionDSP, "GAINCORRECTION");
+    m_fGainCorr = m_pGainCorrectionDSP->data("GAINCORRECTION");
 
     m_pPhaseCorrectionDSP = m_pDSPInterFace->getMemHandle("PhaseCorrection");
     m_pPhaseCorrectionDSP->addVarItem( new cDspVar("PHASECORRECTION",32, DSPDATA::vDspIntVar));
-    m_fPhaseCorr = m_pDSPInterFace->data(m_pPhaseCorrectionDSP, "PHASECORRECTION");
+    m_fPhaseCorr = m_pPhaseCorrectionDSP->data("PHASECORRECTION");
 
     m_pOffsetCorrectionDSP = m_pDSPInterFace->getMemHandle("OffsetCorrection");
     m_pOffsetCorrectionDSP->addVarItem( new cDspVar("OFFSETCORRECTION",32, DSPDATA::vDspIntVar));
-    m_fOffsetCorr = m_pDSPInterFace->data(m_pOffsetCorrectionDSP, "OFFSETCORRECTION");
+    m_fOffsetCorr = m_pOffsetCorrectionDSP->data("OFFSETCORRECTION");
 
     m_MsgNrCmdList[m_pDSPInterFace->dspMemoryRead(m_pGainCorrectionDSP)] = readgaincorr;
 }

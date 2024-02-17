@@ -1500,9 +1500,8 @@ void cPower1ModuleMeasProgram::dataAcquisitionDSP()
 
 void cPower1ModuleMeasProgram::dataReadDSP()
 {
-    if (m_bActive)
-    {
-        m_pDSPInterFace->getData(m_dspVars.getActualValues(), m_ModuleActualValues); // we fetch our actual values
+    if (m_bActive) {
+        m_ModuleActualValues = m_dspVars.getActualValues()->getData();
         emit actualValues(&m_ModuleActualValues); // and send them
         m_pMeasureSignal->setValue(QVariant(1)); // signal measuring
     }

@@ -143,11 +143,11 @@ void cReferenceAdjustment::activationDone()
     if(!m_pModule->getDemo()) {
         m_pGainCorrectionDSP = m_pDSPInterFace->getMemHandle("GainCorrection");
         m_pGainCorrectionDSP->addVarItem( new cDspVar("GAINCORRECTION",32, DSPDATA::vDspIntVar));
-        m_fGainCorr = m_pDSPInterFace->data(m_pGainCorrectionDSP, "GAINCORRECTION");
+        m_fGainCorr = m_pGainCorrectionDSP->data("GAINCORRECTION");
 
         m_pOffset2CorrectionDSP = m_pDSPInterFace->getMemHandle("OffsetCorrection");
         m_pOffset2CorrectionDSP->addVarItem( new cDspVar("OFFSETCORRECTION2",32, DSPDATA::vDspIntVar));
-        m_fOffset2Corr = m_pDSPInterFace->data(m_pOffset2CorrectionDSP, "OFFSETCORRECTION2");
+        m_fOffset2Corr = m_pOffset2CorrectionDSP->data("OFFSETCORRECTION2");
     }
 
     m_nIgnoreCount = m_pConfigData->m_nIgnore;

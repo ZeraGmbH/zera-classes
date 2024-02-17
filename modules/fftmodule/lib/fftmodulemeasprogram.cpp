@@ -905,9 +905,8 @@ void cFftModuleMeasProgram::dataAcquisitionDSP()
 
 void cFftModuleMeasProgram::dataReadDSP()
 {
-    if (m_bActive)
-    {
-        m_pDSPInterFace->getData(m_pActualValuesDSP, m_ModuleActualValues); // we fetch our actual values
+    if (m_bActive) {
+        m_ModuleActualValues = m_pActualValuesDSP->getData();
 
         int nChannels, nHarmonic;
         int middle, offs, resultOffs;

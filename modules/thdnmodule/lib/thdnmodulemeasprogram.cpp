@@ -897,11 +897,9 @@ void cThdnModuleMeasProgram::dataAcquisitionDSP()
 
 void cThdnModuleMeasProgram::dataReadDSP()
 {
-    if (m_bActive)
-    {
-        m_pDSPInterFace->getData(m_pActualValuesDSP, m_ModuleActualValues); // we fetch our actual values
-        if (getConfData()->m_sTHDType == "R")
-        {
+    if (m_bActive) {
+        m_ModuleActualValues = m_pActualValuesDSP->getData();
+        if (getConfData()->m_sTHDType == "R") {
             double thdn, thdr;
             for (int i = 0; i < m_ModuleActualValues.length(); i++)
             {
