@@ -43,12 +43,6 @@ cRangeMeasChannel *cRangeModule::getMeasChannel(QString name)
 }
 
 
-void cRangeModule::doConfiguration(QByteArray xmlConfigData)
-{
-    m_pConfiguration->setConfiguration(xmlConfigData);
-}
-
-
 void cRangeModule::setupModule()
 {
     emit addEventSystem(m_pModuleValidator);

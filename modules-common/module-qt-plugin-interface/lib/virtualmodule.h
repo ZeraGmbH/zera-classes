@@ -24,7 +24,6 @@ public:
     QString getVeinModuleName() { return m_sModuleName; };
     QString getSCPIModuleName() { return m_sSCPIModuleName; };
 
-    virtual void setConfiguration(QByteArray xmlConfigData) = 0; // here we set configuration and parameters
     virtual QByteArray getConfiguration() const = 0;
     virtual bool isConfigured() const = 0;
 

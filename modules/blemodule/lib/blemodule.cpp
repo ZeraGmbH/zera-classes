@@ -46,11 +46,6 @@ QByteArray cBleModule::getConfiguration() const
     return m_pConfiguration->exportConfiguration();
 }
 
-void cBleModule::doConfiguration(QByteArray xmlConfigData)
-{
-    m_pConfiguration->setConfiguration(xmlConfigData);
-}
-
 void cBleModule::setupModule()
 {
     emit addEventSystem(m_pModuleValidator);

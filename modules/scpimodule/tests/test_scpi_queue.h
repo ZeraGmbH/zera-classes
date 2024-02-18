@@ -16,7 +16,9 @@ private slots:
     void enableAndDisableQueueWhileExecutingCmds();
     void disableAndEnableQueueWhileExecutingCmds();
 private:
+    QByteArray loadConfig(QString configFileNameFull);
     AbstractFactoryActValManInTheMiddlePtr m_actValGen;
+
 };
 
 #endif // TEST_SCPI_QUEUE_H

@@ -49,12 +49,6 @@ QByteArray cRmsModule::getConfiguration() const
 
 
 
-void cRmsModule::doConfiguration(QByteArray xmlConfigData)
-{
-    m_pConfiguration->setConfiguration(xmlConfigData);
-}
-
-
 void cRmsModule::setupModule()
 {
     emit addEventSystem(m_pModuleValidator);

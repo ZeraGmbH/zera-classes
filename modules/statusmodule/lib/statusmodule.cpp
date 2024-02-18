@@ -50,12 +50,6 @@ QByteArray cStatusModule::getConfiguration() const
 }
 
 
-void cStatusModule::doConfiguration(QByteArray xmlConfigData)
-{
-    m_pConfiguration->setConfiguration(xmlConfigData);
-}
-
-
 void cStatusModule::setupModule()
 {
     emit addEventSystem(m_pModuleValidator);

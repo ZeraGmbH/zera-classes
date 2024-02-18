@@ -49,12 +49,6 @@ QByteArray cEfficiency1Module::getConfiguration() const
 }
 
 
-void cEfficiency1Module::doConfiguration(QByteArray xmlConfigData)
-{
-    m_pConfiguration->setConfiguration(xmlConfigData);
-}
-
-
 void cEfficiency1Module::setupModule()
 {
     emit addEventSystem(m_pModuleValidator);

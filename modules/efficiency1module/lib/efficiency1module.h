@@ -18,7 +18,6 @@ public:
 
 protected:
     cEfficiency1ModuleMeasProgram *m_pMeasProgram; // our measuring program, lets say the working horse
-    virtual void doConfiguration(QByteArray xmlConfigData); // here we have to do our configuration
     virtual void setupModule(); // after xml configuration we can setup and export our module
     virtual void startMeas(); // we make the measuring program start here
     virtual void stopMeas();

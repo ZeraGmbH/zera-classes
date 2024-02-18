@@ -50,12 +50,6 @@ QByteArray cLambdaModule::getConfiguration() const
 
 
 
-void cLambdaModule::doConfiguration(QByteArray xmlConfigData)
-{
-    m_pConfiguration->setConfiguration(xmlConfigData);
-}
-
-
 void cLambdaModule::setupModule()
 {
     emit addEventSystem(m_pModuleValidator);

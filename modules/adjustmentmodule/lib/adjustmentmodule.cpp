@@ -48,12 +48,6 @@ QByteArray cAdjustmentModule::getConfiguration() const
 
 
 
-void cAdjustmentModule::doConfiguration(QByteArray xmlConfigData)
-{
-    m_pConfiguration->setConfiguration(xmlConfigData);
-}
-
-
 void cAdjustmentModule::setupModule()
 {
     emit addEventSystem(m_pModuleValidator);

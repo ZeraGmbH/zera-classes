@@ -28,7 +28,6 @@ protected:
     cAdjustManagement * m_pAdjustment = nullptr; // our justifying and normation program
     cRangeObsermatic *m_pRangeObsermatic = nullptr; // our range handling
     QList<cRangeMeasChannel*> m_rangeMeasChannelList; // our meas channels
-    virtual void doConfiguration(QByteArray xmlConfigData); // here we have to do our configuration
     virtual void setupModule(); // after xml configuration we can setup and export our module
     virtual void startMeas(); // we make the measuring program start here
     virtual void stopMeas();

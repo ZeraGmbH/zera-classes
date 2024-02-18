@@ -71,12 +71,6 @@ cReferenceMeasChannel *cReferenceModule::getMeasChannel(QString name)
 }
 
 
-void cReferenceModule::doConfiguration(QByteArray xmlConfigData)
-{
-    m_pConfiguration->setConfiguration(xmlConfigData);
-}
-
-
 void cReferenceModule::setupModule()
 {
     emit addEventSystem(m_pModuleValidator);

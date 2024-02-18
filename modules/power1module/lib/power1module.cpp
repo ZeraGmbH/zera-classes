@@ -54,11 +54,6 @@ VfEventSystemInputComponents *cPower1Module::getPEventSystem() const
     return m_inputComponentEventSystem;
 }
 
-void cPower1Module::doConfiguration(QByteArray xmlConfigData)
-{
-    m_pConfiguration->setConfiguration(xmlConfigData);
-}
-
 void cPower1Module::setupModule()
 {
     emit addEventSystem(m_pModuleValidator);

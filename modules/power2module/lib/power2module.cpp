@@ -51,12 +51,6 @@ QByteArray cPower2Module::getConfiguration() const
 
 
 
-void cPower2Module::doConfiguration(QByteArray xmlConfigData)
-{
-    m_pConfiguration->setConfiguration(xmlConfigData);
-}
-
-
 void cPower2Module::setupModule()
 {
     emit addEventSystem(m_pModuleValidator);

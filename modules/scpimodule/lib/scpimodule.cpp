@@ -44,12 +44,6 @@ cSCPIServer *cSCPIModule::getSCPIServer()
 }
 
 
-void cSCPIModule::doConfiguration(QByteArray xmlConfigData)
-{
-    m_pConfiguration->setConfiguration(xmlConfigData);
-}
-
-
 void cSCPIModule::setupModule()
 {
     emit addEventSystem(m_pModuleValidator);

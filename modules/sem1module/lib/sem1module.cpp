@@ -52,12 +52,6 @@ QByteArray cSem1Module::getConfiguration() const
 }
 
 
-void cSem1Module::doConfiguration(QByteArray xmlConfigData)
-{
-    m_pConfiguration->setConfiguration(xmlConfigData);
-}
-
-
 void cSem1Module::setupModule()
 {
     emit addEventSystem(m_pModuleValidator);

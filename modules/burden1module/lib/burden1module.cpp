@@ -51,12 +51,6 @@ QByteArray cBurden1Module::getConfiguration() const
 
 
 
-void cBurden1Module::doConfiguration(QByteArray xmlConfigData)
-{
-    m_pConfiguration->setConfiguration(xmlConfigData);
-}
-
-
 void cBurden1Module::setupModule()
 {
     emit addEventSystem(m_pModuleValidator);

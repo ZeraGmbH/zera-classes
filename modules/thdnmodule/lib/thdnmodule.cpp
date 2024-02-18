@@ -58,12 +58,6 @@ QByteArray cThdnModule::getConfiguration() const
 
 
 
-void cThdnModule::doConfiguration(QByteArray xmlConfigData)
-{
-    m_pConfiguration->setConfiguration(xmlConfigData);
-}
-
-
 void cThdnModule::setupModule()
 {
     emit addEventSystem(m_pModuleValidator);
