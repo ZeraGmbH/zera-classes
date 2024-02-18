@@ -1,6 +1,7 @@
 #include "rangemodule.h"
 #include "rangeobsermatic.h"
 #include "rangemeaschannel.h"
+#include "factoryserviceinterfacessingleton.h"
 #include <errormessages.h>
 #include <reply.h>
 #include <proxy.h>
@@ -27,7 +28,7 @@ cRangeObsermatic::cRangeObsermatic(cRangeModule *module, cSocket *dsprmsocket, Q
 
     //  we set 0.0 as default value for all peak values in case that these values are needed before actual values really arrived
 
-    m_pDSPInterFace = new Zera::cDSPInterface();
+    m_dspInterface = FactoryServiceInterfacesSingleton::getInstance()->getDspInterfaceOther();
 
     m_readGainCorrState.addTransition(this, &cRangeObsermatic::activationContinue, &m_readGainCorrDoneState);
     m_activationMachine.addState(&m_dspserverConnectState);
@@ -61,13 +62,6 @@ cRangeObsermatic::cRangeObsermatic(cRangeModule *module, cSocket *dsprmsocket, Q
     connect(&m_writeGainCorrState, &QState::entered, this, &cRangeObsermatic::writeGainCorr);
     connect(&m_writeGainCorrDoneState, &QState::entered, this, &cRangeObsermatic::writeGainCorrDone);
 }
-
-
-cRangeObsermatic::~cRangeObsermatic()
-{
-    delete m_pDSPInterFace;
-}
-
 
 void cRangeObsermatic::ActionHandler(QVector<float> *actualValues)
 {
@@ -594,21 +588,21 @@ void cRangeObsermatic::dspserverConnect()
         m_ChannelAliasList.replace(i, m_RangeMeasChannelList.at(i)->getAlias());
     }
 
-    m_pDspClient = Zera::Proxy::getInstance()->getConnection(m_pDSPSocket->m_sIP, m_pDSPSocket->m_nPort);
-    m_pDSPInterFace->setClient(m_pDspClient);
-    m_dspserverConnectState.addTransition(m_pDspClient, &Zera::ProxyClient::connected, &m_readGainCorrState);
-    connect(m_pDSPInterFace, &Zera::cDSPInterface::serverAnswer, this, &cRangeObsermatic::catchInterfaceAnswer);
-    Zera::Proxy::getInstance()->startConnection(m_pDspClient);
+    m_dspClient = Zera::Proxy::getInstance()->getConnectionSmart(m_pDSPSocket->m_sIP, m_pDSPSocket->m_nPort);
+    m_dspInterface->setClientSmart(m_dspClient);
+    m_dspserverConnectState.addTransition(m_dspClient.get(), &Zera::ProxyClient::connected, &m_readGainCorrState);
+    connect(m_dspInterface.get(), &Zera::cDSPInterface::serverAnswer, this, &cRangeObsermatic::catchInterfaceAnswer);
+    Zera::Proxy::getInstance()->startConnectionSmart(m_dspClient);
 }
 
 
 void cRangeObsermatic::readGainCorr()
 {
     // qInfo() << "readGainCorr";
-    m_pGainCorrection2DSP = m_pDSPInterFace->getMemHandle("SCALEMEM");
+    m_pGainCorrection2DSP = m_dspInterface->getMemHandle("SCALEMEM");
     m_pGainCorrection2DSP->addVarItem( new cDspVar("GAINCORRECTION2",32, DSPDATA::vDspIntVar));
     m_pfScale =  m_pGainCorrection2DSP->data("GAINCORRECTION2");
-    m_MsgNrCmdList[m_pDSPInterFace->dspMemoryRead(m_pGainCorrection2DSP)] = readgain2corr;
+    m_MsgNrCmdList[m_dspInterface->dspMemoryRead(m_pGainCorrection2DSP)] = readgain2corr;
 }
 
 
@@ -694,9 +688,9 @@ void cRangeObsermatic::readGainCorrDone()
 void cRangeObsermatic::deactivationInit()
 {
     m_bActive = false;
-    Zera::Proxy::getInstance()->releaseConnection(m_pDspClient);
-    disconnect(m_pDSPInterFace, 0, this, 0); // we disconnect from our dsp interface
-    m_pDSPInterFace->deleteMemHandle(m_pGainCorrection2DSP); // and free our memory handle
+    Zera::Proxy::getInstance()->releaseConnection(m_dspClient.get());
+    disconnect(m_dspInterface.get(), 0, this, 0); // we disconnect from our dsp interface
+    m_dspInterface->deleteMemHandle(m_pGainCorrection2DSP); // and free our memory handle
     emit deactivationContinue();
 }
 
@@ -711,7 +705,7 @@ void cRangeObsermatic::writeGainCorr()
 {
     // qInfo() << "writeGainCorr";
     if (m_bActive) {
-        m_MsgNrCmdList[m_pDSPInterFace->dspMemoryWrite(m_pGainCorrection2DSP)] = writegain2corr;
+        m_MsgNrCmdList[m_dspInterface->dspMemoryWrite(m_pGainCorrection2DSP)] = writegain2corr;
     }
 }
 

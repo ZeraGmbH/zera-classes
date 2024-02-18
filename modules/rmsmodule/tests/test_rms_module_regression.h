@@ -12,6 +12,7 @@ class test_rms_module_regression : public QObject
 {
     Q_OBJECT
 private slots:
+    void initTestCase();
     void cleanup();
 
     void minimalSession();

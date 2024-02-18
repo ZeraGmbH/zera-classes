@@ -25,6 +25,7 @@ target_link_libraries(zera-modulemanager-testlib
     Zera::zenuxservicecommon-testlib
     zera-modulemanager-lib
     module-actual-values-testlib
+    module-service-interfaces-testlib
 )
 
 set_target_properties(zera-modulemanager-testlib PROPERTIES VERSION ${PROJECT_VERSION})

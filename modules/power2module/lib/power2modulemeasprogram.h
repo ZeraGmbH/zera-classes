@@ -58,7 +58,6 @@ class cPower2ModuleMeasProgram: public cBaseDspMeasProgram
     Q_OBJECT
 public:
     cPower2ModuleMeasProgram(cPower2Module* module, std::shared_ptr<cBaseModuleConfiguration> pConfiguration);
-    virtual ~cPower2ModuleMeasProgram();
     virtual void generateInterface(); // here we export our interface (entities)
 public slots:
     virtual void start(); // difference between start and stop is that actual values

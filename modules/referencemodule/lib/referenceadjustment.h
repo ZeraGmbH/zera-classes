@@ -3,6 +3,7 @@
 
 #include "referencemoduleconfigdata.h"
 #include "referencemeaschannel.h"
+#include "abstractfactoryserviceinterfaces.h"
 #include <moduleactivist.h>
 #include <dspinterface.h>
 #include <pcbinterface.h>
@@ -38,8 +39,8 @@ signals:
 private:
     cReferenceModule* m_pModule; // the module we live in
     cReferenceModuleConfigData* m_pConfigData;
-    Zera::cDSPInterface* m_pDSPInterFace; // our interface to dsp
-    Zera::ProxyClient *m_pDspClient;
+    DspInterfacePtr m_dspInterface;
+    Zera::ProxyClientPtr m_dspClient;
     Zera::cPCBInterface *m_pPCBInterface;
     Zera::ProxyClient *m_pPCBClient;
     QList<cReferenceMeasChannel*> m_ChannelList;

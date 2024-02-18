@@ -4,6 +4,7 @@
 #include "rangemoduleconfigdata.h"
 #include "rangemeaschannel.h"
 #include <moduleactivist.h>
+#include "abstractfactoryserviceinterfaces.h"
 #include <vfmoduleparameter.h>
 #include <socket.h>
 #include <stringvalidator.h>
@@ -42,7 +43,6 @@ class cRangeObsermatic: public cModuleActivist
     Q_OBJECT
 public:
     cRangeObsermatic(cRangeModule* module, cSocket* dspsocket, QList<QStringList> groupList, QStringList chnlist, cObsermaticConfPar& confpar, bool demo);
-    virtual ~cRangeObsermatic();
     virtual void generateInterface(); // here we export our interface (entities)
     VfModuleComponent *m_pRangingSignal;
 public slots:
@@ -56,8 +56,8 @@ private:
     QList<QStringList> m_GroupList;
     QStringList m_ChannelNameList; // the system names of our channels
     cObsermaticConfPar& m_ConfPar;
-    Zera::cDSPInterface* m_pDSPInterFace; // our interface to dsp
-    Zera::ProxyClient *m_pDspClient;
+    DspInterfacePtr m_dspInterface;
+    Zera::ProxyClientPtr m_dspClient;
     QStringList m_ChannelAliasList; // the alias of our channels
     QList<cRangeMeasChannel*> m_RangeMeasChannelList;
     QHash<QString,cStringValidator*> m_ChannelRangeValidatorHash;

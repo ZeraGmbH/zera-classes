@@ -2,6 +2,8 @@
 #include "licensesystemmock.h"
 #include "testfactoryactvalmaninthemiddle.h"
 #include "testmodulemanager.h"
+#include "factoryserviceinterfacessingleton.h"
+#include "testfactoryserviceinterfaces.h"
 #include "scpimoduleclientblocked.h"
 #include <timemachineobject.h>
 #include <scpimodule.h>
@@ -15,6 +17,11 @@
 #include <QTest>
 
 QTEST_MAIN(test_scpi_cmds_in_session)
+
+void test_scpi_cmds_in_session::initTestCase()
+{
+    FactoryServiceInterfacesSingleton::setInstance(std::make_unique<TestFactoryServiceInterfaces>());
+}
 
 void test_scpi_cmds_in_session::cleanup()
 {

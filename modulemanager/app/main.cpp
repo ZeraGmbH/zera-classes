@@ -1,5 +1,8 @@
 #include "demofactoryactvalmaninthemiddle.h"
 #include "factoryactvalmaninthemiddle.h"
+#include "demofactoryserviceinterfaces.h"
+#include "factoryserviceinterfaces.h"
+#include "factoryserviceinterfacessingleton.h"
 #include "modulemanager.h"
 #include "modulemanagerconfig.h"
 #include "customerdatasystem.h"
@@ -133,10 +136,14 @@ int main(int argc, char *argv[])
     ModuleManagerSetupFacade *modManSetupFacade = new ModuleManagerSetupFacade(licenseSystem, mmConfig->isDevMode(), app.get());
 
     AbstractFactoryActValManInTheMiddlePtr actualValueFactory;
-    if(demoMode)
+    if(demoMode) {
         actualValueFactory = std::make_shared<DemoFactoryActValManInTheMiddle>();
-    else
+        FactoryServiceInterfacesSingleton::setInstance(std::make_unique<DemoFactoryServiceInterfaces>());
+    }
+    else {
         actualValueFactory = std::make_shared<FactoryActValManInTheMiddle>();
+        FactoryServiceInterfacesSingleton::setInstance(std::make_unique<FactoryServiceInterfaces>());
+    }
     ZeraModules::ModuleManager *modMan = new ZeraModules::ModuleManager(
         modManSetupFacade,
         actualValueFactory,

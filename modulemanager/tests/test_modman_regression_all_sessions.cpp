@@ -4,6 +4,8 @@
 #include "moduledata.h"
 #include "modulemanagerconfig.h"
 #include "testfactoryactvalmaninthemiddle.h"
+#include "factoryserviceinterfacessingleton.h"
+#include "testfactoryserviceinterfaces.h"
 #include <timemachineobject.h>
 #include <QTest>
 
@@ -11,6 +13,7 @@ QTEST_MAIN(test_modman_regression_all_sessions)
 
 void test_modman_regression_all_sessions::initTestCase()
 {
+    FactoryServiceInterfacesSingleton::setInstance(std::make_unique<TestFactoryServiceInterfaces>());
     ModuleManagerSetupFacade::registerMetaTypeStreamOperators();
     TestModuleManager::supportOeTests();
     TestModuleManager::pointToInstalledSessionFiles();
@@ -1159,4 +1162,3 @@ void test_modman_regression_all_sessions::regressionMt310s2Meas()
     modMan.destroyModulesAndWaitUntilAllShutdown();
     // ------ end auto generated code ----
 }
-
