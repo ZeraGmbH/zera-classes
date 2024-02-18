@@ -43,7 +43,6 @@ class cDftModuleMeasProgram: public cBaseDspMeasProgram
     Q_OBJECT
 public:
     cDftModuleMeasProgram(cDftModule* module, std::shared_ptr<cBaseModuleConfiguration> pConfiguration);
-    virtual ~cDftModuleMeasProgram();
     virtual void generateInterface() override; // here we export our interface (components)
 
 public slots:

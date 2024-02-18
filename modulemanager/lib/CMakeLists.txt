@@ -42,4 +42,6 @@ target_link_libraries(zera-modulemanager-lib
     zera-json-params
     module-actual-values
     module-actual-values-demolib
+    module-service-interfaces
+    module-service-interfaces-demolib
     )

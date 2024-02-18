@@ -11,6 +11,7 @@ class test_scpi_cmds_in_session : public QObject
 {
     Q_OBJECT
 private slots:
+    void initTestCase();
     void cleanup();
 
     void initialSession();

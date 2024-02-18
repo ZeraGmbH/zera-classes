@@ -13,7 +13,6 @@
 #include <QTimer>
 #include <QElapsedTimer>
 
-
 namespace VeinEvent
 {
 class StorageSystem;

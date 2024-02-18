@@ -18,6 +18,7 @@ target_link_libraries(zera-basemodule
     PUBLIC
     module-qt-plugin-interface
     vf-moduleinterface
+    module-service-interfaces
     Zera::zera-xmlconfig
     Zera::service-interfaces
     Zera::zera-timers

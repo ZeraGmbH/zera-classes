@@ -5,6 +5,7 @@
 #include "veinvalidatorphasestringgenerator.h"
 #include "measmodephasepersistency.h"
 #include <timerfactoryqt.h>
+#include "factoryserviceinterfacessingleton.h"
 #include <errormessages.h>
 #include <reply.h>
 #include <proxy.h>
@@ -21,7 +22,7 @@ cPower1ModuleMeasProgram::cPower1ModuleMeasProgram(cPower1Module* module, std::s
     cBaseDspMeasProgram(pConfiguration),
     m_pModule(module)
 {
-    m_pDSPInterFace = new Zera::cDSPInterface();
+    m_dspInterface = FactoryServiceInterfacesSingleton::getInstance()->getDspInterfaceOther();
 
     if(m_pModule->getDemo()) //skip SENSE resource & DSP server. Mock facade does't have SENSE resource & mock DSP server yet !
         m_IdentifyState.addTransition(this, &cModuleActivist::activationContinue, &m_readResourceSourceState);
@@ -262,13 +263,6 @@ cPower1ModuleMeasProgram::cPower1ModuleMeasProgram(cPower1Module* module, std::s
     }
 }
 
-
-cPower1ModuleMeasProgram::~cPower1ModuleMeasProgram()
-{
-    delete m_pDSPInterFace;
-}
-
-
 void cPower1ModuleMeasProgram::start()
 {
     if (getConfData()->m_bmovingWindow) {
@@ -470,7 +464,7 @@ void cPower1ModuleMeasProgram::generateInterface()
 
 void cPower1ModuleMeasProgram::setDspVarList()
 {
-    m_dspVars.setupVarList(m_pDSPInterFace, getConfData(), m_nSRate);
+    m_dspVars.setupVarList(m_dspInterface.get(), getConfData(), m_nSRate);
     m_ModuleActualValues.resize(m_dspVars.getActualValues()->getSize()); // we provide a vector for generated actual values
     m_nDspMemUsed = m_dspVars.getMemUsed();
 }
@@ -478,7 +472,7 @@ void cPower1ModuleMeasProgram::setDspVarList()
 
 void cPower1ModuleMeasProgram::deleteDspVarList()
 {
-    m_dspVars.deleteVarList(m_pDSPInterFace);
+    m_dspVars.deleteVarList(m_dspInterface.get());
 }
 
 MeasSystemChannels cPower1ModuleMeasProgram::getMeasChannelUIPairs()
@@ -533,14 +527,14 @@ void cPower1ModuleMeasProgram::setDspCmdList()
     QStringList dspFreqCmds = Power1DspCmdGenerator::getCmdsFreqOutput(confdata, m_FoutInfoHash, irqNr, dspChainGen);
 
     // sequence here is important
-    m_pDSPInterFace->addCycListItems(dspInitVarsList);
-    m_pDSPInterFace->addCycListItems(dspMModesCommandList);
-    m_pDSPInterFace->addCycListItems(dspFreqCmds);
+    m_dspInterface->addCycListItems(dspInitVarsList);
+    m_dspInterface->addCycListItems(dspMModesCommandList);
+    m_dspInterface->addCycListItems(dspFreqCmds);
 }
 
 void cPower1ModuleMeasProgram::deleteDspCmdList()
 {
-    m_pDSPInterFace->clearCmdList();
+    m_dspInterface->clearCmdList();
 }
 
 void cPower1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant answer)
@@ -1312,11 +1306,11 @@ void cPower1ModuleMeasProgram::setSenseChannelRangeNotifierDone()
 
 void cPower1ModuleMeasProgram::dspserverConnect()
 {
-    m_pDspClient = Zera::Proxy::getInstance()->getConnection(getConfData()->m_DSPServerSocket.m_sIP, getConfData()->m_DSPServerSocket.m_nPort);
-    m_pDSPInterFace->setClient(m_pDspClient);
-    m_dspserverConnectState.addTransition(m_pDspClient, &Zera::ProxyClient::connected, &m_claimPGRMemState);
-    connect(m_pDSPInterFace, &Zera::cDSPInterface::serverAnswer, this, &cPower1ModuleMeasProgram::catchInterfaceAnswer);
-    Zera::Proxy::getInstance()->startConnection(m_pDspClient);
+    m_dspClient = Zera::Proxy::getInstance()->getConnectionSmart(getConfData()->m_DSPServerSocket.m_sIP, getConfData()->m_DSPServerSocket.m_nPort);
+    m_dspInterface->setClientSmart(m_dspClient);
+    m_dspserverConnectState.addTransition(m_dspClient.get(), &Zera::ProxyClient::connected, &m_claimPGRMemState);
+    connect(m_dspInterface.get(), &Zera::cDSPInterface::serverAnswer, this, &cPower1ModuleMeasProgram::catchInterfaceAnswer);
+    Zera::Proxy::getInstance()->startConnectionSmart(m_dspClient);
 }
 
 
@@ -1324,7 +1318,7 @@ void cPower1ModuleMeasProgram::claimPGRMem()
 {
     setDspVarList(); // !!! sample rate must be fetched before (currently in state m_readSampleRateState)
     setDspCmdList();
-    m_MsgNrCmdList[m_rmInterface.setResource("DSP1", "PGRMEMC", m_pDSPInterFace->cmdListCount())] = claimpgrmem;
+    m_MsgNrCmdList[m_rmInterface.setResource("DSP1", "PGRMEMC", m_dspInterface->cmdListCount())] = claimpgrmem;
 }
 
 
@@ -1336,19 +1330,19 @@ void cPower1ModuleMeasProgram::claimUSERMem()
 
 void cPower1ModuleMeasProgram::varList2DSP()
 {
-    m_MsgNrCmdList[m_pDSPInterFace->varList2Dsp()] = varlist2dsp;
+    m_MsgNrCmdList[m_dspInterface->varList2Dsp()] = varlist2dsp;
 }
 
 
 void cPower1ModuleMeasProgram::cmdList2DSP()
 {
-    m_MsgNrCmdList[m_pDSPInterFace->cmdList2Dsp()] = cmdlist2dsp;
+    m_MsgNrCmdList[m_dspInterface->cmdList2Dsp()] = cmdlist2dsp;
 }
 
 
 void cPower1ModuleMeasProgram::activateDSP()
 {
-    m_MsgNrCmdList[m_pDSPInterFace->activateInterface()] = activatedsp; // aktiviert die var- und cmd-listen im dsp
+    m_MsgNrCmdList[m_dspInterface->activateInterface()] = activatedsp; // aktiviert die var- und cmd-listen im dsp
 }
 
 void cPower1ModuleMeasProgram::setModeTypesComponent()
@@ -1400,13 +1394,13 @@ void cPower1ModuleMeasProgram::activateDSPdone()
 void cPower1ModuleMeasProgram::deactivateDSP()
 {
     m_bActive = false;
-    m_MsgNrCmdList[m_pDSPInterFace->deactivateInterface()] = deactivatedsp; // wat wohl
+    m_MsgNrCmdList[m_dspInterface->deactivateInterface()] = deactivatedsp; // wat wohl
 }
 
 
 void cPower1ModuleMeasProgram::freePGRMem()
 {
-    Zera::Proxy::getInstance()->releaseConnection(m_pDspClient);
+    Zera::Proxy::getInstance()->releaseConnection(m_dspClient.get());
     deleteDspVarList();
     deleteDspCmdList();
 
@@ -1486,7 +1480,7 @@ void cPower1ModuleMeasProgram::deactivateDSPdone()
     }
 
     disconnect(&m_rmInterface, 0, this, 0);
-    disconnect(m_pDSPInterFace, 0, this, 0);
+    disconnect(m_dspInterface.get(), 0, this, 0);
 
     emit deactivated();
 }
@@ -1495,7 +1489,7 @@ void cPower1ModuleMeasProgram::deactivateDSPdone()
 void cPower1ModuleMeasProgram::dataAcquisitionDSP()
 {
     m_pMeasureSignal->setValue(QVariant(0));
-    m_MsgNrCmdList[m_pDSPInterFace->dataAcquisition(m_dspVars.getActualValues())] = dataaquistion; // we start our data aquisition now
+    m_MsgNrCmdList[m_dspInterface->dataAcquisition(m_dspVars.getActualValues())] = dataaquistion; // we start our data aquisition now
 }
 
 
@@ -1570,7 +1564,7 @@ void cPower1ModuleMeasProgram::foutParamsToDsp()
         datalist.resize(datalist.size()-1);
         datalist += ";";
         DspInterfaceCmdDecoder::setVarData(m_dspVars.getFreqScale(), datalist);
-        m_MsgNrCmdList[m_pDSPInterFace->dspMemoryWrite(m_dspVars.getFreqScale())] = writeparameter;
+        m_MsgNrCmdList[m_dspInterface->dspMemoryWrite(m_dspVars.getFreqScale())] = writeparameter;
     }
     setFoutPowerModes();
     double constantImpulsePerKwh = 3600.0 * 1000.0 * constantImpulsePerWs; // imp./kwh
@@ -1595,7 +1589,7 @@ void cPower1ModuleMeasProgram::foutParamsToDsp()
     double pmax = maxVals.maxU * maxVals.maxI; // MQREF
     QString datalist = QString("NOMPOWER:%1;").arg(pmax, 0, 'g', 7);
     DspInterfaceCmdDecoder::setVarData(m_dspVars.getNominalPower(), datalist);
-    m_MsgNrCmdList[m_pDSPInterFace->dspMemoryWrite(m_dspVars.getNominalPower())] = setqrefnominalpower;
+    m_MsgNrCmdList[m_dspInterface->dspMemoryWrite(m_dspVars.getNominalPower())] = setqrefnominalpower;
 }
 
 void cPower1ModuleMeasProgram::setFoutPowerModes()
@@ -1663,7 +1657,7 @@ void cPower1ModuleMeasProgram::dspSetParamsTiMModePhase(int tiTimeOrPeriods)
     if(!phaseVarSet.isEmpty())
         strVarData += ";" + phaseVarSet;
     DspInterfaceCmdDecoder::setVarData(m_dspVars.getParameters(), strVarData, DSPDATA::dInt);
-    m_MsgNrCmdList[m_pDSPInterFace->dspMemoryWrite(m_dspVars.getParameters())] = writeparameter;
+    m_MsgNrCmdList[m_dspInterface->dspMemoryWrite(m_dspVars.getParameters())] = writeparameter;
 }
 
 void cPower1ModuleMeasProgram::handleMModeParamChange()

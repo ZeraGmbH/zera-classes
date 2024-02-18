@@ -1,5 +1,6 @@
 #include "scpiifaceexportgenerator.h"
 #include "testfactoryactvalmaninthemiddle.h"
+#include "testfactoryserviceinterfaces.h"
 #include <QFile>
 
 ScpiIfaceExportGenerator::ScpiIfaceExportGenerator()

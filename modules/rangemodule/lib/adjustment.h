@@ -3,6 +3,7 @@
 
 #include "rangemodule.h"
 #include <moduleactivist.h>
+#include "abstractfactoryserviceinterfaces.h"
 #include <socket.h>
 #include <dspinterface.h>
 #include <pcbinterface.h>
@@ -35,7 +36,6 @@ class cAdjustManagement: public cModuleActivist
     Q_OBJECT
 public:
     cAdjustManagement(cRangeModule* module, cSocket* dspsocket, cSocket* pcbsocket, QStringList chnlist, QStringList subdclist, double interval);
-    virtual ~cAdjustManagement();
     virtual void generateInterface(); // here we export our interface (entities)
 public slots:
     virtual void ActionHandler(QVector<float> *actualValues); // entry after received actual values
@@ -49,10 +49,10 @@ private:
     QStringList m_ChannelNameList; // the list of channels (names) we work on
     QStringList m_subdcChannelNameList; // the list of channels we have to subtract dc
     double m_fAdjInterval;
-    Zera::cDSPInterface* m_pDSPInterFace; // our interface to dsp
+    DspInterfacePtr m_dspInterface;
+    Zera::ProxyClientPtr m_dspClient;
     Zera::cPCBInterface* m_pPCBInterface;
     Zera::ProxyClient *m_pPCBClient;
-    Zera::ProxyClient *m_pDspClient;
     QList<cRangeMeasChannel*> m_ChannelList; // here the real channel list
     QList<cRangeMeasChannel*> m_subDCChannelList;
     // Those are the actual values without preSacling

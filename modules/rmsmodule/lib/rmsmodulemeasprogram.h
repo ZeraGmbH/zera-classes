@@ -43,7 +43,6 @@ class cRmsModuleMeasProgram: public cBaseDspMeasProgram
     Q_OBJECT
 public:
     cRmsModuleMeasProgram(cRmsModule* module, std::shared_ptr<cBaseModuleConfiguration> pConfiguration);
-    virtual ~cRmsModuleMeasProgram();
     virtual void generateInterface() override; // here we export our interface (entities)
 public slots:
     virtual void start() override; // difference between start and stop is that actual values

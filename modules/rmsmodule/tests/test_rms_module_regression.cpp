@@ -1,10 +1,17 @@
 #include "test_rms_module_regression.h"
 #include "testfactoryactvalmaninthemiddle.h"
+#include "factoryserviceinterfacessingleton.h"
+#include "testfactoryserviceinterfaces.h"
 #include <timemachineobject.h>
 #include <QBuffer>
 #include <QTest>
 
 QTEST_MAIN(test_rms_module_regression)
+
+void test_rms_module_regression::initTestCase()
+{
+    FactoryServiceInterfacesSingleton::setInstance(std::make_unique<TestFactoryServiceInterfaces>());
+}
 
 void test_rms_module_regression::cleanup()
 {

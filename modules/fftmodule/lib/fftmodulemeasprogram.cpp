@@ -1,5 +1,6 @@
 #include "fftmodulemeasprogram.h"
 #include "fftmoduleconfiguration.h"
+#include "factoryserviceinterfacessingleton.h"
 #include <errormessages.h>
 #include <reply.h>
 #include <proxy.h>
@@ -15,7 +16,7 @@ namespace FFTMODULE
 cFftModuleMeasProgram::cFftModuleMeasProgram(cFftModule* module, std::shared_ptr<cBaseModuleConfiguration> pConfiguration)
     :cBaseDspMeasProgram(pConfiguration), m_pModule(module)
 {
-    m_pDSPInterFace = new Zera::cDSPInterface();
+    m_dspInterface = FactoryServiceInterfacesSingleton::getInstance()->getDspInterfaceOther();
 
     m_IdentifyState.addTransition(this, &cFftModuleMeasProgram::activationContinue, &m_readResourceTypesState);
     m_readResourceTypesState.addTransition(this, &cFftModuleMeasProgram::activationContinue, &m_readResourceState);
@@ -115,13 +116,6 @@ cFftModuleMeasProgram::cFftModuleMeasProgram(cFftModule* module, std::shared_ptr
     }
 }
 
-
-cFftModuleMeasProgram::~cFftModuleMeasProgram()
-{
-    delete m_pDSPInterFace;
-}
-
-
 void cFftModuleMeasProgram::start()
 {
     if (getConfData()->m_bmovingWindow) {
@@ -134,7 +128,6 @@ void cFftModuleMeasProgram::start()
     if(m_pModule->getDemo())
         m_demoPeriodicTimer->start();
 }
-
 
 void cFftModuleMeasProgram::stop()
 {
@@ -213,7 +206,7 @@ void cFftModuleMeasProgram::setDspVarList()
     // we fetch a handle for sampled data and other temporary values
     // global data segment is 1k words and lies on 1k boundary, so we put fftinput and fftouptut
     // at the beginning of that page because bitreversal adressing of fft only works properly if so
-    m_pTmpDataDsp = m_pDSPInterFace->getMemHandle("TmpData");
+    m_pTmpDataDsp = m_dspInterface->getMemHandle("TmpData");
     m_pTmpDataDsp->addVarItem( new cDspVar("FFTINPUT", 2 * m_nfftLen, DSPDATA::vDspTempGlobal));
     m_pTmpDataDsp->addVarItem( new cDspVar("FFTOUTPUT", 2 * m_nfftLen, DSPDATA::vDspTempGlobal));
     // meassignal will also still fit in global mem ... so we save memory
@@ -226,14 +219,14 @@ void cFftModuleMeasProgram::setDspVarList()
     m_pTmpDataDsp->addVarItem(new cDspVar("DEBUGCOUNT",1,DSPDATA::vDspTemp, DSPDATA::dInt));
 
     // a handle for parameter
-    m_pParameterDSP =  m_pDSPInterFace->getMemHandle("Parameter");
+    m_pParameterDSP =  m_dspInterface->getMemHandle("Parameter");
     m_pParameterDSP->addVarItem( new cDspVar("TIPAR",1, DSPDATA::vDspParam, DSPDATA::dInt)); // integrationtime res = 1ms
     // we use tistart as parameter, so we can finish actual measuring interval bei setting 0
     m_pParameterDSP->addVarItem( new cDspVar("TISTART",1, DSPDATA::vDspParam, DSPDATA::dInt));
     m_pParameterDSP->addVarItem( new cDspVar("REFCHN",1, DSPDATA::vDspParam, DSPDATA::dInt));
 
     // and one for filtered actual values
-    m_pActualValuesDSP = m_pDSPInterFace->getMemHandle("ActualValues");
+    m_pActualValuesDSP = m_dspInterface->getMemHandle("ActualValues");
     m_pActualValuesDSP->addVarItem( new cDspVar("VALXFFTF", 2 * m_nfftLen * m_veinActValueList.count(), DSPDATA::vDspResult));
 
     m_ModuleActualValues.resize(m_pActualValuesDSP->getSize()); // we provide a vector for generated actual values
@@ -244,9 +237,9 @@ void cFftModuleMeasProgram::setDspVarList()
 
 void cFftModuleMeasProgram::deleteDspVarList()
 {
-    m_pDSPInterFace->deleteMemHandle(m_pTmpDataDsp);
-    m_pDSPInterFace->deleteMemHandle(m_pParameterDSP);
-    m_pDSPInterFace->deleteMemHandle(m_pActualValuesDSP);
+    m_dspInterface->deleteMemHandle(m_pTmpDataDsp);
+    m_dspInterface->deleteMemHandle(m_pParameterDSP);
+    m_dspInterface->deleteMemHandle(m_pActualValuesDSP);
 }
 
 
@@ -254,60 +247,60 @@ void cFftModuleMeasProgram::setDspCmdList()
 {
     QString s;
 
-    m_pDSPInterFace->addCycListItem( s = "STARTCHAIN(1,1,0x0101)"); // aktiv, prozessnr. (dummy),hauptkette 1 subkette 1 start
-        m_pDSPInterFace->addCycListItem( s = QString("CLEARN(%1,MEASSIGNAL)").arg(2*m_nSRate) ); // clear meassignal
-        m_pDSPInterFace->addCycListItem( s = QString("CLEARN(%1,FILTER)").arg(2 * 2 * m_nfftLen * m_veinActValueList.count()+1) ); // clear the whole filter incl. count
+    m_dspInterface->addCycListItem( s = "STARTCHAIN(1,1,0x0101)"); // aktiv, prozessnr. (dummy),hauptkette 1 subkette 1 start
+        m_dspInterface->addCycListItem( s = QString("CLEARN(%1,MEASSIGNAL)").arg(2*m_nSRate) ); // clear meassignal
+        m_dspInterface->addCycListItem( s = QString("CLEARN(%1,FILTER)").arg(2 * 2 * m_nfftLen * m_veinActValueList.count()+1) ); // clear the whole filter incl. count
         if (getConfData()->m_bmovingWindow)
-            m_pDSPInterFace->addCycListItem( s = QString("SETVAL(TIPAR,%1)").arg(getConfData()->m_fmovingwindowInterval*1000.0)); // initial ti time
+            m_dspInterface->addCycListItem( s = QString("SETVAL(TIPAR,%1)").arg(getConfData()->m_fmovingwindowInterval*1000.0)); // initial ti time
         else
-            m_pDSPInterFace->addCycListItem( s = QString("SETVAL(TIPAR,%1)").arg(getConfData()->m_fMeasInterval.m_fValue*1000.0)); // initial ti time
-        m_pDSPInterFace->addCycListItem( s = QString("SETVAL(REFCHN,%1)").arg(m_measChannelInfoHash.value(getConfData()->m_RefChannel.m_sPar).dspChannelNr));
-        m_pDSPInterFace->addCycListItem( s = "GETSTIME(TISTART)"); // einmal ti start setzen
-        m_pDSPInterFace->addCycListItem( s = "DEACTIVATECHAIN(1,0x0101)"); // ende prozessnr., hauptkette 1 subkette 1
-        m_pDSPInterFace->addCycListItem( s = QString("SETVAL(DEBUGCOUNT,0)"));
-    m_pDSPInterFace->addCycListItem( s = "STOPCHAIN(1,0x0101)"); // ende prozessnr., hauptkette 1 subkette 1
+            m_dspInterface->addCycListItem( s = QString("SETVAL(TIPAR,%1)").arg(getConfData()->m_fMeasInterval.m_fValue*1000.0)); // initial ti time
+        m_dspInterface->addCycListItem( s = QString("SETVAL(REFCHN,%1)").arg(m_measChannelInfoHash.value(getConfData()->m_RefChannel.m_sPar).dspChannelNr));
+        m_dspInterface->addCycListItem( s = "GETSTIME(TISTART)"); // einmal ti start setzen
+        m_dspInterface->addCycListItem( s = "DEACTIVATECHAIN(1,0x0101)"); // ende prozessnr., hauptkette 1 subkette 1
+        m_dspInterface->addCycListItem( s = QString("SETVAL(DEBUGCOUNT,0)"));
+    m_dspInterface->addCycListItem( s = "STOPCHAIN(1,0x0101)"); // ende prozessnr., hauptkette 1 subkette 1
 
     // we compute the phase of our reference channel first
-    m_pDSPInterFace->addCycListItem( s = QString("COPYDATAIND(REFCHN,0,MEASSIGNAL)"));
-    m_pDSPInterFace->addCycListItem( s = QString("DFT(1,MEASSIGNAL,DFTREF)"));
-    m_pDSPInterFace->addCycListItem( s = QString("GENADR(MEASSIGNAL,DFTREF,IPOLADR)"));
+    m_dspInterface->addCycListItem( s = QString("COPYDATAIND(REFCHN,0,MEASSIGNAL)"));
+    m_dspInterface->addCycListItem( s = QString("DFT(1,MEASSIGNAL,DFTREF)"));
+    m_dspInterface->addCycListItem( s = QString("GENADR(MEASSIGNAL,DFTREF,IPOLADR)"));
 
 
     // next 3 commands for debug purpose , will be removed later
-    //m_pDSPInterFace->addCycListItem( s = "INC(DEBUGCOUNT)");
-    //m_pDSPInterFace->addCycListItem( s = "TESTVCSKIPLT(DEBUGCOUNT,1000)");
-    //m_pDSPInterFace->addCycListItem( s = "BREAK(1)");
+    //m_dspInterface->addCycListItem( s = "INC(DEBUGCOUNT)");
+    //m_dspInterface->addCycListItem( s = "TESTVCSKIPLT(DEBUGCOUNT,1000)");
+    //m_dspInterface->addCycListItem( s = "BREAK(1)");
 
 
     // we compute or copy our wanted actual values
     for (int i = 0; i < getConfData()->m_valueChannelList.count(); i++)
     {
-        m_pDSPInterFace->addCycListItem( s = QString("COPYDATA(CH%1,0,MEASSIGNAL)").arg(m_measChannelInfoHash.value(getConfData()->m_valueChannelList.at(i)).dspChannelNr) );
-        m_pDSPInterFace->addCycListItem( s = QString("COPYDATA(CH%1,0,MEASSIGNAL+%2)").arg(m_measChannelInfoHash.value(getConfData()->m_valueChannelList.at(i)).dspChannelNr).arg(m_nSRate));
-        m_pDSPInterFace->addCycListItem( s = QString("INTERPOLATIONIND(%1,IPOLADR,FFTINPUT)").arg(m_nfftLen));
-        m_pDSPInterFace->addCycListItem( s = QString("FFTREAL(%1,FFTINPUT,FFTOUTPUT)").arg(m_nfftLen));
-        m_pDSPInterFace->addCycListItem( s = QString("COPYMEM(%1,FFTOUTPUT,FFTXOUTPUT+%2)").arg(2 * m_nfftLen).arg(2 * m_nfftLen * i));
+        m_dspInterface->addCycListItem( s = QString("COPYDATA(CH%1,0,MEASSIGNAL)").arg(m_measChannelInfoHash.value(getConfData()->m_valueChannelList.at(i)).dspChannelNr) );
+        m_dspInterface->addCycListItem( s = QString("COPYDATA(CH%1,0,MEASSIGNAL+%2)").arg(m_measChannelInfoHash.value(getConfData()->m_valueChannelList.at(i)).dspChannelNr).arg(m_nSRate));
+        m_dspInterface->addCycListItem( s = QString("INTERPOLATIONIND(%1,IPOLADR,FFTINPUT)").arg(m_nfftLen));
+        m_dspInterface->addCycListItem( s = QString("FFTREAL(%1,FFTINPUT,FFTOUTPUT)").arg(m_nfftLen));
+        m_dspInterface->addCycListItem( s = QString("COPYMEM(%1,FFTOUTPUT,FFTXOUTPUT+%2)").arg(2 * m_nfftLen).arg(2 * m_nfftLen * i));
     }
 
     // and filter them
-    m_pDSPInterFace->addCycListItem( s = QString("AVERAGE1(%1,FFTXOUTPUT,FILTER)").arg(2 * m_nfftLen * m_veinActValueList.count())); // we add results to filter
+    m_dspInterface->addCycListItem( s = QString("AVERAGE1(%1,FFTXOUTPUT,FILTER)").arg(2 * m_nfftLen * m_veinActValueList.count())); // we add results to filter
 
-    m_pDSPInterFace->addCycListItem( s = "TESTTIMESKIPNEX(TISTART,TIPAR)");
-    m_pDSPInterFace->addCycListItem( s = "ACTIVATECHAIN(1,0x0102)");
+    m_dspInterface->addCycListItem( s = "TESTTIMESKIPNEX(TISTART,TIPAR)");
+    m_dspInterface->addCycListItem( s = "ACTIVATECHAIN(1,0x0102)");
 
-    m_pDSPInterFace->addCycListItem( s = "STARTCHAIN(0,1,0x0102)");
-        m_pDSPInterFace->addCycListItem( s = "GETSTIME(TISTART)"); // set new system time
-        m_pDSPInterFace->addCycListItem( s = QString("CMPAVERAGE1(%1,FILTER,VALXFFTF)").arg(2 * m_nfftLen * m_veinActValueList.count()));
-        m_pDSPInterFace->addCycListItem( s = QString("CLEARN(%1,FILTER)").arg(2 * 2 * m_nfftLen * m_veinActValueList.count()+1) );
-        m_pDSPInterFace->addCycListItem( s = QString("DSPINTTRIGGER(0x0,0x%1)").arg(irqNr)); // send interrupt to module
-        m_pDSPInterFace->addCycListItem( s = "DEACTIVATECHAIN(1,0x0102)");
-    m_pDSPInterFace->addCycListItem( s = "STOPCHAIN(1,0x0102)"); // end processnr., mainchain 1 subchain 2
+    m_dspInterface->addCycListItem( s = "STARTCHAIN(0,1,0x0102)");
+        m_dspInterface->addCycListItem( s = "GETSTIME(TISTART)"); // set new system time
+        m_dspInterface->addCycListItem( s = QString("CMPAVERAGE1(%1,FILTER,VALXFFTF)").arg(2 * m_nfftLen * m_veinActValueList.count()));
+        m_dspInterface->addCycListItem( s = QString("CLEARN(%1,FILTER)").arg(2 * 2 * m_nfftLen * m_veinActValueList.count()+1) );
+        m_dspInterface->addCycListItem( s = QString("DSPINTTRIGGER(0x0,0x%1)").arg(irqNr)); // send interrupt to module
+        m_dspInterface->addCycListItem( s = "DEACTIVATECHAIN(1,0x0102)");
+    m_dspInterface->addCycListItem( s = "STOPCHAIN(1,0x0102)"); // end processnr., mainchain 1 subchain 2
 }
 
 
 void cFftModuleMeasProgram::deleteDspCmdList()
 {
-    m_pDSPInterFace->clearCmdList();
+    m_dspInterface->clearCmdList();
 }
 
 
@@ -807,11 +800,11 @@ void cFftModuleMeasProgram::readDspChannelDone()
 
 void cFftModuleMeasProgram::dspserverConnect()
 {
-    m_pDspClient = Zera::Proxy::getInstance()->getConnection(getConfData()->m_DSPServerSocket.m_sIP, getConfData()->m_DSPServerSocket.m_nPort);
-    m_pDSPInterFace->setClient(m_pDspClient);
-    m_dspserverConnectState.addTransition(m_pDspClient, &Zera::ProxyClient::connected, &m_claimPGRMemState);
-    connect(m_pDSPInterFace, &Zera::cDSPInterface::serverAnswer, this, &cFftModuleMeasProgram::catchInterfaceAnswer);
-    Zera::Proxy::getInstance()->startConnection(m_pDspClient);
+    m_dspClient = Zera::Proxy::getInstance()->getConnectionSmart(getConfData()->m_DSPServerSocket.m_sIP, getConfData()->m_DSPServerSocket.m_nPort);
+    m_dspInterface->setClientSmart(m_dspClient);
+    m_dspserverConnectState.addTransition(m_dspClient.get(), &Zera::ProxyClient::connected, &m_claimPGRMemState);
+    connect(m_dspInterface.get(), &Zera::cDSPInterface::serverAnswer, this, &cFftModuleMeasProgram::catchInterfaceAnswer);
+    Zera::Proxy::getInstance()->startConnectionSmart(m_dspClient);
 }
 
 
@@ -820,7 +813,7 @@ void cFftModuleMeasProgram::claimPGRMem()
     // if we've got dsp server connection we set up our measure program and claim the resources
     setDspVarList(); // first we set the var list for our dsp
     setDspCmdList(); // and the cmd list he has to work on
-    m_MsgNrCmdList[m_rmInterface.setResource("DSP1", "PGRMEMC", m_pDSPInterFace->cmdListCount())] = claimpgrmem;
+    m_MsgNrCmdList[m_rmInterface.setResource("DSP1", "PGRMEMC", m_dspInterface->cmdListCount())] = claimpgrmem;
 }
 
 
@@ -832,19 +825,19 @@ void cFftModuleMeasProgram::claimUSERMem()
 
 void cFftModuleMeasProgram::varList2DSP()
 {
-    m_MsgNrCmdList[m_pDSPInterFace->varList2Dsp()] = varlist2dsp;
+    m_MsgNrCmdList[m_dspInterface->varList2Dsp()] = varlist2dsp;
 }
 
 
 void cFftModuleMeasProgram::cmdList2DSP()
 {
-    m_MsgNrCmdList[m_pDSPInterFace->cmdList2Dsp()] = cmdlist2dsp;
+    m_MsgNrCmdList[m_dspInterface->cmdList2Dsp()] = cmdlist2dsp;
 }
 
 
 void cFftModuleMeasProgram::activateDSP()
 {
-    m_MsgNrCmdList[m_pDSPInterFace->activateInterface()] = activatedsp; // aktiviert die var- und cmd-listen im dsp
+    m_MsgNrCmdList[m_dspInterface->activateInterface()] = activatedsp; // aktiviert die var- und cmd-listen im dsp
 }
 
 
@@ -868,13 +861,13 @@ void cFftModuleMeasProgram::activateDSPdone()
 void cFftModuleMeasProgram::deactivateDSP()
 {
     m_bActive = false;
-    m_MsgNrCmdList[m_pDSPInterFace->deactivateInterface()] = deactivatedsp; // wat wohl
+    m_MsgNrCmdList[m_dspInterface->deactivateInterface()] = deactivatedsp; // wat wohl
 }
 
 
 void cFftModuleMeasProgram::freePGRMem()
 {
-    Zera::Proxy::getInstance()->releaseConnection(m_pDspClient);
+    Zera::Proxy::getInstance()->releaseConnection(m_dspClient.get());
     deleteDspVarList();
     deleteDspCmdList();
 
@@ -891,7 +884,7 @@ void cFftModuleMeasProgram::freeUSERMem()
 void cFftModuleMeasProgram::deactivateDSPdone()
 {
     disconnect(&m_rmInterface, 0, this, 0);
-    disconnect(m_pDSPInterFace, 0, this, 0);
+    disconnect(m_dspInterface.get(), 0, this, 0);
     disconnect(m_pcbInterface.get(), 0, this, 0);
     emit deactivated();
 }
@@ -900,7 +893,7 @@ void cFftModuleMeasProgram::deactivateDSPdone()
 void cFftModuleMeasProgram::dataAcquisitionDSP()
 {
     m_pMeasureSignal->setValue(QVariant(0));
-    m_MsgNrCmdList[m_pDSPInterFace->dataAcquisition(m_pActualValuesDSP)] = dataaquistion; // we start our data aquisition now
+    m_MsgNrCmdList[m_dspInterface->dataAcquisition(m_pActualValuesDSP)] = dataaquistion; // we start our data aquisition now
 }
 
 
@@ -957,7 +950,7 @@ void cFftModuleMeasProgram::newIntegrationtime(QVariant ti)
     else {
         DspInterfaceCmdDecoder::setVarData(m_pParameterDSP, QString("TIPAR:%1;TISTART:%2;").arg(getConfData()->m_fMeasInterval.m_fValue*1000)
                                                                             .arg(0), DSPDATA::dInt);
-        m_MsgNrCmdList[m_pDSPInterFace->dspMemoryWrite(m_pParameterDSP)] = writeparameter;
+        m_MsgNrCmdList[m_dspInterface->dspMemoryWrite(m_pParameterDSP)] = writeparameter;
     }
 
     emit m_pModule->parameterChanged();
@@ -968,7 +961,7 @@ void cFftModuleMeasProgram::newRefChannel(QVariant chn)
 {
     getConfData()->m_RefChannel.m_sPar = chn.toString();
     DspInterfaceCmdDecoder::setVarData(m_pParameterDSP, QString("REFCHN:%1;").arg(m_measChannelInfoHash.value(getConfData()->m_RefChannel.m_sPar).dspChannelNr));
-    m_MsgNrCmdList[m_pDSPInterFace->dspMemoryWrite(m_pParameterDSP)] = writeparameter;
+    m_MsgNrCmdList[m_dspInterface->dspMemoryWrite(m_pParameterDSP)] = writeparameter;
     emit m_pModule->parameterChanged();
 }
 }

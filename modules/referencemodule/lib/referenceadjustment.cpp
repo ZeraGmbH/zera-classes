@@ -2,6 +2,7 @@
 #include "referencemoduleconfigdata.h"
 #include "referencemodule.h"
 #include "referencemeaschannel.h"
+#include "factoryserviceinterfacessingleton.h"
 #include <errormessages.h>
 #include <reply.h>
 #include <proxy.h>
@@ -14,7 +15,7 @@ namespace REFERENCEMODULE
 cReferenceAdjustment::cReferenceAdjustment(cReferenceModule* module, cReferenceModuleConfigData* confData)
     :m_pModule(module), m_pConfigData(confData)
 {
-    m_pDSPInterFace = new Zera::cDSPInterface();
+    m_dspInterface = FactoryServiceInterfacesSingleton::getInstance()->getDspInterfaceOther();
     m_pPCBInterface = new Zera::cPCBInterface();
 
     for (int i = 0; i < m_pConfigData->m_referenceChannelList.count(); i++) // we fetch all our real channels first
@@ -74,7 +75,6 @@ cReferenceAdjustment::cReferenceAdjustment(cReferenceModule* module, cReferenceM
 
 cReferenceAdjustment::~cReferenceAdjustment()
 {
-    delete m_pDSPInterFace;
     delete m_pPCBInterface;
 }
 
@@ -128,11 +128,11 @@ void cReferenceAdjustment::dspserverConnect()
 {
     // we set up our dsp server connection
     cSocket sock = m_pConfigData->m_DSPServerSocket;
-    m_pDspClient = Zera::Proxy::getInstance()->getConnection(sock.m_sIP, sock.m_nPort);
-    m_pDSPInterFace->setClient(m_pDspClient);
-    m_dspserverConnectState.addTransition(m_pDspClient, &Zera::ProxyClient::connected, &m_activationDoneState);
-    connect(m_pDSPInterFace, &Zera::cDSPInterface::serverAnswer, this, &cReferenceAdjustment::catchInterfaceAnswer);
-    Zera::Proxy::getInstance()->startConnection(m_pDspClient);
+    m_dspClient = Zera::Proxy::getInstance()->getConnectionSmart(sock.m_sIP, sock.m_nPort);
+    m_dspInterface->setClientSmart(m_dspClient);
+    m_dspserverConnectState.addTransition(m_dspClient.get(), &Zera::ProxyClient::connected, &m_activationDoneState);
+    connect(m_dspInterface.get(), &Zera::cDSPInterface::serverAnswer, this, &cReferenceAdjustment::catchInterfaceAnswer);
+    Zera::Proxy::getInstance()->startConnectionSmart(m_dspClient);
 }
 
 
@@ -141,11 +141,11 @@ void cReferenceAdjustment::activationDone()
     // we fetch a handle for gain correction and offset2 correction for
     // all possible channels because we do not know which channels become active
     if(!m_pModule->getDemo()) {
-        m_pGainCorrectionDSP = m_pDSPInterFace->getMemHandle("GainCorrection");
+        m_pGainCorrectionDSP = m_dspInterface->getMemHandle("GainCorrection");
         m_pGainCorrectionDSP->addVarItem( new cDspVar("GAINCORRECTION",32, DSPDATA::vDspIntVar));
         m_fGainCorr = m_pGainCorrectionDSP->data("GAINCORRECTION");
 
-        m_pOffset2CorrectionDSP = m_pDSPInterFace->getMemHandle("OffsetCorrection");
+        m_pOffset2CorrectionDSP = m_dspInterface->getMemHandle("OffsetCorrection");
         m_pOffset2CorrectionDSP->addVarItem( new cDspVar("OFFSETCORRECTION2",32, DSPDATA::vDspIntVar));
         m_fOffset2Corr = m_pOffset2CorrectionDSP->data("OFFSETCORRECTION2");
     }
@@ -163,14 +163,14 @@ void cReferenceAdjustment::activationDone()
 void cReferenceAdjustment::readGainCorr()
 {
     if (m_bActive)
-        m_MsgNrCmdList[m_pDSPInterFace->dspMemoryRead(m_pGainCorrectionDSP)] = readgaincorr;
+        m_MsgNrCmdList[m_dspInterface->dspMemoryRead(m_pGainCorrectionDSP)] = readgaincorr;
 }
 
 
 void cReferenceAdjustment::readOffset2Corr()
 {
     if (m_bActive)
-        m_MsgNrCmdList[m_pDSPInterFace->dspMemoryRead(m_pOffset2CorrectionDSP)] = readoffset2corr;
+        m_MsgNrCmdList[m_dspInterface->dspMemoryRead(m_pOffset2CorrectionDSP)] = readoffset2corr;
 }
 
 
@@ -194,7 +194,7 @@ void cReferenceAdjustment::writeOffsetAdjustment()
     }
 
     if (m_bActive)
-        m_MsgNrCmdList[m_pDSPInterFace->dspMemoryWrite(m_pOffset2CorrectionDSP)] = writeoffsetadjustment;
+        m_MsgNrCmdList[m_dspInterface->dspMemoryWrite(m_pOffset2CorrectionDSP)] = writeoffsetadjustment;
 }
 
 
@@ -221,10 +221,10 @@ void cReferenceAdjustment::referenceAdjustDone()
 void cReferenceAdjustment::deactivationInit()
 {
     m_bActive = false;
-    Zera::Proxy::getInstance()->releaseConnection(m_pDspClient);
+    Zera::Proxy::getInstance()->releaseConnection(m_dspClient.get());
     Zera::Proxy::getInstance()->releaseConnection(m_pPCBClient);
-    m_pDSPInterFace->deleteMemHandle(m_pGainCorrectionDSP);
-    m_pDSPInterFace->deleteMemHandle(m_pOffset2CorrectionDSP);
+    m_dspInterface->deleteMemHandle(m_pGainCorrectionDSP);
+    m_dspInterface->deleteMemHandle(m_pOffset2CorrectionDSP);
     emit deactivationContinue();
 }
 
@@ -232,7 +232,7 @@ void cReferenceAdjustment::deactivationInit()
 void cReferenceAdjustment::deactivationDone()
 {
     disconnect(m_pPCBInterface, 0, this, 0);
-    disconnect(m_pDSPInterFace, 0, this, 0);
+    disconnect(m_dspInterface.get(), 0, this, 0);
 
     emit deactivated();
 }

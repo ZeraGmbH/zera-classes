@@ -1,6 +1,8 @@
 #include "test_scpi_queue.h"
 #include "modulemanagertestscpiqueue.h"
 #include "testfactoryactvalmaninthemiddle.h"
+#include "factoryserviceinterfacessingleton.h"
+#include "testfactoryserviceinterfaces.h"
 #include <rangemodule.h>
 #include <scpitestclient.h>
 #include <scpiserver.h>
@@ -23,6 +25,7 @@ void disableQueuing(SCPIMODULE::cSCPIInterface* interface)
 
 void test_scpi_queue::initTestCase()
 {
+    FactoryServiceInterfacesSingleton::setInstance(std::make_unique<TestFactoryServiceInterfaces>());
     m_actValGen = std::make_shared<TestFactoryActValManInTheMiddle>();
 }
 

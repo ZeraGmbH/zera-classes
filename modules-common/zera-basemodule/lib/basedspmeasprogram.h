@@ -2,7 +2,7 @@
 #define BASEDSPMEASPROGRAM_H
 
 #include "basemeasprogram.h"
-#include <dspinterface.h>
+#include "abstractfactoryserviceinterfaces.h"
 
 class cBaseDspMeasProgram: public cBaseMeasProgram
 {
@@ -14,8 +14,8 @@ protected:
     // the module creates a central dsp interface and forwards this
     // the reason behind this is, that dsp server generates a new "environment" for each
     // new client. but we want to access the same environment's value from all over the module.
-    Zera::cDSPInterface* m_pDSPInterFace; // our interface to dsp
-    Zera::ProxyClient *m_pDspClient;
+    DspInterfacePtr m_dspInterface; // our interface to dsp
+    Zera::ProxyClientPtr m_dspClient;
     quint32 m_nDspMemUsed;
 
 };
