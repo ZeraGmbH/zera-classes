@@ -51,12 +51,6 @@ QByteArray cDftModule::getConfiguration() const
 
 
 
-void cDftModule::doConfiguration(QByteArray xmlConfigData)
-{
-    m_pConfiguration->setConfiguration(xmlConfigData);
-}
-
-
 void cDftModule::setupModule()
 {
     emit addEventSystem(m_pModuleValidator);

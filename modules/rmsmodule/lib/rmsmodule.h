@@ -19,7 +19,6 @@ public:
 
 protected:
     cRmsModuleMeasProgram *m_pMeasProgram; // our measuring program, lets say the working horse
-    virtual void doConfiguration(QByteArray xmlConfigData) override; // here we have to do our configuration
     virtual void setupModule() override; // after xml configuration we can setup and export our module
     virtual void startMeas() override; // we make the measuring program start here
     virtual void stopMeas() override;

@@ -21,9 +21,12 @@ cBaseModule::cBaseModule(MeasurementModuleFactoryParam moduleParam, std::shared_
 {
     QString s;
 
-    m_bConfCmd = m_bStartCmd = m_bStopCmd = m_bStateMachineStarted = false;
+    m_bStartCmd = m_bStopCmd = m_bStateMachineStarted = false;
 
     m_nStatus = untouched;
+    m_xmlconfString = moduleParam.m_configXmlData;
+    m_pConfiguration->setConfiguration(m_xmlconfString);
+    m_bConfCmd = m_pConfiguration->isConfigured();
 
     // our states from virtualmodule (interface)
     m_pStateIdle = new QState();
@@ -42,15 +45,12 @@ cBaseModule::cBaseModule(MeasurementModuleFactoryParam moduleParam, std::shared_
     m_pStateIdle->addTransition(this, &cBaseModule::sigRun, m_pStateRun); // after sigRun we leave idle
     m_pStateIdle->addTransition(this, &cBaseModule::sigStop, m_pStateStop); // same for sigStop
     m_pStateIDLEIdle = new QState(m_pStateIdle); // the initial state for idle
-    m_pStateIDLEConfXML = new QState(m_pStateIdle); // when we configure within idle
     m_pStateIDLEConfSetup = new QState(m_pStateIdle); // same
-    m_pStateIDLEIdle->addTransition(this, &cBaseModule::sigConfiguration, m_pStateIDLEConfXML);
-    m_pStateIDLEConfXML->addTransition(m_pConfiguration.get(), &cBaseModuleConfiguration::configXMLDone, m_pStateIDLEConfSetup);
+    m_pStateIDLEIdle->addTransition(this, &cBaseModule::sigConfiguration, m_pStateIDLEConfSetup);
     m_pStateIDLEConfSetup->addTransition(this, &cBaseModule::sigConfDone, m_pStateIDLEIdle);
     m_pStateIdle->setInitialState(m_pStateIDLEIdle);
     connect(m_pStateIDLEIdle, &QState::entered, this, &cBaseModule::entryIDLEIdle);
     connect(m_pStateIdle, &QState::entered, this, &cBaseModule::entryIdle);
-    connect(m_pStateIDLEConfXML, &QState::entered, this, &cBaseModule::entryConfXML);
     connect(m_pStateIDLEConfSetup, &QState::entered, this, &cBaseModule::entryConfSetup);
 
     // we set up our CONFIGURE state here
@@ -64,20 +64,17 @@ cBaseModule::cBaseModule(MeasurementModuleFactoryParam moduleParam, std::shared_
     m_pStateRUNDone = new QState(m_pStateRun);
     m_pStateRUNDeactivate = new QState(m_pStateRun);
     m_pStateRUNUnset = new QState(m_pStateRun);
-    m_pStateRUNConfXML = new QState(m_pStateRun);
     m_pStateRUNConfSetup = new QState(m_pStateRun);
     m_pStateRUNStart->addTransition(this, &cBaseModule::activationReady, m_pStateRUNDone);
     m_pStateRUNDone->addTransition(this, &cBaseModule::sigConfiguration, m_pStateRUNDeactivate);
     m_pStateRUNDeactivate->addTransition(this, &cBaseModule::deactivationReady, m_pStateRUNUnset);
-    m_pStateRUNUnset->addTransition(this, &cBaseModule::sigReconfigureContinue, m_pStateRUNConfXML);
-    m_pStateRUNConfXML->addTransition(m_pConfiguration.get(), &cBaseModuleConfiguration::configXMLDone, m_pStateRUNConfSetup);
+    m_pStateRUNUnset->addTransition(this, &cBaseModule::sigReconfigureContinue, m_pStateRUNConfSetup);
     m_pStateRUNConfSetup->addTransition(this, &cBaseModule::sigConfDone, m_pStateRUNStart );
     m_pStateRun->setInitialState(m_pStateRUNStart);
     connect(m_pStateRUNStart, &QState::entered, this, &cBaseModule::entryRunStart);
     connect(m_pStateRUNDone, &QState::entered, this, &cBaseModule::entryRunDone);
     connect(m_pStateRUNDeactivate, &QState::entered, this, &cBaseModule::entryRunDeactivate);
     connect(m_pStateRUNUnset, &QState::entered, this, &cBaseModule::entryRunUnset);
-    connect(m_pStateRUNConfXML, &QState::entered, this, &cBaseModule::entryConfXML);
     connect(m_pStateRUNConfSetup, &QState::entered, this, &cBaseModule::entryConfSetup);
 
     // we set up our STOP state here
@@ -87,20 +84,17 @@ cBaseModule::cBaseModule(MeasurementModuleFactoryParam moduleParam, std::shared_
     m_pStateSTOPDone = new QState(m_pStateStop);
     m_pStateSTOPDeactivate = new QState(m_pStateStop);
     m_pStateSTOPUnset = new QState(m_pStateStop);
-    m_pStateSTOPConfXML = new QState(m_pStateStop);
     m_pStateSTOPConfSetup = new QState(m_pStateStop);
     m_pStateSTOPStart->addTransition(this, &cBaseModule::activationReady, m_pStateSTOPDone);
     m_pStateSTOPDone->addTransition(this, &cBaseModule::sigConfiguration, m_pStateSTOPDeactivate);
     m_pStateSTOPDeactivate->addTransition(this, &cBaseModule::deactivationReady, m_pStateSTOPUnset);
-    m_pStateSTOPUnset->addTransition(this, &cBaseModule::sigReconfigureContinue, m_pStateSTOPConfXML);
-    m_pStateSTOPConfXML->addTransition(m_pConfiguration.get(), &cBaseModuleConfiguration::configXMLDone, m_pStateSTOPConfSetup);
+    m_pStateSTOPUnset->addTransition(this, &cBaseModule::sigReconfigureContinue, m_pStateSTOPConfSetup);
     m_pStateSTOPConfSetup->addTransition(this, &cBaseModule::sigConfDone, m_pStateSTOPStart );
     m_pStateStop->setInitialState(m_pStateSTOPStart);
     connect(m_pStateSTOPStart, &QState::entered, this, &cBaseModule::entryStopStart);
     connect(m_pStateSTOPDone, &QState::entered, this, &cBaseModule::entryStopDone);
     connect(m_pStateSTOPDeactivate, &QState::entered, this, &cBaseModule::entryRunDeactivate); // we use same slot as run
     connect(m_pStateSTOPUnset, &QState::entered, this, &cBaseModule::entryRunUnset);  // we use same slot as run
-    connect(m_pStateSTOPConfXML, &QState::entered, this, &cBaseModule::entryConfXML);
     connect(m_pStateSTOPConfSetup, &QState::entered, this, &cBaseModule::entryConfSetup);
 
     m_stateMachine.addState(m_pStateIdle);
@@ -148,21 +142,18 @@ cBaseModule::~cBaseModule()
     unsetModule();
 
     delete m_pStateIDLEIdle;
-    delete m_pStateIDLEConfXML;
     delete m_pStateIDLEConfSetup;
 
     delete m_pStateRUNStart;
     delete m_pStateRUNDone;
     delete m_pStateRUNDeactivate;
     delete m_pStateRUNUnset;
-    delete m_pStateRUNConfXML;
     delete m_pStateRUNConfSetup;
 
     delete m_pStateSTOPStart;
     delete m_pStateSTOPDone;
     delete m_pStateSTOPDeactivate;
     delete m_pStateSTOPUnset;
-    delete m_pStateSTOPConfXML;
     delete m_pStateSTOPConfSetup;
 
     delete m_pStateIdle;
@@ -170,17 +161,6 @@ cBaseModule::~cBaseModule()
     delete m_pStateRun;
     delete m_pStateStop;
     delete m_pStateFinished;
-}
-
-void cBaseModule::setConfiguration(QByteArray xmlConfigData)
-{
-    m_xmlconfString = xmlConfigData;
-    if (m_bStateMachineStarted) {
-        emit sigConfiguration(); // if our statemachine is already started we emit signal at once
-    }
-    else {
-        m_bConfCmd = true; // otherwise we keep in mind that we should configure when machine starts
-    }
 }
 
 bool cBaseModule::isConfigured() const
@@ -376,12 +356,6 @@ void cBaseModule::entryIDLEIdle()
             }
         }
     }
-}
-
-void cBaseModule::entryConfXML()
-{
-    m_nStatus = untouched; // after each conf. we behave as untouched
-    doConfiguration(m_xmlconfString);
 }
 
 void cBaseModule::entryConfSetup()

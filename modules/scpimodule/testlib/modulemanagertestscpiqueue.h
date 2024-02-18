@@ -12,7 +12,7 @@ class ModuleManagerTestScpiQueue : public QObject
     Q_OBJECT
 public:
     ModuleManagerTestScpiQueue();
-    void addModule(cBaseModule* module, QString configFileFullPath);
+    void addModule(cBaseModule* module);
     VeinStorage::VeinHash* getStorageSystem();
 private:
     void addSystem(VeinEvent::EventSystem* subsystem);

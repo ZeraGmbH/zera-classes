@@ -139,13 +139,13 @@ void ModuleManager::startModule(const QString & uniqueModuleName, const QString 
             qDebug() << "Creating module:" << uniqueModuleName << "with id:" << moduleEntityId << "with config file:" << t_xmlConfigPath;
             MeasurementModuleFactoryParam moduleParam(moduleEntityId,
                                                       moduleNum,
+                                                      t_xmlConfigData,
                                                       m_actualValueFactory,
                                                       m_setupFacade->getStorageSystem(),
                                                       m_demo);
             VirtualModule *tmpModule = tmpFactory->createModule(moduleParam);
             if(tmpModule) {
                 connect(tmpModule, &VirtualModule::addEventSystem, this, &ModuleManager::onModuleEventSystemAdded);
-                tmpModule->setConfiguration(t_xmlConfigData);
                 connect(tmpModule, &VirtualModule::moduleDeactivated, this, &ModuleManager::onStartModuleDelete);
                 connect(tmpModule, &VirtualModule::moduleActivated, this, [this](){
                     m_moduleStartLock=false;

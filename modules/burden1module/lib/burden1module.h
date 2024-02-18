@@ -18,7 +18,6 @@ public:
 
 protected:
     cBurden1ModuleMeasProgram *m_pMeasProgram; // our measuring program, lets say the working horse
-    void doConfiguration(QByteArray xmlConfigData) override; // here we have to do our configuration
     void setupModule() override; // after xml configuration we can setup and export our module
     void startMeas() override; // we make the measuring program start here
     void stopMeas() override;

@@ -70,12 +70,6 @@ cPllMeasChannel* cSampleModule::getPllMeasChannel(QString name)
 }
 
 
-void cSampleModule::doConfiguration(QByteArray xmlConfigData)
-{
-    m_pConfiguration->setConfiguration(xmlConfigData);
-}
-
-
 void cSampleModule::setupModule()
 {
     emit addEventSystem(m_pModuleValidator);

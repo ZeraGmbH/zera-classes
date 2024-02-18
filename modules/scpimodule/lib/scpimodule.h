@@ -41,7 +41,6 @@ public:
 protected:
     cSCPIServer *m_pSCPIServer; // our server for the world
 
-    virtual void doConfiguration(QByteArray xmlConfigData) override; // here we have to do our configuration
     virtual void setupModule() override; // after xml configuration we can setup and export our module
     virtual void startMeas() override; // we make the measuring program start here
     virtual void stopMeas() override;

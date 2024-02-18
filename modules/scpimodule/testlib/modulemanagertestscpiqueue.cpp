@@ -8,17 +8,12 @@ ModuleManagerTestScpiQueue::ModuleManagerTestScpiQueue()
     addSystem(&m_storageSystem);
 }
 
-void ModuleManagerTestScpiQueue::addModule(cBaseModule *module, QString configFileFullPath)
+void ModuleManagerTestScpiQueue::addModule(cBaseModule *module)
 {
     connect(module, &ZeraModules::VirtualModule::addEventSystem, this, [&] (VeinEvent::EventSystem *eventSystem) {
         addSystem(eventSystem);
     });
 
-    QFileInfo fileInfo(configFileFullPath);
-    QFile tmpXmlConfigFile(fileInfo.absoluteFilePath());
-    qInfo("Add %s with configfile: %s...", qPrintable(module->getVeinModuleName()), qPrintable(tmpXmlConfigFile.fileName()));
-    tmpXmlConfigFile.open(QIODevice::Unbuffered | QIODevice::ReadOnly);
-    module->setConfiguration(tmpXmlConfigFile.readAll());
     TimeMachineObject::feedEventLoop();
     module->startModule();
     TimeMachineObject::feedEventLoop();

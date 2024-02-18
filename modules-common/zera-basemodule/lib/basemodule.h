@@ -28,10 +28,9 @@ Q_OBJECT
 public:
     cBaseModule(MeasurementModuleFactoryParam moduleParam, std::shared_ptr<cBaseModuleConfiguration> modcfg);
     virtual ~cBaseModule();
-    virtual void setConfiguration(QByteArray xmlConfigData);
-    virtual bool isConfigured() const;
-    virtual void startModule();
-    virtual void stopModule();
+    virtual bool isConfigured() const override;
+    virtual void startModule() override;
+    virtual void stopModule() override;
     virtual void exportMetaData();
 
     VeinEvent::StorageSystem* getStorageSystem();
@@ -62,7 +61,6 @@ signals:
 protected:
     // additional states for IDLE
     QState* m_pStateIDLEIdle;
-    QState* m_pStateIDLEConfXML;
     QState* m_pStateIDLEConfSetup;
 
     // additional states for RUN
@@ -70,7 +68,6 @@ protected:
     QState* m_pStateRUNDone;
     QState* m_pStateRUNDeactivate;
     QState* m_pStateRUNUnset;
-    QState* m_pStateRUNConfXML;
     QState* m_pStateRUNConfSetup;
 
     // additional states for STOP
@@ -78,7 +75,6 @@ protected:
     QState* m_pStateSTOPDone;
     QState* m_pStateSTOPDeactivate;
     QState* m_pStateSTOPUnset;
-    QState* m_pStateSTOPConfXML;
     QState* m_pStateSTOPConfSetup;
 
     // our states for base modules activation statemachine
@@ -105,7 +101,6 @@ protected:
     VfModuleComponent *m_pModuleInterfaceComponent; // here we export the modules interface as json file
     VfModuleComponent *m_pModuleEntityName;
 
-    virtual void doConfiguration(QByteArray xmlString) = 0; // here we have to do our configuration
     virtual void setupModule(); // after xml configuration we can setup and export our module
     void unsetModule(); // in case of reconfiguration we must unset module first
     virtual void startMeas() =  0;
@@ -135,7 +130,6 @@ private slots:
     void entryIdle();
     void entryIDLEIdle();
 
-    void entryConfXML();
     void entryConfSetup();
 
     void entryRunStart();

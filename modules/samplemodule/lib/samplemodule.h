@@ -24,7 +24,6 @@ protected:
     cSampleModuleMeasProgram *m_pMeasProgram; // our measuring program, lets say the working horse
     cPllObsermatic *m_pPllObsermatic; // our pll handling
 
-    virtual void doConfiguration(QByteArray xmlConfigData); // here we have to do our configuration
     virtual void setupModule(); // after xml configuration we can setup and export our module
     virtual void startMeas(); // we make the measuring program start here
     virtual void stopMeas();

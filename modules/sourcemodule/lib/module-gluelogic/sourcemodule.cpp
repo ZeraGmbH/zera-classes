@@ -23,11 +23,6 @@ VfModuleRpc *SourceModule::getRpcEventSystem() const
     return m_rpcEventSystem;
 }
 
-void SourceModule::doConfiguration(QByteArray xmlConfigData)
-{
-    m_pConfiguration->setConfiguration(xmlConfigData);
-}
-
 void SourceModule::setupModule()
 {
     emit addEventSystem(m_pModuleValidator);

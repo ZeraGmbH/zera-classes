@@ -53,12 +53,6 @@ QByteArray cTransformer1Module::getConfiguration() const
 
 
 
-void cTransformer1Module::doConfiguration(QByteArray xmlConfigData)
-{
-    m_pConfiguration->setConfiguration(xmlConfigData);
-}
-
-
 void cTransformer1Module::setupModule()
 {
     emit addEventSystem(m_pModuleValidator);

@@ -51,12 +51,6 @@ QByteArray cOsciModule::getConfiguration() const
 
 
 
-void cOsciModule::doConfiguration(QByteArray xmlConfigData)
-{
-    m_pConfiguration->setConfiguration(xmlConfigData);
-}
-
-
 void cOsciModule::setupModule()
 {
     emit addEventSystem(m_pModuleValidator);

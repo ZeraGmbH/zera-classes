@@ -19,7 +19,6 @@ public:
     cSem1Module(MeasurementModuleFactoryParam moduleParam);
     QByteArray getConfiguration() const override;
 protected:
-    virtual void doConfiguration(QByteArray xmlConfigData); // here we have to do our configuration
     virtual void setupModule(); // after xml configuration we can setup and export our module
     virtual void startMeas(); // we make the measuring program start here
     virtual void stopMeas();

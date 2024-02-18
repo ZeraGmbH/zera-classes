@@ -29,8 +29,13 @@ void test_scpi_queue::initTestCase()
 void test_scpi_queue::sendStandardCmdsQueueDisabledAndEnabled()
 {
     ModuleManagerTestScpiQueue modman;
-    SCPIMODULE::ScpiModuleForTest scpiModule(MeasurementModuleFactoryParam(9999, 1, m_actValGen, modman.getStorageSystem(), true) );
-    modman.addModule(&scpiModule, QStringLiteral(CONFIG_SOURCES_SCPIMODULE) + "/" + "demo-scpimodule.xml");
+    SCPIMODULE::ScpiModuleForTest scpiModule(MeasurementModuleFactoryParam(9999,
+                                                                           1,
+                                                                           loadConfig(QStringLiteral(CONFIG_SOURCES_SCPIMODULE) + "/" + "demo-scpimodule.xml"),
+                                                                           m_actValGen,
+                                                                           modman.getStorageSystem(),
+                                                                           true) );
+    modman.addModule(&scpiModule);
 
     SCPIMODULE::ScpiTestClient client(&scpiModule, *scpiModule.getConfigData(), scpiModule.getScpiInterface());
     scpiModule.getSCPIServer()->appendClient(&client);
@@ -57,8 +62,13 @@ void test_scpi_queue::sendStandardCmdsQueueDisabledAndEnabled()
 void test_scpi_queue::sendErroneousAndCorrectStandardCmds()
 {
     ModuleManagerTestScpiQueue modman;
-    SCPIMODULE::ScpiModuleForTest scpiModule(MeasurementModuleFactoryParam(9999, 1, m_actValGen, modman.getStorageSystem(), true) );
-    modman.addModule(&scpiModule, QStringLiteral(CONFIG_SOURCES_SCPIMODULE) + "/" + "demo-scpimodule.xml");
+    SCPIMODULE::ScpiModuleForTest scpiModule(MeasurementModuleFactoryParam(9999,
+                                                                           1,
+                                                                           loadConfig(QStringLiteral(CONFIG_SOURCES_SCPIMODULE) + "/" + "demo-scpimodule.xml"),
+                                                                           m_actValGen,
+                                                                           modman.getStorageSystem(),
+                                                                           true) );
+    modman.addModule(&scpiModule);
 
     SCPIMODULE::ScpiTestClient client(&scpiModule, *scpiModule.getConfigData(), scpiModule.getScpiInterface());
     scpiModule.getSCPIServer()->appendClient(&client);
@@ -81,11 +91,21 @@ void test_scpi_queue::sendSubSystemAndStandardCommands()
     TimerFactoryQtForTest::enableTest();
 
     ModuleManagerTestScpiQueue modman;
-    RANGEMODULE::cRangeModule rangeModule( MeasurementModuleFactoryParam(1020, 1, m_actValGen, modman.getStorageSystem(), true) );
-    modman.addModule(&rangeModule, QStringLiteral(CONFIG_SOURCES_RANGEMODULE) + "/" + "mt310s2-rangemodule.xml");
+    RANGEMODULE::cRangeModule rangeModule(MeasurementModuleFactoryParam(1020,
+                                                                        1,
+                                                                        loadConfig(QStringLiteral(CONFIG_SOURCES_RANGEMODULE) + "/" + "mt310s2-rangemodule.xml"),
+                                                                        m_actValGen,
+                                                                        modman.getStorageSystem(),
+                                                                        true) );
+    modman.addModule(&rangeModule);
 
-    SCPIMODULE::ScpiModuleForTest scpiModule( MeasurementModuleFactoryParam(9999, 1, m_actValGen, modman.getStorageSystem(), true) );
-    modman.addModule(&scpiModule, QStringLiteral(CONFIG_SOURCES_SCPIMODULE) + "/" + "demo-scpimodule.xml");
+    SCPIMODULE::ScpiModuleForTest scpiModule(MeasurementModuleFactoryParam(9999,
+                                                                           1,
+                                                                           loadConfig(QStringLiteral(CONFIG_SOURCES_SCPIMODULE) + "/" + "demo-scpimodule.xml"),
+                                                                           m_actValGen,
+                                                                           modman.getStorageSystem(),
+                                                                           true) );
+    modman.addModule(&scpiModule);
 
     SCPIMODULE::ScpiTestClient client(&scpiModule, *scpiModule.getConfigData(), scpiModule.getScpiInterface());
     scpiModule.getSCPIServer()->appendClient(&client);
@@ -120,11 +140,21 @@ void test_scpi_queue::enableAndDisableQueueWhileExecutingCmds()
     TimerFactoryQtForTest::enableTest();
 
     ModuleManagerTestScpiQueue modman;
-    RANGEMODULE::cRangeModule rangeModule( MeasurementModuleFactoryParam(1020, 1, m_actValGen, modman.getStorageSystem(), true) );
-    modman.addModule(&rangeModule, QStringLiteral(CONFIG_SOURCES_RANGEMODULE) + "/" + "mt310s2-rangemodule.xml");
+    RANGEMODULE::cRangeModule rangeModule(MeasurementModuleFactoryParam(1020,
+                                                                        1,
+                                                                        loadConfig(QStringLiteral(CONFIG_SOURCES_RANGEMODULE) + "/" + "mt310s2-rangemodule.xml"),
+                                                                        m_actValGen,
+                                                                        modman.getStorageSystem(),
+                                                                        true) );
+    modman.addModule(&rangeModule);
 
-    SCPIMODULE::ScpiModuleForTest scpiModule( MeasurementModuleFactoryParam(9999, 1, m_actValGen, modman.getStorageSystem(), true) );
-    modman.addModule(&scpiModule, QStringLiteral(CONFIG_SOURCES_SCPIMODULE) + "/" + "demo-scpimodule.xml");
+    SCPIMODULE::ScpiModuleForTest scpiModule(MeasurementModuleFactoryParam(9999,
+                                                                           1,
+                                                                           loadConfig(QStringLiteral(CONFIG_SOURCES_SCPIMODULE) + "/" + "demo-scpimodule.xml"),
+                                                                           m_actValGen,
+                                                                           modman.getStorageSystem(),
+                                                                           true) );
+    modman.addModule(&scpiModule);
 
     SCPIMODULE::ScpiTestClient client(&scpiModule, *scpiModule.getConfigData(), scpiModule.getScpiInterface());
     scpiModule.getSCPIServer()->appendClient(&client);
@@ -153,11 +183,21 @@ void test_scpi_queue::disableAndEnableQueueWhileExecutingCmds()
     TimerFactoryQtForTest::enableTest();
 
     ModuleManagerTestScpiQueue modman;
-    RANGEMODULE::cRangeModule rangeModule( MeasurementModuleFactoryParam(1020, 1, m_actValGen, modman.getStorageSystem(), true) );
-    modman.addModule(&rangeModule, QStringLiteral(CONFIG_SOURCES_RANGEMODULE) + "/" + "mt310s2-rangemodule.xml");
+    RANGEMODULE::cRangeModule rangeModule(MeasurementModuleFactoryParam(1020,
+                                                                        1,
+                                                                        loadConfig(QStringLiteral(CONFIG_SOURCES_RANGEMODULE) + "/" + "mt310s2-rangemodule.xml"),
+                                                                        m_actValGen,
+                                                                        modman.getStorageSystem(),
+                                                                        true) );
+    modman.addModule(&rangeModule);
 
-    SCPIMODULE::ScpiModuleForTest scpiModule( MeasurementModuleFactoryParam(9999, 1, m_actValGen, modman.getStorageSystem(), true) );
-    modman.addModule(&scpiModule, QStringLiteral(CONFIG_SOURCES_SCPIMODULE) + "/" + "demo-scpimodule.xml");
+    SCPIMODULE::ScpiModuleForTest scpiModule(MeasurementModuleFactoryParam(9999,
+                                                                           1,
+                                                                           loadConfig(QStringLiteral(CONFIG_SOURCES_SCPIMODULE) + "/" + "demo-scpimodule.xml"),
+                                                                           m_actValGen,
+                                                                           modman.getStorageSystem(),
+                                                                           true) );
+    modman.addModule(&scpiModule);
 
     SCPIMODULE::ScpiTestClient client(&scpiModule, *scpiModule.getConfigData(), scpiModule.getScpiInterface());
     scpiModule.getSCPIServer()->appendClient(&client);
@@ -177,4 +217,12 @@ void test_scpi_queue::disableAndEnableQueueWhileExecutingCmds()
     QCOMPARE(responses.count(), 2);
     TimeMachineForTest::getInstance()->processTimers(1);
     QCOMPARE(responses.count(), 8);
+}
+
+QByteArray test_scpi_queue::loadConfig(QString configFileNameFull)
+{
+    QFile file(configFileNameFull);
+    if(file.open(QIODevice::ReadOnly))
+        return file.readAll();
+    return QByteArray();
 }
