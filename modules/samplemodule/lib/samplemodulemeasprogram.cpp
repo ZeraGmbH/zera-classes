@@ -15,7 +15,7 @@ namespace SAMPLEMODULE
 cSampleModuleMeasProgram::cSampleModuleMeasProgram(cSampleModule* module, std::shared_ptr<cBaseModuleConfiguration> pConfiguration) :
     cBaseDspMeasProgram(pConfiguration), m_pModule(module)
 {
-    m_dspInterface = FactoryServiceInterfacesSingleton::getInstance()->getDspInterfaceOther();
+    m_dspInterface = FactoryServiceInterfacesSingleton::getInstance()->createDspInterfaceOther();
 
     m_ChannelList = getConfData()->m_ObsermaticConfPar.m_pllChannelList;
 

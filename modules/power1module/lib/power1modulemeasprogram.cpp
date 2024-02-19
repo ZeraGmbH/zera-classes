@@ -22,7 +22,7 @@ cPower1ModuleMeasProgram::cPower1ModuleMeasProgram(cPower1Module* module, std::s
     cBaseDspMeasProgram(pConfiguration),
     m_pModule(module)
 {
-    m_dspInterface = FactoryServiceInterfacesSingleton::getInstance()->getDspInterfaceOther();
+    m_dspInterface = FactoryServiceInterfacesSingleton::getInstance()->createDspInterfaceOther();
 
     if(m_pModule->getDemo()) //skip SENSE resource & DSP server. Mock facade does't have SENSE resource & mock DSP server yet !
         m_IdentifyState.addTransition(this, &cModuleActivist::activationContinue, &m_readResourceSourceState);

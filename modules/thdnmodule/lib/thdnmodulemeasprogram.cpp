@@ -32,7 +32,7 @@ namespace THDNMODULE
 cThdnModuleMeasProgram::cThdnModuleMeasProgram(cThdnModule *module, std::shared_ptr<cBaseModuleConfiguration> pConfiguration)
     :cBaseDspMeasProgram(pConfiguration), m_pModule(module)
 {
-    m_dspInterface = FactoryServiceInterfacesSingleton::getInstance()->getDspInterfaceOther();
+    m_dspInterface = FactoryServiceInterfacesSingleton::getInstance()->createDspInterfaceOther();
 
     m_IdentifyState.addTransition(this, &cThdnModuleMeasProgram::activationContinue, &m_readResourceTypesState);
     m_readResourceTypesState.addTransition(this, &cThdnModuleMeasProgram::activationContinue, &m_readResourceState);

@@ -22,7 +22,7 @@ namespace POWER2MODULE
 cPower2ModuleMeasProgram::cPower2ModuleMeasProgram(cPower2Module* module, std::shared_ptr<cBaseModuleConfiguration> pConfiguration) :
     cBaseDspMeasProgram(pConfiguration), m_pModule(module)
 {
-    m_dspInterface = FactoryServiceInterfacesSingleton::getInstance()->getDspInterfaceOther();
+    m_dspInterface = FactoryServiceInterfacesSingleton::getInstance()->createDspInterfaceOther();
 
     if(m_pModule->getDemo()) //skip SENSE resource & DSP server. Mock facade does't have SENSE resource & mock DSP server yet !
         m_IdentifyState.addTransition(this, &cPower2ModuleMeasProgram::activationContinue, &m_readResourceSourceState);
