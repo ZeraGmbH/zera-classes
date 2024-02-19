@@ -1,0 +1,9 @@
+{
+    "modules" : [
+        {
+          "name" : "dftmodule",
+          "configFile" : "com5003-dftmoduleREF.xml",
+          "id": 1050
+        }
+    ]
+}

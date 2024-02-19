@@ -22,6 +22,7 @@ private slots:
     void injectActualValuesNoReferenceChannel();
     void injectActualValuesReferenceChannelUL1();
     void injectActualValuesReferenceChannelUL2();
+    void injectActualValuesOrder0();
 private:
     void setupServices(QString sessionFileName);
     void setReferenceChannel(QString channel);
