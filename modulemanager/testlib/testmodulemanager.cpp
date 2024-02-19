@@ -20,11 +20,9 @@ void TestModuleManager::pointToInstalledSessionFiles()
 }
 
 TestModuleManager::TestModuleManager(ModuleManagerSetupFacade *setupFacade,
-                                     AbstractFactoryActValManInTheMiddlePtr actualValueFactory,
                                      bool demo) :
     ModuleManager(
         setupFacade,
-        actualValueFactory,
         demo)
 {
     JsonSessionLoaderTest::supportOeTests();

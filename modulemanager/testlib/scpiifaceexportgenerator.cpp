@@ -1,6 +1,4 @@
 #include "scpiifaceexportgenerator.h"
-#include "testfactoryactvalmaninthemiddle.h"
-#include "testfactoryserviceinterfaces.h"
 #include <QFile>
 
 ScpiIfaceExportGenerator::ScpiIfaceExportGenerator()
@@ -9,7 +7,7 @@ ScpiIfaceExportGenerator::ScpiIfaceExportGenerator()
     ModulemanagerConfig::setDemoDevice("mt310s2", false);
     m_modmanConfig = ModulemanagerConfig::getInstance();
     m_modmanSetupFacade = new ModuleManagerSetupFacade(&m_licenseSystem, m_modmanConfig->isDevMode());
-    m_modman = new TestModuleManager(m_modmanSetupFacade, std::make_shared<TestFactoryActValManInTheMiddle>(), true);
+    m_modman = new TestModuleManager(m_modmanSetupFacade, true);
     m_modman->loadAllAvailableModulePlugins();
     m_modman->setupConnections();
 }

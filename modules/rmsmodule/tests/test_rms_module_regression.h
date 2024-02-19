@@ -3,7 +3,6 @@
 
 #include "licensesystemmock.h"
 #include "modulemanagersetupfacade.h"
-#include "testfactoryactvalmaninthemiddle.h"
 #include "testmodulemanager.h"
 #include <QObject>
 #include <memory>
@@ -27,7 +26,6 @@ private:
     std::unique_ptr<LicenseSystemMock> m_licenseSystem;
     std::unique_ptr<ModuleManagerSetupFacade> m_modmanFacade;
     std::unique_ptr<TestModuleManager> m_modMan;
-    TestFactoryActValManInTheMiddlePtr m_factoryActualValueGen;
 };
 
 #endif // TEST_RMS_MODULE_REGRESSION_H

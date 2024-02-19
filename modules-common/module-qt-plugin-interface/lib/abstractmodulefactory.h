@@ -2,7 +2,6 @@
 #define MODULEINTERFACE_H
 
 #include "virtualmodule.h"
-#include "abstractfactoryactvalmaninthemiddle.h"
 #include "modulegroupnumerator.h"
 #include <QtPlugin>
 
@@ -16,14 +15,12 @@ struct MeasurementModuleFactoryParam
     MeasurementModuleFactoryParam(int entityId,
                                   int moduleNum,
                                   QByteArray configXmlData,
-                                  AbstractFactoryActValManInTheMiddlePtr actualValueFactory,
                                   VeinEvent::StorageSystem* storagesystem,
                                   bool demo);
     MeasurementModuleFactoryParam getAdjustedParam(ModuleGroupNumerator* groupNumerator);
     const int m_entityId;
     const int m_moduleNum;
     const QByteArray m_configXmlData;
-    AbstractFactoryActValManInTheMiddlePtr m_actualValueFactory;
     VeinEvent::StorageSystem* m_storagesystem;
     const bool m_demo;
 };
@@ -31,13 +28,11 @@ struct MeasurementModuleFactoryParam
 inline MeasurementModuleFactoryParam::MeasurementModuleFactoryParam(int entityId,
                                                                     int moduleNum,
                                                                     QByteArray configXmlData,
-                                                                    AbstractFactoryActValManInTheMiddlePtr actualValueFactory,
                                                                     VeinEvent::StorageSystem *storagesystem,
                                                                     bool demo) :
     m_entityId(entityId),
     m_moduleNum(moduleNum),
     m_configXmlData(configXmlData),
-    m_actualValueFactory(actualValueFactory),
     m_storagesystem(storagesystem),
     m_demo(demo)
 {
@@ -48,7 +43,6 @@ inline MeasurementModuleFactoryParam MeasurementModuleFactoryParam::getAdjustedP
     return MeasurementModuleFactoryParam(m_entityId,
                                          groupNumerator->requestModuleNum(m_moduleNum),
                                          m_configXmlData,
-                                         m_actualValueFactory,
                                          m_storagesystem,
                                          m_demo);
 }

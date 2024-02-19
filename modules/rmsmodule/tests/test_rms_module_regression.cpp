@@ -20,7 +20,6 @@ void test_rms_module_regression::cleanup()
     if(m_modMan)
         m_modMan->destroyModulesAndWaitUntilAllShutdown();
     m_modMan = nullptr;
-    m_factoryActualValueGen = nullptr;
     TimeMachineObject::feedEventLoop();
     m_modmanFacade = nullptr;
     m_licenseSystem = nullptr;
@@ -143,8 +142,7 @@ void test_rms_module_regression::setupServices(QString sessionFileName)
 {
     m_licenseSystem = std::make_unique<LicenseSystemMock>();
     m_modmanFacade = std::make_unique<ModuleManagerSetupFacade>(m_licenseSystem.get());
-    m_factoryActualValueGen = std::make_shared<TestFactoryActValManInTheMiddle>();
-    m_modMan = std::make_unique<TestModuleManager>(m_modmanFacade.get(), m_factoryActualValueGen, true);
+    m_modMan = std::make_unique<TestModuleManager>(m_modmanFacade.get(), true);
     m_modMan->loadAllAvailableModulePlugins();
     m_modMan->setupConnections();
     m_modMan->startAllServiceMocks("mt310s2");

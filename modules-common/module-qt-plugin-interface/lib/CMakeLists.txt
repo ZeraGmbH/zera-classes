@@ -15,7 +15,6 @@ add_library(module-qt-plugin-interface STATIC
 target_link_libraries(module-qt-plugin-interface
     PUBLIC
     Qt5::Core
-    module-actual-values
     # ask linker to help us finding unresolved symbols
     "-Wl,--no-undefined"
     )
