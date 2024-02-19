@@ -305,7 +305,7 @@ private:
     quint32 m_lastProgress = 0;
     QDateTime m_MeasStartDateTime;
     QDateTime m_MeasEndDateTime;
-    quint64 m_MeasTime;
+    int m_MeasTime;
 
     MultipleResultHelper m_multipleResultHelper;
     cDoubleValidator *m_dutConstValidator;

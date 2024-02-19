@@ -487,8 +487,8 @@ void cSec1ModuleMeasProgram::generateInterface()
 
     m_pMeasTime = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
                                              key = QString("ACT_MeasTime"),
-                                             QString("measurement time (dd-MM-yyyy  HH:mm:ss)"),
-                                             QVariant(int(0)));
+                                             QString("measurement time"),
+                                             QVariant((int)0));
     m_pModule->m_veinModuleParameterMap[key] = m_pMeasTime; // and for the modules interface
     m_pMeasTime->setSCPIInfo(new cSCPIInfo("CALCULATE",  QString("%1:MMEASTIME").arg(modNr), "2", m_pMeasTime->getName(), "0", ""));
 }
