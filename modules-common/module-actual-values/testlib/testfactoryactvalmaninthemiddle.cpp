@@ -1,7 +1,7 @@
 #include "testfactoryactvalmaninthemiddle.h"
 #include "testactvalmaninthemiddle.h"
 
-AbstractActValManInTheMiddlePtr TestFactoryActValManInTheMiddle::getActValGeneratorRms(int entityId, QStringList valueChannelList)
+AbstractActValManInTheMiddlePtr TestFactoryActValManInTheMiddle::getActValGeneratorDft(int entityId, QStringList valueChannelList)
 {
     if(!m_ActValGenerators.contains(entityId)) {
         if(valueChannelList.isEmpty())
@@ -11,19 +11,9 @@ AbstractActValManInTheMiddlePtr TestFactoryActValManInTheMiddle::getActValGenera
     return m_ActValGenerators[entityId];
 }
 
-TestActValManInTheMiddlePtr TestFactoryActValManInTheMiddle::getActValGeneratorRmsTest(int entityId)
+TestActValManInTheMiddlePtr TestFactoryActValManInTheMiddle::getActValGeneratorDftTest(int entityId)
 {
     if(m_ActValGenerators.isEmpty())
         qFatal("Do not create value men in the middle from tests!");
     return m_ActValGenerators[entityId];
-}
-
-AbstractActValManInTheMiddlePtr TestFactoryActValManInTheMiddle::getActValGeneratorDft(int entityId, QStringList valueChannelList)
-{
-    return getActValGeneratorRms(entityId, valueChannelList);
-}
-
-TestActValManInTheMiddlePtr TestFactoryActValManInTheMiddle::getActValGeneratorDftTest(int entityId)
-{
-    return getActValGeneratorRmsTest(entityId);
 }
