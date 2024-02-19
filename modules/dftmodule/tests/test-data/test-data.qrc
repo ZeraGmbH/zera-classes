@@ -1,6 +1,7 @@
 <RCC>
     <qresource prefix="/">
         <file>dumpActual-no-ref.json</file>
+        <file>dumpActual-no-ref-order-0.json</file>
         <file>dumpActual-refUL1.json</file>
         <file>dumpActual-refUL2.json</file>
         <file>dumpInitial.json</file>
@@ -8,6 +9,7 @@
         <file>mt310s2-dftmodule-no-movingwindow-ref.xml</file>
         <file>session-minimal.json</file>
         <file>session-dft-no-movingwindow-no-ref.json</file>
+        <file>session-dft-no-movingwindow-noref-order-0.json</file>
         <file>session-dft-no-movingwindow-ref.json</file>
     </qresource>
 </RCC>

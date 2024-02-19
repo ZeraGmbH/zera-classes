@@ -186,6 +186,44 @@ void test_dft_module_regression::injectActualValuesReferenceChannelUL2()
     }
 }
 
+constexpr int comDcRefChannelCount = 6;
+
+void test_dft_module_regression::injectActualValuesOrder0()
+{
+    setupServices(":/session-dft-no-movingwindow-noref-order-0.json");
+
+    TestFactoryServiceInterfaces* factory = static_cast<TestFactoryServiceInterfaces*>(FactoryServiceInterfacesSingleton::getInstance());
+    const QList<TestDspInterfacePtr>& dspInterfaces = factory->getInterfaceList();
+    QCOMPARE(dspInterfaces.count(), 1);
+
+    QStringList valueList = dspInterfaces[0]->getValueList();
+    QCOMPARE(valueList.count(), comDcRefChannelCount);
+
+    QVector<float> actValues(comDcRefChannelCount * 2); // valuelist * 2 for re+im
+    for(int i = 0; i<comDcRefChannelCount * 2; i++)
+        actValues[i] = i+1;
+
+    dspInterfaces[0]->fireActValInterrupt(actValues, irqNr);
+    TimeMachineObject::feedEventLoop();
+
+    QFile file(":/dumpActual-no-ref-order-0.json");
+    QVERIFY(file.open(QFile::ReadOnly));
+    QString jsonExpected = file.readAll();
+
+    VeinStorage::VeinHash* storageHash = m_modmanFacade->getStorageSystem();
+    QByteArray jsonDumped;
+    QBuffer buff(&jsonDumped);
+    storageHash->dumpToFile(&buff, QList<int>() << dftEntityId);
+
+    if(jsonExpected != jsonDumped) {
+        qWarning("Expected storage hash:");
+        qInfo("%s", qPrintable(jsonExpected));
+        qWarning("Dumped storage hash:");
+        qInfo("%s", qPrintable(jsonDumped));
+        QCOMPARE(jsonExpected, jsonDumped);
+    }
+}
+
 void test_dft_module_regression::setReferenceChannel(QString channel)
 {
     m_vfCmdEventHandlerSystem = std::make_shared<VfCmdEventHandlerSystem>();
