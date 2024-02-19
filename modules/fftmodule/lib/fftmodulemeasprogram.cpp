@@ -15,7 +15,7 @@ namespace FFTMODULE
 cFftModuleMeasProgram::cFftModuleMeasProgram(cFftModule* module, std::shared_ptr<cBaseModuleConfiguration> pConfiguration)
     :cBaseDspMeasProgram(pConfiguration), m_pModule(module)
 {
-    m_dspInterface = m_pModule->getServiceInterfaceFactory()->createDspInterfaceOther();
+    m_dspInterface = m_pModule->getServiceInterfaceFactory()->createDspInterfaceFft(irqNr, getConfData()->m_valueChannelList, getConfData()->m_nFftOrder);
 
     m_IdentifyState.addTransition(this, &cFftModuleMeasProgram::activationContinue, &m_readResourceTypesState);
     m_readResourceTypesState.addTransition(this, &cFftModuleMeasProgram::activationContinue, &m_readResourceState);
@@ -121,12 +121,6 @@ cFftModuleMeasProgram::cFftModuleMeasProgram(cFftModule* module, std::shared_ptr
     else
         connect(&m_startStopHandler, &ActualValueStartStopHandler::sigNewActualValues,
                 this, &cFftModuleMeasProgram::setInterfaceActualValues);
-
-    if(m_pModule->getDemo()){
-        m_demoPeriodicTimer = TimerFactoryQt::createPeriodic(500);
-        connect(m_demoPeriodicTimer.get(), &TimerTemplateQt::sigExpired,this, &cFftModuleMeasProgram::handleDemoActualValues);
-        m_demoPeriodicTimer->start();
-    }
 }
 
 void cFftModuleMeasProgram::start()
@@ -585,58 +579,6 @@ void cFftModuleMeasProgram::setActualValuesNames()
     }
 }
 
-void cFftModuleMeasProgram::setupDemoOperation()
-{
-    m_measChannelInfoHash.clear();
-    cMeasChannelInfo mi;
-    for (int i = 0; i < getConfData()->m_valueChannelList.count(); i++)
-    {
-        QString channelName = getConfData()->m_valueChannelList.at(i);
-        if (!m_measChannelInfoHash.contains(channelName))
-            m_measChannelInfoHash[channelName] = mi;
-    }
-    QList<QString> channelInfoList = m_measChannelInfoHash.keys();
-    foreach (QString channelInfo, channelInfoList) {
-        mi = m_measChannelInfoHash.take(channelInfo);
-        if (channelInfo == "m0") {
-            mi.alias = "UL1";
-            mi.unit = "V";
-        }
-        else if (channelInfo == "m1") {
-            mi.alias = "UL2";
-            mi.unit = "V";
-        }
-        else if (channelInfo == "m2") {
-            mi.alias = "UL3";
-            mi.unit = "V";
-        }
-        else if (channelInfo == "m3") {
-            mi.alias = "IL1";
-            mi.unit = "A";
-        }
-        else if (channelInfo == "m4") {
-            mi.alias = "IL2";
-            mi.unit = "A";
-        }
-        else if (channelInfo == "m5") {
-            mi.alias = "IL3";
-            mi.unit = "A";
-        }
-        else if (channelInfo == "m6") {
-            mi.alias = "UAUX";
-            mi.unit = "V";
-        }
-        else if (channelInfo == "m7") {
-            mi.alias = "IAUX";
-            mi.unit = "A";
-        }
-        else {
-        }
-        m_measChannelInfoHash[channelInfo] = mi;
-    }
-}
-
-
 void cFftModuleMeasProgram::setInterfaceActualValues(QVector<float> *actualValues)
 {
     if (m_bActive) { // maybe we are deactivating !!!!
@@ -655,28 +597,6 @@ void cFftModuleMeasProgram::setInterfaceActualValues(QVector<float> *actualValue
         }
     }
 }
-
-void cFftModuleMeasProgram::handleDemoActualValues()
-{
-    int totalHarmonics = getConfData()->m_nFftOrder;
-    int totalChannels = m_veinActValueList.count();
-    QVector<float> demoValues(totalChannels * totalHarmonics * 2, 0.0);
-
-    for (int i = 0; i < totalChannels; i++) {
-         double randomVal = (double)rand() / RAND_MAX ;
-        int channelOffset = i * totalHarmonics * 2;
-        demoValues.insert(channelOffset, randomVal*0.5); //DC component, real part
-        if(m_veinActValueList.at(i)->getUnit() == "A")
-            demoValues.insert(channelOffset + 2, randomVal*10); //fundamental frequency component, real part
-        else {
-            demoValues.insert(channelOffset + 2, randomVal*230); //fundamental frequency component, real part
-        }
-    }
-
-    m_ModuleActualValues = demoValues;
-    emit actualValues(&m_ModuleActualValues);
-}
-
 
 void cFftModuleMeasProgram::resourceManagerConnect()
 {
@@ -845,9 +765,6 @@ void cFftModuleMeasProgram::activateDSP()
 void cFftModuleMeasProgram::activateDSPdone()
 {
     m_bActive = true;
-
-    if(m_pModule->getDemo())
-        setupDemoOperation();
 
     setActualValuesNames();
     setSCPIMeasInfo();

@@ -116,15 +116,12 @@ private:
 
     void setSCPIMeasInfo();
     void setActualValuesNames();
-    void setupDemoOperation();
 
     cMovingwindowFilter m_movingwindowFilter;
     QVector<float> m_FFTModuleActualValues;
-    TimerTemplateQtPtr m_demoPeriodicTimer;
 
 private slots:
     void setInterfaceActualValues(QVector<float> *actualValues);
-    void handleDemoActualValues();
 
     void resourceManagerConnect();
     void sendRMIdent();
