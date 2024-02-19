@@ -1,11 +1,13 @@
 #include "testfactoryserviceinterfaces.h"
 
+DspInterfacePtr TestFactoryServiceInterfaces::createDspInterfaceDft(int interruptNoHandled, QStringList valueChannelList)
+{
+    return createDspInterfaceCommon(interruptNoHandled, valueChannelList);
+}
+
 DspInterfacePtr TestFactoryServiceInterfaces::createDspInterfaceRms(int interruptNoHandled, QStringList valueChannelList)
 {
-    Q_UNUSED(interruptNoHandled)
-    TestDspInterfacePtr dspInterface = std::make_shared<TestDspInterface>(valueChannelList);
-    m_dspInterfaces.append(dspInterface);
-    return dspInterface;
+    return createDspInterfaceCommon(interruptNoHandled, valueChannelList);
 }
 
 DspInterfacePtr TestFactoryServiceInterfaces::createDspInterfaceOther()
@@ -22,4 +24,12 @@ const QList<TestDspInterfacePtr> &TestFactoryServiceInterfaces::getInterfaceList
 void TestFactoryServiceInterfaces::clearInterfaceList()
 {
     m_dspInterfaces.clear();
+}
+
+DspInterfacePtr TestFactoryServiceInterfaces::createDspInterfaceCommon(int interruptNoHandled, QStringList valueChannelList)
+{
+    Q_UNUSED(interruptNoHandled)
+    TestDspInterfacePtr dspInterface = std::make_shared<TestDspInterface>(valueChannelList);
+    m_dspInterfaces.append(dspInterface);
+    return dspInterface;
 }
