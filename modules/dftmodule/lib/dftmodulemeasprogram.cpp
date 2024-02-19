@@ -117,29 +117,28 @@ cDftModuleMeasProgram::cDftModuleMeasProgram(cDftModule* module, std::shared_ptr
     connect(&m_dataAcquisitionState, &QState::entered, this, &cDftModuleMeasProgram::dataAcquisitionDSP);
     connect(&m_dataAcquisitionDoneState, &QState::entered, this, &cDftModuleMeasProgram::dataReadDSP);
 
-    m_actValueHandler = m_pModule->getActualValueFactory()->getActValGeneratorDft(m_pModule->getEntityId(), getConfData()->m_valueChannelList);
     connect(this, &cDftModuleMeasProgram::actualValues,
-            m_actValueHandler.get(), &AbstractActValManInTheMiddle::onNewActualValues);
+            &m_startStopHandler, &ActualValueStartStopHandler::onNewActualValues);
     if (getConfData()->m_bmovingWindow) {
         m_movingwindowFilter.setIntegrationtime(getConfData()->m_fMeasInterval.m_fValue);
-        connect(m_actValueHandler.get(), &AbstractActValManInTheMiddle::sigNewActualValues,
+        connect(&m_startStopHandler, &ActualValueStartStopHandler::sigNewActualValues,
                 &m_movingwindowFilter, &cMovingwindowFilter::receiveActualValues);
         connect(&m_movingwindowFilter, &cMovingwindowFilter::actualValues,
                 this, &cDftModuleMeasProgram::setInterfaceActualValues);
     }
     else
-        connect(m_actValueHandler.get(), &AbstractActValManInTheMiddle::sigNewActualValues,
+        connect(&m_startStopHandler, &ActualValueStartStopHandler::sigNewActualValues,
                 this, &cDftModuleMeasProgram::setInterfaceActualValues);
 }
 
 void cDftModuleMeasProgram::start()
 {
-    m_actValueHandler->start();
+    m_startStopHandler.start();
 }
 
 void cDftModuleMeasProgram::stop()
 {
-    m_actValueHandler->stop();
+    m_startStopHandler.stop();
 }
 
 void cDftModuleMeasProgram::generateInterface()
