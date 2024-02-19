@@ -3,6 +3,7 @@
 
 #include "dftmodule.h"
 #include "dftmoduleconfiguration.h"
+#include "actualvaluestartstophandler.h"
 #include <basedspmeasprogram.h>
 #include <measchannelinfo.h>
 #include <movingwindowfilter.h>
@@ -59,7 +60,7 @@ private:
     void turnVectorsToRefChannel();
 
     cDftModule* m_pModule;
-    AbstractActValManInTheMiddlePtr m_actValueHandler;
+    ActualValueStartStopHandler m_startStopHandler;
     QList<VfModuleActvalue*> m_veinActValueList; // the list of actual values we work on
     VfModuleActvalue* m_pRFieldActualValue;
     QMap<QString, cMeasChannelInfo> m_measChannelInfoHash;
