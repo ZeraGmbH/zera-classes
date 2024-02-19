@@ -1,5 +1,5 @@
 #include "test_rms_module_regression.h"
-#include "testfactoryactvalmaninthemiddle.h"
+#include "rmsmodulemeasprogram.h"
 #include "factoryserviceinterfacessingleton.h"
 #include "testfactoryserviceinterfaces.h"
 #include <timemachineobject.h>
@@ -15,6 +15,8 @@ void test_rms_module_regression::initTestCase()
 
 void test_rms_module_regression::cleanup()
 {
+    TestFactoryServiceInterfaces* factory = static_cast<TestFactoryServiceInterfaces*>(FactoryServiceInterfacesSingleton::getInstance());
+    factory->clearInterfaceList();
     if(m_modMan)
         m_modMan->destroyModulesAndWaitUntilAllShutdown();
     m_modMan = nullptr;
@@ -74,20 +76,27 @@ void test_rms_module_regression::checkActualValueCount()
 {
     setupServices(":/session-rms-moduleconfig-from-resource.json");
 
-    TestActValManInTheMiddlePtr actValueGenerator = m_factoryActualValueGen->getActValGeneratorRmsTest(rmsEntityId);
-    QStringList actValName = actValueGenerator->getValueChannelList();
-    QCOMPARE(actValName.count(), rmsResultCount);
+    TestFactoryServiceInterfaces* factory = static_cast<TestFactoryServiceInterfaces*>(FactoryServiceInterfacesSingleton::getInstance());
+    const QList<TestDspInterfacePtr>& dspInterfaces = factory->getInterfaceList();
+    QCOMPARE(dspInterfaces.count(), 1);
+
+    QStringList valueList = dspInterfaces[0]->getValueList();
+    QCOMPARE(valueList.count(), rmsResultCount);
 }
 
 void test_rms_module_regression::injectActualValues()
 {
     setupServices(":/session-rms-moduleconfig-from-resource.json");
 
-    TestActValManInTheMiddlePtr actValueGenerator = m_factoryActualValueGen->getActValGeneratorRmsTest(rmsEntityId);
+    TestFactoryServiceInterfaces* factory = static_cast<TestFactoryServiceInterfaces*>(FactoryServiceInterfacesSingleton::getInstance());
+    const QList<TestDspInterfacePtr>& dspInterfaces = factory->getInterfaceList();
+    QCOMPARE(dspInterfaces.count(), 1);
+
     QVector<float> actValues(rmsResultCount);
     for(int i = 0; i<rmsResultCount; i++)
         actValues[i] = i;
-    actValueGenerator->onNewActualValues(&actValues);
+
+    dspInterfaces[0]->fireActValInterrupt(actValues, irqNr);
     TimeMachineObject::feedEventLoop();
 
     QFile file(":/dumpActual.json");
@@ -111,20 +120,22 @@ void test_rms_module_regression::injectActualValues()
 void test_rms_module_regression::injectActualTwice()
 {
     setupServices(":/session-rms-moduleconfig-from-resource.json");
+
+    TestFactoryServiceInterfaces* factory = static_cast<TestFactoryServiceInterfaces*>(FactoryServiceInterfacesSingleton::getInstance());
+    const QList<TestDspInterfacePtr>& dspInterfaces = factory->getInterfaceList();
+    QCOMPARE(dspInterfaces.count(), 1);
+
+    VeinStorage::VeinHash* storageHash = m_modmanFacade->getStorageSystem();
     QVector<float> actValues(rmsResultCount);
-    TestActValManInTheMiddlePtr actValueGenerator = m_factoryActualValueGen->getActValGeneratorRmsTest(rmsEntityId);
 
     actValues[1] = 37;
-    actValueGenerator->onNewActualValues(&actValues);
+    dspInterfaces[0]->fireActValInterrupt(actValues, irqNr);
     TimeMachineObject::feedEventLoop();
-    VeinStorage::VeinHash* storageHash = m_modmanFacade->getStorageSystem();
-
     QCOMPARE(storageHash->getStoredValue(rmsEntityId, "ACT_RMSPN2"), QVariant(37.0));
 
     actValues[1] = 42;
-    actValueGenerator->onNewActualValues(&actValues);
+    dspInterfaces[0]->fireActValInterrupt(actValues, irqNr);
     TimeMachineObject::feedEventLoop();
-
     QCOMPARE(storageHash->getStoredValue(rmsEntityId, "ACT_RMSPN2"), QVariant(42.0));
 }
 

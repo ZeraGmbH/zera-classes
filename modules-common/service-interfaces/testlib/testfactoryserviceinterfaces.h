@@ -10,6 +10,7 @@ public:
     DspInterfacePtr getDspInterfaceRms(int interruptNoHandled, QStringList valueChannelList) override;
     DspInterfacePtr getDspInterfaceOther() override;
     const QList<TestDspInterfacePtr>& getInterfaceList() const;
+    void clearInterfaceList();
 private:
     QList<TestDspInterfacePtr> m_dspInterfaces;
 };
