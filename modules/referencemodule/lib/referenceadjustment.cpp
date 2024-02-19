@@ -15,7 +15,7 @@ namespace REFERENCEMODULE
 cReferenceAdjustment::cReferenceAdjustment(cReferenceModule* module, cReferenceModuleConfigData* confData)
     :m_pModule(module), m_pConfigData(confData)
 {
-    m_dspInterface = FactoryServiceInterfacesSingleton::getInstance()->getDspInterfaceOther();
+    m_dspInterface = FactoryServiceInterfacesSingleton::getInstance()->createDspInterfaceOther();
     m_pPCBInterface = new Zera::cPCBInterface();
 
     for (int i = 0; i < m_pConfigData->m_referenceChannelList.count(); i++) // we fetch all our real channels first

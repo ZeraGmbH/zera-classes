@@ -7,8 +7,8 @@
 class TestFactoryServiceInterfaces : public AbstractFactoryServiceInterfaces
 {
 public:
-    DspInterfacePtr getDspInterfaceRms(int interruptNoHandled, QStringList valueChannelList) override;
-    DspInterfacePtr getDspInterfaceOther() override;
+    DspInterfacePtr createDspInterfaceRms(int interruptNoHandled, QStringList valueChannelList) override;
+    DspInterfacePtr createDspInterfaceOther() override;
     const QList<TestDspInterfacePtr>& getInterfaceList() const;
     void clearInterfaceList();
 private:

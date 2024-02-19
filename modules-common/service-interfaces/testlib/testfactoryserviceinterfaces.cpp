@@ -1,6 +1,6 @@
 #include "testfactoryserviceinterfaces.h"
 
-DspInterfacePtr TestFactoryServiceInterfaces::getDspInterfaceRms(int interruptNoHandled, QStringList valueChannelList)
+DspInterfacePtr TestFactoryServiceInterfaces::createDspInterfaceRms(int interruptNoHandled, QStringList valueChannelList)
 {
     Q_UNUSED(interruptNoHandled)
     TestDspInterfacePtr dspInterface = std::make_shared<TestDspInterface>(valueChannelList);
@@ -8,7 +8,7 @@ DspInterfacePtr TestFactoryServiceInterfaces::getDspInterfaceRms(int interruptNo
     return dspInterface;
 }
 
-DspInterfacePtr TestFactoryServiceInterfaces::getDspInterfaceOther()
+DspInterfacePtr TestFactoryServiceInterfaces::createDspInterfaceOther()
 {
     // no test specific implementation yet
     return std::make_shared<Zera::cDSPInterface>();

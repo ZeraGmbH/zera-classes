@@ -6,8 +6,8 @@
 class FactoryServiceInterfaces : public AbstractFactoryServiceInterfaces
 {
 public:
-    DspInterfacePtr getDspInterfaceRms(int interruptNoHandled, QStringList valueChannelList) override;
-    DspInterfacePtr getDspInterfaceOther() override;
+    DspInterfacePtr createDspInterfaceRms(int interruptNoHandled, QStringList valueChannelList) override;
+    DspInterfacePtr createDspInterfaceOther() override;
 };
 
 #endif // FACTORYSERVICEINTERFACES_H

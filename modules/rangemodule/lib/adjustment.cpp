@@ -17,7 +17,7 @@ namespace RANGEMODULE
 cAdjustManagement::cAdjustManagement(cRangeModule *module, cSocket* dspsocket, cSocket* pcbsocket, QStringList chnlist, QStringList subdclist, double interval)
     :m_pModule(module), m_pDSPSocket(dspsocket), m_pPCBSocket(pcbsocket), m_ChannelNameList(chnlist), m_subdcChannelNameList(subdclist), m_fAdjInterval(interval)
 {
-    m_dspInterface = FactoryServiceInterfacesSingleton::getInstance()->getDspInterfaceOther();
+    m_dspInterface = FactoryServiceInterfacesSingleton::getInstance()->createDspInterfaceOther();
     m_pPCBInterface = new Zera::cPCBInterface();
 
     m_bAdjustTrigger = false;
