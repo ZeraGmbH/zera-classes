@@ -9,6 +9,7 @@ typedef std::shared_ptr<Zera::cDSPInterface> DspInterfacePtr;
 class AbstractFactoryServiceInterfaces
 {
 public:
+    virtual DspInterfacePtr createDspInterfaceDft(int interruptNoHandled, QStringList valueChannelList) = 0;
     virtual DspInterfacePtr createDspInterfaceRms(int interruptNoHandled, QStringList valueChannelList) = 0;
     virtual DspInterfacePtr createDspInterfaceOther() = 0;
 };
