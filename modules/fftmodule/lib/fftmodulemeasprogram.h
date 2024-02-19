@@ -3,6 +3,7 @@
 
 #include "fftmodule.h"
 #include "fftmoduleconfigdata.h"
+#include "actualvaluestartstophandler.h"
 #include <basedspmeasprogram.h>
 #include <measchannelinfo.h>
 #include <movingwindowfilter.h>
@@ -59,6 +60,7 @@ private:
     void deleteDspCmdList();
 
     cFftModule* m_pModule;
+    ActualValueStartStopHandler m_startStopHandler;
     QList<VfModuleActvalue*> m_veinActValueList; // the list of actual values we work on
     QList<VfModuleActvalue*> m_DCValueList;
     VfModuleMetaData* m_pFFTCountInfo;

@@ -109,33 +109,35 @@ cFftModuleMeasProgram::cFftModuleMeasProgram(cFftModule* module, std::shared_ptr
     connect(&m_dataAcquisitionState, &QState::entered, this, &cFftModuleMeasProgram::dataAcquisitionDSP);
     connect(&m_dataAcquisitionDoneState, &QState::entered, this, &cFftModuleMeasProgram::dataReadDSP);
 
+    connect(this, &cFftModuleMeasProgram::actualValues,
+            &m_startStopHandler, &ActualValueStartStopHandler::onNewActualValues);
+    if (getConfData()->m_bmovingWindow) {
+        m_movingwindowFilter.setIntegrationtime(getConfData()->m_fMeasInterval.m_fValue);
+        connect(&m_startStopHandler, &ActualValueStartStopHandler::sigNewActualValues,
+                &m_movingwindowFilter, &cMovingwindowFilter::receiveActualValues);
+        connect(&m_movingwindowFilter, &cMovingwindowFilter::actualValues,
+                this, &cFftModuleMeasProgram::setInterfaceActualValues);
+    }
+    else
+        connect(&m_startStopHandler, &ActualValueStartStopHandler::sigNewActualValues,
+                this, &cFftModuleMeasProgram::setInterfaceActualValues);
+
     if(m_pModule->getDemo()){
         m_demoPeriodicTimer = TimerFactoryQt::createPeriodic(500);
         connect(m_demoPeriodicTimer.get(), &TimerTemplateQt::sigExpired,this, &cFftModuleMeasProgram::handleDemoActualValues);
+        m_demoPeriodicTimer->start();
     }
 }
 
 void cFftModuleMeasProgram::start()
 {
-    if (getConfData()->m_bmovingWindow) {
-        m_movingwindowFilter.setIntegrationtime(getConfData()->m_fMeasInterval.m_fValue);
-        connect(this, &cFftModuleMeasProgram::actualValues, &m_movingwindowFilter, &cMovingwindowFilter::receiveActualValues);
-        connect(&m_movingwindowFilter, &cMovingwindowFilter::actualValues, this, &cFftModuleMeasProgram::setInterfaceActualValues);
-    }
-    else
-        connect(this, &cFftModuleMeasProgram::actualValues, this, &cFftModuleMeasProgram::setInterfaceActualValues);
-    if(m_pModule->getDemo())
-        m_demoPeriodicTimer->start();
+    m_startStopHandler.start();
 }
 
 void cFftModuleMeasProgram::stop()
 {
-    disconnect(this, &cFftModuleMeasProgram::actualValues, 0, 0);
-    disconnect(&m_movingwindowFilter, &cMovingwindowFilter::actualValues, this, 0);
-    if(m_pModule->getDemo())
-        m_demoPeriodicTimer->stop();
+    m_startStopHandler.stop();
 }
-
 
 void cFftModuleMeasProgram::generateInterface()
 {
