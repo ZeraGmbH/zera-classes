@@ -24,7 +24,6 @@ target_link_libraries(zera-modulemanager-testlib
     Zera::zera-timers-testlib
     Zera::zenuxservicecommon-testlib
     zera-modulemanager-lib
-    module-actual-values-testlib
     module-service-interfaces-testlib
 )
 

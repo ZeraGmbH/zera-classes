@@ -1,6 +1,5 @@
 #include "modulemanager.h"
 #include "test_plugin_load.h"
-#include "testfactoryactvalmaninthemiddle.h"
 #include "testmodulemanager.h"
 #include <timemachineobject.h>
 #include <QTest>
@@ -27,7 +26,7 @@ void test_plugin_load::loadModulePluginsInstalled()
         qInfo("Skipping test_plugin_load::loadModulePluginsInstalled in OE");
         return;
     }
-    ZeraModules::ModuleManager modMan(nullptr, std::make_shared<TestFactoryActValManInTheMiddle>(), true);
+    ZeraModules::ModuleManager modMan(nullptr, true);
 
     bool modulesFound = modMan.loadAllAvailableModulePlugins();
     QVERIFY(modulesFound);
@@ -35,7 +34,7 @@ void test_plugin_load::loadModulePluginsInstalled()
 
 void test_plugin_load::loadModulePluginsSources()
 {
-    TestModuleManager modMan(nullptr, nullptr, true);
+    TestModuleManager modMan(nullptr, true);
 
     bool modulesFound = modMan.loadAllAvailableModulePlugins();
     QVERIFY(modulesFound);

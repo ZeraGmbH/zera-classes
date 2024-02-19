@@ -1,6 +1,5 @@
 #include "test_scpi_queue.h"
 #include "modulemanagertestscpiqueue.h"
-#include "testfactoryactvalmaninthemiddle.h"
 #include "factoryserviceinterfacessingleton.h"
 #include "testfactoryserviceinterfaces.h"
 #include <rangemodule.h>
@@ -26,7 +25,6 @@ void disableQueuing(SCPIMODULE::cSCPIInterface* interface)
 void test_scpi_queue::initTestCase()
 {
     FactoryServiceInterfacesSingleton::setInstance(std::make_unique<TestFactoryServiceInterfaces>());
-    m_actValGen = std::make_shared<TestFactoryActValManInTheMiddle>();
 }
 
 void test_scpi_queue::sendStandardCmdsQueueDisabledAndEnabled()
@@ -35,7 +33,6 @@ void test_scpi_queue::sendStandardCmdsQueueDisabledAndEnabled()
     SCPIMODULE::ScpiModuleForTest scpiModule(MeasurementModuleFactoryParam(9999,
                                                                            1,
                                                                            loadConfig(QStringLiteral(CONFIG_SOURCES_SCPIMODULE) + "/" + "demo-scpimodule.xml"),
-                                                                           m_actValGen,
                                                                            modman.getStorageSystem(),
                                                                            true) );
     modman.addModule(&scpiModule);
@@ -68,7 +65,6 @@ void test_scpi_queue::sendErroneousAndCorrectStandardCmds()
     SCPIMODULE::ScpiModuleForTest scpiModule(MeasurementModuleFactoryParam(9999,
                                                                            1,
                                                                            loadConfig(QStringLiteral(CONFIG_SOURCES_SCPIMODULE) + "/" + "demo-scpimodule.xml"),
-                                                                           m_actValGen,
                                                                            modman.getStorageSystem(),
                                                                            true) );
     modman.addModule(&scpiModule);
@@ -97,7 +93,6 @@ void test_scpi_queue::sendSubSystemAndStandardCommands()
     RANGEMODULE::cRangeModule rangeModule(MeasurementModuleFactoryParam(1020,
                                                                         1,
                                                                         loadConfig(QStringLiteral(CONFIG_SOURCES_RANGEMODULE) + "/" + "mt310s2-rangemodule.xml"),
-                                                                        m_actValGen,
                                                                         modman.getStorageSystem(),
                                                                         true) );
     modman.addModule(&rangeModule);
@@ -105,7 +100,6 @@ void test_scpi_queue::sendSubSystemAndStandardCommands()
     SCPIMODULE::ScpiModuleForTest scpiModule(MeasurementModuleFactoryParam(9999,
                                                                            1,
                                                                            loadConfig(QStringLiteral(CONFIG_SOURCES_SCPIMODULE) + "/" + "demo-scpimodule.xml"),
-                                                                           m_actValGen,
                                                                            modman.getStorageSystem(),
                                                                            true) );
     modman.addModule(&scpiModule);
@@ -146,7 +140,6 @@ void test_scpi_queue::enableAndDisableQueueWhileExecutingCmds()
     RANGEMODULE::cRangeModule rangeModule(MeasurementModuleFactoryParam(1020,
                                                                         1,
                                                                         loadConfig(QStringLiteral(CONFIG_SOURCES_RANGEMODULE) + "/" + "mt310s2-rangemodule.xml"),
-                                                                        m_actValGen,
                                                                         modman.getStorageSystem(),
                                                                         true) );
     modman.addModule(&rangeModule);
@@ -154,7 +147,6 @@ void test_scpi_queue::enableAndDisableQueueWhileExecutingCmds()
     SCPIMODULE::ScpiModuleForTest scpiModule(MeasurementModuleFactoryParam(9999,
                                                                            1,
                                                                            loadConfig(QStringLiteral(CONFIG_SOURCES_SCPIMODULE) + "/" + "demo-scpimodule.xml"),
-                                                                           m_actValGen,
                                                                            modman.getStorageSystem(),
                                                                            true) );
     modman.addModule(&scpiModule);
@@ -189,7 +181,6 @@ void test_scpi_queue::disableAndEnableQueueWhileExecutingCmds()
     RANGEMODULE::cRangeModule rangeModule(MeasurementModuleFactoryParam(1020,
                                                                         1,
                                                                         loadConfig(QStringLiteral(CONFIG_SOURCES_RANGEMODULE) + "/" + "mt310s2-rangemodule.xml"),
-                                                                        m_actValGen,
                                                                         modman.getStorageSystem(),
                                                                         true) );
     modman.addModule(&rangeModule);
@@ -197,7 +188,6 @@ void test_scpi_queue::disableAndEnableQueueWhileExecutingCmds()
     SCPIMODULE::ScpiModuleForTest scpiModule(MeasurementModuleFactoryParam(9999,
                                                                            1,
                                                                            loadConfig(QStringLiteral(CONFIG_SOURCES_SCPIMODULE) + "/" + "demo-scpimodule.xml"),
-                                                                           m_actValGen,
                                                                            modman.getStorageSystem(),
                                                                            true) );
     modman.addModule(&scpiModule);

@@ -22,12 +22,10 @@ namespace ZeraModules {
 QString ModuleManager::m_sessionPath = MODMAN_SESSION_PATH;
 
 ModuleManager::ModuleManager(ModuleManagerSetupFacade *setupFacade,
-                             AbstractFactoryActValManInTheMiddlePtr actualValueFactory,
                              bool demo, QObject *parent) :
     QObject(parent),
     m_moduleStartLock(false),
     m_setupFacade(setupFacade),
-    m_actualValueFactory(actualValueFactory),
     m_demo(demo)
 {
     m_timerAllModulesLoaded.start();
@@ -140,7 +138,6 @@ void ModuleManager::startModule(const QString & uniqueModuleName, const QString 
             MeasurementModuleFactoryParam moduleParam(moduleEntityId,
                                                       moduleNum,
                                                       t_xmlConfigData,
-                                                      m_actualValueFactory,
                                                       m_setupFacade->getStorageSystem(),
                                                       m_demo);
             VirtualModule *tmpModule = tmpFactory->createModule(moduleParam);
