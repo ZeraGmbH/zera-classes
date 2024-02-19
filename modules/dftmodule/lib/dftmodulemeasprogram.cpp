@@ -869,50 +869,47 @@ void cDftModuleMeasProgram::dataAcquisitionDSP()
 
 void cDftModuleMeasProgram::turnVectorsToRefChannel()
 {
-    QHash<QString, std::complex<double>> DftActValuesHash;
+    QHash<QString, std::complex<double>> dftActComplexValuesChannelHash;
     for (int i = 0; i < getConfData()->m_valueChannelList.count(); i++)
-        DftActValuesHash[getConfData()->m_valueChannelList.at(i)] = std::complex<double>(m_ModuleActualValues[i*2], m_ModuleActualValues[i*2+1]);
+        dftActComplexValuesChannelHash[getConfData()->m_valueChannelList.at(i)] = std::complex<double>(m_ModuleActualValues[i*2], m_ModuleActualValues[i*2+1]);
 
-    // the complex reference vector
-    std::complex<double> complexRef = DftActValuesHash.value(m_ChannelSystemNameHash.value(getConfData()->m_sRefChannel.m_sPar));
+    QString referenceChannelName = m_ChannelSystemNameHash.value(getConfData()->m_sRefChannel.m_sPar);
+    std::complex<double> complexReferenceVector = dftActComplexValuesChannelHash.value(referenceChannelName);
 
-    double tanRef = complexRef.imag() / complexRef.real();
+    double tanRef = complexReferenceVector.imag() / complexReferenceVector.real();
     double divisor = sqrt(1.0+(tanRef * tanRef));
     // the turnvector has the negative reference angle
     // computing in complex is more acurate, but we have to keep in mind the
     // point of discontinuity of the arctan function
     std::complex<double> turnVector;
-    if (complexRef.real() < 0)
+    if (complexReferenceVector.real() < 0)
         turnVector = std::complex<double>(-(1.0 / divisor), (tanRef / divisor));
     else
         turnVector = std::complex<double>((1.0 / divisor), -(tanRef / divisor));
 
     // this method is alternative ... but it is not so accurate as the above one
-    //double phiRef = userAtan(complexRef.im(), complexRef.re());
+    //double phiRef = userAtan(complexReferenceVector.im(), complexReferenceVector.re());
     //complex turnVector = complex(cos(-phiRef*0.017453292), sin(-phiRef*0.017453292));
 
     for (int i = 0; i < getConfData()->m_valueChannelList.count(); i++) {
         QString key;
         key = getConfData()->m_valueChannelList.at(i);
-        std::complex<double> newDft = DftActValuesHash.take(key);
+        std::complex<double> newDft = dftActComplexValuesChannelHash.take(key);
         newDft *= turnVector;
         if (fabs(newDft.imag()) < 1e-8)
             newDft = std::complex<double>(newDft.real(), 0.0);
-        DftActValuesHash[key] = newDft;
+        dftActComplexValuesChannelHash[key] = newDft;
     }
 
     // now we have to compute the difference vectors and store all new values
     for (int i = 0; i < getConfData()->m_valueChannelList.count(); i++) {
         QString key = getConfData()->m_valueChannelList.at(i);
         QStringList sl = key.split('-');
-
         // we have 2 entries
-        if (sl.count() == 2) {
-            DftActValuesHash.remove(key);
-            DftActValuesHash[key] = DftActValuesHash[sl.at(0)] - DftActValuesHash[sl.at(1)];
-        }
-        m_ModuleActualValues.replace(i*2, DftActValuesHash[key].real());
-        m_ModuleActualValues.replace(i*2+1, DftActValuesHash[key].imag());
+        if (sl.count() == 2)
+            dftActComplexValuesChannelHash[key] = dftActComplexValuesChannelHash[sl.at(0)] - dftActComplexValuesChannelHash[sl.at(1)];
+        m_ModuleActualValues.replace(i*2, dftActComplexValuesChannelHash[key].real());
+        m_ModuleActualValues.replace(i*2+1, dftActComplexValuesChannelHash[key].imag());
     }
 }
 
