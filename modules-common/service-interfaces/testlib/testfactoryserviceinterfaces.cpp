@@ -3,8 +3,7 @@
 DspInterfacePtr TestFactoryServiceInterfaces::getDspInterfaceRms(int interruptNoHandled, QStringList valueChannelList)
 {
     Q_UNUSED(interruptNoHandled)
-    Q_UNUSED(valueChannelList)
-    TestDspInterfacePtr dspInterface = std::make_shared<TestDspInterface>();
+    TestDspInterfacePtr dspInterface = std::make_shared<TestDspInterface>(valueChannelList);
     m_dspInterfaces.append(dspInterface);
     return dspInterface;
 }
@@ -18,4 +17,9 @@ DspInterfacePtr TestFactoryServiceInterfaces::getDspInterfaceOther()
 const QList<TestDspInterfacePtr> &TestFactoryServiceInterfaces::getInterfaceList() const
 {
     return m_dspInterfaces;
+}
+
+void TestFactoryServiceInterfaces::clearInterfaceList()
+{
+    m_dspInterfaces.clear();
 }

@@ -7,7 +7,10 @@ class TestDspInterface : public MockDspInterface
 {
     Q_OBJECT
 public:
-    TestDspInterface();
+    TestDspInterface(QStringList valueNamesList);
+    QStringList getValueList();
+private:
+    QStringList m_valueNamesList;
 };
 
 typedef std::shared_ptr<TestDspInterface> TestDspInterfacePtr;
