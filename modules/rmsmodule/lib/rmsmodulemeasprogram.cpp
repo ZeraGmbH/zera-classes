@@ -110,31 +110,30 @@ cRmsModuleMeasProgram::cRmsModuleMeasProgram(cRmsModule* module, std::shared_ptr
     connect(&m_dataAcquisitionState, &QAbstractState::entered, this, &cRmsModuleMeasProgram::dataAcquisitionDSP);
     connect(&m_dataAcquisitionDoneState, &QAbstractState::entered, this, &cRmsModuleMeasProgram::dataReadDSP);
 
-    m_actValueHandler = m_pModule->getActualValueFactory()->getActValGeneratorRms(m_pModule->getEntityId(), getConfData()->m_valueChannelList);
     connect(this, &cRmsModuleMeasProgram::actualValues,
-            m_actValueHandler.get(), &AbstractActValManInTheMiddle::onNewActualValues);
+            &m_startStopHandler, &ActualValueStartStopHandler::onNewActualValues);
     if (getConfData()->m_bmovingWindow) {
         m_movingwindowFilter.setIntegrationtime(getConfData()->m_fMeasIntervalTime.m_fValue);
-        connect(m_actValueHandler.get(), &AbstractActValManInTheMiddle::sigNewActualValues,
+        connect(&m_startStopHandler, &ActualValueStartStopHandler::sigNewActualValues,
                 &m_movingwindowFilter, &cMovingwindowFilter::receiveActualValues);
         connect(&m_movingwindowFilter, &cMovingwindowFilter::actualValues,
                 this, &cRmsModuleMeasProgram::setInterfaceActualValues);
     }
     else
-        connect(m_actValueHandler.get(), &AbstractActValManInTheMiddle::sigNewActualValues,
+        connect(&m_startStopHandler, &ActualValueStartStopHandler::sigNewActualValues,
                 this, &cRmsModuleMeasProgram::setInterfaceActualValues);
 }
 
 
 void cRmsModuleMeasProgram::start()
 {
-    m_actValueHandler->start();
+    m_startStopHandler.start();
 }
 
 
 void cRmsModuleMeasProgram::stop()
 {
-    m_actValueHandler->stop();
+    m_startStopHandler.stop();
 }
 
 
