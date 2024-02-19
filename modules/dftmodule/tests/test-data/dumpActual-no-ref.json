@@ -1,0 +1,275 @@
+{
+    "1050": {
+        "ACT_DFTPN1": [
+            0,
+            -1
+        ],
+        "ACT_DFTPN2": [
+            2,
+            -3
+        ],
+        "ACT_DFTPN3": [
+            4,
+            -5
+        ],
+        "ACT_DFTPN4": [
+            12,
+            -13
+        ],
+        "ACT_DFTPN5": [
+            14,
+            -15
+        ],
+        "ACT_DFTPN6": [
+            16,
+            -17
+        ],
+        "ACT_DFTPN7": [
+            18,
+            -19
+        ],
+        "ACT_DFTPN8": [
+            20,
+            -21
+        ],
+        "ACT_DFTPP1": [
+            6,
+            -7
+        ],
+        "ACT_DFTPP2": [
+            8,
+            -9
+        ],
+        "ACT_DFTPP3": [
+            10,
+            -11
+        ],
+        "ACT_RFIELD": "123",
+        "EntityName": "DFTModule1",
+        "INF_ModuleInterface": {
+            "ComponentInfo": {
+                "ACT_DFTPN1": {
+                    "ChannelName": "UL1",
+                    "Description": "Actual value phase/neutral",
+                    "Unit": "V"
+                },
+                "ACT_DFTPN2": {
+                    "ChannelName": "UL2",
+                    "Description": "Actual value phase/neutral",
+                    "Unit": "V"
+                },
+                "ACT_DFTPN3": {
+                    "ChannelName": "UL3",
+                    "Description": "Actual value phase/neutral",
+                    "Unit": "V"
+                },
+                "ACT_DFTPN4": {
+                    "ChannelName": "IL1",
+                    "Description": "Actual value",
+                    "Unit": "A"
+                },
+                "ACT_DFTPN5": {
+                    "ChannelName": "IL2",
+                    "Description": "Actual value",
+                    "Unit": "A"
+                },
+                "ACT_DFTPN6": {
+                    "ChannelName": "IL3",
+                    "Description": "Actual value",
+                    "Unit": "A"
+                },
+                "ACT_DFTPN7": {
+                    "ChannelName": "UAUX",
+                    "Description": "Actual value phase/neutral",
+                    "Unit": "V"
+                },
+                "ACT_DFTPN8": {
+                    "ChannelName": "IAUX",
+                    "Description": "Actual value",
+                    "Unit": "A"
+                },
+                "ACT_DFTPP1": {
+                    "ChannelName": "UL1-UL2",
+                    "Description": "Actual value phase/phase",
+                    "Unit": "V"
+                },
+                "ACT_DFTPP2": {
+                    "ChannelName": "UL3-UL2",
+                    "Description": "Actual value phase/phase",
+                    "Unit": "V"
+                },
+                "ACT_DFTPP3": {
+                    "ChannelName": "UL3-UL1",
+                    "Description": "Actual value phase/phase",
+                    "Unit": "V"
+                },
+                "ACT_RFIELD": {
+                    "Description": "Phase sequence"
+                },
+                "EntityName": {
+                    "Description": "Module's name"
+                },
+                "INF_ModuleInterface": {
+                    "Description": "Module's interface details"
+                },
+                "PAR_Interval": {
+                    "Description": "Integration time",
+                    "Unit": "s",
+                    "Validation": {
+                        "Data": [
+                            1,
+                            100,
+                            0.5
+                        ],
+                        "Type": "DOUBLE"
+                    }
+                },
+                "PAR_RefChannel": {
+                    "Description": "Reference channel",
+                    "Validation": {
+                        "Data": [
+                            "UL1",
+                            "UL2",
+                            "UL3",
+                            "IL1",
+                            "IL2",
+                            "IL3",
+                            "UAUX",
+                            "IAUX"
+                        ],
+                        "Type": "STRING"
+                    }
+                },
+                "SIG_Measuring": {
+                    "Description": "Signal indicating measurement activity"
+                }
+            },
+            "ModuleInfo": {
+                "DFTPNCount": "8",
+                "DFTPPCount": "3",
+                "Description": "This module measures configured order dft values for configured channels",
+                "Name": "DFTModule1"
+            },
+            "SCPIInfo": {
+                "Cmd": [
+                    [
+                        "MEASURE",
+                        "UL1",
+                        "8",
+                        "ACT_DFTPN1",
+                        "0",
+                        "V"
+                    ],
+                    [
+                        "MEASURE",
+                        "UL2",
+                        "8",
+                        "ACT_DFTPN2",
+                        "0",
+                        "V"
+                    ],
+                    [
+                        "MEASURE",
+                        "UL3",
+                        "8",
+                        "ACT_DFTPN3",
+                        "0",
+                        "V"
+                    ],
+                    [
+                        "MEASURE",
+                        "UL1-UL2",
+                        "8",
+                        "ACT_DFTPP1",
+                        "0",
+                        "V"
+                    ],
+                    [
+                        "MEASURE",
+                        "UL3-UL2",
+                        "8",
+                        "ACT_DFTPP2",
+                        "0",
+                        "V"
+                    ],
+                    [
+                        "MEASURE",
+                        "UL3-UL1",
+                        "8",
+                        "ACT_DFTPP3",
+                        "0",
+                        "V"
+                    ],
+                    [
+                        "MEASURE",
+                        "IL1",
+                        "8",
+                        "ACT_DFTPN4",
+                        "0",
+                        "A"
+                    ],
+                    [
+                        "MEASURE",
+                        "IL2",
+                        "8",
+                        "ACT_DFTPN5",
+                        "0",
+                        "A"
+                    ],
+                    [
+                        "MEASURE",
+                        "IL3",
+                        "8",
+                        "ACT_DFTPN6",
+                        "0",
+                        "A"
+                    ],
+                    [
+                        "MEASURE",
+                        "UAUX",
+                        "8",
+                        "ACT_DFTPN7",
+                        "0",
+                        "V"
+                    ],
+                    [
+                        "MEASURE",
+                        "IAUX",
+                        "8",
+                        "ACT_DFTPN8",
+                        "0",
+                        "A"
+                    ],
+                    [
+                        "MEASURE",
+                        "RFIELD",
+                        "8",
+                        "ACT_RFIELD",
+                        "0",
+                        ""
+                    ],
+                    [
+                        "CONFIGURATION",
+                        "TINTEGRATION",
+                        "10",
+                        "PAR_Interval",
+                        "0",
+                        "s"
+                    ],
+                    [
+                        "CONFIGURATION",
+                        "REFCHANNEL",
+                        "10",
+                        "PAR_RefChannel",
+                        "0",
+                        ""
+                    ]
+                ],
+                "Name": "DFT1"
+            }
+        },
+        "PAR_Interval": 1,
+        "PAR_RefChannel": "UL1",
+        "SIG_Measuring": 1
+    }
+}

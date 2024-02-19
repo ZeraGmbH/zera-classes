@@ -1,0 +1,9 @@
+{
+    "modules" : [
+        {
+          "name" : "dftmodule",
+          "configFile" : ":/mt310s2-dftmodule-no-movingwindow-ref.xml",
+          "id": 1050
+        }
+    ]
+}
