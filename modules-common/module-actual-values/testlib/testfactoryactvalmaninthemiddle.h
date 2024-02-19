@@ -8,8 +8,6 @@
 class TestFactoryActValManInTheMiddle : public AbstractFactoryActValManInTheMiddle
 {
 public:
-    AbstractActValManInTheMiddlePtr getActValGeneratorRms(int entityId, QStringList valueChannelList = QStringList()) override;
-    TestActValManInTheMiddlePtr getActValGeneratorRmsTest(int entityId);
     AbstractActValManInTheMiddlePtr getActValGeneratorDft(int entityId, QStringList valueChannelList = QStringList()) override;
     TestActValManInTheMiddlePtr getActValGeneratorDftTest(int entityId);
 private:
