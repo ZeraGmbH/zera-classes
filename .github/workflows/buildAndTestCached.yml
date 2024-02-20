@@ -110,3 +110,9 @@ jobs:
           cd "$HOME/targetbuild"
           ctest -V
 
+      - name: run scpi-doc-generator
+        run: |
+          cd $HOME/targetbuild/modulemanager/scpi-doc
+          ./scpi-doc-generator -zci_run
+          ls $HOME/targetbuild/modulemanager/scpi-doc/html-docs
+
