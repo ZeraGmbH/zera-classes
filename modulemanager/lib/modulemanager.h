@@ -1,6 +1,7 @@
 #ifndef MODULELOADER_H
 #define MODULELOADER_H
 
+#include "abstractfactoryserviceinterfaces.h"
 #include "jsonsessionloader.h"
 #include "modulemanagersetupfacade.h"
 #include "moduledata.h"
@@ -31,6 +32,7 @@ class ModuleManager : public QObject
     Q_OBJECT
 public:
     explicit ModuleManager(ModuleManagerSetupFacade *setupFacade,
+                           AbstractFactoryServiceInterfacesPtr serviceInterfaceFactory,
                            bool demo = false,
                            QObject *parent = nullptr);
     ~ModuleManager() override;
@@ -70,6 +72,7 @@ private:
     void handleFinalModuleLoaded();
 
     ModuleManagerSetupFacade *m_setupFacade;
+    AbstractFactoryServiceInterfacesPtr m_serviceInterfaceFactory;
     JsonSessionLoader m_sessionLoader;
     QHash<QString, MeasurementModuleFactory*> m_factoryTable;
     QQueue<ModuleData *> m_deferredStartList;

@@ -3,6 +3,7 @@
 
 #include "licensesystemmock.h"
 #include "modulemanagersetupfacade.h"
+#include "testfactoryserviceinterfaces.h"
 #include "testmodulemanager.h"
 #include "vf_cmd_event_handler_system.h"
 #include <QObject>
@@ -12,7 +13,7 @@ class test_dft_module_regression : public QObject
 {
     Q_OBJECT
 private slots:
-    void initTestCase();
+    void init();
     void cleanup();
 
     void minimalSession();
@@ -32,6 +33,7 @@ private:
     std::unique_ptr<TestModuleManager> m_modMan;
 
     VfCmdEventHandlerSystemPtr m_vfCmdEventHandlerSystem;
+    TestFactoryServiceInterfacesPtr m_serviceInterfaceFactory;
 };
 
 #endif // TEST_DFT_MODULE_REGRESSION_H

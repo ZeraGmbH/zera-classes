@@ -1,7 +1,6 @@
 #include "adjustment.h"
 #include "rangemodule.h"
 #include "rangemeaschannel.h"
-#include "factoryserviceinterfacessingleton.h"
 #include <errormessages.h>
 #include <reply.h>
 #include <proxy.h>
@@ -17,7 +16,7 @@ namespace RANGEMODULE
 cAdjustManagement::cAdjustManagement(cRangeModule *module, cSocket* dspsocket, cSocket* pcbsocket, QStringList chnlist, QStringList subdclist, double interval)
     :m_pModule(module), m_pDSPSocket(dspsocket), m_pPCBSocket(pcbsocket), m_ChannelNameList(chnlist), m_subdcChannelNameList(subdclist), m_fAdjInterval(interval)
 {
-    m_dspInterface = FactoryServiceInterfacesSingleton::getInstance()->createDspInterfaceOther();
+    m_dspInterface = m_pModule->getServiceInterfaceFactory()->createDspInterfaceOther();
     m_pPCBInterface = new Zera::cPCBInterface();
 
     m_bAdjustTrigger = false;

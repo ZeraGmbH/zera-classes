@@ -10,6 +10,7 @@ public:
     static void pointToInstalledSessionFiles();
 
     explicit TestModuleManager(ModuleManagerSetupFacade *setupFacade,
+                               AbstractFactoryServiceInterfacesPtr serviceInterfaceFactory,
                                bool demo = false);
     void startAllServiceMocks(QString deviceName) override;
     void destroyModulesAndWaitUntilAllShutdown();

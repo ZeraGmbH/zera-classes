@@ -2,7 +2,6 @@
 #include "dftmodule.h"
 #include "dftmoduleconfiguration.h"
 #include "dftmoduleconfigdata.h"
-#include "factoryserviceinterfacessingleton.h"
 #include <errormessages.h>
 #include <movingwindowfilter.h>
 #include <timerfactoryqt.h>
@@ -23,7 +22,7 @@ namespace DFTMODULE
 cDftModuleMeasProgram::cDftModuleMeasProgram(cDftModule* module, std::shared_ptr<cBaseModuleConfiguration> pConfiguration)
     :cBaseDspMeasProgram(pConfiguration), m_pModule(module)
 {
-    m_dspInterface = FactoryServiceInterfacesSingleton::getInstance()->createDspInterfaceDft(irqNr, getConfData()->m_valueChannelList);
+    m_dspInterface = m_pModule->getServiceInterfaceFactory()->createDspInterfaceDft(irqNr, getConfData()->m_valueChannelList);
 
     m_IdentifyState.addTransition(this, &cDftModuleMeasProgram::activationContinue, &m_readResourceTypesState);
     m_readResourceTypesState.addTransition(this, &cDftModuleMeasProgram::activationContinue, &m_readResourceState);

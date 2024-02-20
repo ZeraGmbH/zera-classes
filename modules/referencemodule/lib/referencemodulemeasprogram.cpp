@@ -2,7 +2,6 @@
 #include "referencemodule.h"
 #include "referencemeaschannel.h"
 #include "referencemoduleconfiguration.h"
-#include "factoryserviceinterfacessingleton.h"
 #include <errormessages.h>
 #include <proxy.h>
 #include <proxyclient.h>
@@ -15,7 +14,7 @@ namespace REFERENCEMODULE
 cReferenceModuleMeasProgram::cReferenceModuleMeasProgram(cReferenceModule* module, std::shared_ptr<cBaseModuleConfiguration> pConfiguration)
     :cBaseDspMeasProgram(pConfiguration), m_pModule(module)
 {
-    m_dspInterface = FactoryServiceInterfacesSingleton::getInstance()->createDspInterfaceOther();
+    m_dspInterface = m_pModule->getServiceInterfaceFactory()->createDspInterfaceOther();
 
     m_ChannelList = getConfData()->m_referenceChannelList;
 

@@ -1,6 +1,5 @@
 #include "demofactoryserviceinterfaces.h"
 #include "factoryserviceinterfaces.h"
-#include "factoryserviceinterfacessingleton.h"
 #include "modulemanager.h"
 #include "modulemanagerconfig.h"
 #include "customerdatasystem.h"
@@ -133,12 +132,14 @@ int main(int argc, char *argv[])
     LicenseSystem *licenseSystem = new LicenseSystem({QUrl(licenseUrl)}, app.get());
     ModuleManagerSetupFacade *modManSetupFacade = new ModuleManagerSetupFacade(licenseSystem, mmConfig->isDevMode(), app.get());
 
+    AbstractFactoryServiceInterfacesPtr serviceInterfaceFactory;
     if(demoMode)
-        FactoryServiceInterfacesSingleton::setInstance(std::make_unique<DemoFactoryServiceInterfaces>());
+        serviceInterfaceFactory = std::make_unique<DemoFactoryServiceInterfaces>();
     else
-        FactoryServiceInterfacesSingleton::setInstance(std::make_unique<FactoryServiceInterfaces>());
+        serviceInterfaceFactory = std::make_unique<FactoryServiceInterfaces>();
     ZeraModules::ModuleManager *modMan = new ZeraModules::ModuleManager(
         modManSetupFacade,
+        serviceInterfaceFactory,
         demoMode,
         app.get());
     if(demoMode)

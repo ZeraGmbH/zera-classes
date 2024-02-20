@@ -3,6 +3,7 @@
 
 #include "virtualmodule.h"
 #include "modulegroupnumerator.h"
+#include "abstractfactoryserviceinterfaces.h"
 #include <QtPlugin>
 
 namespace VeinEvent
@@ -16,12 +17,14 @@ struct MeasurementModuleFactoryParam
                                   int moduleNum,
                                   QByteArray configXmlData,
                                   VeinEvent::StorageSystem* storagesystem,
+                                  AbstractFactoryServiceInterfacesPtr serviceInterfaceFactory,
                                   bool demo);
     MeasurementModuleFactoryParam getAdjustedParam(ModuleGroupNumerator* groupNumerator);
     const int m_entityId;
     const int m_moduleNum;
     const QByteArray m_configXmlData;
     VeinEvent::StorageSystem* m_storagesystem;
+    AbstractFactoryServiceInterfacesPtr m_serviceInterfaceFactory;
     const bool m_demo;
 };
 
@@ -29,11 +32,13 @@ inline MeasurementModuleFactoryParam::MeasurementModuleFactoryParam(int entityId
                                                                     int moduleNum,
                                                                     QByteArray configXmlData,
                                                                     VeinEvent::StorageSystem *storagesystem,
+                                                                    AbstractFactoryServiceInterfacesPtr serviceInterfaceFactory,
                                                                     bool demo) :
     m_entityId(entityId),
     m_moduleNum(moduleNum),
     m_configXmlData(configXmlData),
     m_storagesystem(storagesystem),
+    m_serviceInterfaceFactory(serviceInterfaceFactory),
     m_demo(demo)
 {
 }
@@ -44,6 +49,7 @@ inline MeasurementModuleFactoryParam MeasurementModuleFactoryParam::getAdjustedP
                                          groupNumerator->requestModuleNum(m_moduleNum),
                                          m_configXmlData,
                                          m_storagesystem,
+                                         m_serviceInterfaceFactory,
                                          m_demo);
 }
 

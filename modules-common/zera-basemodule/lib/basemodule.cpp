@@ -327,6 +327,11 @@ bool cBaseModule::getDemo()
     return m_moduleParam.m_demo;
 }
 
+AbstractFactoryServiceInterfacesPtr cBaseModule::getServiceInterfaceFactory()
+{
+    return m_moduleParam.m_serviceInterfaceFactory;
+}
+
 void cBaseModule::entryIdle()
 {
 }

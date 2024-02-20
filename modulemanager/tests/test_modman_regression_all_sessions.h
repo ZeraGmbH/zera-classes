@@ -30,6 +30,7 @@ private:
     QStringList generateCodeLinesForDeviceSession(QString device, QString session, TestModuleManager &modMan);
     void checkScpiPortOpenedProperlyByVeinDevIface(ModuleManagerSetupFacade &modManFacade);
     void checkVeinModuleEntityNames(TestModuleManager &modMan, ModuleManagerSetupFacade &modManFacade, QString device, QString session);
+    AbstractFactoryServiceInterfacesPtr m_serviceInterfaceFactory;
 };
 
 #endif // TEST_MODMAN_REGRESSION_ALL_ENTITITIES_H

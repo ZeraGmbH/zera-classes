@@ -1,5 +1,3 @@
-#include "factoryserviceinterfacessingleton.h"
-#include "factoryserviceinterfaces.h"
 #include "scpiifaceexportgenerator.h"
 #include "sessionnamesmappingjson.h"
 #include "zera-jsonfileloader.h"
@@ -23,7 +21,6 @@ int main(int argc, char *argv[])
     QString xmlDir = QStringLiteral(HTML_DOCS_PATH) + "scpi-xmls/";
     QDir().mkdir(xmlDir);
 
-    FactoryServiceInterfacesSingleton::setInstance(std::make_unique<FactoryServiceInterfaces>());
     ScpiIfaceExportGenerator scpiIfaceExportGenerator;
     scpiIfaceExportGenerator.getAllSessionsScpiIfaceXmls("mt310s2", xmlDir);
     scpiIfaceExportGenerator.getAllSessionsScpiIfaceXmls("com5003", xmlDir);

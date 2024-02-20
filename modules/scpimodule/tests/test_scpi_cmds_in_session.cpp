@@ -1,7 +1,6 @@
 #include "test_scpi_cmds_in_session.h"
 #include "licensesystemmock.h"
 #include "testmodulemanager.h"
-#include "factoryserviceinterfacessingleton.h"
 #include "testfactoryserviceinterfaces.h"
 #include "scpimoduleclientblocked.h"
 #include <timemachineobject.h>
@@ -19,7 +18,7 @@ QTEST_MAIN(test_scpi_cmds_in_session)
 
 void test_scpi_cmds_in_session::initTestCase()
 {
-    FactoryServiceInterfacesSingleton::setInstance(std::make_unique<TestFactoryServiceInterfaces>());
+    m_serviceInterfaceFactory = std::make_shared<TestFactoryServiceInterfaces>();
 }
 
 void test_scpi_cmds_in_session::cleanup()
@@ -154,7 +153,7 @@ void test_scpi_cmds_in_session::setupServices(QString sessionFileName)
 {
     m_licenseSystem = std::make_unique<LicenseSystemMock>();
     m_modmanFacade = std::make_unique<ModuleManagerSetupFacade>(m_licenseSystem.get());
-    m_modMan = std::make_unique<TestModuleManager>(m_modmanFacade.get(), true);
+    m_modMan = std::make_unique<TestModuleManager>(m_modmanFacade.get(), m_serviceInterfaceFactory, true);
     m_modMan->loadAllAvailableModulePlugins();
     m_modMan->setupConnections();
     m_modMan->startAllServiceMocks("mt310s2");

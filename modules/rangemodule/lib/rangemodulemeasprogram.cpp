@@ -3,7 +3,6 @@
 #include "rangemeaschannel.h"
 #include "rangemoduleconfiguration.h"
 #include "rangemoduleconfigdata.h"
-#include "factoryserviceinterfacessingleton.h"
 #include <errormessages.h>
 #include <reply.h>
 #include <proxy.h>
@@ -16,7 +15,7 @@ cRangeModuleMeasProgram::cRangeModuleMeasProgram(cRangeModule* module, std::shar
     cBaseDspMeasProgram(pConfiguration),
     m_pModule(module)
 {
-    m_dspInterface = FactoryServiceInterfacesSingleton::getInstance()->createDspInterfaceOther();
+    m_dspInterface = m_pModule->getServiceInterfaceFactory()->createDspInterfaceOther();
 
     m_bRanging = false;
     m_bIgnore = false;

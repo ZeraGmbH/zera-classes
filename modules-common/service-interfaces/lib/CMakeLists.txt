@@ -17,7 +17,7 @@ target_link_libraries(module-service-interfaces
     Zera::service-interfaces
     # ask linker to help us finding unresolved symbols
     "-Wl,--no-undefined"
-    )
+)
 
 target_include_directories(module-service-interfaces
     PUBLIC
