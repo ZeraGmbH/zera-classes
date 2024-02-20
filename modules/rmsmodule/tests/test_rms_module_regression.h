@@ -3,6 +3,7 @@
 
 #include "licensesystemmock.h"
 #include "modulemanagersetupfacade.h"
+#include "testfactoryserviceinterfaces.h"
 #include "testmodulemanager.h"
 #include <QObject>
 #include <memory>
@@ -11,7 +12,7 @@ class test_rms_module_regression : public QObject
 {
     Q_OBJECT
 private slots:
-    void initTestCase();
+    void init();
     void cleanup();
 
     void minimalSession();
@@ -26,6 +27,7 @@ private:
     std::unique_ptr<LicenseSystemMock> m_licenseSystem;
     std::unique_ptr<ModuleManagerSetupFacade> m_modmanFacade;
     std::unique_ptr<TestModuleManager> m_modMan;
+    TestFactoryServiceInterfacesPtr m_serviceInterfaceFactory;
 };
 
 #endif // TEST_RMS_MODULE_REGRESSION_H

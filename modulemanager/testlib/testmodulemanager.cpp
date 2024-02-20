@@ -20,9 +20,11 @@ void TestModuleManager::pointToInstalledSessionFiles()
 }
 
 TestModuleManager::TestModuleManager(ModuleManagerSetupFacade *setupFacade,
+                                     AbstractFactoryServiceInterfacesPtr serviceInterfaceFactory,
                                      bool demo) :
     ModuleManager(
         setupFacade,
+        serviceInterfaceFactory,
         demo)
 {
     JsonSessionLoaderTest::supportOeTests();

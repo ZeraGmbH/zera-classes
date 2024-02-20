@@ -26,7 +26,7 @@ void test_plugin_load::loadModulePluginsInstalled()
         qInfo("Skipping test_plugin_load::loadModulePluginsInstalled in OE");
         return;
     }
-    ZeraModules::ModuleManager modMan(nullptr, true);
+    ZeraModules::ModuleManager modMan(nullptr, nullptr, true);
 
     bool modulesFound = modMan.loadAllAvailableModulePlugins();
     QVERIFY(modulesFound);
@@ -34,7 +34,7 @@ void test_plugin_load::loadModulePluginsInstalled()
 
 void test_plugin_load::loadModulePluginsSources()
 {
-    TestModuleManager modMan(nullptr, true);
+    TestModuleManager modMan(nullptr, nullptr, true);
 
     bool modulesFound = modMan.loadAllAvailableModulePlugins();
     QVERIFY(modulesFound);

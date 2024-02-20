@@ -3,7 +3,6 @@
 #include "samplemoduleconfigdata.h"
 #include "samplemodule.h"
 #include "pllmeaschannel.h"
-#include "factoryserviceinterfacessingleton.h"
 #include <errormessages.h>
 #include <reply.h>
 #include <proxy.h>
@@ -15,7 +14,7 @@ namespace SAMPLEMODULE
 cSampleModuleMeasProgram::cSampleModuleMeasProgram(cSampleModule* module, std::shared_ptr<cBaseModuleConfiguration> pConfiguration) :
     cBaseDspMeasProgram(pConfiguration), m_pModule(module)
 {
-    m_dspInterface = FactoryServiceInterfacesSingleton::getInstance()->createDspInterfaceOther();
+    m_dspInterface = m_pModule->getServiceInterfaceFactory()->createDspInterfaceOther();
 
     m_ChannelList = getConfData()->m_ObsermaticConfPar.m_pllChannelList;
 

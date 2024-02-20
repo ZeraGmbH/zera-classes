@@ -1,6 +1,5 @@
 #include "test_rms_module_regression.h"
 #include "rmsmodulemeasprogram.h"
-#include "factoryserviceinterfacessingleton.h"
 #include "testfactoryserviceinterfaces.h"
 #include <timemachineobject.h>
 #include <QBuffer>
@@ -8,15 +7,13 @@
 
 QTEST_MAIN(test_rms_module_regression)
 
-void test_rms_module_regression::initTestCase()
+void test_rms_module_regression::init()
 {
-    FactoryServiceInterfacesSingleton::setInstance(std::make_unique<TestFactoryServiceInterfaces>());
+    m_serviceInterfaceFactory = std::make_shared<TestFactoryServiceInterfaces>();
 }
 
 void test_rms_module_regression::cleanup()
 {
-    TestFactoryServiceInterfaces* factory = static_cast<TestFactoryServiceInterfaces*>(FactoryServiceInterfacesSingleton::getInstance());
-    factory->clearInterfaceList();
     if(m_modMan)
         m_modMan->destroyModulesAndWaitUntilAllShutdown();
     m_modMan = nullptr;
@@ -75,8 +72,7 @@ void test_rms_module_regression::checkActualValueCount()
 {
     setupServices(":/session-rms-moduleconfig-from-resource.json");
 
-    TestFactoryServiceInterfaces* factory = static_cast<TestFactoryServiceInterfaces*>(FactoryServiceInterfacesSingleton::getInstance());
-    const QList<TestDspInterfacePtr>& dspInterfaces = factory->getInterfaceList();
+    const QList<TestDspInterfacePtr>& dspInterfaces = m_serviceInterfaceFactory->getInterfaceList();
     QCOMPARE(dspInterfaces.count(), 1);
 
     QStringList valueList = dspInterfaces[0]->getValueList();
@@ -87,8 +83,7 @@ void test_rms_module_regression::injectActualValues()
 {
     setupServices(":/session-rms-moduleconfig-from-resource.json");
 
-    TestFactoryServiceInterfaces* factory = static_cast<TestFactoryServiceInterfaces*>(FactoryServiceInterfacesSingleton::getInstance());
-    const QList<TestDspInterfacePtr>& dspInterfaces = factory->getInterfaceList();
+    const QList<TestDspInterfacePtr>& dspInterfaces = m_serviceInterfaceFactory->getInterfaceList();
     QCOMPARE(dspInterfaces.count(), 1);
 
     QVector<float> actValues(rmsResultCount);
@@ -120,8 +115,7 @@ void test_rms_module_regression::injectActualTwice()
 {
     setupServices(":/session-rms-moduleconfig-from-resource.json");
 
-    TestFactoryServiceInterfaces* factory = static_cast<TestFactoryServiceInterfaces*>(FactoryServiceInterfacesSingleton::getInstance());
-    const QList<TestDspInterfacePtr>& dspInterfaces = factory->getInterfaceList();
+    const QList<TestDspInterfacePtr>& dspInterfaces = m_serviceInterfaceFactory->getInterfaceList();
     QCOMPARE(dspInterfaces.count(), 1);
 
     VeinStorage::VeinHash* storageHash = m_modmanFacade->getStorageSystem();
@@ -142,7 +136,7 @@ void test_rms_module_regression::setupServices(QString sessionFileName)
 {
     m_licenseSystem = std::make_unique<LicenseSystemMock>();
     m_modmanFacade = std::make_unique<ModuleManagerSetupFacade>(m_licenseSystem.get());
-    m_modMan = std::make_unique<TestModuleManager>(m_modmanFacade.get(), true);
+    m_modMan = std::make_unique<TestModuleManager>(m_modmanFacade.get(), m_serviceInterfaceFactory, true);
     m_modMan->loadAllAvailableModulePlugins();
     m_modMan->setupConnections();
     m_modMan->startAllServiceMocks("mt310s2");

@@ -1,7 +1,6 @@
 #include "rmsmodulemeasprogram.h"
 #include "rmsmodule.h"
 #include "rmsmoduleconfiguration.h"
-#include "factoryserviceinterfacessingleton.h"
 #include <errormessages.h>
 #include <reply.h>
 #include <proxy.h>
@@ -17,7 +16,7 @@ cRmsModuleMeasProgram::cRmsModuleMeasProgram(cRmsModule* module, std::shared_ptr
     cBaseDspMeasProgram(pConfiguration),
     m_pModule(module)
 {
-    m_dspInterface = FactoryServiceInterfacesSingleton::getInstance()->createDspInterfaceRms(irqNr, getConfData()->m_valueChannelList);
+    m_dspInterface = m_pModule->getServiceInterfaceFactory()->createDspInterfaceRms(irqNr, getConfData()->m_valueChannelList);
 
     m_IdentifyState.addTransition(this, &cRmsModuleMeasProgram::activationContinue, &m_readResourceTypesState);
     m_readResourceTypesState.addTransition(this, &cRmsModuleMeasProgram::activationContinue, &m_readResourceState);

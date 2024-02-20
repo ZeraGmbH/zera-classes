@@ -14,6 +14,6 @@ public:
     virtual DspInterfacePtr createDspInterfaceOther() = 0;
 };
 
-typedef std::unique_ptr<AbstractFactoryServiceInterfaces> AbstractFactoryServiceInterfacesPtr;
+typedef std::shared_ptr<AbstractFactoryServiceInterfaces> AbstractFactoryServiceInterfacesPtr;
 
 #endif // ABSTRACTFACTORYSERVICEINTERFACES_H

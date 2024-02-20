@@ -2,7 +2,6 @@
 #include "referencemoduleconfigdata.h"
 #include "referencemodule.h"
 #include "referencemeaschannel.h"
-#include "factoryserviceinterfacessingleton.h"
 #include <errormessages.h>
 #include <reply.h>
 #include <proxy.h>
@@ -15,7 +14,7 @@ namespace REFERENCEMODULE
 cReferenceAdjustment::cReferenceAdjustment(cReferenceModule* module, cReferenceModuleConfigData* confData)
     :m_pModule(module), m_pConfigData(confData)
 {
-    m_dspInterface = FactoryServiceInterfacesSingleton::getInstance()->createDspInterfaceOther();
+    m_dspInterface = m_pModule->getServiceInterfaceFactory()->createDspInterfaceOther();
     m_pPCBInterface = new Zera::cPCBInterface();
 
     for (int i = 0; i < m_pConfigData->m_referenceChannelList.count(); i++) // we fetch all our real channels first
