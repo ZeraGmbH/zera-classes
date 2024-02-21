@@ -58,6 +58,7 @@ private:
     void deleteDspVarList();
     void setDspCmdList();
     void deleteDspCmdList();
+    quint16 calcFftResultLenHalf(quint8 fftOrder);
 
     cFftModule* m_pModule;
     ActualValueStartStopHandler m_startStopHandler;
