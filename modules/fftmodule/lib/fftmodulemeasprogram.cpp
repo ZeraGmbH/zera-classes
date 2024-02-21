@@ -193,11 +193,17 @@ void cFftModuleMeasProgram::generateInterface()
 }
 
 
+quint16 FFTMODULE::cFftModuleMeasProgram::calcFftResultLenHalf(quint8 fftOrder)
+{
+    quint16 fftLen = 2 << (int)(floor(log((fftOrder * 2) -1) / log(2.0)));
+    if (fftLen < 32) // minimum fftlen is 32 !!!!
+        fftLen = fftLen * 2;
+    return fftLen;
+}
+
 void cFftModuleMeasProgram::setDspVarList()
 {
-    m_nfftLen = 2 << (int)(floor(log((getConfData()->m_nFftOrder << 1) -1)/log(2.0))); // our fft length
-    if (m_nfftLen < 32)
-        m_nfftLen = m_nfftLen << 1; // minimum fftlen is 32 !!!!
+    m_nfftLen = calcFftResultLenHalf(getConfData()->m_nFftOrder);
     // we fetch a handle for sampled data and other temporary values
     // global data segment is 1k words and lies on 1k boundary, so we put fftinput and fftouptut
     // at the beginning of that page because bitreversal adressing of fft only works properly if so
