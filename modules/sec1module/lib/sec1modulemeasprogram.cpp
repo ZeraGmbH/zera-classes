@@ -473,21 +473,21 @@ void cSec1ModuleMeasProgram::generateInterface()
 
     m_pMeasStartTime = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
                                              key = QString("ACT_StartTime"),
-                                             QString("Current measurement start time (dd-MM-yyyy  HH:mm:ss)"),
+                                             QString("Current measurement: Start time (dd-MM-yyyy  HH:mm:ss)"),
                                              QVariant(QDateTime()));
     m_pModule->m_veinModuleParameterMap[key] = m_pMeasStartTime; // and for the modules interface
     m_pMeasStartTime->setSCPIInfo(new cSCPIInfo("CALCULATE",  QString("%1:STRTTIME").arg(modNr), "2", m_pMeasStartTime->getName(), "0", ""));
 
     m_pMeasEndTime = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
                                              key = QString("ACT_EndTime"),
-                                             QString("Current measurement end time (dd-MM-yyyy  HH:mm:ss)"),
+                                             QString("Current measurement: End time (dd-MM-yyyy  HH:mm:ss)"),
                                              QVariant(QDateTime()));
     m_pModule->m_veinModuleParameterMap[key] = m_pMeasEndTime; // and for the modules interface
     m_pMeasEndTime->setSCPIInfo(new cSCPIInfo("CALCULATE",  QString("%1:ENDTIME").arg(modNr), "2", m_pMeasEndTime->getName(), "0", ""));
 
     m_pMeasTime = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
                                              key = QString("ACT_MeasTime"),
-                                             QString("measurement time"),
+                                             QString("Current measurement: Duration"),
                                              QVariant((int)0));
     m_pModule->m_veinModuleParameterMap[key] = m_pMeasTime; // and for the modules interface
     m_pMeasTime->setSCPIInfo(new cSCPIInfo("CALCULATE",  QString("%1:MMEASTIME").arg(modNr), "2", m_pMeasTime->getName(), "0", ""));
