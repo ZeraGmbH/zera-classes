@@ -820,41 +820,41 @@ void cFftModuleMeasProgram::dataAcquisitionDSP()
     m_MsgNrCmdList[m_dspInterface->dataAcquisition(m_pActualValuesDSP)] = dataaquistion; // we start our data aquisition now
 }
 
-
 void cFftModuleMeasProgram::dataReadDSP()
 {
     if (m_bActive) {
         m_ModuleActualValues = m_pActualValuesDSP->getData();
 
-        int nChannels, nHarmonic;
-        int middle, offs, resultOffs;
-        double scale;
+        int nChannels = m_veinActValueList.count();
+        int nHarmonic = getConfData()->m_nFftOrder;
+        int resultOffs = nHarmonic * 2;
 
-        nChannels = m_veinActValueList.count();
-        nHarmonic = getConfData()->m_nFftOrder;
-        resultOffs = nHarmonic << 1;
+        double scale = 1.0/m_nfftLen;
+        int middle = m_nfftLen; // the fft results are sym. ordered with pos. and neg. frequencies
+        int sourceDataSize = 2*m_nfftLen;
 
-        scale = 1.0/m_nfftLen;
-        middle = m_nfftLen >> 1; // the fft results are sym. ordered with pos. and neg. frequencies
-        offs = m_nfftLen << 1;
-
-        for (int i = 0; i < nChannels; i++)
+        for (int channelNo = 0; channelNo < nChannels; channelNo++)
         {
+            int sourceOffset = channelNo * sourceDataSize;
 
-            m_FFTModuleActualValues.replace(i * resultOffs, m_ModuleActualValues.at(i * offs) * scale); // special case dc
-            m_FFTModuleActualValues.replace(i * resultOffs + 1, 0.0);
+            // deduced per channel dsp data layout:
+            //                                v- middle                   v- 2*middle
+            // re0|         im-values         |         re-values         |
+            //     123..                 ..321 123...                ..321
+            m_FFTModuleActualValues.replace(channelNo * resultOffs, m_ModuleActualValues.at(sourceOffset) * scale); // special case dc
+            m_FFTModuleActualValues.replace(channelNo * resultOffs + 1, 0.0);
 
-            for (int j = 1; j < nHarmonic; j++)
+            for (int harmonicNo = 1; harmonicNo < nHarmonic; harmonicNo++)
             {
                 double re, im;
                 // as our Fft produces math positive values, we correct them to technical positive values (*-1.0)
                 // also we change real and imag. parts because we are interested in sine rather than cosine
 
-                im = -1.0 * (m_ModuleActualValues.at((i * offs) + (middle << 1) - j) + m_ModuleActualValues.at((i * offs) + j)) * scale;
-                re = -1.0 * (m_ModuleActualValues.at((i * offs) + (middle << 1) +j) - m_ModuleActualValues.at((i * offs) + (middle << 2) - j) ) * scale;
+                re = -scale * (m_ModuleActualValues.at(sourceOffset + middle + harmonicNo) - m_ModuleActualValues.at(sourceOffset + middle * 2 - harmonicNo) );
+                im = -scale * (m_ModuleActualValues.at(sourceOffset + middle - harmonicNo) + m_ModuleActualValues.at(sourceOffset + harmonicNo));
 
-                m_FFTModuleActualValues.replace((i * resultOffs) + (j << 1), re);
-                m_FFTModuleActualValues.replace((i * resultOffs) + (j << 1) + 1, im);
+                m_FFTModuleActualValues.replace(channelNo * resultOffs + (harmonicNo*2), re);
+                m_FFTModuleActualValues.replace(channelNo * resultOffs + (harmonicNo*2) + 1, im);
             }
         }
 
