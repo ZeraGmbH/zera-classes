@@ -1,4 +1,5 @@
 #include "demodspinterfacefft.h"
+#include "demofftdspvalues.h"
 #include <math.h>
 
 DemoDspInterfaceFft::DemoDspInterfaceFft(int interruptNoHandled, QStringList valueChannelList, int fftOrder) :
@@ -15,27 +16,34 @@ DemoDspInterfaceFft::DemoDspInterfaceFft(int interruptNoHandled, QStringList val
 void DemoDspInterfaceFft::onTimer()
 {
     int totalChannels = m_valueChannelList.count();
+    double randomVal = (double)rand() / RAND_MAX;
+    double randomDeviation = 0.95 + 0.1 * randomVal;
 
-    // currently we caused a regression: Old demo created displayable result.
-    // Now the job is to create data before cFftModuleMeasProgram::dataReadDSP()
-    // adjusts it. Yepp same data btw...
-    // check cFftModuleMeasProgram::setDspVarList() and cFftModuleMeasProgram::dataReadDSP() for more details
-    int fftLen = 2 << (int)(floor(log((m_fftOrder << 1) -1)/log(2.0))); // our fft length
-    QVector<float> demoValues(totalChannels * fftLen * 2 * totalChannels, 0.0);
+    DemoFftDspValues dspValues(totalChannels);
 
-    for (int i = 0; i < totalChannels; i++) {
-        double randomVal = (double)rand() / RAND_MAX ;
-        // just real part
-        int channelOffset = i * m_fftOrder * 2;
-        QStringList voltageChannelList = QStringList() << "m0" << "m1" << "m2" << "m6";
-        // DC
-        if(i == 0)
-            demoValues.insert(channelOffset, randomVal*0.5);
-        else {
-            float mult = voltageChannelList.contains(m_valueChannelList[i]) ? 230 : 10;
-            demoValues.insert(channelOffset, randomVal * mult); //fundamental frequency component, real part
-        }
-    }
+    dspValues.setValue(0, 0, 5*randomDeviation, 5*randomDeviation);
+    dspValues.setValue(0, 1, 230*randomDeviation, 0);
+    dspValues.setValue(0, 2, 0, 42*randomDeviation);
 
-    fireActValInterrupt(demoValues, m_interruptNoHandled);
+    dspValues.setValue(1, 0, 5, 5);
+    dspValues.setValue(1, 1, 230, 0);
+    dspValues.setValue(1, 2, 0, 42);
+
+    dspValues.setValue(2, 0, 5, 5);
+    dspValues.setValue(2, 1, 230/M_SQRT2, 230/M_SQRT2);
+    dspValues.setValue(2, 2, 42/M_SQRT2, 42/M_SQRT2);
+
+    dspValues.setValue(3, 0, 2*randomDeviation, 2*randomDeviation);
+    dspValues.setValue(3, 1, 4*randomDeviation, 0);
+    dspValues.setValue(3, 2, 0, 6*randomDeviation);
+
+    dspValues.setValue(4, 0, 2, 2);
+    dspValues.setValue(4, 1, 4, 0);
+    dspValues.setValue(4, 2, 0, 6);
+
+    dspValues.setValue(5, 0, 2, 2);
+    dspValues.setValue(5, 1, 4/M_SQRT2, 4/M_SQRT2);
+    dspValues.setValue(5, 2, 6/M_SQRT2, 6/M_SQRT2);
+
+    fireActValInterrupt(dspValues.getDspValues(), m_interruptNoHandled);
 }
