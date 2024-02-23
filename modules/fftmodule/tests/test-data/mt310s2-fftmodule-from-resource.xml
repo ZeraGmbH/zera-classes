@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<fftmodconfpar xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+
+        <configuration>
+                <connectivity>
+                        <debuglevel>0</debuglevel>
+                        <ethernet>
+                                <resourcemanager>
+                                        <ip>127.0.0.1</ip>
+                                        <port>6312</port>
+                                </resourcemanager>
+                                <pcbserver>
+                                        <ip>127.0.0.1</ip>
+                                        <port>6307</port>
+                                </pcbserver>
+                                <dspserver>
+                                        <ip>127.0.0.1</ip>
+                                        <port>6310</port>
+                                </dspserver>
+                        </ethernet>
+                </connectivity>
+                <measure>
+                    <values>
+                        <nr>41</nr>
+                        <n>8</n>
+                        <val1>m0</val1>
+                        <val2>m1</val2>
+                        <val3>m2</val3>
+                        <val4>m3</val4>
+                        <val5>m4</val5>
+                        <val6>m5</val6>
+                        <val7>m6</val7>
+                        <val8>m7</val8>
+                    </values>
+                    <movingwindow>
+                        <on>0</on>
+                        <time>0.5</time>
+                    </movingwindow>
+                </measure>
+        </configuration>
+
+        <parameter>
+                <refchannel>m0</refchannel>
+                <interval>2.0</interval>
+        </parameter>
+
+</fftmodconfpar>
