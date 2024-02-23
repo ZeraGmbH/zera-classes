@@ -68,8 +68,7 @@ void cRangeModule::setupModule()
                                                         &(pConfData->m_PCBServerSocket),
                                                         pConfData->m_senseChannelList.at(i),
                                                         i+1,
-                                                        pConfData->m_session.m_sPar,
-                                                        getDemo());
+                                                        pConfData->m_session.m_sPar);
         m_rangeMeasChannelList.append(pchn);
         m_ModuleActivistList.append(pchn);
         connect(pchn, &cRangeMeasChannel::activated, this, &cRangeModule::activationContinue);
@@ -83,8 +82,7 @@ void cRangeModule::setupModule()
                                               &(pConfData->m_DSPServerSocket),
                                               pConfData->m_GroupList,
                                               pConfData->m_senseChannelList,
-                                              pConfData->m_ObsermaticConfPar,
-                                              getDemo());
+                                              pConfData->m_ObsermaticConfPar);
     m_ModuleActivistList.append(m_pRangeObsermatic);
     connect(m_pRangeObsermatic, &cRangeObsermatic::activated, this, &cRangeModule::activationContinue);
     connect(m_pRangeObsermatic, &cRangeObsermatic::deactivated, this, &cRangeModule::deactivationContinue);

@@ -12,8 +12,7 @@
 namespace RANGEMODULE
 {
 
-cRangeObsermatic::cRangeObsermatic(cRangeModule *module, cSocket *dsprmsocket, QList<QStringList> groupList, QStringList chnlist, cObsermaticConfPar& confpar, bool demo) :
-    m_demo(demo),
+cRangeObsermatic::cRangeObsermatic(cRangeModule *module, cSocket *dsprmsocket, QList<QStringList> groupList, QStringList chnlist, cObsermaticConfPar& confpar) :
     m_pModule(module),
     m_pDSPSocket(dsprmsocket),
     m_GroupList(groupList),
@@ -41,13 +40,9 @@ cRangeObsermatic::cRangeObsermatic(cRangeModule *module, cSocket *dsprmsocket, Q
     m_deactivationInitState.addTransition(this, &cRangeObsermatic::deactivationContinue, &m_deactivationDoneState);
     m_deactivationMachine.addState(&m_deactivationInitState);
     m_deactivationMachine.addState(&m_deactivationDoneState);
-    if(!m_demo) {
-        m_activationMachine.setInitialState(&m_dspserverConnectState);
-        m_deactivationMachine.setInitialState(&m_deactivationInitState);
-    } else {
-        m_activationMachine.setInitialState(&m_readGainCorrDoneState);
-        m_deactivationMachine.setInitialState(&m_deactivationDoneState);
-    }
+    m_activationMachine.setInitialState(&m_dspserverConnectState);
+    m_deactivationMachine.setInitialState(&m_deactivationInitState);
+
     connect(&m_deactivationInitState, &QState::entered, this, &cRangeObsermatic::deactivationInit);
     connect(&m_deactivationDoneState, &QState::entered, this, &cRangeObsermatic::deactivationDone);
 
@@ -435,22 +430,16 @@ void cRangeObsermatic::setRanges(bool force)
             }
             change = true;
 
-            if(!m_demo) {
-                // set range
-                m_MsgNrCmdList[pmChn->setRange(s)] = setrange + i; // we must know which channel has changed for deferred notification
-                m_nRangeSetPending++;
-                m_actChannelRangeList.replace(i, s);
+            // set range
+            m_MsgNrCmdList[pmChn->setRange(s)] = setrange + i; // we must know which channel has changed for deferred notification
+            m_nRangeSetPending++;
+            m_actChannelRangeList.replace(i, s);
 
-                // we set the scaling factor here
-                chn = pmChn->getDSPChannelNr();
+            // we set the scaling factor here
+            chn = pmChn->getDSPChannelNr();
 
-                // The scaling factor is multplied with the inverse presaling value
-                m_pfScale[chn] = (pmChn->getUrValue() / pmChn->getRejection()) * (1/preScalingFactor);
-            }
-            else {
-                pmChn->setRange(s);
-                m_actChannelRangeList.replace(i, s);
-            }
+            // The scaling factor is multplied with the inverse presaling value
+            m_pfScale[chn] = (pmChn->getUrValue() / pmChn->getRejection()) * (1/preScalingFactor);
 
             // we first set information of channels actual urvalue
             m_RangeActRejectionComponentList.at(i)->setValue(pmChn->getUrValue());
@@ -460,8 +449,7 @@ void cRangeObsermatic::setRanges(bool force)
             // reset hard overload AFTER change of range.
             if (requiresOverloadReset(i) || m_groupOvlList.at(i) || force) {
                 qInfo("Reset overload channel %i", i);
-                if(!m_demo)
-                    m_MsgNrCmdList[pmChn->resetStatus()] = resetstatus;
+                m_MsgNrCmdList[pmChn->resetStatus()] = resetstatus;
                 m_hardOvlList.replace(i, false);
                 m_maxOvlList.replace(i, false);
                 m_groupOvlList.replace(i, false);
@@ -483,25 +471,23 @@ void cRangeObsermatic::setRanges(bool force)
         }
     }
 
-    if(!m_demo) {
-        if (change) {
-            if (m_writeCorrectionDSPMachine.isRunning()) {
-                emit activationRepeat();
-            }
-            else {
-                m_writeCorrectionDSPMachine.start(); // we write all correction after each range setting
-            }
+    if (change) {
+        if (m_writeCorrectionDSPMachine.isRunning()) {
+            emit activationRepeat();
         }
-        // setRanges (=this function :) is called
-        // * periodically in ActionHandler
-        // * here and there on special occasions
-        // =>
-        // * readStatus is called periodically
-        // * since readStatus/analyzeStatus ignore pending status-queries, we
-        //   make sure that we receive an overload status AFTER range changes
-        //   finished.
-        readStatus(); // get overload status
+        else {
+            m_writeCorrectionDSPMachine.start(); // we write all correction after each range setting
+        }
     }
+    // setRanges (=this function :) is called
+    // * periodically in ActionHandler
+    // * here and there on special occasions
+    // =>
+    // * readStatus is called periodically
+    // * since readStatus/analyzeStatus ignore pending status-queries, we
+    //   make sure that we receive an overload status AFTER range changes
+    //   finished.
+    readStatus(); // get overload status
 }
 
 
@@ -544,17 +530,6 @@ bool cRangeObsermatic::requiresOverloadReset(int channel)
     // would cause a infinite loop: We reset hard-overload -> hardware
     // sets it / we reset hard-overload -> hardware...
     return (m_hardOvlList.at(channel) || m_softOvlList.at(channel)) && (m_ConfPar.m_nRangeAutoAct.m_nActive != 1 || !m_maxOvlList.at(channel));
-}
-
-void cRangeObsermatic::setupDemoOperation()
-{
-    for (int i = 0; i < m_ChannelNameList.count(); i++) {
-        // This is done usually in dspserverConnect which we omitted
-        m_ChannelAliasList.replace(i, m_RangeMeasChannelList.at(i)->getAlias());
-
-        m_RangeParameterList.at(i)->setValue(QVariant(m_actChannelRangeList.at(i)));
-        m_actChannelRangeNotifierList.replace(i, (m_actChannelRangeList.at(i)));
-    }
 }
 
 float cRangeObsermatic::getPreScale(int p_idx)
@@ -609,10 +584,6 @@ void cRangeObsermatic::readGainCorrDone()
 {
     // our initial range set from configuration
     setRanges(true);
-    // add bits not done due to missing server responses
-    if(m_demo) {
-        setupDemoOperation();
-    }
 
     // we already read all gain2corrections, set default ranges, default automatic, grouping and scaling values
     // lets now connect signals so we become alive
