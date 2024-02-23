@@ -575,12 +575,6 @@ QString cStatusModuleInit::findCpuInfo()
     return cpuInfo;
 }
 
-void cStatusModuleInit::setupDemoOperation()
-{
-    m_sSerialNumber = QStringLiteral("123456789");
-    m_sAdjStatus = "0";
-}
-
 void cStatusModuleInit::getSchnubbelStatus()
 {
     m_MsgNrCmdList[m_pPCBInterface->getAuthorizationStatus()] = STATUSMODINIT::readPCBServerSchnubbelStatus;
