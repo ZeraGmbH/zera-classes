@@ -141,7 +141,6 @@ private:
     QString findReleaseNr();
     QString findDeviceType();
     QString findCpuInfo();
-    void setupDemoOperation();
 
 private slots:
     void setInterfaceComponents();
