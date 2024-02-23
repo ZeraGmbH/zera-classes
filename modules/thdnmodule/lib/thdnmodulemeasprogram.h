@@ -4,6 +4,7 @@
 #include "basedspmeasprogram.h"
 #include "measchannelinfo.h"
 #include "movingwindowfilter.h"
+#include "actualvaluestartstophandler.h"
 #include <QList>
 #include <QHash>
 #include <QStateMachine>
@@ -73,6 +74,7 @@ private:
     void deleteDspCmdList();
 
     cThdnModule* m_pModule;
+    ActualValueStartStopHandler m_startStopHandler;
     QList<VfModuleActvalue*> m_veinActValueList; // the list of actual values we work on
     VfModuleMetaData* m_pThdnCountInfo;
     VfModuleComponent* m_pMeasureSignal;
