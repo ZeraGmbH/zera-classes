@@ -1,0 +1,6 @@
+<RCC>
+    <qresource prefix="/">
+        <file>session-scpi-and-range.json</file>
+        <file>session-scpi-only.json</file>
+    </qresource>
+</RCC>
