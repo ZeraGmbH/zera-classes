@@ -124,33 +124,35 @@ cThdnModuleMeasProgram::cThdnModuleMeasProgram(cThdnModule *module, std::shared_
     connect(&m_dataAcquisitionState, &QAbstractState::entered, this, &cThdnModuleMeasProgram::dataAcquisitionDSP);
     connect(&m_dataAcquisitionDoneState, &QAbstractState::entered, this, &cThdnModuleMeasProgram::dataReadDSP);
 
+    connect(this, &cThdnModuleMeasProgram::actualValues,
+            &m_startStopHandler, &ActualValueStartStopHandler::onNewActualValues);
+    if (getConfData()->m_bmovingWindow) {
+        m_movingwindowFilter.setIntegrationtime(getConfData()->m_fMeasInterval.m_fValue);
+        connect(&m_startStopHandler, &ActualValueStartStopHandler::sigNewActualValues,
+                &m_movingwindowFilter, &cMovingwindowFilter::receiveActualValues);
+        connect(&m_movingwindowFilter, &cMovingwindowFilter::actualValues,
+                this, &cThdnModuleMeasProgram::setInterfaceActualValues);
+    }
+    else
+        connect(&m_startStopHandler, &ActualValueStartStopHandler::sigNewActualValues,
+                this, &cThdnModuleMeasProgram::setInterfaceActualValues);
+
     if(m_pModule->getDemo()){
         m_demoPeriodicTimer = TimerFactoryQt::createPeriodic(500);
         connect(m_demoPeriodicTimer.get(), &TimerTemplateQt::sigExpired,this, &cThdnModuleMeasProgram::handleDemoActualValues);
+        m_demoPeriodicTimer->start();
     }
 }
 
 void cThdnModuleMeasProgram::start()
 {
-    if (getConfData()->m_bmovingWindow)
-    {
-        m_movingwindowFilter.setIntegrationtime(getConfData()->m_fMeasInterval.m_fValue);
-        connect(this, &cBaseMeasProgram::actualValues, &m_movingwindowFilter, &cMovingwindowFilter::receiveActualValues);
-        connect(&m_movingwindowFilter, &cMovingwindowFilter::actualValues, this, &cThdnModuleMeasProgram::setInterfaceActualValues);
-    }
-    else
-        connect(this, &cBaseMeasProgram::actualValues, this, &cThdnModuleMeasProgram::setInterfaceActualValues);
-    if(m_pModule->getDemo())
-        m_demoPeriodicTimer->start();
+    m_startStopHandler.start();
 }
 
 
 void cThdnModuleMeasProgram::stop()
 {
-    disconnect(this, &cThdnModuleMeasProgram::actualValues, 0, 0);
-    disconnect(&m_movingwindowFilter, &cMovingwindowFilter::actualValues, 0, 0);
-    if(m_pModule->getDemo())
-        m_demoPeriodicTimer->stop();
+    m_startStopHandler.stop();
 }
 
 
