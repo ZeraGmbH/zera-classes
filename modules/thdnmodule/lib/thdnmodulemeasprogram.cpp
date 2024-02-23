@@ -600,51 +600,6 @@ void cThdnModuleMeasProgram::setSCPIMeasInfo()
     }
 }
 
-void cThdnModuleMeasProgram::setupDemoOperation()
-{
-    m_measChannelInfoHash.clear();
-    cMeasChannelInfo mi;
-    for (int i = 0; i < getConfData()->m_valueChannelList.count(); i++)
-    {
-        QString channelName = getConfData()->m_valueChannelList.at(i);
-        if (!m_measChannelInfoHash.contains(channelName))
-            m_measChannelInfoHash[channelName] = mi;
-    }
-    QList<QString> channelInfoList = m_measChannelInfoHash.keys();
-    foreach (QString channelInfo, channelInfoList) {
-        mi = m_measChannelInfoHash.take(channelInfo);
-        if (channelInfo == "m0") {
-            mi.alias = "UL1";
-        }
-        else if (channelInfo == "m1") {
-            mi.alias = "UL2";
-        }
-        else if (channelInfo == "m2") {
-            mi.alias = "UL3";
-        }
-        else if (channelInfo == "m3") {
-            mi.alias = "IL1";
-        }
-        else if (channelInfo == "m4") {
-            mi.alias = "IL2";
-        }
-        else if (channelInfo == "m5") {
-            mi.alias = "IL3";
-        }
-        else if (channelInfo == "m6") {
-            mi.alias = "UAUX";
-        }
-        else if (channelInfo == "m7") {
-            mi.alias = "IAUX";
-        }
-        else {
-        }
-        mi.unit = "%";
-        m_measChannelInfoHash[channelInfo] = mi;
-    }
-}
-
-
 void cThdnModuleMeasProgram::setInterfaceActualValues(QVector<float> *actualValues)
 {
     if (m_bActive) // maybe we are deactivating !!!!
@@ -837,9 +792,6 @@ void cThdnModuleMeasProgram::activateDSP()
 void cThdnModuleMeasProgram::activateDSPdone()
 {
     m_bActive = true;
-
-    if(m_pModule->getDemo())
-        setupDemoOperation();
 
     setActualValuesNames();
     setSCPIMeasInfo();
