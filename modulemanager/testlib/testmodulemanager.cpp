@@ -60,6 +60,15 @@ QList<ZeraModules::ModuleData *> TestModuleManager::getModuleList()
     return m_moduleList;
 }
 
+ZeraModules::VirtualModule *TestModuleManager::getModule(QString uniqueName, int entityId)
+{
+    for(const auto &moduleInfo : qAsConst(m_moduleList)) {
+        if(moduleInfo->m_uniqueName == uniqueName && moduleInfo->m_moduleId == entityId)
+            return moduleInfo->m_reference;
+    }
+    return nullptr;
+}
+
 bool TestModuleManager::modulesReady()
 {
     return !m_moduleStartLock;

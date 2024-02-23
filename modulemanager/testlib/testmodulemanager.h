@@ -16,6 +16,7 @@ public:
     void destroyModulesAndWaitUntilAllShutdown();
     void waitUntilModulesAreReady();
     QList<ZeraModules::ModuleData *> getModuleList();
+    ZeraModules::VirtualModule *getModule(QString uniqueName, int entityId);
 
 private:
     bool modulesReady();
