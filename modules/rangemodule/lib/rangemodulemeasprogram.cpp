@@ -587,12 +587,17 @@ QVector<float> cRangeModuleMeasProgram::demoChannelRms()
     int channelCount = m_ChannelList.count();
     randomChannelRMS.resize(channelCount);
     for (int channel=0; channel<channelCount; ++channel) {
-        bool isVoltage = demoChannelIsVoltage(channel);
-        double baseRMS = isVoltage ? voltageBase : currentBase;
-        double randPlusMinusOne = 2.0 * (double)rand() / RAND_MAX - 1.0;
-        double randOffset = 0.02 * randPlusMinusOne;
-        double randRMS = (1+randOffset) * baseRMS;
-        randomChannelRMS[channel] = randRMS;
+        // MT310s2 AUX I has no clamp in demo - this has room for enhancement
+        if(m_ChannelList[channel] != "m7") {
+            bool isVoltage = demoChannelIsVoltage(channel);
+            double baseRMS = isVoltage ? voltageBase : currentBase;
+            double randPlusMinusOne = 2.0 * (double)rand() / RAND_MAX - 1.0;
+            double randOffset = 0.02 * randPlusMinusOne;
+            double randRMS = (1+randOffset) * baseRMS;
+            randomChannelRMS[channel] = randRMS;
+        }
+        else
+            randomChannelRMS[channel] = 0;
     }
     return randomChannelRMS;
 }
@@ -620,9 +625,9 @@ void cRangeModuleMeasProgram::handleDemoPeriodicTimer()
     }
     // RMS
     for (int channel=0; channel<channelCount; ++channel) {
-        double randPeak = randomChannelRMS[channel];
-        m_ModuleActualValues.append(randPeak);
-        m_veinRmsValueList.at(channel)->setValue(QVariant(randPeak)); // this should go??
+        double randRms = randomChannelRMS[channel];
+        m_ModuleActualValues.append(randRms);
+        m_veinRmsValueList.at(channel)->setValue(QVariant(randRms)); // this should go??
     }
     // frequency
     m_ModuleActualValues.append(demoFrequency());

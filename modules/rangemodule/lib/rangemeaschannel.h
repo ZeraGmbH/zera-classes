@@ -48,7 +48,7 @@ class cRangeMeasChannel:public cBaseMeasChannel
 {
     Q_OBJECT
 public:
-    cRangeMeasChannel(cSocket* rmsocket, cSocket* pcbsocket, QString name, quint8 chnnr,QString session, bool demo);
+    cRangeMeasChannel(cSocket* rmsocket, cSocket* pcbsocket, QString name, quint8 chnnr, QString session);
     ~cRangeMeasChannel();
     virtual void generateInterface(); // here we export our interface (entities)
 
@@ -102,7 +102,6 @@ protected slots:
     void catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant answer);
 
 private:
-    bool m_demo;
     QString m_session;
     QStringList m_RangeNameList; // a list of all ranges
     QHash<QString, cRangeInfoWithConstantValues> m_RangeInfoHash; // a list of available and selectable ranges, alias will be the key
@@ -165,7 +164,6 @@ private:
 
     void setRangeListAlias();
     void setActionErrorcount(int Count);
-    void setupDemoOperation();
 
 private slots:
     void rmConnect();
