@@ -581,7 +581,7 @@ bool cRangeModuleMeasProgram::demoChannelIsVoltage(int channel)
 
 QVector<float> cRangeModuleMeasProgram::demoChannelRms()
 {
-    double voltageBase = 230.0;
+    double voltageBase = getConfData()->m_session.m_sPar != "ref" ? 230.0 : 10;
     double currentBase= 10.0;
     QVector<float> randomChannelRMS;
     int channelCount = m_ChannelList.count();
