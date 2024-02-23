@@ -35,10 +35,7 @@ cReferenceModuleMeasProgram::cReferenceModuleMeasProgram(cReferenceModule* modul
     m_activationMachine.addState(&m_activateDSPState);
     m_activationMachine.addState(&m_loadDSPDoneState);
 
-    if(m_pModule->getDemo())
-        m_activationMachine.setInitialState(&m_loadDSPDoneState);
-    else
-        m_activationMachine.setInitialState(&resourceManagerConnectState);
+    m_activationMachine.setInitialState(&resourceManagerConnectState);
 
     connect(&resourceManagerConnectState, &QState::entered, this, &cReferenceModuleMeasProgram::resourceManagerConnect);
     connect(&m_IdentifyState, &QState::entered, this, &cReferenceModuleMeasProgram::sendRMIdent);
@@ -59,10 +56,7 @@ cReferenceModuleMeasProgram::cReferenceModuleMeasProgram(cReferenceModule* modul
     m_deactivationMachine.addState(&m_freeUSERMemState);
     m_deactivationMachine.addState(&m_unloadDSPDoneState);
 
-    if(m_pModule->getDemo())
-        m_deactivationMachine.setInitialState(&m_unloadDSPDoneState);
-    else
-        m_deactivationMachine.setInitialState(&m_deactivateDSPState);
+    m_deactivationMachine.setInitialState(&m_deactivateDSPState);
 
     connect(&m_deactivateDSPState, &QState::entered, this, &cReferenceModuleMeasProgram::deactivateDSP);
     connect(&m_freePGRMemState, &QState::entered, this, &cReferenceModuleMeasProgram::freePGRMem);
