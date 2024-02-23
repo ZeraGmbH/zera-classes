@@ -109,6 +109,11 @@ cOsciModuleMeasProgram::cOsciModuleMeasProgram(cOsciModule* module, std::shared_
     connect(&m_dataAcquisitionState, &QState::entered, this, &cOsciModuleMeasProgram::dataAcquisitionDSP);
     connect(&m_dataAcquisitionDoneState, &QState::entered, this, &cOsciModuleMeasProgram::dataReadDSP);
 
+    connect(this, &cOsciModuleMeasProgram::actualValues,
+            &m_startStopHandler, &ActualValueStartStopHandler::onNewActualValues);
+    connect(&m_startStopHandler, &ActualValueStartStopHandler::sigNewActualValues,
+            this, &cOsciModuleMeasProgram::setInterfaceActualValues);
+
     if(m_pModule->getDemo()){
         m_demoPeriodicTimer = TimerFactoryQt::createPeriodic(500);
         connect(m_demoPeriodicTimer.get(), &TimerTemplateQt::sigExpired,this, &cOsciModuleMeasProgram::handleDemoActualValues);
@@ -117,14 +122,14 @@ cOsciModuleMeasProgram::cOsciModuleMeasProgram(cOsciModule* module, std::shared_
 
 void cOsciModuleMeasProgram::start()
 {
-    connect(this, &cOsciModuleMeasProgram::actualValues, this, &cOsciModuleMeasProgram::setInterfaceActualValues);
+    m_startStopHandler.start();
     if(m_pModule->getDemo())
         m_demoPeriodicTimer->start();
 }
 
 void cOsciModuleMeasProgram::stop()
 {
-    disconnect(this, &cOsciModuleMeasProgram::actualValues, this, 0);
+    m_startStopHandler.stop();
     if(m_pModule->getDemo())
         m_demoPeriodicTimer->stop();
 }
