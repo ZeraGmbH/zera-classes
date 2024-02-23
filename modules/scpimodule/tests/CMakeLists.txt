@@ -27,3 +27,7 @@ SETUP_QTESTS_MODULE(
     test_scpi_queue
 )
 
+target_sources(test_scpi_queue
+  PRIVATE
+    test-data/test-data.qrc
+)
