@@ -67,8 +67,7 @@ void cRangeModule::setupModule()
         cRangeMeasChannel* pchn = new cRangeMeasChannel(&(pConfData->m_RMSocket),
                                                         &(pConfData->m_PCBServerSocket),
                                                         pConfData->m_senseChannelList.at(i),
-                                                        i+1,
-                                                        pConfData->m_session.m_sPar);
+                                                        i+1);
         m_rangeMeasChannelList.append(pchn);
         m_ModuleActivistList.append(pchn);
         connect(pchn, &cRangeMeasChannel::activated, this, &cRangeModule::activationContinue);

@@ -8,9 +8,8 @@
 namespace RANGEMODULE
 {
 
-cRangeMeasChannel::cRangeMeasChannel(cSocket* rmsocket, cSocket* pcbsocket, QString name, quint8 chnnr, QString session) :
+cRangeMeasChannel::cRangeMeasChannel(cSocket* rmsocket, cSocket* pcbsocket, QString name, quint8 chnnr) :
     cBaseMeasChannel(rmsocket, pcbsocket, name, chnnr),
-    m_session(session),
     m_preScaling(1)
 {
     m_pPCBInterface = new Zera::cPCBInterface();
