@@ -135,7 +135,7 @@ void test_scpi_cmds_in_session::devIfaceVeinComponentMultipleEntities()
 
 void test_scpi_cmds_in_session::devIfaceVeinComponentMultipleEntitiesForLongXml()
 {
-    setupServices(":/session-many-modules.json");
+    setupServices(":/session-many-modules.json"); // this is mt310s2-meas-session.json
 
     ScpiModuleClientBlocked client;
     QString receive = client.sendReceive("dev:iface?");
@@ -158,5 +158,5 @@ void test_scpi_cmds_in_session::setupServices(QString sessionFileName)
     m_modMan->setupConnections();
     m_modMan->startAllServiceMocks("mt310s2");
     m_modMan->loadSession(sessionFileName);
-    TimeMachineObject::feedEventLoop();
+    m_modMan->waitUntilModulesAreReady();
 }
