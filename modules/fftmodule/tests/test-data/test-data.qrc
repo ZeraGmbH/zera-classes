@@ -1,0 +1,9 @@
+<RCC>
+    <qresource prefix="/">
+        <file>dumpActual.json</file>
+        <file>dumpInitial.json</file>
+        <file>mt310s2-fftmodule-from-resource.xml</file>
+        <file>session-minimal.json</file>
+        <file>session-from-resource.json</file>
+    </qresource>
+</RCC>

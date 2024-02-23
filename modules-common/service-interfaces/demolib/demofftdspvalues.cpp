@@ -21,7 +21,7 @@ void DemoFftDspValues::setValue(int channelNo, int harmonicNo, float re, float i
     int channelOffset = channelNo * sourceDataSize;
 
     if(harmonicNo == 0)
-        m_dspValues[channelOffset] = reScaled;
+        m_dspValues[channelOffset] = -reScaled; // DC is not multiplied by -1
     else {
         float reScaledLow = reScaled * 3;
         float reScaledUp = reScaled * 2; // // reScaledLow - reScaledUp = reScaled
