@@ -1,6 +1,7 @@
 #ifndef OSCIMODULEMEASPROGRAM_H
 #define OSCIMODULEMEASPROGRAM_H
 
+#include "actualvaluestartstophandler.h"
 #include "oscimoduleconfigdata.h"
 #include <basedspmeasprogram.h>
 #include <measchannelinfo.h>
@@ -55,6 +56,7 @@ private:
     void deleteDspCmdList();
 
     cOsciModule* m_pModule;
+    ActualValueStartStopHandler m_startStopHandler;
     QList<VfModuleActvalue*> m_veinActValueList; // the list of actual values we work on
     VfModuleMetaData* m_pOsciCountInfo;
     VfModuleComponent* m_pMeasureSignal;
