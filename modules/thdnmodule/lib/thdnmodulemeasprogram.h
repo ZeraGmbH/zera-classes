@@ -128,7 +128,6 @@ private:
 
     void setActualValuesNames();
     void setSCPIMeasInfo();
-    void setupDemoOperation();
 
     cMovingwindowFilter m_movingwindowFilter;
 
