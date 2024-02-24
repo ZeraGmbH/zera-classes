@@ -79,26 +79,22 @@ cRangeModuleMeasProgram::cRangeModuleMeasProgram(cRangeModule* module, std::shar
     connect(&m_dataAcquisitionState, &QState::entered, this, &cRangeModuleMeasProgram::dataAcquisitionDSP);
     connect(&m_dataAcquisitionDoneState, &QState::entered, this, &cRangeModuleMeasProgram::dataReadDSP);
 
+    connect(this, &cRangeModuleMeasProgram::actualValues, this, &cRangeModuleMeasProgram::setInterfaceActualValues);
     connect(&m_dspWatchdogTimer, &QTimer::timeout, this, &cRangeModuleMeasProgram::onDspWatchdogTimeout);
     if(m_pModule->getDemo()) {
         // Demo timer for dummy actual values
         m_demoPeriodicTimer = TimerFactoryQt::createPeriodic(500);
         connect(m_demoPeriodicTimer.get(), &TimerTemplateQt::sigExpired, this, &cRangeModuleMeasProgram::handleDemoPeriodicTimer);
+        m_demoPeriodicTimer->start();
     }
 }
 
 void cRangeModuleMeasProgram::start()
 {
-    disconnect(this, &cRangeModuleMeasProgram::actualValues, this, 0);
-    connect(this, &cRangeModuleMeasProgram::actualValues, this, &cRangeModuleMeasProgram::setInterfaceActualValues);
-    if(m_pModule->getDemo())
-        m_demoPeriodicTimer->start();
 }
 
 void cRangeModuleMeasProgram::stop()
 {
-    if(m_pModule->getDemo())
-        m_demoPeriodicTimer->stop();
 }
 
 void cRangeModuleMeasProgram::syncRanging(QVariant sync)
