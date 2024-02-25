@@ -3,7 +3,7 @@
 
 #include "licensesystemmock.h"
 #include "modulemanagersetupfacade.h"
-#include "testfactoryserviceinterfaces.h"
+#include "demofactoryserviceinterfaces.h"
 #include "testmodulemanager.h"
 #include <QObject>
 #include <memory>
@@ -31,7 +31,7 @@ private:
     std::unique_ptr<ModuleManagerSetupFacade> m_modmanFacade;
     std::unique_ptr<TestModuleManager> m_modMan;
 
-    TestFactoryServiceInterfacesPtr m_serviceInterfaceFactory;
+    std::shared_ptr<DemoFactoryServiceInterfaces> m_serviceInterfaceFactory;
 };
 
 #endif // TEST_SCPI_QUEUE_H

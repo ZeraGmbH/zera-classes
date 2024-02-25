@@ -1,5 +1,4 @@
 #include "test_scpi_queue.h"
-#include "testfactoryserviceinterfaces.h"
 #include <rangemodule.h>
 #include <scpitestclient.h>
 #include <scpiserver.h>
@@ -22,7 +21,7 @@ void disableQueuing(SCPIMODULE::cSCPIInterface* interface)
 
 void test_scpi_queue::initTestCase()
 {
-    m_serviceInterfaceFactory = std::make_shared<TestFactoryServiceInterfaces>();
+    m_serviceInterfaceFactory = std::make_shared<DemoFactoryServiceInterfaces>();
     TimerFactoryQtForTest::enableTest();
 }
 
