@@ -84,7 +84,7 @@ QStringList test_modman_regression_all_sessions::generateCodeLinesForDeviceSessi
     codeLines.append("modMan.setupConnections();");
     codeLines.append("modMan.startAllServiceMocks(\"" + device + "\");");
     codeLines.append("modMan.changeSessionFile(\"" + session + "\");");
-    codeLines.append("TimeMachineObject::feedEventLoop();");
+    codeLines.append("modMan.waitUntilModulesAreReady();");
     codeLines.append("");
     codeLines.append("QList<ZeraModules::ModuleData *> modules = modMan.getModuleList();");
 
@@ -140,7 +140,7 @@ void test_modman_regression_all_sessions::regressionCom5003Ced()
     modMan.setupConnections();
     modMan.startAllServiceMocks("com5003");
     modMan.changeSessionFile("com5003-ced-session.json");
-    TimeMachineObject::feedEventLoop();
+    modMan.waitUntilModulesAreReady();
 
     QList<ZeraModules::ModuleData *> modules = modMan.getModuleList();
     QCOMPARE(modules.count(), 21);
@@ -244,7 +244,7 @@ void test_modman_regression_all_sessions::regressionCom5003Meas()
     modMan.setupConnections();
     modMan.startAllServiceMocks("com5003");
     modMan.changeSessionFile("com5003-meas-session.json");
-    TimeMachineObject::feedEventLoop();
+    modMan.waitUntilModulesAreReady();
 
     QList<ZeraModules::ModuleData *> modules = modMan.getModuleList();
     QCOMPARE(modules.count(), 24);
@@ -360,7 +360,7 @@ void test_modman_regression_all_sessions::regressionCom5003PerPhase()
     modMan.setupConnections();
     modMan.startAllServiceMocks("com5003");
     modMan.changeSessionFile("com5003-perphase-session.json");
-    TimeMachineObject::feedEventLoop();
+    modMan.waitUntilModulesAreReady();
 
     QList<ZeraModules::ModuleData *> modules = modMan.getModuleList();
     QCOMPARE(modules.count(), 25);
@@ -480,7 +480,7 @@ void test_modman_regression_all_sessions::regressionCom5003Ref()
     modMan.setupConnections();
     modMan.startAllServiceMocks("com5003");
     modMan.changeSessionFile("com5003-ref-session.json");
-    TimeMachineObject::feedEventLoop();
+    modMan.waitUntilModulesAreReady();
 
     QList<ZeraModules::ModuleData *> modules = modMan.getModuleList();
     QCOMPARE(modules.count(), 8);
@@ -532,7 +532,7 @@ void test_modman_regression_all_sessions::regressionMt310s2Ced()
     modMan.setupConnections();
     modMan.startAllServiceMocks("mt310s2");
     modMan.changeSessionFile("mt310s2-ced-session.json");
-    TimeMachineObject::feedEventLoop();
+    modMan.waitUntilModulesAreReady();
 
     QList<ZeraModules::ModuleData *> modules = modMan.getModuleList();
     QCOMPARE(modules.count(), 20);
@@ -632,7 +632,7 @@ void test_modman_regression_all_sessions::regressionMt310s2Dc()
     modMan.setupConnections();
     modMan.startAllServiceMocks("mt310s2");
     modMan.changeSessionFile("mt310s2-dc-session.json");
-    TimeMachineObject::feedEventLoop();
+    modMan.waitUntilModulesAreReady();
 
     QList<ZeraModules::ModuleData *> modules = modMan.getModuleList();
     QCOMPARE(modules.count(), 22);
@@ -740,7 +740,7 @@ void test_modman_regression_all_sessions::regressionMt310s2EmobAc()
     modMan.setupConnections();
     modMan.startAllServiceMocks("mt310s2");
     modMan.changeSessionFile("mt310s2-emob-session-ac.json");
-    TimeMachineObject::feedEventLoop();
+    modMan.waitUntilModulesAreReady();
 
     QList<ZeraModules::ModuleData *> modules = modMan.getModuleList();
     QCOMPARE(modules.count(), 21);
@@ -844,7 +844,7 @@ void test_modman_regression_all_sessions::regressionMt310s2EmobDc()
     modMan.setupConnections();
     modMan.startAllServiceMocks("mt310s2");
     modMan.changeSessionFile("mt310s2-emob-session-dc.json");
-    TimeMachineObject::feedEventLoop();
+    modMan.waitUntilModulesAreReady();
 
     QList<ZeraModules::ModuleData *> modules = modMan.getModuleList();
     QCOMPARE(modules.count(), 17);
@@ -932,7 +932,7 @@ void test_modman_regression_all_sessions::regressionMt310s2EmobAcDc()
     modMan.setupConnections();
     modMan.startAllServiceMocks("mt310s2");
     modMan.changeSessionFile("mt310s2-emob-session.json");
-    TimeMachineObject::feedEventLoop();
+    modMan.waitUntilModulesAreReady();
 
     QList<ZeraModules::ModuleData *> modules = modMan.getModuleList();
     QCOMPARE(modules.count(), 22);
@@ -1040,7 +1040,7 @@ void test_modman_regression_all_sessions::regressionMt310s2Meas()
     modMan.setupConnections();
     modMan.startAllServiceMocks("mt310s2");
     modMan.changeSessionFile("mt310s2-meas-session.json");
-    TimeMachineObject::feedEventLoop();
+    modMan.waitUntilModulesAreReady();
 
     QList<ZeraModules::ModuleData *> modules = modMan.getModuleList();
     QCOMPARE(modules.count(), 28);
