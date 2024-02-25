@@ -1,13 +1,14 @@
 #include "demodspinterfacerms.h"
+#include <timerfactoryqt.h>
 
 DemoDspInterfaceRms::DemoDspInterfaceRms(int interruptNoHandled, QStringList valueChannelList) :
     m_interruptNoHandled(interruptNoHandled),
     m_valueChannelList(valueChannelList),
-    m_periodicTimer(500)
+    m_periodicTimer(TimerFactoryQt::createPeriodic(500))
 {
-    connect(&m_periodicTimer, &TimerPeriodicQt::sigExpired,
+    connect(m_periodicTimer.get(), &TimerTemplateQt::sigExpired,
             this, &DemoDspInterfaceRms::onTimer);
-    m_periodicTimer.start();
+    m_periodicTimer->start();
 }
 
 void DemoDspInterfaceRms::onTimer()

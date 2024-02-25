@@ -2,7 +2,7 @@
 #define DEMODSPINTERFACEFFT_H
 
 #include <mockdspinterface.h>
-#include <timerperiodicqt.h>
+#include <timertemplateqt.h>
 
 class DemoDspInterfaceFft : public MockDspInterface
 {
@@ -15,7 +15,7 @@ private:
     int m_interruptNoHandled;
     QStringList m_valueChannelList;
     int m_fftOrder;
-    TimerPeriodicQt m_periodicTimer;
+    TimerTemplateQtPtr m_periodicTimer;
 };
 
 #endif // DEMODSPINTERFACEFFT_H
