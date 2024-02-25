@@ -89,14 +89,9 @@ private:
 
     Zera::ProxyClientPtr m_rmClient;
 
-    TimerTemplateQtPtr m_demoPeriodicTimer;
-
     void setActualValuesNames();
     void setSCPIMeasInfo();
     void restartDspWachdog();
-    bool demoChannelIsVoltage(int channel);
-    QVector<float> demoChannelRms();
-    double demoFrequency();
 
 private slots:
     void setInterfaceActualValues(QVector<float> *actualValues);
@@ -119,7 +114,6 @@ private slots:
     void dataAcquisitionDSP();
     void dataReadDSP();
 
-    void handleDemoPeriodicTimer();
     void onDspWatchdogTimeout();
 };
 

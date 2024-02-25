@@ -15,8 +15,7 @@ cRangeModuleMeasProgram::cRangeModuleMeasProgram(cRangeModule* module, std::shar
     cBaseDspMeasProgram(pConfiguration),
     m_pModule(module)
 {
-    m_dspInterface = m_pModule->getServiceInterfaceFactory()->createDspInterfaceOther();
-
+    m_dspInterface = m_pModule->getServiceInterfaceFactory()->createDspInterfaceRange(irqNr, getConfData()->m_senseChannelList, getConfData()->m_session.m_sPar == "ref");
     m_bRanging = false;
     m_bIgnore = false;
     m_ChannelList = getConfData()->m_senseChannelList;
@@ -62,14 +61,8 @@ cRangeModuleMeasProgram::cRangeModuleMeasProgram(cRangeModule* module, std::shar
     connect(&m_freeUSERMemState, &QState::entered, this, &cRangeModuleMeasProgram::freeUSERMem);
     connect(&m_unloadDSPDoneState, &QState::entered, this, &cRangeModuleMeasProgram::deactivateDSPdone);
 
-    if(!m_pModule->getDemo()) {
-        m_activationMachine.setInitialState(&resourceManagerConnectState);
-        m_deactivationMachine.setInitialState(&m_deactivateDSPState);
-    }
-    else {
-        m_activationMachine.setInitialState(&m_loadDSPDoneState);
-        m_deactivationMachine.setInitialState(&m_unloadDSPDoneState);
-    }
+    m_activationMachine.setInitialState(&resourceManagerConnectState);
+    m_deactivationMachine.setInitialState(&m_deactivateDSPState);
 
     // setting up statemachine for data acquisition
     m_dataAcquisitionState.addTransition(this, &cRangeModuleMeasProgram::dataAquisitionContinue, &m_dataAcquisitionDoneState);
@@ -81,12 +74,6 @@ cRangeModuleMeasProgram::cRangeModuleMeasProgram(cRangeModule* module, std::shar
 
     connect(this, &cRangeModuleMeasProgram::actualValues, this, &cRangeModuleMeasProgram::setInterfaceActualValues);
     connect(&m_dspWatchdogTimer, &QTimer::timeout, this, &cRangeModuleMeasProgram::onDspWatchdogTimeout);
-    if(m_pModule->getDemo()) {
-        // Demo timer for dummy actual values
-        m_demoPeriodicTimer = TimerFactoryQt::createPeriodic(500);
-        connect(m_demoPeriodicTimer.get(), &TimerTemplateQt::sigExpired, this, &cRangeModuleMeasProgram::handleDemoPeriodicTimer);
-        m_demoPeriodicTimer->start();
-    }
 }
 
 void cRangeModuleMeasProgram::start()
@@ -556,85 +543,6 @@ void cRangeModuleMeasProgram::dataReadDSP()
     }
 }
 
-
-bool cRangeModuleMeasProgram::demoChannelIsVoltage(int channel)
-{
-    bool isVoltage;
-    // a bit of a hack: We expect MT310s2 channel order
-    switch(channel) {
-    case 0:
-    case 1:
-    case 2:
-    case 6:
-        isVoltage = true;
-        break;
-    default:
-        isVoltage = false;
-        break;
-    }
-    return isVoltage;
-}
-
-QVector<float> cRangeModuleMeasProgram::demoChannelRms()
-{
-    double voltageBase = getConfData()->m_session.m_sPar != "ref" ? 230.0 : 10;
-    double currentBase= 10.0;
-    QVector<float> randomChannelRMS;
-    int channelCount = m_ChannelList.count();
-    randomChannelRMS.resize(channelCount);
-    for (int channel=0; channel<channelCount; ++channel) {
-        // MT310s2 AUX I has no clamp in demo - this has room for enhancement
-        if(m_ChannelList[channel] != "m7") {
-            bool isVoltage = demoChannelIsVoltage(channel);
-            double baseRMS = isVoltage ? voltageBase : currentBase;
-            double randPlusMinusOne = 2.0 * (double)rand() / RAND_MAX - 1.0;
-            double randOffset = 0.02 * randPlusMinusOne;
-            double randRMS = (1+randOffset) * baseRMS;
-            randomChannelRMS[channel] = randRMS;
-        }
-        else
-            randomChannelRMS[channel] = 0;
-    }
-    return randomChannelRMS;
-}
-
-double cRangeModuleMeasProgram::demoFrequency()
-{
-    double freqBase= 50.0;
-    double randPlusMinusOne = 2.0 * (double)rand() / RAND_MAX - 1.0;
-    double randOffset = 0.02 * randPlusMinusOne;
-    double randRMS = (1+randOffset) * freqBase;
-    return randRMS;
-}
-
-void cRangeModuleMeasProgram::handleDemoPeriodicTimer()
-{
-    QVector<float> randomChannelRMS = demoChannelRms();
-    // values - see cRangeModule::setPeakRmsAndFrequencyValues:
-    m_ModuleActualValues.clear();
-    int channelCount = m_ChannelList.count();
-    // peak
-    for (int channel=0; channel<channelCount; ++channel) {
-        double randPeak = randomChannelRMS[channel]*sqrt2;
-        m_ModuleActualValues.append(randPeak);
-        m_veinActValueList.at(channel)->setValue(QVariant(randPeak)); // this should go??
-    }
-    // RMS
-    for (int channel=0; channel<channelCount; ++channel) {
-        double randRms = randomChannelRMS[channel];
-        m_ModuleActualValues.append(randRms);
-        m_veinRmsValueList.at(channel)->setValue(QVariant(randRms)); // this should go??
-    }
-    // frequency
-    m_ModuleActualValues.append(demoFrequency());
-    // peak DC (no DC for now)
-    for (int channel=0; channel<channelCount; ++channel) {
-        double randPeak = randomChannelRMS[channel]*sqrt2;
-        m_ModuleActualValues.append(randPeak);
-    }
-    emit actualValues(&m_ModuleActualValues);
-}
-
 void cRangeModuleMeasProgram::onDspWatchdogTimeout()
 {
     qCritical("Rangemodule: DSP is stuck!");
@@ -642,8 +550,3 @@ void cRangeModuleMeasProgram::onDspWatchdogTimeout()
 }
 
 }
-
-
-
-
-
