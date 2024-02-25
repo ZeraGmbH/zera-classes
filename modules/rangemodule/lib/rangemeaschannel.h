@@ -42,8 +42,6 @@ enum rangemeaschannelCmds
     unregisterNotifiers
 };
 
-const double sqrt2 = 1.41421356;
-
 class cRangeMeasChannel:public cBaseMeasChannel
 {
     Q_OBJECT

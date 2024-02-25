@@ -1,5 +1,11 @@
 #include "testfactoryserviceinterfaces.h"
 
+DspInterfacePtr TestFactoryServiceInterfaces::createDspInterfaceRange(int interruptNoHandled, QStringList valueChannelList, bool isReferencce)
+{
+    Q_UNUSED(isReferencce)
+    return createDspInterfaceCommon(interruptNoHandled, valueChannelList);
+}
+
 DspInterfacePtr TestFactoryServiceInterfaces::createDspInterfaceDft(int interruptNoHandled, QStringList valueChannelList)
 {
     return createDspInterfaceCommon(interruptNoHandled, valueChannelList);

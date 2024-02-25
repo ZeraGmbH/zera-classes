@@ -1,7 +1,13 @@
 #include "demofactoryserviceinterfaces.h"
+#include "demodspinterfacerange.h"
 #include "demodspinterfacedft.h"
 #include "demodspinterfacefft.h"
 #include "demodspinterfacerms.h"
+
+DspInterfacePtr DemoFactoryServiceInterfaces::createDspInterfaceRange(int interruptNoHandled, QStringList valueChannelList, bool isReferencce)
+{
+    return std::make_shared<DemoDspInterfaceRange>(interruptNoHandled, valueChannelList, isReferencce);
+}
 
 DspInterfacePtr DemoFactoryServiceInterfaces::createDspInterfaceDft(int interruptNoHandled, QStringList valueChannelList)
 {
