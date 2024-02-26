@@ -217,6 +217,9 @@ void cAdjustManagement::deactivationInit()
 
 void cAdjustManagement::deactivationDone()
 {
+    Zera::Proxy::getInstance()->releaseConnection(m_pPCBClient);
+    // and disconnect for our servers afterwards
+    disconnect(m_pPCBInterface, 0, this, 0);
     emit deactivated();
 }
 
