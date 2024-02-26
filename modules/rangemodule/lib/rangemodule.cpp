@@ -96,14 +96,12 @@ void cRangeModule::setupModule()
         connect(pchn, &cRangeMeasChannel::cmdDone, m_pRangeObsermatic, &cRangeObsermatic::catchChannelReply);
     }
 
-    if(!getDemo()) {
-        // we also need some program for adjustment
-        m_pAdjustment = new cAdjustManagement(this, &(pConfData->m_DSPServerSocket), &pConfData->m_PCBServerSocket, pConfData->m_senseChannelList, pConfData->m_subdcChannelList, pConfData->m_fAdjInterval);
-        m_ModuleActivistList.append(m_pAdjustment);
-        connect(m_pAdjustment, &cAdjustManagement::activated, this, &cRangeModule::activationContinue);
-        connect(m_pAdjustment, &cAdjustManagement::deactivated, this, &cRangeModule::deactivationContinue);
-        connect(m_pAdjustment, &cAdjustManagement::errMsg, m_pModuleErrorComponent, &VfModuleErrorComponent::setValue);
-    }
+    // we also need some program for adjustment
+    m_pAdjustment = new cAdjustManagement(this, &(pConfData->m_DSPServerSocket), &pConfData->m_PCBServerSocket, pConfData->m_senseChannelList, pConfData->m_subdcChannelList, pConfData->m_fAdjInterval);
+    m_ModuleActivistList.append(m_pAdjustment);
+    connect(m_pAdjustment, &cAdjustManagement::activated, this, &cRangeModule::activationContinue);
+    connect(m_pAdjustment, &cAdjustManagement::deactivated, this, &cRangeModule::deactivationContinue);
+    connect(m_pAdjustment, &cAdjustManagement::errMsg, m_pModuleErrorComponent, &VfModuleErrorComponent::setValue);
 
     // at last we need some program that does the measuring on dsp
     m_pMeasProgram = new cRangeModuleMeasProgram(this, m_pConfiguration);

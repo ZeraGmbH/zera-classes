@@ -490,8 +490,7 @@ void cRangeModuleMeasProgram::activateDSPdone()
     setActualValuesNames();
     setSCPIMeasInfo();
     m_pMeasureSignal->setValue(QVariant(1));
-    if(!m_pModule->getDemo())
-        restartDspWachdog();
+    restartDspWachdog();
     emit activated();
 }
 
