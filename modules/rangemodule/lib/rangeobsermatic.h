@@ -9,7 +9,6 @@
 #include <socket.h>
 #include <stringvalidator.h>
 #include <dspinterface.h>
-#include <QTimer>
 
 // cRangeObsermatic is responsible for setting, observing, automatic setting
 // and grouping measurement channel ranges. it works on a flexible list of
