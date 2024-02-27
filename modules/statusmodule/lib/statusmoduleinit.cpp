@@ -16,7 +16,7 @@ namespace STATUSMODULE
 cStatusModuleInit::cStatusModuleInit(cStatusModule* module, cStatusModuleConfigData& configData)
     :m_pModule(module), m_ConfigData(configData)
 {
-    m_pPCBInterface = new Zera::cPCBInterface();
+    m_pPCBInterface = std::make_shared<Zera::cPCBInterface>();
     m_pDSPInterface = new Zera::cDSPInterface();
 
     // m_pcbserverConnectionState.addTransition is done in pcbserverConnection
@@ -114,7 +114,6 @@ cStatusModuleInit::cStatusModuleInit(cStatusModule* module, cStatusModuleConfigD
 
 cStatusModuleInit::~cStatusModuleInit()
 {
-    delete m_pPCBInterface;
     delete m_pDSPInterface;
 }
 
@@ -609,12 +608,12 @@ void cStatusModuleInit::setInterfaceComponents()
 
 void cStatusModuleInit::pcbserverConnect()
 {
-    m_pPCBClient = Zera::Proxy::getInstance()->getConnection(m_ConfigData.m_PCBServerSocket.m_sIP, m_ConfigData.m_PCBServerSocket.m_nPort);
-    m_pcbserverConnectionState.addTransition(m_pPCBClient, &Zera::ProxyClient::connected, &m_pcbserverReadVersionState);
+    m_pPCBClient = Zera::Proxy::getInstance()->getConnectionSmart(m_ConfigData.m_PCBServerSocket.m_sIP, m_ConfigData.m_PCBServerSocket.m_nPort);
+    m_pcbserverConnectionState.addTransition(m_pPCBClient.get(), &Zera::ProxyClient::connected, &m_pcbserverReadVersionState);
 
-    m_pPCBInterface->setClient(m_pPCBClient);
-    connect(m_pPCBInterface, &Zera::cPCBInterface::serverAnswer, this, &cStatusModuleInit::catchInterfaceAnswer);
-    Zera::Proxy::getInstance()->startConnection(m_pPCBClient);
+    m_pPCBInterface->setClientSmart(m_pPCBClient);
+    connect(m_pPCBInterface.get(), &Zera::cPCBInterface::serverAnswer, this, &cStatusModuleInit::catchInterfaceAnswer);
+    Zera::Proxy::getInstance()->startConnectionSmart(m_pPCBClient);
 }
 
 
@@ -730,10 +729,10 @@ void cStatusModuleInit::activationDone()
 void cStatusModuleInit::deactivationDone()
 {
     Zera::Proxy::getInstance()->releaseConnection(m_pDSPClient);
-    Zera::Proxy::getInstance()->releaseConnection(m_pPCBClient);
+    Zera::Proxy::getInstance()->releaseConnection(m_pPCBClient.get());
     // and disconnect from our servers afterwards
     disconnect(m_pDSPInterface, 0, this, 0);
-    disconnect(m_pPCBInterface, 0, this, 0);
+    disconnect(m_pPCBInterface.get(), 0, this, 0);
     emit deactivated();
 }
 

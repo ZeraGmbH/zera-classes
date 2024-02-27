@@ -17,7 +17,7 @@ cModeModuleInit::cModeModuleInit(cModeModule* module, cModeModuleConfigData& con
     m_pModule(module),
     m_ConfigData(configData)
 {
-    m_pPCBInterface = new Zera::cPCBInterface();
+    m_pcbInterface = std::make_shared<Zera::cPCBInterface>();
     m_pDSPInterface = new Zera::cDSPInterface();
 
     m_IdentifyState.addTransition(this, &cModeModuleInit::activationContinue, &m_readResourceTypesState);
@@ -91,7 +91,6 @@ cModeModuleInit::cModeModuleInit(cModeModule* module, cModeModuleConfigData& con
 
 cModeModuleInit::~cModeModuleInit()
 {
-    delete m_pPCBInterface;
     delete m_pDSPInterface;
 }
 
@@ -302,18 +301,18 @@ void cModeModuleInit::claimResource()
 
 void cModeModuleInit::pcbserverConnect()
 {
-    m_pPCBClient = Zera::Proxy::getInstance()->getConnection(m_ConfigData.m_PCBServerSocket.m_sIP, m_nPort);
-    m_pcbserverConnectionState.addTransition(m_pPCBClient, &Zera::ProxyClient::connected, &m_setModeState);
+    m_pPCBClient = Zera::Proxy::getInstance()->getConnectionSmart(m_ConfigData.m_PCBServerSocket.m_sIP, m_nPort);
+    m_pcbserverConnectionState.addTransition(m_pPCBClient.get(), &Zera::ProxyClient::connected, &m_setModeState);
 
-    m_pPCBInterface->setClient(m_pPCBClient);
-    connect(m_pPCBInterface, &Zera::cPCBInterface::serverAnswer, this, &cModeModuleInit::catchInterfaceAnswer);
-    Zera::Proxy::getInstance()->startConnection(m_pPCBClient);
+    m_pcbInterface->setClientSmart(m_pPCBClient);
+    connect(m_pcbInterface.get(), &Zera::cPCBInterface::serverAnswer, this, &cModeModuleInit::catchInterfaceAnswer);
+    Zera::Proxy::getInstance()->startConnectionSmart(m_pPCBClient);
 }
 
 
 void cModeModuleInit::setMode()
 {
-    m_MsgNrCmdList[m_pPCBInterface->setMMode(m_ConfigData.m_sMode)] = MODEMODINIT::setmode;
+    m_MsgNrCmdList[m_pcbInterface->setMMode(m_ConfigData.m_sMode)] = MODEMODINIT::setmode;
 }
 
 
@@ -439,7 +438,7 @@ void cModeModuleInit::activationDone()
 void cModeModuleInit::freeResource()
 {
     Zera::Proxy::getInstance()->releaseConnection(m_pDSPClient);
-    Zera::Proxy::getInstance()->releaseConnection(m_pPCBClient);
+    Zera::Proxy::getInstance()->releaseConnection(m_pPCBClient.get());
     m_MsgNrCmdList[m_rmInterface.freeResource("SENSE", "MMODE")] = MODEMODINIT::freeresource;
 }
 
@@ -448,7 +447,7 @@ void cModeModuleInit::deactivationDone()
 {
     // and disconnect from our servers afterwards
     disconnect(&m_rmInterface, 0, this, 0);
-    disconnect(m_pPCBInterface, 0, this, 0);
+    disconnect(m_pcbInterface.get(), 0, this, 0);
     emit deactivated();
 }
 
