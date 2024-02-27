@@ -2,6 +2,7 @@
 #include "demofftdspvalues.h"
 #include "fftmodulemeasprogram.h"
 #include "testfactoryserviceinterfaces.h"
+#include "modulemanagertestrunner.h"
 #include <cmath>
 #include <timemachineobject.h>
 #include <QBuffer>
@@ -9,27 +10,12 @@
 
 QTEST_MAIN(test_fft_module_regression)
 
-void test_fft_module_regression::init()
-{
-    m_serviceInterfaceFactory = std::make_shared<TestFactoryServiceInterfaces>();
-}
-
-void test_fft_module_regression::cleanup()
-{
-    if(m_modMan)
-        m_modMan->destroyModulesAndWaitUntilAllShutdown();
-    m_modMan = nullptr;
-    TimeMachineObject::feedEventLoop();
-    m_modmanFacade = nullptr;
-    m_licenseSystem = nullptr;
-}
-
 static int constexpr fftEntityId = 1060;
 
 void test_fft_module_regression::minimalSession()
 {
-    setupServices(":/session-minimal.json"); // moving window is off at the time of writing
-    VeinStorage::VeinHash* storageHash = m_modmanFacade->getStorageSystem();
+    ModuleManagerTestRunner testRunner(":/session-minimal.json"); // moving window is off at the time of writing
+    VeinStorage::VeinHash* storageHash = testRunner.getVeinStorageSystem();
     QList<int> entityList = storageHash->getEntityList();
     QCOMPARE(entityList.count(), 2);
     QVERIFY(storageHash->hasEntity(fftEntityId));
@@ -37,8 +23,8 @@ void test_fft_module_regression::minimalSession()
 
 void test_fft_module_regression::moduleConfigFromResource()
 {
-    setupServices(":/session-from-resource.json");
-    VeinStorage::VeinHash* storageHash = m_modmanFacade->getStorageSystem();
+    ModuleManagerTestRunner testRunner(":/session-from-resource.json");
+    VeinStorage::VeinHash* storageHash = testRunner.getVeinStorageSystem();
     QList<int> entityList = storageHash->getEntityList();
     QCOMPARE(entityList.count(), 2);
     QVERIFY(storageHash->hasEntity(fftEntityId));
@@ -50,8 +36,8 @@ void test_fft_module_regression::veinDumpInitial()
     QVERIFY(file.open(QFile::ReadOnly));
     QString jsonExpected = file.readAll();
 
-    setupServices(":/session-from-resource.json");
-    VeinStorage::VeinHash* storageHash = m_modmanFacade->getStorageSystem();
+    ModuleManagerTestRunner testRunner(":/session-from-resource.json");
+    VeinStorage::VeinHash* storageHash = testRunner.getVeinStorageSystem();
     QByteArray jsonDumped;
     QBuffer buff(&jsonDumped);
     storageHash->dumpToFile(&buff, QList<int>() << fftEntityId);
@@ -71,9 +57,9 @@ static constexpr int fftResultCount = voltagePhaseNeutralCount + currentPhaseCou
 
 void test_fft_module_regression::checkActualValueCount()
 {
-    setupServices(":/session-from-resource.json");
+    ModuleManagerTestRunner testRunner(":/session-from-resource.json");
 
-    const QList<TestDspInterfacePtr>& dspInterfaces = m_serviceInterfaceFactory->getInterfaceList();
+    const QList<TestDspInterfacePtr>& dspInterfaces = testRunner.getDspInterfaceList();
     QCOMPARE(dspInterfaces.count(), 1);
 
     QStringList valueList = dspInterfaces[0]->getValueList();
@@ -82,9 +68,9 @@ void test_fft_module_regression::checkActualValueCount()
 
 void test_fft_module_regression::injectValues()
 {
-    setupServices(":/session-from-resource.json");
+    ModuleManagerTestRunner testRunner(":/session-from-resource.json");
 
-    const QList<TestDspInterfacePtr>& dspInterfaces = m_serviceInterfaceFactory->getInterfaceList();
+    const QList<TestDspInterfacePtr>& dspInterfaces = testRunner.getDspInterfaceList();
     QCOMPARE(dspInterfaces.count(), 1);
 
     DemoFftDspValues dspValues(dspInterfaces[0]->getValueList().count());
@@ -119,7 +105,7 @@ void test_fft_module_regression::injectValues()
     QVERIFY(file.open(QFile::ReadOnly));
     QString jsonExpected = file.readAll();
 
-    VeinStorage::VeinHash* storageHash = m_modmanFacade->getStorageSystem();
+    VeinStorage::VeinHash* storageHash = testRunner.getVeinStorageSystem();
     QByteArray jsonDumped;
     QBuffer buff(&jsonDumped);
     storageHash->dumpToFile(&buff, QList<int>() << fftEntityId);
@@ -131,16 +117,4 @@ void test_fft_module_regression::injectValues()
         qInfo("%s", qPrintable(jsonDumped));
         QCOMPARE(jsonExpected, jsonDumped);
     }
-}
-
-void test_fft_module_regression::setupServices(QString sessionFileName)
-{
-    m_licenseSystem = std::make_unique<LicenseSystemMock>();
-    m_modmanFacade = std::make_unique<ModuleManagerSetupFacade>(m_licenseSystem.get());
-    m_modMan = std::make_unique<TestModuleManager>(m_modmanFacade.get(), m_serviceInterfaceFactory, true);
-    m_modMan->loadAllAvailableModulePlugins();
-    m_modMan->setupConnections();
-    m_modMan->startAllServiceMocks("mt310s2");
-    m_modMan->loadSession(sessionFileName);
-    m_modMan->waitUntilModulesAreReady();
 }
