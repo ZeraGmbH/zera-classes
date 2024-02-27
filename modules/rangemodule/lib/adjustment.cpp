@@ -5,6 +5,7 @@
 #include <errormessages.h>
 #include <reply.h>
 #include <proxy.h>
+#include <timerfactoryqt.h>
 #include <vfmodulecomponent.h>
 #include <rminterface.h>
 #include <dspinterface.h>
@@ -191,8 +192,9 @@ void cAdjustManagement::setSubDC()
 
 void cAdjustManagement::activationDone()
 {
-    m_AdjustTimer.start(m_fAdjInterval*1000.0);
-    connect(&m_AdjustTimer, &QTimer::timeout, this, &cAdjustManagement::adjustPrepare);
+    m_AdjustTimer = TimerFactoryQt::createPeriodic(m_fAdjInterval*1000.0);
+    m_AdjustTimer->start();
+    connect(m_AdjustTimer.get(), &TimerTemplateQt::sigExpired, this, &cAdjustManagement::adjustPrepare);
     m_bActive = true;
     emit activated();
 }
