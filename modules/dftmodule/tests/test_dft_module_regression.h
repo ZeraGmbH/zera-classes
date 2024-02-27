@@ -1,10 +1,6 @@
 #ifndef TEST_DFT_MODULE_REGRESSION_H
 #define TEST_DFT_MODULE_REGRESSION_H
 
-#include "licensesystemmock.h"
-#include "modulemanagersetupfacade.h"
-#include "testfactoryserviceinterfaces.h"
-#include "testmodulemanager.h"
 #include "vf_cmd_event_handler_system.h"
 #include <QObject>
 #include <memory>
@@ -13,9 +9,6 @@ class test_dft_module_regression : public QObject
 {
     Q_OBJECT
 private slots:
-    void init();
-    void cleanup();
-
     void minimalSession();
     void moduleConfigFromResource();
     void veinDumpInitial();
@@ -25,15 +18,7 @@ private slots:
     void injectActualValuesReferenceChannelUL2();
     void injectActualValuesOrder0();
 private:
-    void setupServices(QString sessionFileName);
-    void setReferenceChannel(QString channel);
-
-    std::unique_ptr<LicenseSystemMock> m_licenseSystem;
-    std::unique_ptr<ModuleManagerSetupFacade> m_modmanFacade;
-    std::unique_ptr<TestModuleManager> m_modMan;
-
-    VfCmdEventHandlerSystemPtr m_vfCmdEventHandlerSystem;
-    TestFactoryServiceInterfacesPtr m_serviceInterfaceFactory;
+    void setReferenceChannel(VfCmdEventHandlerSystemPtr vfCmdEventHandlerSystem, QString channel);
 };
 
 #endif // TEST_DFT_MODULE_REGRESSION_H
