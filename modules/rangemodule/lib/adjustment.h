@@ -7,8 +7,8 @@
 #include <socket.h>
 #include <dspinterface.h>
 #include <pcbinterface.h>
+#include <timertemplateqt.h>
 #include <QFinalState>
-#include <QTimer>
 
 namespace RANGEMODULE
 {
@@ -58,7 +58,7 @@ private:
     // Those are the actual values without preSacling
     quint8 m_nChannelIt;
     QHash<quint32, int> m_MsgNrCmdList;
-    QTimer m_AdjustTimer;
+    TimerTemplateQtPtr m_AdjustTimer;
     bool m_bAdjustTrigger;
 
     VfModuleComponent *m_pAdjustmentInfo;
