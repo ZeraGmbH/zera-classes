@@ -57,8 +57,8 @@ private:
 
     QHash<quint32, int> m_MsgNrCmdList;
 
-    Zera::cPCBInterface *m_pPCBInterface;
-    Zera::ProxyClient *m_pPCBClient;
+    Zera::PcbInterfacePtr m_pcbInterface;
+    Zera::ProxyClientPtr m_pPCBClient;
     Zera::cDSPInterface *m_pDSPInterface;
     Zera::ProxyClient *m_pDSPClient;
     Zera::cRMInterface m_rmInterface;

@@ -17,7 +17,7 @@ cSampleChannel::cSampleChannel(cSampleModule* module, cSampleModuleConfigData& c
     m_pModule(module),
     m_ConfigData(configdata)
 {
-    m_pPCBInterface = new Zera::cPCBInterface();
+    m_pPCBInterface = std::make_shared<Zera::cPCBInterface>();
 
     // setting up statemachine for "activating" sample channel
     // m_rmConnectState.addTransition is done in rmConnect
@@ -69,8 +69,7 @@ cSampleChannel::cSampleChannel(cSampleModule* module, cSampleModuleConfigData& c
 
 cSampleChannel::~cSampleChannel()
 {
-    Zera::Proxy::getInstance()->releaseConnection(m_pPCBClient);
-    delete m_pPCBInterface;
+    Zera::Proxy::getInstance()->releaseConnection(m_pPCBClient.get());
 }
 
 
@@ -273,12 +272,12 @@ void cSampleChannel::claimResource()
 
 void cSampleChannel::pcbConnection()
 {
-    m_pPCBClient = Zera::Proxy::getInstance()->getConnection(m_ConfigData.m_PCBServerSocket.m_sIP, m_ConfigData.m_PCBServerSocket.m_nPort);
-    m_pcbConnectionState.addTransition(m_pPCBClient, &Zera::ProxyClient::connected, &m_readChnAliasState);
+    m_pPCBClient = Zera::Proxy::getInstance()->getConnectionSmart(m_ConfigData.m_PCBServerSocket.m_sIP, m_ConfigData.m_PCBServerSocket.m_nPort);
+    m_pcbConnectionState.addTransition(m_pPCBClient.get(), &Zera::ProxyClient::connected, &m_readChnAliasState);
 
-    m_pPCBInterface->setClient(m_pPCBClient);
-    connect(m_pPCBInterface, &Zera::cPCBInterface::serverAnswer, this, &cSampleChannel::catchInterfaceAnswer);
-    Zera::Proxy::getInstance()->startConnection(m_pPCBClient);
+    m_pPCBInterface->setClientSmart(m_pPCBClient);
+    connect(m_pPCBInterface.get(), &Zera::cPCBInterface::serverAnswer, this, &cSampleChannel::catchInterfaceAnswer);
+    Zera::Proxy::getInstance()->startConnectionSmart(m_pPCBClient);
 }
 
 
@@ -315,7 +314,7 @@ void cSampleChannel::deactivationDone()
 {
     // and disconnect for our servers afterwards
     disconnect(&m_rmInterface, 0, this, 0);
-    disconnect(m_pPCBInterface, 0, this, 0);
+    disconnect(m_pPCBInterface.get(), 0, this, 0);
     emit deactivated();
 }
 

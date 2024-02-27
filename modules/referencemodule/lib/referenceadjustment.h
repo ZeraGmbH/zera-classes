@@ -29,7 +29,6 @@ class cReferenceAdjustment: public cModuleActivist
     Q_OBJECT
 public:
     cReferenceAdjustment(cReferenceModule* module, cReferenceModuleConfigData* confData);
-    virtual ~cReferenceAdjustment();
     virtual void generateInterface(); // here we export our interface (entities)
 public slots:
     virtual void ActionHandler(QVector<float> *actualValues); // entry after received actual values
@@ -41,8 +40,8 @@ private:
     cReferenceModuleConfigData* m_pConfigData;
     DspInterfacePtr m_dspInterface;
     Zera::ProxyClientPtr m_dspClient;
-    Zera::cPCBInterface *m_pPCBInterface;
-    Zera::ProxyClient *m_pPCBClient;
+    Zera::PcbInterfacePtr m_pPCBInterface;
+    Zera::ProxyClientPtr m_pPCBClient;
     QList<cReferenceMeasChannel*> m_ChannelList;
     QVector<float> m_ActualValues;
     quint32 m_nIgnoreCount;

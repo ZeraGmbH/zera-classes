@@ -15,7 +15,7 @@ cReferenceAdjustment::cReferenceAdjustment(cReferenceModule* module, cReferenceM
     :m_pModule(module), m_pConfigData(confData)
 {
     m_dspInterface = m_pModule->getServiceInterfaceFactory()->createDspInterfaceOther();
-    m_pPCBInterface = new Zera::cPCBInterface();
+    m_pPCBInterface = std::make_shared<Zera::cPCBInterface>();
 
     for (int i = 0; i < m_pConfigData->m_referenceChannelList.count(); i++) // we fetch all our real channels first
         m_ChannelList.append(m_pModule->getMeasChannel(m_pConfigData->m_referenceChannelList.at(i)));
@@ -71,13 +71,6 @@ cReferenceAdjustment::cReferenceAdjustment(cReferenceModule* module, cReferenceM
     connect(&m_referenceAdjustDoneState, &QState::entered, this, &cReferenceAdjustment::referenceAdjustDone);
 }
 
-
-cReferenceAdjustment::~cReferenceAdjustment()
-{
-    delete m_pPCBInterface;
-}
-
-
 void cReferenceAdjustment::ActionHandler(QVector<float> *actualValues)
 {
     m_ActualValues = *actualValues;
@@ -104,12 +97,12 @@ void cReferenceAdjustment::generateInterface()
 void cReferenceAdjustment::pcbserverConnect()
 {
     cSocket sock = m_pConfigData->m_PCBServerSocket;
-    m_pPCBClient = Zera::Proxy::getInstance()->getConnection(sock.m_sIP, sock.m_nPort);
-    m_pcbserverConnectState.addTransition(m_pPCBClient, &Zera::ProxyClient::connected, &m_set0VRangeState);
+    m_pPCBClient = Zera::Proxy::getInstance()->getConnectionSmart(sock.m_sIP, sock.m_nPort);
+    m_pcbserverConnectState.addTransition(m_pPCBClient.get(), &Zera::ProxyClient::connected, &m_set0VRangeState);
 
-    m_pPCBInterface->setClient(m_pPCBClient);
-    connect(m_pPCBInterface, &Zera::cPCBInterface::serverAnswer, this, &cReferenceAdjustment::catchInterfaceAnswer);
-    Zera::Proxy::getInstance()->startConnection(m_pPCBClient);
+    m_pPCBInterface->setClientSmart(m_pPCBClient);
+    connect(m_pPCBInterface.get(), &Zera::cPCBInterface::serverAnswer, this, &cReferenceAdjustment::catchInterfaceAnswer);
+    Zera::Proxy::getInstance()->startConnectionSmart(m_pPCBClient);
 }
 
 
@@ -221,7 +214,7 @@ void cReferenceAdjustment::deactivationInit()
 {
     m_bActive = false;
     Zera::Proxy::getInstance()->releaseConnection(m_dspClient.get());
-    Zera::Proxy::getInstance()->releaseConnection(m_pPCBClient);
+    Zera::Proxy::getInstance()->releaseConnection(m_pPCBClient.get());
     m_dspInterface->deleteMemHandle(m_pGainCorrectionDSP);
     m_dspInterface->deleteMemHandle(m_pOffset2CorrectionDSP);
     emit deactivationContinue();
@@ -230,7 +223,7 @@ void cReferenceAdjustment::deactivationInit()
 
 void cReferenceAdjustment::deactivationDone()
 {
-    disconnect(m_pPCBInterface, 0, this, 0);
+    disconnect(m_pPCBInterface.get(), 0, this, 0);
     disconnect(m_dspInterface.get(), 0, this, 0);
 
     emit deactivated();

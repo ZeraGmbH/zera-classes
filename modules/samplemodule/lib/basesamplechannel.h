@@ -19,7 +19,7 @@ protected:
     quint8 m_nChannelNr; // the number of our channel for naming purpose
 
     Zera::cRMInterface m_rmInterface;
-    Zera::cPCBInterface* m_pPCBInterface;
+    Zera::PcbInterfacePtr m_pPCBInterface;
 
     // the things we have to query from our pcb server
     QString m_sAlias; // the channel' alias
