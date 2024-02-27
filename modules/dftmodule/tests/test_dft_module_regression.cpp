@@ -1,6 +1,6 @@
 #include "test_dft_module_regression.h"
 #include "dftmodulemeasprogram.h"
-#include "testfactoryserviceinterfaces.h"
+#include "modulemanagertestrunner.h"
 #include <timemachineobject.h>
 #include <vf_core_stack_client.h>
 #include <vf_entity_component_event_item.h>
@@ -10,27 +10,12 @@
 
 QTEST_MAIN(test_dft_module_regression)
 
-void test_dft_module_regression::init()
-{
-    m_serviceInterfaceFactory = std::make_shared<TestFactoryServiceInterfaces>();
-}
-
-void test_dft_module_regression::cleanup()
-{
-    if(m_modMan)
-        m_modMan->destroyModulesAndWaitUntilAllShutdown();
-    m_modMan = nullptr;
-    TimeMachineObject::feedEventLoop();
-    m_modmanFacade = nullptr;
-    m_licenseSystem = nullptr;
-}
-
 static int constexpr dftEntityId = 1050;
 
 void test_dft_module_regression::minimalSession()
 {
-    setupServices(":/session-minimal.json");
-    VeinStorage::VeinHash* storageHash = m_modmanFacade->getStorageSystem();
+    ModuleManagerTestRunner testRunner(":/session-minimal.json");
+    VeinStorage::VeinHash* storageHash = testRunner.getVeinStorageSystem();
     QList<int> entityList = storageHash->getEntityList();
     QCOMPARE(entityList.count(), 2);
     QVERIFY(storageHash->hasEntity(dftEntityId));
@@ -38,8 +23,8 @@ void test_dft_module_regression::minimalSession()
 
 void test_dft_module_regression::moduleConfigFromResource()
 {
-    setupServices(":/session-dft-no-movingwindow-no-ref.json");
-    VeinStorage::VeinHash* storageHash = m_modmanFacade->getStorageSystem();
+    ModuleManagerTestRunner testRunner(":/session-dft-no-movingwindow-no-ref.json");
+    VeinStorage::VeinHash* storageHash = testRunner.getVeinStorageSystem();
     QList<int> entityList = storageHash->getEntityList();
     QCOMPARE(entityList.count(), 2);
     QVERIFY(storageHash->hasEntity(dftEntityId));
@@ -51,8 +36,8 @@ void test_dft_module_regression::veinDumpInitial()
     QVERIFY(file.open(QFile::ReadOnly));
     QString jsonExpected = file.readAll();
 
-    setupServices(":/session-dft-no-movingwindow-no-ref.json");
-    VeinStorage::VeinHash* storageHash = m_modmanFacade->getStorageSystem();
+    ModuleManagerTestRunner testRunner(":/session-dft-no-movingwindow-no-ref.json");
+    VeinStorage::VeinHash* storageHash = testRunner.getVeinStorageSystem();
     QByteArray jsonDumped;
     QBuffer buff(&jsonDumped);
     storageHash->dumpToFile(&buff, QList<int>() << dftEntityId);
@@ -73,9 +58,9 @@ static constexpr int dftResultCount = voltagePhaseNeutralCount + voltagePhasePha
 
 void test_dft_module_regression::checkActualValueCount()
 {
-    setupServices(":/session-dft-no-movingwindow-no-ref.json");
+    ModuleManagerTestRunner testRunner(":/session-dft-no-movingwindow-no-ref.json");
 
-    const QList<TestDspInterfacePtr>& dspInterfaces = m_serviceInterfaceFactory->getInterfaceList();
+    const QList<TestDspInterfacePtr>& dspInterfaces = testRunner.getDspInterfaceList();
     QCOMPARE(dspInterfaces.count(), 1);
 
     QStringList valueList = dspInterfaces[0]->getValueList();
@@ -84,9 +69,9 @@ void test_dft_module_regression::checkActualValueCount()
 
 void test_dft_module_regression::injectActualValuesNoReferenceChannel()
 {
-    setupServices(":/session-dft-no-movingwindow-no-ref.json");
+    ModuleManagerTestRunner testRunner(":/session-dft-no-movingwindow-no-ref.json");
 
-    const QList<TestDspInterfacePtr>& dspInterfaces = m_serviceInterfaceFactory->getInterfaceList();
+    const QList<TestDspInterfacePtr>& dspInterfaces = testRunner.getDspInterfaceList();
     QCOMPARE(dspInterfaces.count(), 1);
 
     QVector<float> actValues(dftResultCount * 2); // valuelist * 2 for re+im
@@ -100,7 +85,7 @@ void test_dft_module_regression::injectActualValuesNoReferenceChannel()
     QVERIFY(file.open(QFile::ReadOnly));
     QString jsonExpected = file.readAll();
 
-    VeinStorage::VeinHash* storageHash = m_modmanFacade->getStorageSystem();
+    VeinStorage::VeinHash* storageHash = testRunner.getVeinStorageSystem();
     QByteArray jsonDumped;
     QBuffer buff(&jsonDumped);
     storageHash->dumpToFile(&buff, QList<int>() << dftEntityId);
@@ -116,9 +101,9 @@ void test_dft_module_regression::injectActualValuesNoReferenceChannel()
 
 void test_dft_module_regression::injectActualValuesReferenceChannelUL1()
 {
-    setupServices(":/session-dft-no-movingwindow-ref.json");
+    ModuleManagerTestRunner testRunner(":/session-dft-no-movingwindow-ref.json");
 
-    const QList<TestDspInterfacePtr>& dspInterfaces = m_serviceInterfaceFactory->getInterfaceList();
+    const QList<TestDspInterfacePtr>& dspInterfaces = testRunner.getDspInterfaceList();
     QCOMPARE(dspInterfaces.count(), 1);
 
     QVector<float> actValues(dftResultCount * 2); // valuelist * 2 for re+im
@@ -132,7 +117,7 @@ void test_dft_module_regression::injectActualValuesReferenceChannelUL1()
     QVERIFY(file.open(QFile::ReadOnly));
     QString jsonExpected = file.readAll();
 
-    VeinStorage::VeinHash* storageHash = m_modmanFacade->getStorageSystem();
+    VeinStorage::VeinHash* storageHash = testRunner.getVeinStorageSystem();
     QByteArray jsonDumped;
     QBuffer buff(&jsonDumped);
     storageHash->dumpToFile(&buff, QList<int>() << dftEntityId);
@@ -148,10 +133,10 @@ void test_dft_module_regression::injectActualValuesReferenceChannelUL1()
 
 void test_dft_module_regression::injectActualValuesReferenceChannelUL2()
 {
-    setupServices(":/session-dft-no-movingwindow-ref.json");
-    setReferenceChannel("UL2");
+    ModuleManagerTestRunner testRunner(":/session-dft-no-movingwindow-ref.json");
+    setReferenceChannel(testRunner.getVfCmdEventHandlerSystemPtr(), "UL2");
 
-    const QList<TestDspInterfacePtr>& dspInterfaces = m_serviceInterfaceFactory->getInterfaceList();
+    const QList<TestDspInterfacePtr>& dspInterfaces = testRunner.getDspInterfaceList();
     QCOMPARE(dspInterfaces.count(), 1);
 
     QVector<float> actValues(dftResultCount * 2); // valuelist * 2 for re+im
@@ -165,7 +150,7 @@ void test_dft_module_regression::injectActualValuesReferenceChannelUL2()
     QVERIFY(file.open(QFile::ReadOnly));
     QString jsonExpected = file.readAll();
 
-    VeinStorage::VeinHash* storageHash = m_modmanFacade->getStorageSystem();
+    VeinStorage::VeinHash* storageHash = testRunner.getVeinStorageSystem();
     QByteArray jsonDumped;
     QBuffer buff(&jsonDumped);
     storageHash->dumpToFile(&buff, QList<int>() << dftEntityId);
@@ -183,9 +168,9 @@ constexpr int comDcRefChannelCount = 6;
 
 void test_dft_module_regression::injectActualValuesOrder0()
 {
-    setupServices(":/session-dft-no-movingwindow-noref-order-0.json");
+    ModuleManagerTestRunner testRunner(":/session-dft-no-movingwindow-noref-order-0.json");
 
-    const QList<TestDspInterfacePtr>& dspInterfaces = m_serviceInterfaceFactory->getInterfaceList();
+    const QList<TestDspInterfacePtr>& dspInterfaces = testRunner.getDspInterfaceList();
     QCOMPARE(dspInterfaces.count(), 1);
 
     QStringList valueList = dspInterfaces[0]->getValueList();
@@ -202,7 +187,7 @@ void test_dft_module_regression::injectActualValuesOrder0()
     QVERIFY(file.open(QFile::ReadOnly));
     QString jsonExpected = file.readAll();
 
-    VeinStorage::VeinHash* storageHash = m_modmanFacade->getStorageSystem();
+    VeinStorage::VeinHash* storageHash = testRunner.getVeinStorageSystem();
     QByteArray jsonDumped;
     QBuffer buff(&jsonDumped);
     storageHash->dumpToFile(&buff, QList<int>() << dftEntityId);
@@ -216,13 +201,10 @@ void test_dft_module_regression::injectActualValuesOrder0()
     }
 }
 
-void test_dft_module_regression::setReferenceChannel(QString channel)
+void test_dft_module_regression::setReferenceChannel(VfCmdEventHandlerSystemPtr vfCmdEventHandlerSystem, QString channel)
 {
-    m_vfCmdEventHandlerSystem = std::make_shared<VfCmdEventHandlerSystem>();
-    m_modmanFacade->addSubsystem(m_vfCmdEventHandlerSystem.get());
-
     VfCmdEventItemEntityPtr entityItem = VfEntityComponentEventItem::create(dftEntityId);
-    m_vfCmdEventHandlerSystem->addItem(entityItem);
+    vfCmdEventHandlerSystem->addItem(entityItem);
 
     VfClientComponentSetterPtr setter = VfClientComponentSetter::create("PAR_RefChannel", entityItem);
     entityItem->addItem(setter);
@@ -230,14 +212,3 @@ void test_dft_module_regression::setReferenceChannel(QString channel)
     TimeMachineObject::feedEventLoop();
 }
 
-void test_dft_module_regression::setupServices(QString sessionFileName)
-{
-    m_licenseSystem = std::make_unique<LicenseSystemMock>();
-    m_modmanFacade = std::make_unique<ModuleManagerSetupFacade>(m_licenseSystem.get());
-    m_modMan = std::make_unique<TestModuleManager>(m_modmanFacade.get(), m_serviceInterfaceFactory, true);
-    m_modMan->loadAllAvailableModulePlugins();
-    m_modMan->setupConnections();
-    m_modMan->startAllServiceMocks("mt310s2");
-    m_modMan->loadSession(sessionFileName);
-    m_modMan->waitUntilModulesAreReady();
-}
