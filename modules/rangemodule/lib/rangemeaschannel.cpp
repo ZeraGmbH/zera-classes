@@ -12,7 +12,7 @@ cRangeMeasChannel::cRangeMeasChannel(cSocket* rmsocket, cSocket* pcbsocket, QStr
     cBaseMeasChannel(rmsocket, pcbsocket, name, chnnr),
     m_preScaling(1)
 {
-    m_pPCBInterface = new Zera::cPCBInterface();
+    m_pcbInterface = std::make_shared<Zera::cPCBInterface>();
 
     // setting up statemachine for "activating" meas channel
     // m_rmConnectState.addTransition is done in rmConnect
@@ -116,19 +116,13 @@ cRangeMeasChannel::cRangeMeasChannel(cSocket* rmsocket, cSocket* pcbsocket, QStr
 }
 
 
-cRangeMeasChannel::~cRangeMeasChannel()
-{
-    delete m_pPCBInterface;
-}
-
-
 quint32 cRangeMeasChannel::setRange(QString range)
 {
     m_sNewRange = range; // alias !!!!
     m_sActRange = range;
 
     if (m_bActive) {
-        quint32 msgnr = m_pPCBInterface->setRange(m_sName, m_RangeInfoHash[range].name); // we set range per name not alias
+        quint32 msgnr = m_pcbInterface->setRange(m_sName, m_RangeInfoHash[range].name); // we set range per name not alias
         m_MsgNrCmdList[msgnr] = setmeaschannelrange;
         return msgnr;
     }
@@ -141,7 +135,7 @@ quint32 cRangeMeasChannel::setRange(QString range)
 quint32 cRangeMeasChannel::readGainCorrection(double amplitude)
 {
     if (m_bActive) {
-        quint32 msgnr = m_pPCBInterface->getGainCorrection(m_sName, m_RangeInfoHash[m_sActRange].name, amplitude);
+        quint32 msgnr = m_pcbInterface->getGainCorrection(m_sName, m_RangeInfoHash[m_sActRange].name, amplitude);
         m_MsgNrCmdList[msgnr] = readgaincorrection;
         return msgnr;
     }
@@ -154,7 +148,7 @@ quint32 cRangeMeasChannel::readGainCorrection(double amplitude)
 quint32 cRangeMeasChannel::readOffsetCorrection(double amplitude)
 {
     if (m_bActive) {
-        quint32 msgnr = m_pPCBInterface->getOffsetCorrection(m_sName, m_RangeInfoHash[m_sActRange].name, amplitude);
+        quint32 msgnr = m_pcbInterface->getOffsetCorrection(m_sName, m_RangeInfoHash[m_sActRange].name, amplitude);
         m_MsgNrCmdList[msgnr] = readoffsetcorrection;
         return msgnr;
     }
@@ -169,7 +163,7 @@ quint32 cRangeMeasChannel::readOffsetCorrection(double amplitude)
 quint32 cRangeMeasChannel::readStatus()
 {
     if (m_bActive) {
-        quint32 msgnr = m_pPCBInterface->getStatus(m_sName);
+        quint32 msgnr = m_pcbInterface->getStatus(m_sName);
         m_MsgNrCmdList[msgnr] = readmeaschannelstatus;
         return msgnr;
     }
@@ -182,7 +176,7 @@ quint32 cRangeMeasChannel::readStatus()
 quint32 cRangeMeasChannel::resetStatus()
 {
     if (m_bActive) {
-        quint32 msgnr = m_pPCBInterface->resetStatus(m_sName);
+        quint32 msgnr = m_pcbInterface->resetStatus(m_sName);
         m_MsgNrCmdList[msgnr] = resetmeaschannelstatus;
         return msgnr;
     }
@@ -195,7 +189,7 @@ quint32 cRangeMeasChannel::resetStatus()
 quint32 cRangeMeasChannel::readPhaseCorrection(double frequency)
 {
     if (m_bActive) {
-        quint32 msgnr = m_pPCBInterface->getPhaseCorrection(m_sName, m_RangeInfoHash[m_sActRange].name, frequency);
+        quint32 msgnr = m_pcbInterface->getPhaseCorrection(m_sName, m_RangeInfoHash[m_sActRange].name, frequency);
         m_MsgNrCmdList[msgnr] = readphasecorrection;
         return msgnr;
     }
@@ -949,36 +943,36 @@ void cRangeMeasChannel::claimResource()
 
 void cRangeMeasChannel::pcbConnection()
 {
-    m_pPCBClient = Zera::Proxy::getInstance()->getConnection(m_pPCBServerSocket->m_sIP, m_nPort);
-    m_pcbConnectionState.addTransition(m_pPCBClient, &Zera::ProxyClient::connected, &m_readDspChannelState);
+    m_pcbClient = Zera::Proxy::getInstance()->getConnectionSmart(m_pPCBServerSocket->m_sIP, m_nPort);
+    m_pcbConnectionState.addTransition(m_pcbClient.get(), &Zera::ProxyClient::connected, &m_readDspChannelState);
 
-    m_pPCBInterface->setClient(m_pPCBClient);
-    connect(m_pPCBInterface, &Zera::cPCBInterface::serverAnswer, this, &cRangeMeasChannel::catchInterfaceAnswer);
-    Zera::Proxy::getInstance()->startConnection(m_pPCBClient);
+    m_pcbInterface->setClientSmart(m_pcbClient);
+    connect(m_pcbInterface.get(), &Zera::cPCBInterface::serverAnswer, this, &cRangeMeasChannel::catchInterfaceAnswer);
+    Zera::Proxy::getInstance()->startConnectionSmart(m_pcbClient);
 }
 
 
 void cRangeMeasChannel::readDspChannel()
 {
-   m_MsgNrCmdList[m_pPCBInterface->getDSPChannel(m_sName)] = readdspchannel;
+   m_MsgNrCmdList[m_pcbInterface->getDSPChannel(m_sName)] = readdspchannel;
 }
 
 
 void cRangeMeasChannel::readChnAlias()
 {
-    m_MsgNrCmdList[m_pPCBInterface->getAlias(m_sName)] = readchnalias;
+    m_MsgNrCmdList[m_pcbInterface->getAlias(m_sName)] = readchnalias;
 }
 
 
 void cRangeMeasChannel::readSampleRate()
 {
-    m_MsgNrCmdList[m_pPCBInterface->getSampleRate()] = readsamplerate;
+    m_MsgNrCmdList[m_pcbInterface->getSampleRate()] = readsamplerate;
 }
 
 
 void cRangeMeasChannel::readUnit()
 {
-    m_MsgNrCmdList[m_pPCBInterface->getUnit(m_sName)] = readunit;
+    m_MsgNrCmdList[m_pcbInterface->getUnit(m_sName)] = readunit;
 }
 
 
@@ -990,13 +984,13 @@ void cRangeMeasChannel::readRangeAndProperties()
 
 void cRangeMeasChannel::resetStatusSlot()
 {
-    m_MsgNrCmdList[m_pPCBInterface->resetStatus(m_sName)] = resetmeaschannelstatus2;
+    m_MsgNrCmdList[m_pcbInterface->resetStatus(m_sName)] = resetmeaschannelstatus2;
 }
 
 
 void cRangeMeasChannel::setNotifierRangeCat()
 {
-    m_MsgNrCmdList[m_pPCBInterface->registerNotifier(QString("SENS:%1:RANG:CAT?").arg(m_sName), 1)] = registerNotifier;
+    m_MsgNrCmdList[m_pcbInterface->registerNotifier(QString("SENS:%1:RANG:CAT?").arg(m_sName), 1)] = registerNotifier;
 }
 
 
@@ -1017,16 +1011,16 @@ void cRangeMeasChannel::deactivationInit()
 
 void cRangeMeasChannel::deactivationResetNotifiers()
 {
-    m_MsgNrCmdList[m_pPCBInterface->unregisterNotifiers()] = unregisterNotifiers;
+    m_MsgNrCmdList[m_pcbInterface->unregisterNotifiers()] = unregisterNotifiers;
 }
 
 
 void cRangeMeasChannel::deactivationDone()
 {
-    Zera::Proxy::getInstance()->releaseConnection(m_pPCBClient);
+    Zera::Proxy::getInstance()->releaseConnection(m_pcbClient.get());
     // and disconnect for our servers afterwards
     disconnect(&m_rmInterface, 0, this, 0);
-    disconnect(m_pPCBInterface, 0, this, 0);
+    disconnect(m_pcbInterface.get(), 0, this, 0);
     emit deactivated();
 }
 
@@ -1034,7 +1028,7 @@ void cRangeMeasChannel::deactivationDone()
 void cRangeMeasChannel::readRangelist()
 {
     m_RangeInfoHashWorking.clear();
-    m_MsgNrCmdList[m_pPCBInterface->getRangeList(m_sName)] = readrangelist;
+    m_MsgNrCmdList[m_pcbInterface->getRangeList(m_sName)] = readrangelist;
     m_RangeQueryIt = 0; // we start with range 0
 }
 
@@ -1042,43 +1036,43 @@ void cRangeMeasChannel::readRangelist()
 
 void cRangeMeasChannel::readRngAlias()
 {
-    m_MsgNrCmdList[m_pPCBInterface->getAlias(m_sName, m_RangeNameList.at(m_RangeQueryIt))] = readrngalias;
+    m_MsgNrCmdList[m_pcbInterface->getAlias(m_sName, m_RangeNameList.at(m_RangeQueryIt))] = readrngalias;
 }
 
 
 void cRangeMeasChannel::readType()
 {
-    m_MsgNrCmdList[m_pPCBInterface->getType(m_sName, m_RangeNameList.at(m_RangeQueryIt))] = readtype;
+    m_MsgNrCmdList[m_pcbInterface->getType(m_sName, m_RangeNameList.at(m_RangeQueryIt))] = readtype;
 }
 
 
 void cRangeMeasChannel::readUrvalue()
 {
-    m_MsgNrCmdList[m_pPCBInterface->getUrvalue(m_sName, m_RangeNameList.at(m_RangeQueryIt))] = readurvalue;
+    m_MsgNrCmdList[m_pcbInterface->getUrvalue(m_sName, m_RangeNameList.at(m_RangeQueryIt))] = readurvalue;
 }
 
 
 void cRangeMeasChannel::readRejection()
 {
-   m_MsgNrCmdList[m_pPCBInterface->getRejection(m_sName, m_RangeNameList.at(m_RangeQueryIt))] = readrejection;
+   m_MsgNrCmdList[m_pcbInterface->getRejection(m_sName, m_RangeNameList.at(m_RangeQueryIt))] = readrejection;
 }
 
 
 void cRangeMeasChannel::readOVRejection()
 {
-    m_MsgNrCmdList[m_pPCBInterface->getOVRejection(m_sName, m_RangeNameList.at(m_RangeQueryIt))] = readovrejection;
+    m_MsgNrCmdList[m_pcbInterface->getOVRejection(m_sName, m_RangeNameList.at(m_RangeQueryIt))] = readovrejection;
 }
 
 
 void cRangeMeasChannel::readADCRejection()
 {
-    m_MsgNrCmdList[m_pPCBInterface->getADCRejection(m_sName, m_RangeNameList.at(m_RangeQueryIt))] = readadcrejection;
+    m_MsgNrCmdList[m_pcbInterface->getADCRejection(m_sName, m_RangeNameList.at(m_RangeQueryIt))] = readadcrejection;
 }
 
 
 void cRangeMeasChannel::readisAvail()
 {
-    m_MsgNrCmdList[m_pPCBInterface->isAvail(m_sName, m_RangeNameList.at(m_RangeQueryIt))] = readisavail;
+    m_MsgNrCmdList[m_pcbInterface->isAvail(m_sName, m_RangeNameList.at(m_RangeQueryIt))] = readisavail;
 }
 
 

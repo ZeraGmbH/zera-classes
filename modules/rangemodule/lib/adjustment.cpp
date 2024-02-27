@@ -21,7 +21,7 @@ cAdjustManagement::cAdjustManagement(cRangeModule *module, cSocket* dspsocket, c
         irqNr,
         m_ChannelNameList,
         false /* just for demo COM5003 ref-session - postpone better solution now */);
-    m_pPCBInterface = new Zera::cPCBInterface();
+    m_pcbInterface = std::make_shared<Zera::cPCBInterface>();
 
     m_bAdjustTrigger = false;
     for (int i = 0; i < m_ChannelNameList.count(); i++) // we fetch all our real channels first
@@ -124,11 +124,11 @@ void cAdjustManagement::pcbserverConnect()
         connect(m_ChannelList.at(i), &cRangeMeasChannel::cmdDone, this, &cAdjustManagement::catchChannelReply);
 
     // we set up our pcb server connection
-    m_pPCBClient = Zera::Proxy::getInstance()->getConnection(m_pPCBSocket->m_sIP, m_pPCBSocket->m_nPort);
-    m_pPCBInterface->setClient(m_pPCBClient);
-    m_pcbserverConnectState.addTransition(m_pPCBClient, &Zera::ProxyClient::connected, &m_dspserverConnectState);
-    connect(m_pPCBInterface, &Zera::cPCBInterface::serverAnswer, this, &cAdjustManagement::catchInterfaceAnswer);
-    Zera::Proxy::getInstance()->startConnection(m_pPCBClient);
+    m_pcbClient = Zera::Proxy::getInstance()->getConnectionSmart(m_pPCBSocket->m_sIP, m_pPCBSocket->m_nPort);
+    m_pcbInterface->setClientSmart(m_pcbClient);
+    m_pcbserverConnectState.addTransition(m_pcbClient.get(), &Zera::ProxyClient::connected, &m_dspserverConnectState);
+    connect(m_pcbInterface.get(), &Zera::cPCBInterface::serverAnswer, this, &cAdjustManagement::catchInterfaceAnswer);
+    Zera::Proxy::getInstance()->startConnectionSmart(m_pcbClient);
 }
 
 

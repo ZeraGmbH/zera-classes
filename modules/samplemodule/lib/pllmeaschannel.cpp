@@ -9,7 +9,7 @@ namespace SAMPLEMODULE
 cPllMeasChannel::cPllMeasChannel(cSocket* rmsocket, cSocket* pcbsocket, QString name, quint8 chnnr) :
     cBaseMeasChannel(rmsocket, pcbsocket, name, chnnr)
 {
-    m_pPCBInterface = new Zera::cPCBInterface();
+    m_pcbInterface = std::make_shared<Zera::cPCBInterface>();
 
     // setting up statemachine for "activating" pll meas channel
     // m_rmConnectState.addTransition is done in rmConnect
@@ -103,13 +103,6 @@ cPllMeasChannel::cPllMeasChannel(cSocket* rmsocket, cSocket* pcbsocket, QString 
 }
 
 
-cPllMeasChannel::~cPllMeasChannel()
-{
-    Zera::Proxy::getInstance()->releaseConnection(m_pPCBClient);
-    delete m_pPCBInterface;
-}
-
-
 double cPllMeasChannel::getUrValue()
 {
     return m_RangeInfoHash[m_sActRange].urvalue;
@@ -126,7 +119,7 @@ quint32 cPllMeasChannel::setyourself4PLL(QString samplesysname)
 {
     if (m_bActive)
     {
-        quint32 msgnr = m_pPCBInterface->setPLLChannel(samplesysname, m_sName);
+        quint32 msgnr = m_pcbInterface->setPLLChannel(samplesysname, m_sName);
         m_MsgNrCmdList[msgnr] = set4PLL;
         return msgnr;
     }
@@ -138,7 +131,7 @@ quint32 cPllMeasChannel::setPLLMode(QString samplesysname, QString mode)
 {
     if (m_bActive)
     {
-        quint32 msgnr = m_pPCBInterface->setPLLChannel(samplesysname, mode);
+        quint32 msgnr = m_pcbInterface->setPLLChannel(samplesysname, mode);
         m_MsgNrCmdList[msgnr] = set4PLL;
         return msgnr;
     }
@@ -454,42 +447,42 @@ void cPllMeasChannel::readResourceInfo()
 
 void cPllMeasChannel::pcbConnection()
 {
-    m_pPCBClient = Zera::Proxy::getInstance()->getConnection(m_pPCBServerSocket->m_sIP, m_nPort);
-    m_pcbConnectionState.addTransition(m_pPCBClient, &Zera::ProxyClient::connected, &m_readDspChannelState);
+    m_pcbClient = Zera::Proxy::getInstance()->getConnectionSmart(m_pPCBServerSocket->m_sIP, m_nPort);
+    m_pcbConnectionState.addTransition(m_pcbClient.get(), &Zera::ProxyClient::connected, &m_readDspChannelState);
 
-    m_pPCBInterface->setClient(m_pPCBClient);
-    connect(m_pPCBInterface, &Zera::cPCBInterface::serverAnswer, this, &cPllMeasChannel::catchInterfaceAnswer);
-    Zera::Proxy::getInstance()->startConnection(m_pPCBClient);
+    m_pcbInterface->setClientSmart(m_pcbClient);
+    connect(m_pcbInterface.get(), &Zera::cPCBInterface::serverAnswer, this, &cPllMeasChannel::catchInterfaceAnswer);
+    Zera::Proxy::getInstance()->startConnectionSmart(m_pcbClient);
 }
 
 
 void cPllMeasChannel::readDspChannel()
 {
-   m_MsgNrCmdList[m_pPCBInterface->getDSPChannel(m_sName)] = readdspchannel;
+   m_MsgNrCmdList[m_pcbInterface->getDSPChannel(m_sName)] = readdspchannel;
 }
 
 
 void cPllMeasChannel::readChnAlias()
 {
-    m_MsgNrCmdList[m_pPCBInterface->getAlias(m_sName)] = readchnalias;
+    m_MsgNrCmdList[m_pcbInterface->getAlias(m_sName)] = readchnalias;
 }
 
 
 void cPllMeasChannel::readSampleRate()
 {
-    m_MsgNrCmdList[m_pPCBInterface->getSampleRate()] = readsamplerate;
+    m_MsgNrCmdList[m_pcbInterface->getSampleRate()] = readsamplerate;
 }
 
 
 void cPllMeasChannel::readUnit()
 {
-    m_MsgNrCmdList[m_pPCBInterface->getUnit(m_sName)] = readunit;
+    m_MsgNrCmdList[m_pcbInterface->getUnit(m_sName)] = readunit;
 }
 
 
 void cPllMeasChannel::readRangelist()
 {
-    m_MsgNrCmdList[m_pPCBInterface->getRangeList(m_sName)] = readrangelist;
+    m_MsgNrCmdList[m_pcbInterface->getRangeList(m_sName)] = readrangelist;
     m_RangeQueryIt = 0; // we start with range 0
 }
 
@@ -513,7 +506,7 @@ void cPllMeasChannel::readRangeProperties3()
 
 void cPllMeasChannel::setSenseChannelRangeNotifier()
 {
-    m_MsgNrCmdList[m_pPCBInterface->registerNotifier(QString("sens:%1:rang?").arg(m_sName), notifierNr)] = setchannelrangenotifier;
+    m_MsgNrCmdList[m_pcbInterface->registerNotifier(QString("sens:%1:rang?").arg(m_sName), notifierNr)] = setchannelrangenotifier;
 }
 
 
@@ -549,44 +542,44 @@ void cPllMeasChannel::deactivationDone()
 {
     // and disconnect for our servers afterwards
     disconnect(&m_rmInterface, 0, this, 0);
-    disconnect(m_pPCBInterface, 0, this, 0);
+    disconnect(m_pcbInterface.get(), 0, this, 0);
     emit deactivated();
 }
 
 
 void cPllMeasChannel::readRngAlias()
 {
-    m_MsgNrCmdList[m_pPCBInterface->getAlias(m_sName, m_RangeNameList.at(m_RangeQueryIt))] = readrngalias;
+    m_MsgNrCmdList[m_pcbInterface->getAlias(m_sName, m_RangeNameList.at(m_RangeQueryIt))] = readrngalias;
 }
 
 
 void cPllMeasChannel::readType()
 {
-    m_MsgNrCmdList[m_pPCBInterface->getType(m_sName, m_RangeNameList.at(m_RangeQueryIt))] = readtype;
+    m_MsgNrCmdList[m_pcbInterface->getType(m_sName, m_RangeNameList.at(m_RangeQueryIt))] = readtype;
 }
 
 
 void cPllMeasChannel::readUrvalue()
 {
-    m_MsgNrCmdList[m_pPCBInterface->getUrvalue(m_sName, m_RangeNameList.at(m_RangeQueryIt))] = readurvalue;
+    m_MsgNrCmdList[m_pcbInterface->getUrvalue(m_sName, m_RangeNameList.at(m_RangeQueryIt))] = readurvalue;
 }
 
 
 void cPllMeasChannel::readRejection()
 {
-   m_MsgNrCmdList[m_pPCBInterface->getRejection(m_sName, m_RangeNameList.at(m_RangeQueryIt))] = readrejection;
+   m_MsgNrCmdList[m_pcbInterface->getRejection(m_sName, m_RangeNameList.at(m_RangeQueryIt))] = readrejection;
 }
 
 
 void cPllMeasChannel::readOVRejection()
 {
-    m_MsgNrCmdList[m_pPCBInterface->getOVRejection(m_sName, m_RangeNameList.at(m_RangeQueryIt))] = readovrejection;
+    m_MsgNrCmdList[m_pcbInterface->getOVRejection(m_sName, m_RangeNameList.at(m_RangeQueryIt))] = readovrejection;
 }
 
 
 void cPllMeasChannel::readisAvail()
 {
-    m_MsgNrCmdList[m_pPCBInterface->isAvail(m_sName, m_RangeNameList.at(m_RangeQueryIt))] = readisavail;
+    m_MsgNrCmdList[m_pcbInterface->isAvail(m_sName, m_RangeNameList.at(m_RangeQueryIt))] = readisavail;
 }
 
 
@@ -599,7 +592,7 @@ void cPllMeasChannel::rangeQueryDone()
 
 void cPllMeasChannel::readRange()
 {
-    m_MsgNrCmdList[m_pPCBInterface->getRange(m_sName)] = readrange;
+    m_MsgNrCmdList[m_pcbInterface->getRange(m_sName)] = readrange;
 }
 
 
