@@ -12,22 +12,12 @@ class test_rms_module_regression : public QObject
 {
     Q_OBJECT
 private slots:
-    void init();
-    void cleanup();
-
     void minimalSession();
     void moduleConfigFromResource();
     void veinDumpInitial();
     void checkActualValueCount();
     void injectActualValues();
     void injectActualTwice();
-private:
-    void setupServices(QString sessionFileName);
-
-    std::unique_ptr<LicenseSystemMock> m_licenseSystem;
-    std::unique_ptr<ModuleManagerSetupFacade> m_modmanFacade;
-    std::unique_ptr<TestModuleManager> m_modMan;
-    TestFactoryServiceInterfacesPtr m_serviceInterfaceFactory;
 };
 
 #endif // TEST_RMS_MODULE_REGRESSION_H
