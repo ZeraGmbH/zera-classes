@@ -1,33 +1,19 @@
 #include "test_rms_module_regression.h"
 #include "rmsmodulemeasprogram.h"
 #include "testfactoryserviceinterfaces.h"
+#include "modulemanagertestrunner.h"
 #include <timemachineobject.h>
 #include <QBuffer>
 #include <QTest>
 
 QTEST_MAIN(test_rms_module_regression)
 
-void test_rms_module_regression::init()
-{
-    m_serviceInterfaceFactory = std::make_shared<TestFactoryServiceInterfaces>();
-}
-
-void test_rms_module_regression::cleanup()
-{
-    if(m_modMan)
-        m_modMan->destroyModulesAndWaitUntilAllShutdown();
-    m_modMan = nullptr;
-    TimeMachineObject::feedEventLoop();
-    m_modmanFacade = nullptr;
-    m_licenseSystem = nullptr;
-}
-
 static int constexpr rmsEntityId = 1040;
 
 void test_rms_module_regression::minimalSession()
 {
-    setupServices(":/session-minimal.json");
-    VeinStorage::VeinHash* storageHash = m_modmanFacade->getStorageSystem();
+    ModuleManagerTestRunner testRunner(":/session-minimal.json");
+    VeinStorage::VeinHash* storageHash = testRunner.getVeinStorageSystem();
     QList<int> entityList = storageHash->getEntityList();
     QCOMPARE(entityList.count(), 2);
     QVERIFY(storageHash->hasEntity(rmsEntityId));
@@ -35,8 +21,8 @@ void test_rms_module_regression::minimalSession()
 
 void test_rms_module_regression::moduleConfigFromResource()
 {
-    setupServices(":/session-rms-moduleconfig-from-resource.json");
-    VeinStorage::VeinHash* storageHash = m_modmanFacade->getStorageSystem();
+    ModuleManagerTestRunner testRunner(":/session-rms-moduleconfig-from-resource.json");
+    VeinStorage::VeinHash* storageHash = testRunner.getVeinStorageSystem();
     QList<int> entityList = storageHash->getEntityList();
     QCOMPARE(entityList.count(), 2);
     QVERIFY(storageHash->hasEntity(rmsEntityId));
@@ -48,8 +34,8 @@ void test_rms_module_regression::veinDumpInitial()
     QVERIFY(file.open(QFile::ReadOnly));
     QString jsonExpected = file.readAll();
 
-    setupServices(":/session-rms-moduleconfig-from-resource.json");
-    VeinStorage::VeinHash* storageHash = m_modmanFacade->getStorageSystem();
+    ModuleManagerTestRunner testRunner(":/session-rms-moduleconfig-from-resource.json");
+    VeinStorage::VeinHash* storageHash = testRunner.getVeinStorageSystem();
     QByteArray jsonDumped;
     QBuffer buff(&jsonDumped);
     storageHash->dumpToFile(&buff, QList<int>() << rmsEntityId);
@@ -70,9 +56,9 @@ static constexpr int rmsResultCount = voltagePhaseNeutralCount + voltagePhasePha
 
 void test_rms_module_regression::checkActualValueCount()
 {
-    setupServices(":/session-rms-moduleconfig-from-resource.json");
+    ModuleManagerTestRunner testRunner(":/session-rms-moduleconfig-from-resource.json");
 
-    const QList<TestDspInterfacePtr>& dspInterfaces = m_serviceInterfaceFactory->getInterfaceList();
+    const QList<TestDspInterfacePtr>& dspInterfaces = testRunner.getDspInterfaceList();
     QCOMPARE(dspInterfaces.count(), 1);
 
     QStringList valueList = dspInterfaces[0]->getValueList();
@@ -81,9 +67,9 @@ void test_rms_module_regression::checkActualValueCount()
 
 void test_rms_module_regression::injectActualValues()
 {
-    setupServices(":/session-rms-moduleconfig-from-resource.json");
+    ModuleManagerTestRunner testRunner(":/session-rms-moduleconfig-from-resource.json");
 
-    const QList<TestDspInterfacePtr>& dspInterfaces = m_serviceInterfaceFactory->getInterfaceList();
+    const QList<TestDspInterfacePtr>& dspInterfaces = testRunner.getDspInterfaceList();
     QCOMPARE(dspInterfaces.count(), 1);
 
     QVector<float> actValues(rmsResultCount);
@@ -97,7 +83,7 @@ void test_rms_module_regression::injectActualValues()
     QVERIFY(file.open(QFile::ReadOnly));
     QString jsonExpected = file.readAll();
 
-    VeinStorage::VeinHash* storageHash = m_modmanFacade->getStorageSystem();
+    VeinStorage::VeinHash* storageHash = testRunner.getVeinStorageSystem();
     QByteArray jsonDumped;
     QBuffer buff(&jsonDumped);
     storageHash->dumpToFile(&buff, QList<int>() << rmsEntityId);
@@ -113,12 +99,12 @@ void test_rms_module_regression::injectActualValues()
 
 void test_rms_module_regression::injectActualTwice()
 {
-    setupServices(":/session-rms-moduleconfig-from-resource.json");
+    ModuleManagerTestRunner testRunner(":/session-rms-moduleconfig-from-resource.json");
 
-    const QList<TestDspInterfacePtr>& dspInterfaces = m_serviceInterfaceFactory->getInterfaceList();
+    const QList<TestDspInterfacePtr>& dspInterfaces = testRunner.getDspInterfaceList();
     QCOMPARE(dspInterfaces.count(), 1);
 
-    VeinStorage::VeinHash* storageHash = m_modmanFacade->getStorageSystem();
+    VeinStorage::VeinHash* storageHash = testRunner.getVeinStorageSystem();
     QVector<float> actValues(rmsResultCount);
 
     actValues[1] = 37;
@@ -130,16 +116,4 @@ void test_rms_module_regression::injectActualTwice()
     dspInterfaces[0]->fireActValInterrupt(actValues, irqNr);
     TimeMachineObject::feedEventLoop();
     QCOMPARE(storageHash->getStoredValue(rmsEntityId, "ACT_RMSPN2"), QVariant(42.0));
-}
-
-void test_rms_module_regression::setupServices(QString sessionFileName)
-{
-    m_licenseSystem = std::make_unique<LicenseSystemMock>();
-    m_modmanFacade = std::make_unique<ModuleManagerSetupFacade>(m_licenseSystem.get());
-    m_modMan = std::make_unique<TestModuleManager>(m_modmanFacade.get(), m_serviceInterfaceFactory, true);
-    m_modMan->loadAllAvailableModulePlugins();
-    m_modMan->setupConnections();
-    m_modMan->startAllServiceMocks("mt310s2");
-    m_modMan->loadSession(sessionFileName);
-    m_modMan->waitUntilModulesAreReady();
 }
