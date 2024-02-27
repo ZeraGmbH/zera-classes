@@ -9,7 +9,7 @@ namespace REFERENCEMODULE
 cReferenceMeasChannel::cReferenceMeasChannel(cSocket* rmsocket, cSocket* pcbsocket, QString name, quint8 chnnr) :
     cBaseMeasChannel(rmsocket, pcbsocket, name, chnnr)
 {
-    m_pPCBInterface = new Zera::cPCBInterface();
+    m_pcbInterface = std::make_shared<Zera::cPCBInterface>();
 
     // setting up statemachine for "activating" reference meas channel
     // m_rmConnectState.addTransition is done in rmConnect
@@ -89,18 +89,12 @@ cReferenceMeasChannel::cReferenceMeasChannel(cSocket* rmsocket, cSocket* pcbsock
 }
 
 
-cReferenceMeasChannel::~cReferenceMeasChannel()
-{
-    delete m_pPCBInterface;
-}
-
-
 quint32 cReferenceMeasChannel::setRange(QString range)
 {
     quint32 msgnr = 0;
     m_sNewRange = range;
     m_sActRange = m_sNewRange;
-    msgnr = m_pPCBInterface->setRange(m_sName, m_RangeInfoHash[range].name);
+    msgnr = m_pcbInterface->setRange(m_sName, m_RangeInfoHash[range].name);
     m_MsgNrCmdList[msgnr] = setmeaschannelrange;
     return msgnr;
 }
@@ -399,42 +393,42 @@ void cReferenceMeasChannel::readResourceInfo()
 
 void cReferenceMeasChannel::pcbConnection()
 {
-    m_pPCBClient = Zera::Proxy::getInstance()->getConnection(m_pPCBServerSocket->m_sIP, m_nPort);
-    m_pcbConnectionState.addTransition(m_pPCBClient, &Zera::ProxyClient::connected, &m_readDspChannelState);
+    m_pcbClient = Zera::Proxy::getInstance()->getConnectionSmart(m_pPCBServerSocket->m_sIP, m_nPort);
+    m_pcbConnectionState.addTransition(m_pcbClient.get(), &Zera::ProxyClient::connected, &m_readDspChannelState);
 
-    m_pPCBInterface->setClient(m_pPCBClient);
-    connect(m_pPCBInterface, &Zera::cPCBInterface::serverAnswer, this, &cReferenceMeasChannel::catchInterfaceAnswer);
-    Zera::Proxy::getInstance()->startConnection(m_pPCBClient);
+    m_pcbInterface->setClientSmart(m_pcbClient);
+    connect(m_pcbInterface.get(), &Zera::cPCBInterface::serverAnswer, this, &cReferenceMeasChannel::catchInterfaceAnswer);
+    Zera::Proxy::getInstance()->startConnectionSmart(m_pcbClient);
 }
 
 
 void cReferenceMeasChannel::readDspChannel()
 {
-   m_MsgNrCmdList[m_pPCBInterface->getDSPChannel(m_sName)] = readdspchannel;
+   m_MsgNrCmdList[m_pcbInterface->getDSPChannel(m_sName)] = readdspchannel;
 }
 
 
 void cReferenceMeasChannel::readChnAlias()
 {
-    m_MsgNrCmdList[m_pPCBInterface->getAlias(m_sName)] = readchnalias;
+    m_MsgNrCmdList[m_pcbInterface->getAlias(m_sName)] = readchnalias;
 }
 
 
 void cReferenceMeasChannel::readSampleRate()
 {
-    m_MsgNrCmdList[m_pPCBInterface->getSampleRate()] = readsamplerate;
+    m_MsgNrCmdList[m_pcbInterface->getSampleRate()] = readsamplerate;
 }
 
 
 void cReferenceMeasChannel::readUnit()
 {
-    m_MsgNrCmdList[m_pPCBInterface->getUnit(m_sName)] = readunit;
+    m_MsgNrCmdList[m_pcbInterface->getUnit(m_sName)] = readunit;
 }
 
 
 void cReferenceMeasChannel::readRangelist()
 {
-    m_MsgNrCmdList[m_pPCBInterface->getRangeList(m_sName)] = readrangelist;
+    m_MsgNrCmdList[m_pcbInterface->getRangeList(m_sName)] = readrangelist;
     m_RangeQueryIt = 0; // we start with range 0
 }
 
@@ -474,7 +468,6 @@ void cReferenceMeasChannel::activationDone()
 
 void cReferenceMeasChannel::deactivationInit()
 {
-    Zera::Proxy::getInstance()->releaseConnection(m_pPCBClient);
     emit deactivationContinue();
 }
 
@@ -483,25 +476,25 @@ void cReferenceMeasChannel::deactivationDone()
 {
     // and disconnect for our servers afterwards
     disconnect(&m_rmInterface, 0, this, 0);
-    disconnect(m_pPCBInterface, 0, this, 0);
+    disconnect(m_pcbInterface.get(), 0, this, 0);
     emit deactivated();
 }
 
 
 void cReferenceMeasChannel::readRngAlias()
 {
-    m_MsgNrCmdList[m_pPCBInterface->getAlias(m_sName, m_RangeNameList.at(m_RangeQueryIt))] = readrngalias;
+    m_MsgNrCmdList[m_pcbInterface->getAlias(m_sName, m_RangeNameList.at(m_RangeQueryIt))] = readrngalias;
 }
 
 
 void cReferenceMeasChannel::readType()
 {
-    m_MsgNrCmdList[m_pPCBInterface->getType(m_sName, m_RangeNameList.at(m_RangeQueryIt))] = readtype;
+    m_MsgNrCmdList[m_pcbInterface->getType(m_sName, m_RangeNameList.at(m_RangeQueryIt))] = readtype;
 }
 
 void cReferenceMeasChannel::readisAvail()
 {
-    m_MsgNrCmdList[m_pPCBInterface->isAvail(m_sName, m_RangeNameList.at(m_RangeQueryIt))] = readisavail;
+    m_MsgNrCmdList[m_pcbInterface->isAvail(m_sName, m_RangeNameList.at(m_RangeQueryIt))] = readisavail;
 }
 
 
