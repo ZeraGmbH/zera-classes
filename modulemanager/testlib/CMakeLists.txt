@@ -25,6 +25,7 @@ target_link_libraries(zera-modulemanager-testlib
     Zera::zenuxservicecommon-testlib
     zera-modulemanager-lib
     module-service-interfaces-testlib
+    Zera::VfConvenientCode
 )
 
 set_target_properties(zera-modulemanager-testlib PROPERTIES VERSION ${PROJECT_VERSION})
