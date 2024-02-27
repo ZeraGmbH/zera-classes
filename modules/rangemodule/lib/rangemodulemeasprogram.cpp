@@ -13,7 +13,8 @@ namespace RANGEMODULE
 
 cRangeModuleMeasProgram::cRangeModuleMeasProgram(cRangeModule* module, std::shared_ptr<cBaseModuleConfiguration> pConfiguration) :
     cBaseDspMeasProgram(pConfiguration),
-    m_pModule(module)
+    m_pModule(module),
+    m_dspWatchdogTimer(TimerFactoryQt::createSingleShot(3000))
 {
     m_dspInterface = m_pModule->getServiceInterfaceFactory()->createDspInterfaceRange(irqNr, getConfData()->m_senseChannelList, getConfData()->m_session.m_sPar == "ref");
     m_bRanging = false;
@@ -73,7 +74,7 @@ cRangeModuleMeasProgram::cRangeModuleMeasProgram(cRangeModule* module, std::shar
     connect(&m_dataAcquisitionDoneState, &QState::entered, this, &cRangeModuleMeasProgram::dataReadDSP);
 
     connect(this, &cRangeModuleMeasProgram::actualValues, this, &cRangeModuleMeasProgram::setInterfaceActualValues);
-    connect(&m_dspWatchdogTimer, &QTimer::timeout, this, &cRangeModuleMeasProgram::onDspWatchdogTimeout);
+    connect(m_dspWatchdogTimer.get(), &TimerTemplateQt::sigExpired, this, &cRangeModuleMeasProgram::onDspWatchdogTimeout);
 }
 
 void cRangeModuleMeasProgram::start()
@@ -403,9 +404,8 @@ void cRangeModuleMeasProgram::setSCPIMeasInfo()
 
 void cRangeModuleMeasProgram::restartDspWachdog()
 {
-    m_dspWatchdogTimer.stop();
-    m_dspWatchdogTimer.setSingleShot(true);
-    m_dspWatchdogTimer.start(3000);
+    m_dspWatchdogTimer->stop();
+    m_dspWatchdogTimer->start();
 }
 
 void cRangeModuleMeasProgram::setInterfaceActualValues(QVector<float> *actualValues)

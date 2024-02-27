@@ -4,6 +4,7 @@
 #include "modulemanagerconfigtest.h"
 #include "jsonsessionloadertest.h"
 #include <timemachineobject.h>
+#include <timerfactoryqtfortest.h>
 #include <QDir>
 
 void TestModuleManager::supportOeTests()
@@ -27,6 +28,7 @@ TestModuleManager::TestModuleManager(ModuleManagerSetupFacade *setupFacade,
         serviceInterfaceFactory,
         demo)
 {
+    TimerFactoryQtForTest::enableTest();
     JsonSessionLoaderTest::supportOeTests();
     ModulemanagerConfigTest::supportOeTests();
 }
