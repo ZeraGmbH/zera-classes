@@ -1,6 +1,6 @@
 #include "demodspinterfacerange.h"
+#include "demorangedspvalues.h"
 #include <timerfactoryqt.h>
-#include <cmath>
 
 DemoDspInterfaceRange::DemoDspInterfaceRange(int interruptNoHandled, QStringList valueChannelList, bool isReference) :
     m_interruptNoHandled(interruptNoHandled),
@@ -16,26 +16,9 @@ DemoDspInterfaceRange::DemoDspInterfaceRange(int interruptNoHandled, QStringList
 void DemoDspInterfaceRange::onTimer()
 {
     QVector<float> randomChannelRMS = demoChannelRms();
-    QVector<float> demoValues;
-    int channelCount = m_valueChannelList.count();
-    // peak
-    for (int channel=0; channel<channelCount; ++channel) {
-        double randPeak = randomChannelRMS[channel] * M_SQRT2;
-        demoValues.append(randPeak);
-    }
-    // RMS
-    for (int channel=0; channel<channelCount; ++channel) {
-        double randRms = randomChannelRMS[channel];
-        demoValues.append(randRms);
-    }
-    // frequency
-    demoValues.append(demoFrequency());
-    // peak DC (no DC for now)
-    for (int channel=0; channel<channelCount; ++channel) {
-        double randPeak = randomChannelRMS[channel] * M_SQRT2;
-        demoValues.append(randPeak);
-    }
-    fireActValInterrupt(demoValues, m_interruptNoHandled);
+    DemoRangeDspValues rangeValues(m_valueChannelList.count());
+    rangeValues.setValue(randomChannelRMS, demoFrequency());
+    fireActValInterrupt(rangeValues.getDspValues(), m_interruptNoHandled);
 }
 
 bool DemoDspInterfaceRange::demoChannelIsVoltage(int channel)

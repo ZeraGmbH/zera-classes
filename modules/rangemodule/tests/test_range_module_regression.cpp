@@ -3,6 +3,7 @@
 #include "modulemanagertestrunner.h"
 #include "vf_client_component_setter.h"
 #include "vf_entity_component_event_item.h"
+#include "demorangedspvalues.h"
 #include <timemachineobject.h>
 #include <timemachinefortest.h>
 #include <QSignalSpy>
@@ -83,11 +84,15 @@ void test_range_module_regression::injectActualValues()
     const QList<TestDspInterfacePtr>& dspInterfaces = testRunner.getDspInterfaceList();
     QCOMPARE(dspInterfaces.count(), 3);
 
-    QVector<float> actValues(rangeResultCount);
-    for(int i = 0; i < rangeResultCount; i++)
-        actValues[i] = i;
+    QVector<float> rmsValues(rangeChannelCount);
+    for(int i = 0; i < rangeChannelCount; i++)
+        rmsValues[i] = i;
+    double frequency = 15;
 
-    dspInterfaces[dspInterfaces::RangeModuleMeasProgram]->fireActValInterrupt(actValues, irqNr);
+    DemoRangeDspValues rangeValues(rangeChannelCount);
+    rangeValues.setValue(rmsValues, frequency);
+
+    dspInterfaces[dspInterfaces::RangeModuleMeasProgram]->fireActValInterrupt(rangeValues.getDspValues(), irqNr);
     TimeMachineObject::feedEventLoop();
 
     QFile file(":/dumpActual.json");
@@ -116,12 +121,16 @@ void test_range_module_regression::injectActualValuesWithPreScaling()
     const QList<TestDspInterfacePtr>& dspInterfaces = testRunner.getDspInterfaceList();
     QCOMPARE(dspInterfaces.count(), 3);
 
-    QVector<float> actValues(rangeResultCount);
-    for(int i = 0; i < rangeResultCount; i++)
-        actValues[i] = i;
+    QVector<float> rmsValues(rangeChannelCount);
+    for(int i = 0; i < rangeChannelCount; i++)
+        rmsValues[i] = i;
+    double frequency = 15;
+
+    DemoRangeDspValues rangeValues(rangeChannelCount);
+    rangeValues.setValue(rmsValues, frequency);
 
     TimeMachineForTest::getInstance()->processTimers(500); //for 'm_AdjustTimer'
-    dspInterfaces[dspInterfaces::RangeModuleMeasProgram]->fireActValInterrupt(actValues, irqNr);
+    dspInterfaces[dspInterfaces::RangeModuleMeasProgram]->fireActValInterrupt(rangeValues.getDspValues(), irqNr);
     QSignalSpy spyDspWrite(dspInterfaces[dspInterfaces::AdjustManagement].get(), &MockDspInterface::sigDspMemoryWrite);
     TimeMachineObject::feedEventLoop();
 
