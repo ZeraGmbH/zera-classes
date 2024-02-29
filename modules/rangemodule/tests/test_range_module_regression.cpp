@@ -84,13 +84,10 @@ void test_range_module_regression::injectActualValues()
     const QList<TestDspInterfacePtr>& dspInterfaces = testRunner.getDspInterfaceList();
     QCOMPARE(dspInterfaces.count(), 3);
 
-    QVector<float> rmsValues(rangeChannelCount);
-    for(int i = 0; i < rangeChannelCount; i++)
-        rmsValues[i] = i;
-    double frequency = 15;
-
     DemoRangeDspValues rangeValues(rangeChannelCount);
-    rangeValues.setValue(rmsValues, frequency);
+    rangeValues.setFrequency(15);
+    for(int i = 0; i < rangeChannelCount; i++)
+        rangeValues.setRmsValue(i, i);
 
     dspInterfaces[dspInterfaces::RangeModuleMeasProgram]->fireActValInterrupt(rangeValues.getDspValues(), irqNr);
     TimeMachineObject::feedEventLoop();
@@ -121,13 +118,10 @@ void test_range_module_regression::injectActualValuesWithPreScaling()
     const QList<TestDspInterfacePtr>& dspInterfaces = testRunner.getDspInterfaceList();
     QCOMPARE(dspInterfaces.count(), 3);
 
-    QVector<float> rmsValues(rangeChannelCount);
-    for(int i = 0; i < rangeChannelCount; i++)
-        rmsValues[i] = i;
-    double frequency = 15;
-
     DemoRangeDspValues rangeValues(rangeChannelCount);
-    rangeValues.setValue(rmsValues, frequency);
+    rangeValues.setFrequency(15);
+    for(int i = 0; i < rangeChannelCount; i++)
+        rangeValues.setRmsValue(i, i);
 
     TimeMachineForTest::getInstance()->processTimers(500); //for 'm_AdjustTimer'
     dspInterfaces[dspInterfaces::RangeModuleMeasProgram]->fireActValInterrupt(rangeValues.getDspValues(), irqNr);
