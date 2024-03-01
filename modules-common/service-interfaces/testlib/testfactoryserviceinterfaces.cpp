@@ -6,8 +6,9 @@ DspInterfacePtr TestFactoryServiceInterfaces::createDspInterfaceRange(int interr
     return createDspInterfaceCommon(interruptNoHandled, valueChannelList);
 }
 
-DspInterfacePtr TestFactoryServiceInterfaces::createDspInterfaceDft(int interruptNoHandled, QStringList valueChannelList)
+DspInterfacePtr TestFactoryServiceInterfaces::createDspInterfaceDft(int interruptNoHandled, QStringList valueChannelList, int dftOrder)
 {
+    Q_UNUSED(dftOrder)
     return createDspInterfaceCommon(interruptNoHandled, valueChannelList);
 }
 

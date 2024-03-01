@@ -8,10 +8,11 @@ DspInterfacePtr FactoryServiceInterfaces::createDspInterfaceRange(int interruptN
     return std::make_shared<Zera::cDSPInterface>();
 }
 
-DspInterfacePtr FactoryServiceInterfaces::createDspInterfaceDft(int interruptNoHandled, QStringList valueChannelList)
+DspInterfacePtr FactoryServiceInterfaces::createDspInterfaceDft(int interruptNoHandled, QStringList valueChannelList, int dftOrder)
 {
     Q_UNUSED(interruptNoHandled)
     Q_UNUSED(valueChannelList)
+    Q_UNUSED(dftOrder)
     return std::make_shared<Zera::cDSPInterface>();
 }
 

@@ -18,11 +18,13 @@
 namespace DFTMODULE
 {
 
-
 cDftModuleMeasProgram::cDftModuleMeasProgram(cDftModule* module, std::shared_ptr<cBaseModuleConfiguration> pConfiguration)
     :cBaseDspMeasProgram(pConfiguration), m_pModule(module)
 {
-    m_dspInterface = m_pModule->getServiceInterfaceFactory()->createDspInterfaceDft(irqNr, getConfData()->m_valueChannelList);
+    m_dspInterface = m_pModule->getServiceInterfaceFactory()->createDspInterfaceDft(
+        irqNr,
+        getConfData()->m_valueChannelList,
+        getConfData()->m_nDftOrder);
 
     m_IdentifyState.addTransition(this, &cDftModuleMeasProgram::activationContinue, &m_readResourceTypesState);
     m_readResourceTypesState.addTransition(this, &cDftModuleMeasProgram::activationContinue, &m_readResourceState);

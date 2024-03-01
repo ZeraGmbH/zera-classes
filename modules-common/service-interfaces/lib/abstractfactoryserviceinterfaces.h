@@ -10,7 +10,7 @@ class AbstractFactoryServiceInterfaces
 {
 public:
     virtual DspInterfacePtr createDspInterfaceRange(int interruptNoHandled, QStringList valueChannelList, bool isReferencce) = 0;
-    virtual DspInterfacePtr createDspInterfaceDft(int interruptNoHandled, QStringList valueChannelList) = 0;
+    virtual DspInterfacePtr createDspInterfaceDft(int interruptNoHandled, QStringList valueChannelList, int dftOrder) = 0;
     virtual DspInterfacePtr createDspInterfaceFft(int interruptNoHandled, QStringList valueChannelList, int fftOrder) = 0;
     virtual DspInterfacePtr createDspInterfaceRms(int interruptNoHandled, QStringList valueChannelList) = 0;
     virtual DspInterfacePtr createDspInterfaceOther() = 0;
