@@ -1,20 +1,20 @@
-#include "demormsdspvalues.h"
+#include "demovaluesdsprms.h"
 #include <math.h>
 
-DemoRmsDspValues::DemoRmsDspValues(QStringList valueChannelList) :
+DemoValuesDspRms::DemoValuesDspRms(QStringList valueChannelList) :
     m_valueChannelList(valueChannelList)
 {
     for(const auto &valueName : valueChannelList)
         m_rmsValues.insert(valueName, 0.0);
 }
 
-void DemoRmsDspValues::setValue(QString valueChannelName, float rmsValue)
+void DemoValuesDspRms::setValue(QString valueChannelName, float rmsValue)
 {
     if(m_rmsValues.contains(valueChannelName))
         m_rmsValues[valueChannelName] = rmsValue;
 }
 
-void DemoRmsDspValues::setAllValuesSymmetric(float voltage, float current)
+void DemoValuesDspRms::setAllValuesSymmetric(float voltage, float current)
 {
     float sqrt_3 = sqrt(3);
     for(auto iter=m_rmsValues.begin(); iter!=m_rmsValues.end(); iter++) {
@@ -28,7 +28,7 @@ void DemoRmsDspValues::setAllValuesSymmetric(float voltage, float current)
     }
 }
 
-QVector<float> DemoRmsDspValues::getDspValues()
+QVector<float> DemoValuesDspRms::getDspValues()
 {
     QVector<float> valueList;
     for(const auto &valueChannelName : qAsConst(m_valueChannelList))
@@ -36,13 +36,13 @@ QVector<float> DemoRmsDspValues::getDspValues()
     return valueList;
 }
 
-bool DemoRmsDspValues::isPhaseNeutralVoltage(QString valueChannelName)
+bool DemoValuesDspRms::isPhaseNeutralVoltage(QString valueChannelName)
 {
     QStringList voltagePhases = QStringList() << "m0" << "m1" << "m2" << "m6";
     return voltagePhases.contains(valueChannelName);
 }
 
-bool DemoRmsDspValues::isCurrent(QString valueChannelName)
+bool DemoValuesDspRms::isCurrent(QString valueChannelName)
 {
     QStringList currentPhases = QStringList() << "m3" << "m4" << "m5" << "m7";
     return currentPhases.contains(valueChannelName);
