@@ -91,12 +91,15 @@ public:
     double getPeakValueWithDc() const;
     void setPeakValueWithDc(double peakValueWithDc);
 
-    void setThresholdToIgnoreRms(double threshold);
+    void calculateThresholdToIgnoreRms();
     double getThresholdToIgnoreRms();
 
 signals:
     void cmdDone(quint32 cmdnr); // to signal we are ready
     void newRangeList(); // if the channel has read new range list after async. notification
+
+public slots:
+    void setPercThresholdToIgnoreRms(QVariant percThreshold);
 
 protected slots:
     void catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant answer);
@@ -116,7 +119,8 @@ private:
     double m_fGainCorrection;
     double m_fPhaseCorrection;
     double m_fOffsetCorrection;
-    double m_thresholdToIgnoreRms;
+    double m_percentThreshold;
+    double m_thresholdToIgnoreRms = 0.0;
     quint32 m_nStatus;
     QString m_sRangeListAlias; // all range alias: alias1;alias2 ....
 
