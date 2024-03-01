@@ -10,7 +10,9 @@ DemoDspInterfaceDft::DemoDspInterfaceDft(int interruptNoHandled, QStringList val
 {
     connect(m_periodicTimer.get(), &TimerTemplateQt::sigExpired,
             this, &DemoDspInterfaceDft::onTimer);
-    m_periodicTimer->start();
+    connect(this, &DemoDspInterfaceDft::sigDspStarted, [&](){
+        m_periodicTimer->start();
+    });
 }
 
 void DemoDspInterfaceDft::onTimer()

@@ -10,7 +10,9 @@ DemoDspInterfaceRange::DemoDspInterfaceRange(int interruptNoHandled, QStringList
 {
     connect(m_periodicTimer.get(), &TimerTemplateQt::sigExpired,
             this, &DemoDspInterfaceRange::onTimer);
-    m_periodicTimer->start();
+    connect(this, &DemoDspInterfaceRange::sigDspStarted, [&](){
+        m_periodicTimer->start();
+    });
 }
 
 void DemoDspInterfaceRange::onTimer()

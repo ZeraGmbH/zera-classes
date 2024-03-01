@@ -9,7 +9,9 @@ DemoDspInterfaceRms::DemoDspInterfaceRms(int interruptNoHandled, QStringList val
 {
     connect(m_periodicTimer.get(), &TimerTemplateQt::sigExpired,
             this, &DemoDspInterfaceRms::onTimer);
-    m_periodicTimer->start();
+    connect(this, &DemoDspInterfaceRms::sigDspStarted, [&](){
+        m_periodicTimer->start();
+    });
 }
 
 void DemoDspInterfaceRms::onTimer()
