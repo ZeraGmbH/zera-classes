@@ -142,7 +142,6 @@ private slots:
     void newGrouping(QVariant rgrouping);
     void newOverload(QVariant overload);
     void preScalingChanged(QVariant unused);
-    void newThresholdForIgnoredRmsValues(QVariant newValue);
 
     void catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant);
 };

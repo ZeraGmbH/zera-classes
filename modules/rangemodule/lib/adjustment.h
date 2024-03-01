@@ -84,9 +84,9 @@ private:
 
     // statemachine for adjustment
     QStateMachine m_adjustMachine;
-    QState m_getGainCorr1State, m_getGainCorr2State;
-    QState m_getPhaseCorr1State, m_getPhaseCorr2State;
-    QState m_getOffsetCorr1State, m_getOffsetCorr2State;
+    QState m_getGainCorrFromPcbServerState, m_prepareGainCorrForDspServerState, m_ignoreRmsBelowThresholdState;
+    QState m_getPhaseCorrFromPcbServerState, m_preparePhaseCorrForDspServerState;
+    QState m_getOffsetCorrFromPcbServerState, m_prepareOffsetCorrForDspServerState;
     QFinalState m_adjustDoneState;
 
     cDspMeasData* m_pGainCorrectionDSP; // copy of dsp internal correction data
@@ -114,12 +114,13 @@ private slots:
     void writePhaseCorr();
     void writeOffsetCorr();
 
-    void getGainCorr1();
-    void getGainCorr2();
-    void getPhaseCorr1();
-    void getPhaseCorr2();
-    void getOffsetCorr1();
-    void getOffsetCorr2();
+    void getGainCorrFromPcbServer();
+    void prepareGainCorrForDspServer();
+    void ignoreRmsBelowThreshold();
+    void getPhaseCorrFromPcbServer();
+    void preparePhaseCorrForDspServer();
+    void getOffsetCorrFromPcbServer();
+    void prepareOffsetCorrForDspServer();
     void getCorrDone();
 
     void catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant answer);

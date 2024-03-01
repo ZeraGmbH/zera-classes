@@ -70,29 +70,32 @@ cAdjustManagement::cAdjustManagement(cRangeModule *module, cSocket* dspsocket, c
     connect(&m_writePhaseCorrState, &QState::entered, this, &cAdjustManagement::writePhaseCorr);
     connect(&m_writeOffsetCorrState, &QState::entered, this, &cAdjustManagement::writeOffsetCorr);
 
-    m_getGainCorr1State.addTransition(this, &cAdjustManagement::activationContinue, &m_getGainCorr2State);
-    m_getGainCorr2State.addTransition(this, &cAdjustManagement::repeatStateMachine, &m_getGainCorr1State);
-    m_getGainCorr2State.addTransition(this, &cAdjustManagement::activationContinue, &m_getPhaseCorr1State);
-    m_getPhaseCorr1State.addTransition(this, &cAdjustManagement::activationContinue, &m_getPhaseCorr2State);
-    m_getPhaseCorr2State.addTransition(this, &cAdjustManagement::repeatStateMachine, &m_getPhaseCorr1State);
-    m_getPhaseCorr2State.addTransition(this, &cAdjustManagement::activationContinue, &m_getOffsetCorr1State);
-    m_getOffsetCorr1State.addTransition(this, &cAdjustManagement::activationContinue, &m_getOffsetCorr2State);
-    m_getOffsetCorr2State.addTransition(this, &cAdjustManagement::repeatStateMachine, &m_getOffsetCorr1State);
-    m_getOffsetCorr2State.addTransition(this, &cAdjustManagement::activationContinue, &m_adjustDoneState);
-    m_adjustMachine.addState(&m_getGainCorr1State);
-    m_adjustMachine.addState(&m_getGainCorr2State);
-    m_adjustMachine.addState(&m_getPhaseCorr1State);
-    m_adjustMachine.addState(&m_getPhaseCorr2State);
-    m_adjustMachine.addState(&m_getOffsetCorr1State);
-    m_adjustMachine.addState(&m_getOffsetCorr2State);
+    m_getGainCorrFromPcbServerState.addTransition(this, &cAdjustManagement::activationContinue, &m_prepareGainCorrForDspServerState);
+    m_prepareGainCorrForDspServerState.addTransition(this, &cAdjustManagement::activationContinue, &m_ignoreRmsBelowThresholdState);
+    m_ignoreRmsBelowThresholdState.addTransition(this, &cAdjustManagement::repeatStateMachine, &m_getGainCorrFromPcbServerState);
+    m_ignoreRmsBelowThresholdState.addTransition(this, &cAdjustManagement::activationContinue, &m_getPhaseCorrFromPcbServerState);
+    m_getPhaseCorrFromPcbServerState.addTransition(this, &cAdjustManagement::activationContinue, &m_preparePhaseCorrForDspServerState);
+    m_preparePhaseCorrForDspServerState.addTransition(this, &cAdjustManagement::repeatStateMachine, &m_getPhaseCorrFromPcbServerState);
+    m_preparePhaseCorrForDspServerState.addTransition(this, &cAdjustManagement::activationContinue, &m_getOffsetCorrFromPcbServerState);
+    m_getOffsetCorrFromPcbServerState.addTransition(this, &cAdjustManagement::activationContinue, &m_prepareOffsetCorrForDspServerState);
+    m_prepareOffsetCorrForDspServerState.addTransition(this, &cAdjustManagement::repeatStateMachine, &m_getOffsetCorrFromPcbServerState);
+    m_prepareOffsetCorrForDspServerState.addTransition(this, &cAdjustManagement::activationContinue, &m_adjustDoneState);
+    m_adjustMachine.addState(&m_getGainCorrFromPcbServerState);
+    m_adjustMachine.addState(&m_prepareGainCorrForDspServerState);
+    m_adjustMachine.addState(&m_ignoreRmsBelowThresholdState);
+    m_adjustMachine.addState(&m_getPhaseCorrFromPcbServerState);
+    m_adjustMachine.addState(&m_preparePhaseCorrForDspServerState);
+    m_adjustMachine.addState(&m_getOffsetCorrFromPcbServerState);
+    m_adjustMachine.addState(&m_prepareOffsetCorrForDspServerState);
     m_adjustMachine.addState(&m_adjustDoneState);
-    m_adjustMachine.setInitialState(&m_getGainCorr1State);
-    connect(&m_getGainCorr1State, &QState::entered, this, &cAdjustManagement::getGainCorr1);
-    connect(&m_getGainCorr2State, &QState::entered, this, &cAdjustManagement::getGainCorr2);
-    connect(&m_getPhaseCorr1State, &QState::entered, this, &cAdjustManagement::getPhaseCorr1);
-    connect(&m_getPhaseCorr2State, &QState::entered, this, &cAdjustManagement::getPhaseCorr2);
-    connect(&m_getOffsetCorr1State, &QState::entered, this, &cAdjustManagement::getOffsetCorr1);
-    connect(&m_getOffsetCorr2State, &QState::entered, this, &cAdjustManagement::getOffsetCorr2);
+    m_adjustMachine.setInitialState(&m_getGainCorrFromPcbServerState);
+    connect(&m_getGainCorrFromPcbServerState, &QState::entered, this, &cAdjustManagement::getGainCorrFromPcbServer);
+    connect(&m_prepareGainCorrForDspServerState, &QState::entered, this, &cAdjustManagement::prepareGainCorrForDspServer);
+    connect(&m_ignoreRmsBelowThresholdState, &QState::entered, this, &cAdjustManagement::ignoreRmsBelowThreshold);
+    connect(&m_getPhaseCorrFromPcbServerState, &QState::entered, this, &cAdjustManagement::getPhaseCorrFromPcbServer);
+    connect(&m_preparePhaseCorrForDspServerState, &QState::entered, this, &cAdjustManagement::preparePhaseCorrForDspServer);
+    connect(&m_getOffsetCorrFromPcbServerState, &QState::entered, this, &cAdjustManagement::getOffsetCorrFromPcbServer);
+    connect(&m_prepareOffsetCorrForDspServerState, &QState::entered, this, &cAdjustManagement::prepareOffsetCorrForDspServer);
     connect(&m_adjustDoneState, &QState::entered, this, &cAdjustManagement::getCorrDone);
 }
 
@@ -244,7 +247,7 @@ void cAdjustManagement::writeOffsetCorr()
 }
 
 
-void cAdjustManagement::getGainCorr1()
+void cAdjustManagement::getGainCorrFromPcbServer()
 {
     if (m_bActive){
         double actualValue=m_ChannelList.at(m_nChannelIt)->getRmsValue();
@@ -254,7 +257,7 @@ void cAdjustManagement::getGainCorr1()
 }
 
 
-void cAdjustManagement::getGainCorr2()
+void cAdjustManagement::prepareGainCorrForDspServer()
 {
     cRangeMeasChannel *measChannel;
     float fCorr;
@@ -264,6 +267,18 @@ void cAdjustManagement::getGainCorr2()
         measChannel = m_ChannelList.at(m_nChannelIt);
         fCorr = measChannel->getGainCorrection();
         m_fGainCorr[measChannel->getDSPChannelNr()] = fCorr;
+        emit activationContinue();
+    }
+}
+
+void cAdjustManagement::ignoreRmsBelowThreshold()
+{
+    cRangeMeasChannel *measChannel;
+    if (m_bActive)
+    {
+        measChannel = m_ChannelList.at(m_nChannelIt);
+        if(measChannel->getRmsValue() < measChannel->getThresholdToIgnoreRms())
+            m_fGainCorr[measChannel->getDSPChannelNr()] = 1e-10;
         m_nChannelIt++;
         if (m_nChannelIt < m_ChannelNameList.count())
             emit repeatStateMachine();
@@ -276,7 +291,7 @@ void cAdjustManagement::getGainCorr2()
 }
 
 
-void cAdjustManagement::getPhaseCorr1()
+void cAdjustManagement::getPhaseCorrFromPcbServer()
 {
     if (m_bActive){
         double frequency=m_ChannelList.at(m_nChannelIt)->getSignalFrequency();
@@ -285,7 +300,7 @@ void cAdjustManagement::getPhaseCorr1()
 }
 
 
-void cAdjustManagement::getPhaseCorr2()
+void cAdjustManagement::preparePhaseCorrForDspServer()
 {
     cRangeMeasChannel *measChannel;
     float fCorr;
@@ -307,7 +322,7 @@ void cAdjustManagement::getPhaseCorr2()
 }
 
 
-void cAdjustManagement::getOffsetCorr1()
+void cAdjustManagement::getOffsetCorrFromPcbServer()
 {
     if (m_bActive){
         double actualValue=m_ChannelList.at(m_nChannelIt)->getRmsValue();
@@ -317,7 +332,7 @@ void cAdjustManagement::getOffsetCorr1()
 }
 
 
-void cAdjustManagement::getOffsetCorr2()
+void cAdjustManagement::prepareOffsetCorrForDspServer()
 {
     cRangeMeasChannel *measChannel;
     float fCorr;
