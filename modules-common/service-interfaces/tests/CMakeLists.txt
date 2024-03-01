@@ -1,3 +1,3 @@
 SETUP_QTESTS(
-    test_demormsdspvalues
+    test_demovaluesdsprms
 )
