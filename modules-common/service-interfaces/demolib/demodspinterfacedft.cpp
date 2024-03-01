@@ -18,23 +18,13 @@ DemoDspInterfaceDft::DemoDspInterfaceDft(int interruptNoHandled, QStringList val
 void DemoDspInterfaceDft::onTimer()
 {
     DemoValuesDspDft dftValues(m_valueChannelList, m_dftOrder);
-    m_currentAngle += 7.5;
-    if(m_currentAngle > 359)
-        m_currentAngle = 0;
-    dftValues.setAllValuesSymmetric(230, 5, m_currentAngle, false);
-    QVector<float> demoValues = dftValues.getDspValues();
-    for(int i=0; i<demoValues.count(); i++) {
-        float randomVal = (double)rand() / RAND_MAX;
-        float randomDeviation = 0.5 + randomVal;
-        demoValues[i] *= randomDeviation;
-    }
-    /*QVector<float> demoValues;
+    QVector<float> demoValues;
     if(m_dftOrder > 0) {
         m_currentAngle += 7.5;
         if(m_currentAngle > 359)
             m_currentAngle = 0;
         dftValues.setAllValuesSymmetric(230, 5, m_currentAngle, false);
-        QVector<float> demoValues = dftValues.getDspValues();
+        demoValues = dftValues.getDspValues();
         for(int i=0; i<demoValues.count(); i++) {
             float randomVal = (double)rand() / RAND_MAX;
             float randomDeviation = 0.5 + randomVal;
@@ -43,12 +33,12 @@ void DemoDspInterfaceDft::onTimer()
     }
     else {
         dftValues.setAllValuesSymmetric(10, 10, 0, false); // COM DC ref
-        QVector<float> demoValues = dftValues.getDspValues();
+        demoValues = dftValues.getDspValues();
         for(int i=0; i<demoValues.count(); i++) {
             float randomVal = (double)rand() / RAND_MAX;
             float randomDeviation = 0.95 + 0.1*randomVal;
             demoValues[i] *= randomDeviation;
         }
-    }*/
+    }
     fireActValInterrupt(demoValues, m_interruptNoHandled);
 }
