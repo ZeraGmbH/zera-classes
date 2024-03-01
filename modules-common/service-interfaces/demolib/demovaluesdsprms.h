@@ -13,9 +13,6 @@ public:
     void setAllValuesSymmetric(float voltage, float current);
     QVector<float> getDspValues();
 private:
-    bool isPhaseNeutralVoltage(QString valueChannelName);
-    bool isCurrent(QString valueChannelName);
-
     QStringList m_valueChannelList;
     QMap<QString, float> m_rmsValues;
 };
