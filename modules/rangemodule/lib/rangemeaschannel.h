@@ -91,6 +91,9 @@ public:
     double getPeakValueWithDc() const;
     void setPeakValueWithDc(double peakValueWithDc);
 
+    void setThresholdToIgnoreRms(double threshold);
+    double getThresholdToIgnoreRms();
+
 signals:
     void cmdDone(quint32 cmdnr); // to signal we are ready
     void newRangeList(); // if the channel has read new range list after async. notification
@@ -113,6 +116,7 @@ private:
     double m_fGainCorrection;
     double m_fPhaseCorrection;
     double m_fOffsetCorrection;
+    double m_thresholdToIgnoreRms;
     quint32 m_nStatus;
     QString m_sRangeListAlias; // all range alias: alias1;alias2 ....
 

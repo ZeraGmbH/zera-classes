@@ -795,6 +795,16 @@ void cRangeMeasChannel::setPeakValueWithDc(double peakValueWithDc)
     m_peakValueWithDc = peakValueWithDc;
 }
 
+void cRangeMeasChannel::setThresholdToIgnoreRms(double threshold)
+{
+    m_thresholdToIgnoreRms = threshold;
+}
+
+double cRangeMeasChannel::getThresholdToIgnoreRms()
+{
+    return m_thresholdToIgnoreRms;
+}
+
 double cRangeMeasChannel::getPeakValue() const
 {
     return m_peakValue;

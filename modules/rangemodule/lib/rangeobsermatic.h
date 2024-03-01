@@ -83,6 +83,7 @@ private:
     VfModuleParameter* m_pParGroupingOnOff;
     VfModuleParameter* m_pParOverloadOnOff;
     VfModuleComponent* m_pComponentOverloadMax;
+    VfModuleParameter* m_ParIgnoreRmsValues;
 
     cDspMeasData* m_pGainCorrection2DSP; // copy of dsp internal correction data
     float* m_pfScale;
@@ -141,6 +142,7 @@ private slots:
     void newGrouping(QVariant rgrouping);
     void newOverload(QVariant overload);
     void preScalingChanged(QVariant unused);
+    void newThresholdForIgnoredRmsValues(QVariant newValue);
 
     void catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant);
 };

@@ -7,6 +7,7 @@
 #include <proxy.h>
 #include <regexvalidator.h>
 #include <intvalidator.h>
+#include <doublevalidator.h>
 #include <boolvalidator.h>
 #include <math.h>
 
@@ -217,6 +218,16 @@ void cRangeObsermatic::generateInterface()
                                                        QVariant(0));
 
     m_pModule->veinModuleComponentList.append(m_pComponentOverloadMax);
+
+    m_ParIgnoreRmsValues = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
+                                                   QString("PAR_IgnoreRmsValues"),
+                                                   QString("Percentage below which Rms values are ignored"),
+                                                   QVariant(double()));
+
+    m_ParIgnoreRmsValues->setValidator(new cDoubleValidator(0, 100, 1e-3));
+    m_pModule->m_veinModuleParameterMap["PAR_IgnoreRmsValues"] = m_ParIgnoreRmsValues;
+    m_ParIgnoreRmsValues->setUnit("%");
+    m_ParIgnoreRmsValues->setSCPIInfo(new cSCPIInfo("CONFIGURATION","IGNORERMSVAL", "10", m_ParIgnoreRmsValues->getName(), "0", m_ParIgnoreRmsValues->getUnit()));
 
     m_pRangingSignal = new VfModuleComponent(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
                                                 QString("SIG_Ranging"),
@@ -603,6 +614,7 @@ void cRangeObsermatic::readGainCorrDone()
     connect(m_pParRangeAutomaticOnOff, &VfModuleParameter::sigValueChanged, this, &cRangeObsermatic::newRangeAuto);
     connect(m_pParGroupingOnOff, &VfModuleParameter::sigValueChanged, this, &cRangeObsermatic::newGrouping);
     connect(m_pParOverloadOnOff, &VfModuleParameter::sigValueChanged, this, &cRangeObsermatic::newOverload);
+    connect(m_ParIgnoreRmsValues, &VfModuleParameter::sigValueChanged, this, &cRangeObsermatic::newThresholdForIgnoredRmsValues);
 
     cRangeMeasChannel *pmChn;
     for (int i = 0; i < m_RangeMeasChannelList.count(); i++) {
@@ -832,6 +844,14 @@ void cRangeObsermatic::preScalingChanged(QVariant unused)
         }
     }
     setRanges(true);
+}
+
+void cRangeObsermatic::newThresholdForIgnoredRmsValues(QVariant newValue)
+{
+   for(int i = 0; i<m_RangeMeasChannelList.count(); i++) {
+        double channelIgnoredThreshold = newValue.toDouble() * m_RangeMeasChannelList.at(i)->getUrValue() / 100;
+        m_RangeMeasChannelList.at(i)->setThresholdToIgnoreRms(channelIgnoredThreshold);
+   }
 }
 
 
