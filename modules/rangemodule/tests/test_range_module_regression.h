@@ -15,9 +15,11 @@ private slots:
     void injectActualValues();
     void injectActualValuesWithPreScaling();
     void injectActualValuesWithCheating();
+    void injectActualValuesWithCheatingAndRangeChanged();
 private:
     void setVfPreScaling(VfCmdEventHandlerSystemPtr vfCmdEventHandlerSystem, QVariant value);
     void setVfIgnoreRmsValues(VfCmdEventHandlerSystemPtr vfCmdEventHandlerSystem, QVariant value);
+    void setVfRanges(VfCmdEventHandlerSystemPtr vfCmdEventHandlerSystem, QVariant value);
 };
 
 #endif // TEST_RANGE_MODULE_REGRESSION_H
