@@ -1,4 +1,5 @@
 #include "demovaluesdsprms.h"
+#include "servicechannelnamehelper.h"
 #include <math.h>
 
 DemoValuesDspRms::DemoValuesDspRms(QStringList valueChannelList) :
@@ -21,9 +22,9 @@ void DemoValuesDspRms::setAllValuesSymmetric(float voltage, float current)
         const QString valueChannelName = iter.key();
         if(valueChannelName.contains("-"))
             iter.value() = voltage * sqrt_3;
-        else if(isPhaseNeutralVoltage(valueChannelName))
+        else if(ServiceChannelNameHelper::isPhaseNeutralVoltage(valueChannelName))
             iter.value() = voltage;
-        else if(isCurrent(valueChannelName))
+        else if(ServiceChannelNameHelper::isCurrent(valueChannelName))
             iter.value() = current;
     }
 }
@@ -35,16 +36,3 @@ QVector<float> DemoValuesDspRms::getDspValues()
         valueList.append(m_rmsValues[valueChannelName]);
     return valueList;
 }
-
-bool DemoValuesDspRms::isPhaseNeutralVoltage(QString valueChannelName)
-{
-    QStringList voltagePhases = QStringList() << "m0" << "m1" << "m2" << "m6";
-    return voltagePhases.contains(valueChannelName);
-}
-
-bool DemoValuesDspRms::isCurrent(QString valueChannelName)
-{
-    QStringList currentPhases = QStringList() << "m3" << "m4" << "m5" << "m7";
-    return currentPhases.contains(valueChannelName);
-}
-
