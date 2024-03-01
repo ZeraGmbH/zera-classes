@@ -1,9 +1,11 @@
 #include "demodspinterfacedft.h"
+#include "demovaluesdspdft.h"
 #include <timerfactoryqt.h>
 
-DemoDspInterfaceDft::DemoDspInterfaceDft(int interruptNoHandled, QStringList valueChannelList) :
+DemoDspInterfaceDft::DemoDspInterfaceDft(int interruptNoHandled, QStringList valueChannelList, int dftOrder) :
     m_interruptNoHandled(interruptNoHandled),
     m_valueChannelList(valueChannelList),
+    m_dftOrder(dftOrder),
     m_periodicTimer(TimerFactoryQt::createPeriodic(500))
 {
     connect(m_periodicTimer.get(), &TimerTemplateQt::sigExpired,
@@ -13,17 +15,38 @@ DemoDspInterfaceDft::DemoDspInterfaceDft(int interruptNoHandled, QStringList val
 
 void DemoDspInterfaceDft::onTimer()
 {
-    QVector<float> demoValues(m_valueChannelList.count() * 2); // re/im
-    for (int i = 0; i < demoValues.count(); i++) {
-        double randomVal = (double)rand() / RAND_MAX ;
-        demoValues[i] = randomVal;
+    DemoValuesDspDft dftValues(m_valueChannelList, m_dftOrder);
+    m_currentAngle += 7.5;
+    if(m_currentAngle > 359)
+        m_currentAngle = 0;
+    dftValues.setAllValuesSymmetric(230, 5, m_currentAngle, false);
+    QVector<float> demoValues = dftValues.getDspValues();
+    for(int i=0; i<demoValues.count(); i++) {
+        float randomVal = (double)rand() / RAND_MAX;
+        float randomDeviation = 0.5 + randomVal;
+        demoValues[i] *= randomDeviation;
     }
-
-    // this part is copied from dataReadDsp for better simulated values
-    double im;
-    for (int i = 0; i < m_valueChannelList.count(); i++) {
-        im = demoValues[i*2+1] * -1.0;
-        demoValues.replace(i*2+1, im);
+    /*QVector<float> demoValues;
+    if(m_dftOrder > 0) {
+        m_currentAngle += 7.5;
+        if(m_currentAngle > 359)
+            m_currentAngle = 0;
+        dftValues.setAllValuesSymmetric(230, 5, m_currentAngle, false);
+        QVector<float> demoValues = dftValues.getDspValues();
+        for(int i=0; i<demoValues.count(); i++) {
+            float randomVal = (double)rand() / RAND_MAX;
+            float randomDeviation = 0.5 + randomVal;
+            demoValues[i] *= randomDeviation;
+        }
     }
+    else {
+        dftValues.setAllValuesSymmetric(10, 10, 0, false); // COM DC ref
+        QVector<float> demoValues = dftValues.getDspValues();
+        for(int i=0; i<demoValues.count(); i++) {
+            float randomVal = (double)rand() / RAND_MAX;
+            float randomDeviation = 0.95 + 0.1*randomVal;
+            demoValues[i] *= randomDeviation;
+        }
+    }*/
     fireActValInterrupt(demoValues, m_interruptNoHandled);
 }

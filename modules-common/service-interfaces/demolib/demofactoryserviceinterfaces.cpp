@@ -9,9 +9,9 @@ DspInterfacePtr DemoFactoryServiceInterfaces::createDspInterfaceRange(int interr
     return std::make_shared<DemoDspInterfaceRange>(interruptNoHandled, valueChannelList, isReferencce);
 }
 
-DspInterfacePtr DemoFactoryServiceInterfaces::createDspInterfaceDft(int interruptNoHandled, QStringList valueChannelList)
+DspInterfacePtr DemoFactoryServiceInterfaces::createDspInterfaceDft(int interruptNoHandled, QStringList valueChannelList, int dftOrder)
 {
-    return std::make_shared<DemoDspInterfaceDft>(interruptNoHandled, valueChannelList);
+    return std::make_shared<DemoDspInterfaceDft>(interruptNoHandled, valueChannelList, dftOrder);
 }
 
 DspInterfacePtr DemoFactoryServiceInterfaces::createDspInterfaceFft(int interruptNoHandled, QStringList valueChannelList, int fftOrder)
