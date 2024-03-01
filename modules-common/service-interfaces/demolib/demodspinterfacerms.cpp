@@ -1,4 +1,5 @@
 #include "demodspinterfacerms.h"
+#include "demormsdspvalues.h"
 #include <timerfactoryqt.h>
 
 DemoDspInterfaceRms::DemoDspInterfaceRms(int interruptNoHandled, QStringList valueChannelList) :
@@ -13,18 +14,13 @@ DemoDspInterfaceRms::DemoDspInterfaceRms(int interruptNoHandled, QStringList val
 
 void DemoDspInterfaceRms::onTimer()
 {
-    QVector<float> demoValues(m_valueChannelList.count());
-    for (int i = 0; i < m_valueChannelList.count(); i++) {
-        QStringList sl = m_valueChannelList.at(i).split('-');
-        double val = 0;
-        double randPlusMinusOne = 2.0 * (double)rand() / RAND_MAX - 1.0;
-        if (sl.count() == 1) {
-            val = 10 * randPlusMinusOne;
-        }
-        else {
-            val = 20 * randPlusMinusOne;
-        }
-        demoValues[i] = val;
+    DemoRmsDspValues rmsValues(m_valueChannelList);
+    rmsValues.setAllValuesSymmetric(230, 5);
+    QVector<float> demoValues = rmsValues.getDspValues();
+    for(int i=0; i<demoValues.count(); i++) {
+        double randomVal = (double)rand() / RAND_MAX;
+        double randomDeviation = 0.95 + 0.1 * randomVal;
+        demoValues[i] *= randomDeviation;
     }
     fireActValInterrupt(demoValues, m_interruptNoHandled);
 }
