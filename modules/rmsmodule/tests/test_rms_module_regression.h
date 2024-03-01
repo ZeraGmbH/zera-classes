@@ -1,10 +1,6 @@
 #ifndef TEST_RMS_MODULE_REGRESSION_H
 #define TEST_RMS_MODULE_REGRESSION_H
 
-#include "licensesystemmock.h"
-#include "modulemanagersetupfacade.h"
-#include "testfactoryserviceinterfaces.h"
-#include "testmodulemanager.h"
 #include <QObject>
 #include <memory>
 
@@ -18,6 +14,7 @@ private slots:
     void checkActualValueCount();
     void injectActualValues();
     void injectActualTwice();
+    void injectSymmetricValues();
 };
 
 #endif // TEST_RMS_MODULE_REGRESSION_H

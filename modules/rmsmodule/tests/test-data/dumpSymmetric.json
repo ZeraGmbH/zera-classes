@@ -1,0 +1,205 @@
+{
+    "1040": {
+        "ACT_RMSPN1": 230,
+        "ACT_RMSPN2": 230,
+        "ACT_RMSPN3": 230,
+        "ACT_RMSPN4": 5,
+        "ACT_RMSPN5": 5,
+        "ACT_RMSPN6": 5,
+        "ACT_RMSPN7": 230,
+        "ACT_RMSPN8": 5,
+        "ACT_RMSPP1": 398.3716735839844,
+        "ACT_RMSPP2": 398.3716735839844,
+        "ACT_RMSPP3": 398.3716735839844,
+        "EntityName": "RMSModule1",
+        "INF_ModuleInterface": {
+            "ComponentInfo": {
+                "ACT_RMSPN1": {
+                    "ChannelName": "UL1",
+                    "Description": "Actual rms value phase/neutral",
+                    "Unit": "V"
+                },
+                "ACT_RMSPN2": {
+                    "ChannelName": "UL2",
+                    "Description": "Actual rms value phase/neutral",
+                    "Unit": "V"
+                },
+                "ACT_RMSPN3": {
+                    "ChannelName": "UL3",
+                    "Description": "Actual rms value phase/neutral",
+                    "Unit": "V"
+                },
+                "ACT_RMSPN4": {
+                    "ChannelName": "IL1",
+                    "Description": "Actual rms value",
+                    "Unit": "A"
+                },
+                "ACT_RMSPN5": {
+                    "ChannelName": "IL2",
+                    "Description": "Actual rms value",
+                    "Unit": "A"
+                },
+                "ACT_RMSPN6": {
+                    "ChannelName": "IL3",
+                    "Description": "Actual rms value",
+                    "Unit": "A"
+                },
+                "ACT_RMSPN7": {
+                    "ChannelName": "UAUX",
+                    "Description": "Actual rms value phase/neutral",
+                    "Unit": "V"
+                },
+                "ACT_RMSPN8": {
+                    "ChannelName": "IAUX",
+                    "Description": "Actual rms value",
+                    "Unit": "A"
+                },
+                "ACT_RMSPP1": {
+                    "ChannelName": "UL1-UL2",
+                    "Description": "Actual rms value phase/phase",
+                    "Unit": "V"
+                },
+                "ACT_RMSPP2": {
+                    "ChannelName": "UL3-UL2",
+                    "Description": "Actual rms value phase/phase",
+                    "Unit": "V"
+                },
+                "ACT_RMSPP3": {
+                    "ChannelName": "UL3-UL1",
+                    "Description": "Actual rms value phase/phase",
+                    "Unit": "V"
+                },
+                "EntityName": {
+                    "Description": "Module's name"
+                },
+                "INF_ModuleInterface": {
+                    "Description": "Module's interface details"
+                },
+                "PAR_Interval": {
+                    "Description": "Integration time",
+                    "Unit": "s",
+                    "Validation": {
+                        "Data": [
+                            1,
+                            100,
+                            0.5
+                        ],
+                        "Type": "DOUBLE"
+                    }
+                },
+                "SIG_Measuring": {
+                    "Description": "Signal indicating measurement activity"
+                }
+            },
+            "ModuleInfo": {
+                "Description": "This module measures true rms values for configured channels",
+                "Name": "RMSModule1",
+                "RMSPNCount": "8",
+                "RMSPPCount": "3"
+            },
+            "SCPIInfo": {
+                "Cmd": [
+                    [
+                        "MEASURE",
+                        "UL1",
+                        "8",
+                        "ACT_RMSPN1",
+                        "0",
+                        "V"
+                    ],
+                    [
+                        "MEASURE",
+                        "UL2",
+                        "8",
+                        "ACT_RMSPN2",
+                        "0",
+                        "V"
+                    ],
+                    [
+                        "MEASURE",
+                        "UL3",
+                        "8",
+                        "ACT_RMSPN3",
+                        "0",
+                        "V"
+                    ],
+                    [
+                        "MEASURE",
+                        "UL1-UL2",
+                        "8",
+                        "ACT_RMSPP1",
+                        "0",
+                        "V"
+                    ],
+                    [
+                        "MEASURE",
+                        "UL3-UL2",
+                        "8",
+                        "ACT_RMSPP2",
+                        "0",
+                        "V"
+                    ],
+                    [
+                        "MEASURE",
+                        "UL3-UL1",
+                        "8",
+                        "ACT_RMSPP3",
+                        "0",
+                        "V"
+                    ],
+                    [
+                        "MEASURE",
+                        "IL1",
+                        "8",
+                        "ACT_RMSPN4",
+                        "0",
+                        "A"
+                    ],
+                    [
+                        "MEASURE",
+                        "IL2",
+                        "8",
+                        "ACT_RMSPN5",
+                        "0",
+                        "A"
+                    ],
+                    [
+                        "MEASURE",
+                        "IL3",
+                        "8",
+                        "ACT_RMSPN6",
+                        "0",
+                        "A"
+                    ],
+                    [
+                        "MEASURE",
+                        "UAUX",
+                        "8",
+                        "ACT_RMSPN7",
+                        "0",
+                        "V"
+                    ],
+                    [
+                        "MEASURE",
+                        "IAUX",
+                        "8",
+                        "ACT_RMSPN8",
+                        "0",
+                        "A"
+                    ],
+                    [
+                        "CONFIGURATION",
+                        "TINTEGRATION",
+                        "10",
+                        "PAR_Interval",
+                        "0",
+                        "s"
+                    ]
+                ],
+                "Name": "RMS1"
+            }
+        },
+        "PAR_Interval": 1,
+        "SIG_Measuring": 1
+    }
+}

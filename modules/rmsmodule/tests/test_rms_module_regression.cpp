@@ -1,6 +1,8 @@
 #include "test_rms_module_regression.h"
+#include "demormsdspvalues.h"
+#include "rmsmodule.h"
+#include "rmsmoduleconfiguration.h"
 #include "rmsmodulemeasprogram.h"
-#include "testfactoryserviceinterfaces.h"
 #include "modulemanagertestrunner.h"
 #include <timemachineobject.h>
 #include <QBuffer>
@@ -116,4 +118,38 @@ void test_rms_module_regression::injectActualTwice()
     dspInterfaces[0]->fireActValInterrupt(actValues, irqNr);
     TimeMachineObject::feedEventLoop();
     QCOMPARE(storageHash->getStoredValue(rmsEntityId, "ACT_RMSPN2"), QVariant(42.0));
+}
+
+void test_rms_module_regression::injectSymmetricValues()
+{
+    ModuleManagerTestRunner testRunner(":/session-rms-moduleconfig-from-resource.json");
+
+    const QList<TestDspInterfacePtr>& dspInterfaces = testRunner.getDspInterfaceList();
+    QCOMPARE(dspInterfaces.count(), 1);
+
+    RMSMODULE::cRmsModule *rmsModule = static_cast<RMSMODULE::cRmsModule*>(testRunner.getModule("rmsmodule", rmsEntityId));
+    RMSMODULE::cRmsModuleConfiguration config;
+    config.setConfiguration(rmsModule->getConfiguration());
+
+    DemoRmsDspValues demoDspValue(config.getConfigurationData()->m_valueChannelList);
+    demoDspValue.setAllValuesSymmetric(230, 5);
+    dspInterfaces[0]->fireActValInterrupt(demoDspValue.getDspValues(), irqNr);
+    TimeMachineObject::feedEventLoop();
+
+    QFile file(":/dumpSymmetric.json");
+    QVERIFY(file.open(QFile::ReadOnly));
+    QString jsonExpected = file.readAll();
+
+    VeinStorage::VeinHash* storageHash = testRunner.getVeinStorageSystem();
+    QByteArray jsonDumped;
+    QBuffer buff(&jsonDumped);
+    storageHash->dumpToFile(&buff, QList<int>() << rmsEntityId);
+
+    if(jsonExpected != jsonDumped) {
+        qWarning("Expected storage hash:");
+        qInfo("%s", qPrintable(jsonExpected));
+        qWarning("Dumped storage hash:");
+        qInfo("%s", qPrintable(jsonDumped));
+        QCOMPARE(jsonExpected, jsonDumped);
+    }
 }
