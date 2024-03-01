@@ -6,6 +6,5 @@
         <file>session-range-test.json</file>
         <file>dumpActual.json</file>
         <file>dumpActual-preScaled2.json</file>
-        <file>dumpActual-cheated.json</file>
     </qresource>
 </RCC>
