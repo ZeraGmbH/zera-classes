@@ -1,5 +1,5 @@
 #include "test_fft_module_regression.h"
-#include "demofftdspvalues.h"
+#include "demovaluesdspfft.h"
 #include "fftmodulemeasprogram.h"
 #include "testfactoryserviceinterfaces.h"
 #include "modulemanagertestrunner.h"
@@ -73,7 +73,7 @@ void test_fft_module_regression::injectValues()
     const QList<TestDspInterfacePtr>& dspInterfaces = testRunner.getDspInterfaceList();
     QCOMPARE(dspInterfaces.count(), 1);
 
-    DemoFftDspValues dspValues(dspInterfaces[0]->getValueList().count());
+    DemoValuesDspFft dspValues(dspInterfaces[0]->getValueList().count());
     dspValues.setValue(0, 0, 1, 1);
     dspValues.setValue(0, 1, 2, 0);
     dspValues.setValue(0, 2, 0, 3);

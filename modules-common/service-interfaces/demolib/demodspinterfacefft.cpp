@@ -1,5 +1,5 @@
 #include "demodspinterfacefft.h"
-#include "demofftdspvalues.h"
+#include "demovaluesdspfft.h"
 #include <timerfactoryqt.h>
 #include <math.h>
 
@@ -20,7 +20,7 @@ void DemoDspInterfaceFft::onTimer()
     double randomVal = (double)rand() / RAND_MAX;
     double randomDeviation = 0.95 + 0.1 * randomVal;
 
-    DemoFftDspValues dspValues(totalChannels);
+    DemoValuesDspFft dspValues(totalChannels);
 
     dspValues.setValue(0, 0, 5*randomDeviation, 5*randomDeviation);
     dspValues.setValue(0, 1, 230*randomDeviation, 0);
