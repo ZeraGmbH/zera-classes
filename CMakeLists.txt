@@ -135,6 +135,7 @@ function(SETUP_QTESTS)
             zera-basemodule
             module-tasks-testlib
             zera-meas-mode-management-testlib
+            module-service-interfaces-demolib
             Qt5::Test
             Zera::VfStorageHash
             Zera::tasks-base-testlib
