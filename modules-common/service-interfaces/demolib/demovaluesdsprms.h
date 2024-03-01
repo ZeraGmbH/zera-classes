@@ -1,14 +1,14 @@
-#ifndef DEMORMSDSPVALUES_H
-#define DEMORMSDSPVALUES_H
+#ifndef DEMOVALUESDSPRMS_H
+#define DEMOVALUESDSPRMS_H
 
 #include <QVector>
 #include <QMap>
 #include <QStringList>
 
-class DemoRmsDspValues
+class DemoValuesDspRms
 {
 public:
-    DemoRmsDspValues(QStringList valueChannelList);
+    DemoValuesDspRms(QStringList valueChannelList);
     void setValue(QString valueChannelName, float rmsValue);
     void setAllValuesSymmetric(float voltage, float current);
     QVector<float> getDspValues();
@@ -20,4 +20,4 @@ private:
     QMap<QString, float> m_rmsValues;
 };
 
-#endif // DEMORMSDSPVALUES_H
+#endif // DEMOVALUESDSPRMS_H

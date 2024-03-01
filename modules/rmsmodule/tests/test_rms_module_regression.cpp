@@ -1,5 +1,5 @@
 #include "test_rms_module_regression.h"
-#include "demormsdspvalues.h"
+#include "demovaluesdsprms.h"
 #include "rmsmodule.h"
 #include "rmsmoduleconfiguration.h"
 #include "rmsmodulemeasprogram.h"
@@ -131,7 +131,7 @@ void test_rms_module_regression::injectSymmetricValues()
     RMSMODULE::cRmsModuleConfiguration config;
     config.setConfiguration(rmsModule->getConfiguration());
 
-    DemoRmsDspValues demoDspValue(config.getConfigurationData()->m_valueChannelList);
+    DemoValuesDspRms demoDspValue(config.getConfigurationData()->m_valueChannelList);
     demoDspValue.setAllValuesSymmetric(230, 5);
     dspInterfaces[0]->fireActValInterrupt(demoDspValue.getDspValues(), irqNr);
     TimeMachineObject::feedEventLoop();
