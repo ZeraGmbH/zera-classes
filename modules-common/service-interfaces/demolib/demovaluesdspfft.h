@@ -1,12 +1,12 @@
-#ifndef DEMOFFTDSPVALUES_H
-#define DEMOFFTDSPVALUES_H
+#ifndef DEMOVALUESDSPFFT_H
+#define DEMOVALUESDSPFFT_H
 
 #include <QVector>
 
-class DemoFftDspValues
+class DemoValuesDspFft
 {
 public:
-    DemoFftDspValues(int channels, int fftLen = 128);
+    DemoValuesDspFft(int channels, int fftLen = 128);
     void setValue(int channelNo, int harmonicNo, float re, float im);
     QVector<float> getDspValues();
 private:
@@ -15,4 +15,4 @@ private:
     int m_fftLen;
 };
 
-#endif // DEMOFFTDSPVALUES_H
+#endif // DEMOVALUESDSPFFT_H
