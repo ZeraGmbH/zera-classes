@@ -17,7 +17,7 @@ DemoDspInterfaceRms::DemoDspInterfaceRms(int interruptNoHandled, QStringList val
 void DemoDspInterfaceRms::onTimer()
 {
     DemoValuesDspRms rmsValues(m_valueChannelList);
-    rmsValues.setAllValuesSymmetric(230, 5);
+    rmsValues.setAllValuesSymmetric(230, 1);
     QVector<float> demoValues = rmsValues.getDspValues();
     for(int i=0; i<demoValues.count(); i++) {
         double randomVal = (double)rand() / RAND_MAX;

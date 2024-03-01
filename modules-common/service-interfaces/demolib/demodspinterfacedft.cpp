@@ -23,7 +23,7 @@ void DemoDspInterfaceDft::onTimer()
         m_currentAngle += 7.5;
         if(m_currentAngle > 359)
             m_currentAngle = 0;
-        dftValues.setAllValuesSymmetric(230, 5, m_currentAngle, false);
+        dftValues.setAllValuesSymmetric(230, 1, m_currentAngle, false);
         demoValues = dftValues.getDspValues();
         for(int i=0; i<demoValues.count(); i++) {
             float randomVal = (double)rand() / RAND_MAX;
