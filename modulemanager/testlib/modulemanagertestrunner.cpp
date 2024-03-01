@@ -41,3 +41,8 @@ VfCmdEventHandlerSystemPtr ModuleManagerTestRunner::getVfCmdEventHandlerSystemPt
 {
     return m_vfCmdEventHandlerSystem;
 }
+
+ZeraModules::VirtualModule *ModuleManagerTestRunner::getModule(QString uniqueName, int entityId)
+{
+    return m_modMan->getModule(uniqueName, entityId);
+}

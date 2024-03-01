@@ -19,6 +19,7 @@ public:
     VeinStorage::VeinHash* getVeinStorageSystem();
     const QList<TestDspInterfacePtr>& getDspInterfaceList() const;
     VfCmdEventHandlerSystemPtr getVfCmdEventHandlerSystemPtr();
+    ZeraModules::VirtualModule *getModule(QString uniqueName, int entityId);
 private:
     std::unique_ptr<LicenseSystemMock> m_licenseSystem;
     std::unique_ptr<ModuleManagerSetupFacade> m_modmanFacade;
