@@ -349,6 +349,18 @@
                         "Type": "BOOL"
                     }
                 },
+                "PAR_IgnoreRmsValues": {
+                    "Description": "Percentage below which Rms values are ignored",
+                    "Unit": "%",
+                    "Validation": {
+                        "Data": [
+                            0,
+                            100,
+                            0.001
+                        ],
+                        "Type": "DOUBLE"
+                    }
+                },
                 "PAR_Overload": {
                     "Description": "Overload",
                     "Validation": {
@@ -653,6 +665,14 @@
                         ""
                     ],
                     [
+                        "CONFIGURATION",
+                        "IGNORERMSVAL",
+                        "10",
+                        "PAR_IgnoreRmsValues",
+                        "0",
+                        "%"
+                    ],
+                    [
                         "SENSE",
                         "OVERLOAD",
                         "10",
@@ -684,6 +704,7 @@
         "PAR_Channel7Range": "250V",
         "PAR_Channel8Range": "--",
         "PAR_ChannelGrouping": 1,
+        "PAR_IgnoreRmsValues": 0,
         "PAR_Overload": 0,
         "PAR_PreScalingEnabledGroup0": 0,
         "PAR_PreScalingEnabledGroup1": 0,
