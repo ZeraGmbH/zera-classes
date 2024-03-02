@@ -1,7 +1,7 @@
-#include "demorangedspvalues.h"
+#include "demovaluesdsprange.h"
 #include <cmath>
 
-DemoRangeDspValues::DemoRangeDspValues(int channels) :
+DemoValuesDspRange::DemoValuesDspRange(int channels) :
     m_channels(channels),
     m_peakValues(channels),
     m_rmsValues(channels),
@@ -10,7 +10,7 @@ DemoRangeDspValues::DemoRangeDspValues(int channels) :
 {
 }
 
-void DemoRangeDspValues::setRmsValue(int channel, float rmsValue)
+void DemoValuesDspRange::setRmsValue(int channel, float rmsValue)
 {
     float peakValue = rmsValue * M_SQRT2;
     m_peakValues[channel] = peakValue;
@@ -18,12 +18,12 @@ void DemoRangeDspValues::setRmsValue(int channel, float rmsValue)
     m_dcValues[channel] = peakValue;
 }
 
-void DemoRangeDspValues::setFrequency(float frequency)
+void DemoValuesDspRange::setFrequency(float frequency)
 {
     m_freqValue[0] = frequency;
 }
 
-QVector<float> DemoRangeDspValues::getDspValues()
+QVector<float> DemoValuesDspRange::getDspValues()
 {
     return m_peakValues + m_rmsValues + m_freqValue + m_dcValues;
 }
