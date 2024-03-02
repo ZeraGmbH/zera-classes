@@ -3,7 +3,7 @@
 #include "modulemanagertestrunner.h"
 #include "vf_client_component_setter.h"
 #include "vf_entity_component_event_item.h"
-#include "demorangedspvalues.h"
+#include "demovaluesdsprange.h"
 #include <timemachineobject.h>
 #include <timemachinefortest.h>
 #include <QSignalSpy>
@@ -84,7 +84,7 @@ void test_range_module_regression::injectActualValues()
     const QList<TestDspInterfacePtr>& dspInterfaces = testRunner.getDspInterfaceList();
     QCOMPARE(dspInterfaces.count(), 3);
 
-    DemoRangeDspValues rangeValues(rangeChannelCount);
+    DemoValuesDspRange rangeValues(rangeChannelCount);
     rangeValues.setFrequency(15);
     for(int i = 0; i < rangeChannelCount; i++)
         rangeValues.setRmsValue(i, i);
@@ -118,7 +118,7 @@ void test_range_module_regression::injectActualValuesWithPreScaling()
     const QList<TestDspInterfacePtr>& dspInterfaces = testRunner.getDspInterfaceList();
     QCOMPARE(dspInterfaces.count(), 3);
 
-    DemoRangeDspValues rangeValues(rangeChannelCount);
+    DemoValuesDspRange rangeValues(rangeChannelCount);
     rangeValues.setFrequency(15);
     for(int i = 0; i < rangeChannelCount; i++)
         rangeValues.setRmsValue(i, i);
