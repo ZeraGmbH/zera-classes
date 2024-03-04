@@ -12,10 +12,6 @@ static int constexpr dftEntityId = 1050;
 static int constexpr fftEntityId = 1060;
 static int constexpr adjEntityId = 1190;
 static int constexpr scpiEntityId = 9999;
-// do not dump scpimodule: It contains random sorted ACT_DEV_IFACE component
-const QList<int> test_adj_module_regression::m_entityIdListForDump =
-    QList<int>() << rangeEntityId << rmsEntityId << dftEntityId << fftEntityId << adjEntityId;
-
 
 void test_adj_module_regression::minimalSession()
 {
@@ -41,7 +37,8 @@ void test_adj_module_regression::veinDumpInitial()
     VeinStorage::VeinHash* storageHash = testRunner.getVeinStorageSystem();
     QByteArray jsonDumped;
     QBuffer buff(&jsonDumped);
-    storageHash->dumpToFile(&buff, m_entityIdListForDump);
+    // just dump adjustment module to reduce FF on changing other modules
+    storageHash->dumpToFile(&buff, QList<int>() << adjEntityId);
 
     if(jsonExpected != jsonDumped) {
         qWarning("Expected storage hash:");
