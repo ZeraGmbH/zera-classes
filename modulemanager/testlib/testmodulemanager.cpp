@@ -33,15 +33,15 @@ TestModuleManager::TestModuleManager(ModuleManagerSetupFacade *setupFacade,
     ModulemanagerConfigTest::supportOeTests();
 }
 
-void TestModuleManager::startAllTestServices(QString deviceName)
+void TestModuleManager::startAllTestServices(QString deviceName, bool initialAdjPermission)
 {
     if (m_mockAllServices)
         m_mockAllServices = nullptr;
 
     if(deviceName == "mt310s2")
-        m_mockAllServices = std::make_unique<TestAllServicesMt310s2>(std::make_shared<TestFactoryI2cCtrl>(true));
+        m_mockAllServices = std::make_unique<TestAllServicesMt310s2>(std::make_shared<TestFactoryI2cCtrl>(initialAdjPermission));
     else if(deviceName == "com5003")
-        m_mockAllServices = std::make_unique<TestAllServicesCom5003>(std::make_shared<TestFactoryI2cCtrl>(true));
+        m_mockAllServices = std::make_unique<TestAllServicesCom5003>(std::make_shared<TestFactoryI2cCtrl>(initialAdjPermission));
 }
 
 void TestModuleManager::destroyModulesAndWaitUntilAllShutdown()

@@ -14,7 +14,7 @@ class ModuleManagerTestRunner : public QObject
 {
     Q_OBJECT
 public:
-    ModuleManagerTestRunner(QString sessionFileName, QString deviceName = "mt310s2");
+    ModuleManagerTestRunner(QString sessionFileName, bool initialAdjPermission = false, QString deviceName = "mt310s2");
     ~ModuleManagerTestRunner();
     VeinStorage::VeinHash* getVeinStorageSystem();
     const QList<TestDspInterfacePtr>& getDspInterfaceList() const;

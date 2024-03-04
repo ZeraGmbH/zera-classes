@@ -1,7 +1,7 @@
 #include "modulemanagertestrunner.h"
 #include <timemachineobject.h>
 
-ModuleManagerTestRunner::ModuleManagerTestRunner(QString sessionFileName, QString deviceName)
+ModuleManagerTestRunner::ModuleManagerTestRunner(QString sessionFileName, bool initialAdjPermission, QString deviceName)
 {
     m_licenseSystem = std::make_unique<LicenseSystemMock>();
     m_modmanFacade = std::make_unique<ModuleManagerSetupFacade>(m_licenseSystem.get());
@@ -9,7 +9,7 @@ ModuleManagerTestRunner::ModuleManagerTestRunner(QString sessionFileName, QStrin
     m_modMan = std::make_unique<TestModuleManager>(m_modmanFacade.get(), m_serviceInterfaceFactory);
     m_modMan->loadAllAvailableModulePlugins();
     m_modMan->setupConnections();
-    m_modMan->startAllTestServices(deviceName);
+    m_modMan->startAllTestServices(deviceName, initialAdjPermission);
     m_modMan->loadSession(sessionFileName);
     m_modMan->waitUntilModulesAreReady();
     m_vfCmdEventHandlerSystem = std::make_shared<VfCmdEventHandlerSystem>();

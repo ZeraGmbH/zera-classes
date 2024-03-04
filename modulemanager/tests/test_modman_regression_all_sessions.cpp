@@ -56,7 +56,7 @@ int test_modman_regression_all_sessions::generateCodeLists(QString device)
     TestModuleManager modMan(&modManSetupFacade, m_serviceInterfaceFactory);
     modMan.loadAllAvailableModulePlugins();
     modMan.setupConnections();
-    modMan.startAllTestServices(device);
+    modMan.startAllTestServices(device, false);
     for(const auto &session : sessions) {
         modMan.changeSessionFile(session);
         modMan.waitUntilModulesAreReady();
@@ -82,7 +82,7 @@ QStringList test_modman_regression_all_sessions::generateCodeLinesForDeviceSessi
     codeLines.append("TestModuleManager modMan(&modManSetupFacade, m_serviceInterfaceFactory);");
     codeLines.append("modMan.loadAllAvailableModulePlugins();");
     codeLines.append("modMan.setupConnections();");
-    codeLines.append("modMan.startAllTestServices(\"" + device + "\");");
+    codeLines.append("modMan.startAllTestServices(\"" + device + "\", false);");
     codeLines.append("modMan.changeSessionFile(\"" + session + "\");");
     codeLines.append("modMan.waitUntilModulesAreReady();");
     codeLines.append("");
@@ -138,7 +138,7 @@ void test_modman_regression_all_sessions::regressionCom5003Ced()
     TestModuleManager modMan(&modManSetupFacade, m_serviceInterfaceFactory);
     modMan.loadAllAvailableModulePlugins();
     modMan.setupConnections();
-    modMan.startAllTestServices("com5003");
+    modMan.startAllTestServices("com5003", false);
     modMan.changeSessionFile("com5003-ced-session.json");
     modMan.waitUntilModulesAreReady();
 
@@ -242,7 +242,7 @@ void test_modman_regression_all_sessions::regressionCom5003Meas()
     TestModuleManager modMan(&modManSetupFacade, m_serviceInterfaceFactory);
     modMan.loadAllAvailableModulePlugins();
     modMan.setupConnections();
-    modMan.startAllTestServices("com5003");
+    modMan.startAllTestServices("com5003", false);
     modMan.changeSessionFile("com5003-meas-session.json");
     modMan.waitUntilModulesAreReady();
 
@@ -358,7 +358,7 @@ void test_modman_regression_all_sessions::regressionCom5003PerPhase()
     TestModuleManager modMan(&modManSetupFacade, m_serviceInterfaceFactory);
     modMan.loadAllAvailableModulePlugins();
     modMan.setupConnections();
-    modMan.startAllTestServices("com5003");
+    modMan.startAllTestServices("com5003", false);
     modMan.changeSessionFile("com5003-perphase-session.json");
     modMan.waitUntilModulesAreReady();
 
@@ -478,7 +478,7 @@ void test_modman_regression_all_sessions::regressionCom5003Ref()
     TestModuleManager modMan(&modManSetupFacade, m_serviceInterfaceFactory);
     modMan.loadAllAvailableModulePlugins();
     modMan.setupConnections();
-    modMan.startAllTestServices("com5003");
+    modMan.startAllTestServices("com5003", false);
     modMan.changeSessionFile("com5003-ref-session.json");
     modMan.waitUntilModulesAreReady();
 
@@ -530,7 +530,7 @@ void test_modman_regression_all_sessions::regressionMt310s2Ced()
     TestModuleManager modMan(&modManSetupFacade, m_serviceInterfaceFactory);
     modMan.loadAllAvailableModulePlugins();
     modMan.setupConnections();
-    modMan.startAllTestServices("mt310s2");
+    modMan.startAllTestServices("mt310s2", false);
     modMan.changeSessionFile("mt310s2-ced-session.json");
     modMan.waitUntilModulesAreReady();
 
@@ -630,7 +630,7 @@ void test_modman_regression_all_sessions::regressionMt310s2Dc()
     TestModuleManager modMan(&modManSetupFacade, m_serviceInterfaceFactory);
     modMan.loadAllAvailableModulePlugins();
     modMan.setupConnections();
-    modMan.startAllTestServices("mt310s2");
+    modMan.startAllTestServices("mt310s2", false);
     modMan.changeSessionFile("mt310s2-dc-session.json");
     modMan.waitUntilModulesAreReady();
 
@@ -738,7 +738,7 @@ void test_modman_regression_all_sessions::regressionMt310s2EmobAc()
     TestModuleManager modMan(&modManSetupFacade, m_serviceInterfaceFactory);
     modMan.loadAllAvailableModulePlugins();
     modMan.setupConnections();
-    modMan.startAllTestServices("mt310s2");
+    modMan.startAllTestServices("mt310s2", false);
     modMan.changeSessionFile("mt310s2-emob-session-ac.json");
     modMan.waitUntilModulesAreReady();
 
@@ -842,7 +842,7 @@ void test_modman_regression_all_sessions::regressionMt310s2EmobDc()
     TestModuleManager modMan(&modManSetupFacade, m_serviceInterfaceFactory);
     modMan.loadAllAvailableModulePlugins();
     modMan.setupConnections();
-    modMan.startAllTestServices("mt310s2");
+    modMan.startAllTestServices("mt310s2", false);
     modMan.changeSessionFile("mt310s2-emob-session-dc.json");
     modMan.waitUntilModulesAreReady();
 
@@ -930,7 +930,7 @@ void test_modman_regression_all_sessions::regressionMt310s2EmobAcDc()
     TestModuleManager modMan(&modManSetupFacade, m_serviceInterfaceFactory);
     modMan.loadAllAvailableModulePlugins();
     modMan.setupConnections();
-    modMan.startAllTestServices("mt310s2");
+    modMan.startAllTestServices("mt310s2", false);
     modMan.changeSessionFile("mt310s2-emob-session.json");
     modMan.waitUntilModulesAreReady();
 
@@ -1038,7 +1038,7 @@ void test_modman_regression_all_sessions::regressionMt310s2Meas()
     TestModuleManager modMan(&modManSetupFacade, m_serviceInterfaceFactory);
     modMan.loadAllAvailableModulePlugins();
     modMan.setupConnections();
-    modMan.startAllTestServices("mt310s2");
+    modMan.startAllTestServices("mt310s2", false);
     modMan.changeSessionFile("mt310s2-meas-session.json");
     modMan.waitUntilModulesAreReady();
 
