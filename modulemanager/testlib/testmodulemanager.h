@@ -11,7 +11,7 @@ public:
 
     explicit TestModuleManager(ModuleManagerSetupFacade *setupFacade,
                                AbstractFactoryServiceInterfacesPtr serviceInterfaceFactory,
-                               bool demo = false);
+                               bool demo);
     void startAllServiceMocks(QString deviceName) override;
     void destroyModulesAndWaitUntilAllShutdown();
     void waitUntilModulesAreReady();
