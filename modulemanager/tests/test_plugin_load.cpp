@@ -34,7 +34,7 @@ void test_plugin_load::loadModulePluginsInstalled()
 
 void test_plugin_load::loadModulePluginsSources()
 {
-    TestModuleManager modMan(nullptr, nullptr, true);
+    TestModuleManager modMan(nullptr, nullptr);
 
     bool modulesFound = modMan.loadAllAvailableModulePlugins();
     QVERIFY(modulesFound);
