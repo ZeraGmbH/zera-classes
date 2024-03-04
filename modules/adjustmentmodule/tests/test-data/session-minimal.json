@@ -24,6 +24,11 @@
           "name" : "adjustmentmodule",
           "configFile" : "mt310s2-adjustmentmodule.xml",
           "id": 1190
+        },
+        {
+          "name" : "scpimodule",
+          "configFile" : "mt310s2-scpimodule.xml",
+          "id": 9999
         }
     ]
 }
