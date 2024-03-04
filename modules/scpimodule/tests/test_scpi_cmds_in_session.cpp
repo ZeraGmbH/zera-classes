@@ -156,7 +156,7 @@ void test_scpi_cmds_in_session::setupServices(QString sessionFileName)
     m_modMan = std::make_unique<TestModuleManager>(m_modmanFacade.get(), m_serviceInterfaceFactory);
     m_modMan->loadAllAvailableModulePlugins();
     m_modMan->setupConnections();
-    m_modMan->startAllTestServices("mt310s2");
+    m_modMan->startAllTestServices("mt310s2", false);
     m_modMan->loadSession(sessionFileName);
     m_modMan->waitUntilModulesAreReady();
 }
