@@ -9,8 +9,6 @@ class test_adj_module_regression : public QObject
 private slots:
     void minimalSession();
     void veinDumpInitial();
-private:
-    static const QList<int> m_entityIdListForDump;
 };
 
 #endif // TEST_ADJ_MODULE_REGRESSION_H
