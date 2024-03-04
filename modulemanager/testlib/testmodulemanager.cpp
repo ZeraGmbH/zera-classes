@@ -3,6 +3,7 @@
 #include "testallservicesmt310s2.h"
 #include "modulemanagerconfigtest.h"
 #include "jsonsessionloadertest.h"
+#include <testfactoryi2cctrl.h>
 #include <timemachineobject.h>
 #include <timerfactoryqtfortest.h>
 #include <QDir>
@@ -38,9 +39,9 @@ void TestModuleManager::startAllServiceMocks(QString deviceName)
         m_mockAllServices = nullptr;
 
     if(deviceName == "mt310s2")
-        m_mockAllServices = std::make_unique<TestAllServicesMt310s2>();
+        m_mockAllServices = std::make_unique<TestAllServicesMt310s2>(std::make_shared<TestFactoryI2cCtrl>(true));
     else if(deviceName == "com5003")
-        m_mockAllServices = std::make_unique<TestAllServicesCom5003>();
+        m_mockAllServices = std::make_unique<TestAllServicesCom5003>(std::make_shared<TestFactoryI2cCtrl>(true));
 }
 
 void TestModuleManager::destroyModulesAndWaitUntilAllShutdown()
