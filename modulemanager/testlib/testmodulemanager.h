@@ -11,7 +11,7 @@ public:
 
     explicit TestModuleManager(ModuleManagerSetupFacade *setupFacade,
                                AbstractFactoryServiceInterfacesPtr serviceInterfaceFactory);
-    void startAllServiceMocks(QString deviceName) override;
+    void startAllTestServices(QString deviceName);
     void destroyModulesAndWaitUntilAllShutdown();
     void waitUntilModulesAreReady();
     QList<ZeraModules::ModuleData *> getModuleList();

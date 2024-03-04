@@ -33,7 +33,7 @@ TestModuleManager::TestModuleManager(ModuleManagerSetupFacade *setupFacade,
     ModulemanagerConfigTest::supportOeTests();
 }
 
-void TestModuleManager::startAllServiceMocks(QString deviceName)
+void TestModuleManager::startAllTestServices(QString deviceName)
 {
     if (m_mockAllServices)
         m_mockAllServices = nullptr;

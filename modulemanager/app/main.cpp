@@ -143,7 +143,7 @@ int main(int argc, char *argv[])
         demoMode,
         app.get());
     if(demoMode)
-        modMan->startAllServiceMocks(demoDeviceName);
+        modMan->startAllDemoServices(demoDeviceName);
 
     // setup vein modules
     VeinNet::NetworkSystem *netSystem = new VeinNet::NetworkSystem(app.get());

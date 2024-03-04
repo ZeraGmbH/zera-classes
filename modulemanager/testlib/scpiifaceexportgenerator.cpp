@@ -25,7 +25,7 @@ void ScpiIfaceExportGenerator::setDevice(QString device)
     if(m_device != device) {
         m_modman->destroyModulesAndWaitUntilAllShutdown();
         ModulemanagerConfig::setDemoDevice(device, false);
-        m_modman->startAllServiceMocks(device);
+        m_modman->startAllTestServices(device);
         m_device = device;
     }
 }
