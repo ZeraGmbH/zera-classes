@@ -151,9 +151,38 @@ void test_range_module_regression::injectActualValuesWithPreScaling()
     }
 }
 
-void test_range_module_regression::injectActualValuesWithCheating()
+void test_range_module_regression::injectActualValuesWithCheatingDisabled()
 {
     ModuleManagerTestRunner testRunner(":/session-range-test.json");
+    setVfEnableIgnoringRmsValues(testRunner.getVfCmdEventHandlerSystemPtr(), 0);
+    setVfIgnoreRmsValues(testRunner.getVfCmdEventHandlerSystemPtr(), 2);
+
+    const QList<TestDspInterfacePtr>& dspInterfaces = testRunner.getDspInterfaceList();
+    QCOMPARE(dspInterfaces.count(), 3);
+
+    DemoValuesDspRange rangeValues(rangeChannelCount);
+    rangeValues.setFrequency(15);
+    for(int i = 0; i < rangeChannelCount; i++)
+        rangeValues.setRmsValue(i, i);
+
+    TimeMachineForTest::getInstance()->processTimers(500); //for 'm_AdjustTimer'
+    dspInterfaces[dspInterfaces::RangeModuleMeasProgram]->fireActValInterrupt(rangeValues.getDspValues(), irqNr);
+    QSignalSpy spyDspWrite(dspInterfaces[dspInterfaces::AdjustManagement].get(), &MockDspInterface::sigDspMemoryWrite);
+    TimeMachineObject::feedEventLoop();
+
+    QCOMPARE(spyDspWrite.count(), 3);
+    QVariant arguments = spyDspWrite[0][1];
+    QVector<float> writtenCorrData = arguments.value<QVector<float>>();
+    QVector<float> expectedGainCorr = {1, 1, 1, 1, 1, 1, 1, 1};
+    //Extract first 8 values. They are corresponding to 8 channels, others are not used
+    QVector<float> actualGainCorr = writtenCorrData.mid(0, 8);
+    QCOMPARE(expectedGainCorr, actualGainCorr);
+}
+
+void test_range_module_regression::injectActualValuesWithCheatingEnabled()
+{
+    ModuleManagerTestRunner testRunner(":/session-range-test.json");
+    setVfEnableIgnoringRmsValues(testRunner.getVfCmdEventHandlerSystemPtr(), 1);
     setVfIgnoreRmsValues(testRunner.getVfCmdEventHandlerSystemPtr(), 2);
 
     const QList<TestDspInterfacePtr>& dspInterfaces = testRunner.getDspInterfaceList();
@@ -173,6 +202,7 @@ void test_range_module_regression::injectActualValuesWithCheating()
     QVariant arguments = spyDspWrite[0][1];
     QVector<float> writtenCorrData = arguments.value<QVector<float>>();
     //Threshold is UL1-2-3-AUX = 5V, IL1-2-3 = 0.2A / IAUX ≈ 0
+    //RMS Values {UL1 = 0, UL2 = 1, UL3 = 2, IL1 = 3, IL2 = 4, IL3 = 5, UAUX =6, IAUX = 7}
     //Gain correction channel sequence : {UL1, IL1, .....}
     QVector<float> expectedGainCorr = {1e-10, 1, 1e-10, 1, 1e-10, 1, 1, 1};
     //Extract first 8 values. They are corresponding to 8 channels, others are not used
@@ -183,6 +213,7 @@ void test_range_module_regression::injectActualValuesWithCheating()
 void test_range_module_regression::injectActualValuesWithCheatingAndRangeChanged()
 {
     ModuleManagerTestRunner testRunner(":/session-range-test.json");
+    setVfEnableIgnoringRmsValues(testRunner.getVfCmdEventHandlerSystemPtr(), 1);
     setVfIgnoreRmsValues(testRunner.getVfCmdEventHandlerSystemPtr(), 2);
 
     const QList<TestDspInterfacePtr>& dspInterfaces = testRunner.getDspInterfaceList();
@@ -237,6 +268,17 @@ void test_range_module_regression::setVfPreScaling(VfCmdEventHandlerSystemPtr vf
     setter = VfClientComponentSetter::create("PAR_PreScalingGroup0", entityItem);
     entityItem->addItem(setter);
     setter->startSetComponent("1/1", value);
+    TimeMachineObject::feedEventLoop();
+}
+
+void test_range_module_regression::setVfEnableIgnoringRmsValues(VfCmdEventHandlerSystemPtr vfCmdEventHandlerSystem, QVariant value)
+{
+    VfCmdEventItemEntityPtr entityItem = VfEntityComponentEventItem::create(rangeEntityId);
+    vfCmdEventHandlerSystem->addItem(entityItem);
+
+    VfClientComponentSetterPtr setter = VfClientComponentSetter::create("PAR_IgnoreRmsValuesOnOff", entityItem);
+    entityItem->addItem(setter);
+    setter->startSetComponent(0, value);
     TimeMachineObject::feedEventLoop();
 }
 

@@ -99,6 +99,7 @@ signals:
 
 public slots:
     void setPercThresholdToIgnoreRms(QVariant percThreshold);
+    void setEnableCalculatingThreshold(QVariant enableThresholdCalc);
 
 protected slots:
     void catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant answer);
@@ -119,6 +120,7 @@ private:
     double m_fPhaseCorrection;
     double m_fOffsetCorrection;
     double m_percentThreshold;
+    bool m_enableThreshold = false;
     quint32 m_nStatus;
     QString m_sRangeListAlias; // all range alias: alias1;alias2 ....
 
