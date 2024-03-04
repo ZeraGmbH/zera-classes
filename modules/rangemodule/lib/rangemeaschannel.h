@@ -91,7 +91,6 @@ public:
     double getPeakValueWithDc() const;
     void setPeakValueWithDc(double peakValueWithDc);
 
-    void calculateThresholdToIgnoreRms();
     double getThresholdToIgnoreRms();
 
 signals:
@@ -120,7 +119,6 @@ private:
     double m_fPhaseCorrection;
     double m_fOffsetCorrection;
     double m_percentThreshold;
-    double m_thresholdToIgnoreRms = 0.0;
     quint32 m_nStatus;
     QString m_sRangeListAlias; // all range alias: alias1;alias2 ....
 
