@@ -1,5 +1,6 @@
 #include "test_scpi_cmds_in_session.h"
 #include "licensesystemmock.h"
+#include "modulemanagertestrunner.h"
 #include "testmodulemanager.h"
 #include "testfactoryserviceinterfaces.h"
 #include "scpimoduleclientblocked.h"
@@ -16,24 +17,10 @@
 
 QTEST_MAIN(test_scpi_cmds_in_session)
 
-void test_scpi_cmds_in_session::initTestCase()
-{
-    m_serviceInterfaceFactory = std::make_shared<TestFactoryServiceInterfaces>();
-}
-
-void test_scpi_cmds_in_session::cleanup()
-{
-    m_modMan->destroyModulesAndWaitUntilAllShutdown();
-    m_modMan = nullptr;
-    m_modmanFacade = nullptr;
-    m_licenseSystem = nullptr;
-}
-
 void test_scpi_cmds_in_session::initialSession()
 {
-    setupServices(":/session-scpi-only.json");
-
-    VeinStorage::VeinHash* storageHash = m_modmanFacade->getStorageSystem();
+    ModuleManagerTestRunner testRunner(":/session-scpi-only.json");
+    VeinStorage::VeinHash* storageHash = testRunner.getVeinStorageSystem();
     QList<int> entityList = storageHash->getEntityList();
     QCOMPARE(entityList.count(), 2);
 
@@ -43,7 +30,7 @@ void test_scpi_cmds_in_session::initialSession()
 
 void test_scpi_cmds_in_session::initialTestClient()
 {
-    setupServices(":/session-scpi-only.json");
+    ModuleManagerTestRunner testRunner(":/session-scpi-only.json");
 
     ScpiModuleClientBlocked client;
     QString receive1 = client.sendReceive("*STB?");
@@ -55,7 +42,7 @@ void test_scpi_cmds_in_session::initialTestClient()
 
 void test_scpi_cmds_in_session::minScpiDevIface()
 {
-    setupServices(":/session-scpi-only.json");
+    ModuleManagerTestRunner testRunner(":/session-scpi-only.json");
 
     ScpiModuleClientBlocked client;
     QString receive = client.sendReceive("dev:iface?", false);
@@ -69,7 +56,7 @@ void test_scpi_cmds_in_session::minScpiDevIface()
 
 void test_scpi_cmds_in_session::initialScpiCommandsOnOtherModules()
 {
-    setupServices(":/session-two-modules.json");
+    ModuleManagerTestRunner testRunner(":/session-two-modules.json");
 
     ScpiModuleClientBlocked client;
     QString receive1 = client.sendReceive("*STB?");
@@ -89,7 +76,7 @@ void test_scpi_cmds_in_session::multiReadDoubleDeleteCrasher()
 {
     // * double delete fixed by 3766814ec0fae75ad7f18c7f71c34a767675e6e4.
     // * tested by reverting fix -> crashed
-    setupServices(":/session-three-modules.json");
+    ModuleManagerTestRunner testRunner(":/session-three-modules.json");
 
     // multi read to cause double delete crasher
     ScpiModuleClientBlocked client;
@@ -105,9 +92,9 @@ void test_scpi_cmds_in_session::multiReadDoubleDeleteCrasher()
 
 void test_scpi_cmds_in_session::devIfaceVeinComponent()
 {
-    setupServices(":/session-scpi-only.json");
+    ModuleManagerTestRunner testRunner(":/session-scpi-only.json");
 
-    VeinStorage::VeinHash* storageHash = m_modmanFacade->getStorageSystem();
+    VeinStorage::VeinHash* storageHash = testRunner.getVeinStorageSystem();
     QList<QString> componentList = storageHash->getEntityComponents(9999);
     QVERIFY(componentList.contains("ACT_DEV_IFACE"));
 
@@ -122,12 +109,12 @@ void test_scpi_cmds_in_session::devIfaceVeinComponent()
 
 void test_scpi_cmds_in_session::devIfaceVeinComponentMultipleEntities()
 {
-    setupServices(":/session-three-modules.json");
+    ModuleManagerTestRunner testRunner(":/session-three-modules.json");
 
     ScpiModuleClientBlocked client;
     QString receive = client.sendReceive("dev:iface?");
 
-    VeinStorage::VeinHash* storageHash = m_modmanFacade->getStorageSystem();
+    VeinStorage::VeinHash* storageHash = testRunner.getVeinStorageSystem();
     QVariant xmlDevIface = storageHash->getStoredValue(9999, "ACT_DEV_IFACE");
     XmlDocumentCompare compare;
     QVERIFY(compare.compareXml(xmlDevIface.toString(), receive, true));
@@ -135,28 +122,16 @@ void test_scpi_cmds_in_session::devIfaceVeinComponentMultipleEntities()
 
 void test_scpi_cmds_in_session::devIfaceVeinComponentMultipleEntitiesForLongXml()
 {
-    setupServices(":/session-many-modules.json"); // this is mt310s2-meas-session.json
+    ModuleManagerTestRunner testRunner(":/session-many-modules.json"); // this is mt310s2-meas-session.json
 
     ScpiModuleClientBlocked client;
     QString receive = client.sendReceive("dev:iface?");
 
-    VeinStorage::VeinHash* storageHash = m_modmanFacade->getStorageSystem();
+    VeinStorage::VeinHash* storageHash = testRunner.getVeinStorageSystem();
     QVariant xmlDevIface = storageHash->getStoredValue(9999, "ACT_DEV_IFACE");
     // testing this on target / vf-debugger cutted string of len 67395 characters
     QVERIFY(xmlDevIface.toString().size() >= 67395);
     qInfo("%i", xmlDevIface.toString().size());
     XmlDocumentCompare compare;
     QVERIFY(compare.compareXml(xmlDevIface.toString(), receive, true));
-}
-
-void test_scpi_cmds_in_session::setupServices(QString sessionFileName)
-{
-    m_licenseSystem = std::make_unique<LicenseSystemMock>();
-    m_modmanFacade = std::make_unique<ModuleManagerSetupFacade>(m_licenseSystem.get());
-    m_modMan = std::make_unique<TestModuleManager>(m_modmanFacade.get(), m_serviceInterfaceFactory);
-    m_modMan->loadAllAvailableModulePlugins();
-    m_modMan->setupConnections();
-    m_modMan->startAllTestServices("mt310s2", false);
-    m_modMan->loadSession(sessionFileName);
-    m_modMan->waitUntilModulesAreReady();
 }
