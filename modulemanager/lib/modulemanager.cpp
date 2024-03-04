@@ -23,12 +23,12 @@ QString ModuleManager::m_sessionPath = MODMAN_SESSION_PATH;
 
 ModuleManager::ModuleManager(ModuleManagerSetupFacade *setupFacade,
                              AbstractFactoryServiceInterfacesPtr serviceInterfaceFactory,
-                             bool demo, QObject *parent) :
+                             bool moduleDemoMode, QObject *parent) :
     QObject(parent),
     m_moduleStartLock(false),
     m_setupFacade(setupFacade),
     m_serviceInterfaceFactory(serviceInterfaceFactory),
-    m_demo(demo)
+    m_moduleDemoMode(moduleDemoMode)
 {
     m_timerAllModulesLoaded.start();
 
@@ -45,8 +45,8 @@ ModuleManager::ModuleManager(ModuleManagerSetupFacade *setupFacade,
         missingSessions.subtract(fileSet);
         qCritical() << "Missing session file(s)" << missingSessions;
     }
-    if(m_demo && !QString(ZC_SERVICES_IP).isEmpty())
-        qFatal("Running in demo mode, so ZC_SERIVCES_IP must be empty! It is set to: " ZC_SERVICES_IP);
+    if(m_moduleDemoMode && !QString(ZC_SERVICES_IP).isEmpty())
+        qFatal("Running modules in demo mode, so ZC_SERIVCES_IP must be empty! It is set to: " ZC_SERVICES_IP);
 }
 
 ModuleManager::~ModuleManager()
@@ -142,7 +142,7 @@ void ModuleManager::startModule(const QString & uniqueModuleName, const QString 
                                                       t_xmlConfigData,
                                                       m_setupFacade->getStorageSystem(),
                                                       m_serviceInterfaceFactory,
-                                                      m_demo);
+                                                      m_moduleDemoMode);
             VirtualModule *tmpModule = tmpFactory->createModule(moduleParam);
             if(tmpModule) {
                 connect(tmpModule, &VirtualModule::addEventSystem, this, &ModuleManager::onModuleEventSystemAdded);
