@@ -295,7 +295,7 @@ void ModuleManager::onModuleEventSystemAdded(VeinEvent::EventSystem *t_eventSyst
     m_setupFacade->addSystem(t_eventSystem);
 }
 
-void ModuleManager::startAllServiceMocks(QString deviceName)
+void ModuleManager::startAllDemoServices(QString deviceName)
 {
     if (m_mockAllServices)
         m_mockAllServices = nullptr;

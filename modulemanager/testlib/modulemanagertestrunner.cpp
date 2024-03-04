@@ -9,7 +9,7 @@ ModuleManagerTestRunner::ModuleManagerTestRunner(QString sessionFileName, QStrin
     m_modMan = std::make_unique<TestModuleManager>(m_modmanFacade.get(), m_serviceInterfaceFactory);
     m_modMan->loadAllAvailableModulePlugins();
     m_modMan->setupConnections();
-    m_modMan->startAllServiceMocks(deviceName);
+    m_modMan->startAllTestServices(deviceName);
     m_modMan->loadSession(sessionFileName);
     m_modMan->waitUntilModulesAreReady();
     m_vfCmdEventHandlerSystem = std::make_shared<VfCmdEventHandlerSystem>();

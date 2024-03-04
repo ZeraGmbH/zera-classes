@@ -40,7 +40,7 @@ public:
     void loadScripts(VeinScript::ScriptSystem *t_scriptSystem);
     void setupConnections();
     void loadDefaultSession();
-    virtual void startAllServiceMocks(QString deviceName);
+    void startAllDemoServices(QString deviceName);
 signals:
     void sigSessionSwitched(const QString &newSessionFile);
     void sigModulesLoaded(const QString &t_sessionPath, const QStringList &t_sessionsAvailable);
