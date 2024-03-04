@@ -120,7 +120,6 @@ quint32 cRangeMeasChannel::setRange(QString range)
 {
     m_sNewRange = range; // alias !!!!
     m_sActRange = range;
-    calculateThresholdToIgnoreRms();
 
     if (m_bActive) {
         quint32 msgnr = m_pcbInterface->setRange(m_sName, m_RangeInfoHash[range].name); // we set range per name not alias
@@ -796,20 +795,14 @@ void cRangeMeasChannel::setPeakValueWithDc(double peakValueWithDc)
     m_peakValueWithDc = peakValueWithDc;
 }
 
-void cRangeMeasChannel::calculateThresholdToIgnoreRms()
-{
-    m_thresholdToIgnoreRms = m_percentThreshold * getUrValue() / 100;
-}
-
 double cRangeMeasChannel::getThresholdToIgnoreRms()
 {
-    return m_thresholdToIgnoreRms;
+    return m_percentThreshold * getUrValue() / 100;
 }
 
 void cRangeMeasChannel::setPercThresholdToIgnoreRms(QVariant percThreshold)
 {
     m_percentThreshold = percThreshold.toDouble();
-    calculateThresholdToIgnoreRms();
 }
 
 double cRangeMeasChannel::getPeakValue() const
