@@ -6,7 +6,7 @@ ModuleManagerTestRunner::ModuleManagerTestRunner(QString sessionFileName, QStrin
     m_licenseSystem = std::make_unique<LicenseSystemMock>();
     m_modmanFacade = std::make_unique<ModuleManagerSetupFacade>(m_licenseSystem.get());
     m_serviceInterfaceFactory = std::make_shared<TestFactoryServiceInterfaces>();
-    m_modMan = std::make_unique<TestModuleManager>(m_modmanFacade.get(), m_serviceInterfaceFactory, true);
+    m_modMan = std::make_unique<TestModuleManager>(m_modmanFacade.get(), m_serviceInterfaceFactory);
     m_modMan->loadAllAvailableModulePlugins();
     m_modMan->setupConnections();
     m_modMan->startAllServiceMocks(deviceName);

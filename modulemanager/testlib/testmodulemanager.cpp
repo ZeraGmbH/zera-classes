@@ -21,12 +21,11 @@ void TestModuleManager::pointToInstalledSessionFiles()
 }
 
 TestModuleManager::TestModuleManager(ModuleManagerSetupFacade *setupFacade,
-                                     AbstractFactoryServiceInterfacesPtr serviceInterfaceFactory,
-                                     bool demo) :
+                                     AbstractFactoryServiceInterfacesPtr serviceInterfaceFactory) :
     ModuleManager(
         setupFacade,
         serviceInterfaceFactory,
-        demo)
+        true)
 {
     TimerFactoryQtForTest::enableTest();
     JsonSessionLoaderTest::supportOeTests();
