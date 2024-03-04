@@ -84,6 +84,7 @@ private:
     VfModuleParameter* m_pParOverloadOnOff;
     VfModuleComponent* m_pComponentOverloadMax;
     VfModuleParameter* m_ParIgnoreRmsValues;
+    VfModuleParameter* m_ParIgnoreRmsValuesOnOff;
 
     cDspMeasData* m_pGainCorrection2DSP; // copy of dsp internal correction data
     float* m_pfScale;

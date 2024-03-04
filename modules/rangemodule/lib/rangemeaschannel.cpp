@@ -797,12 +797,20 @@ void cRangeMeasChannel::setPeakValueWithDc(double peakValueWithDc)
 
 double cRangeMeasChannel::getThresholdToIgnoreRms()
 {
-    return m_percentThreshold * getUrValue() / 100;
+    if(m_enableThreshold)
+        return m_percentThreshold * getUrValue() / 100;
+    else
+        return 0.0;
 }
 
 void cRangeMeasChannel::setPercThresholdToIgnoreRms(QVariant percThreshold)
 {
     m_percentThreshold = percThreshold.toDouble();
+}
+
+void cRangeMeasChannel::setEnableCalculatingThreshold(QVariant enableThresholdCalc)
+{
+    m_enableThreshold = enableThresholdCalc.toBool();
 }
 
 double cRangeMeasChannel::getPeakValue() const

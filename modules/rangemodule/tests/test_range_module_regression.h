@@ -14,10 +14,12 @@ private slots:
     void checkActualValueCount();
     void injectActualValues();
     void injectActualValuesWithPreScaling();
-    void injectActualValuesWithCheating();
+    void injectActualValuesWithCheatingDisabled();
+    void injectActualValuesWithCheatingEnabled();
     void injectActualValuesWithCheatingAndRangeChanged();
 private:
     void setVfPreScaling(VfCmdEventHandlerSystemPtr vfCmdEventHandlerSystem, QVariant value);
+    void setVfEnableIgnoringRmsValues(VfCmdEventHandlerSystemPtr vfCmdEventHandlerSystem, QVariant value);
     void setVfIgnoreRmsValues(VfCmdEventHandlerSystemPtr vfCmdEventHandlerSystem, QVariant value);
     void setVfVoltageRanges(VfCmdEventHandlerSystemPtr vfCmdEventHandlerSystem, QVariant value);
 };
