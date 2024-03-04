@@ -1,0 +1,6 @@
+<RCC>
+    <qresource prefix="/">
+        <file>dumpInitial.json</file>
+        <file>session-minimal.json</file>
+    </qresource>
+</RCC>
