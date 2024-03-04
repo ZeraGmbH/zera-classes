@@ -172,6 +172,8 @@ void test_range_module_regression::injectActualValuesWithCheating()
     QCOMPARE(spyDspWrite.count(), 3);
     QVariant arguments = spyDspWrite[0][1];
     QVector<float> writtenCorrData = arguments.value<QVector<float>>();
+    //Threshold is Ul1-2-3-AUX = 25V, IL1-2-3 = 1A / IAUX ≈ 0
+    //Gain correction channel sequence : {UL1, IL1, .....}
     QVector<float> expectedGainCorr = {1e-10, 1, 1e-10, 1, 1e-10, 1, 1e-10, 1};
     //Extract first 8 values. They are corresponding to 8 channels, others are not used
     QVector<float> actualGainCorr = writtenCorrData.mid(0, 8);
@@ -181,7 +183,7 @@ void test_range_module_regression::injectActualValuesWithCheating()
 void test_range_module_regression::injectActualValuesWithCheatingAndRangeChanged()
 {
     ModuleManagerTestRunner testRunner(":/session-range-test.json");
-    setVfIgnoreRmsValues(testRunner.getVfCmdEventHandlerSystemPtr(), 10); //25V, 1A
+    setVfIgnoreRmsValues(testRunner.getVfCmdEventHandlerSystemPtr(), 10);
 
     const QList<TestDspInterfacePtr>& dspInterfaces = testRunner.getDspInterfaceList();
     QCOMPARE(dspInterfaces.count(), 3);
@@ -199,12 +201,13 @@ void test_range_module_regression::injectActualValuesWithCheatingAndRangeChanged
     QCOMPARE(spyDspWrite.count(), 3);
     QVariant arguments = spyDspWrite[0][1];
     QVector<float> writtenCorrData = arguments.value<QVector<float>>();
-    QVector<float> expectedGainCorr = {1e-10, 1, 1e-10, 1, 1e-10, 1, 1e-10, 1};//{1e-10, 1, 1, 1, 1, 1, 1, 1};
-    //Extract first 8 values. They are corresponding to 8 channels, others are not used
+    //Threshold is Ul1-2-3-AUX = 25V, IL1-2-3 = 1A / IAUX ≈ 0
+    //Gain correction channel sequence : {UL1, IL1, .....}
+    QVector<float> expectedGainCorr = {1e-10, 1, 1e-10, 1, 1e-10, 1, 1e-10, 1};
     QVector<float> actualGainCorr = writtenCorrData.mid(0, 8);
     QCOMPARE(expectedGainCorr, actualGainCorr);
 
-    setVfRanges(testRunner.getVfCmdEventHandlerSystemPtr(), "8V"); //0.8V, 1A
+    setVfVoltageRanges(testRunner.getVfCmdEventHandlerSystemPtr(), "8V");
     spyDspWrite.clear();
     TimeMachineForTest::getInstance()->processTimers(500); //for 'm_AdjustTimer'
     dspInterfaces[dspInterfaces::RangeModuleMeasProgram]->fireActValInterrupt(rangeValues.getDspValues(), irqNr);
@@ -213,6 +216,9 @@ void test_range_module_regression::injectActualValuesWithCheatingAndRangeChanged
     QCOMPARE(spyDspWrite.count(), 3);
     arguments = spyDspWrite[0][1];
     writtenCorrData = arguments.value<QVector<float>>();
+    //Threshold is UL1-2-3 = 0.8V / UAUX = 25V , IL1-2-3 = 1A / IAUX ≈ 0
+    //RMS Values {UL1 = 0, UL2 = 1, UL3 = 2, IL1 = 3, IL2 = 4, IL3 = 5, UAUX =6, IAUX = 7}
+    //Gain correction channel sequence : {UL1, IL1, .....}
     expectedGainCorr = {1e-10, 1, 1, 1, 1, 1, 1e-10, 1};
     actualGainCorr = writtenCorrData.mid(0, 8);
     QCOMPARE(expectedGainCorr, actualGainCorr);
@@ -245,7 +251,7 @@ void test_range_module_regression::setVfIgnoreRmsValues(VfCmdEventHandlerSystemP
     TimeMachineObject::feedEventLoop();
 }
 
-void test_range_module_regression::setVfRanges(VfCmdEventHandlerSystemPtr vfCmdEventHandlerSystem, QVariant value)
+void test_range_module_regression::setVfVoltageRanges(VfCmdEventHandlerSystemPtr vfCmdEventHandlerSystem, QVariant value)
 {
     VfCmdEventItemEntityPtr entityItem = VfEntityComponentEventItem::create(rangeEntityId);
     vfCmdEventHandlerSystem->addItem(entityItem);

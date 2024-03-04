@@ -19,7 +19,7 @@ private slots:
 private:
     void setVfPreScaling(VfCmdEventHandlerSystemPtr vfCmdEventHandlerSystem, QVariant value);
     void setVfIgnoreRmsValues(VfCmdEventHandlerSystemPtr vfCmdEventHandlerSystem, QVariant value);
-    void setVfRanges(VfCmdEventHandlerSystemPtr vfCmdEventHandlerSystem, QVariant value);
+    void setVfVoltageRanges(VfCmdEventHandlerSystemPtr vfCmdEventHandlerSystem, QVariant value);
 };
 
 #endif // TEST_RANGE_MODULE_REGRESSION_H
