@@ -33,7 +33,7 @@ class ModuleManager : public QObject
 public:
     explicit ModuleManager(ModuleManagerSetupFacade *setupFacade,
                            AbstractFactoryServiceInterfacesPtr serviceInterfaceFactory,
-                           bool demo = false,
+                           bool moduleDemoMode = false,
                            QObject *parent = nullptr);
     ~ModuleManager() override;
     bool loadAllAvailableModulePlugins();
@@ -77,7 +77,7 @@ private:
     QHash<QString, MeasurementModuleFactory*> m_factoryTable;
     QQueue<ModuleData *> m_deferredStartList;
 
-    bool m_demo;
+    bool m_moduleDemoMode; // To be obsoleted: Eiter run full production or inject a test/demo service factory
 
     QString m_sessionFile;
     QList<QString> m_sessionsAvailable;
