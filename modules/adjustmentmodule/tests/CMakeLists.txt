@@ -4,15 +4,30 @@ function(SETUP_QTESTS_MODULE)
         target_sources(${_testname}
             PRIVATE
             ${XML_SCHEMA_RESOURCE_ADJUSTMENTMODULE}
+            ${XML_SCHEMA_RESOURCE_RANGEMODULE}
+            ${XML_SCHEMA_RESOURCE_DFTMODULE}
+            ${XML_SCHEMA_RESOURCE_FFTMODULE}
+            ${XML_SCHEMA_RESOURCE_RMSMODULE}
         )
         target_link_libraries(${_testname}
             PRIVATE
+            zera-modulemanager-testlib
             adjustmentmodule-static
+            rangemodule-static
+            dftmodule-static
+            fftmodule-static
+            rmsmodule-static
+            Zera::VfConvenientCode
         )
     endforeach()
 endfunction()
 
 SETUP_QTESTS_MODULE(
     test_adjustment_config_load
+    test_adj_module_regression
 )
 
+target_sources(test_adj_module_regression
+    PRIVATE
+    test-data/test-data.qrc
+)

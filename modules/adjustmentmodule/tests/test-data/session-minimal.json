@@ -1,0 +1,29 @@
+{
+    "modules" : [
+        {
+          "name" : "rangemodule",
+          "configFile" : "mt310s2-rangemodule.xml",
+          "id": 1020
+        },
+        {
+          "name" : "rmsmodule",
+          "configFile" : "mt310s2-rmsmodule.xml",
+          "id": 1040
+        },
+        {
+          "name" : "dftmodule",
+          "configFile" : "mt310s2-dftmodule.xml",
+          "id": 1050
+        },
+        {
+          "name" : "fftmodule",
+          "configFile" : "mt310s2-fftmodule.xml",
+          "id": 1060
+        },
+        {
+          "name" : "adjustmentmodule",
+          "configFile" : "mt310s2-adjustmentmodule.xml",
+          "id": 1190
+        }
+    ]
+}
