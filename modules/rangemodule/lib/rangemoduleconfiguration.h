@@ -28,6 +28,8 @@ enum moduleconfigstate
     setRangeAutomatic,
     setMeasureInterval,
     setAdjustInterval,
+    setAdjustIgnoreRmsValuesEnable,
+    setAdjustIgnoreRmsValuesThreshold,
 
     setDefaultRange1 = 40, // max. 32 channels
     setSenseChannel1 = 72, // dito
