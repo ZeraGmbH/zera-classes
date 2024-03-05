@@ -1,4 +1,5 @@
 file(GLOB RESOURCES 
+    ${XML_SCHEMA_RESOURCES_ALL}
     ${CMAKE_CURRENT_SOURCE_DIR}/*.qrc
     )
 

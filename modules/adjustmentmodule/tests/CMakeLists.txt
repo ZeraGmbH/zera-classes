@@ -1,15 +1,6 @@
 function(SETUP_QTESTS_MODULE)
     SETUP_QTESTS(${ARGN})
     foreach(_testname ${ARGN})
-        target_sources(${_testname}
-            PRIVATE
-            ${XML_SCHEMA_RESOURCE_ADJUSTMENTMODULE}
-            ${XML_SCHEMA_RESOURCE_RANGEMODULE}
-            ${XML_SCHEMA_RESOURCE_DFTMODULE}
-            ${XML_SCHEMA_RESOURCE_FFTMODULE}
-            ${XML_SCHEMA_RESOURCE_RMSMODULE}
-            ${XML_SCHEMA_RESOURCE_SCPIMODULE}
-        )
         target_link_libraries(${_testname}
             PRIVATE
             zera-modulemanager-testlib

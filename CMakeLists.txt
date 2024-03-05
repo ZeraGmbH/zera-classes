@@ -83,10 +83,13 @@ macro(SET_MODULE_ENV MODULE_NAME)
     # scpimodule running tests with other modules
     add_compile_definitions(CONFIG_SOURCES_${MODULE_NAME_UPPER}="${MODULE_CONFIG_PATH}")
 
-    # xml-schema resources are required by modules and tests. If we put resource into
-    # our library both would need some call of Q_INIT_RESOURCE. So publish resource
+    # xmlschema resources are required by modules, tests and scpi-doc. If we put resource into
+    # some library it would need some call of Q_INIT_RESOURCE. So publish resource
     # location and compile in where needed.
-    set(XML_SCHEMA_RESOURCE_${MODULE_NAME_UPPER} ${MODULE_CONFIG_PATH}/xml-schema.qrc)
+    set(MODULE_SCHEMA_RESOURCE ${MODULE_CONFIG_PATH}/xmlschema.qrc)
+    if(EXISTS ${MODULE_SCHEMA_RESOURCE})
+        set(XML_SCHEMA_RESOURCES_ALL ${XML_SCHEMA_RESOURCES_ALL} ${MODULE_SCHEMA_RESOURCE})
+    endif()
 endmacro()
 
 # Notes
@@ -120,6 +123,7 @@ SET_MODULE_ENV(transformer1module)
 add_compile_definitions(MODULE_PLUGIN_BUILD_PATH="${MODULE_PLUGIN_BUILD_PATH}")
 
 enable_testing()
+
 # Inspired by
 # https://github.com/KDAB/kdabtv/blob/master/Qt-Widgets-and-more/UnitTests/Tests/CMakeLists.txt
 function(SETUP_QTESTS)
@@ -130,6 +134,10 @@ function(SETUP_QTESTS)
             ${_testname}.h
             ${_testname}.cpp
             )
+        target_sources(${_testname}
+            PUBLIC
+            ${XML_SCHEMA_RESOURCES_ALL}
+        )
         target_link_libraries(${_testname}
             PUBLIC
             zera-basemodule
