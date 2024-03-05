@@ -1,14 +1,14 @@
-#include "test_demovaluesdspdft.h"
+#include "test_dft_demovalues.h"
 #include "demovaluesdspdft.h"
 #include <QTest>
 
-QTEST_MAIN(test_demovaluesdspdft)
+QTEST_MAIN(test_dft_demovalues)
 
-const QStringList test_demovaluesdspdft::mtRmsLayout = QStringList() << "m0" << "m1" << "m2" << "m0-m1" << "m2-m1" << "m2-m0" << "m3" << "m4" << "m5" << "m6" << "m7";
+const QStringList test_dft_demovalues::mtRmsLayout = QStringList() << "m0" << "m1" << "m2" << "m0-m1" << "m2-m1" << "m2-m0" << "m3" << "m4" << "m5" << "m6" << "m7";
 
 static constexpr float sqrt2 = float(M_SQRT2);
 
-void test_demovaluesdspdft::addVoltage()
+void test_dft_demovalues::addVoltage()
 {
     DemoValuesDspDft dftValues(mtRmsLayout, 1);
     dftValues.setValue("m0", std::complex<float>(42, 0));
@@ -25,7 +25,7 @@ void test_demovaluesdspdft::addVoltage()
     QCOMPARE(getDspValue("m2", dspValue), std::complex<float>(0, 0));
 }
 
-void test_demovaluesdspdft::addCurrent()
+void test_dft_demovalues::addCurrent()
 {
     DemoValuesDspDft dftValues(mtRmsLayout, 1);
     dftValues.setValue("m3", std::complex<float>(42, 0));
@@ -42,7 +42,7 @@ void test_demovaluesdspdft::addCurrent()
     QCOMPARE(getDspValue("m5", dspValue), std::complex<float>(0, 0));
 }
 
-void test_demovaluesdspdft::setSymmetric()
+void test_dft_demovalues::setSymmetric()
 {
     DemoValuesDspDft dftValues(mtRmsLayout, 1);
     const float voltage = 230;
@@ -69,19 +69,19 @@ void test_demovaluesdspdft::setSymmetric()
     QCOMPARE(getDspValue("m2-m0", dspValue), std::complex<float>(0,0));
 }
 
-float test_demovaluesdspdft::gradToRad(float grad)
+float test_dft_demovalues::gradToRad(float grad)
 {
     return grad * float(M_PI) / 180.0;
 }
 
-std::complex<float> test_demovaluesdspdft::getDspValue(QString valueChannelName, QVector<float> dspValues)
+std::complex<float> test_dft_demovalues::getDspValue(QString valueChannelName, QVector<float> dspValues)
 {
     int idxValue = mtRmsLayout.indexOf(valueChannelName) * 2;
     std::complex<float> value(dspValues[idxValue], dspValues[idxValue+1]);
     return value;
 }
 
-std::complex<float> test_demovaluesdspdft::getExpectedValue(float amplitude, float angle)
+std::complex<float> test_dft_demovalues::getExpectedValue(float amplitude, float angle)
 {
     return std::polar<float>(amplitude*sqrt2, gradToRad(-angle));
 }

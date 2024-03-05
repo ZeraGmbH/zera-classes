@@ -1,9 +1,9 @@
-#ifndef TEST_DEMOVALUESDSPRMS_H
-#define TEST_DEMOVALUESDSPRMS_H
+#ifndef TEST_RMSDEMOVALUES_H
+#define TEST_RMSDEMOVALUES_H
 
 #include <QObject>
 
-class test_demovaluesdsprms : public QObject
+class test_rms_demovalues : public QObject
 {
     Q_OBJECT
 private slots:
