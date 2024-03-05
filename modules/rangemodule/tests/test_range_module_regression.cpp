@@ -289,7 +289,7 @@ void test_range_module_regression::setVfIgnoreRmsValues(VfCmdEventHandlerSystemP
 
     VfClientComponentSetterPtr setter = VfClientComponentSetter::create("PAR_IgnoreRmsValues", entityItem);
     entityItem->addItem(setter);
-    setter->startSetComponent(0, value);
+    setter->startSetComponent(1, value);
     TimeMachineObject::feedEventLoop();
 }
 
