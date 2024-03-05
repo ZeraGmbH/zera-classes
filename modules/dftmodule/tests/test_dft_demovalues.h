@@ -1,10 +1,10 @@
-#ifndef TEST_DEMOVALUESDSPDFT_H
-#define TEST_DEMOVALUESDSPDFT_H
+#ifndef TEST_DFT_DEMOVALUES_H
+#define TEST_DFT_DEMOVALUES_H
 
 #include <complex>
 #include <QObject>
 
-class test_demovaluesdspdft : public QObject
+class test_dft_demovalues : public QObject
 {
     Q_OBJECT
 private slots:

@@ -11,6 +11,7 @@ endfunction()
 
 SETUP_QTESTS_MODULE(
     test_rms_config_load
+    test_rms_demovalues
     test_rms_module_regression
 )
 

@@ -12,6 +12,7 @@ endfunction()
 
 SETUP_QTESTS_MODULE(
     test_dft_config_load
+    test_dft_demovalues
     test_dft_module_regression
 )
 

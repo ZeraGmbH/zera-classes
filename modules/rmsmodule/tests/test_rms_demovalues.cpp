@@ -1,13 +1,13 @@
-#include "test_demovaluesdsprms.h"
+#include "test_rms_demovalues.h"
 #include "demovaluesdsprms.h"
 #include <QTest>
 #include <math.h>
 
-QTEST_MAIN(test_demovaluesdsprms)
+QTEST_MAIN(test_rms_demovalues)
 
-const QStringList test_demovaluesdsprms::mtRmsLayout = QStringList() << "m0" << "m1" << "m2" << "m0-m1" << "m2-m1" << "m2-m0" << "m3" << "m4" << "m5" << "m6" << "m7";
+const QStringList test_rms_demovalues::mtRmsLayout = QStringList() << "m0" << "m1" << "m2" << "m0-m1" << "m2-m1" << "m2-m0" << "m3" << "m4" << "m5" << "m6" << "m7";
 
-void test_demovaluesdsprms::addVoltage()
+void test_rms_demovalues::addVoltage()
 {
     DemoValuesDspRms rmsValues(mtRmsLayout);
     rmsValues.setValue("m0", 42);
@@ -24,7 +24,7 @@ void test_demovaluesdsprms::addVoltage()
     QCOMPARE(dspValue[mtRmsLayout.indexOf("m2")], 0);
 }
 
-void test_demovaluesdsprms::addCurrent()
+void test_rms_demovalues::addCurrent()
 {
     DemoValuesDspRms rmsValues(mtRmsLayout);
     rmsValues.setValue("m3", 42);
@@ -41,7 +41,7 @@ void test_demovaluesdsprms::addCurrent()
     QCOMPARE(dspValue[mtRmsLayout.indexOf("m5")], 0);
 }
 
-void test_demovaluesdsprms::setSymmetric()
+void test_rms_demovalues::setSymmetric()
 {
     DemoValuesDspRms rmsValues(mtRmsLayout);
     const float voltage = 230;
