@@ -224,7 +224,7 @@ void cRangeObsermatic::generateInterface()
                                                    QString("Percentage below which Rms values are ignored"),
                                                    QVariant(double(0.0)));
 
-    m_ParIgnoreRmsValues->setValidator(new cDoubleValidator(0, 100, 1e-3));
+    m_ParIgnoreRmsValues->setValidator(new cDoubleValidator(0, 2, 1e-1));
     m_pModule->m_veinModuleParameterMap["PAR_IgnoreRmsValues"] = m_ParIgnoreRmsValues;
     m_ParIgnoreRmsValues->setUnit("%");
     m_ParIgnoreRmsValues->setSCPIInfo(new cSCPIInfo("CONFIGURATION","IGNORERMSVAL", "10", m_ParIgnoreRmsValues->getName(), "0", m_ParIgnoreRmsValues->getUnit()));
