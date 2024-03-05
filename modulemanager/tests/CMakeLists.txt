@@ -40,19 +40,9 @@ add_custom_target(json-test-session ALL
 add_definitions(-DJSON_TEST_DIR="${CMAKE_CURRENT_SOURCE_DIR}/json-test-files")
 add_definitions(-DOE_INSTALL_ROOT="${OE_INSTALL_ROOT}")
 
-function(SETUP_TESTS)
+function(SETUP_QTESTS_MODULEMANAGER)
+    SETUP_QTESTS(${ARGN})
     foreach(_testname ${ARGN})
-        add_test(NAME ${_testname}
-                 COMMAND ${_testname})
-        add_executable(${_testname}
-            ${_testname}.h
-            ${_testname}.cpp
-            )
-        target_include_directories(${_testname}
-            PRIVATE
-            $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>
-            ${CMAKE_CURRENT_SOURCE_DIR}
-            )
         target_link_libraries(${_testname}
             PUBLIC
             testhelpers
@@ -62,7 +52,7 @@ function(SETUP_TESTS)
     endforeach()
 endfunction()
 
-SETUP_TESTS(
+SETUP_QTESTS_MODULEMANAGER(
     test_jsonloggercontentloader
     test_jsonconfigfiles
     test_loggercontentsessionloader
