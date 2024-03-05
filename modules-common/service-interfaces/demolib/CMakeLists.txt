@@ -22,6 +22,7 @@ target_link_libraries(module-service-interfaces-demolib
     dftmodule-demolib
     fftmodule-demolib
     rangemodule-demolib
+    rmsmodule-demolib
     Zera::service-interfaces-demolib
     Zera::zera-timers
 )
