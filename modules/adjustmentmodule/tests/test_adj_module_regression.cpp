@@ -1,6 +1,7 @@
 #include "test_adj_module_regression.h"
 #include "modulemanagertestrunner.h"
-#include "vs_veinhash.h"
+#include <vs_veinhash.h>
+#include <scpimoduleclientblocked.h>
 #include <QBuffer>
 #include <QTest>
 
@@ -47,4 +48,22 @@ void test_adj_module_regression::veinDumpInitial()
         qInfo("%s", qPrintable(jsonDumped));
         QCOMPARE(jsonExpected, jsonDumped);
     }
+}
+
+void test_adj_module_regression::adjInitWithPermission()
+{
+    ModuleManagerTestRunner testRunner(":/session-minimal.json", true);
+
+    ScpiModuleClientBlocked scpiClient;
+    QString response = scpiClient.sendReceive("calc:adj1:init IL1,10A;|*stb?");
+    QCOMPARE(response, "+0");
+}
+
+void test_adj_module_regression::adjInitWithoutPermission()
+{
+    ModuleManagerTestRunner testRunner(":/session-minimal.json", false);
+
+    ScpiModuleClientBlocked scpiClient;
+    QString response = scpiClient.sendReceive("calc:adj1:init IL1,10A;|*stb?");
+    QCOMPARE(response, "+0"); // Init seem to work without permission...
 }
