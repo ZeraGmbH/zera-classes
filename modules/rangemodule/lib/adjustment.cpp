@@ -17,8 +17,8 @@
 namespace RANGEMODULE 
 {
 
-cAdjustManagement::cAdjustManagement(cRangeModule *module, cSocket* dspsocket, cSocket* pcbsocket, QStringList chnlist, QStringList subdclist, double interval)
-    :m_pModule(module), m_pDSPSocket(dspsocket), m_pPCBSocket(pcbsocket), m_ChannelNameList(chnlist), m_subdcChannelNameList(subdclist), m_fAdjInterval(interval)
+cAdjustManagement::cAdjustManagement(cRangeModule *module, cSocket* dspsocket, cSocket* pcbsocket, QStringList chnlist, QStringList subdclist, adjustConfPar adjustmentConfig)
+    :m_pModule(module), m_pDSPSocket(dspsocket), m_pPCBSocket(pcbsocket), m_ChannelNameList(chnlist), m_subdcChannelNameList(subdclist), m_adjustmentConfig(adjustmentConfig)
 {
     m_dspInterface = m_pModule->getServiceInterfaceFactory()->createDspInterfaceRange(
         irqNr,
@@ -124,21 +124,23 @@ void cAdjustManagement::generateInterface()
     m_ParIgnoreRmsValuesOnOff = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
                                                       QString("PAR_IgnoreRmsValuesOnOff"),
                                                       QString("Enable or disable percentage below which Rms values are ignored"),
-                                                      QVariant(0));
+                                                      QVariant(m_adjustmentConfig.m_ignoreRmsValuesEnable.m_nActive));
 
     m_ParIgnoreRmsValuesOnOff->setValidator(new cBoolValidator());
     m_pModule->m_veinModuleParameterMap["PAR_IgnoreRmsValuesOnOff"] = m_ParIgnoreRmsValuesOnOff;
     m_ParIgnoreRmsValuesOnOff->setSCPIInfo(new cSCPIInfo("CONFIGURATION","ENABLEIGNORERMSVAL", "10", m_ParIgnoreRmsValuesOnOff->getName(), "0", ""));
+    connect(m_ParIgnoreRmsValuesOnOff, &VfModuleParameter::sigValueChanged, this, &cAdjustManagement::parIgnoreRmsValuesOnOffChanged);
 
     m_ParIgnoreRmsValues = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
                                                  QString("PAR_IgnoreRmsValues"),
                                                  QString("Percentage below which Rms values are ignored"),
-                                                 QVariant(double(1.0)));
+                                                 QVariant(m_adjustmentConfig.m_ignoreRmsValuesThreshold.m_fValue));
 
     m_ParIgnoreRmsValues->setValidator(new cDoubleValidator(0, 2, 1e-1));
     m_pModule->m_veinModuleParameterMap["PAR_IgnoreRmsValues"] = m_ParIgnoreRmsValues;
     m_ParIgnoreRmsValues->setUnit("%");
     m_ParIgnoreRmsValues->setSCPIInfo(new cSCPIInfo("CONFIGURATION","IGNORERMSVAL", "10", m_ParIgnoreRmsValues->getName(), "0", m_ParIgnoreRmsValues->getUnit()));
+    connect(m_ParIgnoreRmsValues, &VfModuleParameter::sigValueChanged, this, &cAdjustManagement::parIgnoreRmsValuesChanged);
 }
 
 
@@ -216,7 +218,7 @@ void cAdjustManagement::setSubDC()
 
 void cAdjustManagement::activationDone()
 {
-    m_AdjustTimer = TimerFactoryQt::createPeriodic(m_fAdjInterval*1000.0);
+    m_AdjustTimer = TimerFactoryQt::createPeriodic(m_adjustmentConfig.m_fAdjInterval*1000.0);
     m_AdjustTimer->start();
     connect(m_AdjustTimer.get(), &TimerTemplateQt::sigExpired, this, &cAdjustManagement::adjustPrepare);
     m_bActive = true;
@@ -299,8 +301,8 @@ void cAdjustManagement::ignoreRmsBelowThreshold()
     if (m_bActive)
     {
         measChannel = m_ChannelList.at(m_nChannelIt);
-        if(m_ParIgnoreRmsValuesOnOff->getValue().toBool()) {
-            threshold = m_ParIgnoreRmsValues->getValue().toDouble() * measChannel->getUrValue() / 100;
+        if(m_adjustmentConfig.m_ignoreRmsValuesEnable.m_nActive) {
+            threshold = m_adjustmentConfig.m_ignoreRmsValuesThreshold.m_fValue * measChannel->getUrValue() / 100;
             if(measChannel->getRmsValue() < threshold)
                 m_fGainCorr[measChannel->getDSPChannelNr()] = 1e-10;
         }
@@ -493,6 +495,18 @@ void cAdjustManagement::catchChannelReply(quint32 msgnr)
 void cAdjustManagement::adjustPrepare()
 {
     m_bAdjustTrigger = true;
+}
+
+void cAdjustManagement::parIgnoreRmsValuesOnOffChanged(QVariant newValue)
+{
+    m_adjustmentConfig.m_ignoreRmsValuesEnable.m_nActive = newValue.toInt();
+    emit m_pModule->parameterChanged();
+}
+
+void cAdjustManagement::parIgnoreRmsValuesChanged(QVariant newValue)
+{
+    m_adjustmentConfig.m_ignoreRmsValuesThreshold.m_fValue = newValue.toDouble();
+    emit m_pModule->parameterChanged();
 }
 
 }

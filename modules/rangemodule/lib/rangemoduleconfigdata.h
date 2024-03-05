@@ -17,11 +17,16 @@ struct boolParameter
     quint8 m_nActive; // active or not 1,0
 };
 
-
 struct stringParameter
 {
     QString m_sKey;
     QString m_sPar;
+};
+
+struct doubleParameter
+{
+    QString m_sKey;
+    double m_fValue;
 };
 
 struct cObsermaticConfPar
@@ -29,6 +34,13 @@ struct cObsermaticConfPar
     boolParameter m_nGroupAct; // grouping active or not 1,0
     boolParameter m_nRangeAutoAct; // range automatic active or not 1,0
     QList<stringParameter> m_senseChannelRangeParameter;
+};
+
+struct adjustConfPar
+{
+    double m_fAdjInterval; // adjustment interval 0.5 .. 5.0 sec.
+    boolParameter m_ignoreRmsValuesEnable;
+    doubleParameter m_ignoreRmsValuesThreshold;
 };
 
 class cRangeModuleConfigData
@@ -45,8 +57,8 @@ public:
     QList<int> m_GroupCountList; // the number of expected items per group
     QList<QStringList> m_GroupList; // here are our groups
     cObsermaticConfPar m_ObsermaticConfPar;
+    adjustConfPar m_adjustConfPar;
     double m_fMeasInterval; // measuring interval 0.1 .. 5.0 sec.
-    double m_fAdjInterval; // adjustment interval 0.5 .. 5.0 sec.
     cSocket m_RMSocket; // the sockets we can connect to
     cSocket m_PCBServerSocket;
     cSocket m_DSPServerSocket;

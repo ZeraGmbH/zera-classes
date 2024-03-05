@@ -97,7 +97,7 @@ void cRangeModule::setupModule()
     }
 
     // we also need some program for adjustment
-    m_pAdjustment = new cAdjustManagement(this, &(pConfData->m_DSPServerSocket), &pConfData->m_PCBServerSocket, pConfData->m_senseChannelList, pConfData->m_subdcChannelList, pConfData->m_fAdjInterval);
+    m_pAdjustment = new cAdjustManagement(this, &(pConfData->m_DSPServerSocket), &pConfData->m_PCBServerSocket, pConfData->m_senseChannelList, pConfData->m_subdcChannelList, pConfData->m_adjustConfPar);
     m_ModuleActivistList.append(m_pAdjustment);
     connect(m_pAdjustment, &cAdjustManagement::activated, this, &cRangeModule::activationContinue);
     connect(m_pAdjustment, &cAdjustManagement::deactivated, this, &cRangeModule::deactivationContinue);

@@ -50,6 +50,8 @@ void cRangeModuleConfiguration::setConfiguration(QByteArray xmlString)
 
     m_ConfigXMLMap["rangemodconfpar:configuration:measure:interval"] = setMeasureInterval;
     m_ConfigXMLMap["rangemodconfpar:configuration:adjustment:interval"] = setAdjustInterval;
+    m_ConfigXMLMap["rangemodconfpar:configuration:adjustment:ignoreRmsValues:enable"] = setAdjustIgnoreRmsValuesEnable;
+    m_ConfigXMLMap["rangemodconfpar:configuration:adjustment:ignoreRmsValues:threshold"] = setAdjustIgnoreRmsValuesThreshold;
 
     m_ConfigXMLMap["rangemodconfpar:parameter:sense:grouping"] = setGrouping;
     m_ConfigXMLMap["rangemodconfpar:parameter:sense:rangeauto"] = setRangeAutomatic;
@@ -80,6 +82,11 @@ QByteArray cRangeModuleConfiguration::exportConfiguration()
         sPar = sParList.at(i);
         m_pXMLReader->setValue(sPar.m_sKey, sPar.m_sPar);
     }
+
+    bPar = &m_pRangeModulConfigData->m_adjustConfPar.m_ignoreRmsValuesEnable;
+    m_pXMLReader->setValue(bPar->m_sKey, QString("%1").arg(bPar->m_nActive));
+    doubleParameter* dPar = &m_pRangeModulConfigData->m_adjustConfPar.m_ignoreRmsValuesThreshold;
+    m_pXMLReader->setValue(dPar->m_sKey, QString("%1").arg(dPar->m_fValue));
 
     return m_pXMLReader->getXMLConfig().toUtf8();
 }
@@ -173,7 +180,15 @@ void cRangeModuleConfiguration::configXMLInfo(QString key)
             m_pRangeModulConfigData->m_fMeasInterval = m_pXMLReader->getValue(key).toDouble(&ok);
             break;
         case setAdjustInterval:
-            m_pRangeModulConfigData->m_fAdjInterval = m_pXMLReader->getValue(key).toDouble(&ok);
+            m_pRangeModulConfigData->m_adjustConfPar.m_fAdjInterval = m_pXMLReader->getValue(key).toDouble(&ok);
+            break;
+        case setAdjustIgnoreRmsValuesEnable:
+            m_pRangeModulConfigData->m_adjustConfPar.m_ignoreRmsValuesEnable.m_sKey = key;
+            m_pRangeModulConfigData->m_adjustConfPar.m_ignoreRmsValuesEnable.m_nActive = m_pXMLReader->getValue(key).toInt(&ok);
+            break;
+        case setAdjustIgnoreRmsValuesThreshold:
+            m_pRangeModulConfigData->m_adjustConfPar.m_ignoreRmsValuesThreshold.m_sKey = key;
+            m_pRangeModulConfigData->m_adjustConfPar.m_ignoreRmsValuesThreshold.m_fValue = m_pXMLReader->getValue(key).toDouble(&ok);
             break;
         default:
             if ((cmd >= setDefaultRange1) && (cmd < setDefaultRange1 + 32))

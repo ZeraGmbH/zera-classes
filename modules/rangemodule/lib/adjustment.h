@@ -2,6 +2,7 @@
 #define ADJUSTMENT_H
 
 #include "rangemodule.h"
+#include "rangemoduleconfigdata.h"
 #include <moduleactivist.h>
 #include "abstractfactoryserviceinterfaces.h"
 #include <socket.h>
@@ -35,7 +36,7 @@ class cAdjustManagement: public cModuleActivist
 {
     Q_OBJECT
 public:
-    cAdjustManagement(cRangeModule* module, cSocket* dspsocket, cSocket* pcbsocket, QStringList chnlist, QStringList subdclist, double interval);
+    cAdjustManagement(cRangeModule* module, cSocket* dspsocket, cSocket* pcbsocket, QStringList chnlist, QStringList subdclist, adjustConfPar adjustmentConfig);
     virtual void generateInterface(); // here we export our interface (entities)
 public slots:
     virtual void ActionHandler(QVector<float> *actualValues); // entry after received actual values
@@ -48,7 +49,7 @@ private:
     cSocket* m_pPCBSocket;
     QStringList m_ChannelNameList; // the list of channels (names) we work on
     QStringList m_subdcChannelNameList; // the list of channels we have to subtract dc
-    double m_fAdjInterval;
+    adjustConfPar m_adjustmentConfig;
     DspInterfacePtr m_dspInterface;
     Zera::ProxyClientPtr m_dspClient;
     Zera::PcbInterfacePtr m_pcbInterface;
@@ -130,6 +131,8 @@ private slots:
 
     void adjustPrepare();
 
+    void parIgnoreRmsValuesOnOffChanged(QVariant newValue);
+    void parIgnoreRmsValuesChanged(QVariant newValue);
 };
 
 }

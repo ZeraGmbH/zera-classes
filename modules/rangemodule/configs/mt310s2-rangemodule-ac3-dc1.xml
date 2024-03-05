@@ -60,6 +60,10 @@
         </measure>
         <adjustment>
             <interval>0.5</interval>
+            <ignoreRmsValues>
+                <enable>0</enable>
+                <threshold>1.0</threshold>
+            </ignoreRmsValues>
         </adjustment>
     </configuration>
     <parameter>
