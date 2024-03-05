@@ -154,8 +154,9 @@ void cAdjustmentModuleMeasProgram::setAdjustEnvironment(QVariant var)
 double cAdjustmentModuleMeasProgram::cmpPhase(QVariant var)
 {
     QList<double> list = var.value<QList<double> >();
-    double phi = userAtan(list.at(1), list.at(0));
-    return phi;
+    if(list.count() != 2)
+        return qQNaN();
+    return userAtan(list.at(1), list.at(0));
 }
 
 double cAdjustmentModuleMeasProgram::symAngle(double ang)
@@ -527,6 +528,12 @@ void cAdjustmentModuleMeasProgram::adjustphaseGetCorr()
 {
     m_AdjustActualValue = cmpPhase(m_pModule->getStorageSystem()->getStoredValue(m_AdjustEntity, m_AdjustComponent));
     m_AdjustFrequency = m_pModule->getStorageSystem()->getStoredValue(getConfData()->m_ReferenceFrequency.m_nEntity, getConfData()->m_ReferenceFrequency.m_sComponent).toDouble();
+    if(qIsNaN(m_AdjustActualValue)) {
+        emit adjustError();
+        notifyExecutionError("Invalid phase compare value!");
+        m_pPARAdjustPhase->setError();
+        return;
+    }
     m_MsgNrCmdList[m_commonObjects->m_pcbInterface->getAdjPhaseCorrection(m_sAdjustSysName, m_sAdjustRange, m_AdjustFrequency)] = getadjphasecorrection;
 }
 
