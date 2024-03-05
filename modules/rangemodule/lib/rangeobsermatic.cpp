@@ -231,7 +231,7 @@ void cRangeObsermatic::generateInterface()
     m_ParIgnoreRmsValues = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
                                                    QString("PAR_IgnoreRmsValues"),
                                                    QString("Percentage below which Rms values are ignored"),
-                                                   QVariant(double(0.0)));
+                                                   QVariant(double(1.0)));
 
     m_ParIgnoreRmsValues->setValidator(new cDoubleValidator(0, 2, 1e-1));
     m_pModule->m_veinModuleParameterMap["PAR_IgnoreRmsValues"] = m_ParIgnoreRmsValues;
