@@ -1,4 +1,6 @@
 #include "adjustment.h"
+#include "boolvalidator.h"
+#include "doublevalidator.h"
 #include "rangemodule.h"
 #include "rangemeaschannel.h"
 #include "rangemodulemeasprogram.h"
@@ -118,6 +120,25 @@ void cAdjustManagement::generateInterface()
                                                  QVariant(0));
 
     m_pModule->veinModuleComponentList.append(m_pAdjustmentInfo);
+
+    m_ParIgnoreRmsValuesOnOff = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
+                                                      QString("PAR_IgnoreRmsValuesOnOff"),
+                                                      QString("Enable or disable percentage below which Rms values are ignored"),
+                                                      QVariant(0));
+
+    m_ParIgnoreRmsValuesOnOff->setValidator(new cBoolValidator());
+    m_pModule->m_veinModuleParameterMap["PAR_IgnoreRmsValuesOnOff"] = m_ParIgnoreRmsValuesOnOff;
+    m_ParIgnoreRmsValuesOnOff->setSCPIInfo(new cSCPIInfo("CONFIGURATION","ENABLEIGNORERMSVAL", "10", m_ParIgnoreRmsValuesOnOff->getName(), "0", ""));
+
+    m_ParIgnoreRmsValues = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
+                                                 QString("PAR_IgnoreRmsValues"),
+                                                 QString("Percentage below which Rms values are ignored"),
+                                                 QVariant(double(1.0)));
+
+    m_ParIgnoreRmsValues->setValidator(new cDoubleValidator(0, 2, 1e-1));
+    m_pModule->m_veinModuleParameterMap["PAR_IgnoreRmsValues"] = m_ParIgnoreRmsValues;
+    m_ParIgnoreRmsValues->setUnit("%");
+    m_ParIgnoreRmsValues->setSCPIInfo(new cSCPIInfo("CONFIGURATION","IGNORERMSVAL", "10", m_ParIgnoreRmsValues->getName(), "0", m_ParIgnoreRmsValues->getUnit()));
 }
 
 
@@ -274,11 +295,15 @@ void cAdjustManagement::prepareGainCorrForDspServer()
 void cAdjustManagement::ignoreRmsBelowThreshold()
 {
     cRangeMeasChannel *measChannel;
+    double threshold = 0.0;
     if (m_bActive)
     {
         measChannel = m_ChannelList.at(m_nChannelIt);
-        if(measChannel->getRmsValue() < measChannel->getThresholdToIgnoreRms())
-            m_fGainCorr[measChannel->getDSPChannelNr()] = 1e-10;
+        if(m_ParIgnoreRmsValuesOnOff->getValue().toBool()) {
+            threshold = m_ParIgnoreRmsValues->getValue().toDouble() * measChannel->getUrValue() / 100;
+            if(measChannel->getRmsValue() < threshold)
+                m_fGainCorr[measChannel->getDSPChannelNr()] = 1e-10;
+        }
         m_nChannelIt++;
         if (m_nChannelIt < m_ChannelNameList.count())
             emit repeatStateMachine();

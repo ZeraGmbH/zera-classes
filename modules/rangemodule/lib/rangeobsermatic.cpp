@@ -219,25 +219,6 @@ void cRangeObsermatic::generateInterface()
 
     m_pModule->veinModuleComponentList.append(m_pComponentOverloadMax);
 
-    m_ParIgnoreRmsValuesOnOff = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
-                                                   QString("PAR_IgnoreRmsValuesOnOff"),
-                                                   QString("Enable or disable percentage below which Rms values are ignored"),
-                                                   QVariant(0));
-
-    m_ParIgnoreRmsValuesOnOff->setValidator(new cBoolValidator());
-    m_pModule->m_veinModuleParameterMap["PAR_IgnoreRmsValuesOnOff"] = m_ParIgnoreRmsValuesOnOff;
-    m_ParIgnoreRmsValuesOnOff->setSCPIInfo(new cSCPIInfo("CONFIGURATION","ENABLEIGNORERMSVAL", "10", m_ParIgnoreRmsValuesOnOff->getName(), "0", ""));
-
-    m_ParIgnoreRmsValues = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
-                                                   QString("PAR_IgnoreRmsValues"),
-                                                   QString("Percentage below which Rms values are ignored"),
-                                                   QVariant(double(1.0)));
-
-    m_ParIgnoreRmsValues->setValidator(new cDoubleValidator(0, 2, 1e-1));
-    m_pModule->m_veinModuleParameterMap["PAR_IgnoreRmsValues"] = m_ParIgnoreRmsValues;
-    m_ParIgnoreRmsValues->setUnit("%");
-    m_ParIgnoreRmsValues->setSCPIInfo(new cSCPIInfo("CONFIGURATION","IGNORERMSVAL", "10", m_ParIgnoreRmsValues->getName(), "0", m_ParIgnoreRmsValues->getUnit()));
-
     m_pRangingSignal = new VfModuleComponent(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
                                                 QString("SIG_Ranging"),
                                                 QString("Signal on changing ranges"),
@@ -613,8 +594,6 @@ void cRangeObsermatic::readGainCorrDone()
     // lets now connect signals so we become alive
     for (int i = 0; i < m_ChannelNameList.count(); i++) {
         connect(m_RangeParameterList.at(i), &VfModuleParameter::sigValueChanged, this, &cRangeObsermatic::newRange);
-        connect(m_ParIgnoreRmsValues, &VfModuleParameter::sigValueChanged, m_RangeMeasChannelList.at(i), &cRangeMeasChannel::setPercThresholdToIgnoreRms);
-        connect(m_ParIgnoreRmsValuesOnOff, &VfModuleParameter::sigValueChanged, m_RangeMeasChannelList.at(i), &cRangeMeasChannel::setEnableCalculatingThreshold); //all channels?
     }
 
     for (int i = 0; i < m_RangeGroupPreScalingList.length(); i++) {

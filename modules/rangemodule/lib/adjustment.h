@@ -62,6 +62,8 @@ private:
     bool m_bAdjustTrigger;
 
     VfModuleComponent *m_pAdjustmentInfo;
+    VfModuleParameter *m_ParIgnoreRmsValues;
+    VfModuleParameter *m_ParIgnoreRmsValuesOnOff;
 
     // statemachine for activating gets the following states
     QState m_pcbserverConnectState;
