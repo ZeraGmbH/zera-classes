@@ -18,9 +18,10 @@ target_include_directories(module-service-interfaces-demolib
 
 target_link_libraries(module-service-interfaces-demolib
     PUBLIC
+    module-service-interfaces
     dftmodule-demolib
     fftmodule-demolib
-    module-service-interfaces
+    rangemodule-demolib
     Zera::service-interfaces-demolib
     Zera::zera-timers
 )
