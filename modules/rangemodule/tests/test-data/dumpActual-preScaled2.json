@@ -355,8 +355,8 @@
                     "Validation": {
                         "Data": [
                             0,
-                            100,
-                            0.001
+                            2,
+                            0.1
                         ],
                         "Type": "DOUBLE"
                     }
