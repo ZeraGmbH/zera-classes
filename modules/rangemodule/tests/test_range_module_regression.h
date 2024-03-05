@@ -18,10 +18,7 @@ private slots:
     void injectActualValuesWithCheatingEnabled();
     void injectActualValuesWithCheatingAndRangeChanged();
 private:
-    void setVfPreScaling(VfCmdEventHandlerSystemPtr vfCmdEventHandlerSystem, QVariant value);
-    void setVfEnableIgnoringRmsValues(VfCmdEventHandlerSystemPtr vfCmdEventHandlerSystem, QVariant value);
-    void setVfIgnoreRmsValues(VfCmdEventHandlerSystemPtr vfCmdEventHandlerSystem, QVariant value);
-    void setVfVoltageRanges(VfCmdEventHandlerSystemPtr vfCmdEventHandlerSystem, QVariant value);
+    void setVfComponent(VfCmdEventHandlerSystemPtr vfCmdEventHandlerSystem, QString componentName, QVariant oldValue, QVariant newValue);
 };
 
 #endif // TEST_RANGE_MODULE_REGRESSION_H

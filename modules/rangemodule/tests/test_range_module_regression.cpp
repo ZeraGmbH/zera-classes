@@ -113,7 +113,8 @@ void test_range_module_regression::injectActualValues()
 void test_range_module_regression::injectActualValuesWithPreScaling()
 {
     ModuleManagerTestRunner testRunner(":/session-range-test.json");
-    setVfPreScaling(testRunner.getVfCmdEventHandlerSystemPtr(), "2/1");
+    setVfComponent(testRunner.getVfCmdEventHandlerSystemPtr(), "PAR_PreScalingEnabledGroup0", false, true);
+    setVfComponent(testRunner.getVfCmdEventHandlerSystemPtr(), "PAR_PreScalingGroup0", "1/1", "2/1");
 
     const QList<TestDspInterfacePtr>& dspInterfaces = testRunner.getDspInterfaceList();
     QCOMPARE(dspInterfaces.count(), 3);
@@ -154,8 +155,8 @@ void test_range_module_regression::injectActualValuesWithPreScaling()
 void test_range_module_regression::injectActualValuesWithCheatingDisabled()
 {
     ModuleManagerTestRunner testRunner(":/session-range-test.json");
-    setVfEnableIgnoringRmsValues(testRunner.getVfCmdEventHandlerSystemPtr(), 0);
-    setVfIgnoreRmsValues(testRunner.getVfCmdEventHandlerSystemPtr(), 2);
+    setVfComponent(testRunner.getVfCmdEventHandlerSystemPtr(), "PAR_IgnoreRmsValuesOnOff", 0, 0);
+    setVfComponent(testRunner.getVfCmdEventHandlerSystemPtr(), "PAR_IgnoreRmsValues", 1, 2);
 
     const QList<TestDspInterfacePtr>& dspInterfaces = testRunner.getDspInterfaceList();
     QCOMPARE(dspInterfaces.count(), 3);
@@ -182,8 +183,8 @@ void test_range_module_regression::injectActualValuesWithCheatingDisabled()
 void test_range_module_regression::injectActualValuesWithCheatingEnabled()
 {
     ModuleManagerTestRunner testRunner(":/session-range-test.json");
-    setVfEnableIgnoringRmsValues(testRunner.getVfCmdEventHandlerSystemPtr(), 1);
-    setVfIgnoreRmsValues(testRunner.getVfCmdEventHandlerSystemPtr(), 2);
+    setVfComponent(testRunner.getVfCmdEventHandlerSystemPtr(), "PAR_IgnoreRmsValuesOnOff", 0, 1);
+    setVfComponent(testRunner.getVfCmdEventHandlerSystemPtr(), "PAR_IgnoreRmsValues", 1, 2);
 
     const QList<TestDspInterfacePtr>& dspInterfaces = testRunner.getDspInterfaceList();
     QCOMPARE(dspInterfaces.count(), 3);
@@ -213,8 +214,8 @@ void test_range_module_regression::injectActualValuesWithCheatingEnabled()
 void test_range_module_regression::injectActualValuesWithCheatingAndRangeChanged()
 {
     ModuleManagerTestRunner testRunner(":/session-range-test.json");
-    setVfEnableIgnoringRmsValues(testRunner.getVfCmdEventHandlerSystemPtr(), 1);
-    setVfIgnoreRmsValues(testRunner.getVfCmdEventHandlerSystemPtr(), 2);
+    setVfComponent(testRunner.getVfCmdEventHandlerSystemPtr(), "PAR_IgnoreRmsValuesOnOff", 0, 1);
+    setVfComponent(testRunner.getVfCmdEventHandlerSystemPtr(), "PAR_IgnoreRmsValues", 1, 2);
 
     const QList<TestDspInterfacePtr>& dspInterfaces = testRunner.getDspInterfaceList();
     QCOMPARE(dspInterfaces.count(), 3);
@@ -238,7 +239,7 @@ void test_range_module_regression::injectActualValuesWithCheatingAndRangeChanged
     QVector<float> actualGainCorr = writtenCorrData.mid(0, 8);
     QCOMPARE(expectedGainCorr, actualGainCorr);
 
-    setVfVoltageRanges(testRunner.getVfCmdEventHandlerSystemPtr(), "8V");
+    setVfComponent(testRunner.getVfCmdEventHandlerSystemPtr(), "PAR_Channel1Range", "250V", "8V");
     spyDspWrite.clear();
     TimeMachineForTest::getInstance()->processTimers(500); //for 'm_AdjustTimer'
     dspInterfaces[dspInterfaces::RangeModuleMeasProgram]->fireActValInterrupt(rangeValues.getDspValues(), irqNr);
@@ -255,52 +256,13 @@ void test_range_module_regression::injectActualValuesWithCheatingAndRangeChanged
     QCOMPARE(expectedGainCorr, actualGainCorr);
 }
 
-void test_range_module_regression::setVfPreScaling(VfCmdEventHandlerSystemPtr vfCmdEventHandlerSystem, QVariant value)
+void test_range_module_regression::setVfComponent(VfCmdEventHandlerSystemPtr vfCmdEventHandlerSystem, QString componentName, QVariant oldValue, QVariant newValue)
 {
     VfCmdEventItemEntityPtr entityItem = VfEntityComponentEventItem::create(rangeEntityId);
     vfCmdEventHandlerSystem->addItem(entityItem);
 
-    VfClientComponentSetterPtr setter = VfClientComponentSetter::create("PAR_PreScalingEnabledGroup0", entityItem);
+    VfClientComponentSetterPtr setter = VfClientComponentSetter::create(componentName, entityItem);
     entityItem->addItem(setter);
-    setter->startSetComponent(false, true);
-    TimeMachineObject::feedEventLoop();
-
-    setter = VfClientComponentSetter::create("PAR_PreScalingGroup0", entityItem);
-    entityItem->addItem(setter);
-    setter->startSetComponent("1/1", value);
+    setter->startSetComponent(oldValue, newValue);
     TimeMachineObject::feedEventLoop();
 }
-
-void test_range_module_regression::setVfEnableIgnoringRmsValues(VfCmdEventHandlerSystemPtr vfCmdEventHandlerSystem, QVariant value)
-{
-    VfCmdEventItemEntityPtr entityItem = VfEntityComponentEventItem::create(rangeEntityId);
-    vfCmdEventHandlerSystem->addItem(entityItem);
-
-    VfClientComponentSetterPtr setter = VfClientComponentSetter::create("PAR_IgnoreRmsValuesOnOff", entityItem);
-    entityItem->addItem(setter);
-    setter->startSetComponent(0, value);
-    TimeMachineObject::feedEventLoop();
-}
-
-void test_range_module_regression::setVfIgnoreRmsValues(VfCmdEventHandlerSystemPtr vfCmdEventHandlerSystem, QVariant value)
-{
-    VfCmdEventItemEntityPtr entityItem = VfEntityComponentEventItem::create(rangeEntityId);
-    vfCmdEventHandlerSystem->addItem(entityItem);
-
-    VfClientComponentSetterPtr setter = VfClientComponentSetter::create("PAR_IgnoreRmsValues", entityItem);
-    entityItem->addItem(setter);
-    setter->startSetComponent(1, value);
-    TimeMachineObject::feedEventLoop();
-}
-
-void test_range_module_regression::setVfVoltageRanges(VfCmdEventHandlerSystemPtr vfCmdEventHandlerSystem, QVariant value)
-{
-    VfCmdEventItemEntityPtr entityItem = VfEntityComponentEventItem::create(rangeEntityId);
-    vfCmdEventHandlerSystem->addItem(entityItem);
-
-    VfClientComponentSetterPtr setter = VfClientComponentSetter::create("PAR_Channel1Range", entityItem);
-    entityItem->addItem(setter);
-    setter->startSetComponent("250V", value);
-    TimeMachineObject::feedEventLoop();
-}
-
