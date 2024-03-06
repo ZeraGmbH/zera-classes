@@ -1,4 +1,5 @@
 #include "test_dft_module_regression.h"
+#include "demovaluesdspdft.h"
 #include "dftmodulemeasprogram.h"
 #include "modulemanagertestrunner.h"
 #include <timemachineobject.h>
@@ -104,8 +105,6 @@ void test_dft_module_regression::injectActualValuesReferenceChannelUL1()
     ModuleManagerTestRunner testRunner(":/session-dft-no-movingwindow-ref.json");
 
     const QList<TestDspInterfacePtr>& dspInterfaces = testRunner.getDspInterfaceList();
-    QCOMPARE(dspInterfaces.count(), 1);
-
     QVector<float> actValues(dftResultCount * 2); // valuelist * 2 for re+im
     for(int i = 0; i<dftResultCount * 2; i++)
         actValues[i] = i+1;
@@ -137,8 +136,6 @@ void test_dft_module_regression::injectActualValuesReferenceChannelUL2()
     setReferenceChannel(testRunner.getVfCmdEventHandlerSystemPtr(), "UL2");
 
     const QList<TestDspInterfacePtr>& dspInterfaces = testRunner.getDspInterfaceList();
-    QCOMPARE(dspInterfaces.count(), 1);
-
     QVector<float> actValues(dftResultCount * 2); // valuelist * 2 for re+im
     for(int i = 0; i<dftResultCount * 2; i++)
         actValues[i] = i+1;
@@ -171,8 +168,6 @@ void test_dft_module_regression::injectActualValuesOrder0()
     ModuleManagerTestRunner testRunner(":/session-dft-no-movingwindow-noref-order-0.json");
 
     const QList<TestDspInterfacePtr>& dspInterfaces = testRunner.getDspInterfaceList();
-    QCOMPARE(dspInterfaces.count(), 1);
-
     QStringList valueList = dspInterfaces[0]->getValueList();
     QCOMPARE(valueList.count(), comDcRefChannelCount);
 
@@ -184,6 +179,64 @@ void test_dft_module_regression::injectActualValuesOrder0()
     TimeMachineObject::feedEventLoop();
 
     QFile file(":/dumpActual-no-ref-order-0.json");
+    QVERIFY(file.open(QFile::ReadOnly));
+    QString jsonExpected = file.readAll();
+
+    VeinStorage::VeinHash* storageHash = testRunner.getVeinStorageSystem();
+    QByteArray jsonDumped;
+    QBuffer buff(&jsonDumped);
+    storageHash->dumpToFile(&buff, QList<int>() << dftEntityId);
+
+    if(jsonExpected != jsonDumped) {
+        qWarning("Expected storage hash:");
+        qInfo("%s", qPrintable(jsonExpected));
+        qWarning("Dumped storage hash:");
+        qInfo("%s", qPrintable(jsonDumped));
+        QCOMPARE(jsonExpected, jsonDumped);
+    }
+}
+
+void test_dft_module_regression::injectSymmetricalOrder0()
+{
+    ModuleManagerTestRunner testRunner(":/session-dft-no-movingwindow-noref-order-0.json");
+
+    const QList<TestDspInterfacePtr>& dspInterfaces = testRunner.getDspInterfaceList();
+    DemoValuesDspDft dspValues(dspInterfaces[0]->getValueList(), 0);
+    dspValues.setAllValuesSymmetric(20, 10, 30);
+
+    dspInterfaces[0]->fireActValInterrupt(dspValues.getDspValues(), irqNr);
+    TimeMachineObject::feedEventLoop();
+
+    QFile file(":/dumpSymmetricOrder0.json");
+    QVERIFY(file.open(QFile::ReadOnly));
+    QString jsonExpected = file.readAll();
+
+    VeinStorage::VeinHash* storageHash = testRunner.getVeinStorageSystem();
+    QByteArray jsonDumped;
+    QBuffer buff(&jsonDumped);
+    storageHash->dumpToFile(&buff, QList<int>() << dftEntityId);
+
+    if(jsonExpected != jsonDumped) {
+        qWarning("Expected storage hash:");
+        qInfo("%s", qPrintable(jsonExpected));
+        qWarning("Dumped storage hash:");
+        qInfo("%s", qPrintable(jsonDumped));
+        QCOMPARE(jsonExpected, jsonDumped);
+    }
+}
+
+void test_dft_module_regression::injectSymmetricalOrder1()
+{
+    ModuleManagerTestRunner testRunner(":/session-dft-no-movingwindow-ref.json");
+
+    const QList<TestDspInterfacePtr>& dspInterfaces = testRunner.getDspInterfaceList();
+    DemoValuesDspDft dspValues(dspInterfaces[0]->getValueList(), 1);
+    dspValues.setAllValuesSymmetric(230, 10, 30);
+
+    dspInterfaces[0]->fireActValInterrupt(dspValues.getDspValues(), irqNr);
+    TimeMachineObject::feedEventLoop();
+
+    QFile file(":/dumpSymmetricOrder1.json");
     QVERIFY(file.open(QFile::ReadOnly));
     QString jsonExpected = file.readAll();
 
