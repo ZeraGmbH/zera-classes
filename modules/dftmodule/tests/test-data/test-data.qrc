@@ -5,6 +5,8 @@
         <file>dumpActual-refUL1.json</file>
         <file>dumpActual-refUL2.json</file>
         <file>dumpInitial.json</file>
+        <file>dumpSymmetricOrder0.json</file>
+        <file>dumpSymmetricOrder1.json</file>
         <file>mt310s2-dftmodule-no-movingwindow-no-ref.xml</file>
         <file>mt310s2-dftmodule-no-movingwindow-ref.xml</file>
         <file>session-minimal.json</file>

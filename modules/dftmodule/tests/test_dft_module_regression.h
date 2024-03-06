@@ -17,6 +17,8 @@ private slots:
     void injectActualValuesReferenceChannelUL1();
     void injectActualValuesReferenceChannelUL2();
     void injectActualValuesOrder0();
+    void injectSymmetricalOrder0();
+    void injectSymmetricalOrder1();
 private:
     void setReferenceChannel(VfCmdEventHandlerSystemPtr vfCmdEventHandlerSystem, QString channel);
 };
