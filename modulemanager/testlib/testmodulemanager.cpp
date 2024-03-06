@@ -6,12 +6,14 @@
 #include <testfactoryi2cctrl.h>
 #include <timemachineobject.h>
 #include <timerfactoryqtfortest.h>
+#include <vtcp_workerfactorymethodstest.h>
 #include <QDir>
 
 void TestModuleManager::supportOeTests()
 {
     JsonSessionLoaderTest::supportOeTests();
     ModulemanagerConfigTest::supportOeTests();
+    VeinTcp::TcpWorkerFactoryMethodsTest::enableMockNetwork();
 }
 
 void TestModuleManager::pointToInstalledSessionFiles()
