@@ -26,6 +26,7 @@ target_link_libraries(zera-modulemanager-testlib
     zera-modulemanager-lib
     module-service-interfaces-testlib
     Zera::VfConvenientCode
+    Zera::vf-tcp-testlib
 )
 
 set_target_properties(zera-modulemanager-testlib PROPERTIES VERSION ${PROJECT_VERSION})
