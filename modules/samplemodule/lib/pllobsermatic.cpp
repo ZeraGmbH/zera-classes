@@ -88,7 +88,9 @@ QString cPllObsermatic::getAliasFromSystemName(QString systemName)
 
 void cPllObsermatic::pllAutomatic()
 {
-    if(m_bActive && m_ConfPar.m_ObsermaticConfPar.m_npllAutoAct.m_nActive == 1) {
+    if(m_bActive &&
+        m_ConfPar.m_ObsermaticConfPar.m_npllAutoAct.m_nActive == 1 &&
+        !m_ConfPar.m_ObsermaticConfPar.m_bpllFixed) {
         int i;
         int n = m_ConfPar.m_ObsermaticConfPar.m_pllChannelList.count();
         for (i = 0; i < n; i++) {
@@ -156,47 +158,46 @@ void cPllObsermatic::deactivationDone()
 
 void cPllObsermatic::sendPllChannel(QString systemChannelRequested)
 {
-    if(!m_pllMeasChannelHash.isEmpty()) {
-        QString aliasChannel = getAliasFromSystemName(systemChannelRequested);
-        if(!aliasChannel.isEmpty()) {
-            aliasChannel = adjustToValidPllChannel(aliasChannel);
-            m_sNewPllChannelAlias = aliasChannel;
-            m_pPllSignal->setValue(QVariant(1)); // we signal that we are changing pll channel
-            m_MsgNrCmdList[m_pllMeasChannelHash[aliasChannel]->setyourself4PLL(m_ConfPar.m_ObsermaticConfPar.m_sSampleSystem)] = setpll;
+    if(!m_pllMeasChannelHash.isEmpty()) { // (1 slower)
+        if(!m_ConfPar.m_ObsermaticConfPar.m_bpllFixed) {
+            QString aliasChannel = getAliasFromSystemName(systemChannelRequested);
+            if(!aliasChannel.isEmpty()) {
+                m_sNewPllChannelAlias = aliasChannel;
+                m_pPllSignal->setValue(QVariant(1)); // we signal that we are changing pll channel
+                m_MsgNrCmdList[m_pllMeasChannelHash[aliasChannel]->setyourself4PLL(m_ConfPar.m_ObsermaticConfPar.m_sSampleSystem)] = setpll;
+            }
         }
         else {
+            m_sNewPllChannelAlias = systemChannelRequested;
+            // we abuse 1st channel and get seldom response in catchChannelReply
+            // due race on activation state machines of cPllObsermatic (1 slower) & cSampleModule (2 slower)
             m_MsgNrCmdList[m_pllMeasChannelHash.begin().value()->setPLLMode(m_ConfPar.m_ObsermaticConfPar.m_sSampleSystem, systemChannelRequested)] = setpll;
         }
     }
 }
 
-QString cPllObsermatic::adjustToValidPllChannel(QString channel)
-{
-    if (!m_pllMeasChannelHash.contains(channel))
-        channel = m_AliasHash[m_ConfPar.m_ObsermaticConfPar.m_pllChannelList.at(0)];
-    return channel;
-}
-
 void cPllObsermatic::newPllChannel(QVariant channelAlias)
 {
-    // Isn't this obsolete? Vein transfers changes only.
-    QString channelAliasRequested = adjustToValidPllChannel(channelAlias.toString());
-    QString systemName = m_pllMeasChannelHash[channelAliasRequested]->getName();
-    if(systemName != m_ConfPar.m_ObsermaticConfPar.m_pllSystemChannel.m_sPar)
-        if(!m_ConfPar.m_ObsermaticConfPar.m_bpllFixed)
+    if(!m_ConfPar.m_ObsermaticConfPar.m_bpllFixed) {
+        QString systemName = m_pllMeasChannelHash[channelAlias.toString()]->getName();
+        // Isn't this obsolete? Vein transfers changes only.
+        if(systemName != m_ConfPar.m_ObsermaticConfPar.m_pllSystemChannel.m_sPar)
             sendPllChannel(systemName);
+    }
 }
 
 // called when pll automatic becomes on or off
 void cPllObsermatic::newPllAuto(QVariant pllauto)
 {
-    if ( pllauto.toInt() == 1) {
-        m_ConfPar.m_ObsermaticConfPar.m_npllAutoAct.m_nActive = 1;
-        pllAutomatic(); // call once if switched to automatic
+    if(!m_ConfPar.m_ObsermaticConfPar.m_bpllFixed) {
+        if ( pllauto.toInt() == 1) {
+            m_ConfPar.m_ObsermaticConfPar.m_npllAutoAct.m_nActive = 1;
+            pllAutomatic(); // call once if switched to automatic
+        }
+        else
+            m_ConfPar.m_ObsermaticConfPar.m_npllAutoAct.m_nActive = 0;
+        emit m_pModule->parameterChanged();
     }
-    else
-        m_ConfPar.m_ObsermaticConfPar.m_npllAutoAct.m_nActive = 0;
-    emit m_pModule->parameterChanged();
 }
 
 void cPllObsermatic::setNewPLLChannel()
@@ -204,9 +205,11 @@ void cPllObsermatic::setNewPLLChannel()
     m_pPllSignal->setValue(QVariant(0)); // pll change finished
     m_pVeinPllChannelAlias->setValue(QVariant(m_sNewPllChannelAlias));
 
-    QString systemName = m_pllMeasChannelHash[m_sNewPllChannelAlias]->getName();
-    m_ConfPar.m_ObsermaticConfPar.m_pllSystemChannel.m_sPar = systemName;
-    emit m_pModule->parameterChanged();
+    if(m_pllMeasChannelHash.contains(m_sNewPllChannelAlias)) { // (2 slower)
+        QString systemName = m_pllMeasChannelHash[m_sNewPllChannelAlias]->getName();
+        m_ConfPar.m_ObsermaticConfPar.m_pllSystemChannel.m_sPar = systemName;
+        emit m_pModule->parameterChanged();
+    }
 }
 
 void cPllObsermatic::catchChannelReply(quint32 msgnr)
