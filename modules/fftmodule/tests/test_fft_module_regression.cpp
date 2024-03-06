@@ -1,7 +1,6 @@
 #include "test_fft_module_regression.h"
 #include "demovaluesdspfft.h"
 #include "fftmodulemeasprogram.h"
-#include "testfactoryserviceinterfaces.h"
 #include "modulemanagertestrunner.h"
 #include <cmath>
 #include <timemachineobject.h>
