@@ -1,0 +1,9 @@
+<RCC>
+    <qresource prefix="/">
+        <file>session-minimal.json</file>
+        <file>session-power1-test.json</file>
+        <file>mt310s2-power1module-test.xml</file>
+        <file>dumpInitial.json</file>
+        <file>dumpActual.json</file>
+    </qresource>
+</RCC>

@@ -1,0 +1,204 @@
+{
+    "1070": {
+        "ACT_CanChangePhaseMask": true,
+        "ACT_MaxMeasSysCount": 3,
+        "ACT_PQS1": 0,
+        "ACT_PQS2": 0,
+        "ACT_PQS3": 0,
+        "ACT_PQS4": 0,
+        "ACT_PowerDisplayName": "P",
+        "EntityName": "POWER1Module1",
+        "INF_ModeTypes": [
+            "P"
+        ],
+        "INF_ModuleInterface": {
+            "ComponentInfo": {
+                "ACT_CanChangePhaseMask": {
+                    "Description": "Boolean indicator that current measurement mode can change phase mask"
+                },
+                "ACT_MaxMeasSysCount": {
+                    "Description": "Number of max measurement systems for current measurement mode"
+                },
+                "ACT_PQS1": {
+                    "ChannelName": "P1",
+                    "Description": "Actual power value phase 1",
+                    "Unit": "W"
+                },
+                "ACT_PQS2": {
+                    "ChannelName": "P2",
+                    "Description": "Actual power value phase 2",
+                    "Unit": "W"
+                },
+                "ACT_PQS3": {
+                    "ChannelName": "P3",
+                    "Description": "Actual power value phase 3",
+                    "Unit": "W"
+                },
+                "ACT_PQS4": {
+                    "ChannelName": "PS",
+                    "Description": "Actual power value sum all phases",
+                    "Unit": "W"
+                },
+                "ACT_PowerDisplayName": {
+                    "Description": "Power display name (P/Q/S)"
+                },
+                "EntityName": {
+                    "Description": "Module's name"
+                },
+                "INF_ModeTypes": {
+                    "Description": "Display names (P/Q/S) of available modes"
+                },
+                "INF_ModuleInterface": {
+                    "Description": "Module's interface details"
+                },
+                "PAR_FOUT0": {
+                    "Description": "Frequency output name"
+                },
+                "PAR_FOUTConstant0": {
+                    "ChannelName": "Fout2",
+                    "Description": "Frequency output constant"
+                },
+                "PAR_Interval": {
+                    "Description": "Integration time",
+                    "Unit": "s",
+                    "Validation": {
+                        "Data": [
+                            1,
+                            100,
+                            0.5
+                        ],
+                        "Type": "DOUBLE"
+                    }
+                },
+                "PAR_MeasModePhaseSelect": {
+                    "Description": "Active phases selection mask",
+                    "Validation": {
+                        "Data": [
+                            "000",
+                            "100",
+                            "010",
+                            "110",
+                            "001",
+                            "101",
+                            "011",
+                            "111"
+                        ],
+                        "Type": "STRING"
+                    }
+                },
+                "PAR_MeasuringMode": {
+                    "Description": "Measuring mode",
+                    "Validation": {
+                        "Data": [
+                            "4LW",
+                            "3LW",
+                            "2LW"
+                        ],
+                        "Type": "STRING"
+                    }
+                },
+                "SIG_Measuring": {
+                    "Description": "Signal indicating measurement activity"
+                }
+            },
+            "ModuleInfo": {
+                "Description": "This module measures power with configured measuring and integration modes",
+                "FOUTCount": "1",
+                "Name": "POWER1Module1",
+                "NominalFrequency": "200000",
+                "PQSCount": "4"
+            },
+            "SCPIInfo": {
+                "Cmd": [
+                    [
+                        "CONFIGURATION",
+                        "MMODE:CATALOG",
+                        "2",
+                        "PAR_MeasuringMode",
+                        "1",
+                        ""
+                    ],
+                    [
+                        "MEASURE",
+                        "P1",
+                        "8",
+                        "ACT_PQS1",
+                        "0",
+                        "W"
+                    ],
+                    [
+                        "MEASURE",
+                        "P2",
+                        "8",
+                        "ACT_PQS2",
+                        "0",
+                        "W"
+                    ],
+                    [
+                        "MEASURE",
+                        "P3",
+                        "8",
+                        "ACT_PQS3",
+                        "0",
+                        "W"
+                    ],
+                    [
+                        "MEASURE",
+                        "PS",
+                        "8",
+                        "ACT_PQS4",
+                        "0",
+                        "W"
+                    ],
+                    [
+                        "CONFIGURATION",
+                        "M0OUT",
+                        "2",
+                        "PAR_FOUT0",
+                        "0",
+                        ""
+                    ],
+                    [
+                        "CONFIGURATION",
+                        "M0CONSTANT",
+                        "2",
+                        "PAR_FOUTConstant0",
+                        "0",
+                        ""
+                    ],
+                    [
+                        "CONFIGURATION",
+                        "TINTEGRATION",
+                        "10",
+                        "PAR_Interval",
+                        "0",
+                        "s"
+                    ],
+                    [
+                        "CONFIGURATION",
+                        "MEASMODEPHASESELECT",
+                        "10",
+                        "PAR_MeasModePhaseSelect",
+                        "0",
+                        ""
+                    ],
+                    [
+                        "CONFIGURATION",
+                        "MMODE",
+                        "10",
+                        "PAR_MeasuringMode",
+                        "0",
+                        ""
+                    ]
+                ],
+                "Name": "POW1"
+            }
+        },
+        "PAR_FOUT0": "",
+        "PAR_FOUTConstant0": 96000000,
+        "PAR_Interval": 1,
+        "PAR_MeasModePhaseSelect": "111",
+        "PAR_MeasuringMode": "4LW",
+        "SIG_Measuring": 1
+    }
+}
