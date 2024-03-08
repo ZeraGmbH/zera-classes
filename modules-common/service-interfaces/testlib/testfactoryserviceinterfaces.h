@@ -11,6 +11,7 @@ public:
     DspInterfacePtr createDspInterfaceDft(int interruptNoHandled, QStringList valueChannelList, int dftOrder) override;
     DspInterfacePtr createDspInterfaceFft(int interruptNoHandled, QStringList valueChannelList, int fftOrder) override;
     DspInterfacePtr createDspInterfaceRms(int interruptNoHandled, QStringList valueChannelList) override;
+    DspInterfacePtr createDspInterfacePower1(int interruptNoHandled, MeasModeSelector* measMode) override;
     DspInterfacePtr createDspInterfaceOther() override;
     const QList<TestDspInterfacePtr>& getInterfaceList() const;
     void clearInterfaceList();

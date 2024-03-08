@@ -3,6 +3,7 @@
 #include "demodspinterfacedft.h"
 #include "demodspinterfacefft.h"
 #include "demodspinterfacerms.h"
+#include "demodspinterfacepower1.h"
 
 DspInterfacePtr DemoFactoryServiceInterfaces::createDspInterfaceRange(int interruptNoHandled, QStringList valueChannelList, bool isReferencce)
 {
@@ -22,6 +23,11 @@ DspInterfacePtr DemoFactoryServiceInterfaces::createDspInterfaceFft(int interrup
 DspInterfacePtr DemoFactoryServiceInterfaces::createDspInterfaceRms(int interruptNoHandled, QStringList valueChannelList)
 {
     return std::make_shared<DemoDspInterfaceRms>(interruptNoHandled, valueChannelList);
+}
+
+DspInterfacePtr DemoFactoryServiceInterfaces::createDspInterfacePower1(int interruptNoHandled, MeasModeSelector* measMode)
+{
+    return std::make_shared<DemoDspInterfacePower1>(interruptNoHandled, measMode);
 }
 
 DspInterfacePtr DemoFactoryServiceInterfaces::createDspInterfaceOther()

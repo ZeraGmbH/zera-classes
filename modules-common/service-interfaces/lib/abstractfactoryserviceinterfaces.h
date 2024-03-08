@@ -1,6 +1,7 @@
 #ifndef ABSTRACTFACTORYSERVICEINTERFACES_H
 #define ABSTRACTFACTORYSERVICEINTERFACES_H
 
+#include <measmodeselector.h>
 #include <dspinterface.h>
 #include <memory>
 
@@ -13,6 +14,7 @@ public:
     virtual DspInterfacePtr createDspInterfaceDft(int interruptNoHandled, QStringList valueChannelList, int dftOrder) = 0;
     virtual DspInterfacePtr createDspInterfaceFft(int interruptNoHandled, QStringList valueChannelList, int fftOrder) = 0;
     virtual DspInterfacePtr createDspInterfaceRms(int interruptNoHandled, QStringList valueChannelList) = 0;
+    virtual DspInterfacePtr createDspInterfacePower1(int interruptNoHandled, MeasModeSelector* measMode) = 0;
     virtual DspInterfacePtr createDspInterfaceOther() = 0;
 };
 

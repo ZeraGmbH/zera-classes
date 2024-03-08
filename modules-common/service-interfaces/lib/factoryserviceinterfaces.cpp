@@ -31,6 +31,12 @@ DspInterfacePtr FactoryServiceInterfaces::createDspInterfaceRms(int interruptNoH
     return std::make_shared<Zera::cDSPInterface>();
 }
 
+DspInterfacePtr FactoryServiceInterfaces::createDspInterfacePower1(int interruptNoHandled, MeasModeSelector *measMode)
+{
+    Q_UNUSED(interruptNoHandled)
+    return std::make_shared<Zera::cDSPInterface>();
+}
+
 DspInterfacePtr FactoryServiceInterfaces::createDspInterfaceOther()
 {
     return std::make_shared<Zera::cDSPInterface>();
