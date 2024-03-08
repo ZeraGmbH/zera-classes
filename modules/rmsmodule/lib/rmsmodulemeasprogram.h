@@ -34,9 +34,6 @@ enum rmsmoduleCmds
     freeusermem
 };
 
-
-#define irqNr 2
-
 class cRmsModule;
 
 class cRmsModuleMeasProgram: public cBaseDspMeasProgram
