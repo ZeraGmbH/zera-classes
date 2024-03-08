@@ -1,5 +1,6 @@
 #include "test_adj_module_regression.h"
 #include "modulemanagertestrunner.h"
+#include "adjustmentmodule.h"
 #include <vs_veinhash.h>
 #include <scpimoduleclientblocked.h>
 #include <QBuffer>
@@ -48,6 +49,14 @@ void test_adj_module_regression::veinDumpInitial()
         qInfo("%s", qPrintable(jsonDumped));
         QCOMPARE(jsonExpected, jsonDumped);
     }
+}
+
+void test_adj_module_regression::dspInterfacesChange()
+{
+    ModuleManagerTestRunner testRunner(":/session-minimal.json", true);
+
+    const QList<TestDspInterfacePtr>& dspInterfaces = testRunner.getDspInterfaceList();
+    QCOMPARE(dspInterfaces.count(), DSP_INTERFACE_COUNT);
 }
 
 void test_adj_module_regression::adjInitWithPermission()

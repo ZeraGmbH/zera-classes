@@ -9,7 +9,7 @@ class test_adj_module_phase : public QObject
 private slots:
     void noActValuesWithPermission();
     void validActValuesWithPermission();
-    void noActValuesWithoutPermission();
+    void validActValuesWithoutPermission();
 };
 
 #endif // TEST_ADJ_MODULE_PHASE_H
