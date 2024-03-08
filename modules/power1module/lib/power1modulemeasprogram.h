@@ -15,7 +15,6 @@
 #include <rminterface.h>
 #include <dspinterface.h>
 #include <pcbinterface.h>
-#include <timerperiodicqt.h>
 #include <QFinalState>
 
 namespace POWER1MODULE
@@ -214,11 +213,9 @@ private:
     QFinalState m_foutParamsToDsp;
 
     cMovingwindowFilter m_movingwindowFilter;
-    TimerTemplateQtPtr m_demoPeriodicTimer;
 
 private slots:
     void setInterfaceActualValues(QVector<float> *actualValues);
-    void handleDemoActualValues();
 
     void resourceManagerConnect();
     void sendRMIdent();
