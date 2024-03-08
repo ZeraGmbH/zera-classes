@@ -37,8 +37,6 @@ enum dftmoduleCmds
     freeusermem
 };
 
-#define irqNr 3
-
 class cDftModuleMeasProgram: public cBaseDspMeasProgram
 {
     Q_OBJECT
