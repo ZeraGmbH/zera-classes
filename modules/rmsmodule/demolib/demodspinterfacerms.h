@@ -8,11 +8,10 @@ class DemoDspInterfaceRms : public MockDspInterface
 {
     Q_OBJECT
 public:
-    DemoDspInterfaceRms(int interruptNoHandled, QStringList valueChannelList);
+    DemoDspInterfaceRms(QStringList valueChannelList);
 private slots:
     void onTimer();
 private:
-    int m_interruptNoHandled;
     QStringList m_valueChannelList;
     TimerTemplateQtPtr m_periodicTimer;
 };

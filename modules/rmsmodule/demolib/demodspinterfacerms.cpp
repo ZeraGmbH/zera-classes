@@ -2,8 +2,7 @@
 #include "demovaluesdsprms.h"
 #include <timerfactoryqt.h>
 
-DemoDspInterfaceRms::DemoDspInterfaceRms(int interruptNoHandled, QStringList valueChannelList) :
-    m_interruptNoHandled(interruptNoHandled),
+DemoDspInterfaceRms::DemoDspInterfaceRms(QStringList valueChannelList) :
     m_valueChannelList(valueChannelList),
     m_periodicTimer(TimerFactoryQt::createPeriodic(500))
 {
@@ -24,5 +23,5 @@ void DemoDspInterfaceRms::onTimer()
         double randomDeviation = 0.95 + 0.1 * randomVal;
         demoValues[i] *= randomDeviation;
     }
-    fireActValInterrupt(demoValues, m_interruptNoHandled);
+    fireActValInterrupt(demoValues, 0 /* dummy */);
 }

@@ -18,9 +18,9 @@ DspInterfacePtr TestFactoryServiceInterfaces::createDspInterfaceFft(QStringList 
     return createDspInterfaceCommon(0 /* dummy */, valueChannelList);
 }
 
-DspInterfacePtr TestFactoryServiceInterfaces::createDspInterfaceRms(int interruptNoHandled, QStringList valueChannelList)
+DspInterfacePtr TestFactoryServiceInterfaces::createDspInterfaceRms(QStringList valueChannelList)
 {
-    return createDspInterfaceCommon(interruptNoHandled, valueChannelList);
+    return createDspInterfaceCommon(0 /* dummy */, valueChannelList);
 }
 
 DspInterfacePtr TestFactoryServiceInterfaces::createDspInterfaceOther()
