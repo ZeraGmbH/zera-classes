@@ -15,9 +15,8 @@ DspInterfacePtr FactoryServiceInterfaces::createDspInterfaceDft(QStringList valu
     return std::make_shared<Zera::cDSPInterface>();
 }
 
-DspInterfacePtr FactoryServiceInterfaces::createDspInterfaceFft(int interruptNoHandled, QStringList valueChannelList, int fftOrder)
+DspInterfacePtr FactoryServiceInterfaces::createDspInterfaceFft(QStringList valueChannelList, int fftOrder)
 {
-    Q_UNUSED(interruptNoHandled)
     Q_UNUSED(valueChannelList)
     Q_UNUSED(fftOrder)
     return std::make_shared<Zera::cDSPInterface>();
