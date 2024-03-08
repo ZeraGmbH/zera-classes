@@ -1,6 +1,5 @@
 #include "test_fft_module_regression.h"
 #include "demovaluesdspfft.h"
-#include "fftmodulemeasprogram.h"
 #include "modulemanagertestrunner.h"
 #include <cmath>
 #include <timemachineobject.h>
@@ -97,7 +96,7 @@ void test_fft_module_regression::injectValues()
     dspValues.setValue(5, 1, 4/M_SQRT2, 4/M_SQRT2);
     dspValues.setValue(5, 2, 6/M_SQRT2, 6/M_SQRT2);
 
-    dspInterfaces[0]->fireActValInterrupt(dspValues.getDspValues(), irqNr);
+    dspInterfaces[0]->fireActValInterrupt(dspValues.getDspValues(), /* dummy */ 0);
     TimeMachineObject::feedEventLoop();
 
     QFile file(":/dumpActual.json");

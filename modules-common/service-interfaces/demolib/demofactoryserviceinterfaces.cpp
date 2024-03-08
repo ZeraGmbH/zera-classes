@@ -14,9 +14,9 @@ DspInterfacePtr DemoFactoryServiceInterfaces::createDspInterfaceDft(QStringList 
     return std::make_shared<DemoDspInterfaceDft>(valueChannelList, dftOrder);
 }
 
-DspInterfacePtr DemoFactoryServiceInterfaces::createDspInterfaceFft(int interruptNoHandled, QStringList valueChannelList, int fftOrder)
+DspInterfacePtr DemoFactoryServiceInterfaces::createDspInterfaceFft(QStringList valueChannelList, int fftOrder)
 {
-    return std::make_shared<DemoDspInterfaceFft>(interruptNoHandled, valueChannelList, fftOrder);
+    return std::make_shared<DemoDspInterfaceFft>(valueChannelList, fftOrder);
 }
 
 DspInterfacePtr DemoFactoryServiceInterfaces::createDspInterfaceRms(int interruptNoHandled, QStringList valueChannelList)
