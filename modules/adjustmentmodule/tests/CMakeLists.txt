@@ -5,6 +5,7 @@ function(SETUP_QTESTS_MODULE)
             PRIVATE
             zera-modulemanager-testlib
             adjustmentmodule-static
+            adjustmentmodule-demolib
             rangemodule-static
             dftmodule-static
             fftmodule-static
