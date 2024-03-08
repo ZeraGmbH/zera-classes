@@ -10,6 +10,7 @@ public:
     DspInterfacePtr createDspInterfaceDft(QStringList valueChannelList, int dftOrder) override;
     DspInterfacePtr createDspInterfaceFft(QStringList valueChannelList, int fftOrder) override;
     DspInterfacePtr createDspInterfaceRms(QStringList valueChannelList) override;
+    DspInterfacePtr createDspInterfacePower1(int interruptNoHandled, MeasModeSelector* measMode) override;
     DspInterfacePtr createDspInterfaceOther() override;
 };
 

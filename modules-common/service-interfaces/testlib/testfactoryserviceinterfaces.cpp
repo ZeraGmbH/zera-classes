@@ -23,6 +23,12 @@ DspInterfacePtr TestFactoryServiceInterfaces::createDspInterfaceRms(QStringList 
     return createDspInterfaceCommon(0 /* dummy */, valueChannelList);
 }
 
+DspInterfacePtr TestFactoryServiceInterfaces::createDspInterfacePower1(int interruptNoHandled, MeasModeSelector *measMode)
+{
+    Q_UNUSED(measMode)
+    return createDspInterfaceCommon(interruptNoHandled, {});
+}
+
 DspInterfacePtr TestFactoryServiceInterfaces::createDspInterfaceOther()
 {
     // no test specific implementation yet
