@@ -1,6 +1,5 @@
 #include "test_dft_module_regression.h"
 #include "demovaluesdspdft.h"
-#include "dftmodulemeasprogram.h"
 #include "modulemanagertestrunner.h"
 #include <timemachineobject.h>
 #include <vf_core_stack_client.h>
@@ -79,7 +78,7 @@ void test_dft_module_regression::injectActualValuesNoReferenceChannel()
     for(int i = 0; i<dftResultCount * 2; i++)
         actValues[i] = i;
 
-    dspInterfaces[0]->fireActValInterrupt(actValues, irqNr);
+    dspInterfaces[0]->fireActValInterrupt(actValues, /*dummy*/ 0);
     TimeMachineObject::feedEventLoop();
 
     QFile file(":/dumpActual-no-ref.json");
@@ -109,7 +108,7 @@ void test_dft_module_regression::injectActualValuesReferenceChannelUL1()
     for(int i = 0; i<dftResultCount * 2; i++)
         actValues[i] = i+1;
 
-    dspInterfaces[0]->fireActValInterrupt(actValues, irqNr);
+    dspInterfaces[0]->fireActValInterrupt(actValues, /*dummy*/ 0);
     TimeMachineObject::feedEventLoop();
 
     QFile file(":/dumpActual-refUL1.json");
@@ -140,7 +139,7 @@ void test_dft_module_regression::injectActualValuesReferenceChannelUL2()
     for(int i = 0; i<dftResultCount * 2; i++)
         actValues[i] = i+1;
 
-    dspInterfaces[0]->fireActValInterrupt(actValues, irqNr);
+    dspInterfaces[0]->fireActValInterrupt(actValues, /*dummy*/ 0);
     TimeMachineObject::feedEventLoop();
 
     QFile file(":/dumpActual-refUL2.json");
@@ -175,7 +174,7 @@ void test_dft_module_regression::injectActualValuesOrder0()
     for(int i = 0; i<comDcRefChannelCount * 2; i++)
         actValues[i] = i+1;
 
-    dspInterfaces[0]->fireActValInterrupt(actValues, irqNr);
+    dspInterfaces[0]->fireActValInterrupt(actValues, /*dummy*/ 0);
     TimeMachineObject::feedEventLoop();
 
     QFile file(":/dumpActual-no-ref-order-0.json");
@@ -204,7 +203,7 @@ void test_dft_module_regression::injectSymmetricalOrder0()
     DemoValuesDspDft dspValues(dspInterfaces[0]->getValueList(), 0);
     dspValues.setAllValuesSymmetric(20, 10, 30);
 
-    dspInterfaces[0]->fireActValInterrupt(dspValues.getDspValues(), irqNr);
+    dspInterfaces[0]->fireActValInterrupt(dspValues.getDspValues(), /*dummy*/ 0);
     TimeMachineObject::feedEventLoop();
 
     QFile file(":/dumpSymmetricOrder0.json");
@@ -233,7 +232,7 @@ void test_dft_module_regression::injectSymmetricalOrder1()
     DemoValuesDspDft dspValues(dspInterfaces[0]->getValueList(), 1);
     dspValues.setAllValuesSymmetric(230, 10, 30);
 
-    dspInterfaces[0]->fireActValInterrupt(dspValues.getDspValues(), irqNr);
+    dspInterfaces[0]->fireActValInterrupt(dspValues.getDspValues(), /*dummy*/ 0);
     TimeMachineObject::feedEventLoop();
 
     QFile file(":/dumpSymmetricOrder1.json");

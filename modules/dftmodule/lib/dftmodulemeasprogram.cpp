@@ -22,7 +22,6 @@ cDftModuleMeasProgram::cDftModuleMeasProgram(cDftModule* module, std::shared_ptr
     :cBaseDspMeasProgram(pConfiguration), m_pModule(module)
 {
     m_dspInterface = m_pModule->getServiceInterfaceFactory()->createDspInterfaceDft(
-        irqNr,
         getConfData()->m_valueChannelList,
         getConfData()->m_nDftOrder);
 
@@ -294,7 +293,7 @@ void cDftModuleMeasProgram::setDspCmdList()
         m_dspInterface->addCycListItem( s = "GETSTIME(TISTART)"); // set new system time
         m_dspInterface->addCycListItem( s = QString("CMPAVERAGE1(%1,FILTER,VALXDFTF)").arg(2*m_veinActValueList.count()));
         m_dspInterface->addCycListItem( s = QString("CLEARN(%1,FILTER)").arg(2*2*m_veinActValueList.count()+1) );
-        m_dspInterface->addCycListItem( s = QString("DSPINTTRIGGER(0x0,0x%1)").arg(irqNr)); // send interrupt to module
+        m_dspInterface->addCycListItem( s = QString("DSPINTTRIGGER(0x0,0x%1)").arg(0)); // send interrupt to module
         m_dspInterface->addCycListItem( s = "DEACTIVATECHAIN(1,0x0102)");
     m_dspInterface->addCycListItem( s = "STOPCHAIN(1,0x0102)"); // end processnr., mainchain 1 subchain 2
 }
@@ -309,17 +308,10 @@ void cDftModuleMeasProgram::deleteDspCmdList()
 void cDftModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant answer)
 {
     if (msgnr == 0) { // 0 was reserved for async. messages
-        QString sintnr = answer.toString().section(':', 1, 1);
-        int service = sintnr.toInt();
-        switch (service)
-        {
-        case irqNr:
-            // we got an interrupt from our cmd chain and have to fetch our actual values
-            // but we synchronize on ranging process
-            if (m_bActive && !m_dataAcquisitionMachine.isRunning()) // in case of deactivation in progress, no dataaquisition
-                m_dataAcquisitionMachine.start();
-            break;
-        }
+        // we got an interrupt from our cmd chain and have to fetch our actual values
+        // but we synchronize on ranging process
+        if (m_bActive && !m_dataAcquisitionMachine.isRunning()) // in case of deactivation in progress, no dataaquisition
+            m_dataAcquisitionMachine.start();
     }
     else {
         // maybe other objexts share the same dsp interface
