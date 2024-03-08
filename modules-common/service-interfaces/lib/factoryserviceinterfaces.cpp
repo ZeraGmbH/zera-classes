@@ -1,8 +1,7 @@
 #include "factoryserviceinterfaces.h"
 
-DspInterfacePtr FactoryServiceInterfaces::createDspInterfaceRange(int interruptNoHandled, QStringList valueChannelList, bool isReferencce)
+DspInterfacePtr FactoryServiceInterfaces::createDspInterfaceRange(QStringList valueChannelList, bool isReferencce)
 {
-    Q_UNUSED(interruptNoHandled)
     Q_UNUSED(valueChannelList)
     Q_UNUSED(isReferencce)
     return std::make_shared<Zera::cDSPInterface>();

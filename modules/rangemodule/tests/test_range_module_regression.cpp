@@ -1,5 +1,4 @@
 #include "test_range_module_regression.h"
-#include "rangemodulemeasprogram.h"
 #include "modulemanagertestrunner.h"
 #include "vf_client_component_setter.h"
 #include "vf_entity_component_event_item.h"
@@ -89,7 +88,7 @@ void test_range_module_regression::injectActualValues()
     for(int i = 0; i < rangeChannelCount; i++)
         rangeValues.setRmsValue(i, i);
 
-    dspInterfaces[dspInterfaces::RangeModuleMeasProgram]->fireActValInterrupt(rangeValues.getDspValues(), irqNr);
+    dspInterfaces[dspInterfaces::RangeModuleMeasProgram]->fireActValInterrupt(rangeValues.getDspValues(), /* dummy */ 0);
     TimeMachineObject::feedEventLoop();
 
     QFile file(":/dumpActual.json");
@@ -125,7 +124,7 @@ void test_range_module_regression::injectActualValuesWithPreScaling()
         rangeValues.setRmsValue(i, i);
 
     TimeMachineForTest::getInstance()->processTimers(500); //for 'm_AdjustTimer'
-    dspInterfaces[dspInterfaces::RangeModuleMeasProgram]->fireActValInterrupt(rangeValues.getDspValues(), irqNr);
+    dspInterfaces[dspInterfaces::RangeModuleMeasProgram]->fireActValInterrupt(rangeValues.getDspValues(), /* dummy */ 0);
     QSignalSpy spyDspWrite(dspInterfaces[dspInterfaces::AdjustManagement].get(), &MockDspInterface::sigDspMemoryWrite);
     TimeMachineObject::feedEventLoop();
 
@@ -167,7 +166,7 @@ void test_range_module_regression::injectActualValuesWithCheatingDisabled()
         rangeValues.setRmsValue(i, i);
 
     TimeMachineForTest::getInstance()->processTimers(500); //for 'm_AdjustTimer'
-    dspInterfaces[dspInterfaces::RangeModuleMeasProgram]->fireActValInterrupt(rangeValues.getDspValues(), irqNr);
+    dspInterfaces[dspInterfaces::RangeModuleMeasProgram]->fireActValInterrupt(rangeValues.getDspValues(), /* dummy */ 0);
     QSignalSpy spyDspWrite(dspInterfaces[dspInterfaces::AdjustManagement].get(), &MockDspInterface::sigDspMemoryWrite);
     TimeMachineObject::feedEventLoop();
 
@@ -195,7 +194,7 @@ void test_range_module_regression::injectActualValuesWithCheatingEnabled()
         rangeValues.setRmsValue(i, i);
 
     TimeMachineForTest::getInstance()->processTimers(500); //for 'm_AdjustTimer'
-    dspInterfaces[dspInterfaces::RangeModuleMeasProgram]->fireActValInterrupt(rangeValues.getDspValues(), irqNr);
+    dspInterfaces[dspInterfaces::RangeModuleMeasProgram]->fireActValInterrupt(rangeValues.getDspValues(), /* dummy */ 0);
     QSignalSpy spyDspWrite(dspInterfaces[dspInterfaces::AdjustManagement].get(), &MockDspInterface::sigDspMemoryWrite);
     TimeMachineObject::feedEventLoop();
 
@@ -226,7 +225,7 @@ void test_range_module_regression::injectActualValuesWithCheatingAndRangeChanged
         rangeValues.setRmsValue(i, i);
 
     TimeMachineForTest::getInstance()->processTimers(500); //for 'm_AdjustTimer'
-    dspInterfaces[dspInterfaces::RangeModuleMeasProgram]->fireActValInterrupt(rangeValues.getDspValues(), irqNr);
+    dspInterfaces[dspInterfaces::RangeModuleMeasProgram]->fireActValInterrupt(rangeValues.getDspValues(), /* dummy */ 0);
     QSignalSpy spyDspWrite(dspInterfaces[dspInterfaces::AdjustManagement].get(), &MockDspInterface::sigDspMemoryWrite);
     TimeMachineObject::feedEventLoop();
 
@@ -242,7 +241,7 @@ void test_range_module_regression::injectActualValuesWithCheatingAndRangeChanged
     setVfComponent(testRunner.getVfCmdEventHandlerSystemPtr(), "PAR_Channel1Range", "250V", "8V");
     spyDspWrite.clear();
     TimeMachineForTest::getInstance()->processTimers(500); //for 'm_AdjustTimer'
-    dspInterfaces[dspInterfaces::RangeModuleMeasProgram]->fireActValInterrupt(rangeValues.getDspValues(), irqNr);
+    dspInterfaces[dspInterfaces::RangeModuleMeasProgram]->fireActValInterrupt(rangeValues.getDspValues(), /* dummy */ 0);
     TimeMachineObject::feedEventLoop();
 
     QCOMPARE(spyDspWrite.count(), 3);
