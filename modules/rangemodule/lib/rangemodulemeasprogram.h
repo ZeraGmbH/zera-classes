@@ -27,8 +27,6 @@ enum rangemoduleCmds
     freeusermem
 };
 
-#define irqNr 1
-
 class cRangeModule;
 
 class cRangeModuleMeasProgram: public cBaseDspMeasProgram

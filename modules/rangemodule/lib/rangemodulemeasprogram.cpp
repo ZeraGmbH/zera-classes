@@ -16,7 +16,7 @@ cRangeModuleMeasProgram::cRangeModuleMeasProgram(cRangeModule* module, std::shar
     m_pModule(module),
     m_dspWatchdogTimer(TimerFactoryQt::createSingleShot(3000))
 {
-    m_dspInterface = m_pModule->getServiceInterfaceFactory()->createDspInterfaceRange(irqNr, getConfData()->m_senseChannelList, getConfData()->m_session.m_sPar == "ref");
+    m_dspInterface = m_pModule->getServiceInterfaceFactory()->createDspInterfaceRange(getConfData()->m_senseChannelList, getConfData()->m_session.m_sPar == "ref");
     m_bRanging = false;
     m_bIgnore = false;
     m_ChannelList = getConfData()->m_senseChannelList;
@@ -220,7 +220,7 @@ void cRangeModuleMeasProgram::setDspCmdList()
         }
         m_dspInterface->addCycListItem( s = QString("COPYUD(32,MAXRESET,MAXIMUMSAMPLE)")); // reset dspworkspace maximum samples
 
-        m_dspInterface->addCycListItem( s = QString("DSPINTTRIGGER(0x0,0x%1)").arg(irqNr)); // send interrupt to module
+        m_dspInterface->addCycListItem( s = QString("DSPINTTRIGGER(0x0,0x%1)").arg(/* dummy */ 0)); // send interrupt to module
         m_dspInterface->addCycListItem( s = "DEACTIVATECHAIN(1,0x0102)");
     m_dspInterface->addCycListItem( s = "STOPCHAIN(1,0x0102)"); // end processnr., mainchain 1 subchain 2
 }
@@ -234,30 +234,17 @@ void cRangeModuleMeasProgram::deleteDspCmdList()
 
 void cRangeModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant answer)
 {
-    bool ok;
-
-    if (msgnr == 0) // 0 was reserved for async. messages
-    {
+    if (msgnr == 0) { // 0 was reserved for async. messages
         restartDspWachdog();
-        QString sintnr;
-        sintnr = answer.toString().section(':', 1, 1);
-        int service = sintnr.toInt(&ok);
-        switch (service)
-        {
-        case irqNr:
-            // we got an interrupt from our cmd chain and have to fetch our actual values
-            // but we synchronize on ranging process
-            if (!m_bRanging)
-            {
-                if (!m_bIgnore)
-                {
-                    if (m_bActive && !m_dataAcquisitionMachine.isRunning()) // in case of deactivation in progress, no dataaquisition
-                        m_dataAcquisitionMachine.start();
-                }
-                else
-                    m_bIgnore = false;
+        // we got an interrupt from our cmd chain and have to fetch our actual values
+        // but we synchronize on ranging process
+        if (!m_bRanging) {
+            if (!m_bIgnore) {
+                if (m_bActive && !m_dataAcquisitionMachine.isRunning()) // in case of deactivation in progress, no dataaquisition
+                    m_dataAcquisitionMachine.start();
             }
-            break;
+            else
+                m_bIgnore = false;
         }
     }
     else
