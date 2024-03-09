@@ -29,10 +29,10 @@ void test_adj_module_phase::validActValuesWithPermission()
     DemoValuesDspAdjustment dspValues(dspInterfaces[DSP_INTERFACE_DFT]->getValueList());
     dspValues.setAllValuesSymmetric(testvoltage, testcurrent, testangle, testfrequency);
     dspValues.fireActualValues(
-        dspInterfaces[DSP_INTERFACE_DFT].get(),
-        dspInterfaces[DSP_INTERFACE_FFT].get(),
-        dspInterfaces[DSP_INTERFACE_RANGE_PROGRAM].get(), // Range is for frequency only
-        dspInterfaces[DSP_INTERFACE_RMS].get());
+        dspInterfaces[DSP_INTERFACE_DFT],
+        dspInterfaces[DSP_INTERFACE_FFT],
+        dspInterfaces[DSP_INTERFACE_RANGE_PROGRAM], // Range is for frequency only
+        dspInterfaces[DSP_INTERFACE_RMS]);
 
     ScpiModuleClientBlocked scpiClient;
     QString response = scpiClient.sendReceive("calc:adj1:phas UL2,250V,119.9894;|*stb?");
@@ -47,10 +47,10 @@ void test_adj_module_phase::validActValuesWithoutPermission()
     DemoValuesDspAdjustment dspValues(dspInterfaces[DSP_INTERFACE_DFT]->getValueList());
     dspValues.setAllValuesSymmetric(testvoltage, testcurrent, testangle, testfrequency);
     dspValues.fireActualValues(
-        dspInterfaces[DSP_INTERFACE_DFT].get(),
-        dspInterfaces[DSP_INTERFACE_FFT].get(),
-        dspInterfaces[DSP_INTERFACE_RANGE_PROGRAM].get(), // Range is for frequency only
-        dspInterfaces[DSP_INTERFACE_RMS].get());
+        dspInterfaces[DSP_INTERFACE_DFT],
+        dspInterfaces[DSP_INTERFACE_FFT],
+        dspInterfaces[DSP_INTERFACE_RANGE_PROGRAM], // Range is for frequency only
+        dspInterfaces[DSP_INTERFACE_RMS]);
 
     ScpiModuleClientBlocked scpiClient;
     QString response = scpiClient.sendReceive("calc:adj1:phas UL2,250V,119.9894;|*stb?");
