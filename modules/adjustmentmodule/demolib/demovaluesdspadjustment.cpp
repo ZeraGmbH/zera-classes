@@ -25,7 +25,10 @@ void DemoValuesDspAdjustment::setAllValuesSymmetric(float voltage, float current
     }
 }
 
-void DemoValuesDspAdjustment::fireActualValues(MockDspInterface *dspDft, MockDspInterface *dspFft, MockDspInterface *dspRange, MockDspInterface *dspRms)
+void DemoValuesDspAdjustment::fireActualValues(MockDspInterfacePtr dspDft,
+                                               MockDspInterfacePtr dspFft,
+                                               MockDspInterfacePtr dspRange,
+                                               MockDspInterfacePtr dspRms)
 {
     dspDft->fireActValInterrupt(m_dftValues->getDspValues(), 0 /* dummy */);
     dspFft->fireActValInterrupt(m_fftValues->getDspValues(), 0 /* dummy */);

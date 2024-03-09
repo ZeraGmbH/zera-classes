@@ -13,7 +13,10 @@ class DemoValuesDspAdjustment
 public:
     DemoValuesDspAdjustment(QStringList valueChannelList);
     void setAllValuesSymmetric(float voltage, float current, float angleUi, float frequency, bool invertedSequence = false);
-    void fireActualValues(MockDspInterface* dspDft, MockDspInterface* dspFft, MockDspInterface* dspRange, MockDspInterface* dspRms);
+    void fireActualValues(MockDspInterfacePtr dspDft,
+                          MockDspInterfacePtr dspFft,
+                          MockDspInterfacePtr dspRange,
+                          MockDspInterfacePtr dspRms);
 private:
     QVector<float> getDspValuesDft();
     QVector<float> getDspValuesFft();
