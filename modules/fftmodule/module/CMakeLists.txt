@@ -1,5 +1,4 @@
 add_library(fftmodule MODULE
-    ${XML_SCHEMA_RESOURCE_FFTMODULE}
     ${CMAKE_CURRENT_SOURCE_DIR}/fftmodulefactory.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/fftmodulefactory.h
     )

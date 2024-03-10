@@ -1,5 +1,4 @@
 add_library(lambdamodule MODULE
-    ${XML_SCHEMA_RESOURCE_LAMBDAMODULE}
     ${CMAKE_CURRENT_SOURCE_DIR}/lambdamodulefactory.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/lambdamodulefactory.h
     )

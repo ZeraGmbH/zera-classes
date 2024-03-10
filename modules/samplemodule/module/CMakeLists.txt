@@ -1,5 +1,4 @@
 add_library(samplemodule MODULE
-    ${XML_SCHEMA_RESOURCE_SAMPLEMODULE}
     ${CMAKE_CURRENT_SOURCE_DIR}/samplemodulefactory.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/samplemodulefactory.h
     )
@@ -21,4 +20,3 @@ install(TARGETS samplemodule
     EXPORT samplemoduleExport
     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}/zera-modules
     )
-

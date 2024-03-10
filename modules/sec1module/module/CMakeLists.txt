@@ -1,5 +1,4 @@
 add_library(sec1module MODULE
-    ${XML_SCHEMA_RESOURCE_SEC1MODULE}
     ${CMAKE_CURRENT_SOURCE_DIR}/sec1modulefactory.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/sec1modulefactory.h
     )

@@ -3,6 +3,7 @@ function(SETUP_QTESTS_MODULE)
     foreach(_testname ${ARGN})
         target_sources(${_testname}
             PRIVATE
+            ${XML_SCHEMA_RESOURCES_ALL}
             test-data.qrc
         )
         target_link_libraries(${_testname}

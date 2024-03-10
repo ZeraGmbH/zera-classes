@@ -1,5 +1,4 @@
 add_library(spm1module MODULE
-    ${XML_SCHEMA_RESOURCE_SPM1MODULE}
     ${CMAKE_CURRENT_SOURCE_DIR}/spm1modulefactory.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/spm1modulefactory.h
     )

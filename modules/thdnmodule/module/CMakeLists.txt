@@ -1,5 +1,4 @@
 add_library(thdnmodule MODULE
-    ${XML_SCHEMA_RESOURCE_THDNMODULE}
     ${CMAKE_CURRENT_SOURCE_DIR}/thdnmodulefactory.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/thdnmodulefactory.h
     )
