@@ -86,6 +86,7 @@ macro(SET_MODULE_ENV MODULE_NAME)
     # xmlschema resources are required by modules, tests and scpi-doc. If we put resource into
     # some library it would need some call of Q_INIT_RESOURCE. So publish resource
     # location and compile in where needed.
+    set(XML_SCHEMA_RESOURCE_${MODULE_NAME_UPPER} ${MODULE_CONFIG_PATH}/xmlschema.qrc)
     set(MODULE_SCHEMA_RESOURCE ${MODULE_CONFIG_PATH}/xmlschema.qrc)
     if(EXISTS ${MODULE_SCHEMA_RESOURCE})
         set(XML_SCHEMA_RESOURCES_ALL ${XML_SCHEMA_RESOURCES_ALL} ${MODULE_SCHEMA_RESOURCE})
@@ -134,10 +135,6 @@ function(SETUP_QTESTS)
             ${_testname}.h
             ${_testname}.cpp
             )
-        target_sources(${_testname}
-            PUBLIC
-            ${XML_SCHEMA_RESOURCES_ALL}
-        )
         target_link_libraries(${_testname}
             PUBLIC
             zera-basemodule

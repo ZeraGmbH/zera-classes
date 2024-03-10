@@ -1,5 +1,4 @@
 add_library(rmsmodule MODULE
-    ${XML_SCHEMA_RESOURCE_RMSMODULE}
     ${CMAKE_CURRENT_SOURCE_DIR}/rmsmodulefactory.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/rmsmodulefactory.h
     )

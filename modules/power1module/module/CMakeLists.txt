@@ -1,5 +1,4 @@
 add_library(power1module MODULE
-    ${XML_SCHEMA_RESOURCE_POWER1MODULE}
     ${CMAKE_CURRENT_SOURCE_DIR}/power1modulefactory.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/power1modulefactory.h
     )

@@ -1,5 +1,4 @@
 add_library(blemodule MODULE
-    ${XML_SCHEMA_RESOURCE_BLEMODULE}
     ${CMAKE_CURRENT_SOURCE_DIR}/blemodulefactory.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/blemodulefactory.h
     )

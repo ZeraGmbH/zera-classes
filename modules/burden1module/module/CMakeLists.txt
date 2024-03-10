@@ -1,5 +1,4 @@
 add_library(burden1module MODULE
-    ${XML_SCHEMA_RESOURCE_BURDEN1MODULE}
     ${CMAKE_CURRENT_SOURCE_DIR}/burden1modulefactory.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/burden1modulefactory.h
     )

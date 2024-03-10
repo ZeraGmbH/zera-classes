@@ -62,3 +62,8 @@ SETUP_QTESTS_MODULEMANAGER(
     test_sessionnamesmappingjson
     )
 
+target_sources(test_modman_regression_all_sessions
+  PRIVATE
+    ${XML_SCHEMA_RESOURCES_ALL}
+)
+
