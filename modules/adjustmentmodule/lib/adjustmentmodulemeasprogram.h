@@ -64,6 +64,7 @@ public:
 };
 
 constexpr double maxAmplitudeErrorPercent = 10;
+constexpr double maxPhaseErrorDegrees = 5;
 
 class cAdjustmentModuleMeasProgram: public cBaseMeasWorkProgram
 {

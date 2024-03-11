@@ -15,8 +15,14 @@ private slots:
     // from here on with permission
     void absOutOfRangeLower();
     void absOutOfRangeUpper();
+
+    void outOfLimitLowerIL1();
+    void outOfLimitUpperIL1();
+    void withinLimitLowerIL1();
+    void withinLimitUpperIL1();
 private:
     void setActualTestValues(ModuleManagerTestRunner &testRunner);
+    double adjustAngle(double angle);
 };
 
 #endif // TEST_ADJ_MODULE_PHASE_H
