@@ -1,7 +1,6 @@
 #include "test_adj_module_phase.h"
 #include "adjustmentmodule.h"
 #include "demovaluesdspadjustment.h"
-#include "modulemanagertestrunner.h"
 #include <scpimoduleclientblocked.h>
 #include <QTest>
 
@@ -24,25 +23,46 @@ void test_adj_module_phase::noActValuesWithPermission()
 void test_adj_module_phase::validActValuesWithPermission()
 {
     ModuleManagerTestRunner testRunner(":/session-minimal.json", true);
-
-    const QList<TestDspInterfacePtr>& dspInterfaces = testRunner.getDspInterfaceList();
-    DemoValuesDspAdjustment dspValues(dspInterfaces[DSP_INTERFACE_DFT]->getValueList());
-    dspValues.setAllValuesSymmetric(testvoltage, testcurrent, testangle, testfrequency);
-    dspValues.fireActualValues(
-        dspInterfaces[DSP_INTERFACE_DFT],
-        dspInterfaces[DSP_INTERFACE_FFT],
-        dspInterfaces[DSP_INTERFACE_RANGE_PROGRAM], // Range is for frequency only
-        dspInterfaces[DSP_INTERFACE_RMS]);
+    setActualTestValues(testRunner);
 
     ScpiModuleClientBlocked scpiClient;
-    QString response = scpiClient.sendReceive("calc:adj1:phas UL2,250V,119.9894;|*stb?");
+    QString response = scpiClient.sendReceive("calc:adj1:phas IL1,10A,0;|*stb?");
     QCOMPARE(response, "+0");
 }
 
 void test_adj_module_phase::validActValuesWithoutPermission()
 {
     ModuleManagerTestRunner testRunner(":/session-minimal.json", false);
+    setActualTestValues(testRunner);
 
+    ScpiModuleClientBlocked scpiClient;
+    QString response = scpiClient.sendReceive("calc:adj1:phas IL1,10A,0;|*stb?");
+    QCOMPARE(response, "+4");
+}
+
+void test_adj_module_phase::absOutOfRangeLower()
+{
+    ModuleManagerTestRunner testRunner(":/session-minimal.json", true);
+    setActualTestValues(testRunner);
+
+    ScpiModuleClientBlocked scpiClient;
+    QString response = scpiClient.sendReceive("calc:adj1:phas IL1,10A,-0.0001;|*stb?");
+    QCOMPARE(response, "+4");
+}
+
+void test_adj_module_phase::absOutOfRangeUpper()
+{
+    ModuleManagerTestRunner testRunner(":/session-minimal.json", true);
+    setActualTestValues(testRunner);
+
+    ScpiModuleClientBlocked scpiClient;
+    QString response = scpiClient.sendReceive("calc:adj1:phas IL1,10A,360.0001;|*stb?");
+    QCOMPARE(response, "+4");
+}
+
+
+void test_adj_module_phase::setActualTestValues(ModuleManagerTestRunner &testRunner)
+{
     const QList<TestDspInterfacePtr>& dspInterfaces = testRunner.getDspInterfaceList();
     DemoValuesDspAdjustment dspValues(dspInterfaces[DSP_INTERFACE_DFT]->getValueList());
     dspValues.setAllValuesSymmetric(testvoltage, testcurrent, testangle, testfrequency);
@@ -51,9 +71,4 @@ void test_adj_module_phase::validActValuesWithoutPermission()
         dspInterfaces[DSP_INTERFACE_FFT],
         dspInterfaces[DSP_INTERFACE_RANGE_PROGRAM], // Range is for frequency only
         dspInterfaces[DSP_INTERFACE_RMS]);
-
-    ScpiModuleClientBlocked scpiClient;
-    QString response = scpiClient.sendReceive("calc:adj1:phas UL2,250V,119.9894;|*stb?");
-    QCOMPARE(response, "+4");
 }
-
