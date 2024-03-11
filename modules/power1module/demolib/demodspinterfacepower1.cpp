@@ -1,8 +1,7 @@
 #include "demodspinterfacepower1.h"
 #include <timerfactoryqt.h>
 
-DemoDspInterfacePower1::DemoDspInterfacePower1(int interruptNoHandled, MeasModeSelector *measMode) :
-    m_interruptNoHandled(interruptNoHandled),
+DemoDspInterfacePower1::DemoDspInterfacePower1(MeasModeSelector *measMode) :
     m_measMode(measMode),
     m_periodicTimer(TimerFactoryQt::createPeriodic(500))
 {
@@ -33,5 +32,5 @@ void DemoDspInterfacePower1::onTimer()
         valuesDemo.append(val);
     }
     valuesDemo.append(valuesDemo[0] + valuesDemo[1] + valuesDemo[2]);
-    fireActValInterrupt(valuesDemo, m_interruptNoHandled);
+    fireActValInterrupt(valuesDemo,  /* dummy */ 0);
 }
