@@ -110,8 +110,6 @@ private:
     double m_AdjustFrequency;
     double m_AdjustCorrection;
 
-    int m_AdjustEntity;
-    QString m_AdjustComponent;
     QVariant m_receivedPar;
 
     AdjustmentModuleCommonPtr m_commonObjects;

@@ -495,9 +495,9 @@ double cAdjustmentModuleMeasProgram::calcAdjAbsoluteError()
 void cAdjustmentModuleMeasProgram::setAdjustAmplitudeStartCommand(QVariant var)
 {
     setAdjustEnvironment(var);
-    m_AdjustEntity = getConfData()->m_AdjChannelInfoHash[m_sAdjustSysName]->amplitudeAdjInfo.m_nEntity;
-    m_AdjustComponent = getConfData()->m_AdjChannelInfoHash[m_sAdjustSysName]->amplitudeAdjInfo.m_sComponent;
-    m_AdjustActualValue = m_pModule->getStorageSystem()->getStoredValue(m_AdjustEntity, m_AdjustComponent).toDouble();
+    int adjustEntity = getConfData()->m_AdjChannelInfoHash[m_sAdjustSysName]->amplitudeAdjInfo.m_nEntity;
+    QString adjustComponent = getConfData()->m_AdjChannelInfoHash[m_sAdjustSysName]->amplitudeAdjInfo.m_sComponent;
+    m_AdjustActualValue = m_pModule->getStorageSystem()->getStoredValue(adjustEntity, adjustComponent).toDouble();
     double actWantedError = calcAdjAbsoluteError();
     if(actWantedError > maxAmplitudeErrorPercent) {
         notifyExecutionError("Amplitude to adjust is out of limit!");
@@ -530,21 +530,20 @@ void cAdjustmentModuleMeasProgram::adjustamplitudeSetNode()
 void cAdjustmentModuleMeasProgram::setAdjustPhaseStartCommand(QVariant var)
 {
     setAdjustEnvironment(var);
-    m_AdjustEntity = getConfData()->m_AdjChannelInfoHash[m_sAdjustSysName]->phaseAdjInfo.m_nEntity;
-    m_AdjustComponent = getConfData()->m_AdjChannelInfoHash[m_sAdjustSysName]->phaseAdjInfo.m_sComponent;
+    int adjustEntity = getConfData()->m_AdjChannelInfoHash[m_sAdjustSysName]->phaseAdjInfo.m_nEntity;
+    QString adjustComponent = getConfData()->m_AdjChannelInfoHash[m_sAdjustSysName]->phaseAdjInfo.m_sComponent;
+    m_AdjustActualValue = cmpPhase(m_pModule->getStorageSystem()->getStoredValue(adjustEntity, adjustComponent));
+    if(qIsNaN(m_AdjustActualValue)) {
+        notifyExecutionError("Invalid phase actual value!");
+        m_pPARAdjustPhase->setError();
+        return;
+    }
     m_adjustPhaseMachine.start();
 }
 
 void cAdjustmentModuleMeasProgram::adjustphaseGetCorr()
 {
-    m_AdjustActualValue = cmpPhase(m_pModule->getStorageSystem()->getStoredValue(m_AdjustEntity, m_AdjustComponent));
     m_AdjustFrequency = m_pModule->getStorageSystem()->getStoredValue(getConfData()->m_ReferenceFrequency.m_nEntity, getConfData()->m_ReferenceFrequency.m_sComponent).toDouble();
-    if(qIsNaN(m_AdjustActualValue)) {
-        emit adjustError();
-        notifyExecutionError("Invalid phase actual value!");
-        m_pPARAdjustPhase->setError();
-        return;
-    }
     m_MsgNrCmdList[m_commonObjects->m_pcbInterface->getAdjPhaseCorrection(m_sAdjustSysName, m_sAdjustRange, m_AdjustFrequency)] = getadjphasecorrection;
 }
 
