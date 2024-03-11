@@ -487,17 +487,28 @@ void cAdjustmentModuleMeasProgram::setAdjustInitStartCommand(QVariant var)
     m_adjustIteratorHash[chnName] = new cAdjustIterators();
 }
 
+double cAdjustmentModuleMeasProgram::calcAdjAbsoluteError()
+{
+    return fabs(100 * (m_AdjustTargetValue - m_AdjustActualValue) / m_AdjustActualValue);
+}
+
 void cAdjustmentModuleMeasProgram::setAdjustAmplitudeStartCommand(QVariant var)
 {
     setAdjustEnvironment(var);
     m_AdjustEntity = getConfData()->m_AdjChannelInfoHash[m_sAdjustSysName]->amplitudeAdjInfo.m_nEntity;
     m_AdjustComponent = getConfData()->m_AdjChannelInfoHash[m_sAdjustSysName]->amplitudeAdjInfo.m_sComponent;
+    m_AdjustActualValue = m_pModule->getStorageSystem()->getStoredValue(m_AdjustEntity, m_AdjustComponent).toDouble();
+    double actWantedError = calcAdjAbsoluteError();
+    if(actWantedError > maxAmplitudeErrorPercent) {
+        notifyExecutionError("Amplitude to adjust is out of limit!");
+        m_pPARAdjustAmplitude->setError();
+        return;
+    }
     m_adjustAmplitudeMachine.start();
 }
 
 void cAdjustmentModuleMeasProgram::adjustamplitudeGetCorr()
 {
-    m_AdjustActualValue = m_pModule->getStorageSystem()->getStoredValue(m_AdjustEntity, m_AdjustComponent).toDouble();
     m_MsgNrCmdList[m_commonObjects->m_pcbInterface->getAdjGainCorrection(m_sAdjustSysName, m_sAdjustRange, m_AdjustActualValue)] = getadjgaincorrection;
 }
 

@@ -63,6 +63,7 @@ public:
     int m_nAdjustPhaseIt;
 };
 
+constexpr double maxAmplitudeErrorPercent = 10;
 
 class cAdjustmentModuleMeasProgram: public cBaseMeasWorkProgram
 {
@@ -95,6 +96,7 @@ private:
     void setAdjustEnvironment(QVariant var);
     double cmpPhase(QVariant var);
     double symAngle(double ang);
+    double calcAdjAbsoluteError();
 
     cAdjustmentModule* m_pModule;
     // we use the following 7 parameters globally defined for easier
