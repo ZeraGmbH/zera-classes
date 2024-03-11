@@ -5,24 +5,24 @@
 #include "demodspinterfacerms.h"
 #include "demodspinterfacepower1.h"
 
-DspInterfacePtr DemoFactoryServiceInterfaces::createDspInterfaceRange(int interruptNoHandled, QStringList valueChannelList, bool isReferencce)
+DspInterfacePtr DemoFactoryServiceInterfaces::createDspInterfaceRange(QStringList valueChannelList, bool isReferencce)
 {
-    return std::make_shared<DemoDspInterfaceRange>(interruptNoHandled, valueChannelList, isReferencce);
+    return std::make_shared<DemoDspInterfaceRange>(valueChannelList, isReferencce);
 }
 
-DspInterfacePtr DemoFactoryServiceInterfaces::createDspInterfaceDft(int interruptNoHandled, QStringList valueChannelList, int dftOrder)
+DspInterfacePtr DemoFactoryServiceInterfaces::createDspInterfaceDft(QStringList valueChannelList, int dftOrder)
 {
-    return std::make_shared<DemoDspInterfaceDft>(interruptNoHandled, valueChannelList, dftOrder);
+    return std::make_shared<DemoDspInterfaceDft>(valueChannelList, dftOrder);
 }
 
-DspInterfacePtr DemoFactoryServiceInterfaces::createDspInterfaceFft(int interruptNoHandled, QStringList valueChannelList, int fftOrder)
+DspInterfacePtr DemoFactoryServiceInterfaces::createDspInterfaceFft(QStringList valueChannelList, int fftOrder)
 {
-    return std::make_shared<DemoDspInterfaceFft>(interruptNoHandled, valueChannelList, fftOrder);
+    return std::make_shared<DemoDspInterfaceFft>(valueChannelList, fftOrder);
 }
 
-DspInterfacePtr DemoFactoryServiceInterfaces::createDspInterfaceRms(int interruptNoHandled, QStringList valueChannelList)
+DspInterfacePtr DemoFactoryServiceInterfaces::createDspInterfaceRms(QStringList valueChannelList)
 {
-    return std::make_shared<DemoDspInterfaceRms>(interruptNoHandled, valueChannelList);
+    return std::make_shared<DemoDspInterfaceRms>(valueChannelList);
 }
 
 DspInterfacePtr DemoFactoryServiceInterfaces::createDspInterfacePower1(int interruptNoHandled, MeasModeSelector* measMode)

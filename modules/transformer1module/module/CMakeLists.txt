@@ -1,5 +1,4 @@
 add_library(transformer1module MODULE
-    ${XML_SCHEMA_RESOURCE_TRANSFORMER1MODULE}
     ${CMAKE_CURRENT_SOURCE_DIR}/transformer1modulefactory.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/transformer1modulefactory.h
     )

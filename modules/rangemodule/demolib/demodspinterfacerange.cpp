@@ -2,8 +2,7 @@
 #include "demovaluesdsprange.h"
 #include <timerfactoryqt.h>
 
-DemoDspInterfaceRange::DemoDspInterfaceRange(int interruptNoHandled, QStringList valueChannelList, bool isReference) :
-    m_interruptNoHandled(interruptNoHandled),
+DemoDspInterfaceRange::DemoDspInterfaceRange(QStringList valueChannelList, bool isReference) :
     m_valueChannelList(valueChannelList),
     m_isReference(isReference),
     m_periodicTimer(TimerFactoryQt::createPeriodic(500))
@@ -22,7 +21,7 @@ void DemoDspInterfaceRange::onTimer()
     for(int channel=0; channel<m_valueChannelList.count(); channel++)
         rangeValues.setRmsValue(channel, randomChannelRMS[channel]);
     rangeValues.setFrequency(demoFrequency());
-    fireActValInterrupt(rangeValues.getDspValues(), m_interruptNoHandled);
+    fireActValInterrupt(rangeValues.getDspValues(), 0 /* dummy */);
 }
 
 bool DemoDspInterfaceRange::demoChannelIsVoltage(int channel)

@@ -1,5 +1,4 @@
 add_library(oscimodule MODULE
-    ${XML_SCHEMA_RESOURCE_OSCIMODULE}
     ${CMAKE_CURRENT_SOURCE_DIR}/oscimodulefactory.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/oscimodulefactory.h
     )

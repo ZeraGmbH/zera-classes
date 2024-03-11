@@ -5,6 +5,17 @@
 
 class cAdjustmentModuleMeasProgram;
 
+enum dspInterfaceOrder { // For doc and test
+    DSP_INTERFACE_RANGE_OBSERMATIC = 0,
+    DSP_INTERFACE_RANGE_ADJUSTMENT,
+    DSP_INTERFACE_RANGE_PROGRAM,
+    DSP_INTERFACE_RMS,
+    DSP_INTERFACE_DFT,
+    DSP_INTERFACE_FFT,
+
+    DSP_INTERFACE_COUNT
+};
+
 class cAdjustmentModule : public cBaseMeasModule
 {
     Q_OBJECT

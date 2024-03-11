@@ -2,8 +2,7 @@
 #include "demovaluesdspdft.h"
 #include <timerfactoryqt.h>
 
-DemoDspInterfaceDft::DemoDspInterfaceDft(int interruptNoHandled, QStringList valueChannelList, int dftOrder) :
-    m_interruptNoHandled(interruptNoHandled),
+DemoDspInterfaceDft::DemoDspInterfaceDft(QStringList valueChannelList, int dftOrder) :
     m_valueChannelList(valueChannelList),
     m_dftOrder(dftOrder),
     m_periodicTimer(TimerFactoryQt::createPeriodic(500))
@@ -40,5 +39,5 @@ void DemoDspInterfaceDft::onTimer()
             demoValues[i] *= randomDeviation;
         }
     }
-    fireActValInterrupt(demoValues, m_interruptNoHandled);
+    fireActValInterrupt(demoValues, /* dummy */ 0);
 }

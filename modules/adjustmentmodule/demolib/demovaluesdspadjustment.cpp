@@ -25,9 +25,15 @@ void DemoValuesDspAdjustment::setAllValuesSymmetric(float voltage, float current
     }
 }
 
-void DemoValuesDspAdjustment::fireActualValues(MockDspInterface *dspDft, MockDspInterface *dspFft, MockDspInterface *dspRange, MockDspInterface *dspRms)
+void DemoValuesDspAdjustment::fireActualValues(MockDspInterfacePtr dspDft,
+                                               MockDspInterfacePtr dspFft,
+                                               MockDspInterfacePtr dspRange,
+                                               MockDspInterfacePtr dspRms)
 {
-    //    dspDft->fireActValInterrupt();
+    dspDft->fireActValInterrupt(m_dftValues->getDspValues(), 0 /* dummy */);
+    dspFft->fireActValInterrupt(m_fftValues->getDspValues(), 0 /* dummy */);
+    dspRange->fireActValInterrupt(m_rangeValues->getDspValues(), 0 /* dummy */);
+    dspRms->fireActValInterrupt(m_rmsValues->getDspValues(), 0 /* dummy */);
 }
 
 QVector<float> DemoValuesDspAdjustment::getDspValuesDft()

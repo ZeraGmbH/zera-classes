@@ -1,26 +1,26 @@
 #include "testfactoryserviceinterfaces.h"
 
-DspInterfacePtr TestFactoryServiceInterfaces::createDspInterfaceRange(int interruptNoHandled, QStringList valueChannelList, bool isReferencce)
+DspInterfacePtr TestFactoryServiceInterfaces::createDspInterfaceRange(QStringList valueChannelList, bool isReferencce)
 {
     Q_UNUSED(isReferencce)
-    return createDspInterfaceCommon(interruptNoHandled, valueChannelList);
+    return createDspInterfaceCommon(0 /* dummy */, valueChannelList);
 }
 
-DspInterfacePtr TestFactoryServiceInterfaces::createDspInterfaceDft(int interruptNoHandled, QStringList valueChannelList, int dftOrder)
+DspInterfacePtr TestFactoryServiceInterfaces::createDspInterfaceDft(QStringList valueChannelList, int dftOrder)
 {
     Q_UNUSED(dftOrder)
-    return createDspInterfaceCommon(interruptNoHandled, valueChannelList);
+    return createDspInterfaceCommon(0 /* dummy */, valueChannelList);
 }
 
-DspInterfacePtr TestFactoryServiceInterfaces::createDspInterfaceFft(int interruptNoHandled, QStringList valueChannelList, int fftOrder)
+DspInterfacePtr TestFactoryServiceInterfaces::createDspInterfaceFft(QStringList valueChannelList, int fftOrder)
 {
     Q_UNUSED(fftOrder)
-    return createDspInterfaceCommon(interruptNoHandled, valueChannelList);
+    return createDspInterfaceCommon(0 /* dummy */, valueChannelList);
 }
 
-DspInterfacePtr TestFactoryServiceInterfaces::createDspInterfaceRms(int interruptNoHandled, QStringList valueChannelList)
+DspInterfacePtr TestFactoryServiceInterfaces::createDspInterfaceRms(QStringList valueChannelList)
 {
-    return createDspInterfaceCommon(interruptNoHandled, valueChannelList);
+    return createDspInterfaceCommon(0 /* dummy */, valueChannelList);
 }
 
 DspInterfacePtr TestFactoryServiceInterfaces::createDspInterfacePower1(int interruptNoHandled, MeasModeSelector *measMode)

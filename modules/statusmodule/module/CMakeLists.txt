@@ -1,5 +1,4 @@
 add_library(statusmodule MODULE
-    ${XML_SCHEMA_RESOURCE_STATUSMODULE}
     ${CMAKE_CURRENT_SOURCE_DIR}/statusmodulefactory.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/statusmodulefactory.h
     )

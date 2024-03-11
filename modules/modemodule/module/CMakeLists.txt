@@ -1,5 +1,4 @@
 add_library(modemodule MODULE
-    ${XML_SCHEMA_RESOURCE_MODEMODULE}
     ${CMAKE_CURRENT_SOURCE_DIR}/modemodulefactory.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/modemodulefactory.h
     )

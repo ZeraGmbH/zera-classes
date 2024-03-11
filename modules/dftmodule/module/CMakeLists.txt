@@ -1,5 +1,4 @@
 add_library(dftmodule MODULE
-    ${XML_SCHEMA_RESOURCE_DFTMODULE}
     ${CMAKE_CURRENT_SOURCE_DIR}/dftmodulefactory.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/dftmodulefactory.h
     )

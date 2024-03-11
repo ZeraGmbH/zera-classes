@@ -1,5 +1,4 @@
 add_library(adjustmentmodule MODULE
-    ${XML_SCHEMA_RESOURCE_ADJUSTMENTMODULE}
     ${CMAKE_CURRENT_SOURCE_DIR}/adjustmentmodulefactory.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/adjustmentmodulefactory.h
     )

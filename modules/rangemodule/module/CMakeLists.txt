@@ -1,5 +1,4 @@
 add_library(rangemodule MODULE
-    ${XML_SCHEMA_RESOURCE_RANGEMODULE}
     ${CMAKE_CURRENT_SOURCE_DIR}/rangemodulefactory.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/rangemodulefactory.h
     )

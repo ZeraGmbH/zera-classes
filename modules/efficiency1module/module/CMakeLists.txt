@@ -1,5 +1,4 @@
 add_library(efficiency1module MODULE
-    ${XML_SCHEMA_RESOURCE_EFFICIENCY1MODULE}
     ${CMAKE_CURRENT_SOURCE_DIR}/efficiency1modulefactory.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/efficiency1modulefactory.h
     )

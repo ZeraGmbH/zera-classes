@@ -2,7 +2,6 @@
 #include "demovaluesdsprms.h"
 #include "rmsmodule.h"
 #include "rmsmoduleconfiguration.h"
-#include "rmsmodulemeasprogram.h"
 #include "modulemanagertestrunner.h"
 #include <timemachineobject.h>
 #include <QBuffer>
@@ -78,7 +77,7 @@ void test_rms_module_regression::injectActualValues()
     for(int i = 0; i<rmsResultCount; i++)
         actValues[i] = i;
 
-    dspInterfaces[0]->fireActValInterrupt(actValues, irqNr);
+    dspInterfaces[0]->fireActValInterrupt(actValues, 0 /* dummy */);
     TimeMachineObject::feedEventLoop();
 
     QFile file(":/dumpActual.json");
@@ -110,12 +109,12 @@ void test_rms_module_regression::injectActualTwice()
     QVector<float> actValues(rmsResultCount);
 
     actValues[1] = 37;
-    dspInterfaces[0]->fireActValInterrupt(actValues, irqNr);
+    dspInterfaces[0]->fireActValInterrupt(actValues, 0 /* dummy */);
     TimeMachineObject::feedEventLoop();
     QCOMPARE(storageHash->getStoredValue(rmsEntityId, "ACT_RMSPN2"), QVariant(37.0));
 
     actValues[1] = 42;
-    dspInterfaces[0]->fireActValInterrupt(actValues, irqNr);
+    dspInterfaces[0]->fireActValInterrupt(actValues, 0 /* dummy */);
     TimeMachineObject::feedEventLoop();
     QCOMPARE(storageHash->getStoredValue(rmsEntityId, "ACT_RMSPN2"), QVariant(42.0));
 }
@@ -133,7 +132,7 @@ void test_rms_module_regression::injectSymmetricValues()
 
     DemoValuesDspRms demoDspValue(config.getConfigurationData()->m_valueChannelList);
     demoDspValue.setAllValuesSymmetric(230, 5);
-    dspInterfaces[0]->fireActValInterrupt(demoDspValue.getDspValues(), irqNr);
+    dspInterfaces[0]->fireActValInterrupt(demoDspValue.getDspValues(), 0 /* dummy */);
     TimeMachineObject::feedEventLoop();
 
     QFile file(":/dumpSymmetric.json");

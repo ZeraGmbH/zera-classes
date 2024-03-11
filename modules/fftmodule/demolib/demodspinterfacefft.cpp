@@ -3,8 +3,7 @@
 #include <timerfactoryqt.h>
 #include <math.h>
 
-DemoDspInterfaceFft::DemoDspInterfaceFft(int interruptNoHandled, QStringList valueChannelList, int fftOrder) :
-    m_interruptNoHandled(interruptNoHandled),
+DemoDspInterfaceFft::DemoDspInterfaceFft(QStringList valueChannelList, int fftOrder) :
     m_valueChannelList(valueChannelList),
     m_fftOrder(fftOrder),
     m_periodicTimer(TimerFactoryQt::createPeriodic(500))
@@ -48,5 +47,5 @@ void DemoDspInterfaceFft::onTimer()
     dspValues.setValue(5, 1, 4/M_SQRT2, 4/M_SQRT2);
     dspValues.setValue(5, 2, 6/M_SQRT2, 6/M_SQRT2);
 
-    fireActValInterrupt(dspValues.getDspValues(), m_interruptNoHandled);
+    fireActValInterrupt(dspValues.getDspValues(), /* dummy */ 0);
 }
