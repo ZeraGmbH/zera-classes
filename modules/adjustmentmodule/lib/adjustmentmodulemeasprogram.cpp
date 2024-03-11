@@ -530,7 +530,7 @@ void cAdjustmentModuleMeasProgram::adjustphaseGetCorr()
     m_AdjustFrequency = m_pModule->getStorageSystem()->getStoredValue(getConfData()->m_ReferenceFrequency.m_nEntity, getConfData()->m_ReferenceFrequency.m_sComponent).toDouble();
     if(qIsNaN(m_AdjustActualValue)) {
         emit adjustError();
-        notifyExecutionError("Invalid phase compare value!");
+        notifyExecutionError("Invalid phase actual value!");
         m_pPARAdjustPhase->setError();
         return;
     }
