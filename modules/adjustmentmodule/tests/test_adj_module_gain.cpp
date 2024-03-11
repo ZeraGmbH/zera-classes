@@ -12,7 +12,7 @@ void test_adj_module_gain::noActValuesWithPermission()
     ScpiModuleClientBlocked scpiClient;
     // Init is missing by intention
     QString response = scpiClient.sendReceive("calc:adj1:ampl UL1,250V,199.9893000801;|*stb?");
-    QCOMPARE(response, "+0");
+    QCOMPARE(response, "+0"); // Without sending values we get 0.0 which is not invalid
 }
 
 void test_adj_module_gain::noActValuesWithoutPermission()
