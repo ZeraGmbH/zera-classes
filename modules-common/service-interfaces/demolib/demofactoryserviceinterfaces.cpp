@@ -25,9 +25,9 @@ DspInterfacePtr DemoFactoryServiceInterfaces::createDspInterfaceRms(QStringList 
     return std::make_shared<DemoDspInterfaceRms>(valueChannelList);
 }
 
-DspInterfacePtr DemoFactoryServiceInterfaces::createDspInterfacePower1(int interruptNoHandled, MeasModeSelector* measMode)
+DspInterfacePtr DemoFactoryServiceInterfaces::createDspInterfacePower1(MeasModeSelector* measMode)
 {
-    return std::make_shared<DemoDspInterfacePower1>(interruptNoHandled, measMode);
+    return std::make_shared<DemoDspInterfacePower1>(measMode);
 }
 
 DspInterfacePtr DemoFactoryServiceInterfaces::createDspInterfaceOther()

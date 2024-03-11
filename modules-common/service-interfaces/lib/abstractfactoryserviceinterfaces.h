@@ -14,7 +14,7 @@ public:
     virtual DspInterfacePtr createDspInterfaceDft(QStringList valueChannelList, int dftOrder) = 0;
     virtual DspInterfacePtr createDspInterfaceFft(QStringList valueChannelList, int fftOrder) = 0;
     virtual DspInterfacePtr createDspInterfaceRms(QStringList valueChannelList) = 0;
-    virtual DspInterfacePtr createDspInterfacePower1(int interruptNoHandled, MeasModeSelector* measMode) = 0;
+    virtual DspInterfacePtr createDspInterfacePower1(MeasModeSelector* measMode) = 0;
     virtual DspInterfacePtr createDspInterfaceOther() = 0;
 };
 

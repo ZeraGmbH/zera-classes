@@ -20,7 +20,7 @@ cPower1ModuleMeasProgram::cPower1ModuleMeasProgram(cPower1Module* module, std::s
     cBaseDspMeasProgram(pConfiguration),
     m_pModule(module)
 {
-    m_dspInterface = m_pModule->getServiceInterfaceFactory()->createDspInterfacePower1(irqNr, &m_measModeSelector);
+    m_dspInterface = m_pModule->getServiceInterfaceFactory()->createDspInterfacePower1(&m_measModeSelector);
 
     m_IdentifyState.addTransition(this, &cModuleActivist::activationContinue, &m_readResourceTypesState);
     m_readResourceTypesState.addTransition(this, &cModuleActivist::activationContinue, &m_readResourceSenseState);
@@ -504,31 +504,31 @@ void cPower1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply,
 {
     if (msgnr == 0) { // 0 was reserved for async. messages
         QString sintnr = answer.toString().section(':', 1, 1);
-        int service = sintnr.toInt();
-        switch (service)
-        {
-        case irqNr:
+        QString device = answer.toString().section(':', 0, 0);
+        if(device == "DSPINT") {
             // we got an interrupt from our cmd chain and have to fetch our actual values
             // but we synchronize on ranging process
             if (m_bActive && !m_dataAcquisitionMachine.isRunning()) // in case of deactivation in progress, no dataaquisition
                 m_dataAcquisitionMachine.start();
-            break;
-        case irqNr+1:
-        case irqNr+2:
-        case irqNr+3:
-        case irqNr+4:
-        case irqNr+5:
-        case irqNr+6:
+        }
+        else {
+            int service = sintnr.toInt();
+            switch (service)
+            {
+            case irqNr+1:
+            case irqNr+2:
+            case irqNr+3:
+            case irqNr+4:
+            case irqNr+5:
+            case irqNr+6:
             // we got a sense:channel:range notifier
             // let's look what to do
-        {
-            QString s = m_NotifierInfoHash[service];
-            readUrvalueList.append(s);
-            if (!m_readUpperRangeValueMachine.isRunning())
-                m_readUpperRangeValueMachine.start();
-        }
-
-            break;
+                QString s = m_NotifierInfoHash[service];
+                readUrvalueList.append(s);
+                if (!m_readUpperRangeValueMachine.isRunning())
+                    m_readUpperRangeValueMachine.start();
+                break;
+            }
         }
     }
     else {

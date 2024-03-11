@@ -323,7 +323,7 @@ QStringList Power1DspCmdGenerator::getCmdsFreqOutput(const POWER1MODULE::cPower1
         cmdList.append("GETSTIME(TISTART)"); // set new system time
         cmdList.append(QString("CMPAVERAGE1(4,FILTER,VALPQSF)"));
         cmdList.append(QString("CLEARN(%1,FILTER)").arg(2*4+1) );
-        cmdList.append(QString("DSPINTTRIGGER(0x0,0x%1)").arg(irqNo)); // send interrupt to module
+        cmdList.append(QString("DSPINTTRIGGER(0x0,0x%1)").arg(/* dummy */ 0)); // send interrupt to module
 
         if (configData->m_sFreqActualizationMode == "integrationtime") {
             for (int i = 0; i < configData->m_nFreqOutputCount; i++) {

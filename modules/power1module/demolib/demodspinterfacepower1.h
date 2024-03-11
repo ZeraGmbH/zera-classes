@@ -9,11 +9,10 @@ class DemoDspInterfacePower1 : public MockDspInterface
 {
     Q_OBJECT
 public:
-    DemoDspInterfacePower1(int interruptNoHandled, MeasModeSelector* measMode);
+    DemoDspInterfacePower1(MeasModeSelector* measMode);
 private slots:
     void onTimer();
 private:
-    int m_interruptNoHandled;
     MeasModeSelector *m_measMode;
     TimerTemplateQtPtr m_periodicTimer;
 

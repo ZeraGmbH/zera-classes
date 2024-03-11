@@ -27,9 +27,8 @@ DspInterfacePtr FactoryServiceInterfaces::createDspInterfaceRms(QStringList valu
     return std::make_shared<Zera::cDSPInterface>();
 }
 
-DspInterfacePtr FactoryServiceInterfaces::createDspInterfacePower1(int interruptNoHandled, MeasModeSelector *measMode)
+DspInterfacePtr FactoryServiceInterfaces::createDspInterfacePower1(MeasModeSelector *measMode)
 {
-    Q_UNUSED(interruptNoHandled)
     return std::make_shared<Zera::cDSPInterface>();
 }
 
