@@ -534,7 +534,13 @@ void cAdjustmentModuleMeasProgram::setAdjustPhaseStartCommand(QVariant var)
     QString adjustComponent = getConfData()->m_AdjChannelInfoHash[m_sAdjustSysName]->phaseAdjInfo.m_sComponent;
     m_AdjustActualValue = cmpPhase(m_pModule->getStorageSystem()->getStoredValue(adjustEntity, adjustComponent));
     if(qIsNaN(m_AdjustActualValue)) {
-        notifyExecutionError("Invalid phase actual value!");
+        notifyExecutionError("Phase to adjust has no actual value!");
+        m_pPARAdjustPhase->setError();
+        return;
+    }
+    double diffAngleAbs = fabs(symAngle(m_AdjustActualValue - m_AdjustTargetValue));
+    if(diffAngleAbs > maxPhaseErrorDegrees) {
+        notifyExecutionError("Phase to adjust is out of limit!");
         m_pPARAdjustPhase->setError();
         return;
     }

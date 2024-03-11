@@ -20,6 +20,11 @@ private slots:
     void outOfLimitUpperIL1();
     void withinLimitLowerIL1();
     void withinLimitUpperIL1();
+
+    void outOfLimitLowerUL2();
+    void outOfLimitUpperUL2();
+    void withinLimitLowerUL2();
+    void withinLimitUpperUL2();
 private:
     void setActualTestValues(ModuleManagerTestRunner &testRunner);
     double adjustAngle(double angle);
