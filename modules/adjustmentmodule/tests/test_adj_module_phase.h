@@ -25,6 +25,8 @@ private slots:
     void outOfLimitUpperUL2();
     void withinLimitLowerUL2();
     void withinLimitUpperUL2();
+
+    void denyRangeNotSet();
 private:
     void setActualTestValues(ModuleManagerTestRunner &testRunner);
     double adjustAngle(double angle);

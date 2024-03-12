@@ -160,6 +160,18 @@ void test_adj_module_phase::withinLimitUpperUL2()
     QCOMPARE(response, "+0");
 }
 
+void test_adj_module_phase::denyRangeNotSet()
+{
+    ModuleManagerTestRunner testRunner(":/session-minimal.json", true);
+    setActualTestValues(testRunner);
+
+    double adjRefAngle = adjustAngle(angleUL2 - maxPhaseErrorDegrees + limitOffset);
+    QByteArray send = QString("calc:adj1:phas UL2,8V,%1;|*stb?").arg(adjRefAngle).toLatin1();
+    ScpiModuleClientBlocked scpiClient;
+    QString response = scpiClient.sendReceive(send);
+    QCOMPARE(response, "+4");
+}
+
 void test_adj_module_phase::setActualTestValues(ModuleManagerTestRunner &testRunner)
 {
     const QList<TestDspInterfacePtr>& dspInterfaces = testRunner.getDspInterfaceList();

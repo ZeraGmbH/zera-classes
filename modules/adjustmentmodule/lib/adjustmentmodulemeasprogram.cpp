@@ -137,6 +137,11 @@ bool cAdjustmentModuleMeasProgram::checkExternalVeinComponents()
             emit errMsg(errMagTemplate.arg(adjInfo.m_nEntity).arg(adjInfo.m_sComponent));
             ok = false;
         }
+        adjInfo = getConfData()->m_AdjChannelInfoHash[chn]->rangeAdjInfo;
+        if (adjInfo.m_bAvail && !m_pModule->getStorageSystem()->hasStoredValue(adjInfo.m_nEntity, adjInfo.m_sComponent)) {
+            emit errMsg(errMagTemplate.arg(adjInfo.m_nEntity).arg(adjInfo.m_sComponent));
+            ok = false;
+        }
     }
     return ok;
 }
@@ -492,15 +497,35 @@ double cAdjustmentModuleMeasProgram::calcAdjAbsoluteError()
     return fabs(100 * (m_AdjustTargetValue - m_AdjustActualValue) / m_AdjustActualValue);
 }
 
+bool cAdjustmentModuleMeasProgram::checkRangeIsWanted(QString adjType)
+{
+    VeinEvent::StorageSystem *storageSystem = m_pModule->getStorageSystem();
+    int rangeEntity = getConfData()->m_AdjChannelInfoHash[m_sAdjustSysName]->rangeAdjInfo.m_nEntity;
+    QString rangeComponent = getConfData()->m_AdjChannelInfoHash[m_sAdjustSysName]->rangeAdjInfo.m_sComponent;
+    QString currentRange = storageSystem->getStoredValue(rangeEntity, rangeComponent).toString();
+    if(currentRange != m_sAdjustRange) {
+        notifyExecutionError(QString("Wrong range on %1 adjustment! Wanted: %2 / Current: %3").arg(adjType, m_sAdjustRange, currentRange));
+        return false;
+    }
+    return true;
+}
+
 void cAdjustmentModuleMeasProgram::setAdjustAmplitudeStartCommand(QVariant var)
 {
     setAdjustEnvironment(var);
+    if(!checkRangeIsWanted("gain")) {
+        m_pPARAdjustAmplitude->setError();
+        return;
+    }
+
     int adjustEntity = getConfData()->m_AdjChannelInfoHash[m_sAdjustSysName]->amplitudeAdjInfo.m_nEntity;
     QString adjustComponent = getConfData()->m_AdjChannelInfoHash[m_sAdjustSysName]->amplitudeAdjInfo.m_sComponent;
-    m_AdjustActualValue = m_pModule->getStorageSystem()->getStoredValue(adjustEntity, adjustComponent).toDouble();
+
+    VeinEvent::StorageSystem *storageSystem = m_pModule->getStorageSystem();
+    m_AdjustActualValue = storageSystem->getStoredValue(adjustEntity, adjustComponent).toDouble();
     double actWantedError = calcAdjAbsoluteError();
     if(actWantedError > maxAmplitudeErrorPercent) {
-        notifyExecutionError("Amplitude to adjust is out of limit!");
+        notifyExecutionError(QString("Amplitude to adjust is out of limit! Wanted: %1 / Current: %2").arg(m_AdjustTargetValue).arg(m_AdjustActualValue));
         m_pPARAdjustAmplitude->setError();
         return;
     }
@@ -530,6 +555,11 @@ void cAdjustmentModuleMeasProgram::adjustamplitudeSetNode()
 void cAdjustmentModuleMeasProgram::setAdjustPhaseStartCommand(QVariant var)
 {
     setAdjustEnvironment(var);
+    if(!checkRangeIsWanted("phase")) {
+        m_pPARAdjustPhase->setError();
+        return;
+    }
+
     int adjustEntity = getConfData()->m_AdjChannelInfoHash[m_sAdjustSysName]->phaseAdjInfo.m_nEntity;
     QString adjustComponent = getConfData()->m_AdjChannelInfoHash[m_sAdjustSysName]->phaseAdjInfo.m_sComponent;
     m_AdjustActualValue = cmpPhase(m_pModule->getStorageSystem()->getStoredValue(adjustEntity, adjustComponent));
@@ -568,6 +598,11 @@ void cAdjustmentModuleMeasProgram::adjustphaseSetNode()
 void cAdjustmentModuleMeasProgram::setAdjustOffsetStartCommand(QVariant var)
 {
     setAdjustEnvironment(var);
+    if(!checkRangeIsWanted("offset")) {
+        m_pPARAdjustOffset->setError();
+        return;
+    }
+
     int adjustEntity = getConfData()->m_AdjChannelInfoHash[m_sAdjustSysName]->offsetAdjInfo.m_nEntity;
     QString adjustComponent = getConfData()->m_AdjChannelInfoHash[m_sAdjustSysName]->offsetAdjInfo.m_sComponent;
     double adjustActualValue = m_pModule->getStorageSystem()->getStoredValue(adjustEntity, adjustComponent).toDouble();
