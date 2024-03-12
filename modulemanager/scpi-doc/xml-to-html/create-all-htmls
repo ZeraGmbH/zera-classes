@@ -2,7 +2,8 @@
 
 BASEPATH=`dirname $0`
 mkdir -p "$1/html-docs"
-ADJUSTMENT_HTMLFILE="$1/html-docs/adjustment.html"
+MT_ADJUSTMENT_HTMLFILE="$1/html-docs/mt310s2-adjustment.html"
+COM_ADJUSTMENT_HTMLFILE="$1/html-docs/com5003-adjustment.html"
 
 for XMLFILE in "$1/scpi-xmls"/*.xml; do
     HTMLFILE=`echo "$XMLFILE" | sed '-e s:\.xml:\.html:g' '-e s:scpi-xmls:html-docs:g'`
@@ -11,5 +12,9 @@ for XMLFILE in "$1/scpi-xmls"/*.xml; do
 done
 
 XMLFILE="$1/scpi-xmls/mt310s2-meas-session.xml"
-echo "Writing $ADJUSTMENT_HTMLFILE"
-xmlstarlet tr ${BASEPATH}/xsl-files/scpi-to-html.xsl -s zenuxVersion="$2" -s sessionXml=$XMLFILE -s adjustmentOutput="true" "$XMLFILE" > "$ADJUSTMENT_HTMLFILE"
+echo "Writing $MT_ADJUSTMENT_HTMLFILE"
+xmlstarlet tr ${BASEPATH}/xsl-files/scpi-to-html.xsl -s zenuxVersion="$2" -s sessionXml=$XMLFILE -s adjustmentOutput="true" "$XMLFILE" > "$MT_ADJUSTMENT_HTMLFILE"
+
+XMLFILE="$1/scpi-xmls/com5003-meas-session.xml"
+echo "Writing $COM_ADJUSTMENT_HTMLFILE"
+xmlstarlet tr ${BASEPATH}/xsl-files/scpi-to-html.xsl -s zenuxVersion="$2" -s sessionXml=$XMLFILE -s adjustmentOutput="true" "$XMLFILE" > "$COM_ADJUSTMENT_HTMLFILE"
