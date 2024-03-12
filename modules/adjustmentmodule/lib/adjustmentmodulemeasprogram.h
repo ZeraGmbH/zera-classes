@@ -132,6 +132,7 @@ private:
     double cmpPhase(QVariant var);
     double symAngle(double ang);
     double calcAdjAbsoluteError();
+    bool checkRangeIsWanted(QString adjType);
 
     cAdjustmentModule* m_pModule;
     // we use the following 7 parameters globally defined for easier

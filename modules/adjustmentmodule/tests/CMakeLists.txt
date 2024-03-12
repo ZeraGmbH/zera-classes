@@ -29,6 +29,7 @@ SETUP_QTESTS_MODULE(
     test_adj_module_regression
     test_adj_module_gain
     test_adj_module_phase
+    test_adj_module_offset
 )
 
 target_sources(test_adj_module_regression
@@ -42,6 +43,11 @@ target_sources(test_adj_module_gain
 )
 
 target_sources(test_adj_module_phase
+    PRIVATE
+    test-data/test-data.qrc
+)
+
+target_sources(test_adj_module_offset
     PRIVATE
     test-data/test-data.qrc
 )

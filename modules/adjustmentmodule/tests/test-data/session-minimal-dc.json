@@ -1,0 +1,34 @@
+{
+    "modules" : [
+        {
+          "name" : "rangemodule",
+          "configFile" : "mt310s2-rangemodule-ac3-dc1.xml",
+          "id": 1020
+        },
+        {
+          "name" : "rmsmodule",
+          "configFile" : "mt310s2-rmsmodule.xml",
+          "id": 1040
+        },
+        {
+          "name" : "dftmodule",
+          "configFile" : "mt310s2-dftmodule.xml",
+          "id": 1050
+        },
+        {
+          "name" : "fftmodule",
+          "configFile" : "mt310s2-fftmodule.xml",
+          "id": 1060
+        },
+        {
+          "name" : "adjustmentmodule",
+          "configFile" : "mt310s2-adjustmentmodule-dc-emob.xml",
+          "id": 1190
+        },
+        {
+          "name" : "scpimodule",
+          "configFile" : "mt310s2-scpimodule.xml",
+          "id": 9999
+        }
+    ]
+}

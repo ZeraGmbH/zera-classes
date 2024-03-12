@@ -91,6 +91,18 @@ void test_adj_module_gain::withinLimitUpper()
     QCOMPARE(response, "+0");
 }
 
+void test_adj_module_gain::denyRangeNotSet()
+{
+    ModuleManagerTestRunner testRunner(":/session-minimal.json", true);
+    setActualTestValues(testRunner);
+
+    double adjRefCurrent = testcurrent * (1+maxAmplitudeErrorPercent/100) - limitOffset;
+    QByteArray send = QString("calc:adj1:ampl IL1,2.5A,%1;|*stb?").arg(adjRefCurrent).toLatin1();
+    ScpiModuleClientBlocked scpiClient;
+    QString response = scpiClient.sendReceive(send);
+    QCOMPARE(response, "+4");
+}
+
 void test_adj_module_gain::setActualTestValues(ModuleManagerTestRunner &testRunner)
 {
     const QList<TestDspInterfacePtr>& dspInterfaces = testRunner.getDspInterfaceList();
