@@ -10,5 +10,6 @@ for XMLFILE in "$1/scpi-xmls"/*.xml; do
     xmlstarlet tr ${BASEPATH}/xsl-files/scpi-to-html.xsl -s zenuxVersion="$2" sessionXml="$XMLFILE" "$XMLFILE" > "$HTMLFILE"
 done
 
+XMLFILE="$1/scpi-xmls/mt310s2-meas-session.xml"
 echo "Writing $ADJUSTMENT_HTMLFILE"
-xmlstarlet tr ${BASEPATH}/xsl-files/scpi-to-html.xsl -s zenuxVersion="$2" sessionXml=$1/scpi-xmls/mt310s2-meas-session.xml -s adjustmentOutput="true" "$XMLFILE" > "$ADJUSTMENT_HTMLFILE"
+xmlstarlet tr ${BASEPATH}/xsl-files/scpi-to-html.xsl -s zenuxVersion="$2" -s sessionXml=$XMLFILE -s adjustmentOutput="true" "$XMLFILE" > "$ADJUSTMENT_HTMLFILE"
