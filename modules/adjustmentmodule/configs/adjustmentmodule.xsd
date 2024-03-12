@@ -108,6 +108,7 @@
             <xs:element name="amplitudeinfo" type="justinfotype" minOccurs="1" maxOccurs="1"/>
             <xs:element name="phaseinfo" type="justinfotype" minOccurs="1" maxOccurs="1"/>
             <xs:element name="offsetinfo" type="justinfotype" minOccurs="1" maxOccurs="1"/>
+            <xs:element name="rangeinfo" type="justinfotype" minOccurs="1" maxOccurs="1"/>
         </xs:sequence>
     </xs:complexType>
 

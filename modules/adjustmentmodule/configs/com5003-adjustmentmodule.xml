@@ -42,6 +42,11 @@
                         <entity>1060</entity>
                         <component>ACT_DC1</component>
                     </offsetinfo>
+                    <rangeinfo>
+                        <avail>1</avail>
+                        <entity>1020</entity>
+                        <component>PAR_Channel1Range</component>
+                    </rangeinfo>
                 </chn1>
                 <chn2>
                     <chn>m1</chn>
@@ -60,6 +65,11 @@
                         <entity>1060</entity>
                         <component>ACT_DC2</component>
                     </offsetinfo>
+                    <rangeinfo>
+                        <avail>1</avail>
+                        <entity>1020</entity>
+                        <component>PAR_Channel2Range</component>
+                    </rangeinfo>
                 </chn2>
                 <chn3>
                     <chn>m2</chn>
@@ -78,6 +88,11 @@
                         <entity>1060</entity>
                         <component>ACT_DC3</component>
                     </offsetinfo>
+                    <rangeinfo>
+                        <avail>1</avail>
+                        <entity>1020</entity>
+                        <component>PAR_Channel3Range</component>
+                    </rangeinfo>
                 </chn3>
                 <chn4>
                     <chn>m3</chn>
@@ -96,6 +111,11 @@
                         <entity>1060</entity>
                         <component>ACT_DC4</component>
                     </offsetinfo>
+                    <rangeinfo>
+                        <avail>1</avail>
+                        <entity>1020</entity>
+                        <component>PAR_Channel4Range</component>
+                    </rangeinfo>
                 </chn4>
                 <chn5>
                     <chn>m4</chn>
@@ -114,6 +134,11 @@
                         <entity>1060</entity>
                         <component>ACT_DC5</component>
                     </offsetinfo>
+                    <rangeinfo>
+                        <avail>1</avail>
+                        <entity>1020</entity>
+                        <component>PAR_Channel5Range</component>
+                    </rangeinfo>
                 </chn5>
                 <chn6>
                     <chn>m5</chn>
@@ -132,6 +157,11 @@
                         <entity>1060</entity>
                         <component>ACT_DC6</component>
                     </offsetinfo>
+                    <rangeinfo>
+                        <avail>1</avail>
+                        <entity>1020</entity>
+                        <component>PAR_Channel6Range</component>
+                    </rangeinfo>
                 </chn6>
             </channel>
         </adjustment>
