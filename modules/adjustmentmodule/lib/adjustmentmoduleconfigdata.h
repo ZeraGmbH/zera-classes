@@ -23,6 +23,7 @@ public:
     adjInfoType amplitudeAdjInfo;
     adjInfoType phaseAdjInfo;
     adjInfoType offsetAdjInfo;
+    adjInfoType rangeAdjInfo;
 };
 
 

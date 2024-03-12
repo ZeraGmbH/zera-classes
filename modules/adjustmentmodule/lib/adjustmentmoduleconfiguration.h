@@ -36,7 +36,11 @@ enum moduleconfigstate
     setChn1OffsInfoEntity = setChn1OffsInfoAvail + 32,
     setChn1OffsInfoComponent = setChn1OffsInfoEntity + 32,
 
-    setnext = setChn1OffsInfoComponent + 32
+    setChn1RangeInfoAvail = setChn1OffsInfoComponent + 32,
+    setChn1RangeInfoEntity = setChn1RangeInfoAvail + 32,
+    setChn1RangeInfoComponent = setChn1RangeInfoEntity + 32,
+
+    setnext = setChn1RangeInfoComponent + 32
 };
 
 class cAdjustmentModuleConfigData;
