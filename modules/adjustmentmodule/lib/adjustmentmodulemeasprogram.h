@@ -82,13 +82,47 @@ signals:
     void adjustphaseContinue();
     void adjustError();
     void activationReady();
-
 public slots:
     void start()  override; // difference between start and stop is that actual values
     void stop() override; // in interface are not updated when stop
     void activate() override;
     void deactivate() override;
 
+private slots:
+    void onActivationReady();
+    void onDeactivationReady();
+    void onNewRanges();
+
+    void computationStartCommand(QVariant var);
+    void computationStart();
+    void computationFinished();
+
+    void storageStartCommand(QVariant var);
+    void storageStart();
+    void storageFinished();
+
+    void setAdjustGainStatusStartCommand(QVariant var);
+    void setAdjustPhaseStatusStartCommand(QVariant var);
+    void setAdjustOffsetStatusStartCommand(QVariant var);
+    void setAdjustInitStartCommand(QVariant var);
+
+    void setAdjustAmplitudeStartCommand(QVariant var);
+    void adjustamplitudeGetCorr();
+    void adjustamplitudeSetNode();
+
+    void setAdjustPhaseStartCommand(QVariant var);
+    void adjustphaseGetCorr();
+    void adjustphaseSetNode();
+
+    void setAdjustOffsetStartCommand(QVariant var);
+
+    void transparentDataSend2Port(QVariant var);
+    void writePCBAdjustmentData(QVariant var);
+    void readPCBAdjustmentData(QVariant);
+    void writeCLAMPAdjustmentData(QVariant var);
+    void readCLAMPAdjustmentData(QVariant);
+
+    void catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant answer);
 private:
     cAdjustmentModuleConfigData* getConfData();
     void openPcbConnection();
@@ -155,41 +189,6 @@ private:
     QState m_adjustphaseGetCorrState;
     QState m_adjustphaseSetNodeState;
     QFinalState m_adjustphaseFinishState;
-private slots:
-    void onActivationReady();
-    void onDeactivationReady();
-    void onNewRanges();
-
-    void computationStartCommand(QVariant var);
-    void computationStart();
-    void computationFinished();
-
-    void storageStartCommand(QVariant var);
-    void storageStart();
-    void storageFinished();
-
-    void setAdjustGainStatusStartCommand(QVariant var);
-    void setAdjustPhaseStatusStartCommand(QVariant var);
-    void setAdjustOffsetStatusStartCommand(QVariant var);
-    void setAdjustInitStartCommand(QVariant var);
-
-    void setAdjustAmplitudeStartCommand(QVariant var);
-    void adjustamplitudeGetCorr();
-    void adjustamplitudeSetNode();
-
-    void setAdjustPhaseStartCommand(QVariant var);
-    void adjustphaseGetCorr();
-    void adjustphaseSetNode();
-
-    void setAdjustOffsetStartCommand(QVariant var);
-
-    void transparentDataSend2Port(QVariant var);
-    void writePCBAdjustmentData(QVariant var);
-    void readPCBAdjustmentData(QVariant);
-    void writeCLAMPAdjustmentData(QVariant var);
-    void readCLAMPAdjustmentData(QVariant);
-
-    void catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant answer);
 
 };
 
