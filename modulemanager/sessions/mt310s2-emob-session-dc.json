@@ -63,7 +63,7 @@
       },
       {
         "name" : "adjustmentmodule",
-        "configFile" : "mt310s2-adjustmentmodule-emob-ac.xml",
+        "configFile" : "mt310s2-adjustmentmodule-dc-emob.xml",
         "id": 1190
       },
       {
