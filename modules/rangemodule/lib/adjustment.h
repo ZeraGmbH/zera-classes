@@ -44,6 +44,8 @@ signals:
     void repeatStateMachine();
     void finishStateMachine();
 private:
+    double getIgnoreRmsCorrFactor();
+
     cRangeModule* m_pModule; // the module we live in
     cSocket* m_pDSPSocket;
     cSocket* m_pPCBSocket;
@@ -87,7 +89,7 @@ private:
 
     // statemachine for adjustment
     QStateMachine m_adjustMachine;
-    QState m_getGainCorrFromPcbServerState, m_prepareGainCorrForDspServerState, m_ignoreRmsBelowThresholdState;
+    QState m_getGainCorrFromPcbServerState, m_prepareGainCorrForDspServerState;
     QState m_getPhaseCorrFromPcbServerState, m_preparePhaseCorrForDspServerState;
     QState m_getOffsetCorrFromPcbServerState, m_prepareOffsetCorrForDspServerState;
     QFinalState m_adjustDoneState;
@@ -120,7 +122,6 @@ private slots:
 
     void getGainCorrFromPcbServer();
     void prepareGainCorrForDspServer();
-    void ignoreRmsBelowThreshold();
     void getPhaseCorrFromPcbServer();
     void preparePhaseCorrForDspServer();
     void getOffsetCorrFromPcbServer();

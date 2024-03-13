@@ -72,9 +72,8 @@ cAdjustManagement::cAdjustManagement(cRangeModule *module, cSocket* dspsocket, c
     connect(&m_writeOffsetCorrState, &QState::entered, this, &cAdjustManagement::writeOffsetCorr);
 
     m_getGainCorrFromPcbServerState.addTransition(this, &cAdjustManagement::activationContinue, &m_prepareGainCorrForDspServerState);
-    m_prepareGainCorrForDspServerState.addTransition(this, &cAdjustManagement::activationContinue, &m_ignoreRmsBelowThresholdState);
-    m_ignoreRmsBelowThresholdState.addTransition(this, &cAdjustManagement::repeatStateMachine, &m_getGainCorrFromPcbServerState);
-    m_ignoreRmsBelowThresholdState.addTransition(this, &cAdjustManagement::activationContinue, &m_getPhaseCorrFromPcbServerState);
+    m_prepareGainCorrForDspServerState.addTransition(this, &cAdjustManagement::activationContinue, &m_getPhaseCorrFromPcbServerState);
+    m_prepareGainCorrForDspServerState.addTransition(this, &cAdjustManagement::repeatStateMachine, &m_getGainCorrFromPcbServerState);
     m_getPhaseCorrFromPcbServerState.addTransition(this, &cAdjustManagement::activationContinue, &m_preparePhaseCorrForDspServerState);
     m_preparePhaseCorrForDspServerState.addTransition(this, &cAdjustManagement::repeatStateMachine, &m_getPhaseCorrFromPcbServerState);
     m_preparePhaseCorrForDspServerState.addTransition(this, &cAdjustManagement::activationContinue, &m_getOffsetCorrFromPcbServerState);
@@ -83,7 +82,6 @@ cAdjustManagement::cAdjustManagement(cRangeModule *module, cSocket* dspsocket, c
     m_prepareOffsetCorrForDspServerState.addTransition(this, &cAdjustManagement::activationContinue, &m_adjustDoneState);
     m_adjustMachine.addState(&m_getGainCorrFromPcbServerState);
     m_adjustMachine.addState(&m_prepareGainCorrForDspServerState);
-    m_adjustMachine.addState(&m_ignoreRmsBelowThresholdState);
     m_adjustMachine.addState(&m_getPhaseCorrFromPcbServerState);
     m_adjustMachine.addState(&m_preparePhaseCorrForDspServerState);
     m_adjustMachine.addState(&m_getOffsetCorrFromPcbServerState);
@@ -92,7 +90,6 @@ cAdjustManagement::cAdjustManagement(cRangeModule *module, cSocket* dspsocket, c
     m_adjustMachine.setInitialState(&m_getGainCorrFromPcbServerState);
     connect(&m_getGainCorrFromPcbServerState, &QState::entered, this, &cAdjustManagement::getGainCorrFromPcbServer);
     connect(&m_prepareGainCorrForDspServerState, &QState::entered, this, &cAdjustManagement::prepareGainCorrForDspServer);
-    connect(&m_ignoreRmsBelowThresholdState, &QState::entered, this, &cAdjustManagement::ignoreRmsBelowThreshold);
     connect(&m_getPhaseCorrFromPcbServerState, &QState::entered, this, &cAdjustManagement::getPhaseCorrFromPcbServer);
     connect(&m_preparePhaseCorrForDspServerState, &QState::entered, this, &cAdjustManagement::preparePhaseCorrForDspServer);
     connect(&m_getOffsetCorrFromPcbServerState, &QState::entered, this, &cAdjustManagement::getOffsetCorrFromPcbServer);
@@ -276,7 +273,9 @@ void cAdjustManagement::getGainCorrFromPcbServer()
     if (m_bActive){
         double actualValue=m_ChannelList.at(m_nChannelIt)->getRmsValue();
         double preScalingFact=m_ChannelList[m_nChannelIt]->getPreScaling();
-        m_MsgNrCmdList[m_ChannelList.at(m_nChannelIt)->readGainCorrection(actualValue*preScalingFact)] = getgaincorr;
+        cRangeMeasChannel *measChannel = m_ChannelList.at(m_nChannelIt);
+        double unscaledActualValue = actualValue * preScalingFact / m_fGainKeeperForFakingRmsValues[measChannel->getDSPChannelNr()];
+        m_MsgNrCmdList[m_ChannelList.at(m_nChannelIt)->readGainCorrection(unscaledActualValue)] = getgaincorr;
     }
 }
 
@@ -290,35 +289,8 @@ void cAdjustManagement::prepareGainCorrForDspServer()
     {
         measChannel = m_ChannelList.at(m_nChannelIt);
         fCorr = measChannel->getGainCorrection();
-        m_fGainCorr[measChannel->getDSPChannelNr()] = fCorr;
-        emit activationContinue();
-    }
-}
-
-void cAdjustManagement::ignoreRmsBelowThreshold()
-{
-    cRangeMeasChannel *measChannel;
-    double threshold = 0.0;
-    double rmsValues;
-    if (m_bActive)
-    {
-        //if(m_nChannelIt == 6 || m_nChannelIt == 7)
-        {
-            measChannel = m_ChannelList.at(m_nChannelIt);
-            if(m_adjustmentConfig->m_ignoreRmsValuesEnable.m_nActive) {
-                threshold = m_adjustmentConfig->m_ignoreRmsValuesThreshold.m_fValue * measChannel->getUrValue() / 100;
-                double gain = m_fGainCorr[measChannel->getDSPChannelNr()];
-                double rmsMeasChannel = measChannel->getRmsValue();
-                rmsValues = rmsMeasChannel / m_fGainKeeperForFakingRmsValues[measChannel->getDSPChannelNr()];
-                if(rmsValues < threshold) {
-                    m_fGainCorr[measChannel->getDSPChannelNr()] = 1e-10;
-                    m_fGainKeeperForFakingRmsValues[measChannel->getDSPChannelNr()] = m_fGainCorr[measChannel->getDSPChannelNr()];
-                }
-                else
-                    m_fGainKeeperForFakingRmsValues[measChannel->getDSPChannelNr()] = 1;
-            }
-        }
-
+        m_fGainCorr[measChannel->getDSPChannelNr()] = fCorr*getIgnoreRmsCorrFactor();
+        m_fGainKeeperForFakingRmsValues[measChannel->getDSPChannelNr()] = getIgnoreRmsCorrFactor();
         m_nChannelIt++;
         if (m_nChannelIt < m_ChannelNameList.count())
             emit repeatStateMachine();
@@ -328,6 +300,24 @@ void cAdjustManagement::ignoreRmsBelowThreshold()
             emit activationContinue();
         }
     }
+}
+
+double cAdjustManagement::getIgnoreRmsCorrFactor()
+{
+    double ignoreRmsCorrFactor = 1.0;
+    cRangeMeasChannel *measChannel = m_ChannelList.at(m_nChannelIt);
+    //if(m_nChannelIt == 6 || m_nChannelIt == 7)
+    {
+        if(m_adjustmentConfig->m_ignoreRmsValuesEnable.m_nActive) {
+            double threshold = m_adjustmentConfig->m_ignoreRmsValuesThreshold.m_fValue * measChannel->getUrValue() / 100;
+            double gain = m_fGainCorr[measChannel->getDSPChannelNr()];
+            double rmsMeasChannel = measChannel->getRmsValue();
+            double rmsValues = measChannel->getRmsValue() / m_fGainKeeperForFakingRmsValues[measChannel->getDSPChannelNr()];
+            if(rmsValues < threshold)
+                ignoreRmsCorrFactor = 1e-10;
+        }
+    }
+    return ignoreRmsCorrFactor;
 }
 
 
