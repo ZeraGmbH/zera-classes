@@ -220,6 +220,8 @@ void cAdjustManagement::activationDone()
     m_AdjustTimer = TimerFactoryQt::createPeriodic(m_adjustmentConfig->m_fAdjInterval*1000.0);
     m_AdjustTimer->start();
     connect(m_AdjustTimer.get(), &TimerTemplateQt::sigExpired, this, &cAdjustManagement::adjustPrepare);
+    for(int i = 0; i < m_ChannelList.count(); i++)
+        m_fGainKeeperForFakingRmsValues[m_ChannelList.at(i)->getDSPChannelNr()] = 1;
     m_bActive = true;
     emit activated();
 }
@@ -297,14 +299,26 @@ void cAdjustManagement::ignoreRmsBelowThreshold()
 {
     cRangeMeasChannel *measChannel;
     double threshold = 0.0;
+    double rmsValues;
     if (m_bActive)
     {
-        measChannel = m_ChannelList.at(m_nChannelIt);
-        if(m_adjustmentConfig->m_ignoreRmsValuesEnable.m_nActive) {
-            threshold = m_adjustmentConfig->m_ignoreRmsValuesThreshold.m_fValue * measChannel->getUrValue() / 100;
-            if(measChannel->getRmsValue() < threshold)
-                m_fGainCorr[measChannel->getDSPChannelNr()] = 1e-10;
+        //if(m_nChannelIt == 6 || m_nChannelIt == 7)
+        {
+            measChannel = m_ChannelList.at(m_nChannelIt);
+            if(m_adjustmentConfig->m_ignoreRmsValuesEnable.m_nActive) {
+                threshold = m_adjustmentConfig->m_ignoreRmsValuesThreshold.m_fValue * measChannel->getUrValue() / 100;
+                double gain = m_fGainCorr[measChannel->getDSPChannelNr()];
+                double rmsMeasChannel = measChannel->getRmsValue();
+                rmsValues = rmsMeasChannel / m_fGainKeeperForFakingRmsValues[measChannel->getDSPChannelNr()];
+                if(rmsValues < threshold) {
+                    m_fGainCorr[measChannel->getDSPChannelNr()] = 1e-10;
+                    m_fGainKeeperForFakingRmsValues[measChannel->getDSPChannelNr()] = m_fGainCorr[measChannel->getDSPChannelNr()];
+                }
+                else
+                    m_fGainKeeperForFakingRmsValues[measChannel->getDSPChannelNr()] = 1;
+            }
         }
+
         m_nChannelIt++;
         if (m_nChannelIt < m_ChannelNameList.count())
             emit repeatStateMachine();
