@@ -97,6 +97,7 @@ private:
     cDspMeasData* m_pOffsetCorrectionDSP;
 
     float* m_fGainCorr;
+    float m_fGainKeeperForFakingRmsValues[10];
     float* m_fPhaseCorr;
     float* m_fOffsetCorr;
 
