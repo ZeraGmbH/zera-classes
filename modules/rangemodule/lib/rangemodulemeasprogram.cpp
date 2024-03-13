@@ -191,7 +191,7 @@ void cRangeModuleMeasProgram::setDspCmdList()
         m_dspInterface->addCycListItem( s = QString("COPYDATA(CH%1,0,MEASSIGNAL)").arg(mchn->getDSPChannelNr())); // for each channel we work on
         m_dspInterface->addCycListItem( s = QString("SETPEAK(MEASSIGNAL,CHXPEAK+%1)").arg(i)); // here we have signal with dc regardless subdc is configured
         //m_dspInterface->addCycListItem( s = QString("COPYDATA(CH%1,0,MEASSIGNAL)").arg(chnnr)); // for each channel we work on
-        m_dspInterface->addCycListItem( s = QString("RMS(MEASSIGNAL,CHXRMS+%1)").arg(i)); // with or without dc depending on subdc .... see config file
+        m_dspInterface->addCycListItem( s = QString("MULCCV(MEASSIGNAL,MEASSIGNAL,CHXRMS+%1)").arg(i));
     }
     m_dspInterface->addCycListItem( s = "COPYDU(1,FREQENCY,FREQ)");
 
@@ -204,6 +204,10 @@ void cRangeModuleMeasProgram::setDspCmdList()
         m_dspInterface->addCycListItem( s = "GETSTIME(TISTART)"); // set new system time
         // The following is so assember-ish: We copy CHXPEAKF, CHXRMSF and FREQF here in one line!!!
         m_dspInterface->addCycListItem( s = QString("CMPAVERAGE1(%1,FILTER,CHXPEAKF)").arg(2*m_ChannelList.count()+1));
+
+        for (int i = 0; i < m_ChannelList.count(); i++)
+            m_dspInterface->addCycListItem( s = QString("SQRT(CHXRMSF+%1,CHXRMSF+%2)").arg(i).arg(i));
+
         m_dspInterface->addCycListItem( s = QString("CLEARN(%1,FILTER)").arg(2*(2*m_ChannelList.count()+1)+1) );
 
         m_dspInterface->addCycListItem( s = QString("COPYDU(32,MAXIMUMSAMPLE,MAXRESET)")); // all raw adc maximum samples to userspace
