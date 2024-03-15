@@ -144,7 +144,8 @@ void cRangeModuleMeasProgram::setDspVarList()
     m_pTmpDataDsp->addVarItem( new cDspVar("CHXPEAK",m_ChannelList.count(), DSPDATA::vDspTemp));
     m_pTmpDataDsp->addVarItem( new cDspVar("CHXRMS",m_ChannelList.count(), DSPDATA::vDspTemp));
     m_pTmpDataDsp->addVarItem( new cDspVar("FREQ", 1, DSPDATA::vDspTemp));
-    m_pTmpDataDsp->addVarItem( new cDspVar("FILTER",2*(2*m_ChannelList.count()+1),DSPDATA::vDspTemp)); // filter workspace for scaled peak, rms and freq
+    m_pTmpDataDsp->addVarItem( new cDspVar("FILTER1",2*(m_ChannelList.count()+1),DSPDATA::vDspTemp)); // filter workspace for scaled peak, rms and freq
+    m_pTmpDataDsp->addVarItem( new cDspVar("FILTER2",2*(m_ChannelList.count()),DSPDATA::vDspTemp)); // filter workspace for scaled peak, rms and freq
     m_pTmpDataDsp->addVarItem( new cDspVar("N",1,DSPDATA::vDspTemp));
 
     // a handle for parameter
@@ -154,8 +155,8 @@ void cRangeModuleMeasProgram::setDspVarList()
     // and one for filtered actual values
     m_pActualValuesDSP = m_dspInterface->getMemHandle("ActualValues");
     m_pActualValuesDSP->addVarItem( new cDspVar("CHXPEAKF",m_ChannelList.count(), DSPDATA::vDspResult)); // only copied values from channels maximum from dsp workspace
-    m_pActualValuesDSP->addVarItem( new cDspVar("CHXRMSF",m_ChannelList.count(), DSPDATA::vDspResult));
     m_pActualValuesDSP->addVarItem( new cDspVar("FREQF", 1, DSPDATA::vDspResult));
+    m_pActualValuesDSP->addVarItem( new cDspVar("CHXRMSF",m_ChannelList.count(), DSPDATA::vDspResult));
     m_pActualValuesDSP->addVarItem( new cDspVar("CHXRAWPEAK",m_ChannelList.count(), DSPDATA::vDspResult));
 
     m_ModuleActualValues.resize(m_pActualValuesDSP->getSize()); // we provide a vector for generated actual values
@@ -177,7 +178,8 @@ void cRangeModuleMeasProgram::setDspCmdList()
 
     m_dspInterface->addCycListItem( s = "STARTCHAIN(1,1,0x0101)"); // aktiv, prozessnr. (dummy),hauptkette 1 subkette 1 start
         m_dspInterface->addCycListItem( s = QString("CLEARN(%1,MEASSIGNAL)").arg(m_nSamples) ); // clear meassignal
-        m_dspInterface->addCycListItem( s = QString("CLEARN(%1,FILTER)").arg(2*(2*m_ChannelList.count()+1)+1) ); // clear the whole filter incl. count
+        m_dspInterface->addCycListItem( s = QString("CLEARN(%1,FILTER1)").arg(2*(m_ChannelList.count()+1)+1) ); // clear the whole filter incl. count
+        m_dspInterface->addCycListItem( s = QString("CLEARN(%1,FILTER2)").arg(2*(m_ChannelList.count())+1) ); // clear the whole filter incl. count
         m_dspInterface->addCycListItem( s = QString("SETVAL(TIPAR,%1)").arg(getConfData()->m_fMeasInterval*1000.0)); // initial ti time  /* todo variabel */
         m_dspInterface->addCycListItem( s = "GETSTIME(TISTART)"); // einmal ti start setzen
         m_dspInterface->addCycListItem( s = QString("CLKMODE(1)")); // clk mode auf 48bit einstellen
@@ -196,19 +198,22 @@ void cRangeModuleMeasProgram::setDspCmdList()
     m_dspInterface->addCycListItem( s = "COPYDU(1,FREQENCY,FREQ)");
 
     // and filter them
-    m_dspInterface->addCycListItem( s = QString("AVERAGE1(%1,CHXPEAK,FILTER)").arg(2*m_ChannelList.count()+1)); // we add results to filter
+    m_dspInterface->addCycListItem( s = QString("AVERAGE1(%1,CHXPEAK,FILTER1)").arg(m_ChannelList.count()+1)); // we add results to filter
+    m_dspInterface->addCycListItem( s = QString("AVERAGE1(%1,CHXRMS,FILTER2)").arg(m_ChannelList.count())); // we add results to filter
     m_dspInterface->addCycListItem( s = "TESTTIMESKIPNEX(TISTART,TIPAR)");
     m_dspInterface->addCycListItem( s = "ACTIVATECHAIN(1,0x0102)");
 
     m_dspInterface->addCycListItem( s = "STARTCHAIN(0,1,0x0102)");
         m_dspInterface->addCycListItem( s = "GETSTIME(TISTART)"); // set new system time
         // The following is so assember-ish: We copy CHXPEAKF, CHXRMSF and FREQF here in one line!!!
-        m_dspInterface->addCycListItem( s = QString("CMPAVERAGE1(%1,FILTER,CHXPEAKF)").arg(2*m_ChannelList.count()+1));
+        m_dspInterface->addCycListItem( s = QString("CMPAVERAGE1(%1,FILTER1,CHXPEAKF)").arg(m_ChannelList.count()+1));
+        m_dspInterface->addCycListItem( s = QString("CMPAVERAGE1(%1,FILTER2,CHXRMSF)").arg(m_ChannelList.count()));
 
         for (int i = 0; i < m_ChannelList.count(); i++)
             m_dspInterface->addCycListItem( s = QString("SQRT(CHXRMSF+%1,CHXRMSF+%2)").arg(i).arg(i));
 
-        m_dspInterface->addCycListItem( s = QString("CLEARN(%1,FILTER)").arg(2*(2*m_ChannelList.count()+1)+1) );
+        m_dspInterface->addCycListItem( s = QString("CLEARN(%1,FILTER1)").arg(2*(m_ChannelList.count()+1)+1) );
+        m_dspInterface->addCycListItem( s = QString("CLEARN(%1,FILTER2)").arg(2*(m_ChannelList.count())+1) );
 
         m_dspInterface->addCycListItem( s = QString("COPYDU(32,MAXIMUMSAMPLE,MAXRESET)")); // all raw adc maximum samples to userspace
 
@@ -405,9 +410,9 @@ void cRangeModuleMeasProgram::setInterfaceActualValues(QVector<float> *actualVal
         int i;
         for (i = 0; i < m_veinActValueList.count()-1; i++) // we set n peak values first
             m_veinActValueList.at(i)->setValue(QVariant((*actualValues)[i]));
-        m_veinActValueList.at(i)->setValue(QVariant((*actualValues)[2*i]));
+        m_veinActValueList.at(i)->setValue(QVariant((*actualValues)[m_veinActValueList.count()-1]));
 
-        int rmsOffsetInActual = m_ChannelList.count();
+        int rmsOffsetInActual = m_ChannelList.count()+1;
         for(int rmsNo=0; rmsNo<m_ChannelList.count(); rmsNo++)
             m_veinRmsValueList.at(rmsNo)->setValue(QVariant((*actualValues)[rmsNo+rmsOffsetInActual]));
     }

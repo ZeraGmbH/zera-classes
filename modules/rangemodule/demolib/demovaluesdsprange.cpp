@@ -25,5 +25,5 @@ void DemoValuesDspRange::setFrequency(float frequency)
 
 QVector<float> DemoValuesDspRange::getDspValues()
 {
-    return m_peakValues + m_rmsValues + m_freqValue + m_dcValues;
+    return m_peakValues + m_freqValue + m_rmsValues +  m_dcValues;
 }
