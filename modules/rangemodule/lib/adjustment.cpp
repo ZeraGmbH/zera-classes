@@ -217,6 +217,7 @@ void cAdjustManagement::activationDone()
     m_AdjustTimer = TimerFactoryQt::createPeriodic(m_adjustmentConfig->m_fAdjInterval*1000.0);
     m_AdjustTimer->start();
     connect(m_AdjustTimer.get(), &TimerTemplateQt::sigExpired, this, &cAdjustManagement::adjustPrepare);
+    m_fGainKeeperForFakingRmsValues.resize(32); //prepared for 32 dsp channels
     for(int i = 0; i < m_ChannelList.count(); i++)
         m_fGainKeeperForFakingRmsValues[m_ChannelList.at(i)->getDSPChannelNr()] = 1;
     m_bActive = true;

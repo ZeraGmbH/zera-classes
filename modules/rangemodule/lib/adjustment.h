@@ -99,7 +99,7 @@ private:
     cDspMeasData* m_pOffsetCorrectionDSP;
 
     float* m_fGainCorr;
-    float m_fGainKeeperForFakingRmsValues[8];
+    QVector<float> m_fGainKeeperForFakingRmsValues;
     float* m_fPhaseCorr;
     float* m_fOffsetCorr;
 
