@@ -4,7 +4,7 @@
 #include "rmsmoduleconfigdata.h"
 #include <basedspmeasprogram.h>
 #include <measchannelinfo.h>
-#include <movingwindowsqare.h>
+#include <movingwindowfilterwithoutsumfifo.h>
 #include <timerperiodicqt.h>
 #include "actualvaluestartstophandler.h"
 #include <QFinalState>
@@ -109,7 +109,7 @@ private:
     void setActualValuesNames();
     void setSCPIMeasInfo();
 
-    cMovingwindowSqare m_movingwindowFilter;
+    MovingWindowFilterWithoutSumFifo m_movingwindowFilter;
 
 private slots:
     void setInterfaceActualValues(QVector<float> *actualValues);
