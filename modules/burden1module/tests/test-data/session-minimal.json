@@ -1,0 +1,19 @@
+{
+    "modules" : [
+        {
+          "name" : "dftmodule",
+          "configFile" : "mt310s2-dftmodule.xml",
+          "id": 1050
+        },
+        {
+          "name" : "burden1module",
+          "configFile" : "mt310s2-burden1module.xml",
+          "id": 1160
+        },
+        {
+          "name" : "burden1module",
+          "configFile" : "mt310s2-burden1module2.xml",
+          "id": 1161
+        }
+    ]
+}

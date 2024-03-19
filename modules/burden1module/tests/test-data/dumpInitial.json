@@ -1,0 +1,512 @@
+{
+    "1160": {
+        "ACT_Burden1": 0,
+        "ACT_Burden2": 0,
+        "ACT_Burden3": 0,
+        "ACT_PFactor1": 0,
+        "ACT_PFactor2": 0,
+        "ACT_PFactor3": 0,
+        "ACT_Ratio1": 0,
+        "ACT_Ratio2": 0,
+        "ACT_Ratio3": 0,
+        "EntityName": "Burden1Module1",
+        "INF_ModuleInterface": {
+            "ComponentInfo": {
+                "ACT_Burden1": {
+                    "ChannelName": "BRD1",
+                    "Description": "Burden actual value",
+                    "Unit": "VA"
+                },
+                "ACT_Burden2": {
+                    "ChannelName": "BRD2",
+                    "Description": "Burden actual value",
+                    "Unit": "VA"
+                },
+                "ACT_Burden3": {
+                    "ChannelName": "BRD3",
+                    "Description": "Burden actual value",
+                    "Unit": "VA"
+                },
+                "ACT_PFactor1": {
+                    "ChannelName": "POF1",
+                    "Description": "Burden powerfactor"
+                },
+                "ACT_PFactor2": {
+                    "ChannelName": "POF2",
+                    "Description": "Burden powerfactor"
+                },
+                "ACT_PFactor3": {
+                    "ChannelName": "POF3",
+                    "Description": "Burden powerfactor"
+                },
+                "ACT_Ratio1": {
+                    "ChannelName": "RAT1",
+                    "Description": "Burden ratio value",
+                    "Unit": "%"
+                },
+                "ACT_Ratio2": {
+                    "ChannelName": "RAT2",
+                    "Description": "Burden ratio value",
+                    "Unit": "%"
+                },
+                "ACT_Ratio3": {
+                    "ChannelName": "RAT3",
+                    "Description": "Burden ratio value",
+                    "Unit": "%"
+                },
+                "EntityName": {
+                    "Description": "Module's name"
+                },
+                "INF_ModuleInterface": {
+                    "Description": "Module's interface details"
+                },
+                "PAR_NominalBurden": {
+                    "Description": "Nominal burden",
+                    "Unit": "VA",
+                    "Validation": {
+                        "Data": [
+                            0.1,
+                            500,
+                            0.1
+                        ],
+                        "Type": "DOUBLE"
+                    }
+                },
+                "PAR_NominalRange": {
+                    "Description": "Nominal range",
+                    "Unit": "A",
+                    "Validation": {
+                        "Data": [
+                            1,
+                            300,
+                            0.1
+                        ],
+                        "Type": "DOUBLE"
+                    }
+                },
+                "PAR_NominalRangeFactor": {
+                    "Description": "Nominal range factor",
+                    "Validation": {
+                        "Data": [
+                            "1",
+                            "sqrt(3)",
+                            "1/sqrt(3)",
+                            "1/3"
+                        ],
+                        "Type": "STRING"
+                    }
+                },
+                "PAR_WCrosssection": {
+                    "Description": "Wire crosssection value",
+                    "Unit": "mm²",
+                    "Validation": {
+                        "Data": [
+                            0.1,
+                            100,
+                            0.1
+                        ],
+                        "Type": "DOUBLE"
+                    }
+                },
+                "PAR_WireLength": {
+                    "Description": "Wire length value",
+                    "Unit": "m",
+                    "Validation": {
+                        "Data": [
+                            0,
+                            100,
+                            0.1
+                        ],
+                        "Type": "DOUBLE"
+                    }
+                },
+                "SIG_Measuring": {
+                    "Description": "Signal indicating measurement activity"
+                }
+            },
+            "ModuleInfo": {
+                "BRSCount": "3",
+                "Description": "This module measures configured number burden and powerfactor from configured input dft values",
+                "Name": "Burden1Module1"
+            },
+            "SCPIInfo": {
+                "Cmd": [
+                    [
+                        "MEASURE",
+                        "BRD1",
+                        "8",
+                        "ACT_Burden1",
+                        "0",
+                        "VA"
+                    ],
+                    [
+                        "MEASURE",
+                        "POF1",
+                        "8",
+                        "ACT_PFactor1",
+                        "0",
+                        ""
+                    ],
+                    [
+                        "MEASURE",
+                        "RAT1",
+                        "8",
+                        "ACT_Ratio1",
+                        "0",
+                        "%"
+                    ],
+                    [
+                        "MEASURE",
+                        "BRD2",
+                        "8",
+                        "ACT_Burden2",
+                        "0",
+                        "VA"
+                    ],
+                    [
+                        "MEASURE",
+                        "POF2",
+                        "8",
+                        "ACT_PFactor2",
+                        "0",
+                        ""
+                    ],
+                    [
+                        "MEASURE",
+                        "RAT2",
+                        "8",
+                        "ACT_Ratio2",
+                        "0",
+                        "%"
+                    ],
+                    [
+                        "MEASURE",
+                        "BRD3",
+                        "8",
+                        "ACT_Burden3",
+                        "0",
+                        "VA"
+                    ],
+                    [
+                        "MEASURE",
+                        "POF3",
+                        "8",
+                        "ACT_PFactor3",
+                        "0",
+                        ""
+                    ],
+                    [
+                        "MEASURE",
+                        "RAT3",
+                        "8",
+                        "ACT_Ratio3",
+                        "0",
+                        "%"
+                    ],
+                    [
+                        "CONFIGURATION",
+                        "BURDEN",
+                        "10",
+                        "PAR_NominalBurden",
+                        "0",
+                        "VA"
+                    ],
+                    [
+                        "CONFIGURATION",
+                        "RANGE",
+                        "10",
+                        "PAR_NominalRange",
+                        "0",
+                        "A"
+                    ],
+                    [
+                        "CONFIGURATION",
+                        "RFACTOR",
+                        "10",
+                        "PAR_NominalRangeFactor",
+                        "0",
+                        ""
+                    ],
+                    [
+                        "CONFIGURATION",
+                        "WCSection",
+                        "10",
+                        "PAR_WCrosssection",
+                        "0",
+                        "mm²"
+                    ],
+                    [
+                        "CONFIGURATION",
+                        "WLENGTH",
+                        "10",
+                        "PAR_WireLength",
+                        "0",
+                        "m"
+                    ]
+                ],
+                "Name": "BD11"
+            }
+        },
+        "PAR_NominalBurden": 1,
+        "PAR_NominalRange": 1,
+        "PAR_NominalRangeFactor": "1",
+        "PAR_WCrosssection": 1,
+        "PAR_WireLength": 1,
+        "SIG_Measuring": 0
+    },
+    "1161": {
+        "ACT_Burden1": 0,
+        "ACT_Burden2": 0,
+        "ACT_Burden3": 0,
+        "ACT_PFactor1": 0,
+        "ACT_PFactor2": 0,
+        "ACT_PFactor3": 0,
+        "ACT_Ratio1": 0,
+        "ACT_Ratio2": 0,
+        "ACT_Ratio3": 0,
+        "EntityName": "Burden1Module2",
+        "INF_ModuleInterface": {
+            "ComponentInfo": {
+                "ACT_Burden1": {
+                    "ChannelName": "BRD1",
+                    "Description": "Burden actual value",
+                    "Unit": "VA"
+                },
+                "ACT_Burden2": {
+                    "ChannelName": "BRD2",
+                    "Description": "Burden actual value",
+                    "Unit": "VA"
+                },
+                "ACT_Burden3": {
+                    "ChannelName": "BRD3",
+                    "Description": "Burden actual value",
+                    "Unit": "VA"
+                },
+                "ACT_PFactor1": {
+                    "ChannelName": "POF1",
+                    "Description": "Burden powerfactor"
+                },
+                "ACT_PFactor2": {
+                    "ChannelName": "POF2",
+                    "Description": "Burden powerfactor"
+                },
+                "ACT_PFactor3": {
+                    "ChannelName": "POF3",
+                    "Description": "Burden powerfactor"
+                },
+                "ACT_Ratio1": {
+                    "ChannelName": "RAT1",
+                    "Description": "Burden ratio value",
+                    "Unit": "%"
+                },
+                "ACT_Ratio2": {
+                    "ChannelName": "RAT2",
+                    "Description": "Burden ratio value",
+                    "Unit": "%"
+                },
+                "ACT_Ratio3": {
+                    "ChannelName": "RAT3",
+                    "Description": "Burden ratio value",
+                    "Unit": "%"
+                },
+                "EntityName": {
+                    "Description": "Module's name"
+                },
+                "INF_ModuleInterface": {
+                    "Description": "Module's interface details"
+                },
+                "PAR_NominalBurden": {
+                    "Description": "Nominal burden",
+                    "Unit": "VA",
+                    "Validation": {
+                        "Data": [
+                            0.1,
+                            500,
+                            0.1
+                        ],
+                        "Type": "DOUBLE"
+                    }
+                },
+                "PAR_NominalRange": {
+                    "Description": "Nominal range",
+                    "Unit": "V",
+                    "Validation": {
+                        "Data": [
+                            1,
+                            300,
+                            0.1
+                        ],
+                        "Type": "DOUBLE"
+                    }
+                },
+                "PAR_NominalRangeFactor": {
+                    "Description": "Nominal range factor",
+                    "Validation": {
+                        "Data": [
+                            "1",
+                            "sqrt(3)",
+                            "1/sqrt(3)",
+                            "1/3"
+                        ],
+                        "Type": "STRING"
+                    }
+                },
+                "PAR_WCrosssection": {
+                    "Description": "Wire crosssection value",
+                    "Unit": "mm²",
+                    "Validation": {
+                        "Data": [
+                            0.1,
+                            100,
+                            0.1
+                        ],
+                        "Type": "DOUBLE"
+                    }
+                },
+                "PAR_WireLength": {
+                    "Description": "Wire length value",
+                    "Unit": "m",
+                    "Validation": {
+                        "Data": [
+                            0,
+                            100,
+                            0.1
+                        ],
+                        "Type": "DOUBLE"
+                    }
+                },
+                "SIG_Measuring": {
+                    "Description": "Signal indicating measurement activity"
+                }
+            },
+            "ModuleInfo": {
+                "BRSCount": "3",
+                "Description": "This module measures configured number burden and powerfactor from configured input dft values",
+                "Name": "Burden1Module2"
+            },
+            "SCPIInfo": {
+                "Cmd": [
+                    [
+                        "MEASURE",
+                        "BRD1",
+                        "8",
+                        "ACT_Burden1",
+                        "0",
+                        "VA"
+                    ],
+                    [
+                        "MEASURE",
+                        "POF1",
+                        "8",
+                        "ACT_PFactor1",
+                        "0",
+                        ""
+                    ],
+                    [
+                        "MEASURE",
+                        "RAT1",
+                        "8",
+                        "ACT_Ratio1",
+                        "0",
+                        "%"
+                    ],
+                    [
+                        "MEASURE",
+                        "BRD2",
+                        "8",
+                        "ACT_Burden2",
+                        "0",
+                        "VA"
+                    ],
+                    [
+                        "MEASURE",
+                        "POF2",
+                        "8",
+                        "ACT_PFactor2",
+                        "0",
+                        ""
+                    ],
+                    [
+                        "MEASURE",
+                        "RAT2",
+                        "8",
+                        "ACT_Ratio2",
+                        "0",
+                        "%"
+                    ],
+                    [
+                        "MEASURE",
+                        "BRD3",
+                        "8",
+                        "ACT_Burden3",
+                        "0",
+                        "VA"
+                    ],
+                    [
+                        "MEASURE",
+                        "POF3",
+                        "8",
+                        "ACT_PFactor3",
+                        "0",
+                        ""
+                    ],
+                    [
+                        "MEASURE",
+                        "RAT3",
+                        "8",
+                        "ACT_Ratio3",
+                        "0",
+                        "%"
+                    ],
+                    [
+                        "CONFIGURATION",
+                        "BURDEN",
+                        "10",
+                        "PAR_NominalBurden",
+                        "0",
+                        "VA"
+                    ],
+                    [
+                        "CONFIGURATION",
+                        "RANGE",
+                        "10",
+                        "PAR_NominalRange",
+                        "0",
+                        "V"
+                    ],
+                    [
+                        "CONFIGURATION",
+                        "RFACTOR",
+                        "10",
+                        "PAR_NominalRangeFactor",
+                        "0",
+                        ""
+                    ],
+                    [
+                        "CONFIGURATION",
+                        "WCSection",
+                        "10",
+                        "PAR_WCrosssection",
+                        "0",
+                        "mm²"
+                    ],
+                    [
+                        "CONFIGURATION",
+                        "WLENGTH",
+                        "10",
+                        "PAR_WireLength",
+                        "0",
+                        "m"
+                    ]
+                ],
+                "Name": "BD12"
+            }
+        },
+        "PAR_NominalBurden": 1,
+        "PAR_NominalRange": 1,
+        "PAR_NominalRangeFactor": "1",
+        "PAR_WCrosssection": 1,
+        "PAR_WireLength": 1,
+        "SIG_Measuring": 0
+    }
+}
