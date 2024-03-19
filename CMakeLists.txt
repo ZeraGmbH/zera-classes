@@ -124,6 +124,8 @@ SET_MODULE_ENV(transformer1module)
 add_compile_definitions(MODULE_PLUGIN_BUILD_PATH="${MODULE_PLUGIN_BUILD_PATH}")
 
 enable_testing()
+#include(CodeCoverage.cmake)
+#append_coverage_compiler_flags()
 
 # Inspired by
 # https://github.com/KDAB/kdabtv/blob/master/Qt-Widgets-and-more/UnitTests/Tests/CMakeLists.txt
