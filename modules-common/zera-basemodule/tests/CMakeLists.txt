@@ -1,2 +1,1 @@
-SETUP_QTESTS (
-)
+SETUP_QTESTS(test_movingwindowfilter)

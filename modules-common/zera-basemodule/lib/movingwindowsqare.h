@@ -9,7 +9,7 @@ class cMovingwindowSqare: public cMovingwindowFilter
 public:
     cMovingwindowSqare(float time = 1.0);
 protected:
-    virtual void addnewValues();
+    void addnewValues() override;
 };
 
 #endif // MOVINGWINDOWSQARE_H
