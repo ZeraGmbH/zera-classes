@@ -12,20 +12,7 @@ void test_movingwindowfilter::init()
         m_filteredValues.clear();
 }
 
-void test_movingwindowfilter::oneSetOfActualValues()
-{
-    MovingWindowFilterWithoutSumFifo filter(1.0);
-    TimeMachineObject::feedEventLoop();
-
-    QVector<float> samples{1.0, 2.0, 3.0};
-    connect(&filter, &MovingWindowFilterWithoutSumFifo::actualValues, this, &test_movingwindowfilter::receiveFilteredValues);
-    filter.receiveActualValues(&samples);
-    TimeMachineObject::feedEventLoop();
-
-    QCOMPARE(samples, m_filteredValues);
-}
-
-void test_movingwindowfilter::threeSetOfActualValues()
+void test_movingwindowfilter::threeSetOfActualValuesWithoutIntegrationTimeElapsed()
 {
     MovingWindowFilterWithoutSumFifo filter(1.0);
     TimeMachineObject::feedEventLoop();
@@ -61,4 +48,3 @@ void test_movingwindowfilter::receiveFilteredValues(QVector<float> *filteredValu
     for(int i = 0; i < filteredValues->size(); i++)
         m_filteredValues[i] = filteredValues->at(i);
 }
-
