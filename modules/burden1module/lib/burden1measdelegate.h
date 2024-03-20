@@ -16,6 +16,7 @@ class cBurden1MeasDelegate : public QObject
     Q_OBJECT
 public:
     cBurden1MeasDelegate(VfModuleActvalue *actburden, VfModuleActvalue *actpowerfactor, VfModuleActvalue *actrelburden, QString mode, bool withSignal = false);
+    static double calcWireResistence(double wireLenMeter, double wireCrossSectionMillimeterSquare);
 public slots:
     void actValueInput1(QVariant val);
     void actValueInput2(QVariant val);

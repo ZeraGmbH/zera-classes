@@ -1,5 +1,6 @@
 #include "test_burden1_module_regression.h"
 #include "modulemanagertestrunner.h"
+#include "burden1measdelegate.h"
 #include <QBuffer>
 #include <QTest>
 
@@ -39,4 +40,19 @@ void test_burden1_module_regression::veinDumpInitial()
         qInfo("%s", qPrintable(jsonDumped));
         QCOMPARE(jsonExpected, jsonDumped);
     }
+}
+
+void test_burden1_module_regression::resistanceCalculation()
+{
+    constexpr double conductanceCopper = 56.0; // from doc
+
+    double length = 100.0;
+    double crossSection = 2.5;
+    double expected = length / (crossSection * conductanceCopper); // from doc
+    QCOMPARE(BURDEN1MODULE::cBurden1MeasDelegate::calcWireResistence(length, crossSection), expected);
+
+    length = 10.0;
+    crossSection = 10.0;
+    expected = length / (crossSection * conductanceCopper);
+    QCOMPARE(BURDEN1MODULE::cBurden1MeasDelegate::calcWireResistence(length, crossSection), expected);
 }
