@@ -9,6 +9,8 @@ class test_burden1_module_regression : public QObject
 private slots:
     void minimalSession();
     void veinDumpInitial();
+
+    void resistanceCalculation();
 };
 
 #endif // TEST_BURDEN1_MODULE_REGRESSION_H

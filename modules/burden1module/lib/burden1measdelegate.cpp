@@ -15,6 +15,12 @@ cBurden1MeasDelegate::cBurden1MeasDelegate(VfModuleActvalue *actburden, VfModule
 {
 }
 
+double cBurden1MeasDelegate::calcWireResistence(double wireLenMeter, double wireCrossSectionMillimeterSquare)
+{
+    constexpr double copperConductivity = 56;
+    return wireLenMeter / (wireCrossSectionMillimeterSquare * copperConductivity);
+}
+
 
 void cBurden1MeasDelegate::actValueInput1(QVariant val)
 {
@@ -88,11 +94,9 @@ void cBurden1MeasDelegate::setWireCrosssection(QVariant val)
 
 void cBurden1MeasDelegate::computeOutput()
 {
-    double Rwire, ueff, ieff;
-
-    Rwire = (1.0/56) * m_fWireLength / m_fWireCrosssection;
-    ueff = fabs(m_fVoltageVector) / 1.41421356;
-    ieff = fabs(m_fCurrentVector) / 1.41421356;
+    double Rwire = calcWireResistence(m_fWireLength, m_fWireCrosssection);
+    double ueff = fabs(m_fVoltageVector) / 1.41421356;
+    double ieff = fabs(m_fCurrentVector) / 1.41421356;
 
     // computation of burden, powerfactor and rel. burden !!! vectors are complex !!!
 
