@@ -44,7 +44,5 @@ void test_movingwindowfilter::threeSetOfActualValuesWithoutIntegrationTimeElapse
 
 void test_movingwindowfilter::receiveFilteredValues(QVector<float> *filteredValues)
 {
-    m_filteredValues.resize(filteredValues->size());
-    for(int i = 0; i < filteredValues->size(); i++)
-        m_filteredValues[i] = filteredValues->at(i);
+    m_filteredValues = *filteredValues;
 }
