@@ -44,13 +44,14 @@ void test_movingwindowfilter::threeSetOfActualValues()
     filter.receiveActualValues(&samples2);
     TimeMachineObject::feedEventLoop();
     for(int i = 0; i < samples1.count(); i++)
-        averageSamples[i] = (samples1[i] + samples2[i]) / 2;
+        //cast 'samples' into 'double' to match with steps & accuracy from MovingWindowFilterWithoutSumFifo calculations
+        averageSamples[i] = (static_cast<double>(samples1[i]) + static_cast<double>(samples2[i])) / 2;
     QCOMPARE(averageSamples, m_filteredValues);
 
     filter.receiveActualValues(&samples3);
     TimeMachineObject::feedEventLoop();
     for(int i = 0; i < samples1.count(); i++)
-        averageSamples[i] = (samples1[i] + samples2[i] + samples3[i]) / 3;
+        averageSamples[i] = (static_cast<double>(samples1[i]) + static_cast<double>(samples2[i]) + static_cast<double>(samples3[i])) / 3;
     QCOMPARE(averageSamples, m_filteredValues);
 }
 
