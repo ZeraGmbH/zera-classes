@@ -18,6 +18,7 @@ private slots:
     void injectActualValuesWithCheatingEnabled();
     void injectActualValuesWithCheatingAndRangeChanged();
     void injectIncreasingActualValuesWithCheatingEnabled();
+    void injectActualValuesCheatingEnabledWithPreScaling();
 private:
     void setVfComponent(VfCmdEventHandlerSystemPtr vfCmdEventHandlerSystem, QString componentName, QVariant oldValue, QVariant newValue);
 };
