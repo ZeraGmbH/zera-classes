@@ -307,8 +307,6 @@ double cAdjustManagement::getIgnoreRmsCorrFactor()
 {
     double ignoreRmsCorrFactor = 1.0;
     cRangeMeasChannel *measChannel = m_ChannelList.at(m_nChannelIt);
-    //if(m_nChannelIt == 6 || m_nChannelIt == 7)
-    {
         if(m_adjustmentConfig->m_ignoreRmsValuesEnable.m_nActive) {
             double threshold = m_adjustmentConfig->m_ignoreRmsValuesThreshold.m_fValue * measChannel->getUrValue() / 100;
             double gain = m_fGainCorr[measChannel->getDSPChannelNr()];
@@ -317,7 +315,6 @@ double cAdjustManagement::getIgnoreRmsCorrFactor()
             if(rmsValues < threshold)
                 ignoreRmsCorrFactor = 1e-10;
         }
-    }
     return ignoreRmsCorrFactor;
 }
 
