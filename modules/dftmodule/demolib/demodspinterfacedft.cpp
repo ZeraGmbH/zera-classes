@@ -27,7 +27,7 @@ void DemoDspInterfaceDft::onTimer()
         for(int i=0; i<demoValues.count(); i++) {
             float randomVal = (double)rand() / RAND_MAX;
             float randomDeviation = 0.5 + randomVal;
-            demoValues[i] *= randomDeviation;
+            //demoValues[i] *= randomDeviation;
         }
     }
     else {
@@ -36,7 +36,7 @@ void DemoDspInterfaceDft::onTimer()
         for(int i=0; i<demoValues.count(); i++) {
             float randomVal = (double)rand() / RAND_MAX;
             float randomDeviation = 0.95 + 0.1*randomVal;
-            demoValues[i] *= randomDeviation;
+            //demoValues[i] *= randomDeviation;
         }
     }
     fireActValInterrupt(demoValues, /* dummy */ 0);
