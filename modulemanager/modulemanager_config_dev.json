@@ -10,7 +10,7 @@
   "com5003" : {
     "availableSessions" : ["com5003-meas-session.json", "com5003-ced-session.json", "com5003-ref-session.json", "com5003-perphase-session.json"],
     "sessionDisplayStrings" : ["Default", "Changing energy direction", "Reference", "3 Systems / 2 Wires"],
-    "defaultSession" : "com5003-perphase-session.json",
+    "defaultSession" : "com5003-meas-session.json",
     "customerdataSystemEnabled" : true
   }
 }
