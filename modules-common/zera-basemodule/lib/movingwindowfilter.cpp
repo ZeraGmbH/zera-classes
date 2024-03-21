@@ -1,4 +1,5 @@
 #include "movingwindowfilter.h"
+#include <timerfactoryqt.h>
 
 cMovingwindowFilter::cMovingwindowFilter(float time)
     :m_fintegrationTime(time)
@@ -16,7 +17,7 @@ cMovingwindowFilter::cMovingwindowFilter(float time)
     m_pinitFilterState->addTransition(this, &cMovingwindowFilter::newActualValues, m_psetupFilterState);
     m_psetupFilterState->addTransition(this, &cMovingwindowFilter::timerInitialized, m_pbuildupFilterState);
     m_pbuildupFilterState->addTransition(this, &cMovingwindowFilter::newActualValues, m_pbuildupFilterState);
-    m_pbuildupFilterState->addTransition(&m_integrationTimer, &QTimer::timeout, m_preadyFilterState);
+    m_pbuildupFilterState->addTransition(this, &cMovingwindowFilter::integrationTimeExpired, m_preadyFilterState);
     m_preadyFilterState->addTransition(this, &cMovingwindowFilter::newActualValues, m_pdoFilterState);
     m_pdoFilterState->addTransition(this, &cMovingwindowFilter::newActualValues, m_pdoFilterState);
     connect(&m_FilterStatemachine, &QStateMachine::stopped, this, &cMovingwindowFilter::restartFilter);
@@ -68,17 +69,16 @@ void cMovingwindowFilter::addnewValues()
 void cMovingwindowFilter::initFilter()
 {
     m_ActValueFifoList.clear();
-    m_integrationTimer.stop();
-    m_integrationTimer.setSingleShot(true);
+    m_integrationTimer = TimerFactoryQt::createSingleShot((int)(m_fintegrationTime * 1000.0));
+    connect(m_integrationTimer.get(), &TimerTemplateQt::sigExpired, this, &cMovingwindowFilter::integrationTimeExpired);
 }
 
 void cMovingwindowFilter::setupFilter()
 {
-    m_integrationTimer.start((int)(m_fintegrationTime * 1000.0)); // while timer is running we'll fill the fifo
+    m_integrationTimer->start(); // while timer is running we'll fill the fifo
     m_FifoSum.fill(0.0, m_pActualValues->size());
     m_ActualValues.resize(m_pActualValues->size());
     emit timerInitialized();
-
 }
 
 void cMovingwindowFilter::buildupFilter()
@@ -106,3 +106,4 @@ void cMovingwindowFilter::restartFilter()
 {
     m_FilterStatemachine.start();
 }
+

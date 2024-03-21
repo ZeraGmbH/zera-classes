@@ -1,9 +1,9 @@
 #ifndef MOVINGWINDOWFILTER_H
 #define MOVINGWINDOWFILTER_H
 
+#include "timersingleshotqt.h"
 #include <QList>
 #include <QVector>
-#include <QTimer>
 #include <QStateMachine>
 #include <QState>
 #include <QFinalState>
@@ -19,6 +19,7 @@ signals:
     void newActualValues();
     void finishFilter();
     void timerInitialized();
+    void integrationTimeExpired();
 
 public slots:
     void receiveActualValues(QVector<float>* actualValues);
@@ -27,7 +28,7 @@ public slots:
 protected:
     virtual void addnewValues();
     float m_fintegrationTime;
-    QTimer m_integrationTimer;
+    TimerTemplateQtPtr m_integrationTimer;
     QList<QVector<double> > m_ActValueFifoList;
     QVector<double> m_FifoSum; // the sums of our actualvalues fifo entries
     QVector<float> m_ActualValues; // our new internal, filtered actualvalues
