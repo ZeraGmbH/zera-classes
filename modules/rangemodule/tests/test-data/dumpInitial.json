@@ -675,6 +675,22 @@
                         ""
                     ],
                     [
+                        "CONFIGURATION",
+                        "IGNORERMSVAL",
+                        "10",
+                        "PAR_IgnoreRmsValues",
+                        "0",
+                        "%"
+                    ],
+                    [
+                        "CONFIGURATION",
+                        "ENABLEIGNORERMSVAL",
+                        "10",
+                        "PAR_IgnoreRmsValuesOnOff",
+                        "0",
+                        ""
+                    ],
+                    [
                         "SENSE",
                         "OVERLOAD",
                         "10",
