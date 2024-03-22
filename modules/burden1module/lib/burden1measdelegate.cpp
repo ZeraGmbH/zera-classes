@@ -112,7 +112,7 @@ void cBurden1MeasDelegate::computeOutput()
     }
 
     double deltaW = userAtan(m_fCurrentVector.imag(), m_fCurrentVector.real()) - userAtan(m_fVoltageVector.imag(), m_fVoltageVector.real());
-    deltaW = deltaW * 3.1415926 / 180.0;
+    deltaW = deltaW * M_PI / 180.0;
 
     m_fActPowerFactor = cos(deltaW);
 
