@@ -350,7 +350,7 @@
                     }
                 },
                 "PAR_IgnoreRmsValues": {
-                    "Description": "Percentage below which Rms values are ignored",
+                    "Description": "Percentage of nominal range below which channel values are ignored",
                     "Unit": "%",
                     "Validation": {
                         "Data": [
@@ -362,7 +362,7 @@
                     }
                 },
                 "PAR_IgnoreRmsValuesOnOff": {
-                    "Description": "Enable or disable percentage below which Rms values are ignored",
+                    "Description": "Enable or disable channel ignore limit option",
                     "Validation": {
                         "Data": [
                             0,

@@ -119,7 +119,7 @@ void cAdjustManagement::generateInterface()
 
     m_ParIgnoreRmsValuesOnOff = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
                                                       QString("PAR_IgnoreRmsValuesOnOff"),
-                                                      QString("Enable or disable percentage below which Rms values are ignored"),
+                                                      QString("Enable or disable channel ignore limit option"),
                                                       QVariant(m_adjustmentConfig->m_ignoreRmsValuesEnable.m_nActive));
 
     m_ParIgnoreRmsValuesOnOff->setValidator(new cBoolValidator());
@@ -129,7 +129,7 @@ void cAdjustManagement::generateInterface()
 
     m_ParIgnoreRmsValues = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
                                                  QString("PAR_IgnoreRmsValues"),
-                                                 QString("Percentage below which Rms values are ignored"),
+                                                 QString("Percentage of nominal range below which channel values are ignored"),
                                                  QVariant(m_adjustmentConfig->m_ignoreRmsValuesThreshold.m_fValue));
 
     m_ParIgnoreRmsValues->setValidator(new cDoubleValidator(0, 2, 1e-1));
