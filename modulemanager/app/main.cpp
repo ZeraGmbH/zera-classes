@@ -2,11 +2,7 @@
 #include "factoryserviceinterfaces.h"
 #include "modulemanager.h"
 #include "modulemanagerconfig.h"
-#include "customerdatasystem.h"
-#include "zeradblogger.h"
 #include "licensesystem.h"
-#include "jsonloggercontentloader.h"
-#include "jsonloggercontentsessionloader.h"
 
 #include <QGuiApplication>
 
@@ -94,7 +90,6 @@ int main(int argc, char *argv[])
     }
 
     qInfo() << "Loading session data for" << deviceName;
-    const bool customerdataSystemEnabled = mmConfig->getCustomerDataEnabled();
     const QStringList availableSessionList = mmConfig->getAvailableSessions();
     if(availableSessionList.isEmpty()) {
         fprintf(stderr, "No sessions found for device %s", qPrintable(deviceName));
@@ -150,9 +145,6 @@ int main(int argc, char *argv[])
     VeinNet::TcpSystem *tcpSystem = new VeinNet::TcpSystem(app.get());
     VeinScript::ScriptSystem *scriptSystem = new VeinScript::ScriptSystem(app.get());
     VeinApiQml::VeinQml *qmlSystem = new VeinApiQml::VeinQml(app.get());
-    ZeraDBLogger *dataLoggerSystem = new ZeraDBLogger(new VeinLogger::DataSource(modManSetupFacade->getStorageSystem(), app.get()), sqliteFactory, app.get()); //takes ownership of DataSource
-    CustomerDataSystem *customerDataSystem = nullptr;
-    vfExport::vf_export *exportModule=new vfExport::vf_export();
 
     QStringList allowedFolders{QStringLiteral(MODMAN_CUSTOMERDATA_PATH),
                                QStringLiteral(MODMAN_AUTOMOUNT_PATH),
@@ -162,9 +154,6 @@ int main(int argc, char *argv[])
 
     //setup logger
     VeinApiQml::VeinQml::setStaticInstance(qmlSystem);
-    VeinLogger::QmlLogger::setStaticLogger(dataLoggerSystem);
-    VeinLogger::QmlLogger::setJsonEnvironment(MODMAN_CONTENTSET_PATH, std::make_shared<JsonLoggerContentLoader>());
-    VeinLogger::QmlLogger::setJsonEnvironment(MODMAN_SESSION_PATH, std::make_shared<JsonLoggerContentSessionLoader>());
 
     bool initQmlSystemOnce = false;
     QObject::connect(qmlSystem, &VeinApiQml::VeinQml::sigStateChanged, [&](VeinApiQml::VeinQml::ConnectionState t_state){
@@ -176,26 +165,6 @@ int main(int argc, char *argv[])
     });
 
     netSystem->setOperationMode(VeinNet::NetworkSystem::VNOM_SUBSCRIPTION);
-    auto errorReportFunction = [dataLoggerSystem](const QString &t_error){
-        QJsonObject jsonErrorObj;
-
-        jsonErrorObj.insert("ModuleName", "DataLogger");
-        jsonErrorObj.insert("Time", QDateTime::currentDateTime().toString("yyyy/MM/dd HH:mm:ss"));
-        jsonErrorObj.insert("Error", t_error);
-
-        VeinComponent::ComponentData *cData = new VeinComponent::ComponentData();
-        cData->setEntityId(0);
-        cData->setEventOrigin(VeinEvent::EventData::EventOrigin::EO_LOCAL);
-        cData->setEventTarget(VeinEvent::EventData::EventTarget::ET_LOCAL);
-        cData->setCommand(VeinComponent::ComponentData::Command::CCMD_SET);
-        cData->setComponentName(ModuleManagerController::s_notificationMessagesComponentName);
-
-        cData->setNewValue(jsonErrorObj);
-
-        emit dataLoggerSystem->sigSendEvent(new VeinEvent::CommandEvent(VeinEvent::CommandEvent::EventSubtype::TRANSACTION, cData));
-    };
-    QObject::connect(dataLoggerSystem, &VeinLogger::DatabaseLogger::sigDatabaseError, errorReportFunction);
-
 
     //do not reorder
     modManSetupFacade->addSubsystem(netSystem);
@@ -226,50 +195,7 @@ int main(int argc, char *argv[])
                 true);
     filesModule->addTtyWatcher("Ttys");
 
-    //conditional systems
-    bool customerDataSystemInitialized = false;
-    if(customerdataSystemEnabled)
-    {
-        QObject::connect(licenseSystem, &LicenseSystem::sigSerialNumberInitialized, [&]() {
-            if(licenseSystem->isSystemLicensed(CustomerDataSystem::s_entityName) && !customerDataSystemInitialized)
-            {
-                customerDataSystemInitialized = true;
-                customerDataSystem = new CustomerDataSystem(app.get());
-                QObject::connect(customerDataSystem, &CustomerDataSystem::sigCustomerDataError, errorReportFunction);
-                qDebug() << "CustomerDataSystem is enabled";
-                modManSetupFacade->addSubsystem(customerDataSystem);
-                customerDataSystem->initializeEntity();
-            }
-        });
-    }
-    bool dataLoggerSystemInitialized = false;
-    QObject::connect(licenseSystem, &LicenseSystem::sigSerialNumberInitialized, [&](){
-        if(licenseSystem->isSystemLicensed(dataLoggerSystem->entityName()))
-        {
-            if(!dataLoggerSystemInitialized)
-            {
-                dataLoggerSystemInitialized = true;
-                qInfo("Starting DataLoggerSystem...");
-                modManSetupFacade->addSubsystem(dataLoggerSystem);
-
-                // exports entity
-                qInfo("Starting vf-export...");
-                modManSetupFacade->addSubsystem(exportModule->getVeinEntity());
-                exportModule->initOnce();
-
-                // subscribe those entitities our magic logger QML script
-                // requires (see modMan->loadScripts above)
-                qmlSystem->entitySubscribeById(0); //0 = mmController
-                qmlSystem->entitySubscribeById(2); //2 = dataLoggerSystem
-            }
-        }
-    });
-
     modMan->setupConnections();
-    QObject::connect(modMan, &ZeraModules::ModuleManager::sigSessionSwitched, [&dataLoggerSystem]() {
-        //disable logging to prevent data logging between session switching
-        dataLoggerSystem->setLoggingEnabled(false);
-    });
 
     bool modulesFound = modMan->loadAllAvailableModulePlugins();
     if(!modulesFound) {
