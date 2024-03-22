@@ -48,6 +48,16 @@
                     <source>pmss</source>
                     <type>+-</type>
                     <plug>fOUT2</plug>
+                    <scaling>
+                        <uscale>
+                            <inputentity>1020</inputentity>
+                            <inputcomponent>INF_PreScalingInfoGroup0</inputcomponent>
+                        </uscale>
+                        <iscale>
+                            <inputentity>1020 </inputentity>
+                            <inputcomponent>INF_PreScalingInfoGroup1</inputcomponent>
+                        </iscale>
+                    </scaling>
                 </fout1>
             </output>
         </frequencyoutput>
