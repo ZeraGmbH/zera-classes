@@ -14,44 +14,44 @@
             "ComponentInfo": {
                 "ACT_Burden1": {
                     "ChannelName": "BRD1",
-                    "Description": "Burden actual value",
+                    "Description": "Burden actual value Sb",
                     "Unit": "VA"
                 },
                 "ACT_Burden2": {
                     "ChannelName": "BRD2",
-                    "Description": "Burden actual value",
+                    "Description": "Burden actual value Sb",
                     "Unit": "VA"
                 },
                 "ACT_Burden3": {
                     "ChannelName": "BRD3",
-                    "Description": "Burden actual value",
+                    "Description": "Burden actual value Sb",
                     "Unit": "VA"
                 },
                 "ACT_PFactor1": {
                     "ChannelName": "POF1",
-                    "Description": "Burden powerfactor"
+                    "Description": "Burden powerfactor cos(β)"
                 },
                 "ACT_PFactor2": {
                     "ChannelName": "POF2",
-                    "Description": "Burden powerfactor"
+                    "Description": "Burden powerfactor cos(β)"
                 },
                 "ACT_PFactor3": {
                     "ChannelName": "POF3",
-                    "Description": "Burden powerfactor"
+                    "Description": "Burden powerfactor cos(β)"
                 },
                 "ACT_Ratio1": {
                     "ChannelName": "RAT1",
-                    "Description": "Burden ratio value",
+                    "Description": "Burden ratio value Sn",
                     "Unit": "%"
                 },
                 "ACT_Ratio2": {
                     "ChannelName": "RAT2",
-                    "Description": "Burden ratio value",
+                    "Description": "Burden ratio value Sn",
                     "Unit": "%"
                 },
                 "ACT_Ratio3": {
                     "ChannelName": "RAT3",
-                    "Description": "Burden ratio value",
+                    "Description": "Burden ratio value Sn",
                     "Unit": "%"
                 },
                 "EntityName": {
@@ -269,44 +269,44 @@
             "ComponentInfo": {
                 "ACT_Burden1": {
                     "ChannelName": "BRD1",
-                    "Description": "Burden actual value",
+                    "Description": "Burden actual value Sb",
                     "Unit": "VA"
                 },
                 "ACT_Burden2": {
                     "ChannelName": "BRD2",
-                    "Description": "Burden actual value",
+                    "Description": "Burden actual value Sb",
                     "Unit": "VA"
                 },
                 "ACT_Burden3": {
                     "ChannelName": "BRD3",
-                    "Description": "Burden actual value",
+                    "Description": "Burden actual value Sb",
                     "Unit": "VA"
                 },
                 "ACT_PFactor1": {
                     "ChannelName": "POF1",
-                    "Description": "Burden powerfactor"
+                    "Description": "Burden powerfactor cos(β)"
                 },
                 "ACT_PFactor2": {
                     "ChannelName": "POF2",
-                    "Description": "Burden powerfactor"
+                    "Description": "Burden powerfactor cos(β)"
                 },
                 "ACT_PFactor3": {
                     "ChannelName": "POF3",
-                    "Description": "Burden powerfactor"
+                    "Description": "Burden powerfactor cos(β)"
                 },
                 "ACT_Ratio1": {
                     "ChannelName": "RAT1",
-                    "Description": "Burden ratio value",
+                    "Description": "Burden ratio value Sn",
                     "Unit": "%"
                 },
                 "ACT_Ratio2": {
                     "ChannelName": "RAT2",
-                    "Description": "Burden ratio value",
+                    "Description": "Burden ratio value Sn",
                     "Unit": "%"
                 },
                 "ACT_Ratio3": {
                     "ChannelName": "RAT3",
-                    "Description": "Burden ratio value",
+                    "Description": "Burden ratio value Sn",
                     "Unit": "%"
                 },
                 "EntityName": {
