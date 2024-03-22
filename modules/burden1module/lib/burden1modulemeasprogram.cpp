@@ -58,7 +58,7 @@ void cBurden1ModuleMeasProgram::generateInterface()
     {
         pActvalue = new VfModuleActvalue(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
                                             QString("ACT_Burden%1").arg(i+1),
-                                            QString("Burden actual value"),
+                                            QString("Burden actual value Sb"),
                                             QVariant(0.0) );
         pActvalue->setChannelName(QString("BRD%1").arg(i+1));
         pActvalue->setUnit("VA");
@@ -71,7 +71,7 @@ void cBurden1ModuleMeasProgram::generateInterface()
 
         pActvalue = new VfModuleActvalue(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
                                             QString("ACT_PFactor%1").arg(i+1),
-                                            QString("Burden powerfactor"),
+                                            QString("Burden powerfactor cos(β)"),
                                             QVariant(0.0) );
         pActvalue->setChannelName(QString("POF%1").arg(i+1));
         pActvalue->setUnit("");
@@ -84,7 +84,7 @@ void cBurden1ModuleMeasProgram::generateInterface()
 
         pActvalue = new VfModuleActvalue(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
                                             QString("ACT_Ratio%1").arg(i+1),
-                                            QString("Burden ratio value"),
+                                            QString("Burden ratio value Sn"),
                                             QVariant(0.0) );
         pActvalue->setChannelName(QString("RAT%1").arg(i+1));
         pActvalue->setUnit("%");
