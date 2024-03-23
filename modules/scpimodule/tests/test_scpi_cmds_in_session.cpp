@@ -20,11 +20,11 @@ QTEST_MAIN(test_scpi_cmds_in_session)
 void test_scpi_cmds_in_session::initialSession()
 {
     ModuleManagerTestRunner testRunner(":/session-scpi-only.json");
-    VeinStorage::VeinHash* storageHash = testRunner.getVeinStorageSystem();
-    QList<int> entityList = storageHash->getEntityList();
+    VeinEvent::StorageSystem* veinStorage = testRunner.getVeinStorageSystem();
+    QList<int> entityList = veinStorage->getEntityList();
     QCOMPARE(entityList.count(), 2);
 
-    QList<QString> componentList = storageHash->getEntityComponents(9999);
+    QList<QString> componentList = veinStorage->getEntityComponents(9999);
     QCOMPARE(componentList.count(), 6); // EntitiyName / Metadata / PAR_SerialScpiActive / ACT_SerialScpiDeviceFile / ACT_DEV_IFACE / PAR_OptionalScpiQueue*/
 }
 
@@ -94,13 +94,13 @@ void test_scpi_cmds_in_session::devIfaceVeinComponent()
 {
     ModuleManagerTestRunner testRunner(":/session-scpi-only.json");
 
-    VeinStorage::VeinHash* storageHash = testRunner.getVeinStorageSystem();
-    QList<QString> componentList = storageHash->getEntityComponents(9999);
+    VeinEvent::StorageSystem* veinStorage = testRunner.getVeinStorageSystem();
+    QList<QString> componentList = veinStorage->getEntityComponents(9999);
     QVERIFY(componentList.contains("ACT_DEV_IFACE"));
 
     ScpiModuleClientBlocked client;
     QString receive = client.sendReceive("dev:iface?");
-    QString actDevIface = storageHash->getStoredValue(9999, "ACT_DEV_IFACE").toString();
+    QString actDevIface = veinStorage->getStoredValue(9999, "ACT_DEV_IFACE").toString();
     if(actDevIface.isEmpty()) // we have to make module resilient to this situation
         qFatal("ACT_DEV_IFACE empty - local modulemanager running???");
     XmlDocumentCompare compare;
@@ -114,8 +114,8 @@ void test_scpi_cmds_in_session::devIfaceVeinComponentMultipleEntities()
     ScpiModuleClientBlocked client;
     QString receive = client.sendReceive("dev:iface?");
 
-    VeinStorage::VeinHash* storageHash = testRunner.getVeinStorageSystem();
-    QVariant xmlDevIface = storageHash->getStoredValue(9999, "ACT_DEV_IFACE");
+    VeinEvent::StorageSystem* veinStorage = testRunner.getVeinStorageSystem();
+    QVariant xmlDevIface = veinStorage->getStoredValue(9999, "ACT_DEV_IFACE");
     XmlDocumentCompare compare;
     QVERIFY(compare.compareXml(xmlDevIface.toString(), receive, true));
 }
@@ -127,8 +127,8 @@ void test_scpi_cmds_in_session::devIfaceVeinComponentMultipleEntitiesForLongXml(
     ScpiModuleClientBlocked client;
     QString receive = client.sendReceive("dev:iface?");
 
-    VeinStorage::VeinHash* storageHash = testRunner.getVeinStorageSystem();
-    QVariant xmlDevIface = storageHash->getStoredValue(9999, "ACT_DEV_IFACE");
+    VeinEvent::StorageSystem* veinStorage = testRunner.getVeinStorageSystem();
+    QVariant xmlDevIface = veinStorage->getStoredValue(9999, "ACT_DEV_IFACE");
     // testing this on target / vf-debugger cutted string of len 67395 characters
     QVERIFY(xmlDevIface.toString().size() >= 67395);
     qInfo("%i", xmlDevIface.toString().size());

@@ -18,15 +18,15 @@ static int constexpr scpiEntityId = 9999;
 void test_adj_module_regression::minimalSession()
 {
     ModuleManagerTestRunner testRunner(":/session-minimal.json");
-    VeinStorage::VeinHash* storageHash = testRunner.getVeinStorageSystem();
-    QList<int> entityList = storageHash->getEntityList();
+    VeinEvent::StorageSystem* veinStorage = testRunner.getVeinStorageSystem();
+    QList<int> entityList = veinStorage->getEntityList();
     QCOMPARE(entityList.count(), 7);
-    QVERIFY(storageHash->hasEntity(rangeEntityId));
-    QVERIFY(storageHash->hasEntity(rmsEntityId));
-    QVERIFY(storageHash->hasEntity(dftEntityId));
-    QVERIFY(storageHash->hasEntity(fftEntityId));
-    QVERIFY(storageHash->hasEntity(adjEntityId));
-    QVERIFY(storageHash->hasEntity(scpiEntityId));
+    QVERIFY(veinStorage->hasEntity(rangeEntityId));
+    QVERIFY(veinStorage->hasEntity(rmsEntityId));
+    QVERIFY(veinStorage->hasEntity(dftEntityId));
+    QVERIFY(veinStorage->hasEntity(fftEntityId));
+    QVERIFY(veinStorage->hasEntity(adjEntityId));
+    QVERIFY(veinStorage->hasEntity(scpiEntityId));
 }
 
 void test_adj_module_regression::veinDumpInitial()
@@ -36,11 +36,11 @@ void test_adj_module_regression::veinDumpInitial()
     QString jsonExpected = file.readAll();
 
     ModuleManagerTestRunner testRunner(":/session-minimal.json");
-    VeinStorage::VeinHash* storageHash = testRunner.getVeinStorageSystem();
+    VeinEvent::StorageSystem* veinStorage = testRunner.getVeinStorageSystem();
     QByteArray jsonDumped;
     QBuffer buff(&jsonDumped);
     // just dump adjustment module to reduce FF on changing other modules
-    storageHash->dumpToFile(&buff, QList<int>() << adjEntityId);
+    veinStorage->dumpToFile(&buff, QList<int>() << adjEntityId);
 
     if(jsonExpected != jsonDumped) {
         qWarning("Expected storage hash:");

@@ -44,7 +44,7 @@ ModuleManagerController *ModuleManagerSetupFacade::getModuleManagerController()
     return &m_mmController;
 }
 
-VeinStorage::VeinHash *ModuleManagerSetupFacade::getStorageSystem()
+VeinEvent::StorageSystem *ModuleManagerSetupFacade::getStorageSystem()
 {
     return &m_storSystem;
 }

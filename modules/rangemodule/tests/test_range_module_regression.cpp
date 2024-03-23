@@ -16,19 +16,19 @@ static int constexpr rangeEntityId = 1020;
 void test_range_module_regression::minimalSession()
 {
     ModuleManagerTestRunner testRunner(":/session-minimal.json");
-    VeinStorage::VeinHash* storageHash = testRunner.getVeinStorageSystem();
-    QList<int> entityList = storageHash->getEntityList();
+    VeinEvent::StorageSystem* veinStorage = testRunner.getVeinStorageSystem();
+    QList<int> entityList = veinStorage->getEntityList();
     QCOMPARE(entityList.count(), 2);
-    QVERIFY(storageHash->hasEntity(rangeEntityId));
+    QVERIFY(veinStorage->hasEntity(rangeEntityId));
 }
 
 void test_range_module_regression::moduleConfigFromResource()
 {
     ModuleManagerTestRunner testRunner(":/session-range-test.json");
-    VeinStorage::VeinHash* storageHash = testRunner.getVeinStorageSystem();
-    QList<int> entityList = storageHash->getEntityList();
+    VeinEvent::StorageSystem* veinStorage = testRunner.getVeinStorageSystem();
+    QList<int> entityList = veinStorage->getEntityList();
     QCOMPARE(entityList.count(), 2);
-    QVERIFY(storageHash->hasEntity(rangeEntityId));
+    QVERIFY(veinStorage->hasEntity(rangeEntityId));
 }
 
 void test_range_module_regression::veinDumpInitial()
@@ -38,10 +38,10 @@ void test_range_module_regression::veinDumpInitial()
     QString jsonExpected = file.readAll();
 
     ModuleManagerTestRunner testRunner(":/session-range-test.json");
-    VeinStorage::VeinHash* storageHash = testRunner.getVeinStorageSystem();
+    VeinEvent::StorageSystem* veinStorage = testRunner.getVeinStorageSystem();
     QByteArray jsonDumped;
     QBuffer buff(&jsonDumped);
-    storageHash->dumpToFile(&buff, QList<int>() << rangeEntityId);
+    veinStorage->dumpToFile(&buff, QList<int>() << rangeEntityId);
 
     if(jsonExpected != jsonDumped) {
         qWarning("Expected storage hash:");
@@ -95,10 +95,10 @@ void test_range_module_regression::injectActualValues()
     QVERIFY(file.open(QFile::ReadOnly));
     QString jsonExpected = file.readAll();
 
-    VeinStorage::VeinHash* storageHash = testRunner.getVeinStorageSystem();
+    VeinEvent::StorageSystem* veinStorage = testRunner.getVeinStorageSystem();
     QByteArray jsonDumped;
     QBuffer buff(&jsonDumped);
-    storageHash->dumpToFile(&buff, QList<int>() << rangeEntityId);
+    veinStorage->dumpToFile(&buff, QList<int>() << rangeEntityId);
 
     if(jsonExpected != jsonDumped) {
         qWarning("Expected storage hash:");
@@ -137,10 +137,10 @@ void test_range_module_regression::injectActualValuesWithPreScaling()
     QVERIFY(file.open(QFile::ReadOnly));
     QString jsonExpected = file.readAll();
 
-    VeinStorage::VeinHash* storageHash = testRunner.getVeinStorageSystem();
+    VeinEvent::StorageSystem* veinStorage = testRunner.getVeinStorageSystem();
     QByteArray jsonDumped;
     QBuffer buff(&jsonDumped);
-    storageHash->dumpToFile(&buff, QList<int>() << rangeEntityId);
+    veinStorage->dumpToFile(&buff, QList<int>() << rangeEntityId);
 
     if(jsonExpected != jsonDumped) {
         qWarning("Expected storage hash:");

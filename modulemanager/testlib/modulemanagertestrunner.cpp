@@ -29,7 +29,7 @@ ModuleManagerTestRunner::~ModuleManagerTestRunner()
     m_licenseSystem = nullptr;
 }
 
-VeinStorage::VeinHash *ModuleManagerTestRunner::getVeinStorageSystem()
+VeinEvent::StorageSystem *ModuleManagerTestRunner::getVeinStorageSystem()
 {
     return m_modmanFacade->getStorageSystem();
 }

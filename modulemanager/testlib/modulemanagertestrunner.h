@@ -16,7 +16,7 @@ class ModuleManagerTestRunner : public QObject
 public:
     ModuleManagerTestRunner(QString sessionFileName, bool initialAdjPermission = false, QString deviceName = "mt310s2");
     ~ModuleManagerTestRunner();
-    VeinStorage::VeinHash* getVeinStorageSystem();
+    VeinEvent::StorageSystem *getVeinStorageSystem();
     const QList<TestDspInterfacePtr>& getDspInterfaceList() const;
     VfCmdEventHandlerSystemPtr getVfCmdEventHandlerSystemPtr();
     ZeraModules::VirtualModule *getModule(QString uniqueName, int entityId);

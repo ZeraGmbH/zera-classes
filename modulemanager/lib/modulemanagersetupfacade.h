@@ -17,7 +17,7 @@ public:
     void addSystem(VeinEvent::EventSystem* system);
     void clearSystems();
     ModuleManagerController *getModuleManagerController();
-    VeinStorage::VeinHash *getStorageSystem();
+    VeinEvent::StorageSystem *getStorageSystem();
     LicenseSystemInterface *getLicenseSystem();
 private:
     ModuleEventHandler m_eventHandler;

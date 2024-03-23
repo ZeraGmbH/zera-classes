@@ -14,19 +14,19 @@ static int constexpr rmsEntityId = 1040;
 void test_rms_module_regression::minimalSession()
 {
     ModuleManagerTestRunner testRunner(":/session-minimal.json");
-    VeinStorage::VeinHash* storageHash = testRunner.getVeinStorageSystem();
-    QList<int> entityList = storageHash->getEntityList();
+    VeinEvent::StorageSystem* veinStorage = testRunner.getVeinStorageSystem();
+    QList<int> entityList = veinStorage->getEntityList();
     QCOMPARE(entityList.count(), 2);
-    QVERIFY(storageHash->hasEntity(rmsEntityId));
+    QVERIFY(veinStorage->hasEntity(rmsEntityId));
 }
 
 void test_rms_module_regression::moduleConfigFromResource()
 {
     ModuleManagerTestRunner testRunner(":/session-rms-moduleconfig-from-resource.json");
-    VeinStorage::VeinHash* storageHash = testRunner.getVeinStorageSystem();
-    QList<int> entityList = storageHash->getEntityList();
+    VeinEvent::StorageSystem* veinStorage = testRunner.getVeinStorageSystem();
+    QList<int> entityList = veinStorage->getEntityList();
     QCOMPARE(entityList.count(), 2);
-    QVERIFY(storageHash->hasEntity(rmsEntityId));
+    QVERIFY(veinStorage->hasEntity(rmsEntityId));
 }
 
 void test_rms_module_regression::veinDumpInitial()
@@ -36,10 +36,10 @@ void test_rms_module_regression::veinDumpInitial()
     QString jsonExpected = file.readAll();
 
     ModuleManagerTestRunner testRunner(":/session-rms-moduleconfig-from-resource.json");
-    VeinStorage::VeinHash* storageHash = testRunner.getVeinStorageSystem();
+    VeinEvent::StorageSystem* veinStorage = testRunner.getVeinStorageSystem();
     QByteArray jsonDumped;
     QBuffer buff(&jsonDumped);
-    storageHash->dumpToFile(&buff, QList<int>() << rmsEntityId);
+    veinStorage->dumpToFile(&buff, QList<int>() << rmsEntityId);
 
     if(jsonExpected != jsonDumped) {
         qWarning("Expected storage hash:");
@@ -84,10 +84,10 @@ void test_rms_module_regression::injectActualValues()
     QVERIFY(file.open(QFile::ReadOnly));
     QString jsonExpected = file.readAll();
 
-    VeinStorage::VeinHash* storageHash = testRunner.getVeinStorageSystem();
+    VeinEvent::StorageSystem* veinStorage = testRunner.getVeinStorageSystem();
     QByteArray jsonDumped;
     QBuffer buff(&jsonDumped);
-    storageHash->dumpToFile(&buff, QList<int>() << rmsEntityId);
+    veinStorage->dumpToFile(&buff, QList<int>() << rmsEntityId);
 
     if(jsonExpected != jsonDumped) {
         qWarning("Expected storage hash:");
@@ -105,18 +105,18 @@ void test_rms_module_regression::injectActualTwice()
     const QList<TestDspInterfacePtr>& dspInterfaces = testRunner.getDspInterfaceList();
     QCOMPARE(dspInterfaces.count(), 1);
 
-    VeinStorage::VeinHash* storageHash = testRunner.getVeinStorageSystem();
+    VeinEvent::StorageSystem* veinStorage = testRunner.getVeinStorageSystem();
     QVector<float> actValues(rmsResultCount);
 
     actValues[1] = 37;
     dspInterfaces[0]->fireActValInterrupt(actValues, 0 /* dummy */);
     TimeMachineObject::feedEventLoop();
-    QCOMPARE(storageHash->getStoredValue(rmsEntityId, "ACT_RMSPN2"), QVariant(37.0));
+    QCOMPARE(veinStorage->getStoredValue(rmsEntityId, "ACT_RMSPN2"), QVariant(37.0));
 
     actValues[1] = 42;
     dspInterfaces[0]->fireActValInterrupt(actValues, 0 /* dummy */);
     TimeMachineObject::feedEventLoop();
-    QCOMPARE(storageHash->getStoredValue(rmsEntityId, "ACT_RMSPN2"), QVariant(42.0));
+    QCOMPARE(veinStorage->getStoredValue(rmsEntityId, "ACT_RMSPN2"), QVariant(42.0));
 }
 
 void test_rms_module_regression::injectSymmetricValues()
@@ -139,10 +139,10 @@ void test_rms_module_regression::injectSymmetricValues()
     QVERIFY(file.open(QFile::ReadOnly));
     QString jsonExpected = file.readAll();
 
-    VeinStorage::VeinHash* storageHash = testRunner.getVeinStorageSystem();
+    VeinEvent::StorageSystem* veinStorage = testRunner.getVeinStorageSystem();
     QByteArray jsonDumped;
     QBuffer buff(&jsonDumped);
-    storageHash->dumpToFile(&buff, QList<int>() << rmsEntityId);
+    veinStorage->dumpToFile(&buff, QList<int>() << rmsEntityId);
 
     if(jsonExpected != jsonDumped) {
         qWarning("Expected storage hash:");

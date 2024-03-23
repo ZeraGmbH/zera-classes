@@ -15,12 +15,12 @@ static int constexpr dftBurdenVoltageId = 1161;
 void test_burden1_module_regression::minimalSession()
 {
     ModuleManagerTestRunner testRunner(":/session-minimal.json");
-    VeinStorage::VeinHash* storageHash = testRunner.getVeinStorageSystem();
-    QList<int> entityList = storageHash->getEntityList();
+    VeinEvent::StorageSystem* veinStorage = testRunner.getVeinStorageSystem();
+    QList<int> entityList = veinStorage->getEntityList();
     QCOMPARE(entityList.count(), 4);
-    QVERIFY(storageHash->hasEntity(dftEntityId));
-    QVERIFY(storageHash->hasEntity(dftBurdenCurrentId));
-    QVERIFY(storageHash->hasEntity(dftBurdenVoltageId));
+    QVERIFY(veinStorage->hasEntity(dftEntityId));
+    QVERIFY(veinStorage->hasEntity(dftBurdenCurrentId));
+    QVERIFY(veinStorage->hasEntity(dftBurdenVoltageId));
 }
 
 void test_burden1_module_regression::veinDumpInitial()
@@ -30,10 +30,10 @@ void test_burden1_module_regression::veinDumpInitial()
     QString jsonExpected = file.readAll();
 
     ModuleManagerTestRunner testRunner(":/session-minimal.json");
-    VeinStorage::VeinHash* storageHash = testRunner.getVeinStorageSystem();
+    VeinEvent::StorageSystem* veinStorage = testRunner.getVeinStorageSystem();
     QByteArray jsonDumped;
     QBuffer buff(&jsonDumped);
-    storageHash->dumpToFile(&buff, QList<int>() << dftBurdenCurrentId << dftBurdenVoltageId);
+    veinStorage->dumpToFile(&buff, QList<int>() << dftBurdenCurrentId << dftBurdenVoltageId);
 
     if(jsonExpected != jsonDumped) {
         qWarning("Expected storage hash:");
@@ -74,30 +74,30 @@ void test_burden1_module_regression::voltageBurden230V1ADefaultSettings()
     dspInterfaces[0]->fireActValInterrupt(dspValues.getDspValues(), 0);
     TimeMachineObject::feedEventLoop();
 
-    VeinStorage::VeinHash* storageHash = testRunner.getVeinStorageSystem();
+    VeinEvent::StorageSystem* veinStorage = testRunner.getVeinStorageSystem();
 
     QVariant burden;
-    burden = storageHash->getStoredValue(dftBurdenVoltageId, "ACT_Burden1");
+    burden = veinStorage->getStoredValue(dftBurdenVoltageId, "ACT_Burden1");
     QCOMPARE(burden.toFloat(), calcUBurdenSb(voltage, current, 1, 1, 1));
-    burden = storageHash->getStoredValue(dftBurdenVoltageId, "ACT_Burden2");
+    burden = veinStorage->getStoredValue(dftBurdenVoltageId, "ACT_Burden2");
     QCOMPARE(burden.toFloat(), calcUBurdenSb(voltage, current, 1, 1, 1));
-    burden = storageHash->getStoredValue(dftBurdenVoltageId, "ACT_Burden3");
+    burden = veinStorage->getStoredValue(dftBurdenVoltageId, "ACT_Burden3");
     QCOMPARE(burden.toFloat(), calcUBurdenSb(voltage, current, 1, 1, 1));
 
     QVariant burdenRel;
-    burdenRel = storageHash->getStoredValue(dftBurdenVoltageId, "ACT_Ratio1");
+    burdenRel = veinStorage->getStoredValue(dftBurdenVoltageId, "ACT_Ratio1");
     QCOMPARE(burdenRel.toFloat(), calcUBurdenSn(1, voltage, current, 1, 1, 1));
-    burdenRel = storageHash->getStoredValue(dftBurdenVoltageId, "ACT_Ratio2");
+    burdenRel = veinStorage->getStoredValue(dftBurdenVoltageId, "ACT_Ratio2");
     QCOMPARE(burdenRel.toFloat(), calcUBurdenSn(1, voltage, current, 1, 1, 1));
-    burdenRel = storageHash->getStoredValue(dftBurdenVoltageId, "ACT_Ratio3");
+    burdenRel = veinStorage->getStoredValue(dftBurdenVoltageId, "ACT_Ratio3");
     QCOMPARE(burdenRel.toFloat(), calcUBurdenSn(1, voltage, current, 1, 1, 1));
 
     QVariant calcAngle;
-    calcAngle = storageHash->getStoredValue(dftBurdenVoltageId, "ACT_PFactor1");
+    calcAngle = veinStorage->getStoredValue(dftBurdenVoltageId, "ACT_PFactor1");
     QCOMPARE(calcAngle.toFloat(), 1.0);
-    calcAngle = storageHash->getStoredValue(dftBurdenVoltageId, "ACT_PFactor2");
+    calcAngle = veinStorage->getStoredValue(dftBurdenVoltageId, "ACT_PFactor2");
     QCOMPARE(calcAngle.toFloat(), 1.0);
-    calcAngle = storageHash->getStoredValue(dftBurdenVoltageId, "ACT_PFactor3");
+    calcAngle = veinStorage->getStoredValue(dftBurdenVoltageId, "ACT_PFactor3");
     QCOMPARE(calcAngle.toFloat(), 1.0);
 }
 
@@ -115,30 +115,30 @@ void test_burden1_module_regression::voltageBurden100V1A60DefaultSettings()
     dspInterfaces[0]->fireActValInterrupt(dspValues.getDspValues(), 0);
     TimeMachineObject::feedEventLoop();
 
-    VeinStorage::VeinHash* storageHash = testRunner.getVeinStorageSystem();
+    VeinEvent::StorageSystem* veinStorage = testRunner.getVeinStorageSystem();
 
     QVariant burden;
-    burden = storageHash->getStoredValue(dftBurdenVoltageId, "ACT_Burden1");
+    burden = veinStorage->getStoredValue(dftBurdenVoltageId, "ACT_Burden1");
     QCOMPARE(burden.toFloat(), calcUBurdenSb(voltage, current, 1, 1, 1));
-    burden = storageHash->getStoredValue(dftBurdenVoltageId, "ACT_Burden2");
+    burden = veinStorage->getStoredValue(dftBurdenVoltageId, "ACT_Burden2");
     QCOMPARE(burden.toFloat(), calcUBurdenSb(voltage, current, 1, 1, 1));
-    burden = storageHash->getStoredValue(dftBurdenVoltageId, "ACT_Burden3");
+    burden = veinStorage->getStoredValue(dftBurdenVoltageId, "ACT_Burden3");
     QCOMPARE(burden.toFloat(), calcUBurdenSb(voltage, current, 1, 1, 1));
 
     QVariant burdenRel;
-    burdenRel = storageHash->getStoredValue(dftBurdenVoltageId, "ACT_Ratio1");
+    burdenRel = veinStorage->getStoredValue(dftBurdenVoltageId, "ACT_Ratio1");
     QCOMPARE(burdenRel.toFloat(), calcUBurdenSn(1, voltage, current, 1, 1, 1));
-    burdenRel = storageHash->getStoredValue(dftBurdenVoltageId, "ACT_Ratio2");
+    burdenRel = veinStorage->getStoredValue(dftBurdenVoltageId, "ACT_Ratio2");
     QCOMPARE(burdenRel.toFloat(), calcUBurdenSn(1, voltage, current, 1, 1, 1));
-    burdenRel = storageHash->getStoredValue(dftBurdenVoltageId, "ACT_Ratio3");
+    burdenRel = veinStorage->getStoredValue(dftBurdenVoltageId, "ACT_Ratio3");
     QCOMPARE(burdenRel.toFloat(), calcUBurdenSn(1, voltage, current, 1, 1, 1));
 
     QVariant calcAngle;
-    calcAngle = storageHash->getStoredValue(dftBurdenVoltageId, "ACT_PFactor1");
+    calcAngle = veinStorage->getStoredValue(dftBurdenVoltageId, "ACT_PFactor1");
     QCOMPARE(calcAngle.toFloat(), calcCos(angle));
-    calcAngle = storageHash->getStoredValue(dftBurdenVoltageId, "ACT_PFactor2");
+    calcAngle = veinStorage->getStoredValue(dftBurdenVoltageId, "ACT_PFactor2");
     QCOMPARE(calcAngle.toFloat(), calcCos(angle));
-    calcAngle = storageHash->getStoredValue(dftBurdenVoltageId, "ACT_PFactor3");
+    calcAngle = veinStorage->getStoredValue(dftBurdenVoltageId, "ACT_PFactor3");
     QCOMPARE(calcAngle.toFloat(), calcCos(angle));
 }
 

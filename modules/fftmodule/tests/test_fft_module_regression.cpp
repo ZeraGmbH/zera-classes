@@ -13,19 +13,19 @@ static int constexpr fftEntityId = 1060;
 void test_fft_module_regression::minimalSession()
 {
     ModuleManagerTestRunner testRunner(":/session-minimal.json"); // moving window is off at the time of writing
-    VeinStorage::VeinHash* storageHash = testRunner.getVeinStorageSystem();
-    QList<int> entityList = storageHash->getEntityList();
+    VeinEvent::StorageSystem* veinStorage = testRunner.getVeinStorageSystem();
+    QList<int> entityList = veinStorage->getEntityList();
     QCOMPARE(entityList.count(), 2);
-    QVERIFY(storageHash->hasEntity(fftEntityId));
+    QVERIFY(veinStorage->hasEntity(fftEntityId));
 }
 
 void test_fft_module_regression::moduleConfigFromResource()
 {
     ModuleManagerTestRunner testRunner(":/session-from-resource.json");
-    VeinStorage::VeinHash* storageHash = testRunner.getVeinStorageSystem();
-    QList<int> entityList = storageHash->getEntityList();
+    VeinEvent::StorageSystem* veinStorage = testRunner.getVeinStorageSystem();
+    QList<int> entityList = veinStorage->getEntityList();
     QCOMPARE(entityList.count(), 2);
-    QVERIFY(storageHash->hasEntity(fftEntityId));
+    QVERIFY(veinStorage->hasEntity(fftEntityId));
 }
 
 void test_fft_module_regression::veinDumpInitial()
@@ -35,10 +35,10 @@ void test_fft_module_regression::veinDumpInitial()
     QString jsonExpected = file.readAll();
 
     ModuleManagerTestRunner testRunner(":/session-from-resource.json");
-    VeinStorage::VeinHash* storageHash = testRunner.getVeinStorageSystem();
+    VeinEvent::StorageSystem* veinStorage = testRunner.getVeinStorageSystem();
     QByteArray jsonDumped;
     QBuffer buff(&jsonDumped);
-    storageHash->dumpToFile(&buff, QList<int>() << fftEntityId);
+    veinStorage->dumpToFile(&buff, QList<int>() << fftEntityId);
 
     if(jsonExpected != jsonDumped) {
         qWarning("Expected storage hash:");
@@ -103,10 +103,10 @@ void test_fft_module_regression::injectValues()
     QVERIFY(file.open(QFile::ReadOnly));
     QString jsonExpected = file.readAll();
 
-    VeinStorage::VeinHash* storageHash = testRunner.getVeinStorageSystem();
+    VeinEvent::StorageSystem* veinStorage = testRunner.getVeinStorageSystem();
     QByteArray jsonDumped;
     QBuffer buff(&jsonDumped);
-    storageHash->dumpToFile(&buff, QList<int>() << fftEntityId);
+    veinStorage->dumpToFile(&buff, QList<int>() << fftEntityId);
 
     if(jsonExpected != jsonDumped) {
         qWarning("Expected storage hash:");
