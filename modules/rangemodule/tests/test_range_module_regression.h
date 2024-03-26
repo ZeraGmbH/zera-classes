@@ -19,8 +19,6 @@ private slots:
     void injectActualValuesWithCheatingAndRangeChanged();
     void injectIncreasingActualValuesWithCheatingEnabled();
     void injectActualValuesCheatingEnabledWithPreScaling();
-private:
-    void setVfComponent(VfCmdEventHandlerSystemPtr vfCmdEventHandlerSystem, QString componentName, QVariant oldValue, QVariant newValue);
 };
 
 #endif // TEST_RANGE_MODULE_REGRESSION_H
