@@ -1,4 +1,6 @@
 #include "modulemanagertestrunner.h"
+#include "vf_client_component_setter.h"
+#include "vf_entity_component_event_item.h"
 #include <timemachineobject.h>
 #include <vtcp_workerfactorymethodstest.h>
 
@@ -47,4 +49,15 @@ VfCmdEventHandlerSystemPtr ModuleManagerTestRunner::getVfCmdEventHandlerSystemPt
 ZeraModules::VirtualModule *ModuleManagerTestRunner::getModule(QString uniqueName, int entityId)
 {
     return m_modMan->getModule(uniqueName, entityId);
+}
+
+void ModuleManagerTestRunner::setVfComponent(VfCmdEventHandlerSystemPtr vfCmdEventHandlerSystem, int moduleId, QString componentName, QVariant oldValue, QVariant newValue)
+{
+    VfCmdEventItemEntityPtr entityItem = VfEntityComponentEventItem::create(moduleId);
+    vfCmdEventHandlerSystem->addItem(entityItem);
+
+    VfClientComponentSetterPtr setter = VfClientComponentSetter::create(componentName, entityItem);
+    entityItem->addItem(setter);
+    setter->startSetComponent(oldValue, newValue);
+    TimeMachineObject::feedEventLoop();
 }
