@@ -186,7 +186,7 @@ int main(int argc, char *argv[])
         cData->setEventOrigin(VeinEvent::EventData::EventOrigin::EO_LOCAL);
         cData->setEventTarget(VeinEvent::EventData::EventTarget::ET_LOCAL);
         cData->setCommand(VeinComponent::ComponentData::Command::CCMD_SET);
-        cData->setComponentName(ModuleManagerController::s_notificationMessagesComponentName);
+        cData->setComponentName(SystemModuleEventSystem::s_notificationMessagesComponentName);
 
         cData->setNewValue(jsonErrorObj);
 
