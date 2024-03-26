@@ -1,11 +1,8 @@
 #ifndef LICENSESYSTEM_H
 #define LICENSESYSTEM_H
 
-#include "modman_util.h"
 #include "licensesysteminterface.h"
-
 #include <ve_eventsystem.h>
-
 #include <QMap>
 #include <QHash>
 #include <QUrl>
