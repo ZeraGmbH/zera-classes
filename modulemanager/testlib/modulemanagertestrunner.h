@@ -20,6 +20,7 @@ public:
     const QList<TestDspInterfacePtr>& getDspInterfaceList() const;
     VfCmdEventHandlerSystemPtr getVfCmdEventHandlerSystemPtr();
     ZeraModules::VirtualModule *getModule(QString uniqueName, int entityId);
+    void setVfComponent(VfCmdEventHandlerSystemPtr vfCmdEventHandlerSystem, int moduleId, QString componentName, QVariant oldValue, QVariant newValue);
 private:
     std::unique_ptr<TestLicenseSystem> m_licenseSystem;
     std::unique_ptr<ModuleManagerSetupFacade> m_modmanFacade;
