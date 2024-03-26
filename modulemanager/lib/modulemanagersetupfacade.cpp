@@ -3,15 +3,15 @@
 
 ModuleManagerSetupFacade::ModuleManagerSetupFacade(LicenseSystemInterface *licenseSystem, bool devMode, QObject *parent) :
     QObject(parent),
-    m_mmController(nullptr, devMode),
+    m_systemModuleSystem(nullptr, devMode),
     m_licenseSystem(licenseSystem)
 {
     Q_ASSERT(m_licenseSystem != nullptr);
-    m_eventHandler.addSubsystem(&m_mmController);
+    m_eventHandler.addSubsystem(&m_systemModuleSystem);
     m_eventHandler.addSubsystem(&m_introspectionSystem);
     m_eventHandler.addSubsystem(&m_storSystem);
     m_eventHandler.addSubsystem(m_licenseSystem);
-    m_mmController.setStorage(&m_storSystem);
+    m_systemModuleSystem.setStorage(&m_storSystem);
 }
 
 void ModuleManagerSetupFacade::registerMetaTypeStreamOperators()
@@ -39,9 +39,9 @@ void ModuleManagerSetupFacade::clearSystems()
     m_eventHandler.clearSystems();
 }
 
-ModuleManagerController *ModuleManagerSetupFacade::getModuleManagerController()
+SystemModuleEventSystem *ModuleManagerSetupFacade::getModuleManagerController()
 {
-    return &m_mmController;
+    return &m_systemModuleSystem;
 }
 
 VeinEvent::StorageSystem *ModuleManagerSetupFacade::getStorageSystem()
