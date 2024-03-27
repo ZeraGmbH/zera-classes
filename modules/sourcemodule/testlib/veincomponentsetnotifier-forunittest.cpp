@@ -33,7 +33,7 @@ void VeinComponentSetNotifier::createEntity(int entityId)
 
 void VeinComponentSetNotifier::processEvent(QEvent *t_event)
 {
-    if(t_event->type() == VeinEvent::CommandEvent::eventType()) {
+    if(t_event->type() == VeinEvent::CommandEvent::getQEventType()) {
         VeinEvent::CommandEvent *cmdEvent = static_cast<VeinEvent::CommandEvent *>(t_event);
         if(cmdEvent != 0) {
             EventData *evData = cmdEvent->eventData();

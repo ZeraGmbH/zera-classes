@@ -94,7 +94,7 @@ CustomerDataSystem::CustomerDataSystem(QObject *parent) :
 
 void CustomerDataSystem::processEvent(QEvent *t_event)
 {
-    if(t_event->type() == VeinEvent::CommandEvent::eventType()) {
+    if(t_event->type() == VeinEvent::CommandEvent::getQEventType()) {
         VeinEvent::CommandEvent *cEvent = nullptr;
         cEvent = static_cast<VeinEvent::CommandEvent *>(t_event);
         Q_ASSERT(cEvent != nullptr);
