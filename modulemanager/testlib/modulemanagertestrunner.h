@@ -1,7 +1,7 @@
 #ifndef MODULEMANAGERTESTRUNNER_H
 #define MODULEMANAGERTESTRUNNER_H
 
-#include "licensesystemmock.h"
+#include "testlicensesystem.h"
 #include "modulemanagersetupfacade.h"
 #include "testdspinterface.h"
 #include "testfactoryserviceinterfaces.h"
@@ -21,7 +21,7 @@ public:
     VfCmdEventHandlerSystemPtr getVfCmdEventHandlerSystemPtr();
     ZeraModules::VirtualModule *getModule(QString uniqueName, int entityId);
 private:
-    std::unique_ptr<LicenseSystemMock> m_licenseSystem;
+    std::unique_ptr<TestLicenseSystem> m_licenseSystem;
     std::unique_ptr<ModuleManagerSetupFacade> m_modmanFacade;
     std::unique_ptr<TestModuleManager> m_modMan;
     TestFactoryServiceInterfacesPtr m_serviceInterfaceFactory;

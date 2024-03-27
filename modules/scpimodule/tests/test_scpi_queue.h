@@ -1,7 +1,7 @@
 #ifndef TEST_SCPI_QUEUE_H
 #define TEST_SCPI_QUEUE_H
 
-#include "licensesystemmock.h"
+#include "testlicensesystem.h"
 #include "modulemanagersetupfacade.h"
 #include "demofactoryserviceinterfaces.h"
 #include "testmodulemanager.h"
@@ -27,7 +27,7 @@ private:
     void setupServices(QString sessionFileName);
     void setReferenceChannel(QString channel);
 
-    std::unique_ptr<LicenseSystemMock> m_licenseSystem;
+    std::unique_ptr<TestLicenseSystem> m_licenseSystem;
     std::unique_ptr<ModuleManagerSetupFacade> m_modmanFacade;
     std::unique_ptr<TestModuleManager> m_modMan;
 
