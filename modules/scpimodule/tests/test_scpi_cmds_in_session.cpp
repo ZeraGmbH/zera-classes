@@ -1,5 +1,5 @@
 #include "test_scpi_cmds_in_session.h"
-#include "licensesystemmock.h"
+#include "testlicensesystem.h"
 #include "modulemanagertestrunner.h"
 #include "testmodulemanager.h"
 #include "testfactoryserviceinterfaces.h"

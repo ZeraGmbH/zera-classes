@@ -1,5 +1,5 @@
 #include "test_modman_regression_all_sessions.h"
-#include "licensesystemmock.h"
+#include "testlicensesystem.h"
 #include "modulemanager.h"
 #include "moduledata.h"
 #include "modulemanagerconfig.h"
@@ -51,7 +51,7 @@ int test_modman_regression_all_sessions::generateCodeLists(QString device)
     ModulemanagerConfig::setDemoDevice(device, true);
     ModulemanagerConfig* mmConfig = ModulemanagerConfig::getInstance();
     QStringList sessions = mmConfig->getAvailableSessions();
-    LicenseSystemMock licenseSystem;
+    TestLicenseSystem licenseSystem;
     ModuleManagerSetupFacade modManSetupFacade(&licenseSystem);
     TestModuleManager modMan(&modManSetupFacade, m_serviceInterfaceFactory);
     modMan.loadAllAvailableModulePlugins();
@@ -76,7 +76,7 @@ QStringList test_modman_regression_all_sessions::generateCodeLinesForDeviceSessi
 {
     QStringList codeLines;
     codeLines.append(QString("// ------ Start auto generated code for %1 ----").arg(session));
-    codeLines.append("LicenseSystemMock licenseSystem;");
+    codeLines.append("TestLicenseSystem licenseSystem;");
     codeLines.append("ModuleManagerSetupFacade modManSetupFacade(&licenseSystem);");
     codeLines.append("");
     codeLines.append("TestModuleManager modMan(&modManSetupFacade, m_serviceInterfaceFactory);");
@@ -132,7 +132,7 @@ void test_modman_regression_all_sessions::loadAllSessionsAndOutputRegressionTest
 void test_modman_regression_all_sessions::regressionCom5003Ced()
 {
     // ------ Start auto generated code for com5003-ced-session.json ----
-    LicenseSystemMock licenseSystem;
+    TestLicenseSystem licenseSystem;
     ModuleManagerSetupFacade modManSetupFacade(&licenseSystem);
 
     TestModuleManager modMan(&modManSetupFacade, m_serviceInterfaceFactory);
@@ -236,7 +236,7 @@ void test_modman_regression_all_sessions::regressionCom5003Ced()
 void test_modman_regression_all_sessions::regressionCom5003Meas()
 {
     // ------ Start auto generated code for com5003-meas-session.json ----
-    LicenseSystemMock licenseSystem;
+    TestLicenseSystem licenseSystem;
     ModuleManagerSetupFacade modManSetupFacade(&licenseSystem);
 
     TestModuleManager modMan(&modManSetupFacade, m_serviceInterfaceFactory);
@@ -352,7 +352,7 @@ void test_modman_regression_all_sessions::regressionCom5003Meas()
 void test_modman_regression_all_sessions::regressionCom5003PerPhase()
 {
     // ------ Start auto generated code for com5003-perphase-session.json ----
-    LicenseSystemMock licenseSystem;
+    TestLicenseSystem licenseSystem;
     ModuleManagerSetupFacade modManSetupFacade(&licenseSystem);
 
     TestModuleManager modMan(&modManSetupFacade, m_serviceInterfaceFactory);
@@ -472,7 +472,7 @@ void test_modman_regression_all_sessions::regressionCom5003PerPhase()
 void test_modman_regression_all_sessions::regressionCom5003Ref()
 {
     // ------ Start auto generated code for com5003-ref-session.json ----
-    LicenseSystemMock licenseSystem;
+    TestLicenseSystem licenseSystem;
     ModuleManagerSetupFacade modManSetupFacade(&licenseSystem);
 
     TestModuleManager modMan(&modManSetupFacade, m_serviceInterfaceFactory);
@@ -524,7 +524,7 @@ void test_modman_regression_all_sessions::regressionCom5003Ref()
 void test_modman_regression_all_sessions::regressionMt310s2Ced()
 {
     // ------ Start auto generated code for mt310s2-ced-session.json ----
-    LicenseSystemMock licenseSystem;
+    TestLicenseSystem licenseSystem;
     ModuleManagerSetupFacade modManSetupFacade(&licenseSystem);
 
     TestModuleManager modMan(&modManSetupFacade, m_serviceInterfaceFactory);
@@ -624,7 +624,7 @@ void test_modman_regression_all_sessions::regressionMt310s2Ced()
 void test_modman_regression_all_sessions::regressionMt310s2Dc()
 {
     // ------ Start auto generated code for mt310s2-dc-session.json ----
-    LicenseSystemMock licenseSystem;
+    TestLicenseSystem licenseSystem;
     ModuleManagerSetupFacade modManSetupFacade(&licenseSystem);
 
     TestModuleManager modMan(&modManSetupFacade, m_serviceInterfaceFactory);
@@ -732,7 +732,7 @@ void test_modman_regression_all_sessions::regressionMt310s2Dc()
 void test_modman_regression_all_sessions::regressionMt310s2EmobAc()
 {
     // ------ Start auto generated code for mt310s2-emob-session-ac.json ----
-    LicenseSystemMock licenseSystem;
+    TestLicenseSystem licenseSystem;
     ModuleManagerSetupFacade modManSetupFacade(&licenseSystem);
 
     TestModuleManager modMan(&modManSetupFacade, m_serviceInterfaceFactory);
@@ -836,7 +836,7 @@ void test_modman_regression_all_sessions::regressionMt310s2EmobAc()
 void test_modman_regression_all_sessions::regressionMt310s2EmobDc()
 {
     // ------ Start auto generated code for mt310s2-emob-session-dc.json ----
-    LicenseSystemMock licenseSystem;
+    TestLicenseSystem licenseSystem;
     ModuleManagerSetupFacade modManSetupFacade(&licenseSystem);
 
     TestModuleManager modMan(&modManSetupFacade, m_serviceInterfaceFactory);
@@ -924,7 +924,7 @@ void test_modman_regression_all_sessions::regressionMt310s2EmobDc()
 void test_modman_regression_all_sessions::regressionMt310s2EmobAcDc()
 {
     // ------ Start auto generated code for mt310s2-emob-session.json ----
-    LicenseSystemMock licenseSystem;
+    TestLicenseSystem licenseSystem;
     ModuleManagerSetupFacade modManSetupFacade(&licenseSystem);
 
     TestModuleManager modMan(&modManSetupFacade, m_serviceInterfaceFactory);
@@ -1032,7 +1032,7 @@ void test_modman_regression_all_sessions::regressionMt310s2EmobAcDc()
 void test_modman_regression_all_sessions::regressionMt310s2Meas()
 {
     // ------ Start auto generated code for mt310s2-meas-session.json ----
-    LicenseSystemMock licenseSystem;
+    TestLicenseSystem licenseSystem;
     ModuleManagerSetupFacade modManSetupFacade(&licenseSystem);
 
     TestModuleManager modMan(&modManSetupFacade, m_serviceInterfaceFactory);

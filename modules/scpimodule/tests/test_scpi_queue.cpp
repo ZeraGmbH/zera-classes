@@ -189,7 +189,7 @@ QByteArray test_scpi_queue::loadConfig(QString configFileNameFull)
 
 void test_scpi_queue::setupServices(QString sessionFileName)
 {
-    m_licenseSystem = std::make_unique<LicenseSystemMock>();
+    m_licenseSystem = std::make_unique<TestLicenseSystem>();
     m_modmanFacade = std::make_unique<ModuleManagerSetupFacade>(m_licenseSystem.get());
     m_modMan = std::make_unique<TestModuleManager>(m_modmanFacade.get(), m_serviceInterfaceFactory);
     m_modMan->loadAllAvailableModulePlugins();
