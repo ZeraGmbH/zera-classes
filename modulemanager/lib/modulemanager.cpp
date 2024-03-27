@@ -180,7 +180,7 @@ void ModuleManager::startModule(const QString & uniqueModuleName, const QString 
 
 void ModuleManager::destroyModules()
 {
-    m_setupFacade->clearSystems();
+    m_setupFacade->clearModuleSystems();
     if(!m_moduleList.isEmpty()) {
         m_moduleStartLock = true;
         QElapsedTimer destroyTimer;
@@ -292,7 +292,7 @@ void ModuleManager::onModuleStartNext()
 
 void ModuleManager::onModuleEventSystemAdded(VeinEvent::EventSystem *t_eventSystem)
 {
-    m_setupFacade->addSystem(t_eventSystem);
+    m_setupFacade->addModuleSystem(t_eventSystem);
 }
 
 void ModuleManager::startAllDemoServices(QString deviceName)
