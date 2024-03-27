@@ -120,12 +120,6 @@ int main(int argc, char *argv[])
         return new VeinLogger::SQLiteDB();
     };
 
-#ifdef DEVICE_ARBITRATION
-    //priority based arbitration
-    PriorityArbitrationSystem *arbitrationSystem = new PriorityArbitrationSystem(app.get());
-    evHandler->setArbitrationSystem(arbitrationSystem);
-#endif
-
     QString licenseUrl = QString("file://%1/license-keys").arg(OPERATOR_HOME);
     LicenseSystem *licenseSystem = new LicenseSystem({QUrl(licenseUrl)}, app.get());
     ModuleManagerSetupFacade *modManSetupFacade = new ModuleManagerSetupFacade(licenseSystem, mmConfig->isDevMode(), app.get());
