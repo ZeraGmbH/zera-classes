@@ -612,7 +612,6 @@ constexpr QLatin1String CustomerDataSystem::s_customerDataRemoveProcedureDescrip
 constexpr QLatin1String CustomerDataSystem::s_customerDataSearchProcedureName;
 constexpr QLatin1String CustomerDataSystem::s_customerDataSearchProcedureDescription;
 constexpr QLatin1String CustomerDataSystem::s_customerDataSearchResultText;
-constexpr QLatin1String CustomerDataSystem::s_cusomerDataRpcProgress;
 //base
 constexpr QLatin1String CustomerDataSystem::s_baseIdentifierComponentName;
 constexpr QLatin1String CustomerDataSystem::s_baseIdentifierComponentDescription;
