@@ -117,10 +117,10 @@ void ModuleManager::setupConnections()
     QObject::connect(&m_sessionLoader, &JsonSessionLoader::sigLoadModule, this, &ZeraModules::ModuleManager::startModule);
     QObject::connect(this, &ZeraModules::ModuleManager::sigSessionSwitched, &m_sessionLoader, &JsonSessionLoader::loadSession);
 
-    m_setupFacade->getModuleManagerController()->initOnce();
-    QObject::connect(this, &ZeraModules::ModuleManager::sigModulesLoaded, m_setupFacade->getModuleManagerController(), &SystemModuleEventSystem::initializeEntity);
-    QObject::connect(m_setupFacade->getModuleManagerController(), &SystemModuleEventSystem::sigChangeSession, this, &ZeraModules::ModuleManager::changeSessionFile);
-    QObject::connect(m_setupFacade->getModuleManagerController(), &SystemModuleEventSystem::sigModulesPausedChanged, this, &ZeraModules::ModuleManager::setModulesPaused);
+    m_setupFacade->getSystemModuleEventSystem()->initOnce();
+    QObject::connect(this, &ZeraModules::ModuleManager::sigModulesLoaded, m_setupFacade->getSystemModuleEventSystem(), &SystemModuleEventSystem::initializeEntity);
+    QObject::connect(m_setupFacade->getSystemModuleEventSystem(), &SystemModuleEventSystem::sigChangeSession, this, &ZeraModules::ModuleManager::changeSessionFile);
+    QObject::connect(m_setupFacade->getSystemModuleEventSystem(), &SystemModuleEventSystem::sigModulesPausedChanged, this, &ZeraModules::ModuleManager::setModulesPaused);
 }
 
 void ModuleManager::loadDefaultSession()
