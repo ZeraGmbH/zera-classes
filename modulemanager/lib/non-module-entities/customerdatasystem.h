@@ -103,7 +103,6 @@ private:
     VF_RPC(customerDataSearch, "customerDataSearch(QVariantMap searchMap)", "searchMap: regular expression values in the map are tested against all files")
     void customerDataSearch(const QUuid &t_callId, const QVariantMap &t_parameters);
     static constexpr QLatin1String s_customerDataSearchResultText = modman_util::to_latin1("CustomerDataSystem::searchResult");
-    static constexpr QLatin1String s_cusomerDataRpcProgress = modman_util::to_latin1("CustomerDataSystem::progress");
     //base
     VF_COMPONENT(baseIdentifier, "PAR_DatasetIdentifier", "Unique identifier")
     VF_COMPONENT(baseComment, "PAR_DatasetComment", "Free form text comment")
