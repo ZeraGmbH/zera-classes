@@ -64,8 +64,6 @@ void cPower3Module::setupModule()
     connect(m_pMeasProgram, &cPower3ModuleMeasProgram::deactivated, this, &cPower3Module::deactivationContinue);
     connect(m_pMeasProgram, &cPower3ModuleMeasProgram::errMsg, m_pModuleErrorComponent, &VfModuleErrorComponent::setValue);
 
-    emit addEventSystem(m_pMeasProgram->getEventSystem());
-
     for (int i = 0; i < m_ModuleActivistList.count(); i++)
         m_ModuleActivistList.at(i)->generateInterface();
 }

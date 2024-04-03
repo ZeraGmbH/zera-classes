@@ -292,7 +292,8 @@ void cTransformer1ModuleMeasProgram::searchActualValues()
         emit activationError();
     else
     {
-        m_pEventSystem->setInputList(inputList);
+        emit m_pModule->addEventSystem(&m_veinIntputEventSystem);
+        m_veinIntputEventSystem.setInputList(inputList);
         emit activationContinue();
     }
 }

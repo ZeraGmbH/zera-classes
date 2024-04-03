@@ -321,8 +321,10 @@ void cPower1ModuleMeasProgram::generateInterface()
         QPair<VfModuleComponentInput*,VfModuleComponentInput*> tmpScalePair(pUScaleInput,pIScaleInput);
         m_pScalingInputs.append(tmpScalePair);
     }
-    m_pModule->getPEventSystem()->setInputList(inputList);
-    for(QPair<VfModuleComponentInput*,VfModuleComponentInput*> ele : m_pScalingInputs){
+    emit m_pModule->addEventSystem(&m_veinIntputEventSystem);
+    m_veinIntputEventSystem.setInputList(inputList);
+
+    for(QPair<VfModuleComponentInput*,VfModuleComponentInput*> ele : m_pScalingInputs) {
         if(ele.first != nullptr && ele.second != nullptr){
             connect(ele.first,&VfModuleComponentInput::sigValueChanged,this,&cPower1ModuleMeasProgram::updatePreScaling);
             connect(ele.second,&VfModuleComponentInput::sigValueChanged,this,&cPower1ModuleMeasProgram::updatePreScaling);
