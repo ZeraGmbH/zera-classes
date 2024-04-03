@@ -63,8 +63,6 @@ void cLambdaModule::setupModule()
     connect(m_pMeasProgram, &cLambdaModuleMeasProgram::deactivated, this, &cLambdaModule::deactivationContinue);
     connect(m_pMeasProgram, &cLambdaModuleMeasProgram::errMsg, m_pModuleErrorComponent, &VfModuleErrorComponent::setValue);
 
-    emit addEventSystem(m_pMeasProgram->getEventSystem());
-
     for (int i = 0; i < m_ModuleActivistList.count(); i++)
         m_ModuleActivistList.at(i)->generateInterface();
 }

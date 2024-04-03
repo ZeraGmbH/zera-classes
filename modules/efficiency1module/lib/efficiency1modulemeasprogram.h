@@ -41,6 +41,7 @@ private:
     cEfficiency1ModuleConfigData* getConfData();
 
     cEfficiency1Module* m_pModule;
+    VfEventSystemInputComponents m_veinIntputEventSystem;
     QList<VfModuleActvalue*> m_veinActValueList; // the list of actual values we work on
     VfModuleMetaData* m_pEFFCountInfo; // the number of values we produce
     VfModuleComponent* m_pMeasureSignal;

@@ -61,8 +61,6 @@ void cAdjustmentModule::setupModule()
     connect(m_pMeasProgram, &cAdjustmentModuleMeasProgram::deactivated, this, &cAdjustmentModule::deactivationContinue);
     connect(m_pMeasProgram, &cAdjustmentModuleMeasProgram::errMsg, m_pModuleErrorComponent, &VfModuleErrorComponent::setValue);
 
-    emit addEventSystem(m_pMeasProgram->getEventSystem());
-
     for (int i = 0; i < m_ModuleActivistList.count(); i++)
         m_ModuleActivistList.at(i)->generateInterface();
 }

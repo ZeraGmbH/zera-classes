@@ -9,7 +9,6 @@ namespace POWER1MODULE
 cPower1Module::cPower1Module(MeasurementModuleFactoryParam moduleParam) :
     cBaseMeasModule(moduleParam, std::shared_ptr<cBaseModuleConfiguration>(new cPower1ModuleConfiguration()))
 {
-    m_inputComponentEventSystem = new VfEventSystemInputComponents;
     m_sModuleName = QString("%1%2").arg(BaseModuleName).arg(moduleParam.m_moduleNum);
     m_sModuleDescription = QString("This module measures power with configured measuring and integration modes");
     m_sSCPIModuleName = QString("%1%2").arg(BaseSCPIModuleName).arg(moduleParam.m_moduleNum);
@@ -49,15 +48,9 @@ QByteArray cPower1Module::getConfiguration() const
     return m_pConfiguration->exportConfiguration();
 }
 
-VfEventSystemInputComponents *cPower1Module::getPEventSystem() const
-{
-    return m_inputComponentEventSystem;
-}
-
 void cPower1Module::setupModule()
 {
     emit addEventSystem(m_pModuleValidator);
-    emit addEventSystem(m_inputComponentEventSystem);// Add Eventsystem for input components as raw pointer
     cBaseMeasModule::setupModule();
 
     // we need some program that does the measuring on dsp

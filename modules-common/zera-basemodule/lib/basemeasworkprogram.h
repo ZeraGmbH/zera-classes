@@ -10,8 +10,6 @@ class cBaseMeasWorkProgram: public cModuleActivist
     Q_OBJECT
 public:
     cBaseMeasWorkProgram(std::shared_ptr<cBaseModuleConfiguration> pConfiguration);
-    virtual ~cBaseMeasWorkProgram();
-    VfEventSystemInputComponents* getEventSystem();
 signals:
     void actualValues(QVector<float>*);
 public slots:
@@ -19,7 +17,6 @@ public slots:
     virtual void stop() = 0; // in interface are not updated when stop
 protected:
     QVector<float> m_ModuleActualValues; // a modules actual values
-    VfEventSystemInputComponents *m_pEventSystem;
     std::shared_ptr<cBaseModuleConfiguration> m_pConfiguration;
 };
 

@@ -5,6 +5,7 @@
 #include "power1moduleconfigdata.h"
 #include "power1dspvargenerator.h"
 #include "dspchainidgen.h"
+#include "vfeventsysteminputcomponents.h"
 #include <stringvalidator.h>
 #include <measchannelinfo.h>
 #include <measmodeselector.h>
@@ -107,6 +108,7 @@ private:
     QStringList setupMeasModes(DspChainIdGen &dspChainGen);
 
     cPower1Module* m_pModule;
+    VfEventSystemInputComponents m_veinIntputEventSystem;
     MeasModeSelector m_measModeSelector;
     QHash<QString, cMeasChannelInfo> m_measChannelInfoHash;
     QHash<QString, cFoutInfo> m_FoutInfoHash; // a list with frequency output information for each channel

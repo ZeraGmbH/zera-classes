@@ -136,7 +136,8 @@ void cEfficiency1ModuleMeasProgram::searchActualValues()
             connect(vmci, &VfModuleComponentInput::sigValueChanged, cEMD, &cEfficiency1MeasDelegate::actValueInput2);
         }
 
-        m_pEventSystem->setInputList(vmciList);
+        emit m_pModule->addEventSystem(&m_veinIntputEventSystem);
+        m_veinIntputEventSystem.setInputList(vmciList);
         emit activationContinue();
     }
 
