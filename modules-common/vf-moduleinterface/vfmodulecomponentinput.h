@@ -9,17 +9,16 @@ class VfModuleComponentInput: public QObject
     Q_OBJECT
 
 public:
-    VfModuleComponentInput(int entityid, QString name) :
-        m_nEntityId(entityid),
-        m_sName(name) { }
-    int m_nEntityId;
-    QString m_sName;
+    VfModuleComponentInput(int entityid, QString name);
+    const int m_nEntityId;
+    const QString m_sName;
     QVariant value() const;
     void setValue(const QVariant &value);
-private:
-    QVariant m_value;
 signals:
     void sigValueChanged(QVariant);
+private:
+    friend class VfEventSystemInputComponents;
+    QVariant m_value;
 };
 
 #endif // VEINMODULECOMPONENTINPUT
