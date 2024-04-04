@@ -174,22 +174,16 @@ void cBurden1ModuleMeasProgram::generateInterface()
 
 void cBurden1ModuleMeasProgram::searchActualValues()
 {
-    bool error;
-
-    error = false;
+    bool error = false;
     QList<VfModuleComponentInput*> inputList;
-
-    for (int i = 0; i < getConfData()->m_nBurdenSystemCount; i++)
-    {
+    for (int i = 0; i < getConfData()->m_nBurdenSystemCount; i++) {
         // we first test that wanted input components exist
         if ( (m_pModule->getStorageSystem()->hasStoredValue(getConfData()->m_nModuleId, getConfData()->m_BurdenSystemConfigList.at(i).m_sInputVoltageVector)) &&
-             (m_pModule->getStorageSystem()->hasStoredValue(getConfData()->m_nModuleId, getConfData()->m_BurdenSystemConfigList.at(i).m_sInputCurrentVector)) )
-        {
+             (m_pModule->getStorageSystem()->hasStoredValue(getConfData()->m_nModuleId, getConfData()->m_BurdenSystemConfigList.at(i).m_sInputCurrentVector)) ) {
             cBurden1MeasDelegate* cBMD;
             VfModuleComponentInput* vmci;
 
-            if (i == (getConfData()->m_nBurdenSystemCount-1))
-            {
+            if (i == (getConfData()->m_nBurdenSystemCount-1)) {
                 cBMD = new cBurden1MeasDelegate(m_veinActValueList.at(i*3), m_veinActValueList.at(i*3+1), m_veinActValueList.at(i*3+2), getConfData()->m_Unit, true);
                 connect(cBMD, &cBurden1MeasDelegate::measuring, this, &cBurden1ModuleMeasProgram::setMeasureSignal);
             }
@@ -212,8 +206,7 @@ void cBurden1ModuleMeasProgram::searchActualValues()
 
     if (error)
         emit activationError();
-    else
-    {
+    else {
         emit m_pModule->addEventSystem(&m_veinIntputEventSystem);
         m_veinIntputEventSystem.setInputList(inputList);
         emit activationContinue();
