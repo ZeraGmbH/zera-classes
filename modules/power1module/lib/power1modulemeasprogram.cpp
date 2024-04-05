@@ -275,8 +275,6 @@ void cPower1ModuleMeasProgram::generateInterface()
 
     VfModuleParameter* pFoutParameter;
 
-    QList<VfModuleComponentInput*> inputList;
-
     for (int i = 0; i < getConfData()->m_nFreqOutputCount; i++) {
         // Note: Although components are 'PAR_' they are not changable currently
         pFoutParameter = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
@@ -299,35 +297,27 @@ void cPower1ModuleMeasProgram::generateInterface()
 
         // This code seems to identify fout channels using the list positions.
         // If no scaling Information is provided we will add null pointers to keep the positions correct
-        VfModuleComponentInput* pUScaleInput=nullptr;
-        VfModuleComponentInput* pIScaleInput=nullptr;
-        if(getConfData()->m_FreqOutputConfList.length() > i){
-            int entityId=getConfData()->m_FreqOutputConfList.at(i).m_uscale.m_entityId;
-            QString componentName=getConfData()->m_FreqOutputConfList.at(i).m_uscale.m_componentName;
-            if(entityId != -1 && componentName != ""){
-                pUScaleInput= new VfModuleComponentInput(entityId,componentName);
-                pUScaleInput->setValue(1);
-                inputList.append(pUScaleInput);
-            }
-            entityId=getConfData()->m_FreqOutputConfList.at(i).m_iscale.m_entityId;
-            componentName=getConfData()->m_FreqOutputConfList.at(i).m_iscale.m_componentName;
+        VeinEvent::StorageComponentInterfacePtr scaleInputU;
+        VeinEvent::StorageComponentInterfacePtr scaleInputI;
+        if(getConfData()->m_FreqOutputConfList.length() > i) {
+            int entityIdScaleU = getConfData()->m_FreqOutputConfList.at(i).m_uscale.m_entityId;
+            QString componentNameScaleU = getConfData()->m_FreqOutputConfList.at(i).m_uscale.m_componentName;
+            scaleInputU = m_pModule->getStorageSystem()->getComponent(entityIdScaleU, componentNameScaleU);
 
-            if(entityId != -1 && componentName != ""){
-                pIScaleInput= new VfModuleComponentInput(entityId,componentName);
-                pIScaleInput->setValue(1);
-                inputList.append(pIScaleInput);
-            }
+            int entityIdScaleI = getConfData()->m_FreqOutputConfList.at(i).m_iscale.m_entityId;
+            QString componentNameScaleI = getConfData()->m_FreqOutputConfList.at(i).m_iscale.m_componentName;
+            scaleInputI = m_pModule->getStorageSystem()->getComponent(entityIdScaleI, componentNameScaleI);
         }
-        QPair<VfModuleComponentInput*,VfModuleComponentInput*> tmpScalePair(pUScaleInput,pIScaleInput);
-        m_pScalingInputs.append(tmpScalePair);
+        QPair<VeinEvent::StorageComponentInterfacePtr, VeinEvent::StorageComponentInterfacePtr> tmpScalePair(scaleInputU, scaleInputI);
+        m_scalingInputs.append(tmpScalePair);
     }
-    emit m_pModule->addEventSystem(&m_veinIntputEventSystem);
-    m_veinIntputEventSystem.setInputList(inputList);
 
-    for(QPair<VfModuleComponentInput*,VfModuleComponentInput*> ele : m_pScalingInputs) {
+    for(QPair<VeinEvent::StorageComponentInterfacePtr,VeinEvent::StorageComponentInterfacePtr> ele : m_scalingInputs) {
         if(ele.first != nullptr && ele.second != nullptr){
-            connect(ele.first,&VfModuleComponentInput::sigValueChanged,this,&cPower1ModuleMeasProgram::updatePreScaling);
-            connect(ele.second,&VfModuleComponentInput::sigValueChanged,this,&cPower1ModuleMeasProgram::updatePreScaling);
+            connect(ele.first.get(), &VeinEvent::StorageComponentInterface::sigValueChange,
+                    this, &cPower1ModuleMeasProgram::updatePreScaling);
+            connect(ele.second.get(), &VeinEvent::StorageComponentInterface::sigValueChange,
+                    this, &cPower1ModuleMeasProgram::updatePreScaling);
         }
     }
 
@@ -1511,10 +1501,12 @@ void cPower1ModuleMeasProgram::foutParamsToDsp()
             cFoutInfo fi = m_FoutInfoHash[getConfData()->m_FreqOutputConfList.at(i).m_sName];
             frScale = fi.formFactor * constantImpulsePerWs;
 
-            if(m_pScalingInputs.length() > i){
-                if(m_pScalingInputs.at(i).first != nullptr && m_pScalingInputs.at(i).second != nullptr){
-                    double scale=m_pScalingInputs.at(i).first->value().toDouble()*m_pScalingInputs.at(i).second->value().toDouble();
-                    frScale=frScale*scale;
+            if(m_scalingInputs.length() > i) {
+                if(m_scalingInputs.at(i).first && m_scalingInputs.at(i).second) {
+                    double scaleU = m_scalingInputs.at(i).first->getValue().toDouble();
+                    double scaleI = m_scalingInputs.at(i).second->getValue().toDouble();
+                    double scaleTotal = scaleU * scaleI;
+                    frScale = frScale * scaleTotal;
                 }
             }
             datalist += QString("%1,").arg(frScale, 0, 'g', 7);
@@ -1528,10 +1520,12 @@ void cPower1ModuleMeasProgram::foutParamsToDsp()
     double constantImpulsePerKwh = 3600.0 * 1000.0 * constantImpulsePerWs; // imp./kwh
     for (int i = 0; i < getConfData()->m_nFreqOutputCount; i++) {
         // calculate prescaling factor for Fout
-        if(m_pScalingInputs.length() > i){
-            if(m_pScalingInputs.at(i).first != nullptr && m_pScalingInputs.at(i).second != nullptr){
-                double scale = m_pScalingInputs.at(i).first->value().toDouble() * m_pScalingInputs.at(i).second->value().toDouble();
-                constantImpulsePerKwh = constantImpulsePerKwh * scale;
+        if(m_scalingInputs.length() > i) {
+            if(m_scalingInputs.at(i).first && m_scalingInputs.at(i).second){
+                double scaleU = m_scalingInputs.at(i).first->getValue().toDouble();
+                double scaleI = m_scalingInputs.at(i).second->getValue().toDouble();
+                double scaleTotal = scaleU * scaleI;
+                constantImpulsePerKwh = constantImpulsePerKwh * scaleTotal;
             }
         }
         QString key = getConfData()->m_FreqOutputConfList.at(i).m_sName;
