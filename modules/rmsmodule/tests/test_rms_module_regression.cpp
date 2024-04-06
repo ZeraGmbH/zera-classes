@@ -4,6 +4,7 @@
 #include "rmsmoduleconfiguration.h"
 #include "modulemanagertestrunner.h"
 #include <timemachineobject.h>
+#include <testdumpreporter.h>
 #include <QBuffer>
 #include <QTest>
 
@@ -33,7 +34,7 @@ void test_rms_module_regression::veinDumpInitial()
 {
     QFile file(":/dumpInitial.json");
     QVERIFY(file.open(QFile::ReadOnly));
-    QString jsonExpected = file.readAll();
+    QByteArray jsonExpected = file.readAll();
 
     ModuleManagerTestRunner testRunner(":/session-rms-moduleconfig-from-resource.json");
     VeinEvent::StorageSystem* veinStorage = testRunner.getVeinStorageSystem();
@@ -41,13 +42,7 @@ void test_rms_module_regression::veinDumpInitial()
     QBuffer buff(&jsonDumped);
     veinStorage->dumpToFile(&buff, QList<int>() << rmsEntityId);
 
-    if(jsonExpected != jsonDumped) {
-        qWarning("Expected storage hash:");
-        qInfo("%s", qPrintable(jsonExpected));
-        qWarning("Dumped storage hash:");
-        qInfo("%s", qPrintable(jsonDumped));
-        QCOMPARE(jsonExpected, jsonDumped);
-    }
+    QVERIFY(TestDumpReporter::compareAndLogOnDiff(jsonExpected, jsonDumped));
 }
 
 static constexpr int voltagePhaseNeutralCount = 4;
@@ -82,20 +77,14 @@ void test_rms_module_regression::injectActualValues()
 
     QFile file(":/dumpActual.json");
     QVERIFY(file.open(QFile::ReadOnly));
-    QString jsonExpected = file.readAll();
+    QByteArray jsonExpected = file.readAll();
 
     VeinEvent::StorageSystem* veinStorage = testRunner.getVeinStorageSystem();
     QByteArray jsonDumped;
     QBuffer buff(&jsonDumped);
     veinStorage->dumpToFile(&buff, QList<int>() << rmsEntityId);
 
-    if(jsonExpected != jsonDumped) {
-        qWarning("Expected storage hash:");
-        qInfo("%s", qPrintable(jsonExpected));
-        qWarning("Dumped storage hash:");
-        qInfo("%s", qPrintable(jsonDumped));
-        QCOMPARE(jsonExpected, jsonDumped);
-    }
+    QVERIFY(TestDumpReporter::compareAndLogOnDiff(jsonExpected, jsonDumped));
 }
 
 void test_rms_module_regression::injectActualTwice()
@@ -137,18 +126,12 @@ void test_rms_module_regression::injectSymmetricValues()
 
     QFile file(":/dumpSymmetric.json");
     QVERIFY(file.open(QFile::ReadOnly));
-    QString jsonExpected = file.readAll();
+    QByteArray jsonExpected = file.readAll();
 
     VeinEvent::StorageSystem* veinStorage = testRunner.getVeinStorageSystem();
     QByteArray jsonDumped;
     QBuffer buff(&jsonDumped);
     veinStorage->dumpToFile(&buff, QList<int>() << rmsEntityId);
 
-    if(jsonExpected != jsonDumped) {
-        qWarning("Expected storage hash:");
-        qInfo("%s", qPrintable(jsonExpected));
-        qWarning("Dumped storage hash:");
-        qInfo("%s", qPrintable(jsonDumped));
-        QCOMPARE(jsonExpected, jsonDumped);
-    }
+    QVERIFY(TestDumpReporter::compareAndLogOnDiff(jsonExpected, jsonDumped));
 }

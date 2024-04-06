@@ -2,6 +2,7 @@
 #include "modulemanagertestrunner.h"
 #include "power1modulemeasprogram.h"
 #include <timemachineobject.h>
+#include <testdumpreporter.h>
 #include <QBuffer>
 #include <QTest>
 
@@ -31,7 +32,7 @@ void test_power1_module_regression::veinDumpInitial()
 {
     QFile file(":/dumpInitial.json");
     QVERIFY(file.open(QFile::ReadOnly));
-    QString jsonExpected = file.readAll();
+    QByteArray jsonExpected = file.readAll();
 
     ModuleManagerTestRunner testRunner(":/session-power1-test.json");
     VeinEvent::StorageSystem* veinStorage = testRunner.getVeinStorageSystem();
@@ -39,13 +40,7 @@ void test_power1_module_regression::veinDumpInitial()
     QBuffer buff(&jsonDumped);
     veinStorage->dumpToFile(&buff, QList<int>() << powerEntityId);
 
-    if(jsonExpected != jsonDumped) {
-        qWarning("Expected storage hash:");
-        qInfo("%s", qPrintable(jsonExpected));
-        qWarning("Dumped storage hash:");
-        qInfo("%s", qPrintable(jsonDumped));
-        QCOMPARE(jsonExpected, jsonDumped);
-    }
+    QVERIFY(TestDumpReporter::compareAndLogOnDiff(jsonExpected, jsonDumped));
 }
 
 void test_power1_module_regression::injectActualValues()
@@ -65,19 +60,13 @@ void test_power1_module_regression::injectActualValues()
 
     QFile file(":/dumpActual.json");
     QVERIFY(file.open(QFile::ReadOnly));
-    QString jsonExpected = file.readAll();
+    QByteArray jsonExpected = file.readAll();
 
     VeinEvent::StorageSystem* veinStorage = testRunner.getVeinStorageSystem();
     QByteArray jsonDumped;
     QBuffer buff(&jsonDumped);
     veinStorage->dumpToFile(&buff, QList<int>() << powerEntityId);
 
-    if(jsonExpected != jsonDumped) {
-        qWarning("Expected storage hash:");
-        qInfo("%s", qPrintable(jsonExpected));
-        qWarning("Dumped storage hash:");
-        qInfo("%s", qPrintable(jsonDumped));
-        QCOMPARE(jsonExpected, jsonDumped);
-    }
+    QVERIFY(TestDumpReporter::compareAndLogOnDiff(jsonExpected, jsonDumped));
 }
 

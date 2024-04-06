@@ -2,6 +2,7 @@
 #include "modulemanagertestrunner.h"
 #include "adjustmentmodule.h"
 #include <vs_veinhash.h>
+#include <testdumpreporter.h>
 #include <scpimoduleclientblocked.h>
 #include <QBuffer>
 #include <QTest>
@@ -33,7 +34,7 @@ void test_adj_module_regression::veinDumpInitial()
 {
     QFile file(":/dumpInitial.json");
     QVERIFY(file.open(QFile::ReadOnly));
-    QString jsonExpected = file.readAll();
+    QByteArray jsonExpected = file.readAll();
 
     ModuleManagerTestRunner testRunner(":/session-minimal.json");
     VeinEvent::StorageSystem* veinStorage = testRunner.getVeinStorageSystem();
@@ -42,13 +43,7 @@ void test_adj_module_regression::veinDumpInitial()
     // just dump adjustment module to reduce FF on changing other modules
     veinStorage->dumpToFile(&buff, QList<int>() << adjEntityId);
 
-    if(jsonExpected != jsonDumped) {
-        qWarning("Expected storage hash:");
-        qInfo("%s", qPrintable(jsonExpected));
-        qWarning("Dumped storage hash:");
-        qInfo("%s", qPrintable(jsonDumped));
-        QCOMPARE(jsonExpected, jsonDumped);
-    }
+    QVERIFY(TestDumpReporter::compareAndLogOnDiff(jsonExpected, jsonDumped));
 }
 
 void test_adj_module_regression::dspInterfacesChange()
