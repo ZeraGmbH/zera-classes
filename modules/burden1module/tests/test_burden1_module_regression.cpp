@@ -3,6 +3,7 @@
 #include "modulemanagertestrunner.h"
 #include "burden1measdelegate.h"
 #include <timemachineobject.h>
+#include <testdumpreporter.h>
 #include <QBuffer>
 #include <QTest>
 
@@ -27,7 +28,7 @@ void test_burden1_module_regression::veinDumpInitial()
 {
     QFile file(":/dumpInitial.json");
     QVERIFY(file.open(QFile::ReadOnly));
-    QString jsonExpected = file.readAll();
+    QByteArray jsonExpected = file.readAll();
 
     ModuleManagerTestRunner testRunner(":/session-minimal.json");
     VeinEvent::StorageSystem* veinStorage = testRunner.getVeinStorageSystem();
@@ -35,13 +36,7 @@ void test_burden1_module_regression::veinDumpInitial()
     QBuffer buff(&jsonDumped);
     veinStorage->dumpToFile(&buff, QList<int>() << dftBurdenCurrentId << dftBurdenVoltageId);
 
-    if(jsonExpected != jsonDumped) {
-        qWarning("Expected storage hash:");
-        qInfo("%s", qPrintable(jsonExpected));
-        qWarning("Dumped storage hash:");
-        qInfo("%s", qPrintable(jsonDumped));
-        QCOMPARE(jsonExpected, jsonDumped);
-    }
+    QVERIFY(TestDumpReporter::compareAndLogOnDiff(jsonExpected, jsonDumped));
 }
 
 void test_burden1_module_regression::resistanceCalculation()

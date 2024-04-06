@@ -144,6 +144,7 @@ function(SETUP_QTESTS)
             scpimodule-testlib
             Qt5::Test
             Zera::VfStorageHash
+            Zera::VfFrameworkTest
             Zera::tasks-base-testlib
             Zera::zera-timers-testlib
             Zera::zera-i2c-devices-testlib

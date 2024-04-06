@@ -5,6 +5,7 @@
 #include <vf_core_stack_client.h>
 #include <vf_entity_component_event_item.h>
 #include <vf_client_component_setter.h>
+#include <testdumpreporter.h>
 #include <QBuffer>
 #include <QTest>
 
@@ -34,7 +35,7 @@ void test_dft_module_regression::veinDumpInitial()
 {
     QFile file(":/dumpInitial.json");
     QVERIFY(file.open(QFile::ReadOnly));
-    QString jsonExpected = file.readAll();
+    QByteArray jsonExpected = file.readAll();
 
     ModuleManagerTestRunner testRunner(":/session-dft-no-movingwindow-no-ref.json");
     VeinEvent::StorageSystem* veinStorage = testRunner.getVeinStorageSystem();
@@ -42,13 +43,7 @@ void test_dft_module_regression::veinDumpInitial()
     QBuffer buff(&jsonDumped);
     veinStorage->dumpToFile(&buff, QList<int>() << dftEntityId);
 
-    if(jsonExpected != jsonDumped) {
-        qWarning("Expected storage hash:");
-        qInfo("%s", qPrintable(jsonExpected));
-        qWarning("Dumped storage hash:");
-        qInfo("%s", qPrintable(jsonDumped));
-        QCOMPARE(jsonExpected, jsonDumped);
-    }
+    QVERIFY(TestDumpReporter::compareAndLogOnDiff(jsonExpected, jsonDumped));
 }
 
 static constexpr int voltagePhaseNeutralCount = 4;
@@ -83,20 +78,14 @@ void test_dft_module_regression::injectActualValuesNoReferenceChannel()
 
     QFile file(":/dumpActual-no-ref.json");
     QVERIFY(file.open(QFile::ReadOnly));
-    QString jsonExpected = file.readAll();
+    QByteArray jsonExpected = file.readAll();
 
     VeinEvent::StorageSystem* veinStorage = testRunner.getVeinStorageSystem();
     QByteArray jsonDumped;
     QBuffer buff(&jsonDumped);
     veinStorage->dumpToFile(&buff, QList<int>() << dftEntityId);
 
-    if(jsonExpected != jsonDumped) {
-        qWarning("Expected storage hash:");
-        qInfo("%s", qPrintable(jsonExpected));
-        qWarning("Dumped storage hash:");
-        qInfo("%s", qPrintable(jsonDumped));
-        QCOMPARE(jsonExpected, jsonDumped);
-    }
+    QVERIFY(TestDumpReporter::compareAndLogOnDiff(jsonExpected, jsonDumped));
 }
 
 void test_dft_module_regression::injectActualValuesReferenceChannelUL1()
@@ -113,20 +102,14 @@ void test_dft_module_regression::injectActualValuesReferenceChannelUL1()
 
     QFile file(":/dumpActual-refUL1.json");
     QVERIFY(file.open(QFile::ReadOnly));
-    QString jsonExpected = file.readAll();
+    QByteArray jsonExpected = file.readAll();
 
     VeinEvent::StorageSystem* veinStorage = testRunner.getVeinStorageSystem();
     QByteArray jsonDumped;
     QBuffer buff(&jsonDumped);
     veinStorage->dumpToFile(&buff, QList<int>() << dftEntityId);
 
-    if(jsonExpected != jsonDumped) {
-        qWarning("Expected storage hash:");
-        qInfo("%s", qPrintable(jsonExpected));
-        qWarning("Dumped storage hash:");
-        qInfo("%s", qPrintable(jsonDumped));
-        QCOMPARE(jsonExpected, jsonDumped);
-    }
+    QVERIFY(TestDumpReporter::compareAndLogOnDiff(jsonExpected, jsonDumped));
 }
 
 void test_dft_module_regression::injectActualValuesReferenceChannelUL2()
@@ -144,20 +127,14 @@ void test_dft_module_regression::injectActualValuesReferenceChannelUL2()
 
     QFile file(":/dumpActual-refUL2.json");
     QVERIFY(file.open(QFile::ReadOnly));
-    QString jsonExpected = file.readAll();
+    QByteArray jsonExpected = file.readAll();
 
     VeinEvent::StorageSystem* veinStorage = testRunner.getVeinStorageSystem();
     QByteArray jsonDumped;
     QBuffer buff(&jsonDumped);
     veinStorage->dumpToFile(&buff, QList<int>() << dftEntityId);
 
-    if(jsonExpected != jsonDumped) {
-        qWarning("Expected storage hash:");
-        qInfo("%s", qPrintable(jsonExpected));
-        qWarning("Dumped storage hash:");
-        qInfo("%s", qPrintable(jsonDumped));
-        QCOMPARE(jsonExpected, jsonDumped);
-    }
+    QVERIFY(TestDumpReporter::compareAndLogOnDiff(jsonExpected, jsonDumped));
 }
 
 constexpr int comDcRefChannelCount = 6;
@@ -179,20 +156,14 @@ void test_dft_module_regression::injectActualValuesOrder0()
 
     QFile file(":/dumpActual-no-ref-order-0.json");
     QVERIFY(file.open(QFile::ReadOnly));
-    QString jsonExpected = file.readAll();
+    QByteArray jsonExpected = file.readAll();
 
     VeinEvent::StorageSystem* veinStorage = testRunner.getVeinStorageSystem();
     QByteArray jsonDumped;
     QBuffer buff(&jsonDumped);
     veinStorage->dumpToFile(&buff, QList<int>() << dftEntityId);
 
-    if(jsonExpected != jsonDumped) {
-        qWarning("Expected storage hash:");
-        qInfo("%s", qPrintable(jsonExpected));
-        qWarning("Dumped storage hash:");
-        qInfo("%s", qPrintable(jsonDumped));
-        QCOMPARE(jsonExpected, jsonDumped);
-    }
+    QVERIFY(TestDumpReporter::compareAndLogOnDiff(jsonExpected, jsonDumped));
 }
 
 void test_dft_module_regression::injectSymmetricalOrder0()
@@ -208,20 +179,14 @@ void test_dft_module_regression::injectSymmetricalOrder0()
 
     QFile file(":/dumpSymmetricOrder0.json");
     QVERIFY(file.open(QFile::ReadOnly));
-    QString jsonExpected = file.readAll();
+    QByteArray jsonExpected = file.readAll();
 
     VeinEvent::StorageSystem* veinStorage = testRunner.getVeinStorageSystem();
     QByteArray jsonDumped;
     QBuffer buff(&jsonDumped);
     veinStorage->dumpToFile(&buff, QList<int>() << dftEntityId);
 
-    if(jsonExpected != jsonDumped) {
-        qWarning("Expected storage hash:");
-        qInfo("%s", qPrintable(jsonExpected));
-        qWarning("Dumped storage hash:");
-        qInfo("%s", qPrintable(jsonDumped));
-        QCOMPARE(jsonExpected, jsonDumped);
-    }
+    QVERIFY(TestDumpReporter::compareAndLogOnDiff(jsonExpected, jsonDumped));
 }
 
 void test_dft_module_regression::injectSymmetricalOrder1()
@@ -237,20 +202,14 @@ void test_dft_module_regression::injectSymmetricalOrder1()
 
     QFile file(":/dumpSymmetricOrder1.json");
     QVERIFY(file.open(QFile::ReadOnly));
-    QString jsonExpected = file.readAll();
+    QByteArray jsonExpected = file.readAll();
 
     VeinEvent::StorageSystem* veinStorage = testRunner.getVeinStorageSystem();
     QByteArray jsonDumped;
     QBuffer buff(&jsonDumped);
     veinStorage->dumpToFile(&buff, QList<int>() << dftEntityId);
 
-    if(jsonExpected != jsonDumped) {
-        qWarning("Expected storage hash:");
-        qInfo("%s", qPrintable(jsonExpected));
-        qWarning("Dumped storage hash:");
-        qInfo("%s", qPrintable(jsonDumped));
-        QCOMPARE(jsonExpected, jsonDumped);
-    }
+    QVERIFY(TestDumpReporter::compareAndLogOnDiff(jsonExpected, jsonDumped));
 }
 
 void test_dft_module_regression::setReferenceChannel(VfCmdEventHandlerSystemPtr vfCmdEventHandlerSystem, QString channel)
