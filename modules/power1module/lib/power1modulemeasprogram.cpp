@@ -312,8 +312,8 @@ void cPower1ModuleMeasProgram::generateInterface()
         m_scalingInputs.append(tmpScalePair);
     }
 
-    for(QPair<VeinEvent::StorageComponentInterfacePtr,VeinEvent::StorageComponentInterfacePtr> ele : m_scalingInputs) {
-        if(ele.first != nullptr && ele.second != nullptr){
+    for(const auto &ele : qAsConst(m_scalingInputs)) {
+        if(ele.first != nullptr && ele.second != nullptr) {
             connect(ele.first.get(), &VeinEvent::StorageComponentInterface::sigValueChange,
                     this, &cPower1ModuleMeasProgram::updatePreScaling);
             connect(ele.second.get(), &VeinEvent::StorageComponentInterface::sigValueChange,
@@ -322,14 +322,13 @@ void cPower1ModuleMeasProgram::generateInterface()
     }
 
     // our parameters we deal with
-    cStringValidator *sValidator;
     m_pMeasuringmodeParameter = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
                                                          key = QString("PAR_MeasuringMode"),
                                                          QString("Measuring mode"),
                                                          QVariant(getConfData()->m_sMeasuringMode.m_sValue));
     m_pMeasuringmodeParameter->setSCPIInfo(new cSCPIInfo("CONFIGURATION","MMODE", "10", "PAR_MeasuringMode", "0", ""));
 
-    sValidator = new cStringValidator(getConfData()->m_sMeasmodeList);
+    cStringValidator *sValidator = new cStringValidator(getConfData()->m_sMeasmodeList);
     m_pMeasuringmodeParameter->setValidator(sValidator);
     m_pModule->m_veinModuleParameterMap[key] = m_pMeasuringmodeParameter; // for modules use
 
@@ -1633,9 +1632,8 @@ void cPower1ModuleMeasProgram::newPhaseList(QVariant phaseList)
     m_measModeSelector.tryChangeMask(phaseList.toString());
 }
 
-void cPower1ModuleMeasProgram::updatePreScaling(QVariant p_newValue)
+void cPower1ModuleMeasProgram::updatePreScaling()
 {
-    Q_UNUSED(p_newValue);
     foutParamsToDsp();
 }
 
