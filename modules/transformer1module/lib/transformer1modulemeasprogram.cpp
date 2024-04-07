@@ -6,7 +6,6 @@
 
 #include <ve_storagesystem.h>
 #include <doublevalidator.h>
-#include <vfmodulecomponentinput.h>
 #include <vfmoduleactvalue.h>
 #include <vfmodulemetadata.h>
 #include <vfmoduleparameter.h>
