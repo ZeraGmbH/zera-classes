@@ -2,7 +2,6 @@
 #define POWER1MODULE_H
 
 #include "basemeasmodule.h"
-#include <vfeventsysteminputcomponents.h>
 #include <QFinalState>
 #include <memory>
 

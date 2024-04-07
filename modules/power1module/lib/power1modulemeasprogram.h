@@ -10,7 +10,6 @@
 #include <measmodeselector.h>
 #include <meassytemchannels.h>
 #include <foutinfo.h>
-#include <vfmodulecomponentinput.h>
 #include <movingwindowfilter.h>
 #include <rminterface.h>
 #include <dspinterface.h>

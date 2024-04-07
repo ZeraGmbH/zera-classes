@@ -3,7 +3,6 @@
 
 #include "moduleactivist.h"
 #include "basemoduleconfiguration.h"
-#include <vfeventsysteminputcomponents.h>
 
 class cBaseMeasWorkProgram: public cModuleActivist
 {
