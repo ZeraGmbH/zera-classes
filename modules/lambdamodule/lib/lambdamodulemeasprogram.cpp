@@ -76,46 +76,39 @@ void cLambdaModuleMeasProgram::generateInterface()
 void cLambdaModuleMeasProgram::searchActualValues()
 {
     bool error = false;
-    QList<VfModuleComponentInput*> inputList;
-    VfModuleComponentInput *inputComponent, *inputPComponent, *inputQComponent, *inputSComponent;
-
     m_lambdaCalcDelegate = new LambdaCalcDelegate(getConfData()->m_activeMeasModeAvail, m_veinLambdaActValues, m_veinLoadTypeList);
     connect(m_lambdaCalcDelegate, &LambdaCalcDelegate::measuring, this, &cLambdaModuleMeasProgram::setMeasureSignal);
+    VeinEvent::StorageSystem* storage = m_pModule->getStorageSystem();
+    VeinEvent::StorageComponentInterfacePtr activeMeasModeComponent =
+        storage->getComponent(getConfData()->m_activeMeasModeEntity, getConfData()->m_activeMeasModeComponent);
+    VeinEvent::StorageComponentInterfacePtr activeMeasModePhaseComponent =
+        storage->getComponent(getConfData()->m_activeMeasModeEntity, getConfData()->m_activeMeasModePhaseComponent);
+    if (activeMeasModeComponent && activeMeasModePhaseComponent) {
+        connect(activeMeasModeComponent.get(), &VeinEvent::StorageComponentInterface::sigValueChange,
+                m_lambdaCalcDelegate, &LambdaCalcDelegate::onActivePowerMeasModeChange);
+        m_lambdaCalcDelegate->onActivePowerMeasModeChange(activeMeasModeComponent->getValue());
 
-    if ((m_pModule->getStorageSystem()->hasStoredValue(getConfData()->m_activeMeasModeEntity, getConfData()->m_activeMeasModeComponent)) &&
-        (m_pModule->getStorageSystem()->hasStoredValue(getConfData()->m_activeMeasModeEntity, getConfData()->m_activeMeasModePhaseComponent))) {
-
-        inputComponent = new VfModuleComponentInput(getConfData()->m_activeMeasModeEntity, getConfData()->m_activeMeasModeComponent);
-        inputList.append(inputComponent);
-        connect(inputComponent, &VfModuleComponentInput::sigValueChanged, m_lambdaCalcDelegate, &LambdaCalcDelegate::onActivePowerMeasModeChange);
-        m_lambdaCalcDelegate->onActivePowerMeasModeChange(m_pModule->getStorageSystem()->getStoredValue(getConfData()->m_activeMeasModeEntity, getConfData()->m_activeMeasModeComponent));
-
-        inputComponent = new VfModuleComponentInput(getConfData()->m_activeMeasModeEntity, getConfData()->m_activeMeasModePhaseComponent);
-        inputList.append(inputComponent);
-        connect(inputComponent, &VfModuleComponentInput::sigValueChanged, m_lambdaCalcDelegate, &LambdaCalcDelegate::onActivePowerPhaseMaskChange);
-        m_lambdaCalcDelegate->onActivePowerPhaseMaskChange(m_pModule->getStorageSystem()->getStoredValue(getConfData()->m_activeMeasModeEntity, getConfData()->m_activeMeasModePhaseComponent));
+        connect(activeMeasModePhaseComponent.get(), &VeinEvent::StorageComponentInterface::sigValueChange,
+                m_lambdaCalcDelegate, &LambdaCalcDelegate::onActivePowerPhaseMaskChange);
+        m_lambdaCalcDelegate->onActivePowerPhaseMaskChange(activeMeasModePhaseComponent->getValue());
 
         for (int i = 0; i < getConfData()->m_nLambdaSystemCount; i++) {
             if (!error) {
-                // we first test that wanted input components exist
-                if ((m_pModule->getStorageSystem()->hasStoredValue(getConfData()->m_lambdaSystemConfigList.at(i).m_nInputPEntity, getConfData()->m_lambdaSystemConfigList.at(i).m_sInputP)) &&
-                    (m_pModule->getStorageSystem()->hasStoredValue(getConfData()->m_lambdaSystemConfigList.at(i).m_nInputQEntity, getConfData()->m_lambdaSystemConfigList.at(i).m_sInputQ)) &&
-                    (m_pModule->getStorageSystem()->hasStoredValue(getConfData()->m_lambdaSystemConfigList.at(i).m_nInputSEntity, getConfData()->m_lambdaSystemConfigList.at(i).m_sInputS)) ) {
+                VeinEvent::StorageComponentInterfacePtr inputPComponent =
+                    storage->getComponent(getConfData()->m_lambdaSystemConfigList.at(i).m_nInputPEntity, getConfData()->m_lambdaSystemConfigList.at(i).m_sInputP);
+                VeinEvent::StorageComponentInterfacePtr inputQComponent =
+                    storage->getComponent(getConfData()->m_lambdaSystemConfigList.at(i).m_nInputQEntity, getConfData()->m_lambdaSystemConfigList.at(i).m_sInputQ);
+                VeinEvent::StorageComponentInterfacePtr inputSComponent =
+                    storage->getComponent(getConfData()->m_lambdaSystemConfigList.at(i).m_nInputSEntity, getConfData()->m_lambdaSystemConfigList.at(i).m_sInputS);
 
-                    inputPComponent = new VfModuleComponentInput(getConfData()->m_lambdaSystemConfigList.at(i).m_nInputPEntity, getConfData()->m_lambdaSystemConfigList.at(i).m_sInputP);
-                    inputList.append(inputPComponent);
-                    inputQComponent = new VfModuleComponentInput(getConfData()->m_lambdaSystemConfigList.at(i).m_nInputQEntity, getConfData()->m_lambdaSystemConfigList.at(i).m_sInputQ);
-                    inputList.append(inputQComponent);
-                    inputSComponent = new VfModuleComponentInput(getConfData()->m_lambdaSystemConfigList.at(i).m_nInputSEntity, getConfData()->m_lambdaSystemConfigList.at(i).m_sInputS);
-                    inputList.append(inputSComponent);
-
-                    connect(inputPComponent, &VfModuleComponentInput::sigValueChanged, m_lambdaCalcDelegate, [=](QVariant value){
+                if (inputPComponent && inputQComponent && inputSComponent) {
+                    connect(inputPComponent.get(), &VeinEvent::StorageComponentInterface::sigValueChange, m_lambdaCalcDelegate, [=](QVariant value) {
                         m_lambdaCalcDelegate->handleActivePowerChange(i, value);
                     });
-                    connect(inputQComponent, &VfModuleComponentInput::sigValueChanged, m_lambdaCalcDelegate, [=](QVariant value){
+                    connect(inputQComponent.get(), &VeinEvent::StorageComponentInterface::sigValueChange, m_lambdaCalcDelegate, [=](QVariant value) {
                         m_lambdaCalcDelegate->handleReactivePowerChange(i, value);
                     });
-                    connect(inputSComponent, &VfModuleComponentInput::sigValueChanged, m_lambdaCalcDelegate, [=](QVariant value){
+                    connect(inputSComponent.get(), &VeinEvent::StorageComponentInterface::sigValueChange, m_lambdaCalcDelegate, [=](QVariant value) {
                         m_lambdaCalcDelegate->handleApparentPowerChange(i, value);
                     });
                 }
@@ -129,11 +122,8 @@ void cLambdaModuleMeasProgram::searchActualValues()
 
     if (error)
         emit activationError();
-    else {
-        emit m_pModule->addEventSystem(&m_veinIntputEventSystem);
-        m_veinIntputEventSystem.setInputList(inputList);
+    else
         emit activationContinue();
-    }
 }
 
 void cLambdaModuleMeasProgram::activateDone()
