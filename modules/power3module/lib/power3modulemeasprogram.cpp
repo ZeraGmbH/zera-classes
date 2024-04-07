@@ -117,12 +117,13 @@ void cPower3ModuleMeasProgram::generateInterface()
 void cPower3ModuleMeasProgram::searchActualValues()
 {
     bool error = false;
-    QList<VfModuleComponentInput*> inputList;
+    VeinEvent::StorageSystem* storage = m_pModule->getStorageSystem();
     for (int i = 0; i < getConfData()->m_nPowerSystemCount; i++) {
-        // we first test that wanted input components exist
-        if ( (m_pModule->getStorageSystem()->hasStoredValue(getConfData()->m_nModuleId, getConfData()->m_powerSystemConfigList.at(i).m_sInputU)) &&
-             (m_pModule->getStorageSystem()->hasStoredValue(getConfData()->m_nModuleId, getConfData()->m_powerSystemConfigList.at(i).m_sInputI)) ) {
-
+        VeinEvent::StorageComponentInterfacePtr inputU =
+            storage->getComponent(getConfData()->m_nModuleId, getConfData()->m_powerSystemConfigList.at(i).m_sInputU);
+        VeinEvent::StorageComponentInterfacePtr inputI =
+            storage->getComponent(getConfData()->m_nModuleId, getConfData()->m_powerSystemConfigList.at(i).m_sInputI);
+        if (inputU && inputI) {
             cPower3MeasDelegate* cPMD;
             if (i == (getConfData()->m_nPowerSystemCount-1)) {
                 cPMD = new cPower3MeasDelegate(m_veinActValueList.at(i*3), m_veinActValueList.at(i*3+1), m_veinActValueList.at(i*3+2),true);
@@ -132,14 +133,11 @@ void cPower3ModuleMeasProgram::searchActualValues()
                 cPMD = new cPower3MeasDelegate(m_veinActValueList.at(i*3), m_veinActValueList.at(i*3+1), m_veinActValueList.at(i*3+2));
             m_Power3MeasDelegateList.append(cPMD);
 
-            VfModuleComponentInput *vmci;
-            vmci = new VfModuleComponentInput(getConfData()->m_nModuleId, getConfData()->m_powerSystemConfigList.at(i).m_sInputU);
-            inputList.append(vmci);
-            connect(vmci, &VfModuleComponentInput::sigValueChanged, cPMD, &cPower3MeasDelegate::actValueInput1);
+            connect(inputU.get(), &VeinEvent::StorageComponentInterface::sigValueChange,
+                    cPMD, &cPower3MeasDelegate::actValueInput1);
 
-            vmci = new VfModuleComponentInput(getConfData()->m_nModuleId, getConfData()->m_powerSystemConfigList.at(i).m_sInputI);
-            inputList.append(vmci);
-            connect(vmci, &VfModuleComponentInput::sigValueChanged, cPMD, &cPower3MeasDelegate::actValueInput2);
+            connect(inputI.get(), &VeinEvent::StorageComponentInterface::sigValueChange,
+                    cPMD, &cPower3MeasDelegate::actValueInput2);
         }
         else
             error = true;
@@ -147,11 +145,8 @@ void cPower3ModuleMeasProgram::searchActualValues()
 
     if (error)
         emit activationError();
-    else {
-        emit m_pModule->addEventSystem(&m_veinIntputEventSystem);
-        m_veinIntputEventSystem.setInputList(inputList);
+    else
         emit activationContinue();
-    }
 }
 
 
