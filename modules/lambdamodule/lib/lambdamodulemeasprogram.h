@@ -30,7 +30,6 @@ private:
     cLambdaModuleConfigData* getConfData();
 
     cLambdaModule* m_pModule;
-    VfEventSystemInputComponents m_veinIntputEventSystem;
     QList<VfModuleActvalue*> m_veinLambdaActValues;
     QList<VfModuleActvalue*> m_veinLoadTypeList;
     VfModuleMetaData* m_pLAMBDACountInfo; // the number of values we produce
