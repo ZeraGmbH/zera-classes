@@ -250,22 +250,16 @@ void cTransformer1ModuleMeasProgram::generateInterface()
 
 void cTransformer1ModuleMeasProgram::searchActualValues()
 {
-    bool error;
-
-    error = false;
-    QList<VfModuleComponentInput*> inputList;
-
-    for (int i = 0; i < getConfData()->m_nTransformerSystemCount; i++)
-    {
-        // we first test that wanted input components exist
-        if ( (m_pModule->getStorageSystem()->hasStoredValue(getConfData()->m_nModuleId, getConfData()->m_transformerSystemConfigList.at(i).m_sInputPrimaryVector)) &&
-             (m_pModule->getStorageSystem()->hasStoredValue(getConfData()->m_nModuleId, getConfData()->m_transformerSystemConfigList.at(i).m_sInputSecondaryVector)) )
-        {
+    bool error = false;
+    VeinEvent::StorageSystem* storage = m_pModule->getStorageSystem();
+    for (int i = 0; i < getConfData()->m_nTransformerSystemCount; i++) {
+        VeinEvent::StorageComponentInterfacePtr inputPrimaryVector =
+            storage->getComponent(getConfData()->m_nModuleId, getConfData()->m_transformerSystemConfigList.at(i).m_sInputPrimaryVector);
+        VeinEvent::StorageComponentInterfacePtr inputSecondaryVector =
+            storage->getComponent(getConfData()->m_nModuleId, getConfData()->m_transformerSystemConfigList.at(i).m_sInputSecondaryVector);
+        if(inputPrimaryVector && inputSecondaryVector) {
             cTransformer1MeasDelegate *cTMD;
-            VfModuleComponentInput *vmci;
-
-            if (i == (getConfData()->m_nTransformerSystemCount-1))
-            {
+            if (i == (getConfData()->m_nTransformerSystemCount-1)) {
                 cTMD = new cTransformer1MeasDelegate(m_veinActValueList.at(i*6), m_veinActValueList.at(i*6+1), m_veinActValueList.at(i*6+2),
                                                      m_veinActValueList.at(i*6+3), m_veinActValueList.at(i*6+4), m_veinActValueList.at(i*6+5), true);
                 connect(cTMD, &cTransformer1MeasDelegate::measuring, this, &cTransformer1ModuleMeasProgram::setMeasureSignal);
@@ -273,29 +267,20 @@ void cTransformer1ModuleMeasProgram::searchActualValues()
             else
                 cTMD = new cTransformer1MeasDelegate(m_veinActValueList.at(i*6), m_veinActValueList.at(i*6+1), m_veinActValueList.at(i*6+2),
                                                      m_veinActValueList.at(i*6+3), m_veinActValueList.at(i*6+4), m_veinActValueList.at(i*6+5));
-
             m_Transformer1MeasDelegateList.append(cTMD);
 
-            vmci = new VfModuleComponentInput(getConfData()->m_nModuleId, getConfData()->m_transformerSystemConfigList.at(i).m_sInputPrimaryVector);
-            inputList.append(vmci);
-            connect(vmci, &VfModuleComponentInput::sigValueChanged, cTMD, &cTransformer1MeasDelegate::actValueInput1);
-
-            vmci = new VfModuleComponentInput(getConfData()->m_nModuleId, getConfData()->m_transformerSystemConfigList.at(i).m_sInputSecondaryVector);
-            inputList.append(vmci);
-            connect(vmci, &VfModuleComponentInput::sigValueChanged, cTMD, &cTransformer1MeasDelegate::actValueInput2);
+            connect(inputPrimaryVector.get(), &VeinEvent::StorageComponentInterface::sigValueChange,
+                    cTMD, &cTransformer1MeasDelegate::actValueInput1);
+            connect(inputSecondaryVector.get(), &VeinEvent::StorageComponentInterface::sigValueChange,
+                    cTMD, &cTransformer1MeasDelegate::actValueInput2);
         }
         else
             error = true;
     }
-
     if (error)
         emit activationError();
     else
-    {
-        emit m_pModule->addEventSystem(&m_veinIntputEventSystem);
-        m_veinIntputEventSystem.setInputList(inputList);
         emit activationContinue();
-    }
 }
 
 

@@ -35,7 +35,6 @@ private:
     cTransformer1ModuleConfigData* getConfData();
 
     cTransformer1Module* m_pModule;
-    VfEventSystemInputComponents m_veinIntputEventSystem;
     QList<VfModuleActvalue*> m_veinActValueList; // the list of actual values we work on
     VfModuleMetaData* m_pTRSCountInfo; // the number of transformer system we are configured for
     VfModuleComponent* m_pMeasureSignal;
