@@ -7,7 +7,6 @@
 class test_lambdacalculator : public QObject
 {
     Q_OBJECT
-
 private slots:
     void init();
     void powerFactorOneAllPhases();
@@ -26,6 +25,10 @@ private slots:
     void powerFactor05ActivePowerMeasMode3LW();
     void powerFactorActivePowerMeasMode2LW();
 
+    void unsymmetricMeasMode2LWPhase1();
+    void unsymmetricMeasMode2LWPhase2();
+    void unsymmetricMeasMode2LWPhase3();
+
     void powerFactorPhase1Apparent0();
     void powerFactorPhase3Apparent0();
     void powerFactorApparentSum0();
@@ -39,6 +42,8 @@ private slots:
     void powerFactorMinus1NoTypeText();
 private:
     void create45DegreesLoad();
+    void resetAllPowers();
+    void genUnsymIndCap(int phase);
 
     QVector<double> m_activePower = QVector<double>(MeasPhaseCount+SumValueCount, 0.0);
     QVector<double> m_reactivePower = QVector<double>(MeasPhaseCount+SumValueCount, 0.0);

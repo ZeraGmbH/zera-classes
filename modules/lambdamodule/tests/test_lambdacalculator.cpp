@@ -256,6 +256,81 @@ void test_lambdacalculator::powerFactorActivePowerMeasMode2LW()
     QCOMPARE(lambdas.sumLoadType, LambdaCalculator::IndText);
 }
 
+void test_lambdacalculator::resetAllPowers()
+{
+    for(int i=0; i<MeasPhaseCount; i++)
+        m_activePower[i] = 0.0;
+    m_activePower[sumIndex] = 0.0;
+    for(int i=0; i<MeasPhaseCount; i++)
+        m_reactivePower[i] = 0.0;
+    m_reactivePower[sumIndex] = 0.0;
+    for(int i=0; i<MeasPhaseCount; i++)
+        m_apparentPower[i] = 0.0;
+    m_apparentPower[sumIndex] = 0.0;
+}
+
+
+// Unssymmetrical taken from a real load: 40V / 0.5A / angleUI 60°/ -60° / 60°
+
+static constexpr double cos60 = 0.5;
+static constexpr double sin60 = 0.866025403784;
+static constexpr double apparentPhasePower = 20;
+
+void test_lambdacalculator::genUnsymIndCap(int phase)
+{
+    resetAllPowers();
+    // Power1Module5: 4LS / 111
+    for(int i=0; i<MeasPhaseCount; i++)
+        m_apparentPower[i] = apparentPhasePower;
+    m_apparentPower[sumIndex] = MeasPhaseCount * apparentPhasePower;
+
+    m_activePower[phase] = m_apparentPower[phase] * cos60;
+    m_activePower[sumIndex] = m_activePower[phase];
+
+    // Power1Module6: 4LB / 111
+    m_reactivePower[0] = m_apparentPower[0] * sin60;
+    m_reactivePower[1] = -m_apparentPower[1] * sin60; // that popped up incorrect
+    m_reactivePower[2] = m_apparentPower[1] * sin60;
+    for(int i=0; i<MeasPhaseCount; i++)
+        m_reactivePower[sumIndex] += m_reactivePower[i];
+}
+
+void test_lambdacalculator::unsymmetricMeasMode2LWPhase1()
+{
+    constexpr int phase = 0;
+    genUnsymIndCap(phase);
+
+    PhaseSumValues lambdas = LambdaCalculator::calculateLambdaValues(m_activePower, m_reactivePower, m_apparentPower, "2LW", "100");
+    QCOMPARE(lambdas.phases[phase], cos60);
+    QCOMPARE(lambdas.phaseLoadTypes[phase], LambdaCalculator::IndText);
+    QCOMPARE(lambdas.sum, cos60);
+    QCOMPARE(lambdas.sumLoadType, LambdaCalculator::IndText);
+}
+
+void test_lambdacalculator::unsymmetricMeasMode2LWPhase2()
+{
+    constexpr int phase = 1;
+    genUnsymIndCap(phase);
+
+    PhaseSumValues lambdas = LambdaCalculator::calculateLambdaValues(m_activePower, m_reactivePower, m_apparentPower, "2LW", "010");
+    QCOMPARE(lambdas.phases[phase], cos60);
+    QCOMPARE(lambdas.phaseLoadTypes[phase], LambdaCalculator::CapText);
+    QCOMPARE(lambdas.sum, cos60);
+    QCOMPARE(lambdas.sumLoadType, LambdaCalculator::CapText);
+}
+
+void test_lambdacalculator::unsymmetricMeasMode2LWPhase3()
+{
+    constexpr int phase = 2;
+    genUnsymIndCap(phase);
+
+    PhaseSumValues lambdas = LambdaCalculator::calculateLambdaValues(m_activePower, m_reactivePower, m_apparentPower, "2LW", "001");
+    QCOMPARE(lambdas.phases[phase], cos60);
+    QCOMPARE(lambdas.phaseLoadTypes[phase], LambdaCalculator::IndText);
+    QCOMPARE(lambdas.sum, cos60);
+    QCOMPARE(lambdas.sumLoadType, LambdaCalculator::IndText);
+}
+
 void test_lambdacalculator::powerFactorPhase1Apparent0()
 {
     create45DegreesLoad();

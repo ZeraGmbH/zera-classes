@@ -23,6 +23,7 @@ PhaseSumValues LambdaCalculator::calculateLambdaValues(const QVector<double> &ac
     PhaseSumValues lambdas;
     cMeasModeInfo info = MeasModeCatalog::getInfo(measModeActivePower);
     double apparentPowerSum = 0.0;
+    double reactivePowerSum = 0.0;
 
     if (info.isThreeWire()) {
         lambdas = lambdaFor3LW(activePower[sumIndex], apparentPower[sumIndex]);
@@ -37,6 +38,7 @@ PhaseSumValues LambdaCalculator::calculateLambdaValues(const QVector<double> &ac
                 else {
                     lambdas.phases[i] = limitValueToPlusMinusOne(activePower[i] / apparentPower[i]);
                     apparentPowerSum += apparentPower[i];
+                    reactivePowerSum += reactivePower[i];
                 }
             }
             else
@@ -53,7 +55,7 @@ PhaseSumValues LambdaCalculator::calculateLambdaValues(const QVector<double> &ac
         else {
             lambdas.sum = limitValueToPlusMinusOne(activePower[sumIndex] / apparentPowerSum);
             if(fabs(lambdas.sum) < MaxPowerFactorForTypeText)
-                lambdas.sumLoadType = reactivePower[sumIndex] > 0 ? IndText : CapText;
+                lambdas.sumLoadType = reactivePowerSum > 0 ? IndText : CapText;
         }
     }
     return lambdas;
