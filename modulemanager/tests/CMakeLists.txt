@@ -60,6 +60,7 @@ SETUP_QTESTS_MODULEMANAGER(
     test_plugin_load
     test_modman_regression_all_sessions
     test_sessionnamesmappingjson
+    test_modman_with_vf_logger
     )
 
 target_sources(test_modman_regression_all_sessions
@@ -67,3 +68,8 @@ target_sources(test_modman_regression_all_sessions
     ${XML_SCHEMA_RESOURCES_ALL}
 )
 
+target_sources(test_modman_with_vf_logger
+  PRIVATE
+    ${XML_SCHEMA_RESOURCE_RMSMODULE}
+    test-sessions/test-sessions.qrc
+)
