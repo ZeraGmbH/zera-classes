@@ -46,6 +46,11 @@ VfCmdEventHandlerSystemPtr ModuleManagerTestRunner::getVfCmdEventHandlerSystemPt
     return m_vfCmdEventHandlerSystem;
 }
 
+ModuleManagerSetupFacade *ModuleManagerTestRunner::getModManFacade()
+{
+    return m_modmanFacade.get();
+}
+
 ZeraModules::VirtualModule *ModuleManagerTestRunner::getModule(QString uniqueName, int entityId)
 {
     return m_modMan->getModule(uniqueName, entityId);
