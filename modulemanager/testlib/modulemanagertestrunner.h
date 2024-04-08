@@ -19,6 +19,7 @@ public:
     VeinEvent::StorageSystem *getVeinStorageSystem();
     const QList<TestDspInterfacePtr>& getDspInterfaceList() const;
     VfCmdEventHandlerSystemPtr getVfCmdEventHandlerSystemPtr();
+    ModuleManagerSetupFacade* getModManFacade();
     ZeraModules::VirtualModule *getModule(QString uniqueName, int entityId);
     void setVfComponent(VfCmdEventHandlerSystemPtr vfCmdEventHandlerSystem, int moduleId, QString componentName, QVariant oldValue, QVariant newValue);
 private:
