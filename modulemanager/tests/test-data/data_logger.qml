@@ -60,4 +60,5 @@ VeinLogger {
             }
         }
     }
+    Component.onCompleted: console.info("QML Data logger running under test!!!")
 }
