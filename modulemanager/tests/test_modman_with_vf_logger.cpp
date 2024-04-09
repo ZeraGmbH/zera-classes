@@ -8,10 +8,14 @@
 #include "vsc_scriptsystem.h"
 #include "vl_datasource.h"
 #include "zeradblogger.h"
+#include <timemachineobject.h>
 #include <QTest>
 
 QTEST_MAIN(test_modman_with_vf_logger)
 
+static int constexpr systemEntityId = 0;
+static int constexpr scriptEntityId = 1;
+static int constexpr dataLoggerEntityId = 2;
 static int constexpr rmsEntityId = 1040;
 
 void test_modman_with_vf_logger::basicCheckRmsModule()
@@ -51,7 +55,6 @@ void test_modman_with_vf_logger::setupSytemWithLogger()
             initQmlSystemOnce = true;
         }
     });
-
     mmFacade->addSubsystem(qmlSystem);
     mmFacade->addSubsystem(scriptSystem);
 
@@ -68,16 +71,23 @@ void test_modman_with_vf_logger::setupSytemWithLogger()
 
                 // subscribe those entitities our magic logger QML script
                 // requires (see modMan->loadScripts above)
-                qmlSystem->entitySubscribeById(0); //0 = mmController
-                qmlSystem->entitySubscribeById(2); //2 = dataLoggerSystem
+                qmlSystem->entitySubscribeById(systemEntityId);
+                qmlSystem->entitySubscribeById(dataLoggerEntityId);
             }
         }
     });
     testRunner.start(":/session-minimal-rms.json");
 
+    // THIS IS THE START FOR LAMDAS ABOVE
+    mmFacade->getLicenseSystem()->setDeviceSerial("foo");
+    TimeMachineObject::feedEventLoop();
 
     VeinEvent::StorageSystem* veinStorage = testRunner.getVeinStorageSystem();
     QList<int> entityList = veinStorage->getEntityList();
 
-    QCOMPARE(entityList.count(), 3);
+    QCOMPARE(entityList.count(), 4);
+    QVERIFY(entityList.contains(systemEntityId));
+    QVERIFY(entityList.contains(scriptEntityId));
+    QVERIFY(entityList.contains(dataLoggerEntityId));
+    QVERIFY(entityList.contains(rmsEntityId));
 }
