@@ -1,5 +1,6 @@
 <RCC>
     <qresource prefix="/">
+        <file>data_logger.qml</file>
         <file>session-minimal-rms.json</file>
     </qresource>
 </RCC>
