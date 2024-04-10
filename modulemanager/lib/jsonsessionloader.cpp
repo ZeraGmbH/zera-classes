@@ -27,6 +27,7 @@ void JsonSessionLoader::loadSession(QString filePath)
             QJsonValue tmpModules = rootObj.value("modules");
             if(tmpModules.isArray()) {
                 const QJsonArray jArr = tmpModules.toArray();
+                qInfo("Session contains %i modules", jArr.count());
                 for(const auto &entry : jArr) {
                     if(entry.isObject())
                         parseModule(entry.toObject());
