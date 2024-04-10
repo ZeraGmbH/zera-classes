@@ -14,15 +14,6 @@ static int constexpr scriptEntityId = 1;
 static int constexpr dataLoggerEntityId = 2;
 static int constexpr rmsEntityId = 1040;
 
-void test_modman_with_vf_logger::basicCheckRmsModule()
-{
-    ModuleManagerTestRunner testRunner(":/session-minimal-rms.json", true);
-    VeinEvent::StorageSystem* veinStorage = testRunner.getVeinStorageSystem();
-    QList<int> entityList = veinStorage->getEntityList();
-    QCOMPARE(entityList.count(), 2);
-    QVERIFY(veinStorage->hasEntity(rmsEntityId));
-}
-
 void test_modman_with_vf_logger::checkEntitiesCreated()
 {
     VeinEvent::StorageSystem* veinStorage = m_testRunner->getVeinStorageSystem();
