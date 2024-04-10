@@ -16,6 +16,7 @@ private slots:
     void loggerComponentsCreated();
     void contentSetsAvailable();
     void contentSetsSelectValid();
+
     void initTestCase();
     void init();
     void cleanup();
@@ -24,10 +25,12 @@ private:
     void onSerialNoLicensed();
     void createModmanWithLogger();
     void startModman(QString sessionFileName);
+
     std::unique_ptr<ModuleManagerTestRunner> m_testRunner;
     std::unique_ptr<VeinScript::ScriptSystem> m_scriptSystem;
     std::unique_ptr<VeinApiQml::VeinQml> m_qmlSystem;
     std::unique_ptr<ZeraDBLogger> m_dataLoggerSystem;
+    VeinEvent::StorageSystem* m_storage;
     bool m_initQmlSystemOnce = false;
     bool m_dataLoggerSystemInitialized = false;
 };
