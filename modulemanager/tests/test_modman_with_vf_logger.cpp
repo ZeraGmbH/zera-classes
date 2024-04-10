@@ -63,7 +63,7 @@ void test_modman_with_vf_logger::loggerComponentsCreated()
     QVERIFY(loggerComponents.contains("transactionName"));
 }
 
-void test_modman_with_vf_logger::availableContentSets()
+void test_modman_with_vf_logger::contentSetsAvailable()
 {
     startModman("session-minimal-rms.json");
 
@@ -72,6 +72,25 @@ void test_modman_with_vf_logger::availableContentSets()
     QCOMPARE(availContentSets.count(), 2);
     QVERIFY(availContentSets.contains("ZeraAll"));
     QVERIFY(availContentSets.contains("ZeraActualValuesTest"));
+}
+
+// Lesson learned 1 / TODO: Move LoggedComponents form system- -> logger-entity
+void test_modman_with_vf_logger::contentSetsSelectValid()
+{
+    startModman("session-minimal-rms.json");
+
+    VeinEvent::StorageSystem* veinStorage = m_testRunner->getVeinStorageSystem();
+    QCOMPARE(veinStorage->getStoredValue(dataLoggerEntityId, "currentContentSets"), QStringList());
+    QVariantMap loggedComponents = veinStorage->getStoredValue(systemEntityId, "LoggedComponents").toMap();
+    QCOMPARE(loggedComponents, QVariantMap());
+
+    m_testRunner->setVfComponent(dataLoggerEntityId, "currentContentSets", "ZeraActualValuesTest");
+
+    loggedComponents = veinStorage->getStoredValue(systemEntityId, "LoggedComponents").toMap();
+    QString rmsEntityNum = QString("%1").arg(rmsEntityId);
+
+    QVERIFY(loggedComponents.contains(rmsEntityNum));
+    QCOMPARE(loggedComponents[rmsEntityNum], QStringList()); // no specific components in contentset ZeraActualValuesTest
 }
 
 void test_modman_with_vf_logger::onVfQmlStateChanged(VeinApiQml::VeinQml::ConnectionState t_state)
