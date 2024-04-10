@@ -14,7 +14,8 @@ class test_modman_with_vf_logger : public QObject
 private slots:
     void entitiesCreated();
     void loggerComponentsCreated();
-    void availableContentSets();
+    void contentSetsAvailable();
+    void contentSetsSelectValid();
     void initTestCase();
     void init();
     void cleanup();
