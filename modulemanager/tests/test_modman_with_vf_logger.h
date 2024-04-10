@@ -20,7 +20,7 @@ private:
     void onVfQmlStateChanged(VeinApiQml::VeinQml::ConnectionState t_state);
     void onSerialNoLicensed();
     void createModmanWithLogger();
-    void startModman();
+    void startModman(QString sessionFile);
     std::unique_ptr<ModuleManagerTestRunner> m_testRunner;
     std::unique_ptr<VeinScript::ScriptSystem> m_scriptSystem;
     std::unique_ptr<VeinApiQml::VeinQml> m_qmlSystem;
