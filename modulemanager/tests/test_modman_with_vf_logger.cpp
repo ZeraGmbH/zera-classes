@@ -14,22 +14,11 @@ static int constexpr scriptEntityId = 1;
 static int constexpr dataLoggerEntityId = 2;
 static int constexpr rmsEntityId = 1040;
 
-void test_modman_with_vf_logger::initTestCase()
-{
-    VeinLogger::QmlLogger::setJsonEnvironment(":/contentsets/", std::make_shared<JsonLoggerContentLoader>());
-    VeinLogger::QmlLogger::setJsonEnvironment(":/sessions/", std::make_shared<JsonLoggerContentSessionLoader>());
-}
-
-void test_modman_with_vf_logger::init()
-{
-    createModmanWithLogger();
-}
 void test_modman_with_vf_logger::entitiesCreated()
 {
     startModman("session-minimal-rms.json");
 
-    VeinEvent::StorageSystem* veinStorage = m_testRunner->getVeinStorageSystem();
-    QList<int> entityList = veinStorage->getEntityList();
+    QList<int> entityList = m_storage->getEntityList();
 
     QCOMPARE(entityList.count(), 4);
     QVERIFY(entityList.contains(systemEntityId));
@@ -42,8 +31,7 @@ void test_modman_with_vf_logger::loggerComponentsCreated()
 {
     startModman("session-minimal-rms.json");
 
-    VeinEvent::StorageSystem* veinStorage = m_testRunner->getVeinStorageSystem();
-    QList<QString> loggerComponents = veinStorage->getEntityComponents(dataLoggerEntityId);
+    QList<QString> loggerComponents = m_storage->getEntityComponents(dataLoggerEntityId);
 
     QCOMPARE(loggerComponents.count(), 15);
     QVERIFY(loggerComponents.contains("availableContentSets"));
@@ -67,30 +55,42 @@ void test_modman_with_vf_logger::contentSetsAvailable()
 {
     startModman("session-minimal-rms.json");
 
-    VeinEvent::StorageSystem* veinStorage = m_testRunner->getVeinStorageSystem();
-    QStringList availContentSets = veinStorage->getStoredValue(dataLoggerEntityId, "availableContentSets").toStringList();
+    QStringList availContentSets = m_storage->getStoredValue(dataLoggerEntityId, "availableContentSets").toStringList();
     QCOMPARE(availContentSets.count(), 2);
     QVERIFY(availContentSets.contains("ZeraAll"));
     QVERIFY(availContentSets.contains("ZeraActualValuesTest"));
 }
 
-// Lesson learned 1 / TODO: Move LoggedComponents form system- -> logger-entity
+// Lesson learned / TODO: Move LoggedComponents from system- -> logger-entity
 void test_modman_with_vf_logger::contentSetsSelectValid()
 {
     startModman("session-minimal-rms.json");
 
-    VeinEvent::StorageSystem* veinStorage = m_testRunner->getVeinStorageSystem();
-    QCOMPARE(veinStorage->getStoredValue(dataLoggerEntityId, "currentContentSets"), QStringList());
-    QVariantMap loggedComponents = veinStorage->getStoredValue(systemEntityId, "LoggedComponents").toMap();
+    QCOMPARE(m_storage->getStoredValue(dataLoggerEntityId, "currentContentSets"), QStringList());
+    QVariantMap loggedComponents = m_storage->getStoredValue(systemEntityId, "LoggedComponents").toMap();
     QCOMPARE(loggedComponents, QVariantMap());
 
     m_testRunner->setVfComponent(dataLoggerEntityId, "currentContentSets", "ZeraActualValuesTest");
 
-    loggedComponents = veinStorage->getStoredValue(systemEntityId, "LoggedComponents").toMap();
+    loggedComponents = m_storage->getStoredValue(systemEntityId, "LoggedComponents").toMap();
     QString rmsEntityNum = QString("%1").arg(rmsEntityId);
 
     QVERIFY(loggedComponents.contains(rmsEntityNum));
     QCOMPARE(loggedComponents[rmsEntityNum], QStringList()); // no specific components in contentset ZeraActualValuesTest
+}
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////////
+// code to setup test environment
+void test_modman_with_vf_logger::initTestCase()
+{
+    VeinLogger::QmlLogger::setJsonEnvironment(":/contentsets/", std::make_shared<JsonLoggerContentLoader>());
+    VeinLogger::QmlLogger::setJsonEnvironment(":/sessions/", std::make_shared<JsonLoggerContentSessionLoader>());
+}
+
+void test_modman_with_vf_logger::init()
+{
+    createModmanWithLogger();
 }
 
 void test_modman_with_vf_logger::onVfQmlStateChanged(VeinApiQml::VeinQml::ConnectionState t_state)
@@ -133,18 +133,19 @@ void test_modman_with_vf_logger::createModmanWithLogger()
     m_dataLoggerSystemInitialized = false;
 
     m_testRunner = std::make_unique<ModuleManagerTestRunner>("", true);
-    ModuleManagerSetupFacade* mmFacade = m_testRunner->getModManFacade();
+    m_storage = m_testRunner->getVeinStorageSystem();
+
     m_scriptSystem = std::make_unique<VeinScript::ScriptSystem>();
     m_qmlSystem = std::make_unique<VeinApiQml::VeinQml>();
 
+    ModuleManagerSetupFacade* mmFacade = m_testRunner->getModManFacade();
     mmFacade->addSubsystem(m_qmlSystem.get());
     mmFacade->addSubsystem(m_scriptSystem.get());
 
     connect(m_qmlSystem.get(), &VeinApiQml::VeinQml::sigStateChanged,
             this, &test_modman_with_vf_logger::onVfQmlStateChanged);
 
-    LicenseSystemInterface *licenseSystem = mmFacade->getLicenseSystem();
-    connect(licenseSystem, &LicenseSystemInterface::sigSerialNumberInitialized,
+    connect(mmFacade->getLicenseSystem(), &LicenseSystemInterface::sigSerialNumberInitialized,
             this, &test_modman_with_vf_logger::onSerialNoLicensed);
 
     const VeinLogger::DBFactory sqliteFactory = [](){
