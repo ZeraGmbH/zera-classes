@@ -121,5 +121,8 @@ void test_modman_with_vf_logger::init()
 void test_modman_with_vf_logger::cleanup()
 {
     m_testRunner = nullptr;
+    m_dataLoggerSystem = nullptr;
+    TimeMachineObject::feedEventLoop();
+    m_scriptSystem = nullptr;
+    TimeMachineObject::feedEventLoop();
 }
-
