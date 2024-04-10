@@ -35,15 +35,31 @@ void test_modman_with_vf_logger::checkEntitiesCreated()
     QVERIFY(entityList.contains(rmsEntityId));
 }
 
-void test_modman_with_vf_logger::checkLoggerComponentValues()
+void test_modman_with_vf_logger::checkLoggerComponentsCreated()
 {
-
+    VeinEvent::StorageSystem* veinStorage = m_testRunner->getVeinStorageSystem();
+    QList<QString> loggerComponents = veinStorage->getEntityComponents(dataLoggerEntityId);
+    QCOMPARE(loggerComponents.count(), 15);
+    QVERIFY(loggerComponents.contains("availableContentSets"));
+    QVERIFY(loggerComponents.contains("CustomerData"));
+    QVERIFY(loggerComponents.contains("currentContentSets"));
+    QVERIFY(loggerComponents.contains("DatabaseFile"));
+    QVERIFY(loggerComponents.contains("DatabaseReady"));
+    QVERIFY(loggerComponents.contains("EntityName"));
+    QVERIFY(loggerComponents.contains("ExistingSessions"));
+    QVERIFY(loggerComponents.contains("guiContext"));
+    QVERIFY(loggerComponents.contains("LoggingEnabled"));
+    QVERIFY(loggerComponents.contains("LoggingStatus"));
+    QVERIFY(loggerComponents.contains("ScheduledLoggingCountdown"));
+    QVERIFY(loggerComponents.contains("ScheduledLoggingDuration"));
+    QVERIFY(loggerComponents.contains("ScheduledLoggingEnabled"));
+    QVERIFY(loggerComponents.contains("sessionName"));
+    QVERIFY(loggerComponents.contains("transactionName"));
 }
 
 void test_modman_with_vf_logger::onVfQmlStateChanged(VeinApiQml::VeinQml::ConnectionState t_state)
 {
-    if(t_state == VeinApiQml::VeinQml::ConnectionState::VQ_LOADED && m_initQmlSystemOnce == false)
-    {
+    if(t_state == VeinApiQml::VeinQml::ConnectionState::VQ_LOADED && m_initQmlSystemOnce == false) {
         m_scriptSystem->loadScriptFromFile(":/data_logger.qml");
         m_initQmlSystemOnce = true;
     }
@@ -59,7 +75,7 @@ void test_modman_with_vf_logger::onSerialNoLicensed()
             qInfo("Starting DataLoggerSystem...");
             mmFacade->addSubsystem(m_dataLoggerSystem.get());
 
-            // subscribe those entitities our magic logger QML scriptrequires
+            // subscribe those entitities our magic logger QML script requires
             m_qmlSystem->entitySubscribeById(systemEntityId);
             m_qmlSystem->entitySubscribeById(dataLoggerEntityId);
         }

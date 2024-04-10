@@ -14,7 +14,7 @@ class test_modman_with_vf_logger : public QObject
 private slots:
     void basicCheckRmsModule();
     void checkEntitiesCreated();
-    void checkLoggerComponentValues();
+    void checkLoggerComponentsCreated();
     void init();
     void cleanup();
 private:
