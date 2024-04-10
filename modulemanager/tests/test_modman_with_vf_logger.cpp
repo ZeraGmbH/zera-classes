@@ -16,6 +16,8 @@ static int constexpr rmsEntityId = 1040;
 
 void test_modman_with_vf_logger::checkEntitiesCreated()
 {
+    startModman(":/session-minimal-rms.json");
+
     VeinEvent::StorageSystem* veinStorage = m_testRunner->getVeinStorageSystem();
     QList<int> entityList = veinStorage->getEntityList();
 
@@ -28,8 +30,11 @@ void test_modman_with_vf_logger::checkEntitiesCreated()
 
 void test_modman_with_vf_logger::checkLoggerComponentsCreated()
 {
+    startModman(":/session-minimal-rms.json");
+
     VeinEvent::StorageSystem* veinStorage = m_testRunner->getVeinStorageSystem();
     QList<QString> loggerComponents = veinStorage->getEntityComponents(dataLoggerEntityId);
+
     QCOMPARE(loggerComponents.count(), 15);
     QVERIFY(loggerComponents.contains("availableContentSets"));
     QVERIFY(loggerComponents.contains("CustomerData"));
@@ -104,18 +109,19 @@ void test_modman_with_vf_logger::createModmanWithLogger()
     VeinLogger::QmlLogger::setJsonEnvironment(MODMAN_SESSION_PATH, std::make_shared<JsonLoggerContentSessionLoader>());
 }
 
-void test_modman_with_vf_logger::startModman()
+void test_modman_with_vf_logger::startModman(QString sessionFile)
 {
-    m_testRunner->start(":/session-minimal-rms.json");
+    m_testRunner->start(sessionFile);
     ModuleManagerSetupFacade* mmFacade = m_testRunner->getModManFacade();
     mmFacade->getLicenseSystem()->setDeviceSerial("foo");
+    TimeMachineObject::feedEventLoop();
+    mmFacade->getSystemModuleEventSystem()->initializeEntity(sessionFile, QStringList() << sessionFile);
     TimeMachineObject::feedEventLoop();
 }
 
 void test_modman_with_vf_logger::init()
 {
     createModmanWithLogger();
-    startModman();
 }
 
 void test_modman_with_vf_logger::cleanup()
