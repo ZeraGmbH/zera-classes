@@ -62,10 +62,10 @@ ZeraModules::VirtualModule *ModuleManagerTestRunner::getModule(QString uniqueNam
     return m_modMan->getModule(uniqueName, entityId);
 }
 
-void ModuleManagerTestRunner::setVfComponent(VfCmdEventHandlerSystemPtr vfCmdEventHandlerSystem, int moduleId, QString componentName, QVariant oldValue, QVariant newValue)
+void ModuleManagerTestRunner::setVfComponent(int moduleId, QString componentName, QVariant oldValue, QVariant newValue)
 {
     VfCmdEventItemEntityPtr entityItem = VfEntityComponentEventItem::create(moduleId);
-    vfCmdEventHandlerSystem->addItem(entityItem);
+    m_vfCmdEventHandlerSystem->addItem(entityItem);
 
     VfClientComponentSetterPtr setter = VfClientComponentSetter::create(componentName, entityItem);
     entityItem->addItem(setter);

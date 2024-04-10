@@ -99,8 +99,8 @@ void test_range_module_regression::injectActualValues()
 void test_range_module_regression::injectActualValuesWithPreScaling()
 {
     ModuleManagerTestRunner testRunner(":/session-range-test.json");
-    testRunner.setVfComponent(testRunner.getVfCmdEventHandlerSystemPtr(), rangeEntityId, "PAR_PreScalingEnabledGroup0", false, true);
-    testRunner.setVfComponent(testRunner.getVfCmdEventHandlerSystemPtr(), rangeEntityId, "PAR_PreScalingGroup0", "1/1", "2/1");
+    testRunner.setVfComponent(rangeEntityId, "PAR_PreScalingEnabledGroup0", false, true);
+    testRunner.setVfComponent(rangeEntityId, "PAR_PreScalingGroup0", "1/1", "2/1");
 
     const QList<TestDspInterfacePtr>& dspInterfaces = testRunner.getDspInterfaceList();
     QCOMPARE(dspInterfaces.count(), 3);
@@ -135,8 +135,8 @@ void test_range_module_regression::injectActualValuesWithPreScaling()
 void test_range_module_regression::injectActualValuesWithCheatingDisabled()
 {
     ModuleManagerTestRunner testRunner(":/session-range-test.json");
-    testRunner.setVfComponent(testRunner.getVfCmdEventHandlerSystemPtr(), rangeEntityId, "PAR_IgnoreRmsValuesOnOff", 0, 0);
-    testRunner.setVfComponent(testRunner.getVfCmdEventHandlerSystemPtr(), rangeEntityId, "PAR_IgnoreRmsValues", 1, 2);
+    testRunner.setVfComponent(rangeEntityId, "PAR_IgnoreRmsValuesOnOff", 0, 0);
+    testRunner.setVfComponent(rangeEntityId, "PAR_IgnoreRmsValues", 1, 2);
 
     const QList<TestDspInterfacePtr>& dspInterfaces = testRunner.getDspInterfaceList();
     QCOMPARE(dspInterfaces.count(), 3);
@@ -163,8 +163,8 @@ void test_range_module_regression::injectActualValuesWithCheatingDisabled()
 void test_range_module_regression::injectActualValuesWithCheatingEnabled()
 {
     ModuleManagerTestRunner testRunner(":/session-range-test.json");
-    testRunner.setVfComponent(testRunner.getVfCmdEventHandlerSystemPtr(), rangeEntityId, "PAR_IgnoreRmsValuesOnOff", 0, 1);
-    testRunner.setVfComponent(testRunner.getVfCmdEventHandlerSystemPtr(), rangeEntityId, "PAR_IgnoreRmsValues", 1, 2);
+    testRunner.setVfComponent(rangeEntityId, "PAR_IgnoreRmsValuesOnOff", 0, 1);
+    testRunner.setVfComponent(rangeEntityId, "PAR_IgnoreRmsValues", 1, 2);
 
     const QList<TestDspInterfacePtr>& dspInterfaces = testRunner.getDspInterfaceList();
     QCOMPARE(dspInterfaces.count(), 3);
@@ -194,8 +194,8 @@ void test_range_module_regression::injectActualValuesWithCheatingEnabled()
 void test_range_module_regression::injectActualValuesWithCheatingAndRangeChanged()
 {
     ModuleManagerTestRunner testRunner(":/session-range-test.json");
-    testRunner.setVfComponent(testRunner.getVfCmdEventHandlerSystemPtr(), rangeEntityId, "PAR_IgnoreRmsValuesOnOff", 0, 1);
-    testRunner.setVfComponent(testRunner.getVfCmdEventHandlerSystemPtr(), rangeEntityId, "PAR_IgnoreRmsValues", 1, 2);
+    testRunner.setVfComponent(rangeEntityId, "PAR_IgnoreRmsValuesOnOff", 0, 1);
+    testRunner.setVfComponent(rangeEntityId, "PAR_IgnoreRmsValues", 1, 2);
 
     const QList<TestDspInterfacePtr>& dspInterfaces = testRunner.getDspInterfaceList();
     QCOMPARE(dspInterfaces.count(), 3);
@@ -219,7 +219,7 @@ void test_range_module_regression::injectActualValuesWithCheatingAndRangeChanged
     QVector<float> actualGainCorr = writtenCorrData.mid(0, 8);
     QCOMPARE(expectedGainCorr, actualGainCorr);
 
-    testRunner.setVfComponent(testRunner.getVfCmdEventHandlerSystemPtr(), rangeEntityId, "PAR_Channel1Range", "250V", "8V");
+    testRunner.setVfComponent(rangeEntityId, "PAR_Channel1Range", "250V", "8V");
     spyDspWrite.clear();
     TimeMachineForTest::getInstance()->processTimers(500); //for 'm_AdjustTimer'
     dspInterfaces[dspInterfaces::RangeModuleMeasProgram]->fireActValInterrupt(rangeValues.getDspValues(), /* dummy */ 0);
@@ -239,8 +239,8 @@ void test_range_module_regression::injectActualValuesWithCheatingAndRangeChanged
 void test_range_module_regression::injectIncreasingActualValuesWithCheatingEnabled()
 {
     ModuleManagerTestRunner testRunner(":/session-range-test.json");
-    testRunner.setVfComponent(testRunner.getVfCmdEventHandlerSystemPtr(), rangeEntityId, "PAR_IgnoreRmsValuesOnOff", 0, 1);
-    testRunner.setVfComponent(testRunner.getVfCmdEventHandlerSystemPtr(), rangeEntityId, "PAR_IgnoreRmsValues", 1, 2);
+    testRunner.setVfComponent(rangeEntityId, "PAR_IgnoreRmsValuesOnOff", 0, 1);
+    testRunner.setVfComponent(rangeEntityId, "PAR_IgnoreRmsValues", 1, 2);
 
     const QList<TestDspInterfacePtr>& dspInterfaces = testRunner.getDspInterfaceList();
 
@@ -286,10 +286,10 @@ void test_range_module_regression::injectIncreasingActualValuesWithCheatingEnabl
 void test_range_module_regression::injectActualValuesCheatingEnabledWithPreScaling()
 {
     ModuleManagerTestRunner testRunner(":/session-range-test.json");
-    testRunner.setVfComponent(testRunner.getVfCmdEventHandlerSystemPtr(), rangeEntityId, "PAR_IgnoreRmsValuesOnOff", 0, 1);
-    testRunner.setVfComponent(testRunner.getVfCmdEventHandlerSystemPtr(), rangeEntityId, "PAR_IgnoreRmsValues", 1, 0.5);
-    testRunner.setVfComponent(testRunner.getVfCmdEventHandlerSystemPtr(), rangeEntityId, "PAR_PreScalingEnabledGroup0", false, true);
-    testRunner.setVfComponent(testRunner.getVfCmdEventHandlerSystemPtr(), rangeEntityId, "PAR_PreScalingGroup0", "1/1", "2/1");
+    testRunner.setVfComponent(rangeEntityId, "PAR_IgnoreRmsValuesOnOff", 0, 1);
+    testRunner.setVfComponent(rangeEntityId, "PAR_IgnoreRmsValues", 1, 0.5);
+    testRunner.setVfComponent(rangeEntityId, "PAR_PreScalingEnabledGroup0", false, true);
+    testRunner.setVfComponent(rangeEntityId, "PAR_PreScalingGroup0", "1/1", "2/1");
 
     const QList<TestDspInterfacePtr>& dspInterfaces = testRunner.getDspInterfaceList();
 
