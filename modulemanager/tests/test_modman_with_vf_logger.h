@@ -12,15 +12,17 @@ class test_modman_with_vf_logger : public QObject
 {
     Q_OBJECT
 private slots:
-    void checkEntitiesCreated();
-    void checkLoggerComponentsCreated();
+    void entitiesCreated();
+    void loggerComponentsCreated();
+    void availableContentSets();
+    void initTestCase();
     void init();
     void cleanup();
 private:
     void onVfQmlStateChanged(VeinApiQml::VeinQml::ConnectionState t_state);
     void onSerialNoLicensed();
     void createModmanWithLogger();
-    void startModman(QString sessionFile);
+    void startModman(QString sessionFileName);
     std::unique_ptr<ModuleManagerTestRunner> m_testRunner;
     std::unique_ptr<VeinScript::ScriptSystem> m_scriptSystem;
     std::unique_ptr<VeinApiQml::VeinQml> m_qmlSystem;
