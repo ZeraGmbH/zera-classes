@@ -14,9 +14,19 @@ static int constexpr scriptEntityId = 1;
 static int constexpr dataLoggerEntityId = 2;
 static int constexpr rmsEntityId = 1040;
 
-void test_modman_with_vf_logger::checkEntitiesCreated()
+void test_modman_with_vf_logger::initTestCase()
 {
-    startModman(":/session-minimal-rms.json");
+    VeinLogger::QmlLogger::setJsonEnvironment(":/contentsets/", std::make_shared<JsonLoggerContentLoader>());
+    VeinLogger::QmlLogger::setJsonEnvironment(":/sessions/", std::make_shared<JsonLoggerContentSessionLoader>());
+}
+
+void test_modman_with_vf_logger::init()
+{
+    createModmanWithLogger();
+}
+void test_modman_with_vf_logger::entitiesCreated()
+{
+    startModman("session-minimal-rms.json");
 
     VeinEvent::StorageSystem* veinStorage = m_testRunner->getVeinStorageSystem();
     QList<int> entityList = veinStorage->getEntityList();
@@ -28,9 +38,9 @@ void test_modman_with_vf_logger::checkEntitiesCreated()
     QVERIFY(entityList.contains(rmsEntityId));
 }
 
-void test_modman_with_vf_logger::checkLoggerComponentsCreated()
+void test_modman_with_vf_logger::loggerComponentsCreated()
 {
-    startModman(":/session-minimal-rms.json");
+    startModman("session-minimal-rms.json");
 
     VeinEvent::StorageSystem* veinStorage = m_testRunner->getVeinStorageSystem();
     QList<QString> loggerComponents = veinStorage->getEntityComponents(dataLoggerEntityId);
@@ -51,6 +61,17 @@ void test_modman_with_vf_logger::checkLoggerComponentsCreated()
     QVERIFY(loggerComponents.contains("ScheduledLoggingEnabled"));
     QVERIFY(loggerComponents.contains("sessionName"));
     QVERIFY(loggerComponents.contains("transactionName"));
+}
+
+void test_modman_with_vf_logger::availableContentSets()
+{
+    startModman("session-minimal-rms.json");
+
+    VeinEvent::StorageSystem* veinStorage = m_testRunner->getVeinStorageSystem();
+    QStringList availContentSets = veinStorage->getStoredValue(dataLoggerEntityId, "availableContentSets").toStringList();
+    QCOMPARE(availContentSets.count(), 2);
+    QVERIFY(availContentSets.contains("ZeraAll"));
+    QVERIFY(availContentSets.contains("ZeraActualValuesTest"));
 }
 
 void test_modman_with_vf_logger::onVfQmlStateChanged(VeinApiQml::VeinQml::ConnectionState t_state)
@@ -76,6 +97,15 @@ void test_modman_with_vf_logger::onSerialNoLicensed()
             m_qmlSystem->entitySubscribeById(dataLoggerEntityId);
         }
     }
+}
+
+void test_modman_with_vf_logger::cleanup()
+{
+    m_testRunner = nullptr;
+    m_dataLoggerSystem = nullptr;
+    TimeMachineObject::feedEventLoop();
+    m_scriptSystem = nullptr;
+    TimeMachineObject::feedEventLoop();
 }
 
 void test_modman_with_vf_logger::createModmanWithLogger()
@@ -105,30 +135,14 @@ void test_modman_with_vf_logger::createModmanWithLogger()
 
     VeinApiQml::VeinQml::setStaticInstance(m_qmlSystem.get());
     VeinLogger::QmlLogger::setStaticLogger(m_dataLoggerSystem.get());
-    VeinLogger::QmlLogger::setJsonEnvironment(MODMAN_CONTENTSET_PATH, std::make_shared<JsonLoggerContentLoader>());
-    VeinLogger::QmlLogger::setJsonEnvironment(MODMAN_SESSION_PATH, std::make_shared<JsonLoggerContentSessionLoader>());
 }
 
-void test_modman_with_vf_logger::startModman(QString sessionFile)
+void test_modman_with_vf_logger::startModman(QString sessionFileName)
 {
-    m_testRunner->start(sessionFile);
+    m_testRunner->start(":/sessions/" + sessionFileName);
     ModuleManagerSetupFacade* mmFacade = m_testRunner->getModManFacade();
     mmFacade->getLicenseSystem()->setDeviceSerial("foo");
     TimeMachineObject::feedEventLoop();
-    mmFacade->getSystemModuleEventSystem()->initializeEntity(sessionFile, QStringList() << sessionFile);
-    TimeMachineObject::feedEventLoop();
-}
-
-void test_modman_with_vf_logger::init()
-{
-    createModmanWithLogger();
-}
-
-void test_modman_with_vf_logger::cleanup()
-{
-    m_testRunner = nullptr;
-    m_dataLoggerSystem = nullptr;
-    TimeMachineObject::feedEventLoop();
-    m_scriptSystem = nullptr;
+    mmFacade->getSystemModuleEventSystem()->initializeEntity(sessionFileName, QStringList() << sessionFileName);
     TimeMachineObject::feedEventLoop();
 }
