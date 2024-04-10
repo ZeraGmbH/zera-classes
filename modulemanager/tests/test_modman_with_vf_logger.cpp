@@ -1,13 +1,9 @@
 #include "test_modman_with_vf_logger.h"
 #include "jsonloggercontentloader.h"
 #include "jsonloggercontentsessionloader.h"
-#include "modulemanagertestrunner.h"
-#include "veinqml.h"
 #include "vl_qmllogger.h"
 #include "vl_sqlitedb.h"
-#include "vsc_scriptsystem.h"
 #include "vl_datasource.h"
-#include "zeradblogger.h"
 #include <timemachineobject.h>
 #include <QTest>
 
@@ -27,62 +23,9 @@ void test_modman_with_vf_logger::basicCheckRmsModule()
     QVERIFY(veinStorage->hasEntity(rmsEntityId));
 }
 
-void test_modman_with_vf_logger::setupSytemWithLogger()
+void test_modman_with_vf_logger::checkEntitiesCreated()
 {
-    ModuleManagerTestRunner testRunner("", true);
-    ModuleManagerSetupFacade* mmFacade = testRunner.getModManFacade();
-
-    // Add all the logger crap as is see modulemanager's main.cpp
-    VeinScript::ScriptSystem *scriptSystem = new VeinScript::ScriptSystem(mmFacade);
-    VeinApiQml::VeinQml *qmlSystem = new VeinApiQml::VeinQml(mmFacade);
-
-    const VeinLogger::DBFactory sqliteFactory = [](){
-        return new VeinLogger::SQLiteDB();
-    };
-    ZeraDBLogger *dataLoggerSystem = new ZeraDBLogger(new VeinLogger::DataSource(mmFacade->getStorageSystem(), mmFacade), sqliteFactory, mmFacade); //takes ownership of DataSource
-
-    //setup logger
-    VeinApiQml::VeinQml::setStaticInstance(qmlSystem);
-    VeinLogger::QmlLogger::setStaticLogger(dataLoggerSystem);
-    VeinLogger::QmlLogger::setJsonEnvironment(MODMAN_CONTENTSET_PATH, std::make_shared<JsonLoggerContentLoader>());
-    VeinLogger::QmlLogger::setJsonEnvironment(MODMAN_SESSION_PATH, std::make_shared<JsonLoggerContentSessionLoader>());
-
-    bool initQmlSystemOnce = false;
-    QObject::connect(qmlSystem, &VeinApiQml::VeinQml::sigStateChanged, [&](VeinApiQml::VeinQml::ConnectionState t_state){
-        if(t_state == VeinApiQml::VeinQml::ConnectionState::VQ_LOADED && initQmlSystemOnce == false)
-        {
-            scriptSystem->loadScriptFromFile(":/data_logger.qml");
-            initQmlSystemOnce = true;
-        }
-    });
-    mmFacade->addSubsystem(qmlSystem);
-    mmFacade->addSubsystem(scriptSystem);
-
-    LicenseSystemInterface *licenseSystem = mmFacade->getLicenseSystem();
-    bool dataLoggerSystemInitialized = false;
-    QObject::connect(licenseSystem, &LicenseSystemInterface::sigSerialNumberInitialized, [&](){
-        if(licenseSystem->isSystemLicensed(dataLoggerSystem->entityName()))
-        {
-            if(!dataLoggerSystemInitialized)
-            {
-                dataLoggerSystemInitialized = true;
-                qInfo("Starting DataLoggerSystem...");
-                mmFacade->addSubsystem(dataLoggerSystem);
-
-                // subscribe those entitities our magic logger QML script
-                // requires (see modMan->loadScripts above)
-                qmlSystem->entitySubscribeById(systemEntityId);
-                qmlSystem->entitySubscribeById(dataLoggerEntityId);
-            }
-        }
-    });
-    testRunner.start(":/session-minimal-rms.json");
-
-    // THIS IS THE START FOR LAMDAS ABOVE
-    mmFacade->getLicenseSystem()->setDeviceSerial("foo");
-    TimeMachineObject::feedEventLoop();
-
-    VeinEvent::StorageSystem* veinStorage = testRunner.getVeinStorageSystem();
+    VeinEvent::StorageSystem* veinStorage = m_testRunner->getVeinStorageSystem();
     QList<int> entityList = veinStorage->getEntityList();
 
     QCOMPARE(entityList.count(), 4);
@@ -91,3 +34,85 @@ void test_modman_with_vf_logger::setupSytemWithLogger()
     QVERIFY(entityList.contains(dataLoggerEntityId));
     QVERIFY(entityList.contains(rmsEntityId));
 }
+
+void test_modman_with_vf_logger::checkLoggerComponentValues()
+{
+
+}
+
+void test_modman_with_vf_logger::onVfQmlStateChanged(VeinApiQml::VeinQml::ConnectionState t_state)
+{
+    if(t_state == VeinApiQml::VeinQml::ConnectionState::VQ_LOADED && m_initQmlSystemOnce == false)
+    {
+        m_scriptSystem->loadScriptFromFile(":/data_logger.qml");
+        m_initQmlSystemOnce = true;
+    }
+}
+
+void test_modman_with_vf_logger::onSerialNoLicensed()
+{
+    ModuleManagerSetupFacade* mmFacade = m_testRunner->getModManFacade();
+    LicenseSystemInterface *licenseSystem = mmFacade->getLicenseSystem();
+    if(licenseSystem->isSystemLicensed(m_dataLoggerSystem->entityName())) {
+        if(!m_dataLoggerSystemInitialized) {
+            m_dataLoggerSystemInitialized = true;
+            qInfo("Starting DataLoggerSystem...");
+            mmFacade->addSubsystem(m_dataLoggerSystem.get());
+
+            // subscribe those entitities our magic logger QML scriptrequires
+            m_qmlSystem->entitySubscribeById(systemEntityId);
+            m_qmlSystem->entitySubscribeById(dataLoggerEntityId);
+        }
+    }
+}
+
+void test_modman_with_vf_logger::createModmanWithLogger()
+{
+    m_initQmlSystemOnce = false;
+    m_dataLoggerSystemInitialized = false;
+
+    m_testRunner = std::make_unique<ModuleManagerTestRunner>("", true);
+    ModuleManagerSetupFacade* mmFacade = m_testRunner->getModManFacade();
+    m_scriptSystem = std::make_unique<VeinScript::ScriptSystem>();
+    m_qmlSystem = std::make_unique<VeinApiQml::VeinQml>();
+
+    mmFacade->addSubsystem(m_qmlSystem.get());
+    mmFacade->addSubsystem(m_scriptSystem.get());
+
+    connect(m_qmlSystem.get(), &VeinApiQml::VeinQml::sigStateChanged,
+            this, &test_modman_with_vf_logger::onVfQmlStateChanged);
+
+    LicenseSystemInterface *licenseSystem = mmFacade->getLicenseSystem();
+    connect(licenseSystem, &LicenseSystemInterface::sigSerialNumberInitialized,
+            this, &test_modman_with_vf_logger::onSerialNoLicensed);
+
+    const VeinLogger::DBFactory sqliteFactory = [](){
+        return new VeinLogger::SQLiteDB();
+    };
+    m_dataLoggerSystem = std::make_unique<ZeraDBLogger>(new VeinLogger::DataSource(mmFacade->getStorageSystem()), sqliteFactory); //takes ownership of DataSource
+
+    VeinApiQml::VeinQml::setStaticInstance(m_qmlSystem.get());
+    VeinLogger::QmlLogger::setStaticLogger(m_dataLoggerSystem.get());
+    VeinLogger::QmlLogger::setJsonEnvironment(MODMAN_CONTENTSET_PATH, std::make_shared<JsonLoggerContentLoader>());
+    VeinLogger::QmlLogger::setJsonEnvironment(MODMAN_SESSION_PATH, std::make_shared<JsonLoggerContentSessionLoader>());
+}
+
+void test_modman_with_vf_logger::startModman()
+{
+    m_testRunner->start(":/session-minimal-rms.json");
+    ModuleManagerSetupFacade* mmFacade = m_testRunner->getModManFacade();
+    mmFacade->getLicenseSystem()->setDeviceSerial("foo");
+    TimeMachineObject::feedEventLoop();
+}
+
+void test_modman_with_vf_logger::init()
+{
+    createModmanWithLogger();
+    startModman();
+}
+
+void test_modman_with_vf_logger::cleanup()
+{
+    m_testRunner = nullptr;
+}
+
