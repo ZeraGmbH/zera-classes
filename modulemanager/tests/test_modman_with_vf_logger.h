@@ -15,7 +15,9 @@ private slots:
     void entitiesCreated();
     void loggerComponentsCreated();
     void contentSetsAvailable();
-    void contentSetsSelectValid();
+    void contentSetsSelectValid(); // This is a bug!!
+    void contentSetsSelectInvValid();
+    void contentSetsSelectValidList();
 
     void initTestCase();
     void init();
