@@ -18,11 +18,6 @@ namespace VeinEvent
 class StorageSystem;
 }
 
-namespace VeinScript
-{
-class ScriptSystem;
-}
-
 class MeasurementModuleFactory;
 
 namespace ZeraModules
@@ -37,7 +32,6 @@ public:
                            QObject *parent = nullptr);
     ~ModuleManager() override;
     bool loadAllAvailableModulePlugins();
-    void loadScripts(VeinScript::ScriptSystem *t_scriptSystem);
     void setupConnections();
     void loadDefaultSession();
     void startAllDemoServices(QString deviceName);
