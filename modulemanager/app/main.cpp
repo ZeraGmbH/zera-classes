@@ -1,11 +1,11 @@
 #include "demofactoryserviceinterfaces.h"
 #include "factoryserviceinterfaces.h"
+#include "jsonloggercontentloader.h"
 #include "modulemanager.h"
 #include "modulemanagerconfig.h"
 #include "customerdatasystem.h"
 #include "zeradblogger.h"
 #include "licensesystem.h"
-#include "jsonloggercontentloader.h"
 #include "jsonloggercontentsessionloader.h"
 
 #include <QGuiApplication>
@@ -20,6 +20,7 @@
 #include <veinqmlwrapper.h>
 
 #include <vl_databaselogger.h>
+#include <loggercontentsetconfig.h>
 #include <vl_datasource.h>
 #include <vl_qmllogger.h>
 #include <vl_sqlitedb.h>
@@ -155,8 +156,8 @@ int main(int argc, char *argv[])
     //setup logger
     VeinApiQml::VeinQml::setStaticInstance(qmlSystem);
     VeinLogger::QmlLogger::setStaticLogger(dataLoggerSystem);
-    VeinLogger::QmlLogger::setJsonEnvironment(MODMAN_CONTENTSET_PATH, std::make_shared<JsonLoggerContentLoader>());
-    VeinLogger::QmlLogger::setJsonEnvironment(MODMAN_SESSION_PATH, std::make_shared<JsonLoggerContentSessionLoader>());
+    VeinLogger::LoggerContentSetConfig::setJsonEnvironment(MODMAN_CONTENTSET_PATH, std::make_shared<JsonLoggerContentLoader>());
+    VeinLogger::LoggerContentSetConfig::setJsonEnvironment(MODMAN_SESSION_PATH, std::make_shared<JsonLoggerContentSessionLoader>());
 
     bool initQmlSystemOnce = false;
     QObject::connect(qmlSystem, &VeinApiQml::VeinQml::sigStateChanged, [&](VeinApiQml::VeinQml::ConnectionState t_state){
