@@ -134,7 +134,7 @@ void test_modman_with_vf_logger::init()
 void test_modman_with_vf_logger::onVfQmlStateChanged(VeinApiQml::VeinQml::ConnectionState t_state)
 {
     if(t_state == VeinApiQml::VeinQml::ConnectionState::VQ_LOADED && m_initQmlSystemOnce == false) {
-        m_scriptSystem->loadScriptFromFile(":/data_logger.qml");
+        VeinLogger::DatabaseLogger::loadScripts(m_scriptSystem.get());
         m_initQmlSystemOnce = true;
     }
 }
@@ -174,7 +174,9 @@ void test_modman_with_vf_logger::createModmanWithLogger()
     m_storage = m_testRunner->getVeinStorageSystem();
 
     m_scriptSystem = std::make_unique<VeinScript::ScriptSystem>();
+
     m_qmlSystem = std::make_unique<VeinApiQml::VeinQml>();
+    VeinApiQml::VeinQml::setStaticInstance(m_qmlSystem.get());
 
     ModuleManagerSetupFacade* mmFacade = m_testRunner->getModManFacade();
     mmFacade->addSubsystem(m_qmlSystem.get());
@@ -190,8 +192,6 @@ void test_modman_with_vf_logger::createModmanWithLogger()
         return new VeinLogger::SQLiteDB();
     };
     m_dataLoggerSystem = std::make_unique<ZeraDBLogger>(new VeinLogger::DataSource(mmFacade->getStorageSystem()), sqliteFactory); //takes ownership of DataSource
-
-    VeinApiQml::VeinQml::setStaticInstance(m_qmlSystem.get());
     VeinLogger::QmlLogger::setStaticLogger(m_dataLoggerSystem.get());
 }
 

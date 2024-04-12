@@ -1,6 +1,5 @@
 <RCC>
     <qresource prefix="/">
-        <file>qml/data_logger.qml</file>
         <file alias="license_cert.pem">test_cert.pem</file>
     </qresource>
 </RCC>

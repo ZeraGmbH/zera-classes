@@ -6,7 +6,6 @@
 #include "demoallservicesmt310s2.h"
 
 #include <ve_eventsystem.h>
-#include <vsc_scriptsystem.h>
 
 #include <QPluginLoader>
 #include <abstractmodulefactory.h>
@@ -93,20 +92,6 @@ bool ModuleManager::loadAllAvailableModulePlugins()
     }
     qInfo("Modules analysed after %llims", m_timerAllModulesLoaded.elapsed());
     return retVal;
-}
-
-void ModuleManager::loadScripts(VeinScript::ScriptSystem *t_scriptSystem)
-{
-    //load builtin qml-scripts
-    const QDir virtualFiles(":/qml");
-    const QStringList scriptList = virtualFiles.entryList();
-    for(const QString &scriptFilePath : scriptList)
-    {
-        const QString dataLocation = QString("%1/%2").arg(virtualFiles.path(), scriptFilePath);
-        qDebug() << "Loading script:" << dataLocation;
-        if(t_scriptSystem->loadScriptFromFile(dataLocation) == false)
-            qWarning() << "Error loading script file:" << scriptFilePath;
-    }
 }
 
 void ModuleManager::setupConnections()

@@ -3,8 +3,8 @@
 
 #include "modulemanagertestrunner.h"
 #include "veinqml.h"
-#include "vsc_scriptsystem.h"
 #include "zeradblogger.h"
+#include <vsc_scriptsystem.h>
 #include <QObject>
 #include <memory>
 

@@ -163,7 +163,7 @@ int main(int argc, char *argv[])
     QObject::connect(qmlSystem, &VeinApiQml::VeinQml::sigStateChanged, [&](VeinApiQml::VeinQml::ConnectionState t_state){
         if(t_state == VeinApiQml::VeinQml::ConnectionState::VQ_LOADED && initQmlSystemOnce == false)
         {
-            modMan->loadScripts(scriptSystem);
+            VeinLogger::DatabaseLogger::loadScripts(scriptSystem);
             initQmlSystemOnce = true;
         }
     });
@@ -251,7 +251,7 @@ int main(int argc, char *argv[])
                 exportModule->initOnce();
 
                 // subscribe those entitities our magic logger QML script
-                // requires (see modMan->loadScripts above)
+                // requires (see VeinLogger::DatabaseLogger::loadScripts above)
                 qmlSystem->entitySubscribeById(0); //0 = mmController
                 qmlSystem->entitySubscribeById(2); //2 = dataLoggerSystem
             }
