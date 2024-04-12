@@ -75,6 +75,43 @@ void test_modman_with_vf_logger::contentSetsSelectValid()
     loggedComponents = m_storage->getStoredValue(systemEntityId, "LoggedComponents").toMap();
     QString rmsEntityNum = QString("%1").arg(rmsEntityId);
 
+    // TODO: On rework, a string not in a list must not be accepted
+    QVariant contentSets = m_storage->getStoredValue(dataLoggerEntityId, "currentContentSets");
+    QCOMPARE(contentSets, "ZeraActualValuesTest");
+
+    QVERIFY(loggedComponents.contains(rmsEntityNum));
+    QCOMPARE(loggedComponents[rmsEntityNum], QStringList()); // no specific components in contentset ZeraActualValuesTest
+}
+
+void test_modman_with_vf_logger::contentSetsSelectInvValid()
+{
+    startModman("session-minimal-rms.json");
+
+    QCOMPARE(m_storage->getStoredValue(dataLoggerEntityId, "currentContentSets"), QStringList());
+    QVariantMap loggedComponents = m_storage->getStoredValue(systemEntityId, "LoggedComponents").toMap();
+    QCOMPARE(loggedComponents, QVariantMap());
+
+    m_testRunner->setVfComponent(dataLoggerEntityId, "currentContentSets", "Foo");
+
+    loggedComponents = m_storage->getStoredValue(systemEntityId, "LoggedComponents").toMap();
+    QVERIFY(loggedComponents.isEmpty());
+}
+
+void test_modman_with_vf_logger::contentSetsSelectValidList()
+{
+    startModman("session-minimal-rms.json");
+
+    QCOMPARE(m_storage->getStoredValue(dataLoggerEntityId, "currentContentSets"), QStringList());
+
+    m_testRunner->setVfComponent(dataLoggerEntityId, "currentContentSets", QStringList() << "ZeraActualValuesTest");
+
+    QVariantMap loggedComponents = m_storage->getStoredValue(systemEntityId, "LoggedComponents").toMap();
+    QString rmsEntityNum = QString("%1").arg(rmsEntityId);
+
+    QVariantList contentSets = m_storage->getStoredValue(dataLoggerEntityId, "currentContentSets").toList();
+    QCOMPARE(contentSets.size(), 1);
+    QCOMPARE(contentSets[0], "ZeraActualValuesTest");
+
     QVERIFY(loggedComponents.contains(rmsEntityNum));
     QCOMPARE(loggedComponents[rmsEntityNum], QStringList()); // no specific components in contentset ZeraActualValuesTest
 }
