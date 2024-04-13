@@ -84,7 +84,7 @@ void test_modman_with_vf_logger::contentSetsSelectValid()
     QCOMPARE(loggedComponents[rmsEntityNum], QStringList()); // no specific components in contentset ZeraActualValuesTest
 }
 
-void test_modman_with_vf_logger::contentSetsSelectInvValid()
+void test_modman_with_vf_logger::contentSetsSelectInvalid()
 {
     startModman("session-minimal-rms.json");
 

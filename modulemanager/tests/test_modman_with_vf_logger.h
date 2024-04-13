@@ -16,7 +16,7 @@ private slots:
     void loggerComponentsCreated();
     void contentSetsAvailable();
     void contentSetsSelectValid(); // This is a bug!!
-    void contentSetsSelectInvValid();
+    void contentSetsSelectInvalid();
     void contentSetsSelectValidList();
 
     void initTestCase();
