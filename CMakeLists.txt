@@ -15,7 +15,7 @@ include(GenerateExportHeader)
 include(CMakePackageConfigHelpers)
 include(FindPkgConfig)
 
-find_package(Qt5 COMPONENTS Core Network Qml Concurrent Test CONFIG REQUIRED)
+find_package(Qt5 COMPONENTS Core Network Qml Test CONFIG REQUIRED)
 find_package(GTest REQUIRED)
 find_package(ZenuxCore REQUIRED)
 find_package(ZeraMicroController REQUIRED)
