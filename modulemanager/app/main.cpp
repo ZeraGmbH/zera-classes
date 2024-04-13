@@ -227,7 +227,7 @@ int main(int argc, char *argv[])
             if(licenseSystem->isSystemLicensed(CustomerDataSystem::s_entityName) && !customerDataSystemInitialized)
             {
                 customerDataSystemInitialized = true;
-                customerDataSystem = new CustomerDataSystem(app.get());
+                customerDataSystem = new CustomerDataSystem(MODMAN_CUSTOMERDATA_PATH, app.get());
                 QObject::connect(customerDataSystem, &CustomerDataSystem::sigCustomerDataError, errorReportFunction);
                 qDebug() << "CustomerDataSystem is enabled";
                 modManSetupFacade->addSubsystem(customerDataSystem);
