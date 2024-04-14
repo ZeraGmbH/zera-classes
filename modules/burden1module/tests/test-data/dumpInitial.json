@@ -1,14 +1,14 @@
 {
     "1160": {
-        "ACT_Burden1": 0,
-        "ACT_Burden2": 0,
-        "ACT_Burden3": 0,
-        "ACT_PFactor1": 0,
-        "ACT_PFactor2": 0,
-        "ACT_PFactor3": 0,
-        "ACT_Ratio1": 0,
-        "ACT_Ratio2": 0,
-        "ACT_Ratio3": 0,
+        "ACT_Burden1": null,
+        "ACT_Burden2": null,
+        "ACT_Burden3": null,
+        "ACT_PFactor1": null,
+        "ACT_PFactor2": null,
+        "ACT_PFactor3": null,
+        "ACT_Ratio1": null,
+        "ACT_Ratio2": null,
+        "ACT_Ratio3": null,
         "EntityName": "Burden1Module1",
         "INF_ModuleInterface": {
             "ComponentInfo": {
@@ -255,15 +255,15 @@
         "SIG_Measuring": 0
     },
     "1161": {
-        "ACT_Burden1": 0,
-        "ACT_Burden2": 0,
-        "ACT_Burden3": 0,
-        "ACT_PFactor1": 0,
-        "ACT_PFactor2": 0,
-        "ACT_PFactor3": 0,
-        "ACT_Ratio1": 0,
-        "ACT_Ratio2": 0,
-        "ACT_Ratio3": 0,
+        "ACT_Burden1": null,
+        "ACT_Burden2": null,
+        "ACT_Burden3": null,
+        "ACT_PFactor1": null,
+        "ACT_PFactor2": null,
+        "ACT_PFactor3": null,
+        "ACT_Ratio1": null,
+        "ACT_Ratio2": null,
+        "ACT_Ratio3": null,
         "EntityName": "Burden1Module2",
         "INF_ModuleInterface": {
             "ComponentInfo": {

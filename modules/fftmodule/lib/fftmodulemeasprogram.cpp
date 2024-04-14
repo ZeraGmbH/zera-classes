@@ -141,15 +141,13 @@ void cFftModuleMeasProgram::generateInterface()
     for (int i = 0; i < n; i++) {
         pActvalue = new VfModuleActvalue(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
                                             QString("ACT_FFT%1").arg(i+1),
-                                            QString("FFT actual values"),
-                                            QVariant(0.0) );
+                                            QString("FFT actual values"));
         m_veinActValueList.append(pActvalue); // we add the component for our measurement
         m_pModule->veinModuleActvalueList.append(pActvalue); // and for the modules interface
 
         pActvalue = new VfModuleActvalue(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
                                             QString("ACT_DC%1").arg(i+1),
-                                            QString("DC actual value"),
-                                            QVariant(0.0) );
+                                            QString("DC actual value"));
         m_DCValueList.append(pActvalue);
         m_pModule->veinModuleActvalueList.append(pActvalue);
     }

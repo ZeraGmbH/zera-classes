@@ -168,8 +168,7 @@ void cThdnModuleMeasProgram::generateInterface()
     {
         pActvalue = new VfModuleActvalue(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
                                             QString("ACT_THD%1%2").arg(getConfData()->m_sTHDType).arg(i+1),
-                                            QString("THD%1 actual value").arg(getConfData()->m_sTHDType.toLower()),
-                                            QVariant(0.0) );
+                                            QString("THD%1 actual value").arg(getConfData()->m_sTHDType.toLower()));
         m_veinActValueList.append(pActvalue); // we add the component for our measurement
         m_pModule->veinModuleActvalueList.append(pActvalue); // and for the modules interface
     }

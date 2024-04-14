@@ -63,8 +63,7 @@ void cPower3ModuleMeasProgram::generateInterface()
     {
         pActvalue = new VfModuleActvalue(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
                                             QString("ACT_HPP%1").arg(i+1),
-                                            QString("Harmonic power active values"),
-                                            QVariant(0.0) );
+                                            QString("Harmonic power active values"));
         pActvalue->setChannelName(QString("P%1").arg(i+1)); // we take "system" as name because we export real- and imaginary part
         pActvalue->setUnit("W");
 
@@ -76,8 +75,7 @@ void cPower3ModuleMeasProgram::generateInterface()
 
         pActvalue = new VfModuleActvalue(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
                                             QString("ACT_HPQ%1").arg(i+1),
-                                            QString("Harmonic power reactive values"),
-                                            QVariant(0.0) );
+                                            QString("Harmonic power reactive values"));
         pActvalue->setChannelName(QString("Q%1").arg(i+1)); // we take "system" as name because we export real- and imaginary part
         pActvalue->setUnit("Var");
 
@@ -89,8 +87,7 @@ void cPower3ModuleMeasProgram::generateInterface()
 
         pActvalue = new VfModuleActvalue(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
                                             QString("ACT_HPS%1").arg(i+1),
-                                            QString("Harmonic power apparent values"),
-                                            QVariant(0.0) );
+                                            QString("Harmonic power apparent values"));
         pActvalue->setChannelName(QString("S%1").arg(i+1)); // we take "system" as name because we export real- and imaginary part
         pActvalue->setUnit("VA");
 
