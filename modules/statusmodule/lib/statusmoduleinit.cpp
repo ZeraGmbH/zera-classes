@@ -214,7 +214,7 @@ void cStatusModuleInit::generateInterface()
     m_pAdjustmentStatus = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
                                                    key = QString("INF_Adjusted"),
                                                    QString("Adjustment information"),
-                                                   QVariant(0));
+                                                   QVariant(""));
 
     m_pModule->m_veinModuleParameterMap[key] = m_pAdjustmentStatus;
     m_pAdjustmentStatus->setSCPIInfo(new cSCPIInfo("STATUS", "ADJUSTMENT", "2", key, "0", ""));
@@ -222,7 +222,7 @@ void cStatusModuleInit::generateInterface()
     m_pAdjustmentChksum = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
                                                    key = QString("INF_AdjChksum"),
                                                    QString("Adjustment data checksum device"),
-                                                   QVariant(0));
+                                                   QVariant(""));
 
     m_pModule->m_veinModuleParameterMap[key] = m_pAdjustmentChksum;
     m_pAdjustmentChksum->setSCPIInfo(new cSCPIInfo("STATUS", "ADJCHKSUM", "2", key, "0", ""));

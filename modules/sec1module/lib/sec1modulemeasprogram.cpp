@@ -298,7 +298,7 @@ void cSec1ModuleMeasProgram::generateInterface()
     m_pMRatePar = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
                                            key = QString("PAR_MRate"),
                                            QString("Pulses to measure"),
-                                           QVariant((double)0.0));
+                                           QVariant());
     m_pMRatePar->setSCPIInfo(new cSCPIInfo("CALCULATE", QString("%1:MRATE").arg(modNr), "10", m_pMRatePar->getName(), "0", ""));
     m_pModule->m_veinModuleParameterMap[key] = m_pMRatePar; // for modules use
     iValidator = new cIntValidator(1, 4294967295, 1);
@@ -307,7 +307,7 @@ void cSec1ModuleMeasProgram::generateInterface()
     m_pTargetPar = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
                                             key = QString("PAR_Target"),
                                             QString("REF pulses for 0% error - set automatically"),
-                                            QVariant((double)0.0));
+                                            QVariant());
     m_pTargetPar->setSCPIInfo(new cSCPIInfo("CALCULATE",QString("%1:TARGET").arg(modNr), "10", m_pTargetPar->getName(), "0", ""));
     m_pModule->m_veinModuleParameterMap[key] = m_pTargetPar; // for modules use
     iValidator = new cIntValidator(1, 4294967295, 1);
