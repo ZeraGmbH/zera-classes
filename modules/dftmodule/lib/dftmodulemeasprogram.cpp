@@ -158,8 +158,7 @@ void cDftModuleMeasProgram::generateInterface()
                 channelDescription = QString("Actual value");
             pActvalue = new VfModuleActvalue(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
                                                 QString("ACT_DFTPN%1").arg(n+1),
-                                                channelDescription,
-                                                QVariant(0.0) );
+                                                channelDescription);
             m_veinActValueList.append(pActvalue); // we add the component for our measurement
             m_pModule->veinModuleActvalueList.append(pActvalue); // and for the modules interface
             n++;
@@ -167,8 +166,7 @@ void cDftModuleMeasProgram::generateInterface()
         else {
             pActvalue = new VfModuleActvalue(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
                                                 QString("ACT_DFTPP%1").arg(p+1),
-                                                QString("Actual value phase/phase"),
-                                                QVariant(0.0) );
+                                                QString("Actual value phase/phase"));
             m_veinActValueList.append(pActvalue); // we add the component for our measurement
             m_pModule->veinModuleActvalueList.append(pActvalue); // and for the modules interface
             p++;
@@ -177,8 +175,7 @@ void cDftModuleMeasProgram::generateInterface()
 
     m_pRFieldActualValue = new VfModuleActvalue(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
                                                    QString("ACT_RFIELD"),
-                                                   QString("Phase sequence"),
-                                                   QVariant("") );
+                                                   QString("Phase sequence"));
 
     m_pModule->veinModuleActvalueList.append(m_pRFieldActualValue); // we add the component for the modules interface
 

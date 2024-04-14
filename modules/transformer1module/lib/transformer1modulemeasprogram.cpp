@@ -79,8 +79,7 @@ void cTransformer1ModuleMeasProgram::generateInterface()
     {
         pActvalue = new VfModuleActvalue(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
                                             QString("ACT_Error%1").arg(i+1),
-                                            QString("Transformer transmission error value"),
-                                            QVariant(0.0) );
+                                            QString("Transformer transmission error value"));
         pActvalue->setChannelName(QString("ERR%1").arg(i+1));
         pActvalue->setUnit("%");
 
@@ -92,8 +91,7 @@ void cTransformer1ModuleMeasProgram::generateInterface()
 
         pActvalue = new VfModuleActvalue(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
                                             QString("ACT_Angle%1").arg(i+1),
-                                            QString("Transformer angle deviation value"),
-                                            QVariant(0.0) );
+                                            QString("Transformer angle deviation value"));
         pActvalue->setChannelName(QString("ANG%1").arg(i+1));
         pActvalue->setUnit("°");
 
@@ -105,8 +103,7 @@ void cTransformer1ModuleMeasProgram::generateInterface()
 
         pActvalue = new VfModuleActvalue(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
                                             QString("ACT_Ratio%1").arg(i+1),
-                                            QString("Transformer ratio value"),
-                                            QVariant(0.0) );
+                                            QString("Transformer ratio value"));
         pActvalue->setChannelName(QString("RAT%1").arg(i+1));
         pActvalue->setUnit("");
 
@@ -118,8 +115,7 @@ void cTransformer1ModuleMeasProgram::generateInterface()
 
         pActvalue = new VfModuleActvalue(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
                                             QString("ACT_INSecondary%1").arg(i+1),
-                                            QString("Reference N secondary input"),
-                                            QVariant(0.0) );
+                                            QString("Reference N secondary input"));
         pActvalue->setChannelName(QString("INSEC%1").arg(i+1));
         pActvalue->setUnit(QString(getConfData()->m_clampUnit[0]));
 
@@ -131,8 +127,7 @@ void cTransformer1ModuleMeasProgram::generateInterface()
 
         pActvalue = new VfModuleActvalue(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
                                             QString("ACT_IXSecondary%1").arg(i+1),
-                                            QString("DUT secondary input"),
-                                            QVariant(0.0) );
+                                            QString("DUT secondary input"));
         pActvalue->setChannelName(QString("IXSEC%1").arg(i+1));
         pActvalue->setUnit(QString(getConfData()->m_clampUnit[2]));
 
@@ -144,8 +139,7 @@ void cTransformer1ModuleMeasProgram::generateInterface()
 
         pActvalue = new VfModuleActvalue(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
                                             QString("ACT_IXPrimary%1").arg(i+1),
-                                            QString("DUT test primary input"),
-                                            QVariant(0.0) );
+                                            QString("DUT test primary input"));
         pActvalue->setChannelName(QString("IXPRIM%1").arg(i+1));
         pActvalue->setUnit(QString(getConfData()->m_clampUnit[4]));
 

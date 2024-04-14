@@ -8,7 +8,7 @@ class VfModuleActvalue: public VfModuleComponent
 {
     Q_OBJECT
 public:
-    VfModuleActvalue(int entityId, VeinEvent::EventSystem *eventsystem, QString name, QString description, QVariant initval);
+    VfModuleActvalue(int entityId, VeinEvent::EventSystem *eventsystem, QString name, QString description, QVariant initval = QVariant());
     virtual ~VfModuleActvalue();
     virtual void exportSCPIInfo(QJsonArray &jsArr);
     void setSCPIInfo(cSCPIInfo* scpiinfo);

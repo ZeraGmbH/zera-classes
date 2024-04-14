@@ -2,10 +2,10 @@
     "1070": {
         "ACT_CanChangePhaseMask": true,
         "ACT_MaxMeasSysCount": 3,
-        "ACT_PQS1": 0,
-        "ACT_PQS2": 0,
-        "ACT_PQS3": 0,
-        "ACT_PQS4": 0,
+        "ACT_PQS1": null,
+        "ACT_PQS2": null,
+        "ACT_PQS3": null,
+        "ACT_PQS4": null,
         "ACT_PowerDisplayName": "P",
         "EntityName": "POWER1Module1",
         "INF_ModeTypes": [

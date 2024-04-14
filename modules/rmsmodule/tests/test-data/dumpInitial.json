@@ -1,16 +1,16 @@
 {
     "1040": {
-        "ACT_RMSPN1": 0,
-        "ACT_RMSPN2": 0,
-        "ACT_RMSPN3": 0,
-        "ACT_RMSPN4": 0,
-        "ACT_RMSPN5": 0,
-        "ACT_RMSPN6": 0,
-        "ACT_RMSPN7": 0,
-        "ACT_RMSPN8": 0,
-        "ACT_RMSPP1": 0,
-        "ACT_RMSPP2": 0,
-        "ACT_RMSPP3": 0,
+        "ACT_RMSPN1": null,
+        "ACT_RMSPN2": null,
+        "ACT_RMSPN3": null,
+        "ACT_RMSPN4": null,
+        "ACT_RMSPN5": null,
+        "ACT_RMSPN6": null,
+        "ACT_RMSPN7": null,
+        "ACT_RMSPN8": null,
+        "ACT_RMSPP1": null,
+        "ACT_RMSPP2": null,
+        "ACT_RMSPP3": null,
         "EntityName": "RMSModule1",
         "INF_ModuleInterface": {
             "ComponentInfo": {

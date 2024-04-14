@@ -44,8 +44,7 @@ void cLambdaModuleMeasProgram::generateInterface()
     for (int i = 0; i < getConfData()->m_nLambdaSystemCount; i++) {
         pActvalue = new VfModuleActvalue(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
                                             QString("ACT_Lambda%1").arg(i+1),
-                                            QString("Actual lambda value"),
-                                            QVariant(0.0) );
+                                            QString("Actual lambda value"));
         pActvalue->setChannelName(QString("Lambda%1").arg(i+1));
         pActvalue->setUnit("");
 
@@ -57,8 +56,7 @@ void cLambdaModuleMeasProgram::generateInterface()
 
         pActvalue = new VfModuleActvalue(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
                                          QString("ACT_Load%1").arg(i+1),
-                                         QString("load type"),
-                                         QVariant(QString()));
+                                         QString("load type"));
         m_veinLoadTypeList.append(pActvalue);
         m_pModule->veinModuleComponentList.append(pActvalue);
     }
