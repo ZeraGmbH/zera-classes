@@ -279,7 +279,7 @@ void cPower1ModuleMeasProgram::generateInterface()
         pFoutParameter = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
                                                           key = QString("PAR_FOUTConstant%1").arg(i),
                                                           QString("Frequency output constant"),
-                                                          QVariant(0));
+                                                          QVariant(0.0));
         pFoutParameter->setSCPIInfo(new cSCPIInfo("CONFIGURATION",QString("M%1CONSTANT").arg(i), "2", pFoutParameter->getName(), "0", ""));
 
         m_FoutConstParameterList.append(pFoutParameter);
