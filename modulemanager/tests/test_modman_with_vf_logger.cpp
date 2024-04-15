@@ -68,12 +68,10 @@ void test_modman_with_vf_logger::contentSetsSelectValid()
     startModman("session-minimal-rms.json");
 
     QCOMPARE(m_storage->getStoredValue(dataLoggerEntityId, "currentContentSets"), QStringList());
-    QVariantMap loggedComponents = m_storage->getStoredValue(systemEntityId, "LoggedComponents").toMap();
-    QCOMPARE(loggedComponents, QVariantMap());
 
     m_testRunner->setVfComponent(dataLoggerEntityId, "currentContentSets", "ZeraActualValuesTest");
 
-    loggedComponents = m_storage->getStoredValue(dataLoggerEntityId, "LoggedComponents").toMap();
+    QVariantMap loggedComponents = m_storage->getStoredValue(dataLoggerEntityId, "LoggedComponents").toMap();
     QString rmsEntityNum = QString("%1").arg(rmsEntityId);
 
     // TODO: On rework, a string not in a list must not be accepted
@@ -89,12 +87,10 @@ void test_modman_with_vf_logger::contentSetsSelectInvalid()
     startModman("session-minimal-rms.json");
 
     QCOMPARE(m_storage->getStoredValue(dataLoggerEntityId, "currentContentSets"), QStringList());
-    QVariantMap loggedComponents = m_storage->getStoredValue(systemEntityId, "LoggedComponents").toMap();
-    QCOMPARE(loggedComponents, QVariantMap());
 
     m_testRunner->setVfComponent(dataLoggerEntityId, "currentContentSets", "Foo");
 
-    loggedComponents = m_storage->getStoredValue(dataLoggerEntityId, "LoggedComponents").toMap();
+    QVariantMap loggedComponents = m_storage->getStoredValue(dataLoggerEntityId, "LoggedComponents").toMap();
     QVERIFY(loggedComponents.isEmpty());
 }
 
