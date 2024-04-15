@@ -34,7 +34,7 @@ void test_modman_with_vf_logger::loggerComponentsCreated()
 
     QList<QString> loggerComponents = m_storage->getEntityComponents(dataLoggerEntityId);
 
-    QCOMPARE(loggerComponents.count(), 15);
+    QCOMPARE(loggerComponents.count(), 16);
     QVERIFY(loggerComponents.contains("availableContentSets"));
     QVERIFY(loggerComponents.contains("CustomerData"));
     QVERIFY(loggerComponents.contains("currentContentSets"));
@@ -43,6 +43,7 @@ void test_modman_with_vf_logger::loggerComponentsCreated()
     QVERIFY(loggerComponents.contains("EntityName"));
     QVERIFY(loggerComponents.contains("ExistingSessions"));
     QVERIFY(loggerComponents.contains("guiContext"));
+    QVERIFY(loggerComponents.contains("LoggedComponents"));
     QVERIFY(loggerComponents.contains("LoggingEnabled"));
     QVERIFY(loggerComponents.contains("LoggingStatus"));
     QVERIFY(loggerComponents.contains("ScheduledLoggingCountdown"));
@@ -62,7 +63,6 @@ void test_modman_with_vf_logger::contentSetsAvailable()
     QVERIFY(availContentSets.contains("ZeraActualValuesTest"));
 }
 
-// Lesson learned / TODO: Move LoggedComponents from system- -> logger-entity
 void test_modman_with_vf_logger::contentSetsSelectValid()
 {
     startModman("session-minimal-rms.json");
@@ -73,7 +73,7 @@ void test_modman_with_vf_logger::contentSetsSelectValid()
 
     m_testRunner->setVfComponent(dataLoggerEntityId, "currentContentSets", "ZeraActualValuesTest");
 
-    loggedComponents = m_storage->getStoredValue(systemEntityId, "LoggedComponents").toMap();
+    loggedComponents = m_storage->getStoredValue(dataLoggerEntityId, "LoggedComponents").toMap();
     QString rmsEntityNum = QString("%1").arg(rmsEntityId);
 
     // TODO: On rework, a string not in a list must not be accepted
@@ -94,7 +94,7 @@ void test_modman_with_vf_logger::contentSetsSelectInvalid()
 
     m_testRunner->setVfComponent(dataLoggerEntityId, "currentContentSets", "Foo");
 
-    loggedComponents = m_storage->getStoredValue(systemEntityId, "LoggedComponents").toMap();
+    loggedComponents = m_storage->getStoredValue(dataLoggerEntityId, "LoggedComponents").toMap();
     QVERIFY(loggedComponents.isEmpty());
 }
 
@@ -106,7 +106,7 @@ void test_modman_with_vf_logger::contentSetsSelectValidList()
 
     m_testRunner->setVfComponent(dataLoggerEntityId, "currentContentSets", QStringList() << "ZeraActualValuesTest");
 
-    QVariantMap loggedComponents = m_storage->getStoredValue(systemEntityId, "LoggedComponents").toMap();
+    QVariantMap loggedComponents = m_storage->getStoredValue(dataLoggerEntityId, "LoggedComponents").toMap();
     QString rmsEntityNum = QString("%1").arg(rmsEntityId);
 
     QVariantList contentSets = m_storage->getStoredValue(dataLoggerEntityId, "currentContentSets").toList();
