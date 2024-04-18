@@ -347,9 +347,9 @@ void cSpm1ModuleMeasProgram::generateInterface()
     m_pClientNotifierPar = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
                                            key = QString("PAR_ClientActiveNotify"),
                                            QString("By changing this component, a client asks us for max actualize performance"),
-                                           QVariant((quint32)0));
+                                           QVariant(0));
     m_pModule->m_veinModuleParameterMap[key] = m_pClientNotifierPar; // for modules use
-    iValidator = new cIntValidator(0, std::numeric_limits<quint32>::max(), 1);
+    iValidator = new cIntValidator(0, std::numeric_limits<int>::max(), 1);
     m_pClientNotifierPar->setValidator(iValidator);
     m_ClientActiveNotifier.init(m_pClientNotifierPar);
     connect(&m_ClientActiveNotifier, &ClientActiveComponent::clientActiveStateChanged, this, &cSpm1ModuleMeasProgram::clientActivationChanged);
