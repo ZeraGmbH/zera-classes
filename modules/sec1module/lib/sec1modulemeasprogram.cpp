@@ -325,7 +325,7 @@ void cSec1ModuleMeasProgram::generateInterface()
 
     m_pStartStopPar = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
                                                key = QString("PAR_StartStop"),
-                                               QString("Start/stop measurement"),
+                                               QString("Start/stop measurement (start=1, stop=0)"),
                                                QVariant((int)0));
     m_pStartStopPar->setSCPIInfo(new cSCPIInfo("CALCULATE", QString("%1:START").arg(modNr), "10", m_pStartStopPar->getName(), "0", ""));
     m_pModule->m_veinModuleParameterMap[key] =  m_pStartStopPar; // for modules use
