@@ -3,7 +3,7 @@
 
 #include "modulemanagertestrunner.h"
 #include "veinqml.h"
-#include "zeradblogger.h"
+#include <vl_databaselogger.h>
 #include <vsc_scriptsystem.h>
 #include <QObject>
 #include <memory>
@@ -31,7 +31,7 @@ private:
     std::unique_ptr<ModuleManagerTestRunner> m_testRunner;
     std::unique_ptr<VeinScript::ScriptSystem> m_scriptSystem;
     std::unique_ptr<VeinApiQml::VeinQml> m_qmlSystem;
-    std::unique_ptr<ZeraDBLogger> m_dataLoggerSystem;
+    std::unique_ptr<VeinLogger::DatabaseLogger> m_dataLoggerSystem;
     VeinEvent::StorageSystem* m_storage;
     bool m_initQmlSystemOnce = false;
     bool m_dataLoggerSystemInitialized = false;

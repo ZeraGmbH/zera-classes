@@ -4,7 +4,6 @@
 #include "modulemanager.h"
 #include "modulemanagerconfig.h"
 #include "customerdatasystem.h"
-#include "zeradblogger.h"
 #include "licensesystem.h"
 #include "jsonloggercontentsessionloader.h"
 
@@ -15,6 +14,7 @@
 #include <vn_networksystem.h>
 #include <vn_tcpsystem.h>
 #include <vs_veinhash.h>
+#include <vl_databaselogger.h>
 #include <vsc_scriptsystem.h>
 #include <veinqml.h>
 #include <veinqmlwrapper.h>
@@ -143,7 +143,7 @@ int main(int argc, char *argv[])
     VeinNet::TcpSystem *tcpSystem = new VeinNet::TcpSystem(app.get());
     VeinScript::ScriptSystem *scriptSystem = new VeinScript::ScriptSystem(app.get());
     VeinApiQml::VeinQml *qmlSystem = new VeinApiQml::VeinQml(app.get());
-    ZeraDBLogger *dataLoggerSystem = new ZeraDBLogger(new VeinLogger::DataSource(modManSetupFacade->getStorageSystem(), app.get()), sqliteFactory, app.get()); //takes ownership of DataSource
+    VeinLogger::DatabaseLogger *dataLoggerSystem = new VeinLogger::DatabaseLogger(new VeinLogger::DataSource(modManSetupFacade->getStorageSystem(), app.get()), sqliteFactory, app.get()); //takes ownership of DataSource
     CustomerDataSystem *customerDataSystem = nullptr;
     vfExport::vf_export *exportModule=new vfExport::vf_export();
 

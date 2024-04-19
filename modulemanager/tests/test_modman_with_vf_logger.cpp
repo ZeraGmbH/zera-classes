@@ -187,7 +187,7 @@ void test_modman_with_vf_logger::createModmanWithLogger()
     const VeinLogger::DBFactory sqliteFactory = [](){
         return new VeinLogger::SQLiteDB();
     };
-    m_dataLoggerSystem = std::make_unique<ZeraDBLogger>(new VeinLogger::DataSource(mmFacade->getStorageSystem()), sqliteFactory); //takes ownership of DataSource
+    m_dataLoggerSystem = std::make_unique<VeinLogger::DatabaseLogger>(new VeinLogger::DataSource(mmFacade->getStorageSystem()), sqliteFactory); //takes ownership of DataSource
     VeinLogger::QmlLogger::setStaticLogger(m_dataLoggerSystem.get());
 }
 
