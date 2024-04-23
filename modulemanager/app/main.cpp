@@ -15,14 +15,8 @@
 #include <vn_tcpsystem.h>
 #include <vs_veinhash.h>
 #include <vl_databaselogger.h>
-#include <vsc_scriptsystem.h>
-#include <veinqml.h>
-#include <veinqmlwrapper.h>
-
-#include <vl_databaselogger.h>
 #include <loggercontentsetconfig.h>
 #include <vl_datasource.h>
-#include <vl_qmllogger.h>
 #include <vl_sqlitedb.h>
 #include <vf_export.h>
 #include <vf_files.h>
@@ -112,9 +106,7 @@ int main(int argc, char *argv[])
     QStringList loggingFilters = QStringList() << QString("%1.debug=false").arg(VEIN_EVENT().categoryName()) <<
                                                   QString("%1.debug=false").arg(VEIN_NET_VERBOSE().categoryName()) <<
                                                   QString("%1.debug=false").arg(VEIN_NET_INTRO_VERBOSE().categoryName()) << //< Introspection logging is still enabled
-                                                  QString("%1.debug=false").arg(VEIN_NET_TCP_VERBOSE().categoryName()) <<
-                                                  QString("%1.debug=false").arg(VEIN_API_QML().categoryName()) <<
-                                                  QString("%1.debug=false").arg(VEIN_API_QML_VERBOSE().categoryName());
+                                                  QString("%1.debug=false").arg(VEIN_NET_TCP_VERBOSE().categoryName());
     QLoggingCategory::setFilterRules(loggingFilters.join("\n"));
 
     const VeinLogger::DBFactory sqliteFactory = [](){
@@ -141,8 +133,6 @@ int main(int argc, char *argv[])
     // setup vein modules
     VeinNet::NetworkSystem *netSystem = new VeinNet::NetworkSystem(app.get());
     VeinNet::TcpSystem *tcpSystem = new VeinNet::TcpSystem(app.get());
-    VeinScript::ScriptSystem *scriptSystem = new VeinScript::ScriptSystem(app.get());
-    VeinApiQml::VeinQml *qmlSystem = new VeinApiQml::VeinQml(app.get());
     VeinLogger::DatabaseLogger *dataLoggerSystem = new VeinLogger::DatabaseLogger(new VeinLogger::DataSource(modManSetupFacade->getStorageSystem(), app.get()), sqliteFactory, app.get()); //takes ownership of DataSource
     CustomerDataSystem *customerDataSystem = nullptr;
     vfExport::vf_export *exportModule=new vfExport::vf_export();
@@ -154,19 +144,8 @@ int main(int argc, char *argv[])
     vfFiles::vf_files *filesModule = new vfFiles::vf_files(fileAccessController);
 
     //setup logger
-    VeinApiQml::VeinQml::setStaticInstance(qmlSystem);
-    VeinLogger::QmlLogger::setStaticLogger(dataLoggerSystem);
     VeinLogger::LoggerContentSetConfig::setJsonEnvironment(MODMAN_CONTENTSET_PATH, std::make_shared<JsonLoggerContentLoader>());
     VeinLogger::LoggerContentSetConfig::setJsonEnvironment(MODMAN_SESSION_PATH, std::make_shared<JsonLoggerContentSessionLoader>());
-
-    bool initQmlSystemOnce = false;
-    QObject::connect(qmlSystem, &VeinApiQml::VeinQml::sigStateChanged, [&](VeinApiQml::VeinQml::ConnectionState t_state){
-        if(t_state == VeinApiQml::VeinQml::ConnectionState::VQ_LOADED && initQmlSystemOnce == false)
-        {
-            VeinLogger::DatabaseLogger::loadScripts(scriptSystem);
-            initQmlSystemOnce = true;
-        }
-    });
 
     netSystem->setOperationMode(VeinNet::NetworkSystem::VNOM_SUBSCRIPTION);
     auto errorReportFunction = [dataLoggerSystem](const QString &t_error){
@@ -193,8 +172,6 @@ int main(int argc, char *argv[])
     //do not reorder
     modManSetupFacade->addSubsystem(netSystem);
     modManSetupFacade->addSubsystem(tcpSystem);
-    modManSetupFacade->addSubsystem(qmlSystem);
-    modManSetupFacade->addSubsystem(scriptSystem);
 
     // files entity
     qInfo("Starting vf-files...");
@@ -227,9 +204,9 @@ int main(int argc, char *argv[])
             if(licenseSystem->isSystemLicensed(CustomerDataSystem::s_entityName) && !customerDataSystemInitialized)
             {
                 customerDataSystemInitialized = true;
+                qInfo("Starting CustomerDataSystem");
                 customerDataSystem = new CustomerDataSystem(MODMAN_CUSTOMERDATA_PATH, app.get());
                 QObject::connect(customerDataSystem, &CustomerDataSystem::sigCustomerDataError, errorReportFunction);
-                qDebug() << "CustomerDataSystem is enabled";
                 modManSetupFacade->addSubsystem(customerDataSystem);
                 customerDataSystem->initializeEntity();
             }
@@ -249,11 +226,6 @@ int main(int argc, char *argv[])
                 qInfo("Starting vf-export...");
                 modManSetupFacade->addSubsystem(exportModule->getVeinEntity());
                 exportModule->initOnce();
-
-                // subscribe those entitities our magic logger QML script
-                // requires (see VeinLogger::DatabaseLogger::loadScripts above)
-                qmlSystem->entitySubscribeById(0); //0 = mmController
-                qmlSystem->entitySubscribeById(2); //2 = dataLoggerSystem
             }
         }
     });

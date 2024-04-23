@@ -25,7 +25,6 @@ target_link_libraries(zera-modulemanager-lib
     Zera::VfStorageHash
     Zera::VfNet2
     Zera::VfTcp
-    Zera::VfQml
     Zera::VfCpp
     Zera::ModmanBase
     Zera::zenuxservicecommon-demolib

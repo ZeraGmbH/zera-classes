@@ -2,9 +2,7 @@
 #define TEST_MODMAN_WITH_VF_LOGGER_H
 
 #include "modulemanagertestrunner.h"
-#include "veinqml.h"
 #include <vl_databaselogger.h>
-#include <vsc_scriptsystem.h>
 #include <QObject>
 #include <memory>
 
@@ -23,17 +21,13 @@ private slots:
     void init();
     void cleanup();
 private:
-    void onVfQmlStateChanged(VeinApiQml::VeinQml::ConnectionState t_state);
     void onSerialNoLicensed();
     void createModmanWithLogger();
     void startModman(QString sessionFileName);
 
     std::unique_ptr<ModuleManagerTestRunner> m_testRunner;
-    std::unique_ptr<VeinScript::ScriptSystem> m_scriptSystem;
-    std::unique_ptr<VeinApiQml::VeinQml> m_qmlSystem;
     std::unique_ptr<VeinLogger::DatabaseLogger> m_dataLoggerSystem;
     VeinEvent::StorageSystem* m_storage;
-    bool m_initQmlSystemOnce = false;
     bool m_dataLoggerSystemInitialized = false;
 };
 

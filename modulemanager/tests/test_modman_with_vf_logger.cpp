@@ -2,7 +2,6 @@
 #include <jsonloggercontentloader.h>
 #include <jsonloggercontentsessionloader.h>
 #include <loggercontentsetconfig.h>
-#include "vl_qmllogger.h"
 #include "vl_sqlitedb.h"
 #include "vl_datasource.h"
 #include <timemachineobject.h>
@@ -11,7 +10,6 @@
 QTEST_MAIN(test_modman_with_vf_logger)
 
 static int constexpr systemEntityId = 0;
-static int constexpr scriptEntityId = 1;
 static int constexpr dataLoggerEntityId = 2;
 static int constexpr rmsEntityId = 1040;
 
@@ -21,9 +19,8 @@ void test_modman_with_vf_logger::entitiesCreated()
 
     QList<int> entityList = m_storage->getEntityList();
 
-    QCOMPARE(entityList.count(), 4);
+    QCOMPARE(entityList.count(), 3);
     QVERIFY(entityList.contains(systemEntityId));
-    QVERIFY(entityList.contains(scriptEntityId));
     QVERIFY(entityList.contains(dataLoggerEntityId));
     QVERIFY(entityList.contains(rmsEntityId));
 }
@@ -127,14 +124,6 @@ void test_modman_with_vf_logger::init()
     createModmanWithLogger();
 }
 
-void test_modman_with_vf_logger::onVfQmlStateChanged(VeinApiQml::VeinQml::ConnectionState t_state)
-{
-    if(t_state == VeinApiQml::VeinQml::ConnectionState::VQ_LOADED && m_initQmlSystemOnce == false) {
-        VeinLogger::DatabaseLogger::loadScripts(m_scriptSystem.get());
-        m_initQmlSystemOnce = true;
-    }
-}
-
 void test_modman_with_vf_logger::onSerialNoLicensed()
 {
     ModuleManagerSetupFacade* mmFacade = m_testRunner->getModManFacade();
@@ -144,10 +133,6 @@ void test_modman_with_vf_logger::onSerialNoLicensed()
             m_dataLoggerSystemInitialized = true;
             qInfo("Starting DataLoggerSystem...");
             mmFacade->addSubsystem(m_dataLoggerSystem.get());
-
-            // subscribe those entitities our magic logger QML script requires
-            m_qmlSystem->entitySubscribeById(systemEntityId);
-            m_qmlSystem->entitySubscribeById(dataLoggerEntityId);
         }
     }
 }
@@ -157,30 +142,17 @@ void test_modman_with_vf_logger::cleanup()
     m_testRunner = nullptr;
     m_dataLoggerSystem = nullptr;
     TimeMachineObject::feedEventLoop();
-    m_scriptSystem = nullptr;
     TimeMachineObject::feedEventLoop();
 }
 
 void test_modman_with_vf_logger::createModmanWithLogger()
 {
-    m_initQmlSystemOnce = false;
     m_dataLoggerSystemInitialized = false;
 
     m_testRunner = std::make_unique<ModuleManagerTestRunner>("", true);
     m_storage = m_testRunner->getVeinStorageSystem();
 
-    m_scriptSystem = std::make_unique<VeinScript::ScriptSystem>();
-
-    m_qmlSystem = std::make_unique<VeinApiQml::VeinQml>();
-    VeinApiQml::VeinQml::setStaticInstance(m_qmlSystem.get());
-
     ModuleManagerSetupFacade* mmFacade = m_testRunner->getModManFacade();
-    mmFacade->addSubsystem(m_qmlSystem.get());
-    mmFacade->addSubsystem(m_scriptSystem.get());
-
-    connect(m_qmlSystem.get(), &VeinApiQml::VeinQml::sigStateChanged,
-            this, &test_modman_with_vf_logger::onVfQmlStateChanged);
-
     connect(mmFacade->getLicenseSystem(), &LicenseSystemInterface::sigSerialNumberInitialized,
             this, &test_modman_with_vf_logger::onSerialNoLicensed);
 
@@ -188,7 +160,6 @@ void test_modman_with_vf_logger::createModmanWithLogger()
         return new VeinLogger::SQLiteDB();
     };
     m_dataLoggerSystem = std::make_unique<VeinLogger::DatabaseLogger>(new VeinLogger::DataSource(mmFacade->getStorageSystem()), sqliteFactory); //takes ownership of DataSource
-    VeinLogger::QmlLogger::setStaticLogger(m_dataLoggerSystem.get());
 }
 
 void test_modman_with_vf_logger::startModman(QString sessionFileName)
