@@ -18,7 +18,7 @@ target_include_directories(rangemodule-demolib
 
 target_link_libraries(rangemodule-demolib
     PUBLIC
-    rangemodule
+    rangemodule-static
     module-service-interfaces
     Zera::service-interfaces-demolib
     Zera::zera-timers

@@ -18,7 +18,7 @@ target_include_directories(fftmodule-demolib
 
 target_link_libraries(fftmodule-demolib
     PUBLIC
-    fftmodule
+    fftmodule-static
     module-service-interfaces
     Zera::service-interfaces-demolib
     Zera::zera-timers
