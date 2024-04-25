@@ -16,7 +16,6 @@
 #include <vs_veinhash.h>
 #include <vl_databaselogger.h>
 #include <loggercontentsetconfig.h>
-#include <vl_datasource.h>
 #include <vl_sqlitedb.h>
 #include <vf_export.h>
 #include <vf_files.h>
@@ -133,7 +132,7 @@ int main(int argc, char *argv[])
     // setup vein modules
     VeinNet::NetworkSystem *netSystem = new VeinNet::NetworkSystem(app.get());
     VeinNet::TcpSystem *tcpSystem = new VeinNet::TcpSystem(app.get());
-    VeinLogger::DatabaseLogger *dataLoggerSystem = new VeinLogger::DatabaseLogger(new VeinLogger::DataSource(modManSetupFacade->getStorageSystem(), app.get()), sqliteFactory, app.get()); //takes ownership of DataSource
+    VeinLogger::DatabaseLogger *dataLoggerSystem = new VeinLogger::DatabaseLogger(modManSetupFacade->getStorageSystem(), sqliteFactory, app.get());
     CustomerDataSystem *customerDataSystem = nullptr;
     vfExport::vf_export *exportModule=new vfExport::vf_export();
 

@@ -3,7 +3,6 @@
 #include <jsonloggercontentsessionloader.h>
 #include <loggercontentsetconfig.h>
 #include "vl_sqlitedb.h"
-#include "vl_datasource.h"
 #include <timemachineobject.h>
 #include <QTest>
 
@@ -159,7 +158,7 @@ void test_modman_with_vf_logger::createModmanWithLogger()
     const VeinLogger::DBFactory sqliteFactory = [](){
         return new VeinLogger::SQLiteDB();
     };
-    m_dataLoggerSystem = std::make_unique<VeinLogger::DatabaseLogger>(new VeinLogger::DataSource(mmFacade->getStorageSystem()), sqliteFactory); //takes ownership of DataSource
+    m_dataLoggerSystem = std::make_unique<VeinLogger::DatabaseLogger>(mmFacade->getStorageSystem(), sqliteFactory);
 }
 
 void test_modman_with_vf_logger::startModman(QString sessionFileName)
