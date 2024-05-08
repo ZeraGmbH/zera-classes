@@ -118,10 +118,13 @@ void ModuleManager::startModule(const QString & uniqueModuleName, const QString 
 {
     // do not allow starting until all modules are shut down
     if(m_moduleStartLock == false) {
-        qInfo("Starting module %s...", qPrintable(uniqueModuleName));
         MeasurementModuleFactory *tmpFactory = m_factoryTable.value(uniqueModuleName);
         if(tmpFactory && m_setupFacade->getLicenseSystem()->isSystemLicensed(uniqueModuleName)) {
-            qDebug() << "Creating module:" << uniqueModuleName << "with id:" << moduleEntityId << "with config file:" << t_xmlConfigPath;
+            const QFileInfo confFileInfo(t_xmlConfigPath);
+            qInfo("Creating module: %s / EntityId: %i / Config: %s",
+                  qPrintable(uniqueModuleName),
+                  moduleEntityId,
+                  qPrintable(confFileInfo.fileName()));
             MeasurementModuleFactoryParam moduleParam(moduleEntityId,
                                                       moduleNum,
                                                       t_xmlConfigData,
