@@ -60,7 +60,6 @@ ModuleManager::~ModuleManager()
 QStringList ModuleManager::getModuleFileNames()
 {
     QString modulePath = MODMAN_MODULE_PATH;
-    qDebug("Loading modules from %s", qPrintable(modulePath));
     QDir moduleDir(modulePath);
     QStringList fullNames;
     for(auto &name : moduleDir.entryList(QDir::Files))
@@ -81,7 +80,6 @@ bool ModuleManager::loadAllAvailableModulePlugins()
     for(auto& fileName : getModuleFileNames()) {
         QPluginLoader loader(fileName);
         MeasurementModuleFactory *module = qobject_cast<MeasurementModuleFactory *>(loader.instance());
-        qDebug() << "Analyzing:" << loader.fileName() << "\nfile is a library?" << QLibrary::isLibrary(fileName) << "loaded:" << loader.isLoaded();
         if (module) {
             module->setModuleNumerator(std::make_unique<ModuleGroupNumerator>());
             retVal=true;
@@ -90,7 +88,7 @@ bool ModuleManager::loadAllAvailableModulePlugins()
         else
             qWarning() << "Error string:\n" << loader.errorString();
     }
-    qInfo("Modules analysed after %llims", m_timerAllModulesLoaded.elapsed());
+    qInfo("Modules analyse took %llims", m_timerAllModulesLoaded.elapsed());
     return retVal;
 }
 
