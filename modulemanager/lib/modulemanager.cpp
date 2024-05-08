@@ -159,7 +159,8 @@ void ModuleManager::startModule(const QString & uniqueModuleName, const QString 
         }
     }
     else {
-        qInfo("Locked - enqueue module %s...", qPrintable(uniqueModuleName));
+        // All but first are enqueued - misconception? - spam just for thos e working on..
+        //qInfo("Locked - enqueue module %s...", qPrintable(uniqueModuleName));
         m_deferredStartList.enqueue(new ModuleData(nullptr, uniqueModuleName, t_xmlConfigPath, t_xmlConfigData, moduleEntityId, moduleNum));
     }
 }
