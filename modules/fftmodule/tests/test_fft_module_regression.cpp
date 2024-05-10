@@ -3,7 +3,7 @@
 #include "modulemanagertestrunner.h"
 #include <cmath>
 #include <timemachineobject.h>
-#include <testdumpreporter.h>
+#include <testloghelpers.h>
 #include <QBuffer>
 #include <QTest>
 
@@ -41,7 +41,7 @@ void test_fft_module_regression::veinDumpInitial()
     QBuffer buff(&jsonDumped);
     veinStorage->dumpToFile(&buff, QList<int>() << fftEntityId);
 
-    QVERIFY(TestDumpReporter::compareAndLogOnDiff(jsonExpected, jsonDumped));
+    QVERIFY(TestLogHelpers::compareAndLogOnDiff(jsonExpected, jsonDumped));
 }
 
 static constexpr int voltagePhaseNeutralCount = 4;
@@ -103,5 +103,5 @@ void test_fft_module_regression::injectValues()
     QBuffer buff(&jsonDumped);
     veinStorage->dumpToFile(&buff, QList<int>() << fftEntityId);
 
-    QVERIFY(TestDumpReporter::compareAndLogOnDiff(jsonExpected, jsonDumped));
+    QVERIFY(TestLogHelpers::compareAndLogOnDiff(jsonExpected, jsonDumped));
 }

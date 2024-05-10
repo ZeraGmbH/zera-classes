@@ -3,7 +3,7 @@
 #include "demovaluesdsprange.h"
 #include <timemachineobject.h>
 #include <timemachinefortest.h>
-#include <testdumpreporter.h>
+#include <testloghelpers.h>
 #include <QSignalSpy>
 #include <QBuffer>
 #include <QTest>
@@ -42,7 +42,7 @@ void test_range_module_regression::veinDumpInitial()
     QBuffer buff(&jsonDumped);
     veinStorage->dumpToFile(&buff, QList<int>() << rangeEntityId);
 
-    QVERIFY(TestDumpReporter::compareAndLogOnDiff(jsonExpected, jsonDumped));
+    QVERIFY(TestLogHelpers::compareAndLogOnDiff(jsonExpected, jsonDumped));
 }
 
 enum dspInterfaces{
@@ -93,7 +93,7 @@ void test_range_module_regression::injectActualValues()
     QBuffer buff(&jsonDumped);
     veinStorage->dumpToFile(&buff, QList<int>() << rangeEntityId);
 
-    QVERIFY(TestDumpReporter::compareAndLogOnDiff(jsonExpected, jsonDumped));
+    QVERIFY(TestLogHelpers::compareAndLogOnDiff(jsonExpected, jsonDumped));
 }
 
 void test_range_module_regression::injectActualValuesWithPreScaling()
@@ -129,7 +129,7 @@ void test_range_module_regression::injectActualValuesWithPreScaling()
     QBuffer buff(&jsonDumped);
     veinStorage->dumpToFile(&buff, QList<int>() << rangeEntityId);
 
-    QVERIFY(TestDumpReporter::compareAndLogOnDiff(jsonExpected, jsonDumped));
+    QVERIFY(TestLogHelpers::compareAndLogOnDiff(jsonExpected, jsonDumped));
 }
 
 void test_range_module_regression::injectActualValuesWithCheatingDisabled()

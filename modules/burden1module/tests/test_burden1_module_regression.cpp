@@ -3,7 +3,7 @@
 #include "modulemanagertestrunner.h"
 #include "burden1measdelegate.h"
 #include <timemachineobject.h>
-#include <testdumpreporter.h>
+#include <testloghelpers.h>
 #include <QBuffer>
 #include <QTest>
 
@@ -36,7 +36,7 @@ void test_burden1_module_regression::veinDumpInitial()
     QBuffer buff(&jsonDumped);
     veinStorage->dumpToFile(&buff, QList<int>() << dftBurdenCurrentId << dftBurdenVoltageId);
 
-    QVERIFY(TestDumpReporter::compareAndLogOnDiff(jsonExpected, jsonDumped));
+    QVERIFY(TestLogHelpers::compareAndLogOnDiff(jsonExpected, jsonDumped));
 }
 
 void test_burden1_module_regression::resistanceCalculation()

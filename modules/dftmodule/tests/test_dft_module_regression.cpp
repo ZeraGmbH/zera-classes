@@ -5,7 +5,7 @@
 #include <vf_core_stack_client.h>
 #include <vf_entity_component_event_item.h>
 #include <vf_client_component_setter.h>
-#include <testdumpreporter.h>
+#include <testloghelpers.h>
 #include <QBuffer>
 #include <QTest>
 
@@ -43,7 +43,7 @@ void test_dft_module_regression::veinDumpInitial()
     QBuffer buff(&jsonDumped);
     veinStorage->dumpToFile(&buff, QList<int>() << dftEntityId);
 
-    QVERIFY(TestDumpReporter::compareAndLogOnDiff(jsonExpected, jsonDumped));
+    QVERIFY(TestLogHelpers::compareAndLogOnDiff(jsonExpected, jsonDumped));
 }
 
 static constexpr int voltagePhaseNeutralCount = 4;
@@ -85,7 +85,7 @@ void test_dft_module_regression::injectActualValuesNoReferenceChannel()
     QBuffer buff(&jsonDumped);
     veinStorage->dumpToFile(&buff, QList<int>() << dftEntityId);
 
-    QVERIFY(TestDumpReporter::compareAndLogOnDiff(jsonExpected, jsonDumped));
+    QVERIFY(TestLogHelpers::compareAndLogOnDiff(jsonExpected, jsonDumped));
 }
 
 void test_dft_module_regression::injectActualValuesReferenceChannelUL1()
@@ -109,7 +109,7 @@ void test_dft_module_regression::injectActualValuesReferenceChannelUL1()
     QBuffer buff(&jsonDumped);
     veinStorage->dumpToFile(&buff, QList<int>() << dftEntityId);
 
-    QVERIFY(TestDumpReporter::compareAndLogOnDiff(jsonExpected, jsonDumped));
+    QVERIFY(TestLogHelpers::compareAndLogOnDiff(jsonExpected, jsonDumped));
 }
 
 void test_dft_module_regression::injectActualValuesReferenceChannelUL2()
@@ -134,7 +134,7 @@ void test_dft_module_regression::injectActualValuesReferenceChannelUL2()
     QBuffer buff(&jsonDumped);
     veinStorage->dumpToFile(&buff, QList<int>() << dftEntityId);
 
-    QVERIFY(TestDumpReporter::compareAndLogOnDiff(jsonExpected, jsonDumped));
+    QVERIFY(TestLogHelpers::compareAndLogOnDiff(jsonExpected, jsonDumped));
 }
 
 constexpr int comDcRefChannelCount = 6;
@@ -163,7 +163,7 @@ void test_dft_module_regression::injectActualValuesOrder0()
     QBuffer buff(&jsonDumped);
     veinStorage->dumpToFile(&buff, QList<int>() << dftEntityId);
 
-    QVERIFY(TestDumpReporter::compareAndLogOnDiff(jsonExpected, jsonDumped));
+    QVERIFY(TestLogHelpers::compareAndLogOnDiff(jsonExpected, jsonDumped));
 }
 
 void test_dft_module_regression::injectSymmetricalOrder0()
@@ -186,7 +186,7 @@ void test_dft_module_regression::injectSymmetricalOrder0()
     QBuffer buff(&jsonDumped);
     veinStorage->dumpToFile(&buff, QList<int>() << dftEntityId);
 
-    QVERIFY(TestDumpReporter::compareAndLogOnDiff(jsonExpected, jsonDumped));
+    QVERIFY(TestLogHelpers::compareAndLogOnDiff(jsonExpected, jsonDumped));
 }
 
 void test_dft_module_regression::injectSymmetricalOrder1()
@@ -209,7 +209,7 @@ void test_dft_module_regression::injectSymmetricalOrder1()
     QBuffer buff(&jsonDumped);
     veinStorage->dumpToFile(&buff, QList<int>() << dftEntityId);
 
-    QVERIFY(TestDumpReporter::compareAndLogOnDiff(jsonExpected, jsonDumped));
+    QVERIFY(TestLogHelpers::compareAndLogOnDiff(jsonExpected, jsonDumped));
 }
 
 void test_dft_module_regression::setReferenceChannel(VfCmdEventHandlerSystemPtr vfCmdEventHandlerSystem, QString channel)

@@ -143,6 +143,7 @@ function(SETUP_QTESTS)
             Qt5::Test
             Zera::VfStorageHash
             Zera::VfFrameworkTest
+            Zera::testlib-common
             Zera::tasks-base-testlib
             Zera::zera-timers-testlib
             Zera::zera-i2c-devices-testlib

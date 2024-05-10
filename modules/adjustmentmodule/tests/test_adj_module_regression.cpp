@@ -2,7 +2,8 @@
 #include "modulemanagertestrunner.h"
 #include "adjustmentmodule.h"
 #include <vs_veinhash.h>
-#include <testdumpreporter.h>
+#include <testloghelpers.h>
+#include <testloghelpers.h>
 #include <scpimoduleclientblocked.h>
 #include <QBuffer>
 #include <QTest>
@@ -43,7 +44,7 @@ void test_adj_module_regression::veinDumpInitial()
     // just dump adjustment module to reduce FF on changing other modules
     veinStorage->dumpToFile(&buff, QList<int>() << adjEntityId);
 
-    QVERIFY(TestDumpReporter::compareAndLogOnDiff(jsonExpected, jsonDumped));
+    QVERIFY(TestLogHelpers::compareAndLogOnDiff(jsonExpected, jsonDumped));
 }
 
 void test_adj_module_regression::dspInterfacesChange()

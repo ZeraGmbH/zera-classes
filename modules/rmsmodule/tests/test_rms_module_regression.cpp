@@ -4,7 +4,7 @@
 #include "rmsmoduleconfiguration.h"
 #include "modulemanagertestrunner.h"
 #include <timemachineobject.h>
-#include <testdumpreporter.h>
+#include <testloghelpers.h>
 #include <QBuffer>
 #include <QTest>
 
@@ -42,7 +42,7 @@ void test_rms_module_regression::veinDumpInitial()
     QBuffer buff(&jsonDumped);
     veinStorage->dumpToFile(&buff, QList<int>() << rmsEntityId);
 
-    QVERIFY(TestDumpReporter::compareAndLogOnDiff(jsonExpected, jsonDumped));
+    QVERIFY(TestLogHelpers::compareAndLogOnDiff(jsonExpected, jsonDumped));
 }
 
 static constexpr int voltagePhaseNeutralCount = 4;
@@ -84,7 +84,7 @@ void test_rms_module_regression::injectActualValues()
     QBuffer buff(&jsonDumped);
     veinStorage->dumpToFile(&buff, QList<int>() << rmsEntityId);
 
-    QVERIFY(TestDumpReporter::compareAndLogOnDiff(jsonExpected, jsonDumped));
+    QVERIFY(TestLogHelpers::compareAndLogOnDiff(jsonExpected, jsonDumped));
 }
 
 void test_rms_module_regression::injectActualTwice()
@@ -133,5 +133,5 @@ void test_rms_module_regression::injectSymmetricValues()
     QBuffer buff(&jsonDumped);
     veinStorage->dumpToFile(&buff, QList<int>() << rmsEntityId);
 
-    QVERIFY(TestDumpReporter::compareAndLogOnDiff(jsonExpected, jsonDumped));
+    QVERIFY(TestLogHelpers::compareAndLogOnDiff(jsonExpected, jsonDumped));
 }

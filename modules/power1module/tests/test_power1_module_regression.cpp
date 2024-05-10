@@ -2,7 +2,7 @@
 #include "modulemanagertestrunner.h"
 #include "power1modulemeasprogram.h"
 #include <timemachineobject.h>
-#include <testdumpreporter.h>
+#include <testloghelpers.h>
 #include <QBuffer>
 #include <QTest>
 
@@ -40,7 +40,7 @@ void test_power1_module_regression::veinDumpInitial()
     QBuffer buff(&jsonDumped);
     veinStorage->dumpToFile(&buff, QList<int>() << powerEntityId);
 
-    QVERIFY(TestDumpReporter::compareAndLogOnDiff(jsonExpected, jsonDumped));
+    QVERIFY(TestLogHelpers::compareAndLogOnDiff(jsonExpected, jsonDumped));
 }
 
 void test_power1_module_regression::injectActualValues()
@@ -67,6 +67,6 @@ void test_power1_module_regression::injectActualValues()
     QBuffer buff(&jsonDumped);
     veinStorage->dumpToFile(&buff, QList<int>() << powerEntityId);
 
-    QVERIFY(TestDumpReporter::compareAndLogOnDiff(jsonExpected, jsonDumped));
+    QVERIFY(TestLogHelpers::compareAndLogOnDiff(jsonExpected, jsonDumped));
 }
 
