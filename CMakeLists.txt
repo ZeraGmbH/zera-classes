@@ -30,6 +30,9 @@ find_package(ZenuxLegacyComponents REQUIRED)
 find_package(ZenuxServices REQUIRED)
 find_package(BlePlayground REQUIRED)
 
+# better suggestions?
+get_filename_component(SYSTEMD_UNIT_INSTALL_PATH "${CMAKE_INSTALL_PREFIX}/../lib/systemd/system" ABSOLUTE)
+
 # As long as there is no smart way to get 'check-jsonschema' on all parts
 # of our pipeline, python warnings are hacked away at users of JSONSCHEMA
 find_program (JSONSCHEMA NAMES jsonschema REQUIRED)
