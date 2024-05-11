@@ -1,0 +1,13 @@
+[Unit]
+Description=Zera Module Manager
+After=zdsp1d.service
+
+[Service]
+ExecStart=/usr/bin/zera-modulemanager
+Type=simple
+User=zera-services
+NoNewPrivileges=true
+StandardOutput=journal
+
+[Install]
+WantedBy=multi-user.target
