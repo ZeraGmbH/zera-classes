@@ -166,6 +166,8 @@ void cSCPIClient::execCmd()
         // we will leave if there is no command anymore
         if (cmd.length() == 0)
             break;
+
+        qInfo("Executing SCPI command : %s", qPrintable(cmd));
         if (!m_pSCPIInterface->executeCmd(this, cmd))
             emit m_pIEEE4882->AddEventError(CommandError);
         // we leave here if there is any parameter settings pending

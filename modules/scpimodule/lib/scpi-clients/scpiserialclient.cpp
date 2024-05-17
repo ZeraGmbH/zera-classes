@@ -35,6 +35,7 @@ void cSCPISerialClient::receiveAnswer(QString answ, bool ok)
 
     ba = answer.toLatin1();
     m_pSerialPort->write(ba.data(), ba.size());
+    qInfo("Serial SCPI command response : %s", qPrintable(answ));
     if(ok)
         emit commandAnswered(this);
 }
@@ -47,7 +48,6 @@ void cSCPISerialClient::cmdInput()
     // first we read all available input and add it to our input fifo
     addString = QString(m_pSerialPort->readAll().data());
     m_sInputFifo.append(addString);
-
     testCmd();
 }
 
