@@ -24,6 +24,7 @@ void cSCPIEthClient::receiveAnswer(QString answ, bool ok)
 {
     QByteArray ba = answ.toUtf8() + "\n";
     m_pSocket->write(ba);
+    qInfo("Network SCPI command response : %s", qPrintable(answ));
     if(ok)
         emit commandAnswered(this);
 }
