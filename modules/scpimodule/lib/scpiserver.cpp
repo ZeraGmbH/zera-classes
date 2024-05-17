@@ -140,6 +140,7 @@ void cSCPIServer::createSerialScpi()
 
             m_pSerialClient = new cSCPISerialClient(m_pSerialPort, m_pModule, m_ConfigData, m_pSCPIInterface);
             appendClient(m_pSerialClient);
+            qInfo("Serial SCPI client connected / Active clients: %i", m_SCPIClientList.count());
             m_bSerialScpiActive = true;
         }
         else
@@ -157,6 +158,7 @@ void cSCPIServer::destroySerialScpi()
         m_pSerialPort->close();
         deleteSerialPort();
         m_pSerialClient = nullptr;
+        qInfo("Serial SCPI client disconnected / Active clients: %i", m_SCPIClientList.count());
     }
     m_pVeinParamSerialOn->setValue(m_bSerialScpiActive);
 }
@@ -175,7 +177,7 @@ void cSCPIServer::addSCPIClient()
         QTcpSocket* socket = m_pTcpServer->nextPendingConnection();
         cSCPIEthClient* client = new cSCPIEthClient(socket, m_pModule, m_ConfigData, m_pSCPIInterface); // each client our interface;
         appendClient(client);
-        qInfo("Created client / Active clients: %i", m_SCPIClientList.count());
+        qInfo("Network SCPI client (%s) connected / Active clients: %i", qPrintable(client->getPeerAddress()), m_SCPIClientList.count());
         connect(client, &cSCPIEthClient::destroyed, this, &cSCPIServer::deleteSCPIClient);
      }
 }
@@ -185,7 +187,7 @@ void cSCPIServer::deleteSCPIClient(QObject *obj)
     cSCPIEthClient* client = static_cast<cSCPIEthClient*>(obj);
     if(client) {
         m_SCPIClientList.removeAll(client);
-        qInfo("SCPI client destroyed / Active clients: %i", m_SCPIClientList.count());
+        qInfo("Network SCPI client (%s) disconnected / Active clients: %i", qPrintable(client->getPeerAddress()), m_SCPIClientList.count());
         if(m_SCPIClientList.count() > 0)
             m_SCPIClientList.at(0)->setAuthorisation(true);
     }
