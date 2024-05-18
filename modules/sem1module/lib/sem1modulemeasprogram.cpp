@@ -282,7 +282,7 @@ void cSem1ModuleMeasProgram::generateInterface()
     m_pStatusAct = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
                                             key = QString("ACT_Status"),
                                             QString("State: 0:Idle 1:First pulse wait 2:Started 4:Ready 8:Aborted"),
-                                            QVariant((int)0) );
+                                            QVariant((quint32)0) );
     m_pModule->m_veinModuleParameterMap[key] =  m_pStatusAct; // and for the modules interface
     m_pStatusAct->setSCPIInfo(new cSCPIInfo("CALCULATE",  QString("%1:STATUS").arg(modNr), "2", m_pStatusAct->getName(), "0", ""));
 
