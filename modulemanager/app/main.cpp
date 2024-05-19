@@ -24,7 +24,9 @@
 #include <QCommandLineParser>
 
 static bool serverStarted = false;
+static VeinNet::NetworkSystem *netSystem = nullptr;
 static VeinNet::TcpSystem *tcpSystem = nullptr;
+static ModuleManagerSetupFacade *modManSetupFacade = nullptr;
 static VeinEvent::StorageComponentInterfacePtr entititesComponent;
 
 static QString getDemoDeviceName(int argc, char *argv[])
@@ -57,6 +59,20 @@ static void quit(bool demo)
         QGuiApplication::quit();
     else
         QCoreApplication::quit();
+}
+
+static void startNetwork(QObject *parent)
+{
+    if(!serverStarted) {
+        netSystem = new VeinNet::NetworkSystem(parent);
+        netSystem->setOperationMode(VeinNet::NetworkSystem::VNOM_SUBSCRIPTION);
+        tcpSystem = new VeinNet::TcpSystem(parent);
+        //do not reorder
+        modManSetupFacade->addSubsystem(netSystem);
+        modManSetupFacade->addSubsystem(tcpSystem);
+        tcpSystem->startServer(12000);
+        serverStarted = true;
+    }
 }
 
 int main(int argc, char *argv[])
@@ -117,7 +133,7 @@ int main(int argc, char *argv[])
 
     QString licenseUrl = QString("file://%1/license-keys").arg(OPERATOR_HOME);
     LicenseSystem *licenseSystem = new LicenseSystem({QUrl(licenseUrl)}, app.get());
-    ModuleManagerSetupFacade *modManSetupFacade = new ModuleManagerSetupFacade(licenseSystem, mmConfig->isDevMode(), app.get());
+    modManSetupFacade = new ModuleManagerSetupFacade(licenseSystem, mmConfig->isDevMode(), app.get());
 
     AbstractFactoryServiceInterfacesPtr serviceInterfaceFactory;
     if(demoMode)
@@ -133,8 +149,6 @@ int main(int argc, char *argv[])
         modMan->startAllDemoServices(demoDeviceName);
 
     // setup vein modules
-    VeinNet::NetworkSystem *netSystem = new VeinNet::NetworkSystem(app.get());
-    tcpSystem = new VeinNet::TcpSystem(app.get());
     VeinLogger::DatabaseLogger *dataLoggerSystem = new VeinLogger::DatabaseLogger(modManSetupFacade->getStorageSystem(), sqliteFactory, app.get());
     CustomerDataSystem *customerDataSystem = nullptr;
     vfExport::vf_export *exportModule=new vfExport::vf_export();
@@ -149,7 +163,6 @@ int main(int argc, char *argv[])
     VeinLogger::LoggerContentSetConfig::setJsonEnvironment(MODMAN_CONTENTSET_PATH, std::make_shared<JsonLoggerContentLoader>());
     VeinLogger::LoggerContentSetConfig::setJsonEnvironment(MODMAN_SESSION_PATH, std::make_shared<JsonLoggerContentSessionLoader>());
 
-    netSystem->setOperationMode(VeinNet::NetworkSystem::VNOM_SUBSCRIPTION);
     auto errorReportFunction = [dataLoggerSystem](const QString &t_error){
         QJsonObject jsonErrorObj;
 
@@ -170,10 +183,6 @@ int main(int argc, char *argv[])
     };
     QObject::connect(dataLoggerSystem, &VeinLogger::DatabaseLogger::sigDatabaseError, errorReportFunction);
 
-
-    //do not reorder
-    modManSetupFacade->addSubsystem(netSystem);
-    modManSetupFacade->addSubsystem(tcpSystem);
 
     // files entity
     qInfo("Starting vf-files...");
@@ -248,10 +257,8 @@ int main(int argc, char *argv[])
         VeinEvent::StorageSystem *storage = modManSetupFacade->getStorageSystem();
         entititesComponent = storage->getFutureComponent(0, "Entities");
         QObject::connect(entititesComponent.get(), &VeinEvent::StorageComponentInterface::sigValueChange, entititesComponent.get(), [&] (QVariant newValue) {
-            if(!serverStarted && !newValue.toString().isEmpty()) {
-                tcpSystem->startServer(12000);
-                serverStarted = true;
-            }
+            if(newValue.isValid())
+                startNetwork(app.get());
         });
     }
     return exec(demoMode);
