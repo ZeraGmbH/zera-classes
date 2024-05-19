@@ -1,6 +1,5 @@
 [Unit]
 Description=Zera Module Manager
-After=zdsp1d.service
 
 [Service]
 ExecStart=/usr/bin/zera-modulemanager
