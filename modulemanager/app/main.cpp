@@ -23,6 +23,9 @@
 #include <QDebug>
 #include <QCommandLineParser>
 
+static bool serverStarted = false;
+static VeinNet::TcpSystem *tcpSystem = nullptr;
+static VeinEvent::StorageComponentInterfacePtr entititesComponent;
 
 static QString getDemoDeviceName(int argc, char *argv[])
 {
@@ -131,7 +134,7 @@ int main(int argc, char *argv[])
 
     // setup vein modules
     VeinNet::NetworkSystem *netSystem = new VeinNet::NetworkSystem(app.get());
-    VeinNet::TcpSystem *tcpSystem = new VeinNet::TcpSystem(app.get());
+    tcpSystem = new VeinNet::TcpSystem(app.get());
     VeinLogger::DatabaseLogger *dataLoggerSystem = new VeinLogger::DatabaseLogger(modManSetupFacade->getStorageSystem(), sqliteFactory, app.get());
     CustomerDataSystem *customerDataSystem = nullptr;
     vfExport::vf_export *exportModule=new vfExport::vf_export();
@@ -242,7 +245,14 @@ int main(int argc, char *argv[])
     }
     else {
         modMan->loadDefaultSession();
-        tcpSystem->startServer(12000);
+        VeinEvent::StorageSystem *storage = modManSetupFacade->getStorageSystem();
+        entititesComponent = storage->getFutureComponent(0, "Entities");
+        QObject::connect(entititesComponent.get(), &VeinEvent::StorageComponentInterface::sigValueChange, entititesComponent.get(), [&] (QVariant newValue) {
+            if(!serverStarted && !newValue.toString().isEmpty()) {
+                tcpSystem->startServer(12000);
+                serverStarted = true;
+            }
+        });
     }
     return exec(demoMode);
 }
