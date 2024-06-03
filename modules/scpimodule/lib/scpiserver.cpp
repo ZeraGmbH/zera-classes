@@ -184,10 +184,11 @@ void cSCPIServer::addSCPIClient()
 
 void cSCPIServer::deleteSCPIClient(QObject *obj)
 {
+    // don't use for other than remove from list - it is destroyed and not usable
     cSCPIEthClient* client = static_cast<cSCPIEthClient*>(obj);
     if(client) {
         m_SCPIClientList.removeAll(client);
-        qInfo("Network SCPI client (%s) disconnected / Active clients: %i", qPrintable(client->getPeerAddress()), m_SCPIClientList.count());
+        qInfo("Network SCPI client deleted / Active clients: %i", m_SCPIClientList.count());
         if(m_SCPIClientList.count() > 0)
             m_SCPIClientList.at(0)->setAuthorisation(true);
     }
