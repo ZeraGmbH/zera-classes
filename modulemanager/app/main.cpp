@@ -6,6 +6,7 @@
 #include "customerdatasystem.h"
 #include "licensesystem.h"
 #include "jsonloggercontentsessionloader.h"
+#include "systemmetricsvein.h"
 
 #include <QGuiApplication>
 
@@ -158,6 +159,11 @@ int main(int argc, char *argv[])
                                QStringLiteral(MODMAN_LOGGER_LOCAL_PATH)};
     FileAccessControlPtr fileAccessController = std::make_shared<FileAccessControl>(allowedFolders);
     vfFiles::vf_files *filesModule = new vfFiles::vf_files(fileAccessController);
+
+    qInfo("Starting SystemMetrics...");
+    SystemMetricsVein* systemMetrics = new SystemMetricsVein(10, app.get());
+    modManSetupFacade->addSubsystem(systemMetrics->getEventSystem());
+    systemMetrics->initOnce();
 
     //setup logger
     VeinLogger::LoggerContentSetConfig::setJsonEnvironment(MODMAN_CONTENTSET_PATH, std::make_shared<JsonLoggerContentLoader>());
