@@ -22,7 +22,6 @@ private slots:
     void regressionMt310s2Dc();
     void regressionMt310s2EmobAc();
     void regressionMt310s2EmobDc();
-    void regressionMt310s2EmobAcDc();
     void regressionMt310s2Meas();
 
 private:

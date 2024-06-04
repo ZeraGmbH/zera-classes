@@ -114,7 +114,7 @@ void test_modman_regression_all_sessions::loadAllSessionsAndOutputRegressionTest
 void test_modman_regression_all_sessions::loadAllSessionsAndOutputRegressionTestCodeMt310s2()
 {
     int sessionCount = generateCodeLists("mt310s2");
-    constexpr int sessionCountMt310s2 = 6;
+    constexpr int sessionCountMt310s2 = 5;
     if(sessionCount != sessionCountMt310s2)
         qFatal("Seems sessions (found %i) changed for MT310s2. Read comment below howto update regression tests", sessionCount);
 }
@@ -916,114 +916,6 @@ void test_modman_regression_all_sessions::regressionMt310s2EmobDc()
     QCOMPARE(modules[16]->m_moduleId, 9999);
     QCOMPARE(modules[16]->m_reference->getVeinModuleName(), "SCPIModule1");
     QCOMPARE(modules[16]->m_reference->getSCPIModuleName(), "SCP1");
-
-    modMan.destroyModulesAndWaitUntilAllShutdown();
-    // ------ end auto generated code ----
-}
-
-void test_modman_regression_all_sessions::regressionMt310s2EmobAcDc()
-{
-    // ------ Start auto generated code for mt310s2-emob-session.json ----
-    TestLicenseSystem licenseSystem;
-    ModuleManagerSetupFacade modManSetupFacade(&licenseSystem);
-
-    TestModuleManager modMan(&modManSetupFacade, m_serviceInterfaceFactory);
-    modMan.loadAllAvailableModulePlugins();
-    modMan.setupConnections();
-    modMan.startAllTestServices("mt310s2", false);
-    modMan.changeSessionFile("mt310s2-emob-session.json");
-    modMan.waitUntilModulesAreReady();
-
-    QList<ZeraModules::ModuleData *> modules = modMan.getModuleList();
-    QCOMPARE(modules.count(), 22);
-
-    QCOMPARE(modules[0]->m_moduleId, 1150);
-    QCOMPARE(modules[0]->m_reference->getVeinModuleName(), "StatusModule1");
-    QCOMPARE(modules[0]->m_reference->getSCPIModuleName(), "DEV1");
-
-    QCOMPARE(modules[1]->m_moduleId, 1000);
-    QCOMPARE(modules[1]->m_reference->getVeinModuleName(), "ModeModule1");
-    QCOMPARE(modules[1]->m_reference->getSCPIModuleName(), "MOD1");
-
-    QCOMPARE(modules[2]->m_moduleId, 1020);
-    QCOMPARE(modules[2]->m_reference->getVeinModuleName(), "RangeModule1");
-    QCOMPARE(modules[2]->m_reference->getSCPIModuleName(), "RNG1");
-
-    QCOMPARE(modules[3]->m_moduleId, 1030);
-    QCOMPARE(modules[3]->m_reference->getVeinModuleName(), "SampleModule1");
-    QCOMPARE(modules[3]->m_reference->getSCPIModuleName(), "SAM1");
-
-    QCOMPARE(modules[4]->m_moduleId, 1040);
-    QCOMPARE(modules[4]->m_reference->getVeinModuleName(), "RMSModule1");
-    QCOMPARE(modules[4]->m_reference->getSCPIModuleName(), "RMS1");
-
-    QCOMPARE(modules[5]->m_moduleId, 1050);
-    QCOMPARE(modules[5]->m_reference->getVeinModuleName(), "DFTModule1");
-    QCOMPARE(modules[5]->m_reference->getSCPIModuleName(), "DFT1");
-
-    QCOMPARE(modules[6]->m_moduleId, 1060);
-    QCOMPARE(modules[6]->m_reference->getVeinModuleName(), "FFTModule1");
-    QCOMPARE(modules[6]->m_reference->getSCPIModuleName(), "FFT1");
-
-    QCOMPARE(modules[7]->m_moduleId, 1070);
-    QCOMPARE(modules[7]->m_reference->getVeinModuleName(), "POWER1Module1");
-    QCOMPARE(modules[7]->m_reference->getSCPIModuleName(), "POW1");
-
-    QCOMPARE(modules[8]->m_moduleId, 1071);
-    QCOMPARE(modules[8]->m_reference->getVeinModuleName(), "POWER1Module2");
-    QCOMPARE(modules[8]->m_reference->getSCPIModuleName(), "POW2");
-
-    QCOMPARE(modules[9]->m_moduleId, 1072);
-    QCOMPARE(modules[9]->m_reference->getVeinModuleName(), "POWER1Module3");
-    QCOMPARE(modules[9]->m_reference->getSCPIModuleName(), "POW3");
-
-    QCOMPARE(modules[10]->m_moduleId, 1073);
-    QCOMPARE(modules[10]->m_reference->getVeinModuleName(), "POWER1Module4");
-    QCOMPARE(modules[10]->m_reference->getSCPIModuleName(), "POW4");
-
-    QCOMPARE(modules[11]->m_moduleId, 1076);
-    QCOMPARE(modules[11]->m_reference->getVeinModuleName(), "POWER1Module5");
-    QCOMPARE(modules[11]->m_reference->getSCPIModuleName(), "POW5");
-
-    QCOMPARE(modules[12]->m_moduleId, 1110);
-    QCOMPARE(modules[12]->m_reference->getVeinModuleName(), "THDNModule1");
-    QCOMPARE(modules[12]->m_reference->getSCPIModuleName(), "THD1");
-
-    QCOMPARE(modules[13]->m_moduleId, 1111);
-    QCOMPARE(modules[13]->m_reference->getVeinModuleName(), "THDNModule2");
-    QCOMPARE(modules[13]->m_reference->getSCPIModuleName(), "THD2");
-
-    QCOMPARE(modules[14]->m_moduleId, 1120);
-    QCOMPARE(modules[14]->m_reference->getVeinModuleName(), "OSCIModule1");
-    QCOMPARE(modules[14]->m_reference->getSCPIModuleName(), "OSC1");
-
-    QCOMPARE(modules[15]->m_moduleId, 1130);
-    QCOMPARE(modules[15]->m_reference->getVeinModuleName(), "SEC1Module1");
-    QCOMPARE(modules[15]->m_reference->getSCPIModuleName(), "EC01");
-
-    QCOMPARE(modules[16]->m_moduleId, 1140);
-    QCOMPARE(modules[16]->m_reference->getVeinModuleName(), "LambdaModule1");
-    QCOMPARE(modules[16]->m_reference->getSCPIModuleName(), "LAM1");
-
-    QCOMPARE(modules[17]->m_moduleId, 1190);
-    QCOMPARE(modules[17]->m_reference->getVeinModuleName(), "AdjustmentModule1");
-    QCOMPARE(modules[17]->m_reference->getSCPIModuleName(), "ADJ1");
-
-    QCOMPARE(modules[18]->m_moduleId, 1200);
-    QCOMPARE(modules[18]->m_reference->getVeinModuleName(), "SEM1Module1");
-    QCOMPARE(modules[18]->m_reference->getSCPIModuleName(), "EM01");
-
-    QCOMPARE(modules[19]->m_moduleId, 1300);
-    QCOMPARE(modules[19]->m_reference->getVeinModuleName(), "SourceModule1");
-    QCOMPARE(modules[19]->m_reference->getSCPIModuleName(), "SRC1");
-
-    QCOMPARE(modules[20]->m_moduleId, 1400);
-    QCOMPARE(modules[20]->m_reference->getVeinModuleName(), "BleModule1");
-    QCOMPARE(modules[20]->m_reference->getSCPIModuleName(), "BLE1");
-
-    QCOMPARE(modules[21]->m_moduleId, 9999);
-    QCOMPARE(modules[21]->m_reference->getVeinModuleName(), "SCPIModule1");
-    QCOMPARE(modules[21]->m_reference->getSCPIModuleName(), "SCP1");
 
     modMan.destroyModulesAndWaitUntilAllShutdown();
     // ------ end auto generated code ----

@@ -2,8 +2,8 @@
   "deviceName" : "mt310s2",
   "devMode" : true,
   "mt310s2" : {
-    "availableSessions" : ["mt310s2-meas-session.json", "mt310s2-dc-session.json", "mt310s2-emob-session.json", "mt310s2-emob-session-ac.json", "mt310s2-emob-session-dc.json", "mt310s2-ced-session.json"],
-    "sessionDisplayStrings" : ["Default", "DC: 4*Voltage / 1*Current", "EMOB AC/DC", "EMOB AC", "EMOB DC", "Changing energy direction"],
+    "availableSessions" : ["mt310s2-meas-session.json", "mt310s2-dc-session.json", "mt310s2-emob-session-ac.json", "mt310s2-emob-session-dc.json", "mt310s2-ced-session.json"],
+    "sessionDisplayStrings" : ["Default", "DC: 4*Voltage / 1*Current", "EMOB AC", "EMOB DC", "Changing energy direction"],
     "defaultSession" : "mt310s2-meas-session.json",
     "customerdataSystemEnabled" : true
   },
