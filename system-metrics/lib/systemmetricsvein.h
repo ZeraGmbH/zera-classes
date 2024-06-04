@@ -1,0 +1,26 @@
+#ifndef SYSTEMMETRICSVEIN_H
+#define SYSTEMMETRICSVEIN_H
+
+#include "vf-cpp-entity.h"
+#include "systemmetrics.h"
+#include <QObject>
+
+class SystemMetricsVein : public QObject
+{
+    Q_OBJECT
+public:
+    explicit SystemMetricsVein(int entityId, QObject *parent = nullptr);
+    VeinEvent::EventSystem* getEventSystem();
+    void initOnce();
+private slots:
+    void onPollTimeChanged(QVariant newValue);
+    void onNewValues();
+private:
+    VfCpp::VfCppEntity m_entity;
+    int m_pollTimeMs = 1000;
+    VfCpp::VfCppComponent::Ptr m_pollTimeComponent;
+    QMap<QString, VfCpp::VfCppComponent::Ptr> m_cpuLoadComponents;
+    SystemMetrics m_systemMetrics;
+};
+
+#endif // SYSTEMMETRICSVEIN_H

@@ -6,7 +6,7 @@ file(GLOB HEADER
     ${CMAKE_CURRENT_SOURCE_DIR}/*.h
     )
 
-add_library(system-metrics SHARED
+add_library(system-metrics STATIC
     ${SOURCES}
     ${HEADER}
 )
@@ -15,6 +15,7 @@ target_link_libraries(system-metrics
     PUBLIC
     Qt5::Core
     Zera::zera-timers
+    Zera::VfCpp
     # ask linker to help us finding unresolved symbols
     "-Wl,--no-undefined"
     )
