@@ -88,7 +88,7 @@ void CpuLoad::checkLimitAndSpawnWarning(float allLoad)
     }
     else {
         if(allLoad < m_loadWarnLimit) {
-            qInfo("CPU load %.1f%% within limit %.1f%% again - max was %.1f%%", loadDisplayed, limitDisplayed, maxLoadDisplayed);
+            qInfo("CPU load %.1f%% is within %.1f%% limit again - max was %.1f%%", loadDisplayed, limitDisplayed, maxLoadDisplayed);
             m_loadWarnLimitActive = false;
             m_loadMax = 0.0;
         }
