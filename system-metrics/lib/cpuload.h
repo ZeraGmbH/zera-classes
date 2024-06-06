@@ -12,7 +12,7 @@ public:
 
 private:
     static QString getCpuDisplayName(int cpuIdx);
-    void checkLimitAndSpawnWarning(float allLoad);
+    void checkLimitAndSpawnWarning(float allCpuLoad);
     struct LoadRelevantData
     {
         quint64 m_totalTime = 0;
@@ -21,9 +21,9 @@ private:
     QMap<int, float> m_loadMap;
     QMap<int, LoadRelevantData> m_prevLoadRelData;
 
-    float m_loadWarnLimit = 0.0;
-    float m_loadMax = 0.0;
-    bool m_loadWarnLimitActive = false;
+    float m_allCpuLoadWarnLimit = 0.0;
+    float m_allCpuLoadMax = 0.0;
+    bool m_allCpuloadAboveWarnLimit = false;
 };
 
 #endif // CPULOAD_H
