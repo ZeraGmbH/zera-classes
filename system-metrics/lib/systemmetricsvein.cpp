@@ -19,6 +19,9 @@ void SystemMetricsVein::initOnce()
     m_pollTimeComponent = m_entity.createComponent("PAR_PollTimeMs", m_pollTimeMs);
     connect(m_pollTimeComponent.get(), &VfCpp::VfCppComponent::sigValueChanged,
             this, &SystemMetricsVein::onPollTimeChanged);
+    m_cpuLoadWarnLimitComponent= m_entity.createComponent("PAR_LoadWarnLimit", m_cpuLoadWarnLimit);
+    connect(m_cpuLoadWarnLimitComponent.get(), &VfCpp::VfCppComponent::sigValueChanged,
+            this, &SystemMetricsVein::onCpuWarnLimitChanged);
 
     CpuLoad* cpuLoad = m_systemMetrics.getCpuLoad();
     QMap<QString, float> cpuInfo = cpuLoad->getLoadMapForDisplay();
@@ -37,6 +40,16 @@ void SystemMetricsVein::onPollTimeChanged(QVariant newValue)
     }
     else
         m_pollTimeComponent->setValue(m_pollTimeMs);
+}
+
+void SystemMetricsVein::onCpuWarnLimitChanged(QVariant newValue)
+{
+    if(newValue.toInt() >= 0 && newValue.toInt() <= 100) { // 0: no warnings
+        m_cpuLoadWarnLimit = newValue.toInt();
+        m_systemMetrics.getCpuLoad()->setWarningLimit(((float)m_cpuLoadWarnLimit)/100.0);
+    }
+    else
+        m_cpuLoadWarnLimitComponent->setValue(m_cpuLoadWarnLimit);
 }
 
 void SystemMetricsVein::onNewValues()
