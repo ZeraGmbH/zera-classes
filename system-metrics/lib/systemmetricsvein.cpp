@@ -30,6 +30,7 @@ void SystemMetricsVein::initOnce()
     connect(&m_systemMetrics, &SystemMetrics::sigNewValues,
             this, &SystemMetricsVein::onNewValues);
     m_systemMetrics.startTimer(m_pollTimeMs);
+    m_systemMetrics.getCpuLoad()->setWarningLimit(((float)m_cpuLoadWarnLimit)/100.0);
 }
 
 void SystemMetricsVein::onPollTimeChanged(QVariant newValue)
