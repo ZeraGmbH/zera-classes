@@ -23,10 +23,21 @@ void CpuLoad::calcNextValues()
 
         float totalDiff = (float)(currLoadRelData.m_totalTime - m_prevLoadRelData[timingNum].m_totalTime);
         float loadRelevantDiff = (float)(currLoadRelData.m_loadRelevantTime - m_prevLoadRelData[timingNum].m_loadRelevantTime);
-        float load = loadRelevantDiff / totalDiff;
+        float load = totalDiff == 0.0 ? 0.0 : loadRelevantDiff / totalDiff;
+        if(timingNum == 0)
+            checkLimitAndSpawnWarning(load);
         m_loadMap[timingNum] = load;
         m_prevLoadRelData[timingNum] = currLoadRelData;
     }
+}
+
+bool CpuLoad::setWarningLimit(float limit)
+{
+    if(limit >= 0 && limit < 1) {
+        m_loadWarnLimit = limit;
+        return true;
+    }
+    return false;
 }
 
 QMap<QString, float> CpuLoad::getLoadMapForDisplay() const
@@ -56,4 +67,30 @@ QString CpuLoad::getCpuDisplayName(int cpuIdx)
     if(cpuIdx == 0)
         return "All";
     return QString("%1").arg(cpuIdx); // 1 based
+}
+
+void CpuLoad::checkLimitAndSpawnWarning(float allLoad)
+{
+    if(m_loadWarnLimit == 0.0) {
+        m_loadWarnLimitActive = false;
+        return;
+    }
+    if(allLoad > m_loadMax)
+        m_loadMax = allLoad;
+    float loadDisplayed = allLoad * 100.0;
+    float limitDisplayed = m_loadWarnLimit * 100.0;
+    float maxLoadDisplayed = m_loadMax * 100.0;
+    if(!m_loadWarnLimitActive) {
+        if(allLoad > m_loadWarnLimit) {
+            qWarning("CPU load %.1f%% exceeds limit %.1f%%", loadDisplayed, limitDisplayed);
+            m_loadWarnLimitActive = true;
+        }
+    }
+    else {
+        if(allLoad < m_loadWarnLimit) {
+            qInfo("CPU load %.1f%% within limit %.1f%% again - max was %.1f%%", loadDisplayed, limitDisplayed, maxLoadDisplayed);
+            m_loadWarnLimitActive = false;
+            m_loadMax = 0.0;
+        }
+    }
 }
