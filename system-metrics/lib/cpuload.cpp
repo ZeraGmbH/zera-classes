@@ -34,7 +34,7 @@ void CpuLoad::calcNextValues()
 bool CpuLoad::setWarningLimit(float limit)
 {
     if(limit >= 0 && limit < 1) {
-        m_loadWarnLimit = limit;
+        m_allCpuLoadWarnLimit = limit;
         return true;
     }
     return false;
@@ -69,28 +69,28 @@ QString CpuLoad::getCpuDisplayName(int cpuIdx)
     return QString("%1").arg(cpuIdx); // 1 based
 }
 
-void CpuLoad::checkLimitAndSpawnWarning(float allLoad)
+void CpuLoad::checkLimitAndSpawnWarning(float allCpuLoad)
 {
-    if(m_loadWarnLimit == 0.0) {
-        m_loadWarnLimitActive = false;
+    if(m_allCpuLoadWarnLimit == 0.0) {
+        m_allCpuloadAboveWarnLimit = false;
         return;
     }
-    if(allLoad > m_loadMax)
-        m_loadMax = allLoad;
-    float loadDisplayed = allLoad * 100.0;
-    float limitDisplayed = m_loadWarnLimit * 100.0;
-    float maxLoadDisplayed = m_loadMax * 100.0;
-    if(!m_loadWarnLimitActive) {
-        if(allLoad > m_loadWarnLimit) {
+    if(allCpuLoad > m_allCpuLoadMax)
+        m_allCpuLoadMax = allCpuLoad;
+    float loadDisplayed = allCpuLoad * 100.0;
+    float limitDisplayed = m_allCpuLoadWarnLimit * 100.0;
+    if(!m_allCpuloadAboveWarnLimit) {
+        if(allCpuLoad > m_allCpuLoadWarnLimit) {
             qWarning("CPU load %.1f%% exceeds limit %.1f%%", loadDisplayed, limitDisplayed);
-            m_loadWarnLimitActive = true;
+            m_allCpuloadAboveWarnLimit = true;
         }
     }
     else {
-        if(allLoad < m_loadWarnLimit) {
+        float maxLoadDisplayed = m_allCpuLoadMax * 100.0;
+        if(allCpuLoad < m_allCpuLoadWarnLimit) {
             qInfo("CPU load %.1f%% is within %.1f%% limit again - max was %.1f%%", loadDisplayed, limitDisplayed, maxLoadDisplayed);
-            m_loadWarnLimitActive = false;
-            m_loadMax = 0.0;
+            m_allCpuloadAboveWarnLimit = false;
+            m_allCpuLoadMax = 0.0;
         }
     }
 }
