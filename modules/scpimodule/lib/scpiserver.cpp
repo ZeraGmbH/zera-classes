@@ -185,7 +185,7 @@ void cSCPIServer::addSCPIClient()
 void cSCPIServer::deleteSCPIClient(QObject *obj)
 {
     // don't use for other than remove from list - it is destroyed and not usable
-    cSCPIEthClient* client = static_cast<cSCPIEthClient*>(obj);
+    cSCPIClient* client = static_cast<cSCPIClient*>(obj);
     if(client) {
         m_SCPIClientList.removeAll(client);
         qInfo("Network SCPI client deleted / Active clients: %i", m_SCPIClientList.count());
