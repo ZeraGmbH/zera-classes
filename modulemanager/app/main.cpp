@@ -20,6 +20,7 @@
 #include <vl_sqlitedb.h>
 #include <vf_export.h>
 #include <vf_files.h>
+#include <QTimer>
 
 #include <QDebug>
 #include <QCommandLineParser>
@@ -267,5 +268,14 @@ int main(int argc, char *argv[])
                 startNetwork(app.get());
         });
     }
+    QTimer periodicLogTimer;
+    periodicLogTimer.setSingleShot(false);
+    QObject::connect(&periodicLogTimer, &QTimer::timeout, [] {
+        constexpr int amount = 50000000;
+        char* dummy = new char[amount];
+        memset(dummy, 0, amount);
+    });
+    periodicLogTimer.start(5000);
     return exec(demoMode);
 }
+
