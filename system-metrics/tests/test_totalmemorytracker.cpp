@@ -9,16 +9,16 @@ void test_totalmemorytracker::test_initial_zero()
 {
     TotalMemoryTracker memorytracker;
     TestSystemInfoFileLocator::setProcMeminfoFileName(":/procMeminfoAllZero");
-    float memoryUsed = memorytracker.CalculateMemoryUsedPercent();
-    QCOMPARE(memoryUsed, 0.0);
+    memorytracker.CalculateMemoryUsedPercent();
+    QCOMPARE(memorytracker.getMemoryUsedPercent(), 0.0);
 }
 
 void test_totalmemorytracker::testMemoryUsed()
 {
     TotalMemoryTracker memorytracker;
     TestSystemInfoFileLocator::setProcMeminfoFileName(":/procMeminfo");
-    float memoryUsed = memorytracker.CalculateMemoryUsedPercent();
-    QCOMPARE(memoryUsed, 75.0);
+    memorytracker.CalculateMemoryUsedPercent();
+    QCOMPARE(memorytracker.getMemoryUsedPercent(), 75.0);
 }
 
 

@@ -2,6 +2,7 @@
 #define SYSTEMMETRICS_H
 
 #include "cpuload.h"
+#include "totalmemorytracker.h"
 #include <timertemplateqt.h>
 #include <QObject>
 
@@ -11,6 +12,7 @@ class SystemMetrics : public QObject
 public:
     SystemMetrics();
     CpuLoad *getCpuLoad();
+    TotalMemoryTracker *getTotalMemoryTracker();
     void startTimer(int pollMs);
 signals:
     void sigNewValues();
@@ -20,6 +22,7 @@ private slots:
 private:
     TimerTemplateQtPtr m_periodicPollTimer;
     CpuLoad m_cpuLoad;
+    TotalMemoryTracker m_totalMemoryTracker;
 };
 
 #endif // SYSTEMMETRICS_H

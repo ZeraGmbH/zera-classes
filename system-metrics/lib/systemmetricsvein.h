@@ -23,6 +23,7 @@ private:
     VfCpp::VfCppComponent::Ptr m_pollTimeComponent;
     VfCpp::VfCppComponent::Ptr m_cpuLoadWarnLimitComponent;
     QMap<QString, VfCpp::VfCppComponent::Ptr> m_cpuLoadComponents;
+    VfCpp::VfCppComponent::Ptr m_memoryUsedComponent;
     SystemMetrics m_systemMetrics;
 };
 

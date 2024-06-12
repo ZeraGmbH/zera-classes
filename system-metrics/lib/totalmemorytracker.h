@@ -1,13 +1,15 @@
 #ifndef TOTALMEMORYTRACKER_H
 #define TOTALMEMORYTRACKER_H
 
-#include <QObject>
+#include <QMap>
 
-class TotalMemoryTracker : public QObject
+class TotalMemoryTracker
 {
-    Q_OBJECT
 public:
-    float CalculateMemoryUsedPercent();
+    void CalculateMemoryUsedPercent();
+    float getMemoryUsedPercent() const;
+private:
+    float m_memoryUsedPercent = 0.0;
 };
 
 #endif // TOTALMEMORYTRACKER_H
