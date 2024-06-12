@@ -27,6 +27,10 @@ void SystemMetricsVein::initOnce()
     QMap<QString, float> cpuInfo = cpuLoad->getLoadMapForDisplay();
     for(auto iter=cpuInfo.cbegin(); iter!=cpuInfo.cend(); ++iter)
         m_cpuLoadComponents[iter.key()] = m_entity.createComponent(QString("ACT_CPU_%1_LOAD").arg(iter.key()), float(0.0), true);
+
+    TotalMemoryTracker* memoryTracker = m_systemMetrics.getTotalMemoryTracker();
+    m_memoryUsedComponent = m_entity.createComponent(QString("ACT_MEMORY_USED"), memoryTracker->getMemoryUsedPercent());
+
     connect(&m_systemMetrics, &SystemMetrics::sigNewValues,
             this, &SystemMetricsVein::onNewValues);
     m_systemMetrics.startTimer(m_pollTimeMs);
@@ -63,4 +67,7 @@ void SystemMetricsVein::onNewValues()
         else
             qWarning("SystemMetricsVein: unkown CPU %s", qPrintable(iter.key()));
     }
+
+    TotalMemoryTracker* memoryTracker = m_systemMetrics.getTotalMemoryTracker();
+    m_memoryUsedComponent->setValue(memoryTracker->getMemoryUsedPercent());
 }
