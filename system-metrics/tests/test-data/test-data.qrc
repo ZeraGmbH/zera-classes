@@ -6,5 +6,6 @@
         <file>procStatOneCpuUserLoad</file>
         <file>procStatOneCpuUserLoad1</file>
         <file>procStatOneCpuUserLoad2</file>
+        <file>procMeminfo</file>
     </qresource>
 </RCC>
