@@ -17,4 +17,5 @@ SETUP_SYSTEM_METRICE_TESTS(
     test_procstatdecoder
     test_cpuload
     test_procmeminfodecoder
+    test_totalmemorytracker
 )
