@@ -1,3 +1,5 @@
 MemTotal:        0 kB
 MemFree:          0 kB
 MemAvailable:     0 kB
+Buffers:          0 kB
+Cached:           0 kB

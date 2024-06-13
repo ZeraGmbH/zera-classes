@@ -20,7 +20,9 @@ void test_procmeminfodecoder::decodeSingleLineMeminfo()
 void test_procmeminfodecoder::decodeTestProcMeminfo()
 {
     MemoryValues testMemoryValues = ProcMeminfoDecoder::getCurrentMemoryValues();
-    QCOMPARE(testMemoryValues.totalMemory, 1016372);
-    QCOMPARE(testMemoryValues.freeMemory, 254093);
+    QCOMPARE(testMemoryValues.totalMemory, 1000000);
+    QCOMPARE(testMemoryValues.freeMemory, 400000);
+    QCOMPARE(testMemoryValues.buffers, 150000);
+    QCOMPARE(testMemoryValues.cached, 200000);
 }
 

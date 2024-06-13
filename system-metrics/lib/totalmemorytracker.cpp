@@ -4,10 +4,15 @@
 void TotalMemoryTracker::CalculateMemoryUsedPercent()
 {
     MemoryValues memoryValues = ProcMeminfoDecoder::getCurrentMemoryValues();
-    m_memoryUsedPercent = memoryValues.totalMemory == 0.0 ? 0.0 : float(memoryValues.totalMemory - memoryValues.freeMemory) / float(memoryValues.totalMemory) * 100.0;
+    quint32 usedMemory = memoryValues.totalMemory - memoryValues.freeMemory;
+    quint32 buffersAndCachedMemory = memoryValues.buffers + memoryValues.cached;
+    quint32 usedRAM = usedMemory - buffersAndCachedMemory;
+
+    m_memoryUsageParams.m_RAMUsedPercent = memoryValues.totalMemory == 0.0 ? 0.0 : float(usedRAM) / float(memoryValues.totalMemory) * 100.0;
+    m_memoryUsageParams.m_buffersAndCachedUsedPercent = memoryValues.totalMemory == 0.0 ? 0.0 : float(buffersAndCachedMemory) / float(memoryValues.totalMemory) * 100.0;
 }
 
-float TotalMemoryTracker::getMemoryUsedPercent() const
+memoryUsageParams TotalMemoryTracker::getMemoryUsageParams() const
 {
-    return m_memoryUsedPercent;
+    return m_memoryUsageParams;
 }
