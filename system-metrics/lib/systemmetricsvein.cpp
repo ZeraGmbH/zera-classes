@@ -34,7 +34,7 @@ void SystemMetricsVein::initOnce()
 
     connect(&m_systemMetrics, &SystemMetrics::sigNewValues,
             this, &SystemMetricsVein::onNewValues);
-    m_systemMetrics.startTimer(m_pollTimeMs);
+    m_systemMetrics.startPollTimer(m_pollTimeMs);
     m_systemMetrics.getCpuLoad()->setWarningLimit(((float)m_cpuLoadWarnLimit)/100.0);
 }
 
@@ -42,7 +42,7 @@ void SystemMetricsVein::onPollTimeChanged(QVariant newValue)
 {
     if(newValue.toInt() >= 500 && newValue.toInt() <= 100000) {
         m_pollTimeMs = newValue.toInt();
-        m_systemMetrics.startTimer(m_pollTimeMs);
+        m_systemMetrics.startPollTimer(m_pollTimeMs);
     }
     else
         m_pollTimeComponent->setValue(m_pollTimeMs);
