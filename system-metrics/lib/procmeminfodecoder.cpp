@@ -11,6 +11,10 @@ MemoryValues ProcMeminfoDecoder::getCurrentMemoryValues()
             currentMemoryValues.totalMemory = decodeSingleMemoryValue(line);
         if(line.startsWith("MemFree"))
             currentMemoryValues.freeMemory = decodeSingleMemoryValue(line);
+        if(line.startsWith("Buffers"))
+            currentMemoryValues.buffers = decodeSingleMemoryValue(line);
+        if(line.startsWith("Cached"))
+            currentMemoryValues.cached = decodeSingleMemoryValue(line);
     }
     return currentMemoryValues;
 }

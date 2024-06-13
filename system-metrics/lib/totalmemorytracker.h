@@ -3,13 +3,18 @@
 
 #include <QMap>
 
+struct memoryUsageParams {
+    float m_RAMUsedPercent = 0.0;
+    float m_buffersAndCachedUsedPercent = 0.0;
+};
+
 class TotalMemoryTracker
 {
 public:
     void CalculateMemoryUsedPercent();
-    float getMemoryUsedPercent() const;
+    memoryUsageParams getMemoryUsageParams() const;
 private:
-    float m_memoryUsedPercent = 0.0;
+    memoryUsageParams m_memoryUsageParams;
 };
 
 #endif // TOTALMEMORYTRACKER_H
