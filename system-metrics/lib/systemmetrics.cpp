@@ -18,17 +18,17 @@ TotalMemoryTracker *SystemMetrics::getTotalMemoryTracker()
     return &m_totalMemoryTracker;
 }
 
-void SystemMetrics::onTimer()
+void SystemMetrics::onPollTimer()
 {
     m_cpuLoad.calcNextValues();
     m_totalMemoryTracker.CalculateMemoryUsedPercent();
     emit sigNewValues();
 }
 
-void SystemMetrics::startTimer(int pollMs)
+void SystemMetrics::startPollTimer(int pollMs)
 {
     m_periodicPollTimer = TimerFactoryQt::createPeriodic(pollMs);
     connect(m_periodicPollTimer.get(), &TimerTemplateQt::sigExpired,
-            this, &SystemMetrics::onTimer);
+            this, &SystemMetrics::onPollTimer);
     m_periodicPollTimer->start();
 }
