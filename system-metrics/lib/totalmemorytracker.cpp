@@ -16,3 +16,8 @@ memoryUsageParams TotalMemoryTracker::getMemoryUsageParams() const
 {
     return m_memoryUsageParams;
 }
+
+void TotalMemoryTracker::periodicLogs()
+{
+    qInfo("Memory used: %0.2f%%, Buffers & Cache: %0.2f%% ", m_memoryUsageParams.m_RAMUsedPercent, m_memoryUsageParams.m_buffersAndCachedUsedPercent);
+}

@@ -25,10 +25,23 @@ void SystemMetrics::onPollTimer()
     emit sigNewValues();
 }
 
+void SystemMetrics::onLogTimer()
+{
+    m_totalMemoryTracker.periodicLogs();
+}
+
 void SystemMetrics::startPollTimer(int pollMs)
 {
     m_periodicPollTimer = TimerFactoryQt::createPeriodic(pollMs);
     connect(m_periodicPollTimer.get(), &TimerTemplateQt::sigExpired,
             this, &SystemMetrics::onPollTimer);
     m_periodicPollTimer->start();
+}
+
+void SystemMetrics::startLogTimer(int logIntervalMs)
+{
+    m_periodicLogTimer = TimerFactoryQt::createPeriodic(logIntervalMs);
+    connect(m_periodicLogTimer.get(), &TimerTemplateQt::sigExpired,
+            this, &SystemMetrics::onLogTimer);
+    m_periodicLogTimer->start();
 }

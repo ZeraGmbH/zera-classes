@@ -13,6 +13,7 @@ class TotalMemoryTracker
 public:
     void CalculateMemoryUsedPercent();
     memoryUsageParams getMemoryUsageParams() const;
+    void periodicLogs();
 private:
     memoryUsageParams m_memoryUsageParams;
 };

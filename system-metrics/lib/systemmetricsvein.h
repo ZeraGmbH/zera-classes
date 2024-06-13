@@ -14,13 +14,16 @@ public:
     void initOnce();
 private slots:
     void onPollTimeChanged(QVariant newValue);
+    void onLogIntervalChanged(QVariant newValue);
     void onCpuWarnLimitChanged(QVariant newValue);
     void onNewValues();
 private:
     VfCpp::VfCppEntity m_entity;
     int m_pollTimeMs = 1000;
+    int m_logIntervalMs = 5000;
     float m_cpuLoadWarnLimit = 20;
     VfCpp::VfCppComponent::Ptr m_pollTimeComponent;
+    VfCpp::VfCppComponent::Ptr m_logIntervalComponent;
     VfCpp::VfCppComponent::Ptr m_cpuLoadWarnLimitComponent;
     QMap<QString, VfCpp::VfCppComponent::Ptr> m_cpuLoadComponents;
     VfCpp::VfCppComponent::Ptr m_RAMUsedComponent;
