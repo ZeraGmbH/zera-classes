@@ -19,6 +19,9 @@ void SystemMetricsVein::initOnce()
     m_pollTimeComponent = m_entity.createComponent("PAR_PollTimeMs", m_pollTimeMs);
     connect(m_pollTimeComponent.get(), &VfCpp::VfCppComponent::sigValueChanged,
             this, &SystemMetricsVein::onPollTimeChanged);
+    m_logIntervalComponent = m_entity.createComponent("PAR_LogIntervalMs", m_logIntervalMs);
+    connect(m_logIntervalComponent.get(), &VfCpp::VfCppComponent::sigValueChanged,
+            this, &SystemMetricsVein::onLogIntervalChanged);
     m_cpuLoadWarnLimitComponent= m_entity.createComponent("PAR_LoadWarnLimit", m_cpuLoadWarnLimit);
     connect(m_cpuLoadWarnLimitComponent.get(), &VfCpp::VfCppComponent::sigValueChanged,
             this, &SystemMetricsVein::onCpuWarnLimitChanged);
@@ -35,6 +38,7 @@ void SystemMetricsVein::initOnce()
     connect(&m_systemMetrics, &SystemMetrics::sigNewValues,
             this, &SystemMetricsVein::onNewValues);
     m_systemMetrics.startPollTimer(m_pollTimeMs);
+    m_systemMetrics.startLogTimer(m_logIntervalMs);
     m_systemMetrics.getCpuLoad()->setWarningLimit(((float)m_cpuLoadWarnLimit)/100.0);
 }
 
@@ -46,6 +50,16 @@ void SystemMetricsVein::onPollTimeChanged(QVariant newValue)
     }
     else
         m_pollTimeComponent->setValue(m_pollTimeMs);
+}
+
+void SystemMetricsVein::onLogIntervalChanged(QVariant newValue)
+{
+    if(newValue.toInt() >= 1000 && newValue.toInt() <= 100000) {
+        m_logIntervalMs = newValue.toInt();
+        m_systemMetrics.startLogTimer(m_logIntervalMs);
+    }
+    else
+        m_logIntervalComponent->setValue(m_logIntervalMs);
 }
 
 void SystemMetricsVein::onCpuWarnLimitChanged(QVariant newValue)
