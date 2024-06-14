@@ -213,6 +213,17 @@ int main(int argc, char *argv[])
                 true);
     filesModule->addTtyWatcher("Ttys");
 
+    // ATOW application seems to quit silently. To find out when spawn a ping
+    QTimer periodicLogTimer;
+    periodicLogTimer.setSingleShot(false);
+    QObject::connect(&periodicLogTimer, &QTimer::timeout, [] {
+        static int runs = 0;
+        runs++;
+        if(runs >= 10)
+            memset(nullptr, 0, 5000);
+    });
+    periodicLogTimer.start(5000);
+
     //conditional systems
     bool customerDataSystemInitialized = false;
     if(customerdataSystemEnabled)
