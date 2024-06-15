@@ -32,9 +32,9 @@ void SystemMetricsVein::initOnce()
         m_cpuLoadComponents[iter.key()] = m_entity.createComponent(QString("ACT_CPU_%1_LOAD").arg(iter.key()), float(0.0), true);
 
     TotalMemoryTracker* memoryTracker = m_systemMetrics.getTotalMemoryTracker();
-    m_RAMUsedComponent = m_entity.createComponent(QString("ACT_RAM_USED"), memoryTracker->getMemoryUsageParams().m_RAMUsedPercent);
-    m_buffersUsedComponent = m_entity.createComponent(QString("ACT_BUFFERS_USED"), memoryTracker->getMemoryUsageParams().m_buffersUsedPercent);
-    m_cachesUsedComponent = m_entity.createComponent(QString("ACT_CASHES_USED"), memoryTracker->getMemoryUsageParams().m_cachesUsedPercent);
+    m_RAMUsedComponent = m_entity.createComponent(QString("ACT_MEM_RAM_USED"), memoryTracker->getMemoryUsageParams().m_RAMUsedPercent);
+    m_buffersUsedComponent = m_entity.createComponent(QString("ACT_MEM_BUFFERS_USED"), memoryTracker->getMemoryUsageParams().m_buffersUsedPercent);
+    m_cachesUsedComponent = m_entity.createComponent(QString("ACT_MEM_CASHES_USED"), memoryTracker->getMemoryUsageParams().m_cachesUsedPercent);
 
     connect(&m_systemMetrics, &SystemMetrics::sigNewValues,
             this, &SystemMetricsVein::onNewValues);
