@@ -27,7 +27,8 @@ private:
     VfCpp::VfCppComponent::Ptr m_cpuLoadWarnLimitComponent;
     QMap<QString, VfCpp::VfCppComponent::Ptr> m_cpuLoadComponents;
     VfCpp::VfCppComponent::Ptr m_RAMUsedComponent;
-    VfCpp::VfCppComponent::Ptr m_buffersAndCachedUsedComponent;
+    VfCpp::VfCppComponent::Ptr m_buffersUsedComponent;
+    VfCpp::VfCppComponent::Ptr m_cachesUsedComponent;
     SystemMetrics m_systemMetrics;
 };
 

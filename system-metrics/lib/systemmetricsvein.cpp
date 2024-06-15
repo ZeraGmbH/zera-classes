@@ -33,7 +33,8 @@ void SystemMetricsVein::initOnce()
 
     TotalMemoryTracker* memoryTracker = m_systemMetrics.getTotalMemoryTracker();
     m_RAMUsedComponent = m_entity.createComponent(QString("ACT_RAM_USED"), memoryTracker->getMemoryUsageParams().m_RAMUsedPercent);
-    m_buffersAndCachedUsedComponent = m_entity.createComponent(QString("ACT_BUFFERS_CACHE_USED"), memoryTracker->getMemoryUsageParams().m_buffersAndCachedUsedPercent);
+    m_buffersUsedComponent = m_entity.createComponent(QString("ACT_BUFFERS_USED"), memoryTracker->getMemoryUsageParams().m_buffersUsedPercent);
+    m_cachesUsedComponent = m_entity.createComponent(QString("ACT_CASHES_USED"), memoryTracker->getMemoryUsageParams().m_cachesUsedPercent);
 
     connect(&m_systemMetrics, &SystemMetrics::sigNewValues,
             this, &SystemMetricsVein::onNewValues);
@@ -85,5 +86,6 @@ void SystemMetricsVein::onNewValues()
 
     TotalMemoryTracker* memoryTracker = m_systemMetrics.getTotalMemoryTracker();
     m_RAMUsedComponent->setValue(memoryTracker->getMemoryUsageParams().m_RAMUsedPercent);
-    m_buffersAndCachedUsedComponent->setValue(memoryTracker->getMemoryUsageParams().m_buffersAndCachedUsedPercent);
+    m_buffersUsedComponent->setValue(memoryTracker->getMemoryUsageParams().m_buffersUsedPercent);
+    m_cachesUsedComponent->setValue(memoryTracker->getMemoryUsageParams().m_cachesUsedPercent);
 }

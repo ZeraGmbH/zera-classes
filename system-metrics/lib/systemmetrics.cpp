@@ -5,7 +5,7 @@
 SystemMetrics::SystemMetrics()
 {
     m_cpuLoad.calcNextValues();
-    m_totalMemoryTracker.CalculateMemoryUsedPercent();
+    m_totalMemoryTracker.calculateMemoryUsedPercent();
 }
 
 CpuLoad *SystemMetrics::getCpuLoad()
@@ -21,7 +21,7 @@ TotalMemoryTracker *SystemMetrics::getTotalMemoryTracker()
 void SystemMetrics::onPollTimer()
 {
     m_cpuLoad.calcNextValues();
-    m_totalMemoryTracker.CalculateMemoryUsedPercent();
+    m_totalMemoryTracker.calculateMemoryUsedPercent();
     emit sigNewValues();
 }
 
