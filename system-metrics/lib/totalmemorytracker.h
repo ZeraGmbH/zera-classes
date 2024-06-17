@@ -19,6 +19,7 @@ public:
 private:
     float calcPercentageOneDecimal(float value);
     MemoryUsageParams m_memoryUsageParams;
+    QString m_lastLogString;
 };
 
 #endif // TOTALMEMORYTRACKER_H

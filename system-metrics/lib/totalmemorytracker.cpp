@@ -36,7 +36,10 @@ void TotalMemoryTracker::periodicLogs()
                             .arg(m_memoryUsageParams.m_RAMUsedPercent, 0, 'f', 1)
                             .arg(m_memoryUsageParams.m_buffersUsedPercent, 0, 'f', 1)
                             .arg(m_memoryUsageParams.m_cachesUsedPercent, 0, 'f', 1);
-    qInfo("%s", qPrintable(logString));
+    if(logString != m_lastLogString) {
+        m_lastLogString = logString;
+        qInfo("%s", qPrintable(logString));
+    }
 }
 
 float TotalMemoryTracker::calcPercentageOneDecimal(float value)
