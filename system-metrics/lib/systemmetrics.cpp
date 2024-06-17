@@ -18,30 +18,30 @@ TotalMemoryTracker *SystemMetrics::getTotalMemoryTracker()
     return &m_totalMemoryTracker;
 }
 
-void SystemMetrics::onPollTimer()
+void SystemMetrics::onCpuLoadTimer()
 {
     m_cpuLoad.calcNextValues();
     m_totalMemoryTracker.calculateMemoryUsedPercent();
     emit sigNewValues();
 }
 
-void SystemMetrics::onLogTimer()
+void SystemMetrics::onMemoryTimer()
 {
     m_totalMemoryTracker.periodicLogs();
 }
 
-void SystemMetrics::startPollTimer(int pollMs)
+void SystemMetrics::startCpuLoadPollTimer(int pollMs)
 {
-    m_periodicPollTimer = TimerFactoryQt::createPeriodic(pollMs);
-    connect(m_periodicPollTimer.get(), &TimerTemplateQt::sigExpired,
-            this, &SystemMetrics::onPollTimer);
-    m_periodicPollTimer->start();
+    m_cpuLoadPollTimer = TimerFactoryQt::createPeriodic(pollMs);
+    connect(m_cpuLoadPollTimer.get(), &TimerTemplateQt::sigExpired,
+            this, &SystemMetrics::onCpuLoadTimer);
+    m_cpuLoadPollTimer->start();
 }
 
-void SystemMetrics::startLogTimer(int logIntervalMs)
+void SystemMetrics::startMemoryPollTimer(int logIntervalMs)
 {
-    m_periodicLogTimer = TimerFactoryQt::createPeriodic(logIntervalMs);
-    connect(m_periodicLogTimer.get(), &TimerTemplateQt::sigExpired,
-            this, &SystemMetrics::onLogTimer);
-    m_periodicLogTimer->start();
+    m_memoryPollTimer = TimerFactoryQt::createPeriodic(logIntervalMs);
+    connect(m_memoryPollTimer.get(), &TimerTemplateQt::sigExpired,
+            this, &SystemMetrics::onMemoryTimer);
+    m_memoryPollTimer->start();
 }

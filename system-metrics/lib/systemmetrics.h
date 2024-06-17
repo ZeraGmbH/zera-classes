@@ -13,17 +13,17 @@ public:
     SystemMetrics();
     CpuLoad *getCpuLoad();
     TotalMemoryTracker *getTotalMemoryTracker();
-    void startPollTimer(int pollMs);
-    void startLogTimer(int logIntervalMs);
+    void startCpuLoadPollTimer(int pollMs);
+    void startMemoryPollTimer(int logIntervalMs);
 signals:
     void sigNewValues();
 
 private slots:
-    void onPollTimer();
-    void onLogTimer();
+    void onCpuLoadTimer();
+    void onMemoryTimer();
 private:
-    TimerTemplateQtPtr m_periodicPollTimer;
-    TimerTemplateQtPtr m_periodicLogTimer;
+    TimerTemplateQtPtr m_cpuLoadPollTimer;
+    TimerTemplateQtPtr m_memoryPollTimer;
     CpuLoad m_cpuLoad;
     TotalMemoryTracker m_totalMemoryTracker;
 };
