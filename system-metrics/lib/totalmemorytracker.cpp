@@ -32,10 +32,11 @@ MemoryUsageParams TotalMemoryTracker::getMemoryUsageParams() const
 
 void TotalMemoryTracker::periodicLogs()
 {
-    qInfo("Memory used: %0.1f%%, Buffers: %0.1f%% Cache: %0.1f%%",
-          m_memoryUsageParams.m_RAMUsedPercent,
-          m_memoryUsageParams.m_buffersUsedPercent,
-          m_memoryUsageParams.m_cachesUsedPercent);
+    QString logString = QString("Memory used: %1%, Buffers: %2% Cache: %3%")
+                            .arg(m_memoryUsageParams.m_RAMUsedPercent, 0, 'f', 1)
+                            .arg(m_memoryUsageParams.m_buffersUsedPercent, 0, 'f', 1)
+                            .arg(m_memoryUsageParams.m_cachesUsedPercent, 0, 'f', 1);
+    qInfo("%s", qPrintable(logString));
 }
 
 float TotalMemoryTracker::calcPercentageOneDecimal(float value)
