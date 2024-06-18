@@ -1,0 +1,7 @@
+<RCC>
+    <qresource prefix="/">
+        <file>contentsets/session-minimal-rms.json</file>
+        <file>sessions/session-minimal-rms.json</file>
+    </qresource>
+</RCC>
+
