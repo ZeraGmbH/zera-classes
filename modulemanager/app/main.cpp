@@ -6,6 +6,7 @@
 #include "customerdatasystem.h"
 #include "licensesystem.h"
 #include "jsonloggercontentsessionloader.h"
+#include "vf_storage.h"
 
 #include <QGuiApplication>
 
@@ -158,6 +159,7 @@ int main(int argc, char *argv[])
                                QStringLiteral(MODMAN_LOGGER_LOCAL_PATH)};
     FileAccessControlPtr fileAccessController = std::make_shared<FileAccessControl>(allowedFolders);
     vfFiles::vf_files *filesModule = new vfFiles::vf_files(fileAccessController);
+    Vf_Storage *storageModule = new Vf_Storage();
 
     //setup logger
     VeinLogger::LoggerContentSetConfig::setJsonEnvironment(MODMAN_CONTENTSET_PATH, std::make_shared<JsonLoggerContentLoader>());
@@ -240,6 +242,9 @@ int main(int argc, char *argv[])
             }
         }
     });
+
+    modManSetupFacade->addSubsystem(storageModule->getVeinEntity());
+    storageModule->initOnce();
 
     modMan->setupConnections();
     QObject::connect(modMan, &ZeraModules::ModuleManager::sigSessionSwitched, [&dataLoggerSystem]() {
