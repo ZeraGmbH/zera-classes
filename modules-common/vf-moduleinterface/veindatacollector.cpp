@@ -60,4 +60,32 @@ QHash<QString, QList<QVariant> > VeinDataCollector::getStoredValuesOfEntity(int 
 void VeinDataCollector::appendValue(int entityId, QString componentName, QVariant value)
 {
     m_veinValuesHash[entityId][componentName].append(value);
+    convertToJson();
+}
+
+void VeinDataCollector::convertToJson()
+{
+    QJsonObject jsonObject;
+    for (auto it = m_veinValuesHash.constBegin(); it != m_veinValuesHash.constEnd(); ++it) {
+        jsonObject.insert(QString::number(it.key()), convertHashToJsonObject(it.value()));
+    }
+    emit newStoredValue(jsonObject);
+}
+
+QJsonArray VeinDataCollector::convertListToJsonArray(QList<QVariant> list)
+{
+    QJsonArray jsonArray;
+    for (const QVariant& item : list) {
+        jsonArray.append(QJsonValue::fromVariant(item));
+    }
+    return jsonArray;
+}
+
+QJsonObject VeinDataCollector::convertHashToJsonObject(QHash<QString, QList<QVariant> > hash)
+{
+    QJsonObject jsonObject;
+    for (auto it = hash.constBegin(); it != hash.constEnd(); ++it) {
+        jsonObject.insert(it.key(), convertListToJsonArray(it.value()));
+    }
+    return jsonObject;
 }
