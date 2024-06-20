@@ -159,7 +159,6 @@ int main(int argc, char *argv[])
                                QStringLiteral(MODMAN_LOGGER_LOCAL_PATH)};
     FileAccessControlPtr fileAccessController = std::make_shared<FileAccessControl>(allowedFolders);
     vfFiles::vf_files *filesModule = new vfFiles::vf_files(fileAccessController);
-    Vf_Storage *storageModule = new Vf_Storage();
 
     //setup logger
     VeinLogger::LoggerContentSetConfig::setJsonEnvironment(MODMAN_CONTENTSET_PATH, std::make_shared<JsonLoggerContentLoader>());
@@ -243,9 +242,6 @@ int main(int argc, char *argv[])
         }
     });
 
-    modManSetupFacade->addSubsystem(storageModule->getVeinEntity());
-    storageModule->initOnce();
-
     modMan->setupConnections();
     QObject::connect(modMan, &ZeraModules::ModuleManager::sigSessionSwitched, [&dataLoggerSystem]() {
         //disable logging to prevent data logging between session switching
@@ -266,5 +262,9 @@ int main(int argc, char *argv[])
                 startNetwork(app.get());
         });
     }
+    Vf_Storage *storageModule = new Vf_Storage(modManSetupFacade->getStorageSystem());
+    modManSetupFacade->addSubsystem(storageModule->getVeinEntity());
+    storageModule->initOnce();
+
     return exec(demoMode);
 }
