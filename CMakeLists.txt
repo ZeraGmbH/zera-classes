@@ -160,7 +160,6 @@ add_subdirectory(modules)
 add_subdirectory(modules-common)
 add_subdirectory(modules-common-power)
 add_subdirectory(modules-common-sec)
-add_subdirectory(system-metrics)
 
 write_basic_package_version_file(
     ZeraClassesConfigVersion.cmake

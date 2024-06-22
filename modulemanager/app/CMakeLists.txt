@@ -12,7 +12,6 @@ target_link_libraries(zera-modulemanager
     PRIVATE
     Qt5::Gui
     zera-modulemanager-lib
-    system-metrics
 )
 
 install(TARGETS zera-modulemanager
