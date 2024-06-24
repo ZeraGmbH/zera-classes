@@ -253,11 +253,7 @@ void cPower1ModuleMeasProgram::generateInterface()
     QString key;
     VfModuleActvalue *pActvalue;
     for (int i = 0; i < MeasPhaseCount+SumValueCount; i++) {
-        QString strDescription;
-        if(i<MeasPhaseCount)
-            strDescription = QString("Actual power value phase %1").arg(i+1);
-        else
-            strDescription = QString("Actual power value sum all phases");
+        QString strDescription = getPhasePowerDescription(i);
         pActvalue = new VfModuleActvalue(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
                                             QString("ACT_PQS%1").arg(i+1),
                                             strDescription);
@@ -1703,6 +1699,50 @@ bool cPower1ModuleMeasProgram::canChangePhaseMask(std::shared_ptr<MeasMode> mode
     bool hasVarMask = mode->hasVarMask();
     bool hasMultipleMeasSystems = mode->getMeasSysCount()>1;
     return hasVarMask && hasMultipleMeasSystems && !disablePhase;
+}
+
+QString cPower1ModuleMeasProgram::getChannelNameEarlyHack(QString channelName)
+{
+    if(channelName == "m0")
+        return "U1";
+    if(channelName == "m1")
+        return "U2";
+    if(channelName == "m2")
+        return "U3";
+    if(channelName == "m3")
+        return "I1";
+    if(channelName == "m4")
+        return "I2";
+    if(channelName == "m5")
+        return "I3";
+    if(channelName == "m6")
+        return "UAUX";
+    if(channelName == "m7")
+        return "IAUX";
+    return "";
+}
+
+QString cPower1ModuleMeasProgram::getPhasePowerDescription(int measSystemNo)
+{
+    QString strDescription;
+    if(measSystemNo < MeasPhaseCount) {
+        if(measSystemNo>=getConfData()->m_sMeasSystemList.count())
+            strDescription = QString("Unused in this session").arg(measSystemNo+1);
+        else {
+            // We found nothing useful filled at the time of call - so hack
+            QStringList powerChannels = getConfData()->m_sMeasSystemList[measSystemNo].split(",");
+            if(powerChannels.count() == 2) {
+                QString name0 = getChannelNameEarlyHack(powerChannels[0]);
+                QString name1 = getChannelNameEarlyHack(powerChannels[1]);
+                strDescription = QString("Actual power value %1/%2").arg(name0, name1);
+            }
+        }
+        if(strDescription.isEmpty())
+            strDescription = QString("Actual power value phase %1").arg(measSystemNo+1);
+    }
+    else
+        strDescription = QString("Actual power value sum all phases");
+    return strDescription;
 }
 
 void cPower1ModuleMeasProgram::onModeTransactionOk()
