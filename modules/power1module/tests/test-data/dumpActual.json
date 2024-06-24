@@ -21,17 +21,17 @@
                 },
                 "ACT_PQS1": {
                     "ChannelName": "P1",
-                    "Description": "Actual power value phase 1",
+                    "Description": "Actual power value U1/I1",
                     "Unit": "W"
                 },
                 "ACT_PQS2": {
                     "ChannelName": "P2",
-                    "Description": "Actual power value phase 2",
+                    "Description": "Actual power value U2/I2",
                     "Unit": "W"
                 },
                 "ACT_PQS3": {
                     "ChannelName": "P3",
-                    "Description": "Actual power value phase 3",
+                    "Description": "Actual power value U3/I3",
                     "Unit": "W"
                 },
                 "ACT_PQS4": {
