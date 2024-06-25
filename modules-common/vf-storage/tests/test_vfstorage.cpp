@@ -48,7 +48,7 @@ void test_vfstorage::componentsFound()
 void test_vfstorage::storeValuesBasedOnNoEntitiesInJson()
 {
     startModman(":/session-minimal.json");
-    m_testRunner->setVfComponent(storageEntityId, "PAR_JsonWithEntities", QJsonObject());
+    m_testRunner->setVfComponent(storageEntityId, "PAR_JsonWithEntities", "");
     m_testRunner->setVfComponent(storageEntityId, "PAR_StartStopLogging", true);
 
     QJsonObject storedValues = m_storage->getStoredValue(storageEntityId, "StoredValues").toJsonObject();
@@ -58,27 +58,21 @@ void test_vfstorage::storeValuesBasedOnNoEntitiesInJson()
 void test_vfstorage::storeValuesBasedOnIncorrectEntitiesInJson()
 {
     startModman(":/session-minimal.json");
-    QFile file(":/incorrect-entities.json");
-    file.open(QIODevice::ReadOnly);
-    QString fileContent = file.readAll();
-    QJsonDocument jsonDoc = QJsonDocument::fromJson(fileContent.toUtf8());
-    QJsonObject jsonObject = jsonDoc.object();
+    QString fileContent = readEntitiesAndCompoFromJsonFile(":/incorrect-entities.json");
 
-    m_testRunner->setVfComponent(storageEntityId, "PAR_JsonWithEntities", jsonObject);
+    m_testRunner->setVfComponent(storageEntityId, "PAR_JsonWithEntities", fileContent);
     m_testRunner->setVfComponent(storageEntityId, "PAR_StartStopLogging", true);
     QJsonObject storedValues = m_storage->getStoredValue(storageEntityId, "StoredValues").toJsonObject();
 
     QVERIFY(storedValues.isEmpty());
 }
 
-void test_vfstorage::storeValuesBasedOnCorrectEntitiesInJson()
+void test_vfstorage::storeValuesCorrectEntitiesStartStopLoggingDisabled()
 {
     startModman(":/session-minimal-rms.json");
     QCOMPARE(m_storage->getEntityList().count(), 3);
 
-    QFile file(":/correct-entities.json");
-    file.open(QIODevice::ReadOnly);
-    QString fileContent = file.readAll();
+    QString fileContent = readEntitiesAndCompoFromJsonFile(":/correct-entities.json");
     m_testRunner->setVfComponent(storageEntityId, "PAR_JsonWithEntities", fileContent);
     m_testRunner->setVfComponent(storageEntityId, "PAR_StartStopLogging", false);
 
@@ -89,27 +83,34 @@ void test_vfstorage::storeValuesBasedOnCorrectEntitiesInJson()
 
     QJsonObject storedValues = m_storage->getStoredValue(storageEntityId, "StoredValues").toJsonObject();
     QVERIFY(storedValues.isEmpty());
+}
 
+void test_vfstorage::storeValuesStartStopLoggingEnabledDisabled()
+{
+    startModman(":/session-minimal-rms.json");
+    QString fileContent = readEntitiesAndCompoFromJsonFile(":/correct-entities.json");
+
+    m_testRunner->setVfComponent(storageEntityId, "PAR_JsonWithEntities", fileContent);
     m_testRunner->setVfComponent(storageEntityId, "PAR_StartStopLogging", true);
     emit m_storage->sigSendEvent(generateEvent(rmsEntityId, "ACT_RMSPN1", QVariant(), 3) );
     emit m_storage->sigSendEvent(generateEvent(rmsEntityId, "ACT_RMSPN2", QVariant(), 4) );
     emit m_storage->sigSendEvent(generateEvent(rmsEntityId, "ACT_RMSPN2", QVariant(), 5) );
     TimeMachineObject::feedEventLoop();
 
-    storedValues = m_storage->getStoredValue(storageEntityId, "StoredValues").toJsonObject();
+    QJsonObject storedValues = m_storage->getStoredValue(storageEntityId, "StoredValues").toJsonObject();
     QVERIFY(storedValues.contains(QString::number(rmsEntityId)));
 
     QVariant componentStored = storedValues.value(QString::number(rmsEntityId)).toVariant();
-    QHash<QString, QVariant> compoNames = componentStored.toHash();
-    QVERIFY(compoNames.contains("ACT_RMSPN1"));
-    QVERIFY(compoNames.contains("ACT_RMSPN2"));
+    QHash<QString, QVariant> componentsHash = componentStored.toHash();
+    QVERIFY(componentsHash.contains("ACT_RMSPN1"));
+    QVERIFY(componentsHash.contains("ACT_RMSPN2"));
 
-    QVariant value = compoNames.value("ACT_RMSPN1");
-    QVERIFY(value.toList().contains(3));
+    QList<QVariant> values = getValuesStoredOfComponent(componentsHash, "ACT_RMSPN1");
+    QVERIFY(values.contains(3));
 
-    value = compoNames.value("ACT_RMSPN2");
-    QVERIFY(value.toList().contains(4));
-    QVERIFY(value.toList().contains(5));
+    values = getValuesStoredOfComponent(componentsHash, "ACT_RMSPN2");
+    QVERIFY(values.contains(4));
+    QVERIFY(values.contains(5));
 
     //deactivate "PAR_StartStopLogging" and expect same content
     m_testRunner->setVfComponent(storageEntityId, "PAR_StartStopLogging", false);
@@ -119,15 +120,52 @@ void test_vfstorage::storeValuesBasedOnCorrectEntitiesInJson()
 
     storedValues = m_storage->getStoredValue(storageEntityId, "StoredValues").toJsonObject();
     componentStored = storedValues.value(QString::number(rmsEntityId)).toVariant();
-    compoNames = componentStored.toHash();
-    value = compoNames.value("ACT_RMSPN1");
-    QVERIFY(value.toList().contains(3));
-    QVERIFY(!value.toList().contains(7));
+    componentsHash = componentStored.toHash();
+    values = getValuesStoredOfComponent(componentsHash, "ACT_RMSPN1");
 
-    value = compoNames.value("ACT_RMSPN2");
-    QVERIFY(value.toList().contains(4));
-    QVERIFY(value.toList().contains(5));
-    QVERIFY(!value.toList().contains(8));
+    QVERIFY(values.contains(3));
+    QVERIFY(!values.contains(7));
+
+    values = getValuesStoredOfComponent(componentsHash, "ACT_RMSPN2");
+    QVERIFY(values.contains(4));
+    QVERIFY(values.contains(5));
+    QVERIFY(!values.contains(8));
+}
+
+void test_vfstorage::changeJsonFileWhileLogging()
+{
+    startModman(":/session-minimal-rms.json");
+    QString fileContent = readEntitiesAndCompoFromJsonFile(":/correct-entities.json");
+
+    m_testRunner->setVfComponent(storageEntityId, "PAR_JsonWithEntities", fileContent);
+    m_testRunner->setVfComponent(storageEntityId, "PAR_StartStopLogging", true);
+    emit m_storage->sigSendEvent(generateEvent(rmsEntityId, "ACT_RMSPN1", QVariant(), 10) );
+    emit m_storage->sigSendEvent(generateEvent(rmsEntityId, "ACT_RMSPN2", QVariant(), 11) );
+    TimeMachineObject::feedEventLoop();
+
+    QJsonObject storedValues = m_storage->getStoredValue(storageEntityId, "StoredValues").toJsonObject();
+    QVariant componentStored = storedValues.value(QString::number(rmsEntityId)).toVariant();
+    QHash<QString, QVariant> componentsHash = componentStored.toHash();
+    QVERIFY(componentsHash.contains("ACT_RMSPN1"));
+    QVERIFY(componentsHash.contains("ACT_RMSPN2"));
+
+    QList<QVariant> values = getValuesStoredOfComponent(componentsHash, "ACT_RMSPN1");
+    QVERIFY(values.contains(10));
+
+    values = getValuesStoredOfComponent(componentsHash, "ACT_RMSPN2");
+    QVERIFY(values.contains(11));
+
+    fileContent = readEntitiesAndCompoFromJsonFile(":/more-rms-components.json");
+    m_testRunner->setVfComponent(storageEntityId, "PAR_JsonWithEntities", fileContent);
+    emit m_storage->sigSendEvent(generateEvent(rmsEntityId, "ACT_RMSPN3", QVariant(), 5) );
+    emit m_storage->sigSendEvent(generateEvent(rmsEntityId, "ACT_RMSPN4", QVariant(), 6) );
+    TimeMachineObject::feedEventLoop();
+
+    storedValues = m_storage->getStoredValue(storageEntityId, "StoredValues").toJsonObject();
+    componentStored = storedValues.value(QString::number(rmsEntityId)).toVariant();
+    componentsHash = componentStored.toHash();
+    QVERIFY(!componentsHash.contains("ACT_RMSPN3"));
+    QVERIFY(!componentsHash.contains("ACT_RMSPN4"));
 }
 
 void test_vfstorage::onSerialNoLicensed()
@@ -179,4 +217,23 @@ QEvent *test_vfstorage::generateEvent(int entityId, QString componentName, QVari
     cData->setOldValue(oldValue);
 
     return new VeinEvent::CommandEvent(VeinEvent::CommandEvent::EventSubtype::NOTIFICATION, cData);
+}
+
+QString test_vfstorage::readEntitiesAndCompoFromJsonFile(QString filePath)
+{
+    QFile file(filePath);
+    file.open(QIODevice::ReadOnly);
+    return file.readAll();
+}
+
+QList<QVariant> test_vfstorage::getValuesStoredOfComponent(QHash<QString, QVariant> componentHash, QString componentName)
+{
+    QList<QVariant> values;
+    QVariant valueAndTime = componentHash.value(componentName);
+    QList<QVariant> valueAndTimeList = valueAndTime.toList();
+    for(int i = 0; i < valueAndTimeList.size(); i++) {
+        QHash<QString, QVariant> valueAndTimeHash = valueAndTimeList[i].toHash();
+        values.append(valueAndTimeHash["value"]);
+    }
+    return values;
 }

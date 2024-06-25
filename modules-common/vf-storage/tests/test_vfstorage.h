@@ -17,13 +17,17 @@ private slots:
     void componentsFound();
     void storeValuesBasedOnNoEntitiesInJson();
     void storeValuesBasedOnIncorrectEntitiesInJson();
-    void storeValuesBasedOnCorrectEntitiesInJson();
+    void storeValuesCorrectEntitiesStartStopLoggingDisabled();
+    void storeValuesStartStopLoggingEnabledDisabled();
+    void changeJsonFileWhileLogging();
 
 private:
     void onSerialNoLicensed();
     void createModmanWithStorage();
     void startModman(QString sessionFileName);
     QEvent *generateEvent(int entityId, QString componentName, QVariant oldValue, QVariant newValue);
+    QString readEntitiesAndCompoFromJsonFile(QString filePath);
+    QList<QVariant> getValuesStoredOfComponent(QHash<QString, QVariant> componentHash, QString componentName);
 
     std::unique_ptr<ModuleManagerTestRunner> m_testRunner;
     std::unique_ptr<Vf_Storage> m_vfStorageEntity;
