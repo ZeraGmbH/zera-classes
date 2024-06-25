@@ -11,6 +11,8 @@ class VeinDataCollector : public QObject
     Q_OBJECT
 public:
     explicit VeinDataCollector(VeinEvent::StorageSystem* storage);
+    void startLogging(QHash<int, QStringList> entitesAndComponents);
+    void stopLogging();
     void collectRMSValues();
     void collectPowerValuesForEmobAC();
     void collectPowerValuesForEmobDC();
@@ -24,8 +26,8 @@ private slots:
 
 private:
     void convertToJson();
-    QJsonArray convertListToJsonArray(QList<QVariant> list);
     QJsonObject convertHashToJsonObject(QHash<QString, QList<QVariant> > hash);
+    QJsonArray convertListToJsonArray(QList<QVariant> list);
 
     VeinEvent::StorageSystem* m_storage;
     QHash<int , QHash<QString, QList<QVariant>> > m_veinValuesHash;
