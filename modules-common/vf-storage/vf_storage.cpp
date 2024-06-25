@@ -1,3 +1,4 @@
+#include "QJsonDocument"
 #include "vf_storage.h"
 
 Vf_Storage::Vf_Storage(VeinEvent::StorageSystem *storageSystem, QObject *parent, int entityId):
@@ -16,7 +17,7 @@ bool Vf_Storage::initOnce()
         m_entity->initModule();
         m_entity->createComponent("EntityName", "Storage", true);
         m_storedValues = m_entity->createComponent("StoredValues", QJsonObject(), true);
-        m_JsonWithEntities = m_entity->createComponent("PAR_JsonWithEntities", QJsonObject(), false);
+        m_JsonWithEntities = m_entity->createComponent("PAR_JsonWithEntities", "", false);
         m_startStopLogging = m_entity->createComponent("PAR_StartStopLogging", false, false);
 
         connect(m_startStopLogging.get(), &VfCpp::VfCppComponent::sigValueChanged, this, &Vf_Storage::startStopLogging);
@@ -45,7 +46,10 @@ void Vf_Storage::startStopLogging(QVariant value)
 
     if(onOff) {
         m_JsonWithEntities->changeComponentReadWriteType(true);
-        readJson(m_JsonWithEntities->getValue());
+        QString jsonString = m_JsonWithEntities->getValue().toString();
+        QJsonDocument jsonDoc = QJsonDocument::fromJson(jsonString.toUtf8());
+        QJsonObject jsonObject = jsonDoc.object();
+        readJson(jsonObject);
     }
     else {
         m_JsonWithEntities->changeComponentReadWriteType(false);
