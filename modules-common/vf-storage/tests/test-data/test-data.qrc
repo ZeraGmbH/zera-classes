@@ -1,0 +1,10 @@
+<RCC>
+    <qresource prefix="/">
+        <file>session-minimal-rms.json</file>
+        <file>session-minimal.json</file>
+        <file>correct-entities.json</file>
+        <file>incorrect-entities.json</file>
+    </qresource>
+</RCC>
+
+
