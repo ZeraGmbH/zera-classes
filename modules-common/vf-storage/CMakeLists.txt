@@ -45,3 +45,4 @@ install(
     DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/zera-classes/vf-storage
     )
 
+add_subdirectory(tests)
