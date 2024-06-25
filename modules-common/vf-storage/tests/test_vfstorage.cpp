@@ -79,9 +79,7 @@ void test_vfstorage::storeValuesBasedOnCorrectEntitiesInJson()
     QFile file(":/correct-entities.json");
     file.open(QIODevice::ReadOnly);
     QString fileContent = file.readAll();
-    QJsonDocument jsonDoc = QJsonDocument::fromJson(fileContent.toUtf8());
-    QJsonObject jsonObject = jsonDoc.object();
-    m_testRunner->setVfComponent(storageEntityId, "PAR_JsonWithEntities", jsonObject);
+    m_testRunner->setVfComponent(storageEntityId, "PAR_JsonWithEntities", fileContent);
     m_testRunner->setVfComponent(storageEntityId, "PAR_StartStopLogging", false);
 
     //other way of setting a vf-compo we need VeinEvent::CommandEvent::EventSubtype::NOTIFICATION
