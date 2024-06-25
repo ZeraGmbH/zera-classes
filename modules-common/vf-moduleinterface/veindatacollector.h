@@ -13,10 +13,6 @@ public:
     explicit VeinDataCollector(VeinEvent::StorageSystem* storage);
     void startLogging(QHash<int, QStringList> entitesAndComponents);
     void stopLogging();
-    void collectRMSValues();
-    void collectPowerValuesForEmobAC();
-    void collectPowerValuesForEmobDC();
-    QHash<QString, QList<QVariant>> getStoredValuesOfEntity(int entityId);
 
 signals:
     void newStoredValue(QJsonObject jsonObject);
