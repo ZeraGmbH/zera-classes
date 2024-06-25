@@ -47,5 +47,3 @@ install(
     FILES ${HEADER}
     DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/zera-classes/vf-moduleinterface
     )
-
-add_subdirectory(tests)
