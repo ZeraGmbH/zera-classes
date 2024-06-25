@@ -1,4 +1,5 @@
 #include "veindatacollector.h"
+#include <QDateTime>
 
  VeinDataCollector::VeinDataCollector(VeinEvent::StorageSystem *storage)
     :m_storage{storage}
@@ -50,7 +51,7 @@ QJsonObject VeinDataCollector::convertHashToJsonObject(QHash<QString, QList<QVar
 {
     QJsonObject jsonObject;
     for (auto it = hash.constBegin(); it != hash.constEnd(); ++it) {
-        jsonObject.insert(it.key(), convertListToJsonArray(it.value()));   //
+        jsonObject.insert(it.key(), convertListToJsonArray(it.value()));
     }
     return jsonObject;
 }
@@ -59,7 +60,11 @@ QJsonArray VeinDataCollector::convertListToJsonArray(QList<QVariant> list)
 {
     QJsonArray jsonArray;
     for (const QVariant& item : list) {
-        jsonArray.append(QJsonValue::fromVariant(item));
+        QJsonObject itemObject;
+        QDateTime now = QDateTime::currentDateTime();
+        itemObject["time"] = now.toString("dd-MM-yyyy hh:mm:ss");
+        itemObject["value"] = QJsonValue::fromVariant(item);
+        jsonArray.append(itemObject);
     }
     return jsonArray;
 }
