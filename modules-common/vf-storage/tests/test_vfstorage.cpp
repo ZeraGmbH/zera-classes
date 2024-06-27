@@ -94,23 +94,21 @@ void test_vfstorage::storeValuesStartStopLoggingEnabledDisabled()
     m_testRunner->setVfComponent(storageEntityId, "PAR_StartStopLogging", true);
     emit m_storage->sigSendEvent(generateEvent(rmsEntityId, "ACT_RMSPN1", QVariant(), 3) );
     emit m_storage->sigSendEvent(generateEvent(rmsEntityId, "ACT_RMSPN2", QVariant(), 4) );
-    emit m_storage->sigSendEvent(generateEvent(rmsEntityId, "ACT_RMSPN2", QVariant(), 5) );
     TimeMachineObject::feedEventLoop();
 
     QJsonObject storedValues = m_storage->getStoredValue(storageEntityId, "StoredValues").toJsonObject();
-    QVERIFY(storedValues.contains(QString::number(rmsEntityId)));
+    QJsonObject storedValuesWithoutTimeStamp = getStoredValueWithoutTimeStamp(storedValues);
+    QVERIFY(storedValuesWithoutTimeStamp.contains(QString::number(rmsEntityId)));
 
-    QVariant componentStored = storedValues.value(QString::number(rmsEntityId)).toVariant();
-    QHash<QString, QVariant> componentsHash = componentStored.toHash();
+    QHash<QString, QVariant> componentsHash = getComponentsStoredOfEntity(rmsEntityId, storedValuesWithoutTimeStamp);
     QVERIFY(componentsHash.contains("ACT_RMSPN1"));
     QVERIFY(componentsHash.contains("ACT_RMSPN2"));
 
-    QList<QVariant> values = getValuesStoredOfComponent(componentsHash, "ACT_RMSPN1");
-    QVERIFY(values.contains(3));
+    QString value = getValuesStoredOfComponent(componentsHash, "ACT_RMSPN1");
+    QCOMPARE(value, "3");
 
-    values = getValuesStoredOfComponent(componentsHash, "ACT_RMSPN2");
-    QVERIFY(values.contains(4));
-    QVERIFY(values.contains(5));
+    value = getValuesStoredOfComponent(componentsHash, "ACT_RMSPN2");
+    QCOMPARE(value, "4");
 
     //deactivate "PAR_StartStopLogging" and expect same content
     m_testRunner->setVfComponent(storageEntityId, "PAR_StartStopLogging", false);
@@ -119,17 +117,16 @@ void test_vfstorage::storeValuesStartStopLoggingEnabledDisabled()
     TimeMachineObject::feedEventLoop();
 
     storedValues = m_storage->getStoredValue(storageEntityId, "StoredValues").toJsonObject();
-    componentStored = storedValues.value(QString::number(rmsEntityId)).toVariant();
-    componentsHash = componentStored.toHash();
-    values = getValuesStoredOfComponent(componentsHash, "ACT_RMSPN1");
+    storedValuesWithoutTimeStamp = getStoredValueWithoutTimeStamp(storedValues);
+    componentsHash = getComponentsStoredOfEntity(rmsEntityId, storedValuesWithoutTimeStamp);
 
-    QVERIFY(values.contains(3));
-    QVERIFY(!values.contains(7));
+    value = getValuesStoredOfComponent(componentsHash, "ACT_RMSPN1");
+    QCOMPARE(value, "3");
+    QVERIFY(value != "7");
 
-    values = getValuesStoredOfComponent(componentsHash, "ACT_RMSPN2");
-    QVERIFY(values.contains(4));
-    QVERIFY(values.contains(5));
-    QVERIFY(!values.contains(8));
+    value = getValuesStoredOfComponent(componentsHash, "ACT_RMSPN2");
+    QCOMPARE(value, "4");
+    QVERIFY(value != "8");
 }
 
 void test_vfstorage::changeJsonFileWhileLogging()
@@ -144,16 +141,17 @@ void test_vfstorage::changeJsonFileWhileLogging()
     TimeMachineObject::feedEventLoop();
 
     QJsonObject storedValues = m_storage->getStoredValue(storageEntityId, "StoredValues").toJsonObject();
-    QVariant componentStored = storedValues.value(QString::number(rmsEntityId)).toVariant();
-    QHash<QString, QVariant> componentsHash = componentStored.toHash();
+    QJsonObject storedValuesWithoutTimeStamp = getStoredValueWithoutTimeStamp(storedValues);
+
+    QHash<QString, QVariant> componentsHash = getComponentsStoredOfEntity(rmsEntityId, storedValuesWithoutTimeStamp);
     QVERIFY(componentsHash.contains("ACT_RMSPN1"));
     QVERIFY(componentsHash.contains("ACT_RMSPN2"));
 
-    QList<QVariant> values = getValuesStoredOfComponent(componentsHash, "ACT_RMSPN1");
-    QVERIFY(values.contains(10));
+    QString value = getValuesStoredOfComponent(componentsHash, "ACT_RMSPN1");
+    QCOMPARE(value, "10");
 
-    values = getValuesStoredOfComponent(componentsHash, "ACT_RMSPN2");
-    QVERIFY(values.contains(11));
+    value = getValuesStoredOfComponent(componentsHash, "ACT_RMSPN2");
+    QCOMPARE(value, "11");
 
     fileContent = readEntitiesAndCompoFromJsonFile(":/more-rms-components.json");
     m_testRunner->setVfComponent(storageEntityId, "PAR_JsonWithEntities", fileContent);
@@ -162,10 +160,11 @@ void test_vfstorage::changeJsonFileWhileLogging()
     TimeMachineObject::feedEventLoop();
 
     storedValues = m_storage->getStoredValue(storageEntityId, "StoredValues").toJsonObject();
-    componentStored = storedValues.value(QString::number(rmsEntityId)).toVariant();
-    componentsHash = componentStored.toHash();
-    QVERIFY(!componentsHash.contains("ACT_RMSPN3"));
-    QVERIFY(!componentsHash.contains("ACT_RMSPN4"));
+    storedValuesWithoutTimeStamp = getStoredValueWithoutTimeStamp(storedValues);
+
+    QString inputJsonFile = m_storage->getStoredValue(storageEntityId, "PAR_JsonWithEntities").toString();
+    QVERIFY(!inputJsonFile.contains("ACT_RMSPN3"));
+    QVERIFY(!inputJsonFile.contains("ACT_RMSPN4"));
 }
 
 void test_vfstorage::onSerialNoLicensed()
@@ -226,14 +225,24 @@ QString test_vfstorage::readEntitiesAndCompoFromJsonFile(QString filePath)
     return file.readAll();
 }
 
-QList<QVariant> test_vfstorage::getValuesStoredOfComponent(QHash<QString, QVariant> componentHash, QString componentName)
+QJsonObject test_vfstorage::getStoredValueWithoutTimeStamp(QJsonObject storedValues)
 {
-    QList<QVariant> values;
-    QVariant valueAndTime = componentHash.value(componentName);
-    QList<QVariant> valueAndTimeList = valueAndTime.toList();
-    for(int i = 0; i < valueAndTimeList.size(); i++) {
-        QHash<QString, QVariant> valueAndTimeHash = valueAndTimeList[i].toHash();
-        values.append(valueAndTimeHash["value"]);
+    QJsonObject storedValuesWithoutTimeStamp;
+    for(const QString &key : storedValues.keys()) {
+        QJsonValue entityFound = storedValues.value(key);
+        storedValuesWithoutTimeStamp = entityFound.toObject();
     }
-    return values;
+    return storedValuesWithoutTimeStamp;
+}
+
+QHash<QString, QVariant> test_vfstorage::getComponentsStoredOfEntity(int entityId, QJsonObject storedValueWithoutTimeStamp)
+{
+    QVariant componentStored = storedValueWithoutTimeStamp.value(QString::number(entityId)).toVariant();
+    return componentStored.toHash();
+}
+
+QString test_vfstorage::getValuesStoredOfComponent(QHash<QString, QVariant> componentHash, QString componentName)
+{
+    QVariant value = componentHash.value(componentName);
+    return value.toString();
 }

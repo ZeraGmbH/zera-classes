@@ -18,15 +18,17 @@ signals:
     void newStoredValue(QJsonObject jsonObject);
 
 private slots:
-    void appendValue(int entityId, QString componentName, QVariant value);
+    void appendValue(int entityId, QString componentName, QVariant value, QString time);
 
 private:
-    void convertToJson();
-    QJsonObject convertHashToJsonObject(QHash<QString, QList<QVariant> > hash);
+    void convertToJsonWithTimeStamp(QString time);
+    QJsonObject convertToJson();
+    QJsonObject convertHashToJsonObject(QHash<QString, QVariant> hash);
     QJsonArray convertListToJsonArray(QList<QVariant> list);
 
     VeinEvent::StorageSystem* m_storage;
-    QHash<int , QHash<QString, QList<QVariant>> > m_veinValuesHash;
+    QHash<int , QHash<QString, QVariant> > m_veinValuesHash;
+    QJsonObject m_jsonObject;
 };
 
 #endif // VEINDATACOLLECTOR_H
