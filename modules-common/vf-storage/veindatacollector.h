@@ -18,10 +18,10 @@ signals:
     void newStoredValue(QJsonObject jsonObject);
 
 private slots:
-    void appendValue(int entityId, QString componentName, QVariant value, QString time);
+    void appendValue(int entityId, QString componentName, QVariant value, QString timestamp);
 
 private:
-    void convertToJsonWithTimeStamp(QString time);
+    void convertToJsonWithTimeStamp(QString timestamp);
     QJsonObject convertToJson();
     QJsonObject convertHashToJsonObject(QHash<QString, QVariant> hash);
     QJsonArray convertListToJsonArray(QList<QVariant> list);
