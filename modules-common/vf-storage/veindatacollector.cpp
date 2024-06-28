@@ -14,7 +14,7 @@ void VeinDataCollector::startLogging(QHash<int, QStringList> entitesAndComponent
         for(QString& component: components) {
             VeinEvent::StorageComponentInterfacePtr futureComponent = m_storage->getFutureComponent(entityId, component);
             connect(futureComponent.get(), &VeinEvent::StorageComponentInterface::sigValueChange, this, [&, component, entityId, futureComponent](QVariant newValue) {
-                QString time = futureComponent->getTime();
+                QString time = futureComponent->getTimestamp();
                 VeinDataCollector::appendValue(entityId, component, newValue, time);
             });
         }
@@ -33,15 +33,15 @@ void VeinDataCollector::stopLogging()
     m_veinValuesHash.clear();
 }
 
-void VeinDataCollector::appendValue(int entityId, QString componentName, QVariant value, QString time)
+void VeinDataCollector::appendValue(int entityId, QString componentName, QVariant value, QString timestamp)
 {
     m_veinValuesHash[entityId][componentName] = value;
-    convertToJsonWithTimeStamp(time);
+    convertToJsonWithTimeStamp(timestamp);
 }
 
-void VeinDataCollector::convertToJsonWithTimeStamp(QString time)
+void VeinDataCollector::convertToJsonWithTimeStamp(QString timestamp)
 {
-    m_jsonObject.insert(time, convertToJson());
+    m_jsonObject.insert(timestamp, convertToJson());
     emit newStoredValue(m_jsonObject);
 }
 
