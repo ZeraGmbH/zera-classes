@@ -14,8 +14,8 @@ void VeinDataCollector::startLogging(QHash<int, QStringList> entitesAndComponent
         for(QString& component: components) {
             VeinEvent::StorageComponentInterfacePtr futureComponent = m_storage->getFutureComponent(entityId, component);
             connect(futureComponent.get(), &VeinEvent::StorageComponentInterface::sigValueChange, this, [&, component, entityId, futureComponent](QVariant newValue) {
-                QString time = futureComponent->getTimestamp();
-                VeinDataCollector::appendValue(entityId, component, newValue, time);
+                QDateTime time = futureComponent->getTimestamp();
+                VeinDataCollector::appendValue(entityId, component, newValue, time.toString("dd-MM-yyyy hh:mm:ss"));
             });
         }
     }
