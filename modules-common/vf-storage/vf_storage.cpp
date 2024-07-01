@@ -5,6 +5,7 @@ static constexpr int maximumStorages = 5;
 
 Vf_Storage::Vf_Storage(VeinEvent::StorageSystem *storageSystem, QObject *parent, int entityId):
     QObject(parent),
+    m_storageSystem(storageSystem),
     m_isInitalized(false)
 {
     m_entity=new VfCpp::VfCppEntity(entityId);
@@ -90,8 +91,12 @@ QHash<int, QStringList> Vf_Storage::extractEntitiesAndComponents(QJsonObject jso
         QStringList componentList;
         if (componentValue.isArray()) {
             QJsonArray componentArray = componentValue.toArray();
-            for (const QJsonValue& compValue : componentArray) {
-                componentList.append(compValue.toString());
+            if(componentArray.isEmpty())
+                componentList = m_storageSystem->getEntityComponents(entityId);
+            else {
+                for (const QJsonValue& compValue : componentArray) {
+                    componentList.append(compValue.toString());
+                }
             }
         }
         else if (componentValue.isString()) {

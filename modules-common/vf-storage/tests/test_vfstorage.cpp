@@ -71,6 +71,26 @@ void test_vfstorage::storeValuesBasedOnIncorrectEntitiesInJson()
     QVERIFY(storedValues.isEmpty());
 }
 
+void test_vfstorage::storeValuesEmptyComponentsInJson()
+{
+    constexpr int storageNum = 0;
+    startModman(":/session-minimal-rms.json");
+    startLogging(":/empty-components.json", 0);
+    changeRMSValues(1, 2);
+    m_testRunner->setVfComponent(rmsEntityId, "PAR_Interval", 5);
+
+    QJsonObject storedValuesWithoutTimeStamp = getStoredValueWithoutTimeStamp(storageNum);
+    QVERIFY(storedValuesWithoutTimeStamp.contains(QString::number(rmsEntityId)));
+
+    QHash<QString, QVariant> componentsHash = getComponentsStoredOfEntity(rmsEntityId, storedValuesWithoutTimeStamp);
+    QString value = getValuesStoredOfComponent(componentsHash, "ACT_RMSPN1");
+    QCOMPARE(value, "1");
+    value = getValuesStoredOfComponent(componentsHash, "ACT_RMSPN2");
+    QCOMPARE(value, "2");
+    value = getValuesStoredOfComponent(componentsHash, "PAR_Interval");
+    QCOMPARE(value, "5");
+}
+
 void test_vfstorage::storeValuesCorrectEntitiesStartStopLoggingDisabled()
 {
     startModman(":/session-minimal-rms.json");

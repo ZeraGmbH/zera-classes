@@ -21,6 +21,7 @@ private:
     void readJson(QVariant value, int storageNum);
     QHash<int, QStringList> extractEntitiesAndComponents(QJsonObject jsonObject);
 
+    VeinEvent::StorageSystem* m_storageSystem;
     VfCpp::VfCppEntity *m_entity;
     bool m_isInitalized;
     VfCpp::VfCppComponent::Ptr m_maximumLoggingComponents;
