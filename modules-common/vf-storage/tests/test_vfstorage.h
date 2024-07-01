@@ -18,7 +18,8 @@ private slots:
     void storeValuesBasedOnNoEntitiesInJson();
     void storeValuesBasedOnIncorrectEntitiesInJson();
     void storeValuesCorrectEntitiesStartStopLoggingDisabled();
-    void storeValuesStartStopLoggingEnabledDisabled();
+    void loggingOnOffSequence0();
+    void loggingOnOffSequence1();
     void changeJsonFileWhileLogging();
     void fireActualValuesAfterDelayWhileLogging();
 
