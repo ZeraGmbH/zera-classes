@@ -29,10 +29,11 @@ private:
     QEvent *generateEvent(int entityId, QString componentName, QVariant oldValue, QVariant newValue);
 
     QString readEntitiesAndCompoFromJsonFile(QString filePath);
-    QJsonObject getStoredValueWithoutTimeStamp(QJsonObject storedValues);
+    QJsonObject getStoredValueWithoutTimeStamp(int storageNum);
     QHash<QString, QVariant> getComponentsStoredOfEntity(int entityId, QJsonObject storedValueWithoutTimeStamp);
     QString getValuesStoredOfComponent(QHash<QString, QVariant> componentHash, QString componentName);
-
+    void startLogging(QString fileName, int storageNum);
+    void stopLogging(int storageNum);
 
     std::unique_ptr<ModuleManagerTestRunner> m_testRunner;
     std::unique_ptr<Vf_Storage> m_vfStorageEntity;
