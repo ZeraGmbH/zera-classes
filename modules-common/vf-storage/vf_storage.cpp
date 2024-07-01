@@ -1,13 +1,20 @@
 #include "QJsonDocument"
 #include "vf_storage.h"
 
+static constexpr int maximumStorages = 5;
+
 Vf_Storage::Vf_Storage(VeinEvent::StorageSystem *storageSystem, QObject *parent, int entityId):
     QObject(parent),
     m_isInitalized(false)
 {
     m_entity=new VfCpp::VfCppEntity(entityId);
-    m_dataCollect = new VeinDataCollector(storageSystem);
-    connect(m_dataCollect, &VeinDataCollector::newStoredValue, this, &Vf_Storage::updateValue);
+    for(int i = 0; i < maximumStorages; i++) {
+        VeinDataCollector* dataCollector = new VeinDataCollector(storageSystem);
+        m_dataCollect.append(dataCollector);
+        connect(dataCollector, &VeinDataCollector::newStoredValue, this, [=](QJsonObject value){
+            m_storedValues[i]->setValue(value);
+        });
+    }
 }
 
 bool Vf_Storage::initOnce()
@@ -16,11 +23,15 @@ bool Vf_Storage::initOnce()
         m_isInitalized=true;
         m_entity->initModule();
         m_entity->createComponent("EntityName", "Storage", true);
-        m_storedValues = m_entity->createComponent("StoredValues", QJsonObject(), true);
-        m_JsonWithEntities = m_entity->createComponent("PAR_JsonWithEntities", "", false);
-        m_startStopLogging = m_entity->createComponent("PAR_StartStopLogging", false, false);
-
-        connect(m_startStopLogging.get(), &VfCpp::VfCppComponent::sigValueChanged, this, &Vf_Storage::startStopLogging);
+        m_maximumLoggingComponents = m_entity->createComponent("ACT_MaximumLoggingComponents", maximumStorages, true);
+        for(int i = 0; i < maximumStorages; i++) {
+            m_storedValues.append(m_entity->createComponent(QString("StoredValues%1").arg(i), QJsonObject(), true));
+            m_JsonWithEntities.append(m_entity->createComponent(QString("PAR_JsonWithEntities%1").arg(i), "", false));
+            m_startStopLogging.append(m_entity->createComponent(QString("PAR_StartStopLogging%1").arg(i), false, false));
+            connect(m_startStopLogging.at(i).get(), &VfCpp::VfCppComponent::sigValueChanged, this, [=](QVariant value){
+                startStopLogging(value, i);
+            });
+        }
     }
     return true;
 }
@@ -35,35 +46,30 @@ void Vf_Storage::setVeinEntity(VfCpp::VfCppEntity *entity)
     m_entity = entity;
 }
 
-void Vf_Storage::updateValue(QJsonObject value)
-{
-    m_storedValues->setValue(value);
-}
-
-void Vf_Storage::startStopLogging(QVariant value)
+void Vf_Storage::startStopLogging(QVariant value, int storageNum)
 {
     bool onOff = value.toBool();
 
     if(onOff) {
-        m_JsonWithEntities->changeComponentReadWriteType(true);
-        QString jsonString = m_JsonWithEntities->getValue().toString();
+        m_JsonWithEntities[storageNum]->changeComponentReadWriteType(true);
+        QString jsonString = m_JsonWithEntities[storageNum]->getValue().toString();
         QJsonDocument jsonDoc = QJsonDocument::fromJson(jsonString.toUtf8());
         QJsonObject jsonObject = jsonDoc.object();
-        readJson(jsonObject);
+        readJson(jsonObject, storageNum);
     }
     else {
-        m_JsonWithEntities->changeComponentReadWriteType(false);
-        m_dataCollect->stopLogging();
+        m_JsonWithEntities[storageNum]->changeComponentReadWriteType(false);
+        m_dataCollect[storageNum]->stopLogging();
     }
 }
 
-void Vf_Storage::readJson(QVariant value)
+void Vf_Storage::readJson(QVariant value, int storageNum)
 {
     QJsonObject jsonObject = value.toJsonObject();
 
     if(!jsonObject.isEmpty()) {
         QHash<int, QStringList> entitesAndComponents = extractEntitiesAndComponents(jsonObject);
-        m_dataCollect->startLogging(entitesAndComponents);
+        m_dataCollect[storageNum]->startLogging(entitesAndComponents);
     }
     else {
         qInfo("Empty Json !");
