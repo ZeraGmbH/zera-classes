@@ -2,6 +2,8 @@
 #include "modulemanagertestrunner.h"
 #include "testveinserverwithnet.h"
 #include <timemachineobject.h>
+#include <timerfactoryqtfortest.h>
+#include <timemachinefortest.h>
 #include "vf_client_entity_subscriber.h"
 #include <QTest>
 
@@ -165,6 +167,34 @@ void test_vfstorage::changeJsonFileWhileLogging()
     QString inputJsonFile = m_storage->getStoredValue(storageEntityId, "PAR_JsonWithEntities").toString();
     QVERIFY(!inputJsonFile.contains("ACT_RMSPN3"));
     QVERIFY(!inputJsonFile.contains("ACT_RMSPN4"));
+}
+
+void test_vfstorage::fieActualValuesAfterDelayWhileLogging()
+{
+    startModman(":/session-minimal-rms.json");
+    QString fileContent = readEntitiesAndCompoFromJsonFile(":/correct-entities.json");
+
+    m_testRunner->setVfComponent(storageEntityId, "PAR_JsonWithEntities", fileContent);
+    m_testRunner->setVfComponent(storageEntityId, "PAR_StartStopLogging", true);
+    emit m_storage->sigSendEvent(generateEvent(rmsEntityId, "ACT_RMSPN1", QVariant(), 3) );
+    emit m_storage->sigSendEvent(generateEvent(rmsEntityId, "ACT_RMSPN2", QVariant(), 4) );
+    TimeMachineObject::feedEventLoop();
+
+    QJsonObject storedValues = m_storage->getStoredValue(storageEntityId, "StoredValues").toJsonObject();
+    QStringList timestampKeys = storedValues.keys();
+    QCOMPARE (timestampKeys.size(), 1);
+
+    TimeMachineForTest::getInstance()->processTimers(5000);
+    emit m_storage->sigSendEvent(generateEvent(rmsEntityId, "ACT_RMSPN1", QVariant(), 5) );
+    emit m_storage->sigSendEvent(generateEvent(rmsEntityId, "ACT_RMSPN2", QVariant(), 6) );
+    TimeMachineObject::feedEventLoop();
+    storedValues = m_storage->getStoredValue(storageEntityId, "StoredValues").toJsonObject();
+    timestampKeys = storedValues.keys();
+    QCOMPARE (timestampKeys.size(), 2);
+
+    QDateTime firstTimeStamp = QDateTime::fromString(timestampKeys.first() , "dd-MM-yyyy hh:mm:ss");
+    QDateTime lastTimeStamp = QDateTime::fromString(timestampKeys.last() , "dd-MM-yyyy hh:mm:ss");
+    QVERIFY(firstTimeStamp < lastTimeStamp);
 }
 
 void test_vfstorage::onSerialNoLicensed()
