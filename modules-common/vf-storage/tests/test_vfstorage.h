@@ -17,6 +17,7 @@ private slots:
     void componentsFound();
     void storeValuesBasedOnNoEntitiesInJson();
     void storeValuesBasedOnIncorrectEntitiesInJson();
+    void storeValuesEmptyComponentsInJson();
     void storeValuesCorrectEntitiesStartStopLoggingDisabled();
     void loggingOnOffSequence0();
     void loggingOnOffSequence1();
