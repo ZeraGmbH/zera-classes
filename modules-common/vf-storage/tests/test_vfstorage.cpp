@@ -86,30 +86,57 @@ void test_vfstorage::storeValuesCorrectEntitiesStartStopLoggingDisabled()
     QVERIFY(storedValues.isEmpty());
 }
 
-void test_vfstorage::storeValuesStartStopLoggingEnabledDisabled()
+void test_vfstorage::loggingOnOffSequence0()
 {
+    constexpr int storageNum = 0;
     startModman(":/session-minimal-rms.json");
-    startLogging(":/correct-entities.json", 1);
+    startLogging(":/correct-entities.json", storageNum);
 
     changeRMSValues(3, 4);
-    QJsonObject storedValuesWithoutTimeStamp = getStoredValueWithoutTimeStamp(1);
+    QJsonObject storedValuesWithoutTimeStamp = getStoredValueWithoutTimeStamp(storageNum);
     QVERIFY(storedValuesWithoutTimeStamp.contains(QString::number(rmsEntityId)));
 
     QHash<QString, QVariant> componentsHash = getComponentsStoredOfEntity(rmsEntityId, storedValuesWithoutTimeStamp);
     QString value = getValuesStoredOfComponent(componentsHash, "ACT_RMSPN1");
     QCOMPARE(value, "3");
-
     value = getValuesStoredOfComponent(componentsHash, "ACT_RMSPN2");
     QCOMPARE(value, "4");
 
-    stopLogging(1);
+    stopLogging(storageNum);
     changeRMSValues(7, 8);
-    storedValuesWithoutTimeStamp = getStoredValueWithoutTimeStamp(1);
+    storedValuesWithoutTimeStamp = getStoredValueWithoutTimeStamp(storageNum);
     componentsHash = getComponentsStoredOfEntity(rmsEntityId, storedValuesWithoutTimeStamp);
 
     value = getValuesStoredOfComponent(componentsHash, "ACT_RMSPN1");
     QCOMPARE(value, "3");  // !=7
+    value = getValuesStoredOfComponent(componentsHash, "ACT_RMSPN2");
+    QCOMPARE(value, "4");  // !=8
+}
 
+
+void test_vfstorage::loggingOnOffSequence1()
+{
+    constexpr int storageNum = 1;
+    startModman(":/session-minimal-rms.json");
+    startLogging(":/correct-entities.json", storageNum);
+
+    changeRMSValues(3, 4);
+    QJsonObject storedValuesWithoutTimeStamp = getStoredValueWithoutTimeStamp(storageNum);
+    QVERIFY(storedValuesWithoutTimeStamp.contains(QString::number(rmsEntityId)));
+
+    QHash<QString, QVariant> componentsHash = getComponentsStoredOfEntity(rmsEntityId, storedValuesWithoutTimeStamp);
+    QString value = getValuesStoredOfComponent(componentsHash, "ACT_RMSPN1");
+    QCOMPARE(value, "3");
+    value = getValuesStoredOfComponent(componentsHash, "ACT_RMSPN2");
+    QCOMPARE(value, "4");
+
+    stopLogging(storageNum);
+    changeRMSValues(7, 8);
+    storedValuesWithoutTimeStamp = getStoredValueWithoutTimeStamp(storageNum);
+    componentsHash = getComponentsStoredOfEntity(rmsEntityId, storedValuesWithoutTimeStamp);
+
+    value = getValuesStoredOfComponent(componentsHash, "ACT_RMSPN1");
+    QCOMPARE(value, "3");  // !=7
     value = getValuesStoredOfComponent(componentsHash, "ACT_RMSPN2");
     QCOMPARE(value, "4");  // !=8
 }
