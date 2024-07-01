@@ -80,10 +80,7 @@ void test_vfstorage::storeValuesCorrectEntitiesStartStopLoggingDisabled()
     m_testRunner->setVfComponent(storageEntityId, "PAR_JsonWithEntities0", fileContent);
     stopLogging(0);
 
-    //other way of setting a vf-compo we need VeinEvent::CommandEvent::EventSubtype::NOTIFICATION
-    emit m_storage->sigSendEvent(generateEvent(rmsEntityId, "ACT_RMSPN1", QVariant(), 1) );
-    emit m_storage->sigSendEvent(generateEvent(rmsEntityId, "ACT_RMSPN2", QVariant(), 2) );
-    TimeMachineObject::feedEventLoop();
+    changeRMSValues(1, 2);
 
     QJsonObject storedValues = m_storage->getStoredValue(storageEntityId, "StoredValues0").toJsonObject();
     QVERIFY(storedValues.isEmpty());
@@ -92,41 +89,29 @@ void test_vfstorage::storeValuesCorrectEntitiesStartStopLoggingDisabled()
 void test_vfstorage::storeValuesStartStopLoggingEnabledDisabled()
 {
     startModman(":/session-minimal-rms.json");
-    startLogging(":/correct-entities.json", 0);
+    startLogging(":/correct-entities.json", 1);
 
-    emit m_storage->sigSendEvent(generateEvent(rmsEntityId, "ACT_RMSPN1", QVariant(), 3) );
-    emit m_storage->sigSendEvent(generateEvent(rmsEntityId, "ACT_RMSPN2", QVariant(), 4) );
-    TimeMachineObject::feedEventLoop();
-
-    QJsonObject storedValuesWithoutTimeStamp = getStoredValueWithoutTimeStamp(0);
+    changeRMSValues(3, 4);
+    QJsonObject storedValuesWithoutTimeStamp = getStoredValueWithoutTimeStamp(1);
     QVERIFY(storedValuesWithoutTimeStamp.contains(QString::number(rmsEntityId)));
 
     QHash<QString, QVariant> componentsHash = getComponentsStoredOfEntity(rmsEntityId, storedValuesWithoutTimeStamp);
-    QVERIFY(componentsHash.contains("ACT_RMSPN1"));
-    QVERIFY(componentsHash.contains("ACT_RMSPN2"));
-
     QString value = getValuesStoredOfComponent(componentsHash, "ACT_RMSPN1");
     QCOMPARE(value, "3");
 
     value = getValuesStoredOfComponent(componentsHash, "ACT_RMSPN2");
     QCOMPARE(value, "4");
 
-    //deactivate "PAR_StartStopLogging" and expect same content
-    stopLogging(0);
-    emit m_storage->sigSendEvent(generateEvent(rmsEntityId, "ACT_RMSPN1", QVariant(), 7) );
-    emit m_storage->sigSendEvent(generateEvent(rmsEntityId, "ACT_RMSPN2", QVariant(), 8) );
-    TimeMachineObject::feedEventLoop();
-
-    storedValuesWithoutTimeStamp = getStoredValueWithoutTimeStamp(0);
+    stopLogging(1);
+    changeRMSValues(7, 8);
+    storedValuesWithoutTimeStamp = getStoredValueWithoutTimeStamp(1);
     componentsHash = getComponentsStoredOfEntity(rmsEntityId, storedValuesWithoutTimeStamp);
 
     value = getValuesStoredOfComponent(componentsHash, "ACT_RMSPN1");
-    QCOMPARE(value, "3");
-    QVERIFY(value != "7");
+    QCOMPARE(value, "3");  // !=7
 
     value = getValuesStoredOfComponent(componentsHash, "ACT_RMSPN2");
-    QCOMPARE(value, "4");
-    QVERIFY(value != "8");
+    QCOMPARE(value, "4");  // !=8
 }
 
 void test_vfstorage::changeJsonFileWhileLogging()
@@ -134,16 +119,10 @@ void test_vfstorage::changeJsonFileWhileLogging()
     startModman(":/session-minimal-rms.json");
     startLogging(":/correct-entities.json", 0);
 
-    emit m_storage->sigSendEvent(generateEvent(rmsEntityId, "ACT_RMSPN1", QVariant(), 10) );
-    emit m_storage->sigSendEvent(generateEvent(rmsEntityId, "ACT_RMSPN2", QVariant(), 11) );
-    TimeMachineObject::feedEventLoop();
-
+    changeRMSValues(10, 11);
     QJsonObject storedValuesWithoutTimeStamp = getStoredValueWithoutTimeStamp(0);
 
     QHash<QString, QVariant> componentsHash = getComponentsStoredOfEntity(rmsEntityId, storedValuesWithoutTimeStamp);
-    QVERIFY(componentsHash.contains("ACT_RMSPN1"));
-    QVERIFY(componentsHash.contains("ACT_RMSPN2"));
-
     QString value = getValuesStoredOfComponent(componentsHash, "ACT_RMSPN1");
     QCOMPARE(value, "10");
 
@@ -152,10 +131,7 @@ void test_vfstorage::changeJsonFileWhileLogging()
 
     QString fileContent = readEntitiesAndCompoFromJsonFile(":/more-rms-components.json");
     m_testRunner->setVfComponent(storageEntityId, "PAR_JsonWithEntities0", fileContent);
-    emit m_storage->sigSendEvent(generateEvent(rmsEntityId, "ACT_RMSPN3", QVariant(), 5) );
-    emit m_storage->sigSendEvent(generateEvent(rmsEntityId, "ACT_RMSPN4", QVariant(), 6) );
-    TimeMachineObject::feedEventLoop();
-
+    changeRMSValues(5, 6);
     storedValuesWithoutTimeStamp = getStoredValueWithoutTimeStamp(0);
 
     QString inputJsonFile = m_storage->getStoredValue(storageEntityId, "PAR_JsonWithEntities0").toString();
@@ -167,9 +143,7 @@ void test_vfstorage::fireActualValuesAfterDelayWhileLogging()
 {
     startModman(":/session-minimal-rms.json");
     startLogging(":/correct-entities.json", 0);
-    emit m_storage->sigSendEvent(generateEvent(rmsEntityId, "ACT_RMSPN1", QVariant(), 3) );
-    emit m_storage->sigSendEvent(generateEvent(rmsEntityId, "ACT_RMSPN2", QVariant(), 4) );
-    TimeMachineObject::feedEventLoop();
+    changeRMSValues(3, 4);
 
     QJsonObject storedValues = m_storage->getStoredValue(storageEntityId, "StoredValues0").toJsonObject();
     QStringList timestampKeys = storedValues.keys();
@@ -279,4 +253,13 @@ void test_vfstorage::startLogging(QString fileName, int storageNum)
 void test_vfstorage::stopLogging(int storageNum)
 {
     m_testRunner->setVfComponent(storageEntityId, QString("PAR_StartStopLogging%1").arg(storageNum), false);
+}
+
+void test_vfstorage::changeRMSValues(QVariant newValue1, QVariant newValue2)
+{
+    //other way of setting a vf-compo we need VeinEvent::CommandEvent::EventSubtype::NOTIFICATION
+    emit m_storage->sigSendEvent(generateEvent(rmsEntityId, "ACT_RMSPN1", QVariant(), newValue1) );
+    emit m_storage->sigSendEvent(generateEvent(rmsEntityId, "ACT_RMSPN2", QVariant(), newValue2) );
+    TimeMachineObject::feedEventLoop();
+
 }

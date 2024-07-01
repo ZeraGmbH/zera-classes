@@ -34,6 +34,7 @@ private:
     QString getValuesStoredOfComponent(QHash<QString, QVariant> componentHash, QString componentName);
     void startLogging(QString fileName, int storageNum);
     void stopLogging(int storageNum);
+    void changeRMSValues(QVariant newValue1, QVariant newValue2);
 
     std::unique_ptr<ModuleManagerTestRunner> m_testRunner;
     std::unique_ptr<Vf_Storage> m_vfStorageEntity;
