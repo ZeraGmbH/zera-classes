@@ -12,9 +12,9 @@ void VeinDataCollector::startLogging(QHash<int, QStringList> entitesAndComponent
     for(int& entityId: entitesAndComponents.keys()) {
         QStringList components = entitesAndComponents[entityId];
         for(QString& component: components) {
-            VeinEvent::StorageComponentInterfacePtr futureComponent = m_storage->getFutureComponent(entityId, component);
-            connect(futureComponent.get(), &VeinEvent::StorageComponentInterface::sigValueChange, this, [=](QVariant newValue) {
-                QDateTime time = futureComponent->getTimestamp();
+            VeinEvent::StorageComponentInterfacePtr actualComponent = m_storage->getComponent(entityId, component);
+            connect(actualComponent.get(), &VeinEvent::StorageComponentInterface::sigValueChange, this, [=](QVariant newValue) {
+                QDateTime time = actualComponent->getTimestamp();
                 VeinDataCollector::appendValue(entityId, component, newValue, time.toString("dd-MM-yyyy hh:mm:ss"));
             });
         }
@@ -26,8 +26,8 @@ void VeinDataCollector::stopLogging()
     for(int& entityId: m_veinValuesHash.keys()) {
         QHash<QString, QVariant> compoAndValues = m_veinValuesHash[entityId];
         for(QString& component : compoAndValues.keys()) {
-            VeinEvent::StorageComponentInterfacePtr futureComponent = m_storage->getFutureComponent(entityId, component);
-            futureComponent->disconnect(SIGNAL(sigValueChange(QVariant)));
+            VeinEvent::StorageComponentInterfacePtr actualComponent = m_storage->getComponent(entityId, component);
+            actualComponent->disconnect(SIGNAL(sigValueChange(QVariant)));
         }
     }
     m_veinValuesHash.clear();
