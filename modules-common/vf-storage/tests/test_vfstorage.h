@@ -20,7 +20,7 @@ private slots:
     void storeValuesCorrectEntitiesStartStopLoggingDisabled();
     void storeValuesStartStopLoggingEnabledDisabled();
     void changeJsonFileWhileLogging();
-    void fieActualValuesAfterDelayWhileLogging();
+    void fireActualValuesAfterDelayWhileLogging();
 
 private:
     void onSerialNoLicensed();

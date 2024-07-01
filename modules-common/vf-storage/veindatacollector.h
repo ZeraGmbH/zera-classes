@@ -24,7 +24,6 @@ private:
     void convertToJsonWithTimeStamp(QString timestamp);
     QJsonObject convertToJson();
     QJsonObject convertHashToJsonObject(QHash<QString, QVariant> hash);
-    QJsonArray convertListToJsonArray(QList<QVariant> list);
 
     VeinEvent::StorageSystem* m_storage;
     QHash<int , QHash<QString, QVariant> > m_veinValuesHash;

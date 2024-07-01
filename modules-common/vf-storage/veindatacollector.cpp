@@ -13,7 +13,7 @@ void VeinDataCollector::startLogging(QHash<int, QStringList> entitesAndComponent
         QStringList components = entitesAndComponents[entityId];
         for(QString& component: components) {
             VeinEvent::StorageComponentInterfacePtr futureComponent = m_storage->getFutureComponent(entityId, component);
-            connect(futureComponent.get(), &VeinEvent::StorageComponentInterface::sigValueChange, this, [&, component, entityId, futureComponent](QVariant newValue) {
+            connect(futureComponent.get(), &VeinEvent::StorageComponentInterface::sigValueChange, this, [=](QVariant newValue) {
                 QDateTime time = futureComponent->getTimestamp();
                 VeinDataCollector::appendValue(entityId, component, newValue, time.toString("dd-MM-yyyy hh:mm:ss"));
             });
@@ -61,17 +61,4 @@ QJsonObject VeinDataCollector::convertHashToJsonObject(QHash<QString, QVariant> 
         jsonObject.insert(it.key(), it.value().toString());
     }
     return jsonObject;
-}
-
-QJsonArray VeinDataCollector::convertListToJsonArray(QList<QVariant> list)
-{
-    QJsonArray jsonArray;
-    for (const QVariant& item : list) {
-        QJsonObject itemObject;
-        QDateTime now = QDateTime::currentDateTime();
-        itemObject["time"] = now.toString("dd-MM-yyyy hh:mm:ss");
-        itemObject["value"] = QJsonValue::fromVariant(item);
-        jsonArray.append(itemObject);
-    }
-    return jsonArray;
 }

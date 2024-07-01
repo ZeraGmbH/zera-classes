@@ -16,21 +16,19 @@ public:
     VfCpp::VfCppEntity *getVeinEntity() const;
     void setVeinEntity(VfCpp::VfCppEntity *entity);
 
-private slots:
-    void updateValue(QJsonObject value);
-    void startStopLogging(QVariant value);
-
 private:
-    void readJson(QVariant value);
+    void startStopLogging(QVariant value, int storageNum);
+    void readJson(QVariant value, int storageNum);
     QHash<int, QStringList> extractEntitiesAndComponents(QJsonObject jsonObject);
 
     VfCpp::VfCppEntity *m_entity;
     bool m_isInitalized;
-    VfCpp::VfCppComponent::Ptr m_storedValues;
-    VfCpp::VfCppComponent::Ptr m_JsonWithEntities;
-    VfCpp::VfCppComponent::Ptr m_startStopLogging;
+    VfCpp::VfCppComponent::Ptr m_maximumLoggingComponents;
+    QList<VfCpp::VfCppComponent::Ptr> m_storedValues;
+    QList<VfCpp::VfCppComponent::Ptr> m_JsonWithEntities;
+    QList<VfCpp::VfCppComponent::Ptr> m_startStopLogging;
 
-    VeinDataCollector *m_dataCollect; //unique ptr ?
+    QList<VeinDataCollector*> m_dataCollect; //unique ptr ?
 };
 
 #endif // VF_STORAGE_H
