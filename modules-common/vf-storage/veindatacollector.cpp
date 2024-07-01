@@ -8,7 +8,7 @@
 
 void VeinDataCollector::startLogging(QHash<int, QStringList> entitesAndComponents)
 {
-    m_veinValuesHash.clear();
+    clearJson();
     for(int& entityId: entitesAndComponents.keys()) {
         QStringList components = entitesAndComponents[entityId];
         for(QString& component: components) {
@@ -61,4 +61,13 @@ QJsonObject VeinDataCollector::convertHashToJsonObject(QHash<QString, QVariant> 
         jsonObject.insert(it.key(), it.value().toString());
     }
     return jsonObject;
+}
+
+void VeinDataCollector::clearJson()
+{
+    if(!m_jsonObject.isEmpty()) {
+        for (const QString &key : m_jsonObject.keys()) {
+            m_jsonObject.remove(key);
+        }
+    }
 }
