@@ -1,9 +1,0 @@
-{
-    "modules" : [
-      {
-        "name" : "scpimodule",
-        "configFile" : "demo-scpimodule.xml",
-        "id": 9999
-      }
-    ]
-}

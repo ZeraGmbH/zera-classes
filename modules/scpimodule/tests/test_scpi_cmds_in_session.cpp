@@ -118,7 +118,7 @@ void test_scpi_cmds_in_session::devIfaceVeinComponentMultipleEntities()
 
 void test_scpi_cmds_in_session::devIfaceVeinComponentMultipleEntitiesForLongXml()
 {
-    ModuleManagerTestRunner testRunner(":/session-many-modules.json"); // this is mt310s2-meas-session.json
+    ModuleManagerTestRunner testRunner(":/mt310s2-meas-session.json");
 
     ScpiModuleClientBlocked client;
     QString receive = client.sendReceive("dev:iface?");
@@ -134,12 +134,10 @@ void test_scpi_cmds_in_session::devIfaceVeinComponentMultipleEntitiesForLongXml(
 
 void test_scpi_cmds_in_session::closeSocketOnPendingWriteStbQueryNoCrasher()
 {
-    ModuleManagerTestRunner testRunner(":/session-many-modules.json"); // this is mt310s2-meas-session.json
-
+    ModuleManagerTestRunner testRunner(":/mt310s2-meas-session.json");
     ScpiModuleClientBlocked client;
 
     client.sendMulti(QByteArrayList() << "SENSE:RNG1:Il1:RANGE 25mA;" << "*STB?");
-
     client.closeSocket();
     TimeMachineObject::feedEventLoop();
 }

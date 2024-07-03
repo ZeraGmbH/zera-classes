@@ -1,6 +1,10 @@
 <RCC>
     <qresource prefix="/">
+        <file>dev-iface-basic.xml</file>
+        <file>mt310s2-meas-session.json</file>
         <file>session-scpi-and-range.json</file>
         <file>session-scpi-only.json</file>
+        <file>session-three-modules.json</file>
+        <file>session-two-modules.json</file>
     </qresource>
 </RCC>
