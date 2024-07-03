@@ -131,3 +131,19 @@ void test_scpi_cmds_in_session::devIfaceVeinComponentMultipleEntitiesForLongXml(
     XmlDocumentCompare compare;
     QVERIFY(compare.compareXml(xmlDevIface.toString(), receive, true));
 }
+
+void test_scpi_cmds_in_session::sendMultiCommandWithoutWait()
+{
+    ModuleManagerTestRunner testRunner(":/session-many-modules.json"); // this is mt310s2-meas-session.json
+
+    ScpiModuleClientBlocked client;
+
+    QByteArrayList receive = client.sendReceiveMulti(QByteArrayList() << "SENSE:RNG1:Il1:RANGE 25mA;" << "*STB?");
+
+    QCOMPARE(receive[0], "+0");
+
+    QByteArrayList receive2 = client.sendReceiveMulti(QByteArrayList() << "SENSE:RNG1:Il1:RANGE 100mA;" << "*STB?");
+
+    QCOMPARE(receive2[0], "+0");
+
+}

@@ -15,6 +15,7 @@ private slots:
     void devIfaceVeinComponent();
     void devIfaceVeinComponentMultipleEntities();
     void devIfaceVeinComponentMultipleEntitiesForLongXml();
+    void sendMultiCommandWithoutWait();
 };
 
 #endif // TEST_SCPI_CMDS_IN_SESSION_H
