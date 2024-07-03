@@ -1,8 +1,5 @@
 #include "test_scpi_cmds_in_session.h"
-#include "testlicensesystem.h"
 #include "modulemanagertestrunner.h"
-#include "testmodulemanager.h"
-#include "testfactoryserviceinterfaces.h"
 #include "scpimoduleclientblocked.h"
 #include <timemachineobject.h>
 #include <scpimodule.h>
@@ -12,7 +9,6 @@
 #include <statusmodule.h>
 #include <rangemodule.h>
 #include <xmldocumentcompare.h>
-#include <vector>
 #include <QTest>
 
 QTEST_MAIN(test_scpi_cmds_in_session)
