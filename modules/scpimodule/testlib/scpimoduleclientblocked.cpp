@@ -22,3 +22,20 @@ QString ScpiModuleClientBlocked::sendReceive(QByteArray send, bool removeLineFee
     qInfo("Network I/O received: %s / took %llims", qPrintable(ret), timer.elapsed());
     return ret;
 }
+
+QByteArrayList ScpiModuleClientBlocked::sendReceiveMulti(QByteArrayList send)
+{
+    QElapsedTimer timer;
+    timer.start();
+
+    for(auto &item : send)
+        m_socket.write(item + "\n");
+
+    TimeMachineObject::feedEventLoop();
+
+    QByteArray received = m_socket.readAll();
+    QByteArrayList ret = received.split('\n');
+    qInfo("Network I/O received: %s / took %llims", qPrintable(received), timer.elapsed());
+    return ret;
+}
+
