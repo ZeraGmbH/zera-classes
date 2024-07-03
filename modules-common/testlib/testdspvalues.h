@@ -1,5 +1,5 @@
-#ifndef DEMOVALUESDSPADJUSTMENT_H
-#define DEMOVALUESDSPADJUSTMENT_H
+#ifndef TESTDSPVALUES_H
+#define TESTDSPVALUES_H
 
 #include "demovaluesdspdft.h"
 #include "demovaluesdspfft.h"
@@ -8,10 +8,10 @@
 #include <mockdspinterface.h>
 #include <memory>
 
-class DemoValuesDspAdjustment
+class TestDspValues
 {
 public:
-    DemoValuesDspAdjustment(QStringList valueChannelList);
+    TestDspValues(QStringList valueChannelList);
     void setAllValuesSymmetric(float voltage, float current, float angleUi, float frequency, bool invertedSequence = false);
     void fireActualValues(MockDspInterfacePtr dspDft,
                           MockDspInterfacePtr dspFft,
@@ -29,4 +29,4 @@ private:
     QStringList m_channelList;
 };
 
-#endif // DEMOVALUESDSPADJUSTMENT_H
+#endif // TESTDSPVALUES_H

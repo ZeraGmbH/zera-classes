@@ -1,7 +1,7 @@
-#include "demovaluesdspadjustment.h"
+#include "testdspvalues.h"
 #include "servicechannelnamehelper.h"
 
-DemoValuesDspAdjustment::DemoValuesDspAdjustment(QStringList valueChannelList)
+TestDspValues::TestDspValues(QStringList valueChannelList)
 {
     for(const QString& valueChannel : valueChannelList) {
         if(valueChannel.split("-").count() == 1)
@@ -13,7 +13,7 @@ DemoValuesDspAdjustment::DemoValuesDspAdjustment(QStringList valueChannelList)
     m_rmsValues = std::make_unique<DemoValuesDspRms>(valueChannelList);
 }
 
-void DemoValuesDspAdjustment::setAllValuesSymmetric(float voltage, float current, float angleUi, float frequency, bool invertedSequence)
+void TestDspValues::setAllValuesSymmetric(float voltage, float current, float angleUi, float frequency, bool invertedSequence)
 {
     m_dftValues->setAllValuesSymmetric(voltage, current, angleUi, invertedSequence);
     for(int channel=0; channel<m_channelList.count(); channel++) {
@@ -25,7 +25,7 @@ void DemoValuesDspAdjustment::setAllValuesSymmetric(float voltage, float current
     }
 }
 
-void DemoValuesDspAdjustment::fireActualValues(MockDspInterfacePtr dspDft,
+void TestDspValues::fireActualValues(MockDspInterfacePtr dspDft,
                                                MockDspInterfacePtr dspFft,
                                                MockDspInterfacePtr dspRange,
                                                MockDspInterfacePtr dspRms)
@@ -36,22 +36,22 @@ void DemoValuesDspAdjustment::fireActualValues(MockDspInterfacePtr dspDft,
     dspRms->fireActValInterrupt(m_rmsValues->getDspValues(), 0 /* dummy */);
 }
 
-QVector<float> DemoValuesDspAdjustment::getDspValuesDft()
+QVector<float> TestDspValues::getDspValuesDft()
 {
     return m_dftValues->getDspValues();
 }
 
-QVector<float> DemoValuesDspAdjustment::getDspValuesFft()
+QVector<float> TestDspValues::getDspValuesFft()
 {
     return m_dftValues->getDspValues();
 }
 
-QVector<float> DemoValuesDspAdjustment::getDspValuesRange()
+QVector<float> TestDspValues::getDspValuesRange()
 {
     return m_rangeValues->getDspValues();
 }
 
-QVector<float> DemoValuesDspAdjustment::getDspValuesRms()
+QVector<float> TestDspValues::getDspValuesRms()
 {
     return m_rmsValues->getDspValues();
 }
