@@ -178,16 +178,19 @@ void cSCPIServer::addSCPIClient()
         cSCPIEthClient* client = new cSCPIEthClient(socket, m_pModule, m_ConfigData, m_pSCPIInterface); // each client our interface;
         appendClient(client);
         qInfo("Network SCPI client (%s) connected / Active clients: %i", qPrintable(client->getPeerAddress()), m_SCPIClientList.count());
-        connect(client, &cSCPIEthClient::destroyed, this, &cSCPIServer::deleteSCPIClient);
+        connect(socket, &QTcpSocket::disconnected, this, [=]() {
+            deleteSCPIClient(client);
+        });
      }
 }
 
-void cSCPIServer::deleteSCPIClient(QObject *obj)
+void cSCPIServer::deleteSCPIClient(cSCPIClient *client)
 {
     // don't use for other than remove from list - it is destroyed and not usable
-    cSCPIClient* client = static_cast<cSCPIClient*>(obj);
     if(client) {
+        m_pModule->scpiParameterCmdInfoHash.remove(client->getComponentName());
         m_SCPIClientList.removeAll(client);
+        delete client;
         qInfo("Network SCPI client deleted / Active clients: %i", m_SCPIClientList.count());
         if(m_SCPIClientList.count() > 0)
             m_SCPIClientList.at(0)->setAuthorisation(true);

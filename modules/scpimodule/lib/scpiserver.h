@@ -34,7 +34,7 @@ public:
     cSCPIInterface* getScpiInterface() const;
 private slots:
     void addSCPIClient();
-    void deleteSCPIClient(QObject* obj);
+    void deleteSCPIClient(cSCPIClient *client);
     void TCPError(QAbstractSocket::SocketError);
 
     void setupTCPServer();
