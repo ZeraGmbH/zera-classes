@@ -56,7 +56,7 @@ void test_adj_module_offset::setActualTestValues(ModuleManagerTestRunner &testRu
     const QList<TestDspInterfacePtr>& dspInterfaces = testRunner.getDspInterfaceList();
     TestDspValues dspValues(dspInterfaces[DSP_INTERFACE_DFT]->getValueList());
     dspValues.setAllValuesSymmetric(testvoltage, testcurrent, testangle, testfrequency);
-    dspValues.fireActualValues(
+    dspValues.fireAllActualValues(
         dspInterfaces[DSP_INTERFACE_DFT],
         dspInterfaces[DSP_INTERFACE_FFT],
         dspInterfaces[DSP_INTERFACE_RANGE_PROGRAM], // Range is for frequency only
