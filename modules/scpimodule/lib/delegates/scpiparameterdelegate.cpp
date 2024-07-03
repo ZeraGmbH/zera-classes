@@ -52,9 +52,9 @@ void cSCPIParameterDelegate::executeSCPI(cSCPIClient *client, QString &sInput)
         // we memorize : for component (componentname) the client to set something
         SCPIClientInfoPtr clientinfo;
         if (bQuery)
-            clientinfo = std::make_shared<cSCPIClientInfo>(client, m_pSCPICmdInfo->entityId, SCPIMODULE::parQuery);
+            clientinfo = std::make_shared<cSCPIClientInfo>(client, m_pSCPICmdInfo->entityId, m_pSCPICmdInfo->componentName, SCPIMODULE::parQuery);
         else
-            clientinfo = std::make_shared<cSCPIClientInfo>(client, m_pSCPICmdInfo->entityId, SCPIMODULE::parcmd);
+            clientinfo = std::make_shared<cSCPIClientInfo>(client, m_pSCPICmdInfo->entityId, m_pSCPICmdInfo->componentName, SCPIMODULE::parcmd);
 
         m_pModule->scpiParameterCmdInfoHash.insert(m_pSCPICmdInfo->componentName, clientinfo);
         client->addSCPIClientInfo(m_pSCPICmdInfo->componentName, clientinfo);

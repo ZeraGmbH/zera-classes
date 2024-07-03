@@ -14,7 +14,7 @@ enum parCmdType {parcmd, parQuery};
 class cSCPIClientInfo
 {
 public:
-    cSCPIClientInfo(cSCPIClient* client, int entityid, int parcmdtype = parcmd);
+    cSCPIClientInfo(cSCPIClient* client, int entityid, QString componentName, int parcmdtype = parcmd);
 
     int entityId();
     int parCmdType();

@@ -16,7 +16,7 @@ cSCPIEthClient::cSCPIEthClient(QTcpSocket *socket, cSCPIModule *module, cSCPIMod
 cSCPIEthClient::~cSCPIEthClient()
 {
     m_pSocket->abort();
-    delete m_pSocket;
+    m_pSocket->deleteLater();
     qInfo("SCPI socket %s deleted", qPrintable(m_peerAddress));
 }
 
@@ -47,7 +47,6 @@ void cSCPIEthClient::cmdInput()
 void cSCPIEthClient::onDisconnect()
 {
     qInfo("SCPI socket %s disconnected", qPrintable(m_peerAddress));
-    deleteLater();
 }
 
 }
