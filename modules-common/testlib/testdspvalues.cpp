@@ -25,15 +25,35 @@ void TestDspValues::setAllValuesSymmetric(float voltage, float current, float an
     }
 }
 
-void TestDspValues::fireActualValues(MockDspInterfacePtr dspDft,
+void TestDspValues::fireDftActualValues(MockDspInterfacePtr dspDft)
+{
+    dspDft->fireActValInterrupt(m_dftValues->getDspValues(), 0 /* dummy */);
+}
+
+void TestDspValues::fireFftActualValues(MockDspInterfacePtr dspFft)
+{
+    dspFft->fireActValInterrupt(m_fftValues->getDspValues(), 0 /* dummy */);
+}
+
+void TestDspValues::fireRangeActualValues(MockDspInterfacePtr dspRange)
+{
+    dspRange->fireActValInterrupt(m_rangeValues->getDspValues(), 0 /* dummy */);
+}
+
+void TestDspValues::fireRmsActualValues(MockDspInterfacePtr dspRms)
+{
+    dspRms->fireActValInterrupt(m_rmsValues->getDspValues(), 0 /* dummy */);
+}
+
+void TestDspValues::fireAllActualValues(MockDspInterfacePtr dspDft,
                                                MockDspInterfacePtr dspFft,
                                                MockDspInterfacePtr dspRange,
                                                MockDspInterfacePtr dspRms)
 {
-    dspDft->fireActValInterrupt(m_dftValues->getDspValues(), 0 /* dummy */);
-    dspFft->fireActValInterrupt(m_fftValues->getDspValues(), 0 /* dummy */);
-    dspRange->fireActValInterrupt(m_rangeValues->getDspValues(), 0 /* dummy */);
-    dspRms->fireActValInterrupt(m_rmsValues->getDspValues(), 0 /* dummy */);
+    fireDftActualValues(dspDft);
+    fireFftActualValues(dspFft);
+    fireRangeActualValues(dspRange);
+    fireRmsActualValues(dspRms);
 }
 
 QVector<float> TestDspValues::getDspValuesDft()
