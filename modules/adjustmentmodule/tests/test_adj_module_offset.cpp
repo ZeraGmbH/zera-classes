@@ -1,6 +1,6 @@
 #include "test_adj_module_offset.h"
 #include "adjustmentmodule.h"
-#include "demovaluesdspadjustment.h"
+#include "testdspvalues.h"
 #include <scpimoduleclientblocked.h>
 #include <QTest>
 
@@ -54,7 +54,7 @@ void test_adj_module_offset::denyRangeNotSet()
 void test_adj_module_offset::setActualTestValues(ModuleManagerTestRunner &testRunner)
 {
     const QList<TestDspInterfacePtr>& dspInterfaces = testRunner.getDspInterfaceList();
-    DemoValuesDspAdjustment dspValues(dspInterfaces[DSP_INTERFACE_DFT]->getValueList());
+    TestDspValues dspValues(dspInterfaces[DSP_INTERFACE_DFT]->getValueList());
     dspValues.setAllValuesSymmetric(testvoltage, testcurrent, testangle, testfrequency);
     dspValues.fireActualValues(
         dspInterfaces[DSP_INTERFACE_DFT],
