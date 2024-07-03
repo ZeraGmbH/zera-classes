@@ -132,7 +132,7 @@ void test_scpi_cmds_in_session::devIfaceVeinComponentMultipleEntitiesForLongXml(
     QVERIFY(compare.compareXml(xmlDevIface.toString(), receive, true));
 }
 
-void test_scpi_cmds_in_session::closeSocketBeforeCmdFinish()
+void test_scpi_cmds_in_session::closeSocketBeforeCmdFinishNoCrasher()
 {
     ModuleManagerTestRunner testRunner(":/session-many-modules.json"); // this is mt310s2-meas-session.json
 
@@ -142,7 +142,4 @@ void test_scpi_cmds_in_session::closeSocketBeforeCmdFinish()
 
     client.closeSocket();
     TimeMachineObject::feedEventLoop();
-
-    QVERIFY(true);
-
 }
