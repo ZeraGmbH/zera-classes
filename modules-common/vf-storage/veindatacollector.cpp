@@ -12,6 +12,7 @@ void VeinDataCollector::startLogging(QHash<int, QStringList> entitesAndComponent
     for(int& entityId: entitesAndComponents.keys()) {
         QStringList components = entitesAndComponents[entityId];
         for(QString& component: components) {
+            m_componentsKeeper[entityId].append(component);
             VeinEvent::StorageComponentInterfacePtr actualComponent = m_storage->getComponent(entityId, component);
             connect(actualComponent.get(), &VeinEvent::StorageComponentInterface::sigValueChange, this, [=](QVariant newValue) {
                 QDateTime time = actualComponent->getTimestamp();
@@ -23,33 +24,52 @@ void VeinDataCollector::startLogging(QHash<int, QStringList> entitesAndComponent
 
 void VeinDataCollector::stopLogging()
 {
-    for(int& entityId: m_veinValuesHash.keys()) {
-        QHash<QString, QVariant> compoAndValues = m_veinValuesHash[entityId];
-        for(QString& component : compoAndValues.keys()) {
+    for(int& entityId: m_componentsKeeper.keys()) {
+        QStringList components = m_componentsKeeper[entityId];
+        for(QString& component : components) {
             VeinEvent::StorageComponentInterfacePtr actualComponent = m_storage->getComponent(entityId, component);
             actualComponent->disconnect(SIGNAL(sigValueChange(QVariant)));
         }
     }
-    m_veinValuesHash.clear();
+    m_componentsKeeper.clear();
 }
 
 void VeinDataCollector::appendValue(int entityId, QString componentName, QVariant value, QString timestamp)
 {
-    m_veinValuesHash[entityId][componentName] = value;
-    convertToJsonWithTimeStamp(timestamp);
+    QHash<int , QHash<QString, QVariant> > infosHash;
+    infosHash[entityId][componentName] = value;
+    convertToJsonWithTimeStamp(timestamp, infosHash);
 }
 
-void VeinDataCollector::convertToJsonWithTimeStamp(QString timestamp)
+void VeinDataCollector::convertToJsonWithTimeStamp(QString timestamp, QHash<int , QHash<QString, QVariant>> infosHash)
 {
-    m_jsonObject.insert(timestamp, convertToJson());
+    m_jsonObject.insert(timestamp, convertToJson(timestamp, infosHash));
     emit newStoredValue(m_jsonObject);
 }
 
-QJsonObject VeinDataCollector::convertToJson()
+QJsonObject VeinDataCollector::convertToJson(QString timestamp, QHash<int , QHash<QString, QVariant>> infosHash)
 {
     QJsonObject jsonObject;
-    for (auto it = m_veinValuesHash.constBegin(); it != m_veinValuesHash.constEnd(); ++it) {
-        jsonObject.insert(QString::number(it.key()), convertHashToJsonObject(it.value()));
+    for (auto it = infosHash.constBegin(); it != infosHash.constEnd(); ++it) {
+        QJsonObject jsonWithoutTimestamp;
+        for(const QString &key : m_jsonObject.keys()) {
+            if(key == timestamp) {
+                QJsonValue entityFound = m_jsonObject.value(key);
+                jsonWithoutTimestamp = entityFound.toObject();
+            }
+        }
+        if(jsonWithoutTimestamp.contains(QString::number(it.key())) ) {
+            QJsonValue existingValue = jsonWithoutTimestamp.value(QString::number(it.key()));
+            QHash<QString, QVariant> hash= existingValue.toObject().toVariantHash();
+            for (auto hashIt = it.value().constBegin(); hashIt != it.value().constEnd(); ++hashIt)
+                hash.insert(hashIt.key(), hashIt.value());
+            jsonObject = jsonWithoutTimestamp;
+            jsonObject.insert(QString::number(it.key()), convertHashToJsonObject(hash));
+        }
+        else {
+            jsonObject = jsonWithoutTimestamp;
+            jsonObject.insert(QString::number(it.key()), convertHashToJsonObject(it.value()));
+        }
     }
     return jsonObject;
 }
