@@ -7,6 +7,7 @@
 #include <reply.h>
 #include <proxy.h>
 #include <timerfactoryqt.h>
+#include <math.h>
 
 namespace RANGEMODULE
 {
@@ -402,8 +403,14 @@ void cRangeModuleMeasProgram::setInterfaceActualValues(QVector<float> *actualVal
         int i;
         for (i = 0; i < m_veinActValueList.count()-1; i++) // we set n peak values first
             m_veinActValueList.at(i)->setValue(QVariant((*actualValues)[i]));
-        m_veinActValueList.at(i)->setValue(QVariant((*actualValues)[2*i]));
-
+        const int frqIndex = 2*i;
+        float freq = (*actualValues)[frqIndex];
+        m_veinActValueList.at(i)->setValue(QVariant(freq));
+        QString displayedFreq = QString("%1Hz").arg(round(freq), 0, 'f', 0);
+        if(m_lastDisplayedFreq != displayedFreq) {
+            m_lastDisplayedFreq = displayedFreq;
+            qInfo("Measured frequency: ~%s", qPrintable(displayedFreq));
+        }
         int rmsOffsetInActual = m_ChannelList.count();
         for(int rmsNo=0; rmsNo<m_ChannelList.count(); rmsNo++)
             m_veinRmsValueList.at(rmsNo)->setValue(QVariant((*actualValues)[rmsNo+rmsOffsetInActual]));

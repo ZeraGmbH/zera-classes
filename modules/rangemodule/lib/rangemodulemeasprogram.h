@@ -86,6 +86,7 @@ private:
     QFinalState m_dataAcquisitionDoneState;
 
     Zera::ProxyClientPtr m_rmClient;
+    QString m_lastDisplayedFreq;
 
     void setActualValuesNames();
     void setSCPIMeasInfo();
