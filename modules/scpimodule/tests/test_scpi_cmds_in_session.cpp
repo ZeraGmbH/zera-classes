@@ -136,12 +136,14 @@ void test_scpi_cmds_in_session::closeSocketOnPendingWriteStbQueryNoCrasher()
 {
     ModuleManagerTestRunner testRunner(":/mt310s2-meas-session.json");
     ScpiModuleClientBlocked client;
+    QString currRange = client.sendReceive("SENSE:RNG1:Il1:RANGE?");
+    QCOMPARE(currRange, "10A");
 
     client.sendMulti(QByteArrayList() << "SENSE:RNG1:Il1:RANGE 25mA;" << "*STB?");
     client.closeSocket();
     TimeMachineObject::feedEventLoop();
 
     ScpiModuleClientBlocked clientCheck;
-    QString currRange = clientCheck.sendReceive("SENSE:RNG1:Il1:RANGE?");
+    currRange = clientCheck.sendReceive("SENSE:RNG1:Il1:RANGE?");
     QCOMPARE(currRange, "25mA");
 }
