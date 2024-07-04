@@ -21,13 +21,13 @@ private slots:
     void appendValue(int entityId, QString componentName, QVariant value, QString timestamp);
 
 private:
-    void convertToJsonWithTimeStamp(QString timestamp);
-    QJsonObject convertToJson();
+    void convertToJsonWithTimeStamp(QString timestamp, QHash<int, QHash<QString, QVariant> > infosHash);
+    QJsonObject convertToJson(QString timestamp, QHash<int, QHash<QString, QVariant> > infosHash);
     QJsonObject convertHashToJsonObject(QHash<QString, QVariant> hash);
     void clearJson();
 
     VeinEvent::StorageSystem* m_storage;
-    QHash<int , QHash<QString, QVariant> > m_veinValuesHash;
+    QHash<int, QStringList> m_componentsKeeper;
     QJsonObject m_jsonObject;
 };
 
