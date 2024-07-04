@@ -5,10 +5,10 @@
 #include <basemeasmodule.h>
 #include <basedspmeasprogram.h>
 #include <proxyclient.h>
+#include <timertemplateqt.h>
 #include <QList>
 #include <QStateMachine>
 #include <QFinalState>
-#include <timerperiodicqt.h>
 
 namespace RANGEMODULE
 {
@@ -22,6 +22,8 @@ enum rangemoduleCmds
     cmdlist2dsp,
     activatedsp,
     deactivatedsp,
+    readdspmaxload,
+    resetdspmaxload,
     dataaquistion,
     freepgrmem,
     freeusermem
@@ -82,11 +84,17 @@ private:
 
     // statemachine for reading actual values
     QStateMachine m_dataAcquisitionMachine;
+    QState m_getDspMaxLoadState;
+    QState m_resetDspMaxLoadState;
     QState m_dataAcquisitionState;
     QFinalState m_dataAcquisitionDoneState;
 
+    int m_lastFrequencyRounded = 0;
+    int m_lastDspLoad = 0;
+    bool m_loadLogAndResetRequired = true;
+    TimerTemplateQtPtr m_loadLogTimer;
+
     Zera::ProxyClientPtr m_rmClient;
-    QString m_lastDisplayedFreq;
 
     void setActualValuesNames();
     void setSCPIMeasInfo();
@@ -110,6 +118,8 @@ private slots:
     void freeUSERMem();
     void deactivateDSPdone();
 
+    void getDspMaxLoadState();
+    void resetDspMaxLoadState();
     void dataAcquisitionDSP();
     void dataReadDSP();
 

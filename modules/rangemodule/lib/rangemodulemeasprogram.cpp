@@ -15,7 +15,8 @@ namespace RANGEMODULE
 cRangeModuleMeasProgram::cRangeModuleMeasProgram(cRangeModule* module, std::shared_ptr<cBaseModuleConfiguration> pConfiguration) :
     cBaseDspMeasProgram(pConfiguration),
     m_pModule(module),
-    m_dspWatchdogTimer(TimerFactoryQt::createSingleShot(3000))
+    m_dspWatchdogTimer(TimerFactoryQt::createSingleShot(3000)),
+    m_loadLogTimer(TimerFactoryQt::createPeriodic(10000))
 {
     m_dspInterface = m_pModule->getServiceInterfaceFactory()->createDspInterfaceRange(getConfData()->m_senseChannelList, getConfData()->m_session.m_sPar == "ref");
     m_bRanging = false;
@@ -67,15 +68,27 @@ cRangeModuleMeasProgram::cRangeModuleMeasProgram(cRangeModule* module, std::shar
     m_deactivationMachine.setInitialState(&m_deactivateDSPState);
 
     // setting up statemachine for data acquisition
+    m_getDspMaxLoadState.addTransition(this,&cRangeModuleMeasProgram::dataAquisitionContinue, &m_resetDspMaxLoadState);
+    m_resetDspMaxLoadState.addTransition(this,&cRangeModuleMeasProgram::dataAquisitionContinue, &m_dataAcquisitionState);
     m_dataAcquisitionState.addTransition(this, &cRangeModuleMeasProgram::dataAquisitionContinue, &m_dataAcquisitionDoneState);
+
+    m_dataAcquisitionMachine.addState(&m_getDspMaxLoadState);
+    m_dataAcquisitionMachine.addState(&m_resetDspMaxLoadState);
     m_dataAcquisitionMachine.addState(&m_dataAcquisitionState);
     m_dataAcquisitionMachine.addState(&m_dataAcquisitionDoneState);
-    m_dataAcquisitionMachine.setInitialState(&m_dataAcquisitionState);
+    m_dataAcquisitionMachine.setInitialState(&m_getDspMaxLoadState);
+    connect(&m_getDspMaxLoadState, &QAbstractState::entered, this, &cRangeModuleMeasProgram::getDspMaxLoadState);
+    connect(&m_resetDspMaxLoadState, &QAbstractState::entered, this, &cRangeModuleMeasProgram::resetDspMaxLoadState);
     connect(&m_dataAcquisitionState, &QState::entered, this, &cRangeModuleMeasProgram::dataAcquisitionDSP);
     connect(&m_dataAcquisitionDoneState, &QState::entered, this, &cRangeModuleMeasProgram::dataReadDSP);
 
     connect(this, &cRangeModuleMeasProgram::actualValues, this, &cRangeModuleMeasProgram::setInterfaceActualValues);
     connect(m_dspWatchdogTimer.get(), &TimerTemplateQt::sigExpired, this, &cRangeModuleMeasProgram::onDspWatchdogTimeout);
+
+    connect(m_loadLogTimer.get(), &TimerTemplateQt::sigExpired, this, [&]() {
+        m_loadLogAndResetRequired = true;
+    });
+    m_loadLogTimer->start();
 }
 
 void cRangeModuleMeasProgram::start()
@@ -341,6 +354,28 @@ void cRangeModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, 
                 }
                 break;
 
+            case readdspmaxload:
+                if (reply == ack) {
+                    // example response BUSYMAX:5.7539682
+                    QString response = answer.toString();
+                    QStringList argList = response.split(":");
+                    if(argList.count() >= 1) {
+                        QString value = argList[1].replace(";", "");
+                        int load = round(value.toFloat());
+                        if(m_lastDspLoad != load) {
+                            m_lastDspLoad = load;
+                            qInfo("DSP max load: %i", load);
+                        }
+                    }
+                    emit dataAquisitionContinue();
+                }
+                else {
+                    m_dataAcquisitionMachine.stop();
+                    emit errMsg((tr(dataaquisitionErrMsg)));
+                    emit executionError();
+                }
+                break;
+            case resetdspmaxload:
             case dataaquistion:
                 if (reply == ack)
                     emit dataAquisitionContinue();
@@ -406,10 +441,11 @@ void cRangeModuleMeasProgram::setInterfaceActualValues(QVector<float> *actualVal
         const int frqIndex = 2*i;
         float freq = (*actualValues)[frqIndex];
         m_veinActValueList.at(i)->setValue(QVariant(freq));
-        QString displayedFreq = QString("%1Hz").arg(round(freq), 0, 'f', 0);
-        if(m_lastDisplayedFreq != displayedFreq) {
-            m_lastDisplayedFreq = displayedFreq;
-            qInfo("Measured frequency: ~%s", qPrintable(displayedFreq));
+        int freqRounded = round(freq);
+        if(m_lastFrequencyRounded != freqRounded) {
+            m_lastFrequencyRounded = freqRounded;
+            m_loadLogAndResetRequired = true;
+            qInfo("Measured frequency: ~%iHz", freqRounded);
         }
         int rmsOffsetInActual = m_ChannelList.count();
         for(int rmsNo=0; rmsNo<m_ChannelList.count(); rmsNo++)
@@ -520,6 +556,23 @@ void cRangeModuleMeasProgram::deactivateDSPdone()
     emit deactivated();
 }
 
+void cRangeModuleMeasProgram::getDspMaxLoadState()
+{
+    if(m_loadLogAndResetRequired)
+        m_MsgNrCmdList[m_dspInterface->readMaximumLoad()] = readdspmaxload;
+    else
+        emit dataAquisitionContinue();
+}
+
+void cRangeModuleMeasProgram::resetDspMaxLoadState()
+{
+    if(m_loadLogAndResetRequired) {
+        m_loadLogAndResetRequired = false;
+        m_MsgNrCmdList[m_dspInterface->resetMaximumLoad()] = resetdspmaxload;
+    }
+    else
+        emit dataAquisitionContinue();
+}
 
 void cRangeModuleMeasProgram::dataAcquisitionDSP()
 {
