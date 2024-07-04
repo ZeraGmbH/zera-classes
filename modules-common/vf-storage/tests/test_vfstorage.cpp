@@ -204,8 +204,8 @@ void test_vfstorage::fireActualValuesAfterDelayWhileLogging()
     timestampKeys = storedValues.keys();
     QCOMPARE (timestampKeys.size(), 2);
 
-    QDateTime firstTimeStamp = QDateTime::fromString(timestampKeys.first() , "dd-MM-yyyy hh:mm:ss");
-    QDateTime lastTimeStamp = QDateTime::fromString(timestampKeys.last() , "dd-MM-yyyy hh:mm:ss");
+    QDateTime firstTimeStamp = QDateTime::fromString(timestampKeys.first() , "dd-MM-yyyy hh:mm:ss.zzz");
+    QDateTime lastTimeStamp = QDateTime::fromString(timestampKeys.last() , "dd-MM-yyyy hh:mm:ss.zzz");
     QVERIFY(firstTimeStamp < lastTimeStamp);
 }
 
