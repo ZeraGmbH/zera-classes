@@ -154,7 +154,6 @@ void cSCPIServer::destroySerialScpi()
     if (m_bSerialScpiActive) {
         m_bSerialScpiActive = false;
         deleteSCPIClient(m_pSerialClient);
-        delete m_pSerialClient;
         m_pSerialPort->close();
         deleteSerialPort();
         m_pSerialClient = nullptr;
