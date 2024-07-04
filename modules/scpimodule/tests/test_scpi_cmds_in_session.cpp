@@ -140,4 +140,8 @@ void test_scpi_cmds_in_session::closeSocketOnPendingWriteStbQueryNoCrasher()
     client.sendMulti(QByteArrayList() << "SENSE:RNG1:Il1:RANGE 25mA;" << "*STB?");
     client.closeSocket();
     TimeMachineObject::feedEventLoop();
+
+    ScpiModuleClientBlocked clientCheck;
+    QString currRange = clientCheck.sendReceive("SENSE:RNG1:Il1:RANGE?");
+    QCOMPARE(currRange, "25mA");
 }
