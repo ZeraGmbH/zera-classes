@@ -20,6 +20,7 @@ private:
     void startStopLogging(QVariant value, int storageNum);
     void readJson(QVariant value, int storageNum);
     QHash<int, QStringList> extractEntitiesAndComponents(QJsonObject jsonObject);
+    void ignoreComponents(QStringList *componentList);
 
     VeinEvent::StorageSystem* m_storageSystem;
     VfCpp::VfCppEntity *m_entity;
