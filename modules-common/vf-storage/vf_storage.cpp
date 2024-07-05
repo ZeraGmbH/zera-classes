@@ -91,8 +91,10 @@ QHash<int, QStringList> Vf_Storage::extractEntitiesAndComponents(QJsonObject jso
         QStringList componentList;
         if (componentValue.isArray()) {
             QJsonArray componentArray = componentValue.toArray();
-            if(componentArray.isEmpty())
+            if(componentArray.isEmpty()) {
                 componentList = m_storageSystem->getEntityComponents(entityId);
+                ignoreComponents(&componentList);
+            }
             else {
                 for (const QJsonValue& compValue : componentArray) {
                     componentList.append(compValue.toString());
@@ -105,5 +107,11 @@ QHash<int, QStringList> Vf_Storage::extractEntitiesAndComponents(QJsonObject jso
         entitesAndComponents.insert(entityId, componentList);
     }
     return entitesAndComponents;
+}
+
+void Vf_Storage::ignoreComponents(QStringList *componentList)
+{
+    QString componentToBeIgnored = "SIG_Measuring";
+    componentList->removeAll(componentToBeIgnored);
 }
 
