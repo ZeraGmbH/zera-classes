@@ -68,7 +68,7 @@ QVector<float> DemoDspInterfaceRange::demoChannelRms()
 double DemoDspInterfaceRange::demoFrequency()
 {
     double freqBase= 50.0;
-    double randPlusMinusOne = 2.0 * (double)rand() / RAND_MAX - 1.0;
+    double randPlusMinusOne = 1.0 * (double)rand() / RAND_MAX - 0.5;
     double randOffset = 0.02 * randPlusMinusOne;
     double randRMS = (1+randOffset) * freqBase;
     return randRMS;
