@@ -51,27 +51,39 @@ QJsonObject VeinDataCollector::convertToJson(QString timestamp, QHash<int , QHas
 {
     QJsonObject jsonObject;
     for (auto it = infosHash.constBegin(); it != infosHash.constEnd(); ++it) {
-        QJsonObject jsonWithoutTimestamp;
-        for(const QString &key : m_jsonObject.keys()) {
-            if(key == timestamp) {
-                QJsonValue entityFound = m_jsonObject.value(key);
-                jsonWithoutTimestamp = entityFound.toObject();
-            }
-        }
-        if(jsonWithoutTimestamp.contains(QString::number(it.key())) ) {
-            QJsonValue existingValue = jsonWithoutTimestamp.value(QString::number(it.key()));
-            QHash<QString, QVariant> hash= existingValue.toObject().toVariantHash();
-            for (auto hashIt = it.value().constBegin(); hashIt != it.value().constEnd(); ++hashIt)
-                hash.insert(hashIt.key(), hashIt.value());
+        QJsonObject jsonWithoutTimestamp = getJsonWithoutTimestamp(timestamp);
+        QString entityIdToString = QString::number(it.key());
+
+        if(jsonWithoutTimestamp.contains(entityIdToString) ) {
+            QJsonValue existingValue = jsonWithoutTimestamp.value(entityIdToString);
+            QHash<QString, QVariant> hash = appendNewValueToExistingValues(existingValue, it.value()) ;
             jsonObject = jsonWithoutTimestamp;
-            jsonObject.insert(QString::number(it.key()), convertHashToJsonObject(hash));
+            jsonObject.insert(entityIdToString, convertHashToJsonObject(hash));
         }
         else {
             jsonObject = jsonWithoutTimestamp;
-            jsonObject.insert(QString::number(it.key()), convertHashToJsonObject(it.value()));
+            jsonObject.insert(entityIdToString, convertHashToJsonObject(it.value()));
         }
     }
     return jsonObject;
+}
+
+QJsonObject VeinDataCollector::getJsonWithoutTimestamp(QString timestamp)
+{
+    QJsonObject jsonWithoutTimestamp;
+    for(const QString &key : m_jsonObject.keys()) {
+        if(key == timestamp)
+            jsonWithoutTimestamp = m_jsonObject.value(key).toObject();
+    }
+    return jsonWithoutTimestamp;
+}
+
+QHash<QString, QVariant> VeinDataCollector::appendNewValueToExistingValues(QJsonValue existingValue, QHash<QString, QVariant> compoValuesHash)
+{
+    QHash<QString, QVariant> hash= existingValue.toObject().toVariantHash();
+    for (auto hashIt = compoValuesHash.constBegin(); hashIt != compoValuesHash.constEnd(); ++hashIt)
+        hash.insert(hashIt.key(), hashIt.value());
+    return hash;
 }
 
 QJsonObject VeinDataCollector::convertHashToJsonObject(QHash<QString, QVariant> hash)
