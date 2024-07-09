@@ -24,6 +24,8 @@ private:
     void convertToJsonWithTimeStamp(QString timestamp, QHash<int, QHash<QString, QVariant> > infosHash);
     QJsonObject convertToJson(QString timestamp, QHash<int, QHash<QString, QVariant> > infosHash);
     QJsonObject convertHashToJsonObject(QHash<QString, QVariant> hash);
+    QJsonObject getJsonWithoutTimestamp(QString timestamp);
+    QHash<QString, QVariant> appendNewValueToExistingValues(QJsonValue existingValue, QHash<QString, QVariant> compoValuesHash);
     void clearJson();
 
     VeinEvent::StorageSystem* m_storage;
