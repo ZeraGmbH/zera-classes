@@ -1,4 +1,5 @@
 #include "veindatacollector.h"
+#include "jsontimegrouping.h"
 #include <QDateTime>
 
  VeinDataCollector::VeinDataCollector(VeinEvent::StorageSystem *storage)
@@ -44,7 +45,8 @@ void VeinDataCollector::appendValue(int entityId, QString componentName, QVarian
 void VeinDataCollector::convertToJsonWithTimeStamp(QString timestamp, QHash<int , QHash<QString, QVariant>> infosHash)
 {
     m_jsonObject.insert(timestamp, convertToJson(timestamp, infosHash));
-    emit newStoredValue(m_jsonObject);
+    JsonTimeGrouping jsonGrouping(m_jsonObject);
+    emit newStoredValue(jsonGrouping.regroupTimestamp());
 }
 
 QJsonObject VeinDataCollector::convertToJson(QString timestamp, QHash<int , QHash<QString, QVariant>> infosHash)

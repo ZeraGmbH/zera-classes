@@ -12,6 +12,7 @@ QTEST_MAIN(test_vfstorage)
 static constexpr int systemEntityId = 0;
 static constexpr int storageEntityId = 1;
 static constexpr int rmsEntityId = 1040;
+static constexpr int powerEntityId = 1070;
 static constexpr int maximumStorage = 5;
 
 void test_vfstorage::init()
@@ -205,6 +206,52 @@ void test_vfstorage::fireActualValuesAfterDelayWhileLogging()
     QDateTime firstTimeStamp = QDateTime::fromString(timestampKeys.first() , "dd-MM-yyyy hh:mm:ss.zzz");
     QDateTime lastTimeStamp = QDateTime::fromString(timestampKeys.last() , "dd-MM-yyyy hh:mm:ss.zzz");
     QVERIFY(firstTimeStamp < lastTimeStamp);
+}
+
+void test_vfstorage::fireRmsPowerValuesAfterDifferentDelaysWhileLogging()
+{
+    startModman(":/session-minimal-rms-power.json");
+    startLogging(":/rms-power1-components.json", 0);
+
+    changeRMSValues(1, 2);
+    emit m_storage->sigSendEvent(generateEvent(1070, "ACT_PQS1", QVariant(), 1) );
+    emit m_storage->sigSendEvent(generateEvent(1070, "ACT_PQS2", QVariant(), 2) );
+    TimeMachineObject::feedEventLoop();
+
+    QJsonObject storedValues = m_storage->getStoredValue(storageEntityId, "StoredValues0").toJsonObject();
+    QStringList timestampKeys = storedValues.keys();
+    QCOMPARE (timestampKeys.size(), 1);
+
+    QJsonObject storedValuesWithoutTimeStamp = getStoredValueWithoutTimeStamp(0);
+    QVERIFY(storedValuesWithoutTimeStamp.contains(QString::number(rmsEntityId)));
+    QVERIFY(storedValuesWithoutTimeStamp.contains(QString::number(powerEntityId)));
+
+    TimeMachineForTest::getInstance()->processTimers(500);
+    changeRMSValues(3, 4);
+    storedValues = m_storage->getStoredValue(storageEntityId, "StoredValues0").toJsonObject();
+    timestampKeys = storedValues.keys();
+    QCOMPARE (timestampKeys.size(), 2);
+
+    storedValuesWithoutTimeStamp = getStoredValueWithoutTimeStamp(0);
+    QVERIFY(storedValuesWithoutTimeStamp.contains(QString::number(rmsEntityId)));
+    QVERIFY(!storedValuesWithoutTimeStamp.contains(QString::number(powerEntityId)));
+
+    TimeMachineForTest::getInstance()->processTimers(500);
+    changeRMSValues(5, 6);
+    emit m_storage->sigSendEvent(generateEvent(1070, "ACT_PQS1", QVariant(), 5) );
+    TimeMachineObject::feedEventLoop();
+
+    TimeMachineForTest::getInstance()->processTimers(10);
+    emit m_storage->sigSendEvent(generateEvent(1070, "ACT_PQS2", QVariant(), 6) );
+    TimeMachineObject::feedEventLoop();
+
+    storedValues = m_storage->getStoredValue(storageEntityId, "StoredValues0").toJsonObject();
+    timestampKeys = storedValues.keys();
+    QCOMPARE (timestampKeys.size(), 3);
+
+    storedValuesWithoutTimeStamp = getStoredValueWithoutTimeStamp(0);
+    QVERIFY(storedValuesWithoutTimeStamp.contains(QString::number(rmsEntityId)));
+    QVERIFY(storedValuesWithoutTimeStamp.contains(QString::number(powerEntityId)));
 }
 
 void test_vfstorage::onSerialNoLicensed()

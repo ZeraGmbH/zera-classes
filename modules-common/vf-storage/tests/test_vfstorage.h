@@ -23,6 +23,7 @@ private slots:
     void loggingOnOffSequence1();
     void changeJsonFileWhileLogging();
     void fireActualValuesAfterDelayWhileLogging();
+    void fireRmsPowerValuesAfterDifferentDelaysWhileLogging();
 
 private:
     void onSerialNoLicensed();

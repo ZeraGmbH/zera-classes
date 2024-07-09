@@ -17,5 +17,6 @@ SETUP_QTESTS_BASE(
 target_sources(test_vfstorage
   PRIVATE
   ${XML_SCHEMA_RESOURCE_RMSMODULE}
+  ${XML_SCHEMA_RESOURCE_POWER1MODULE}
   test-data/test-data.qrc
 )
