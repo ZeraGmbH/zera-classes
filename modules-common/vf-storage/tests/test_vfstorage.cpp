@@ -197,9 +197,7 @@ void test_vfstorage::fireActualValuesAfterDelayWhileLogging()
     QCOMPARE (timestampKeys.size(), 1);
 
     TimeMachineForTest::getInstance()->processTimers(5000);
-    emit m_storage->sigSendEvent(generateEvent(rmsEntityId, "ACT_RMSPN1", QVariant(), 5) );
-    emit m_storage->sigSendEvent(generateEvent(rmsEntityId, "ACT_RMSPN2", QVariant(), 6) );
-    TimeMachineObject::feedEventLoop();
+    changeRMSValues(5, 6);
     storedValues = m_storage->getStoredValue(storageEntityId, "StoredValues0").toJsonObject();
     timestampKeys = storedValues.keys();
     QCOMPARE (timestampKeys.size(), 2);
