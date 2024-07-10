@@ -2,9 +2,6 @@
 #include <QVariant>
 #include <QDateTime>
 
-static const char* JsonDateTimeFormat = "dd-MM-yyyy hh:mm:ss.zzz";
-static const qint64 maxTimeDiffMs = 20;
-
 QJsonObject JsonTimeGrouping::regroupTimestamp(QJsonObject json)
 {
     QMap<qint64, QJsonObject> timedMap = jsonToMsSinceEpochValuesMap(json);
@@ -12,15 +9,8 @@ QJsonObject JsonTimeGrouping::regroupTimestamp(QJsonObject json)
     return msSinceEpochValueMapToJson(groupedMap);
 }
 
-QJsonObject JsonTimeGrouping::msSinceEpochValueMapToJson(const QMap<qint64, QJsonObject> map)
-{
-    QJsonObject jsonObject;
-    for(auto it = map.constBegin(); it != map.constEnd(); ++it) {
-        QString strDateTime = QDateTime::fromMSecsSinceEpoch(it.key()).toString(JsonDateTimeFormat);
-        jsonObject.insert(strDateTime, it.value());
-    }
-    return jsonObject;
-}
+static const char* JsonDateTimeFormat = "dd-MM-yyyy hh:mm:ss.zzz";
+static const qint64 maxTimeDiffMs = 20;
 
 QMap<qint64, QJsonObject> JsonTimeGrouping::jsonToMsSinceEpochValuesMap(const QJsonObject &json)
 {
@@ -58,13 +48,23 @@ QMap<qint64, QJsonObject> JsonTimeGrouping::groupToMsSinceEpochValuesMap(const Q
     return ret;
 }
 
+QJsonObject JsonTimeGrouping::msSinceEpochValueMapToJson(const QMap<qint64, QJsonObject> map)
+{
+    QJsonObject jsonObject;
+    for(auto it = map.constBegin(); it != map.constEnd(); ++it) {
+        QString strDateTime = QDateTime::fromMSecsSinceEpoch(it.key()).toString(JsonDateTimeFormat);
+        jsonObject.insert(strDateTime, it.value());
+    }
+    return jsonObject;
+}
+
 void JsonTimeGrouping::appendValuesToJson(QJsonObject& mergedJson, QJsonObject objWithoutTime)
 {
     const QStringList keys = objWithoutTime.keys();
     for(const auto &entityKey : keys) {
         if(mergedJson.contains(entityKey)) {
             QJsonValue existingValue = mergedJson.value(entityKey);
-            QHash<QString, QVariant> hash= existingValue.toObject().toVariantHash();
+            QHash<QString, QVariant> hash = existingValue.toObject().toVariantHash();
             QHash<QString, QVariant> valuesToAppend = objWithoutTime.value(entityKey).toObject().toVariantHash();
             for(auto hashIt = valuesToAppend.constBegin(); hashIt != valuesToAppend.constEnd(); ++hashIt)
                 hash.insert(hashIt.key(), hashIt.value());
