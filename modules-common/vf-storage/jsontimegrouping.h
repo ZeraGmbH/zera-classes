@@ -17,6 +17,7 @@ public:
 private:
     QMap<qint64, QJsonObject> jsonToTimedMap(const QJsonObject &json);
     QMap<qint64, QJsonObject> groupTimedMap(const QMap<qint64, QJsonObject> timedMap);
+    QJsonObject convertMapToJsonObject(const QMap<QString, QJsonObject> map);
 
     QList<QDateTime> getTimeInJson();
     QHash<int, QList<QDateTime>> getApproximativeTimestamps();
