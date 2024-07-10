@@ -262,9 +262,9 @@ int main(int argc, char *argv[])
                 startNetwork(app.get());
         });
     }
-    Vf_Storage *storageModule = new Vf_Storage(modManSetupFacade->getStorageSystem());
+    /*Vf_Storage *storageModule = new Vf_Storage(modManSetupFacade->getStorageSystem());
     modManSetupFacade->addSubsystem(storageModule->getVeinEntity());
-    storageModule->initOnce();
+    storageModule->initOnce();*/
 
     return exec(demoMode);
 }
