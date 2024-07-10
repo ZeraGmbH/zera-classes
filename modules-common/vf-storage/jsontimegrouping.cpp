@@ -8,8 +8,18 @@ JsonTimeGrouping::JsonTimeGrouping(QJsonObject json) :
 
 QJsonObject JsonTimeGrouping::regroupTimestamp()
 {
+    QJsonObject finalJson;
+
     QMap<qint64, QJsonObject> timedMap = jsonToTimedMap(m_json);
     QMap<qint64, QJsonObject> groupedMap = groupTimedMap(timedMap);
+    QMap<QString, QJsonObject> groupedMapDateTime;
+    for(const auto &key : groupedMap.keys()) {
+        QDateTime dateTime;
+        dateTime.setMSecsSinceEpoch(key);
+        QString strDateTime = dateTime.toString("dd-MM-yyyy hh:mm:ss.zzz");
+        groupedMapDateTime[strDateTime] = groupedMap[key];
+    }
+    finalJson = convertMapToJsonObject(groupedMapDateTime);
 
     QJsonObject regroupedJson;
     QHash<int, QList<QDateTime>> approxTimestamps = getApproximativeTimestamps();
@@ -26,6 +36,15 @@ QJsonObject JsonTimeGrouping::regroupTimestamp()
         regroupedJson.insert(lastTimestamp, mergedJson);
     }
     return regroupedJson;
+}
+
+QJsonObject JsonTimeGrouping::convertMapToJsonObject(const QMap<QString, QJsonObject> map)
+{
+    QJsonObject jsonObject;
+    for (auto it = map.constBegin(); it != map.constEnd(); ++it) {
+        jsonObject.insert(it.key(), it.value());
+    }
+    return jsonObject;
 }
 
 QMap<qint64, QJsonObject> JsonTimeGrouping::jsonToTimedMap(const QJsonObject &json)
