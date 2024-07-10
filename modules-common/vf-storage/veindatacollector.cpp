@@ -45,8 +45,7 @@ void VeinDataCollector::appendValue(int entityId, QString componentName, QVarian
 void VeinDataCollector::convertToJsonWithTimeStamp(QString timestamp, QHash<int , QHash<QString, QVariant>> infosHash)
 {
     m_jsonObject.insert(timestamp, convertToJson(timestamp, infosHash));
-    JsonTimeGrouping jsonGrouping(m_jsonObject);
-    emit newStoredValue(jsonGrouping.regroupTimestamp());
+    emit newStoredValue(JsonTimeGrouping::regroupTimestamp(m_jsonObject));
 }
 
 QJsonObject VeinDataCollector::convertToJson(QString timestamp, QHash<int , QHash<QString, QVariant>> infosHash)
