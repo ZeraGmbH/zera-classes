@@ -42,11 +42,6 @@ VfCpp::VfCppEntity *Vf_Storage::getVeinEntity() const
     return m_entity;
 }
 
-void Vf_Storage::setVeinEntity(VfCpp::VfCppEntity *entity)
-{
-    m_entity = entity;
-}
-
 void Vf_Storage::startStopLogging(QVariant value, int storageNum)
 {
     bool onOff = value.toBool();

@@ -14,7 +14,6 @@ public:
     bool initOnce();
     bool addComponent(const QString componentName);
     VfCpp::VfCppEntity *getVeinEntity() const;
-    void setVeinEntity(VfCpp::VfCppEntity *entity);
 
 private:
     void startStopLogging(QVariant value, int storageNum);
