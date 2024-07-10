@@ -10,16 +10,13 @@ class JsonTimeGrouping : public QObject
 {
     Q_OBJECT
 public:
-    JsonTimeGrouping(QJsonObject json);
-    QJsonObject regroupTimestamp();
+    static QJsonObject regroupTimestamp(QJsonObject json);
 
 private:
-    QMap<qint64, QJsonObject> jsonToTimedMap(const QJsonObject &json);
-    QMap<qint64, QJsonObject> groupTimedMap(const QMap<qint64, QJsonObject> timedMap);
-    QJsonObject convertMapToJsonObject(const QMap<QString, QJsonObject> map);
-    void appendValuesToJson(QJsonObject &mergedJson, QJsonObject objWithoutTime);
-
-    QJsonObject m_json;
+    static QMap<qint64, QJsonObject> jsonToTimedMap(const QJsonObject &json);
+    static QMap<qint64, QJsonObject> groupTimedMap(const QMap<qint64, QJsonObject> timedMap);
+    static QJsonObject convertMapToJsonObject(const QMap<QString, QJsonObject> map);
+    static void appendValuesToJson(QJsonObject &mergedJson, QJsonObject objWithoutTime);
 };
 
 #endif // JSONTIMEGROUPING_H

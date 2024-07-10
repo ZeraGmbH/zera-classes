@@ -2,15 +2,10 @@
 #include <QHash>
 #include <QVariant>
 
-JsonTimeGrouping::JsonTimeGrouping(QJsonObject json) :
-    m_json(json)
-{
-}
-
-QJsonObject JsonTimeGrouping::regroupTimestamp()
+QJsonObject JsonTimeGrouping::regroupTimestamp(QJsonObject json)
 {
     QJsonObject regroupedJson;
-    QMap<qint64, QJsonObject> timedMap = jsonToTimedMap(m_json);
+    QMap<qint64, QJsonObject> timedMap = jsonToTimedMap(json);
     QMap<qint64, QJsonObject> groupedMap = groupTimedMap(timedMap);
     QMap<QString, QJsonObject> groupedMapDateTime;
     for(const auto &key : groupedMap.keys()) {
