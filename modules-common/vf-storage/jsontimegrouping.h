@@ -15,7 +15,7 @@ public:
 private:
     static QMap<qint64, QJsonObject> jsonToTimedMap(const QJsonObject &json);
     static QMap<qint64, QJsonObject> groupTimedMap(const QMap<qint64, QJsonObject> timedMap);
-    static QJsonObject convertMapToJsonObject(const QMap<QString, QJsonObject> map);
+    static QJsonObject convertMapToJsonObject(const QMap<qint64, QJsonObject> map);
     static void appendValuesToJson(QJsonObject &mergedJson, QJsonObject objWithoutTime);
 };
 

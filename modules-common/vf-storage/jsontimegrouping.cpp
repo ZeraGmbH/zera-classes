@@ -2,27 +2,22 @@
 #include <QHash>
 #include <QVariant>
 
+static const char* JsonDateTimeFormat = "dd-MM-yyyy hh:mm:ss.zzz";
+static const qint64 maxTimeDiffMs = 20;
+
 QJsonObject JsonTimeGrouping::regroupTimestamp(QJsonObject json)
 {
-    QJsonObject regroupedJson;
     QMap<qint64, QJsonObject> timedMap = jsonToTimedMap(json);
     QMap<qint64, QJsonObject> groupedMap = groupTimedMap(timedMap);
-    QMap<QString, QJsonObject> groupedMapDateTime;
-    for(const auto &key : groupedMap.keys()) {
-        QDateTime dateTime;
-        dateTime.setMSecsSinceEpoch(key);
-        QString strDateTime = dateTime.toString("dd-MM-yyyy hh:mm:ss.zzz");
-        groupedMapDateTime[strDateTime] = groupedMap[key];
-    }
-    regroupedJson = convertMapToJsonObject(groupedMapDateTime);
-    return regroupedJson;
+    return convertMapToJsonObject(groupedMap);
 }
 
-QJsonObject JsonTimeGrouping::convertMapToJsonObject(const QMap<QString, QJsonObject> map)
+QJsonObject JsonTimeGrouping::convertMapToJsonObject(const QMap<qint64, QJsonObject> map)
 {
     QJsonObject jsonObject;
-    for (auto it = map.constBegin(); it != map.constEnd(); ++it) {
-        jsonObject.insert(it.key(), it.value());
+    for(auto it = map.constBegin(); it != map.constEnd(); ++it) {
+        QString strDateTime = QDateTime::fromMSecsSinceEpoch(it.key()).toString(JsonDateTimeFormat);
+        jsonObject.insert(strDateTime, it.value());
     }
     return jsonObject;
 }
@@ -32,13 +27,11 @@ QMap<qint64, QJsonObject> JsonTimeGrouping::jsonToTimedMap(const QJsonObject &js
     QMap<qint64, QJsonObject> dateTimeJsonMap;
     const QStringList keys = json.keys();
     for(const QString &key : keys) {
-        qint64 dateTimeMs = QDateTime::fromString(key, "dd-MM-yyyy hh:mm:ss.zzz").toMSecsSinceEpoch();
+        qint64 dateTimeMs = QDateTime::fromString(key, JsonDateTimeFormat).toMSecsSinceEpoch();
         dateTimeJsonMap[dateTimeMs] = json[key].toObject();
     }
     return dateTimeJsonMap;
 }
-
-const qint64 maxTimeDiffMs = 20;
 
 QMap<qint64, QJsonObject> JsonTimeGrouping::groupTimedMap(const QMap<qint64, QJsonObject> timedMap)
 {
@@ -67,7 +60,8 @@ QMap<qint64, QJsonObject> JsonTimeGrouping::groupTimedMap(const QMap<qint64, QJs
 
 void JsonTimeGrouping::appendValuesToJson(QJsonObject& mergedJson, QJsonObject objWithoutTime)
 {
-    for(const auto &entityKey : objWithoutTime.keys()) {
+    const QStringList keys = objWithoutTime.keys();
+    for(const auto &entityKey : keys) {
         if(mergedJson.contains(entityKey)) {
             QJsonValue existingValue = mergedJson.value(entityKey);
             QHash<QString, QVariant> hash= existingValue.toObject().toVariantHash();
