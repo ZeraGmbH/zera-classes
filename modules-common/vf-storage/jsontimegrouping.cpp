@@ -8,6 +8,9 @@ JsonTimeGrouping::JsonTimeGrouping(QJsonObject json) :
 
 QJsonObject JsonTimeGrouping::regroupTimestamp()
 {
+    QMap<qint64, QJsonObject> timedMap = jsonToTimedMap(m_json);
+    QMap<qint64, QJsonObject> groupedMap = groupTimedMap(timedMap);
+
     QJsonObject regroupedJson;
     QHash<int, QList<QDateTime>> approxTimestamps = getApproximativeTimestamps();
     for (auto it = approxTimestamps.constBegin(); it != approxTimestamps.constEnd(); ++it) {
@@ -23,6 +26,46 @@ QJsonObject JsonTimeGrouping::regroupTimestamp()
         regroupedJson.insert(lastTimestamp, mergedJson);
     }
     return regroupedJson;
+}
+
+QMap<qint64, QJsonObject> JsonTimeGrouping::jsonToTimedMap(const QJsonObject &json)
+{
+    QMap<qint64, QJsonObject> dateTimeJsonMap;
+    const QStringList keys = json.keys();
+    for(const QString &key : keys) {
+        qint64 dateTimeMs = QDateTime::fromString(key, "dd-MM-yyyy hh:mm:ss.zzz").toMSecsSinceEpoch();
+        dateTimeJsonMap[dateTimeMs] = json[key].toObject();
+    }
+    return dateTimeJsonMap;
+}
+
+const qint64 maxTimeDiffMs = 20;
+
+QMap<qint64, QJsonObject> JsonTimeGrouping::groupTimedMap(const QMap<qint64, QJsonObject> timedMap)
+{
+    QMap<qint64, QJsonObject> ret;
+    qint64 currTimeStampStored = 0;
+    for(auto iter = timedMap.cbegin(); iter != timedMap.cend(); ++iter) {
+        qint64 entryDateTime = iter.key();
+        bool append = false;
+        if(!ret.contains(entryDateTime)) {
+            if(entryDateTime-currTimeStampStored > maxTimeDiffMs) {
+                currTimeStampStored = entryDateTime;
+                ret[currTimeStampStored] = iter.value();
+            }
+            else
+                append = true;
+        }
+        /*else
+            append = true;*/
+        if(append) {
+            QJsonObject jsoncurrTimeStamp = ret[currTimeStampStored];
+            QJsonObject lastValueArray = iter.value();
+            appendValuesToJson(jsoncurrTimeStamp, lastValueArray);
+            ret[currTimeStampStored] = jsoncurrTimeStamp;
+        }
+    }
+    return ret;
 }
 
 QList<QDateTime> JsonTimeGrouping::getTimeInJson()

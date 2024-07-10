@@ -4,6 +4,7 @@
 #include <QDateTime>
 #include <QJsonObject>
 #include <QHash>
+#include <QMap>
 #include <QObject>
 
 class JsonTimeGrouping : public QObject
@@ -14,6 +15,9 @@ public:
     QJsonObject regroupTimestamp();
 
 private:
+    QMap<qint64, QJsonObject> jsonToTimedMap(const QJsonObject &json);
+    QMap<qint64, QJsonObject> groupTimedMap(const QMap<qint64, QJsonObject> timedMap);
+
     QList<QDateTime> getTimeInJson();
     QHash<int, QList<QDateTime>> getApproximativeTimestamps();
     void appendValuesToJson(QJsonObject &mergedJson, QJsonObject objWithoutTime);
