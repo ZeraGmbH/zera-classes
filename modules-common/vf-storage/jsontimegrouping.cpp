@@ -67,7 +67,7 @@ QMap<qint64, QJsonObject> JsonTimeGrouping::groupTimedMap(const QMap<qint64, QJs
 
 void JsonTimeGrouping::appendValuesToJson(QJsonObject& mergedJson, QJsonObject objWithoutTime)
 {
-    for(const auto entityKey : objWithoutTime.keys()) {
+    for(const auto &entityKey : objWithoutTime.keys()) {
         if(mergedJson.contains(entityKey)) {
             QJsonValue existingValue = mergedJson.value(entityKey);
             QHash<QString, QVariant> hash= existingValue.toObject().toVariantHash();
