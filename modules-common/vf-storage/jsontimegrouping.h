@@ -13,9 +13,9 @@ public:
     static QJsonObject regroupTimestamp(QJsonObject json);
 
 private:
-    static QMap<qint64, QJsonObject> jsonToTimedMap(const QJsonObject &json);
-    static QMap<qint64, QJsonObject> groupTimedMap(const QMap<qint64, QJsonObject> timedMap);
-    static QJsonObject convertMapToJsonObject(const QMap<qint64, QJsonObject> map);
+    static QMap<qint64, QJsonObject> jsonToMsSinceEpochValuesMap(const QJsonObject &json);
+    static QMap<qint64, QJsonObject> groupToMsSinceEpochValuesMap(const QMap<qint64, QJsonObject> timedMap);
+    static QJsonObject msSinceEpochValueMapToJson(const QMap<qint64, QJsonObject> map);
     static void appendValuesToJson(QJsonObject &mergedJson, QJsonObject objWithoutTime);
 };
 

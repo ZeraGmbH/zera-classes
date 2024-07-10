@@ -7,12 +7,12 @@ static const qint64 maxTimeDiffMs = 20;
 
 QJsonObject JsonTimeGrouping::regroupTimestamp(QJsonObject json)
 {
-    QMap<qint64, QJsonObject> timedMap = jsonToTimedMap(json);
-    QMap<qint64, QJsonObject> groupedMap = groupTimedMap(timedMap);
-    return convertMapToJsonObject(groupedMap);
+    QMap<qint64, QJsonObject> timedMap = jsonToMsSinceEpochValuesMap(json);
+    QMap<qint64, QJsonObject> groupedMap = groupToMsSinceEpochValuesMap(timedMap);
+    return msSinceEpochValueMapToJson(groupedMap);
 }
 
-QJsonObject JsonTimeGrouping::convertMapToJsonObject(const QMap<qint64, QJsonObject> map)
+QJsonObject JsonTimeGrouping::msSinceEpochValueMapToJson(const QMap<qint64, QJsonObject> map)
 {
     QJsonObject jsonObject;
     for(auto it = map.constBegin(); it != map.constEnd(); ++it) {
@@ -22,7 +22,7 @@ QJsonObject JsonTimeGrouping::convertMapToJsonObject(const QMap<qint64, QJsonObj
     return jsonObject;
 }
 
-QMap<qint64, QJsonObject> JsonTimeGrouping::jsonToTimedMap(const QJsonObject &json)
+QMap<qint64, QJsonObject> JsonTimeGrouping::jsonToMsSinceEpochValuesMap(const QJsonObject &json)
 {
     QMap<qint64, QJsonObject> dateTimeJsonMap;
     const QStringList keys = json.keys();
@@ -33,7 +33,7 @@ QMap<qint64, QJsonObject> JsonTimeGrouping::jsonToTimedMap(const QJsonObject &js
     return dateTimeJsonMap;
 }
 
-QMap<qint64, QJsonObject> JsonTimeGrouping::groupTimedMap(const QMap<qint64, QJsonObject> timedMap)
+QMap<qint64, QJsonObject> JsonTimeGrouping::groupToMsSinceEpochValuesMap(const QMap<qint64, QJsonObject> timedMap)
 {
     QMap<qint64, QJsonObject> ret;
     qint64 currTimeStampStored = 0;
