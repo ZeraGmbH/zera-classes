@@ -1,6 +1,6 @@
 #include "jsontimegrouping.h"
-#include <QHash>
 #include <QVariant>
+#include <QDateTime>
 
 static const char* JsonDateTimeFormat = "dd-MM-yyyy hh:mm:ss.zzz";
 static const qint64 maxTimeDiffMs = 20;
