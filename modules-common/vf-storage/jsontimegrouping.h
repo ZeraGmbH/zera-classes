@@ -4,11 +4,9 @@
 #include <QDateTime>
 #include <QJsonObject>
 #include <QMap>
-#include <QObject>
 
-class JsonTimeGrouping : public QObject
+class JsonTimeGrouping
 {
-    Q_OBJECT
 public:
     static QJsonObject regroupTimestamp(QJsonObject json);
 
