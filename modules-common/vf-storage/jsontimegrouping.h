@@ -15,12 +15,10 @@ public:
 private:
     QList<QDateTime> getTimeInJson();
     QHash<int, QList<QDateTime>> getApproximativeTimestamps();
-    void appendValuesToJson(QJsonObject objWithoutTime);
+    void appendValuesToJson(QJsonObject &mergedJson, QJsonObject objWithoutTime);
     void appendOneTimestamp(QHash<int, QList<QDateTime>> *approxTimestamps, int hashKey, QDateTime timestamp);
-    void clearJson();
 
     QJsonObject m_json;
-    QJsonObject m_mergedJson;
 };
 
 #endif // JSONTIMEGROUPING_H
