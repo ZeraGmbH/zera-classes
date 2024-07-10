@@ -1,5 +1,5 @@
-#include <QSet>
 #include "jsontimegrouping.h"
+#include <QSet>
 
 JsonTimeGrouping::JsonTimeGrouping(QJsonObject json) :
     m_json(json)
@@ -8,21 +8,21 @@ JsonTimeGrouping::JsonTimeGrouping(QJsonObject json) :
 
 QJsonObject JsonTimeGrouping::regroupTimestamp()
 {
-    QJsonObject mergedJson;
+    QJsonObject regroupedJson;
     QHash<int, QList<QDateTime>> approxTimestamps = getApproximativeTimestamps();
     for (auto it = approxTimestamps.constBegin(); it != approxTimestamps.constEnd(); ++it) {
-        clearJson();
+        QJsonObject mergedJson;
         QList<QDateTime> Timelist = it.value();
         for(int i = 0; i < Timelist.size(); i++) {
             QString strTime = Timelist[i].toString("dd-MM-yyyy hh:mm:ss.zzz");
             QJsonValue value = m_json.value(strTime);
             QJsonObject objWithoutTime = value.toObject();
-            appendValuesToJson(objWithoutTime);
+            appendValuesToJson(mergedJson, objWithoutTime);
         }
         QString lastTimestamp = Timelist.last().toString("dd-MM-yyyy hh:mm:ss.zzz");
-        mergedJson.insert(lastTimestamp, m_mergedJson);
+        regroupedJson.insert(lastTimestamp, mergedJson);
     }
-    return mergedJson;
+    return regroupedJson;
 }
 
 QList<QDateTime> JsonTimeGrouping::getTimeInJson()
@@ -74,19 +74,19 @@ QHash<int, QList<QDateTime>> JsonTimeGrouping::getApproximativeTimestamps()
     return approxTimestamps;
 }
 
-void JsonTimeGrouping::appendValuesToJson(QJsonObject objWithoutTime)
+void JsonTimeGrouping::appendValuesToJson(QJsonObject& mergedJson, QJsonObject objWithoutTime)
 {
     for(const auto entityKey : objWithoutTime.keys()) {
-        if(m_mergedJson.contains(entityKey)) {
-            QJsonValue existingValue = m_mergedJson.value(entityKey);
+        if(mergedJson.contains(entityKey)) {
+            QJsonValue existingValue = mergedJson.value(entityKey);
             QHash<QString, QVariant> hash= existingValue.toObject().toVariantHash();
             QHash<QString, QVariant> valuesToAppend = objWithoutTime.value(entityKey).toObject().toVariantHash();
             for(auto hashIt = valuesToAppend.constBegin(); hashIt != valuesToAppend.constEnd(); ++hashIt)
                 hash.insert(hashIt.key(), hashIt.value());
-            m_mergedJson.insert(entityKey, QJsonObject::fromVariantHash(hash));
+            mergedJson.insert(entityKey, QJsonObject::fromVariantHash(hash));
         }
         else
-            m_mergedJson.insert(entityKey, objWithoutTime.value(entityKey));
+            mergedJson.insert(entityKey, objWithoutTime.value(entityKey));
     }
 }
 
@@ -96,13 +96,3 @@ void JsonTimeGrouping::appendOneTimestamp(QHash<int, QList<QDateTime>> *approxTi
     oneElt.append(timestamp);
     approxTimestamps->insert(hashKey, oneElt);
 }
-
-void JsonTimeGrouping::clearJson()
-{
-    if(!m_mergedJson.isEmpty()) {
-        for (const QString &key : m_mergedJson.keys()) {
-            m_mergedJson.remove(key);
-        }
-    }
-}
-
