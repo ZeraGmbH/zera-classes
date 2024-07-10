@@ -1,7 +1,6 @@
 #ifndef JSONTIMEGROUPING_H
 #define JSONTIMEGROUPING_H
 
-#include <QDateTime>
 #include <QJsonObject>
 #include <QMap>
 
