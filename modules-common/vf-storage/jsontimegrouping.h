@@ -3,6 +3,7 @@
 
 #include <QDateTime>
 #include <QJsonObject>
+#include <QHash>
 #include <QObject>
 
 class JsonTimeGrouping : public QObject
