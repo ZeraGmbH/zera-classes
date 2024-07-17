@@ -12,7 +12,7 @@
       </tr>
       <!-- table data -->
       <xsl:for-each select="MODELS/STATUS">
-        <xsl:for-each select="node()/VERSION/* | node()/*">
+        <xsl:for-each select="node()/*/* | node()/*">
           <xsl:sort select="@Description"/>
           <xsl:if test="@Description!=''">
             <tr>
