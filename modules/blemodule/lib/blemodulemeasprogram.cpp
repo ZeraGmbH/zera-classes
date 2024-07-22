@@ -47,7 +47,7 @@ void cBleModuleMeasProgram::generateInterface()
     m_pTemperatureCAct = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
                                               key = QString("ACT_TemperatureC"),
                                               QString("Current temperature in degree Celsius"),
-                                              QVariant((float)qQNaN()));
+                                              QVariant(qQNaN()));
     m_pTemperatureCAct->setUnit("°C");
     m_pTemperatureCAct->setSCPIInfo(new cSCPIInfo("STATUS", "TEMP:CELSIUS", "2", m_pTemperatureCAct->getName(), "0", m_pTemperatureCAct->getUnit()));
 
@@ -56,7 +56,7 @@ void cBleModuleMeasProgram::generateInterface()
     m_pTemperatureFAct = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
                                              key = QString("ACT_TemperatureF"),
                                              QString("Current temperature in degree Fahrenheit"),
-                                             QVariant((float)qQNaN()));
+                                             QVariant(qQNaN()));
     m_pTemperatureFAct->setUnit("°F");
     m_pTemperatureFAct->setSCPIInfo(new cSCPIInfo("STATUS", "TEMP:FAHRENHEIT", "2", m_pTemperatureFAct->getName(), "0", m_pTemperatureFAct->getUnit()));
     m_pModule->m_veinModuleParameterMap[key] = m_pTemperatureFAct;
@@ -64,7 +64,7 @@ void cBleModuleMeasProgram::generateInterface()
     m_pHumidityAct = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
                                           key = QString("ACT_Humidity"),
                                           QString("Current relative humidity in percent"),
-                                          QVariant((float)qQNaN()));
+                                          QVariant(qQNaN()));
     m_pHumidityAct->setUnit("%");
     m_pHumidityAct->setSCPIInfo(new cSCPIInfo("STATUS", "HUMID", "2", m_pHumidityAct->getName(), "0", m_pHumidityAct->getUnit()));
     m_pModule->m_veinModuleParameterMap[key] = m_pHumidityAct;
@@ -72,7 +72,7 @@ void cBleModuleMeasProgram::generateInterface()
     m_pAirPressureAct = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
                                              key = QString("ACT_AirPressure"),
                                              QString("Current atmospheric pressure in hPa"),
-                                             QVariant((float)qQNaN()));
+                                             QVariant(qQNaN()));
     m_pAirPressureAct->setUnit("hPa");
     m_pAirPressureAct->setSCPIInfo(new cSCPIInfo("STATUS", "AIRPR", "2", m_pAirPressureAct->getName(), "0", m_pAirPressureAct->getUnit()));
     m_pModule->m_veinModuleParameterMap[key] = m_pAirPressureAct;
@@ -146,10 +146,10 @@ void cBleModuleMeasProgram::onNewValues()
 
 void cBleModuleMeasProgram::makeValuesInvalid()
 {
-    m_pTemperatureCAct->setValue((float)qQNaN());
-    m_pTemperatureFAct->setValue((float)qQNaN());
-    m_pHumidityAct->setValue((float)qQNaN());
-    m_pAirPressureAct->setValue((float)qQNaN());
+    m_pTemperatureCAct->setValue(qQNaN());
+    m_pTemperatureFAct->setValue(qQNaN());
+    m_pHumidityAct->setValue(qQNaN());
+    m_pAirPressureAct->setValue(qQNaN());
     m_pWarningFlagsAct->setValue(quint32(0));
     m_pErrorFlagsAct->setValue(quint32(0));
 }
