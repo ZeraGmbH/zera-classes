@@ -22,8 +22,6 @@ enum rangemoduleCmds
     cmdlist2dsp,
     activatedsp,
     deactivatedsp,
-    readdspmaxload,
-    resetdspmaxload,
     dataaquistion,
     freepgrmem,
     freeusermem
@@ -84,13 +82,8 @@ private:
 
     // statemachine for reading actual values
     QStateMachine m_dataAcquisitionMachine;
-    QState m_getDspMaxLoadState;
-    QState m_resetDspMaxLoadState;
     QState m_dataAcquisitionState;
     QFinalState m_dataAcquisitionDoneState;
-
-    bool m_loadLogAndResetRequired = true;
-    TimerTemplateQtPtr m_loadLogTimer;
 
     Zera::ProxyClientPtr m_rmClient;
     QString m_lastDisplayedFreq;
@@ -117,8 +110,6 @@ private slots:
     void freeUSERMem();
     void deactivateDSPdone();
 
-    void getDspMaxLoadState();
-    void resetDspMaxLoadState();
     void dataAcquisitionDSP();
     void dataReadDSP();
 
