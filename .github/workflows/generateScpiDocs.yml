@@ -102,7 +102,7 @@ jobs:
           tar -c -I 'xz -T0' -f $HOME/scpi_docs.tar.xz "$HOME/html-docs" "$HOME/SessionNamesMapping.json"
 
       - name: 'Upload scpi_docs artifact'
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: scpi-docs-artifact
           path: /github/home/scpi_docs.tar.xz
