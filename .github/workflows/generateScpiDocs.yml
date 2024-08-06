@@ -21,7 +21,7 @@ jobs:
 
       # Prepare source code for incremental build
       - name: Download source artifact last build
-        uses: dawidd6/action-download-artifact@v2
+        uses: dawidd6/action-download-artifact@v3
         with:
           workflow: recreateBuildCaches.yml
           name: source-cache-gcc
@@ -45,7 +45,7 @@ jobs:
 
       # Prepare last build files for incremental build
       - name: Download build artifact
-        uses: dawidd6/action-download-artifact@v2
+        uses: dawidd6/action-download-artifact@v3
         with:
           workflow: recreateBuildCaches.yml
           name: build-cache-gcc
@@ -66,7 +66,7 @@ jobs:
       # * mandatory
       # * zera-metaproject's generator workflow name must be set
       - name: Download zera-metaproject's install artifact
-        uses: dawidd6/action-download-artifact@v2
+        uses: dawidd6/action-download-artifact@v3
         with:
           repo: ZeraGmbH/zera-metaproject
           name: install-artifact
