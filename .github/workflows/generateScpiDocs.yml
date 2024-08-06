@@ -116,3 +116,5 @@ jobs:
           workflow_file_name: uploadScpiDocs.yml
           inputs: '{"version" : "${{ github.event.inputs.version}}"}'
           ref: main
+          wait_workflow: false
+          propagate_failure: false
