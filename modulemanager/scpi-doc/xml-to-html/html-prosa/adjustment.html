@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<body>
+    <p>
+        The sequence of adjustment commands is important.
+    </p>
+    <ul>
+        <li><b>Init:</b>
+            <p>
+                The init command must be used before starting the range adjustment.<br/>
+                For e.g. CALCULATE:ADJ1:INIT UL1,250V; This makes a clear start for the UL1-250V adjustment.
+                It doesn't change the EEPROM and already calculated adjustment data for other channels/ranges.
+            </p>
+        </li>
+        <li><b>Amplitude:</b>
+            <p>
+                This command calculates the amplitude correction value and adds one amplitude correction node.<br/>
+                For e.g. CALCULATE:ADJ1:AMPLITUDE UL1,250V,199.9865998284; As long as INIT command isn't called again, all old nodes are maintained.
+            </p>
+        </li>
+        <li><b>Gstatus:</b>
+            <p>
+                Once all gain correction nodes for this range are set, the GSTATUS command can be used to set the status of gain correction.<br/>
+                For example, CALCULATE:ADJ1:GSTATUS UL1,250V,128; The status value '128' means this range is adjusted.
+            </p>
+        </li>
+        <li><b>Phase:</b>
+            <p>
+                This command calculates the phase correction value and adds one phase correction node.<br/>
+            </p>
+        </li>
+        <li><b>Pstatus:</b>
+            <p>
+                Once all phase correction nodes for this range are set, the PSTATUS command can be used to set the status of phase correction.<br/>
+            </p>
+        </li>
+        <li><b>Offset:</b>
+            <p>
+                This command calculates the offset correction value and adds one offset correction node.<br/>
+            </p>
+        </li>
+        <li><b>Ostatus:</b>
+            <p>
+                Once all offset correction nodes for this range are set, the OSTATUS command can be used to set the status of offset correction.<br/>
+            </p>
+        </li>
+        <li><b>Computation:</b>
+            <p>
+                The 'CALCULATE:ADJ1:COMPUTATION 1' command computes coefficients for all channels and all ranges from the nodes previously set.
+            </p>
+        </li>
+        <li><b>Storage:</b>
+            <p>
+                With 'CALCULATE:ADJ1:STORAGE 1' the computed adjustment data is stored into EEPROM.<br/>
+                Ideally, use this command at the end, when all channels and ranges are adjusted.
+            </p>
+        </li>
+        <li><b>Send:</b>
+            <p>
+                The command CALCULATE:ADJ1:SEND forwards the command to the specified port.<br/>
+                For e.g. CALCULATE:ADJ1:SEND? 6307,sens:mmod AC\;; The command 'sens:mmod AC;' is forwarded to port 6307.
+            </p>
+        </li>
+    </ul>
+</body>
+</html>
