@@ -527,6 +527,7 @@
 
     <xsl:if test="$adjustmentOutput = 'true'">
       <h1 id="Adjustment"><xsl:value-of select="$Adjustment"/></h1>
+      <p><xsl:copy-of select="document(concat($ProsaFolder, 'adjustment.html'))"/></p>
       <xsl:call-template name="Adjustment"/>
     </xsl:if>
 
