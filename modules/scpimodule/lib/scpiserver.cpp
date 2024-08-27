@@ -186,7 +186,7 @@ void cSCPIServer::addSCPIClient()
 void cSCPIServer::deleteSCPIClient(cSCPIClient *client)
 {
     // don't use for other than remove from list - it is destroyed and not usable
-    if(client) {
+    if(m_SCPIClientList.contains(client)) {
         m_pModule->scpiParameterCmdInfoHash.remove(client->getComponentName());
         m_SCPIClientList.removeAll(client);
         delete client;
@@ -244,7 +244,7 @@ void cSCPIServer::shutdownTCPServer()
     if (m_bSerialScpiActive)
         destroySerialScpi();
     for(auto client : qAsConst(m_SCPIClientList))
-        delete client;
+        deleteSCPIClient(client);
     m_SCPIClientList.clear();
     m_pTcpServer->close();
     emit deactivationContinue();
