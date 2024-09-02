@@ -100,6 +100,10 @@ void ModuleManager::setupConnections()
     QObject::connect(&m_sessionLoader, &JsonSessionLoader::sigLoadModule, this, &ZeraModules::ModuleManager::startModule);
     QObject::connect(this, &ZeraModules::ModuleManager::sigSessionSwitched, &m_sessionLoader, &JsonSessionLoader::loadSession);
 
+    ModulemanagerConfig *mmConfig = ModulemanagerConfig::getInstance();
+    QString configFileName = mmConfig->getConfigFileNameFull();
+    m_setupFacade->getSystemModuleEventSystem()->setConfigFileName(configFileName);
+
     m_setupFacade->getSystemModuleEventSystem()->initOnce();
     QObject::connect(this, &ZeraModules::ModuleManager::sigModulesLoaded, m_setupFacade->getSystemModuleEventSystem(), &SystemModuleEventSystem::initializeEntity);
     QObject::connect(m_setupFacade->getSystemModuleEventSystem(), &SystemModuleEventSystem::sigChangeSession, this, &ZeraModules::ModuleManager::changeSessionFile);
