@@ -13,10 +13,10 @@ add_library(vf-moduleinterface SHARED
 
 target_link_libraries(vf-moduleinterface
     PUBLIC
-    module-validators
     Zera::VfEvent
     Zera::VfComponent
     Zera::ModmanBase
+    Zera::validators
     # ask linker to help us finding unresolved symbols
     "-Wl,--no-undefined"
     )
