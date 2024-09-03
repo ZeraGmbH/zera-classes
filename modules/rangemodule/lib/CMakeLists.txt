@@ -22,5 +22,6 @@ target_include_directories(rangemodule-static
 target_link_libraries(rangemodule-static
     zera-basemodule
     Zera::zera-timers
+    Zera::zera-log-statistics
 )
 

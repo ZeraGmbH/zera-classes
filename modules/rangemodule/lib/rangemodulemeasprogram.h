@@ -9,6 +9,7 @@
 #include <QStateMachine>
 #include <QFinalState>
 #include <timerperiodicqt.h>
+#include <logstatisticsasyncfloat.h>
 
 namespace RANGEMODULE
 {
@@ -86,7 +87,7 @@ private:
     QFinalState m_dataAcquisitionDoneState;
 
     Zera::ProxyClientPtr m_rmClient;
-    QString m_lastDisplayedFreq;
+    LogStatisticsAsyncFloat m_frequencyLogStatistics;
 
     void setActualValuesNames();
     void setSCPIMeasInfo();

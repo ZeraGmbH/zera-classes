@@ -15,7 +15,8 @@ namespace RANGEMODULE
 cRangeModuleMeasProgram::cRangeModuleMeasProgram(cRangeModule* module, std::shared_ptr<cBaseModuleConfiguration> pConfiguration) :
     cBaseDspMeasProgram(pConfiguration),
     m_pModule(module),
-    m_dspWatchdogTimer(TimerFactoryQt::createSingleShot(3000))
+    m_dspWatchdogTimer(TimerFactoryQt::createSingleShot(3000)),
+    m_frequencyLogStatistics(10000)
 {
     m_dspInterface = m_pModule->getServiceInterfaceFactory()->createDspInterfaceRange(getConfData()->m_senseChannelList, getConfData()->m_session.m_sPar == "ref");
     m_bRanging = false;
@@ -76,6 +77,12 @@ cRangeModuleMeasProgram::cRangeModuleMeasProgram(cRangeModule* module, std::shar
 
     connect(this, &cRangeModuleMeasProgram::actualValues, this, &cRangeModuleMeasProgram::setInterfaceActualValues);
     connect(m_dspWatchdogTimer.get(), &TimerTemplateQt::sigExpired, this, &cRangeModuleMeasProgram::onDspWatchdogTimeout);
+
+    connect(&m_frequencyLogStatistics, &LogStatisticsAsyncFloat::sigNewStatistics, [](float min, float max, float avg, int msgCnt) {
+        qInfo("Measured frequency intervall (Hz) min: %.1f, max: %.1f, mean: %.1f; Total message count: %i",
+              min, max, avg, msgCnt);
+    });
+
 }
 
 void cRangeModuleMeasProgram::start()
@@ -406,11 +413,7 @@ void cRangeModuleMeasProgram::setInterfaceActualValues(QVector<float> *actualVal
         const int frqIndex = 2*i;
         float freq = (*actualValues)[frqIndex];
         m_veinActValueList.at(i)->setValue(QVariant(freq));
-        QString displayedFreq = QString("%1Hz").arg(round(freq), 0, 'f', 0);
-        if(m_lastDisplayedFreq != displayedFreq) {
-            m_lastDisplayedFreq = displayedFreq;
-            qInfo("Measured frequency: ~%s", qPrintable(displayedFreq));
-        }
+        m_frequencyLogStatistics.addValue(freq);
         int rmsOffsetInActual = m_ChannelList.count();
         for(int rmsNo=0; rmsNo<m_ChannelList.count(); rmsNo++)
             m_veinRmsValueList.at(rmsNo)->setValue(QVariant((*actualValues)[rmsNo+rmsOffsetInActual]));
