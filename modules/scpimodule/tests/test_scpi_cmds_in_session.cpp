@@ -1,5 +1,6 @@
 #include "test_scpi_cmds_in_session.h"
 #include "modulemanagertestrunner.h"
+#include "modulemanagerconfig.h"
 #include "scpimoduleclientblocked.h"
 #include <timemachineobject.h>
 #include <scpimodule.h>
@@ -38,6 +39,7 @@ void test_scpi_cmds_in_session::initialTestClient()
 
 void test_scpi_cmds_in_session::minScpiDevIface()
 {
+    ModulemanagerConfig::setDemoDevice("DEMO", false);
     ModuleManagerTestRunner testRunner(":/session-scpi-only.json");
 
     ScpiModuleClientBlocked client;
