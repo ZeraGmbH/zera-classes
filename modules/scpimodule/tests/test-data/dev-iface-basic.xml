@@ -5,7 +5,7 @@
  <MODELS>
   <CONFIGURATION Type="Model,Node">
    <SYST Type="Node">
-    <NAMESESSION ScpiPath="CONFIGURATION:SYST:NAMESESSION" Description="Session name" Type="Query,Command+Par" DataType="STRING"/>
+    <NAMESESSION ScpiPath="CONFIGURATION:SYST:NAMESESSION" ValidPar="Default,EMOB AC,EMOB DC,DC: 4*Voltage / 1*Current" Description="Session name" Type="Query,Command+Par" DataType="STRING"/>
    </SYST>
   </CONFIGURATION>
   <DEVICE Type="Model,Node">
