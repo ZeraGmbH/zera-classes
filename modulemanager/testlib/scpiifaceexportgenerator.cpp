@@ -7,28 +7,36 @@ ScpiIfaceExportGenerator::ScpiIfaceExportGenerator()
     ModuleManagerSetupFacade::registerMetaTypeStreamOperators();
     ModulemanagerConfig::setDemoDevice("mt310s2", false);
     m_modmanConfig = ModulemanagerConfig::getInstance();
-    createModman("mt310s2");
 }
 
 ScpiIfaceExportGenerator::~ScpiIfaceExportGenerator()
 {
-    m_modman->destroyModulesAndWaitUntilAllShutdown();
+    destroyModules();
 }
 
 void ScpiIfaceExportGenerator::createModman(QString device)
 {
-    m_modmanSetupFacade = std::make_unique<ModuleManagerSetupFacade>(&m_licenseSystem, m_modmanConfig->isDevMode());
+    ModulemanagerConfig::setDemoDevice(device, false);
+    m_licenseSystem = std::make_unique<TestLicenseSystem>();
+    m_modmanSetupFacade = std::make_unique<ModuleManagerSetupFacade>(m_licenseSystem.get(), m_modmanConfig->isDevMode());
     m_modman = std::make_unique<TestModuleManager>(m_modmanSetupFacade.get(), std::make_shared<FactoryServiceInterfaces>());
+
     m_modman->loadAllAvailableModulePlugins();
     m_modman->setupConnections();
+    m_modman->startAllTestServices(device, false);
+}
+
+void ScpiIfaceExportGenerator::destroyModules()
+{
+    if(m_modman)
+        m_modman->destroyModulesAndWaitUntilAllShutdown();
 }
 
 void ScpiIfaceExportGenerator::setDevice(QString device)
 {
     if(m_device != device) {
-        m_modman->destroyModulesAndWaitUntilAllShutdown();
-        ModulemanagerConfig::setDemoDevice(device, false);
-        m_modman->startAllTestServices(device, false);
+        destroyModules();
+        createModman(device);
         m_device = device;
     }
 }
