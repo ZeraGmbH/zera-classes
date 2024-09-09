@@ -7,17 +7,20 @@ ScpiIfaceExportGenerator::ScpiIfaceExportGenerator()
     ModuleManagerSetupFacade::registerMetaTypeStreamOperators();
     ModulemanagerConfig::setDemoDevice("mt310s2", false);
     m_modmanConfig = ModulemanagerConfig::getInstance();
-    m_modmanSetupFacade = new ModuleManagerSetupFacade(&m_licenseSystem, m_modmanConfig->isDevMode());
-    m_modman = new TestModuleManager(m_modmanSetupFacade, std::make_shared<FactoryServiceInterfaces>());
-    m_modman->loadAllAvailableModulePlugins();
-    m_modman->setupConnections();
+    createModman("mt310s2");
 }
 
 ScpiIfaceExportGenerator::~ScpiIfaceExportGenerator()
 {
     m_modman->destroyModulesAndWaitUntilAllShutdown();
-    delete m_modman;
-    delete m_modmanSetupFacade;
+}
+
+void ScpiIfaceExportGenerator::createModman(QString device)
+{
+    m_modmanSetupFacade = std::make_unique<ModuleManagerSetupFacade>(&m_licenseSystem, m_modmanConfig->isDevMode());
+    m_modman = std::make_unique<TestModuleManager>(m_modmanSetupFacade.get(), std::make_shared<FactoryServiceInterfaces>());
+    m_modman->loadAllAvailableModulePlugins();
+    m_modman->setupConnections();
 }
 
 void ScpiIfaceExportGenerator::setDevice(QString device)
@@ -33,7 +36,6 @@ void ScpiIfaceExportGenerator::setDevice(QString device)
 QString ScpiIfaceExportGenerator::getSessionScpiIface(QString device, QString session)
 {
     QString scpiIface;
-    setDevice(device);
     if(m_modmanConfig->getAvailableSessions().contains(session)) {
         m_modman->changeSessionFile(session);
         m_modman->waitUntilModulesAreReady();
