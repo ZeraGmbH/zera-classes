@@ -13,12 +13,13 @@ public:
     QString getSessionScpiIface(QString device, QString session);
     void getAllSessionsScpiIfaceXmls(QString device, QString xmlDir);
 private:
+    void createModman(QString device);
     void setDevice(QString device);
     void createXml(QString completeFileName, QString contents);
     TestLicenseSystem m_licenseSystem;
     ModulemanagerConfig *m_modmanConfig;
-    ModuleManagerSetupFacade *m_modmanSetupFacade;
-    TestModuleManager *m_modman;
+    std::unique_ptr<ModuleManagerSetupFacade> m_modmanSetupFacade;
+    std::unique_ptr<TestModuleManager> m_modman;
     QString m_device;
 };
 
