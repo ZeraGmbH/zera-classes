@@ -8,6 +8,7 @@
 <xsl:include href="templates/header-global.xsl"/>
 <xsl:include href="templates/current-date.xsl"/>
 <xsl:include href="templates/device-info.xsl"/>
+<xsl:include href="templates/system-commands.xsl"/>
 <xsl:include href="templates/error-calculators.xsl"/>
 <xsl:include href="templates/measurement.xsl"/>
 <xsl:include href="templates/sense-range.xsl"/>
@@ -350,6 +351,7 @@
           <li><a href="#DeviceConnection"><xsl:value-of select="$DeviceConnection"/></a></li>
           <li><a href="#DeviceInfo"><xsl:value-of select="$DeviceInfo"/></a></li>
           <li><a href="#DevIface"><xsl:value-of select="$DevIface"/></a></li>
+          <li><a href="#SystemCmds"><xsl:value-of select="$SystemCmds"/></a></li>
           <li><a href="#ScpiStandardCmds"><xsl:value-of select="$ScpiStandardCmds"/></a></li>
           <xsl:if test="$adjustmentOutput != 'true'">
             <li><a href="#MeasSystems"><xsl:value-of select="$MeasSystems"/></a></li>
@@ -389,6 +391,9 @@
     <xsl:call-template name="DevIface">
         <xsl:with-param name="Prosa" select="document(concat($ProsaFolder, 'dev-iface.html'))"/>
     </xsl:call-template>
+
+    <h1 id="SystemCmds"><xsl:value-of select="$SystemCmds"/></h1>
+    <xsl:call-template name="SystemCmds"/>
 
     <h1 id="ScpiStandardCmds"><xsl:value-of select="$ScpiStandardCmds"/></h1>
     <xsl:call-template name="ScpiStandardCmds"/>

@@ -23,12 +23,13 @@
 <xsl:variable name="DeviceConnection" select="'2. Device connection'"/>
 <xsl:variable name="DeviceInfo" select="'3. Device information'"/>
 <xsl:variable name="DevIface" select="'4. Device interface'"/>
-<xsl:variable name="ScpiStandardCmds" select="'5. Standard SCPI commands'"/>
-<xsl:variable name="MeasSystemsChapterNo" select="'6'"/>
+<xsl:variable name="SystemCmds" select="'5. System commands'"/>
+<xsl:variable name="ScpiStandardCmds" select="'6. Standard SCPI commands'"/>
+<xsl:variable name="MeasSystemsChapterNo" select="'7'"/>
 <xsl:variable name="MeasSystems" select="concat($MeasSystemsChapterNo, '. ', 'Measurement systems')"/>
-<xsl:variable name="Ranges" select="'7. Ranges'"/>
-<xsl:variable name="ErrorCalculators" select="'8. Comparison Measurements'"/>
-<xsl:variable name="Adjustment" select="'6. Adjustment Commands'"/>
+<xsl:variable name="Ranges" select="'8. Ranges'"/>
+<xsl:variable name="ErrorCalculators" select="'9. Comparison Measurements'"/>
+<xsl:variable name="Adjustment" select="'7. Adjustment Commands'"/>
 
 <!-- Measurement sub-chapter headings -->
 <xsl:variable name="PhaseValues" select="'Phase amplitudes and angles'"/>
