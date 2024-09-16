@@ -9,6 +9,9 @@ class test_change_session : public QObject
     Q_OBJECT
 private slots:
     void initTestCase();
+    void changeToUnavailableSession();
+    void changeToSameSession();
+
     void changeSessionMt310s2FromComponent();
     void changeSessionMt310s2SCPICmd();
 

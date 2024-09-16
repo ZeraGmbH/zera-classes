@@ -21,6 +21,46 @@ void test_change_session::initTestCase()
     qputenv("QT_FATAL_CRITICALS", "1");
 }
 
+void test_change_session::changeToUnavailableSession()
+{
+    TestLicenseSystem licenseSystem;
+    ModuleManagerSetupFacade modManSetupFacade(&licenseSystem);
+
+    TestModuleManager modMan(&modManSetupFacade, m_serviceInterfaceFactory);
+    modMan.loadAllAvailableModulePlugins();
+    modMan.setupConnections();
+    modMan.startAllTestServices("mt310s2", false);
+    modMan.changeSessionFile("mt310s2-meas-session.json");
+    modMan.waitUntilModulesAreReady();
+
+    QVariant oldValue = modManSetupFacade.getStorageSystem()->getStoredValue(systemEntityId, "Session");
+    QEvent* event = VfClientComponentSetter::generateEvent(systemEntityId, "Session", oldValue, "XYZ");
+    emit modManSetupFacade.getStorageSystem()->sigSendEvent(event); // could be any event system
+    modMan.waitUntilModulesAreReady();
+    QCOMPARE(modManSetupFacade.getStorageSystem()->getStoredValue(systemEntityId, "Session").toString(), QString("mt310s2-meas-session.json"));
+    modMan.destroyModulesAndWaitUntilAllShutdown();
+}
+
+void test_change_session::changeToSameSession()
+{
+    TestLicenseSystem licenseSystem;
+    ModuleManagerSetupFacade modManSetupFacade(&licenseSystem);
+
+    TestModuleManager modMan(&modManSetupFacade, m_serviceInterfaceFactory);
+    modMan.loadAllAvailableModulePlugins();
+    modMan.setupConnections();
+    modMan.startAllTestServices("mt310s2", false);
+    modMan.changeSessionFile("mt310s2-meas-session.json");
+    modMan.waitUntilModulesAreReady();
+
+    QVariant oldValue = modManSetupFacade.getStorageSystem()->getStoredValue(systemEntityId, "Session");
+    QEvent* event = VfClientComponentSetter::generateEvent(systemEntityId, "Session", oldValue, "mt310s2-meas-session.json");
+    emit modManSetupFacade.getStorageSystem()->sigSendEvent(event); // could be any event system
+    modMan.waitUntilModulesAreReady();
+    QCOMPARE(modManSetupFacade.getStorageSystem()->getStoredValue(systemEntityId, "Session").toString(), QString("mt310s2-meas-session.json"));
+    modMan.destroyModulesAndWaitUntilAllShutdown();
+}
+
 void test_change_session::changeSessionMt310s2FromComponent()
 {
     TestLicenseSystem licenseSystem;
