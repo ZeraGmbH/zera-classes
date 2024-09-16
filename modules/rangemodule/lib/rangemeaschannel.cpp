@@ -883,6 +883,16 @@ void cRangeMeasChannel::setActionErrorcount(int Count)
     m_ActionErrorcountHash[setmeaschannelrange] = Count;
 }
 
+void cRangeMeasChannel::setInvertedPhaseState(bool inverted)
+{
+    m_invertedPhase = inverted;
+}
+
+bool cRangeMeasChannel::getInvertedPhaseState()
+{
+    return m_invertedPhase;
+}
+
 void cRangeMeasChannel::rmConnect()
 {
     // we instantiate a working resource manager interface first
