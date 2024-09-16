@@ -91,6 +91,9 @@ public:
     double getPeakValueWithDc() const;
     void setPeakValueWithDc(double peakValueWithDc);
 
+    void setInvertedPhaseState(bool inverted);
+    bool getInvertedPhaseState();
+
 signals:
     void cmdDone(quint32 cmdnr); // to signal we are ready
     void newRangeList(); // if the channel has read new range list after async. notification
@@ -115,6 +118,7 @@ private:
     double m_fOffsetCorrection;
     quint32 m_nStatus;
     QString m_sRangeListAlias; // all range alias: alias1;alias2 ....
+    bool m_invertedPhase;
 
     // statemachine for activating a rangemeaschannel
     QState m_rmConnectState; // we must connect first to resource manager

@@ -45,6 +45,7 @@ signals:
     void finishStateMachine();
 private:
     double getIgnoreRmsCorrFactor();
+    QString getInitialInvertedPhasesSelection();
 
     cRangeModule* m_pModule; // the module we live in
     cSocket* m_pDSPSocket;
@@ -67,6 +68,7 @@ private:
     VfModuleComponent *m_pAdjustmentInfo;
     VfModuleParameter *m_ParIgnoreRmsValues;
     VfModuleParameter *m_ParIgnoreRmsValuesOnOff;
+    VfModuleParameter *m_ParInvertedPhases;
 
     // statemachine for activating gets the following states
     QState m_pcbserverConnectState;
@@ -135,6 +137,9 @@ private slots:
 
     void parIgnoreRmsValuesOnOffChanged(QVariant newValue);
     void parIgnoreRmsValuesChanged(QVariant newValue);
+
+    void parInvertedPhaseStateChanged(QVariant newValue);
+
 };
 
 }

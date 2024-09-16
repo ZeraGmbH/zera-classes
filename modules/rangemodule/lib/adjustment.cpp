@@ -1,6 +1,7 @@
 #include "adjustment.h"
 #include "boolvalidator.h"
 #include "doublevalidator.h"
+#include "regexvalidator.h"
 #include "rangemodule.h"
 #include "rangemeaschannel.h"
 #include "rangemodulemeasprogram.h"
@@ -137,6 +138,16 @@ void cAdjustManagement::generateInterface()
     m_ParIgnoreRmsValues->setUnit("%");
     m_ParIgnoreRmsValues->setSCPIInfo(new cSCPIInfo("CONFIGURATION","IGNORERMSVAL", "10", m_ParIgnoreRmsValues->getName(), "0", m_ParIgnoreRmsValues->getUnit()));
     connect(m_ParIgnoreRmsValues, &VfModuleParameter::sigValueChanged, this, &cAdjustManagement::parIgnoreRmsValuesChanged);
+
+    m_ParInvertedPhases = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
+                                                         QString("PAR_InvertPhases"),
+                                                         QString("Inverted Phases selection mask"),
+                                                         QVariant(getInitialInvertedPhasesSelection()));
+    QString invertedPhaseValidatorStr = "\\b(0|1){" + QString::number(m_ChannelList.length()) + "}\\b";
+    m_ParInvertedPhases->setValidator(new cRegExValidator(invertedPhaseValidatorStr));
+    m_pModule->m_veinModuleParameterMap["PAR_InvertPhases"] = m_ParInvertedPhases; // for modules use
+    connect(m_ParInvertedPhases, &VfModuleParameter::sigValueChanged, this, &cAdjustManagement::parInvertedPhaseStateChanged);
+
 }
 
 
@@ -315,6 +326,14 @@ double cAdjustManagement::getIgnoreRmsCorrFactor()
             ignoreRmsCorrFactor = 1e-10;
     }
     return ignoreRmsCorrFactor;
+}
+
+QString cAdjustManagement::getInitialInvertedPhasesSelection()
+{
+    QString initialPhaseState;
+    for(int i=0; i<m_ChannelList.length(); i++)
+        initialPhaseState.append("0");
+    return initialPhaseState;
 }
 
 
@@ -507,6 +526,13 @@ void cAdjustManagement::parIgnoreRmsValuesChanged(QVariant newValue)
 {
     m_adjustmentConfig->m_ignoreRmsValuesThreshold.m_fValue = newValue.toDouble();
     emit m_pModule->parameterChanged();
+}
+
+void cAdjustManagement::parInvertedPhaseStateChanged(QVariant newValue)
+{
+    QString invertedPhaseStates = newValue.toString();
+    for(int i = 0; i < invertedPhaseStates.length(); i++)
+        invertedPhaseStates[i] == "1" ? m_ChannelList[i]->setInvertedPhaseState(true) : m_ChannelList[i]->setInvertedPhaseState(false);
 }
 
 }
