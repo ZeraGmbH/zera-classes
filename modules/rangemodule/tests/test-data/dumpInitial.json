@@ -371,6 +371,86 @@
                         "Type": "BOOL"
                     }
                 },
+                "PAR_InvertPhase1": {
+                    "Description": "Inverted Phase",
+                    "Validation": {
+                        "Data": [
+                            0,
+                            1
+                        ],
+                        "Type": "BOOL"
+                    }
+                },
+                "PAR_InvertPhase2": {
+                    "Description": "Inverted Phase",
+                    "Validation": {
+                        "Data": [
+                            0,
+                            1
+                        ],
+                        "Type": "BOOL"
+                    }
+                },
+                "PAR_InvertPhase3": {
+                    "Description": "Inverted Phase",
+                    "Validation": {
+                        "Data": [
+                            0,
+                            1
+                        ],
+                        "Type": "BOOL"
+                    }
+                },
+                "PAR_InvertPhase4": {
+                    "Description": "Inverted Phase",
+                    "Validation": {
+                        "Data": [
+                            0,
+                            1
+                        ],
+                        "Type": "BOOL"
+                    }
+                },
+                "PAR_InvertPhase5": {
+                    "Description": "Inverted Phase",
+                    "Validation": {
+                        "Data": [
+                            0,
+                            1
+                        ],
+                        "Type": "BOOL"
+                    }
+                },
+                "PAR_InvertPhase6": {
+                    "Description": "Inverted Phase",
+                    "Validation": {
+                        "Data": [
+                            0,
+                            1
+                        ],
+                        "Type": "BOOL"
+                    }
+                },
+                "PAR_InvertPhase7": {
+                    "Description": "Inverted Phase",
+                    "Validation": {
+                        "Data": [
+                            0,
+                            1
+                        ],
+                        "Type": "BOOL"
+                    }
+                },
+                "PAR_InvertPhase8": {
+                    "Description": "Inverted Phase",
+                    "Validation": {
+                        "Data": [
+                            0,
+                            1
+                        ],
+                        "Type": "BOOL"
+                    }
+                },
                 "PAR_Overload": {
                     "Description": "Overload",
                     "Validation": {
@@ -724,6 +804,14 @@
         "PAR_ChannelGrouping": 1,
         "PAR_IgnoreRmsValues": 1,
         "PAR_IgnoreRmsValuesOnOff": 0,
+        "PAR_InvertPhase1": 0,
+        "PAR_InvertPhase2": 0,
+        "PAR_InvertPhase3": 0,
+        "PAR_InvertPhase4": 0,
+        "PAR_InvertPhase5": 0,
+        "PAR_InvertPhase6": 0,
+        "PAR_InvertPhase7": 0,
+        "PAR_InvertPhase8": 0,
         "PAR_Overload": 0,
         "PAR_PreScalingEnabledGroup0": 0,
         "PAR_PreScalingEnabledGroup1": 0,

@@ -68,7 +68,7 @@ private:
     VfModuleComponent *m_pAdjustmentInfo;
     VfModuleParameter *m_ParIgnoreRmsValues;
     VfModuleParameter *m_ParIgnoreRmsValuesOnOff;
-    VfModuleParameter *m_ParInvertedPhases;
+    QList<VfModuleParameter*> m_invertedPhasesParList;
 
     // statemachine for activating gets the following states
     QState m_pcbserverConnectState;
