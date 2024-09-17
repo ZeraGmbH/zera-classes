@@ -118,7 +118,7 @@ private:
     double m_fOffsetCorrection;
     quint32 m_nStatus;
     QString m_sRangeListAlias; // all range alias: alias1;alias2 ....
-    bool m_invertedPhase;
+    bool m_invertedPhase = false;
 
     // statemachine for activating a rangemeaschannel
     QState m_rmConnectState; // we must connect first to resource manager

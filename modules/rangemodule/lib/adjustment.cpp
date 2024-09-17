@@ -1,7 +1,6 @@
 #include "adjustment.h"
 #include "boolvalidator.h"
 #include "doublevalidator.h"
-#include "regexvalidator.h"
 #include "rangemodule.h"
 #include "rangemeaschannel.h"
 #include "rangemodulemeasprogram.h"
@@ -139,15 +138,18 @@ void cAdjustManagement::generateInterface()
     m_ParIgnoreRmsValues->setSCPIInfo(new cSCPIInfo("CONFIGURATION","IGNORERMSVAL", "10", m_ParIgnoreRmsValues->getName(), "0", m_ParIgnoreRmsValues->getUnit()));
     connect(m_ParIgnoreRmsValues, &VfModuleParameter::sigValueChanged, this, &cAdjustManagement::parIgnoreRmsValuesChanged);
 
-    m_ParInvertedPhases = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
-                                                         QString("PAR_InvertPhases"),
-                                                         QString("Inverted Phases selection mask"),
-                                                         QVariant(getInitialInvertedPhasesSelection()));
-    QString invertedPhaseValidatorStr = "\\b(0|1){" + QString::number(m_ChannelList.length()) + "}\\b";
-    m_ParInvertedPhases->setValidator(new cRegExValidator(invertedPhaseValidatorStr));
-    m_pModule->m_veinModuleParameterMap["PAR_InvertPhases"] = m_ParInvertedPhases; // for modules use
-    connect(m_ParInvertedPhases, &VfModuleParameter::sigValueChanged, this, &cAdjustManagement::parInvertedPhaseStateChanged);
-
+    VfModuleParameter *pParameter;
+    QString key;
+    for (int i = 0; i < m_ChannelNameList.count(); i++) {
+        pParameter = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
+                                           key = QString("PAR_InvertPhase%1").arg(i+1),
+                                           QString("Inverted Phase"),
+                                           QVariant(0));
+        pParameter->setValidator(new cBoolValidator());
+        m_pModule->m_veinModuleParameterMap[key] = pParameter; // for modules use
+        m_invertedPhasesParList.append(pParameter);
+        connect(pParameter, &VfModuleParameter::sigValueChanged, this, &cAdjustManagement::parInvertedPhaseStateChanged);
+    }
 }
 
 
@@ -530,9 +532,9 @@ void cAdjustManagement::parIgnoreRmsValuesChanged(QVariant newValue)
 
 void cAdjustManagement::parInvertedPhaseStateChanged(QVariant newValue)
 {
-    QString invertedPhaseStates = newValue.toString();
-    for(int i = 0; i < invertedPhaseStates.length(); i++)
-        invertedPhaseStates[i] == "1" ? m_ChannelList[i]->setInvertedPhaseState(true) : m_ChannelList[i]->setInvertedPhaseState(false);
+    VfModuleParameter *pParameter = qobject_cast<VfModuleParameter*>(sender()); // get sender of updated signal
+    int index = m_invertedPhasesParList.indexOf(pParameter); // which channel is it
+    m_ChannelList[index]->setInvertedPhaseState(newValue.toBool());
 }
 
 }
