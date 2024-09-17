@@ -231,8 +231,10 @@ void cAdjustManagement::activationDone()
     m_AdjustTimer->start();
     connect(m_AdjustTimer.get(), &TimerTemplateQt::sigExpired, this, &cAdjustManagement::adjustPrepare);
     m_fGainKeeperForFakingRmsValues.resize(32); //prepared for 32 dsp channels
-    for(int i = 0; i < m_ChannelList.count(); i++)
+    for(int i = 0; i < m_ChannelList.count(); i++) {
         m_fGainKeeperForFakingRmsValues[m_ChannelList.at(i)->getDSPChannelNr()] = 1;
+        m_invertedPhasesParList.at(i)->setSCPIInfo(new cSCPIInfo("CONFIGURATION",QString("%1:INVERTPHASE").arg(m_ChannelList.at(i)->getAlias()), "10", m_invertedPhasesParList.at(i)->getName(), "0", ""));
+    }
     m_bActive = true;
     emit activated();
 }

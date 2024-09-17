@@ -771,6 +771,70 @@
                         ""
                     ],
                     [
+                        "CONFIGURATION",
+                        "UL1:INVERTPHASE",
+                        "10",
+                        "PAR_InvertPhase1",
+                        "0",
+                        ""
+                    ],
+                    [
+                        "CONFIGURATION",
+                        "UL2:INVERTPHASE",
+                        "10",
+                        "PAR_InvertPhase2",
+                        "0",
+                        ""
+                    ],
+                    [
+                        "CONFIGURATION",
+                        "UL3:INVERTPHASE",
+                        "10",
+                        "PAR_InvertPhase3",
+                        "0",
+                        ""
+                    ],
+                    [
+                        "CONFIGURATION",
+                        "IL1:INVERTPHASE",
+                        "10",
+                        "PAR_InvertPhase4",
+                        "0",
+                        ""
+                    ],
+                    [
+                        "CONFIGURATION",
+                        "IL2:INVERTPHASE",
+                        "10",
+                        "PAR_InvertPhase5",
+                        "0",
+                        ""
+                    ],
+                    [
+                        "CONFIGURATION",
+                        "IL3:INVERTPHASE",
+                        "10",
+                        "PAR_InvertPhase6",
+                        "0",
+                        ""
+                    ],
+                    [
+                        "CONFIGURATION",
+                        "UAUX:INVERTPHASE",
+                        "10",
+                        "PAR_InvertPhase7",
+                        "0",
+                        ""
+                    ],
+                    [
+                        "CONFIGURATION",
+                        "IAUX:INVERTPHASE",
+                        "10",
+                        "PAR_InvertPhase8",
+                        "0",
+                        ""
+                    ],
+                    [
                         "SENSE",
                         "OVERLOAD",
                         "10",
