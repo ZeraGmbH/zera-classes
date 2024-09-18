@@ -45,7 +45,6 @@ signals:
     void finishStateMachine();
 private:
     double getIgnoreRmsCorrFactor();
-    QString getInitialInvertedPhasesSelection();
 
     cRangeModule* m_pModule; // the module we live in
     cSocket* m_pDSPSocket;

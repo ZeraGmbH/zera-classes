@@ -41,6 +41,7 @@ struct adjustConfPar
     double m_fAdjInterval; // adjustment interval 0.5 .. 5.0 sec.
     boolParameter m_ignoreRmsValuesEnable;
     doubleParameter m_ignoreRmsValuesThreshold;
+    QList<boolParameter> m_senseChannelInvertParameter;
 };
 
 class cRangeModuleConfigData

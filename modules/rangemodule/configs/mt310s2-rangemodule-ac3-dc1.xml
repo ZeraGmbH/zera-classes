@@ -70,27 +70,35 @@
         <sense>
             <m0>
                 <range>250V</range>
+                <invert>0</invert>
             </m0>
             <m1>
                 <range>250V</range>
+                <invert>0</invert>
             </m1>
             <m2>
                 <range>250V</range>
+                <invert>0</invert>
             </m2>
             <m3>
                 <range>10A</range>
+                <invert>0</invert>
             </m3>
             <m4>
                 <range>10A</range>
+                <invert>0</invert>
             </m4>
             <m5>
                 <range>10A</range>
+                <invert>0</invert>
             </m5>
             <m6>
                 <range>250V</range>
+                <invert>0</invert>
             </m6>
             <m7>
                 <range>0A</range>
+                <invert>0</invert>
             </m7>
             <grouping>1</grouping>
             <rangeauto>0</rangeauto>

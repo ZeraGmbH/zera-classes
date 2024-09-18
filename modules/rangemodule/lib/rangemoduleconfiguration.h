@@ -35,9 +35,10 @@ enum moduleconfigstate
     setSenseChannel1 = 72, // dito
     setSubdcChannel1 = 104, // dito
     setExtendChannel1 = 136, // dito
+    setInvertChannel1 = 168, // dito
 
-    setGroup1ChannelCount = 168, // max. 10 groups
-    setGroup1Channel1 = 146
+    setGroup1ChannelCount = 222, // max. 10 groups
+    setGroup1Channel1 = 200
 };
 
 

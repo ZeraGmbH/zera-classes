@@ -9,6 +9,7 @@ class test_range_config_load : public QObject
 private slots:
     void fileFound();
     void allFilesLoaded();
+    void invertPhaseStateLoaded();
 };
 
 #endif // TEST_ADJ_CONFIG_LOAD_H

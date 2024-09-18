@@ -213,6 +213,7 @@
     <xs:complexType name="parametersensechanneltype">
         <xs:sequence>
             <xs:element name="range" type="xs:string"/>
+            <xs:element name="invert" type="yesnotype"/>
         </xs:sequence>
     </xs:complexType>
 

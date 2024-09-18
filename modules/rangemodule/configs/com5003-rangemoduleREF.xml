@@ -74,21 +74,27 @@
         <sense>
             <m0>
                 <range>R10V</range>
+                <invert>0</invert>
             </m0>
             <m1>
                 <range>R10V</range>
+                <invert>0</invert>
             </m1>
             <m2>
                 <range>R10V</range>
+                <invert>0</invert>
             </m2>
             <m3>
                 <range>R10V</range>
+                <invert>0</invert>
             </m3>
             <m4>
                 <range>R10V</range>
+                <invert>0</invert>
             </m4>
             <m5>
                 <range>R10V</range>
+                <invert>0</invert>
             </m5>
             <grouping>1</grouping>
             <rangeauto>0</rangeauto>

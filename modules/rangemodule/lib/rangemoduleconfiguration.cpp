@@ -77,10 +77,16 @@ QByteArray cRangeModuleConfiguration::exportConfiguration()
 
     stringParameter sPar;
     QList<stringParameter> sParList = m_pRangeModulConfigData->m_ObsermaticConfPar.m_senseChannelRangeParameter;
+
+    boolParameter invertPhaseState;
+    QList<boolParameter> invertPhaseStateList = m_pRangeModulConfigData->m_adjustConfPar.m_senseChannelInvertParameter;
     for (int i = 0; i < sParList.count(); i++)
     {
         sPar = sParList.at(i);
         m_pXMLReader->setValue(sPar.m_sKey, sPar.m_sPar);
+
+        invertPhaseState = invertPhaseStateList.at(i);
+        m_pXMLReader->setValue(invertPhaseState.m_sKey, QString("%1").arg(invertPhaseState.m_nActive));
     }
 
     bPar = &m_pRangeModulConfigData->m_adjustConfPar.m_ignoreRmsValuesEnable;
@@ -139,11 +145,13 @@ void cRangeModuleConfiguration::configXMLInfo(QString key)
             m_pRangeModulConfigData->m_nChannelCount = m_pXMLReader->getValue(key).toInt(&ok);
             // here we generate dynamic hash entries for channel configuration
             stringParameter sParam;
+            boolParameter bParam;
             for (int i = 0; i < m_pRangeModulConfigData->m_nChannelCount; i++)
             {
                 m_ConfigXMLMap[QString("rangemodconfpar:configuration:sense:channel:ch%1").arg(i+1)] = setSenseChannel1+i;
                 // m_senseChannelRangeList.append("");
                 m_pRangeModulConfigData->m_ObsermaticConfPar.m_senseChannelRangeParameter.append(sParam);
+                m_pRangeModulConfigData->m_adjustConfPar.m_senseChannelInvertParameter.append(bParam);
             }
             break;
         }
@@ -202,6 +210,17 @@ void cRangeModuleConfiguration::configXMLInfo(QString key)
             }
             else
 
+            if ((cmd >= setInvertChannel1) && (cmd < setInvertChannel1 + 32))
+            {
+                cmd -= setInvertChannel1;
+                //m_pRangeModulConfigData->m_senseChannelRangeList.replace(cmd, m_pXMLReader->getValue(key));
+                boolParameter bParam;
+                bParam.m_sKey = key;
+                bParam.m_nActive = m_pXMLReader->getValue(key).toInt(&ok);
+                m_pRangeModulConfigData->m_adjustConfPar.m_senseChannelInvertParameter.replace(cmd, bParam);
+            }
+            else
+
             if ((cmd >= setSenseChannel1) && (cmd < setSenseChannel1 + m_pRangeModulConfigData->m_nChannelCount))
             {
                 cmd -= setSenseChannel1;
@@ -209,6 +228,7 @@ void cRangeModuleConfiguration::configXMLInfo(QString key)
                 QString senseChannel = m_pXMLReader->getValue(key);
                 m_pRangeModulConfigData->m_senseChannelList.append(senseChannel); // for configuration of our engine
                 m_ConfigXMLMap[QString("rangemodconfpar:parameter:sense:%1:range").arg(senseChannel)] = setDefaultRange1+cmd;
+                m_ConfigXMLMap[QString("rangemodconfpar:parameter:sense:%1:invert").arg(senseChannel)] = setInvertChannel1+cmd;
             }
 
             if ((cmd >= setSubdcChannel1) && (cmd < setSubdcChannel1 + m_pRangeModulConfigData->m_nSubDCCount))
