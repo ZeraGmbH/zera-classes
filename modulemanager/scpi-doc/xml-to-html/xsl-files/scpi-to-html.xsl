@@ -426,6 +426,7 @@
           <xsl:with-param name="MeasSystem" select="'POW'"/>
           <xsl:with-param name="PerSystemHeader" select="$PowerModule"/>
           <xsl:with-param name="Prosa" select="document($prosaFile)"/>
+          <xsl:with-param name="CatalogPresent" select="'true'"/>
         </xsl:call-template>
       </xsl:if>
 
