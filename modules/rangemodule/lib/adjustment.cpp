@@ -305,6 +305,8 @@ void cAdjustManagement::prepareGainCorrForDspServer()
     {
         measChannel = m_ChannelList.at(m_nChannelIt);
         fCorr = measChannel->getGainCorrection();
+        if (measChannel->getInvertedPhaseState())
+            fCorr = fCorr * -1;
         m_fGainCorr[measChannel->getDSPChannelNr()] = fCorr*getIgnoreRmsCorrFactor();
         m_fGainKeeperForFakingRmsValues[measChannel->getDSPChannelNr()] = getIgnoreRmsCorrFactor();
         m_nChannelIt++;
