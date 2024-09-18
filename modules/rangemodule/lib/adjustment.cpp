@@ -144,7 +144,7 @@ void cAdjustManagement::generateInterface()
         pParameter = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
                                            key = QString("PAR_InvertPhase%1").arg(i+1),
                                            QString("Inverted Phase"),
-                                           QVariant(0));
+                                           QVariant(m_adjustmentConfig->m_senseChannelInvertParameter[i].m_nActive));
         pParameter->setValidator(new cBoolValidator());
         m_pModule->m_veinModuleParameterMap[key] = pParameter; // for modules use
         m_invertedPhasesParList.append(pParameter);
@@ -333,15 +333,6 @@ double cAdjustManagement::getIgnoreRmsCorrFactor()
     }
     return ignoreRmsCorrFactor;
 }
-
-QString cAdjustManagement::getInitialInvertedPhasesSelection()
-{
-    QString initialPhaseState;
-    for(int i=0; i<m_ChannelList.length(); i++)
-        initialPhaseState.append("0");
-    return initialPhaseState;
-}
-
 
 void cAdjustManagement::getPhaseCorrFromPcbServer()
 {
@@ -539,6 +530,8 @@ void cAdjustManagement::parInvertedPhaseStateChanged(QVariant newValue)
     VfModuleParameter *pParameter = qobject_cast<VfModuleParameter*>(sender()); // get sender of updated signal
     int index = m_invertedPhasesParList.indexOf(pParameter); // which channel is it
     m_ChannelList[index]->setInvertedPhaseState(newValue.toBool());
+    m_adjustmentConfig->m_senseChannelInvertParameter[index].m_nActive = newValue.toUInt();
+    emit m_pModule->parameterChanged();
 }
 
 }
