@@ -199,8 +199,7 @@ void cRangeModuleConfiguration::configXMLInfo(QString key)
             m_pRangeModulConfigData->m_adjustConfPar.m_ignoreRmsValuesThreshold.m_fValue = m_pXMLReader->getValue(key).toDouble(&ok);
             break;
         default:
-            if ((cmd >= setDefaultRange1) && (cmd < setDefaultRange1 + 32))
-            {
+            if ((cmd >= setDefaultRange1) && (cmd < setDefaultRange1 + 32)) {
                 cmd -= setDefaultRange1;
                 //m_pRangeModulConfigData->m_senseChannelRangeList.replace(cmd, m_pXMLReader->getValue(key));
                 stringParameter sParam;
@@ -208,10 +207,7 @@ void cRangeModuleConfiguration::configXMLInfo(QString key)
                 sParam.m_sPar = m_pXMLReader->getValue(key);
                 m_pRangeModulConfigData->m_ObsermaticConfPar.m_senseChannelRangeParameter.replace(cmd, sParam);
             }
-            else
-
-            if ((cmd >= setInvertChannel1) && (cmd < setInvertChannel1 + 32))
-            {
+            else if ((cmd >= setInvertChannel1) && (cmd < setInvertChannel1 + 32)) {
                 cmd -= setInvertChannel1;
                 //m_pRangeModulConfigData->m_senseChannelRangeList.replace(cmd, m_pXMLReader->getValue(key));
                 boolParameter bParam;
@@ -219,10 +215,7 @@ void cRangeModuleConfiguration::configXMLInfo(QString key)
                 bParam.m_nActive = m_pXMLReader->getValue(key).toInt(&ok);
                 m_pRangeModulConfigData->m_adjustConfPar.m_senseChannelInvertParameter.replace(cmd, bParam);
             }
-            else
-
-            if ((cmd >= setSenseChannel1) && (cmd < setSenseChannel1 + m_pRangeModulConfigData->m_nChannelCount))
-            {
+            else if ((cmd >= setSenseChannel1) && (cmd < setSenseChannel1 + m_pRangeModulConfigData->m_nChannelCount)) {
                 cmd -= setSenseChannel1;
                 // it is command for setting channel name
                 QString senseChannel = m_pXMLReader->getValue(key);
@@ -230,34 +223,28 @@ void cRangeModuleConfiguration::configXMLInfo(QString key)
                 m_ConfigXMLMap[QString("rangemodconfpar:parameter:sense:%1:range").arg(senseChannel)] = setDefaultRange1+cmd;
                 m_ConfigXMLMap[QString("rangemodconfpar:parameter:sense:%1:invert").arg(senseChannel)] = setInvertChannel1+cmd;
             }
-
-            if ((cmd >= setSubdcChannel1) && (cmd < setSubdcChannel1 + m_pRangeModulConfigData->m_nSubDCCount))
-            {
+            else if ((cmd >= setSubdcChannel1) && (cmd < setSubdcChannel1 + m_pRangeModulConfigData->m_nSubDCCount)) {
                 cmd -= setSubdcChannel1;
                 // it is command for setting subdc channel name
                 QString subdcChannel = m_pXMLReader->getValue(key);
                 m_pRangeModulConfigData->m_subdcChannelList.append(subdcChannel); // for configuration of our engine
             }
-
-            else
-
-            if ((cmd >= setGroup1ChannelCount) && (cmd < (setGroup1ChannelCount+ m_pRangeModulConfigData->m_nGroupCount)))
-            {   // it is cmd for setting groupx channel count
+            else if ((cmd >= setGroup1ChannelCount) && (cmd < (setGroup1ChannelCount+ m_pRangeModulConfigData->m_nGroupCount))) {
+                // it is cmd for setting groupx channel count
                 cmd -= setGroup1ChannelCount;
                 m_pRangeModulConfigData->m_GroupCountList.replace(cmd , m_pXMLReader->getValue(key).toInt(&ok));
                 for (int i = 0; i < m_pRangeModulConfigData->m_GroupCountList.at(cmd); i++) // create hash entries for setting channels in this group
                     m_ConfigXMLMap[QString("rangemodconfpar:configuration:sense:group:gr%1:ch%2").arg(cmd+1).arg(i+1)] = setGroup1Channel1 +(cmd << 5) +i;
             }
-
-            else
-
-            for (int i = 0; i < m_pRangeModulConfigData->m_nGroupCount; i++)
-                if ((cmd >= setGroup1Channel1 + (i << 5)) && (cmd < (setGroup1Channel1+ (i << 5) + 32)))
-                {
-                    QStringList sl = m_pRangeModulConfigData->m_GroupList.at(i);
-                    sl.append(m_pXMLReader->getValue(key));
-                    m_pRangeModulConfigData->m_GroupList.replace(i, sl);
+            else {
+                for (int i = 0; i < m_pRangeModulConfigData->m_nGroupCount; i++) {
+                    if ((cmd >= setGroup1Channel1 + (i << 5)) && (cmd < (setGroup1Channel1+ (i << 5) + 32))) {
+                        QStringList sl = m_pRangeModulConfigData->m_GroupList.at(i);
+                        sl.append(m_pXMLReader->getValue(key));
+                        m_pRangeModulConfigData->m_GroupList.replace(i, sl);
+                    }
                 }
+            }
         }
         m_bConfigError |= !ok;
     }
