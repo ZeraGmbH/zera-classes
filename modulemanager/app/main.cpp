@@ -150,9 +150,9 @@ int main(int argc, char *argv[])
         modMan->startAllDemoServices(demoDeviceName);
 
     // setup vein modules
-    VeinLogger::DatabaseLogger *dataLoggerSystem = new VeinLogger::DatabaseLogger(modManSetupFacade->getStorageSystem(), sqliteFactory, app.get());
+    /*VeinLogger::DatabaseLogger *dataLoggerSystem = new VeinLogger::DatabaseLogger(modManSetupFacade->getStorageSystem(), sqliteFactory, app.get());
     CustomerDataSystem *customerDataSystem = nullptr;
-    vfExport::vf_export *exportModule=new vfExport::vf_export();
+    vfExport::vf_export *exportModule=new vfExport::vf_export();*/
 
     QStringList allowedFolders{QStringLiteral(MODMAN_CUSTOMERDATA_PATH),
                                QStringLiteral(MODMAN_AUTOMOUNT_PATH),
@@ -164,7 +164,7 @@ int main(int argc, char *argv[])
     VeinLogger::LoggerContentSetConfig::setJsonEnvironment(MODMAN_CONTENTSET_PATH, std::make_shared<JsonLoggerContentLoader>());
     VeinLogger::LoggerContentSetConfig::setJsonEnvironment(MODMAN_SESSION_PATH, std::make_shared<JsonLoggerContentSessionLoader>());
 
-    auto errorReportFunction = [dataLoggerSystem](const QString &t_error){
+    /*auto errorReportFunction = [dataLoggerSystem](const QString &t_error){
         QJsonObject jsonErrorObj;
 
         jsonErrorObj.insert("ModuleName", "DataLogger");
@@ -182,7 +182,7 @@ int main(int argc, char *argv[])
 
         emit dataLoggerSystem->sigSendEvent(new VeinEvent::CommandEvent(VeinEvent::CommandEvent::EventSubtype::TRANSACTION, cData));
     };
-    QObject::connect(dataLoggerSystem, &VeinLogger::DatabaseLogger::sigDatabaseError, errorReportFunction);
+    QObject::connect(dataLoggerSystem, &VeinLogger::DatabaseLogger::sigDatabaseError, errorReportFunction);*/
 
 
     // files entity
@@ -210,7 +210,7 @@ int main(int argc, char *argv[])
 
     //conditional systems
     bool customerDataSystemInitialized = false;
-    if(customerdataSystemEnabled)
+    /*if(customerdataSystemEnabled)
     {
         QObject::connect(licenseSystem, &LicenseSystem::sigSerialNumberInitialized, [&]() {
             if(licenseSystem->isSystemLicensed(CustomerDataSystem::s_entityName) && !customerDataSystemInitialized)
@@ -241,12 +241,12 @@ int main(int argc, char *argv[])
             }
         }
     });
-
+    */
     modMan->setupConnections();
-    QObject::connect(modMan, &ZeraModules::ModuleManager::sigSessionSwitched, [&dataLoggerSystem]() {
+    /*QObject::connect(modMan, &ZeraModules::ModuleManager::sigSessionSwitched, [&dataLoggerSystem]() {
         //disable logging to prevent data logging between session switching
         dataLoggerSystem->setLoggingEnabled(false);
-    });
+    });*/
 
     bool modulesFound = modMan->loadAllAvailableModulePlugins();
     if(!modulesFound) {

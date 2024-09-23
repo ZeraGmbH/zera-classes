@@ -4,7 +4,7 @@
   "mt310s2" : {
     "availableSessions" : ["mt310s2-meas-session.json", "mt310s2-emob-session-ac.json", "mt310s2-emob-session-dc.json", "mt310s2-dc-session.json"],
     "sessionDisplayStrings" : ["Default", "EMOB AC", "EMOB DC", "DC: 4*Voltage / 1*Current"],
-    "defaultSession" : "mt310s2-meas-session.json",
+    "defaultSession" : "mt310s2-emob-session-ac.json",
     "customerdataSystemEnabled" : true
   },
   "com5003" : {
