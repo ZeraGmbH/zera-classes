@@ -10,7 +10,7 @@ QJsonObject JsonTimeGrouping::regroupTimestamp(QJsonObject json)
 }
 
 static const char* JsonDateTimeFormat = "dd-MM-yyyy hh:mm:ss.zzz";
-static const qint64 maxTimeDiffMs = 20;
+static const qint64 maxTimeDiffMs = 100;
 
 QMap<qint64, QJsonObject> JsonTimeGrouping::jsonToMsSinceEpochValuesMap(const QJsonObject &json)
 {
