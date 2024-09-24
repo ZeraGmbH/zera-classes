@@ -2,6 +2,7 @@
 #define VEINDATACOLLECTOR_H
 
 #include <ve_storagesystem.h>
+#include <timerperiodicqt.h>
 #include <QJsonObject>
 #include <QJsonArray>
 #include <QObject>
@@ -21,7 +22,6 @@ private slots:
     void appendValue(int entityId, QString componentName, QVariant value, QString timestamp);
 
 private:
-    void convertToJsonWithTimeStamp(QString timestamp, QHash<int, QHash<QString, QVariant> > infosHash);
     QJsonObject convertToJson(QString timestamp, QHash<int, QHash<QString, QVariant> > infosHash);
     QJsonObject convertHashToJsonObject(QHash<QString, QVariant> hash);
     QJsonObject getJsonWithoutTimestamp(QString timestamp);
@@ -31,6 +31,7 @@ private:
     VeinEvent::StorageSystem* m_storage;
     QHash<int, QStringList> m_componentsKeeper;
     QJsonObject m_jsonObject;
+    TimerTemplateQtPtr m_periodicTimer;
 };
 
 #endif // VEINDATACOLLECTOR_H

@@ -1,15 +1,21 @@
 #include "veindatacollector.h"
 #include "jsontimegrouping.h"
+#include <timerfactoryqt.h>
 #include <QDateTime>
 
  VeinDataCollector::VeinDataCollector(VeinEvent::StorageSystem *storage)
     :m_storage{storage}
 {
+    m_periodicTimer = TimerFactoryQt::createPeriodic(100);
+    connect(m_periodicTimer.get(), &TimerTemplateQt::sigExpired,this, [&]{
+            emit newStoredValue(JsonTimeGrouping::regroupTimestamp(m_jsonObject));
+    });
 }
 
 void VeinDataCollector::startLogging(QHash<int, QStringList> entitesAndComponents)
 {
     clearJson();
+    m_periodicTimer->start();
     for(int& entityId: entitesAndComponents.keys()) {
         QStringList components = entitesAndComponents[entityId];
         for(QString& component: components) {
@@ -25,6 +31,7 @@ void VeinDataCollector::startLogging(QHash<int, QStringList> entitesAndComponent
 
 void VeinDataCollector::stopLogging()
 {
+    m_periodicTimer->stop();
     for(int& entityId: m_componentsKeeper.keys()) {
         QStringList components = m_componentsKeeper[entityId];
         for(QString& component : components) {
@@ -39,13 +46,7 @@ void VeinDataCollector::appendValue(int entityId, QString componentName, QVarian
 {
     QHash<int , QHash<QString, QVariant> > infosHash;
     infosHash[entityId][componentName] = value;
-    convertToJsonWithTimeStamp(timestamp, infosHash);
-}
-
-void VeinDataCollector::convertToJsonWithTimeStamp(QString timestamp, QHash<int , QHash<QString, QVariant>> infosHash)
-{
     m_jsonObject.insert(timestamp, convertToJson(timestamp, infosHash));
-    emit newStoredValue(JsonTimeGrouping::regroupTimestamp(m_jsonObject));
 }
 
 QJsonObject VeinDataCollector::convertToJson(QString timestamp, QHash<int , QHash<QString, QVariant>> infosHash)
