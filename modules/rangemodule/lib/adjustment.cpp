@@ -149,6 +149,7 @@ void cAdjustManagement::generateInterface()
         m_pModule->m_veinModuleParameterMap[key] = pParameter; // for modules use
         m_invertedPhasesParList.append(pParameter);
         connect(pParameter, &VfModuleParameter::sigValueChanged, this, &cAdjustManagement::parInvertedPhaseStateChanged);
+        m_ChannelList[i]->setInvertedPhaseState(m_adjustmentConfig->m_senseChannelInvertParameter[i].m_nActive);
     }
 }
 
