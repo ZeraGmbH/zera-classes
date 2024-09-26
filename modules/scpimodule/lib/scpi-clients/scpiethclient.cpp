@@ -37,10 +37,13 @@ QString cSCPIEthClient::getPeerAddress()
 
 void cSCPIEthClient::cmdInput()
 {
+    QString totalInput;
     while (m_pSocket->canReadLine()) {
-        QString m_sInput = m_pSocket->readLine();
-        m_sInputFifo.append(m_sInput);
+        QString inputLine = m_pSocket->readLine();
+        m_sInputFifo.append(inputLine);
+        totalInput.append(inputLine);
     }
+    qInfo("Network SCPI command input: %s", qPrintable(makeBareScpiInPrintable(totalInput)));
     testCmd();
 }
 
