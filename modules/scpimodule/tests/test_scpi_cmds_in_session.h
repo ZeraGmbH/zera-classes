@@ -16,6 +16,7 @@ private slots:
     void devIfaceVeinComponentMultipleEntities();
     void devIfaceVeinComponentMultipleEntitiesForLongXml();
     void closeSocketOnPendingWriteStbQueryNoCrasher();
+    void multilineCommandsLastOpc();
 };
 
 #endif // TEST_SCPI_CMDS_IN_SESSION_H
