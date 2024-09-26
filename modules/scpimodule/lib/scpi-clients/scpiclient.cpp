@@ -188,6 +188,15 @@ void cSCPIClient::execCmd()
     }
 }
 
+QString cSCPIClient::makeBareScpiInPrintable(const QString &input)
+{
+    QString ret = input;
+    ret.replace("\n", "\\n");
+    ret.replace("\r", "\\r");
+    ret.replace("\t", "\\t");
+    return ret;
+}
+
 QUuid cSCPIClient::getClientId()
 {
     return mClientId;

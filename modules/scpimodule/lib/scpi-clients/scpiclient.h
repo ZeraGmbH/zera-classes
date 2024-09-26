@@ -56,6 +56,7 @@ protected:
     bool cmdAvail();
     void takeCmd();
     void execCmd();
+    QString makeBareScpiInPrintable(const QString &input);
 
 private:
     cSCPIModule* m_pModule;
