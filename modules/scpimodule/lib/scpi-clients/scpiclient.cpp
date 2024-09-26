@@ -146,20 +146,22 @@ bool cSCPIClient::cmdAvail()
 
 void cSCPIClient::takeCmd()
 {
-    if (m_sInputFifo.contains('\n'))
-        endChar = '\n';
-    else
-        endChar = '\r';
-    int index = m_sInputFifo.indexOf(endChar);
-    activeCmd = m_sInputFifo.left(index);
-    activeCmd.remove('\n'); // we don't know which was the first
-    activeCmd.remove('\r');
-    activeCmd.remove('\t');
-    m_sInputFifo.remove(0, index+1);
-    if (m_sInputFifo.length() > 0) {
-        QChar firstChar = m_sInputFifo.at(0); // maybe there is still 1 end char
-        if ((firstChar == '\n') or (firstChar == '\r'))
-            m_sInputFifo.remove(0,1);
+    if(activeCmd.isEmpty()) {
+        if (m_sInputFifo.contains('\n'))
+            endChar = '\n';
+        else
+            endChar = '\r';
+        int index = m_sInputFifo.indexOf(endChar);
+        activeCmd = m_sInputFifo.left(index);
+        activeCmd.remove('\n'); // we don't know which was the first
+        activeCmd.remove('\r');
+        activeCmd.remove('\t');
+        m_sInputFifo.remove(0, index+1);
+        if (m_sInputFifo.length() > 0) {
+            QChar firstChar = m_sInputFifo.at(0); // maybe there is still 1 end char
+            if ((firstChar == '\n') or (firstChar == '\r'))
+                m_sInputFifo.remove(0,1);
+        }
     }
 }
 

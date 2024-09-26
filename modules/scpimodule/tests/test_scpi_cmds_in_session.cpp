@@ -149,3 +149,20 @@ void test_scpi_cmds_in_session::closeSocketOnPendingWriteStbQueryNoCrasher()
     currRange = clientCheck.sendReceive("SENSE:RNG1:Il1:RANGE?");
     QCOMPARE(currRange, "25mA");
 }
+
+void test_scpi_cmds_in_session::multilineCommandsLastOpc()
+{
+    ModuleManagerTestRunner testRunner(":/mt310s2-meas-session.json");
+    ScpiModuleClientBlocked client;
+    QByteArrayList commands = QByteArrayList() << "SENSE:RNG1:UL1:RANGE 8V;|SENSE:RNG1:UL2:RANGE 8V;|SENSE:RNG1:UL3:RANGE 8V;|SENSE:RNG1:UAUX:RANGE 8V;"
+                                               << "*OPC?";
+    client.sendMulti(commands);
+    TimeMachineObject::feedEventLoop();
+    QByteArrayList responses = client.receiveMulti();
+    QCOMPARE(responses.count(), 1);
+
+    QCOMPARE(client.sendReceive("SENSE:RNG1:UL1:RANGE?"), "8V");
+    QCOMPARE(client.sendReceive("SENSE:RNG1:UL2:RANGE?"), "8V");
+    QCOMPARE(client.sendReceive("SENSE:RNG1:UL3:RANGE?"), "8V");
+    QCOMPARE(client.sendReceive("SENSE:RNG1:UAUX:RANGE?"), "8V");
+}
