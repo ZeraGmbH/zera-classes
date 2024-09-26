@@ -15,7 +15,6 @@ cSCPISerialClient::cSCPISerialClient(QSerialPort* serial, cSCPIModule *module, c
     m_pSerialPort(serial)
 {
     qInfo("Serial SCPI connection established");
-    // so now we can start our connection
     connect(m_pSerialPort, &QSerialPort::readyRead, this, &cSCPISerialClient::cmdInput);
 }
 
