@@ -32,6 +32,8 @@ void ScpiModuleClientBlocked::sendMulti(QByteArrayList send)
 QByteArrayList ScpiModuleClientBlocked::receiveMulti()
 {
     QByteArray receive = m_socket.readAll();
+    if(receive.endsWith('\n'))
+        receive = receive.left(receive.length() - 1);
     return receive.split('\n');
 }
 
