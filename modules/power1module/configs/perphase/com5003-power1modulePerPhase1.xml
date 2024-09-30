@@ -47,7 +47,7 @@
                     <name>fo0</name>
                     <source>pmss</source>
                     <type>+-</type>
-                    <plug>fOUT1</plug>
+                    <name_displayed>fOUT1</name_displayed>
                     <scaling>
                         <uscale>
                             <inputentity>1020</inputentity>

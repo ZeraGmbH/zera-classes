@@ -55,12 +55,12 @@ enum moduleconfigstate
     setfreqout3Type,
     setfreqout4Type,
 
-    setfreqout1Plug = setfreqout1Type + 8,
+    setfreqout1NameDisplayed = setfreqout1Type + 8,
     setfreqout2Plug,
     setfreqout3Plug,
     setfreqout4Plug,
 
-    setnext = setfreqout1Plug + 8,
+    setnext = setfreqout1NameDisplayed + 8,
 
     setfreqout1UScaleEntity = setnext+8,
     setfreqout2UScaleEntity,

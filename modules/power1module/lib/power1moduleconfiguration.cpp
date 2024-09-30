@@ -162,7 +162,7 @@ void cPower1ModuleConfiguration::configXMLInfo(QString key)
                     m_ConfigXMLMap[QString("pow1modconfpar:configuration:frequencyoutput:output:fout%1:name").arg(i+1)] = setfreqout1Name+i;
                     m_ConfigXMLMap[QString("pow1modconfpar:configuration:frequencyoutput:output:fout%1:source").arg(i+1)] = setfreqout1Source+i;
                     m_ConfigXMLMap[QString("pow1modconfpar:configuration:frequencyoutput:output:fout%1:type").arg(i+1)] = setfreqout1Type+i;
-                    m_ConfigXMLMap[QString("pow1modconfpar:configuration:frequencyoutput:output:fout%1:plug").arg(i+1)] = setfreqout1Plug+i;
+                    m_ConfigXMLMap[QString("pow1modconfpar:configuration:frequencyoutput:output:fout%1:name_displayed").arg(i+1)] = setfreqout1NameDisplayed+i;
                     m_ConfigXMLMap[QString("pow1modconfpar:configuration:frequencyoutput:output:fout%1:scaling:uscale:inputentity").arg(i+1)] = setfreqout1UScaleEntity + i;
                     m_ConfigXMLMap[QString("pow1modconfpar:configuration:frequencyoutput:output:fout%1:scaling:uscale:inputcomponent").arg(i+1)] = setfreqout1UScaleComponent + i;
                     m_ConfigXMLMap[QString("pow1modconfpar:configuration:frequencyoutput:output:fout%1:scaling:iscale:inputentity").arg(i+1)] = setfreqout1IScaleEntity + i;
@@ -239,11 +239,11 @@ void cPower1ModuleConfiguration::configXMLInfo(QString key)
 
                 m_pPower1ModulConfigData->m_FreqOutputConfList.replace(cmd, fconf);
             }
-            else if ((cmd >= setfreqout1Plug) && (cmd < setfreqout1Plug + 8)) {
-                cmd -= setfreqout1Plug;
+            else if ((cmd >= setfreqout1NameDisplayed) && (cmd < setfreqout1NameDisplayed + 8)) {
+                cmd -= setfreqout1NameDisplayed;
                 freqoutconfiguration fconf;
                 fconf = m_pPower1ModulConfigData->m_FreqOutputConfList.at(cmd);
-                fconf.m_sPlug = m_pXMLReader->getValue(key);
+                fconf.m_sFreqOutNameDisplayed = m_pXMLReader->getValue(key);
                 m_pPower1ModulConfigData->m_FreqOutputConfList.replace(cmd, fconf);
             }
             else if ((cmd >= setfreqout1UScaleEntity) && (cmd < setfreqout1UScaleEntity + 8)) {
