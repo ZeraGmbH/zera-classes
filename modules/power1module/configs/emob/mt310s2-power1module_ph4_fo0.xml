@@ -40,6 +40,7 @@
                 <name>fo0</name>
                 <source>pmss</source>
                 <type>+-</type>
+                <plug>fOUT</plug>
                 <scaling>
                     <uscale>
                         <inputentity>1020</inputentity>

@@ -40,9 +40,10 @@
             <output>
             <n>1</n>
             <fout1>
-                <name>fo1</name>
+                <name>fo0</name>
                 <source>pmss</source>
                 <type>+-</type>
+                <plug>fOUT</plug>
                 <scaling>
                     <uscale>
                         <inputentity>1020</inputentity>
