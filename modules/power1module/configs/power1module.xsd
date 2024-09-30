@@ -203,7 +203,7 @@
             <xs:element name="name" type="foutxnameType" minOccurs="1" maxOccurs="1"/>
             <xs:element name="source" type="pmsType" minOccurs="1" maxOccurs="1"/>
             <xs:element name="type" type="foutxtypeType" minOccurs="1" maxOccurs="1"/>
-            <xs:element name="plug" type="xs:string" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="name_displayed" type="xs:string" minOccurs="0" maxOccurs="1"/>
             <xs:element name="scaling" type="scalingType" minOccurs="0" maxOccurs="1"/>
         </xs:sequence>
     </xs:complexType>
