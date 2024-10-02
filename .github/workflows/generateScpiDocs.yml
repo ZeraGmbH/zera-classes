@@ -91,10 +91,10 @@ jobs:
 
       - name: run scpi-doc-generator
         run: |
-          cd $HOME/targetbuild/modulemanager/scpi-doc
+          cd $HOME/targetbuild/scpi-doc/app
           ./scpi-doc-generator -z${{ github.event.inputs.version}}
-          mv $HOME/targetbuild/modulemanager/scpi-doc/html-docs $HOME/html-docs
-          mv $HOME/targetbuild/modulemanager/scpi-doc/SessionNamesMapping.json $HOME
+          mv $HOME/targetbuild/scpi-doc/app/html-docs $HOME/html-docs
+          mv $HOME/targetbuild/scpi-doc/app/SessionNamesMapping.json $HOME
           ls $HOME/
 
       - name: Tar scpi-docs

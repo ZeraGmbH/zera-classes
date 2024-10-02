@@ -30,7 +30,7 @@ int main(int argc, char *argv[])
         qFatal("Session names mapping json file could not be created!");
 
     QProcess sh;
-    QStringList paramList = QStringList() << QStringLiteral(SCPI_DOC_SOURCE_PATH) + "/xml-to-html/create-all-htmls" << QStringLiteral(HTML_DOCS_PATH) << zenuxRelease;
+    QStringList paramList = QStringList() << QStringLiteral(SCPI_DOC_SOURCE_PATH) + "/create-all-htmls" << QStringLiteral(HTML_DOCS_PATH) << zenuxRelease;
     sh.start("/bin/sh", paramList);
     sh.waitForFinished();
     printf("%s", qPrintable(sh.readAll()));
