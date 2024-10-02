@@ -5,7 +5,6 @@
 #include <scpiinfo.h>
 #include <stringvalidator.h>
 #include <boolvalidator.h>
-#include <math.h>
 
 namespace SAMPLEMODULE
 {

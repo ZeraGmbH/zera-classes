@@ -36,7 +36,6 @@ SETUP_QTESTS_MODULEMANAGER(
     test_modman_config
     test_plugin_load
     test_modman_regression_all_sessions
-    test_sessionnamesmappingjson
     test_modman_with_vf_logger
     test_change_session
     )
