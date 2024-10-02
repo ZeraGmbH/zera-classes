@@ -112,7 +112,7 @@ jobs:
 
       - name: run scpi-doc-generator
         run: |
-          cd $HOME/targetbuild/modulemanager/scpi-doc
+          cd $HOME/targetbuild/scpi-doc/app
           ./scpi-doc-generator -zci_run
-          ls $HOME/targetbuild/modulemanager/scpi-doc/html-docs
+          ls $HOME/targetbuild/scpi-doc/app/html-docs
 
