@@ -26,6 +26,7 @@ function(SETUP_QTESTS_MODULEMANAGER)
             testhelpers
             zera-modulemanager-lib
             zera-modulemanager-testlib
+            scpi-doc-lib
             )
     endforeach()
 endfunction()

@@ -1,6 +1,6 @@
 #include "sessionnamesmappingjson.h"
 #include <zera-jsonfileloader.h>
-#include "zera-json-merge.h"
+#include <zera-json-merge.h>
 #include <QJsonArray>
 
 QJsonObject SessionNamesMappingJson::createSessionNamesMappingJsonAllDevices(QString modmanConfigFile)
