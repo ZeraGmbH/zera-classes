@@ -79,8 +79,9 @@ cRangeModuleMeasProgram::cRangeModuleMeasProgram(cRangeModule* module, std::shar
     connect(m_dspWatchdogTimer.get(), &TimerTemplateQt::sigExpired, this, &cRangeModuleMeasProgram::onDspWatchdogTimeout);
 
     connect(&m_frequencyLogStatistics, &LogStatisticsAsyncFloat::sigNewStatistics, [](float min, float max, float avg, int msgCnt) {
-        qInfo("Measured frequency intervall (Hz) min: %.1f, max: %.1f, mean: %.1f; Total message count: %i",
-              min, max, avg, msgCnt);
+        Q_UNUSED(msgCnt)
+        qInfo("Measured frequency (Hz) min: %.1f, max: %.1f, mean: %.1f",
+              min, max, avg);
     });
 
 }
