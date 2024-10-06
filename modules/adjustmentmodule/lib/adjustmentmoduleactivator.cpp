@@ -1,7 +1,4 @@
 #include "adjustmentmoduleactivator.h"
-#include "adjustmentmodule.h"
-#include "adjustmentmodulemeasprogram.h"
-#include "adjustmentmoduleconfiguration.h"
 #include "taskserverconnectionstart.h"
 #include "taskchannelscheckavail.h"
 #include "taskchannelgetalias.h"
