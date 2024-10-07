@@ -22,7 +22,6 @@ QString SysInfo::getSerialNr()
 QString SysInfo::getReleaseNr()
 {
     QString path = "/opt/zera/conf/CHANGELOG";
-    bool releaseNrFound = false;
     QString releaseNr = "";
     QFile file(path);
     if (file.exists()) {
@@ -30,15 +29,16 @@ QString SysInfo::getReleaseNr()
         QTextStream stream(&file);
         int start, end;
         QString line;
+        bool releaseNrFound = false;
         do {
             line = stream.readLine();
             if ((start = line.indexOf("'release-")+1) > 0 ||
                 (start = line.indexOf("'snapshot-")+1) > 0 ||
                 (start = line.indexOf("'no-release-")+1) > 0) {
                 end = line.indexOf("'", start);
-                if ((releaseNrFound = (end > start)) == true) {
+                releaseNrFound = end > start;
+                if (releaseNrFound)
                     releaseNr = line.mid(start, end-start);
-                }
             }
         } while (!line.isNull() && !(releaseNrFound));
         file.close();
