@@ -12,7 +12,7 @@ void test_scpi_config_load::fileFound()
 
 void test_scpi_config_load::allFilesLoaded()
 {
-    QFileInfoList fileList = QDir(QStringLiteral(CONFIG_SOURCES_SCPIMODULE)).entryInfoList(QStringList() << "*.xml");
+    const QFileInfoList fileList = QDir(QStringLiteral(CONFIG_SOURCES_SCPIMODULE)).entryInfoList(QStringList() << "*.xml");
     for(const auto &fileInfo : fileList) {
         QFile configFile(fileInfo.absoluteFilePath());
         qInfo("Load %s...", qPrintable(configFile.fileName()));

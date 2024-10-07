@@ -14,7 +14,7 @@ void test_sem1_config_load::fileFound()
 
 void test_sem1_config_load::allFilesLoaded()
 {
-    QFileInfoList fileList = QDir(QStringLiteral(CONFIG_SOURCES_SEM1MODULE)).entryInfoList(QStringList() << "*.xml");
+    const QFileInfoList fileList = QDir(QStringLiteral(CONFIG_SOURCES_SEM1MODULE)).entryInfoList(QStringList() << "*.xml");
     for(const auto &fileInfo : fileList) {
         QFile configFile(fileInfo.absoluteFilePath());
         qInfo("Load %s...", qPrintable(configFile.fileName()));

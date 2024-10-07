@@ -12,7 +12,7 @@ void test_reference_config_load::fileFound()
 
 void test_reference_config_load::allFilesLoaded()
 {
-    QFileInfoList fileList = QDir(QStringLiteral(CONFIG_SOURCES_REFERENCEMODULE)).entryInfoList(QStringList() << "*.xml");
+    const QFileInfoList fileList = QDir(QStringLiteral(CONFIG_SOURCES_REFERENCEMODULE)).entryInfoList(QStringList() << "*.xml");
     for(const auto &fileInfo : fileList) {
         QFile configFile(fileInfo.absoluteFilePath());
         qInfo("Load %s...", qPrintable(configFile.fileName()));

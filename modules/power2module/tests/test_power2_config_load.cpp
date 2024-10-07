@@ -16,7 +16,7 @@ void test_power2_config_load::fileFound()
 void test_power2_config_load::allFilesLoaded()
 {
     // Note: Some checks are done within cPower2ModuleConfiguration and failures fire Q_ASSERT
-    QFileInfoList fileList = QDir(QStringLiteral(CONFIG_SOURCES_POWER2MODULE)).entryInfoList(QStringList() << "*.xml");
+    const QFileInfoList fileList = QDir(QStringLiteral(CONFIG_SOURCES_POWER2MODULE)).entryInfoList(QStringList() << "*.xml");
     for(const auto &fileInfo : fileList) {
         QFile configFile(fileInfo.absoluteFilePath());
         qInfo("Load %s...", qPrintable(configFile.fileName()));
