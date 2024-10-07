@@ -76,8 +76,7 @@ QHash<int, QStringList> Vf_Storage::extractEntitiesAndComponents(QJsonObject jso
 {
     QHash<int, QStringList> entitesAndComponents;
     QString firstKey = jsonObject.keys().at(0);
-    QJsonArray values = jsonObject.value(firstKey).toArray();
-
+    const QJsonArray values = jsonObject.value(firstKey).toArray();
     for (const QJsonValue& value : values) {
         QJsonObject itemObject = value.toObject();
         int entityId = itemObject["EntityId"].toInt();
@@ -85,7 +84,7 @@ QHash<int, QStringList> Vf_Storage::extractEntitiesAndComponents(QJsonObject jso
 
         QStringList componentList;
         if (componentValue.isArray()) {
-            QJsonArray componentArray = componentValue.toArray();
+            const QJsonArray componentArray = componentValue.toArray();
             if(componentArray.isEmpty()) {
                 componentList = m_storageSystem->getEntityComponents(entityId);
                 ignoreComponents(&componentList);
