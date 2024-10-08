@@ -29,7 +29,7 @@ private:
     void clearJson();
 
     VeinEvent::StorageSystem* m_storage;
-    QHash<int, QStringList> m_componentsKeeper;
+    QList<QMetaObject::Connection> m_componentChangeConnections;
     QJsonObject m_jsonObject;
     TimerTemplateQtPtr m_periodicTimer;
 };

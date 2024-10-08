@@ -19,11 +19,11 @@ void VeinDataCollector::startLogging(QHash<int, QStringList> entitesAndComponent
     for(int& entityId : entitesAndComponents.keys()) {
         QStringList components = entitesAndComponents[entityId];
         for(QString& component: components) {
-            m_componentsKeeper[entityId].append(component);
             VeinEvent::StorageComponentInterfacePtr actualComponent = m_storage->getComponent(entityId, component);
-            connect(actualComponent.get(), &VeinEvent::StorageComponentInterface::sigValueChange, this, [=](QVariant newValue) {
+            auto conn = connect(actualComponent.get(), &VeinEvent::StorageComponentInterface::sigValueChange, this, [=](QVariant newValue) {
                 appendValue(entityId, component, newValue, actualComponent->getTimestamp());
             });
+            m_componentChangeConnections.append(conn);
         }
     }
 }
@@ -31,14 +31,9 @@ void VeinDataCollector::startLogging(QHash<int, QStringList> entitesAndComponent
 void VeinDataCollector::stopLogging()
 {
     m_periodicTimer->stop();
-    for(int& entityId: m_componentsKeeper.keys()) {
-        QStringList components = m_componentsKeeper[entityId];
-        for(QString& component : components) {
-            VeinEvent::StorageComponentInterfacePtr actualComponent = m_storage->getComponent(entityId, component);
-            actualComponent->disconnect(SIGNAL(sigValueChange(QVariant)));
-        }
-    }
-    m_componentsKeeper.clear();
+    for(auto &conn : m_componentChangeConnections)
+        disconnect(conn);
+    m_componentChangeConnections.clear();
 }
 
 void VeinDataCollector::appendValue(int entityId, QString componentName, QVariant value, const QDateTime &timestamp)
