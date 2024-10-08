@@ -18,10 +18,10 @@ private slots:
     void storeValuesBasedOnNoEntitiesInJson();
     void storeValuesBasedOnIncorrectEntitiesInJson();
     void storeValuesEmptyComponentsInJson();
-    void storeValuesCorrectEntitiesStartstopLoggingFromJsonDisabled();
+    void storeValuesCorrectEntitiesStartStopLoggingDisabled();
     void loggingOnOffSequence0();
     void loggingOnOffSequence1();
-    void stopLoggingFromJsonHasNoSideEffectOnOtherConnections();
+    void stopLoggingHasNoSideEffectOnOtherConnections();
     void changeJsonFileWhileLogging();
     void fireActualValuesAfterDelayWhileLogging();
     void fireRmsPowerValuesAfterDifferentDelaysWhileLogging();
@@ -36,8 +36,8 @@ private:
     QJsonObject getStoredValueWithoutTimeStamp(int storageNum);
     QHash<QString, QVariant> getComponentsStoredOfEntity(int entityId, QJsonObject storedValueWithoutTimeStamp);
     QString getValuesStoredOfComponent(QHash<QString, QVariant> componentHash, QString componentName);
-    void startLoggingFromJson(QString fileName, int storageNum);
-    void stopLoggingFromJson(int storageNum);
+    void startLogging(QString fileName, int storageNum);
+    void stopLogging(int storageNum);
     void changeRMSValues(QVariant newValue1, QVariant newValue2);
 
     std::unique_ptr<ModuleManagerTestRunner> m_testRunner;
