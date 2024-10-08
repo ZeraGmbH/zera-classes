@@ -36,8 +36,8 @@ private:
     QJsonObject getStoredValueWithoutTimeStamp(int storageNum);
     QHash<QString, QVariant> getComponentsStoredOfEntity(int entityId, QJsonObject storedValueWithoutTimeStamp);
     QString getValuesStoredOfComponent(QHash<QString, QVariant> componentHash, QString componentName);
-    void startLogging(QString fileName, int storageNum);
-    void stopLogging(int storageNum);
+    void startLoggingFromJson(QString fileName, int storageNum);
+    void stopLoggingFromJson(int storageNum);
     void changeRMSValues(QVariant newValue1, QVariant newValue2);
 
     std::unique_ptr<ModuleManagerTestRunner> m_testRunner;
