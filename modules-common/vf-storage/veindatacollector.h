@@ -5,7 +5,7 @@
 #include <timerperiodicqt.h>
 #include <QJsonObject>
 #include <QJsonArray>
-#include <QObject>
+#include <QDateTime>
 
 class VeinDataCollector : public QObject
 {
@@ -19,7 +19,7 @@ signals:
     void newStoredValue(QJsonObject jsonObject);
 
 private slots:
-    void appendValue(int entityId, QString componentName, QVariant value, QString timestamp);
+    void appendValue(int entityId, QString componentName, QVariant value, const QDateTime &timestamp);
 
 private:
     QJsonObject convertToJson(QString timestamp, QHash<int, QHash<QString, QVariant> > infosHash);

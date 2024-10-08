@@ -22,8 +22,7 @@ void VeinDataCollector::startLogging(QHash<int, QStringList> entitesAndComponent
             m_componentsKeeper[entityId].append(component);
             VeinEvent::StorageComponentInterfacePtr actualComponent = m_storage->getComponent(entityId, component);
             connect(actualComponent.get(), &VeinEvent::StorageComponentInterface::sigValueChange, this, [=](QVariant newValue) {
-                QDateTime time = actualComponent->getTimestamp();
-                appendValue(entityId, component, newValue, time.toString("dd-MM-yyyy hh:mm:ss.zzz"));
+                appendValue(entityId, component, newValue, actualComponent->getTimestamp());
             });
         }
     }
@@ -42,11 +41,12 @@ void VeinDataCollector::stopLogging()
     m_componentsKeeper.clear();
 }
 
-void VeinDataCollector::appendValue(int entityId, QString componentName, QVariant value, QString timestamp)
+void VeinDataCollector::appendValue(int entityId, QString componentName, QVariant value, const QDateTime &timestamp)
 {
     QHash<int , QHash<QString, QVariant> > infosHash;
     infosHash[entityId][componentName] = value;
-    m_jsonObject.insert(timestamp, convertToJson(timestamp, infosHash));
+    QString timeString = timestamp.toString("dd-MM-yyyy hh:mm:ss.zzz");
+    m_jsonObject.insert(timeString, convertToJson(timeString, infosHash));
 }
 
 QJsonObject VeinDataCollector::convertToJson(QString timestamp, QHash<int , QHash<QString, QVariant>> infosHash)
