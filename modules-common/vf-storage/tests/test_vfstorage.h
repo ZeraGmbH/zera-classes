@@ -21,6 +21,7 @@ private slots:
     void storeValuesCorrectEntitiesStartStopLoggingDisabled();
     void loggingOnOffSequence0();
     void loggingOnOffSequence1();
+    void stopLoggingHasNoSideEffectOnOtherConnections();
     void changeJsonFileWhileLogging();
     void fireActualValuesAfterDelayWhileLogging();
     void fireRmsPowerValuesAfterDifferentDelaysWhileLogging();

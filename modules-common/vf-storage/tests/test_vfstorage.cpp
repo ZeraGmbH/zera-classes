@@ -171,6 +171,26 @@ void test_vfstorage::loggingOnOffSequence1()
     QCOMPARE(value, "4");  // !=8
 }
 
+void test_vfstorage::stopLoggingHasNoSideEffectOnOtherConnections()
+{
+    constexpr int storageNum = 0;
+    startModman(":/session-minimal-rms.json");
+    startLogging(":/correct-entities.json", storageNum);
+
+    int changesDetected = 0;
+    VeinEvent::StorageComponentInterfacePtr component = m_testRunner->getVeinStorageSystem()->getComponent(rmsEntityId, "ACT_RMSPN1");
+    connect(component.get(), &VeinEvent::StorageComponentInterface::sigValueChange, [&]() {
+        changesDetected++;
+    });
+    changeRMSValues(39, 42);
+    QCOMPARE(changesDetected, 1);
+
+    stopLogging(storageNum);
+
+    changeRMSValues(42, 39);
+    QCOMPARE(changesDetected, 2);
+}
+
 void test_vfstorage::changeJsonFileWhileLogging()
 {
     startModman(":/session-minimal-rms.json");
