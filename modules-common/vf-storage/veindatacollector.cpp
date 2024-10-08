@@ -8,7 +8,7 @@
 {
     m_periodicTimer = TimerFactoryQt::createPeriodic(100);
     connect(m_periodicTimer.get(), &TimerTemplateQt::sigExpired,this, [&]{
-            emit newStoredValue(JsonTimeGrouping::regroupTimestamp(m_jsonObject));
+        emit newStoredValue(JsonTimeGrouping::regroupTimestamp(m_jsonObject));
     });
 }
 
@@ -16,7 +16,7 @@ void VeinDataCollector::startLogging(QHash<int, QStringList> entitesAndComponent
 {
     clearJson();
     m_periodicTimer->start();
-    for(int& entityId: entitesAndComponents.keys()) {
+    for(int& entityId : entitesAndComponents.keys()) {
         QStringList components = entitesAndComponents[entityId];
         for(QString& component: components) {
             m_componentsKeeper[entityId].append(component);
