@@ -38,21 +38,25 @@
       {
         "name" : "power1module",
         "configFile" : "mt310s2-power1module-4WA-only.xml",
+        "module_num": 1,
         "id": 1070
       },
       {
         "name" : "power1module",
         "configFile" : "mt310s2-power1module-4WR-only.xml",
+        "module_num": 2,
         "id": 1071
       },
       {
         "name" : "power1module",
         "configFile" : "mt310s2-power1module-4WAP-only.xml",
+        "module_num": 3,
         "id": 1072
       },
       {
         "name" : "power1module",
         "configFile" : "power1moduleAllPhaseLambdaReactive.xml",
+        "module_num": 5,
         "id": 1076
       },
       {

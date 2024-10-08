@@ -786,8 +786,8 @@ void test_modman_regression_all_sessions::regressionMt310s2EmobAc()
     QCOMPARE(modules[9]->m_reference->getSCPIModuleName(), "POW3");
 
     QCOMPARE(modules[10]->m_moduleId, 1076);
-    QCOMPARE(modules[10]->m_reference->getVeinModuleName(), "POWER1Module4");
-    QCOMPARE(modules[10]->m_reference->getSCPIModuleName(), "POW4");
+    QCOMPARE(modules[10]->m_reference->getVeinModuleName(), "POWER1Module5");
+    QCOMPARE(modules[10]->m_reference->getSCPIModuleName(), "POW5");
 
     QCOMPARE(modules[11]->m_moduleId, 1110);
     QCOMPARE(modules[11]->m_reference->getVeinModuleName(), "THDNModule1");
