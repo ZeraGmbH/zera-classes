@@ -24,7 +24,7 @@
             </dutinput>
             <refinput>
                 <n>1</n>
-                <inp1>fo1</inp1>
+                <inp1>fo0</inp1>
             </refinput>
             <refinput_appends>
                 <append1> AC</append1>
@@ -34,7 +34,7 @@
     <parameter>
         <measure>
             <dutinput>sh0</dutinput>
-            <refinput>fo1</refinput>
+            <refinput>fo0</refinput>
             <mode>mrate</mode>
             <dutconstant>10000</dutconstant>
             <dutconstantunit>none</dutconstantunit>

@@ -20,7 +20,7 @@
         <measure>
             <refinput>
                 <n>1</n>
-                <inp1>fo1</inp1>
+                <inp1>fo0</inp1>
             </refinput>
             <refinput_appends>
                 <append1> AC</append1>
@@ -47,7 +47,7 @@
     </configuration>
     <parameter>
         <measure>
-            <refinput>fo1</refinput>
+            <refinput>fo0</refinput>
             <targeted>1</targeted>
             <meastime>120</meastime>
             <upperlimit>10.0</upperlimit>
