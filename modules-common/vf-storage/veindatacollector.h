@@ -14,14 +14,11 @@ public:
     explicit VeinDataCollector(VeinEvent::StorageSystem* storage);
     void startLogging(QHash<int, QStringList> entitesAndComponents);
     void stopLogging();
-
 signals:
     void newStoredValue(QJsonObject jsonObject);
 
-private slots:
-    void appendValue(int entityId, QString componentName, QVariant value, const QDateTime &timestamp);
-
 private:
+    void appendValue(int entityId, QString componentName, QVariant value, const QDateTime &timestamp);
     QJsonObject convertToJson(QString timestamp, QHash<int, QHash<QString, QVariant> > infosHash);
     QJsonObject convertHashToJsonObject(QHash<QString, QVariant> hash);
     QJsonObject getJsonWithoutTimestamp(QString timestamp);
