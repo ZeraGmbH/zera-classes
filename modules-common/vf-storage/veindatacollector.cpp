@@ -47,21 +47,16 @@ void VeinDataCollector::appendValue(int entityId, QString componentName, QVarian
 
 QJsonObject VeinDataCollector::convertToJson(QString timestamp, QHash<int , QHash<QString, QVariant>> infosHash)
 {
-    QJsonObject jsonObject;
-    for (auto it = infosHash.constBegin(); it != infosHash.constEnd(); ++it) {
-        QJsonObject jsonWithoutTimestamp = getJsonWithoutTimestamp(timestamp);
+    QJsonObject jsonObject = getJsonWithoutTimestamp(timestamp);
+    for(auto it = infosHash.constBegin(); it != infosHash.constEnd(); ++it) {
         QString entityIdToString = QString::number(it.key());
-
-        if(jsonWithoutTimestamp.contains(entityIdToString) ) {
-            QJsonValue existingValue = jsonWithoutTimestamp.value(entityIdToString);
+        if(jsonObject.contains(entityIdToString)) {
+            QJsonValue existingValue = jsonObject.value(entityIdToString);
             QHash<QString, QVariant> hash = appendNewValueToExistingValues(existingValue, it.value()) ;
-            jsonObject = jsonWithoutTimestamp;
             jsonObject.insert(entityIdToString, convertHashToJsonObject(hash));
         }
-        else {
-            jsonObject = jsonWithoutTimestamp;
+        else
             jsonObject.insert(entityIdToString, convertHashToJsonObject(it.value()));
-        }
     }
     return jsonObject;
 }
