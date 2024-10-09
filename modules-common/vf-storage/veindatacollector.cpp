@@ -16,9 +16,10 @@ void VeinDataCollector::startLogging(QHash<int, QStringList> entitesAndComponent
 {
     clearJson();
     m_periodicTimer->start();
-    for(int& entityId : entitesAndComponents.keys()) {
-        QStringList components = entitesAndComponents[entityId];
-        for(QString& component: components) {
+    for(auto iter=entitesAndComponents.cbegin(); iter!=entitesAndComponents.cend(); ++iter) {
+        const QStringList components = iter.value();
+        int entityId = iter.key();
+        for(const QString& component : components) {
             VeinEvent::StorageComponentInterfacePtr actualComponent = m_storage->getComponent(entityId, component);
             auto conn = connect(actualComponent.get(), &VeinEvent::StorageComponentInterface::sigValueChange, this, [=](QVariant newValue) {
                 appendValue(entityId, component, newValue, actualComponent->getTimestamp());
