@@ -12,7 +12,6 @@ class Vf_Storage : public QObject
 public:
     explicit Vf_Storage(VeinEvent::StorageSystem* storageSystem, QObject *parent = nullptr, int entityId = 1);
     bool initOnce();
-    bool addComponent(const QString componentName);
     VfCpp::VfCppEntity *getVeinEntity() const;
 
 private:
