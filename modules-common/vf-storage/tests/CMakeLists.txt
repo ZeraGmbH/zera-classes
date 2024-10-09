@@ -12,6 +12,7 @@ endfunction()
 
 SETUP_QTESTS_BASE(
     test_vfstorage
+    test_vein_data_collector
 )
 
 target_sources(test_vfstorage
