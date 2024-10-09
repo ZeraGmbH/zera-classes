@@ -15,6 +15,11 @@ public:
     void startLogging(QHash<int, QStringList> entitesAndComponents);
     void stopLogging();
 signals:
+    // Ideas:
+    // * replace internal data QJsoonObject by
+    //   typedef QHash<int/*entityId*/, QHash<QString/*componentName*/, QVariant/*value*/>> RecordedGroups;
+    //   typedef QMap<qint64 /* msSinceEpochTimestamp */, RecordedGroups> TimeStampedGroups;
+    // * split up filter / datacollection / periodic vein update into smaller pieces
     void newStoredValue(QJsonObject jsonObject);
 
 private:
