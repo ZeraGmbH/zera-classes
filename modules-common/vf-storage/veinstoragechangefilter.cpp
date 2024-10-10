@@ -1,8 +1,8 @@
 #include "veinstoragechangefilter.h"
 
-VeinStorageChangeFilter::VeinStorageChangeFilter(VeinEvent::StorageSystem* storage, bool fireCurrentValidOnAddFiter) :
+VeinStorageChangeFilter::VeinStorageChangeFilter(VeinEvent::StorageSystem* storage, Settings settings) :
     m_storage{storage},
-    m_fireCurrentValidOnAddFiter(fireCurrentValidOnAddFiter)
+    m_settings(settings)
 {
 }
 
@@ -17,7 +17,7 @@ bool VeinStorageChangeFilter::add(int entityId, QString componentName)
     if(!m_filteredEntityComponents.contains(entityId) || !m_filteredEntityComponents[entityId].contains(componentName)) {
         if(actualComponent) {
             m_filteredEntityComponents[entityId].insert(componentName);
-            if(m_fireCurrentValidOnAddFiter)
+            if(m_settings.m_fireCurrentValidOnAddFiter)
                 fireActual(entityId, componentName, actualComponent);
             auto conn = connect(actualComponent.get(), &VeinEvent::StorageComponentInterface::sigValueChange, this, [=](QVariant newValue) {
                 emit sigComponentValue(entityId, componentName, newValue, actualComponent->getTimestamp());
