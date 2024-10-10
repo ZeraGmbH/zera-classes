@@ -11,7 +11,15 @@ class VeinStorageChangeFilter : public QObject
 {
     Q_OBJECT
 public:
-    explicit VeinStorageChangeFilter(VeinEvent::StorageSystem* storage, bool fireCurrentValidOnAddFiter);
+    struct Settings {
+        Settings(bool fireCurrentValidOnAddFiter, bool fireOnChangesOnly) :
+            m_fireCurrentValidOnAddFiter(fireCurrentValidOnAddFiter),
+            m_fireOnChangesOnly(fireOnChangesOnly)
+            {}
+        bool m_fireCurrentValidOnAddFiter;
+        bool m_fireOnChangesOnly;
+    };
+    explicit VeinStorageChangeFilter(VeinEvent::StorageSystem* storage, Settings settings);
     ~VeinStorageChangeFilter();
     bool add(int entityId, QString componentName);
     void clear();
@@ -21,7 +29,7 @@ signals:
 private:
     void fireActual(int entityId, QString componentName, VeinEvent::StorageComponentInterfacePtr actualComponent);
     const VeinEvent::StorageSystem* m_storage;
-    const bool m_fireCurrentValidOnAddFiter;
+    const Settings m_settings;
     QList<QMetaObject::Connection> m_componentChangeConnections;
     QHash<int, QSet<QString>> m_filteredEntityComponents;
 };
