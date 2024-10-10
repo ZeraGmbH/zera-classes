@@ -1,5 +1,5 @@
-#ifndef VEINSTORAGECHANGEFILTER_H
-#define VEINSTORAGECHANGEFILTER_H
+#ifndef VEINSTORAGEFILTER_H
+#define VEINSTORAGEFILTER_H
 
 #include <ve_storagesystem.h>
 #include <QDateTime>
@@ -7,7 +7,7 @@
 #include <QHash>
 
 // A candidate for vein-framework once matured???
-class VeinStorageChangeFilter : public QObject
+class VeinStorageFilter : public QObject
 {
     Q_OBJECT
 public:
@@ -19,8 +19,8 @@ public:
         bool m_fireCurrentValidOnAddFiter;
         bool m_fireOnChangesOnly;
     };
-    explicit VeinStorageChangeFilter(VeinEvent::StorageSystem* storage, Settings settings);
-    ~VeinStorageChangeFilter();
+    explicit VeinStorageFilter(VeinEvent::StorageSystem* storage, Settings settings);
+    ~VeinStorageFilter();
     bool add(int entityId, QString componentName);
     void clear();
 signals:
@@ -34,4 +34,4 @@ private:
     QHash<int, QSet<QString>> m_filteredEntityComponents;
 };
 
-#endif // VEINSTORAGECHANGEFILTER_H
+#endif // VEINSTORAGEFILTER_H
