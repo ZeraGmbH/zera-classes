@@ -1,17 +1,17 @@
-#include "veinstoragechangefilter.h"
+#include "veinstoragefilter.h"
 
-VeinStorageChangeFilter::VeinStorageChangeFilter(VeinEvent::StorageSystem* storage, Settings settings) :
+VeinStorageFilter::VeinStorageFilter(VeinEvent::StorageSystem* storage, Settings settings) :
     m_storage{storage},
     m_settings(settings)
 {
 }
 
-VeinStorageChangeFilter::~VeinStorageChangeFilter()
+VeinStorageFilter::~VeinStorageFilter()
 {
     clear();
 }
 
-bool VeinStorageChangeFilter::add(int entityId, QString componentName)
+bool VeinStorageFilter::add(int entityId, QString componentName)
 {
     VeinEvent::StorageComponentInterfacePtr actualComponent = m_storage->getComponent(entityId, componentName);
     if(!m_filteredEntityComponents.contains(entityId) || !m_filteredEntityComponents[entityId].contains(componentName)) {
@@ -29,7 +29,7 @@ bool VeinStorageChangeFilter::add(int entityId, QString componentName)
     return false;
 }
 
-void VeinStorageChangeFilter::clear()
+void VeinStorageFilter::clear()
 {
     for(const auto &connection : qAsConst(m_componentChangeConnections))
         disconnect(connection);
@@ -37,7 +37,7 @@ void VeinStorageChangeFilter::clear()
     m_filteredEntityComponents.clear();
 }
 
-void VeinStorageChangeFilter::fireActual(int entityId, QString componentName, VeinEvent::StorageComponentInterfacePtr actualComponent)
+void VeinStorageFilter::fireActual(int entityId, QString componentName, VeinEvent::StorageComponentInterfacePtr actualComponent)
 {
     const QVariant currValue = actualComponent->getValue();
     if(currValue.isValid())
