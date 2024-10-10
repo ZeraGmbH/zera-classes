@@ -5,11 +5,9 @@
 #include "vfmodulecomponent.h"
 #include "vfmoduleerrorcomponent.h"
 #include "vfmoduleparameter.h"
+#include "vf_server_entity_add.h"
+#include "vf_server_entity_remove.h"
 #include "scpiinfo.h"
-#include <ve_commandevent.h>
-#include <vcmp_entitydata.h>
-#include <vcmp_componentdata.h>
-#include <ve_eventsystem.h>
 #include <virtualmodule.h>
 #include <QJsonDocument>
 #include <QFile>
@@ -193,11 +191,7 @@ void cBaseModule::stopModule()
 
 void cBaseModule::setupModule()
 {
-    VeinComponent::EntityData *eData = new VeinComponent::EntityData();
-    eData->setCommand(VeinComponent::EntityData::Command::ECMD_ADD);
-    eData->setEntityId(getEntityId());
-    VeinEvent::CommandEvent *tmpEvent = new VeinEvent::CommandEvent(VeinEvent::CommandEvent::EventSubtype::NOTIFICATION, eData);
-    emit m_pModuleEventSystem->sigSendEvent(tmpEvent);
+    emit m_pModuleEventSystem->sigSendEvent(VfServerEntityAdd::generateEvent(getEntityId()));
 
     m_pModuleEntityName = new VfModuleComponent(getEntityId(), m_pModuleEventSystem,
                                                    QString("EntityName"),
@@ -254,11 +248,7 @@ void cBaseModule::unsetModule()
     }
     m_veinModuleParameterMap.clear();
 
-    VeinComponent::EntityData *eData = new VeinComponent::EntityData();
-    eData->setCommand(VeinComponent::EntityData::Command::ECMD_REMOVE);
-    eData->setEntityId(getEntityId());
-    VeinEvent::CommandEvent *tmpEvent = new VeinEvent::CommandEvent(VeinEvent::CommandEvent::EventSubtype::NOTIFICATION, eData);
-    emit m_pModuleEventSystem->sigSendEvent(tmpEvent);
+    emit m_pModuleEventSystem->sigSendEvent(VfServerEntityRemove::generateEvent(getEntityId()));
 
     for (auto ModuleActivist : qAsConst(m_ModuleActivistList)) {
         delete ModuleActivist;
