@@ -19,9 +19,16 @@ bool VeinStorageFilter::add(int entityId, QString componentName)
             m_filteredEntityComponents[entityId].insert(componentName);
             if(m_settings.m_fireCurrentValidOnAddFiter)
                 fireActual(entityId, componentName, actualComponent);
-            auto conn = connect(actualComponent.get(), &VeinEvent::StorageComponentInterface::sigValueChange, this, [=](QVariant newValue) {
-                emit sigComponentValue(entityId, componentName, newValue, actualComponent->getTimestamp());
-            });
+
+            QMetaObject::Connection conn;
+            if(m_settings.m_fireOnChangesOnly)
+                conn = connect(actualComponent.get(), &VeinEvent::StorageComponentInterface::sigValueChange, this, [=](QVariant newValue) {
+                    emit sigComponentValue(entityId, componentName, newValue, actualComponent->getTimestamp());
+                });
+            else
+                conn = connect(actualComponent.get(), &VeinEvent::StorageComponentInterface::sigValueSet, this, [=](QVariant setValue) {
+                    emit sigComponentValue(entityId, componentName, setValue, actualComponent->getTimestamp());
+                });
             m_componentChangeConnections.append(conn);
             return true;
         }

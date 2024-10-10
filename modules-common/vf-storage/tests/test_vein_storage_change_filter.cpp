@@ -206,6 +206,21 @@ void test_vein_storage_change_filter::fireChangeTwoSequentialClearFilter()
     QCOMPARE(spy2.count(), 0);
 }
 
+void test_vein_storage_change_filter::fireSetAllSame()
+{
+    VeinStorageFilter filter(m_server->getStorage(), VeinStorageFilter::Settings(false, false));
+    QSignalSpy spy(&filter, &VeinStorageFilter::sigComponentValue);
+
+    QCOMPARE(filter.add(entityId1, componentName1), true);
+
+    m_server->setComponentServerNotification(entityId1, componentName1, "foo");
+    m_server->setComponentServerNotification(entityId1, componentName1, "foo");
+
+    QCOMPARE(spy.count(), 2);
+    QCOMPARE(spy[0][2], "foo");
+    QCOMPARE(spy[1][2], "foo");
+}
+
 void test_vein_storage_change_filter::setupServer()
 {
     m_server = std::make_unique<TestVeinServer>();

@@ -25,6 +25,7 @@ private slots:
     void fireChangeOnceOnTwoIdenticalValid();
     void fireChangeTwoSequentialClearFilter();
 
+    void fireSetAllSame();
 private:
     void setupServer();
     QDateTime msAfterEpoch(qint64 msecs);
