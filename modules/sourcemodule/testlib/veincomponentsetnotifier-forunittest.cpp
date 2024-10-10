@@ -1,10 +1,7 @@
 #include "veincomponentsetnotifier-forunittest.h"
-#include <vcmp_entitydata.h>
 #include <ve_commandevent.h>
-#include <vcmp_componentdata.h>
-#include <vcmp_entitydata.h>
+#include "vf_server_entity_add.h"
 
-using VeinComponent::EntityData;
 using VeinEvent::CommandEvent;
 using VeinEvent::EventData;
 using VeinComponent::ComponentData;
@@ -23,12 +20,7 @@ void VeinComponentSetNotifier::addComponentToNotify(QString componentName, VfMod
 
 void VeinComponentSetNotifier::createEntity(int entityId)
 {
-    VeinComponent::EntityData *entityData = new VeinComponent::EntityData();
-    entityData->setCommand(VeinComponent::EntityData::Command::ECMD_ADD);
-    entityData->setEventOrigin(VeinComponent::EntityData::EventOrigin::EO_LOCAL);
-    entityData->setEventTarget(VeinComponent::EntityData::EventTarget::ET_ALL);
-    entityData->setEntityId(entityId);
-    emit sigSendEvent(new VeinEvent::CommandEvent(VeinEvent::CommandEvent::EventSubtype::NOTIFICATION, entityData));
+    emit sigSendEvent(VfServerEntityAdd::generateEvent(entityId));
 }
 
 void VeinComponentSetNotifier::processEvent(QEvent *t_event)
