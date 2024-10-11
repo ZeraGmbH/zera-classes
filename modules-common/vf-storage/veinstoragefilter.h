@@ -12,10 +12,7 @@ class VeinStorageFilter : public QObject
     Q_OBJECT
 public:
     struct Settings {
-        Settings(bool fireCurrentValidOnAddFiter, bool fireOnChangesOnly) :
-            m_fireCurrentValidOnAddFiter(fireCurrentValidOnAddFiter),
-            m_fireOnChangesOnly(fireOnChangesOnly)
-            {}
+        Settings(bool fireCurrentValidOnAddFiter, bool fireOnChangesOnly);
         bool m_fireCurrentValidOnAddFiter;
         bool m_fireOnChangesOnly;
     };
