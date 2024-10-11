@@ -33,7 +33,7 @@ void test_vein_data_collector::oneChangeWithinOnePeriod()
     collectorComponents[10] = QStringList() << "ComponentName1";
     dataCollector.startLogging(collectorComponents);
 
-    m_server->setComponentClientTransaction(10, "ComponentName1", "foo");
+    m_server->setComponentServerNotification(10, "ComponentName1", "foo");
     TimeMachineObject::feedEventLoop();
 
     QCOMPARE(spy.count(), 0);
