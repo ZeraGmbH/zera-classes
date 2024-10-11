@@ -1,5 +1,11 @@
 #include "veinstoragefilter.h"
 
+VeinStorageFilter::Settings::Settings(bool fireCurrentValidOnAddFiter, bool fireOnChangesOnly) :
+    m_fireCurrentValidOnAddFiter(fireCurrentValidOnAddFiter),
+    m_fireOnChangesOnly(fireOnChangesOnly)
+{
+}
+
 VeinStorageFilter::VeinStorageFilter(VeinEvent::StorageSystem* storage, Settings settings) :
     m_storage{storage},
     m_settings(settings)
