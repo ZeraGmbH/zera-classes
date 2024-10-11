@@ -4,7 +4,7 @@
 #include <testveinserver.h>
 #include <QDateTime>
 
-class test_vein_storage_change_filter : public QObject
+class test_vein_storage_filter : public QObject
 {
     Q_OBJECT
 private slots:
