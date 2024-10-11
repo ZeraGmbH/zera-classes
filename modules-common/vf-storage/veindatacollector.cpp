@@ -3,11 +3,18 @@
 #include <timerfactoryqt.h>
 #include <QDateTime>
 
- VeinDataCollector::VeinDataCollector(VeinEvent::StorageSystem *storage)
-    :m_storage{storage}
+// Note:
+// VeinStorageFilter::Settings are going to change - current settings are set
+// to make tests happy
+
+ VeinDataCollector::VeinDataCollector(VeinEvent::StorageSystem *storage) :
+    m_storageFilter(storage, VeinStorageFilter::Settings(false, true))
 {
+    connect(&m_storageFilter, &VeinStorageFilter::sigComponentValue,
+            this, &VeinDataCollector::appendValue);
+
     m_periodicTimer = TimerFactoryQt::createPeriodic(100);
-    connect(m_periodicTimer.get(), &TimerTemplateQt::sigExpired,this, [&]{
+    connect(m_periodicTimer.get(), &TimerTemplateQt::sigExpired,this, [&] {
         emit newStoredValue(JsonTimeGrouping::regroupTimestamp(m_jsonObject));
     });
 }
@@ -19,25 +26,18 @@ void VeinDataCollector::startLogging(QHash<int, QStringList> entitesAndComponent
     for(auto iter=entitesAndComponents.cbegin(); iter!=entitesAndComponents.cend(); ++iter) {
         const QStringList components = iter.value();
         int entityId = iter.key();
-        for(const QString& component : components) {
-            VeinEvent::StorageComponentInterfacePtr actualComponent = m_storage->getComponent(entityId, component);
-            auto conn = connect(actualComponent.get(), &VeinEvent::StorageComponentInterface::sigValueChange, this, [=](QVariant newValue) {
-                appendValue(entityId, component, newValue, actualComponent->getTimestamp());
-            });
-            m_componentChangeConnections.append(conn);
-        }
+        for(const QString& componentName : components)
+            m_storageFilter.add(entityId, componentName);
     }
 }
 
 void VeinDataCollector::stopLogging()
 {
     m_periodicTimer->stop();
-    for(auto &conn : m_componentChangeConnections)
-        disconnect(conn);
-    m_componentChangeConnections.clear();
+    m_storageFilter.clear();
 }
 
-void VeinDataCollector::appendValue(int entityId, QString componentName, QVariant value, const QDateTime &timestamp)
+void VeinDataCollector::appendValue(int entityId, QString componentName, QVariant value, QDateTime timestamp)
 {
     QHash<int , QHash<QString, QVariant> > infosHash;
     infosHash[entityId][componentName] = value;

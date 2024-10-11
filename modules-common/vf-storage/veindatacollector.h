@@ -2,9 +2,9 @@
 #define VEINDATACOLLECTOR_H
 
 #include <ve_storagesystem.h>
+#include <veinstoragefilter.h>
 #include <timerperiodicqt.h>
 #include <QJsonObject>
-#include <QJsonArray>
 #include <QDateTime>
 
 class VeinDataCollector : public QObject
@@ -22,16 +22,16 @@ signals:
     // * split up filter / datacollection / periodic vein update into smaller pieces
     void newStoredValue(QJsonObject jsonObject);
 
+private slots:
+    void appendValue(int entityId, QString componentName, QVariant value, QDateTime timestamp);
 private:
-    void appendValue(int entityId, QString componentName, QVariant value, const QDateTime &timestamp);
     QJsonObject convertToJson(QString timestamp, QHash<int, QHash<QString, QVariant> > infosHash);
     QJsonObject convertHashToJsonObject(QHash<QString, QVariant> hash);
     QJsonObject getJsonForTimestamp(QString timestamp);
     QHash<QString, QVariant> appendNewValueToExistingValues(QJsonValue existingValue, QHash<QString, QVariant> compoValuesHash);
     void clearJson();
 
-    VeinEvent::StorageSystem* m_storage;
-    QList<QMetaObject::Connection> m_componentChangeConnections;
+    VeinStorageFilter m_storageFilter;
     QJsonObject m_jsonObject;
     TimerTemplateQtPtr m_periodicTimer;
 };
