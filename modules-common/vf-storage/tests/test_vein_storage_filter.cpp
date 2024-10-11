@@ -1,4 +1,4 @@
-#include "test_vein_storage_change_filter.h"
+#include "test_vein_storage_filter.h"
 #include "veinstoragefilter.h"
 #include <timemachineobject.h>
 #include <timemachinefortest.h>
@@ -6,7 +6,7 @@
 #include <QSignalSpy>
 #include <QTest>
 
-QTEST_MAIN(test_vein_storage_change_filter)
+QTEST_MAIN(test_vein_storage_filter)
 
 static constexpr int entityId1 = 10;
 static constexpr int entityId2 = 11;
@@ -14,24 +14,24 @@ static const char* componentName1 = "ComponentName1";
 static const char* componentName2 = "ComponentName2";
 static constexpr int startTimeStamp = 0;
 
-void test_vein_storage_change_filter::initTestCase()
+void test_vein_storage_filter::initTestCase()
 {
     TimerFactoryQtForTest::enableTest();
 }
 
-void test_vein_storage_change_filter::init()
+void test_vein_storage_filter::init()
 {
     TimeMachineForTest::reset();
     setupServer();
 }
 
-void test_vein_storage_change_filter::cleanup()
+void test_vein_storage_filter::cleanup()
 {
     m_server = nullptr;
     TimeMachineObject::feedEventLoop();
 }
 
-void test_vein_storage_change_filter::fireInitialValid()
+void test_vein_storage_filter::fireInitialValid()
 {
     TimeMachineForTest::getInstance()->processTimers(42);
     m_server->setComponentClientTransaction(entityId1, componentName1, "foo");
@@ -48,7 +48,7 @@ void test_vein_storage_change_filter::fireInitialValid()
     QCOMPARE(spy[0][3], msAfterEpoch(42));
 }
 
-void test_vein_storage_change_filter::noFireInitialInvalid()
+void test_vein_storage_filter::noFireInitialInvalid()
 {
     VeinStorageFilter filter(m_server->getStorage(), VeinStorageFilter::Settings(true, true));
     QSignalSpy spy(&filter, &VeinStorageFilter::sigComponentValue);
@@ -58,7 +58,7 @@ void test_vein_storage_change_filter::noFireInitialInvalid()
     QCOMPARE(spy.count(), 0);
 }
 
-void test_vein_storage_change_filter::nofireInitialValid()
+void test_vein_storage_filter::nofireInitialValid()
 {
     m_server->setComponentClientTransaction(entityId1, componentName1, "foo");
 
@@ -70,7 +70,7 @@ void test_vein_storage_change_filter::nofireInitialValid()
     QCOMPARE(spy.count(), 0);
 }
 
-void test_vein_storage_change_filter::nofireInitialValidWrongFilter()
+void test_vein_storage_filter::nofireInitialValidWrongFilter()
 {
     m_server->setComponentClientTransaction(entityId1, componentName1, "foo");
 
@@ -83,7 +83,7 @@ void test_vein_storage_change_filter::nofireInitialValidWrongFilter()
     QCOMPARE(spy.count(), 0);
 }
 
-void test_vein_storage_change_filter::fireIntitialOnceOnTwoIdenticalValid()
+void test_vein_storage_filter::fireIntitialOnceOnTwoIdenticalValid()
 {
     m_server->setComponentClientTransaction(entityId1, componentName1, "foo");
 
@@ -96,7 +96,7 @@ void test_vein_storage_change_filter::fireIntitialOnceOnTwoIdenticalValid()
     QCOMPARE(spy.count(), 1);
 }
 
-void test_vein_storage_change_filter::fireInitialValidOpenClose()
+void test_vein_storage_filter::fireInitialValidOpenClose()
 {
     m_server->setComponentClientTransaction(entityId1, componentName1, "foo");
 
@@ -109,7 +109,7 @@ void test_vein_storage_change_filter::fireInitialValidOpenClose()
     QCOMPARE(spy.count(), 2);
 }
 
-void test_vein_storage_change_filter::fireChangeValid()
+void test_vein_storage_filter::fireChangeValid()
 {
     VeinStorageFilter filter(m_server->getStorage(), VeinStorageFilter::Settings(false, true));
     QSignalSpy spy(&filter, &VeinStorageFilter::sigComponentValue);
@@ -129,7 +129,7 @@ void test_vein_storage_change_filter::fireChangeValid()
     QCOMPARE(spy[0][3], msAfterEpoch(42));
 }
 
-void test_vein_storage_change_filter::fireChangeValidMultiple()
+void test_vein_storage_filter::fireChangeValidMultiple()
 {
     VeinStorageFilter filter(m_server->getStorage(), VeinStorageFilter::Settings(false, true));
     QSignalSpy spy(&filter, &VeinStorageFilter::sigComponentValue);
@@ -151,7 +151,7 @@ void test_vein_storage_change_filter::fireChangeValidMultiple()
     QCOMPARE(spy[3][2], "boz");
 }
 
-void test_vein_storage_change_filter::nofireChangeValidWrongFilter()
+void test_vein_storage_filter::nofireChangeValidWrongFilter()
 {
     VeinStorageFilter filter(m_server->getStorage(), VeinStorageFilter::Settings(false, true));
     QSignalSpy spy(&filter, &VeinStorageFilter::sigComponentValue);
@@ -164,7 +164,7 @@ void test_vein_storage_change_filter::nofireChangeValidWrongFilter()
     QCOMPARE(spy.count(), 0);
 }
 
-void test_vein_storage_change_filter::fireChangeOnceOnTwoIdenticalValid()
+void test_vein_storage_filter::fireChangeOnceOnTwoIdenticalValid()
 {
     VeinStorageFilter filter(m_server->getStorage(), VeinStorageFilter::Settings(false, true));
     QSignalSpy spy(&filter, &VeinStorageFilter::sigComponentValue);
@@ -177,7 +177,7 @@ void test_vein_storage_change_filter::fireChangeOnceOnTwoIdenticalValid()
     QCOMPARE(spy.count(), 1);
 }
 
-void test_vein_storage_change_filter::fireChangeTwoSequentialClearFilter()
+void test_vein_storage_filter::fireChangeTwoSequentialClearFilter()
 {
     VeinStorageFilter filter1(m_server->getStorage(), VeinStorageFilter::Settings(false, true));
     QSignalSpy spy1(&filter1, &VeinStorageFilter::sigComponentValue);
@@ -206,7 +206,7 @@ void test_vein_storage_change_filter::fireChangeTwoSequentialClearFilter()
     QCOMPARE(spy2.count(), 0);
 }
 
-void test_vein_storage_change_filter::fireSetAllSame()
+void test_vein_storage_filter::fireSetAllSame()
 {
     VeinStorageFilter filter(m_server->getStorage(), VeinStorageFilter::Settings(false, false));
     QSignalSpy spy(&filter, &VeinStorageFilter::sigComponentValue);
@@ -221,7 +221,7 @@ void test_vein_storage_change_filter::fireSetAllSame()
     QCOMPARE(spy[1][2], "foo");
 }
 
-void test_vein_storage_change_filter::setupServer()
+void test_vein_storage_filter::setupServer()
 {
     m_server = std::make_unique<TestVeinServer>();
 
@@ -231,7 +231,7 @@ void test_vein_storage_change_filter::setupServer()
     m_server->simulAllModulesLoaded("test-session1.json", QStringList() << "test-session1.json" << "test-session2.json");
 }
 
-QDateTime test_vein_storage_change_filter::msAfterEpoch(qint64 msecs)
+QDateTime test_vein_storage_filter::msAfterEpoch(qint64 msecs)
 {
     QDateTime dateTime;
     dateTime.setMSecsSinceEpoch(msecs);
