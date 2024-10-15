@@ -143,7 +143,7 @@ void test_modman_regression_all_sessions::regressionCom5003Ced()
     modMan.waitUntilModulesAreReady();
 
     QList<ZeraModules::ModuleData *> modules = modMan.getModuleList();
-    QCOMPARE(modules.count(), 21);
+    QCOMPARE(modules.count(), 22);
 
     QCOMPARE(modules[0]->m_moduleId, 1150);
     QCOMPARE(modules[0]->m_reference->getVeinModuleName(), "StatusModule1");
@@ -225,9 +225,13 @@ void test_modman_regression_all_sessions::regressionCom5003Ced()
     QCOMPARE(modules[19]->m_reference->getVeinModuleName(), "SourceModule1");
     QCOMPARE(modules[19]->m_reference->getSCPIModuleName(), "SRC1");
 
-    QCOMPARE(modules[20]->m_moduleId, 9999);
-    QCOMPARE(modules[20]->m_reference->getVeinModuleName(), "SCPIModule1");
-    QCOMPARE(modules[20]->m_reference->getSCPIModuleName(), "SCP1");
+    QCOMPARE(modules[20]->m_moduleId, 1400);
+    QCOMPARE(modules[20]->m_reference->getVeinModuleName(), "BleModule1");
+    QCOMPARE(modules[20]->m_reference->getSCPIModuleName(), "BLE1");
+
+    QCOMPARE(modules[21]->m_moduleId, 9999);
+    QCOMPARE(modules[21]->m_reference->getVeinModuleName(), "SCPIModule1");
+    QCOMPARE(modules[21]->m_reference->getSCPIModuleName(), "SCP1");
 
     modMan.destroyModulesAndWaitUntilAllShutdown();
     // ------ end auto generated code ----
@@ -247,7 +251,7 @@ void test_modman_regression_all_sessions::regressionCom5003Meas()
     modMan.waitUntilModulesAreReady();
 
     QList<ZeraModules::ModuleData *> modules = modMan.getModuleList();
-    QCOMPARE(modules.count(), 24);
+    QCOMPARE(modules.count(), 25);
 
     QCOMPARE(modules[0]->m_moduleId, 1150);
     QCOMPARE(modules[0]->m_reference->getVeinModuleName(), "StatusModule1");
@@ -341,9 +345,13 @@ void test_modman_regression_all_sessions::regressionCom5003Meas()
     QCOMPARE(modules[22]->m_reference->getVeinModuleName(), "SourceModule1");
     QCOMPARE(modules[22]->m_reference->getSCPIModuleName(), "SRC1");
 
-    QCOMPARE(modules[23]->m_moduleId, 9999);
-    QCOMPARE(modules[23]->m_reference->getVeinModuleName(), "SCPIModule1");
-    QCOMPARE(modules[23]->m_reference->getSCPIModuleName(), "SCP1");
+    QCOMPARE(modules[23]->m_moduleId, 1400);
+    QCOMPARE(modules[23]->m_reference->getVeinModuleName(), "BleModule1");
+    QCOMPARE(modules[23]->m_reference->getSCPIModuleName(), "BLE1");
+
+    QCOMPARE(modules[24]->m_moduleId, 9999);
+    QCOMPARE(modules[24]->m_reference->getVeinModuleName(), "SCPIModule1");
+    QCOMPARE(modules[24]->m_reference->getSCPIModuleName(), "SCP1");
 
     modMan.destroyModulesAndWaitUntilAllShutdown();
     // ------ end auto generated code ----
@@ -363,7 +371,7 @@ void test_modman_regression_all_sessions::regressionCom5003PerPhase()
     modMan.waitUntilModulesAreReady();
 
     QList<ZeraModules::ModuleData *> modules = modMan.getModuleList();
-    QCOMPARE(modules.count(), 25);
+    QCOMPARE(modules.count(), 26);
 
     QCOMPARE(modules[0]->m_moduleId, 1150);
     QCOMPARE(modules[0]->m_reference->getVeinModuleName(), "StatusModule1");
@@ -461,9 +469,13 @@ void test_modman_regression_all_sessions::regressionCom5003PerPhase()
     QCOMPARE(modules[23]->m_reference->getVeinModuleName(), "SourceModule1");
     QCOMPARE(modules[23]->m_reference->getSCPIModuleName(), "SRC1");
 
-    QCOMPARE(modules[24]->m_moduleId, 9999);
-    QCOMPARE(modules[24]->m_reference->getVeinModuleName(), "SCPIModule1");
-    QCOMPARE(modules[24]->m_reference->getSCPIModuleName(), "SCP1");
+    QCOMPARE(modules[24]->m_moduleId, 1400);
+    QCOMPARE(modules[24]->m_reference->getVeinModuleName(), "BleModule1");
+    QCOMPARE(modules[24]->m_reference->getSCPIModuleName(), "BLE1");
+
+    QCOMPARE(modules[25]->m_moduleId, 9999);
+    QCOMPARE(modules[25]->m_reference->getVeinModuleName(), "SCPIModule1");
+    QCOMPARE(modules[25]->m_reference->getSCPIModuleName(), "SCP1");
 
     modMan.destroyModulesAndWaitUntilAllShutdown();
     // ------ end auto generated code ----
@@ -483,7 +495,7 @@ void test_modman_regression_all_sessions::regressionCom5003Ref()
     modMan.waitUntilModulesAreReady();
 
     QList<ZeraModules::ModuleData *> modules = modMan.getModuleList();
-    QCOMPARE(modules.count(), 8);
+    QCOMPARE(modules.count(), 9);
 
     QCOMPARE(modules[0]->m_moduleId, 1150);
     QCOMPARE(modules[0]->m_reference->getVeinModuleName(), "StatusModule1");
@@ -513,9 +525,13 @@ void test_modman_regression_all_sessions::regressionCom5003Ref()
     QCOMPARE(modules[6]->m_reference->getVeinModuleName(), "SEC1Module1");
     QCOMPARE(modules[6]->m_reference->getSCPIModuleName(), "EC01");
 
-    QCOMPARE(modules[7]->m_moduleId, 9999);
-    QCOMPARE(modules[7]->m_reference->getVeinModuleName(), "SCPIModule1");
-    QCOMPARE(modules[7]->m_reference->getSCPIModuleName(), "SCP1");
+    QCOMPARE(modules[7]->m_moduleId, 1400);
+    QCOMPARE(modules[7]->m_reference->getVeinModuleName(), "BleModule1");
+    QCOMPARE(modules[7]->m_reference->getSCPIModuleName(), "BLE1");
+
+    QCOMPARE(modules[8]->m_moduleId, 9999);
+    QCOMPARE(modules[8]->m_reference->getVeinModuleName(), "SCPIModule1");
+    QCOMPARE(modules[8]->m_reference->getSCPIModuleName(), "SCP1");
 
     modMan.destroyModulesAndWaitUntilAllShutdown();
     // ------ end auto generated code ----

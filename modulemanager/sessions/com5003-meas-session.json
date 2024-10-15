@@ -116,6 +116,11 @@
         "id": 1300
       },
       {
+        "name" : "blemodule",
+        "configFile" : "blemodule.xml",
+        "id": 1400
+      },
+      {
         "name" : "scpimodule",
         "configFile" : "com5003-scpimodule.xml",
         "id": 9999
