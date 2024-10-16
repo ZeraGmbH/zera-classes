@@ -94,6 +94,7 @@ jobs:
           cd $HOME/targetbuild/scpi-doc/app
           ./scpi-doc-generator -z${{ github.event.inputs.version}}
           mv $HOME/targetbuild/scpi-doc/app/html-docs $HOME/html-docs
+          find $HOME/html-docs/ -name *adjustment* -delete
           mv $HOME/targetbuild/scpi-doc/app/SessionNamesMapping.json $HOME
           ls $HOME/
 
