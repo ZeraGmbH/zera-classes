@@ -21,7 +21,7 @@
 
 void VeinDataCollector::startLogging(QHash<int, QStringList> entitesAndComponents)
 {
-    clearJson();
+    m_jsonObject = QJsonObject();
     m_periodicTimer->start();
     for(auto iter=entitesAndComponents.cbegin(); iter!=entitesAndComponents.cend(); ++iter) {
         const QStringList components = iter.value();
@@ -86,13 +86,4 @@ QJsonObject VeinDataCollector::convertHashToJsonObject(QHash<QString, QVariant> 
         jsonObject.insert(it.key(), it.value().toString());
     }
     return jsonObject;
-}
-
-void VeinDataCollector::clearJson()
-{
-    if(!m_jsonObject.isEmpty()) {
-        for (const QString &key : m_jsonObject.keys()) {
-            m_jsonObject.remove(key);
-        }
-    }
 }

@@ -29,7 +29,6 @@ private:
     QJsonObject convertHashToJsonObject(QHash<QString, QVariant> hash);
     QJsonObject getJsonForTimestamp(QString timestamp);
     QHash<QString, QVariant> appendNewValueToExistingValues(QJsonValue existingValue, QHash<QString, QVariant> compoValuesHash);
-    void clearJson();
 
     VeinStorageFilter m_storageFilter;
     QJsonObject m_jsonObject;
