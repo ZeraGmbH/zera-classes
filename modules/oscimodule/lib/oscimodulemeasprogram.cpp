@@ -569,7 +569,6 @@ void cOsciModuleMeasProgram::setActualValuesNames()
         s1.remove(QRegExp("[1-9][0-9]?"));
         s2.remove(s1);
 
-        QString s = s1 + "%1" + QString(";%1;[%]").arg(s2);
         QString name = s1 + s2;
 
         m_veinActValueList.at(i)->setChannelName(name);
