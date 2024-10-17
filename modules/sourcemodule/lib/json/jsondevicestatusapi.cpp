@@ -82,8 +82,8 @@ QStringList JsonDeviceStatusApi::getArray(QString key) const
 {
     QStringList strList;
     auto arr = m_jsonStatus[key].toArray();
-    auto variantList = arr.toVariantList();
-    for (auto entry : variantList) {
+    const auto variantList = arr.toVariantList();
+    for (const auto &entry : variantList) {
         strList.append(entry.toString());
     }
     return strList;
