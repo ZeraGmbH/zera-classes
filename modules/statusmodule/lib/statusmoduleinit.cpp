@@ -540,7 +540,7 @@ QString cStatusModuleInit::findDeviceType()
     QString procKernelParamFilename = QStringLiteral("/proc/cmdline");
     QFile file(procKernelParamFilename);
     if(file.open(QIODevice::ReadOnly)) {
-        QStringList kernelParams = QString::fromLatin1(file.readAll()).split(QStringLiteral(" "));
+        const QStringList kernelParams = QString::fromLatin1(file.readAll()).split(QStringLiteral(" "));
         QString paramSearch = QStringLiteral("zera_device=");
         for(auto param : kernelParams) {
             if(param.contains(paramSearch)) {
