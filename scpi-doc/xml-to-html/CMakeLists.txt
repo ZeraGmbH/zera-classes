@@ -16,6 +16,6 @@ add_custom_target(xsl-files ALL
     SOURCES ${XSL_FILES}
 )
 
-add_custom_target(create-all-htmls ALL
-    SOURCES create-all-htmls
+add_custom_target(create-html ALL
+    SOURCES create-html
 )
