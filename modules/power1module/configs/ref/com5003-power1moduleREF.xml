@@ -46,6 +46,7 @@
                </fout1>
             </output>
         </frequencyoutput>
+        <enableSCPICommands>1</enableSCPICommands>
     </configuration>
     <parameter>
         <measuringmode>QREF</measuringmode>

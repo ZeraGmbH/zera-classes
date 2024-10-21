@@ -30,7 +30,7 @@ enum moduleconfigstate
     setNominalFrequency,
     setFrequencyActualizationMode,
     setFrequencyOutputCount,
-
+    setEnableScpiCommands,
 
     setMeasuringMode,
     setModePhaseCount,

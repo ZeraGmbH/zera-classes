@@ -45,6 +45,7 @@
                 <n>0</n>
             </output>
         </frequencyoutput>
+        <enableSCPICommands>1</enableSCPICommands>
     </configuration>
     <parameter>
         <measuringmode>4LB</measuringmode>
