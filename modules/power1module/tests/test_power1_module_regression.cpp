@@ -70,3 +70,24 @@ void test_power1_module_regression::injectActualValues()
     QVERIFY(TestLogHelpers::compareAndLogOnDiff(jsonExpected, jsonDumped));
 }
 
+void test_power1_module_regression::testScpiCommandsDisabled()
+{
+    QFile file(":/dumpInitial-withoutScpi.json");
+    QVERIFY(file.open(QFile::ReadOnly));
+    QByteArray jsonExpected = file.readAll();
+
+    ModuleManagerTestRunner testRunner(":/session-power1-withoutScpi-test.json");
+    VeinEvent::StorageSystem* veinStorage = testRunner.getVeinStorageSystem();
+    QByteArray jsonDumped;
+    QBuffer buff(&jsonDumped);
+    veinStorage->dumpToFile(&buff, QList<int>() << powerEntityId);
+
+    QVERIFY(TestLogHelpers::compareAndLogOnDiff(jsonExpected, jsonDumped));
+
+    //When we change into 'INF_ModuleInterface', we take current 'jsonDumped' and copy it to test-data.
+    //So, here is an extra check to be sure that no scpi commands are introduced by accident in future.
+    QJsonObject dumpedModuleInterface = QJsonDocument::fromVariant(veinStorage->getStoredValue(powerEntityId, QString("INF_ModuleInterface"))).object();
+    QJsonValue scpiCmds = dumpedModuleInterface.value("SCPIInfo").toObject().value("Cmd");
+    QCOMPARE(scpiCmds.toArray().count(), 0);
+}
+
