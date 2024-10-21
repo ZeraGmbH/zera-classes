@@ -33,8 +33,8 @@ int main(int argc, char *argv[])
 
     qputenv("QT_FATAL_CRITICALS", "1");
 
-    QJsonObject mappedJson = SessionNamesMappingJson::createSessionNamesMappingJsonAllDevices(ModulemanagerConfig::getConfigFileNameFull());
-    if(!cJsonFileLoader::storeJsonFile(QStringLiteral(HTML_DOCS_PATH) + "SessionNamesMapping.json", mappedJson))
+    SessionNamesMappingJson sessionNamesMapping(ModulemanagerConfig::getConfigFileNameFull());
+    if(!sessionNamesMapping.storeMappedJsonFile(QStringLiteral(HTML_DOCS_PATH) + "SessionNamesMapping.json"))
         qFatal("Session names mapping json file could not be created!");
 
     QString xmlDirPath = QStringLiteral(HTML_DOCS_PATH) + "scpi-xmls/";
