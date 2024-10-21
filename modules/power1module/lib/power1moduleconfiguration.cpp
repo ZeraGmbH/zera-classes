@@ -52,6 +52,8 @@ void cPower1ModuleConfiguration::validateAndSetConfig(QByteArray xmlString, QStr
     m_ConfigXMLMap["pow1modconfpar:configuration:frequencyoutput:frequencyact"] = setFrequencyActualizationMode;
     m_ConfigXMLMap["pow1modconfpar:configuration:frequencyoutput:output:n"] = setFrequencyOutputCount;
 
+    m_ConfigXMLMap["pow1modconfpar:configuration:enableSCPICommands"] = setEnableScpiCommands;
+
     m_ConfigXMLMap["pow1modconfpar:parameter:measuringmode"] = setMeasuringMode;
     m_ConfigXMLMap["pow1modconfpar:parameter:modePhases:n"] = setModePhaseCount;
     m_ConfigXMLMap["pow1modconfpar:parameter:interval:time"] = setMeasureIntervalTime;
@@ -171,6 +173,9 @@ void cPower1ModuleConfiguration::configXMLInfo(QString key)
                     m_pPower1ModulConfigData->m_FreqOutputConfList.append(fconf);
                 }
             }
+            break;
+        case setEnableScpiCommands:
+            m_pPower1ModulConfigData->m_enableScpiCommands = m_pXMLReader->getValue(key).toInt(&ok);
             break;
         case setMeasuringMode:
             m_pPower1ModulConfigData->m_sMeasuringMode.m_sKey = key;

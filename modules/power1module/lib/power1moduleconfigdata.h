@@ -77,6 +77,7 @@ public:
     double m_fmovingwindowInterval;
     bool m_disablephaseselect = false;
     bool m_bmovingWindow;
+    bool m_enableScpiCommands;
 };
 
 }

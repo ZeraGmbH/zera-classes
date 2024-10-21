@@ -308,6 +308,7 @@
                             <xs:element name="connectivity" type="connectivitytype"/>
                             <xs:element name="measure" type="measureType"/>
                             <xs:element name="frequencyoutput" type="frequencyoutputType"/>
+                            <xs:element name="enableSCPICommands" type="yesnotype"/>
                         </xs:sequence>
                     </xs:complexType>
                 </xs:element>
