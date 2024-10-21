@@ -1,0 +1,9 @@
+{
+    "modules" : [
+        {
+          "name" : "power1module",
+          "configFile" : ":/mt310s2-power1module-withoutScpi-test.xml",
+          "id": 1070
+        }
+    ]
+}

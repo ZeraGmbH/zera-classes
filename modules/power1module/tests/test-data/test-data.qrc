@@ -3,7 +3,10 @@
         <file>session-minimal.json</file>
         <file>session-power1-test.json</file>
         <file>mt310s2-power1module-test.xml</file>
-        <file>dumpInitial.json</file>
         <file>dumpActual.json</file>
+        <file>dumpInitial.json</file>
+        <file>dumpInitial-withoutScpi.json</file>
+        <file>session-power1-withoutScpi-test.json</file>
+        <file>mt310s2-power1module-withoutScpi-test.xml</file>
     </qresource>
 </RCC>
