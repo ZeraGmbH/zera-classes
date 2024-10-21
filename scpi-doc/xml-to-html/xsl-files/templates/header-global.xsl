@@ -6,7 +6,7 @@
     <xsl:param name="adjustmentData"/>
     <xsl:choose>
         <xsl:when test="$adjustmentData='true'">
-            <xsl:text>Adjustment </xsl:text><xsl:value-of select="$GlobalHeaderAppend"/>
+            <xsl:value-of select="DEVICE"/><xsl:text> - Adjustment </xsl:text><xsl:value-of select="$GlobalHeaderAppend"/>
         </xsl:when>
         <xsl:otherwise>
             <xsl:value-of select="DEVICE"/><xsl:text> - </xsl:text>
