@@ -23,9 +23,9 @@ protected:
     cReferenceModuleMeasProgram *m_pMeasProgram; // our measuring program, lets say the working horse
     cReferenceAdjustment *m_pReferenceAdjustment; // our justifying and normation program
     QList<cReferenceMeasChannel*> m_ReferenceMeasChannelList; // our meas channels
-    virtual void setupModule(); // after xml configuration we can setup and export our module
-    virtual void startMeas(); // we make the measuring program start here
-    virtual void stopMeas();
+    void setupModule() override; // after xml configuration we can setup and export our module
+    void startMeas() override; // we make the measuring program start here
+    void stopMeas() override;
 
     // our states for base modules activation statemacine
     QState m_ActivationStartState;
@@ -44,16 +44,16 @@ private:
     qint32 m_nActivationIt;
 
 private slots:
-    void activationStart();
-    void activationExec();
-    void activationDone();
+    void activationStart() override;
+    void activationExec() override;
+    void activationDone() override;
     void activationAdjustment();
-    void activationFinished();
+    void activationFinished() override;
 
-    void deactivationStart();
-    void deactivationExec();
-    void deactivationDone();
-    void deactivationFinished();
+    void deactivationStart() override;
+    void deactivationExec() override;
+    void deactivationDone() override;
+    void deactivationFinished() override;
 };
 
 }
