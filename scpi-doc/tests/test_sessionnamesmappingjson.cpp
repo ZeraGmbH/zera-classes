@@ -18,3 +18,17 @@ void test_sessionnamesmappingjson::testMt310s2Com5003SessionCount()
     QCOMPARE(sessionNamesMapping.getSessionCount("com5003"), mmConfig->getAvailableSessions().count());
     QCOMPARE(sessionNamesMapping.getSessionCount("foo"), 0);
 }
+
+void test_sessionnamesmappingjson::testSessionNames()
+{
+    ModulemanagerConfigTest::supportOeTests();
+    ModulemanagerConfig::setDemoDevice("mt310s2", false);
+    ModulemanagerConfig* mmConfig = ModulemanagerConfig::getInstance();
+    SessionNamesMappingJson sessionNamesMapping(ModulemanagerConfig::getConfigFileNameFull());
+
+    QCOMPARE(sessionNamesMapping.getSessionNameForExternalUsers("mt310s2-meas-session.json"), "Default");
+    QCOMPARE(sessionNamesMapping.getSessionNameForExternalUsers("mt310s2-dc-session.json"), "DC: 4*Voltage / 1*Current");
+    QCOMPARE(sessionNamesMapping.getSessionNameForExternalUsers("com5003-ced-session.json"), "Changing energy direction");
+    QCOMPARE(sessionNamesMapping.getSessionNameForExternalUsers("com5003-perphase-session.json"), "3 Systems / 2 Wires");
+    QCOMPARE(sessionNamesMapping.getSessionNameForExternalUsers("foo"), "");
+}

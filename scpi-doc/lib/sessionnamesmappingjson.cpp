@@ -23,6 +23,19 @@ int SessionNamesMappingJson::getSessionCount(QString device)
     return m_mappedJson[device].toObject().count();
 }
 
+QString SessionNamesMappingJson::getSessionNameForExternalUsers(QString internalSessionName)
+{
+    QString externalName;
+    foreach(const QString& device, m_mappedJson.keys()) {
+        QJsonObject sessions = m_mappedJson.value(device).toObject();
+        if (sessions.contains(internalSessionName)) {
+            externalName = sessions.value(internalSessionName).toString();
+            break;
+        }
+    }
+    return externalName;
+}
+
 QJsonObject SessionNamesMappingJson::createSessionNamesMappingJson(QString device)
 {
     QJsonObject jsonConfig = cJsonFileLoader::loadJsonFile(m_modmanConfigFile).value(device).toObject();
