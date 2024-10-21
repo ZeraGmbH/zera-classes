@@ -22,6 +22,7 @@
 
 <xsl:param name="zenuxVersion"/>
 <xsl:param name="sessionXml"/>
+<xsl:param name="sessionName"/>
 <xsl:param name="adjustmentOutput"/>
 
 <xsl:template match="MODELLIST">
@@ -29,6 +30,7 @@
   <html> 
   <title>
     <xsl:call-template name="HeaderGlobal">
+      <xsl:with-param name="sessionName" select="$sessionName"/>
       <xsl:with-param name="adjustmentData" select="$adjustmentOutput"/>
     </xsl:call-template>
   </title>
@@ -182,6 +184,7 @@
   <header>
     <xsl:call-template name="ZeraLogo"/>
     <xsl:call-template name="HeaderGlobal">
+      <xsl:with-param name="sessionName" select="$sessionName"/>
       <xsl:with-param name="adjustmentData" select="$adjustmentOutput"/>
     </xsl:call-template>
     <button id="toggleThemeButton" class="toggleThemeButton" onclick="toggleTheme()">Toggle theme</button>

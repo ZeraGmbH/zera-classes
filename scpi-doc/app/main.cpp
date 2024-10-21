@@ -7,7 +7,7 @@
 #include <QProcess>
 
 
-void createHtml(QString zenuxRelease, QFileInfo sessionXml, QString adjustment, QString htmlPath)
+void createHtml(QString zenuxRelease, QFileInfo sessionXml, QString sessionName, QString adjustment, QString htmlPath)
 {
     QProcess sh;
     QStringList paramList;
@@ -15,6 +15,7 @@ void createHtml(QString zenuxRelease, QFileInfo sessionXml, QString adjustment, 
                 << QStringLiteral(SCPI_DOC_SOURCE_PATH) + "/create-html"
                 << zenuxRelease
                 << sessionXml.filePath()
+                << sessionName
                 << adjustment
                 << htmlPath;
     sh.start("/bin/sh", paramList);
@@ -48,18 +49,20 @@ int main(int argc, char *argv[])
 
     QDir xmlDir(xmlDirPath);
     QString htmlPath;
+    QString sessionName;
     for(auto xmlFile: xmlDir.entryInfoList({"*.xml"})) {
         htmlPath = htmlDirPath + xmlFile.fileName().replace("xml", "html");
-        createHtml(zenuxRelease, xmlFile, "false", htmlPath);
+        sessionName = sessionNamesMapping.getSessionNameForExternalUsers(xmlFile.fileName().replace("xml", "json"));
+        createHtml(zenuxRelease, xmlFile, sessionName, "false", htmlPath);
     }
 
     QFileInfo mtDefaultSessionXml(xmlDirPath + "/mt310s2-meas-session.xml");
     htmlPath = htmlDirPath + mtDefaultSessionXml.fileName().replace("meas-session.xml", "adjustment.html");
-    createHtml(zenuxRelease, mtDefaultSessionXml, "true", htmlPath);
+    createHtml(zenuxRelease, mtDefaultSessionXml, "", "true", htmlPath);
 
     QFileInfo comDefaultSessionXml(xmlDirPath + "/com5003-meas-session.xml");
     htmlPath = htmlDirPath + comDefaultSessionXml.fileName().replace("meas-session.xml", "adjustment.html");
-    createHtml(zenuxRelease, comDefaultSessionXml, "true", htmlPath);
+    createHtml(zenuxRelease, comDefaultSessionXml, "", "true", htmlPath);
 
     xmlDir.removeRecursively();
 }
