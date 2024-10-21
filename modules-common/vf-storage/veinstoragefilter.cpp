@@ -1,7 +1,7 @@
 #include "veinstoragefilter.h"
 
-VeinStorageFilter::Settings::Settings(bool fireCurrentValidOnAddFiter, bool fireOnChangesOnly) :
-    m_fireCurrentValidOnAddFiter(fireCurrentValidOnAddFiter),
+VeinStorageFilter::Settings::Settings(bool fireCurrentValueOnAddFilter, bool fireOnChangesOnly) :
+    m_fireCurrentValueOnAddFilter(fireCurrentValueOnAddFilter),
     m_fireOnChangesOnly(fireOnChangesOnly)
 {
 }
@@ -23,7 +23,7 @@ bool VeinStorageFilter::add(int entityId, QString componentName)
     if(!m_filteredEntityComponents.contains(entityId) || !m_filteredEntityComponents[entityId].contains(componentName)) {
         if(actualComponent) {
             m_filteredEntityComponents[entityId].insert(componentName);
-            if(m_settings.m_fireCurrentValidOnAddFiter)
+            if(m_settings.m_fireCurrentValueOnAddFilter)
                 fireActual(entityId, componentName, actualComponent);
 
             QMetaObject::Connection conn;

@@ -12,8 +12,8 @@ class VeinStorageFilter : public QObject
     Q_OBJECT
 public:
     struct Settings {
-        Settings(bool fireCurrentValidOnAddFiter, bool fireOnChangesOnly);
-        bool m_fireCurrentValidOnAddFiter;
+        Settings(bool fireCurrentValueOnAddFilter, bool fireOnChangesOnly);
+        bool m_fireCurrentValueOnAddFilter;
         bool m_fireOnChangesOnly;
     };
     explicit VeinStorageFilter(VeinEvent::StorageSystem* storage, Settings settings);
