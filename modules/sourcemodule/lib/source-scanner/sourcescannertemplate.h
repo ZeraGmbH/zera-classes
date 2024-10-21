@@ -9,6 +9,7 @@
 class SourceScannerTemplate
 {
 public:
+    virtual ~SourceScannerTemplate() = default;
     typedef std::unique_ptr<SourceScannerTemplate> Ptr;
     IoQueueGroup::Ptr getNextQueueGroupForScan();
     SourceProperties findSourceFromResponse();
