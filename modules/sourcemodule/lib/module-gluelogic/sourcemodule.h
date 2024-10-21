@@ -19,23 +19,23 @@ public:
 protected:
     SourceModuleProgram *m_pProgram; // our program, lets say the working horse
 
-    virtual void setupModule(); // after xml configuration we can setup and export our module
-    virtual void startMeas(); // we make the measuring program start here
-    virtual void stopMeas();
+    void setupModule() override; // after xml configuration we can setup and export our module
+    void startMeas() override; // we make the measuring program start here
+    void stopMeas() override;
 
 private slots:
     // entered immediately - no interim states for now
-    void activationFinished();
-    void deactivationFinished();
+    void activationFinished() override;
+    void deactivationFinished() override;
 
     // sigh - we have to add overrides to not being pure virtual
-    virtual void activationStart() {}
-    virtual void activationExec() {}
-    virtual void activationDone() {}
+    void activationStart() override {}
+    void activationExec() override {}
+    void activationDone() override {}
 
-    virtual void deactivationStart() {}
-    virtual void deactivationExec() {}
-    virtual void deactivationDone() {}
+    void deactivationStart() override {}
+    void deactivationExec() override {}
+    void deactivationDone() override {}
 private:
     QState m_stateSwitchAllOff;
     VfModuleRpc *m_rpcEventSystem;

@@ -41,14 +41,14 @@ public:
 protected:
     cSCPIServer *m_pSCPIServer; // our server for the world
 
-    virtual void setupModule() override; // after xml configuration we can setup and export our module
-    virtual void startMeas() override; // we make the measuring program start here
-    virtual void stopMeas() override;
+    void setupModule() override; // after xml configuration we can setup and export our module
+    void startMeas() override; // we make the measuring program start here
+    void stopMeas() override;
 
 protected slots:
-    virtual void activationStart() override;
-    virtual void activationExec() override;
-    virtual void activationDone() override;
+    void activationStart() override;
+    void activationExec() override;
+    void activationDone() override;
     virtual void activationFinished() override;
 
     virtual void deactivationStart() override;
