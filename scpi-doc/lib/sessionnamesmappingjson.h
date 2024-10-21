@@ -10,6 +10,7 @@ public:
     SessionNamesMappingJson(QString modmanConfigFile);
     bool storeMappedJsonFile(QString destFile);
     int getSessionCount(QString device);
+    QString getSessionNameForExternalUsers(QString internalSessionName);
 private:
     QJsonObject createSessionNamesMappingJson(QString device);
     QString m_modmanConfigFile;
