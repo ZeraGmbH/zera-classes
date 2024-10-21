@@ -2,18 +2,30 @@
 #include <zera-jsonfileloader.h>
 #include <zera-json-merge.h>
 #include <QJsonArray>
+#include <QStringList>
 
-QJsonObject SessionNamesMappingJson::createSessionNamesMappingJsonAllDevices(QString modmanConfigFile)
+SessionNamesMappingJson::SessionNamesMappingJson(QString modmanConfigFile) :
+    m_modmanConfigFile(modmanConfigFile)
 {
-    QJsonObject mappedJsonCom = createSessionNamesMappingJson(modmanConfigFile, "com5003");
-    QJsonObject mappedJsonMt = createSessionNamesMappingJson(modmanConfigFile, "mt310s2");
-    cJSONMerge::mergeJson(mappedJsonCom, mappedJsonMt);
-    return mappedJsonCom;
+    QJsonObject deviceJson = createSessionNamesMappingJson("mt310s2");
+    cJSONMerge::mergeJson(m_mappedJson, deviceJson);
+    deviceJson = createSessionNamesMappingJson("com5003");
+    cJSONMerge::mergeJson(m_mappedJson, deviceJson);
 }
 
-QJsonObject SessionNamesMappingJson::createSessionNamesMappingJson(QString modmanConfigFile, QString device)
+bool SessionNamesMappingJson::storeMappedJsonFile(QString destFile)
 {
-    QJsonObject jsonConfig = cJsonFileLoader::loadJsonFile(modmanConfigFile).value(device).toObject();
+    return cJsonFileLoader::storeJsonFile(destFile, m_mappedJson);
+}
+
+int SessionNamesMappingJson::getSessionCount(QString device)
+{
+    return m_mappedJson[device].toObject().count();
+}
+
+QJsonObject SessionNamesMappingJson::createSessionNamesMappingJson(QString device)
+{
+    QJsonObject jsonConfig = cJsonFileLoader::loadJsonFile(m_modmanConfigFile).value(device).toObject();
     QJsonArray availableSessions = jsonConfig["availableSessions"].toArray();
     QJsonArray sessionDisplayStrings = jsonConfig["sessionDisplayStrings"].toArray();
 

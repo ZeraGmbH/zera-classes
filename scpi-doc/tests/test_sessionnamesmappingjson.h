@@ -7,8 +7,7 @@ class test_sessionnamesmappingjson : public QObject
 {
     Q_OBJECT
 private slots:
-    void testMt310s2Sessions();
-    void testMt310s2Com5003Sessions();
+    void testMt310s2Com5003SessionCount();
 };
 
 #endif // TEST_SESSIONNAMESMAPPINGJSON_H

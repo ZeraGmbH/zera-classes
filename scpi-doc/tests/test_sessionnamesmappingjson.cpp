@@ -6,27 +6,15 @@
 
 QTEST_MAIN(test_sessionnamesmappingjson)
 
-void test_sessionnamesmappingjson::testMt310s2Sessions()
+void test_sessionnamesmappingjson::testMt310s2Com5003SessionCount()
 {
     ModulemanagerConfigTest::supportOeTests();
     ModulemanagerConfig::setDemoDevice("mt310s2", false);
     ModulemanagerConfig* mmConfig = ModulemanagerConfig::getInstance();
-    QJsonObject jsonData = SessionNamesMappingJson::createSessionNamesMappingJson(ModulemanagerConfig::getConfigFileNameFull(), "mt310s2");
-    QVERIFY(jsonData.contains("mt310s2"));
-    QCOMPARE(jsonData["mt310s2"].toObject().count(), mmConfig->getAvailableSessions().count());
-}
+    SessionNamesMappingJson sessionNamesMapping(ModulemanagerConfig::getConfigFileNameFull());
 
-void test_sessionnamesmappingjson::testMt310s2Com5003Sessions()
-{
-    ModulemanagerConfigTest::supportOeTests();
-    ModulemanagerConfig::setDemoDevice("mt310s2", false);
-    ModulemanagerConfig* mmConfig = ModulemanagerConfig::getInstance();
-    QJsonObject jsonData = SessionNamesMappingJson::createSessionNamesMappingJsonAllDevices(ModulemanagerConfig::getConfigFileNameFull());
-
-    QVERIFY(jsonData.contains("mt310s2"));
-    QCOMPARE(jsonData["mt310s2"].toObject().count(), mmConfig->getAvailableSessions().count());
+    QCOMPARE(sessionNamesMapping.getSessionCount("mt310s2"), mmConfig->getAvailableSessions().count());
     ModulemanagerConfig::setDemoDevice("com5003", false);
-    QVERIFY(jsonData.contains("com5003"));
-    QCOMPARE(jsonData["com5003"].toObject().count(), mmConfig->getAvailableSessions().count());
+    QCOMPARE(sessionNamesMapping.getSessionCount("com5003"), mmConfig->getAvailableSessions().count());
+    QCOMPARE(sessionNamesMapping.getSessionCount("foo"), 0);
 }
-
