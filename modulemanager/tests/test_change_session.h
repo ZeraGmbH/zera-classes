@@ -18,6 +18,7 @@ private slots:
     void changeSessionCom5003FromComponent();
     void changeSessionCom5003SCPICmd();
 
+    void testSessionCatalogScpiCmd();
 private:
     AbstractFactoryServiceInterfacesPtr m_serviceInterfaceFactory;
 };
