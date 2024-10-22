@@ -5,7 +5,10 @@
  <MODELS>
   <CONFIGURATION Type="Model,Node">
    <SYST Type="Node">
-    <NAMESESSION ScpiPath="CONFIGURATION:SYST:NAMESESSION" DataType="STRING" Type="Query,Command+Par" Description="Session name"/>
+    <NAMESESSION ValidPar="Default,EMOB AC,EMOB DC,DC: 4*Voltage / 1*Current" Description="Session name" ScpiPath="CONFIGURATION:SYST:NAMESESSION" DataType="STRING" Type="Query,Command+Par"/>
+    <SESSION Type="Node">
+     <CATALOG ScpiPath="CONFIGURATION:SYST:SESSION:CATALOG" Type="Query"/>
+    </SESSION>
    </SYST>
   </CONFIGURATION>
   <DEVICE Type="Model,Node">
@@ -34,19 +37,19 @@
     </MEASURE>
    </OPERATION>
   </STATUS>
-  <MULOPC ScpiPath="*OPC" Type="Model,Query,Command" Description="OPeration Complete"/>
-  <MULESE ScpiPath="*ESE" Type="Model,Query,Command+Par" Description="Event Status Enable"/>
-  <MULSRE ScpiPath="*SRE" Type="Model,Query,Command+Par" Description="Service Request Enable"/>
-  <MULCLS ScpiPath="*CLS" Type="Model,Command" Description="Clear Status"/>
-  <MULRST ScpiPath="*RST" Type="Model,Command" Description="Reset"/>
-  <MULIDN ScpiPath="*IDN" Type="Model,Query" Description="Identification query"/>
-  <MULESR ScpiPath="*ESR" Type="Model,Query" Description="Event Status Register"/>
-  <MULSTB ScpiPath="*STB" Type="Model,Query" Description="Status Byte query"/>
-  <MULTST ScpiPath="*TST" Type="Model,Query" Description="Self-Test query"/>
+  <MULOPC Description="OPeration Complete" ScpiPath="*OPC" Type="Model,Query,Command"/>
+  <MULESE Description="Event Status Enable" ScpiPath="*ESE" Type="Model,Query,Command+Par"/>
+  <MULSRE Description="Service Request Enable" ScpiPath="*SRE" Type="Model,Query,Command+Par"/>
+  <MULCLS Description="Clear Status" ScpiPath="*CLS" Type="Model,Command"/>
+  <MULRST Description="Reset" ScpiPath="*RST" Type="Model,Command"/>
+  <MULIDN Description="Identification query" ScpiPath="*IDN" Type="Model,Query"/>
+  <MULESR Description="Event Status Register" ScpiPath="*ESR" Type="Model,Query"/>
+  <MULSTB Description="Status Byte query" ScpiPath="*STB" Type="Model,Query"/>
+  <MULTST Description="Self-Test query" ScpiPath="*TST" Type="Model,Query"/>
   <SYSTEM Type="Model,Node">
-   <ERROR ScpiPath="SYSTEM:ERROR" Type="Node,Query" Description="Queries one error of internal error list">
-    <COUNT ScpiPath="SYSTEM:ERROR:COUNT" Type="Query" Description="Queries the number of error messages of internal error list"/>
-    <ALL ScpiPath="SYSTEM:ERROR:ALL" Type="Query" Description="Queries all error stored in internal error list"/>
+   <ERROR Description="Queries one error of internal error list" ScpiPath="SYSTEM:ERROR" Type="Node,Query">
+    <COUNT Description="Queries the number of error messages of internal error list" ScpiPath="SYSTEM:ERROR:COUNT" Type="Query"/>
+    <ALL Description="Queries all error stored in internal error list" ScpiPath="SYSTEM:ERROR:ALL" Type="Query"/>
    </ERROR>
   </SYSTEM>
  </MODELS>
