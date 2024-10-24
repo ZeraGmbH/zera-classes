@@ -9,8 +9,9 @@
 #include <vtcp_workerfactorymethodstest.h>
 #include <QDir>
 
-void TestModuleManager::supportOeTests()
+void TestModuleManager::enableTests()
 {
+    TimerFactoryQtForTest::enableTest();
     JsonSessionLoaderTest::supportOeTests();
     ModulemanagerConfigTest::supportOeTests();
     VeinTcp::TcpWorkerFactoryMethodsTest::enableMockNetwork();

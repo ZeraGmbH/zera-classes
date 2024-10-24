@@ -8,6 +8,8 @@ class test_adj_module_offset : public QObject
 {
     Q_OBJECT
 private slots:
+    void initTestCase();
+
     void validActValuesWithPermission();
     void validActValuesWithoutPermission();
 

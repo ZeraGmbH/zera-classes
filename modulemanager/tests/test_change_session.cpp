@@ -17,7 +17,7 @@ static int constexpr systemEntityId = 0;
 void test_change_session::initTestCase()
 {
     m_serviceInterfaceFactory = std::make_shared<TestFactoryServiceInterfaces>();
-    TestModuleManager::supportOeTests();
+    TestModuleManager::enableTests();
     TestModuleManager::pointToInstalledSessionFiles();
     qputenv("QT_FATAL_CRITICALS", "1");
 }

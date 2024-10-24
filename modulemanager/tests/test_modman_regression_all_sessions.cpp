@@ -13,7 +13,7 @@ void test_modman_regression_all_sessions::initTestCase()
 {
     m_serviceInterfaceFactory = std::make_shared<TestFactoryServiceInterfaces>();
     ModuleManagerSetupFacade::registerMetaTypeStreamOperators();
-    TestModuleManager::supportOeTests();
+    TestModuleManager::enableTests();
     TestModuleManager::pointToInstalledSessionFiles();
     qputenv("QT_FATAL_CRITICALS", "1");
     qputenv("QT_LOGGING_RULES", "*.debug=false;*.info=false");

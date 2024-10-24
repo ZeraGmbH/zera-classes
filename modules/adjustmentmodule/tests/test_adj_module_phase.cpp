@@ -15,6 +15,12 @@ constexpr double limitOffset = 0.1;
 constexpr double angleUL2 = 120;
 
 
+void test_adj_module_phase::initTestCase()
+{
+    TestModuleManager::enableTests();
+    TestModuleManager::pointToInstalledSessionFiles();
+}
+
 void test_adj_module_phase::noActValuesWithPermission()
 {
     ModuleManagerTestRunner testRunner(":/session-minimal.json", true);

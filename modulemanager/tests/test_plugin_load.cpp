@@ -9,7 +9,7 @@ QTEST_MAIN(test_plugin_load)
 void test_plugin_load::initTestCase()
 {
     ModuleManagerSetupFacade::registerMetaTypeStreamOperators();
-    TestModuleManager::supportOeTests();
+    TestModuleManager::enableTests();
     TestModuleManager::pointToInstalledSessionFiles();
     qputenv("QT_FATAL_CRITICALS", "1");
 }
