@@ -32,8 +32,6 @@ TestModuleManager::TestModuleManager(ModuleManagerSetupFacade *setupFacade,
         true)
 {
     TimerFactoryQtForTest::enableTest();
-    JsonSessionLoaderTest::supportOeTests();
-    ModulemanagerConfigTest::supportOeTests();
 }
 
 void TestModuleManager::startAllTestServices(QString deviceName, bool initialAdjPermission)

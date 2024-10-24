@@ -17,7 +17,6 @@ constexpr double angleUL2 = 120;
 
 void test_adj_module_phase::initTestCase()
 {
-    TestModuleManager::enableTests();
     TestModuleManager::pointToInstalledSessionFiles();
 }
 

@@ -13,7 +13,6 @@ constexpr double testfrequency = 50;
 
 void test_adj_module_offset::initTestCase()
 {
-    TestModuleManager::enableTests();
     TestModuleManager::pointToInstalledSessionFiles();
 }
 

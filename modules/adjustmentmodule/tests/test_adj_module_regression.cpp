@@ -19,7 +19,6 @@ static int constexpr scpiEntityId = 9999;
 
 void test_adj_module_regression::initTestCase()
 {
-    TestModuleManager::enableTests();
     TestModuleManager::pointToInstalledSessionFiles();
 }
 

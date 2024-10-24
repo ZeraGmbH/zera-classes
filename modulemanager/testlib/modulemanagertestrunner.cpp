@@ -6,7 +6,7 @@
 
 ModuleManagerTestRunner::ModuleManagerTestRunner(QString sessionFileName, bool initialAdjPermission, QString deviceName)
 {
-    VeinTcp::TcpWorkerFactoryMethodsTest::enableMockNetwork();
+    TestModuleManager::enableTests();
     m_licenseSystem = std::make_unique<TestLicenseSystem>();
     m_modmanFacade = std::make_unique<ModuleManagerSetupFacade>(m_licenseSystem.get());
     m_serviceInterfaceFactory = std::make_shared<TestFactoryServiceInterfaces>();
