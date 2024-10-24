@@ -13,6 +13,12 @@ constexpr double testangle = 0;
 constexpr double testfrequency = 50;
 constexpr double limitOffset = 0.1;
 
+void test_adj_module_gain::initTestCase()
+{
+    TestModuleManager::enableTests();
+    TestModuleManager::pointToInstalledSessionFiles();
+}
+
 void test_adj_module_gain::noActValuesWithPermission()
 {
     ModuleManagerTestRunner testRunner(":/session-minimal.json", true);
