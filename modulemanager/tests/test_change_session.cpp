@@ -1,10 +1,9 @@
 #include "test_change_session.h"
 #include "testfactoryserviceinterfaces.h"
-#include "modulemanagertestrunner.h"
 #include "modulemanagerconfig.h"
-#include "modulemanagerconfigtest.h"
 #include "scpimoduleclientblocked.h"
 #include "vf_client_component_setter.h"
+#include <testlicensesystem.h>
 #include <zera-jsonfileloader.h>
 #include <timemachineobject.h>
 #include <QJsonArray>
