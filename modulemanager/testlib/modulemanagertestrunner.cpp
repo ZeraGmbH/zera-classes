@@ -1,12 +1,9 @@
 #include "modulemanagertestrunner.h"
 #include "vf_client_component_setter.h"
-#include "vf_entity_component_event_item.h"
 #include <timemachineobject.h>
-#include <vtcp_workerfactorymethodstest.h>
 
 ModuleManagerTestRunner::ModuleManagerTestRunner(QString sessionFileName, bool initialAdjPermission, QString deviceName)
 {
-    VeinTcp::TcpWorkerFactoryMethodsTest::enableMockNetwork();
     m_licenseSystem = std::make_unique<TestLicenseSystem>();
     m_modmanFacade = std::make_unique<ModuleManagerSetupFacade>(m_licenseSystem.get());
     m_serviceInterfaceFactory = std::make_shared<TestFactoryServiceInterfaces>();
