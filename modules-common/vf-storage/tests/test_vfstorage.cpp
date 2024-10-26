@@ -1,10 +1,8 @@
 #include "test_vfstorage.h"
 #include "modulemanagertestrunner.h"
-#include "testveinserverwithnet.h"
 #include <timemachineobject.h>
 #include <timerfactoryqtfortest.h>
 #include <timemachinefortest.h>
-#include "vf_client_entity_subscriber.h"
 #include <QTest>
 
 QTEST_MAIN(test_vfstorage)
