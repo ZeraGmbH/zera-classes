@@ -13,7 +13,6 @@ namespace REFERENCEMODULE
 
 enum moduleconfigstate
 {
-    setDebugLevel,
     setRMIp,
     setRMPort,
     setPCBServerIp,

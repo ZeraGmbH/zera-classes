@@ -36,7 +36,6 @@ void cReferenceModuleConfiguration::setConfiguration(QByteArray xmlString)
     // so now we can set up
     // initializing hash table for xml configuration
 
-    m_ConfigXMLMap["referencemodconfpar:configuration:connectivity:debuglevel"] = setDebugLevel;
     m_ConfigXMLMap["referencemodconfpar:configuration:connectivity:ethernet:resourcemanager:ip"] = setRMIp;
     m_ConfigXMLMap["referencemodconfpar:configuration:connectivity:ethernet:resourcemanager:port"] = setRMPort;
     m_ConfigXMLMap["referencemodconfpar:configuration:connectivity:ethernet:pcbserver:ip"] = setPCBServerIp;
@@ -79,9 +78,6 @@ void cReferenceModuleConfiguration::configXMLInfo(QString key)
         int cmd = m_ConfigXMLMap[key];
         switch (cmd)
         {
-        case setDebugLevel:
-            m_pReferenceModulConfigData->m_nDebugLevel = m_pXMLReader->getValue(key).toInt(&ok);
-            break;
         case setRMIp:
             m_pReferenceModulConfigData->m_RMSocket.m_sIP = m_pXMLReader->getValue(key);
             break;

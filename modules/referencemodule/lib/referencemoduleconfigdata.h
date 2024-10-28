@@ -13,7 +13,6 @@ class cReferenceModuleConfigData
 {
 public:
     cReferenceModuleConfigData(){}
-    quint8 m_nDebugLevel;
     quint8 m_nChannelCount; // how many measurement channels
     QStringList m_referenceChannelList; // a list of channel system names we work on
 
