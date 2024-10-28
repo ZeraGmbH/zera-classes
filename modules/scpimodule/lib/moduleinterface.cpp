@@ -16,7 +16,7 @@
 #include "moduleinterface.h"
 #include "scpicmdinfo.h"
 #include "scpiparameterdelegate.h"
-#include "scpipropertydelegate.h"
+#include "scpicatalogcmddelegate.h"
 #include "scpimeasuredelegate.h"
 
 
@@ -136,8 +136,8 @@ void cModuleInterface::addSCPICommand(cSCPICmdInfo *scpiCmdInfo)
             setXmlComponentInfo(delegate, scpiCmdInfo->veinComponentInfo);
         }
         else {
-            delegate = new cSCPIPropertyDelegate(cmdParent, cmdNode, scpiCmdInfo->scpiCommandType.toInt(), m_pModule, scpiCmdInfo);
-            m_scpiPropertyDelegateHash[cmdComplete] = static_cast<cSCPIPropertyDelegate*>(delegate); // for easier access if we need to change answers of this delegate
+            delegate = new cSCPICatalogCmdDelegate(cmdParent, cmdNode, scpiCmdInfo->scpiCommandType.toInt(), m_pModule, scpiCmdInfo);
+            m_scpiPropertyDelegateHash[cmdComplete] = static_cast<cSCPICatalogCmdDelegate*>(delegate); // for easier access if we need to change answers of this delegate
         }
         m_scpiDelegateList.append(delegate); // for clean up .....
         m_pSCPIInterface->addSCPICommand(delegate);

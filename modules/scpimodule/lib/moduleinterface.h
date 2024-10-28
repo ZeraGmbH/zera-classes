@@ -18,7 +18,7 @@ class cSCPICmdInfo;
 class cSCPIInterface;
 class ScpiBaseDelegate;
 class cSCPIParameterDelegate;
-class cSCPIPropertyDelegate;
+class cSCPICatalogCmdDelegate;
 class cSCPIMeasure;
 class cSCPIMeasureDelegate;
 
@@ -40,7 +40,7 @@ public:
 private:
     QList<ScpiBaseDelegate*> m_scpiDelegateList; // our delegatelist for parameter cmd's ... needed to clean up
     QHash<QString, cSCPIMeasureDelegate*> m_scpiMeasureDelegateHash; // a hash for measure cmd's ... needed for clean up and search for existing cmd
-    QHash<QString, cSCPIPropertyDelegate*> m_scpiPropertyDelegateHash; // a hash with property delegates taht might need actualization when something changes
+    QHash<QString, cSCPICatalogCmdDelegate*> m_scpiPropertyDelegateHash; // a hash with property delegates taht might need actualization when something changes
 
     void addSCPICommand(cSCPICmdInfo *scpiCmdInfo);
     void addSCPIMeasureCommand(QString cmdparent, QString cmd,  quint8 cmdType, quint8 measCode, cSCPIMeasure* measureObject, QJsonObject veinComponentInfo = QJsonObject());

@@ -1,5 +1,5 @@
-#ifndef SCPIPROPERTYDELEGATE
-#define SCPIPROPERTYDELEGATE
+#ifndef SCPICATALOGCMDDELEGATE
+#define SCPICATALOGCMDDELEGATE
 
 #include "scpibasedelegate.h"
 #include "scpimodule.h"
@@ -7,12 +7,12 @@
 
 namespace SCPIMODULE {
 
-class cSCPIPropertyDelegate: public ScpiBaseDelegate
+class cSCPICatalogCmdDelegate: public ScpiBaseDelegate
 {
     Q_OBJECT
 public:
-    cSCPIPropertyDelegate(QString cmdParent, QString cmd, quint8 type, cSCPIModule* scpimodule, cSCPICmdInfo* scpicmdinfo);
-    virtual ~cSCPIPropertyDelegate();
+    cSCPICatalogCmdDelegate(QString cmdParent, QString cmd, quint8 type, cSCPIModule* scpimodule, cSCPICmdInfo* scpicmdinfo);
+    virtual ~cSCPICatalogCmdDelegate();
     virtual void executeSCPI(cSCPIClient *client, QString& sInput) override;
     void setOutput(cSCPICmdInfo* scpicmdinfo);
     void setOutput(QVariant modInterface);
@@ -24,5 +24,5 @@ private:
 
 }
 
-#endif // SCPIPROPERTYDELEGATE
+#endif // SCPICATALOGCMDDELEGATE
 

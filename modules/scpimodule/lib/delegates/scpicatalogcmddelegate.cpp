@@ -1,4 +1,4 @@
-#include "scpipropertydelegate.h"
+#include "scpicatalogcmddelegate.h"
 #include "scpiclient.h"
 #include <zscpi_response_definitions.h>
 #include <vcmp_componentdata.h>
@@ -8,18 +8,18 @@
 
 namespace SCPIMODULE {
 
-cSCPIPropertyDelegate::cSCPIPropertyDelegate(QString cmdParent, QString cmd, quint8 type, cSCPIModule *scpimodule,  cSCPICmdInfo* scpicmdinfo)
+cSCPICatalogCmdDelegate::cSCPICatalogCmdDelegate(QString cmdParent, QString cmd, quint8 type, cSCPIModule *scpimodule,  cSCPICmdInfo* scpicmdinfo)
     :ScpiBaseDelegate(cmdParent, cmd, type), m_pModule(scpimodule), m_pSCPICmdInfo(scpicmdinfo)
 {
     setOutput(m_pSCPICmdInfo);
 }
 
-cSCPIPropertyDelegate::~cSCPIPropertyDelegate()
+cSCPICatalogCmdDelegate::~cSCPICatalogCmdDelegate()
 {
     delete m_pSCPICmdInfo;
 }
 
-void cSCPIPropertyDelegate::executeSCPI(cSCPIClient *client, QString &sInput)
+void cSCPICatalogCmdDelegate::executeSCPI(cSCPIClient *client, QString &sInput)
 {
     quint8 scpiCmdType = getType();
     cSCPICommand cmd = sInput;
@@ -29,13 +29,13 @@ void cSCPIPropertyDelegate::executeSCPI(cSCPIClient *client, QString &sInput)
         client->receiveStatus(ZSCPI::nak);
 }
 
-void cSCPIPropertyDelegate::setOutput(cSCPICmdInfo *scpicmdinfo)
+void cSCPICatalogCmdDelegate::setOutput(cSCPICmdInfo *scpicmdinfo)
 {
     QVariant ModInterface = m_pModule->getStorageSystem()->getStoredValue(scpicmdinfo->entityId, QString("INF_ModuleInterface"));
     setOutput(ModInterface);
 }
 
-void cSCPIPropertyDelegate::setOutput(QVariant modInterface)
+void cSCPICatalogCmdDelegate::setOutput(QVariant modInterface)
 {
     QJsonDocument jsonDoc = QJsonDocument::fromJson(modInterface.toByteArray());
     QJsonObject jsonObj = jsonDoc.object();
