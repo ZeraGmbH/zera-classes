@@ -26,7 +26,6 @@ class cDftModuleConfigData
 {
 public:
     cDftModuleConfigData(){}
-    quint8 m_nDebugLevel;
     quint8 m_nDftOrder;
     quint8 m_nValueCount; // how many measurment values
     QStringList m_valueChannelList; // a list of channel or channel pairs we work on to generate our measurement values

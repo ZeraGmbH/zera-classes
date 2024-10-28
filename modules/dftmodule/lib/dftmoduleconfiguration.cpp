@@ -37,7 +37,6 @@ void cDftModuleConfiguration::setConfiguration(QByteArray xmlString)
     // so now we can set up
     // initializing hash table for xml configuration
 
-    m_ConfigXMLMap["dftmodconfpar:configuration:connectivity:debuglevel"] = setDebugLevel;
     m_ConfigXMLMap["dftmodconfpar:configuration:connectivity:ethernet:resourcemanager:ip"] = setRMIp;
     m_ConfigXMLMap["dftmodconfpar:configuration:connectivity:ethernet:resourcemanager:port"] = setRMPort;
     m_ConfigXMLMap["dftmodconfpar:configuration:connectivity:ethernet:pcbserver:ip"] = setPCBServerIp;
@@ -93,9 +92,6 @@ void cDftModuleConfiguration::configXMLInfo(QString key)
         int cmd = m_ConfigXMLMap[key];
         switch (cmd)
         {
-        case setDebugLevel:
-            m_pDftModulConfigData->m_nDebugLevel = m_pXMLReader->getValue(key).toInt(&ok);
-            break;
         case setRMIp:
             m_pDftModulConfigData->m_RMSocket.m_sIP = m_pXMLReader->getValue(key);
             break;
