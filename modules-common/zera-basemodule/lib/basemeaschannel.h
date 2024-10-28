@@ -12,7 +12,7 @@ class cBaseMeasChannel: public cModuleActivist
     Q_OBJECT
 
 public:
-    cBaseMeasChannel(cSocket* rmsocket, cSocket* pcbsocket, VeinTcp::AbstractTcpWorkerFactoryPtr tcpWorkerFactory, QString name, quint8 chnnr);
+    cBaseMeasChannel(cSocket* rmsocket, cSocket* pcbsocket, VeinTcp::AbstractTcpWorkerFactoryPtr tcpNetworkFactory, QString name, quint8 chnnr);
     virtual ~cBaseMeasChannel(){}
 
     quint8 getDSPChannelNr();
@@ -24,7 +24,7 @@ public:
 protected:
     cSocket* m_pRMSocket; // the sockets we can connect to
     cSocket* m_pPCBServerSocket;
-    VeinTcp::AbstractTcpWorkerFactoryPtr m_tcpWorkerFactory;
+    VeinTcp::AbstractTcpWorkerFactoryPtr m_tcpNetworkFactory;
     QString m_sName; // the channel's system name
     quint8 m_nChannelNr; // the number of our channel for naming purpose
 

@@ -1,10 +1,10 @@
 #include "basemeaschannel.h"
 
-cBaseMeasChannel::cBaseMeasChannel(cSocket* rmsocket, cSocket* pcbsocket, VeinTcp::AbstractTcpWorkerFactoryPtr tcpWorkerFactory,
+cBaseMeasChannel::cBaseMeasChannel(cSocket* rmsocket, cSocket* pcbsocket, VeinTcp::AbstractTcpWorkerFactoryPtr tcpNetworkFactory,
                                    QString name, quint8 chnnr) :
     m_pRMSocket(rmsocket),
     m_pPCBServerSocket(pcbsocket),
-    m_tcpWorkerFactory(tcpWorkerFactory),
+    m_tcpNetworkFactory(tcpNetworkFactory),
     m_sName(name),
     m_nChannelNr(chnnr)
 {

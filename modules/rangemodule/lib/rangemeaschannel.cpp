@@ -8,9 +8,9 @@
 namespace RANGEMODULE
 {
 
-cRangeMeasChannel::cRangeMeasChannel(cSocket* rmsocket, cSocket* pcbsocket, VeinTcp::AbstractTcpWorkerFactoryPtr tcpWorkerFactory,
+cRangeMeasChannel::cRangeMeasChannel(cSocket* rmsocket, cSocket* pcbsocket, VeinTcp::AbstractTcpWorkerFactoryPtr tcpNetworkFactory,
                                      QString name, quint8 chnnr) :
-    cBaseMeasChannel(rmsocket, pcbsocket, tcpWorkerFactory, name, chnnr),
+    cBaseMeasChannel(rmsocket, pcbsocket, tcpNetworkFactory, name, chnnr),
     m_preScaling(1)
 {
     m_pcbInterface = std::make_shared<Zera::cPCBInterface>();
@@ -900,7 +900,7 @@ void cRangeMeasChannel::rmConnect()
     // so first we try to get a connection to resource manager over proxy
     m_rmClient = Zera::Proxy::getInstance()->getConnectionSmart(m_pRMSocket->m_sIP,
                                                                 m_pRMSocket->m_nPort,
-                                                                m_tcpWorkerFactory);
+                                                                m_tcpNetworkFactory);
     m_rmConnectState.addTransition(m_rmClient.get(), &Zera::ProxyClient::connected, &m_IdentifyState);
     // and then we set connection resource manager interface's connection
     m_rmInterface.setClientSmart(m_rmClient); //
@@ -958,7 +958,7 @@ void cRangeMeasChannel::pcbConnection()
 {
     m_pcbClient = Zera::Proxy::getInstance()->getConnectionSmart(m_pPCBServerSocket->m_sIP,
                                                                  m_nPort,
-                                                                 m_tcpWorkerFactory);
+                                                                 m_tcpNetworkFactory);
     m_pcbConnectionState.addTransition(m_pcbClient.get(), &Zera::ProxyClient::connected, &m_readDspChannelState);
 
     m_pcbInterface->setClientSmart(m_pcbClient);

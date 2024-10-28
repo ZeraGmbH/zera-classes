@@ -29,7 +29,7 @@ class ModuleManager : public QObject
 public:
     explicit ModuleManager(ModuleManagerSetupFacade *setupFacade,
                            AbstractFactoryServiceInterfacesPtr serviceInterfaceFactory,
-                           VeinTcp::AbstractTcpWorkerFactoryPtr tcpWorkerFactory,
+                           VeinTcp::AbstractTcpWorkerFactoryPtr tcpNetworkFactory,
                            bool moduleDemoMode = false,
                            QObject *parent = nullptr);
     ~ModuleManager() override;
@@ -69,7 +69,7 @@ private:
 
     ModuleManagerSetupFacade *m_setupFacade;
     AbstractFactoryServiceInterfacesPtr m_serviceInterfaceFactory;
-    VeinTcp::AbstractTcpWorkerFactoryPtr m_tcpWorkerFactory;
+    VeinTcp::AbstractTcpWorkerFactoryPtr m_tcpNetworkFactory;
     JsonSessionLoader m_sessionLoader;
     QHash<QString, MeasurementModuleFactory*> m_factoryTable;
     QQueue<ModuleData *> m_deferredStartList;

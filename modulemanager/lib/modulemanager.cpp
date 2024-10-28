@@ -22,13 +22,13 @@ QString ModuleManager::m_sessionPath = MODMAN_SESSION_PATH;
 
 ModuleManager::ModuleManager(ModuleManagerSetupFacade *setupFacade,
                              AbstractFactoryServiceInterfacesPtr serviceInterfaceFactory,
-                             VeinTcp::AbstractTcpWorkerFactoryPtr tcpWorkerFactory,
+                             VeinTcp::AbstractTcpWorkerFactoryPtr tcpNetworkFactory,
                              bool moduleDemoMode, QObject *parent) :
     QObject(parent),
     m_moduleStartLock(false),
     m_setupFacade(setupFacade),
     m_serviceInterfaceFactory(serviceInterfaceFactory),
-    m_tcpWorkerFactory(tcpWorkerFactory),
+    m_tcpNetworkFactory(tcpNetworkFactory),
     m_moduleDemoMode(moduleDemoMode)
 {
     m_timerAllModulesLoaded.start();
@@ -135,7 +135,7 @@ void ModuleManager::startModule(const QString & uniqueModuleName, const QString 
                                                       t_xmlConfigData,
                                                       m_setupFacade->getStorageSystem(),
                                                       m_serviceInterfaceFactory,
-                                                      m_tcpWorkerFactory,
+                                                      m_tcpNetworkFactory,
                                                       m_moduleDemoMode);
             VirtualModule *tmpModule = tmpFactory->createModule(moduleParam);
             if(tmpModule) {

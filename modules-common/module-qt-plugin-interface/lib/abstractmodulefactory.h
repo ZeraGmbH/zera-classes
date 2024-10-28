@@ -19,7 +19,7 @@ struct MeasurementModuleFactoryParam
                                   QByteArray configXmlData,
                                   VeinEvent::StorageSystem* storagesystem,
                                   AbstractFactoryServiceInterfacesPtr serviceInterfaceFactory,
-                                  VeinTcp::AbstractTcpWorkerFactoryPtr tcpWorkerFactory,
+                                  VeinTcp::AbstractTcpWorkerFactoryPtr tcpNetworkFactory,
                                   bool demo);
     MeasurementModuleFactoryParam getAdjustedParam(ModuleGroupNumerator* groupNumerator);
     const int m_entityId;
@@ -27,7 +27,7 @@ struct MeasurementModuleFactoryParam
     const QByteArray m_configXmlData;
     VeinEvent::StorageSystem* m_storagesystem;
     AbstractFactoryServiceInterfacesPtr m_serviceInterfaceFactory;
-    VeinTcp::AbstractTcpWorkerFactoryPtr m_tcpWorkerFactory;
+    VeinTcp::AbstractTcpWorkerFactoryPtr m_tcpNetworkFactory;
     const bool m_demo;
 };
 
@@ -36,14 +36,14 @@ inline MeasurementModuleFactoryParam::MeasurementModuleFactoryParam(int entityId
                                                                     QByteArray configXmlData,
                                                                     VeinEvent::StorageSystem *storagesystem,
                                                                     AbstractFactoryServiceInterfacesPtr serviceInterfaceFactory,
-                                                                    VeinTcp::AbstractTcpWorkerFactoryPtr tcpWorkerFactory,
+                                                                    VeinTcp::AbstractTcpWorkerFactoryPtr tcpNetworkFactory,
                                                                     bool demo) :
     m_entityId(entityId),
     m_moduleNum(moduleNum),
     m_configXmlData(configXmlData),
     m_storagesystem(storagesystem),
     m_serviceInterfaceFactory(serviceInterfaceFactory),
-    m_tcpWorkerFactory(tcpWorkerFactory),
+    m_tcpNetworkFactory(tcpNetworkFactory),
     m_demo(demo)
 {
 }
@@ -55,7 +55,7 @@ inline MeasurementModuleFactoryParam MeasurementModuleFactoryParam::getAdjustedP
                                          m_configXmlData,
                                          m_storagesystem,
                                          m_serviceInterfaceFactory,
-                                         m_tcpWorkerFactory,
+                                         m_tcpNetworkFactory,
                                          m_demo);
 }
 
