@@ -35,8 +35,6 @@ void cPower3ModuleConfiguration::setConfiguration(QByteArray xmlString)
     // so now we can set up
     // initializing hash table for xml configuration
 
-    m_ConfigXMLMap["pow3modconfpar:configuration:connectivity:debuglevel"] = setDebugLevel;
-
     m_ConfigXMLMap["pow3modconfpar:configuration:measure:inputentity"] = setInputModule;
     m_ConfigXMLMap["pow3modconfpar:configuration:measure:system:n"] = setSystemCount;
 
@@ -69,9 +67,6 @@ void cPower3ModuleConfiguration::configXMLInfo(QString key)
         int cmd = m_ConfigXMLMap[key];
         switch (cmd)
         {
-        case setDebugLevel:
-            m_pPower3ModulConfigData->m_nDebugLevel = m_pXMLReader->getValue(key).toInt(&ok);
-            break;
         case setInputModule:
             m_pPower3ModulConfigData->m_nModuleId = m_pXMLReader->getValue(key).toInt(&ok);
             break;

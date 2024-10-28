@@ -1,9 +1,6 @@
 <?xml version="1.0"?>
 <pow3modconfpar>
     <configuration>
-        <connectivity>
-            <debuglevel>0</debuglevel>
-        </connectivity>
         <measure>
             <inputentity>1060</inputentity>
             <system>

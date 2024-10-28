@@ -23,7 +23,6 @@ class cPower3ModuleConfigData
 public:
     cPower3ModuleConfigData(){}
 
-    quint8 m_nDebugLevel;
     quint8 m_nPowerSystemCount;
     int m_nModuleId;
     QList<powersystemconfiguration> m_powerSystemConfigList;

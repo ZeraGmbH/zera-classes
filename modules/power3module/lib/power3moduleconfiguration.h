@@ -13,7 +13,6 @@ namespace POWER3MODULE
 
 enum moduleconfigstate
 {
-    setDebugLevel,
     setInputModule,
     setSystemCount,
 
