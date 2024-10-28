@@ -43,7 +43,8 @@ class cReferenceMeasChannel:public cBaseMeasChannel
     Q_OBJECT
 
 public:
-    cReferenceMeasChannel(cSocket* rmsocket, cSocket* pcbsocket, QString name, quint8 chnnr);
+    cReferenceMeasChannel(cSocket* rmsocket, cSocket* pcbsocket, VeinTcp::AbstractTcpWorkerFactoryPtr tcpWorkerFactory,
+                          QString name, quint8 chnnr);
     virtual void generateInterface(); // here we export our interface (entities)
 
     quint32 setRange(QString range); // a statemachine gets started that returns cmdDone(quint32 cmdnr)

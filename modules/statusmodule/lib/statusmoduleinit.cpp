@@ -608,7 +608,9 @@ void cStatusModuleInit::setInterfaceComponents()
 
 void cStatusModuleInit::pcbserverConnect()
 {
-    m_pPCBClient = Zera::Proxy::getInstance()->getConnectionSmart(m_ConfigData.m_PCBServerSocket.m_sIP, m_ConfigData.m_PCBServerSocket.m_nPort);
+    m_pPCBClient = Zera::Proxy::getInstance()->getConnectionSmart(m_ConfigData.m_PCBServerSocket.m_sIP,
+                                                                  m_ConfigData.m_PCBServerSocket.m_nPort,
+                                                                  m_pModule->getTcpWorkerFactory());
     m_pcbserverConnectionState.addTransition(m_pPCBClient.get(), &Zera::ProxyClient::connected, &m_pcbserverReadVersionState);
 
     m_pPCBInterface->setClientSmart(m_pPCBClient);
@@ -670,7 +672,9 @@ void cStatusModuleInit::unregisterNotifiers()
 void cStatusModuleInit::dspserverConnect()
 {
     // we set up our dsp server connection
-    m_pDSPClient = Zera::Proxy::getInstance()->getConnection(m_ConfigData.m_DSPServerSocket.m_sIP, m_ConfigData.m_DSPServerSocket.m_nPort);
+    m_pDSPClient = Zera::Proxy::getInstance()->getConnection(m_ConfigData.m_DSPServerSocket.m_sIP,
+                                                             m_ConfigData.m_DSPServerSocket.m_nPort,
+                                                             m_pModule->getTcpWorkerFactory());
     m_pDSPInterface->setClient(m_pDSPClient);
     m_dspserverConnectionState.addTransition(m_pDSPClient, &Zera::ProxyClient::connected, &m_dspserverReadVersionState);
     connect(m_pDSPInterface, &Zera::cDSPInterface::serverAnswer, this, &cStatusModuleInit::catchInterfaceAnswer);

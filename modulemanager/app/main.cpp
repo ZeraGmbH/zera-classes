@@ -20,6 +20,7 @@
 #include <vl_sqlitedb.h>
 #include <vf_export.h>
 #include <vf_files.h>
+#include <tcpworkerfactory.h>
 
 #include <QDebug>
 #include <QCommandLineParser>
@@ -144,6 +145,7 @@ int main(int argc, char *argv[])
     ZeraModules::ModuleManager *modMan = new ZeraModules::ModuleManager(
         modManSetupFacade,
         serviceInterfaceFactory,
+        VeinTcp::TcpWorkerFactory::create(),
         demoMode,
         app.get());
     if(demoMode)

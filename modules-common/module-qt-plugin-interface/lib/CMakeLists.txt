@@ -16,6 +16,7 @@ target_link_libraries(module-qt-plugin-interface
     PUBLIC
     Qt5::Core
     module-service-interfaces
+    Zera::VfTcp
     # ask linker to help us finding unresolved symbols
     "-Wl,--no-undefined"
     )

@@ -82,6 +82,7 @@ void cSampleModule::setupModule()
     for (int i = 0; i < pConfData->m_ObsermaticConfPar.m_npllChannelCount; i ++) {
         cPllMeasChannel* pllchn = new cPllMeasChannel(&(pConfData->m_RMSocket),
                                                       &(pConfData->m_PCBServerSocket),
+                                                      getTcpWorkerFactory(),
                                                       pConfData->m_ObsermaticConfPar.m_pllChannelList.at(i),
                                                       i+1);
         m_pllMeasChannelList.append(pllchn);

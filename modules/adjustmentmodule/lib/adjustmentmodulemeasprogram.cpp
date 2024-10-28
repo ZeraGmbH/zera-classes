@@ -104,7 +104,9 @@ cAdjustmentModuleConfigData *cAdjustmentModuleMeasProgram::getConfData()
 void cAdjustmentModuleMeasProgram::openPcbConnection()
 {
     m_commonObjects->m_pcbInterface = std::make_shared<Zera::cPCBInterface>();
-    m_commonObjects->m_pcbClient = Zera::Proxy::getInstance()->getConnectionSmart(getConfData()->m_PCBSocket.m_sIP, getConfData()->m_PCBSocket.m_nPort);
+    m_commonObjects->m_pcbClient = Zera::Proxy::getInstance()->getConnectionSmart(getConfData()->m_PCBSocket.m_sIP,
+                                                                                  getConfData()->m_PCBSocket.m_nPort,
+                                                                                  m_pModule->getTcpWorkerFactory());
     m_commonObjects->m_pcbInterface->setClientSmart(m_commonObjects->m_pcbClient);
 }
 

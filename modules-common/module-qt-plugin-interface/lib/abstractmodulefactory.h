@@ -4,6 +4,7 @@
 #include "virtualmodule.h"
 #include "modulegroupnumerator.h"
 #include "abstractfactoryserviceinterfaces.h"
+#include <abstracttcpworkerfactory.h>
 #include <QtPlugin>
 
 namespace VeinEvent
@@ -18,6 +19,7 @@ struct MeasurementModuleFactoryParam
                                   QByteArray configXmlData,
                                   VeinEvent::StorageSystem* storagesystem,
                                   AbstractFactoryServiceInterfacesPtr serviceInterfaceFactory,
+                                  VeinTcp::AbstractTcpWorkerFactoryPtr tcpWorkerFactory,
                                   bool demo);
     MeasurementModuleFactoryParam getAdjustedParam(ModuleGroupNumerator* groupNumerator);
     const int m_entityId;
@@ -25,6 +27,7 @@ struct MeasurementModuleFactoryParam
     const QByteArray m_configXmlData;
     VeinEvent::StorageSystem* m_storagesystem;
     AbstractFactoryServiceInterfacesPtr m_serviceInterfaceFactory;
+    VeinTcp::AbstractTcpWorkerFactoryPtr m_tcpWorkerFactory;
     const bool m_demo;
 };
 
@@ -33,12 +36,14 @@ inline MeasurementModuleFactoryParam::MeasurementModuleFactoryParam(int entityId
                                                                     QByteArray configXmlData,
                                                                     VeinEvent::StorageSystem *storagesystem,
                                                                     AbstractFactoryServiceInterfacesPtr serviceInterfaceFactory,
+                                                                    VeinTcp::AbstractTcpWorkerFactoryPtr tcpWorkerFactory,
                                                                     bool demo) :
     m_entityId(entityId),
     m_moduleNum(moduleNum),
     m_configXmlData(configXmlData),
     m_storagesystem(storagesystem),
     m_serviceInterfaceFactory(serviceInterfaceFactory),
+    m_tcpWorkerFactory(tcpWorkerFactory),
     m_demo(demo)
 {
 }
@@ -50,6 +55,7 @@ inline MeasurementModuleFactoryParam MeasurementModuleFactoryParam::getAdjustedP
                                          m_configXmlData,
                                          m_storagesystem,
                                          m_serviceInterfaceFactory,
+                                         m_tcpWorkerFactory,
                                          m_demo);
 }
 

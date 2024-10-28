@@ -97,7 +97,9 @@ void cReferenceAdjustment::generateInterface()
 void cReferenceAdjustment::pcbserverConnect()
 {
     cSocket sock = m_pConfigData->m_PCBServerSocket;
-    m_pPCBClient = Zera::Proxy::getInstance()->getConnectionSmart(sock.m_sIP, sock.m_nPort);
+    m_pPCBClient = Zera::Proxy::getInstance()->getConnectionSmart(sock.m_sIP,
+                                                                  sock.m_nPort,
+                                                                  m_pModule->getTcpWorkerFactory());
     m_pcbserverConnectState.addTransition(m_pPCBClient.get(), &Zera::ProxyClient::connected, &m_set0VRangeState);
 
     m_pPCBInterface->setClientSmart(m_pPCBClient);
@@ -120,7 +122,9 @@ void cReferenceAdjustment::dspserverConnect()
 {
     // we set up our dsp server connection
     cSocket sock = m_pConfigData->m_DSPServerSocket;
-    m_dspClient = Zera::Proxy::getInstance()->getConnectionSmart(sock.m_sIP, sock.m_nPort);
+    m_dspClient = Zera::Proxy::getInstance()->getConnectionSmart(sock.m_sIP,
+                                                                 sock.m_nPort,
+                                                                 m_pModule->getTcpWorkerFactory());
     m_dspInterface->setClientSmart(m_dspClient);
     m_dspserverConnectState.addTransition(m_dspClient.get(), &Zera::ProxyClient::connected, &m_activationDoneState);
     connect(m_dspInterface.get(), &Zera::cDSPInterface::serverAnswer, this, &cReferenceAdjustment::catchInterfaceAnswer);

@@ -42,7 +42,8 @@ class cPllMeasChannel:public cBaseMeasChannel
 {
     Q_OBJECT
 public:
-    cPllMeasChannel(cSocket* rmsocket, cSocket* pcbsocket, QString name, quint8 chnnr);
+    cPllMeasChannel(cSocket* rmsocket, cSocket* pcbsocket, VeinTcp::AbstractTcpWorkerFactoryPtr tcpWorkerFactory,
+                    QString name, quint8 chnnr);
     virtual void generateInterface(); // here we export our interface (entities)
     quint32 setyourself4PLL(QString samplesysname); // a statemachine gets started that returns cmdDone(quint32 cmdnr)
     quint32 setPLLMode(QString samplesysname, QString mode);

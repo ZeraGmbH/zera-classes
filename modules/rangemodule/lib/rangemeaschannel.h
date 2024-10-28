@@ -46,7 +46,8 @@ class cRangeMeasChannel:public cBaseMeasChannel
 {
     Q_OBJECT
 public:
-    cRangeMeasChannel(cSocket* rmsocket, cSocket* pcbsocket, QString name, quint8 chnnr);
+    cRangeMeasChannel(cSocket* rmsocket, cSocket* pcbsocket, VeinTcp::AbstractTcpWorkerFactoryPtr tcpWorkerFactory,
+                      QString name, quint8 chnnr);
     virtual void generateInterface(); // here we export our interface (entities)
 
     quint32 setRange(QString range); // a statemachine gets started that returns cmdDone(quint32 cmdnr)

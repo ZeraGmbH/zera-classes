@@ -614,7 +614,9 @@ void cFftModuleMeasProgram::resourceManagerConnect()
 
     // we have to instantiate a working resource manager interface
     // so first we try to get a connection to resource manager over proxy
-    m_rmClient = Zera::Proxy::getInstance()->getConnectionSmart(getConfData()->m_RMSocket.m_sIP, getConfData()->m_RMSocket.m_nPort);
+    m_rmClient = Zera::Proxy::getInstance()->getConnectionSmart(getConfData()->m_RMSocket.m_sIP,
+                                                                getConfData()->m_RMSocket.m_nPort,
+                                                                m_pModule->getTcpWorkerFactory());
     m_resourceManagerConnectState.addTransition(m_rmClient.get(), &Zera::ProxyClient::connected, &m_IdentifyState);
     // todo insert timer for timeout and/or connect error conditions.....
     // and then we set resource manager interface's connection
@@ -667,7 +669,9 @@ void cFftModuleMeasProgram::readResourceInfoDone()
 
 void cFftModuleMeasProgram::pcbserverConnect()
 {
-    m_pcbClient = Zera::Proxy::getInstance()->getConnectionSmart(getConfData()->m_PCBServerSocket.m_sIP, getConfData()->m_PCBServerSocket.m_nPort);
+    m_pcbClient = Zera::Proxy::getInstance()->getConnectionSmart(getConfData()->m_PCBServerSocket.m_sIP,
+                                                                 getConfData()->m_PCBServerSocket.m_nPort,
+                                                                 m_pModule->getTcpWorkerFactory());
     m_pcbInterface->setClientSmart(m_pcbClient);
     connect(m_pcbClient.get(), &Zera::ProxyClient::connected, this, &cBaseMeasProgram::activationContinue);
     connect(m_pcbInterface.get(), &AbstractServerInterface::serverAnswer, this, &cFftModuleMeasProgram::catchInterfaceAnswer);
@@ -718,7 +722,9 @@ void cFftModuleMeasProgram::readDspChannelDone()
 
 void cFftModuleMeasProgram::dspserverConnect()
 {
-    m_dspClient = Zera::Proxy::getInstance()->getConnectionSmart(getConfData()->m_DSPServerSocket.m_sIP, getConfData()->m_DSPServerSocket.m_nPort);
+    m_dspClient = Zera::Proxy::getInstance()->getConnectionSmart(getConfData()->m_DSPServerSocket.m_sIP,
+                                                                 getConfData()->m_DSPServerSocket.m_nPort,
+                                                                 m_pModule->getTcpWorkerFactory());
     m_dspInterface->setClientSmart(m_dspClient);
     m_dspserverConnectState.addTransition(m_dspClient.get(), &Zera::ProxyClient::connected, &m_claimPGRMemState);
     connect(m_dspInterface.get(), &Zera::cDSPInterface::serverAnswer, this, &cFftModuleMeasProgram::catchInterfaceAnswer);

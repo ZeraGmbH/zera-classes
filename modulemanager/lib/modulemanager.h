@@ -6,6 +6,7 @@
 #include "modulemanagersetupfacade.h"
 #include "moduledata.h"
 #include "abstractmockallservices.h"
+#include <abstracttcpworkerfactory.h>
 #include <virtualmodule.h>
 #include <QVariant>
 #include <QHash>
@@ -28,6 +29,7 @@ class ModuleManager : public QObject
 public:
     explicit ModuleManager(ModuleManagerSetupFacade *setupFacade,
                            AbstractFactoryServiceInterfacesPtr serviceInterfaceFactory,
+                           VeinTcp::AbstractTcpWorkerFactoryPtr tcpWorkerFactory,
                            bool moduleDemoMode = false,
                            QObject *parent = nullptr);
     ~ModuleManager() override;
@@ -67,6 +69,7 @@ private:
 
     ModuleManagerSetupFacade *m_setupFacade;
     AbstractFactoryServiceInterfacesPtr m_serviceInterfaceFactory;
+    VeinTcp::AbstractTcpWorkerFactoryPtr m_tcpWorkerFactory;
     JsonSessionLoader m_sessionLoader;
     QHash<QString, MeasurementModuleFactory*> m_factoryTable;
     QQueue<ModuleData *> m_deferredStartList;

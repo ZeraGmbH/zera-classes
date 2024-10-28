@@ -161,7 +161,9 @@ void cAdjustManagement::pcbserverConnect()
         connect(m_ChannelList.at(i), &cRangeMeasChannel::cmdDone, this, &cAdjustManagement::catchChannelReply);
 
     // we set up our pcb server connection
-    m_pcbClient = Zera::Proxy::getInstance()->getConnectionSmart(m_pPCBSocket->m_sIP, m_pPCBSocket->m_nPort);
+    m_pcbClient = Zera::Proxy::getInstance()->getConnectionSmart(m_pPCBSocket->m_sIP,
+                                                                 m_pPCBSocket->m_nPort,
+                                                                 m_pModule->getTcpWorkerFactory());
     m_pcbInterface->setClientSmart(m_pcbClient);
     m_pcbserverConnectState.addTransition(m_pcbClient.get(), &Zera::ProxyClient::connected, &m_dspserverConnectState);
     connect(m_pcbInterface.get(), &Zera::cPCBInterface::serverAnswer, this, &cAdjustManagement::catchInterfaceAnswer);
@@ -172,7 +174,9 @@ void cAdjustManagement::pcbserverConnect()
 void cAdjustManagement::dspserverConnect()
 {
     // we set up our dsp server connection
-    m_dspClient = Zera::Proxy::getInstance()->getConnectionSmart(m_pDSPSocket->m_sIP, m_pDSPSocket->m_nPort);
+    m_dspClient = Zera::Proxy::getInstance()->getConnectionSmart(m_pDSPSocket->m_sIP,
+                                                                 m_pDSPSocket->m_nPort,
+                                                                 m_pModule->getTcpWorkerFactory());
     m_dspInterface->setClientSmart(m_dspClient);
     m_dspserverConnectState.addTransition(m_dspClient.get(), &Zera::ProxyClient::connected, &m_readGainCorrState);
     connect(m_dspInterface.get(), &Zera::cDSPInterface::serverAnswer, this, &cAdjustManagement::catchInterfaceAnswer);
