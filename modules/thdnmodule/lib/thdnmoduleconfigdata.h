@@ -21,7 +21,6 @@ class cThdnModuleConfigData
 {
 public:
     cThdnModuleConfigData(){}
-    quint8 m_nDebugLevel;
     quint8 m_nValueCount; // how many measurment values
     QString m_sTHDType; // N or R
     QStringList m_valueChannelList; // a list of channel or channel pairs we work on to generate our measurement values
