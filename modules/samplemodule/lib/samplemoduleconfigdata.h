@@ -40,7 +40,6 @@ class cSampleModuleConfigData
 {
 public:
     cSampleModuleConfigData(){}
-    quint8 m_nDebugLevel;
     cObsermaticConfPar m_ObsermaticConfPar;
     double m_fMeasInterval; // measuring interval 0.1 .. 5.0 sec.
     cSocket m_RMSocket; // the sockets we can connect to

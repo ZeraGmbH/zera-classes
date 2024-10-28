@@ -13,7 +13,6 @@ namespace SAMPLEMODULE
 
 enum moduleconfigstate
 {
-    setDebugLevel,
     setRMIp,
     setRMPort,
     setPCBServerIp,
