@@ -4,7 +4,7 @@
 <!-- default strings - translations?-->
 
 <!-- common strings -->
-<xsl:variable name="GlobalHeaderAppend" select="'SCPI commands'"/>
+<xsl:variable name="GlobalHeaderAppend" select="'SCPI commands '"/>
 <xsl:variable name="Description" select="'Description'"/>
 <xsl:variable name="ScpiPath" select="'SCPI path'"/>
 <xsl:variable name="ScpiQuery" select="'SCPI query'"/>

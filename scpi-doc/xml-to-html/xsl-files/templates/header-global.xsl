@@ -6,12 +6,12 @@
     <xsl:param name="adjustmentData"/>
     <xsl:choose>
         <xsl:when test="$adjustmentData='true'">
-            <xsl:value-of select="DEVICE"/><xsl:text> - Adjustment </xsl:text><xsl:value-of select="$GlobalHeaderAppend"/>
+            <xsl:value-of select="$GlobalHeaderAppend"/><xsl:value-of select="DEVICE"/><xsl:text> - Adjustment </xsl:text>
         </xsl:when>
         <xsl:otherwise>
-            <xsl:value-of select="DEVICE"/><xsl:text> - </xsl:text>
-            <xsl:value-of select="$sessionName"/><xsl:text> session - </xsl:text>
             <xsl:value-of select="$GlobalHeaderAppend"/>
+            <xsl:value-of select="DEVICE"/><xsl:text> - </xsl:text>
+            <xsl:value-of select="$sessionName"/><xsl:text> session</xsl:text>
         </xsl:otherwise>
     </xsl:choose>
 </xsl:template>
