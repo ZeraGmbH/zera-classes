@@ -28,7 +28,6 @@ class cRmsModuleConfigData
 {
 public:
     cRmsModuleConfigData(){}
-    quint8 m_nDebugLevel;
     quint8 m_nValueCount; // how many measurment values
     QStringList m_valueChannelList; // a list of channel or channel pairs we work on to generate our measurement values
     QString m_sIntegrationMode; // we integrate over time or periods

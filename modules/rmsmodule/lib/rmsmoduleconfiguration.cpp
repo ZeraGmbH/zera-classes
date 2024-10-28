@@ -36,7 +36,6 @@ void cRmsModuleConfiguration::setConfiguration(QByteArray xmlString)
     // so now we can set up
     // initializing hash table for xml configuration
 
-    m_ConfigXMLMap["rmsmodconfpar:configuration:connectivity:debuglevel"] = setDebugLevel;
     m_ConfigXMLMap["rmsmodconfpar:configuration:connectivity:ethernet:resourcemanager:ip"] = setRMIp;
     m_ConfigXMLMap["rmsmodconfpar:configuration:connectivity:ethernet:resourcemanager:port"] = setRMPort;
     m_ConfigXMLMap["rmsmodconfpar:configuration:connectivity:ethernet:pcbserver:ip"] = setPCBServerIp;
@@ -87,9 +86,6 @@ void cRmsModuleConfiguration::configXMLInfo(QString key)
         int cmd = m_ConfigXMLMap[key];
         switch (cmd)
         {
-        case setDebugLevel:
-            m_pRmsModulConfigData->m_nDebugLevel = m_pXMLReader->getValue(key).toInt(&ok);
-            break;
         case setRMIp:
             m_pRmsModulConfigData->m_RMSocket.m_sIP = m_pXMLReader->getValue(key);
             break;
