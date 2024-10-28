@@ -10,7 +10,6 @@
 
 enum moduleconfigstate
 {
-    setDebugLevel,
     setRMIp,
     setRMPort,
     setPCBIp,

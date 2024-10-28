@@ -2,7 +2,6 @@
 <adjmodconfpar>
     <configuration>
         <connectivity>
-            <debuglevel>0</debuglevel>
             <ethernet>
                 <resourcemanager>
                     <ip>127.0.0.1</ip>

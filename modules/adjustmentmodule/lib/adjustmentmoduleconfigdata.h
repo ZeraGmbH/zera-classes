@@ -32,7 +32,6 @@ class cAdjustmentModuleConfigData
 public:
     cAdjustmentModuleConfigData(){}
 
-    quint8 m_nDebugLevel;
     quint8 m_nAdjustmentChannelCount;
     QList<QString> m_AdjChannelList;
     adjInfoType m_ReferenceAngle;

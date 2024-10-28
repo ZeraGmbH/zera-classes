@@ -39,7 +39,6 @@ void cAdjustmentModuleConfiguration::validateAndSetConfig(QByteArray xmlString, 
     // so now we can set up
     // initializing hash table for xml configuration
 
-    m_ConfigXMLMap["adjmodconfpar:configuration:connectivity:debuglevel"] = setDebugLevel;
     m_ConfigXMLMap["adjmodconfpar:configuration:connectivity:ethernet:resourcemanager:ip"] = setRMIp;
     m_ConfigXMLMap["adjmodconfpar:configuration:connectivity:ethernet:resourcemanager:port"] = setRMPort;
     m_ConfigXMLMap["adjmodconfpar:configuration:connectivity:ethernet:pcbserver:ip"] = setPCBIp;
@@ -83,9 +82,6 @@ void cAdjustmentModuleConfiguration::configXMLInfo(QString key)
         int cmd = m_ConfigXMLMap[key];
         switch (cmd)
         {
-        case setDebugLevel:
-            m_pAdjustmentModulConfigData->m_nDebugLevel = m_pXMLReader->getValue(key).toInt(&ok);
-            break;
         case setRMIp:
             m_pAdjustmentModulConfigData->m_RMSocket.m_sIP = m_pXMLReader->getValue(key);
             break;
