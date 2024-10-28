@@ -4,7 +4,7 @@
 #include "virtualmodule.h"
 #include "modulegroupnumerator.h"
 #include "abstractfactoryserviceinterfaces.h"
-#include <abstracttcpworkerfactory.h>
+#include <abstracttcpnetworkfactory.h>
 #include <QtPlugin>
 
 namespace VeinEvent
@@ -19,7 +19,7 @@ struct MeasurementModuleFactoryParam
                                   QByteArray configXmlData,
                                   VeinEvent::StorageSystem* storagesystem,
                                   AbstractFactoryServiceInterfacesPtr serviceInterfaceFactory,
-                                  VeinTcp::AbstractTcpWorkerFactoryPtr tcpNetworkFactory,
+                                  VeinTcp::AbstractTcpNetworkFactoryPtr tcpNetworkFactory,
                                   bool demo);
     MeasurementModuleFactoryParam getAdjustedParam(ModuleGroupNumerator* groupNumerator);
     const int m_entityId;
@@ -27,7 +27,7 @@ struct MeasurementModuleFactoryParam
     const QByteArray m_configXmlData;
     VeinEvent::StorageSystem* m_storagesystem;
     AbstractFactoryServiceInterfacesPtr m_serviceInterfaceFactory;
-    VeinTcp::AbstractTcpWorkerFactoryPtr m_tcpNetworkFactory;
+    VeinTcp::AbstractTcpNetworkFactoryPtr m_tcpNetworkFactory;
     const bool m_demo;
 };
 
@@ -36,7 +36,7 @@ inline MeasurementModuleFactoryParam::MeasurementModuleFactoryParam(int entityId
                                                                     QByteArray configXmlData,
                                                                     VeinEvent::StorageSystem *storagesystem,
                                                                     AbstractFactoryServiceInterfacesPtr serviceInterfaceFactory,
-                                                                    VeinTcp::AbstractTcpWorkerFactoryPtr tcpNetworkFactory,
+                                                                    VeinTcp::AbstractTcpNetworkFactoryPtr tcpNetworkFactory,
                                                                     bool demo) :
     m_entityId(entityId),
     m_moduleNum(moduleNum),

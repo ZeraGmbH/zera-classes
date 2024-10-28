@@ -6,7 +6,7 @@
 #include <testfactoryi2cctrl.h>
 #include <timemachineobject.h>
 #include <timerfactoryqtfortest.h>
-#include <tcpworkerfactory.h>
+#include <tcpnetworkfactory.h>
 #include <QDir>
 
 void TestModuleManager::enableTests()
@@ -28,7 +28,7 @@ TestModuleManager::TestModuleManager(ModuleManagerSetupFacade *setupFacade,
     ModuleManager(
         setupFacade,
         serviceInterfaceFactory,
-        VeinTcp::TcpWorkerFactory::create(),
+        VeinTcp::TcpNetworkFactory::create(),
         true)
 {
     TimerFactoryQtForTest::enableTest();

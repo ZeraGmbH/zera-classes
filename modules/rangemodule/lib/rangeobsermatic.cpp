@@ -568,7 +568,7 @@ void cRangeObsermatic::dspserverConnect()
 
     m_dspClient = Zera::Proxy::getInstance()->getConnectionSmart(m_pDSPSocket->m_sIP,
                                                                  m_pDSPSocket->m_nPort,
-                                                                 m_pModule->getTcpWorkerFactory());
+                                                                 m_pModule->getTcpNetworkFactory());
     m_dspInterface->setClientSmart(m_dspClient);
     m_dspserverConnectState.addTransition(m_dspClient.get(), &Zera::ProxyClient::connected, &m_readGainCorrState);
     connect(m_dspInterface.get(), &Zera::cDSPInterface::serverAnswer, this, &cRangeObsermatic::catchInterfaceAnswer);

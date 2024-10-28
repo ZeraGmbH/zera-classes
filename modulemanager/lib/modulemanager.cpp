@@ -22,7 +22,7 @@ QString ModuleManager::m_sessionPath = MODMAN_SESSION_PATH;
 
 ModuleManager::ModuleManager(ModuleManagerSetupFacade *setupFacade,
                              AbstractFactoryServiceInterfacesPtr serviceInterfaceFactory,
-                             VeinTcp::AbstractTcpWorkerFactoryPtr tcpNetworkFactory,
+                             VeinTcp::AbstractTcpNetworkFactoryPtr tcpNetworkFactory,
                              bool moduleDemoMode, QObject *parent) :
     QObject(parent),
     m_moduleStartLock(false),

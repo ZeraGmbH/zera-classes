@@ -66,7 +66,7 @@ void cRangeModule::setupModule()
         channel = pConfData->m_senseChannelList.at(i);
         cRangeMeasChannel* pchn = new cRangeMeasChannel(&(pConfData->m_RMSocket),
                                                         &(pConfData->m_PCBServerSocket),
-                                                        getTcpWorkerFactory(),
+                                                        getTcpNetworkFactory(),
                                                         pConfData->m_senseChannelList.at(i),
                                                         i+1);
         m_rangeMeasChannelList.append(pchn);

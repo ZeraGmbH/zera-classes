@@ -36,7 +36,7 @@ public:
     VeinEvent::StorageSystem* getStorageSystem();
     bool getDemo();
     AbstractFactoryServiceInterfacesPtr getServiceInterfaceFactory();
-    VeinTcp::AbstractTcpWorkerFactoryPtr getTcpWorkerFactory();
+    VeinTcp::AbstractTcpNetworkFactoryPtr getTcpNetworkFactory();
 
     QList<VfModuleMetaData*> veinModuleMetaDataList; // only meta information
     QList<VfModuleComponent*> veinModuleComponentList; // for components that need no scpi interface

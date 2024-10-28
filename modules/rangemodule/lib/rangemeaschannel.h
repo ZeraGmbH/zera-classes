@@ -46,7 +46,7 @@ class cRangeMeasChannel:public cBaseMeasChannel
 {
     Q_OBJECT
 public:
-    cRangeMeasChannel(cSocket* rmsocket, cSocket* pcbsocket, VeinTcp::AbstractTcpWorkerFactoryPtr tcpNetworkFactory,
+    cRangeMeasChannel(cSocket* rmsocket, cSocket* pcbsocket, VeinTcp::AbstractTcpNetworkFactoryPtr tcpNetworkFactory,
                       QString name, quint8 chnnr);
     virtual void generateInterface(); // here we export our interface (entities)
 

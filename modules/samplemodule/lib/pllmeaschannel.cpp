@@ -6,7 +6,7 @@
 namespace SAMPLEMODULE
 {
 
-cPllMeasChannel::cPllMeasChannel(cSocket* rmsocket, cSocket* pcbsocket, VeinTcp::AbstractTcpWorkerFactoryPtr tcpNetworkFactory,
+cPllMeasChannel::cPllMeasChannel(cSocket* rmsocket, cSocket* pcbsocket, VeinTcp::AbstractTcpNetworkFactoryPtr tcpNetworkFactory,
                                  QString name, quint8 chnnr) :
     cBaseMeasChannel(rmsocket, pcbsocket, tcpNetworkFactory, name, chnnr)
 {
