@@ -31,7 +31,6 @@ class cTransformer1ModuleConfigData
 public:
     cTransformer1ModuleConfigData(){}
 
-    quint8 m_nDebugLevel;
     quint8 m_nTransformerSystemCount;
     int m_nModuleId;
     QList<transformersystemconfiguration> m_transformerSystemConfigList;

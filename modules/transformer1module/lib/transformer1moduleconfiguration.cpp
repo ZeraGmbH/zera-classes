@@ -35,8 +35,6 @@ void cTransformer1ModuleConfiguration::setConfiguration(QByteArray xmlString)
     // so now we can set up
     // initializing hash table for xml configuration
 
-    m_ConfigXMLMap["trf1modconfpar:configuration:connectivity:debuglevel"] = setDebugLevel;
-
     m_ConfigXMLMap["trf1modconfpar:configuration:measure:inputentity"] = setInputModule;
     m_ConfigXMLMap["trf1modconfpar:configuration:measure:system:n"] = setSystemCount;
     m_ConfigXMLMap["trf1modconfpar:configuration:measure:system:unit"] = setSystemUnit;
@@ -96,9 +94,6 @@ void cTransformer1ModuleConfiguration::configXMLInfo(QString key)
         int cmd = m_ConfigXMLMap[key];
         switch (cmd)
         {
-        case setDebugLevel:
-            m_pTransformer1ModulConfigData->m_nDebugLevel = m_pXMLReader->getValue(key).toInt(&ok);
-            break;
         case setInputModule:
             m_pTransformer1ModulConfigData->m_nModuleId = m_pXMLReader->getValue(key).toInt(&ok);
             break;

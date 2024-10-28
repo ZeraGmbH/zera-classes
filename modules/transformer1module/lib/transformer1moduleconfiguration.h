@@ -13,7 +13,6 @@ namespace TRANSFORMER1MODULE
 
 enum moduleconfigstate
 {
-    setDebugLevel,
     setInputModule,
     setSystemCount,
     setSystemUnit,

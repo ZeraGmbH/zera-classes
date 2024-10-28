@@ -1,21 +1,6 @@
 <?xml version="1.0" encoding="ISO-8859-1" ?>
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
 
-    <xs:simpleType name="debugtype">
-        <xs:restriction base="xs:integer">
-            <xs:maxInclusive value='7'/>
-            <xs:minInclusive value='0'/>
-        </xs:restriction>
-    </xs:simpleType>
-
-
-    <xs:complexType name="connectivitytype">
-        <xs:sequence>
-            <xs:element name="debuglevel" type="debugtype"/>
-        </xs:sequence>
-    </xs:complexType>
-
-
     <xs:simpleType name="anztype">
         <xs:restriction base="xs:integer">
             <xs:maxInclusive value='12'/>
@@ -63,7 +48,6 @@
                 <xs:element name="configuration">
                     <xs:complexType>
                         <xs:sequence>
-                            <xs:element name="connectivity" type="connectivitytype"/>
                             <xs:element name="measure" type="measuretype"/>
                         </xs:sequence>
                     </xs:complexType>
