@@ -1,9 +1,6 @@
 <?xml version="1.0"?>
 <lambdamodconfpar>
     <configuration>
-        <connectivity>
-            <debuglevel>0</debuglevel>
-        </connectivity>
         <measure>
             <activepmeasmode>
                 <avail>0</avail>

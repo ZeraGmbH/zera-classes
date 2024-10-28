@@ -23,7 +23,6 @@ class cLambdaModuleConfigData
 public:
     cLambdaModuleConfigData(){}
 
-    quint8 m_nDebugLevel;
     quint8 m_nLambdaSystemCount;
     int m_nModuleId;
     QList<lambdasystemconfiguration> m_lambdaSystemConfigList;

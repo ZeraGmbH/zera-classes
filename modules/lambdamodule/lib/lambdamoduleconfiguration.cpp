@@ -36,7 +36,6 @@ void cLambdaModuleConfiguration::setConfiguration(QByteArray xmlString)
     // so now we can set up
     // initializing hash table for xml configuration
 
-    m_ConfigXMLMap["lambdamodconfpar:configuration:connectivity:debuglevel"] = setDebugLevel;
     m_ConfigXMLMap["lambdamodconfpar:configuration:measure:activepmeasmode:avail"] = setActivePMeasModeAvail;
     m_ConfigXMLMap["lambdamodconfpar:configuration:measure:activepmeasmode:inputentity"] = setActivePMeasModeEntity;
     m_ConfigXMLMap["lambdamodconfpar:configuration:measure:activepmeasmode:componentmeasmode"] = setActivePMeasModeComponent;
@@ -72,9 +71,6 @@ void cLambdaModuleConfiguration::configXMLInfo(QString key)
         int cmd = m_ConfigXMLMap[key];
         switch (cmd)
         {
-        case setDebugLevel:
-            m_pLambdaModulConfigData->m_nDebugLevel = m_pXMLReader->getValue(key).toInt(&ok);
-            break;
         case setActivePMeasModeAvail:
             m_pLambdaModulConfigData->m_activeMeasModeAvail = (m_pXMLReader->getValue(key).toInt(&ok) == 1);
             break;

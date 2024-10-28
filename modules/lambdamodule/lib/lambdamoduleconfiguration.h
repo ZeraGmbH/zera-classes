@@ -10,7 +10,6 @@ namespace LAMBDAMODULE
 
 enum moduleconfigstate
 {
-    setDebugLevel,
     setSystemCount,
     setActivePMeasModeAvail,
     setActivePMeasModeEntity,
