@@ -35,7 +35,6 @@ void cRangeModuleConfiguration::setConfiguration(QByteArray xmlString)
     // so now we can set up
     // initializing hash table for xml configuration
 
-    m_ConfigXMLMap["rangemodconfpar:configuration:connectivity:debuglevel"] = setDebugLevel;
     m_ConfigXMLMap["rangemodconfpar:configuration:connectivity:session"] = setSession;
     m_ConfigXMLMap["rangemodconfpar:configuration:connectivity:ethernet:resourcemanager:ip"] = setRMIp;
     m_ConfigXMLMap["rangemodconfpar:configuration:connectivity:ethernet:resourcemanager:port"] = setRMPort;
@@ -115,9 +114,6 @@ void cRangeModuleConfiguration::configXMLInfo(QString key)
         int cmd = m_ConfigXMLMap[key];
         switch (cmd)
         {
-        case setDebugLevel:
-            m_pRangeModulConfigData->m_nDebugLevel = m_pXMLReader->getValue(key).toInt(&ok);
-            break;
         case setSession:
             m_pRangeModulConfigData->m_session.m_sKey = key;
             m_pRangeModulConfigData->m_session.m_sPar = m_pXMLReader->getValue(key);

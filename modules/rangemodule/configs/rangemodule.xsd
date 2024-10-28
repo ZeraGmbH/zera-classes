@@ -9,14 +9,6 @@
     </xs:simpleType>
 
 
-    <xs:simpleType name="debugtype">
-        <xs:restriction base="xs:integer">
-            <xs:maxInclusive value='7'/>
-            <xs:minInclusive value='0'/>
-        </xs:restriction>
-    </xs:simpleType>
-
-
     <xs:simpleType name="porttype">
         <xs:restriction base="xs:integer">
             <xs:maxInclusive value='60000'/>
@@ -35,7 +27,6 @@
     <xs:complexType name="connectivitytype">
         <xs:sequence>
             <xs:element name="session" type="xs:string" minOccurs="0" maxOccurs="1"/>
-            <xs:element name="debuglevel" type="debugtype"/>
             <xs:element name="ethernet">
                 <xs:complexType>
                     <xs:sequence>

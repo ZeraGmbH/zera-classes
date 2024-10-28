@@ -48,7 +48,6 @@ class cRangeModuleConfigData
 {
 public:
     cRangeModuleConfigData(){}
-    quint8 m_nDebugLevel;
     stringParameter m_session;
     quint8 m_nChannelCount; // how many measurment channels
     QStringList m_senseChannelList; // a list of channel system names we work on
