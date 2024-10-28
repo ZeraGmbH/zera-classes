@@ -13,7 +13,6 @@ namespace SCPIMODULE
 
 enum moduleconfigstate
 {
-    setDebugLevel,
     setnrClient,
     setInterfacePort,
     setSerialOn,

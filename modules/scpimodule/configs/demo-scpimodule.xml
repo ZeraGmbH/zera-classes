@@ -3,7 +3,6 @@
     <configuration>
         <scpiqueue>0</scpiqueue>
         <connectivity>
-            <debuglevel>0</debuglevel>
             <ethernet>
                 <nrclient>5</nrclient>
                 <port>6320</port>

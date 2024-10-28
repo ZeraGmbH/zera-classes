@@ -39,7 +39,6 @@ void cSCPIModuleConfiguration::validateAndSetConfig(QByteArray xmlString, QStrin
     // so now we can set up
     // initializing hash table for xml configuration
 
-    m_ConfigXMLMap["scpimodconfpar:configuration:connectivity:debuglevel"] = setDebugLevel;
     m_ConfigXMLMap["scpimodconfpar:configuration:connectivity:ethernet:nrclient"] = setnrClient;
     m_ConfigXMLMap["scpimodconfpar:configuration:connectivity:ethernet:port"] = setInterfacePort;
     m_ConfigXMLMap["scpimodconfpar:configuration:connectivity:serialdevice:on"] = setSerialOn;
@@ -91,9 +90,6 @@ void cSCPIModuleConfiguration::configXMLInfo(QString key)
         int cmd = m_ConfigXMLMap[key];
         switch (cmd)
         {
-        case setDebugLevel:
-            m_pSCPIModulConfigData->m_nDebugLevel = m_pXMLReader->getValue(key).toInt(&ok);
-            break;
         case setnrClient:
             m_pSCPIModulConfigData->m_nClients = m_pXMLReader->getValue(key).toInt(&ok);
             break;

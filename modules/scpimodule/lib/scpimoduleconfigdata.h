@@ -31,7 +31,6 @@ class cSCPIModuleConfigData
 {
 public:
     cSCPIModuleConfigData(){}
-    quint8 m_nDebugLevel;
     quint8 m_nClients; // the max. nr of clients accepted to connect
     cSocket m_InterfaceSocket; // we listen here ip is localhost
     QString m_sDeviceName;
