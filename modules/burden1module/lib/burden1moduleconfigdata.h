@@ -38,7 +38,6 @@ class cBurden1ModuleConfigData
 public:
     cBurden1ModuleConfigData(){}
 
-    quint8 m_nDebugLevel;
     quint8 m_nBurdenSystemCount;
     int m_nModuleId;
     QList<burdensystemconfiguration> m_BurdenSystemConfigList;

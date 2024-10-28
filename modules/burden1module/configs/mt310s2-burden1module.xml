@@ -1,9 +1,6 @@
 <?xml version="1.0"?>
 <brd1modconfpar>
     <configuration>
-        <connectivity>
-            <debuglevel>0</debuglevel>
-        </connectivity>
         <measure>
             <inputentity>1050</inputentity>
             <system>

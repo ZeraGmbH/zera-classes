@@ -10,7 +10,6 @@ namespace BURDEN1MODULE
 
 enum moduleconfigstate
 {
-    setDebugLevel,
     setInputModule,
     setSystemCount,
     setSystemUnit,
