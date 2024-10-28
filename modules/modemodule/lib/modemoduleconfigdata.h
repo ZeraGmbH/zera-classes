@@ -12,7 +12,6 @@ class cModeModuleConfigData
 {
 public:
     cModeModuleConfigData(){}
-    quint8 m_nDebugLevel;
     QString m_sMode;
     cSocket m_RMSocket; // the sockets we can connect to
     cSocket m_PCBServerSocket;
