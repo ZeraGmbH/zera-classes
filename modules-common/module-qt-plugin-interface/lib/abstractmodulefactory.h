@@ -6,11 +6,6 @@
 #include "measurementmodulefactoryparam.h"
 #include <QtPlugin>
 
-namespace VeinEvent
-{
-    class StorageSystem;
-}
-
 class AbstractModuleFactory // each module needs to implement a conrete
 {
 public:
