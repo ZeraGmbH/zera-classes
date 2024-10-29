@@ -9,8 +9,8 @@ namespace ZeraModules
 class ModuleData
 {
 public:
-    ModuleData(VirtualModule *t_ref, const QString &t_name, const QString &t_confPath, const QByteArray &t_confData, int moduleEntityId, int moduleNum);
-    static ModuleData *findByReference(QList<ModuleData*> t_list, VirtualModule *t_ref);
+    ModuleData(VirtualModule *ref, const QString &name, const QString &confPath, const QByteArray &confData, int moduleEntityId, int moduleNum);
+    static ModuleData *findByReference(QList<ModuleData*> list, VirtualModule *ref);
 
     VirtualModule *m_reference;
     const QString m_uniqueName;

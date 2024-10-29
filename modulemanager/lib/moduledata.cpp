@@ -2,21 +2,21 @@
 
 namespace ZeraModules {
 
-ModuleData::ModuleData(VirtualModule *t_ref, const QString &t_name, const QString &t_confPath, const QByteArray &t_confData, int moduleEntityId, int moduleNum) :
-    m_reference(t_ref),
-    m_uniqueName(t_name),
-    m_configPath(t_confPath),
-    m_configData(t_confData),
+ModuleData::ModuleData(VirtualModule *ref, const QString &name, const QString &confPath, const QByteArray &confData, int moduleEntityId, int moduleNum) :
+    m_reference(ref),
+    m_uniqueName(name),
+    m_configPath(confPath),
+    m_configData(confData),
     m_moduleId(moduleEntityId),
     m_moduleNum(moduleNum)
 {
 }
 
-ModuleData *ModuleData::findByReference(QList<ModuleData*> t_list, VirtualModule *t_ref)
+ModuleData *ModuleData::findByReference(QList<ModuleData*> list, VirtualModule *ref)
 {
     ModuleData *retVal = nullptr;
-    foreach(ModuleData *tmpData, t_list) {
-        if(tmpData->m_reference == t_ref) {
+    foreach(ModuleData *tmpData, list) {
+        if(tmpData->m_reference == ref) {
             retVal = tmpData;
             break;
         }

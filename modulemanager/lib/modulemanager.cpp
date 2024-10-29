@@ -119,15 +119,19 @@ void ModuleManager::loadDefaultSession()
     changeSessionFile(mmConfig->getDefaultSession());
 }
 
-void ModuleManager::startModule(const QString & uniqueModuleName, const QString & t_xmlConfigPath, const QByteArray &t_xmlConfigData, int moduleEntityId, int moduleNum)
+void ModuleManager::startModule(const QString &uniqueName,
+                                const QString &xmlConfigPath,
+                                const QByteArray &xmlConfigData,
+                                int moduleEntityId,
+                                int moduleNum)
 {
     // do not allow starting until all modules are shut down
     if(m_moduleStartLock == false) {
-        AbstractModuleFactory *tmpFactory = m_factoryTable.value(uniqueModuleName);
-        if(tmpFactory && m_setupFacade->getLicenseSystem()->isSystemLicensed(uniqueModuleName)) {
-            const QFileInfo confFileInfo(t_xmlConfigPath);
+        AbstractModuleFactory *tmpFactory = m_factoryTable.value(uniqueName);
+        if(tmpFactory && m_setupFacade->getLicenseSystem()->isSystemLicensed(uniqueName)) {
+            const QFileInfo confFileInfo(xmlConfigPath);
             qInfo("Creating module: %s / EntityId: %i / Config: %s",
-                  qPrintable(uniqueModuleName),
+                  qPrintable(uniqueName),
                   moduleEntityId,
                   qPrintable(confFileInfo.fileName()));
 
@@ -140,7 +144,7 @@ void ModuleManager::startModule(const QString & uniqueModuleName, const QString 
                 mmConfig->getResmanConnectionInfo());
             ModuleFactoryParam moduleParam(moduleEntityId,
                                            moduleNum,
-                                           t_xmlConfigData,
+                                           xmlConfigData,
                                            m_setupFacade->getStorageSystem(),
                                            m_serviceInterfaceFactory,
                                            networkParams,
@@ -155,7 +159,7 @@ void ModuleManager::startModule(const QString & uniqueModuleName, const QString 
                 });
                 m_moduleStartLock = true;
                 tmpModule->startModule();
-                ModuleData *moduleData = new ModuleData(tmpModule, uniqueModuleName, t_xmlConfigPath, QByteArray(), moduleEntityId, moduleNum);
+                ModuleData *moduleData = new ModuleData(tmpModule, uniqueName, xmlConfigPath, QByteArray(), moduleEntityId, moduleNum);
                 connect(tmpModule, &VirtualModule::parameterChanged, this, [this, moduleData](){
                     saveModuleConfig(moduleData);
                 });
@@ -164,20 +168,20 @@ void ModuleManager::startModule(const QString & uniqueModuleName, const QString 
         }
         else if(m_setupFacade->getLicenseSystem()->serialNumberIsInitialized()) {
             if(tmpFactory != nullptr)
-                qWarning() << "Skipping module:" << uniqueModuleName << "No license found!";
+                qWarning() << "Skipping module:" << uniqueName << "No license found!";
             else
-                qWarning() << "Could not create module:" << uniqueModuleName << "!";
+                qWarning() << "Could not create module:" << uniqueName << "!";
             onModuleStartNext();
         }
         else {//wait for serial number initialization
-            qInfo("No serialno - enqueue module %s...", qPrintable(uniqueModuleName));
-            m_deferredStartList.enqueue(new ModuleData(nullptr, uniqueModuleName, t_xmlConfigPath, t_xmlConfigData, moduleEntityId, moduleNum));
+            qInfo("No serialno - enqueue module %s...", qPrintable(uniqueName));
+            m_deferredStartList.enqueue(new ModuleData(nullptr, uniqueName, xmlConfigPath, xmlConfigData, moduleEntityId, moduleNum));
         }
     }
     else {
         // All but first are enqueued - misconception? - spam just for thos e working on..
         //qInfo("Locked - enqueue module %s...", qPrintable(uniqueModuleName));
-        m_deferredStartList.enqueue(new ModuleData(nullptr, uniqueModuleName, t_xmlConfigPath, t_xmlConfigData, moduleEntityId, moduleNum));
+        m_deferredStartList.enqueue(new ModuleData(nullptr, uniqueName, xmlConfigPath, xmlConfigData, moduleEntityId, moduleNum));
     }
 }
 

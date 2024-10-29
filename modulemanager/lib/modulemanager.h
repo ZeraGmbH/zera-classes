@@ -44,7 +44,11 @@ signals:
 public slots:
     bool loadSession(const QString sessionFileNameFull);
     void changeSessionFile(const QString &newSessionFile);
-    void startModule(const QString &t_uniqueName, const QString &t_xmlConfigPath, const QByteArray &t_xmlConfigData, int moduleEntityId, int moduleNum);
+    void startModule(const QString &uniqueName,
+                     const QString &xmlConfigPath,
+                     const QByteArray &xmlConfigData,
+                     int moduleEntityId,
+                     int moduleNum);
     void destroyModules();
     void setModulesPaused(bool t_paused);
 
