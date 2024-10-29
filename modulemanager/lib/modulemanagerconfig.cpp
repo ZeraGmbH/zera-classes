@@ -103,6 +103,15 @@ NetworkConnectionInfo ModulemanagerConfig::getDspConnectionInfo()
         serviceObj["port"].toInt());
 }
 
+NetworkConnectionInfo ModulemanagerConfig::getSecConnectionInfo()
+{
+    const char* serviceTag = "secService";
+    QJsonObject serviceObj = m_jsonConfig[topTagConnnection].toObject()[serviceTag].toObject();
+    return NetworkConnectionInfo(
+        serviceObj["ip"].toString(),
+        serviceObj["port"].toInt());
+}
+
 NetworkConnectionInfo ModulemanagerConfig::getResmanConnectionInfo()
 {
     const char* serviceTag = "resmanService";

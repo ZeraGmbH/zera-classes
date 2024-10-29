@@ -62,6 +62,16 @@ void test_modman_config::dspServiceConnectionInfo()
     QCOMPARE(info.m_nPort, 6310);
 }
 
+void test_modman_config::secServiceConnectionInfo()
+{
+    ModulemanagerConfigTest::supportOeTests();
+
+    ModulemanagerConfig* mmConfig = ModulemanagerConfig::getInstance();
+    NetworkConnectionInfo info = mmConfig->getSecConnectionInfo();
+    QCOMPARE(info.m_sIP, getConfiguredIp());
+    QCOMPARE(info.m_nPort, 6305);
+}
+
 void test_modman_config::resmanServiceConnectionInfo()
 {
     ModulemanagerConfigTest::supportOeTests();

@@ -21,6 +21,7 @@ public:
     bool containsDeviceName(QString devName);
     NetworkConnectionInfo getPcbConnectionInfo();
     NetworkConnectionInfo getDspConnectionInfo();
+    NetworkConnectionInfo getSecConnectionInfo();
     NetworkConnectionInfo getResmanConnectionInfo();
     bool isDevMode();
 protected:

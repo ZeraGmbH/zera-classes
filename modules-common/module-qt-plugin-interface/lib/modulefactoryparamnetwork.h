@@ -10,10 +10,12 @@ struct ModuleFactoryParamNetwork
     ModuleFactoryParamNetwork(VeinTcp::AbstractTcpNetworkFactoryPtr tcpNetworkFactory,
                               NetworkConnectionInfo pcbServiceConnectionInfo,
                               NetworkConnectionInfo dspServiceConnectionInfo,
+                              NetworkConnectionInfo secServiceConnectionInfo,
                               NetworkConnectionInfo rmServiceConnectionInfo);
     const VeinTcp::AbstractTcpNetworkFactoryPtr m_tcpNetworkFactory;
     const NetworkConnectionInfo m_pcbServiceConnectionInfo;
     const NetworkConnectionInfo m_dspServiceConnectionInfo;
+    const NetworkConnectionInfo m_secServiceConnectionInfo;
     const NetworkConnectionInfo m_rmServiceConnectionInfo;
 };
 

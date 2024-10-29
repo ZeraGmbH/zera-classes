@@ -136,6 +136,7 @@ void ModuleManager::startModule(const QString & uniqueModuleName, const QString 
                 m_tcpNetworkFactory,
                 mmConfig->getPcbConnectionInfo(),
                 mmConfig->getDspConnectionInfo(),
+                mmConfig->getSecConnectionInfo(),
                 mmConfig->getResmanConnectionInfo());
             ModuleFactoryParam moduleParam(moduleEntityId,
                                            moduleNum,

@@ -11,6 +11,7 @@ private slots:
     void verifySessionsCount();
     void pcbServiceConnectionInfo();
     void dspServiceConnectionInfo();
+    void secServiceConnectionInfo();
     void resmanServiceConnectionInfo();
 private:
     static QString getConfiguredIp();
