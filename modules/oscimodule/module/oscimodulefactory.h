@@ -9,11 +9,11 @@
 namespace OSCIMODULE
 {
 
-class OsciModuleFactory : public QObject, public MeasurementModuleFactory
+class OsciModuleFactory : public QObject, public AbstractModuleFactory
 {
     Q_OBJECT
     Q_PLUGIN_METADATA(IID MeasurementModuleFactory_iid FILE "oscimodule.json")
-    Q_INTERFACES(MeasurementModuleFactory)
+    Q_INTERFACES(AbstractModuleFactory)
   
 public:
     OsciModuleFactory(){}

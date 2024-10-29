@@ -81,7 +81,7 @@ bool ModuleManager::loadAllAvailableModulePlugins()
     bool retVal = false;
     for(auto& fileName : getModuleFileNames()) {
         QPluginLoader loader(fileName);
-        MeasurementModuleFactory *module = qobject_cast<MeasurementModuleFactory *>(loader.instance());
+        AbstractModuleFactory *module = qobject_cast<AbstractModuleFactory *>(loader.instance());
         if (module) {
             module->setModuleNumerator(std::make_unique<ModuleGroupNumerator>());
             retVal=true;
@@ -123,7 +123,7 @@ void ModuleManager::startModule(const QString & uniqueModuleName, const QString 
 {
     // do not allow starting until all modules are shut down
     if(m_moduleStartLock == false) {
-        MeasurementModuleFactory *tmpFactory = m_factoryTable.value(uniqueModuleName);
+        AbstractModuleFactory *tmpFactory = m_factoryTable.value(uniqueModuleName);
         if(tmpFactory && m_setupFacade->getLicenseSystem()->isSystemLicensed(uniqueModuleName)) {
             const QFileInfo confFileInfo(t_xmlConfigPath);
             qInfo("Creating module: %s / EntityId: %i / Config: %s",

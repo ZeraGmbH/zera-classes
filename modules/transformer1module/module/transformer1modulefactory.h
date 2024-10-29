@@ -9,11 +9,11 @@
 namespace TRANSFORMER1MODULE
 {
 
-class Transformer1ModuleFactory : public QObject, public MeasurementModuleFactory
+class Transformer1ModuleFactory : public QObject, public AbstractModuleFactory
 {
     Q_OBJECT
     Q_PLUGIN_METADATA(IID MeasurementModuleFactory_iid FILE "transformer1module.json")
-    Q_INTERFACES(MeasurementModuleFactory)
+    Q_INTERFACES(AbstractModuleFactory)
   
 public:
     Transformer1ModuleFactory(){}

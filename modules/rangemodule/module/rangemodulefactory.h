@@ -9,11 +9,11 @@
 namespace RANGEMODULE
 {
 
-class RangeModuleFactory : public QObject, public MeasurementModuleFactory
+class RangeModuleFactory : public QObject, public AbstractModuleFactory
 {
     Q_OBJECT
     Q_PLUGIN_METADATA(IID MeasurementModuleFactory_iid FILE "rangemodule.json")
-    Q_INTERFACES(MeasurementModuleFactory)
+    Q_INTERFACES(AbstractModuleFactory)
   
 public:
     RangeModuleFactory(){}

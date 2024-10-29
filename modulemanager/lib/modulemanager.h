@@ -19,7 +19,7 @@ namespace VeinEvent
 class StorageSystem;
 }
 
-class MeasurementModuleFactory;
+class AbstractModuleFactory;
 
 namespace ZeraModules
 {
@@ -71,7 +71,7 @@ private:
     AbstractFactoryServiceInterfacesPtr m_serviceInterfaceFactory;
     VeinTcp::AbstractTcpNetworkFactoryPtr m_tcpNetworkFactory;
     JsonSessionLoader m_sessionLoader;
-    QHash<QString, MeasurementModuleFactory*> m_factoryTable;
+    QHash<QString, AbstractModuleFactory*> m_factoryTable;
     QQueue<ModuleData *> m_deferredStartList;
 
     bool m_moduleDemoMode; // To be obsoleted: Eiter run full production or inject a test/demo service factory

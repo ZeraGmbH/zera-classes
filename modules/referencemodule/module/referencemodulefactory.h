@@ -9,11 +9,11 @@
 namespace REFERENCEMODULE
 {
 
-class ReferenceModuleFactory : public QObject, public MeasurementModuleFactory
+class ReferenceModuleFactory : public QObject, public AbstractModuleFactory
 {
     Q_OBJECT
     Q_PLUGIN_METADATA(IID MeasurementModuleFactory_iid FILE "referencemodule.json")
-    Q_INTERFACES(MeasurementModuleFactory)
+    Q_INTERFACES(AbstractModuleFactory)
   
 public:
     ReferenceModuleFactory(){}

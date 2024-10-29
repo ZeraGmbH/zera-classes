@@ -9,11 +9,11 @@
 namespace SEM1MODULE
 {
 
-class Sem1ModuleFactory : public QObject, public MeasurementModuleFactory
+class Sem1ModuleFactory : public QObject, public AbstractModuleFactory
 {
     Q_OBJECT
     Q_PLUGIN_METADATA(IID MeasurementModuleFactory_iid FILE "sem1module.json")
-    Q_INTERFACES(MeasurementModuleFactory)
+    Q_INTERFACES(AbstractModuleFactory)
   
 public:
     Sem1ModuleFactory(){}

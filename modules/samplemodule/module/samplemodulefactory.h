@@ -9,11 +9,11 @@
 namespace SAMPLEMODULE
 {
 
-class SampleModuleFactory : public QObject, public MeasurementModuleFactory
+class SampleModuleFactory : public QObject, public AbstractModuleFactory
 {
     Q_OBJECT
     Q_PLUGIN_METADATA(IID MeasurementModuleFactory_iid FILE "samplemodule.json")
-    Q_INTERFACES(MeasurementModuleFactory)
+    Q_INTERFACES(AbstractModuleFactory)
   
 public:
     SampleModuleFactory(){}

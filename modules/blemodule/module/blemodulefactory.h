@@ -9,11 +9,11 @@
 namespace BLEMODULE
 {
 
-class BleModuleFactory : public QObject, public MeasurementModuleFactory
+class BleModuleFactory : public QObject, public AbstractModuleFactory
 {
     Q_OBJECT
     Q_PLUGIN_METADATA(IID MeasurementModuleFactory_iid FILE "blemodule.json")
-    Q_INTERFACES(MeasurementModuleFactory)
+    Q_INTERFACES(AbstractModuleFactory)
   
 public:
     BleModuleFactory(){}

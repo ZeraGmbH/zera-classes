@@ -6,11 +6,11 @@
 #include <QList>
 #include <QtPlugin>
 
-class AdjustmentModuleFactory : public QObject, public MeasurementModuleFactory
+class AdjustmentModuleFactory : public QObject, public AbstractModuleFactory
 {
     Q_OBJECT
     Q_PLUGIN_METADATA(IID MeasurementModuleFactory_iid FILE "adjustmentmodule.json")
-    Q_INTERFACES(MeasurementModuleFactory)
+    Q_INTERFACES(AbstractModuleFactory)
 public:
     AdjustmentModuleFactory(){}
     ZeraModules::VirtualModule *createModule(MeasurementModuleFactoryParam moduleParam) override;
