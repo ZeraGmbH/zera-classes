@@ -15,7 +15,6 @@ target_link_libraries(module-service-interfaces
     PUBLIC
     Qt5::Core
     zera-meas-mode-management
-    PRIVATE
     Zera::service-interfaces
     # ask linker to help us finding unresolved symbols
     "-Wl,--no-undefined"
