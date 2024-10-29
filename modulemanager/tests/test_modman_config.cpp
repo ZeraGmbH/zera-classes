@@ -41,3 +41,33 @@ void test_modman_config::verifySessionsCount()
     jsonConfig = cJsonFileLoader::loadJsonFile(configFile).value("com5003").toObject();
     QCOMPARE(jsonConfig.value("availableSessions").toArray().count(), jsonConfig.value("sessionDisplayStrings").toArray().count());
 }
+
+void test_modman_config::pcbServiceConnectionInfo()
+{
+    ModulemanagerConfigTest::supportOeTests();
+
+    ModulemanagerConfig* mmConfig = ModulemanagerConfig::getInstance();
+    NetworkConnectionInfo info = mmConfig->getPcbConnectionInfo();
+    QCOMPARE(info.m_sIP, "127.0.0.1");
+    QCOMPARE(info.m_nPort, 6307);
+}
+
+void test_modman_config::dspServiceConnectionInfo()
+{
+    ModulemanagerConfigTest::supportOeTests();
+
+    ModulemanagerConfig* mmConfig = ModulemanagerConfig::getInstance();
+    NetworkConnectionInfo info = mmConfig->getDspConnectionInfo();
+    QCOMPARE(info.m_sIP, "127.0.0.1");
+    QCOMPARE(info.m_nPort, 6310);
+}
+
+void test_modman_config::resmanServiceConnectionInfo()
+{
+    ModulemanagerConfigTest::supportOeTests();
+
+    ModulemanagerConfig* mmConfig = ModulemanagerConfig::getInstance();
+    NetworkConnectionInfo info = mmConfig->getResmanConnectionInfo();
+    QCOMPARE(info.m_sIP, "127.0.0.1");
+    QCOMPARE(info.m_nPort, 6312);
+}

@@ -1,6 +1,7 @@
 #ifndef MODULEMANAGERCONFIG_H
 #define MODULEMANAGERCONFIG_H
 
+#include "networkconnectioninfo.h"
 #include <QJsonObject>
 #include <mutex>
 
@@ -18,6 +19,9 @@ public:
     const QString getDefaultSession();
     void setDefaultSession(QString session);
     bool containsDeviceName(QString devName);
+    NetworkConnectionInfo getPcbConnectionInfo();
+    NetworkConnectionInfo getDspConnectionInfo();
+    NetworkConnectionInfo getResmanConnectionInfo();
     bool isDevMode();
 protected:
     static QString m_configFileDir;

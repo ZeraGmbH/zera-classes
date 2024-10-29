@@ -1,6 +1,20 @@
 {
     "deviceName" : "mt310s2",
     "devMode" : false,
+    "connectivity" : {
+        "pcbService": {
+            "ip": "127.0.0.1",
+            "port": 6307
+        },
+        "dspService": {
+            "ip": "127.0.0.1",
+            "port": 6310
+        },
+        "resmanService": {
+            "ip": "127.0.0.1",
+            "port": 6312
+        }
+    },
     "mt310s2" : {
         "availableSessions" : ["mt310s2-meas-session.json", "mt310s2-emob-session-ac.json", "mt310s2-emob-session-dc.json", "mt310s2-dc-session.json"],
         "sessionDisplayStrings" : ["Default", "EMOB AC", "EMOB DC", "DC: 4*Voltage / 1*Current"],

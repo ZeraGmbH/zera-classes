@@ -83,6 +83,35 @@ bool ModulemanagerConfig::containsDeviceName(QString devName)
     return false;
 }
 
+static const char* topTagConnnection = "connectivity";
+
+NetworkConnectionInfo ModulemanagerConfig::getPcbConnectionInfo()
+{
+    const char* serviceTag = "pcbService";
+    QJsonObject serviceObj = m_jsonConfig[topTagConnnection].toObject()[serviceTag].toObject();
+    return NetworkConnectionInfo(
+        serviceObj["ip"].toString(),
+        serviceObj["port"].toInt());
+}
+
+NetworkConnectionInfo ModulemanagerConfig::getDspConnectionInfo()
+{
+    const char* serviceTag = "dspService";
+    QJsonObject serviceObj = m_jsonConfig[topTagConnnection].toObject()[serviceTag].toObject();
+    return NetworkConnectionInfo(
+        serviceObj["ip"].toString(),
+        serviceObj["port"].toInt());
+}
+
+NetworkConnectionInfo ModulemanagerConfig::getResmanConnectionInfo()
+{
+    const char* serviceTag = "resmanService";
+    QJsonObject serviceObj = m_jsonConfig[topTagConnnection].toObject()[serviceTag].toObject();
+    return NetworkConnectionInfo(
+        serviceObj["ip"].toString(),
+        serviceObj["port"].toInt());
+}
+
 bool ModulemanagerConfig::isDevMode()
 {
     return m_jsonConfig["devMode"].toBool();
