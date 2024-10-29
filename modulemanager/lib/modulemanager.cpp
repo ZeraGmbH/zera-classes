@@ -130,13 +130,23 @@ void ModuleManager::startModule(const QString & uniqueModuleName, const QString 
                   qPrintable(uniqueModuleName),
                   moduleEntityId,
                   qPrintable(confFileInfo.fileName()));
+
+            // For now hard coded
+            const cSocket m_pcbServiceConnectionInfo("127.0.0.1", 6307);
+            const cSocket m_dspServiceConnectionInfo("127.0.0.1", 6310);
+            const cSocket m_rmServiceConnectionInfo("127.0.0.1", 6312);
+            ModuleFactoryParamNetworkPtr networkParams = std::make_shared<ModuleFactoryParamNetwork>(
+                m_tcpNetworkFactory,
+                m_pcbServiceConnectionInfo,
+                m_dspServiceConnectionInfo,
+                m_rmServiceConnectionInfo);
             ModuleFactoryParam moduleParam(moduleEntityId,
-                                                      moduleNum,
-                                                      t_xmlConfigData,
-                                                      m_setupFacade->getStorageSystem(),
-                                                      m_serviceInterfaceFactory,
-                                                      m_tcpNetworkFactory,
-                                                      m_moduleDemoMode);
+                                           moduleNum,
+                                           t_xmlConfigData,
+                                           m_setupFacade->getStorageSystem(),
+                                           m_serviceInterfaceFactory,
+                                           networkParams,
+                                           m_moduleDemoMode);
             VirtualModule *tmpModule = tmpFactory->createModule(moduleParam);
             if(tmpModule) {
                 connect(tmpModule, &VirtualModule::addEventSystem, this, &ModuleManager::onModuleEventSystemAdded);

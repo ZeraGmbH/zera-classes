@@ -324,7 +324,7 @@ AbstractFactoryServiceInterfacesPtr cBaseModule::getServiceInterfaceFactory()
 
 VeinTcp::AbstractTcpNetworkFactoryPtr cBaseModule::getTcpNetworkFactory()
 {
-    return m_moduleParam.m_tcpNetworkFactory;
+    return m_moduleParam.m_networkParams->m_tcpNetworkFactory;
 }
 
 void cBaseModule::entryIdle()
