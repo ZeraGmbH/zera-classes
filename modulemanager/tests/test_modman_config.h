@@ -12,6 +12,8 @@ private slots:
     void pcbServiceConnectionInfo();
     void dspServiceConnectionInfo();
     void resmanServiceConnectionInfo();
+private:
+    static QString getConfiguredIp();
 };
 
 #endif // TEST_MODMAN_CONFIG_H

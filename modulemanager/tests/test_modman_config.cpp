@@ -48,7 +48,7 @@ void test_modman_config::pcbServiceConnectionInfo()
 
     ModulemanagerConfig* mmConfig = ModulemanagerConfig::getInstance();
     NetworkConnectionInfo info = mmConfig->getPcbConnectionInfo();
-    QCOMPARE(info.m_sIP, "127.0.0.1");
+    QCOMPARE(info.m_sIP, getConfiguredIp());
     QCOMPARE(info.m_nPort, 6307);
 }
 
@@ -58,7 +58,7 @@ void test_modman_config::dspServiceConnectionInfo()
 
     ModulemanagerConfig* mmConfig = ModulemanagerConfig::getInstance();
     NetworkConnectionInfo info = mmConfig->getDspConnectionInfo();
-    QCOMPARE(info.m_sIP, "127.0.0.1");
+    QCOMPARE(info.m_sIP, getConfiguredIp());
     QCOMPARE(info.m_nPort, 6310);
 }
 
@@ -68,6 +68,11 @@ void test_modman_config::resmanServiceConnectionInfo()
 
     ModulemanagerConfig* mmConfig = ModulemanagerConfig::getInstance();
     NetworkConnectionInfo info = mmConfig->getResmanConnectionInfo();
-    QCOMPARE(info.m_sIP, "127.0.0.1");
+    QCOMPARE(info.m_sIP, getConfiguredIp());
     QCOMPARE(info.m_nPort, 6312);
+}
+
+QString test_modman_config::getConfiguredIp()
+{
+    return QString(ZC_SERVICES_IP).isEmpty() ? "127.0.0.1" : ZC_SERVICES_IP;
 }
