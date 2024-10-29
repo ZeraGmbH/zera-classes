@@ -15,9 +15,9 @@ public:
     VirtualModule *m_module;
     const QString m_uniqueName;
     const QString m_configPath;
-    QByteArray m_configData;
-    int m_moduleId;
-    int m_moduleNum;
+    const QByteArray m_configData;
+    const int m_moduleId;
+    const int m_moduleNum;
 };
 
 }
