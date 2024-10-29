@@ -53,7 +53,7 @@ ModuleManager::ModuleManager(ModuleManagerSetupFacade *setupFacade,
 ModuleManager::~ModuleManager()
 {
     for(ModuleData *module : qAsConst(m_moduleList)) {
-        m_factoryTable.value(module->m_uniqueName)->destroyModule(module->m_reference);
+        m_factoryTable.value(module->m_uniqueName)->destroyModule(module->m_module);
         delete module;
     }
     m_moduleList.clear();
@@ -193,7 +193,7 @@ void ModuleManager::destroyModules()
         QElapsedTimer destroyTimer;
         destroyTimer.start();
         for(int i = m_moduleList.length()-1; i>=0; i--) { // seems we don't want to destroy _SYSTEM...
-            VirtualModule *toDestroy = m_moduleList.at(i)->m_reference;
+            VirtualModule *toDestroy = m_moduleList.at(i)->m_module;
             QString tmpModuleName = m_moduleList.at(i)->m_uniqueName;
             if(m_factoryTable.contains(tmpModuleName)) {
                 qInfo() << "Destroying module:" << tmpModuleName;
@@ -237,9 +237,9 @@ void ModuleManager::setModulesPaused(bool t_paused)
 {
     for(ModuleData *module : qAsConst(m_moduleList)) {
         if(t_paused)
-            module->m_reference->stopModule();
+            module->m_module->stopModule();
         else
-            module->m_reference->startModule();
+            module->m_module->startModule();
     }
 }
 
@@ -247,7 +247,7 @@ void ModuleManager::onStartModuleDelete()
 {
     VirtualModule *toDelete = qobject_cast<VirtualModule*>(QObject::sender());
     if(toDelete) {
-        ModuleData *tmpData = ModuleData::findByReference(m_moduleList, toDelete);
+        ModuleData *tmpData = ModuleData::findModuleByPointer(m_moduleList, toDelete);
         if(tmpData) {
             qInfo() << "Start delete module:" << tmpData->m_uniqueName;
             connect(toDelete, &VirtualModule::destroyed, this, &ModuleManager::checkModuleList);
@@ -262,7 +262,7 @@ void ModuleManager::checkModuleList(QObject *object)
 {
     VirtualModule *toDelete = static_cast<VirtualModule*>(object);
     if(toDelete) {
-        ModuleData *tmpData = ModuleData::findByReference(m_moduleList, toDelete);
+        ModuleData *tmpData = ModuleData::findModuleByPointer(m_moduleList, toDelete);
         if(tmpData) {
             qInfo() << "Deleted module:" << tmpData->m_uniqueName;
             m_moduleList.removeAll(tmpData);
@@ -315,7 +315,7 @@ void ModuleManager::startAllDemoServices(QString deviceName)
 
 void ModuleManager::saveModuleConfig(ModuleData *moduleData)
 {
-    QByteArray configData = moduleData->m_reference->getConfiguration();
+    QByteArray configData = moduleData->m_module->getConfiguration();
     if(configData.isEmpty() == false) {
         QSaveFile f; //if the application is closed while writing it will not end up with empty files due to truncate
         f.setFileName(moduleData->m_configPath);

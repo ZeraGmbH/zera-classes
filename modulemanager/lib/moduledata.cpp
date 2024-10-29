@@ -2,8 +2,8 @@
 
 namespace ZeraModules {
 
-ModuleData::ModuleData(VirtualModule *ref, const QString &name, const QString &confPath, const QByteArray &confData, int moduleEntityId, int moduleNum) :
-    m_reference(ref),
+ModuleData::ModuleData(VirtualModule *module, const QString &name, const QString &confPath, const QByteArray &confData, int moduleEntityId, int moduleNum) :
+    m_module(module),
     m_uniqueName(name),
     m_configPath(confPath),
     m_configData(confData),
@@ -12,11 +12,11 @@ ModuleData::ModuleData(VirtualModule *ref, const QString &name, const QString &c
 {
 }
 
-ModuleData *ModuleData::findByReference(QList<ModuleData*> list, VirtualModule *ref)
+ModuleData *ModuleData::findModuleByPointer(QList<ModuleData*> moduleDataList, VirtualModule *module)
 {
     ModuleData *retVal = nullptr;
-    foreach(ModuleData *tmpData, list) {
-        if(tmpData->m_reference == ref) {
+    for(ModuleData *tmpData : moduleDataList) {
+        if(tmpData->m_module == module) {
             retVal = tmpData;
             break;
         }
