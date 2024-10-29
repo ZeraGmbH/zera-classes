@@ -14,7 +14,7 @@
 namespace RANGEMODULE
 {
 
-cRangeObsermatic::cRangeObsermatic(cRangeModule *module, cSocket *dsprmsocket, QList<QStringList> groupList, QStringList chnlist, cObsermaticConfPar& confpar) :
+cRangeObsermatic::cRangeObsermatic(cRangeModule *module, NetworkConnectionInfo *dsprmsocket, QList<QStringList> groupList, QStringList chnlist, cObsermaticConfPar& confpar) :
     m_pModule(module),
     m_pDSPSocket(dsprmsocket),
     m_GroupList(groupList),

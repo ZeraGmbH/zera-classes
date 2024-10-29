@@ -5,7 +5,7 @@
 #include <QStringList>
 #include <QList>
 
-#include "socket.h"
+#include "networkconnectioninfo.h"
 #include "foutinfo.h"
 
 namespace POWER3MODULE

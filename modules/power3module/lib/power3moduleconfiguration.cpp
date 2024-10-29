@@ -4,7 +4,7 @@
 
 #include "power3moduleconfiguration.h"
 #include "power3moduleconfigdata.h"
-#include "socket.h"
+#include "networkconnectioninfo.h"
 
 namespace POWER3MODULE
 {

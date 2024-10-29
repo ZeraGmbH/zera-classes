@@ -17,7 +17,7 @@
 namespace RANGEMODULE 
 {
 
-cAdjustManagement::cAdjustManagement(cRangeModule *module, cSocket* dspsocket, cSocket* pcbsocket, QStringList chnlist, QStringList subdclist, adjustConfPar *adjustmentConfig)
+cAdjustManagement::cAdjustManagement(cRangeModule *module, NetworkConnectionInfo* dspsocket, NetworkConnectionInfo* pcbsocket, QStringList chnlist, QStringList subdclist, adjustConfPar *adjustmentConfig)
     :m_pModule(module), m_pDSPSocket(dspsocket), m_pPCBSocket(pcbsocket), m_ChannelNameList(chnlist), m_subdcChannelNameList(subdclist), m_adjustmentConfig(adjustmentConfig)
 {
     m_dspInterface = m_pModule->getServiceInterfaceFactory()->createDspInterfaceRange(

@@ -4,7 +4,7 @@
 
 #include "sec1moduleconfiguration.h"
 #include "sec1moduleconfigdata.h"
-#include "socket.h"
+#include "networkconnectioninfo.h"
 
 namespace SEC1MODULE
 {

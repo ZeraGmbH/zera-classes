@@ -4,7 +4,7 @@
 
 #include "scpimoduleconfiguration.h"
 #include "scpimoduleconfigdata.h"
-#include "socket.h"
+#include "networkconnectioninfo.h"
 
 namespace SCPIMODULE
 {

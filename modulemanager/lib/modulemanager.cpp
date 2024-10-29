@@ -132,9 +132,9 @@ void ModuleManager::startModule(const QString & uniqueModuleName, const QString 
                   qPrintable(confFileInfo.fileName()));
 
             // For now hard coded
-            const cSocket m_pcbServiceConnectionInfo("127.0.0.1", 6307);
-            const cSocket m_dspServiceConnectionInfo("127.0.0.1", 6310);
-            const cSocket m_rmServiceConnectionInfo("127.0.0.1", 6312);
+            const NetworkConnectionInfo m_pcbServiceConnectionInfo("127.0.0.1", 6307);
+            const NetworkConnectionInfo m_dspServiceConnectionInfo("127.0.0.1", 6310);
+            const NetworkConnectionInfo m_rmServiceConnectionInfo("127.0.0.1", 6312);
             ModuleFactoryParamNetworkPtr networkParams = std::make_shared<ModuleFactoryParamNetwork>(
                 m_tcpNetworkFactory,
                 m_pcbServiceConnectionInfo,

@@ -4,7 +4,7 @@
 
 #include "statusmoduleconfiguration.h"
 #include "statusmoduleconfigdata.h"
-#include "socket.h"
+#include "networkconnectioninfo.h"
 
 namespace STATUSMODULE
 {

@@ -5,7 +5,7 @@
 #include <QStringList>
 #include <QList>
 
-#include "socket.h"
+#include "networkconnectioninfo.h"
 #include "foutinfo.h"
 
 namespace POWER1MODULE
@@ -55,9 +55,9 @@ class cPower1ModuleConfigData
 public:
     cPower1ModuleConfigData(){}
 
-    cSocket m_RMSocket; // the sockets we can connect to
-    cSocket m_PCBServerSocket;
-    cSocket m_DSPServerSocket;
+    NetworkConnectionInfo m_RMSocket; // the sockets we can connect to
+    NetworkConnectionInfo m_PCBServerSocket;
+    NetworkConnectionInfo m_DSPServerSocket;
 
     quint8 m_nMeasModeCount; // how many measurement modes do we support
     QStringList m_sMeasmodeList; // a list of our measurement modes

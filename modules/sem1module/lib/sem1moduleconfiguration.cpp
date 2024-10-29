@@ -4,7 +4,7 @@
 
 #include "sem1moduleconfiguration.h"
 #include "sem1moduleconfigdata.h"
-#include "socket.h"
+#include "networkconnectioninfo.h"
 
 namespace SEM1MODULE
 {

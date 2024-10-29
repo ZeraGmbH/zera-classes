@@ -4,7 +4,7 @@
 
 #include "spm1moduleconfiguration.h"
 #include "spm1moduleconfigdata.h"
-#include "socket.h"
+#include "networkconnectioninfo.h"
 
 namespace SPM1MODULE
 {

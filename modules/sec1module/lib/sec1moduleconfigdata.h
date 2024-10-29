@@ -1,7 +1,7 @@
 #ifndef SEC1MODULECONFIGDATA_H
 #define SEC1MODULECONFIGDATA_H
 
-#include "socket.h"
+#include "networkconnectioninfo.h"
 #include "secconfigdatacommon.h"
 #include <QList>
 
@@ -63,9 +63,9 @@ public:
     doubleParameter m_fUpperLimit;
     doubleParameter m_fLowerLimit;
     stringParameter m_sResultUnit;
-    cSocket m_RMSocket; // the sockets we can connect to
-    cSocket m_PCBServerSocket;
-    cSocket m_SECServerSocket;
+    NetworkConnectionInfo m_RMSocket; // the sockets we can connect to
+    NetworkConnectionInfo m_PCBServerSocket;
+    NetworkConnectionInfo m_SECServerSocket;
 };
 
 }

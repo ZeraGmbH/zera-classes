@@ -4,7 +4,7 @@
 
 #include "fftmoduleconfiguration.h"
 #include "fftmoduleconfigdata.h"
-#include "socket.h"
+#include "networkconnectioninfo.h"
 
 namespace FFTMODULE
 {

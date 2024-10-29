@@ -2,7 +2,7 @@
 #define SEM1MODULECONFIGDATA_H
 
 #include "secconfigdatacommon.h"
-#include "socket.h"
+#include "networkconnectioninfo.h"
 #include <QList>
 
 namespace SEM1MODULE
@@ -56,9 +56,9 @@ public:
     boolParameter m_bTargeted;
     doubleParameter m_fUpperLimit;
     doubleParameter m_fLowerLimit;
-    cSocket m_RMSocket; // the sockets we can connect to
-    cSocket m_PCBServerSocket;
-    cSocket m_SECServerSocket;
+    NetworkConnectionInfo m_RMSocket; // the sockets we can connect to
+    NetworkConnectionInfo m_PCBServerSocket;
+    NetworkConnectionInfo m_SECServerSocket;
 };
 
 }

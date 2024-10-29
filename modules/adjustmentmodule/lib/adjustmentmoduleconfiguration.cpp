@@ -4,7 +4,7 @@
 
 #include "adjustmentmoduleconfiguration.h"
 #include "adjustmentmoduleconfigdata.h"
-#include "socket.h"
+#include "networkconnectioninfo.h"
 
 static const char* defaultXSDFile = "://adjustmentmodule.xsd";
 

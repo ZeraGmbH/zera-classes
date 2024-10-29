@@ -4,7 +4,7 @@
 
 #include "referencemoduleconfiguration.h"
 #include "referencemoduleconfigdata.h"
-#include "socket.h"
+#include "networkconnectioninfo.h"
 
 namespace REFERENCEMODULE
 {

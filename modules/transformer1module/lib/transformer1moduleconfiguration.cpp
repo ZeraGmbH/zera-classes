@@ -4,7 +4,7 @@
 
 #include "transformer1moduleconfiguration.h"
 #include "transformer1moduleconfigdata.h"
-#include "socket.h"
+#include "networkconnectioninfo.h"
 
 namespace TRANSFORMER1MODULE
 {

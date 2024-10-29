@@ -96,7 +96,7 @@ void cReferenceAdjustment::generateInterface()
 
 void cReferenceAdjustment::pcbserverConnect()
 {
-    cSocket sock = m_pConfigData->m_PCBServerSocket;
+    NetworkConnectionInfo sock = m_pConfigData->m_PCBServerSocket;
     m_pPCBClient = Zera::Proxy::getInstance()->getConnectionSmart(sock.m_sIP,
                                                                   sock.m_nPort,
                                                                   m_pModule->getTcpNetworkFactory());
@@ -121,7 +121,7 @@ void cReferenceAdjustment::set0VRange()
 void cReferenceAdjustment::dspserverConnect()
 {
     // we set up our dsp server connection
-    cSocket sock = m_pConfigData->m_DSPServerSocket;
+    NetworkConnectionInfo sock = m_pConfigData->m_DSPServerSocket;
     m_dspClient = Zera::Proxy::getInstance()->getConnectionSmart(sock.m_sIP,
                                                                  sock.m_nPort,
                                                                  m_pModule->getTcpNetworkFactory());

@@ -6,7 +6,7 @@
 #include <moduleactivist.h>
 #include "abstractfactoryserviceinterfaces.h"
 #include <vfmoduleparameter.h>
-#include <socket.h>
+#include <networkconnectioninfo.h>
 #include <stringvalidator.h>
 #include <dspinterface.h>
 
@@ -41,7 +41,7 @@ class cRangeObsermatic: public cModuleActivist
 {
     Q_OBJECT
 public:
-    cRangeObsermatic(cRangeModule* module, cSocket* dspsocket, QList<QStringList> groupList, QStringList chnlist, cObsermaticConfPar& confpar);
+    cRangeObsermatic(cRangeModule* module, NetworkConnectionInfo* dspsocket, QList<QStringList> groupList, QStringList chnlist, cObsermaticConfPar& confpar);
     virtual void generateInterface(); // here we export our interface (entities)
     VfModuleComponent *m_pRangingSignal;
 public slots:
@@ -50,7 +50,7 @@ public slots:
     void catchChannelNewRangeList();
 private:
     cRangeModule *m_pModule;
-    cSocket *m_pDSPSocket;
+    NetworkConnectionInfo *m_pDSPSocket;
     QList<QStringList> m_GroupList;
     QStringList m_ChannelNameList; // the system names of our channels
     cObsermaticConfPar& m_ConfPar;

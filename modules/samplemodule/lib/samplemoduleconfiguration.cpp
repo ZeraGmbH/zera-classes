@@ -4,7 +4,7 @@
 
 #include "samplemoduleconfiguration.h"
 #include "samplemoduleconfigdata.h"
-#include "socket.h"
+#include "networkconnectioninfo.h"
 
 namespace SAMPLEMODULE
 {

@@ -1,7 +1,7 @@
 #ifndef SPM1MODULECONFIGDATA_H
 #define SPM1MODULECONFIGDATA_H
 
-#include "socket.h"
+#include "networkconnectioninfo.h"
 #include "secconfigdatacommon.h"
 #include <QList>
 
@@ -56,9 +56,9 @@ public:
     boolParameter m_bTargeted;
     doubleParameter m_fUpperLimit;
     doubleParameter m_fLowerLimit;
-    cSocket m_RMSocket; // the sockets we can connect to
-    cSocket m_PCBServerSocket;
-    cSocket m_SECServerSocket;
+    NetworkConnectionInfo m_RMSocket; // the sockets we can connect to
+    NetworkConnectionInfo m_PCBServerSocket;
+    NetworkConnectionInfo m_SECServerSocket;
 };
 
 }

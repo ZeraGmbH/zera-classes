@@ -4,7 +4,7 @@
 
 #include "thdnmoduleconfiguration.h"
 #include "thdnmoduleconfigdata.h"
-#include "socket.h"
+#include "networkconnectioninfo.h"
 
 namespace THDNMODULE
 {

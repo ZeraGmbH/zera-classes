@@ -1,20 +1,20 @@
 #ifndef MODULEFACTORYPARAMNETWORK_H
 #define MODULEFACTORYPARAMNETWORK_H
 
-#include "socket.h"
+#include "networkconnectioninfo.h"
 #include <abstracttcpnetworkfactory.h>
 #include <memory>
 
 struct ModuleFactoryParamNetwork
 {
     ModuleFactoryParamNetwork(VeinTcp::AbstractTcpNetworkFactoryPtr tcpNetworkFactory,
-                              cSocket pcbServiceConnectionInfo,
-                              cSocket dspServiceConnectionInfo,
-                              cSocket rmServiceConnectionInfo);
+                              NetworkConnectionInfo pcbServiceConnectionInfo,
+                              NetworkConnectionInfo dspServiceConnectionInfo,
+                              NetworkConnectionInfo rmServiceConnectionInfo);
     const VeinTcp::AbstractTcpNetworkFactoryPtr m_tcpNetworkFactory;
-    const cSocket m_pcbServiceConnectionInfo;
-    const cSocket m_dspServiceConnectionInfo;
-    const cSocket m_rmServiceConnectionInfo;
+    const NetworkConnectionInfo m_pcbServiceConnectionInfo;
+    const NetworkConnectionInfo m_dspServiceConnectionInfo;
+    const NetworkConnectionInfo m_rmServiceConnectionInfo;
 };
 
 typedef std::shared_ptr<ModuleFactoryParamNetwork> ModuleFactoryParamNetworkPtr;

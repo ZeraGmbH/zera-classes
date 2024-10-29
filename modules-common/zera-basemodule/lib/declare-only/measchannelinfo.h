@@ -1,7 +1,7 @@
 #ifndef MEASCHANNELINFO_H
 #define MEASCHANNELINFO_H
 
-#include "socket.h"
+#include "networkconnectioninfo.h"
 #include <pcbinterface.h>
 #include <QObject>
 #include <QString>
@@ -12,7 +12,7 @@ struct cMeasChannelInfo
     double m_fUrValue; // the channels actual upper range value
     QString alias;
     QString unit;
-    cSocket pcbServersocket;
+    NetworkConnectionInfo pcbServersocket;
     Zera::cPCBInterface* pcbIFace;
 };
 

@@ -6,7 +6,7 @@
 #include <pcbinterface.h>
 #include "taskcontainersequence.h"
 #include "taskcontainerparallel.h"
-#include "socket.h"
+#include "networkconnectioninfo.h"
 #include <vfmoduleerrorcomponent.h>
 
 class AdjustmentModuleActivator : public QObject

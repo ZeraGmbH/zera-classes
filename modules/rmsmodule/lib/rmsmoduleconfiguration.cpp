@@ -4,7 +4,7 @@
 
 #include "rmsmoduleconfiguration.h"
 #include "rmsmoduleconfigdata.h"
-#include "socket.h"
+#include "networkconnectioninfo.h"
 
 namespace RMSMODULE
 {

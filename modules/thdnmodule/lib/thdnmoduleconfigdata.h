@@ -4,7 +4,7 @@
 #include <QString>
 #include <QList>
 
-#include "socket.h"
+#include "networkconnectioninfo.h"
 
 namespace THDNMODULE
 {
@@ -27,9 +27,9 @@ public:
     doubleParameter m_fMeasInterval; // measuring interval 0.1 .. 100.0 sec.
     double m_fmovingwindowInterval;
     bool m_bmovingWindow;
-    cSocket m_RMSocket; // the sockets we can connect to
-    cSocket m_PCBServerSocket;
-    cSocket m_DSPServerSocket;
+    NetworkConnectionInfo m_RMSocket; // the sockets we can connect to
+    NetworkConnectionInfo m_PCBServerSocket;
+    NetworkConnectionInfo m_DSPServerSocket;
 };
 
 }

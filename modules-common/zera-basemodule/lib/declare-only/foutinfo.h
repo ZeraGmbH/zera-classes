@@ -1,7 +1,7 @@
 #ifndef FOUTINFO_H
 #define FOUTINFO_H
 
-#include "socket.h"
+#include "networkconnectioninfo.h"
 #include <pcbinterface.h>
 
 enum foutmodes
@@ -17,7 +17,7 @@ struct cFoutInfo
     bool avail; // may be it is not available (future purpose)
     quint8 dspFoutChannel; // the dspchannel that is responsible for this output 0..3
     double formFactor;
-    cSocket pcbServersocket;
+    NetworkConnectionInfo pcbServersocket;
     Zera::cPCBInterface* pcbIFace;
 };
 

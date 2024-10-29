@@ -5,7 +5,7 @@
 #include <QStringList>
 #include <QList>
 
-#include "socket.h"
+#include "networkconnectioninfo.h"
 #include "statusbitdescriptor.h"
 
 
@@ -32,7 +32,7 @@ class cSCPIModuleConfigData
 public:
     cSCPIModuleConfigData(){}
     quint8 m_nClients; // the max. nr of clients accepted to connect
-    cSocket m_InterfaceSocket; // we listen here ip is localhost
+    NetworkConnectionInfo m_InterfaceSocket; // we listen here ip is localhost
     QString m_sDeviceName;
     quint8 m_nQuestonionableStatusBitCount;
     quint8 m_nOperationStatusBitCount;

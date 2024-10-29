@@ -6,7 +6,7 @@
 namespace REFERENCEMODULE
 {
 
-cReferenceMeasChannel::cReferenceMeasChannel(cSocket* rmsocket, cSocket* pcbsocket, VeinTcp::AbstractTcpNetworkFactoryPtr tcpNetworkFactory,
+cReferenceMeasChannel::cReferenceMeasChannel(NetworkConnectionInfo* rmsocket, NetworkConnectionInfo* pcbsocket, VeinTcp::AbstractTcpNetworkFactoryPtr tcpNetworkFactory,
                                              QString name, quint8 chnnr) :
     cBaseMeasChannel(rmsocket, pcbsocket, tcpNetworkFactory, name, chnnr)
 {

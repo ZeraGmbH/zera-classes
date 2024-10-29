@@ -4,7 +4,7 @@
 #include <QString>
 #include <QList>
 
-#include "socket.h"
+#include "networkconnectioninfo.h"
 
 namespace OSCIMODULE
 {
@@ -24,9 +24,9 @@ public:
     quint16 m_nInterpolation; // sample count we have to interpolate to
     quint16 m_nGap; // how many sample periods are left before sampling next
     stringParameter m_RefChannel;
-    cSocket m_RMSocket; // the sockets we can connect to
-    cSocket m_PCBServerSocket;
-    cSocket m_DSPServerSocket;
+    NetworkConnectionInfo m_RMSocket; // the sockets we can connect to
+    NetworkConnectionInfo m_PCBServerSocket;
+    NetworkConnectionInfo m_DSPServerSocket;
 };
 
 }

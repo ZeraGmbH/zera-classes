@@ -1113,7 +1113,7 @@ void cPower1ModuleMeasProgram::pcbserverConnect4measChannels()
     {
         QString key = infoReadList.at(i);
         cMeasChannelInfo mi = m_measChannelInfoHash.take(key);
-        cSocket sock = mi.pcbServersocket;
+        NetworkConnectionInfo sock = mi.pcbServersocket;
         Zera::ProxyClient* pcbClient = Zera::Proxy::getInstance()->getConnection(sock.m_sIP,
                                                                                  sock.m_nPort,
                                                                                  m_pModule->getTcpNetworkFactory());
@@ -1140,7 +1140,7 @@ void cPower1ModuleMeasProgram::pcbserverConnect4freqChannels()
         {
             QString key = infoReadList.at(i);
             cFoutInfo fi = m_FoutInfoHash.take(key);
-            cSocket sock = fi.pcbServersocket;
+            NetworkConnectionInfo sock = fi.pcbServersocket;
             Zera::ProxyClient* pcbClient = Zera::Proxy::getInstance()->getConnection(sock.m_sIP,
                                                                                      sock.m_nPort,
                                                                                      m_pModule->getTcpNetworkFactory());

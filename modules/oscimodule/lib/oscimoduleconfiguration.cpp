@@ -4,7 +4,7 @@
 
 #include "oscimoduleconfiguration.h"
 #include "oscimoduleconfigdata.h"
-#include "socket.h"
+#include "networkconnectioninfo.h"
 
 namespace OSCIMODULE
 {

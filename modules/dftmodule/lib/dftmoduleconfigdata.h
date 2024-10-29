@@ -4,7 +4,7 @@
 #include <QString>
 #include <QList>
 
-#include "socket.h"
+#include "networkconnectioninfo.h"
 
 namespace DFTMODULE
 {
@@ -35,9 +35,9 @@ public:
     stringParameter m_sRefChannel; // the reference channel's name
     bool m_bRefChannelOn; // if we shall take reference angle in account
     bool m_bmovingWindow;
-    cSocket m_RMSocket; // the sockets we can connect to
-    cSocket m_PCBServerSocket;
-    cSocket m_DSPServerSocket;
+    NetworkConnectionInfo m_RMSocket; // the sockets we can connect to
+    NetworkConnectionInfo m_PCBServerSocket;
+    NetworkConnectionInfo m_DSPServerSocket;
 };
 
 }

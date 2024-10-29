@@ -4,7 +4,7 @@
 
 #include "lambdamoduleconfiguration.h"
 #include "lambdamoduleconfigdata.h"
-#include "socket.h"
+#include "networkconnectioninfo.h"
 
 namespace LAMBDAMODULE
 {

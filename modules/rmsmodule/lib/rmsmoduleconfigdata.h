@@ -4,7 +4,7 @@
 #include <QString>
 #include <QList>
 
-#include "socket.h"
+#include "networkconnectioninfo.h"
 
 namespace RMSMODULE
 {
@@ -35,9 +35,9 @@ public:
     intParameter m_nMeasIntervalPeriod; // measuring periods 1 .. 10000
     double m_fmovingwindowInterval;
     bool m_bmovingWindow;
-    cSocket m_RMSocket; // the sockets we can connect to
-    cSocket m_PCBServerSocket;
-    cSocket m_DSPServerSocket;
+    NetworkConnectionInfo m_RMSocket; // the sockets we can connect to
+    NetworkConnectionInfo m_PCBServerSocket;
+    NetworkConnectionInfo m_DSPServerSocket;
 };
 
 }

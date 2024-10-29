@@ -4,7 +4,7 @@
 
 #include "modemoduleconfiguration.h"
 #include "modemoduleconfigdata.h"
-#include "socket.h"
+#include "networkconnectioninfo.h"
 
 namespace MODEMODULE
 {

@@ -4,7 +4,7 @@
 
 #include "dftmoduleconfiguration.h"
 #include "dftmoduleconfigdata.h"
-#include "socket.h"
+#include "networkconnectioninfo.h"
 
 namespace DFTMODULE
 {

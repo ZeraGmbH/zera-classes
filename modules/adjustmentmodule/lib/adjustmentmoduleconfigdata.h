@@ -5,7 +5,7 @@
 #include <QList>
 #include <QHash>
 
-#include "socket.h"
+#include "networkconnectioninfo.h"
 
 struct adjInfoType
 {
@@ -37,8 +37,8 @@ public:
     adjInfoType m_ReferenceAngle;
     adjInfoType m_ReferenceFrequency;
     QHash<QString, cAdjChannelInfo*> m_AdjChannelInfoHash;
-    cSocket m_RMSocket;
-    cSocket m_PCBSocket;
+    NetworkConnectionInfo m_RMSocket;
+    NetworkConnectionInfo m_PCBSocket;
 };
 
 #endif // ADJUSTMENTMODULECONFIGDATA_H
