@@ -4,7 +4,7 @@
 namespace POWER3MODULE
 {
 
-ZeraModules::VirtualModule* Power3ModuleFactory::createModule(MeasurementModuleFactoryParam moduleParam)
+ZeraModules::VirtualModule* Power3ModuleFactory::createModule(ModuleFactoryParam moduleParam)
 {
     return new cPower3Module(moduleParam.getAdjustedParam(m_moduleGroupNumerator.get()));
 }

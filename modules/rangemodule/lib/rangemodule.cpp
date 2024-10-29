@@ -14,7 +14,7 @@
 namespace RANGEMODULE
 {
 
-cRangeModule::cRangeModule(MeasurementModuleFactoryParam moduleParam) :
+cRangeModule::cRangeModule(ModuleFactoryParam moduleParam) :
     cBaseMeasModule(moduleParam, std::shared_ptr<cBaseModuleConfiguration>(new cRangeModuleConfiguration()))
 {
     m_sModuleName = QString("%1%2").arg(BaseModuleName).arg(moduleParam.m_moduleNum);

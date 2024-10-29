@@ -4,7 +4,7 @@
 
 namespace SCPIMODULE {
 
-ScpiModuleForTest::ScpiModuleForTest(MeasurementModuleFactoryParam moduleParam) :
+ScpiModuleForTest::ScpiModuleForTest(ModuleFactoryParam moduleParam) :
     cSCPIModule(moduleParam)
 {
 }

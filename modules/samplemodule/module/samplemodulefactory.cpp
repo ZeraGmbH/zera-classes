@@ -4,7 +4,7 @@
 namespace SAMPLEMODULE
 {
 
-ZeraModules::VirtualModule* SampleModuleFactory::createModule(MeasurementModuleFactoryParam moduleParam)
+ZeraModules::VirtualModule* SampleModuleFactory::createModule(ModuleFactoryParam moduleParam)
 {
     return new cSampleModule(moduleParam.getAdjustedParam(m_moduleGroupNumerator.get()));
 }

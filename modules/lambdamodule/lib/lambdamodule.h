@@ -13,7 +13,7 @@ public:
     static constexpr const char* BaseModuleName = "LambdaModule";
     static constexpr const char* BaseSCPIModuleName = "LAM";
 
-    cLambdaModule(MeasurementModuleFactoryParam moduleParam);
+    cLambdaModule(ModuleFactoryParam moduleParam);
     QByteArray getConfiguration() const override;
 protected:
     cLambdaModuleMeasProgram *m_pMeasProgram; // our measuring program, lets say the working horse

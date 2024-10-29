@@ -6,7 +6,7 @@
 namespace STATUSMODULE
 {
 
-cStatusModule::cStatusModule(MeasurementModuleFactoryParam moduleParam) :
+cStatusModule::cStatusModule(ModuleFactoryParam moduleParam) :
     cBaseMeasModule(moduleParam, std::shared_ptr<cBaseModuleConfiguration>(new cStatusModuleConfiguration()))
 {
     m_sModuleName = QString("%1%2").arg(BaseModuleName).arg(moduleParam.m_moduleNum);

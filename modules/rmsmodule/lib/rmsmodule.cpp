@@ -5,7 +5,7 @@
 namespace RMSMODULE
 {
 
-cRmsModule::cRmsModule(MeasurementModuleFactoryParam moduleParam) :
+cRmsModule::cRmsModule(ModuleFactoryParam moduleParam) :
     cBaseMeasModule(moduleParam, std::shared_ptr<cBaseModuleConfiguration>(new cRmsModuleConfiguration()))
 {
     m_sModuleName = QString("%1%2").arg(BaseModuleName).arg(moduleParam.m_moduleNum);

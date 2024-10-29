@@ -11,7 +11,7 @@ class ScpiModuleForTest : public cSCPIModule
 {
     Q_OBJECT
 public:
-    ScpiModuleForTest(MeasurementModuleFactoryParam moduleParam);
+    ScpiModuleForTest(ModuleFactoryParam moduleParam);
     cSCPIModuleConfigData *getConfigData() const;
     cSCPIInterface* getScpiInterface() const;
 };

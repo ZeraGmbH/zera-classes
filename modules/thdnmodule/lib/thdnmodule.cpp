@@ -13,7 +13,7 @@
 namespace THDNMODULE
 {
 
-cThdnModule::cThdnModule(MeasurementModuleFactoryParam moduleParam) :
+cThdnModule::cThdnModule(ModuleFactoryParam moduleParam) :
     cBaseMeasModule(moduleParam, std::shared_ptr<cBaseModuleConfiguration>(new cThdnModuleConfiguration()))
 {
     m_sModuleName = QString("%1%2").arg(BaseModuleName).arg(moduleParam.m_moduleNum);

@@ -1,6 +1,6 @@
 #include "basemeasmodule.h"
 
-cBaseMeasModule::cBaseMeasModule(MeasurementModuleFactoryParam moduleParam, std::shared_ptr<cBaseModuleConfiguration> modcfg) :
+cBaseMeasModule::cBaseMeasModule(ModuleFactoryParam moduleParam, std::shared_ptr<cBaseModuleConfiguration> modcfg) :
     cBaseModule(moduleParam, modcfg)
 {
     m_pModuleValidator = new VfEventSytemModuleParam(moduleParam.m_entityId, moduleParam.m_storagesystem);

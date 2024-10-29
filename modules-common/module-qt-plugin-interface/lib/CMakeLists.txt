@@ -10,7 +10,7 @@ file(GLOB SOURCES
 add_library(module-qt-plugin-interface STATIC
     ${HEADER}
     ${SOURCES}
-    )
+)
 
 target_link_libraries(module-qt-plugin-interface
     PUBLIC

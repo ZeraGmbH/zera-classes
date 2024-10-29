@@ -17,7 +17,7 @@ public:
     // and each ec will have an additional scpi parent with its number 0001 .. 9999
     static constexpr const char* BaseSCPIModuleName = "EC01";
 
-    cSec1Module(MeasurementModuleFactoryParam moduleParam);
+    cSec1Module(ModuleFactoryParam moduleParam);
     QByteArray getConfiguration() const override;
 protected:
     void setupModule() override; // after xml configuration we can setup and export our module

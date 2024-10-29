@@ -4,7 +4,7 @@
 namespace THDNMODULE
 {
 
-ZeraModules::VirtualModule* ThdnModuleFactory::createModule(MeasurementModuleFactoryParam moduleParam)
+ZeraModules::VirtualModule* ThdnModuleFactory::createModule(ModuleFactoryParam moduleParam)
 {
     return new cThdnModule(moduleParam.getAdjustedParam(m_moduleGroupNumerator.get()));
 }

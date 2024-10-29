@@ -4,7 +4,7 @@
 namespace OSCIMODULE
 {
 
-ZeraModules::VirtualModule* OsciModuleFactory::createModule(MeasurementModuleFactoryParam moduleParam)
+ZeraModules::VirtualModule* OsciModuleFactory::createModule(ModuleFactoryParam moduleParam)
 {
     return new cOsciModule(moduleParam.getAdjustedParam(m_moduleGroupNumerator.get()));
 }

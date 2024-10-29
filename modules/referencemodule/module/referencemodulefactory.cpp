@@ -4,7 +4,7 @@
 namespace REFERENCEMODULE
 {
 
-ZeraModules::VirtualModule* ReferenceModuleFactory::createModule(MeasurementModuleFactoryParam moduleParam)
+ZeraModules::VirtualModule* ReferenceModuleFactory::createModule(ModuleFactoryParam moduleParam)
 {
     return new cReferenceModule(moduleParam.getAdjustedParam(m_moduleGroupNumerator.get()));
 }

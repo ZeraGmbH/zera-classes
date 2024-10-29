@@ -26,7 +26,7 @@ class cBaseModule : public ZeraModules::VirtualModule
 Q_OBJECT
 
 public:
-    cBaseModule(MeasurementModuleFactoryParam moduleParam, std::shared_ptr<cBaseModuleConfiguration> modcfg);
+    cBaseModule(ModuleFactoryParam moduleParam, std::shared_ptr<cBaseModuleConfiguration> modcfg);
     virtual ~cBaseModule();
     virtual bool isConfigured() const override;
     virtual void startModule() override;
@@ -119,7 +119,7 @@ protected slots:
     virtual void deactivationDone() = 0;
     virtual void deactivationFinished() = 0;
 private:
-    const MeasurementModuleFactoryParam m_moduleParam;
+    const ModuleFactoryParam m_moduleParam;
     bool m_bConfCmd;
     bool m_bStartCmd;
     bool m_bStopCmd;

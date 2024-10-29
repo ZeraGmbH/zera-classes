@@ -27,7 +27,7 @@ public:
     static constexpr const char* BaseModuleName = "SCPIModule";
     static constexpr const char* BaseSCPIModuleName = "SCP";
 
-    cSCPIModule(MeasurementModuleFactoryParam moduleParam);
+    cSCPIModule(ModuleFactoryParam moduleParam);
     QByteArray getConfiguration() const override;
     cSCPIServer* getSCPIServer();
 

@@ -130,7 +130,7 @@ void ModuleManager::startModule(const QString & uniqueModuleName, const QString 
                   qPrintable(uniqueModuleName),
                   moduleEntityId,
                   qPrintable(confFileInfo.fileName()));
-            MeasurementModuleFactoryParam moduleParam(moduleEntityId,
+            ModuleFactoryParam moduleParam(moduleEntityId,
                                                       moduleNum,
                                                       t_xmlConfigData,
                                                       m_setupFacade->getStorageSystem(),

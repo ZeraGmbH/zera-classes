@@ -11,7 +11,7 @@
 namespace REFERENCEMODULE
 {
 
-cReferenceModule::cReferenceModule(MeasurementModuleFactoryParam moduleParam) :
+cReferenceModule::cReferenceModule(ModuleFactoryParam moduleParam) :
     cBaseMeasModule(moduleParam, std::shared_ptr<cBaseModuleConfiguration>(new cReferenceModuleConfiguration()))
 {
     m_sModuleName = QString("%1%2").arg(BaseModuleName).arg(moduleParam.m_moduleNum);

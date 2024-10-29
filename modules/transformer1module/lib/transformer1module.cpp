@@ -8,7 +8,7 @@
 namespace TRANSFORMER1MODULE
 {
 
-cTransformer1Module::cTransformer1Module(MeasurementModuleFactoryParam moduleParam) :
+cTransformer1Module::cTransformer1Module(ModuleFactoryParam moduleParam) :
     cBaseMeasModule(moduleParam, std::shared_ptr<cBaseModuleConfiguration>(new cTransformer1ModuleConfiguration()))
 {
     m_sModuleName = QString("%1%2").arg(BaseModuleName).arg(moduleParam.m_moduleNum);

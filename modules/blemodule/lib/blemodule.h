@@ -13,7 +13,7 @@ public:
     static constexpr const char* BaseModuleName = "BleModule";
     static constexpr const char* BaseSCPIModuleName = "BLE";
 
-    cBleModule(MeasurementModuleFactoryParam moduleParam);
+    cBleModule(ModuleFactoryParam moduleParam);
     QByteArray getConfiguration() const override;
 
 protected:

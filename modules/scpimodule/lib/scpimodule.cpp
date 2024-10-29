@@ -20,7 +20,7 @@
 namespace SCPIMODULE
 {
 
-cSCPIModule::cSCPIModule(MeasurementModuleFactoryParam moduleParam) :
+cSCPIModule::cSCPIModule(ModuleFactoryParam moduleParam) :
     cBaseModule(moduleParam, std::shared_ptr<cBaseModuleConfiguration>(new cSCPIModuleConfiguration()))
 {
     m_sModuleName = QString("%1%2").arg(BaseModuleName).arg(moduleParam.m_moduleNum);

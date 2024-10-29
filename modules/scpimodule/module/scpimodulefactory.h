@@ -18,7 +18,7 @@ class SCPIModuleFactory : public QObject, public AbstractModuleFactory
   
 public:
     SCPIModuleFactory(){}
-    ZeraModules::VirtualModule *createModule(MeasurementModuleFactoryParam moduleParam) override;
+    ZeraModules::VirtualModule *createModule(ModuleFactoryParam moduleParam) override;
     void destroyModule(ZeraModules::VirtualModule *module) override;
     QString getFactoryName() const override;
 };

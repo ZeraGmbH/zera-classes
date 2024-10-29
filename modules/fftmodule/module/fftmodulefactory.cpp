@@ -4,7 +4,7 @@
 namespace FFTMODULE
 {
 
-ZeraModules::VirtualModule* FftModuleFactory::createModule(MeasurementModuleFactoryParam moduleParam)
+ZeraModules::VirtualModule* FftModuleFactory::createModule(ModuleFactoryParam moduleParam)
 {
     return new cFftModule(moduleParam.getAdjustedParam(m_moduleGroupNumerator.get()));
 }

@@ -6,7 +6,7 @@
 namespace RMSMODULE
 {
 
-ZeraModules::VirtualModule* RmsModuleFactory::createModule(MeasurementModuleFactoryParam moduleParam)
+ZeraModules::VirtualModule* RmsModuleFactory::createModule(ModuleFactoryParam moduleParam)
 {
     return new cRmsModule(moduleParam.getAdjustedParam(m_moduleGroupNumerator.get()));
 }

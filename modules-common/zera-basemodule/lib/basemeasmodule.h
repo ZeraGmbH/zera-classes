@@ -10,7 +10,7 @@ class cBaseMeasModule : public cBaseModule
 {
     Q_OBJECT
 public:
-    cBaseMeasModule(MeasurementModuleFactoryParam moduleParam, std::shared_ptr<cBaseModuleConfiguration> modcfg);
+    cBaseMeasModule(ModuleFactoryParam moduleParam, std::shared_ptr<cBaseModuleConfiguration> modcfg);
     VfEventSytemModuleParam* m_pModuleValidator;
 };
 

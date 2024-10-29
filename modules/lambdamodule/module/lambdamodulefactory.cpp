@@ -4,7 +4,7 @@
 namespace LAMBDAMODULE
 {
 
-ZeraModules::VirtualModule* LambdaModuleFactory::createModule(MeasurementModuleFactoryParam moduleParam)
+ZeraModules::VirtualModule* LambdaModuleFactory::createModule(ModuleFactoryParam moduleParam)
 {
     return new cLambdaModule(moduleParam.getAdjustedParam(m_moduleGroupNumerator.get()));
 }

@@ -1,6 +1,6 @@
-#include "measurementmodulefactoryparam.h"
+#include "modulefactoryparam.h"
 
-MeasurementModuleFactoryParam::MeasurementModuleFactoryParam(int entityId,
+ModuleFactoryParam::ModuleFactoryParam(int entityId,
                                                              int moduleNum,
                                                              QByteArray configXmlData,
                                                              VeinEvent::StorageSystem *storagesystem,
@@ -17,9 +17,9 @@ MeasurementModuleFactoryParam::MeasurementModuleFactoryParam(int entityId,
 {
 }
 
-MeasurementModuleFactoryParam MeasurementModuleFactoryParam::getAdjustedParam(ModuleGroupNumerator *groupNumerator)
+ModuleFactoryParam ModuleFactoryParam::getAdjustedParam(ModuleGroupNumerator *groupNumerator)
 {
-    return MeasurementModuleFactoryParam(m_entityId,
+    return ModuleFactoryParam(m_entityId,
                                          groupNumerator->requestModuleNum(m_moduleNum),
                                          m_configXmlData,
                                          m_storagesystem,

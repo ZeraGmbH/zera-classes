@@ -6,7 +6,7 @@
 namespace POWER2MODULE
 {
 
-cPower2Module::cPower2Module(MeasurementModuleFactoryParam moduleParam) :
+cPower2Module::cPower2Module(ModuleFactoryParam moduleParam) :
     cBaseMeasModule(moduleParam, std::shared_ptr<cBaseModuleConfiguration>(new cPower2ModuleConfiguration()))
 {
     m_sModuleName = QString("%1%2").arg(BaseModuleName).arg(moduleParam.m_moduleNum);

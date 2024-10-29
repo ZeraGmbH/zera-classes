@@ -4,7 +4,7 @@
 namespace POWER2MODULE
 {
 
-ZeraModules::VirtualModule* Power2ModuleFactory::createModule(MeasurementModuleFactoryParam moduleParam)
+ZeraModules::VirtualModule* Power2ModuleFactory::createModule(ModuleFactoryParam moduleParam)
 {
     return new cPower2Module(moduleParam.getAdjustedParam(m_moduleGroupNumerator.get()));
 }

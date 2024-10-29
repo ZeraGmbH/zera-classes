@@ -16,7 +16,7 @@ public:
     static constexpr const char* BaseModuleName = "DFTModule";
     static constexpr const char* BaseSCPIModuleName = "DFT";
 
-    cDftModule(MeasurementModuleFactoryParam moduleParam);
+    cDftModule(ModuleFactoryParam moduleParam);
     QByteArray getConfiguration() const override;
 
 protected:

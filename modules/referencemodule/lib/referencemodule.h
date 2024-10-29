@@ -16,7 +16,7 @@ public:
     static constexpr const char* BaseModuleName = "REFERENCEModule";
     static constexpr const char* BaseSCPIModuleName = "REF";
 
-    cReferenceModule(MeasurementModuleFactoryParam moduleParam);
+    cReferenceModule(ModuleFactoryParam moduleParam);
     QByteArray getConfiguration() const override;
     virtual cReferenceMeasChannel* getMeasChannel(QString name); // also used for callback
 protected:

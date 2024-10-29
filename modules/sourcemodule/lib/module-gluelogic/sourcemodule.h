@@ -12,7 +12,7 @@ public:
     static constexpr const char* BaseModuleName = "SourceModule";
     static constexpr const char* BaseSCPIModuleName = "SRC";
 
-    SourceModule(MeasurementModuleFactoryParam moduleParam);
+    SourceModule(ModuleFactoryParam moduleParam);
     QByteArray getConfiguration() const override;
     VfModuleRpc *getRpcEventSystem() const;
 

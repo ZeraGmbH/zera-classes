@@ -10,16 +10,16 @@ namespace VeinEvent
 class StorageSystem;
 }
 
-struct MeasurementModuleFactoryParam
+struct ModuleFactoryParam
 {
-    MeasurementModuleFactoryParam(int entityId,
+    ModuleFactoryParam(int entityId,
                                   int moduleNum,
                                   QByteArray configXmlData,
                                   VeinEvent::StorageSystem* storagesystem,
                                   AbstractFactoryServiceInterfacesPtr serviceInterfaceFactory,
                                   VeinTcp::AbstractTcpNetworkFactoryPtr tcpNetworkFactory,
                                   bool demo);
-    MeasurementModuleFactoryParam getAdjustedParam(ModuleGroupNumerator* groupNumerator);
+    ModuleFactoryParam getAdjustedParam(ModuleGroupNumerator* groupNumerator);
     const int m_entityId;
     const int m_moduleNum;
     const QByteArray m_configXmlData;

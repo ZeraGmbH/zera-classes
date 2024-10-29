@@ -4,7 +4,7 @@
 namespace RANGEMODULE
 {
 
-ZeraModules::VirtualModule* RangeModuleFactory::createModule(MeasurementModuleFactoryParam moduleParam)
+ZeraModules::VirtualModule* RangeModuleFactory::createModule(ModuleFactoryParam moduleParam)
 {
     return new cRangeModule(moduleParam.getAdjustedParam(m_moduleGroupNumerator.get()));
 }

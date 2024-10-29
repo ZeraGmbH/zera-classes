@@ -15,7 +15,7 @@ public:
     static constexpr const char* BaseModuleName = "Power3Module";
     static constexpr const char* BaseSCPIModuleName = "PW3";
 
-    cPower3Module(MeasurementModuleFactoryParam moduleParam);
+    cPower3Module(ModuleFactoryParam moduleParam);
     QByteArray getConfiguration() const override;
 protected:
     cPower3ModuleMeasProgram *m_pMeasProgram; // our measuring program, lets say the working horse

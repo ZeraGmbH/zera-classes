@@ -12,7 +12,7 @@
 namespace SAMPLEMODULE
 {
 
-cSampleModule::cSampleModule(MeasurementModuleFactoryParam moduleParam) :
+cSampleModule::cSampleModule(ModuleFactoryParam moduleParam) :
     cBaseMeasModule(moduleParam, std::shared_ptr<cBaseModuleConfiguration>(new cSampleModuleConfiguration()))
 {
     m_sModuleName = QString("%1%2").arg(BaseModuleName).arg(moduleParam.m_moduleNum);

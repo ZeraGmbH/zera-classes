@@ -18,7 +18,7 @@ public:
     static constexpr const char* BaseModuleName = "Transformer1Module";
     static constexpr const char* BaseSCPIModuleName = "TR1";
 
-    cTransformer1Module(MeasurementModuleFactoryParam moduleParam);
+    cTransformer1Module(ModuleFactoryParam moduleParam);
     QByteArray getConfiguration() const override;
 
 protected:

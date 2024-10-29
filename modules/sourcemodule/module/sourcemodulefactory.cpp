@@ -1,7 +1,7 @@
 #include "sourcemodulefactory.h"
 #include "sourcemodule.h"
 
-ZeraModules::VirtualModule* SourceModuleFactory::createModule(MeasurementModuleFactoryParam moduleParam)
+ZeraModules::VirtualModule* SourceModuleFactory::createModule(ModuleFactoryParam moduleParam)
 {
     return new SourceModule(moduleParam.getAdjustedParam(m_moduleGroupNumerator.get()));
 }

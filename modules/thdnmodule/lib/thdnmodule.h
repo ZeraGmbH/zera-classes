@@ -16,7 +16,7 @@ public:
     static constexpr const char* BaseModuleName = "THDNModule";
     static constexpr const char* BaseSCPIModuleName = "THD";
 
-    cThdnModule(MeasurementModuleFactoryParam moduleParam);
+    cThdnModule(ModuleFactoryParam moduleParam);
     QByteArray getConfiguration() const override;
 
 protected:

@@ -12,7 +12,7 @@
 #include <QJsonDocument>
 #include <QFile>
 
-cBaseModule::cBaseModule(MeasurementModuleFactoryParam moduleParam, std::shared_ptr<cBaseModuleConfiguration> modcfg) :
+cBaseModule::cBaseModule(ModuleFactoryParam moduleParam, std::shared_ptr<cBaseModuleConfiguration> modcfg) :
     ZeraModules::VirtualModule(moduleParam.m_moduleNum, moduleParam.m_entityId),
     m_pConfiguration(modcfg),
     m_moduleParam(moduleParam)

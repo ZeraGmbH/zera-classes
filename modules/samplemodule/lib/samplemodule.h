@@ -16,7 +16,7 @@ public:
     static constexpr const char* BaseModuleName = "SampleModule";
     static constexpr const char* BaseSCPIModuleName = "SAM";
 
-    cSampleModule(MeasurementModuleFactoryParam moduleParam);
+    cSampleModule(ModuleFactoryParam moduleParam);
     QByteArray getConfiguration() const override;
     cPllMeasChannel* getPllMeasChannel(QString name);
 

@@ -3,15 +3,15 @@
 
 #include "virtualmodule.h"
 #include "modulegroupnumerator.h"
-#include "measurementmodulefactoryparam.h"
+#include "modulefactoryparam.h"
 #include <QtPlugin>
 
-class AbstractModuleFactory // each module needs to implement a conrete
+class AbstractModuleFactory // each module has to implement a conrete
 {
 public:
     void setModuleNumerator(ModuleGroupNumeratorPtr moduleGroupNumerator) { m_moduleGroupNumerator = std::move(moduleGroupNumerator); }
     virtual ~AbstractModuleFactory() = default;
-    virtual ZeraModules::VirtualModule *createModule(MeasurementModuleFactoryParam moduleParam) = 0;
+    virtual ZeraModules::VirtualModule *createModule(ModuleFactoryParam moduleParam) = 0;
     virtual void destroyModule(ZeraModules::VirtualModule *module) = 0;
     virtual QString getFactoryName() const = 0;
 protected:

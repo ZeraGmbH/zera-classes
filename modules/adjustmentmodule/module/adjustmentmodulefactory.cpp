@@ -1,7 +1,7 @@
 #include "adjustmentmodulefactory.h"
 #include "adjustmentmodule.h"
 
-ZeraModules::VirtualModule* AdjustmentModuleFactory::createModule(MeasurementModuleFactoryParam moduleParam)
+ZeraModules::VirtualModule* AdjustmentModuleFactory::createModule(ModuleFactoryParam moduleParam)
 {
     return new cAdjustmentModule(moduleParam.getAdjustedParam(m_moduleGroupNumerator.get()));
 }

@@ -5,7 +5,7 @@
 namespace BLEMODULE
 {
 
-cBleModule::cBleModule(MeasurementModuleFactoryParam moduleParam) :
+cBleModule::cBleModule(ModuleFactoryParam moduleParam) :
     cBaseMeasModule(moduleParam, std::shared_ptr<cBaseModuleConfiguration>(new cBleModuleConfiguration()))
 {
     m_sModuleName = QString("%1%2").arg(BaseModuleName).arg(moduleParam.m_moduleNum);

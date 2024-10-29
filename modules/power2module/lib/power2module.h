@@ -17,7 +17,7 @@ public:
     static constexpr const char* BaseModuleName = "POWER2Module";
     static constexpr const char* BaseSCPIModuleName = "PW2";
 
-    cPower2Module(MeasurementModuleFactoryParam moduleParam);
+    cPower2Module(ModuleFactoryParam moduleParam);
     QByteArray getConfiguration() const override;
 
 protected:

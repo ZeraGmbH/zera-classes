@@ -4,7 +4,7 @@
 namespace DFTMODULE
 {
 
-ZeraModules::VirtualModule* DftModuleFactory::createModule(MeasurementModuleFactoryParam moduleParam)
+ZeraModules::VirtualModule* DftModuleFactory::createModule(ModuleFactoryParam moduleParam)
 {
     return new cDftModule(moduleParam.getAdjustedParam(m_moduleGroupNumerator.get()));
 }

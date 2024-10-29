@@ -3,7 +3,7 @@
 #include "adjustmentmodulemeasprogram.h"
 #include <errormessages.h>
 
-cAdjustmentModule::cAdjustmentModule(MeasurementModuleFactoryParam moduleParam) :
+cAdjustmentModule::cAdjustmentModule(ModuleFactoryParam moduleParam) :
     cBaseMeasModule(moduleParam, std::shared_ptr<cBaseModuleConfiguration>(new cAdjustmentModuleConfiguration()))
 {
     m_sModuleName = QString("%1%2").arg(BaseModuleName).arg(moduleParam.m_moduleNum);

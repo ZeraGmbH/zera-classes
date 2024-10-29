@@ -16,7 +16,7 @@ public:
     // and each energy measurement  will have an additional scpi parent with its number 0001 .. 9999
     static constexpr const char* BaseSCPIModuleName = "EM01";
 
-    cSem1Module(MeasurementModuleFactoryParam moduleParam);
+    cSem1Module(ModuleFactoryParam moduleParam);
     QByteArray getConfiguration() const override;
 protected:
     void setupModule() override; // after xml configuration we can setup and export our module

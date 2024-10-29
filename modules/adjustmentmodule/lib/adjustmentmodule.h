@@ -22,7 +22,7 @@ class cAdjustmentModule : public cBaseMeasModule
 public:
     static constexpr const char* BaseModuleName = "AdjustmentModule";
     static constexpr const char* BaseSCPIModuleName = "ADJ";
-    cAdjustmentModule(MeasurementModuleFactoryParam moduleParam);
+    cAdjustmentModule(ModuleFactoryParam moduleParam);
     QByteArray getConfiguration() const override;
 protected:
     cAdjustmentModuleMeasProgram *m_pMeasProgram; // our measuring program, lets say the working horse

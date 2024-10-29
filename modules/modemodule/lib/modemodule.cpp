@@ -9,7 +9,7 @@
 namespace MODEMODULE
 {
 
-cModeModule::cModeModule(MeasurementModuleFactoryParam moduleParam) :
+cModeModule::cModeModule(ModuleFactoryParam moduleParam) :
     cBaseMeasModule(moduleParam, std::shared_ptr<cBaseModuleConfiguration>(new cModeModuleConfiguration()))
 {
     m_sModuleName = QString("%1%2").arg(BaseModuleName).arg(moduleParam.m_moduleNum);
