@@ -17,8 +17,6 @@ cBaseModule::cBaseModule(ModuleFactoryParam moduleParam, std::shared_ptr<cBaseMo
     m_pConfiguration(modcfg),
     m_moduleParam(moduleParam)
 {
-    QString s;
-
     m_bStartCmd = m_bStopCmd = m_bStateMachineStarted = false;
 
     m_nStatus = untouched;
@@ -27,15 +25,15 @@ cBaseModule::cBaseModule(ModuleFactoryParam moduleParam, std::shared_ptr<cBaseMo
 
     // our states from virtualmodule (interface)
     m_pStateIdle = new QState();
-    m_pStateIdle->setObjectName(s = "IDLE");
+    m_pStateIdle->setObjectName("IDLE");
     m_pStateConfigure = new QState();
-    m_pStateConfigure->setObjectName(s = "CONFIGURE");
+    m_pStateConfigure->setObjectName("CONFIGURE");
     m_pStateRun = new QState();
-    m_pStateRun->setObjectName(s = "RUN");
+    m_pStateRun->setObjectName("RUN");
     m_pStateStop = new QState();
-    m_pStateStop->setObjectName(s = "STOP");
+    m_pStateStop->setObjectName("STOP");
     m_pStateFinished = new QFinalState();
-    m_pStateFinished->setObjectName(s = "FINISH");
+    m_pStateFinished->setObjectName("FINISH");
 
     // we set up our IDLE state here
 
