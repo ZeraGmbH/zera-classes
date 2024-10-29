@@ -3,60 +3,12 @@
 
 #include "virtualmodule.h"
 #include "modulegroupnumerator.h"
-#include "abstractfactoryserviceinterfaces.h"
-#include <abstracttcpnetworkfactory.h>
+#include "measurementmodulefactoryparam.h"
 #include <QtPlugin>
 
 namespace VeinEvent
 {
     class StorageSystem;
-}
-
-struct MeasurementModuleFactoryParam
-{
-    MeasurementModuleFactoryParam(int entityId,
-                                  int moduleNum,
-                                  QByteArray configXmlData,
-                                  VeinEvent::StorageSystem* storagesystem,
-                                  AbstractFactoryServiceInterfacesPtr serviceInterfaceFactory,
-                                  VeinTcp::AbstractTcpNetworkFactoryPtr tcpNetworkFactory,
-                                  bool demo);
-    MeasurementModuleFactoryParam getAdjustedParam(ModuleGroupNumerator* groupNumerator);
-    const int m_entityId;
-    const int m_moduleNum;
-    const QByteArray m_configXmlData;
-    VeinEvent::StorageSystem* m_storagesystem;
-    AbstractFactoryServiceInterfacesPtr m_serviceInterfaceFactory;
-    VeinTcp::AbstractTcpNetworkFactoryPtr m_tcpNetworkFactory;
-    const bool m_demo;
-};
-
-inline MeasurementModuleFactoryParam::MeasurementModuleFactoryParam(int entityId,
-                                                                    int moduleNum,
-                                                                    QByteArray configXmlData,
-                                                                    VeinEvent::StorageSystem *storagesystem,
-                                                                    AbstractFactoryServiceInterfacesPtr serviceInterfaceFactory,
-                                                                    VeinTcp::AbstractTcpNetworkFactoryPtr tcpNetworkFactory,
-                                                                    bool demo) :
-    m_entityId(entityId),
-    m_moduleNum(moduleNum),
-    m_configXmlData(configXmlData),
-    m_storagesystem(storagesystem),
-    m_serviceInterfaceFactory(serviceInterfaceFactory),
-    m_tcpNetworkFactory(tcpNetworkFactory),
-    m_demo(demo)
-{
-}
-
-inline MeasurementModuleFactoryParam MeasurementModuleFactoryParam::getAdjustedParam(ModuleGroupNumerator *groupNumerator)
-{
-    return MeasurementModuleFactoryParam(m_entityId,
-                                         groupNumerator->requestModuleNum(m_moduleNum),
-                                         m_configXmlData,
-                                         m_storagesystem,
-                                         m_serviceInterfaceFactory,
-                                         m_tcpNetworkFactory,
-                                         m_demo);
 }
 
 class MeasurementModuleFactory
