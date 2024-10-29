@@ -36,12 +36,6 @@ void cFftModuleConfiguration::setConfiguration(QByteArray xmlString)
     // so now we can set up
     // initializing hash table for xml configuration
 
-    m_ConfigXMLMap["fftmodconfpar:configuration:connectivity:ethernet:resourcemanager:ip"] = setRMIp;
-    m_ConfigXMLMap["fftmodconfpar:configuration:connectivity:ethernet:resourcemanager:port"] = setRMPort;
-    m_ConfigXMLMap["fftmodconfpar:configuration:connectivity:ethernet:pcbserver:ip"] = setPCBServerIp;
-    m_ConfigXMLMap["fftmodconfpar:configuration:connectivity:ethernet:pcbserver:port"] = setPCBServerPort;
-    m_ConfigXMLMap["fftmodconfpar:configuration:connectivity:ethernet:dspserver:ip"] = setDSPServerIp;
-    m_ConfigXMLMap["fftmodconfpar:configuration:connectivity:ethernet:dspserver:port"] = setDSPServerPort;
     m_ConfigXMLMap["fftmodconfpar:configuration:measure:values:nr"] = setFftorder;
     m_ConfigXMLMap["fftmodconfpar:configuration:measure:values:n"] = setValueCount;
     m_ConfigXMLMap["fftmodconfpar:configuration:measure:movingwindow:on"] = setMovingwindowBool;
@@ -82,24 +76,6 @@ void cFftModuleConfiguration::configXMLInfo(QString key)
         int cmd = m_ConfigXMLMap[key];
         switch (cmd)
         {
-        case setRMIp:
-            m_pFftModulConfigData->m_RMSocket.m_sIP = m_pXMLReader->getValue(key);
-            break;
-        case setRMPort:
-            m_pFftModulConfigData->m_RMSocket.m_nPort = m_pXMLReader->getValue(key).toInt(&ok);
-            break;
-        case setPCBServerIp:
-            m_pFftModulConfigData->m_PCBServerSocket.m_sIP = m_pXMLReader->getValue(key);
-            break;
-        case setPCBServerPort:
-            m_pFftModulConfigData->m_PCBServerSocket.m_nPort = m_pXMLReader->getValue(key).toInt(&ok);
-            break;
-        case setDSPServerIp:
-            m_pFftModulConfigData->m_DSPServerSocket.m_sIP = m_pXMLReader->getValue(key);
-            break;
-        case setDSPServerPort:
-            m_pFftModulConfigData->m_DSPServerSocket.m_nPort = m_pXMLReader->getValue(key).toInt(&ok);
-            break;
         case setFftorder:
             m_pFftModulConfigData->m_nFftOrder = m_pXMLReader->getValue(key).toInt(&ok);
             break;

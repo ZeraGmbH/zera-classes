@@ -64,9 +64,9 @@ void cRangeModule::setupModule()
         QString channel;
 
         channel = pConfData->m_senseChannelList.at(i);
-        cRangeMeasChannel* pchn = new cRangeMeasChannel(&(pConfData->m_RMSocket),
-                                                        &(pConfData->m_PCBServerSocket),
-                                                        getTcpNetworkFactory(),
+        cRangeMeasChannel* pchn = new cRangeMeasChannel(getNetworkConfig()->m_rmServiceConnectionInfo,
+                                                        getNetworkConfig()->m_pcbServiceConnectionInfo,
+                                                        getNetworkConfig()->m_tcpNetworkFactory,
                                                         pConfData->m_senseChannelList.at(i),
                                                         i+1);
         m_rangeMeasChannelList.append(pchn);
@@ -79,7 +79,6 @@ void cRangeModule::setupModule()
     // we need some program that does the range handling (observation, automatic, setting and grouping)
     // it will also do the scaling job
     m_pRangeObsermatic = new cRangeObsermatic(this,
-                                              &(pConfData->m_DSPServerSocket),
                                               pConfData->m_GroupList,
                                               pConfData->m_senseChannelList,
                                               pConfData->m_ObsermaticConfPar);
@@ -98,7 +97,7 @@ void cRangeModule::setupModule()
     }
 
     // we also need some program for adjustment
-    m_pAdjustment = new cAdjustManagement(this, &(pConfData->m_DSPServerSocket), &pConfData->m_PCBServerSocket, pConfData->m_senseChannelList, pConfData->m_subdcChannelList, &pConfData->m_adjustConfPar);
+    m_pAdjustment = new cAdjustManagement(this, pConfData->m_senseChannelList, pConfData->m_subdcChannelList, &pConfData->m_adjustConfPar);
     m_ModuleActivistList.append(m_pAdjustment);
     connect(m_pAdjustment, &cAdjustManagement::activated, this, &cRangeModule::activationContinue);
     connect(m_pAdjustment, &cAdjustManagement::deactivated, this, &cRangeModule::deactivationContinue);

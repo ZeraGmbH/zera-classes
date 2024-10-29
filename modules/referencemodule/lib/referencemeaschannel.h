@@ -43,7 +43,7 @@ class cReferenceMeasChannel:public cBaseMeasChannel
     Q_OBJECT
 
 public:
-    cReferenceMeasChannel(NetworkConnectionInfo* rmsocket, NetworkConnectionInfo* pcbsocket, VeinTcp::AbstractTcpNetworkFactoryPtr tcpNetworkFactory,
+    cReferenceMeasChannel(NetworkConnectionInfo rmsocket, NetworkConnectionInfo pcbsocket, VeinTcp::AbstractTcpNetworkFactoryPtr tcpNetworkFactory,
                           QString name, quint8 chnnr);
     virtual void generateInterface(); // here we export our interface (entities)
 

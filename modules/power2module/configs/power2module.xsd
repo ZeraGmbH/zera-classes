@@ -23,42 +23,6 @@
         </xs:restriction>
     </xs:simpleType>
 
-	
-    <xs:complexType name="connectivitytype">
-        <xs:sequence>
-            <xs:element name="ethernet">
-            <xs:complexType>
-                <xs:sequence>
-                    <xs:element name="resourcemanager">
-                        <xs:complexType>
-                            <xs:sequence>
-                                <xs:element name="ip" type="ipadresstype"/>
-                                <xs:element name="port" type="porttype"/>
-                            </xs:sequence>
-                        </xs:complexType>
-                    </xs:element>
-                    <xs:element name="pcbserver">
-                        <xs:complexType>
-                            <xs:sequence>
-                                <xs:element name="ip" type="ipadresstype"/>
-                                <xs:element name="port" type="porttype"/>
-                            </xs:sequence>
-                        </xs:complexType>
-                    </xs:element>
-                    <xs:element name="dspserver">
-                        <xs:complexType>
-                            <xs:sequence>
-                                <xs:element name="ip" type="ipadresstype"/>
-                                <xs:element name="port" type="porttype"/>
-                            </xs:sequence>
-                        </xs:complexType>
-                    </xs:element>
-                </xs:sequence>
-            </xs:complexType>
-            </xs:element>
-        </xs:sequence>
-    </xs:complexType>
-
 
     <xs:simpleType name="measuringmodeType">
       <xs:restriction base="xs:string">
@@ -238,7 +202,6 @@
                 <xs:element name="configuration">
                     <xs:complexType>
                         <xs:sequence>
-                            <xs:element name="connectivity" type="connectivitytype"/>
                             <xs:element name="measure" type="measureType"/>
                             <xs:element name="frequencyoutput" type="frequencyoutputType"/>
                         </xs:sequence>

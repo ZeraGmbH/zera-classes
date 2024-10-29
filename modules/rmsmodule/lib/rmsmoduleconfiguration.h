@@ -13,12 +13,6 @@ namespace RMSMODULE
 
 enum moduleconfigstate
 {
-    setRMIp,
-    setRMPort,
-    setPCBServerIp,
-    setPCBServerPort,
-    setDSPServerIp,
-    setDSPServerPort,
     setValueCount,
     setIntegrationMode,
     setMovingwindowBool,

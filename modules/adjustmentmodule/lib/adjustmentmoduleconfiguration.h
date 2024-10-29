@@ -10,11 +10,6 @@
 
 enum moduleconfigstate
 {
-    setRMIp,
-    setRMPort,
-    setPCBIp,
-    setPCBPort,
-
     setAngleReferenceEntity,
     setAngleReferenceComponent,
     setFrequencyReferenceEntity,

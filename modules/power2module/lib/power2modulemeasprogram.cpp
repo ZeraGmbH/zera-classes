@@ -1172,7 +1172,7 @@ void cPower2ModuleMeasProgram::resourceManagerConnect()
     // as this is our entry point when activating the module, we do some initialization first
     m_measChannelInfoHash.clear(); // we build up a new channel info hash
     cMeasChannelInfo mi;
-    mi.pcbServersocket = getConfData()->m_PCBServerSocket; // the default from configuration file
+    mi.pcbServersocket = m_pModule->getNetworkConfig()->m_pcbServiceConnectionInfo; // the default from configuration file
     for(auto &measSystem : getConfData()->m_sMeasSystemList) {
         QStringList sl = measSystem.split(',');
         for (int j = 0; j < sl.count(); j++) {
@@ -1184,7 +1184,7 @@ void cPower2ModuleMeasProgram::resourceManagerConnect()
 
     m_FoutInfoHash.clear();
     cFoutInfo fi;
-    fi.pcbServersocket = getConfData()->m_PCBServerSocket; // the default from configuration file
+    fi.pcbServersocket = m_pModule->getNetworkConfig()->m_pcbServiceConnectionInfo; // the default from configuration file
     if (getConfData()->m_nFreqOutputCount > 0)
     {
         for (int i = 0; i < getConfData()->m_nFreqOutputCount; i++)
@@ -1199,9 +1199,9 @@ void cPower2ModuleMeasProgram::resourceManagerConnect()
 
     // we have to instantiate a working resource manager interface
     // so first we try to get a connection to resource manager over proxy
-    m_rmClient = Zera::Proxy::getInstance()->getConnectionSmart(getConfData()->m_RMSocket.m_sIP,
-                                                                getConfData()->m_RMSocket.m_nPort,
-                                                                m_pModule->getTcpNetworkFactory());
+    m_rmClient = Zera::Proxy::getInstance()->getConnectionSmart(m_pModule->getNetworkConfig()->m_rmServiceConnectionInfo.m_sIP,
+                                                                m_pModule->getNetworkConfig()->m_rmServiceConnectionInfo.m_nPort,
+                                                                m_pModule->getNetworkConfig()->m_tcpNetworkFactory);
     // and then we set resource manager interface's connection
     m_rmInterface.setClientSmart(m_rmClient);
     m_resourceManagerConnectState.addTransition(m_rmClient.get(), &Zera::ProxyClient::connected, &m_IdentifyState);
@@ -1318,7 +1318,7 @@ void cPower2ModuleMeasProgram::pcbserverConnect4measChannels()
         NetworkConnectionInfo sock = mi.pcbServersocket;
         Zera::ProxyClient* pcbClient = Zera::Proxy::getInstance()->getConnection(sock.m_sIP,
                                                                                  sock.m_nPort,
-                                                                                 m_pModule->getTcpNetworkFactory());
+                                                                                 m_pModule->getNetworkConfig()->m_tcpNetworkFactory);
         m_pcbClientList.append(pcbClient);
         Zera::cPCBInterface* pcbIFace = new Zera::cPCBInterface();
         m_pcbIFaceList.append(pcbIFace);
@@ -1345,7 +1345,7 @@ void cPower2ModuleMeasProgram::pcbserverConnect4freqChannels()
             NetworkConnectionInfo sock = fi.pcbServersocket;
             Zera::ProxyClient* pcbClient = Zera::Proxy::getInstance()->getConnection(sock.m_sIP,
                                                                                      sock.m_nPort,
-                                                                                     m_pModule->getTcpNetworkFactory());
+                                                                                     m_pModule->getNetworkConfig()->m_tcpNetworkFactory);
             m_pcbClientList.append(pcbClient);
             Zera::cPCBInterface* pcbIFace = new Zera::cPCBInterface();
             m_pcbIFaceList.append(pcbIFace);
@@ -1474,9 +1474,9 @@ void cPower2ModuleMeasProgram::setSenseChannelRangeNotifierDone()
 
 void cPower2ModuleMeasProgram::dspserverConnect()
 {
-    m_dspClient = Zera::Proxy::getInstance()->getConnectionSmart(getConfData()->m_DSPServerSocket.m_sIP,
-                                                                 getConfData()->m_DSPServerSocket.m_nPort,
-                                                                 m_pModule->getTcpNetworkFactory());
+    m_dspClient = Zera::Proxy::getInstance()->getConnectionSmart(m_pModule->getNetworkConfig()->m_dspServiceConnectionInfo.m_sIP,
+                                                                 m_pModule->getNetworkConfig()->m_dspServiceConnectionInfo.m_nPort,
+                                                                 m_pModule->getNetworkConfig()->m_tcpNetworkFactory);
     m_dspInterface->setClientSmart(m_dspClient);
     m_dspserverConnectState.addTransition(m_dspClient.get(), &Zera::ProxyClient::connected, &m_claimPGRMemState);
     connect(m_dspInterface.get(), &Zera::cDSPInterface::serverAnswer, this, &cPower2ModuleMeasProgram::catchInterfaceAnswer);

@@ -35,13 +35,6 @@ void cSpm1ModuleConfiguration::setConfiguration(QByteArray xmlString)
     // so now we can set up
     // initializing hash table for xml configuration
 
-    m_ConfigXMLMap["spm1modconfpar:configuration:connectivity:ethernet:resourcemanager:ip"] = setRMIp;
-    m_ConfigXMLMap["spm1modconfpar:configuration:connectivity:ethernet:resourcemanager:port"] = setRMPort;
-    m_ConfigXMLMap["spm1modconfpar:configuration:connectivity:ethernet:pcbserver:ip"] = setPCBServerIp;
-    m_ConfigXMLMap["spm1modconfpar:configuration:connectivity:ethernet:pcbserver:port"] = setPCBServerPort;
-    m_ConfigXMLMap["spm1modconfpar:configuration:connectivity:ethernet:secserver:ip"] = setSPMServerIp;
-    m_ConfigXMLMap["spm1modconfpar:configuration:connectivity:ethernet:secserver:port"] = setSPMServerPort;
-
     m_ConfigXMLMap["spm1modconfpar:configuration:measure:refinput:n"] = setRefInputCount;
     m_ConfigXMLMap["spm1modconfpar:configuration:measure:activeunits:n"] = setActiveUnitCount;
     m_ConfigXMLMap["spm1modconfpar:configuration:measure:reactiveunits:n"] = setReactiveUnitCount;
@@ -101,24 +94,6 @@ void cSpm1ModuleConfiguration::configXMLInfo(QString key)
         int cmd = m_ConfigXMLMap[key];
         switch (cmd)
         {
-        case setRMIp:
-            m_pSpm1ModulConfigData->m_RMSocket.m_sIP = m_pXMLReader->getValue(key);
-            break;
-        case setRMPort:
-            m_pSpm1ModulConfigData->m_RMSocket.m_nPort = m_pXMLReader->getValue(key).toInt(&ok);
-            break;
-        case setPCBServerIp:
-            m_pSpm1ModulConfigData->m_PCBServerSocket.m_sIP = m_pXMLReader->getValue(key);
-            break;
-        case setPCBServerPort:
-            m_pSpm1ModulConfigData->m_PCBServerSocket.m_nPort = m_pXMLReader->getValue(key).toInt(&ok);
-            break;
-        case setSPMServerIp:
-            m_pSpm1ModulConfigData->m_SECServerSocket.m_sIP = m_pXMLReader->getValue(key);
-            break;
-        case setSPMServerPort:
-            m_pSpm1ModulConfigData->m_SECServerSocket.m_nPort = m_pXMLReader->getValue(key).toInt(&ok);
-            break;
         case setRefInputCount:
             m_pSpm1ModulConfigData->m_nRefInpCount = m_pXMLReader->getValue(key).toInt(&ok);
             for (int i = 0; i < m_pSpm1ModulConfigData->m_nRefInpCount; i++) {

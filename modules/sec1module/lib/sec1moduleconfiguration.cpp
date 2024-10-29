@@ -35,13 +35,6 @@ void cSec1ModuleConfiguration::setConfiguration(QByteArray xmlString)
     // so now we can set up
     // initializing hash table for xml configuration
 
-    m_ConfigXMLMap["sec1modconfpar:configuration:connectivity:ethernet:resourcemanager:ip"] = setRMIp;
-    m_ConfigXMLMap["sec1modconfpar:configuration:connectivity:ethernet:resourcemanager:port"] = setRMPort;
-    m_ConfigXMLMap["sec1modconfpar:configuration:connectivity:ethernet:pcbserver:ip"] = setPCBServerIp;
-    m_ConfigXMLMap["sec1modconfpar:configuration:connectivity:ethernet:pcbserver:port"] = setPCBServerPort;
-    m_ConfigXMLMap["sec1modconfpar:configuration:connectivity:ethernet:secserver:ip"] = setSECServerIp;
-    m_ConfigXMLMap["sec1modconfpar:configuration:connectivity:ethernet:secserver:port"] = setSECServerPort;
-
     m_ConfigXMLMap["sec1modconfpar:configuration:measure:dutinput:n"] = setDutInputCount;
     m_ConfigXMLMap["sec1modconfpar:configuration:measure:refinput:n"] = setRefInputCount;
 
@@ -136,24 +129,6 @@ void cSec1ModuleConfiguration::configXMLInfo(QString key)
         int cmd = m_ConfigXMLMap[key];
         switch (cmd)
         {
-        case setRMIp:
-            m_pSec1ModulConfigData->m_RMSocket.m_sIP = m_pXMLReader->getValue(key);
-            break;
-        case setRMPort:
-            m_pSec1ModulConfigData->m_RMSocket.m_nPort = m_pXMLReader->getValue(key).toInt(&ok);
-            break;
-        case setPCBServerIp:
-            m_pSec1ModulConfigData->m_PCBServerSocket.m_sIP = m_pXMLReader->getValue(key);
-            break;
-        case setPCBServerPort:
-            m_pSec1ModulConfigData->m_PCBServerSocket.m_nPort = m_pXMLReader->getValue(key).toInt(&ok);
-            break;
-        case setSECServerIp:
-            m_pSec1ModulConfigData->m_SECServerSocket.m_sIP = m_pXMLReader->getValue(key);
-            break;
-        case setSECServerPort:
-            m_pSec1ModulConfigData->m_SECServerSocket.m_nPort = m_pXMLReader->getValue(key).toInt(&ok);
-            break;
         case setDutInputCount:
             m_pSec1ModulConfigData->m_nDutInpCount = m_pXMLReader->getValue(key).toInt(&ok);
             for (int i = 0; i < m_pSec1ModulConfigData->m_nDutInpCount; i++) {

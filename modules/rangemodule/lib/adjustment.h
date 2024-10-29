@@ -36,7 +36,7 @@ class cAdjustManagement: public cModuleActivist
 {
     Q_OBJECT
 public:
-    cAdjustManagement(cRangeModule* module, NetworkConnectionInfo* dspsocket, NetworkConnectionInfo* pcbsocket, QStringList chnlist, QStringList subdclist, adjustConfPar *adjustmentConfig);
+    cAdjustManagement(cRangeModule* module, QStringList chnlist, QStringList subdclist, adjustConfPar *adjustmentConfig);
     virtual void generateInterface(); // here we export our interface (entities)
 public slots:
     virtual void ActionHandler(QVector<float> *actualValues); // entry after received actual values
@@ -47,8 +47,6 @@ private:
     double getIgnoreRmsCorrFactor();
 
     cRangeModule* m_pModule; // the module we live in
-    NetworkConnectionInfo* m_pDSPSocket;
-    NetworkConnectionInfo* m_pPCBSocket;
     QStringList m_ChannelNameList; // the list of channels (names) we work on
     QStringList m_subdcChannelNameList; // the list of channels we have to subtract dc
     adjustConfPar *m_adjustmentConfig;

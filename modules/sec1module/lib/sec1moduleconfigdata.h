@@ -63,9 +63,6 @@ public:
     doubleParameter m_fUpperLimit;
     doubleParameter m_fLowerLimit;
     stringParameter m_sResultUnit;
-    NetworkConnectionInfo m_RMSocket; // the sockets we can connect to
-    NetworkConnectionInfo m_PCBServerSocket;
-    NetworkConnectionInfo m_SECServerSocket;
 };
 
 }

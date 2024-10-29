@@ -259,9 +259,9 @@ void cModeModuleInit::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant
 void cModeModuleInit::resourceManagerConnect()
 {
     // first we try to get a connection to resource manager over proxy
-    m_rmClient = Zera::Proxy::getInstance()->getConnectionSmart(m_ConfigData.m_RMSocket.m_sIP,
-                                                                m_ConfigData.m_RMSocket.m_nPort,
-                                                                m_pModule->getTcpNetworkFactory());
+    m_rmClient = Zera::Proxy::getInstance()->getConnectionSmart(m_pModule->getNetworkConfig()->m_rmServiceConnectionInfo.m_sIP,
+                                                                m_pModule->getNetworkConfig()->m_rmServiceConnectionInfo.m_nPort,
+                                                                m_pModule->getNetworkConfig()->m_tcpNetworkFactory);
     // and then we set connection resource manager interface's connection
     m_rmInterface.setClientSmart(m_rmClient); //
     m_resourceManagerConnectState.addTransition(m_rmClient.get(), &Zera::ProxyClient::connected, &m_IdentifyState);
@@ -303,9 +303,9 @@ void cModeModuleInit::claimResource()
 
 void cModeModuleInit::pcbserverConnect()
 {
-    m_pPCBClient = Zera::Proxy::getInstance()->getConnectionSmart(m_ConfigData.m_PCBServerSocket.m_sIP,
+    m_pPCBClient = Zera::Proxy::getInstance()->getConnectionSmart(m_pModule->getNetworkConfig()->m_pcbServiceConnectionInfo.m_sIP,
                                                                   m_nPort,
-                                                                  m_pModule->getTcpNetworkFactory());
+                                                                  m_pModule->getNetworkConfig()->m_tcpNetworkFactory);
     m_pcbserverConnectionState.addTransition(m_pPCBClient.get(), &Zera::ProxyClient::connected, &m_setModeState);
 
     m_pcbInterface->setClientSmart(m_pPCBClient);
@@ -323,9 +323,9 @@ void cModeModuleInit::setMode()
 void cModeModuleInit::dspserverConnect()
 {
     // we set up our dsp server connection
-    m_pDSPClient = Zera::Proxy::getInstance()->getConnection(m_ConfigData.m_DSPServerSocket.m_sIP,
-                                                             m_ConfigData.m_DSPServerSocket.m_nPort,
-                                                             m_pModule->getTcpNetworkFactory());
+    m_pDSPClient = Zera::Proxy::getInstance()->getConnection(m_pModule->getNetworkConfig()->m_dspServiceConnectionInfo.m_sIP,
+                                                             m_pModule->getNetworkConfig()->m_dspServiceConnectionInfo.m_nPort,
+                                                             m_pModule->getNetworkConfig()->m_tcpNetworkFactory);
     m_pDSPInterface->setClient(m_pDSPClient);
     m_dspserverConnectionState.addTransition(m_pDSPClient, &Zera::ProxyClient::connected, &m_writeGainCorrState);
     connect(m_pDSPInterface, &Zera::cDSPInterface::serverAnswer, this, &cModeModuleInit::catchInterfaceAnswer);

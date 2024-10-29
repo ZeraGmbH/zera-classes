@@ -56,9 +56,6 @@ public:
     boolParameter m_bTargeted;
     doubleParameter m_fUpperLimit;
     doubleParameter m_fLowerLimit;
-    NetworkConnectionInfo m_RMSocket; // the sockets we can connect to
-    NetworkConnectionInfo m_PCBServerSocket;
-    NetworkConnectionInfo m_SECServerSocket;
 };
 
 }

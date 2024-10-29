@@ -13,12 +13,6 @@ namespace SEC1MODULE
 
 enum moduleconfigstate
 {
-    setRMIp,
-    setRMPort,
-    setPCBServerIp,
-    setPCBServerPort,
-    setSECServerIp,
-    setSECServerPort,
     setDutInputCount,
     setRefInputCount,
 

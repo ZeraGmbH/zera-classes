@@ -14,12 +14,6 @@ namespace RANGEMODULE
 enum moduleconfigstate
 {
     setSession,
-    setRMIp,
-    setRMPort,
-    setPCBServerIp,
-    setPCBServerPort,
-    setDSPServerIp,
-    setDSPServerPort,
     setChannelCount,
     setSubdcCount,
     setGroupCount,

@@ -36,13 +36,6 @@ void cSampleModuleConfiguration::setConfiguration(QByteArray xmlString)
     // so now we can set up
     // initializing hash table for xml configuration
 
-    m_ConfigXMLMap["samplemodconfpar:configuration:connectivity:ethernet:resourcemanager:ip"] = setRMIp;
-    m_ConfigXMLMap["samplemodconfpar:configuration:connectivity:ethernet:resourcemanager:port"] = setRMPort;
-    m_ConfigXMLMap["samplemodconfpar:configuration:connectivity:ethernet:pcbserver:ip"] = setPCBServerIp;
-    m_ConfigXMLMap["samplemodconfpar:configuration:connectivity:ethernet:pcbserver:port"] = setPCBServerPort;
-    m_ConfigXMLMap["samplemodconfpar:configuration:connectivity:ethernet:dspserver:ip"] = setDSPServerIp;
-    m_ConfigXMLMap["samplemodconfpar:configuration:connectivity:ethernet:dspserver:port"] = setDSPServerPort;
-
     m_ConfigXMLMap["samplemodconfpar:configuration:sample:system"] = setSampleSystem;
     m_ConfigXMLMap["samplemodconfpar:configuration:sample:withpllautomatic"] = setPllAutomaticBool;
     m_ConfigXMLMap["samplemodconfpar:configuration:sample:pllfixed"] = setPllFixedBool;
@@ -92,24 +85,6 @@ void cSampleModuleConfiguration::configXMLInfo(QString key)
         int cmd = m_ConfigXMLMap[key];
         switch (cmd)
         {
-        case setRMIp:
-            m_pSampleModulConfigData->m_RMSocket.m_sIP = m_pXMLReader->getValue(key);
-            break;
-        case setRMPort:
-            m_pSampleModulConfigData->m_RMSocket.m_nPort = m_pXMLReader->getValue(key).toInt(&ok);
-            break;
-        case setPCBServerIp:
-            m_pSampleModulConfigData->m_PCBServerSocket.m_sIP = m_pXMLReader->getValue(key);
-            break;
-        case setPCBServerPort:
-            m_pSampleModulConfigData->m_PCBServerSocket.m_nPort = m_pXMLReader->getValue(key).toInt(&ok);
-            break;
-        case setDSPServerIp:
-            m_pSampleModulConfigData->m_DSPServerSocket.m_sIP = m_pXMLReader->getValue(key);
-            break;
-        case setDSPServerPort:
-            m_pSampleModulConfigData->m_DSPServerSocket.m_nPort = m_pXMLReader->getValue(key).toInt(&ok);
-            break;
         case setSampleSystem:
             m_pSampleModulConfigData->m_ObsermaticConfPar.m_sSampleSystem = m_pXMLReader->getValue(key);
             break;

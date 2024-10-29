@@ -13,12 +13,6 @@ namespace STATUSMODULE
 
 enum moduleconfigstate
 {
-    setRMIp,
-    setRMPort,
-    setPCBServerIp,
-    setPCBServerPort,
-    setDSPServerIp,
-    setDSPServerPort,
     setMeasStatus,
     setAccumulator
 };

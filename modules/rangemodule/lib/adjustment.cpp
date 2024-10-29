@@ -17,8 +17,14 @@
 namespace RANGEMODULE 
 {
 
-cAdjustManagement::cAdjustManagement(cRangeModule *module, NetworkConnectionInfo* dspsocket, NetworkConnectionInfo* pcbsocket, QStringList chnlist, QStringList subdclist, adjustConfPar *adjustmentConfig)
-    :m_pModule(module), m_pDSPSocket(dspsocket), m_pPCBSocket(pcbsocket), m_ChannelNameList(chnlist), m_subdcChannelNameList(subdclist), m_adjustmentConfig(adjustmentConfig)
+cAdjustManagement::cAdjustManagement(cRangeModule *module,
+                                     QStringList chnlist,
+                                     QStringList subdclist,
+                                     adjustConfPar *adjustmentConfig) :
+    m_pModule(module),
+    m_ChannelNameList(chnlist),
+    m_subdcChannelNameList(subdclist),
+    m_adjustmentConfig(adjustmentConfig)
 {
     m_dspInterface = m_pModule->getServiceInterfaceFactory()->createDspInterfaceRange(
         m_ChannelNameList,
@@ -161,9 +167,9 @@ void cAdjustManagement::pcbserverConnect()
         connect(m_ChannelList.at(i), &cRangeMeasChannel::cmdDone, this, &cAdjustManagement::catchChannelReply);
 
     // we set up our pcb server connection
-    m_pcbClient = Zera::Proxy::getInstance()->getConnectionSmart(m_pPCBSocket->m_sIP,
-                                                                 m_pPCBSocket->m_nPort,
-                                                                 m_pModule->getTcpNetworkFactory());
+    m_pcbClient = Zera::Proxy::getInstance()->getConnectionSmart(m_pModule->getNetworkConfig()->m_pcbServiceConnectionInfo.m_sIP,
+                                                                 m_pModule->getNetworkConfig()->m_pcbServiceConnectionInfo.m_nPort,
+                                                                 m_pModule->getNetworkConfig()->m_tcpNetworkFactory);
     m_pcbInterface->setClientSmart(m_pcbClient);
     m_pcbserverConnectState.addTransition(m_pcbClient.get(), &Zera::ProxyClient::connected, &m_dspserverConnectState);
     connect(m_pcbInterface.get(), &Zera::cPCBInterface::serverAnswer, this, &cAdjustManagement::catchInterfaceAnswer);
@@ -174,9 +180,9 @@ void cAdjustManagement::pcbserverConnect()
 void cAdjustManagement::dspserverConnect()
 {
     // we set up our dsp server connection
-    m_dspClient = Zera::Proxy::getInstance()->getConnectionSmart(m_pDSPSocket->m_sIP,
-                                                                 m_pDSPSocket->m_nPort,
-                                                                 m_pModule->getTcpNetworkFactory());
+    m_dspClient = Zera::Proxy::getInstance()->getConnectionSmart(m_pModule->getNetworkConfig()->m_dspServiceConnectionInfo.m_sIP,
+                                                                 m_pModule->getNetworkConfig()->m_dspServiceConnectionInfo.m_nPort,
+                                                                 m_pModule->getNetworkConfig()->m_tcpNetworkFactory);
     m_dspInterface->setClientSmart(m_dspClient);
     m_dspserverConnectState.addTransition(m_dspClient.get(), &Zera::ProxyClient::connected, &m_readGainCorrState);
     connect(m_dspInterface.get(), &Zera::cDSPInterface::serverAnswer, this, &cAdjustManagement::catchInterfaceAnswer);

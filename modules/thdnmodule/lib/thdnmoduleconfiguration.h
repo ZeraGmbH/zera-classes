@@ -13,12 +13,6 @@ namespace THDNMODULE
 
 enum moduleconfigstate
 {
-    setRMIp,
-    setRMPort,
-    setPCBServerIp,
-    setPCBServerPort,
-    setDSPServerIp,
-    setDSPServerPort,
     setValueCount,
     setMeasureInterval,
     setMovingwindowBool,

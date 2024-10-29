@@ -12,9 +12,6 @@ class cStatusModuleConfigData
 {
 public:
     cStatusModuleConfigData(){}
-    NetworkConnectionInfo m_RMSocket; // the sockets we can connect to
-    NetworkConnectionInfo m_PCBServerSocket;
-    NetworkConnectionInfo m_DSPServerSocket;
     bool m_accumulator;
 };
 

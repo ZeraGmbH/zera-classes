@@ -36,12 +36,6 @@ void cRangeModuleConfiguration::setConfiguration(QByteArray xmlString)
     // initializing hash table for xml configuration
 
     m_ConfigXMLMap["rangemodconfpar:configuration:connectivity:session"] = setSession;
-    m_ConfigXMLMap["rangemodconfpar:configuration:connectivity:ethernet:resourcemanager:ip"] = setRMIp;
-    m_ConfigXMLMap["rangemodconfpar:configuration:connectivity:ethernet:resourcemanager:port"] = setRMPort;
-    m_ConfigXMLMap["rangemodconfpar:configuration:connectivity:ethernet:pcbserver:ip"] = setPCBServerIp;
-    m_ConfigXMLMap["rangemodconfpar:configuration:connectivity:ethernet:pcbserver:port"] = setPCBServerPort;
-    m_ConfigXMLMap["rangemodconfpar:configuration:connectivity:ethernet:dspserver:ip"] = setDSPServerIp;
-    m_ConfigXMLMap["rangemodconfpar:configuration:connectivity:ethernet:dspserver:port"] = setDSPServerPort;
 
     m_ConfigXMLMap["rangemodconfpar:configuration:sense:channel:n"] = setChannelCount;
     m_ConfigXMLMap["rangemodconfpar:configuration:sense:subdc:n"] = setSubdcCount;
@@ -117,24 +111,6 @@ void cRangeModuleConfiguration::configXMLInfo(QString key)
         case setSession:
             m_pRangeModulConfigData->m_session.m_sKey = key;
             m_pRangeModulConfigData->m_session.m_sPar = m_pXMLReader->getValue(key);
-            break;
-        case setRMIp:
-            m_pRangeModulConfigData->m_RMSocket.m_sIP = m_pXMLReader->getValue(key);
-            break;
-        case setRMPort:
-            m_pRangeModulConfigData->m_RMSocket.m_nPort = m_pXMLReader->getValue(key).toInt(&ok);
-            break;
-        case setPCBServerIp:
-            m_pRangeModulConfigData->m_PCBServerSocket.m_sIP = m_pXMLReader->getValue(key);
-            break;
-        case setPCBServerPort:
-            m_pRangeModulConfigData->m_PCBServerSocket.m_nPort = m_pXMLReader->getValue(key).toInt(&ok);
-            break;
-        case setDSPServerIp:
-            m_pRangeModulConfigData->m_DSPServerSocket.m_sIP = m_pXMLReader->getValue(key);
-            break;
-        case setDSPServerPort:
-            m_pRangeModulConfigData->m_DSPServerSocket.m_nPort = m_pXMLReader->getValue(key).toInt(&ok);
             break;
         case setChannelCount:
         {

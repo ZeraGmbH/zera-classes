@@ -13,12 +13,6 @@ namespace SEM1MODULE
 
 enum moduleconfigstate
 {
-    setRMIp,
-    setRMPort,
-    setPCBServerIp,
-    setPCBServerPort,
-    setSEMServerIp,
-    setSEMServerPort,
     setRefInputCount,
     setActiveUnitCount,
     setReactiveUnitCount,

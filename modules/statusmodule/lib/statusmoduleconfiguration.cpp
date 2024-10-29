@@ -39,13 +39,6 @@ void STATUSMODULE::cStatusModuleConfiguration::validateAndSetConfig(QByteArray x
 
     // so now we can set up
     // initializing hash table for xml configuration
-
-    m_ConfigXMLMap["statusmodconfpar:configuration:connectivity:ethernet:resourcemanager:ip"] = setRMIp;
-    m_ConfigXMLMap["statusmodconfpar:configuration:connectivity:ethernet:resourcemanager:port"] = setRMPort;
-    m_ConfigXMLMap["statusmodconfpar:configuration:connectivity:ethernet:pcbserver:ip"] = setPCBServerIp;
-    m_ConfigXMLMap["statusmodconfpar:configuration:connectivity:ethernet:pcbserver:port"] = setPCBServerPort;
-    m_ConfigXMLMap["statusmodconfpar:configuration:connectivity:ethernet:dspserver:ip"] = setDSPServerIp;
-    m_ConfigXMLMap["statusmodconfpar:configuration:connectivity:ethernet:dspserver:port"] = setDSPServerPort;
     m_ConfigXMLMap["statusmodconfpar:configuration:accumulator"] = setAccumulator;
 
     if (m_pXMLReader->loadSchema(xsdFilename))
@@ -75,24 +68,6 @@ void cStatusModuleConfiguration::configXMLInfo(QString key)
         int cmd = m_ConfigXMLMap[key];
         switch (cmd)
         {
-        case setRMIp:
-            m_pStatusModulConfigData->m_RMSocket.m_sIP = m_pXMLReader->getValue(key);
-            break;
-        case setRMPort:
-            m_pStatusModulConfigData->m_RMSocket.m_nPort = m_pXMLReader->getValue(key).toInt(&ok);
-            break;
-        case setPCBServerIp:
-            m_pStatusModulConfigData->m_PCBServerSocket.m_sIP = m_pXMLReader->getValue(key);
-            break;
-        case setPCBServerPort:
-            m_pStatusModulConfigData->m_PCBServerSocket.m_nPort = m_pXMLReader->getValue(key).toInt(&ok);
-            break;
-        case setDSPServerIp:
-            m_pStatusModulConfigData->m_DSPServerSocket.m_sIP = m_pXMLReader->getValue(key);
-            break;
-        case setDSPServerPort:
-            m_pStatusModulConfigData->m_DSPServerSocket.m_nPort = m_pXMLReader->getValue(key).toInt(&ok);
-            break;
         case setAccumulator:
             m_pStatusModulConfigData->m_accumulator = m_pXMLReader->getValue(key).toInt(&ok);
             break;

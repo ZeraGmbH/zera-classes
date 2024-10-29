@@ -59,9 +59,6 @@ public:
     cObsermaticConfPar m_ObsermaticConfPar;
     adjustConfPar m_adjustConfPar;
     double m_fMeasInterval; // measuring interval 0.1 .. 5.0 sec.
-    NetworkConnectionInfo m_RMSocket; // the sockets we can connect to
-    NetworkConnectionInfo m_PCBServerSocket;
-    NetworkConnectionInfo m_DSPServerSocket;
 };
 
 }

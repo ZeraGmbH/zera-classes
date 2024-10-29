@@ -37,8 +37,6 @@ public:
     adjInfoType m_ReferenceAngle;
     adjInfoType m_ReferenceFrequency;
     QHash<QString, cAdjChannelInfo*> m_AdjChannelInfoHash;
-    NetworkConnectionInfo m_RMSocket;
-    NetworkConnectionInfo m_PCBSocket;
 };
 
 #endif // ADJUSTMENTMODULECONFIGDATA_H

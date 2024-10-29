@@ -80,9 +80,9 @@ void cSampleModule::setupModule()
 
     // first we build a list of our pll meas channels, that hold informations for other activists
     for (int i = 0; i < pConfData->m_ObsermaticConfPar.m_npllChannelCount; i ++) {
-        cPllMeasChannel* pllchn = new cPllMeasChannel(&(pConfData->m_RMSocket),
-                                                      &(pConfData->m_PCBServerSocket),
-                                                      getTcpNetworkFactory(),
+        cPllMeasChannel* pllchn = new cPllMeasChannel(getNetworkConfig()->m_rmServiceConnectionInfo,
+                                                      getNetworkConfig()->m_pcbServiceConnectionInfo,
+                                                      getNetworkConfig()->m_tcpNetworkFactory,
                                                       pConfData->m_ObsermaticConfPar.m_pllChannelList.at(i),
                                                       i+1);
         m_pllMeasChannelList.append(pllchn);

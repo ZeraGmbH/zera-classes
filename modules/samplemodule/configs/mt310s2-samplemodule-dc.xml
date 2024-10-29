@@ -1,22 +1,6 @@
 <?xml version="1.0"?>
 <samplemodconfpar>
     <configuration>
-        <connectivity>
-            <ethernet>
-                <resourcemanager>
-                    <ip>127.0.0.1</ip>
-                    <port>6312</port>
-                </resourcemanager>
-                <pcbserver>
-                    <ip>127.0.0.1</ip>
-                    <port>6307</port>
-                </pcbserver>
-                <dspserver>
-                    <ip>127.0.0.1</ip>
-                    <port>6310</port>
-                </dspserver>
-            </ethernet>
-        </connectivity>
         <sample>
             <system>s0</system>
             <withpllautomatic>0</withpllautomatic>

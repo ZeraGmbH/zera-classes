@@ -1,18 +1,6 @@
 <?xml version="1.0"?>
 <adjmodconfpar>
     <configuration>
-        <connectivity>
-            <ethernet>
-                <resourcemanager>
-                    <ip>127.0.0.1</ip>
-                    <port>6312</port>
-                </resourcemanager>
-                <pcbserver>
-                    <ip>127.0.0.1</ip>
-                    <port>6307</port>
-                </pcbserver>
-            </ethernet>
-        </connectivity>
         <adjustment>
             <channel>
                 <anglereference>

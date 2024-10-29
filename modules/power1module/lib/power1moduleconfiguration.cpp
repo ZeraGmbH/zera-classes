@@ -30,13 +30,6 @@ void cPower1ModuleConfiguration::validateAndSetConfig(QByteArray xmlString, QStr
 
     // so now we can set up
     // initializing hash table for xml configuration
-    m_ConfigXMLMap["pow1modconfpar:configuration:connectivity:ethernet:resourcemanager:ip"] = setRMIp;
-    m_ConfigXMLMap["pow1modconfpar:configuration:connectivity:ethernet:resourcemanager:port"] = setRMPort;
-    m_ConfigXMLMap["pow1modconfpar:configuration:connectivity:ethernet:pcbserver:ip"] = setPCBServerIp;
-    m_ConfigXMLMap["pow1modconfpar:configuration:connectivity:ethernet:pcbserver:port"] = setPCBServerPort;
-    m_ConfigXMLMap["pow1modconfpar:configuration:connectivity:ethernet:dspserver:ip"] = setDSPServerIp;
-    m_ConfigXMLMap["pow1modconfpar:configuration:connectivity:ethernet:dspserver:port"] = setDSPServerPort;
-
     m_ConfigXMLMap["pow1modconfpar:configuration:measure:modes:n"] = setMeasModeCount;
 
     m_ConfigXMLMap["pow1modconfpar:configuration:measure:system:pms1"] = setMeasSystem1;
@@ -103,24 +96,6 @@ void cPower1ModuleConfiguration::configXMLInfo(QString key)
         int cmd = m_ConfigXMLMap[key];
         switch (cmd)
         {
-        case setRMIp:
-            m_pPower1ModulConfigData->m_RMSocket.m_sIP = m_pXMLReader->getValue(key);
-            break;
-        case setRMPort:
-            m_pPower1ModulConfigData->m_RMSocket.m_nPort = m_pXMLReader->getValue(key).toInt(&ok);
-            break;
-        case setPCBServerIp:
-            m_pPower1ModulConfigData->m_PCBServerSocket.m_sIP = m_pXMLReader->getValue(key);
-            break;
-        case setPCBServerPort:
-            m_pPower1ModulConfigData->m_PCBServerSocket.m_nPort = m_pXMLReader->getValue(key).toInt(&ok);
-            break;
-        case setDSPServerIp:
-            m_pPower1ModulConfigData->m_DSPServerSocket.m_sIP = m_pXMLReader->getValue(key);
-            break;
-        case setDSPServerPort:
-            m_pPower1ModulConfigData->m_DSPServerSocket.m_nPort = m_pXMLReader->getValue(key).toInt(&ok);
-            break;
         case setMeasModeCount:
             m_pPower1ModulConfigData->m_nMeasModeCount = m_pXMLReader->getValue(key).toInt(&ok);
             // here we generate dynamic hash entries for value channel configuration

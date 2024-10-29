@@ -14,9 +14,8 @@
 namespace RANGEMODULE
 {
 
-cRangeObsermatic::cRangeObsermatic(cRangeModule *module, NetworkConnectionInfo *dsprmsocket, QList<QStringList> groupList, QStringList chnlist, cObsermaticConfPar& confpar) :
+cRangeObsermatic::cRangeObsermatic(cRangeModule *module, QList<QStringList> groupList, QStringList chnlist, cObsermaticConfPar& confpar) :
     m_pModule(module),
-    m_pDSPSocket(dsprmsocket),
     m_GroupList(groupList),
     m_ChannelNameList(chnlist),
     m_ConfPar(confpar)
@@ -566,9 +565,9 @@ void cRangeObsermatic::dspserverConnect()
         m_ChannelAliasList.replace(i, m_RangeMeasChannelList.at(i)->getAlias());
     }
 
-    m_dspClient = Zera::Proxy::getInstance()->getConnectionSmart(m_pDSPSocket->m_sIP,
-                                                                 m_pDSPSocket->m_nPort,
-                                                                 m_pModule->getTcpNetworkFactory());
+    m_dspClient = Zera::Proxy::getInstance()->getConnectionSmart(m_pModule->getNetworkConfig()->m_dspServiceConnectionInfo.m_sIP,
+                                                                 m_pModule->getNetworkConfig()->m_dspServiceConnectionInfo.m_nPort,
+                                                                 m_pModule->getNetworkConfig()->m_tcpNetworkFactory);
     m_dspInterface->setClientSmart(m_dspClient);
     m_dspserverConnectState.addTransition(m_dspClient.get(), &Zera::ProxyClient::connected, &m_readGainCorrState);
     connect(m_dspInterface.get(), &Zera::cDSPInterface::serverAnswer, this, &cRangeObsermatic::catchInterfaceAnswer);

@@ -40,42 +40,6 @@
     </xs:simpleType>
 
 	
-    <xs:complexType name="connectivitytype">
-        <xs:sequence>
-            <xs:element name="ethernet">
-                <xs:complexType>
-                    <xs:sequence>
-                        <xs:element name="resourcemanager">
-                            <xs:complexType>
-                                <xs:sequence>
-                                    <xs:element name="ip" type="ipadresstype"/>
-                                    <xs:element name="port" type="porttype"/>
-                                </xs:sequence>
-                            </xs:complexType>
-                        </xs:element>
-                        <xs:element name="pcbserver">
-                            <xs:complexType>
-                                <xs:sequence>
-                                    <xs:element name="ip" type="ipadresstype"/>
-                                    <xs:element name="port" type="porttype"/>
-                                </xs:sequence>
-                            </xs:complexType>
-                        </xs:element>
-                        <xs:element name="dspserver">
-                            <xs:complexType>
-                                <xs:sequence>
-                                    <xs:element name="ip" type="ipadresstype"/>
-                                    <xs:element name="port" type="porttype"/>
-                                </xs:sequence>
-                            </xs:complexType>
-                        </xs:element>
-                    </xs:sequence>
-                </xs:complexType>
-            </xs:element>
-        </xs:sequence>
-    </xs:complexType>
-
-
     <xs:simpleType name="modetype">
         <xs:restriction base="xs:string">
             <xs:enumeration value="AC"/>
@@ -112,7 +76,6 @@
                 <xs:element name="configuration">
                     <xs:complexType>
                         <xs:sequence>
-                            <xs:element name="connectivity" type="connectivitytype"/>
                             <xs:element name="pcb" type="pcbtype"/>
                             <xs:element name="dsp" type="dsptype"/>
                         </xs:sequence>

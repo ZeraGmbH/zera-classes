@@ -39,11 +39,6 @@ void cAdjustmentModuleConfiguration::validateAndSetConfig(QByteArray xmlString, 
     // so now we can set up
     // initializing hash table for xml configuration
 
-    m_ConfigXMLMap["adjmodconfpar:configuration:connectivity:ethernet:resourcemanager:ip"] = setRMIp;
-    m_ConfigXMLMap["adjmodconfpar:configuration:connectivity:ethernet:resourcemanager:port"] = setRMPort;
-    m_ConfigXMLMap["adjmodconfpar:configuration:connectivity:ethernet:pcbserver:ip"] = setPCBIp;
-    m_ConfigXMLMap["adjmodconfpar:configuration:connectivity:ethernet:pcbserver:port"] = setPCBPort;
-
     m_ConfigXMLMap["adjmodconfpar:configuration:adjustment:channel:anglereference:entity"] = setAngleReferenceEntity;
     m_ConfigXMLMap["adjmodconfpar:configuration:adjustment:channel:anglereference:component"] = setAngleReferenceComponent;
     m_ConfigXMLMap["adjmodconfpar:configuration:adjustment:channel:frequencyreference:entity"] = setFrequencyReferenceEntity;
@@ -82,18 +77,6 @@ void cAdjustmentModuleConfiguration::configXMLInfo(QString key)
         int cmd = m_ConfigXMLMap[key];
         switch (cmd)
         {
-        case setRMIp:
-            m_pAdjustmentModulConfigData->m_RMSocket.m_sIP = m_pXMLReader->getValue(key);
-            break;
-        case setRMPort:
-            m_pAdjustmentModulConfigData->m_RMSocket.m_nPort = m_pXMLReader->getValue(key).toInt(&ok);
-            break;
-        case setPCBIp:
-            m_pAdjustmentModulConfigData->m_PCBSocket.m_sIP = m_pXMLReader->getValue(key);
-            break;
-        case setPCBPort:
-            m_pAdjustmentModulConfigData->m_PCBSocket.m_nPort = m_pXMLReader->getValue(key).toInt(&ok);
-            break;
         case setAngleReferenceEntity:
             m_pAdjustmentModulConfigData->m_ReferenceAngle.m_nEntity = m_pXMLReader->getValue(key).toInt(&ok);
             break;

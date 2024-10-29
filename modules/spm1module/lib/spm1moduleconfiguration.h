@@ -13,12 +13,6 @@ namespace SPM1MODULE
 
 enum moduleconfigstate
 {
-    setRMIp,
-    setRMPort,
-    setPCBServerIp,
-    setPCBServerPort,
-    setSPMServerIp,
-    setSPMServerPort,
     setRefInputCount,
     setActiveUnitCount,
     setReactiveUnitCount,

@@ -13,12 +13,6 @@ namespace FFTMODULE
 
 enum moduleconfigstate
 {
-    setRMIp,
-    setRMPort,
-    setPCBServerIp,
-    setPCBServerPort,
-    setDSPServerIp,
-    setDSPServerPort,
     setFftorder,
     setValueCount,
     setRefChannel,

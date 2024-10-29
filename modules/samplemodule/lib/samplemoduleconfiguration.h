@@ -13,12 +13,6 @@ namespace SAMPLEMODULE
 
 enum moduleconfigstate
 {
-    setRMIp,
-    setRMPort,
-    setPCBServerIp,
-    setPCBServerPort,
-    setDSPServerIp,
-    setDSPServerPort,
     setPllAutomaticBool,
     setPllFixedBool,
     setPllAutomatic,

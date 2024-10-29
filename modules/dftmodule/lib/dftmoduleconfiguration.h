@@ -13,12 +13,6 @@ namespace DFTMODULE
 
 enum moduleconfigstate
 {
-    setRMIp,
-    setRMPort,
-    setPCBServerIp,
-    setPCBServerPort,
-    setDSPServerIp,
-    setDSPServerPort,
     setDftOrder,
     setValueCount,
     setrfieldChn1,

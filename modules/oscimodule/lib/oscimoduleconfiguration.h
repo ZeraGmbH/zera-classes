@@ -13,12 +13,6 @@ namespace OSCIMODULE
 
 enum moduleconfigstate
 {
-    setRMIp,
-    setRMPort,
-    setPCBServerIp,
-    setPCBServerPort,
-    setDSPServerIp,
-    setDSPServerPort,
     setInterpolation,
     setGap,
     setValueCount,

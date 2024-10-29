@@ -18,9 +18,6 @@ public:
 
     double m_fMeasInterval; // measuring interval 1.0 .. 10.0 sec.
     int m_nIgnore; // how many measurement values we ignore before adjustment start
-    NetworkConnectionInfo m_RMSocket; // the sockets we can connect to
-    NetworkConnectionInfo m_PCBServerSocket;
-    NetworkConnectionInfo m_DSPServerSocket;
 };
 
 }

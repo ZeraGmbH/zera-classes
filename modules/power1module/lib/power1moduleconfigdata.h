@@ -55,10 +55,6 @@ class cPower1ModuleConfigData
 public:
     cPower1ModuleConfigData(){}
 
-    NetworkConnectionInfo m_RMSocket; // the sockets we can connect to
-    NetworkConnectionInfo m_PCBServerSocket;
-    NetworkConnectionInfo m_DSPServerSocket;
-
     quint8 m_nMeasModeCount; // how many measurement modes do we support
     QStringList m_sMeasmodeList; // a list of our measurement modes
     int m_measmodePhaseCount;

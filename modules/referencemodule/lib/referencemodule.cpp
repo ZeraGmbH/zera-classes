@@ -82,9 +82,9 @@ void cReferenceModule::setupModule()
     // first we build a list of our meas channels
     for (int i = 0; i < pConfData->m_nChannelCount; i ++)
     {
-        cReferenceMeasChannel* pchn = new cReferenceMeasChannel(&(pConfData->m_RMSocket),
-                                                                &(pConfData->m_PCBServerSocket),
-                                                                getTcpNetworkFactory(),
+        cReferenceMeasChannel* pchn = new cReferenceMeasChannel(getNetworkConfig()->m_rmServiceConnectionInfo,
+                                                                getNetworkConfig()->m_pcbServiceConnectionInfo,
+                                                                getNetworkConfig()->m_tcpNetworkFactory,
                                                                 pConfData->m_referenceChannelList.at(i), i+1);
         m_ReferenceMeasChannelList.append(pchn);
         m_ModuleActivistList.append(pchn);

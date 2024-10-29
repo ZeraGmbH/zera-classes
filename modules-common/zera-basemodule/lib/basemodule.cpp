@@ -317,14 +317,14 @@ bool cBaseModule::getDemo()
     return m_moduleParam.m_demo;
 }
 
-AbstractFactoryServiceInterfacesPtr cBaseModule::getServiceInterfaceFactory()
+const AbstractFactoryServiceInterfacesPtr cBaseModule::getServiceInterfaceFactory() const
 {
     return m_moduleParam.m_serviceInterfaceFactory;
 }
 
-VeinTcp::AbstractTcpNetworkFactoryPtr cBaseModule::getTcpNetworkFactory()
+const ModuleFactoryParamNetworkPtr cBaseModule::getNetworkConfig() const
 {
-    return m_moduleParam.m_networkParams->m_tcpNetworkFactory;
+    return m_moduleParam.m_networkParams;
 }
 
 void cBaseModule::entryIdle()

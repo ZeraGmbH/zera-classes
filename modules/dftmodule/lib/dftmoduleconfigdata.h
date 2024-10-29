@@ -35,9 +35,6 @@ public:
     stringParameter m_sRefChannel; // the reference channel's name
     bool m_bRefChannelOn; // if we shall take reference angle in account
     bool m_bmovingWindow;
-    NetworkConnectionInfo m_RMSocket; // the sockets we can connect to
-    NetworkConnectionInfo m_PCBServerSocket;
-    NetworkConnectionInfo m_DSPServerSocket;
 };
 
 }

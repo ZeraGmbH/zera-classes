@@ -13,12 +13,6 @@ namespace MODEMODULE
 
 enum moduleconfigstate
 {
-    setRMIp,
-    setRMPort,
-    setPCBServerIp,
-    setPCBServerPort,
-    setDSPServerIp,
-    setDSPServerPort,
     setMeasMode,
     setSamplingChnNr,
     setSamplingSigPeriod,

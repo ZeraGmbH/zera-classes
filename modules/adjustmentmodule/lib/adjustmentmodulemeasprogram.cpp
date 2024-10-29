@@ -104,9 +104,9 @@ cAdjustmentModuleConfigData *cAdjustmentModuleMeasProgram::getConfData()
 void cAdjustmentModuleMeasProgram::openPcbConnection()
 {
     m_commonObjects->m_pcbInterface = std::make_shared<Zera::cPCBInterface>();
-    m_commonObjects->m_pcbClient = Zera::Proxy::getInstance()->getConnectionSmart(getConfData()->m_PCBSocket.m_sIP,
-                                                                                  getConfData()->m_PCBSocket.m_nPort,
-                                                                                  m_pModule->getTcpNetworkFactory());
+    m_commonObjects->m_pcbClient = Zera::Proxy::getInstance()->getConnectionSmart(m_pModule->getNetworkConfig()->m_pcbServiceConnectionInfo.m_sIP,
+                                                                                  m_pModule->getNetworkConfig()->m_pcbServiceConnectionInfo.m_nPort,
+                                                                                  m_pModule->getNetworkConfig()->m_tcpNetworkFactory);
     m_commonObjects->m_pcbInterface->setClientSmart(m_commonObjects->m_pcbClient);
 }
 
@@ -623,7 +623,7 @@ void cAdjustmentModuleMeasProgram::transparentDataSend2Port(QVariant var)
     QList<QString> sl = var.toString().split(',');
     if (sl.count() == 2) { // we expect a port number and a command
         int port = sl.at(0).toInt();
-        if (port == getConfData()->m_PCBSocket.m_nPort) {
+        if (port == m_pModule->getNetworkConfig()->m_pcbServiceConnectionInfo.m_nPort) {
             m_MsgNrCmdList[m_commonObjects->m_pcbInterface->transparentCommand(sl.at(1))] = sendtransparentcmd;
             return;
         }

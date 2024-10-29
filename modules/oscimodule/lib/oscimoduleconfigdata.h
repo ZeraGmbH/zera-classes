@@ -24,9 +24,6 @@ public:
     quint16 m_nInterpolation; // sample count we have to interpolate to
     quint16 m_nGap; // how many sample periods are left before sampling next
     stringParameter m_RefChannel;
-    NetworkConnectionInfo m_RMSocket; // the sockets we can connect to
-    NetworkConnectionInfo m_PCBServerSocket;
-    NetworkConnectionInfo m_DSPServerSocket;
 };
 
 }

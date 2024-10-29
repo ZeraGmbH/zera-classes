@@ -1,22 +1,6 @@
 <?xml version="1.0"?>
 <spm1modconfpar>
     <configuration>
-        <connectivity>
-            <ethernet>
-                <resourcemanager>
-                    <ip>127.0.0.1</ip>
-                    <port>6312</port>
-                </resourcemanager>
-                <pcbserver>
-                    <ip>127.0.0.1</ip>
-                    <port>6307</port>
-                </pcbserver>
-                <secserver>
-                    <ip>127.0.0.1</ip>
-                    <port>6305</port>
-                </secserver>
-            </ethernet>
-        </connectivity>
         <measure>
             <refinput>
                 <n>4</n>
