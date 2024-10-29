@@ -22,8 +22,7 @@ cBaseModule::cBaseModule(ModuleFactoryParam moduleParam, std::shared_ptr<cBaseMo
     m_bStartCmd = m_bStopCmd = m_bStateMachineStarted = false;
 
     m_nStatus = untouched;
-    m_xmlconfString = moduleParam.m_configXmlData;
-    m_pConfiguration->setConfiguration(m_xmlconfString);
+    m_pConfiguration->setConfiguration(moduleParam.m_configXmlData);
     m_bConfCmd = m_pConfiguration->isConfigured();
 
     // our states from virtualmodule (interface)

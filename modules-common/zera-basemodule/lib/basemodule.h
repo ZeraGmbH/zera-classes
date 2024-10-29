@@ -89,8 +89,6 @@ protected:
     QState m_DeactivationDoneState;
     QFinalState m_DeactivationFinishedState;
 
-
-    QByteArray m_xmlconfString;
     QList<cModuleActivist*> m_ModuleActivistList;
     std::shared_ptr<cBaseModuleConfiguration> m_pConfiguration; // our xml configuration
     QString m_sModuleDescription;
