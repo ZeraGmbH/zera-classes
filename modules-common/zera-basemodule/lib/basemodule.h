@@ -67,14 +67,12 @@ protected:
     QState* m_pStateRUNStart;
     QState* m_pStateRUNDone;
     QState* m_pStateRUNDeactivate;
-    QState* m_pStateRUNUnset;
     QState* m_pStateRUNConfSetup;
 
     // additional states for STOP
     QState* m_pStateSTOPStart;
     QState* m_pStateSTOPDone;
     QState* m_pStateSTOPDeactivate;
-    QState* m_pStateSTOPUnset;
     QState* m_pStateSTOPConfSetup;
 
     // our states for base modules activation statemachine
@@ -100,7 +98,7 @@ protected:
     VfModuleComponent *m_pModuleEntityName;
 
     virtual void setupModule(); // after xml configuration we can setup and export our module
-    void unsetModule(); // in case of reconfiguration we must unset module first
+    void unsetModule();
     virtual void startMeas() =  0;
     virtual void stopMeas() = 0;
 
@@ -133,7 +131,6 @@ private slots:
     void entryRunStart();
     void entryRunDone();
     void entryRunDeactivate();
-    void entryRunUnset();
     void entryStopStart();
     void entryStopDone();
 };

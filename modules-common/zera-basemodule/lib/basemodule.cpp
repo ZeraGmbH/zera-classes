@@ -58,18 +58,15 @@ cBaseModule::cBaseModule(ModuleFactoryParam moduleParam, std::shared_ptr<cBaseMo
     m_pStateRUNStart = new QState(m_pStateRun);
     m_pStateRUNDone = new QState(m_pStateRun);
     m_pStateRUNDeactivate = new QState(m_pStateRun);
-    m_pStateRUNUnset = new QState(m_pStateRun);
     m_pStateRUNConfSetup = new QState(m_pStateRun);
     m_pStateRUNStart->addTransition(this, &cBaseModule::activationReady, m_pStateRUNDone);
     m_pStateRUNDone->addTransition(this, &cBaseModule::sigConfiguration, m_pStateRUNDeactivate);
-    m_pStateRUNDeactivate->addTransition(this, &cBaseModule::deactivationReady, m_pStateRUNUnset);
-    m_pStateRUNUnset->addTransition(this, &cBaseModule::sigReconfigureContinue, m_pStateRUNConfSetup);
+    m_pStateRUNDeactivate->addTransition(this, &cBaseModule::deactivationReady, m_pStateRUNConfSetup);
     m_pStateRUNConfSetup->addTransition(this, &cBaseModule::sigConfDone, m_pStateRUNStart );
     m_pStateRun->setInitialState(m_pStateRUNStart);
     connect(m_pStateRUNStart, &QState::entered, this, &cBaseModule::entryRunStart);
     connect(m_pStateRUNDone, &QState::entered, this, &cBaseModule::entryRunDone);
     connect(m_pStateRUNDeactivate, &QState::entered, this, &cBaseModule::entryRunDeactivate);
-    connect(m_pStateRUNUnset, &QState::entered, this, &cBaseModule::entryRunUnset);
     connect(m_pStateRUNConfSetup, &QState::entered, this, &cBaseModule::entryConfSetup);
 
     // we set up our STOP state here
@@ -78,18 +75,15 @@ cBaseModule::cBaseModule(ModuleFactoryParam moduleParam, std::shared_ptr<cBaseMo
     m_pStateSTOPStart = new QState(m_pStateStop);
     m_pStateSTOPDone = new QState(m_pStateStop);
     m_pStateSTOPDeactivate = new QState(m_pStateStop);
-    m_pStateSTOPUnset = new QState(m_pStateStop);
     m_pStateSTOPConfSetup = new QState(m_pStateStop);
     m_pStateSTOPStart->addTransition(this, &cBaseModule::activationReady, m_pStateSTOPDone);
     m_pStateSTOPDone->addTransition(this, &cBaseModule::sigConfiguration, m_pStateSTOPDeactivate);
-    m_pStateSTOPDeactivate->addTransition(this, &cBaseModule::deactivationReady, m_pStateSTOPUnset);
-    m_pStateSTOPUnset->addTransition(this, &cBaseModule::sigReconfigureContinue, m_pStateSTOPConfSetup);
+    m_pStateSTOPDeactivate->addTransition(this, &cBaseModule::deactivationReady, m_pStateSTOPConfSetup);
     m_pStateSTOPConfSetup->addTransition(this, &cBaseModule::sigConfDone, m_pStateSTOPStart );
     m_pStateStop->setInitialState(m_pStateSTOPStart);
     connect(m_pStateSTOPStart, &QState::entered, this, &cBaseModule::entryStopStart);
     connect(m_pStateSTOPDone, &QState::entered, this, &cBaseModule::entryStopDone);
     connect(m_pStateSTOPDeactivate, &QState::entered, this, &cBaseModule::entryRunDeactivate); // we use same slot as run
-    connect(m_pStateSTOPUnset, &QState::entered, this, &cBaseModule::entryRunUnset);  // we use same slot as run
     connect(m_pStateSTOPConfSetup, &QState::entered, this, &cBaseModule::entryConfSetup);
 
     m_stateMachine.addState(m_pStateIdle);
@@ -142,13 +136,11 @@ cBaseModule::~cBaseModule()
     delete m_pStateRUNStart;
     delete m_pStateRUNDone;
     delete m_pStateRUNDeactivate;
-    delete m_pStateRUNUnset;
     delete m_pStateRUNConfSetup;
 
     delete m_pStateSTOPStart;
     delete m_pStateSTOPDone;
     delete m_pStateSTOPDeactivate;
-    delete m_pStateSTOPUnset;
     delete m_pStateSTOPConfSetup;
 
     delete m_pStateIdle;
@@ -380,12 +372,6 @@ void cBaseModule::entryRunDone()
 void cBaseModule::entryRunDeactivate()
 {
     m_DeactivationMachine.start();
-}
-
-void cBaseModule::entryRunUnset()
-{
-    unsetModule();
-    emit sigReconfigureContinue();
 }
 
 void cBaseModule::entryStopStart()
