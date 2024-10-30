@@ -1,12 +1,8 @@
 #ifndef POWER3MODULECONFIGDATA_H
 #define POWER3MODULECONFIGDATA_H
 
-#include <QString>
 #include <QStringList>
 #include <QList>
-
-#include "networkconnectioninfo.h"
-#include "foutinfo.h"
 
 namespace POWER3MODULE
 {

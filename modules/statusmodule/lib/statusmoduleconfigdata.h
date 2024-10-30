@@ -1,10 +1,6 @@
 #ifndef STATUSMODULECONFIGDATA_H
 #define STATUSMODULECONFIGDATA_H
 
-#include <QString>
-
-#include "networkconnectioninfo.h"
-
 namespace STATUSMODULE
 {
 

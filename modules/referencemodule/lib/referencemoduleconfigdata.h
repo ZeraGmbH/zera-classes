@@ -1,10 +1,7 @@
 #ifndef REFERENCEMODULECONFIGDATA_H
 #define REFERENCEMODULECONFIGDATA_H
 
-#include <QString>
-#include <QList>
-
-#include "networkconnectioninfo.h"
+#include <QStringList>
 
 namespace REFERENCEMODULE
 {

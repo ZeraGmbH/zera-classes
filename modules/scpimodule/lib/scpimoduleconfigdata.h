@@ -1,13 +1,9 @@
 #ifndef SCPIMODULECONFIGDATA_H
 #define SCPIMODULECONFIGDATA_H
 
-#include <QString>
-#include <QStringList>
-#include <QList>
-
 #include "networkconnectioninfo.h"
 #include "statusbitdescriptor.h"
-
+#include <QStringList>
 
 namespace SCPIMODULE
 {

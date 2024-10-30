@@ -1,10 +1,6 @@
-#include <QPoint>
-#include <QString>
-#include <xmlconfigreader.h>
-
 #include "oscimoduleconfiguration.h"
 #include "oscimoduleconfigdata.h"
-#include "networkconnectioninfo.h"
+#include <xmlconfigreader.h>
 
 namespace OSCIMODULE
 {

@@ -1,10 +1,6 @@
-#include <QPoint>
-#include <QString>
-#include <xmlconfigreader.h>
-
 #include "power3moduleconfiguration.h"
 #include "power3moduleconfigdata.h"
-#include "networkconnectioninfo.h"
+#include <xmlconfigreader.h>
 
 namespace POWER3MODULE
 {

@@ -1,10 +1,6 @@
-#include <QPoint>
-#include <QString>
-#include <xmlconfigreader.h>
-
 #include "dftmoduleconfiguration.h"
 #include "dftmoduleconfigdata.h"
-#include "networkconnectioninfo.h"
+#include <xmlconfigreader.h>
 
 namespace DFTMODULE
 {

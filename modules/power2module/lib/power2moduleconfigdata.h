@@ -1,12 +1,8 @@
 #ifndef POWER2MODULECONFIGDATA_H
 #define POWER2MODULECONFIGDATA_H
 
-#include <QString>
 #include <QStringList>
 #include <QList>
-
-#include "networkconnectioninfo.h"
-#include "foutinfo.h"
 
 namespace POWER2MODULE
 {

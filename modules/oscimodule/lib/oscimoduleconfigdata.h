@@ -1,10 +1,7 @@
 #ifndef OSCIMODULECONFIGDATA_H
 #define OSCIMODULECONFIGDATA_H
 
-#include <QString>
-#include <QList>
-
-#include "networkconnectioninfo.h"
+#include <QStringList>
 
 namespace OSCIMODULE
 {

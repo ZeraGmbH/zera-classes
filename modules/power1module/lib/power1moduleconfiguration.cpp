@@ -1,5 +1,6 @@
 #include "power1moduleconfiguration.h"
 #include "power1moduleconfigdata.h"
+#include "foutinfo.h"
 #include <xmlconfigreader.h>
 
 namespace POWER1MODULE

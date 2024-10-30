@@ -1,10 +1,6 @@
-#include <QPoint>
-#include <QString>
-#include <xmlconfigreader.h>
-
 #include "scpimoduleconfiguration.h"
 #include "scpimoduleconfigdata.h"
-#include "networkconnectioninfo.h"
+#include <xmlconfigreader.h>
 
 namespace SCPIMODULE
 {

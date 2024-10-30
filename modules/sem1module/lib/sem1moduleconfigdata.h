@@ -2,7 +2,6 @@
 #define SEM1MODULECONFIGDATA_H
 
 #include "secconfigdatacommon.h"
-#include "networkconnectioninfo.h"
 #include <QList>
 
 namespace SEM1MODULE

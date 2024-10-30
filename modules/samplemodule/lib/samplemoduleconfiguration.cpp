@@ -1,10 +1,6 @@
-#include <QPoint>
-#include <QString>
-#include <xmlconfigreader.h>
-
 #include "samplemoduleconfiguration.h"
 #include "samplemoduleconfigdata.h"
-#include "networkconnectioninfo.h"
+#include <xmlconfigreader.h>
 
 namespace SAMPLEMODULE
 {

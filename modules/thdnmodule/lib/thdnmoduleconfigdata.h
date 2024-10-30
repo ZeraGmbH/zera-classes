@@ -1,10 +1,7 @@
 #ifndef THDNMODULECONFIGDATA_H
 #define THDNMODULECONFIGDATA_H
 
-#include <QString>
-#include <QList>
-
-#include "networkconnectioninfo.h"
+#include <QStringList>
 
 namespace THDNMODULE
 {

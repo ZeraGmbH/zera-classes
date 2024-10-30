@@ -5,9 +5,6 @@
 #include <QStringList>
 #include <QList>
 
-#include "networkconnectioninfo.h"
-#include "foutinfo.h"
-
 namespace BURDEN1MODULE
 {
 

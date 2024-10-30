@@ -1,10 +1,7 @@
 #include <QPoint>
-#include <QString>
-#include <xmlconfigreader.h>
-
 #include "statusmoduleconfiguration.h"
 #include "statusmoduleconfigdata.h"
-#include "networkconnectioninfo.h"
+#include <xmlconfigreader.h>
 
 namespace STATUSMODULE
 {

@@ -1,12 +1,7 @@
 #ifndef TRANSFORMER1MODULECONFIGDATA_H
 #define TRANSFORMER1MODULECONFIGDATA_H
 
-#include <QString>
 #include <QStringList>
-#include <QList>
-
-#include "networkconnectioninfo.h"
-#include "foutinfo.h"
 
 namespace TRANSFORMER1MODULE
 {

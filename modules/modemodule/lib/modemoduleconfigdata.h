@@ -3,8 +3,6 @@
 
 #include <QString>
 
-#include "networkconnectioninfo.h"
-
 namespace MODEMODULE
 {
 
