@@ -2,8 +2,11 @@
 #include <QVariant>
 #include <QDateTime>
 
+QElapsedTimer JsonTimeGrouping::m_regroupingTime;
+
 QJsonObject JsonTimeGrouping::regroupTimestamp(QJsonObject json)
 {
+    m_regroupingTime.start();
     QMap<qint64, QJsonObject> timedMap = jsonToMsSinceEpochValuesMap(json);
     QMap<qint64, QJsonObject> groupedMap = groupToMsSinceEpochValuesMap(timedMap);
     return msSinceEpochValueMapToJson(groupedMap);
@@ -55,6 +58,7 @@ QJsonObject JsonTimeGrouping::msSinceEpochValueMapToJson(const QMap<qint64, QJso
         QString strDateTime = QDateTime::fromMSecsSinceEpoch(it.key()).toString(JsonDateTimeFormat);
         jsonObject.insert(strDateTime, it.value());
     }
+    qInfo("JsonTimeGrouping::regrouping took %llims", m_regroupingTime.elapsed());
     return jsonObject;
 }
 
