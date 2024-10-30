@@ -1,5 +1,6 @@
 #include "power2moduleconfiguration.h"
 #include "power2moduleconfigdata.h"
+#include "foutinfo.h"
 #include <xmlconfigreader.h>
 
 namespace POWER2MODULE

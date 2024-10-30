@@ -5,6 +5,7 @@
 #include "meassytemchannels.h"
 #include <dspchainidgen.h>
 #include "measmode.h"
+#include "foutinfo.h"
 #include <QStringList>
 
 class Power1DspCmdGenerator

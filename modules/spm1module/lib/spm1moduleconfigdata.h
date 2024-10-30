@@ -1,7 +1,6 @@
 #ifndef SPM1MODULECONFIGDATA_H
 #define SPM1MODULECONFIGDATA_H
 
-#include "networkconnectioninfo.h"
 #include "secconfigdatacommon.h"
 #include <QList>
 

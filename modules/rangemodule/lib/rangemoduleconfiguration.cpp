@@ -4,7 +4,6 @@
 
 #include "rangemoduleconfiguration.h"
 #include "rangemoduleconfigdata.h"
-#include "networkconnectioninfo.h"
 
 namespace RANGEMODULE
 {

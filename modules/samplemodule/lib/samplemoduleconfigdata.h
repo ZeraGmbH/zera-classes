@@ -1,10 +1,7 @@
 #ifndef SAMPLEMODULECONFIGDATA_H
 #define SAMPLEMODULECONFIGDATA_H
 
-#include <QString>
-#include <QList>
-
-#include "networkconnectioninfo.h"
+#include <QStringList>
 
 namespace SAMPLEMODULE
 {

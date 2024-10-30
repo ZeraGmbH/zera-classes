@@ -1,12 +1,7 @@
 #ifndef POWER1MODULECONFIGDATA_H
 #define POWER1MODULECONFIGDATA_H
 
-#include <QString>
 #include <QStringList>
-#include <QList>
-
-#include "networkconnectioninfo.h"
-#include "foutinfo.h"
 
 namespace POWER1MODULE
 {

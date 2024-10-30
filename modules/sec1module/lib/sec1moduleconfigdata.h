@@ -1,7 +1,6 @@
 #ifndef SEC1MODULECONFIGDATA_H
 #define SEC1MODULECONFIGDATA_H
 
-#include "networkconnectioninfo.h"
 #include "secconfigdatacommon.h"
 #include <QList>
 

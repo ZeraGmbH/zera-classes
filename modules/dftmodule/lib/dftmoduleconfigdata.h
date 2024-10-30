@@ -4,8 +4,6 @@
 #include <QString>
 #include <QList>
 
-#include "networkconnectioninfo.h"
-
 namespace DFTMODULE
 {
 

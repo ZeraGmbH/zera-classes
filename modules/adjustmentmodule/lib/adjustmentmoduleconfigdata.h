@@ -5,8 +5,6 @@
 #include <QList>
 #include <QHash>
 
-#include "networkconnectioninfo.h"
-
 struct adjInfoType
 {
     bool m_bAvail;

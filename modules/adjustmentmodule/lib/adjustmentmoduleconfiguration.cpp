@@ -1,10 +1,6 @@
-#include <QPoint>
-#include <QString>
-#include <xmlconfigreader.h>
-
 #include "adjustmentmoduleconfiguration.h"
 #include "adjustmentmoduleconfigdata.h"
-#include "networkconnectioninfo.h"
+#include <xmlconfigreader.h>
 
 static const char* defaultXSDFile = "://adjustmentmodule.xsd";
 

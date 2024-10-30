@@ -1,10 +1,7 @@
 #ifndef RMSMODULECONFIGDATA_H
 #define RMSMODULECONFIGDATA_H
 
-#include <QString>
-#include <QList>
-
-#include "networkconnectioninfo.h"
+#include <QStringList>
 
 namespace RMSMODULE
 {
