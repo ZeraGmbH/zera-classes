@@ -997,8 +997,7 @@ void cPower1ModuleMeasProgram::resourceManagerConnect()
 
     // we have to instantiate a working resource manager interface
     // so first we try to get a connection to resource manager over proxy
-    m_rmClient = Zera::Proxy::getInstance()->getConnectionSmart(m_pModule->getNetworkConfig()->m_rmServiceConnectionInfo.m_sIP,
-                                                                m_pModule->getNetworkConfig()->m_rmServiceConnectionInfo.m_nPort,
+    m_rmClient = Zera::Proxy::getInstance()->getConnectionSmart(m_pModule->getNetworkConfig()->m_rmServiceConnectionInfo,
                                                                 m_pModule->getNetworkConfig()->m_tcpNetworkFactory);
     // and then we set resource manager interface's connection
     m_rmInterface.setClientSmart(m_rmClient);
@@ -1113,9 +1112,8 @@ void cPower1ModuleMeasProgram::pcbserverConnect4measChannels()
     {
         QString key = infoReadList.at(i);
         cMeasChannelInfo mi = m_measChannelInfoHash.take(key);
-        NetworkConnectionInfo sock = mi.pcbServersocket;
-        Zera::ProxyClient* pcbClient = Zera::Proxy::getInstance()->getConnection(sock.m_sIP,
-                                                                                 sock.m_nPort,
+        NetworkConnectionInfo netInfo = mi.pcbServersocket;
+        Zera::ProxyClient* pcbClient = Zera::Proxy::getInstance()->getConnection(netInfo,
                                                                                  m_pModule->getNetworkConfig()->m_tcpNetworkFactory);
         m_pcbClientList.append(pcbClient);
         Zera::cPCBInterface* pcbIFace = new Zera::cPCBInterface();
@@ -1140,9 +1138,8 @@ void cPower1ModuleMeasProgram::pcbserverConnect4freqChannels()
         {
             QString key = infoReadList.at(i);
             cFoutInfo fi = m_FoutInfoHash.take(key);
-            NetworkConnectionInfo sock = fi.pcbServersocket;
-            Zera::ProxyClient* pcbClient = Zera::Proxy::getInstance()->getConnection(sock.m_sIP,
-                                                                                     sock.m_nPort,
+            NetworkConnectionInfo netInfo = fi.pcbServersocket;
+            Zera::ProxyClient* pcbClient = Zera::Proxy::getInstance()->getConnection(netInfo,
                                                                                      m_pModule->getNetworkConfig()->m_tcpNetworkFactory);
             m_pcbClientList.append(pcbClient);
             Zera::cPCBInterface* pcbIFace = new Zera::cPCBInterface();
@@ -1271,8 +1268,7 @@ void cPower1ModuleMeasProgram::setSenseChannelRangeNotifierDone()
 
 void cPower1ModuleMeasProgram::dspserverConnect()
 {
-    m_dspClient = Zera::Proxy::getInstance()->getConnectionSmart(m_pModule->getNetworkConfig()->m_dspServiceConnectionInfo.m_sIP,
-                                                                 m_pModule->getNetworkConfig()->m_dspServiceConnectionInfo.m_nPort,
+    m_dspClient = Zera::Proxy::getInstance()->getConnectionSmart(m_pModule->getNetworkConfig()->m_dspServiceConnectionInfo,
                                                                  m_pModule->getNetworkConfig()->m_tcpNetworkFactory);
     m_dspInterface->setClientSmart(m_dspClient);
     m_dspserverConnectState.addTransition(m_dspClient.get(), &Zera::ProxyClient::connected, &m_claimPGRMemState);

@@ -898,8 +898,7 @@ void cRangeMeasChannel::rmConnect()
 {
     // we instantiate a working resource manager interface first
     // so first we try to get a connection to resource manager over proxy
-    m_rmClient = Zera::Proxy::getInstance()->getConnectionSmart(m_resmanNetworkInfo.m_sIP,
-                                                                m_resmanNetworkInfo.m_nPort,
+    m_rmClient = Zera::Proxy::getInstance()->getConnectionSmart(m_resmanNetworkInfo,
                                                                 m_tcpNetworkFactory);
     m_rmConnectState.addTransition(m_rmClient.get(), &Zera::ProxyClient::connected, &m_IdentifyState);
     // and then we set connection resource manager interface's connection

@@ -219,8 +219,7 @@ void cSampleChannel::rmConnect()
 {
     // we instantiate a working resource manager interface first
     // so first we try to get a connection to resource manager over proxy
-    m_rmClient = Zera::Proxy::getInstance()->getConnectionSmart(m_pModule->getNetworkConfig()->m_rmServiceConnectionInfo.m_sIP,
-                                                                m_pModule->getNetworkConfig()->m_rmServiceConnectionInfo.m_nPort,
+    m_rmClient = Zera::Proxy::getInstance()->getConnectionSmart(m_pModule->getNetworkConfig()->m_rmServiceConnectionInfo,
                                                                 m_pModule->getNetworkConfig()->m_tcpNetworkFactory);
     m_rmConnectState.addTransition(m_rmClient.get(), &Zera::ProxyClient::connected, &m_IdentifyState);
     // and then we set connection resource manager interface's connection
@@ -274,8 +273,7 @@ void cSampleChannel::claimResource()
 
 void cSampleChannel::pcbConnection()
 {
-    m_pPCBClient = Zera::Proxy::getInstance()->getConnectionSmart(m_pModule->getNetworkConfig()->m_pcbServiceConnectionInfo.m_sIP,
-                                                                  m_pModule->getNetworkConfig()->m_pcbServiceConnectionInfo.m_nPort,
+    m_pPCBClient = Zera::Proxy::getInstance()->getConnectionSmart(m_pModule->getNetworkConfig()->m_pcbServiceConnectionInfo,
                                                                   m_pModule->getNetworkConfig()->m_tcpNetworkFactory);
     m_pcbConnectionState.addTransition(m_pPCBClient.get(), &Zera::ProxyClient::connected, &m_readChnAliasState);
 

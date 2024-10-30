@@ -660,8 +660,7 @@ void cOsciModuleMeasProgram::resourceManagerConnect()
 
     // we have to instantiate a working resource manager interface
     // so first we try to get a connection to resource manager over proxy
-    m_rmClient = Zera::Proxy::getInstance()->getConnectionSmart(m_pModule->getNetworkConfig()->m_rmServiceConnectionInfo.m_sIP,
-                                                                m_pModule->getNetworkConfig()->m_rmServiceConnectionInfo.m_nPort,
+    m_rmClient = Zera::Proxy::getInstance()->getConnectionSmart(m_pModule->getNetworkConfig()->m_rmServiceConnectionInfo,
                                                                 m_pModule->getNetworkConfig()->m_tcpNetworkFactory);
     // and then we set resource manager interface's connection
     m_rmInterface.setClientSmart(m_rmClient);
@@ -714,8 +713,7 @@ void cOsciModuleMeasProgram::readResourceInfoDone()
 
 void cOsciModuleMeasProgram::pcbserverConnect()
 {
-    m_pcbClient = Zera::Proxy::getInstance()->getConnectionSmart(m_pModule->getNetworkConfig()->m_pcbServiceConnectionInfo.m_sIP,
-                                                                 m_pModule->getNetworkConfig()->m_pcbServiceConnectionInfo.m_nPort,
+    m_pcbClient = Zera::Proxy::getInstance()->getConnectionSmart(m_pModule->getNetworkConfig()->m_pcbServiceConnectionInfo,
                                                                  m_pModule->getNetworkConfig()->m_tcpNetworkFactory);
     m_pcbInterface->setClientSmart(m_pcbClient);
     connect(m_pcbClient.get(), &Zera::ProxyClient::connected, this, &cBaseMeasProgram::activationContinue);
@@ -767,8 +765,7 @@ void cOsciModuleMeasProgram::readDspChannelDone()
 
 void cOsciModuleMeasProgram::dspserverConnect()
 {
-    m_dspClient = Zera::Proxy::getInstance()->getConnectionSmart(m_pModule->getNetworkConfig()->m_dspServiceConnectionInfo.m_sIP,
-                                                                 m_pModule->getNetworkConfig()->m_dspServiceConnectionInfo.m_nPort,
+    m_dspClient = Zera::Proxy::getInstance()->getConnectionSmart(m_pModule->getNetworkConfig()->m_dspServiceConnectionInfo,
                                                                  m_pModule->getNetworkConfig()->m_tcpNetworkFactory);
     m_dspInterface->setClientSmart(m_dspClient);
     m_dspserverConnectState.addTransition(m_dspClient.get(), &Zera::ProxyClient::connected, &m_claimPGRMemState);

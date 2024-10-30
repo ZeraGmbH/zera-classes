@@ -837,8 +837,7 @@ void cSpm1ModuleMeasProgram::updateDemoMeasurementResults()
 void cSpm1ModuleMeasProgram::resourceManagerConnect()
 {
     // first we try to get a connection to resource manager over proxy
-    m_rmClient = Zera::Proxy::getInstance()->getConnectionSmart(m_pModule->getNetworkConfig()->m_rmServiceConnectionInfo.m_sIP,
-                                                                m_pModule->getNetworkConfig()->m_rmServiceConnectionInfo.m_nPort,
+    m_rmClient = Zera::Proxy::getInstance()->getConnectionSmart(m_pModule->getNetworkConfig()->m_rmServiceConnectionInfo,
                                                                 m_pModule->getNetworkConfig()->m_tcpNetworkFactory);
     // and then we set connection resource manager interface's connection
     m_rmInterface.setClientSmart(m_rmClient);
@@ -905,8 +904,7 @@ void cSpm1ModuleMeasProgram::testSpmInputs()
 void cSpm1ModuleMeasProgram::ecalcServerConnect()
 {
     // we try to get a connection to ecalc server over proxy
-    m_pSECClient = Zera::Proxy::getInstance()->getConnection(m_pModule->getNetworkConfig()->m_secServiceConnectionInfo.m_sIP,
-                                                             m_pModule->getNetworkConfig()->m_secServiceConnectionInfo.m_nPort,
+    m_pSECClient = Zera::Proxy::getInstance()->getConnection(m_pModule->getNetworkConfig()->m_secServiceConnectionInfo,
                                                              m_pModule->getNetworkConfig()->m_tcpNetworkFactory);
     // and then we set ecalcalculator interface's connection
     m_pSECInterface->setClient(m_pSECClient); //
@@ -926,8 +924,7 @@ void cSpm1ModuleMeasProgram::fetchECalcUnits()
 void cSpm1ModuleMeasProgram::pcbServerConnect()
 {
     // we try to get a connection to ecalc server over proxy
-    m_pPCBClient = Zera::Proxy::getInstance()->getConnection(m_pModule->getNetworkConfig()->m_pcbServiceConnectionInfo.m_sIP,
-                                                             m_pModule->getNetworkConfig()->m_pcbServiceConnectionInfo.m_nPort,
+    m_pPCBClient = Zera::Proxy::getInstance()->getConnection(m_pModule->getNetworkConfig()->m_pcbServiceConnectionInfo,
                                                              m_pModule->getNetworkConfig()->m_tcpNetworkFactory);
     // and then we set ecalcalculator interface's connection
     m_pcbInterface->setClient(m_pPCBClient); //
