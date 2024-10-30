@@ -12,9 +12,12 @@ private slots:
     void init();
     void cleanup();
     void oneChangeWithinOnePeriod();
+    void twoChangesInTwoPeriods();
 
 private:
     void setupServer();
+    QJsonObject getStoredValueFromTimeStampIndex(QJsonObject newStoredValues, int timeIndex);
+    QVariant getComponentValue(int entityId, QString componentName, QJsonObject storedValueWithoutTimeStamp);
     std::unique_ptr<TestVeinServer> m_server;
 };
 
