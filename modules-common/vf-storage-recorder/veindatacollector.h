@@ -24,6 +24,7 @@ signals:
 
 private slots:
     void appendValue(int entityId, QString componentName, QVariant value, QDateTime timestamp);
+    void onPeriodicTimerExpired();
 private:
     QJsonObject convertToJson(QString timestamp, QHash<int, QHash<QString, QVariant> > infosHash);
     QJsonObject convertHashToJsonObject(QHash<QString, QVariant> hash);
@@ -31,6 +32,7 @@ private:
     QHash<QString, QVariant> appendNewValueToExistingValues(QJsonValue existingValue, QHash<QString, QVariant> compoValuesHash);
 
     VeinStorage::StorageFilter m_storageFilter;
+    QJsonObject m_regrouppedTimestampJson;
     QJsonObject m_jsonObject;
     TimerTemplateQtPtr m_periodicTimer;
 };
