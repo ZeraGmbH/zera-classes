@@ -15,7 +15,6 @@
 enum Status
 {
     untouched,  // we just got new configuration data that is not yet analyzed
-    configured, // we have analyzed config data and config data was ok
     setup,      // we have setup our interface
     activated   // we have activated the module
 };

@@ -344,11 +344,8 @@ void cBaseModule::entryIDLEIdle()
 
 void cBaseModule::entryConfSetup()
 {
-    if (m_pConfiguration->isConfigured()) {
-        m_nStatus  = configured;
-        setupModule();
-        m_nStatus = setup;
-    }
+    setupModule();
+    m_nStatus = setup;
     emit sigConfDone();
 }
 
