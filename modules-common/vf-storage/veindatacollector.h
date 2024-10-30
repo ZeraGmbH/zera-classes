@@ -1,6 +1,7 @@
 #ifndef VEINDATACOLLECTOR_H
 #define VEINDATACOLLECTOR_H
 
+#include "qelapsedtimer.h"
 #include <ve_storagesystem.h>
 #include <veinstoragefilter.h>
 #include <timerperiodicqt.h>
