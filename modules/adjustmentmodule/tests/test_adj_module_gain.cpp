@@ -16,7 +16,6 @@ constexpr double limitOffset = 0.1;
 void test_adj_module_gain::initTestCase()
 {
     TestModuleManager::enableTests();
-    TestModuleManager::pointToInstalledSessionFiles();
 }
 
 void test_adj_module_gain::noActValuesWithPermission()

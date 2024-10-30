@@ -10,7 +10,6 @@ void test_plugin_load::initTestCase()
 {
     ModuleManagerSetupFacade::registerMetaTypeStreamOperators();
     TestModuleManager::enableTests();
-    TestModuleManager::pointToInstalledSessionFiles();
     qputenv("QT_FATAL_CRITICALS", "1");
 }
 

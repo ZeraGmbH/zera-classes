@@ -7,7 +7,6 @@ class TestModuleManager : public ZeraModules::ModuleManager
 {
 public:
     static void enableTests();
-    static void pointToInstalledSessionFiles();
 
     explicit TestModuleManager(ModuleManagerSetupFacade *setupFacade,
                                AbstractFactoryServiceInterfacesPtr serviceInterfaceFactory);
@@ -19,6 +18,7 @@ public:
 
 private:
     static bool prepareOe();
+    static void pointToInstalledSessionFiles();
     bool modulesReady();
     QStringList getModuleFileNames() override;
     // Avoid file write in install area on tests (OE tests turn 'ff')

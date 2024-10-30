@@ -13,6 +13,7 @@ bool TestModuleManager::prepareOe()
 {
     ModulemanagerConfigTest::supportOeTests();
     JsonSessionLoaderTest::supportOeTests();
+    pointToInstalledSessionFiles();
     return true;
 }
 

@@ -17,7 +17,6 @@ QTEST_MAIN(test_scpi_cmds_in_session)
 void test_scpi_cmds_in_session::initTestCase()
 {
     TestModuleManager::enableTests();
-    TestModuleManager::pointToInstalledSessionFiles();
 }
 
 void test_scpi_cmds_in_session::initialSession()
