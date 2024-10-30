@@ -9,21 +9,6 @@
     </xs:simpleType>
 
 
-    <xs:simpleType name="porttype">
-        <xs:restriction base="xs:integer">
-            <xs:maxInclusive value='60000'/>
-            <xs:minExclusive value='1024'/>
-        </xs:restriction>
-    </xs:simpleType>
-
-
-    <xs:simpleType name="ipadresstype">
-        <xs:restriction base="xs:string">
-            <xs:pattern value = '(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)'/>
-        </xs:restriction>
-    </xs:simpleType>
-
-
     <xs:complexType name="channeltype">
         <xs:sequence>
             <xs:element name="n" minOccurs="1" maxOccurs="1">
