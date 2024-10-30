@@ -68,12 +68,6 @@ protected:
     QState* m_pStateRUNDeactivate;
     QState* m_pStateRUNConfSetup;
 
-    // additional states for STOP
-    QState* m_pStateSTOPStart;
-    QState* m_pStateSTOPDone;
-    QState* m_pStateSTOPDeactivate;
-    QState* m_pStateSTOPConfSetup;
-
     // our states for base modules activation statemachine
     QState m_ActivationStartState;
     QState m_ActivationExecState;
@@ -130,8 +124,6 @@ private slots:
     void entryRunStart();
     void entryRunDone();
     void entryRunDeactivate();
-    void entryStopStart();
-    void entryStopDone();
 };
 
 #endif // BASEMODULE_H

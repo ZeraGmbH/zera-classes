@@ -49,7 +49,6 @@ protected:
     QState *m_pStateIdle;
     QState *m_pStateConfigure;
     QState *m_pStateRun;
-    QState *m_pStateStop;
     QFinalState *m_pStateFinished;
 
     QString m_sModuleName;

@@ -30,15 +30,12 @@ cBaseModule::cBaseModule(ModuleFactoryParam moduleParam, std::shared_ptr<cBaseMo
     m_pStateConfigure->setObjectName("CONFIGURE");
     m_pStateRun = new QState();
     m_pStateRun->setObjectName("RUN");
-    m_pStateStop = new QState();
-    m_pStateStop->setObjectName("STOP");
     m_pStateFinished = new QFinalState();
     m_pStateFinished->setObjectName("FINISH");
 
     // we set up our IDLE state here
 
     m_pStateIdle->addTransition(this, &cBaseModule::sigRun, m_pStateRun); // after sigRun we leave idle
-    m_pStateIdle->addTransition(this, &cBaseModule::sigStop, m_pStateStop); // same for sigStop
     m_pStateIDLEIdle = new QState(m_pStateIdle); // the initial state for idle
     m_pStateIDLEConfSetup = new QState(m_pStateIdle); // same
     m_pStateIDLEIdle->addTransition(this, &cBaseModule::sigConfiguration, m_pStateIDLEConfSetup);
@@ -69,27 +66,9 @@ cBaseModule::cBaseModule(ModuleFactoryParam moduleParam, std::shared_ptr<cBaseMo
     connect(m_pStateRUNDeactivate, &QState::entered, this, &cBaseModule::entryRunDeactivate);
     connect(m_pStateRUNConfSetup, &QState::entered, this, &cBaseModule::entryConfSetup);
 
-    // we set up our STOP state here
-
-    m_pStateStop->addTransition(this, &cBaseModule::sigStopFailed, m_pStateIdle); // in case of error we fall back to idle
-    m_pStateSTOPStart = new QState(m_pStateStop);
-    m_pStateSTOPDone = new QState(m_pStateStop);
-    m_pStateSTOPDeactivate = new QState(m_pStateStop);
-    m_pStateSTOPConfSetup = new QState(m_pStateStop);
-    m_pStateSTOPStart->addTransition(this, &cBaseModule::activationReady, m_pStateSTOPDone);
-    m_pStateSTOPDone->addTransition(this, &cBaseModule::sigConfiguration, m_pStateSTOPDeactivate);
-    m_pStateSTOPDeactivate->addTransition(this, &cBaseModule::deactivationReady, m_pStateSTOPConfSetup);
-    m_pStateSTOPConfSetup->addTransition(this, &cBaseModule::sigConfDone, m_pStateSTOPStart );
-    m_pStateStop->setInitialState(m_pStateSTOPStart);
-    connect(m_pStateSTOPStart, &QState::entered, this, &cBaseModule::entryStopStart);
-    connect(m_pStateSTOPDone, &QState::entered, this, &cBaseModule::entryStopDone);
-    connect(m_pStateSTOPDeactivate, &QState::entered, this, &cBaseModule::entryRunDeactivate); // we use same slot as run
-    connect(m_pStateSTOPConfSetup, &QState::entered, this, &cBaseModule::entryConfSetup);
-
     m_stateMachine.addState(m_pStateIdle);
     m_stateMachine.addState(m_pStateConfigure);
     m_stateMachine.addState(m_pStateRun);
-    m_stateMachine.addState(m_pStateStop);
     m_stateMachine.addState(m_pStateFinished);
     m_stateMachine.setInitialState(m_pStateIdle);
 
@@ -138,15 +117,9 @@ cBaseModule::~cBaseModule()
     delete m_pStateRUNDeactivate;
     delete m_pStateRUNConfSetup;
 
-    delete m_pStateSTOPStart;
-    delete m_pStateSTOPDone;
-    delete m_pStateSTOPDeactivate;
-    delete m_pStateSTOPConfSetup;
-
     delete m_pStateIdle;
     delete m_pStateConfigure;
     delete m_pStateRun;
-    delete m_pStateStop;
     delete m_pStateFinished;
 }
 
@@ -369,21 +342,4 @@ void cBaseModule::entryRunDone()
 void cBaseModule::entryRunDeactivate()
 {
     m_DeactivationMachine.start();
-}
-
-void cBaseModule::entryStopStart()
-{
-    if (m_nStatus == setup) { // we must be set up (configured and interface represents configuration)
-        m_ActivationMachine.start();
-    }
-    else {
-        emit sigStopFailed(); // otherwise we are not able to run
-    }
-}
-
-void cBaseModule::entryStopDone()
-{
-    stopMeas();
-    m_nStatus = activated;
-    emit moduleActivated();
 }
