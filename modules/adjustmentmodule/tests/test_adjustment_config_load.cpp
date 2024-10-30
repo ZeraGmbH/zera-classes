@@ -17,8 +17,7 @@ void test_adjustment_config_load::fileLoaded()
     QFile tmpXmlConfigFile(QStringLiteral(CONFIG_SOURCES_ADJUSTMENTMODULE) + "/" + "com5003-adjustmentmodule.xml");
     QVERIFY(tmpXmlConfigFile.open(QIODevice::Unbuffered | QIODevice::ReadOnly));
     std::unique_ptr<cAdjustmentModuleConfiguration> conf = std::make_unique<cAdjustmentModuleConfiguration>();
-
-    QSignalSpy spy(conf.get(), &cBaseModuleConfiguration::configXMLDone);
     conf->setConfiguration(tmpXmlConfigFile.readAll());
-    QCOMPARE(spy.count(), 1);
+
+    QCOMPARE(conf->isConfigured(), true);
 }

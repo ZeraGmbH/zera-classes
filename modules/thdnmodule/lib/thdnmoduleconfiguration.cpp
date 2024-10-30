@@ -115,7 +115,6 @@ void cThdnModuleConfiguration::configXMLInfo(QString key)
 void cThdnModuleConfiguration::completeConfiguration(bool ok)
 {
     m_bConfigured = (ok && !m_bConfigError);
-    emit configXMLDone();
 }
 
 }

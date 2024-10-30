@@ -239,7 +239,6 @@ void cSCPIModuleConfiguration::configXMLInfo(QString key)
 void cSCPIModuleConfiguration::completeConfiguration(bool ok)
 {
     m_bConfigured = (ok && !m_bConfigError);
-    emit configXMLDone();
 }
 
 }

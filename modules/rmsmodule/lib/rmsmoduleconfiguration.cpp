@@ -122,7 +122,6 @@ void cRmsModuleConfiguration::configXMLInfo(QString key)
 void cRmsModuleConfiguration::completeConfiguration(bool ok)
 {
     m_bConfigured = (ok && !m_bConfigError);
-    emit configXMLDone();
 }
 
 }

@@ -119,7 +119,6 @@ void cFftModuleConfiguration::configXMLInfo(QString key)
 void cFftModuleConfiguration::completeConfiguration(bool ok)
 {
     m_bConfigured = (ok && !m_bConfigError);
-    emit configXMLDone();
 }
 
 }

@@ -114,7 +114,6 @@ void cPower3ModuleConfiguration::configXMLInfo(QString key)
 void cPower3ModuleConfiguration::completeConfiguration(bool ok)
 {
     m_bConfigured = (ok && !m_bConfigError);
-    emit configXMLDone();
 }
 
 }

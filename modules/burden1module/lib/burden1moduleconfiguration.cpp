@@ -137,7 +137,6 @@ void cBurden1ModuleConfiguration::configXMLInfo(QString key)
 void cBurden1ModuleConfiguration::completeConfiguration(bool ok)
 {
     m_bConfigured = (ok && !m_bConfigError);
-    emit configXMLDone();
 }
 
 }

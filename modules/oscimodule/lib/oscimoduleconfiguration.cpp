@@ -111,7 +111,6 @@ void cOsciModuleConfiguration::configXMLInfo(QString key)
 void cOsciModuleConfiguration::completeConfiguration(bool ok)
 {
     m_bConfigured = (ok && !m_bConfigError);
-    emit configXMLDone();
 }
 
 }

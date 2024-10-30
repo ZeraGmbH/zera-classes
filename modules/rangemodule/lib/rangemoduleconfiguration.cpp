@@ -229,7 +229,6 @@ void cRangeModuleConfiguration::configXMLInfo(QString key)
 void cRangeModuleConfiguration::completeConfiguration(bool ok)
 {
     m_bConfigured = (ok && !m_bConfigError);
-    emit configXMLDone();
 }
 
 }

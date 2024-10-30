@@ -227,7 +227,6 @@ void cSec1ModuleConfiguration::configXMLInfo(QString key)
 void cSec1ModuleConfiguration::completeConfiguration(bool ok)
 {
     m_bConfigured = (ok && !m_bConfigError);
-    emit configXMLDone();
 }
 
 }

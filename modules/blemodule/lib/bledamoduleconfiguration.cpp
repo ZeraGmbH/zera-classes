@@ -87,7 +87,6 @@ void cBleModuleConfiguration::configXMLInfo(QString key)
 void cBleModuleConfiguration::completeConfiguration(bool ok)
 {
     m_bConfigured = (ok && !m_bConfigError);
-    emit configXMLDone();
 }
 
 }

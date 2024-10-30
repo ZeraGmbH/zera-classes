@@ -206,7 +206,6 @@ void cPower2ModuleConfiguration::configXMLInfo(QString key)
 void cPower2ModuleConfiguration::completeConfiguration(bool ok)
 {
     m_bConfigured = (ok && !m_bConfigError);
-    emit configXMLDone();
 }
 
 }

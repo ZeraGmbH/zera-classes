@@ -138,7 +138,6 @@ void cDftModuleConfiguration::configXMLInfo(QString key)
 void cDftModuleConfiguration::completeConfiguration(bool ok)
 {
     m_bConfigured = (ok && !m_bConfigError);
-    emit configXMLDone();
 }
 
 }

@@ -139,7 +139,6 @@ void cSampleModuleConfiguration::configXMLInfo(QString key)
 void cSampleModuleConfiguration::completeConfiguration(bool ok)
 {
     m_bConfigured = (ok && !m_bConfigError);
-    emit configXMLDone();
 }
 
 }

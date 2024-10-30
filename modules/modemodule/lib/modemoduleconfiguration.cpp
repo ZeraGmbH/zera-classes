@@ -95,7 +95,6 @@ void cModeModuleConfiguration::configXMLInfo(QString key)
 void cModeModuleConfiguration::completeConfiguration(bool ok)
 {
     m_bConfigured = (ok && !m_bConfigError);
-    emit configXMLDone();
 }
 
 }

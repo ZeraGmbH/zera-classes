@@ -84,7 +84,6 @@ void cStatusModuleConfiguration::configXMLInfo(QString key)
 void cStatusModuleConfiguration::completeConfiguration(bool ok)
 {
     m_bConfigured = (ok && !m_bConfigError);
-    emit configXMLDone();
 }
 
 }

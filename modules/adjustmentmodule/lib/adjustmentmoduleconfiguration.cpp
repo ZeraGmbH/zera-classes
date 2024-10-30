@@ -252,6 +252,5 @@ void cAdjustmentModuleConfiguration::configXMLInfo(QString key)
 void cAdjustmentModuleConfiguration::completeConfiguration(bool ok)
 {
     m_bConfigured = (ok && !m_bConfigError);
-    emit configXMLDone();
 }
 
