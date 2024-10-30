@@ -14,12 +14,6 @@ constexpr double testfrequency = 50;
 constexpr double limitOffset = 0.1;
 constexpr double angleUL2 = 120;
 
-
-void test_adj_module_phase::initTestCase()
-{
-    TestModuleManager::enableTests();
-}
-
 void test_adj_module_phase::noActValuesWithPermission()
 {
     ModuleManagerTestRunner testRunner(":/session-minimal.json", true);

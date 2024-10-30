@@ -9,7 +9,6 @@ QTEST_MAIN(test_plugin_load)
 void test_plugin_load::initTestCase()
 {
     ModuleManagerSetupFacade::registerMetaTypeStreamOperators();
-    TestModuleManager::enableTests();
     qputenv("QT_FATAL_CRITICALS", "1");
 }
 
@@ -25,6 +24,7 @@ void test_plugin_load::loadModulePluginsInstalled()
         qInfo("Skipping test_plugin_load::loadModulePluginsInstalled in OE");
         return;
     }
+    TestModuleManager::enableTests(); // we use production so need to take care of paths
     ZeraModules::ModuleManager modMan(nullptr, nullptr, nullptr, true);
 
     bool modulesFound = modMan.loadAllAvailableModulePlugins();

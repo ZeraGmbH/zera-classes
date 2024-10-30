@@ -14,11 +14,6 @@
 
 QTEST_MAIN(test_scpi_cmds_in_session)
 
-void test_scpi_cmds_in_session::initTestCase()
-{
-    TestModuleManager::enableTests();
-}
-
 void test_scpi_cmds_in_session::initialSession()
 {
     ModuleManagerTestRunner testRunner(":/session-scpi-only.json");

@@ -11,11 +11,6 @@ constexpr double testcurrent = 10;
 constexpr double testangle = 0;
 constexpr double testfrequency = 50;
 
-void test_adj_module_offset::initTestCase()
-{
-    TestModuleManager::enableTests();
-}
-
 void test_adj_module_offset::validActValuesWithPermission()
 {
     ModuleManagerTestRunner testRunner(":/session-minimal-dc.json", true);

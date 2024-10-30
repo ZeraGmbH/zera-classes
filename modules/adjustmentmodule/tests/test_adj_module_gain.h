@@ -8,8 +8,6 @@ class test_adj_module_gain : public QObject
 {
     Q_OBJECT
 private slots:
-    void initTestCase();
-
     void noActValuesWithPermission();
     void validActValuesWithPermission();
     void validActValuesWithoutPermission();

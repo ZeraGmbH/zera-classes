@@ -23,7 +23,6 @@ void test_scpi_queue::initTestCase()
 {
     m_serviceInterfaceFactory = std::make_shared<DemoFactoryServiceInterfaces>();
     TimerFactoryQtForTest::enableTest();
-    TestModuleManager::enableTests();
 }
 
 void test_scpi_queue::cleanup()

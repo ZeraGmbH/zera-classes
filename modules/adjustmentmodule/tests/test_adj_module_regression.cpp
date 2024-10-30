@@ -17,11 +17,6 @@ static int constexpr fftEntityId = 1060;
 static int constexpr adjEntityId = 1190;
 static int constexpr scpiEntityId = 9999;
 
-void test_adj_module_regression::initTestCase()
-{
-    TestModuleManager::enableTests();
-}
-
 void test_adj_module_regression::minimalSession()
 {
     ModuleManagerTestRunner testRunner(":/session-minimal.json");
