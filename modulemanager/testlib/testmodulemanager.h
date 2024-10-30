@@ -18,6 +18,7 @@ public:
     ZeraModules::VirtualModule *getModule(QString uniqueName, int entityId);
 
 private:
+    static bool prepareOe();
     bool modulesReady();
     QStringList getModuleFileNames() override;
     // Avoid file write in install area on tests (OE tests turn 'ff')

@@ -9,11 +9,17 @@
 #include <tcpnetworkfactory.h>
 #include <QDir>
 
+bool TestModuleManager::prepareOe()
+{
+    ModulemanagerConfigTest::supportOeTests();
+    JsonSessionLoaderTest::supportOeTests();
+    return true;
+}
+
 void TestModuleManager::enableTests()
 {
     TimerFactoryQtForTest::enableTest();
-    JsonSessionLoaderTest::supportOeTests();
-    ModulemanagerConfigTest::supportOeTests();
+    prepareOe();
 }
 
 void TestModuleManager::pointToInstalledSessionFiles()
@@ -29,11 +35,10 @@ TestModuleManager::TestModuleManager(ModuleManagerSetupFacade *setupFacade,
         setupFacade,
         serviceInterfaceFactory,
         VeinTcp::TcpNetworkFactory::create(),
-        true)
+        // This is a hack to modify static test environment before ModuleManager starts using them
+        prepareOe())
 {
-    TimerFactoryQtForTest::enableTest();
-    JsonSessionLoaderTest::supportOeTests();
-    ModulemanagerConfigTest::supportOeTests();
+    enableTests();
 }
 
 void TestModuleManager::startAllTestServices(QString deviceName, bool initialAdjPermission)
