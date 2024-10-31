@@ -4,9 +4,11 @@
 
 const char* TimeGrouping::DateTimeFormat = "dd-MM-yyyy hh:mm:ss.zzz";
 static const qint64 maxTimeDiffMs = 100;
+QElapsedTimer TimeGrouping::m_regroupingTime;
 
 QJsonObject TimeGrouping::regroupTimestamp(TimeStampedGroups inputTimeStampedGroups)
 {
+    m_regroupingTime.start();
     TimeStampedGroups regroupedTimeStamps;
     qint64 currentTimeStamp = 0;
 
@@ -28,6 +30,7 @@ QJsonObject TimeGrouping::regroupTimestamp(TimeStampedGroups inputTimeStampedGro
         }
     }
     QJsonObject returnJson = convertTimeStampedGroupsToJson(regroupedTimeStamps);
+    qInfo("TimeGrouping::regrouping took %llims", m_regroupingTime.elapsed());
     return returnJson;
 }
 

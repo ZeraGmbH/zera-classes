@@ -5,6 +5,7 @@
 #include <QVariant>
 #include <QMap>
 #include <QHash>
+#include <QElapsedTimer>
 
 typedef QHash<int/*entityId*/, QHash<QString/*componentName*/, QVariant/*value*/>> RecordedGroups;
 typedef QMap<qint64 /* msSinceEpochTimestamp */, RecordedGroups> TimeStampedGroups;
@@ -18,6 +19,7 @@ public:
     static RecordedGroups appendEntityToRecordedGroup(RecordedGroups currentGroup, RecordedGroups inputGroup, int entityID);
 private:
     static QJsonObject convertTimeStampedGroupsToJson(TimeStampedGroups timeStampedGroups);
+    static QElapsedTimer m_regroupingTime;
 };
 
 #endif // TIMEGROUPING_H
