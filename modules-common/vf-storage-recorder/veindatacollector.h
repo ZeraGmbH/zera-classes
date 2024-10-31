@@ -7,6 +7,7 @@
 #include <timerperiodicqt.h>
 #include <QJsonObject>
 #include <QDateTime>
+#include <QElapsedTimer>
 
 class VeinDataCollector : public QObject
 {
@@ -36,6 +37,7 @@ private:
     QJsonObject m_regrouppedTimestampJson;
     TimeStampedGroups m_timestampedGrp;
     TimerTemplateQtPtr m_periodicTimer;
+    QElapsedTimer m_appendValueElapsedTimer;
 };
 
 #endif // VEINDATACOLLECTOR_H

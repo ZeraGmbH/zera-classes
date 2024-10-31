@@ -38,6 +38,7 @@ void VeinDataCollector::stopLogging()
 
 void VeinDataCollector::appendValue(int entityId, QString componentName, QVariant value, QDateTime timestamp)
 {
+    m_appendValueElapsedTimer.start();
     RecordedGroups newRecordedGrp;
     newRecordedGrp[entityId][componentName] = value;
     if(m_timestampedGrp.contains(timestamp.toMSecsSinceEpoch())) {
@@ -48,6 +49,7 @@ void VeinDataCollector::appendValue(int entityId, QString componentName, QVarian
             newRecordedGrp = TimeGrouping::appendEntityToRecordedGroup(preRecordedGrp, newRecordedGrp, entityId);
     }
     m_timestampedGrp.insert(timestamp.toMSecsSinceEpoch(), newRecordedGrp);
+    qInfo("VeinDataCollector::appendValue took %llims", m_appendValueElapsedTimer.elapsed());
 }
 
 void VeinDataCollector::onPeriodicTimerExpired()
