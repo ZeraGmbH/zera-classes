@@ -43,10 +43,6 @@ cBaseModule::cBaseModule(ModuleFactoryParam moduleParam, std::shared_ptr<cBaseMo
     connect(m_pStateIdle, &QState::entered, this, &cBaseModule::entryIdle);
     connect(m_pStateIDLEConfSetup, &QState::entered, this, &cBaseModule::entryConfSetup);
 
-    // we set up our CONFIGURE state here
-    // we have nothing to do here because we have some additional states
-    // for configuration in idle as well as run and stop because we want to stay in these states
-
     // we set up our RUN state here
 
     m_pStateRun->addTransition(this, &cBaseModule::sigRunFailed, m_pStateIdle); // in case of error we fall back to idle
