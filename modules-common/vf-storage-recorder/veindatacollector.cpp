@@ -20,6 +20,7 @@
 void VeinDataCollector::startLogging(QHash<int, QStringList> entitesAndComponents)
 {
     m_timestampedGrp.clear();
+    m_regrouppedTimestampJson = QJsonObject();
     m_periodicTimer->start();
     for(auto iter=entitesAndComponents.cbegin(); iter!=entitesAndComponents.cend(); ++iter) {
         const QStringList components = iter.value();
