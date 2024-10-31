@@ -11,7 +11,7 @@ class cBaseMeasProgram: public cModuleActivist
 {
     Q_OBJECT
 public:
-    cBaseMeasProgram(std::shared_ptr<cBaseModuleConfiguration> pConfiguration);
+    cBaseMeasProgram(std::shared_ptr<BaseModuleConfiguration> pConfiguration);
 signals:
     void actualValues(QVector<float>*);
 public slots:
@@ -20,7 +20,7 @@ public slots:
     void monitorConnection();
 
 protected:
-    std::shared_ptr<cBaseModuleConfiguration> m_pConfiguration;
+    std::shared_ptr<BaseModuleConfiguration> m_pConfiguration;
     Zera::cRMInterface m_rmInterface;
     Zera::ProxyClientPtr m_rmClient;
 

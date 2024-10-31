@@ -25,7 +25,7 @@ enum moduleconfigstate
     setnext = setMeasSystem1 + 16
 };
 
-class cBurden1ModuleConfiguration: public cBaseModuleConfiguration
+class cBurden1ModuleConfiguration: public BaseModuleConfiguration
 {
     Q_OBJECT
 public:

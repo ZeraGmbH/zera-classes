@@ -42,7 +42,7 @@ const QString defaultXSDFile = "://rangemodule.xsd";
 
 // rangemoduleconfiguration holds configuration data as well as parameter
 
-class cRangeModuleConfiguration: public cBaseModuleConfiguration
+class cRangeModuleConfiguration: public BaseModuleConfiguration
 {
     Q_OBJECT
 public:

@@ -29,7 +29,7 @@ class cRmsModuleConfigData;
 
 // rangemoduleconfiguration holds configuration data as well as parameter
 
-class cRmsModuleConfiguration: public cBaseModuleConfiguration
+class cRmsModuleConfiguration: public BaseModuleConfiguration
 {
     Q_OBJECT
 public:

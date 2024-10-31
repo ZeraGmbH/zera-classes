@@ -23,7 +23,7 @@ namespace  Server {
 }
 }
 
-class cBaseModule;
+class BaseModule;
 class VfModuleActvalue;
 class VfModuleMetaData;
 class VfModuleComponent;
@@ -71,7 +71,7 @@ class cAdjustmentModuleMeasProgram: public cBaseMeasWorkProgram
     Q_OBJECT
 
 public:
-    cAdjustmentModuleMeasProgram(cAdjustmentModule* module, std::shared_ptr<cBaseModuleConfiguration> pConfiguration);
+    cAdjustmentModuleMeasProgram(cAdjustmentModule* module, std::shared_ptr<BaseModuleConfiguration> pConfiguration);
     void generateInterface() override; // here we export our interface (entities)
 
 signals:

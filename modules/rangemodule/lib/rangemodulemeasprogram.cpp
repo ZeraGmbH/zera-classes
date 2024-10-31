@@ -12,7 +12,7 @@
 namespace RANGEMODULE
 {
 
-cRangeModuleMeasProgram::cRangeModuleMeasProgram(cRangeModule* module, std::shared_ptr<cBaseModuleConfiguration> pConfiguration) :
+cRangeModuleMeasProgram::cRangeModuleMeasProgram(cRangeModule* module, std::shared_ptr<BaseModuleConfiguration> pConfiguration) :
     cBaseDspMeasProgram(pConfiguration),
     m_pModule(module),
     m_dspWatchdogTimer(TimerFactoryQt::createSingleShot(3000)),

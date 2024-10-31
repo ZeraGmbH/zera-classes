@@ -41,7 +41,7 @@ class cOsciModuleMeasProgram: public cBaseDspMeasProgram
 {
     Q_OBJECT
 public:
-    cOsciModuleMeasProgram(cOsciModule* module, std::shared_ptr<cBaseModuleConfiguration> pConfiguration);
+    cOsciModuleMeasProgram(cOsciModule* module, std::shared_ptr<BaseModuleConfiguration> pConfiguration);
     virtual void generateInterface(); // here we export our interface (entities)
 public slots:
     virtual void start(); // difference between start and stop is that actual values

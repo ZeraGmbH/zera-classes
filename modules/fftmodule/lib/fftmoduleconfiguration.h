@@ -29,7 +29,7 @@ class cFftModuleConfigData;
 
 // rangemoduleconfiguration holds configuration data as well as parameter
 
-class cFftModuleConfiguration: public cBaseModuleConfiguration
+class cFftModuleConfiguration: public BaseModuleConfiguration
 {
     Q_OBJECT
 public:

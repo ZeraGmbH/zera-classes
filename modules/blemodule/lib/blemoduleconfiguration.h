@@ -15,7 +15,7 @@ enum moduleconfigstate
 
 // moduleconfiguration holds configuration data as well as parameter
 
-class cBleModuleConfiguration: public cBaseModuleConfiguration
+class cBleModuleConfiguration: public BaseModuleConfiguration
 {
     Q_OBJECT
 public:

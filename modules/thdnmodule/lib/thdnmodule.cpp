@@ -14,7 +14,7 @@ namespace THDNMODULE
 {
 
 cThdnModule::cThdnModule(ModuleFactoryParam moduleParam) :
-    cBaseMeasModule(moduleParam, std::shared_ptr<cBaseModuleConfiguration>(new cThdnModuleConfiguration()))
+    cBaseMeasModule(moduleParam, std::shared_ptr<BaseModuleConfiguration>(new cThdnModuleConfiguration()))
 {
     m_sModuleName = QString("%1%2").arg(BaseModuleName).arg(moduleParam.m_moduleNum);
     m_sModuleDescription = QString("This module measures thdn values for configured channels");
@@ -66,8 +66,8 @@ void cThdnModule::setupModule()
     // we need some program that does the measuring on dsp
     m_pMeasProgram = new cThdnModuleMeasProgram(this, m_pConfiguration);
     m_ModuleActivistList.append(m_pMeasProgram);
-    connect(m_pMeasProgram, &cModuleActivist::activated, this, &cBaseModule::activationContinue);
-    connect(m_pMeasProgram, &cModuleActivist::deactivated, this, &cBaseModule::deactivationContinue);
+    connect(m_pMeasProgram, &cModuleActivist::activated, this, &BaseModule::activationContinue);
+    connect(m_pMeasProgram, &cModuleActivist::deactivated, this, &BaseModule::deactivationContinue);
     connect(m_pMeasProgram, &cModuleActivist::errMsg, m_pModuleErrorComponent, &VfModuleErrorComponent::setValue);
 
     for (int i = 0; i < m_ModuleActivistList.count(); i++)

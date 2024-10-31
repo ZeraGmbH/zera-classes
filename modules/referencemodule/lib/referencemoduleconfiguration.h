@@ -27,7 +27,7 @@ class cReferenceModuleConfigData;
 
 // referencemoduleconfiguration holds configuration data as well as parameter
 
-class cReferenceModuleConfiguration: public cBaseModuleConfiguration
+class cReferenceModuleConfiguration: public BaseModuleConfiguration
 {
     Q_OBJECT
 public:

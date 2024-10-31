@@ -24,7 +24,7 @@ enum moduleconfigstate
     setLambdaInputSComponent1 = setLambdaInputQComponent1 +16
 };
 
-class cLambdaModuleConfiguration: public cBaseModuleConfiguration
+class cLambdaModuleConfiguration: public BaseModuleConfiguration
 {
     Q_OBJECT
 public:

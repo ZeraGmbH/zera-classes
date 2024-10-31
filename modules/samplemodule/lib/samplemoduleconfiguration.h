@@ -31,7 +31,7 @@ class cSampleModuleConfigData;
 
 // samplemoduleconfiguration holds configuration data as well as parameter
 
-class cSampleModuleConfiguration: public cBaseModuleConfiguration
+class cSampleModuleConfiguration: public BaseModuleConfiguration
 {
     Q_OBJECT
 public:

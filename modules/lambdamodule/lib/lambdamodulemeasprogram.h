@@ -20,7 +20,7 @@ class cLambdaModuleMeasProgram: public cBaseMeasWorkProgram
 {
     Q_OBJECT
 public:
-    cLambdaModuleMeasProgram(cLambdaModule* module, std::shared_ptr<cBaseModuleConfiguration> pConfiguration);
+    cLambdaModuleMeasProgram(cLambdaModule* module, std::shared_ptr<BaseModuleConfiguration> pConfiguration);
     virtual void generateInterface();
 public slots:
     virtual void start() {}

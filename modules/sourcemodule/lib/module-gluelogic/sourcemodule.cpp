@@ -27,7 +27,7 @@ void SourceModule::setupModule()
 {
     emit addEventSystem(m_pModuleValidator);
     emit addEventSystem(m_rpcEventSystem);
-    cBaseModule::setupModule();
+    BaseModule::setupModule();
 
     m_pProgram = new SourceModuleProgram(this, m_pConfiguration);
     m_ModuleActivistList.append(m_pProgram);

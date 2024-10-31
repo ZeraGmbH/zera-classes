@@ -20,7 +20,7 @@ class cSCPIMeasure;
 class cSCPIEventSystem;
 
 
-class cSCPIModule : public cBaseModule
+class cSCPIModule : public BaseModule
 {
     Q_OBJECT
 public:

@@ -43,7 +43,7 @@ enum moduleconfigstate
 class cSCPIModuleConfigData;
 
 // scpimoduleconfiguration holds configuration data
-class cSCPIModuleConfiguration: public cBaseModuleConfiguration
+class cSCPIModuleConfiguration: public BaseModuleConfiguration
 {
     Q_OBJECT
 public:

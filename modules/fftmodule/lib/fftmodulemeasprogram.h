@@ -43,7 +43,7 @@ class cFftModuleMeasProgram: public cBaseDspMeasProgram
 {
     Q_OBJECT
 public:
-    cFftModuleMeasProgram(cFftModule* module, std::shared_ptr<cBaseModuleConfiguration> pConfiguration);
+    cFftModuleMeasProgram(cFftModule* module, std::shared_ptr<BaseModuleConfiguration> pConfiguration);
     virtual void generateInterface(); // here we export our interface (entities)
 public slots:
     virtual void start(); // difference between start and stop is that actual values

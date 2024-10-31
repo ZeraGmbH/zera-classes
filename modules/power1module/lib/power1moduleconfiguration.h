@@ -80,7 +80,7 @@ enum moduleconfigstate
 class cPower1ModuleConfigData;
 
 // moduleconfiguration holds configuration data as well as parameter
-class cPower1ModuleConfiguration: public cBaseModuleConfiguration
+class cPower1ModuleConfiguration: public BaseModuleConfiguration
 {
     Q_OBJECT
 public:

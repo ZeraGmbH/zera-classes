@@ -20,7 +20,7 @@ class cBleModuleMeasProgram: public cBaseMeasWorkProgram
 {
     Q_OBJECT
 public:
-    cBleModuleMeasProgram(cBleModule* module, std::shared_ptr<cBaseModuleConfiguration> pConfiguration);
+    cBleModuleMeasProgram(cBleModule* module, std::shared_ptr<BaseModuleConfiguration> pConfiguration);
     virtual ~cBleModuleMeasProgram();
     void generateInterface() override; // here we export our interface (entities)
 public slots:

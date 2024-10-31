@@ -20,7 +20,7 @@ enum moduleconfigstate
 class cStatusModuleConfigData;
 
 // Statusmoduleconfiguration holds configuration data as well as parameter
-class cStatusModuleConfiguration: public cBaseModuleConfiguration
+class cStatusModuleConfiguration: public BaseModuleConfiguration
 {
     Q_OBJECT
 public:

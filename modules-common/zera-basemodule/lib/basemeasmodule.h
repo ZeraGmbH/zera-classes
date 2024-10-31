@@ -6,11 +6,11 @@
 #include <ve_storagesystem.h>
 #include <memory>
 
-class cBaseMeasModule : public cBaseModule
+class cBaseMeasModule : public BaseModule
 {
     Q_OBJECT
 public:
-    cBaseMeasModule(ModuleFactoryParam moduleParam, std::shared_ptr<cBaseModuleConfiguration> modcfg);
+    cBaseMeasModule(ModuleFactoryParam moduleParam, std::shared_ptr<BaseModuleConfiguration> modcfg);
     VfEventSytemModuleParam* m_pModuleValidator;
 };
 

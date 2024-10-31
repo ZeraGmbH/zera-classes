@@ -18,7 +18,7 @@ class cBurden1ModuleMeasProgram: public cBaseMeasWorkProgram
     Q_OBJECT
 
 public:
-    cBurden1ModuleMeasProgram(cBurden1Module* module, std::shared_ptr<cBaseModuleConfiguration> pConfiguration);
+    cBurden1ModuleMeasProgram(cBurden1Module* module, std::shared_ptr<BaseModuleConfiguration> pConfiguration);
     virtual ~cBurden1ModuleMeasProgram();
     virtual void generateInterface() override; // here we export our interface (entities)
 public slots:

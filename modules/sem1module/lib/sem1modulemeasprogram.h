@@ -55,7 +55,7 @@ class cSem1ModuleMeasProgram: public cBaseMeasProgram
 {
     Q_OBJECT
 public:
-    cSem1ModuleMeasProgram(cSem1Module* module, std::shared_ptr<cBaseModuleConfiguration> pConfiguration);
+    cSem1ModuleMeasProgram(cSem1Module* module, std::shared_ptr<BaseModuleConfiguration> pConfiguration);
     virtual ~cSem1ModuleMeasProgram();
     void generateInterface() override; // here we export our interface (entities)
 

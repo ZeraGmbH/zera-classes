@@ -12,7 +12,7 @@
 #include <QJsonDocument>
 #include <QFile>
 
-cBaseModule::cBaseModule(ModuleFactoryParam moduleParam, std::shared_ptr<cBaseModuleConfiguration> modcfg) :
+BaseModule::BaseModule(ModuleFactoryParam moduleParam, std::shared_ptr<BaseModuleConfiguration> modcfg) :
     ZeraModules::VirtualModule(moduleParam.m_moduleNum, moduleParam.m_entityId),
     m_pConfiguration(modcfg),
     m_moduleParam(moduleParam)
@@ -33,32 +33,32 @@ cBaseModule::cBaseModule(ModuleFactoryParam moduleParam, std::shared_ptr<cBaseMo
 
     // we set up our IDLE state here
 
-    m_pStateIdle->addTransition(this, &cBaseModule::sigRun, m_pStateRun); // after sigRun we leave idle
+    m_pStateIdle->addTransition(this, &BaseModule::sigRun, m_pStateRun); // after sigRun we leave idle
     m_pStateIDLEIdle = new QState(m_pStateIdle); // the initial state for idle
     m_pStateIDLEConfSetup = new QState(m_pStateIdle); // same
-    m_pStateIDLEIdle->addTransition(this, &cBaseModule::sigConfiguration, m_pStateIDLEConfSetup);
-    m_pStateIDLEConfSetup->addTransition(this, &cBaseModule::sigConfDone, m_pStateIDLEIdle);
+    m_pStateIDLEIdle->addTransition(this, &BaseModule::sigConfiguration, m_pStateIDLEConfSetup);
+    m_pStateIDLEConfSetup->addTransition(this, &BaseModule::sigConfDone, m_pStateIDLEIdle);
     m_pStateIdle->setInitialState(m_pStateIDLEIdle);
-    connect(m_pStateIDLEIdle, &QState::entered, this, &cBaseModule::entryIDLEIdle);
-    connect(m_pStateIdle, &QState::entered, this, &cBaseModule::entryIdle);
-    connect(m_pStateIDLEConfSetup, &QState::entered, this, &cBaseModule::entryConfSetup);
+    connect(m_pStateIDLEIdle, &QState::entered, this, &BaseModule::entryIDLEIdle);
+    connect(m_pStateIdle, &QState::entered, this, &BaseModule::entryIdle);
+    connect(m_pStateIDLEConfSetup, &QState::entered, this, &BaseModule::entryConfSetup);
 
     // we set up our RUN state here
 
-    m_pStateRun->addTransition(this, &cBaseModule::sigRunFailed, m_pStateIdle); // in case of error we fall back to idle
+    m_pStateRun->addTransition(this, &BaseModule::sigRunFailed, m_pStateIdle); // in case of error we fall back to idle
     m_pStateRUNStart = new QState(m_pStateRun);
     m_pStateRUNDone = new QState(m_pStateRun);
     m_pStateRUNDeactivate = new QState(m_pStateRun);
     m_pStateRUNConfSetup = new QState(m_pStateRun);
-    m_pStateRUNStart->addTransition(this, &cBaseModule::activationReady, m_pStateRUNDone);
-    m_pStateRUNDone->addTransition(this, &cBaseModule::sigConfiguration, m_pStateRUNDeactivate);
-    m_pStateRUNDeactivate->addTransition(this, &cBaseModule::deactivationReady, m_pStateRUNConfSetup);
-    m_pStateRUNConfSetup->addTransition(this, &cBaseModule::sigConfDone, m_pStateRUNStart );
+    m_pStateRUNStart->addTransition(this, &BaseModule::activationReady, m_pStateRUNDone);
+    m_pStateRUNDone->addTransition(this, &BaseModule::sigConfiguration, m_pStateRUNDeactivate);
+    m_pStateRUNDeactivate->addTransition(this, &BaseModule::deactivationReady, m_pStateRUNConfSetup);
+    m_pStateRUNConfSetup->addTransition(this, &BaseModule::sigConfDone, m_pStateRUNStart );
     m_pStateRun->setInitialState(m_pStateRUNStart);
-    connect(m_pStateRUNStart, &QState::entered, this, &cBaseModule::entryRunStart);
-    connect(m_pStateRUNDone, &QState::entered, this, &cBaseModule::entryRunDone);
-    connect(m_pStateRUNDeactivate, &QState::entered, this, &cBaseModule::entryRunDeactivate);
-    connect(m_pStateRUNConfSetup, &QState::entered, this, &cBaseModule::entryConfSetup);
+    connect(m_pStateRUNStart, &QState::entered, this, &BaseModule::entryRunStart);
+    connect(m_pStateRUNDone, &QState::entered, this, &BaseModule::entryRunDone);
+    connect(m_pStateRUNDeactivate, &QState::entered, this, &BaseModule::entryRunDeactivate);
+    connect(m_pStateRUNConfSetup, &QState::entered, this, &BaseModule::entryConfSetup);
 
     m_stateMachine.addState(m_pStateIdle);
     m_stateMachine.addState(m_pStateRun);
@@ -68,37 +68,37 @@ cBaseModule::cBaseModule(ModuleFactoryParam moduleParam, std::shared_ptr<cBaseMo
     m_stateMachine.start();
 
     // now we set up our machines for activating, deactivating a module
-    m_ActivationStartState.addTransition(this, &cBaseModule::activationContinue, &m_ActivationExecState);
-    m_ActivationExecState.addTransition(this, &cBaseModule::activationContinue, &m_ActivationDoneState);
-    m_ActivationDoneState.addTransition(this, &cBaseModule::activationNext, &m_ActivationExecState);
-    m_ActivationDoneState.addTransition(this, &cBaseModule::activationContinue, &m_ActivationFinishedState);
+    m_ActivationStartState.addTransition(this, &BaseModule::activationContinue, &m_ActivationExecState);
+    m_ActivationExecState.addTransition(this, &BaseModule::activationContinue, &m_ActivationDoneState);
+    m_ActivationDoneState.addTransition(this, &BaseModule::activationNext, &m_ActivationExecState);
+    m_ActivationDoneState.addTransition(this, &BaseModule::activationContinue, &m_ActivationFinishedState);
     m_ActivationMachine.addState(&m_ActivationStartState);
     m_ActivationMachine.addState(&m_ActivationExecState);
     m_ActivationMachine.addState(&m_ActivationDoneState);
     m_ActivationMachine.addState(&m_ActivationFinishedState);
     m_ActivationMachine.setInitialState(&m_ActivationStartState);
-    connect(&m_ActivationStartState, &QState::entered, this, &cBaseModule::activationStart);
-    connect(&m_ActivationExecState, &QState::entered, this, &cBaseModule::activationExec);
-    connect(&m_ActivationDoneState, &QState::entered, this, &cBaseModule::activationDone);
-    connect(&m_ActivationFinishedState, &QState::entered, this, &cBaseModule::activationFinished);
+    connect(&m_ActivationStartState, &QState::entered, this, &BaseModule::activationStart);
+    connect(&m_ActivationExecState, &QState::entered, this, &BaseModule::activationExec);
+    connect(&m_ActivationDoneState, &QState::entered, this, &BaseModule::activationDone);
+    connect(&m_ActivationFinishedState, &QState::entered, this, &BaseModule::activationFinished);
 
-    m_DeactivationStartState.addTransition(this, &cBaseModule::deactivationContinue, &m_DeactivationExecState);
-    m_DeactivationExecState.addTransition(this, &cBaseModule::deactivationContinue, &m_DeactivationDoneState);
-    m_DeactivationDoneState.addTransition(this, &cBaseModule::deactivationNext, &m_DeactivationExecState);
-    m_DeactivationDoneState.addTransition(this, &cBaseModule::deactivationContinue, &m_DeactivationFinishedState);
+    m_DeactivationStartState.addTransition(this, &BaseModule::deactivationContinue, &m_DeactivationExecState);
+    m_DeactivationExecState.addTransition(this, &BaseModule::deactivationContinue, &m_DeactivationDoneState);
+    m_DeactivationDoneState.addTransition(this, &BaseModule::deactivationNext, &m_DeactivationExecState);
+    m_DeactivationDoneState.addTransition(this, &BaseModule::deactivationContinue, &m_DeactivationFinishedState);
     m_DeactivationMachine.addState(&m_DeactivationStartState);
     m_DeactivationMachine.addState(&m_DeactivationExecState);
     m_DeactivationMachine.addState(&m_DeactivationDoneState);
     m_DeactivationMachine.addState(&m_DeactivationFinishedState);
     m_DeactivationMachine.setInitialState(&m_DeactivationStartState);
-    connect(&m_DeactivationStartState, &QState::entered, this, &cBaseModule::deactivationStart);
-    connect(&m_DeactivationExecState, &QState::entered, this, &cBaseModule::deactivationExec);
-    connect(&m_DeactivationDoneState, &QState::entered, this, &cBaseModule::deactivationDone);
-    connect(&m_DeactivationFinishedState, &QState::entered, this, &cBaseModule::deactivationFinished);
+    connect(&m_DeactivationStartState, &QState::entered, this, &BaseModule::deactivationStart);
+    connect(&m_DeactivationExecState, &QState::entered, this, &BaseModule::deactivationExec);
+    connect(&m_DeactivationDoneState, &QState::entered, this, &BaseModule::deactivationDone);
+    connect(&m_DeactivationFinishedState, &QState::entered, this, &BaseModule::deactivationFinished);
 }
 
 
-cBaseModule::~cBaseModule()
+BaseModule::~BaseModule()
 {
     unsetModule();
 
@@ -115,7 +115,7 @@ cBaseModule::~cBaseModule()
     delete m_pStateFinished;
 }
 
-void cBaseModule::startModule()
+void BaseModule::startModule()
 {
     if (m_bStateMachineStarted) {
         emit sigRun(); // if our statemachine is already started we emit signal at once
@@ -126,7 +126,7 @@ void cBaseModule::startModule()
     }
 }
 
-void cBaseModule::stopModule()
+void BaseModule::stopModule()
 {
     if (m_bStateMachineStarted) {
         emit sigStop(); // if our statemachine is already started we emit signal at once
@@ -138,7 +138,7 @@ void cBaseModule::stopModule()
 
 }
 
-void cBaseModule::startDestroy()
+void BaseModule::startDestroy()
 {
     connect(this, &ZeraModules::VirtualModule::deactivationReady,
             this, &ZeraModules::VirtualModule::moduleDeactivated);
@@ -146,7 +146,7 @@ void cBaseModule::startDestroy()
         m_DeactivationMachine.start();
 }
 
-void cBaseModule::setupModule()
+void BaseModule::setupModule()
 {
     emit m_pModuleEventSystem->sigSendEvent(VfServerEntityAdd::generateEvent(getEntityId()));
 
@@ -176,7 +176,7 @@ void cBaseModule::setupModule()
 }
 
 
-void cBaseModule::unsetModule()
+void BaseModule::unsetModule()
 {
     delete m_pModuleErrorComponent;
 
@@ -213,7 +213,7 @@ void cBaseModule::unsetModule()
     m_ModuleActivistList.clear();
 }
 
-void cBaseModule::exportMetaData()
+void BaseModule::exportMetaData()
 {
     QJsonObject jsonObj;
     QJsonObject jsonObj2;
@@ -264,31 +264,31 @@ void cBaseModule::exportMetaData()
     m_pModuleInterfaceComponent->setValue(QVariant(ba));
 }
 
-VeinEvent::StorageSystem *cBaseModule::getStorageSystem()
+VeinEvent::StorageSystem *BaseModule::getStorageSystem()
 {
     return m_moduleParam.m_storagesystem;
 }
 
-bool cBaseModule::getDemo()
+bool BaseModule::getDemo()
 {
     return m_moduleParam.m_demo;
 }
 
-const AbstractFactoryServiceInterfacesPtr cBaseModule::getServiceInterfaceFactory() const
+const AbstractFactoryServiceInterfacesPtr BaseModule::getServiceInterfaceFactory() const
 {
     return m_moduleParam.m_serviceInterfaceFactory;
 }
 
-const ModuleFactoryParamNetworkPtr cBaseModule::getNetworkConfig() const
+const ModuleFactoryParamNetworkPtr BaseModule::getNetworkConfig() const
 {
     return m_moduleParam.m_networkParams;
 }
 
-void cBaseModule::entryIdle()
+void BaseModule::entryIdle()
 {
 }
 
-void cBaseModule::entryIDLEIdle()
+void BaseModule::entryIDLEIdle()
 {
     m_bStateMachineStarted = true; // event loop has activated our statemachine
     if (m_bConfCmd) {
@@ -310,14 +310,14 @@ void cBaseModule::entryIDLEIdle()
     }
 }
 
-void cBaseModule::entryConfSetup()
+void BaseModule::entryConfSetup()
 {
     setupModule();
     m_nStatus = setup;
     emit sigConfDone();
 }
 
-void cBaseModule::entryRunStart()
+void BaseModule::entryRunStart()
 {
     if (m_nStatus == setup) { // we must be set up (configured and interface represents configuration)
         m_ActivationMachine.start();
@@ -327,14 +327,14 @@ void cBaseModule::entryRunStart()
     }
 }
 
-void cBaseModule::entryRunDone()
+void BaseModule::entryRunDone()
 {
     startMeas();
     m_nStatus = activated;
     emit moduleActivated();
 }
 
-void cBaseModule::entryRunDeactivate()
+void BaseModule::entryRunDeactivate()
 {
     m_DeactivationMachine.start();
 }

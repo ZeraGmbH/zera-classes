@@ -12,7 +12,7 @@
 namespace RMSMODULE
 {
 
-cRmsModuleMeasProgram::cRmsModuleMeasProgram(cRmsModule* module, std::shared_ptr<cBaseModuleConfiguration> pConfiguration) :
+cRmsModuleMeasProgram::cRmsModuleMeasProgram(cRmsModule* module, std::shared_ptr<BaseModuleConfiguration> pConfiguration) :
     cBaseDspMeasProgram(pConfiguration),
     m_pModule(module)
 {

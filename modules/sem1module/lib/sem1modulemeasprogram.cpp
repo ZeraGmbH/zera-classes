@@ -15,7 +15,7 @@
 namespace SEM1MODULE
 {
 
-cSem1ModuleMeasProgram::cSem1ModuleMeasProgram(cSem1Module* module, std::shared_ptr<cBaseModuleConfiguration> pConfiguration)
+cSem1ModuleMeasProgram::cSem1ModuleMeasProgram(cSem1Module* module, std::shared_ptr<BaseModuleConfiguration> pConfiguration)
     :cBaseMeasProgram(pConfiguration), m_pModule(module)
 {
     // we have to instantiate a working resource manager and secserver interface

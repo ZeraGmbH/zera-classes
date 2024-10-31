@@ -21,7 +21,7 @@ namespace SCPIMODULE
 {
 
 cSCPIModule::cSCPIModule(ModuleFactoryParam moduleParam) :
-    cBaseModule(moduleParam, std::shared_ptr<cBaseModuleConfiguration>(new cSCPIModuleConfiguration()))
+    BaseModule(moduleParam, std::shared_ptr<BaseModuleConfiguration>(new cSCPIModuleConfiguration()))
 {
     m_sModuleName = QString("%1%2").arg(BaseModuleName).arg(moduleParam.m_moduleNum);
     m_sModuleDescription = QString("This module provides a scpi interface depending on the actual session running");
@@ -50,7 +50,7 @@ void cSCPIModule::setupModule()
     emit addEventSystem(m_pSCPIEventSystem);
 
     m_pModuleEventSystem = m_pSCPIEventSystem;
-    cBaseModule::setupModule();
+    BaseModule::setupModule();
 
     cSCPIModuleConfigData *pConfData;
     pConfData = qobject_cast<cSCPIModuleConfiguration*>(m_pConfiguration.get())->getConfigurationData();

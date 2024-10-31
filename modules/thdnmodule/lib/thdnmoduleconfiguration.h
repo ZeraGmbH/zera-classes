@@ -28,7 +28,7 @@ class cThdnModuleConfigData;
 
 // rangemoduleconfiguration holds configuration data as well as parameter
 
-class cThdnModuleConfiguration: public cBaseModuleConfiguration
+class cThdnModuleConfiguration: public BaseModuleConfiguration
 {
     Q_OBJECT
 public:

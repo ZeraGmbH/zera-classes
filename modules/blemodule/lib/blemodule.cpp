@@ -6,7 +6,7 @@ namespace BLEMODULE
 {
 
 cBleModule::cBleModule(ModuleFactoryParam moduleParam) :
-    cBaseMeasModule(moduleParam, std::shared_ptr<cBaseModuleConfiguration>(new cBleModuleConfiguration()))
+    cBaseMeasModule(moduleParam, std::shared_ptr<BaseModuleConfiguration>(new cBleModuleConfiguration()))
 {
     m_sModuleName = QString("%1%2").arg(BaseModuleName).arg(moduleParam.m_moduleNum);
     m_sModuleDescription = QString("This module measures configured number of harmonic power values from configured input values");

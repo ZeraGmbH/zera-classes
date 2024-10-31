@@ -1,6 +1,6 @@
 #include "basemeasprogram.h"
 
-cBaseMeasProgram::cBaseMeasProgram(std::shared_ptr<cBaseModuleConfiguration> pConfiguration) :
+cBaseMeasProgram::cBaseMeasProgram(std::shared_ptr<BaseModuleConfiguration> pConfiguration) :
     m_pConfiguration(pConfiguration)
 {
     m_pcbInterface = std::make_shared<Zera::cPCBInterface>();

@@ -7,7 +7,7 @@
 namespace LAMBDAMODULE
 {
 
-cLambdaModuleMeasProgram::cLambdaModuleMeasProgram(cLambdaModule* module, std::shared_ptr<cBaseModuleConfiguration> pConfiguration)
+cLambdaModuleMeasProgram::cLambdaModuleMeasProgram(cLambdaModule* module, std::shared_ptr<BaseModuleConfiguration> pConfiguration)
     :cBaseMeasWorkProgram(pConfiguration), m_pModule(module)
 {
     m_searchActualValuesState.addTransition(this, &cLambdaModuleMeasProgram::activationContinue, &m_activationDoneState);

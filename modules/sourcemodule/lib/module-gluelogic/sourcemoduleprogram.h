@@ -13,7 +13,7 @@ class SourceModuleProgram: public cBaseMeasWorkProgram
 {
     Q_OBJECT
 public:
-    SourceModuleProgram(SourceModule* module, std::shared_ptr<cBaseModuleConfiguration> pConfiguration);
+    SourceModuleProgram(SourceModule* module, std::shared_ptr<BaseModuleConfiguration> pConfiguration);
     virtual ~SourceModuleProgram();
     virtual void generateInterface() override; // here we export our interface (entities)
     void startDestroy();

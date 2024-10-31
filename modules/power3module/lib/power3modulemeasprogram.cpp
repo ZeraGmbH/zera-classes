@@ -8,7 +8,7 @@
 namespace POWER3MODULE
 {
 
-cPower3ModuleMeasProgram::cPower3ModuleMeasProgram(cPower3Module* module, std::shared_ptr<cBaseModuleConfiguration> pConfiguration)
+cPower3ModuleMeasProgram::cPower3ModuleMeasProgram(cPower3Module* module, std::shared_ptr<BaseModuleConfiguration> pConfiguration)
     :cBaseMeasWorkProgram(pConfiguration), m_pModule(module)
 {
     m_searchActualValuesState.addTransition(this, &cPower3ModuleMeasProgram::activationContinue, &m_activationDoneState);

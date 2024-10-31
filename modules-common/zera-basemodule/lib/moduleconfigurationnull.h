@@ -3,7 +3,7 @@
 
 #include "basemoduleconfiguration.h"
 
-class ModuleConfigurationNull : public cBaseModuleConfiguration
+class ModuleConfigurationNull : public BaseModuleConfiguration
 {
     Q_OBJECT
 public:

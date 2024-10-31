@@ -27,7 +27,7 @@ const QString defaultXSDFile = "://modemodule.xsd";
 
 // modemoduleconfiguration holds configuration data as well as parameter
 
-class cModeModuleConfiguration: public cBaseModuleConfiguration
+class cModeModuleConfiguration: public BaseModuleConfiguration
 {
     Q_OBJECT
 public:

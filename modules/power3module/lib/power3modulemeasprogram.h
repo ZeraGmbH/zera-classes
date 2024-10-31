@@ -19,7 +19,7 @@ class cPower3ModuleMeasProgram: public cBaseMeasWorkProgram
     Q_OBJECT
 
 public:
-    cPower3ModuleMeasProgram(cPower3Module* module, std::shared_ptr<cBaseModuleConfiguration> pConfiguration);
+    cPower3ModuleMeasProgram(cPower3Module* module, std::shared_ptr<BaseModuleConfiguration> pConfiguration);
     virtual ~cPower3ModuleMeasProgram();
     virtual void generateInterface(); // here we export our interface (entities)
 

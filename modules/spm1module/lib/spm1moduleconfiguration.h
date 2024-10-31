@@ -39,7 +39,7 @@ const QString defaultXSDFile = "://spm1module.xsd";
 
 // spm1moduleconfiguration holds configuration data as well as parameter
 
-class cSpm1ModuleConfiguration: public cBaseModuleConfiguration
+class cSpm1ModuleConfiguration: public BaseModuleConfiguration
 {
     Q_OBJECT
 public:

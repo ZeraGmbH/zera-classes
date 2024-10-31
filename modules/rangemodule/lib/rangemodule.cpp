@@ -15,7 +15,7 @@ namespace RANGEMODULE
 {
 
 cRangeModule::cRangeModule(ModuleFactoryParam moduleParam) :
-    cBaseMeasModule(moduleParam, std::shared_ptr<cBaseModuleConfiguration>(new cRangeModuleConfiguration()))
+    cBaseMeasModule(moduleParam, std::shared_ptr<BaseModuleConfiguration>(new cRangeModuleConfiguration()))
 {
     m_sModuleName = QString("%1%2").arg(BaseModuleName).arg(moduleParam.m_moduleNum);
     m_sModuleDescription = QString("This module is responsible for range handling,\n range setting, automatic, adjustment and scaling");

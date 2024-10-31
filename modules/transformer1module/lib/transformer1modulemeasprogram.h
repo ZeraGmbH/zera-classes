@@ -23,7 +23,7 @@ class cTransformer1ModuleMeasProgram: public cBaseMeasWorkProgram
     Q_OBJECT
 
 public:
-    cTransformer1ModuleMeasProgram(cTransformer1Module* module, std::shared_ptr<cBaseModuleConfiguration> pConfiguration);
+    cTransformer1ModuleMeasProgram(cTransformer1Module* module, std::shared_ptr<BaseModuleConfiguration> pConfiguration);
     virtual ~cTransformer1ModuleMeasProgram();
     virtual void generateInterface(); // here we export our interface (entities)
 

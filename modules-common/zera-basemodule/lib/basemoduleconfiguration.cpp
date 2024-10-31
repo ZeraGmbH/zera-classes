@@ -1,18 +1,18 @@
 #include <xmlconfigreader.h>
 #include "basemoduleconfiguration.h"
 
-cBaseModuleConfiguration::cBaseModuleConfiguration()
+BaseModuleConfiguration::BaseModuleConfiguration()
 {
     m_pXMLReader = new Zera::XMLConfig::cReader();
     m_bConfigured = false;
 }
 
-cBaseModuleConfiguration::~cBaseModuleConfiguration()
+BaseModuleConfiguration::~BaseModuleConfiguration()
 {
     delete m_pXMLReader;
 }
 
-bool cBaseModuleConfiguration::isConfigured()
+bool BaseModuleConfiguration::isConfigured()
 {
     return m_bConfigured;
 }

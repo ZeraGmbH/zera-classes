@@ -11,7 +11,7 @@
 #include <errormessages.h>
 #include <math.h>
 
-cAdjustmentModuleMeasProgram::cAdjustmentModuleMeasProgram(cAdjustmentModule* module, std::shared_ptr<cBaseModuleConfiguration> pConfiguration) :
+cAdjustmentModuleMeasProgram::cAdjustmentModuleMeasProgram(cAdjustmentModule* module, std::shared_ptr<BaseModuleConfiguration> pConfiguration) :
     cBaseMeasWorkProgram(pConfiguration),
     m_pModule(module),
     m_commonObjects(std::make_shared<AdjustmentModuleCommon>()),

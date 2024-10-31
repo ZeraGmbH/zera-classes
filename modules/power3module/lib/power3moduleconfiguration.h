@@ -29,7 +29,7 @@ const QString defaultXSDFile = "://power3module.xsd";
 
 // moduleconfiguration holds configuration data as well as parameter
 
-class cPower3ModuleConfiguration: public cBaseModuleConfiguration
+class cPower3ModuleConfiguration: public BaseModuleConfiguration
 {
     Q_OBJECT
 public:

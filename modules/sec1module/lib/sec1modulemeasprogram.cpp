@@ -19,7 +19,7 @@
 namespace SEC1MODULE
 {
 
-cSec1ModuleMeasProgram::cSec1ModuleMeasProgram(cSec1Module* module, std::shared_ptr<cBaseModuleConfiguration> pConfiguration) :
+cSec1ModuleMeasProgram::cSec1ModuleMeasProgram(cSec1Module* module, std::shared_ptr<BaseModuleConfiguration> pConfiguration) :
     cBaseMeasProgram(pConfiguration),
     m_pModule(module)
 {

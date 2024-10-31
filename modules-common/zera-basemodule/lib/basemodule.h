@@ -20,13 +20,13 @@ enum Status
 };
 
 
-class cBaseModule : public ZeraModules::VirtualModule
+class BaseModule : public ZeraModules::VirtualModule
 {
 Q_OBJECT
 
 public:
-    cBaseModule(ModuleFactoryParam moduleParam, std::shared_ptr<cBaseModuleConfiguration> modcfg);
-    virtual ~cBaseModule();
+    BaseModule(ModuleFactoryParam moduleParam, std::shared_ptr<BaseModuleConfiguration> modcfg);
+    virtual ~BaseModule();
     virtual void startModule() override;
     virtual void stopModule() override;
     void startDestroy() override;
@@ -94,7 +94,7 @@ protected:
     QFinalState m_DeactivationFinishedState;
 
     QList<cModuleActivist*> m_ModuleActivistList;
-    std::shared_ptr<cBaseModuleConfiguration> m_pConfiguration; // our xml configuration
+    std::shared_ptr<BaseModuleConfiguration> m_pConfiguration; // our xml configuration
     QString m_sModuleDescription;
 
     VfModuleMetaData *m_pModuleName;
