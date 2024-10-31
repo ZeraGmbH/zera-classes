@@ -227,6 +227,7 @@ void test_vfstorage::fireActualValuesAfterDelayWhileLogging()
     QJsonObject storedValues = m_storage->getDb()->getStoredValue(storageEntityId, "StoredValues0").toJsonObject();
     QStringList timestampKeys = storedValues.keys();
     QCOMPARE (timestampKeys.size(), 1);
+    QDateTime firstTimeStamp = QDateTime::fromString(timestampKeys.first() , "dd-MM-yyyy hh:mm:ss.zzz");
 
     TimeMachineForTest::getInstance()->processTimers(5000);
     changeRMSValues(5, 6);
@@ -234,9 +235,8 @@ void test_vfstorage::fireActualValuesAfterDelayWhileLogging()
 
     storedValues = m_storage->getDb()->getStoredValue(storageEntityId, "StoredValues0").toJsonObject();
     timestampKeys = storedValues.keys();
-    QCOMPARE (timestampKeys.size(), 2);
+    QCOMPARE (timestampKeys.size(), 1);
 
-    QDateTime firstTimeStamp = QDateTime::fromString(timestampKeys.first() , "dd-MM-yyyy hh:mm:ss.zzz");
     QDateTime lastTimeStamp = QDateTime::fromString(timestampKeys.last() , "dd-MM-yyyy hh:mm:ss.zzz");
     QVERIFY(firstTimeStamp < lastTimeStamp);
 }
@@ -267,7 +267,7 @@ void test_vfstorage::fireRmsPowerValuesAfterDifferentDelaysWhileLogging()
 
     storedValues = m_storage->getDb()->getStoredValue(storageEntityId, "StoredValues0").toJsonObject();
     timestampKeys = storedValues.keys();
-    QCOMPARE (timestampKeys.size(), 2);
+    QCOMPARE (timestampKeys.size(), 1);
 
     storedValuesWithoutTimeStamp = getStoredValueWithoutTimeStamp(0);
     QVERIFY(storedValuesWithoutTimeStamp.contains(QString::number(rmsEntityId)));
@@ -284,7 +284,7 @@ void test_vfstorage::fireRmsPowerValuesAfterDifferentDelaysWhileLogging()
 
     storedValues = m_storage->getDb()->getStoredValue(storageEntityId, "StoredValues0").toJsonObject();
     timestampKeys = storedValues.keys();
-    QCOMPARE (timestampKeys.size(), 3);
+    QCOMPARE (timestampKeys.size(), 1);
 
     storedValuesWithoutTimeStamp = getStoredValueWithoutTimeStamp(0);
     QVERIFY(storedValuesWithoutTimeStamp.contains(QString::number(rmsEntityId)));

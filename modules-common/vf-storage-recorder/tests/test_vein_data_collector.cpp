@@ -57,14 +57,14 @@ void test_vein_data_collector::twoChangesInTwoPeriods()
     TimeMachineObject::feedEventLoop();
     TimeMachineForTest::getInstance()->processTimers(100);
     QCOMPARE(spy.count(), 1);
+    QJsonObject newEntityValue = getStoredValueFromTimeStampIndex(spy[0][0].toJsonObject(), 0);
+    QCOMPARE(getComponentValue(10, "ComponentName1", newEntityValue), "foo");
 
     m_server->setComponentServerNotification(10, "ComponentName1", "bar");
     TimeMachineObject::feedEventLoop();
     TimeMachineForTest::getInstance()->processTimers(100);
     QCOMPARE(spy.count(), 2);
-    QJsonObject newEntityValue = getStoredValueFromTimeStampIndex(spy[1][0].toJsonObject(), 0);
-    QCOMPARE(getComponentValue(10, "ComponentName1", newEntityValue), "foo");
-    newEntityValue = getStoredValueFromTimeStampIndex(spy[1][0].toJsonObject(), 1);
+    newEntityValue = getStoredValueFromTimeStampIndex(spy[1][0].toJsonObject(), 0);
     QCOMPARE(getComponentValue(10, "ComponentName1", newEntityValue), "bar");
 }
 
