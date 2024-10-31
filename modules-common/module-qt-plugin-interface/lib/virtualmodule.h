@@ -47,7 +47,6 @@ protected:
     QStateMachine m_stateMachine;
 
     QState *m_pStateIdle;
-    QState *m_pStateConfigure;
     QState *m_pStateRun;
     QFinalState *m_pStateFinished;
 

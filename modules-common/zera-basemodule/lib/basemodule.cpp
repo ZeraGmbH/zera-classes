@@ -26,8 +26,6 @@ cBaseModule::cBaseModule(ModuleFactoryParam moduleParam, std::shared_ptr<cBaseMo
     // our states from virtualmodule (interface)
     m_pStateIdle = new QState();
     m_pStateIdle->setObjectName("IDLE");
-    m_pStateConfigure = new QState();
-    m_pStateConfigure->setObjectName("CONFIGURE");
     m_pStateRun = new QState();
     m_pStateRun->setObjectName("RUN");
     m_pStateFinished = new QFinalState();
@@ -67,7 +65,6 @@ cBaseModule::cBaseModule(ModuleFactoryParam moduleParam, std::shared_ptr<cBaseMo
     connect(m_pStateRUNConfSetup, &QState::entered, this, &cBaseModule::entryConfSetup);
 
     m_stateMachine.addState(m_pStateIdle);
-    m_stateMachine.addState(m_pStateConfigure);
     m_stateMachine.addState(m_pStateRun);
     m_stateMachine.addState(m_pStateFinished);
     m_stateMachine.setInitialState(m_pStateIdle);
@@ -118,7 +115,6 @@ cBaseModule::~cBaseModule()
     delete m_pStateRUNConfSetup;
 
     delete m_pStateIdle;
-    delete m_pStateConfigure;
     delete m_pStateRun;
     delete m_pStateFinished;
 }
