@@ -27,9 +27,10 @@ Q_OBJECT
 public:
     cBaseModule(ModuleFactoryParam moduleParam, std::shared_ptr<cBaseModuleConfiguration> modcfg);
     virtual ~cBaseModule();
-    virtual bool isConfigured() const override;
+    bool isConfigured() const override;
     virtual void startModule() override;
     virtual void stopModule() override;
+    void startDestroy() override;
     virtual void exportMetaData();
 
     VeinEvent::StorageSystem* getStorageSystem();
@@ -43,6 +44,8 @@ public:
     QMap<QString, VfModuleParameter*> m_veinModuleParameterMap; // parameters are components that need an interface and validation
     QList<cSCPIInfo*> scpiCommandList; // a list of commands that work without existing component, it uses a component's validation data for additional queries
 
+    QStateMachine m_ActivationMachine; // we use statemachine for module activation
+    QStateMachine m_DeactivationMachine; // and deactivation
 signals:
     void sigRun();
     void sigRunFailed();
@@ -58,6 +61,12 @@ signals:
     void deactivationNext();
 
 protected:
+    QStateMachine m_stateMachine;
+
+    QState *m_pStateIdle;
+    QState *m_pStateRun;
+    QFinalState *m_pStateFinished;
+
     // additional states for IDLE
     QState* m_pStateIDLEIdle;
     QState* m_pStateIDLEConfSetup;

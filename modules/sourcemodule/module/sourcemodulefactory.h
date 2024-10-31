@@ -3,8 +3,6 @@
 
 #include <abstractmodulefactory.h>
 #include <virtualmodule.h>
-#include <QList>
-#include <QtPlugin>
 
 class SourceModuleFactory : public QObject, public AbstractModuleFactory
 {

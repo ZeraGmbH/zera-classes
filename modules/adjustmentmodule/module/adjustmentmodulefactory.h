@@ -3,8 +3,6 @@
 
 #include <abstractmodulefactory.h>
 #include <virtualmodule.h>
-#include <QList>
-#include <QtPlugin>
 
 class AdjustmentModuleFactory : public QObject, public AbstractModuleFactory
 {

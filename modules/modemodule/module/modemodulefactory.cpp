@@ -10,15 +10,11 @@ ZeraModules::VirtualModule* ModeModuleFactory::createModule(ModuleFactoryParam m
     return new cModeModule(moduleParam.getAdjustedParam(m_moduleGroupNumerator.get()));
 }
 
-
 void ModeModuleFactory::destroyModule(ZeraModules::VirtualModule *module)
 {
     m_moduleGroupNumerator->freeModuleNum(module->getModuleNr());
-    connect(module, &ZeraModules::VirtualModule::deactivationReady, module, &ZeraModules::VirtualModule::moduleDeactivated);
-    if (!module->m_DeactivationMachine.isRunning())
-        module->m_DeactivationMachine.start();
+    module->startDestroy();
 }
-
 
 QString ModeModuleFactory::getFactoryName() const
 {

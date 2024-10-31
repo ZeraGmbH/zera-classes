@@ -12,11 +12,8 @@ ZeraModules::VirtualModule* ThdnModuleFactory::createModule(ModuleFactoryParam m
 void ThdnModuleFactory::destroyModule(ZeraModules::VirtualModule *module)
 {
     m_moduleGroupNumerator->freeModuleNum(module->getModuleNr());
-    connect(module, &ZeraModules::VirtualModule::deactivationReady, module, &ZeraModules::VirtualModule::moduleDeactivated);
-    if (!module->m_DeactivationMachine.isRunning())
-        module->m_DeactivationMachine.start();
+    module->startDestroy();
 }
-
 
 QString ThdnModuleFactory::getFactoryName() const
 {

@@ -12,11 +12,8 @@ ZeraModules::VirtualModule* Spm1ModuleFactory::createModule(ModuleFactoryParam m
 void Spm1ModuleFactory::destroyModule(ZeraModules::VirtualModule *module)
 {
     m_moduleGroupNumerator->freeModuleNum(module->getModuleNr());
-    connect(module, &ZeraModules::VirtualModule::deactivationReady, module, &ZeraModules::VirtualModule::moduleDeactivated);
-    if (!module->m_DeactivationMachine.isRunning())
-        module->m_DeactivationMachine.start();
+    module->startDestroy();
 }
-
 
 QString Spm1ModuleFactory::getFactoryName() const
 {

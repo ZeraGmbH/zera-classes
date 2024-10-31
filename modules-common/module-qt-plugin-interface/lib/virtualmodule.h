@@ -29,9 +29,8 @@ public:
 
     virtual void startModule() = 0;
     virtual void stopModule() = 0;
+    virtual void startDestroy() = 0;
 
-    QStateMachine m_ActivationMachine; // we use statemachine for module activation
-    QStateMachine m_DeactivationMachine; // and deactivation
 signals:
     // signals to be used by activation and deactivation statemachine when ready
     void activationReady();
@@ -44,12 +43,6 @@ signals:
     void parameterChanged();
 
 protected:
-    QStateMachine m_stateMachine;
-
-    QState *m_pStateIdle;
-    QState *m_pStateRun;
-    QFinalState *m_pStateFinished;
-
     QString m_sModuleName;
     QString m_sSCPIModuleName;
 private:

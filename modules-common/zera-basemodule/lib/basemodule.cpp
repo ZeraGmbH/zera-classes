@@ -143,6 +143,14 @@ void cBaseModule::stopModule()
 
 }
 
+void cBaseModule::startDestroy()
+{
+    connect(this, &ZeraModules::VirtualModule::deactivationReady,
+            this, &ZeraModules::VirtualModule::moduleDeactivated);
+    if(!m_DeactivationMachine.isRunning())
+        m_DeactivationMachine.start();
+}
+
 void cBaseModule::setupModule()
 {
     emit m_pModuleEventSystem->sigSendEvent(VfServerEntityAdd::generateEvent(getEntityId()));

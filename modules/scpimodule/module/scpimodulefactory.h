@@ -3,12 +3,9 @@
 
 #include <abstractmodulefactory.h>
 #include <virtualmodule.h>
-#include <QList>
-#include <QtPlugin>
 
 namespace SCPIMODULE
 {
-
 
 class SCPIModuleFactory : public QObject, public AbstractModuleFactory
 {

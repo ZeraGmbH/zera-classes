@@ -12,11 +12,8 @@ ZeraModules::VirtualModule* Sem1ModuleFactory::createModule(ModuleFactoryParam m
 void Sem1ModuleFactory::destroyModule(ZeraModules::VirtualModule *module)
 {
     m_moduleGroupNumerator->freeModuleNum(module->getModuleNr());
-    connect(module, &ZeraModules::VirtualModule::deactivationReady, module, &ZeraModules::VirtualModule::moduleDeactivated);
-    if (!module->m_DeactivationMachine.isRunning())
-        module->m_DeactivationMachine.start();
+    module->startDestroy();
 }
-
 
 QString Sem1ModuleFactory::getFactoryName() const
 {
