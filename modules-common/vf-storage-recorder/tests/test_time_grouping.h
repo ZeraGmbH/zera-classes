@@ -9,7 +9,7 @@ class test_time_grouping : public QObject
 private slots:
     void oneTimestampGrouped();
     void twoTimestampsSeparate();
-    void twoTimestampsGroupedSameEntity();
+    void twoTimestampsGroupedSameEntitySameComponent();
     void twoTimestampsGroupedDifferentEntity();
 private:
     QJsonObject getStoredValueFromTimeStampIndex(QJsonObject newStoredValues, int timeIndex);

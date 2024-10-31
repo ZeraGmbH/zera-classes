@@ -43,7 +43,7 @@ void test_time_grouping::twoTimestampsSeparate()
     QCOMPARE(getComponentValue(entityID, "component1", recordedGroupJson), "bar");
 }
 
-void test_time_grouping::twoTimestampsGroupedSameEntity()
+void test_time_grouping::twoTimestampsGroupedSameEntitySameComponent()
 {
     int entityID = 10;
     QHash<QString, QVariant> componentData1{{"component1", "foo"}};
@@ -65,14 +65,16 @@ void test_time_grouping::twoTimestampsGroupedSameEntity()
 
 void test_time_grouping::twoTimestampsGroupedDifferentEntity()
 {
-    int entityID1 = 10;
-    QHash<QString, QVariant> componentData1{{"component1", "foo"}};
+    int entityID1 = 1040;
+    QHash<QString, QVariant> componentData1{{"RMSPN1", "230"}};
     RecordedGroups recordedGroup1 {{entityID1, componentData1}};
     TimeStampedGroups timeStampedGroup {{110, recordedGroup1}};
 
-    int entityID2 = 20;
-    QHash<QString, QVariant> componentData2{{"component2", "bar"}};
-    RecordedGroups recordedGroup2 {{entityID2, componentData2}};
+    QHash<QString, QVariant> componentData2{{"RMSPN5", "227"}};
+    RecordedGroups recordedGroup2 {{entityID1, componentData2}};
+    int entityID2 = 1070;
+    QHash<QString, QVariant> componentData3{{"PQS1", "2000"}};
+    recordedGroup2.insert(entityID2, componentData3);
     timeStampedGroup.insert(120, recordedGroup2);
 
     QJsonObject regroupedJson = TimeGrouping::regroupTimestamp(timeStampedGroup);
@@ -81,8 +83,9 @@ void test_time_grouping::twoTimestampsGroupedDifferentEntity()
     QCOMPARE(regroupedJson.keys().at(0), QDateTime::fromMSecsSinceEpoch(110).toString(TimeGrouping::DateTimeFormat));
 
     QJsonObject recordedGroupJson = getStoredValueFromTimeStampIndex(regroupedJson, 0);
-    QCOMPARE(getComponentValue(entityID1, "component1", recordedGroupJson), "foo");
-    QCOMPARE(getComponentValue(entityID2, "component2", recordedGroupJson), "bar");
+    QCOMPARE(getComponentValue(entityID1, "RMSPN1", recordedGroupJson), "230");
+    QCOMPARE(getComponentValue(entityID1, "RMSPN5", recordedGroupJson), "227");
+    QCOMPARE(getComponentValue(entityID2, "PQS1", recordedGroupJson), "2000");
 }
 
 QJsonObject test_time_grouping::getStoredValueFromTimeStampIndex(QJsonObject newStoredValues, int timeIndex)

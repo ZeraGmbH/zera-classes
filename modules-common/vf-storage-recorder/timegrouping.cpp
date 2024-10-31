@@ -20,12 +20,14 @@ QJsonObject TimeGrouping::regroupTimestamp(TimeStampedGroups inputTimeStampedGro
                 currentTimeStamp = timeStamp;
             }
             else {
-                RecordedGroups preRecordedGroup = regroupedTimeStamps.value(currentTimeStamp);
-                for(auto inputEntity: inputRecordedGroup.keys())
+                RecordedGroups preRecordedGroup;
+                for(auto inputEntity: inputRecordedGroup.keys()) {
+                    preRecordedGroup = regroupedTimeStamps.value(currentTimeStamp);
                     if (preRecordedGroup.contains(inputEntity))
                         regroupedTimeStamps.insert(currentTimeStamp, appendComponentInfoToRecordedGroup(preRecordedGroup, inputRecordedGroup, inputEntity));
                     else
                         regroupedTimeStamps.insert(currentTimeStamp, appendEntityToRecordedGroup(preRecordedGroup,inputRecordedGroup, inputEntity));
+                }
             }
         }
     }
