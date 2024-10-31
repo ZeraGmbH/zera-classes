@@ -43,8 +43,6 @@ public:
     QMap<QString, VfModuleParameter*> m_veinModuleParameterMap; // parameters are components that need an interface and validation
     QList<cSCPIInfo*> scpiCommandList; // a list of commands that work without existing component, it uses a component's validation data for additional queries
 
-    QStateMachine m_ActivationMachine; // we use statemachine for module activation
-    QStateMachine m_DeactivationMachine; // and deactivation
 signals:
     void sigRun();
     void sigRunFailed();
@@ -61,6 +59,8 @@ signals:
 
 protected:
     QStateMachine m_stateMachine;
+    QStateMachine m_ActivationMachine; // we use statemachine for module activation
+    QStateMachine m_DeactivationMachine; // and deactivation
 
     QState *m_pStateIdle;
     QState *m_pStateRun;
