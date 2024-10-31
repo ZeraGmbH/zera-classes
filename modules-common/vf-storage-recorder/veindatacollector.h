@@ -3,6 +3,7 @@
 
 #include <vs_abstracteventsystem.h>
 #include <vs_storagefilter.h>
+#include "timegrouping.h"
 #include <timerperiodicqt.h>
 #include <QJsonObject>
 #include <QDateTime>
@@ -33,7 +34,7 @@ private:
 
     VeinStorage::StorageFilter m_storageFilter;
     QJsonObject m_regrouppedTimestampJson;
-    QJsonObject m_jsonObject;
+    TimeStampedGroups m_timestampedGrp;
     TimerTemplateQtPtr m_periodicTimer;
 };
 
