@@ -27,7 +27,6 @@ Q_OBJECT
 public:
     cBaseModule(ModuleFactoryParam moduleParam, std::shared_ptr<cBaseModuleConfiguration> modcfg);
     virtual ~cBaseModule();
-    bool isConfigured() const override;
     virtual void startModule() override;
     virtual void stopModule() override;
     void startDestroy() override;

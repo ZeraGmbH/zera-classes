@@ -115,11 +115,6 @@ cBaseModule::~cBaseModule()
     delete m_pStateFinished;
 }
 
-bool cBaseModule::isConfigured() const
-{
-    return (m_nStatus > untouched);
-}
-
 void cBaseModule::startModule()
 {
     if (m_bStateMachineStarted) {

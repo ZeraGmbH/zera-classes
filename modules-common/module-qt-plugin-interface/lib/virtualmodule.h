@@ -25,7 +25,6 @@ public:
     QString getSCPIModuleName() { return m_sSCPIModuleName; };
 
     virtual QByteArray getConfiguration() const = 0;
-    virtual bool isConfigured() const = 0;
 
     virtual void startModule() = 0;
     virtual void stopModule() = 0;
