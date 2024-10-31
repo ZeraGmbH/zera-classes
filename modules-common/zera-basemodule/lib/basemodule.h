@@ -58,6 +58,11 @@ signals:
     void deactivationNext();
 
 protected:
+    virtual void setupModule(); // after xml configuration we can setup and export our module
+    void unsetModule();
+    virtual void startMeas() =  0;
+    virtual void stopMeas() = 0;
+
     QStateMachine m_stateMachine;
     QStateMachine m_ActivationMachine; // we use statemachine for module activation
     QStateMachine m_DeactivationMachine; // and deactivation
@@ -97,11 +102,6 @@ protected:
     VfModuleErrorComponent *m_pModuleErrorComponent=nullptr; // here we export errors the module encountered
     VfModuleComponent *m_pModuleInterfaceComponent; // here we export the modules interface as json file
     VfModuleComponent *m_pModuleEntityName;
-
-    virtual void setupModule(); // after xml configuration we can setup and export our module
-    void unsetModule();
-    virtual void startMeas() =  0;
-    virtual void stopMeas() = 0;
 
     VeinEvent::EventSystem *m_pModuleEventSystem;
 
