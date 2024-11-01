@@ -14,6 +14,7 @@ add_library(vf-storage SHARED
 target_link_libraries(vf-storage
     PUBLIC
     Zera::VfCpp
+    Zera::VfStorageHash
 )
 
 target_include_directories(vf-storage
