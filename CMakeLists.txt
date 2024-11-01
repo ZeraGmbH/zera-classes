@@ -144,7 +144,7 @@ function(SETUP_QTESTS)
             module-service-interfaces-demolib
             scpimodule-testlib
             Qt5::Test
-            Zera::VfStorageHash
+            Zera::VfStorage
             Zera::VfFrameworkTest
             Zera::testlib-common
             Zera::tasks-base-testlib

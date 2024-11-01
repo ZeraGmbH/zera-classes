@@ -22,7 +22,7 @@ target_link_libraries(zera-modulemanager-lib
     Qt5::Network
     Zera::VfEvent
     Zera::VfComponent
-    Zera::VfStorageHash
+    Zera::VfStorage
     Zera::VfNet2
     Zera::VfTcp
     Zera::VfCpp
