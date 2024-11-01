@@ -5,7 +5,7 @@ function(SETUP_QTESTS_BASE)
             PUBLIC
             testhelpers
             zera-modulemanager-testlib
-            vf-storage
+            vf-storage-recorder
             )
     endforeach()
 endfunction()

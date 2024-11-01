@@ -12,7 +12,7 @@ target_link_libraries(zera-modulemanager
     PRIVATE
     Qt5::Gui
     zera-modulemanager-lib
-    vf-storage
+    vf-storage-recorder
 )
 
 install(TARGETS zera-modulemanager
