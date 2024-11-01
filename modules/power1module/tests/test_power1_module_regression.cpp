@@ -13,7 +13,7 @@ const int powerEntityId = 1070;
 void test_power1_module_regression::minimalSession()
 {
     ModuleManagerTestRunner testRunner(":/session-minimal.json");
-    VeinEvent::StorageSystem* veinStorage = testRunner.getVeinStorageSystem();
+    VeinStorage::AbstractEventSystem* veinStorage = testRunner.getVeinStorageSystem();
     QList<int> entityList = veinStorage->getEntityList();
     QCOMPARE(entityList.count(), 2);
     QVERIFY(veinStorage->hasEntity(powerEntityId));
@@ -22,7 +22,7 @@ void test_power1_module_regression::minimalSession()
 void test_power1_module_regression::moduleConfigFromResource()
 {
     ModuleManagerTestRunner testRunner(":/session-power1-test.json");
-    VeinEvent::StorageSystem* veinStorage = testRunner.getVeinStorageSystem();
+    VeinStorage::AbstractEventSystem* veinStorage = testRunner.getVeinStorageSystem();
     QList<int> entityList = veinStorage->getEntityList();
     QCOMPARE(entityList.count(), 2);
     QVERIFY(veinStorage->hasEntity(powerEntityId));
@@ -35,7 +35,7 @@ void test_power1_module_regression::veinDumpInitial()
     QByteArray jsonExpected = file.readAll();
 
     ModuleManagerTestRunner testRunner(":/session-power1-test.json");
-    VeinEvent::StorageSystem* veinStorage = testRunner.getVeinStorageSystem();
+    VeinStorage::AbstractEventSystem* veinStorage = testRunner.getVeinStorageSystem();
     QByteArray jsonDumped;
     QBuffer buff(&jsonDumped);
     veinStorage->dumpToFile(&buff, QList<int>() << powerEntityId);
@@ -62,7 +62,7 @@ void test_power1_module_regression::injectActualValues()
     QVERIFY(file.open(QFile::ReadOnly));
     QByteArray jsonExpected = file.readAll();
 
-    VeinEvent::StorageSystem* veinStorage = testRunner.getVeinStorageSystem();
+    VeinStorage::AbstractEventSystem* veinStorage = testRunner.getVeinStorageSystem();
     QByteArray jsonDumped;
     QBuffer buff(&jsonDumped);
     veinStorage->dumpToFile(&buff, QList<int>() << powerEntityId);
@@ -77,7 +77,7 @@ void test_power1_module_regression::testScpiCommandsDisabled()
     QByteArray jsonExpected = file.readAll();
 
     ModuleManagerTestRunner testRunner(":/session-power1-withoutScpi-test.json");
-    VeinEvent::StorageSystem* veinStorage = testRunner.getVeinStorageSystem();
+    VeinStorage::AbstractEventSystem* veinStorage = testRunner.getVeinStorageSystem();
     QByteArray jsonDumped;
     QBuffer buff(&jsonDumped);
     veinStorage->dumpToFile(&buff, QList<int>() << powerEntityId);

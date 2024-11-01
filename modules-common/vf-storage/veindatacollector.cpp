@@ -4,13 +4,13 @@
 #include <QDateTime>
 
 // Note:
-// VeinStorageFilter::Settings are going to change - current settings are set
+// StorageFilter::Settings are going to change - current settings are set
 // to make tests happy
 
- VeinDataCollector::VeinDataCollector(VeinEvent::StorageSystem *storage) :
-    m_storageFilter(storage, VeinStorageFilter::Settings(false, true))
+ VeinDataCollector::VeinDataCollector(VeinStorage::AbstractEventSystem *storage) :
+    m_storageFilter(storage, VeinStorage::StorageFilter::Settings(false, true))
 {
-    connect(&m_storageFilter, &VeinStorageFilter::sigComponentValue,
+    connect(&m_storageFilter, &VeinStorage::StorageFilter::sigComponentValue,
             this, &VeinDataCollector::appendValue);
 
     m_periodicTimer = TimerFactoryQt::createPeriodic(100);

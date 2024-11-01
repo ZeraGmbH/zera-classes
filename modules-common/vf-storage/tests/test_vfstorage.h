@@ -42,7 +42,7 @@ private:
 
     std::unique_ptr<ModuleManagerTestRunner> m_testRunner;
     std::unique_ptr<Vf_Storage> m_vfStorageEntity;
-    VeinEvent::StorageSystem* m_storage;
+    VeinStorage::AbstractEventSystem* m_storage;
 
     bool m_dataLoggerSystemInitialized = false;
 };

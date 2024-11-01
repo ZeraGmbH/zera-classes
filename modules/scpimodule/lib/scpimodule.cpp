@@ -8,7 +8,7 @@
 #include <vfmoduleactvalue.h>
 #include <vfmoduleparameter.h>
 #include <scpiinfo.h>
-#include <ve_storagesystem.h>
+#include <vs_abstracteventsystem.h>
 #include <ve_commandevent.h>
 #include <vcmp_entitydata.h>
 #include <QJsonDocument>

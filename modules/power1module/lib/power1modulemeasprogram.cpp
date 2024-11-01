@@ -294,8 +294,8 @@ void cPower1ModuleMeasProgram::generateInterface()
 
         // This code seems to identify fout channels using the list positions.
         // If no scaling Information is provided we will add null pointers to keep the positions correct
-        VeinEvent::StorageComponentInterfacePtr scaleInputU;
-        VeinEvent::StorageComponentInterfacePtr scaleInputI;
+        VeinStorage::AbstractComponentPtr scaleInputU;
+        VeinStorage::AbstractComponentPtr scaleInputI;
         if(getConfData()->m_FreqOutputConfList.length() > i) {
             int entityIdScaleU = getConfData()->m_FreqOutputConfList.at(i).m_uscale.m_entityId;
             QString componentNameScaleU = getConfData()->m_FreqOutputConfList.at(i).m_uscale.m_componentName;
@@ -305,15 +305,15 @@ void cPower1ModuleMeasProgram::generateInterface()
             QString componentNameScaleI = getConfData()->m_FreqOutputConfList.at(i).m_iscale.m_componentName;
             scaleInputI = m_pModule->getStorageSystem()->getComponent(entityIdScaleI, componentNameScaleI);
         }
-        QPair<VeinEvent::StorageComponentInterfacePtr, VeinEvent::StorageComponentInterfacePtr> tmpScalePair(scaleInputU, scaleInputI);
+        QPair<VeinStorage::AbstractComponentPtr, VeinStorage::AbstractComponentPtr> tmpScalePair(scaleInputU, scaleInputI);
         m_scalingInputs.append(tmpScalePair);
     }
 
     for(const auto &ele : qAsConst(m_scalingInputs)) {
         if(ele.first != nullptr && ele.second != nullptr) {
-            connect(ele.first.get(), &VeinEvent::StorageComponentInterface::sigValueChange,
+            connect(ele.first.get(), &VeinStorage::AbstractComponent::sigValueChange,
                     this, &cPower1ModuleMeasProgram::updatePreScaling);
-            connect(ele.second.get(), &VeinEvent::StorageComponentInterface::sigValueChange,
+            connect(ele.second.get(), &VeinStorage::AbstractComponent::sigValueChange,
                     this, &cPower1ModuleMeasProgram::updatePreScaling);
         }
     }

@@ -15,7 +15,7 @@ static int constexpr rmsEntityId = 1040;
 void test_rms_module_regression::minimalSession()
 {
     ModuleManagerTestRunner testRunner(":/session-minimal.json");
-    VeinEvent::StorageSystem* veinStorage = testRunner.getVeinStorageSystem();
+    VeinStorage::AbstractEventSystem* veinStorage = testRunner.getVeinStorageSystem();
     QList<int> entityList = veinStorage->getEntityList();
     QCOMPARE(entityList.count(), 2);
     QVERIFY(veinStorage->hasEntity(rmsEntityId));
@@ -24,7 +24,7 @@ void test_rms_module_regression::minimalSession()
 void test_rms_module_regression::moduleConfigFromResource()
 {
     ModuleManagerTestRunner testRunner(":/session-rms-moduleconfig-from-resource.json");
-    VeinEvent::StorageSystem* veinStorage = testRunner.getVeinStorageSystem();
+    VeinStorage::AbstractEventSystem* veinStorage = testRunner.getVeinStorageSystem();
     QList<int> entityList = veinStorage->getEntityList();
     QCOMPARE(entityList.count(), 2);
     QVERIFY(veinStorage->hasEntity(rmsEntityId));
@@ -37,7 +37,7 @@ void test_rms_module_regression::veinDumpInitial()
     QByteArray jsonExpected = file.readAll();
 
     ModuleManagerTestRunner testRunner(":/session-rms-moduleconfig-from-resource.json");
-    VeinEvent::StorageSystem* veinStorage = testRunner.getVeinStorageSystem();
+    VeinStorage::AbstractEventSystem* veinStorage = testRunner.getVeinStorageSystem();
     QByteArray jsonDumped;
     QBuffer buff(&jsonDumped);
     veinStorage->dumpToFile(&buff, QList<int>() << rmsEntityId);
@@ -79,7 +79,7 @@ void test_rms_module_regression::injectActualValues()
     QVERIFY(file.open(QFile::ReadOnly));
     QByteArray jsonExpected = file.readAll();
 
-    VeinEvent::StorageSystem* veinStorage = testRunner.getVeinStorageSystem();
+    VeinStorage::AbstractEventSystem* veinStorage = testRunner.getVeinStorageSystem();
     QByteArray jsonDumped;
     QBuffer buff(&jsonDumped);
     veinStorage->dumpToFile(&buff, QList<int>() << rmsEntityId);
@@ -94,7 +94,7 @@ void test_rms_module_regression::injectActualTwice()
     const QList<TestDspInterfacePtr>& dspInterfaces = testRunner.getDspInterfaceList();
     QCOMPARE(dspInterfaces.count(), 1);
 
-    VeinEvent::StorageSystem* veinStorage = testRunner.getVeinStorageSystem();
+    VeinStorage::AbstractEventSystem* veinStorage = testRunner.getVeinStorageSystem();
     QVector<float> actValues(rmsResultCount);
 
     actValues[1] = 37;
@@ -128,7 +128,7 @@ void test_rms_module_regression::injectSymmetricValues()
     QVERIFY(file.open(QFile::ReadOnly));
     QByteArray jsonExpected = file.readAll();
 
-    VeinEvent::StorageSystem* veinStorage = testRunner.getVeinStorageSystem();
+    VeinStorage::AbstractEventSystem* veinStorage = testRunner.getVeinStorageSystem();
     QByteArray jsonDumped;
     QBuffer buff(&jsonDumped);
     veinStorage->dumpToFile(&buff, QList<int>() << rmsEntityId);

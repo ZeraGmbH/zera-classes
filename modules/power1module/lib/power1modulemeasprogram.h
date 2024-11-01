@@ -129,7 +129,7 @@ private:
     VfModuleComponent* m_pMeasureSignal;
     VfModuleComponent *m_MModesTypes;
 
-    QList<QPair<VeinEvent::StorageComponentInterfacePtr, VeinEvent::StorageComponentInterfacePtr>> m_scalingInputs; //scaling component list
+    QList<QPair<VeinStorage::AbstractComponentPtr, VeinStorage::AbstractComponentPtr>> m_scalingInputs;
 
     QList<QString> infoReadList; // a list of all channel info we have to read
     QString infoRead; // the actual channel info we are working on

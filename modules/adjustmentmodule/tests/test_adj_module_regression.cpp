@@ -1,7 +1,7 @@
 #include "test_adj_module_regression.h"
 #include "modulemanagertestrunner.h"
 #include "adjustmentmodule.h"
-#include <vs_veinhash.h>
+#include <vs_storageeventsystem.h>
 #include <testloghelpers.h>
 #include <testloghelpers.h>
 #include <scpimoduleclientblocked.h>
@@ -20,7 +20,7 @@ static int constexpr scpiEntityId = 9999;
 void test_adj_module_regression::minimalSession()
 {
     ModuleManagerTestRunner testRunner(":/session-minimal.json");
-    VeinEvent::StorageSystem* veinStorage = testRunner.getVeinStorageSystem();
+    VeinStorage::AbstractEventSystem* veinStorage = testRunner.getVeinStorageSystem();
     QList<int> entityList = veinStorage->getEntityList();
     QCOMPARE(entityList.count(), 7);
     QVERIFY(veinStorage->hasEntity(rangeEntityId));
@@ -38,7 +38,7 @@ void test_adj_module_regression::veinDumpInitial()
     QByteArray jsonExpected = file.readAll();
 
     ModuleManagerTestRunner testRunner(":/session-minimal.json");
-    VeinEvent::StorageSystem* veinStorage = testRunner.getVeinStorageSystem();
+    VeinStorage::AbstractEventSystem* veinStorage = testRunner.getVeinStorageSystem();
     QByteArray jsonDumped;
     QBuffer buff(&jsonDumped);
     // just dump adjustment module to reduce FF on changing other modules

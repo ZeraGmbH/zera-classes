@@ -16,7 +16,7 @@ static int constexpr dftBurdenVoltageId = 1161;
 void test_burden1_module_regression::minimalSession()
 {
     ModuleManagerTestRunner testRunner(":/session-minimal.json");
-    VeinEvent::StorageSystem* veinStorage = testRunner.getVeinStorageSystem();
+    VeinStorage::AbstractEventSystem* veinStorage = testRunner.getVeinStorageSystem();
     QList<int> entityList = veinStorage->getEntityList();
     QCOMPARE(entityList.count(), 4);
     QVERIFY(veinStorage->hasEntity(dftEntityId));
@@ -31,7 +31,7 @@ void test_burden1_module_regression::veinDumpInitial()
     QByteArray jsonExpected = file.readAll();
 
     ModuleManagerTestRunner testRunner(":/session-minimal.json");
-    VeinEvent::StorageSystem* veinStorage = testRunner.getVeinStorageSystem();
+    VeinStorage::AbstractEventSystem* veinStorage = testRunner.getVeinStorageSystem();
     QByteArray jsonDumped;
     QBuffer buff(&jsonDumped);
     veinStorage->dumpToFile(&buff, QList<int>() << dftBurdenCurrentId << dftBurdenVoltageId);
@@ -69,7 +69,7 @@ void test_burden1_module_regression::voltageBurden230V1ADefaultSettings()
     dspInterfaces[0]->fireActValInterrupt(dspValues.getDspValues(), 0);
     TimeMachineObject::feedEventLoop();
 
-    VeinEvent::StorageSystem* veinStorage = testRunner.getVeinStorageSystem();
+    VeinStorage::AbstractEventSystem* veinStorage = testRunner.getVeinStorageSystem();
 
     QVariant burden;
     burden = veinStorage->getStoredValue(dftBurdenVoltageId, "ACT_Burden1");
@@ -110,7 +110,7 @@ void test_burden1_module_regression::voltageBurden100V1A60DefaultSettings()
     dspInterfaces[0]->fireActValInterrupt(dspValues.getDspValues(), 0);
     TimeMachineObject::feedEventLoop();
 
-    VeinEvent::StorageSystem* veinStorage = testRunner.getVeinStorageSystem();
+    VeinStorage::AbstractEventSystem* veinStorage = testRunner.getVeinStorageSystem();
 
     QVariant burden;
     burden = veinStorage->getStoredValue(dftBurdenVoltageId, "ACT_Burden1");

@@ -3,7 +3,7 @@
 
 static constexpr int maximumStorages = 5;
 
-Vf_Storage::Vf_Storage(VeinEvent::StorageSystem *storageSystem, QObject *parent, int entityId):
+Vf_Storage::Vf_Storage(VeinStorage::AbstractEventSystem *storageSystem, QObject *parent, int entityId):
     QObject(parent),
     m_storageSystem(storageSystem),
     m_isInitalized(false)

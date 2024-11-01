@@ -3,19 +3,19 @@
 
 #include "vfeventsystemcommandfilter.h"
 #include "vfmoduleparameter.h"
-#include <ve_storagesystem.h>
+#include <vs_abstracteventsystem.h>
 #include <QHash>
 
 class VfEventSytemModuleParam : public VfEventSystemCommandFilter
 {
     Q_OBJECT
 public:
-    VfEventSytemModuleParam(int entityId, VeinEvent::StorageSystem* storageSystem);
+    VfEventSytemModuleParam(int entityId, VeinStorage::AbstractEventSystem* storageSystem);
     virtual void processCommandEvent(VeinEvent::CommandEvent *commandEvent);
     void setParameterMap(const QMap<QString, VfModuleParameter *> &parameterHash);
 private:
     int m_entityId;
-    VeinEvent::StorageSystem* m_storageSystem;
+    VeinStorage::AbstractEventSystem* m_storageSystem;
     QMap<QString, VfModuleParameter*> m_parameterHash;
 };
 

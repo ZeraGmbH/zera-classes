@@ -1,6 +1,6 @@
 #include "vfeventsytemmoduleparam.h"
 
-VfEventSytemModuleParam::VfEventSytemModuleParam(int entityId, VeinEvent::StorageSystem *storageSystem) :
+VfEventSytemModuleParam::VfEventSytemModuleParam(int entityId, VeinStorage::AbstractEventSystem *storageSystem) :
     VfEventSystemCommandFilter(VeinEvent::CommandEvent::EventSubtype::TRANSACTION),
     m_entityId(entityId),
     m_storageSystem(storageSystem)

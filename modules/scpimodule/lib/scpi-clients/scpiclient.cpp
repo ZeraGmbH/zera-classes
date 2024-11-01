@@ -12,7 +12,7 @@
 #include "scpimeasure.h"
 #include <scpi.h>
 #include <zscpi_response_definitions.h>
-#include <ve_storagesystem.h>
+#include <vs_abstracteventsystem.h>
 #include <QJsonDocument>
 
 namespace SCPIMODULE

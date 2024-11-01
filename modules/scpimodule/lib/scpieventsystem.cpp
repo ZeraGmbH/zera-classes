@@ -9,7 +9,7 @@
 #include <scpi.h>
 #include <zscpi_response_definitions.h>
 #include <ve_commandevent.h>
-#include <ve_storagesystem.h>
+#include <vs_abstracteventsystem.h>
 #include <vcmp_componentdata.h>
 #include <vcmp_errordata.h>
 #include <QCoreApplication>

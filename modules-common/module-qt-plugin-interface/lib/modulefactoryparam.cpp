@@ -3,7 +3,7 @@
 ModuleFactoryParam::ModuleFactoryParam(int entityId,
                                        int moduleNum,
                                        QByteArray configXmlData,
-                                       VeinEvent::StorageSystem *storagesystem,
+                                       VeinStorage::AbstractEventSystem *storagesystem,
                                        AbstractFactoryServiceInterfacesPtr serviceInterfaceFactory,
                                        ModuleFactoryParamNetworkPtr networkParams,
                                        bool demo) :

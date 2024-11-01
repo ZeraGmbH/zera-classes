@@ -10,7 +10,7 @@ class Vf_Storage : public QObject
 {
     Q_OBJECT
 public:
-    explicit Vf_Storage(VeinEvent::StorageSystem* storageSystem, QObject *parent = nullptr, int entityId = 1);
+    explicit Vf_Storage(VeinStorage::AbstractEventSystem* storageSystem, QObject *parent = nullptr, int entityId = 1);
     bool initOnce();
     VfCpp::VfCppEntity *getVeinEntity() const;
 
@@ -20,7 +20,7 @@ private:
     QHash<int, QStringList> extractEntitiesAndComponents(QJsonObject jsonObject);
     void ignoreComponents(QStringList *componentList);
 
-    VeinEvent::StorageSystem* m_storageSystem;
+    VeinStorage::AbstractEventSystem* m_storageSystem;
     VfCpp::VfCppEntity *m_entity;
     bool m_isInitalized;
     VfCpp::VfCppComponent::Ptr m_maximumLoggingComponents;

@@ -1,8 +1,8 @@
 #ifndef VEINDATACOLLECTOR_H
 #define VEINDATACOLLECTOR_H
 
-#include <ve_storagesystem.h>
-#include <veinstoragefilter.h>
+#include <vs_abstracteventsystem.h>
+#include <vs_storagefilter.h>
 #include <timerperiodicqt.h>
 #include <QJsonObject>
 #include <QDateTime>
@@ -11,7 +11,7 @@ class VeinDataCollector : public QObject
 {
     Q_OBJECT
 public:
-    explicit VeinDataCollector(VeinEvent::StorageSystem* storage);
+    explicit VeinDataCollector(VeinStorage::AbstractEventSystem* storage);
     void startLogging(QHash<int, QStringList> entitesAndComponents);
     void stopLogging();
 signals:
@@ -30,7 +30,7 @@ private:
     QJsonObject getJsonForTimestamp(QString timestamp);
     QHash<QString, QVariant> appendNewValueToExistingValues(QJsonValue existingValue, QHash<QString, QVariant> compoValuesHash);
 
-    VeinStorageFilter m_storageFilter;
+    VeinStorage::StorageFilter m_storageFilter;
     QJsonObject m_jsonObject;
     TimerTemplateQtPtr m_periodicTimer;
 };

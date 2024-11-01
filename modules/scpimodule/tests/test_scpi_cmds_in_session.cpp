@@ -17,7 +17,7 @@ QTEST_MAIN(test_scpi_cmds_in_session)
 void test_scpi_cmds_in_session::initialSession()
 {
     ModuleManagerTestRunner testRunner(":/session-scpi-only.json");
-    VeinEvent::StorageSystem* veinStorage = testRunner.getVeinStorageSystem();
+    VeinStorage::AbstractEventSystem* veinStorage = testRunner.getVeinStorageSystem();
     QList<int> entityList = veinStorage->getEntityList();
     QCOMPARE(entityList.count(), 2);
 
@@ -92,7 +92,7 @@ void test_scpi_cmds_in_session::devIfaceVeinComponent()
 {
     ModuleManagerTestRunner testRunner(":/session-scpi-only.json");
 
-    VeinEvent::StorageSystem* veinStorage = testRunner.getVeinStorageSystem();
+    VeinStorage::AbstractEventSystem* veinStorage = testRunner.getVeinStorageSystem();
     QList<QString> componentList = veinStorage->getEntityComponents(9999);
     QVERIFY(componentList.contains("ACT_DEV_IFACE"));
 
@@ -112,7 +112,7 @@ void test_scpi_cmds_in_session::devIfaceVeinComponentMultipleEntities()
     ScpiModuleClientBlocked client;
     QString receive = client.sendReceive("dev:iface?");
 
-    VeinEvent::StorageSystem* veinStorage = testRunner.getVeinStorageSystem();
+    VeinStorage::AbstractEventSystem* veinStorage = testRunner.getVeinStorageSystem();
     QVariant xmlDevIface = veinStorage->getStoredValue(9999, "ACT_DEV_IFACE");
     XmlDocumentCompare compare;
     QVERIFY(compare.compareXml(xmlDevIface.toString(), receive, true));
@@ -125,7 +125,7 @@ void test_scpi_cmds_in_session::devIfaceVeinComponentMultipleEntitiesForLongXml(
     ScpiModuleClientBlocked client;
     QString receive = client.sendReceive("dev:iface?");
 
-    VeinEvent::StorageSystem* veinStorage = testRunner.getVeinStorageSystem();
+    VeinStorage::AbstractEventSystem* veinStorage = testRunner.getVeinStorageSystem();
     QVariant xmlDevIface = veinStorage->getStoredValue(9999, "ACT_DEV_IFACE");
     // testing this on target / vf-debugger cutted string of len 67395 characters
     QVERIFY(xmlDevIface.toString().size() >= 67395);

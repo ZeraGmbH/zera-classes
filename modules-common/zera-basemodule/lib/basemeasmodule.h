@@ -3,7 +3,7 @@
 
 #include "basemodule.h"
 #include "vfeventsytemmoduleparam.h"
-#include <ve_storagesystem.h>
+#include <vs_abstracteventsystem.h>
 #include <memory>
 
 class cBaseMeasModule : public BaseModule

@@ -500,7 +500,7 @@ double cAdjustmentModuleMeasProgram::calcAdjAbsoluteError()
 
 bool cAdjustmentModuleMeasProgram::checkRangeIsWanted(QString adjType)
 {
-    VeinEvent::StorageSystem *storageSystem = m_pModule->getStorageSystem();
+    VeinStorage::AbstractEventSystem *storageSystem = m_pModule->getStorageSystem();
     int rangeEntity = getConfData()->m_AdjChannelInfoHash[m_sAdjustSysName]->rangeAdjInfo.m_nEntity;
     QString rangeComponent = getConfData()->m_AdjChannelInfoHash[m_sAdjustSysName]->rangeAdjInfo.m_sComponent;
     QString currentRange = storageSystem->getStoredValue(rangeEntity, rangeComponent).toString();
@@ -522,7 +522,7 @@ void cAdjustmentModuleMeasProgram::setAdjustAmplitudeStartCommand(QVariant var)
     int adjustEntity = getConfData()->m_AdjChannelInfoHash[m_sAdjustSysName]->amplitudeAdjInfo.m_nEntity;
     QString adjustComponent = getConfData()->m_AdjChannelInfoHash[m_sAdjustSysName]->amplitudeAdjInfo.m_sComponent;
 
-    VeinEvent::StorageSystem *storageSystem = m_pModule->getStorageSystem();
+    VeinStorage::AbstractEventSystem *storageSystem = m_pModule->getStorageSystem();
     m_AdjustActualValue = storageSystem->getStoredValue(adjustEntity, adjustComponent).toDouble();
     double actWantedError = calcAdjAbsoluteError();
     if(actWantedError > maxAmplitudeErrorPercent) {

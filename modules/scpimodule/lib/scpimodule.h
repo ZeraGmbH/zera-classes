@@ -9,7 +9,7 @@
 namespace VeinEvent
 {
     class EventSystem;
-    class StorageSystem;
+    class AbstractEventSystem;
 }
 
 namespace SCPIMODULE {

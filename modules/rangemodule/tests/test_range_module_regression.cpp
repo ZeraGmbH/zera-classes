@@ -15,7 +15,7 @@ static int constexpr rangeEntityId = 1020;
 void test_range_module_regression::minimalSession()
 {
     ModuleManagerTestRunner testRunner(":/session-minimal.json");
-    VeinEvent::StorageSystem* veinStorage = testRunner.getVeinStorageSystem();
+    VeinStorage::AbstractEventSystem* veinStorage = testRunner.getVeinStorageSystem();
     QList<int> entityList = veinStorage->getEntityList();
     QCOMPARE(entityList.count(), 2);
     QVERIFY(veinStorage->hasEntity(rangeEntityId));
@@ -24,7 +24,7 @@ void test_range_module_regression::minimalSession()
 void test_range_module_regression::moduleConfigFromResource()
 {
     ModuleManagerTestRunner testRunner(":/session-range-test.json");
-    VeinEvent::StorageSystem* veinStorage = testRunner.getVeinStorageSystem();
+    VeinStorage::AbstractEventSystem* veinStorage = testRunner.getVeinStorageSystem();
     QList<int> entityList = veinStorage->getEntityList();
     QCOMPARE(entityList.count(), 2);
     QVERIFY(veinStorage->hasEntity(rangeEntityId));
@@ -37,7 +37,7 @@ void test_range_module_regression::veinDumpInitial()
     QByteArray jsonExpected = file.readAll();
 
     ModuleManagerTestRunner testRunner(":/session-range-test.json");
-    VeinEvent::StorageSystem* veinStorage = testRunner.getVeinStorageSystem();
+    VeinStorage::AbstractEventSystem* veinStorage = testRunner.getVeinStorageSystem();
     QByteArray jsonDumped;
     QBuffer buff(&jsonDumped);
     veinStorage->dumpToFile(&buff, QList<int>() << rangeEntityId);
@@ -88,7 +88,7 @@ void test_range_module_regression::injectActualValues()
     QVERIFY(file.open(QFile::ReadOnly));
     QByteArray jsonExpected = file.readAll();
 
-    VeinEvent::StorageSystem* veinStorage = testRunner.getVeinStorageSystem();
+    VeinStorage::AbstractEventSystem* veinStorage = testRunner.getVeinStorageSystem();
     QByteArray jsonDumped;
     QBuffer buff(&jsonDumped);
     veinStorage->dumpToFile(&buff, QList<int>() << rangeEntityId);
@@ -124,7 +124,7 @@ void test_range_module_regression::injectActualValuesWithPreScaling()
     QVERIFY(file.open(QFile::ReadOnly));
     QByteArray jsonExpected = file.readAll();
 
-    VeinEvent::StorageSystem* veinStorage = testRunner.getVeinStorageSystem();
+    VeinStorage::AbstractEventSystem* veinStorage = testRunner.getVeinStorageSystem();
     QByteArray jsonDumped;
     QBuffer buff(&jsonDumped);
     veinStorage->dumpToFile(&buff, QList<int>() << rangeEntityId);

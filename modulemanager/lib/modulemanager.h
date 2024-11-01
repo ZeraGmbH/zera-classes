@@ -16,7 +16,7 @@
 
 namespace VeinEvent
 {
-class StorageSystem;
+class AbstractEventSystem;
 }
 
 class AbstractModuleFactory;

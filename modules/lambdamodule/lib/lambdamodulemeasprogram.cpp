@@ -76,37 +76,37 @@ void cLambdaModuleMeasProgram::searchActualValues()
     bool error = false;
     m_lambdaCalcDelegate = new LambdaCalcDelegate(getConfData()->m_activeMeasModeAvail, m_veinLambdaActValues, m_veinLoadTypeList);
     connect(m_lambdaCalcDelegate, &LambdaCalcDelegate::measuring, this, &cLambdaModuleMeasProgram::setMeasureSignal);
-    VeinEvent::StorageSystem* storage = m_pModule->getStorageSystem();
-    VeinEvent::StorageComponentInterfacePtr activeMeasModeComponent =
+    VeinStorage::AbstractEventSystem* storage = m_pModule->getStorageSystem();
+    VeinStorage::AbstractComponentPtr activeMeasModeComponent =
         storage->getComponent(getConfData()->m_activeMeasModeEntity, getConfData()->m_activeMeasModeComponent);
-    VeinEvent::StorageComponentInterfacePtr activeMeasModePhaseComponent =
+    VeinStorage::AbstractComponentPtr activeMeasModePhaseComponent =
         storage->getComponent(getConfData()->m_activeMeasModeEntity, getConfData()->m_activeMeasModePhaseComponent);
     if (activeMeasModeComponent && activeMeasModePhaseComponent) {
-        connect(activeMeasModeComponent.get(), &VeinEvent::StorageComponentInterface::sigValueChange,
+        connect(activeMeasModeComponent.get(), &VeinStorage::AbstractComponent::sigValueChange,
                 m_lambdaCalcDelegate, &LambdaCalcDelegate::onActivePowerMeasModeChange);
         m_lambdaCalcDelegate->onActivePowerMeasModeChange(activeMeasModeComponent->getValue());
 
-        connect(activeMeasModePhaseComponent.get(), &VeinEvent::StorageComponentInterface::sigValueChange,
+        connect(activeMeasModePhaseComponent.get(), &VeinStorage::AbstractComponent::sigValueChange,
                 m_lambdaCalcDelegate, &LambdaCalcDelegate::onActivePowerPhaseMaskChange);
         m_lambdaCalcDelegate->onActivePowerPhaseMaskChange(activeMeasModePhaseComponent->getValue());
 
         for (int i = 0; i < getConfData()->m_nLambdaSystemCount; i++) {
             if (!error) {
-                VeinEvent::StorageComponentInterfacePtr inputPComponent =
+                VeinStorage::AbstractComponentPtr inputPComponent =
                     storage->getComponent(getConfData()->m_lambdaSystemConfigList.at(i).m_nInputPEntity, getConfData()->m_lambdaSystemConfigList.at(i).m_sInputP);
-                VeinEvent::StorageComponentInterfacePtr inputQComponent =
+                VeinStorage::AbstractComponentPtr inputQComponent =
                     storage->getComponent(getConfData()->m_lambdaSystemConfigList.at(i).m_nInputQEntity, getConfData()->m_lambdaSystemConfigList.at(i).m_sInputQ);
-                VeinEvent::StorageComponentInterfacePtr inputSComponent =
+                VeinStorage::AbstractComponentPtr inputSComponent =
                     storage->getComponent(getConfData()->m_lambdaSystemConfigList.at(i).m_nInputSEntity, getConfData()->m_lambdaSystemConfigList.at(i).m_sInputS);
 
                 if (inputPComponent && inputQComponent && inputSComponent) {
-                    connect(inputPComponent.get(), &VeinEvent::StorageComponentInterface::sigValueChange, m_lambdaCalcDelegate, [=](QVariant value) {
+                    connect(inputPComponent.get(), &VeinStorage::AbstractComponent::sigValueChange, m_lambdaCalcDelegate, [=](QVariant value) {
                         m_lambdaCalcDelegate->handleActivePowerChange(i, value);
                     });
-                    connect(inputQComponent.get(), &VeinEvent::StorageComponentInterface::sigValueChange, m_lambdaCalcDelegate, [=](QVariant value) {
+                    connect(inputQComponent.get(), &VeinStorage::AbstractComponent::sigValueChange, m_lambdaCalcDelegate, [=](QVariant value) {
                         m_lambdaCalcDelegate->handleReactivePowerChange(i, value);
                     });
-                    connect(inputSComponent.get(), &VeinEvent::StorageComponentInterface::sigValueChange, m_lambdaCalcDelegate, [=](QVariant value) {
+                    connect(inputSComponent.get(), &VeinStorage::AbstractComponent::sigValueChange, m_lambdaCalcDelegate, [=](QVariant value) {
                         m_lambdaCalcDelegate->handleApparentPowerChange(i, value);
                     });
                 }

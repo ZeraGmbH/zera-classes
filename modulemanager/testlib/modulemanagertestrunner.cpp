@@ -34,7 +34,7 @@ void ModuleManagerTestRunner::start(QString sessionFileName)
     m_modmanFacade->addSubsystem(m_vfCmdEventHandlerSystem.get());
 }
 
-VeinEvent::StorageSystem *ModuleManagerTestRunner::getVeinStorageSystem()
+VeinStorage::AbstractEventSystem *ModuleManagerTestRunner::getVeinStorageSystem()
 {
     return m_modmanFacade->getStorageSystem();
 }

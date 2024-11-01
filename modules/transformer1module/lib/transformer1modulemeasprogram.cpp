@@ -4,7 +4,7 @@
 #include <QJsonArray>
 #include <QStringList>
 
-#include <ve_storagesystem.h>
+#include <vs_abstracteventsystem.h>
 #include <doublevalidator.h>
 #include <vfmoduleactvalue.h>
 #include <vfmodulemetadata.h>
@@ -244,11 +244,11 @@ void cTransformer1ModuleMeasProgram::generateInterface()
 void cTransformer1ModuleMeasProgram::searchActualValues()
 {
     bool error = false;
-    VeinEvent::StorageSystem* storage = m_pModule->getStorageSystem();
+    VeinStorage::AbstractEventSystem* storage = m_pModule->getStorageSystem();
     for (int i = 0; i < getConfData()->m_nTransformerSystemCount; i++) {
-        VeinEvent::StorageComponentInterfacePtr inputPrimaryVector =
+        VeinStorage::AbstractComponentPtr inputPrimaryVector =
             storage->getComponent(getConfData()->m_nModuleId, getConfData()->m_transformerSystemConfigList.at(i).m_sInputPrimaryVector);
-        VeinEvent::StorageComponentInterfacePtr inputSecondaryVector =
+        VeinStorage::AbstractComponentPtr inputSecondaryVector =
             storage->getComponent(getConfData()->m_nModuleId, getConfData()->m_transformerSystemConfigList.at(i).m_sInputSecondaryVector);
         if(inputPrimaryVector && inputSecondaryVector) {
             cTransformer1MeasDelegate *cTMD;
@@ -262,9 +262,9 @@ void cTransformer1ModuleMeasProgram::searchActualValues()
                                                      m_veinActValueList.at(i*6+3), m_veinActValueList.at(i*6+4), m_veinActValueList.at(i*6+5));
             m_Transformer1MeasDelegateList.append(cTMD);
 
-            connect(inputPrimaryVector.get(), &VeinEvent::StorageComponentInterface::sigValueChange,
+            connect(inputPrimaryVector.get(), &VeinStorage::AbstractComponent::sigValueChange,
                     cTMD, &cTransformer1MeasDelegate::actValueInput1);
-            connect(inputSecondaryVector.get(), &VeinEvent::StorageComponentInterface::sigValueChange,
+            connect(inputSecondaryVector.get(), &VeinStorage::AbstractComponent::sigValueChange,
                     cTMD, &cTransformer1MeasDelegate::actValueInput2);
         }
         else

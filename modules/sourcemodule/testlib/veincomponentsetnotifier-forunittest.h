@@ -4,7 +4,7 @@
 #include <vfmodulecomponent.h>
 #include <ve_eventsystem.h>
 #include <ve_eventhandler.h>
-#include <vs_veinhash.h>
+#include <vs_storageeventsystem.h>
 
 #include <QObject>
 #include <QHash>
@@ -23,7 +23,7 @@ private:
     void processEvent(QEvent *t_event) override;
 
     VeinEvent::EventHandler m_eventHandler;
-    VeinStorage::VeinHash m_storageHash;
+    VeinStorage::StorageEventSystem m_storageHash;
     QHash <QString, VfModuleComponent*> m_hashComponentsListening;
 };
 

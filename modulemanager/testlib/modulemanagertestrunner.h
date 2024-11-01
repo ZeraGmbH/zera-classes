@@ -16,7 +16,7 @@ class ModuleManagerTestRunner : public QObject
 public:
     ModuleManagerTestRunner(QString sessionFileName, bool initialAdjPermission = false, QString deviceName = "mt310s2");
     ~ModuleManagerTestRunner();
-    VeinEvent::StorageSystem *getVeinStorageSystem();
+    VeinStorage::AbstractEventSystem *getVeinStorageSystem();
     const QList<TestDspInterfacePtr>& getDspInterfaceList() const;
     VfCmdEventHandlerSystemPtr getVfCmdEventHandlerSystemPtr();
     ModuleManagerSetupFacade* getModManFacade();

@@ -10,7 +10,7 @@
 #include <virtualmodule.h>
 #include <xmlsettings.h>
 #include <ve_eventsystem.h>
-#include <ve_storagesystem.h>
+#include <vs_abstracteventsystem.h>
 
 enum Status
 {
@@ -32,7 +32,7 @@ public:
     void startDestroy() override;
     virtual void exportMetaData();
 
-    VeinEvent::StorageSystem* getStorageSystem();
+    VeinStorage::AbstractEventSystem* getStorageSystem();
     bool getDemo();
     const AbstractFactoryServiceInterfacesPtr getServiceInterfaceFactory() const;
     const ModuleFactoryParamNetworkPtr getNetworkConfig() const;

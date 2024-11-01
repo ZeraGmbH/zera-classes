@@ -172,11 +172,11 @@ void cBurden1ModuleMeasProgram::generateInterface()
 void cBurden1ModuleMeasProgram::searchActualValues()
 {
     bool error = false;
-    VeinEvent::StorageSystem* storage = m_pModule->getStorageSystem();
+    VeinStorage::AbstractEventSystem* storage = m_pModule->getStorageSystem();
     for (int i = 0; i < getConfData()->m_nBurdenSystemCount; i++) {
-        VeinEvent::StorageComponentInterfacePtr inputVoltageVector =
+        VeinStorage::AbstractComponentPtr inputVoltageVector =
             storage->getComponent(getConfData()->m_nModuleId, getConfData()->m_BurdenSystemConfigList.at(i).m_sInputVoltageVector);
-        VeinEvent::StorageComponentInterfacePtr inputCurrentVector =
+        VeinStorage::AbstractComponentPtr inputCurrentVector =
             storage->getComponent(getConfData()->m_nModuleId, getConfData()->m_BurdenSystemConfigList.at(i).m_sInputCurrentVector);
         if(inputVoltageVector && inputCurrentVector) {
             cBurden1MeasDelegate* cBMD;
@@ -188,9 +188,9 @@ void cBurden1ModuleMeasProgram::searchActualValues()
                 cBMD = new cBurden1MeasDelegate(m_veinActValueList.at(i*3), m_veinActValueList.at(i*3+1), m_veinActValueList.at(i*3+2), getConfData()->m_Unit);
 
             m_Burden1MeasDelegateList.append(cBMD);
-            connect(inputVoltageVector.get(), &VeinEvent::StorageComponentInterface::sigValueChange,
+            connect(inputVoltageVector.get(), &VeinStorage::AbstractComponent::sigValueChange,
                     cBMD, &cBurden1MeasDelegate::actValueInput1);
-            connect(inputCurrentVector.get(), &VeinEvent::StorageComponentInterface::sigValueChange,
+            connect(inputCurrentVector.get(), &VeinStorage::AbstractComponent::sigValueChange,
                     cBMD,  &cBurden1MeasDelegate::actValueInput2);
         }
         else

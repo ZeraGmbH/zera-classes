@@ -114,11 +114,11 @@ void cPower3ModuleMeasProgram::generateInterface()
 void cPower3ModuleMeasProgram::searchActualValues()
 {
     bool error = false;
-    VeinEvent::StorageSystem* storage = m_pModule->getStorageSystem();
+    VeinStorage::AbstractEventSystem* storage = m_pModule->getStorageSystem();
     for (int i = 0; i < getConfData()->m_nPowerSystemCount; i++) {
-        VeinEvent::StorageComponentInterfacePtr inputU =
+        VeinStorage::AbstractComponentPtr inputU =
             storage->getComponent(getConfData()->m_nModuleId, getConfData()->m_powerSystemConfigList.at(i).m_sInputU);
-        VeinEvent::StorageComponentInterfacePtr inputI =
+        VeinStorage::AbstractComponentPtr inputI =
             storage->getComponent(getConfData()->m_nModuleId, getConfData()->m_powerSystemConfigList.at(i).m_sInputI);
         if (inputU && inputI) {
             cPower3MeasDelegate* cPMD;
@@ -130,10 +130,10 @@ void cPower3ModuleMeasProgram::searchActualValues()
                 cPMD = new cPower3MeasDelegate(m_veinActValueList.at(i*3), m_veinActValueList.at(i*3+1), m_veinActValueList.at(i*3+2));
             m_Power3MeasDelegateList.append(cPMD);
 
-            connect(inputU.get(), &VeinEvent::StorageComponentInterface::sigValueChange,
+            connect(inputU.get(), &VeinStorage::AbstractComponent::sigValueChange,
                     cPMD, &cPower3MeasDelegate::actValueInput1);
 
-            connect(inputI.get(), &VeinEvent::StorageComponentInterface::sigValueChange,
+            connect(inputI.get(), &VeinStorage::AbstractComponent::sigValueChange,
                     cPMD, &cPower3MeasDelegate::actValueInput2);
         }
         else

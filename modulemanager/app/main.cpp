@@ -14,7 +14,7 @@
 #include <vcmp_componentdata.h>
 #include <vn_networksystem.h>
 #include <vn_tcpsystem.h>
-#include <vs_veinhash.h>
+#include <vs_storageeventsystem.h>
 #include <vl_databaselogger.h>
 #include <loggercontentsetconfig.h>
 #include <vl_sqlitedb.h>
@@ -29,7 +29,7 @@ static bool serverStarted = false;
 static VeinNet::NetworkSystem *netSystem = nullptr;
 static VeinNet::TcpSystem *tcpSystem = nullptr;
 static ModuleManagerSetupFacade *modManSetupFacade = nullptr;
-static VeinEvent::StorageComponentInterfacePtr entititesComponent;
+static VeinStorage::AbstractComponentPtr entititesComponent;
 
 static QString getDemoDeviceName(int argc, char *argv[])
 {
@@ -257,9 +257,9 @@ int main(int argc, char *argv[])
     }
     else {
         modMan->loadDefaultSession();
-        VeinEvent::StorageSystem *storage = modManSetupFacade->getStorageSystem();
+        VeinStorage::AbstractEventSystem *storage = modManSetupFacade->getStorageSystem();
         entititesComponent = storage->getFutureComponent(0, "Entities");
-        QObject::connect(entititesComponent.get(), &VeinEvent::StorageComponentInterface::sigValueChange, entititesComponent.get(), [&] (QVariant newValue) {
+        QObject::connect(entititesComponent.get(), &VeinStorage::AbstractComponent::sigValueChange, entititesComponent.get(), [&] (QVariant newValue) {
             if(newValue.isValid())
                 startNetwork(app.get());
         });
