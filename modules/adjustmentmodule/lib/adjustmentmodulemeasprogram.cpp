@@ -113,10 +113,11 @@ bool cAdjustmentModuleMeasProgram::checkExternalVeinComponents()
 {
     bool ok = true;
     adjInfoType adjInfo = getConfData()->m_ReferenceAngle;
-    if (!m_pModule->getStorageSystem()->hasStoredValue(adjInfo.m_nEntity, adjInfo.m_sComponent))
+    const VeinStorage::AbstractDatabase* storageDb = m_pModule->getStorageSystem()->getDb();
+    if (!storageDb->hasStoredValue(adjInfo.m_nEntity, adjInfo.m_sComponent))
         ok = false;
     adjInfo = getConfData()->m_ReferenceFrequency;
-    if (!m_pModule->getStorageSystem()->hasStoredValue(adjInfo.m_nEntity, adjInfo.m_sComponent))
+    if (!storageDb->hasStoredValue(adjInfo.m_nEntity, adjInfo.m_sComponent))
         ok = false;
 
     for (int i = 0; ok && i<getConfData()->m_nAdjustmentChannelCount; i++) {
@@ -124,22 +125,22 @@ bool cAdjustmentModuleMeasProgram::checkExternalVeinComponents()
         QString chn = getConfData()->m_AdjChannelList.at(i);
         adjInfo = getConfData()->m_AdjChannelInfoHash[chn]->amplitudeAdjInfo;
         const QString errMagTemplate = "Entity %1 / componen %2 not found";
-        if (adjInfo.m_bAvail && !m_pModule->getStorageSystem()->hasStoredValue(adjInfo.m_nEntity, adjInfo.m_sComponent)) {
+        if (adjInfo.m_bAvail && !storageDb->hasStoredValue(adjInfo.m_nEntity, adjInfo.m_sComponent)) {
             emit errMsg(errMagTemplate.arg(adjInfo.m_nEntity).arg(adjInfo.m_sComponent));
             ok = false;
         }
         adjInfo = getConfData()->m_AdjChannelInfoHash[chn]->phaseAdjInfo;
-        if (adjInfo.m_bAvail && !m_pModule->getStorageSystem()->hasStoredValue(adjInfo.m_nEntity, adjInfo.m_sComponent)) {
+        if (adjInfo.m_bAvail && !storageDb->hasStoredValue(adjInfo.m_nEntity, adjInfo.m_sComponent)) {
             emit errMsg(errMagTemplate.arg(adjInfo.m_nEntity).arg(adjInfo.m_sComponent));
             ok = false;
         }
         adjInfo = getConfData()->m_AdjChannelInfoHash[chn]->offsetAdjInfo;
-        if (adjInfo.m_bAvail && !m_pModule->getStorageSystem()->hasStoredValue(adjInfo.m_nEntity, adjInfo.m_sComponent)) {
+        if (adjInfo.m_bAvail && !storageDb->hasStoredValue(adjInfo.m_nEntity, adjInfo.m_sComponent)) {
             emit errMsg(errMagTemplate.arg(adjInfo.m_nEntity).arg(adjInfo.m_sComponent));
             ok = false;
         }
         adjInfo = getConfData()->m_AdjChannelInfoHash[chn]->rangeAdjInfo;
-        if (adjInfo.m_bAvail && !m_pModule->getStorageSystem()->hasStoredValue(adjInfo.m_nEntity, adjInfo.m_sComponent)) {
+        if (adjInfo.m_bAvail && !storageDb->hasStoredValue(adjInfo.m_nEntity, adjInfo.m_sComponent)) {
             emit errMsg(errMagTemplate.arg(adjInfo.m_nEntity).arg(adjInfo.m_sComponent));
             ok = false;
         }

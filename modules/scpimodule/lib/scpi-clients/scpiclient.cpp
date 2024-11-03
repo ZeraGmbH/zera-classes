@@ -233,6 +233,7 @@ void cSCPIClient::setSignalConnections(cSCPIStatus* scpiStatus, QList<cStatusBit
         entityIdList = m_pModule->getStorageSystem()->getDb()->getEntityList();
         int entityIdCount = entityIdList.count();
         // we iterate over all statusbitdescriptors
+        VeinStorage::AbstractDatabase* storageDb = m_pModule->getStorageSystem()->getDb();
         for (int i = 0; i < n; i++) {
             bool moduleFound = false;
             cStatusBitDescriptor des = dList.at(i); // the searched status bit descriptor
@@ -241,7 +242,7 @@ void cSCPIClient::setSignalConnections(cSCPIStatus* scpiStatus, QList<cStatusBit
                 // we parse over all moduleinterface components
                 for (int j = 0; j < entityIdCount; j++) {
                     entityID = entityIdList.at(j);
-                    if (m_pModule->getStorageSystem()->hasStoredValue(entityID, QString("INF_ModuleInterface"))) {
+                    if (storageDb->hasStoredValue(entityID, QString("INF_ModuleInterface"))) {
                         QJsonDocument jsonDoc = QJsonDocument::fromJson(m_pModule->getStorageSystem()->getStoredValue(entityID, QString("INF_ModuleInterface")).toByteArray());
                         if ( !jsonDoc.isNull() && jsonDoc.isObject() ) {
                             QJsonObject jsonObj = jsonDoc.object();
@@ -255,7 +256,7 @@ void cSCPIClient::setSignalConnections(cSCPIStatus* scpiStatus, QList<cStatusBit
                     }
                 }
                 if (moduleFound) {
-                    if (m_pModule->getStorageSystem()->hasStoredValue(entityID, des.m_sComponentName)) {
+                    if (storageDb->hasStoredValue(entityID, des.m_sComponentName)) {
                         // if we found the searched component, we generate a signal connection delegate
                         // we need an eventsystem to look for notifications with these components
                         // that lets the signal connection delegate  do his job
