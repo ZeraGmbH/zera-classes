@@ -40,10 +40,11 @@ cModuleInterface::~cModuleInterface()
 bool cModuleInterface::setupInterface()
 {
     bool ok = true;
-    const QList<int> entityIdList = m_pModule->getStorageSystem()->getDb()->getEntityList();
+    VeinStorage::AbstractDatabase* storageDb = m_pModule->getStorageSystem()->getDb();
+    const QList<int> entityIdList = storageDb->getEntityList();
     for(auto entityID : entityIdList) {
         // we parse over all moduleinterface components
-        if (m_pModule->getStorageSystem()->getDb()->hasStoredValue(entityID, QString("INF_ModuleInterface"))) {
+        if (storageDb->hasStoredValue(entityID, QString("INF_ModuleInterface"))) {
             QJsonDocument jsonDoc = QJsonDocument::fromJson(m_pModule->getStorageSystem()->getStoredValue(entityID, QString("INF_ModuleInterface")).toByteArray());
             if ( !jsonDoc.isNull() && jsonDoc.isObject() ) {
                 const QJsonObject jsonObj = jsonDoc.object();

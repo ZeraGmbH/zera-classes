@@ -172,12 +172,12 @@ void cBurden1ModuleMeasProgram::generateInterface()
 void cBurden1ModuleMeasProgram::searchActualValues()
 {
     bool error = false;
-    VeinStorage::AbstractEventSystem* storage = m_pModule->getStorageSystem();
+    VeinStorage::AbstractDatabase* storageDb = m_pModule->getStorageSystem()->getDb();
     for (int i = 0; i < getConfData()->m_nBurdenSystemCount; i++) {
         VeinStorage::AbstractComponentPtr inputVoltageVector =
-            storage->getDb()->findComponent(getConfData()->m_nModuleId, getConfData()->m_BurdenSystemConfigList.at(i).m_sInputVoltageVector);
+            storageDb->findComponent(getConfData()->m_nModuleId, getConfData()->m_BurdenSystemConfigList.at(i).m_sInputVoltageVector);
         VeinStorage::AbstractComponentPtr inputCurrentVector =
-            storage->getDb()->findComponent(getConfData()->m_nModuleId, getConfData()->m_BurdenSystemConfigList.at(i).m_sInputCurrentVector);
+            storageDb->findComponent(getConfData()->m_nModuleId, getConfData()->m_BurdenSystemConfigList.at(i).m_sInputCurrentVector);
         if(inputVoltageVector && inputCurrentVector) {
             cBurden1MeasDelegate* cBMD;
             if (i == (getConfData()->m_nBurdenSystemCount-1)) {

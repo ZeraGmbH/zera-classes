@@ -244,12 +244,12 @@ void cTransformer1ModuleMeasProgram::generateInterface()
 void cTransformer1ModuleMeasProgram::searchActualValues()
 {
     bool error = false;
-    VeinStorage::AbstractEventSystem* storage = m_pModule->getStorageSystem();
+    VeinStorage::AbstractDatabase* storageDb = m_pModule->getStorageSystem()->getDb();
     for (int i = 0; i < getConfData()->m_nTransformerSystemCount; i++) {
         VeinStorage::AbstractComponentPtr inputPrimaryVector =
-            storage->getDb()->findComponent(getConfData()->m_nModuleId, getConfData()->m_transformerSystemConfigList.at(i).m_sInputPrimaryVector);
+            storageDb->findComponent(getConfData()->m_nModuleId, getConfData()->m_transformerSystemConfigList.at(i).m_sInputPrimaryVector);
         VeinStorage::AbstractComponentPtr inputSecondaryVector =
-            storage->getDb()->findComponent(getConfData()->m_nModuleId, getConfData()->m_transformerSystemConfigList.at(i).m_sInputSecondaryVector);
+            storageDb->findComponent(getConfData()->m_nModuleId, getConfData()->m_transformerSystemConfigList.at(i).m_sInputSecondaryVector);
         if(inputPrimaryVector && inputSecondaryVector) {
             cTransformer1MeasDelegate *cTMD;
             if (i == (getConfData()->m_nTransformerSystemCount-1)) {

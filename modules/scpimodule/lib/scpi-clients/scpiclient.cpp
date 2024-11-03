@@ -228,12 +228,10 @@ void cSCPIClient::setSignalConnections(cSCPIStatus* scpiStatus, QList<cStatusBit
 {
     int n;
     if ((n = dList.count()) > 0) {
-
-        QList<int> entityIdList;
-        entityIdList = m_pModule->getStorageSystem()->getDb()->getEntityList();
+        VeinStorage::AbstractDatabase* storageDb = m_pModule->getStorageSystem()->getDb();
+        QList<int> entityIdList = storageDb->getEntityList();
         int entityIdCount = entityIdList.count();
         // we iterate over all statusbitdescriptors
-        VeinStorage::AbstractDatabase* storageDb = m_pModule->getStorageSystem()->getDb();
         for (int i = 0; i < n; i++) {
             bool moduleFound = false;
             cStatusBitDescriptor des = dList.at(i); // the searched status bit descriptor
