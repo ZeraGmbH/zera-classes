@@ -92,13 +92,13 @@ void test_scpi_cmds_in_session::devIfaceVeinComponent()
 {
     ModuleManagerTestRunner testRunner(":/session-scpi-only.json");
 
-    VeinStorage::AbstractEventSystem* veinStorage = testRunner.getVeinStorageSystem();
-    QList<QString> componentList = veinStorage->getDb()->getComponentList(9999);
+    VeinStorage::AbstractDatabase* storageDb = testRunner.getVeinStorageSystem()->getDb();
+    QList<QString> componentList = storageDb->getComponentList(9999);
     QVERIFY(componentList.contains("ACT_DEV_IFACE"));
 
     ScpiModuleClientBlocked client;
     QString receive = client.sendReceive("dev:iface?");
-    QString actDevIface = veinStorage->getStoredValue(9999, "ACT_DEV_IFACE").toString();
+    QString actDevIface = storageDb->getStoredValue(9999, "ACT_DEV_IFACE").toString();
     if(actDevIface.isEmpty()) // we have to make module resilient to this situation
         qFatal("ACT_DEV_IFACE empty - local modulemanager running???");
     XmlDocumentCompare compare;
@@ -112,8 +112,8 @@ void test_scpi_cmds_in_session::devIfaceVeinComponentMultipleEntities()
     ScpiModuleClientBlocked client;
     QString receive = client.sendReceive("dev:iface?");
 
-    VeinStorage::AbstractEventSystem* veinStorage = testRunner.getVeinStorageSystem();
-    QVariant xmlDevIface = veinStorage->getStoredValue(9999, "ACT_DEV_IFACE");
+    VeinStorage::AbstractDatabase* storageDb = testRunner.getVeinStorageSystem()->getDb();
+    QVariant xmlDevIface = storageDb->getStoredValue(9999, "ACT_DEV_IFACE");
     XmlDocumentCompare compare;
     QVERIFY(compare.compareXml(xmlDevIface.toString(), receive, true));
 }
@@ -125,8 +125,8 @@ void test_scpi_cmds_in_session::devIfaceVeinComponentMultipleEntitiesForLongXml(
     ScpiModuleClientBlocked client;
     QString receive = client.sendReceive("dev:iface?");
 
-    VeinStorage::AbstractEventSystem* veinStorage = testRunner.getVeinStorageSystem();
-    QVariant xmlDevIface = veinStorage->getStoredValue(9999, "ACT_DEV_IFACE");
+    VeinStorage::AbstractDatabase* storageDb = testRunner.getVeinStorageSystem()->getDb();
+    QVariant xmlDevIface = storageDb->getStoredValue(9999, "ACT_DEV_IFACE");
     // testing this on target / vf-debugger cutted string of len 67395 characters
     QVERIFY(xmlDevIface.toString().size() >= 67395);
     qInfo("%i", xmlDevIface.toString().size());

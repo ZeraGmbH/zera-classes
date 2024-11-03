@@ -20,7 +20,7 @@ void test_modman_regression_all_sessions::initTestCase()
 
 void test_modman_regression_all_sessions::checkScpiPortOpenedProperlyByVeinDevIface(ModuleManagerSetupFacade &modManFacade)
 {
-    QString actDevIface = modManFacade.getStorageSystem()->getStoredValue(9999, "ACT_DEV_IFACE").toString();
+    QString actDevIface = modManFacade.getStorageSystem()->getDb()->getStoredValue(9999, "ACT_DEV_IFACE").toString();
     if(actDevIface.isEmpty()) // we have to make module resilient to this situation
         qFatal("ACT_DEV_IFACE empty - local modulemanager running???");
 }
@@ -32,7 +32,7 @@ void test_modman_regression_all_sessions::checkVeinModuleEntityNames(TestModuleM
     for(int i=0; i<modules.count(); i++) {
         ZeraModules::ModuleData * module = modules[i];
         QString moduleNameExpected = module->m_module->getVeinModuleName();
-        QString veinModuleNameFound = modManFacade.getStorageSystem()->getStoredValue(module->m_moduleId, "EntityName").toString();
+        QString veinModuleNameFound = modManFacade.getStorageSystem()->getDb()->getStoredValue(module->m_moduleId, "EntityName").toString();
         if(moduleNameExpected != veinModuleNameFound) {
             allEntitiesOk = false;
             qWarning("Vein entity name incorrect: Device: '%s' / Session '%s' / Expected: '%s' / Received: '%s'",

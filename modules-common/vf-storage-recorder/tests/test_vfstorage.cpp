@@ -56,7 +56,7 @@ void test_vfstorage::storeValuesBasedOnNoEntitiesInJson()
         m_testRunner->setVfComponent(storageEntityId, QString("PAR_JsonWithEntities%1").arg(i), "");
         m_testRunner->setVfComponent(storageEntityId, QString("PAR_StartStopLogging%1").arg(i), true);
 
-        QJsonObject storedValues = m_storage->getStoredValue(storageEntityId, QString("StoredValues%1").arg(i)).toJsonObject();
+        QJsonObject storedValues = m_storage->getDb()->getStoredValue(storageEntityId, QString("StoredValues%1").arg(i)).toJsonObject();
         QVERIFY(storedValues.isEmpty());
     }
 }
@@ -65,7 +65,7 @@ void test_vfstorage::storeValuesBasedOnIncorrectEntitiesInJson()
 {
     startModman(":/session-minimal.json");
     startLoggingFromJson(":/incorrect-entities.json", 0);
-    QJsonObject storedValues = m_storage->getStoredValue(storageEntityId, "StoredValues0").toJsonObject();
+    QJsonObject storedValues = m_storage->getDb()->getStoredValue(storageEntityId, "StoredValues0").toJsonObject();
 
     QVERIFY(storedValues.isEmpty());
 }
@@ -102,7 +102,7 @@ void test_vfstorage::storeValuesCorrectEntitiesStartStopLoggingDisabled()
 
     changeRMSValues(1, 2);
 
-    QJsonObject storedValues = m_storage->getStoredValue(storageEntityId, "StoredValues0").toJsonObject();
+    QJsonObject storedValues = m_storage->getDb()->getStoredValue(storageEntityId, "StoredValues0").toJsonObject();
     QVERIFY(storedValues.isEmpty());
 }
 
@@ -212,7 +212,7 @@ void test_vfstorage::changeJsonFileWhileLogging()
     TimeMachineForTest::getInstance()->processTimers(100);
 
     storedValuesWithoutTimeStamp = getStoredValueWithoutTimeStamp(0);
-    QString inputJsonFile = m_storage->getStoredValue(storageEntityId, "PAR_JsonWithEntities0").toString();
+    QString inputJsonFile = m_storage->getDb()->getStoredValue(storageEntityId, "PAR_JsonWithEntities0").toString();
     QVERIFY(!inputJsonFile.contains("ACT_RMSPN3"));
     QVERIFY(!inputJsonFile.contains("ACT_RMSPN4"));
 }
@@ -224,7 +224,7 @@ void test_vfstorage::fireActualValuesAfterDelayWhileLogging()
     changeRMSValues(3, 4);
     TimeMachineForTest::getInstance()->processTimers(100);
 
-    QJsonObject storedValues = m_storage->getStoredValue(storageEntityId, "StoredValues0").toJsonObject();
+    QJsonObject storedValues = m_storage->getDb()->getStoredValue(storageEntityId, "StoredValues0").toJsonObject();
     QStringList timestampKeys = storedValues.keys();
     QCOMPARE (timestampKeys.size(), 1);
 
@@ -232,7 +232,7 @@ void test_vfstorage::fireActualValuesAfterDelayWhileLogging()
     changeRMSValues(5, 6);
     TimeMachineForTest::getInstance()->processTimers(100);
 
-    storedValues = m_storage->getStoredValue(storageEntityId, "StoredValues0").toJsonObject();
+    storedValues = m_storage->getDb()->getStoredValue(storageEntityId, "StoredValues0").toJsonObject();
     timestampKeys = storedValues.keys();
     QCOMPARE (timestampKeys.size(), 2);
 
@@ -252,7 +252,7 @@ void test_vfstorage::fireRmsPowerValuesAfterDifferentDelaysWhileLogging()
     TimeMachineObject::feedEventLoop();
     TimeMachineForTest::getInstance()->processTimers(100);
 
-    QJsonObject storedValues = m_storage->getStoredValue(storageEntityId, "StoredValues0").toJsonObject();
+    QJsonObject storedValues = m_storage->getDb()->getStoredValue(storageEntityId, "StoredValues0").toJsonObject();
     QStringList timestampKeys = storedValues.keys();
     QCOMPARE (timestampKeys.size(), 1);
 
@@ -265,7 +265,7 @@ void test_vfstorage::fireRmsPowerValuesAfterDifferentDelaysWhileLogging()
     changeRMSValues(3, 4);
     TimeMachineForTest::getInstance()->processTimers(100);
 
-    storedValues = m_storage->getStoredValue(storageEntityId, "StoredValues0").toJsonObject();
+    storedValues = m_storage->getDb()->getStoredValue(storageEntityId, "StoredValues0").toJsonObject();
     timestampKeys = storedValues.keys();
     QCOMPARE (timestampKeys.size(), 2);
 
@@ -282,7 +282,7 @@ void test_vfstorage::fireRmsPowerValuesAfterDifferentDelaysWhileLogging()
 
     TimeMachineForTest::getInstance()->processTimers(100);
 
-    storedValues = m_storage->getStoredValue(storageEntityId, "StoredValues0").toJsonObject();
+    storedValues = m_storage->getDb()->getStoredValue(storageEntityId, "StoredValues0").toJsonObject();
     timestampKeys = storedValues.keys();
     QCOMPARE (timestampKeys.size(), 3);
 
@@ -352,7 +352,7 @@ QString test_vfstorage::readEntitiesAndCompoFromJsonFile(QString filePath)
 QJsonObject test_vfstorage::getStoredValueWithoutTimeStamp(int storageNum)
 {
     QJsonObject storedValuesWithoutTimeStamp;
-    QJsonObject storedValues = m_storage->getStoredValue(storageEntityId, QString("StoredValues%1").arg(storageNum)).toJsonObject();
+    QJsonObject storedValues = m_storage->getDb()->getStoredValue(storageEntityId, QString("StoredValues%1").arg(storageNum)).toJsonObject();
     for(const QString &key : storedValues.keys()) {
         QJsonValue entityFound = storedValues.value(key);
         storedValuesWithoutTimeStamp = entityFound.toObject();

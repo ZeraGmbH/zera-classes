@@ -95,18 +95,18 @@ void test_rms_module_regression::injectActualTwice()
     const QList<TestDspInterfacePtr>& dspInterfaces = testRunner.getDspInterfaceList();
     QCOMPARE(dspInterfaces.count(), 1);
 
-    VeinStorage::AbstractEventSystem* veinStorage = testRunner.getVeinStorageSystem();
+    VeinStorage::AbstractDatabase* storageDb = testRunner.getVeinStorageSystem()->getDb();
     QVector<float> actValues(rmsResultCount);
 
     actValues[1] = 37;
     dspInterfaces[0]->fireActValInterrupt(actValues, 0 /* dummy */);
     TimeMachineObject::feedEventLoop();
-    QCOMPARE(veinStorage->getStoredValue(rmsEntityId, "ACT_RMSPN2"), QVariant(37.0));
+    QCOMPARE(storageDb->getStoredValue(rmsEntityId, "ACT_RMSPN2"), QVariant(37.0));
 
     actValues[1] = 42;
     dspInterfaces[0]->fireActValInterrupt(actValues, 0 /* dummy */);
     TimeMachineObject::feedEventLoop();
-    QCOMPARE(veinStorage->getStoredValue(rmsEntityId, "ACT_RMSPN2"), QVariant(42.0));
+    QCOMPARE(storageDb->getStoredValue(rmsEntityId, "ACT_RMSPN2"), QVariant(42.0));
 }
 
 void test_rms_module_regression::injectSymmetricValues()

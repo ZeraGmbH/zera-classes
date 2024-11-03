@@ -53,7 +53,7 @@ void test_modman_with_vf_logger::contentSetsAvailable()
 {
     startModman("session-minimal-rms.json");
 
-    QStringList availContentSets = m_storage->getStoredValue(dataLoggerEntityId, "availableContentSets").toStringList();
+    QStringList availContentSets = m_storage->getDb()->getStoredValue(dataLoggerEntityId, "availableContentSets").toStringList();
     QCOMPARE(availContentSets.count(), 2);
     QVERIFY(availContentSets.contains("ZeraAll"));
     QVERIFY(availContentSets.contains("ZeraActualValuesTest"));
@@ -63,15 +63,16 @@ void test_modman_with_vf_logger::contentSetsSelectValid()
 {
     startModman("session-minimal-rms.json");
 
-    QCOMPARE(m_storage->getStoredValue(dataLoggerEntityId, "currentContentSets"), QStringList());
+    QCOMPARE(m_storage->getDb()->getStoredValue(dataLoggerEntityId, "currentContentSets"), QStringList());
 
     m_testRunner->setVfComponent(dataLoggerEntityId, "currentContentSets", "ZeraActualValuesTest");
 
-    QVariantMap loggedComponents = m_storage->getStoredValue(dataLoggerEntityId, "LoggedComponents").toMap();
+    VeinStorage::AbstractDatabase* storageDb = m_storage->getDb();
+    QVariantMap loggedComponents = storageDb->getStoredValue(dataLoggerEntityId, "LoggedComponents").toMap();
     QString rmsEntityNum = QString("%1").arg(rmsEntityId);
 
     // TODO: On rework, a string not in a list must not be accepted
-    QVariant contentSets = m_storage->getStoredValue(dataLoggerEntityId, "currentContentSets");
+    QVariant contentSets = storageDb->getStoredValue(dataLoggerEntityId, "currentContentSets");
     QCOMPARE(contentSets, "ZeraActualValuesTest");
 
     QVERIFY(loggedComponents.contains(rmsEntityNum));
@@ -82,11 +83,12 @@ void test_modman_with_vf_logger::contentSetsSelectInvalid()
 {
     startModman("session-minimal-rms.json");
 
-    QCOMPARE(m_storage->getStoredValue(dataLoggerEntityId, "currentContentSets"), QStringList());
+    QCOMPARE(m_storage->getDb()->getStoredValue(dataLoggerEntityId, "currentContentSets"), QStringList());
 
     m_testRunner->setVfComponent(dataLoggerEntityId, "currentContentSets", "Foo");
 
-    QVariantMap loggedComponents = m_storage->getStoredValue(dataLoggerEntityId, "LoggedComponents").toMap();
+    VeinStorage::AbstractDatabase* storageDb = m_storage->getDb();
+    QVariantMap loggedComponents = storageDb->getStoredValue(dataLoggerEntityId, "LoggedComponents").toMap();
     QVERIFY(loggedComponents.isEmpty());
 }
 
@@ -94,14 +96,15 @@ void test_modman_with_vf_logger::contentSetsSelectValidList()
 {
     startModman("session-minimal-rms.json");
 
-    QCOMPARE(m_storage->getStoredValue(dataLoggerEntityId, "currentContentSets"), QStringList());
+    QCOMPARE(m_storage->getDb()->getStoredValue(dataLoggerEntityId, "currentContentSets"), QStringList());
 
     m_testRunner->setVfComponent(dataLoggerEntityId, "currentContentSets", QStringList() << "ZeraActualValuesTest");
 
-    QVariantMap loggedComponents = m_storage->getStoredValue(dataLoggerEntityId, "LoggedComponents").toMap();
+    VeinStorage::AbstractDatabase* storageDb = m_storage->getDb();
+    QVariantMap loggedComponents = storageDb->getStoredValue(dataLoggerEntityId, "LoggedComponents").toMap();
     QString rmsEntityNum = QString("%1").arg(rmsEntityId);
 
-    QVariantList contentSets = m_storage->getStoredValue(dataLoggerEntityId, "currentContentSets").toList();
+    QVariantList contentSets = storageDb->getStoredValue(dataLoggerEntityId, "currentContentSets").toList();
     QCOMPARE(contentSets.size(), 1);
     QCOMPARE(contentSets[0], "ZeraActualValuesTest");
 

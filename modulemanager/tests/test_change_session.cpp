@@ -32,11 +32,11 @@ void test_change_session::changeToUnavailableSession()
     modMan.changeSessionFile("mt310s2-meas-session.json");
     modMan.waitUntilModulesAreReady();
 
-    QVariant oldValue = modManSetupFacade.getStorageSystem()->getStoredValue(systemEntityId, "Session");
+    QVariant oldValue = modManSetupFacade.getStorageSystem()->getDb()->getStoredValue(systemEntityId, "Session");
     QEvent* event = VfClientComponentSetter::generateEvent(systemEntityId, "Session", oldValue, "XYZ");
     emit modManSetupFacade.getStorageSystem()->sigSendEvent(event); // could be any event system
     modMan.waitUntilModulesAreReady();
-    QCOMPARE(modManSetupFacade.getStorageSystem()->getStoredValue(systemEntityId, "Session").toString(), QString("mt310s2-meas-session.json"));
+    QCOMPARE(modManSetupFacade.getStorageSystem()->getDb()->getStoredValue(systemEntityId, "Session").toString(), QString("mt310s2-meas-session.json"));
     modMan.destroyModulesAndWaitUntilAllShutdown();
 }
 
@@ -52,11 +52,11 @@ void test_change_session::changeToSameSession()
     modMan.changeSessionFile("mt310s2-meas-session.json");
     modMan.waitUntilModulesAreReady();
 
-    QVariant oldValue = modManSetupFacade.getStorageSystem()->getStoredValue(systemEntityId, "Session");
+    QVariant oldValue = modManSetupFacade.getStorageSystem()->getDb()->getStoredValue(systemEntityId, "Session");
     QEvent* event = VfClientComponentSetter::generateEvent(systemEntityId, "Session", oldValue, "mt310s2-meas-session.json");
     emit modManSetupFacade.getStorageSystem()->sigSendEvent(event); // could be any event system
     modMan.waitUntilModulesAreReady();
-    QCOMPARE(modManSetupFacade.getStorageSystem()->getStoredValue(systemEntityId, "Session").toString(), QString("mt310s2-meas-session.json"));
+    QCOMPARE(modManSetupFacade.getStorageSystem()->getDb()->getStoredValue(systemEntityId, "Session").toString(), QString("mt310s2-meas-session.json"));
     modMan.destroyModulesAndWaitUntilAllShutdown();
 }
 
@@ -72,11 +72,11 @@ void test_change_session::changeSessionMt310s2FromComponent()
     modMan.changeSessionFile("mt310s2-meas-session.json");
     modMan.waitUntilModulesAreReady();
 
-    QVariant oldValue = modManSetupFacade.getStorageSystem()->getStoredValue(systemEntityId, "Session");
+    QVariant oldValue = modManSetupFacade.getStorageSystem()->getDb()->getStoredValue(systemEntityId, "Session");
     QEvent* event = VfClientComponentSetter::generateEvent(systemEntityId, "Session", oldValue, "mt310s2-dc-session.json");
     emit modManSetupFacade.getStorageSystem()->sigSendEvent(event); // could be any event system
     modMan.waitUntilModulesAreReady();
-    QCOMPARE(modManSetupFacade.getStorageSystem()->getStoredValue(systemEntityId, "Session").toString(), QString("mt310s2-dc-session.json"));
+    QCOMPARE(modManSetupFacade.getStorageSystem()->getDb()->getStoredValue(systemEntityId, "Session").toString(), QString("mt310s2-dc-session.json"));
     modMan.destroyModulesAndWaitUntilAllShutdown();
 }
 
@@ -95,7 +95,7 @@ void test_change_session::changeSessionMt310s2SCPICmd()
     ScpiModuleClientBlocked client;
     client.sendReceive("CONFIGURATION:SYST:NAMESESSION EMOB DC;");
     modMan.waitUntilModulesAreReady();
-    QCOMPARE(modManSetupFacade.getStorageSystem()->getStoredValue(systemEntityId, "Session").toString(), QString("mt310s2-emob-session-dc.json"));
+    QCOMPARE(modManSetupFacade.getStorageSystem()->getDb()->getStoredValue(systemEntityId, "Session").toString(), QString("mt310s2-emob-session-dc.json"));
     modMan.destroyModulesAndWaitUntilAllShutdown();
 }
 
@@ -112,11 +112,11 @@ void test_change_session::changeSessionCom5003FromComponent()
     modMan.changeSessionFile("com5003-meas-session.json");
     modMan.waitUntilModulesAreReady();
 
-    QVariant oldValue = modManSetupFacade.getStorageSystem()->getStoredValue(systemEntityId, "Session");
+    QVariant oldValue = modManSetupFacade.getStorageSystem()->getDb()->getStoredValue(systemEntityId, "Session");
     QEvent* event = VfClientComponentSetter::generateEvent(systemEntityId, "Session", oldValue, "com5003-ced-session.json");
     emit modManSetupFacade.getStorageSystem()->sigSendEvent(event); // could be any event system
     modMan.waitUntilModulesAreReady();
-    QCOMPARE(modManSetupFacade.getStorageSystem()->getStoredValue(systemEntityId, "Session").toString(), QString("com5003-ced-session.json"));
+    QCOMPARE(modManSetupFacade.getStorageSystem()->getDb()->getStoredValue(systemEntityId, "Session").toString(), QString("com5003-ced-session.json"));
     modMan.destroyModulesAndWaitUntilAllShutdown();
 }
 
@@ -136,7 +136,7 @@ void test_change_session::changeSessionCom5003SCPICmd()
     ScpiModuleClientBlocked client;
     client.sendReceive("CONFIGURATION:SYST:NAMESESSION 3 Systems / 2 Wires;");
     modMan.waitUntilModulesAreReady();
-    QCOMPARE(modManSetupFacade.getStorageSystem()->getStoredValue(systemEntityId, "Session").toString(), QString("com5003-perphase-session.json"));
+    QCOMPARE(modManSetupFacade.getStorageSystem()->getDb()->getStoredValue(systemEntityId, "Session").toString(), QString("com5003-perphase-session.json"));
     modMan.destroyModulesAndWaitUntilAllShutdown();
 }
 

@@ -15,18 +15,22 @@ void test_power1_module_regression::minimalSession()
 {
     ModuleManagerTestRunner testRunner(":/session-minimal.json");
     VeinStorage::AbstractEventSystem* veinStorage = testRunner.getVeinStorageSystem();
-    QList<int> entityList = veinStorage->getDb()->getEntityList();
+    VeinStorage::AbstractDatabase* storageDb = veinStorage->getDb();
+
+    QList<int> entityList = storageDb->getEntityList();
     QCOMPARE(entityList.count(), 2);
-    QVERIFY(veinStorage->getDb()->hasEntity(powerEntityId));
+    QVERIFY(storageDb->hasEntity(powerEntityId));
 }
 
 void test_power1_module_regression::moduleConfigFromResource()
 {
     ModuleManagerTestRunner testRunner(":/session-power1-test.json");
     VeinStorage::AbstractEventSystem* veinStorage = testRunner.getVeinStorageSystem();
-    QList<int> entityList = veinStorage->getDb()->getEntityList();
+    VeinStorage::AbstractDatabase* storageDb = veinStorage->getDb();
+
+    QList<int> entityList = storageDb->getEntityList();
     QCOMPARE(entityList.count(), 2);
-    QVERIFY(veinStorage->getDb()->hasEntity(powerEntityId));
+    QVERIFY(storageDb->hasEntity(powerEntityId));
 }
 
 void test_power1_module_regression::veinDumpInitial()
@@ -37,9 +41,11 @@ void test_power1_module_regression::veinDumpInitial()
 
     ModuleManagerTestRunner testRunner(":/session-power1-test.json");
     VeinStorage::AbstractEventSystem* veinStorage = testRunner.getVeinStorageSystem();
+    VeinStorage::AbstractDatabase* storageDb = veinStorage->getDb();
+
     QByteArray jsonDumped;
     QBuffer buff(&jsonDumped);
-    VeinStorage::DumpJson::dumpToFile(veinStorage->getDb(),&buff, QList<int>() << powerEntityId);
+    VeinStorage::DumpJson::dumpToFile(storageDb,&buff, QList<int>() << powerEntityId);
 
     QVERIFY(TestLogHelpers::compareAndLogOnDiff(jsonExpected, jsonDumped));
 }
@@ -79,15 +85,17 @@ void test_power1_module_regression::testScpiCommandsDisabled()
 
     ModuleManagerTestRunner testRunner(":/session-power1-withoutScpi-test.json");
     VeinStorage::AbstractEventSystem* veinStorage = testRunner.getVeinStorageSystem();
+    VeinStorage::AbstractDatabase* storageDb = veinStorage->getDb();
+
     QByteArray jsonDumped;
     QBuffer buff(&jsonDumped);
-    VeinStorage::DumpJson::dumpToFile(veinStorage->getDb(),&buff, QList<int>() << powerEntityId);
+    VeinStorage::DumpJson::dumpToFile(storageDb, &buff, QList<int>() << powerEntityId);
 
     QVERIFY(TestLogHelpers::compareAndLogOnDiff(jsonExpected, jsonDumped));
 
     //When we change into 'INF_ModuleInterface', we take current 'jsonDumped' and copy it to test-data.
     //So, here is an extra check to be sure that no scpi commands are introduced by accident in future.
-    QJsonObject dumpedModuleInterface = QJsonDocument::fromVariant(veinStorage->getStoredValue(powerEntityId, QString("INF_ModuleInterface"))).object();
+    QJsonObject dumpedModuleInterface = QJsonDocument::fromVariant(storageDb->getStoredValue(powerEntityId, QString("INF_ModuleInterface"))).object();
     QJsonValue scpiCmds = dumpedModuleInterface.value("SCPIInfo").toObject().value("Cmd");
     QCOMPARE(scpiCmds.toArray().count(), 0);
 }

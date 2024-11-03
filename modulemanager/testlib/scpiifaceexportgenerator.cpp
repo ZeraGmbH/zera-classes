@@ -47,7 +47,7 @@ QString ScpiIfaceExportGenerator::getSessionScpiIface(QString device, QString se
     if(m_modmanConfig->getAvailableSessions().contains(session)) {
         m_modman->changeSessionFile(session);
         m_modman->waitUntilModulesAreReady();
-        scpiIface = m_modmanSetupFacade->getStorageSystem()->getStoredValue(9999, "ACT_DEV_IFACE").toString();
+        scpiIface = m_modmanSetupFacade->getStorageSystem()->getDb()->getStoredValue(9999, "ACT_DEV_IFACE").toString();
     }
     return scpiIface;
 }

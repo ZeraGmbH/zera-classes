@@ -501,10 +501,10 @@ double cAdjustmentModuleMeasProgram::calcAdjAbsoluteError()
 
 bool cAdjustmentModuleMeasProgram::checkRangeIsWanted(QString adjType)
 {
-    VeinStorage::AbstractEventSystem *storageSystem = m_pModule->getStorageSystem();
+    const VeinStorage::AbstractDatabase *storageDb = m_pModule->getStorageSystem()->getDb();
     int rangeEntity = getConfData()->m_AdjChannelInfoHash[m_sAdjustSysName]->rangeAdjInfo.m_nEntity;
     QString rangeComponent = getConfData()->m_AdjChannelInfoHash[m_sAdjustSysName]->rangeAdjInfo.m_sComponent;
-    QString currentRange = storageSystem->getStoredValue(rangeEntity, rangeComponent).toString();
+    QString currentRange = storageDb->getStoredValue(rangeEntity, rangeComponent).toString();
     if(currentRange != m_sAdjustRange) {
         notifyExecutionError(QString("Wrong range on %1 adjustment! Wanted: %2 / Current: %3").arg(adjType, m_sAdjustRange, currentRange));
         return false;
@@ -523,8 +523,8 @@ void cAdjustmentModuleMeasProgram::setAdjustAmplitudeStartCommand(QVariant var)
     int adjustEntity = getConfData()->m_AdjChannelInfoHash[m_sAdjustSysName]->amplitudeAdjInfo.m_nEntity;
     QString adjustComponent = getConfData()->m_AdjChannelInfoHash[m_sAdjustSysName]->amplitudeAdjInfo.m_sComponent;
 
-    VeinStorage::AbstractEventSystem *storageSystem = m_pModule->getStorageSystem();
-    m_AdjustActualValue = storageSystem->getStoredValue(adjustEntity, adjustComponent).toDouble();
+    const VeinStorage::AbstractDatabase *storageDb = m_pModule->getStorageSystem()->getDb();
+    m_AdjustActualValue = storageDb->getStoredValue(adjustEntity, adjustComponent).toDouble();
     double actWantedError = calcAdjAbsoluteError();
     if(actWantedError > maxAmplitudeErrorPercent) {
         notifyExecutionError(QString("Amplitude to adjust is out of limit! Wanted: %1 / Current: %2").arg(m_AdjustTargetValue).arg(m_AdjustActualValue));
@@ -564,7 +564,7 @@ void cAdjustmentModuleMeasProgram::setAdjustPhaseStartCommand(QVariant var)
 
     int adjustEntity = getConfData()->m_AdjChannelInfoHash[m_sAdjustSysName]->phaseAdjInfo.m_nEntity;
     QString adjustComponent = getConfData()->m_AdjChannelInfoHash[m_sAdjustSysName]->phaseAdjInfo.m_sComponent;
-    m_AdjustActualValue = cmpPhase(m_pModule->getStorageSystem()->getStoredValue(adjustEntity, adjustComponent));
+    m_AdjustActualValue = cmpPhase(m_pModule->getStorageSystem()->getDb()->getStoredValue(adjustEntity, adjustComponent));
     if(qIsNaN(m_AdjustActualValue)) {
         notifyExecutionError("Phase to adjust has no actual value!");
         m_pPARAdjustPhase->setError();
@@ -581,7 +581,7 @@ void cAdjustmentModuleMeasProgram::setAdjustPhaseStartCommand(QVariant var)
 
 void cAdjustmentModuleMeasProgram::adjustphaseGetCorr()
 {
-    m_AdjustFrequency = m_pModule->getStorageSystem()->getStoredValue(getConfData()->m_ReferenceFrequency.m_nEntity, getConfData()->m_ReferenceFrequency.m_sComponent).toDouble();
+    m_AdjustFrequency = m_pModule->getStorageSystem()->getDb()->getStoredValue(getConfData()->m_ReferenceFrequency.m_nEntity, getConfData()->m_ReferenceFrequency.m_sComponent).toDouble();
     m_MsgNrCmdList[m_commonObjects->m_pcbInterface->getAdjPhaseCorrection(m_sAdjustSysName, m_sAdjustRange, m_AdjustFrequency)] = getadjphasecorrection;
 }
 
@@ -607,7 +607,7 @@ void cAdjustmentModuleMeasProgram::setAdjustOffsetStartCommand(QVariant var)
 
     int adjustEntity = getConfData()->m_AdjChannelInfoHash[m_sAdjustSysName]->offsetAdjInfo.m_nEntity;
     QString adjustComponent = getConfData()->m_AdjChannelInfoHash[m_sAdjustSysName]->offsetAdjInfo.m_sComponent;
-    double adjustActualValue = m_pModule->getStorageSystem()->getStoredValue(adjustEntity, adjustComponent).toDouble();
+    double adjustActualValue = m_pModule->getStorageSystem()->getDb()->getStoredValue(adjustEntity, adjustComponent).toDouble();
     m_offsetTasks.addSub(TaskOffset::create(m_commonObjects->m_pcbInterface,
                                             m_sAdjustSysName, m_sAdjustRange,
                                             adjustActualValue, m_AdjustTargetValue,

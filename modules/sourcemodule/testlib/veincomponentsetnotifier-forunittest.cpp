@@ -36,7 +36,7 @@ void VeinComponentSetNotifier::processEvent(QEvent *t_event)
                     auto iter = m_hashComponentsListening.find(componentName);
                     if(iter != m_hashComponentsListening.end()) {
                         int entityId = evData->entityId();
-                        QVariant oldValue = m_storageHash.getStoredValue(entityId, componentName);
+                        QVariant oldValue = m_storageHash.getDb()->getStoredValue(entityId, componentName);
                         QVariant newValue = iter.value()->getValue();
                         if(oldValue != newValue) {
                             emit sigComponentChanged(componentName, newValue);

@@ -45,7 +45,7 @@ bool cModuleInterface::setupInterface()
     for(auto entityID : entityIdList) {
         // we parse over all moduleinterface components
         if (storageDb->hasStoredValue(entityID, QString("INF_ModuleInterface"))) {
-            QJsonDocument jsonDoc = QJsonDocument::fromJson(m_pModule->getStorageSystem()->getStoredValue(entityID, QString("INF_ModuleInterface")).toByteArray());
+            QJsonDocument jsonDoc = QJsonDocument::fromJson(storageDb->getStoredValue(entityID, QString("INF_ModuleInterface")).toByteArray());
             if ( !jsonDoc.isNull() && jsonDoc.isObject() ) {
                 const QJsonObject jsonObj = jsonDoc.object();
                 const QJsonObject jsonScpiInfo = jsonObj["SCPIInfo"].toObject();
