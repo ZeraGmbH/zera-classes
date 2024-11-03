@@ -117,9 +117,9 @@ void cPower3ModuleMeasProgram::searchActualValues()
     VeinStorage::AbstractEventSystem* storage = m_pModule->getStorageSystem();
     for (int i = 0; i < getConfData()->m_nPowerSystemCount; i++) {
         VeinStorage::AbstractComponentPtr inputU =
-            storage->getComponent(getConfData()->m_nModuleId, getConfData()->m_powerSystemConfigList.at(i).m_sInputU);
+            storage->getDb()->findComponent(getConfData()->m_nModuleId, getConfData()->m_powerSystemConfigList.at(i).m_sInputU);
         VeinStorage::AbstractComponentPtr inputI =
-            storage->getComponent(getConfData()->m_nModuleId, getConfData()->m_powerSystemConfigList.at(i).m_sInputI);
+            storage->getDb()->findComponent(getConfData()->m_nModuleId, getConfData()->m_powerSystemConfigList.at(i).m_sInputI);
         if (inputU && inputI) {
             cPower3MeasDelegate* cPMD;
             if (i == (getConfData()->m_nPowerSystemCount-1)) {

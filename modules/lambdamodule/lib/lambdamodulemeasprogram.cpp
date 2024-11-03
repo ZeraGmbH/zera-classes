@@ -78,9 +78,9 @@ void cLambdaModuleMeasProgram::searchActualValues()
     connect(m_lambdaCalcDelegate, &LambdaCalcDelegate::measuring, this, &cLambdaModuleMeasProgram::setMeasureSignal);
     VeinStorage::AbstractEventSystem* storage = m_pModule->getStorageSystem();
     VeinStorage::AbstractComponentPtr activeMeasModeComponent =
-        storage->getComponent(getConfData()->m_activeMeasModeEntity, getConfData()->m_activeMeasModeComponent);
+        storage->getDb()->findComponent(getConfData()->m_activeMeasModeEntity, getConfData()->m_activeMeasModeComponent);
     VeinStorage::AbstractComponentPtr activeMeasModePhaseComponent =
-        storage->getComponent(getConfData()->m_activeMeasModeEntity, getConfData()->m_activeMeasModePhaseComponent);
+        storage->getDb()->findComponent(getConfData()->m_activeMeasModeEntity, getConfData()->m_activeMeasModePhaseComponent);
     if (activeMeasModeComponent && activeMeasModePhaseComponent) {
         connect(activeMeasModeComponent.get(), &VeinStorage::AbstractComponent::sigValueChange,
                 m_lambdaCalcDelegate, &LambdaCalcDelegate::onActivePowerMeasModeChange);
@@ -93,11 +93,11 @@ void cLambdaModuleMeasProgram::searchActualValues()
         for (int i = 0; i < getConfData()->m_nLambdaSystemCount; i++) {
             if (!error) {
                 VeinStorage::AbstractComponentPtr inputPComponent =
-                    storage->getComponent(getConfData()->m_lambdaSystemConfigList.at(i).m_nInputPEntity, getConfData()->m_lambdaSystemConfigList.at(i).m_sInputP);
+                    storage->getDb()->findComponent(getConfData()->m_lambdaSystemConfigList.at(i).m_nInputPEntity, getConfData()->m_lambdaSystemConfigList.at(i).m_sInputP);
                 VeinStorage::AbstractComponentPtr inputQComponent =
-                    storage->getComponent(getConfData()->m_lambdaSystemConfigList.at(i).m_nInputQEntity, getConfData()->m_lambdaSystemConfigList.at(i).m_sInputQ);
+                    storage->getDb()->findComponent(getConfData()->m_lambdaSystemConfigList.at(i).m_nInputQEntity, getConfData()->m_lambdaSystemConfigList.at(i).m_sInputQ);
                 VeinStorage::AbstractComponentPtr inputSComponent =
-                    storage->getComponent(getConfData()->m_lambdaSystemConfigList.at(i).m_nInputSEntity, getConfData()->m_lambdaSystemConfigList.at(i).m_sInputS);
+                    storage->getDb()->findComponent(getConfData()->m_lambdaSystemConfigList.at(i).m_nInputSEntity, getConfData()->m_lambdaSystemConfigList.at(i).m_sInputS);
 
                 if (inputPComponent && inputQComponent && inputSComponent) {
                     connect(inputPComponent.get(), &VeinStorage::AbstractComponent::sigValueChange, m_lambdaCalcDelegate, [=](QVariant value) {

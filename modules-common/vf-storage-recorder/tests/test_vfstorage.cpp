@@ -176,7 +176,8 @@ void test_vfstorage::stopLoggingHasNoSideEffectOnOtherConnections()
     startLoggingFromJson(":/correct-entities.json", storageNum);
 
     int changesDetected = 0;
-    VeinStorage::AbstractComponentPtr component = m_testRunner->getVeinStorageSystem()->getComponent(rmsEntityId, "ACT_RMSPN1");
+    VeinStorage::AbstractDatabase *storageDb = m_testRunner->getVeinStorageSystem()->getDb();
+    VeinStorage::AbstractComponentPtr component = storageDb->findComponent(rmsEntityId, "ACT_RMSPN1");
     connect(component.get(), &VeinStorage::AbstractComponent::sigValueChange, [&]() {
         changesDetected++;
     });
