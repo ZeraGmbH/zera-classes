@@ -21,7 +21,7 @@ void test_scpi_cmds_in_session::initialSession()
     QList<int> entityList = veinStorage->getEntityList();
     QCOMPARE(entityList.count(), 2);
 
-    QList<QString> componentList = veinStorage->getEntityComponents(9999);
+    QList<QString> componentList = veinStorage->getDb()->getComponentList(9999);
     QCOMPARE(componentList.count(), 6); // EntitiyName / Metadata / PAR_SerialScpiActive / ACT_SerialScpiDeviceFile / ACT_DEV_IFACE / PAR_OptionalScpiQueue*/
 }
 
@@ -93,7 +93,7 @@ void test_scpi_cmds_in_session::devIfaceVeinComponent()
     ModuleManagerTestRunner testRunner(":/session-scpi-only.json");
 
     VeinStorage::AbstractEventSystem* veinStorage = testRunner.getVeinStorageSystem();
-    QList<QString> componentList = veinStorage->getEntityComponents(9999);
+    QList<QString> componentList = veinStorage->getDb()->getComponentList(9999);
     QVERIFY(componentList.contains("ACT_DEV_IFACE"));
 
     ScpiModuleClientBlocked client;

@@ -38,7 +38,7 @@ void test_vfstorage::entitiesFoundMinimalSession()
 void test_vfstorage::componentsFound()
 {
     startModman(":/session-minimal.json");
-    QList<QString> storageComponents = m_storage->getEntityComponents(storageEntityId);
+    QList<QString> storageComponents = m_storage->getDb()->getComponentList(storageEntityId);
 
     QCOMPARE(storageComponents.count(), 17);
     QVERIFY(storageComponents.contains("EntityName"));

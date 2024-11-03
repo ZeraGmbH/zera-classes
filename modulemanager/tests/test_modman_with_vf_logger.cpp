@@ -28,7 +28,7 @@ void test_modman_with_vf_logger::loggerComponentsCreated()
 {
     startModman("session-minimal-rms.json");
 
-    QList<QString> loggerComponents = m_storage->getEntityComponents(dataLoggerEntityId);
+    QList<QString> loggerComponents = m_storage->getDb()->getComponentList(dataLoggerEntityId);
 
     QCOMPARE(loggerComponents.count(), 16);
     QVERIFY(loggerComponents.contains("availableContentSets"));

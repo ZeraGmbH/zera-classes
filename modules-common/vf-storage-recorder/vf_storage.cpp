@@ -86,7 +86,7 @@ QHash<int, QStringList> Vf_Storage::extractEntitiesAndComponents(QJsonObject jso
         if (componentValue.isArray()) {
             const QJsonArray componentArray = componentValue.toArray();
             if(componentArray.isEmpty()) {
-                componentList = m_storageSystem->getEntityComponents(entityId);
+                componentList = m_storageSystem->getDb()->getComponentList(entityId);
                 ignoreComponents(&componentList);
             }
             else {
