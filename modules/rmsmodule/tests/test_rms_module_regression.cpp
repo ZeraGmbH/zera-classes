@@ -3,6 +3,7 @@
 #include "rmsmodule.h"
 #include "rmsmoduleconfiguration.h"
 #include "modulemanagertestrunner.h"
+#include <vs_dumpjson.h>
 #include <timemachineobject.h>
 #include <testloghelpers.h>
 #include <QBuffer>
@@ -40,7 +41,7 @@ void test_rms_module_regression::veinDumpInitial()
     VeinStorage::AbstractEventSystem* veinStorage = testRunner.getVeinStorageSystem();
     QByteArray jsonDumped;
     QBuffer buff(&jsonDumped);
-    veinStorage->dumpToFile(&buff, QList<int>() << rmsEntityId);
+    VeinStorage::DumpJson::dumpToFile(veinStorage->getDb(),&buff, QList<int>() << rmsEntityId);
 
     QVERIFY(TestLogHelpers::compareAndLogOnDiff(jsonExpected, jsonDumped));
 }
@@ -82,7 +83,7 @@ void test_rms_module_regression::injectActualValues()
     VeinStorage::AbstractEventSystem* veinStorage = testRunner.getVeinStorageSystem();
     QByteArray jsonDumped;
     QBuffer buff(&jsonDumped);
-    veinStorage->dumpToFile(&buff, QList<int>() << rmsEntityId);
+    VeinStorage::DumpJson::dumpToFile(veinStorage->getDb(),&buff, QList<int>() << rmsEntityId);
 
     QVERIFY(TestLogHelpers::compareAndLogOnDiff(jsonExpected, jsonDumped));
 }
@@ -131,7 +132,7 @@ void test_rms_module_regression::injectSymmetricValues()
     VeinStorage::AbstractEventSystem* veinStorage = testRunner.getVeinStorageSystem();
     QByteArray jsonDumped;
     QBuffer buff(&jsonDumped);
-    veinStorage->dumpToFile(&buff, QList<int>() << rmsEntityId);
+    VeinStorage::DumpJson::dumpToFile(veinStorage->getDb(),&buff, QList<int>() << rmsEntityId);
 
     QVERIFY(TestLogHelpers::compareAndLogOnDiff(jsonExpected, jsonDumped));
 }

@@ -4,6 +4,7 @@
 #include <timemachineobject.h>
 #include <timemachinefortest.h>
 #include <testloghelpers.h>
+#include <vs_dumpjson.h>
 #include <QSignalSpy>
 #include <QBuffer>
 #include <QTest>
@@ -40,7 +41,7 @@ void test_range_module_regression::veinDumpInitial()
     VeinStorage::AbstractEventSystem* veinStorage = testRunner.getVeinStorageSystem();
     QByteArray jsonDumped;
     QBuffer buff(&jsonDumped);
-    veinStorage->dumpToFile(&buff, QList<int>() << rangeEntityId);
+    VeinStorage::DumpJson::dumpToFile(veinStorage->getDb(),&buff, QList<int>() << rangeEntityId);
 
     QVERIFY(TestLogHelpers::compareAndLogOnDiff(jsonExpected, jsonDumped));
 }
@@ -91,7 +92,7 @@ void test_range_module_regression::injectActualValues()
     VeinStorage::AbstractEventSystem* veinStorage = testRunner.getVeinStorageSystem();
     QByteArray jsonDumped;
     QBuffer buff(&jsonDumped);
-    veinStorage->dumpToFile(&buff, QList<int>() << rangeEntityId);
+    VeinStorage::DumpJson::dumpToFile(veinStorage->getDb(),&buff, QList<int>() << rangeEntityId);
 
     QVERIFY(TestLogHelpers::compareAndLogOnDiff(jsonExpected, jsonDumped));
 }
@@ -127,7 +128,7 @@ void test_range_module_regression::injectActualValuesWithPreScaling()
     VeinStorage::AbstractEventSystem* veinStorage = testRunner.getVeinStorageSystem();
     QByteArray jsonDumped;
     QBuffer buff(&jsonDumped);
-    veinStorage->dumpToFile(&buff, QList<int>() << rangeEntityId);
+    VeinStorage::DumpJson::dumpToFile(veinStorage->getDb(),&buff, QList<int>() << rangeEntityId);
 
     QVERIFY(TestLogHelpers::compareAndLogOnDiff(jsonExpected, jsonDumped));
 }

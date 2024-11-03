@@ -2,6 +2,7 @@
 #include "modulemanagertestrunner.h"
 #include "adjustmentmodule.h"
 #include <vs_storageeventsystem.h>
+#include <vs_dumpjson.h>
 #include <testloghelpers.h>
 #include <testloghelpers.h>
 #include <scpimoduleclientblocked.h>
@@ -42,7 +43,7 @@ void test_adj_module_regression::veinDumpInitial()
     QByteArray jsonDumped;
     QBuffer buff(&jsonDumped);
     // just dump adjustment module to reduce FF on changing other modules
-    veinStorage->dumpToFile(&buff, QList<int>() << adjEntityId);
+    VeinStorage::DumpJson::dumpToFile(veinStorage->getDb(),&buff, QList<int>() << adjEntityId);
 
     QVERIFY(TestLogHelpers::compareAndLogOnDiff(jsonExpected, jsonDumped));
 }

@@ -5,6 +5,7 @@
 #include <vf_core_stack_client.h>
 #include <vf_entity_component_event_item.h>
 #include <vf_client_component_setter.h>
+#include <vs_dumpjson.h>
 #include <testloghelpers.h>
 #include <QBuffer>
 #include <QTest>
@@ -41,7 +42,7 @@ void test_dft_module_regression::veinDumpInitial()
     VeinStorage::AbstractEventSystem* veinStorage = testRunner.getVeinStorageSystem();
     QByteArray jsonDumped;
     QBuffer buff(&jsonDumped);
-    veinStorage->dumpToFile(&buff, QList<int>() << dftEntityId);
+    VeinStorage::DumpJson::dumpToFile(veinStorage->getDb(),&buff, QList<int>() << dftEntityId);
 
     QVERIFY(TestLogHelpers::compareAndLogOnDiff(jsonExpected, jsonDumped));
 }
@@ -83,7 +84,7 @@ void test_dft_module_regression::injectActualValuesNoReferenceChannel()
     VeinStorage::AbstractEventSystem* veinStorage = testRunner.getVeinStorageSystem();
     QByteArray jsonDumped;
     QBuffer buff(&jsonDumped);
-    veinStorage->dumpToFile(&buff, QList<int>() << dftEntityId);
+    VeinStorage::DumpJson::dumpToFile(veinStorage->getDb(),&buff, QList<int>() << dftEntityId);
 
     QVERIFY(TestLogHelpers::compareAndLogOnDiff(jsonExpected, jsonDumped));
 }
@@ -107,7 +108,7 @@ void test_dft_module_regression::injectActualValuesReferenceChannelUL1()
     VeinStorage::AbstractEventSystem* veinStorage = testRunner.getVeinStorageSystem();
     QByteArray jsonDumped;
     QBuffer buff(&jsonDumped);
-    veinStorage->dumpToFile(&buff, QList<int>() << dftEntityId);
+    VeinStorage::DumpJson::dumpToFile(veinStorage->getDb(),&buff, QList<int>() << dftEntityId);
 
     QVERIFY(TestLogHelpers::compareAndLogOnDiff(jsonExpected, jsonDumped));
 }
@@ -132,7 +133,7 @@ void test_dft_module_regression::injectActualValuesReferenceChannelUL2()
     VeinStorage::AbstractEventSystem* veinStorage = testRunner.getVeinStorageSystem();
     QByteArray jsonDumped;
     QBuffer buff(&jsonDumped);
-    veinStorage->dumpToFile(&buff, QList<int>() << dftEntityId);
+    VeinStorage::DumpJson::dumpToFile(veinStorage->getDb(),&buff, QList<int>() << dftEntityId);
 
     QVERIFY(TestLogHelpers::compareAndLogOnDiff(jsonExpected, jsonDumped));
 }
@@ -161,7 +162,7 @@ void test_dft_module_regression::injectActualValuesOrder0()
     VeinStorage::AbstractEventSystem* veinStorage = testRunner.getVeinStorageSystem();
     QByteArray jsonDumped;
     QBuffer buff(&jsonDumped);
-    veinStorage->dumpToFile(&buff, QList<int>() << dftEntityId);
+    VeinStorage::DumpJson::dumpToFile(veinStorage->getDb(),&buff, QList<int>() << dftEntityId);
 
     QVERIFY(TestLogHelpers::compareAndLogOnDiff(jsonExpected, jsonDumped));
 }
@@ -184,7 +185,7 @@ void test_dft_module_regression::injectSymmetricalOrder0()
     VeinStorage::AbstractEventSystem* veinStorage = testRunner.getVeinStorageSystem();
     QByteArray jsonDumped;
     QBuffer buff(&jsonDumped);
-    veinStorage->dumpToFile(&buff, QList<int>() << dftEntityId);
+    VeinStorage::DumpJson::dumpToFile(veinStorage->getDb(),&buff, QList<int>() << dftEntityId);
 
     QVERIFY(TestLogHelpers::compareAndLogOnDiff(jsonExpected, jsonDumped));
 }
@@ -207,7 +208,7 @@ void test_dft_module_regression::injectSymmetricalOrder1()
     VeinStorage::AbstractEventSystem* veinStorage = testRunner.getVeinStorageSystem();
     QByteArray jsonDumped;
     QBuffer buff(&jsonDumped);
-    veinStorage->dumpToFile(&buff, QList<int>() << dftEntityId);
+    VeinStorage::DumpJson::dumpToFile(veinStorage->getDb(),&buff, QList<int>() << dftEntityId);
 
     QVERIFY(TestLogHelpers::compareAndLogOnDiff(jsonExpected, jsonDumped));
 }

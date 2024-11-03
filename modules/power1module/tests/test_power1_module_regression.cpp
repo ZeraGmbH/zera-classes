@@ -3,6 +3,7 @@
 #include "power1modulemeasprogram.h"
 #include <timemachineobject.h>
 #include <testloghelpers.h>
+#include <vs_dumpjson.h>
 #include <QBuffer>
 #include <QTest>
 
@@ -38,7 +39,7 @@ void test_power1_module_regression::veinDumpInitial()
     VeinStorage::AbstractEventSystem* veinStorage = testRunner.getVeinStorageSystem();
     QByteArray jsonDumped;
     QBuffer buff(&jsonDumped);
-    veinStorage->dumpToFile(&buff, QList<int>() << powerEntityId);
+    VeinStorage::DumpJson::dumpToFile(veinStorage->getDb(),&buff, QList<int>() << powerEntityId);
 
     QVERIFY(TestLogHelpers::compareAndLogOnDiff(jsonExpected, jsonDumped));
 }
@@ -65,7 +66,7 @@ void test_power1_module_regression::injectActualValues()
     VeinStorage::AbstractEventSystem* veinStorage = testRunner.getVeinStorageSystem();
     QByteArray jsonDumped;
     QBuffer buff(&jsonDumped);
-    veinStorage->dumpToFile(&buff, QList<int>() << powerEntityId);
+    VeinStorage::DumpJson::dumpToFile(veinStorage->getDb(),&buff, QList<int>() << powerEntityId);
 
     QVERIFY(TestLogHelpers::compareAndLogOnDiff(jsonExpected, jsonDumped));
 }
@@ -80,7 +81,7 @@ void test_power1_module_regression::testScpiCommandsDisabled()
     VeinStorage::AbstractEventSystem* veinStorage = testRunner.getVeinStorageSystem();
     QByteArray jsonDumped;
     QBuffer buff(&jsonDumped);
-    veinStorage->dumpToFile(&buff, QList<int>() << powerEntityId);
+    VeinStorage::DumpJson::dumpToFile(veinStorage->getDb(),&buff, QList<int>() << powerEntityId);
 
     QVERIFY(TestLogHelpers::compareAndLogOnDiff(jsonExpected, jsonDumped));
 

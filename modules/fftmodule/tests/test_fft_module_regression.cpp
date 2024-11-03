@@ -1,10 +1,11 @@
 #include "test_fft_module_regression.h"
 #include "demovaluesdspfft.h"
 #include "modulemanagertestrunner.h"
-#include <cmath>
+#include <vs_dumpjson.h>
 #include <timemachineobject.h>
 #include <testloghelpers.h>
 #include <QBuffer>
+#include <cmath>
 #include <QTest>
 
 QTEST_MAIN(test_fft_module_regression)
@@ -39,7 +40,7 @@ void test_fft_module_regression::veinDumpInitial()
     VeinStorage::AbstractEventSystem* veinStorage = testRunner.getVeinStorageSystem();
     QByteArray jsonDumped;
     QBuffer buff(&jsonDumped);
-    veinStorage->dumpToFile(&buff, QList<int>() << fftEntityId);
+    VeinStorage::DumpJson::dumpToFile(veinStorage->getDb(),&buff, QList<int>() << fftEntityId);
 
     QVERIFY(TestLogHelpers::compareAndLogOnDiff(jsonExpected, jsonDumped));
 }
@@ -101,7 +102,7 @@ void test_fft_module_regression::injectValues()
     VeinStorage::AbstractEventSystem* veinStorage = testRunner.getVeinStorageSystem();
     QByteArray jsonDumped;
     QBuffer buff(&jsonDumped);
-    veinStorage->dumpToFile(&buff, QList<int>() << fftEntityId);
+    VeinStorage::DumpJson::dumpToFile(veinStorage->getDb(),&buff, QList<int>() << fftEntityId);
 
     QVERIFY(TestLogHelpers::compareAndLogOnDiff(jsonExpected, jsonDumped));
 }

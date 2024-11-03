@@ -2,6 +2,7 @@
 #include "demovaluesdspdft.h"
 #include "modulemanagertestrunner.h"
 #include "burden1measdelegate.h"
+#include <vs_dumpjson.h>
 #include <timemachineobject.h>
 #include <testloghelpers.h>
 #include <QBuffer>
@@ -34,7 +35,7 @@ void test_burden1_module_regression::veinDumpInitial()
     VeinStorage::AbstractEventSystem* veinStorage = testRunner.getVeinStorageSystem();
     QByteArray jsonDumped;
     QBuffer buff(&jsonDumped);
-    veinStorage->dumpToFile(&buff, QList<int>() << dftBurdenCurrentId << dftBurdenVoltageId);
+    VeinStorage::DumpJson::dumpToFile(veinStorage->getDb(),&buff, QList<int>() << dftBurdenCurrentId << dftBurdenVoltageId);
 
     QVERIFY(TestLogHelpers::compareAndLogOnDiff(jsonExpected, jsonDumped));
 }
