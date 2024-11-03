@@ -258,7 +258,7 @@ int main(int argc, char *argv[])
     else {
         modMan->loadDefaultSession();
         VeinStorage::AbstractEventSystem *storage = modManSetupFacade->getStorageSystem();
-        entititesComponent = storage->getFutureComponent(0, "Entities");
+        entititesComponent = storage->getDb()->getFutureComponent(0, "Entities");
         QObject::connect(entititesComponent.get(), &VeinStorage::AbstractComponent::sigValueChange, entititesComponent.get(), [&] (QVariant newValue) {
             if(newValue.isValid())
                 startNetwork(app.get());
