@@ -16,7 +16,7 @@ void test_modman_with_vf_logger::entitiesCreated()
 {
     startModman("session-minimal-rms.json");
 
-    QList<int> entityList = m_storage->getEntityList();
+    QList<int> entityList = m_storage->getDb()->getEntityList();
 
     QCOMPARE(entityList.count(), 3);
     QVERIFY(entityList.contains(systemEntityId));

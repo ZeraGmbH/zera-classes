@@ -14,7 +14,7 @@ void test_power1_module_regression::minimalSession()
 {
     ModuleManagerTestRunner testRunner(":/session-minimal.json");
     VeinStorage::AbstractEventSystem* veinStorage = testRunner.getVeinStorageSystem();
-    QList<int> entityList = veinStorage->getEntityList();
+    QList<int> entityList = veinStorage->getDb()->getEntityList();
     QCOMPARE(entityList.count(), 2);
     QVERIFY(veinStorage->hasEntity(powerEntityId));
 }
@@ -23,7 +23,7 @@ void test_power1_module_regression::moduleConfigFromResource()
 {
     ModuleManagerTestRunner testRunner(":/session-power1-test.json");
     VeinStorage::AbstractEventSystem* veinStorage = testRunner.getVeinStorageSystem();
-    QList<int> entityList = veinStorage->getEntityList();
+    QList<int> entityList = veinStorage->getDb()->getEntityList();
     QCOMPARE(entityList.count(), 2);
     QVERIFY(veinStorage->hasEntity(powerEntityId));
 }

@@ -15,7 +15,7 @@ void test_fft_module_regression::minimalSession()
 {
     ModuleManagerTestRunner testRunner(":/session-minimal.json"); // moving window is off at the time of writing
     VeinStorage::AbstractEventSystem* veinStorage = testRunner.getVeinStorageSystem();
-    QList<int> entityList = veinStorage->getEntityList();
+    QList<int> entityList = veinStorage->getDb()->getEntityList();
     QCOMPARE(entityList.count(), 2);
     QVERIFY(veinStorage->hasEntity(fftEntityId));
 }
@@ -24,7 +24,7 @@ void test_fft_module_regression::moduleConfigFromResource()
 {
     ModuleManagerTestRunner testRunner(":/session-from-resource.json");
     VeinStorage::AbstractEventSystem* veinStorage = testRunner.getVeinStorageSystem();
-    QList<int> entityList = veinStorage->getEntityList();
+    QList<int> entityList = veinStorage->getDb()->getEntityList();
     QCOMPARE(entityList.count(), 2);
     QVERIFY(veinStorage->hasEntity(fftEntityId));
 }

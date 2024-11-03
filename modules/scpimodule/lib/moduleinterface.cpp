@@ -40,7 +40,7 @@ cModuleInterface::~cModuleInterface()
 bool cModuleInterface::setupInterface()
 {
     bool ok = true;
-    const QList<int> entityIdList = m_pModule->getStorageSystem()->getEntityList();
+    const QList<int> entityIdList = m_pModule->getStorageSystem()->getDb()->getEntityList();
     for(auto entityID : entityIdList) {
         // we parse over all moduleinterface components
         if (m_pModule->getStorageSystem()->hasStoredValue(entityID, QString("INF_ModuleInterface"))) {

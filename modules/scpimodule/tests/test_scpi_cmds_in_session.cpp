@@ -18,7 +18,7 @@ void test_scpi_cmds_in_session::initialSession()
 {
     ModuleManagerTestRunner testRunner(":/session-scpi-only.json");
     VeinStorage::AbstractEventSystem* veinStorage = testRunner.getVeinStorageSystem();
-    QList<int> entityList = veinStorage->getEntityList();
+    QList<int> entityList = veinStorage->getDb()->getEntityList();
     QCOMPARE(entityList.count(), 2);
 
     QList<QString> componentList = veinStorage->getDb()->getComponentList(9999);

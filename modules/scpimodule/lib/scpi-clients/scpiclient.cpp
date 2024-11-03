@@ -230,7 +230,7 @@ void cSCPIClient::setSignalConnections(cSCPIStatus* scpiStatus, QList<cStatusBit
     if ((n = dList.count()) > 0) {
 
         QList<int> entityIdList;
-        entityIdList = m_pModule->getStorageSystem()->getEntityList();
+        entityIdList = m_pModule->getStorageSystem()->getDb()->getEntityList();
         int entityIdCount = entityIdList.count();
         // we iterate over all statusbitdescriptors
         for (int i = 0; i < n; i++) {

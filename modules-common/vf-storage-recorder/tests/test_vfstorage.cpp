@@ -28,7 +28,7 @@ void test_vfstorage::cleanup()
 void test_vfstorage::entitiesFoundMinimalSession()
 {
     startModman(":/session-minimal.json");
-    QList<int> entityList = m_storage->getEntityList();
+    QList<int> entityList = m_storage->getDb()->getEntityList();
 
     QCOMPARE(entityList.count(), 2);
     QVERIFY(m_storage->hasEntity(systemEntityId));
@@ -94,7 +94,7 @@ void test_vfstorage::storeValuesEmptyComponentsInJson()
 void test_vfstorage::storeValuesCorrectEntitiesStartStopLoggingDisabled()
 {
     startModman(":/session-minimal-rms.json");
-    QCOMPARE(m_storage->getEntityList().count(), 3);
+    QCOMPARE(m_storage->getDb()->getEntityList().count(), 3);
 
     QString fileContent = readEntitiesAndCompoFromJsonFile(":/correct-entities.json");
     m_testRunner->setVfComponent(storageEntityId, "PAR_JsonWithEntities0", fileContent);
