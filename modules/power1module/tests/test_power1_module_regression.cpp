@@ -17,7 +17,7 @@ void test_power1_module_regression::minimalSession()
     VeinStorage::AbstractEventSystem* veinStorage = testRunner.getVeinStorageSystem();
     QList<int> entityList = veinStorage->getDb()->getEntityList();
     QCOMPARE(entityList.count(), 2);
-    QVERIFY(veinStorage->hasEntity(powerEntityId));
+    QVERIFY(veinStorage->getDb()->hasEntity(powerEntityId));
 }
 
 void test_power1_module_regression::moduleConfigFromResource()
@@ -26,7 +26,7 @@ void test_power1_module_regression::moduleConfigFromResource()
     VeinStorage::AbstractEventSystem* veinStorage = testRunner.getVeinStorageSystem();
     QList<int> entityList = veinStorage->getDb()->getEntityList();
     QCOMPARE(entityList.count(), 2);
-    QVERIFY(veinStorage->hasEntity(powerEntityId));
+    QVERIFY(veinStorage->getDb()->hasEntity(powerEntityId));
 }
 
 void test_power1_module_regression::veinDumpInitial()

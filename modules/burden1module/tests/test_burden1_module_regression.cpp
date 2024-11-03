@@ -20,9 +20,9 @@ void test_burden1_module_regression::minimalSession()
     VeinStorage::AbstractEventSystem* veinStorage = testRunner.getVeinStorageSystem();
     QList<int> entityList = veinStorage->getDb()->getEntityList();
     QCOMPARE(entityList.count(), 4);
-    QVERIFY(veinStorage->hasEntity(dftEntityId));
-    QVERIFY(veinStorage->hasEntity(dftBurdenCurrentId));
-    QVERIFY(veinStorage->hasEntity(dftBurdenVoltageId));
+    QVERIFY(veinStorage->getDb()->hasEntity(dftEntityId));
+    QVERIFY(veinStorage->getDb()->hasEntity(dftBurdenCurrentId));
+    QVERIFY(veinStorage->getDb()->hasEntity(dftBurdenVoltageId));
 }
 
 void test_burden1_module_regression::veinDumpInitial()

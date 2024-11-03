@@ -18,7 +18,7 @@ void test_fft_module_regression::minimalSession()
     VeinStorage::AbstractEventSystem* veinStorage = testRunner.getVeinStorageSystem();
     QList<int> entityList = veinStorage->getDb()->getEntityList();
     QCOMPARE(entityList.count(), 2);
-    QVERIFY(veinStorage->hasEntity(fftEntityId));
+    QVERIFY(veinStorage->getDb()->hasEntity(fftEntityId));
 }
 
 void test_fft_module_regression::moduleConfigFromResource()
@@ -27,7 +27,7 @@ void test_fft_module_regression::moduleConfigFromResource()
     VeinStorage::AbstractEventSystem* veinStorage = testRunner.getVeinStorageSystem();
     QList<int> entityList = veinStorage->getDb()->getEntityList();
     QCOMPARE(entityList.count(), 2);
-    QVERIFY(veinStorage->hasEntity(fftEntityId));
+    QVERIFY(veinStorage->getDb()->hasEntity(fftEntityId));
 }
 
 void test_fft_module_regression::veinDumpInitial()

@@ -24,12 +24,12 @@ void test_adj_module_regression::minimalSession()
     VeinStorage::AbstractEventSystem* veinStorage = testRunner.getVeinStorageSystem();
     QList<int> entityList = veinStorage->getDb()->getEntityList();
     QCOMPARE(entityList.count(), 7);
-    QVERIFY(veinStorage->hasEntity(rangeEntityId));
-    QVERIFY(veinStorage->hasEntity(rmsEntityId));
-    QVERIFY(veinStorage->hasEntity(dftEntityId));
-    QVERIFY(veinStorage->hasEntity(fftEntityId));
-    QVERIFY(veinStorage->hasEntity(adjEntityId));
-    QVERIFY(veinStorage->hasEntity(scpiEntityId));
+    QVERIFY(veinStorage->getDb()->hasEntity(rangeEntityId));
+    QVERIFY(veinStorage->getDb()->hasEntity(rmsEntityId));
+    QVERIFY(veinStorage->getDb()->hasEntity(dftEntityId));
+    QVERIFY(veinStorage->getDb()->hasEntity(fftEntityId));
+    QVERIFY(veinStorage->getDb()->hasEntity(adjEntityId));
+    QVERIFY(veinStorage->getDb()->hasEntity(scpiEntityId));
 }
 
 void test_adj_module_regression::veinDumpInitial()

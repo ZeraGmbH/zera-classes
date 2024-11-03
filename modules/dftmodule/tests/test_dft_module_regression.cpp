@@ -20,7 +20,7 @@ void test_dft_module_regression::minimalSession()
     VeinStorage::AbstractEventSystem* veinStorage = testRunner.getVeinStorageSystem();
     QList<int> entityList = veinStorage->getDb()->getEntityList();
     QCOMPARE(entityList.count(), 2);
-    QVERIFY(veinStorage->hasEntity(dftEntityId));
+    QVERIFY(veinStorage->getDb()->hasEntity(dftEntityId));
 }
 
 void test_dft_module_regression::moduleConfigFromResource()
@@ -29,7 +29,7 @@ void test_dft_module_regression::moduleConfigFromResource()
     VeinStorage::AbstractEventSystem* veinStorage = testRunner.getVeinStorageSystem();
     QList<int> entityList = veinStorage->getDb()->getEntityList();
     QCOMPARE(entityList.count(), 2);
-    QVERIFY(veinStorage->hasEntity(dftEntityId));
+    QVERIFY(veinStorage->getDb()->hasEntity(dftEntityId));
 }
 
 void test_dft_module_regression::veinDumpInitial()

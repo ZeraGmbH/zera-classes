@@ -19,7 +19,7 @@ void test_rms_module_regression::minimalSession()
     VeinStorage::AbstractEventSystem* veinStorage = testRunner.getVeinStorageSystem();
     QList<int> entityList = veinStorage->getDb()->getEntityList();
     QCOMPARE(entityList.count(), 2);
-    QVERIFY(veinStorage->hasEntity(rmsEntityId));
+    QVERIFY(veinStorage->getDb()->hasEntity(rmsEntityId));
 }
 
 void test_rms_module_regression::moduleConfigFromResource()
@@ -28,7 +28,7 @@ void test_rms_module_regression::moduleConfigFromResource()
     VeinStorage::AbstractEventSystem* veinStorage = testRunner.getVeinStorageSystem();
     QList<int> entityList = veinStorage->getDb()->getEntityList();
     QCOMPARE(entityList.count(), 2);
-    QVERIFY(veinStorage->hasEntity(rmsEntityId));
+    QVERIFY(veinStorage->getDb()->hasEntity(rmsEntityId));
 }
 
 void test_rms_module_regression::veinDumpInitial()

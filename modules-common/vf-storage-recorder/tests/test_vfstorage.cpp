@@ -31,8 +31,8 @@ void test_vfstorage::entitiesFoundMinimalSession()
     QList<int> entityList = m_storage->getDb()->getEntityList();
 
     QCOMPARE(entityList.count(), 2);
-    QVERIFY(m_storage->hasEntity(systemEntityId));
-    QVERIFY(m_storage->hasEntity(storageEntityId));
+    QVERIFY(m_storage->getDb()->hasEntity(systemEntityId));
+    QVERIFY(m_storage->getDb()->hasEntity(storageEntityId));
 }
 
 void test_vfstorage::componentsFound()
