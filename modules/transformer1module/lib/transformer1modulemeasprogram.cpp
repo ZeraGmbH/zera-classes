@@ -244,7 +244,7 @@ void cTransformer1ModuleMeasProgram::generateInterface()
 void cTransformer1ModuleMeasProgram::searchActualValues()
 {
     bool error = false;
-    const VeinStorage::AbstractDatabase* storageDb = m_pModule->getStorageSystem()->getDb();
+    const VeinStorage::AbstractDatabase* storageDb = m_pModule->getStorageDb();
     for (int i = 0; i < getConfData()->m_nTransformerSystemCount; i++) {
         VeinStorage::AbstractComponentPtr inputPrimaryVector =
             storageDb->findComponent(getConfData()->m_nModuleId, getConfData()->m_transformerSystemConfigList.at(i).m_sInputPrimaryVector);

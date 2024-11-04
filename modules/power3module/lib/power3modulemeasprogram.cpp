@@ -114,7 +114,7 @@ void cPower3ModuleMeasProgram::generateInterface()
 void cPower3ModuleMeasProgram::searchActualValues()
 {
     bool error = false;
-    const VeinStorage::AbstractDatabase* storageDb = m_pModule->getStorageSystem()->getDb();
+    const VeinStorage::AbstractDatabase* storageDb = m_pModule->getStorageDb();
     for (int i = 0; i < getConfData()->m_nPowerSystemCount; i++) {
         VeinStorage::AbstractComponentPtr inputU =
             storageDb->findComponent(getConfData()->m_nModuleId, getConfData()->m_powerSystemConfigList.at(i).m_sInputU);

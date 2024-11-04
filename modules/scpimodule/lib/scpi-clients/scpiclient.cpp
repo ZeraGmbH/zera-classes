@@ -228,7 +228,7 @@ void cSCPIClient::setSignalConnections(cSCPIStatus* scpiStatus, QList<cStatusBit
 {
     int n;
     if ((n = dList.count()) > 0) {
-        const VeinStorage::AbstractDatabase* storageDb = m_pModule->getStorageSystem()->getDb();
+        const VeinStorage::AbstractDatabase* storageDb = m_pModule->getStorageDb();
         QList<int> entityIdList = storageDb->getEntityList();
         int entityIdCount = entityIdList.count();
         // we iterate over all statusbitdescriptors
