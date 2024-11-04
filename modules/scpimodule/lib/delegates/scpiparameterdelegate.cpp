@@ -32,7 +32,7 @@ void cSCPIParameterDelegate::executeSCPI(cSCPIClient *client, QString &sInput)
         cData->setEventOrigin(VeinEvent::EventData::EventOrigin::EO_LOCAL);
         cData->setEventTarget(VeinEvent::EventData::EventTarget::ET_ALL);
         cData->setComponentName(m_pSCPICmdInfo->componentName);
-        cData->setOldValue(m_pModule->getStorageSystem()->getDb()->getStoredValue(m_pSCPICmdInfo->entityId, m_pSCPICmdInfo->componentName));
+        cData->setOldValue(m_pModule->getStorageDb()->getStoredValue(m_pSCPICmdInfo->entityId, m_pSCPICmdInfo->componentName));
         if (bQuery) {
             if (cmd.isQuery(1))
                 cData->setNewValue(cmd.getParam(0));

@@ -32,7 +32,7 @@ public:
     void startDestroy() override;
     virtual void exportMetaData();
 
-    VeinStorage::AbstractEventSystem* getStorageSystem();
+    const VeinStorage::AbstractDatabase *getStorageDb() const;
     bool getDemo();
     const AbstractFactoryServiceInterfacesPtr getServiceInterfaceFactory() const;
     const ModuleFactoryParamNetworkPtr getNetworkConfig() const;

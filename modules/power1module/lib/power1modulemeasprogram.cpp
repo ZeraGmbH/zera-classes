@@ -298,7 +298,7 @@ void cPower1ModuleMeasProgram::generateInterface()
         VeinStorage::AbstractComponentPtr scaleInputI;
         if(getConfData()->m_FreqOutputConfList.length() > i) {
             int entityIdScaleU = getConfData()->m_FreqOutputConfList.at(i).m_uscale.m_entityId;
-            VeinStorage::AbstractDatabase *storageDb = m_pModule->getStorageSystem()->getDb();
+            const VeinStorage::AbstractDatabase *storageDb = m_pModule->getStorageDb();
             QString componentNameScaleU = getConfData()->m_FreqOutputConfList.at(i).m_uscale.m_componentName;
             scaleInputU = storageDb->findComponent(entityIdScaleU, componentNameScaleU);
 

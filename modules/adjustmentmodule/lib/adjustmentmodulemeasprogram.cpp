@@ -113,7 +113,7 @@ bool cAdjustmentModuleMeasProgram::checkExternalVeinComponents()
 {
     bool ok = true;
     adjInfoType adjInfo = getConfData()->m_ReferenceAngle;
-    const VeinStorage::AbstractDatabase* storageDb = m_pModule->getStorageSystem()->getDb();
+    const VeinStorage::AbstractDatabase* storageDb = m_pModule->getStorageDb();
     if (!storageDb->hasStoredValue(adjInfo.m_nEntity, adjInfo.m_sComponent))
         ok = false;
     adjInfo = getConfData()->m_ReferenceFrequency;
@@ -501,7 +501,7 @@ double cAdjustmentModuleMeasProgram::calcAdjAbsoluteError()
 
 bool cAdjustmentModuleMeasProgram::checkRangeIsWanted(QString adjType)
 {
-    const VeinStorage::AbstractDatabase *storageDb = m_pModule->getStorageSystem()->getDb();
+    const VeinStorage::AbstractDatabase *storageDb = m_pModule->getStorageDb();
     int rangeEntity = getConfData()->m_AdjChannelInfoHash[m_sAdjustSysName]->rangeAdjInfo.m_nEntity;
     QString rangeComponent = getConfData()->m_AdjChannelInfoHash[m_sAdjustSysName]->rangeAdjInfo.m_sComponent;
     QString currentRange = storageDb->getStoredValue(rangeEntity, rangeComponent).toString();
@@ -523,7 +523,7 @@ void cAdjustmentModuleMeasProgram::setAdjustAmplitudeStartCommand(QVariant var)
     int adjustEntity = getConfData()->m_AdjChannelInfoHash[m_sAdjustSysName]->amplitudeAdjInfo.m_nEntity;
     QString adjustComponent = getConfData()->m_AdjChannelInfoHash[m_sAdjustSysName]->amplitudeAdjInfo.m_sComponent;
 
-    const VeinStorage::AbstractDatabase *storageDb = m_pModule->getStorageSystem()->getDb();
+    const VeinStorage::AbstractDatabase *storageDb = m_pModule->getStorageDb();
     m_AdjustActualValue = storageDb->getStoredValue(adjustEntity, adjustComponent).toDouble();
     double actWantedError = calcAdjAbsoluteError();
     if(actWantedError > maxAmplitudeErrorPercent) {
@@ -564,7 +564,7 @@ void cAdjustmentModuleMeasProgram::setAdjustPhaseStartCommand(QVariant var)
 
     int adjustEntity = getConfData()->m_AdjChannelInfoHash[m_sAdjustSysName]->phaseAdjInfo.m_nEntity;
     QString adjustComponent = getConfData()->m_AdjChannelInfoHash[m_sAdjustSysName]->phaseAdjInfo.m_sComponent;
-    m_AdjustActualValue = cmpPhase(m_pModule->getStorageSystem()->getDb()->getStoredValue(adjustEntity, adjustComponent));
+    m_AdjustActualValue = cmpPhase(m_pModule->getStorageDb()->getStoredValue(adjustEntity, adjustComponent));
     if(qIsNaN(m_AdjustActualValue)) {
         notifyExecutionError("Phase to adjust has no actual value!");
         m_pPARAdjustPhase->setError();
@@ -581,7 +581,7 @@ void cAdjustmentModuleMeasProgram::setAdjustPhaseStartCommand(QVariant var)
 
 void cAdjustmentModuleMeasProgram::adjustphaseGetCorr()
 {
-    m_AdjustFrequency = m_pModule->getStorageSystem()->getDb()->getStoredValue(getConfData()->m_ReferenceFrequency.m_nEntity, getConfData()->m_ReferenceFrequency.m_sComponent).toDouble();
+    m_AdjustFrequency = m_pModule->getStorageDb()->getStoredValue(getConfData()->m_ReferenceFrequency.m_nEntity, getConfData()->m_ReferenceFrequency.m_sComponent).toDouble();
     m_MsgNrCmdList[m_commonObjects->m_pcbInterface->getAdjPhaseCorrection(m_sAdjustSysName, m_sAdjustRange, m_AdjustFrequency)] = getadjphasecorrection;
 }
 
@@ -607,7 +607,7 @@ void cAdjustmentModuleMeasProgram::setAdjustOffsetStartCommand(QVariant var)
 
     int adjustEntity = getConfData()->m_AdjChannelInfoHash[m_sAdjustSysName]->offsetAdjInfo.m_nEntity;
     QString adjustComponent = getConfData()->m_AdjChannelInfoHash[m_sAdjustSysName]->offsetAdjInfo.m_sComponent;
-    double adjustActualValue = m_pModule->getStorageSystem()->getDb()->getStoredValue(adjustEntity, adjustComponent).toDouble();
+    double adjustActualValue = m_pModule->getStorageDb()->getStoredValue(adjustEntity, adjustComponent).toDouble();
     m_offsetTasks.addSub(TaskOffset::create(m_commonObjects->m_pcbInterface,
                                             m_sAdjustSysName, m_sAdjustRange,
                                             adjustActualValue, m_AdjustTargetValue,

@@ -40,7 +40,7 @@ cModuleInterface::~cModuleInterface()
 bool cModuleInterface::setupInterface()
 {
     bool ok = true;
-    const VeinStorage::AbstractDatabase* storageDb = m_pModule->getStorageSystem()->getDb();
+    const VeinStorage::AbstractDatabase* storageDb = m_pModule->getStorageDb();
     const QList<int> entityIdList = storageDb->getEntityList();
     for(auto entityID : entityIdList) {
         // we parse over all moduleinterface components
