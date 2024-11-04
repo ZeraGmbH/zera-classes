@@ -15,9 +15,10 @@ class TimeGrouping
 public:
     static const char* DateTimeFormat;
     static QJsonObject regroupTimestamp(TimeStampedGroups inputTimeStampedGroups);
-    static RecordedGroups appendComponentInfoToRecordedGroup(RecordedGroups currentGroup, RecordedGroups inputGroup, int entityID);
     static RecordedGroups appendEntityToRecordedGroup(RecordedGroups currentGroup, RecordedGroups inputGroup, int entityID);
 private:
+    static RecordedGroups appendComponentInfoToRecordedGroup(RecordedGroups currentGroup, RecordedGroups inputGroup, int entityID);
+    static RecordedGroups appendNewEntityToRecordedGroup(RecordedGroups currentGroup, RecordedGroups inputGroup, int entityID);
     static QJsonObject convertTimeStampedGroupsToJson(TimeStampedGroups timeStampedGroups);
     static QElapsedTimer m_regroupingTime;
 };

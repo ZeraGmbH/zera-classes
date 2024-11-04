@@ -43,10 +43,7 @@ void VeinDataCollector::appendValue(int entityId, QString componentName, QVarian
     newRecordedGrp[entityId][componentName] = value;
     if(m_timestampedGrp.contains(timestamp.toMSecsSinceEpoch())) {
         RecordedGroups preRecordedGrp = m_timestampedGrp[timestamp.toMSecsSinceEpoch()];
-        if(preRecordedGrp.contains(entityId))
-            newRecordedGrp = TimeGrouping::appendComponentInfoToRecordedGroup(preRecordedGrp, newRecordedGrp, entityId);
-        else
-            newRecordedGrp = TimeGrouping::appendEntityToRecordedGroup(preRecordedGrp, newRecordedGrp, entityId);
+        newRecordedGrp = TimeGrouping::appendEntityToRecordedGroup(preRecordedGrp, newRecordedGrp, entityId);
     }
     m_timestampedGrp.insert(timestamp.toMSecsSinceEpoch(), newRecordedGrp);
     qInfo("VeinDataCollector::appendValue took %llims", m_appendValueElapsedTimer.elapsed());

@@ -23,10 +23,7 @@ QJsonObject TimeGrouping::regroupTimestamp(TimeStampedGroups inputTimeStampedGro
                 RecordedGroups preRecordedGroup;
                 for(auto inputEntity: inputRecordedGroup.keys()) {
                     preRecordedGroup = regroupedTimeStamps.value(currentTimeStamp);
-                    if (preRecordedGroup.contains(inputEntity))
-                        regroupedTimeStamps.insert(currentTimeStamp, appendComponentInfoToRecordedGroup(preRecordedGroup, inputRecordedGroup, inputEntity));
-                    else
-                        regroupedTimeStamps.insert(currentTimeStamp, appendEntityToRecordedGroup(preRecordedGroup,inputRecordedGroup, inputEntity));
+                    regroupedTimeStamps.insert(currentTimeStamp, appendComponentInfoToRecordedGroup(preRecordedGroup, inputRecordedGroup, inputEntity));
                 }
             }
         }
@@ -34,6 +31,14 @@ QJsonObject TimeGrouping::regroupTimestamp(TimeStampedGroups inputTimeStampedGro
     QJsonObject returnJson = convertTimeStampedGroupsToJson(regroupedTimeStamps);
     qInfo("TimeGrouping::regrouping took %llims", m_regroupingTime.elapsed());
     return returnJson;
+}
+
+RecordedGroups TimeGrouping::appendEntityToRecordedGroup(RecordedGroups currentGroup, RecordedGroups inputGroup, int entityID)
+{
+    if (currentGroup.contains(entityID))
+        return appendComponentInfoToRecordedGroup(currentGroup, inputGroup, entityID);
+    else
+        return appendNewEntityToRecordedGroup(currentGroup, inputGroup, entityID);
 }
 
 RecordedGroups TimeGrouping::appendComponentInfoToRecordedGroup(RecordedGroups currentGroup, RecordedGroups inputGroup, int entityID)
@@ -46,7 +51,7 @@ RecordedGroups TimeGrouping::appendComponentInfoToRecordedGroup(RecordedGroups c
     return currentGroup;
 }
 
-RecordedGroups TimeGrouping::appendEntityToRecordedGroup(RecordedGroups currentGroup, RecordedGroups inputGroup, int entityID)
+RecordedGroups TimeGrouping::appendNewEntityToRecordedGroup(RecordedGroups currentGroup, RecordedGroups inputGroup, int entityID)
 {
     currentGroup.insert(entityID, inputGroup[entityID]);
     return currentGroup;
