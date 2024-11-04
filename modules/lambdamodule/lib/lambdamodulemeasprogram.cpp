@@ -76,7 +76,7 @@ void cLambdaModuleMeasProgram::searchActualValues()
     bool error = false;
     m_lambdaCalcDelegate = new LambdaCalcDelegate(getConfData()->m_activeMeasModeAvail, m_veinLambdaActValues, m_veinLoadTypeList);
     connect(m_lambdaCalcDelegate, &LambdaCalcDelegate::measuring, this, &cLambdaModuleMeasProgram::setMeasureSignal);
-    VeinStorage::AbstractDatabase* storageDb = m_pModule->getStorageSystem()->getDb();
+    const VeinStorage::AbstractDatabase* storageDb = m_pModule->getStorageSystem()->getDb();
     VeinStorage::AbstractComponentPtr activeMeasModeComponent =
         storageDb->findComponent(getConfData()->m_activeMeasModeEntity, getConfData()->m_activeMeasModeComponent);
     VeinStorage::AbstractComponentPtr activeMeasModePhaseComponent =

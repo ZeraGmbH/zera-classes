@@ -172,7 +172,7 @@ void cBurden1ModuleMeasProgram::generateInterface()
 void cBurden1ModuleMeasProgram::searchActualValues()
 {
     bool error = false;
-    VeinStorage::AbstractDatabase* storageDb = m_pModule->getStorageSystem()->getDb();
+    const VeinStorage::AbstractDatabase* storageDb = m_pModule->getStorageSystem()->getDb();
     for (int i = 0; i < getConfData()->m_nBurdenSystemCount; i++) {
         VeinStorage::AbstractComponentPtr inputVoltageVector =
             storageDb->findComponent(getConfData()->m_nModuleId, getConfData()->m_BurdenSystemConfigList.at(i).m_sInputVoltageVector);
