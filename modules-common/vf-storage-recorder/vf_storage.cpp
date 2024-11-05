@@ -8,9 +8,10 @@ Vf_Storage::Vf_Storage(VeinStorage::AbstractEventSystem *storageSystem, QObject 
     m_storageSystem(storageSystem),
     m_isInitalized(false)
 {
+    m_timeStamper = VeinStorage::TimeStamperSettable::create();
     m_entity=new VfCpp::VfCppEntity(entityId);
     for(int i = 0; i < maximumStorages; i++) {
-        VeinDataCollector* dataCollector = new VeinDataCollector(storageSystem);
+        VeinDataCollector* dataCollector = new VeinDataCollector(storageSystem, m_timeStamper);
         m_dataCollect.append(dataCollector);
         connect(dataCollector, &VeinDataCollector::newStoredValue, this, [=](QJsonObject value){
             m_storedValues[i]->setValue(value);
@@ -47,6 +48,7 @@ void Vf_Storage::startStopLogging(QVariant value, int storageNum)
     bool onOff = value.toBool();
 
     if(onOff) {
+        prepareTimeRecording();
         m_JsonWithEntities[storageNum]->changeComponentReadWriteType(true);
         QString jsonString = m_JsonWithEntities[storageNum]->getValue().toString();
         QJsonDocument jsonDoc = QJsonDocument::fromJson(jsonString.toUtf8());
@@ -107,5 +109,16 @@ void Vf_Storage::ignoreComponents(QStringList *componentList)
 {
     QString componentToBeIgnored = "SIG_Measuring";
     componentList->removeAll(componentToBeIgnored);
+}
+
+void Vf_Storage::prepareTimeRecording()
+{
+    int rangeModuleEntity = 1020;
+    VeinStorage::AbstractComponentPtr storageCompo = m_storageSystem->getDb()->findComponent(rangeModuleEntity, "SIG_Measuring");
+    connect(storageCompo.get(), &VeinStorage::AbstractComponent::sigValueChange, this, [&](QVariant newValue){
+        if(newValue.toInt() == 1) { // 1 indicates RangeModule received new actual values
+            m_timeStamper->setTimestampToNow();
+        }
+    });
 }
 

@@ -39,6 +39,7 @@ private:
     void startLoggingFromJson(QString fileName, int storageNum);
     void stopLoggingFromJson(int storageNum);
     void changeRMSValues(QVariant newValue1, QVariant newValue2);
+    void triggerRangeModuleSigMeasuring();
 
     std::unique_ptr<ModuleManagerTestRunner> m_testRunner;
     std::unique_ptr<Vf_Storage> m_vfStorageEntity;

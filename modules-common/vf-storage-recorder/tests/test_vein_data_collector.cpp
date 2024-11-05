@@ -26,7 +26,8 @@ void test_vein_data_collector::cleanup()
 
 void test_vein_data_collector::oneChangeWithinOnePeriod()
 {
-    VeinDataCollector dataCollector(m_server->getStorage());
+    VeinStorage::TimeStamperSettablePtr timeStamper = VeinStorage::TimeStamperSettable::create();
+    VeinDataCollector dataCollector(m_server->getStorage(), timeStamper);
     QSignalSpy spy(&dataCollector, &VeinDataCollector::newStoredValue);
 
     QHash<int, QStringList> collectorComponents;

@@ -9,6 +9,7 @@ QTEST_MAIN(test_vfstorage)
 
 static constexpr int systemEntityId = 0;
 static constexpr int storageEntityId = 1;
+static constexpr int rangeEntityId = 1020;
 static constexpr int rmsEntityId = 1040;
 static constexpr int powerEntityId = 1070;
 static constexpr int maximumStorage = 5;
@@ -73,7 +74,7 @@ void test_vfstorage::storeValuesBasedOnIncorrectEntitiesInJson()
 void test_vfstorage::storeValuesEmptyComponentsInJson()
 {
     constexpr int storageNum = 0;
-    startModman(":/session-minimal-rms.json");
+    startModman(":/session-minimal-range-rms.json");
     startLoggingFromJson(":/empty-components.json", 0);
     changeRMSValues(1, 2);
     m_testRunner->setVfComponent(rmsEntityId, "PAR_Interval", 5);
@@ -93,8 +94,8 @@ void test_vfstorage::storeValuesEmptyComponentsInJson()
 
 void test_vfstorage::storeValuesCorrectEntitiesStartStopLoggingDisabled()
 {
-    startModman(":/session-minimal-rms.json");
-    QCOMPARE(m_storage->getDb()->getEntityList().count(), 3);
+    startModman(":/session-minimal-range-rms.json");
+    QCOMPARE(m_storage->getDb()->getEntityList().count(), 4);
 
     QString fileContent = readEntitiesAndCompoFromJsonFile(":/correct-entities.json");
     m_testRunner->setVfComponent(storageEntityId, "PAR_JsonWithEntities0", fileContent);
@@ -109,7 +110,7 @@ void test_vfstorage::storeValuesCorrectEntitiesStartStopLoggingDisabled()
 void test_vfstorage::loggingOnOffSequence0()
 {
     constexpr int storageNum = 0;
-    startModman(":/session-minimal-rms.json");
+    startModman(":/session-minimal-range-rms.json");
     startLoggingFromJson(":/correct-entities.json", storageNum);
 
     changeRMSValues(3, 4);
@@ -141,7 +142,7 @@ void test_vfstorage::loggingOnOffSequence0()
 void test_vfstorage::loggingOnOffSequence1()
 {
     constexpr int storageNum = 1;
-    startModman(":/session-minimal-rms.json");
+    startModman(":/session-minimal-range-rms.json");
     startLoggingFromJson(":/correct-entities.json", storageNum);
 
     changeRMSValues(3, 4);
@@ -172,7 +173,7 @@ void test_vfstorage::loggingOnOffSequence1()
 void test_vfstorage::stopLoggingHasNoSideEffectOnOtherConnections()
 {
     constexpr int storageNum = 0;
-    startModman(":/session-minimal-rms.json");
+    startModman(":/session-minimal-range-rms.json");
     startLoggingFromJson(":/correct-entities.json", storageNum);
 
     int changesDetected = 0;
@@ -192,7 +193,7 @@ void test_vfstorage::stopLoggingHasNoSideEffectOnOtherConnections()
 
 void test_vfstorage::changeJsonFileWhileLogging()
 {
-    startModman(":/session-minimal-rms.json");
+    startModman(":/session-minimal-range-rms.json");
     startLoggingFromJson(":/correct-entities.json", 0);
 
     changeRMSValues(10, 11);
@@ -219,8 +220,9 @@ void test_vfstorage::changeJsonFileWhileLogging()
 
 void test_vfstorage::fireActualValuesAfterDelayWhileLogging()
 {
-    startModman(":/session-minimal-rms.json");
+    startModman(":/session-minimal-range-rms.json");
     startLoggingFromJson(":/correct-entities.json", 0);
+    triggerRangeModuleSigMeasuring();
     changeRMSValues(3, 4);
     TimeMachineForTest::getInstance()->processTimers(100);
 
@@ -229,6 +231,7 @@ void test_vfstorage::fireActualValuesAfterDelayWhileLogging()
     QCOMPARE (timestampKeys.size(), 1);
 
     TimeMachineForTest::getInstance()->processTimers(5000);
+    triggerRangeModuleSigMeasuring();
     changeRMSValues(5, 6);
     TimeMachineForTest::getInstance()->processTimers(100);
 
@@ -243,9 +246,10 @@ void test_vfstorage::fireActualValuesAfterDelayWhileLogging()
 
 void test_vfstorage::fireRmsPowerValuesAfterDifferentDelaysWhileLogging()
 {
-    startModman(":/session-minimal-rms-power.json");
+    startModman(":/session-minimal-range-rms-power.json");
     startLoggingFromJson(":/rms-power1-components.json", 0);
 
+    triggerRangeModuleSigMeasuring();
     changeRMSValues(1, 2);
     emit m_storage->sigSendEvent(generateEvent(1070, "ACT_PQS1", QVariant(), 1) );
     emit m_storage->sigSendEvent(generateEvent(1070, "ACT_PQS2", QVariant(), 2) );
@@ -262,6 +266,7 @@ void test_vfstorage::fireRmsPowerValuesAfterDifferentDelaysWhileLogging()
 
     TimeMachineForTest::getInstance()->processTimers(500);
 
+    triggerRangeModuleSigMeasuring();
     changeRMSValues(3, 4);
     TimeMachineForTest::getInstance()->processTimers(100);
 
@@ -274,6 +279,7 @@ void test_vfstorage::fireRmsPowerValuesAfterDifferentDelaysWhileLogging()
     QVERIFY(!storedValuesWithoutTimeStamp.contains(QString::number(powerEntityId)));
 
     TimeMachineForTest::getInstance()->processTimers(500);
+    triggerRangeModuleSigMeasuring();
     changeRMSValues(5, 6);
     emit m_storage->sigSendEvent(generateEvent(1070, "ACT_PQS1", QVariant(), 5) );
     TimeMachineObject::feedEventLoop();
@@ -390,5 +396,13 @@ void test_vfstorage::changeRMSValues(QVariant newValue1, QVariant newValue2)
     emit m_storage->sigSendEvent(generateEvent(rmsEntityId, "ACT_RMSPN1", QVariant(), newValue1) );
     emit m_storage->sigSendEvent(generateEvent(rmsEntityId, "ACT_RMSPN2", QVariant(), newValue2) );
     TimeMachineObject::feedEventLoop();
+}
 
+void test_vfstorage::triggerRangeModuleSigMeasuring()
+{
+    //"SIG_Measuring" changes from 0 to 1 when new actual values are available
+    emit m_storage->sigSendEvent(generateEvent(rangeEntityId, "SIG_Measuring", QVariant(1), QVariant(0)) );
+    TimeMachineObject::feedEventLoop();
+    emit m_storage->sigSendEvent(generateEvent(rangeEntityId, "SIG_Measuring", QVariant(0), QVariant(1)) );
+    TimeMachineObject::feedEventLoop();
 }
