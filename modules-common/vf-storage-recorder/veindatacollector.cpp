@@ -1,5 +1,4 @@
 #include "veindatacollector.h"
-#include "jsontimegrouping.h"
 #include <vs_abstractcomponent.h>
 #include <timerfactoryqt.h>
 #include <QDateTime>
@@ -17,7 +16,7 @@
 
     m_periodicTimer = TimerFactoryQt::createPeriodic(100);
     connect(m_periodicTimer.get(), &TimerTemplateQt::sigExpired,this, [&] {
-        emit newStoredValue(JsonTimeGrouping::regroupTimestamp(m_jsonObject));
+        emit newStoredValue(m_jsonObject);
     });
 }
 
