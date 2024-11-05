@@ -3,6 +3,7 @@
 
 #include <vs_abstracteventsystem.h>
 #include <vs_storagefilter.h>
+#include <vs_timestampersettable.h>
 #include <timerperiodicqt.h>
 #include <QJsonObject>
 #include <QDateTime>
@@ -11,7 +12,7 @@ class VeinDataCollector : public QObject
 {
     Q_OBJECT
 public:
-    explicit VeinDataCollector(VeinStorage::AbstractEventSystem* storage);
+    explicit VeinDataCollector(VeinStorage::AbstractEventSystem* storage, VeinStorage::TimeStamperSettablePtr timeSetter);
     void startLogging(QHash<int, QStringList> entitesAndComponents);
     void stopLogging();
 signals:
@@ -23,7 +24,7 @@ signals:
     void newStoredValue(QJsonObject jsonObject);
 
 private slots:
-    void appendValue(int entityId, QString componentName, QVariant value, QDateTime timestamp);
+    void appendValue(int entityId, QString componentName, QVariant value, QDateTime timeStamp);
 private:
     QJsonObject convertToJson(QString timestamp, QHash<int, QHash<QString, QVariant> > infosHash);
     QJsonObject convertHashToJsonObject(QHash<QString, QVariant> hash);
@@ -31,6 +32,7 @@ private:
     QHash<QString, QVariant> appendNewValueToExistingValues(QJsonValue existingValue, QHash<QString, QVariant> compoValuesHash);
 
     VeinStorage::StorageFilter m_storageFilter;
+    VeinStorage::TimeStamperSettablePtr m_timeStamper;
     QJsonObject m_jsonObject;
     TimerTemplateQtPtr m_periodicTimer;
 };

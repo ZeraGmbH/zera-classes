@@ -19,7 +19,7 @@ private:
     void readJson(QVariant value, int storageNum);
     QHash<int, QStringList> extractEntitiesAndComponents(QJsonObject jsonObject);
     void ignoreComponents(QStringList *componentList);
-
+    void prepareTimeRecording();
     VeinStorage::AbstractEventSystem* m_storageSystem;
     VfCpp::VfCppEntity *m_entity;
     bool m_isInitalized;
@@ -29,6 +29,7 @@ private:
     QList<VfCpp::VfCppComponent::Ptr> m_startStopLogging;
 
     QList<VeinDataCollector*> m_dataCollect; //unique ptr ?
+    VeinStorage::TimeStamperSettablePtr m_timeStamper;
 };
 
 #endif // VF_STORAGE_H

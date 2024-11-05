@@ -1,5 +1,6 @@
 #include "veindatacollector.h"
 #include "jsontimegrouping.h"
+#include <vs_abstractcomponent.h>
 #include <timerfactoryqt.h>
 #include <QDateTime>
 
@@ -7,8 +8,9 @@
 // StorageFilter::Settings are going to change - current settings are set
 // to make tests happy
 
- VeinDataCollector::VeinDataCollector(VeinStorage::AbstractEventSystem *storage) :
-    m_storageFilter(storage, VeinStorage::StorageFilter::Settings(false, true))
+ VeinDataCollector::VeinDataCollector(VeinStorage::AbstractEventSystem *storage, VeinStorage::TimeStamperSettablePtr timeSetter) :
+    m_storageFilter(storage, VeinStorage::StorageFilter::Settings(false, true)),
+    m_timeStamper(timeSetter)
 {
     connect(&m_storageFilter, &VeinStorage::StorageFilter::sigComponentValue,
             this, &VeinDataCollector::appendValue);
@@ -37,11 +39,12 @@ void VeinDataCollector::stopLogging()
     m_storageFilter.clear();
 }
 
-void VeinDataCollector::appendValue(int entityId, QString componentName, QVariant value, QDateTime timestamp)
+void VeinDataCollector::appendValue(int entityId, QString componentName, QVariant value, QDateTime timeStamp)
 {
+    Q_UNUSED(timeStamp)
     QHash<int , QHash<QString, QVariant> > infosHash;
     infosHash[entityId][componentName] = value;
-    QString timeString = timestamp.toString("dd-MM-yyyy hh:mm:ss.zzz");
+    QString timeString = m_timeStamper->getTimestamp().toString("dd-MM-yyyy hh:mm:ss.zzz");
     m_jsonObject.insert(timeString, convertToJson(timeString, infosHash));
 }
 
