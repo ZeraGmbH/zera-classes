@@ -1,5 +1,5 @@
-#ifndef TEST_VF_STORAGE_GUI_H
-#define TEST_VF_STORAGE_GUI_H
+#ifndef TEST_VF_RECORDER_H
+#define TEST_VF_RECORDER_H
 
 #include "vf_storage.h"
 #include "ve_eventhandler.h"
@@ -7,7 +7,7 @@
 #include <memory>
 #include <QObject>
 
-class test_vf_storage_gui : public QObject
+class test_vf_recorder : public QObject
 {
     Q_OBJECT
 private slots:
@@ -43,4 +43,4 @@ private:
     std::shared_ptr<VeinStorage::StorageEventSystem> m_storageEventSystem;
 };
 
-#endif // TEST_VF_STORAGE_GUI_H
+#endif // TEST_VF_RECORDER_H
