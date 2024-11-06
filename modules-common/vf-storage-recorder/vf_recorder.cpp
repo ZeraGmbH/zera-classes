@@ -1,9 +1,9 @@
 #include "QJsonDocument"
-#include "vf_storage.h"
+#include "vf_recorder.h"
 
 static constexpr int maximumStorages = 5;
 
-Vf_Storage::Vf_Storage(VeinStorage::AbstractEventSystem *storageSystem, QObject *parent, int entityId):
+Vf_Recorder::Vf_Recorder(VeinStorage::AbstractEventSystem *storageSystem, QObject *parent, int entityId):
     QObject(parent),
     m_storageSystem(storageSystem),
     m_isInitalized(false)
@@ -19,7 +19,7 @@ Vf_Storage::Vf_Storage(VeinStorage::AbstractEventSystem *storageSystem, QObject 
     }
 }
 
-bool Vf_Storage::initOnce()
+bool Vf_Recorder::initOnce()
 {
     if(!m_isInitalized) {
         m_isInitalized=true;
@@ -38,12 +38,12 @@ bool Vf_Storage::initOnce()
     return true;
 }
 
-VfCpp::VfCppEntity *Vf_Storage::getVeinEntity() const
+VfCpp::VfCppEntity *Vf_Recorder::getVeinEntity() const
 {
     return m_entity;
 }
 
-void Vf_Storage::startStopLogging(QVariant value, int storageNum)
+void Vf_Recorder::startStopLogging(QVariant value, int storageNum)
 {
     bool onOff = value.toBool();
 
@@ -61,7 +61,7 @@ void Vf_Storage::startStopLogging(QVariant value, int storageNum)
     }
 }
 
-void Vf_Storage::readJson(QVariant value, int storageNum)
+void Vf_Recorder::readJson(QVariant value, int storageNum)
 {
     QJsonObject jsonObject = value.toJsonObject();
 
@@ -74,7 +74,7 @@ void Vf_Storage::readJson(QVariant value, int storageNum)
     }
 }
 
-QHash<int, QStringList> Vf_Storage::extractEntitiesAndComponents(QJsonObject jsonObject)
+QHash<int, QStringList> Vf_Recorder::extractEntitiesAndComponents(QJsonObject jsonObject)
 {
     QHash<int, QStringList> entitesAndComponents;
     QString firstKey = jsonObject.keys().at(0);
@@ -105,13 +105,13 @@ QHash<int, QStringList> Vf_Storage::extractEntitiesAndComponents(QJsonObject jso
     return entitesAndComponents;
 }
 
-void Vf_Storage::ignoreComponents(QStringList *componentList)
+void Vf_Recorder::ignoreComponents(QStringList *componentList)
 {
     QString componentToBeIgnored = "SIG_Measuring";
     componentList->removeAll(componentToBeIgnored);
 }
 
-void Vf_Storage::prepareTimeRecording()
+void Vf_Recorder::prepareTimeRecording()
 {
     int rangeModuleEntity = 1020;
     VeinStorage::AbstractComponentPtr storageCompo = m_storageSystem->getDb()->findComponent(rangeModuleEntity, "SIG_Measuring");

@@ -1,16 +1,16 @@
-#ifndef VF_STORAGE_H
-#define VF_STORAGE_H
+#ifndef VF_RECORDER_H
+#define VF_RECORDER_H
 
 #include "veindatacollector.h"
 #include <vf-cpp-entity.h>
 #include <vf-cpp-compproxy.h>
 #include <QObject>
 
-class Vf_Storage : public QObject
+class Vf_Recorder : public QObject
 {
     Q_OBJECT
 public:
-    explicit Vf_Storage(VeinStorage::AbstractEventSystem* storageSystem, QObject *parent = nullptr, int entityId = 1);
+    explicit Vf_Recorder(VeinStorage::AbstractEventSystem* storageSystem, QObject *parent = nullptr, int entityId = 1);
     bool initOnce();
     VfCpp::VfCppEntity *getVeinEntity() const;
 
@@ -32,4 +32,4 @@ private:
     VeinStorage::TimeStamperSettablePtr m_timeStamper;
 };
 
-#endif // VF_STORAGE_H
+#endif // VF_RECORDER_H

@@ -6,7 +6,7 @@
 #include "customerdatasystem.h"
 #include "licensesystem.h"
 #include "jsonloggercontentsessionloader.h"
-#include "vf_storage.h"
+#include "vf_recorder.h"
 
 #include <QGuiApplication>
 
@@ -264,9 +264,9 @@ int main(int argc, char *argv[])
                 startNetwork(app.get());
         });
     }
-    Vf_Storage *storageModule = new Vf_Storage(modManSetupFacade->getStorageSystem());
-    modManSetupFacade->addSubsystem(storageModule->getVeinEntity());
-    storageModule->initOnce();
+    Vf_Recorder *recorderModule = new Vf_Recorder(modManSetupFacade->getStorageSystem());
+    modManSetupFacade->addSubsystem(recorderModule->getVeinEntity());
+    recorderModule->initOnce();
 
     return exec(demoMode);
 }
