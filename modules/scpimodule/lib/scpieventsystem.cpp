@@ -49,7 +49,7 @@ void cSCPIEventSystem::processCommandEvent(VeinEvent::CommandEvent *commandEvent
                 {
                     cSignalConnectionDelegate* sdelegate;
                     sdelegate = m_pModule->sConnectDelegateList.at(i);
-                    if (sdelegate->EntityId() == entityId)
+                    if (sdelegate->EntityId() == entityId && sdelegate->ComponentName() == cName)
                     {
                         sdelegate->setStatus(cData->newValue());
                     }
