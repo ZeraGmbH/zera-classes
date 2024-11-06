@@ -40,20 +40,13 @@ void cSCPIEventSystem::processCommandEvent(VeinEvent::CommandEvent *commandEvent
             cName = cData->componentName();
             entityId = cData->entityId();
 
-            // first the handler handles existing signal connections
+            // handle configured signal connections
             int n = m_pModule->sConnectDelegateList.count();
-
-            if (n > 0)
-            {
-                for (int i = 0; i < n; i++)
-                {
-                    cSignalConnectionDelegate* sdelegate;
-                    sdelegate = m_pModule->sConnectDelegateList.at(i);
-                    if (sdelegate->EntityId() == entityId && sdelegate->ComponentName() == cName)
-                    {
-                        sdelegate->setStatus(cData->newValue());
-                    }
-                }
+            for(int i = 0; i < n; i++) {
+                cSignalConnectionDelegate* sdelegate;
+                sdelegate = m_pModule->sConnectDelegateList.at(i);
+                if(sdelegate->EntityId() == entityId && sdelegate->ComponentName() == cName)
+                    sdelegate->setStatus(cData->newValue());
             }
 
             // then it looks for parameter values
@@ -94,22 +87,15 @@ void cSCPIEventSystem::processCommandEvent(VeinEvent::CommandEvent *commandEvent
             // then it looks for measurement values
             QList<cSCPIMeasure*> scpiMeasureList = m_pModule->scpiMeasureHash.values(cName);
             n = scpiMeasureList.count();
-
-            if (n > 0)
-            {
-                for (int i = 0; i < n; i++)
-                {
-                    cSCPIMeasure *scpiMeasure = scpiMeasureList.at(i);
-                    if (scpiMeasure->entityID() == entityId)
-                        scpiMeasure->receiveMeasureValue(cData->newValue());
-                }
+            for (int i = 0; i < n; i++) {
+                cSCPIMeasure *scpiMeasure = scpiMeasureList.at(i);
+                if (scpiMeasure->entityID() == entityId)
+                    scpiMeasure->receiveMeasureValue(cData->newValue());
             }
 
             // then it looks for changes on module interface components
-            {
-                if ( cName == QString("INF_ModuleInterface"))
-                    m_pModule->getSCPIServer()->getModuleInterface()->actualizeInterface(cData->newValue());
-            }
+            if ( cName == QString("INF_ModuleInterface"))
+                m_pModule->getSCPIServer()->getModuleInterface()->actualizeInterface(cData->newValue());
 
         }
     }
