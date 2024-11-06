@@ -27,7 +27,7 @@ cSCPIModule::cSCPIModule(ModuleFactoryParam moduleParam) :
     m_sModuleDescription = QString("This module provides a scpi interface depending on the actual session running");
     m_sSCPIModuleName = QString("%1%2").arg(BaseSCPIModuleName).arg(moduleParam.m_moduleNum);
 
-    m_pSCPIEventSystem = new cSCPIEventSystem(this);
+    m_pSCPIEventSystem = new SCPIEventSystem(this);
     m_pModuleValidator = new VfEventSytemModuleParam(moduleParam.m_entityId, moduleParam.m_storagesystem);
 }
 

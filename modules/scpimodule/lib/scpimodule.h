@@ -17,7 +17,7 @@ namespace SCPIMODULE {
 class cSCPIServer;
 class cSignalConnectionDelegate;
 class cSCPIMeasure;
-class cSCPIEventSystem;
+class SCPIEventSystem;
 
 
 class cSCPIModule : public BaseModule
@@ -35,7 +35,7 @@ public:
     QList<cSignalConnectionDelegate*> sConnectDelegateList;
     QMultiHash<QString, cSCPIMeasure*> scpiMeasureHash;
 
-    cSCPIEventSystem* m_pSCPIEventSystem;
+    SCPIEventSystem* m_pSCPIEventSystem;
     VfEventSytemModuleParam* m_pModuleValidator;
 
 protected:
