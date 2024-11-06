@@ -190,7 +190,7 @@
                 <xs:element name="configuration">
                     <xs:complexType>
                         <xs:sequence>
-                            <xs:element name="connectivity" type="connectivitytype"/>
+                            <xs:element name="connectivity" type="connectivitytype" minOccurs="0" maxOccurs="1"/>
                             <xs:element name="sense">
                             <xs:complexType>
                                 <xs:sequence>
