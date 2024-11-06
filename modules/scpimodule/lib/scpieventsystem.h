@@ -1,32 +1,28 @@
 #ifndef SCPIEVENTSYSTEM
 #define SCPIEVENTSYSTEM
 
+#include "scpimodule.h"
 #include <vfeventsystemcommandfilter.h>
-
-namespace VeinEvent
-{
-  class CommandEvent;
-}
+#include <ve_commandevent.h>
 
 namespace SCPIMODULE
 {
 
-class cSCPIModule;
-
-class cSCPIEventSystem: public VfEventSystemCommandFilter
+class SCPIEventSystem: public VfEventSystemCommandFilter
 {
     Q_OBJECT
-
 public:
-    cSCPIEventSystem(cSCPIModule* module);
+    SCPIEventSystem(cSCPIModule* module);
 signals:
-    void status(quint8);
-    void clientinfoSignal(QString);
+    void sigClientInfoSignal(QString);
 
 private:
     cSCPIModule* m_pModule;
     void processCommandEvent(VeinEvent::CommandEvent *commandEvent) override;
+    void handleComponentData(VeinEvent::CommandEvent *commandEvent);
+    void handleErrorData(VeinEvent::CommandEvent *commandEvent);
 };
+
 }
 
 #endif // SCPIEVENTSYSTEM

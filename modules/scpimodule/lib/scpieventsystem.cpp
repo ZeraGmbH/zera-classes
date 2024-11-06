@@ -1,144 +1,115 @@
 #include "scpieventsystem.h"
-#include "scpimodule.h"
 #include "scpiclient.h"
 #include "scpiclientinfo.h"
 #include "signalconnectiondelegate.h"
-#include "scpimeasure.h"
 #include "scpiserver.h"
 #include "moduleinterface.h"
-#include <scpi.h>
 #include <zscpi_response_definitions.h>
-#include <ve_commandevent.h>
-#include <vs_abstracteventsystem.h>
 #include <vcmp_componentdata.h>
 #include <vcmp_errordata.h>
-#include <QCoreApplication>
-#include <QEvent>
-#include <QHash>
-#include <QMultiHash>
 
 namespace SCPIMODULE
 {
 
-cSCPIEventSystem::cSCPIEventSystem(cSCPIModule* module) :
-      VfEventSystemCommandFilter(VeinEvent::CommandEvent::EventSubtype::NOTIFICATION),
-      m_pModule(module)
+SCPIEventSystem::SCPIEventSystem(cSCPIModule* module) :
+    VfEventSystemCommandFilter(VeinEvent::CommandEvent::EventSubtype::NOTIFICATION),
+    m_pModule(module)
 {
 }
 
-void cSCPIEventSystem::processCommandEvent(VeinEvent::CommandEvent *commandEvent)
+void SCPIEventSystem::processCommandEvent(VeinEvent::CommandEvent *commandEvent)
 {
-    // is it a command event for setting component data
-    if (commandEvent->eventData()->type() == VeinComponent::ComponentData::dataType())
-    {
-        // only notifications will be handled
-        if (commandEvent->eventSubtype() == VeinEvent::CommandEvent::EventSubtype::NOTIFICATION)
-        {
-            QString cName;
-            int entityId;
-            VeinComponent::ComponentData* cData = static_cast<VeinComponent::ComponentData*> (commandEvent->eventData());
-            cName = cData->componentName();
-            entityId = cData->entityId();
+    if(commandEvent->eventData()->type() == VeinComponent::ComponentData::dataType())
+        handleComponentData(commandEvent);
+    else if(commandEvent->eventData()->type() == VeinComponent::ErrorData::dataType())
+        handleErrorData(commandEvent);
+}
 
-            // handle configured signal connections
-            int n = m_pModule->sConnectDelegateList.count();
-            for(int i = 0; i < n; i++) {
-                cSignalConnectionDelegate* sdelegate;
-                sdelegate = m_pModule->sConnectDelegateList.at(i);
-                if(sdelegate->EntityId() == entityId && sdelegate->ComponentName() == cName)
-                    sdelegate->setStatus(cData->newValue());
-            }
+void SCPIEventSystem::handleComponentData(VeinEvent::CommandEvent *commandEvent)
+{
+    if(commandEvent->eventSubtype() == VeinEvent::CommandEvent::EventSubtype::NOTIFICATION) {
+        const VeinComponent::ComponentData* cData = static_cast<VeinComponent::ComponentData*>(commandEvent->eventData());
+        const int entityId = cData->entityId();
+        const QString componentName = cData->componentName();
 
-            // then it looks for parameter values
-            if (m_pModule->scpiParameterCmdInfoHash.contains(cName))
-            {
-                QList<SCPIClientInfoPtr> clientinfolist = m_pModule->scpiParameterCmdInfoHash.values(cName);
-                for (int i = 0; i < clientinfolist.count(); i++)
-                {
-                    SCPIClientInfoPtr clientinfo = clientinfolist.at(i);
+        // handle configured signal connections
+        for(int i = 0; i < m_pModule->sConnectDelegateList.count(); i++) {
+            cSignalConnectionDelegate* delegate = m_pModule->sConnectDelegateList.at(i);
+            if(delegate->EntityId() == entityId && delegate->ComponentName() == componentName)
+                delegate->setStatus(cData->newValue());
+        }
 
-                    QUuid clientId;
-                    clientId = commandEvent->peerId();
-                    if (clientId.isNull() || clientId == clientinfo->getClient()->getClientId()) // test if this client sent command for this parameter
-                    {
-                        if (clientinfo->entityId() == entityId)
-                        {
-                            m_pModule->scpiParameterCmdInfoHash.remove(cName, clientinfo);
-                            QMetaObject::Connection myConn = connect(this, &cSCPIEventSystem::clientinfoSignal, clientinfo->getClient(), &cSCPIClient::removeSCPIClientInfo, Qt::QueuedConnection);
-                            emit clientinfoSignal(cName);
-                            disconnect(myConn);
-                            if (clientinfo->parCmdType() == SCPIMODULE::parcmd)
-                            {
-                                cSCPIClient* client = clientinfo->getClient();
-                                client->receiveStatus(ZSCPI::ack);
-                            }
-                            else
-                            {
-                                QString answer = static_cast<VeinComponent::ComponentData*> (commandEvent->eventData())->newValue().toString();
-                                //cSCPIClient* client = clientinfo->getClient();
-                                clientinfo->getClient()->receiveAnswer(answer);
-                            }
-                            break;
+        // then it looks for parameter values
+        if(m_pModule->scpiParameterCmdInfoHash.contains(componentName)) {
+            const QList<SCPIClientInfoPtr> clientInfoList = m_pModule->scpiParameterCmdInfoHash.values(componentName);
+            for(int i = 0; i < clientInfoList.count(); i++) {
+                SCPIClientInfoPtr clientinfo = clientInfoList.at(i);
+                QUuid clientId = commandEvent->peerId();
+                // test if this client sent command for this parameter
+                if(clientId.isNull() || clientId == clientinfo->getClient()->getClientId()) {
+                    if(clientinfo->entityId() == entityId) {
+                        m_pModule->scpiParameterCmdInfoHash.remove(componentName, clientinfo);
+                        QMetaObject::Connection myConn = connect(this, &SCPIEventSystem::sigClientInfoSignal,
+                                                                 clientinfo->getClient(), &cSCPIClient::removeSCPIClientInfo, Qt::QueuedConnection);
+                        emit sigClientInfoSignal(componentName);
+                        disconnect(myConn);
+                        if(clientinfo->parCmdType() == parcmd) {
+                            cSCPIClient* client = clientinfo->getClient();
+                            client->receiveStatus(ZSCPI::ack);
                         }
+                        else {
+                            QString answer = static_cast<VeinComponent::ComponentData*>(commandEvent->eventData())->newValue().toString();
+                            clientinfo->getClient()->receiveAnswer(answer);
+                        }
+                        break;
                     }
                 }
             }
+        }
 
-            // then it looks for measurement values
-            QList<cSCPIMeasure*> scpiMeasureList = m_pModule->scpiMeasureHash.values(cName);
-            n = scpiMeasureList.count();
-            for (int i = 0; i < n; i++) {
-                cSCPIMeasure *scpiMeasure = scpiMeasureList.at(i);
-                if (scpiMeasure->entityID() == entityId)
-                    scpiMeasure->receiveMeasureValue(cData->newValue());
+        // then it looks for measurement values
+        const QList<cSCPIMeasure*> scpiMeasureList = m_pModule->scpiMeasureHash.values(componentName);
+        for(int i = 0; i < scpiMeasureList.count(); i++) {
+            cSCPIMeasure *scpiMeasure = scpiMeasureList.at(i);
+            if(scpiMeasure->entityID() == entityId)
+                scpiMeasure->receiveMeasureValue(cData->newValue());
+        }
+
+        // then it looks for changes on module interface components
+        if( componentName == QString("INF_ModuleInterface"))
+            m_pModule->getSCPIServer()->getModuleInterface()->actualizeInterface(cData->newValue());
+
+    }
+}
+
+void SCPIEventSystem::handleErrorData(VeinEvent::CommandEvent *commandEvent)
+{
+    if(commandEvent->eventSubtype() == VeinEvent::CommandEvent::EventSubtype::NOTIFICATION) {
+        const VeinComponent::ErrorData* eData = static_cast<VeinComponent::ErrorData*>(commandEvent->eventData());
+        VeinComponent::ComponentData* cData = new VeinComponent::ComponentData();
+        cData->deserialize(eData->originalData());
+        const QString errorComponentName = cData->componentName();
+        const int errorEntityId = eData->entityId();
+
+        // error notifications are sent for invalid parameters
+        if(m_pModule->scpiParameterCmdInfoHash.contains(errorComponentName)) {
+            QList<SCPIClientInfoPtr> clientinfolist = m_pModule->scpiParameterCmdInfoHash.values();
+            for (int i = 0; i < clientinfolist.count(); i++) {
+                SCPIClientInfoPtr clientinfo = clientinfolist.at(i);
+                if(clientinfo->entityId() == errorEntityId) {
+                    commandEvent->accept();  // we caused the error event due to wrong parameter
+                    m_pModule->scpiParameterCmdInfoHash.remove(errorComponentName, clientinfo);
+                    QMetaObject::Connection myConn = connect(this, &SCPIEventSystem::sigClientInfoSignal,
+                                                             clientinfo->getClient(), &cSCPIClient::removeSCPIClientInfo, Qt::QueuedConnection);
+                    emit sigClientInfoSignal(errorComponentName);
+                    disconnect(myConn);
+                    cSCPIClient* client = clientinfo->getClient();
+                    client->receiveStatus(ZSCPI::errval);
+                    break;
+                }
             }
-
-            // then it looks for changes on module interface components
-            if ( cName == QString("INF_ModuleInterface"))
-                m_pModule->getSCPIServer()->getModuleInterface()->actualizeInterface(cData->newValue());
-
         }
     }
-
-    else
-        // or is it command event for error notification
-        if (commandEvent->eventData()->type() == VeinComponent::ErrorData::dataType() )
-        {
-            // only notifications will be handled
-            if (commandEvent->eventSubtype() == VeinEvent::CommandEvent::EventSubtype::NOTIFICATION)
-            {
-                QString cName;
-                int entityId;
-                VeinComponent::ErrorData* eData;
-                eData = static_cast<VeinComponent::ErrorData*> (commandEvent->eventData());
-                VeinComponent::ComponentData* cData = new VeinComponent::ComponentData();
-                cData->deserialize(eData->originalData());
-
-                cName = cData->componentName();
-                entityId = eData->entityId();
-
-                // error notifications are sent for invalid parameters
-                if (m_pModule->scpiParameterCmdInfoHash.contains(cName))
-                {
-                    QList<SCPIClientInfoPtr> clientinfolist = m_pModule->scpiParameterCmdInfoHash.values();
-                    for (int i = 0; i < clientinfolist.count(); i++)
-                    {
-                        SCPIClientInfoPtr clientinfo = clientinfolist.at(i);
-                        if (clientinfo->entityId() == entityId)
-                        {
-                            commandEvent->accept();  // we caused the error event due to wrong parameter
-                            m_pModule->scpiParameterCmdInfoHash.remove(cName, clientinfo);
-                            QMetaObject::Connection myConn = connect(this, &cSCPIEventSystem::clientinfoSignal, clientinfo->getClient(), &cSCPIClient::removeSCPIClientInfo, Qt::QueuedConnection);
-                            emit clientinfoSignal(cName);
-                            disconnect(myConn);
-                            cSCPIClient* client = clientinfo->getClient();
-                            client->receiveStatus(ZSCPI::errval);
-                            break;
-                        }
-                    }
-                }
-            }
-        }
 }
 
 }
