@@ -1,11 +1,11 @@
-#include "test_vf_storage_gui.h"
+#include "test_vf_recorder.h"
 #include "vf_client_component_setter.h"
 #include <timemachineobject.h>
 #include <timemachinefortest.h>
 #include <timerfactoryqtfortest.h>
 #include <QTest>
 
-QTEST_MAIN(test_vf_storage_gui)
+QTEST_MAIN(test_vf_recorder)
 
 static constexpr int storageEntityId = 1;
 static constexpr int rangeEntityId = 1020;
@@ -14,7 +14,7 @@ static constexpr int powerEntityId = 1070;
 static constexpr int maximumStorage = 5;
 static constexpr int storageNum = 0;
 
-void test_vf_storage_gui::init()
+void test_vf_recorder::init()
 {
     TimerFactoryQtForTest::enableTest();
     m_eventHandler = std::make_unique<VeinEvent::EventHandler>();
@@ -27,7 +27,7 @@ void test_vf_storage_gui::init()
     TimeMachineObject::feedEventLoop();
 }
 
-void test_vf_storage_gui::cleanup()
+void test_vf_recorder::cleanup()
 {
     m_eventHandler = nullptr;
     m_storageRecorder = nullptr;
@@ -35,7 +35,7 @@ void test_vf_storage_gui::cleanup()
     TimeMachineObject::feedEventLoop();
 }
 
-void test_vf_storage_gui::componentsFound()
+void test_vf_recorder::componentsFound()
 {
     QList<QString> storageComponents = m_storageEventSystem->getDb()->getComponentList(storageEntityId);
 
@@ -48,7 +48,7 @@ void test_vf_storage_gui::componentsFound()
     }
 }
 
-void test_vf_storage_gui::storeValuesBasedOnNoEntitiesInJson()
+void test_vf_recorder::storeValuesBasedOnNoEntitiesInJson()
 {
     for(int i = 0; i < maximumStorage; i++) {
         changeComponentValue(storageEntityId, QString("PAR_JsonWithEntities%1").arg(i), "");
@@ -59,7 +59,7 @@ void test_vf_storage_gui::storeValuesBasedOnNoEntitiesInJson()
     }
 }
 
-void test_vf_storage_gui::storeValuesBasedOnIncorrectEntitiesInJson()
+void test_vf_recorder::storeValuesBasedOnIncorrectEntitiesInJson()
 {
     startLoggingFromJson(":/incorrect-entities.json", 0);
     QJsonObject storedValues = m_storageEventSystem->getDb()->getStoredValue(storageEntityId, "StoredValues0").toJsonObject();
@@ -67,7 +67,7 @@ void test_vf_storage_gui::storeValuesBasedOnIncorrectEntitiesInJson()
     QVERIFY(storedValues.isEmpty());
 }
 
-void test_vf_storage_gui::storeValuesEmptyComponentsInJson()
+void test_vf_recorder::storeValuesEmptyComponentsInJson()
 {
     QVariantMap components = {{"ACT_RMSPN1", QVariant()}, {"ACT_RMSPN2", QVariant()}, {"PAR_Interval", QVariant()}};
     createModule(rmsEntityId, components);
@@ -97,7 +97,7 @@ void test_vf_storage_gui::storeValuesEmptyComponentsInJson()
     QCOMPARE(value, "5");
 }
 
-void test_vf_storage_gui::storeValuesCorrectEntitiesStartStopLoggingDisabled()
+void test_vf_recorder::storeValuesCorrectEntitiesStartStopLoggingDisabled()
 {
     createMinimalRangeRmsModules();
     QCOMPARE(m_storageEventSystem->getDb()->getEntityList().count(), 3);
@@ -115,7 +115,7 @@ void test_vf_storage_gui::storeValuesCorrectEntitiesStartStopLoggingDisabled()
     QVERIFY(storedValues.isEmpty());
 }
 
-void test_vf_storage_gui::loggingOnOffSequence0()
+void test_vf_recorder::loggingOnOffSequence0()
 {
     createMinimalRangeRmsModules();
 
@@ -148,7 +148,7 @@ void test_vf_storage_gui::loggingOnOffSequence0()
     QCOMPARE(value, "4");  // !=8
 }
 
-void test_vf_storage_gui::loggingOnOffSequence1()
+void test_vf_recorder::loggingOnOffSequence1()
 {
     constexpr int storageNum = 1;
     createMinimalRangeRmsModules();
@@ -182,7 +182,7 @@ void test_vf_storage_gui::loggingOnOffSequence1()
     QCOMPARE(value, "4");  // !=8
 }
 
-void test_vf_storage_gui::stopLoggingHasNoSideEffectOnOtherConnections()
+void test_vf_recorder::stopLoggingHasNoSideEffectOnOtherConnections()
 {
     createMinimalRangeRmsModules();
     startLoggingFromJson(":/correct-entities.json", storageNum);
@@ -204,7 +204,7 @@ void test_vf_storage_gui::stopLoggingHasNoSideEffectOnOtherConnections()
     QCOMPARE(changesDetected, 2);
 }
 
-void test_vf_storage_gui::changeJsonFileWhileLogging()
+void test_vf_recorder::changeJsonFileWhileLogging()
 {
     createMinimalRangeRmsModules();
     startLoggingFromJson(":/correct-entities.json", 0);
@@ -234,7 +234,7 @@ void test_vf_storage_gui::changeJsonFileWhileLogging()
     QVERIFY(!inputJsonFile.contains("ACT_RMSPN4"));
 }
 
-void test_vf_storage_gui::fireActualValuesAfterDelayWhileLogging()
+void test_vf_recorder::fireActualValuesAfterDelayWhileLogging()
 {
     createMinimalRangeRmsModules();
     startLoggingFromJson(":/correct-entities.json", 0);
@@ -263,7 +263,7 @@ void test_vf_storage_gui::fireActualValuesAfterDelayWhileLogging()
     QVERIFY(firstTimeStamp < lastTimeStamp);
 }
 
-void test_vf_storage_gui::fireRmsPowerValuesAfterDifferentDelaysWhileLogging()
+void test_vf_recorder::fireRmsPowerValuesAfterDifferentDelaysWhileLogging()
 {
     createMinimalRangeRmsModules();
     QVariantMap components = {{"ACT_PQS1", QVariant()}, {"ACT_PQS2", QVariant()}};
@@ -321,7 +321,7 @@ void test_vf_storage_gui::fireRmsPowerValuesAfterDifferentDelaysWhileLogging()
     QVERIFY(storedValuesWithoutTimeStamp.contains(QString::number(powerEntityId)));
 }
 
-void test_vf_storage_gui::createMinimalRangeRmsModules()
+void test_vf_recorder::createMinimalRangeRmsModules()
 {
     QVariantMap components = {{"ACT_RMSPN1", QVariant()}, {"ACT_RMSPN2", QVariant()}};
     createModule(rmsEntityId, components);
@@ -329,7 +329,7 @@ void test_vf_storage_gui::createMinimalRangeRmsModules()
     createModule(rangeEntityId, components);
 }
 
-void test_vf_storage_gui::changeComponentValue(int entityId, QString componentName, QVariant newValue)
+void test_vf_recorder::changeComponentValue(int entityId, QString componentName, QVariant newValue)
 {
     QVariant oldValue = m_storageEventSystem->getDb()->getStoredValue(entityId, componentName);
     QEvent* event = VfClientComponentSetter::generateEvent(entityId, componentName, oldValue, newValue);
@@ -337,7 +337,7 @@ void test_vf_storage_gui::changeComponentValue(int entityId, QString componentNa
     TimeMachineObject::feedEventLoop();
 }
 
-void test_vf_storage_gui::createModule(int entityId, QMap<QString, QVariant> components)
+void test_vf_recorder::createModule(int entityId, QMap<QString, QVariant> components)
 {
     VfCpp::VfCppEntity * entity =new VfCpp::VfCppEntity(entityId);
     m_eventHandler->addSubsystem(entity);
@@ -347,33 +347,33 @@ void test_vf_storage_gui::createModule(int entityId, QMap<QString, QVariant> com
         entity->createComponent(compoName, components[compoName]);
 }
 
-void test_vf_storage_gui::triggerRangeModuleSigMeasuring()
+void test_vf_recorder::triggerRangeModuleSigMeasuring()
 {
     //"SIG_Measuring" changes from 0 to 1 when new actual values are available
     changeComponentValue(rangeEntityId, "SIG_Measuring", QVariant(0));
     changeComponentValue(rangeEntityId, "SIG_Measuring", QVariant(1));
 }
 
-QString test_vf_storage_gui::readEntitiesAndCompoFromJsonFile(QString filePath)
+QString test_vf_recorder::readEntitiesAndCompoFromJsonFile(QString filePath)
 {
     QFile file(filePath);
     file.open(QIODevice::ReadOnly);
     return file.readAll();
 }
 
-void test_vf_storage_gui::startLoggingFromJson(QString fileName, int storageNum)
+void test_vf_recorder::startLoggingFromJson(QString fileName, int storageNum)
 {
     QString fileContent = readEntitiesAndCompoFromJsonFile(fileName);
     changeComponentValue(storageEntityId, QString("PAR_JsonWithEntities%1").arg(storageNum), fileContent);
     changeComponentValue(storageEntityId, QString("PAR_StartStopLogging%1").arg(storageNum), true);
 }
 
-void test_vf_storage_gui::stopLogging(int storageNum)
+void test_vf_recorder::stopLogging(int storageNum)
 {
     changeComponentValue(storageEntityId, QString("PAR_StartStopLogging%1").arg(storageNum), false);
 }
 
-QJsonObject test_vf_storage_gui::getStoredValueWithoutTimeStamp(int storageNum)
+QJsonObject test_vf_recorder::getStoredValueWithoutTimeStamp(int storageNum)
 {
     QJsonObject storedValuesWithoutTimeStamp;
     QJsonObject storedValues = m_storageEventSystem->getDb()->getStoredValue(storageEntityId, QString("StoredValues%1").arg(storageNum)).toJsonObject();
@@ -384,13 +384,13 @@ QJsonObject test_vf_storage_gui::getStoredValueWithoutTimeStamp(int storageNum)
     return storedValuesWithoutTimeStamp;
 }
 
-QHash<QString, QVariant> test_vf_storage_gui::getComponentsStoredOfEntity(int entityId, QJsonObject storedValueWithoutTimeStamp)
+QHash<QString, QVariant> test_vf_recorder::getComponentsStoredOfEntity(int entityId, QJsonObject storedValueWithoutTimeStamp)
 {
     QVariant componentStored = storedValueWithoutTimeStamp.value(QString::number(entityId)).toVariant();
     return componentStored.toHash();
 }
 
-QString test_vf_storage_gui::getValuesStoredOfComponent(QHash<QString, QVariant> componentHash, QString componentName)
+QString test_vf_recorder::getValuesStoredOfComponent(QHash<QString, QVariant> componentHash, QString componentName)
 {
     QVariant value = componentHash.value(componentName);
     return value.toString();
