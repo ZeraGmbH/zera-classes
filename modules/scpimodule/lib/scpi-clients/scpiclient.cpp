@@ -22,7 +22,7 @@ cSCPIClient::cSCPIClient(cSCPIModule* module, cSCPIModuleConfigData &configdata,
     m_pModule(module),
     m_ConfigData(configdata)
 {
-    mClientId = QUuid::createUuid(); // we need an unique id in case we want to send deferred error notifications events
+    m_clientId = QUuid::createUuid(); // we need an unique id in case we want to send deferred error notifications events
 
     m_bAuthorisation = false;
     m_sInputFifo = "";
@@ -66,8 +66,8 @@ cSCPIClient::cSCPIClient(cSCPIModule* module, cSCPIModuleConfigData &configdata,
 
 cSCPIClient::~cSCPIClient()
 {
-    for (int i = 0; i < mysConnectDelegateList.count(); i++) {
-        cSignalConnectionDelegate* sCD = mysConnectDelegateList.at(i);
+    for (int i = 0; i < m_connectDelegateList.count(); i++) {
+        cSignalConnectionDelegate* sCD = m_connectDelegateList.at(i);
         m_pModule->sConnectDelegateList.removeAll(sCD);
         delete sCD;
     }
@@ -146,16 +146,16 @@ bool cSCPIClient::cmdAvail()
 
 void cSCPIClient::takeCmd()
 {
-    if(activeCmd.isEmpty()) {
+    if(m_activeCmd.isEmpty()) {
         if (m_sInputFifo.contains('\n'))
-            endChar = '\n';
+            m_endChar = '\n';
         else
-            endChar = '\r';
-        int index = m_sInputFifo.indexOf(endChar);
-        activeCmd = m_sInputFifo.left(index);
-        activeCmd.remove('\n'); // we don't know which was the first
-        activeCmd.remove('\r');
-        activeCmd.remove('\t');
+            m_endChar = '\r';
+        int index = m_sInputFifo.indexOf(m_endChar);
+        m_activeCmd = m_sInputFifo.left(index);
+        m_activeCmd.remove('\n'); // we don't know which was the first
+        m_activeCmd.remove('\r');
+        m_activeCmd.remove('\t');
         m_sInputFifo.remove(0, index+1);
         if (m_sInputFifo.length() > 0) {
             QChar firstChar = m_sInputFifo.at(0); // maybe there is still 1 end char
@@ -168,12 +168,12 @@ void cSCPIClient::takeCmd()
 void cSCPIClient::execCmd()
 {
     while (true) {
-        QStringList cmdList = activeCmd.split('|');
+        QStringList cmdList = m_activeCmd.split('|');
         QString cmd = cmdList.at(0);
-        activeCmd.remove(0, cmd.length());
-        if (activeCmd.length() > 0) {
-            if (activeCmd.at(0) == '|')
-               activeCmd.remove(0,1);
+        m_activeCmd.remove(0, cmd.length());
+        if (m_activeCmd.length() > 0) {
+            if (m_activeCmd.at(0) == '|')
+               m_activeCmd.remove(0,1);
         }
         // we will leave if there is no command anymore
         if (cmd.length() == 0)
@@ -199,7 +199,7 @@ QString cSCPIClient::makeBareScpiInPrintable(const QString &input)
 
 QUuid cSCPIClient::getClientId()
 {
-    return mClientId;
+    return m_clientId;
 }
 
 void cSCPIClient::receiveStatus(quint8 stat)
@@ -263,7 +263,7 @@ void cSCPIClient::setSignalConnections(cSCPIStatus* scpiStatus, QList<cStatusBit
                         sConnectDelegate = new cSignalConnectionDelegate(scpiStatus, des.m_nBitNr, entityID, des.m_sComponentName);
                         // as we only want a single eventsystem the module itself holds the list of delegates
                         m_pModule->sConnectDelegateList.append(sConnectDelegate);
-                        mysConnectDelegateList.append(sConnectDelegate); // our own list so we can clean up if client dies
+                        m_connectDelegateList.append(sConnectDelegate); // our own list so we can clean up if client dies
                     }
                 }
             }

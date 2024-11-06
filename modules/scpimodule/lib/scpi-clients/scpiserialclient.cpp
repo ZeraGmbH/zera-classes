@@ -29,8 +29,8 @@ void cSCPISerialClient::receiveAnswer(QString answ, bool ok)
 {
     QString answer;
     QByteArray ba;
-    answer = answ + endChar;
-    answer.replace("\n", endChar);
+    answer = answ + m_endChar;
+    answer.replace("\n", m_endChar);
 
     ba = answer.toLatin1();
     m_pSerialPort->write(ba.data(), ba.size());
