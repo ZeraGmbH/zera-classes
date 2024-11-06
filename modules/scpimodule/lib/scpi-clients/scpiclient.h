@@ -49,8 +49,8 @@ protected:
     QHash<QString, SCPIClientInfoPtr> m_scpiClientInfoHash;
 
     QString m_sInputFifo;
-    QString activeCmd;
-    QChar endChar;
+    QString m_activeCmd;
+    QChar m_endChar;
 
     void testCmd();
     bool cmdAvail();
@@ -66,11 +66,11 @@ private:
     QString m_componentName;
 
     QHash<cSCPIMeasure*, cSCPIMeasure*> m_SCPIMeasureTranslationHash;
-    QUuid mClientId;
+    QUuid m_clientId;
 
     bool m_bAuthorisation;
     void setSignalConnections(cSCPIStatus* scpiStatus, QList<cStatusBitDescriptor> &dList);
-    QList<cSignalConnectionDelegate*> mysConnectDelegateList;
+    QList<cSignalConnectionDelegate*> m_connectDelegateList;
     void generateSCPIMeasureSystem();
 
 private slots:
