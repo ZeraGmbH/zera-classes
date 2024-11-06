@@ -34,10 +34,10 @@ void cSCPIStatus::readwriteStatusReg(cSCPIClient *client, quint16 &status, QStri
             if (ok)
                 status = regValue;
             else
-                emit eventError(NumericDataError);
+                emit sigEventError(NumericDataError);
         }
         else
-            emit eventError(CommandError);
+            emit sigEventError(CommandError);
         emit client->commandAnswered(client);
     }
 }
@@ -52,7 +52,7 @@ void cSCPIStatus::readStatusReg(cSCPIClient *client, quint16 &status, QString in
     if (cmd.isQuery())
         client->receiveAnswer(QString("%1").arg(status));
     else {
-        emit eventError(CommandError);
+        emit sigEventError(CommandError);
         emit client->commandAnswered(client);
     }
 }
@@ -97,9 +97,9 @@ void cSCPIStatus::setCondition(quint16 condition)
     if ( (m_nEvent & m_nEnable) > 0 )
     {
         if (posTransition)
-            emit event(m_n2Throw, 1);
+            emit sigEvent(m_n2Throw, 1);
         else
-            emit event(m_n2Throw, 0);
+            emit sigEvent(m_n2Throw, 0);
     }
 }
 

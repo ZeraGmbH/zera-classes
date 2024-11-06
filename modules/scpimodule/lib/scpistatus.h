@@ -36,8 +36,8 @@ public:
     quint16 m_nEnable; // enable register
 
 signals:
-    void event(quint8, quint8); // status object can send an event with 16bit mask
-    void eventError(int);
+    void sigEvent(quint8, quint8); // status object can send an event with 16bit mask
+    void sigEventError(int);
 
 public slots:
     void setCondition(quint16 condition); // we can set our condition reg.

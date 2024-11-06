@@ -42,10 +42,10 @@ cSCPIClient::cSCPIClient(cSCPIModule* module, cSCPIModuleConfigData &configdata,
     m_pIEEE4882 = new cIEEE4882(this, m_ConfigData.m_sDeviceName, 50);
 
     // we connect the cascaded scpi operation status systems
-    connect(scpiOperMeasStatus, &cSCPIStatus::event, scpiOperStatus, &cSCPIStatus::SetConditionBit);
+    connect(scpiOperMeasStatus, &cSCPIStatus::sigEvent, scpiOperStatus, &cSCPIStatus::SetConditionBit);
     // and we connect operationstatus and questionable status with ieee488 status byte
-    connect(scpiOperStatus, &cSCPIStatus::event, m_pIEEE4882, &cIEEE4882::setStatusByte);
-    connect(scpiQuestStatus, &cSCPIStatus::event, m_pIEEE4882, &cIEEE4882::setStatusByte);
+    connect(scpiOperStatus, &cSCPIStatus::sigEvent, m_pIEEE4882, &cIEEE4882::setStatusByte);
+    connect(scpiQuestStatus, &cSCPIStatus::sigEvent, m_pIEEE4882, &cIEEE4882::setStatusByte);
 
     // and we need this connections for setting status conditions as result of common commands
     connect(m_pIEEE4882, &cIEEE4882::setQuestionableCondition, scpiQuestStatus, &cSCPIStatus::setCondition);
@@ -53,9 +53,9 @@ cSCPIClient::cSCPIClient(cSCPIModule* module, cSCPIModuleConfigData &configdata,
     connect(m_pIEEE4882, &cIEEE4882::setOperationMeasureCondition, scpiOperMeasStatus, &cSCPIStatus::setCondition);
 
     // and we must connect event error signals of scpi status systems to common status
-    connect(scpiQuestStatus, &cSCPIStatus::eventError, m_pIEEE4882, &cIEEE4882::AddEventError);
-    connect(scpiOperStatus, &cSCPIStatus::eventError, m_pIEEE4882, &cIEEE4882::AddEventError);
-    connect(scpiOperMeasStatus, &cSCPIStatus::eventError, m_pIEEE4882, &cIEEE4882::AddEventError);
+    connect(scpiQuestStatus, &cSCPIStatus::sigEventError, m_pIEEE4882, &cIEEE4882::AddEventError);
+    connect(scpiOperStatus, &cSCPIStatus::sigEventError, m_pIEEE4882, &cIEEE4882::AddEventError);
+    connect(scpiOperMeasStatus, &cSCPIStatus::sigEventError, m_pIEEE4882, &cIEEE4882::AddEventError);
 
     setSignalConnections(scpiQuestStatus, m_ConfigData.m_QuestionableStatDescriptorList);
     setSignalConnections(scpiOperStatus, m_ConfigData.m_OperationStatDescriptorList);
