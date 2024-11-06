@@ -43,8 +43,18 @@ void cSCPISerialClient::receiveAnswer(QString answ, bool ok)
 void cSCPISerialClient::cmdInput()
 {
     QString totalInput = m_pSerialPort->readAll();
-    qInfo("Serial SCPI command input: %s", qPrintable(makeBareScpiInPrintable(totalInput)));
     m_sInputFifo.append(totalInput);
+
+    QString inputCopy = m_sInputFifo;
+    QString singleCmd;
+    for(int ch=0; ch<inputCopy.size(); ch++) {
+        const QString currentChar(inputCopy[ch]);
+        singleCmd += currentChar;
+        if(currentChar == "\n" || currentChar == "\r") {
+            qInfo("Serial SCPI command input: %s", qPrintable(makeBareScpiInPrintable(singleCmd)));
+            singleCmd.clear();
+        }
+    }
     testCmd();
 }
 
