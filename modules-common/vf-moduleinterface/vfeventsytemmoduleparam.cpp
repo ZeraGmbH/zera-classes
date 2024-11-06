@@ -12,16 +12,16 @@ void VfEventSytemModuleParam::processCommandEvent(VeinEvent::CommandEvent *comma
     if (commandEvent->eventData()->entityId() == m_entityId) {
         // is it a command event for setting component data
         if (commandEvent->eventData()->type() == VeinComponent::ComponentData::dataType()) {
-            VeinComponent::ComponentData* cData = static_cast<VeinComponent::ComponentData*> (commandEvent->eventData());
-            QString cName = cData->componentName();
+            const VeinComponent::ComponentData* cData = static_cast<VeinComponent::ComponentData*> (commandEvent->eventData());
+            const QString componentName = cData->componentName();
             // does this component data belong to our module
-            auto hashIter = m_parameterHash.find(cName);
-            if(hashIter != m_parameterHash.end()) {
+            auto hashIter = m_parameterHash.constFind(componentName);
+            if(hashIter != m_parameterHash.constEnd()) {
                 // we only take new values if the old values are equal
                 double oldValue = cData->oldValue().toDouble();
                 const VeinStorage::AbstractDatabase *storageDb = m_storageSystem->getDb();
-                double newValue = storageDb->getStoredValue(m_entityId, cName).toDouble();
-                if (cData->oldValue() == storageDb->getStoredValue(m_entityId, cName) ||
+                double newValue = storageDb->getStoredValue(m_entityId, componentName).toDouble();
+                if (cData->oldValue() == storageDb->getStoredValue(m_entityId, componentName) ||
                         (qIsNaN(oldValue) && qIsNaN(newValue))) {
                     VfModuleParameter *param = hashIter.value();
                     param->transaction(commandEvent->peerId(), cData->newValue(), cData->oldValue(), cData->eventCommand());
