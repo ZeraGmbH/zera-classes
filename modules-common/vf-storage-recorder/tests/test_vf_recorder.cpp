@@ -19,18 +19,18 @@ void test_vf_recorder::init()
     TimerFactoryQtForTest::enableTest();
     m_eventHandler = std::make_unique<VeinEvent::EventHandler>();
     m_storageEventSystem = std::make_shared<VeinStorage::StorageEventSystem>();
-    m_storageRecorder = std::make_unique<Vf_Storage>(m_storageEventSystem.get());
+    m_recorder = std::make_unique<Vf_Recorder>(m_storageEventSystem.get());
 
     m_eventHandler->addSubsystem(m_storageEventSystem.get());
-    m_eventHandler->addSubsystem(m_storageRecorder->getVeinEntity());
-    m_storageRecorder->initOnce();
+    m_eventHandler->addSubsystem(m_recorder->getVeinEntity());
+    m_recorder->initOnce();
     TimeMachineObject::feedEventLoop();
 }
 
 void test_vf_recorder::cleanup()
 {
     m_eventHandler = nullptr;
-    m_storageRecorder = nullptr;
+    m_recorder = nullptr;
     m_storageEventSystem = nullptr;
     TimeMachineObject::feedEventLoop();
 }

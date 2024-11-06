@@ -1,7 +1,7 @@
 #ifndef TEST_VF_RECORDER_H
 #define TEST_VF_RECORDER_H
 
-#include "vf_storage.h"
+#include "vf_recorder.h"
 #include "ve_eventhandler.h"
 #include "vs_storageeventsystem.h"
 #include <memory>
@@ -39,7 +39,7 @@ private:
     QString getValuesStoredOfComponent(QHash<QString, QVariant> componentHash, QString componentName);
 
     std::unique_ptr<VeinEvent::EventHandler> m_eventHandler;
-    std::unique_ptr<Vf_Storage> m_storageRecorder;
+    std::unique_ptr<Vf_Recorder> m_recorder;
     std::shared_ptr<VeinStorage::StorageEventSystem> m_storageEventSystem;
 };
 
