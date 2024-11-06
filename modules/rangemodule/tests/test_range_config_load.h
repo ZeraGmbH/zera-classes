@@ -10,6 +10,7 @@ private slots:
     void fileFound();
     void allFilesLoaded();
     void invertPhaseStateLoaded();
+    void writtenXmlIsStillValid();
 };
 
 #endif // TEST_ADJ_CONFIG_LOAD_H
