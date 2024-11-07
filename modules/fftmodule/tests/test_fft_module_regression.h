@@ -2,7 +2,6 @@
 #define TEST_FFT_MODULE_REGRESSION_H
 
 #include <QObject>
-#include <memory>
 
 class test_fft_module_regression : public QObject
 {
