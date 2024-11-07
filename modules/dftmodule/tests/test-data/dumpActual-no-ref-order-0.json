@@ -24,38 +24,98 @@
             5.5,
             12
         ],
+        "ACT_POL_DFTPN1": [
+            2.06155,
+            1.32582,
+            75.9638
+        ],
+        "ACT_POL_DFTPN2": [
+            4.272,
+            1.21203,
+            69.444
+        ],
+        "ACT_POL_DFTPN3": [
+            6.5,
+            1.17601,
+            67.3801
+        ],
+        "ACT_POL_DFTPN4": [
+            8.73212,
+            1.15839,
+            66.3706
+        ],
+        "ACT_POL_DFTPN5": [
+            10.9659,
+            1.14794,
+            65.7723
+        ],
+        "ACT_POL_DFTPN6": [
+            13.2004,
+            1.14103,
+            65.3764
+        ],
         "ACT_RFIELD": "132",
         "EntityName": "DFTModule1",
         "INF_ModuleInterface": {
             "ComponentInfo": {
                 "ACT_DFTPN1": {
                     "ChannelName": "UL1",
-                    "Description": "Actual value phase/neutral",
+                    "Description": "Actual value phase/neutral / cartesian format: re,im",
                     "Unit": "V"
                 },
                 "ACT_DFTPN2": {
                     "ChannelName": "UL2",
-                    "Description": "Actual value phase/neutral",
+                    "Description": "Actual value phase/neutral / cartesian format: re,im",
                     "Unit": "V"
                 },
                 "ACT_DFTPN3": {
                     "ChannelName": "UL3",
-                    "Description": "Actual value phase/neutral",
+                    "Description": "Actual value phase/neutral / cartesian format: re,im",
                     "Unit": "V"
                 },
                 "ACT_DFTPN4": {
                     "ChannelName": "IL1",
-                    "Description": "Actual value",
+                    "Description": "Actual value / cartesian format: re,im",
                     "Unit": "A"
                 },
                 "ACT_DFTPN5": {
                     "ChannelName": "IL2",
-                    "Description": "Actual value",
+                    "Description": "Actual value / cartesian format: re,im",
                     "Unit": "A"
                 },
                 "ACT_DFTPN6": {
                     "ChannelName": "IL3",
-                    "Description": "Actual value",
+                    "Description": "Actual value / cartesian format: re,im",
+                    "Unit": "A"
+                },
+                "ACT_POL_DFTPN1": {
+                    "ChannelName": "UL1",
+                    "Description": "Actual value phase/neutral / polar format: abs,rad[-π,π],deg[-180-180]",
+                    "Unit": "V"
+                },
+                "ACT_POL_DFTPN2": {
+                    "ChannelName": "UL2",
+                    "Description": "Actual value phase/neutral / polar format: abs,rad[-π,π],deg[-180-180]",
+                    "Unit": "V"
+                },
+                "ACT_POL_DFTPN3": {
+                    "ChannelName": "UL3",
+                    "Description": "Actual value phase/neutral / polar format: abs,rad[-π,π],deg[-180-180]",
+                    "Unit": "V"
+                },
+                "ACT_POL_DFTPN4": {
+                    "ChannelName": "IL1",
+                    "Description": "Actual value / polar format: abs,rad[-π,π],deg[-180-180]",
+                    "Unit": "A"
+                },
+                "ACT_POL_DFTPN5": {
+                    "ChannelName": "IL2",
+                    "Description": "Actual value / polar format: abs,rad[-π,π],deg[-180-180]",
+                    "Unit": "A"
+                },
+                "ACT_POL_DFTPN6": {
+                    "ChannelName": "IL3",
+                    "Description": "Actual value / polar format: abs,rad[-π,π],deg[-180-180]",
                     "Unit": "A"
                 },
                 "ACT_RFIELD": {
@@ -115,9 +175,25 @@
                     ],
                     [
                         "MEASURE",
+                        "U1",
+                        "8",
+                        "ACT_POL_DFTPN1",
+                        "0",
+                        "V"
+                    ],
+                    [
+                        "MEASURE",
                         "UL2",
                         "8",
                         "ACT_DFTPN2",
+                        "0",
+                        "V"
+                    ],
+                    [
+                        "MEASURE",
+                        "U2",
+                        "8",
+                        "ACT_POL_DFTPN2",
                         "0",
                         "V"
                     ],
@@ -131,9 +207,25 @@
                     ],
                     [
                         "MEASURE",
+                        "U3",
+                        "8",
+                        "ACT_POL_DFTPN3",
+                        "0",
+                        "V"
+                    ],
+                    [
+                        "MEASURE",
                         "IL1",
                         "8",
                         "ACT_DFTPN4",
+                        "0",
+                        "A"
+                    ],
+                    [
+                        "MEASURE",
+                        "I1",
+                        "8",
+                        "ACT_POL_DFTPN4",
                         "0",
                         "A"
                     ],
@@ -147,9 +239,25 @@
                     ],
                     [
                         "MEASURE",
+                        "I2",
+                        "8",
+                        "ACT_POL_DFTPN5",
+                        "0",
+                        "A"
+                    ],
+                    [
+                        "MEASURE",
                         "IL3",
                         "8",
                         "ACT_DFTPN6",
+                        "0",
+                        "A"
+                    ],
+                    [
+                        "MEASURE",
+                        "I3",
+                        "8",
+                        "ACT_POL_DFTPN6",
                         "0",
                         "A"
                     ],

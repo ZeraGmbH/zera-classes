@@ -60,6 +60,7 @@ private:
     cDftModule* m_pModule;
     ActualValueStartStopHandler m_startStopHandler;
     QList<VfModuleActvalue*> m_veinActValueList; // the list of actual values we work on
+    QList<VfModuleActvalue*> m_veinPolarValue;
     VfModuleActvalue* m_pRFieldActualValue;
     QMap<QString, cMeasChannelInfo> m_measChannelInfoHash;
     QHash<QString, QString> m_ChannelSystemNameHash; // a hash for fast access to the system name with key = alias

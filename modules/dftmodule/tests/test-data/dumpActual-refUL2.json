@@ -1,48 +1,103 @@
 {
     "1050": {
         "ACT_DFTPN1": [
-            2.200000047683716,
-            -0.4000000059604645
+            2.2,
+            -0.4
         ],
         "ACT_DFTPN2": [
             5,
             0
         ],
         "ACT_DFTPN3": [
-            7.800000190734863,
-            0.4000000059604645
+            7.8,
+            0.4
         ],
         "ACT_DFTPN4": [
             19,
             2
         ],
         "ACT_DFTPN5": [
-            21.799999237060547,
-            2.4000000953674316
+            21.8,
+            2.4
         ],
         "ACT_DFTPN6": [
-            24.600000381469727,
-            2.799999952316284
+            24.6,
+            2.8
         ],
         "ACT_DFTPN7": [
-            27.399999618530273,
-            3.200000047683716
+            27.4,
+            3.2
         ],
         "ACT_DFTPN8": [
-            30.200000762939453,
-            3.5999999046325684
+            30.2,
+            3.6
         ],
         "ACT_DFTPP1": [
-            -2.799999952316284,
-            -0.4000000059604645
+            -2.8,
+            -0.4
         ],
         "ACT_DFTPP2": [
-            2.799999952316284,
-            0.4000000059604645
+            2.8,
+            0.4
         ],
         "ACT_DFTPP3": [
-            5.599999904632568,
-            0.800000011920929
+            5.6,
+            0.8
+        ],
+        "ACT_POL_DFTPN1": [
+            2.23607,
+            -0.179853,
+            -10.3048
+        ],
+        "ACT_POL_DFTPN2": [
+            5,
+            0,
+            0
+        ],
+        "ACT_POL_DFTPN3": [
+            7.81025,
+            0.0512372,
+            2.93567
+        ],
+        "ACT_POL_DFTPN4": [
+            19.105,
+            0.104877,
+            6.00901
+        ],
+        "ACT_POL_DFTPN5": [
+            21.9317,
+            0.10965,
+            6.28249
+        ],
+        "ACT_POL_DFTPN6": [
+            24.7588,
+            0.113333,
+            6.49353
+        ],
+        "ACT_POL_DFTPN7": [
+            27.5862,
+            0.116262,
+            6.6613
+        ],
+        "ACT_POL_DFTPN8": [
+            30.4138,
+            0.118645,
+            6.79788
+        ],
+        "ACT_POL_DFTPP1": [
+            2.82843,
+            -2.9997,
+            -171.87
+        ],
+        "ACT_POL_DFTPP2": [
+            2.82843,
+            0.141897,
+            8.1301
+        ],
+        "ACT_POL_DFTPP3": [
+            5.65685,
+            0.141897,
+            8.1301
         ],
         "ACT_RFIELD": "132",
         "EntityName": "DFTModule1",
@@ -50,57 +105,112 @@
             "ComponentInfo": {
                 "ACT_DFTPN1": {
                     "ChannelName": "UL1",
-                    "Description": "Actual value phase/neutral",
+                    "Description": "Actual value phase/neutral / cartesian format: re,im",
                     "Unit": "V"
                 },
                 "ACT_DFTPN2": {
                     "ChannelName": "UL2",
-                    "Description": "Actual value phase/neutral",
+                    "Description": "Actual value phase/neutral / cartesian format: re,im",
                     "Unit": "V"
                 },
                 "ACT_DFTPN3": {
                     "ChannelName": "UL3",
-                    "Description": "Actual value phase/neutral",
+                    "Description": "Actual value phase/neutral / cartesian format: re,im",
                     "Unit": "V"
                 },
                 "ACT_DFTPN4": {
                     "ChannelName": "IL1",
-                    "Description": "Actual value",
+                    "Description": "Actual value / cartesian format: re,im",
                     "Unit": "A"
                 },
                 "ACT_DFTPN5": {
                     "ChannelName": "IL2",
-                    "Description": "Actual value",
+                    "Description": "Actual value / cartesian format: re,im",
                     "Unit": "A"
                 },
                 "ACT_DFTPN6": {
                     "ChannelName": "IL3",
-                    "Description": "Actual value",
+                    "Description": "Actual value / cartesian format: re,im",
                     "Unit": "A"
                 },
                 "ACT_DFTPN7": {
                     "ChannelName": "UAUX",
-                    "Description": "Actual value phase/neutral",
+                    "Description": "Actual value phase/neutral / cartesian format: re,im",
                     "Unit": "V"
                 },
                 "ACT_DFTPN8": {
                     "ChannelName": "IAUX",
-                    "Description": "Actual value",
+                    "Description": "Actual value / cartesian format: re,im",
                     "Unit": "A"
                 },
                 "ACT_DFTPP1": {
                     "ChannelName": "UL1-UL2",
-                    "Description": "Actual value phase/phase",
+                    "Description": "Actual value phase/phase / cartesian format: re,im",
                     "Unit": "V"
                 },
                 "ACT_DFTPP2": {
                     "ChannelName": "UL3-UL2",
-                    "Description": "Actual value phase/phase",
+                    "Description": "Actual value phase/phase / cartesian format: re,im",
                     "Unit": "V"
                 },
                 "ACT_DFTPP3": {
                     "ChannelName": "UL3-UL1",
-                    "Description": "Actual value phase/phase",
+                    "Description": "Actual value phase/phase / cartesian format: re,im",
+                    "Unit": "V"
+                },
+                "ACT_POL_DFTPN1": {
+                    "ChannelName": "UL1",
+                    "Description": "Actual value phase/neutral / polar format: abs,rad[-π,π],deg[-180-180]",
+                    "Unit": "V"
+                },
+                "ACT_POL_DFTPN2": {
+                    "ChannelName": "UL2",
+                    "Description": "Actual value phase/neutral / polar format: abs,rad[-π,π],deg[-180-180]",
+                    "Unit": "V"
+                },
+                "ACT_POL_DFTPN3": {
+                    "ChannelName": "UL3",
+                    "Description": "Actual value phase/neutral / polar format: abs,rad[-π,π],deg[-180-180]",
+                    "Unit": "V"
+                },
+                "ACT_POL_DFTPN4": {
+                    "ChannelName": "IL1",
+                    "Description": "Actual value / polar format: abs,rad[-π,π],deg[-180-180]",
+                    "Unit": "A"
+                },
+                "ACT_POL_DFTPN5": {
+                    "ChannelName": "IL2",
+                    "Description": "Actual value / polar format: abs,rad[-π,π],deg[-180-180]",
+                    "Unit": "A"
+                },
+                "ACT_POL_DFTPN6": {
+                    "ChannelName": "IL3",
+                    "Description": "Actual value / polar format: abs,rad[-π,π],deg[-180-180]",
+                    "Unit": "A"
+                },
+                "ACT_POL_DFTPN7": {
+                    "ChannelName": "UAUX",
+                    "Description": "Actual value phase/neutral / polar format: abs,rad[-π,π],deg[-180-180]",
+                    "Unit": "V"
+                },
+                "ACT_POL_DFTPN8": {
+                    "ChannelName": "IAUX",
+                    "Description": "Actual value / polar format: abs,rad[-π,π],deg[-180-180]",
+                    "Unit": "A"
+                },
+                "ACT_POL_DFTPP1": {
+                    "ChannelName": "UL1-UL2",
+                    "Description": "Actual value phase/phase / polar format: abs,rad[-π,π],deg[-180-180]",
+                    "Unit": "V"
+                },
+                "ACT_POL_DFTPP2": {
+                    "ChannelName": "UL3-UL2",
+                    "Description": "Actual value phase/phase / polar format: abs,rad[-π,π],deg[-180-180]",
+                    "Unit": "V"
+                },
+                "ACT_POL_DFTPP3": {
+                    "ChannelName": "UL3-UL1",
+                    "Description": "Actual value phase/phase / polar format: abs,rad[-π,π],deg[-180-180]",
                     "Unit": "V"
                 },
                 "ACT_RFIELD": {
@@ -162,9 +272,25 @@
                     ],
                     [
                         "MEASURE",
+                        "U1",
+                        "8",
+                        "ACT_POL_DFTPN1",
+                        "0",
+                        "V"
+                    ],
+                    [
+                        "MEASURE",
                         "UL2",
                         "8",
                         "ACT_DFTPN2",
+                        "0",
+                        "V"
+                    ],
+                    [
+                        "MEASURE",
+                        "U2",
+                        "8",
+                        "ACT_POL_DFTPN2",
                         "0",
                         "V"
                     ],
@@ -178,9 +304,25 @@
                     ],
                     [
                         "MEASURE",
+                        "U3",
+                        "8",
+                        "ACT_POL_DFTPN3",
+                        "0",
+                        "V"
+                    ],
+                    [
+                        "MEASURE",
                         "UL1-UL2",
                         "8",
                         "ACT_DFTPP1",
+                        "0",
+                        "V"
+                    ],
+                    [
+                        "MEASURE",
+                        "U1U2",
+                        "8",
+                        "ACT_POL_DFTPP1",
                         "0",
                         "V"
                     ],
@@ -194,9 +336,25 @@
                     ],
                     [
                         "MEASURE",
+                        "U3U2",
+                        "8",
+                        "ACT_POL_DFTPP2",
+                        "0",
+                        "V"
+                    ],
+                    [
+                        "MEASURE",
                         "UL3-UL1",
                         "8",
                         "ACT_DFTPP3",
+                        "0",
+                        "V"
+                    ],
+                    [
+                        "MEASURE",
+                        "U3U1",
+                        "8",
+                        "ACT_POL_DFTPP3",
                         "0",
                         "V"
                     ],
@@ -210,9 +368,25 @@
                     ],
                     [
                         "MEASURE",
+                        "I1",
+                        "8",
+                        "ACT_POL_DFTPN4",
+                        "0",
+                        "A"
+                    ],
+                    [
+                        "MEASURE",
                         "IL2",
                         "8",
                         "ACT_DFTPN5",
+                        "0",
+                        "A"
+                    ],
+                    [
+                        "MEASURE",
+                        "I2",
+                        "8",
+                        "ACT_POL_DFTPN5",
                         "0",
                         "A"
                     ],
@@ -226,6 +400,14 @@
                     ],
                     [
                         "MEASURE",
+                        "I3",
+                        "8",
+                        "ACT_POL_DFTPN6",
+                        "0",
+                        "A"
+                    ],
+                    [
+                        "MEASURE",
                         "UAUX",
                         "8",
                         "ACT_DFTPN7",
@@ -234,9 +416,25 @@
                     ],
                     [
                         "MEASURE",
+                        "U4",
+                        "8",
+                        "ACT_POL_DFTPN7",
+                        "0",
+                        "V"
+                    ],
+                    [
+                        "MEASURE",
                         "IAUX",
                         "8",
                         "ACT_DFTPN8",
+                        "0",
+                        "A"
+                    ],
+                    [
+                        "MEASURE",
+                        "I4",
+                        "8",
+                        "ACT_POL_DFTPN8",
                         "0",
                         "A"
                     ],

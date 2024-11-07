@@ -145,30 +145,48 @@ void cDftModuleMeasProgram::generateInterface()
 {
     VfModuleActvalue *pActvalue;
     int n,p;
-    n = p = 0; //
-    QString channelDescription;
-    for (int i = 0; i < getConfData()->m_valueChannelList.count(); i++)
-    {
+    n = p = 0;
+    for (int i = 0; i < getConfData()->m_valueChannelList.count(); i++) {
         QStringList sl = getConfData()->m_valueChannelList.at(i).split('-');
         // we have 1 or 2 entries for each value
         if (sl.count() == 1) { // in this case we have phase,neutral value
-            if(sl.contains("m0") || sl.contains("m1") || sl.contains("m2") || sl.contains("m6")) //voltage channels
-                channelDescription = QString("Actual value phase/neutral");
-            else //current channels
-                channelDescription = QString("Actual value");
+            QString channelDescriptionCartesian;
+            QString channelDescriptionPolar;
+            if(sl.contains("m0") || sl.contains("m1") || sl.contains("m2") || sl.contains("m6")) { //voltage channels
+                channelDescriptionCartesian = QString("Actual value phase/neutral / cartesian format: re,im");
+                channelDescriptionPolar = QString("Actual value phase/neutral / polar format: abs,rad[-π,π],deg[-180-180]");
+            }
+            else { //current channels
+                channelDescriptionCartesian = QString("Actual value / cartesian format: re,im");
+                channelDescriptionPolar = QString("Actual value / polar format: abs,rad[-π,π],deg[-180-180]");
+            }
             pActvalue = new VfModuleActvalue(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
                                                 QString("ACT_DFTPN%1").arg(n+1),
-                                                channelDescription);
+                                                channelDescriptionCartesian);
             m_veinActValueList.append(pActvalue); // we add the component for our measurement
             m_pModule->veinModuleActvalueList.append(pActvalue); // and for the modules interface
+
+            pActvalue = new VfModuleActvalue(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
+                                             QString("ACT_POL_DFTPN%1").arg(n+1),
+                                             channelDescriptionPolar);
+            m_veinPolarValue.append(pActvalue); // we add the component for our measurement
+            m_pModule->veinModuleActvalueList.append(pActvalue); // and for the modules interface
+
             n++;
         }
         else {
             pActvalue = new VfModuleActvalue(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
                                                 QString("ACT_DFTPP%1").arg(p+1),
-                                                QString("Actual value phase/phase"));
+                                                QString("Actual value phase/phase / cartesian format: re,im"));
             m_veinActValueList.append(pActvalue); // we add the component for our measurement
             m_pModule->veinModuleActvalueList.append(pActvalue); // and for the modules interface
+
+            pActvalue = new VfModuleActvalue(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
+                                             QString("ACT_POL_DFTPP%1").arg(p+1),
+                                             QString("Actual value phase/phase / polar format: abs,rad[-π,π],deg[-180-180]"));
+            m_veinPolarValue.append(pActvalue); // we add the component for our measurement
+            m_pModule->veinModuleActvalueList.append(pActvalue); // and for the modules interface
+
             p++;
         }
     }
@@ -566,17 +584,23 @@ void cDftModuleMeasProgram::setActualValuesNames()
 
         m_veinActValueList.at(i)->setChannelName(name);
         m_veinActValueList.at(i)->setUnit(m_measChannelInfoHash.value(sl.at(0)).unit);
+        m_veinPolarValue.at(i)->setChannelName(name);
+        m_veinPolarValue.at(i)->setUnit(m_measChannelInfoHash.value(sl.at(0)).unit);
     }
 }
 
 void cDftModuleMeasProgram::setSCPIMeasInfo()
 {
     cSCPIInfo* pSCPIInfo;
-
-    for (int i = 0; i < getConfData()->m_valueChannelList.count(); i++)
-    {
-        pSCPIInfo = new cSCPIInfo("MEASURE", m_veinActValueList.at(i)->getChannelName(), "8", m_veinActValueList.at(i)->getName(), "0", m_veinActValueList.at(i)->getUnit());
+    for (int i = 0; i < getConfData()->m_valueChannelList.count(); i++) {
+        QString channelName = m_veinPolarValue.at(i)->getChannelName();
+        pSCPIInfo = new cSCPIInfo("MEASURE", channelName, "8", m_veinActValueList.at(i)->getName(), "0", m_veinActValueList.at(i)->getUnit());
         m_veinActValueList.at(i)->setSCPIInfo(pSCPIInfo);
+
+        // Try hard to find unique names with four letters...
+        QString polarChannelName = channelName.replace("L", "").replace("-", "").replace("AUX", "4");
+        pSCPIInfo = new cSCPIInfo("MEASURE", polarChannelName, "8", m_veinPolarValue.at(i)->getName(), "0", m_veinPolarValue.at(i)->getUnit());
+        m_veinPolarValue.at(i)->setSCPIInfo(pSCPIInfo);
     }
 
     pSCPIInfo = new cSCPIInfo("MEASURE", "RFIELD", "8", m_pRFieldActualValue->getName(), "0", "");
@@ -618,16 +642,26 @@ void cDftModuleMeasProgram::initRFieldMeasurement()
 
 void cDftModuleMeasProgram::setInterfaceActualValues(QVector<float> *actualValues)
 {
-    if (m_bActive) // maybe we are deactivating !!!!
-    {
-        for (int i = 0; i < m_veinActValueList.count(); i++)
-        {
+    if (m_bActive) { // maybe we are deactivating !!!!
+        for (int i = 0; i < m_veinActValueList.count(); i++) {
+            double re = actualValues->at(2*i);
+            double im = actualValues->at(2*i+1);
+
             QList<double> dftResult;
-            dftResult.append(actualValues->at(2*i));
-            dftResult.append(actualValues->at(2*i+1));
-            QVariant list;
-            list = QVariant::fromValue<QList<double> >(dftResult);
+            dftResult.append(re);
+            dftResult.append(im);
+            QVariant list = QVariant::fromValue<QList<double>>(dftResult);
             m_veinActValueList.at(i)->setValue(list); // and set entities
+
+            QList<double> dftResultPolar;
+            double abs = sqrt(re*re + im*im);
+            dftResultPolar.append(abs);
+            double rad = atan2(im, re); // y=im / x=re
+            dftResultPolar.append(rad);
+            double deg = rad / M_PI * 180;
+            dftResultPolar.append(deg);
+            QVariant listPolar = QVariant::fromValue<QList<double>>(dftResultPolar);
+            m_veinPolarValue.at(i)->setValue(listPolar);
         }
 
         // rfield computation
