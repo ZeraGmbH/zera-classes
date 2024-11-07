@@ -14,6 +14,7 @@ private slots:
     void modePhaseListPlausis();
     void measSystemsValid();
     void allModesProperlyLoadedFromConfig();
+    void writtenXmlIsStillValid();
 };
 
 #endif // TEST_POW1_CONFIG_LOAD_H

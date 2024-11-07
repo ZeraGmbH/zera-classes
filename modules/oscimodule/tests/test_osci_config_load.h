@@ -9,6 +9,7 @@ class test_osci_config_load : public QObject
 private slots:
     void fileFound();
     void allFilesLoaded();
+    void writtenXmlIsStillValid();
 };
 
 #endif // TEST_OSCI_CONFIG_LOAD_H

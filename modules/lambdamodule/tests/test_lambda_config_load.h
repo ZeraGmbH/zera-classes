@@ -9,6 +9,7 @@ class test_lambda_config_load : public QObject
 private slots:
     void fileFound();
     void allFilesLoaded();
+    void writtenXmlIsStillValid();
 };
 
 #endif // TEST_LAMBDA_CONFIG_LOAD_H

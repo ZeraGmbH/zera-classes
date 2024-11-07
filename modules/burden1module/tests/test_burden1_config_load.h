@@ -9,6 +9,7 @@ class test_burden1_config_load : public QObject
 private slots:
     void fileFound();
     void allFilesLoaded();
+    void writtenXmlIsStillValid();
 };
 
 #endif // TEST_BURDEN1_CONFIG_LOAD_H

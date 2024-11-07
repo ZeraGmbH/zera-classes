@@ -9,6 +9,7 @@ class test_spm1_config_load : public QObject
 private slots:
     void fileFound();
     void allFilesLoaded();
+    void writtenXmlIsStillValid();
 };
 
 #endif // TEST_SPM1_CONFIG_LOAD_H

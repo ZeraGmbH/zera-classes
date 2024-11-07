@@ -9,6 +9,7 @@ class test_reference_config_load : public QObject
 private slots:
     void fileFound();
     void allFilesLoaded();
+    void writtenXmlIsStillValid();
 };
 
 #endif // TEST_FFT_CONFIG_LOAD_H

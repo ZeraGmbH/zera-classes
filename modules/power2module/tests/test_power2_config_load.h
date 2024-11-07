@@ -10,6 +10,7 @@ private slots:
     void fileFound();
     void allFilesLoaded();
     void modeListCountSameAsArraySize();
+    void writtenXmlIsStillValid();
 };
 
 #endif // TEST_POW2_CONFIG_LOAD_H
