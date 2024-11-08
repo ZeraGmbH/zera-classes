@@ -166,27 +166,6 @@ int main(int argc, char *argv[])
     VeinLogger::LoggerContentSetConfig::setJsonEnvironment(MODMAN_CONTENTSET_PATH, std::make_shared<JsonLoggerContentLoader>());
     VeinLogger::LoggerContentSetConfig::setJsonEnvironment(MODMAN_SESSION_PATH, std::make_shared<JsonLoggerContentSessionLoader>());
 
-    auto errorReportFunction = [dataLoggerSystem](const QString &t_error){
-        QJsonObject jsonErrorObj;
-
-        jsonErrorObj.insert("ModuleName", "DataLogger");
-        jsonErrorObj.insert("Time", QDateTime::currentDateTime().toString("yyyy/MM/dd HH:mm:ss"));
-        jsonErrorObj.insert("Error", t_error);
-
-        VeinComponent::ComponentData *cData = new VeinComponent::ComponentData();
-        cData->setEntityId(0);
-        cData->setEventOrigin(VeinEvent::EventData::EventOrigin::EO_LOCAL);
-        cData->setEventTarget(VeinEvent::EventData::EventTarget::ET_LOCAL);
-        cData->setCommand(VeinComponent::ComponentData::Command::CCMD_SET);
-        cData->setComponentName("Error_Messages");
-
-        cData->setNewValue(jsonErrorObj);
-
-        emit dataLoggerSystem->sigSendEvent(new VeinEvent::CommandEvent(VeinEvent::CommandEvent::EventSubtype::TRANSACTION, cData));
-    };
-    QObject::connect(dataLoggerSystem, &VeinLogger::DatabaseLogger::sigDatabaseError, errorReportFunction);
-
-
     // files entity
     qInfo("Starting vf-files...");
     modManSetupFacade->addSubsystem(filesModule->getVeinEntity());
@@ -220,7 +199,6 @@ int main(int argc, char *argv[])
                 customerDataSystemInitialized = true;
                 qInfo("Starting CustomerDataSystem");
                 customerDataSystem = new CustomerDataSystem(MODMAN_CUSTOMERDATA_PATH, app.get());
-                QObject::connect(customerDataSystem, &CustomerDataSystem::sigCustomerDataError, errorReportFunction);
                 modManSetupFacade->addSubsystem(customerDataSystem);
                 customerDataSystem->initializeEntity();
             }
