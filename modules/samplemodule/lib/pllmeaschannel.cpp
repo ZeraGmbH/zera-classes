@@ -165,7 +165,7 @@ void cPllMeasChannel::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant
         switch (cmd)
         {
         case sendpllchannelrmident:
-            if (reply == ack) // we only continue if resource manager acknowledges
+            if (reply == ack)
                 emit activationContinue();
             else
                 notifyActivationError(tr(rmidentErrMSG));

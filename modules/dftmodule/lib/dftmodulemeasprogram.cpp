@@ -335,37 +335,37 @@ void cDftModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QV
             switch (cmd)
             {
             case sendrmident:
-                if (reply == ack) // we only continue if resource manager acknowledges
+                if (reply == ack)
                     emit activationContinue();
                 else
                     notifyActivationError(rmidentErrMSG);
                 break;
             case claimpgrmem:
-                if (reply == ack) // we only continue if resource manager acknowledges
+                if (reply == ack)
                     emit activationContinue();
                 else
                     notifyActivationError((tr(claimresourceErrMsg)));
                 break;
             case claimusermem:
-                if (reply == ack) // we only continue if resource manager acknowledges
+                if (reply == ack)
                     emit activationContinue();
                 else
                     notifyActivationError((tr(claimresourceErrMsg)));
                 break;
             case varlist2dsp:
-                if (reply == ack) // we only continue if resource manager acknowledges
+                if (reply == ack)
                     emit activationContinue();
                 else
                     notifyActivationError((tr(dspvarlistwriteErrMsg)));
                 break;
             case cmdlist2dsp:
-                if (reply == ack) // we only continue if resource manager acknowledges
+                if (reply == ack)
                     emit activationContinue();
                 else
                     notifyActivationError((tr(dspcmdlistwriteErrMsg)));
                 break;
             case activatedsp:
-                if (reply == ack) // we only continue if resource manager acknowledges
+                if (reply == ack)
                     emit activationContinue();
                 else
                     notifyActivationError((tr(dspactiveErrMsg)));
@@ -482,7 +482,7 @@ void cDftModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QV
                 break;
 
             case deactivatedsp:
-                if (reply == ack) // we only continue if resource manager acknowledges
+                if (reply == ack)
                     emit deactivationContinue();
                 else {
                     emit errMsg((tr(dspdeactiveErrMsg)));
@@ -490,7 +490,7 @@ void cDftModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QV
                 }
                 break;
             case freepgrmem:
-                if (reply == ack) // we only continue if resource manager acknowledges
+                if (reply == ack)
                     emit deactivationContinue();
                 else {
                     emit errMsg((tr(freeresourceErrMsg)));
@@ -498,7 +498,7 @@ void cDftModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QV
                 }
                 break;
             case freeusermem:
-                if (reply == ack) // we only continue if resource manager acknowledges
+                if (reply == ack)
                     emit deactivationContinue();
                 else {
                     emit errMsg((tr(freeresourceErrMsg)));

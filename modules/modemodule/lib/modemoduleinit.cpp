@@ -111,7 +111,7 @@ void cModeModuleInit::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant
             int cmd = m_MsgNrCmdList.take(msgnr);
             switch (cmd) {
             case MODEMODINIT::sendrmident:
-                if (reply == ack) { // we only continue if resource manager acknowledges
+                if (reply == ack) {
                     emit activationContinue();
                 }
                 else

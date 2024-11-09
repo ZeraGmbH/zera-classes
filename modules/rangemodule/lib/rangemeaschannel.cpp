@@ -452,7 +452,7 @@ void cRangeMeasChannel::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVaria
         switch (cmd)
         {
         case sendmeaschannelrmident:
-            if (reply == ack) // we only continue if resource manager acknowledges
+            if (reply == ack)
                 emit activationContinue();
             else
                 notifyActivationError(tr(rmidentErrMSG));

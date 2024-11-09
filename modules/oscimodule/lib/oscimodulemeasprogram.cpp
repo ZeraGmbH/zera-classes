@@ -299,37 +299,37 @@ void cOsciModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, Q
             switch (cmd)
             {
             case sendrmident:
-                if (reply == ack) // we only continue if resource manager acknowledges
+                if (reply == ack)
                     emit activationContinue();
                 else
                     notifyActivationError(tr(rmidentErrMSG));
                 break;
             case claimpgrmem:
-                if (reply == ack) // we only continue if resource manager acknowledges
+                if (reply == ack)
                     emit activationContinue();
                 else
                     notifyActivationError((tr(claimresourceErrMsg)));
                 break;
             case claimusermem:
-                if (reply == ack) // we only continue if resource manager acknowledges
+                if (reply == ack)
                     emit activationContinue();
                 else
                     notifyActivationError((tr(claimresourceErrMsg)));
                 break;
             case varlist2dsp:
-                if (reply == ack) // we only continue if resource manager acknowledges
+                if (reply == ack)
                     emit activationContinue();
                 else
                     notifyActivationError((tr(dspvarlistwriteErrMsg)));
                 break;
             case cmdlist2dsp:
-                if (reply == ack) // we only continue if resource manager acknowledges
+                if (reply == ack)
                     emit activationContinue();
                 else
                     notifyActivationError((tr(dspcmdlistwriteErrMsg)));
                 break;
             case activatedsp:
-                if (reply == ack) // we only continue if resource manager acknowledges
+                if (reply == ack)
                     emit activationContinue();
                 else
                     notifyActivationError((tr(dspactiveErrMsg)));
@@ -439,7 +439,7 @@ void cOsciModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, Q
                 break;
 
             case deactivatedsp:
-                if (reply == ack) // we only continue if resource manager acknowledges
+                if (reply == ack)
                     emit deactivationContinue();
                 else
                 {
@@ -448,7 +448,7 @@ void cOsciModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, Q
                 }
                 break;
             case freepgrmem:
-                if (reply == ack) // we only continue if resource manager acknowledges
+                if (reply == ack)
                     emit deactivationContinue();
                 else
                 {
@@ -457,7 +457,7 @@ void cOsciModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, Q
                 }
                 break;
             case freeusermem:
-                if (reply == ack) // we only continue if resource manager acknowledges
+                if (reply == ack)
                     emit deactivationContinue();
                 else
                 {

@@ -266,44 +266,44 @@ void cRangeModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, 
             switch (cmd)
             {
             case sendrmident:
-                if (reply == ack) // we only continue if resource manager acknowledges
+                if (reply == ack)
                     emit activationContinue();
                 else
                     notifyActivationError((tr(rmidentErrMSG)));
                 break;
             case claimpgrmem:
-                if (reply == ack) // we only continue if resource manager acknowledges
+                if (reply == ack)
                     emit activationContinue();
                 else
                     notifyActivationError((tr(claimresourceErrMsg)));
                 break;
             case claimusermem:
-                if (reply == ack) // we only continue if resource manager acknowledges
+                if (reply == ack)
                     emit activationContinue();
                 else
                     notifyActivationError((tr(claimresourceErrMsg)));
                 break;
             case varlist2dsp:
-                if (reply == ack) // we only continue if resource manager acknowledges
+                if (reply == ack)
                     emit activationContinue();
                 else
                     notifyActivationError((tr(dspvarlistwriteErrMsg)));
                 break;
             case cmdlist2dsp:
-                if (reply == ack) // we only continue if resource manager acknowledges
+                if (reply == ack)
                     emit activationContinue();
                 else
                     notifyActivationError((tr(dspcmdlistwriteErrMsg)));
                 break;
             case activatedsp:
-                if (reply == ack) // we only continue if resource manager acknowledges
+                if (reply == ack)
                     emit activationContinue();
                 else
                     notifyActivationError((tr(dspactiveErrMsg)));
                 break;
 
             case deactivatedsp:
-                if (reply == ack) // we only continue if resource manager acknowledges
+                if (reply == ack)
                     emit deactivationContinue();
                 else
                 {
@@ -312,7 +312,7 @@ void cRangeModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, 
                 }
                 break;
             case freepgrmem:
-                if (reply == ack) // we only continue if resource manager acknowledges
+                if (reply == ack)
                     emit deactivationContinue();
                 else
                 {
@@ -321,7 +321,7 @@ void cRangeModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, 
                 }
                 break;
             case freeusermem:
-                if (reply == ack) // we only continue if resource manager acknowledges
+                if (reply == ack)
                     emit deactivationContinue();
                 else
                 {

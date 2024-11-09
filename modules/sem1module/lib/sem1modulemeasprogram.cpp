@@ -386,7 +386,7 @@ void cSem1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, Q
             switch (cmd)
             {
             case sendrmident:
-                if (reply == ack) // we only continue if resource manager acknowledges
+                if (reply == ack)
                     emit activationContinue();
                 else
                     notifyActivationError((tr(rmidentErrMSG)));
@@ -460,7 +460,7 @@ void cSem1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, Q
                 break;
 
             case freeecresource:
-                if (reply == ack) // we only continue if resource manager acknowledges
+                if (reply == ack)
                     emit deactivationContinue();
                 else
                 {
