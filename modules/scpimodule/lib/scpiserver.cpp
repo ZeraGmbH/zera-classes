@@ -203,22 +203,22 @@ void cSCPIServer::TCPError(QAbstractSocket::SocketError)
 void cSCPIServer::setupTCPServer()
 {
     // before we can call listen we must set up a valid interface that clients can connect to
-    bool noError = m_pModuleInterface->setupInterface();
-    noError = noError && m_pInterfaceInterface->setupInterface();
-    noError = noError && m_pStatusInterface->setupInterface();
-    noError = noError && m_pIEEE488Interface->setupInterface();
-    if (!noError)
+    bool ok = m_pModuleInterface->setupInterface();
+    ok = ok && m_pInterfaceInterface->setupInterface();
+    ok = ok && m_pStatusInterface->setupInterface();
+    ok = ok && m_pIEEE488Interface->setupInterface();
+    if (!ok)
         emit errMsg((tr(interfacejsonErrMsg)));
 
-    noError = noError && m_pTcpServer->listen(QHostAddress(QHostAddress::AnyIPv4), m_ConfigData.m_InterfaceSocket.m_nPort);
-    if(!noError)
+    ok = ok && m_pTcpServer->listen(QHostAddress(QHostAddress::AnyIPv4), m_ConfigData.m_InterfaceSocket.m_nPort);
+    if(!ok)
         emit errMsg((tr(interfaceETHErrMsg)));
 
     if (m_ConfigData.m_SerialDevice.m_nOn == 1) {
         connect(&m_SerialTestTimer, &QTimer::timeout, this, &cSCPIServer::testSerial);
         m_SerialTestTimer.start(serialPollTimerPeriod);
     }
-    if (noError)
+    if (ok)
         emit activationContinue();
     else
         emit activationError();
