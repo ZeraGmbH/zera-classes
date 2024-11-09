@@ -119,7 +119,7 @@ void cLambdaModuleMeasProgram::searchActualValues()
         error = true;
 
     if (error)
-        emit activationError();
+        notifyActivationError(confiuredVeinComponentsNotFound);
     else
         emit activationContinue();
 }

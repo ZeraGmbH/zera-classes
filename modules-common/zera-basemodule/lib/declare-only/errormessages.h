@@ -53,6 +53,7 @@
 #define writePCBXMLMSG "PCB xml data write failed"
 #define readClampXMLMSG "Clamp xml data read failed"
 #define writeClampXMLMSG "Clamp xml data write failed"
+#define confiuredVeinComponentsNotFound "Configured vein components not found"
 
 #define adjustcomputationPCBErrMSG "PCB adjustment computation failed"
 #define adjuststoragePCBErrMSG "PCB adjustment storage failed"

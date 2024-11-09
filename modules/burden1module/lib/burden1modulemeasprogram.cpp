@@ -198,7 +198,7 @@ void cBurden1ModuleMeasProgram::searchActualValues()
     }
 
     if (error)
-        emit activationError();
+        notifyActivationError(confiuredVeinComponentsNotFound);
     else
         emit activationContinue();
 }
