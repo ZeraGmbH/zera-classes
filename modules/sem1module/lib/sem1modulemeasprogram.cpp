@@ -389,36 +389,25 @@ void cSem1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, Q
                 if (reply == ack) // we only continue if resource manager acknowledges
                     emit activationContinue();
                 else
-                {
-                    emit errMsg((tr(rmidentErrMSG)));
-                    emit activationError();
-                }
+                    notifyActivationError((tr(rmidentErrMSG)));
                 break;
 
             case testsec1resource:
                 if ((reply == ack) && (answer.toString().contains("SEC1")))
                     emit activationContinue();
                 else
-                {
-                    emit errMsg((tr(resourcetypeErrMsg)));
-                    emit activationError();
-                }
+                    notifyActivationError((tr(resourcetypeErrMsg)));
                 break;
 
             case setecresource:
                 if (reply == ack)
                     emit activationContinue();
                 else
-                {
-                    emit errMsg((tr(setresourceErrMsg)));
-                    emit activationError();
-                }
+                    notifyActivationError((tr(setresourceErrMsg)));
                 break;
 
             case readresource:
-            {
-                if (reply == ack)
-                {
+                if (reply == ack) {
                     QStringList resourceTypeList = m_resourceTypeList.getResourceTypeList();
                     m_ResourceHash[resourceTypeList.at(m_nIt)] = answer.toString();
                     m_nIt++;
@@ -428,29 +417,20 @@ void cSem1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, Q
                         emit activationContinue();
                 }
                 else
-                {
-                    emit errMsg((tr(resourceErrMsg)));
-                    emit activationError();
-                }
+                    notifyActivationError((tr(resourceErrMsg)));
                 break;
-            }
 
             case fetchecalcunits:
             {
-                QStringList sl;
-                sl = answer.toString().split(';');
-                if ((reply == ack) && (sl.length() >= 3))
-                {
+                QStringList sl = answer.toString().split(';');
+                if ((reply == ack) && (sl.length() >= 3)) {
                     m_masterErrCalcName = sl.at(0);
                     m_slaveErrCalcName = sl.at(1);
                     m_slave2ErrCalcName = sl.at(2);
                     emit activationContinue();
                 }
                 else
-                {
-                    emit errMsg((tr(fetchsececalcunitErrMsg)));
-                    emit activationError();
-                }
+                    notifyActivationError((tr(fetchsececalcunitErrMsg)));
                 break;
             }
 
@@ -464,10 +444,8 @@ void cSem1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, Q
                         qWarning("SEM: Improper alias %s received for iterator %i", qPrintable(alias), m_nIt);
                     emit activationContinue();
                 }
-                else {
-                    emit errMsg((tr(readaliasErrMsg)));
-                    emit activationError();
-                }
+                else
+                    notifyActivationError((tr(readaliasErrMsg)));
                 break;
             }
 

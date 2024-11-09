@@ -307,10 +307,7 @@ void cThdnModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, Q
                 if (reply == ack) // we only continue if resource manager acknowledges
                     emit activationContinue();
                 else
-                {
-                    emit errMsg(tr(rmidentErrMSG));
-                    emit activationError();
-                }
+                    notifyActivationError(tr(rmidentErrMSG));
                 break;
             case claimpgrmem:
                 if (reply == ack) // we only continue if resource manager acknowledges

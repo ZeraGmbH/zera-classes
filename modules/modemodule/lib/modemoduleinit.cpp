@@ -114,30 +114,24 @@ void cModeModuleInit::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant
                 if (reply == ack) { // we only continue if resource manager acknowledges
                     emit activationContinue();
                 }
-                else {
-                    emit errMsg((tr(rmidentErrMSG)));
-                    emit activationError();
-                }
+                else
+                    notifyActivationError((tr(rmidentErrMSG)));
                 break;
 
             case MODEMODINIT::readresourcetypes:
                 if ((reply == ack) && (answer.toString().contains("SENSE"))) {
                     emit activationContinue();
                 }
-                else {
-                    emit errMsg((tr(resourcetypeErrMsg)));
-                    emit activationError();
-                }
+                else
+                    notifyActivationError((tr(resourcetypeErrMsg)));
                 break;
 
             case MODEMODINIT::readresource:
                 if ((reply == ack) && (answer.toString().contains("MMODE"))) {
                     emit activationContinue();
                 }
-                else {
-                    emit errMsg((tr(resourceErrMsg)));
-                    emit activationError();
-                }
+                else
+                    notifyActivationError((tr(resourceErrMsg)));
                 break;
 
             case MODEMODINIT::readresourceinfo:
@@ -155,36 +149,26 @@ void cModeModuleInit::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant
                     if (ok1 && ok2 && ok3 && ((max == free) == 1)) {
                         emit activationContinue();
                     }
-                    else {
-                        emit errMsg((tr(resourceInfoErrMsg)));
-                        emit activationError();
-                    }
+                    else
+                        notifyActivationError((tr(resourceInfoErrMsg)));
                 }
-                else {
-                    emit errMsg((tr(resourceInfoErrMsg)));
-                    emit activationError();
-                }
+                else
+                    notifyActivationError((tr(resourceInfoErrMsg)));
                 break;
             }
 
             case MODEMODINIT::claimresource:
-                if (reply == ack) {
+                if (reply == ack)
                     emit activationContinue();
-                }
-                else {
-                    emit errMsg((tr(claimresourceErrMsg)));
-                    emit activationError();
-                }
+                else
+                    notifyActivationError((tr(claimresourceErrMsg)));
                 break;
 
             case MODEMODINIT::setmode:
-                if (reply == ack) {
+                if (reply == ack)
                     emit activationContinue();
-                }
-                else {
-                    emit errMsg((tr(setMeasModeErrMsg)));
-                    emit activationError();
-                }
+                else
+                    notifyActivationError((tr(setMeasModeErrMsg)));
                 break;
 
             case MODEMODINIT::writegaincorr:

@@ -197,53 +197,38 @@ void cSampleModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply,
             case sendrmidentsample:
                 if (reply == ack) // we only continue if resource manager acknowledges
                     emit activationContinue();
-                else {
-                    emit errMsg((tr(rmidentErrMSG)));
-                    emit activationError();
-                }
+                else
+                    notifyActivationError((tr(rmidentErrMSG)));
                 break;
             case claimpgrmem:
                 if (reply == ack) // we only continue if resource manager acknowledges
                     emit activationContinue();
-                else {
-                    emit errMsg((tr(claimresourceErrMsg)));
-                    emit activationError();
-                }
+                else
+                    notifyActivationError((tr(claimresourceErrMsg)));
                 break;
             case claimusermem:
                 if (reply == ack) // we only continue if resource manager acknowledges
                     emit activationContinue();
-                else {
-                    emit errMsg((tr(claimresourceErrMsg)));
-                    emit activationError();
-                }
+                else
+                    notifyActivationError((tr(claimresourceErrMsg)));
                 break;
             case varlist2dsp:
                 if (reply == ack) // we only continue if resource manager acknowledges
                     emit activationContinue();
                 else
-                {
-                    emit errMsg((tr(dspvarlistwriteErrMsg)));
-                    emit activationError();
-                }
+                    notifyActivationError((tr(dspvarlistwriteErrMsg)));
                 break;
             case cmdlist2dsp:
                 if (reply == ack) // we only continue if resource manager acknowledges
                     emit activationContinue();
                 else
-                {
-                    emit errMsg((tr(dspcmdlistwriteErrMsg)));
-                    emit activationError();
-                }
+                    notifyActivationError((tr(dspcmdlistwriteErrMsg)));
                 break;
             case activatedsp:
                 if (reply == ack) // we only continue if resource manager acknowledges
                     emit activationContinue();
                 else
-                {
-                    emit errMsg((tr(dspactiveErrMsg)));
-                    emit activationError();
-                }
+                    notifyActivationError((tr(dspactiveErrMsg)));
                 break;
 
             case deactivatedsp:
