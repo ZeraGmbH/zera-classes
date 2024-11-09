@@ -1132,10 +1132,8 @@ void cSec1ModuleMeasProgram::testSecInputs()
 
     if ((refInCountLeftToCheck == 0) && (dutInputCountLeftToCheck == 0)) // we found all our configured Inputs
         emit activationContinue(); // so lets go on
-    else {
-        emit errMsg((tr(resourceErrMsg)));
-        emit activationError();
-    }
+    else
+        notifyActivationError((tr(resourceErrMsg)));
 }
 
 

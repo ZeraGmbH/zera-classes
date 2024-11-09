@@ -605,12 +605,8 @@ void cSpm1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, Q
                 if (reply == ack) // we only continue if sec server acknowledges
                     emit activationContinue();
                 else
-                {
-                    emit errMsg((tr(registerpcbnotifierErrMsg)));
-                    emit activationError();
-                }
+                    notifyActivationError((tr(registerpcbnotifierErrMsg)));
                 break;
-
 
             case readintregister:
                 if (reply == ack) // we only continue if sec server acknowledges
@@ -626,9 +622,7 @@ void cSpm1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, Q
                 break;
             case resetintregister:
                 if (reply == ack) // we only continue if sec server acknowledges
-                {
                     emit interruptContinue();
-                }
                 else
                 {
                     emit errMsg((tr(writesecregisterErrMsg)));
@@ -871,10 +865,8 @@ void cSpm1ModuleMeasProgram::testSpmInputs()
     }
     if (refInCountLeftToCheck == 0) // we found all our configured Inputs
         emit activationContinue(); // so lets go on
-    else {
-        emit errMsg((tr(resourceErrMsg)));
-        emit activationError();
-    }
+    else
+        notifyActivationError((tr(resourceErrMsg)));
 }
 
 void cSpm1ModuleMeasProgram::ecalcServerConnect()

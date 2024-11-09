@@ -101,32 +101,26 @@ void cSampleChannel::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant 
     case sendsamplechannelrmident:
         if (reply == ack) // we only continue if resource manager acknowledges
             emit activationContinue();
-        else {
-            emit errMsg(tr(rmidentErrMSG));
-            emit activationError();
-        }
+        else
+            notifyActivationError(tr(rmidentErrMSG));
         break;
     case readresourcetypessamplechannel:
         if ((reply == ack) && (answer.toString().contains("SAMPLE")))
             emit activationContinue();
-        else {
-            emit errMsg((tr(resourcetypeErrMsg)));
-            emit activationError();
-        }
+        else
+            notifyActivationError((tr(resourcetypeErrMsg)));
         break;
     case readresourcesamplechannel:
         if ((reply == ack) && (answer.toString().contains(m_sName)))
             emit activationContinue();
-        else {
-            emit errMsg((tr(resourceErrMsg)));
-            emit activationError();
-        }
+        else
+            notifyActivationError((tr(resourceErrMsg)));
         break;
     case readresourceinfosamplechannel:
     {
-        bool ok1, ok2, ok3;
         QStringList sl = answer.toString().split(';');
         if ((reply ==ack) && (sl.length() >= 4)) {
+            bool ok1, ok2, ok3;
             int max = sl.at(0).toInt(&ok1); // fixed position
             int free = sl.at(1).toInt(&ok2);
             m_sDescription = sl.at(2);
@@ -134,25 +128,19 @@ void cSampleChannel::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant 
 
             if (ok1 && ok2 && ok3 && ((max == free) == 1))
                 emit activationContinue();
-            else {
-                emit errMsg((tr(resourceInfoErrMsg)));
-                emit activationError();
-            }
+            else
+                notifyActivationError((tr(resourceInfoErrMsg)));
         }
-        else {
-            emit errMsg((tr(resourceInfoErrMsg)));
-            emit activationError();
-        }
+        else
+            notifyActivationError((tr(resourceInfoErrMsg)));
         break;
 
     }
     case claimresource:
         if (reply == ack)
             emit activationContinue();
-        else {
-            emit errMsg((tr(claimresourceErrMsg)));
-            emit activationError();
-        }
+        else
+            notifyActivationError((tr(claimresourceErrMsg)));
         break;
     case freeresource:
         if (reply == ack || reply == nack) // we accept nack here also
@@ -167,20 +155,16 @@ void cSampleChannel::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant 
             m_sAlias = answer.toString();
             emit activationContinue();
         }
-        else {
-            emit errMsg((tr(readaliasErrMsg)));
-            emit activationError();
-        }
+        else
+            notifyActivationError((tr(readaliasErrMsg)));
         break;
     case readrangelistsamplechannel:
         if (reply == ack) {
             m_RangeNameList = answer.toStringList();
             emit activationContinue();
         }
-        else {
-            emit errMsg((tr(readrangelistErrMsg)));
-            emit activationError();
-        }
+        else
+            notifyActivationError((tr(readrangelistErrMsg)));
         break;
     case setsamplechannelrange:
         if (reply == ack)

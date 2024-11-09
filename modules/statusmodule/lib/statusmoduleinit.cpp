@@ -336,149 +336,108 @@ void cStatusModuleInit::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVaria
                 break;
 
             case STATUSMODINIT::readPCBServerVersion:
-                if (reply == ack)
-                {
+                if (reply == ack) {
                     m_sPCBServerVersion = answer.toString();
                     emit activationContinue();
                 }
                 else
-                {
-                    emit errMsg((tr(readPCBServerVersionErrMsg)));
-                    emit activationError();
-                }
+                    notifyActivationError((tr(readPCBServerVersionErrMsg)));
                 break;
 
             case STATUSMODINIT::readPCBInfo:
-                if (reply == ack)
-                {
+                if (reply == ack) {
                     m_sPCBVersion = answer.toString();
                     m_pPCBVersion->setValue(m_sPCBVersion);
                     emit activationContinue();
                 }
                 else
-                {
-                    emit errMsg((tr(readPCBInfoErrMsg)));
-                    emit activationError();
-                }
+                    notifyActivationError((tr(readPCBInfoErrMsg)));
                 break;
 
             case STATUSMODINIT::readPCBServerCtrlVersion:
-                if (reply == ack)
-                {
+                if (reply == ack) {
                     m_sCtrlVersion = answer.toString();
                     m_pCtrlVersion->setValue(m_sCtrlVersion);
                     emit activationContinue();
                 }
                 else
-                {
-                    emit errMsg((tr(readPCBCtrlVersionErrMSG)));
-                    emit activationError();
-                }
+                    notifyActivationError((tr(readPCBCtrlVersionErrMSG)));
                 break;
 
             case STATUSMODINIT::readPCBServerFPGAVersion:
-                if (reply == ack)
-                {
+                if (reply == ack) {
                     m_sFPGAVersion = answer.toString();
                     emit activationContinue();
                 }
                 else
-                {
-                    emit errMsg((tr(readPCBFPGAVersionErrMSG)));
-                    emit activationError();
-                }
+                    notifyActivationError((tr(readPCBFPGAVersionErrMSG)));
                 break;
 
 
             case STATUSMODINIT::readPCBServerSerialNumber:
-                if (reply == ack)
-                {
+                if (reply == ack) {
                     m_sSerialNumber = answer.toString();
                     emit activationContinue();
                 }
                 else
-                {
-                    emit errMsg((tr(readPCBSerialNrErrMSG)));
-                    emit activationError();
-                }
+                    notifyActivationError((tr(readPCBSerialNrErrMSG)));
                 break;
 
             case STATUSMODINIT::writePCBServerSerialNumber:
-                if (reply == ack)
-                {
+                if (reply == ack) {
                     m_sSerialNumber = wantedSerialNr.toString();
                     m_pSerialNumber->setValue(wantedSerialNr); // m_pSerialNumber has deferred notification so this will send the event
                     emit m_pModule->parameterChanged();
                 }
-                else
-                {
+                else {
                     m_pSerialNumber->setError(); // in case of error we send an error event
                     emit errMsg(tr(writePCBSerialNrErrMSG));
                 }
                 break;
 
             case STATUSMODINIT::readPCBServerAdjStatus:
-                if (reply == ack)
-                {
+                if (reply == ack) {
                     m_sAdjStatus = answer.toString();
                     emit activationContinue();
                 }
-                else {
-                    emit errMsg((tr(readadjstatusErrMsg)));
-                    emit activationError();
-                }
+                else
+                    notifyActivationError((tr(readadjstatusErrMsg)));
                 break;
 
             case STATUSMODINIT::readPCBServerAdjChksum:
-                if (reply == ack)
-                {
+                if (reply == ack) {
                     m_sAdjChksum = answer.toString();
                     emit activationContinue();
                 }
                 else
-                {
-                    emit errMsg((tr(readadjchksumErrMsg)));
-                    emit activationError();
-                }
+                    notifyActivationError((tr(readadjchksumErrMsg)));
                 break;
 
             case STATUSMODINIT::readDSPServerVersion:
-                if (reply == ack)
-                {
+                if (reply == ack) {
                     m_sDSPServerVersion = answer.toString();
                     emit activationContinue();
                 }
                 else
-                {
-                    emit errMsg((tr(readDSPServerVersionErrMsg)));
-                    emit activationError();
-                }
+                    notifyActivationError((tr(readDSPServerVersionErrMsg)));
                 break;
 
             case STATUSMODINIT::readDSPServerDSPProgramVersion:
-                if (reply == ack)
-                {
+                if (reply == ack) {
                     m_sDSPProgramVersion = answer.toString();
                     emit activationContinue();
                 }
                 else
-                {
-                    emit errMsg((tr(readDSPProgramVersionErrMsg)));
-                    emit activationError();
-                }
+                    notifyActivationError((tr(readDSPProgramVersionErrMsg)));
                 break;
 
             case STATUSMODINIT::readPCBServerSchnubbelStatus:
-                if (reply == ack)
-                {
+                if (reply == ack) {
                     m_pSchnubbelStatus->setValue(QVariant(answer.toInt()));
                     emit activationContinue();
                 }
                 else
-                {
-                    emit errMsg((tr(readschnubbelstatusErrMsg)));
-                    emit activationError();
-                }
+                    notifyActivationError((tr(readschnubbelstatusErrMsg)));
                 break;
 
             case STATUSMODINIT::readPCBServerAccumulatorStatus:
@@ -487,16 +446,12 @@ void cStatusModuleInit::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVaria
                    emit activationContinue();
                 }
                 else {
-                   if (reply == ack)
-                    {
-                      m_pAccumulatorStatus->setValue(QVariant(answer.toInt()));
-                      emit activationContinue();
+                    if (reply == ack) {
+                        m_pAccumulatorStatus->setValue(QVariant(answer.toInt()));
+                        emit activationContinue();
                     }
                     else
-                    {
-                       emit errMsg((tr(readaccumulatorstatusErrMsg)));
-                       emit activationError();
-                   }
+                        notifyActivationError((tr(readaccumulatorstatusErrMsg)));
                 }
                 break;
 
@@ -505,16 +460,12 @@ void cStatusModuleInit::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVaria
                    emit activationContinue();
                 }
                 else {
-                    if (reply == ack)
-                    {
+                    if (reply == ack) {
                        m_pAccumulatorSoc->setValue(QVariant(answer.toInt()));
                        emit activationContinue();
                     }
                     else
-                    {
-                       emit errMsg((tr(readaccumulatorsocErrMsg)));
-                       emit activationError();
-                    }
+                       notifyActivationError((tr(readaccumulatorsocErrMsg)));
                 }
                 break;
             }

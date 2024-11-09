@@ -168,209 +168,134 @@ void cPllMeasChannel::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant
             if (reply == ack) // we only continue if resource manager acknowledges
                 emit activationContinue();
             else
-            {
-                emit errMsg(tr(rmidentErrMSG));
-                emit activationError();
-            }
+                notifyActivationError(tr(rmidentErrMSG));
             break;
         case readresourcetypes:
             if ((reply == ack) && (answer.toString().contains("SENSE")))
                 emit activationContinue();
             else
-            {
-                emit errMsg((tr(resourcetypeErrMsg)));
-                emit activationError();
-            }
+                notifyActivationError((tr(resourcetypeErrMsg)));
             break;
         case readresource:
             if ((reply == ack) && (answer.toString().contains(m_sName)))
                 emit activationContinue();
             else
-            {
-                emit errMsg((tr(resourceErrMsg)));
-                emit activationError();
-            }
+                notifyActivationError((tr(resourceErrMsg)));
             break;
         case readresourceinfo:
         {
-            bool ok1, ok2;
-            int max;
-            QStringList sl;
-
-
-            sl = answer.toString().split(';');
-            if ((reply ==ack) && (sl.length() >= 4))
-            {
-                max = sl.at(0).toInt(&ok1); // fixed position
+            QStringList sl = answer.toString().split(';');
+            if ((reply ==ack) && (sl.length() >= 4)) {
+                bool ok1, ok2;
+                int max = sl.at(0).toInt(&ok1); // fixed position
                 m_sDescription = sl.at(2);
                 m_nPort = sl.at(3).toInt(&ok2);
 
                 if (ok1 && ok2 && (max == 1)) // we need one but it must not be free
-                {
                     emit activationContinue();
-                }
-
                 else
-                {
-                    emit errMsg((tr(resourceInfoErrMsg)));
-                    emit activationError();
-                }
+                    notifyActivationError((tr(resourceInfoErrMsg)));
             }
-
             else
-            {
-                emit errMsg((tr(resourceInfoErrMsg)));
-                emit activationError();
-            }
-
+                notifyActivationError((tr(resourceInfoErrMsg)));
             break;
-
         }
         case readdspchannel:
-            if (reply == ack)
-            {
+            if (reply == ack) {
                 m_nDspChannel = answer.toInt(&ok);
                 emit activationContinue();
             }
             else
-            {
-                emit errMsg((tr(readdspchannelErrMsg)));
-                emit activationError();
-            }
+                notifyActivationError((tr(readdspchannelErrMsg)));
             break;
         case readrange:
             if (reply == ack)
-            {
                 m_sActRange = answer.toString();
-            }
             else
-            {
                 emit errMsg((tr(getRangeErrMsg)));
-            }
             break;
         case readchnalias:
-            if (reply == ack)
-            {
+            if (reply == ack) {
                 m_sAlias = answer.toString();
                 emit activationContinue();
             }
             else
-            {
-                emit errMsg((tr(readaliasErrMsg)));
-                emit activationError();
-            }
+                notifyActivationError((tr(readaliasErrMsg)));
             break;
         case readsamplerate:
-            if (reply == ack)
-            {
+            if (reply == ack) {
                 m_nSampleRate = answer.toInt(&ok);
                 emit activationContinue();
             }
             else
-            {
-                emit errMsg((tr(readsamplerateErrMsg)));
-                emit activationError();
-            }
+                notifyActivationError((tr(readsamplerateErrMsg)));
             break;
         case readunit:
-            if (reply == ack)
-            {
+            if (reply == ack) {
                 m_sUnit = answer.toString();
                 emit activationContinue();
             }
             else
-            {
-                emit errMsg((tr(readunitErrMsg)));
-                emit activationError();
-            }
+                notifyActivationError((tr(readunitErrMsg)));
             break;
         case readrangelist:
-            if (reply == ack)
-            {
+            if (reply == ack) {
                 m_RangeNameList = answer.toStringList();
                 emit activationContinue();
             }
             else
-            {
-                emit errMsg((tr(readrangelistErrMsg)));
-                emit activationError();
-            }
+                notifyActivationError((tr(readrangelistErrMsg)));
             break;
         case readrngalias:
-            if (reply == ack)
-            {
+            if (reply == ack) {
                 ri.alias = answer.toString();
                 emit activationContinue();
             }
             else
-            {
-                emit errMsg((tr(readrangealiasErrMsg)));
-                emit activationError();
-            }
+                notifyActivationError((tr(readrangealiasErrMsg)));
             break;
         case readtype:
-            if (reply == ack)
-            {
+            if (reply == ack) {
                 ri.type = answer.toInt(&ok);
                 emit activationContinue();
             }
             else
-            {
-                emit errMsg((tr(readrangetypeErrMsg)));
-                emit activationError();
-            }
+                notifyActivationError((tr(readrangetypeErrMsg)));
             break;
         case readurvalue:
-            if (reply == ack)
-            {
+            if (reply == ack) {
                 ri.urvalue = answer.toDouble(&ok);
                 emit activationContinue();
             }
             else
-            {
-                emit errMsg((tr(readrangeurvalueErrMsg)));
-                emit activationError();
-            }
+                notifyActivationError((tr(readrangeurvalueErrMsg)));
             break;
         case readrejection:
-            if (reply == ack)
-            {
+            if (reply == ack) {
                 ri.rejection = answer.toDouble(&ok);
                 emit activationContinue();
             }
             else
-            {
-                emit errMsg((tr(readrangerejectionErrMsg)));
-                emit activationError();
-            }
+                notifyActivationError((tr(readrangerejectionErrMsg)));
             break;
         case readovrejection:
-            if (reply == ack)
-            {
+            if (reply == ack) {
                 ri.ovrejection = answer.toDouble(&ok);
                 emit activationContinue();
             }
             else
-            {
-                emit errMsg((tr(readrangeovrejectionErrMsg)));
-                emit activationError();
-            }
+                notifyActivationError((tr(readrangeovrejectionErrMsg)));
             break;
         case readisavail:
-            if (reply == ack)
-            {
+            if (reply == ack) {
                 ri.avail = answer.toBool();
                 emit activationContinue();
             }
             else
-            {
-                emit errMsg((tr(readrangeavailErrMsg)));
-                emit activationError();
-            }
+                notifyActivationError((tr(readrangeavailErrMsg)));
             break;
         case set4PLL:
-            if (reply == ack)
-            {}
+            if (reply == ack) {}
             else
             {
                 emit errMsg((tr(setPllErrMsg)));
@@ -380,16 +305,10 @@ void cPllMeasChannel::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant
             break;
         case setchannelrangenotifier:
             if (reply == ack)
-            {
                 emit activationContinue();
-            }
             else
-            {
-                emit errMsg((tr(registerpcbnotifierErrMsg)));
-                emit activationError();
-            }
+                notifyActivationError((tr(registerpcbnotifierErrMsg)));
             break;
-
         }
     }
 }
