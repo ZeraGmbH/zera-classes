@@ -535,17 +535,16 @@ void cPower1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply,
                 if (reply == ack)
                     emit activationContinue();
                 else
-                    notifyActivationError(tr(rmidentErrMSG));
+                    notifyActivationError(rmidentErrMSG);
                 break;
 
             case setchannelrangenotifier:
-                if (reply == ack) // we only continue pcb server acknowledges
-                {
+                if (reply == ack) { // we only continue pcb server acknowledges
                     m_NotifierInfoHash[m_notifierNr] = infoRead;
                     emit activationContinue();
                 }
                 else
-                    notifyActivationError((tr(registerpcbnotifierErrMsg)));
+                    notifyActivationError(registerpcbnotifierErrMsg);
                 break;
 
             case readurvalue:
@@ -558,13 +557,13 @@ void cPower1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply,
                     emit activationContinue();
                 }
                 else
-                    notifyActivationError((tr(readrangeurvalueErrMsg)));
+                    notifyActivationError(readrangeurvalueErrMsg);
                 break;
             }
 
             case setqrefnominalpower:
                 if (reply != ack) { // we ignore ack
-                    emit errMsg((tr(writedspmemoryErrMsg)));
+                    emit errMsg(writedspmemoryErrMsg);
                     emit executionError();
                 }
                 break;
@@ -573,35 +572,35 @@ void cPower1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply,
                 if (reply == ack)
                     emit activationContinue();
                 else
-                    notifyActivationError((tr(claimresourceErrMsg)));
+                    notifyActivationError(claimresourceErrMsg);
                 break;
 
             case claimusermem:
                 if (reply == ack)
                     emit activationContinue();
                 else
-                    notifyActivationError((tr(claimresourceErrMsg)));
+                    notifyActivationError(claimresourceErrMsg);
                 break;
 
             case varlist2dsp:
                 if (reply == ack)
                     emit activationContinue();
                 else
-                    notifyActivationError((tr(dspvarlistwriteErrMsg)));
+                    notifyActivationError(dspvarlistwriteErrMsg);
                 break;
 
             case cmdlist2dsp:
                 if (reply == ack)
                     emit activationContinue();
                 else
-                    notifyActivationError((tr(dspcmdlistwriteErrMsg)));
+                    notifyActivationError(dspcmdlistwriteErrMsg);
                 break;
 
             case activatedsp:
                 if (reply == ack)
                     emit activationContinue();
                 else
-                    notifyActivationError((tr(dspactiveErrMsg)));
+                    notifyActivationError(dspactiveErrMsg);
                 break;
 
             case readresourcetypes:
@@ -618,7 +617,7 @@ void cPower1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply,
                 if (ok)
                     emit activationContinue();
                 else
-                    notifyActivationError((tr(resourcetypeErrMsg)));
+                    notifyActivationError(resourcetypeErrMsg);
                 break;
             }
             case readresourcesense:
@@ -634,10 +633,10 @@ void cPower1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply,
                     if (allfound)
                         emit activationContinue();
                     else
-                        notifyActivationError((tr(resourceErrMsg)));
+                        notifyActivationError(resourceErrMsg);
                 }
                 else
-                    notifyActivationError((tr(resourceErrMsg)));
+                    notifyActivationError(resourceErrMsg);
                 break;
             }
 
@@ -654,10 +653,10 @@ void cPower1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply,
                         emit activationContinue();
                     }
                     else
-                        notifyActivationError((tr(resourceInfoErrMsg)));
+                        notifyActivationError(resourceInfoErrMsg);
                 }
                 else
-                    notifyActivationError((tr(resourceInfoErrMsg)));
+                    notifyActivationError(resourceInfoErrMsg);
                 break;
             }
 
@@ -675,10 +674,10 @@ void cPower1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply,
                     if (allfound)
                         emit activationContinue();
                     else
-                        notifyActivationError((tr(resourceErrMsg)));
+                        notifyActivationError(resourceErrMsg);
                 }
                 else
-                    notifyActivationError((tr(resourceErrMsg)));
+                    notifyActivationError(resourceErrMsg);
                 break;
             }
 
@@ -697,10 +696,10 @@ void cPower1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply,
                         emit activationContinue();
                     }
                     else
-                        notifyActivationError((tr(resourceInfoErrMsg)));
+                        notifyActivationError(resourceInfoErrMsg);
                 }
                 else
-                    notifyActivationError((tr(resourceInfoErrMsg)));
+                    notifyActivationError(resourceInfoErrMsg);
                 break;
             }
 
@@ -708,7 +707,7 @@ void cPower1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply,
                 if (reply == ack)
                     emit activationContinue();
                 else
-                    notifyActivationError((tr(claimresourceErrMsg)));
+                    notifyActivationError(claimresourceErrMsg);
                 break;
 
             case readsamplerate:
@@ -717,7 +716,7 @@ void cPower1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply,
                     emit activationContinue();
                 }
                 else
-                    notifyActivationError((tr(readsamplerateErrMsg)));
+                    notifyActivationError(readsamplerateErrMsg);
                 break;
 
             case readsensechannelalias:
@@ -729,7 +728,7 @@ void cPower1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply,
                     emit activationContinue();
                 }
                 else
-                    notifyActivationError((tr(readaliasErrMsg)));
+                    notifyActivationError(readaliasErrMsg);
                 break;
 
             case readsensechannelunit:
@@ -741,7 +740,7 @@ void cPower1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply,
                     emit activationContinue();
                 }
                 else
-                    notifyActivationError((tr(readunitErrMsg)));
+                    notifyActivationError(readunitErrMsg);
                 break;
 
             case readsensechanneldspchannel:
@@ -753,7 +752,7 @@ void cPower1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply,
                     emit activationContinue();
                 }
                 else
-                    notifyActivationError((tr(readdspchannelErrMsg)));
+                    notifyActivationError(readdspchannelErrMsg);
                 break;
             break;
 
@@ -766,7 +765,7 @@ void cPower1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply,
                     emit activationContinue();
                 }
                 else
-                    notifyActivationError((tr(readaliasErrMsg)));
+                    notifyActivationError(readaliasErrMsg);
                 break;
 
             case readsourcechanneldspchannel:
@@ -778,7 +777,7 @@ void cPower1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply,
                     emit activationContinue();
                 }
                 else
-                    notifyActivationError((tr(readdspchannelErrMsg)));
+                    notifyActivationError(readdspchannelErrMsg);
                 break;
             break;
 
@@ -791,14 +790,14 @@ void cPower1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply,
                     emit activationContinue();
                 }
                 else
-                    notifyActivationError((tr(readFormFactorErrMsg)));
+                    notifyActivationError(readFormFactorErrMsg);
                 break;
 
             case writeparameter:
                 if (reply == ack) // we ignore ack
                     ;
                 else {
-                    emit errMsg((tr(writedspmemoryErrMsg)));
+                    emit errMsg(writedspmemoryErrMsg);
                     emit executionError();
                 }
                 break;
@@ -837,7 +836,7 @@ void cPower1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply,
                 else
                 {
                     m_dataAcquisitionMachine.stop();
-                    emit errMsg((tr(dataaquisitionErrMsg)));
+                    emit errMsg(dataaquisitionErrMsg);
                     emit executionError(); // but we send error message
                 }
                 break;

@@ -434,26 +434,26 @@ void cAdjustManagement::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVaria
                 if (reply == ack)
                     emit activationContinue();
                 else
-                    notifyActivationError((tr(readdspgaincorrErrMsg)));
+                    notifyActivationError(readdspgaincorrErrMsg);
                 break;
             case readphasecorr:
                 if (reply == ack)
                     emit activationContinue();
                 else
-                    notifyActivationError((tr(readdspphasecorrErrMsg)));
+                    notifyActivationError(readdspphasecorrErrMsg);
                 break;
             case readoffsetcorr:
                 if (reply == ack)
                     emit activationContinue();
                 else
-                    notifyActivationError((tr(readdspoffsetcorrErrMsg)));
+                    notifyActivationError(readdspoffsetcorrErrMsg);
                 break;
 
             case subdcdsp:
                 if (reply == ack)
                     emit activationContinue();
                 else
-                    notifyActivationError((tr(writesubdcErrMsg)));
+                    notifyActivationError(writesubdcErrMsg);
                 break;
 
 
@@ -461,32 +461,22 @@ void cAdjustManagement::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVaria
                 if (reply == ack)
                     emit activationContinue();
                 else
-                {
-                    // perhaps we emit some error here ?
-                    emit errMsg((tr(writedspgaincorrErrMsg)));
-                }
+                    emit errMsg(writedspgaincorrErrMsg);
                 break;
 
             case writephasecorr:
                 if (reply == ack)
                     emit activationContinue();
                 else
-                {
-                    // perhaps we emit some error here ?
-                    emit errMsg((tr(writedspphasecorrErrMsg)));
-                }
+                    emit errMsg(writedspphasecorrErrMsg);
                 break;
 
             case writeoffsetcorr:
                 if (reply == ack)
                     emit activationContinue();
                 else
-                {
-                    // perhaps we emit some error here ?
-                    emit errMsg((tr(writedspoffsetcorrErrMsg)));
-                }
+                    emit errMsg(writedspoffsetcorrErrMsg);
                 break;
-
             }
         }
     }

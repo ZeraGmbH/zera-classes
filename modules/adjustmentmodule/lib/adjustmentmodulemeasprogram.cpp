@@ -672,7 +672,7 @@ void cAdjustmentModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 re
                     emit computationContinue();
                 else {
                     m_computationMachine.stop();
-                    notifyExecutionError(tr(adjustcomputationPCBErrMSG));
+                    notifyExecutionError(adjustcomputationPCBErrMSG);
                 }
                 break;
 
@@ -681,7 +681,7 @@ void cAdjustmentModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 re
                     emit storageContinue();
                 else {
                     m_storageMachine.stop();
-                    notifyExecutionError(tr(adjuststoragePCBErrMSG));
+                    notifyExecutionError(adjuststoragePCBErrMSG);
                     m_pPARStorage->setError();
                 }
                 break;
@@ -690,7 +690,7 @@ void cAdjustmentModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 re
                 if (reply == ack)
                     m_pPARAdjustGainStatus->setValue(QVariant(0));
                 else {
-                    notifyExecutionError(tr(adjuststatusPCBErrMSG));
+                    notifyExecutionError(adjuststatusPCBErrMSG);
                     m_pPARAdjustGainStatus->setError();
                 }
                 break;
@@ -699,7 +699,7 @@ void cAdjustmentModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 re
                 if (reply == ack)
                     m_pPARAdjustPhaseStatus->setValue(QVariant(0));
                 else {
-                    notifyExecutionError(tr(adjuststatusPCBErrMSG));
+                    notifyExecutionError(adjuststatusPCBErrMSG);
                     m_pPARAdjustPhaseStatus->setError();
                 }
                 break;
@@ -708,7 +708,7 @@ void cAdjustmentModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 re
                 if (reply == ack)
                     m_pPARAdjustOffsetStatus->setValue(QVariant(0));
                 else {
-                    notifyExecutionError(tr(adjuststatusPCBErrMSG));
+                    notifyExecutionError(adjuststatusPCBErrMSG);
                     m_pPARAdjustOffsetStatus->setError();
                 }
                 break;
@@ -720,7 +720,7 @@ void cAdjustmentModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 re
                 }
                 else {
                     emit adjustError();
-                    notifyExecutionError(tr(readGainCorrErrMsg));
+                    notifyExecutionError(readGainCorrErrMsg);
                     m_pPARAdjustAmplitude->setError();
                 }
                 break;
@@ -732,7 +732,7 @@ void cAdjustmentModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 re
                 }
                 else {
                     emit adjustError();
-                    notifyExecutionError(tr(setGainNodeErrMsg));
+                    notifyExecutionError(setGainNodeErrMsg);
                     m_pPARAdjustAmplitude->setError();
                 }
                 break;
@@ -744,7 +744,7 @@ void cAdjustmentModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 re
                 }
                 else {
                     emit adjustError();
-                    notifyExecutionError(tr(setOffsetNodeErrMsg));
+                    notifyExecutionError(setOffsetNodeErrMsg);
                     m_pPARAdjustOffset->setError();
                 }
                 break;
@@ -756,7 +756,7 @@ void cAdjustmentModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 re
                 }
                 else {
                     emit adjustError();
-                    notifyExecutionError(tr(readPhaseCorrErrMsg));
+                    notifyExecutionError(readPhaseCorrErrMsg);
                     m_pPARAdjustPhase->setError();
                 }
                 break;
@@ -768,7 +768,7 @@ void cAdjustmentModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 re
                 }
                 else {
                     emit adjustError();
-                    notifyExecutionError(tr(setPhaseNodeErrMsg));
+                    notifyExecutionError(setPhaseNodeErrMsg);
                     m_pPARAdjustPhase->setError();
                 }
                 break;

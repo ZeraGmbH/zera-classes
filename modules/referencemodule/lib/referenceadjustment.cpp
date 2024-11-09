@@ -246,7 +246,7 @@ void cReferenceAdjustment::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVa
                 if (reply == ack)
                     emit activationContinue();
                 else
-                    notifyActivationError((tr(setMeasModeErrMsg)));
+                    notifyActivationError(setMeasModeErrMsg);
                 break;
             case setacmode:
                 if (reply == ack)
@@ -259,7 +259,7 @@ void cReferenceAdjustment::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVa
                     emit adjustContinue();
                 else
                 {
-                    emit errMsg((tr(readdspgaincorrErrMsg)));
+                    emit errMsg(readdspgaincorrErrMsg);
                     emit executionError();
                 }
                 break;
@@ -269,7 +269,7 @@ void cReferenceAdjustment::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVa
                     emit adjustContinue();
                 else
                 {
-                    emit errMsg((tr(readdspoffsetcorrErrMsg)));
+                    emit errMsg(readdspoffsetcorrErrMsg);
                     emit executionError();
                 }
                 break;
@@ -278,10 +278,7 @@ void cReferenceAdjustment::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVa
                 if (reply == ack)
                     emit adjustContinue();
                 else
-                {
-                    // perhaps we emit some error here ?
-                    emit errMsg((tr(writedspoffsetcorrErrMsg)));
-                }
+                    emit errMsg(writedspoffsetcorrErrMsg);
                 break;
 
             }

@@ -344,38 +344,38 @@ void cDftModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QV
                 if (reply == ack)
                     emit activationContinue();
                 else
-                    notifyActivationError((tr(claimresourceErrMsg)));
+                    notifyActivationError(claimresourceErrMsg);
                 break;
             case claimusermem:
                 if (reply == ack)
                     emit activationContinue();
                 else
-                    notifyActivationError((tr(claimresourceErrMsg)));
+                    notifyActivationError(claimresourceErrMsg);
                 break;
             case varlist2dsp:
                 if (reply == ack)
                     emit activationContinue();
                 else
-                    notifyActivationError((tr(dspvarlistwriteErrMsg)));
+                    notifyActivationError(dspvarlistwriteErrMsg);
                 break;
             case cmdlist2dsp:
                 if (reply == ack)
                     emit activationContinue();
                 else
-                    notifyActivationError((tr(dspcmdlistwriteErrMsg)));
+                    notifyActivationError(dspcmdlistwriteErrMsg);
                 break;
             case activatedsp:
                 if (reply == ack)
                     emit activationContinue();
                 else
-                    notifyActivationError((tr(dspactiveErrMsg)));
+                    notifyActivationError(dspactiveErrMsg);
                 break;
 
             case readresourcetypes:
                 if ((reply == ack) && (answer.toString().contains("SENSE")))
                     emit activationContinue();
                 else
-                    notifyActivationError((tr(resourcetypeErrMsg)));
+                    notifyActivationError(resourcetypeErrMsg);
                 break;
 
             case readresource:
@@ -391,10 +391,10 @@ void cDftModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QV
                     if (allfound)
                         emit activationContinue();
                     else
-                        notifyActivationError((tr(resourceErrMsg)));
+                        notifyActivationError(resourceErrMsg);
                 }
                 else
-                    notifyActivationError((tr(resourceErrMsg)));
+                    notifyActivationError(resourceErrMsg);
                 break;
             }
 
@@ -411,10 +411,10 @@ void cDftModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QV
                         emit activationContinue();
                     }
                     else
-                        notifyActivationError((tr(resourceInfoErrMsg)));
+                        notifyActivationError(resourceInfoErrMsg);
                 }
                 else
-                    notifyActivationError((tr(resourceInfoErrMsg)));
+                    notifyActivationError(resourceInfoErrMsg);
                 break;
             }
 
@@ -424,7 +424,7 @@ void cDftModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QV
                     emit activationContinue();
                 }
                 else
-                    notifyActivationError((tr(readsamplerateErrMsg)));
+                    notifyActivationError(readsamplerateErrMsg);
                 break;
 
             case readalias:
@@ -438,7 +438,7 @@ void cDftModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QV
                     emit activationContinue();
                 }
                 else
-                    notifyActivationError((tr(readaliasErrMsg)));
+                    notifyActivationError(readaliasErrMsg);
                 break;
             }
 
@@ -452,7 +452,7 @@ void cDftModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QV
                     emit activationContinue();
                 }
                 else
-                    notifyActivationError((tr(readunitErrMsg)));
+                    notifyActivationError(readunitErrMsg);
                 break;
             }
 
@@ -467,7 +467,7 @@ void cDftModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QV
                     emit activationContinue();
                 }
                 else
-                    notifyActivationError((tr(readdspchannelErrMsg)));
+                    notifyActivationError(readdspchannelErrMsg);
                 break;
             }
 
@@ -476,7 +476,7 @@ void cDftModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QV
                 if (reply == ack) // we ignore ack
                     ;
                 else {
-                    emit errMsg((tr(writedspmemoryErrMsg)));
+                    emit errMsg(writedspmemoryErrMsg);
                     emit executionError();
                 }
                 break;
@@ -505,7 +505,7 @@ void cDftModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QV
                     emit dataAquisitionContinue();
                 else {
                     m_dataAcquisitionMachine.stop();
-                    emit errMsg((tr(dataaquisitionErrMsg)));
+                    emit errMsg(dataaquisitionErrMsg);
                     emit executionError(); // but we send error message
                 }
                 break;

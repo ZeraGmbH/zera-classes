@@ -116,20 +116,20 @@ void cReferenceMeasChannel::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QV
         if (reply == ack)
             emit activationContinue();
         else
-            notifyActivationError(tr(rmidentErrMSG));
+            notifyActivationError(rmidentErrMSG);
         break;
     case readresourcetypes:
         if ((reply == ack) && (answer.toString().contains("SENSE")))
             emit activationContinue();
         else
-            notifyActivationError((tr(resourcetypeErrMsg)));
+            notifyActivationError(resourcetypeErrMsg);
         break;
 
     case readresource:
         if ((reply == ack) && (answer.toString().contains(m_sName)))
             emit activationContinue();
         else
-            notifyActivationError((tr(resourceErrMsg)));
+            notifyActivationError(resourceErrMsg);
         break;
 
     case readresourceinfo:
@@ -143,10 +143,10 @@ void cReferenceMeasChannel::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QV
             if (ok1 && ok2 && (max ==1))
                 emit activationContinue();
             else
-                notifyActivationError((tr(resourceInfoErrMsg)));
+                notifyActivationError(resourceInfoErrMsg);
         }
         else
-            notifyActivationError((tr(resourceInfoErrMsg)));
+            notifyActivationError(resourceInfoErrMsg);
         break;
     }
 
@@ -156,7 +156,7 @@ void cReferenceMeasChannel::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QV
             emit activationContinue();
         }
         else
-            notifyActivationError((tr(readdspchannelErrMsg)));
+            notifyActivationError(readdspchannelErrMsg);
         break;
     case readchnalias:
         if (reply == ack)
@@ -165,7 +165,7 @@ void cReferenceMeasChannel::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QV
             emit activationContinue();
         }
         else
-            notifyActivationError((tr(readaliasErrMsg)));
+            notifyActivationError(readaliasErrMsg);
         break;
 
     case readsamplerate:
@@ -174,7 +174,7 @@ void cReferenceMeasChannel::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QV
             emit activationContinue();
         }
         else
-            notifyActivationError((tr(readsamplerateErrMsg)));
+            notifyActivationError(readsamplerateErrMsg);
         break;
     case readunit:
         if (reply == ack) {
@@ -182,7 +182,7 @@ void cReferenceMeasChannel::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QV
             emit activationContinue();
         }
         else
-            notifyActivationError((tr(readunitErrMsg)));
+            notifyActivationError(readunitErrMsg);
         break;
 
     case readrangelist:
@@ -192,7 +192,7 @@ void cReferenceMeasChannel::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QV
             emit activationContinue();
         }
         else
-            notifyActivationError((tr(readrangelistErrMsg)));
+            notifyActivationError(readrangelistErrMsg);
         break;
 
     case readrngalias:
@@ -201,7 +201,7 @@ void cReferenceMeasChannel::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QV
             emit activationContinue();
         }
         else
-            notifyActivationError((tr(readrangealiasErrMsg)));
+            notifyActivationError(readrangealiasErrMsg);
         break;
 
     case readtype:
@@ -210,7 +210,7 @@ void cReferenceMeasChannel::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QV
             emit activationContinue();
         }
         else
-            notifyActivationError((tr(readrangetypeErrMsg)));
+            notifyActivationError(readrangetypeErrMsg);
         break;
     case readisavail:
         if (reply == ack) {
@@ -218,14 +218,14 @@ void cReferenceMeasChannel::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QV
             emit activationContinue();
         }
         else
-            notifyActivationError((tr(readrangeavailErrMsg)));
+            notifyActivationError(readrangeavailErrMsg);
         break;
     case setmeaschannelrange:
         if (reply == ack)
             m_sActRange = m_sNewRange;
         else
         {
-            emit errMsg((tr(setRangeErrMsg)));
+            emit errMsg(setRangeErrMsg);
             emit executionError();
         }; // perhaps some error output
         emit cmdDone(msgnr);
@@ -235,7 +235,7 @@ void cReferenceMeasChannel::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QV
             m_fGainCorrection = answer.toDouble();
         else
         {
-            emit errMsg((tr(readGainCorrErrMsg)));
+            emit errMsg(readGainCorrErrMsg);
         };
         emit cmdDone(msgnr);
         break;
@@ -244,7 +244,7 @@ void cReferenceMeasChannel::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QV
             m_fOffsetCorrection = answer.toDouble();
         else
         {
-            emit errMsg((tr(readOffsetCorrErrMsg)));
+            emit errMsg(readOffsetCorrErrMsg);
             emit executionError();
         };
         emit cmdDone(msgnr);
@@ -254,7 +254,7 @@ void cReferenceMeasChannel::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QV
             m_fPhaseCorrection = answer.toDouble();
         else
         {
-            emit errMsg((tr(readPhaseCorrErrMsg)));
+            emit errMsg(readPhaseCorrErrMsg);
             emit executionError();
         };
         emit cmdDone(msgnr);
@@ -264,7 +264,7 @@ void cReferenceMeasChannel::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QV
             m_nStatus = answer.toInt();
         else
         {
-            emit errMsg((tr(readChannelStatusErrMsg)));
+            emit errMsg(readChannelStatusErrMsg);
             emit executionError();
         };
         emit cmdDone(msgnr);
@@ -274,7 +274,7 @@ void cReferenceMeasChannel::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QV
             {}
         else
         {
-            emit errMsg((tr(resetChannelStatusErrMsg)));
+            emit errMsg(resetChannelStatusErrMsg);
             emit executionError();
         }; // perhaps some error output
         emit cmdDone(msgnr);

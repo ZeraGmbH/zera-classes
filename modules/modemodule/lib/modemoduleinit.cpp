@@ -111,27 +111,24 @@ void cModeModuleInit::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant
             int cmd = m_MsgNrCmdList.take(msgnr);
             switch (cmd) {
             case MODEMODINIT::sendrmident:
-                if (reply == ack) {
+                if (reply == ack)
                     emit activationContinue();
-                }
                 else
-                    notifyActivationError((tr(rmidentErrMSG)));
+                    notifyActivationError(rmidentErrMSG);
                 break;
 
             case MODEMODINIT::readresourcetypes:
-                if ((reply == ack) && (answer.toString().contains("SENSE"))) {
+                if ((reply == ack) && (answer.toString().contains("SENSE")))
                     emit activationContinue();
-                }
                 else
-                    notifyActivationError((tr(resourcetypeErrMsg)));
+                    notifyActivationError(resourcetypeErrMsg);
                 break;
 
             case MODEMODINIT::readresource:
-                if ((reply == ack) && (answer.toString().contains("MMODE"))) {
+                if ((reply == ack) && (answer.toString().contains("MMODE")))
                     emit activationContinue();
-                }
                 else
-                    notifyActivationError((tr(resourceErrMsg)));
+                    notifyActivationError(resourceErrMsg);
                 break;
 
             case MODEMODINIT::readresourceinfo:
@@ -146,14 +143,13 @@ void cModeModuleInit::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant
                     free = sl.at(1).toInt(&ok2);
                     m_sDescription = sl.at(2);
                     m_nPort = sl.at(3).toInt(&ok3);
-                    if (ok1 && ok2 && ok3 && ((max == free) == 1)) {
+                    if (ok1 && ok2 && ok3 && ((max == free) == 1))
                         emit activationContinue();
-                    }
                     else
-                        notifyActivationError((tr(resourceInfoErrMsg)));
+                        notifyActivationError(resourceInfoErrMsg);
                 }
                 else
-                    notifyActivationError((tr(resourceInfoErrMsg)));
+                    notifyActivationError(resourceInfoErrMsg);
                 break;
             }
 
@@ -161,14 +157,14 @@ void cModeModuleInit::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant
                 if (reply == ack)
                     emit activationContinue();
                 else
-                    notifyActivationError((tr(claimresourceErrMsg)));
+                    notifyActivationError(claimresourceErrMsg);
                 break;
 
             case MODEMODINIT::setmode:
                 if (reply == ack)
                     emit activationContinue();
                 else
-                    notifyActivationError((tr(setMeasModeErrMsg)));
+                    notifyActivationError(setMeasModeErrMsg);
                 break;
 
             case MODEMODINIT::writegaincorr:
@@ -178,51 +174,38 @@ void cModeModuleInit::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant
                 }
                 else {
                     // perhaps we emit some error here ?
-                    emit errMsg((tr(writedspgaincorrErrMsg)));
+                    emit errMsg(writedspgaincorrErrMsg);
                 }
                 break;
 
             case MODEMODINIT::writephasecorr:
             case MODEMODINIT::writephasecorr2:
-                if (reply == ack) {
+                if (reply == ack)
                     emit activationContinue();
-                }
-                else {
-                    // perhaps we emit some error here ?
-                    emit errMsg((tr(writedspphasecorrErrMsg)));
-                }
+                else
+                    emit errMsg(writedspphasecorrErrMsg);
                 break;
 
             case MODEMODINIT::writeoffsetcorr:
             case MODEMODINIT::writeoffsetcorr2:
-                if (reply == ack) {
+                if (reply == ack)
                     emit activationContinue();
-                }
-                else {
-                    // perhaps we emit some error here ?
-                    emit errMsg((tr(writedspoffsetcorrErrMsg)));
-                }
+                else
+                    emit errMsg(writedspoffsetcorrErrMsg);
                 break;
 
             case MODEMODINIT::subdcdsp:
-                if (reply == ack) {
+                if (reply == ack)
                     emit activationContinue();
-                }
-                else {
-                    // perhaps we emit some error here ?
-                    emit errMsg((tr(writesubdcErrMsg)));
-                }
+                else
+                    emit errMsg(writesubdcErrMsg);
                 break;
 
             case MODEMODINIT::setsamplingsystem:
-                if (reply == ack) {
+                if (reply == ack)
                     emit activationContinue();
-                }
                 else
-                {
-                    // perhaps we emit some error here ?
-                    emit errMsg((tr(setsamplingsystemErrmsg)));
-                }
+                    emit errMsg(setsamplingsystemErrmsg);
                 break;
 
             case MODEMODINIT::freeresource:
