@@ -226,13 +226,10 @@ void cModeModuleInit::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant
                 break;
 
             case MODEMODINIT::freeresource:
-                if (reply == ack || reply == nack) { // we accept nack here also
+                if (reply == ack || reply == nack) // we accept nack here also
                     emit deactivationContinue(); // maybe that resource was deleted by server and then it is no more set
-                }
-                else {
-                    emit errMsg((tr(freeresourceErrMsg)));
-                    emit deactivationError();
-                }
+                else
+                    notifyDeactivationError(freeresourceErrMsg);
                 break;
             }
         }

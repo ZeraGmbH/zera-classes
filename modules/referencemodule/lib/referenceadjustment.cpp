@@ -252,10 +252,7 @@ void cReferenceAdjustment::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVa
                 if (reply == ack)
                     emit deactivationContinue();
                 else
-                {
-                    emit errMsg((tr(setMeasModeErrMsg)));
-                    emit deactivationError();
-                }
+                    notifyDeactivationError(setMeasModeErrMsg);
                 break;
             case readgaincorr:
                 if (reply == ack)

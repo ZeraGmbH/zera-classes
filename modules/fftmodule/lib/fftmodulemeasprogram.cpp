@@ -456,26 +456,20 @@ void cFftModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QV
             case deactivatedsp:
                 if (reply == ack)
                     emit deactivationContinue();
-                else {
-                    emit errMsg((tr(dspdeactiveErrMsg)));
-                    emit deactivationError();
-                }
+                else
+                    notifyDeactivationError(dspdeactiveErrMsg);
                 break;
             case freepgrmem:
                 if (reply == ack)
                     emit deactivationContinue();
-                else {
-                    emit errMsg((tr(freeresourceErrMsg)));
-                    emit deactivationError();
-                }
+                else
+                    notifyDeactivationError(freeresourceErrMsg);
                 break;
             case freeusermem:
                 if (reply == ack)
                     emit deactivationContinue();
-                else {
-                    emit errMsg((tr(freeresourceErrMsg)));
-                    emit deactivationError();
-                }
+                else
+                    notifyDeactivationError(freeresourceErrMsg);
                 break;
 
             case dataaquistion:

@@ -806,38 +806,29 @@ void cPower1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply,
             case deactivatedsp:
                 if (reply == ack)
                     emit deactivationContinue();
-                else {
-                    emit errMsg((tr(dspdeactiveErrMsg)));
-                    emit deactivationError();
-                }
+                else
+                    notifyDeactivationError(dspdeactiveErrMsg);
                 break;
             case freepgrmem:
                 if (reply == ack)
                     emit deactivationContinue();
-                else {
-                    emit errMsg((tr(freeresourceErrMsg)));
-                    emit deactivationError();
-                }
+                else
+                    notifyDeactivationError(freeresourceErrMsg);
                 break;
 
             case freeusermem:
             case freeresourcesource:
                 if (reply == ack)
                     emit deactivationContinue();
-                else {
-                    emit errMsg((tr(freeresourceErrMsg)));
-                    emit deactivationError();
-                }
+                else
+                    notifyDeactivationError(freeresourceErrMsg);
                 break;
 
             case unregisterrangenotifiers:
                 if (reply == ack) // we only continue pcb server acknowledges
                     emit deactivationContinue();
                 else
-                {
-                    emit errMsg((tr(unregisterpcbnotifierErrMsg)));
-                    emit deactivationError();
-                }
+                    notifyDeactivationError(unregisterpcbnotifierErrMsg);
                 break;
 
             case dataaquistion:

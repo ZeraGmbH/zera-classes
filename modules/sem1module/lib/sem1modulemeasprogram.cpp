@@ -453,20 +453,14 @@ void cSem1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, Q
                 if (reply == ack) // we only continue if sec server manager acknowledges
                     emit deactivationContinue();
                 else
-                {
-                    emit errMsg((tr(freesececalcunitErrMsg)));
-                    emit deactivationError();
-                }
+                    notifyDeactivationError(freesececalcunitErrMsg);
                 break;
 
             case freeecresource:
                 if (reply == ack)
                     emit deactivationContinue();
                 else
-                {
-                    emit errMsg((tr(freeresourceErrMsg)));
-                    emit deactivationError();
-                }
+                    notifyDeactivationError(freeresourceErrMsg);
                 break;
 
             case actualizeenergy:

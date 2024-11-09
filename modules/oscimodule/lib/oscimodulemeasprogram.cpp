@@ -442,28 +442,19 @@ void cOsciModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, Q
                 if (reply == ack)
                     emit deactivationContinue();
                 else
-                {
-                    emit errMsg((tr(dspdeactiveErrMsg)));
-                    emit deactivationError();
-                }
+                    notifyDeactivationError(dspdeactiveErrMsg);
                 break;
             case freepgrmem:
                 if (reply == ack)
                     emit deactivationContinue();
                 else
-                {
-                    emit errMsg((tr(freeresourceErrMsg)));
-                    emit deactivationError();
-                }
+                    notifyDeactivationError(freeresourceErrMsg);
                 break;
             case freeusermem:
                 if (reply == ack)
                     emit deactivationContinue();
                 else
-                {
-                    emit errMsg((tr(freeresourceErrMsg)));
-                    emit deactivationError();
-                }
+                    notifyDeactivationError(freeresourceErrMsg);
                 break;
 
             case dataaquistion:
