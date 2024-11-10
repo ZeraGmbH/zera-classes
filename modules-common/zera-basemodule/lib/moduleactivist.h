@@ -25,7 +25,6 @@ signals:
     void deactivationContinue();
     void deactivationLoop();
     void deactivationSkip();
-    void deactivationError();
     void dataAquisitionContinue();
     void setupContinue();
     void interruptContinue();
