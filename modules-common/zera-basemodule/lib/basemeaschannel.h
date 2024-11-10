@@ -17,7 +17,6 @@ public:
                      VeinTcp::AbstractTcpNetworkFactoryPtr tcpNetworkFactory,
                      QString channelName, quint8 chnnr,
                      QString moduleChannelInfo);
-    virtual ~cBaseMeasChannel(){}
 
     quint8 getDSPChannelNr();
     quint16 getSampleRate();

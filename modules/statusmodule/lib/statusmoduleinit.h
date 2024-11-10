@@ -60,7 +60,7 @@ class cStatusModuleInit: public cModuleActivist
 public:
     cStatusModuleInit(cStatusModule* module, cStatusModuleConfigData& configData);
     virtual ~cStatusModuleInit();
-    virtual void generateInterface(); // here we export our interface (entities)
+    void generateInterface() override;
 signals:
     void activationError();
 protected slots:

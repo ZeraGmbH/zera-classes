@@ -45,7 +45,7 @@ class cReferenceMeasChannel: public cBaseMeasChannel
 public:
     cReferenceMeasChannel(NetworkConnectionInfo rmsocket, NetworkConnectionInfo pcbsocket, VeinTcp::AbstractTcpNetworkFactoryPtr tcpNetworkFactory,
                           QString name, quint8 chnnr, QString moduleName);
-    virtual void generateInterface(); // here we export our interface (entities)
+    void generateInterface() override;
 
     quint32 setRange(QString range); // a statemachine gets started that returns cmdDone(quint32 cmdnr)
 
@@ -53,7 +53,7 @@ signals:
     void cmdDone(quint32 cmdnr); // to signal we are ready
 
 protected slots:
-    void catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant answer);
+    void catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant answer) override;
 
 private:
     QStringList m_RangeNameList; // a list of all ranges

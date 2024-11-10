@@ -70,7 +70,7 @@ class cAdjustmentModuleMeasProgram: public cBaseMeasWorkProgram
 
 public:
     cAdjustmentModuleMeasProgram(cAdjustmentModule* module, std::shared_ptr<BaseModuleConfiguration> pConfiguration);
-    void generateInterface() override; // here we export our interface (entities)
+    void generateInterface() override;
 
 signals:
     void computationContinue();

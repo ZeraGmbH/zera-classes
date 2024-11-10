@@ -58,10 +58,10 @@ class cPower2ModuleMeasProgram: public cBaseDspMeasProgram
     Q_OBJECT
 public:
     cPower2ModuleMeasProgram(cPower2Module* module, std::shared_ptr<BaseModuleConfiguration> pConfiguration);
-    virtual void generateInterface(); // here we export our interface (entities)
+    void generateInterface() override;
 public slots:
-    virtual void start(); // difference between start and stop is that actual values
-    virtual void stop(); // in interface are not updated when stop
+    virtual void start() override;
+    virtual void stop() override;
 signals:
     void activationSkip();
     void deactivationSkip();
