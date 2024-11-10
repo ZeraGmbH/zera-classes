@@ -31,10 +31,10 @@ class cReferenceModuleMeasProgram: public cBaseDspMeasProgram
     Q_OBJECT
 public:
     cReferenceModuleMeasProgram(cReferenceModule* module, std::shared_ptr<BaseModuleConfiguration> pConfiguration);
-    virtual void generateInterface(); // here we export our interface (entities)
+    void generateInterface() override;
 public slots:
-    virtual void start(); // difference between start and stop is that actual values
-    virtual void stop(); // in interface are not updated when stop
+    void start() override;
+    void stop() override;
 protected slots:
     virtual void catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant answer);
 private:

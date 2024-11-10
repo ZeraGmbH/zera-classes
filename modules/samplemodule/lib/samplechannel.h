@@ -29,11 +29,11 @@ class cSampleChannel: public cBaseSampleChannel
 public:
     cSampleChannel(cSampleModule* module, cSampleModuleConfigData& configdata, quint8 chnnr);
     ~cSampleChannel();
-    virtual void generateInterface(); // here we export our interface (entities)
+    void generateInterface() override;
 signals:
     void cmdDone(quint32 cmdnr); // to signal we are ready
 protected slots:
-    void catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant answer);
+    void catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant answer) override;
 private:
     cSampleModule* m_pModule;
     cSampleModuleConfigData& m_ConfigData;

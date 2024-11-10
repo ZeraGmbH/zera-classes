@@ -15,14 +15,14 @@ class SourceModuleProgram: public cBaseMeasWorkProgram
 public:
     SourceModuleProgram(SourceModule* module, std::shared_ptr<BaseModuleConfiguration> pConfiguration);
     virtual ~SourceModuleProgram();
-    virtual void generateInterface() override; // here we export our interface (entities)
+    void generateInterface() override;
     void startDestroy();
 signals:
     void sigLastSourceRemoved();
 public slots:
     // Make cBaseMeasWorkProgram happy...
-    virtual void start() override {}
-    virtual void stop() override {}
+    void start() override {}
+    void stop() override {}
 
     QVariant RPC_ScanInterface(QVariantMap p_params);
     QVariant RPC_CloseSource(QVariantMap p_params);

@@ -42,7 +42,7 @@ class cDftModuleMeasProgram: public cBaseDspMeasProgram
     Q_OBJECT
 public:
     cDftModuleMeasProgram(cDftModule* module, std::shared_ptr<BaseModuleConfiguration> pConfiguration);
-    virtual void generateInterface() override; // here we export our interface (components)
+    void generateInterface() override;
 
 public slots:
     virtual void start() override; // difference between start and stop is that actual values

@@ -49,7 +49,7 @@ public:
     cRangeMeasChannel(NetworkConnectionInfo rmsocket, NetworkConnectionInfo pcbsocket,
                       VeinTcp::AbstractTcpNetworkFactoryPtr tcpNetworkFactory,
                       QString name, quint8 chnnr, QString moduleName);
-    virtual void generateInterface(); // here we export our interface (entities)
+    void generateInterface() override;
 
     quint32 setRange(QString range); // a statemachine gets started that returns cmdDone(quint32 cmdnr)
     quint32 readGainCorrection(double amplitude); // dito
@@ -101,7 +101,7 @@ signals:
     void newRangeList(); // if the channel has read new range list after async. notification
 
 protected slots:
-    void catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant answer);
+    void catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant answer) override;
 
 private:
     QStringList m_RangeNameList; // a list of all ranges

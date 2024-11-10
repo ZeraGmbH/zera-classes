@@ -44,10 +44,10 @@ class cFftModuleMeasProgram: public cBaseDspMeasProgram
     Q_OBJECT
 public:
     cFftModuleMeasProgram(cFftModule* module, std::shared_ptr<BaseModuleConfiguration> pConfiguration);
-    virtual void generateInterface(); // here we export our interface (entities)
+    void generateInterface() override;
 public slots:
-    virtual void start(); // difference between start and stop is that actual values
-    virtual void stop(); // in interface are not updated when stop
+    virtual void start() override;
+    virtual void stop() override;
 protected slots:
     virtual void catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant answer);
 private:

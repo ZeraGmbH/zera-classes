@@ -46,7 +46,7 @@ class cModeModuleInit: public cModuleActivist
 public:
     cModeModuleInit(cModeModule* module, cModeModuleConfigData& configData);
     virtual ~cModeModuleInit();
-    virtual void generateInterface(); // here we export our interface (entities)
+    void generateInterface() override;
 
 protected slots:
     virtual void catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant answer);

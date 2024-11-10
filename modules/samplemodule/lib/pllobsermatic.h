@@ -28,7 +28,7 @@ class cPllObsermatic: public cModuleActivist
 public:
     cPllObsermatic(cSampleModule* module, cSampleModuleConfigData& confData);
     virtual ~cPllObsermatic();
-    virtual void generateInterface(); // here we export our interface (entities)
+    void generateInterface() override;
     QString getAliasFromSystemName(QString systemName);
 public slots:
     virtual void ActionHandler(QVector<float>* actualValues); // entry after received actual values

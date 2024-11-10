@@ -57,13 +57,13 @@ class cSem1ModuleMeasProgram: public cBaseMeasProgram
 public:
     cSem1ModuleMeasProgram(cSem1Module* module, std::shared_ptr<BaseModuleConfiguration> pConfiguration);
     virtual ~cSem1ModuleMeasProgram();
-    void generateInterface() override; // here we export our interface (entities)
+    void generateInterface() override;
 signals:
     void setupContinue();
     void interruptContinue();
 public slots:
-    void start() override; // difference between start and stop is that actual values
-    void stop() override; // in interface are not updated when stop
+    void start() override;
+    void stop() override;
 
 private slots:
     void catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant answer);

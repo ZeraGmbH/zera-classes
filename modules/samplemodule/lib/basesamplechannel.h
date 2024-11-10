@@ -11,7 +11,6 @@ class cBaseSampleChannel: public cModuleActivist
 
 public:
     cBaseSampleChannel(QString name, quint8 chnnr, QString moduleChannelName);
-    virtual ~cBaseSampleChannel(){}
     QString getName();
     QString getAlias();
 protected:

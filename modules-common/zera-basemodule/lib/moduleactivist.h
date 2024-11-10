@@ -12,7 +12,6 @@ class cModuleActivist: public QObject
     Q_OBJECT
 public:
     cModuleActivist(QString notifyHeaderString);
-    virtual ~cModuleActivist(){}
 signals:
     void activated(); // is emitted after the activist is completely activated
     void activationContinue(); // for activist progress in activation statemachine

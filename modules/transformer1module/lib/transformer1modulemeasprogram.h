@@ -25,11 +25,11 @@ class cTransformer1ModuleMeasProgram: public cBaseMeasWorkProgram
 public:
     cTransformer1ModuleMeasProgram(cTransformer1Module* module, std::shared_ptr<BaseModuleConfiguration> pConfiguration);
     virtual ~cTransformer1ModuleMeasProgram();
-    virtual void generateInterface(); // here we export our interface (entities)
+    void generateInterface() override;
 
 public slots:
-    virtual void start(); // difference between start and stop is that actual values
-    virtual void stop(); // in interface are not updated when stop
+    void start() override;
+    void stop() override;
 
 private:
     cTransformer1ModuleConfigData* getConfData();

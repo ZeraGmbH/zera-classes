@@ -21,10 +21,10 @@ class cLambdaModuleMeasProgram: public cBaseMeasWorkProgram
     Q_OBJECT
 public:
     cLambdaModuleMeasProgram(cLambdaModule* module, std::shared_ptr<BaseModuleConfiguration> pConfiguration);
-    virtual void generateInterface();
+    void generateInterface() override;
 public slots:
-    virtual void start() {}
-    virtual void stop() {}
+    void start() override {}
+    void stop() override {}
 
 private:
     cLambdaModuleConfigData* getConfData();

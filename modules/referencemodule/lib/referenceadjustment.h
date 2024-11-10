@@ -29,7 +29,7 @@ class cReferenceAdjustment: public cModuleActivist
     Q_OBJECT
 public:
     cReferenceAdjustment(cReferenceModule* module, cReferenceModuleConfigData* confData);
-    virtual void generateInterface(); // here we export our interface (entities)
+    void generateInterface() override;
 public slots:
     virtual void ActionHandler(QVector<float> *actualValues); // entry after received actual values
 signals:

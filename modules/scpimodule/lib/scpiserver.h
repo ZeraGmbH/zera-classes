@@ -28,7 +28,7 @@ class cSCPIServer: public cModuleActivist
 public:
     cSCPIServer(cSCPIModule* module, cSCPIModuleConfigData& configData);
     virtual ~cSCPIServer();
-    virtual void generateInterface() override; // here we export our interface (entities)
+    void generateInterface() override;
     cModuleInterface* getModuleInterface();
     void appendClient(cSCPIClient *client);
     cSCPIInterface* getScpiInterface() const;

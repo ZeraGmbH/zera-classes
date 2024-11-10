@@ -22,10 +22,10 @@ class cBleModuleMeasProgram: public cBaseMeasWorkProgram
 public:
     cBleModuleMeasProgram(cBleModule* module, std::shared_ptr<BaseModuleConfiguration> pConfiguration);
     virtual ~cBleModuleMeasProgram();
-    void generateInterface() override; // here we export our interface (entities)
+    void generateInterface() override;
 public slots:
-    void start() override; // difference between start and stop is that actual values
-    void stop() override; // in interface are not updated when stop
+    void start() override;
+    void stop() override;
 
 private slots:
     void activateDone();
