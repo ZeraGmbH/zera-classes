@@ -157,7 +157,7 @@ void cThdnModuleMeasProgram::stop()
 }
 
 
-void cThdnModuleMeasProgram::generateInterface()
+void cThdnModuleMeasProgram::generateVeinInterface()
 {
     QString key;
 

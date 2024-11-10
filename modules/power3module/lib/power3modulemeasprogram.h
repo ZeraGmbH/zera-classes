@@ -21,7 +21,7 @@ class cPower3ModuleMeasProgram: public cBaseMeasWorkProgram
 public:
     cPower3ModuleMeasProgram(cPower3Module* module, std::shared_ptr<BaseModuleConfiguration> pConfiguration);
     virtual ~cPower3ModuleMeasProgram();
-    void generateInterface() override;
+    void generateVeinInterface() override;
 
 public slots:
     virtual void start(); // difference between start and stop is that actual values

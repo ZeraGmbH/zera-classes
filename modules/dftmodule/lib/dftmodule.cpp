@@ -63,7 +63,7 @@ void cDftModule::setupModule()
     connect(m_pMeasProgram, &cDftModuleMeasProgram::deactivated, this, &cDftModule::deactivationContinue);
 
     for (int i = 0; i < m_ModuleActivistList.count(); i++)
-        m_ModuleActivistList.at(i)->generateInterface();
+        m_ModuleActivistList.at(i)->generateVeinInterface();
 }
 
 

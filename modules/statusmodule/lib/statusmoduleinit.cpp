@@ -120,7 +120,7 @@ cStatusModuleInit::~cStatusModuleInit()
 }
 
 
-void cStatusModuleInit::generateInterface()
+void cStatusModuleInit::generateVeinInterface()
 {
     QString key;
 

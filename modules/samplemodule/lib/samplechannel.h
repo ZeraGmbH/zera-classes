@@ -29,7 +29,7 @@ class cSampleChannel: public cBaseSampleChannel
 public:
     cSampleChannel(cSampleModule* module, cSampleModuleConfigData& configdata, quint8 chnnr);
     ~cSampleChannel();
-    void generateInterface() override;
+    void generateVeinInterface() override;
 signals:
     void cmdDone(quint32 cmdnr); // to signal we are ready
 protected slots:

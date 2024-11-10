@@ -135,7 +135,7 @@ void cOsciModuleMeasProgram::stop()
         m_demoPeriodicTimer->stop();
 }
 
-void cOsciModuleMeasProgram::generateInterface()
+void cOsciModuleMeasProgram::generateVeinInterface()
 {
     QString key;
 

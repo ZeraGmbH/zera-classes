@@ -79,7 +79,7 @@ cSCPIServer::~cSCPIServer()
     deleteSerialPort();
 }
 
-void cSCPIServer::generateInterface()
+void cSCPIServer::generateVeinInterface()
 {
     QString key;
     m_pVeinParamSerialOn = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,

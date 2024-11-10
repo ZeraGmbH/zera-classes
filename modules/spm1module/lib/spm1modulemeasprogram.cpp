@@ -199,7 +199,7 @@ void cSpm1ModuleMeasProgram::stop()
 {
 }
 
-void cSpm1ModuleMeasProgram::generateInterface()
+void cSpm1ModuleMeasProgram::generateVeinInterface()
 {
     QString s;
     QString key;

@@ -57,7 +57,7 @@ class cSem1ModuleMeasProgram: public cBaseMeasProgram
 public:
     cSem1ModuleMeasProgram(cSem1Module* module, std::shared_ptr<BaseModuleConfiguration> pConfiguration);
     virtual ~cSem1ModuleMeasProgram();
-    void generateInterface() override;
+    void generateVeinInterface() override;
 signals:
     void setupContinue();
     void interruptContinue();

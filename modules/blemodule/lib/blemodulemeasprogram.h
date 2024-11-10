@@ -22,7 +22,7 @@ class cBleModuleMeasProgram: public cBaseMeasWorkProgram
 public:
     cBleModuleMeasProgram(cBleModule* module, std::shared_ptr<BaseModuleConfiguration> pConfiguration);
     virtual ~cBleModuleMeasProgram();
-    void generateInterface() override;
+    void generateVeinInterface() override;
 public slots:
     void start() override;
     void stop() override;

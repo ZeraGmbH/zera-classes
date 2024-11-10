@@ -56,7 +56,7 @@ class cSpm1ModuleMeasProgram: public cBaseMeasProgram
 public:
     cSpm1ModuleMeasProgram(cSpm1Module* module, std::shared_ptr<BaseModuleConfiguration> pConfiguration);
     virtual ~cSpm1ModuleMeasProgram();
-    void generateInterface() override;
+    void generateVeinInterface() override;
 signals:
     void setupContinue();
     void interruptContinue();

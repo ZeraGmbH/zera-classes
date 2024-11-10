@@ -60,7 +60,7 @@ class cStatusModuleInit: public cModuleActivist
 public:
     cStatusModuleInit(cStatusModule* module, cStatusModuleConfigData& configData);
     virtual ~cStatusModuleInit();
-    void generateInterface() override;
+    void generateVeinInterface() override;
 signals:
     void activationError();
 protected slots:

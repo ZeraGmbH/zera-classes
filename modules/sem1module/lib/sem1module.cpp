@@ -63,7 +63,7 @@ void cSem1Module::setupModule()
     connect(m_pMeasProgram, &cSem1ModuleMeasProgram::deactivated, this, &cSem1Module::deactivationContinue);
 
     for (int i = 0; i < m_ModuleActivistList.count(); i++)
-        m_ModuleActivistList.at(i)->generateInterface();
+        m_ModuleActivistList.at(i)->generateVeinInterface();
 }
 
 

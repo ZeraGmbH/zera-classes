@@ -37,7 +37,7 @@ class cAdjustManagement: public cModuleActivist
     Q_OBJECT
 public:
     cAdjustManagement(cRangeModule* module, QStringList chnlist, QStringList subdclist, adjustConfPar *adjustmentConfig);
-    void generateInterface() override;
+    void generateVeinInterface() override;
 public slots:
     virtual void ActionHandler(QVector<float> *actualValues); // entry after received actual values
 signals:

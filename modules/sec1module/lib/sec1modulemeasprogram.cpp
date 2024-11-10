@@ -191,7 +191,7 @@ void cSec1ModuleMeasProgram::stop()
 }
 
 
-void cSec1ModuleMeasProgram::generateInterface()
+void cSec1ModuleMeasProgram::generateVeinInterface()
 {
     QString s;
     QString key;

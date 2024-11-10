@@ -100,7 +100,7 @@ void cRangeModuleMeasProgram::syncRanging(QVariant sync)
     m_bIgnore = (sync == 0); // when ranging has finished we ignore 1 more actual values
 }
 
-void cRangeModuleMeasProgram::generateInterface()
+void cRangeModuleMeasProgram::generateVeinInterface()
 {
     VfModuleActvalue *pActvalue;
 

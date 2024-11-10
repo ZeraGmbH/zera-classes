@@ -115,7 +115,7 @@ void cAdjustManagement::ActionHandler(QVector<float> *actualValues)
     }
 }
 
-void cAdjustManagement::generateInterface()
+void cAdjustManagement::generateVeinInterface()
 {
     m_pAdjustmentInfo = new VfModuleComponent(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
                                                  QString("INF_Adjusted"),

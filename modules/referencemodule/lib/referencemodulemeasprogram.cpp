@@ -88,7 +88,7 @@ void cReferenceModuleMeasProgram::stop()
 }
 
 
-void cReferenceModuleMeasProgram::generateInterface()
+void cReferenceModuleMeasProgram::generateVeinInterface()
 {
     // we have no interface
 }

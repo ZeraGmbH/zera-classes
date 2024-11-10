@@ -28,7 +28,7 @@ class cSCPIServer: public cModuleActivist
 public:
     cSCPIServer(cSCPIModule* module, cSCPIModuleConfigData& configData);
     virtual ~cSCPIServer();
-    void generateInterface() override;
+    void generateVeinInterface() override;
     cModuleInterface* getModuleInterface();
     void appendClient(cSCPIClient *client);
     cSCPIInterface* getScpiInterface() const;

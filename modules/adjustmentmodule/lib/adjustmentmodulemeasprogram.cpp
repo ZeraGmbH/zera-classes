@@ -268,7 +268,7 @@ void cAdjustmentModuleMeasProgram::setInterfaceValidation()
     m_pPARAdjustClampData->setValidator(adjValidatorFine);
 }
 
-void cAdjustmentModuleMeasProgram::generateInterface()
+void cAdjustmentModuleMeasProgram::generateVeinInterface()
 {
     QString key;
     cIntValidator* iValidator;

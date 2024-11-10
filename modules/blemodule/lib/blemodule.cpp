@@ -57,7 +57,7 @@ void cBleModule::setupModule()
     connect(m_pMeasProgram, &cBleModuleMeasProgram::deactivated, this, &cBleModule::deactivationContinue);
 
     for (int i = 0; i < m_ModuleActivistList.count(); i++)
-        m_ModuleActivistList.at(i)->generateInterface();
+        m_ModuleActivistList.at(i)->generateVeinInterface();
 }
 
 void cBleModule::startMeas()

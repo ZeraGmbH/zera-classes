@@ -288,7 +288,7 @@ void cPower2ModuleMeasProgram::stop()
 }
 
 
-void cPower2ModuleMeasProgram::generateInterface()
+void cPower2ModuleMeasProgram::generateVeinInterface()
 {
     QString key;
     VfModuleActvalue *pActvalue;

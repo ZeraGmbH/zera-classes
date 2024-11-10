@@ -45,7 +45,7 @@ public:
     cPllMeasChannel(NetworkConnectionInfo rmsocket, NetworkConnectionInfo pcbsocket,
                     VeinTcp::AbstractTcpNetworkFactoryPtr tcpNetworkFactory,
                     QString name, quint8 chnnr, QString moduleName);
-    void generateInterface() override;
+    void generateVeinInterface() override;
     quint32 setyourself4PLL(QString samplesysname); // a statemachine gets started that returns cmdDone(quint32 cmdnr)
     quint32 setPLLMode(QString samplesysname, QString mode);
     double getUrValue(); // returns upper range of actual range

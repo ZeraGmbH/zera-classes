@@ -25,7 +25,7 @@ class cTransformer1ModuleMeasProgram: public cBaseMeasWorkProgram
 public:
     cTransformer1ModuleMeasProgram(cTransformer1Module* module, std::shared_ptr<BaseModuleConfiguration> pConfiguration);
     virtual ~cTransformer1ModuleMeasProgram();
-    void generateInterface() override;
+    void generateVeinInterface() override;
 
 public slots:
     void start() override;
