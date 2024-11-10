@@ -20,9 +20,6 @@ signals:
     void deactivated();
     void deactivationContinue();
     void deactivationLoop();
-
-    void setupContinue();
-    void interruptContinue();
 public slots:
     virtual void activate(); // here we query our properties and activate ourself
     virtual void deactivate(); // what do you think ? yes you're right
