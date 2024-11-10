@@ -49,7 +49,7 @@ cBurden1ModuleConfigData *cBurden1ModuleMeasProgram::getConfData()
 }
 
 
-void cBurden1ModuleMeasProgram::generateInterface()
+void cBurden1ModuleMeasProgram::generateVeinInterface()
 {
     VfModuleActvalue *pActvalue;
     cSCPIInfo* pSCPIInfo;

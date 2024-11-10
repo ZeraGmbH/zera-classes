@@ -22,7 +22,7 @@ signals:
 public slots:
     virtual void activate(); // here we query our properties and activate ourself
     virtual void deactivate(); // what do you think ? yes you're right
-    virtual void generateInterface() = 0; // here we export our interface (entities)
+    virtual void generateVeinInterface() = 0;
 protected:
     void notifyError(QVariant value);
 

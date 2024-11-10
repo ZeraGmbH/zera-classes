@@ -20,7 +20,7 @@ class cBurden1ModuleMeasProgram: public cBaseMeasWorkProgram
 public:
     cBurden1ModuleMeasProgram(cBurden1Module* module, std::shared_ptr<BaseModuleConfiguration> pConfiguration);
     virtual ~cBurden1ModuleMeasProgram();
-    void generateInterface() override;
+    void generateVeinInterface() override;
 public slots:
     virtual void start() override {};
     virtual void stop() override {};

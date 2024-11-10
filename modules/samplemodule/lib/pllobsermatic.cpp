@@ -39,7 +39,7 @@ void cPllObsermatic::ActionHandler(QVector<float> *actualValues)
     pllAutomatic(); // let pllautomatic do its job
 }
 
-void cPllObsermatic::generateInterface()
+void cPllObsermatic::generateVeinInterface()
 {
     QString key;
     m_pVeinPllChannelAlias = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,

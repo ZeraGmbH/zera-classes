@@ -41,7 +41,7 @@ cBleModuleConfigData *cBleModuleMeasProgram::getConfData()
     return qobject_cast<cBleModuleConfiguration*>(m_pConfiguration.get())->getConfigurationData();
 }
 
-void cBleModuleMeasProgram::generateInterface()
+void cBleModuleMeasProgram::generateVeinInterface()
 {
     QString key;
     m_pTemperatureCAct = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,

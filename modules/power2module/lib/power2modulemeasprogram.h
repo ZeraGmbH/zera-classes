@@ -58,7 +58,7 @@ class cPower2ModuleMeasProgram: public cBaseDspMeasProgram
     Q_OBJECT
 public:
     cPower2ModuleMeasProgram(cPower2Module* module, std::shared_ptr<BaseModuleConfiguration> pConfiguration);
-    void generateInterface() override;
+    void generateVeinInterface() override;
 public slots:
     virtual void start() override;
     virtual void stop() override;

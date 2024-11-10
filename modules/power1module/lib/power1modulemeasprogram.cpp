@@ -248,7 +248,7 @@ void cPower1ModuleMeasProgram::stop()
     disconnect(&m_movingwindowFilter, &cMovingwindowFilter::actualValues, this, 0);
 }
 
-void cPower1ModuleMeasProgram::generateInterface()
+void cPower1ModuleMeasProgram::generateVeinInterface()
 {
     QString key;
     VfModuleActvalue *pActvalue;

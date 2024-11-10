@@ -134,7 +134,7 @@ void cFftModuleMeasProgram::stop()
     m_startStopHandler.stop();
 }
 
-void cFftModuleMeasProgram::generateInterface()
+void cFftModuleMeasProgram::generateVeinInterface()
 {
     QString key;
     VfModuleActvalue *pActvalue;

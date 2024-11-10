@@ -74,7 +74,7 @@ cSampleChannel::~cSampleChannel()
 }
 
 
-void cSampleChannel::generateInterface()
+void cSampleChannel::generateVeinInterface()
 {
     QString key;
     cSCPIInfo *scpiInfo;

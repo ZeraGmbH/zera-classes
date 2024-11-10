@@ -137,7 +137,7 @@ void cRmsModuleMeasProgram::stop()
 }
 
 
-void cRmsModuleMeasProgram::generateInterface()
+void cRmsModuleMeasProgram::generateVeinInterface()
 {
     VfModuleActvalue *pActvalue;
     int n,p;

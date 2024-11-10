@@ -96,7 +96,7 @@ void cSampleModuleMeasProgram::stop()
 }
 
 
-void cSampleModuleMeasProgram::generateInterface()
+void cSampleModuleMeasProgram::generateVeinInterface()
 {
     // we don't have any interface for publication
 }

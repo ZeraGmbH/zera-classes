@@ -35,7 +35,7 @@ class cRangeModuleMeasProgram: public cBaseDspMeasProgram
     Q_OBJECT
 public:
     cRangeModuleMeasProgram(cRangeModule* module, std::shared_ptr<BaseModuleConfiguration> pConfiguration);
-    void generateInterface() override;
+    void generateVeinInterface() override;
 public slots:
     void start() override;
     void stop() override;

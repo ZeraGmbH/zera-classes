@@ -15,7 +15,7 @@ class SourceModuleProgram: public cBaseMeasWorkProgram
 public:
     SourceModuleProgram(SourceModule* module, std::shared_ptr<BaseModuleConfiguration> pConfiguration);
     virtual ~SourceModuleProgram();
-    void generateInterface() override;
+    void generateVeinInterface() override;
     void startDestroy();
 signals:
     void sigLastSourceRemoved();

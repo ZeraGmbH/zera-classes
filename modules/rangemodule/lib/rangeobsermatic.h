@@ -42,7 +42,7 @@ class cRangeObsermatic: public cModuleActivist
     Q_OBJECT
 public:
     cRangeObsermatic(cRangeModule* module, QList<QStringList> groupList, QStringList chnlist, cObsermaticConfPar& confpar);
-    void generateInterface() override;
+    void generateVeinInterface() override;
     VfModuleComponent *m_pRangingSignal;
 signals:
     void activationRepeat();

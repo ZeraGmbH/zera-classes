@@ -40,7 +40,7 @@ void SourceModule::setupModule()
     m_DeactivationMachine.setInitialState(&m_stateSwitchAllOff);
 
     for (int i = 0; i < m_ModuleActivistList.count(); i++) {
-        m_ModuleActivistList.at(i)->generateInterface();
+        m_ModuleActivistList.at(i)->generateVeinInterface();
     }
 }
 

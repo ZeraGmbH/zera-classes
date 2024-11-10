@@ -96,7 +96,7 @@ cModeModuleInit::~cModeModuleInit()
 }
 
 
-void cModeModuleInit::generateInterface()
+void cModeModuleInit::generateVeinInterface()
 {
     // at the moment we have no interface
 }

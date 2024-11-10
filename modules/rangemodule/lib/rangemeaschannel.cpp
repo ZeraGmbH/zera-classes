@@ -423,7 +423,7 @@ double cRangeMeasChannel::getRangeUrvalueMax()
 }
 
 
-void cRangeMeasChannel::generateInterface()
+void cRangeMeasChannel::generateVeinInterface()
 {
 }
 

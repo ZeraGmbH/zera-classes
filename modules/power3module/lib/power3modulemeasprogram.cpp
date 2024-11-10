@@ -55,7 +55,7 @@ cPower3ModuleConfigData *cPower3ModuleMeasProgram::getConfData()
 }
 
 
-void cPower3ModuleMeasProgram::generateInterface()
+void cPower3ModuleMeasProgram::generateVeinInterface()
 {
     VfModuleActvalue *pActvalue;
     cSCPIInfo* pSCPIInfo;

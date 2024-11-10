@@ -64,7 +64,7 @@ void cBurden1Module::setupModule()
     connect(m_pMeasProgram, &cBurden1ModuleMeasProgram::deactivated, this, &cBurden1Module::deactivationContinue);
 
     for (int i = 0; i < m_ModuleActivistList.count(); i++)
-        m_ModuleActivistList.at(i)->generateInterface();
+        m_ModuleActivistList.at(i)->generateVeinInterface();
 }
 
 

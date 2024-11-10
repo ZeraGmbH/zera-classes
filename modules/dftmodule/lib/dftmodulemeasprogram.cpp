@@ -142,7 +142,7 @@ void cDftModuleMeasProgram::stop()
     m_startStopHandler.stop();
 }
 
-void cDftModuleMeasProgram::generateInterface()
+void cDftModuleMeasProgram::generateVeinInterface()
 {
     VfModuleActvalue *pActvalue;
     int n,p;

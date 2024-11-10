@@ -112,7 +112,7 @@ double cPllMeasChannel::getUrValue()
 }
 
 
-void cPllMeasChannel::generateInterface()
+void cPllMeasChannel::generateVeinInterface()
 {
     // we don't generate any interface
 }

@@ -80,7 +80,7 @@ void cRangeObsermatic::ActionHandler(QVector<float> *actualValues)
 }
 
 
-void cRangeObsermatic::generateInterface()
+void cRangeObsermatic::generateVeinInterface()
 {
     QString s;
     QString key;

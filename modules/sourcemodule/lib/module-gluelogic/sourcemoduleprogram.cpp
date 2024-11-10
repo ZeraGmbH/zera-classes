@@ -21,7 +21,7 @@ SourceModuleProgram::~SourceModuleProgram()
     }
 }
 
-void SourceModuleProgram::generateInterface()
+void SourceModuleProgram::generateVeinInterface()
 {
     // source manager
     int maxSources = 4;

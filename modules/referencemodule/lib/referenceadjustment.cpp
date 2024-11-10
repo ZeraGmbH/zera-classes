@@ -90,7 +90,7 @@ void cReferenceAdjustment::ActionHandler(QVector<float> *actualValues)
 }
 
 
-void cReferenceAdjustment::generateInterface()
+void cReferenceAdjustment::generateVeinInterface()
 {
     // at the moment no interface
 }

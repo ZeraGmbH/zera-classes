@@ -69,7 +69,7 @@ void cThdnModule::setupModule()
     connect(m_pMeasProgram, &cModuleActivist::deactivated, this, &BaseModule::deactivationContinue);
 
     for (int i = 0; i < m_ModuleActivistList.count(); i++)
-        m_ModuleActivistList.at(i)->generateInterface();
+        m_ModuleActivistList.at(i)->generateVeinInterface();
 }
 
 

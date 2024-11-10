@@ -38,7 +38,7 @@ cLambdaModuleConfigData *cLambdaModuleMeasProgram::getConfData()
     return qobject_cast<cLambdaModuleConfiguration*>(m_pConfiguration.get())->getConfigurationData();
 }
 
-void cLambdaModuleMeasProgram::generateInterface()
+void cLambdaModuleMeasProgram::generateVeinInterface()
 {
     VfModuleActvalue *pActvalue;
     cSCPIInfo* pSCPIInfo;

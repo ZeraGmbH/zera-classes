@@ -70,7 +70,7 @@ cTransformer1ModuleConfigData *cTransformer1ModuleMeasProgram::getConfData()
 }
 
 
-void cTransformer1ModuleMeasProgram::generateInterface()
+void cTransformer1ModuleMeasProgram::generateVeinInterface()
 {
     VfModuleActvalue *pActvalue;
     cSCPIInfo* pSCPIInfo;

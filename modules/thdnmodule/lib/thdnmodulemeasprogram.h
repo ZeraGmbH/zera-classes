@@ -60,7 +60,7 @@ class cThdnModuleMeasProgram: public cBaseDspMeasProgram
     Q_OBJECT
 public:
     cThdnModuleMeasProgram(cThdnModule* module, std::shared_ptr<BaseModuleConfiguration> pConfiguration);
-    void generateInterface() override;
+    void generateVeinInterface() override;
 public slots:
     void start() override;
     void stop() override;

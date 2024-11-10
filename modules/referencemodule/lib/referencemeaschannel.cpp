@@ -102,7 +102,7 @@ quint32 cReferenceMeasChannel::setRange(QString range)
 }
 
 
-void cReferenceMeasChannel::generateInterface()
+void cReferenceMeasChannel::generateVeinInterface()
 {
     // we have no interface
 }
