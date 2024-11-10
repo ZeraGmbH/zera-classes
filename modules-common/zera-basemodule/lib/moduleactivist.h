@@ -3,7 +3,6 @@
 
 #include <QObject>
 #include <QStateMachine>
-#include <QHash>
 
 // pure virtual class for all objects living in a module, which generate an interface
 // and/or which can do something after it got activated
