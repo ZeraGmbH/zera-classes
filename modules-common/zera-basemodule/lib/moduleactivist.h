@@ -4,7 +4,6 @@
 #include <QObject>
 #include <QStateMachine>
 #include <QHash>
-#include <functional>
 
 // pure virtual class for all objects living in a module, which generate an interface
 // and/or which can do something after it got activated
@@ -31,13 +30,11 @@ public slots:
     virtual void generateInterface() = 0; // here we export our interface (entities)
 protected:
     void notifyError(QVariant value);
-    bool handleFinishCallback(int cmdNumber, quint8 reply, QVariant answer);
 
     bool m_bActive = false;
     QString m_notifyHeaderString;
     QStateMachine m_activationMachine;
     QStateMachine m_deactivationMachine;
-    QHash<int, std::function<void(quint8 reply, QVariant answer)>> m_cmdFinishCallbacks;
 };
 
 #endif // MODULEACITIVIST_H
