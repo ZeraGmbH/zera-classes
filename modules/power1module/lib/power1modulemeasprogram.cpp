@@ -31,7 +31,7 @@ cPower1ModuleMeasProgram::cPower1ModuleMeasProgram(cPower1Module* module, std::s
     m_readResourceSenseInfoDoneState.addTransition(this, &cModuleActivist::activationLoop, &m_readResourceSenseInfoState);
 
     m_readResourceSourceState.addTransition(this, &cModuleActivist::activationContinue, &m_readResourceSourceInfosState);
-    m_readResourceSourceState.addTransition(this, &cModuleActivist::activationSkip, &m_pcbserverConnectState4measChannels);
+    m_readResourceSourceState.addTransition(this, &cPower1ModuleMeasProgram::activationSkip, &m_pcbserverConnectState4measChannels);
     m_readResourceSourceInfosState.addTransition(this, &cModuleActivist::activationContinue, &m_readResourceSourceInfoState);
     m_readResourceSourceInfoState.addTransition(this, &cModuleActivist::activationContinue, &m_readResourceSourceInfoDoneState);
     m_readResourceSourceInfoDoneState.addTransition(this, &cModuleActivist::activationContinue, &m_claimResourcesSourceState);
@@ -52,7 +52,7 @@ cPower1ModuleMeasProgram::cPower1ModuleMeasProgram(cPower1Module* module, std::s
     m_readSenseChannelInformationDoneState.addTransition(this, &cModuleActivist::activationLoop, &m_readSenseChannelAliasState);
 
     m_readSourceChannelInformationState.addTransition(this, &cModuleActivist::activationContinue, &m_readSourceChannelAliasState);
-    m_readSourceChannelInformationState.addTransition(this, &cModuleActivist::activationSkip, &m_dspserverConnectState);
+    m_readSourceChannelInformationState.addTransition(this, &cPower1ModuleMeasProgram::activationSkip, &m_dspserverConnectState);
     m_readSourceChannelAliasState.addTransition(this, &cModuleActivist::activationContinue, &m_readSourceDspChannelState);
     m_readSourceDspChannelState.addTransition(this, &cModuleActivist::activationContinue, &m_readSourceFormFactorState);
     m_readSourceFormFactorState.addTransition(this, &cModuleActivist::activationContinue, &m_readSourceChannelInformationDoneState);
@@ -168,7 +168,7 @@ cPower1ModuleMeasProgram::cPower1ModuleMeasProgram(cPower1Module* module, std::s
     m_freeUSERMemState.addTransition(this, &cModuleActivist::deactivationContinue, &m_freeFreqOutputsState);
 
     m_freeFreqOutputsState.addTransition(this, &cModuleActivist::deactivationContinue, &m_freeFreqOutputState);
-    m_freeFreqOutputsState.addTransition(this, &cModuleActivist::deactivationSkip, &m_resetNotifiersState);
+    m_freeFreqOutputsState.addTransition(this, &cPower1ModuleMeasProgram::deactivationSkip, &m_resetNotifiersState);
     m_freeFreqOutputState.addTransition(this, &cModuleActivist::deactivationContinue, &m_freeFreqOutputDoneState);
     m_freeFreqOutputDoneState.addTransition(this, &cModuleActivist::deactivationContinue, &m_resetNotifiersState);
     m_freeFreqOutputDoneState.addTransition(this, &cModuleActivist::deactivationLoop, &m_freeFreqOutputState);
