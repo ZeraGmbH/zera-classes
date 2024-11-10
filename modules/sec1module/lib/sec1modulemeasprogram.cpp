@@ -657,7 +657,7 @@ void cSec1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, Q
                     updateProgress(answer.toUInt());
                 }
                 else
-                    notifyExecutionError(readsecregisterErrMsg);
+                    notifyError(readsecregisterErrMsg);
                 break;
             }
 
@@ -676,7 +676,7 @@ void cSec1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, Q
                     }
                 }
                 else
-                    notifyExecutionError(readsecregisterErrMsg);
+                    notifyError(readsecregisterErrMsg);
                 break;
             }
 
@@ -693,7 +693,7 @@ void cSec1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, Q
                     }
                 }
                 else
-                    notifyExecutionError(readsecregisterErrMsg);
+                    notifyError(readsecregisterErrMsg);
                 break;
             }
 
@@ -701,7 +701,7 @@ void cSec1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, Q
                 if (reply == ack)
                     emit setupContinue();
                 else
-                    notifyExecutionError(setsyncErrMsg);
+                    notifyError(setsyncErrMsg);
                 break;
 
             case enableinterrupt:
@@ -709,7 +709,7 @@ void cSec1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, Q
                 if (reply == ack)
                     emit setupContinue();
                 else
-                    notifyExecutionError(writesecregisterErrMsg);
+                    notifyError(writesecregisterErrMsg);
                 break;
 
             case setmastermux:
@@ -717,7 +717,7 @@ void cSec1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, Q
                 if (reply == ack)
                     emit setupContinue();
                 else
-                    notifyExecutionError(setmuxErrMsg);
+                    notifyError(setmuxErrMsg);
                 break;
 
             case setmastermeasmode:
@@ -727,7 +727,7 @@ void cSec1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, Q
                     emit setupContinue();
                 }
                 else
-                    notifyExecutionError(setcmdidErrMsg);
+                    notifyError(setcmdidErrMsg);
                 break;
 
             case startmeasurement:
@@ -736,7 +736,7 @@ void cSec1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, Q
                     emit setupContinue();
                 }
                 else
-                    notifyExecutionError(startmeasErrMsg);
+                    notifyError(startmeasErrMsg);
                 break;
 
             case stopmeas:
@@ -744,7 +744,7 @@ void cSec1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, Q
                     emit deactivationContinue();
                 }
                 else
-                    notifyExecutionError(stopmeasErrMsg);
+                    notifyError(stopmeasErrMsg);
                 break;
 
             case setsecintnotifier:
@@ -762,13 +762,13 @@ void cSec1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, Q
                     emit interruptContinue();
                 }
                 else
-                    notifyExecutionError(readsecregisterErrMsg);
+                    notifyError(readsecregisterErrMsg);
                 break;
             case resetintregister:
                 if (reply == ack)
                     emit interruptContinue();
                 else
-                    notifyExecutionError(writesecregisterErrMsg);
+                    notifyError(writesecregisterErrMsg);
                 break;
             case readvicount:
                 if (reply == ack) {
@@ -787,7 +787,7 @@ void cSec1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, Q
                     emit interruptContinue();
                 }
                 else
-                    notifyExecutionError(readsecregisterErrMsg);
+                    notifyError(readsecregisterErrMsg);
                 break;
 
             }

@@ -37,7 +37,6 @@ protected:
     void notifyError(QVariant value);
     void notifyActivationError(QVariant value);
     void notifyDeactivationError(QVariant value);
-    void notifyExecutionError(QVariant value);
     bool handleFinishCallback(int cmdNumber, quint8 reply, QVariant answer);
 
     bool m_bActive = false;

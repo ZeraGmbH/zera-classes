@@ -260,14 +260,14 @@ void cReferenceAdjustment::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVa
                 if (reply == ack)
                     emit adjustContinue();
                 else
-                    notifyExecutionError(readdspgaincorrErrMsg);
+                    notifyError(readdspgaincorrErrMsg);
                 break;
 
             case readoffset2corr:
                 if (reply == ack)
                     emit adjustContinue();
                 else
-                    notifyExecutionError(readdspoffsetcorrErrMsg);
+                    notifyError(readdspoffsetcorrErrMsg);
                 break;
 
             case writeoffsetadjustment:

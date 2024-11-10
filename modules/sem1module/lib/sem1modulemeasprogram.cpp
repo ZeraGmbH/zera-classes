@@ -475,7 +475,7 @@ void cSem1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, Q
                     }
                 }
                 else
-                    notifyExecutionError(readsecregisterErrMsg);
+                    notifyError(readsecregisterErrMsg);
                 break;
             }
 
@@ -492,7 +492,7 @@ void cSem1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, Q
                     }
                 }
                 else
-                    notifyExecutionError(readsecregisterErrMsg);
+                    notifyError(readsecregisterErrMsg);
                 break;
             }
 
@@ -507,7 +507,7 @@ void cSem1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, Q
                     }
                 }
                 else
-                    notifyExecutionError(readsecregisterErrMsg);
+                    notifyError(readsecregisterErrMsg);
                 break;
             }
 
@@ -515,7 +515,7 @@ void cSem1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, Q
                 if (reply == ack)
                     emit setupContinue();
                 else
-                    notifyExecutionError(setsyncErrMsg);
+                    notifyError(setsyncErrMsg);
                 break;
 
             case enableinterrupt:
@@ -523,7 +523,7 @@ void cSem1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, Q
                 if (reply == ack)
                     emit setupContinue();
                 else
-                    notifyExecutionError(writesecregisterErrMsg);
+                    notifyError(writesecregisterErrMsg);
                 break;
 
             case setmastermux:
@@ -531,7 +531,7 @@ void cSem1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, Q
                 if (reply == ack)
                     emit setupContinue();
                 else
-                    notifyExecutionError(setmuxErrMsg);
+                    notifyError(setmuxErrMsg);
                 break;
 
             case setmastermeasmode:
@@ -539,21 +539,21 @@ void cSem1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, Q
                 if (reply == ack)
                     emit setupContinue();
                 else
-                    notifyExecutionError(setcmdidErrMsg);
+                    notifyError(setcmdidErrMsg);
                 break;
 
             case startmeasurement:
                 if (reply == ack)
                     emit setupContinue();
                 else
-                    notifyExecutionError(startmeasErrMsg);
+                    notifyError(startmeasErrMsg);
                 break;
 
             case stopmeas:
                 if (reply == ack)
                     emit deactivationContinue();
                 else
-                    notifyExecutionError(stopmeasErrMsg);
+                    notifyError(stopmeasErrMsg);
                 break;
 
             case setsecintnotifier:
@@ -569,13 +569,13 @@ void cSem1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, Q
                     emit interruptContinue();
                 }
                 else
-                    notifyExecutionError(readsecregisterErrMsg);
+                    notifyError(readsecregisterErrMsg);
                 break;
             case resetintregister:
                 if (reply == ack)
                     emit interruptContinue();
                 else
-                    notifyExecutionError(writesecregisterErrMsg);
+                    notifyError(writesecregisterErrMsg);
                 break;
             case readvicount:
                 if (reply == ack)
@@ -590,7 +590,7 @@ void cSem1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, Q
                     emit interruptContinue();
                 }
                 else
-                    notifyExecutionError(readsecregisterErrMsg);
+                    notifyError(readsecregisterErrMsg);
                 break;
             case readtcount:
                 if (reply == ack) {// we only continue if sec server acknowledges
@@ -598,7 +598,7 @@ void cSem1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, Q
                     emit interruptContinue();
                 }
                 else
-                    notifyExecutionError(readsecregisterErrMsg);
+                    notifyError(readsecregisterErrMsg);
                 break;
 
             }

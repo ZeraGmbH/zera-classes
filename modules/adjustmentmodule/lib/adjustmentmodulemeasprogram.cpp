@@ -505,7 +505,7 @@ bool cAdjustmentModuleMeasProgram::checkRangeIsWanted(QString adjType)
     QString rangeComponent = getConfData()->m_AdjChannelInfoHash[m_sAdjustSysName]->rangeAdjInfo.m_sComponent;
     QString currentRange = storageDb->getStoredValue(rangeEntity, rangeComponent).toString();
     if(currentRange != m_sAdjustRange) {
-        notifyExecutionError(QString("Wrong range on %1 adjustment! Wanted: %2 / Current: %3").arg(adjType, m_sAdjustRange, currentRange));
+        notifyError(QString("Wrong range on %1 adjustment! Wanted: %2 / Current: %3").arg(adjType, m_sAdjustRange, currentRange));
         return false;
     }
     return true;
@@ -526,7 +526,7 @@ void cAdjustmentModuleMeasProgram::setAdjustAmplitudeStartCommand(QVariant var)
     m_AdjustActualValue = storageDb->getStoredValue(adjustEntity, adjustComponent).toDouble();
     double actWantedError = calcAdjAbsoluteError();
     if(actWantedError > maxAmplitudeErrorPercent) {
-        notifyExecutionError(QString("Amplitude to adjust is out of limit! Wanted: %1 / Current: %2").arg(m_AdjustTargetValue).arg(m_AdjustActualValue));
+        notifyError(QString("Amplitude to adjust is out of limit! Wanted: %1 / Current: %2").arg(m_AdjustTargetValue).arg(m_AdjustActualValue));
         m_pPARAdjustAmplitude->setError();
         return;
     }
@@ -565,13 +565,13 @@ void cAdjustmentModuleMeasProgram::setAdjustPhaseStartCommand(QVariant var)
     QString adjustComponent = getConfData()->m_AdjChannelInfoHash[m_sAdjustSysName]->phaseAdjInfo.m_sComponent;
     m_AdjustActualValue = cmpPhase(m_pModule->getStorageDb()->getStoredValue(adjustEntity, adjustComponent));
     if(qIsNaN(m_AdjustActualValue)) {
-        notifyExecutionError("Phase to adjust has no actual value!");
+        notifyError("Phase to adjust has no actual value!");
         m_pPARAdjustPhase->setError();
         return;
     }
     double diffAngleAbs = fabs(symAngle(m_AdjustActualValue - m_AdjustTargetValue));
     if(diffAngleAbs > maxPhaseErrorDegrees) {
-        notifyExecutionError("Phase to adjust is out of limit!");
+        notifyError("Phase to adjust is out of limit!");
         m_pPARAdjustPhase->setError();
         return;
     }
@@ -611,7 +611,7 @@ void cAdjustmentModuleMeasProgram::setAdjustOffsetStartCommand(QVariant var)
                                             m_sAdjustSysName, m_sAdjustRange,
                                             adjustActualValue, m_AdjustTargetValue,
                                             TRANSACTION_TIMEOUT, [&](QString errorMsg){
-                             notifyExecutionError(errorMsg);
+                             notifyError(errorMsg);
                              m_pPARAdjustOffset->setError();
                          }));
     m_offsetTasks.start();
@@ -671,7 +671,7 @@ void cAdjustmentModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 re
                     emit computationContinue();
                 else {
                     m_computationMachine.stop();
-                    notifyExecutionError(adjustcomputationPCBErrMSG);
+                    notifyError(adjustcomputationPCBErrMSG);
                 }
                 break;
 
@@ -680,7 +680,7 @@ void cAdjustmentModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 re
                     emit storageContinue();
                 else {
                     m_storageMachine.stop();
-                    notifyExecutionError(adjuststoragePCBErrMSG);
+                    notifyError(adjuststoragePCBErrMSG);
                     m_pPARStorage->setError();
                 }
                 break;
@@ -689,7 +689,7 @@ void cAdjustmentModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 re
                 if (reply == ack)
                     m_pPARAdjustGainStatus->setValue(QVariant(0));
                 else {
-                    notifyExecutionError(adjuststatusPCBErrMSG);
+                    notifyError(adjuststatusPCBErrMSG);
                     m_pPARAdjustGainStatus->setError();
                 }
                 break;
@@ -698,7 +698,7 @@ void cAdjustmentModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 re
                 if (reply == ack)
                     m_pPARAdjustPhaseStatus->setValue(QVariant(0));
                 else {
-                    notifyExecutionError(adjuststatusPCBErrMSG);
+                    notifyError(adjuststatusPCBErrMSG);
                     m_pPARAdjustPhaseStatus->setError();
                 }
                 break;
@@ -707,7 +707,7 @@ void cAdjustmentModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 re
                 if (reply == ack)
                     m_pPARAdjustOffsetStatus->setValue(QVariant(0));
                 else {
-                    notifyExecutionError(adjuststatusPCBErrMSG);
+                    notifyError(adjuststatusPCBErrMSG);
                     m_pPARAdjustOffsetStatus->setError();
                 }
                 break;
@@ -719,7 +719,7 @@ void cAdjustmentModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 re
                 }
                 else {
                     emit adjustError();
-                    notifyExecutionError(readGainCorrErrMsg);
+                    notifyError(readGainCorrErrMsg);
                     m_pPARAdjustAmplitude->setError();
                 }
                 break;
@@ -731,7 +731,7 @@ void cAdjustmentModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 re
                 }
                 else {
                     emit adjustError();
-                    notifyExecutionError(setGainNodeErrMsg);
+                    notifyError(setGainNodeErrMsg);
                     m_pPARAdjustAmplitude->setError();
                 }
                 break;
@@ -743,7 +743,7 @@ void cAdjustmentModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 re
                 }
                 else {
                     emit adjustError();
-                    notifyExecutionError(setOffsetNodeErrMsg);
+                    notifyError(setOffsetNodeErrMsg);
                     m_pPARAdjustOffset->setError();
                 }
                 break;
@@ -755,7 +755,7 @@ void cAdjustmentModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 re
                 }
                 else {
                     emit adjustError();
-                    notifyExecutionError(readPhaseCorrErrMsg);
+                    notifyError(readPhaseCorrErrMsg);
                     m_pPARAdjustPhase->setError();
                 }
                 break;
@@ -767,7 +767,7 @@ void cAdjustmentModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 re
                 }
                 else {
                     emit adjustError();
-                    notifyExecutionError(setPhaseNodeErrMsg);
+                    notifyError(setPhaseNodeErrMsg);
                     m_pPARAdjustPhase->setError();
                 }
                 break;

@@ -433,7 +433,7 @@ void cOsciModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, Q
                 if (reply == ack) // we ignore ack
                     ;
                 else
-                    notifyExecutionError(writedspmemoryErrMsg);
+                    notifyError(writedspmemoryErrMsg);
                 break;
 
             case deactivatedsp:
@@ -460,7 +460,7 @@ void cOsciModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, Q
                     emit dataAquisitionContinue();
                 else {
                     m_dataAcquisitionMachine.stop();
-                    notifyExecutionError(dataaquisitionErrMsg); // but we send error message
+                    notifyError(dataaquisitionErrMsg);
                 }
                 break;
             }

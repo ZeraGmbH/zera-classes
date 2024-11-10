@@ -169,7 +169,7 @@ void cSampleChannel::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant 
         if (reply == ack)
             m_sActRange = m_sNewRange;
         else
-            notifyExecutionError(setRangeErrMsg);
+            notifyError(setRangeErrMsg);
         break;
     }
 }
