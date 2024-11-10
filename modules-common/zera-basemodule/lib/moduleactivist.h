@@ -21,7 +21,7 @@ signals:
     void deactivated();
     void deactivationContinue();
     void deactivationLoop();
-    void dataAquisitionContinue();
+
     void setupContinue();
     void interruptContinue();
 public slots:

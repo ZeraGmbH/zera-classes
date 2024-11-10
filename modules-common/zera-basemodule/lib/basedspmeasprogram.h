@@ -10,6 +10,8 @@ class cBaseDspMeasProgram: public cBaseMeasProgram
 public:
     cBaseDspMeasProgram(std::shared_ptr<BaseModuleConfiguration> pConfiguration, QString moduleName);
     virtual ~cBaseDspMeasProgram() { }
+signals:
+    void dataAquisitionContinue();
 protected:
     // the module creates a central dsp interface and forwards this
     // the reason behind this is, that dsp server generates a new "environment" for each
