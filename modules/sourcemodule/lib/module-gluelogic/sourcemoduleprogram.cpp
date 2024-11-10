@@ -136,7 +136,7 @@ void SourceModuleProgram::updateDemoCount()
     m_bDeafenDemoChange = false;
 }
 
-void SourceModuleProgram::onSourceScanFinished(int slotPosition, QUuid uuid, QString errMsg)
+void SourceModuleProgram::onSourceScanFinished(int slotPosition, QUuid uuid, QString errorMsg)
 {
     bool sourceAdded = slotPosition >= 0;
     if(sourceAdded) {
@@ -147,19 +147,19 @@ void SourceModuleProgram::onSourceScanFinished(int slotPosition, QUuid uuid, QSt
     }
     m_sharedPtrRpcScanInterface->sendRpcResult(uuid,
                                                sourceAdded ? VfCpp::cVeinModuleRpc::RPCResultCodes::RPC_SUCCESS : VfCpp::cVeinModuleRpc::RPCResultCodes::RPC_EINVAL,
-                                               errMsg,
+                                               errorMsg,
                                                sourceAdded);
 }
 
-void SourceModuleProgram::onSourceDeviceRemoved(int slot, QUuid uuid, QString errMsg)
+void SourceModuleProgram::onSourceDeviceRemoved(int slot, QUuid uuid, QString errorMsg)
 {
     Q_UNUSED(slot);
     m_pVeinCountAct->setValue(QVariant(m_pSourceDeviceManager->getActiveSlotCount()));
     if(!uuid.isNull()) {
-        bool ok = errMsg.isEmpty();
+        bool ok = errorMsg.isEmpty();
         m_sharedPtrRpcRemoveInterface->sendRpcResult(uuid,
                                                      ok ? VfCpp::cVeinModuleRpc::RPCResultCodes::RPC_SUCCESS : VfCpp::cVeinModuleRpc::RPCResultCodes::RPC_EINVAL,
-                                                     errMsg,
+                                                     errorMsg,
                                                      ok);
     }
     updateDemoCount();

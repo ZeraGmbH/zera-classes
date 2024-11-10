@@ -40,8 +40,8 @@ private:
     QVector<SourceVeinInterface*> m_arrVeinIoInterfaces;
     bool m_bDeafenDemoChange = false;
 private slots:
-    void onSourceScanFinished(int slotPosition, QUuid uuid, QString errMsg);
-    void onSourceDeviceRemoved(int slot, QUuid uuid, QString errMsg);
+    void onSourceScanFinished(int slotPosition, QUuid uuid, QString errorMsg);
+    void onSourceDeviceRemoved(int slot, QUuid uuid, QString errorMsg);
     void newDemoSourceCount(QVariant getDemoCount);
 };
 

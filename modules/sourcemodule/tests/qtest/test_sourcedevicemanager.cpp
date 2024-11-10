@@ -6,16 +6,16 @@
 
 QTEST_MAIN(test_sourcedevicemanager)
 
-FinishEntry::FinishEntry(int slotNo, QUuid uuid, QString errMsg)
+FinishEntry::FinishEntry(int slotNo, QUuid uuid, QString errorMsg)
 {
     this->slotNo = slotNo;
     this->uuid = uuid;
-    this->errMsg = errMsg;
+    this->errorMsg = errorMsg;
 }
 
-void test_sourcedevicemanager::onSourceScanFinished(int slotNo, QUuid uuid, QString errMsg)
+void test_sourcedevicemanager::onSourceScanFinished(int slotNo, QUuid uuid, QString errorMsg)
 {
-    m_listSourcesAdded.append(FinishEntry(slotNo, uuid, errMsg));
+    m_listSourcesAdded.append(FinishEntry(slotNo, uuid, errorMsg));
 }
 
 void test_sourcedevicemanager::onSlotRemoved(int slotNo)
@@ -288,7 +288,7 @@ void test_sourcedevicemanager::demoAddNotificationTooMany()
     checkAddRemoveNotifications(slotCount, slotCount+1, 0);
 
     QCOMPARE(m_listSourcesAdded[slotCount].slotNo, -1);
-    QVERIFY(!m_listSourcesAdded[slotCount].errMsg.isEmpty());
+    QVERIFY(!m_listSourcesAdded[slotCount].errorMsg.isEmpty());
 }
 
 void test_sourcedevicemanager::demoRemoveNotification()

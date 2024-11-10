@@ -611,8 +611,8 @@ void cAdjustmentModuleMeasProgram::setAdjustOffsetStartCommand(QVariant var)
     m_offsetTasks.addSub(TaskOffset::create(m_commonObjects->m_pcbInterface,
                                             m_sAdjustSysName, m_sAdjustRange,
                                             adjustActualValue, m_AdjustTargetValue,
-                                            TRANSACTION_TIMEOUT, [&](QString errMsg){
-                             notifyExecutionError(errMsg);
+                                            TRANSACTION_TIMEOUT, [&](QString errorMsg){
+                             notifyExecutionError(errorMsg);
                              m_pPARAdjustOffset->setError();
                          }));
     m_offsetTasks.start();

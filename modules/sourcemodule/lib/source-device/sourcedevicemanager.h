@@ -23,15 +23,15 @@ public:
     SourceDeviceFacade::Ptr getSourceController(int slotNo);
     int getDemoCount();
 signals:
-    void sigSourceScanFinished(int slotNo, QUuid uuid, QString errMsg);
-    void sigSlotRemoved(int slotNo, QUuid uuid, QString errMsg);
+    void sigSourceScanFinished(int slotNo, QUuid uuid, QString errorMsg);
+    void sigSlotRemoved(int slotNo, QUuid uuid, QString errorMsg);
     void sigAllSlotsRemoved();
 
 private slots:
     void onScanFinished(SourceScanner::Ptr scanner);
     void onSourceClosed(int facadeId, QUuid uuid);
 signals:
-    void sigSlotRemovedQueued(int slotNo, QUuid uuid, QString errMsg);
+    void sigSlotRemovedQueued(int slotNo, QUuid uuid, QString errorMsg);
 private:
     bool isValidSlotNo(int slotNo);
     int findFreeSlot();

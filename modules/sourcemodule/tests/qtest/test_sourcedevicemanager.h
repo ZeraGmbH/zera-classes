@@ -6,17 +6,17 @@
 
 struct FinishEntry
 {
-    FinishEntry(int slotNo, QUuid uuid, QString errMsg);
+    FinishEntry(int slotNo, QUuid uuid, QString errorMsg);
     int slotNo;
     QUuid uuid;
-    QString errMsg;
+    QString errorMsg;
 };
 
 class test_sourcedevicemanager : public QObject
 {
     Q_OBJECT
 public slots:
-    void onSourceScanFinished(int slotNo, QUuid uuid, QString errMsg);
+    void onSourceScanFinished(int slotNo, QUuid uuid, QString errorMsg);
     void onSlotRemoved(int slotNo);
 
 private slots:
