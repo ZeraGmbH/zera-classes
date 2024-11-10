@@ -475,6 +475,11 @@ void cStatusModuleInit::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVaria
     }
 }
 
+void cStatusModuleInit::notifyActivationError(QVariant value)
+{
+    notifyError(value);
+    emit activationError();
+}
 
 QString cStatusModuleInit::findReleaseNr()
 {

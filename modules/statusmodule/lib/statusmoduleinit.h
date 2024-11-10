@@ -61,9 +61,13 @@ public:
     cStatusModuleInit(cStatusModule* module, cStatusModuleConfigData& configData);
     virtual ~cStatusModuleInit();
     virtual void generateInterface(); // here we export our interface (entities)
+signals:
+    void activationError();
 protected slots:
     virtual void catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant answer);
 private:
+    void notifyActivationError(QVariant value);
+
     cStatusModule* m_pModule; // the module we live in
     cStatusModuleConfigData& m_ConfigData;
 

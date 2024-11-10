@@ -103,19 +103,19 @@ void cSampleChannel::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant 
         if (reply == ack)
             emit activationContinue();
         else
-            notifyActivationError(rmidentErrMSG);
+            notifyError(rmidentErrMSG);
         break;
     case readresourcetypessamplechannel:
         if ((reply == ack) && (answer.toString().contains("SAMPLE")))
             emit activationContinue();
         else
-            notifyActivationError(resourcetypeErrMsg);
+            notifyError(resourcetypeErrMsg);
         break;
     case readresourcesamplechannel:
         if ((reply == ack) && (answer.toString().contains(m_sName)))
             emit activationContinue();
         else
-            notifyActivationError(resourceErrMsg);
+            notifyError(resourceErrMsg);
         break;
     case readresourceinfosamplechannel:
     {
@@ -130,10 +130,10 @@ void cSampleChannel::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant 
             if (ok1 && ok2 && ok3 && ((max == free) == 1))
                 emit activationContinue();
             else
-                notifyActivationError(resourceInfoErrMsg);
+                notifyError(resourceInfoErrMsg);
         }
         else
-            notifyActivationError(resourceInfoErrMsg);
+            notifyError(resourceInfoErrMsg);
         break;
 
     }
@@ -141,7 +141,7 @@ void cSampleChannel::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant 
         if (reply == ack)
             emit activationContinue();
         else
-            notifyActivationError(claimresourceErrMsg);
+            notifyError(claimresourceErrMsg);
         break;
     case freeresource:
         if (reply == ack || reply == nack) // we accept nack here also
@@ -155,7 +155,7 @@ void cSampleChannel::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant 
             emit activationContinue();
         }
         else
-            notifyActivationError(readaliasErrMsg);
+            notifyError(readaliasErrMsg);
         break;
     case readrangelistsamplechannel:
         if (reply == ack) {
@@ -163,7 +163,7 @@ void cSampleChannel::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant 
             emit activationContinue();
         }
         else
-            notifyActivationError(readrangelistErrMsg);
+            notifyError(readrangelistErrMsg);
         break;
     case setsamplechannelrange:
         if (reply == ack)

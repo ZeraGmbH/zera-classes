@@ -272,7 +272,7 @@ void cTransformer1ModuleMeasProgram::searchActualValues()
             error = true;
     }
     if (error)
-        notifyActivationError(confiuredVeinComponentsNotFound);
+        notifyError(confiuredVeinComponentsNotFound);
     else
         emit activationContinue();
 }

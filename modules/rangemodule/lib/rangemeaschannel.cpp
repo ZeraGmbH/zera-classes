@@ -458,21 +458,21 @@ void cRangeMeasChannel::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVaria
             if (reply == ack)
                 emit activationContinue();
             else
-                notifyActivationError(rmidentErrMSG);
+                notifyError(rmidentErrMSG);
             break;
 
         case readresourcetypes:
             if ((reply == ack) && (answer.toString().contains("SENSE")))
                 emit activationContinue();
             else
-                notifyActivationError(resourcetypeErrMsg);
+                notifyError(resourcetypeErrMsg);
             break;
 
         case readresource:
             if ((reply == ack) && (answer.toString().contains(m_sName)))
                 emit activationContinue();
             else
-                notifyActivationError(resourceErrMsg);
+                notifyError(resourceErrMsg);
             break;
 
         case readresourceinfo:
@@ -487,17 +487,17 @@ void cRangeMeasChannel::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVaria
                 if (ok1 && ok2 && ok3 && ((max == free) == 1))
                     emit activationContinue();
                 else
-                    notifyActivationError(resourceInfoErrMsg);
+                    notifyError(resourceInfoErrMsg);
             }
             else
-                notifyActivationError(resourceInfoErrMsg);
+                notifyError(resourceInfoErrMsg);
             break;
         }
         case claimresource:
             if (reply == ack)
                 emit activationContinue();
             else
-                notifyActivationError(claimresourceErrMsg);
+                notifyError(claimresourceErrMsg);
             break;
 
         case freeresource:
@@ -520,7 +520,7 @@ void cRangeMeasChannel::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVaria
                 emit activationContinue();
             }
             else
-                notifyActivationError(readdspchannelErrMsg);
+                notifyError(readdspchannelErrMsg);
             break;
 
         case readchnalias:
@@ -529,7 +529,7 @@ void cRangeMeasChannel::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVaria
                 emit activationContinue();
             }
             else
-                notifyActivationError(readaliasErrMsg);
+                notifyError(readaliasErrMsg);
             break;
 
         case readsamplerate:
@@ -538,7 +538,7 @@ void cRangeMeasChannel::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVaria
                 emit activationContinue();
             }
             else
-                notifyActivationError(readsamplerateErrMsg);
+                notifyError(readsamplerateErrMsg);
             break;
 
         case readunit:
@@ -547,7 +547,7 @@ void cRangeMeasChannel::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVaria
                 emit activationContinue();
             }
             else
-                notifyActivationError(readunitErrMsg);
+                notifyError(readunitErrMsg);
             break;
 
         case readrangelist:
@@ -556,7 +556,7 @@ void cRangeMeasChannel::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVaria
                 emit activationContinue();
             }
             else
-                notifyActivationError(readrangelistErrMsg);
+                notifyError(readrangelistErrMsg);
             break;
 
         case readrngalias:
@@ -565,7 +565,7 @@ void cRangeMeasChannel::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVaria
                 emit activationContinue();
             }
             else
-                notifyActivationError(readrangealiasErrMsg);
+                notifyError(readrangealiasErrMsg);
             break;
 
         case readtype:
@@ -574,7 +574,7 @@ void cRangeMeasChannel::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVaria
                 emit activationContinue();
             }
             else
-                notifyActivationError(readrangetypeErrMsg);
+                notifyError(readrangetypeErrMsg);
             break;
 
         case readurvalue:
@@ -583,7 +583,7 @@ void cRangeMeasChannel::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVaria
                 emit activationContinue();
             }
             else
-                notifyActivationError(readrangeurvalueErrMsg);
+                notifyError(readrangeurvalueErrMsg);
             break;
 
         case readrejection:
@@ -592,7 +592,7 @@ void cRangeMeasChannel::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVaria
                 emit activationContinue();
             }
             else
-                notifyActivationError(readrangerejectionErrMsg);
+                notifyError(readrangerejectionErrMsg);
             break;
 
         case readovrejection:
@@ -601,7 +601,7 @@ void cRangeMeasChannel::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVaria
                 emit activationContinue();
             }
             else
-                notifyActivationError(readrangeovrejectionErrMsg);
+                notifyError(readrangeovrejectionErrMsg);
             break;
 
         case readadcrejection:
@@ -610,7 +610,7 @@ void cRangeMeasChannel::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVaria
                 emit activationContinue();
             }
             else
-                notifyActivationError(readrangeadcrejectionErrMsg);
+                notifyError(readrangeadcrejectionErrMsg);
             break;
 
         case readisavail:
@@ -619,7 +619,7 @@ void cRangeMeasChannel::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVaria
                 emit activationContinue();
             }
             else
-                notifyActivationError(readrangeavailErrMsg);
+                notifyError(readrangeavailErrMsg);
             break;
 
         case setmeaschannelrange:
@@ -697,14 +697,14 @@ void cRangeMeasChannel::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVaria
             if (reply == ack)
                 emit activationContinue();
             else
-                notifyActivationError(resetChannelStatusErrMsg);
+                notifyError(resetChannelStatusErrMsg);
             break;
 
         case registerNotifier:
             if (reply == ack)
                 emit activationContinue();
             else
-                notifyActivationError(registerpcbnotifierErrMsg);
+                notifyError(registerpcbnotifierErrMsg);
             break;
         }
     }

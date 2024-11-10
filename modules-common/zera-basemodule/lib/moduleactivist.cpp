@@ -20,12 +20,6 @@ void cModuleActivist::notifyError(QVariant value)
     qWarning("%s reported error: %s", qPrintable(m_notifyInfo), qPrintable(value.toString()));
 }
 
-void cModuleActivist::notifyActivationError(QVariant value)
-{
-    notifyError(value);
-    emit activationError();
-}
-
 bool cModuleActivist::handleFinishCallback(int cmdNumber, quint8 reply, QVariant answer)
 {
     auto iter = m_cmdFinishCallbacks.constFind(cmdNumber);
