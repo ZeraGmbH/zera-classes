@@ -515,7 +515,6 @@ void cSpm1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, Q
                     emit setupContinue();
                 else
                     notifyExecutionError(writesecregisterErrMsg);
-                    emit executionError();
                 break;
 
             case setmastermux:

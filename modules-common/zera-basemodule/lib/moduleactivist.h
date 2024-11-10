@@ -29,7 +29,6 @@ signals:
     void dataAquisitionContinue();
     void setupContinue();
     void interruptContinue();
-    void executionError();
 public slots:
     virtual void activate(); // here we query our properties and activate ourself
     virtual void deactivate(); // what do you think ? yes you're right
