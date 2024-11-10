@@ -212,7 +212,7 @@ void cPllMeasChannel::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant
             if (reply == ack)
                 m_sActRange = answer.toString();
             else
-                emit errMsg(getRangeErrMsg);
+                notifyError(getRangeErrMsg);
             break;
         case readchnalias:
             if (reply == ack) {

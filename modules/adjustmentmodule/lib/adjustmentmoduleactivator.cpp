@@ -66,7 +66,7 @@ void AdjustmentModuleActivator::addStaticActivationTasks()
     m_activationTasks.addSub(TaskChannelsCheckAvail::create(
                                  m_commonObjects->m_pcbInterface,
                                  m_configuredChannels,
-                                 TRANSACTION_TIMEOUT,[&]{ emit errMsg(resourceErrMsg); }));
+                                 TRANSACTION_TIMEOUT,[&]{ notifyError(resourceErrMsg); }));
 }
 
 void AdjustmentModuleActivator::addDynChannelActivationTasks()
@@ -78,6 +78,11 @@ void AdjustmentModuleActivator::addDynChannelActivationTasks()
     }));
 }
 
+void AdjustmentModuleActivator::notifyError(QVariant value)
+{
+    emit errMsg(value);
+}
+
 TaskTemplatePtr AdjustmentModuleActivator::getChannelsReadTasks()
 {
     TaskContainerInterfacePtr channelTasks = TaskContainerParallel::create();
@@ -87,12 +92,12 @@ TaskTemplatePtr AdjustmentModuleActivator::getChannelsReadTasks()
                                     m_commonObjects->m_pcbInterface,
                                     channelName,
                                     m_commonObjects->m_adjustChannelInfoHash[channelName]->m_sAlias,
-                                    TRANSACTION_TIMEOUT, [&]{ emit errMsg(readaliasErrMsg); }));
+                                    TRANSACTION_TIMEOUT, [&]{ notifyError(readaliasErrMsg); }));
         perChannelTasks->addSub(TaskChannelGetRangeList::create(
                                     m_commonObjects->m_pcbInterface,
                                     channelName,
                                     m_commonObjects->m_adjustChannelInfoHash[channelName]->m_sRangelist,
-                                    TRANSACTION_TIMEOUT,[&]{ emit errMsg(readrangelistErrMsg); }));
+                                    TRANSACTION_TIMEOUT,[&]{ notifyError(readrangelistErrMsg); }));
         channelTasks->addSub(std::move(perChannelTasks));
     }
     return channelTasks;
@@ -105,7 +110,7 @@ TaskTemplatePtr AdjustmentModuleActivator::getChannelsRegisterNotifyTasks()
         tasks->addSub(TaskChannelRegisterNotifier::create(
                           m_commonObjects->m_pcbInterface,
                           channelName,
-                          TRANSACTION_TIMEOUT, [&]{ emit errMsg(registerpcbnotifierErrMsg); }));
+                          TRANSACTION_TIMEOUT, [&]{ notifyError(registerpcbnotifierErrMsg); }));
     return tasks;
 }
 
@@ -113,7 +118,7 @@ TaskTemplatePtr AdjustmentModuleActivator::getDeactivationTasks()
 {
     return TaskUnregisterNotifier::create(
                 m_commonObjects->m_pcbInterface,
-                TRANSACTION_TIMEOUT, [&]{ emit errMsg(unregisterpcbnotifierErrMsg); });
+                TRANSACTION_TIMEOUT, [&]{ notifyError(unregisterpcbnotifierErrMsg); });
 }
 
 void AdjustmentModuleActivator::initChannelInfoHash()

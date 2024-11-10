@@ -31,6 +31,7 @@ private slots:
 private:
     void addStaticActivationTasks();
     void addDynChannelActivationTasks();
+    void notifyError(QVariant value);
     TaskTemplatePtr getChannelsReadTasks();
     TaskTemplatePtr getChannelsRegisterNotifyTasks();
     TaskTemplatePtr getDeactivationTasks();

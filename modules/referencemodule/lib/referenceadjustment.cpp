@@ -272,7 +272,7 @@ void cReferenceAdjustment::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVa
                 if (reply == ack)
                     emit adjustContinue();
                 else
-                    emit errMsg(writedspoffsetcorrErrMsg);
+                    notifyError(writedspoffsetcorrErrMsg);
                 break;
 
             }

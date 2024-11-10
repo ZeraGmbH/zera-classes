@@ -126,22 +126,22 @@ bool cAdjustmentModuleMeasProgram::checkExternalVeinComponents()
         adjInfo = getConfData()->m_AdjChannelInfoHash[chn]->amplitudeAdjInfo;
         const QString errMagTemplate = "Entity %1 / component %2 not found";
         if (adjInfo.m_bAvail && !storageDb->hasStoredValue(adjInfo.m_nEntity, adjInfo.m_sComponent)) {
-            emit errMsg(errMagTemplate.arg(adjInfo.m_nEntity).arg(adjInfo.m_sComponent));
+            notifyError(errMagTemplate.arg(adjInfo.m_nEntity).arg(adjInfo.m_sComponent));
             ok = false;
         }
         adjInfo = getConfData()->m_AdjChannelInfoHash[chn]->phaseAdjInfo;
         if (adjInfo.m_bAvail && !storageDb->hasStoredValue(adjInfo.m_nEntity, adjInfo.m_sComponent)) {
-            emit errMsg(errMagTemplate.arg(adjInfo.m_nEntity).arg(adjInfo.m_sComponent));
+            notifyError(errMagTemplate.arg(adjInfo.m_nEntity).arg(adjInfo.m_sComponent));
             ok = false;
         }
         adjInfo = getConfData()->m_AdjChannelInfoHash[chn]->offsetAdjInfo;
         if (adjInfo.m_bAvail && !storageDb->hasStoredValue(adjInfo.m_nEntity, adjInfo.m_sComponent)) {
-            emit errMsg(errMagTemplate.arg(adjInfo.m_nEntity).arg(adjInfo.m_sComponent));
+            notifyError(errMagTemplate.arg(adjInfo.m_nEntity).arg(adjInfo.m_sComponent));
             ok = false;
         }
         adjInfo = getConfData()->m_AdjChannelInfoHash[chn]->rangeAdjInfo;
         if (adjInfo.m_bAvail && !storageDb->hasStoredValue(adjInfo.m_nEntity, adjInfo.m_sComponent)) {
-            emit errMsg(errMagTemplate.arg(adjInfo.m_nEntity).arg(adjInfo.m_sComponent));
+            notifyError(errMagTemplate.arg(adjInfo.m_nEntity).arg(adjInfo.m_sComponent));
             ok = false;
         }
     }
@@ -784,7 +784,7 @@ void cAdjustmentModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 re
                     m_pPARAdjustPCBData->setValue(answer);
                 else {
                     m_pPARAdjustPCBData->setError();
-                    emit errMsg(readPCBXMLMSG);
+                    notifyError(readPCBXMLMSG);
                 }
                 break;
 
@@ -793,7 +793,7 @@ void cAdjustmentModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 re
                     m_pPARAdjustPCBData->setValue(m_receivedPar);
                 else {
                     m_pPARAdjustPCBData->setError();
-                    emit errMsg(writePCBXMLMSG);
+                    notifyError(writePCBXMLMSG);
                 }
                 break;
 
@@ -802,7 +802,7 @@ void cAdjustmentModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 re
                     m_pPARAdjustClampData->setValue(answer);
                 else {
                     m_pPARAdjustClampData->setError();
-                    emit errMsg(readClampXMLMSG);
+                    notifyError(readClampXMLMSG);
                 }
                 break;
 
@@ -811,7 +811,7 @@ void cAdjustmentModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 re
                     m_pPARAdjustClampData->setValue(m_receivedPar);
                 else {
                     m_pPARAdjustClampData->setError();
-                    emit errMsg(writeClampXMLMSG);
+                    notifyError(writeClampXMLMSG);
                 }
                 break;
             }

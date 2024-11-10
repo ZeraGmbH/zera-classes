@@ -461,21 +461,21 @@ void cAdjustManagement::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVaria
                 if (reply == ack)
                     emit activationContinue();
                 else
-                    emit errMsg(writedspgaincorrErrMsg);
+                    notifyError(writedspgaincorrErrMsg);
                 break;
 
             case writephasecorr:
                 if (reply == ack)
                     emit activationContinue();
                 else
-                    emit errMsg(writedspphasecorrErrMsg);
+                    notifyError(writedspphasecorrErrMsg);
                 break;
 
             case writeoffsetcorr:
                 if (reply == ack)
                     emit activationContinue();
                 else
-                    emit errMsg(writedspoffsetcorrErrMsg);
+                    notifyError(writedspoffsetcorrErrMsg);
                 break;
             }
         }

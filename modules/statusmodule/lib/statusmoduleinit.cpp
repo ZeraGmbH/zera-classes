@@ -391,7 +391,7 @@ void cStatusModuleInit::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVaria
                 }
                 else {
                     m_pSerialNumber->setError(); // in case of error we send an error event
-                    emit errMsg(writePCBSerialNrErrMSG);
+                    notifyError(writePCBSerialNrErrMSG);
                 }
                 break;
 
@@ -480,7 +480,7 @@ QString cStatusModuleInit::findReleaseNr()
 
     releaseNr = SysInfo::getReleaseNr();
     if (releaseNr == "")
-        emit errMsg(releaseNumberErrMsg);
+        notifyError(releaseNumberErrMsg);
 
     return releaseNr;
 }
