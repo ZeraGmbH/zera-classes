@@ -13,8 +13,9 @@
 namespace OSCIMODULE
 {
 
-cOsciModuleMeasProgram::cOsciModuleMeasProgram(cOsciModule* module, std::shared_ptr<BaseModuleConfiguration> pConfiguration)
-    :cBaseDspMeasProgram(pConfiguration), m_pModule(module)
+cOsciModuleMeasProgram::cOsciModuleMeasProgram(cOsciModule* module, std::shared_ptr<BaseModuleConfiguration> pConfiguration) :
+    cBaseDspMeasProgram(pConfiguration, module->getVeinModuleName()),
+    m_pModule(module)
 {
     m_dspInterface = m_pModule->getServiceInterfaceFactory()->createDspInterfaceOther();
 

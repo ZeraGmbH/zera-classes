@@ -12,7 +12,11 @@ class cBaseMeasChannel: public cModuleActivist
     Q_OBJECT
 
 public:
-    cBaseMeasChannel(NetworkConnectionInfo rmsocket, NetworkConnectionInfo pcbsocket, VeinTcp::AbstractTcpNetworkFactoryPtr tcpNetworkFactory, QString name, quint8 chnnr);
+    cBaseMeasChannel(NetworkConnectionInfo rmsocket,
+                     NetworkConnectionInfo pcbsocket,
+                     VeinTcp::AbstractTcpNetworkFactoryPtr tcpNetworkFactory,
+                     QString channelName, quint8 chnnr,
+                     QString moduleChannelInfo);
     virtual ~cBaseMeasChannel(){}
 
     quint8 getDSPChannelNr();

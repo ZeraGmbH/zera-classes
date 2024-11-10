@@ -6,9 +6,7 @@
 #include "adjustmentmoduleactivator.h"
 #include <rminterface.h>
 #include "basemeasworkprogram.h"
-#include "measchannelinfo.h"
-#include "foutinfo.h"
-#include "taskcontainersequence.h"
+#include "taskcontainerparallel.h"
 #include <QObject>
 #include <QList>
 #include <QHash>

@@ -14,6 +14,7 @@ namespace MODEMODULE
 {
 
 cModeModuleInit::cModeModuleInit(cModeModule* module, cModeModuleConfigData& configData) :
+    cModuleActivist(module->getVeinModuleName()),
     m_pModule(module),
     m_ConfigData(configData)
 {

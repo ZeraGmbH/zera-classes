@@ -7,9 +7,12 @@
 #include "taskunregisternotifier.h"
 #include "tasklambdarunner.h"
 #include "errormessages.h"
+#include <taskcontainerparallel.h>
 
 AdjustmentModuleActivator::AdjustmentModuleActivator(QStringList configuredChannels,
-                                                     AdjustmentModuleCommonPtr activationData) :
+                                                     AdjustmentModuleCommonPtr activationData,
+                                                     QString moduleName) :
+    m_moduleName(moduleName),
     m_configuredChannels(configuredChannels),
     m_commonObjects(activationData)
 {
@@ -80,7 +83,7 @@ void AdjustmentModuleActivator::addDynChannelActivationTasks()
 
 void AdjustmentModuleActivator::notifyError(QVariant value)
 {
-    emit errMsg(value);
+    qWarning("Module %s reported error: %s", qPrintable(m_moduleName), qPrintable(value.toString()));
 }
 
 TaskTemplatePtr AdjustmentModuleActivator::getChannelsReadTasks()

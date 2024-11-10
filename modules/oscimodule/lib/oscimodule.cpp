@@ -61,7 +61,6 @@ void cOsciModule::setupModule()
     m_ModuleActivistList.append(m_pMeasProgram);
     connect(m_pMeasProgram, &cOsciModuleMeasProgram::activated, this, &cOsciModule::activationContinue);
     connect(m_pMeasProgram, &cOsciModuleMeasProgram::deactivated, this, &cOsciModule::deactivationContinue);
-    connect(m_pMeasProgram, &cOsciModuleMeasProgram::errMsg, m_pModuleErrorComponent, &VfModuleErrorComponent::setValue);
 
     for (int i = 0; i < m_ModuleActivistList.count(); i++)
         m_ModuleActivistList.at(i)->generateInterface();

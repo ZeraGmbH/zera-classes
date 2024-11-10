@@ -8,7 +8,7 @@
 #include <jsonparamvalidator.h>
 
 SourceModuleProgram::SourceModuleProgram(SourceModule* module, std::shared_ptr<BaseModuleConfiguration> pConfiguration) :
-    cBaseMeasWorkProgram(pConfiguration),
+    cBaseMeasWorkProgram(pConfiguration, module->getVeinModuleName()),
     m_pModule(module)
 {
 }

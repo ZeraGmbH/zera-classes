@@ -68,7 +68,6 @@ void cThdnModule::setupModule()
     m_ModuleActivistList.append(m_pMeasProgram);
     connect(m_pMeasProgram, &cModuleActivist::activated, this, &BaseModule::activationContinue);
     connect(m_pMeasProgram, &cModuleActivist::deactivated, this, &BaseModule::deactivationContinue);
-    connect(m_pMeasProgram, &cModuleActivist::errMsg, m_pModuleErrorComponent, &VfModuleErrorComponent::setValue);
 
     for (int i = 0; i < m_ModuleActivistList.count(); i++)
         m_ModuleActivistList.at(i)->generateInterface();

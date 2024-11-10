@@ -3,7 +3,8 @@
 
 #include "moduleactivist.h"
 #include "basemoduleconfiguration.h"
-#include "abstractmodulefactory.h"
+#include "modulefactoryparam.h"
+#include "vfmoduleerrorcomponent.h"
 #include "vfmodulemetadata.h"
 #include <vfmoduleactvalue.h>
 #include <vfmoduleparameter.h>

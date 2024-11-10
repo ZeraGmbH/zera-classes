@@ -17,7 +17,7 @@ namespace POWER1MODULE
 {
 
 cPower1ModuleMeasProgram::cPower1ModuleMeasProgram(cPower1Module* module, std::shared_ptr<BaseModuleConfiguration> pConfiguration) :
-    cBaseDspMeasProgram(pConfiguration),
+    cBaseDspMeasProgram(pConfiguration, module->getVeinModuleName()),
     m_pModule(module)
 {
     m_dspInterface = m_pModule->getServiceInterfaceFactory()->createDspInterfacePower1(&m_measModeSelector);

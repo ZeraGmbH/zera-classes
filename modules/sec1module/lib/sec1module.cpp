@@ -61,7 +61,6 @@ void cSec1Module::setupModule()
     m_ModuleActivistList.append(m_pMeasProgram);
     connect(m_pMeasProgram, &cSec1ModuleMeasProgram::activated, this, &cSec1Module::activationContinue);
     connect(m_pMeasProgram, &cSec1ModuleMeasProgram::deactivated, this, &cSec1Module::deactivationContinue);
-    connect(m_pMeasProgram, &cSec1ModuleMeasProgram::errMsg, m_pModuleErrorComponent, &VfModuleErrorComponent::setValue);
 
     for (int i = 0; i < m_ModuleActivistList.count(); i++)
         m_ModuleActivistList.at(i)->generateInterface();

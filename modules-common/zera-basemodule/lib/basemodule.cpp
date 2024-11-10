@@ -9,6 +9,7 @@
 #include "vf_server_entity_remove.h"
 #include "scpiinfo.h"
 #include <virtualmodule.h>
+#include <QJsonArray>
 #include <QJsonDocument>
 #include <QFile>
 

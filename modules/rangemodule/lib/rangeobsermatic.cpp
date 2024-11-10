@@ -14,7 +14,11 @@
 namespace RANGEMODULE
 {
 
-cRangeObsermatic::cRangeObsermatic(cRangeModule *module, QList<QStringList> groupList, QStringList chnlist, cObsermaticConfPar& confpar) :
+cRangeObsermatic::cRangeObsermatic(cRangeModule *module,
+                                   QList<QStringList> groupList,
+                                   QStringList chnlist,
+                                   cObsermaticConfPar& confpar) :
+    cModuleActivist(QString("RangeObsermatic / %1").arg(qPrintable(module->getVeinModuleName()))),
     m_pModule(module),
     m_GroupList(groupList),
     m_ChannelNameList(chnlist),

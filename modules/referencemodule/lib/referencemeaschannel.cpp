@@ -7,8 +7,9 @@ namespace REFERENCEMODULE
 {
 
 cReferenceMeasChannel::cReferenceMeasChannel(NetworkConnectionInfo rmsocket, NetworkConnectionInfo pcbsocket, VeinTcp::AbstractTcpNetworkFactoryPtr tcpNetworkFactory,
-                                             QString name, quint8 chnnr) :
-    cBaseMeasChannel(rmsocket, pcbsocket, tcpNetworkFactory, name, chnnr)
+                                             QString name, quint8 chnnr, QString moduleName) :
+    cBaseMeasChannel(rmsocket, pcbsocket, tcpNetworkFactory, name, chnnr,
+                       QString("%1/cReferenceMeasChannel/%2").arg(moduleName, name))
 {
     m_pcbInterface = std::make_shared<Zera::cPCBInterface>();
 

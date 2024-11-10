@@ -10,7 +10,7 @@ class cBaseSampleChannel: public cModuleActivist
     Q_OBJECT
 
 public:
-    cBaseSampleChannel(QString name, quint8 chnnr);
+    cBaseSampleChannel(QString name, quint8 chnnr, QString moduleChannelName);
     virtual ~cBaseSampleChannel(){}
     QString getName();
     QString getAlias();

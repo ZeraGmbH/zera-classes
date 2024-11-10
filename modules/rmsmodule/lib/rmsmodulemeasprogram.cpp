@@ -12,8 +12,9 @@
 namespace RMSMODULE
 {
 
-cRmsModuleMeasProgram::cRmsModuleMeasProgram(cRmsModule* module, std::shared_ptr<BaseModuleConfiguration> pConfiguration) :
-    cBaseDspMeasProgram(pConfiguration),
+cRmsModuleMeasProgram::cRmsModuleMeasProgram(cRmsModule* module,
+                                             std::shared_ptr<BaseModuleConfiguration> pConfiguration) :
+    cBaseDspMeasProgram(pConfiguration, module->getVeinModuleName()),
     m_pModule(module)
 {
     m_dspInterface = m_pModule->getServiceInterfaceFactory()->createDspInterfaceRms(getConfData()->m_valueChannelList);

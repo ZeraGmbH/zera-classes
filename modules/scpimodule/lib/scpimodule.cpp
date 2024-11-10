@@ -60,7 +60,6 @@ void cSCPIModule::setupModule()
     m_ModuleActivistList.append(m_pSCPIServer);
     connect(m_pSCPIServer, &cSCPIServer::activated, this, &cSCPIModule::activationContinue);
     connect(m_pSCPIServer, &cSCPIServer::deactivated, this, &cSCPIModule::deactivationContinue);
-    connect(m_pSCPIServer, &cSCPIServer::errMsg, m_pModuleErrorComponent, &VfModuleErrorComponent::setValue);
 
     // we already post meta information here because setting up interface looks for valid meta info
     exportMetaData();

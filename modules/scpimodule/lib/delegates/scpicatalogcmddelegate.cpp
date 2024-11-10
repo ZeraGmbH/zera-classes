@@ -4,6 +4,7 @@
 #include <vcmp_componentdata.h>
 #include <QJsonDocument>
 #include <QJsonObject>
+#include <QJsonArray>
 #include <QVariantList>
 
 namespace SCPIMODULE {

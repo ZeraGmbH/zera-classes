@@ -38,13 +38,13 @@ enum rangemeaschannelCmds
     resetmeaschannelstatus
 };
 
-class cReferenceMeasChannel:public cBaseMeasChannel
+class cReferenceMeasChannel: public cBaseMeasChannel
 {
     Q_OBJECT
 
 public:
     cReferenceMeasChannel(NetworkConnectionInfo rmsocket, NetworkConnectionInfo pcbsocket, VeinTcp::AbstractTcpNetworkFactoryPtr tcpNetworkFactory,
-                          QString name, quint8 chnnr);
+                          QString name, quint8 chnnr, QString moduleName);
     virtual void generateInterface(); // here we export our interface (entities)
 
     quint32 setRange(QString range); // a statemachine gets started that returns cmdDone(quint32 cmdnr)
