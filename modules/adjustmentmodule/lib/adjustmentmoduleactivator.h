@@ -22,7 +22,7 @@ signals:
     void sigActivationReady();
     void sigDeactivationReady();
     void sigRangesReloaded();
-    void errMsg(QVariant value, int dest = globalDest);
+    void errMsg(QVariant value);
 
 private slots:
     void onActivateContinue(bool ok);

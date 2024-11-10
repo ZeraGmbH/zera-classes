@@ -12,7 +12,7 @@ VfModuleErrorComponent::VfModuleErrorComponent(int entityId, VeinEvent::EventSys
 {
 }
 
-void VfModuleErrorComponent::setValue(QVariant value, int dest)
+void VfModuleErrorComponent::setValue(QVariant value)
 {
     qWarning("Module %s reported error: %s", qPrintable(m_sModuleName), qPrintable(value.toString()));
     QJsonObject jsObj;
@@ -24,12 +24,7 @@ void VfModuleErrorComponent::setValue(QVariant value, int dest)
     VeinComponent::ComponentData *cData = new VeinComponent::ComponentData();
     cData->setEntityId(0);
     cData->setEventOrigin(VeinEvent::EventData::EventOrigin::EO_LOCAL);
-    if (dest == globalDest) {
-        cData->setEventTarget(VeinEvent::EventData::EventTarget::ET_ALL);
-    }
-    else {
-        cData->setEventTarget(VeinEvent::EventData::EventTarget::ET_LOCAL);
-    }
+    cData->setEventTarget(VeinEvent::EventData::EventTarget::ET_ALL);
     cData->setCommand(VeinComponent::ComponentData::Command::CCMD_SET);
     cData->setComponentName(m_sName);
     cData->setNewValue(jsObj);

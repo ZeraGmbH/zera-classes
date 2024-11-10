@@ -32,15 +32,15 @@ signals:
     void setupContinue();
     void interruptContinue();
     void executionError();
-    void errMsg(QVariant value, int dest = globalDest);
+    void errMsg(QVariant value);
 public slots:
     virtual void activate(); // here we query our properties and activate ourself
     virtual void deactivate(); // what do you think ? yes you're right
     virtual void generateInterface() = 0; // here we export our interface (entities)
 protected:
-    void notifyActivationError(QVariant value, int dest = globalDest);
-    void notifyDeactivationError(QVariant value, int dest = globalDest);
-    void notifyExecutionError(QVariant value, int dest = globalDest);
+    void notifyActivationError(QVariant value);
+    void notifyDeactivationError(QVariant value);
+    void notifyExecutionError(QVariant value);
     bool handleFinishCallback(int cmdNumber, quint8 reply, QVariant answer);
 
     bool m_bActive;

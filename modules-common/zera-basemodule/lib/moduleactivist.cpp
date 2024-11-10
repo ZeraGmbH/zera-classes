@@ -10,21 +10,21 @@ void cModuleActivist::deactivate()
     m_deactivationMachine.start();
 }
 
-void cModuleActivist::notifyActivationError(QVariant value, int dest)
+void cModuleActivist::notifyActivationError(QVariant value)
 {
-    emit errMsg(value, dest);
+    emit errMsg(value);
     emit activationError();
 }
 
-void cModuleActivist::notifyDeactivationError(QVariant value, int dest)
+void cModuleActivist::notifyDeactivationError(QVariant value)
 {
-    emit errMsg(value, dest);
+    emit errMsg(value);
     emit deactivationError();
 }
 
-void cModuleActivist::notifyExecutionError(QVariant value, int dest)
+void cModuleActivist::notifyExecutionError(QVariant value)
 {
-    emit errMsg(value, dest);
+    emit errMsg(value);
     emit executionError();
 }
 
