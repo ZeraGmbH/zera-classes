@@ -2,7 +2,6 @@
 #include "scpimoduleconfiguration.h"
 #include "scpimoduleconfigdata.h"
 #include "scpiserver.h"
-#include "vfmoduleerrorcomponent.h"
 #include "scpieventsystem.h"
 #include <vfmodulemetadata.h>
 #include <vfmoduleactvalue.h>

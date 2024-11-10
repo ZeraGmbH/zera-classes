@@ -5,7 +5,6 @@
 #include <rminterface.h>
 #include <pcbinterface.h>
 #include <taskcontainersequence.h>
-#include <vfmoduleerrorcomponent.h>
 
 class AdjustmentModuleActivator : public QObject
 {

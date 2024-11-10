@@ -2,7 +2,6 @@
 #include "thdnmoduleconfiguration.h"
 #include "thdnmodulemeasprogram.h"
 #include <vfmodulecomponent.h>
-#include <vfmoduleerrorcomponent.h>
 #include <vfmodulemetadata.h>
 #include <QByteArray>
 #include <QJsonDocument>

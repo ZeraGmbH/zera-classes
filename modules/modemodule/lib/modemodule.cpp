@@ -3,7 +3,6 @@
 #include "modemoduleconfigdata.h"
 #include "modemoduleinit.h"
 #include <vfmodulecomponent.h>
-#include <vfmoduleerrorcomponent.h>
 #include <vfmodulemetadata.h>
 
 namespace MODEMODULE
