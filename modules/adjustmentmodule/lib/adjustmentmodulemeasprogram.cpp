@@ -124,7 +124,7 @@ bool cAdjustmentModuleMeasProgram::checkExternalVeinComponents()
         // we test if all configured actual value data exist
         QString chn = getConfData()->m_AdjChannelList.at(i);
         adjInfo = getConfData()->m_AdjChannelInfoHash[chn]->amplitudeAdjInfo;
-        const QString errMagTemplate = "Entity %1 / componen %2 not found";
+        const QString errMagTemplate = "Entity %1 / component %2 not found";
         if (adjInfo.m_bAvail && !storageDb->hasStoredValue(adjInfo.m_nEntity, adjInfo.m_sComponent)) {
             emit errMsg(errMagTemplate.arg(adjInfo.m_nEntity).arg(adjInfo.m_sComponent));
             ok = false;
