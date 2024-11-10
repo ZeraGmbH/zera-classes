@@ -38,6 +38,7 @@ public slots:
     virtual void deactivate(); // what do you think ? yes you're right
     virtual void generateInterface() = 0; // here we export our interface (entities)
 protected:
+    void notifyError(QVariant value);
     void notifyActivationError(QVariant value);
     void notifyDeactivationError(QVariant value);
     void notifyExecutionError(QVariant value);

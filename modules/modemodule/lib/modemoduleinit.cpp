@@ -174,7 +174,7 @@ void cModeModuleInit::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant
                 }
                 else {
                     // perhaps we emit some error here ?
-                    emit errMsg(writedspgaincorrErrMsg);
+                    notifyError(writedspgaincorrErrMsg);
                 }
                 break;
 
@@ -183,7 +183,7 @@ void cModeModuleInit::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant
                 if (reply == ack)
                     emit activationContinue();
                 else
-                    emit errMsg(writedspphasecorrErrMsg);
+                    notifyError(writedspphasecorrErrMsg);
                 break;
 
             case MODEMODINIT::writeoffsetcorr:
@@ -191,21 +191,21 @@ void cModeModuleInit::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant
                 if (reply == ack)
                     emit activationContinue();
                 else
-                    emit errMsg(writedspoffsetcorrErrMsg);
+                    notifyError(writedspoffsetcorrErrMsg);
                 break;
 
             case MODEMODINIT::subdcdsp:
                 if (reply == ack)
                     emit activationContinue();
                 else
-                    emit errMsg(writesubdcErrMsg);
+                    notifyError(writesubdcErrMsg);
                 break;
 
             case MODEMODINIT::setsamplingsystem:
                 if (reply == ack)
                     emit activationContinue();
                 else
-                    emit errMsg(setsamplingsystemErrmsg);
+                    notifyError(setsamplingsystemErrmsg);
                 break;
 
             case MODEMODINIT::freeresource:
