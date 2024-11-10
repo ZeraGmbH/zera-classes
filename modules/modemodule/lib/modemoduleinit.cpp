@@ -115,21 +115,21 @@ void cModeModuleInit::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant
                 if (reply == ack)
                     emit activationContinue();
                 else
-                    notifyActivationError(rmidentErrMSG);
+                    notifyError(rmidentErrMSG);
                 break;
 
             case MODEMODINIT::readresourcetypes:
                 if ((reply == ack) && (answer.toString().contains("SENSE")))
                     emit activationContinue();
                 else
-                    notifyActivationError(resourcetypeErrMsg);
+                    notifyError(resourcetypeErrMsg);
                 break;
 
             case MODEMODINIT::readresource:
                 if ((reply == ack) && (answer.toString().contains("MMODE")))
                     emit activationContinue();
                 else
-                    notifyActivationError(resourceErrMsg);
+                    notifyError(resourceErrMsg);
                 break;
 
             case MODEMODINIT::readresourceinfo:
@@ -147,10 +147,10 @@ void cModeModuleInit::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant
                     if (ok1 && ok2 && ok3 && ((max == free) == 1))
                         emit activationContinue();
                     else
-                        notifyActivationError(resourceInfoErrMsg);
+                        notifyError(resourceInfoErrMsg);
                 }
                 else
-                    notifyActivationError(resourceInfoErrMsg);
+                    notifyError(resourceInfoErrMsg);
                 break;
             }
 
@@ -158,14 +158,14 @@ void cModeModuleInit::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant
                 if (reply == ack)
                     emit activationContinue();
                 else
-                    notifyActivationError(claimresourceErrMsg);
+                    notifyError(claimresourceErrMsg);
                 break;
 
             case MODEMODINIT::setmode:
                 if (reply == ack)
                     emit activationContinue();
                 else
-                    notifyActivationError(setMeasModeErrMsg);
+                    notifyError(setMeasModeErrMsg);
                 break;
 
             case MODEMODINIT::writegaincorr:

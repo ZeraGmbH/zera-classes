@@ -199,37 +199,37 @@ void cSampleModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply,
                 if (reply == ack)
                     emit activationContinue();
                 else
-                    notifyActivationError(rmidentErrMSG);
+                    notifyError(rmidentErrMSG);
                 break;
             case claimpgrmem:
                 if (reply == ack)
                     emit activationContinue();
                 else
-                    notifyActivationError(claimresourceErrMsg);
+                    notifyError(claimresourceErrMsg);
                 break;
             case claimusermem:
                 if (reply == ack)
                     emit activationContinue();
                 else
-                    notifyActivationError(claimresourceErrMsg);
+                    notifyError(claimresourceErrMsg);
                 break;
             case varlist2dsp:
                 if (reply == ack)
                     emit activationContinue();
                 else
-                    notifyActivationError(dspvarlistwriteErrMsg);
+                    notifyError(dspvarlistwriteErrMsg);
                 break;
             case cmdlist2dsp:
                 if (reply == ack)
                     emit activationContinue();
                 else
-                    notifyActivationError(dspcmdlistwriteErrMsg);
+                    notifyError(dspcmdlistwriteErrMsg);
                 break;
             case activatedsp:
                 if (reply == ack)
                     emit activationContinue();
                 else
-                    notifyActivationError(dspactiveErrMsg);
+                    notifyError(dspactiveErrMsg);
                 break;
 
             case deactivatedsp:

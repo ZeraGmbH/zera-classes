@@ -248,7 +248,7 @@ void cReferenceAdjustment::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVa
                 if (reply == ack)
                     emit activationContinue();
                 else
-                    notifyActivationError(setMeasModeErrMsg);
+                    notifyError(setMeasModeErrMsg);
                 break;
             case setacmode:
                 if (reply == ack)

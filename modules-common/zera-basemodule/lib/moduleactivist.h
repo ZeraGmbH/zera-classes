@@ -20,7 +20,6 @@ signals:
     void activationLoop();
     void activationRepeat();
     void activationSkip();
-    void activationError();
     void deactivated();
     void deactivationContinue();
     void deactivationLoop();
@@ -34,7 +33,6 @@ public slots:
     virtual void generateInterface() = 0; // here we export our interface (entities)
 protected:
     void notifyError(QVariant value);
-    void notifyActivationError(QVariant value);
     bool handleFinishCallback(int cmdNumber, quint8 reply, QVariant answer);
 
     bool m_bActive = false;

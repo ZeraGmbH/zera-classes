@@ -435,26 +435,26 @@ void cAdjustManagement::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVaria
                 if (reply == ack)
                     emit activationContinue();
                 else
-                    notifyActivationError(readdspgaincorrErrMsg);
+                    notifyError(readdspgaincorrErrMsg);
                 break;
             case readphasecorr:
                 if (reply == ack)
                     emit activationContinue();
                 else
-                    notifyActivationError(readdspphasecorrErrMsg);
+                    notifyError(readdspphasecorrErrMsg);
                 break;
             case readoffsetcorr:
                 if (reply == ack)
                     emit activationContinue();
                 else
-                    notifyActivationError(readdspoffsetcorrErrMsg);
+                    notifyError(readdspoffsetcorrErrMsg);
                 break;
 
             case subdcdsp:
                 if (reply == ack)
                     emit activationContinue();
                 else
-                    notifyActivationError(writesubdcErrMsg);
+                    notifyError(writesubdcErrMsg);
                 break;
 
 

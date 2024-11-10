@@ -223,7 +223,7 @@ void cSCPIServer::setupTCPServer()
     if (ok)
         emit activationContinue();
     else
-        notifyActivationError(errorMsg);
+        notifyError(errorMsg);
 }
 
 void cSCPIServer::activationDone()

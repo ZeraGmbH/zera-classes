@@ -142,7 +142,7 @@ void cPower3ModuleMeasProgram::searchActualValues()
     }
 
     if (error)
-        notifyActivationError(confiuredVeinComponentsNotFound);
+        notifyError(confiuredVeinComponentsNotFound);
     else
         emit activationContinue();
 }
