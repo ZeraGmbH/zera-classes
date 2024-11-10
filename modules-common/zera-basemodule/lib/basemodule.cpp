@@ -3,7 +3,6 @@
 #include "vfmodulemetadata.h"
 #include "vfmoduleactvalue.h"
 #include "vfmodulecomponent.h"
-#include "vfmoduleerrorcomponent.h"
 #include "vfmoduleparameter.h"
 #include "vf_server_entity_add.h"
 #include "vf_server_entity_remove.h"
@@ -158,10 +157,6 @@ void BaseModule::setupModule()
 
     veinModuleComponentList.append(m_pModuleEntityName);
 
-    m_pModuleErrorComponent = new VfModuleErrorComponent(getEntityId(), m_pModuleEventSystem,
-                                                            QString("Error_Messages"),
-                                                            m_sModuleName);
-
     m_pModuleInterfaceComponent = new VfModuleComponent(getEntityId(), m_pModuleEventSystem,
                                                            QString("INF_ModuleInterface"),
                                                            QString("Module's interface details"),
@@ -179,8 +174,6 @@ void BaseModule::setupModule()
 
 void BaseModule::unsetModule()
 {
-    delete m_pModuleErrorComponent;
-
     for (auto veinModuleMetaData : qAsConst(veinModuleMetaDataList)) {
         delete veinModuleMetaData;
     }

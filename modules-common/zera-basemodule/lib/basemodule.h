@@ -4,7 +4,6 @@
 #include "moduleactivist.h"
 #include "basemoduleconfiguration.h"
 #include "modulefactoryparam.h"
-#include "vfmoduleerrorcomponent.h"
 #include "vfmodulemetadata.h"
 #include <vfmoduleactvalue.h>
 #include <vfmoduleparameter.h>
@@ -100,7 +99,6 @@ protected:
 
     VfModuleMetaData *m_pModuleName;
     VfModuleMetaData *m_pModuleDescription;
-    VfModuleErrorComponent *m_pModuleErrorComponent=nullptr; // here we export errors the module encountered
     VfModuleComponent *m_pModuleInterfaceComponent; // here we export the modules interface as json file
     VfModuleComponent *m_pModuleEntityName;
 

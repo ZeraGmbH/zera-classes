@@ -2,7 +2,6 @@
 #include "sem1moduleconfiguration.h"
 #include "sem1modulemeasprogram.h"
 #include <vfmodulecomponent.h>
-#include <vfmoduleerrorcomponent.h>
 #include <vfmodulemetadata.h>
 
 namespace SEM1MODULE

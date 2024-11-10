@@ -2,7 +2,6 @@
 #include "fftmoduleconfiguration.h"
 #include "fftmodulemeasprogram.h"
 #include <vfmodulecomponent.h>
-#include <vfmoduleerrorcomponent.h>
 #include <vfmodulemetadata.h>
 #include <QByteArray>
 #include <QJsonDocument>

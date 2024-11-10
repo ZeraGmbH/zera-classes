@@ -6,7 +6,6 @@
 #include "rangeobsermatic.h"
 #include "adjustment.h"
 #include <vfmodulecomponent.h>
-#include <vfmoduleerrorcomponent.h>
 #include <vfmodulemetadata.h>
 #include <QDebug>
 #include <QByteArray>
