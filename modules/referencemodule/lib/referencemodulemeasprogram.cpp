@@ -237,19 +237,19 @@ void cReferenceModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 rep
                 if (reply == ack)
                     emit deactivationContinue();
                 else
-                    notifyDeactivationError(dspdeactiveErrMsg);
+                    notifyError(dspdeactiveErrMsg);
                 break;
             case freepgrmem:
                 if (reply == ack)
                     emit deactivationContinue();
                 else
-                    notifyDeactivationError(freeresourceErrMsg);
+                    notifyError(freeresourceErrMsg);
                 break;
             case freeusermem:
                 if (reply == ack)
                     emit deactivationContinue();
                 else
-                    notifyDeactivationError(freeresourceErrMsg);
+                    notifyError(freeresourceErrMsg);
                 break;
 
             case dataaquistion:

@@ -504,14 +504,14 @@ void cRangeMeasChannel::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVaria
             if (reply == ack || reply == nack) // we accept nack here also
                 emit deactivationContinue(); // maybe that resource was deleted by server and then it is no more set
             else
-                notifyDeactivationError(freeresourceErrMsg);
+                notifyError(freeresourceErrMsg);
             break;
 
         case unregisterNotifiers:
             if (reply == ack)
                 emit deactivationContinue();
             else
-                notifyDeactivationError(unregisterpcbnotifierErrMsg);
+                notifyError(unregisterpcbnotifierErrMsg);
             break;
 
         case readdspchannel:

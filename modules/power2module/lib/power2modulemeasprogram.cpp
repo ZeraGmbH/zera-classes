@@ -902,13 +902,13 @@ void cPower2ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply,
                 if (reply == ack)
                     emit deactivationContinue();
                 else
-                    notifyDeactivationError(dspdeactiveErrMsg);
+                    notifyError(dspdeactiveErrMsg);
                 break;
             case freepgrmem:
                 if (reply == ack)
                     emit deactivationContinue();
                 else
-                    notifyDeactivationError(freeresourceErrMsg);
+                    notifyError(freeresourceErrMsg);
                 break;
 
             case freeusermem:
@@ -916,14 +916,14 @@ void cPower2ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply,
                 if (reply == ack)
                     emit deactivationContinue();
                 else
-                    notifyDeactivationError(freeresourceErrMsg);
+                    notifyError(freeresourceErrMsg);
                 break;
 
             case unregisterrangenotifiers:
                 if (reply == ack) // we only continue pcb server acknowledges
                     emit deactivationContinue();
                 else
-                    notifyDeactivationError(unregisterpcbnotifierErrMsg);
+                    notifyError(unregisterpcbnotifierErrMsg);
                 break;
 
             case dataaquistion:
