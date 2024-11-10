@@ -58,7 +58,9 @@ public:
     cSem1ModuleMeasProgram(cSem1Module* module, std::shared_ptr<BaseModuleConfiguration> pConfiguration);
     virtual ~cSem1ModuleMeasProgram();
     void generateInterface() override; // here we export our interface (entities)
-
+signals:
+    void setupContinue();
+    void interruptContinue();
 public slots:
     void start() override; // difference between start and stop is that actual values
     void stop() override; // in interface are not updated when stop
