@@ -12,7 +12,7 @@ class cModuleActivist: public QObject
 {
     Q_OBJECT
 public:
-    cModuleActivist(QString moduleName);
+    cModuleActivist(QString notifyInfo);
     virtual ~cModuleActivist(){}
 signals:
     void activated(); // is emitted after the activist is completely activated
@@ -42,7 +42,7 @@ protected:
     bool handleFinishCallback(int cmdNumber, quint8 reply, QVariant answer);
 
     bool m_bActive = false;
-    QString m_moduleName;
+    QString m_notifyInfo;
     QStateMachine m_activationMachine;
     QStateMachine m_deactivationMachine;
     QHash<int, std::function<void(quint8 reply, QVariant answer)>> m_cmdFinishCallbacks;
