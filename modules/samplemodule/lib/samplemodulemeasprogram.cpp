@@ -256,7 +256,7 @@ void cSampleModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply,
                     emit dataAquisitionContinue();
                 else {
                     m_dataAcquisitionMachine.stop();
-                    notifyExecutionError(dataaquisitionErrMsg);
+                    notifyError(dataaquisitionErrMsg);
                 }
                 break;
             }

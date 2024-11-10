@@ -225,42 +225,42 @@ void cReferenceMeasChannel::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QV
         if (reply == ack)
             m_sActRange = m_sNewRange;
         else
-            notifyExecutionError(setRangeErrMsg);
+            notifyError(setRangeErrMsg);
         emit cmdDone(msgnr);
         break;    
     case readgaincorrection:
         if (reply == ack)
             m_fGainCorrection = answer.toDouble();
         else
-            notifyExecutionError(readGainCorrErrMsg);
+            notifyError(readGainCorrErrMsg);
         emit cmdDone(msgnr);
         break;
     case readoffsetcorrection:
         if (reply == ack)
             m_fOffsetCorrection = answer.toDouble();
         else
-            notifyExecutionError(readOffsetCorrErrMsg);
+            notifyError(readOffsetCorrErrMsg);
         emit cmdDone(msgnr);
         break;
     case readphasecorrection:
         if (reply == ack)
             m_fPhaseCorrection = answer.toDouble();
         else
-            notifyExecutionError(readPhaseCorrErrMsg);
+            notifyError(readPhaseCorrErrMsg);
         emit cmdDone(msgnr);
         break;
     case readmeaschannelstatus:
         if (reply == ack)
             m_nStatus = answer.toInt();
         else
-            notifyExecutionError(readChannelStatusErrMsg);
+            notifyError(readChannelStatusErrMsg);
         emit cmdDone(msgnr);
         break;
     case resetmeaschannelstatus:
         if (reply == ack)
             {}
         else
-            notifyExecutionError(resetChannelStatusErrMsg);
+            notifyError(resetChannelStatusErrMsg);
         emit cmdDone(msgnr);
         break;
     }

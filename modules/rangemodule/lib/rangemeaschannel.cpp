@@ -634,7 +634,7 @@ void cRangeMeasChannel::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVaria
                          qPrintable(getAlias()),
                          reply);
                 if (errcount > 1)
-                    notifyExecutionError(setRangeErrMsg);
+                    notifyError(setRangeErrMsg);
             } // perhaps some error output
             emit cmdDone(msgnr);
             break;
@@ -647,7 +647,7 @@ void cRangeMeasChannel::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVaria
                 errcount++;
                 m_ActionErrorcountHash[readgaincorrection] = errcount;
                 if (errcount > 1)
-                    notifyExecutionError(readGainCorrErrMsg);
+                    notifyError(readGainCorrErrMsg);
             }
             emit cmdDone(msgnr);
             break;
@@ -660,7 +660,7 @@ void cRangeMeasChannel::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVaria
                 errcount++;
                 m_ActionErrorcountHash[readoffsetcorrection] = errcount;
                 if (errcount > 1)
-                    notifyExecutionError(readOffsetCorrErrMsg);
+                    notifyError(readOffsetCorrErrMsg);
             }
             emit cmdDone(msgnr);
             break;
@@ -673,7 +673,7 @@ void cRangeMeasChannel::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVaria
                 errcount++;
                 m_ActionErrorcountHash[readphasecorrection] = errcount;
                 if (errcount > 1)
-                    notifyExecutionError(readPhaseCorrErrMsg);
+                    notifyError(readPhaseCorrErrMsg);
             }
             emit cmdDone(msgnr);
             break;
@@ -682,14 +682,14 @@ void cRangeMeasChannel::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVaria
             if (reply == ack)
                 m_nStatus = answer.toInt(&ok);
             else
-                notifyExecutionError(readChannelStatusErrMsg);
+                notifyError(readChannelStatusErrMsg);
             emit cmdDone(msgnr);
             break;
 
         case resetmeaschannelstatus:
             if (reply == ack) { }
             else
-                notifyExecutionError(resetChannelStatusErrMsg);
+                notifyError(resetChannelStatusErrMsg);
             emit cmdDone(msgnr);
             break;
 

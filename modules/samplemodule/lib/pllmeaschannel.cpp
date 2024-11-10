@@ -299,7 +299,7 @@ void cPllMeasChannel::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant
         case set4PLL:
             if (reply == ack) {}
             else
-                notifyExecutionError(setPllErrMsg);
+                notifyError(setPllErrMsg);
             emit cmdDone(msgnr);
             break;
         case setchannelrangenotifier:
