@@ -1,7 +1,7 @@
 #include "moduleactivist.h"
 
-cModuleActivist::cModuleActivist(QString notifyInfo) :
-    m_notifyInfo(notifyInfo)
+cModuleActivist::cModuleActivist(QString notifyHeaderString) :
+    m_notifyHeaderString(notifyHeaderString)
 {
 }
 
@@ -17,7 +17,7 @@ void cModuleActivist::deactivate()
 
 void cModuleActivist::notifyError(QVariant value)
 {
-    qWarning("%s reported error: %s", qPrintable(m_notifyInfo), qPrintable(value.toString()));
+    qWarning("%s reported error: %s", qPrintable(m_notifyHeaderString), qPrintable(value.toString()));
 }
 
 bool cModuleActivist::handleFinishCallback(int cmdNumber, quint8 reply, QVariant answer)
