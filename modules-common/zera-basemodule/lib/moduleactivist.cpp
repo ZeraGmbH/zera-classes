@@ -26,11 +26,6 @@ void cModuleActivist::notifyActivationError(QVariant value)
     emit activationError();
 }
 
-void cModuleActivist::notifyDeactivationError(QVariant value)
-{
-    notifyError(value);
-}
-
 bool cModuleActivist::handleFinishCallback(int cmdNumber, quint8 reply, QVariant answer)
 {
     auto iter = m_cmdFinishCallbacks.constFind(cmdNumber);

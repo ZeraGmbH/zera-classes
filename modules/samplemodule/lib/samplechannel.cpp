@@ -147,7 +147,7 @@ void cSampleChannel::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant 
         if (reply == ack || reply == nack) // we accept nack here also
             emit deactivationContinue(); // maybe that resource was deleted by server and then it is no more set
         else
-            notifyDeactivationError(freeresourceErrMsg);
+            notifyError(freeresourceErrMsg);
         break;
     case readchnaliassamplechannel:
         if (reply == ack) {
