@@ -168,19 +168,19 @@ void cPllMeasChannel::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant
             if (reply == ack)
                 emit activationContinue();
             else
-                notifyActivationError(tr(rmidentErrMSG));
+                notifyActivationError(rmidentErrMSG);
             break;
         case readresourcetypes:
             if ((reply == ack) && (answer.toString().contains("SENSE")))
                 emit activationContinue();
             else
-                notifyActivationError((tr(resourcetypeErrMsg)));
+                notifyActivationError(resourcetypeErrMsg);
             break;
         case readresource:
             if ((reply == ack) && (answer.toString().contains(m_sName)))
                 emit activationContinue();
             else
-                notifyActivationError((tr(resourceErrMsg)));
+                notifyActivationError(resourceErrMsg);
             break;
         case readresourceinfo:
         {
@@ -194,10 +194,10 @@ void cPllMeasChannel::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant
                 if (ok1 && ok2 && (max == 1)) // we need one but it must not be free
                     emit activationContinue();
                 else
-                    notifyActivationError((tr(resourceInfoErrMsg)));
+                    notifyActivationError(resourceInfoErrMsg);
             }
             else
-                notifyActivationError((tr(resourceInfoErrMsg)));
+                notifyActivationError(resourceInfoErrMsg);
             break;
         }
         case readdspchannel:
@@ -206,13 +206,13 @@ void cPllMeasChannel::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant
                 emit activationContinue();
             }
             else
-                notifyActivationError((tr(readdspchannelErrMsg)));
+                notifyActivationError(readdspchannelErrMsg);
             break;
         case readrange:
             if (reply == ack)
                 m_sActRange = answer.toString();
             else
-                emit errMsg((tr(getRangeErrMsg)));
+                emit errMsg(getRangeErrMsg);
             break;
         case readchnalias:
             if (reply == ack) {
@@ -220,7 +220,7 @@ void cPllMeasChannel::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant
                 emit activationContinue();
             }
             else
-                notifyActivationError((tr(readaliasErrMsg)));
+                notifyActivationError(readaliasErrMsg);
             break;
         case readsamplerate:
             if (reply == ack) {
@@ -228,7 +228,7 @@ void cPllMeasChannel::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant
                 emit activationContinue();
             }
             else
-                notifyActivationError((tr(readsamplerateErrMsg)));
+                notifyActivationError(readsamplerateErrMsg);
             break;
         case readunit:
             if (reply == ack) {
@@ -236,7 +236,7 @@ void cPllMeasChannel::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant
                 emit activationContinue();
             }
             else
-                notifyActivationError((tr(readunitErrMsg)));
+                notifyActivationError(readunitErrMsg);
             break;
         case readrangelist:
             if (reply == ack) {
@@ -244,7 +244,7 @@ void cPllMeasChannel::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant
                 emit activationContinue();
             }
             else
-                notifyActivationError((tr(readrangelistErrMsg)));
+                notifyActivationError(readrangelistErrMsg);
             break;
         case readrngalias:
             if (reply == ack) {
@@ -252,7 +252,7 @@ void cPllMeasChannel::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant
                 emit activationContinue();
             }
             else
-                notifyActivationError((tr(readrangealiasErrMsg)));
+                notifyActivationError(readrangealiasErrMsg);
             break;
         case readtype:
             if (reply == ack) {
@@ -260,7 +260,7 @@ void cPllMeasChannel::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant
                 emit activationContinue();
             }
             else
-                notifyActivationError((tr(readrangetypeErrMsg)));
+                notifyActivationError(readrangetypeErrMsg);
             break;
         case readurvalue:
             if (reply == ack) {
@@ -268,7 +268,7 @@ void cPllMeasChannel::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant
                 emit activationContinue();
             }
             else
-                notifyActivationError((tr(readrangeurvalueErrMsg)));
+                notifyActivationError(readrangeurvalueErrMsg);
             break;
         case readrejection:
             if (reply == ack) {
@@ -276,7 +276,7 @@ void cPllMeasChannel::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant
                 emit activationContinue();
             }
             else
-                notifyActivationError((tr(readrangerejectionErrMsg)));
+                notifyActivationError(readrangerejectionErrMsg);
             break;
         case readovrejection:
             if (reply == ack) {
@@ -284,7 +284,7 @@ void cPllMeasChannel::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant
                 emit activationContinue();
             }
             else
-                notifyActivationError((tr(readrangeovrejectionErrMsg)));
+                notifyActivationError(readrangeovrejectionErrMsg);
             break;
         case readisavail:
             if (reply == ack) {
@@ -292,13 +292,13 @@ void cPllMeasChannel::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant
                 emit activationContinue();
             }
             else
-                notifyActivationError((tr(readrangeavailErrMsg)));
+                notifyActivationError(readrangeavailErrMsg);
             break;
         case set4PLL:
             if (reply == ack) {}
             else
             {
-                emit errMsg((tr(setPllErrMsg)));
+                emit errMsg(setPllErrMsg);
                 emit executionError();
             }; // perhaps some error output
             emit cmdDone(msgnr);
@@ -307,7 +307,7 @@ void cPllMeasChannel::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant
             if (reply == ack)
                 emit activationContinue();
             else
-                notifyActivationError((tr(registerpcbnotifierErrMsg)));
+                notifyActivationError(registerpcbnotifierErrMsg);
             break;
         }
     }

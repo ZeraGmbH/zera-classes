@@ -341,7 +341,7 @@ void cStatusModuleInit::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVaria
                     emit activationContinue();
                 }
                 else
-                    notifyActivationError((tr(readPCBServerVersionErrMsg)));
+                    notifyActivationError(readPCBServerVersionErrMsg);
                 break;
 
             case STATUSMODINIT::readPCBInfo:
@@ -351,7 +351,7 @@ void cStatusModuleInit::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVaria
                     emit activationContinue();
                 }
                 else
-                    notifyActivationError((tr(readPCBInfoErrMsg)));
+                    notifyActivationError(readPCBInfoErrMsg);
                 break;
 
             case STATUSMODINIT::readPCBServerCtrlVersion:
@@ -361,7 +361,7 @@ void cStatusModuleInit::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVaria
                     emit activationContinue();
                 }
                 else
-                    notifyActivationError((tr(readPCBCtrlVersionErrMSG)));
+                    notifyActivationError(readPCBCtrlVersionErrMSG);
                 break;
 
             case STATUSMODINIT::readPCBServerFPGAVersion:
@@ -370,7 +370,7 @@ void cStatusModuleInit::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVaria
                     emit activationContinue();
                 }
                 else
-                    notifyActivationError((tr(readPCBFPGAVersionErrMSG)));
+                    notifyActivationError(readPCBFPGAVersionErrMSG);
                 break;
 
 
@@ -380,7 +380,7 @@ void cStatusModuleInit::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVaria
                     emit activationContinue();
                 }
                 else
-                    notifyActivationError((tr(readPCBSerialNrErrMSG)));
+                    notifyActivationError(readPCBSerialNrErrMSG);
                 break;
 
             case STATUSMODINIT::writePCBServerSerialNumber:
@@ -391,7 +391,7 @@ void cStatusModuleInit::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVaria
                 }
                 else {
                     m_pSerialNumber->setError(); // in case of error we send an error event
-                    emit errMsg(tr(writePCBSerialNrErrMSG));
+                    emit errMsg(writePCBSerialNrErrMSG);
                 }
                 break;
 
@@ -401,7 +401,7 @@ void cStatusModuleInit::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVaria
                     emit activationContinue();
                 }
                 else
-                    notifyActivationError((tr(readadjstatusErrMsg)));
+                    notifyActivationError(readadjstatusErrMsg);
                 break;
 
             case STATUSMODINIT::readPCBServerAdjChksum:
@@ -410,7 +410,7 @@ void cStatusModuleInit::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVaria
                     emit activationContinue();
                 }
                 else
-                    notifyActivationError((tr(readadjchksumErrMsg)));
+                    notifyActivationError(readadjchksumErrMsg);
                 break;
 
             case STATUSMODINIT::readDSPServerVersion:
@@ -419,7 +419,7 @@ void cStatusModuleInit::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVaria
                     emit activationContinue();
                 }
                 else
-                    notifyActivationError((tr(readDSPServerVersionErrMsg)));
+                    notifyActivationError(readDSPServerVersionErrMsg);
                 break;
 
             case STATUSMODINIT::readDSPServerDSPProgramVersion:
@@ -428,7 +428,7 @@ void cStatusModuleInit::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVaria
                     emit activationContinue();
                 }
                 else
-                    notifyActivationError((tr(readDSPProgramVersionErrMsg)));
+                    notifyActivationError(readDSPProgramVersionErrMsg);
                 break;
 
             case STATUSMODINIT::readPCBServerSchnubbelStatus:
@@ -437,7 +437,7 @@ void cStatusModuleInit::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVaria
                     emit activationContinue();
                 }
                 else
-                    notifyActivationError((tr(readschnubbelstatusErrMsg)));
+                    notifyActivationError(readschnubbelstatusErrMsg);
                 break;
 
             case STATUSMODINIT::readPCBServerAccumulatorStatus:
@@ -451,7 +451,7 @@ void cStatusModuleInit::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVaria
                         emit activationContinue();
                     }
                     else
-                        notifyActivationError((tr(readaccumulatorstatusErrMsg)));
+                        notifyActivationError(readaccumulatorstatusErrMsg);
                 }
                 break;
 
@@ -465,7 +465,7 @@ void cStatusModuleInit::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVaria
                        emit activationContinue();
                     }
                     else
-                       notifyActivationError((tr(readaccumulatorsocErrMsg)));
+                       notifyActivationError(readaccumulatorsocErrMsg);
                 }
                 break;
             }

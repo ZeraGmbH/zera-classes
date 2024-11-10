@@ -563,21 +563,21 @@ void cSec1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, Q
                 if (reply == ack)
                     emit activationContinue();
                 else
-                    notifyActivationError(tr(rmidentErrMSG));
+                    notifyActivationError(rmidentErrMSG);
                 break;
 
             case testsec1resource:
                 if ((reply == ack) && (answer.toString().contains("SEC1")))
                     emit activationContinue();
                 else
-                    notifyActivationError(tr(resourcetypeErrMsg));
+                    notifyActivationError(resourcetypeErrMsg);
                 break;
 
             case setecresource:
                 if (reply == ack)
                     emit activationContinue();
                 else
-                    notifyActivationError(tr(setresourceErrMsg));
+                    notifyActivationError(setresourceErrMsg);
                 break;
 
             case readresource:
@@ -592,7 +592,7 @@ void cSec1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, Q
                         emit activationContinue();
                 }
                 else
-                    notifyActivationError(tr(resourceErrMsg));
+                    notifyActivationError(resourceErrMsg);
                 break;
             }
 
@@ -606,7 +606,7 @@ void cSec1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, Q
                     emit activationContinue();
                 }
                 else
-                    notifyActivationError(tr(fetchsececalcunitErrMsg));
+                    notifyActivationError(fetchsececalcunitErrMsg);
                 break;
             }
 
@@ -621,7 +621,7 @@ void cSec1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, Q
                     emit activationContinue();
                 }
                 else
-                    notifyActivationError(tr(readaliasErrMsg));
+                    notifyActivationError(readaliasErrMsg);
                 break;
             }
 
@@ -632,7 +632,7 @@ void cSec1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, Q
                     emit activationContinue();
                 }
                 else
-                    notifyActivationError(tr(readaliasErrMsg));
+                    notifyActivationError(readaliasErrMsg);
                 break;
             }
 
@@ -640,14 +640,14 @@ void cSec1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, Q
                 if (reply == ack) // we only continue if sec server manager acknowledges
                     emit deactivationContinue();
                 else
-                    notifyDeactivationError(tr(freesececalcunitErrMsg));
+                    notifyDeactivationError(freesececalcunitErrMsg);
                 break;
 
             case freeecresource:
                 if (reply == ack)
                     emit deactivationContinue();
                 else
-                    notifyDeactivationError(tr(freeresourceErrMsg));
+                    notifyDeactivationError(freeresourceErrMsg);
                 break;
 
             case actualizeprogress:
@@ -1133,7 +1133,7 @@ void cSec1ModuleMeasProgram::testSecInputs()
     if ((refInCountLeftToCheck == 0) && (dutInputCountLeftToCheck == 0)) // we found all our configured Inputs
         emit activationContinue(); // so lets go on
     else
-        notifyActivationError((tr(resourceErrMsg)));
+        notifyActivationError(resourceErrMsg);
 }
 
 

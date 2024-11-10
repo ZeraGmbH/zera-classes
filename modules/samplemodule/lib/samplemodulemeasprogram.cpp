@@ -198,37 +198,37 @@ void cSampleModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply,
                 if (reply == ack)
                     emit activationContinue();
                 else
-                    notifyActivationError((tr(rmidentErrMSG)));
+                    notifyActivationError(rmidentErrMSG);
                 break;
             case claimpgrmem:
                 if (reply == ack)
                     emit activationContinue();
                 else
-                    notifyActivationError((tr(claimresourceErrMsg)));
+                    notifyActivationError(claimresourceErrMsg);
                 break;
             case claimusermem:
                 if (reply == ack)
                     emit activationContinue();
                 else
-                    notifyActivationError((tr(claimresourceErrMsg)));
+                    notifyActivationError(claimresourceErrMsg);
                 break;
             case varlist2dsp:
                 if (reply == ack)
                     emit activationContinue();
                 else
-                    notifyActivationError((tr(dspvarlistwriteErrMsg)));
+                    notifyActivationError(dspvarlistwriteErrMsg);
                 break;
             case cmdlist2dsp:
                 if (reply == ack)
                     emit activationContinue();
                 else
-                    notifyActivationError((tr(dspcmdlistwriteErrMsg)));
+                    notifyActivationError(dspcmdlistwriteErrMsg);
                 break;
             case activatedsp:
                 if (reply == ack)
                     emit activationContinue();
                 else
-                    notifyActivationError((tr(dspactiveErrMsg)));
+                    notifyActivationError(dspactiveErrMsg);
                 break;
 
             case deactivatedsp:
@@ -258,7 +258,7 @@ void cSampleModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply,
                     m_dataAcquisitionMachine.stop();
                     // perhaps we emit some error here ?
                     {
-                        emit errMsg((tr(dataaquisitionErrMsg)));
+                        emit errMsg(dataaquisitionErrMsg);
                         emit executionError();
                     }
                 }

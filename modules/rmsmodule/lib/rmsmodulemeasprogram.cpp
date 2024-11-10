@@ -468,7 +468,7 @@ void cRmsModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QV
                     emit activationContinue();
                 }
                 else
-                    notifyActivationError((tr(readdspchannelErrMsg)));
+                    notifyActivationError(readdspchannelErrMsg);
                 break;
 
             case writeparameter:
@@ -476,7 +476,7 @@ void cRmsModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QV
                     ;
                 else
                 {
-                    emit errMsg((tr(writedspmemoryErrMsg)));
+                    emit errMsg(writedspmemoryErrMsg);
                     emit executionError();
                 }
                 break;
@@ -506,7 +506,7 @@ void cRmsModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QV
                 else
                 {
                     m_dataAcquisitionMachine.stop();
-                    emit errMsg((tr(dataaquisitionErrMsg)));
+                    emit errMsg(dataaquisitionErrMsg);
                     emit executionError(); // but we send error message
                 }
                 break;

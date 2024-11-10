@@ -384,21 +384,21 @@ void cSpm1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, Q
                 if (reply == ack)
                     emit activationContinue();
                 else
-                    notifyActivationError((tr(rmidentErrMSG)));
+                    notifyActivationError(rmidentErrMSG);
                 break;
 
             case testsec1resource:
                 if ((reply == ack) && (answer.toString().contains("SEC1")))
                     emit activationContinue();
                 else
-                    notifyActivationError((tr(resourcetypeErrMsg)));
+                    notifyActivationError(resourcetypeErrMsg);
                 break;
 
             case setecresource:
                 if (reply == ack)
                     emit activationContinue();
                 else
-                    notifyActivationError((tr(setresourceErrMsg)));
+                    notifyActivationError(setresourceErrMsg);
                 break;
 
             case readresource:
@@ -412,7 +412,7 @@ void cSpm1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, Q
                         emit activationContinue();
                 }
                 else
-                    notifyActivationError((tr(resourceErrMsg)));
+                    notifyActivationError(resourceErrMsg);
                 break;
 
             case fetchecalcunits:
@@ -425,7 +425,7 @@ void cSpm1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, Q
                     emit activationContinue();
                 }
                 else
-                    notifyActivationError((tr(fetchsececalcunitErrMsg)));
+                    notifyActivationError(fetchsececalcunitErrMsg);
                 break;
             }
 
@@ -439,7 +439,7 @@ void cSpm1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, Q
                     emit activationContinue();
                 }
                 else
-                    notifyActivationError((tr(readaliasErrMsg)));
+                    notifyActivationError(readaliasErrMsg);
                 break;
 
             case freeecalcunits:
@@ -467,7 +467,7 @@ void cSpm1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, Q
                     }
                 }
                 else {
-                    emit errMsg((tr(readsecregisterErrMsg)));
+                    emit errMsg(readsecregisterErrMsg);
                     emit executionError();
                 }
                 break;
@@ -486,7 +486,7 @@ void cSpm1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, Q
                     }
                 }
                 else {
-                    emit errMsg((tr(readsecregisterErrMsg)));
+                    emit errMsg(readsecregisterErrMsg);
                     emit executionError();
                 }
                 break;
@@ -503,7 +503,7 @@ void cSpm1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, Q
                     }
                 }
                 else {
-                    emit errMsg((tr(readsecregisterErrMsg)));
+                    emit errMsg(readsecregisterErrMsg);
                     emit executionError();
                 }
                 break;
@@ -517,7 +517,7 @@ void cSpm1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, Q
                 else
                 {
                     {
-                        emit errMsg((tr(setsyncErrMsg)));
+                        emit errMsg(setsyncErrMsg);
                         emit executionError();
                     }
                 }
@@ -532,7 +532,7 @@ void cSpm1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, Q
                 else
                 {
                     {
-                        emit errMsg((tr(writesecregisterErrMsg)));
+                        emit errMsg(writesecregisterErrMsg);
                         emit executionError();
                     }
                 }
@@ -547,7 +547,7 @@ void cSpm1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, Q
                 else
                 {
                     {
-                        emit errMsg((tr(setmuxErrMsg)));
+                        emit errMsg(setmuxErrMsg);
                         emit executionError();
                     }
                 }
@@ -562,7 +562,7 @@ void cSpm1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, Q
                 else
                 {
                     {
-                        emit errMsg((tr(setcmdidErrMsg)));
+                        emit errMsg(setcmdidErrMsg);
                         emit executionError();
                     }
                 }
@@ -576,7 +576,7 @@ void cSpm1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, Q
                 else
                 {
                     {
-                        emit errMsg((tr(startmeasErrMsg)));
+                        emit errMsg(startmeasErrMsg);
                         emit executionError();
                     }
                 }
@@ -589,7 +589,7 @@ void cSpm1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, Q
                 else
                 {
                     {
-                        emit errMsg((tr(stopmeasErrMsg)));
+                        emit errMsg(stopmeasErrMsg);
                         emit executionError();
                     }
                 }
@@ -599,7 +599,7 @@ void cSpm1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, Q
                 if (reply == ack) // we only continue if sec server acknowledges
                     emit activationContinue();
                 else
-                    notifyActivationError((tr(registerpcbnotifierErrMsg)));
+                    notifyActivationError(registerpcbnotifierErrMsg);
                 break;
 
             case readintregister:
@@ -610,7 +610,7 @@ void cSpm1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, Q
                 }
                 else
                 {
-                    emit errMsg((tr(readsecregisterErrMsg)));
+                    emit errMsg(readsecregisterErrMsg);
                     emit executionError();
                 }
                 break;
@@ -619,7 +619,7 @@ void cSpm1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, Q
                     emit interruptContinue();
                 else
                 {
-                    emit errMsg((tr(writesecregisterErrMsg)));
+                    emit errMsg(writesecregisterErrMsg);
                     emit executionError();
                 }
                 break;
@@ -637,7 +637,7 @@ void cSpm1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, Q
                 }
                 else
                 {
-                    emit errMsg((tr(readsecregisterErrMsg)));
+                    emit errMsg(readsecregisterErrMsg);
                     emit executionError();
                 }
                 break;
@@ -649,7 +649,7 @@ void cSpm1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, Q
                 }
                 else
                 {
-                    emit errMsg((tr(readsecregisterErrMsg)));
+                    emit errMsg(readsecregisterErrMsg);
                     emit executionError();
                 }
                 break;
@@ -860,7 +860,7 @@ void cSpm1ModuleMeasProgram::testSpmInputs()
     if (refInCountLeftToCheck == 0) // we found all our configured Inputs
         emit activationContinue(); // so lets go on
     else
-        notifyActivationError((tr(resourceErrMsg)));
+        notifyActivationError(resourceErrMsg);
 }
 
 void cSpm1ModuleMeasProgram::ecalcServerConnect()
