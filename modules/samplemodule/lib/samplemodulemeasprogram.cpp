@@ -253,14 +253,9 @@ void cSampleModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply,
             case dataaquistion:
                 if (reply == ack)
                     emit dataAquisitionContinue();
-                else
-                {
+                else {
                     m_dataAcquisitionMachine.stop();
-                    // perhaps we emit some error here ?
-                    {
-                        emit errMsg(dataaquisitionErrMsg);
-                        emit executionError();
-                    }
+                    notifyExecutionError(dataaquisitionErrMsg);
                 }
                 break;
             }

@@ -630,10 +630,8 @@ void cRangeMeasChannel::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVaria
                          qPrintable(m_sNewRange),
                          qPrintable(getAlias()),
                          reply);
-                if (errcount > 1) {
-                    emit errMsg(setRangeErrMsg);
-                    emit executionError();
-                }
+                if (errcount > 1)
+                    notifyExecutionError(setRangeErrMsg);
             } // perhaps some error output
             emit cmdDone(msgnr);
             break;
@@ -645,10 +643,8 @@ void cRangeMeasChannel::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVaria
                 errcount = m_ActionErrorcountHash.take(readgaincorrection);
                 errcount++;
                 m_ActionErrorcountHash[readgaincorrection] = errcount;
-                if (errcount > 1) {
-                    emit errMsg(readGainCorrErrMsg);
-                    emit executionError();
-                }
+                if (errcount > 1)
+                    notifyExecutionError(readGainCorrErrMsg);
             }
             emit cmdDone(msgnr);
             break;
@@ -660,10 +656,8 @@ void cRangeMeasChannel::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVaria
                 errcount = m_ActionErrorcountHash.take(readoffsetcorrection);
                 errcount++;
                 m_ActionErrorcountHash[readoffsetcorrection] = errcount;
-                if (errcount > 1) {
-                    emit errMsg(readOffsetCorrErrMsg);
-                    emit executionError();
-                }
+                if (errcount > 1)
+                    notifyExecutionError(readOffsetCorrErrMsg);
             }
             emit cmdDone(msgnr);
             break;
@@ -676,10 +670,7 @@ void cRangeMeasChannel::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVaria
                 errcount++;
                 m_ActionErrorcountHash[readphasecorrection] = errcount;
                 if (errcount > 1)
-                {
-                    emit errMsg(readPhaseCorrErrMsg);
-                    emit executionError();
-                }
+                    notifyExecutionError(readPhaseCorrErrMsg);
             }
             emit cmdDone(msgnr);
             break;
@@ -687,20 +678,15 @@ void cRangeMeasChannel::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVaria
         case readmeaschannelstatus:
             if (reply == ack)
                 m_nStatus = answer.toInt(&ok);
-            else {
-                emit errMsg(readChannelStatusErrMsg);
-                emit executionError();
-            }
+            else
+                notifyExecutionError(readChannelStatusErrMsg);
             emit cmdDone(msgnr);
             break;
 
         case resetmeaschannelstatus:
-            if (reply == ack) {
-            }
-            else {
-                emit errMsg(resetChannelStatusErrMsg);
-                emit executionError();
-            } // perhaps some error output
+            if (reply == ack) { }
+            else
+                notifyExecutionError(resetChannelStatusErrMsg);
             emit cmdDone(msgnr);
             break;
 

@@ -475,10 +475,7 @@ void cRmsModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QV
                 if (reply == ack) // we ignore ack
                     ;
                 else
-                {
-                    emit errMsg(writedspmemoryErrMsg);
-                    emit executionError();
-                }
+                    notifyExecutionError(writedspmemoryErrMsg);
                 break;
 
             case deactivatedsp:
@@ -503,11 +500,9 @@ void cRmsModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QV
             case dataaquistion:
                 if (reply == ack)
                     emit dataAquisitionContinue();
-                else
-                {
+                else {
                     m_dataAcquisitionMachine.stop();
-                    emit errMsg(dataaquisitionErrMsg);
-                    emit executionError(); // but we send error message
+                    notifyExecutionError(dataaquisitionErrMsg); // but we send error message
                 }
                 break;
             }

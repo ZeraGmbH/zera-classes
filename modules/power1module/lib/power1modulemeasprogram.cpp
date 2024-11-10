@@ -562,10 +562,8 @@ void cPower1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply,
             }
 
             case setqrefnominalpower:
-                if (reply != ack) { // we ignore ack
-                    emit errMsg(writedspmemoryErrMsg);
-                    emit executionError();
-                }
+                if (reply != ack) // we ignore ack
+                    notifyExecutionError(writedspmemoryErrMsg);
                 break;
 
             case claimpgrmem:
@@ -796,10 +794,8 @@ void cPower1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply,
             case writeparameter:
                 if (reply == ack) // we ignore ack
                     ;
-                else {
-                    emit errMsg(writedspmemoryErrMsg);
-                    emit executionError();
-                }
+                else
+                    notifyExecutionError(writedspmemoryErrMsg);
                 break;
 
             case deactivatedsp:
@@ -833,11 +829,9 @@ void cPower1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply,
             case dataaquistion:
                 if (reply == ack)
                     emit dataAquisitionContinue();
-                else
-                {
+                else {
                     m_dataAcquisitionMachine.stop();
-                    emit errMsg(dataaquisitionErrMsg);
-                    emit executionError(); // but we send error message
+                    notifyExecutionError(dataaquisitionErrMsg); // but we send error message
                 }
                 break;
             }

@@ -748,7 +748,7 @@ void cSec1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, Q
                 break;
 
             case setsecintnotifier:
-                if (reply == ack) // we only continue if sec server acknowledges
+                if (reply == ack)
                     emit activationContinue();
                 else
                     notifyActivationError(registerpcbnotifierErrMsg);
@@ -756,7 +756,7 @@ void cSec1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, Q
 
 
             case readintregister:
-                if (reply == ack) // we only continue if sec server acknowledges
+                if (reply == ack)
                 {
                     m_nIntReg = answer.toInt(&ok) & 7;
                     emit interruptContinue();
@@ -765,13 +765,13 @@ void cSec1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, Q
                     notifyExecutionError(readsecregisterErrMsg);
                 break;
             case resetintregister:
-                if (reply == ack) // we only continue if sec server acknowledges
+                if (reply == ack)
                     emit interruptContinue();
                 else
                     notifyExecutionError(writesecregisterErrMsg);
                 break;
             case readvicount:
-                if (reply == ack) { // we only continue if sec server acknowledges
+                if (reply == ack) {
                     // On high frequency continuous measurements chances are high
                     // that an abort comes in while we fetch final energy counter.
                     // All aborts (user / change ranges) stop measurement and that

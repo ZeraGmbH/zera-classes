@@ -475,10 +475,8 @@ void cDftModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QV
             case writeparameter:
                 if (reply == ack) // we ignore ack
                     ;
-                else {
-                    emit errMsg(writedspmemoryErrMsg);
-                    emit executionError();
-                }
+                else
+                    notifyExecutionError(writedspmemoryErrMsg);
                 break;
 
             case deactivatedsp:
@@ -505,8 +503,7 @@ void cDftModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QV
                     emit dataAquisitionContinue();
                 else {
                     m_dataAcquisitionMachine.stop();
-                    emit errMsg(dataaquisitionErrMsg);
-                    emit executionError(); // but we send error message
+                    notifyExecutionError(dataaquisitionErrMsg); // but we send error message
                 }
                 break;
             }

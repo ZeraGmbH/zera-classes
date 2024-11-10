@@ -224,59 +224,42 @@ void cReferenceMeasChannel::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QV
         if (reply == ack)
             m_sActRange = m_sNewRange;
         else
-        {
-            emit errMsg(setRangeErrMsg);
-            emit executionError();
-        }; // perhaps some error output
+            notifyExecutionError(setRangeErrMsg);
         emit cmdDone(msgnr);
         break;    
     case readgaincorrection:
         if (reply == ack)
             m_fGainCorrection = answer.toDouble();
         else
-        {
-            emit errMsg(readGainCorrErrMsg);
-        };
+            notifyExecutionError(readGainCorrErrMsg);
         emit cmdDone(msgnr);
         break;
     case readoffsetcorrection:
         if (reply == ack)
             m_fOffsetCorrection = answer.toDouble();
         else
-        {
-            emit errMsg(readOffsetCorrErrMsg);
-            emit executionError();
-        };
+            notifyExecutionError(readOffsetCorrErrMsg);
         emit cmdDone(msgnr);
         break;
     case readphasecorrection:
         if (reply == ack)
             m_fPhaseCorrection = answer.toDouble();
         else
-        {
-            emit errMsg(readPhaseCorrErrMsg);
-            emit executionError();
-        };
+            notifyExecutionError(readPhaseCorrErrMsg);
         emit cmdDone(msgnr);
         break;
     case readmeaschannelstatus:
         if (reply == ack)
             m_nStatus = answer.toInt();
         else
-        {
-            emit errMsg(readChannelStatusErrMsg);
-            emit executionError();
-        };
+            notifyExecutionError(readChannelStatusErrMsg);
         emit cmdDone(msgnr);
         break;
     case resetmeaschannelstatus:
         if (reply == ack)
             {}
         else
-        {
-            emit errMsg(resetChannelStatusErrMsg);
-            emit executionError();
-        }; // perhaps some error output
+            notifyExecutionError(resetChannelStatusErrMsg);
         emit cmdDone(msgnr);
         break;
     }

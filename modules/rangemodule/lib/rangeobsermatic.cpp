@@ -851,13 +851,10 @@ void cRangeObsermatic::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVarian
                     notifyActivationError(readdspgaincorrErrMsg);
                 break;
             case writegain2corr:
-                if (reply == ack) {
+                if (reply == ack)
                     emit activationContinue();
-                }
-                else {
-                    emit errMsg(writedspgaincorrErrMsg);
-                    emit executionError();
-                }
+                else
+                    notifyExecutionError(writedspgaincorrErrMsg);
                 break;
             }
         }

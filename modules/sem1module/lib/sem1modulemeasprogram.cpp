@@ -473,10 +473,8 @@ void cSem1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, Q
                         m_pEnergyAct->setValue(m_fEnergy); // in MWh, kWh, Wh depends on selected unit for user input
                     }
                 }
-                else {
-                    emit errMsg(readsecregisterErrMsg);
-                    emit executionError();
-                }
+                else
+                    notifyExecutionError(readsecregisterErrMsg);
                 break;
             }
 
@@ -492,10 +490,8 @@ void cSem1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, Q
                         m_pTimeAct->setValue(m_fTimeSecondsActual);
                     }
                 }
-                else {
-                    emit errMsg(readsecregisterErrMsg);
-                    emit executionError();
-                }
+                else
+                    notifyExecutionError(readsecregisterErrMsg);
                 break;
             }
 
@@ -509,129 +505,79 @@ void cSem1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, Q
                         setStatus((status & ECALCSTATUS::READY) | (answer.toUInt(&ok) & 7));
                     }
                 }
-                else {
-                    emit errMsg(readsecregisterErrMsg);
-                    emit executionError();
-                }
+                else
+                    notifyExecutionError(readsecregisterErrMsg);
                 break;
             }
 
             case setsync:
                 if (reply == ack)
-                {
                     emit setupContinue();
-                }
                 else
-                {
-                    {
-                        emit errMsg(setsyncErrMsg);
-                        emit executionError();
-                    }
-                }
+                    notifyExecutionError(setsyncErrMsg);
                 break;
 
             case enableinterrupt:
             case setmeaspulses:
                 if (reply == ack)
-                {
                     emit setupContinue();
-                }
                 else
-                {
-                    {
-                        emit errMsg(writesecregisterErrMsg);
-                        emit executionError();
-                    }
-                }
+                    notifyExecutionError(writesecregisterErrMsg);
                 break;
 
             case setmastermux:
             case setslavemux:
                 if (reply == ack)
-                {
                     emit setupContinue();
-                }
                 else
-                {
-                    {
-                        emit errMsg(setmuxErrMsg);
-                        emit executionError();
-                    }
-                }
+                    notifyExecutionError(setmuxErrMsg);
                 break;
 
             case setmastermeasmode:
             case setslavemeasmode:
                 if (reply == ack)
-                {
                     emit setupContinue();
-                }
                 else
-                {
-                    {
-                        emit errMsg(setcmdidErrMsg);
-                        emit executionError();
-                    }
-                }
+                    notifyExecutionError(setcmdidErrMsg);
                 break;
 
             case startmeasurement:
                 if (reply == ack)
-                {
                     emit setupContinue();
-                }
                 else
-                {
-                    {
-                        emit errMsg(startmeasErrMsg);
-                        emit executionError();
-                    }
-                }
+                    notifyExecutionError(startmeasErrMsg);
                 break;
 
             case stopmeas:
-                if (reply == ack) {
+                if (reply == ack)
                     emit deactivationContinue();
-                }
                 else
-                {
-                    {
-                        emit errMsg(stopmeasErrMsg);
-                        emit executionError();
-                    }
-                }
+                    notifyExecutionError(stopmeasErrMsg);
                 break;
 
             case setsecintnotifier:
-                if (reply == ack) // we only continue if sec server acknowledges
+                if (reply == ack)
                     emit activationContinue();
                 else
                     notifyActivationError(registerpcbnotifierErrMsg);
                 break;
 
             case readintregister:
-                if (reply == ack) // we only continue if sec server acknowledges
-                {
+                if (reply == ack) {
                     m_nIntReg = answer.toInt(&ok) & 7;
                     emit interruptContinue();
                 }
                 else
-                {
-                    emit errMsg(readsecregisterErrMsg);
-                    emit executionError();
-                }
+                    notifyExecutionError(readsecregisterErrMsg);
                 break;
             case resetintregister:
-                if (reply == ack) // we only continue if sec server acknowledges
+                if (reply == ack)
                     emit interruptContinue();
                 else
-                {
-                    emit errMsg(writesecregisterErrMsg);
-                    emit executionError();
-                }
+                    notifyExecutionError(writesecregisterErrMsg);
                 break;
             case readvicount:
-                if (reply == ack) // we only continue if sec server acknowledges
+                if (reply == ack)
                 {
                     // Although we do not have high frequency measurements,
                     // incorporate still running check as we learned from sec1
@@ -643,20 +589,15 @@ void cSem1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, Q
                     emit interruptContinue();
                 }
                 else
-                {
-                    emit errMsg(readsecregisterErrMsg);
-                    emit executionError();
-                }
+                    notifyExecutionError(readsecregisterErrMsg);
                 break;
             case readtcount:
                 if (reply == ack) {// we only continue if sec server acknowledges
                     m_fTimeSecondsFinal = double(answer.toLongLong(&ok)) * 0.001;
                     emit interruptContinue();
                 }
-                else {
-                    emit errMsg(readsecregisterErrMsg);
-                    emit executionError();
-                }
+                else
+                    notifyExecutionError(readsecregisterErrMsg);
                 break;
 
             }
