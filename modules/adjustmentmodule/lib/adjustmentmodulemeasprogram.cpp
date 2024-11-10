@@ -661,11 +661,8 @@ void cAdjustmentModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 re
         // because rangemodulemeasprogram, adjustment and rangeobsermatic share the same dsp interface
         if (m_MsgNrCmdList.contains(msgnr)) {
             int cmd = m_MsgNrCmdList.take(msgnr);
-            if(handleFinishCallback(cmd, reply, answer))
-                return;
             switch (cmd)
             {
-
             case adjustcomputation:
                 if (reply == ack)
                     emit computationContinue();
