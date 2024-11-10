@@ -29,7 +29,6 @@ void cModuleActivist::notifyActivationError(QVariant value)
 void cModuleActivist::notifyDeactivationError(QVariant value)
 {
     notifyError(value);
-    emit deactivationError();
 }
 
 bool cModuleActivist::handleFinishCallback(int cmdNumber, quint8 reply, QVariant answer)
