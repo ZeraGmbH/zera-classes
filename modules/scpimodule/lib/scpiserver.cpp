@@ -34,6 +34,7 @@ namespace SCPIMODULE
 constexpr int serialPollTimerPeriod = 1000;
 
 cSCPIServer::cSCPIServer(cSCPIModule *module, cSCPIModuleConfigData &configData) :
+    cModuleActivist(module->getVeinModuleName()),
     m_pModule(module),
     m_ConfigData(configData)
 {

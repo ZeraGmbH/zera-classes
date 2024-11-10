@@ -21,6 +21,7 @@ cAdjustManagement::cAdjustManagement(cRangeModule *module,
                                      QStringList chnlist,
                                      QStringList subdclist,
                                      adjustConfPar *adjustmentConfig) :
+    cModuleActivist(QString("%1 / AdjustManagement").arg(qPrintable(module->getVeinModuleName()))),
     m_pModule(module),
     m_ChannelNameList(chnlist),
     m_subdcChannelNameList(subdclist),

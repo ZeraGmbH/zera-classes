@@ -13,8 +13,10 @@
 namespace STATUSMODULE
 {
 
-cStatusModuleInit::cStatusModuleInit(cStatusModule* module, cStatusModuleConfigData& configData)
-    :m_pModule(module), m_ConfigData(configData)
+cStatusModuleInit::cStatusModuleInit(cStatusModule* module, cStatusModuleConfigData& configData) :
+    cModuleActivist(module->getVeinModuleName()),
+    m_pModule(module),
+    m_ConfigData(configData)
 {
     m_pPCBInterface = std::make_shared<Zera::cPCBInterface>();
     m_pDSPInterface = new Zera::cDSPInterface();

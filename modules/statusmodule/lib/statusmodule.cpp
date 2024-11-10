@@ -63,7 +63,6 @@ void cStatusModule::setupModule()
     m_ModuleActivistList.append(m_pStatusModuleInit);
     connect(m_pStatusModuleInit, &cStatusModuleInit::activated, this, &cStatusModule::activationContinue);
     connect(m_pStatusModuleInit, &cStatusModuleInit::deactivated, this, &cStatusModule::deactivationContinue);
-    connect(m_pStatusModuleInit, &cStatusModuleInit::errMsg, m_pModuleErrorComponent, &VfModuleErrorComponent::setValue);
 
     for (int i = 0; i < m_ModuleActivistList.count(); i++)
         m_ModuleActivistList.at(i)->generateInterface();

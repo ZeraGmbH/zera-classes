@@ -11,8 +11,10 @@
 namespace REFERENCEMODULE
 {
 
-cReferenceAdjustment::cReferenceAdjustment(cReferenceModule* module, cReferenceModuleConfigData* confData)
-    :m_pModule(module), m_pConfigData(confData)
+cReferenceAdjustment::cReferenceAdjustment(cReferenceModule* module, cReferenceModuleConfigData* confData) :
+    cModuleActivist(module->getVeinModuleName()),
+    m_pModule(module),
+    m_pConfigData(confData)
 {
     m_dspInterface = m_pModule->getServiceInterfaceFactory()->createDspInterfaceOther();
     m_pPCBInterface = std::make_shared<Zera::cPCBInterface>();

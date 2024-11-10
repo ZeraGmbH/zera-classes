@@ -4,6 +4,7 @@
 #include <timemachineobject.h>
 #include <testloghelpers.h>
 #include <vs_dumpjson.h>
+#include <QJsonArray>
 #include <QBuffer>
 #include <QTest>
 

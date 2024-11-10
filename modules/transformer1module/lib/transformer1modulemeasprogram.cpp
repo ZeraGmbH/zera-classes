@@ -22,8 +22,9 @@
 namespace TRANSFORMER1MODULE
 {
 
-cTransformer1ModuleMeasProgram::cTransformer1ModuleMeasProgram(cTransformer1Module* module, std::shared_ptr<BaseModuleConfiguration> pConfiguration)
-    :cBaseMeasWorkProgram(pConfiguration), m_pModule(module)
+cTransformer1ModuleMeasProgram::cTransformer1ModuleMeasProgram(cTransformer1Module* module, std::shared_ptr<BaseModuleConfiguration> pConfiguration) :
+    cBaseMeasWorkProgram(pConfiguration, module->getVeinModuleName()),
+    m_pModule(module)
 {
     m_searchActualValuesState.addTransition(this, &cTransformer1ModuleMeasProgram::activationContinue, &m_activationDoneState);
 

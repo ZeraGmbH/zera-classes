@@ -8,7 +8,7 @@ class cBaseDspMeasProgram: public cBaseMeasProgram
 {
     Q_OBJECT
 public:
-    cBaseDspMeasProgram(std::shared_ptr<BaseModuleConfiguration> pConfiguration);
+    cBaseDspMeasProgram(std::shared_ptr<BaseModuleConfiguration> pConfiguration, QString moduleName);
     virtual ~cBaseDspMeasProgram() { }
 protected:
     // the module creates a central dsp interface and forwards this

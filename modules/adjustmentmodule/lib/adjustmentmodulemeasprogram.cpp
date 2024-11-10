@@ -12,17 +12,16 @@
 #include <math.h>
 
 cAdjustmentModuleMeasProgram::cAdjustmentModuleMeasProgram(cAdjustmentModule* module, std::shared_ptr<BaseModuleConfiguration> pConfiguration) :
-    cBaseMeasWorkProgram(pConfiguration),
+    cBaseMeasWorkProgram(pConfiguration, module->getVeinModuleName()),
     m_pModule(module),
     m_commonObjects(std::make_shared<AdjustmentModuleCommon>()),
-    m_activator(getConfData()->m_AdjChannelList, m_commonObjects)
+    m_activator(getConfData()->m_AdjChannelList, m_commonObjects, module->getVeinModuleName())
 {
     openPcbConnection();
 
     connect(&m_activator, &AdjustmentModuleActivator::sigActivationReady, this, &cAdjustmentModuleMeasProgram::onActivationReady);
     connect(&m_activator, &AdjustmentModuleActivator::sigDeactivationReady, this, &cAdjustmentModuleMeasProgram::onDeactivationReady);
     connect(&m_activator, &AdjustmentModuleActivator::sigRangesReloaded, this, &cAdjustmentModuleMeasProgram::onNewRanges);
-    connect(&m_activator, &AdjustmentModuleActivator::errMsg, this, &cAdjustmentModuleMeasProgram::errMsg);
 
     connect(&m_offsetTasks, &TaskTemplate::sigFinish, [&](bool ok) {
         if(ok)

@@ -10,6 +10,7 @@ namespace SAMPLEMODULE
 {
 
 cPllObsermatic::cPllObsermatic(cSampleModule* module, cSampleModuleConfigData& confData) :
+    cModuleActivist(module->getVeinModuleName()),
     m_pModule(module),
     m_ConfPar(confData)
 {

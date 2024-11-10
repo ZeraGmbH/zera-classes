@@ -59,21 +59,17 @@ void cRangeModule::setupModule()
 
 
     // first we build a list of our meas channels
-    for (int i = 0; i < pConfData->m_nChannelCount; i ++)
-    {
-        QString channel;
-
-        channel = pConfData->m_senseChannelList.at(i);
+    for (int i = 0; i < pConfData->m_nChannelCount; i ++) {
         cRangeMeasChannel* pchn = new cRangeMeasChannel(getNetworkConfig()->m_rmServiceConnectionInfo,
                                                         getNetworkConfig()->m_pcbServiceConnectionInfo,
                                                         getNetworkConfig()->m_tcpNetworkFactory,
                                                         pConfData->m_senseChannelList.at(i),
-                                                        i+1);
+                                                        i+1,
+                                                        getVeinModuleName());
         m_rangeMeasChannelList.append(pchn);
         m_ModuleActivistList.append(pchn);
         connect(pchn, &cRangeMeasChannel::activated, this, &cRangeModule::activationContinue);
         connect(pchn, &cRangeMeasChannel::deactivated, this, &cRangeModule::deactivationContinue);
-        connect(pchn, &cRangeMeasChannel::errMsg, m_pModuleErrorComponent , &VfModuleErrorComponent::setValue);
     }
 
     // we need some program that does the range handling (observation, automatic, setting and grouping)
@@ -85,7 +81,6 @@ void cRangeModule::setupModule()
     m_ModuleActivistList.append(m_pRangeObsermatic);
     connect(m_pRangeObsermatic, &cRangeObsermatic::activated, this, &cRangeModule::activationContinue);
     connect(m_pRangeObsermatic, &cRangeObsermatic::deactivated, this, &cRangeModule::deactivationContinue);
-    connect(m_pRangeObsermatic, &cRangeObsermatic::errMsg, m_pModuleErrorComponent, &VfModuleErrorComponent::setValue);
 
     // we have to connect all cmddone from our meas channel to range obsermatic
     // this is also used for synchronizing purpose
@@ -101,14 +96,12 @@ void cRangeModule::setupModule()
     m_ModuleActivistList.append(m_pAdjustment);
     connect(m_pAdjustment, &cAdjustManagement::activated, this, &cRangeModule::activationContinue);
     connect(m_pAdjustment, &cAdjustManagement::deactivated, this, &cRangeModule::deactivationContinue);
-    connect(m_pAdjustment, &cAdjustManagement::errMsg, m_pModuleErrorComponent, &VfModuleErrorComponent::setValue);
 
     // at last we need some program that does the measuring on dsp
     m_pMeasProgram = new cRangeModuleMeasProgram(this, m_pConfiguration);
     m_ModuleActivistList.append(m_pMeasProgram);
     connect(m_pMeasProgram, &cRangeModuleMeasProgram::activated, this, &cRangeModule::activationContinue);
     connect(m_pMeasProgram, &cRangeModuleMeasProgram::deactivated, this, &cRangeModule::deactivationContinue);
-    connect(m_pMeasProgram, &cRangeModuleMeasProgram::errMsg, m_pModuleErrorComponent, &VfModuleErrorComponent::setValue);
 
     for (int i = 0; i < m_ModuleActivistList.count(); i++)
         m_ModuleActivistList.at(i)->generateInterface();

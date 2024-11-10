@@ -42,12 +42,13 @@ enum rangemeaschannelCmds
     unregisterNotifiers
 };
 
-class cRangeMeasChannel:public cBaseMeasChannel
+class cRangeMeasChannel: public cBaseMeasChannel
 {
     Q_OBJECT
 public:
-    cRangeMeasChannel(NetworkConnectionInfo rmsocket, NetworkConnectionInfo pcbsocket, VeinTcp::AbstractTcpNetworkFactoryPtr tcpNetworkFactory,
-                      QString name, quint8 chnnr);
+    cRangeMeasChannel(NetworkConnectionInfo rmsocket, NetworkConnectionInfo pcbsocket,
+                      VeinTcp::AbstractTcpNetworkFactoryPtr tcpNetworkFactory,
+                      QString name, quint8 chnnr, QString moduleName);
     virtual void generateInterface(); // here we export our interface (entities)
 
     quint32 setRange(QString range); // a statemachine gets started that returns cmdDone(quint32 cmdnr)

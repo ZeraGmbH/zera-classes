@@ -66,7 +66,6 @@ void cModeModule::setupModule()
     m_ModuleActivistList.append(m_pModeModuleInit);
     connect(m_pModeModuleInit, &cModeModuleInit::activated, this, &cModeModule::activationContinue);
     connect(m_pModeModuleInit, &cModeModuleInit::deactivated, this, &cModeModule::deactivationContinue);
-    connect(m_pModeModuleInit, &cModeModuleInit::errMsg, m_pModuleErrorComponent, &VfModuleErrorComponent::setValue);
 
     for (int i = 0; i < m_ModuleActivistList.count(); i++)
         m_ModuleActivistList.at(i)->generateInterface();

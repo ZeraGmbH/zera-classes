@@ -15,8 +15,9 @@
 namespace SEM1MODULE
 {
 
-cSem1ModuleMeasProgram::cSem1ModuleMeasProgram(cSem1Module* module, std::shared_ptr<BaseModuleConfiguration> pConfiguration)
-    :cBaseMeasProgram(pConfiguration), m_pModule(module)
+cSem1ModuleMeasProgram::cSem1ModuleMeasProgram(cSem1Module* module, std::shared_ptr<BaseModuleConfiguration> pConfiguration) :
+    cBaseMeasProgram(pConfiguration, module->getVeinModuleName()),
+    m_pModule(module)
 {
     // we have to instantiate a working resource manager and secserver interface
     m_pSECInterface = new Zera::cSECInterface();

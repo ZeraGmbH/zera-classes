@@ -85,12 +85,13 @@ void cReferenceModule::setupModule()
         cReferenceMeasChannel* pchn = new cReferenceMeasChannel(getNetworkConfig()->m_rmServiceConnectionInfo,
                                                                 getNetworkConfig()->m_pcbServiceConnectionInfo,
                                                                 getNetworkConfig()->m_tcpNetworkFactory,
-                                                                pConfData->m_referenceChannelList.at(i), i+1);
+                                                                pConfData->m_referenceChannelList.at(i),
+                                                                i+1,
+                                                                getVeinModuleName());
         m_ReferenceMeasChannelList.append(pchn);
         m_ModuleActivistList.append(pchn);
         connect(pchn, &cReferenceMeasChannel::activated, this, &cReferenceModule::activationContinue);
         connect(pchn, &cReferenceMeasChannel::deactivated, this, &cReferenceModule::deactivationContinue);
-        connect(pchn, &cReferenceMeasChannel::errMsg, m_pModuleErrorComponent, &VfModuleErrorComponent::setValue);
     }
 
     // then we need some program for adjustment
@@ -102,8 +103,6 @@ void cReferenceModule::setupModule()
 
     connect(m_pReferenceAdjustment, &cReferenceAdjustment::activated, this, &cReferenceModule::activationContinue);
     connect(m_pReferenceAdjustment, &cReferenceAdjustment::deactivated, this, &cReferenceModule::deactivationContinue);
-    connect(m_pReferenceAdjustment, &cReferenceAdjustment::errMsg, m_pModuleErrorComponent, &VfModuleErrorComponent::setValue);
-
 
     // we have to connect all cmddone from our reference meas channels to refernce adjustment
     for (int i = 0; i < m_ReferenceMeasChannelList.count(); i ++)
@@ -117,7 +116,6 @@ void cReferenceModule::setupModule()
     m_ModuleActivistList.append(m_pMeasProgram);
     connect(m_pMeasProgram, &cReferenceModuleMeasProgram::activated, this, &cReferenceModule::activationContinue);
     connect(m_pMeasProgram, &cReferenceModuleMeasProgram::deactivated, this, &cReferenceModule::deactivationContinue);
-    connect(m_pMeasProgram, &cReferenceModuleMeasProgram::errMsg, m_pModuleErrorComponent, &VfModuleErrorComponent::setValue);
 
     for (int i = 0; i < m_ModuleActivistList.count(); i++)
         m_ModuleActivistList.at(i)->generateInterface();

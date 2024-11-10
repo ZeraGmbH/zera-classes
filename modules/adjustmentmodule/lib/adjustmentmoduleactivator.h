@@ -4,9 +4,7 @@
 #include "adjustmentmodulecommon.h"
 #include <rminterface.h>
 #include <pcbinterface.h>
-#include "taskcontainersequence.h"
-#include "taskcontainerparallel.h"
-#include "networkconnectioninfo.h"
+#include <taskcontainersequence.h>
 #include <vfmoduleerrorcomponent.h>
 
 class AdjustmentModuleActivator : public QObject
@@ -14,7 +12,8 @@ class AdjustmentModuleActivator : public QObject
     Q_OBJECT
 public:
     AdjustmentModuleActivator(QStringList configuredChannels,
-                              AdjustmentModuleCommonPtr activationData);
+                              AdjustmentModuleCommonPtr activationData,
+                              QString moduleName);
     void activate();
     void deactivate();
     void reloadRanges();
@@ -22,7 +21,6 @@ signals:
     void sigActivationReady();
     void sigDeactivationReady();
     void sigRangesReloaded();
-    void errMsg(QVariant value);
 
 private slots:
     void onActivateContinue(bool ok);
@@ -38,6 +36,7 @@ private:
     void initChannelInfoHash();
     void fillChannelAliasHash();
 
+    QString m_moduleName;
     QStringList m_configuredChannels;
 
     TaskContainerSequence m_activationTasks;

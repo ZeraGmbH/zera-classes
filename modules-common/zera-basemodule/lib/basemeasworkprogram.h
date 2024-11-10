@@ -3,12 +3,13 @@
 
 #include "moduleactivist.h"
 #include "basemoduleconfiguration.h"
+#include <memory>
 
 class cBaseMeasWorkProgram: public cModuleActivist
 {
     Q_OBJECT
 public:
-    cBaseMeasWorkProgram(std::shared_ptr<BaseModuleConfiguration> pConfiguration);
+    cBaseMeasWorkProgram(std::shared_ptr<BaseModuleConfiguration> pConfiguration, QString moduleName);
 signals:
     void actualValues(QVector<float>*);
 public slots:

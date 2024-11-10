@@ -1,5 +1,10 @@
 #include "moduleactivist.h"
 
+cModuleActivist::cModuleActivist(QString moduleName) :
+    m_moduleName(moduleName)
+{
+}
+
 void cModuleActivist::activate()
 {
     m_activationMachine.start();
@@ -12,7 +17,7 @@ void cModuleActivist::deactivate()
 
 void cModuleActivist::notifyError(QVariant value)
 {
-    emit errMsg(value);
+    qWarning("Module %s reported error: %s", qPrintable(m_moduleName), qPrintable(value.toString()));
 }
 
 void cModuleActivist::notifyActivationError(QVariant value)

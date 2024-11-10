@@ -12,7 +12,8 @@ namespace SAMPLEMODULE
 {
 
 cSampleModuleMeasProgram::cSampleModuleMeasProgram(cSampleModule* module, std::shared_ptr<BaseModuleConfiguration> pConfiguration) :
-    cBaseDspMeasProgram(pConfiguration), m_pModule(module)
+    cBaseDspMeasProgram(pConfiguration, module->getVeinModuleName()),
+    m_pModule(module)
 {
     m_dspInterface = m_pModule->getServiceInterfaceFactory()->createDspInterfaceOther();
 

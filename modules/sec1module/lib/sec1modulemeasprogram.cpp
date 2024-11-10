@@ -20,7 +20,7 @@ namespace SEC1MODULE
 {
 
 cSec1ModuleMeasProgram::cSec1ModuleMeasProgram(cSec1Module* module, std::shared_ptr<BaseModuleConfiguration> pConfiguration) :
-    cBaseMeasProgram(pConfiguration),
+    cBaseMeasProgram(pConfiguration, module->getVeinModuleName()),
     m_pModule(module)
 {
     // we have to instantiate a working resource manager and secserver interface

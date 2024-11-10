@@ -55,7 +55,6 @@ void cBleModule::setupModule()
     m_ModuleActivistList.append(m_pMeasProgram);
     connect(m_pMeasProgram, &cBleModuleMeasProgram::activated, this, &cBleModule::activationContinue);
     connect(m_pMeasProgram, &cBleModuleMeasProgram::deactivated, this, &cBleModule::deactivationContinue);
-    connect(m_pMeasProgram, &cBleModuleMeasProgram::errMsg, m_pModuleErrorComponent, &VfModuleErrorComponent::setValue);
 
     for (int i = 0; i < m_ModuleActivistList.count(); i++)
         m_ModuleActivistList.at(i)->generateInterface();

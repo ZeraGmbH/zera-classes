@@ -6,9 +6,11 @@
 namespace SAMPLEMODULE
 {
 
-cPllMeasChannel::cPllMeasChannel(NetworkConnectionInfo rmsocket, NetworkConnectionInfo pcbsocket, VeinTcp::AbstractTcpNetworkFactoryPtr tcpNetworkFactory,
-                                 QString name, quint8 chnnr) :
-    cBaseMeasChannel(rmsocket, pcbsocket, tcpNetworkFactory, name, chnnr)
+cPllMeasChannel::cPllMeasChannel(NetworkConnectionInfo rmsocket, NetworkConnectionInfo pcbsocket,
+                                 VeinTcp::AbstractTcpNetworkFactoryPtr tcpNetworkFactory,
+                                 QString name, quint8 chnnr, QString moduleName) :
+    cBaseMeasChannel(rmsocket, pcbsocket, tcpNetworkFactory, name, chnnr,
+                       QString("%1/PllMeasChannel/%2").arg(moduleName, name))
 {
     m_pcbInterface = std::make_shared<Zera::cPCBInterface>();
 

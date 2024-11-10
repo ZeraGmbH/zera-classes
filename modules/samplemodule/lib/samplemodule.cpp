@@ -84,12 +84,12 @@ void cSampleModule::setupModule()
                                                       getNetworkConfig()->m_pcbServiceConnectionInfo,
                                                       getNetworkConfig()->m_tcpNetworkFactory,
                                                       pConfData->m_ObsermaticConfPar.m_pllChannelList.at(i),
-                                                      i+1);
+                                                      i+1,
+                                                      getVeinModuleName());
         m_pllMeasChannelList.append(pllchn);
         m_ModuleActivistList.append(pllchn);
         connect(pllchn, &cPllMeasChannel::activated, this, &cSampleModule::activationContinue);
         connect(pllchn, &cPllMeasChannel::deactivated, this, &cSampleModule::deactivationContinue);
-        connect(pllchn, &cPllMeasChannel::errMsg, m_pModuleErrorComponent, &VfModuleErrorComponent::setValue);
     }
 
     // next we instantiate an object of sample channel so we can switch sample frequency ranges
@@ -99,21 +99,18 @@ void cSampleModule::setupModule()
     m_ModuleActivistList.append(schn);
     connect(schn, &cSampleChannel::activated, this, &cSampleModule::activationContinue);
     connect(schn, &cSampleChannel::deactivated, this, &cSampleModule::deactivationContinue);
-    connect(schn, &cSampleChannel::errMsg, m_pModuleErrorComponent, &VfModuleErrorComponent::setValue);
 
     // we need some program that does the pll handling (observation, automatic, setting)
     m_pPllObsermatic = new cPllObsermatic(this, *pConfData);
     m_ModuleActivistList.append(m_pPllObsermatic);
     connect(m_pPllObsermatic, &cPllObsermatic::activated, this, &cSampleModule::activationContinue);
     connect(m_pPllObsermatic, &cPllObsermatic::deactivated, this, &cSampleModule::deactivationContinue);
-    connect(m_pPllObsermatic, &cPllObsermatic::errMsg, m_pModuleErrorComponent, &VfModuleErrorComponent::setValue);
 
     // at last we need some program that does the measuring on dsp
     m_pMeasProgram = new cSampleModuleMeasProgram(this, m_pConfiguration);
     m_ModuleActivistList.append(m_pMeasProgram);
     connect(m_pMeasProgram, &cSampleModuleMeasProgram::activated, this, &cSampleModule::activationContinue);
     connect(m_pMeasProgram, &cSampleModuleMeasProgram::deactivated, this, &cSampleModule::deactivationContinue);
-    connect(m_pMeasProgram, &cSampleModuleMeasProgram::errMsg, m_pModuleErrorComponent, &VfModuleErrorComponent::setValue);
 
     for (int i = 0; i < m_ModuleActivistList.count(); i++)
         m_ModuleActivistList.at(i)->generateInterface();

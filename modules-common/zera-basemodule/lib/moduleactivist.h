@@ -1,9 +1,7 @@
 #ifndef MODULEACTIVIST_H
 #define MODULEACTIVIST_H
 
-#include "vfmoduleerrorcomponent.h"
 #include <QObject>
-#include <QJsonArray>
 #include <QStateMachine>
 #include <QHash>
 #include <functional>
@@ -14,7 +12,7 @@ class cModuleActivist: public QObject
 {
     Q_OBJECT
 public:
-    cModuleActivist(){m_bActive = false;}
+    cModuleActivist(QString moduleName);
     virtual ~cModuleActivist(){}
 signals:
     void activated(); // is emitted after the activist is completely activated
@@ -32,7 +30,6 @@ signals:
     void setupContinue();
     void interruptContinue();
     void executionError();
-    void errMsg(QVariant value);
 public slots:
     virtual void activate(); // here we query our properties and activate ourself
     virtual void deactivate(); // what do you think ? yes you're right
@@ -44,7 +41,8 @@ protected:
     void notifyExecutionError(QVariant value);
     bool handleFinishCallback(int cmdNumber, quint8 reply, QVariant answer);
 
-    bool m_bActive;
+    bool m_bActive = false;
+    QString m_moduleName;
     QStateMachine m_activationMachine;
     QStateMachine m_deactivationMachine;
     QHash<int, std::function<void(quint8 reply, QVariant answer)>> m_cmdFinishCallbacks;

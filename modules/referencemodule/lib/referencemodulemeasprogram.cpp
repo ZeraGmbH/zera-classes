@@ -11,8 +11,9 @@
 namespace REFERENCEMODULE
 {
 
-cReferenceModuleMeasProgram::cReferenceModuleMeasProgram(cReferenceModule* module, std::shared_ptr<BaseModuleConfiguration> pConfiguration)
-    :cBaseDspMeasProgram(pConfiguration), m_pModule(module)
+cReferenceModuleMeasProgram::cReferenceModuleMeasProgram(cReferenceModule* module, std::shared_ptr<BaseModuleConfiguration> pConfiguration) :
+    cBaseDspMeasProgram(pConfiguration, module->getVeinModuleName()),
+    m_pModule(module)
 {
     m_dspInterface = m_pModule->getServiceInterfaceFactory()->createDspInterfaceOther();
 
