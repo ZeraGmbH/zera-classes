@@ -1,11 +1,8 @@
 #ifndef CLIENTACTIVECOMPONENT_H
 #define CLIENTACTIVECOMPONENT_H
 
-#include <QObject>
+#include "vfmoduleparameter.h"
 #include <QTimer>
-#include <QVariant>
-
-class VfModuleParameter;
 
 /**
  * @brief ClientActiveComponent is a simple helper fo performance/energy
@@ -22,7 +19,6 @@ class VfModuleParameter;
  *   run into timeout
  * * Module is notified by signal clientActiveStateChanged or can query state
  *   by areClientsActive().
- * Simple he?
  */
 class ClientActiveComponent : public QObject
 {
