@@ -24,8 +24,8 @@ public:
     void generateVeinInterface() override;
 
 public slots:
-    virtual void start(); // difference between start and stop is that actual values
-    virtual void stop(); // in interface are not updated when stop
+    void start() override; // difference between start and stop is that actual values
+    void stop() override; // in interface are not updated when stop
 
 private:
     cPower3ModuleConfigData* getConfData();
