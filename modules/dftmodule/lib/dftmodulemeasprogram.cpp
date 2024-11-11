@@ -155,11 +155,11 @@ void cDftModuleMeasProgram::generateVeinInterface()
             QString channelDescriptionPolar;
             if(sl.contains("m0") || sl.contains("m1") || sl.contains("m2") || sl.contains("m6")) { //voltage channels
                 channelDescriptionCartesian = QString("Actual value phase/neutral / cartesian format: re,im");
-                channelDescriptionPolar = QString("Actual value phase/neutral / polar format: abs,rad[-π,π],deg[-180-180]");
+                channelDescriptionPolar = QString("Actual value phase/neutral / polar format: abs,rad[0,2π],deg[0,360]");
             }
             else { //current channels
                 channelDescriptionCartesian = QString("Actual value / cartesian format: re,im");
-                channelDescriptionPolar = QString("Actual value / polar format: abs,rad[-π,π],deg[-180-180]");
+                channelDescriptionPolar = QString("Actual value / polar format: abs,rad[0,2π],deg[0,360]");
             }
             pActvalue = new VfModuleActvalue(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
                                                 QString("ACT_DFTPN%1").arg(n+1),
@@ -184,7 +184,7 @@ void cDftModuleMeasProgram::generateVeinInterface()
 
             pActvalue = new VfModuleActvalue(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
                                              QString("ACT_POL_DFTPP%1").arg(p+1),
-                                             QString("Actual value phase/phase / polar format: abs,rad[-π,π],deg[-180-180]"));
+                                             QString("Actual value phase/phase / polar format: abs,rad[0,2π],deg[0,360]"));
             m_veinPolarValue.append(pActvalue); // we add the component for our measurement
             m_pModule->veinModuleActvalueList.append(pActvalue); // and for the modules interface
 
@@ -619,9 +619,12 @@ void cDftModuleMeasProgram::setInterfaceActualValues(QVector<float> *actualValue
             double abs = sqrt(re*re + im*im);
             dftResultPolar.append(abs);
             double rad = atan2(im, re); // y=im / x=re
+            if(rad < 0)
+                rad += 2*M_PI;
             dftResultPolar.append(rad);
             double deg = rad / M_PI * 180;
             dftResultPolar.append(deg);
+
             QVariant listPolar = QVariant::fromValue<QList<double>>(dftResultPolar);
             m_veinPolarValue.at(i)->setValue(listPolar);
         }
