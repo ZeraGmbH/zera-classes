@@ -86,8 +86,8 @@
         ],
         "ACT_POL_DFTPP1": [
             2.82843,
-            -2.81984,
-            -161.565
+            3.46334,
+            198.435
         ],
         "ACT_POL_DFTPP2": [
             2.82843,
@@ -160,57 +160,57 @@
                 },
                 "ACT_POL_DFTPN1": {
                     "ChannelName": "UL1",
-                    "Description": "Actual value phase/neutral / polar format: abs,rad[-π,π],deg[-180-180]",
+                    "Description": "Actual value phase/neutral / polar format: abs,rad[0,2π],deg[0,360]",
                     "Unit": "V"
                 },
                 "ACT_POL_DFTPN2": {
                     "ChannelName": "UL2",
-                    "Description": "Actual value phase/neutral / polar format: abs,rad[-π,π],deg[-180-180]",
+                    "Description": "Actual value phase/neutral / polar format: abs,rad[0,2π],deg[0,360]",
                     "Unit": "V"
                 },
                 "ACT_POL_DFTPN3": {
                     "ChannelName": "UL3",
-                    "Description": "Actual value phase/neutral / polar format: abs,rad[-π,π],deg[-180-180]",
+                    "Description": "Actual value phase/neutral / polar format: abs,rad[0,2π],deg[0,360]",
                     "Unit": "V"
                 },
                 "ACT_POL_DFTPN4": {
                     "ChannelName": "IL1",
-                    "Description": "Actual value / polar format: abs,rad[-π,π],deg[-180-180]",
+                    "Description": "Actual value / polar format: abs,rad[0,2π],deg[0,360]",
                     "Unit": "A"
                 },
                 "ACT_POL_DFTPN5": {
                     "ChannelName": "IL2",
-                    "Description": "Actual value / polar format: abs,rad[-π,π],deg[-180-180]",
+                    "Description": "Actual value / polar format: abs,rad[0,2π],deg[0,360]",
                     "Unit": "A"
                 },
                 "ACT_POL_DFTPN6": {
                     "ChannelName": "IL3",
-                    "Description": "Actual value / polar format: abs,rad[-π,π],deg[-180-180]",
+                    "Description": "Actual value / polar format: abs,rad[0,2π],deg[0,360]",
                     "Unit": "A"
                 },
                 "ACT_POL_DFTPN7": {
                     "ChannelName": "UAUX",
-                    "Description": "Actual value phase/neutral / polar format: abs,rad[-π,π],deg[-180-180]",
+                    "Description": "Actual value phase/neutral / polar format: abs,rad[0,2π],deg[0,360]",
                     "Unit": "V"
                 },
                 "ACT_POL_DFTPN8": {
                     "ChannelName": "IAUX",
-                    "Description": "Actual value / polar format: abs,rad[-π,π],deg[-180-180]",
+                    "Description": "Actual value / polar format: abs,rad[0,2π],deg[0,360]",
                     "Unit": "A"
                 },
                 "ACT_POL_DFTPP1": {
                     "ChannelName": "UL1-UL2",
-                    "Description": "Actual value phase/phase / polar format: abs,rad[-π,π],deg[-180-180]",
+                    "Description": "Actual value phase/phase / polar format: abs,rad[0,2π],deg[0,360]",
                     "Unit": "V"
                 },
                 "ACT_POL_DFTPP2": {
                     "ChannelName": "UL3-UL2",
-                    "Description": "Actual value phase/phase / polar format: abs,rad[-π,π],deg[-180-180]",
+                    "Description": "Actual value phase/phase / polar format: abs,rad[0,2π],deg[0,360]",
                     "Unit": "V"
                 },
                 "ACT_POL_DFTPP3": {
                     "ChannelName": "UL3-UL1",
-                    "Description": "Actual value phase/phase / polar format: abs,rad[-π,π],deg[-180-180]",
+                    "Description": "Actual value phase/phase / polar format: abs,rad[0,2π],deg[0,360]",
                     "Unit": "V"
                 },
                 "ACT_RFIELD": {
