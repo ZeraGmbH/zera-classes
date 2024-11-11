@@ -90,32 +90,32 @@
                 },
                 "ACT_POL_DFTPN1": {
                     "ChannelName": "UL1",
-                    "Description": "Actual value phase/neutral / polar format: abs,rad[0,2π],deg[0,360]",
+                    "Description": "Actual value phase/neutral / polar format: abs,rad[-π,π],deg[-180-180]",
                     "Unit": "V"
                 },
                 "ACT_POL_DFTPN2": {
                     "ChannelName": "UL2",
-                    "Description": "Actual value phase/neutral / polar format: abs,rad[0,2π],deg[0,360]",
+                    "Description": "Actual value phase/neutral / polar format: abs,rad[-π,π],deg[-180-180]",
                     "Unit": "V"
                 },
                 "ACT_POL_DFTPN3": {
                     "ChannelName": "UL3",
-                    "Description": "Actual value phase/neutral / polar format: abs,rad[0,2π],deg[0,360]",
+                    "Description": "Actual value phase/neutral / polar format: abs,rad[-π,π],deg[-180-180]",
                     "Unit": "V"
                 },
                 "ACT_POL_DFTPN4": {
                     "ChannelName": "IL1",
-                    "Description": "Actual value / polar format: abs,rad[0,2π],deg[0,360]",
+                    "Description": "Actual value / polar format: abs,rad[-π,π],deg[-180-180]",
                     "Unit": "A"
                 },
                 "ACT_POL_DFTPN5": {
                     "ChannelName": "IL2",
-                    "Description": "Actual value / polar format: abs,rad[0,2π],deg[0,360]",
+                    "Description": "Actual value / polar format: abs,rad[-π,π],deg[-180-180]",
                     "Unit": "A"
                 },
                 "ACT_POL_DFTPN6": {
                     "ChannelName": "IL3",
-                    "Description": "Actual value / polar format: abs,rad[0,2π],deg[0,360]",
+                    "Description": "Actual value / polar format: abs,rad[-π,π],deg[-180-180]",
                     "Unit": "A"
                 },
                 "ACT_RFIELD": {
