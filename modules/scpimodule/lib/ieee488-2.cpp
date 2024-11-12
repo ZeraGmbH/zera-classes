@@ -31,16 +31,13 @@ scpiErrorType SCPIError[scpiLastError] = {  {0,(char*)"No error"},
                                             {-500,(char*)"Power on"} };
 
 
-cIEEE4882::cIEEE4882(cSCPIClient *client, QString deviceFamilyFromConfig, quint16 errorqueuelen, const VeinStorage::AbstractDatabase *storageDb) :
+cIEEE4882::cIEEE4882(cSCPIClient *client, QString deviceFamilyFromConfig, quint16 errorqueuelen, VeinStorage::AbstractDatabase *storageDb) :
     m_pClient(client),
-    m_nQueueLen(errorqueuelen)
+    m_deviceFamilyFromConfig(deviceFamilyFromConfig),
+    m_nQueueLen(errorqueuelen),
+    m_serNoComponent(storageDb->getFutureComponent(1150, "PAR_SerialNr"))
 {
     m_nSTB = m_nSRE = m_nESR = m_nESE = 0;
-    VeinStorage::StorageComponentPtr serNoComponent = storageDb->findComponent(1150, "PAR_SerialNr");
-    QString deviceSerNo;
-    if(serNoComponent)
-        deviceSerNo = serNoComponent->getValue().toString();
-    setIdentification(deviceFamilyFromConfig, deviceSerNo);
 }
 
 
@@ -141,7 +138,7 @@ void cIEEE4882::executeCmd(cSCPIClient *client, int cmdCode, const QString &sInp
 
     case identification:
         if (cmd.isQuery())
-            client->receiveAnswer(m_sIdentification);
+            client->receiveAnswer(getIdentification());
         else
             AddEventErrorWithResponse(CommandError);
         break;
@@ -223,19 +220,17 @@ void cIEEE4882::setStatusByte(quint8 stb, quint8)
     SetSTB(m_nSTB | (1 << stb)); // we ignore the value here, it's only important for scpi status systems
 }
 
-
-void cIEEE4882::setIdentification(QString deviceFamilyFromConfig, QString deviceSerNo)
+QString cIEEE4882::getIdentification()
 {
     QString companyName QStringLiteral("ZERA GmbH Koenigswinter");
     QString releaseNr = SysInfo::getReleaseNr();
     if(releaseNr.isEmpty())
         releaseNr = QStringLiteral("unknokwn-release");
-    QString serialNr = deviceSerNo;
+    QString serialNr = m_serNoComponent->getValue().toString();
     if(serialNr.isEmpty()) // was zera-setup2 completed??
         serialNr = QStringLiteral("unknown-serialno");
-    m_sIdentification = QString("%1, %2, %3, %4").arg(companyName, deviceFamilyFromConfig, serialNr, releaseNr);
+    return QString("%1, %2, %3, %4").arg(companyName, m_deviceFamilyFromConfig, serialNr, releaseNr);
 }
-
 
 QString cIEEE4882::RegOutput(quint8 reg)
 {

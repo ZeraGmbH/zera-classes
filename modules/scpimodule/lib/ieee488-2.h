@@ -98,7 +98,7 @@ class cIEEE4882: public QObject
     Q_OBJECT
 
 public:
-    cIEEE4882(cSCPIClient* client, QString deviceFamilyFromConfig, quint16 errorqueuelen, const VeinStorage::AbstractDatabase *storageDb);
+    cIEEE4882(cSCPIClient* client, QString deviceFamilyFromConfig, quint16 errorqueuelen, VeinStorage::AbstractDatabase *storageDb);
 
     void executeCmd(cSCPIClient* client, int cmdCode, const QString &sInput);
 
@@ -113,12 +113,12 @@ public slots:
 
 private:
     cSCPIClient* m_pClient;
-    QString m_sIdentification;
+    QString m_deviceFamilyFromConfig;
     quint16 m_nQueueLen; // max. entries in m_ErrEventQueue
-
+    const VeinStorage::StorageComponentPtr m_serNoComponent;
     QVector<int> m_ErrEventQueue;
 
-    void setIdentification(QString deviceFamilyFromConfig, QString deviceSerNo);
+    QString getIdentification();
     QString RegOutput(quint8 reg);
     QString mGetScpiError();
 
