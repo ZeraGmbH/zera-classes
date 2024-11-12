@@ -1,6 +1,7 @@
 #ifndef IEEE4882_H
 #define IEEE4882_H
 
+#include <vs_abstractdatabase.h>
 #include <QObject>
 #include <QString>
 #include <QVector>
@@ -97,7 +98,7 @@ class cIEEE4882: public QObject
     Q_OBJECT
 
 public:
-    cIEEE4882(cSCPIClient* client, QString deviceFamilyFromConfig, quint16 errorqueuelen);
+    cIEEE4882(cSCPIClient* client, QString deviceFamilyFromConfig, quint16 errorqueuelen, const VeinStorage::AbstractDatabase *storageDb);
 
     void executeCmd(cSCPIClient* client, int cmdCode, const QString &sInput);
 
@@ -117,7 +118,7 @@ private:
 
     QVector<int> m_ErrEventQueue;
 
-    void setIdentification(QString deviceFamilyFromConfig);
+    void setIdentification(QString deviceFamilyFromConfig, QString deviceSerNo);
     QString RegOutput(quint8 reg);
     QString mGetScpiError();
 

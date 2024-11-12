@@ -31,12 +31,16 @@ scpiErrorType SCPIError[scpiLastError] = {  {0,(char*)"No error"},
                                             {-500,(char*)"Power on"} };
 
 
-cIEEE4882::cIEEE4882(cSCPIClient *client, QString deviceFamilyFromConfig, quint16 errorqueuelen) :
+cIEEE4882::cIEEE4882(cSCPIClient *client, QString deviceFamilyFromConfig, quint16 errorqueuelen, const VeinStorage::AbstractDatabase *storageDb) :
     m_pClient(client),
     m_nQueueLen(errorqueuelen)
 {
     m_nSTB = m_nSRE = m_nESR = m_nESE = 0;
-    setIdentification(deviceFamilyFromConfig);
+    VeinStorage::StorageComponentPtr serNoComponent = storageDb->findComponent(1150, "PAR_SerialNr");
+    QString deviceSerNo;
+    if(serNoComponent)
+        deviceSerNo = serNoComponent->getValue().toString();
+    setIdentification(deviceFamilyFromConfig, deviceSerNo);
 }
 
 
@@ -220,13 +224,13 @@ void cIEEE4882::setStatusByte(quint8 stb, quint8)
 }
 
 
-void cIEEE4882::setIdentification(QString deviceFamilyFromConfig)
+void cIEEE4882::setIdentification(QString deviceFamilyFromConfig, QString deviceSerNo)
 {
     QString companyName QStringLiteral("ZERA GmbH Koenigswinter");
     QString releaseNr = SysInfo::getReleaseNr();
     if(releaseNr.isEmpty())
         releaseNr = QStringLiteral("unknokwn-release");
-    QString serialNr = SysInfo::getSerialNr();
+    QString serialNr = deviceSerNo;
     if(serialNr.isEmpty()) // was zera-setup2 completed??
         serialNr = QStringLiteral("unknown-serialno");
     m_sIdentification = QString("%1, %2, %3, %4").arg(companyName, deviceFamilyFromConfig, serialNr, releaseNr);
