@@ -258,7 +258,7 @@ void BaseModule::exportMetaData()
     m_pModuleInterfaceComponent->setValue(QVariant(ba));
 }
 
-const VeinStorage::AbstractDatabase *BaseModule::getStorageDb() const
+VeinStorage::AbstractDatabase *BaseModule::getStorageDb() const
 {
     return m_moduleParam.m_storagesystem->getDb();
 }
