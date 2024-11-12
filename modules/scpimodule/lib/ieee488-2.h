@@ -99,7 +99,6 @@ class cIEEE4882: public QObject
 
 public:
     cIEEE4882(cSCPIClient* client, QString deviceFamilyFromConfig, quint16 errorqueuelen, VeinStorage::AbstractDatabase *storageDb);
-
     void executeCmd(cSCPIClient* client, int cmdCode, const QString &sInput);
 
 signals:

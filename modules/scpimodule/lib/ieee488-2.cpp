@@ -1,8 +1,5 @@
-#include <scpi.h>
-
 #include "ieee488-2.h"
 #include "scpiclient.h"
-#include "scpimodule.h"
 #include <sysinfo.h>
 
 namespace SCPIMODULE
@@ -50,33 +47,25 @@ void cIEEE4882::AddEventErrorWithResponse(int error)
 void cIEEE4882::executeCmd(cSCPIClient *client, int cmdCode, const QString &sInput)
 {
     cSCPICommand cmd = sInput;
-    quint8 par;
-    int anzError, i;
-    QString sError;
-    bool ok;
-
-
     switch (cmdCode)
     {
     case operationComplete:
-        if (cmd.isCommand(0))
-        {
+        if (cmd.isCommand(0)) {
             // for the moment we only reset opcstate, means we only support sequential commands
             m_nOPCState = OCAS;
             SetnoOperFlag(true); // wir setzen ocas, setzen das nooperpending flag => setzen opc im sesr
             emit m_pClient->commandAnswered(m_pClient);
         }
+        else if (cmd.isQuery())
+            client->receiveAnswer(RegOutput(client->operationComplete()));
         else
-            if (cmd.isQuery())
-                client->receiveAnswer(RegOutput(client->operationComplete()));
-            else
-                AddEventErrorWithResponse(CommandError);
+            AddEventErrorWithResponse(CommandError);
         break;
 
     case eventstatusenable:
-        if (cmd.isCommand(1))
-        {
-            par = cmd.getParam(0).toInt(&ok);
+        if (cmd.isCommand(1)) {
+            bool ok;
+            quint8 par = cmd.getParam(0).toInt(&ok);
             if (ok) {
                 SetESE(par);
                 emit m_pClient->commandAnswered(m_pClient);
@@ -84,18 +73,16 @@ void cIEEE4882::executeCmd(cSCPIClient *client, int cmdCode, const QString &sInp
             else
                 AddEventErrorWithResponse(NumericDataError);
         }
+        else if (cmd.isQuery())
+            client->receiveAnswer(RegOutput(m_nESE));
         else
-            if (cmd.isQuery())
-                client->receiveAnswer(RegOutput(m_nESE));
-            else
-                AddEventErrorWithResponse(CommandError);
+            AddEventErrorWithResponse(CommandError);
         break;
 
     case servicerequestenable:
-        if (cmd.isCommand(1))
-        {
-
-            par = cmd.getParam(0).toInt(&ok);
+        if (cmd.isCommand(1)) {
+            bool ok;
+            quint8 par = cmd.getParam(0).toInt(&ok);
             if (ok) {
                 SetSRE(par);
                 emit m_pClient->commandAnswered(m_pClient);
@@ -103,37 +90,32 @@ void cIEEE4882::executeCmd(cSCPIClient *client, int cmdCode, const QString &sInp
             else
                 AddEventErrorWithResponse(NumericDataError);
         }
+        else if (cmd.isQuery())
+            client->receiveAnswer(RegOutput(m_nSRE));
         else
-            if (cmd.isQuery())
-                client->receiveAnswer(RegOutput(m_nSRE));
-            else
-                AddEventErrorWithResponse(CommandError);
+            AddEventErrorWithResponse(CommandError);
         break;
 
     case clearstatus:
-        if (cmd.isCommand(0))
-        {
+        if (cmd.isCommand(0)) {
             ClearStatus();
             emit m_pClient->commandAnswered(m_pClient);
         }
+        else if (cmd.isQuery())
+            AddEventErrorWithResponse(QueryError);
         else
-            if (cmd.isQuery())
-                AddEventErrorWithResponse(QueryError);
-            else
-                AddEventErrorWithResponse(CommandError);
+            AddEventErrorWithResponse(CommandError);
         break;
 
     case reset:
-        if (cmd.isCommand(0))
-        {
+        if (cmd.isCommand(0)) {
             ResetDevice();
             emit m_pClient->commandAnswered(m_pClient);
         }
+        else if (cmd.isQuery())
+            AddEventErrorWithResponse(QueryError);
         else
-            if (cmd.isQuery())
-                AddEventErrorWithResponse(QueryError);
-            else
-                AddEventErrorWithResponse(CommandError);
+            AddEventErrorWithResponse(CommandError);
         break;
 
     case identification:
@@ -179,41 +161,35 @@ void cIEEE4882::executeCmd(cSCPIClient *client, int cmdCode, const QString &sInp
         break;
 
     case readallerrors:
-        if (cmd.isQuery())
-        {
-            anzError = m_ErrEventQueue.count();
+        if (cmd.isQuery()) {
+            int anzError = m_ErrEventQueue.count();
             if (anzError == 0)
                 client->receiveAnswer(mGetScpiError());
-            else
-            {
-                sError = mGetScpiError();
+            else {
+                QString sError = mGetScpiError();
                 if (anzError > 1)
-                    for (i = 1; i < anzError; i++)
+                    for (int i = 1; i < anzError; i++)
                         sError = sError + ";" + mGetScpiError();
                 client->receiveAnswer(sError);
             }
         }
         else
             AddEventErrorWithResponse(CommandError);
-
         break;
     }
-
 }
 
 
 void cIEEE4882::AddEventError(int error)
 {
     SetSTB(m_nSTB | (1 << STBeeQueueNotEmpty)); // we have something in our output queue -> so we set status byte
-    if ( m_ErrEventQueue.count() == m_nQueueLen )
-    {
+    if ( m_ErrEventQueue.count() == m_nQueueLen ) {
         m_ErrEventQueue.pop_back();
         m_ErrEventQueue.append(QueueOverflow);
     }
     else
         m_ErrEventQueue.append(error);
 }
-
 
 void cIEEE4882::setStatusByte(quint8 stb, quint8)
 {
@@ -237,20 +213,17 @@ QString cIEEE4882::RegOutput(quint8 reg)
     return QString("+%1").arg(reg);
 }
 
-
 QString cIEEE4882::mGetScpiError()
 {
     if ( m_ErrEventQueue.empty() )
         return QString("+%1,%2").arg(SCPIError[0].ErrNum).arg(SCPIError[0].ErrTxt);
-    else
-    {
+    else {
         int e = m_ErrEventQueue.first(); // fifo
         m_ErrEventQueue.pop_front();
         if ( m_ErrEventQueue.empty() )
             SetSTB(m_nSTB & ~(1 << STBeeQueueNotEmpty)); // we reset this bit
 
         return QString("%1,%2").arg(SCPIError[e].ErrNum).arg(SCPIError[e].ErrTxt);
-
     }
 }
 
@@ -276,44 +249,36 @@ void cIEEE4882::ClearStatus()
     m_nOPCQState = OQIS;
 }
 
-
 void cIEEE4882::ClearEventError()
 {
     SetSTB(m_nSTB & ~(1 << STBmav)); // clear message avail bit in status byte
     m_ErrEventQueue.clear(); // clear our event error queue
 }
 
-
 void cIEEE4882::SetnoOperFlag(bool b)
 {
     m_bnoOperationPendingFlag = b;
-    if ( (b) && (m_nOPCState == OCAS))
-    { // wenn operation complete active state
+    if ( (b) && (m_nOPCState == OCAS)) {
         m_nOPCState = OCIS; // if we are in operation complete active state, we change into idle
         SetESR(m_nESR | SESROperationComplete);
     }
 }
 
-
 void cIEEE4882::SetSTB(quint8 b)
 {
     m_nSTB = b;
-    if (m_nSTB & m_nSRE & 0xBF) // if bit is enabled
-    {
+    if (m_nSTB & m_nSRE & 0xBF) { // if bit is enabled
         m_nSTB |= (1 << STBrqs); // we set the request service bit in stb
         if (((m_nSTB & m_nSRE) & (1 << STBrqs)) != 0)
             m_pClient->receiveAnswer("SRQ", false);
     }
 }
 
-
-
 void cIEEE4882::SetSRE(quint8 b)
 {
     m_nSRE = b;
     SetSTB(m_nSTB); // we set already set bits !? ... yes if there are bits sets which become enabled now....
 }
-
 
 void cIEEE4882::SetESR(quint8 b)
 {
@@ -322,12 +287,10 @@ void cIEEE4882::SetESR(quint8 b)
         SetSTB(m_nSTB | 1 << STBesb);
 }
 
-
 void cIEEE4882::SetESE(quint8 b)
 {
     m_nESE = b;
     SetESR(m_nESR);
 }
-
 
 }
