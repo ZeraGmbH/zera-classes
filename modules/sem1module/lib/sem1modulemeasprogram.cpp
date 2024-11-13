@@ -739,7 +739,6 @@ void cSem1ModuleMeasProgram::updateDemoMeasurementResults()
     m_fTimeSecondsFinal = rand() % 10 +1; //random value between 1 and 10
     newRefConstant(QVariant(3600000));
     setEMResult();
-    stopMeasurement(false);
 }
 
 void cSem1ModuleMeasProgram::resourceManagerConnect()
