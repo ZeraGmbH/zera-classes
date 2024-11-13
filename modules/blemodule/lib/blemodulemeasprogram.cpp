@@ -81,11 +81,13 @@ void cBleModuleMeasProgram::generateVeinInterface()
                                               key = QString("ACT_WarningFlags"),
                                               QString("Current warning flags"),
                                               QVariant((quint32)0));
+    m_pModule->m_veinModuleParameterMap[key] = m_pWarningFlagsAct;
 
     m_pErrorFlagsAct = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
                                             key = QString("ACT_ErrorFlags"),
                                             QString("Current error flags"),
                                             QVariant(quint32(0)));
+    m_pModule->m_veinModuleParameterMap[key] = m_pErrorFlagsAct;
 
     m_pBluetoothOnOff = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
                                 key = QString("PAR_BluetoothOn"),
