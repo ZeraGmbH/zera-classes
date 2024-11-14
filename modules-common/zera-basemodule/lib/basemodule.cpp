@@ -100,6 +100,7 @@ BaseModule::BaseModule(ModuleFactoryParam moduleParam, std::shared_ptr<BaseModul
 
 BaseModule::~BaseModule()
 {
+    emit m_pModuleEventSystem->sigSendEvent(VfServerEntityRemove::generateEvent(getEntityId()));
     unsetModule();
 
     delete m_pStateIDLEIdle;
@@ -198,8 +199,6 @@ void BaseModule::unsetModule()
         delete veinModuleParameter;
     }
     m_veinModuleParameterMap.clear();
-
-    emit m_pModuleEventSystem->sigSendEvent(VfServerEntityRemove::generateEvent(getEntityId()));
 
     for (auto ModuleActivist : qAsConst(m_ModuleActivistList)) {
         delete ModuleActivist;

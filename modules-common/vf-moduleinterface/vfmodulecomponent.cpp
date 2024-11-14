@@ -18,7 +18,7 @@ VfModuleComponent::VfModuleComponent(int entityId, VeinEvent::EventSystem *event
 
 VfModuleComponent::~VfModuleComponent()
 {
-    sendNotification(VeinComponent::ComponentData::Command::CCMD_REMOVE);
+    // Entities are removed as a whole -> no component remove
 }
 
 void VfModuleComponent::exportMetaData(QJsonObject &jsObj)
