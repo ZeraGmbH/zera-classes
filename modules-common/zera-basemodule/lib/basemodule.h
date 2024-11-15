@@ -35,7 +35,7 @@ public:
     VeinStorage::AbstractDatabase *getStorageDb() const;
     bool getDemo();
     const AbstractFactoryServiceInterfacesPtr getServiceInterfaceFactory() const;
-    const ModuleFactoryParamNetworkPtr getNetworkConfig() const;
+    const ModuleNetworkParamsPtr getNetworkConfig() const;
 
     QList<VfModuleMetaData*> veinModuleMetaDataList; // only meta information
     QList<VfModuleComponent*> veinModuleComponentList; // for components that need no scpi interface

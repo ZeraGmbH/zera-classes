@@ -136,7 +136,7 @@ void ModuleManager::startModule(const QString &uniqueName,
                   qPrintable(confFileInfo.fileName()));
 
             ModulemanagerConfig *mmConfig = ModulemanagerConfig::getInstance();
-            ModuleFactoryParamNetworkPtr networkParams = std::make_shared<ModuleFactoryParamNetwork>(
+            ModuleNetworkParamsPtr networkParams = std::make_shared<ModuleNetworkParams>(
                 m_tcpNetworkFactory,
                 mmConfig->getPcbConnectionInfo(),
                 mmConfig->getDspConnectionInfo(),

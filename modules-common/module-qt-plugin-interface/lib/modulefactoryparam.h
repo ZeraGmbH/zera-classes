@@ -1,7 +1,7 @@
 #ifndef MEASUREMENTMODULEFACTORYPARAM_H
 #define MEASUREMENTMODULEFACTORYPARAM_H
 
-#include "modulefactoryparamnetwork.h"
+#include "modulenetworkparams.h"
 #include "modulegroupnumerator.h"
 #include "abstractfactoryserviceinterfaces.h"
 #include <abstracttcpnetworkfactory.h>
@@ -18,7 +18,7 @@ struct ModuleFactoryParam
                        QByteArray configXmlData,
                        VeinStorage::AbstractEventSystem* storagesystem,
                        AbstractFactoryServiceInterfacesPtr serviceInterfaceFactory,
-                       ModuleFactoryParamNetworkPtr networkParams,
+                       ModuleNetworkParamsPtr networkParams,
                        bool demo);
     ModuleFactoryParam getAdjustedParam(ModuleGroupNumerator* groupNumerator);
     const int m_entityId;
@@ -26,7 +26,7 @@ struct ModuleFactoryParam
     const QByteArray m_configXmlData;
     VeinStorage::AbstractEventSystem* m_storagesystem;
     AbstractFactoryServiceInterfacesPtr m_serviceInterfaceFactory;
-    const ModuleFactoryParamNetworkPtr m_networkParams;
+    const ModuleNetworkParamsPtr m_networkParams;
     const bool m_demo;
 };
 

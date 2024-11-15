@@ -272,7 +272,7 @@ const AbstractFactoryServiceInterfacesPtr BaseModule::getServiceInterfaceFactory
     return m_moduleParam.m_serviceInterfaceFactory;
 }
 
-const ModuleFactoryParamNetworkPtr BaseModule::getNetworkConfig() const
+const ModuleNetworkParamsPtr BaseModule::getNetworkConfig() const
 {
     return m_moduleParam.m_networkParams;
 }

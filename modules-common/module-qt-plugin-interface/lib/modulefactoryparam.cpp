@@ -5,7 +5,7 @@ ModuleFactoryParam::ModuleFactoryParam(int entityId,
                                        QByteArray configXmlData,
                                        VeinStorage::AbstractEventSystem *storagesystem,
                                        AbstractFactoryServiceInterfacesPtr serviceInterfaceFactory,
-                                       ModuleFactoryParamNetworkPtr networkParams,
+                                       ModuleNetworkParamsPtr networkParams,
                                        bool demo) :
     m_entityId(entityId),
     m_moduleNum(moduleNum),
