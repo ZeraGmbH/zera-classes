@@ -1,7 +1,7 @@
 #include "pcbserviceconnection.h"
 #include <proxy.h>
 
-void PcbServiceConnection::openConnection(ModuleNetworkParamsPtr networkParams)
+void PcbServiceConnection::setNetworkParams(ModuleNetworkParamsPtr networkParams)
 {
     m_pcbInterface = std::make_shared<Zera::cPCBInterface>();
     m_pcbClient = Zera::Proxy::getInstance()->getConnectionSmart(networkParams->m_pcbServiceConnectionInfo,

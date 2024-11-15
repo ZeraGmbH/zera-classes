@@ -123,7 +123,6 @@ private slots:
     void catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant answer);
 private:
     cAdjustmentModuleConfigData* getConfData();
-    void openPcbConnection();
     bool checkExternalVeinComponents();
     void setInterfaceValidation();
     void setAdjustEnvironment(QVariant var);

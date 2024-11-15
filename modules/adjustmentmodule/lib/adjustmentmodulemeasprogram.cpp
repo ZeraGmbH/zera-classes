@@ -17,7 +17,7 @@ cAdjustmentModuleMeasProgram::cAdjustmentModuleMeasProgram(cAdjustmentModule* mo
     m_commonObjects(std::make_shared<AdjustmentModuleCommon>()),
     m_activator(getConfData()->m_AdjChannelList, m_commonObjects, module->getVeinModuleName())
 {
-    openPcbConnection();
+    m_commonObjects->m_pcbConnection.setNetworkParams(m_pModule->getNetworkConfig());
 
     connect(&m_activator, &AdjustmentModuleActivator::sigActivationReady, this, &cAdjustmentModuleMeasProgram::onActivationReady);
     connect(&m_activator, &AdjustmentModuleActivator::sigDeactivationReady, this, &cAdjustmentModuleMeasProgram::onDeactivationReady);
@@ -98,11 +98,6 @@ void cAdjustmentModuleMeasProgram::deactivate()
 cAdjustmentModuleConfigData *cAdjustmentModuleMeasProgram::getConfData()
 {
     return qobject_cast<cAdjustmentModuleConfiguration*>(m_pConfiguration.get())->getConfigurationData();
-}
-
-void cAdjustmentModuleMeasProgram::openPcbConnection()
-{
-    m_commonObjects->m_pcbConnection.openConnection(m_pModule->getNetworkConfig());
 }
 
 bool cAdjustmentModuleMeasProgram::checkExternalVeinComponents()

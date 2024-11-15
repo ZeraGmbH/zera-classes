@@ -7,7 +7,7 @@
 class PcbServiceConnection
 {
 public:
-    void openConnection(ModuleNetworkParamsPtr networkParams);
+    void setNetworkParams(ModuleNetworkParamsPtr networkParams);
     Zera::PcbInterfacePtr getInterface();
     Zera::ProxyClientPtr getClient();
 private:
