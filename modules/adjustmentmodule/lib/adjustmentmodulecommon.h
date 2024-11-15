@@ -1,8 +1,7 @@
 #ifndef ADJUSTMENTMODULECOMMON_H
 #define ADJUSTMENTMODULECOMMON_H
 
-#include <pcbinterface.h>
-#include <rminterface.h>
+#include "pcbserviceconnection.h"
 #include <QHash>
 #include <unordered_map>
 #include <memory>
@@ -18,8 +17,7 @@ public:
 
 struct AdjustmentModuleCommon
 {
-    Zera::PcbInterfacePtr m_pcbInterface;
-    Zera::ProxyClientPtr m_pcbClient;
+    PcbServiceConnection m_pcbConnection;
 
     std::unordered_map<QString/* m0,m1..*/, std::unique_ptr<AdjustChannelInfo>> m_adjustChannelInfoHash;
     QHash<QString/*UL1,UL2...*/, QString/*m0,m1*/> m_channelAliasHash;
