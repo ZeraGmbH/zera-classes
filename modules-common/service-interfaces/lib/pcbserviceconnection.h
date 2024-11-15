@@ -2,12 +2,14 @@
 #define PCBSERVICECONNECTION_H
 
 #include "modulenetworkparams.h"
+#include <tasktemplate.h>
 #include <pcbinterface.h>
 
 class PcbServiceConnection
 {
 public:
     void setNetworkParams(ModuleNetworkParamsPtr networkParams);
+    TaskTemplatePtr createConnectionTask();
     Zera::PcbInterfacePtr getInterface();
     Zera::ProxyClientPtr getClient();
 private:
