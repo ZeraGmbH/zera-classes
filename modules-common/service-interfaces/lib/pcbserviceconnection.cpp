@@ -10,12 +10,12 @@ void PcbServiceConnection::setNetworkParams(ModuleNetworkParamsPtr networkParams
     m_pcbInterface->setClientSmart(m_pcbClient);
 }
 
-TaskTemplatePtr PcbServiceConnection::createConnectionTask()
+TaskTemplatePtr PcbServiceConnection::createConnectionTask() const
 {
     return TaskServerConnectionStart::create(m_pcbClient, CONNECTION_TIMEOUT);
 }
 
-Zera::PcbInterfacePtr PcbServiceConnection::getInterface()
+Zera::PcbInterfacePtr PcbServiceConnection::getInterface() const
 {
     return m_pcbInterface;
 }
