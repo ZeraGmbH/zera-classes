@@ -11,7 +11,6 @@ public:
     void setNetworkParams(ModuleNetworkParamsPtr networkParams);
     TaskTemplatePtr createConnectionTask();
     Zera::PcbInterfacePtr getInterface();
-    Zera::ProxyClientPtr getClient();
 private:
     Zera::PcbInterfacePtr m_pcbInterface;
     Zera::ProxyClientPtr m_pcbClient;

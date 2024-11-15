@@ -19,8 +19,3 @@ Zera::PcbInterfacePtr PcbServiceConnection::getInterface()
 {
     return m_pcbInterface;
 }
-
-Zera::ProxyClientPtr PcbServiceConnection::getClient()
-{
-    return m_pcbClient;
-}
