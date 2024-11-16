@@ -12,7 +12,7 @@ void PcbChannelManager::startScan()
 
 QStringList PcbChannelManager::getChannelMNames() const
 {
-    return QStringList();
+    return m_channelNames;
 }
 
 void PcbChannelManager::clear()
