@@ -1,14 +1,32 @@
 #include "pcbchannelmanager.h"
 #include "taskchannelgetavail.h"
-#include <abstractserverInterface.h>
-#include <taskserverconnectionstart.h>
+#include "taskserverconnectionstart.h"
 #include <taskcontainersequence.h>
 
-PcbChannelManager::PcbChannelManager()
+void PcbChannelManager::startScan(Zera::ProxyClientPtr pcbClient)
 {
+    if(m_channelMNames.isEmpty()) {
+        createTasks(pcbClient);
+        connect(m_currentTasks.get(), &TaskTemplate::sigFinish,
+                this, &PcbChannelManager::onTasksFinish);
+        m_currentTasks->start();
+    }
+    else
+        emit sigScanFinished(true);
 }
 
-void PcbChannelManager::startScan(Zera::ProxyClientPtr pcbClient)
+QStringList PcbChannelManager::getChannelMNames() const
+{
+    return m_channelMNames;
+}
+
+void PcbChannelManager::onTasksFinish(bool ok)
+{
+    m_currentTasks = nullptr;
+    emit sigScanFinished(ok);
+}
+
+void PcbChannelManager::createTasks(Zera::ProxyClientPtr pcbClient)
 {
     m_currentTasks = TaskContainerSequence::create();
 
@@ -16,14 +34,5 @@ void PcbChannelManager::startScan(Zera::ProxyClientPtr pcbClient)
 
     Zera::PcbInterfacePtr pcbInterface = std::make_shared<Zera::cPCBInterface>();
     pcbInterface->setClientSmart(pcbClient);
-    m_currentTasks->addSub(TaskChannelGetAvail::create(pcbInterface, m_channelNames, TRANSACTION_TIMEOUT));
-
-    connect(m_currentTasks.get(), &TaskTemplate::sigFinish,
-            this, &PcbChannelManager::sigScanFinished);
-    m_currentTasks->start();
-}
-
-QStringList PcbChannelManager::getChannelMNames() const
-{
-    return m_channelNames;
+    m_currentTasks->addSub(TaskChannelGetAvail::create(pcbInterface, m_channelMNames, TRANSACTION_TIMEOUT));
 }

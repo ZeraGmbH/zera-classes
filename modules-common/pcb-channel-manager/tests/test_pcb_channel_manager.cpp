@@ -1,5 +1,6 @@
 #include "test_pcb_channel_manager.h"
 #include "pcbchannelmanager.h"
+#include "pcbchannelmanagerformodman.h"
 #include <timemachineobject.h>
 #include <testallservicesmt310s2.h>
 #include <mocktcpnetworkfactory.h>
@@ -57,4 +58,51 @@ void test_pcb_channel_manager::scanChannelListChannelsReturned()
 
     QStringList channels = manager.getChannelMNames();
     QCOMPARE(channels.count(), 8);
+    QVERIFY(channels.contains("m0"));
+    QVERIFY(channels.contains("m1"));
+    QVERIFY(channels.contains("m2"));
+    QVERIFY(channels.contains("m3"));
+    QVERIFY(channels.contains("m4"));
+    QVERIFY(channels.contains("m5"));
+    QVERIFY(channels.contains("m6"));
+    QVERIFY(channels.contains("m7"));
+}
+
+void test_pcb_channel_manager::rescanWithoutClear()
+{
+    PcbChannelManager manager;
+    manager.startScan(m_pcbClient);
+    TimeMachineObject::feedEventLoop();
+
+    QStringList channels = manager.getChannelMNames();
+    QCOMPARE(channels.count(), 8);
+
+    cleanup(); // make sure no I/O is performed by killing servers
+
+    QSignalSpy spy(&manager, &PcbChannelManager::sigScanFinished);
+    manager.startScan(m_pcbClient);
+    TimeMachineObject::feedEventLoop();
+
+    QCOMPARE(manager.getChannelMNames().count(), 8);
+    QCOMPARE(spy.count(), 1);
+}
+
+void test_pcb_channel_manager::rescanWithClear()
+{
+    PcbChannelManagerForModman manager;
+    manager.startScan(m_pcbClient);
+    TimeMachineObject::feedEventLoop();
+
+    QStringList channels = manager.getChannelMNames();
+    QCOMPARE(channels.count(), 8);
+
+    manager.clear();
+    QCOMPARE(manager.getChannelMNames().count(), 0);
+
+    QSignalSpy spy(&manager, &PcbChannelManager::sigScanFinished);
+    manager.startScan(m_pcbClient);
+    TimeMachineObject::feedEventLoop();
+
+    QCOMPARE(manager.getChannelMNames().count(), 8);
+    QCOMPARE(spy.count(), 1);
 }
