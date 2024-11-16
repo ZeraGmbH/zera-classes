@@ -4,9 +4,9 @@
 
 PcbServiceConnection::PcbServiceConnection(ModuleNetworkParamsPtr networkParams)
 {
-    m_pcbInterface = std::make_shared<Zera::cPCBInterface>();
     m_pcbClient = Zera::Proxy::getInstance()->getConnectionSmart(networkParams->m_pcbServiceConnectionInfo,
                                                                  networkParams->m_tcpNetworkFactory);
+    m_pcbInterface = std::make_shared<Zera::cPCBInterface>();
     m_pcbInterface->setClientSmart(m_pcbClient);
 }
 
