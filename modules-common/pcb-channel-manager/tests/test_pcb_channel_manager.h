@@ -17,6 +17,8 @@ private slots:
     void emptyChannelListOnStartup();
     void scanChannelListSignalReturned();
     void scanChannelListChannelsReturned();
+    void rescanWithoutClear();
+    void rescanWithClear();
 private:
     VeinTcp::AbstractTcpNetworkFactoryPtr m_tcpFactory;
     std::shared_ptr<TestFactoryI2cCtrl> m_i2cFactory;
