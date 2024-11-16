@@ -21,6 +21,15 @@ void test_pcb_channel_manager::initTestCase()
 void test_pcb_channel_manager::init()
 {
     TimeMachineForTest::reset();
+    m_allServices = std::make_unique<TestAllServicesMt310s2>(m_tcpFactory, m_i2cFactory);
+    m_pcbClient = Zera::Proxy::getInstance()->getConnectionSmart("127.0.0.1", 6307, m_tcpFactory);
+}
+
+void test_pcb_channel_manager::cleanup()
+{
+    m_pcbClient = nullptr;
+    m_allServices = nullptr;
+    TimeMachineObject::feedEventLoop();
 }
 
 void test_pcb_channel_manager::emptyChannelListOnStartup()
@@ -31,14 +40,10 @@ void test_pcb_channel_manager::emptyChannelListOnStartup()
 
 void test_pcb_channel_manager::scanChannelListSignalReturned()
 {
-    std::unique_ptr<AbstractMockAllServices> allServices =
-        std::make_unique<TestAllServicesMt310s2>(m_tcpFactory, m_i2cFactory);
-    Zera::ProxyClientPtr client = Zera::Proxy::getInstance()->getConnectionSmart("127.0.0.1", 6307, m_tcpFactory);
-
     PcbChannelManager manager;
     QSignalSpy spy(&manager, &PcbChannelManager::sigScanFinished);
 
-    manager.startScan(client);
+    manager.startScan(m_pcbClient);
     TimeMachineObject::feedEventLoop();
 
     QCOMPARE(spy.count(), 1);
@@ -46,12 +51,8 @@ void test_pcb_channel_manager::scanChannelListSignalReturned()
 
 void test_pcb_channel_manager::scanChannelListChannelsReturned()
 {
-    std::unique_ptr<AbstractMockAllServices> allServices =
-        std::make_unique<TestAllServicesMt310s2>(m_tcpFactory, m_i2cFactory);
-    Zera::ProxyClientPtr client = Zera::Proxy::getInstance()->getConnectionSmart("127.0.0.1", 6307, m_tcpFactory);
-
     PcbChannelManager manager;
-    manager.startScan(client);
+    manager.startScan(m_pcbClient);
     TimeMachineObject::feedEventLoop();
 
     QStringList channels = manager.getChannelMNames();
