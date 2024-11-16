@@ -20,6 +20,7 @@ function(SETUP_QTESTS_MODULE)
             fftmodule-static
             rmsmodule-static
             Zera::VfConvenientCode
+            scpimodule-testlib
         )
     endforeach()
 endfunction()
