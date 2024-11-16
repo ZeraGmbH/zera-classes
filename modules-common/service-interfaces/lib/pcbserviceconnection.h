@@ -8,7 +8,7 @@
 class PcbServiceConnection
 {
 public:
-    void setNetworkParams(ModuleNetworkParamsPtr networkParams);
+    PcbServiceConnection(ModuleNetworkParamsPtr networkParams);
     TaskTemplatePtr createConnectionTask() const;
     Zera::PcbInterfacePtr getInterface() const;
 private:

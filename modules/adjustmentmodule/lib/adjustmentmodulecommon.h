@@ -17,6 +17,7 @@ public:
 
 struct AdjustmentModuleCommon
 {
+    AdjustmentModuleCommon(ModuleNetworkParamsPtr networkParams) : m_pcbConnection(networkParams) {}
     PcbServiceConnection m_pcbConnection;
 
     std::unordered_map<QString/* m0,m1..*/, std::unique_ptr<AdjustChannelInfo>> m_adjustChannelInfoHash;

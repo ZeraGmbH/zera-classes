@@ -14,11 +14,9 @@
 cAdjustmentModuleMeasProgram::cAdjustmentModuleMeasProgram(cAdjustmentModule* module, std::shared_ptr<BaseModuleConfiguration> pConfiguration) :
     cBaseMeasWorkProgram(pConfiguration, module->getVeinModuleName()),
     m_pModule(module),
-    m_commonObjects(std::make_shared<AdjustmentModuleCommon>()),
+    m_commonObjects(std::make_shared<AdjustmentModuleCommon>(m_pModule->getNetworkConfig())),
     m_activator(getConfData()->m_AdjChannelList, m_commonObjects, module->getVeinModuleName())
 {
-    m_commonObjects->m_pcbConnection.setNetworkParams(m_pModule->getNetworkConfig());
-
     connect(&m_activator, &AdjustmentModuleActivator::sigActivationReady, this, &cAdjustmentModuleMeasProgram::onActivationReady);
     connect(&m_activator, &AdjustmentModuleActivator::sigDeactivationReady, this, &cAdjustmentModuleMeasProgram::onDeactivationReady);
     connect(&m_activator, &AdjustmentModuleActivator::sigRangesReloaded, this, &cAdjustmentModuleMeasProgram::onNewRanges);
