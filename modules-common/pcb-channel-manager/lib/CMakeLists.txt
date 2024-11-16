@@ -15,6 +15,7 @@ target_link_libraries(pcb-channel-manager
     PUBLIC
     Qt5::Core
     module-tasks
+    module-service-interfaces
     Zera::service-interfaces
     # ask linker to help us finding unresolved symbols
     "-Wl,--no-undefined"

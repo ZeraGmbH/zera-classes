@@ -4,6 +4,8 @@ function(SETUP_QTESTS_CHANNEL_MANAGER)
         target_link_libraries(${_testname}
             PUBLIC
             pcb-channel-manager
+            Zera::zenuxservicecommon-testlib
+            Zera::vf-tcp-mock-networklib
             )
     endforeach()
 endfunction()
