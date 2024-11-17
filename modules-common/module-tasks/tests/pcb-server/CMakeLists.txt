@@ -1,4 +1,4 @@
-SETUP_QTESTS(
+SETUP_QTESTS_MODULE_TASKS(
     test_taskchannelscheckavail
     test_taskchannelgetalias
     test_taskchannelgetavail
