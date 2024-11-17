@@ -12,7 +12,8 @@ class PcbChannelManager : public QObject
     Q_OBJECT
 public:
     void startScan(Zera::ProxyClientPtr pcbClient);
-    QStringList getChannelMNames() const;
+    const QStringList getChannelMNames() const;
+    const QStringList getChannelRanges(const QString &channelMName) const;
     const PcbChannelDataPtr getChannelData(QString channelName);
 signals:
     void sigScanFinished(bool ok);
@@ -28,7 +29,9 @@ private:
     void notifyError(QString errMsg);
     TaskTemplatePtr getChannelsReadTasks(Zera::PcbInterfacePtr pcbInterface);
     TaskContainerInterfacePtr m_currentTasks;
+
     QStringList m_tempChannelMNames;
+    QMap<QString, QStringList> m_tempChannelRanges;
 };
 
 #endif // PCBCHANNELMANAGER_H
