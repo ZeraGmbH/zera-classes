@@ -114,7 +114,13 @@ void test_pcb_channel_manager::checkAlias()
     TimeMachineObject::feedEventLoop();
 
     QCOMPARE(manager.getChannelData("m0").m_alias, "UL1");
+    QCOMPARE(manager.getChannelData("m1").m_alias, "UL2");
+    QCOMPARE(manager.getChannelData("m2").m_alias, "UL3");
     QCOMPARE(manager.getChannelData("m3").m_alias, "IL1");
+    QCOMPARE(manager.getChannelData("m4").m_alias, "IL2");
+    QCOMPARE(manager.getChannelData("m5").m_alias, "IL3");
+    QCOMPARE(manager.getChannelData("m6").m_alias, "UAUX");
+    QCOMPARE(manager.getChannelData("m7").m_alias, "IAUX");
 }
 
 void test_pcb_channel_manager::checkDspChannel()
