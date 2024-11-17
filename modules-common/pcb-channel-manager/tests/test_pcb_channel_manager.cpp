@@ -117,6 +117,22 @@ void test_pcb_channel_manager::checkAlias()
     QCOMPARE(manager.getChannelData("m3").m_alias, "IL1");
 }
 
+void test_pcb_channel_manager::checkDspChannel()
+{
+    PcbChannelManagerForModman manager;
+    manager.startScan(m_pcbClient);
+    TimeMachineObject::feedEventLoop();
+
+    QCOMPARE(manager.getChannelData("m0").m_dspChannel, 0);
+    QCOMPARE(manager.getChannelData("m1").m_dspChannel, 2);
+    QCOMPARE(manager.getChannelData("m2").m_dspChannel, 4);
+    QCOMPARE(manager.getChannelData("m3").m_dspChannel, 1);
+    QCOMPARE(manager.getChannelData("m4").m_dspChannel, 3);
+    QCOMPARE(manager.getChannelData("m5").m_dspChannel, 5);
+    QCOMPARE(manager.getChannelData("m6").m_dspChannel, 6);
+    QCOMPARE(manager.getChannelData("m7").m_dspChannel, 7);
+}
+
 void test_pcb_channel_manager::getDataForInvalidChannel()
 {
     PcbChannelManagerForModman manager;
