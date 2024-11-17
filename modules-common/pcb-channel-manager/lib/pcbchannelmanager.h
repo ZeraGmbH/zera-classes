@@ -14,6 +14,7 @@ public:
     QStringList getChannelMNames() const;
     struct ChannelData {
         QString m_alias;
+        int m_dspChannel;
     };
     const ChannelData getChannelData(QString channelName);
 signals:

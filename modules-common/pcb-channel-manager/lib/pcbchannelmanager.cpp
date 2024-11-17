@@ -3,6 +3,7 @@
 #include "taskserverconnectionstart.h"
 #include <taskcontainersequence.h>
 #include <taskchannelgetalias.h>
+#include <taskchannelgetdspchannel.h>
 #include <taskchannelgetrangelist.h>
 #include <tasklambdarunner.h>
 #include <taskcontainerparallel.h>
@@ -70,6 +71,11 @@ TaskTemplatePtr PcbChannelManager::getChannelsReadTasks(Zera::PcbInterfacePtr pc
                                                          m_channels[channelName].m_alias,
                                                          TRANSACTION_TIMEOUT,
                                                          [&]{ notifyError(QString("Could not read alias for channel %1").arg(channelName)); }));
+        channelTasks->addSub(TaskChannelGetDspChannel::create(pcbInterface,
+                                                         channelName,
+                                                         m_channels[channelName].m_dspChannel,
+                                                         TRANSACTION_TIMEOUT,
+                                                         [&]{ notifyError(QString("Could not read dsp-channel for channel %1").arg(channelName)); }));
     }
     return channelTasks;
 }
