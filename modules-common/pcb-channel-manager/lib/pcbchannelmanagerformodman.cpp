@@ -2,5 +2,5 @@
 
 void PcbChannelManagerForModman::clear()
 {
-    m_channelMNames.clear();
+    m_channels.clear();
 }
