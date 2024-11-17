@@ -140,7 +140,6 @@ function(SETUP_QTESTS)
             PUBLIC
             zera-basemodule
             zera-meas-mode-management-testlib
-            module-service-interfaces-demolib
             Qt5::Test
             Zera::VfStorage
             Zera::VfFrameworkTest
