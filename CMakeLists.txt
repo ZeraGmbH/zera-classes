@@ -139,7 +139,6 @@ function(SETUP_QTESTS)
         target_link_libraries(${_testname}
             PUBLIC
             zera-basemodule
-            zera-meas-mode-management-testlib
             Qt5::Test
             Zera::VfStorage
             Zera::VfFrameworkTest

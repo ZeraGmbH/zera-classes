@@ -1,4 +1,14 @@
-SETUP_QTESTS(
+function(SETUP_QTESTS_COMMON_POWER)
+    SETUP_QTESTS(${ARGN})
+    foreach(_testname ${ARGN})
+        target_link_libraries(${_testname}
+            PUBLIC
+            zera-meas-mode-management-testlib
+            )
+    endforeach()
+endfunction()
+
+SETUP_QTESTS_COMMON_POWER(
     test_measmodephasesetstrategyphasesvar
     test_measmodephasesetstrategyphasesfixed
     test_measmodephasesetstrategy2wire
