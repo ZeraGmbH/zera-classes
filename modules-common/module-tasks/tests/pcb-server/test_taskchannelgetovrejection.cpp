@@ -21,7 +21,7 @@ void test_taskchannelgetovrejection::checkScpiSend()
                                                              ovRejection,
                                                              EXPIRE_INFINITE);
     task->start();
-    QCoreApplication::processEvents();
+    TimeMachineObject::feedEventLoop();
     QStringList scpiSent = pcb.getProxyClient()->getReceivedCommands();
     QCOMPARE(scpiSent.count(), 1);
     QString scpiExpectedPath = QString("SENSE:%1:%2:OVREJECTION").arg(channelSysName, rangeName);
@@ -39,7 +39,7 @@ void test_taskchannelgetovrejection::returnsOvrRejectionProperly()
                                                              ovRejection,
                                                              EXPIRE_INFINITE);
     task->start();
-    QCoreApplication::processEvents();
+    TimeMachineObject::feedEventLoop();
     QCOMPARE(ovRejection, defaultOvRejection);
 }
 

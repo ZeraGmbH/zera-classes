@@ -21,7 +21,7 @@ void test_taskchannelgeturvalue::checkScpiSend()
                                                          urValue,
                                                          EXPIRE_INFINITE);
     task->start();
-    QCoreApplication::processEvents();
+    TimeMachineObject::feedEventLoop();
     QStringList scpiSent = pcb.getProxyClient()->getReceivedCommands();
     QCOMPARE(scpiSent.count(), 1);
     QString scpiExpectedPath = QString("SENSE:%1:%2:URVALUE").arg(channelSysName, rangeName);
@@ -39,7 +39,7 @@ void test_taskchannelgeturvalue::returnsUrValueProperly()
                                                          urValue,
                                                          EXPIRE_INFINITE);
     task->start();
-    QCoreApplication::processEvents();
+    TimeMachineObject::feedEventLoop();
     QCOMPARE(urValue, defaultUrValue);
 }
 

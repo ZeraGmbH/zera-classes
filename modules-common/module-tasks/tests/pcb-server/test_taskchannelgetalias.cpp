@@ -20,7 +20,7 @@ void test_taskchannelgetalias::checkScpiSend()
                                                        channelAlias,
                                                        EXPIRE_INFINITE);
     task->start();
-    QCoreApplication::processEvents();
+    TimeMachineObject::feedEventLoop();
     QStringList scpiSent = pcb.getProxyClient()->getReceivedCommands();
     QCOMPARE(scpiSent.count(), 1);
     QString scpiExpectedPath = QString("SENSE:%1:ALIAS").arg(channelName);
@@ -38,7 +38,7 @@ void test_taskchannelgetalias::returnsAliasProperly()
                                                        channelAlias,
                                                        EXPIRE_INFINITE);
     task->start();
-    QCoreApplication::processEvents();
+    TimeMachineObject::feedEventLoop();
     QCOMPARE(channelAlias, defaultResponse);
 }
 

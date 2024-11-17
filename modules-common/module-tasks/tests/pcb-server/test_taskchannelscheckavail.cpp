@@ -20,7 +20,7 @@ void test_taskrmchannelscheckavail::okOnExpectedEqualGet()
                                                             EXPIRE_INFINITE);
     TaskTestHelper helper(task.get());
     task->start();
-    QCoreApplication::processEvents();
+    TimeMachineObject::feedEventLoop();
     QCOMPARE(helper.okCount(), 1);
     QCOMPARE(helper.errCount(), 0);
 }
@@ -35,7 +35,7 @@ void test_taskrmchannelscheckavail::okOnExpectedPartOfGet()
                                                             EXPIRE_INFINITE);
     TaskTestHelper helper(task.get());
     task->start();
-    QCoreApplication::processEvents();
+    TimeMachineObject::feedEventLoop();
     QCOMPARE(helper.okCount(), 1);
     QCOMPARE(helper.errCount(), 0);
 }
@@ -50,7 +50,7 @@ void test_taskrmchannelscheckavail::errOnExpectedNotPartOfGet()
                                                             EXPIRE_INFINITE);
     TaskTestHelper helper(task.get());
     task->start();
-    QCoreApplication::processEvents();
+    TimeMachineObject::feedEventLoop();
     QCOMPARE(helper.okCount(), 0);
     QCOMPARE(helper.errCount(), 1);
 }

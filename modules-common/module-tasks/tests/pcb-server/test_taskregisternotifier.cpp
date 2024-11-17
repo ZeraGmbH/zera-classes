@@ -19,7 +19,7 @@ void test_taskregisternotifier::checkScpiSend()
                                                         notificationId,
                                                         EXPIRE_INFINITE);
     task->start();
-    QCoreApplication::processEvents();
+    TimeMachineObject::feedEventLoop();
     QStringList scpiSent = pcb.getProxyClient()->getReceivedCommands();
     QCOMPARE(scpiSent.count(), 1);
     QString scpiExpectedPath = QString("SERVER:REGISTER");

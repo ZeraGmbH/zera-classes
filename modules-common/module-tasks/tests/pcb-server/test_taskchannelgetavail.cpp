@@ -18,7 +18,7 @@ void test_taskchannelgetavail::checkScpiSend()
                                                        channelList,
                                                        EXPIRE_INFINITE);
     task->start();
-    QCoreApplication::processEvents();
+    TimeMachineObject::feedEventLoop();
     QStringList scpiSent = pcb.getProxyClient()->getReceivedCommands();
     QCOMPARE(scpiSent.count(), 1);
     QString scpiExpectedPath = QString("SENSE:CHANNEL:CAT");
@@ -35,7 +35,7 @@ void test_taskchannelgetavail::returnsChannelListProperly()
                                                        channelList,
                                                        EXPIRE_INFINITE);
     task->start();
-    QCoreApplication::processEvents();
+    TimeMachineObject::feedEventLoop();
     QStringList expectedRanges = QString(defaultResponse).split(";");
     QCOMPARE(channelList, expectedRanges);
 }

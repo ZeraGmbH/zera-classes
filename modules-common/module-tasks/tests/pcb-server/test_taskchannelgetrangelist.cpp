@@ -20,7 +20,7 @@ void test_taskchannelgetrangelist::checkScpiSend()
                                                            rangeList,
                                                            EXPIRE_INFINITE);
     task->start();
-    QCoreApplication::processEvents();
+    TimeMachineObject::feedEventLoop();
     QStringList scpiSent = pcb.getProxyClient()->getReceivedCommands();
     QCOMPARE(scpiSent.count(), 1);
     QString scpiExpectedPath = QString("SENSE:%1:RANGE:CATALOG").arg(channelSysName);
@@ -38,7 +38,7 @@ void test_taskchannelgetrangelist::returnsRangeListProperly()
                                                            rangeList,
                                                            EXPIRE_INFINITE);
     task->start();
-    QCoreApplication::processEvents();
+    TimeMachineObject::feedEventLoop();
     QStringList expectedRanges = QString(defaultResponse).split(";");
     QCOMPARE(rangeList, expectedRanges);
 }
