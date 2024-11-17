@@ -106,3 +106,22 @@ void test_pcb_channel_manager::rescanWithClear()
     QCOMPARE(manager.getChannelMNames().count(), 8);
     QCOMPARE(spy.count(), 1);
 }
+
+void test_pcb_channel_manager::checkAlias()
+{
+    PcbChannelManagerForModman manager;
+    manager.startScan(m_pcbClient);
+    TimeMachineObject::feedEventLoop();
+
+    QCOMPARE(manager.getChannelData("m0").m_alias, "UL1");
+    QCOMPARE(manager.getChannelData("m3").m_alias, "IL1");
+}
+
+void test_pcb_channel_manager::getDataForInvalidChannel()
+{
+    PcbChannelManagerForModman manager;
+    manager.startScan(m_pcbClient);
+    TimeMachineObject::feedEventLoop();
+
+    QCOMPARE(manager.getChannelData("foo").m_alias, "");
+}

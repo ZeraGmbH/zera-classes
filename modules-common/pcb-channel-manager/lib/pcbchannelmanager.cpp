@@ -2,10 +2,14 @@
 #include "taskchannelgetavail.h"
 #include "taskserverconnectionstart.h"
 #include <taskcontainersequence.h>
+#include <taskchannelgetalias.h>
+#include <taskchannelgetrangelist.h>
+#include <tasklambdarunner.h>
+#include <taskcontainerparallel.h>
 
 void PcbChannelManager::startScan(Zera::ProxyClientPtr pcbClient)
 {
-    if(m_channelMNames.isEmpty()) {
+    if(m_channels.isEmpty()) {
         createTasks(pcbClient);
         connect(m_currentTasks.get(), &TaskTemplate::sigFinish,
                 this, &PcbChannelManager::onTasksFinish);
@@ -17,7 +21,16 @@ void PcbChannelManager::startScan(Zera::ProxyClientPtr pcbClient)
 
 QStringList PcbChannelManager::getChannelMNames() const
 {
-    return m_channelMNames;
+    return m_channels.keys();
+}
+
+const PcbChannelManager::ChannelData PcbChannelManager::getChannelData(QString channelName)
+{
+    auto iter = m_channels.constFind(channelName);
+    if(iter != m_channels.constEnd())
+        return iter.value();
+    qWarning("PcbChannelManager: Channel data for %s not found!", qPrintable(channelName));
+    return ChannelData();
 }
 
 void PcbChannelManager::onTasksFinish(bool ok)
@@ -34,5 +47,29 @@ void PcbChannelManager::createTasks(Zera::ProxyClientPtr pcbClient)
 
     Zera::PcbInterfacePtr pcbInterface = std::make_shared<Zera::cPCBInterface>();
     pcbInterface->setClientSmart(pcbClient);
-    m_currentTasks->addSub(TaskChannelGetAvail::create(pcbInterface, m_channelMNames, TRANSACTION_TIMEOUT));
+    m_currentTasks->addSub(TaskChannelGetAvail::create(
+        pcbInterface, m_tempChannelMNames, TRANSACTION_TIMEOUT, [=] { notifyError("Get available channels failed");}));
+
+    m_currentTasks->addSub(TaskLambdaRunner::create([=]() {
+        m_currentTasks->addSub(getChannelsReadTasks(pcbInterface));
+        return true;
+    }));
+}
+
+void PcbChannelManager::notifyError(QString errMsg)
+{
+    qWarning("PcbChannelManager error: %s", qPrintable(errMsg));
+}
+
+TaskTemplatePtr PcbChannelManager::getChannelsReadTasks(Zera::PcbInterfacePtr pcbInterface)
+{
+    TaskContainerInterfacePtr channelTasks = TaskContainerParallel::create();
+    for(const auto &channelName : qAsConst(m_tempChannelMNames)) {
+        channelTasks->addSub(TaskChannelGetAlias::create(pcbInterface,
+                                                         channelName,
+                                                         m_channels[channelName].m_alias,
+                                                         TRANSACTION_TIMEOUT,
+                                                         [&]{ notifyError(QString("Could not read alias for channel %1").arg(channelName)); }));
+    }
+    return channelTasks;
 }

@@ -19,6 +19,8 @@ private slots:
     void scanChannelListChannelsReturned();
     void rescanWithoutClear();
     void rescanWithClear();
+    void checkAlias();
+    void getDataForInvalidChannel();
 private:
     VeinTcp::AbstractTcpNetworkFactoryPtr m_tcpFactory;
     std::shared_ptr<TestFactoryI2cCtrl> m_i2cFactory;
