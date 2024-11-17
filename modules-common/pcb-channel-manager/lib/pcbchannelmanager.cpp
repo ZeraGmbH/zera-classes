@@ -21,9 +21,18 @@ void PcbChannelManager::startScan(Zera::ProxyClientPtr pcbClient)
         emit sigScanFinished(true);
 }
 
-QStringList PcbChannelManager::getChannelMNames() const
+const QStringList PcbChannelManager::getChannelMNames() const
 {
     return m_channels.keys();
+}
+
+const QStringList PcbChannelManager::getChannelRanges(const QString &channelMName) const
+{
+    QStringList ranges;
+    auto iter = m_tempChannelRanges.constFind(channelMName);
+    if(iter != m_tempChannelRanges.constEnd())
+        ranges = iter.value();
+    return ranges;
 }
 
 const PcbChannelDataPtr PcbChannelManager::getChannelData(QString channelName)
@@ -83,6 +92,11 @@ TaskTemplatePtr PcbChannelManager::getChannelsReadTasks(Zera::PcbInterfacePtr pc
                                                         m_channels[channelName]->m_unit,
                                                         TRANSACTION_TIMEOUT,
                                                         [&]{ notifyError(QString("Could not read unit for channel %1").arg(channelName)); }));
+        channelTasks->addSub(TaskChannelGetRangeList::create(pcbInterface,
+                                                             channelName,
+                                                             m_tempChannelRanges[channelName],
+                                                             TRANSACTION_TIMEOUT,
+                                                             [&]{ notifyError(QString("Could not read range list for channel %1").arg(channelName)); }));
     }
     return channelTasks;
 }

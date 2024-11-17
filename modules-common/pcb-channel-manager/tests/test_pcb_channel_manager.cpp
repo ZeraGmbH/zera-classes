@@ -149,6 +149,16 @@ void test_pcb_channel_manager::checkUnit()
     QCOMPARE(manager.getChannelData("m3")->m_unit, "A");
 }
 
+void test_pcb_channel_manager::checkRanges()
+{
+    PcbChannelManagerForModman manager;
+    manager.startScan(m_pcbClient);
+    TimeMachineObject::feedEventLoop();
+
+    QCOMPARE(manager.getChannelRanges("m0").size(), 3);
+    QCOMPARE(manager.getChannelRanges("m0")[0], "250V");
+}
+
 void test_pcb_channel_manager::getDataForInvalidChannel()
 {
     PcbChannelManagerForModman manager;
