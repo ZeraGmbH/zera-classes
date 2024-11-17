@@ -21,6 +21,7 @@ private slots:
     void rescanWithClear();
     void checkAlias();
     void checkDspChannel();
+    void checkUnit();
     void getDataForInvalidChannel();
 private:
     VeinTcp::AbstractTcpNetworkFactoryPtr m_tcpFactory;

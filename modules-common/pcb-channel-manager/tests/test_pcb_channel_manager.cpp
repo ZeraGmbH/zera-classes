@@ -139,6 +139,16 @@ void test_pcb_channel_manager::checkDspChannel()
     QCOMPARE(manager.getChannelData("m7").m_dspChannel, 7);
 }
 
+void test_pcb_channel_manager::checkUnit()
+{
+    PcbChannelManagerForModman manager;
+    manager.startScan(m_pcbClient);
+    TimeMachineObject::feedEventLoop();
+
+    QCOMPARE(manager.getChannelData("m0").m_unit, "V");
+    QCOMPARE(manager.getChannelData("m3").m_unit, "A");
+}
+
 void test_pcb_channel_manager::getDataForInvalidChannel()
 {
     PcbChannelManagerForModman manager;
