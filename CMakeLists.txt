@@ -138,7 +138,6 @@ function(SETUP_QTESTS)
             )
         target_link_libraries(${_testname}
             PUBLIC
-            zera-basemodule
             Qt5::Test
             Zera::VfStorage
             Zera::VfFrameworkTest
