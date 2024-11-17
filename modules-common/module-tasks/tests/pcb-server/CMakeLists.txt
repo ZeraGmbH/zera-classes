@@ -9,4 +9,5 @@ SETUP_QTESTS_MODULE_TASKS(
     test_taskchannelregisternotifier
     test_taskregisternotifier
     test_taskunregisternotifier
+    test_taskchannelgetdspchannel
     )
