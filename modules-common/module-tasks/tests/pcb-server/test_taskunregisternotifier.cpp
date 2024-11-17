@@ -14,7 +14,7 @@ void test_taskunregisternotifier::checkScpiSend()
     TaskTemplatePtr task = TaskUnregisterNotifier::create(pcb.getPcbInterface(),
                                                           EXPIRE_INFINITE);
     task->start();
-    QCoreApplication::processEvents();
+    TimeMachineObject::feedEventLoop();
     QStringList scpiSent = pcb.getProxyClient()->getReceivedCommands();
     QCOMPARE(scpiSent.count(), 1);
     QString scpiExpectedPath = QString("SERVER:UNREGISTER");

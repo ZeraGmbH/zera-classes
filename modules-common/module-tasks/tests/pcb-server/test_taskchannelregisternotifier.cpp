@@ -17,7 +17,7 @@ void test_taskchannelregisternotifier::checkScpiSend()
                                                                channelSysName,
                                                                EXPIRE_INFINITE);
     task->start();
-    QCoreApplication::processEvents();
+    TimeMachineObject::feedEventLoop();
     QStringList scpiSent = pcb.getProxyClient()->getReceivedCommands();
     QCOMPARE(scpiSent.count(), 1);
     QString scpiExpectedPath = QString("SERVER:REGISTER");

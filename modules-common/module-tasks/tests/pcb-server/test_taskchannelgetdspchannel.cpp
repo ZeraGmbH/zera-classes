@@ -37,7 +37,7 @@ void test_taskchannelgetdspchannel::returnsDspChannelProperly()
                                                             dspChannel,
                                                             EXPIRE_INFINITE);
     task->start();
-    QCoreApplication::processEvents();
+    TimeMachineObject::feedEventLoop();
     QCOMPARE(dspChannel, 42);
 }
 
