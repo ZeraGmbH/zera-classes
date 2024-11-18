@@ -26,13 +26,13 @@ QStringList PcbChannelManager::getChannelMNames() const
     return m_channels.keys();
 }
 
-const PcbChannelManager::ChannelData PcbChannelManager::getChannelData(QString channelName)
+const PcbChannelDataPtr PcbChannelManager::getChannelData(QString channelName)
 {
     auto iter = m_channels.constFind(channelName);
     if(iter != m_channels.constEnd())
         return iter.value();
     qWarning("PcbChannelManager: Channel data for %s not found!", qPrintable(channelName));
-    return ChannelData();
+    return nullptr;
 }
 
 void PcbChannelManager::onTasksFinish(bool ok)
@@ -67,19 +67,20 @@ TaskTemplatePtr PcbChannelManager::getChannelsReadTasks(Zera::PcbInterfacePtr pc
 {
     TaskContainerInterfacePtr channelTasks = TaskContainerParallel::create();
     for(const auto &channelName : qAsConst(m_tempChannelMNames)) {
+        m_channels[channelName] = std::make_shared<PcbChannelData>();
         channelTasks->addSub(TaskChannelGetAlias::create(pcbInterface,
                                                          channelName,
-                                                         m_channels[channelName].m_alias,
+                                                         m_channels[channelName]->m_alias,
                                                          TRANSACTION_TIMEOUT,
                                                          [&]{ notifyError(QString("Could not read alias for channel %1").arg(channelName)); }));
         channelTasks->addSub(TaskChannelGetDspChannel::create(pcbInterface,
                                                               channelName,
-                                                              m_channels[channelName].m_dspChannel,
+                                                              m_channels[channelName]->m_dspChannel,
                                                               TRANSACTION_TIMEOUT,
                                                               [&]{ notifyError(QString("Could not read dsp-channel for channel %1").arg(channelName)); }));
         channelTasks->addSub(TaskChannelGetUnit::create(pcbInterface,
                                                         channelName,
-                                                        m_channels[channelName].m_unit,
+                                                        m_channels[channelName]->m_unit,
                                                         TRANSACTION_TIMEOUT,
                                                         [&]{ notifyError(QString("Could not read unit for channel %1").arg(channelName)); }));
     }

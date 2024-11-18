@@ -1,6 +1,7 @@
 #ifndef PCBCHANNELMANAGER_H
 #define PCBCHANNELMANAGER_H
 
+#include "pcbchanneldata.h"
 #include <pcbinterface.h>
 #include <proxyclient.h>
 #include <taskcontainerinterface.h>
@@ -12,18 +13,13 @@ class PcbChannelManager : public QObject
 public:
     void startScan(Zera::ProxyClientPtr pcbClient);
     QStringList getChannelMNames() const;
-    struct ChannelData {
-        QString m_alias;
-        QString m_unit;
-        int m_dspChannel;
-    };
-    const ChannelData getChannelData(QString channelName);
+    const PcbChannelDataPtr getChannelData(QString channelName);
 signals:
     void sigScanFinished(bool ok);
     void sigChannelChanged(QString channelMName);
 
 protected:
-    QMap<QString, ChannelData> m_channels;
+    QMap<QString, PcbChannelDataPtr> m_channels;
 
 private slots:
     void onTasksFinish(bool ok);
