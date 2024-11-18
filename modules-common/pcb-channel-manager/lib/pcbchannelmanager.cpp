@@ -100,7 +100,7 @@ void PcbChannelManager::prepareScan(Zera::ProxyClientPtr pcbClient)
         m_currentPcbInterface, m_tempChannelMNames,
         TRANSACTION_TIMEOUT, [=] { notifyError("Get available channels failed");}));
     m_currentTasks->addSub(TaskLambdaRunner::create([=]() {
-        m_currentTasks->addSub(getChannelsReadInfoAndRangeNamesTasks());
+        m_currentTasks->addSub(getChannelsReadInfoAndRangeNamesTasks(m_tempChannelMNames));
         m_tempChannelMNames.clear(); // avoid further usage
         return true;
     }));
@@ -120,12 +120,12 @@ void PcbChannelManager::notifyError(QString errMsg)
     qWarning("PcbChannelManager error: %s", qPrintable(errMsg));
 }
 
-TaskTemplatePtr PcbChannelManager::getChannelsReadInfoAndRangeNamesTasks()
+TaskTemplatePtr PcbChannelManager::getChannelsReadInfoAndRangeNamesTasks(const QStringList &channelMNames)
 {
     TaskContainerInterfacePtr allChannelsTasks = TaskContainerParallel::create();
-    for(int i=0; i<m_tempChannelMNames.size(); ++i) {
+    for(int i=0; i<channelMNames.size(); ++i) {
         TaskContainerInterfacePtr channelTasks = TaskContainerSequence::create();
-        const QString &channelMName = m_tempChannelMNames[i];
+        const QString &channelMName = channelMNames[i];
         m_notifyIdToChannelMName[i] = channelMName;
         m_channelNamesToData[channelMName] = std::make_shared<PcbChannelData>();
         channelTasks->addSub(TaskChannelGetAlias::create(
