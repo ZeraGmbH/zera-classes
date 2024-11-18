@@ -43,11 +43,6 @@ const PcbChannelDataPtr PcbChannelManager::getChannelData(QString channelMName)
     return nullptr;
 }
 
-Zera::PcbInterfacePtr PcbChannelManager::getPcbInterface()
-{
-    return m_currentPcbInterface;
-}
-
 void PcbChannelManager::onTasksFinish(bool ok)
 {
     m_currentTasks = nullptr;
