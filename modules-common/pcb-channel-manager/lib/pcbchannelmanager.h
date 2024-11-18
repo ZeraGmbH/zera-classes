@@ -31,10 +31,10 @@ private slots:
 private:
     void prepareScan(Zera::ProxyClientPtr pcbClient);
     void startRangesChangeTasks(QString channelMName);
-    void notifyError(QString errMsg);
-    TaskTemplatePtr getChannelsReadInfoAndRangeNamesTasks();
+    static void notifyError(QString errMsg);
+    TaskTemplatePtr getChannelsReadInfoAndRangeNamesTasks(const QStringList &channelMNames);
     TaskTemplatePtr getChannelReadRangeNamesTask(const QString &channelMName);
-    TaskTemplatePtr getReadRangeDetailsTasks(const QStringList &channelMNames);
+    static TaskTemplatePtr getReadRangeDetailsTasks(const QStringList &channelMNames);
     TaskTemplatePtr getReadRangeFinalTasks(const QStringList &channelMNames);
     TaskContainerInterfacePtr m_currentTasks;
     Zera::PcbInterfacePtr m_currentPcbInterface;
