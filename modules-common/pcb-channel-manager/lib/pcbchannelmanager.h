@@ -19,7 +19,7 @@ public:
     Zera::PcbInterfacePtr getPcbInterface(); // intermediate
 signals:
     void sigScanFinished(bool ok);
-    void sigChannelChanged(QString channelMName);
+    void sigChannelRangesChanged(QString channelMName);
 
 protected:
     QMap<QString, PcbChannelDataPtr> m_channelNamesToData;
@@ -30,10 +30,12 @@ private slots:
     void onInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant answer);
 private:
     void prepareScan(Zera::ProxyClientPtr pcbClient);
+    void startRangesChangeTasks(QString channelMName);
     void notifyError(QString errMsg);
-    TaskTemplatePtr getChannelsReadTasks();
-    TaskTemplatePtr getChannelReadRangesTasks(const QString &channelMName);
-    TaskTemplatePtr getChannelReadRangeDetailsTasks(const QString &channelMName);
+    TaskTemplatePtr getChannelsReadInfoAndRangeNamesTasks();
+    TaskTemplatePtr getChannelReadRangeNamesTask(const QString &channelMName);
+    TaskTemplatePtr getReadRangeDetailsTasks(const QStringList &channelMNames);
+    TaskTemplatePtr getReadRangeFinalTasks(const QStringList &channelMNames);
     TaskContainerInterfacePtr m_currentTasks;
     Zera::PcbInterfacePtr m_currentPcbInterface;
 
