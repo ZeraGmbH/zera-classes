@@ -3,8 +3,9 @@
 
 #include <testfactoryi2cctrl.h>
 #include <abstracttcpnetworkfactory.h>
-#include <abstractmockallservices.h>
+#include <resmanrunfacade.h>
 #include <proxyclient.h>
+#include <testserverforsenseinterfacemt310s2.h>
 #include <QObject>
 
 class test_pcb_channel_manager : public QObject
@@ -26,8 +27,8 @@ private slots:
     void getDataForInvalidChannel();
 private:
     VeinTcp::AbstractTcpNetworkFactoryPtr m_tcpFactory;
-    std::shared_ptr<TestFactoryI2cCtrl> m_i2cFactory;
-    std::unique_ptr<AbstractMockAllServices> m_allServices;
+    std::unique_ptr<TestServerForSenseInterfaceMt310s2> m_testServer;
+    std::unique_ptr<ResmanRunFacade> m_resmanServer;
     Zera::ProxyClientPtr m_pcbClient;
 };
 

@@ -6,6 +6,7 @@ function(SETUP_QTESTS_CHANNEL_MANAGER)
             pcb-channel-manager
             Zera::zenuxservicecommon-testlib
             Zera::vf-tcp-mock-networklib
+            Zera::mt310s2d-testlib
             )
     endforeach()
 endfunction()
