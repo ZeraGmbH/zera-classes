@@ -24,11 +24,13 @@ protected:
 
 private slots:
     void onTasksFinish(bool ok);
+    void onInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant answer);
 private:
-    void createTasks(Zera::ProxyClientPtr pcbClient);
+    void prepareScan(Zera::ProxyClientPtr pcbClient);
     void notifyError(QString errMsg);
     TaskTemplatePtr getChannelsReadTasks(Zera::PcbInterfacePtr pcbInterface);
     TaskContainerInterfacePtr m_currentTasks;
+    Zera::PcbInterfacePtr m_currentPcbInterface;
 
     QStringList m_tempChannelMNames;
     QMap<QString, QStringList> m_tempChannelRanges;
