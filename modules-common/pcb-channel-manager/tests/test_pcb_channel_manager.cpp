@@ -4,6 +4,7 @@
 #include <timemachineobject.h>
 #include <testallservicesmt310s2.h>
 #include <mocktcpnetworkfactory.h>
+#include <mocki2ceepromiofactory.h>
 #include <proxy.h>
 #include <timemachinefortest.h>
 #include <timerfactoryqtfortest.h>
@@ -14,22 +15,25 @@ QTEST_MAIN(test_pcb_channel_manager)
 
 void test_pcb_channel_manager::initTestCase()
 {
+    MockI2cEEpromIoFactory::enableMock();
     m_tcpFactory = VeinTcp::MockTcpNetworkFactory::create();
-    m_i2cFactory = std::make_shared<TestFactoryI2cCtrl>(false);
     TimerFactoryQtForTest::enableTest();
 }
 
 void test_pcb_channel_manager::init()
 {
     TimeMachineForTest::reset();
-    m_allServices = std::make_unique<TestAllServicesMt310s2>(m_tcpFactory, m_i2cFactory);
+    m_resmanServer = std::make_unique<ResmanRunFacade>(m_tcpFactory);
+    m_testServer = std::make_unique<TestServerForSenseInterfaceMt310s2>(std::make_shared<TestFactoryI2cCtrl>(true), m_tcpFactory);
+    TimeMachineObject::feedEventLoop();
     m_pcbClient = Zera::Proxy::getInstance()->getConnectionSmart("127.0.0.1", 6307, m_tcpFactory);
 }
 
 void test_pcb_channel_manager::cleanup()
 {
+    m_resmanServer = nullptr;
+    TimeMachineObject::feedEventLoop();
     m_pcbClient = nullptr;
-    m_allServices = nullptr;
     TimeMachineObject::feedEventLoop();
 }
 
