@@ -15,8 +15,6 @@ public:
     const QStringList getChannelMNames() const;
     const QStringList getChannelRanges(const QString &channelMName) const;
     const PcbChannelDataPtr getChannelData(QString channelMName);
-
-    Zera::PcbInterfacePtr getPcbInterface(); // intermediate
 signals:
     void sigScanFinished(bool ok);
     void sigChannelRangesChanged(QString channelMName);
