@@ -24,6 +24,7 @@ private slots:
     void checkDspChannel();
     void checkUnit();
     void checkRanges();
+    void changeRangesByClamp();
     void getDataForInvalidChannel();
 private:
     VeinTcp::AbstractTcpNetworkFactoryPtr m_tcpFactory;

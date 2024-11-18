@@ -14,13 +14,16 @@ public:
     void startScan(Zera::ProxyClientPtr pcbClient);
     const QStringList getChannelMNames() const;
     const QStringList getChannelRanges(const QString &channelMName) const;
-    const PcbChannelDataPtr getChannelData(QString channelName);
+    const PcbChannelDataPtr getChannelData(QString channelMName);
+
+    Zera::PcbInterfacePtr getPcbInterface(); // intermediate
 signals:
     void sigScanFinished(bool ok);
     void sigChannelChanged(QString channelMName);
 
 protected:
-    QMap<QString, PcbChannelDataPtr> m_channels;
+    QMap<QString, PcbChannelDataPtr> m_channelNamesToData;
+    QHash<int, QString> m_notifyIdToChannelMName;
 
 private slots:
     void onTasksFinish(bool ok);
@@ -28,12 +31,13 @@ private slots:
 private:
     void prepareScan(Zera::ProxyClientPtr pcbClient);
     void notifyError(QString errMsg);
-    TaskTemplatePtr getChannelsReadTasks(Zera::PcbInterfacePtr pcbInterface);
+    TaskTemplatePtr getChannelsReadTasks();
+    TaskTemplatePtr getChannelReadRangesTasks(const QString &channelMName);
+    TaskTemplatePtr getChannelReadRangeDetailsTasks(const QString &channelMName);
     TaskContainerInterfacePtr m_currentTasks;
     Zera::PcbInterfacePtr m_currentPcbInterface;
 
     QStringList m_tempChannelMNames;
-    QMap<QString, QStringList> m_tempChannelRanges;
 };
 
 #endif // PCBCHANNELMANAGER_H

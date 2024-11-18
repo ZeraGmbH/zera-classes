@@ -3,8 +3,10 @@
 #include "pcbchannelmanagerformodman.h"
 #include <timemachineobject.h>
 #include <testallservicesmt310s2.h>
+#include <clampfactorytest.h>
 #include <mocktcpnetworkfactory.h>
 #include <mocki2ceepromiofactory.h>
+#include <clamp.h>
 #include <proxy.h>
 #include <timemachinefortest.h>
 #include <timerfactoryqtfortest.h>
@@ -15,6 +17,7 @@ QTEST_MAIN(test_pcb_channel_manager)
 
 void test_pcb_channel_manager::initTestCase()
 {
+    ClampFactoryTest::enableTest();
     MockI2cEEpromIoFactory::enableMock();
     m_tcpFactory = VeinTcp::MockTcpNetworkFactory::create();
     TimerFactoryQtForTest::enableTest();
@@ -113,7 +116,7 @@ void test_pcb_channel_manager::rescanWithClear()
 
 void test_pcb_channel_manager::checkAlias()
 {
-    PcbChannelManagerForModman manager;
+    PcbChannelManager manager;
     manager.startScan(m_pcbClient);
     TimeMachineObject::feedEventLoop();
 
@@ -129,7 +132,7 @@ void test_pcb_channel_manager::checkAlias()
 
 void test_pcb_channel_manager::checkDspChannel()
 {
-    PcbChannelManagerForModman manager;
+    PcbChannelManager manager;
     manager.startScan(m_pcbClient);
     TimeMachineObject::feedEventLoop();
 
@@ -145,7 +148,7 @@ void test_pcb_channel_manager::checkDspChannel()
 
 void test_pcb_channel_manager::checkUnit()
 {
-    PcbChannelManagerForModman manager;
+    PcbChannelManager manager;
     manager.startScan(m_pcbClient);
     TimeMachineObject::feedEventLoop();
 
@@ -155,12 +158,29 @@ void test_pcb_channel_manager::checkUnit()
 
 void test_pcb_channel_manager::checkRanges()
 {
-    PcbChannelManagerForModman manager;
+    PcbChannelManager manager;
     manager.startScan(m_pcbClient);
     TimeMachineObject::feedEventLoop();
 
     QCOMPARE(manager.getChannelRanges("m0").size(), 3);
     QCOMPARE(manager.getChannelRanges("m0")[0], "250V");
+}
+
+void test_pcb_channel_manager::changeRangesByClamp()
+{
+    PcbChannelManager manager;
+    manager.startScan(m_pcbClient);
+    TimeMachineObject::feedEventLoop();
+    QStringList ranges = manager.getChannelRanges("m3");
+    QCOMPARE(ranges.size(), 21);
+
+    m_testServer->addClamp(cClamp::CL120A, "IL1");
+    TimeMachineObject::feedEventLoop();
+
+    ranges = manager.getChannelRanges("m3");
+    QCOMPARE(ranges.size(), 30);
+
+    TimeMachineObject::feedEventLoop();
 }
 
 void test_pcb_channel_manager::getDataForInvalidChannel()
