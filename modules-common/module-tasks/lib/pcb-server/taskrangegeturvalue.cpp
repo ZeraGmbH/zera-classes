@@ -1,20 +1,20 @@
-#include "taskchannelgeturvalue.h"
+#include "taskrangegeturvalue.h"
 #include "taskdecoratortimeout.h"
 
-TaskTemplatePtr TaskChannelGetUrValue::create(Zera::PcbInterfacePtr pcbInterface,
+TaskTemplatePtr TaskRangeGetUrValue::create(Zera::PcbInterfacePtr pcbInterface,
                                                QString channelSysName, QString rangeName,
                                                double &valueReceived,
                                                int timeout, std::function<void ()> additionalErrorHandler)
 {
     return TaskDecoratorTimeout::wrapTimeout(timeout,
-                                             std::make_unique<TaskChannelGetUrValue>(
+                                             std::make_unique<TaskRangeGetUrValue>(
                                                  pcbInterface,
                                                  channelSysName, rangeName,
                                                  valueReceived),
                                              additionalErrorHandler);
 }
 
-TaskChannelGetUrValue::TaskChannelGetUrValue(Zera::PcbInterfacePtr pcbInterface,
+TaskRangeGetUrValue::TaskRangeGetUrValue(Zera::PcbInterfacePtr pcbInterface,
                                              QString channelSysName, QString rangeName,
                                              double &valueReceived) :
     TaskServerTransactionTemplate(pcbInterface),
@@ -24,12 +24,12 @@ TaskChannelGetUrValue::TaskChannelGetUrValue(Zera::PcbInterfacePtr pcbInterface,
 {
 }
 
-quint32 TaskChannelGetUrValue::sendToServer()
+quint32 TaskRangeGetUrValue::sendToServer()
 {
     return m_pcbInterface->getUrvalue(m_channelSysName, m_rangeName);
 }
 
-bool TaskChannelGetUrValue::handleCheckedServerAnswer(QVariant answer)
+bool TaskRangeGetUrValue::handleCheckedServerAnswer(QVariant answer)
 {
     m_valueReceived = answer.toDouble();
     return true;

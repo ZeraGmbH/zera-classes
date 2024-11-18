@@ -1,10 +1,10 @@
-#ifndef TASKCHANNELGETURVALUE_H
-#define TASKCHANNELGETURVALUE_H
+#ifndef TASKRANGEGETURVALUE_H
+#define TASKRANGEGETURVALUE_H
 
 #include "taskservertransactiontemplate.h"
 #include <pcbinterface.h>
 
-class TaskChannelGetUrValue : public TaskServerTransactionTemplate
+class TaskRangeGetUrValue : public TaskServerTransactionTemplate
 {
     Q_OBJECT
 public:
@@ -12,7 +12,7 @@ public:
                                    QString channelSysName, QString rangeName,
                                    double &valueReceived,
                                    int timeout, std::function<void()> additionalErrorHandler = []{});
-    TaskChannelGetUrValue(Zera::PcbInterfacePtr pcbInterface,
+    TaskRangeGetUrValue(Zera::PcbInterfacePtr pcbInterface,
                           QString channelSysName, QString rangeName,
                           double &valueReceived);
 private:
@@ -24,4 +24,4 @@ private:
     double &m_valueReceived;
 };
 
-#endif // TASKCHANNELGETURVALUE_H
+#endif // TASKRANGEGETURVALUE_H
