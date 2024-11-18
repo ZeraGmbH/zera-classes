@@ -25,6 +25,7 @@ private slots:
     void checkUnit();
     void checkRanges();
     void changeRangesByClamp();
+    void notifyRangeChangeByClamp();
     void getDataForInvalidChannel();
 private:
     VeinTcp::AbstractTcpNetworkFactoryPtr m_tcpFactory;
