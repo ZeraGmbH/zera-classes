@@ -3,7 +3,7 @@
 
 #include <QObject>
 
-class test_taskchannelgetrejection : public QObject
+class test_taskrangegetrejection : public QObject
 {
     Q_OBJECT
 private slots:

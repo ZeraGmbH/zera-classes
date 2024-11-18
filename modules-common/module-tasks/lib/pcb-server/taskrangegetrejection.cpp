@@ -1,20 +1,20 @@
-#include "taskchannelgetrejection.h"
+#include "taskrangegetrejection.h"
 #include "taskdecoratortimeout.h"
 
-TaskTemplatePtr TaskChannelGetRejection::create(Zera::PcbInterfacePtr pcbInterface,
+TaskTemplatePtr TaskRangeGetRejection::create(Zera::PcbInterfacePtr pcbInterface,
                                                  QString channelSysName, QString rangeName,
                                                  double &valueReceived,
                                                  int timeout, std::function<void ()> additionalErrorHandler)
 {
     return TaskDecoratorTimeout::wrapTimeout(timeout,
-                                             std::make_unique<TaskChannelGetRejection>(
+                                             std::make_unique<TaskRangeGetRejection>(
                                                  pcbInterface,
                                                  channelSysName, rangeName,
                                                  valueReceived),
                                              additionalErrorHandler);
 }
 
-TaskChannelGetRejection::TaskChannelGetRejection(Zera::PcbInterfacePtr pcbInterface,
+TaskRangeGetRejection::TaskRangeGetRejection(Zera::PcbInterfacePtr pcbInterface,
                                                  QString channelSysName, QString rangeName,
                                                  double &valueReceived) :
     TaskServerTransactionTemplate(pcbInterface),
@@ -24,12 +24,12 @@ TaskChannelGetRejection::TaskChannelGetRejection(Zera::PcbInterfacePtr pcbInterf
 {
 }
 
-quint32 TaskChannelGetRejection::sendToServer()
+quint32 TaskRangeGetRejection::sendToServer()
 {
     return m_pcbInterface->getRejection(m_channelSysName, m_rangeName);
 }
 
-bool TaskChannelGetRejection::handleCheckedServerAnswer(QVariant answer)
+bool TaskRangeGetRejection::handleCheckedServerAnswer(QVariant answer)
 {
     m_valueReceived = answer.toDouble();
     return true;

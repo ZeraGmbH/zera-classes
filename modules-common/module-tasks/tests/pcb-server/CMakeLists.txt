@@ -4,11 +4,11 @@ SETUP_QTESTS_MODULE_TASKS(
     test_taskchannelgetavail
     test_taskchannelgetovrejection
     test_taskchannelgetrangelist
-    test_taskchannelgetrejection
     test_taskchannelgeturvalue
     test_taskchannelregisternotifier
     test_taskregisternotifier
     test_taskunregisternotifier
     test_taskchannelgetdspchannel
     test_taskchannelgetunit
+    test_taskrangegetrejection
     )

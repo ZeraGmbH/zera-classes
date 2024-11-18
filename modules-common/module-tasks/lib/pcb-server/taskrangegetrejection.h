@@ -1,10 +1,10 @@
-#ifndef TASKCHANNELGETREJECTION_H
-#define TASKCHANNELGETREJECTION_H
+#ifndef TASKRANGEGETREJECTION_H
+#define TASKRANGEGETREJECTION_H
 
 #include "taskservertransactiontemplate.h"
 #include <pcbinterface.h>
 
-class TaskChannelGetRejection : public TaskServerTransactionTemplate
+class TaskRangeGetRejection : public TaskServerTransactionTemplate
 {
     Q_OBJECT
 public:
@@ -12,7 +12,7 @@ public:
                                    QString channelSysName, QString rangeName,
                                    double &valueReceived,
                                    int timeout, std::function<void()> additionalErrorHandler = []{});
-    TaskChannelGetRejection(Zera::PcbInterfacePtr pcbInterface,
+    TaskRangeGetRejection(Zera::PcbInterfacePtr pcbInterface,
                             QString channelSysName, QString rangeName,
                             double &valueReceived);
 private:
@@ -24,4 +24,4 @@ private:
     double &m_valueReceived;
 };
 
-#endif // TASKCHANNELGETREJECTION_H
+#endif // TASKRANGEGETREJECTION_H

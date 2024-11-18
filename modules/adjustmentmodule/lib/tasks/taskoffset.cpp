@@ -1,6 +1,6 @@
 #include "taskoffset.h"
 #include "taskoffsetgetcorrection.h"
-#include "taskchannelgetrejection.h"
+#include "taskrangegetrejection.h"
 #include "taskchannelgeturvalue.h"
 #include "errormessages.h"
 
@@ -26,7 +26,7 @@ TaskOffset::TaskOffset(Zera::PcbInterfacePtr pcbInterface,
                                            perTransactionTimout, [&]{
             m_perTransactionErrorHandler(readOffsetCorrErrMsg);
         }));
-    addSub(TaskChannelGetRejection::create(pcbInterface,
+    addSub(TaskRangeGetRejection::create(pcbInterface,
                                            channelSysName, rangeName,
                                            m_rangeVals.m_rejection,
                                            perTransactionTimout, [&]{
