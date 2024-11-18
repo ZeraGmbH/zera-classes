@@ -67,7 +67,7 @@ static void startNetwork(QObject *parent)
     if(!serverStarted) {
         netSystem = new VeinNet::NetworkSystem(parent);
         netSystem->setOperationMode(VeinNet::NetworkSystem::VNOM_SUBSCRIPTION);
-        tcpSystem = new VeinNet::TcpSystem(parent);
+        tcpSystem = new VeinNet::TcpSystem(VeinTcp::TcpNetworkFactory::create(), parent);
         //do not reorder
         modManSetupFacade->addSubsystem(netSystem);
         modManSetupFacade->addSubsystem(tcpSystem);
