@@ -113,14 +113,14 @@ void test_pcb_channel_manager::checkAlias()
     manager.startScan(m_pcbClient);
     TimeMachineObject::feedEventLoop();
 
-    QCOMPARE(manager.getChannelData("m0").m_alias, "UL1");
-    QCOMPARE(manager.getChannelData("m1").m_alias, "UL2");
-    QCOMPARE(manager.getChannelData("m2").m_alias, "UL3");
-    QCOMPARE(manager.getChannelData("m3").m_alias, "IL1");
-    QCOMPARE(manager.getChannelData("m4").m_alias, "IL2");
-    QCOMPARE(manager.getChannelData("m5").m_alias, "IL3");
-    QCOMPARE(manager.getChannelData("m6").m_alias, "UAUX");
-    QCOMPARE(manager.getChannelData("m7").m_alias, "IAUX");
+    QCOMPARE(manager.getChannelData("m0")->m_alias, "UL1");
+    QCOMPARE(manager.getChannelData("m1")->m_alias, "UL2");
+    QCOMPARE(manager.getChannelData("m2")->m_alias, "UL3");
+    QCOMPARE(manager.getChannelData("m3")->m_alias, "IL1");
+    QCOMPARE(manager.getChannelData("m4")->m_alias, "IL2");
+    QCOMPARE(manager.getChannelData("m5")->m_alias, "IL3");
+    QCOMPARE(manager.getChannelData("m6")->m_alias, "UAUX");
+    QCOMPARE(manager.getChannelData("m7")->m_alias, "IAUX");
 }
 
 void test_pcb_channel_manager::checkDspChannel()
@@ -129,14 +129,14 @@ void test_pcb_channel_manager::checkDspChannel()
     manager.startScan(m_pcbClient);
     TimeMachineObject::feedEventLoop();
 
-    QCOMPARE(manager.getChannelData("m0").m_dspChannel, 0);
-    QCOMPARE(manager.getChannelData("m1").m_dspChannel, 2);
-    QCOMPARE(manager.getChannelData("m2").m_dspChannel, 4);
-    QCOMPARE(manager.getChannelData("m3").m_dspChannel, 1);
-    QCOMPARE(manager.getChannelData("m4").m_dspChannel, 3);
-    QCOMPARE(manager.getChannelData("m5").m_dspChannel, 5);
-    QCOMPARE(manager.getChannelData("m6").m_dspChannel, 6);
-    QCOMPARE(manager.getChannelData("m7").m_dspChannel, 7);
+    QCOMPARE(manager.getChannelData("m0")->m_dspChannel, 0);
+    QCOMPARE(manager.getChannelData("m1")->m_dspChannel, 2);
+    QCOMPARE(manager.getChannelData("m2")->m_dspChannel, 4);
+    QCOMPARE(manager.getChannelData("m3")->m_dspChannel, 1);
+    QCOMPARE(manager.getChannelData("m4")->m_dspChannel, 3);
+    QCOMPARE(manager.getChannelData("m5")->m_dspChannel, 5);
+    QCOMPARE(manager.getChannelData("m6")->m_dspChannel, 6);
+    QCOMPARE(manager.getChannelData("m7")->m_dspChannel, 7);
 }
 
 void test_pcb_channel_manager::checkUnit()
@@ -145,8 +145,8 @@ void test_pcb_channel_manager::checkUnit()
     manager.startScan(m_pcbClient);
     TimeMachineObject::feedEventLoop();
 
-    QCOMPARE(manager.getChannelData("m0").m_unit, "V");
-    QCOMPARE(manager.getChannelData("m3").m_unit, "A");
+    QCOMPARE(manager.getChannelData("m0")->m_unit, "V");
+    QCOMPARE(manager.getChannelData("m3")->m_unit, "A");
 }
 
 void test_pcb_channel_manager::getDataForInvalidChannel()
@@ -155,5 +155,5 @@ void test_pcb_channel_manager::getDataForInvalidChannel()
     manager.startScan(m_pcbClient);
     TimeMachineObject::feedEventLoop();
 
-    QCOMPARE(manager.getChannelData("foo").m_alias, "");
+    QCOMPARE(manager.getChannelData("foo"), nullptr);
 }
