@@ -98,5 +98,6 @@ TaskTemplatePtr PcbChannelManager::getChannelsReadTasks(Zera::PcbInterfacePtr pc
                                                              TRANSACTION_TIMEOUT,
                                                              [&]{ notifyError(QString("Could not read range list for channel %1").arg(channelName)); }));
     }
+    m_tempChannelMNames.clear(); // avoid further usage
     return channelTasks;
 }
