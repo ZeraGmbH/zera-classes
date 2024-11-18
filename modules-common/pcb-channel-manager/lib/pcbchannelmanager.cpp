@@ -56,23 +56,21 @@ void PcbChannelManager::onInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant 
 
 void PcbChannelManager::prepareScan(Zera::ProxyClientPtr pcbClient)
 {
-    m_currentTasks = TaskContainerSequence::create();
-
-    m_currentTasks->addSub(TaskServerConnectionStart::create(pcbClient, CONNECTION_TIMEOUT));
-
     m_currentPcbInterface = std::make_shared<Zera::cPCBInterface>();
     m_currentPcbInterface->setClientSmart(pcbClient);
+    connect(m_currentPcbInterface.get(), &Zera::cPCBInterface::serverAnswer,
+            this, &PcbChannelManager::onInterfaceAnswer);
+
+    m_currentTasks = TaskContainerSequence::create();
+    m_currentTasks->addSub(TaskServerConnectionStart::create(pcbClient, CONNECTION_TIMEOUT));
     m_currentTasks->addSub(TaskChannelGetAvail::create(
         m_currentPcbInterface, m_tempChannelMNames, TRANSACTION_TIMEOUT, [=] { notifyError("Get available channels failed");}));
-
     m_currentTasks->addSub(TaskLambdaRunner::create([=]() {
         m_currentTasks->addSub(getChannelsReadTasks(m_currentPcbInterface));
         return true;
     }));
     connect(m_currentTasks.get(), &TaskTemplate::sigFinish,
             this, &PcbChannelManager::onTasksFinish);
-    connect(m_currentPcbInterface.get(), &Zera::cPCBInterface::serverAnswer,
-            this, &PcbChannelManager::onInterfaceAnswer);
 }
 
 void PcbChannelManager::notifyError(QString errMsg)
