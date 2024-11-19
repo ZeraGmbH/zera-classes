@@ -21,7 +21,7 @@ TaskContainerInterfacePtr ChannelObserver::addRangesFetchTasks(TaskContainerInte
                                                                Zera::PcbInterfacePtr pcbInterface)
 {
     tasks->addSub(getReadRangeNamesTask(channelMName, pcbInterface));
-    tasks->addSub(getReadRangeDetailsTasks(channelMName, pcbInterface));
+    tasks = addReadRangeDetailsTasks(std::move(tasks), channelMName, pcbInterface);
     tasks->addSub(getReadRangeFinalTask(channelMName));
     return tasks;
 }
@@ -33,13 +33,16 @@ TaskTemplatePtr ChannelObserver::getReadRangeNamesTask(const QString &channelMNa
         TRANSACTION_TIMEOUT, [&]{ notifyError(QString("Could not read range list for channel %1").arg(channelMName)); });
 }
 
-TaskTemplatePtr ChannelObserver::getReadRangeDetailsTasks(const QString &channelMName, Zera::PcbInterfacePtr pcbInterface)
+TaskContainerInterfacePtr ChannelObserver::addReadRangeDetailsTasks(TaskContainerInterfacePtr tasks,
+                                                                    const QString &channelMName,
+                                                                    Zera::PcbInterfacePtr pcbInterface)
 {
-    TaskContainerInterfacePtr allChannelsTasks = TaskContainerParallel::create();
+    TaskContainerInterfacePtr taskToAdd = TaskContainerParallel::create();
 
     // TODO: add range tasks
 
-    return allChannelsTasks;
+    tasks->addSub(std::move(taskToAdd));
+    return tasks;
 }
 
 TaskTemplatePtr ChannelObserver::getReadRangeFinalTask(const QString &channelMName)

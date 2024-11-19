@@ -24,7 +24,9 @@ signals:
     void sigRangeListChanged(QString channelMName);
 private:
     TaskTemplatePtr getReadRangeNamesTask(const QString &channelMName, Zera::PcbInterfacePtr pcbInterface);
-    TaskTemplatePtr getReadRangeDetailsTasks(const QString &channelMName, Zera::PcbInterfacePtr pcbInterface);
+    TaskContainerInterfacePtr addReadRangeDetailsTasks(TaskContainerInterfacePtr tasks,
+                                                       const QString &channelMName,
+                                                       Zera::PcbInterfacePtr pcbInterface);
     TaskTemplatePtr getReadRangeFinalTask(const QString &channelMName);
     static void notifyError(QString errMsg);
     QStringList m_tempRangesNames;
