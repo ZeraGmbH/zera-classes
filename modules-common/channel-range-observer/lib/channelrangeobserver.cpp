@@ -5,41 +5,38 @@
 #include <taskchannelgetalias.h>
 #include <taskchannelgetdspchannel.h>
 #include <taskchannelgetunit.h>
-#include <taskchannelgetrangelist.h>
 #include <taskchannelregisternotifier.h>
 #include <tasklambdarunner.h>
 #include <taskcontainerparallel.h>
 
-void ChannelRangeObserver::startScan(Zera::ProxyClientPtr pcbClient)
+void ChannelRangeObserver::startFullScan(Zera::ProxyClientPtr pcbClient)
 {
-    if(m_channelNamesToData.isEmpty()) {
-        prepareScan(pcbClient);
-        m_currentTasks->start();
-    }
+    if(m_channelNamesToObserver.isEmpty())
+        doStartFullScan(pcbClient);
     else
         emit sigScanFinished(true);
 }
 
 const QStringList ChannelRangeObserver::getChannelMNames() const
 {
-    return m_channelNamesToData.keys();
+    return m_channelNamesToObserver.keys();
 }
 
 const QStringList ChannelRangeObserver::getChannelRanges(const QString &channelMName) const
 {
-    QStringList ranges;
-    auto iterChannel = m_channelNamesToData.constFind(channelMName);
-    if(iterChannel != m_channelNamesToData.constEnd())
-        ranges = iterChannel.value()->m_tempChannelRanges;
-    return ranges;
+    auto iterChannel = m_channelNamesToObserver.constFind(channelMName);
+    if(iterChannel != m_channelNamesToObserver.constEnd())
+        return iterChannel.value()->getRangeNames();
+    qWarning("ChannelRangeObserver: Channel ranges not found for %s!", qPrintable(channelMName));
+    return QStringList();
 }
 
 const ChannelObserverPtr ChannelRangeObserver::getChannelData(QString channelMName)
 {
-    auto iter = m_channelNamesToData.constFind(channelMName);
-    if(iter != m_channelNamesToData.constEnd())
+    auto iter = m_channelNamesToObserver.constFind(channelMName);
+    if(iter != m_channelNamesToObserver.constEnd())
         return iter.value();
-    qWarning("ChannelRangeObserver: Channel data for %s not found!", qPrintable(channelMName));
+    qWarning("ChannelRangeObserver: Channel data not found for %s!", qPrintable(channelMName));
     return nullptr;
 }
 
@@ -61,53 +58,85 @@ void ChannelRangeObserver::onInterfaceAnswer(quint32 msgnr, quint8 reply, QVaria
                 startRangesChangeTasks(channelMName);
             }
             else
-                qInfo("ChannelRangeObserver: Unknown notification: %s!", qPrintable(answer.toString()));
+                qInfo("ChannelRangeObserver: Notification not for us: %s!", qPrintable(answer.toString()));
         }
+        else
+            qInfo("ChannelRangeObserver: Unknown notification: %s!", qPrintable(answer.toString()));
     }
 }
 
 void ChannelRangeObserver::startRangesChangeTasks(QString channelMName)
 {
-    auto iter = m_channelNamesToData.find(channelMName);
-    if(iter != m_channelNamesToData.end()) {
-        TaskContainerInterfacePtr rangeTasks = TaskContainerSequence::create();
-        const QStringList channelMNames = QStringList() << channelMName;
-        rangeTasks->addSub(getChannelReadRangeNamesTask(channelMName));
-        rangeTasks->addSub(getReadRangeDetailsTasks(channelMNames));
-        rangeTasks->addSub(getReadRangeFinalTasks(channelMNames));
-        iter.value()->m_currentTasks = std::move(rangeTasks);
-        iter.value()->m_currentTasks->start();
-    }
+    auto iter = m_channelNamesToObserver.find(channelMName);
+    if(iter != m_channelNamesToObserver.end())
+        iter.value()->startReReadRanges(channelMName, m_currentPcbInterface);
     else
         qInfo("ChannelRangeObserver: On change notification channel %s not found!", qPrintable(channelMName));
 }
 
-void ChannelRangeObserver::prepareScan(Zera::ProxyClientPtr pcbClient)
+void ChannelRangeObserver::doStartFullScan(Zera::ProxyClientPtr pcbClient)
 {
-    m_currentPcbInterface = std::make_shared<Zera::cPCBInterface>();
-    m_currentPcbInterface->setClientSmart(pcbClient);
-    connect(m_currentPcbInterface.get(), &Zera::cPCBInterface::serverAnswer,
-            this, &ChannelRangeObserver::onInterfaceAnswer);
-
     m_currentTasks = TaskContainerSequence::create();
-    m_currentTasks->addSub(TaskServerConnectionStart::create(pcbClient, CONNECTION_TIMEOUT));
-    m_currentTasks->addSub(TaskChannelGetAvail::create(
-        m_currentPcbInterface, m_tempChannelMNames,
-        TRANSACTION_TIMEOUT, [=] { notifyError("Get available channels failed");}));
-    m_currentTasks->addSub(TaskLambdaRunner::create([=]() {
-        m_currentTasks->addSub(getChannelsReadInfoAndRangeNamesTasks(m_tempChannelMNames));
-        m_tempChannelMNames.clear(); // avoid further usage
-        return true;
-    }));
+    m_currentTasks->addSub(perparePcbConnectionTasks(pcbClient));
 
-    m_currentTasks->addSub(TaskLambdaRunner::create([=]() {
-        m_currentTasks->addSub(getReadRangeDetailsTasks(getChannelMNames()));
-        m_currentTasks->addSub(getReadRangeFinalTasks(getChannelMNames()));
+    static QStringList tempChannelMNames;
+    m_currentTasks->addSub(TaskChannelGetAvail::create(
+        m_currentPcbInterface, tempChannelMNames,
+        TRANSACTION_TIMEOUT, [=] { notifyError("Get available channels failed");}));
+
+    m_currentTasks->addSub(TaskLambdaRunner::create([&]() {
+        TaskContainerInterfacePtr allChannelsDetailsTasks = TaskContainerParallel::create();
+        for(int channelNo = 0; channelNo<tempChannelMNames.count(); ++channelNo) {
+            ChannelObserverPtr channelObserver = std::make_shared<ChannelObserver>();
+            QString &channelMName = tempChannelMNames[channelNo];
+            m_channelNamesToObserver[channelMName] = channelObserver;
+
+            TaskContainerInterfacePtr perChannelTask = TaskContainerSequence::create();
+            perChannelTask->addSub(getChannelReadDetailsTasks(channelMName, channelNo));
+            perChannelTask->addSub(channelObserver->getRangesFetchTasks(channelMName, m_currentPcbInterface));
+            allChannelsDetailsTasks->addSub(std::move(perChannelTask));
+
+            connect(channelObserver.get(), &ChannelObserver::sigRangeListChanged,
+                    this, &ChannelRangeObserver::sigRangeListChanged);
+        }
+        m_currentTasks->addSub(std::move(allChannelsDetailsTasks));
         return true;
     }));
 
     connect(m_currentTasks.get(), &TaskTemplate::sigFinish,
             this, &ChannelRangeObserver::onTasksFinish);
+    m_currentTasks->start();
+}
+
+TaskTemplatePtr ChannelRangeObserver::perparePcbConnectionTasks(Zera::ProxyClientPtr pcbClient)
+{
+    m_currentPcbInterface = std::make_shared<Zera::cPCBInterface>();
+    m_currentPcbInterface->setClientSmart(pcbClient);
+    connect(m_currentPcbInterface.get(), &Zera::cPCBInterface::serverAnswer,
+            this, &ChannelRangeObserver::onInterfaceAnswer);
+    return TaskServerConnectionStart::create(pcbClient, CONNECTION_TIMEOUT);
+}
+
+TaskTemplatePtr ChannelRangeObserver::getChannelReadDetailsTasks(const QString &channelMName, int notificationId)
+{
+    TaskContainerInterfacePtr allChannelsTasks = TaskContainerParallel::create();
+    TaskContainerInterfacePtr channelTasks = TaskContainerSequence::create();
+    m_notifyIdToChannelMName[notificationId] = channelMName;
+    channelTasks->addSub(TaskChannelGetAlias::create(
+        m_currentPcbInterface, channelMName, m_channelNamesToObserver[channelMName]->m_alias,
+        TRANSACTION_TIMEOUT, [&]{ notifyError(QString("Could not read alias for channel %1").arg(channelMName)); }));
+    channelTasks->addSub(TaskChannelGetDspChannel::create(
+        m_currentPcbInterface, channelMName, m_channelNamesToObserver[channelMName]->m_dspChannel,
+        TRANSACTION_TIMEOUT, [&]{ notifyError(QString("Could not read dsp-channel for channel %1").arg(channelMName)); }));
+    channelTasks->addSub(TaskChannelGetUnit::create(
+        m_currentPcbInterface, channelMName, m_channelNamesToObserver[channelMName]->m_unit,
+        TRANSACTION_TIMEOUT, [&]{ notifyError(QString("Could not read unit for channel %1").arg(channelMName)); }));
+    // TODO: Handle / check unregister
+    channelTasks->addSub(TaskChannelRegisterNotifier::create(
+        m_currentPcbInterface, channelMName, notificationId,
+        TRANSACTION_TIMEOUT, [&]{ notifyError(QString("Could not register notification for channel %1").arg(channelMName)); }));
+    allChannelsTasks->addSub(std::move(channelTasks));
+    return allChannelsTasks;
 }
 
 void ChannelRangeObserver::notifyError(QString errMsg)
@@ -115,53 +144,3 @@ void ChannelRangeObserver::notifyError(QString errMsg)
     qWarning("ChannelRangeObserver error: %s", qPrintable(errMsg));
 }
 
-TaskTemplatePtr ChannelRangeObserver::getChannelsReadInfoAndRangeNamesTasks(const QStringList &channelMNames)
-{
-    TaskContainerInterfacePtr allChannelsTasks = TaskContainerParallel::create();
-    for(int i=0; i<channelMNames.size(); ++i) {
-        TaskContainerInterfacePtr channelTasks = TaskContainerSequence::create();
-        const QString &channelMName = channelMNames[i];
-        m_notifyIdToChannelMName[i] = channelMName;
-        m_channelNamesToData[channelMName] = std::make_shared<ChannelObserver>();
-        channelTasks->addSub(TaskChannelGetAlias::create(
-            m_currentPcbInterface, channelMName, m_channelNamesToData[channelMName]->m_alias,
-            TRANSACTION_TIMEOUT, [&]{ notifyError(QString("Could not read alias for channel %1").arg(channelMName)); }));
-        channelTasks->addSub(TaskChannelGetDspChannel::create(
-            m_currentPcbInterface, channelMName, m_channelNamesToData[channelMName]->m_dspChannel,
-            TRANSACTION_TIMEOUT, [&]{ notifyError(QString("Could not read dsp-channel for channel %1").arg(channelMName)); }));
-        channelTasks->addSub(TaskChannelGetUnit::create(
-            m_currentPcbInterface, channelMName, m_channelNamesToData[channelMName]->m_unit,
-            TRANSACTION_TIMEOUT, [&]{ notifyError(QString("Could not read unit for channel %1").arg(channelMName)); }));
-        // TODO: Handle / check unregister
-        channelTasks->addSub(TaskChannelRegisterNotifier::create(
-            m_currentPcbInterface, channelMName, i,
-            TRANSACTION_TIMEOUT, [&]{ notifyError(QString("Could not register notification for channel %1").arg(channelMName)); }));
-        channelTasks->addSub(getChannelReadRangeNamesTask(channelMName));
-        allChannelsTasks->addSub(std::move(channelTasks));
-    }
-    return allChannelsTasks;
-}
-
-TaskTemplatePtr ChannelRangeObserver::getChannelReadRangeNamesTask(const QString &channelMName)
-{
-    return TaskChannelGetRangeList::create(
-        m_currentPcbInterface, channelMName, m_channelNamesToData[channelMName]->m_tempChannelRanges,
-        TRANSACTION_TIMEOUT, [&]{ notifyError(QString("Could not read range list for channel %1").arg(channelMName)); });
-}
-
-TaskTemplatePtr ChannelRangeObserver::getReadRangeDetailsTasks(const QStringList &channelMNames)
-{
-    TaskContainerInterfacePtr allChannelsTasks = TaskContainerParallel::create();
-    for(const QString &channelMName : channelMNames) {
-        // TODO: add range tasks
-    }
-    return allChannelsTasks;
-}
-
-TaskTemplatePtr ChannelRangeObserver::getReadRangeFinalTasks(const QStringList &channelMNames)
-{
-    TaskContainerInterfacePtr allChannelsTasks = TaskContainerParallel::create();
-    for(const QString &channelMName : channelMNames)
-        emit sigChannelRangesChanged(channelMName);
-    return allChannelsTasks;
-}

@@ -45,16 +45,16 @@ void test_channel_range_observer::cleanup()
 
 void test_channel_range_observer::emptyChannelListOnStartup()
 {
-    ChannelRangeObserver manager;
-    QVERIFY(manager.getChannelMNames().isEmpty());
+    ChannelRangeObserver observer;
+    QVERIFY(observer.getChannelMNames().isEmpty());
 }
 
 void test_channel_range_observer::scanChannelListSignalReturned()
 {
-    ChannelRangeObserver manager;
-    QSignalSpy spy(&manager, &ChannelRangeObserver::sigScanFinished);
+    ChannelRangeObserver observer;
+    QSignalSpy spy(&observer, &ChannelRangeObserver::sigScanFinished);
 
-    manager.startScan(m_pcbClient);
+    observer.startFullScan(m_pcbClient);
     TimeMachineObject::feedEventLoop();
 
     QCOMPARE(spy.count(), 1);
@@ -62,11 +62,11 @@ void test_channel_range_observer::scanChannelListSignalReturned()
 
 void test_channel_range_observer::scanChannelListChannelsReturned()
 {
-    ChannelRangeObserver manager;
-    manager.startScan(m_pcbClient);
+    ChannelRangeObserver observer;
+    observer.startFullScan(m_pcbClient);
     TimeMachineObject::feedEventLoop();
 
-    QStringList channels = manager.getChannelMNames();
+    QStringList channels = observer.getChannelMNames();
     QCOMPARE(channels.count(), 8);
     QVERIFY(channels.contains("m0"));
     QVERIFY(channels.contains("m1"));
@@ -80,115 +80,115 @@ void test_channel_range_observer::scanChannelListChannelsReturned()
 
 void test_channel_range_observer::rescanWithoutClear()
 {
-    ChannelRangeObserver manager;
-    QSignalSpy spyRangesChanged(&manager, &ChannelRangeObserver::sigChannelRangesChanged);
-    manager.startScan(m_pcbClient);
+    ChannelRangeObserver observer;
+    QSignalSpy spyRangesChanged(&observer, &ChannelRangeObserver::sigRangeListChanged);
+    observer.startFullScan(m_pcbClient);
     TimeMachineObject::feedEventLoop();
 
     QCOMPARE(spyRangesChanged.count(), 8);
-    QStringList channels = manager.getChannelMNames();
+    QStringList channels = observer.getChannelMNames();
     QCOMPARE(channels.count(), 8);
 
     spyRangesChanged.clear();
     cleanup(); // make sure no I/O is performed by killing servers
 
-    QSignalSpy spyFinished(&manager, &ChannelRangeObserver::sigScanFinished);
-    manager.startScan(m_pcbClient);
+    QSignalSpy spyFinished(&observer, &ChannelRangeObserver::sigScanFinished);
+    observer.startFullScan(m_pcbClient);
     TimeMachineObject::feedEventLoop();
 
-    QCOMPARE(manager.getChannelMNames().count(), 8);
+    QCOMPARE(observer.getChannelMNames().count(), 8);
     QCOMPARE(spyRangesChanged.count(), 0);
     QCOMPARE(spyFinished.count(), 1);
 }
 
 void test_channel_range_observer::rescanWithClear()
 {
-    ChannelRangeObserverForModman manager;
-    QSignalSpy spyRangesChanged(&manager, &ChannelRangeObserver::sigChannelRangesChanged);
-    manager.startScan(m_pcbClient);
+    ChannelRangeObserverForModman observer;
+    QSignalSpy spyRangesChanged(&observer, &ChannelRangeObserver::sigRangeListChanged);
+    observer.startFullScan(m_pcbClient);
     TimeMachineObject::feedEventLoop();
 
     QCOMPARE(spyRangesChanged.count(), 8);
-    QStringList channels = manager.getChannelMNames();
+    QStringList channels = observer.getChannelMNames();
     QCOMPARE(channels.count(), 8);
 
     spyRangesChanged.clear();
-    manager.clear();
-    QCOMPARE(manager.getChannelMNames().count(), 0);
+    observer.clear();
+    QCOMPARE(observer.getChannelMNames().count(), 0);
 
-    QSignalSpy spyFinished(&manager, &ChannelRangeObserver::sigScanFinished);
-    manager.startScan(m_pcbClient);
+    QSignalSpy spyFinished(&observer, &ChannelRangeObserver::sigScanFinished);
+    observer.startFullScan(m_pcbClient);
     TimeMachineObject::feedEventLoop();
 
-    QCOMPARE(manager.getChannelMNames().count(), 8);
+    QCOMPARE(observer.getChannelMNames().count(), 8);
     QCOMPARE(spyRangesChanged.count(), 8);
     QCOMPARE(spyFinished.count(), 1);
 }
 
 void test_channel_range_observer::checkAlias()
 {
-    ChannelRangeObserver manager;
-    manager.startScan(m_pcbClient);
+    ChannelRangeObserver observer;
+    observer.startFullScan(m_pcbClient);
     TimeMachineObject::feedEventLoop();
 
-    QCOMPARE(manager.getChannelData("m0")->m_alias, "UL1");
-    QCOMPARE(manager.getChannelData("m1")->m_alias, "UL2");
-    QCOMPARE(manager.getChannelData("m2")->m_alias, "UL3");
-    QCOMPARE(manager.getChannelData("m3")->m_alias, "IL1");
-    QCOMPARE(manager.getChannelData("m4")->m_alias, "IL2");
-    QCOMPARE(manager.getChannelData("m5")->m_alias, "IL3");
-    QCOMPARE(manager.getChannelData("m6")->m_alias, "UAUX");
-    QCOMPARE(manager.getChannelData("m7")->m_alias, "IAUX");
+    QCOMPARE(observer.getChannelData("m0")->m_alias, "UL1");
+    QCOMPARE(observer.getChannelData("m1")->m_alias, "UL2");
+    QCOMPARE(observer.getChannelData("m2")->m_alias, "UL3");
+    QCOMPARE(observer.getChannelData("m3")->m_alias, "IL1");
+    QCOMPARE(observer.getChannelData("m4")->m_alias, "IL2");
+    QCOMPARE(observer.getChannelData("m5")->m_alias, "IL3");
+    QCOMPARE(observer.getChannelData("m6")->m_alias, "UAUX");
+    QCOMPARE(observer.getChannelData("m7")->m_alias, "IAUX");
 }
 
 void test_channel_range_observer::checkDspChannel()
 {
-    ChannelRangeObserver manager;
-    manager.startScan(m_pcbClient);
+    ChannelRangeObserver observer;
+    observer.startFullScan(m_pcbClient);
     TimeMachineObject::feedEventLoop();
 
-    QCOMPARE(manager.getChannelData("m0")->m_dspChannel, 0);
-    QCOMPARE(manager.getChannelData("m1")->m_dspChannel, 2);
-    QCOMPARE(manager.getChannelData("m2")->m_dspChannel, 4);
-    QCOMPARE(manager.getChannelData("m3")->m_dspChannel, 1);
-    QCOMPARE(manager.getChannelData("m4")->m_dspChannel, 3);
-    QCOMPARE(manager.getChannelData("m5")->m_dspChannel, 5);
-    QCOMPARE(manager.getChannelData("m6")->m_dspChannel, 6);
-    QCOMPARE(manager.getChannelData("m7")->m_dspChannel, 7);
+    QCOMPARE(observer.getChannelData("m0")->m_dspChannel, 0);
+    QCOMPARE(observer.getChannelData("m1")->m_dspChannel, 2);
+    QCOMPARE(observer.getChannelData("m2")->m_dspChannel, 4);
+    QCOMPARE(observer.getChannelData("m3")->m_dspChannel, 1);
+    QCOMPARE(observer.getChannelData("m4")->m_dspChannel, 3);
+    QCOMPARE(observer.getChannelData("m5")->m_dspChannel, 5);
+    QCOMPARE(observer.getChannelData("m6")->m_dspChannel, 6);
+    QCOMPARE(observer.getChannelData("m7")->m_dspChannel, 7);
 }
 
 void test_channel_range_observer::checkUnit()
 {
-    ChannelRangeObserver manager;
-    manager.startScan(m_pcbClient);
+    ChannelRangeObserver observer;
+    observer.startFullScan(m_pcbClient);
     TimeMachineObject::feedEventLoop();
 
-    QCOMPARE(manager.getChannelData("m0")->m_unit, "V");
-    QCOMPARE(manager.getChannelData("m3")->m_unit, "A");
+    QCOMPARE(observer.getChannelData("m0")->m_unit, "V");
+    QCOMPARE(observer.getChannelData("m3")->m_unit, "A");
 }
 
 void test_channel_range_observer::checkRanges()
 {
-    ChannelRangeObserver manager;
-    manager.startScan(m_pcbClient);
+    ChannelRangeObserver observer;
+    observer.startFullScan(m_pcbClient);
     TimeMachineObject::feedEventLoop();
 
-    QCOMPARE(manager.getChannelRanges("m0").size(), 3);
-    QCOMPARE(manager.getChannelRanges("m0")[0], "250V");
+    QCOMPARE(observer.getChannelRanges("m0").size(), 3);
+    QCOMPARE(observer.getChannelRanges("m0")[0], "250V");
 }
 
 void test_channel_range_observer::changeRangesByClamp()
 {
-    ChannelRangeObserver manager;
-    manager.startScan(m_pcbClient);
+    ChannelRangeObserver observer;
+    observer.startFullScan(m_pcbClient);
     TimeMachineObject::feedEventLoop();
-    QStringList ranges = manager.getChannelRanges("m3");
+    QStringList ranges = observer.getChannelRanges("m3");
     QCOMPARE(ranges.size(), 21);
 
     m_testServer->addClamp(cClamp::CL120A, "IL1");
     TimeMachineObject::feedEventLoop();
 
-    ranges = manager.getChannelRanges("m3");
+    ranges = observer.getChannelRanges("m3");
     QCOMPARE(ranges.size(), 30);
 
     TimeMachineObject::feedEventLoop();
@@ -196,9 +196,9 @@ void test_channel_range_observer::changeRangesByClamp()
 
 void test_channel_range_observer::notifyRangeChangeByClamp()
 {
-    ChannelRangeObserver manager;
-    QSignalSpy spy(&manager, &ChannelRangeObserver::sigChannelRangesChanged);
-    manager.startScan(m_pcbClient);
+    ChannelRangeObserver observer;
+    QSignalSpy spy(&observer, &ChannelRangeObserver::sigRangeListChanged);
+    observer.startFullScan(m_pcbClient);
     TimeMachineObject::feedEventLoop();
     QCOMPARE(spy.size(), 8);
 
@@ -220,9 +220,9 @@ void test_channel_range_observer::notifyRangeChangeByClamp()
 
 void test_channel_range_observer::getDataForInvalidChannel()
 {
-    ChannelRangeObserverForModman manager;
-    manager.startScan(m_pcbClient);
+    ChannelRangeObserverForModman observer;
+    observer.startFullScan(m_pcbClient);
     TimeMachineObject::feedEventLoop();
 
-    QCOMPARE(manager.getChannelData("foo"), nullptr);
+    QCOMPARE(observer.getChannelData("foo"), nullptr);
 }
