@@ -30,13 +30,16 @@ void test_pcb_channel_manager::init()
     m_testServer = std::make_unique<TestServerForSenseInterfaceMt310s2>(std::make_shared<TestFactoryI2cCtrl>(true), m_tcpFactory);
     TimeMachineObject::feedEventLoop();
     m_pcbClient = Zera::Proxy::getInstance()->getConnectionSmart("127.0.0.1", 6307, m_tcpFactory);
+    TimeMachineObject::feedEventLoop();
 }
 
 void test_pcb_channel_manager::cleanup()
 {
-    m_resmanServer = nullptr;
+    qInfo("cleanup");
     TimeMachineObject::feedEventLoop();
     m_pcbClient = nullptr;
+    m_testServer = nullptr;
+    m_resmanServer = nullptr;
     TimeMachineObject::feedEventLoop();
 }
 
