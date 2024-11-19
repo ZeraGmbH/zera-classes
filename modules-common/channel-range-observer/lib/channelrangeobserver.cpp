@@ -47,12 +47,10 @@ void ChannelRangeObserver::onInterfaceAnswer(quint32 msgnr, quint8 reply, QVaria
         if(answerParts.size() == 2 && answerParts[0] == "Notify") {
             bool ok;
             auto iter = m_notifyIdToChannelMName.constFind(answerParts[1].toInt(&ok));
-            if(ok && iter != m_notifyIdToChannelMName.constEnd()) {
-                QString channelMName = iter.value();
-                startRangesChangeTasks(channelMName);
-            }
+            if(ok && iter != m_notifyIdToChannelMName.constEnd())
+                startRangesChangeTasks(iter.value());
             else
-                qInfo("ChannelRangeObserver: Notification not for us: %s!", qPrintable(answer.toString()));
+                qInfo("ChannelRangeObserver: Unknown notification: %s!", qPrintable(answer.toString()));
         }
         else
             qInfo("ChannelRangeObserver: Unknown notification: %s!", qPrintable(answer.toString()));
