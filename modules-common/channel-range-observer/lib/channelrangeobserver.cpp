@@ -40,12 +40,6 @@ const ChannelObserverPtr ChannelRangeObserver::getChannelData(QString channelMNa
     return nullptr;
 }
 
-void ChannelRangeObserver::onTasksFinish(bool ok)
-{
-    m_currentTasks = nullptr;
-    emit sigFullScanFinished(ok);
-}
-
 void ChannelRangeObserver::onInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant answer)
 {
     if (msgnr == 0) { // 0 was reserved for async. messages
@@ -103,7 +97,7 @@ void ChannelRangeObserver::doStartFullScan(Zera::ProxyClientPtr pcbClient)
     }));
 
     connect(m_currentTasks.get(), &TaskTemplate::sigFinish,
-            this, &ChannelRangeObserver::onTasksFinish);
+            this, &ChannelRangeObserver::sigFullScanFinished);
     m_currentTasks->start();
 }
 

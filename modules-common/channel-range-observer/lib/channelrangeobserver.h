@@ -24,7 +24,6 @@ protected:
     QHash<int, QString> m_notifyIdToChannelMName;
 
 private slots:
-    void onTasksFinish(bool ok);
     void onInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant answer);
 private:
     void doStartFullScan(Zera::ProxyClientPtr pcbClient);
