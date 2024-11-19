@@ -34,6 +34,7 @@ private:
     static void notifyError(QString errMsg);
     TaskContainerInterfacePtr m_currentTasks;
     Zera::PcbInterfacePtr m_currentPcbInterface;
+    QStringList m_tempChannelMNames;
 };
 
 #endif // CHANNELRANGEOBSERVER_H
