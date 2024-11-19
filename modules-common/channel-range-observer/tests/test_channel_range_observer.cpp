@@ -1,6 +1,6 @@
-#include "test_pcb_channel_manager.h"
-#include "pcbchannelmanager.h"
-#include "pcbchannelmanagerformodman.h"
+#include "test_channel_range_observer.h"
+#include "channelrangeobserver.h"
+#include "channelrangeobserverformodman.h"
 #include <timemachineobject.h>
 #include <testallservicesmt310s2.h>
 #include <clampfactorytest.h>
@@ -13,9 +13,9 @@
 #include <QTest>
 #include <QSignalSpy>
 
-QTEST_MAIN(test_pcb_channel_manager)
+QTEST_MAIN(test_channel_range_observer)
 
-void test_pcb_channel_manager::initTestCase()
+void test_channel_range_observer::initTestCase()
 {
     ClampFactoryTest::enableTest();
     MockI2cEEpromIoFactory::enableMock();
@@ -23,7 +23,7 @@ void test_pcb_channel_manager::initTestCase()
     TimerFactoryQtForTest::enableTest();
 }
 
-void test_pcb_channel_manager::init()
+void test_channel_range_observer::init()
 {
     TimeMachineForTest::reset();
     m_resmanServer = std::make_unique<ResmanRunFacade>(m_tcpFactory);
@@ -33,7 +33,7 @@ void test_pcb_channel_manager::init()
     TimeMachineObject::feedEventLoop();
 }
 
-void test_pcb_channel_manager::cleanup()
+void test_channel_range_observer::cleanup()
 {
     qInfo("cleanup");
     TimeMachineObject::feedEventLoop();
@@ -43,16 +43,16 @@ void test_pcb_channel_manager::cleanup()
     TimeMachineObject::feedEventLoop();
 }
 
-void test_pcb_channel_manager::emptyChannelListOnStartup()
+void test_channel_range_observer::emptyChannelListOnStartup()
 {
-    PcbChannelManager manager;
+    ChannelRangeObserver manager;
     QVERIFY(manager.getChannelMNames().isEmpty());
 }
 
-void test_pcb_channel_manager::scanChannelListSignalReturned()
+void test_channel_range_observer::scanChannelListSignalReturned()
 {
-    PcbChannelManager manager;
-    QSignalSpy spy(&manager, &PcbChannelManager::sigScanFinished);
+    ChannelRangeObserver manager;
+    QSignalSpy spy(&manager, &ChannelRangeObserver::sigScanFinished);
 
     manager.startScan(m_pcbClient);
     TimeMachineObject::feedEventLoop();
@@ -60,9 +60,9 @@ void test_pcb_channel_manager::scanChannelListSignalReturned()
     QCOMPARE(spy.count(), 1);
 }
 
-void test_pcb_channel_manager::scanChannelListChannelsReturned()
+void test_channel_range_observer::scanChannelListChannelsReturned()
 {
-    PcbChannelManager manager;
+    ChannelRangeObserver manager;
     manager.startScan(m_pcbClient);
     TimeMachineObject::feedEventLoop();
 
@@ -78,10 +78,10 @@ void test_pcb_channel_manager::scanChannelListChannelsReturned()
     QVERIFY(channels.contains("m7"));
 }
 
-void test_pcb_channel_manager::rescanWithoutClear()
+void test_channel_range_observer::rescanWithoutClear()
 {
-    PcbChannelManager manager;
-    QSignalSpy spyRangesChanged(&manager, &PcbChannelManager::sigChannelRangesChanged);
+    ChannelRangeObserver manager;
+    QSignalSpy spyRangesChanged(&manager, &ChannelRangeObserver::sigChannelRangesChanged);
     manager.startScan(m_pcbClient);
     TimeMachineObject::feedEventLoop();
 
@@ -92,7 +92,7 @@ void test_pcb_channel_manager::rescanWithoutClear()
     spyRangesChanged.clear();
     cleanup(); // make sure no I/O is performed by killing servers
 
-    QSignalSpy spyFinished(&manager, &PcbChannelManager::sigScanFinished);
+    QSignalSpy spyFinished(&manager, &ChannelRangeObserver::sigScanFinished);
     manager.startScan(m_pcbClient);
     TimeMachineObject::feedEventLoop();
 
@@ -101,10 +101,10 @@ void test_pcb_channel_manager::rescanWithoutClear()
     QCOMPARE(spyFinished.count(), 1);
 }
 
-void test_pcb_channel_manager::rescanWithClear()
+void test_channel_range_observer::rescanWithClear()
 {
-    PcbChannelManagerForModman manager;
-    QSignalSpy spyRangesChanged(&manager, &PcbChannelManager::sigChannelRangesChanged);
+    ChannelRangeObserverForModman manager;
+    QSignalSpy spyRangesChanged(&manager, &ChannelRangeObserver::sigChannelRangesChanged);
     manager.startScan(m_pcbClient);
     TimeMachineObject::feedEventLoop();
 
@@ -116,7 +116,7 @@ void test_pcb_channel_manager::rescanWithClear()
     manager.clear();
     QCOMPARE(manager.getChannelMNames().count(), 0);
 
-    QSignalSpy spyFinished(&manager, &PcbChannelManager::sigScanFinished);
+    QSignalSpy spyFinished(&manager, &ChannelRangeObserver::sigScanFinished);
     manager.startScan(m_pcbClient);
     TimeMachineObject::feedEventLoop();
 
@@ -125,9 +125,9 @@ void test_pcb_channel_manager::rescanWithClear()
     QCOMPARE(spyFinished.count(), 1);
 }
 
-void test_pcb_channel_manager::checkAlias()
+void test_channel_range_observer::checkAlias()
 {
-    PcbChannelManager manager;
+    ChannelRangeObserver manager;
     manager.startScan(m_pcbClient);
     TimeMachineObject::feedEventLoop();
 
@@ -141,9 +141,9 @@ void test_pcb_channel_manager::checkAlias()
     QCOMPARE(manager.getChannelData("m7")->m_alias, "IAUX");
 }
 
-void test_pcb_channel_manager::checkDspChannel()
+void test_channel_range_observer::checkDspChannel()
 {
-    PcbChannelManager manager;
+    ChannelRangeObserver manager;
     manager.startScan(m_pcbClient);
     TimeMachineObject::feedEventLoop();
 
@@ -157,9 +157,9 @@ void test_pcb_channel_manager::checkDspChannel()
     QCOMPARE(manager.getChannelData("m7")->m_dspChannel, 7);
 }
 
-void test_pcb_channel_manager::checkUnit()
+void test_channel_range_observer::checkUnit()
 {
-    PcbChannelManager manager;
+    ChannelRangeObserver manager;
     manager.startScan(m_pcbClient);
     TimeMachineObject::feedEventLoop();
 
@@ -167,9 +167,9 @@ void test_pcb_channel_manager::checkUnit()
     QCOMPARE(manager.getChannelData("m3")->m_unit, "A");
 }
 
-void test_pcb_channel_manager::checkRanges()
+void test_channel_range_observer::checkRanges()
 {
-    PcbChannelManager manager;
+    ChannelRangeObserver manager;
     manager.startScan(m_pcbClient);
     TimeMachineObject::feedEventLoop();
 
@@ -177,9 +177,9 @@ void test_pcb_channel_manager::checkRanges()
     QCOMPARE(manager.getChannelRanges("m0")[0], "250V");
 }
 
-void test_pcb_channel_manager::changeRangesByClamp()
+void test_channel_range_observer::changeRangesByClamp()
 {
-    PcbChannelManager manager;
+    ChannelRangeObserver manager;
     manager.startScan(m_pcbClient);
     TimeMachineObject::feedEventLoop();
     QStringList ranges = manager.getChannelRanges("m3");
@@ -194,10 +194,10 @@ void test_pcb_channel_manager::changeRangesByClamp()
     TimeMachineObject::feedEventLoop();
 }
 
-void test_pcb_channel_manager::notifyRangeChangeByClamp()
+void test_channel_range_observer::notifyRangeChangeByClamp()
 {
-    PcbChannelManager manager;
-    QSignalSpy spy(&manager, &PcbChannelManager::sigChannelRangesChanged);
+    ChannelRangeObserver manager;
+    QSignalSpy spy(&manager, &ChannelRangeObserver::sigChannelRangesChanged);
     manager.startScan(m_pcbClient);
     TimeMachineObject::feedEventLoop();
     QCOMPARE(spy.size(), 8);
@@ -218,9 +218,9 @@ void test_pcb_channel_manager::notifyRangeChangeByClamp()
     QCOMPARE(spy.size(), 2);
 }
 
-void test_pcb_channel_manager::getDataForInvalidChannel()
+void test_channel_range_observer::getDataForInvalidChannel()
 {
-    PcbChannelManagerForModman manager;
+    ChannelRangeObserverForModman manager;
     manager.startScan(m_pcbClient);
     TimeMachineObject::feedEventLoop();
 

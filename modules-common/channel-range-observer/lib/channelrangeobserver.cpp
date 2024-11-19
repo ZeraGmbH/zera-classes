@@ -1,4 +1,4 @@
-#include "pcbchannelmanager.h"
+#include "channelrangeobserver.h"
 #include "taskchannelgetavail.h"
 #include "taskserverconnectionstart.h"
 #include <taskcontainersequence.h>
@@ -10,7 +10,7 @@
 #include <tasklambdarunner.h>
 #include <taskcontainerparallel.h>
 
-void PcbChannelManager::startScan(Zera::ProxyClientPtr pcbClient)
+void ChannelRangeObserver::startScan(Zera::ProxyClientPtr pcbClient)
 {
     if(m_channelNamesToData.isEmpty()) {
         prepareScan(pcbClient);
@@ -20,12 +20,12 @@ void PcbChannelManager::startScan(Zera::ProxyClientPtr pcbClient)
         emit sigScanFinished(true);
 }
 
-const QStringList PcbChannelManager::getChannelMNames() const
+const QStringList ChannelRangeObserver::getChannelMNames() const
 {
     return m_channelNamesToData.keys();
 }
 
-const QStringList PcbChannelManager::getChannelRanges(const QString &channelMName) const
+const QStringList ChannelRangeObserver::getChannelRanges(const QString &channelMName) const
 {
     QStringList ranges;
     auto iterChannel = m_channelNamesToData.constFind(channelMName);
@@ -34,22 +34,22 @@ const QStringList PcbChannelManager::getChannelRanges(const QString &channelMNam
     return ranges;
 }
 
-const PcbChannelDataPtr PcbChannelManager::getChannelData(QString channelMName)
+const ChannelObserverPtr ChannelRangeObserver::getChannelData(QString channelMName)
 {
     auto iter = m_channelNamesToData.constFind(channelMName);
     if(iter != m_channelNamesToData.constEnd())
         return iter.value();
-    qWarning("PcbChannelManager: Channel data for %s not found!", qPrintable(channelMName));
+    qWarning("ChannelRangeObserver: Channel data for %s not found!", qPrintable(channelMName));
     return nullptr;
 }
 
-void PcbChannelManager::onTasksFinish(bool ok)
+void ChannelRangeObserver::onTasksFinish(bool ok)
 {
     m_currentTasks = nullptr;
     emit sigScanFinished(ok);
 }
 
-void PcbChannelManager::onInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant answer)
+void ChannelRangeObserver::onInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant answer)
 {
     if (msgnr == 0) { // 0 was reserved for async. messages
         const QStringList answerParts = answer.toString().split(":", Qt::SkipEmptyParts);
@@ -61,12 +61,12 @@ void PcbChannelManager::onInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant 
                 startRangesChangeTasks(channelMName);
             }
             else
-                qInfo("PcbChannelManager: Unknown notification: %s!", qPrintable(answer.toString()));
+                qInfo("ChannelRangeObserver: Unknown notification: %s!", qPrintable(answer.toString()));
         }
     }
 }
 
-void PcbChannelManager::startRangesChangeTasks(QString channelMName)
+void ChannelRangeObserver::startRangesChangeTasks(QString channelMName)
 {
     auto iter = m_channelNamesToData.find(channelMName);
     if(iter != m_channelNamesToData.end()) {
@@ -79,15 +79,15 @@ void PcbChannelManager::startRangesChangeTasks(QString channelMName)
         iter.value()->m_currentTasks->start();
     }
     else
-        qInfo("PcbChannelManager: On change notification channel %s not found!", qPrintable(channelMName));
+        qInfo("ChannelRangeObserver: On change notification channel %s not found!", qPrintable(channelMName));
 }
 
-void PcbChannelManager::prepareScan(Zera::ProxyClientPtr pcbClient)
+void ChannelRangeObserver::prepareScan(Zera::ProxyClientPtr pcbClient)
 {
     m_currentPcbInterface = std::make_shared<Zera::cPCBInterface>();
     m_currentPcbInterface->setClientSmart(pcbClient);
     connect(m_currentPcbInterface.get(), &Zera::cPCBInterface::serverAnswer,
-            this, &PcbChannelManager::onInterfaceAnswer);
+            this, &ChannelRangeObserver::onInterfaceAnswer);
 
     m_currentTasks = TaskContainerSequence::create();
     m_currentTasks->addSub(TaskServerConnectionStart::create(pcbClient, CONNECTION_TIMEOUT));
@@ -107,22 +107,22 @@ void PcbChannelManager::prepareScan(Zera::ProxyClientPtr pcbClient)
     }));
 
     connect(m_currentTasks.get(), &TaskTemplate::sigFinish,
-            this, &PcbChannelManager::onTasksFinish);
+            this, &ChannelRangeObserver::onTasksFinish);
 }
 
-void PcbChannelManager::notifyError(QString errMsg)
+void ChannelRangeObserver::notifyError(QString errMsg)
 {
-    qWarning("PcbChannelManager error: %s", qPrintable(errMsg));
+    qWarning("ChannelRangeObserver error: %s", qPrintable(errMsg));
 }
 
-TaskTemplatePtr PcbChannelManager::getChannelsReadInfoAndRangeNamesTasks(const QStringList &channelMNames)
+TaskTemplatePtr ChannelRangeObserver::getChannelsReadInfoAndRangeNamesTasks(const QStringList &channelMNames)
 {
     TaskContainerInterfacePtr allChannelsTasks = TaskContainerParallel::create();
     for(int i=0; i<channelMNames.size(); ++i) {
         TaskContainerInterfacePtr channelTasks = TaskContainerSequence::create();
         const QString &channelMName = channelMNames[i];
         m_notifyIdToChannelMName[i] = channelMName;
-        m_channelNamesToData[channelMName] = std::make_shared<PcbChannelData>();
+        m_channelNamesToData[channelMName] = std::make_shared<ChannelObserver>();
         channelTasks->addSub(TaskChannelGetAlias::create(
             m_currentPcbInterface, channelMName, m_channelNamesToData[channelMName]->m_alias,
             TRANSACTION_TIMEOUT, [&]{ notifyError(QString("Could not read alias for channel %1").arg(channelMName)); }));
@@ -142,14 +142,14 @@ TaskTemplatePtr PcbChannelManager::getChannelsReadInfoAndRangeNamesTasks(const Q
     return allChannelsTasks;
 }
 
-TaskTemplatePtr PcbChannelManager::getChannelReadRangeNamesTask(const QString &channelMName)
+TaskTemplatePtr ChannelRangeObserver::getChannelReadRangeNamesTask(const QString &channelMName)
 {
     return TaskChannelGetRangeList::create(
         m_currentPcbInterface, channelMName, m_channelNamesToData[channelMName]->m_tempChannelRanges,
         TRANSACTION_TIMEOUT, [&]{ notifyError(QString("Could not read range list for channel %1").arg(channelMName)); });
 }
 
-TaskTemplatePtr PcbChannelManager::getReadRangeDetailsTasks(const QStringList &channelMNames)
+TaskTemplatePtr ChannelRangeObserver::getReadRangeDetailsTasks(const QStringList &channelMNames)
 {
     TaskContainerInterfacePtr allChannelsTasks = TaskContainerParallel::create();
     for(const QString &channelMName : channelMNames) {
@@ -158,7 +158,7 @@ TaskTemplatePtr PcbChannelManager::getReadRangeDetailsTasks(const QStringList &c
     return allChannelsTasks;
 }
 
-TaskTemplatePtr PcbChannelManager::getReadRangeFinalTasks(const QStringList &channelMNames)
+TaskTemplatePtr ChannelRangeObserver::getReadRangeFinalTasks(const QStringList &channelMNames)
 {
     TaskContainerInterfacePtr allChannelsTasks = TaskContainerParallel::create();
     for(const QString &channelMName : channelMNames)

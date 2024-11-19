@@ -1,26 +1,26 @@
-#ifndef PCBCHANNELMANAGER_H
-#define PCBCHANNELMANAGER_H
+#ifndef CHANNELRANGEOBSERVER_H
+#define CHANNELRANGEOBSERVER_H
 
-#include "pcbchanneldata.h"
+#include "channelobserver.h"
 #include <pcbinterface.h>
 #include <proxyclient.h>
 #include <taskcontainerinterface.h>
 #include <QMap>
 
-class PcbChannelManager : public QObject
+class ChannelRangeObserver : public QObject
 {
     Q_OBJECT
 public:
     void startScan(Zera::ProxyClientPtr pcbClient);
     const QStringList getChannelMNames() const;
     const QStringList getChannelRanges(const QString &channelMName) const;
-    const PcbChannelDataPtr getChannelData(QString channelMName);
+    const ChannelObserverPtr getChannelData(QString channelMName);
 signals:
     void sigScanFinished(bool ok);
     void sigChannelRangesChanged(QString channelMName);
 
 protected:
-    QMap<QString, PcbChannelDataPtr> m_channelNamesToData;
+    QMap<QString, ChannelObserverPtr> m_channelNamesToData;
     QHash<int, QString> m_notifyIdToChannelMName;
 
 private slots:
@@ -40,4 +40,4 @@ private:
     QStringList m_tempChannelMNames;
 };
 
-#endif // PCBCHANNELMANAGER_H
+#endif // CHANNELRANGEOBSERVER_H
