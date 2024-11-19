@@ -1,22 +1,22 @@
-#include "test_taskchannelgetovrejection.h"
-#include "taskchannelgetovrejection.h"
+#include "test_taskrangegetovrejection.h"
+#include "taskrangegetovrejection.h"
 #include "pcbinitfortest.h"
 #include "scpifullcmdcheckerfortest.h"
 #include <timemachinefortest.h>
 #include <tasktesthelper.h>
 #include <QTest>
 
-QTEST_MAIN(test_taskchannelgetovrejection)
+QTEST_MAIN(test_taskrangegetovrejection)
 
 static const char* channelSysName = "m0";
 static const char* rangeName = "250V";
 static double defaultOvRejection = 123456.0; // although treated as double - it is more an int...
 
-void test_taskchannelgetovrejection::checkScpiSend()
+void test_taskrangegetovrejection::checkScpiSend()
 {
     PcbInitForTest pcb;
     double ovRejection;
-    TaskTemplatePtr task = TaskChannelGetOvRejection::create(pcb.getPcbInterface(),
+    TaskTemplatePtr task = TaskRangeGetOvRejection::create(pcb.getPcbInterface(),
                                                              channelSysName, rangeName,
                                                              ovRejection,
                                                              EXPIRE_INFINITE);
@@ -29,12 +29,12 @@ void test_taskchannelgetovrejection::checkScpiSend()
     QVERIFY(scpiChecker.matches(scpiSent[0]));
 }
 
-void test_taskchannelgetovrejection::returnsOvrRejectionProperly()
+void test_taskrangegetovrejection::returnsOvrRejectionProperly()
 {
     PcbInitForTest pcb;
     pcb.getProxyClient()->setAnswers(ServerTestAnswerList() << ServerTestAnswer(ack, QString("%1").arg(defaultOvRejection)));
     double ovRejection = 0.0;
-    TaskTemplatePtr task = TaskChannelGetOvRejection::create(pcb.getPcbInterface(),
+    TaskTemplatePtr task = TaskRangeGetOvRejection::create(pcb.getPcbInterface(),
                                                              channelSysName, rangeName,
                                                              ovRejection,
                                                              EXPIRE_INFINITE);
@@ -43,12 +43,12 @@ void test_taskchannelgetovrejection::returnsOvrRejectionProperly()
     QCOMPARE(ovRejection, defaultOvRejection);
 }
 
-void test_taskchannelgetovrejection::timeoutAndErrFunc()
+void test_taskrangegetovrejection::timeoutAndErrFunc()
 {
     PcbInitForTest pcb;
     int localErrorCount = 0;
     double ovRejection = 0.0;
-    TaskTemplatePtr task = TaskChannelGetOvRejection::create(pcb.getPcbInterface(),
+    TaskTemplatePtr task = TaskRangeGetOvRejection::create(pcb.getPcbInterface(),
                                                              channelSysName, rangeName,
                                                              ovRejection,
                                                              DEFAULT_EXPIRE,
