@@ -14,7 +14,7 @@ void ChannelRangeObserver::startFullScan(Zera::ProxyClientPtr pcbClient)
     if(m_channelNamesToObserver.isEmpty())
         doStartFullScan(pcbClient);
     else
-        emit sigScanFinished(true);
+        emit sigFullScanFinished(true);
 }
 
 const QStringList ChannelRangeObserver::getChannelMNames() const
@@ -43,7 +43,7 @@ const ChannelObserverPtr ChannelRangeObserver::getChannelData(QString channelMNa
 void ChannelRangeObserver::onTasksFinish(bool ok)
 {
     m_currentTasks = nullptr;
-    emit sigScanFinished(ok);
+    emit sigFullScanFinished(ok);
 }
 
 void ChannelRangeObserver::onInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant answer)

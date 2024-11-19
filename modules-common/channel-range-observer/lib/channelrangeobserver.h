@@ -16,7 +16,7 @@ public:
     const QStringList getChannelRanges(const QString &channelMName) const;
     const ChannelObserverPtr getChannelData(QString channelMName);
 signals:
-    void sigScanFinished(bool ok);
+    void sigFullScanFinished(bool ok);
     void sigRangeListChanged(QString channelMName);
 
 protected:

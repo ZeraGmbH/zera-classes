@@ -52,7 +52,7 @@ void test_channel_range_observer::emptyChannelListOnStartup()
 void test_channel_range_observer::scanChannelListSignalReturned()
 {
     ChannelRangeObserver observer;
-    QSignalSpy spy(&observer, &ChannelRangeObserver::sigScanFinished);
+    QSignalSpy spy(&observer, &ChannelRangeObserver::sigFullScanFinished);
 
     observer.startFullScan(m_pcbClient);
     TimeMachineObject::feedEventLoop();
@@ -92,7 +92,7 @@ void test_channel_range_observer::rescanWithoutClear()
     spyRangesChanged.clear();
     cleanup(); // make sure no I/O is performed by killing servers
 
-    QSignalSpy spyFinished(&observer, &ChannelRangeObserver::sigScanFinished);
+    QSignalSpy spyFinished(&observer, &ChannelRangeObserver::sigFullScanFinished);
     observer.startFullScan(m_pcbClient);
     TimeMachineObject::feedEventLoop();
 
@@ -116,7 +116,7 @@ void test_channel_range_observer::rescanWithClear()
     observer.clear();
     QCOMPARE(observer.getChannelMNames().count(), 0);
 
-    QSignalSpy spyFinished(&observer, &ChannelRangeObserver::sigScanFinished);
+    QSignalSpy spyFinished(&observer, &ChannelRangeObserver::sigFullScanFinished);
     observer.startFullScan(m_pcbClient);
     TimeMachineObject::feedEventLoop();
 
