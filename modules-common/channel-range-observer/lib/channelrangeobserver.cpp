@@ -79,16 +79,15 @@ void ChannelRangeObserver::doStartFullScan(Zera::ProxyClientPtr pcbClient)
     m_currentTasks = TaskContainerSequence::create();
     m_currentTasks->addSub(perparePcbConnectionTasks(pcbClient));
 
-    static QStringList tempChannelMNames;
     m_currentTasks->addSub(TaskChannelGetAvail::create(
-        m_currentPcbInterface, tempChannelMNames,
+        m_currentPcbInterface, m_tempChannelMNames,
         TRANSACTION_TIMEOUT, [=] { notifyError("Get available channels failed");}));
 
     m_currentTasks->addSub(TaskLambdaRunner::create([&]() {
         TaskContainerInterfacePtr allChannelsDetailsTasks = TaskContainerParallel::create();
-        for(int channelNo = 0; channelNo<tempChannelMNames.count(); ++channelNo) {
+        for(int channelNo = 0; channelNo<m_tempChannelMNames.count(); ++channelNo) {
             ChannelObserverPtr channelObserver = std::make_shared<ChannelObserver>();
-            QString &channelMName = tempChannelMNames[channelNo];
+            QString &channelMName = m_tempChannelMNames[channelNo];
             m_channelNamesToObserver[channelMName] = channelObserver;
 
             TaskContainerInterfacePtr perChannelTask = TaskContainerSequence::create();
