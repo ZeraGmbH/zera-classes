@@ -1,20 +1,20 @@
-#include "taskchannelgetovrejection.h"
+#include "taskrangegetovrejection.h"
 #include "taskdecoratortimeout.h"
 
-TaskTemplatePtr TaskChannelGetOvRejection::create(Zera::PcbInterfacePtr pcbInterface,
+TaskTemplatePtr TaskRangeGetOvRejection::create(Zera::PcbInterfacePtr pcbInterface,
                                                    QString channelSysName, QString rangeName,
                                                    double &valueReceived,
                                                    int timeout, std::function<void ()> additionalErrorHandler)
 {
     return TaskDecoratorTimeout::wrapTimeout(timeout,
-                                             std::make_unique<TaskChannelGetOvRejection>(
+                                             std::make_unique<TaskRangeGetOvRejection>(
                                                  pcbInterface,
                                                  channelSysName, rangeName,
                                                  valueReceived),
                                              additionalErrorHandler);
 }
 
-TaskChannelGetOvRejection::TaskChannelGetOvRejection(Zera::PcbInterfacePtr pcbInterface,
+TaskRangeGetOvRejection::TaskRangeGetOvRejection(Zera::PcbInterfacePtr pcbInterface,
                                                      QString channelSysName, QString rangeName,
                                                      double &valueReceived) :
     TaskServerTransactionTemplate(pcbInterface),
@@ -24,12 +24,12 @@ TaskChannelGetOvRejection::TaskChannelGetOvRejection(Zera::PcbInterfacePtr pcbIn
 {
 }
 
-quint32 TaskChannelGetOvRejection::sendToServer()
+quint32 TaskRangeGetOvRejection::sendToServer()
 {
     return m_pcbInterface->getOVRejection(m_channelSysName, m_rangeName);
 }
 
-bool TaskChannelGetOvRejection::handleCheckedServerAnswer(QVariant answer)
+bool TaskRangeGetOvRejection::handleCheckedServerAnswer(QVariant answer)
 {
     m_valueReceived = answer.toDouble();
     return true;

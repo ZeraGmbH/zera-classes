@@ -3,12 +3,12 @@
 
 #include <QObject>
 
-class test_taskrangegetrejection : public QObject
+class test_taskrangegetovrejection : public QObject
 {
     Q_OBJECT
 private slots:
     void checkScpiSend();
-    void returnsRejectionProperly();
+    void returnsOvrRejectionProperly();
     void timeoutAndErrFunc();
 };
 
