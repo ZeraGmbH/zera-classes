@@ -35,7 +35,6 @@ void test_channel_range_observer::init()
 
 void test_channel_range_observer::cleanup()
 {
-    qInfo("cleanup");
     TimeMachineObject::feedEventLoop();
     m_pcbClient = nullptr;
     m_testServer = nullptr;
