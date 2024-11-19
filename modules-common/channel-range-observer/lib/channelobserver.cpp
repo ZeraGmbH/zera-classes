@@ -11,17 +11,19 @@ const QStringList ChannelObserver::getRangeNames() const
 
 void ChannelObserver::startReReadRanges(const QString &channelMName, Zera::PcbInterfacePtr pcbInterface)
 {
-    m_reReadTask = getRangesFetchTasks(channelMName, pcbInterface);
+    m_reReadTask = TaskContainerSequence::create();
+    m_reReadTask = addRangesFetchTasks(std::move(m_reReadTask), channelMName, pcbInterface);
     m_reReadTask->start();
 }
 
-TaskTemplatePtr ChannelObserver::getRangesFetchTasks(const QString &channelMName, Zera::PcbInterfacePtr pcbInterface)
+TaskContainerInterfacePtr ChannelObserver::addRangesFetchTasks(TaskContainerInterfacePtr tasks,
+                                                               const QString &channelMName,
+                                                               Zera::PcbInterfacePtr pcbInterface)
 {
-    TaskContainerInterfacePtr rangeTasks = TaskContainerSequence::create();
-    rangeTasks->addSub(getReadRangeNamesTask(channelMName, pcbInterface));
-    rangeTasks->addSub(getReadRangeDetailsTasks(channelMName, pcbInterface));
-    rangeTasks->addSub(getReadRangeFinalTask(channelMName));
-    return rangeTasks;
+    tasks->addSub(getReadRangeNamesTask(channelMName, pcbInterface));
+    tasks->addSub(getReadRangeDetailsTasks(channelMName, pcbInterface));
+    tasks->addSub(getReadRangeFinalTask(channelMName));
+    return tasks;
 }
 
 TaskTemplatePtr ChannelObserver::getReadRangeNamesTask(const QString &channelMName, Zera::PcbInterfacePtr pcbInterface)

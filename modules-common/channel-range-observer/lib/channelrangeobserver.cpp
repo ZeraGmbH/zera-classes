@@ -84,7 +84,8 @@ void ChannelRangeObserver::doStartFullScan(Zera::ProxyClientPtr pcbClient)
 
             TaskContainerInterfacePtr perChannelTask = TaskContainerSequence::create();
             perChannelTask->addSub(getChannelReadDetailsTasks(channelMName, channelNo));
-            perChannelTask->addSub(channelObserver->getRangesFetchTasks(channelMName, m_currentPcbInterface));
+            perChannelTask = channelObserver->addRangesFetchTasks(std::move(perChannelTask),
+                                                                  channelMName, m_currentPcbInterface);
             allChannelsDetailsTasks->addSub(std::move(perChannelTask));
 
             connect(channelObserver.get(), &ChannelObserver::sigRangeListChanged,
