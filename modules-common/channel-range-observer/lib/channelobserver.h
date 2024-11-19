@@ -16,7 +16,9 @@ public:
     QString m_unit;
     int m_dspChannel;
     const QStringList getRangeNames() const;
-    TaskTemplatePtr getRangesFetchTasks(const QString &channelMName, Zera::PcbInterfacePtr pcbInterface);
+    TaskContainerInterfacePtr addRangesFetchTasks(TaskContainerInterfacePtr tasks,
+                                                  const QString &channelMName,
+                                                  Zera::PcbInterfacePtr pcbInterface);
     void startReReadRanges(const QString &channelMName, Zera::PcbInterfacePtr pcbInterface);
 signals:
     void sigRangeListChanged(QString channelMName);
@@ -26,7 +28,7 @@ private:
     TaskTemplatePtr getReadRangeFinalTask(const QString &channelMName);
     static void notifyError(QString errMsg);
     QStringList m_tempRangesNames;
-    TaskTemplatePtr m_reReadTask;
+    TaskContainerInterfacePtr m_reReadTask;
 };
 
 typedef std::shared_ptr<ChannelObserver> ChannelObserverPtr;
