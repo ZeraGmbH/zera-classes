@@ -2,6 +2,6 @@
 
 void ChannelRangeObserverForModman::clear()
 {
-    m_channelNamesToData.clear();
+    m_channelNamesToObserver.clear();
     m_notifyIdToChannelMName.clear();
 }
