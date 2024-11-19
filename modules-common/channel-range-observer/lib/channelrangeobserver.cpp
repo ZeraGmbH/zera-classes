@@ -112,8 +112,7 @@ TaskTemplatePtr ChannelRangeObserver::perparePcbConnectionTasks(Zera::ProxyClien
 
 TaskTemplatePtr ChannelRangeObserver::getChannelReadDetailsTasks(const QString &channelMName, int notificationId)
 {
-    TaskContainerInterfacePtr allChannelsTasks = TaskContainerParallel::create();
-    TaskContainerInterfacePtr channelTasks = TaskContainerSequence::create();
+    TaskContainerInterfacePtr channelTasks = TaskContainerParallel::create();
     m_notifyIdToChannelMName[notificationId] = channelMName;
     channelTasks->addSub(TaskChannelGetAlias::create(
         m_currentPcbInterface, channelMName, m_channelNamesToObserver[channelMName]->m_alias,
@@ -128,8 +127,7 @@ TaskTemplatePtr ChannelRangeObserver::getChannelReadDetailsTasks(const QString &
     channelTasks->addSub(TaskChannelRegisterNotifier::create(
         m_currentPcbInterface, channelMName, notificationId,
         TRANSACTION_TIMEOUT, [&]{ notifyError(QString("Could not register notification for channel %1").arg(channelMName)); }));
-    allChannelsTasks->addSub(std::move(channelTasks));
-    return allChannelsTasks;
+    return channelTasks;
 }
 
 void ChannelRangeObserver::notifyError(QString errMsg)
