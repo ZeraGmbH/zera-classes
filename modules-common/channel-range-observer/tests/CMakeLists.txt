@@ -3,7 +3,7 @@ function(SETUP_QTESTS_CHANNEL_MANAGER)
     foreach(_testname ${ARGN})
         target_link_libraries(${_testname}
             PUBLIC
-            pcb-channel-manager
+            channel-range-observer
             Zera::zenuxservicecommon-testlib
             Zera::vf-tcp-mock-networklib
             Zera::mt310s2d-testlib
@@ -12,5 +12,5 @@ function(SETUP_QTESTS_CHANNEL_MANAGER)
 endfunction()
 
 SETUP_QTESTS_CHANNEL_MANAGER(
-    test_pcb_channel_manager
+    test_channel_range_observer
 )

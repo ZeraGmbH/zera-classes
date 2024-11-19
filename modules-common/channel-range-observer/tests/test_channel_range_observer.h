@@ -1,5 +1,5 @@
-#ifndef TEST_PCB_CHANNEL_MANAGER_H
-#define TEST_PCB_CHANNEL_MANAGER_H
+#ifndef TEST_CHANNEL_RANGE_OBSERVER_H
+#define TEST_CHANNEL_RANGE_OBSERVER_H
 
 #include <testfactoryi2cctrl.h>
 #include <abstracttcpnetworkfactory.h>
@@ -8,7 +8,7 @@
 #include <testserverforsenseinterfacemt310s2.h>
 #include <QObject>
 
-class test_pcb_channel_manager : public QObject
+class test_channel_range_observer : public QObject
 {
     Q_OBJECT
 private slots:
@@ -34,4 +34,4 @@ private:
     Zera::ProxyClientPtr m_pcbClient;
 };
 
-#endif // TEST_PCB_CHANNEL_MANAGER_H
+#endif // TEST_CHANNEL_RANGE_OBSERVER_H

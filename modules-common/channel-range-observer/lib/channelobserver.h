@@ -1,12 +1,12 @@
-#ifndef PCBCHANNELDATA_H
-#define PCBCHANNELDATA_H
+#ifndef CHANNELOBSERVER_H
+#define CHANNELOBSERVER_H
 
 #include <tasktemplate.h>
 #include <QObject>
 #include <QStringList>
 #include <memory>
 
-class PcbChannelData : public QObject
+class ChannelObserver : public QObject
 {
     Q_OBJECT
 public:
@@ -16,10 +16,8 @@ public:
     int m_dspChannel;
     TaskTemplatePtr m_currentTasks;
     QStringList m_tempChannelRanges;
-signals:
-    void sigRangesReloaded();
 };
 
-typedef std::shared_ptr<PcbChannelData> PcbChannelDataPtr;
+typedef std::shared_ptr<ChannelObserver> ChannelObserverPtr;
 
-#endif // PCBCHANNELDATA_H
+#endif // CHANNELOBSERVER_H
