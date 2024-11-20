@@ -3,8 +3,9 @@
     <configuration>
         <measure>
             <modes>
-                <n>1</n>
+                <n>2</n>
                 <m1>4LS</m1>
+                <m2>2LS</m2>
             </modes>
             <system>
                 <pms1>m0,m3</pms1>
