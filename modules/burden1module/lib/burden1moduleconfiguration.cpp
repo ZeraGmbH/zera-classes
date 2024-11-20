@@ -49,6 +49,17 @@ void cBurden1ModuleConfiguration::setConfiguration(QByteArray xmlString)
 
 QByteArray cBurden1ModuleConfiguration::exportConfiguration()
 {
+    doubleParameter* dPar = &m_pBurden1ModulConfigData->nominalRange;
+    m_pXMLReader->setValue(dPar->m_sKey, QString("%1").arg(dPar->m_fValue));
+    stringParameter *sPar = &m_pBurden1ModulConfigData->nominalRangeFactor;
+    m_pXMLReader->setValue(sPar->m_sKey, sPar->m_sPar);
+    dPar = &m_pBurden1ModulConfigData->nominalBurden;
+    m_pXMLReader->setValue(dPar->m_sKey, QString("%1").arg(dPar->m_fValue));
+    dPar = &m_pBurden1ModulConfigData->wireLength;
+    m_pXMLReader->setValue(dPar->m_sKey, QString("%1").arg(dPar->m_fValue));
+    dPar = &m_pBurden1ModulConfigData->wireCrosssection;
+    m_pXMLReader->setValue(dPar->m_sKey, QString("%1").arg(dPar->m_fValue));
+
     return m_pXMLReader->getXMLConfig().toUtf8();
 }
 
