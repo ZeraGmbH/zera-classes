@@ -103,7 +103,7 @@ void cBurden1ModuleMeasProgram::generateVeinInterface()
     m_pNominalRangeParameter->setSCPIInfo(new cSCPIInfo("CONFIGURATION","RANGE", "10", "PAR_NominalRange", "0", s));
 
     cDoubleValidator *dValidator;
-    dValidator = new cDoubleValidator(1.0, 300.0, 0.1);
+    dValidator = new cDoubleValidator(0.001, 10000.0, 0.001);
     m_pNominalRangeParameter->setValidator(dValidator);
     m_pModule->m_veinModuleParameterMap[key] = m_pNominalRangeParameter; // for modules use
 
@@ -127,7 +127,7 @@ void cBurden1ModuleMeasProgram::generateVeinInterface()
     m_pNominalBurdenParameter->setUnit(s);
     m_pNominalBurdenParameter->setSCPIInfo(new cSCPIInfo("CONFIGURATION","BURDEN", "10", "PAR_NominalBurden", "0", s));
 
-    dValidator = new cDoubleValidator(0.1, 500.0, 0.1);
+    dValidator = new cDoubleValidator(0.001, 10000.0, 0.001);
     m_pNominalBurdenParameter->setValidator(dValidator);
 
     m_pModule->m_veinModuleParameterMap[key] = m_pNominalBurdenParameter; // for modules use

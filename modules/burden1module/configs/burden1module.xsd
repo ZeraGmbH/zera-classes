@@ -37,8 +37,8 @@
 
     <xs:simpleType name="rangetype">
         <xs:restriction base="xs:float">
-            <xs:maxInclusive value='300.0'/>
-            <xs:minInclusive value='1.0'/>
+            <xs:maxInclusive value='10000.0'/>
+            <xs:minInclusive value='0.001'/>
         </xs:restriction>
     </xs:simpleType>
 
@@ -64,8 +64,8 @@
 
     <xs:simpleType name="burdentype">
         <xs:restriction base="xs:float">
-            <xs:maxInclusive value='500.0'/>
-            <xs:minInclusive value='0.1'/>
+            <xs:maxInclusive value='10000.0'/>
+            <xs:minInclusive value='0.001'/>
         </xs:restriction>
     </xs:simpleType>
 
