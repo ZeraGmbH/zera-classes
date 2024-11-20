@@ -12,7 +12,7 @@
                 <pms2>m1,m4</pms2>
                 <pms3>m2,m5</pms3>
             </system>
-            <disablephaseselect>1</disablephaseselect>
+            <disablephaseselect>0</disablephaseselect>
             <integrationmode>time</integrationmode>
             <movingwindow>
                 <on>1</on>
@@ -46,7 +46,8 @@
     <parameter>
         <measuringmode>4LB</measuringmode>
         <modePhases>
-            <n>0</n>
+            <n>1</n>
+            <m1>2LB,100</m1>
         </modePhases>
         <interval>
             <time>1</time>
