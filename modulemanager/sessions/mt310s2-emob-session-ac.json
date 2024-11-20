@@ -37,19 +37,19 @@
       },
       {
         "name" : "power1module",
-        "configFile" : "mt310s2-power1module-4WA-only.xml",
+        "configFile" : "mt310s2-power1module-EMOB-AC-P.xml",
         "module_num": 1,
         "id": 1070
       },
       {
         "name" : "power1module",
-        "configFile" : "mt310s2-power1module-4WR-only.xml",
+        "configFile" : "mt310s2-power1module-EMOB-AC-Q.xml",
         "module_num": 2,
         "id": 1071
       },
       {
         "name" : "power1module",
-        "configFile" : "mt310s2-power1module-4WAP-only.xml",
+        "configFile" : "mt310s2-power1module-EMOB-AC-S.xml",
         "module_num": 3,
         "id": 1072
       },
