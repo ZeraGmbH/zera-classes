@@ -1070,22 +1070,16 @@ void cSpm1ModuleMeasProgram::readTCountact()
 
 void cSpm1ModuleMeasProgram::setEMResult()
 {
-    double PRef;
-    double PDut;
-    double time;
-
     m_fEnergy = 1.0 * m_nEnergyCounterFinal / m_pRefConstantPar->getValue().toDouble();
-    time = m_fTimeSecondsFinal;
+    double time = m_fTimeSecondsFinal;
 
-    PRef = m_fEnergy * 3600.0 / time;
-    PDut = (m_pT1InputPar->getValue().toDouble() - m_pT0InputPar->getValue().toDouble()) * mPowerUnitFactorHash[m_pInputUnitPar->getValue().toString()];
-    if (PRef == 0)
-    {
+    double PRef = m_fEnergy * 3600.0 / time;
+    double PDut = (m_pT1InputPar->getValue().toDouble() - m_pT0InputPar->getValue().toDouble()) * mPowerUnitFactorHash[m_pInputUnitPar->getValue().toString()];
+    if (PRef == 0) {
         m_fResult = qQNaN();
         m_eRating = ECALCRESULT::RESULT_UNFINISHED;
     }
-    else
-    {
+    else {
         m_fResult = (PDut - PRef) * 100.0 / PRef;
         setRating();
     }

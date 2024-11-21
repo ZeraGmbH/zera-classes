@@ -1449,13 +1449,11 @@ void cSec1ModuleMeasProgram::readMTCountact()
 
 void cSec1ModuleMeasProgram::setECResult()
 {
-    if (m_nEnergyCounterFinal == 0)
-    {
+    if (m_nEnergyCounterFinal == 0) {
         m_fResult = qQNaN();
         m_eRating = ECALCRESULT::RESULT_UNFINISHED;
     }
-    else
-    {
+    else {
         m_fResult = (1.0 * getConfData()->m_nTarget.m_nPar - 1.0 * m_nEnergyCounterFinal) * getUnitFactor() / m_nEnergyCounterFinal;
         setRating();
     }
@@ -1565,8 +1563,7 @@ void cSec1ModuleMeasProgram::checkForRestart()
 
 void cSec1ModuleMeasProgram::setRating()
 {
-    if (getStatus() & ECALCSTATUS::READY)
-    {
+    if (getStatus() & ECALCSTATUS::READY) {
         if ( (m_fResult >= getConfData()->m_fLowerLimit.m_fPar) && (m_fResult <= getConfData()->m_fUpperLimit.m_fPar))
             m_eRating = ECALCRESULT::RESULT_PASSED;
         else
