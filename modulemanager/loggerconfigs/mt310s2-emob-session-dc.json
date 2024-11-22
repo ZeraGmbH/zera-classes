@@ -1,28 +1,24 @@
 {
     "ZeraActualValues": [
         {
+            "EntityId": 1020,
+            "Comment": "RangeModule"
+        },
+        {
             "EntityId": 1040,
-            "Comment": "RMSModule: AC U/I"
+            "Comment": "RMSModule"
         },
         {
             "EntityId": 1050,
-            "Comment": "DftModule AC U/I angles"
+            "Comment": "DftModule"
         },
         {
             "EntityId": 1060,
             "Comment": "FFTModule DC U/I"
         },
         {
-            "EntityId": 1070,
-            "Comment": "Power1ModuleAct AC P1-P3 PSUM"
-        },
-        {
             "EntityId": 1073,
             "Comment": "Power1ModuleDC"
-        },
-        {
-            "EntityId": 1020,
-            "Comment": "RangeModule"
         },
         {
             "EntityId": 1140,
@@ -30,6 +26,10 @@
         }
     ],
     "ZeraHarmonics" : [
+        {
+            "EntityId": 1020,
+            "Comment": "RangeModule"
+        },
         {
             "EntityId": 1110,
             "Comment": "THDNModule1"
@@ -41,27 +41,19 @@
         {
             "EntityId": 1060,
             "Comment": "FFTModule"
-        },
-        {
-            "EntityId": 1020,
-            "Comment": "RangeModule"
         }
     ],
     "ZeraCurves" : [
         {
-            "EntityId": 1120,
-            "Comment": "OSCIModule"
-        },
-        {
             "EntityId": 1020,
             "Comment": "RangeModule"
+        },
+        {
+            "EntityId": 1120,
+            "Comment": "OSCIModule"
         }
     ],
     "ZeraComparison": [
-        {
-            "EntityId": 1130,
-            "Comment": "SECModule"
-        },
         {
             "EntityId": 1020,
             "Comment": "RangeModule"
@@ -75,6 +67,10 @@
             "Comment": "DFTModule"
         },
         {
+            "EntityId": 1073,
+            "Comment": "PowerModule DC"
+        },
+        {
             "EntityId": 1110,
             "Comment": "THDNModule"
         },
@@ -83,20 +79,12 @@
             "Comment": "THDNModule"
         },
         {
-            "EntityId": 1070,
-            "Comment": "Power1ModuleAct AC P1-P3 PSUM"
+            "EntityId": 1130,
+            "Comment": "SECModule"
         },
         {
-            "EntityId": 1073,
-            "Comment": "PowerModule DC"
-        },
-        {
-            "EntityId": 1020,
-            "Comment": "RangeModule"
-        },
-        {
-            "EntityId": 1140,
-            "Comment": "LambdaModule"
+            "EntityId": 1200,
+            "Comment": "SEMModule"
         }
     ]
 }
