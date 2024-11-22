@@ -14,7 +14,7 @@
         },
         {
             "EntityId": 1060,
-            "Comment": "FFTModule DC U/I"
+            "Comment": "FFTModule"
         },
         {
             "EntityId": 1073,
@@ -65,6 +65,10 @@
         {
             "EntityId": 1050,
             "Comment": "DFTModule"
+        },
+        {
+            "EntityId": 1060,
+            "Comment": "FFTModule"
         },
         {
             "EntityId": 1073,
