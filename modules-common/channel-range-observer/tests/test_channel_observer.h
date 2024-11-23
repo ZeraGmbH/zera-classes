@@ -15,6 +15,9 @@ private slots:
     void emptyOnStartup();
     void fetchDirect();
     void fetchDirectTwice();
+    void fetchByTask();
+    void fetchCheckChannelDataM0();
+    void fetchCheckChannelDataM3();
 private:
     VeinTcp::AbstractTcpNetworkFactoryPtr m_tcpFactory;
     std::unique_ptr<TestServerForSenseInterfaceMt310s2> m_testServer;

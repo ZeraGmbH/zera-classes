@@ -1,14 +1,20 @@
 #include "channelfetchtask.h"
 
-ChannelFetchTask::ChannelFetchTask(ChannelObserverPtr rangeObserver)
+ChannelFetchTaskPtr ChannelFetchTask::create(ChannelObserverPtr rangeObserver)
 {
-    connect(rangeObserver.get(), &ChannelObserver::sigFetchComplete,
+    return std::make_unique<ChannelFetchTask>(rangeObserver);
+}
+
+ChannelFetchTask::ChannelFetchTask(ChannelObserverPtr rangeObserver) :
+    m_rangeObserver(rangeObserver)
+{
+    connect(m_rangeObserver.get(), &ChannelObserver::sigFetchComplete,
             this, &ChannelFetchTask::onChannelFetched);
 }
 
 void ChannelFetchTask::start()
 {
-
+    m_rangeObserver->startFetch();
 }
 
 void ChannelFetchTask::onChannelFetched(QString channelMName)

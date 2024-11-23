@@ -28,8 +28,6 @@ private:
     void clear();
     void doStartFullScan();
     TaskTemplatePtr getPcbConnectionTask();
-    TaskTemplatePtr getChannelReadDetailsTasks(const QString &channelMName, int notificationId);
-    void startRangesChangeTasks(QString channelMName);
     static void notifyError(QString errMsg);
 
     NetworkConnectionInfo m_netInfo;

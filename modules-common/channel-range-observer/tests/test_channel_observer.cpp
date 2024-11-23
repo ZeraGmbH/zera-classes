@@ -1,5 +1,6 @@
 #include "test_channel_observer.h"
 #include "channelbserver.h"
+#include "channelfetchtask.h"
 #include <testfactoryi2cctrl.h>
 #include <networkconnectioninfo.h>
 #include <timemachineobject.h>
@@ -70,5 +71,39 @@ void test_channel_observer::fetchDirectTwice()
     TimeMachineObject::feedEventLoop();
 
     QCOMPARE(spy.count(), 2);
+}
+
+void test_channel_observer::fetchByTask()
+{
+    ChannelObserverPtr observer = std::make_shared<ChannelObserver>("m0", netInfo, m_tcpFactory);
+    ChannelFetchTaskPtr task = ChannelFetchTask::create(observer);
+
+    QSignalSpy spy(task.get(), &TaskTemplate::sigFinish);
+    task->start();
+    TimeMachineObject::feedEventLoop();
+
+    QCOMPARE(spy.count(), 1);
+}
+
+void test_channel_observer::fetchCheckChannelDataM0()
+{
+    ChannelObserver observer("m0", netInfo, m_tcpFactory);
+    observer.startFetch();
+    TimeMachineObject::feedEventLoop();
+
+    QCOMPARE(observer.m_alias, "UL1");
+    QCOMPARE(observer.m_unit, "V");
+    QCOMPARE(observer.m_dspChannel, 0);
+}
+
+void test_channel_observer::fetchCheckChannelDataM3()
+{
+    ChannelObserver observer("m3", netInfo, m_tcpFactory);
+    observer.startFetch();
+    TimeMachineObject::feedEventLoop();
+
+    QCOMPARE(observer.m_alias, "IL1");
+    QCOMPARE(observer.m_unit, "A");
+    QCOMPARE(observer.m_dspChannel, 1);
 }
 

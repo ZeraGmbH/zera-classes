@@ -21,16 +21,17 @@ public:
                     const NetworkConnectionInfo &netInfo,
                     VeinTcp::AbstractTcpNetworkFactoryPtr tcpFactory);
     const QStringList getRangeNames() const;
-    TaskContainerInterfacePtr addRangesFetchTasks(TaskContainerInterfacePtr tasks); // -> rework & private
     void startFetch();
 signals:
-    void sigFetchComplete(QString channelMName);
+    void sigFetchComplete(QString channelMName); // TODO change argument to bool ok
 
 private slots:
     void onInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant answer);
 private:
     TaskTemplatePtr getPcbConnectionTask();
+    TaskTemplatePtr getChannelReadDetailsTask();
     TaskTemplatePtr getReadRangeNamesTask();
+    TaskTemplatePtr getRangesFetchTasks();
     TaskTemplatePtr getReadRangeDetailsTask();
     TaskTemplatePtr getReadRangeFinalTask();
     static void notifyError(QString errMsg);

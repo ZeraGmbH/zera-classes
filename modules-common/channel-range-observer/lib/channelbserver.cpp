@@ -3,6 +3,9 @@
 #include <taskchannelgetrangelist.h>
 #include <taskcontainersequence.h>
 #include <taskcontainerparallel.h>
+#include <taskchannelgetalias.h>
+#include <taskchannelgetdspchannel.h>
+#include <taskchannelgetunit.h>
 #include <tasklambdarunner.h>
 #include <taskchannelregisternotifier.h>
 #include <proxy.h>
@@ -26,7 +29,8 @@ void ChannelObserver::startFetch()
 {
     m_currentTasks = TaskContainerSequence::create();
     m_currentTasks->addSub(getPcbConnectionTask());
-    m_currentTasks = addRangesFetchTasks(std::move(m_currentTasks));
+    m_currentTasks->addSub(getChannelReadDetailsTask());
+    m_currentTasks->addSub(getRangesFetchTasks());
     m_currentTasks->start();
 }
 
@@ -46,20 +50,19 @@ TaskTemplatePtr ChannelObserver::getPcbConnectionTask()
     return TaskServerConnectionStart::create(m_pcbClient, CONNECTION_TIMEOUT);
 }
 
-TaskContainerInterfacePtr ChannelObserver::addRangesFetchTasks(TaskContainerInterfacePtr tasks)
+TaskTemplatePtr ChannelObserver::getChannelReadDetailsTask()
 {
-    tasks->addSub(getReadRangeNamesTask());
-    // TODO: Handle / check unregister
-    connect(m_pcbInterface.get(), &Zera::cPCBInterface::serverAnswer,
-            this, &ChannelObserver::onInterfaceAnswer);
-    tasks->addSub(TaskChannelRegisterNotifier::create(
-        m_pcbInterface, m_channelMName, 1,
-        TRANSACTION_TIMEOUT, [&]{ notifyError(QString("Could not register notification for channel %1").arg(m_channelMName)); }));
-
-    tasks->addSub(getReadRangeDetailsTask());
-
-    tasks->addSub(getReadRangeFinalTask());
-    return tasks;
+    TaskContainerInterfacePtr task = TaskContainerParallel::create();
+    task->addSub(TaskChannelGetAlias::create(
+        m_pcbInterface, m_channelMName, m_alias,
+        TRANSACTION_TIMEOUT, [&]{ notifyError(QString("Could not read alias for channel %1").arg(m_channelMName)); }));
+    task->addSub(TaskChannelGetDspChannel::create(
+        m_pcbInterface, m_channelMName, m_dspChannel,
+        TRANSACTION_TIMEOUT, [&]{ notifyError(QString("Could not read dsp-channel for channel %1").arg(m_channelMName)); }));
+    task->addSub(TaskChannelGetUnit::create(
+        m_pcbInterface, m_channelMName, m_unit,
+        TRANSACTION_TIMEOUT, [&]{ notifyError(QString("Could not read unit for channel %1").arg(m_channelMName)); }));
+    return task;
 }
 
 TaskTemplatePtr ChannelObserver::getReadRangeNamesTask()
@@ -67,6 +70,22 @@ TaskTemplatePtr ChannelObserver::getReadRangeNamesTask()
     return TaskChannelGetRangeList::create(
         m_pcbInterface, m_channelMName, m_tempRangesNames,
         TRANSACTION_TIMEOUT, [&]{ notifyError(QString("Could not read range list for channel %1").arg(m_channelMName)); });
+}
+
+TaskTemplatePtr ChannelObserver::getRangesFetchTasks()
+{
+    TaskContainerInterfacePtr task = TaskContainerSequence::create();
+    task->addSub(getReadRangeNamesTask());
+    // TODO: Handle / check unregister
+    connect(m_pcbInterface.get(), &Zera::cPCBInterface::serverAnswer,
+            this, &ChannelObserver::onInterfaceAnswer);
+    task->addSub(TaskChannelRegisterNotifier::create(
+        m_pcbInterface, m_channelMName, 1,
+        TRANSACTION_TIMEOUT, [&]{ notifyError(QString("Could not register notification for channel %1").arg(m_channelMName)); }));
+
+    task->addSub(getReadRangeDetailsTask());
+    task->addSub(getReadRangeFinalTask());
+    return task;
 }
 
 TaskTemplatePtr ChannelObserver::getReadRangeDetailsTask()
