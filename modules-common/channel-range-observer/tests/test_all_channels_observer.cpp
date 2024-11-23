@@ -1,9 +1,9 @@
-#include "test_channel_range_observer.h"
-#include "allchannelobserver.h"
-#include "allchannelobserverresetter.h"
-#include "networkconnectioninfo.h"
+#include "test_all_channels_observer.h"
+#include "allchannelsobserver.h"
+#include "allchannelsobserverresetter.h"
+#include <testfactoryi2cctrl.h>
+#include <networkconnectioninfo.h>
 #include <timemachineobject.h>
-#include <testallservicesmt310s2.h>
 #include <clampfactorytest.h>
 #include <mocktcpnetworkfactory.h>
 #include <mocki2ceepromiofactory.h>
@@ -14,11 +14,11 @@
 #include <QTest>
 #include <QSignalSpy>
 
-QTEST_MAIN(test_channel_range_observer)
+QTEST_MAIN(test_all_channels_observer)
 
 static const NetworkConnectionInfo netInfo("127.0.0.1", 6307);
 
-void test_channel_range_observer::initTestCase()
+void test_all_channels_observer::initTestCase()
 {
     ClampFactoryTest::enableTest();
     MockI2cEEpromIoFactory::enableMock();
@@ -26,7 +26,7 @@ void test_channel_range_observer::initTestCase()
     TimerFactoryQtForTest::enableTest();
 }
 
-void test_channel_range_observer::init()
+void test_all_channels_observer::init()
 {
     TimeMachineForTest::reset();
     m_resmanServer = std::make_unique<ResmanRunFacade>(m_tcpFactory);
@@ -35,7 +35,7 @@ void test_channel_range_observer::init()
     TimeMachineObject::feedEventLoop();
 }
 
-void test_channel_range_observer::cleanup()
+void test_all_channels_observer::cleanup()
 {
     TimeMachineObject::feedEventLoop();
     m_testServer = nullptr;
@@ -43,16 +43,16 @@ void test_channel_range_observer::cleanup()
     TimeMachineObject::feedEventLoop();
 }
 
-void test_channel_range_observer::emptyChannelListOnStartup()
+void test_all_channels_observer::emptyChannelListOnStartup()
 {
-    AllChannelObserver observer(netInfo, m_tcpFactory);
+    AllChannelsObserver observer(netInfo, m_tcpFactory);
     QVERIFY(observer.getChannelMNames().isEmpty());
 }
 
-void test_channel_range_observer::scanChannelListSignalReturned()
+void test_all_channels_observer::scanChannelListSignalReturned()
 {
-    AllChannelObserver observer(netInfo, m_tcpFactory);
-    QSignalSpy spy(&observer, &AllChannelObserver::sigFullScanFinished);
+    AllChannelsObserver observer(netInfo, m_tcpFactory);
+    QSignalSpy spy(&observer, &AllChannelsObserver::sigFullScanFinished);
 
     observer.startFullScan();
     TimeMachineObject::feedEventLoop();
@@ -60,9 +60,9 @@ void test_channel_range_observer::scanChannelListSignalReturned()
     QCOMPARE(spy.count(), 1);
 }
 
-void test_channel_range_observer::scanChannelListChannelsReturned()
+void test_all_channels_observer::scanChannelListChannelsReturned()
 {
-    AllChannelObserver observer(netInfo, m_tcpFactory);
+    AllChannelsObserver observer(netInfo, m_tcpFactory);
     observer.startFullScan();
     TimeMachineObject::feedEventLoop();
 
@@ -78,10 +78,10 @@ void test_channel_range_observer::scanChannelListChannelsReturned()
     QVERIFY(channels.contains("m7"));
 }
 
-void test_channel_range_observer::rescanWithoutClear()
+void test_all_channels_observer::rescanWithoutClear()
 {
-    AllChannelObserver observer(netInfo, m_tcpFactory);
-    QSignalSpy spyRangesChanged(&observer, &AllChannelObserver::sigRangeListChanged);
+    AllChannelsObserver observer(netInfo, m_tcpFactory);
+    QSignalSpy spyRangesChanged(&observer, &AllChannelsObserver::sigFetchComplete);
     observer.startFullScan();
     TimeMachineObject::feedEventLoop();
 
@@ -92,7 +92,7 @@ void test_channel_range_observer::rescanWithoutClear()
     spyRangesChanged.clear();
     cleanup(); // make sure no I/O is performed by killing servers
 
-    QSignalSpy spyFinished(&observer, &AllChannelObserver::sigFullScanFinished);
+    QSignalSpy spyFinished(&observer, &AllChannelsObserver::sigFullScanFinished);
     observer.startFullScan();
     TimeMachineObject::feedEventLoop();
 
@@ -101,10 +101,10 @@ void test_channel_range_observer::rescanWithoutClear()
     QCOMPARE(spyFinished.count(), 1);
 }
 
-void test_channel_range_observer::rescanWithClear()
+void test_all_channels_observer::rescanWithClear()
 {
-    AllChannelObserver observer(netInfo, m_tcpFactory);
-    QSignalSpy spyRangesChanged(&observer, &AllChannelObserver::sigRangeListChanged);
+    AllChannelsObserver observer(netInfo, m_tcpFactory);
+    QSignalSpy spyRangesChanged(&observer, &AllChannelsObserver::sigFetchComplete);
     observer.startFullScan();
     TimeMachineObject::feedEventLoop();
 
@@ -113,10 +113,10 @@ void test_channel_range_observer::rescanWithClear()
     QCOMPARE(channels.count(), 8);
 
     spyRangesChanged.clear();
-    AllChannelObserverResetter::clear(&observer);
+    AllChannelsObserverResetter::clear(&observer);
     QCOMPARE(observer.getChannelMNames().count(), 0);
 
-    QSignalSpy spyFinished(&observer, &AllChannelObserver::sigFullScanFinished);
+    QSignalSpy spyFinished(&observer, &AllChannelsObserver::sigFullScanFinished);
     observer.startFullScan();
     TimeMachineObject::feedEventLoop();
 
@@ -125,79 +125,79 @@ void test_channel_range_observer::rescanWithClear()
     QCOMPARE(spyFinished.count(), 1);
 }
 
-void test_channel_range_observer::checkAlias()
+void test_all_channels_observer::checkAlias()
 {
-    AllChannelObserver observer(netInfo, m_tcpFactory);
+    AllChannelsObserver observer(netInfo, m_tcpFactory);
     observer.startFullScan();
     TimeMachineObject::feedEventLoop();
 
-    QCOMPARE(observer.getChannelData("m0")->m_alias, "UL1");
-    QCOMPARE(observer.getChannelData("m1")->m_alias, "UL2");
-    QCOMPARE(observer.getChannelData("m2")->m_alias, "UL3");
-    QCOMPARE(observer.getChannelData("m3")->m_alias, "IL1");
-    QCOMPARE(observer.getChannelData("m4")->m_alias, "IL2");
-    QCOMPARE(observer.getChannelData("m5")->m_alias, "IL3");
-    QCOMPARE(observer.getChannelData("m6")->m_alias, "UAUX");
-    QCOMPARE(observer.getChannelData("m7")->m_alias, "IAUX");
+    QCOMPARE(observer.getChannelObserver("m0")->m_alias, "UL1");
+    QCOMPARE(observer.getChannelObserver("m1")->m_alias, "UL2");
+    QCOMPARE(observer.getChannelObserver("m2")->m_alias, "UL3");
+    QCOMPARE(observer.getChannelObserver("m3")->m_alias, "IL1");
+    QCOMPARE(observer.getChannelObserver("m4")->m_alias, "IL2");
+    QCOMPARE(observer.getChannelObserver("m5")->m_alias, "IL3");
+    QCOMPARE(observer.getChannelObserver("m6")->m_alias, "UAUX");
+    QCOMPARE(observer.getChannelObserver("m7")->m_alias, "IAUX");
 }
 
-void test_channel_range_observer::checkDspChannel()
+void test_all_channels_observer::checkDspChannel()
 {
-    AllChannelObserver observer(netInfo, m_tcpFactory);
+    AllChannelsObserver observer(netInfo, m_tcpFactory);
     observer.startFullScan();
     TimeMachineObject::feedEventLoop();
 
-    QCOMPARE(observer.getChannelData("m0")->m_dspChannel, 0);
-    QCOMPARE(observer.getChannelData("m1")->m_dspChannel, 2);
-    QCOMPARE(observer.getChannelData("m2")->m_dspChannel, 4);
-    QCOMPARE(observer.getChannelData("m3")->m_dspChannel, 1);
-    QCOMPARE(observer.getChannelData("m4")->m_dspChannel, 3);
-    QCOMPARE(observer.getChannelData("m5")->m_dspChannel, 5);
-    QCOMPARE(observer.getChannelData("m6")->m_dspChannel, 6);
-    QCOMPARE(observer.getChannelData("m7")->m_dspChannel, 7);
+    QCOMPARE(observer.getChannelObserver("m0")->m_dspChannel, 0);
+    QCOMPARE(observer.getChannelObserver("m1")->m_dspChannel, 2);
+    QCOMPARE(observer.getChannelObserver("m2")->m_dspChannel, 4);
+    QCOMPARE(observer.getChannelObserver("m3")->m_dspChannel, 1);
+    QCOMPARE(observer.getChannelObserver("m4")->m_dspChannel, 3);
+    QCOMPARE(observer.getChannelObserver("m5")->m_dspChannel, 5);
+    QCOMPARE(observer.getChannelObserver("m6")->m_dspChannel, 6);
+    QCOMPARE(observer.getChannelObserver("m7")->m_dspChannel, 7);
 }
 
-void test_channel_range_observer::checkUnit()
+void test_all_channels_observer::checkUnit()
 {
-    AllChannelObserver observer(netInfo, m_tcpFactory);
+    AllChannelsObserver observer(netInfo, m_tcpFactory);
     observer.startFullScan();
     TimeMachineObject::feedEventLoop();
 
-    QCOMPARE(observer.getChannelData("m0")->m_unit, "V");
-    QCOMPARE(observer.getChannelData("m3")->m_unit, "A");
+    QCOMPARE(observer.getChannelObserver("m0")->m_unit, "V");
+    QCOMPARE(observer.getChannelObserver("m3")->m_unit, "A");
 }
 
-void test_channel_range_observer::checkRanges()
+void test_all_channels_observer::checkRanges()
 {
-    AllChannelObserver observer(netInfo, m_tcpFactory);
+    AllChannelsObserver observer(netInfo, m_tcpFactory);
     observer.startFullScan();
     TimeMachineObject::feedEventLoop();
 
-    QCOMPARE(observer.getChannelRanges("m0").size(), 3);
-    QCOMPARE(observer.getChannelRanges("m0")[0], "250V");
+    QCOMPARE(observer.getChannelObserver("m0")->getRangeNames().size(), 3);
+    QCOMPARE(observer.getChannelObserver("m0")->getRangeNames()[0], "250V");
 }
 
-void test_channel_range_observer::changeRangesByClamp()
+void test_all_channels_observer::changeRangesByClamp()
 {
-    AllChannelObserver observer(netInfo, m_tcpFactory);
+    AllChannelsObserver observer(netInfo, m_tcpFactory);
     observer.startFullScan();
     TimeMachineObject::feedEventLoop();
-    QStringList ranges = observer.getChannelRanges("m3");
+    QStringList ranges = observer.getChannelObserver("m3")->getRangeNames();
     QCOMPARE(ranges.size(), 21);
 
     m_testServer->addClamp(cClamp::CL120A, "IL1");
     TimeMachineObject::feedEventLoop();
 
-    ranges = observer.getChannelRanges("m3");
+    ranges = observer.getChannelObserver("m3")->getRangeNames();
     QCOMPARE(ranges.size(), 30);
 
     TimeMachineObject::feedEventLoop();
 }
 
-void test_channel_range_observer::notifyRangeChangeByClamp()
+void test_all_channels_observer::notifyRangeChangeByClamp()
 {
-    AllChannelObserver observer(netInfo, m_tcpFactory);
-    QSignalSpy spy(&observer, &AllChannelObserver::sigRangeListChanged);
+    AllChannelsObserver observer(netInfo, m_tcpFactory);
+    QSignalSpy spy(&observer, &AllChannelsObserver::sigFetchComplete);
     observer.startFullScan();
     TimeMachineObject::feedEventLoop();
     QCOMPARE(spy.size(), 8);
@@ -218,11 +218,11 @@ void test_channel_range_observer::notifyRangeChangeByClamp()
     QCOMPARE(spy.size(), 2);
 }
 
-void test_channel_range_observer::getDataForInvalidChannel()
+void test_all_channels_observer::getDataForInvalidChannel()
 {
-    AllChannelObserver observer(netInfo, m_tcpFactory);
+    AllChannelsObserver observer(netInfo, m_tcpFactory);
     observer.startFullScan();
     TimeMachineObject::feedEventLoop();
 
-    QCOMPARE(observer.getChannelData("foo"), nullptr);
+    QCOMPARE(observer.getChannelObserver("foo"), nullptr);
 }

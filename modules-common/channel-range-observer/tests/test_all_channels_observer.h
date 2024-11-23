@@ -1,11 +1,11 @@
-#ifndef TEST_CHANNEL_RANGE_OBSERVER_H
-#define TEST_CHANNEL_RANGE_OBSERVER_H
+#ifndef test_all_channels_observer_H
+#define test_all_channels_observer_H
 
 #include <abstracttcpnetworkfactory.h>
 #include <resmanrunfacade.h>
 #include <testserverforsenseinterfacemt310s2.h>
 
-class test_channel_range_observer : public QObject
+class test_all_channels_observer : public QObject
 {
     Q_OBJECT
 private slots:
@@ -30,4 +30,4 @@ private:
     std::unique_ptr<ResmanRunFacade> m_resmanServer;
 };
 
-#endif // TEST_CHANNEL_RANGE_OBSERVER_H
+#endif // test_all_channels_observer_H

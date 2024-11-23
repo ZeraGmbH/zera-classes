@@ -9,7 +9,7 @@
 #include <QStringList>
 #include <memory>
 
-class RangeObserver : public QObject
+class ChannelObserver : public QObject
 {
     Q_OBJECT
 public:
@@ -17,20 +17,21 @@ public:
     QString m_unit;
     int m_dspChannel;
 
-    RangeObserver(const QString &channelMName,
-                  const NetworkConnectionInfo &netInfo,
-                  VeinTcp::AbstractTcpNetworkFactoryPtr tcpFactory);
+    ChannelObserver(const QString &channelMName,
+                    const NetworkConnectionInfo &netInfo,
+                    VeinTcp::AbstractTcpNetworkFactoryPtr tcpFactory);
     const QStringList getRangeNames() const;
     TaskContainerInterfacePtr addRangesFetchTasks(TaskContainerInterfacePtr tasks); // -> rework & private
-    void startReadRanges();
+    void startFetch();
 signals:
-    void sigRangeListChanged(QString channelMName);
+    void sigFetchComplete(QString channelMName);
 
 private slots:
     void onInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant answer);
 private:
+    TaskTemplatePtr getPcbConnectionTask();
     TaskTemplatePtr getReadRangeNamesTask();
-    TaskTemplatePtr getReadRangeDetailsTasks();
+    TaskTemplatePtr getReadRangeDetailsTask();
     TaskTemplatePtr getReadRangeFinalTask();
     static void notifyError(QString errMsg);
 
@@ -39,10 +40,11 @@ private:
     QStringList m_tempRangesNames;
     TaskContainerInterfacePtr m_currentTasks;
 
+    Zera::ProxyClientPtr m_pcbClient;
     Zera::PcbInterfacePtr m_pcbInterface;
     VeinTcp::AbstractTcpNetworkFactoryPtr m_tcpFactory;
 };
 
-typedef std::shared_ptr<RangeObserver> RangeObserverPtr;
+typedef std::shared_ptr<ChannelObserver> ChannelObserverPtr;
 
 #endif // RANGEOBSERVER_H

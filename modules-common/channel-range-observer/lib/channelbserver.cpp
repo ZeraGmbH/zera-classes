@@ -1,4 +1,5 @@
-#include "rangeobserver.h"
+#include "channelbserver.h"
+#include "taskserverconnectionstart.h"
 #include <taskchannelgetrangelist.h>
 #include <taskcontainersequence.h>
 #include <taskcontainerparallel.h>
@@ -6,63 +7,69 @@
 #include <taskchannelregisternotifier.h>
 #include <proxy.h>
 
-RangeObserver::RangeObserver(const QString &channelMName,
-                             const NetworkConnectionInfo &netInfo,
-                             VeinTcp::AbstractTcpNetworkFactoryPtr tcpFactory) :
+ChannelObserver::ChannelObserver(const QString &channelMName,
+                                 const NetworkConnectionInfo &netInfo,
+                                 VeinTcp::AbstractTcpNetworkFactoryPtr tcpFactory) :
     m_channelMName(channelMName),
+    m_pcbClient(Zera::Proxy::getInstance()->getConnectionSmart(netInfo, tcpFactory)),
     m_pcbInterface(std::make_shared<Zera::cPCBInterface>())
 {
-    Zera::ProxyClientPtr pcbClient = Zera::Proxy::getInstance()->getConnectionSmart(netInfo, tcpFactory);
-    m_pcbInterface->setClientSmart(pcbClient);
+    m_pcbInterface->setClientSmart(m_pcbClient);
 }
 
-const QStringList RangeObserver::getRangeNames() const
+const QStringList ChannelObserver::getRangeNames() const
 {
     return m_tempRangesNames;
 }
 
-void RangeObserver::startReadRanges()
+void ChannelObserver::startFetch()
 {
     m_currentTasks = TaskContainerSequence::create();
+    m_currentTasks->addSub(getPcbConnectionTask());
     m_currentTasks = addRangesFetchTasks(std::move(m_currentTasks));
     m_currentTasks->start();
 }
 
-void RangeObserver::onInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant answer)
+void ChannelObserver::onInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant answer)
 {
     if (msgnr == 0) { // 0 was reserved for async. messages
         const QStringList answerParts = answer.toString().split(":", Qt::SkipEmptyParts);
         if(answerParts.size() == 2 && answerParts[0] == "Notify")
-            startReadRanges();
+            startFetch();
         else
             qInfo("onInterfaceAnswer: Unknown notification: %s!", qPrintable(answer.toString()));
     }
 }
 
-TaskContainerInterfacePtr RangeObserver::addRangesFetchTasks(TaskContainerInterfacePtr tasks)
+TaskTemplatePtr ChannelObserver::getPcbConnectionTask()
+{
+    return TaskServerConnectionStart::create(m_pcbClient, CONNECTION_TIMEOUT);
+}
+
+TaskContainerInterfacePtr ChannelObserver::addRangesFetchTasks(TaskContainerInterfacePtr tasks)
 {
     tasks->addSub(getReadRangeNamesTask());
     // TODO: Handle / check unregister
     connect(m_pcbInterface.get(), &Zera::cPCBInterface::serverAnswer,
-            this, &RangeObserver::onInterfaceAnswer);
+            this, &ChannelObserver::onInterfaceAnswer);
     tasks->addSub(TaskChannelRegisterNotifier::create(
         m_pcbInterface, m_channelMName, 1,
         TRANSACTION_TIMEOUT, [&]{ notifyError(QString("Could not register notification for channel %1").arg(m_channelMName)); }));
 
-    tasks->addSub(getReadRangeDetailsTasks());
+    tasks->addSub(getReadRangeDetailsTask());
 
     tasks->addSub(getReadRangeFinalTask());
     return tasks;
 }
 
-TaskTemplatePtr RangeObserver::getReadRangeNamesTask()
+TaskTemplatePtr ChannelObserver::getReadRangeNamesTask()
 {
     return TaskChannelGetRangeList::create(
         m_pcbInterface, m_channelMName, m_tempRangesNames,
         TRANSACTION_TIMEOUT, [&]{ notifyError(QString("Could not read range list for channel %1").arg(m_channelMName)); });
 }
 
-TaskTemplatePtr RangeObserver::getReadRangeDetailsTasks()
+TaskTemplatePtr ChannelObserver::getReadRangeDetailsTask()
 {
     TaskContainerInterfacePtr taskToAdd = TaskContainerParallel::create();
 
@@ -71,15 +78,15 @@ TaskTemplatePtr RangeObserver::getReadRangeDetailsTasks()
     return taskToAdd;
 }
 
-TaskTemplatePtr RangeObserver::getReadRangeFinalTask()
+TaskTemplatePtr ChannelObserver::getReadRangeFinalTask()
 {
     return TaskLambdaRunner::create([=]() {
-        emit sigRangeListChanged(m_channelMName);
+        emit sigFetchComplete(m_channelMName);
         return true;
     });
 }
 
-void RangeObserver::notifyError(QString errMsg)
+void ChannelObserver::notifyError(QString errMsg)
 {
-    qWarning("RangeObserver error: %s", qPrintable(errMsg));
+    qWarning("ChannelObserver error: %s", qPrintable(errMsg));
 }

@@ -12,5 +12,6 @@ function(SETUP_QTESTS_CHANNEL_MANAGER)
 endfunction()
 
 SETUP_QTESTS_CHANNEL_MANAGER(
-    test_channel_range_observer
+    test_all_channels_observer
+    test_channel_observer
 )

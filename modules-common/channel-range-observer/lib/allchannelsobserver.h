@@ -1,34 +1,33 @@
-#ifndef AllCHANNELOBSERVER_H
-#define AllCHANNELOBSERVER_H
+#ifndef AllCHANNELSOBSERVER_H
+#define AllCHANNELSOBSERVER_H
 
-#include "rangeobserver.h"
+#include "channelbserver.h"
 #include <pcbinterface.h>
 #include <proxyclient.h>
 #include <taskcontainerinterface.h>
 #include <QMap>
 
-class AllChannelObserver : public QObject
+class AllChannelsObserver : public QObject
 {
     Q_OBJECT
 public:
-    AllChannelObserver(const NetworkConnectionInfo &netInfo, VeinTcp::AbstractTcpNetworkFactoryPtr tcpFactory);
+    AllChannelsObserver(const NetworkConnectionInfo &netInfo, VeinTcp::AbstractTcpNetworkFactoryPtr tcpFactory);
     void startFullScan();
     const QStringList getChannelMNames() const;
-    const QStringList getChannelRanges(const QString &channelMName) const;
-    const RangeObserverPtr getChannelData(QString channelMName);
+    const ChannelObserverPtr getChannelObserver(QString channelMName);
 signals:
     void sigFullScanFinished(bool ok);
-    void sigRangeListChanged(QString channelMName);
-    friend class AllChannelObserverResetter;
+    void sigFetchComplete(QString channelMName);
+    friend class AllChannelsObserverResetter;
 
 protected:
-    QMap<QString, RangeObserverPtr> m_channelNamesToObserver;
+    QMap<QString, ChannelObserverPtr> m_channelNamesToObserver;
     QHash<int, QString> m_notifyIdToChannelMName;
 
 private:
     void clear();
     void doStartFullScan();
-    TaskTemplatePtr perparePcbConnectionTasks();
+    TaskTemplatePtr getPcbConnectionTask();
     TaskTemplatePtr getChannelReadDetailsTasks(const QString &channelMName, int notificationId);
     void startRangesChangeTasks(QString channelMName);
     static void notifyError(QString errMsg);
@@ -42,4 +41,4 @@ private:
     QStringList m_tempChannelMNames;
 };
 
-#endif // AllCHANNELOBSERVER_H
+#endif // AllCHANNELSOBSERVER_H

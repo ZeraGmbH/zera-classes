@@ -1,4 +1,4 @@
-#include "allchannelobserver.h"
+#include "allchannelsobserver.h"
 #include "taskchannelgetavail.h"
 #include "taskserverconnectionstart.h"
 #include <taskcontainersequence.h>
@@ -9,7 +9,7 @@
 #include <taskcontainerparallel.h>
 #include <proxy.h>
 
-AllChannelObserver::AllChannelObserver(const NetworkConnectionInfo &netInfo, VeinTcp::AbstractTcpNetworkFactoryPtr tcpFactory) :
+AllChannelsObserver::AllChannelsObserver(const NetworkConnectionInfo &netInfo, VeinTcp::AbstractTcpNetworkFactoryPtr tcpFactory) :
     m_netInfo(netInfo),
     m_tcpFactory(tcpFactory),
     m_pcbClient(Zera::Proxy::getInstance()->getConnectionSmart(netInfo, tcpFactory)),
@@ -18,7 +18,7 @@ AllChannelObserver::AllChannelObserver(const NetworkConnectionInfo &netInfo, Vei
     m_pcbInterface->setClientSmart(m_pcbClient);
 }
 
-void AllChannelObserver::startFullScan()
+void AllChannelsObserver::startFullScan()
 {
     if(m_channelNamesToObserver.isEmpty())
         doStartFullScan();
@@ -26,48 +26,39 @@ void AllChannelObserver::startFullScan()
         emit sigFullScanFinished(true);
 }
 
-const QStringList AllChannelObserver::getChannelMNames() const
+const QStringList AllChannelsObserver::getChannelMNames() const
 {
     return m_channelNamesToObserver.keys();
 }
 
-const QStringList AllChannelObserver::getChannelRanges(const QString &channelMName) const
-{
-    auto iterChannel = m_channelNamesToObserver.constFind(channelMName);
-    if(iterChannel != m_channelNamesToObserver.constEnd())
-        return iterChannel.value()->getRangeNames();
-    qWarning("AllChannelObserver: Channel ranges not found for %s!", qPrintable(channelMName));
-    return QStringList();
-}
-
-const RangeObserverPtr AllChannelObserver::getChannelData(QString channelMName)
+const ChannelObserverPtr AllChannelsObserver::getChannelObserver(QString channelMName)
 {
     auto iter = m_channelNamesToObserver.constFind(channelMName);
     if(iter != m_channelNamesToObserver.constEnd())
         return iter.value();
-    qWarning("AllChannelObserver: Channel data not found for %s!", qPrintable(channelMName));
+    qWarning("AllChannelsObserver: Channel data not found for %s!", qPrintable(channelMName));
     return nullptr;
 }
 
-void AllChannelObserver::clear()
+void AllChannelsObserver::clear()
 {
     m_channelNamesToObserver.clear();
     m_notifyIdToChannelMName.clear();
 }
 
-void AllChannelObserver::startRangesChangeTasks(QString channelMName)
+void AllChannelsObserver::startRangesChangeTasks(QString channelMName)
 {
     auto iter = m_channelNamesToObserver.find(channelMName);
     if(iter != m_channelNamesToObserver.end())
-        iter.value()->startReadRanges();
+        iter.value()->startFetch();
     else
-        qInfo("AllChannelObserver: On change notification channel %s not found!", qPrintable(channelMName));
+        qInfo("AllChannelsObserver: On change notification channel %s not found!", qPrintable(channelMName));
 }
 
-void AllChannelObserver::doStartFullScan()
+void AllChannelsObserver::doStartFullScan()
 {
     m_currentTasks = TaskContainerSequence::create();
-    m_currentTasks->addSub(perparePcbConnectionTasks());
+    m_currentTasks->addSub(getPcbConnectionTask());
 
     m_currentTasks->addSub(TaskChannelGetAvail::create(
         m_pcbInterface, m_tempChannelMNames,
@@ -77,7 +68,7 @@ void AllChannelObserver::doStartFullScan()
         TaskContainerInterfacePtr allChannelsDetailsTasks = TaskContainerParallel::create();
         for(int channelNo = 0; channelNo<m_tempChannelMNames.count(); ++channelNo) {
             QString &channelMName = m_tempChannelMNames[channelNo];
-            RangeObserverPtr channelObserver = std::make_shared<RangeObserver>(channelMName, m_netInfo, m_tcpFactory);
+            ChannelObserverPtr channelObserver = std::make_shared<ChannelObserver>(channelMName, m_netInfo, m_tcpFactory);
             m_channelNamesToObserver[channelMName] = channelObserver;
 
             // TODO this has to go
@@ -86,24 +77,24 @@ void AllChannelObserver::doStartFullScan()
             perChannelTask = channelObserver->addRangesFetchTasks(std::move(perChannelTask));
             allChannelsDetailsTasks->addSub(std::move(perChannelTask));
 
-            connect(channelObserver.get(), &RangeObserver::sigRangeListChanged,
-                    this, &AllChannelObserver::sigRangeListChanged);
+            connect(channelObserver.get(), &ChannelObserver::sigFetchComplete,
+                    this, &AllChannelsObserver::sigFetchComplete);
         }
         m_currentTasks->addSub(std::move(allChannelsDetailsTasks));
         return true;
     }));
 
     connect(m_currentTasks.get(), &TaskTemplate::sigFinish,
-            this, &AllChannelObserver::sigFullScanFinished);
+            this, &AllChannelsObserver::sigFullScanFinished);
     m_currentTasks->start();
 }
 
-TaskTemplatePtr AllChannelObserver::perparePcbConnectionTasks()
+TaskTemplatePtr AllChannelsObserver::getPcbConnectionTask()
 {
     return TaskServerConnectionStart::create(m_pcbClient, CONNECTION_TIMEOUT);
 }
 
-TaskTemplatePtr AllChannelObserver::getChannelReadDetailsTasks(const QString &channelMName, int notificationId)
+TaskTemplatePtr AllChannelsObserver::getChannelReadDetailsTasks(const QString &channelMName, int notificationId)
 {
     TaskContainerInterfacePtr channelTasks = TaskContainerParallel::create();
     m_notifyIdToChannelMName[notificationId] = channelMName;
@@ -119,8 +110,8 @@ TaskTemplatePtr AllChannelObserver::getChannelReadDetailsTasks(const QString &ch
     return channelTasks;
 }
 
-void AllChannelObserver::notifyError(QString errMsg)
+void AllChannelsObserver::notifyError(QString errMsg)
 {
-    qWarning("AllChannelObserver error: %s", qPrintable(errMsg));
+    qWarning("AllChannelsObserver error: %s", qPrintable(errMsg));
 }
 

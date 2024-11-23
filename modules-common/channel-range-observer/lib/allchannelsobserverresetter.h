@@ -1,12 +1,12 @@
 #ifndef AllCHANNELOBSERVERRESETTER_H
 #define AllCHANNELOBSERVERRESETTER_H
 
-#include "allchannelobserver.h"
+#include "allchannelsobserver.h"
 
-class AllChannelObserverResetter
+class AllChannelsObserverResetter
 {
 public:
-    static void clear(AllChannelObserver* observer);
+    static void clear(AllChannelsObserver* observer);
 };
 
 #endif // AllCHANNELOBSERVERRESETTER_H
