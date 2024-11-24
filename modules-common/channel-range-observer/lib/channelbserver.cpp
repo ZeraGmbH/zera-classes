@@ -1,5 +1,6 @@
 #include "channelbserver.h"
 #include "taskrangegeturvalue.h"
+#include "taskrangegetisavailable.h"
 #include "taskserverconnectionstart.h"
 #include <taskchannelgetrangelist.h>
 #include <taskcontainersequence.h>
@@ -23,18 +24,20 @@ ChannelObserver::ChannelObserver(const QString &channelMName,
 
 void ChannelObserver::startFetch()
 {
+    clearRanges();
     m_currentTasks = TaskContainerSequence::create();
-    m_currentTasks->addSub(getPcbConnectionTask());
-    m_currentTasks->addSub(getChannelReadDetailsTask());
     m_currentTasks->addSub(getAllRangesTask());
-    m_currentTasks->addSub(getRangesRegisterChangeNotificationTask());
-    m_currentTasks->addSub(getReadRangeFinalTask());
     m_currentTasks->start();
 }
 
-const QStringList ChannelObserver::getRangeNames() const
+const QStringList ChannelObserver::getAllRangeNames() const
 {
-    return m_rangesNamesOrderedByServer;
+    return m_allRangeNamesOrderedByServer;
+}
+
+const QStringList ChannelObserver::getAvailRangeNames() const
+{
+    return m_availableRangeNames;
 }
 
 const std::shared_ptr<ChannelObserver::RangeData> ChannelObserver::getRangeData(const QString &rangeName) const
@@ -56,6 +59,13 @@ void ChannelObserver::onInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant an
         else
             qInfo("onInterfaceAnswer: Unknown notification: %s!", qPrintable(answer.toString()));
     }
+}
+
+void ChannelObserver::clearRanges()
+{
+    m_allRangeNamesOrderedByServer.clear();
+    m_availableRangeNames.clear();
+    m_rangeNameToRangeData.clear();
 }
 
 TaskTemplatePtr ChannelObserver::getPcbConnectionTask()
@@ -81,24 +91,42 @@ TaskTemplatePtr ChannelObserver::getChannelReadDetailsTask()
 TaskTemplatePtr ChannelObserver::getAllRangesTask()
 {
     TaskContainerInterfacePtr task = TaskContainerSequence::create();
-    task->addSub(TaskChannelGetRangeList::create(m_pcbInterface, m_channelMName, m_rangesNamesOrderedByServer,
+    task->addSub(getPcbConnectionTask());
+    task->addSub(TaskChannelGetRangeList::create(
+        m_pcbInterface, m_channelMName, m_allRangeNamesOrderedByServer,
         TRANSACTION_TIMEOUT, [&]{ notifyError(QString("Could not read range list for channel %1").arg(m_channelMName)); }));
     task->addSub(TaskLambdaRunner::create([&]() {
-        TaskContainerInterfacePtr allRangesDetailsTasks = TaskContainerParallel::create();
-        for(const QString &rangeName : qAsConst(m_rangesNamesOrderedByServer)) {
+        TaskContainerInterfacePtr allRangesTasks = TaskContainerParallel::create();
+        allRangesTasks->addSub(getChannelReadDetailsTask());
+        for(const QString &rangeName : qAsConst(m_allRangeNamesOrderedByServer)) {
             std::shared_ptr<RangeData> newRange = std::make_shared<RangeData>();
             m_rangeNameToRangeData[rangeName] = newRange;
-            allRangesDetailsTasks->addSub(TaskRangeGetUrValue::create(
-                m_pcbInterface, m_channelMName, rangeName, newRange->m_urValue,
-                TRANSACTION_TIMEOUT,
-                [&]{ notifyError(QString("Could not range UrValue  fir channel %1 / range %2").arg(m_channelMName, rangeName)); }));
-
-            // TODO: add range tasks
+            allRangesTasks = addRangeDataTasks(std::move(allRangesTasks), rangeName, newRange);
         }
-        m_currentTasks->addSub(std::move(allRangesDetailsTasks));
+        m_currentTasks->addSub(std::move(allRangesTasks));
+        m_currentTasks->addSub(getRangesRegisterChangeNotificationTask());
+        m_currentTasks->addSub(getReadRangeFinalTask());
         return true;
     }));
     return task;
+}
+
+TaskContainerInterfacePtr ChannelObserver::addRangeDataTasks(TaskContainerInterfacePtr taskContainer,
+                                                             const QString &rangeName,
+                                                             std::shared_ptr<RangeData> newRange)
+{
+    taskContainer->addSub(TaskRangeGetIsAvailable::create(
+        m_pcbInterface, m_channelMName, rangeName, newRange->m_available,
+        TRANSACTION_TIMEOUT,
+        [&]{ notifyError(QString("Could not fetch range availability: Channel %1 / Range %2").arg(m_channelMName, rangeName)); }));
+    taskContainer->addSub(TaskRangeGetUrValue::create(
+        m_pcbInterface, m_channelMName, rangeName, newRange->m_urValue,
+        TRANSACTION_TIMEOUT,
+        [&]{ notifyError(QString("Could not fetch range UrValue: Channel %1 / Range %2").arg(m_channelMName, rangeName)); }));
+
+    // TODO: add more range tasks
+
+    return taskContainer;
 }
 
 TaskTemplatePtr ChannelObserver::getRangesRegisterChangeNotificationTask()
@@ -114,10 +142,18 @@ TaskTemplatePtr ChannelObserver::getRangesRegisterChangeNotificationTask()
 
 TaskTemplatePtr ChannelObserver::getReadRangeFinalTask()
 {
-    return TaskLambdaRunner::create([=]() {
+    return TaskLambdaRunner::create([&]() {
+        setAvailableRanges();
         emit sigFetchComplete(m_channelMName);
         return true;
     });
+}
+
+void ChannelObserver::setAvailableRanges()
+{
+    for(const QString &rangeName : qAsConst(m_allRangeNamesOrderedByServer))
+        if(m_rangeNameToRangeData[rangeName]->m_available)
+            m_availableRangeNames.append(rangeName);
 }
 
 void ChannelObserver::notifyError(QString errMsg)

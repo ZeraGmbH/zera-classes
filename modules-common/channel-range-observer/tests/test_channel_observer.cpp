@@ -28,15 +28,14 @@ void test_channel_observer::initTestCase()
 
 void test_channel_observer::init()
 {
-    TimeMachineForTest::reset();
-    m_resmanServer = std::make_unique<ResmanRunFacade>(m_tcpFactory);
-    m_testServer = std::make_unique<TestServerForSenseInterfaceMt310s2>(std::make_shared<TestFactoryI2cCtrl>(true), m_tcpFactory);
-    TimeMachineObject::feedEventLoop();
-    TimeMachineObject::feedEventLoop();
+    setupServers();
+    setupClient();
 }
 
 void test_channel_observer::cleanup()
 {
+    m_pcbInterface = nullptr;
+    m_pcbClient = nullptr;
     TimeMachineObject::feedEventLoop();
     m_testServer = nullptr;
     m_resmanServer = nullptr;
@@ -46,7 +45,7 @@ void test_channel_observer::cleanup()
 void test_channel_observer::emptyOnStartup()
 {
     ChannelObserver observer("m0", netInfo, m_tcpFactory);
-    QVERIFY(observer.getRangeNames().isEmpty());
+    QVERIFY(observer.getAllRangeNames().isEmpty());
 }
 
 void test_channel_observer::fetchDirect()
@@ -115,7 +114,7 @@ void test_channel_observer::getRangesCheckBasicData()
 
     QVERIFY(observer.getRangeData("250V") != nullptr);
     QCOMPARE(observer.getRangeData("foo"), nullptr);
-    QStringList rangeName = observer.getRangeNames();
+    QStringList rangeName = observer.getAllRangeNames();
     QCOMPARE(rangeName.count(), 3);
     QVERIFY(rangeName.contains("8V"));
     QVERIFY(rangeName.contains("100mV"));
@@ -138,7 +137,7 @@ void test_channel_observer::checkOrderingVoltageRanges()
     observer.startFetch();
     TimeMachineObject::feedEventLoop();
 
-    QStringList rangeNamesReceived = observer.getRangeNames();
+    QStringList rangeNamesReceived = observer.getAllRangeNames();
     QStringList rangeNamesExpected = QStringList() << "250V" << "8V" << "100mV";
     QCOMPARE(rangeNamesReceived, rangeNamesExpected);
 }
@@ -149,7 +148,7 @@ void test_channel_observer::checkOrderingAllCurrentRanges()
     observer.startFetch();
     TimeMachineObject::feedEventLoop();
 
-    QStringList rangeNamesReceived = observer.getRangeNames();
+    QStringList rangeNamesReceived = observer.getAllRangeNames();
     QStringList rangeNamesExpected = QStringList()
                                      << "10A" << "5A" << "2.5A" << "1.0A"
                                      << "500mA" << "250mA" << "100mA" << "50mA" << "25mA"
@@ -158,3 +157,64 @@ void test_channel_observer::checkOrderingAllCurrentRanges()
     QCOMPARE(rangeNamesReceived, rangeNamesExpected);
 }
 
+void test_channel_observer::checkRangeAvailable()
+{
+    ChannelObserver observer("m3", netInfo, m_tcpFactory);
+    observer.startFetch();
+    TimeMachineObject::feedEventLoop();
+
+    QCOMPARE(observer.getRangeData("10A")->m_available, true);
+    QCOMPARE(observer.getRangeData("500mA")->m_available, true);
+    QCOMPARE(observer.getRangeData("8V")->m_available, false);
+    QCOMPARE(observer.getRangeData("500mV")->m_available, false);
+}
+
+void test_channel_observer::checkAvailableRangesMtDefaultAc()
+{
+    ChannelObserver observer("m3", netInfo, m_tcpFactory);
+    observer.startFetch();
+    TimeMachineObject::feedEventLoop();
+
+    QStringList rangeNamesReceived = observer.getAvailRangeNames();
+    QStringList rangeNamesExpected = QStringList()
+                                     << "10A" << "5A" << "2.5A" << "1.0A"
+                                     << "500mA" << "250mA" << "100mA" << "50mA" << "25mA";
+    QCOMPARE(rangeNamesReceived, rangeNamesExpected);
+}
+
+void test_channel_observer::checkAvailableRangesMtAdj()
+{
+    ChannelObserver observer("m3", netInfo, m_tcpFactory);
+    observer.startFetch();
+    TimeMachineObject::feedEventLoop();
+
+    QSignalSpy spy(&observer, &ChannelObserver::sigFetchComplete);
+    m_pcbInterface->setMMode("ADJ");
+    TimeMachineObject::feedEventLoop();
+    QCOMPARE(spy.count(), 1);
+
+    QStringList rangeNamesReceivedAdj = observer.getAvailRangeNames();
+    QStringList rangeNamesExpectedAdj = QStringList()
+                                        << "10A" << "5A" << "2.5A" << "1.0A"
+                                        << "500mA" << "250mA" << "100mA" << "50mA" << "25mA"
+                                        << "8V" << "5V" << "2V" << "1V"
+                                        << "500mV" << "200mV" << "100mV" << "50mV" << "20mV" << "10mV" << "5mV" << "2mV";
+    QCOMPARE(rangeNamesReceivedAdj, rangeNamesExpectedAdj);
+}
+
+void test_channel_observer::setupServers()
+{
+    TimeMachineForTest::reset();
+    m_resmanServer = std::make_unique<ResmanRunFacade>(m_tcpFactory);
+    m_testServer = std::make_unique<TestServerForSenseInterfaceMt310s2>(std::make_shared<TestFactoryI2cCtrl>(true), m_tcpFactory);
+    TimeMachineObject::feedEventLoop();
+}
+
+void test_channel_observer::setupClient()
+{
+    m_pcbClient = Zera::Proxy::getInstance()->getConnectionSmart(netInfo, m_tcpFactory);
+    m_pcbInterface = std::make_shared<Zera::cPCBInterface>();
+    m_pcbInterface->setClientSmart(m_pcbClient);
+    Zera::Proxy::getInstance()->startConnectionSmart(m_pcbClient);
+    TimeMachineObject::feedEventLoop();
+}

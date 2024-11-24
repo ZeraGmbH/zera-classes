@@ -22,26 +22,35 @@ public:
                     const NetworkConnectionInfo &netInfo,
                     VeinTcp::AbstractTcpNetworkFactoryPtr tcpFactory);
     void startFetch();
-    const QStringList getRangeNames() const;
+    // TODO: What if we are asked while fetching?
+    const QStringList getAllRangeNames() const;
+    const QStringList getAvailRangeNames() const;
     struct RangeData
     {
-        double m_urValue;
+        bool m_available = false;
+        double m_urValue = 0.0;
     };
     const std::shared_ptr<RangeData> getRangeData(const QString &rangeName) const;
 signals:
-    void sigFetchComplete(QString channelMName); // TODO change argument to bool ok
+    void sigFetchComplete(QString channelMName);
 
 private slots:
     void onInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant answer);
 private:
+    void clearRanges();
     TaskTemplatePtr getPcbConnectionTask();
     TaskTemplatePtr getChannelReadDetailsTask();
     TaskTemplatePtr getAllRangesTask();
+    TaskContainerInterfacePtr addRangeDataTasks(TaskContainerInterfacePtr taskContainer,
+                                                const QString &rangeName, std::shared_ptr<RangeData> newRange);
     TaskTemplatePtr getRangesRegisterChangeNotificationTask();
     TaskTemplatePtr getReadRangeFinalTask();
+    void setAvailableRanges();
     static void notifyError(QString errMsg);
 
     QString m_channelMName;
+    QStringList m_allRangeNamesOrderedByServer;
+    QStringList m_availableRangeNames;
     QHash<QString, std::shared_ptr<RangeData>> m_rangeNameToRangeData;
 
     Zera::ProxyClientPtr m_pcbClient;
@@ -49,7 +58,6 @@ private:
     VeinTcp::AbstractTcpNetworkFactoryPtr m_tcpFactory;
 
     TaskContainerInterfacePtr m_currentTasks;
-    QStringList m_rangesNamesOrderedByServer; // maybe when we ordering as servers suggest we use m_rangesNamesOrderedByServer
 };
 
 typedef std::shared_ptr<ChannelObserver> ChannelObserverPtr;

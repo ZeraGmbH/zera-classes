@@ -1,6 +1,7 @@
 #ifndef TEST_CHANNEL_OBSERVER_H
 #define TEST_CHANNEL_OBSERVER_H
 
+#include <pcbinterface.h>
 #include <abstracttcpnetworkfactory.h>
 #include <resmanrunfacade.h>
 #include <testserverforsenseinterfacemt310s2.h>
@@ -20,12 +21,20 @@ private slots:
     void fetchCheckChannelDataM3();
     void getRangesCheckBasicData();
     void checkUrValue();
+    void checkRangeAvailable();
     void checkOrderingVoltageRanges();
     void checkOrderingAllCurrentRanges();
+    void checkAvailableRangesMtDefaultAc();
+    void checkAvailableRangesMtAdj();
 private:
+    void setupServers();
+    void setupClient();
     VeinTcp::AbstractTcpNetworkFactoryPtr m_tcpFactory;
     std::unique_ptr<TestServerForSenseInterfaceMt310s2> m_testServer;
     std::unique_ptr<ResmanRunFacade> m_resmanServer;
+
+    Zera::ProxyClientPtr m_pcbClient;
+    Zera::PcbInterfacePtr m_pcbInterface;
 };
 
 #endif // TEST_CHANNEL_OBSERVER_H

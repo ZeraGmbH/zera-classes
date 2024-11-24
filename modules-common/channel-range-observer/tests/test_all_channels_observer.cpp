@@ -173,8 +173,8 @@ void test_all_channels_observer::checkRanges()
     observer.startFullScan();
     TimeMachineObject::feedEventLoop();
 
-    QCOMPARE(observer.getChannelObserver("m0")->getRangeNames().size(), 3);
-    QCOMPARE(observer.getChannelObserver("m0")->getRangeNames()[0], "250V");
+    QCOMPARE(observer.getChannelObserver("m0")->getAllRangeNames().size(), 3);
+    QCOMPARE(observer.getChannelObserver("m0")->getAllRangeNames()[0], "250V");
 }
 
 void test_all_channels_observer::changeRangesByClamp()
@@ -182,13 +182,13 @@ void test_all_channels_observer::changeRangesByClamp()
     AllChannelsObserver observer(netInfo, m_tcpFactory);
     observer.startFullScan();
     TimeMachineObject::feedEventLoop();
-    QStringList ranges = observer.getChannelObserver("m3")->getRangeNames();
+    QStringList ranges = observer.getChannelObserver("m3")->getAllRangeNames();
     QCOMPARE(ranges.size(), 21);
 
     m_testServer->addClamp(cClamp::CL120A, "IL1");
     TimeMachineObject::feedEventLoop();
 
-    ranges = observer.getChannelObserver("m3")->getRangeNames();
+    ranges = observer.getChannelObserver("m3")->getAllRangeNames();
     QCOMPARE(ranges.size(), 30);
 
     TimeMachineObject::feedEventLoop();
