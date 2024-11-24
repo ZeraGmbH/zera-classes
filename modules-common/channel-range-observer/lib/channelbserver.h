@@ -48,14 +48,13 @@ private:
     void setAvailableRanges();
     static void notifyError(QString errMsg);
 
-    QString m_channelMName;
+    const QString m_channelMName;
     QStringList m_allRangeNamesOrderedByServer;
     QStringList m_availableRangeNames;
     QHash<QString, std::shared_ptr<RangeData>> m_rangeNameToRangeData;
 
-    Zera::ProxyClientPtr m_pcbClient;
-    Zera::PcbInterfacePtr m_pcbInterface;
-    VeinTcp::AbstractTcpNetworkFactoryPtr m_tcpFactory;
+    const Zera::ProxyClientPtr m_pcbClient;
+    const Zera::PcbInterfacePtr m_pcbInterface;
 
     TaskContainerInterfacePtr m_currentTasks;
 };
