@@ -48,13 +48,11 @@ void AllChannelsObserver::doStartFullScan()
 {
     m_currentTasks = TaskContainerSequence::create();
     m_currentTasks->addSub(getPcbConnectionTask());
-    m_currentTasks->addSub(TaskChannelGetAvail::create(
-        m_pcbInterface, m_tempChannelMNames,
-        TRANSACTION_TIMEOUT, [=] { notifyError("Get available channels failed");}));
+    m_currentTasks->addSub(TaskChannelGetAvail::create(m_pcbInterface, m_tempChannelMNames,
+                                                       TRANSACTION_TIMEOUT, [=] { notifyError("Get available channels failed");}));
     m_currentTasks->addSub(TaskLambdaRunner::create([&]() {
         TaskContainerInterfacePtr allChannelsDetailsTasks = TaskContainerParallel::create();
-        for(int channelNo = 0; channelNo<m_tempChannelMNames.count(); ++channelNo) {
-            QString &channelMName = m_tempChannelMNames[channelNo];
+        for(const QString &channelMName : qAsConst(m_tempChannelMNames)) {
             ChannelObserverPtr channelObserver = std::make_shared<ChannelObserver>(channelMName, m_netInfo, m_tcpFactory);
             m_channelNamesToObserver[channelMName] = channelObserver;
 
