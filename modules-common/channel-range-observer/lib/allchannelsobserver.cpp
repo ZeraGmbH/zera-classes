@@ -41,7 +41,6 @@ const ChannelObserverPtr AllChannelsObserver::getChannelObserver(QString channel
 void AllChannelsObserver::clear()
 {
     m_channelNamesToObserver.clear();
-    m_notifyIdToChannelMName.clear();
 }
 
 void AllChannelsObserver::doStartFullScan()
@@ -60,6 +59,7 @@ void AllChannelsObserver::doStartFullScan()
             connect(channelObserver.get(), &ChannelObserver::sigFetchComplete,
                     this, &AllChannelsObserver::sigFetchComplete);
         }
+        m_tempChannelMNames.clear();
         m_currentTasks->addSub(std::move(allChannelsDetailsTasks));
         return true;
     }));

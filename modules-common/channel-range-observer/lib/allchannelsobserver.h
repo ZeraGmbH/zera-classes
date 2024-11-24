@@ -22,7 +22,6 @@ signals:
 
 protected:
     QMap<QString, ChannelObserverPtr> m_channelNamesToObserver;
-    QHash<int, QString> m_notifyIdToChannelMName;
 
 private:
     void clear();

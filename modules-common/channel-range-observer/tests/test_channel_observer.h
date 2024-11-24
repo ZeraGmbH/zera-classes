@@ -18,6 +18,10 @@ private slots:
     void fetchByTask();
     void fetchCheckChannelDataM0();
     void fetchCheckChannelDataM3();
+    void getRangesCheckBasicData();
+    void checkUrValue();
+    void checkOrderingVoltageRanges();
+    void checkOrderingAllCurrentRanges();
 private:
     VeinTcp::AbstractTcpNetworkFactoryPtr m_tcpFactory;
     std::unique_ptr<TestServerForSenseInterfaceMt310s2> m_testServer;

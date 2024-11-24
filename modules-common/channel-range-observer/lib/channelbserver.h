@@ -7,6 +7,7 @@
 #include <taskcontainerinterface.h>
 #include <QObject>
 #include <QStringList>
+#include <QHash>
 #include <memory>
 
 class ChannelObserver : public QObject
@@ -20,8 +21,13 @@ public:
     ChannelObserver(const QString &channelMName,
                     const NetworkConnectionInfo &netInfo,
                     VeinTcp::AbstractTcpNetworkFactoryPtr tcpFactory);
-    const QStringList getRangeNames() const;
     void startFetch();
+    const QStringList getRangeNames() const;
+    struct RangeData
+    {
+        double m_urValue;
+    };
+    const std::shared_ptr<RangeData> getRangeData(const QString &rangeName) const;
 signals:
     void sigFetchComplete(QString channelMName); // TODO change argument to bool ok
 
@@ -30,19 +36,20 @@ private slots:
 private:
     TaskTemplatePtr getPcbConnectionTask();
     TaskTemplatePtr getChannelReadDetailsTask();
-    TaskTemplatePtr getRangesFetchTasks();
-    TaskTemplatePtr getReadRangeDetailsTask();
+    TaskTemplatePtr getAllRangesTask();
+    TaskTemplatePtr getRangesRegisterChangeNotificationTask();
     TaskTemplatePtr getReadRangeFinalTask();
     static void notifyError(QString errMsg);
 
     QString m_channelMName;
-
-    QStringList m_tempRangesNames;
-    TaskContainerInterfacePtr m_currentTasks;
+    QHash<QString, std::shared_ptr<RangeData>> m_rangeNameToRangeData;
 
     Zera::ProxyClientPtr m_pcbClient;
     Zera::PcbInterfacePtr m_pcbInterface;
     VeinTcp::AbstractTcpNetworkFactoryPtr m_tcpFactory;
+
+    TaskContainerInterfacePtr m_currentTasks;
+    QStringList m_rangesNamesOrderedByServer; // maybe when we ordering as servers suggest we use m_rangesNamesOrderedByServer
 };
 
 typedef std::shared_ptr<ChannelObserver> ChannelObserverPtr;

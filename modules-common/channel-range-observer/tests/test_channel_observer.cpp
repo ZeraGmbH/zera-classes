@@ -107,3 +107,54 @@ void test_channel_observer::fetchCheckChannelDataM3()
     QCOMPARE(observer.m_dspChannel, 1);
 }
 
+void test_channel_observer::getRangesCheckBasicData()
+{
+    ChannelObserver observer("m0", netInfo, m_tcpFactory);
+    observer.startFetch();
+    TimeMachineObject::feedEventLoop();
+
+    QVERIFY(observer.getRangeData("250V") != nullptr);
+    QCOMPARE(observer.getRangeData("foo"), nullptr);
+    QStringList rangeName = observer.getRangeNames();
+    QCOMPARE(rangeName.count(), 3);
+    QVERIFY(rangeName.contains("8V"));
+    QVERIFY(rangeName.contains("100mV"));
+}
+
+void test_channel_observer::checkUrValue()
+{
+    ChannelObserver observer("m0", netInfo, m_tcpFactory);
+    observer.startFetch();
+    TimeMachineObject::feedEventLoop();
+
+    QCOMPARE(observer.getRangeData("250V")->m_urValue, 250.0);
+    QCOMPARE(observer.getRangeData("8V")->m_urValue, 8.0);
+    QCOMPARE(observer.getRangeData("100mV")->m_urValue, 0.1);
+}
+
+void test_channel_observer::checkOrderingVoltageRanges()
+{
+    ChannelObserver observer("m0", netInfo, m_tcpFactory);
+    observer.startFetch();
+    TimeMachineObject::feedEventLoop();
+
+    QStringList rangeNamesReceived = observer.getRangeNames();
+    QStringList rangeNamesExpected = QStringList() << "250V" << "8V" << "100mV";
+    QCOMPARE(rangeNamesReceived, rangeNamesExpected);
+}
+
+void test_channel_observer::checkOrderingAllCurrentRanges()
+{
+    ChannelObserver observer("m3", netInfo, m_tcpFactory);
+    observer.startFetch();
+    TimeMachineObject::feedEventLoop();
+
+    QStringList rangeNamesReceived = observer.getRangeNames();
+    QStringList rangeNamesExpected = QStringList()
+                                     << "10A" << "5A" << "2.5A" << "1.0A"
+                                     << "500mA" << "250mA" << "100mA" << "50mA" << "25mA"
+                                     << "8V" << "5V" << "2V" << "1V"
+                                     << "500mV" << "200mV" << "100mV" << "50mV" << "20mV" << "10mV" << "5mV" << "2mV";
+    QCOMPARE(rangeNamesReceived, rangeNamesExpected);
+}
+

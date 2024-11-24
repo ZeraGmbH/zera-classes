@@ -1,4 +1,5 @@
 #include "channelbserver.h"
+#include "taskrangegeturvalue.h"
 #include "taskserverconnectionstart.h"
 #include <taskchannelgetrangelist.h>
 #include <taskcontainersequence.h>
@@ -20,23 +21,34 @@ ChannelObserver::ChannelObserver(const QString &channelMName,
     m_pcbInterface->setClientSmart(m_pcbClient);
 }
 
-const QStringList ChannelObserver::getRangeNames() const
-{
-    return m_tempRangesNames;
-}
-
 void ChannelObserver::startFetch()
 {
     m_currentTasks = TaskContainerSequence::create();
     m_currentTasks->addSub(getPcbConnectionTask());
     m_currentTasks->addSub(getChannelReadDetailsTask());
-    m_currentTasks->addSub(getRangesFetchTasks());
+    m_currentTasks->addSub(getAllRangesTask());
+    m_currentTasks->addSub(getRangesRegisterChangeNotificationTask());
+    m_currentTasks->addSub(getReadRangeFinalTask());
     m_currentTasks->start();
+}
+
+const QStringList ChannelObserver::getRangeNames() const
+{
+    return m_rangesNamesOrderedByServer;
+}
+
+const std::shared_ptr<ChannelObserver::RangeData> ChannelObserver::getRangeData(const QString &rangeName) const
+{
+    auto iter = m_rangeNameToRangeData.constFind(rangeName);
+    if(iter != m_rangeNameToRangeData.constEnd())
+        return iter.value();
+    qWarning("Range data for range %s not found!", qPrintable(rangeName));
+    return nullptr;
 }
 
 void ChannelObserver::onInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant answer)
 {
-    // TODO?: Remove all decoding: We expect nothing but our notification
+    // TODO?: Remove all decoding: We expect nothing but our notification - but howto test?
     if (msgnr == 0) { // 0 was reserved for async. messages
         const QStringList answerParts = answer.toString().split(":", Qt::SkipEmptyParts);
         if(answerParts.size() == 2 && answerParts[0] == "Notify")
@@ -66,30 +78,38 @@ TaskTemplatePtr ChannelObserver::getChannelReadDetailsTask()
     return task;
 }
 
-TaskTemplatePtr ChannelObserver::getRangesFetchTasks()
+TaskTemplatePtr ChannelObserver::getAllRangesTask()
 {
     TaskContainerInterfacePtr task = TaskContainerSequence::create();
-    task->addSub(TaskChannelGetRangeList::create(m_pcbInterface, m_channelMName, m_tempRangesNames,
-                 TRANSACTION_TIMEOUT, [&]{ notifyError(QString("Could not read range list for channel %1").arg(m_channelMName)); }));
-    // TODO: Handle / check unregister
-    constexpr int dontCareNotifyId = 1;
-    task->addSub(TaskChannelRegisterNotifier::create(m_pcbInterface, m_channelMName, dontCareNotifyId,
-        TRANSACTION_TIMEOUT, [&]{ notifyError(QString("Could not register notification for channel %1").arg(m_channelMName)); }));
-    connect(m_pcbInterface.get(), &Zera::cPCBInterface::serverAnswer,
-            this, &ChannelObserver::onInterfaceAnswer);
+    task->addSub(TaskChannelGetRangeList::create(m_pcbInterface, m_channelMName, m_rangesNamesOrderedByServer,
+        TRANSACTION_TIMEOUT, [&]{ notifyError(QString("Could not read range list for channel %1").arg(m_channelMName)); }));
+    task->addSub(TaskLambdaRunner::create([&]() {
+        TaskContainerInterfacePtr allRangesDetailsTasks = TaskContainerParallel::create();
+        for(const QString &rangeName : qAsConst(m_rangesNamesOrderedByServer)) {
+            std::shared_ptr<RangeData> newRange = std::make_shared<RangeData>();
+            m_rangeNameToRangeData[rangeName] = newRange;
+            allRangesDetailsTasks->addSub(TaskRangeGetUrValue::create(
+                m_pcbInterface, m_channelMName, rangeName, newRange->m_urValue,
+                TRANSACTION_TIMEOUT,
+                [&]{ notifyError(QString("Could not range UrValue  fir channel %1 / range %2").arg(m_channelMName, rangeName)); }));
 
-    task->addSub(getReadRangeDetailsTask());
-    task->addSub(getReadRangeFinalTask());
+            // TODO: add range tasks
+        }
+        m_currentTasks->addSub(std::move(allRangesDetailsTasks));
+        return true;
+    }));
     return task;
 }
 
-TaskTemplatePtr ChannelObserver::getReadRangeDetailsTask()
+TaskTemplatePtr ChannelObserver::getRangesRegisterChangeNotificationTask()
 {
-    TaskContainerInterfacePtr taskToAdd = TaskContainerParallel::create();
-
-    // TODO: add range tasks
-
-    return taskToAdd;
+    connect(m_pcbInterface.get(), &Zera::cPCBInterface::serverAnswer,
+            this, &ChannelObserver::onInterfaceAnswer);
+    constexpr int dontCareNotifyId = 1;
+    // TODO: Handle / check unregister
+    return TaskChannelRegisterNotifier::create(
+        m_pcbInterface, m_channelMName, dontCareNotifyId,
+        TRANSACTION_TIMEOUT, [&]{ notifyError(QString("Could not register notification for channel %1").arg(m_channelMName)); });
 }
 
 TaskTemplatePtr ChannelObserver::getReadRangeFinalTask()
