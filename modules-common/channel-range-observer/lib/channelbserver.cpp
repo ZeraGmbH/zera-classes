@@ -36,6 +36,7 @@ void ChannelObserver::startFetch()
 
 void ChannelObserver::onInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant answer)
 {
+    // TODO?: Remove all decoding: We expect nothing but our notification
     if (msgnr == 0) { // 0 was reserved for async. messages
         const QStringList answerParts = answer.toString().split(":", Qt::SkipEmptyParts);
         if(answerParts.size() == 2 && answerParts[0] == "Notify")
@@ -65,23 +66,17 @@ TaskTemplatePtr ChannelObserver::getChannelReadDetailsTask()
     return task;
 }
 
-TaskTemplatePtr ChannelObserver::getReadRangeNamesTask()
-{
-    return TaskChannelGetRangeList::create(
-        m_pcbInterface, m_channelMName, m_tempRangesNames,
-        TRANSACTION_TIMEOUT, [&]{ notifyError(QString("Could not read range list for channel %1").arg(m_channelMName)); });
-}
-
 TaskTemplatePtr ChannelObserver::getRangesFetchTasks()
 {
     TaskContainerInterfacePtr task = TaskContainerSequence::create();
-    task->addSub(getReadRangeNamesTask());
+    task->addSub(TaskChannelGetRangeList::create(m_pcbInterface, m_channelMName, m_tempRangesNames,
+                 TRANSACTION_TIMEOUT, [&]{ notifyError(QString("Could not read range list for channel %1").arg(m_channelMName)); }));
     // TODO: Handle / check unregister
+    constexpr int dontCareNotifyId = 1;
+    task->addSub(TaskChannelRegisterNotifier::create(m_pcbInterface, m_channelMName, dontCareNotifyId,
+        TRANSACTION_TIMEOUT, [&]{ notifyError(QString("Could not register notification for channel %1").arg(m_channelMName)); }));
     connect(m_pcbInterface.get(), &Zera::cPCBInterface::serverAnswer,
             this, &ChannelObserver::onInterfaceAnswer);
-    task->addSub(TaskChannelRegisterNotifier::create(
-        m_pcbInterface, m_channelMName, 1,
-        TRANSACTION_TIMEOUT, [&]{ notifyError(QString("Could not register notification for channel %1").arg(m_channelMName)); }));
 
     task->addSub(getReadRangeDetailsTask());
     task->addSub(getReadRangeFinalTask());

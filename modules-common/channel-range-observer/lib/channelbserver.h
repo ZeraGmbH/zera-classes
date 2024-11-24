@@ -30,7 +30,6 @@ private slots:
 private:
     TaskTemplatePtr getPcbConnectionTask();
     TaskTemplatePtr getChannelReadDetailsTask();
-    TaskTemplatePtr getReadRangeNamesTask();
     TaskTemplatePtr getRangesFetchTasks();
     TaskTemplatePtr getReadRangeDetailsTask();
     TaskTemplatePtr getReadRangeFinalTask();
