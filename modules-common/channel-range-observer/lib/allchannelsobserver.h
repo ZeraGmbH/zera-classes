@@ -29,10 +29,10 @@ private:
     TaskTemplatePtr getPcbConnectionTask();
     static void notifyError(QString errMsg);
 
-    NetworkConnectionInfo m_netInfo;
-    VeinTcp::AbstractTcpNetworkFactoryPtr m_tcpFactory;
-    Zera::ProxyClientPtr m_pcbClient;
-    Zera::PcbInterfacePtr m_pcbInterface;
+    const NetworkConnectionInfo m_netInfo;
+    const VeinTcp::AbstractTcpNetworkFactoryPtr m_tcpFactory;
+    const Zera::ProxyClientPtr m_pcbClient;
+    const Zera::PcbInterfacePtr m_pcbInterface;
 
     TaskContainerInterfacePtr m_currentTasks;
     QStringList m_tempChannelMNames;
