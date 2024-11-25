@@ -1,4 +1,4 @@
-#include "allchannelsobserver.h"
+#include "allchannels.h"
 #include "channelfetchtask.h"
 #include "taskchannelgetavail.h"
 #include "taskserverconnectionstart.h"
@@ -9,7 +9,7 @@
 
 namespace ChannelRangeObserver {
 
-AllChannelsObserver::AllChannelsObserver(const NetworkConnectionInfo &netInfo, VeinTcp::AbstractTcpNetworkFactoryPtr tcpFactory) :
+AllChannels::AllChannels(const NetworkConnectionInfo &netInfo, VeinTcp::AbstractTcpNetworkFactoryPtr tcpFactory) :
     m_netInfo(netInfo),
     m_tcpFactory(tcpFactory),
     m_pcbClient(Zera::Proxy::getInstance()->getConnectionSmart(netInfo, tcpFactory)),
@@ -18,34 +18,34 @@ AllChannelsObserver::AllChannelsObserver(const NetworkConnectionInfo &netInfo, V
     m_pcbInterface->setClientSmart(m_pcbClient);
 }
 
-void AllChannelsObserver::startFullScan()
+void AllChannels::startFullScan()
 {
-    if(m_channelNamesToObserver.isEmpty())
+    if(m_channelNameToChannel.isEmpty())
         doStartFullScan();
     else
         emit sigFullScanFinished(true);
 }
 
-const QStringList AllChannelsObserver::getChannelMNames() const
+const QStringList AllChannels::getChannelMNames() const
 {
-    return m_channelNamesToObserver.keys();
+    return m_channelNameToChannel.keys();
 }
 
-const ChannelObserverPtr AllChannelsObserver::getChannelObserver(QString channelMName)
+const ChannelPtr AllChannels::getChannel(QString channelMName)
 {
-    auto iter = m_channelNamesToObserver.constFind(channelMName);
-    if(iter != m_channelNamesToObserver.constEnd())
+    auto iter = m_channelNameToChannel.constFind(channelMName);
+    if(iter != m_channelNameToChannel.constEnd())
         return iter.value();
-    qWarning("AllChannelsObserver: Channel data not found for %s!", qPrintable(channelMName));
+    qWarning("AllChannels: Channel data not found for %s!", qPrintable(channelMName));
     return nullptr;
 }
 
-void AllChannelsObserver::clear()
+void AllChannels::clear()
 {
-    m_channelNamesToObserver.clear();
+    m_channelNameToChannel.clear();
 }
 
-void AllChannelsObserver::doStartFullScan()
+void AllChannels::doStartFullScan()
 {
     m_currentTasks = TaskContainerSequence::create();
     m_currentTasks->addSub(getPcbConnectionTask());
@@ -54,12 +54,12 @@ void AllChannelsObserver::doStartFullScan()
     m_currentTasks->addSub(TaskLambdaRunner::create([&]() {
         TaskContainerInterfacePtr allChannelsDetailsTasks = TaskContainerParallel::create();
         for(const QString &channelMName : qAsConst(m_tempChannelMNames)) {
-            ChannelObserverPtr channelObserver = std::make_shared<ChannelObserver>(channelMName, m_netInfo, m_tcpFactory);
-            m_channelNamesToObserver[channelMName] = channelObserver;
+            ChannelPtr channelObserver = std::make_shared<Channel>(channelMName, m_netInfo, m_tcpFactory);
+            m_channelNameToChannel[channelMName] = channelObserver;
 
             allChannelsDetailsTasks->addSub(ChannelFetchTask::create(channelObserver));
-            connect(channelObserver.get(), &ChannelObserver::sigFetchComplete,
-                    this, &AllChannelsObserver::sigFetchComplete);
+            connect(channelObserver.get(), &Channel::sigFetchComplete,
+                    this, &AllChannels::sigFetchComplete);
         }
         m_tempChannelMNames.clear();
         m_currentTasks->addSub(std::move(allChannelsDetailsTasks));
@@ -67,18 +67,18 @@ void AllChannelsObserver::doStartFullScan()
     }));
 
     connect(m_currentTasks.get(), &TaskTemplate::sigFinish,
-            this, &AllChannelsObserver::sigFullScanFinished);
+            this, &AllChannels::sigFullScanFinished);
     m_currentTasks->start();
 }
 
-TaskTemplatePtr AllChannelsObserver::getPcbConnectionTask()
+TaskTemplatePtr AllChannels::getPcbConnectionTask()
 {
     return TaskServerConnectionStart::create(m_pcbClient, CONNECTION_TIMEOUT);
 }
 
-void AllChannelsObserver::notifyError(QString errMsg)
+void AllChannels::notifyError(QString errMsg)
 {
-    qWarning("AllChannelsObserver error: %s", qPrintable(errMsg));
+    qWarning("AllChannels error: %s", qPrintable(errMsg));
 }
 
 }

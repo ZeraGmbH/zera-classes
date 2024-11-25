@@ -1,4 +1,4 @@
-#include "channelbserver.h"
+#include "channel.h"
 #include "taskrangegeturvalue.h"
 #include "taskrangegetisavailable.h"
 #include "taskserverconnectionstart.h"
@@ -14,9 +14,9 @@
 
 namespace ChannelRangeObserver {
 
-ChannelObserver::ChannelObserver(const QString &channelMName,
-                                 const NetworkConnectionInfo &netInfo,
-                                 VeinTcp::AbstractTcpNetworkFactoryPtr tcpFactory) :
+Channel::Channel(const QString &channelMName,
+                 const NetworkConnectionInfo &netInfo,
+                 VeinTcp::AbstractTcpNetworkFactoryPtr tcpFactory) :
     m_channelMName(channelMName),
     m_pcbClient(Zera::Proxy::getInstance()->getConnectionSmart(netInfo, tcpFactory)),
     m_pcbInterface(std::make_shared<Zera::cPCBInterface>())
@@ -24,7 +24,7 @@ ChannelObserver::ChannelObserver(const QString &channelMName,
     m_pcbInterface->setClientSmart(m_pcbClient);
 }
 
-void ChannelObserver::startFetch()
+void Channel::startFetch()
 {
     clearRanges();
     m_currentTasks = TaskContainerSequence::create();
@@ -32,26 +32,26 @@ void ChannelObserver::startFetch()
     m_currentTasks->start();
 }
 
-const QStringList ChannelObserver::getAllRangeNames() const
+const QStringList Channel::getAllRangeNames() const
 {
     return m_allRangeNamesOrderedByServer;
 }
 
-const QStringList ChannelObserver::getAvailRangeNames() const
+const QStringList Channel::getAvailRangeNames() const
 {
     return m_availableRangeNames;
 }
 
-const std::shared_ptr<ChannelObserver::RangeData> ChannelObserver::getRangeData(const QString &rangeName) const
+const std::shared_ptr<Range> Channel::getRange(const QString &rangeName) const
 {
-    auto iter = m_rangeNameToRangeData.constFind(rangeName);
-    if(iter != m_rangeNameToRangeData.constEnd())
+    auto iter = m_rangeNameToRange.constFind(rangeName);
+    if(iter != m_rangeNameToRange.constEnd())
         return iter.value();
     qWarning("Range data for range %s not found!", qPrintable(rangeName));
     return nullptr;
 }
 
-void ChannelObserver::onInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant answer)
+void Channel::onInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant answer)
 {
     // TODO?: Remove all decoding: We expect nothing but our notification - but howto test?
     if (msgnr == 0) { // 0 was reserved for async. messages
@@ -63,19 +63,19 @@ void ChannelObserver::onInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant an
     }
 }
 
-void ChannelObserver::clearRanges()
+void Channel::clearRanges()
 {
     m_allRangeNamesOrderedByServer.clear();
     m_availableRangeNames.clear();
-    m_rangeNameToRangeData.clear();
+    m_rangeNameToRange.clear();
 }
 
-TaskTemplatePtr ChannelObserver::getPcbConnectionTask()
+TaskTemplatePtr Channel::getPcbConnectionTask()
 {
     return TaskServerConnectionStart::create(m_pcbClient, CONNECTION_TIMEOUT);
 }
 
-TaskTemplatePtr ChannelObserver::getChannelReadDetailsTask()
+TaskTemplatePtr Channel::getChannelReadDetailsTask()
 {
     TaskContainerInterfacePtr task = TaskContainerParallel::create();
     task->addSub(TaskChannelGetAlias::create(
@@ -90,7 +90,7 @@ TaskTemplatePtr ChannelObserver::getChannelReadDetailsTask()
     return task;
 }
 
-TaskTemplatePtr ChannelObserver::getAllRangesTask()
+TaskTemplatePtr Channel::getAllRangesTask()
 {
     TaskContainerInterfacePtr task = TaskContainerSequence::create();
     task->addSub(getPcbConnectionTask());
@@ -101,8 +101,8 @@ TaskTemplatePtr ChannelObserver::getAllRangesTask()
         TaskContainerInterfacePtr allRangesTasks = TaskContainerParallel::create();
         allRangesTasks->addSub(getChannelReadDetailsTask());
         for(const QString &rangeName : qAsConst(m_allRangeNamesOrderedByServer)) {
-            std::shared_ptr<RangeData> newRange = std::make_shared<RangeData>();
-            m_rangeNameToRangeData[rangeName] = newRange;
+            std::shared_ptr<Range> newRange = std::make_shared<Range>();
+            m_rangeNameToRange[rangeName] = newRange;
             allRangesTasks = addRangeDataTasks(std::move(allRangesTasks), rangeName, newRange);
         }
         m_currentTasks->addSub(std::move(allRangesTasks));
@@ -113,9 +113,9 @@ TaskTemplatePtr ChannelObserver::getAllRangesTask()
     return task;
 }
 
-TaskContainerInterfacePtr ChannelObserver::addRangeDataTasks(TaskContainerInterfacePtr taskContainer,
+TaskContainerInterfacePtr Channel::addRangeDataTasks(TaskContainerInterfacePtr taskContainer,
                                                              const QString &rangeName,
-                                                             std::shared_ptr<RangeData> newRange)
+                                                             std::shared_ptr<Range> newRange)
 {
     taskContainer->addSub(TaskRangeGetIsAvailable::create(
         m_pcbInterface, m_channelMName, rangeName, newRange->m_available,
@@ -131,10 +131,10 @@ TaskContainerInterfacePtr ChannelObserver::addRangeDataTasks(TaskContainerInterf
     return taskContainer;
 }
 
-TaskTemplatePtr ChannelObserver::getRangesRegisterChangeNotificationTask()
+TaskTemplatePtr Channel::getRangesRegisterChangeNotificationTask()
 {
     connect(m_pcbInterface.get(), &Zera::cPCBInterface::serverAnswer,
-            this, &ChannelObserver::onInterfaceAnswer);
+            this, &Channel::onInterfaceAnswer);
     constexpr int dontCareNotifyId = 1;
     // TODO: Handle / check unregister
     return TaskChannelRegisterNotifier::create(
@@ -142,7 +142,7 @@ TaskTemplatePtr ChannelObserver::getRangesRegisterChangeNotificationTask()
         TRANSACTION_TIMEOUT, [&]{ notifyError(QString("Could not register notification for channel %1").arg(m_channelMName)); });
 }
 
-TaskTemplatePtr ChannelObserver::getReadRangeFinalTask()
+TaskTemplatePtr Channel::getReadRangeFinalTask()
 {
     return TaskLambdaRunner::create([&]() {
         setAvailableRanges();
@@ -151,16 +151,16 @@ TaskTemplatePtr ChannelObserver::getReadRangeFinalTask()
     });
 }
 
-void ChannelObserver::setAvailableRanges()
+void Channel::setAvailableRanges()
 {
     for(const QString &rangeName : qAsConst(m_allRangeNamesOrderedByServer))
-        if(m_rangeNameToRangeData[rangeName]->m_available)
+        if(m_rangeNameToRange[rangeName]->m_available)
             m_availableRangeNames.append(rangeName);
 }
 
-void ChannelObserver::notifyError(QString errMsg)
+void Channel::notifyError(QString errMsg)
 {
-    qWarning("ChannelObserver error: %s", qPrintable(errMsg));
+    qWarning("Channel error: %s", qPrintable(errMsg));
 }
 
 }

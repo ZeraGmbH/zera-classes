@@ -1,7 +1,7 @@
-#ifndef AllCHANNELSOBSERVER_H
-#define AllCHANNELSOBSERVER_H
+#ifndef CHANNEL_RANGE_OBSERVER_All_CHANNELS_H
+#define CHANNEL_RANGE_OBSERVER_All_CHANNELS_H
 
-#include "channelbserver.h"
+#include "channel.h"
 #include <pcbinterface.h>
 #include <proxyclient.h>
 #include <taskcontainerinterface.h>
@@ -9,21 +9,21 @@
 
 namespace ChannelRangeObserver {
 
-class AllChannelsObserver : public QObject
+class AllChannels : public QObject
 {
     Q_OBJECT
 public:
-    AllChannelsObserver(const NetworkConnectionInfo &netInfo, VeinTcp::AbstractTcpNetworkFactoryPtr tcpFactory);
+    AllChannels(const NetworkConnectionInfo &netInfo, VeinTcp::AbstractTcpNetworkFactoryPtr tcpFactory);
     void startFullScan();
     const QStringList getChannelMNames() const;
-    const ChannelObserverPtr getChannelObserver(QString channelMName);
+    const ChannelPtr getChannel(QString channelMName);
 signals:
     void sigFullScanFinished(bool ok);
     void sigFetchComplete(QString channelMName);
-    friend class AllChannelsObserverResetter;
+    friend class AllChannelsResetter;
 
 protected:
-    QMap<QString, ChannelObserverPtr> m_channelNamesToObserver;
+    QMap<QString, ChannelPtr> m_channelNameToChannel;
 
 private:
     void clear();
@@ -41,4 +41,4 @@ private:
 };
 
 }
-#endif // AllCHANNELSOBSERVER_H
+#endif // CHANNEL_RANGE_OBSERVER_All_CHANNELS_H

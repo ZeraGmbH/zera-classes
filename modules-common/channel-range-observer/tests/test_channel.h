@@ -1,12 +1,12 @@
-#ifndef TEST_CHANNEL_OBSERVER_H
-#define TEST_CHANNEL_OBSERVER_H
+#ifndef TEST_CHANNEL_H
+#define TEST_CHANNEL_H
 
 #include <pcbinterface.h>
 #include <abstracttcpnetworkfactory.h>
 #include <resmanrunfacade.h>
 #include <testserverforsenseinterfacemt310s2.h>
 
-class test_channel_observer : public QObject
+class test_channel : public QObject
 {
     Q_OBJECT
 private slots:
@@ -37,4 +37,4 @@ private:
     Zera::PcbInterfacePtr m_pcbInterface;
 };
 
-#endif // TEST_CHANNEL_OBSERVER_H
+#endif // TEST_CHANNEL_H

@@ -1,7 +1,7 @@
 #ifndef CHANNELFETCHTASK_H
 #define CHANNELFETCHTASK_H
 
-#include "channelbserver.h"
+#include "channel.h"
 #include <tasktemplate.h>
 
 namespace ChannelRangeObserver {
@@ -13,13 +13,13 @@ class ChannelFetchTask : public TaskTemplate
 {
     Q_OBJECT
 public:
-    static ChannelFetchTaskPtr create(ChannelObserverPtr rangeObserver);
-    ChannelFetchTask(ChannelObserverPtr rangeObserver);
+    static ChannelFetchTaskPtr create(ChannelPtr rangeObserver);
+    ChannelFetchTask(ChannelPtr rangeObserver);
     void start() override;
 private slots:
     void onChannelFetched(QString channelMName);
 private:
-    ChannelObserverPtr m_rangeObserver;
+    ChannelPtr m_rangeObserver;
 };
 
 }

@@ -1,6 +1,7 @@
-#ifndef RANGEOBSERVER_H
-#define RANGEOBSERVER_H
+#ifndef CHANNEL_RANGE_OBSERVER_CHANNEL_H
+#define CHANNEL_RANGE_OBSERVER_CHANNEL_H
 
+#include "range.h"
 #include <networkconnectioninfo.h>
 #include <abstracttcpnetworkfactory.h>
 #include <pcbinterface.h>
@@ -12,7 +13,7 @@
 
 namespace ChannelRangeObserver {
 
-class ChannelObserver : public QObject
+class Channel : public QObject
 {
     Q_OBJECT
 public:
@@ -20,19 +21,14 @@ public:
     QString m_unit;
     int m_dspChannel;
 
-    ChannelObserver(const QString &channelMName,
-                    const NetworkConnectionInfo &netInfo,
-                    VeinTcp::AbstractTcpNetworkFactoryPtr tcpFactory);
+    Channel(const QString &channelMName,
+            const NetworkConnectionInfo &netInfo,
+            VeinTcp::AbstractTcpNetworkFactoryPtr tcpFactory);
     void startFetch();
     // TODO: What if we are asked while fetching?
     const QStringList getAllRangeNames() const;
     const QStringList getAvailRangeNames() const;
-    struct RangeData
-    {
-        bool m_available = false;
-        double m_urValue = 0.0;
-    };
-    const std::shared_ptr<RangeData> getRangeData(const QString &rangeName) const;
+    const std::shared_ptr<Range> getRange(const QString &rangeName) const;
 signals:
     void sigFetchComplete(QString channelMName);
 
@@ -44,7 +40,7 @@ private:
     TaskTemplatePtr getChannelReadDetailsTask();
     TaskTemplatePtr getAllRangesTask();
     TaskContainerInterfacePtr addRangeDataTasks(TaskContainerInterfacePtr taskContainer,
-                                                const QString &rangeName, std::shared_ptr<RangeData> newRange);
+                                                const QString &rangeName, std::shared_ptr<Range> newRange);
     TaskTemplatePtr getRangesRegisterChangeNotificationTask();
     TaskTemplatePtr getReadRangeFinalTask();
     void setAvailableRanges();
@@ -53,7 +49,7 @@ private:
     const QString m_channelMName;
     QStringList m_allRangeNamesOrderedByServer;
     QStringList m_availableRangeNames;
-    QHash<QString, std::shared_ptr<RangeData>> m_rangeNameToRangeData;
+    QHash<QString, std::shared_ptr<Range>> m_rangeNameToRange;
 
     const Zera::ProxyClientPtr m_pcbClient;
     const Zera::PcbInterfacePtr m_pcbInterface;
@@ -61,8 +57,8 @@ private:
     TaskContainerInterfacePtr m_currentTasks;
 };
 
-typedef std::shared_ptr<ChannelObserver> ChannelObserverPtr;
+typedef std::shared_ptr<Channel> ChannelPtr;
 
 }
 
-#endif // RANGEOBSERVER_H
+#endif // CHANNEL_RANGE_OBSERVER_CHANNEL_H

@@ -1,5 +1,5 @@
-#include "test_channel_observer.h"
-#include "channelbserver.h"
+#include "test_channel.h"
+#include "channel.h"
 #include "channelfetchtask.h"
 #include <testfactoryi2cctrl.h>
 #include <networkconnectioninfo.h>
@@ -14,13 +14,13 @@
 #include <QTest>
 #include <QSignalSpy>
 
-QTEST_MAIN(test_channel_observer)
+QTEST_MAIN(test_channel)
 
 static const NetworkConnectionInfo netInfo("127.0.0.1", 6307);
 
 using namespace ChannelRangeObserver;
 
-void test_channel_observer::initTestCase()
+void test_channel::initTestCase()
 {
     ClampFactoryTest::enableTest();
     MockI2cEEpromIoFactory::enableMock();
@@ -28,13 +28,13 @@ void test_channel_observer::initTestCase()
     TimerFactoryQtForTest::enableTest();
 }
 
-void test_channel_observer::init()
+void test_channel::init()
 {
     setupServers();
     setupClient();
 }
 
-void test_channel_observer::cleanup()
+void test_channel::cleanup()
 {
     m_pcbInterface = nullptr;
     m_pcbClient = nullptr;
@@ -44,16 +44,16 @@ void test_channel_observer::cleanup()
     TimeMachineObject::feedEventLoop();
 }
 
-void test_channel_observer::emptyOnStartup()
+void test_channel::emptyOnStartup()
 {
-    ChannelObserver observer("m0", netInfo, m_tcpFactory);
+    Channel observer("m0", netInfo, m_tcpFactory);
     QVERIFY(observer.getAllRangeNames().isEmpty());
 }
 
-void test_channel_observer::fetchDirect()
+void test_channel::fetchDirect()
 {
-    ChannelObserver observer("m0", netInfo, m_tcpFactory);
-    QSignalSpy spy(&observer, &ChannelObserver::sigFetchComplete);
+    Channel observer("m0", netInfo, m_tcpFactory);
+    QSignalSpy spy(&observer, &Channel::sigFetchComplete);
 
     observer.startFetch();
     TimeMachineObject::feedEventLoop();
@@ -61,10 +61,10 @@ void test_channel_observer::fetchDirect()
     QCOMPARE(spy.count(), 1);
 }
 
-void test_channel_observer::fetchDirectTwice()
+void test_channel::fetchDirectTwice()
 {
-    ChannelObserver observer("m0", netInfo, m_tcpFactory);
-    QSignalSpy spy(&observer, &ChannelObserver::sigFetchComplete);
+    Channel observer("m0", netInfo, m_tcpFactory);
+    QSignalSpy spy(&observer, &Channel::sigFetchComplete);
 
     observer.startFetch();
     TimeMachineObject::feedEventLoop();
@@ -74,9 +74,9 @@ void test_channel_observer::fetchDirectTwice()
     QCOMPARE(spy.count(), 2);
 }
 
-void test_channel_observer::fetchByTask()
+void test_channel::fetchByTask()
 {
-    ChannelObserverPtr observer = std::make_shared<ChannelObserver>("m0", netInfo, m_tcpFactory);
+    ChannelPtr observer = std::make_shared<Channel>("m0", netInfo, m_tcpFactory);
     ChannelFetchTaskPtr task = ChannelFetchTask::create(observer);
 
     QSignalSpy spy(task.get(), &TaskTemplate::sigFinish);
@@ -86,9 +86,9 @@ void test_channel_observer::fetchByTask()
     QCOMPARE(spy.count(), 1);
 }
 
-void test_channel_observer::fetchCheckChannelDataM0()
+void test_channel::fetchCheckChannelDataM0()
 {
-    ChannelObserver observer("m0", netInfo, m_tcpFactory);
+    Channel observer("m0", netInfo, m_tcpFactory);
     observer.startFetch();
     TimeMachineObject::feedEventLoop();
 
@@ -97,9 +97,9 @@ void test_channel_observer::fetchCheckChannelDataM0()
     QCOMPARE(observer.m_dspChannel, 0);
 }
 
-void test_channel_observer::fetchCheckChannelDataM3()
+void test_channel::fetchCheckChannelDataM3()
 {
-    ChannelObserver observer("m3", netInfo, m_tcpFactory);
+    Channel observer("m3", netInfo, m_tcpFactory);
     observer.startFetch();
     TimeMachineObject::feedEventLoop();
 
@@ -108,34 +108,34 @@ void test_channel_observer::fetchCheckChannelDataM3()
     QCOMPARE(observer.m_dspChannel, 1);
 }
 
-void test_channel_observer::getRangesCheckBasicData()
+void test_channel::getRangesCheckBasicData()
 {
-    ChannelObserver observer("m0", netInfo, m_tcpFactory);
+    Channel observer("m0", netInfo, m_tcpFactory);
     observer.startFetch();
     TimeMachineObject::feedEventLoop();
 
-    QVERIFY(observer.getRangeData("250V") != nullptr);
-    QCOMPARE(observer.getRangeData("foo"), nullptr);
+    QVERIFY(observer.getRange("250V") != nullptr);
+    QCOMPARE(observer.getRange("foo"), nullptr);
     QStringList rangeName = observer.getAllRangeNames();
     QCOMPARE(rangeName.count(), 3);
     QVERIFY(rangeName.contains("8V"));
     QVERIFY(rangeName.contains("100mV"));
 }
 
-void test_channel_observer::checkUrValue()
+void test_channel::checkUrValue()
 {
-    ChannelObserver observer("m0", netInfo, m_tcpFactory);
+    Channel observer("m0", netInfo, m_tcpFactory);
     observer.startFetch();
     TimeMachineObject::feedEventLoop();
 
-    QCOMPARE(observer.getRangeData("250V")->m_urValue, 250.0);
-    QCOMPARE(observer.getRangeData("8V")->m_urValue, 8.0);
-    QCOMPARE(observer.getRangeData("100mV")->m_urValue, 0.1);
+    QCOMPARE(observer.getRange("250V")->m_urValue, 250.0);
+    QCOMPARE(observer.getRange("8V")->m_urValue, 8.0);
+    QCOMPARE(observer.getRange("100mV")->m_urValue, 0.1);
 }
 
-void test_channel_observer::checkOrderingVoltageRanges()
+void test_channel::checkOrderingVoltageRanges()
 {
-    ChannelObserver observer("m0", netInfo, m_tcpFactory);
+    Channel observer("m0", netInfo, m_tcpFactory);
     observer.startFetch();
     TimeMachineObject::feedEventLoop();
 
@@ -144,9 +144,9 @@ void test_channel_observer::checkOrderingVoltageRanges()
     QCOMPARE(rangeNamesReceived, rangeNamesExpected);
 }
 
-void test_channel_observer::checkOrderingAllCurrentRanges()
+void test_channel::checkOrderingAllCurrentRanges()
 {
-    ChannelObserver observer("m3", netInfo, m_tcpFactory);
+    Channel observer("m3", netInfo, m_tcpFactory);
     observer.startFetch();
     TimeMachineObject::feedEventLoop();
 
@@ -159,21 +159,21 @@ void test_channel_observer::checkOrderingAllCurrentRanges()
     QCOMPARE(rangeNamesReceived, rangeNamesExpected);
 }
 
-void test_channel_observer::checkRangeAvailable()
+void test_channel::checkRangeAvailable()
 {
-    ChannelObserver observer("m3", netInfo, m_tcpFactory);
+    Channel observer("m3", netInfo, m_tcpFactory);
     observer.startFetch();
     TimeMachineObject::feedEventLoop();
 
-    QCOMPARE(observer.getRangeData("10A")->m_available, true);
-    QCOMPARE(observer.getRangeData("500mA")->m_available, true);
-    QCOMPARE(observer.getRangeData("8V")->m_available, false);
-    QCOMPARE(observer.getRangeData("500mV")->m_available, false);
+    QCOMPARE(observer.getRange("10A")->m_available, true);
+    QCOMPARE(observer.getRange("500mA")->m_available, true);
+    QCOMPARE(observer.getRange("8V")->m_available, false);
+    QCOMPARE(observer.getRange("500mV")->m_available, false);
 }
 
-void test_channel_observer::checkAvailableRangesMtDefaultAc()
+void test_channel::checkAvailableRangesMtDefaultAc()
 {
-    ChannelObserver observer("m3", netInfo, m_tcpFactory);
+    Channel observer("m3", netInfo, m_tcpFactory);
     observer.startFetch();
     TimeMachineObject::feedEventLoop();
 
@@ -184,13 +184,13 @@ void test_channel_observer::checkAvailableRangesMtDefaultAc()
     QCOMPARE(rangeNamesReceived, rangeNamesExpected);
 }
 
-void test_channel_observer::checkAvailableRangesMtAdj()
+void test_channel::checkAvailableRangesMtAdj()
 {
-    ChannelObserver observer("m3", netInfo, m_tcpFactory);
+    Channel observer("m3", netInfo, m_tcpFactory);
     observer.startFetch();
     TimeMachineObject::feedEventLoop();
 
-    QSignalSpy spy(&observer, &ChannelObserver::sigFetchComplete);
+    QSignalSpy spy(&observer, &Channel::sigFetchComplete);
     m_pcbInterface->setMMode("ADJ");
     TimeMachineObject::feedEventLoop();
     QCOMPARE(spy.count(), 1);
@@ -204,7 +204,7 @@ void test_channel_observer::checkAvailableRangesMtAdj()
     QCOMPARE(rangeNamesReceivedAdj, rangeNamesExpectedAdj);
 }
 
-void test_channel_observer::setupServers()
+void test_channel::setupServers()
 {
     TimeMachineForTest::reset();
     m_resmanServer = std::make_unique<ResmanRunFacade>(m_tcpFactory);
@@ -212,7 +212,7 @@ void test_channel_observer::setupServers()
     TimeMachineObject::feedEventLoop();
 }
 
-void test_channel_observer::setupClient()
+void test_channel::setupClient()
 {
     m_pcbClient = Zera::Proxy::getInstance()->getConnectionSmart(netInfo, m_tcpFactory);
     m_pcbInterface = std::make_shared<Zera::cPCBInterface>();
