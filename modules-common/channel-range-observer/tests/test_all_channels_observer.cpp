@@ -18,6 +18,8 @@ QTEST_MAIN(test_all_channels_observer)
 
 static const NetworkConnectionInfo netInfo("127.0.0.1", 6307);
 
+using namespace ChannelRangeObserver;
+
 void test_all_channels_observer::initTestCase()
 {
     ClampFactoryTest::enableTest();

@@ -1,5 +1,7 @@
 #include "channelfetchtask.h"
 
+namespace ChannelRangeObserver {
+
 ChannelFetchTaskPtr ChannelFetchTask::create(ChannelObserverPtr rangeObserver)
 {
     return std::make_unique<ChannelFetchTask>(rangeObserver);
@@ -20,4 +22,6 @@ void ChannelFetchTask::start()
 void ChannelFetchTask::onChannelFetched(QString channelMName)
 {
     finishTask(true);
+}
+
 }

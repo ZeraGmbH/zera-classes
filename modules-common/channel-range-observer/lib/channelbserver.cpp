@@ -12,6 +12,8 @@
 #include <taskchannelregisternotifier.h>
 #include <proxy.h>
 
+namespace ChannelRangeObserver {
+
 ChannelObserver::ChannelObserver(const QString &channelMName,
                                  const NetworkConnectionInfo &netInfo,
                                  VeinTcp::AbstractTcpNetworkFactoryPtr tcpFactory) :
@@ -159,4 +161,6 @@ void ChannelObserver::setAvailableRanges()
 void ChannelObserver::notifyError(QString errMsg)
 {
     qWarning("ChannelObserver error: %s", qPrintable(errMsg));
+}
+
 }

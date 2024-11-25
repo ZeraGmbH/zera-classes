@@ -7,6 +7,8 @@
 #include <taskcontainerparallel.h>
 #include <proxy.h>
 
+namespace ChannelRangeObserver {
+
 AllChannelsObserver::AllChannelsObserver(const NetworkConnectionInfo &netInfo, VeinTcp::AbstractTcpNetworkFactoryPtr tcpFactory) :
     m_netInfo(netInfo),
     m_tcpFactory(tcpFactory),
@@ -79,3 +81,4 @@ void AllChannelsObserver::notifyError(QString errMsg)
     qWarning("AllChannelsObserver error: %s", qPrintable(errMsg));
 }
 
+}

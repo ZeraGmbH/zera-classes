@@ -4,6 +4,8 @@
 #include "channelbserver.h"
 #include <tasktemplate.h>
 
+namespace ChannelRangeObserver {
+
 class ChannelFetchTask;
 typedef std::unique_ptr<ChannelFetchTask> ChannelFetchTaskPtr;
 
@@ -20,5 +22,5 @@ private:
     ChannelObserverPtr m_rangeObserver;
 };
 
-
+}
 #endif // CHANNELFETCHTASK_H

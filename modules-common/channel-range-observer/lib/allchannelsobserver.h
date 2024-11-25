@@ -7,6 +7,8 @@
 #include <taskcontainerinterface.h>
 #include <QMap>
 
+namespace ChannelRangeObserver {
+
 class AllChannelsObserver : public QObject
 {
     Q_OBJECT
@@ -38,4 +40,5 @@ private:
     QStringList m_tempChannelMNames;
 };
 
+}
 #endif // AllCHANNELSOBSERVER_H

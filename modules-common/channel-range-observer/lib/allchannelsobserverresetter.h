@@ -3,10 +3,13 @@
 
 #include "allchannelsobserver.h"
 
+namespace ChannelRangeObserver {
+
 class AllChannelsObserverResetter
 {
 public:
     static void clear(AllChannelsObserver* observer);
 };
 
+}
 #endif // AllCHANNELOBSERVERRESETTER_H

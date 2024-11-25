@@ -10,6 +10,8 @@
 #include <QHash>
 #include <memory>
 
+namespace ChannelRangeObserver {
+
 class ChannelObserver : public QObject
 {
     Q_OBJECT
@@ -60,5 +62,7 @@ private:
 };
 
 typedef std::shared_ptr<ChannelObserver> ChannelObserverPtr;
+
+}
 
 #endif // RANGEOBSERVER_H
