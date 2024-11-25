@@ -1,6 +1,10 @@
 {
     "ZeraActualValues": [
         {
+            "EntityId": 1130,
+            "Comment": "SECModule to detect EMOB DC"
+        },
+        {
             "EntityId": 1020,
             "Comment": "RangeModule"
         },
