@@ -204,6 +204,42 @@ void test_channel::checkAvailableRangesMtAdj()
     QCOMPARE(rangeNamesReceivedAdj, rangeNamesExpectedAdj);
 }
 
+void test_channel::checkAvailableRangesMtSequence()
+{
+    Channel observer("m3", netInfo, m_tcpFactory);
+    observer.startFetch();
+    TimeMachineObject::feedEventLoop();
+
+    QStringList rangeNamesReceived = observer.getAvailRangeNames();
+    QStringList rangeNamesExpected = QStringList()
+                                     << "10A" << "5A" << "2.5A" << "1.0A"
+                                     << "500mA" << "250mA" << "100mA" << "50mA" << "25mA";
+    QCOMPARE(rangeNamesReceived, rangeNamesExpected);
+
+    QSignalSpy spy(&observer, &Channel::sigFetchComplete);
+    m_pcbInterface->setMMode("ADJ");
+    TimeMachineObject::feedEventLoop();
+    QCOMPARE(spy.count(), 1);
+
+    QStringList rangeNamesReceivedAdj = observer.getAvailRangeNames();
+    QStringList rangeNamesExpectedAdj = QStringList()
+                                        << "10A" << "5A" << "2.5A" << "1.0A"
+                                        << "500mA" << "250mA" << "100mA" << "50mA" << "25mA"
+                                        << "8V" << "5V" << "2V" << "1V"
+                                        << "500mV" << "200mV" << "100mV" << "50mV" << "20mV" << "10mV" << "5mV" << "2mV";
+    QCOMPARE(rangeNamesReceivedAdj, rangeNamesExpectedAdj);
+
+    m_pcbInterface->setMMode("AC");
+    TimeMachineObject::feedEventLoop();
+    QCOMPARE(spy.count(), 2);
+
+    QStringList rangeNamesReceivedAc = observer.getAvailRangeNames();
+    QStringList rangeNamesExpectedAc = QStringList()
+                                        << "10A" << "5A" << "2.5A" << "1.0A"
+                                        << "500mA" << "250mA" << "100mA" << "50mA" << "25mA";
+    QCOMPARE(rangeNamesReceivedAc, rangeNamesExpectedAc);
+}
+
 void test_channel::setupServers()
 {
     TimeMachineForTest::reset();

@@ -26,6 +26,7 @@ private slots:
     void checkOrderingAllCurrentRanges();
     void checkAvailableRangesMtDefaultAc();
     void checkAvailableRangesMtAdj();
+    void checkAvailableRangesMtSequence();
 private:
     void setupServers();
     void setupClient();
