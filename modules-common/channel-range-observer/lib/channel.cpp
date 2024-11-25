@@ -18,6 +18,8 @@ Channel::Channel(const QString &channelMName,
                  const NetworkConnectionInfo &netInfo,
                  VeinTcp::AbstractTcpNetworkFactoryPtr tcpFactory) :
     m_channelMName(channelMName),
+    m_netInfo(netInfo),
+    m_tcpFactory(tcpFactory),
     m_pcbClient(Zera::Proxy::getInstance()->getConnectionSmart(netInfo, tcpFactory)),
     m_pcbInterface(std::make_shared<Zera::cPCBInterface>())
 {
@@ -27,9 +29,7 @@ Channel::Channel(const QString &channelMName,
 void Channel::startFetch()
 {
     clearRanges();
-    m_currentTasks = TaskContainerSequence::create();
-    m_currentTasks->addSub(getAllRangesTask());
-    m_currentTasks->start();
+    startAllRangesTasks();
 }
 
 const QStringList Channel::getAllRangeNames() const
@@ -75,6 +75,31 @@ TaskTemplatePtr Channel::getPcbConnectionTask()
     return TaskServerConnectionStart::create(m_pcbClient, CONNECTION_TIMEOUT);
 }
 
+void Channel::startAllRangesTasks()
+{
+    m_currentTasks = TaskContainerSequence::create();
+    TaskContainerInterfacePtr task = TaskContainerSequence::create();
+    task->addSub(getPcbConnectionTask());
+    task->addSub(TaskChannelGetRangeList::create(
+        m_pcbInterface, m_channelMName, m_allRangeNamesOrderedByServer,
+        TRANSACTION_TIMEOUT, [&]{ notifyError(QString("Could not read range list for channel %1").arg(m_channelMName)); }));
+    task->addSub(TaskLambdaRunner::create([&]() {
+        TaskContainerInterfacePtr allRangesTasks = TaskContainerParallel::create();
+        allRangesTasks->addSub(getChannelReadDetailsTask());
+        for(const QString &rangeName : qAsConst(m_allRangeNamesOrderedByServer)) {
+            std::shared_ptr<Range> newRange = std::make_shared<Range>(m_channelMName, m_netInfo, m_tcpFactory);
+            m_rangeNameToRange[rangeName] = newRange;
+            allRangesTasks = addRangeDataTasks(std::move(allRangesTasks), rangeName, newRange);
+        }
+        m_currentTasks->addSub(std::move(allRangesTasks));
+        m_currentTasks->addSub(getRangesRegisterChangeNotificationTask());
+        m_currentTasks->addSub(getReadRangeFinalTask());
+        return true;
+    }));
+    m_currentTasks->addSub(std::move(task));
+    m_currentTasks->start();
+}
+
 TaskTemplatePtr Channel::getChannelReadDetailsTask()
 {
     TaskContainerInterfacePtr task = TaskContainerParallel::create();
@@ -90,32 +115,9 @@ TaskTemplatePtr Channel::getChannelReadDetailsTask()
     return task;
 }
 
-TaskTemplatePtr Channel::getAllRangesTask()
-{
-    TaskContainerInterfacePtr task = TaskContainerSequence::create();
-    task->addSub(getPcbConnectionTask());
-    task->addSub(TaskChannelGetRangeList::create(
-        m_pcbInterface, m_channelMName, m_allRangeNamesOrderedByServer,
-        TRANSACTION_TIMEOUT, [&]{ notifyError(QString("Could not read range list for channel %1").arg(m_channelMName)); }));
-    task->addSub(TaskLambdaRunner::create([&]() {
-        TaskContainerInterfacePtr allRangesTasks = TaskContainerParallel::create();
-        allRangesTasks->addSub(getChannelReadDetailsTask());
-        for(const QString &rangeName : qAsConst(m_allRangeNamesOrderedByServer)) {
-            std::shared_ptr<Range> newRange = std::make_shared<Range>();
-            m_rangeNameToRange[rangeName] = newRange;
-            allRangesTasks = addRangeDataTasks(std::move(allRangesTasks), rangeName, newRange);
-        }
-        m_currentTasks->addSub(std::move(allRangesTasks));
-        m_currentTasks->addSub(getRangesRegisterChangeNotificationTask());
-        m_currentTasks->addSub(getReadRangeFinalTask());
-        return true;
-    }));
-    return task;
-}
-
 TaskContainerInterfacePtr Channel::addRangeDataTasks(TaskContainerInterfacePtr taskContainer,
-                                                             const QString &rangeName,
-                                                             std::shared_ptr<Range> newRange)
+                                                     const QString &rangeName,
+                                                     std::shared_ptr<Range> newRange)
 {
     taskContainer->addSub(TaskRangeGetIsAvailable::create(
         m_pcbInterface, m_channelMName, rangeName, newRange->m_available,

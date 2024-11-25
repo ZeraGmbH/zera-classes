@@ -36,11 +36,12 @@ private slots:
     void onInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant answer);
 private:
     void clearRanges();
+    void startAllRangesTasks();
     TaskTemplatePtr getPcbConnectionTask();
     TaskTemplatePtr getChannelReadDetailsTask();
-    TaskTemplatePtr getAllRangesTask();
     TaskContainerInterfacePtr addRangeDataTasks(TaskContainerInterfacePtr taskContainer,
-                                                const QString &rangeName, std::shared_ptr<Range> newRange);
+                                                const QString &rangeName,
+                                                std::shared_ptr<Range> newRange);
     TaskTemplatePtr getRangesRegisterChangeNotificationTask();
     TaskTemplatePtr getReadRangeFinalTask();
     void setAvailableRanges();
@@ -51,6 +52,8 @@ private:
     QStringList m_availableRangeNames;
     QHash<QString, std::shared_ptr<Range>> m_rangeNameToRange;
 
+    const NetworkConnectionInfo m_netInfo;
+    const VeinTcp::AbstractTcpNetworkFactoryPtr m_tcpFactory;
     const Zera::ProxyClientPtr m_pcbClient;
     const Zera::PcbInterfacePtr m_pcbInterface;
 
