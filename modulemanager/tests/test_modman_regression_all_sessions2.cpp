@@ -27,11 +27,6 @@ void test_modman_regression_all_sessions2::allSessionsVeinDumps_data()
     for(const QString &device : devices) {
         const QStringList sessionFileNames = getSessionFileNames(device);
         for(const QString &sessionFileName : sessionFileNames) {
-            // for now - something is wrong with them...
-            if(sessionFileName == "com5003-ced-session.json")
-                continue;
-            if(sessionFileName == "mt310s2-ced-session.json")
-                continue;
             QTest::newRow(sessionFileName.toLatin1()) << device << sessionFileName;
         }
     }

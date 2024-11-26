@@ -503,7 +503,7 @@ void cPower2ModuleMeasProgram::setDspCmdList()
                 // here we set abs, plus or minus and which frequency output has to be set
                 // we could also take absPower because we have dedicated values for + , - , abs
 
-                quint16 freqpar = confdata->m_FreqOutputConfList.at(i).m_nFoutMode + (m_FoutInfoHash[foutSystemName].dspFoutChannel << 8);
+                quint16 freqpar = confdata->m_FreqOutputConfList.at(i).m_nFoutMode + (m_FoutInfoMap[foutSystemName].dspFoutChannel << 8);
                 // frequenzausgang berechnen lassen
                 m_dspInterface->addCycListItem( s = QString("CMPCLK(%1,VALPOWER+%2,FREQSCALE+%3)")
                                                  .arg(freqpar)
@@ -536,7 +536,7 @@ void cPower2ModuleMeasProgram::setDspCmdList()
                         QString foutSystemName =  confdata->m_FreqOutputConfList.at(i).m_sName;
                         // here we set abs, plus or minus and which frequency output has to be set
                         // we could also take absPower because we have dedicated values for + , - , abs
-                        quint16 freqpar = confdata->m_FreqOutputConfList.at(i).m_nFoutMode + (m_FoutInfoHash[foutSystemName].dspFoutChannel << 8);
+                        quint16 freqpar = confdata->m_FreqOutputConfList.at(i).m_nFoutMode + (m_FoutInfoMap[foutSystemName].dspFoutChannel << 8);
                         // frequenzausgang berechnen lassen
                         m_dspInterface->addCycListItem( s = QString("CMPCLK(%1,VALPOWERF+%2,FREQSCALE+%3)")
                                                          .arg(freqpar)
@@ -572,7 +572,7 @@ void cPower2ModuleMeasProgram::setDspCmdList()
                         quint8 actvalueIndex = cmpActualValIndex(confdata->m_FreqOutputConfList.at(i));
                         QString foutSystemName =  confdata->m_FreqOutputConfList.at(i).m_sName;
                         // here we set abs, plus or minus and which frequency output has to be set
-                        quint16 freqpar = confdata->m_FreqOutputConfList.at(i).m_nFoutMode + (m_FoutInfoHash[foutSystemName].dspFoutChannel << 8);
+                        quint16 freqpar = confdata->m_FreqOutputConfList.at(i).m_nFoutMode + (m_FoutInfoMap[foutSystemName].dspFoutChannel << 8);
                         // frequenzausgang berechnen lassen
                         m_dspInterface->addCycListItem( s = QString("CMPCLK(%1,VALPOWERF+%2,FREQSCALE+%3)")
                                                          .arg(freqpar)
@@ -764,7 +764,7 @@ void cPower2ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply,
             case readresourcesource:
                 if (reply == ack) {
                     bool allfound = true;
-                    QList<QString> sl = m_FoutInfoHash.keys();
+                    QList<QString> sl = m_FoutInfoMap.keys();
                     QString s = answer.toString();
                     for (int i = 0; i < sl.count(); i++)
                     {
@@ -790,9 +790,9 @@ void cPower2ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply,
                     int free = sl.at(1).toInt(&ok2);
                     int port = sl.at(3).toInt(&ok3);
                     if (ok1 && ok2 && ok3 && ((max == free) == 1)) {
-                        cFoutInfo fi = m_FoutInfoHash.take(infoRead);
+                        cFoutInfo fi = m_FoutInfoMap.take(infoRead);
                         fi.pcbServersocket.m_nPort = port;
-                        m_FoutInfoHash[infoRead] = fi;
+                        m_FoutInfoMap[infoRead] = fi;
                         emit activationContinue();
                     }
                     else
@@ -858,9 +858,9 @@ void cPower2ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply,
             case readsourcechannelalias:
                 if (reply == ack) {
                     QString alias = answer.toString();
-                    cFoutInfo fi = m_FoutInfoHash.take(infoRead);
+                    cFoutInfo fi = m_FoutInfoMap.take(infoRead);
                     fi.alias = alias;
-                    m_FoutInfoHash[infoRead] = fi;
+                    m_FoutInfoMap[infoRead] = fi;
                     emit activationContinue();
                 }
                 else
@@ -870,9 +870,9 @@ void cPower2ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply,
             case readsourcechanneldspchannel:
                 if (reply == ack) {
                     int chnnr = answer.toInt(&ok);
-                    cFoutInfo fi = m_FoutInfoHash.take(infoRead);
+                    cFoutInfo fi = m_FoutInfoMap.take(infoRead);
                     fi.dspFoutChannel = chnnr;
-                    m_FoutInfoHash[infoRead] = fi;
+                    m_FoutInfoMap[infoRead] = fi;
                     emit activationContinue();
                 }
                 else
@@ -882,9 +882,9 @@ void cPower2ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply,
             case readsourceformfactor:
                 if (reply == ack) {
                     double ffac = answer.toDouble(&ok);
-                    cFoutInfo fi = m_FoutInfoHash.take(infoRead);
+                    cFoutInfo fi = m_FoutInfoMap.take(infoRead);
                     fi.formFactor = ffac;
-                    m_FoutInfoHash[infoRead] = fi;
+                    m_FoutInfoMap[infoRead] = fi;
                     emit activationContinue();
                 }
                 else
@@ -1016,7 +1016,7 @@ void cPower2ModuleMeasProgram::resourceManagerConnect()
         }
     }
 
-    m_FoutInfoHash.clear();
+    m_FoutInfoMap.clear();
     cFoutInfo fi;
     fi.pcbServersocket = m_pModule->getNetworkConfig()->m_pcbServiceConnectionInfo; // the default from configuration file
     if (getConfData()->m_nFreqOutputCount > 0)
@@ -1024,8 +1024,8 @@ void cPower2ModuleMeasProgram::resourceManagerConnect()
         for (int i = 0; i < getConfData()->m_nFreqOutputCount; i++)
         {
             QString name = getConfData()->m_FreqOutputConfList.at(i).m_sName;
-            if (!m_FoutInfoHash.contains(name))
-                m_FoutInfoHash[name] = fi; //
+            if (!m_FoutInfoMap.contains(name))
+                m_FoutInfoMap[name] = fi;
         }
     }
 
@@ -1094,7 +1094,7 @@ void cPower2ModuleMeasProgram::readResourceSource()
 
 void cPower2ModuleMeasProgram::claimResourcesSource()
 {
-    infoReadList = m_FoutInfoHash.keys(); // we have to read information for all freq outputs in this list
+    infoReadList = m_FoutInfoMap.keys(); // we have to read information for all freq outputs in this list
     emit activationContinue();
 }
 
@@ -1117,7 +1117,7 @@ void cPower2ModuleMeasProgram::claimResourceSourceDone()
 
 void cPower2ModuleMeasProgram::readResourceSourceInfos()
 {
-    infoReadList = m_FoutInfoHash.keys(); // we have to read information for all freq outputs in this list
+    infoReadList = m_FoutInfoMap.keys(); // we have to read information for all freq outputs in this list
     emit activationContinue();
 }
 
@@ -1166,14 +1166,14 @@ void cPower2ModuleMeasProgram::pcbserverConnect4measChannels()
 
 void cPower2ModuleMeasProgram::pcbserverConnect4freqChannels()
 {
-    infoReadList = m_FoutInfoHash.keys(); // and then  we look for our different pcb sockets for source
+    infoReadList = m_FoutInfoMap.keys(); // and then  we look for our different pcb sockets for source
     if (infoReadList.count() > 0)
     {
         m_nConnectionCount += infoReadList.count();
         for (int i = 0; i < infoReadList.count(); i++)
         {
             QString key = infoReadList.at(i);
-            cFoutInfo fi = m_FoutInfoHash.take(key);
+            cFoutInfo fi = m_FoutInfoMap.take(key);
             NetworkConnectionInfo netInfo = fi.pcbServersocket;
             Zera::ProxyClient* pcbClient = Zera::Proxy::getInstance()->getConnection(netInfo,
                                                                                      m_pModule->getNetworkConfig()->m_tcpNetworkFactory);
@@ -1183,7 +1183,7 @@ void cPower2ModuleMeasProgram::pcbserverConnect4freqChannels()
             pcbIFace->setClient(pcbClient);
             fi.pcbIFace = pcbIFace;
             fi.name = key;
-            m_FoutInfoHash[key] = fi;
+            m_FoutInfoMap[key] = fi;
             connect(pcbClient, &Zera::ProxyClient::connected, this, &cPower2ModuleMeasProgram::monitorConnection); // here we wait until all connections are established
             connect(pcbIFace, &AbstractServerInterface::serverAnswer, this, &cPower2ModuleMeasProgram::catchInterfaceAnswer);
             Zera::Proxy::getInstance()->startConnection(pcbClient);
@@ -1240,7 +1240,7 @@ void cPower2ModuleMeasProgram::readSourceChannelInformation()
 {
     if (getConfData()->m_nFreqOutputCount > 0) // we only have to read information if really configured
     {
-        infoReadList = m_FoutInfoHash.keys(); // we have to read information for all channels in this list
+        infoReadList = m_FoutInfoMap.keys(); // we have to read information for all channels in this list
         emit activationContinue();
     }
     else
@@ -1251,19 +1251,19 @@ void cPower2ModuleMeasProgram::readSourceChannelInformation()
 void cPower2ModuleMeasProgram::readSourceChannelAlias()
 {
     infoRead = infoReadList.takeFirst();
-    m_MsgNrCmdList[m_FoutInfoHash[infoRead].pcbIFace->getAliasSource(infoRead)] = readsourcechannelalias;
+    m_MsgNrCmdList[m_FoutInfoMap[infoRead].pcbIFace->getAliasSource(infoRead)] = readsourcechannelalias;
 }
 
 
 void cPower2ModuleMeasProgram::readSourceDspChannel()
 {
-    m_MsgNrCmdList[m_FoutInfoHash[infoRead].pcbIFace->getDSPChannelSource(infoRead)] = readsourcechanneldspchannel;
+    m_MsgNrCmdList[m_FoutInfoMap[infoRead].pcbIFace->getDSPChannelSource(infoRead)] = readsourcechanneldspchannel;
 }
 
 
 void cPower2ModuleMeasProgram::readSourceFormFactor()
 {
-    m_MsgNrCmdList[m_FoutInfoHash[infoRead].pcbIFace->getFormFactorSource(infoRead)] = readsourceformfactor;
+    m_MsgNrCmdList[m_FoutInfoMap[infoRead].pcbIFace->getFormFactorSource(infoRead)] = readsourceformfactor;
 }
 
 
@@ -1399,7 +1399,7 @@ void cPower2ModuleMeasProgram::freeFreqOutputs()
 {
     if (getConfData()->m_nFreqOutputCount > 0) // we only have to read information if really configured
     {
-        infoReadList = m_FoutInfoHash.keys(); // we have to read information for all channels in this list
+        infoReadList = m_FoutInfoMap.keys(); // we have to read information for all channels in this list
         emit deactivationContinue();
     }
     else
@@ -1532,7 +1532,7 @@ void cPower2ModuleMeasProgram::foutParamsToDsp()
         QString datalist = "FREQSCALE:";
         for (int i = 0; i<getConfData()->m_nFreqOutputCount; i++) {
             double frScale;
-            cFoutInfo fi = m_FoutInfoHash[getConfData()->m_FreqOutputConfList.at(i).m_sName];
+            cFoutInfo fi = m_FoutInfoMap[getConfData()->m_FreqOutputConfList.at(i).m_sName];
             frScale = fi.formFactor * constantImpulsePerWs;
 
             /*if(m_pScalingInputs.length() > i){
@@ -1559,7 +1559,7 @@ void cPower2ModuleMeasProgram::foutParamsToDsp()
             }
         }*/
         QString key = getConfData()->m_FreqOutputConfList.at(i).m_sName;
-        cFoutInfo fi = m_FoutInfoHash[key];
+        cFoutInfo fi = m_FoutInfoMap[key];
         if(isValidConstant) {
             m_MsgNrCmdList[fi.pcbIFace->setConstantSource(fi.name, constantImpulsePerKwh)] = writeparameter;
             //m_FoutConstParameterList.at(i)->setValue(constantImpulsePerKwh);
@@ -1576,7 +1576,7 @@ void cPower2ModuleMeasProgram::foutParamsToDsp()
 
 void cPower2ModuleMeasProgram::setFoutPowerModes()
 {
-    QList<QString> keylist = m_FoutInfoHash.keys();
+    QList<QString> keylist = m_FoutInfoMap.keys();
     for (int i = 0; i < keylist.count(); i++) {
         QString powtype;
         int foutmode = getConfData()->m_FreqOutputConfList.at(i).m_nFoutMode;
@@ -1592,7 +1592,7 @@ void cPower2ModuleMeasProgram::setFoutPowerModes()
             powtype = "";
         }
         powtype += MeasModeCatalog::getInfo(getConfData()->m_sMeasuringMode.m_sValue).getActvalName();
-        cFoutInfo fi = m_FoutInfoHash[keylist.at(i)];
+        cFoutInfo fi = m_FoutInfoMap[keylist.at(i)];
         m_MsgNrCmdList[fi.pcbIFace->setPowTypeSource(fi.name, powtype)] = writeparameter;
     }
 }

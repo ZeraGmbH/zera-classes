@@ -294,7 +294,7 @@ QStringList Power1DspCmdGenerator::getCmdsSumAndAverage(DspChainIdGen &idGen)
 }
 
 QStringList Power1DspCmdGenerator::getCmdsFreqOutput(const POWER1MODULE::cPower1ModuleConfigData *configData,
-                                                     const QHash<QString, cFoutInfo> foutInfoHash,
+                                                     const QMap<QString, cFoutInfo> foutInfoHash,
                                                      int irqNo,
                                                      DspChainIdGen &idGen)
 {

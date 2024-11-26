@@ -3681,8 +3681,8 @@
                     "Description": "REF input",
                     "Validation": {
                         "Data": [
-                            "-P",
                             "+P",
+                            "-P",
                             "P"
                         ],
                         "Type": "STRING"
@@ -4032,7 +4032,7 @@
         "PAR_MeasCount": 1,
         "PAR_MeasWait": 0,
         "PAR_RefConstant": 500000000,
-        "PAR_RefInput": "-P",
+        "PAR_RefInput": "+P",
         "PAR_ResultUnit": "%",
         "PAR_StartStop": 0,
         "PAR_Target": 500000,

@@ -96,7 +96,7 @@ private:
     cPower2Module* m_pModule;
     MeasModeSelector m_measModeSelector;
     QHash<QString, cMeasChannelInfo> m_measChannelInfoHash;
-    QHash<QString, cFoutInfo> m_FoutInfoHash; // a list with frequency output information for each channel
+    QMap<QString, cFoutInfo> m_FoutInfoMap; // a list with frequency output information for each channel
     QHash<int, QString> m_NotifierInfoHash; // a list with channel information for each notifier
 
     QList<VfModuleActvalue*> m_veinActValueList; // the list of actual values we work on
