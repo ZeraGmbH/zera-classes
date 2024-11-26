@@ -1248,10 +1248,11 @@ void cSec1ModuleMeasProgram::setsecINTNotifier()
 void cSec1ModuleMeasProgram::activationDone()
 {
     cSec1ModuleConfigData *confData = getConfData();
-    for (int i = 0; i < confData->m_refInpList.count(); i++) {
-        QString displayString = getRefInputDisplayString(confData->m_refInpList.at(i).inputName);
+    const QList<TRefInput> refInputList = confData->m_refInpList;
+    for(const TRefInput &refInput : refInputList) {
+        QString displayString = getRefInputDisplayString(refInput.inputName);
         m_REFAliasList.append(displayString); // build up a fixed sorted list of alias
-        m_refInputDictionary.setDisplayedString(confData->m_refInpList.at(i).inputName, displayString);
+        m_refInputDictionary.setDisplayedString(refInput.inputName, displayString);
     }
 
     for (int i = 0; i < confData->m_dutInpList.count(); i++) {
