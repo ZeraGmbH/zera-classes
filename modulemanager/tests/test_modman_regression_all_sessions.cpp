@@ -184,13 +184,13 @@ void test_modman_regression_all_sessions::regressionCom5003Ced()
     QCOMPARE(modules[9]->m_module->getVeinModuleName(), "POWER1Module3");
     QCOMPARE(modules[9]->m_module->getSCPIModuleName(), "POW3");
 
-    QCOMPARE(modules[10]->m_moduleId, 1074);
-    QCOMPARE(modules[10]->m_module->getVeinModuleName(), "POWER1Module4");
-    QCOMPARE(modules[10]->m_module->getSCPIModuleName(), "POW4");
+    QCOMPARE(modules[10]->m_moduleId, 1078);
+    QCOMPARE(modules[10]->m_module->getVeinModuleName(), "POWER1Module98");
+    QCOMPARE(modules[10]->m_module->getSCPIModuleName(), "POW98");
 
-    QCOMPARE(modules[11]->m_moduleId, 1076);
-    QCOMPARE(modules[11]->m_module->getVeinModuleName(), "POWER1Module5");
-    QCOMPARE(modules[11]->m_module->getSCPIModuleName(), "POW5");
+    QCOMPARE(modules[11]->m_moduleId, 1079);
+    QCOMPARE(modules[11]->m_module->getVeinModuleName(), "POWER1Module99");
+    QCOMPARE(modules[11]->m_module->getSCPIModuleName(), "POW99");
 
     QCOMPARE(modules[12]->m_moduleId, 1090);
     QCOMPARE(modules[12]->m_module->getVeinModuleName(), "POWER2Module1");
@@ -296,13 +296,13 @@ void test_modman_regression_all_sessions::regressionCom5003Meas()
     QCOMPARE(modules[10]->m_module->getVeinModuleName(), "POWER1Module4");
     QCOMPARE(modules[10]->m_module->getSCPIModuleName(), "POW4");
 
-    QCOMPARE(modules[11]->m_moduleId, 1074);
-    QCOMPARE(modules[11]->m_module->getVeinModuleName(), "POWER1Module5");
-    QCOMPARE(modules[11]->m_module->getSCPIModuleName(), "POW5");
+    QCOMPARE(modules[11]->m_moduleId, 1078);
+    QCOMPARE(modules[11]->m_module->getVeinModuleName(), "POWER1Module98");
+    QCOMPARE(modules[11]->m_module->getSCPIModuleName(), "POW98");
 
-    QCOMPARE(modules[12]->m_moduleId, 1076);
-    QCOMPARE(modules[12]->m_module->getVeinModuleName(), "POWER1Module6");
-    QCOMPARE(modules[12]->m_module->getSCPIModuleName(), "POW6");
+    QCOMPARE(modules[12]->m_moduleId, 1079);
+    QCOMPARE(modules[12]->m_module->getVeinModuleName(), "POWER1Module99");
+    QCOMPARE(modules[12]->m_module->getSCPIModuleName(), "POW99");
 
     QCOMPARE(modules[13]->m_moduleId, 1100);
     QCOMPARE(modules[13]->m_module->getVeinModuleName(), "Power3Module1");
@@ -416,17 +416,17 @@ void test_modman_regression_all_sessions::regressionCom5003PerPhase()
     QCOMPARE(modules[10]->m_module->getVeinModuleName(), "POWER1Module4");
     QCOMPARE(modules[10]->m_module->getSCPIModuleName(), "POW4");
 
-    QCOMPARE(modules[11]->m_moduleId, 1074);
-    QCOMPARE(modules[11]->m_module->getVeinModuleName(), "POWER1Module5");
-    QCOMPARE(modules[11]->m_module->getSCPIModuleName(), "POW5");
+    QCOMPARE(modules[11]->m_moduleId, 1077);
+    QCOMPARE(modules[11]->m_module->getVeinModuleName(), "POWER1Module97");
+    QCOMPARE(modules[11]->m_module->getSCPIModuleName(), "POW97");
 
-    QCOMPARE(modules[12]->m_moduleId, 1075);
-    QCOMPARE(modules[12]->m_module->getVeinModuleName(), "POWER1Module6");
-    QCOMPARE(modules[12]->m_module->getSCPIModuleName(), "POW6");
+    QCOMPARE(modules[12]->m_moduleId, 1078);
+    QCOMPARE(modules[12]->m_module->getVeinModuleName(), "POWER1Module98");
+    QCOMPARE(modules[12]->m_module->getSCPIModuleName(), "POW98");
 
-    QCOMPARE(modules[13]->m_moduleId, 1076);
-    QCOMPARE(modules[13]->m_module->getVeinModuleName(), "POWER1Module7");
-    QCOMPARE(modules[13]->m_module->getSCPIModuleName(), "POW7");
+    QCOMPARE(modules[13]->m_moduleId, 1079);
+    QCOMPARE(modules[13]->m_module->getVeinModuleName(), "POWER1Module99");
+    QCOMPARE(modules[13]->m_module->getSCPIModuleName(), "POW99");
 
     QCOMPARE(modules[14]->m_moduleId, 1100);
     QCOMPARE(modules[14]->m_module->getVeinModuleName(), "Power3Module1");
@@ -592,13 +592,13 @@ void test_modman_regression_all_sessions::regressionMt310s2Ced()
     QCOMPARE(modules[9]->m_module->getVeinModuleName(), "POWER1Module3");
     QCOMPARE(modules[9]->m_module->getSCPIModuleName(), "POW3");
 
-    QCOMPARE(modules[10]->m_moduleId, 1074);
-    QCOMPARE(modules[10]->m_module->getVeinModuleName(), "POWER1Module4");
-    QCOMPARE(modules[10]->m_module->getSCPIModuleName(), "POW4");
+    QCOMPARE(modules[10]->m_moduleId, 1078);
+    QCOMPARE(modules[10]->m_module->getVeinModuleName(), "POWER1Module98");
+    QCOMPARE(modules[10]->m_module->getSCPIModuleName(), "POW98");
 
-    QCOMPARE(modules[11]->m_moduleId, 1076);
-    QCOMPARE(modules[11]->m_module->getVeinModuleName(), "POWER1Module5");
-    QCOMPARE(modules[11]->m_module->getSCPIModuleName(), "POW5");
+    QCOMPARE(modules[11]->m_moduleId, 1079);
+    QCOMPARE(modules[11]->m_module->getVeinModuleName(), "POWER1Module99");
+    QCOMPARE(modules[11]->m_module->getSCPIModuleName(), "POW99");
 
     QCOMPARE(modules[12]->m_moduleId, 1090);
     QCOMPARE(modules[12]->m_module->getVeinModuleName(), "POWER2Module1");
@@ -650,7 +650,7 @@ void test_modman_regression_all_sessions::regressionMt310s2Dc()
     modMan.waitUntilModulesAreReady();
 
     QList<ZeraModules::ModuleData *> modules = modMan.getModuleList();
-    QCOMPARE(modules.count(), 22);
+    QCOMPARE(modules.count(), 20);
 
     QCOMPARE(modules[0]->m_moduleId, 1150);
     QCOMPARE(modules[0]->m_module->getVeinModuleName(), "StatusModule1");
@@ -696,49 +696,41 @@ void test_modman_regression_all_sessions::regressionMt310s2Dc()
     QCOMPARE(modules[10]->m_module->getVeinModuleName(), "POWER1Module4");
     QCOMPARE(modules[10]->m_module->getSCPIModuleName(), "POW4");
 
-    QCOMPARE(modules[11]->m_moduleId, 1076);
-    QCOMPARE(modules[11]->m_module->getVeinModuleName(), "POWER1Module5");
-    QCOMPARE(modules[11]->m_module->getSCPIModuleName(), "POW5");
+    QCOMPARE(modules[11]->m_moduleId, 1110);
+    QCOMPARE(modules[11]->m_module->getVeinModuleName(), "THDNModule1");
+    QCOMPARE(modules[11]->m_module->getSCPIModuleName(), "THD1");
 
-    QCOMPARE(modules[12]->m_moduleId, 1110);
-    QCOMPARE(modules[12]->m_module->getVeinModuleName(), "THDNModule1");
-    QCOMPARE(modules[12]->m_module->getSCPIModuleName(), "THD1");
+    QCOMPARE(modules[12]->m_moduleId, 1111);
+    QCOMPARE(modules[12]->m_module->getVeinModuleName(), "THDNModule2");
+    QCOMPARE(modules[12]->m_module->getSCPIModuleName(), "THD2");
 
-    QCOMPARE(modules[13]->m_moduleId, 1111);
-    QCOMPARE(modules[13]->m_module->getVeinModuleName(), "THDNModule2");
-    QCOMPARE(modules[13]->m_module->getSCPIModuleName(), "THD2");
+    QCOMPARE(modules[13]->m_moduleId, 1120);
+    QCOMPARE(modules[13]->m_module->getVeinModuleName(), "OSCIModule1");
+    QCOMPARE(modules[13]->m_module->getSCPIModuleName(), "OSC1");
 
-    QCOMPARE(modules[14]->m_moduleId, 1120);
-    QCOMPARE(modules[14]->m_module->getVeinModuleName(), "OSCIModule1");
-    QCOMPARE(modules[14]->m_module->getSCPIModuleName(), "OSC1");
+    QCOMPARE(modules[14]->m_moduleId, 1130);
+    QCOMPARE(modules[14]->m_module->getVeinModuleName(), "SEC1Module1");
+    QCOMPARE(modules[14]->m_module->getSCPIModuleName(), "EC01");
 
-    QCOMPARE(modules[15]->m_moduleId, 1130);
-    QCOMPARE(modules[15]->m_module->getVeinModuleName(), "SEC1Module1");
-    QCOMPARE(modules[15]->m_module->getSCPIModuleName(), "EC01");
+    QCOMPARE(modules[15]->m_moduleId, 1190);
+    QCOMPARE(modules[15]->m_module->getVeinModuleName(), "AdjustmentModule1");
+    QCOMPARE(modules[15]->m_module->getSCPIModuleName(), "ADJ1");
 
-    QCOMPARE(modules[16]->m_moduleId, 1140);
-    QCOMPARE(modules[16]->m_module->getVeinModuleName(), "LambdaModule1");
-    QCOMPARE(modules[16]->m_module->getSCPIModuleName(), "LAM1");
+    QCOMPARE(modules[16]->m_moduleId, 1200);
+    QCOMPARE(modules[16]->m_module->getVeinModuleName(), "SEM1Module1");
+    QCOMPARE(modules[16]->m_module->getSCPIModuleName(), "EM01");
 
-    QCOMPARE(modules[17]->m_moduleId, 1190);
-    QCOMPARE(modules[17]->m_module->getVeinModuleName(), "AdjustmentModule1");
-    QCOMPARE(modules[17]->m_module->getSCPIModuleName(), "ADJ1");
+    QCOMPARE(modules[17]->m_moduleId, 1300);
+    QCOMPARE(modules[17]->m_module->getVeinModuleName(), "SourceModule1");
+    QCOMPARE(modules[17]->m_module->getSCPIModuleName(), "SRC1");
 
-    QCOMPARE(modules[18]->m_moduleId, 1200);
-    QCOMPARE(modules[18]->m_module->getVeinModuleName(), "SEM1Module1");
-    QCOMPARE(modules[18]->m_module->getSCPIModuleName(), "EM01");
+    QCOMPARE(modules[18]->m_moduleId, 1400);
+    QCOMPARE(modules[18]->m_module->getVeinModuleName(), "BleModule1");
+    QCOMPARE(modules[18]->m_module->getSCPIModuleName(), "BLE1");
 
-    QCOMPARE(modules[19]->m_moduleId, 1300);
-    QCOMPARE(modules[19]->m_module->getVeinModuleName(), "SourceModule1");
-    QCOMPARE(modules[19]->m_module->getSCPIModuleName(), "SRC1");
-
-    QCOMPARE(modules[20]->m_moduleId, 1400);
-    QCOMPARE(modules[20]->m_module->getVeinModuleName(), "BleModule1");
-    QCOMPARE(modules[20]->m_module->getSCPIModuleName(), "BLE1");
-
-    QCOMPARE(modules[21]->m_moduleId, 9999);
-    QCOMPARE(modules[21]->m_module->getVeinModuleName(), "SCPIModule1");
-    QCOMPARE(modules[21]->m_module->getSCPIModuleName(), "SCP1");
+    QCOMPARE(modules[19]->m_moduleId, 9999);
+    QCOMPARE(modules[19]->m_module->getVeinModuleName(), "SCPIModule1");
+    QCOMPARE(modules[19]->m_module->getSCPIModuleName(), "SCP1");
 
     modMan.destroyModulesAndWaitUntilAllShutdown();
     // ------ end auto generated code ----
@@ -758,7 +750,7 @@ void test_modman_regression_all_sessions::regressionMt310s2EmobAc()
     modMan.waitUntilModulesAreReady();
 
     QList<ZeraModules::ModuleData *> modules = modMan.getModuleList();
-    QCOMPARE(modules.count(), 21);
+    QCOMPARE(modules.count(), 22);
 
     QCOMPARE(modules[0]->m_moduleId, 1150);
     QCOMPARE(modules[0]->m_module->getVeinModuleName(), "StatusModule1");
@@ -800,49 +792,53 @@ void test_modman_regression_all_sessions::regressionMt310s2EmobAc()
     QCOMPARE(modules[9]->m_module->getVeinModuleName(), "POWER1Module3");
     QCOMPARE(modules[9]->m_module->getSCPIModuleName(), "POW3");
 
-    QCOMPARE(modules[10]->m_moduleId, 1076);
-    QCOMPARE(modules[10]->m_module->getVeinModuleName(), "POWER1Module5");
-    QCOMPARE(modules[10]->m_module->getSCPIModuleName(), "POW5");
+    QCOMPARE(modules[10]->m_moduleId, 1078);
+    QCOMPARE(modules[10]->m_module->getVeinModuleName(), "POWER1Module98");
+    QCOMPARE(modules[10]->m_module->getSCPIModuleName(), "POW98");
 
-    QCOMPARE(modules[11]->m_moduleId, 1110);
-    QCOMPARE(modules[11]->m_module->getVeinModuleName(), "THDNModule1");
-    QCOMPARE(modules[11]->m_module->getSCPIModuleName(), "THD1");
+    QCOMPARE(modules[11]->m_moduleId, 1079);
+    QCOMPARE(modules[11]->m_module->getVeinModuleName(), "POWER1Module99");
+    QCOMPARE(modules[11]->m_module->getSCPIModuleName(), "POW99");
 
-    QCOMPARE(modules[12]->m_moduleId, 1111);
-    QCOMPARE(modules[12]->m_module->getVeinModuleName(), "THDNModule2");
-    QCOMPARE(modules[12]->m_module->getSCPIModuleName(), "THD2");
+    QCOMPARE(modules[12]->m_moduleId, 1110);
+    QCOMPARE(modules[12]->m_module->getVeinModuleName(), "THDNModule1");
+    QCOMPARE(modules[12]->m_module->getSCPIModuleName(), "THD1");
 
-    QCOMPARE(modules[13]->m_moduleId, 1120);
-    QCOMPARE(modules[13]->m_module->getVeinModuleName(), "OSCIModule1");
-    QCOMPARE(modules[13]->m_module->getSCPIModuleName(), "OSC1");
+    QCOMPARE(modules[13]->m_moduleId, 1111);
+    QCOMPARE(modules[13]->m_module->getVeinModuleName(), "THDNModule2");
+    QCOMPARE(modules[13]->m_module->getSCPIModuleName(), "THD2");
 
-    QCOMPARE(modules[14]->m_moduleId, 1130);
-    QCOMPARE(modules[14]->m_module->getVeinModuleName(), "SEC1Module1");
-    QCOMPARE(modules[14]->m_module->getSCPIModuleName(), "EC01");
+    QCOMPARE(modules[14]->m_moduleId, 1120);
+    QCOMPARE(modules[14]->m_module->getVeinModuleName(), "OSCIModule1");
+    QCOMPARE(modules[14]->m_module->getSCPIModuleName(), "OSC1");
 
-    QCOMPARE(modules[15]->m_moduleId, 1140);
-    QCOMPARE(modules[15]->m_module->getVeinModuleName(), "LambdaModule1");
-    QCOMPARE(modules[15]->m_module->getSCPIModuleName(), "LAM1");
+    QCOMPARE(modules[15]->m_moduleId, 1130);
+    QCOMPARE(modules[15]->m_module->getVeinModuleName(), "SEC1Module1");
+    QCOMPARE(modules[15]->m_module->getSCPIModuleName(), "EC01");
 
-    QCOMPARE(modules[16]->m_moduleId, 1190);
-    QCOMPARE(modules[16]->m_module->getVeinModuleName(), "AdjustmentModule1");
-    QCOMPARE(modules[16]->m_module->getSCPIModuleName(), "ADJ1");
+    QCOMPARE(modules[16]->m_moduleId, 1140);
+    QCOMPARE(modules[16]->m_module->getVeinModuleName(), "LambdaModule1");
+    QCOMPARE(modules[16]->m_module->getSCPIModuleName(), "LAM1");
 
-    QCOMPARE(modules[17]->m_moduleId, 1200);
-    QCOMPARE(modules[17]->m_module->getVeinModuleName(), "SEM1Module1");
-    QCOMPARE(modules[17]->m_module->getSCPIModuleName(), "EM01");
+    QCOMPARE(modules[17]->m_moduleId, 1190);
+    QCOMPARE(modules[17]->m_module->getVeinModuleName(), "AdjustmentModule1");
+    QCOMPARE(modules[17]->m_module->getSCPIModuleName(), "ADJ1");
 
-    QCOMPARE(modules[18]->m_moduleId, 1300);
-    QCOMPARE(modules[18]->m_module->getVeinModuleName(), "SourceModule1");
-    QCOMPARE(modules[18]->m_module->getSCPIModuleName(), "SRC1");
+    QCOMPARE(modules[18]->m_moduleId, 1200);
+    QCOMPARE(modules[18]->m_module->getVeinModuleName(), "SEM1Module1");
+    QCOMPARE(modules[18]->m_module->getSCPIModuleName(), "EM01");
 
-    QCOMPARE(modules[19]->m_moduleId, 1400);
-    QCOMPARE(modules[19]->m_module->getVeinModuleName(), "BleModule1");
-    QCOMPARE(modules[19]->m_module->getSCPIModuleName(), "BLE1");
+    QCOMPARE(modules[19]->m_moduleId, 1300);
+    QCOMPARE(modules[19]->m_module->getVeinModuleName(), "SourceModule1");
+    QCOMPARE(modules[19]->m_module->getSCPIModuleName(), "SRC1");
 
-    QCOMPARE(modules[20]->m_moduleId, 9999);
-    QCOMPARE(modules[20]->m_module->getVeinModuleName(), "SCPIModule1");
-    QCOMPARE(modules[20]->m_module->getSCPIModuleName(), "SCP1");
+    QCOMPARE(modules[20]->m_moduleId, 1400);
+    QCOMPARE(modules[20]->m_module->getVeinModuleName(), "BleModule1");
+    QCOMPARE(modules[20]->m_module->getSCPIModuleName(), "BLE1");
+
+    QCOMPARE(modules[21]->m_moduleId, 9999);
+    QCOMPARE(modules[21]->m_module->getVeinModuleName(), "SCPIModule1");
+    QCOMPARE(modules[21]->m_module->getSCPIModuleName(), "SCP1");
 
     modMan.destroyModulesAndWaitUntilAllShutdown();
     // ------ end auto generated code ----
@@ -996,13 +992,13 @@ void test_modman_regression_all_sessions::regressionMt310s2Meas()
     QCOMPARE(modules[10]->m_module->getVeinModuleName(), "POWER1Module4");
     QCOMPARE(modules[10]->m_module->getSCPIModuleName(), "POW4");
 
-    QCOMPARE(modules[11]->m_moduleId, 1074);
-    QCOMPARE(modules[11]->m_module->getVeinModuleName(), "POWER1Module5");
-    QCOMPARE(modules[11]->m_module->getSCPIModuleName(), "POW5");
+    QCOMPARE(modules[11]->m_moduleId, 1078);
+    QCOMPARE(modules[11]->m_module->getVeinModuleName(), "POWER1Module98");
+    QCOMPARE(modules[11]->m_module->getSCPIModuleName(), "POW98");
 
-    QCOMPARE(modules[12]->m_moduleId, 1076);
-    QCOMPARE(modules[12]->m_module->getVeinModuleName(), "POWER1Module6");
-    QCOMPARE(modules[12]->m_module->getSCPIModuleName(), "POW6");
+    QCOMPARE(modules[12]->m_moduleId, 1079);
+    QCOMPARE(modules[12]->m_module->getVeinModuleName(), "POWER1Module99");
+    QCOMPARE(modules[12]->m_module->getSCPIModuleName(), "POW99");
 
     QCOMPARE(modules[13]->m_moduleId, 1100);
     QCOMPARE(modules[13]->m_module->getVeinModuleName(), "Power3Module1");

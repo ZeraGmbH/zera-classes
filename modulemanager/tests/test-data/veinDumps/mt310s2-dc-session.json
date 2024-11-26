@@ -13,12 +13,10 @@
             1071,
             1072,
             1073,
-            1076,
             1110,
             1111,
             1120,
             1130,
-            1140,
             1150,
             1190,
             1200,
@@ -2761,110 +2759,6 @@
         "PAR_MeasuringMode": "2LW",
         "SIG_Measuring": 1
     },
-    "1076": {
-        "ACT_CanChangePhaseMask": false,
-        "ACT_MaxMeasSysCount": 3,
-        "ACT_PQS1": null,
-        "ACT_PQS2": null,
-        "ACT_PQS3": null,
-        "ACT_PQS4": null,
-        "ACT_PowerDisplayName": "Q",
-        "EntityName": "POWER1Module5",
-        "INF_ModeTypes": [
-            "Q"
-        ],
-        "INF_ModuleInterface": {
-            "ComponentInfo": {
-                "ACT_CanChangePhaseMask": {
-                    "Description": "Boolean indicator that current measurement mode can change phase mask"
-                },
-                "ACT_MaxMeasSysCount": {
-                    "Description": "Number of max measurement systems for current measurement mode"
-                },
-                "ACT_PQS1": {
-                    "ChannelName": "Q1",
-                    "Description": "Actual power value U1/I1",
-                    "Unit": "Var"
-                },
-                "ACT_PQS2": {
-                    "ChannelName": "Q2",
-                    "Description": "Actual power value U2/I2",
-                    "Unit": "Var"
-                },
-                "ACT_PQS3": {
-                    "ChannelName": "Q3",
-                    "Description": "Actual power value U3/I3",
-                    "Unit": "Var"
-                },
-                "ACT_PQS4": {
-                    "ChannelName": "QS",
-                    "Description": "Actual power value sum all phases",
-                    "Unit": "Var"
-                },
-                "ACT_PowerDisplayName": {
-                    "Description": "Power display name (P/Q/S)"
-                },
-                "EntityName": {
-                    "Description": "Module's name"
-                },
-                "INF_ModeTypes": {
-                    "Description": "Display names (P/Q/S) of available modes"
-                },
-                "INF_ModuleInterface": {
-                    "Description": "Module's interface details"
-                },
-                "PAR_Interval": {
-                    "Description": "Integration time",
-                    "Unit": "s",
-                    "Validation": {
-                        "Data": [
-                            1,
-                            100,
-                            0.5
-                        ],
-                        "Type": "DOUBLE"
-                    }
-                },
-                "PAR_MeasModePhaseSelect": {
-                    "Description": "Active phases selection mask",
-                    "Validation": {
-                        "Data": [
-                            "111"
-                        ],
-                        "Type": "STRING"
-                    }
-                },
-                "PAR_MeasuringMode": {
-                    "Description": "Measuring mode",
-                    "Validation": {
-                        "Data": [
-                            "4LB"
-                        ],
-                        "Type": "STRING"
-                    }
-                },
-                "SIG_Measuring": {
-                    "Description": "Signal indicating measurement activity"
-                }
-            },
-            "ModuleInfo": {
-                "Description": "This module measures power with configured measuring and integration modes",
-                "FOUTCount": "0",
-                "Name": "POWER1Module5",
-                "NominalFrequency": "200000",
-                "PQSCount": "4"
-            },
-            "SCPIInfo": {
-                "Cmd": [
-                ],
-                "Name": "POW5"
-            }
-        },
-        "PAR_Interval": 1,
-        "PAR_MeasModePhaseSelect": "111",
-        "PAR_MeasuringMode": "4LB",
-        "SIG_Measuring": 1
-    },
     "1110": {
         "ACT_THDN1": null,
         "ACT_THDN2": null,
@@ -3939,101 +3833,6 @@
         "PAR_StartStop": 0,
         "PAR_Target": 500000,
         "PAR_Uplimit": 10
-    },
-    "1140": {
-        "ACT_Lambda1": null,
-        "ACT_Lambda2": null,
-        "ACT_Lambda3": null,
-        "ACT_Lambda4": null,
-        "ACT_Load1": null,
-        "ACT_Load2": null,
-        "ACT_Load3": null,
-        "ACT_Load4": null,
-        "EntityName": "LambdaModule1",
-        "INF_ModuleInterface": {
-            "ComponentInfo": {
-                "ACT_Lambda1": {
-                    "ChannelName": "Lambda1",
-                    "Description": "Actual lambda value"
-                },
-                "ACT_Lambda2": {
-                    "ChannelName": "Lambda2",
-                    "Description": "Actual lambda value"
-                },
-                "ACT_Lambda3": {
-                    "ChannelName": "Lambda3",
-                    "Description": "Actual lambda value"
-                },
-                "ACT_Lambda4": {
-                    "ChannelName": "Lambda4",
-                    "Description": "Actual lambda value"
-                },
-                "ACT_Load1": {
-                    "Description": "load type"
-                },
-                "ACT_Load2": {
-                    "Description": "load type"
-                },
-                "ACT_Load3": {
-                    "Description": "load type"
-                },
-                "ACT_Load4": {
-                    "Description": "load type"
-                },
-                "EntityName": {
-                    "Description": "Module's name"
-                },
-                "INF_ModuleInterface": {
-                    "Description": "Module's interface details"
-                },
-                "SIG_Measuring": {
-                    "Description": "Signal indicating measurement activity"
-                }
-            },
-            "ModuleInfo": {
-                "Description": "This module measures configured number of harmonic power values from configured input values",
-                "LambdaCount": "4",
-                "Name": "LambdaModule1"
-            },
-            "SCPIInfo": {
-                "Cmd": [
-                    [
-                        "MEASURE",
-                        "Lambda1",
-                        "8",
-                        "ACT_Lambda1",
-                        "0",
-                        ""
-                    ],
-                    [
-                        "MEASURE",
-                        "Lambda2",
-                        "8",
-                        "ACT_Lambda2",
-                        "0",
-                        ""
-                    ],
-                    [
-                        "MEASURE",
-                        "Lambda3",
-                        "8",
-                        "ACT_Lambda3",
-                        "0",
-                        ""
-                    ],
-                    [
-                        "MEASURE",
-                        "Lambda4",
-                        "8",
-                        "ACT_Lambda4",
-                        "0",
-                        ""
-                    ]
-                ],
-                "Name": "LAM1"
-            }
-        },
-        "SIG_Measuring": 0
     },
     "1150": {
         "EntityName": "StatusModule1",

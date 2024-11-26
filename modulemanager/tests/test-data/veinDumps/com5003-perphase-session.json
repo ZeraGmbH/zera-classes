@@ -13,9 +13,9 @@
             1071,
             1072,
             1073,
-            1074,
-            1075,
-            1076,
+            1077,
+            1078,
+            1079,
             1100,
             1110,
             1111,
@@ -2521,7 +2521,7 @@
         "PAR_MeasuringMode": "2LW",
         "SIG_Measuring": 1
     },
-    "1074": {
+    "1077": {
         "ACT_CanChangePhaseMask": false,
         "ACT_MaxMeasSysCount": 3,
         "ACT_PQS1": null,
@@ -2529,7 +2529,7 @@
         "ACT_PQS3": null,
         "ACT_PQS4": null,
         "ACT_PowerDisplayName": "P",
-        "EntityName": "POWER1Module5",
+        "EntityName": "POWER1Module97",
         "INF_ModeTypes": [
             "P"
         ],
@@ -2610,14 +2610,14 @@
             "ModuleInfo": {
                 "Description": "This module measures power with configured measuring and integration modes",
                 "FOUTCount": "0",
-                "Name": "POWER1Module5",
+                "Name": "POWER1Module97",
                 "NominalFrequency": "200000",
                 "PQSCount": "4"
             },
             "SCPIInfo": {
                 "Cmd": [
                 ],
-                "Name": "POW5"
+                "Name": "POW97"
             }
         },
         "PAR_Interval": 1,
@@ -2625,111 +2625,7 @@
         "PAR_MeasuringMode": "4LW",
         "SIG_Measuring": 1
     },
-    "1075": {
-        "ACT_CanChangePhaseMask": false,
-        "ACT_MaxMeasSysCount": 3,
-        "ACT_PQS1": null,
-        "ACT_PQS2": null,
-        "ACT_PQS3": null,
-        "ACT_PQS4": null,
-        "ACT_PowerDisplayName": "S",
-        "EntityName": "POWER1Module6",
-        "INF_ModeTypes": [
-            "S"
-        ],
-        "INF_ModuleInterface": {
-            "ComponentInfo": {
-                "ACT_CanChangePhaseMask": {
-                    "Description": "Boolean indicator that current measurement mode can change phase mask"
-                },
-                "ACT_MaxMeasSysCount": {
-                    "Description": "Number of max measurement systems for current measurement mode"
-                },
-                "ACT_PQS1": {
-                    "ChannelName": "S1",
-                    "Description": "Actual power value U1/I1",
-                    "Unit": "VA"
-                },
-                "ACT_PQS2": {
-                    "ChannelName": "S2",
-                    "Description": "Actual power value U2/I2",
-                    "Unit": "VA"
-                },
-                "ACT_PQS3": {
-                    "ChannelName": "S3",
-                    "Description": "Actual power value U3/I3",
-                    "Unit": "VA"
-                },
-                "ACT_PQS4": {
-                    "ChannelName": "SS",
-                    "Description": "Actual power value sum all phases",
-                    "Unit": "VA"
-                },
-                "ACT_PowerDisplayName": {
-                    "Description": "Power display name (P/Q/S)"
-                },
-                "EntityName": {
-                    "Description": "Module's name"
-                },
-                "INF_ModeTypes": {
-                    "Description": "Display names (P/Q/S) of available modes"
-                },
-                "INF_ModuleInterface": {
-                    "Description": "Module's interface details"
-                },
-                "PAR_Interval": {
-                    "Description": "Integration time",
-                    "Unit": "s",
-                    "Validation": {
-                        "Data": [
-                            1,
-                            100,
-                            0.5
-                        ],
-                        "Type": "DOUBLE"
-                    }
-                },
-                "PAR_MeasModePhaseSelect": {
-                    "Description": "Active phases selection mask",
-                    "Validation": {
-                        "Data": [
-                            "111"
-                        ],
-                        "Type": "STRING"
-                    }
-                },
-                "PAR_MeasuringMode": {
-                    "Description": "Measuring mode",
-                    "Validation": {
-                        "Data": [
-                            "4LS"
-                        ],
-                        "Type": "STRING"
-                    }
-                },
-                "SIG_Measuring": {
-                    "Description": "Signal indicating measurement activity"
-                }
-            },
-            "ModuleInfo": {
-                "Description": "This module measures power with configured measuring and integration modes",
-                "FOUTCount": "0",
-                "Name": "POWER1Module6",
-                "NominalFrequency": "200000",
-                "PQSCount": "4"
-            },
-            "SCPIInfo": {
-                "Cmd": [
-                ],
-                "Name": "POW6"
-            }
-        },
-        "PAR_Interval": 1,
-        "PAR_MeasModePhaseSelect": "111",
-        "PAR_MeasuringMode": "4LS",
-        "SIG_Measuring": 1
-    },
-    "1076": {
+    "1078": {
         "ACT_CanChangePhaseMask": false,
         "ACT_MaxMeasSysCount": 3,
         "ACT_PQS1": null,
@@ -2737,7 +2633,7 @@
         "ACT_PQS3": null,
         "ACT_PQS4": null,
         "ACT_PowerDisplayName": "Q",
-        "EntityName": "POWER1Module7",
+        "EntityName": "POWER1Module98",
         "INF_ModeTypes": [
             "Q"
         ],
@@ -2818,19 +2714,123 @@
             "ModuleInfo": {
                 "Description": "This module measures power with configured measuring and integration modes",
                 "FOUTCount": "0",
-                "Name": "POWER1Module7",
+                "Name": "POWER1Module98",
                 "NominalFrequency": "200000",
                 "PQSCount": "4"
             },
             "SCPIInfo": {
                 "Cmd": [
                 ],
-                "Name": "POW7"
+                "Name": "POW98"
             }
         },
         "PAR_Interval": 1,
         "PAR_MeasModePhaseSelect": "111",
         "PAR_MeasuringMode": "4LB",
+        "SIG_Measuring": 1
+    },
+    "1079": {
+        "ACT_CanChangePhaseMask": false,
+        "ACT_MaxMeasSysCount": 3,
+        "ACT_PQS1": null,
+        "ACT_PQS2": null,
+        "ACT_PQS3": null,
+        "ACT_PQS4": null,
+        "ACT_PowerDisplayName": "S",
+        "EntityName": "POWER1Module99",
+        "INF_ModeTypes": [
+            "S"
+        ],
+        "INF_ModuleInterface": {
+            "ComponentInfo": {
+                "ACT_CanChangePhaseMask": {
+                    "Description": "Boolean indicator that current measurement mode can change phase mask"
+                },
+                "ACT_MaxMeasSysCount": {
+                    "Description": "Number of max measurement systems for current measurement mode"
+                },
+                "ACT_PQS1": {
+                    "ChannelName": "S1",
+                    "Description": "Actual power value U1/I1",
+                    "Unit": "VA"
+                },
+                "ACT_PQS2": {
+                    "ChannelName": "S2",
+                    "Description": "Actual power value U2/I2",
+                    "Unit": "VA"
+                },
+                "ACT_PQS3": {
+                    "ChannelName": "S3",
+                    "Description": "Actual power value U3/I3",
+                    "Unit": "VA"
+                },
+                "ACT_PQS4": {
+                    "ChannelName": "SS",
+                    "Description": "Actual power value sum all phases",
+                    "Unit": "VA"
+                },
+                "ACT_PowerDisplayName": {
+                    "Description": "Power display name (P/Q/S)"
+                },
+                "EntityName": {
+                    "Description": "Module's name"
+                },
+                "INF_ModeTypes": {
+                    "Description": "Display names (P/Q/S) of available modes"
+                },
+                "INF_ModuleInterface": {
+                    "Description": "Module's interface details"
+                },
+                "PAR_Interval": {
+                    "Description": "Integration time",
+                    "Unit": "s",
+                    "Validation": {
+                        "Data": [
+                            1,
+                            100,
+                            0.5
+                        ],
+                        "Type": "DOUBLE"
+                    }
+                },
+                "PAR_MeasModePhaseSelect": {
+                    "Description": "Active phases selection mask",
+                    "Validation": {
+                        "Data": [
+                            "111"
+                        ],
+                        "Type": "STRING"
+                    }
+                },
+                "PAR_MeasuringMode": {
+                    "Description": "Measuring mode",
+                    "Validation": {
+                        "Data": [
+                            "4LS"
+                        ],
+                        "Type": "STRING"
+                    }
+                },
+                "SIG_Measuring": {
+                    "Description": "Signal indicating measurement activity"
+                }
+            },
+            "ModuleInfo": {
+                "Description": "This module measures power with configured measuring and integration modes",
+                "FOUTCount": "0",
+                "Name": "POWER1Module99",
+                "NominalFrequency": "200000",
+                "PQSCount": "4"
+            },
+            "SCPIInfo": {
+                "Cmd": [
+                ],
+                "Name": "POW99"
+            }
+        },
+        "PAR_Interval": 1,
+        "PAR_MeasModePhaseSelect": "111",
+        "PAR_MeasuringMode": "4LS",
         "SIG_Measuring": 1
     },
     "1100": {

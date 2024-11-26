@@ -6,7 +6,7 @@ QTEST_MAIN(test_lambda_config_load)
 
 void test_lambda_config_load::fileFound()
 {
-    QFile tmpXmlConfigFile(QStringLiteral(CONFIG_SOURCES_LAMBDAMODULE) + "/" + "mt310s2-lambdamodule.xml");
+    QFile tmpXmlConfigFile(QStringLiteral(CONFIG_SOURCES_LAMBDAMODULE) + "/" + "lambdamodule-with-own-apparentpowermodule.xml");
     QVERIFY(tmpXmlConfigFile.exists());
 }
 

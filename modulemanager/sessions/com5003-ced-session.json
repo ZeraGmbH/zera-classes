@@ -52,13 +52,15 @@
       },
       {
         "name" : "power1module",
-        "configFile" : "power1moduleAllPhaseLambdaApparentCED.xml",
-        "id": 1074
+        "configFile" : "power1moduleAllPhaseLambdaReactive.xml",
+        "module_num": 98,
+        "id": 1078
       },
       {
         "name" : "power1module",
-        "configFile" : "power1moduleAllPhaseLambdaReactive.xml",
-        "id": 1076
+        "configFile" : "power1moduleAllPhaseLambdaApparentCED.xml",
+        "module_num": 99,
+        "id": 1079
       },
       {
         "name" : "power2module",
