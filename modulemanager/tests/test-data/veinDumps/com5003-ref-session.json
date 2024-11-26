@@ -1,0 +1,2171 @@
+{
+    "0": {
+        "DevMode": false,
+        "Entities": [
+            0,
+            1000,
+            1001,
+            1020,
+            1050,
+            1070,
+            1130,
+            1150,
+            1400,
+            9999
+        ],
+        "EntityName": "_System",
+        "INF_ModuleInterface": {
+            "ComponentInfo": {
+                "EntityName": {
+                    "Desciption": "Module's name"
+                },
+                "INF_ModuleInterface": {
+                    "Description": "Module's interface details"
+                },
+                "Session": {
+                    "Description": "Session name",
+                    "Validation": {
+                        "Data": [
+                            "Default",
+                            "DC: 4*Voltage / 1*Current",
+                            "EMOB AC",
+                            "EMOB DC",
+                            "Changing energy direction"
+                        ],
+                        "Type": "STRING"
+                    }
+                }
+            },
+            "ModuleInfo": {
+                "Description": "This module gives general information about the device",
+                "Name": "_System"
+            },
+            "SCPIInfo": {
+                "Cmd": [
+                    [
+                        "CONFIGURATION",
+                        "NAMESESSION",
+                        "10",
+                        "Session",
+                        "0",
+                        ""
+                    ],
+                    [
+                        "CONFIGURATION",
+                        "SESSION:CATALOG",
+                        "2",
+                        "Session",
+                        "1",
+                        ""
+                    ]
+                ],
+                "Name": "SYST"
+            }
+        },
+        "ModulesPaused": false,
+        "Session": "com5003-ref-session.json",
+        "SessionsAvailable": [
+            "mt310s2-meas-session.json",
+            "mt310s2-dc-session.json",
+            "mt310s2-emob-session-ac.json",
+            "mt310s2-emob-session-dc.json",
+            "mt310s2-ced-session.json"
+        ]
+    },
+    "1000": {
+        "EntityName": "ModeModule1",
+        "INF_ModuleInterface": {
+            "ComponentInfo": {
+                "EntityName": {
+                    "Description": "Module's name"
+                },
+                "INF_ModuleInterface": {
+                    "Description": "Module's interface details"
+                }
+            },
+            "ModuleInfo": {
+                "Description": "This module is responsible for setting measuring mode and resetting dsp adjustment data",
+                "Name": "ModeModule1"
+            },
+            "SCPIInfo": {
+                "Cmd": [
+                ],
+                "Name": "MOD1"
+            }
+        }
+    },
+    "1001": {
+        "EntityName": "REFERENCEModule1",
+        "INF_ModuleInterface": {
+            "ComponentInfo": {
+                "EntityName": {
+                    "Description": "Module's name"
+                },
+                "INF_ModuleInterface": {
+                    "Description": "Module's interface details"
+                }
+            },
+            "ModuleInfo": {
+                "Description": "This module measures reference actual values for configured channels",
+                "Name": "REFERENCEModule1"
+            },
+            "SCPIInfo": {
+                "Cmd": [
+                ],
+                "Name": "REF1"
+            }
+        }
+    },
+    "1020": {
+        "ACT_Channel1Peak": null,
+        "ACT_Channel1Rms": null,
+        "ACT_Channel2Peak": null,
+        "ACT_Channel2Rms": null,
+        "ACT_Channel3Peak": null,
+        "ACT_Channel3Rms": null,
+        "ACT_Channel4Peak": null,
+        "ACT_Channel4Rms": null,
+        "ACT_Channel5Peak": null,
+        "ACT_Channel5Rms": null,
+        "ACT_Channel6Peak": null,
+        "ACT_Channel6Rms": null,
+        "ACT_Frequency": null,
+        "EntityName": "RangeModule1",
+        "INF_Adjusted": 0,
+        "INF_Channel1ActOVLREJ": 12.499988280242833,
+        "INF_Channel1ActREJ": 10,
+        "INF_Channel1OVLREJ": 12.499988280242833,
+        "INF_Channel2ActOVLREJ": 12.499988280242833,
+        "INF_Channel2ActREJ": 10,
+        "INF_Channel2OVLREJ": 12.499988280242833,
+        "INF_Channel3ActOVLREJ": 12.499988280242833,
+        "INF_Channel3ActREJ": 10,
+        "INF_Channel3OVLREJ": 12.499988280242833,
+        "INF_Channel4ActOVLREJ": 12.499988280242833,
+        "INF_Channel4ActREJ": 10,
+        "INF_Channel4OVLREJ": 12.499988280242833,
+        "INF_Channel5ActOVLREJ": 12.499988280242833,
+        "INF_Channel5ActREJ": 10,
+        "INF_Channel5OVLREJ": 12.499988280242833,
+        "INF_Channel6ActOVLREJ": 12.499988280242833,
+        "INF_Channel6ActREJ": 10,
+        "INF_Channel6OVLREJ": 12.499988280242833,
+        "INF_ModuleInterface": {
+            "ComponentInfo": {
+                "ACT_Channel1Peak": {
+                    "ChannelName": "REF1",
+                    "Description": "Actual peak value",
+                    "Unit": "V"
+                },
+                "ACT_Channel1Rms": {
+                    "Description": "Actual RMS value"
+                },
+                "ACT_Channel2Peak": {
+                    "ChannelName": "REF2",
+                    "Description": "Actual peak value",
+                    "Unit": "V"
+                },
+                "ACT_Channel2Rms": {
+                    "Description": "Actual RMS value"
+                },
+                "ACT_Channel3Peak": {
+                    "ChannelName": "REF3",
+                    "Description": "Actual peak value",
+                    "Unit": "V"
+                },
+                "ACT_Channel3Rms": {
+                    "Description": "Actual RMS value"
+                },
+                "ACT_Channel4Peak": {
+                    "ChannelName": "REF4",
+                    "Description": "Actual peak value",
+                    "Unit": "V"
+                },
+                "ACT_Channel4Rms": {
+                    "Description": "Actual RMS value"
+                },
+                "ACT_Channel5Peak": {
+                    "ChannelName": "REF5",
+                    "Description": "Actual peak value",
+                    "Unit": "V"
+                },
+                "ACT_Channel5Rms": {
+                    "Description": "Actual RMS value"
+                },
+                "ACT_Channel6Peak": {
+                    "ChannelName": "REF6",
+                    "Description": "Actual peak value",
+                    "Unit": "V"
+                },
+                "ACT_Channel6Rms": {
+                    "Description": "Actual RMS value"
+                },
+                "ACT_Frequency": {
+                    "Description": "Actual frequency",
+                    "Unit": "Hz"
+                },
+                "EntityName": {
+                    "Description": "Module's name"
+                },
+                "INF_Adjusted": {
+                    "Description": "Adjustment information"
+                },
+                "INF_Channel1ActOVLREJ": {
+                    "ChannelName": "REF1",
+                    "Description": "Channel's actual range peak rejection"
+                },
+                "INF_Channel1ActREJ": {
+                    "ChannelName": "REF1",
+                    "Description": "Channel's actual rejection"
+                },
+                "INF_Channel1OVLREJ": {
+                    "ChannelName": "REF1",
+                    "Description": "Channel's maximum range peak rejection"
+                },
+                "INF_Channel2ActOVLREJ": {
+                    "ChannelName": "REF2",
+                    "Description": "Channel's actual range peak rejection"
+                },
+                "INF_Channel2ActREJ": {
+                    "ChannelName": "REF2",
+                    "Description": "Channel's actual rejection"
+                },
+                "INF_Channel2OVLREJ": {
+                    "ChannelName": "REF2",
+                    "Description": "Channel's maximum range peak rejection"
+                },
+                "INF_Channel3ActOVLREJ": {
+                    "ChannelName": "REF3",
+                    "Description": "Channel's actual range peak rejection"
+                },
+                "INF_Channel3ActREJ": {
+                    "ChannelName": "REF3",
+                    "Description": "Channel's actual rejection"
+                },
+                "INF_Channel3OVLREJ": {
+                    "ChannelName": "REF3",
+                    "Description": "Channel's maximum range peak rejection"
+                },
+                "INF_Channel4ActOVLREJ": {
+                    "ChannelName": "REF4",
+                    "Description": "Channel's actual range peak rejection"
+                },
+                "INF_Channel4ActREJ": {
+                    "ChannelName": "REF4",
+                    "Description": "Channel's actual rejection"
+                },
+                "INF_Channel4OVLREJ": {
+                    "ChannelName": "REF4",
+                    "Description": "Channel's maximum range peak rejection"
+                },
+                "INF_Channel5ActOVLREJ": {
+                    "ChannelName": "REF5",
+                    "Description": "Channel's actual range peak rejection"
+                },
+                "INF_Channel5ActREJ": {
+                    "ChannelName": "REF5",
+                    "Description": "Channel's actual rejection"
+                },
+                "INF_Channel5OVLREJ": {
+                    "ChannelName": "REF5",
+                    "Description": "Channel's maximum range peak rejection"
+                },
+                "INF_Channel6ActOVLREJ": {
+                    "ChannelName": "REF6",
+                    "Description": "Channel's actual range peak rejection"
+                },
+                "INF_Channel6ActREJ": {
+                    "ChannelName": "REF6",
+                    "Description": "Channel's actual rejection"
+                },
+                "INF_Channel6OVLREJ": {
+                    "ChannelName": "REF6",
+                    "Description": "Channel's maximum range peak rejection"
+                },
+                "INF_ModuleInterface": {
+                    "Description": "Module's interface details"
+                },
+                "INF_OverloadMax": {
+                    "Description": "Maximum range overload condition"
+                },
+                "INF_PreScalingInfoGroup0": {
+                    "Description": "Channel's actual range peak rejection"
+                },
+                "INF_PreScalingInfoGroup1": {
+                    "Description": "Channel's actual range peak rejection"
+                },
+                "INF_PreScalingInfoGroup2": {
+                    "Description": "Channel's actual range peak rejection"
+                },
+                "PAR_Channel1Range": {
+                    "ChannelName": "REF1",
+                    "Description": "Channel's range",
+                    "Validation": {
+                        "Data": [
+                            "R10V",
+                            "R0V"
+                        ],
+                        "Type": "STRING"
+                    }
+                },
+                "PAR_Channel2Range": {
+                    "ChannelName": "REF2",
+                    "Description": "Channel's range",
+                    "Validation": {
+                        "Data": [
+                            "R10V",
+                            "R0V"
+                        ],
+                        "Type": "STRING"
+                    }
+                },
+                "PAR_Channel3Range": {
+                    "ChannelName": "REF3",
+                    "Description": "Channel's range",
+                    "Validation": {
+                        "Data": [
+                            "R10V",
+                            "R0V"
+                        ],
+                        "Type": "STRING"
+                    }
+                },
+                "PAR_Channel4Range": {
+                    "ChannelName": "REF4",
+                    "Description": "Channel's range",
+                    "Validation": {
+                        "Data": [
+                            "R10V",
+                            "R0V"
+                        ],
+                        "Type": "STRING"
+                    }
+                },
+                "PAR_Channel5Range": {
+                    "ChannelName": "REF5",
+                    "Description": "Channel's range",
+                    "Validation": {
+                        "Data": [
+                            "R10V",
+                            "R0V"
+                        ],
+                        "Type": "STRING"
+                    }
+                },
+                "PAR_Channel6Range": {
+                    "ChannelName": "REF6",
+                    "Description": "Channel's range",
+                    "Validation": {
+                        "Data": [
+                            "R10V",
+                            "R0V"
+                        ],
+                        "Type": "STRING"
+                    }
+                },
+                "PAR_ChannelGrouping": {
+                    "Description": "Channel grouping on/off",
+                    "Validation": {
+                        "Data": [
+                            0,
+                            1
+                        ],
+                        "Type": "BOOL"
+                    }
+                },
+                "PAR_IgnoreRmsValues": {
+                    "Description": "Percentage of nominal range below which channel values are ignored",
+                    "Unit": "%",
+                    "Validation": {
+                        "Data": [
+                            0,
+                            2,
+                            0.1
+                        ],
+                        "Type": "DOUBLE"
+                    }
+                },
+                "PAR_IgnoreRmsValuesOnOff": {
+                    "Description": "Enable or disable channel ignore limit option",
+                    "Validation": {
+                        "Data": [
+                            0,
+                            1
+                        ],
+                        "Type": "BOOL"
+                    }
+                },
+                "PAR_InvertPhase1": {
+                    "Description": "Inverted Phase",
+                    "Validation": {
+                        "Data": [
+                            0,
+                            1
+                        ],
+                        "Type": "BOOL"
+                    }
+                },
+                "PAR_InvertPhase2": {
+                    "Description": "Inverted Phase",
+                    "Validation": {
+                        "Data": [
+                            0,
+                            1
+                        ],
+                        "Type": "BOOL"
+                    }
+                },
+                "PAR_InvertPhase3": {
+                    "Description": "Inverted Phase",
+                    "Validation": {
+                        "Data": [
+                            0,
+                            1
+                        ],
+                        "Type": "BOOL"
+                    }
+                },
+                "PAR_InvertPhase4": {
+                    "Description": "Inverted Phase",
+                    "Validation": {
+                        "Data": [
+                            0,
+                            1
+                        ],
+                        "Type": "BOOL"
+                    }
+                },
+                "PAR_InvertPhase5": {
+                    "Description": "Inverted Phase",
+                    "Validation": {
+                        "Data": [
+                            0,
+                            1
+                        ],
+                        "Type": "BOOL"
+                    }
+                },
+                "PAR_InvertPhase6": {
+                    "Description": "Inverted Phase",
+                    "Validation": {
+                        "Data": [
+                            0,
+                            1
+                        ],
+                        "Type": "BOOL"
+                    }
+                },
+                "PAR_Overload": {
+                    "Description": "Overload",
+                    "Validation": {
+                        "Data": [
+                            0,
+                            1
+                        ],
+                        "Type": "BOOL"
+                    }
+                },
+                "PAR_PreScalingEnabledGroup0": {
+                    "Description": "Enable prescaling for group",
+                    "Validation": {
+                        "Data": [
+                            0,
+                            1
+                        ],
+                        "Type": "BOOL"
+                    }
+                },
+                "PAR_PreScalingEnabledGroup1": {
+                    "Description": "Enable prescaling for group",
+                    "Validation": {
+                        "Data": [
+                            0,
+                            1
+                        ],
+                        "Type": "BOOL"
+                    }
+                },
+                "PAR_PreScalingEnabledGroup2": {
+                    "Description": "Enable prescaling for group",
+                    "Validation": {
+                        "Data": [
+                            0,
+                            1
+                        ],
+                        "Type": "BOOL"
+                    }
+                },
+                "PAR_PreScalingGroup0": {
+                    "Description": "Scaling factor for group k (see configuration)",
+                    "Validation": {
+                        "Data": "^[1-9][0-9]*\\/[1-9][0-9]*(\\*\\((sqrt\\(3\\)|1\\/sqrt\\(3\\))\\))?$",
+                        "Type": "REGEX"
+                    }
+                },
+                "PAR_PreScalingGroup1": {
+                    "Description": "Scaling factor for group k (see configuration)",
+                    "Validation": {
+                        "Data": "^[1-9][0-9]*\\/[1-9][0-9]*(\\*\\((sqrt\\(3\\)|1\\/sqrt\\(3\\))\\))?$",
+                        "Type": "REGEX"
+                    }
+                },
+                "PAR_PreScalingGroup2": {
+                    "Description": "Scaling factor for group k (see configuration)",
+                    "Validation": {
+                        "Data": "^[1-9][0-9]*\\/[1-9][0-9]*(\\*\\((sqrt\\(3\\)|1\\/sqrt\\(3\\))\\))?$",
+                        "Type": "REGEX"
+                    }
+                },
+                "PAR_RangeAutomatic": {
+                    "Description": "Range automatic on/off",
+                    "Validation": {
+                        "Data": [
+                            0,
+                            1
+                        ],
+                        "Type": "BOOL"
+                    }
+                },
+                "SIG_Channel1OVL": {
+                    "Description": "Channels overload status"
+                },
+                "SIG_Channel2OVL": {
+                    "Description": "Channels overload status"
+                },
+                "SIG_Channel3OVL": {
+                    "Description": "Channels overload status"
+                },
+                "SIG_Channel4OVL": {
+                    "Description": "Channels overload status"
+                },
+                "SIG_Channel5OVL": {
+                    "Description": "Channels overload status"
+                },
+                "SIG_Channel6OVL": {
+                    "Description": "Channels overload status"
+                },
+                "SIG_Measuring": {
+                    "Description": "Signal indicating measurement activity"
+                },
+                "SIG_Ranging": {
+                    "Description": "Signal on changing ranges"
+                }
+            },
+            "ModuleInfo": {
+                "ChannelCount": "6",
+                "ChannelGroup1": "UL1;UL2;UL3",
+                "ChannelGroup2": "IL1;IL2;IL3",
+                "ChannelGroup3": "REF1;REF2;REF3;REF4;REF5;REF6",
+                "Description": "This module is responsible for range handling,\n range setting, automatic, adjustment and scaling",
+                "GroupCount": "3",
+                "Name": "RangeModule1"
+            },
+            "SCPIInfo": {
+                "Cmd": [
+                    [
+                        "SENSE",
+                        "REF1:RANGE:CATALOG",
+                        "2",
+                        "PAR_Channel1Range",
+                        "1",
+                        ""
+                    ],
+                    [
+                        "SENSE",
+                        "REF2:RANGE:CATALOG",
+                        "2",
+                        "PAR_Channel2Range",
+                        "1",
+                        ""
+                    ],
+                    [
+                        "SENSE",
+                        "REF3:RANGE:CATALOG",
+                        "2",
+                        "PAR_Channel3Range",
+                        "1",
+                        ""
+                    ],
+                    [
+                        "SENSE",
+                        "REF4:RANGE:CATALOG",
+                        "2",
+                        "PAR_Channel4Range",
+                        "1",
+                        ""
+                    ],
+                    [
+                        "SENSE",
+                        "REF5:RANGE:CATALOG",
+                        "2",
+                        "PAR_Channel5Range",
+                        "1",
+                        ""
+                    ],
+                    [
+                        "SENSE",
+                        "REF6:RANGE:CATALOG",
+                        "2",
+                        "PAR_Channel6Range",
+                        "1",
+                        ""
+                    ],
+                    [
+                        "MEASURE",
+                        "REF1",
+                        "8",
+                        "ACT_Channel1Peak",
+                        "0",
+                        "V"
+                    ],
+                    [
+                        "MEASURE",
+                        "REF2",
+                        "8",
+                        "ACT_Channel2Peak",
+                        "0",
+                        "V"
+                    ],
+                    [
+                        "MEASURE",
+                        "REF3",
+                        "8",
+                        "ACT_Channel3Peak",
+                        "0",
+                        "V"
+                    ],
+                    [
+                        "MEASURE",
+                        "REF4",
+                        "8",
+                        "ACT_Channel4Peak",
+                        "0",
+                        "V"
+                    ],
+                    [
+                        "MEASURE",
+                        "REF5",
+                        "8",
+                        "ACT_Channel5Peak",
+                        "0",
+                        "V"
+                    ],
+                    [
+                        "MEASURE",
+                        "REF6",
+                        "8",
+                        "ACT_Channel6Peak",
+                        "0",
+                        "V"
+                    ],
+                    [
+                        "MEASURE",
+                        "F",
+                        "8",
+                        "ACT_Frequency",
+                        "0",
+                        "Hz"
+                    ],
+                    [
+                        "SENSE",
+                        "REF1:RANGE",
+                        "10",
+                        "PAR_Channel1Range",
+                        "0",
+                        ""
+                    ],
+                    [
+                        "SENSE",
+                        "REF2:RANGE",
+                        "10",
+                        "PAR_Channel2Range",
+                        "0",
+                        ""
+                    ],
+                    [
+                        "SENSE",
+                        "REF3:RANGE",
+                        "10",
+                        "PAR_Channel3Range",
+                        "0",
+                        ""
+                    ],
+                    [
+                        "SENSE",
+                        "REF4:RANGE",
+                        "10",
+                        "PAR_Channel4Range",
+                        "0",
+                        ""
+                    ],
+                    [
+                        "SENSE",
+                        "REF5:RANGE",
+                        "10",
+                        "PAR_Channel5Range",
+                        "0",
+                        ""
+                    ],
+                    [
+                        "SENSE",
+                        "REF6:RANGE",
+                        "10",
+                        "PAR_Channel6Range",
+                        "0",
+                        ""
+                    ],
+                    [
+                        "CONFIGURATION",
+                        "GROUPING",
+                        "10",
+                        "PAR_ChannelGrouping",
+                        "0",
+                        ""
+                    ],
+                    [
+                        "CONFIGURATION",
+                        "IGNORERMSVAL",
+                        "10",
+                        "PAR_IgnoreRmsValues",
+                        "0",
+                        "%"
+                    ],
+                    [
+                        "CONFIGURATION",
+                        "ENABLEIGNORERMSVAL",
+                        "10",
+                        "PAR_IgnoreRmsValuesOnOff",
+                        "0",
+                        ""
+                    ],
+                    [
+                        "CONFIGURATION",
+                        "REF1:INVERTPHASE",
+                        "10",
+                        "PAR_InvertPhase1",
+                        "0",
+                        ""
+                    ],
+                    [
+                        "CONFIGURATION",
+                        "REF2:INVERTPHASE",
+                        "10",
+                        "PAR_InvertPhase2",
+                        "0",
+                        ""
+                    ],
+                    [
+                        "CONFIGURATION",
+                        "REF3:INVERTPHASE",
+                        "10",
+                        "PAR_InvertPhase3",
+                        "0",
+                        ""
+                    ],
+                    [
+                        "CONFIGURATION",
+                        "REF4:INVERTPHASE",
+                        "10",
+                        "PAR_InvertPhase4",
+                        "0",
+                        ""
+                    ],
+                    [
+                        "CONFIGURATION",
+                        "REF5:INVERTPHASE",
+                        "10",
+                        "PAR_InvertPhase5",
+                        "0",
+                        ""
+                    ],
+                    [
+                        "CONFIGURATION",
+                        "REF6:INVERTPHASE",
+                        "10",
+                        "PAR_InvertPhase6",
+                        "0",
+                        ""
+                    ],
+                    [
+                        "SENSE",
+                        "OVERLOAD",
+                        "10",
+                        "PAR_Overload",
+                        "0",
+                        ""
+                    ],
+                    [
+                        "CONFIGURATION",
+                        "RNGAUTO",
+                        "10",
+                        "PAR_RangeAutomatic",
+                        "0",
+                        ""
+                    ]
+                ],
+                "Name": "RNG1"
+            }
+        },
+        "INF_OverloadMax": 0,
+        "INF_PreScalingInfoGroup0": 1,
+        "INF_PreScalingInfoGroup1": 1,
+        "INF_PreScalingInfoGroup2": 1,
+        "PAR_Channel1Range": "R10V",
+        "PAR_Channel2Range": "R10V",
+        "PAR_Channel3Range": "R10V",
+        "PAR_Channel4Range": "R10V",
+        "PAR_Channel5Range": "R10V",
+        "PAR_Channel6Range": "R10V",
+        "PAR_ChannelGrouping": 1,
+        "PAR_IgnoreRmsValues": 1,
+        "PAR_IgnoreRmsValuesOnOff": 0,
+        "PAR_InvertPhase1": 0,
+        "PAR_InvertPhase2": 0,
+        "PAR_InvertPhase3": 0,
+        "PAR_InvertPhase4": 0,
+        "PAR_InvertPhase5": 0,
+        "PAR_InvertPhase6": 0,
+        "PAR_Overload": 0,
+        "PAR_PreScalingEnabledGroup0": 0,
+        "PAR_PreScalingEnabledGroup1": 0,
+        "PAR_PreScalingEnabledGroup2": 0,
+        "PAR_PreScalingGroup0": "1/1",
+        "PAR_PreScalingGroup1": "1/1",
+        "PAR_PreScalingGroup2": "1/1",
+        "PAR_RangeAutomatic": 0,
+        "SIG_Channel1OVL": 0,
+        "SIG_Channel2OVL": 0,
+        "SIG_Channel3OVL": 0,
+        "SIG_Channel4OVL": 0,
+        "SIG_Channel5OVL": 0,
+        "SIG_Channel6OVL": 0,
+        "SIG_Measuring": 1,
+        "SIG_Ranging": 0
+    },
+    "1050": {
+        "ACT_DFTPN1": null,
+        "ACT_DFTPN2": null,
+        "ACT_DFTPN3": null,
+        "ACT_DFTPN4": null,
+        "ACT_DFTPN5": null,
+        "ACT_DFTPN6": null,
+        "ACT_POL_DFTPN1": null,
+        "ACT_POL_DFTPN2": null,
+        "ACT_POL_DFTPN3": null,
+        "ACT_POL_DFTPN4": null,
+        "ACT_POL_DFTPN5": null,
+        "ACT_POL_DFTPN6": null,
+        "ACT_RFIELD": null,
+        "EntityName": "DFTModule1",
+        "INF_ModuleInterface": {
+            "ComponentInfo": {
+                "ACT_DFTPN1": {
+                    "ChannelName": "REF1",
+                    "Description": "Actual value phase/neutral / cartesian format: re,im",
+                    "Unit": "V"
+                },
+                "ACT_DFTPN2": {
+                    "ChannelName": "REF2",
+                    "Description": "Actual value phase/neutral / cartesian format: re,im",
+                    "Unit": "V"
+                },
+                "ACT_DFTPN3": {
+                    "ChannelName": "REF3",
+                    "Description": "Actual value phase/neutral / cartesian format: re,im",
+                    "Unit": "V"
+                },
+                "ACT_DFTPN4": {
+                    "ChannelName": "REF4",
+                    "Description": "Actual value / cartesian format: re,im",
+                    "Unit": "V"
+                },
+                "ACT_DFTPN5": {
+                    "ChannelName": "REF5",
+                    "Description": "Actual value / cartesian format: re,im",
+                    "Unit": "V"
+                },
+                "ACT_DFTPN6": {
+                    "ChannelName": "REF6",
+                    "Description": "Actual value / cartesian format: re,im",
+                    "Unit": "V"
+                },
+                "ACT_POL_DFTPN1": {
+                    "ChannelName": "REF1",
+                    "Description": "Actual value phase/neutral / polar format: abs,rad[0,2π],deg[0,360]",
+                    "Unit": "V"
+                },
+                "ACT_POL_DFTPN2": {
+                    "ChannelName": "REF2",
+                    "Description": "Actual value phase/neutral / polar format: abs,rad[0,2π],deg[0,360]",
+                    "Unit": "V"
+                },
+                "ACT_POL_DFTPN3": {
+                    "ChannelName": "REF3",
+                    "Description": "Actual value phase/neutral / polar format: abs,rad[0,2π],deg[0,360]",
+                    "Unit": "V"
+                },
+                "ACT_POL_DFTPN4": {
+                    "ChannelName": "REF4",
+                    "Description": "Actual value / polar format: abs,rad[0,2π],deg[0,360]",
+                    "Unit": "V"
+                },
+                "ACT_POL_DFTPN5": {
+                    "ChannelName": "REF5",
+                    "Description": "Actual value / polar format: abs,rad[0,2π],deg[0,360]",
+                    "Unit": "V"
+                },
+                "ACT_POL_DFTPN6": {
+                    "ChannelName": "REF6",
+                    "Description": "Actual value / polar format: abs,rad[0,2π],deg[0,360]",
+                    "Unit": "V"
+                },
+                "ACT_RFIELD": {
+                    "Description": "Phase sequence"
+                },
+                "EntityName": {
+                    "Description": "Module's name"
+                },
+                "INF_ModuleInterface": {
+                    "Description": "Module's interface details"
+                },
+                "PAR_Interval": {
+                    "Description": "Integration time",
+                    "Unit": "s",
+                    "Validation": {
+                        "Data": [
+                            1,
+                            100,
+                            0.5
+                        ],
+                        "Type": "DOUBLE"
+                    }
+                },
+                "PAR_RefChannel": {
+                    "Description": "Reference channel",
+                    "Validation": {
+                        "Data": [
+                            "REF1",
+                            "REF2",
+                            "REF3",
+                            "REF4",
+                            "REF5",
+                            "REF6"
+                        ],
+                        "Type": "STRING"
+                    }
+                },
+                "SIG_Measuring": {
+                    "Description": "Signal indicating measurement activity"
+                }
+            },
+            "ModuleInfo": {
+                "DFTPNCount": "6",
+                "DFTPPCount": "0",
+                "Description": "This module measures configured order dft values for configured channels",
+                "Name": "DFTModule1"
+            },
+            "SCPIInfo": {
+                "Cmd": [
+                    [
+                        "MEASURE",
+                        "REF1",
+                        "8",
+                        "ACT_DFTPN1",
+                        "0",
+                        "V"
+                    ],
+                    [
+                        "MEASURE",
+                        "REF1",
+                        "8",
+                        "ACT_POL_DFTPN1",
+                        "0",
+                        "V"
+                    ],
+                    [
+                        "MEASURE",
+                        "REF2",
+                        "8",
+                        "ACT_DFTPN2",
+                        "0",
+                        "V"
+                    ],
+                    [
+                        "MEASURE",
+                        "REF2",
+                        "8",
+                        "ACT_POL_DFTPN2",
+                        "0",
+                        "V"
+                    ],
+                    [
+                        "MEASURE",
+                        "REF3",
+                        "8",
+                        "ACT_DFTPN3",
+                        "0",
+                        "V"
+                    ],
+                    [
+                        "MEASURE",
+                        "REF3",
+                        "8",
+                        "ACT_POL_DFTPN3",
+                        "0",
+                        "V"
+                    ],
+                    [
+                        "MEASURE",
+                        "REF4",
+                        "8",
+                        "ACT_DFTPN4",
+                        "0",
+                        "V"
+                    ],
+                    [
+                        "MEASURE",
+                        "REF4",
+                        "8",
+                        "ACT_POL_DFTPN4",
+                        "0",
+                        "V"
+                    ],
+                    [
+                        "MEASURE",
+                        "REF5",
+                        "8",
+                        "ACT_DFTPN5",
+                        "0",
+                        "V"
+                    ],
+                    [
+                        "MEASURE",
+                        "REF5",
+                        "8",
+                        "ACT_POL_DFTPN5",
+                        "0",
+                        "V"
+                    ],
+                    [
+                        "MEASURE",
+                        "REF6",
+                        "8",
+                        "ACT_DFTPN6",
+                        "0",
+                        "V"
+                    ],
+                    [
+                        "MEASURE",
+                        "REF6",
+                        "8",
+                        "ACT_POL_DFTPN6",
+                        "0",
+                        "V"
+                    ],
+                    [
+                        "MEASURE",
+                        "RFIELD",
+                        "8",
+                        "ACT_RFIELD",
+                        "0",
+                        ""
+                    ],
+                    [
+                        "CONFIGURATION",
+                        "TINTEGRATION",
+                        "10",
+                        "PAR_Interval",
+                        "0",
+                        "s"
+                    ],
+                    [
+                        "CONFIGURATION",
+                        "REFCHANNEL",
+                        "10",
+                        "PAR_RefChannel",
+                        "0",
+                        ""
+                    ]
+                ],
+                "Name": "DFT1"
+            }
+        },
+        "PAR_Interval": 2,
+        "PAR_RefChannel": "UL1",
+        "SIG_Measuring": 1
+    },
+    "1070": {
+        "ACT_CanChangePhaseMask": false,
+        "ACT_MaxMeasSysCount": 3,
+        "ACT_PQS1": null,
+        "ACT_PQS2": null,
+        "ACT_PQS3": null,
+        "ACT_PQS4": null,
+        "ACT_PowerDisplayName": "P",
+        "EntityName": "POWER1Module1",
+        "INF_ModeTypes": [
+            "P"
+        ],
+        "INF_ModuleInterface": {
+            "ComponentInfo": {
+                "ACT_CanChangePhaseMask": {
+                    "Description": "Boolean indicator that current measurement mode can change phase mask"
+                },
+                "ACT_MaxMeasSysCount": {
+                    "Description": "Number of max measurement systems for current measurement mode"
+                },
+                "ACT_PQS1": {
+                    "ChannelName": "P1",
+                    "Description": "Actual power value U1/I1",
+                    "Unit": "W"
+                },
+                "ACT_PQS2": {
+                    "ChannelName": "P2",
+                    "Description": "Actual power value U2/I2",
+                    "Unit": "W"
+                },
+                "ACT_PQS3": {
+                    "ChannelName": "P3",
+                    "Description": "Actual power value U3/I3",
+                    "Unit": "W"
+                },
+                "ACT_PQS4": {
+                    "ChannelName": "PS",
+                    "Description": "Actual power value sum all phases",
+                    "Unit": "W"
+                },
+                "ACT_PowerDisplayName": {
+                    "Description": "Power display name (P/Q/S)"
+                },
+                "EntityName": {
+                    "Description": "Module's name"
+                },
+                "INF_ModeTypes": {
+                    "Description": "Display names (P/Q/S) of available modes"
+                },
+                "INF_ModuleInterface": {
+                    "Description": "Module's interface details"
+                },
+                "PAR_FOUT0": {
+                    "Description": "Frequency output name"
+                },
+                "PAR_FOUTConstant0": {
+                    "ChannelName": "Fout1",
+                    "Description": "Frequency output constant"
+                },
+                "PAR_Interval": {
+                    "Description": "Integration time",
+                    "Unit": "s",
+                    "Validation": {
+                        "Data": [
+                            1,
+                            100,
+                            0.5
+                        ],
+                        "Type": "DOUBLE"
+                    }
+                },
+                "PAR_MeasModePhaseSelect": {
+                    "Description": "Active phases selection mask",
+                    "Validation": {
+                        "Data": [
+                            "111"
+                        ],
+                        "Type": "STRING"
+                    }
+                },
+                "PAR_MeasuringMode": {
+                    "Description": "Measuring mode",
+                    "Validation": {
+                        "Data": [
+                            "QREF"
+                        ],
+                        "Type": "STRING"
+                    }
+                },
+                "SIG_Measuring": {
+                    "Description": "Signal indicating measurement activity"
+                }
+            },
+            "ModuleInfo": {
+                "Description": "This module measures power with configured measuring and integration modes",
+                "FOUTCount": "1",
+                "Name": "POWER1Module1",
+                "NominalFrequency": "1000000",
+                "PQSCount": "4"
+            },
+            "SCPIInfo": {
+                "Cmd": [
+                    [
+                        "CONFIGURATION",
+                        "MMODE:CATALOG",
+                        "2",
+                        "PAR_MeasuringMode",
+                        "1",
+                        ""
+                    ],
+                    [
+                        "MEASURE",
+                        "P1",
+                        "8",
+                        "ACT_PQS1",
+                        "0",
+                        "W"
+                    ],
+                    [
+                        "MEASURE",
+                        "P2",
+                        "8",
+                        "ACT_PQS2",
+                        "0",
+                        "W"
+                    ],
+                    [
+                        "MEASURE",
+                        "P3",
+                        "8",
+                        "ACT_PQS3",
+                        "0",
+                        "W"
+                    ],
+                    [
+                        "MEASURE",
+                        "PS",
+                        "8",
+                        "ACT_PQS4",
+                        "0",
+                        "W"
+                    ],
+                    [
+                        "CONFIGURATION",
+                        "M0OUT",
+                        "2",
+                        "PAR_FOUT0",
+                        "0",
+                        ""
+                    ],
+                    [
+                        "CONFIGURATION",
+                        "M0CONSTANT",
+                        "2",
+                        "PAR_FOUTConstant0",
+                        "0",
+                        ""
+                    ],
+                    [
+                        "CONFIGURATION",
+                        "TINTEGRATION",
+                        "10",
+                        "PAR_Interval",
+                        "0",
+                        "s"
+                    ],
+                    [
+                        "CONFIGURATION",
+                        "MEASMODEPHASESELECT",
+                        "10",
+                        "PAR_MeasModePhaseSelect",
+                        "0",
+                        ""
+                    ],
+                    [
+                        "CONFIGURATION",
+                        "MMODE",
+                        "10",
+                        "PAR_MeasuringMode",
+                        "0",
+                        ""
+                    ]
+                ],
+                "Name": "POW1"
+            }
+        },
+        "PAR_FOUT0": "fOUT1",
+        "PAR_FOUTConstant0": 12000000000,
+        "PAR_Interval": 1,
+        "PAR_MeasModePhaseSelect": "111",
+        "PAR_MeasuringMode": "QREF",
+        "SIG_Measuring": 1
+    },
+    "1130": {
+        "ACT_EndTime": null,
+        "ACT_Energy": 0,
+        "ACT_EnergyFinal": 0,
+        "ACT_MeasNum": 0,
+        "ACT_MeasTime": 0,
+        "ACT_MulCount": 0,
+        "ACT_MulResult": "{\"countFail\":0,\"countPass\":0,\"countUnfinish\":0,\"idxMax\":-1,\"idxMin\":-1,\"limits\":[],\"mean\":null,\"range\":null,\"stddevN\":null,\"stddevN1\":null,\"values\":[]}",
+        "ACT_Progress": 0,
+        "ACT_Rating": -1,
+        "ACT_RefFreqInput": "fo0",
+        "ACT_Result": 0,
+        "ACT_StartTime": null,
+        "ACT_Status": 0,
+        "EntityName": "SEC1Module1",
+        "INF_ModuleInterface": {
+            "ComponentInfo": {
+                "ACT_EndTime": {
+                    "Description": "Current measurement: End time (dd-MM-yyyy  HH:mm:ss)"
+                },
+                "ACT_Energy": {
+                    "Description": "Energy since last start",
+                    "Unit": "kWh"
+                },
+                "ACT_EnergyFinal": {
+                    "Description": "Energy of last measurement",
+                    "Unit": "kWh"
+                },
+                "ACT_MeasNum": {
+                    "Description": "Multiple measurements: Count"
+                },
+                "ACT_MeasTime": {
+                    "Description": "Current measurement: Duration"
+                },
+                "ACT_MulCount": {
+                    "Description": "Multiple measurements: Count stored"
+                },
+                "ACT_MulResult": {
+                    "Description": "Multiple measurements: JSON result array / statistics"
+                },
+                "ACT_Progress": {
+                    "Description": "Progress information"
+                },
+                "ACT_Rating": {
+                    "Description": "Evaluation last measurement"
+                },
+                "ACT_RefFreqInput": {
+                    "Description": "Reference frequency input to find power module"
+                },
+                "ACT_Result": {
+                    "Description": "Result of last measurement"
+                },
+                "ACT_StartTime": {
+                    "Description": "Current measurement: Start time (dd-MM-yyyy  HH:mm:ss)"
+                },
+                "ACT_Status": {
+                    "Description": "Status: 0:Idle 1:Waiting for first pulse 2:Started 4:Ready 8:Aborted"
+                },
+                "EntityName": {
+                    "Description": "Module's name"
+                },
+                "INF_ModuleInterface": {
+                    "Description": "Module's interface details"
+                },
+                "PAR_ClientActiveNotify": {
+                    "Description": "By changing this component, a client asks us for max actualize performance",
+                    "Validation": {
+                        "Data": [
+                            0,
+                            2147483647,
+                            1
+                        ],
+                        "Type": "INTEGER"
+                    }
+                },
+                "PAR_Continuous": {
+                    "Description": "Enables/disable continuous measurement",
+                    "Validation": {
+                        "Data": [
+                            0,
+                            1,
+                            1
+                        ],
+                        "Type": "INTEGER"
+                    }
+                },
+                "PAR_DUTConstUnit": {
+                    "Description": "DUT constant unit",
+                    "Validation": {
+                        "Data": [
+                            "I/kWh",
+                            "Wh/I"
+                        ],
+                        "Type": "STRING"
+                    }
+                },
+                "PAR_DutConstant": {
+                    "Description": "DUT constant",
+                    "Validation": {
+                        "Data": [
+                            1e-06,
+                            1e+20,
+                            1e-06
+                        ],
+                        "Type": "DOUBLE"
+                    }
+                },
+                "PAR_DutConstantAuto": {
+                    "Description": "Calculate DUT constant to get ~0% error",
+                    "Validation": {
+                        "Data": [
+                            0,
+                            1,
+                            1
+                        ],
+                        "Type": "INTEGER"
+                    }
+                },
+                "PAR_DutConstantIScaleDenom": {
+                    "Description": "Scale the dut constant in case tranformers are used (I fraction denominator)",
+                    "Validation": {
+                        "Data": "^[1-9][0-9]*?$",
+                        "Type": "REGEX"
+                    }
+                },
+                "PAR_DutConstantIScaleNum": {
+                    "Description": "Scale the dut constant in case tranformers are used (I fraction numerator)",
+                    "Validation": {
+                        "Data": "^[1-9][0-9]*$",
+                        "Type": "REGEX"
+                    }
+                },
+                "PAR_DutConstantUScaleDenom": {
+                    "Description": "Scale the dut constant in case tranformers are used (U fraction denominator)",
+                    "Validation": {
+                        "Data": "^[1-9][0-9]*(\\/sqrt\\(3\\))?$",
+                        "Type": "REGEX"
+                    }
+                },
+                "PAR_DutConstantUScaleNum": {
+                    "Description": "Scale the dut constant in case tranformers are used (U fraction numerator)",
+                    "Validation": {
+                        "Data": "^[1-9][0-9]*(\\/sqrt\\(3\\))?$",
+                        "Type": "REGEX"
+                    }
+                },
+                "PAR_DutInput": {
+                    "Description": "DUT input",
+                    "Validation": {
+                        "Data": [
+                            "Fin1",
+                            "Fin2",
+                            "Fin3",
+                            "Fin4"
+                        ],
+                        "Type": "STRING"
+                    }
+                },
+                "PAR_DutTypeMeasurePoint": {
+                    "Description": "Scale the dut constant in case tranformers are used (Measurement point selection)",
+                    "Validation": {
+                        "Data": [
+                            "CpIpUp",
+                            "CpIsUs",
+                            "CsIpUp",
+                            "CsIsUs"
+                        ],
+                        "Type": "STRING"
+                    }
+                },
+                "PAR_Energy": {
+                    "Description": "Energy value",
+                    "Unit": "kWh",
+                    "Validation": {
+                        "Data": [
+                            0,
+                            10000000,
+                            1e-05
+                        ],
+                        "Type": "DOUBLE"
+                    }
+                },
+                "PAR_Lolimit": {
+                    "Description": "Error limit: lower",
+                    "Unit": "%",
+                    "Validation": {
+                        "Data": [
+                            -100,
+                            100,
+                            1e-06
+                        ],
+                        "Type": "DOUBLE"
+                    }
+                },
+                "PAR_MRate": {
+                    "Description": "Pulses to measure",
+                    "Validation": {
+                        "Data": [
+                            1,
+                            4294967295,
+                            1
+                        ],
+                        "Type": "INTEGER"
+                    }
+                },
+                "PAR_MeasCount": {
+                    "Description": "Multiple measurements: Number of measurements",
+                    "Validation": {
+                        "Data": [
+                            1,
+                            400,
+                            1
+                        ],
+                        "Type": "INTEGER"
+                    }
+                },
+                "PAR_MeasWait": {
+                    "Description": "Multiple measurements: Seconds to wait between measurements",
+                    "Unit": "s",
+                    "Validation": {
+                        "Data": [
+                            0,
+                            2147483,
+                            1
+                        ],
+                        "Type": "INTEGER"
+                    }
+                },
+                "PAR_RefConstant": {
+                    "Description": "Reference meter constant"
+                },
+                "PAR_RefInput": {
+                    "Description": "REF input",
+                    "Validation": {
+                        "Data": [
+                            "P"
+                        ],
+                        "Type": "STRING"
+                    }
+                },
+                "PAR_ResultUnit": {
+                    "Description": "Result unit",
+                    "Validation": {
+                        "Data": [
+                            "%",
+                            "ppm"
+                        ],
+                        "Type": "STRING"
+                    }
+                },
+                "PAR_StartStop": {
+                    "Description": "Start/stop measurement (start=1, stop=0)",
+                    "Validation": {
+                        "Data": [
+                            0,
+                            1,
+                            1
+                        ],
+                        "Type": "INTEGER"
+                    }
+                },
+                "PAR_Target": {
+                    "Description": "REF pulses for 0% error - set automatically",
+                    "Validation": {
+                        "Data": [
+                            1,
+                            4294967295,
+                            1
+                        ],
+                        "Type": "INTEGER"
+                    }
+                },
+                "PAR_Uplimit": {
+                    "Description": "Error limit: upper",
+                    "Unit": "%",
+                    "Validation": {
+                        "Data": [
+                            -100,
+                            100,
+                            1e-06
+                        ],
+                        "Type": "DOUBLE"
+                    }
+                }
+            },
+            "ModuleInfo": {
+                "Description": "This module povides a configurable error calculator",
+                "Name": "SEC1Module1"
+            },
+            "SCPIInfo": {
+                "Cmd": [
+                    [
+                        "CALCULATE",
+                        "0001:ENDTIME",
+                        "2",
+                        "ACT_EndTime",
+                        "0",
+                        ""
+                    ],
+                    [
+                        "CALCULATE",
+                        "0001:ENERGY",
+                        "2",
+                        "ACT_Energy",
+                        "0",
+                        ""
+                    ],
+                    [
+                        "CALCULATE",
+                        "0001:ENFINAL",
+                        "2",
+                        "ACT_EnergyFinal",
+                        "0",
+                        ""
+                    ],
+                    [
+                        "CALCULATE",
+                        "0001:MEASNUM",
+                        "2",
+                        "ACT_MeasNum",
+                        "0",
+                        ""
+                    ],
+                    [
+                        "CALCULATE",
+                        "0001:MMEASTIME",
+                        "2",
+                        "ACT_MeasTime",
+                        "0",
+                        ""
+                    ],
+                    [
+                        "CALCULATE",
+                        "0001:MULCOUNT",
+                        "2",
+                        "ACT_MulCount",
+                        "0",
+                        ""
+                    ],
+                    [
+                        "CALCULATE",
+                        "0001:STJARRAY",
+                        "2",
+                        "ACT_MulResult",
+                        "0",
+                        ""
+                    ],
+                    [
+                        "CALCULATE",
+                        "0001:PROGRESS",
+                        "2",
+                        "ACT_Progress",
+                        "0",
+                        ""
+                    ],
+                    [
+                        "CALCULATE",
+                        "0001:RATING",
+                        "2",
+                        "ACT_Rating",
+                        "0",
+                        ""
+                    ],
+                    [
+                        "CALCULATE",
+                        "0001:REFFREQINPUT",
+                        "2",
+                        "ACT_RefFreqInput",
+                        "0",
+                        ""
+                    ],
+                    [
+                        "CALCULATE",
+                        "0001:RESULT",
+                        "2",
+                        "ACT_Result",
+                        "0",
+                        ""
+                    ],
+                    [
+                        "CALCULATE",
+                        "0001:STRTTIME",
+                        "2",
+                        "ACT_StartTime",
+                        "0",
+                        ""
+                    ],
+                    [
+                        "CALCULATE",
+                        "0001:STATUS",
+                        "2",
+                        "ACT_Status",
+                        "0",
+                        ""
+                    ],
+                    [
+                        "CALCULATE",
+                        "0001:CONTINUOUS",
+                        "10",
+                        "PAR_Continuous",
+                        "0",
+                        ""
+                    ],
+                    [
+                        "CALCULATE",
+                        "0001:DCUNIT",
+                        "10",
+                        "PAR_DUTConstUnit",
+                        "0",
+                        ""
+                    ],
+                    [
+                        "CALCULATE",
+                        "0001:DUTCONSTANT",
+                        "10",
+                        "PAR_DutConstant",
+                        "0",
+                        ""
+                    ],
+                    [
+                        "CALCULATE",
+                        "0001:AUTODUTCONSTANT",
+                        "10",
+                        "PAR_DutConstantAuto",
+                        "0",
+                        ""
+                    ],
+                    [
+                        "CONFIGURATION",
+                        "0001:DUTCONSTANTISCALEDENOM",
+                        "10",
+                        "PAR_DutConstantIScaleDenom",
+                        "0",
+                        ""
+                    ],
+                    [
+                        "CONFIGURATION",
+                        "0001:DUTCONSTANTISCALENUM",
+                        "10",
+                        "PAR_DutConstantIScaleNum",
+                        "0",
+                        ""
+                    ],
+                    [
+                        "CONFIGURATION",
+                        "0001:DUTCONSTANTUSCALEDENOM",
+                        "10",
+                        "PAR_DutConstantUScaleDenom",
+                        "0",
+                        ""
+                    ],
+                    [
+                        "CONFIGURATION",
+                        "0001:DUTCONSTANTUSCALENUM",
+                        "10",
+                        "PAR_DutConstantUScaleNum",
+                        "0",
+                        ""
+                    ],
+                    [
+                        "CALCULATE",
+                        "0001:DUTSOURCE",
+                        "10",
+                        "PAR_DutInput",
+                        "0",
+                        ""
+                    ],
+                    [
+                        "CONFIGURATION",
+                        "0001:DUTCONSTANTMEASUREPOINT",
+                        "10",
+                        "PAR_DutTypeMeasurePoint",
+                        "0",
+                        ""
+                    ],
+                    [
+                        "CALCULATE",
+                        "0001:PARENERGY",
+                        "10",
+                        "PAR_Energy",
+                        "0",
+                        ""
+                    ],
+                    [
+                        "CALCULATE",
+                        "0001:LOLIMIT",
+                        "10",
+                        "PAR_Lolimit",
+                        "0",
+                        "%"
+                    ],
+                    [
+                        "CALCULATE",
+                        "0001:MRATE",
+                        "10",
+                        "PAR_MRate",
+                        "0",
+                        ""
+                    ],
+                    [
+                        "CALCULATE",
+                        "0001:MCOUNT",
+                        "10",
+                        "PAR_MeasCount",
+                        "0",
+                        ""
+                    ],
+                    [
+                        "CALCULATE",
+                        "0001:MWAIT",
+                        "10",
+                        "PAR_MeasWait",
+                        "0",
+                        ""
+                    ],
+                    [
+                        "CALCULATE",
+                        "0001:REFCONSTANT",
+                        "10",
+                        "PAR_RefConstant",
+                        "0",
+                        ""
+                    ],
+                    [
+                        "CALCULATE",
+                        "0001:REFSOURCE",
+                        "10",
+                        "PAR_RefInput",
+                        "0",
+                        ""
+                    ],
+                    [
+                        "CALCULATE",
+                        "0001:RESULTUNIT",
+                        "10",
+                        "PAR_ResultUnit",
+                        "0",
+                        ""
+                    ],
+                    [
+                        "CALCULATE",
+                        "0001:START",
+                        "10",
+                        "PAR_StartStop",
+                        "0",
+                        ""
+                    ],
+                    [
+                        "CALCULATE",
+                        "0001:TARGET",
+                        "10",
+                        "PAR_Target",
+                        "0",
+                        ""
+                    ],
+                    [
+                        "CALCULATE",
+                        "0001:UPLIMIT",
+                        "10",
+                        "PAR_Uplimit",
+                        "0",
+                        "%"
+                    ]
+                ],
+                "Name": "EC01"
+            }
+        },
+        "PAR_ClientActiveNotify": 0,
+        "PAR_Continuous": 0,
+        "PAR_DUTConstUnit": "I/kWh",
+        "PAR_DutConstant": 38750000,
+        "PAR_DutConstantAuto": 0,
+        "PAR_DutConstantIScaleDenom": "1",
+        "PAR_DutConstantIScaleNum": "1",
+        "PAR_DutConstantUScaleDenom": "1",
+        "PAR_DutConstantUScaleNum": "1",
+        "PAR_DutInput": "Fin1",
+        "PAR_DutTypeMeasurePoint": "CsIsUs",
+        "PAR_Energy": 0.002,
+        "PAR_Lolimit": -10,
+        "PAR_MRate": 77500,
+        "PAR_MeasCount": 1,
+        "PAR_MeasWait": 0,
+        "PAR_RefConstant": 500000000,
+        "PAR_RefInput": "P",
+        "PAR_ResultUnit": "ppm",
+        "PAR_StartStop": 0,
+        "PAR_Target": 1000000,
+        "PAR_Uplimit": 10
+    },
+    "1150": {
+        "EntityName": "StatusModule1",
+        "INF_AccumulatorSoc": 0,
+        "INF_AccumulatorStatus": 0,
+        "INF_AdjChksum": "0xffff",
+        "INF_Adjusted": "5",
+        "INF_CTRLVersion": "{\"Relay controller version\":\"Unknown\"}",
+        "INF_CpuInfo": "",
+        "INF_DSPServerVersion": "V42.0",
+        "INF_DSPVersion": "DEVICE: Unknown;PCB: Unknown;LCA: Unknown;CTRL: Unknown",
+        "INF_DeviceType": "unknown",
+        "INF_FPGAVersion": "Unknown",
+        "INF_ModuleInterface": {
+            "ComponentInfo": {
+                "EntityName": {
+                    "Description": "Module's name"
+                },
+                "INF_AccumulatorSoc": {
+                    "Description": "Accumulator state of charge"
+                },
+                "INF_AccumulatorStatus": {
+                    "Description": "Accumulator status"
+                },
+                "INF_AdjChksum": {
+                    "Description": "Adjustment data checksum device"
+                },
+                "INF_Adjusted": {
+                    "Description": "Adjustment information"
+                },
+                "INF_CTRLVersion": {
+                    "Description": "Controller version"
+                },
+                "INF_CpuInfo": {
+                    "Description": "CPU/SOM info"
+                },
+                "INF_DSPServerVersion": {
+                    "Description": "DSP-server version"
+                },
+                "INF_DSPVersion": {
+                    "Description": "DSP software version"
+                },
+                "INF_DeviceType": {
+                    "Description": "Device type"
+                },
+                "INF_FPGAVersion": {
+                    "Description": "FPGA version"
+                },
+                "INF_ModuleInterface": {
+                    "Description": "Module's interface details"
+                },
+                "INF_PCBServerVersion": {
+                    "Description": "PCB-server version"
+                },
+                "INF_PCBVersion": {
+                    "Description": "PCB version"
+                },
+                "INF_ReleaseNr": {
+                    "Description": "Release number"
+                },
+                "INF_Schnubbel": {
+                    "Description": "Adjustment values write permission"
+                },
+                "PAR_SerialNr": {
+                    "Description": "Serial number",
+                    "Validation": {
+                        "Data": "^\\d{9}$",
+                        "Type": "REGEX"
+                    }
+                }
+            },
+            "ModuleInfo": {
+                "Description": "This module is responsible for reading and providing system Status information",
+                "Name": "StatusModule1"
+            },
+            "SCPIInfo": {
+                "Cmd": [
+                    [
+                        "STATUS",
+                        "ADJCHKSUM",
+                        "2",
+                        "INF_AdjChksum",
+                        "0",
+                        ""
+                    ],
+                    [
+                        "STATUS",
+                        "ADJUSTMENT",
+                        "2",
+                        "INF_Adjusted",
+                        "0",
+                        ""
+                    ],
+                    [
+                        "STATUS",
+                        "VERSION:CONTROLER",
+                        "2",
+                        "INF_CTRLVersion",
+                        "0",
+                        ""
+                    ],
+                    [
+                        "STATUS",
+                        "CPUINFO",
+                        "2",
+                        "INF_CpuInfo",
+                        "0",
+                        ""
+                    ],
+                    [
+                        "STATUS",
+                        "VERSION:DSPSERVER",
+                        "2",
+                        "INF_DSPServerVersion",
+                        "0",
+                        ""
+                    ],
+                    [
+                        "STATUS",
+                        "VERSION:DSP",
+                        "2",
+                        "INF_DSPVersion",
+                        "0",
+                        ""
+                    ],
+                    [
+                        "STATUS",
+                        "DEVTYPE",
+                        "2",
+                        "INF_DeviceType",
+                        "0",
+                        ""
+                    ],
+                    [
+                        "STATUS",
+                        "VERSION:FPGA",
+                        "2",
+                        "INF_FPGAVersion",
+                        "0",
+                        ""
+                    ],
+                    [
+                        "STATUS",
+                        "VERSION:PCBSERVER",
+                        "2",
+                        "INF_PCBServerVersion",
+                        "0",
+                        ""
+                    ],
+                    [
+                        "STATUS",
+                        "VERSION:PCB",
+                        "2",
+                        "INF_PCBVersion",
+                        "0",
+                        ""
+                    ],
+                    [
+                        "STATUS",
+                        "RELEASE",
+                        "2",
+                        "INF_ReleaseNr",
+                        "0",
+                        ""
+                    ],
+                    [
+                        "STATUS",
+                        "AUTHORIZATION",
+                        "2",
+                        "INF_Schnubbel",
+                        "0",
+                        ""
+                    ],
+                    [
+                        "STATUS",
+                        "SERIAL",
+                        "10",
+                        "PAR_SerialNr",
+                        "0",
+                        ""
+                    ]
+                ],
+                "Name": "DEV1"
+            }
+        },
+        "INF_PCBServerVersion": "V42.0",
+        "INF_PCBVersion": "{\"Relay PCB version\":\"Unknown\"}",
+        "INF_ReleaseNr": "",
+        "INF_Schnubbel": 0,
+        "PAR_SerialNr": "Unknown"
+    },
+    "1400": {
+        "ACT_AirPressure": null,
+        "ACT_ErrorFlags": 0,
+        "ACT_Humidity": null,
+        "ACT_TemperatureC": null,
+        "ACT_TemperatureF": null,
+        "ACT_WarningFlags": 0,
+        "EntityName": "BleModule1",
+        "INF_ModuleInterface": {
+            "ComponentInfo": {
+                "ACT_AirPressure": {
+                    "Description": "Current atmospheric pressure in hPa",
+                    "Unit": "hPa"
+                },
+                "ACT_ErrorFlags": {
+                    "Description": "Current error flags"
+                },
+                "ACT_Humidity": {
+                    "Description": "Current relative humidity in percent",
+                    "Unit": "%"
+                },
+                "ACT_TemperatureC": {
+                    "Description": "Current temperature in degree Celsius",
+                    "Unit": "°C"
+                },
+                "ACT_TemperatureF": {
+                    "Description": "Current temperature in degree Fahrenheit",
+                    "Unit": "°F"
+                },
+                "ACT_WarningFlags": {
+                    "Description": "Current warning flags"
+                },
+                "EntityName": {
+                    "Description": "Module's name"
+                },
+                "INF_ModuleInterface": {
+                    "Description": "Module's interface details"
+                },
+                "PAR_BluetoothOn": {
+                    "Description": "Bluetooth on",
+                    "Validation": {
+                        "Data": [
+                            0,
+                            1
+                        ],
+                        "Type": "BOOL"
+                    }
+                },
+                "PAR_MacAddress": {
+                    "Description": "MAC address of environment sensor",
+                    "Validation": {
+                        "Data": "^((([0-9A-Fa-f]{2}:){5})|(([0-9A-Fa-f]{2}){5})([0-9A-Fa-f]{2})$|^$)",
+                        "Type": "REGEX"
+                    }
+                }
+            },
+            "ModuleInfo": {
+                "Description": "This module measures configured number of harmonic power values from configured input values",
+                "Name": "BleModule1"
+            },
+            "SCPIInfo": {
+                "Cmd": [
+                    [
+                        "STATUS",
+                        "AIRPR",
+                        "2",
+                        "ACT_AirPressure",
+                        "0",
+                        "hPa"
+                    ],
+                    [
+                        "STATUS",
+                        "HUMID",
+                        "2",
+                        "ACT_Humidity",
+                        "0",
+                        "%"
+                    ],
+                    [
+                        "STATUS",
+                        "TEMP:CELSIUS",
+                        "2",
+                        "ACT_TemperatureC",
+                        "0",
+                        "°C"
+                    ],
+                    [
+                        "STATUS",
+                        "TEMP:FAHRENHEIT",
+                        "2",
+                        "ACT_TemperatureF",
+                        "0",
+                        "°F"
+                    ]
+                ],
+                "Name": "BLE1"
+            }
+        },
+        "PAR_BluetoothOn": 0,
+        "PAR_MacAddress": "00:00:00:00:00:00"
+    }
+}

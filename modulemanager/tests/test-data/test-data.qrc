@@ -2,5 +2,16 @@
     <qresource prefix="/">
         <file>contentsets/session-minimal-rms.json</file>
         <file>sessions/session-minimal-rms.json</file>
+
+        <file>veinDumps/com5003-ced-session.json</file>
+        <file>veinDumps/com5003-meas-session.json</file>
+        <file>veinDumps/com5003-perphase-session.json</file>
+        <file>veinDumps/com5003-ref-session.json</file>
+
+        <file>veinDumps/mt310s2-ced-session.json</file>
+        <file>veinDumps/mt310s2-dc-session.json</file>
+        <file>veinDumps/mt310s2-emob-session-ac.json</file>
+        <file>veinDumps/mt310s2-emob-session-dc.json</file>
+        <file>veinDumps/mt310s2-meas-session.json</file>
     </qresource>
 </RCC>
