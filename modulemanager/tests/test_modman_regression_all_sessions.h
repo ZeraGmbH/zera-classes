@@ -1,8 +1,7 @@
-#ifndef TEST_MODMAN_REGRESSION_ALL_ENTITITIES_H
-#define TEST_MODMAN_REGRESSION_ALL_ENTITITIES_H
+#ifndef TEST_MODMAN_REGRESSION_ALL_SESSIONS_H
+#define TEST_MODMAN_REGRESSION_ALL_SESSIONS_H
 
-#include "testmodulemanager.h"
-#include <QObject>
+#include <abstractfactoryserviceinterfaces.h>
 
 class test_modman_regression_all_sessions : public QObject
 {
@@ -10,26 +9,14 @@ class test_modman_regression_all_sessions : public QObject
 private slots:
     void initTestCase();
 
-    void loadAllSessionsAndOutputRegressionTestCodeCom5003();
-    void loadAllSessionsAndOutputRegressionTestCodeMt310s2();
-
-    void regressionCom5003Ced();
-    void regressionCom5003Meas();
-    void regressionCom5003PerPhase();
-    void regressionCom5003Ref();
-
-    void regressionMt310s2Ced();
-    void regressionMt310s2Dc();
-    void regressionMt310s2EmobAc();
-    void regressionMt310s2EmobDc();
-    void regressionMt310s2Meas();
-
+    void allSessionsVeinDumps_data();
+    void allSessionsVeinDumps();
+    void uniqueEntityNameEntityIdPairsCom5003();
+    void uniqueEntityNameEntityIdPairsMt310s2();
 private:
-    int generateCodeLists(QString device);
-    QStringList generateCodeLinesForDeviceSession(QString device, QString session, TestModuleManager &modMan);
-    void checkScpiPortOpenedProperlyByVeinDevIface(ModuleManagerSetupFacade &modManFacade);
-    void checkVeinModuleEntityNames(TestModuleManager &modMan, ModuleManagerSetupFacade &modManFacade, QString device, QString session);
+    const QStringList getSessionFileNames(const QString deviceName);
+    bool checkUniqueEntityIdNames(const QString& device);
     AbstractFactoryServiceInterfacesPtr m_serviceInterfaceFactory;
 };
 
-#endif // TEST_MODMAN_REGRESSION_ALL_ENTITITIES_H
+#endif // TEST_MODMAN_REGRESSION_ALL_SESSIONS_H
