@@ -1659,7 +1659,7 @@ QString cPower1ModuleMeasProgram::getPhasePowerDescription(int measSystemNo)
     QString strDescription;
     if(measSystemNo < MeasPhaseCount) {
         if(measSystemNo >= getConfData()->m_sMeasSystemList.count())
-            strDescription = QString("Unused in this session phase %i").arg(measSystemNo+1);
+            strDescription = QString("Unused in this session phase %1").arg(measSystemNo+1);
         else {
             // We found nothing useful filled at the time of call - so hack
             QStringList powerChannels = getConfData()->m_sMeasSystemList[measSystemNo].split(",");
