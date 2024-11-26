@@ -58,9 +58,10 @@ void test_modman_regression_all_sessions2::allSessionsVeinDumps()
     QByteArray jsonDumped;
     QBuffer buff(&jsonDumped);
     VeinStorage::DumpJson::dumpToFile(modManSetupFacade.getStorageSystem()->getDb(), &buff, QList<int>(), QList<int>() << 9999);
-    QVERIFY(TestLogHelpers::compareAndLogOnDiff(jsonExpected, jsonDumped));
 
     modMan.destroyModulesAndWaitUntilAllShutdown();
+
+    QVERIFY(TestLogHelpers::compareAndLogOnDiff(jsonExpected, jsonDumped));
 }
 
 void test_modman_regression_all_sessions2::uniqueEntityNameEntityIdPairsCom5003()
