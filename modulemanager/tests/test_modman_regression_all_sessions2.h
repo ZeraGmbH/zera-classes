@@ -11,8 +11,11 @@ private slots:
 
     void allSessionsVeinDumps_data();
     void allSessionsVeinDumps();
+    void uniqueEntityNameEntityIdPairsCom5003();
+    void uniqueEntityNameEntityIdPairsMt310s2();
 private:
     const QStringList getSessionFileNames(const QString deviceName);
+    bool checkUniqueEntityIdNames(const QString& device);
     AbstractFactoryServiceInterfacesPtr m_serviceInterfaceFactory;
 };
 
