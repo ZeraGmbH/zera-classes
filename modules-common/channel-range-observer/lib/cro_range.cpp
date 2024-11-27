@@ -1,10 +1,10 @@
 #include "cro_range.h"
+#include "taskserverconnectionstart.h"
+#include "taskrangegetisavailable.h"
+#include "taskrangegeturvalue.h"
 #include <taskcontainersequence.h>
-#include <tasklambdarunner.h>
-#include <taskserverconnectionstart.h>
-#include <taskrangegetisavailable.h>
-#include <taskrangegeturvalue.h>
 #include <taskcontainerparallel.h>
+#include <tasklambdarunner.h>
 #include <proxy.h>
 
 namespace ChannelRangeObserver {

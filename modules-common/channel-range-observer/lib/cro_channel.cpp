@@ -1,14 +1,14 @@
 #include "cro_channel.h"
 #include "cro_rangefetchtask.h"
 #include "taskserverconnectionstart.h"
-#include <taskchannelgetrangelist.h>
+#include "taskchannelgetalias.h"
+#include "taskchannelgetdspchannel.h"
+#include "taskchannelgetunit.h"
+#include "taskchannelregisternotifier.h"
+#include "taskchannelgetrangelist.h"
 #include <taskcontainersequence.h>
 #include <taskcontainerparallel.h>
-#include <taskchannelgetalias.h>
-#include <taskchannelgetdspchannel.h>
-#include <taskchannelgetunit.h>
 #include <tasklambdarunner.h>
-#include <taskchannelregisternotifier.h>
 #include <proxy.h>
 
 namespace ChannelRangeObserver {
@@ -48,19 +48,6 @@ const RangePtr Channel::getRange(const QString &rangeName) const
         return iter.value();
     qWarning("Range data for range %s not found!", qPrintable(rangeName));
     return nullptr;
-}
-
-void Channel::onInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant answer)
-{
-    Q_UNUSED(reply)
-    // We share pcb-interface with tasks so decoding is necessary here
-    if (msgnr == 0) { // 0 was reserved for async. messages
-        const QStringList answerParts = answer.toString().split(":", Qt::SkipEmptyParts);
-        if(answerParts.size() == 2 && answerParts[0] == "Notify")
-            startFetch();
-        else
-            qInfo("onInterfaceAnswer: Unknown notification: %s!", qPrintable(answer.toString()));
-    }
 }
 
 void Channel::clearRanges()
@@ -118,15 +105,24 @@ TaskTemplatePtr Channel::getChannelReadDetailsTask()
     return task;
 }
 
+static constexpr int notifyId = 1;
+static const char* notificationStr = "Notify:1";
+
 TaskTemplatePtr Channel::getRangesRegisterChangeNotificationTask()
 {
     connect(m_pcbInterface.get(), &Zera::cPCBInterface::serverAnswer,
             this, &Channel::onInterfaceAnswer);
-    constexpr int dontCareNotifyId = 1;
     // TODO: Handle / check unregister
     return TaskChannelRegisterNotifier::create(
-        m_pcbInterface, m_channelMName, dontCareNotifyId,
+        m_pcbInterface, m_channelMName, notifyId,
         TRANSACTION_TIMEOUT, [&]{ notifyError(QString("Could not register notification for channel %1").arg(m_channelMName)); });
+}
+
+void Channel::onInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant answer)
+{
+    Q_UNUSED(reply)
+    if (msgnr == 0 && answer == notificationStr)
+        startFetch();
 }
 
 TaskTemplatePtr Channel::getFetchFinalTask()
