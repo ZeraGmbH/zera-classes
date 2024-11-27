@@ -24,6 +24,7 @@ private slots:
     void changeRangesByClamp();
     void notifyRangeChangeByClamp();
     void getDataForInvalidChannel();
+    void invalidScan();
 private:
     VeinTcp::AbstractTcpNetworkFactoryPtr m_tcpFactory;
     std::unique_ptr<TestServerForSenseInterfaceMt310s2> m_testServer;

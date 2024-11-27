@@ -19,7 +19,7 @@ public:
     const ChannelPtr getChannel(QString channelMName);
 signals:
     void sigFullScanFinished(bool ok);
-    void sigFetchComplete(QString channelMName);
+    void sigFetchComplete(QString channelMName, bool ok);
     friend class AllChannelsResetter;
 
 protected:

@@ -60,6 +60,7 @@ void test_cro_all_channels::scanChannelListSignalReturned()
     TimeMachineObject::feedEventLoop();
 
     QCOMPARE(spy.count(), 1);
+    QCOMPARE(spy[0][0], true);
 }
 
 void test_cro_all_channels::scanChannelListChannelsReturned()
@@ -101,6 +102,7 @@ void test_cro_all_channels::rescanWithoutClear()
     QCOMPARE(observer.getChannelMNames().count(), 8);
     QCOMPARE(spyRangesChanged.count(), 0);
     QCOMPARE(spyFinished.count(), 1);
+    QCOMPARE(spyFinished[0][0], true);
 }
 
 void test_cro_all_channels::rescanWithClear()
@@ -111,6 +113,14 @@ void test_cro_all_channels::rescanWithClear()
     TimeMachineObject::feedEventLoop();
 
     QCOMPARE(spyRangesChanged.count(), 8);
+    QCOMPARE(spyRangesChanged[0][1], true);
+    QCOMPARE(spyRangesChanged[1][1], true);
+    QCOMPARE(spyRangesChanged[2][1], true);
+    QCOMPARE(spyRangesChanged[3][1], true);
+    QCOMPARE(spyRangesChanged[4][1], true);
+    QCOMPARE(spyRangesChanged[5][1], true);
+    QCOMPARE(spyRangesChanged[6][1], true);
+    QCOMPARE(spyRangesChanged[7][1], true);
     QStringList channels = observer.getChannelMNames();
     QCOMPARE(channels.count(), 8);
 
@@ -124,7 +134,17 @@ void test_cro_all_channels::rescanWithClear()
 
     QCOMPARE(observer.getChannelMNames().count(), 8);
     QCOMPARE(spyRangesChanged.count(), 8);
+    QCOMPARE(spyRangesChanged.count(), 8);
+    QCOMPARE(spyRangesChanged[0][1], true);
+    QCOMPARE(spyRangesChanged[1][1], true);
+    QCOMPARE(spyRangesChanged[2][1], true);
+    QCOMPARE(spyRangesChanged[3][1], true);
+    QCOMPARE(spyRangesChanged[4][1], true);
+    QCOMPARE(spyRangesChanged[5][1], true);
+    QCOMPARE(spyRangesChanged[6][1], true);
+    QCOMPARE(spyRangesChanged[7][1], true);
     QCOMPARE(spyFinished.count(), 1);
+    QCOMPARE(spyFinished[0][0], true);
 }
 
 void test_cro_all_channels::checkAlias()
@@ -208,16 +228,22 @@ void test_cro_all_channels::notifyRangeChangeByClamp()
     m_testServer->addClamp(cClamp::CL120A, "IL1");
     TimeMachineObject::feedEventLoop();
     QCOMPARE(spy.size(), 1);
+    QCOMPARE(spy[0][0], "m3");
+    QCOMPARE(spy[0][1], true);
 
     spy.clear();
     m_testServer->addClamp(cClamp::CL120A, "IL2");
     TimeMachineObject::feedEventLoop();
     QCOMPARE(spy.size(), 1);
+    QCOMPARE(spy[0][0], "m4");
+    QCOMPARE(spy[0][1], true);
 
     spy.clear();
     m_testServer->removeAllClamps();
     TimeMachineObject::feedEventLoop();
     QCOMPARE(spy.size(), 2);
+    QCOMPARE(spy[0][1], true);
+    QCOMPARE(spy[1][1], true);
 }
 
 void test_cro_all_channels::getDataForInvalidChannel()
@@ -227,4 +253,18 @@ void test_cro_all_channels::getDataForInvalidChannel()
     TimeMachineObject::feedEventLoop();
 
     QCOMPARE(observer.getChannel("foo"), nullptr);
+}
+
+void test_cro_all_channels::invalidScan()
+{
+    NetworkConnectionInfo netInfoInvalid("127.0.0.1", 42);
+    AllChannels observer(netInfoInvalid, m_tcpFactory);
+    QSignalSpy spyFullScanFinished(&observer, &AllChannels::sigFullScanFinished);
+    QSignalSpy spyChannel(&observer, &AllChannels::sigFetchComplete);
+    observer.startFullScan();
+    TimeMachineForTest::getInstance()->processTimers(CONNECTION_TIMEOUT);
+
+    QCOMPARE(spyFullScanFinished.size(), 1);
+    QCOMPARE(spyFullScanFinished[0][0], false);
+    QCOMPARE(spyChannel.count(), 0);
 }
