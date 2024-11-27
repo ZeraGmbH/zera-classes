@@ -17,7 +17,9 @@ private slots:
     void emptyOnStartup();
     void fetchDirect();
     void fetchDirectTwice();
-    void fetchByTask();
+    void fetchInvalidChannel();
+    void fetchByTaskValid();
+    void fetchByTaskInvalid();
     void fetchCheckChannelDataM0();
     void fetchCheckChannelDataM3();
     void getRangesCheckBasicData();

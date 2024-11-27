@@ -30,7 +30,7 @@ public:
     const QStringList getAvailRangeNames() const;
     const std::shared_ptr<Range> getRange(const QString &rangeName) const;
 signals:
-    void sigFetchComplete(QString channelMName);
+    void sigFetchComplete(QString channelMName, bool ok);
 
 private slots:
     void onInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant answer);

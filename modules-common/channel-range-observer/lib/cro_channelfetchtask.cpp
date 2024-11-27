@@ -19,9 +19,10 @@ void ChannelFetchTask::start()
     m_rangeObserver->startFetch();
 }
 
-void ChannelFetchTask::onChannelFetched(QString channelMName)
+void ChannelFetchTask::onChannelFetched(QString channelMName, bool ok)
 {
-    finishTask(true);
+    Q_UNUSED(channelMName)
+    finishTask(ok);
 }
 
 }

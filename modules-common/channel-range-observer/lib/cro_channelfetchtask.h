@@ -17,7 +17,7 @@ public:
     ChannelFetchTask(ChannelPtr rangeObserver);
     void start() override;
 private slots:
-    void onChannelFetched(QString channelMName);
+    void onChannelFetched(QString channelMName, bool ok);
 private:
     ChannelPtr m_rangeObserver;
 };

@@ -59,6 +59,8 @@ void test_cro_channel::fetchDirect()
     TimeMachineObject::feedEventLoop();
 
     QCOMPARE(spy.count(), 1);
+    QCOMPARE(spy[0][0], "m0");
+    QCOMPARE(spy[0][1], true);
 }
 
 void test_cro_channel::fetchDirectTwice()
@@ -74,7 +76,21 @@ void test_cro_channel::fetchDirectTwice()
     QCOMPARE(spy.count(), 2);
 }
 
-void test_cro_channel::fetchByTask()
+void test_cro_channel::fetchInvalidChannel()
+{
+    Channel observer("foo", netInfo, m_tcpFactory);
+    QSignalSpy spy(&observer, &Channel::sigFetchComplete);
+
+    observer.startFetch();
+    TimeMachineObject::feedEventLoop();
+
+    QCOMPARE(spy.count(), 1);
+    QCOMPARE(spy[0][0], "foo");
+    QCOMPARE(spy[0][1], false);
+    QCOMPARE(observer.getAvailRangeNames(), QStringList());
+}
+
+void test_cro_channel::fetchByTaskValid()
 {
     ChannelPtr observer = std::make_shared<Channel>("m0", netInfo, m_tcpFactory);
     ChannelFetchTaskPtr task = ChannelFetchTask::create(observer);
@@ -84,6 +100,20 @@ void test_cro_channel::fetchByTask()
     TimeMachineObject::feedEventLoop();
 
     QCOMPARE(spy.count(), 1);
+    QCOMPARE(spy[0][0], true);
+}
+
+void test_cro_channel::fetchByTaskInvalid()
+{
+    ChannelPtr observer = std::make_shared<Channel>("foo", netInfo, m_tcpFactory);
+    ChannelFetchTaskPtr task = ChannelFetchTask::create(observer);
+
+    QSignalSpy spy(task.get(), &TaskTemplate::sigFinish);
+    task->start();
+    TimeMachineObject::feedEventLoop();
+
+    QCOMPARE(spy.count(), 1);
+    QCOMPARE(spy[0][0], false);
 }
 
 void test_cro_channel::fetchCheckChannelDataM0()

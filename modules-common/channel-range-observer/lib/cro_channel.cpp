@@ -98,6 +98,9 @@ void Channel::startAllRangesTasks()
         return true;
     }));
     m_currentTasks->addSub(std::move(task));
+    connect(m_currentTasks.get(), &TaskTemplate::sigFinish, this, [&](bool ok) {
+        emit sigFetchComplete(m_channelMName, ok);
+    });
     m_currentTasks->start();
 }
 
@@ -149,7 +152,6 @@ TaskTemplatePtr Channel::getFetchFinalTask()
 {
     return TaskLambdaRunner::create([&]() {
         setAvailableRanges();
-        emit sigFetchComplete(m_channelMName);
         return true;
     });
 }
