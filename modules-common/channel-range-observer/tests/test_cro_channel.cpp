@@ -46,16 +46,16 @@ void test_cro_channel::cleanup()
 
 void test_cro_channel::emptyOnStartup()
 {
-    Channel observer("m0", netInfo, m_tcpFactory);
-    QVERIFY(observer.getAllRangeNames().isEmpty());
+    Channel channel("m0", netInfo, m_tcpFactory);
+    QVERIFY(channel.getAllRangeNames().isEmpty());
 }
 
 void test_cro_channel::fetchDirect()
 {
-    Channel observer("m0", netInfo, m_tcpFactory);
-    QSignalSpy spy(&observer, &Channel::sigFetchComplete);
+    Channel channel("m0", netInfo, m_tcpFactory);
+    QSignalSpy spy(&channel, &Channel::sigFetchComplete);
 
-    observer.startFetch();
+    channel.startFetch();
     TimeMachineObject::feedEventLoop();
 
     QCOMPARE(spy.count(), 1);
@@ -65,12 +65,12 @@ void test_cro_channel::fetchDirect()
 
 void test_cro_channel::fetchDirectTwice()
 {
-    Channel observer("m0", netInfo, m_tcpFactory);
-    QSignalSpy spy(&observer, &Channel::sigFetchComplete);
+    Channel channel("m0", netInfo, m_tcpFactory);
+    QSignalSpy spy(&channel, &Channel::sigFetchComplete);
 
-    observer.startFetch();
+    channel.startFetch();
     TimeMachineObject::feedEventLoop();
-    observer.startFetch();
+    channel.startFetch();
     TimeMachineObject::feedEventLoop();
 
     QCOMPARE(spy.count(), 2);
@@ -78,22 +78,22 @@ void test_cro_channel::fetchDirectTwice()
 
 void test_cro_channel::fetchInvalidChannel()
 {
-    Channel observer("foo", netInfo, m_tcpFactory);
-    QSignalSpy spy(&observer, &Channel::sigFetchComplete);
+    Channel channel("foo", netInfo, m_tcpFactory);
+    QSignalSpy spy(&channel, &Channel::sigFetchComplete);
 
-    observer.startFetch();
+    channel.startFetch();
     TimeMachineObject::feedEventLoop();
 
     QCOMPARE(spy.count(), 1);
     QCOMPARE(spy[0][0], "foo");
     QCOMPARE(spy[0][1], false);
-    QCOMPARE(observer.getAvailRangeNames(), QStringList());
+    QCOMPARE(channel.getAvailRangeNames(), QStringList());
 }
 
 void test_cro_channel::fetchByTaskValid()
 {
-    ChannelPtr observer = std::make_shared<Channel>("m0", netInfo, m_tcpFactory);
-    ChannelFetchTaskPtr task = ChannelFetchTask::create(observer);
+    ChannelPtr channel = std::make_shared<Channel>("m0", netInfo, m_tcpFactory);
+    ChannelFetchTaskPtr task = ChannelFetchTask::create(channel);
 
     QSignalSpy spy(task.get(), &TaskTemplate::sigFinish);
     task->start();
@@ -105,8 +105,8 @@ void test_cro_channel::fetchByTaskValid()
 
 void test_cro_channel::fetchByTaskInvalid()
 {
-    ChannelPtr observer = std::make_shared<Channel>("foo", netInfo, m_tcpFactory);
-    ChannelFetchTaskPtr task = ChannelFetchTask::create(observer);
+    ChannelPtr channel = std::make_shared<Channel>("foo", netInfo, m_tcpFactory);
+    ChannelFetchTaskPtr task = ChannelFetchTask::create(channel);
 
     QSignalSpy spy(task.get(), &TaskTemplate::sigFinish);
     task->start();
@@ -118,35 +118,57 @@ void test_cro_channel::fetchByTaskInvalid()
 
 void test_cro_channel::fetchCheckChannelDataM0()
 {
-    Channel observer("m0", netInfo, m_tcpFactory);
-    observer.startFetch();
+    Channel channel("m0", netInfo, m_tcpFactory);
+    channel.startFetch();
     TimeMachineObject::feedEventLoop();
 
-    QCOMPARE(observer.m_alias, "UL1");
-    QCOMPARE(observer.m_unit, "V");
-    QCOMPARE(observer.m_dspChannel, 0);
+    QCOMPARE(channel.m_alias, "UL1");
+    QCOMPARE(channel.m_unit, "V");
+    QCOMPARE(channel.m_dspChannel, 0);
 }
 
 void test_cro_channel::fetchCheckChannelDataM3()
 {
-    Channel observer("m3", netInfo, m_tcpFactory);
-    observer.startFetch();
+    Channel channel("m3", netInfo, m_tcpFactory);
+    channel.startFetch();
     TimeMachineObject::feedEventLoop();
 
-    QCOMPARE(observer.m_alias, "IL1");
-    QCOMPARE(observer.m_unit, "A");
-    QCOMPARE(observer.m_dspChannel, 1);
+    QCOMPARE(channel.m_alias, "IL1");
+    QCOMPARE(channel.m_unit, "A");
+    QCOMPARE(channel.m_dspChannel, 1);
+}
+
+void test_cro_channel::refetchAlthoughNotSuggestedWorks()
+{
+    Channel channel("m0", netInfo, m_tcpFactory);
+    QSignalSpy spy(&channel, &Channel::sigFetchComplete);
+
+    channel.startFetch();
+    TimeMachineObject::feedEventLoop();
+    QCOMPARE(spy.count(), 1);
+
+    spy.clear();
+    channel.startFetch();
+    TimeMachineObject::feedEventLoop();
+    QCOMPARE(spy.count(), 1);
+    QCOMPARE(spy[0][0], "m0");
+    QCOMPARE(spy[0][1], true);
+
+    QStringList rangeNamesReceived = channel.getAvailRangeNames();
+    QStringList rangeNamesExpected = QStringList()
+                                     << "250V" << "8V" << "100mV";
+    QCOMPARE(rangeNamesReceived, rangeNamesExpected);
 }
 
 void test_cro_channel::getRangesCheckBasicData()
 {
-    Channel observer("m0", netInfo, m_tcpFactory);
-    observer.startFetch();
+    Channel channel("m0", netInfo, m_tcpFactory);
+    channel.startFetch();
     TimeMachineObject::feedEventLoop();
 
-    QVERIFY(observer.getRange("250V") != nullptr);
-    QCOMPARE(observer.getRange("foo"), nullptr);
-    QStringList rangeName = observer.getAllRangeNames();
+    QVERIFY(channel.getRange("250V") != nullptr);
+    QCOMPARE(channel.getRange("foo"), nullptr);
+    QStringList rangeName = channel.getAllRangeNames();
     QCOMPARE(rangeName.count(), 3);
     QVERIFY(rangeName.contains("8V"));
     QVERIFY(rangeName.contains("100mV"));
@@ -154,33 +176,33 @@ void test_cro_channel::getRangesCheckBasicData()
 
 void test_cro_channel::checkUrValue()
 {
-    Channel observer("m0", netInfo, m_tcpFactory);
-    observer.startFetch();
+    Channel channel("m0", netInfo, m_tcpFactory);
+    channel.startFetch();
     TimeMachineObject::feedEventLoop();
 
-    QCOMPARE(observer.getRange("250V")->m_urValue, 250.0);
-    QCOMPARE(observer.getRange("8V")->m_urValue, 8.0);
-    QCOMPARE(observer.getRange("100mV")->m_urValue, 0.1);
+    QCOMPARE(channel.getRange("250V")->m_urValue, 250.0);
+    QCOMPARE(channel.getRange("8V")->m_urValue, 8.0);
+    QCOMPARE(channel.getRange("100mV")->m_urValue, 0.1);
 }
 
 void test_cro_channel::checkOrderingVoltageRanges()
 {
-    Channel observer("m0", netInfo, m_tcpFactory);
-    observer.startFetch();
+    Channel channel("m0", netInfo, m_tcpFactory);
+    channel.startFetch();
     TimeMachineObject::feedEventLoop();
 
-    QStringList rangeNamesReceived = observer.getAllRangeNames();
+    QStringList rangeNamesReceived = channel.getAllRangeNames();
     QStringList rangeNamesExpected = QStringList() << "250V" << "8V" << "100mV";
     QCOMPARE(rangeNamesReceived, rangeNamesExpected);
 }
 
 void test_cro_channel::checkOrderingAllCurrentRanges()
 {
-    Channel observer("m3", netInfo, m_tcpFactory);
-    observer.startFetch();
+    Channel channel("m3", netInfo, m_tcpFactory);
+    channel.startFetch();
     TimeMachineObject::feedEventLoop();
 
-    QStringList rangeNamesReceived = observer.getAllRangeNames();
+    QStringList rangeNamesReceived = channel.getAllRangeNames();
     QStringList rangeNamesExpected = QStringList()
                                      << "10A" << "5A" << "2.5A" << "1.0A"
                                      << "500mA" << "250mA" << "100mA" << "50mA" << "25mA"
@@ -191,23 +213,23 @@ void test_cro_channel::checkOrderingAllCurrentRanges()
 
 void test_cro_channel::checkRangeAvailable()
 {
-    Channel observer("m3", netInfo, m_tcpFactory);
-    observer.startFetch();
+    Channel channel("m3", netInfo, m_tcpFactory);
+    channel.startFetch();
     TimeMachineObject::feedEventLoop();
 
-    QCOMPARE(observer.getRange("10A")->m_available, true);
-    QCOMPARE(observer.getRange("500mA")->m_available, true);
-    QCOMPARE(observer.getRange("8V")->m_available, false);
-    QCOMPARE(observer.getRange("500mV")->m_available, false);
+    QCOMPARE(channel.getRange("10A")->m_available, true);
+    QCOMPARE(channel.getRange("500mA")->m_available, true);
+    QCOMPARE(channel.getRange("8V")->m_available, false);
+    QCOMPARE(channel.getRange("500mV")->m_available, false);
 }
 
 void test_cro_channel::checkAvailableRangesMtDefaultAc()
 {
-    Channel observer("m3", netInfo, m_tcpFactory);
-    observer.startFetch();
+    Channel channel("m3", netInfo, m_tcpFactory);
+    channel.startFetch();
     TimeMachineObject::feedEventLoop();
 
-    QStringList rangeNamesReceived = observer.getAvailRangeNames();
+    QStringList rangeNamesReceived = channel.getAvailRangeNames();
     QStringList rangeNamesExpected = QStringList()
                                      << "10A" << "5A" << "2.5A" << "1.0A"
                                      << "500mA" << "250mA" << "100mA" << "50mA" << "25mA";
@@ -216,16 +238,16 @@ void test_cro_channel::checkAvailableRangesMtDefaultAc()
 
 void test_cro_channel::checkAvailableRangesMtAdj()
 {
-    Channel observer("m3", netInfo, m_tcpFactory);
-    observer.startFetch();
+    Channel channel("m3", netInfo, m_tcpFactory);
+    channel.startFetch();
     TimeMachineObject::feedEventLoop();
 
-    QSignalSpy spy(&observer, &Channel::sigFetchComplete);
+    QSignalSpy spy(&channel, &Channel::sigFetchComplete);
     m_pcbInterface->setMMode("ADJ");
     TimeMachineObject::feedEventLoop();
     QCOMPARE(spy.count(), 1);
 
-    QStringList rangeNamesReceivedAdj = observer.getAvailRangeNames();
+    QStringList rangeNamesReceivedAdj = channel.getAvailRangeNames();
     QStringList rangeNamesExpectedAdj = QStringList()
                                         << "10A" << "5A" << "2.5A" << "1.0A"
                                         << "500mA" << "250mA" << "100mA" << "50mA" << "25mA"
@@ -236,22 +258,22 @@ void test_cro_channel::checkAvailableRangesMtAdj()
 
 void test_cro_channel::checkAvailableRangesMtSequence()
 {
-    Channel observer("m3", netInfo, m_tcpFactory);
-    observer.startFetch();
+    Channel channel("m3", netInfo, m_tcpFactory);
+    channel.startFetch();
     TimeMachineObject::feedEventLoop();
 
-    QStringList rangeNamesReceived = observer.getAvailRangeNames();
+    QStringList rangeNamesReceived = channel.getAvailRangeNames();
     QStringList rangeNamesExpected = QStringList()
                                      << "10A" << "5A" << "2.5A" << "1.0A"
                                      << "500mA" << "250mA" << "100mA" << "50mA" << "25mA";
     QCOMPARE(rangeNamesReceived, rangeNamesExpected);
 
-    QSignalSpy spy(&observer, &Channel::sigFetchComplete);
+    QSignalSpy spy(&channel, &Channel::sigFetchComplete);
     m_pcbInterface->setMMode("ADJ");
     TimeMachineObject::feedEventLoop();
     QCOMPARE(spy.count(), 1);
 
-    QStringList rangeNamesReceivedAdj = observer.getAvailRangeNames();
+    QStringList rangeNamesReceivedAdj = channel.getAvailRangeNames();
     QStringList rangeNamesExpectedAdj = QStringList()
                                         << "10A" << "5A" << "2.5A" << "1.0A"
                                         << "500mA" << "250mA" << "100mA" << "50mA" << "25mA"
@@ -263,7 +285,7 @@ void test_cro_channel::checkAvailableRangesMtSequence()
     TimeMachineObject::feedEventLoop();
     QCOMPARE(spy.count(), 2);
 
-    QStringList rangeNamesReceivedAc = observer.getAvailRangeNames();
+    QStringList rangeNamesReceivedAc = channel.getAvailRangeNames();
     QStringList rangeNamesExpectedAc = QStringList()
                                         << "10A" << "5A" << "2.5A" << "1.0A"
                                         << "500mA" << "250mA" << "100mA" << "50mA" << "25mA";

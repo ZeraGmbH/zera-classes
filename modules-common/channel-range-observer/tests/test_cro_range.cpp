@@ -89,6 +89,25 @@ void test_cro_range::fetchInvalid()
     QCOMPARE(range.m_available, false);
 }
 
+void test_cro_range::refetchAlthoughNotSuggestedWorks()
+{
+    Range range("m0", "250V", netInfo, m_tcpFactory);
+    QSignalSpy spy(&range, &Range::sigFetchComplete);
+
+    range.startFetch();
+    TimeMachineObject::feedEventLoop();
+    QCOMPARE(spy.count(), 1);
+    spy.clear();
+
+    range.startFetch();
+    TimeMachineObject::feedEventLoop();
+    QCOMPARE(spy.count(), 1);
+    QCOMPARE(spy[0][0], "m0");
+    QCOMPARE(spy[0][1], "250V");
+    QCOMPARE(spy[0][2], true);
+    QCOMPARE(range.m_available, true);
+}
+
 void test_cro_range::fetchUrValueMatching()
 {
     Range range("m0", "250V", netInfo, m_tcpFactory);

@@ -22,6 +22,7 @@ private slots:
     void fetchByTaskInvalid();
     void fetchCheckChannelDataM0();
     void fetchCheckChannelDataM3();
+    void refetchAlthoughNotSuggestedWorks();
     void getRangesCheckBasicData();
     void checkUrValue();
     void checkRangeAvailable();

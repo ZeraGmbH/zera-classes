@@ -20,6 +20,7 @@ private slots:
     void fetchAvailable();
     void fetchNotAvailable();
     void fetchInvalid();
+    void refetchAlthoughNotSuggestedWorks();
     void fetchUrValueMatching();
 private:
     void setupServers();
