@@ -12,7 +12,7 @@ function(SETUP_QTESTS_CHANNEL_MANAGER)
 endfunction()
 
 SETUP_QTESTS_CHANNEL_MANAGER(
-    test_all_channels
-    test_channel
-    test_range
+    test_cro_all_channels
+    test_cro_channel
+    test_cro_range
 )

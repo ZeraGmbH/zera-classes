@@ -1,11 +1,11 @@
-#ifndef TEST_ALL_CHANNELS_H
-#define TEST_ALL_CHANNELS_H
+#ifndef TEST_CRO_ALL_CHANNELS_H
+#define TEST_CRO_ALL_CHANNELS_H
 
 #include <abstracttcpnetworkfactory.h>
 #include <resmanrunfacade.h>
 #include <testserverforsenseinterfacemt310s2.h>
 
-class test_all_channels : public QObject
+class test_cro_all_channels : public QObject
 {
     Q_OBJECT
 private slots:
@@ -30,4 +30,4 @@ private:
     std::unique_ptr<ResmanRunFacade> m_resmanServer;
 };
 
-#endif // TEST_ALL_CHANNELS_H
+#endif // TEST_CRO_ALL_CHANNELS_H

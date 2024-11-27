@@ -1,5 +1,5 @@
-#ifndef TEST_RANGE_H
-#define TEST_RANGE_H
+#ifndef TEST_CRO_RANGE_H
+#define TEST_CRO_RANGE_H
 
 #include <pcbinterface.h>
 #include <proxyclient.h>
@@ -8,7 +8,7 @@
 #include <abstracttcpnetworkfactory.h>
 #include <QObject>
 
-class test_range : public QObject
+class test_cro_range : public QObject
 {
     Q_OBJECT
 private slots:
@@ -28,4 +28,4 @@ private:
     Zera::PcbInterfacePtr m_pcbInterface;
 };
 
-#endif // TEST_RANGE_H
+#endif // TEST_CRO_RANGE_H

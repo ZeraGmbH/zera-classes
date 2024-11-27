@@ -1,4 +1,4 @@
-#include "test_all_channels.h"
+#include "test_cro_all_channels.h"
 #include "allchannels.h"
 #include "allchannelsresetter.h"
 #include <testfactoryi2cctrl.h>
@@ -14,13 +14,13 @@
 #include <QTest>
 #include <QSignalSpy>
 
-QTEST_MAIN(test_all_channels)
+QTEST_MAIN(test_cro_all_channels)
 
 static const NetworkConnectionInfo netInfo("127.0.0.1", 6307);
 
 using namespace ChannelRangeObserver;
 
-void test_all_channels::initTestCase()
+void test_cro_all_channels::initTestCase()
 {
     ClampFactoryTest::enableTest();
     MockI2cEEpromIoFactory::enableMock();
@@ -28,7 +28,7 @@ void test_all_channels::initTestCase()
     TimerFactoryQtForTest::enableTest();
 }
 
-void test_all_channels::init()
+void test_cro_all_channels::init()
 {
     TimeMachineForTest::reset();
     m_resmanServer = std::make_unique<ResmanRunFacade>(m_tcpFactory);
@@ -37,7 +37,7 @@ void test_all_channels::init()
     TimeMachineObject::feedEventLoop();
 }
 
-void test_all_channels::cleanup()
+void test_cro_all_channels::cleanup()
 {
     TimeMachineObject::feedEventLoop();
     m_testServer = nullptr;
@@ -45,13 +45,13 @@ void test_all_channels::cleanup()
     TimeMachineObject::feedEventLoop();
 }
 
-void test_all_channels::emptyChannelListOnStartup()
+void test_cro_all_channels::emptyChannelListOnStartup()
 {
     AllChannels observer(netInfo, m_tcpFactory);
     QVERIFY(observer.getChannelMNames().isEmpty());
 }
 
-void test_all_channels::scanChannelListSignalReturned()
+void test_cro_all_channels::scanChannelListSignalReturned()
 {
     AllChannels observer(netInfo, m_tcpFactory);
     QSignalSpy spy(&observer, &AllChannels::sigFullScanFinished);
@@ -62,7 +62,7 @@ void test_all_channels::scanChannelListSignalReturned()
     QCOMPARE(spy.count(), 1);
 }
 
-void test_all_channels::scanChannelListChannelsReturned()
+void test_cro_all_channels::scanChannelListChannelsReturned()
 {
     AllChannels observer(netInfo, m_tcpFactory);
     observer.startFullScan();
@@ -80,7 +80,7 @@ void test_all_channels::scanChannelListChannelsReturned()
     QVERIFY(channels.contains("m7"));
 }
 
-void test_all_channels::rescanWithoutClear()
+void test_cro_all_channels::rescanWithoutClear()
 {
     AllChannels observer(netInfo, m_tcpFactory);
     QSignalSpy spyRangesChanged(&observer, &AllChannels::sigFetchComplete);
@@ -103,7 +103,7 @@ void test_all_channels::rescanWithoutClear()
     QCOMPARE(spyFinished.count(), 1);
 }
 
-void test_all_channels::rescanWithClear()
+void test_cro_all_channels::rescanWithClear()
 {
     AllChannels observer(netInfo, m_tcpFactory);
     QSignalSpy spyRangesChanged(&observer, &AllChannels::sigFetchComplete);
@@ -127,7 +127,7 @@ void test_all_channels::rescanWithClear()
     QCOMPARE(spyFinished.count(), 1);
 }
 
-void test_all_channels::checkAlias()
+void test_cro_all_channels::checkAlias()
 {
     AllChannels observer(netInfo, m_tcpFactory);
     observer.startFullScan();
@@ -143,7 +143,7 @@ void test_all_channels::checkAlias()
     QCOMPARE(observer.getChannel("m7")->m_alias, "IAUX");
 }
 
-void test_all_channels::checkDspChannel()
+void test_cro_all_channels::checkDspChannel()
 {
     AllChannels observer(netInfo, m_tcpFactory);
     observer.startFullScan();
@@ -159,7 +159,7 @@ void test_all_channels::checkDspChannel()
     QCOMPARE(observer.getChannel("m7")->m_dspChannel, 7);
 }
 
-void test_all_channels::checkUnit()
+void test_cro_all_channels::checkUnit()
 {
     AllChannels observer(netInfo, m_tcpFactory);
     observer.startFullScan();
@@ -169,7 +169,7 @@ void test_all_channels::checkUnit()
     QCOMPARE(observer.getChannel("m3")->m_unit, "A");
 }
 
-void test_all_channels::checkRanges()
+void test_cro_all_channels::checkRanges()
 {
     AllChannels observer(netInfo, m_tcpFactory);
     observer.startFullScan();
@@ -179,7 +179,7 @@ void test_all_channels::checkRanges()
     QCOMPARE(observer.getChannel("m0")->getAllRangeNames()[0], "250V");
 }
 
-void test_all_channels::changeRangesByClamp()
+void test_cro_all_channels::changeRangesByClamp()
 {
     AllChannels observer(netInfo, m_tcpFactory);
     observer.startFullScan();
@@ -196,7 +196,7 @@ void test_all_channels::changeRangesByClamp()
     TimeMachineObject::feedEventLoop();
 }
 
-void test_all_channels::notifyRangeChangeByClamp()
+void test_cro_all_channels::notifyRangeChangeByClamp()
 {
     AllChannels observer(netInfo, m_tcpFactory);
     QSignalSpy spy(&observer, &AllChannels::sigFetchComplete);
@@ -220,7 +220,7 @@ void test_all_channels::notifyRangeChangeByClamp()
     QCOMPARE(spy.size(), 2);
 }
 
-void test_all_channels::getDataForInvalidChannel()
+void test_cro_all_channels::getDataForInvalidChannel()
 {
     AllChannels observer(netInfo, m_tcpFactory);
     observer.startFullScan();

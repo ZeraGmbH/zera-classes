@@ -1,4 +1,4 @@
-#include "test_range.h"
+#include "test_cro_range.h"
 #include "range.h"
 #include <networkconnectioninfo.h>
 #include <clampfactorytest.h>
@@ -11,13 +11,13 @@
 #include <QSignalSpy>
 #include <QTest>
 
-QTEST_MAIN(test_range)
+QTEST_MAIN(test_cro_range)
 
 static const NetworkConnectionInfo netInfo("127.0.0.1", 6307);
 
 using namespace ChannelRangeObserver;
 
-void test_range::initTestCase()
+void test_cro_range::initTestCase()
 {
     ClampFactoryTest::enableTest();
     MockI2cEEpromIoFactory::enableMock();
@@ -25,13 +25,13 @@ void test_range::initTestCase()
     TimerFactoryQtForTest::enableTest();
 }
 
-void test_range::init()
+void test_cro_range::init()
 {
     setupServers();
     setupClient();
 }
 
-void test_range::cleanup()
+void test_cro_range::cleanup()
 {
     m_pcbInterface = nullptr;
     m_pcbClient = nullptr;
@@ -41,14 +41,14 @@ void test_range::cleanup()
     TimeMachineObject::feedEventLoop();
 }
 
-void test_range::defaultOnStartup()
+void test_cro_range::defaultOnStartup()
 {
     Range range("m0", "250V", netInfo, m_tcpFactory);
     QCOMPARE(range.m_available, false);
     QCOMPARE(range.m_urValue, 0.0);
 }
 
-void test_range::setupServers()
+void test_cro_range::setupServers()
 {
     TimeMachineForTest::reset();
     m_resmanServer = std::make_unique<ResmanRunFacade>(m_tcpFactory);
@@ -56,7 +56,7 @@ void test_range::setupServers()
     TimeMachineObject::feedEventLoop();
 }
 
-void test_range::setupClient()
+void test_cro_range::setupClient()
 {
     m_pcbClient = Zera::Proxy::getInstance()->getConnectionSmart(netInfo, m_tcpFactory);
     m_pcbInterface = std::make_shared<Zera::cPCBInterface>();
