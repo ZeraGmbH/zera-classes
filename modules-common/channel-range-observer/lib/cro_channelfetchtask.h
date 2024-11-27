@@ -19,7 +19,7 @@ public:
 private slots:
     void onChannelFetched(QString channelMName, bool ok);
 private:
-    ChannelPtr m_rangeObserver;
+    ChannelPtr m_channel;
 };
 
 }

@@ -8,15 +8,15 @@ ChannelFetchTaskPtr ChannelFetchTask::create(ChannelPtr channel)
 }
 
 ChannelFetchTask::ChannelFetchTask(ChannelPtr channel) :
-    m_rangeObserver(channel)
+    m_channel(channel)
 {
-    connect(m_rangeObserver.get(), &Channel::sigFetchComplete,
+    connect(m_channel.get(), &Channel::sigFetchComplete,
             this, &ChannelFetchTask::onChannelFetched);
 }
 
 void ChannelFetchTask::start()
 {
-    m_rangeObserver->startFetch();
+    m_channel->startFetch();
 }
 
 void ChannelFetchTask::onChannelFetched(QString channelMName, bool ok)
