@@ -43,7 +43,7 @@ private:
                                                 const QString &rangeName,
                                                 std::shared_ptr<Range> newRange);
     TaskTemplatePtr getRangesRegisterChangeNotificationTask();
-    TaskTemplatePtr getReadRangeFinalTask();
+    TaskTemplatePtr getFetchFinalTask();
     void setAvailableRanges();
     static void notifyError(QString errMsg);
 

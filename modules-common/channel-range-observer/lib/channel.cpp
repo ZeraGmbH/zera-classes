@@ -88,13 +88,13 @@ void Channel::startAllRangesTasks()
         TaskContainerInterfacePtr allRangesTasks = TaskContainerParallel::create();
         allRangesTasks->addSub(getChannelReadDetailsTask());
         for(const QString &rangeName : qAsConst(m_allRangeNamesOrderedByServer)) {
-            std::shared_ptr<Range> newRange = std::make_shared<Range>(m_channelMName, m_netInfo, m_tcpFactory);
+            std::shared_ptr<Range> newRange = std::make_shared<Range>(m_channelMName, rangeName, m_netInfo, m_tcpFactory);
             m_rangeNameToRange[rangeName] = newRange;
             allRangesTasks = addRangeDataTasks(std::move(allRangesTasks), rangeName, newRange);
         }
         m_currentTasks->addSub(std::move(allRangesTasks));
         m_currentTasks->addSub(getRangesRegisterChangeNotificationTask());
-        m_currentTasks->addSub(getReadRangeFinalTask());
+        m_currentTasks->addSub(getFetchFinalTask());
         return true;
     }));
     m_currentTasks->addSub(std::move(task));
@@ -145,7 +145,7 @@ TaskTemplatePtr Channel::getRangesRegisterChangeNotificationTask()
         TRANSACTION_TIMEOUT, [&]{ notifyError(QString("Could not register notification for channel %1").arg(m_channelMName)); });
 }
 
-TaskTemplatePtr Channel::getReadRangeFinalTask()
+TaskTemplatePtr Channel::getFetchFinalTask()
 {
     return TaskLambdaRunner::create([&]() {
         setAvailableRanges();

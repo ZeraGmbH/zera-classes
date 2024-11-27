@@ -13,6 +13,7 @@ private slots:
     void initTestCase();
     void init();
     void cleanup();
+
     void emptyOnStartup();
     void fetchDirect();
     void fetchDirectTwice();

@@ -14,4 +14,5 @@ endfunction()
 SETUP_QTESTS_CHANNEL_MANAGER(
     test_all_channels
     test_channel
+    test_range
 )

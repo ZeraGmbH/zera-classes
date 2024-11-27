@@ -11,8 +11,8 @@
 #include <proxy.h>
 #include <timemachinefortest.h>
 #include <timerfactoryqtfortest.h>
-#include <QTest>
 #include <QSignalSpy>
+#include <QTest>
 
 QTEST_MAIN(test_channel)
 
