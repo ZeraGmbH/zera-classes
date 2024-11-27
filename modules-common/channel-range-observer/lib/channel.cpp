@@ -53,6 +53,7 @@ const std::shared_ptr<Range> Channel::getRange(const QString &rangeName) const
 
 void Channel::onInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant answer)
 {
+    Q_UNUSED(reply)
     // TODO?: Remove all decoding: We expect nothing but our notification - but howto test?
     if (msgnr == 0) { // 0 was reserved for async. messages
         const QStringList answerParts = answer.toString().split(":", Qt::SkipEmptyParts);
