@@ -38,6 +38,8 @@ private:
     TaskContainerInterfacePtr m_currentTasks;
 };
 
+typedef std::shared_ptr<Range> RangePtr;
+
 }
 
 #endif // CRO_RANGE_H

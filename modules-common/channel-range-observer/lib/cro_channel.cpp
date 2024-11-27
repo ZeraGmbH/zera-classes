@@ -42,7 +42,7 @@ const QStringList Channel::getAvailRangeNames() const
     return m_availableRangeNames;
 }
 
-const std::shared_ptr<Range> Channel::getRange(const QString &rangeName) const
+const RangePtr Channel::getRange(const QString &rangeName) const
 {
     auto iter = m_rangeNameToRange.constFind(rangeName);
     if(iter != m_rangeNameToRange.constEnd())
@@ -88,7 +88,7 @@ void Channel::startAllRangesTasks()
         TaskContainerInterfacePtr allRangesTasks = TaskContainerParallel::create();
         allRangesTasks->addSub(getChannelReadDetailsTask());
         for(const QString &rangeName : qAsConst(m_allRangeNamesOrderedByServer)) {
-            std::shared_ptr<Range> newRange = std::make_shared<Range>(m_channelMName, rangeName, m_netInfo, m_tcpFactory);
+            RangePtr newRange = std::make_shared<Range>(m_channelMName, rangeName, m_netInfo, m_tcpFactory);
             m_rangeNameToRange[rangeName] = newRange;
             allRangesTasks = addRangeDataTasks(std::move(allRangesTasks), rangeName, newRange);
         }
@@ -121,7 +121,7 @@ TaskTemplatePtr Channel::getChannelReadDetailsTask()
 
 TaskContainerInterfacePtr Channel::addRangeDataTasks(TaskContainerInterfacePtr taskContainer,
                                                      const QString &rangeName,
-                                                     std::shared_ptr<Range> newRange)
+                                                     RangePtr newRange)
 {
     taskContainer->addSub(TaskRangeGetIsAvailable::create(
         m_pcbInterface, m_channelMName, rangeName, newRange->m_available,

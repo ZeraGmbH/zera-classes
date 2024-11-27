@@ -28,7 +28,7 @@ public:
     // TODO: What if we are asked while fetching?
     const QStringList getAllRangeNames() const;
     const QStringList getAvailRangeNames() const;
-    const std::shared_ptr<Range> getRange(const QString &rangeName) const;
+    const RangePtr getRange(const QString &rangeName) const;
 signals:
     void sigFetchComplete(QString channelMName, bool ok);
 
@@ -41,7 +41,7 @@ private:
     TaskTemplatePtr getChannelReadDetailsTask();
     TaskContainerInterfacePtr addRangeDataTasks(TaskContainerInterfacePtr taskContainer,
                                                 const QString &rangeName,
-                                                std::shared_ptr<Range> newRange);
+                                                RangePtr newRange);
     TaskTemplatePtr getRangesRegisterChangeNotificationTask();
     TaskTemplatePtr getFetchFinalTask();
     void setAvailableRanges();
@@ -50,7 +50,7 @@ private:
     const QString m_channelMName;
     QStringList m_allRangeNamesOrderedByServer;
     QStringList m_availableRangeNames;
-    QHash<QString, std::shared_ptr<Range>> m_rangeNameToRange;
+    QHash<QString, RangePtr> m_rangeNameToRange;
 
     const NetworkConnectionInfo m_netInfo;
     const VeinTcp::AbstractTcpNetworkFactoryPtr m_tcpFactory;
