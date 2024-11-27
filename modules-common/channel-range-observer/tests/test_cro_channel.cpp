@@ -1,6 +1,6 @@
 #include "test_cro_channel.h"
-#include "channel.h"
-#include "channelfetchtask.h"
+#include "cro_channel.h"
+#include "cro_channelfetchtask.h"
 #include <testfactoryi2cctrl.h>
 #include <networkconnectioninfo.h>
 #include <timemachineobject.h>

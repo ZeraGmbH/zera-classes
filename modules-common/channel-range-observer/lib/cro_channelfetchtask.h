@@ -1,7 +1,7 @@
-#ifndef CHANNELFETCHTASK_H
-#define CHANNELFETCHTASK_H
+#ifndef CRO_CHANNELFETCHTASK_H
+#define CRO_CHANNELFETCHTASK_H
 
-#include "channel.h"
+#include "cro_channel.h"
 #include <tasktemplate.h>
 
 namespace ChannelRangeObserver {
@@ -23,4 +23,4 @@ private:
 };
 
 }
-#endif // CHANNELFETCHTASK_H
+#endif // CRO_CHANNELFETCHTASK_H

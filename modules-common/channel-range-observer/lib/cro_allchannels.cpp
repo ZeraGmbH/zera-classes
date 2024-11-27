@@ -1,5 +1,5 @@
-#include "allchannels.h"
-#include "channelfetchtask.h"
+#include "cro_allchannels.h"
+#include "cro_channelfetchtask.h"
 #include "taskchannelgetavail.h"
 #include "taskserverconnectionstart.h"
 #include <taskcontainersequence.h>

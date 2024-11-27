@@ -1,7 +1,7 @@
-#ifndef CHANNEL_RANGE_OBSERVER_CHANNEL_H
-#define CHANNEL_RANGE_OBSERVER_CHANNEL_H
+#ifndef CRO_CHANNEL_H
+#define CRO_CHANNEL_H
 
-#include "range.h"
+#include "cro_range.h"
 #include <networkconnectioninfo.h>
 #include <abstracttcpnetworkfactory.h>
 #include <pcbinterface.h>
@@ -64,4 +64,4 @@ typedef std::shared_ptr<Channel> ChannelPtr;
 
 }
 
-#endif // CHANNEL_RANGE_OBSERVER_CHANNEL_H
+#endif // CRO_CHANNEL_H

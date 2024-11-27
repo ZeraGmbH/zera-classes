@@ -1,6 +1,6 @@
 #include "test_cro_all_channels.h"
-#include "allchannels.h"
-#include "allchannelsresetter.h"
+#include "cro_allchannels.h"
+#include "cro_allchannelsresetter.h"
 #include <testfactoryi2cctrl.h>
 #include <networkconnectioninfo.h>
 #include <timemachineobject.h>

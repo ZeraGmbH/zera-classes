@@ -1,7 +1,7 @@
-#ifndef CHANNEL_RANGE_OBSERVER_All_CHANNELS_H
-#define CHANNEL_RANGE_OBSERVER_All_CHANNELS_H
+#ifndef CRO_All_CHANNELS_H
+#define CRO_All_CHANNELS_H
 
-#include "channel.h"
+#include "cro_channel.h"
 #include <pcbinterface.h>
 #include <proxyclient.h>
 #include <taskcontainerinterface.h>
@@ -41,4 +41,4 @@ private:
 };
 
 }
-#endif // CHANNEL_RANGE_OBSERVER_All_CHANNELS_H
+#endif // CRO_All_CHANNELS_H

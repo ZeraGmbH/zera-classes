@@ -1,5 +1,5 @@
 #include "test_cro_range.h"
-#include "range.h"
+#include "cro_range.h"
 #include <networkconnectioninfo.h>
 #include <clampfactorytest.h>
 #include <testfactoryi2cctrl.h>

@@ -1,4 +1,4 @@
-#include "allchannelsresetter.h"
+#include "cro_allchannelsresetter.h"
 
 namespace ChannelRangeObserver {
 

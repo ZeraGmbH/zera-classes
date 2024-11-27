@@ -1,5 +1,5 @@
-#ifndef CHANNEL_RANGE_OBSERVER_RANGE_H
-#define CHANNEL_RANGE_OBSERVER_RANGE_H
+#ifndef CRO_RANGE_H
+#define CRO_RANGE_H
 
 #include <taskcontainerinterface.h>
 #include <abstracttcpnetworkfactory.h>
@@ -41,4 +41,4 @@ private:
 
 }
 
-#endif // CHANNEL_RANGE_OBSERVER_RANGE_H
+#endif // CRO_RANGE_H
