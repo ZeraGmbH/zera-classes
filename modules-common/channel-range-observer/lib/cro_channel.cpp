@@ -53,7 +53,7 @@ const RangePtr Channel::getRange(const QString &rangeName) const
 void Channel::onInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant answer)
 {
     Q_UNUSED(reply)
-    // TODO?: Remove all decoding: We expect nothing but our notification - but howto test?
+    // We share pcb-interface with tasks so decoding is necessary here
     if (msgnr == 0) { // 0 was reserved for async. messages
         const QStringList answerParts = answer.toString().split(":", Qt::SkipEmptyParts);
         if(answerParts.size() == 2 && answerParts[0] == "Notify")
