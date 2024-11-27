@@ -1,6 +1,5 @@
 #include "cro_channel.h"
-#include "taskrangegeturvalue.h"
-#include "taskrangegetisavailable.h"
+#include "cro_rangefetchtask.h"
 #include "taskserverconnectionstart.h"
 #include <taskchannelgetrangelist.h>
 #include <taskcontainersequence.h>
@@ -90,7 +89,7 @@ void Channel::startAllRangesTasks()
         for(const QString &rangeName : qAsConst(m_allRangeNamesOrderedByServer)) {
             RangePtr newRange = std::make_shared<Range>(m_channelMName, rangeName, m_netInfo, m_tcpFactory);
             m_rangeNameToRange[rangeName] = newRange;
-            allRangesTasks = addRangeDataTasks(std::move(allRangesTasks), rangeName, newRange);
+            allRangesTasks->addSub(RangeFetchTask::create(newRange));
         }
         m_currentTasks->addSub(std::move(allRangesTasks));
         m_currentTasks->addSub(getRangesRegisterChangeNotificationTask());
@@ -117,24 +116,6 @@ TaskTemplatePtr Channel::getChannelReadDetailsTask()
         m_pcbInterface, m_channelMName, m_unit,
         TRANSACTION_TIMEOUT, [&]{ notifyError(QString("Could not read unit for channel %1").arg(m_channelMName)); }));
     return task;
-}
-
-TaskContainerInterfacePtr Channel::addRangeDataTasks(TaskContainerInterfacePtr taskContainer,
-                                                     const QString &rangeName,
-                                                     RangePtr newRange)
-{
-    taskContainer->addSub(TaskRangeGetIsAvailable::create(
-        m_pcbInterface, m_channelMName, rangeName, newRange->m_available,
-        TRANSACTION_TIMEOUT,
-        [&]{ notifyError(QString("Could not fetch range availability: Channel %1 / Range %2").arg(m_channelMName, rangeName)); }));
-    taskContainer->addSub(TaskRangeGetUrValue::create(
-        m_pcbInterface, m_channelMName, rangeName, newRange->m_urValue,
-        TRANSACTION_TIMEOUT,
-        [&]{ notifyError(QString("Could not fetch range UrValue: Channel %1 / Range %2").arg(m_channelMName, rangeName)); }));
-
-    // TODO: add more range tasks
-
-    return taskContainer;
 }
 
 TaskTemplatePtr Channel::getRangesRegisterChangeNotificationTask()

@@ -39,9 +39,6 @@ private:
     void startAllRangesTasks();
     TaskTemplatePtr getPcbConnectionTask();
     TaskTemplatePtr getChannelReadDetailsTask();
-    TaskContainerInterfacePtr addRangeDataTasks(TaskContainerInterfacePtr taskContainer,
-                                                const QString &rangeName,
-                                                RangePtr newRange);
     TaskTemplatePtr getRangesRegisterChangeNotificationTask();
     TaskTemplatePtr getFetchFinalTask();
     void setAvailableRanges();
