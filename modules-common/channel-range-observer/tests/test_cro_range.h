@@ -19,7 +19,10 @@ private slots:
     void defaultOnStartup();
     void fetchAvailable();
     void fetchNotAvailable();
-    void fetchInvalid();
+    void fetchInvalidChannel();
+    void fetchInvalidRange();
+    void fetchByTaskValid();
+    void fetchByTaskInvalid();
     void refetchAlthoughNotSuggestedWorks();
     void fetchUrValueMatching();
 private:

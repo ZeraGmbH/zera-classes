@@ -1,5 +1,6 @@
 #include "test_cro_range.h"
 #include "cro_range.h"
+#include "cro_rangefetchtask.h"
 #include <networkconnectioninfo.h>
 #include <clampfactorytest.h>
 #include <testfactoryi2cctrl.h>
@@ -75,7 +76,21 @@ void test_cro_range::fetchNotAvailable()
     QCOMPARE(range.m_available, false);
 }
 
-void test_cro_range::fetchInvalid()
+void test_cro_range::fetchInvalidChannel()
+{
+    Range range("foo", "5000V", netInfo, m_tcpFactory);
+    QSignalSpy spy(&range, &Range::sigFetchComplete);
+    range.startFetch();
+    TimeMachineObject::feedEventLoop();
+
+    QCOMPARE(spy.count(), 1);
+    QCOMPARE(spy[0][0], "foo");
+    QCOMPARE(spy[0][1], "5000V");
+    QCOMPARE(spy[0][2], false);
+    QCOMPARE(range.m_available, false);
+}
+
+void test_cro_range::fetchInvalidRange()
 {
     Range range("m0", "foo", netInfo, m_tcpFactory);
     QSignalSpy spy(&range, &Range::sigFetchComplete);
@@ -87,6 +102,32 @@ void test_cro_range::fetchInvalid()
     QCOMPARE(spy[0][1], "foo");
     QCOMPARE(spy[0][2], false);
     QCOMPARE(range.m_available, false);
+}
+
+void test_cro_range::fetchByTaskValid()
+{
+    RangePtr range = std::make_shared<Range>("m0", "250V", netInfo, m_tcpFactory);
+    RangeFetchTaskPtr task = RangeFetchTask::create(range);
+
+    QSignalSpy spy(task.get(), &TaskTemplate::sigFinish);
+    task->start();
+    TimeMachineObject::feedEventLoop();
+
+    QCOMPARE(spy.count(), 1);
+    QCOMPARE(spy[0][0], true);
+}
+
+void test_cro_range::fetchByTaskInvalid()
+{
+    RangePtr range = std::make_shared<Range>("m0", "foo", netInfo, m_tcpFactory);
+    RangeFetchTaskPtr task = RangeFetchTask::create(range);
+
+    QSignalSpy spy(task.get(), &TaskTemplate::sigFinish);
+    task->start();
+    TimeMachineObject::feedEventLoop();
+
+    QCOMPARE(spy.count(), 1);
+    QCOMPARE(spy[0][0], false);
 }
 
 void test_cro_range::refetchAlthoughNotSuggestedWorks()
