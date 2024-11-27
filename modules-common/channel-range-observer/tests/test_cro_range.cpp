@@ -28,7 +28,6 @@ void test_cro_range::initTestCase()
 void test_cro_range::init()
 {
     setupServers();
-    setupClient();
 }
 
 void test_cro_range::cleanup()
@@ -48,19 +47,62 @@ void test_cro_range::defaultOnStartup()
     QCOMPARE(range.m_urValue, 0.0);
 }
 
+void test_cro_range::fetchAvailable()
+{
+    Range range("m0", "250V", netInfo, m_tcpFactory);
+    QSignalSpy spy(&range, &Range::sigFetchComplete);
+    range.startFetch();
+    TimeMachineObject::feedEventLoop();
+
+    QCOMPARE(spy.count(), 1);
+    QCOMPARE(spy[0][0], "m0");
+    QCOMPARE(spy[0][1], "250V");
+    QCOMPARE(spy[0][2], true);
+    QCOMPARE(range.m_available, true);
+}
+
+void test_cro_range::fetchNotAvailable()
+{
+    Range range("m3", "2mV", netInfo, m_tcpFactory);
+    QSignalSpy spy(&range, &Range::sigFetchComplete);
+    range.startFetch();
+    TimeMachineObject::feedEventLoop();
+
+    QCOMPARE(spy.count(), 1);
+    QCOMPARE(spy[0][0], "m3");
+    QCOMPARE(spy[0][1], "2mV");
+    QCOMPARE(spy[0][2], true);
+    QCOMPARE(range.m_available, false);
+}
+
+void test_cro_range::fetchInvalid()
+{
+    Range range("m0", "foo", netInfo, m_tcpFactory);
+    QSignalSpy spy(&range, &Range::sigFetchComplete);
+    range.startFetch();
+    TimeMachineObject::feedEventLoop();
+
+    QCOMPARE(spy.count(), 1);
+    QCOMPARE(spy[0][0], "m0");
+    QCOMPARE(spy[0][1], "foo");
+    QCOMPARE(spy[0][2], false);
+    QCOMPARE(range.m_available, false);
+}
+
+void test_cro_range::fetchUrValueMatching()
+{
+    Range range("m0", "250V", netInfo, m_tcpFactory);
+    QSignalSpy spy(&range, &Range::sigFetchComplete);
+    range.startFetch();
+    TimeMachineObject::feedEventLoop();
+
+    QCOMPARE(range.m_urValue, 250);
+}
+
 void test_cro_range::setupServers()
 {
     TimeMachineForTest::reset();
     m_resmanServer = std::make_unique<ResmanRunFacade>(m_tcpFactory);
     m_testServer = std::make_unique<TestServerForSenseInterfaceMt310s2>(std::make_shared<TestFactoryI2cCtrl>(true), m_tcpFactory);
-    TimeMachineObject::feedEventLoop();
-}
-
-void test_cro_range::setupClient()
-{
-    m_pcbClient = Zera::Proxy::getInstance()->getConnectionSmart(netInfo, m_tcpFactory);
-    m_pcbInterface = std::make_shared<Zera::cPCBInterface>();
-    m_pcbInterface->setClientSmart(m_pcbClient);
-    Zera::Proxy::getInstance()->startConnectionSmart(m_pcbClient);
     TimeMachineObject::feedEventLoop();
 }

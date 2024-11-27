@@ -21,12 +21,11 @@ public:
           VeinTcp::AbstractTcpNetworkFactoryPtr tcpFactory);
     void startFetch();
 signals:
-    void sigFetchComplete(QString channelMName, QString rangeName);
+    void sigFetchComplete(QString channelMName, QString rangeName, bool ok);
 
 private:
     TaskTemplatePtr getPcbConnectionTask();
-    TaskTemplatePtr getFetchFinalTask();
-    static void notifyError(QString errMsg);
+    void notifyError(QString errMsg);
 
     const QString m_channelMName;
     const QString m_rangeName;

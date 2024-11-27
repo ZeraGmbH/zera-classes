@@ -17,9 +17,12 @@ private slots:
     void cleanup();
 
     void defaultOnStartup();
+    void fetchAvailable();
+    void fetchNotAvailable();
+    void fetchInvalid();
+    void fetchUrValueMatching();
 private:
     void setupServers();
-    void setupClient();
     VeinTcp::AbstractTcpNetworkFactoryPtr m_tcpFactory;
     std::unique_ptr<TestServerForSenseInterfaceMt310s2> m_testServer;
     std::unique_ptr<ResmanRunFacade> m_resmanServer;

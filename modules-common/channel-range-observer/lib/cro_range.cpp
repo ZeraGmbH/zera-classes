@@ -19,6 +19,7 @@ Range::Range(const QString &channelMName, const QString &rangeName,
     m_pcbClient(Zera::Proxy::getInstance()->getConnectionSmart(netInfo, tcpFactory)),
     m_pcbInterface(std::make_shared<Zera::cPCBInterface>())
 {
+    m_pcbInterface->setClientSmart(m_pcbClient);
 }
 
 void Range::startFetch()
@@ -38,20 +39,15 @@ void Range::startFetch()
     // TODO: add more range tasks
 
     m_currentTasks->addSub(std::move(rangesTasks));
-    m_currentTasks->addSub(getFetchFinalTask());
+    connect(m_currentTasks.get(), &TaskTemplate::sigFinish, this, [&](bool ok) {
+        emit sigFetchComplete(m_channelMName, m_rangeName, ok);
+    });
+    m_currentTasks->start();
 }
 
 TaskTemplatePtr Range::getPcbConnectionTask()
 {
     return TaskServerConnectionStart::create(m_pcbClient, CONNECTION_TIMEOUT);
-}
-
-TaskTemplatePtr Range::getFetchFinalTask()
-{
-    return TaskLambdaRunner::create([&]() {
-        emit sigFetchComplete(m_channelMName, m_rangeName);
-        return true;
-    });
 }
 
 void Range::notifyError(QString errMsg)
