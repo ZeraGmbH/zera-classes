@@ -31,6 +31,7 @@ quint32 TaskRangeGetUrValue::sendToServer()
 
 bool TaskRangeGetUrValue::handleCheckedServerAnswer(QVariant answer)
 {
-    m_valueReceived = answer.toDouble();
-    return true;
+    bool ok;
+    m_valueReceived = answer.toDouble(&ok);
+    return ok;
 }
