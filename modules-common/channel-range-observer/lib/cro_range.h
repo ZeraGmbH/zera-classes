@@ -14,6 +14,7 @@ class Range : public QObject
     Q_OBJECT
 public:
     bool m_available = false;
+    int m_type = 0;
     double m_urValue = 0.0;
 
     Range(const QString &channelMName, const QString &rangeName,

@@ -1,6 +1,7 @@
 #include "cro_range.h"
 #include "taskserverconnectionstart.h"
 #include "taskrangegetisavailable.h"
+#include "taskrangegettype.h"
 #include "taskrangegeturvalue.h"
 #include <taskcontainersequence.h>
 #include <taskcontainerparallel.h>
@@ -32,10 +33,15 @@ void Range::startFetch()
         m_pcbInterface, m_channelMName, m_rangeName, m_available,
         TRANSACTION_TIMEOUT,
         [&]{ notifyError(QString("Could not fetch range availability: Channel %1 / Range %2").arg(m_channelMName, m_rangeName)); }));
+    rangesTasks->addSub(TaskRangeGetType::create(
+        m_pcbInterface, m_channelMName, m_rangeName, m_type,
+        TRANSACTION_TIMEOUT,
+        [&]{ notifyError(QString("Could not fetch range UrValue: Channel %1 / Range %2").arg(m_channelMName, m_rangeName)); }));
     rangesTasks->addSub(TaskRangeGetUrValue::create(
         m_pcbInterface, m_channelMName, m_rangeName, m_urValue,
         TRANSACTION_TIMEOUT,
         [&]{ notifyError(QString("Could not fetch range UrValue: Channel %1 / Range %2").arg(m_channelMName, m_rangeName)); }));
+
     // TODO: add more range tasks
 
     m_currentTasks->addSub(std::move(rangesTasks));
