@@ -149,7 +149,7 @@ void test_cro_range::refetchAlthoughNotSuggestedWorks()
     QCOMPARE(range.m_available, true);
 }
 
-void test_cro_range::fetchUrValueMatching()
+void test_cro_range::checkUrValue()
 {
     Range range("m0", "250V", netInfo, m_tcpFactory);
     QSignalSpy spy(&range, &Range::sigFetchComplete);

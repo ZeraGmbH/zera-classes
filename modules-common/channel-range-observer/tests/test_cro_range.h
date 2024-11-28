@@ -24,7 +24,7 @@ private slots:
     void fetchByTaskValid();
     void fetchByTaskInvalid();
     void refetchAlthoughNotSuggestedWorks();
-    void fetchUrValueMatching();
+    void checkUrValue();
 private:
     void setupServers();
     VeinTcp::AbstractTcpNetworkFactoryPtr m_tcpFactory;
