@@ -23,10 +23,6 @@
         {
             "EntityId": 1073,
             "Comment": "Power1ModuleDC"
-        },
-        {
-            "EntityId": 1140,
-            "Comment": "LambdaModule AC 1/2/3/SUM"
         }
     ],
     "ZeraHarmonics" : [
