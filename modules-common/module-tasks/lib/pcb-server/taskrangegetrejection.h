@@ -13,8 +13,8 @@ public:
                                    double &valueReceived,
                                    int timeout, std::function<void()> additionalErrorHandler = []{});
     TaskRangeGetRejection(Zera::PcbInterfacePtr pcbInterface,
-                            QString channelSysName, QString rangeName,
-                            double &valueReceived);
+                          QString channelSysName, QString rangeName,
+                          double &valueReceived);
 private:
     quint32 sendToServer() override;
     bool handleCheckedServerAnswer(QVariant answer) override;
