@@ -11,5 +11,6 @@ SETUP_QTESTS_MODULE_TASKS(
     test_taskunregisternotifier
     test_taskchannelgetdspchannel
     test_taskchannelgetunit
+    test_taskrangegettype
     test_taskrangegetrejection
     )
