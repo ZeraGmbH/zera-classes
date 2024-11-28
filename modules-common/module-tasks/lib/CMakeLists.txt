@@ -1,11 +1,15 @@
 file(GLOB HEADER
     ${CMAKE_CURRENT_SOURCE_DIR}/*.h
     ${CMAKE_CURRENT_SOURCE_DIR}/pcb-server/*.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/pcb-server/channels/*.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/pcb-server/ranges/*.h
     ${CMAKE_CURRENT_SOURCE_DIR}/resman/*.h
     )
 file(GLOB SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/*.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/pcb-server/*.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/pcb-server/channels/*.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/pcb-server/ranges/*.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/resman/*.cpp
     )
 
@@ -25,6 +29,8 @@ target_include_directories(module-tasks
     PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/pcb-server>
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/pcb-server/channels>
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/pcb-server/ranges>
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/resman>
     $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/zera-classes/module-tasks>
     )
