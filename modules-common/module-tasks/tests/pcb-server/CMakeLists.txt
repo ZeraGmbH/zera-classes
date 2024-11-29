@@ -6,7 +6,6 @@ SETUP_QTESTS_MODULE_TASKS(
     test_taskchannelgetrangelist
     test_taskrangegeturvalue
     test_taskrangegetisavailable
-    test_taskchannelregisternotifier
     test_taskregisternotifier
     test_taskunregisternotifier
     test_taskchannelgetdspchannel

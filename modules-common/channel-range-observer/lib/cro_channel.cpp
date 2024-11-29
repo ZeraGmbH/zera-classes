@@ -4,7 +4,7 @@
 #include "taskchannelgetalias.h"
 #include "taskchannelgetdspchannel.h"
 #include "taskchannelgetunit.h"
-#include "taskchannelregisternotifier.h"
+#include "taskregisternotifier.h"
 #include "taskchannelgetrangelist.h"
 #include <taskcontainersequence.h>
 #include <taskcontainerparallel.h>
@@ -113,8 +113,8 @@ TaskTemplatePtr Channel::getRangesRegisterChangeNotificationTask()
     connect(m_pcbInterface.get(), &Zera::cPCBInterface::serverAnswer,
             this, &Channel::onInterfaceAnswer);
     // TODO: Handle / check unregister
-    return TaskChannelRegisterNotifier::create(
-        m_pcbInterface, m_channelMName, notifyId,
+    return TaskRegisterNotifier::create(
+        m_pcbInterface, QString("SENS:%1:RANG:CAT?").arg(m_channelMName), notifyId,
         TRANSACTION_TIMEOUT, [&]{ notifyError(QString("Could not register notification for channel %1").arg(m_channelMName)); });
 }
 

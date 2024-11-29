@@ -1,8 +1,8 @@
 #include "adjustmentmoduleactivator.h"
 #include "taskchannelscheckavail.h"
 #include "taskchannelgetalias.h"
-#include "taskchannelregisternotifier.h"
 #include "taskchannelgetrangelist.h"
+#include "taskregisternotifier.h"
 #include "taskunregisternotifier.h"
 #include "tasklambdarunner.h"
 #include "errormessages.h"
@@ -106,11 +106,13 @@ TaskTemplatePtr AdjustmentModuleActivator::getChannelsReadTasks()
 TaskTemplatePtr AdjustmentModuleActivator::getChannelsRegisterNotifyTasks()
 {
     TaskContainerInterfacePtr tasks = TaskContainerParallel::create();
+    // Hmm we ignore id and relaoad all - see cAdjustmentModuleMeasProgram::catchInterfaceAnswer
+    constexpr int notifierId = 1;
     for(const auto &channelName : qAsConst(m_configuredChannels))
-        tasks->addSub(TaskChannelRegisterNotifier::create(
-                          m_commonObjects->m_pcbConnection.getInterface(),
-                          channelName,
-                          TRANSACTION_TIMEOUT, [&]{ notifyError(registerpcbnotifierErrMsg); }));
+        tasks->addSub(TaskRegisterNotifier::create(
+                        m_commonObjects->m_pcbConnection.getInterface(),
+                        QString("SENS:%1:RANG:CAT?").arg(channelName), notifierId,
+                        TRANSACTION_TIMEOUT, [&]{ notifyError(registerpcbnotifierErrMsg); }));
     return tasks;
 }
 
