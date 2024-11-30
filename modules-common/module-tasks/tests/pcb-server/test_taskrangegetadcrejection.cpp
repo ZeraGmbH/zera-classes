@@ -8,7 +8,7 @@
 
 QTEST_MAIN(test_taskrangegetadcrejection)
 
-static const char* channelSysName = "m0";
+static const char* channelMName = "m0";
 static const char* rangeName = "250V";
 static double defaultRejection = 123456.0; // although treated as double - it is more an int...
 
@@ -17,14 +17,14 @@ void test_taskrangegetadcrejection::checkScpiSend()
     PcbInitForTest pcb;
     double rejection;
     TaskTemplatePtr task = TaskRangeGetAdcRejection::create(pcb.getPcbInterface(),
-                                                            channelSysName, rangeName,
+                                                            channelMName, rangeName,
                                                             rejection,
                                                             EXPIRE_INFINITE);
     task->start();
     TimeMachineObject::feedEventLoop();
     QStringList scpiSent = pcb.getProxyClient()->getReceivedCommands();
     QCOMPARE(scpiSent.count(), 1);
-    QString scpiExpectedPath = QString("SENSE:%1:%2:ADCREJECTION").arg(channelSysName, rangeName);
+    QString scpiExpectedPath = QString("SENSE:%1:%2:ADCREJECTION").arg(channelMName, rangeName);
     ScpiFullCmdCheckerForTest scpiChecker(scpiExpectedPath, SCPI::isQuery);
     QVERIFY(scpiChecker.matches(scpiSent[0]));
 }
@@ -35,7 +35,7 @@ void test_taskrangegetadcrejection::returnsRejectionProperly()
     pcb.getProxyClient()->setAnswers(ServerTestAnswerList() << ServerTestAnswer(ack, QString("%1").arg(defaultRejection)));
     double rejection = 0.0;
     TaskTemplatePtr task = TaskRangeGetAdcRejection::create(pcb.getPcbInterface(),
-                                                            channelSysName, rangeName,
+                                                            channelMName, rangeName,
                                                             rejection,
                                                             EXPIRE_INFINITE);
     task->start();
@@ -49,7 +49,7 @@ void test_taskrangegetadcrejection::timeoutAndErrFunc()
     int localErrorCount = 0;
     double rejection = 0.0;
     TaskTemplatePtr task = TaskRangeGetAdcRejection::create(pcb.getPcbInterface(),
-                                                            channelSysName, rangeName,
+                                                            channelMName, rangeName,
                                                             rejection,
                                                             DEFAULT_EXPIRE,
                                                             [&]{

@@ -12,8 +12,8 @@ public:
                                    QString& valueReceived,
                                    int timeout, std::function<void()> additionalErrorHandler = []{});
     TaskChannelGetAlias(Zera::PcbInterfacePtr pcbInterface,
-                         QString channelName,
-                         QString& valueReceived);
+                        QString channelName,
+                        QString& valueReceived);
 private:
     quint32 sendToServer() override;
     bool handleCheckedServerAnswer(QVariant answer) override;

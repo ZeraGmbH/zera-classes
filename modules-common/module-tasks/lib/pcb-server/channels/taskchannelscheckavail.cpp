@@ -2,8 +2,8 @@
 #include "taskchannelgetavail.h"
 
 TaskTemplatePtr TaskChannelsCheckAvail::create(Zera::PcbInterfacePtr pcbInterface,
-                                                 QStringList expectedChannels,
-                                                 int timeout, std::function<void ()> additionalErrorHandler)
+                                               QStringList expectedChannels,
+                                               int timeout, std::function<void ()> additionalErrorHandler)
 {
     return std::make_unique<TaskChannelsCheckAvail>(pcbInterface,
                                                       expectedChannels,
@@ -11,8 +11,8 @@ TaskTemplatePtr TaskChannelsCheckAvail::create(Zera::PcbInterfacePtr pcbInterfac
 }
 
 TaskChannelsCheckAvail::TaskChannelsCheckAvail(Zera::PcbInterfacePtr pcbInterface,
-                                                   QStringList expectedChannels,
-                                                   int timeout, std::function<void ()> additionalErrorHandler) :
+                                               QStringList expectedChannels,
+                                               int timeout, std::function<void ()> additionalErrorHandler) :
     m_taskGetChannelList(TaskChannelGetAvail::create(pcbInterface,
                                                      m_receivedChannels,
                                                      timeout,

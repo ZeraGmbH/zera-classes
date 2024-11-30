@@ -9,18 +9,18 @@ class TaskOffsetGetCorrection : public TaskTemplate
     Q_OBJECT
 public:
     static TaskTemplatePtr create(Zera::PcbInterfacePtr pcbInterface,
-                                   QString channelSysName, QString rangeName, double ourActualValue,
+                                   QString channelMName, QString rangeName, double ourActualValue,
                                    double &correctionValue,
                                    int timeout, std::function<void()> additionalErrorHandler = []{});
     TaskOffsetGetCorrection(Zera::PcbInterfacePtr pcbInterface,
-                            QString channelSysName, QString rangeName, double ourActualValue,
+                            QString channelMName, QString rangeName, double ourActualValue,
                             double &correctionValue);
     void start() override;
 private slots:
     void onServerAnswer(quint32 msgnr, quint8 reply, QVariant answer);
 private:
     Zera::PcbInterfacePtr m_pcbInterface;
-    QString m_channelSysName;
+    QString m_channelMName;
     QString m_rangeName;
     double m_ourActualValue;
     double &m_correctionValue;

@@ -2,9 +2,9 @@
 #include "taskdecoratortimeout.h"
 
 TaskTemplatePtr TaskChannelGetAlias::create(Zera::PcbInterfacePtr pcbInterface,
-                                             QString channelName,
-                                             QString &valueReceived,
-                                             int timeout, std::function<void ()> additionalErrorHandler)
+                                            QString channelName,
+                                            QString &valueReceived,
+                                            int timeout, std::function<void ()> additionalErrorHandler)
 {
     return TaskDecoratorTimeout::wrapTimeout(timeout,
                                              std::make_unique<TaskChannelGetAlias>(

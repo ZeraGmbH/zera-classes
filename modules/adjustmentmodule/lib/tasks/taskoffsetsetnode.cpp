@@ -4,23 +4,23 @@
 #include <math.h>
 
 TaskTemplatePtr TaskOffsetSetNode::create(Zera::PcbInterfacePtr pcbInterface,
-                                           QString channelSysName, QString rangeName,
+                                           QString channelMName, QString rangeName,
                                            double actualValue, double targetValue, RangeVals &rngVals,
                                            int timeout, std::function<void()> additionalErrorHandler)
 {
     return TaskDecoratorTimeout::wrapTimeout(timeout,
                                              std::make_unique<TaskOffsetSetNode>(
                                                  pcbInterface,
-                                                 channelSysName, rangeName,
+                                                 channelMName, rangeName,
                                                  actualValue, targetValue, rngVals),
                                              additionalErrorHandler);
 }
 
 TaskOffsetSetNode::TaskOffsetSetNode(Zera::PcbInterfacePtr pcbInterface,
-                                     QString channelSysName, QString rangeName,
+                                     QString channelMName, QString rangeName,
                                      double actualValue, double targetValue, RangeVals &rngVals) :
     m_pcbInterface(pcbInterface),
-    m_channelSysName(channelSysName), m_rangeName(rangeName),
+    m_channelMName(channelMName), m_rangeName(rangeName),
     m_actualValue(actualValue), m_targetValue(targetValue),
     m_rngVals(rngVals)
 {
@@ -37,7 +37,7 @@ void TaskOffsetSetNode::start()
 
     connect(m_pcbInterface.get(), &Zera::cPCBInterface::serverAnswer,
             this, &TaskOffsetSetNode::onServerAnswer);
-    m_msgnr = m_pcbInterface->setOffsetNode(m_channelSysName, m_rangeName, 0, Corr, m_targetValue);
+    m_msgnr = m_pcbInterface->setOffsetNode(m_channelMName, m_rangeName, 0, Corr, m_targetValue);
 }
 
 void TaskOffsetSetNode::onServerAnswer(quint32 msgnr, quint8 reply, QVariant answer)

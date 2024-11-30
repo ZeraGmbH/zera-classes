@@ -15,18 +15,18 @@ public:
         double m_rejectionValue;
     };
     static TaskTemplatePtr create(Zera::PcbInterfacePtr pcbInterface,
-                                   QString channelSysName, QString rangeName,
+                                   QString channelMName, QString rangeName,
                                    double actualValue, double targetValue, RangeVals &rngVals,
                                    int timeout, std::function<void()> additionalErrorHandler = []{});
     TaskOffsetSetNode(Zera::PcbInterfacePtr pcbInterface,
-                      QString channelSysName, QString rangeName,
+                      QString channelMName, QString rangeName,
                       double actualValue, double targetValue, RangeVals &rngVals);
     void start() override;
 private slots:
     void onServerAnswer(quint32 msgnr, quint8 reply, QVariant answer);
 private:
     Zera::PcbInterfacePtr m_pcbInterface;
-    QString m_channelSysName;
+    QString m_channelMName;
     QString m_rangeName;
     double m_actualValue;
     double m_targetValue;

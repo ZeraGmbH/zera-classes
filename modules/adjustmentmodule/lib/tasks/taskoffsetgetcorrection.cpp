@@ -3,24 +3,24 @@
 #include <reply.h>
 
 TaskTemplatePtr TaskOffsetGetCorrection::create(Zera::PcbInterfacePtr pcbInterface,
-                                                 QString channelSysName, QString rangeName, double ourActualValue,
+                                                 QString channelMName, QString rangeName, double ourActualValue,
                                                  double &correctionValue,
                                                  int timeout, std::function<void ()> additionalErrorHandler)
 {
     return TaskDecoratorTimeout::wrapTimeout(timeout,
                                              std::make_unique<TaskOffsetGetCorrection>(
                                                  pcbInterface,
-                                                 channelSysName, rangeName, ourActualValue,
+                                                 channelMName, rangeName, ourActualValue,
                                                  correctionValue),
                                              additionalErrorHandler);
 
 }
 
 TaskOffsetGetCorrection::TaskOffsetGetCorrection(Zera::PcbInterfacePtr pcbInterface,
-                                                 QString channelSysName, QString rangeName, double ourActualValue,
+                                                 QString channelMName, QString rangeName, double ourActualValue,
                                                  double &correctionValue) :
     m_pcbInterface(pcbInterface),
-    m_channelSysName(channelSysName), m_rangeName(rangeName), m_ourActualValue(ourActualValue),
+    m_channelMName(channelMName), m_rangeName(rangeName), m_ourActualValue(ourActualValue),
     m_correctionValue(correctionValue)
 {
 }
@@ -29,7 +29,7 @@ void TaskOffsetGetCorrection::start()
 {
     connect(m_pcbInterface.get(), &Zera::cPCBInterface::serverAnswer,
             this, &TaskOffsetGetCorrection::onServerAnswer);
-    m_msgnr = m_pcbInterface->getAdjOffsetCorrection(m_channelSysName, m_rangeName, m_ourActualValue);
+    m_msgnr = m_pcbInterface->getAdjOffsetCorrection(m_channelMName, m_rangeName, m_ourActualValue);
 }
 
 void TaskOffsetGetCorrection::onServerAnswer(quint32 msgnr, quint8 reply, QVariant answer)

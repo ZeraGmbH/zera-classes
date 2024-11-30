@@ -8,7 +8,7 @@
 
 QTEST_MAIN(test_taskrangegettype)
 
-static const char* channelSysName = "m0";
+static const char* channelMName = "m0";
 static const char* rangeName = "250V";
 static const int defaultType = 42;
 
@@ -17,14 +17,14 @@ void test_taskrangegettype::checkScpiSend()
     PcbInitForTest pcb;
     int type;
     TaskTemplatePtr task = TaskRangeGetType::create(pcb.getPcbInterface(),
-                                                           channelSysName, rangeName,
+                                                           channelMName, rangeName,
                                                            type,
                                                            EXPIRE_INFINITE);
     task->start();
     TimeMachineObject::feedEventLoop();
     QStringList scpiSent = pcb.getProxyClient()->getReceivedCommands();
     QCOMPARE(scpiSent.count(), 1);
-    QString scpiExpectedPath = QString("SENSE:%1:%2:TYPE").arg(channelSysName, rangeName);
+    QString scpiExpectedPath = QString("SENSE:%1:%2:TYPE").arg(channelMName, rangeName);
     ScpiFullCmdCheckerForTest scpiChecker(scpiExpectedPath, SCPI::isQuery);
     QVERIFY(scpiChecker.matches(scpiSent[0]));
 }
@@ -35,7 +35,7 @@ void test_taskrangegettype::returnsTypeProperly()
     pcb.getProxyClient()->setAnswers(ServerTestAnswerList() << ServerTestAnswer(ack, QString("%1").arg(defaultType)));
     int type = 0;
     TaskTemplatePtr task = TaskRangeGetType::create(pcb.getPcbInterface(),
-                                                    channelSysName, rangeName,
+                                                    channelMName, rangeName,
                                                     type,
                                                     EXPIRE_INFINITE);
     task->start();
@@ -49,7 +49,7 @@ void test_taskrangegettype::timeoutAndErrFunc()
     int localErrorCount = 0;
     int type = 0;
     TaskTemplatePtr task = TaskRangeGetType::create(pcb.getPcbInterface(),
-                                                    channelSysName, rangeName,
+                                                    channelMName, rangeName,
                                                     type,
                                                     DEFAULT_EXPIRE,
                                                     [&]{

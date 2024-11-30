@@ -5,41 +5,41 @@
 #include "errormessages.h"
 
 TaskTemplatePtr TaskOffset::create(Zera::PcbInterfacePtr pcbInterface,
-                                    QString channelSysName, QString rangeName,
+                                    QString channelMName, QString rangeName,
                                     double actualValue, double targetValue,
                                     int perTransactionTimout, std::function<void (QString)> perTransactionErrorHandler)
 {
     return std::make_unique<TaskOffset>(pcbInterface,
-                                        channelSysName, rangeName,
+                                        channelMName, rangeName,
                                         actualValue, targetValue,
                                         perTransactionTimout, perTransactionErrorHandler);
 }
 
 TaskOffset::TaskOffset(Zera::PcbInterfacePtr pcbInterface,
-                       QString channelSysName, QString rangeName, double actualValue, double targetValue,
+                       QString channelMName, QString rangeName, double actualValue, double targetValue,
                        int perTransactionTimout, std::function<void (QString)> perTransactionErrorHandler) :
     m_perTransactionErrorHandler(perTransactionErrorHandler)
 {
     addSub(TaskOffsetGetCorrection::create(pcbInterface,
-                                           channelSysName, rangeName, targetValue,
+                                           channelMName, rangeName, targetValue,
                                            m_rangeVals.m_correction,
                                            perTransactionTimout, [&]{
             m_perTransactionErrorHandler(readOffsetCorrErrMsg);
         }));
     addSub(TaskRangeGetRejection::create(pcbInterface,
-                                           channelSysName, rangeName,
+                                           channelMName, rangeName,
                                            m_rangeVals.m_rejection,
                                            perTransactionTimout, [&]{
             m_perTransactionErrorHandler(readrangerejectionErrMsg);
         }));
     addSub(TaskRangeGetUrValue::create(pcbInterface,
-                                         channelSysName, rangeName,
+                                         channelMName, rangeName,
                                          m_rangeVals.m_rejectionValue,
                                          perTransactionTimout, [&]{
         m_perTransactionErrorHandler(readrangeurvalueErrMsg);
     }));
     addSub(TaskOffsetSetNode::create(pcbInterface,
-                                     channelSysName, rangeName,
+                                     channelMName, rangeName,
                                      actualValue, targetValue,
                                      m_rangeVals,
                                      perTransactionTimout, [&]{

@@ -10,11 +10,11 @@ class TaskChannelsCheckAvail : public TaskTemplate
     Q_OBJECT
 public:
     static TaskTemplatePtr create(Zera::PcbInterfacePtr pcbInterface,
-                                   QStringList expectedChannels,
-                                   int timeout, std::function<void()> additionalErrorHandler = []{});
+                                  QStringList expectedChannels,
+                                  int timeout, std::function<void()> additionalErrorHandler = []{});
     TaskChannelsCheckAvail(Zera::PcbInterfacePtr pcbInterface,
-                             QStringList expectedChannels,
-                             int timeout, std::function<void()> additionalErrorHandler = []{});
+                           QStringList expectedChannels,
+                           int timeout, std::function<void()> additionalErrorHandler = []{});
     void start() override;
 private slots:
     void onChannelGetFinish(bool ok);

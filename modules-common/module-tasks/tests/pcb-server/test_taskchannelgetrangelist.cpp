@@ -8,7 +8,7 @@
 
 QTEST_MAIN(test_taskchannelgetrangelist)
 
-static const char* channelSysName = "m0";
+static const char* channelMName = "m0";
 static const char* defaultResponse = "250V;8V;100mV";
 
 void test_taskchannelgetrangelist::checkScpiSend()
@@ -16,14 +16,14 @@ void test_taskchannelgetrangelist::checkScpiSend()
     PcbInitForTest pcb;
     QStringList rangeList;
     TaskTemplatePtr task = TaskChannelGetRangeList::create(pcb.getPcbInterface(),
-                                                           channelSysName,
+                                                           channelMName,
                                                            rangeList,
                                                            EXPIRE_INFINITE);
     task->start();
     TimeMachineObject::feedEventLoop();
     QStringList scpiSent = pcb.getProxyClient()->getReceivedCommands();
     QCOMPARE(scpiSent.count(), 1);
-    QString scpiExpectedPath = QString("SENSE:%1:RANGE:CATALOG").arg(channelSysName);
+    QString scpiExpectedPath = QString("SENSE:%1:RANGE:CATALOG").arg(channelMName);
     ScpiFullCmdCheckerForTest scpiChecker(scpiExpectedPath, SCPI::isQuery);
     QVERIFY(scpiChecker.matches(scpiSent[0]));
 }
@@ -34,7 +34,7 @@ void test_taskchannelgetrangelist::returnsRangeListProperly()
     pcb.getProxyClient()->setAnswers(ServerTestAnswerList() << ServerTestAnswer(ack, defaultResponse));
     QStringList rangeList;
     TaskTemplatePtr task = TaskChannelGetRangeList::create(pcb.getPcbInterface(),
-                                                           channelSysName,
+                                                           channelMName,
                                                            rangeList,
                                                            EXPIRE_INFINITE);
     task->start();
@@ -49,7 +49,7 @@ void test_taskchannelgetrangelist::timeoutAndErrFunc()
     int localErrorCount = 0;
     QStringList rangeList;
     TaskTemplatePtr task = TaskChannelGetRangeList::create(pcb.getPcbInterface(),
-                                                           channelSysName,
+                                                           channelMName,
                                                            rangeList,
                                                            DEFAULT_EXPIRE,
                                                            [&]{

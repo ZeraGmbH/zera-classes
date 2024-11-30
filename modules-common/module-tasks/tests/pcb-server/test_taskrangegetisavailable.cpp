@@ -8,7 +8,7 @@
 
 QTEST_MAIN(test_taskrangegetisavailable)
 
-static const char* channelSysName = "m0";
+static const char* channelMName = "m0";
 static const char* rangeName = "250V";
 static const bool defaultAvailValue = true;
 
@@ -17,14 +17,14 @@ void test_taskrangegetisavailable::checkScpiSend()
     PcbInitForTest pcb;
     bool isAvailable;
     TaskTemplatePtr task = TaskRangeGetIsAvailable::create(pcb.getPcbInterface(),
-                                                           channelSysName, rangeName,
+                                                           channelMName, rangeName,
                                                            isAvailable,
                                                            EXPIRE_INFINITE);
     task->start();
     TimeMachineObject::feedEventLoop();
     QStringList scpiSent = pcb.getProxyClient()->getReceivedCommands();
     QCOMPARE(scpiSent.count(), 1);
-    QString scpiExpectedPath = QString("SENSE:%1:%2:AVAIL").arg(channelSysName, rangeName);
+    QString scpiExpectedPath = QString("SENSE:%1:%2:AVAIL").arg(channelMName, rangeName);
     ScpiFullCmdCheckerForTest scpiChecker(scpiExpectedPath, SCPI::isQuery);
     QVERIFY(scpiChecker.matches(scpiSent[0]));
 }
@@ -35,7 +35,7 @@ void test_taskrangegetisavailable::returnsIsAvailProperly()
     pcb.getProxyClient()->setAnswers(ServerTestAnswerList() << ServerTestAnswer(ack, QString("%1").arg(defaultAvailValue)));
     bool isAvailable = !defaultAvailValue;
     TaskTemplatePtr task = TaskRangeGetIsAvailable::create(pcb.getPcbInterface(),
-                                                           channelSysName, rangeName,
+                                                           channelMName, rangeName,
                                                            isAvailable,
                                                            EXPIRE_INFINITE);
     task->start();
@@ -49,7 +49,7 @@ void test_taskrangegetisavailable::timeoutAndErrFunc()
     int localErrorCount = 0;
     bool isAvailable = !defaultAvailValue;
     TaskTemplatePtr task = TaskRangeGetIsAvailable::create(pcb.getPcbInterface(),
-                                                           channelSysName, rangeName,
+                                                           channelMName, rangeName,
                                                            isAvailable,
                                                            DEFAULT_EXPIRE,
                                                            [&]{

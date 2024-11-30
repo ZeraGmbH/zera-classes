@@ -9,17 +9,17 @@ class TaskRangeGetIsAvailable : public TaskServerTransactionTemplate
     Q_OBJECT
 public:
     static TaskTemplatePtr create(Zera::PcbInterfacePtr pcbInterface,
-                                  QString channelSysName, QString rangeName,
+                                  QString channelMName, QString rangeName,
                                   bool &valueReceived,
                                   int timeout, std::function<void ()> additionalErrorHandler = []{});
     TaskRangeGetIsAvailable(Zera::PcbInterfacePtr pcbInterface,
-                            QString channelSysName, QString rangeName,
+                            QString channelMName, QString rangeName,
                             bool &valueReceived);
 private:
     quint32 sendToServer() override;
     bool handleCheckedServerAnswer(QVariant answer) override;
     Zera::PcbInterfacePtr m_pcbInterface;
-    QString m_channelSysName;
+    QString m_channelMName;
     QString m_rangeName;
     bool &m_valueReceived;
 };

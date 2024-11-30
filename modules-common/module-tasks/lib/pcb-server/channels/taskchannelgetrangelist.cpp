@@ -3,9 +3,9 @@
 #include <reply.h>
 
 TaskTemplatePtr TaskChannelGetRangeList::create(Zera::PcbInterfacePtr pcbInterface,
-                                               QString channelName,
-                                               QStringList &targetRangeList,
-                                               int timeout, std::function<void ()> additionalErrorHandler)
+                                                QString channelName,
+                                                QStringList &targetRangeList,
+                                                int timeout, std::function<void ()> additionalErrorHandler)
 {
     return TaskDecoratorTimeout::wrapTimeout(timeout,
                                              std::make_unique<TaskChannelGetRangeList>(
@@ -16,8 +16,8 @@ TaskTemplatePtr TaskChannelGetRangeList::create(Zera::PcbInterfacePtr pcbInterfa
 }
 
 TaskChannelGetRangeList::TaskChannelGetRangeList(Zera::PcbInterfacePtr pcbInterface,
-                                             QString channelName,
-                                             QStringList &targetRangeList) :
+                                                 QString channelName,
+                                                 QStringList &targetRangeList) :
     TaskServerTransactionTemplate(pcbInterface),
     m_pcbInterface(pcbInterface),
     m_channelName(channelName),

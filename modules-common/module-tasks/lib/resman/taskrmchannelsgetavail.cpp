@@ -5,24 +5,24 @@ QStringList TaskRmChannelsGetAvail::m_defaultSenseResourcesIgnored = QStringList
 
 TaskTemplatePtr TaskRmChannelsGetAvail::create(Zera::RMInterfacePtr rmInterface,
                                                 int timeout,
-                                                QStringList &channelSysNameList,
+                                                QStringList &channelMNameList,
                                                 std::function<void ()> additionalErrorHandler,
                                                 QStringList senseResourcesIgnored)
 {
     return TaskDecoratorTimeout::wrapTimeout(timeout,
                                              std::make_unique<TaskRmChannelsGetAvail>(
                                                  rmInterface,
-                                                 channelSysNameList,
+                                                 channelMNameList,
                                                  senseResourcesIgnored),
                                              additionalErrorHandler);
 }
 
 TaskRmChannelsGetAvail::TaskRmChannelsGetAvail(Zera::RMInterfacePtr rmInterface,
-                                               QStringList &channelSysNameList,
+                                               QStringList &channelMNameList,
                                                QStringList senseResourcesIgnored) :
     TaskServerTransactionTemplate(rmInterface),
     m_rmInterface(rmInterface),
-    m_channelSysNameList(channelSysNameList),
+    m_channelMNameList(channelMNameList),
     m_senseResourcesIgnored(senseResourcesIgnored)
 {
 }
@@ -52,7 +52,7 @@ void TaskRmChannelsGetAvail::fillChannelList(QVariant answer)
             }
         }
         if(!ignore)
-            m_channelSysNameList.append(channel);
+            m_channelMNameList.append(channel);
     }
 }
 
