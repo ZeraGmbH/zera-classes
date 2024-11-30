@@ -23,7 +23,7 @@ void test_taskregisternotifier::checkScpiSend()
     QStringList scpiSent = pcb.getProxyClient()->getReceivedCommands();
     QCOMPARE(scpiSent.count(), 1);
     QString scpiExpectedPath = QString("SERVER:REGISTER");
-    ScpiFullCmdCheckerForTest scpiChecker(scpiExpectedPath, SCPI::isCmdwP, 2);
+    ScpiFullCmdCheckerForTest scpiChecker(scpiExpectedPath, SCPI::isCmdwP, 3);
     QVERIFY(scpiChecker.matches(scpiSent[0]));
 }
 
