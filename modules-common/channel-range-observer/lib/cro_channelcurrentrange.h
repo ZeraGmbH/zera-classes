@@ -24,15 +24,18 @@ signals:
 private slots:
     void onInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant answer);
 private:
+    void preparePcbInterface();
+    void startTasks();
     TaskTemplatePtr getPcbConnectionTask();
     static void notifyError(QString errMsg);
+
     const QString m_channelMName;
     QString m_currentRangeName;
 
     const NetworkConnectionInfo m_netInfo;
     const VeinTcp::AbstractTcpNetworkFactoryPtr m_tcpFactory;
     const Zera::ProxyClientPtr m_pcbClient;
-    const Zera::PcbInterfacePtr m_pcbInterface;
+    Zera::PcbInterfacePtr m_pcbInterface;
 
     TaskContainerInterfacePtr m_currentTasks;
 };

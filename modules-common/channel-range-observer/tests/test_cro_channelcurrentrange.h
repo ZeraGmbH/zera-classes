@@ -20,6 +20,7 @@ private slots:
     void signalsForInvalidChannel();
     void getForValidFetch();
     void handleRangeChange();
+    void startObserveTwiceHandleRangeChange();
     void afterRangeChange();
 private:
     void setupServers();

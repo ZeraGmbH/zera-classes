@@ -1,7 +1,7 @@
 #include "cro_channelcurrentrange.h"
 #include "taskserverconnectionstart.h"
 #include "taskchannelgetcurrentrange.h"
-#include "taskregisternotifier.h"
+#include "taskregisternotifierwithvalue.h"
 #include <taskcontainersequence.h>
 #include <proxy.h>
 
@@ -13,10 +13,8 @@ ChannelCurrentRange::ChannelCurrentRange(const QString &channelMName,
     m_channelMName(channelMName),
     m_netInfo(netInfo),
     m_tcpFactory(tcpFactory),
-    m_pcbClient(Zera::Proxy::getInstance()->getConnectionSmart(netInfo, tcpFactory)),
-    m_pcbInterface(std::make_shared<Zera::cPCBInterface>())
+    m_pcbClient(Zera::Proxy::getInstance()->getConnectionSmart(netInfo, tcpFactory))
 {
-    m_pcbInterface->setClientSmart(m_pcbClient);
 }
 
 const QString ChannelCurrentRange::getCurrentRange() const
@@ -24,23 +22,36 @@ const QString ChannelCurrentRange::getCurrentRange() const
     return m_currentRangeName;
 }
 
+void ChannelCurrentRange::startObserve()
+{
+    preparePcbInterface();
+    startTasks();
+}
+
+void ChannelRangeObserver::ChannelCurrentRange::preparePcbInterface()
+{
+    m_pcbInterface = std::make_shared<Zera::cPCBInterface>();
+    m_pcbInterface->setClientSmart(m_pcbClient);
+    connect(m_pcbInterface.get(), &Zera::cPCBInterface::serverAnswer,
+            this, &ChannelCurrentRange::onInterfaceAnswer);
+}
+
 static constexpr int notifyId = 1;
 static const char* notificationStr = "Notify:1";
 
-void ChannelCurrentRange::startObserve()
+void ChannelRangeObserver::ChannelCurrentRange::startTasks()
 {
     m_currentTasks = TaskContainerSequence::create();
     m_currentTasks->addSub(getPcbConnectionTask());
     m_currentTasks->addSub(TaskChannelGetCurrentRange::create(
         m_pcbInterface, m_channelMName, m_currentRangeName,
-        TRANSACTION_TIMEOUT, [&]{ notifyError(QString("Could not read dsp-channel for channel %1").arg(m_channelMName)); }));
-    m_currentTasks->addSub(
-        TaskRegisterNotifier::create(m_pcbInterface, QString("SENS:%1:RANG?").arg(m_channelMName), notifyId,
-        TRANSACTION_TIMEOUT, [&]{ notifyError(QString("Could not register notification for channel %1").arg(m_channelMName)); }));
-    connect(m_pcbInterface.get(), &Zera::cPCBInterface::serverAnswer,
-            this, &ChannelCurrentRange::onInterfaceAnswer);
+        TRANSACTION_TIMEOUT, [=]{ notifyError(QString("Could not read current range for channel %1").arg(m_channelMName)); }));
+    m_currentTasks->addSub(TaskRegisterNotifierWithValue::create(
+        m_pcbInterface, QString("SENS:%1:RANG?").arg(m_channelMName), notifyId,
+        TRANSACTION_TIMEOUT, [=]{ notifyError(QString("Could not register notification for channel %1").arg(m_channelMName)); }));
     connect(m_currentTasks.get(), &TaskTemplate::sigFinish, this, [&](bool ok) {
         emit sigFetchComplete(m_channelMName, m_currentRangeName, ok);
+        m_currentTasks = nullptr;
     });
     m_currentTasks->start();
 }
@@ -48,11 +59,14 @@ void ChannelCurrentRange::startObserve()
 void ChannelCurrentRange::onInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant answer)
 {
     Q_UNUSED(reply)
-    if(msgnr == 0 && answer == notificationStr) {
-        m_currentTasks->addSub(TaskChannelGetCurrentRange::create(
-            m_pcbInterface,m_channelMName, m_currentRangeName,
-            TRANSACTION_TIMEOUT, [&]{ notifyError(QString("Could not read dsp-channel for channel %1").arg(m_channelMName)); }));
-        m_currentTasks->start();
+    if(msgnr == 0) {
+        QStringList entries = answer.toString().split(":");
+        if(answer.toString().contains(notificationStr) && entries.count() == 3) {
+            m_currentRangeName = entries[2];
+            emit sigFetchComplete(m_channelMName, m_currentRangeName, true);
+        }
+        else
+            notifyError("Unkown notification");
     }
 }
 

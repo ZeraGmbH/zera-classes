@@ -119,6 +119,25 @@ void test_cro_channelcurrentrange::handleRangeChange()
     QCOMPARE(ccr.getCurrentRange(), "8V");
 }
 
+void test_cro_channelcurrentrange::startObserveTwiceHandleRangeChange()
+{
+    ChannelCurrentRange ccr("m0", netInfo, m_tcpFactory);
+    ccr.startObserve();
+    TimeMachineObject::feedEventLoop();
+    ccr.startObserve();
+    TimeMachineObject::feedEventLoop();
+
+    QSignalSpy spy(&ccr, &ChannelCurrentRange::sigFetchComplete);
+    m_pcbInterface->setRange("m0", "8V");
+    TimeMachineObject::feedEventLoop();
+
+    QCOMPARE(spy.count(), 1);
+    QCOMPARE(spy[0][0], "m0");
+    QCOMPARE(spy[0][1], "8V");
+    QCOMPARE(spy[0][2], true);
+    QCOMPARE(ccr.getCurrentRange(), "8V");
+}
+
 void test_cro_channelcurrentrange::afterRangeChange()
 {
     ChannelCurrentRange ccr("m0", netInfo, m_tcpFactory);
