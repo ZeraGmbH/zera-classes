@@ -5,6 +5,7 @@ SETUP_QTESTS_MODULE_TASKS(
     test_taskrangegetovrejection
     test_taskchannelgetrangelist
     test_taskrangegeturvalue
+    test_taskrangegetadcrejection
     test_taskrangegetisavailable
     test_taskregisternotifier
     test_taskunregisternotifier

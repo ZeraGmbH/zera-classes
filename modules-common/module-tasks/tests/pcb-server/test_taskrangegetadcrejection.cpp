@@ -1,0 +1,65 @@
+#include "test_taskrangegetadcrejection.h"
+#include "taskrangegetadcrejection.h"
+#include "pcbinitfortest.h"
+#include "scpifullcmdcheckerfortest.h"
+#include <timemachinefortest.h>
+#include <tasktesthelper.h>
+#include <QTest>
+
+QTEST_MAIN(test_taskrangegetadcrejection)
+
+static const char* channelSysName = "m0";
+static const char* rangeName = "250V";
+static double defaultRejection = 123456.0; // although treated as double - it is more an int...
+
+void test_taskrangegetadcrejection::checkScpiSend()
+{
+    PcbInitForTest pcb;
+    double rejection;
+    TaskTemplatePtr task = TaskRangeGetAdcRejection::create(pcb.getPcbInterface(),
+                                                            channelSysName, rangeName,
+                                                            rejection,
+                                                            EXPIRE_INFINITE);
+    task->start();
+    TimeMachineObject::feedEventLoop();
+    QStringList scpiSent = pcb.getProxyClient()->getReceivedCommands();
+    QCOMPARE(scpiSent.count(), 1);
+    QString scpiExpectedPath = QString("SENSE:%1:%2:ADCREJECTION").arg(channelSysName, rangeName);
+    ScpiFullCmdCheckerForTest scpiChecker(scpiExpectedPath, SCPI::isQuery);
+    QVERIFY(scpiChecker.matches(scpiSent[0]));
+}
+
+void test_taskrangegetadcrejection::returnsRejectionProperly()
+{
+    PcbInitForTest pcb;
+    pcb.getProxyClient()->setAnswers(ServerTestAnswerList() << ServerTestAnswer(ack, QString("%1").arg(defaultRejection)));
+    double rejection = 0.0;
+    TaskTemplatePtr task = TaskRangeGetAdcRejection::create(pcb.getPcbInterface(),
+                                                            channelSysName, rangeName,
+                                                            rejection,
+                                                            EXPIRE_INFINITE);
+    task->start();
+    TimeMachineObject::feedEventLoop();
+    QCOMPARE(rejection, defaultRejection);
+}
+
+void test_taskrangegetadcrejection::timeoutAndErrFunc()
+{
+    PcbInitForTest pcb;
+    int localErrorCount = 0;
+    double rejection = 0.0;
+    TaskTemplatePtr task = TaskRangeGetAdcRejection::create(pcb.getPcbInterface(),
+                                                            channelSysName, rangeName,
+                                                            rejection,
+                                                            DEFAULT_EXPIRE,
+                                                            [&]{
+                                                                localErrorCount++;
+                                                            });
+    TaskTestHelper helper(task.get());
+    task->start();
+    TimeMachineForTest::getInstance()->processTimers(DEFAULT_EXPIRE_WAIT);
+    QCOMPARE(localErrorCount, 1);
+    QCOMPARE(helper.okCount(), 0);
+    QCOMPARE(helper.errCount(), 1);
+    QCOMPARE(helper.signalDelayMs(), DEFAULT_EXPIRE);
+}
