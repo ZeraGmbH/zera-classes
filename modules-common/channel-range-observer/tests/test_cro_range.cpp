@@ -219,7 +219,7 @@ void test_cro_range::checkRejection()
     QCOMPARE(range.m_rejection, 4415057.0);
 }
 
-void test_cro_range::checkOvrejection()
+void test_cro_range::checkOvRejection()
 {
     Range range("m0", "250V", netInfo, m_tcpFactory);
     QSignalSpy spy(&range, &Range::sigFetchComplete);
@@ -228,6 +228,17 @@ void test_cro_range::checkOvrejection()
 
     // Value taken from Mt310s2SenseInterface::setChannelAndRanges
     QCOMPARE(range.m_ovrejection, 5518821.0);
+}
+
+void test_cro_range::checkAdcRejection()
+{
+    Range range("m0", "250V", netInfo, m_tcpFactory);
+    QSignalSpy spy(&range, &Range::sigFetchComplete);
+    range.startFetch();
+    TimeMachineObject::feedEventLoop();
+
+    // check mt310s2senserange.cpp / adcRejectionMt310s2
+    QCOMPARE(range.m_adcrejection, 8388607.0);
 }
 
 void test_cro_range::setupServers()

@@ -28,7 +28,8 @@ private slots:
     void checkUrValue();
     void checkType();
     void checkRejection();
-    void checkOvrejection();
+    void checkOvRejection();
+    void checkAdcRejection();
 private:
     void setupServers();
     VeinTcp::AbstractTcpNetworkFactoryPtr m_tcpFactory;

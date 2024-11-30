@@ -5,6 +5,7 @@
 #include "taskrangegeturvalue.h"
 #include "taskrangegetrejection.h"
 #include "taskrangegetovrejection.h"
+#include "taskrangegetadcrejection.h"
 #include <taskcontainersequence.h>
 #include <taskcontainerparallel.h>
 #include <tasklambdarunner.h>
@@ -50,6 +51,10 @@ void Range::startFetch()
         m_pcbInterface, m_channelMName, m_rangeName, m_ovrejection,
         TRANSACTION_TIMEOUT,
         [&]{ notifyError(QString("Could not fetch range ovrejection: Channel %1 / Range %2").arg(m_channelMName, m_rangeName)); }));
+    rangesTasks->addSub(TaskRangeGetAdcRejection::create(
+        m_pcbInterface, m_channelMName, m_rangeName, m_adcrejection,
+        TRANSACTION_TIMEOUT,
+        [&]{ notifyError(QString("Could not fetch range adcrejection: Channel %1 / Range %2").arg(m_channelMName, m_rangeName)); }));
 
     // TODO: add more range tasks
 
