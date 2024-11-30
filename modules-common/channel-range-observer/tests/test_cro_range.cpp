@@ -104,6 +104,25 @@ void test_cro_range::fetchInvalidRange()
     QCOMPARE(range.m_available, false);
 }
 
+void test_cro_range::fetchTwice()
+{
+    Range range("m0", "250V", netInfo, m_tcpFactory);
+    QSignalSpy spy(&range, &Range::sigFetchComplete);
+
+    range.startFetch();
+    TimeMachineObject::feedEventLoop();
+    range.startFetch();
+    TimeMachineObject::feedEventLoop();
+
+    QCOMPARE(spy.count(), 2);
+    QCOMPARE(spy[0][0], "m0");
+    QCOMPARE(spy[0][1], "250V");
+    QCOMPARE(spy[0][2], true);
+    QCOMPARE(spy[1][0], "m0");
+    QCOMPARE(spy[1][1], "250V");
+    QCOMPARE(spy[1][2], true);
+}
+
 void test_cro_range::fetchByTaskValid()
 {
     RangePtr range = std::make_shared<Range>("m0", "250V", netInfo, m_tcpFactory);
@@ -187,6 +206,28 @@ void test_cro_range::checkType()
     TimeMachineObject::feedEventLoop();
 
     QCOMPARE(range2.m_type, Direct + modeADJ);
+}
+
+void test_cro_range::checkRejection()
+{
+    Range range("m0", "250V", netInfo, m_tcpFactory);
+    QSignalSpy spy(&range, &Range::sigFetchComplete);
+    range.startFetch();
+    TimeMachineObject::feedEventLoop();
+
+    // Value taken from Mt310s2SenseInterface::setChannelAndRanges
+    QCOMPARE(range.m_rejection, 4415057.0);
+}
+
+void test_cro_range::checkOvrejection()
+{
+    Range range("m0", "250V", netInfo, m_tcpFactory);
+    QSignalSpy spy(&range, &Range::sigFetchComplete);
+    range.startFetch();
+    TimeMachineObject::feedEventLoop();
+
+    // Value taken from Mt310s2SenseInterface::setChannelAndRanges
+    QCOMPARE(range.m_ovrejection, 5518821.0);
 }
 
 void test_cro_range::setupServers()

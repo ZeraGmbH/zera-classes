@@ -16,6 +16,8 @@ public:
     bool m_available = false;
     int m_type = 0;
     double m_urValue = 0.0;
+    double m_rejection = 0.0;
+    double m_ovrejection = 0.0;
 
     Range(const QString &channelMName, const QString &rangeName,
           const NetworkConnectionInfo &netInfo,
@@ -25,6 +27,7 @@ signals:
     void sigFetchComplete(QString channelMName, QString rangeName, bool ok);
 
 private:
+    void preparePcbInterface();
     TaskTemplatePtr getPcbConnectionTask();
     void notifyError(QString errMsg);
 
@@ -34,7 +37,7 @@ private:
     const NetworkConnectionInfo m_netInfo;
     const VeinTcp::AbstractTcpNetworkFactoryPtr m_tcpFactory;
     const Zera::ProxyClientPtr m_pcbClient;
-    const Zera::PcbInterfacePtr m_pcbInterface;
+    Zera::PcbInterfacePtr m_pcbInterface;
 
     TaskContainerInterfacePtr m_currentTasks;
 };

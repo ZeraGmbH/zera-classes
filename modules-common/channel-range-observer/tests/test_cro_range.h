@@ -21,11 +21,14 @@ private slots:
     void fetchNotAvailable();
     void fetchInvalidChannel();
     void fetchInvalidRange();
+    void fetchTwice();
     void fetchByTaskValid();
     void fetchByTaskInvalid();
     void refetchAlthoughNotSuggestedWorks();
     void checkUrValue();
     void checkType();
+    void checkRejection();
+    void checkOvrejection();
 private:
     void setupServers();
     VeinTcp::AbstractTcpNetworkFactoryPtr m_tcpFactory;
