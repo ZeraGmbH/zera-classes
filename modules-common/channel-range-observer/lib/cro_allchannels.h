@@ -27,6 +27,7 @@ protected:
 
 private:
     void clear();
+    void preparePcbInterface();
     void doStartFullScan();
     TaskTemplatePtr getPcbConnectionTask();
     static void notifyError(QString errMsg);
@@ -34,7 +35,7 @@ private:
     const NetworkConnectionInfo m_netInfo;
     const VeinTcp::AbstractTcpNetworkFactoryPtr m_tcpFactory;
     const Zera::ProxyClientPtr m_pcbClient;
-    const Zera::PcbInterfacePtr m_pcbInterface;
+    Zera::PcbInterfacePtr m_pcbInterface;
 
     TaskContainerInterfacePtr m_currentTasks;
     QStringList m_tempChannelMNames;

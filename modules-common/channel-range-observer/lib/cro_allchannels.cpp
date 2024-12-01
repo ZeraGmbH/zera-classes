@@ -12,10 +12,8 @@ namespace ChannelRangeObserver {
 AllChannels::AllChannels(const NetworkConnectionInfo &netInfo, VeinTcp::AbstractTcpNetworkFactoryPtr tcpFactory) :
     m_netInfo(netInfo),
     m_tcpFactory(tcpFactory),
-    m_pcbClient(Zera::Proxy::getInstance()->getConnectionSmart(netInfo, tcpFactory)),
-    m_pcbInterface(std::make_shared<Zera::cPCBInterface>())
+    m_pcbClient(Zera::Proxy::getInstance()->getConnectionSmart(netInfo, tcpFactory))
 {
-    m_pcbInterface->setClientSmart(m_pcbClient);
 }
 
 void AllChannels::startFullScan()
@@ -45,8 +43,15 @@ void AllChannels::clear()
     m_channelNameToChannel.clear();
 }
 
+void AllChannels::preparePcbInterface()
+{
+    m_pcbInterface = std::make_shared<Zera::cPCBInterface>();
+    m_pcbInterface->setClientSmart(m_pcbClient);
+}
+
 void AllChannels::doStartFullScan()
 {
+    preparePcbInterface();
     m_currentTasks = TaskContainerSequence::create();
     m_currentTasks->addSub(getPcbConnectionTask());
     m_currentTasks->addSub(TaskChannelGetAvail::create(m_pcbInterface, m_tempChannelMNames,
