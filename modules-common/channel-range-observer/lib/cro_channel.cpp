@@ -19,15 +19,14 @@ Channel::Channel(const QString &channelMName,
     m_channelMName(channelMName),
     m_netInfo(netInfo),
     m_tcpFactory(tcpFactory),
-    m_pcbClient(Zera::Proxy::getInstance()->getConnectionSmart(netInfo, tcpFactory)),
-    m_pcbInterface(std::make_shared<Zera::cPCBInterface>())
+    m_pcbClient(Zera::Proxy::getInstance()->getConnectionSmart(netInfo, tcpFactory))
 {
-    m_pcbInterface->setClientSmart(m_pcbClient);
 }
 
 void Channel::startFetch()
 {
     clearRanges();
+    preparePcbInterface();
     startAllRangesTasks();
 }
 
@@ -55,6 +54,14 @@ void Channel::clearRanges()
     m_allRangeNamesOrderedByServer.clear();
     m_availableRangeNames.clear();
     m_rangeNameToRange.clear();
+}
+
+void Channel::preparePcbInterface()
+{
+    m_pcbInterface = std::make_shared<Zera::cPCBInterface>();
+    m_pcbInterface->setClientSmart(m_pcbClient);
+    connect(m_pcbInterface.get(), &Zera::cPCBInterface::serverAnswer,
+            this, &Channel::onInterfaceAnswer);
 }
 
 TaskTemplatePtr Channel::getPcbConnectionTask()
@@ -110,9 +117,6 @@ static const char* notificationStr = "Notify:1";
 
 TaskTemplatePtr Channel::getRangesRegisterChangeNotificationTask()
 {
-    connect(m_pcbInterface.get(), &Zera::cPCBInterface::serverAnswer,
-            this, &Channel::onInterfaceAnswer);
-    // TODO: Handle / check unregister
     return TaskRegisterNotifier::create(
         m_pcbInterface, QString("SENS:%1:RANG:CAT?").arg(m_channelMName), notifyId,
         TRANSACTION_TIMEOUT, [&]{ notifyError(QString("Could not register notification for channel %1").arg(m_channelMName)); });

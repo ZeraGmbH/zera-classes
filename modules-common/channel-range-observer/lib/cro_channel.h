@@ -36,6 +36,7 @@ private slots:
     void onInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant answer);
 private:
     void clearRanges();
+    void preparePcbInterface();
     void startAllRangesTasks();
     TaskTemplatePtr getPcbConnectionTask();
     TaskTemplatePtr getChannelReadDetailsTask();
@@ -52,7 +53,7 @@ private:
     const NetworkConnectionInfo m_netInfo;
     const VeinTcp::AbstractTcpNetworkFactoryPtr m_tcpFactory;
     const Zera::ProxyClientPtr m_pcbClient;
-    const Zera::PcbInterfacePtr m_pcbInterface;
+    Zera::PcbInterfacePtr m_pcbInterface;
 
     TaskContainerInterfacePtr m_currentTasks;
 };

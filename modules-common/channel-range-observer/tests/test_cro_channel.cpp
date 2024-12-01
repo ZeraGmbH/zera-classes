@@ -292,6 +292,20 @@ void test_cro_channel::checkAvailableRangesMtSequence()
     QCOMPARE(rangeNamesReceivedAc, rangeNamesExpectedAc);
 }
 
+void test_cro_channel::checkScanTwiceAvailableRangesMtAdj()
+{
+    Channel channel("m3", netInfo, m_tcpFactory);
+    channel.startFetch();
+    TimeMachineObject::feedEventLoop();
+    channel.startFetch();
+    TimeMachineObject::feedEventLoop();
+
+    QSignalSpy spy(&channel, &Channel::sigFetchComplete);
+    m_pcbInterface->setMMode("ADJ");
+    TimeMachineObject::feedEventLoop();
+    QCOMPARE(spy.count(), 1);
+}
+
 void test_cro_channel::setupServers()
 {
     TimeMachineForTest::reset();
