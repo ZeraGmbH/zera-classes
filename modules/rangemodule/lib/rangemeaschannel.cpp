@@ -19,12 +19,6 @@ cRangeMeasChannel::cRangeMeasChannel(NetworkConnectionInfo rmsocket,
     m_pcbInterface = std::make_shared<Zera::cPCBInterface>();
 
     // setting up statemachine for "activating" meas channel
-    // m_rmConnectState.addTransition is done in rmConnect
-    m_IdentifyState.addTransition(this, &cRangeMeasChannel::activationContinue, &m_readResourceTypesState);
-    m_readResourceTypesState.addTransition(this, &cRangeMeasChannel::activationContinue, &m_readResourceState);
-    m_readResourceState.addTransition(this, &cRangeMeasChannel::activationContinue, &m_readResourceInfoState);
-    m_readResourceInfoState.addTransition(this, &cRangeMeasChannel::activationContinue, &m_claimResourceState);
-    m_claimResourceState.addTransition(this, &cRangeMeasChannel::activationContinue, &m_pcbConnectionState);
     // m_pcbConnectionState.addTransition is done in pcbConnection
     m_readDspChannelState.addTransition(this, &cRangeMeasChannel::activationContinue, &m_readChnAliasState);
     m_readChnAliasState.addTransition(this, &cRangeMeasChannel::activationContinue, &m_readSampleRateState);
@@ -34,12 +28,6 @@ cRangeMeasChannel::cRangeMeasChannel(NetworkConnectionInfo rmsocket,
     m_resetStatusState.addTransition(this, &cRangeMeasChannel::activationContinue, &m_setNotifierRangeCat);
     m_setNotifierRangeCat.addTransition(this, &cRangeMeasChannel::activationContinue, &m_activationDoneState);
 
-    m_activationMachine.addState(&m_rmConnectState);
-    m_activationMachine.addState(&m_IdentifyState);
-    m_activationMachine.addState(&m_readResourceTypesState);
-    m_activationMachine.addState(&m_readResourceState);
-    m_activationMachine.addState(&m_readResourceInfoState);
-    m_activationMachine.addState(&m_claimResourceState);
     m_activationMachine.addState(&m_pcbConnectionState);
     m_activationMachine.addState(&m_readDspChannelState);
     m_activationMachine.addState(&m_readChnAliasState);
@@ -50,12 +38,6 @@ cRangeMeasChannel::cRangeMeasChannel(NetworkConnectionInfo rmsocket,
     m_activationMachine.addState(&m_setNotifierRangeCat);
     m_activationMachine.addState(&m_activationDoneState);
 
-    connect(&m_rmConnectState, &QState::entered, this, &cRangeMeasChannel::rmConnect);
-    connect(&m_IdentifyState, &QState::entered, this, &cRangeMeasChannel::sendRMIdent);
-    connect(&m_readResourceTypesState, &QState::entered, this, &cRangeMeasChannel::readResourceTypes);
-    connect(&m_readResourceState, &QState::entered, this, &cRangeMeasChannel::readResource);
-    connect(&m_readResourceInfoState, &QState::entered, this, &cRangeMeasChannel::readResourceInfo);
-    connect(&m_claimResourceState, &QState::entered, this, &cRangeMeasChannel::claimResource);
     connect(&m_pcbConnectionState, &QState::entered, this, &cRangeMeasChannel::pcbConnection);
     connect(&m_readDspChannelState, &QState::entered, this, &cRangeMeasChannel::readDspChannel);
     connect(&m_readChnAliasState, &QState::entered, this, &cRangeMeasChannel::readChnAlias);
@@ -67,17 +49,14 @@ cRangeMeasChannel::cRangeMeasChannel(NetworkConnectionInfo rmsocket,
     connect(&m_activationDoneState, &QState::entered, this, &cRangeMeasChannel::activationDone);
 
     // setting up statemachine for "deactivating" meas channel
-    m_deactivationInitState.addTransition(this, &cRangeMeasChannel::deactivationContinue, &m_deactivationResetNotifiersState);
-    m_deactivationResetNotifiersState.addTransition(this, &cRangeMeasChannel::deactivationContinue, &m_deactivationDoneState);
+    m_deactivationInitState.addTransition(this, &cRangeMeasChannel::deactivationContinue, &m_deactivationDoneState);
     m_deactivationMachine.addState(&m_deactivationInitState);
-    m_deactivationMachine.addState(&m_deactivationResetNotifiersState);
     m_deactivationMachine.addState(&m_deactivationDoneState);
 
-    connect(&m_deactivationInitState, &QState::entered, this, &cRangeMeasChannel::deactivationInit);
-    connect(&m_deactivationResetNotifiersState, &QState::entered, this, &cRangeMeasChannel::deactivationResetNotifiers);
+    connect(&m_deactivationInitState, &QState::entered, this, &cRangeMeasChannel::deactivationResetNotifiers);
     connect(&m_deactivationDoneState, &QState::entered, this, &cRangeMeasChannel::deactivationDone);
 
-    m_activationMachine.setInitialState(&m_rmConnectState);
+    m_activationMachine.setInitialState(&m_pcbConnectionState);
     m_deactivationMachine.setInitialState(&m_deactivationInitState);
 
     // setting up statemachine for querying the meas channels ranges and their properties
@@ -454,59 +433,6 @@ void cRangeMeasChannel::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVaria
         int cmd = m_MsgNrCmdList.take(msgnr);
         switch (cmd)
         {
-        case sendmeaschannelrmident:
-            if (reply == ack)
-                emit activationContinue();
-            else
-                notifyError(rmidentErrMSG);
-            break;
-
-        case readresourcetypes:
-            if ((reply == ack) && (answer.toString().contains("SENSE")))
-                emit activationContinue();
-            else
-                notifyError(resourcetypeErrMsg);
-            break;
-
-        case readresource:
-            if ((reply == ack) && (answer.toString().contains(m_sName)))
-                emit activationContinue();
-            else
-                notifyError(resourceErrMsg);
-            break;
-
-        case readresourceinfo:
-        {
-            QStringList sl = answer.toString().split(';');
-            if ((reply ==ack) && (sl.length() >= 4)) {
-                bool ok1, ok2, ok3;
-                int max = sl.at(0).toInt(&ok1); // fixed position
-                int free = sl.at(1).toInt(&ok2);
-                m_sDescription = sl.at(2);
-                m_nPort = sl.at(3).toInt(&ok3);
-                if (ok1 && ok2 && ok3 && ((max == free) == 1))
-                    emit activationContinue();
-                else
-                    notifyError(resourceInfoErrMsg);
-            }
-            else
-                notifyError(resourceInfoErrMsg);
-            break;
-        }
-        case claimresource:
-            if (reply == ack)
-                emit activationContinue();
-            else
-                notifyError(claimresourceErrMsg);
-            break;
-
-        case freeresource:
-            if (reply == ack || reply == nack) // we accept nack here also
-                emit deactivationContinue(); // maybe that resource was deleted by server and then it is no more set
-            else
-                notifyError(freeresourceErrMsg);
-            break;
-
         case unregisterNotifiers:
             if (reply == ack)
                 emit deactivationContinue();
@@ -818,69 +744,10 @@ bool cRangeMeasChannel::getInvertedPhaseState()
     return m_invertedPhase;
 }
 
-void cRangeMeasChannel::rmConnect()
-{
-    // we instantiate a working resource manager interface first
-    // so first we try to get a connection to resource manager over proxy
-    m_rmClient = Zera::Proxy::getInstance()->getConnectionSmart(m_resmanNetworkInfo,
-                                                                m_tcpNetworkFactory);
-    m_rmConnectState.addTransition(m_rmClient.get(), &Zera::ProxyClient::connected, &m_IdentifyState);
-    // and then we set connection resource manager interface's connection
-    m_rmInterface.setClientSmart(m_rmClient); //
-    // todo insert timer for timeout
-
-    connect(&m_rmInterface, &Zera::cRMInterface::serverAnswer, this, &cRangeMeasChannel::catchInterfaceAnswer);
-    Zera::Proxy::getInstance()->startConnectionSmart(m_rmClient);
-    // resource manager liste sense abfragen
-    // bin ich da drin ?
-    // nein -> fehler activierung
-    // ja -> socket von rm besorgen
-    // resource bei rm belegen
-    // beim pcb proxy server interface beantragen
-
-    // quint8 m_nDspChannel; dsp kanal erfragen
-    // QString m_sAlias; kanal alias erfragen
-    // eine liste aller möglichen bereichen erfragen
-    // d.h. (avail = 1 und type =1
-    // und von diesen dann
-    // alias, urvalue, rejection und ovrejection abfragen
-}
-
-
-void cRangeMeasChannel::sendRMIdent()
-{
-   m_MsgNrCmdList[m_rmInterface.rmIdent(QString("MeasChannel%1").arg(m_nChannelNr))] = sendmeaschannelrmident;
-}
-
-
-void cRangeMeasChannel::readResourceTypes()
-{
-    m_MsgNrCmdList[m_rmInterface.getResourceTypes()] = readresourcetypes;
-}
-
-
-void cRangeMeasChannel::readResource()
-{
-    m_MsgNrCmdList[m_rmInterface.getResources("SENSE")] = readresource;
-}
-
-
-void cRangeMeasChannel::readResourceInfo()
-{
-    m_MsgNrCmdList[m_rmInterface.getResourceInfo("SENSE", m_sName)] = readresourceinfo;
-}
-
-
-void cRangeMeasChannel::claimResource()
-{
-    m_MsgNrCmdList[m_rmInterface.setResource("SENSE", m_sName, 1)] = claimresource;
-}
-
-
 void cRangeMeasChannel::pcbConnection()
 {
     m_pcbClient = Zera::Proxy::getInstance()->getConnectionSmart(m_pcbNetworkInfo.m_sIP,
-                                                                 m_nPort,
+                                                                 m_pcbNetworkInfo.m_nPort,
                                                                  m_tcpNetworkFactory);
     m_pcbConnectionState.addTransition(m_pcbClient.get(), &Zera::ProxyClient::connected, &m_readDspChannelState);
 
@@ -939,16 +806,9 @@ void cRangeMeasChannel::activationDone()
 }
 
 
-void cRangeMeasChannel::deactivationInit()
-{
-    // deactivation means we have to free our resources
-    m_bActive = false;
-    m_MsgNrCmdList[m_rmInterface.freeResource("SENSE", m_sName)] = freeresource;
-}
-
-
 void cRangeMeasChannel::deactivationResetNotifiers()
 {
+    m_bActive = false;
     m_MsgNrCmdList[m_pcbInterface->unregisterNotifiers()] = unregisterNotifiers;
 }
 
@@ -957,7 +817,6 @@ void cRangeMeasChannel::deactivationDone()
 {
     Zera::Proxy::getInstance()->releaseConnection(m_pcbClient.get());
     // and disconnect for our servers afterwards
-    disconnect(&m_rmInterface, 0, this, 0);
     disconnect(m_pcbInterface.get(), 0, this, 0);
     emit deactivated();
 }
