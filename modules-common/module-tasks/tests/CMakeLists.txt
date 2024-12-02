@@ -14,5 +14,4 @@ SETUP_QTESTS_MODULE_TASKS(
 )
 
 add_subdirectory(pcb-server)
-add_subdirectory(resman)
 
