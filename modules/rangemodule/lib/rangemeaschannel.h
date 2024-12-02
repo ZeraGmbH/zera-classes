@@ -40,7 +40,7 @@ class cRangeMeasChannel: public cBaseMeasChannel
 {
     Q_OBJECT
 public:
-    cRangeMeasChannel(NetworkConnectionInfo rmsocket, NetworkConnectionInfo pcbsocket,
+    cRangeMeasChannel(NetworkConnectionInfo pcbsocket,
                       VeinTcp::AbstractTcpNetworkFactoryPtr tcpNetworkFactory,
                       QString name, quint8 chnnr, QString moduleName);
     void generateVeinInterface() override;
