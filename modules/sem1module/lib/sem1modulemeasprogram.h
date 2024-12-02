@@ -244,7 +244,7 @@ private:
     VfModuleParameter* m_pRatingAct;
     VfModuleParameter* m_pMeasStartTime;
     VfModuleParameter* m_pMeasEndTime;
-    VfModuleParameter* m_pMeasTime;
+    VfModuleParameter* m_pMeasDurationMs;
 
     VfModuleParameter* m_pClientNotifierPar;
     ClientActiveComponent m_ClientActiveNotifier;
@@ -262,9 +262,9 @@ private:
     double m_fPower = 0.0;
     quint32 m_nIntReg = 0;
 
-    QDateTime m_MeasStartDateTime;
-    QDateTime m_MeasEndDateTime;
-    int m_MeasTime;
+    QDateTime m_measStartDateTime;
+    QDateTime m_measEndDateTime;
+    int m_measDuration;
 
     // Some decisions - we have enough of configration params around
     static constexpr quint32 m_nActualizeIntervallLowFreq = 1000;
