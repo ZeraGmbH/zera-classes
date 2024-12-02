@@ -3402,7 +3402,7 @@
         "INF_ModuleInterface": {
             "ComponentInfo": {
                 "ACT_EndTime": {
-                    "Description": "Current measurement: End time (dd-MM-yyyy HH:mm:ss)"
+                    "Description": "Last measurement (sequence): End time (dd-MM-yyyy HH:mm:ss)"
                 },
                 "ACT_Energy": {
                     "Description": "Energy since last start",
@@ -3416,7 +3416,7 @@
                     "Description": "Multiple measurements: Count"
                 },
                 "ACT_MeasTime": {
-                    "Description": "Current measurement: Duration"
+                    "Description": "Last measurement: Duration [ms]"
                 },
                 "ACT_MulCount": {
                     "Description": "Multiple measurements: Count stored"
@@ -3437,7 +3437,7 @@
                     "Description": "Result of last measurement"
                 },
                 "ACT_StartTime": {
-                    "Description": "Current measurement: Start time (dd-MM-yyyy HH:mm:ss)"
+                    "Description": "Last measurement (sequence): Start time (dd-MM-yyyy HH:mm:ss)"
                 },
                 "ACT_Status": {
                     "Description": "Status: 0:Idle 1:Waiting for first pulse 2:Started 4:Ready 8:Aborted"
@@ -3992,7 +3992,7 @@
         "INF_ModuleInterface": {
             "ComponentInfo": {
                 "ACT_EndTime": {
-                    "Description": "Current measurement: End time (dd-MM-yyyy HH:mm:ss)"
+                    "Description": "Last measurement (sequence): End time (dd-MM-yyyy HH:mm:ss)"
                 },
                 "ACT_Energy": {
                     "Description": "Energy since last start",
@@ -4006,7 +4006,7 @@
                     "Description": "Multiple measurements: Count"
                 },
                 "ACT_MeasTime": {
-                    "Description": "Current measurement: Duration"
+                    "Description": "Last measurement: Duration [ms]"
                 },
                 "ACT_MulCount": {
                     "Description": "Multiple measurements: Count stored"
@@ -4027,7 +4027,7 @@
                     "Description": "Result of last measurement"
                 },
                 "ACT_StartTime": {
-                    "Description": "Current measurement: Start time (dd-MM-yyyy HH:mm:ss)"
+                    "Description": "Last measurement (sequence): Start time (dd-MM-yyyy HH:mm:ss)"
                 },
                 "ACT_Status": {
                     "Description": "Status: 0:Idle 1:Waiting for first pulse 2:Started 4:Ready 8:Aborted"
@@ -5094,19 +5094,28 @@
         "PAR_Storage": 0
     },
     "1200": {
+        "ACT_EndTime": null,
         "ACT_Energy": 0,
+        "ACT_MeasTime": 0,
         "ACT_Power": 0,
         "ACT_Rating": -1,
         "ACT_RefFreqInput": "fo0",
         "ACT_Result": 0,
+        "ACT_StartTime": null,
         "ACT_Status": 0,
         "ACT_Time": 0,
         "EntityName": "SEM1Module1",
         "INF_ModuleInterface": {
             "ComponentInfo": {
+                "ACT_EndTime": {
+                    "Description": "Last measurement: End time (dd-MM-yyyy HH:mm:ss)"
+                },
                 "ACT_Energy": {
                     "Description": "Energy since last start",
                     "Unit": "kWh"
+                },
+                "ACT_MeasTime": {
+                    "Description": "Last measurement: Duration [ms]"
                 },
                 "ACT_Power": {
                     "Description": "Mean power since last start",
@@ -5121,6 +5130,9 @@
                 "ACT_Result": {
                     "Description": "Result of last measurement",
                     "Unit": "%"
+                },
+                "ACT_StartTime": {
+                    "Description": "Last measurement: Start time (dd-MM-yyyy HH:mm:ss)"
                 },
                 "ACT_Status": {
                     "Description": "State: 0:Idle 1:First pulse wait 2:Started 4:Ready 8:Aborted"
@@ -5262,9 +5274,25 @@
                 "Cmd": [
                     [
                         "CALCULATE",
+                        "0001:ENDTIME",
+                        "2",
+                        "ACT_EndTime",
+                        "0",
+                        ""
+                    ],
+                    [
+                        "CALCULATE",
                         "0001:ENERGY",
                         "2",
                         "ACT_Energy",
+                        "0",
+                        ""
+                    ],
+                    [
+                        "CALCULATE",
+                        "0001:MMEASTIME",
+                        "2",
+                        "ACT_MeasTime",
                         "0",
                         ""
                     ],
@@ -5299,6 +5327,14 @@
                         "ACT_Result",
                         "0",
                         "%"
+                    ],
+                    [
+                        "CALCULATE",
+                        "0001:STRTTIME",
+                        "2",
+                        "ACT_StartTime",
+                        "0",
+                        ""
                     ],
                     [
                         "CALCULATE",
