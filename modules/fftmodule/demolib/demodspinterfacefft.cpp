@@ -47,13 +47,17 @@ void DemoDspInterfaceFft::onTimer()
     dspValues.setValue(5, 1, 4/M_SQRT2, 4/M_SQRT2);
     dspValues.setValue(5, 2, 6/M_SQRT2, 6/M_SQRT2);
 
-    dspValues.setValue(6, 0, 10*randomDeviation, 10*randomDeviation);
-    dspValues.setValue(6, 1, 230*randomDeviation, 0);
-    dspValues.setValue(6, 2, 0, 42*randomDeviation);
+    if(totalChannels > 6) {
+        dspValues.setValue(6, 0, 10*randomDeviation, 10*randomDeviation);
+        dspValues.setValue(6, 1, 230*randomDeviation, 0);
+        dspValues.setValue(6, 2, 0, 42*randomDeviation);
+    }
 
-    dspValues.setValue(7, 0, 20*randomDeviation, 5*randomDeviation);
-    dspValues.setValue(7, 1, 230*randomDeviation, 0);
-    dspValues.setValue(7, 2, 0, 42*randomDeviation);
+    if(totalChannels > 7) {
+        dspValues.setValue(7, 0, 20*randomDeviation, 5*randomDeviation);
+        dspValues.setValue(7, 1, 230*randomDeviation, 0);
+        dspValues.setValue(7, 2, 0, 42*randomDeviation);
+    }
 
     fireActValInterrupt(dspValues.getDspValues(), /* dummy */ 0);
 }
