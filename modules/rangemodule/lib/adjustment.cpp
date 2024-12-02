@@ -9,7 +9,6 @@
 #include <proxy.h>
 #include <timerfactoryqt.h>
 #include <vfmodulecomponent.h>
-#include <rminterface.h>
 #include <dspinterface.h>
 #include <dspinterfacecmddecoder.h>
 #include <QSignalTransition>

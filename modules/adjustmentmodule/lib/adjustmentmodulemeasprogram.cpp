@@ -7,7 +7,6 @@
 #include <proxy.h>
 #include <intvalidator.h>
 #include <useratan.h>
-#include <rminterface.h>
 #include <errormessages.h>
 #include <math.h>
 
