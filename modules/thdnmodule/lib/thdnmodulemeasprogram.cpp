@@ -14,7 +14,6 @@
 #include <vfmoduleactvalue.h>
 #include <doublevalidator.h>
 #include <intvalidator.h>
-#include <rminterface.h>
 #include <dspinterface.h>
 #include <dspinterfacecmddecoder.h>
 #include <pcbinterface.h>
