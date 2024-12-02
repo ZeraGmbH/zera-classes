@@ -4,7 +4,6 @@
 #include "adjustmentmoduleconfigdata.h"
 #include "adjustmentmodulecommon.h"
 #include "adjustmentmoduleactivator.h"
-#include <rminterface.h>
 #include "basemeasworkprogram.h"
 #include "taskcontainerparallel.h"
 #include <QObject>
