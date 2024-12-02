@@ -375,12 +375,12 @@ void cSem1ModuleMeasProgram::generateVeinInterface()
     m_pModule->m_veinModuleParameterMap[key] = m_pMeasEndTime; // and for the modules interface
     m_pMeasEndTime->setSCPIInfo(new cSCPIInfo("CALCULATE",  QString("%1:ENDTIME").arg(modNr), "2", m_pMeasEndTime->getName(), "0", ""));
 
-    m_pMeasTime = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
+    m_pMeasDurationMs = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
                                         key = QString("ACT_MeasTime"),
                                         QString("Last measurement: Duration [ms]"),
                                         QVariant((int)0));
-    m_pModule->m_veinModuleParameterMap[key] = m_pMeasTime; // and for the modules interface
-    m_pMeasTime->setSCPIInfo(new cSCPIInfo("CALCULATE",  QString("%1:MMEASTIME").arg(modNr), "2", m_pMeasTime->getName(), "0", ""));
+    m_pModule->m_veinModuleParameterMap[key] = m_pMeasDurationMs; // and for the modules interface
+    m_pMeasDurationMs->setSCPIInfo(new cSCPIInfo("CALCULATE",  QString("%1:MMEASTIME").arg(modNr), "2", m_pMeasDurationMs->getName(), "0", ""));
 }
 
 
@@ -775,8 +775,8 @@ void cSem1ModuleMeasProgram::setDateTime(QDateTime var, VfModuleParameter *veinP
 
 void cSem1ModuleMeasProgram::calculateMeasTime()
 {
-    m_MeasTime = m_MeasStartDateTime.msecsTo(m_MeasEndDateTime);
-    m_pMeasTime->setValue(m_MeasTime);
+    m_measDuration = m_measStartDateTime.msecsTo(m_measEndDateTime);
+    m_pMeasDurationMs->setValue(m_measDuration);
 }
 
 void cSem1ModuleMeasProgram::resourceManagerConnect()
@@ -1038,11 +1038,11 @@ void cSem1ModuleMeasProgram::enableInterrupt()
 
 void cSem1ModuleMeasProgram::startMeasurement()
 {
-    setDateTimeNow(m_MeasStartDateTime, m_pMeasStartTime);
-    m_MeasTime = 0;
-    m_pMeasTime->setValue(m_MeasTime);
-    m_MeasEndDateTime = QDateTime();
-    setDateTime(m_MeasEndDateTime, m_pMeasEndTime);
+    setDateTimeNow(m_measStartDateTime, m_pMeasStartTime);
+    m_measDuration = 0;
+    m_pMeasDurationMs->setValue(m_measDuration);
+    m_measEndDateTime = QDateTime();
+    setDateTime(m_measEndDateTime, m_pMeasEndTime);
     if(!m_pModule->getDemo())
         m_MsgNrCmdList[m_pSECInterface->start(m_masterErrCalcName)] = startmeasurement;
     setStatus(ECALCSTATUS::ARMED);
@@ -1089,7 +1089,7 @@ void cSem1ModuleMeasProgram::readTCountact()
 
 void cSem1ModuleMeasProgram::onEMResultState()
 {
-    setDateTimeNow(m_MeasEndDateTime, m_pMeasEndTime);
+    setDateTimeNow(m_measEndDateTime, m_pMeasEndTime);
     calculateMeasTime();
     setEMResult();
 }
