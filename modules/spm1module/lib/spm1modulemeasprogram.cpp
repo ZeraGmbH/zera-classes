@@ -167,7 +167,7 @@ cSpm1ModuleMeasProgram::cSpm1ModuleMeasProgram(cSpm1Module* module, std::shared_
     connect(&m_resetIntRegisterState, &QState::entered, this, &cSpm1ModuleMeasProgram::resetIntRegister);
     connect(&m_readFinalEnergyCounterState, &QState::entered, this, &cSpm1ModuleMeasProgram::readVICountact);
     connect(&m_readFinalTimeCounterState, &QState::entered, this, &cSpm1ModuleMeasProgram::readTCountact);
-    connect(&m_setEMResultState, &QState::entered, this, &cSpm1ModuleMeasProgram::setEMResult);
+    connect(&m_setEMResultState, &QState::entered, this, &cSpm1ModuleMeasProgram::onEMResult);
 
     // we need a hash for our different power input units
     mPowerUnitFactorHash["MW"] = 1000.0;
@@ -355,6 +355,26 @@ void cSpm1ModuleMeasProgram::generateVeinInterface()
     m_ClientActiveNotifier.init(m_pClientNotifierPar);
     connect(&m_ClientActiveNotifier, &ClientActiveComponent::clientActiveStateChanged, this, &cSpm1ModuleMeasProgram::clientActivationChanged);
 
+    m_pMeasStartTime = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
+                                             key = QString("ACT_StartTime"),
+                                             QString("Last measurement: Start time (dd-MM-yyyy HH:mm:ss)"),
+                                             QVariant(QDateTime()));
+    m_pModule->m_veinModuleParameterMap[key] = m_pMeasStartTime; // and for the modules interface
+    m_pMeasStartTime->setSCPIInfo(new cSCPIInfo("CALCULATE",  QString("%1:STRTTIME").arg(modNr), "2", m_pMeasStartTime->getName(), "0", ""));
+
+    m_pMeasEndTime = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
+                                           key = QString("ACT_EndTime"),
+                                           QString("Last measurement: End time (dd-MM-yyyy HH:mm:ss)"),
+                                           QVariant(QDateTime()));
+    m_pModule->m_veinModuleParameterMap[key] = m_pMeasEndTime; // and for the modules interface
+    m_pMeasEndTime->setSCPIInfo(new cSCPIInfo("CALCULATE",  QString("%1:ENDTIME").arg(modNr), "2", m_pMeasEndTime->getName(), "0", ""));
+
+    m_pMeasDurationMs = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
+                                        key = QString("ACT_MeasTime"),
+                                        QString("Last measurement: Duration [ms]"),
+                                        QVariant((int)0));
+    m_pModule->m_veinModuleParameterMap[key] = m_pMeasDurationMs; // and for the modules interface
+    m_pMeasDurationMs->setSCPIInfo(new cSCPIInfo("CALCULATE",  QString("%1:MMEASTIME").arg(modNr), "2", m_pMeasDurationMs->getName(), "0", ""));
 }
 
 
@@ -734,6 +754,23 @@ void cSpm1ModuleMeasProgram::updateDemoMeasurementResults()
     stopMeasurement(false);
 }
 
+void cSpm1ModuleMeasProgram::setDateTimeNow(QDateTime &var, VfModuleParameter *veinParam)
+{
+    var = QDateTime::currentDateTime();
+    setDateTime(var, veinParam);
+}
+
+void cSpm1ModuleMeasProgram::setDateTime(QDateTime var, VfModuleParameter *veinParam)
+{
+    veinParam->setValue(var.toString("dd-MM-yyyy HH:mm:ss"));
+}
+
+void cSpm1ModuleMeasProgram::calculateMeasTime()
+{
+    m_measDuration = m_measStartDateTime.msecsTo(m_measEndDateTime);
+    m_pMeasDurationMs->setValue(m_measDuration);
+}
+
 void cSpm1ModuleMeasProgram::resourceManagerConnect()
 {
     // first we try to get a connection to resource manager over proxy
@@ -1017,6 +1054,11 @@ void cSpm1ModuleMeasProgram::enableInterrupt()
 
 void cSpm1ModuleMeasProgram::startMeasurement()
 {
+    setDateTimeNow(m_measStartDateTime, m_pMeasStartTime);
+    m_measDuration = 0;
+    m_pMeasDurationMs->setValue(m_measDuration);
+    m_measEndDateTime = QDateTime();
+    setDateTime(m_measEndDateTime, m_pMeasEndTime);
     if(!m_pModule->getDemo())
         m_MsgNrCmdList[m_pSECInterface->start(m_masterErrCalcName)] = startmeasurement;
     setStatus(ECALCSTATUS::ARMED);
@@ -1055,7 +1097,6 @@ void cSpm1ModuleMeasProgram::readVICountact()
     m_MsgNrCmdList[m_pSECInterface->readRegister(m_slaveErrCalcName, ECALCREG::MTCNTfin)] = readvicount;
 }
 
-
 void cSpm1ModuleMeasProgram::readTCountact()
 {
     m_MsgNrCmdList[m_pSECInterface->readRegister(m_slave2ErrCalcName, ECALCREG::MTCNTfin)] = readtcount;
@@ -1067,6 +1108,12 @@ void cSpm1ModuleMeasProgram::readTCountact()
     setStatus(ECALCSTATUS::READY);
 }
 
+void cSpm1ModuleMeasProgram::onEMResult()
+{
+    setDateTimeNow(m_measEndDateTime, m_pMeasEndTime);
+    calculateMeasTime();
+    setEMResult();
+}
 
 void cSpm1ModuleMeasProgram::setEMResult()
 {

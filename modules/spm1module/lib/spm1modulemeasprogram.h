@@ -106,7 +106,7 @@ private slots:
     void resetIntRegister();
     void readVICountact();
     void readTCountact();
-    void setEMResult();
+    void onEMResult();
     void setRating();
 
     void newStartStop(QVariant startstop);
@@ -130,6 +130,7 @@ private:
     void setInterfaceComponents();
     void setValidators();
     void setUnits();
+    void setEMResult();
 
     QStringList getEnergyUnitValidator();
     QString getEnergyUnit();
@@ -142,6 +143,10 @@ private:
 
     void handleSECInterrupt();
     void updateDemoMeasurementResults();
+
+    static void setDateTimeNow(QDateTime &var, VfModuleParameter* veinParam);
+    static void setDateTime(QDateTime var, VfModuleParameter* veinParam);
+    void calculateMeasTime();
 
     cSpm1Module* m_pModule; // the module we live in
     Zera::cSECInterface* m_pSECInterface;
@@ -235,6 +240,9 @@ private:
     VfModuleParameter* m_pUpperLimitPar;
     VfModuleParameter* m_pLowerLimitPar;
     VfModuleParameter* m_pRatingAct;
+    VfModuleParameter* m_pMeasStartTime;
+    VfModuleParameter* m_pMeasEndTime;
+    VfModuleParameter* m_pMeasDurationMs;
 
     VfModuleParameter* m_pClientNotifierPar;
     ClientActiveComponent m_ClientActiveNotifier;
@@ -251,6 +259,10 @@ private:
     double m_fEnergy = 0.0;
     double m_fPower = 0.0;
     quint32 m_nIntReg = 0;
+
+    QDateTime m_measStartDateTime;
+    QDateTime m_measEndDateTime;
+    int m_measDuration;
 
     // Some decisions - we have enough of configration params around
     static constexpr quint32 m_nActualizeIntervallLowFreq = 1000;
