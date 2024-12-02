@@ -3,7 +3,6 @@
 
 #include "moduleactivist.h"
 #include <pcbinterface.h>
-#include <rminterface.h>
 
 class cBaseSampleChannel: public cModuleActivist
 {
@@ -17,7 +16,6 @@ protected:
     QString m_sName; // the channel's system name
     quint8 m_nChannelNr; // the number of our channel for naming purpose
 
-    Zera::cRMInterface m_rmInterface;
     Zera::PcbInterfacePtr m_pPCBInterface;
 
     // the things we have to query from our pcb server
