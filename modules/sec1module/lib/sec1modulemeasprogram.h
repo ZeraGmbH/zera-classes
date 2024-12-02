@@ -270,7 +270,7 @@ private:
     VfModuleParameter* m_pMulResultArray;
     VfModuleParameter* m_pMeasStartTime;
     VfModuleParameter* m_pMeasEndTime;
-    VfModuleParameter* m_pMeasTime;
+    VfModuleParameter* m_pMeasDurationMs;
 
 
     VfModuleParameter* m_pClientNotifierPar;
@@ -306,9 +306,9 @@ private:
     QDateTime m_WaitStartDateTime;
 
     quint32 m_lastProgress = 0;
-    QDateTime m_MeasStartDateTime;
-    QDateTime m_MeasEndDateTime;
-    int m_MeasTime;
+    QDateTime m_measStartDateTime;
+    QDateTime m_measEndDateTime;
+    int m_measDuration;
 
     MultipleResultHelper m_multipleResultHelper;
     cDoubleValidator *m_dutConstValidator;
