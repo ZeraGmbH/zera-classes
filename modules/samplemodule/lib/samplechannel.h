@@ -10,12 +10,6 @@ namespace SAMPLEMODULE
 {
 enum samplechannelCmds
 {
-    sendsamplechannelrmident,
-    readresourcetypessamplechannel,
-    readresourcesamplechannel,
-    readresourceinfosamplechannel,
-    claimresource,
-    freeresource,
     readchnaliassamplechannel,
     readrangelistsamplechannel,
     setsamplechannelrange
@@ -45,12 +39,6 @@ private:
     QString m_sNewRange;
 
     // statemachine for activating a samplechannel
-    QState m_rmConnectState; // we must connect first to resource manager
-    QState m_IdentifyState; // we must identify ourself at resource manager
-    QState m_readResourceTypesState; // we ask for a list of all resources
-    QState m_readResourceState; // we look for our resource needed
-    QState m_readResourceInfoState; // we look for resource specification
-    QState m_claimResourceState; // we claim our resource
     QState m_pcbConnectionState; // we try to get a connection to our pcb server
     QState m_readChnAliasState; // we query our alias
     QState m_readRangelistState; // we query our range list
@@ -58,7 +46,6 @@ private:
     QFinalState m_activationDoneState;
 
     // statemachine for deactivating a rangemeaschannel
-    QState m_deactivationInitState;
     QFinalState m_deactivationDoneState;
 
     void setRangeValidator();
@@ -66,22 +53,14 @@ private:
 
     qint32 m_RangeQueryIt;
 
-    Zera::ProxyClientPtr m_rmClient;
     Zera::ProxyClientPtr m_pPCBClient;
 
 private slots:
-    void rmConnect();
-    void sendRMIdent();
-    void readResourceTypes();
-    void readResource();
-    void readResourceInfo();
-    void claimResource();
     void pcbConnection();
     void readChnAlias();
     void readRangelist();
     void activationDone();
 
-    void deactivationInit();
     void deactivationDone();
 
     void newPLLRange(QVariant rng);
