@@ -27,8 +27,7 @@ void MultipleResultHelper::append(const double fResult,
                                   const double fLowerLimit,
                                   const double fUpperLimit,
                                   const double fMaxError,
-                                  const QString startTime,
-                                  const QString endTime)
+                                  const QString startTime, const QString endTime, int durationMs)
 {
     // limits
     // note: limits are not results of a calculation so we can comape on equality
@@ -46,7 +45,8 @@ void MultipleResultHelper::append(const double fResult,
         { "V", fResult },
         { "R", int(eRating) },
         { "S", startTime },
-        { "T", endTime }
+        { "T", endTime },
+        { "D", durationMs },
     };
     m_jsonResultArray.append(jsonObjectValue);
     // some statistics

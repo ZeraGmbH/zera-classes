@@ -10,20 +10,13 @@
  */
 class MultipleResultHelper {
 public:
-    /**
-     * @brief clear: Clear resulr array / reset statistics
-     */
     void clear();
     void append(const double fResult,
                 const enum ECALCRESULT::enResultTypes eRating,
                 const double fLowerLimit,
                 const double fUpperLimit,
                 const double fMaxError,
-                const QString startTime, const QString endTime);
-    /**
-     * @brief getCountTotal
-     * @return Number of results in array
-     */
+                const QString startTime, const QString endTime, int durationMs);
     quint32 getCountTotal();
     /**
      * @brief getJSONResultArray: return JSON result array
