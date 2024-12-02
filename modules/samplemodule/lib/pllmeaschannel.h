@@ -12,10 +12,6 @@ namespace SAMPLEMODULE
 
 enum pllmeaschannelCmds
 {
-    sendpllchannelrmident,
-    readresourcetypes,
-    readresource,
-    readresourceinfo,
     readdspchannel,
     readchnalias,
     readunit,
@@ -59,11 +55,6 @@ private:
     QString m_sActRange; // the actual range set (name)
 
     // statemachine for activating a rangemeaschannel
-    QState m_rmConnectState; // we must connect first to resource manager
-    QState m_IdentifyState; // we must identify ourself at resource manager
-    QState m_readResourceTypesState; // we ask for a list of all resources
-    QState m_readResourceState; // we look for our resource needed
-    QState m_readResourceInfoState; // we look for resource specification
     QState m_pcbConnectionState; // we try to get a connection to our pcb server
     QState m_readDspChannelState; // we query our dsp channel
     QState m_readChnAliasState; // we query our alias
@@ -99,15 +90,9 @@ private:
     qint32 m_RangeQueryIt;
     cRangeInfoWithConstantValues ri;
 
-    Zera::ProxyClientPtr m_rmClient;
     Zera::ProxyClientPtr m_pcbClient;
 
 private slots:
-    void rmConnect();
-    void sendRMIdent();
-    void readResourceTypes();
-    void readResource();
-    void readResourceInfo();
     void pcbConnection();
     void readDspChannel();
     void readChnAlias();
