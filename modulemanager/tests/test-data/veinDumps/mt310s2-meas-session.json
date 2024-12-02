@@ -3676,7 +3676,7 @@
         "INF_ModuleInterface": {
             "ComponentInfo": {
                 "ACT_EndTime": {
-                    "Description": "Current measurement: End time (dd-MM-yyyy  HH:mm:ss)"
+                    "Description": "Current measurement: End time (dd-MM-yyyy HH:mm:ss)"
                 },
                 "ACT_Energy": {
                     "Description": "Energy since last start",
@@ -3711,7 +3711,7 @@
                     "Description": "Result of last measurement"
                 },
                 "ACT_StartTime": {
-                    "Description": "Current measurement: Start time (dd-MM-yyyy  HH:mm:ss)"
+                    "Description": "Current measurement: Start time (dd-MM-yyyy HH:mm:ss)"
                 },
                 "ACT_Status": {
                     "Description": "Status: 0:Idle 1:Waiting for first pulse 2:Started 4:Ready 8:Aborted"
