@@ -168,7 +168,7 @@ cSem1ModuleMeasProgram::cSem1ModuleMeasProgram(cSem1Module* module, std::shared_
     connect(&m_resetIntRegisterState, &QState::entered, this, &cSem1ModuleMeasProgram::resetIntRegister);
     connect(&m_readFinalEnergyCounterState, &QState::entered, this, &cSem1ModuleMeasProgram::readVICountact);
     connect(&m_readFinalTimeCounterState, &QState::entered, this, &cSem1ModuleMeasProgram::readTCountact);
-    connect(&m_setEMResultState, &QState::entered, this, &cSem1ModuleMeasProgram::setEMResult);
+    connect(&m_setEMResultState, &QState::entered, this, &cSem1ModuleMeasProgram::onEMResultState);
 
     // we need a hash for our different energy input units
     mEnergyUnitFactorHash["MWh"] = 1000.0;
@@ -360,6 +360,27 @@ void cSem1ModuleMeasProgram::generateVeinInterface()
     m_pClientNotifierPar->setValidator(iValidator);
     m_ClientActiveNotifier.init(m_pClientNotifierPar);
     connect(&m_ClientActiveNotifier, &ClientActiveComponent::clientActiveStateChanged, this, &cSem1ModuleMeasProgram::clientActivationChanged);
+
+    m_pMeasStartTime = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
+                                             key = QString("ACT_StartTime"),
+                                             QString("Current measurement: Start time (dd-MM-yyyy  HH:mm:ss)"),
+                                             QVariant(QDateTime()));
+    m_pModule->m_veinModuleParameterMap[key] = m_pMeasStartTime; // and for the modules interface
+    m_pMeasStartTime->setSCPIInfo(new cSCPIInfo("CALCULATE",  QString("%1:STRTTIME").arg(modNr), "2", m_pMeasStartTime->getName(), "0", ""));
+
+    m_pMeasEndTime = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
+                                           key = QString("ACT_EndTime"),
+                                           QString("Current measurement: End time (dd-MM-yyyy  HH:mm:ss)"),
+                                           QVariant(QDateTime()));
+    m_pModule->m_veinModuleParameterMap[key] = m_pMeasEndTime; // and for the modules interface
+    m_pMeasEndTime->setSCPIInfo(new cSCPIInfo("CALCULATE",  QString("%1:ENDTIME").arg(modNr), "2", m_pMeasEndTime->getName(), "0", ""));
+
+    m_pMeasTime = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
+                                        key = QString("ACT_MeasTime"),
+                                        QString("Current measurement: Duration"),
+                                        QVariant((int)0));
+    m_pModule->m_veinModuleParameterMap[key] = m_pMeasTime; // and for the modules interface
+    m_pMeasTime->setSCPIInfo(new cSCPIInfo("CALCULATE",  QString("%1:MMEASTIME").arg(modNr), "2", m_pMeasTime->getName(), "0", ""));
 }
 
 
@@ -741,6 +762,23 @@ void cSem1ModuleMeasProgram::updateDemoMeasurementResults()
     setEMResult();
 }
 
+void cSem1ModuleMeasProgram::setDateTimeNow(QDateTime &var, VfModuleParameter *veinParam)
+{
+    var = QDateTime::currentDateTime();
+    setDateTime(var, veinParam);
+}
+
+void cSem1ModuleMeasProgram::setDateTime(QDateTime var, VfModuleParameter *veinParam)
+{
+    veinParam->setValue(var.toString("dd-MM-yyyy  HH:mm:ss"));
+}
+
+void cSem1ModuleMeasProgram::calculateMeasTime()
+{
+    m_MeasTime = m_MeasStartDateTime.msecsTo(m_MeasEndDateTime);
+    m_pMeasTime->setValue(m_MeasTime);
+}
+
 void cSem1ModuleMeasProgram::resourceManagerConnect()
 {
     // first we try to get a connection to resource manager over proxy
@@ -1000,6 +1038,11 @@ void cSem1ModuleMeasProgram::enableInterrupt()
 
 void cSem1ModuleMeasProgram::startMeasurement()
 {
+    setDateTimeNow(m_MeasStartDateTime, m_pMeasStartTime);
+    m_MeasTime = 0;
+    m_pMeasTime->setValue(m_MeasTime);
+    m_MeasEndDateTime = QDateTime();
+    setDateTime(m_MeasEndDateTime, m_pMeasEndTime);
     if(!m_pModule->getDemo())
         m_MsgNrCmdList[m_pSECInterface->start(m_masterErrCalcName)] = startmeasurement;
     setStatus(ECALCSTATUS::ARMED);
@@ -1042,6 +1085,13 @@ void cSem1ModuleMeasProgram::readTCountact()
         m_MsgNrCmdList[m_pSECInterface->stop(m_masterErrCalcName)] = stopmeas;
     m_pStartStopPar->setValue(QVariant(0)); // restart enable
     setStatus(ECALCSTATUS::READY);
+}
+
+void cSem1ModuleMeasProgram::onEMResultState()
+{
+    setDateTimeNow(m_MeasEndDateTime, m_pMeasEndTime);
+    calculateMeasTime();
+    setEMResult();
 }
 
 void cSem1ModuleMeasProgram::setEMResult()
