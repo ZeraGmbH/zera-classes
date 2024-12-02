@@ -3,7 +3,6 @@
 
 #include "moduleactivist.h"
 #include "networkconnectioninfo.h"
-#include <rminterface.h>
 #include <pcbinterface.h>
 #include <abstracttcpnetworkfactory.h>
 
@@ -12,8 +11,7 @@ class cBaseMeasChannel: public cModuleActivist
     Q_OBJECT
 
 public:
-    cBaseMeasChannel(NetworkConnectionInfo rmsocket,
-                     NetworkConnectionInfo pcbsocket,
+    cBaseMeasChannel(NetworkConnectionInfo pcbsocket,
                      VeinTcp::AbstractTcpNetworkFactoryPtr tcpNetworkFactory,
                      QString channelName, quint8 chnnr,
                      QString moduleChannelInfo);
@@ -25,13 +23,11 @@ public:
     QString getUnit();
 
 protected:
-    NetworkConnectionInfo m_resmanNetworkInfo;
     NetworkConnectionInfo m_pcbNetworkInfo;
     VeinTcp::AbstractTcpNetworkFactoryPtr m_tcpNetworkFactory;
     QString m_sName; // the channel's system name
     quint8 m_nChannelNr; // the number of our channel for naming purpose
 
-    Zera::cRMInterface m_rmInterface;
     Zera::PcbInterfacePtr m_pcbInterface;
 
     // the things we have to query from our pcb server
@@ -40,7 +36,6 @@ protected:
     QString m_sAlias; // the channel' alias
     QString m_sUnit;
     QString m_sDescription; // we take description from resource manager
-    quint16 m_nPort; // and also the port adress of pcb server
     QHash<quint32, int> m_MsgNrCmdList;
 
 protected slots:

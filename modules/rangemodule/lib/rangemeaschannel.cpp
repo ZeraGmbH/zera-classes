@@ -8,11 +8,10 @@
 namespace RANGEMODULE
 {
 
-cRangeMeasChannel::cRangeMeasChannel(NetworkConnectionInfo rmsocket,
-                                     NetworkConnectionInfo pcbsocket,
+cRangeMeasChannel::cRangeMeasChannel(NetworkConnectionInfo pcbsocket,
                                      VeinTcp::AbstractTcpNetworkFactoryPtr tcpNetworkFactory,
                                      QString name, quint8 chnnr, QString moduleName) :
-    cBaseMeasChannel(rmsocket, pcbsocket, tcpNetworkFactory, name, chnnr,
+    cBaseMeasChannel(pcbsocket, tcpNetworkFactory, name, chnnr,
                        QString("%1/RangeMeasChannel/%2").arg(moduleName, name)),
     m_preScaling(1)
 {

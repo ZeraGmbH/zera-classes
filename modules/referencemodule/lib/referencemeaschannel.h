@@ -15,11 +15,6 @@ namespace REFERENCEMODULE
 
 enum rangemeaschannelCmds
 {
-    sendmeaschannelrmident,
-    readresourcetypes,
-    readresource,
-    readresourceinfo,
-    freeresource,
     readdspchannel,
     readchnalias,
     readsamplerate,
@@ -43,7 +38,7 @@ class cReferenceMeasChannel: public cBaseMeasChannel
     Q_OBJECT
 
 public:
-    cReferenceMeasChannel(NetworkConnectionInfo rmsocket, NetworkConnectionInfo pcbsocket, VeinTcp::AbstractTcpNetworkFactoryPtr tcpNetworkFactory,
+    cReferenceMeasChannel(NetworkConnectionInfo pcbsocket, VeinTcp::AbstractTcpNetworkFactoryPtr tcpNetworkFactory,
                           QString name, quint8 chnnr, QString moduleName);
     void generateVeinInterface() override;
 
@@ -66,11 +61,6 @@ private:
     quint32 m_nStatus;
 
     // statemachine for activating a referencemeaschannel
-    QState m_rmConnectState; // we must connect first to resource manager
-    QState m_IdentifyState; // we must identify ourself at resource manager
-    QState m_readResourceTypesState; // we ask for a list of all resources
-    QState m_readResourceState; // we look for our resource needed
-    QState m_readResourceInfoState; // we look for resource specification
     QState m_pcbConnectionState; // we try to get a connection to our pcb server
     QState m_readDspChannelState; // we query our dsp channel
     QState m_readChnAliasState; // we query our alias
@@ -93,11 +83,6 @@ private:
     QState m_readisAvailState;
     QFinalState m_rangeQueryDoneState;
 
-    // statemachine for querying a measchannels range properties
-    QStateMachine m_freeResourceStatemachine;
-    QState m_freeResourceStartState;
-    QFinalState m_freeResourceDoneState;
-
     qint32 m_RangeQueryIt;
     cRangeInfoBase m_rangeInfo;
 
@@ -105,11 +90,6 @@ private:
     Zera::ProxyClientPtr m_pcbClient;
 
 private slots:
-    void rmConnect();
-    void sendRMIdent();
-    void readResourceTypes();
-    void readResource();
-    void readResourceInfo();
     void pcbConnection();
     void readDspChannel();
     void readChnAlias();

@@ -59,8 +59,7 @@ void cRangeModule::setupModule()
 
     // first we build a list of our meas channels
     for (int i = 0; i < pConfData->m_nChannelCount; i ++) {
-        cRangeMeasChannel* pchn = new cRangeMeasChannel(getNetworkConfig()->m_rmServiceConnectionInfo,
-                                                        getNetworkConfig()->m_pcbServiceConnectionInfo,
+        cRangeMeasChannel* pchn = new cRangeMeasChannel(getNetworkConfig()->m_pcbServiceConnectionInfo,
                                                         getNetworkConfig()->m_tcpNetworkFactory,
                                                         pConfData->m_senseChannelList.at(i),
                                                         i+1,

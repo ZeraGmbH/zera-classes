@@ -61,11 +61,6 @@ private:
     QState m_deactivationInitState;
     QFinalState m_deactivationDoneState;
 
-    // statemachine for freeing resources
-    QStateMachine m_freeResourceStatemachine;
-    QState m_freeResourceStartState;
-    QFinalState m_freeResourceDoneState;
-
     void setRangeValidator();
     void setChannelNameMetaInfo();
 

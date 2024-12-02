@@ -3,7 +3,6 @@
 
 #include "rangeinfo.h"
 #include <basemeaschannel.h>
-#include <rminterface.h>
 #include <pcbinterface.h>
 #include <QFinalState>
 
@@ -38,7 +37,7 @@ class cPllMeasChannel:public cBaseMeasChannel
 {
     Q_OBJECT
 public:
-    cPllMeasChannel(NetworkConnectionInfo rmsocket, NetworkConnectionInfo pcbsocket,
+    cPllMeasChannel(NetworkConnectionInfo pcbsocket,
                     VeinTcp::AbstractTcpNetworkFactoryPtr tcpNetworkFactory,
                     QString name, quint8 chnnr, QString moduleName);
     void generateVeinInterface() override;
@@ -81,11 +80,6 @@ private:
     QState m_readOVRejectionState;
     QState m_readisAvailState;
     QFinalState m_rangeQueryDoneState;
-
-    // statemachine for querying a measchannels range properties
-    QStateMachine m_freeResourceStatemachine;
-    QState m_freeResourceStartState;
-    QFinalState m_freeResourceDoneState;
 
     qint32 m_RangeQueryIt;
     cRangeInfoWithConstantValues ri;

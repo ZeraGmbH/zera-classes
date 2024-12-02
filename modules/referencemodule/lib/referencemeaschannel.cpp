@@ -6,19 +6,14 @@
 namespace REFERENCEMODULE
 {
 
-cReferenceMeasChannel::cReferenceMeasChannel(NetworkConnectionInfo rmsocket, NetworkConnectionInfo pcbsocket, VeinTcp::AbstractTcpNetworkFactoryPtr tcpNetworkFactory,
+cReferenceMeasChannel::cReferenceMeasChannel(NetworkConnectionInfo pcbsocket, VeinTcp::AbstractTcpNetworkFactoryPtr tcpNetworkFactory,
                                              QString name, quint8 chnnr, QString moduleName) :
-    cBaseMeasChannel(rmsocket, pcbsocket, tcpNetworkFactory, name, chnnr,
+    cBaseMeasChannel(pcbsocket, tcpNetworkFactory, name, chnnr,
                        QString("%1/cReferenceMeasChannel/%2").arg(moduleName, name))
 {
     m_pcbInterface = std::make_shared<Zera::cPCBInterface>();
 
     // setting up statemachine for "activating" reference meas channel
-    // m_rmConnectState.addTransition is done in rmConnect
-    m_IdentifyState.addTransition(this, &cReferenceMeasChannel::activationContinue, &m_readResourceTypesState);
-    m_readResourceTypesState.addTransition(this, &cReferenceMeasChannel::activationContinue, &m_readResourceState);
-    m_readResourceState.addTransition(this, &cReferenceMeasChannel::activationContinue, &m_readResourceInfoState);
-    m_readResourceInfoState.addTransition(this, &cReferenceMeasChannel::activationContinue, &m_pcbConnectionState);
     // m_pcbConnectionState.addTransition is done in pcbConnection
     m_readDspChannelState.addTransition(this, &cReferenceMeasChannel::activationContinue, &m_readChnAliasState);
     m_readChnAliasState.addTransition(this, &cReferenceMeasChannel::activationContinue, &m_readSampleRateState);
@@ -29,11 +24,6 @@ cReferenceMeasChannel::cReferenceMeasChannel(NetworkConnectionInfo rmsocket, Net
     m_readRangeProperties2State.addTransition(&m_rangeQueryMachine, &QStateMachine::finished, &m_readRangeProperties3State);
     m_readRangeProperties3State.addTransition(this, &cReferenceMeasChannel::activationLoop, &m_readRangeProperties1State);
     m_readRangeProperties3State.addTransition(this, &cReferenceMeasChannel::activationContinue, &m_activationDoneState);
-    m_activationMachine.addState(&m_rmConnectState);
-    m_activationMachine.addState(&m_IdentifyState);
-    m_activationMachine.addState(&m_readResourceTypesState);
-    m_activationMachine.addState(&m_readResourceState);
-    m_activationMachine.addState(&m_readResourceInfoState);
     m_activationMachine.addState(&m_pcbConnectionState);
     m_activationMachine.addState(&m_readDspChannelState);
     m_activationMachine.addState(&m_readChnAliasState);
@@ -45,13 +35,8 @@ cReferenceMeasChannel::cReferenceMeasChannel(NetworkConnectionInfo rmsocket, Net
     m_activationMachine.addState(&m_readRangeProperties3State);
     m_activationMachine.addState(&m_activationDoneState);
 
-    m_activationMachine.setInitialState(&m_rmConnectState);
+    m_activationMachine.setInitialState(&m_pcbConnectionState);
 
-    connect(&m_rmConnectState, &QState::entered, this, &cReferenceMeasChannel::rmConnect);
-    connect(&m_IdentifyState, &QState::entered, this, &cReferenceMeasChannel::sendRMIdent);
-    connect(&m_readResourceTypesState, &QState::entered, this, &cReferenceMeasChannel::readResourceTypes);
-    connect(&m_readResourceState, &QState::entered, this, &cReferenceMeasChannel::readResource);
-    connect(&m_readResourceInfoState, &QState::entered, this, &cReferenceMeasChannel::readResourceInfo);
     connect(&m_pcbConnectionState, &QState::entered, this, &cReferenceMeasChannel::pcbConnection);
     connect(&m_readDspChannelState, &QState::entered, this, &cReferenceMeasChannel::readDspChannel);
     connect(&m_readChnAliasState, &QState::entered, this, &cReferenceMeasChannel::readChnAlias);
@@ -113,44 +98,6 @@ void cReferenceMeasChannel::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QV
     int cmd = m_MsgNrCmdList.take(msgnr);
     switch (cmd)
     {
-    case sendmeaschannelrmident:
-        if (reply == ack)
-            emit activationContinue();
-        else
-            notifyError(rmidentErrMSG);
-        break;
-    case readresourcetypes:
-        if ((reply == ack) && (answer.toString().contains("SENSE")))
-            emit activationContinue();
-        else
-            notifyError(resourcetypeErrMsg);
-        break;
-
-    case readresource:
-        if ((reply == ack) && (answer.toString().contains(m_sName)))
-            emit activationContinue();
-        else
-            notifyError(resourceErrMsg);
-        break;
-
-    case readresourceinfo:
-    {
-        QStringList sl = answer.toString().split(';');
-        if ((reply ==ack) && (sl.length() >= 4)) {
-            bool ok1, ok2;
-            int max = sl.at(0).toInt(&ok1); // fixed position
-            m_sDescription = sl.at(2);
-            m_nPort = sl.at(3).toInt(&ok2);
-            if (ok1 && ok2 && (max ==1))
-                emit activationContinue();
-            else
-                notifyError(resourceInfoErrMsg);
-        }
-        else
-            notifyError(resourceInfoErrMsg);
-        break;
-    }
-
     case readdspchannel:
         if (reply == ack) {
             m_nDspChannel = answer.toInt();
@@ -266,63 +213,10 @@ void cReferenceMeasChannel::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QV
     }
 }
 
-void cReferenceMeasChannel::rmConnect()
-{
-    // we instantiate a working resource manager interface first
-    // so first we try to get a connection to resource manager over proxy
-    m_rmClient = Zera::Proxy::getInstance()->getConnectionSmart(m_resmanNetworkInfo,
-                                                                m_tcpNetworkFactory);
-    m_rmConnectState.addTransition(m_rmClient.get(), &Zera::ProxyClient::connected, &m_IdentifyState);
-    // and then we set connection resource manager interface's connection
-    m_rmInterface.setClientSmart(m_rmClient); //
-    // todo insert timer for timeout
-
-    connect(&m_rmInterface, &Zera::cRMInterface::serverAnswer, this, &cReferenceMeasChannel::catchInterfaceAnswer);
-    Zera::Proxy::getInstance()->startConnectionSmart(m_rmClient);
-    // resource manager liste sense abfragen
-    // bin ich da drin ?
-    // nein -> fehler activierung
-    // ja -> socket von rm besorgen
-    // resource bei rm belegen
-    // beim pcb proxy server interface beantragen
-
-    // quint8 m_nDspChannel; dsp kanal erfragen
-    // QString m_sAlias; kanal alias erfragen
-    // eine liste aller möglichen bereichen erfragen
-    // d.h. (avail = 1 und type =1
-    // und von diesen dann
-    // alias, urvalue, rejection und ovrejection abfragen
-}
-
-
-void cReferenceMeasChannel::sendRMIdent()
-{
-   m_MsgNrCmdList[m_rmInterface.rmIdent(QString("ReferenceMeasChannel%1").arg(m_nChannelNr))] = sendmeaschannelrmident;
-}
-
-
-void cReferenceMeasChannel::readResourceTypes()
-{
-    m_MsgNrCmdList[m_rmInterface.getResourceTypes()] = readresourcetypes;
-}
-
-
-void cReferenceMeasChannel::readResource()
-{
-    m_MsgNrCmdList[m_rmInterface.getResources("SENSE")] = readresource;
-}
-
-
-void cReferenceMeasChannel::readResourceInfo()
-{
-    m_MsgNrCmdList[m_rmInterface.getResourceInfo("SENSE", m_sName)] = readresourceinfo;
-}
-
-
 void cReferenceMeasChannel::pcbConnection()
 {
     m_pcbClient = Zera::Proxy::getInstance()->getConnectionSmart(m_pcbNetworkInfo.m_sIP,
-                                                                 m_nPort,
+                                                                 m_pcbNetworkInfo.m_nPort,
                                                                  m_tcpNetworkFactory);
     m_pcbConnectionState.addTransition(m_pcbClient.get(), &Zera::ProxyClient::connected, &m_readDspChannelState);
 
@@ -405,7 +299,6 @@ void cReferenceMeasChannel::deactivationInit()
 void cReferenceMeasChannel::deactivationDone()
 {
     // and disconnect for our servers afterwards
-    disconnect(&m_rmInterface, 0, this, 0);
     disconnect(m_pcbInterface.get(), 0, this, 0);
     emit deactivated();
 }

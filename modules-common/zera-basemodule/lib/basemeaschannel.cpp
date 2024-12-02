@@ -1,11 +1,10 @@
 #include "basemeaschannel.h"
 
-cBaseMeasChannel::cBaseMeasChannel(NetworkConnectionInfo rmsocket, NetworkConnectionInfo pcbsocket,
+cBaseMeasChannel::cBaseMeasChannel(NetworkConnectionInfo pcbsocket,
                                    VeinTcp::AbstractTcpNetworkFactoryPtr tcpNetworkFactory,
                                    QString channelName, quint8 chnnr,
                                    QString moduleChannelInfo) :
     cModuleActivist(moduleChannelInfo),
-    m_resmanNetworkInfo(rmsocket),
     m_pcbNetworkInfo(pcbsocket),
     m_tcpNetworkFactory(tcpNetworkFactory),
     m_sName(channelName),
