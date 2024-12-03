@@ -16,7 +16,7 @@ public:
     AllChannels(const NetworkConnectionInfo &netInfo, VeinTcp::AbstractTcpNetworkFactoryPtr tcpFactory);
     void startFullScan();
     const QStringList getChannelMNames() const;
-    const ChannelPtr getChannel(QString channelMName);
+    const ChannelPtr getChannel(QString channelMName) const;
 signals:
     void sigFullScanFinished(bool ok);
     void sigFetchComplete(QString channelMName, bool ok);

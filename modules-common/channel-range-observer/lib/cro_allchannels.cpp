@@ -29,7 +29,7 @@ const QStringList AllChannels::getChannelMNames() const
     return m_channelNameToChannel.keys();
 }
 
-const ChannelPtr AllChannels::getChannel(QString channelMName)
+const ChannelPtr AllChannels::getChannel(QString channelMName) const
 {
     auto iter = m_channelNameToChannel.constFind(channelMName);
     if(iter != m_channelNameToChannel.constEnd())
