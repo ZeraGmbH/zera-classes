@@ -1,5 +1,5 @@
-#ifndef CRO_All_CHANNELS_H
-#define CRO_All_CHANNELS_H
+#ifndef CRO_CHANNEL_OBSERVER_H
+#define CRO_CHANNEL_OBSERVER_H
 
 #include "cro_channel.h"
 #include <pcbinterface.h>
@@ -9,18 +9,18 @@
 
 namespace ChannelRangeObserver {
 
-class AllChannels : public QObject
+class SystemObserver : public QObject
 {
     Q_OBJECT
 public:
-    AllChannels(const NetworkConnectionInfo &netInfo, VeinTcp::AbstractTcpNetworkFactoryPtr tcpFactory);
+    SystemObserver(const NetworkConnectionInfo &netInfo, VeinTcp::AbstractTcpNetworkFactoryPtr tcpFactory);
     void startFullScan();
     const QStringList getChannelMNames() const;
     const ChannelPtr getChannel(QString channelMName) const;
 signals:
     void sigFullScanFinished(bool ok);
     void sigFetchComplete(QString channelMName, bool ok);
-    friend class AllChannelsResetter;
+    friend class SystemObserverResetter;
 
 protected:
     QMap<QString, ChannelPtr> m_channelNameToChannel;
@@ -42,4 +42,4 @@ private:
 };
 
 }
-#endif // CRO_All_CHANNELS_H
+#endif // CRO_CHANNEL_OBSERVER_H

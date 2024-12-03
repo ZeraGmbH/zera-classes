@@ -12,7 +12,7 @@ function(SETUP_QTESTS_CHANNEL_RANGE_OBSERVER)
 endfunction()
 
 SETUP_QTESTS_CHANNEL_RANGE_OBSERVER(
-    test_cro_all_channels
+    test_cro_system_observer
     test_cro_channel
     test_cro_range
     test_cro_channelcurrentrange

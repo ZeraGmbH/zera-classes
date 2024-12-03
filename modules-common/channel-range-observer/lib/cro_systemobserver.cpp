@@ -1,4 +1,4 @@
-#include "cro_allchannels.h"
+#include "cro_systemobserver.h"
 #include "cro_channelfetchtask.h"
 #include "taskchannelgetavail.h"
 #include "taskserverconnectionstart.h"
@@ -9,14 +9,14 @@
 
 namespace ChannelRangeObserver {
 
-AllChannels::AllChannels(const NetworkConnectionInfo &netInfo, VeinTcp::AbstractTcpNetworkFactoryPtr tcpFactory) :
+SystemObserver::SystemObserver(const NetworkConnectionInfo &netInfo, VeinTcp::AbstractTcpNetworkFactoryPtr tcpFactory) :
     m_netInfo(netInfo),
     m_tcpFactory(tcpFactory),
     m_pcbClient(Zera::Proxy::getInstance()->getConnectionSmart(netInfo, tcpFactory))
 {
 }
 
-void AllChannels::startFullScan()
+void SystemObserver::startFullScan()
 {
     if(m_channelNameToChannel.isEmpty())
         doStartFullScan();
@@ -24,32 +24,32 @@ void AllChannels::startFullScan()
         emit sigFullScanFinished(true);
 }
 
-const QStringList AllChannels::getChannelMNames() const
+const QStringList SystemObserver::getChannelMNames() const
 {
     return m_channelNameToChannel.keys();
 }
 
-const ChannelPtr AllChannels::getChannel(QString channelMName) const
+const ChannelPtr SystemObserver::getChannel(QString channelMName) const
 {
     auto iter = m_channelNameToChannel.constFind(channelMName);
     if(iter != m_channelNameToChannel.constEnd())
         return iter.value();
-    qWarning("AllChannels: Channel data not found for %s!", qPrintable(channelMName));
+    qWarning("SystemObserver: Channel data not found for %s!", qPrintable(channelMName));
     return nullptr;
 }
 
-void AllChannels::clear()
+void SystemObserver::clear()
 {
     m_channelNameToChannel.clear();
 }
 
-void AllChannels::preparePcbInterface()
+void SystemObserver::preparePcbInterface()
 {
     m_pcbInterface = std::make_shared<Zera::cPCBInterface>();
     m_pcbInterface->setClientSmart(m_pcbClient);
 }
 
-void AllChannels::doStartFullScan()
+void SystemObserver::doStartFullScan()
 {
     preparePcbInterface();
     m_currentTasks = TaskContainerSequence::create();
@@ -64,7 +64,7 @@ void AllChannels::doStartFullScan()
 
             allChannelsDetailsTasks->addSub(ChannelFetchTask::create(channelObserver));
             connect(channelObserver.get(), &Channel::sigFetchComplete,
-                    this, &AllChannels::sigFetchComplete);
+                    this, &SystemObserver::sigFetchComplete);
         }
         m_tempChannelMNames.clear();
         m_currentTasks->addSub(std::move(allChannelsDetailsTasks));
@@ -72,18 +72,18 @@ void AllChannels::doStartFullScan()
     }));
 
     connect(m_currentTasks.get(), &TaskTemplate::sigFinish,
-            this, &AllChannels::sigFullScanFinished);
+            this, &SystemObserver::sigFullScanFinished);
     m_currentTasks->start();
 }
 
-TaskTemplatePtr AllChannels::getPcbConnectionTask()
+TaskTemplatePtr SystemObserver::getPcbConnectionTask()
 {
     return TaskServerConnectionStart::create(m_pcbClient, CONNECTION_TIMEOUT);
 }
 
-void AllChannels::notifyError(QString errMsg)
+void SystemObserver::notifyError(QString errMsg)
 {
-    qWarning("AllChannels error: %s", qPrintable(errMsg));
+    qWarning("SystemObserver error: %s", qPrintable(errMsg));
 }
 
 }

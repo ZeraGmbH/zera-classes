@@ -5,7 +5,7 @@
 #include <resmanrunfacade.h>
 #include <testserverforsenseinterfacemt310s2.h>
 
-class test_cro_all_channels : public QObject
+class test_cro_system_observer : public QObject
 {
     Q_OBJECT
 private slots:
