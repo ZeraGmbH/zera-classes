@@ -41,5 +41,7 @@ private:
     QStringList m_tempChannelMNames;
 };
 
+typedef std::shared_ptr<SystemObserver> SystemObserverPtr;
+
 }
 #endif // CRO_CHANNEL_OBSERVER_H

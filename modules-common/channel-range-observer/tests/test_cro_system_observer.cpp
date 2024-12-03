@@ -1,5 +1,6 @@
 #include "test_cro_system_observer.h"
 #include "cro_systemobserver.h"
+#include "cro_systemobserverfetchtask.h"
 #include "cro_systemobserverresetter.h"
 #include <testfactoryi2cctrl.h>
 #include <networkconnectioninfo.h>
@@ -79,6 +80,29 @@ void test_cro_system_observer::scanChannelListChannelsReturned()
     QVERIFY(channels.contains("m5"));
     QVERIFY(channels.contains("m6"));
     QVERIFY(channels.contains("m7"));
+}
+
+void test_cro_system_observer::scanByTaskValid()
+{
+    SystemObserverPtr observer = std::make_shared<SystemObserver>(netInfo, m_tcpFactory);
+    SystemObserverFetchTaskPtr task = SystemObserverFetchTask::create(observer);
+    QSignalSpy spy(task.get(), &SystemObserverFetchTask::sigFinish);
+    task->start();
+    TimeMachineObject::feedEventLoop();
+    QCOMPARE(spy.count(), 1);
+    QCOMPARE(spy[0][0], true);
+}
+
+void test_cro_system_observer::scanByTaskInvalid()
+{
+    NetworkConnectionInfo netInfoInvalid("127.0.0.1", 42);
+    SystemObserverPtr observer = std::make_shared<SystemObserver>(netInfoInvalid, m_tcpFactory);
+    SystemObserverFetchTaskPtr task = SystemObserverFetchTask::create(observer);
+    QSignalSpy spy(task.get(), &SystemObserverFetchTask::sigFinish);
+    task->start();
+    TimeMachineForTest::getInstance()->processTimers(CONNECTION_TIMEOUT);
+    QCOMPARE(spy.count(), 1);
+    QCOMPARE(spy[0][0], false);
 }
 
 void test_cro_system_observer::rescanWithoutClear()

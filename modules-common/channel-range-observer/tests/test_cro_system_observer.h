@@ -15,6 +15,8 @@ private slots:
     void emptyChannelListOnStartup();
     void scanChannelListSignalReturned();
     void scanChannelListChannelsReturned();
+    void scanByTaskValid();
+    void scanByTaskInvalid();
     void rescanWithoutClear();
     void rescanWithClear();
     void checkAlias();
