@@ -1,6 +1,7 @@
 #include "cro_systemobserver.h"
 #include "cro_channelfetchtask.h"
 #include "taskchannelgetavail.h"
+#include "taskgetsamplerate.h"
 #include "taskserverconnectionstart.h"
 #include <taskcontainersequence.h>
 #include <tasklambdarunner.h>
@@ -38,6 +39,11 @@ const ChannelPtr SystemObserver::getChannel(QString channelMName) const
     return nullptr;
 }
 
+const int SystemObserver::getSampleRate() const
+{
+    return m_sampleRate;
+}
+
 void SystemObserver::clear()
 {
     m_channelNameToChannel.clear();
@@ -58,6 +64,8 @@ void SystemObserver::doStartFullScan()
                                                        TRANSACTION_TIMEOUT, [=] { notifyError("Get available channels failed");}));
     m_currentTasks->addSub(TaskLambdaRunner::create([&]() {
         TaskContainerInterfacePtr allChannelsDetailsTasks = TaskContainerParallel::create();
+        allChannelsDetailsTasks->addSub(TaskGetSampleRate::create(m_pcbInterface, m_sampleRate,
+                                                                  TRANSACTION_TIMEOUT, [=] { notifyError("Get sample rate failed");}));
         for(const QString &channelMName : qAsConst(m_tempChannelMNames)) {
             ChannelPtr channelObserver = std::make_shared<Channel>(channelMName, m_netInfo, m_tcpFactory);
             m_channelNameToChannel[channelMName] = channelObserver;

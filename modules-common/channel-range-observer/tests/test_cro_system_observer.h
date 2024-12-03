@@ -19,6 +19,7 @@ private slots:
     void scanByTaskInvalid();
     void rescanWithoutClear();
     void rescanWithClear();
+    void checkSampleRate();
     void checkAlias();
     void checkDspChannel();
     void checkUnit();

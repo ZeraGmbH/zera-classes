@@ -171,6 +171,15 @@ void test_cro_system_observer::rescanWithClear()
     QCOMPARE(spyFinished[0][0], true);
 }
 
+void test_cro_system_observer::checkSampleRate()
+{
+    SystemObserver observer(netInfo, m_tcpFactory);
+    observer.startFullScan();
+    TimeMachineObject::feedEventLoop();
+
+    QCOMPARE(observer.getSampleRate(), 504);
+}
+
 void test_cro_system_observer::checkAlias()
 {
     SystemObserver observer(netInfo, m_tcpFactory);

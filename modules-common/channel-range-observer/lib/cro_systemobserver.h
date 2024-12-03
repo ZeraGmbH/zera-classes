@@ -17,6 +17,7 @@ public:
     void startFullScan();
     const QStringList getChannelMNames() const;
     const ChannelPtr getChannel(QString channelMName) const;
+    const int getSampleRate() const;
 signals:
     void sigFullScanFinished(bool ok);
     void sigFetchComplete(QString channelMName, bool ok);
@@ -37,6 +38,7 @@ private:
     const Zera::ProxyClientPtr m_pcbClient;
     Zera::PcbInterfacePtr m_pcbInterface;
 
+    int m_sampleRate = 0;
     TaskContainerInterfacePtr m_currentTasks;
     QStringList m_tempChannelMNames;
 };
