@@ -5,7 +5,7 @@
 
 namespace ChannelRangeObserver {
 
-class SystemObserverResetter
+class SystemObserverResetter // TODO remove
 {
 public:
     static void clear(SystemObserver* observer);
