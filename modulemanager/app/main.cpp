@@ -151,7 +151,13 @@ int main(int argc, char *argv[])
         modMan->startAllDemoServices(demoDeviceName);
 
     // setup vein modules
-    VeinLogger::DatabaseLogger *dataLoggerSystem = new VeinLogger::DatabaseLogger(modManSetupFacade->getStorageSystem(), sqliteFactory, app.get());
+    VeinLogger::DatabaseLogger *dataLoggerSystem = new VeinLogger::DatabaseLogger(
+        modManSetupFacade->getStorageSystem(),
+        sqliteFactory,
+        app.get(),
+        QList<int>()
+            << 0    /* SYSTEM */
+            << 1150 /* STATUS */);
     CustomerDataSystem *customerDataSystem = nullptr;
     vfExport::vf_export *exportModule=new vfExport::vf_export();
 
