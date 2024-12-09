@@ -31,6 +31,7 @@ ModuleManager::ModuleManager(ModuleManagerSetupFacade *setupFacade,
     m_tcpNetworkFactory(tcpNetworkFactory),
     m_moduleDemoMode(moduleDemoMode)
 {
+    initCommonModuleParamForNextSession();
     m_timerAllModulesLoaded.start();
 
     ModulemanagerConfig *mmConfig = ModulemanagerConfig::getInstance();
@@ -119,6 +120,21 @@ void ModuleManager::loadDefaultSession()
     changeSessionFile(mmConfig->getDefaultSession());
 }
 
+void ModuleManager::initCommonModuleParamForNextSession()
+{
+    ModulemanagerConfig *mmConfig = ModulemanagerConfig::getInstance();
+    ModuleNetworkParamsPtr networkParams = std::make_shared<ModuleNetworkParams>(
+        m_tcpNetworkFactory,
+        mmConfig->getPcbConnectionInfo(),
+        mmConfig->getDspConnectionInfo(),
+        mmConfig->getSecConnectionInfo(),
+        mmConfig->getResmanConnectionInfo());
+    m_moduleCommonObjects = nullptr;
+    m_moduleCommonObjects = std::make_shared<ModuleSharedData>(networkParams,
+                                                               m_serviceInterfaceFactory,
+                                                               m_moduleDemoMode);
+}
+
 void ModuleManager::startModule(const QString &uniqueName,
                                 const QString &xmlConfigPath,
                                 const QByteArray &xmlConfigData,
@@ -135,20 +151,11 @@ void ModuleManager::startModule(const QString &uniqueName,
                   moduleEntityId,
                   qPrintable(confFileInfo.fileName()));
 
-            ModulemanagerConfig *mmConfig = ModulemanagerConfig::getInstance();
-            ModuleNetworkParamsPtr networkParams = std::make_shared<ModuleNetworkParams>(
-                m_tcpNetworkFactory,
-                mmConfig->getPcbConnectionInfo(),
-                mmConfig->getDspConnectionInfo(),
-                mmConfig->getSecConnectionInfo(),
-                mmConfig->getResmanConnectionInfo());
             ModuleFactoryParam moduleParam(moduleEntityId,
                                            moduleNum,
                                            xmlConfigData,
                                            m_setupFacade->getStorageSystem(),
-                                           m_serviceInterfaceFactory,
-                                           networkParams,
-                                           m_moduleDemoMode);
+                                           m_moduleCommonObjects);
             VirtualModule *tmpModule = tmpFactory->createModule(moduleParam);
             if(tmpModule) {
                 connect(tmpModule, &VirtualModule::addEventSystem, this, &ModuleManager::onModuleEventSystemAdded);
@@ -250,7 +257,7 @@ void ModuleManager::onStartModuleDelete()
         ModuleData *tmpData = ModuleData::findModuleByPointer(m_moduleList, toDelete);
         if(tmpData) {
             qInfo() << "Start delete module:" << tmpData->m_uniqueName;
-            connect(toDelete, &VirtualModule::destroyed, this, &ModuleManager::checkModuleList);
+            connect(toDelete, &VirtualModule::destroyed, this, &ModuleManager::onDestroyModule);
             toDelete->deleteLater();
         }
         else
@@ -258,7 +265,7 @@ void ModuleManager::onStartModuleDelete()
     }
 }
 
-void ModuleManager::checkModuleList(QObject *object)
+void ModuleManager::onDestroyModule(QObject *object)
 {
     VirtualModule *toDelete = static_cast<VirtualModule*>(object);
     if(toDelete) {
@@ -269,8 +276,10 @@ void ModuleManager::checkModuleList(QObject *object)
             delete tmpData;
         }
     }
-    if(m_moduleList.isEmpty())
+    if(m_moduleList.isEmpty()) {
+        initCommonModuleParamForNextSession();
         onModuleStartNext();
+    }
 }
 
 void ModuleManager::delayedModuleStartNext()
