@@ -264,17 +264,17 @@ VeinStorage::AbstractDatabase *BaseModule::getStorageDb() const
 
 bool BaseModule::getDemo()
 {
-    return m_moduleParam.m_demo;
+    return m_moduleParam.m_moduleSharedData->m_demo;
 }
 
 const AbstractFactoryServiceInterfacesPtr BaseModule::getServiceInterfaceFactory() const
 {
-    return m_moduleParam.m_serviceInterfaceFactory;
+    return m_moduleParam.m_moduleSharedData->m_serviceInterfaceFactory;
 }
 
 const ModuleNetworkParamsPtr BaseModule::getNetworkConfig() const
 {
-    return m_moduleParam.m_networkParams;
+    return m_moduleParam.m_moduleSharedData->m_networkParams;
 }
 
 void BaseModule::entryIdle()
