@@ -3,6 +3,7 @@
 
 #include "abstractfactoryserviceinterfaces.h"
 #include "jsonsessionloader.h"
+#include "modulefactoryparam.h"
 #include "modulemanagersetupfacade.h"
 #include "moduledata.h"
 #include "abstractmockallservices.h"
@@ -70,7 +71,9 @@ private:
     virtual void saveDefaultSession();
     virtual QStringList getModuleFileNames();
     void handleFinalModuleLoaded();
+    void initCommonModuleParamForNextSession();
 
+    std::shared_ptr<ModuleSharedData> m_moduleCommonObjects;
     ModuleManagerSetupFacade *m_setupFacade;
     AbstractFactoryServiceInterfacesPtr m_serviceInterfaceFactory;
     VeinTcp::AbstractTcpNetworkFactoryPtr m_tcpNetworkFactory;
