@@ -257,7 +257,7 @@ void ModuleManager::onStartModuleDelete()
         ModuleData *tmpData = ModuleData::findModuleByPointer(m_moduleList, toDelete);
         if(tmpData) {
             qInfo() << "Start delete module:" << tmpData->m_uniqueName;
-            connect(toDelete, &VirtualModule::destroyed, this, &ModuleManager::checkModuleList);
+            connect(toDelete, &VirtualModule::destroyed, this, &ModuleManager::onDestroyModule);
             toDelete->deleteLater();
         }
         else
@@ -265,7 +265,7 @@ void ModuleManager::onStartModuleDelete()
     }
 }
 
-void ModuleManager::checkModuleList(QObject *object)
+void ModuleManager::onDestroyModule(QObject *object)
 {
     VirtualModule *toDelete = static_cast<VirtualModule*>(object);
     if(toDelete) {

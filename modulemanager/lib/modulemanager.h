@@ -57,7 +57,7 @@ private slots:
     void onStartModuleDelete();
     void delayedModuleStartNext();
     void onModuleStartNext();
-    void checkModuleList(QObject *object);
+    void onDestroyModule(QObject *object);
     void onModuleEventSystemAdded(VeinEvent::EventSystem *t_eventSystem);
 
 protected:
