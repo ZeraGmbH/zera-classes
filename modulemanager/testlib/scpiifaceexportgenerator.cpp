@@ -16,6 +16,7 @@ ScpiIfaceExportGenerator::~ScpiIfaceExportGenerator()
 
 void ScpiIfaceExportGenerator::createModman(QString device)
 {
+    qInfo("Create modman for device: %s\n", qPrintable(device));
     ModulemanagerConfig::setDemoDevice(device, false);
     m_licenseSystem = std::make_unique<TestLicenseSystem>();
     m_modmanSetupFacade = std::make_unique<ModuleManagerSetupFacade>(m_licenseSystem.get(), m_modmanConfig->isDevMode());

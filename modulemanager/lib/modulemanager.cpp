@@ -31,7 +31,6 @@ ModuleManager::ModuleManager(ModuleManagerSetupFacade *setupFacade,
     m_tcpNetworkFactory(tcpNetworkFactory),
     m_moduleDemoMode(moduleDemoMode)
 {
-    initCommonModuleParamForNextSession();
     m_timerAllModulesLoaded.start();
 
     ModulemanagerConfig *mmConfig = ModulemanagerConfig::getInstance();
@@ -73,6 +72,7 @@ QStringList ModuleManager::getModuleFileNames()
 void ZeraModules::ModuleManager::handleFinalModuleLoaded()
 {
     saveDefaultSession();
+    m_moduleSharedObjects = nullptr; // all modules are supplied
     qInfo("All modules started within %llims", m_timerAllModulesLoaded.elapsed());
     emit sigModulesLoaded(m_sessionFile, m_sessionsAvailable);
 }
@@ -120,22 +120,23 @@ void ModuleManager::loadDefaultSession()
     changeSessionFile(mmConfig->getDefaultSession());
 }
 
-void ModuleManager::initCommonModuleParamForNextSession()
+void ModuleManager::createCommonModuleParam()
 {
-    ModulemanagerConfig *mmConfig = ModulemanagerConfig::getInstance();
-    ModuleNetworkParamsPtr networkParams = std::make_shared<ModuleNetworkParams>(
-        m_tcpNetworkFactory,
-        mmConfig->getPcbConnectionInfo(),
-        mmConfig->getDspConnectionInfo(),
-        mmConfig->getSecConnectionInfo(),
-        mmConfig->getResmanConnectionInfo());
-    ChannelRangeObserver::SystemObserverPtr croObserver =
-        std::make_shared<ChannelRangeObserver::SystemObserver>(mmConfig->getPcbConnectionInfo(), m_tcpNetworkFactory);
-    m_moduleCommonObjects = nullptr;
-    m_moduleCommonObjects = std::make_shared<ModuleSharedData>(networkParams,
-                                                               m_serviceInterfaceFactory,
-                                                               croObserver,
-                                                               m_moduleDemoMode);
+    if(!m_moduleSharedObjects) {
+        ModulemanagerConfig *mmConfig = ModulemanagerConfig::getInstance();
+        ModuleNetworkParamsPtr networkParams = std::make_shared<ModuleNetworkParams>(
+            m_tcpNetworkFactory,
+            mmConfig->getPcbConnectionInfo(),
+            mmConfig->getDspConnectionInfo(),
+            mmConfig->getSecConnectionInfo(),
+            mmConfig->getResmanConnectionInfo());
+        ChannelRangeObserver::SystemObserverPtr croObserver =
+            std::make_shared<ChannelRangeObserver::SystemObserver>(mmConfig->getPcbConnectionInfo(), m_tcpNetworkFactory);
+        m_moduleSharedObjects = std::make_shared<ModuleSharedData>(networkParams,
+                                                                   m_serviceInterfaceFactory,
+                                                                   croObserver,
+                                                                   m_moduleDemoMode);
+    }
 }
 
 void ModuleManager::startModule(const QString &uniqueName,
@@ -153,12 +154,12 @@ void ModuleManager::startModule(const QString &uniqueName,
                   qPrintable(uniqueName),
                   moduleEntityId,
                   qPrintable(confFileInfo.fileName()));
-
+            createCommonModuleParam();
             ModuleFactoryParam moduleParam(moduleEntityId,
                                            moduleNum,
                                            xmlConfigData,
                                            m_setupFacade->getStorageSystem(),
-                                           m_moduleCommonObjects);
+                                           m_moduleSharedObjects);
             VirtualModule *tmpModule = tmpFactory->createModule(moduleParam);
             if(tmpModule) {
                 connect(tmpModule, &VirtualModule::addEventSystem, this, &ModuleManager::onModuleEventSystemAdded);
@@ -279,10 +280,8 @@ void ModuleManager::onDestroyModule(QObject *object)
             delete tmpData;
         }
     }
-    if(m_moduleList.isEmpty()) {
-        initCommonModuleParamForNextSession();
+    if(m_moduleList.isEmpty())
         onModuleStartNext();
-    }
 }
 
 void ModuleManager::delayedModuleStartNext()
