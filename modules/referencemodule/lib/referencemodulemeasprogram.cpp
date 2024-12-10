@@ -19,6 +19,9 @@ cReferenceModuleMeasProgram::cReferenceModuleMeasProgram(cReferenceModule* modul
 
     m_ChannelList = getConfData()->m_referenceChannelList;
 
+    // As long as there are no tasks - ignore error
+    m_channelRangeObserverScanState.addTransition(
+        m_pModule->getSharedChannelRangeObserver().get(), &ChannelRangeObserver::SystemObserver::sigFullScanFinished,&m_resourceManagerConnectState);
     m_IdentifyState.addTransition(this, &cReferenceModuleMeasProgram::activationContinue, &m_dspserverConnectState);
     m_claimPGRMemState.addTransition(this, &cReferenceModuleMeasProgram::activationContinue, &m_claimUSERMemState);
     m_claimUSERMemState.addTransition(this, &cReferenceModuleMeasProgram::activationContinue, &m_var2DSPState);
@@ -26,7 +29,8 @@ cReferenceModuleMeasProgram::cReferenceModuleMeasProgram(cReferenceModule* modul
     m_cmd2DSPState.addTransition(this, &cReferenceModuleMeasProgram::activationContinue, &m_activateDSPState);
     m_activateDSPState.addTransition(this, &cReferenceModuleMeasProgram::activationContinue, &m_loadDSPDoneState);
 
-    m_activationMachine.addState(&resourceManagerConnectState);
+    m_activationMachine.addState(&m_channelRangeObserverScanState);
+    m_activationMachine.addState(&m_resourceManagerConnectState);
     m_activationMachine.addState(&m_IdentifyState);
     m_activationMachine.addState(&m_dspserverConnectState);
     m_activationMachine.addState(&m_claimPGRMemState);
@@ -36,9 +40,10 @@ cReferenceModuleMeasProgram::cReferenceModuleMeasProgram(cReferenceModule* modul
     m_activationMachine.addState(&m_activateDSPState);
     m_activationMachine.addState(&m_loadDSPDoneState);
 
-    m_activationMachine.setInitialState(&resourceManagerConnectState);
+    m_activationMachine.setInitialState(&m_channelRangeObserverScanState);
 
-    connect(&resourceManagerConnectState, &QState::entered, this, &cReferenceModuleMeasProgram::resourceManagerConnect);
+    connect(&m_channelRangeObserverScanState, &QState::entered, this, &cReferenceModuleMeasProgram::startFetchCommonRanges);
+    connect(&m_resourceManagerConnectState, &QState::entered, this, &cReferenceModuleMeasProgram::resourceManagerConnect);
     connect(&m_IdentifyState, &QState::entered, this, &cReferenceModuleMeasProgram::sendRMIdent);
     connect(&m_dspserverConnectState, &QState::entered, this, &cReferenceModuleMeasProgram::dspserverConnect);
     connect(&m_claimPGRMemState, &QState::entered, this, &cReferenceModuleMeasProgram::claimPGRMem);
@@ -167,6 +172,10 @@ void cReferenceModuleMeasProgram::deleteDspCmdList()
     m_dspInterface->clearCmdList();
 }
 
+void cReferenceModuleMeasProgram::startFetchCommonRanges()
+{
+    m_pModule->getSharedChannelRangeObserver()->startFullScan();
+}
 
 void cReferenceModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant answer)
 {
@@ -278,7 +287,7 @@ void cReferenceModuleMeasProgram::resourceManagerConnect()
                                                                 m_pModule->getNetworkConfig()->m_tcpNetworkFactory);
     // and then we set connection resource manager interface's connection
     m_rmInterface.setClientSmart(m_rmClient); //
-    resourceManagerConnectState.addTransition(m_rmClient.get(), &Zera::ProxyClient::connected, &m_IdentifyState);
+    m_resourceManagerConnectState.addTransition(m_rmClient.get(), &Zera::ProxyClient::connected, &m_IdentifyState);
     connect(&m_rmInterface, &Zera::cRMInterface::serverAnswer, this, &cReferenceModuleMeasProgram::catchInterfaceAnswer);
     // todo insert timer for timeout and/or connect error conditions
     Zera::Proxy::getInstance()->startConnectionSmart(m_rmClient);
