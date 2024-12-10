@@ -35,7 +35,6 @@ protected:
     quint16 m_nSampleRate; // the systems sample rate
     QString m_sAlias; // the channel' alias
     QString m_sUnit;
-    QString m_sDescription; // we take description from resource manager
     QHash<quint32, int> m_MsgNrCmdList;
 
 protected slots:
