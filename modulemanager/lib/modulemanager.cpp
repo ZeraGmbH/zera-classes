@@ -129,9 +129,12 @@ void ModuleManager::initCommonModuleParamForNextSession()
         mmConfig->getDspConnectionInfo(),
         mmConfig->getSecConnectionInfo(),
         mmConfig->getResmanConnectionInfo());
+    ChannelRangeObserver::SystemObserverPtr croObserver =
+        std::make_shared<ChannelRangeObserver::SystemObserver>(mmConfig->getPcbConnectionInfo(), m_tcpNetworkFactory);
     m_moduleCommonObjects = nullptr;
     m_moduleCommonObjects = std::make_shared<ModuleSharedData>(networkParams,
                                                                m_serviceInterfaceFactory,
+                                                               croObserver,
                                                                m_moduleDemoMode);
 }
 

@@ -277,6 +277,11 @@ const ModuleNetworkParamsPtr BaseModule::getNetworkConfig() const
     return m_moduleParam.m_moduleSharedData->m_networkParams;
 }
 
+const ChannelRangeObserver::SystemObserverPtr BaseModule::getSharedCroObserver() const
+{
+    return m_moduleParam.m_moduleSharedData->m_croObserver;
+}
+
 void BaseModule::entryIdle()
 {
 }

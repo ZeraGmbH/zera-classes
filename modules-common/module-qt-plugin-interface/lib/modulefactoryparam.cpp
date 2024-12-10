@@ -4,9 +4,11 @@ int ModuleSharedData::m_instanceCount = 0;
 
 ModuleSharedData::ModuleSharedData(ModuleNetworkParamsPtr networkParams,
                                    AbstractFactoryServiceInterfacesPtr serviceInterfaceFactory,
+                                   ChannelRangeObserver::SystemObserverPtr croObserver,
                                    bool demo) :
     m_networkParams(networkParams),
     m_serviceInterfaceFactory(serviceInterfaceFactory),
+    m_croObserver(croObserver),
     m_demo(demo)
 {
     Q_ASSERT(m_instanceCount == 0);
