@@ -17,13 +17,13 @@ class ModuleSharedData
 public:
     ModuleSharedData(ModuleNetworkParamsPtr networkParams,
                      AbstractFactoryServiceInterfacesPtr serviceInterfaceFactory,
-                     ChannelRangeObserver::SystemObserverPtr croObserver,
+                     ChannelRangeObserver::SystemObserverPtr channelRangeObserver,
                      bool demo);
     virtual ~ModuleSharedData();
 
     const ModuleNetworkParamsPtr m_networkParams;
     const AbstractFactoryServiceInterfacesPtr m_serviceInterfaceFactory;
-    const ChannelRangeObserver::SystemObserverPtr m_croObserver;
+    const ChannelRangeObserver::SystemObserverPtr m_channelRangeObserver;
     const bool m_demo;
 private:
     static int m_instanceCount;
