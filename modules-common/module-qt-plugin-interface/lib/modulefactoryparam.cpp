@@ -11,7 +11,7 @@ ModuleSharedData::ModuleSharedData(ModuleNetworkParamsPtr networkParams,
     m_croObserver(croObserver),
     m_demo(demo)
 {
-    Q_ASSERT(m_instanceCount == 0);
+    Q_ASSERT(m_instanceCount == 0); // crashing here: Are there module zombies on session change?
     m_instanceCount++;
 }
 

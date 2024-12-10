@@ -71,9 +71,9 @@ private:
     virtual void saveDefaultSession();
     virtual QStringList getModuleFileNames();
     void handleFinalModuleLoaded();
-    void initCommonModuleParamForNextSession();
+    void createCommonModuleParam();
 
-    std::shared_ptr<ModuleSharedData> m_moduleCommonObjects;
+    std::shared_ptr<ModuleSharedData> m_moduleSharedObjects;
     ModuleManagerSetupFacade *m_setupFacade;
     AbstractFactoryServiceInterfacesPtr m_serviceInterfaceFactory;
     VeinTcp::AbstractTcpNetworkFactoryPtr m_tcpNetworkFactory;
