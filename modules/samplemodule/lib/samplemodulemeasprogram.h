@@ -57,7 +57,8 @@ private:
     cDspMeasData* m_pActualValuesDSP;
 
     // statemachine for activating gets the following states
-    QState resourceManagerConnectState;
+    QState m_channelRangeObserverScanState;
+    QState m_resourceManagerConnectState;
     QState m_IdentifyState;
     QState m_dspserverConnectState;
     QState m_claimPGRMemState;
@@ -85,6 +86,7 @@ private slots:
     void setInterfaceActualValues(QVector<float>);
     void handleDemoActualValues();
 
+    void startFetchCommonRanges();
     void resourceManagerConnect();
     void sendRMIdent();
     void dspserverConnect();
