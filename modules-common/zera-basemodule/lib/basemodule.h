@@ -36,6 +36,7 @@ public:
     bool getDemo();
     const AbstractFactoryServiceInterfacesPtr getServiceInterfaceFactory() const;
     const ModuleNetworkParamsPtr getNetworkConfig() const;
+    const ChannelRangeObserver::SystemObserverPtr getSharedCroObserver() const;
 
     QList<VfModuleMetaData*> veinModuleMetaDataList; // only meta information
     QList<VfModuleComponent*> veinModuleComponentList; // for components that need no scpi interface

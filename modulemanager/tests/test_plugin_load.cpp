@@ -1,6 +1,7 @@
 #include "modulemanager.h"
 #include "test_plugin_load.h"
 #include "testmodulemanager.h"
+#include <mocktcpnetworkfactory.h>
 #include <timemachineobject.h>
 #include <QTest>
 
@@ -25,7 +26,7 @@ void test_plugin_load::loadModulePluginsInstalled()
         return;
     }
     TestModuleManager::enableTests(); // we use production so need to take care of paths
-    ZeraModules::ModuleManager modMan(nullptr, nullptr, nullptr, true);
+    ZeraModules::ModuleManager modMan(nullptr, nullptr, VeinTcp::MockTcpNetworkFactory::create(), true);
 
     bool modulesFound = modMan.loadAllAvailableModulePlugins();
     QVERIFY(modulesFound);

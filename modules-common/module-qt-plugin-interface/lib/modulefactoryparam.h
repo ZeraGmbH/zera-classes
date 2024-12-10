@@ -4,6 +4,7 @@
 #include "modulenetworkparams.h"
 #include "modulegroupnumerator.h"
 #include "abstractfactoryserviceinterfaces.h"
+#include "cro_systemobserver.h"
 #include <abstracttcpnetworkfactory.h>
 
 namespace VeinStorage
@@ -16,11 +17,13 @@ class ModuleSharedData
 public:
     ModuleSharedData(ModuleNetworkParamsPtr networkParams,
                      AbstractFactoryServiceInterfacesPtr serviceInterfaceFactory,
+                     ChannelRangeObserver::SystemObserverPtr croObserver,
                      bool demo);
     virtual ~ModuleSharedData();
 
     const ModuleNetworkParamsPtr m_networkParams;
     const AbstractFactoryServiceInterfacesPtr m_serviceInterfaceFactory;
+    const ChannelRangeObserver::SystemObserverPtr m_croObserver;
     const bool m_demo;
 private:
     static int m_instanceCount;
