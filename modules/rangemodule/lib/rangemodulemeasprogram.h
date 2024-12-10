@@ -65,7 +65,7 @@ private:
     cDspMeasData* m_pActualValuesDSP;
 
     // statemachine for activating gets the following states
-    QState resourceManagerConnectState;
+    QState m_resourceManagerConnectState;
     QState m_IdentifyState;
     QState m_dspserverConnectState;
     QState m_claimPGRMemState;

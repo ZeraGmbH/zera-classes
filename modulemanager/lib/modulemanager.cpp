@@ -130,11 +130,11 @@ void ModuleManager::createCommonModuleParam()
             mmConfig->getDspConnectionInfo(),
             mmConfig->getSecConnectionInfo(),
             mmConfig->getResmanConnectionInfo());
-        ChannelRangeObserver::SystemObserverPtr croObserver =
+        ChannelRangeObserver::SystemObserverPtr channelRangeObserver =
             std::make_shared<ChannelRangeObserver::SystemObserver>(mmConfig->getPcbConnectionInfo(), m_tcpNetworkFactory);
         m_moduleSharedObjects = std::make_shared<ModuleSharedData>(networkParams,
                                                                    m_serviceInterfaceFactory,
-                                                                   croObserver,
+                                                                   channelRangeObserver,
                                                                    m_moduleDemoMode);
     }
 }
