@@ -2,6 +2,7 @@
     <qresource prefix="/">
         <file>session-minimal.json</file>
         <file>dumpInitial.json</file>
+        <file>dumpDspCyclicRangeMeas.txt</file>
         <file>mt310s2-rangemodule-test.xml</file>
         <file>session-range-test.json</file>
         <file>dumpActual.json</file>

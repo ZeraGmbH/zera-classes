@@ -19,6 +19,7 @@ private slots:
     void injectActualValuesWithCheatingAndRangeChanged();
     void injectIncreasingActualValuesWithCheatingEnabled();
     void injectActualValuesCheatingEnabledWithPreScaling();
+    void dumpDspCyclicLists();
 };
 
 #endif // TEST_RANGE_MODULE_REGRESSION_H

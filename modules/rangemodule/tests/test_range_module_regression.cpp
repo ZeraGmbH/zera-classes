@@ -315,3 +315,23 @@ void test_range_module_regression::injectActualValuesCheatingEnabledWithPreScali
     QVector<float> actualGainCorr = writtenCorrData.mid(0, 8);
     QCOMPARE(expectedGainCorr, actualGainCorr);
 }
+
+void test_range_module_regression::dumpDspCyclicLists()
+{
+    ModuleManagerTestRunner testRunner(":/session-range-test.json");
+
+    const QList<TestDspInterfacePtr>& dspInterfaces = testRunner.getDspInterfaceList();
+    QCOMPARE(dspInterfaces.count(), 3);
+
+    QByteArray rangeCyclicListDumped = dspInterfaces[dspInterfaces::RangeObsermatic]->dumpCycListItem();
+    QVERIFY(TestLogHelpers::compareAndLogOnDiff("", rangeCyclicListDumped));
+
+    QByteArray adjustCyclicListDumped = dspInterfaces[dspInterfaces::AdjustManagement]->dumpCycListItem();
+    QVERIFY(TestLogHelpers::compareAndLogOnDiff("", adjustCyclicListDumped));
+
+    QByteArray rangeMeasCyclicListDumped = dspInterfaces[dspInterfaces::RangeModuleMeasProgram]->dumpCycListItem();
+    QFile file(":/dumpDspCyclicRangeMeas.txt");
+    QVERIFY(file.open(QFile::ReadOnly));
+    QByteArray rangeListExpected = file.readAll();
+    QVERIFY(TestLogHelpers::compareAndLogOnDiff(rangeListExpected, rangeMeasCyclicListDumped));
+}

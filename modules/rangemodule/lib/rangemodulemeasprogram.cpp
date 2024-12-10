@@ -198,8 +198,9 @@ void cRangeModuleMeasProgram::setDspCmdList()
     // we compute or copy our wanted actual values
     for (int i = 0; i < m_ChannelList.count(); i++)
     {
-        cRangeMeasChannel* mchn = m_pModule->getMeasChannel(m_ChannelList.at(i));
-        m_dspInterface->addCycListItem( s = QString("COPYDATA(CH%1,0,MEASSIGNAL)").arg(mchn->getDSPChannelNr())); // for each channel we work on
+        const ChannelRangeObserver::ChannelPtr channel =
+            m_pModule->getSharedChannelRangeObserver()->getChannel(m_ChannelList.at(i));
+        m_dspInterface->addCycListItem( s = QString("COPYDATA(CH%1,0,MEASSIGNAL)").arg(channel->m_dspChannel)); // for each channel we work on
         m_dspInterface->addCycListItem( s = QString("SETPEAK(MEASSIGNAL,CHXPEAK+%1)").arg(i)); // here we have signal with dc regardless subdc is configured
         //m_dspInterface->addCycListItem( s = QString("COPYDATA(CH%1,0,MEASSIGNAL)").arg(chnnr)); // for each channel we work on
         m_dspInterface->addCycListItem( s = QString("MULCCV(MEASSIGNAL,MEASSIGNAL,CHXRMS+%1)").arg(i));
@@ -344,7 +345,6 @@ cRangeModuleConfigData *cRangeModuleMeasProgram::getConfData()
     return qobject_cast<cRangeModuleConfiguration*>(m_pConfiguration.get())->getConfigurationData();
 }
 
-
 void cRangeModuleMeasProgram::setActualValuesNames()
 {
     cRangeMeasChannel* mchn;
@@ -356,7 +356,6 @@ void cRangeModuleMeasProgram::setActualValuesNames()
         m_veinActValueList.at(i)->setUnit(mchn->getUnit());
     }
 }
-
 
 void cRangeModuleMeasProgram::setSCPIMeasInfo()
 {
