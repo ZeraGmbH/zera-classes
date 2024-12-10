@@ -347,25 +347,20 @@ cRangeModuleConfigData *cRangeModuleMeasProgram::getConfData()
 
 void cRangeModuleMeasProgram::setActualValuesNames()
 {
-    cRangeMeasChannel* mchn;
-
-    for (int i = 0; i < m_ChannelList.count(); i++)
-    {
-        mchn = m_pModule->getMeasChannel(m_ChannelList.at(i));
-        m_veinActValueList.at(i)->setChannelName(mchn->getAlias());
-        m_veinActValueList.at(i)->setUnit(mchn->getUnit());
+    for (int i = 0; i < m_ChannelList.count(); i++) {
+        const ChannelRangeObserver::ChannelPtr channel =
+            m_pModule->getSharedChannelRangeObserver()->getChannel(m_ChannelList.at(i));
+        m_veinActValueList.at(i)->setChannelName(channel->m_alias);
+        m_veinActValueList.at(i)->setUnit(channel->m_unit);
     }
 }
 
 void cRangeModuleMeasProgram::setSCPIMeasInfo()
 {
-    cRangeMeasChannel* mchn;
-    cSCPIInfo* pSCPIInfo;
-
-    for (int i = 0; i < m_ChannelList.count(); i++)
-    {
-        mchn = m_pModule->getMeasChannel(m_ChannelList.at(i));
-        pSCPIInfo = new cSCPIInfo("MEASURE", mchn->getAlias(), "8", m_veinActValueList.at(i)->getName(), "0", m_veinActValueList.at(i)->getUnit());
+    for (int i = 0; i < m_ChannelList.count(); i++) {
+        const ChannelRangeObserver::ChannelPtr channel =
+            m_pModule->getSharedChannelRangeObserver()->getChannel(m_ChannelList.at(i));
+        cSCPIInfo* pSCPIInfo = new cSCPIInfo("MEASURE", channel->m_alias, "8", m_veinActValueList.at(i)->getName(), "0", m_veinActValueList.at(i)->getUnit());
         m_veinActValueList.at(i)->setSCPIInfo(pSCPIInfo);
     }
 }
