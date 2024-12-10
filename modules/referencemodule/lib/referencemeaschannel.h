@@ -1,6 +1,7 @@
 #ifndef REFERENCEMEASCHANNEL_H
 #define REFERENCEMEASCHANNEL_H
 
+#include "cro_systemobserver.h"
 #include <rangeinfo.h>
 #include <QHash>
 #include <QStringList>
@@ -38,7 +39,8 @@ class cReferenceMeasChannel: public cBaseMeasChannel
     Q_OBJECT
 
 public:
-    cReferenceMeasChannel(NetworkConnectionInfo pcbsocket, VeinTcp::AbstractTcpNetworkFactoryPtr tcpNetworkFactory,
+    cReferenceMeasChannel(const ChannelRangeObserver::SystemObserverPtr channelRangeObserver,
+                          NetworkConnectionInfo pcbsocket, VeinTcp::AbstractTcpNetworkFactoryPtr tcpNetworkFactory,
                           QString name, quint8 chnnr, QString moduleName);
     void generateVeinInterface() override;
 
@@ -51,6 +53,7 @@ protected slots:
     void catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant answer) override;
 
 private:
+    const ChannelRangeObserver::SystemObserverPtr m_channelRangeObserver;
     QStringList m_RangeNameList; // a list of all ranges
     QHash<QString, cRangeInfoBase> m_RangeInfoHash; // a list of available and selectable ranges, alias will be the key
     QString m_sNewRange;
