@@ -29,6 +29,11 @@ DspInterfacePtr TestFactoryServiceInterfaces::createDspInterfacePower1(MeasModeS
     return createDspInterfaceCommon(0 /* dummy */, {});
 }
 
+DspInterfacePtr TestFactoryServiceInterfaces::createDspInterfaceSample(QStringList valueChannelList)
+{
+    return createDspInterfaceCommon(8 /* that is what module expects currently */, valueChannelList);
+}
+
 DspInterfacePtr TestFactoryServiceInterfaces::createDspInterfaceOther()
 {
     // no test specific implementation yet

@@ -15,9 +15,8 @@ cSampleModuleMeasProgram::cSampleModuleMeasProgram(cSampleModule* module, std::s
     cBaseDspMeasProgram(pConfiguration, module->getVeinModuleName()),
     m_pModule(module)
 {
-    m_dspInterface = m_pModule->getServiceInterfaceFactory()->createDspInterfaceOther();
-
     m_ChannelList = getConfData()->m_ObsermaticConfPar.m_pllChannelList;
+    m_dspInterface = m_pModule->getServiceInterfaceFactory()->createDspInterfaceSample(m_ChannelList);
 
     // As long as there are no tasks - ignore error
     m_channelRangeObserverScanState.addTransition(
@@ -76,40 +75,28 @@ cSampleModuleMeasProgram::cSampleModuleMeasProgram(cSampleModule* module, std::s
     m_dataAcquisitionMachine.setInitialState(&m_dataAcquisitionState);
     connect(&m_dataAcquisitionState, &QState::entered, this, &cSampleModuleMeasProgram::dataAcquisitionDSP);
     connect(&m_dataAcquisitionDoneState, &QState::entered, this, &cSampleModuleMeasProgram::dataReadDSP);
-
-    if(m_pModule->getDemo()) {
-        m_demoPeriodicTimer = TimerFactoryQt::createPeriodic(500);
-        connect(m_demoPeriodicTimer.get(), &TimerTemplateQt::sigExpired,this, &cSampleModuleMeasProgram::handleDemoActualValues);
-        m_demoPeriodicTimer->start();
-    }
 }
-
 
 cSampleModuleMeasProgram::~cSampleModuleMeasProgram()
 {
     Zera::Proxy::getInstance()->releaseConnection(m_dspClient.get());
 }
 
-
 void cSampleModuleMeasProgram::start()
 {
 }
 
-
 void cSampleModuleMeasProgram::stop()
 {
 }
-
 
 void cSampleModuleMeasProgram::generateVeinInterface()
 {
     // we don't have any interface for publication
 }
 
-
 void cSampleModuleMeasProgram::setDspVarList()
 {
-
     // we fetch a handle for sampled data and other temporary values
     m_pTmpDataDsp = m_dspInterface->getMemHandle("TmpData");
     m_pTmpDataDsp->addVarItem( new cDspVar("MEASSIGNAL", m_nSamples, DSPDATA::vDspTemp));
@@ -130,14 +117,12 @@ void cSampleModuleMeasProgram::setDspVarList()
     m_nDspMemUsed = m_pTmpDataDsp->getSize() + m_pParameterDSP->getSize() + m_pActualValuesDSP->getSize();
 }
 
-
 void cSampleModuleMeasProgram::deleteDspVarList()
 {
     m_dspInterface->deleteMemHandle(m_pTmpDataDsp);
     m_dspInterface->deleteMemHandle(m_pParameterDSP);
     m_dspInterface->deleteMemHandle(m_pActualValuesDSP);
 }
-
 
 void cSampleModuleMeasProgram::setDspCmdList()
 {
@@ -174,18 +159,15 @@ void cSampleModuleMeasProgram::setDspCmdList()
     m_dspInterface->addCycListItem( s = "STOPCHAIN(1,0x0102)"); // end processnr., mainchain 1 subchain 2
 }
 
-
 void cSampleModuleMeasProgram::deleteDspCmdList()
 {
     m_dspInterface->clearCmdList();
 }
 
-
 void cSampleModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant answer)
 {
     if (msgnr == 0) { // 0 was reserved for async. messages
-        QString sintnr;
-        sintnr = answer.toString().section(':', 1, 1);
+        QString sintnr = answer.toString().section(':', 1, 1);
         int service = sintnr.toInt();
         switch (service)
         {
@@ -274,24 +256,9 @@ cSampleModuleConfigData *cSampleModuleMeasProgram::getConfData()
     return qobject_cast<cSampleModuleConfiguration*>(m_pConfiguration.get())->getConfigurationData();
 }
 
-
 void cSampleModuleMeasProgram::setInterfaceActualValues(QVector<float>)
 {
     // we have no interface ......
-}
-
-void cSampleModuleMeasProgram::handleDemoActualValues()
-{
-    QVector<float> demoValues;
-    int channelCount = getConfData()->m_ObsermaticConfPar.m_npllChannelCount;
-
-    for (int i = 0; i < channelCount; i++) {
-        float val = (float)rand() / RAND_MAX ;
-        demoValues.append(val);
-    }
-    m_ModuleActualValues = demoValues;
-    Q_ASSERT(demoValues.size() == m_ModuleActualValues.size());
-    emit actualValues(&m_ModuleActualValues);
 }
 
 void cSampleModuleMeasProgram::startFetchCommonRanges()
@@ -312,12 +279,10 @@ void cSampleModuleMeasProgram::resourceManagerConnect()
     Zera::Proxy::getInstance()->startConnectionSmart(m_rmClient);
 }
 
-
 void cSampleModuleMeasProgram::sendRMIdent()
 {
     m_MsgNrCmdList[m_rmInterface.rmIdent(QString("SampleModule%1").arg(m_pModule->getModuleNr()))] = sendrmidentsample;
 }
-
 
 void cSampleModuleMeasProgram::dspserverConnect()
 {
@@ -329,7 +294,6 @@ void cSampleModuleMeasProgram::dspserverConnect()
     Zera::Proxy::getInstance()->startConnectionSmart(m_dspClient);
 }
 
-
 void cSampleModuleMeasProgram::claimPGRMem()
 {
     m_nSamples = m_pModule->getPllMeasChannel(m_ChannelList.at(0))->getSampleRate(); // we first read the sample nr from first channel
@@ -339,30 +303,25 @@ void cSampleModuleMeasProgram::claimPGRMem()
     m_MsgNrCmdList[m_rmInterface.setResource("DSP1", "PGRMEMC", m_dspInterface->cmdListCount())] = claimpgrmem;
 }
 
-
 void cSampleModuleMeasProgram::claimUSERMem()
 {
    m_MsgNrCmdList[m_rmInterface.setResource("DSP1", "USERMEM", m_nDspMemUsed)] = claimusermem;
 }
-
 
 void cSampleModuleMeasProgram::varList2DSP()
 {
     m_MsgNrCmdList[m_dspInterface->varList2Dsp()] = varlist2dsp;
 }
 
-
 void cSampleModuleMeasProgram::cmdList2DSP()
 {
     m_MsgNrCmdList[m_dspInterface->cmdList2Dsp()] = cmdlist2dsp;
 }
 
-
 void cSampleModuleMeasProgram::activateDSP()
 {
     m_MsgNrCmdList[m_dspInterface->activateInterface()] = activatedsp; // aktiviert die var- und cmd-listen im dsp
 }
-
 
 void cSampleModuleMeasProgram::activateDSPdone()
 {
@@ -370,13 +329,11 @@ void cSampleModuleMeasProgram::activateDSPdone()
     emit activated();
 }
 
-
 void cSampleModuleMeasProgram::deactivateDSP()
 {
     m_bActive = false;
     m_MsgNrCmdList[m_dspInterface->deactivateInterface()] = deactivatedsp; // wat wohl
 }
-
 
 void cSampleModuleMeasProgram::freePGRMem()
 {
@@ -385,12 +342,10 @@ void cSampleModuleMeasProgram::freePGRMem()
     m_MsgNrCmdList[m_rmInterface.freeResource("DSP1", "PGRMEMC")] = freepgrmem;
 }
 
-
 void cSampleModuleMeasProgram::freeUSERMem()
 {
     m_MsgNrCmdList[m_rmInterface.freeResource("DSP1", "USERMEM")] = freeusermem;
 }
-
 
 void cSampleModuleMeasProgram::deactivateDSPdone()
 {
@@ -399,12 +354,10 @@ void cSampleModuleMeasProgram::deactivateDSPdone()
     emit deactivated();
 }
 
-
 void cSampleModuleMeasProgram::dataAcquisitionDSP()
 {
     m_MsgNrCmdList[m_dspInterface->dataAcquisition(m_pActualValuesDSP)] = dataaquistion; // we start our data aquisition now
 }
-
 
 void cSampleModuleMeasProgram::dataReadDSP()
 {
