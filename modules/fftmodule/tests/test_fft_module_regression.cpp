@@ -106,3 +106,26 @@ void test_fft_module_regression::injectValues()
 
     QVERIFY(TestLogHelpers::compareAndLogOnDiff(jsonExpected, jsonDumped));
 }
+
+static QString loadFile(QString fileName)
+{
+    QString fileData;
+    QFile file(fileName);
+    if(file.open(QFile::ReadOnly)) {
+        fileData = file.readAll();
+        file.close();
+    }
+    return fileData;
+}
+
+void test_fft_module_regression::dumpDspSetup()
+{
+    ModuleManagerTestRunner testRunner(":/session-from-resource.json");
+
+    const QList<TestDspInterfacePtr>& dspInterfaces = testRunner.getDspInterfaceList();
+    QCOMPARE(dspInterfaces.count(), 1);
+
+    QString measProgramDumped = TestLogHelpers::dump(dspInterfaces[0]->dumpAll());
+    QString measProgramExpected = loadFile(":/dspDumps/dumpMeasProgram.json");
+    QVERIFY(TestLogHelpers::compareAndLogOnDiff(measProgramExpected, measProgramDumped));
+}

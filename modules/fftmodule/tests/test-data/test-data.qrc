@@ -1,5 +1,6 @@
 <RCC>
     <qresource prefix="/">
+        <file>dspDumps/dumpMeasProgram.json</file>
         <file>dumpActual.json</file>
         <file>dumpInitial.json</file>
         <file>mt310s2-fftmodule-from-resource.xml</file>
