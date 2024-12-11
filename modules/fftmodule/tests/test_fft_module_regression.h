@@ -12,6 +12,7 @@ private slots:
     void veinDumpInitial();
     void checkActualValueCount();
     void injectValues();
+    void dumpDspSetup();
 };
 
 #endif // TEST_FFT_MODULE_REGRESSION_H
