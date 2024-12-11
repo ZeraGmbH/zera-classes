@@ -198,8 +198,9 @@ void cRangeModuleMeasProgram::setDspCmdList()
     // we compute or copy our wanted actual values
     for (int i = 0; i < m_ChannelList.count(); i++)
     {
-        cRangeMeasChannel* mchn = m_pModule->getMeasChannel(m_ChannelList.at(i));
-        m_dspInterface->addCycListItem( s = QString("COPYDATA(CH%1,0,MEASSIGNAL)").arg(mchn->getDSPChannelNr())); // for each channel we work on
+        const ChannelRangeObserver::ChannelPtr channel =
+            m_pModule->getSharedChannelRangeObserver()->getChannel(m_ChannelList.at(i));
+        m_dspInterface->addCycListItem( s = QString("COPYDATA(CH%1,0,MEASSIGNAL)").arg(channel->m_dspChannel)); // for each channel we work on
         m_dspInterface->addCycListItem( s = QString("SETPEAK(MEASSIGNAL,CHXPEAK+%1)").arg(i)); // here we have signal with dc regardless subdc is configured
         //m_dspInterface->addCycListItem( s = QString("COPYDATA(CH%1,0,MEASSIGNAL)").arg(chnnr)); // for each channel we work on
         m_dspInterface->addCycListItem( s = QString("MULCCV(MEASSIGNAL,MEASSIGNAL,CHXRMS+%1)").arg(i));
@@ -223,12 +224,10 @@ void cRangeModuleMeasProgram::setDspCmdList()
 
         m_dspInterface->addCycListItem( s = QString("COPYDU(32,MAXIMUMSAMPLE,MAXRESET)")); // all raw adc maximum samples to userspace
 
-        for (int i = 0; i < m_ChannelList.count(); i++)
-        {
-            quint8 chnnr;
-
-            cRangeMeasChannel* mchn = m_pModule->getMeasChannel(m_ChannelList.at(i));
-            chnnr = mchn->getDSPChannelNr();
+        for (int i = 0; i < m_ChannelList.count(); i++) {
+            const ChannelRangeObserver::ChannelPtr channel =
+                m_pModule->getSharedChannelRangeObserver()->getChannel(m_ChannelList.at(i));
+            quint8 chnnr = channel->m_dspChannel;
             m_dspInterface->addCycListItem( s = QString("COPYDU(1,MAXIMUMSAMPLE+%1,CHXRAWPEAK+%2)").arg(chnnr).arg(i)); // raw adc value maximum
             m_dspInterface->addCycListItem( s = QString("SETVAL(MAXRESET+%1,0.0)").arg(chnnr)); // raw adc value maximum
 
@@ -344,29 +343,22 @@ cRangeModuleConfigData *cRangeModuleMeasProgram::getConfData()
     return qobject_cast<cRangeModuleConfiguration*>(m_pConfiguration.get())->getConfigurationData();
 }
 
-
 void cRangeModuleMeasProgram::setActualValuesNames()
 {
-    cRangeMeasChannel* mchn;
-
-    for (int i = 0; i < m_ChannelList.count(); i++)
-    {
-        mchn = m_pModule->getMeasChannel(m_ChannelList.at(i));
-        m_veinActValueList.at(i)->setChannelName(mchn->getAlias());
-        m_veinActValueList.at(i)->setUnit(mchn->getUnit());
+    for (int i = 0; i < m_ChannelList.count(); i++) {
+        const ChannelRangeObserver::ChannelPtr channel =
+            m_pModule->getSharedChannelRangeObserver()->getChannel(m_ChannelList.at(i));
+        m_veinActValueList.at(i)->setChannelName(channel->m_alias);
+        m_veinActValueList.at(i)->setUnit(channel->m_unit);
     }
 }
 
-
 void cRangeModuleMeasProgram::setSCPIMeasInfo()
 {
-    cRangeMeasChannel* mchn;
-    cSCPIInfo* pSCPIInfo;
-
-    for (int i = 0; i < m_ChannelList.count(); i++)
-    {
-        mchn = m_pModule->getMeasChannel(m_ChannelList.at(i));
-        pSCPIInfo = new cSCPIInfo("MEASURE", mchn->getAlias(), "8", m_veinActValueList.at(i)->getName(), "0", m_veinActValueList.at(i)->getUnit());
+    for (int i = 0; i < m_ChannelList.count(); i++) {
+        const ChannelRangeObserver::ChannelPtr channel =
+            m_pModule->getSharedChannelRangeObserver()->getChannel(m_ChannelList.at(i));
+        cSCPIInfo* pSCPIInfo = new cSCPIInfo("MEASURE", channel->m_alias, "8", m_veinActValueList.at(i)->getName(), "0", m_veinActValueList.at(i)->getUnit());
         m_veinActValueList.at(i)->setSCPIInfo(pSCPIInfo);
     }
 }
@@ -430,7 +422,7 @@ void cRangeModuleMeasProgram::dspserverConnect()
 
 void cRangeModuleMeasProgram::claimPGRMem()
 {
-    m_nSamples = m_pModule->getMeasChannel(m_ChannelList.at(0))->getSampleRate(); // we first read the sample nr from first channel
+    m_nSamples = m_pModule->getSharedChannelRangeObserver()->getSampleRate();
     setDspVarList(); // first we set the var list for our dsp
     setDspCmdList(); // and the cmd list he has to work on
 
