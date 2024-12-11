@@ -1,7 +1,6 @@
 #ifndef TEST_RANGE_MODULE_REGRESSION_H
 #define TEST_RANGE_MODULE_REGRESSION_H
 
-#include "vf_cmd_event_handler_system.h"
 #include <QObject>
 
 class test_range_module_regression : public QObject
