@@ -2,7 +2,6 @@
 #define TEST_RMS_MODULE_REGRESSION_H
 
 #include <QObject>
-#include <memory>
 
 class test_rms_module_regression : public QObject
 {
@@ -15,6 +14,7 @@ private slots:
     void injectActualValues();
     void injectActualTwice();
     void injectSymmetricValues();
+    void dumpDspSetup();
 };
 
 #endif // TEST_RMS_MODULE_REGRESSION_H
