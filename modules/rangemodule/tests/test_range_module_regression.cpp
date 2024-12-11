@@ -327,7 +327,7 @@ static QString loadFile(QString fileName)
     return fileData;
 }
 
-void test_range_module_regression::dumpDspCyclicLists()
+void test_range_module_regression::dumpDspSetup()
 {
     ModuleManagerTestRunner testRunner(":/session-range-test.json");
 
