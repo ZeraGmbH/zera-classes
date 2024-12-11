@@ -12,6 +12,7 @@ private slots:
     void veinDumpInitial();
     void injectActualValues();
     void testScpiCommandsDisabled();
+    void dumpDspSetup();
 };
 
 #endif // TEST_POWER1_MODULE_REGRESSION_H

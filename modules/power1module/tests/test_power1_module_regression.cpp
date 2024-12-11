@@ -101,3 +101,26 @@ void test_power1_module_regression::testScpiCommandsDisabled()
     QCOMPARE(scpiCmds.toArray().count(), 0);
 }
 
+static QString loadFile(QString fileName)
+{
+    QString fileData;
+    QFile file(fileName);
+    if(file.open(QFile::ReadOnly)) {
+        fileData = file.readAll();
+        file.close();
+    }
+    return fileData;
+}
+
+void test_power1_module_regression::dumpDspSetup()
+{
+    ModuleManagerTestRunner testRunner(":/session-minimal.json");
+    const QList<TestDspInterfacePtr>& dspInterfaces = testRunner.getDspInterfaceList();
+    QCOMPARE(dspInterfaces.count(), 1);
+
+    QString measProgramDumped = TestLogHelpers::dump(dspInterfaces[0]->dumpAll());
+    QString measProgramExpected = loadFile(":/dspDumps/dumpMeasProgram.json");
+    QVERIFY(TestLogHelpers::compareAndLogOnDiff(measProgramExpected, measProgramDumped));
+
+}
+

@@ -1,5 +1,6 @@
 <RCC>
     <qresource prefix="/">
+        <file>dspDumps/dumpMeasProgram.json</file>
         <file>session-minimal.json</file>
         <file>session-power1-test.json</file>
         <file>mt310s2-power1module-test.xml</file>
