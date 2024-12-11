@@ -12,6 +12,7 @@ public:
     DspInterfacePtr createDspInterfaceFft(QStringList valueChannelList, int fftOrder) override;
     DspInterfacePtr createDspInterfaceRms(QStringList valueChannelList) override;
     DspInterfacePtr createDspInterfacePower1(MeasModeSelector* measMode) override;
+    DspInterfacePtr createDspInterfaceSample(QStringList valueChannelList) override;
     DspInterfacePtr createDspInterfaceOther() override;
     const QList<TestDspInterfacePtr>& getInterfaceList() const;
     void clearInterfaceList();
