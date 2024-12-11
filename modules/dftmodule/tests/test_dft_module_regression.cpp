@@ -213,6 +213,29 @@ void test_dft_module_regression::injectSymmetricalOrder1()
     QVERIFY(TestLogHelpers::compareAndLogOnDiff(jsonExpected, jsonDumped));
 }
 
+static QString loadFile(QString fileName)
+{
+    QString fileData;
+    QFile file(fileName);
+    if(file.open(QFile::ReadOnly)) {
+        fileData = file.readAll();
+        file.close();
+    }
+    return fileData;
+}
+
+void test_dft_module_regression::dumpDspSetup()
+{
+    ModuleManagerTestRunner testRunner(":/session-dft-no-movingwindow-ref.json");
+
+    const QList<TestDspInterfacePtr>& dspInterfaces = testRunner.getDspInterfaceList();
+    QCOMPARE(dspInterfaces.count(), 1);
+
+    QString measProgramDumped = TestLogHelpers::dump(dspInterfaces[0]->dumpAll());
+    QString measProgramExpected = loadFile(":/dspDumps/dumpMeasProgram.json");
+    QVERIFY(TestLogHelpers::compareAndLogOnDiff(measProgramExpected, measProgramDumped));
+}
+
 void test_dft_module_regression::setReferenceChannel(VfCmdEventHandlerSystemPtr vfCmdEventHandlerSystem, QString channel)
 {
     VfCmdEventItemEntityPtr entityItem = VfEntityComponentEventItem::create(dftEntityId);

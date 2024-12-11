@@ -3,7 +3,6 @@
 
 #include "vf_cmd_event_handler_system.h"
 #include <QObject>
-#include <memory>
 
 class test_dft_module_regression : public QObject
 {
@@ -19,6 +18,7 @@ private slots:
     void injectActualValuesOrder0();
     void injectSymmetricalOrder0();
     void injectSymmetricalOrder1();
+    void dumpDspSetup();
 private:
     void setReferenceChannel(VfCmdEventHandlerSystemPtr vfCmdEventHandlerSystem, QString channel);
 };

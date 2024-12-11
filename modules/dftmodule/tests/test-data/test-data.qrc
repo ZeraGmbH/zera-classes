@@ -1,5 +1,6 @@
 <RCC>
     <qresource prefix="/">
+        <file>dspDumps/dumpMeasProgram.json</file>
         <file>dumpActual-no-ref.json</file>
         <file>dumpActual-no-ref-order-0.json</file>
         <file>dumpActual-refUL1.json</file>
