@@ -70,10 +70,24 @@ QStringList TestDspInterface::dumpCycListItem()
 
 QString TestDspInterface::dspVarDataTypeToJson(int type)
 {
-    return type == DSPDATA::dFloat ? "DSPDATA::dFloat" : "DSPDATA::dInt";
+    switch(type) {
+    case DSPDATA::dFloat:
+        return "DSPDATA::dFloat";
+    case DSPDATA::dInt:
+        return "DSPDATA::dInt";
+    default:
+        qFatal("Unknown DSP var type");
+    }
 }
 
 QString TestDspInterface::dspVarSegmentToJson(int segment)
 {
-    return segment == DSPDATA::localSegment ? "DSPDATA::localSegment" : "DSPDATA::globalSegment";
+    switch(segment) {
+    case DSPDATA::localSegment:
+        return "DSPDATA::localSegment";
+    case DSPDATA::globalSegment:
+        return "DSPDATA::globalSegment";
+    default:
+        qFatal("Unknown DSP var segment");
+    }
 }
