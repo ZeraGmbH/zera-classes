@@ -224,12 +224,10 @@ void cRangeModuleMeasProgram::setDspCmdList()
 
         m_dspInterface->addCycListItem( s = QString("COPYDU(32,MAXIMUMSAMPLE,MAXRESET)")); // all raw adc maximum samples to userspace
 
-        for (int i = 0; i < m_ChannelList.count(); i++)
-        {
-            quint8 chnnr;
-
-            cRangeMeasChannel* mchn = m_pModule->getMeasChannel(m_ChannelList.at(i));
-            chnnr = mchn->getDSPChannelNr();
+        for (int i = 0; i < m_ChannelList.count(); i++) {
+            const ChannelRangeObserver::ChannelPtr channel =
+                m_pModule->getSharedChannelRangeObserver()->getChannel(m_ChannelList.at(i));
+            quint8 chnnr = channel->m_dspChannel;
             m_dspInterface->addCycListItem( s = QString("COPYDU(1,MAXIMUMSAMPLE+%1,CHXRAWPEAK+%2)").arg(chnnr).arg(i)); // raw adc value maximum
             m_dspInterface->addCycListItem( s = QString("SETVAL(MAXRESET+%1,0.0)").arg(chnnr)); // raw adc value maximum
 
@@ -424,7 +422,7 @@ void cRangeModuleMeasProgram::dspserverConnect()
 
 void cRangeModuleMeasProgram::claimPGRMem()
 {
-    m_nSamples = m_pModule->getMeasChannel(m_ChannelList.at(0))->getSampleRate(); // we first read the sample nr from first channel
+    m_nSamples = m_pModule->getSharedChannelRangeObserver()->getSampleRate();
     setDspVarList(); // first we set the var list for our dsp
     setDspCmdList(); // and the cmd list he has to work on
 
