@@ -1,0 +1,10 @@
+{
+    "1-MemGroups": {
+        "SCALEMEM": {
+            "Size": 32,
+            "UserMemSize": 32
+        }
+    },
+    "2-CmdList": [
+    ]
+}

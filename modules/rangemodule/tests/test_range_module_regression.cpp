@@ -316,6 +316,17 @@ void test_range_module_regression::injectActualValuesCheatingEnabledWithPreScali
     QCOMPARE(expectedGainCorr, actualGainCorr);
 }
 
+static QString loadFile(QString fileName)
+{
+    QString fileData;
+    QFile file(fileName);
+    if(file.open(QFile::ReadOnly)) {
+        fileData = file.readAll();
+        file.close();
+    }
+    return fileData;
+}
+
 void test_range_module_regression::dumpDspCyclicLists()
 {
     ModuleManagerTestRunner testRunner(":/session-range-test.json");
@@ -323,15 +334,16 @@ void test_range_module_regression::dumpDspCyclicLists()
     const QList<TestDspInterfacePtr>& dspInterfaces = testRunner.getDspInterfaceList();
     QCOMPARE(dspInterfaces.count(), 3);
 
-    QByteArray rangeCyclicListDumped = dspInterfaces[dspInterfaces::RangeObsermatic]->dumpCycListItem();
-    QVERIFY(TestLogHelpers::compareAndLogOnDiff("", rangeCyclicListDumped));
+    QString obsermaticDumped = TestLogHelpers::dump(dspInterfaces[dspInterfaces::RangeObsermatic]->dumpAll());
+    QString obsermaticExpected = loadFile(":/dspDumps/dumpObsermatic.json");
+    QVERIFY(TestLogHelpers::compareAndLogOnDiff(obsermaticExpected, obsermaticDumped));
 
-    QByteArray adjustCyclicListDumped = dspInterfaces[dspInterfaces::AdjustManagement]->dumpCycListItem();
-    QVERIFY(TestLogHelpers::compareAndLogOnDiff("", adjustCyclicListDumped));
+    QString adjustListDumped = TestLogHelpers::dump(dspInterfaces[dspInterfaces::AdjustManagement]->dumpAll());
+    QString adjustListExpected = loadFile(":/dspDumps/dumpAdjustManagement.json");
+    QVERIFY(TestLogHelpers::compareAndLogOnDiff(adjustListExpected, adjustListDumped));
 
-    QByteArray rangeMeasCyclicListDumped = dspInterfaces[dspInterfaces::RangeModuleMeasProgram]->dumpCycListItem();
-    QFile file(":/dumpDspCyclicRangeMeas.txt");
-    QVERIFY(file.open(QFile::ReadOnly));
-    QByteArray rangeListExpected = file.readAll();
-    QVERIFY(TestLogHelpers::compareAndLogOnDiff(rangeListExpected, rangeMeasCyclicListDumped));
+    QString measProgramDumped = TestLogHelpers::dump(dspInterfaces[dspInterfaces::RangeModuleMeasProgram]->dumpAll());
+    QString measProgramExpected = loadFile(":/dspDumps/dumpMeasProgram.json");
+    QVERIFY(TestLogHelpers::compareAndLogOnDiff(measProgramExpected, measProgramDumped));
 }
+

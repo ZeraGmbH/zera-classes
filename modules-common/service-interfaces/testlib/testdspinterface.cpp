@@ -1,4 +1,5 @@
 #include "testdspinterface.h"
+#include <dspinterface_p.h>
 
 TestDspInterface::TestDspInterface(QStringList valueNamesList) :
     m_valueNamesList(valueNamesList)
@@ -10,21 +11,69 @@ QStringList TestDspInterface::getValueList()
     return m_valueNamesList;
 }
 
-void TestDspInterface::addCycListItem(QString cmd)
+QJsonObject TestDspInterface::dumpAll()
 {
-    MockDspInterface::addCycListItem(cmd);
-    m_cyclicListItems.append(cmd);
+    QJsonObject dump;
+    QJsonObject memGroups = dumpMemoryGroups();
+    memGroups = dumpVarList(memGroups);
+    dump.insert("1-MemGroups", memGroups);
+    dump.insert("2-CmdList", QJsonArray::fromStringList(dumpCycListItem()));
+    return dump;
 }
 
-void TestDspInterface::addCycListItems(const QStringList &cmds)
+QJsonObject TestDspInterface::dumpMemoryGroups()
 {
-    MockDspInterface::addCycListItems(cmds);
-    m_cyclicListItems.append(cmds);
+    const QList<cDspMeasData*> dspMemoryDataList = d_ptr->getMemoryDataList();
+    QJsonObject dumpMemGroup;
+    for(cDspMeasData* memData : dspMemoryDataList) {
+        QJsonObject entry;
+        entry.insert("Size", int(memData->getSize()));
+        entry.insert("UserMemSize", int(memData->getumemSize()));
+        dumpMemGroup.insert(memData->getName(), entry);
+    }
+    return dumpMemGroup;
 }
 
-QByteArray TestDspInterface::dumpCycListItem()
+QJsonObject TestDspInterface::dumpVarList(QJsonObject inData)
 {
-    if(m_cyclicListItems.count() == 0)
-        return "";
-    return m_cyclicListItems.join("\n").toLatin1() + "\n"; // Qt-Creator appends a final linefeed automatically
+    const QStringList varList = d_ptr->varList2String().split(";", Qt::SkipEmptyParts);
+    QMap<QString, QJsonArray> memGroupVariables;
+    for(const QString &var : varList) {
+        // see: cDspMeasData::VarListLong
+        // ts << QString("%1,%2,%3,%4,%5;").arg(m_handleName, pDspVar->Name()).arg(pDspVar->size()).arg(pDspVar->datatype()).arg(seg);
+        const QStringList entry = var.split(",", Qt::SkipEmptyParts);
+        QString memGroup = entry[0];
+        QString varName = entry[1];
+        int size = entry[2].toInt();
+        int dataType = entry[3].toInt();
+        int segment = entry[4].toInt();
+        QJsonObject jsonVar;
+        jsonVar.insert("Name", varName);
+        jsonVar.insert("Size", size);
+        jsonVar.insert("TypeData", dspVarDataTypeToJson(dataType));
+        jsonVar.insert("Segment", dspVarSegmentToJson(segment));
+        memGroupVariables[memGroup].append(jsonVar);
+    }
+    QJsonObject outData = inData;
+    for(auto iter=memGroupVariables.constBegin(); iter!=memGroupVariables.constEnd(); iter++) {
+        QJsonObject group = outData[iter.key()].toObject();
+        group.insert("Variables", iter.value());
+        outData.insert(iter.key(), group);
+    }
+    return outData;
+}
+
+QStringList TestDspInterface::dumpCycListItem()
+{
+    return d_ptr->getCyclicCmdList();
+}
+
+QString TestDspInterface::dspVarDataTypeToJson(int type)
+{
+    return type == DSPDATA::dFloat ? "DSPDATA::dFloat" : "DSPDATA::dInt";
+}
+
+QString TestDspInterface::dspVarSegmentToJson(int segment)
+{
+    return segment == DSPDATA::localSegment ? "DSPDATA::localSegment" : "DSPDATA::globalSegment";
 }

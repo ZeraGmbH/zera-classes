@@ -2,6 +2,8 @@
 #define TESTDSPINTERFACE_H
 
 #include <mockdspinterface.h>
+#include <QJsonObject>
+#include <QJsonArray>
 
 class TestDspInterface : public MockDspInterface
 {
@@ -10,13 +12,14 @@ public:
     TestDspInterface(QStringList valueNamesList);
     QStringList getValueList();
 
-    void addCycListItem(QString cmd) override;
-    void addCycListItems(const QStringList &cmds) override;
-
-    QByteArray dumpCycListItem();
+    QJsonObject dumpAll();
+    QJsonObject dumpMemoryGroups();
+    QJsonObject dumpVarList(QJsonObject inData);
+    QStringList dumpCycListItem();
 private:
+    QString dspVarDataTypeToJson(int type);
+    QString dspVarSegmentToJson(int segment);
     QStringList m_valueNamesList;
-    QStringList m_cyclicListItems;
 };
 
 typedef std::shared_ptr<TestDspInterface> TestDspInterfacePtr;
