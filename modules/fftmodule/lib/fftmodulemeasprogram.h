@@ -23,7 +23,6 @@ enum fftmoduleCmds
     readresourcetypes,
     readresource,
     readresourceinfo,
-    readsamplerate,
     readalias,
     readunit,
     readdspchannel,
@@ -72,7 +71,6 @@ private:
     QHash<QString, cMeasChannelInfo> m_measChannelInfoHash;
     QList<QString> channelInfoReadList; // a list of all channel info we have to read
     QString channelInfoRead; // the actual channel info we are working on
-    quint32 m_nSRate; // number of samples / signal period
 
     cDspMeasData* m_pTmpDataDsp;
     cDspMeasData* m_pParameterDSP;
@@ -88,7 +86,6 @@ private:
     QState m_readResourceInfoState;
     QState m_readResourceInfoDoneState;
     QState m_pcbserverConnectState;
-    QState m_readSampleRateState;
     QState m_readChannelInformationState;
     QState m_readChannelAliasState;
     QState m_readChannelUnitState;
@@ -133,7 +130,6 @@ private slots:
     void readResourceInfoDone();
 
     void pcbserverConnect();
-    void readSampleRate();
     void readChannelInformation();
     void readChannelAlias();
     void readChannelUnit();

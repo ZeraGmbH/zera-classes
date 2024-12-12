@@ -28,8 +28,7 @@ cFftModuleMeasProgram::cFftModuleMeasProgram(cFftModule* module, std::shared_ptr
     m_readResourceInfoState.addTransition(this, &cFftModuleMeasProgram::activationContinue, &m_readResourceInfoDoneState);
     m_readResourceInfoDoneState.addTransition(this, &cFftModuleMeasProgram::activationContinue, &m_pcbserverConnectState);
     m_readResourceInfoDoneState.addTransition(this, &cFftModuleMeasProgram::activationLoop, &m_readResourceInfoState);
-    m_pcbserverConnectState.addTransition(this, &cFftModuleMeasProgram::activationContinue, &m_readSampleRateState);
-    m_readSampleRateState.addTransition(this, &cFftModuleMeasProgram::activationContinue, &m_readChannelInformationState);
+    m_pcbserverConnectState.addTransition(this, &cFftModuleMeasProgram::activationContinue, &m_readChannelInformationState);
     m_readChannelInformationState.addTransition(this, &cFftModuleMeasProgram::activationContinue, &m_readChannelAliasState);
     m_readChannelAliasState.addTransition(this, &cFftModuleMeasProgram::activationContinue, &m_readChannelUnitState);
     m_readChannelUnitState.addTransition(this, &cFftModuleMeasProgram::activationContinue, &m_readDspChannelState);
@@ -52,7 +51,6 @@ cFftModuleMeasProgram::cFftModuleMeasProgram(cFftModule* module, std::shared_ptr
     m_activationMachine.addState(&m_readResourceInfoState);
     m_activationMachine.addState(&m_readResourceInfoDoneState);
     m_activationMachine.addState(&m_pcbserverConnectState);
-    m_activationMachine.addState(&m_readSampleRateState);
     m_activationMachine.addState(&m_readChannelInformationState);
     m_activationMachine.addState(&m_readChannelAliasState);
     m_activationMachine.addState(&m_readChannelUnitState);
@@ -77,7 +75,6 @@ cFftModuleMeasProgram::cFftModuleMeasProgram(cFftModule* module, std::shared_ptr
     connect(&m_readResourceInfoState, &QState::entered, this, &cFftModuleMeasProgram::readResourceInfo);
     connect(&m_readResourceInfoDoneState, &QState::entered, this, &cFftModuleMeasProgram::readResourceInfoDone);
     connect(&m_pcbserverConnectState, &QState::entered, this, &cFftModuleMeasProgram::pcbserverConnect);
-    connect(&m_readSampleRateState, &QState::entered, this, &cFftModuleMeasProgram::readSampleRate);
     connect(&m_readChannelInformationState, &QState::entered, this, &cFftModuleMeasProgram::readChannelInformation);
     connect(&m_readChannelAliasState, &QState::entered, this, &cFftModuleMeasProgram::readChannelAlias);
     connect(&m_readChannelUnitState, &QState::entered, this, &cFftModuleMeasProgram::readChannelUnit);
@@ -207,6 +204,7 @@ quint16 FFTMODULE::cFftModuleMeasProgram::calcFftResultLenHalf(quint8 fftOrder)
 
 void cFftModuleMeasProgram::setDspVarList()
 {
+    int samples = m_pModule->getSharedChannelRangeObserver()->getSampleRate();
     m_nfftLen = calcFftResultLenHalf(getConfData()->m_nFftOrder);
     // we fetch a handle for sampled data and other temporary values
     // global data segment is 1k words and lies on 1k boundary, so we put fftinput and fftouptut
@@ -215,7 +213,7 @@ void cFftModuleMeasProgram::setDspVarList()
     m_pTmpDataDsp->addVarItem( new cDspVar("FFTINPUT", 2 * m_nfftLen, DSPDATA::vDspTempGlobal));
     m_pTmpDataDsp->addVarItem( new cDspVar("FFTOUTPUT", 2 * m_nfftLen, DSPDATA::vDspTempGlobal));
     // meassignal will also still fit in global mem ... so we save memory
-    m_pTmpDataDsp->addVarItem( new cDspVar("MEASSIGNAL", 2 * m_nSRate, DSPDATA::vDspTemp));
+    m_pTmpDataDsp->addVarItem( new cDspVar("MEASSIGNAL", 2 * samples, DSPDATA::vDspTemp));
     m_pTmpDataDsp->addVarItem( new cDspVar("FFTXOUTPUT", 2 * m_nfftLen * m_veinActValueList.count(), DSPDATA::vDspTemp));
     m_pTmpDataDsp->addVarItem( new cDspVar("FILTER", 2 * 2 * m_nfftLen * m_veinActValueList.count(),DSPDATA::vDspTemp));
     m_pTmpDataDsp->addVarItem( new cDspVar("N",1,DSPDATA::vDspTemp));
@@ -252,8 +250,9 @@ void cFftModuleMeasProgram::setDspCmdList()
 {
     QString s;
 
+    int samples = m_pModule->getSharedChannelRangeObserver()->getSampleRate();
     m_dspInterface->addCycListItem( s = "STARTCHAIN(1,1,0x0101)"); // aktiv, prozessnr. (dummy),hauptkette 1 subkette 1 start
-        m_dspInterface->addCycListItem( s = QString("CLEARN(%1,MEASSIGNAL)").arg(2*m_nSRate) ); // clear meassignal
+        m_dspInterface->addCycListItem( s = QString("CLEARN(%1,MEASSIGNAL)").arg(2*samples) ); // clear meassignal
         m_dspInterface->addCycListItem( s = QString("CLEARN(%1,FILTER)").arg(2 * 2 * m_nfftLen * m_veinActValueList.count()+1) ); // clear the whole filter incl. count
         if (getConfData()->m_bmovingWindow)
             m_dspInterface->addCycListItem( s = QString("SETVAL(TIPAR,%1)").arg(getConfData()->m_fmovingwindowInterval*1000.0)); // initial ti time
@@ -281,7 +280,7 @@ void cFftModuleMeasProgram::setDspCmdList()
     for (int i = 0; i < getConfData()->m_valueChannelList.count(); i++)
     {
         m_dspInterface->addCycListItem( s = QString("COPYDATA(CH%1,0,MEASSIGNAL)").arg(m_measChannelInfoHash.value(getConfData()->m_valueChannelList.at(i)).dspChannelNr) );
-        m_dspInterface->addCycListItem( s = QString("COPYDATA(CH%1,0,MEASSIGNAL+%2)").arg(m_measChannelInfoHash.value(getConfData()->m_valueChannelList.at(i)).dspChannelNr).arg(m_nSRate));
+        m_dspInterface->addCycListItem( s = QString("COPYDATA(CH%1,0,MEASSIGNAL+%2)").arg(m_measChannelInfoHash.value(getConfData()->m_valueChannelList.at(i)).dspChannelNr).arg(samples));
         m_dspInterface->addCycListItem( s = QString("INTERPOLATIONIND(%1,IPOLADR,FFTINPUT)").arg(m_nfftLen));
         m_dspInterface->addCycListItem( s = QString("FFTREAL(%1,FFTINPUT,FFTOUTPUT)").arg(m_nfftLen));
         m_dspInterface->addCycListItem( s = QString("COPYMEM(%1,FFTOUTPUT,FFTXOUTPUT+%2)").arg(2 * m_nfftLen).arg(2 * m_nfftLen * i));
@@ -404,15 +403,6 @@ void cFftModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QV
                     notifyError(resourceInfoErrMsg);
                 break;
             }
-
-            case readsamplerate:
-                if (reply == ack) {
-                    m_nSRate = answer.toInt();
-                    emit activationContinue();
-                }
-                else
-                    notifyError(readsamplerateErrMsg);
-                break;
 
             case readalias:
                 if (reply == ack) {
@@ -645,12 +635,6 @@ void cFftModuleMeasProgram::pcbserverConnect()
     connect(m_pcbClient.get(), &Zera::ProxyClient::connected, this, &cBaseMeasProgram::activationContinue);
     connect(m_pcbInterface.get(), &AbstractServerInterface::serverAnswer, this, &cFftModuleMeasProgram::catchInterfaceAnswer);
     Zera::Proxy::getInstance()->startConnectionSmart(m_pcbClient);
-}
-
-
-void cFftModuleMeasProgram::readSampleRate()
-{
-    m_MsgNrCmdList[m_pcbInterface->getSampleRate()] = readsamplerate;
 }
 
 
