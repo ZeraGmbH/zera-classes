@@ -17,7 +17,6 @@ public:
                      QString moduleChannelInfo);
 
     quint8 getDSPChannelNr();
-    quint16 getSampleRate();
     QString getName();
     QString getAlias();
     QString getUnit();
@@ -32,7 +31,6 @@ protected:
 
     // the things we have to query from our pcb server
     quint8 m_nDspChannel; // the dsp's channel where samples come in
-    quint16 m_nSampleRate; // the systems sample rate
     QString m_sAlias; // the channel' alias
     QString m_sUnit;
     QHash<quint32, int> m_MsgNrCmdList;

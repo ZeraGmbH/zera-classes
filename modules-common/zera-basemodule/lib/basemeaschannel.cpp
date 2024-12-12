@@ -17,11 +17,6 @@ quint8 cBaseMeasChannel::getDSPChannelNr()
     return m_nDspChannel;
 }
 
-quint16 cBaseMeasChannel::getSampleRate()
-{
-    return m_nSampleRate;
-}
-
 QString cBaseMeasChannel::getName()
 {
     return m_sName;
