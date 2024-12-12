@@ -296,7 +296,7 @@ void cSampleModuleMeasProgram::dspserverConnect()
 
 void cSampleModuleMeasProgram::claimPGRMem()
 {
-    m_nSamples = m_pModule->getPllMeasChannel(m_ChannelList.at(0))->getSampleRate(); // we first read the sample nr from first channel
+    m_nSamples = m_pModule->getSharedChannelRangeObserver()->getSampleRate();
     setDspVarList(); // first we set the var list for our dsp
     setDspCmdList(); // and the cmd list he has to work on
 
