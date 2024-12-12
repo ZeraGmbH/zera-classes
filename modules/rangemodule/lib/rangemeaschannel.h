@@ -14,7 +14,6 @@ enum rangemeaschannelCmds
 {
     readdspchannel,
     readchnalias,
-    readsamplerate,
     readunit,
     readrangelist,
 
@@ -123,7 +122,6 @@ private:
     QState m_pcbConnectionState; // we try to get a connection to our pcb server
     QState m_readDspChannelState; // we query our dsp channel
     QState m_readChnAliasState; // we query our alias
-    QState m_readSampleRateState; // we read the sample nr
     QState m_readUnitState; // we read the meas channel unit volt ampere ...
     QState m_readRangeAndProperties; // we query our range list and all their properties
     QState m_resetStatusState; // we reset our measuring channel when activated
@@ -160,7 +158,6 @@ private slots:
     void pcbConnection();
     void readDspChannel();
     void readChnAlias();
-    void readSampleRate();
     void readUnit();
     void readRangeAndProperties();
     void resetStatusSlot();
