@@ -22,6 +22,9 @@ cPower1ModuleMeasProgram::cPower1ModuleMeasProgram(cPower1Module* module, std::s
 {
     m_dspInterface = m_pModule->getServiceInterfaceFactory()->createDspInterfacePower1(&m_measModeSelector);
 
+    // As long as there are no tasks - ignore error
+    m_channelRangeObserverScanState.addTransition(
+        m_pModule->getSharedChannelRangeObserver().get(), &ChannelRangeObserver::SystemObserver::sigFullScanFinished,&m_resourceManagerConnectState);
     m_IdentifyState.addTransition(this, &cModuleActivist::activationContinue, &m_readResourceTypesState);
     m_readResourceTypesState.addTransition(this, &cModuleActivist::activationContinue, &m_readResourceSenseState);
     m_readResourceSenseState.addTransition(this, &cModuleActivist::activationContinue, &m_readResourceSenseInfosState);
@@ -70,6 +73,7 @@ cPower1ModuleMeasProgram::cPower1ModuleMeasProgram(cPower1Module* module, std::s
     m_cmd2DSPState.addTransition(this, &cModuleActivist::activationContinue, &m_activateDSPState);
     m_activateDSPState.addTransition(this, &cModuleActivist::activationContinue, &m_loadDSPDoneState);
 
+    m_activationMachine.addState(&m_channelRangeObserverScanState);
     m_activationMachine.addState(&m_resourceManagerConnectState);
     m_activationMachine.addState(&m_IdentifyState);
     m_activationMachine.addState(&m_readResourceTypesState);
@@ -115,8 +119,9 @@ cPower1ModuleMeasProgram::cPower1ModuleMeasProgram(cPower1Module* module, std::s
     m_activationMachine.addState(&m_activateDSPState);
     m_activationMachine.addState(&m_loadDSPDoneState);
 
-    m_activationMachine.setInitialState(&m_resourceManagerConnectState);
+    m_activationMachine.setInitialState(&m_channelRangeObserverScanState);
 
+    connect(&m_channelRangeObserverScanState, &QState::entered, this, &cPower1ModuleMeasProgram::startFetchCommonRanges);
     connect(&m_resourceManagerConnectState, &QAbstractState::entered, this, &cPower1ModuleMeasProgram::resourceManagerConnect);
     connect(&m_IdentifyState, &QAbstractState::entered, this, &cPower1ModuleMeasProgram::sendRMIdent);
     connect(&m_readResourceTypesState, &QAbstractState::entered, this, &cPower1ModuleMeasProgram::readResourceTypes);
@@ -886,6 +891,10 @@ void cPower1ModuleMeasProgram::setInterfaceActualValues(QVector<float> *actualVa
     }
 }
 
+void cPower1ModuleMeasProgram::startFetchCommonRanges()
+{
+    m_pModule->getSharedChannelRangeObserver()->startFullScan();
+}
 
 void cPower1ModuleMeasProgram::resourceManagerConnect()
 {
