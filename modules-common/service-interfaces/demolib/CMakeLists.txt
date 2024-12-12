@@ -25,6 +25,7 @@ target_link_libraries(module-service-interfaces-demolib
     rmsmodule-demolib
     samplemodule-demolib
     power1module-demolib
+    thdnmodule-demolib
     Zera::service-interfaces-demolib
     Zera::zera-timers
 )

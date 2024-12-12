@@ -1,0 +1,9 @@
+{
+    "modules" : [
+        {
+            "name" : "thdnmodule",
+            "configFile" : "mt310s2-thdnmodule.xml",
+            "id": 1110
+        }
+    ]
+}

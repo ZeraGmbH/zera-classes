@@ -31,7 +31,7 @@ cThdnModuleMeasProgram::cThdnModuleMeasProgram(cThdnModule *module, std::shared_
     cBaseDspMeasProgram(pConfiguration, module->getVeinModuleName()),
     m_pModule(module)
 {
-    m_dspInterface = m_pModule->getServiceInterfaceFactory()->createDspInterfaceOther();
+    m_dspInterface = m_pModule->getServiceInterfaceFactory()->createDspInterfaceThdn(getConfData()->m_valueChannelList);
 
     m_IdentifyState.addTransition(this, &cThdnModuleMeasProgram::activationContinue, &m_readResourceTypesState);
     m_readResourceTypesState.addTransition(this, &cThdnModuleMeasProgram::activationContinue, &m_readResourceState);
@@ -136,12 +136,6 @@ cThdnModuleMeasProgram::cThdnModuleMeasProgram(cThdnModule *module, std::shared_
     else
         connect(&m_startStopHandler, &ActualValueStartStopHandler::sigNewActualValues,
                 this, &cThdnModuleMeasProgram::setInterfaceActualValues);
-
-    if(m_pModule->getDemo()){
-        m_demoPeriodicTimer = TimerFactoryQt::createPeriodic(500);
-        connect(m_demoPeriodicTimer.get(), &TimerTemplateQt::sigExpired,this, &cThdnModuleMeasProgram::handleDemoActualValues);
-        m_demoPeriodicTimer->start();
-    }
 }
 
 void cThdnModuleMeasProgram::start()
@@ -515,24 +509,6 @@ void cThdnModuleMeasProgram::setInterfaceActualValues(QVector<float> *actualValu
             m_veinActValueList.at(i)->setValue(QVariant((double)actualValues->at(i))); // and set entities
     }
 }
-
-void cThdnModuleMeasProgram::handleDemoActualValues()
-{
-    QVector<float> demoValues;
-    double thdn, thdr;
-
-    for (int i = 0; i < getConfData()->m_valueChannelList.count(); i++) {
-        float val = 20 * (float)rand() / RAND_MAX ;
-        demoValues.append(val);
-        thdn = demoValues.at(i) / 100.0;
-        thdr = 100.0 * thdn / sqrt(1 + (thdn * thdn));
-        demoValues.replace(i, thdr);
-    }
-    m_ModuleActualValues = demoValues;
-    Q_ASSERT(demoValues.size() == m_ModuleActualValues.size());
-    emit actualValues(&m_ModuleActualValues);
-}
-
 
 void cThdnModuleMeasProgram::resourceManagerConnect()
 {

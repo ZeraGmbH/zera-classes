@@ -29,10 +29,17 @@ DspInterfacePtr FactoryServiceInterfaces::createDspInterfaceRms(QStringList valu
 
 DspInterfacePtr FactoryServiceInterfaces::createDspInterfacePower1(MeasModeSelector *measMode)
 {
+    Q_UNUSED(measMode)
     return std::make_shared<Zera::cDSPInterface>();
 }
 
 DspInterfacePtr FactoryServiceInterfaces::createDspInterfaceSample(QStringList valueChannelList)
+{
+    Q_UNUSED(valueChannelList)
+    return std::make_shared<Zera::cDSPInterface>();
+}
+
+DspInterfacePtr FactoryServiceInterfaces::createDspInterfaceThdn(QStringList valueChannelList)
 {
     Q_UNUSED(valueChannelList)
     return std::make_shared<Zera::cDSPInterface>();
