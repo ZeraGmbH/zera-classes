@@ -26,6 +26,9 @@ cDftModuleMeasProgram::cDftModuleMeasProgram(cDftModule* module, std::shared_ptr
         getConfData()->m_valueChannelList,
         getConfData()->m_nDftOrder);
 
+    // As long as there are no tasks - ignore error
+    m_channelRangeObserverScanState.addTransition(
+        m_pModule->getSharedChannelRangeObserver().get(), &ChannelRangeObserver::SystemObserver::sigFullScanFinished,&m_resourceManagerConnectState);
     m_IdentifyState.addTransition(this, &cDftModuleMeasProgram::activationContinue, &m_readResourceTypesState);
     m_readResourceTypesState.addTransition(this, &cDftModuleMeasProgram::activationContinue, &m_readResourceState);
     m_readResourceState.addTransition(this, &cDftModuleMeasProgram::activationContinue, &m_readResourceInfosState);
@@ -48,6 +51,7 @@ cDftModuleMeasProgram::cDftModuleMeasProgram(cDftModule* module, std::shared_ptr
     m_cmd2DSPState.addTransition(this, &cDftModuleMeasProgram::activationContinue, &m_activateDSPState);
     m_activateDSPState.addTransition(this, &cDftModuleMeasProgram::activationContinue, &m_loadDSPDoneState);
 
+    m_activationMachine.addState(&m_channelRangeObserverScanState);
     m_activationMachine.addState(&m_resourceManagerConnectState);
     m_activationMachine.addState(&m_IdentifyState);
     m_activationMachine.addState(&m_readResourceTypesState);
@@ -70,8 +74,9 @@ cDftModuleMeasProgram::cDftModuleMeasProgram(cDftModule* module, std::shared_ptr
     m_activationMachine.addState(&m_activateDSPState);
     m_activationMachine.addState(&m_loadDSPDoneState);
 
-    m_activationMachine.setInitialState(&m_resourceManagerConnectState);
+    m_activationMachine.setInitialState(&m_channelRangeObserverScanState);
 
+    connect(&m_channelRangeObserverScanState, &QState::entered, this, &cDftModuleMeasProgram::startFetchCommonRanges);
     connect(&m_resourceManagerConnectState, &QState::entered, this, &cDftModuleMeasProgram::resourceManagerConnect);
     connect(&m_IdentifyState, &QState::entered, this, &cDftModuleMeasProgram::sendRMIdent);
     connect(&m_readResourceTypesState, &QState::entered, this, &cDftModuleMeasProgram::readResourceTypes);
@@ -638,6 +643,11 @@ void cDftModuleMeasProgram::setInterfaceActualValues(QVector<float> *actualValue
         else
             m_pRFieldActualValue->setValue("132");
     }
+}
+
+void cDftModuleMeasProgram::startFetchCommonRanges()
+{
+    m_pModule->getSharedChannelRangeObserver()->startFullScan();
 }
 
 void cDftModuleMeasProgram::resourceManagerConnect()
