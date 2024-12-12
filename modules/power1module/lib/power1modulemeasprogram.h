@@ -30,8 +30,6 @@ enum power1moduleCmds
     readresourcesourceinfo,
     claimresourcesource,
 
-    readsamplerate,
-
     readsensechannelalias,
     readsensechannelunit,
     readsensechanneldspchannel,
@@ -139,7 +137,6 @@ private:
     QList<QString> readUrvalueList; // a list with system channel names we need urvalue from
     QString readUrvalueInfo;
 
-    quint32 m_nSRate; // number of samples / signal period
     quint8 m_notifierNr;
 
     Power1DspVarGenerator m_dspVars;
@@ -166,7 +163,6 @@ private:
 
     QState m_pcbserverConnectState4measChannels;
     QState m_pcbserverConnectState4freqChannels;
-    QState m_readSampleRateState;
 
     QState m_readSenseChannelInformationState;
     QState m_readSenseChannelAliasState;
@@ -241,7 +237,6 @@ private slots:
 
     void pcbserverConnect4measChannels();
     void pcbserverConnect4freqChannels();
-    void readSampleRate();
     void readSenseChannelInformation();
     void readSenseChannelAlias();
     void readSenseChannelUnit();
