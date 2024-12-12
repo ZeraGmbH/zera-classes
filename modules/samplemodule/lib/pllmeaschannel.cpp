@@ -18,8 +18,7 @@ cPllMeasChannel::cPllMeasChannel(const ChannelRangeObserver::SystemObserverPtr c
     // setting up statemachine for "activating" pll meas channel
     // m_pcbConnectionState.addTransition is done in pcbConnection
     m_readDspChannelState.addTransition(this, &cPllMeasChannel::activationContinue, &m_readChnAliasState);
-    m_readChnAliasState.addTransition(this, &cPllMeasChannel::activationContinue, &m_readSampleRateState);
-    m_readSampleRateState.addTransition(this, &cPllMeasChannel::activationContinue, &m_readUnitState);
+    m_readChnAliasState.addTransition(this, &cPllMeasChannel::activationContinue, &m_readUnitState);
     m_readUnitState.addTransition(this, &cPllMeasChannel::activationContinue, &m_readRangelistState);
     m_readRangelistState.addTransition(this, &cPllMeasChannel::activationContinue, &m_readRangeProperties1State);
     m_readRangeProperties1State.addTransition(this, &cPllMeasChannel::activationContinue, &m_readRangeProperties2State);
@@ -30,7 +29,6 @@ cPllMeasChannel::cPllMeasChannel(const ChannelRangeObserver::SystemObserverPtr c
     m_activationMachine.addState(&m_pcbConnectionState);
     m_activationMachine.addState(&m_readDspChannelState);
     m_activationMachine.addState(&m_readChnAliasState);
-    m_activationMachine.addState(&m_readSampleRateState);
     m_activationMachine.addState(&m_readUnitState);
     m_activationMachine.addState(&m_readRangelistState);
     m_activationMachine.addState(&m_readRangeProperties1State);
@@ -44,7 +42,6 @@ cPllMeasChannel::cPllMeasChannel(const ChannelRangeObserver::SystemObserverPtr c
     connect(&m_pcbConnectionState, &QState::entered, this, &cPllMeasChannel::pcbConnection);
     connect(&m_readDspChannelState, &QState::entered, this, &cPllMeasChannel::readDspChannel);
     connect(&m_readChnAliasState, &QState::entered, this, &cPllMeasChannel::readChnAlias);
-    connect(&m_readSampleRateState, &QState::entered, this, &cPllMeasChannel::readSampleRate);
     connect(&m_readUnitState, &QState::entered, this, &cPllMeasChannel::readUnit);
     connect(&m_readRangelistState, &QState::entered, this, &cPllMeasChannel::readRangelist);
     connect(&m_readRangeProperties1State, &QState::entered, this, &cPllMeasChannel::readRangeProperties1);
@@ -174,14 +171,6 @@ void cPllMeasChannel::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant
             else
                 notifyError(readaliasErrMsg);
             break;
-        case readsamplerate:
-            if (reply == ack) {
-                m_nSampleRate = answer.toInt(&ok);
-                emit activationContinue();
-            }
-            else
-                notifyError(readsamplerateErrMsg);
-            break;
         case readunit:
             if (reply == ack) {
                 m_sUnit = answer.toString();
@@ -284,12 +273,6 @@ void cPllMeasChannel::readDspChannel()
 void cPllMeasChannel::readChnAlias()
 {
     m_MsgNrCmdList[m_pcbInterface->getAlias(m_sName)] = readchnalias;
-}
-
-
-void cPllMeasChannel::readSampleRate()
-{
-    m_MsgNrCmdList[m_pcbInterface->getSampleRate()] = readsamplerate;
 }
 
 
