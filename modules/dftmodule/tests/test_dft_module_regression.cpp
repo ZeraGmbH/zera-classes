@@ -14,6 +14,17 @@ QTEST_MAIN(test_dft_module_regression)
 
 static int constexpr dftEntityId = 1050;
 
+static QString loadFile(QString fileName)
+{
+    QString fileData;
+    QFile file(fileName);
+    if(file.open(QFile::ReadOnly)) {
+        fileData = file.readAll();
+        file.close();
+    }
+    return fileData;
+}
+
 void test_dft_module_regression::minimalSession()
 {
     ModuleManagerTestRunner testRunner(":/session-minimal.json");
@@ -136,6 +147,11 @@ void test_dft_module_regression::injectActualValuesReferenceChannelUL2()
     VeinStorage::DumpJson::dumpToFile(veinStorage->getDb(),&buff, QList<int>() << dftEntityId);
 
     QVERIFY(TestLogHelpers::compareAndLogOnDiff(jsonExpected, jsonDumped));
+
+    // reference is caclulated by dftmodule -> same layout as default
+    QString measProgramDumped = TestLogHelpers::dump(dspInterfaces[0]->dumpAll());
+    QString measProgramExpected = loadFile(":/dspDumps/dumpMeasProgram.json");
+    QVERIFY(TestLogHelpers::compareAndLogOnDiff(measProgramExpected, measProgramDumped));
 }
 
 constexpr int comDcRefChannelCount = 6;
@@ -211,17 +227,6 @@ void test_dft_module_regression::injectSymmetricalOrder1()
     VeinStorage::DumpJson::dumpToFile(veinStorage->getDb(),&buff, QList<int>() << dftEntityId);
 
     QVERIFY(TestLogHelpers::compareAndLogOnDiff(jsonExpected, jsonDumped));
-}
-
-static QString loadFile(QString fileName)
-{
-    QString fileData;
-    QFile file(fileName);
-    if(file.open(QFile::ReadOnly)) {
-        fileData = file.readAll();
-        file.close();
-    }
-    return fileData;
 }
 
 void test_dft_module_regression::dumpDspSetup()
