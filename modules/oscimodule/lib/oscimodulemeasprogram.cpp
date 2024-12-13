@@ -17,7 +17,9 @@ cOsciModuleMeasProgram::cOsciModuleMeasProgram(cOsciModule* module, std::shared_
     cBaseDspMeasProgram(pConfiguration, module->getVeinModuleName()),
     m_pModule(module)
 {
-    m_dspInterface = m_pModule->getServiceInterfaceFactory()->createDspInterfaceOther();
+    m_dspInterface = m_pModule->getServiceInterfaceFactory()->createDspInterfaceOsci(
+        getConfData()->m_valueChannelList,
+        getConfData()->m_nInterpolation);
 
     m_IdentifyState.addTransition(this, &cOsciModuleMeasProgram::activationContinue, &m_readResourceTypesState);
     m_readResourceTypesState.addTransition(this, &cOsciModuleMeasProgram::activationContinue, &m_readResourceState);
@@ -114,25 +116,16 @@ cOsciModuleMeasProgram::cOsciModuleMeasProgram(cOsciModule* module, std::shared_
             &m_startStopHandler, &ActualValueStartStopHandler::onNewActualValues);
     connect(&m_startStopHandler, &ActualValueStartStopHandler::sigNewActualValues,
             this, &cOsciModuleMeasProgram::setInterfaceActualValues);
-
-    if(m_pModule->getDemo()){
-        m_demoPeriodicTimer = TimerFactoryQt::createPeriodic(500);
-        connect(m_demoPeriodicTimer.get(), &TimerTemplateQt::sigExpired,this, &cOsciModuleMeasProgram::handleDemoActualValues);
-    }
 }
 
 void cOsciModuleMeasProgram::start()
 {
     m_startStopHandler.start();
-    if(m_pModule->getDemo())
-        m_demoPeriodicTimer->start();
 }
 
 void cOsciModuleMeasProgram::stop()
 {
     m_startStopHandler.stop();
-    if(m_pModule->getDemo())
-        m_demoPeriodicTimer->stop();
 }
 
 void cOsciModuleMeasProgram::generateVeinInterface()
@@ -520,38 +513,6 @@ void cOsciModuleMeasProgram::setInterfaceActualValues(QVector<float> *actualValu
         }
     }
 }
-
-QVector<float> cOsciModuleMeasProgram::generateSineCurve(int sampleCount, int amplitude, float phase)
-{
-    QVector<float> samples;
-    for(int i = 0; i < sampleCount; i++) {
-        samples.append(amplitude * sin((2 * M_PI * i / sampleCount) + phase));
-    }
-    return samples;
-}
-
-void cOsciModuleMeasProgram::handleDemoActualValues()
-{
-    QVector<float> demoValues;
-    float phase = 0.0;
-    for (int i = 0; i < getConfData()->m_valueChannelList.count(); i++) {
-        double randomVal = (double)rand() / RAND_MAX ;
-        if(m_veinActValueList.at(i)->getChannelName().contains("2")) //UL2,IL2
-            phase = randomVal * M_PI/2;
-        else if(m_veinActValueList.at(i)->getChannelName().contains("3")) //UL3,IL3
-            phase = randomVal * -M_PI/2;
-        else
-            phase = 0.0;
-
-        if(m_veinActValueList.at(i)->getUnit() == "A")
-            demoValues.append(generateSineCurve(getConfData()->m_nInterpolation, 10, phase));
-        else
-            demoValues.append(generateSineCurve(getConfData()->m_nInterpolation, 230, phase));
-    }
-    m_ModuleActualValues = demoValues;
-    emit actualValues(&m_ModuleActualValues);
-}
-
 
 void cOsciModuleMeasProgram::resourceManagerConnect()
 {

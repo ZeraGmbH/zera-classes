@@ -45,6 +45,13 @@ DspInterfacePtr FactoryServiceInterfaces::createDspInterfaceThdn(QStringList val
     return std::make_shared<Zera::cDSPInterface>();
 }
 
+DspInterfacePtr FactoryServiceInterfaces::createDspInterfaceOsci(QStringList valueChannelList, int interpolation)
+{
+    Q_UNUSED(valueChannelList)
+    Q_UNUSED(interpolation)
+    return std::make_shared<Zera::cDSPInterface>();
+}
+
 DspInterfacePtr FactoryServiceInterfaces::createDspInterfaceOther()
 {
     return std::make_shared<Zera::cDSPInterface>();

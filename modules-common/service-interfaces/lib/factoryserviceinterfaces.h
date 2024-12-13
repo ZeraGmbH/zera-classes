@@ -13,6 +13,7 @@ public:
     DspInterfacePtr createDspInterfacePower1(MeasModeSelector* measMode) override;
     DspInterfacePtr createDspInterfaceSample(QStringList valueChannelList) override;
     DspInterfacePtr createDspInterfaceThdn(QStringList valueChannelList) override;
+    DspInterfacePtr createDspInterfaceOsci(QStringList valueChannelList, int interpolation) override;
     DspInterfacePtr createDspInterfaceOther() override;
 };
 

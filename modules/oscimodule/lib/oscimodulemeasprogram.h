@@ -106,16 +106,11 @@ private:
     QState m_dataAcquisitionState;
     QFinalState m_dataAcquisitionDoneState;
 
-    TimerTemplateQtPtr m_demoPeriodicTimer;
-
     void setActualValuesNames();
     void setSCPIMeasInfo();
 
-    QVector<float> generateSineCurve(int sampleCount, int amplitude, float phase);
-
 private slots:
     void setInterfaceActualValues(QVector<float> *actualValues);
-    void handleDemoActualValues();
 
     void resourceManagerConnect();
     void sendRMIdent();

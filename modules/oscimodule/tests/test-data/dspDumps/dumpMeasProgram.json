@@ -1,0 +1,130 @@
+{
+    "1-MemGroups": {
+        "ActualValues": {
+            "Size": 1024,
+            "UserMemSize": 1024,
+            "Variables": [
+                {
+                    "Name": "VALXOSCI",
+                    "Segment": "DSPDATA::localSegment",
+                    "Size": 1024,
+                    "TypeData": "DSPDATA::dFloat"
+                }
+            ]
+        },
+        "Parameter": {
+            "Size": 1,
+            "UserMemSize": 1,
+            "Variables": [
+                {
+                    "Name": "REFCHN",
+                    "Segment": "DSPDATA::localSegment",
+                    "Size": 1,
+                    "TypeData": "DSPDATA::dInt"
+                }
+            ]
+        },
+        "TmpData": {
+            "Size": 5046,
+            "UserMemSize": 5046,
+            "Variables": [
+                {
+                    "Name": "MEASSIGNAL",
+                    "Segment": "DSPDATA::localSegment",
+                    "Size": 4032,
+                    "TypeData": "DSPDATA::dFloat"
+                },
+                {
+                    "Name": "WORKSPACE",
+                    "Segment": "DSPDATA::localSegment",
+                    "Size": 1008,
+                    "TypeData": "DSPDATA::dFloat"
+                },
+                {
+                    "Name": "GAPCOUNT",
+                    "Segment": "DSPDATA::localSegment",
+                    "Size": 1,
+                    "TypeData": "DSPDATA::dInt"
+                },
+                {
+                    "Name": "GAPPAR",
+                    "Segment": "DSPDATA::localSegment",
+                    "Size": 1,
+                    "TypeData": "DSPDATA::dInt"
+                },
+                {
+                    "Name": "IPOLADR",
+                    "Segment": "DSPDATA::localSegment",
+                    "Size": 1,
+                    "TypeData": "DSPDATA::dInt"
+                },
+                {
+                    "Name": "DEBUGCOUNT",
+                    "Segment": "DSPDATA::localSegment",
+                    "Size": 1,
+                    "TypeData": "DSPDATA::dInt"
+                },
+                {
+                    "Name": "DFTREF",
+                    "Segment": "DSPDATA::localSegment",
+                    "Size": 2,
+                    "TypeData": "DSPDATA::dFloat"
+                }
+            ]
+        }
+    },
+    "2-CmdList": [
+        "STARTCHAIN(1,1,0x0101)",
+        "CLEARN(4032,MEASSIGNAL)",
+        "SETVAL(GAPCOUNT,25)",
+        "SETVAL(GAPPAR,26)",
+        "SETVAL(REFCHN,0)",
+        "SETVAL(DEBUGCOUNT,0)",
+        "DEACTIVATECHAIN(1,0x0101)",
+        "STOPCHAIN(1,0x0101)",
+        "INC(GAPCOUNT)",
+        "ACTIVATECHAIN(1,0x0102)",
+        "TESTVVSKIPEQ(GAPCOUNT,GAPPAR)",
+        "DEACTIVATECHAIN(1,0x0102)",
+        "STARTCHAIN(0,1,0x0102)",
+        "SETVAL((GAPCOUNT,0)",
+        "COPYDATAIND(REFCHN,0,WORKSPACE)",
+        "DFT(1,WORKSPACE,DFTREF)",
+        "GENADR(WORKSPACE,DFTREF,IPOLADR)",
+        "COPYMEM(504,MEASSIGNAL+0,WORKSPACE)",
+        "COPYDATA(CH0,0,WORKSPACE+504)",
+        "INTERPOLATIONIND(128,IPOLADR,VALXOSCI+0)",
+        "COPYMEM(504,WORKSPACE+504,MEASSIGNAL+0)",
+        "COPYMEM(504,MEASSIGNAL+504,WORKSPACE)",
+        "COPYDATA(CH2,0,WORKSPACE+504)",
+        "INTERPOLATIONIND(128,IPOLADR,VALXOSCI+128)",
+        "COPYMEM(504,WORKSPACE+504,MEASSIGNAL+504)",
+        "COPYMEM(504,MEASSIGNAL+1008,WORKSPACE)",
+        "COPYDATA(CH4,0,WORKSPACE+504)",
+        "INTERPOLATIONIND(128,IPOLADR,VALXOSCI+256)",
+        "COPYMEM(504,WORKSPACE+504,MEASSIGNAL+1008)",
+        "COPYMEM(504,MEASSIGNAL+1512,WORKSPACE)",
+        "COPYDATA(CH1,0,WORKSPACE+504)",
+        "INTERPOLATIONIND(128,IPOLADR,VALXOSCI+384)",
+        "COPYMEM(504,WORKSPACE+504,MEASSIGNAL+1512)",
+        "COPYMEM(504,MEASSIGNAL+2016,WORKSPACE)",
+        "COPYDATA(CH3,0,WORKSPACE+504)",
+        "INTERPOLATIONIND(128,IPOLADR,VALXOSCI+512)",
+        "COPYMEM(504,WORKSPACE+504,MEASSIGNAL+2016)",
+        "COPYMEM(504,MEASSIGNAL+2520,WORKSPACE)",
+        "COPYDATA(CH5,0,WORKSPACE+504)",
+        "INTERPOLATIONIND(128,IPOLADR,VALXOSCI+640)",
+        "COPYMEM(504,WORKSPACE+504,MEASSIGNAL+2520)",
+        "COPYMEM(504,MEASSIGNAL+3024,WORKSPACE)",
+        "COPYDATA(CH6,0,WORKSPACE+504)",
+        "INTERPOLATIONIND(128,IPOLADR,VALXOSCI+768)",
+        "COPYMEM(504,WORKSPACE+504,MEASSIGNAL+3024)",
+        "COPYMEM(504,MEASSIGNAL+3528,WORKSPACE)",
+        "COPYDATA(CH7,0,WORKSPACE+504)",
+        "INTERPOLATIONIND(128,IPOLADR,VALXOSCI+896)",
+        "COPYMEM(504,WORKSPACE+504,MEASSIGNAL+3528)",
+        "DSPINTTRIGGER(0x0,0x6)",
+        "DEACTIVATECHAIN(1,0x0102)",
+        "STOPCHAIN(1,0x0102)"
+    ]
+}
