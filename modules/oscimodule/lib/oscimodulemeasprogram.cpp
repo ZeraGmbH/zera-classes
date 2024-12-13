@@ -31,8 +31,7 @@ cOsciModuleMeasProgram::cOsciModuleMeasProgram(cOsciModule* module, std::shared_
     m_readResourceInfoState.addTransition(this, &cOsciModuleMeasProgram::activationContinue, &m_readResourceInfoDoneState);
     m_readResourceInfoDoneState.addTransition(this, &cOsciModuleMeasProgram::activationContinue, &m_pcbserverConnectState);
     m_readResourceInfoDoneState.addTransition(this, &cOsciModuleMeasProgram::activationLoop, &m_readResourceInfoState);
-    m_pcbserverConnectState.addTransition(this, &cOsciModuleMeasProgram::activationContinue, &m_readSampleRateState);
-    m_readSampleRateState.addTransition(this, &cOsciModuleMeasProgram::activationContinue, &m_readChannelInformationState);
+    m_pcbserverConnectState.addTransition(this, &cOsciModuleMeasProgram::activationContinue, &m_readChannelInformationState);
     m_readChannelInformationState.addTransition(this, &cOsciModuleMeasProgram::activationContinue, &m_readChannelAliasState);
     m_readChannelAliasState.addTransition(this, &cOsciModuleMeasProgram::activationContinue, &m_readChannelUnitState);
     m_readChannelUnitState.addTransition(this, &cOsciModuleMeasProgram::activationContinue, &m_readDspChannelState);
@@ -54,7 +53,6 @@ cOsciModuleMeasProgram::cOsciModuleMeasProgram(cOsciModule* module, std::shared_
     m_activationMachine.addState(&m_readResourceInfoState);
     m_activationMachine.addState(&m_readResourceInfoDoneState);
     m_activationMachine.addState(&m_pcbserverConnectState);
-    m_activationMachine.addState(&m_readSampleRateState);
     m_activationMachine.addState(&m_readChannelInformationState);
     m_activationMachine.addState(&m_readChannelAliasState);
     m_activationMachine.addState(&m_readChannelUnitState);
@@ -79,7 +77,6 @@ cOsciModuleMeasProgram::cOsciModuleMeasProgram(cOsciModule* module, std::shared_
     connect(&m_readResourceInfoState, &QState::entered, this, &cOsciModuleMeasProgram::readResourceInfo);
     connect(&m_readResourceInfoDoneState, &QState::entered, this, &cOsciModuleMeasProgram::readResourceInfoDone);
     connect(&m_pcbserverConnectState, &QState::entered, this, &cOsciModuleMeasProgram::pcbserverConnect);
-    connect(&m_readSampleRateState, &QState::entered, this, &cOsciModuleMeasProgram::readSampleRate);
     connect(&m_readChannelInformationState, &QState::entered, this, &cOsciModuleMeasProgram::readChannelInformation);
     connect(&m_readChannelAliasState, &QState::entered, this, &cOsciModuleMeasProgram::readChannelAlias);
     connect(&m_readChannelUnitState, &QState::entered, this, &cOsciModuleMeasProgram::readChannelUnit);
@@ -178,9 +175,10 @@ void cOsciModuleMeasProgram::generateVeinInterface()
 void cOsciModuleMeasProgram::setDspVarList()
 {
     // we fetch a handle for sampled data and other temporary values
+    int samples = m_pModule->getSharedChannelRangeObserver()->getSampleRate();
     m_pTmpDataDsp = m_dspInterface->getMemHandle("TmpData");
-    m_pTmpDataDsp->addVarItem( new cDspVar("MEASSIGNAL", m_veinActValueList.count() * m_nSRate, DSPDATA::vDspTemp));
-    m_pTmpDataDsp->addVarItem(new cDspVar("WORKSPACE", 2 * m_nSRate, DSPDATA::vDspTemp));
+    m_pTmpDataDsp->addVarItem( new cDspVar("MEASSIGNAL", m_veinActValueList.count() * samples, DSPDATA::vDspTemp));
+    m_pTmpDataDsp->addVarItem(new cDspVar("WORKSPACE", 2 * samples, DSPDATA::vDspTemp));
     m_pTmpDataDsp->addVarItem( new cDspVar("GAPCOUNT", 1, DSPDATA::vDspTemp, DSPDATA::dInt));
     m_pTmpDataDsp->addVarItem( new cDspVar("GAPPAR",1, DSPDATA::vDspTemp, DSPDATA::dInt));
     m_pTmpDataDsp->addVarItem( new cDspVar("IPOLADR", 1, DSPDATA::vDspTemp, DSPDATA::dInt));
@@ -211,9 +209,9 @@ void cOsciModuleMeasProgram::deleteDspVarList()
 void cOsciModuleMeasProgram::setDspCmdList()
 {
     QString s;
-
+    int samples = m_pModule->getSharedChannelRangeObserver()->getSampleRate();
     m_dspInterface->addCycListItem( s = "STARTCHAIN(1,1,0x0101)"); // aktiv, prozessnr. (dummy),hauptkette 1 subkette 1 start
-        m_dspInterface->addCycListItem( s = QString("CLEARN(%1,MEASSIGNAL)").arg(m_veinActValueList.count() * m_nSRate) ); // clear meassignal
+        m_dspInterface->addCycListItem( s = QString("CLEARN(%1,MEASSIGNAL)").arg(m_veinActValueList.count() * samples) ); // clear meassignal
         m_dspInterface->addCycListItem( s = QString("SETVAL(GAPCOUNT,%1)").arg(getConfData()->m_nGap)); // we start with the first period
         m_dspInterface->addCycListItem( s = QString("SETVAL(GAPPAR,%1)").arg(getConfData()->m_nGap+1)); // our value to reload gap
         m_dspInterface->addCycListItem( s = QString("SETVAL(REFCHN,%1)").arg(m_measChannelInfoHash.value(getConfData()->m_RefChannel.m_sPar).dspChannelNr));
@@ -245,14 +243,14 @@ void cOsciModuleMeasProgram::setDspCmdList()
         // now we do all necessary for each channel we work on
         for (int i = 0; i < m_veinActValueList.count(); i++)
         {
-            m_dspInterface->addCycListItem( s = QString("COPYMEM(%1,MEASSIGNAL+%2,WORKSPACE)").arg(m_nSRate).arg(i * m_nSRate));
+            m_dspInterface->addCycListItem( s = QString("COPYMEM(%1,MEASSIGNAL+%2,WORKSPACE)").arg(samples).arg(i * samples));
             m_dspInterface->addCycListItem( s = QString("COPYDATA(CH%1,0,WORKSPACE+%2)").arg(m_measChannelInfoHash.value(getConfData()->m_valueChannelList.at(i)).dspChannelNr)
-                                                                                     .arg(m_nSRate));
+                                                                                     .arg(samples));
 
             m_dspInterface->addCycListItem( s = QString("INTERPOLATIONIND(%1,IPOLADR,VALXOSCI+%2)")
                                              .arg(getConfData()->m_nInterpolation)
                                              .arg(i * getConfData()->m_nInterpolation));
-            m_dspInterface->addCycListItem( s = QString("COPYMEM(%1,WORKSPACE+%2,MEASSIGNAL+%3)").arg(m_nSRate).arg(m_nSRate).arg(i * m_nSRate));
+            m_dspInterface->addCycListItem( s = QString("COPYMEM(%1,WORKSPACE+%2,MEASSIGNAL+%3)").arg(samples).arg(samples).arg(i * samples));
 
         }
 
@@ -379,15 +377,6 @@ void cOsciModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, Q
                     notifyError(resourceInfoErrMsg);
                 break;
             }
-
-            case readsamplerate:
-                if (reply == ack) {
-                    m_nSRate = answer.toInt(&ok);
-                    emit activationContinue();
-                }
-                else
-                    notifyError(readsamplerateErrMsg);
-                break;
 
             case readalias:
                 if (reply == ack) {
@@ -605,19 +594,11 @@ void cOsciModuleMeasProgram::pcbserverConnect()
     Zera::Proxy::getInstance()->startConnectionSmart(m_pcbClient);
 }
 
-
-void cOsciModuleMeasProgram::readSampleRate()
-{
-    m_MsgNrCmdList[m_pcbInterface->getSampleRate()] = readsamplerate;
-}
-
-
 void cOsciModuleMeasProgram::readChannelInformation()
 {
     channelInfoReadList = m_measChannelInfoHash.keys(); // we have to read information for all channels in this list
     emit activationContinue();
 }
-
 
 void cOsciModuleMeasProgram::readChannelAlias()
 {
