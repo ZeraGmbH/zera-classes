@@ -39,6 +39,12 @@ DspInterfacePtr TestFactoryServiceInterfaces::createDspInterfaceThdn(QStringList
     return createDspInterfaceCommon(4 /* that is what module expects currently */, valueChannelList);
 }
 
+DspInterfacePtr TestFactoryServiceInterfaces::createDspInterfaceOsci(QStringList valueChannelList, int interpolation)
+{
+    Q_UNUSED(interpolation)
+    return createDspInterfaceCommon(6 /* that is what module expects currently */, valueChannelList);
+}
+
 DspInterfacePtr TestFactoryServiceInterfaces::createDspInterfaceOther()
 {
     // no test specific implementation yet

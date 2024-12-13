@@ -1,0 +1,9 @@
+{
+    "modules" : [
+        {
+            "name" : "oscimodule",
+            "configFile" : "mt310s2-oscimodule.xml",
+            "id": 1120
+        }
+    ]
+}
