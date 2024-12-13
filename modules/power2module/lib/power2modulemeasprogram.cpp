@@ -48,8 +48,7 @@ cPower2ModuleMeasProgram::cPower2ModuleMeasProgram(cPower2Module* module, std::s
     m_claimResourceSourceDoneState.addTransition(this, &cPower2ModuleMeasProgram::activationContinue, &m_pcbserverConnectState4measChannels);
     m_claimResourceSourceDoneState.addTransition(this, &cPower2ModuleMeasProgram::activationLoop, &m_claimResourceSourceState);
     m_pcbserverConnectState4measChannels.addTransition(this, &cPower2ModuleMeasProgram::activationContinue, &m_pcbserverConnectState4freqChannels);
-    m_pcbserverConnectState4freqChannels.addTransition(this, &cPower2ModuleMeasProgram::activationContinue, &m_readSampleRateState);
-    m_readSampleRateState.addTransition(this, &cPower2ModuleMeasProgram::activationContinue, &m_readSenseChannelInformationState);
+    m_pcbserverConnectState4freqChannels.addTransition(this, &cPower2ModuleMeasProgram::activationContinue, &m_readSenseChannelInformationState);
     m_readSenseChannelInformationState.addTransition(this, &cPower2ModuleMeasProgram::activationContinue, &m_readSenseChannelAliasState);
     m_readSenseChannelAliasState.addTransition(this, &cPower2ModuleMeasProgram::activationContinue, &m_readSenseChannelUnitState);
     m_readSenseChannelUnitState.addTransition(this, &cPower2ModuleMeasProgram::activationContinue, &m_readSenseDspChannelState);
@@ -96,7 +95,6 @@ cPower2ModuleMeasProgram::cPower2ModuleMeasProgram(cPower2Module* module, std::s
     m_activationMachine.addState(&m_claimResourceSourceDoneState);
     m_activationMachine.addState(&m_pcbserverConnectState4measChannels);
     m_activationMachine.addState(&m_pcbserverConnectState4freqChannels);
-    m_activationMachine.addState(&m_readSampleRateState);
 
     m_activationMachine.addState(&m_readSenseChannelInformationState);
     m_activationMachine.addState(&m_readSenseChannelAliasState);
@@ -145,7 +143,6 @@ cPower2ModuleMeasProgram::cPower2ModuleMeasProgram(cPower2Module* module, std::s
 
     connect(&m_pcbserverConnectState4measChannels, &QAbstractState::entered, this, &cPower2ModuleMeasProgram::pcbserverConnect4measChannels);
     connect(&m_pcbserverConnectState4freqChannels, &QAbstractState::entered, this, &cPower2ModuleMeasProgram::pcbserverConnect4freqChannels);
-    connect(&m_readSampleRateState, &QAbstractState::entered, this, &cPower2ModuleMeasProgram::readSampleRate);
 
     connect(&m_readSenseChannelInformationState, &QAbstractState::entered, this, &cPower2ModuleMeasProgram::readSenseChannelInformation);
     connect(&m_readSenseChannelAliasState, &QAbstractState::entered, this, &cPower2ModuleMeasProgram::readSenseChannelAlias);
@@ -355,10 +352,11 @@ void cPower2ModuleMeasProgram::generateVeinInterface()
 
 void cPower2ModuleMeasProgram::setDspVarList()
 {
+    int samples = m_pModule->getSharedChannelRangeObserver()->getSampleRate();
     // we fetch a handle for sampled data and other temporary values
     m_pTmpDataDsp = m_dspInterface->getMemHandle("TmpData");
-    m_pTmpDataDsp->addVarItem( new cDspVar("MEASSIGNAL1", m_nSRate, DSPDATA::vDspTemp)); // we need 2 signals for our computations
-    m_pTmpDataDsp->addVarItem( new cDspVar("MEASSIGNAL2", m_nSRate, DSPDATA::vDspTemp)); // we need 2 signals for our computations
+    m_pTmpDataDsp->addVarItem( new cDspVar("MEASSIGNAL1", samples, DSPDATA::vDspTemp)); // we need 2 signals for our computations
+    m_pTmpDataDsp->addVarItem( new cDspVar("MEASSIGNAL2", samples, DSPDATA::vDspTemp)); // we need 2 signals for our computations
     m_pTmpDataDsp->addVarItem( new cDspVar("VALPOWER", 3*(MeasPhaseCount+SumValueCount), DSPDATA::vDspTemp)); // p1+,p1-,p1, p2+,p2-,p2, p3+,p3-,p3, ps+,ps-,ps
     m_pTmpDataDsp->addVarItem( new cDspVar("TEMP1", 2, DSPDATA::vDspTemp)); // we need 2 temp. vars also for complex
     m_pTmpDataDsp->addVarItem( new cDspVar("TEMP2", 2, DSPDATA::vDspTemp));
@@ -398,10 +396,11 @@ void cPower2ModuleMeasProgram::deleteDspVarList()
 
 QStringList cPower2ModuleMeasProgram::dspCmdInitVars(int dspInitialSelectCode)
 {
+    int samples = m_pModule->getSharedChannelRangeObserver()->getSampleRate();
     QStringList dspCmdList;
     dspCmdList.append("STARTCHAIN(1,1,0x0101)"); // aktiv, prozessnr. (dummy),hauptkette 1 subkette 1 start
-    dspCmdList.append(QString("CLEARN(%1,MEASSIGNAL1)").arg(m_nSRate) ); // clear meassignal
-    dspCmdList.append(QString("CLEARN(%1,MEASSIGNAL2)").arg(m_nSRate) ); // clear meassignal
+    dspCmdList.append(QString("CLEARN(%1,MEASSIGNAL1)").arg(samples) ); // clear meassignal
+    dspCmdList.append(QString("CLEARN(%1,MEASSIGNAL2)").arg(samples) ); // clear meassignal
     dspCmdList.append(QString("CLEARN(%1,FILTER)").arg(2*3*(MeasPhaseCount+SumValueCount)+1) ); // clear the whole filter incl. count
     dspCmdList.append(QString("SETVAL(MMODE,%1)").arg(dspInitialSelectCode));
     double integrationTime = calcTiTime();
@@ -430,15 +429,15 @@ void cPower2ModuleMeasProgram::setDspCmdList()
     //MeasModeBroker measBroker(Power2DspModeFunctionCatalog::get(measSytemCount));
 
     // we set up all our lists for wanted measuring modes, this gets much more performance
+    int samples = m_pModule->getSharedChannelRangeObserver()->getSampleRate();
     QStringList dspMModesCommandList;
-    //MeasModeBroker::BrokerReturn brokerReturn;
     for (int i = 0; i < confdata->m_nMeasModeCount; i++) {
         cMeasModeInfo mInfo = MeasModeCatalog::getInfo(confdata->m_sMeasmodeList.at(i));
         measmodes measModeId = mInfo.getCode();
         switch (measModeId)
         {
         case m4lw:
-            dspMModesCommandList.append(Power2DspCmdGenerator::getCmdsMMode4LW(measModeId, measChannelPairList, m_nSRate));
+            dspMModesCommandList.append(Power2DspCmdGenerator::getCmdsMMode4LW(measModeId, measChannelPairList, samples));
             m_measModeSelector.addMode(std::make_shared<MeasMode>(mInfo.getName(),
                                                                   measModeId,
                                                                   measSytemCount,
@@ -780,15 +779,6 @@ void cPower2ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply,
                 else
                     notifyError(claimresourceErrMsg);
                 break;
-
-            case readsamplerate:
-            if (reply == ack) {
-                m_nSRate = answer.toInt(&ok);
-                emit activationContinue();
-            }
-            else
-                notifyError(readsamplerateErrMsg);
-            break;
 
             case readsensechannelalias:
                 if (reply == ack) {
@@ -1168,20 +1158,11 @@ void cPower2ModuleMeasProgram::pcbserverConnect4freqChannels()
         emit activationContinue();
 }
 
-
-void cPower2ModuleMeasProgram::readSampleRate()
-{
-    // we always take the sample count from the first channels pcb server
-    m_MsgNrCmdList[m_pcbIFaceList.at(0)->getSampleRate()] = readsamplerate;
-}
-
-
 void cPower2ModuleMeasProgram::readSenseChannelInformation()
 {
     infoReadList = m_measChannelInfoHash.keys(); // we have to read information for all channels in this list
     emit activationContinue();
 }
-
 
 void cPower2ModuleMeasProgram::readSenseChannelAlias()
 {
