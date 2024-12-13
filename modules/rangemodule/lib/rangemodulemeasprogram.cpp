@@ -347,11 +347,8 @@ cRangeModuleConfigData *cRangeModuleMeasProgram::getConfData()
 
 void cRangeModuleMeasProgram::setActualValuesNames()
 {
-    cRangeMeasChannel* mchn;
-
-    for (int i = 0; i < m_ChannelList.count(); i++)
-    {
-        mchn = m_pModule->getMeasChannel(m_ChannelList.at(i));
+    for (int i = 0; i < m_ChannelList.count(); i++) {
+        cRangeMeasChannel* mchn = m_pModule->getMeasChannel(m_ChannelList.at(i));
         m_veinActValueList.at(i)->setChannelName(mchn->getAlias());
         m_veinActValueList.at(i)->setUnit(mchn->getUnit());
     }
