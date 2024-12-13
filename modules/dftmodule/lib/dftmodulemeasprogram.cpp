@@ -2,6 +2,7 @@
 #include "dftmodule.h"
 #include "dftmoduleconfiguration.h"
 #include "dftmoduleconfigdata.h"
+#include "servicechannelnamehelper.h"
 #include <errormessages.h>
 #include <movingwindowfilter.h>
 #include <timerfactoryqt.h>
@@ -511,23 +512,18 @@ cDftModuleConfigData *cDftModuleMeasProgram::getConfData()
     return qobject_cast<cDftModuleConfiguration*>(m_pConfiguration.get())->getConfigurationData();
 }
 
-
 void cDftModuleMeasProgram::setActualValuesNames()
 {
-    for(int i = 0; i < getConfData()->m_valueChannelList.count(); i++) {
+    ChannelRangeObserver::SystemObserverPtr observer = m_pModule->getSharedChannelRangeObserver();
+    const QStringList &channelList = getConfData()->m_valueChannelList;
+    for(int i = 0; i < channelList.count(); i++) {
         const QString &channelMNamesEntry = getConfData()->m_valueChannelList.at(i);
-        QString aliasedChannels = channelMNamesEntry;
-        QString unit;
-        const QStringList channelNameList = channelMNamesEntry.split('-');
-        for(const QString &channelName : channelNameList) {
-            QString alias = m_measChannelInfoHash.value(channelName).alias;
-            aliasedChannels.replace(channelName, alias);
-            unit = m_measChannelInfoHash.value(channelName).unit;
-        }
-        m_veinActValueList.at(i)->setChannelName(aliasedChannels);
-        m_veinActValueList.at(i)->setUnit(unit);
-        m_veinPolarValue.at(i)->setChannelName(aliasedChannels);
-        m_veinPolarValue.at(i)->setUnit(unit);
+        ServiceChannelNameHelper::TChannelAliasUnit aliasUnit =
+            ServiceChannelNameHelper::getChannelAndUnit(channelMNamesEntry, observer);
+        m_veinActValueList.at(i)->setChannelName(aliasUnit.m_channelAlias);
+        m_veinActValueList.at(i)->setUnit(aliasUnit.m_channelUnit);
+        m_veinPolarValue.at(i)->setChannelName(aliasUnit.m_channelAlias);
+        m_veinPolarValue.at(i)->setUnit(aliasUnit.m_channelUnit);
     }
 }
 
