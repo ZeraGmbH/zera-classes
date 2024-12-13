@@ -514,34 +514,20 @@ cDftModuleConfigData *cDftModuleMeasProgram::getConfData()
 
 void cDftModuleMeasProgram::setActualValuesNames()
 {
-    for (int i = 0; i < getConfData()->m_valueChannelList.count(); i++)
-    {
-        QStringList sl = getConfData()->m_valueChannelList.at(i).split('-');
-        QString s, name;
-        QString s1,s2,s3,s4;
-        // we have 1 or 2 entries for each value
-        s1 = s2 = m_measChannelInfoHash.value(sl.at(0)).alias;
-        s1.remove(QRegExp("[1-9][0-9]?"));
-        s2.remove(s1);
-
-        if (sl.count() == 1)
-        {
-            s = s1 + "%1" + QString(";%1;[%2]").arg(s2).arg(m_measChannelInfoHash.value(sl.at(0)).unit);
-            name = s1 + s2; // we still have to clarify translation solution
+    for(int i = 0; i < getConfData()->m_valueChannelList.count(); i++) {
+        const QString &channelMNamesEntry = getConfData()->m_valueChannelList.at(i);
+        QString aliasedChannels = channelMNamesEntry;
+        QString unit;
+        const QStringList channelNameList = channelMNamesEntry.split('-');
+        for(const QString &channelName : channelNameList) {
+            QString alias = m_measChannelInfoHash.value(channelName).alias;
+            aliasedChannels.replace(channelName, alias);
+            unit = m_measChannelInfoHash.value(channelName).unit;
         }
-        else
-        {
-            s3 = s4 = m_measChannelInfoHash.value(sl.at(1)).alias;
-            s3.remove(QRegExp("[1-9][0-9]?"));
-            s4.remove(s3);
-            s = s1 + "%1-" + s3 + "%2" + QString(";%1;%2;[%3]").arg(s2).arg(s4).arg(m_measChannelInfoHash.value(sl.at(0)).unit);
-            name = s1 + s2 + "-" + s3 +s4; // dito
-        }
-
-        m_veinActValueList.at(i)->setChannelName(name);
-        m_veinActValueList.at(i)->setUnit(m_measChannelInfoHash.value(sl.at(0)).unit);
-        m_veinPolarValue.at(i)->setChannelName(name);
-        m_veinPolarValue.at(i)->setUnit(m_measChannelInfoHash.value(sl.at(0)).unit);
+        m_veinActValueList.at(i)->setChannelName(aliasedChannels);
+        m_veinActValueList.at(i)->setUnit(unit);
+        m_veinPolarValue.at(i)->setChannelName(aliasedChannels);
+        m_veinPolarValue.at(i)->setUnit(unit);
     }
 }
 
