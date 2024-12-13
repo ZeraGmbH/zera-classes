@@ -19,6 +19,7 @@ target_include_directories(oscimodule-static
 target_link_libraries(oscimodule-static
     PUBLIC
     zera-basemodule
+    service-common
     Zera::zera-math
     Zera::zera-timers
     # ask linker to help us finding unresolved symbols
