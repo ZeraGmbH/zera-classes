@@ -4,6 +4,7 @@
 #include "demodspinterfacefft.h"
 #include "demodspinterfacerms.h"
 #include "demodspinterfacepower1.h"
+#include "demodspinterfacepower2.h"
 #include "demodspinterfacesample.h"
 #include "demodspinterfacethdn.h"
 #include "demodspinterfaceosci.h"
@@ -31,6 +32,11 @@ DspInterfacePtr DemoFactoryServiceInterfaces::createDspInterfaceRms(QStringList 
 DspInterfacePtr DemoFactoryServiceInterfaces::createDspInterfacePower1(MeasModeSelector* measMode)
 {
     return std::make_shared<DemoDspInterfacePower1>(measMode);
+}
+
+DspInterfacePtr DemoFactoryServiceInterfaces::createDspInterfacePower2(MeasModeSelector *measMode)
+{
+    return std::make_shared<DemoDspInterfacePower2>(measMode);
 }
 
 DspInterfacePtr DemoFactoryServiceInterfaces::createDspInterfaceSample(QStringList valueChannelList)
