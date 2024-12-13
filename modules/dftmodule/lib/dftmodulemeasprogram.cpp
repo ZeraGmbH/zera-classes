@@ -39,8 +39,7 @@ cDftModuleMeasProgram::cDftModuleMeasProgram(cDftModule* module, std::shared_ptr
     m_readResourceInfoDoneState.addTransition(this, &cDftModuleMeasProgram::activationLoop, &m_readResourceInfoState);
     m_pcbserverConnectState.addTransition(this, &cDftModuleMeasProgram::activationContinue, &m_readChannelInformationState);
     m_readChannelInformationState.addTransition(this, &cDftModuleMeasProgram::activationContinue, &m_readChannelAliasState);
-    m_readChannelAliasState.addTransition(this, &cDftModuleMeasProgram::activationContinue, &m_readChannelUnitState);
-    m_readChannelUnitState.addTransition(this, &cDftModuleMeasProgram::activationContinue, &m_readDspChannelState);
+    m_readChannelAliasState.addTransition(this, &cDftModuleMeasProgram::activationContinue, &m_readDspChannelState);
     m_readDspChannelState.addTransition(this, &cDftModuleMeasProgram::activationContinue, &m_readDspChannelDoneState);
     m_readDspChannelDoneState.addTransition(this, &cDftModuleMeasProgram::activationContinue, &m_dspserverConnectState);
     m_readDspChannelDoneState.addTransition(this, &cDftModuleMeasProgram::activationLoop, &m_readChannelAliasState);
@@ -62,7 +61,6 @@ cDftModuleMeasProgram::cDftModuleMeasProgram(cDftModule* module, std::shared_ptr
     m_activationMachine.addState(&m_pcbserverConnectState);
     m_activationMachine.addState(&m_readChannelInformationState);
     m_activationMachine.addState(&m_readChannelAliasState);
-    m_activationMachine.addState(&m_readChannelUnitState);
     m_activationMachine.addState(&m_readDspChannelState);
     m_activationMachine.addState(&m_readDspChannelDoneState);
     m_activationMachine.addState(&m_dspserverConnectState);
@@ -86,7 +84,6 @@ cDftModuleMeasProgram::cDftModuleMeasProgram(cDftModule* module, std::shared_ptr
     connect(&m_pcbserverConnectState, &QState::entered, this, &cDftModuleMeasProgram::pcbserverConnect);
     connect(&m_readChannelInformationState, &QState::entered, this, &cDftModuleMeasProgram::readChannelInformation);
     connect(&m_readChannelAliasState, &QState::entered, this, &cDftModuleMeasProgram::readChannelAlias);
-    connect(&m_readChannelUnitState, &QState::entered, this, &cDftModuleMeasProgram::readChannelUnit);
     connect(&m_readDspChannelState, &QState::entered, this, &cDftModuleMeasProgram::readDspChannel);
     connect(&m_readDspChannelDoneState, &QState::entered, this, &cDftModuleMeasProgram::readDspChannelDone);
     connect(&m_dspserverConnectState, &QState::entered, this, &cDftModuleMeasProgram::dspserverConnect);
@@ -438,20 +435,6 @@ void cDftModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QV
                 break;
             }
 
-            case readunit:
-            {
-                if (reply == ack) {
-                    QString unit = answer.toString();
-                    cMeasChannelInfo mi = m_measChannelInfoHash.take(channelInfoRead);
-                    mi.unit = unit;
-                    m_measChannelInfoHash[channelInfoRead] = mi;
-                    emit activationContinue();
-                }
-                else
-                    notifyError(readunitErrMsg);
-                break;
-            }
-
             case readdspchannel:
             {
                 if (reply == ack) {
@@ -714,13 +697,6 @@ void cDftModuleMeasProgram::readChannelAlias()
     channelInfoRead = channelInfoReadList.takeFirst();
     m_MsgNrCmdList[m_pcbInterface->getAlias(channelInfoRead)] = readalias;
 }
-
-
-void cDftModuleMeasProgram::readChannelUnit()
-{
-    m_MsgNrCmdList[m_pcbInterface->getUnit(channelInfoRead)] = readunit;
-}
-
 
 void cDftModuleMeasProgram::readDspChannel()
 {

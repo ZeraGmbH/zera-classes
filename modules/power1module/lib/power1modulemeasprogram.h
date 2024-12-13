@@ -31,7 +31,6 @@ enum power1moduleCmds
     claimresourcesource,
 
     readsensechannelalias,
-    readsensechannelunit,
     readsensechanneldspchannel,
 
     readsourcechannelalias,
@@ -166,7 +165,6 @@ private:
 
     QState m_readSenseChannelInformationState;
     QState m_readSenseChannelAliasState;
-    QState m_readSenseChannelUnitState;
     QState m_readSenseDspChannelState;
     QState m_readSenseChannelInformationDoneState;
 
@@ -239,7 +237,6 @@ private slots:
     void pcbserverConnect4freqChannels();
     void readSenseChannelInformation();
     void readSenseChannelAlias();
-    void readSenseChannelUnit();
     void readSenseDspChannel();
     void readSenseChannelInformationDone();
 
