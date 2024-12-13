@@ -12,12 +12,13 @@ public:
     static bool isPhaseNeutralVoltage(QString valueChannelName);
     static bool isCurrent(QString valueChannelName);
 
-    struct TChannelUnit
+    struct TChannelAliasUnit
     {
-        QString channelName;
-        QString channelUnit;
+        QString m_channelAlias;
+        QString m_channelUnit;
     };
-    static TChannelUnit getChannelAndUnit(const QString &channelOrChannelPair, ChannelRangeObserver::SystemObserverPtr observer);
+    static TChannelAliasUnit getChannelAndUnit(const QString &channelOrChannelPair,
+                                               ChannelRangeObserver::SystemObserverPtr observer);
 };
 
 #endif // SERVICECHANNELNAMEHELPER_H
