@@ -20,6 +20,7 @@ private slots:
     void rescanWithoutClear();
     void rescanWithClear();
     void checkSampleRate();
+    void checkValidChannels();
     void checkAlias();
     void checkDspChannel();
     void checkUnit();

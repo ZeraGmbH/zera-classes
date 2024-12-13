@@ -17,9 +17,10 @@ class Channel : public QObject
 {
     Q_OBJECT
 public:
+    bool m_valid = false;
     QString m_alias;
     QString m_unit;
-    int m_dspChannel;
+    int m_dspChannel = 0;
 
     Channel(const QString &channelMName,
             const NetworkConnectionInfo &netInfo,
