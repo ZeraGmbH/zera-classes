@@ -1,6 +1,7 @@
 #include "thdnmodulemeasprogram.h"
 #include "thdnmodule.h"
 #include "thdnmoduleconfiguration.h"
+#include "servicechannelnamehelper.h"
 #include "thdnmoduleconfigdata.h"
 #include "errormessages.h"
 #include <reply.h>
@@ -461,28 +462,18 @@ cThdnModuleConfigData *cThdnModuleMeasProgram::getConfData()
     return qobject_cast<cThdnModuleConfiguration*>(m_pConfiguration.get())->getConfigurationData();
 }
 
-
 void cThdnModuleMeasProgram::setActualValuesNames()
 {
-    for (int i = 0; i < getConfData()->m_valueChannelList.count(); i++)
-    {
-        QString s;
-        QString s1,s2;
-        QString name;
-
-        s1 = s2 = m_measChannelInfoHash.value(getConfData()->m_valueChannelList.at(i)).alias;
-        s1.remove(QRegExp("[1-9][0-9]?"));
-        s2.remove(s1);
-
-        s = s1 + "%1" + QString(";%1;[%]").arg(s2);
-
-        name = s1 + s2;
-
-        m_veinActValueList.at(i)->setChannelName(name);
-        m_veinActValueList.at(i)->setUnit(QString("%"));
+    ChannelRangeObserver::SystemObserverPtr observer = m_pModule->getSharedChannelRangeObserver();
+    const QStringList &channelList = getConfData()->m_valueChannelList;
+    for(int i = 0; i < channelList.count(); i++) {
+        const QString &channelMNamesEntry = getConfData()->m_valueChannelList.at(i);
+        ServiceChannelNameHelper::TChannelAliasUnit aliasUnit =
+            ServiceChannelNameHelper::getChannelAndUnit(channelMNamesEntry, observer);
+        m_veinActValueList.at(i)->setChannelName(aliasUnit.m_channelAlias);
+        m_veinActValueList.at(i)->setUnit("%"); // !!!
     }
 }
-
 
 void cThdnModuleMeasProgram::setSCPIMeasInfo()
 {
