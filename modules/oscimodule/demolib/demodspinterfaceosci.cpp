@@ -19,7 +19,7 @@ QVector<float> DemoDspInterfaceOsci::generateSineCurve(int sampleCount, int ampl
 {
     QVector<float> samples;
     for(int i = 0; i < sampleCount; i++) {
-        samples.append(amplitude * sin((2 * M_PI * i / sampleCount) + phase));
+        samples.append(amplitude * M_SQRT2 * sin((2 * M_PI * i / sampleCount) + phase));
     }
     return samples;
 }
