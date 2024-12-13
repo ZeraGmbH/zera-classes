@@ -24,3 +24,18 @@ bool ServiceChannelNameHelper::isCurrent(QString valueChannelName)
 {
     return getCurrentChannelNamesUsed().contains(valueChannelName);
 }
+
+ServiceChannelNameHelper::TChannelAliasUnit ServiceChannelNameHelper::getChannelAndUnit(const QString &channelOrChannelPair,
+                                                                                        ChannelRangeObserver::SystemObserverPtr observer)
+{
+    const QStringList channelNameList = channelOrChannelPair.split('-');
+    QString aliasedChannels = channelOrChannelPair;
+    TChannelAliasUnit ret;
+    for(const QString &channelMName : channelNameList) {
+        const ChannelRangeObserver::ChannelPtr channel = observer->getChannel(channelMName);
+        aliasedChannels.replace(channelMName, channel->m_alias);
+        ret.m_channelUnit = channel->m_unit;
+    }
+    ret.m_channelAlias = aliasedChannels;
+    return ret;
+}
