@@ -14,7 +14,7 @@ static int constexpr fftEntityId = 1060;
 
 void test_fft_module_regression::minimalSession()
 {
-    ModuleManagerTestRunner testRunner(":/session-minimal.json"); // moving window is off at the time of writing
+    ModuleManagerTestRunner testRunner(":/sessions/minimal.json"); // moving window is off at the time of writing
     VeinStorage::AbstractEventSystem* veinStorage = testRunner.getVeinStorageSystem();
     QList<int> entityList = veinStorage->getDb()->getEntityList();
     QCOMPARE(entityList.count(), 2);
@@ -23,7 +23,7 @@ void test_fft_module_regression::minimalSession()
 
 void test_fft_module_regression::moduleConfigFromResource()
 {
-    ModuleManagerTestRunner testRunner(":/session-from-resource.json");
+    ModuleManagerTestRunner testRunner(":/sessions/from-resource.json");
     VeinStorage::AbstractEventSystem* veinStorage = testRunner.getVeinStorageSystem();
     QList<int> entityList = veinStorage->getDb()->getEntityList();
     QCOMPARE(entityList.count(), 2);
@@ -36,7 +36,7 @@ void test_fft_module_regression::veinDumpInitial()
     QVERIFY(file.open(QFile::ReadOnly));
     QByteArray jsonExpected = file.readAll();
 
-    ModuleManagerTestRunner testRunner(":/session-from-resource.json");
+    ModuleManagerTestRunner testRunner(":/sessions/from-resource.json");
     VeinStorage::AbstractEventSystem* veinStorage = testRunner.getVeinStorageSystem();
     QByteArray jsonDumped;
     QBuffer buff(&jsonDumped);
@@ -51,7 +51,7 @@ static constexpr int fftResultCount = voltagePhaseNeutralCount + currentPhaseCou
 
 void test_fft_module_regression::checkActualValueCount()
 {
-    ModuleManagerTestRunner testRunner(":/session-from-resource.json");
+    ModuleManagerTestRunner testRunner(":/sessions/from-resource.json");
 
     const QList<TestDspInterfacePtr>& dspInterfaces = testRunner.getDspInterfaceList();
     QCOMPARE(dspInterfaces.count(), 1);
@@ -62,7 +62,7 @@ void test_fft_module_regression::checkActualValueCount()
 
 void test_fft_module_regression::injectValues()
 {
-    ModuleManagerTestRunner testRunner(":/session-from-resource.json");
+    ModuleManagerTestRunner testRunner(":/sessions/from-resource.json");
 
     const QList<TestDspInterfacePtr>& dspInterfaces = testRunner.getDspInterfaceList();
     QCOMPARE(dspInterfaces.count(), 1);
@@ -120,7 +120,7 @@ static QString loadFile(QString fileName)
 
 void test_fft_module_regression::dumpDspSetup()
 {
-    ModuleManagerTestRunner testRunner(":/session-from-resource.json");
+    ModuleManagerTestRunner testRunner(":/sessions/from-resource.json");
 
     const QList<TestDspInterfacePtr>& dspInterfaces = testRunner.getDspInterfaceList();
     QCOMPARE(dspInterfaces.count(), 1);
@@ -132,7 +132,7 @@ void test_fft_module_regression::dumpDspSetup()
 
 void test_fft_module_regression::dumpDspIL1ReferenceSetup()
 {
-    ModuleManagerTestRunner testRunner(":/session-ref-IL1.json");
+    ModuleManagerTestRunner testRunner(":/sessions/ref-IL1.json");
 
     const QList<TestDspInterfacePtr>& dspInterfaces = testRunner.getDspInterfaceList();
     QCOMPARE(dspInterfaces.count(), 1);

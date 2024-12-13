@@ -6,8 +6,8 @@
         <file>dumpInitial.json</file>
         <file>mt310s2-fftmodule-from-resource.xml</file>
         <file>mt310s2-fftmodule-ref-IL1.xml</file>
-        <file>session-minimal.json</file>
-        <file>session-from-resource.json</file>
-        <file>session-ref-IL1.json</file>
+        <file>sessions/minimal.json</file>
+        <file>sessions/from-resource.json</file>
+        <file>sessions/ref-IL1.json</file>
     </qresource>
 </RCC>
