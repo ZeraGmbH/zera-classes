@@ -25,6 +25,7 @@ target_link_libraries(module-service-interfaces-demolib
     rmsmodule-demolib
     samplemodule-demolib
     power1module-demolib
+    power2module-demolib
     thdnmodule-demolib
     oscimodule-demolib
     Zera::service-interfaces-demolib

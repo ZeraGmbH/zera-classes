@@ -1,0 +1,9 @@
+{
+    "modules" : [
+        {
+            "name" : "power2module",
+            "configFile" : "mt310s2-power2moduleCED.xml",
+            "id": 1090
+        }
+    ]
+}

@@ -195,7 +195,6 @@ private:
     QFinalState m_setFoutConstantState;
 
     cMovingwindowFilter m_movingwindowFilter;
-    TimerTemplateQtPtr m_demoPeriodicTimer;
 
 private slots:
     void setSCPIMeasInfo();
@@ -269,7 +268,6 @@ private slots:
     void newMeasMode(QVariant mm);
 
     void onModeTransactionOk();
-    void handleDemoActualValues();
 };
 
 }
