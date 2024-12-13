@@ -37,19 +37,8 @@ cThdnModuleMeasProgram::cThdnModuleMeasProgram(cThdnModule *module, std::shared_
     // As long as there are no tasks - ignore error
     m_channelRangeObserverScanState.addTransition(
         m_pModule->getSharedChannelRangeObserver().get(), &ChannelRangeObserver::SystemObserver::sigFullScanFinished,&m_resourceManagerConnectState);
-    m_IdentifyState.addTransition(this, &cThdnModuleMeasProgram::activationContinue, &m_readResourceTypesState);
-    m_readResourceTypesState.addTransition(this, &cThdnModuleMeasProgram::activationContinue, &m_readResourceState);
-    m_readResourceState.addTransition(this, &cThdnModuleMeasProgram::activationContinue, &m_readResourceInfosState);
-    m_readResourceInfosState.addTransition(this, &cThdnModuleMeasProgram::activationContinue, &m_readResourceInfoState);
-    m_readResourceInfoState.addTransition(this, &cThdnModuleMeasProgram::activationContinue, &m_readResourceInfoDoneState);
-    m_readResourceInfoDoneState.addTransition(this, &cThdnModuleMeasProgram::activationContinue, &m_pcbserverConnectState);
-    m_readResourceInfoDoneState.addTransition(this, &cThdnModuleMeasProgram::activationLoop, &m_readResourceInfoState);
-    m_pcbserverConnectState.addTransition(this, &cThdnModuleMeasProgram::activationContinue, &m_readChannelInformationState);
-
-    m_readChannelInformationState.addTransition(this, &cThdnModuleMeasProgram::activationContinue, &m_readDspChannelState);
-    m_readDspChannelState.addTransition(this, &cThdnModuleMeasProgram::activationContinue, &m_readDspChannelDoneState);
-    m_readDspChannelDoneState.addTransition(this, &cThdnModuleMeasProgram::activationContinue, &m_dspserverConnectState);
-    m_readDspChannelDoneState.addTransition(this, &cThdnModuleMeasProgram::activationLoop, &m_readDspChannelState);
+    m_IdentifyState.addTransition(this, &cThdnModuleMeasProgram::activationContinue, &m_pcbserverConnectState);
+    m_pcbserverConnectState.addTransition(this, &cThdnModuleMeasProgram::activationContinue, &m_dspserverConnectState);
 
     m_claimPGRMemState.addTransition(this, &cThdnModuleMeasProgram::activationContinue, &m_claimUSERMemState);
     m_claimUSERMemState.addTransition(this, &cThdnModuleMeasProgram::activationContinue, &m_var2DSPState);
@@ -60,15 +49,7 @@ cThdnModuleMeasProgram::cThdnModuleMeasProgram(cThdnModule *module, std::shared_
     m_activationMachine.addState(&m_channelRangeObserverScanState);
     m_activationMachine.addState(&m_resourceManagerConnectState);
     m_activationMachine.addState(&m_IdentifyState);
-    m_activationMachine.addState(&m_readResourceTypesState);
-    m_activationMachine.addState(&m_readResourceState);
-    m_activationMachine.addState(&m_readResourceInfosState);
-    m_activationMachine.addState(&m_readResourceInfoState);
-    m_activationMachine.addState(&m_readResourceInfoDoneState);
     m_activationMachine.addState(&m_pcbserverConnectState);
-    m_activationMachine.addState(&m_readChannelInformationState);
-    m_activationMachine.addState(&m_readDspChannelState);
-    m_activationMachine.addState(&m_readDspChannelDoneState);
     m_activationMachine.addState(&m_dspserverConnectState);
     m_activationMachine.addState(&m_claimPGRMemState);
     m_activationMachine.addState(&m_claimUSERMemState);
@@ -82,15 +63,7 @@ cThdnModuleMeasProgram::cThdnModuleMeasProgram(cThdnModule *module, std::shared_
     connect(&m_channelRangeObserverScanState, &QState::entered, this, &cThdnModuleMeasProgram::startFetchCommonRanges);
     connect(&m_resourceManagerConnectState, &QAbstractState::entered, this, &cThdnModuleMeasProgram::resourceManagerConnect);
     connect(&m_IdentifyState, &QAbstractState::entered, this, &cThdnModuleMeasProgram::sendRMIdent);
-    connect(&m_readResourceTypesState, &QAbstractState::entered, this, &cThdnModuleMeasProgram::readResourceTypes);
-    connect(&m_readResourceState, &QAbstractState::entered, this, &cThdnModuleMeasProgram::readResource);
-    connect(&m_readResourceInfosState, &QAbstractState::entered, this, &cThdnModuleMeasProgram::readResourceInfos);
-    connect(&m_readResourceInfoState, &QAbstractState::entered, this, &cThdnModuleMeasProgram::readResourceInfo);
-    connect(&m_readResourceInfoDoneState, &QAbstractState::entered, this, &cThdnModuleMeasProgram::readResourceInfoDone);
     connect(&m_pcbserverConnectState, &QAbstractState::entered, this, &cThdnModuleMeasProgram::pcbserverConnect);
-    connect(&m_readChannelInformationState, &QAbstractState::entered, this, &cThdnModuleMeasProgram::readChannelInformation);
-    connect(&m_readDspChannelState, &QAbstractState::entered, this, &cThdnModuleMeasProgram::readDspChannel);
-    connect(&m_readDspChannelDoneState, &QAbstractState::entered, this, &cThdnModuleMeasProgram::readDspChannelDone);
     connect(&m_dspserverConnectState, &QAbstractState::entered, this, &cThdnModuleMeasProgram::dspserverConnect);
     connect(&m_claimPGRMemState, &QAbstractState::entered, this, &cThdnModuleMeasProgram::claimPGRMem);
     connect(&m_claimUSERMemState, &QAbstractState::entered, this, &cThdnModuleMeasProgram::claimUSERMem);
@@ -227,7 +200,8 @@ void cThdnModuleMeasProgram::deleteDspVarList()
 void cThdnModuleMeasProgram::setDspCmdList()
 {
     QString s;
-    int samples = m_pModule->getSharedChannelRangeObserver()->getSampleRate();
+    ChannelRangeObserver::SystemObserverPtr observer = m_pModule->getSharedChannelRangeObserver();
+    int samples = observer->getSampleRate();
     m_dspInterface->addCycListItem( s = "STARTCHAIN(1,1,0x0101)"); // aktiv, prozessnr. (dummy),hauptkette 1 subkette 1 start
         m_dspInterface->addCycListItem( s = QString("CLEARN(%1,MEASSIGNAL)").arg(samples) ); // clear meassignal
         m_dspInterface->addCycListItem( s = QString("CLEARN(%1,FILTER)").arg(2*m_veinActValueList.count()+1) ); // clear the whole filter incl. count
@@ -242,9 +216,10 @@ void cThdnModuleMeasProgram::setDspCmdList()
     m_dspInterface->addCycListItem( s = "STOPCHAIN(1,0x0101)"); // ende prozessnr., hauptkette 1 subkette 1
 
     // we compute or copy our wanted actual values
-    for (int i = 0; i < m_veinActValueList.count(); i++)
-    {
-        m_dspInterface->addCycListItem( s = QString("COPYDATA(CH%1,0,MEASSIGNAL)").arg(m_measChannelInfoHash.value(getConfData()->m_valueChannelList.at(i)).dspChannelNr));
+    for (int i = 0; i < m_veinActValueList.count(); i++) {
+        QString channelMName = getConfData()->m_valueChannelList[i];
+        int dspChannel = observer->getChannel(channelMName)->m_dspChannel;
+        m_dspInterface->addCycListItem( s = QString("COPYDATA(CH%1,0,MEASSIGNAL)").arg(dspChannel));
         m_dspInterface->addCycListItem( s = QString("THDN(MEASSIGNAL,VALXTHDN+%1)").arg(i));
     }
 
@@ -334,62 +309,6 @@ void cThdnModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, Q
                     notifyError(dspactiveErrMsg);
                 break;
 
-            case readresourcetypes:
-                if ((reply == ack) && (answer.toString().contains("SENSE")))
-                    emit activationContinue();
-                else
-                    notifyError(resourcetypeErrMsg);
-                break;
-
-            case readresource:
-                if (reply == ack) {
-                    bool allfound = true;
-                    QList<QString> sl = m_measChannelInfoHash.keys();
-                    QString s = answer.toString();
-                    for (int i = 0; i < sl.count(); i++) {
-                        if (!s.contains(sl.at(i)))
-                            allfound = false;
-                    }
-                    if (allfound)
-                        emit activationContinue();
-                    else
-                        notifyError(resourceErrMsg);
-                }
-                else
-                    notifyError(resourceErrMsg);
-                break;
-
-            case readresourceinfo:
-            {
-                QStringList sl = answer.toString().split(';');
-                if ((reply == ack) && (sl.length() >= 4)) {
-                    int port = sl.at(3).toInt(&ok); // we have to set the port where we can find our meas channel
-                    if (ok) {
-                        cMeasChannelInfo mi = m_measChannelInfoHash.take(channelInfoRead);
-                        mi.pcbServersocket.m_nPort = port;
-                        m_measChannelInfoHash[channelInfoRead] = mi;
-                        emit activationContinue();
-                    }
-                    else
-                        notifyError(resourceInfoErrMsg);
-                }
-                else
-                    notifyError(resourceInfoErrMsg);
-                break;
-            }
-
-            case readdspchannel:
-                if (reply == ack) {
-                    int chnnr = answer.toInt(&ok);
-                    cMeasChannelInfo mi = m_measChannelInfoHash.take(channelInfoRead);
-                    mi.dspChannelNr = chnnr;
-                    m_measChannelInfoHash[channelInfoRead] = mi;
-                    emit activationContinue();
-                }
-                else
-                    notifyError(readdspchannelErrMsg);
-                break;
-
             case writeparameter:
                 if (reply == ack) // we ignore ack
                     ;
@@ -477,7 +396,6 @@ void cThdnModuleMeasProgram::resourceManagerConnect()
     // as this is our entry point when activating the module, we do some initialization first
     m_measChannelInfoHash.clear(); // we build up a new channel info hash
     cMeasChannelInfo mi;
-    mi.pcbServersocket = m_pModule->getNetworkConfig()->m_pcbServiceConnectionInfo; // the default from configuration file
     for (int i = 0; i < getConfData()->m_valueChannelList.count(); i++)
     {
         QStringList sl = getConfData()->m_valueChannelList.at(i).split('-');
@@ -500,47 +418,10 @@ void cThdnModuleMeasProgram::resourceManagerConnect()
     Zera::Proxy::getInstance()->startConnectionSmart(m_rmClient);
 }
 
-
 void cThdnModuleMeasProgram::sendRMIdent()
 {
     m_MsgNrCmdList[m_rmInterface.rmIdent(QString("ThdnModule%1").arg(m_pModule->getModuleNr()))] = sendrmident;
 }
-
-
-void cThdnModuleMeasProgram::readResourceTypes()
-{
-    m_MsgNrCmdList[m_rmInterface.getResourceTypes()] = readresourcetypes;
-}
-
-
-void cThdnModuleMeasProgram::readResource()
-{
-    m_MsgNrCmdList[m_rmInterface.getResources("SENSE")] = readresource;
-}
-
-
-void cThdnModuleMeasProgram::readResourceInfos()
-{
-    channelInfoReadList = m_measChannelInfoHash.keys(); // we have to read information for all channels in this list
-    emit activationContinue();
-}
-
-
-void cThdnModuleMeasProgram::readResourceInfo()
-{
-    channelInfoRead = channelInfoReadList.takeLast();
-    m_MsgNrCmdList[m_rmInterface.getResourceInfo("SENSE", channelInfoRead)] = readresourceinfo;
-}
-
-
-void cThdnModuleMeasProgram::readResourceInfoDone()
-{
-    if (channelInfoReadList.isEmpty())
-        emit activationContinue();
-    else
-        emit activationLoop();
-}
-
 
 void cThdnModuleMeasProgram::pcbserverConnect()
 {
@@ -550,26 +431,6 @@ void cThdnModuleMeasProgram::pcbserverConnect()
     connect(m_pcbClient.get(), &Zera::ProxyClient::connected, this, &cBaseMeasProgram::activationContinue);
     connect(m_pcbInterface.get(), &AbstractServerInterface::serverAnswer, this, &cThdnModuleMeasProgram::catchInterfaceAnswer);
     Zera::Proxy::getInstance()->startConnectionSmart(m_pcbClient);
-}
-
-void cThdnModuleMeasProgram::readChannelInformation()
-{
-    channelInfoReadList = m_measChannelInfoHash.keys(); // we have to read information for all channels in this list
-    emit activationContinue();
-}
-
-void cThdnModuleMeasProgram::readDspChannel()
-{
-    channelInfoRead = channelInfoReadList.takeFirst();
-    m_MsgNrCmdList[m_pcbInterface->getDSPChannel(channelInfoRead)] = readdspchannel;
-}
-
-void cThdnModuleMeasProgram::readDspChannelDone()
-{
-    if (channelInfoReadList.isEmpty())
-        emit activationContinue();
-    else
-        emit activationLoop();
 }
 
 void cThdnModuleMeasProgram::dspserverConnect()
@@ -582,7 +443,6 @@ void cThdnModuleMeasProgram::dspserverConnect()
     Zera::Proxy::getInstance()->startConnectionSmart(m_dspClient);
 }
 
-
 void cThdnModuleMeasProgram::claimPGRMem()
 {
     setDspVarList(); // first we set the var list for our dsp
@@ -590,30 +450,25 @@ void cThdnModuleMeasProgram::claimPGRMem()
     m_MsgNrCmdList[m_rmInterface.setResource("DSP1", "PGRMEMC", m_dspInterface->cmdListCount())] = claimpgrmem;
 }
 
-
 void cThdnModuleMeasProgram::claimUSERMem()
 {
    m_MsgNrCmdList[m_rmInterface.setResource("DSP1", "USERMEM", m_nDspMemUsed)] = claimusermem;
 }
-
 
 void cThdnModuleMeasProgram::varList2DSP()
 {
     m_MsgNrCmdList[m_dspInterface->varList2Dsp()] = varlist2dsp;
 }
 
-
 void cThdnModuleMeasProgram::cmdList2DSP()
 {
     m_MsgNrCmdList[m_dspInterface->cmdList2Dsp()] = cmdlist2dsp;
 }
 
-
 void cThdnModuleMeasProgram::activateDSP()
 {
     m_MsgNrCmdList[m_dspInterface->activateInterface()] = activatedsp; // aktiviert die var- und cmd-listen im dsp
 }
-
 
 void cThdnModuleMeasProgram::activateDSPdone()
 {
@@ -628,13 +483,11 @@ void cThdnModuleMeasProgram::activateDSPdone()
     emit activated();
 }
 
-
 void cThdnModuleMeasProgram::deactivateDSP()
 {
     m_bActive = false;
     m_MsgNrCmdList[m_dspInterface->deactivateInterface()] = deactivatedsp; // wat wohl
 }
-
 
 void cThdnModuleMeasProgram::freePGRMem()
 {
@@ -645,12 +498,10 @@ void cThdnModuleMeasProgram::freePGRMem()
     m_MsgNrCmdList[m_rmInterface.freeResource("DSP1", "PGRMEMC")] = freepgrmem;
 }
 
-
 void cThdnModuleMeasProgram::freeUSERMem()
 {
     m_MsgNrCmdList[m_rmInterface.freeResource("DSP1", "USERMEM")] = freeusermem;
 }
-
 
 void cThdnModuleMeasProgram::deactivateDSPdone()
 {
@@ -660,13 +511,11 @@ void cThdnModuleMeasProgram::deactivateDSPdone()
     emit deactivated();
 }
 
-
 void cThdnModuleMeasProgram::dataAcquisitionDSP()
 {
     m_pMeasureSignal->setValue(QVariant(0));
     m_MsgNrCmdList[m_dspInterface->dataAcquisition(m_pActualValuesDSP)] = dataaquistion; // we start our data aquisition now
 }
-
 
 void cThdnModuleMeasProgram::dataReadDSP()
 {
@@ -685,7 +534,6 @@ void cThdnModuleMeasProgram::dataReadDSP()
         m_pMeasureSignal->setValue(QVariant(1)); // signal measuring
     }
 }
-
 
 void cThdnModuleMeasProgram::newIntegrationtime(QVariant ti)
 {
