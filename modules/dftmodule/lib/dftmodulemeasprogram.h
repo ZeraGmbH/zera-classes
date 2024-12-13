@@ -18,10 +18,6 @@ namespace DFTMODULE
 enum dftmoduleCmds
 {
     sendrmident,
-    readresourcetypes,
-    readresource,
-    readresourceinfo,
-    readdspchannel,
     claimpgrmem,
     claimusermem,
     varlist2dsp,
@@ -61,9 +57,7 @@ private:
     VfModuleActvalue* m_pRFieldActualValue;
     QMap<QString, cMeasChannelInfo> m_measChannelInfoHash;
     QHash<QString, QString> m_ChannelSystemNameHash; // a hash for fast access to the system name with key = alias
-    QList<QString> channelInfoReadList; // a list of all channel info we have to read
     QList<int> rfieldActvalueIndexList; // an index list for access to configured actual values
-    QString channelInfoRead; // the actual channel info we are working on
 
     VfModuleComponent* m_pMeasureSignal;
     VfModuleParameter* m_pIntegrationTimeParameter;
@@ -80,15 +74,7 @@ private:
     QState m_channelRangeObserverScanState;
     QState m_resourceManagerConnectState;
     QState m_IdentifyState;
-    QState m_readResourceTypesState;
-    QState m_readResourceState;
-    QState m_readResourceInfosState;
-    QState m_readResourceInfoState;
-    QState m_readResourceInfoDoneState;
     QState m_pcbserverConnectState;
-    QState m_readChannelInformationState;
-    QState m_readDspChannelState;
-    QState m_readDspChannelDoneState;
 
     QState m_dspserverConnectState;
     QState m_claimPGRMemState;
@@ -122,17 +108,7 @@ private slots:
     void startFetchCommonRanges();
     void resourceManagerConnect();
     void sendRMIdent();
-    void readResourceTypes();
-    void readResource();
-    void readResourceInfos();
-    void readResourceInfo();
-    void readResourceInfoDone();
-
     void pcbserverConnect();
-    void readChannelInformation();
-    void readDspChannel();
-    void readDspChannelDone();
-
     void dspserverConnect();
     void claimPGRMem();
     void claimUSERMem();

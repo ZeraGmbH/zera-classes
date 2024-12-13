@@ -30,19 +30,8 @@ cDftModuleMeasProgram::cDftModuleMeasProgram(cDftModule* module, std::shared_ptr
     // As long as there are no tasks - ignore error
     m_channelRangeObserverScanState.addTransition(
         m_pModule->getSharedChannelRangeObserver().get(), &ChannelRangeObserver::SystemObserver::sigFullScanFinished,&m_resourceManagerConnectState);
-    m_IdentifyState.addTransition(this, &cDftModuleMeasProgram::activationContinue, &m_readResourceTypesState);
-    m_readResourceTypesState.addTransition(this, &cDftModuleMeasProgram::activationContinue, &m_readResourceState);
-    m_readResourceState.addTransition(this, &cDftModuleMeasProgram::activationContinue, &m_readResourceInfosState);
-    m_readResourceInfosState.addTransition(this, &cDftModuleMeasProgram::activationContinue, &m_readResourceInfoState);
-    m_readResourceInfoState.addTransition(this, &cDftModuleMeasProgram::activationContinue, &m_readResourceInfoDoneState);
-    m_readResourceInfoDoneState.addTransition(this, &cDftModuleMeasProgram::activationContinue, &m_pcbserverConnectState);
-    m_readResourceInfoDoneState.addTransition(this, &cDftModuleMeasProgram::activationLoop, &m_readResourceInfoState);
-    m_pcbserverConnectState.addTransition(this, &cDftModuleMeasProgram::activationContinue, &m_readChannelInformationState);
-
-    m_readChannelInformationState.addTransition(this, &cDftModuleMeasProgram::activationContinue, &m_readDspChannelState);
-    m_readDspChannelState.addTransition(this, &cDftModuleMeasProgram::activationContinue, &m_readDspChannelDoneState);
-    m_readDspChannelDoneState.addTransition(this, &cDftModuleMeasProgram::activationContinue, &m_dspserverConnectState);
-    m_readDspChannelDoneState.addTransition(this, &cDftModuleMeasProgram::activationLoop, &m_readDspChannelState);
+    m_IdentifyState.addTransition(this, &cDftModuleMeasProgram::activationContinue, &m_pcbserverConnectState);
+    m_pcbserverConnectState.addTransition(this, &cDftModuleMeasProgram::activationContinue, &m_dspserverConnectState);
 
     m_claimPGRMemState.addTransition(this, &cDftModuleMeasProgram::activationContinue, &m_claimUSERMemState);
     m_claimUSERMemState.addTransition(this, &cDftModuleMeasProgram::activationContinue, &m_var2DSPState);
@@ -53,15 +42,7 @@ cDftModuleMeasProgram::cDftModuleMeasProgram(cDftModule* module, std::shared_ptr
     m_activationMachine.addState(&m_channelRangeObserverScanState);
     m_activationMachine.addState(&m_resourceManagerConnectState);
     m_activationMachine.addState(&m_IdentifyState);
-    m_activationMachine.addState(&m_readResourceTypesState);
-    m_activationMachine.addState(&m_readResourceState);
-    m_activationMachine.addState(&m_readResourceInfosState);
-    m_activationMachine.addState(&m_readResourceInfoState);
-    m_activationMachine.addState(&m_readResourceInfoDoneState);
     m_activationMachine.addState(&m_pcbserverConnectState);
-    m_activationMachine.addState(&m_readChannelInformationState);
-    m_activationMachine.addState(&m_readDspChannelState);
-    m_activationMachine.addState(&m_readDspChannelDoneState);
     m_activationMachine.addState(&m_dspserverConnectState);
     m_activationMachine.addState(&m_claimPGRMemState);
     m_activationMachine.addState(&m_claimUSERMemState);
@@ -75,15 +56,7 @@ cDftModuleMeasProgram::cDftModuleMeasProgram(cDftModule* module, std::shared_ptr
     connect(&m_channelRangeObserverScanState, &QState::entered, this, &cDftModuleMeasProgram::startFetchCommonRanges);
     connect(&m_resourceManagerConnectState, &QState::entered, this, &cDftModuleMeasProgram::resourceManagerConnect);
     connect(&m_IdentifyState, &QState::entered, this, &cDftModuleMeasProgram::sendRMIdent);
-    connect(&m_readResourceTypesState, &QState::entered, this, &cDftModuleMeasProgram::readResourceTypes);
-    connect(&m_readResourceState, &QState::entered, this, &cDftModuleMeasProgram::readResource);
-    connect(&m_readResourceInfosState, &QState::entered, this, &cDftModuleMeasProgram::readResourceInfos);
-    connect(&m_readResourceInfoState, &QState::entered, this, &cDftModuleMeasProgram::readResourceInfo);
-    connect(&m_readResourceInfoDoneState, &QState::entered, this, &cDftModuleMeasProgram::readResourceInfoDone);
     connect(&m_pcbserverConnectState, &QState::entered, this, &cDftModuleMeasProgram::pcbserverConnect);
-    connect(&m_readChannelInformationState, &QState::entered, this, &cDftModuleMeasProgram::readChannelInformation);
-    connect(&m_readDspChannelState, &QState::entered, this, &cDftModuleMeasProgram::readDspChannel);
-    connect(&m_readDspChannelDoneState, &QState::entered, this, &cDftModuleMeasProgram::readDspChannelDone);
     connect(&m_dspserverConnectState, &QState::entered, this, &cDftModuleMeasProgram::dspserverConnect);
     connect(&m_claimPGRMemState, &QState::entered, this, &cDftModuleMeasProgram::claimPGRMem);
     connect(&m_claimUSERMemState, &QState::entered, this, &cDftModuleMeasProgram::claimUSERMem);
@@ -271,7 +244,8 @@ void cDftModuleMeasProgram::deleteDspVarList()
 void cDftModuleMeasProgram::setDspCmdList()
 {
     QString s;
-    int samples = m_pModule->getSharedChannelRangeObserver()->getSampleRate();
+    ChannelRangeObserver::SystemObserverPtr observer = m_pModule->getSharedChannelRangeObserver();
+    int samples = observer->getSampleRate();
     m_dspInterface->addCycListItem( s = "STARTCHAIN(1,1,0x0101)"); // aktiv, prozessnr. (dummy),hauptkette 1 subkette 1 start
         m_dspInterface->addCycListItem( s = QString("CLEARN(%1,MEASSIGNAL)").arg(samples) ); // clear meassignal
         m_dspInterface->addCycListItem( s = QString("CLEARN(%1,FILTER)").arg(2*2*m_veinActValueList.count()+1) ); // clear the whole filter incl. count
@@ -288,13 +262,17 @@ void cDftModuleMeasProgram::setDspCmdList()
     // we compute or copy our wanted actual values
     for (int i = 0; i < getConfData()->m_valueChannelList.count(); i++)
     {
-        QStringList sl = getConfData()->m_valueChannelList.at(i).split('-');
+        QStringList channelMNameList = getConfData()->m_valueChannelList.at(i).split('-');
         // we have 1 or 2 entries for each value
-        if (sl.count() == 1)
-            m_dspInterface->addCycListItem( s = QString("COPYDATA(CH%1,0,MEASSIGNAL)").arg(m_measChannelInfoHash.value(sl.at(0)).dspChannelNr));
-        else
-            m_dspInterface->addCycListItem( s = QString("COPYDIFF(CH%1,CH%2,MEASSIGNAL)").arg(m_measChannelInfoHash.value(sl.at(0)).dspChannelNr)
-                                                                                      .arg(m_measChannelInfoHash.value(sl.at(1)).dspChannelNr));
+        if (channelMNameList.count() == 1) {
+            int dspChannel = observer->getChannel(channelMNameList[0])->m_dspChannel;
+            m_dspInterface->addCycListItem( s = QString("COPYDATA(CH%1,0,MEASSIGNAL)").arg(dspChannel));
+        }
+        else {
+            int dspChannel0 = observer->getChannel(channelMNameList[0])->m_dspChannel;
+            int dspChannel1 = observer->getChannel(channelMNameList[1])->m_dspChannel;
+            m_dspInterface->addCycListItem( s = QString("COPYDIFF(CH%1,CH%2,MEASSIGNAL)").arg(dspChannel0).arg(dspChannel1));
+        }
         m_dspInterface->addCycListItem( s = QString("DFT(%1,MEASSIGNAL,VALXDFT+%2)").arg(getConfData()->m_nDftOrder).arg(2*i));
     }
 
@@ -370,69 +348,6 @@ void cDftModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QV
                 else
                     notifyError(dspactiveErrMsg);
                 break;
-
-            case readresourcetypes:
-                if ((reply == ack) && (answer.toString().contains("SENSE")))
-                    emit activationContinue();
-                else
-                    notifyError(resourcetypeErrMsg);
-                break;
-
-            case readresource:
-            {
-                if (reply == ack) {
-                    bool allfound = true;
-                    QList<QString> sl = m_measChannelInfoHash.keys();
-                    QString s = answer.toString();
-                    for (int i = 0; i < sl.count(); i++) {
-                        if (!s.contains(sl.at(i)))
-                            allfound = false;
-                    }
-                    if (allfound)
-                        emit activationContinue();
-                    else
-                        notifyError(resourceErrMsg);
-                }
-                else
-                    notifyError(resourceErrMsg);
-                break;
-            }
-
-            case readresourceinfo:
-            {
-                QStringList sl = answer.toString().split(';');
-                if ((reply == ack) && (sl.length() >= 4)) {
-                    bool ok;
-                    int port = sl.at(3).toInt(&ok); // we have to set the port where we can find our meas channel
-                    if (ok) {
-                        cMeasChannelInfo mi = m_measChannelInfoHash.take(channelInfoRead);
-                        mi.pcbServersocket.m_nPort = port;
-                        m_measChannelInfoHash[channelInfoRead] = mi;
-                        emit activationContinue();
-                    }
-                    else
-                        notifyError(resourceInfoErrMsg);
-                }
-                else
-                    notifyError(resourceInfoErrMsg);
-                break;
-            }
-
-            case readdspchannel:
-            {
-                if (reply == ack) {
-                    bool ok;
-                    int chnnr = answer.toInt(&ok);
-                    cMeasChannelInfo mi = m_measChannelInfoHash.take(channelInfoRead);
-                    mi.dspChannelNr = chnnr;
-                    m_measChannelInfoHash[channelInfoRead] = mi;
-                    emit activationContinue();
-                }
-                else
-                    notifyError(readdspchannelErrMsg);
-                break;
-            }
-
 
             case writeparameter:
                 if (reply == ack) // we ignore ack
@@ -585,7 +500,6 @@ void cDftModuleMeasProgram::resourceManagerConnect()
     // as this is our entry point when activating the module, we do some initialization first
     m_measChannelInfoHash.clear(); // we build up a new channel info hash
     cMeasChannelInfo mi;
-    mi.pcbServersocket = m_pModule->getNetworkConfig()->m_pcbServiceConnectionInfo; // the default from configuration file
     for (int i = 0; i < getConfData()->m_valueChannelList.count(); i++)
     {
         QStringList sl = getConfData()->m_valueChannelList.at(i).split('-');
@@ -615,42 +529,6 @@ void cDftModuleMeasProgram::sendRMIdent()
     m_MsgNrCmdList[m_rmInterface.rmIdent(QString("DftModule%1").arg(m_pModule->getModuleNr()))] = sendrmident;
 }
 
-
-void cDftModuleMeasProgram::readResourceTypes()
-{
-    m_MsgNrCmdList[m_rmInterface.getResourceTypes()] = readresourcetypes;
-}
-
-
-void cDftModuleMeasProgram::readResource()
-{
-    m_MsgNrCmdList[m_rmInterface.getResources("SENSE")] = readresource;
-}
-
-
-void cDftModuleMeasProgram::readResourceInfos()
-{
-    channelInfoReadList = m_measChannelInfoHash.keys(); // we have to read information for all channels in this list
-    emit activationContinue();
-}
-
-
-void cDftModuleMeasProgram::readResourceInfo()
-{
-    channelInfoRead = channelInfoReadList.takeLast();
-    m_MsgNrCmdList[m_rmInterface.getResourceInfo("SENSE", channelInfoRead)] = readresourceinfo;
-}
-
-
-void cDftModuleMeasProgram::readResourceInfoDone()
-{
-    if (channelInfoReadList.isEmpty())
-        emit activationContinue();
-    else
-        emit activationLoop();
-}
-
-
 void cDftModuleMeasProgram::pcbserverConnect()
 {
     m_pcbClient = Zera::Proxy::getInstance()->getConnectionSmart(m_pModule->getNetworkConfig()->m_pcbServiceConnectionInfo,
@@ -659,27 +537,6 @@ void cDftModuleMeasProgram::pcbserverConnect()
     connect(m_pcbClient.get(), &Zera::ProxyClient::connected, this, &cBaseMeasProgram::activationContinue);
     connect(m_pcbInterface.get(), &AbstractServerInterface::serverAnswer, this, &cDftModuleMeasProgram::catchInterfaceAnswer);
     Zera::Proxy::getInstance()->startConnectionSmart(m_pcbClient);
-}
-
-void cDftModuleMeasProgram::readChannelInformation()
-{
-    channelInfoReadList = m_measChannelInfoHash.keys(); // we have to read information for all channels in this list
-    emit activationContinue();
-}
-
-
-void cDftModuleMeasProgram::readDspChannel()
-{
-    channelInfoRead = channelInfoReadList.takeFirst();
-    m_MsgNrCmdList[m_pcbInterface->getDSPChannel(channelInfoRead)] = readdspchannel;
-}
-
-void cDftModuleMeasProgram::readDspChannelDone()
-{
-    if (channelInfoReadList.isEmpty())
-        emit activationContinue();
-    else
-        emit activationLoop();
 }
 
 void cDftModuleMeasProgram::dspserverConnect()
