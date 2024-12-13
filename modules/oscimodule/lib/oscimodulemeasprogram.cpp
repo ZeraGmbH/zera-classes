@@ -21,6 +21,9 @@ cOsciModuleMeasProgram::cOsciModuleMeasProgram(cOsciModule* module, std::shared_
         getConfData()->m_valueChannelList,
         getConfData()->m_nInterpolation);
 
+    // As long as there are no tasks - ignore error
+    m_channelRangeObserverScanState.addTransition(
+        m_pModule->getSharedChannelRangeObserver().get(), &ChannelRangeObserver::SystemObserver::sigFullScanFinished,&m_resourceManagerConnectState);
     m_IdentifyState.addTransition(this, &cOsciModuleMeasProgram::activationContinue, &m_readResourceTypesState);
     m_readResourceTypesState.addTransition(this, &cOsciModuleMeasProgram::activationContinue, &m_readResourceState);
     m_readResourceState.addTransition(this, &cOsciModuleMeasProgram::activationContinue, &m_readResourceInfosState);
@@ -42,6 +45,7 @@ cOsciModuleMeasProgram::cOsciModuleMeasProgram(cOsciModule* module, std::shared_
     m_cmd2DSPState.addTransition(this, &cOsciModuleMeasProgram::activationContinue, &m_activateDSPState);
     m_activateDSPState.addTransition(this, &cOsciModuleMeasProgram::activationContinue, &m_loadDSPDoneState);
 
+    m_activationMachine.addState(&m_channelRangeObserverScanState);
     m_activationMachine.addState(&m_resourceManagerConnectState);
     m_activationMachine.addState(&m_IdentifyState);
     m_activationMachine.addState(&m_readResourceTypesState);
@@ -64,8 +68,9 @@ cOsciModuleMeasProgram::cOsciModuleMeasProgram(cOsciModule* module, std::shared_
     m_activationMachine.addState(&m_activateDSPState);
     m_activationMachine.addState(&m_loadDSPDoneState);
 
-    m_activationMachine.setInitialState(&m_resourceManagerConnectState);
+    m_activationMachine.setInitialState(&m_channelRangeObserverScanState);
 
+    connect(&m_channelRangeObserverScanState, &QState::entered, this, &cOsciModuleMeasProgram::startFetchCommonRanges);
     connect(&m_resourceManagerConnectState, &QState::entered, this, &cOsciModuleMeasProgram::resourceManagerConnect);
     connect(&m_IdentifyState, &QState::entered, this, &cOsciModuleMeasProgram::sendRMIdent);
     connect(&m_readResourceTypesState, &QState::entered, this, &cOsciModuleMeasProgram::readResourceTypes);
@@ -512,6 +517,11 @@ void cOsciModuleMeasProgram::setInterfaceActualValues(QVector<float> *actualValu
             m_veinActValueList.at(i)->setValue(list); // and set entities
         }
     }
+}
+
+void cOsciModuleMeasProgram::startFetchCommonRanges()
+{
+    m_pModule->getSharedChannelRangeObserver()->startFullScan();
 }
 
 void cOsciModuleMeasProgram::resourceManagerConnect()
