@@ -19,6 +19,7 @@ target_include_directories(thdnmodule-static
 target_link_libraries(thdnmodule-static
     PUBLIC
     zera-basemodule
+    service-common
     Zera::zera-math
     Zera::zera-timers
     # ask linker to help us finding unresolved symbols
