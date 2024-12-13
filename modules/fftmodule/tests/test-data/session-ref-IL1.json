@@ -1,0 +1,9 @@
+{
+    "modules" : [
+        {
+          "name" : "fftmodule",
+          "configFile" : ":/mt310s2-fftmodule-ref-IL1.xml",
+          "id": 1060
+        }
+    ]
+}

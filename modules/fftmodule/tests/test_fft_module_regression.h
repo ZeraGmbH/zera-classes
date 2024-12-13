@@ -13,6 +13,7 @@ private slots:
     void checkActualValueCount();
     void injectValues();
     void dumpDspSetup();
+    void dumpDspIL1ReferenceSetup();
 };
 
 #endif // TEST_FFT_MODULE_REGRESSION_H

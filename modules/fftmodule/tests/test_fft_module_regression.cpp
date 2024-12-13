@@ -129,3 +129,15 @@ void test_fft_module_regression::dumpDspSetup()
     QString measProgramExpected = loadFile(":/dspDumps/dumpMeasProgram.json");
     QVERIFY(TestLogHelpers::compareAndLogOnDiff(measProgramExpected, measProgramDumped));
 }
+
+void test_fft_module_regression::dumpDspIL1ReferenceSetup()
+{
+    ModuleManagerTestRunner testRunner(":/session-ref-IL1.json");
+
+    const QList<TestDspInterfacePtr>& dspInterfaces = testRunner.getDspInterfaceList();
+    QCOMPARE(dspInterfaces.count(), 1);
+
+    QString measProgramDumped = TestLogHelpers::dump(dspInterfaces[0]->dumpAll());
+    QString measProgramExpected = loadFile(":/dspDumps/dump-ref-IL1.json");
+    QVERIFY(TestLogHelpers::compareAndLogOnDiff(measProgramExpected, measProgramDumped));
+}
