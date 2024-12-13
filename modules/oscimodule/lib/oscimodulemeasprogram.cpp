@@ -1,6 +1,7 @@
 #include "oscimodulemeasprogram.h"
 #include "oscimodule.h"
 #include "oscimoduleconfiguration.h"
+#include "servicechannelnamehelper.h"
 #include <stringvalidator.h>
 #include <intvalidator.h>
 #include <errormessages.h>
@@ -463,16 +464,14 @@ cOsciModuleConfigData *cOsciModuleMeasProgram::getConfData()
 
 void cOsciModuleMeasProgram::setActualValuesNames()
 {
-    for (int i = 0; i < getConfData()->m_valueChannelList.count(); i++) {
-        QString s1,s2;
-        s1 = s2 = m_measChannelInfoHash.value(getConfData()->m_valueChannelList.at(i)).alias;
-        s1.remove(QRegExp("[1-9][0-9]?"));
-        s2.remove(s1);
-
-        QString name = s1 + s2;
-
-        m_veinActValueList.at(i)->setChannelName(name);
-        m_veinActValueList.at(i)->setUnit(m_measChannelInfoHash.value(getConfData()->m_valueChannelList.at(i)).unit);
+    ChannelRangeObserver::SystemObserverPtr observer = m_pModule->getSharedChannelRangeObserver();
+    const QStringList &channelList = getConfData()->m_valueChannelList;
+    for(int i = 0; i < channelList.count(); i++) {
+        const QString &channelMNamesEntry = getConfData()->m_valueChannelList.at(i);
+        ServiceChannelNameHelper::TChannelAliasUnit aliasUnit =
+            ServiceChannelNameHelper::getChannelAndUnit(channelMNamesEntry, observer);
+        m_veinActValueList.at(i)->setChannelName(aliasUnit.m_channelAlias);
+        m_veinActValueList.at(i)->setUnit(aliasUnit.m_channelUnit);
     }
 }
 
