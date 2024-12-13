@@ -10,7 +10,6 @@ struct cMeasChannelInfo
 {
     quint8 dspChannelNr;
     double m_fUrValue; // the channels actual upper range value
-    QString alias;
     NetworkConnectionInfo pcbServersocket;
     Zera::cPCBInterface* pcbIFace;
 };

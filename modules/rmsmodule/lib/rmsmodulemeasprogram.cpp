@@ -31,11 +31,12 @@ cRmsModuleMeasProgram::cRmsModuleMeasProgram(cRmsModule* module,
     m_readResourceInfoDoneState.addTransition(this, &cRmsModuleMeasProgram::activationContinue, &m_pcbserverConnectState);
     m_readResourceInfoDoneState.addTransition(this, &cRmsModuleMeasProgram::activationLoop, &m_readResourceInfoState);
     m_pcbserverConnectState.addTransition(this, &cRmsModuleMeasProgram::activationContinue, &m_readChannelInformationState);
-    m_readChannelInformationState.addTransition(this, &cRmsModuleMeasProgram::activationContinue, &m_readChannelAliasState);
-    m_readChannelAliasState.addTransition(this, &cRmsModuleMeasProgram::activationContinue, &m_readDspChannelState);
+
+    m_readChannelInformationState.addTransition(this, &cRmsModuleMeasProgram::activationContinue, &m_readDspChannelState);
     m_readDspChannelState.addTransition(this, &cRmsModuleMeasProgram::activationContinue, &m_readDspChannelDoneState);
     m_readDspChannelDoneState.addTransition(this, &cRmsModuleMeasProgram::activationContinue, &m_dspserverConnectState);
-    m_readDspChannelDoneState.addTransition(this, &cRmsModuleMeasProgram::activationLoop, &m_readChannelAliasState);
+    m_readDspChannelDoneState.addTransition(this, &cRmsModuleMeasProgram::activationLoop, &m_readDspChannelState);
+
     m_claimPGRMemState.addTransition(this, &cRmsModuleMeasProgram::activationContinue, &m_claimUSERMemState);
     m_claimUSERMemState.addTransition(this, &cRmsModuleMeasProgram::activationContinue, &m_var2DSPState);
     m_var2DSPState.addTransition(this, &cRmsModuleMeasProgram::activationContinue, &m_cmd2DSPState);
@@ -52,7 +53,6 @@ cRmsModuleMeasProgram::cRmsModuleMeasProgram(cRmsModule* module,
     m_activationMachine.addState(&m_readResourceInfoDoneState);
     m_activationMachine.addState(&m_pcbserverConnectState);
     m_activationMachine.addState(&m_readChannelInformationState);
-    m_activationMachine.addState(&m_readChannelAliasState);
     m_activationMachine.addState(&m_readDspChannelState);
     m_activationMachine.addState(&m_readDspChannelDoneState);
     m_activationMachine.addState(&m_dspserverConnectState);
@@ -75,7 +75,6 @@ cRmsModuleMeasProgram::cRmsModuleMeasProgram(cRmsModule* module,
     connect(&m_readResourceInfoDoneState, &QAbstractState::entered, this, &cRmsModuleMeasProgram::readResourceInfoDone);
     connect(&m_pcbserverConnectState, &QAbstractState::entered, this, &cRmsModuleMeasProgram::pcbserverConnect);
     connect(&m_readChannelInformationState, &QAbstractState::entered, this, &cRmsModuleMeasProgram::readChannelInformation);
-    connect(&m_readChannelAliasState, &QAbstractState::entered, this, &cRmsModuleMeasProgram::readChannelAlias);
     connect(&m_readDspChannelState, &QAbstractState::entered, this, &cRmsModuleMeasProgram::readDspChannel);
     connect(&m_readDspChannelDoneState, &QAbstractState::entered, this, &cRmsModuleMeasProgram::readDspChannelDone);
     connect(&m_dspserverConnectState, &QAbstractState::entered, this, &cRmsModuleMeasProgram::dspserverConnect);
@@ -427,18 +426,6 @@ void cRmsModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QV
                 break;
             }
 
-            case readalias:
-                if (reply == ack) {
-                    QString alias = answer.toString();
-                    cMeasChannelInfo mi = m_measChannelInfoHash.take(channelInfoRead);
-                    mi.alias = alias;
-                    m_measChannelInfoHash[channelInfoRead] = mi;
-                    emit activationContinue();
-                }
-                else
-                    notifyError(readaliasErrMsg);
-                break;
-
             case readdspchannel:
                 if (reply == ack) {
                     int chnnr = answer.toInt(&ok);
@@ -618,14 +605,9 @@ void cRmsModuleMeasProgram::readChannelInformation()
     emit activationContinue();
 }
 
-void cRmsModuleMeasProgram::readChannelAlias()
-{
-    channelInfoRead = channelInfoReadList.takeFirst();
-    m_MsgNrCmdList[m_pcbInterface->getAlias(channelInfoRead)] = readalias;
-}
-
 void cRmsModuleMeasProgram::readDspChannel()
 {
+    channelInfoRead = channelInfoReadList.takeFirst();
     m_MsgNrCmdList[m_pcbInterface->getDSPChannel(channelInfoRead)] = readdspchannel;
 }
 

@@ -45,11 +45,12 @@ cThdnModuleMeasProgram::cThdnModuleMeasProgram(cThdnModule *module, std::shared_
     m_readResourceInfoDoneState.addTransition(this, &cThdnModuleMeasProgram::activationContinue, &m_pcbserverConnectState);
     m_readResourceInfoDoneState.addTransition(this, &cThdnModuleMeasProgram::activationLoop, &m_readResourceInfoState);
     m_pcbserverConnectState.addTransition(this, &cThdnModuleMeasProgram::activationContinue, &m_readChannelInformationState);
-    m_readChannelInformationState.addTransition(this, &cThdnModuleMeasProgram::activationContinue, &m_readChannelAliasState);
-    m_readChannelAliasState.addTransition(this, &cThdnModuleMeasProgram::activationContinue, &m_readDspChannelState);
+
+    m_readChannelInformationState.addTransition(this, &cThdnModuleMeasProgram::activationContinue, &m_readDspChannelState);
     m_readDspChannelState.addTransition(this, &cThdnModuleMeasProgram::activationContinue, &m_readDspChannelDoneState);
     m_readDspChannelDoneState.addTransition(this, &cThdnModuleMeasProgram::activationContinue, &m_dspserverConnectState);
-    m_readDspChannelDoneState.addTransition(this, &cThdnModuleMeasProgram::activationLoop, &m_readChannelAliasState);
+    m_readDspChannelDoneState.addTransition(this, &cThdnModuleMeasProgram::activationLoop, &m_readDspChannelState);
+
     m_claimPGRMemState.addTransition(this, &cThdnModuleMeasProgram::activationContinue, &m_claimUSERMemState);
     m_claimUSERMemState.addTransition(this, &cThdnModuleMeasProgram::activationContinue, &m_var2DSPState);
     m_var2DSPState.addTransition(this, &cThdnModuleMeasProgram::activationContinue, &m_cmd2DSPState);
@@ -66,7 +67,6 @@ cThdnModuleMeasProgram::cThdnModuleMeasProgram(cThdnModule *module, std::shared_
     m_activationMachine.addState(&m_readResourceInfoDoneState);
     m_activationMachine.addState(&m_pcbserverConnectState);
     m_activationMachine.addState(&m_readChannelInformationState);
-    m_activationMachine.addState(&m_readChannelAliasState);
     m_activationMachine.addState(&m_readDspChannelState);
     m_activationMachine.addState(&m_readDspChannelDoneState);
     m_activationMachine.addState(&m_dspserverConnectState);
@@ -89,7 +89,6 @@ cThdnModuleMeasProgram::cThdnModuleMeasProgram(cThdnModule *module, std::shared_
     connect(&m_readResourceInfoDoneState, &QAbstractState::entered, this, &cThdnModuleMeasProgram::readResourceInfoDone);
     connect(&m_pcbserverConnectState, &QAbstractState::entered, this, &cThdnModuleMeasProgram::pcbserverConnect);
     connect(&m_readChannelInformationState, &QAbstractState::entered, this, &cThdnModuleMeasProgram::readChannelInformation);
-    connect(&m_readChannelAliasState, &QAbstractState::entered, this, &cThdnModuleMeasProgram::readChannelAlias);
     connect(&m_readDspChannelState, &QAbstractState::entered, this, &cThdnModuleMeasProgram::readDspChannel);
     connect(&m_readDspChannelDoneState, &QAbstractState::entered, this, &cThdnModuleMeasProgram::readDspChannelDone);
     connect(&m_dspserverConnectState, &QAbstractState::entered, this, &cThdnModuleMeasProgram::dspserverConnect);
@@ -379,18 +378,6 @@ void cThdnModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, Q
                 break;
             }
 
-            case readalias:
-                if (reply == ack) {
-                    QString alias = answer.toString();
-                    cMeasChannelInfo mi = m_measChannelInfoHash.take(channelInfoRead);
-                    mi.alias = alias;
-                    m_measChannelInfoHash[channelInfoRead] = mi;
-                    emit activationContinue();
-                }
-                else
-                    notifyError(readaliasErrMsg);
-                break;
-
             case readdspchannel:
                 if (reply == ack) {
                     int chnnr = answer.toInt(&ok);
@@ -571,14 +558,9 @@ void cThdnModuleMeasProgram::readChannelInformation()
     emit activationContinue();
 }
 
-void cThdnModuleMeasProgram::readChannelAlias()
-{
-    channelInfoRead = channelInfoReadList.takeFirst();
-    m_MsgNrCmdList[m_pcbInterface->getAlias(channelInfoRead)] = readalias;
-}
-
 void cThdnModuleMeasProgram::readDspChannel()
 {
+    channelInfoRead = channelInfoReadList.takeFirst();
     m_MsgNrCmdList[m_pcbInterface->getDSPChannel(channelInfoRead)] = readdspchannel;
 }
 

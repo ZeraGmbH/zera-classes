@@ -33,11 +33,12 @@ cOsciModuleMeasProgram::cOsciModuleMeasProgram(cOsciModule* module, std::shared_
     m_readResourceInfoDoneState.addTransition(this, &cOsciModuleMeasProgram::activationContinue, &m_pcbserverConnectState);
     m_readResourceInfoDoneState.addTransition(this, &cOsciModuleMeasProgram::activationLoop, &m_readResourceInfoState);
     m_pcbserverConnectState.addTransition(this, &cOsciModuleMeasProgram::activationContinue, &m_readChannelInformationState);
-    m_readChannelInformationState.addTransition(this, &cOsciModuleMeasProgram::activationContinue, &m_readChannelAliasState);
-    m_readChannelAliasState.addTransition(this, &cOsciModuleMeasProgram::activationContinue, &m_readDspChannelState);
+
+    m_readChannelInformationState.addTransition(this, &cOsciModuleMeasProgram::activationContinue, &m_readDspChannelState);
     m_readDspChannelState.addTransition(this, &cOsciModuleMeasProgram::activationContinue, &m_readDspChannelDoneState);
     m_readDspChannelDoneState.addTransition(this, &cOsciModuleMeasProgram::activationContinue, &m_dspserverConnectState);
-    m_readDspChannelDoneState.addTransition(this, &cOsciModuleMeasProgram::activationLoop, &m_readChannelAliasState);
+    m_readDspChannelDoneState.addTransition(this, &cOsciModuleMeasProgram::activationLoop, &m_readDspChannelState);
+
     m_claimPGRMemState.addTransition(this, &cOsciModuleMeasProgram::activationContinue, &m_claimUSERMemState);
     m_claimUSERMemState.addTransition(this, &cOsciModuleMeasProgram::activationContinue, &m_var2DSPState);
     m_var2DSPState.addTransition(this, &cOsciModuleMeasProgram::activationContinue, &m_cmd2DSPState);
@@ -54,7 +55,6 @@ cOsciModuleMeasProgram::cOsciModuleMeasProgram(cOsciModule* module, std::shared_
     m_activationMachine.addState(&m_readResourceInfoDoneState);
     m_activationMachine.addState(&m_pcbserverConnectState);
     m_activationMachine.addState(&m_readChannelInformationState);
-    m_activationMachine.addState(&m_readChannelAliasState);
     m_activationMachine.addState(&m_readDspChannelState);
     m_activationMachine.addState(&m_readDspChannelDoneState);
     m_activationMachine.addState(&m_dspserverConnectState);
@@ -77,7 +77,6 @@ cOsciModuleMeasProgram::cOsciModuleMeasProgram(cOsciModule* module, std::shared_
     connect(&m_readResourceInfoDoneState, &QState::entered, this, &cOsciModuleMeasProgram::readResourceInfoDone);
     connect(&m_pcbserverConnectState, &QState::entered, this, &cOsciModuleMeasProgram::pcbserverConnect);
     connect(&m_readChannelInformationState, &QState::entered, this, &cOsciModuleMeasProgram::readChannelInformation);
-    connect(&m_readChannelAliasState, &QState::entered, this, &cOsciModuleMeasProgram::readChannelAlias);
     connect(&m_readDspChannelState, &QState::entered, this, &cOsciModuleMeasProgram::readDspChannel);
     connect(&m_readDspChannelDoneState, &QState::entered, this, &cOsciModuleMeasProgram::readDspChannelDone);
     connect(&m_dspserverConnectState, &QState::entered, this, &cOsciModuleMeasProgram::dspserverConnect);
@@ -376,18 +375,6 @@ void cOsciModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, Q
                 break;
             }
 
-            case readalias:
-                if (reply == ack) {
-                    QString alias = answer.toString();
-                    cMeasChannelInfo mi = m_measChannelInfoHash.take(channelInfoRead);
-                    mi.alias = alias;
-                    m_measChannelInfoHash[channelInfoRead] = mi;
-                    emit activationContinue();
-                }
-                else
-                    notifyError(readaliasErrMsg);
-                break;
-
             case readdspchannel:
                 if (reply == ack) {
                     int chnnr = answer.toInt(&ok);
@@ -584,14 +571,9 @@ void cOsciModuleMeasProgram::readChannelInformation()
     emit activationContinue();
 }
 
-void cOsciModuleMeasProgram::readChannelAlias()
-{
-    channelInfoRead = channelInfoReadList.takeFirst();
-    m_MsgNrCmdList[m_pcbInterface->getAlias(channelInfoRead)] = readalias;
-}
-
 void cOsciModuleMeasProgram::readDspChannel()
 {
+    channelInfoRead = channelInfoReadList.takeFirst();
     m_MsgNrCmdList[m_pcbInterface->getDSPChannel(channelInfoRead)] = readdspchannel;
 }
 

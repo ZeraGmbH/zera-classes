@@ -49,11 +49,11 @@ cPower2ModuleMeasProgram::cPower2ModuleMeasProgram(cPower2Module* module, std::s
     m_claimResourceSourceDoneState.addTransition(this, &cPower2ModuleMeasProgram::activationLoop, &m_claimResourceSourceState);
     m_pcbserverConnectState4measChannels.addTransition(this, &cPower2ModuleMeasProgram::activationContinue, &m_pcbserverConnectState4freqChannels);
     m_pcbserverConnectState4freqChannels.addTransition(this, &cPower2ModuleMeasProgram::activationContinue, &m_readSenseChannelInformationState);
-    m_readSenseChannelInformationState.addTransition(this, &cPower2ModuleMeasProgram::activationContinue, &m_readSenseChannelAliasState);
-    m_readSenseChannelAliasState.addTransition(this, &cPower2ModuleMeasProgram::activationContinue, &m_readSenseDspChannelState);
+
+    m_readSenseChannelInformationState.addTransition(this, &cPower2ModuleMeasProgram::activationContinue, &m_readSenseDspChannelState);
     m_readSenseDspChannelState.addTransition(this, &cPower2ModuleMeasProgram::activationContinue, &m_readSenseChannelInformationDoneState);
     m_readSenseChannelInformationDoneState.addTransition(this, &cPower2ModuleMeasProgram::activationContinue, &m_readSourceChannelInformationState);
-    m_readSenseChannelInformationDoneState.addTransition(this, &cPower2ModuleMeasProgram::activationLoop, &m_readSenseChannelAliasState);
+    m_readSenseChannelInformationDoneState.addTransition(this, &cPower2ModuleMeasProgram::activationLoop, &m_readSenseDspChannelState);
 
     m_readSourceChannelInformationState.addTransition(this, &cPower2ModuleMeasProgram::activationContinue, &m_readSourceChannelAliasState);
     m_readSourceChannelInformationState.addTransition(this, &cPower2ModuleMeasProgram::activationSkip, &m_dspserverConnectState);
@@ -96,7 +96,6 @@ cPower2ModuleMeasProgram::cPower2ModuleMeasProgram(cPower2Module* module, std::s
     m_activationMachine.addState(&m_pcbserverConnectState4freqChannels);
 
     m_activationMachine.addState(&m_readSenseChannelInformationState);
-    m_activationMachine.addState(&m_readSenseChannelAliasState);
     m_activationMachine.addState(&m_readSenseDspChannelState);
     m_activationMachine.addState(&m_readSenseChannelInformationDoneState);
 
@@ -143,7 +142,6 @@ cPower2ModuleMeasProgram::cPower2ModuleMeasProgram(cPower2Module* module, std::s
     connect(&m_pcbserverConnectState4freqChannels, &QAbstractState::entered, this, &cPower2ModuleMeasProgram::pcbserverConnect4freqChannels);
 
     connect(&m_readSenseChannelInformationState, &QAbstractState::entered, this, &cPower2ModuleMeasProgram::readSenseChannelInformation);
-    connect(&m_readSenseChannelAliasState, &QAbstractState::entered, this, &cPower2ModuleMeasProgram::readSenseChannelAlias);
     connect(&m_readSenseDspChannelState, &QAbstractState::entered, this, &cPower2ModuleMeasProgram::readSenseDspChannel);
     connect(&m_readSenseChannelInformationDoneState, &QAbstractState::entered, this, &cPower2ModuleMeasProgram::readSenseChannelInformationDone);
 
@@ -777,18 +775,6 @@ void cPower2ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply,
                     notifyError(claimresourceErrMsg);
                 break;
 
-            case readsensechannelalias:
-                if (reply == ack) {
-                    QString alias = answer.toString();
-                    cMeasChannelInfo mi = m_measChannelInfoHash.take(infoRead);
-                    mi.alias = alias;
-                    m_measChannelInfoHash[infoRead] = mi;
-                    emit activationContinue();
-                }
-                else
-                    notifyError(readaliasErrMsg);
-                break;
-
             case readsensechanneldspchannel:
                 if (reply == ack) {
                     int chnnr = answer.toInt(&ok);
@@ -1149,14 +1135,9 @@ void cPower2ModuleMeasProgram::readSenseChannelInformation()
     emit activationContinue();
 }
 
-void cPower2ModuleMeasProgram::readSenseChannelAlias()
-{
-    infoRead = infoReadList.takeFirst();
-    m_MsgNrCmdList[m_measChannelInfoHash[infoRead].pcbIFace->getAlias(infoRead)] = readsensechannelalias;
-}
-
 void cPower2ModuleMeasProgram::readSenseDspChannel()
 {
+    infoRead = infoReadList.takeFirst();
     m_MsgNrCmdList[m_measChannelInfoHash[infoRead].pcbIFace->getDSPChannel(infoRead)] = readsensechanneldspchannel;
 }
 
