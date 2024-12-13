@@ -36,7 +36,7 @@ const ChannelPtr SystemObserver::getChannel(QString channelMName) const
     if(iter != m_channelNameToChannel.constEnd())
         return iter.value();
     qWarning("SystemObserver: Channel data not found for %s!", qPrintable(channelMName));
-    return nullptr;
+    return std::make_shared<Channel>("", NetworkConnectionInfo(), m_tcpFactory);
 }
 
 const int SystemObserver::getSampleRate() const
