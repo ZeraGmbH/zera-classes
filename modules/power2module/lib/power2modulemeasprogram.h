@@ -122,6 +122,7 @@ private:
     cDspMeasData* m_pNomPower;
 
     // statemachine for activating gets the following states
+    QState m_channelRangeObserverScanState;
     QState m_resourceManagerConnectState;
     QState m_IdentifyState;
     QState m_readResourceTypesState;
@@ -200,6 +201,7 @@ private slots:
     void setSCPIMeasInfo();
     void setInterfaceActualValues(QVector<float> *actualValues);
 
+    void startFetchCommonRanges();
     void resourceManagerConnect();
     void sendRMIdent();
     void readResourceTypes();
