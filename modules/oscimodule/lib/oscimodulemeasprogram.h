@@ -18,7 +18,6 @@ enum oscimoduleCmds
     readresource,
     readresourceinfo,
     readalias,
-    readunit,
     readdspchannel,
     claimpgrmem,
     claimusermem,
@@ -81,7 +80,6 @@ private:
     QState m_pcbserverConnectState;
     QState m_readChannelInformationState;
     QState m_readChannelAliasState;
-    QState m_readChannelUnitState;
     QState m_readDspChannelState;
     QState m_readDspChannelDoneState;
 
@@ -122,7 +120,6 @@ private slots:
     void pcbserverConnect();
     void readChannelInformation();
     void readChannelAlias();
-    void readChannelUnit();
     void readDspChannel();
     void readDspChannelDone();
 
