@@ -189,10 +189,11 @@ void cDftModuleMeasProgram::generateVeinInterface()
     dValidator = new cDoubleValidator(1.0, 100.0, 0.5);
     m_pIntegrationTimeParameter->setValidator(dValidator);
 
+    QString refChannelAliasConfigured = getConfData()->m_sRefChannel.m_sPar;
     m_pRefChannelParameter = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
-                                                      key = QString("PAR_RefChannel"),
-                                                      QString("Reference channel"),
-                                                      QVariant(getConfData()->m_sRefChannel.m_sPar));
+                                                   key = QString("PAR_RefChannel"),
+                                                   QString("Reference channel"),
+                                                   refChannelAliasConfigured);
 
     m_pRefChannelParameter->setSCPIInfo(new cSCPIInfo("CONFIGURATION","REFCHANNEL", "10", "PAR_RefChannel", "0", ""));
 

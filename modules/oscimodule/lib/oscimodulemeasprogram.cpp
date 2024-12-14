@@ -147,10 +147,11 @@ void cOsciModuleMeasProgram::generateVeinInterface()
     m_pOsciCountInfo = new VfModuleMetaData(QString("OSCICount"), QVariant(n));
     m_pModule->veinModuleMetaDataList.append(m_pOsciCountInfo);
 
+    QString refChannelMNameConfigured = getConfData()->m_RefChannel.m_sPar;
     m_pRefChannelParameter = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
-                                                      key = QString("PAR_RefChannel"),
-                                                      QString("Reference channel"),
-                                                      QVariant(getConfData()->m_RefChannel.m_sPar));
+                                                   key = QString("PAR_RefChannel"),
+                                                   QString("Reference channel"),
+                                                   refChannelMNameConfigured);
 
     m_pRefChannelParameter->setSCPIInfo(new cSCPIInfo("CONFIGURATION","REFCHANNEL", "10", "PAR_RefChannel", "0", ""));
 

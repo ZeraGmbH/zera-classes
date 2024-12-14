@@ -141,10 +141,11 @@ void cFftModuleMeasProgram::generateVeinInterface()
     dValidator = new cDoubleValidator(1.0, 100.0, 0.5);
     m_pIntegrationTimeParameter->setValidator(dValidator);
 
+    QString refChannelMNameConfigured = getConfData()->m_RefChannel.m_sPar;
     m_pRefChannelParameter = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
-                                                      key = QString("PAR_RefChannel"),
-                                                      QString("Reference channel"),
-                                                      QVariant(getConfData()->m_RefChannel.m_sPar));
+                                                   key = QString("PAR_RefChannel"),
+                                                   QString("Reference channel"),
+                                                   refChannelMNameConfigured);
 
     cStringValidator *sValidator;
     sValidator = new cStringValidator(getConfData()->m_valueChannelList);
