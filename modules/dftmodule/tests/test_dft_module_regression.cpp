@@ -101,7 +101,7 @@ void test_dft_module_regression::injectActualValuesReferenceChannelUL1()
 void test_dft_module_regression::injectActualValuesReferenceChannelUL2()
 {
     ModuleManagerTestRunner testRunner(":/session-dft-no-movingwindow-ref.json");
-    setReferenceChannel(testRunner.getVfCmdEventHandlerSystemPtr(), "UL2"); // Alias (fft/osci expect channel-m-name)
+    setReferenceChannel(testRunner.getVfCmdEventHandlerSystemPtr(), "UL1", "UL2"); // Alias (fft/osci expect channel-m-name)
 
     const QList<TestDspInterfacePtr>& dspInterfaces = testRunner.getDspInterfaceList();
     QVector<float> actValues(dftResultCount * 2); // valuelist * 2 for re+im
@@ -195,14 +195,16 @@ void test_dft_module_regression::dumpDspSetup()
     QVERIFY(TestLogHelpers::compareAndLogOnDiff(measProgramExpected, measProgramDumped));
 }
 
-void test_dft_module_regression::setReferenceChannel(VfCmdEventHandlerSystemPtr vfCmdEventHandlerSystem, QString channelAlias)
+void test_dft_module_regression::setReferenceChannel(VfCmdEventHandlerSystemPtr vfCmdEventHandlerSystem,
+                                                     QString channelAliasOld,
+                                                     QString channelAliasNew)
 {
     VfCmdEventItemEntityPtr entityItem = VfEntityComponentEventItem::create(dftEntityId);
     vfCmdEventHandlerSystem->addItem(entityItem);
 
     VfClientComponentSetterPtr setter = VfClientComponentSetter::create("PAR_RefChannel", entityItem);
     entityItem->addItem(setter);
-    setter->startSetComponent("UL1", channelAlias);
+    setter->startSetComponent(channelAliasOld, channelAliasNew);
     TimeMachineObject::feedEventLoop();
 }
 

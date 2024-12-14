@@ -23,7 +23,9 @@ private:
     // DFT is the only module:
     // * for which GUI supports setting ref channel
     // * Expecting alias as parameter
-    void setReferenceChannel(VfCmdEventHandlerSystemPtr vfCmdEventHandlerSystem, QString channelAlias);
+    void setReferenceChannel(VfCmdEventHandlerSystemPtr vfCmdEventHandlerSystem,
+                             QString channelAliasOld, // MUST be correct - otherwise ignored
+                             QString channelAliasNew);
 };
 
 #endif // TEST_DFT_MODULE_REGRESSION_H
