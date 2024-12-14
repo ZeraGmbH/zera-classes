@@ -6,7 +6,6 @@
 #include <testloghelpers.h>
 #include <vs_dumpjson.h>
 #include <QSignalSpy>
-#include <QBuffer>
 #include <QTest>
 
 QTEST_MAIN(test_range_module_regression)
@@ -33,15 +32,11 @@ void test_range_module_regression::moduleConfigFromResource()
 
 void test_range_module_regression::veinDumpInitial()
 {
-    QFile file(":/dumpInitial.json");
-    QVERIFY(file.open(QFile::ReadOnly));
-    QByteArray jsonExpected = file.readAll();
-
     ModuleManagerTestRunner testRunner(":/session-range-test.json");
+
+    QByteArray jsonExpected = TestLogHelpers::loadFile(":/dumpInitial.json");
     VeinStorage::AbstractEventSystem* veinStorage = testRunner.getVeinStorageSystem();
-    QByteArray jsonDumped;
-    QBuffer buff(&jsonDumped);
-    VeinStorage::DumpJson::dumpToFile(veinStorage->getDb(),&buff, QList<int>() << rangeEntityId);
+    QByteArray jsonDumped = VeinStorage::DumpJson::dumpToByteArray(veinStorage->getDb(), QList<int>() << rangeEntityId);
 
     QVERIFY(TestLogHelpers::compareAndLogOnDiff(jsonExpected, jsonDumped));
 }
@@ -85,14 +80,9 @@ void test_range_module_regression::injectActualValues()
     dspInterfaces[dspInterfaces::RangeModuleMeasProgram]->fireActValInterrupt(rangeValues.getDspValues(), /* dummy */ 0);
     TimeMachineObject::feedEventLoop();
 
-    QFile file(":/dumpActual.json");
-    QVERIFY(file.open(QFile::ReadOnly));
-    QByteArray jsonExpected = file.readAll();
-
+    QByteArray jsonExpected = TestLogHelpers::loadFile(":/dumpActual.json");
     VeinStorage::AbstractEventSystem* veinStorage = testRunner.getVeinStorageSystem();
-    QByteArray jsonDumped;
-    QBuffer buff(&jsonDumped);
-    VeinStorage::DumpJson::dumpToFile(veinStorage->getDb(),&buff, QList<int>() << rangeEntityId);
+    QByteArray jsonDumped = VeinStorage::DumpJson::dumpToByteArray(veinStorage->getDb(), QList<int>() << rangeEntityId);
 
     QVERIFY(TestLogHelpers::compareAndLogOnDiff(jsonExpected, jsonDumped));
 }
@@ -121,14 +111,9 @@ void test_range_module_regression::injectActualValuesWithPreScaling()
     QCOMPARE(spyDspWrite.at(1).at(0), "PhaseCorrection");
     QCOMPARE(spyDspWrite.at(2).at(0), "OffsetCorrection");
 
-    QFile file(":/dumpActual-preScaled2.json");
-    QVERIFY(file.open(QFile::ReadOnly));
-    QByteArray jsonExpected = file.readAll();
-
+    QByteArray jsonExpected = TestLogHelpers::loadFile(":/dumpActual-preScaled2.json");
     VeinStorage::AbstractEventSystem* veinStorage = testRunner.getVeinStorageSystem();
-    QByteArray jsonDumped;
-    QBuffer buff(&jsonDumped);
-    VeinStorage::DumpJson::dumpToFile(veinStorage->getDb(),&buff, QList<int>() << rangeEntityId);
+    QByteArray jsonDumped = VeinStorage::DumpJson::dumpToByteArray(veinStorage->getDb(), QList<int>() << rangeEntityId);
 
     QVERIFY(TestLogHelpers::compareAndLogOnDiff(jsonExpected, jsonDumped));
 }
@@ -316,17 +301,6 @@ void test_range_module_regression::injectActualValuesCheatingEnabledWithPreScali
     QCOMPARE(expectedGainCorr, actualGainCorr);
 }
 
-static QString loadFile(QString fileName)
-{
-    QString fileData;
-    QFile file(fileName);
-    if(file.open(QFile::ReadOnly)) {
-        fileData = file.readAll();
-        file.close();
-    }
-    return fileData;
-}
-
 void test_range_module_regression::dumpDspSetup()
 {
     ModuleManagerTestRunner testRunner(":/session-range-test.json");
@@ -335,15 +309,15 @@ void test_range_module_regression::dumpDspSetup()
     QCOMPARE(dspInterfaces.count(), 3);
 
     QString obsermaticDumped = TestLogHelpers::dump(dspInterfaces[dspInterfaces::RangeObsermatic]->dumpAll());
-    QString obsermaticExpected = loadFile(":/dspDumps/dumpObsermatic.json");
+    QString obsermaticExpected = TestLogHelpers::loadFile(":/dspDumps/dumpObsermatic.json");
     QVERIFY(TestLogHelpers::compareAndLogOnDiff(obsermaticExpected, obsermaticDumped));
 
     QString adjustListDumped = TestLogHelpers::dump(dspInterfaces[dspInterfaces::AdjustManagement]->dumpAll());
-    QString adjustListExpected = loadFile(":/dspDumps/dumpAdjustManagement.json");
+    QString adjustListExpected = TestLogHelpers::loadFile(":/dspDumps/dumpAdjustManagement.json");
     QVERIFY(TestLogHelpers::compareAndLogOnDiff(adjustListExpected, adjustListDumped));
 
     QString measProgramDumped = TestLogHelpers::dump(dspInterfaces[dspInterfaces::RangeModuleMeasProgram]->dumpAll());
-    QString measProgramExpected = loadFile(":/dspDumps/dumpMeasProgram.json");
+    QString measProgramExpected = TestLogHelpers::loadFile(":/dspDumps/dumpMeasProgram.json");
     QVERIFY(TestLogHelpers::compareAndLogOnDiff(measProgramExpected, measProgramDumped));
 }
 
