@@ -6,7 +6,6 @@
 #include <testloghelpers.h>
 #include <testloghelpers.h>
 #include <scpimoduleclientblocked.h>
-#include <QBuffer>
 #include <QTest>
 
 QTEST_MAIN(test_adj_module_regression)
@@ -34,16 +33,12 @@ void test_adj_module_regression::minimalSession()
 
 void test_adj_module_regression::veinDumpInitial()
 {
-    QFile file(":/dumpInitial.json");
-    QVERIFY(file.open(QFile::ReadOnly));
-    QByteArray jsonExpected = file.readAll();
-
     ModuleManagerTestRunner testRunner(":/session-minimal.json");
+
+    QByteArray jsonExpected = TestLogHelpers::loadFile(":/dumpInitial.json");;
     VeinStorage::AbstractEventSystem* veinStorage = testRunner.getVeinStorageSystem();
-    QByteArray jsonDumped;
-    QBuffer buff(&jsonDumped);
     // just dump adjustment module to reduce FF on changing other modules
-    VeinStorage::DumpJson::dumpToFile(veinStorage->getDb(),&buff, QList<int>() << adjEntityId);
+    QByteArray jsonDumped = VeinStorage::DumpJson::dumpToByteArray(veinStorage->getDb(), QList<int>() << adjEntityId);
 
     QVERIFY(TestLogHelpers::compareAndLogOnDiff(jsonExpected, jsonDumped));
 }
