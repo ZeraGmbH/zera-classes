@@ -33,11 +33,9 @@ void test_dft_module_regression::moduleConfigFromResource()
 
 void test_dft_module_regression::veinDumpInitial()
 {
-    QFile file(":/dumpInitial.json");
-    QVERIFY(file.open(QFile::ReadOnly));
-    QByteArray jsonExpected = file.readAll();
-
     ModuleManagerTestRunner testRunner(":/session-dft-no-movingwindow-no-ref.json");
+
+    QByteArray jsonExpected = TestLogHelpers::loadFile(":/dumpInitial.json");
     VeinStorage::AbstractEventSystem* veinStorage = testRunner.getVeinStorageSystem();
     QByteArray jsonDumped = VeinStorage::DumpJson::dumpToByteArray(veinStorage->getDb(), QList<int>() << dftEntityId);
 
