@@ -1,5 +1,6 @@
 #include "test_burden1_config_load.h"
 #include "burden1moduleconfiguration.h"
+#include <testloghelpers.h>
 #include <QTest>
 
 QTEST_MAIN(test_burden1_config_load)
@@ -23,24 +24,12 @@ void test_burden1_config_load::allFilesLoaded()
     }
 }
 
-static QByteArray loadFile(QString fileName)
-{
-    QByteArray fileData;
-    QFile file(fileName);
-    if(file.open(QFile::ReadOnly)) {
-        fileData = file.readAll();
-        file.close();
-    }
-    return fileData;
-}
-
-
 void test_burden1_config_load::writtenXmlIsStillValid()
 {
     const QFileInfoList fileList = QDir(QStringLiteral(CONFIG_SOURCES_BURDEN1MODULE)).entryInfoList(QStringList() << "*.xml");
     bool allOk = true;
     for(const auto &fileInfo : fileList) {
-        QByteArray xmlConfOrig = loadFile(fileInfo.absoluteFilePath());
+        QByteArray xmlConfOrig = TestLogHelpers::loadFile(fileInfo.absoluteFilePath());
         BURDEN1MODULE::cBurden1ModuleConfiguration moduleConfig;
         moduleConfig.setConfiguration(xmlConfOrig);
         if(!moduleConfig.isConfigured()) {
