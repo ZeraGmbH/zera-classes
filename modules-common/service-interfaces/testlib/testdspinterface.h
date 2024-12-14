@@ -10,16 +10,23 @@ class TestDspInterface : public MockDspInterface
     Q_OBJECT
 public:
     TestDspInterface(QStringList valueNamesList);
-    QStringList getValueList();
+    quint32 dspMemoryWrite(cDspMeasData* memgroup) override;
 
-    QJsonObject dumpAll();
+    QStringList getValueList();
+    QJsonObject dumpAll(bool dumpVarWrite = false);
     QJsonObject dumpMemoryGroups();
     QJsonObject dumpVarList(QJsonObject inData);
     QStringList dumpCycListItem();
+    QJsonArray dumpVariablesWritten();
 private:
     QString dspVarDataTypeToJson(int type);
     QString dspVarSegmentToJson(int segment);
     QStringList m_valueNamesList;
+    struct TVarsWritten {
+        QString varName;
+        QVector<float> dataWritten;
+    };
+    QList<TVarsWritten> m_valuesWritten;
 };
 
 typedef std::shared_ptr<TestDspInterface> TestDspInterfacePtr;

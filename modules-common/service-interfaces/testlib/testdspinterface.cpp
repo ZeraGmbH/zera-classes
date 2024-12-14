@@ -6,18 +6,28 @@ TestDspInterface::TestDspInterface(QStringList valueNamesList) :
 {
 }
 
+quint32 TestDspInterface::dspMemoryWrite(cDspMeasData *memgroup)
+{
+    struct TVarsWritten write = { memgroup->getName(), memgroup->getData() };
+    m_valuesWritten.append(write);
+    emit sigDspMemoryWrite(memgroup->getName(), memgroup->getData());
+    return sendCmdResponse("");
+}
+
 QStringList TestDspInterface::getValueList()
 {
     return m_valueNamesList;
 }
 
-QJsonObject TestDspInterface::dumpAll()
+QJsonObject TestDspInterface::dumpAll(bool dumpVarWrite)
 {
     QJsonObject dump;
     QJsonObject memGroups = dumpMemoryGroups();
     memGroups = dumpVarList(memGroups);
     dump.insert("1-MemGroups", memGroups);
     dump.insert("2-CmdList", QJsonArray::fromStringList(dumpCycListItem()));
+    if(dumpVarWrite)
+        dump.insert("3-VarsWritten", dumpVariablesWritten());
     return dump;
 }
 
@@ -52,6 +62,7 @@ QJsonObject TestDspInterface::dumpVarList(QJsonObject inData)
         jsonVar.insert("Size", size);
         jsonVar.insert("TypeData", dspVarDataTypeToJson(dataType));
         jsonVar.insert("Segment", dspVarSegmentToJson(segment));
+
         memGroupVariables[memGroup].append(jsonVar);
     }
     QJsonObject outData = inData;
@@ -66,6 +77,22 @@ QJsonObject TestDspInterface::dumpVarList(QJsonObject inData)
 QStringList TestDspInterface::dumpCycListItem()
 {
     return d_ptr->getCyclicCmdList();
+}
+
+QJsonArray TestDspInterface::dumpVariablesWritten()
+{
+    QJsonArray arr;
+    for(const TVarsWritten& entry : qAsConst(m_valuesWritten)) {
+        QJsonObject values;
+        for(int i=0; i<entry.dataWritten.count(); i++) {
+            QString num = QString("0000%1").arg(i).right(4);
+            QString key = QString("%1+%2").arg(entry.varName, num);
+            values.insert(key,
+                          QString("%1").arg(entry.dataWritten[i], -1, 'g', 6).toDouble());
+        }
+        arr.append(values);
+    }
+    return arr;
 }
 
 QString TestDspInterface::dspVarDataTypeToJson(int type)
