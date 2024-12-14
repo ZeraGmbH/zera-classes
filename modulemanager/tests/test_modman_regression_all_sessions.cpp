@@ -6,7 +6,6 @@
 #include "testlicensesystem.h"
 #include <vs_dumpjson.h>
 #include <testloghelpers.h>
-#include <QBuffer>
 #include <QTest>
 
 QTEST_MAIN(test_modman_regression_all_sessions)
@@ -47,12 +46,8 @@ void test_modman_regression_all_sessions::allSessionsVeinDumps()
     modMan.changeSessionFile(sessionFileName);
     modMan.waitUntilModulesAreReady();
 
-    QFile file(QString(":/veinDumps/%1").arg(sessionFileName));
-    QVERIFY(file.open(QFile::ReadOnly));
-    QByteArray jsonExpected = file.readAll();
-    QByteArray jsonDumped;
-    QBuffer buff(&jsonDumped);
-    VeinStorage::DumpJson::dumpToFile(modManSetupFacade.getStorageSystem()->getDb(), &buff, QList<int>(), QList<int>() << 9999);
+    QByteArray jsonExpected = TestLogHelpers::loadFile(QString(":/veinDumps/%1").arg(sessionFileName));
+    QByteArray jsonDumped = VeinStorage::DumpJson::dumpToByteArray(modManSetupFacade.getStorageSystem()->getDb(), QList<int>(), QList<int>() << 9999);
 
     modMan.destroyModulesAndWaitUntilAllShutdown();
 
@@ -97,10 +92,7 @@ bool test_modman_regression_all_sessions::checkUniqueEntityIdNames(const QString
         modMan.changeSessionFile(sessionFileName);
         modMan.waitUntilModulesAreReady();
 
-        QByteArray jsonDumpedRaw;
-        QBuffer buff(&jsonDumpedRaw);
-        VeinStorage::DumpJson::dumpToFile(modManSetupFacade.getStorageSystem()->getDb(), &buff);
-
+        QByteArray jsonDumpedRaw = VeinStorage::DumpJson::dumpToByteArray(modManSetupFacade.getStorageSystem()->getDb());
         QJsonObject jsonDumped = QJsonDocument::fromJson(jsonDumpedRaw).object();
         for(auto iter=jsonDumped.constBegin(); iter!=jsonDumped.constEnd(); ++iter) {
             int entityId = iter.key().toInt();
