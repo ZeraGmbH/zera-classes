@@ -1,5 +1,6 @@
 #include "test_sem1_config_load.h"
 #include "sem1moduleconfiguration.h"
+#include <testloghelpers.h>
 #include <memory>
 #include <QSignalSpy>
 #include <QTest>
@@ -57,23 +58,12 @@ private:
 
 QVector<PowConfig> ConfFileLoader::m_confFiles;
 
-static QByteArray loadFile(QString fileName)
-{
-    QByteArray fileData;
-    QFile file(fileName);
-    if(file.open(QFile::ReadOnly)) {
-        fileData = file.readAll();
-        file.close();
-    }
-    return fileData;
-}
-
 void test_sem1_config_load::writtenXmlIsStillValid()
 {
     const QFileInfoList fileList = QDir(QStringLiteral(CONFIG_SOURCES_SEM1MODULE)).entryInfoList(QStringList() << "*.xml");
     bool allOk = true;
     for(const auto &fileInfo : fileList) {
-        QByteArray xmlConfOrig = loadFile(fileInfo.absoluteFilePath());
+        QByteArray xmlConfOrig = TestLogHelpers::loadFile(fileInfo.absoluteFilePath());
         SEM1MODULE::cSem1ModuleConfiguration moduleConfig;
         moduleConfig.setConfiguration(xmlConfOrig);
         if(!moduleConfig.isConfigured()) {
