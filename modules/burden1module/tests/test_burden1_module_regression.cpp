@@ -5,7 +5,6 @@
 #include <vs_dumpjson.h>
 #include <timemachineobject.h>
 #include <testloghelpers.h>
-#include <QBuffer>
 #include <QTest>
 
 QTEST_MAIN(test_burden1_module_regression)
@@ -27,16 +26,11 @@ void test_burden1_module_regression::minimalSession()
 
 void test_burden1_module_regression::veinDumpInitial()
 {
-    QFile file(":/dumpInitial.json");
-    QVERIFY(file.open(QFile::ReadOnly));
-    QByteArray jsonExpected = file.readAll();
-
     ModuleManagerTestRunner testRunner(":/session-minimal.json");
     VeinStorage::AbstractEventSystem* veinStorage = testRunner.getVeinStorageSystem();
-    QByteArray jsonDumped;
-    QBuffer buff(&jsonDumped);
-    VeinStorage::DumpJson::dumpToFile(veinStorage->getDb(),&buff, QList<int>() << dftBurdenCurrentId << dftBurdenVoltageId);
 
+    QByteArray jsonDumped = VeinStorage::DumpJson::dumpToByteArray(veinStorage->getDb(), QList<int>() << dftBurdenCurrentId << dftBurdenVoltageId);
+    QByteArray jsonExpected = TestLogHelpers::loadFile(":/dumpInitial.json");
     QVERIFY(TestLogHelpers::compareAndLogOnDiff(jsonExpected, jsonDumped));
 }
 
