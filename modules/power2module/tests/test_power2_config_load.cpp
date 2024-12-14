@@ -1,6 +1,7 @@
 #include "test_power2_config_load.h"
 #include "power2moduleconfigdata.h"
 #include "power2moduleconfiguration.h"
+#include <testloghelpers.h>
 #include <memory>
 #include <QSignalSpy>
 #include <QTest>
@@ -67,23 +68,12 @@ void test_power2_config_load::modeListCountSameAsArraySize()
     }
 }
 
-static QByteArray loadFile(QString fileName)
-{
-    QByteArray fileData;
-    QFile file(fileName);
-    if(file.open(QFile::ReadOnly)) {
-        fileData = file.readAll();
-        file.close();
-    }
-    return fileData;
-}
-
 void test_power2_config_load::writtenXmlIsStillValid()
 {
     const QFileInfoList fileList = QDir(QStringLiteral(CONFIG_SOURCES_POWER2MODULE)).entryInfoList(QStringList() << "*.xml");
     bool allOk = true;
     for(const auto &fileInfo : fileList) {
-        QByteArray xmlConfOrig = loadFile(fileInfo.absoluteFilePath());
+        QByteArray xmlConfOrig = TestLogHelpers::loadFile(fileInfo.absoluteFilePath());
         POWER2MODULE::cPower2ModuleConfiguration moduleConfig;
         moduleConfig.setConfiguration(xmlConfOrig);
         if(!moduleConfig.isConfigured()) {
