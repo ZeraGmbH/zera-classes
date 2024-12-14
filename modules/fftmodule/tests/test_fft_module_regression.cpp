@@ -4,7 +4,6 @@
 #include <vs_dumpjson.h>
 #include <timemachineobject.h>
 #include <testloghelpers.h>
-#include <QBuffer>
 #include <cmath>
 #include <QTest>
 
@@ -32,15 +31,11 @@ void test_fft_module_regression::moduleConfigFromResource()
 
 void test_fft_module_regression::veinDumpInitial()
 {
-    QFile file(":/dumpInitial.json");
-    QVERIFY(file.open(QFile::ReadOnly));
-    QByteArray jsonExpected = file.readAll();
-
     ModuleManagerTestRunner testRunner(":/sessions/from-resource.json");
+
+    QByteArray jsonExpected = TestLogHelpers::loadFile(":/dumpInitial.json");
     VeinStorage::AbstractEventSystem* veinStorage = testRunner.getVeinStorageSystem();
-    QByteArray jsonDumped;
-    QBuffer buff(&jsonDumped);
-    VeinStorage::DumpJson::dumpToFile(veinStorage->getDb(),&buff, QList<int>() << fftEntityId);
+    QByteArray jsonDumped = VeinStorage::DumpJson::dumpToByteArray(veinStorage->getDb(), QList<int>() << fftEntityId);
 
     QVERIFY(TestLogHelpers::compareAndLogOnDiff(jsonExpected, jsonDumped));
 }
@@ -95,27 +90,11 @@ void test_fft_module_regression::injectValues()
     dspInterfaces[0]->fireActValInterrupt(dspValues.getDspValues(), /* dummy */ 0);
     TimeMachineObject::feedEventLoop();
 
-    QFile file(":/dumpActual.json");
-    QVERIFY(file.open(QFile::ReadOnly));
-    QByteArray jsonExpected = file.readAll();
-
+    QByteArray jsonExpected = TestLogHelpers::loadFile(":/dumpActual.json");
     VeinStorage::AbstractEventSystem* veinStorage = testRunner.getVeinStorageSystem();
-    QByteArray jsonDumped;
-    QBuffer buff(&jsonDumped);
-    VeinStorage::DumpJson::dumpToFile(veinStorage->getDb(),&buff, QList<int>() << fftEntityId);
+    QByteArray jsonDumped = VeinStorage::DumpJson::dumpToByteArray(veinStorage->getDb(), QList<int>() << fftEntityId);
 
     QVERIFY(TestLogHelpers::compareAndLogOnDiff(jsonExpected, jsonDumped));
-}
-
-static QString loadFile(QString fileName)
-{
-    QString fileData;
-    QFile file(fileName);
-    if(file.open(QFile::ReadOnly)) {
-        fileData = file.readAll();
-        file.close();
-    }
-    return fileData;
 }
 
 void test_fft_module_regression::dumpDspSetup()
@@ -126,7 +105,7 @@ void test_fft_module_regression::dumpDspSetup()
     QCOMPARE(dspInterfaces.count(), 1);
 
     QString measProgramDumped = TestLogHelpers::dump(dspInterfaces[0]->dumpAll());
-    QString measProgramExpected = loadFile(":/dspDumps/dumpMeasProgram.json");
+    QString measProgramExpected = TestLogHelpers::loadFile(":/dspDumps/dumpMeasProgram.json");
     QVERIFY(TestLogHelpers::compareAndLogOnDiff(measProgramExpected, measProgramDumped));
 }
 
@@ -138,6 +117,6 @@ void test_fft_module_regression::dumpDspIL1ReferenceSetup()
     QCOMPARE(dspInterfaces.count(), 1);
 
     QString measProgramDumped = TestLogHelpers::dump(dspInterfaces[0]->dumpAll());
-    QString measProgramExpected = loadFile(":/dspDumps/dump-ref-IL1.json");
+    QString measProgramExpected = TestLogHelpers::loadFile(":/dspDumps/dump-ref-IL1.json");
     QVERIFY(TestLogHelpers::compareAndLogOnDiff(measProgramExpected, measProgramDumped));
 }
