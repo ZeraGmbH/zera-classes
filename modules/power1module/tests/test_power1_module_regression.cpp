@@ -5,7 +5,6 @@
 #include <testloghelpers.h>
 #include <vs_dumpjson.h>
 #include <QJsonArray>
-#include <QBuffer>
 #include <QTest>
 
 QTEST_MAIN(test_power1_module_regression)
@@ -36,17 +35,12 @@ void test_power1_module_regression::moduleConfigFromResource()
 
 void test_power1_module_regression::veinDumpInitial()
 {
-    QFile file(":/dumpInitial.json");
-    QVERIFY(file.open(QFile::ReadOnly));
-    QByteArray jsonExpected = file.readAll();
-
     ModuleManagerTestRunner testRunner(":/session-power1-test.json");
+
+    QByteArray jsonExpected = TestLogHelpers::loadFile(":/dumpInitial.json");
     VeinStorage::AbstractEventSystem* veinStorage = testRunner.getVeinStorageSystem();
     VeinStorage::AbstractDatabase* storageDb = veinStorage->getDb();
-
-    QByteArray jsonDumped;
-    QBuffer buff(&jsonDumped);
-    VeinStorage::DumpJson::dumpToFile(storageDb,&buff, QList<int>() << powerEntityId);
+    QByteArray jsonDumped = VeinStorage::DumpJson::dumpToByteArray(storageDb, QList<int>() << powerEntityId);
 
     QVERIFY(TestLogHelpers::compareAndLogOnDiff(jsonExpected, jsonDumped));
 }
@@ -66,31 +60,21 @@ void test_power1_module_regression::injectActualValues()
     dspInterfaces[0]->fireActValInterrupt(powerValues, irqNr);
     TimeMachineObject::feedEventLoop();
 
-    QFile file(":/dumpActual.json");
-    QVERIFY(file.open(QFile::ReadOnly));
-    QByteArray jsonExpected = file.readAll();
-
+    QByteArray jsonExpected = TestLogHelpers::loadFile(":/dumpActual.json");
     VeinStorage::AbstractEventSystem* veinStorage = testRunner.getVeinStorageSystem();
-    QByteArray jsonDumped;
-    QBuffer buff(&jsonDumped);
-    VeinStorage::DumpJson::dumpToFile(veinStorage->getDb(),&buff, QList<int>() << powerEntityId);
+    QByteArray jsonDumped = VeinStorage::DumpJson::dumpToByteArray(veinStorage->getDb(), QList<int>() << powerEntityId);
 
     QVERIFY(TestLogHelpers::compareAndLogOnDiff(jsonExpected, jsonDumped));
 }
 
 void test_power1_module_regression::testScpiCommandsDisabled()
 {
-    QFile file(":/dumpInitial-withoutScpi.json");
-    QVERIFY(file.open(QFile::ReadOnly));
-    QByteArray jsonExpected = file.readAll();
-
     ModuleManagerTestRunner testRunner(":/session-power1-withoutScpi-test.json");
+
+    QByteArray jsonExpected = TestLogHelpers::loadFile(":/dumpInitial-withoutScpi.json");
     VeinStorage::AbstractEventSystem* veinStorage = testRunner.getVeinStorageSystem();
     VeinStorage::AbstractDatabase* storageDb = veinStorage->getDb();
-
-    QByteArray jsonDumped;
-    QBuffer buff(&jsonDumped);
-    VeinStorage::DumpJson::dumpToFile(storageDb, &buff, QList<int>() << powerEntityId);
+    QByteArray jsonDumped = VeinStorage::DumpJson::dumpToByteArray(storageDb, QList<int>() << powerEntityId);
 
     QVERIFY(TestLogHelpers::compareAndLogOnDiff(jsonExpected, jsonDumped));
 
@@ -101,17 +85,6 @@ void test_power1_module_regression::testScpiCommandsDisabled()
     QCOMPARE(scpiCmds.toArray().count(), 0);
 }
 
-static QString loadFile(QString fileName)
-{
-    QString fileData;
-    QFile file(fileName);
-    if(file.open(QFile::ReadOnly)) {
-        fileData = file.readAll();
-        file.close();
-    }
-    return fileData;
-}
-
 void test_power1_module_regression::dumpDspSetup()
 {
     ModuleManagerTestRunner testRunner(":/session-minimal.json");
@@ -119,8 +92,7 @@ void test_power1_module_regression::dumpDspSetup()
     QCOMPARE(dspInterfaces.count(), 1);
 
     QString measProgramDumped = TestLogHelpers::dump(dspInterfaces[0]->dumpAll());
-    QString measProgramExpected = loadFile(":/dspDumps/dumpMeasProgram.json");
+    QString measProgramExpected = TestLogHelpers::loadFile(":/dspDumps/dumpMeasProgram.json");
     QVERIFY(TestLogHelpers::compareAndLogOnDiff(measProgramExpected, measProgramDumped));
-
 }
 
