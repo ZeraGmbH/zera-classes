@@ -20,7 +20,10 @@ private slots:
     void injectSymmetricalOrder1();
     void dumpDspSetup();
 private:
-    void setReferenceChannel(VfCmdEventHandlerSystemPtr vfCmdEventHandlerSystem, QString channel);
+    // DFT is the only module:
+    // * for which GUI supports setting ref channel
+    // * Expecting alias as parameter
+    void setReferenceChannel(VfCmdEventHandlerSystemPtr vfCmdEventHandlerSystem, QString channelAlias);
 };
 
 #endif // TEST_DFT_MODULE_REGRESSION_H
