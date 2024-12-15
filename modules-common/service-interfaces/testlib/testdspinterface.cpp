@@ -6,35 +6,40 @@ TestDspInterface::TestDspInterface(QStringList valueNamesList) :
 {
 }
 
+QJsonObject TestDspInterface::dumpMemGroupsWritten()
+{
+    QJsonObject ret;
+    for(int i=0; i<m_memgroupsWritten.count(); ++i) {
+        const TMemGroupWritten &entry = m_memgroupsWritten[i];
+
+        QString cmdString = entry.cmdWriteString;
+        const QStringList cmdEntries = cmdString.split(";", Qt::SkipEmptyParts);
+
+        for(const QString &cmdEntry : cmdEntries) {
+            const QStringList entryParts = cmdEntry.split(",");
+            QString varName = entryParts[0];
+            QString groupVarName = entry.memGroupName + ":" + varName;
+
+            QString transactionNum = QString("0000%1").arg(entry.transcationCount).right(4);
+            QString key = QString("WriteNo: %1 / Handle:Variable: %2").arg(transactionNum, groupVarName);
+
+            QString varValue = entryParts[1];
+            ret.insert(key, varValue.toDouble());
+        }
+    }
+    return ret;
+}
+
+
 quint32 TestDspInterface::dspMemoryWrite(cDspMeasData *memgroup)
 {
-    QString memGroupName = memgroup->getName();
     cDspMeasData *currentMemGroup = d_ptr->findMemHandle(memgroup->getName());
     bool nonEmptyMemgroupFound = false;
     if(currentMemGroup) {
-        int varOffset = 0;
-        const QList<cDspVar*> currentVars = currentMemGroup->getVars();
-        for(int var=0; var<currentVars.size(); ++var) {
-            nonEmptyMemgroupFound = true;
-            cDspVar* currentVar = currentVars[var];
-            const QString varName = currentVar->Name();
-            for(int varEntry=0; varEntry<currentVar->size(); ++varEntry) {
-                const float newValue = memgroup->getData()[varOffset+varEntry];
-                QString label;
-                if(varEntry == 0)
-                    label = QString("%1:%2").arg(memGroupName, varName);
-                else
-                    label = QString("%1:%2+%3").arg(memGroupName, varName).arg(varEntry);
-                struct TVarsWritten write = { m_transactionCount, label, newValue };
-                m_valuesWritten.append(write);
-            }
-            varOffset += currentVar->size();
-        }
-    }
-    if(!nonEmptyMemgroupFound) {
-        const QVector<float> &values = memgroup->getData();
-        struct TVarsWritten write = { m_transactionCount, QString("No variables found for memgroup %1").arg(memGroupName), float(qQNaN()) };
-        m_valuesWritten.append(write);
+        TMemGroupWritten toWrite = { m_transactionCount,
+                                     currentMemGroup->getName(),
+                                     currentMemGroup->writeCommand() };
+        m_memgroupsWritten.append(toWrite);
     }
     m_transactionCount++;
 
@@ -54,8 +59,10 @@ QJsonObject TestDspInterface::dumpAll(bool dumpVarWrite)
     memGroups = dumpVarList(memGroups);
     dump.insert("1-MemGroups", memGroups);
     dump.insert("2-CmdList", QJsonArray::fromStringList(dumpCycListItem()));
-    if(dumpVarWrite)
-        dump.insert("3-VarsWritten", dumpVariablesWritten());
+    if(dumpVarWrite) {
+        dump.insert("3-VarsWritten", dumpMemGroupsWritten());
+        //dump.insert("3-VarsWritten", dumpVariablesWritten());
+    }
     return dump;
 }
 
@@ -105,19 +112,6 @@ QJsonObject TestDspInterface::dumpVarList(QJsonObject inData)
 QStringList TestDspInterface::dumpCycListItem()
 {
     return d_ptr->getCyclicCmdList();
-}
-
-QJsonObject TestDspInterface::dumpVariablesWritten()
-{
-    QJsonObject values;
-    for(int i=0; i<m_valuesWritten.count(); ++i) {
-        const TVarsWritten& entry = m_valuesWritten[i];
-        QString num = QString("0000%1").arg(entry.transcationCount).right(4);
-        QString key = QString("WriteNo: %1 / Handle:Variable: %2").arg(num, entry.groupVarName);
-        values.insert(key,
-                      QString("%1").arg(entry.dataWritten, -1, 'g', 6).toDouble());
-    }
-    return values;
 }
 
 QString TestDspInterface::dspVarDataTypeToJson(int type)

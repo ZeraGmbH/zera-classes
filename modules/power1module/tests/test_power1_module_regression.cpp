@@ -4,6 +4,9 @@
 #include <timemachineobject.h>
 #include <testloghelpers.h>
 #include <vs_dumpjson.h>
+#include <vf_entity_component_event_item.h>
+#include <vf_client_component_setter.h>
+#include <timemachineobject.h>
 #include <QJsonArray>
 #include <QTest>
 
@@ -94,5 +97,33 @@ void test_power1_module_regression::dumpDspSetup()
     QString measProgramDumped = TestLogHelpers::dump(dspInterfaces[0]->dumpAll());
     QString measProgramExpected = TestLogHelpers::loadFile(":/dspDumps/dumpMeasProgram.json");
     QVERIFY(TestLogHelpers::compareAndLogOnDiff(measProgramExpected, measProgramDumped));
+}
+
+void test_power1_module_regression::dumpDspOnMeasModeChange()
+{
+    ModuleManagerTestRunner testRunner(":/session-minimal.json");
+    const QList<TestDspInterfacePtr>& dspInterfaces = testRunner.getDspInterfaceList();
+    QCOMPARE(dspInterfaces.count(), 1);
+
+    setMeasMode(testRunner.getVfCmdEventHandlerSystemPtr(), "4LW", "3LW");
+    setMeasMode(testRunner.getVfCmdEventHandlerSystemPtr(), "3LW", "2LW");
+    setMeasMode(testRunner.getVfCmdEventHandlerSystemPtr(), "2LW", "4LW");
+
+    QString measProgramDumped = TestLogHelpers::dump(dspInterfaces[0]->dumpAll(true));
+    QString measProgramExpected = TestLogHelpers::loadFile(":/dspDumps/dump-measmode-change.json");
+    QVERIFY(TestLogHelpers::compareAndLogOnDiff(measProgramExpected, measProgramDumped));
+}
+
+void test_power1_module_regression::setMeasMode(VfCmdEventHandlerSystemPtr vfCmdEventHandlerSystem,
+                                                QString measModeOld,
+                                                QString measModeNew)
+{
+    VfCmdEventItemEntityPtr entityItem = VfEntityComponentEventItem::create(powerEntityId);
+    vfCmdEventHandlerSystem->addItem(entityItem);
+
+    VfClientComponentSetterPtr setter = VfClientComponentSetter::create("PAR_MeasuringMode", entityItem);
+    entityItem->addItem(setter);
+    setter->startSetComponent(measModeOld, measModeNew);
+    TimeMachineObject::feedEventLoop();
 }
 

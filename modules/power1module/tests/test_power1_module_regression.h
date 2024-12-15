@@ -1,7 +1,7 @@
 #ifndef TEST_POWER1_MODULE_REGRESSION_H
 #define TEST_POWER1_MODULE_REGRESSION_H
 
-#include <QObject>
+#include "vf_cmd_event_handler_system.h"
 
 class test_power1_module_regression : public QObject
 {
@@ -13,6 +13,11 @@ private slots:
     void injectActualValues();
     void testScpiCommandsDisabled();
     void dumpDspSetup();
+    void dumpDspOnMeasModeChange();
+private:
+    void setMeasMode(VfCmdEventHandlerSystemPtr vfCmdEventHandlerSystem,
+                     QString measModeOld, // MUST be correct - otherwise ignored
+                     QString measModeNew);
 };
 
 #endif // TEST_POWER1_MODULE_REGRESSION_H

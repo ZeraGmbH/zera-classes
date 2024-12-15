@@ -17,17 +17,21 @@ public:
     QJsonObject dumpMemoryGroups();
     QJsonObject dumpVarList(QJsonObject inData);
     QStringList dumpCycListItem();
-    QJsonObject dumpVariablesWritten();
+    QJsonObject dumpMemGroupsWritten();
 private:
     QString dspVarDataTypeToJson(int type);
     QString dspVarSegmentToJson(int segment);
+
     QStringList m_valueNamesList;
-    struct TVarsWritten {
-        int transcationCount;
-        QString groupVarName;
-        float dataWritten;
+
+    struct TMemGroupWritten {
+        int transcationCount = 0;
+        QString memGroupName;
+        //DSPDATA::dType dataType;
+        QString cmdWriteString;
     };
-    QList<TVarsWritten> m_valuesWritten;
+    QList<TMemGroupWritten> m_memgroupsWritten;
+
     int m_transactionCount = 0;
 };
 
