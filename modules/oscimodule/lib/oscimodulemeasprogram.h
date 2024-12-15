@@ -14,10 +14,6 @@ namespace OSCIMODULE
 enum oscimoduleCmds
 {
     sendrmident,
-    readresourcetypes,
-    readresource,
-    readresourceinfo,
-    readdspchannel,
     claimpgrmem,
     claimusermem,
     varlist2dsp,
@@ -60,8 +56,6 @@ private:
     VfModuleParameter* m_pRefChannelParameter;
 
     QHash<QString, cMeasChannelInfo> m_measChannelInfoHash;
-    QList<QString> channelInfoReadList; // a list of all channel info we have to read
-    QString channelInfoRead; // the actual channel info we are working on
 
     cDspMeasData* m_pTmpDataDsp;
     cDspMeasData* m_pParameterDSP;
@@ -71,16 +65,7 @@ private:
     QState m_channelRangeObserverScanState;
     QState m_resourceManagerConnectState;
     QState m_IdentifyState;
-    QState m_readResourceTypesState;
-    QState m_readResourceState;
-    QState m_readResourceInfosState;
-    QState m_readResourceInfoState;
-    QState m_readResourceInfoDoneState;
     QState m_pcbserverConnectState;
-    QState m_readChannelInformationState;
-    QState m_readDspChannelState;
-    QState m_readDspChannelDoneState;
-
     QState m_dspserverConnectState;
     QState m_claimPGRMemState;
     QState m_claimUSERMemState;
@@ -109,17 +94,7 @@ private slots:
     void startFetchCommonRanges();
     void resourceManagerConnect();
     void sendRMIdent();
-    void readResourceTypes();
-    void readResource();
-    void readResourceInfos();
-    void readResourceInfo();
-    void readResourceInfoDone();
-
     void pcbserverConnect();
-    void readChannelInformation();
-    void readDspChannel();
-    void readDspChannelDone();
-
     void dspserverConnect();
     void claimPGRMem();
     void claimUSERMem();
