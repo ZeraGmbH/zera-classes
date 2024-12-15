@@ -1,0 +1,184 @@
+{
+    "1-MemGroups": {
+        "ActualValues": {
+            "Size": 2048,
+            "UserMemSize": 2048,
+            "Variables": [
+                {
+                    "Name": "VALXFFTF",
+                    "Segment": "DSPDATA::localSegment",
+                    "Size": 2048,
+                    "TypeData": "DSPDATA::dFloat"
+                }
+            ]
+        },
+        "Parameter": {
+            "Size": 3,
+            "UserMemSize": 3,
+            "Variables": [
+                {
+                    "Name": "TIPAR",
+                    "Segment": "DSPDATA::localSegment",
+                    "Size": 1,
+                    "TypeData": "DSPDATA::dInt"
+                },
+                {
+                    "Name": "TISTART",
+                    "Segment": "DSPDATA::localSegment",
+                    "Size": 1,
+                    "TypeData": "DSPDATA::dInt"
+                },
+                {
+                    "Name": "REFCHN",
+                    "Segment": "DSPDATA::localSegment",
+                    "Size": 1,
+                    "TypeData": "DSPDATA::dInt"
+                }
+            ]
+        },
+        "TmpData": {
+            "Size": 7669,
+            "UserMemSize": 7157,
+            "Variables": [
+                {
+                    "Name": "FFTINPUT",
+                    "Segment": "DSPDATA::globalSegment",
+                    "Size": 256,
+                    "TypeData": "DSPDATA::dFloat"
+                },
+                {
+                    "Name": "FFTOUTPUT",
+                    "Segment": "DSPDATA::globalSegment",
+                    "Size": 256,
+                    "TypeData": "DSPDATA::dFloat"
+                },
+                {
+                    "Name": "MEASSIGNAL",
+                    "Segment": "DSPDATA::localSegment",
+                    "Size": 1008,
+                    "TypeData": "DSPDATA::dFloat"
+                },
+                {
+                    "Name": "FFTXOUTPUT",
+                    "Segment": "DSPDATA::localSegment",
+                    "Size": 2048,
+                    "TypeData": "DSPDATA::dFloat"
+                },
+                {
+                    "Name": "FILTER",
+                    "Segment": "DSPDATA::localSegment",
+                    "Size": 4096,
+                    "TypeData": "DSPDATA::dFloat"
+                },
+                {
+                    "Name": "N",
+                    "Segment": "DSPDATA::localSegment",
+                    "Size": 1,
+                    "TypeData": "DSPDATA::dFloat"
+                },
+                {
+                    "Name": "IPOLADR",
+                    "Segment": "DSPDATA::localSegment",
+                    "Size": 1,
+                    "TypeData": "DSPDATA::dInt"
+                },
+                {
+                    "Name": "DFTREF",
+                    "Segment": "DSPDATA::localSegment",
+                    "Size": 2,
+                    "TypeData": "DSPDATA::dFloat"
+                },
+                {
+                    "Name": "DEBUGCOUNT",
+                    "Segment": "DSPDATA::localSegment",
+                    "Size": 1,
+                    "TypeData": "DSPDATA::dInt"
+                }
+            ]
+        }
+    },
+    "2-CmdList": [
+        "STARTCHAIN(1,1,0x0101)",
+        "CLEARN(1008,MEASSIGNAL)",
+        "CLEARN(4097,FILTER)",
+        "SETVAL(TIPAR,2000)",
+        "SETVAL(REFCHN,0)",
+        "GETSTIME(TISTART)",
+        "DEACTIVATECHAIN(1,0x0101)",
+        "SETVAL(DEBUGCOUNT,0)",
+        "STOPCHAIN(1,0x0101)",
+        "COPYDATAIND(REFCHN,0,MEASSIGNAL)",
+        "DFT(1,MEASSIGNAL,DFTREF)",
+        "GENADR(MEASSIGNAL,DFTREF,IPOLADR)",
+        "COPYDATA(CH0,0,MEASSIGNAL)",
+        "COPYDATA(CH0,0,MEASSIGNAL+504)",
+        "INTERPOLATIONIND(128,IPOLADR,FFTINPUT)",
+        "FFTREAL(128,FFTINPUT,FFTOUTPUT)",
+        "COPYMEM(256,FFTOUTPUT,FFTXOUTPUT+0)",
+        "COPYDATA(CH2,0,MEASSIGNAL)",
+        "COPYDATA(CH2,0,MEASSIGNAL+504)",
+        "INTERPOLATIONIND(128,IPOLADR,FFTINPUT)",
+        "FFTREAL(128,FFTINPUT,FFTOUTPUT)",
+        "COPYMEM(256,FFTOUTPUT,FFTXOUTPUT+256)",
+        "COPYDATA(CH4,0,MEASSIGNAL)",
+        "COPYDATA(CH4,0,MEASSIGNAL+504)",
+        "INTERPOLATIONIND(128,IPOLADR,FFTINPUT)",
+        "FFTREAL(128,FFTINPUT,FFTOUTPUT)",
+        "COPYMEM(256,FFTOUTPUT,FFTXOUTPUT+512)",
+        "COPYDATA(CH1,0,MEASSIGNAL)",
+        "COPYDATA(CH1,0,MEASSIGNAL+504)",
+        "INTERPOLATIONIND(128,IPOLADR,FFTINPUT)",
+        "FFTREAL(128,FFTINPUT,FFTOUTPUT)",
+        "COPYMEM(256,FFTOUTPUT,FFTXOUTPUT+768)",
+        "COPYDATA(CH3,0,MEASSIGNAL)",
+        "COPYDATA(CH3,0,MEASSIGNAL+504)",
+        "INTERPOLATIONIND(128,IPOLADR,FFTINPUT)",
+        "FFTREAL(128,FFTINPUT,FFTOUTPUT)",
+        "COPYMEM(256,FFTOUTPUT,FFTXOUTPUT+1024)",
+        "COPYDATA(CH5,0,MEASSIGNAL)",
+        "COPYDATA(CH5,0,MEASSIGNAL+504)",
+        "INTERPOLATIONIND(128,IPOLADR,FFTINPUT)",
+        "FFTREAL(128,FFTINPUT,FFTOUTPUT)",
+        "COPYMEM(256,FFTOUTPUT,FFTXOUTPUT+1280)",
+        "COPYDATA(CH6,0,MEASSIGNAL)",
+        "COPYDATA(CH6,0,MEASSIGNAL+504)",
+        "INTERPOLATIONIND(128,IPOLADR,FFTINPUT)",
+        "FFTREAL(128,FFTINPUT,FFTOUTPUT)",
+        "COPYMEM(256,FFTOUTPUT,FFTXOUTPUT+1536)",
+        "COPYDATA(CH7,0,MEASSIGNAL)",
+        "COPYDATA(CH7,0,MEASSIGNAL+504)",
+        "INTERPOLATIONIND(128,IPOLADR,FFTINPUT)",
+        "FFTREAL(128,FFTINPUT,FFTOUTPUT)",
+        "COPYMEM(256,FFTOUTPUT,FFTXOUTPUT+1792)",
+        "AVERAGE1(2048,FFTXOUTPUT,FILTER)",
+        "TESTTIMESKIPNEX(TISTART,TIPAR)",
+        "ACTIVATECHAIN(1,0x0102)",
+        "STARTCHAIN(0,1,0x0102)",
+        "GETSTIME(TISTART)",
+        "CMPAVERAGE1(2048,FILTER,VALXFFTF)",
+        "CLEARN(4097,FILTER)",
+        "DSPINTTRIGGER(0x0,0x0)",
+        "DEACTIVATECHAIN(1,0x0102)",
+        "STOPCHAIN(1,0x0102)"
+    ],
+    "3-VarsWritten": {
+        "WriteNo: 0000 / Handle:Variable: Parameter:REFCHN": 2,
+        "WriteNo: 0000 / Handle:Variable: Parameter:TIPAR": 0,
+        "WriteNo: 0000 / Handle:Variable: Parameter:TISTART": 0,
+        "WriteNo: 0001 / Handle:Variable: Parameter:REFCHN": 4,
+        "WriteNo: 0001 / Handle:Variable: Parameter:TIPAR": 0,
+        "WriteNo: 0001 / Handle:Variable: Parameter:TISTART": 0,
+        "WriteNo: 0002 / Handle:Variable: Parameter:REFCHN": 1,
+        "WriteNo: 0002 / Handle:Variable: Parameter:TIPAR": 0,
+        "WriteNo: 0002 / Handle:Variable: Parameter:TISTART": 0,
+        "WriteNo: 0003 / Handle:Variable: Parameter:REFCHN": 3,
+        "WriteNo: 0003 / Handle:Variable: Parameter:TIPAR": 0,
+        "WriteNo: 0003 / Handle:Variable: Parameter:TISTART": 0,
+        "WriteNo: 0004 / Handle:Variable: Parameter:REFCHN": 5,
+        "WriteNo: 0004 / Handle:Variable: Parameter:TIPAR": 0,
+        "WriteNo: 0004 / Handle:Variable: Parameter:TISTART": 0,
+        "WriteNo: 0005 / Handle:Variable: Parameter:REFCHN": 0,
+        "WriteNo: 0005 / Handle:Variable: Parameter:TIPAR": 0,
+        "WriteNo: 0005 / Handle:Variable: Parameter:TISTART": 0
+    }
+}
