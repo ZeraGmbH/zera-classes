@@ -35,7 +35,7 @@ void test_dft_module_regression::veinDumpInitial()
 {
     ModuleManagerTestRunner testRunner(":/sessions/dft-no-movingwindow-no-ref.json");
 
-    QByteArray jsonExpected = TestLogHelpers::loadFile(":/dumpInitial.json");
+    QByteArray jsonExpected = TestLogHelpers::loadFile(":/veinDumps/dumpInitial.json");
     VeinStorage::AbstractEventSystem* veinStorage = testRunner.getVeinStorageSystem();
     QByteArray jsonDumped = VeinStorage::DumpJson::dumpToByteArray(veinStorage->getDb(), QList<int>() << dftEntityId);
 
@@ -72,7 +72,7 @@ void test_dft_module_regression::injectActualValuesNoReferenceChannel()
     dspInterfaces[0]->fireActValInterrupt(actValues, /*dummy*/ 0);
     TimeMachineObject::feedEventLoop();
 
-    QByteArray jsonExpected = TestLogHelpers::loadFile(":/dumpActual-no-ref.json");
+    QByteArray jsonExpected = TestLogHelpers::loadFile(":/veinDumps/dumpActual-no-ref.json");
     VeinStorage::AbstractEventSystem* veinStorage = testRunner.getVeinStorageSystem();
     QByteArray jsonDumped = VeinStorage::DumpJson::dumpToByteArray(veinStorage->getDb(), QList<int>() << dftEntityId);
 
@@ -91,7 +91,7 @@ void test_dft_module_regression::injectActualValuesReferenceChannelUL1()
     dspInterfaces[0]->fireActValInterrupt(actValues, /*dummy*/ 0);
     TimeMachineObject::feedEventLoop();
 
-    QByteArray jsonExpected = TestLogHelpers::loadFile(":/dumpActual-refUL1.json");
+    QByteArray jsonExpected = TestLogHelpers::loadFile(":/veinDumps/dumpActual-refUL1.json");
     VeinStorage::AbstractEventSystem* veinStorage = testRunner.getVeinStorageSystem();
     QByteArray jsonDumped = VeinStorage::DumpJson::dumpToByteArray(veinStorage->getDb(), QList<int>() << dftEntityId);
 
@@ -111,7 +111,7 @@ void test_dft_module_regression::injectActualValuesReferenceChannelUL2()
     dspInterfaces[0]->fireActValInterrupt(actValues, /*dummy*/ 0);
     TimeMachineObject::feedEventLoop();
 
-    QByteArray jsonExpected = TestLogHelpers::loadFile(":/dumpActual-refUL2.json");
+    QByteArray jsonExpected = TestLogHelpers::loadFile(":/veinDumps/dumpActual-refUL2.json");
     VeinStorage::AbstractEventSystem* veinStorage = testRunner.getVeinStorageSystem();
     QByteArray jsonDumped = VeinStorage::DumpJson::dumpToByteArray(veinStorage->getDb(), QList<int>() << dftEntityId);
 
@@ -140,7 +140,7 @@ void test_dft_module_regression::injectActualValuesOrder0()
     dspInterfaces[0]->fireActValInterrupt(actValues, /*dummy*/ 0);
     TimeMachineObject::feedEventLoop();
 
-    QByteArray jsonExpected = TestLogHelpers::loadFile(":/dumpActual-no-ref-order-0.json");
+    QByteArray jsonExpected = TestLogHelpers::loadFile(":/veinDumps/dumpActual-no-ref-order-0.json");
     VeinStorage::AbstractEventSystem* veinStorage = testRunner.getVeinStorageSystem();
     QByteArray jsonDumped = VeinStorage::DumpJson::dumpToByteArray(veinStorage->getDb(), QList<int>() << dftEntityId);
 
@@ -158,7 +158,7 @@ void test_dft_module_regression::injectSymmetricalOrder0()
     dspInterfaces[0]->fireActValInterrupt(dspValues.getDspValues(), /*dummy*/ 0);
     TimeMachineObject::feedEventLoop();
 
-    QByteArray jsonExpected = TestLogHelpers::loadFile(":/dumpSymmetricOrder0.json");
+    QByteArray jsonExpected = TestLogHelpers::loadFile(":/veinDumps/dumpSymmetricOrder0.json");
     VeinStorage::AbstractEventSystem* veinStorage = testRunner.getVeinStorageSystem();
     QByteArray jsonDumped = VeinStorage::DumpJson::dumpToByteArray(veinStorage->getDb(), QList<int>() << dftEntityId);
 
@@ -176,7 +176,7 @@ void test_dft_module_regression::injectSymmetricalOrder1()
     dspInterfaces[0]->fireActValInterrupt(dspValues.getDspValues(), /*dummy*/ 0);
     TimeMachineObject::feedEventLoop();
 
-    QByteArray jsonExpected = TestLogHelpers::loadFile(":/dumpSymmetricOrder1.json");
+    QByteArray jsonExpected = TestLogHelpers::loadFile(":/veinDumps/dumpSymmetricOrder1.json");
     VeinStorage::AbstractEventSystem* veinStorage = testRunner.getVeinStorageSystem();
     QByteArray jsonDumped = VeinStorage::DumpJson::dumpToByteArray(veinStorage->getDb(), QList<int>() << dftEntityId);
 
