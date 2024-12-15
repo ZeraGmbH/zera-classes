@@ -2,6 +2,10 @@
     <qresource prefix="/">
         <file>dspDumps/dumpMeasProgram.json</file>
         <file>dspDumps/dumpReferenceChannelChange.json</file>
+        <file>sessions/minimal.json</file>
+        <file>sessions/dft-no-movingwindow-no-ref.json</file>
+        <file>sessions/dft-no-movingwindow-noref-order-0.json</file>
+        <file>sessions/dft-no-movingwindow-ref.json</file>
         <file>dumpActual-no-ref.json</file>
         <file>dumpActual-no-ref-order-0.json</file>
         <file>dumpActual-refUL1.json</file>
@@ -11,9 +15,5 @@
         <file>dumpSymmetricOrder1.json</file>
         <file>mt310s2-dftmodule-no-movingwindow-no-ref.xml</file>
         <file>mt310s2-dftmodule-no-movingwindow-ref.xml</file>
-        <file>session-minimal.json</file>
-        <file>session-dft-no-movingwindow-no-ref.json</file>
-        <file>session-dft-no-movingwindow-noref-order-0.json</file>
-        <file>session-dft-no-movingwindow-ref.json</file>
     </qresource>
 </RCC>
