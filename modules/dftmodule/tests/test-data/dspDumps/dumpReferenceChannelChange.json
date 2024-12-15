@@ -1,0 +1,107 @@
+{
+    "1-MemGroups": {
+        "ActualValues": {
+            "Size": 22,
+            "UserMemSize": 22,
+            "Variables": [
+                {
+                    "Name": "VALXDFTF",
+                    "Segment": "DSPDATA::localSegment",
+                    "Size": 22,
+                    "TypeData": "DSPDATA::dFloat"
+                }
+            ]
+        },
+        "Parameter": {
+            "Size": 2,
+            "UserMemSize": 2,
+            "Variables": [
+                {
+                    "Name": "TIPAR",
+                    "Segment": "DSPDATA::localSegment",
+                    "Size": 1,
+                    "TypeData": "DSPDATA::dInt"
+                },
+                {
+                    "Name": "TISTART",
+                    "Segment": "DSPDATA::localSegment",
+                    "Size": 1,
+                    "TypeData": "DSPDATA::dInt"
+                }
+            ]
+        },
+        "TmpData": {
+            "Size": 571,
+            "UserMemSize": 571,
+            "Variables": [
+                {
+                    "Name": "MEASSIGNAL",
+                    "Segment": "DSPDATA::localSegment",
+                    "Size": 504,
+                    "TypeData": "DSPDATA::dFloat"
+                },
+                {
+                    "Name": "VALXDFT",
+                    "Segment": "DSPDATA::localSegment",
+                    "Size": 22,
+                    "TypeData": "DSPDATA::dFloat"
+                },
+                {
+                    "Name": "FILTER",
+                    "Segment": "DSPDATA::localSegment",
+                    "Size": 44,
+                    "TypeData": "DSPDATA::dFloat"
+                },
+                {
+                    "Name": "N",
+                    "Segment": "DSPDATA::localSegment",
+                    "Size": 1,
+                    "TypeData": "DSPDATA::dFloat"
+                }
+            ]
+        }
+    },
+    "2-CmdList": [
+        "STARTCHAIN(1,1,0x0101)",
+        "CLEARN(504,MEASSIGNAL)",
+        "CLEARN(45,FILTER)",
+        "SETVAL(TIPAR,1000)",
+        "GETSTIME(TISTART)",
+        "DEACTIVATECHAIN(1,0x0101)",
+        "STOPCHAIN(1,0x0101)",
+        "COPYDATA(CH0,0,MEASSIGNAL)",
+        "DFT(1,MEASSIGNAL,VALXDFT+0)",
+        "COPYDATA(CH2,0,MEASSIGNAL)",
+        "DFT(1,MEASSIGNAL,VALXDFT+2)",
+        "COPYDATA(CH4,0,MEASSIGNAL)",
+        "DFT(1,MEASSIGNAL,VALXDFT+4)",
+        "COPYDIFF(CH0,CH2,MEASSIGNAL)",
+        "DFT(1,MEASSIGNAL,VALXDFT+6)",
+        "COPYDIFF(CH4,CH2,MEASSIGNAL)",
+        "DFT(1,MEASSIGNAL,VALXDFT+8)",
+        "COPYDIFF(CH4,CH0,MEASSIGNAL)",
+        "DFT(1,MEASSIGNAL,VALXDFT+10)",
+        "COPYDATA(CH1,0,MEASSIGNAL)",
+        "DFT(1,MEASSIGNAL,VALXDFT+12)",
+        "COPYDATA(CH3,0,MEASSIGNAL)",
+        "DFT(1,MEASSIGNAL,VALXDFT+14)",
+        "COPYDATA(CH5,0,MEASSIGNAL)",
+        "DFT(1,MEASSIGNAL,VALXDFT+16)",
+        "COPYDATA(CH6,0,MEASSIGNAL)",
+        "DFT(1,MEASSIGNAL,VALXDFT+18)",
+        "COPYDATA(CH7,0,MEASSIGNAL)",
+        "DFT(1,MEASSIGNAL,VALXDFT+20)",
+        "AVERAGE1(22,VALXDFT,FILTER)",
+        "TESTTIMESKIPNEX(TISTART,TIPAR)",
+        "ACTIVATECHAIN(1,0x0102)",
+        "STARTCHAIN(0,1,0x0102)",
+        "GETSTIME(TISTART)",
+        "CMPAVERAGE1(22,FILTER,VALXDFTF)",
+        "CLEARN(45,FILTER)",
+        "DSPINTTRIGGER(0x0,0x0)",
+        "DEACTIVATECHAIN(1,0x0102)",
+        "STOPCHAIN(1,0x0102)"
+    ],
+    "3-VarsWritten": {
+    }
+}
