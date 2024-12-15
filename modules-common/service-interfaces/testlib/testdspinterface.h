@@ -17,16 +17,18 @@ public:
     QJsonObject dumpMemoryGroups();
     QJsonObject dumpVarList(QJsonObject inData);
     QStringList dumpCycListItem();
-    QJsonArray dumpVariablesWritten();
+    QJsonObject dumpVariablesWritten();
 private:
     QString dspVarDataTypeToJson(int type);
     QString dspVarSegmentToJson(int segment);
     QStringList m_valueNamesList;
     struct TVarsWritten {
-        QString varName;
-        QVector<float> dataWritten;
+        int transcationCount;
+        QString groupVarName;
+        float dataWritten;
     };
     QList<TVarsWritten> m_valuesWritten;
+    int m_transactionCount = 0;
 };
 
 typedef std::shared_ptr<TestDspInterface> TestDspInterfacePtr;

@@ -8,8 +8,36 @@ TestDspInterface::TestDspInterface(QStringList valueNamesList) :
 
 quint32 TestDspInterface::dspMemoryWrite(cDspMeasData *memgroup)
 {
-    struct TVarsWritten write = { memgroup->getName(), memgroup->getData() };
-    m_valuesWritten.append(write);
+    QString memGroupName = memgroup->getName();
+    cDspMeasData *currentMemGroup = d_ptr->findMemHandle(memgroup->getName());
+    bool nonEmptyMemgroupFound = false;
+    if(currentMemGroup) {
+        int varOffset = 0;
+        const QList<cDspVar*> currentVars = currentMemGroup->getVars();
+        for(int var=0; var<currentVars.size(); ++var) {
+            nonEmptyMemgroupFound = true;
+            cDspVar* currentVar = currentVars[var];
+            const QString varName = currentVar->Name();
+            for(int varEntry=0; varEntry<currentVar->size(); ++varEntry) {
+                const float newValue = memgroup->getData()[varOffset+varEntry];
+                QString label;
+                if(varEntry == 0)
+                    label = QString("%1:%2").arg(memGroupName, varName);
+                else
+                    label = QString("%1:%2+%3").arg(memGroupName, varName).arg(varEntry);
+                struct TVarsWritten write = { m_transactionCount, label, newValue };
+                m_valuesWritten.append(write);
+            }
+            varOffset += currentVar->size();
+        }
+    }
+    if(!nonEmptyMemgroupFound) {
+        const QVector<float> &values = memgroup->getData();
+        struct TVarsWritten write = { m_transactionCount, QString("No variables found for memgroup %1").arg(memGroupName), float(qQNaN()) };
+        m_valuesWritten.append(write);
+    }
+    m_transactionCount++;
+
     emit sigDspMemoryWrite(memgroup->getName(), memgroup->getData());
     return sendCmdResponse("");
 }
@@ -79,20 +107,17 @@ QStringList TestDspInterface::dumpCycListItem()
     return d_ptr->getCyclicCmdList();
 }
 
-QJsonArray TestDspInterface::dumpVariablesWritten()
+QJsonObject TestDspInterface::dumpVariablesWritten()
 {
-    QJsonArray arr;
-    for(const TVarsWritten& entry : qAsConst(m_valuesWritten)) {
-        QJsonObject values;
-        for(int i=0; i<entry.dataWritten.count(); i++) {
-            QString num = QString("0000%1").arg(i).right(4);
-            QString key = QString("%1+%2").arg(entry.varName, num);
-            values.insert(key,
-                          QString("%1").arg(entry.dataWritten[i], -1, 'g', 6).toDouble());
-        }
-        arr.append(values);
+    QJsonObject values;
+    for(int i=0; i<m_valuesWritten.count(); ++i) {
+        const TVarsWritten& entry = m_valuesWritten[i];
+        QString num = QString("0000%1").arg(entry.transcationCount).right(4);
+        QString key = QString("WriteNo: %1 / Handle:Variable: %2").arg(num, entry.groupVarName);
+        values.insert(key,
+                      QString("%1").arg(entry.dataWritten, -1, 'g', 6).toDouble());
     }
-    return arr;
+    return values;
 }
 
 QString TestDspInterface::dspVarDataTypeToJson(int type)
