@@ -135,11 +135,11 @@ void cReferenceAdjustment::activationDone()
     // all possible channels because we do not know which channels become active
     if(!m_pModule->getDemo()) {
         m_pGainCorrectionDSP = m_dspInterface->getMemHandle("GainCorrection");
-        m_pGainCorrectionDSP->addVarItem( new cDspVar("GAINCORRECTION",32, DSPDATA::vDspIntVar));
+        m_pGainCorrectionDSP->addVarItem( new DspVariable("GAINCORRECTION",32, DSPDATA::vDspIntVar));
         m_fGainCorr = m_pGainCorrectionDSP->data("GAINCORRECTION");
 
         m_pOffset2CorrectionDSP = m_dspInterface->getMemHandle("OffsetCorrection");
-        m_pOffset2CorrectionDSP->addVarItem( new cDspVar("OFFSETCORRECTION2",32, DSPDATA::vDspIntVar));
+        m_pOffset2CorrectionDSP->addVarItem( new DspVariable("OFFSETCORRECTION2",32, DSPDATA::vDspIntVar));
         m_fOffset2Corr = m_pOffset2CorrectionDSP->data("OFFSETCORRECTION2");
     }
 

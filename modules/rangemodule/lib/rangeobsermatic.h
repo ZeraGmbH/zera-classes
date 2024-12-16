@@ -85,7 +85,7 @@ private:
     VfModuleParameter* m_pParOverloadOnOff;
     VfModuleComponent* m_pComponentOverloadMax;
 
-    cDspMeasData* m_pGainCorrection2DSP; // copy of dsp internal correction data
+    DspMemoryGroups* m_pGainCorrection2DSP; // copy of dsp internal correction data
     float* m_pfScale;
     QHash<quint32, int> m_MsgNrCmdList;
 

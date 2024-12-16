@@ -57,9 +57,9 @@ private:
     VfModuleMetaData* m_pRMSPNCountInfo;
     VfModuleMetaData* m_pRMSPPCountInfo;
 
-    cDspMeasData* m_pTmpDataDsp;
-    cDspMeasData* m_pParameterDSP;
-    cDspMeasData* m_pActualValuesDSP;
+    DspMemoryGroups* m_pTmpDataDsp;
+    DspMemoryGroups* m_pParameterDSP;
+    DspMemoryGroups* m_pActualValuesDSP;
 
     // statemachine for activating gets the following states
     QState m_channelRangeObserverScanState;

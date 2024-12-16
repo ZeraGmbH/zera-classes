@@ -8,7 +8,6 @@
 #include <rminterface.h>
 #include <pcbinterface.h>
 #include <dspinterface.h>
-#include <dspinterfacecmddecoder.h>
 
 namespace MODEMODULE
 {
@@ -299,7 +298,7 @@ void cModeModuleInit::dspserverConnect()
 void cModeModuleInit::writeGainCorr()
 {
     m_pCorrectionDSP = m_pDSPInterface->getMemHandle("GainCorrection");
-    m_pCorrectionDSP->addVarItem( new cDspVar("GAINCORRECTION",32, DSPDATA::vDspIntVar));
+    m_pCorrectionDSP->addVarItem( new DspVariable("GAINCORRECTION",32, DSPDATA::vDspIntVar));
     float* data = m_pCorrectionDSP->data("GAINCORRECTION");
     for (int i = 0; i < 32; i++) {
         data[i] = 1.0;
@@ -313,7 +312,7 @@ void cModeModuleInit::writeGainCorr2()
     m_pDSPInterface->deleteMemHandle(m_pCorrectionDSP); // we delete the old handle
 
     m_pCorrectionDSP = m_pDSPInterface->getMemHandle("GainCorrection");
-    m_pCorrectionDSP->addVarItem( new cDspVar("GAINCORRECTION2",32, DSPDATA::vDspIntVar));
+    m_pCorrectionDSP->addVarItem( new DspVariable("GAINCORRECTION2",32, DSPDATA::vDspIntVar));
     float* data = m_pCorrectionDSP->data("GAINCORRECTION2");
     for (int i = 0; i < 32; i++) {
         data[i] = 1.0;
@@ -327,7 +326,7 @@ void cModeModuleInit::writePhaseCorr()
     m_pDSPInterface->deleteMemHandle(m_pCorrectionDSP); // we delete the old handle
 
     m_pCorrectionDSP = m_pDSPInterface->getMemHandle("PhaseCorrection");
-    m_pCorrectionDSP->addVarItem( new cDspVar("PHASECORRECTION",32, DSPDATA::vDspIntVar));
+    m_pCorrectionDSP->addVarItem( new DspVariable("PHASECORRECTION",32, DSPDATA::vDspIntVar));
     float* data = m_pCorrectionDSP->data("PHASECORRECTION");
     for (int i = 0; i < 32; i++) {
         data[i] = 0.0;
@@ -341,7 +340,7 @@ void cModeModuleInit::writePhaseCorr2()
     m_pDSPInterface->deleteMemHandle(m_pCorrectionDSP); // we delete the old handle
 
     m_pCorrectionDSP = m_pDSPInterface->getMemHandle("PhaseCorrection");
-    m_pCorrectionDSP->addVarItem( new cDspVar("PHASECORRECTION2",32, DSPDATA::vDspIntVar));
+    m_pCorrectionDSP->addVarItem( new DspVariable("PHASECORRECTION2",32, DSPDATA::vDspIntVar));
     float* data = m_pCorrectionDSP->data("PHASECORRECTION2");
     for (int i = 0; i < 32; i++) {
         data[i] = 0.0;
@@ -355,7 +354,7 @@ void cModeModuleInit::writeOffsetCorr()
     m_pDSPInterface->deleteMemHandle(m_pCorrectionDSP); // we delete the old handle
 
     m_pCorrectionDSP = m_pDSPInterface->getMemHandle("OffsetCorrection");
-    m_pCorrectionDSP->addVarItem( new cDspVar("OFFSETCORRECTION",32, DSPDATA::vDspIntVar));
+    m_pCorrectionDSP->addVarItem( new DspVariable("OFFSETCORRECTION",32, DSPDATA::vDspIntVar));
     float* data = m_pCorrectionDSP->data("OFFSETCORRECTION");
     for (int i = 0; i < 32; i++) {
         data[i] = 0.0;
@@ -369,7 +368,7 @@ void cModeModuleInit::writeOffsetCorr2()
     m_pDSPInterface->deleteMemHandle(m_pCorrectionDSP); // we delete the old handle
 
     m_pCorrectionDSP = m_pDSPInterface->getMemHandle("OffsetCorrection");
-    m_pCorrectionDSP->addVarItem( new cDspVar("OFFSETCORRECTION2",32, DSPDATA::vDspIntVar));
+    m_pCorrectionDSP->addVarItem( new DspVariable("OFFSETCORRECTION2",32, DSPDATA::vDspIntVar));
     float* data = m_pCorrectionDSP->data("OFFSETCORRECTION2");
     for (int i = 0; i < 32; i++) {
         data[i] = 0.0;
@@ -384,8 +383,8 @@ void cModeModuleInit::setSubDC()
 
     quint32 subdc = 0;
     // here we can set if sub dc or not
-    cDspMeasData* pSubDCMaskDSP = m_pDSPInterface->getMemHandle("SubDC");
-    pSubDCMaskDSP->addVarItem( new cDspVar("SUBDC",1, DSPDATA::vDspIntVar, DSPDATA::dInt));
+    DspMemoryGroups* pSubDCMaskDSP = m_pDSPInterface->getMemHandle("SubDC");
+    pSubDCMaskDSP->addVarItem( new DspVariable("SUBDC",1, DSPDATA::vDspIntVar, DSPDATA::dInt));
     DspInterfaceCmdDecoder::setVarData(pSubDCMaskDSP, QString("SUBDC:%1;").arg(subdc), DSPDATA::dInt);
     m_MsgNrCmdList[m_pDSPInterface->dspMemoryWrite(pSubDCMaskDSP)] = MODEMODINIT::subdcdsp;
 }

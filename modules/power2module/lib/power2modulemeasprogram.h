@@ -110,11 +110,11 @@ private:
 
     quint8 m_notifierNr;
 
-    cDspMeasData* m_pTmpDataDsp;
-    cDspMeasData* m_pParameterDSP;
-    cDspMeasData* m_pActualValuesDSP;
-    cDspMeasData* m_pfreqScaleDSP;
-    cDspMeasData* m_pNomPower;
+    DspMemoryGroups* m_pTmpDataDsp;
+    DspMemoryGroups* m_pParameterDSP;
+    DspMemoryGroups* m_pActualValuesDSP;
+    DspMemoryGroups* m_pfreqScaleDSP;
+    DspMemoryGroups* m_pNomPower;
 
     // statemachine for activating gets the following states
     QState m_channelRangeObserverScanState;

@@ -4,7 +4,6 @@
 #include <errormessages.h>
 #include <reply.h>
 #include <proxy.h>
-#include <dspinterfacecmddecoder.h>
 #include <doublevalidator.h>
 #include <stringvalidator.h>
 #include <math.h>
@@ -179,31 +178,31 @@ void cFftModuleMeasProgram::setDspVarList()
     // global data segment is 1k words and lies on 1k boundary, so we put fftinput and fftouptut
     // at the beginning of that page because bitreversal adressing of fft only works properly if so
     m_pTmpDataDsp = m_dspInterface->getMemHandle("TmpData");
-    m_pTmpDataDsp->addVarItem( new cDspVar("FFTINPUT", 2 * m_nfftLen, DSPDATA::vDspTempGlobal));
-    m_pTmpDataDsp->addVarItem( new cDspVar("FFTOUTPUT", 2 * m_nfftLen, DSPDATA::vDspTempGlobal));
+    m_pTmpDataDsp->addVarItem( new DspVariable("FFTINPUT", 2 * m_nfftLen, DSPDATA::vDspTempGlobal));
+    m_pTmpDataDsp->addVarItem( new DspVariable("FFTOUTPUT", 2 * m_nfftLen, DSPDATA::vDspTempGlobal));
     // meassignal will also still fit in global mem ... so we save memory
-    m_pTmpDataDsp->addVarItem( new cDspVar("MEASSIGNAL", 2 * samples, DSPDATA::vDspTemp));
-    m_pTmpDataDsp->addVarItem( new cDspVar("FFTXOUTPUT", 2 * m_nfftLen * m_veinActValueList.count(), DSPDATA::vDspTemp));
-    m_pTmpDataDsp->addVarItem( new cDspVar("FILTER", 2 * 2 * m_nfftLen * m_veinActValueList.count(),DSPDATA::vDspTemp));
-    m_pTmpDataDsp->addVarItem( new cDspVar("N",1,DSPDATA::vDspTemp));
-    m_pTmpDataDsp->addVarItem( new cDspVar("IPOLADR", 1, DSPDATA::vDspTemp, DSPDATA::dInt));
-    m_pTmpDataDsp->addVarItem( new cDspVar("DFTREF", 2, DSPDATA::vDspTemp));
-    m_pTmpDataDsp->addVarItem(new cDspVar("DEBUGCOUNT",1,DSPDATA::vDspTemp, DSPDATA::dInt));
+    m_pTmpDataDsp->addVarItem( new DspVariable("MEASSIGNAL", 2 * samples, DSPDATA::vDspTemp));
+    m_pTmpDataDsp->addVarItem( new DspVariable("FFTXOUTPUT", 2 * m_nfftLen * m_veinActValueList.count(), DSPDATA::vDspTemp));
+    m_pTmpDataDsp->addVarItem( new DspVariable("FILTER", 2 * 2 * m_nfftLen * m_veinActValueList.count(),DSPDATA::vDspTemp));
+    m_pTmpDataDsp->addVarItem( new DspVariable("N",1,DSPDATA::vDspTemp));
+    m_pTmpDataDsp->addVarItem( new DspVariable("IPOLADR", 1, DSPDATA::vDspTemp, DSPDATA::dInt));
+    m_pTmpDataDsp->addVarItem( new DspVariable("DFTREF", 2, DSPDATA::vDspTemp));
+    m_pTmpDataDsp->addVarItem(new DspVariable("DEBUGCOUNT",1,DSPDATA::vDspTemp, DSPDATA::dInt));
 
     // a handle for parameter
     m_pParameterDSP =  m_dspInterface->getMemHandle("Parameter");
-    m_pParameterDSP->addVarItem( new cDspVar("TIPAR",1, DSPDATA::vDspParam, DSPDATA::dInt)); // integrationtime res = 1ms
+    m_pParameterDSP->addVarItem( new DspVariable("TIPAR",1, DSPDATA::vDspParam, DSPDATA::dInt)); // integrationtime res = 1ms
     // we use tistart as parameter, so we can finish actual measuring interval bei setting 0
-    m_pParameterDSP->addVarItem( new cDspVar("TISTART",1, DSPDATA::vDspParam, DSPDATA::dInt));
-    m_pParameterDSP->addVarItem( new cDspVar("REFCHN",1, DSPDATA::vDspParam, DSPDATA::dInt));
+    m_pParameterDSP->addVarItem( new DspVariable("TISTART",1, DSPDATA::vDspParam, DSPDATA::dInt));
+    m_pParameterDSP->addVarItem( new DspVariable("REFCHN",1, DSPDATA::vDspParam, DSPDATA::dInt));
 
     // and one for filtered actual values
     m_pActualValuesDSP = m_dspInterface->getMemHandle("ActualValues");
-    m_pActualValuesDSP->addVarItem( new cDspVar("VALXFFTF", 2 * m_nfftLen * m_veinActValueList.count(), DSPDATA::vDspResult));
+    m_pActualValuesDSP->addVarItem( new DspVariable("VALXFFTF", 2 * m_nfftLen * m_veinActValueList.count(), DSPDATA::vDspResult));
 
     m_ModuleActualValues.resize(m_pActualValuesDSP->getSize()); // we provide a vector for generated actual values
     m_FFTModuleActualValues.resize(m_veinActValueList.count() * getConfData()->m_nFftOrder * 2);
-    m_nDspMemUsed = m_pTmpDataDsp->getumemSize() + m_pParameterDSP->getSize() + m_pActualValuesDSP->getSize();
+    m_nDspMemUsed = m_pTmpDataDsp->getUserMemSize() + m_pParameterDSP->getSize() + m_pActualValuesDSP->getSize();
 }
 
 

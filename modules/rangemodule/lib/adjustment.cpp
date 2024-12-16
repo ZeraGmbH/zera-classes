@@ -10,7 +10,6 @@
 #include <timerfactoryqt.h>
 #include <vfmodulecomponent.h>
 #include <dspinterface.h>
-#include <dspinterfacecmddecoder.h>
 #include <QSignalTransition>
 
 namespace RANGEMODULE 
@@ -194,15 +193,15 @@ void cAdjustManagement::readGainCorr()
     // all possible channels because we do not know which channels become active
 
     m_pGainCorrectionDSP = m_dspInterface->getMemHandle("GainCorrection");
-    m_pGainCorrectionDSP->addVarItem( new cDspVar("GAINCORRECTION",32, DSPDATA::vDspIntVar));
+    m_pGainCorrectionDSP->addVarItem( new DspVariable("GAINCORRECTION",32, DSPDATA::vDspIntVar));
     m_fGainCorr = m_pGainCorrectionDSP->data("GAINCORRECTION");
 
     m_pPhaseCorrectionDSP = m_dspInterface->getMemHandle("PhaseCorrection");
-    m_pPhaseCorrectionDSP->addVarItem( new cDspVar("PHASECORRECTION",32, DSPDATA::vDspIntVar));
+    m_pPhaseCorrectionDSP->addVarItem( new DspVariable("PHASECORRECTION",32, DSPDATA::vDspIntVar));
     m_fPhaseCorr = m_pPhaseCorrectionDSP->data("PHASECORRECTION");
 
     m_pOffsetCorrectionDSP = m_dspInterface->getMemHandle("OffsetCorrection");
-    m_pOffsetCorrectionDSP->addVarItem( new cDspVar("OFFSETCORRECTION",32, DSPDATA::vDspIntVar));
+    m_pOffsetCorrectionDSP->addVarItem( new DspVariable("OFFSETCORRECTION",32, DSPDATA::vDspIntVar));
     m_fOffsetCorr = m_pOffsetCorrectionDSP->data("OFFSETCORRECTION");
 
     m_MsgNrCmdList[m_dspInterface->dspMemoryRead(m_pGainCorrectionDSP)] = readgaincorr;
@@ -227,8 +226,8 @@ void cAdjustManagement::setSubDC()
     for (int i = 0; i < m_subDCChannelList.count(); i++) {
         subdc |= (1 << m_subDCChannelList.at(i)->getDSPChannelNr());
     }
-    cDspMeasData* pSubDCMaskDSP = m_dspInterface->getMemHandle("SubDC"); // here we can set if sub dc or not
-    pSubDCMaskDSP->addVarItem( new cDspVar("SUBDC",1, DSPDATA::vDspIntVar, DSPDATA::dInt));
+    DspMemoryGroups* pSubDCMaskDSP = m_dspInterface->getMemHandle("SubDC"); // here we can set if sub dc or not
+    pSubDCMaskDSP->addVarItem( new DspVariable("SUBDC",1, DSPDATA::vDspIntVar, DSPDATA::dInt));
     DspInterfaceCmdDecoder::setVarData(pSubDCMaskDSP, QString("SUBDC:%1;").arg(subdc), DSPDATA::dInt);
     m_MsgNrCmdList[m_dspInterface->dspMemoryWrite(pSubDCMaskDSP)] = subdcdsp;
 }

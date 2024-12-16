@@ -31,19 +31,19 @@ QJsonObject TestDspInterface::dumpMemGroupsWritten()
 }
 
 
-quint32 TestDspInterface::dspMemoryWrite(cDspMeasData *memgroup)
+quint32 TestDspInterface::dspMemoryWrite(DspMemoryGroups *memgroup)
 {
-    cDspMeasData *currentMemGroup = d_ptr->findMemHandle(memgroup->getName());
+    DspMemoryGroups *currentMemGroup = d_ptr->findMemHandle(memgroup->getName());
     bool nonEmptyMemgroupFound = false;
     if(currentMemGroup) {
         TMemGroupWritten toWrite = { m_transactionCount,
                                      currentMemGroup->getName(),
-                                     currentMemGroup->writeCommand() };
+                                     currentMemGroup->getInterfaceWriteCommand() };
         m_memgroupsWritten.append(toWrite);
     }
     m_transactionCount++;
 
-    emit sigDspMemoryWrite(memgroup->getName(), memgroup->getData());
+    emit sigDspMemoryWrite(memgroup->getName(), generateDataVector(memgroup));
     return sendCmdResponse("");
 }
 
@@ -68,12 +68,12 @@ QJsonObject TestDspInterface::dumpAll(bool dumpVarWrite)
 
 QJsonObject TestDspInterface::dumpMemoryGroups()
 {
-    const QList<cDspMeasData*> dspMemoryDataList = d_ptr->getMemoryDataList();
+    const QList<DspMemoryGroups*> dspMemoryDataList = d_ptr->getMemoryDataList();
     QJsonObject dumpMemGroup;
-    for(cDspMeasData* memData : dspMemoryDataList) {
+    for(DspMemoryGroups* memData : dspMemoryDataList) {
         QJsonObject entry;
         entry.insert("Size", int(memData->getSize()));
-        entry.insert("UserMemSize", int(memData->getumemSize()));
+        entry.insert("UserMemSize", int(memData->getUserMemSize()));
         dumpMemGroup.insert(memData->getName(), entry);
     }
     return dumpMemGroup;
@@ -84,7 +84,7 @@ QJsonObject TestDspInterface::dumpVarList(QJsonObject inData)
     const QStringList varList = d_ptr->varList2String().split(";", Qt::SkipEmptyParts);
     QMap<QString, QJsonArray> memGroupVariables;
     for(const QString &var : varList) {
-        // see: cDspMeasData::VarListLong
+        // see: DspMemoryGroups::getVarListLong
         // ts << QString("%1,%2,%3,%4,%5;").arg(m_handleName, pDspVar->Name()).arg(pDspVar->size()).arg(pDspVar->datatype()).arg(seg);
         const QStringList entry = var.split(",", Qt::SkipEmptyParts);
         QString memGroup = entry[0];

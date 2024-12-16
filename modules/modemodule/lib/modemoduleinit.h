@@ -67,7 +67,7 @@ private:
     QString m_sDescription;
     quint16 m_nPort; // the port adress of pcb server
 
-    cDspMeasData* m_pCorrectionDSP;
+    DspMemoryGroups* m_pCorrectionDSP;
 
     // statemachine for activating gets the following states
     QState m_resourceManagerConnectState;

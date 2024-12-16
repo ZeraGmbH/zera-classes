@@ -8,7 +8,6 @@
 #include <stringvalidator.h>
 #include <doublevalidator.h>
 #include <intvalidator.h>
-#include <dspinterfacecmddecoder.h>
 #include <reply.h>
 #include <proxy.h>
 #include <errormessages.h>
@@ -350,32 +349,32 @@ void cPower2ModuleMeasProgram::setDspVarList()
     int samples = m_pModule->getSharedChannelRangeObserver()->getSampleRate();
     // we fetch a handle for sampled data and other temporary values
     m_pTmpDataDsp = m_dspInterface->getMemHandle("TmpData");
-    m_pTmpDataDsp->addVarItem( new cDspVar("MEASSIGNAL1", samples, DSPDATA::vDspTemp)); // we need 2 signals for our computations
-    m_pTmpDataDsp->addVarItem( new cDspVar("MEASSIGNAL2", samples, DSPDATA::vDspTemp)); // we need 2 signals for our computations
-    m_pTmpDataDsp->addVarItem( new cDspVar("VALPOWER", 3*(MeasPhaseCount+SumValueCount), DSPDATA::vDspTemp)); // p1+,p1-,p1, p2+,p2-,p2, p3+,p3-,p3, ps+,ps-,ps
-    m_pTmpDataDsp->addVarItem( new cDspVar("TEMP1", 2, DSPDATA::vDspTemp)); // we need 2 temp. vars also for complex
-    m_pTmpDataDsp->addVarItem( new cDspVar("TEMP2", 2, DSPDATA::vDspTemp));
-    m_pTmpDataDsp->addVarItem( new cDspVar("FILTER", 2*3*(MeasPhaseCount+SumValueCount),DSPDATA::vDspTemp));
-    m_pTmpDataDsp->addVarItem( new cDspVar("N",1,DSPDATA::vDspTemp));
+    m_pTmpDataDsp->addVarItem( new DspVariable("MEASSIGNAL1", samples, DSPDATA::vDspTemp)); // we need 2 signals for our computations
+    m_pTmpDataDsp->addVarItem( new DspVariable("MEASSIGNAL2", samples, DSPDATA::vDspTemp)); // we need 2 signals for our computations
+    m_pTmpDataDsp->addVarItem( new DspVariable("VALPOWER", 3*(MeasPhaseCount+SumValueCount), DSPDATA::vDspTemp)); // p1+,p1-,p1, p2+,p2-,p2, p3+,p3-,p3, ps+,ps-,ps
+    m_pTmpDataDsp->addVarItem( new DspVariable("TEMP1", 2, DSPDATA::vDspTemp)); // we need 2 temp. vars also for complex
+    m_pTmpDataDsp->addVarItem( new DspVariable("TEMP2", 2, DSPDATA::vDspTemp));
+    m_pTmpDataDsp->addVarItem( new DspVariable("FILTER", 2*3*(MeasPhaseCount+SumValueCount),DSPDATA::vDspTemp));
+    m_pTmpDataDsp->addVarItem( new DspVariable("N",1,DSPDATA::vDspTemp));
 
     // a handle for parameter
     m_pParameterDSP =  m_dspInterface->getMemHandle("Parameter");
-    m_pParameterDSP->addVarItem( new cDspVar("TIPAR",1, DSPDATA::vDspParam, DSPDATA::dInt)); // integrationtime res = 1ms or period
+    m_pParameterDSP->addVarItem( new DspVariable("TIPAR",1, DSPDATA::vDspParam, DSPDATA::dInt)); // integrationtime res = 1ms or period
     // we use tistart as parameter, so we can finish actual measuring interval bei setting 0
-    m_pParameterDSP->addVarItem( new cDspVar("TISTART",1, DSPDATA::vDspParam, DSPDATA::dInt));
-    m_pParameterDSP->addVarItem( new cDspVar("MMODE",1, DSPDATA::vDspParam, DSPDATA::dInt));
+    m_pParameterDSP->addVarItem( new DspVariable("TISTART",1, DSPDATA::vDspParam, DSPDATA::dInt));
+    m_pParameterDSP->addVarItem( new DspVariable("MMODE",1, DSPDATA::vDspParam, DSPDATA::dInt));
 
     // a handle for filtered actual values
     m_pActualValuesDSP = m_dspInterface->getMemHandle("ActualValues");
-    m_pActualValuesDSP->addVarItem( new cDspVar("VALPOWERF", 3*(MeasPhaseCount+SumValueCount), DSPDATA::vDspResult));
+    m_pActualValuesDSP->addVarItem( new DspVariable("VALPOWERF", 3*(MeasPhaseCount+SumValueCount), DSPDATA::vDspResult));
 
     // and one for the frequency output scale values, we need 1 value for each configured output
     m_pfreqScaleDSP = m_dspInterface->getMemHandle("FrequencyScale");
-    m_pfreqScaleDSP->addVarItem( new cDspVar("FREQSCALE", getConfData()->m_nFreqOutputCount, DSPDATA::vDspParam));
+    m_pfreqScaleDSP->addVarItem( new DspVariable("FREQSCALE", getConfData()->m_nFreqOutputCount, DSPDATA::vDspParam));
 
     // and one for nominal power in case that measuring mode is qref
     m_pNomPower = m_dspInterface->getMemHandle("QRefScale");
-    m_pNomPower->addVarItem( new cDspVar("NOMPOWER", 1, DSPDATA::vDspParam));
+    m_pNomPower->addVarItem( new DspVariable("NOMPOWER", 1, DSPDATA::vDspParam));
 
     m_ModuleActualValues.resize(m_pActualValuesDSP->getSize()); // we provide a vector for generated actual values
     m_nDspMemUsed = m_pTmpDataDsp->getSize() + m_pParameterDSP->getSize() + m_pActualValuesDSP->getSize();

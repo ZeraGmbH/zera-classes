@@ -5,7 +5,6 @@
 #include <stringvalidator.h>
 #include <intvalidator.h>
 #include <errormessages.h>
-#include <dspinterfacecmddecoder.h>
 #include <reply.h>
 #include <proxy.h>
 #include <timerfactoryqt.h>
@@ -147,21 +146,21 @@ void cOsciModuleMeasProgram::setDspVarList()
     // we fetch a handle for sampled data and other temporary values
     int samples = m_pModule->getSharedChannelRangeObserver()->getSampleRate();
     m_pTmpDataDsp = m_dspInterface->getMemHandle("TmpData");
-    m_pTmpDataDsp->addVarItem( new cDspVar("MEASSIGNAL", m_veinActValueList.count() * samples, DSPDATA::vDspTemp));
-    m_pTmpDataDsp->addVarItem(new cDspVar("WORKSPACE", 2 * samples, DSPDATA::vDspTemp));
-    m_pTmpDataDsp->addVarItem( new cDspVar("GAPCOUNT", 1, DSPDATA::vDspTemp, DSPDATA::dInt));
-    m_pTmpDataDsp->addVarItem( new cDspVar("GAPPAR",1, DSPDATA::vDspTemp, DSPDATA::dInt));
-    m_pTmpDataDsp->addVarItem( new cDspVar("IPOLADR", 1, DSPDATA::vDspTemp, DSPDATA::dInt));
-    m_pTmpDataDsp->addVarItem(new cDspVar("DEBUGCOUNT",1,DSPDATA::vDspTemp, DSPDATA::dInt));
-    m_pTmpDataDsp->addVarItem( new cDspVar("DFTREF", 2, DSPDATA::vDspTemp));
+    m_pTmpDataDsp->addVarItem( new DspVariable("MEASSIGNAL", m_veinActValueList.count() * samples, DSPDATA::vDspTemp));
+    m_pTmpDataDsp->addVarItem(new DspVariable("WORKSPACE", 2 * samples, DSPDATA::vDspTemp));
+    m_pTmpDataDsp->addVarItem( new DspVariable("GAPCOUNT", 1, DSPDATA::vDspTemp, DSPDATA::dInt));
+    m_pTmpDataDsp->addVarItem( new DspVariable("GAPPAR",1, DSPDATA::vDspTemp, DSPDATA::dInt));
+    m_pTmpDataDsp->addVarItem( new DspVariable("IPOLADR", 1, DSPDATA::vDspTemp, DSPDATA::dInt));
+    m_pTmpDataDsp->addVarItem(new DspVariable("DEBUGCOUNT",1,DSPDATA::vDspTemp, DSPDATA::dInt));
+    m_pTmpDataDsp->addVarItem( new DspVariable("DFTREF", 2, DSPDATA::vDspTemp));
 
     // a handle for parameter
     m_pParameterDSP =  m_dspInterface->getMemHandle("Parameter");
-    m_pParameterDSP->addVarItem( new cDspVar("REFCHN",1, DSPDATA::vDspParam, DSPDATA::dInt));
+    m_pParameterDSP->addVarItem( new DspVariable("REFCHN",1, DSPDATA::vDspParam, DSPDATA::dInt));
 
     // and one for actual values
     m_pActualValuesDSP = m_dspInterface->getMemHandle("ActualValues");
-    m_pActualValuesDSP->addVarItem( new cDspVar("VALXOSCI",m_veinActValueList.count() * getConfData()->m_nInterpolation, DSPDATA::vDspResult));
+    m_pActualValuesDSP->addVarItem( new DspVariable("VALXOSCI",m_veinActValueList.count() * getConfData()->m_nInterpolation, DSPDATA::vDspResult));
 
     m_ModuleActualValues.resize(m_pActualValuesDSP->getSize()); // we provide a vector for generated actual values
     m_nDspMemUsed = m_pTmpDataDsp->getSize() + m_pParameterDSP->getSize() + m_pActualValuesDSP->getSize();

@@ -93,9 +93,9 @@ private:
     QState m_getOffsetCorrFromPcbServerState, m_prepareOffsetCorrForDspServerState;
     QFinalState m_adjustDoneState;
 
-    cDspMeasData* m_pGainCorrectionDSP; // copy of dsp internal correction data
-    cDspMeasData* m_pPhaseCorrectionDSP;
-    cDspMeasData* m_pOffsetCorrectionDSP;
+    DspMemoryGroups* m_pGainCorrectionDSP; // copy of dsp internal correction data
+    DspMemoryGroups* m_pPhaseCorrectionDSP;
+    DspMemoryGroups* m_pOffsetCorrectionDSP;
 
     float* m_fGainCorr;
     QVector<float> m_fGainKeeperForFakingRmsValues;

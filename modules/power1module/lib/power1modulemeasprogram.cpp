@@ -9,7 +9,6 @@
 #include <proxy.h>
 #include <doublevalidator.h>
 #include <intvalidator.h>
-#include <dspinterfacecmddecoder.h>
 #include <inttohexstringconvert.h>
 #include <math.h>
 

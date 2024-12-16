@@ -149,25 +149,25 @@ void cRangeModuleMeasProgram::setDspVarList()
 
     // we fetch a handle for sampled data and other temporary values
     m_pTmpDataDsp = m_dspInterface->getMemHandle("TmpData");
-    m_pTmpDataDsp->addVarItem( new cDspVar("MEASSIGNAL", m_nSamples, DSPDATA::vDspTemp));
-    m_pTmpDataDsp->addVarItem( new cDspVar("MAXRESET", 32, DSPDATA::vDspTemp));
-    m_pTmpDataDsp->addVarItem( new cDspVar("TISTART",1, DSPDATA::vDspTemp, DSPDATA::dInt));
-    m_pTmpDataDsp->addVarItem( new cDspVar("CHXPEAK",m_ChannelList.count(), DSPDATA::vDspTemp));
-    m_pTmpDataDsp->addVarItem( new cDspVar("CHXRMS",m_ChannelList.count(), DSPDATA::vDspTemp));
-    m_pTmpDataDsp->addVarItem( new cDspVar("FREQ", 1, DSPDATA::vDspTemp));
-    m_pTmpDataDsp->addVarItem( new cDspVar("FILTER",2*(2*m_ChannelList.count()+1),DSPDATA::vDspTemp)); // filter workspace for scaled peak, rms and freq
-    m_pTmpDataDsp->addVarItem( new cDspVar("N",1,DSPDATA::vDspTemp));
+    m_pTmpDataDsp->addVarItem( new DspVariable("MEASSIGNAL", m_nSamples, DSPDATA::vDspTemp));
+    m_pTmpDataDsp->addVarItem( new DspVariable("MAXRESET", 32, DSPDATA::vDspTemp));
+    m_pTmpDataDsp->addVarItem( new DspVariable("TISTART",1, DSPDATA::vDspTemp, DSPDATA::dInt));
+    m_pTmpDataDsp->addVarItem( new DspVariable("CHXPEAK",m_ChannelList.count(), DSPDATA::vDspTemp));
+    m_pTmpDataDsp->addVarItem( new DspVariable("CHXRMS",m_ChannelList.count(), DSPDATA::vDspTemp));
+    m_pTmpDataDsp->addVarItem( new DspVariable("FREQ", 1, DSPDATA::vDspTemp));
+    m_pTmpDataDsp->addVarItem( new DspVariable("FILTER",2*(2*m_ChannelList.count()+1),DSPDATA::vDspTemp)); // filter workspace for scaled peak, rms and freq
+    m_pTmpDataDsp->addVarItem( new DspVariable("N",1,DSPDATA::vDspTemp));
 
     // a handle for parameter
     m_pParameterDSP =  m_dspInterface->getMemHandle("Parameter");
-    m_pParameterDSP->addVarItem( new cDspVar("TIPAR",1, DSPDATA::vDspParam, DSPDATA::dInt)); // integrationtime res = 1ms
+    m_pParameterDSP->addVarItem( new DspVariable("TIPAR",1, DSPDATA::vDspParam, DSPDATA::dInt)); // integrationtime res = 1ms
 
     // and one for filtered actual values
     m_pActualValuesDSP = m_dspInterface->getMemHandle("ActualValues");
-    m_pActualValuesDSP->addVarItem( new cDspVar("CHXPEAKF",m_ChannelList.count(), DSPDATA::vDspResult)); // only copied values from channels maximum from dsp workspace
-    m_pActualValuesDSP->addVarItem( new cDspVar("CHXRMSF",m_ChannelList.count(), DSPDATA::vDspResult));
-    m_pActualValuesDSP->addVarItem( new cDspVar("FREQF", 1, DSPDATA::vDspResult));
-    m_pActualValuesDSP->addVarItem( new cDspVar("CHXRAWPEAK",m_ChannelList.count(), DSPDATA::vDspResult));
+    m_pActualValuesDSP->addVarItem( new DspVariable("CHXPEAKF",m_ChannelList.count(), DSPDATA::vDspResult)); // only copied values from channels maximum from dsp workspace
+    m_pActualValuesDSP->addVarItem( new DspVariable("CHXRMSF",m_ChannelList.count(), DSPDATA::vDspResult));
+    m_pActualValuesDSP->addVarItem( new DspVariable("FREQF", 1, DSPDATA::vDspResult));
+    m_pActualValuesDSP->addVarItem( new DspVariable("CHXRAWPEAK",m_ChannelList.count(), DSPDATA::vDspResult));
 
     m_ModuleActualValues.resize(m_pActualValuesDSP->getSize()); // we provide a vector for generated actual values
     m_nDspMemUsed = m_pTmpDataDsp->getSize() + m_pParameterDSP->getSize() + m_pActualValuesDSP->getSize();

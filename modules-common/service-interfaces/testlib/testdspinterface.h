@@ -10,7 +10,7 @@ class TestDspInterface : public MockDspInterface
     Q_OBJECT
 public:
     TestDspInterface(QStringList valueNamesList);
-    quint32 dspMemoryWrite(cDspMeasData* memgroup) override;
+    quint32 dspMemoryWrite(DspMemoryGroups* memgroup) override;
 
     QStringList getValueList();
     QJsonObject dumpAll(bool dumpVarWrite = false);
