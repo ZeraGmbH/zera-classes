@@ -718,8 +718,7 @@ void cDftModuleMeasProgram::newIntegrationtime(QVariant ti)
     if (getConfData()->m_bmovingWindow)
         m_movingwindowFilter.setIntegrationtime(getConfData()->m_fMeasInterval.m_fValue);
     else {
-        DspInterfaceCmdDecoder::setVarData(m_pParameterDSP, QString("TIPAR:%1;TISTART:%2;").arg(getConfData()->m_fMeasInterval.m_fValue*1000)
-                                                                            .arg(0), DSPDATA::dInt);
+        m_pParameterDSP->setVarData(QString("TIPAR:%1;TISTART:%2;").arg(getConfData()->m_fMeasInterval.m_fValue*1000).arg(0));
         m_MsgNrCmdList[m_dspInterface->dspMemoryWrite(m_pParameterDSP)] = writeparameter;
     }
 

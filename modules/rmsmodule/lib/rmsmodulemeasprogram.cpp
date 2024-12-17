@@ -597,18 +597,14 @@ void cRmsModuleMeasProgram::newIntegrationtime(QVariant ti)
 {
     bool ok;
     getConfData()->m_fMeasIntervalTime.m_fValue = ti.toDouble(&ok);
-    if (getConfData()->m_sIntegrationMode == "time")
-    {
+    if (getConfData()->m_sIntegrationMode == "time") {
         if (getConfData()->m_bmovingWindow)
             m_movingwindowFilter.setIntegrationtime(getConfData()->m_fMeasIntervalTime.m_fValue);
-        else
-        {
-            DspInterfaceCmdDecoder::setVarData(m_pParameterDSP, QString("TIPAR:%1;TISTART:%2;").arg(getConfData()->m_fMeasIntervalTime.m_fValue*1000)
-                                                                                .arg(0), DSPDATA::dInt);
+        else {
+            m_pParameterDSP->setVarData(QString("TIPAR:%1;TISTART:%2;").arg(getConfData()->m_fMeasIntervalTime.m_fValue*1000).arg(0));
             m_MsgNrCmdList[m_dspInterface->dspMemoryWrite(m_pParameterDSP)] = writeparameter;
         }
         emit m_pModule->parameterChanged();
-
     }  
 }
 
@@ -617,13 +613,10 @@ void cRmsModuleMeasProgram::newIntegrationPeriod(QVariant period)
 {
     bool ok;
     getConfData()->m_nMeasIntervalPeriod.m_nValue = period.toInt(&ok);
-    if (getConfData()->m_sIntegrationMode == "period")
-    {
-        DspInterfaceCmdDecoder::setVarData(m_pParameterDSP, QString("TIPAR:%1;TISTART:%2;").arg(getConfData()->m_nMeasIntervalPeriod.m_nValue)
-                                .arg(0), DSPDATA::dInt);
+    if(getConfData()->m_sIntegrationMode == "period") {
+        m_pParameterDSP->setVarData(QString("TIPAR:%1;TISTART:%2;").arg(getConfData()->m_nMeasIntervalPeriod.m_nValue).arg(0));
         m_MsgNrCmdList[m_dspInterface->dspMemoryWrite(m_pParameterDSP)] = writeparameter;
     }
-
     emit m_pModule->parameterChanged();
 }
 

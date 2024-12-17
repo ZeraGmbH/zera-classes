@@ -538,7 +538,7 @@ void cOsciModuleMeasProgram::newRefChannel(QVariant chn)
     ChannelRangeObserver::SystemObserverPtr observer = m_pModule->getSharedChannelRangeObserver();
     ChannelRangeObserver::ChannelPtr channel = observer->getChannel(channelMName);
     int dspChannel = channel->m_dspChannel;
-    DspInterfaceCmdDecoder::setVarData(m_pParameterDSP, QString("REFCHN:%1;").arg(dspChannel));
+    m_pParameterDSP->setVarData(QString("REFCHN:%1;").arg(dspChannel));
     m_MsgNrCmdList[m_dspInterface->dspMemoryWrite(m_pParameterDSP)] = writeparameter;
     emit m_pModule->parameterChanged();
 }

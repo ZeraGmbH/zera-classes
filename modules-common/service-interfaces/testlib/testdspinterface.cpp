@@ -43,7 +43,7 @@ quint32 TestDspInterface::dspMemoryWrite(DspMemoryGroups *memgroup)
     }
     m_transactionCount++;
 
-    emit sigDspMemoryWrite(memgroup->getName(), generateDataVector(memgroup));
+    emit sigDspMemoryWrite(memgroup->getName(), memgroup->getData());
     return sendCmdResponse("");
 }
 
@@ -59,10 +59,8 @@ QJsonObject TestDspInterface::dumpAll(bool dumpVarWrite)
     memGroups = dumpVarList(memGroups);
     dump.insert("1-MemGroups", memGroups);
     dump.insert("2-CmdList", QJsonArray::fromStringList(dumpCycListItem()));
-    if(dumpVarWrite) {
+    if(dumpVarWrite)
         dump.insert("3-VarsWritten", dumpMemGroupsWritten());
-        //dump.insert("3-VarsWritten", dumpVariablesWritten());
-    }
     return dump;
 }
 

@@ -385,7 +385,7 @@ void cModeModuleInit::setSubDC()
     // here we can set if sub dc or not
     DspMemoryGroups* pSubDCMaskDSP = m_pDSPInterface->getMemHandle("SubDC");
     pSubDCMaskDSP->addVarItem( new DspVariable("SUBDC",1, DSPDATA::vDspIntVar, DSPDATA::dInt));
-    DspInterfaceCmdDecoder::setVarData(pSubDCMaskDSP, QString("SUBDC:%1;").arg(subdc), DSPDATA::dInt);
+    pSubDCMaskDSP->setVarData(QString("SUBDC:%1;").arg(subdc));
     m_MsgNrCmdList[m_pDSPInterface->dspMemoryWrite(pSubDCMaskDSP)] = MODEMODINIT::subdcdsp;
 }
 
