@@ -19,7 +19,7 @@ cModeModuleInit::cModeModuleInit(cModeModule* module, cModeModuleConfigData& con
     m_ConfigData(configData)
 {
     m_pcbInterface = std::make_shared<Zera::cPCBInterface>();
-    m_pDSPInterface = new Zera::cDSPInterface();
+    m_dspInterface = m_pModule->getServiceInterfaceFactory()->createDspInterfaceMode();
 
     m_IdentifyState.addTransition(this, &cModeModuleInit::activationContinue, &m_readResourceTypesState);
     m_readResourceTypesState.addTransition(this, &cModeModuleInit::activationContinue, &m_readResourceState);
@@ -87,12 +87,6 @@ cModeModuleInit::cModeModuleInit(cModeModule* module, cModeModuleConfigData& con
     connect(&m_freeResourceState, &QState::entered, this, &cModeModuleInit::freeResource);
     connect(&m_deactivationDoneState, &QState::entered, this, &cModeModuleInit::deactivationDone);
 
-}
-
-
-cModeModuleInit::~cModeModuleInit()
-{
-    delete m_pDSPInterface;
 }
 
 
@@ -286,127 +280,126 @@ void cModeModuleInit::setMode()
 
 void cModeModuleInit::dspserverConnect()
 {
-    // we set up our dsp server connection
-    m_pDSPClient = Zera::Proxy::getInstance()->getConnection(m_pModule->getNetworkConfig()->m_dspServiceConnectionInfo,
-                                                             m_pModule->getNetworkConfig()->m_tcpNetworkFactory);
-    m_pDSPInterface->setClient(m_pDSPClient);
-    m_dspserverConnectionState.addTransition(m_pDSPClient, &Zera::ProxyClient::connected, &m_writeGainCorrState);
-    connect(m_pDSPInterface, &Zera::cDSPInterface::serverAnswer, this, &cModeModuleInit::catchInterfaceAnswer);
-    Zera::Proxy::getInstance()->startConnection(m_pDSPClient);
+    m_dspClient = Zera::Proxy::getInstance()->getConnectionSmart(m_pModule->getNetworkConfig()->m_dspServiceConnectionInfo,
+                                                                 m_pModule->getNetworkConfig()->m_tcpNetworkFactory);
+    m_dspInterface->setClientSmart(m_dspClient);
+    m_dspserverConnectionState.addTransition(m_dspClient.get(), &Zera::ProxyClient::connected, &m_writeGainCorrState);
+    connect(m_dspInterface.get(), &Zera::cDSPInterface::serverAnswer, this, &cModeModuleInit::catchInterfaceAnswer);
+    Zera::Proxy::getInstance()->startConnectionSmart(m_dspClient);
 }
 
 
 void cModeModuleInit::writeGainCorr()
 {
-    m_pCorrectionDSP = m_pDSPInterface->getMemHandle("GainCorrection");
+    m_pCorrectionDSP = m_dspInterface->getMemHandle("GainCorrection");
     m_pCorrectionDSP->addVarItem( new cDspVar("GAINCORRECTION",32, DSPDATA::vDspIntVar));
     float* data = m_pCorrectionDSP->data("GAINCORRECTION");
     for (int i = 0; i < 32; i++) {
         data[i] = 1.0;
     }
-    m_MsgNrCmdList[m_pDSPInterface->dspMemoryWrite(m_pCorrectionDSP)] = MODEMODINIT::writegaincorr;
+    m_MsgNrCmdList[m_dspInterface->dspMemoryWrite(m_pCorrectionDSP)] = MODEMODINIT::writegaincorr;
 }
 
 
 void cModeModuleInit::writeGainCorr2()
 {
-    m_pDSPInterface->deleteMemHandle(m_pCorrectionDSP); // we delete the old handle
+    m_dspInterface->deleteMemHandle(m_pCorrectionDSP); // we delete the old handle
 
-    m_pCorrectionDSP = m_pDSPInterface->getMemHandle("GainCorrection");
+    m_pCorrectionDSP = m_dspInterface->getMemHandle("GainCorrection");
     m_pCorrectionDSP->addVarItem( new cDspVar("GAINCORRECTION2",32, DSPDATA::vDspIntVar));
     float* data = m_pCorrectionDSP->data("GAINCORRECTION2");
     for (int i = 0; i < 32; i++) {
         data[i] = 1.0;
     }
-    m_MsgNrCmdList[m_pDSPInterface->dspMemoryWrite(m_pCorrectionDSP)] = MODEMODINIT::writegaincorr2;
+    m_MsgNrCmdList[m_dspInterface->dspMemoryWrite(m_pCorrectionDSP)] = MODEMODINIT::writegaincorr2;
 }
 
 
 void cModeModuleInit::writePhaseCorr()
 {
-    m_pDSPInterface->deleteMemHandle(m_pCorrectionDSP); // we delete the old handle
+    m_dspInterface->deleteMemHandle(m_pCorrectionDSP); // we delete the old handle
 
-    m_pCorrectionDSP = m_pDSPInterface->getMemHandle("PhaseCorrection");
+    m_pCorrectionDSP = m_dspInterface->getMemHandle("PhaseCorrection");
     m_pCorrectionDSP->addVarItem( new cDspVar("PHASECORRECTION",32, DSPDATA::vDspIntVar));
     float* data = m_pCorrectionDSP->data("PHASECORRECTION");
     for (int i = 0; i < 32; i++) {
         data[i] = 0.0;
     }
-    m_MsgNrCmdList[m_pDSPInterface->dspMemoryWrite(m_pCorrectionDSP)] = MODEMODINIT::writephasecorr;
+    m_MsgNrCmdList[m_dspInterface->dspMemoryWrite(m_pCorrectionDSP)] = MODEMODINIT::writephasecorr;
 }
 
 
 void cModeModuleInit::writePhaseCorr2()
 {
-    m_pDSPInterface->deleteMemHandle(m_pCorrectionDSP); // we delete the old handle
+    m_dspInterface->deleteMemHandle(m_pCorrectionDSP); // we delete the old handle
 
-    m_pCorrectionDSP = m_pDSPInterface->getMemHandle("PhaseCorrection");
+    m_pCorrectionDSP = m_dspInterface->getMemHandle("PhaseCorrection");
     m_pCorrectionDSP->addVarItem( new cDspVar("PHASECORRECTION2",32, DSPDATA::vDspIntVar));
     float* data = m_pCorrectionDSP->data("PHASECORRECTION2");
     for (int i = 0; i < 32; i++) {
         data[i] = 0.0;
     }
-    m_MsgNrCmdList[m_pDSPInterface->dspMemoryWrite(m_pCorrectionDSP)] = MODEMODINIT::writephasecorr2;
+    m_MsgNrCmdList[m_dspInterface->dspMemoryWrite(m_pCorrectionDSP)] = MODEMODINIT::writephasecorr2;
 }
 
 
 void cModeModuleInit::writeOffsetCorr()
 {
-    m_pDSPInterface->deleteMemHandle(m_pCorrectionDSP); // we delete the old handle
+    m_dspInterface->deleteMemHandle(m_pCorrectionDSP); // we delete the old handle
 
-    m_pCorrectionDSP = m_pDSPInterface->getMemHandle("OffsetCorrection");
+    m_pCorrectionDSP = m_dspInterface->getMemHandle("OffsetCorrection");
     m_pCorrectionDSP->addVarItem( new cDspVar("OFFSETCORRECTION",32, DSPDATA::vDspIntVar));
     float* data = m_pCorrectionDSP->data("OFFSETCORRECTION");
     for (int i = 0; i < 32; i++) {
         data[i] = 0.0;
     }
-    m_MsgNrCmdList[m_pDSPInterface->dspMemoryWrite(m_pCorrectionDSP)] = MODEMODINIT::writeoffsetcorr;
+    m_MsgNrCmdList[m_dspInterface->dspMemoryWrite(m_pCorrectionDSP)] = MODEMODINIT::writeoffsetcorr;
 }
 
 
 void cModeModuleInit::writeOffsetCorr2()
 {
-    m_pDSPInterface->deleteMemHandle(m_pCorrectionDSP); // we delete the old handle
+    m_dspInterface->deleteMemHandle(m_pCorrectionDSP); // we delete the old handle
 
-    m_pCorrectionDSP = m_pDSPInterface->getMemHandle("OffsetCorrection");
+    m_pCorrectionDSP = m_dspInterface->getMemHandle("OffsetCorrection");
     m_pCorrectionDSP->addVarItem( new cDspVar("OFFSETCORRECTION2",32, DSPDATA::vDspIntVar));
     float* data = m_pCorrectionDSP->data("OFFSETCORRECTION2");
     for (int i = 0; i < 32; i++) {
         data[i] = 0.0;
     }
-    m_MsgNrCmdList[m_pDSPInterface->dspMemoryWrite(m_pCorrectionDSP)] = MODEMODINIT::writeoffsetcorr;
+    m_MsgNrCmdList[m_dspInterface->dspMemoryWrite(m_pCorrectionDSP)] = MODEMODINIT::writeoffsetcorr;
 }
 
 
 void cModeModuleInit::setSubDC()
 {
-    m_pDSPInterface->deleteMemHandle(m_pCorrectionDSP); // we delete the old handle
+    m_dspInterface->deleteMemHandle(m_pCorrectionDSP); // we delete the old handle
 
     quint32 subdc = 0;
     // here we can set if sub dc or not
-    cDspMeasData* pSubDCMaskDSP = m_pDSPInterface->getMemHandle("SubDC");
+    cDspMeasData* pSubDCMaskDSP = m_dspInterface->getMemHandle("SubDC");
     pSubDCMaskDSP->addVarItem( new cDspVar("SUBDC",1, DSPDATA::vDspIntVar, DSPDATA::dInt));
     DspInterfaceCmdDecoder::setVarData(pSubDCMaskDSP, QString("SUBDC:%1;").arg(subdc), DSPDATA::dInt);
-    m_MsgNrCmdList[m_pDSPInterface->dspMemoryWrite(pSubDCMaskDSP)] = MODEMODINIT::subdcdsp;
+    m_MsgNrCmdList[m_dspInterface->dspMemoryWrite(pSubDCMaskDSP)] = MODEMODINIT::subdcdsp;
 }
 
 
 void cModeModuleInit::setSamplingsytem()
 {
-    m_MsgNrCmdList[m_pDSPInterface->setSamplingSystem(m_ConfigData.m_nChannelnr, m_ConfigData.m_nSignalPeriod, m_ConfigData.m_nMeasurePeriod)] = MODEMODINIT::setsamplingsystem;
+    m_MsgNrCmdList[m_dspInterface->setSamplingSystem(m_ConfigData.m_nChannelnr, m_ConfigData.m_nSignalPeriod, m_ConfigData.m_nMeasurePeriod)] = MODEMODINIT::setsamplingsystem;
 }
 
 
 void cModeModuleInit::activationDone()
 {
-    m_pDSPInterface->deleteMemHandle(m_pCorrectionDSP); // we delete the old handle
+    m_dspInterface->deleteMemHandle(m_pCorrectionDSP); // we delete the old handle
     emit activated();
 }
 
 
 void cModeModuleInit::freeResource()
 {
-    Zera::Proxy::getInstance()->releaseConnection(m_pDSPClient);
+    Zera::Proxy::getInstance()->releaseConnection(m_dspClient.get());
     Zera::Proxy::getInstance()->releaseConnection(m_pPCBClient.get());
     m_MsgNrCmdList[m_rmInterface.freeResource("SENSE", "MMODE")] = MODEMODINIT::freeresource;
 }

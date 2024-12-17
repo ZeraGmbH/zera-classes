@@ -2,6 +2,7 @@
 #define MODEMODULEINIT_H
 
 #include "moduleactivist.h"
+#include "abstractfactoryserviceinterfaces.h"
 #include <rminterface.h>
 #include <dspinterface.h>
 #include <pcbinterface.h>
@@ -45,7 +46,6 @@ class cModeModuleInit: public cModuleActivist
 
 public:
     cModeModuleInit(cModeModule* module, cModeModuleConfigData& configData);
-    virtual ~cModeModuleInit();
     void generateVeinInterface() override;
 
 protected slots:
@@ -59,8 +59,8 @@ private:
 
     Zera::PcbInterfacePtr m_pcbInterface;
     Zera::ProxyClientPtr m_pPCBClient;
-    Zera::cDSPInterface *m_pDSPInterface;
-    Zera::ProxyClient *m_pDSPClient;
+    DspInterfacePtr m_dspInterface; // our interface to dsp
+    Zera::ProxyClientPtr m_dspClient;
     Zera::cRMInterface m_rmInterface;
     Zera::ProxyClientPtr m_rmClient;
 

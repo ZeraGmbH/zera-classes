@@ -1,0 +1,9 @@
+{
+    "modules" : [
+        {
+          "name" : "modemodule",
+          "configFile" : "mt310s2-modemoduleAC.xml",
+          "id": 1000
+        }
+    ]
+}
