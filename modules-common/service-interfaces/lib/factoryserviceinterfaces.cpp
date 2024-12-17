@@ -58,6 +58,11 @@ DspInterfacePtr FactoryServiceInterfaces::createDspInterfaceOsci(QStringList val
     return std::make_shared<Zera::cDSPInterface>();
 }
 
+DspInterfacePtr FactoryServiceInterfaces::createDspInterfaceMode()
+{
+    return std::make_shared<Zera::cDSPInterface>();
+}
+
 DspInterfacePtr FactoryServiceInterfaces::createDspInterfaceOther()
 {
     return std::make_shared<Zera::cDSPInterface>();

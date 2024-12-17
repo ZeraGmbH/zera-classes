@@ -51,6 +51,11 @@ DspInterfacePtr TestFactoryServiceInterfaces::createDspInterfaceOsci(QStringList
     return createDspInterfaceCommon(6 /* that is what module expects currently */, valueChannelList);
 }
 
+DspInterfacePtr TestFactoryServiceInterfaces::createDspInterfaceMode()
+{
+    return createDspInterfaceCommon(0 /* dummy */, {});
+}
+
 DspInterfacePtr TestFactoryServiceInterfaces::createDspInterfaceOther()
 {
     // no test specific implementation yet

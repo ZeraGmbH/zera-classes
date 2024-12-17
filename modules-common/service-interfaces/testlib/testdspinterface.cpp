@@ -23,8 +23,10 @@ quint32 TestDspInterface::dspMemoryWrite(cDspMeasData *memgroup)
                 QString label;
                 if(varEntry == 0)
                     label = QString("%1:%2").arg(memGroupName, varName);
-                else
-                    label = QString("%1:%2+%3").arg(memGroupName, varName).arg(varEntry);
+                else {
+                    QString entryNum = QString("0000%1").arg(varEntry).right(4);
+                    label = QString("%1:%2+%3").arg(memGroupName, varName, entryNum);
+                }
                 struct TVarsWritten write = { m_transactionCount, label, newValue };
                 m_valuesWritten.append(write);
             }

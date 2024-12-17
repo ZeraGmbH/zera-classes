@@ -54,6 +54,11 @@ DspInterfacePtr DemoFactoryServiceInterfaces::createDspInterfaceOsci(QStringList
     return std::make_shared<DemoDspInterfaceOsci>(valueChannelList, interpolation);
 }
 
+DspInterfacePtr DemoFactoryServiceInterfaces::createDspInterfaceMode()
+{
+    return std::make_shared<Zera::cDSPInterface>();
+}
+
 DspInterfacePtr DemoFactoryServiceInterfaces::createDspInterfaceOther()
 {
     // no demo specific implementation yet

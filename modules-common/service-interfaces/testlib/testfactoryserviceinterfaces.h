@@ -16,6 +16,7 @@ public:
     DspInterfacePtr createDspInterfaceSample(QStringList valueChannelList) override;
     DspInterfacePtr createDspInterfaceThdn(QStringList valueChannelList) override;
     DspInterfacePtr createDspInterfaceOsci(QStringList valueChannelList, int interpolation) override;
+    DspInterfacePtr createDspInterfaceMode() override;
     DspInterfacePtr createDspInterfaceOther() override;
     const QList<TestDspInterfacePtr>& getInterfaceList() const;
     void clearInterfaceList();
