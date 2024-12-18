@@ -1,0 +1,9 @@
+{
+    "modules" : [
+        {
+            "name" : "referencemodule",
+            "configFile" : "com5003-referencemodule.xml",
+            "id": 1001
+        }
+    ]
+}

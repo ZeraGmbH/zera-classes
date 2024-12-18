@@ -16,6 +16,7 @@ public:
     DspInterfacePtr createDspInterfaceThdn(QStringList valueChannelList) override;
     DspInterfacePtr createDspInterfaceOsci(QStringList valueChannelList, int interpolation) override;
     DspInterfacePtr createDspInterfaceMode() override;
+    DspInterfacePtr createDspInterfaceRef(QStringList valueChannelList) override;
     DspInterfacePtr createDspInterfaceOther() override;
 };
 

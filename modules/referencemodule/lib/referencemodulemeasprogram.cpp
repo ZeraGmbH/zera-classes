@@ -15,9 +15,8 @@ cReferenceModuleMeasProgram::cReferenceModuleMeasProgram(cReferenceModule* modul
     cBaseDspMeasProgram(pConfiguration, module->getVeinModuleName()),
     m_pModule(module)
 {
-    m_dspInterface = m_pModule->getServiceInterfaceFactory()->createDspInterfaceOther();
-
     m_ChannelList = getConfData()->m_referenceChannelList;
+    m_dspInterface = m_pModule->getServiceInterfaceFactory()->createDspInterfaceRef(m_ChannelList);
 
     // As long as there are no tasks - ignore error
     m_channelRangeObserverScanState.addTransition(

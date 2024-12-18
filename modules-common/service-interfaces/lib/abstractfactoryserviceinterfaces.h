@@ -20,6 +20,7 @@ public:
     virtual DspInterfacePtr createDspInterfaceThdn(QStringList valueChannelList) = 0;
     virtual DspInterfacePtr createDspInterfaceOsci(QStringList valueChannelList, int interpolation) = 0;
     virtual DspInterfacePtr createDspInterfaceMode() = 0;
+    virtual DspInterfacePtr createDspInterfaceRef(QStringList valueChannelList) = 0;
     virtual DspInterfacePtr createDspInterfaceOther() = 0;
 };
 

@@ -59,6 +59,12 @@ DspInterfacePtr DemoFactoryServiceInterfaces::createDspInterfaceMode()
     return std::make_shared<Zera::cDSPInterface>();
 }
 
+DspInterfacePtr DemoFactoryServiceInterfaces::createDspInterfaceRef(QStringList valueChannelList)
+{
+    Q_UNUSED(valueChannelList)
+    return std::make_shared<Zera::cDSPInterface>();
+}
+
 DspInterfacePtr DemoFactoryServiceInterfaces::createDspInterfaceOther()
 {
     // no demo specific implementation yet

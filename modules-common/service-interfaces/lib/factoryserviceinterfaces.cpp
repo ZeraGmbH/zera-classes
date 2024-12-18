@@ -63,6 +63,12 @@ DspInterfacePtr FactoryServiceInterfaces::createDspInterfaceMode()
     return std::make_shared<Zera::cDSPInterface>();
 }
 
+DspInterfacePtr FactoryServiceInterfaces::createDspInterfaceRef(QStringList valueChannelList)
+{
+    Q_UNUSED(valueChannelList)
+    return std::make_shared<Zera::cDSPInterface>();
+}
+
 DspInterfacePtr FactoryServiceInterfaces::createDspInterfaceOther()
 {
     return std::make_shared<Zera::cDSPInterface>();
