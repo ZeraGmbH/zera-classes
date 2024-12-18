@@ -89,7 +89,6 @@ private:
     void setPhaseMaskValidator(std::shared_ptr<MeasMode> mode);
     void updatePhaseMaskVeinComponents(std::shared_ptr<MeasMode> mode);
     bool canChangePhaseMask(std::shared_ptr<MeasMode> mode);
-    QString getChannelNameEarlyHack(QString channelName);
     QString getPhasePowerDescription(int measSystemNo);
     struct RangeMaxVals
     {
