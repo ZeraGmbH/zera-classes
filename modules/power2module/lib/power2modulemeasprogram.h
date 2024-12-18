@@ -17,11 +17,7 @@ enum power2moduleCmds
 {
     sendrmident,
     readresourcetypes,
-    readresourcesense,
-    readresourcesenseinfo,
 
-    readresourcesource,
-    readresourcesourceinfo,
     claimresourcesource,
 
     readsourcechannelalias,
@@ -118,21 +114,10 @@ private:
     QState m_channelRangeObserverScanState;
     QState m_resourceManagerConnectState;
     QState m_IdentifyState;
-    QState m_readResourceTypesState;
 
-    QState m_readResourceSenseState;
-    QState m_readResourceSenseInfosState;
-    QState m_readResourceSenseInfoState;
-    QState m_readResourceSenseInfoDoneState;
-
-    QState m_readResourceSourceState;
     QState m_claimResourcesSourceState;
     QState m_claimResourceSourceState;
     QState m_claimResourceSourceDoneState;
-
-    QState m_readResourceSourceInfosState;
-    QState m_readResourceSourceInfoState;
-    QState m_readResourceSourceInfoDoneState;
 
     QState m_pcbserverConnectState4measChannels;
     QState m_pcbserverConnectState4freqChannels;
@@ -190,15 +175,6 @@ private slots:
     void startFetchCommonRanges();
     void resourceManagerConnect();
     void sendRMIdent();
-    void readResourceTypes();
-    void readResourceSense();
-    void readResourceSenseInfos();
-    void readResourceSenseInfo();
-    void readResourceSenseInfoDone();
-    void readResourceSource();
-    void readResourceSourceInfos();
-    void readResourceSourceInfo();
-    void readResourceSourceInfoDone();
 
     void claimResourcesSource();
     void claimResourceSource();
