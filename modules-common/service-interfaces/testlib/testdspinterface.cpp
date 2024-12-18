@@ -12,14 +12,14 @@ quint32 TestDspInterface::dspMemoryWrite(cDspMeasData *memgroup)
     cDspMeasData *currentMemGroup = d_ptr->findMemHandle(memgroup->getName());
     bool nonEmptyMemgroupFound = false;
     if(currentMemGroup) {
-        int varOffset = 0;
         const QList<cDspVar*> currentVars = currentMemGroup->getVars();
         for(int var=0; var<currentVars.size(); ++var) {
             nonEmptyMemgroupFound = true;
             cDspVar* currentVar = currentVars[var];
             const QString varName = currentVar->Name();
+            DSPDATA::dType dataType = static_cast<DSPDATA::dType>(currentVar->datatype());
             for(int varEntry=0; varEntry<currentVar->size(); ++varEntry) {
-                const float newValue = memgroup->getData()[varOffset+varEntry];
+                const float* valuePointer = currentVar->data() + varEntry;
                 QString label;
                 if(varEntry == 0)
                     label = QString("%1:%2").arg(memGroupName, varName);
@@ -27,10 +27,18 @@ quint32 TestDspInterface::dspMemoryWrite(cDspMeasData *memgroup)
                     QString entryNum = QString("0000%1").arg(varEntry).right(4);
                     label = QString("%1:%2+%3").arg(memGroupName, varName, entryNum);
                 }
-                struct TVarsWritten write = { m_transactionCount, label, newValue };
+                // There is this nasty float/uint cast
+                // see cDspMeasData::setVarData & cDspMeasData::writeCommand()
+                double value = 0.0;
+                if(dataType == DSPDATA::dInt) {
+                    uint* uintPointer = (uint*) valuePointer;
+                    value = *uintPointer;
+                }
+                else
+                    value = *valuePointer;
+                struct TVarsWritten write = { m_transactionCount, label, value };
                 m_valuesWritten.append(write);
             }
-            varOffset += currentVar->size();
         }
     }
     if(!nonEmptyMemgroupFound) {
@@ -68,7 +76,7 @@ QJsonObject TestDspInterface::dumpMemoryGroups()
     for(cDspMeasData* memData : dspMemoryDataList) {
         QJsonObject entry;
         entry.insert("Size", int(memData->getSize()));
-        entry.insert("UserMemSize", int(memData->getumemSize()));
+        entry.insert("UserMemSize", int(memData->getUserMemSize()));
         dumpMemGroup.insert(memData->getName(), entry);
     }
     return dumpMemGroup;

@@ -4,7 +4,6 @@
 #include <errormessages.h>
 #include <reply.h>
 #include <proxy.h>
-#include <dspinterfacecmddecoder.h>
 #include <doublevalidator.h>
 #include <stringvalidator.h>
 #include <math.h>
@@ -203,7 +202,7 @@ void cFftModuleMeasProgram::setDspVarList()
 
     m_ModuleActualValues.resize(m_pActualValuesDSP->getSize()); // we provide a vector for generated actual values
     m_FFTModuleActualValues.resize(m_veinActValueList.count() * getConfData()->m_nFftOrder * 2);
-    m_nDspMemUsed = m_pTmpDataDsp->getumemSize() + m_pParameterDSP->getSize() + m_pActualValuesDSP->getSize();
+    m_nDspMemUsed = m_pTmpDataDsp->getUserMemSize() + m_pParameterDSP->getSize() + m_pActualValuesDSP->getSize();
 }
 
 
@@ -609,8 +608,7 @@ void cFftModuleMeasProgram::newIntegrationtime(QVariant ti)
     if (getConfData()->m_bmovingWindow)
         m_movingwindowFilter.setIntegrationtime(getConfData()->m_fMeasInterval.m_fValue);
     else {
-        DspInterfaceCmdDecoder::setVarData(m_pParameterDSP, QString("TIPAR:%1;TISTART:%2;").arg(getConfData()->m_fMeasInterval.m_fValue*1000)
-                                                                            .arg(0), DSPDATA::dInt);
+        m_pParameterDSP->setVarData(QString("TIPAR:%1;TISTART:0;").arg(getConfData()->m_fMeasInterval.m_fValue*1000));
         m_MsgNrCmdList[m_dspInterface->dspMemoryWrite(m_pParameterDSP)] = writeparameter;
     }
 
@@ -624,7 +622,7 @@ void cFftModuleMeasProgram::newRefChannel(QVariant chn)
     ChannelRangeObserver::SystemObserverPtr observer = m_pModule->getSharedChannelRangeObserver();
     ChannelRangeObserver::ChannelPtr channel = observer->getChannel(channelMName);
     int dspChannel = channel->m_dspChannel;
-    DspInterfaceCmdDecoder::setVarData(m_pParameterDSP, QString("REFCHN:%1;").arg(dspChannel));
+    m_pParameterDSP->setVarData(QString("REFCHN:%1;").arg(dspChannel));
     m_MsgNrCmdList[m_dspInterface->dspMemoryWrite(m_pParameterDSP)] = writeparameter;
     emit m_pModule->parameterChanged();
 }

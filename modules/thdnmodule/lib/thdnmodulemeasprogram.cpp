@@ -16,7 +16,6 @@
 #include <doublevalidator.h>
 #include <intvalidator.h>
 #include <dspinterface.h>
-#include <dspinterfacecmddecoder.h>
 #include <pcbinterface.h>
 #include <math.h>
 #include <QString>
@@ -523,8 +522,7 @@ void cThdnModuleMeasProgram::dataReadDSP()
         m_ModuleActualValues = m_pActualValuesDSP->getData();
         if (getConfData()->m_sTHDType == "R") {
             double thdn, thdr;
-            for (int i = 0; i < m_ModuleActualValues.length(); i++)
-            {
+            for (int i = 0; i < m_ModuleActualValues.length(); i++) {
                 thdn = m_ModuleActualValues.at(i) / 100.0;
                 thdr = 100.0 * thdn / sqrt(1 + (thdn * thdn));
                 m_ModuleActualValues.replace(i, thdr);
@@ -539,15 +537,12 @@ void cThdnModuleMeasProgram::newIntegrationtime(QVariant ti)
 {
     bool ok;
     getConfData()->m_fMeasInterval.m_fValue = ti.toDouble(&ok);
-
     if (getConfData()->m_bmovingWindow)
         m_movingwindowFilter.setIntegrationtime(getConfData()->m_fMeasInterval.m_fValue);
     else {
-        DspInterfaceCmdDecoder::setVarData(m_pParameterDSP, QString("TIPAR:%1;TISTART:%2;").arg(getConfData()->m_fMeasInterval.m_fValue*1000)
-                                                                                .arg(0), DSPDATA::dInt);
+        m_pParameterDSP->setVarData(QString("TIPAR:%1;TISTART:0;").arg(getConfData()->m_fMeasInterval.m_fValue*1000));
         m_MsgNrCmdList[m_dspInterface->dspMemoryWrite(m_pParameterDSP)] = writeparameter;
     }
-
     emit m_pModule->parameterChanged();
 }
 

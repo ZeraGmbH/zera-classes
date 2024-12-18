@@ -25,7 +25,7 @@ private:
     struct TVarsWritten {
         int transcationCount;
         QString groupVarName;
-        float dataWritten;
+        double dataWritten; // enough precision for uint (32 bit)
     };
     QList<TVarsWritten> m_valuesWritten;
     int m_transactionCount = 0;
