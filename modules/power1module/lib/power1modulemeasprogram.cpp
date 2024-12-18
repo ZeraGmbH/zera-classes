@@ -24,25 +24,14 @@ cPower1ModuleMeasProgram::cPower1ModuleMeasProgram(cPower1Module* module, std::s
     // As long as there are no tasks - ignore error
     m_channelRangeObserverScanState.addTransition(
         m_pModule->getSharedChannelRangeObserver().get(), &ChannelRangeObserver::SystemObserver::sigFullScanFinished,&m_resourceManagerConnectState);
-    m_IdentifyState.addTransition(this, &cModuleActivist::activationContinue, &m_readResourceTypesState);
-    m_readResourceTypesState.addTransition(this, &cModuleActivist::activationContinue, &m_readResourceSenseState);
-    m_readResourceSenseState.addTransition(this, &cModuleActivist::activationContinue, &m_readResourceSenseInfosState);
-    m_readResourceSenseInfosState.addTransition(this, &cModuleActivist::activationContinue, &m_readResourceSenseInfoState);
-    m_readResourceSenseInfoState.addTransition(this, &cModuleActivist::activationContinue, &m_readResourceSenseInfoDoneState);
-    m_readResourceSenseInfoDoneState.addTransition(this, &cModuleActivist::activationContinue, &m_readResourceSourceState);
-    m_readResourceSenseInfoDoneState.addTransition(this, &cModuleActivist::activationLoop, &m_readResourceSenseInfoState);
-
-    m_readResourceSourceState.addTransition(this, &cModuleActivist::activationContinue, &m_readResourceSourceInfosState);
-    m_readResourceSourceState.addTransition(this, &cPower1ModuleMeasProgram::activationSkip, &m_pcbserverConnectState4measChannels);
-    m_readResourceSourceInfosState.addTransition(this, &cModuleActivist::activationContinue, &m_readResourceSourceInfoState);
-    m_readResourceSourceInfoState.addTransition(this, &cModuleActivist::activationContinue, &m_readResourceSourceInfoDoneState);
-    m_readResourceSourceInfoDoneState.addTransition(this, &cModuleActivist::activationContinue, &m_claimResourcesSourceState);
-    m_readResourceSourceInfoDoneState.addTransition(this, &cModuleActivist::activationLoop, &m_readResourceSourceInfoState);
+    m_IdentifyState.addTransition(this, &cModuleActivist::activationContinue, &m_claimResourcesSourceState);
 
     m_claimResourcesSourceState.addTransition(this, &cModuleActivist::activationContinue, &m_claimResourceSourceState);
+    m_claimResourcesSourceState.addTransition(this, &cPower1ModuleMeasProgram::activationSkip, &m_pcbserverConnectState4measChannels);
     m_claimResourceSourceState.addTransition(this, &cModuleActivist::activationContinue, &m_claimResourceSourceDoneState);
     m_claimResourceSourceDoneState.addTransition(this, &cModuleActivist::activationContinue, &m_pcbserverConnectState4measChannels);
     m_claimResourceSourceDoneState.addTransition(this, &cModuleActivist::activationLoop, &m_claimResourceSourceState);
+
     m_pcbserverConnectState4measChannels.addTransition(this, &cModuleActivist::activationContinue, &m_pcbserverConnectState4freqChannels);
     m_pcbserverConnectState4freqChannels.addTransition(this, &cModuleActivist::activationContinue, &m_readSourceChannelInformationState);
 
@@ -68,17 +57,6 @@ cPower1ModuleMeasProgram::cPower1ModuleMeasProgram(cPower1Module* module, std::s
     m_activationMachine.addState(&m_channelRangeObserverScanState);
     m_activationMachine.addState(&m_resourceManagerConnectState);
     m_activationMachine.addState(&m_IdentifyState);
-    m_activationMachine.addState(&m_readResourceTypesState);
-
-    m_activationMachine.addState(&m_readResourceSenseState);
-    m_activationMachine.addState(&m_readResourceSenseInfosState);
-    m_activationMachine.addState(&m_readResourceSenseInfoState);
-    m_activationMachine.addState(&m_readResourceSenseInfoDoneState);
-
-    m_activationMachine.addState(&m_readResourceSourceState);
-    m_activationMachine.addState(&m_readResourceSourceInfosState);
-    m_activationMachine.addState(&m_readResourceSourceInfoState);
-    m_activationMachine.addState(&m_readResourceSourceInfoDoneState);
 
     m_activationMachine.addState(&m_claimResourcesSourceState);
     m_activationMachine.addState(&m_claimResourceSourceState);
@@ -109,16 +87,6 @@ cPower1ModuleMeasProgram::cPower1ModuleMeasProgram(cPower1Module* module, std::s
     connect(&m_channelRangeObserverScanState, &QState::entered, this, &cPower1ModuleMeasProgram::startFetchCommonRanges);
     connect(&m_resourceManagerConnectState, &QAbstractState::entered, this, &cPower1ModuleMeasProgram::resourceManagerConnect);
     connect(&m_IdentifyState, &QAbstractState::entered, this, &cPower1ModuleMeasProgram::sendRMIdent);
-    connect(&m_readResourceTypesState, &QAbstractState::entered, this, &cPower1ModuleMeasProgram::readResourceTypes);
-    connect(&m_readResourceSenseState, &QAbstractState::entered, this, &cPower1ModuleMeasProgram::readResourceSense);
-    connect(&m_readResourceSenseInfosState, &QAbstractState::entered, this, &cPower1ModuleMeasProgram::readResourceSenseInfos);
-    connect(&m_readResourceSenseInfoState, &QAbstractState::entered, this, &cPower1ModuleMeasProgram::readResourceSenseInfo);
-    connect(&m_readResourceSenseInfoDoneState, &QAbstractState::entered, this, &cPower1ModuleMeasProgram::readResourceSenseInfoDone);
-
-    connect(&m_readResourceSourceState, &QAbstractState::entered, this, &cPower1ModuleMeasProgram::readResourceSource);
-    connect(&m_readResourceSourceInfosState, &QAbstractState::entered, this, &cPower1ModuleMeasProgram::readResourceSourceInfos);
-    connect(&m_readResourceSourceInfoState, &QAbstractState::entered, this, &cPower1ModuleMeasProgram::readResourceSourceInfo);
-    connect(&m_readResourceSourceInfoDoneState, &QAbstractState::entered, this, &cPower1ModuleMeasProgram::readResourceSourceInfoDone);
 
     connect(&m_dspserverConnectState, &QAbstractState::entered, this, &cPower1ModuleMeasProgram::dspserverConnect);
     connect(&m_claimResourcesSourceState, &QAbstractState::entered, this, &cPower1ModuleMeasProgram::claimResourcesSource);
@@ -587,106 +555,6 @@ void cPower1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply,
                     notifyError(dspactiveErrMsg);
                 break;
 
-            case readresourcetypes:
-            {
-                bool ok = false;
-                if ((reply == ack) && (answer.toString().contains("SENSE"))) { // we need sense  at least
-                    if (getConfData()->m_nFreqOutputCount > 0) {
-                        if (answer.toString().contains("SOURCE")) // maybe we also need source
-                            ok = true;
-                    }
-                    else
-                        ok = true;
-                }
-                if (ok)
-                    emit activationContinue();
-                else
-                    notifyError(resourcetypeErrMsg);
-                break;
-            }
-            case readresourcesense:
-            {
-                if (reply == ack) {
-                    QList<QString> sl = m_measChannelInfoHash.keys();
-                    QString s = answer.toString();
-                    bool allfound = true;
-                    for (int i = 0; i < sl.count(); i++) {
-                        if (!s.contains(sl.at(i)))
-                            allfound = false;
-                    }
-                    if (allfound)
-                        emit activationContinue();
-                    else
-                        notifyError(resourceErrMsg);
-                }
-                else
-                    notifyError(resourceErrMsg);
-                break;
-            }
-
-            case readresourcesenseinfo:
-            {
-                QStringList sl = answer.toString().split(';');
-                if ((reply == ack) && (sl.length() >= 4)) {
-                    bool ok;
-                    int port = sl.at(3).toInt(&ok); // we have to set the port where we can find our meas channel
-                    if (ok) {
-                        cMeasChannelInfo mi = m_measChannelInfoHash.take(infoRead);
-                        mi.pcbServersocket.m_nPort = port;
-                        m_measChannelInfoHash[infoRead] = mi;
-                        emit activationContinue();
-                    }
-                    else
-                        notifyError(resourceInfoErrMsg);
-                }
-                else
-                    notifyError(resourceInfoErrMsg);
-                break;
-            }
-
-            case readresourcesource:
-            {
-                if (reply == ack)
-                {
-                    QList<QString> sl = m_FoutInfoMap.keys();
-                    QString s = answer.toString();
-                    bool allfound = true;
-                    for (int i = 0; i < sl.count(); i++) {
-                        if (!s.contains(sl.at(i)))
-                            allfound = false;
-                    }
-                    if (allfound)
-                        emit activationContinue();
-                    else
-                        notifyError(resourceErrMsg);
-                }
-                else
-                    notifyError(resourceErrMsg);
-                break;
-            }
-
-            case readresourcesourceinfo:
-            {
-                QStringList sl = answer.toString().split(';');
-                if ((reply == ack) && (sl.length() >= 4)) {
-                    bool ok1, ok2, ok3;
-                    int max = sl.at(0).toInt(&ok1); // fixed position
-                    int free = sl.at(1).toInt(&ok2);
-                    int port = sl.at(3).toInt(&ok3);
-                    if (ok1 && ok2 && ok3 && ((max == free) == 1)) {
-                        cFoutInfo fi = m_FoutInfoMap.take(infoRead);
-                        fi.pcbServersocket.m_nPort = port;
-                        m_FoutInfoMap[infoRead] = fi;
-                        emit activationContinue();
-                    }
-                    else
-                        notifyError(resourceInfoErrMsg);
-                }
-                else
-                    notifyError(resourceInfoErrMsg);
-                break;
-            }
-
             case claimresourcesource:
                 if (reply == ack)
                     emit activationContinue();
@@ -836,7 +704,6 @@ void cPower1ModuleMeasProgram::resourceManagerConnect()
     // as this is our entry point when activating the module, we do some initialization first
     m_measChannelInfoHash.clear(); // we build up a new channel info hash
     cMeasChannelInfo mi;
-    mi.pcbServersocket = m_pModule->getNetworkConfig()->m_pcbServiceConnectionInfo; // the default from configuration file
     for(auto &measSystem : getConfData()->m_sMeasSystemList) {
         QStringList sl = measSystem.split(',');
         for (int j = 0; j < sl.count(); j++) {
@@ -848,7 +715,6 @@ void cPower1ModuleMeasProgram::resourceManagerConnect()
 
     m_FoutInfoMap.clear();
     cFoutInfo fi;
-    fi.pcbServersocket = m_pModule->getNetworkConfig()->m_pcbServiceConnectionInfo; // the default from configuration file
     for (int i = 0; i < getConfData()->m_nFreqOutputCount; i++) {
         QString name = getConfData()->m_FreqOutputConfList.at(i).m_sName;
         if (!m_FoutInfoMap.contains(name))
@@ -868,69 +734,25 @@ void cPower1ModuleMeasProgram::resourceManagerConnect()
     Zera::Proxy::getInstance()->startConnectionSmart(m_rmClient);
 }
 
-
 void cPower1ModuleMeasProgram::sendRMIdent()
 {
     m_MsgNrCmdList[m_rmInterface.rmIdent(QString("Power1Module%1").arg(m_pModule->getModuleNr()))] = sendrmident;
 }
 
-
-void cPower1ModuleMeasProgram::readResourceTypes()
-{
-    m_MsgNrCmdList[m_rmInterface.getResourceTypes()] = readresourcetypes;
-}
-
-
-void cPower1ModuleMeasProgram::readResourceSense()
-{
-    m_MsgNrCmdList[m_rmInterface.getResources("SENSE")] = readresourcesense;
-}
-
-
-void cPower1ModuleMeasProgram::readResourceSenseInfos()
-{
-    infoReadList = m_measChannelInfoHash.keys(); // we have to read information for all channels in this list
-    emit activationContinue();
-}
-
-
-void cPower1ModuleMeasProgram::readResourceSenseInfo()
-{
-    infoRead = infoReadList.takeLast();
-    m_MsgNrCmdList[m_rmInterface.getResourceInfo("SENSE", infoRead)] = readresourcesenseinfo;
-}
-
-
-void cPower1ModuleMeasProgram::readResourceSenseInfoDone()
-{
-    if (infoReadList.isEmpty())
-        emit activationContinue();
-    else
-        emit activationLoop();
-}
-
-
-void cPower1ModuleMeasProgram::readResourceSource()
-{
-    if (getConfData()->m_nFreqOutputCount > 0) // do we have any frequency output
-        m_MsgNrCmdList[m_rmInterface.getResources("SOURCE")] = readresourcesource; // then we read the needed info
-    else
-        emit activationSkip(); // otherwise we will skip
-}
-
 void cPower1ModuleMeasProgram::claimResourcesSource()
 {
     infoReadList = m_FoutInfoMap.keys(); // we have to read information for all freq outputs in this list
-    emit activationContinue();
+    if(!infoReadList.isEmpty())
+        emit activationContinue();
+    else
+        emit activationSkip();
 }
-
 
 void cPower1ModuleMeasProgram::claimResourceSource()
 {
     infoRead = infoReadList.takeLast();
     m_MsgNrCmdList[m_rmInterface.setResource("SOURCE", infoRead, 1)] = claimresourcesource;
 }
-
 
 void cPower1ModuleMeasProgram::claimResourceSourceDone()
 {
@@ -940,42 +762,16 @@ void cPower1ModuleMeasProgram::claimResourceSourceDone()
         emit activationLoop();
 }
 
-
-void cPower1ModuleMeasProgram::readResourceSourceInfos()
-{
-    infoReadList = m_FoutInfoMap.keys(); // we have to read information for all freq outputs in this list
-    emit activationContinue();
-}
-
-
-void cPower1ModuleMeasProgram::readResourceSourceInfo()
-{
-    infoRead = infoReadList.takeLast();
-    m_MsgNrCmdList[m_rmInterface.getResourceInfo("SOURCE", infoRead)] = readresourcesourceinfo;
-}
-
-
-void cPower1ModuleMeasProgram::readResourceSourceInfoDone()
-{
-    if (infoReadList.isEmpty())
-        emit activationContinue();
-    else
-        emit activationLoop();
-}
-
-
 void cPower1ModuleMeasProgram::pcbserverConnect4measChannels()
 {
     // we have to connect to all ports....
     infoReadList = m_measChannelInfoHash.keys(); // so first we look for our different pcb sockets for sense
     m_nConnectionCount = infoReadList.count();
 
-    for (int i = 0; i < infoReadList.count(); i++)
-    {
+    for (int i = 0; i < infoReadList.count(); i++) {
         QString key = infoReadList.at(i);
         cMeasChannelInfo mi = m_measChannelInfoHash.take(key);
-        NetworkConnectionInfo netInfo = mi.pcbServersocket;
-        Zera::ProxyClient* pcbClient = Zera::Proxy::getInstance()->getConnection(netInfo,
+        Zera::ProxyClient* pcbClient = Zera::Proxy::getInstance()->getConnection(m_pModule->getNetworkConfig()->m_pcbServiceConnectionInfo,
                                                                                  m_pModule->getNetworkConfig()->m_tcpNetworkFactory);
         m_pcbClientList.append(pcbClient);
         Zera::cPCBInterface* pcbIFace = new Zera::cPCBInterface();
@@ -989,19 +785,15 @@ void cPower1ModuleMeasProgram::pcbserverConnect4measChannels()
     }
 }
 
-
 void cPower1ModuleMeasProgram::pcbserverConnect4freqChannels()
 {
     infoReadList = m_FoutInfoMap.keys(); // and then  we look for our different pcb sockets for source
-    if (infoReadList.count() > 0)
-    {
+    if (infoReadList.count() > 0) {
         m_nConnectionCount += infoReadList.count();
-        for (int i = 0; i < infoReadList.count(); i++)
-        {
+        for (int i = 0; i < infoReadList.count(); i++) {
             QString key = infoReadList.at(i);
             cFoutInfo fi = m_FoutInfoMap.take(key);
-            NetworkConnectionInfo netInfo = fi.pcbServersocket;
-            Zera::ProxyClient* pcbClient = Zera::Proxy::getInstance()->getConnection(netInfo,
+            Zera::ProxyClient* pcbClient = Zera::Proxy::getInstance()->getConnection(m_pModule->getNetworkConfig()->m_pcbServiceConnectionInfo,
                                                                                      m_pModule->getNetworkConfig()->m_tcpNetworkFactory);
             m_pcbClientList.append(pcbClient);
             Zera::cPCBInterface* pcbIFace = new Zera::cPCBInterface();
