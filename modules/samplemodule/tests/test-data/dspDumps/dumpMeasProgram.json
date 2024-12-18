@@ -95,5 +95,7 @@
         "DSPINTTRIGGER(0x0,0x8)",
         "DEACTIVATECHAIN(1,0x0102)",
         "STOPCHAIN(1,0x0102)"
-    ]
+    ],
+    "3-VarsWritten": {
+    }
 }
