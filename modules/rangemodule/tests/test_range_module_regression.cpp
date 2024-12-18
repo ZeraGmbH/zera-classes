@@ -308,15 +308,16 @@ void test_range_module_regression::dumpDspSetup()
     const QList<TestDspInterfacePtr>& dspInterfaces = testRunner.getDspInterfaceList();
     QCOMPARE(dspInterfaces.count(), 3);
 
+    // dumping SCALEMEM:GAINCORRECTION2 does not seem reproducable yet
     QString obsermaticDumped = TestLogHelpers::dump(dspInterfaces[dspInterfaces::RangeObsermatic]->dumpAll());
     QString obsermaticExpected = TestLogHelpers::loadFile(":/dspDumps/dumpObsermatic.json");
     QVERIFY(TestLogHelpers::compareAndLogOnDiff(obsermaticExpected, obsermaticDumped));
 
-    QString adjustListDumped = TestLogHelpers::dump(dspInterfaces[dspInterfaces::AdjustManagement]->dumpAll());
+    QString adjustListDumped = TestLogHelpers::dump(dspInterfaces[dspInterfaces::AdjustManagement]->dumpAll(true));
     QString adjustListExpected = TestLogHelpers::loadFile(":/dspDumps/dumpAdjustManagement.json");
     QVERIFY(TestLogHelpers::compareAndLogOnDiff(adjustListExpected, adjustListDumped));
 
-    QString measProgramDumped = TestLogHelpers::dump(dspInterfaces[dspInterfaces::RangeModuleMeasProgram]->dumpAll());
+    QString measProgramDumped = TestLogHelpers::dump(dspInterfaces[dspInterfaces::RangeModuleMeasProgram]->dumpAll(true));
     QString measProgramExpected = TestLogHelpers::loadFile(":/dspDumps/dumpMeasProgram.json");
     QVERIFY(TestLogHelpers::compareAndLogOnDiff(measProgramExpected, measProgramDumped));
 }

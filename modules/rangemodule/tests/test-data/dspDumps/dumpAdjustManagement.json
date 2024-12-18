@@ -18,5 +18,8 @@
         }
     },
     "2-CmdList": [
-    ]
+    ],
+    "3-VarsWritten": {
+        "WriteNo: 0000 / Handle:Variable: SubDC:SUBDC": 255
+    }
 }
