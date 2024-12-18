@@ -17,7 +17,6 @@ struct cFoutInfo
     bool avail; // may be it is not available (future purpose)
     quint8 dspFoutChannel; // the dspchannel that is responsible for this output 0..3
     double formFactor;
-    NetworkConnectionInfo pcbServersocket;
     Zera::cPCBInterface* pcbIFace;
 };
 
