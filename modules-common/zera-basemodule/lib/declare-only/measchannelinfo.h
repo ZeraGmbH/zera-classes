@@ -8,7 +8,6 @@
 
 struct cMeasChannelInfo
 {
-    quint8 dspChannelNr;
     double m_fUrValue; // the channels actual upper range value
     NetworkConnectionInfo pcbServersocket;
     Zera::cPCBInterface* pcbIFace;
