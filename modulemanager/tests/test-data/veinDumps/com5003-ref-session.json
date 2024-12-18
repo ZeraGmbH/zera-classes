@@ -1116,17 +1116,17 @@
                 },
                 "ACT_PQS1": {
                     "ChannelName": "P1",
-                    "Description": "Actual power value REF1/REF4",
+                    "Description": "Actual power value U1/I1",
                     "Unit": "W"
                 },
                 "ACT_PQS2": {
                     "ChannelName": "P2",
-                    "Description": "Actual power value REF2/REF5",
+                    "Description": "Actual power value U2/I2",
                     "Unit": "W"
                 },
                 "ACT_PQS3": {
                     "ChannelName": "P3",
-                    "Description": "Actual power value REF3/REF6",
+                    "Description": "Actual power value U3/I3",
                     "Unit": "W"
                 },
                 "ACT_PQS4": {

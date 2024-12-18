@@ -1751,17 +1751,17 @@
                 },
                 "ACT_PQS1": {
                     "ChannelName": "P1",
-                    "Description": "Actual power value UL1/IL1",
+                    "Description": "Actual power value U1/I1",
                     "Unit": "W"
                 },
                 "ACT_PQS2": {
                     "ChannelName": "P2",
-                    "Description": "Actual power value UL2/IL2",
+                    "Description": "Actual power value U2/I2",
                     "Unit": "W"
                 },
                 "ACT_PQS3": {
                     "ChannelName": "P3",
-                    "Description": "Actual power value UL3/IL3",
+                    "Description": "Actual power value U3/I3",
                     "Unit": "W"
                 },
                 "ACT_PQS4": {
@@ -1953,17 +1953,17 @@
                 },
                 "ACT_PQS1": {
                     "ChannelName": "Q1",
-                    "Description": "Actual power value UL1/IL1",
+                    "Description": "Actual power value U1/I1",
                     "Unit": "Var"
                 },
                 "ACT_PQS2": {
                     "ChannelName": "Q2",
-                    "Description": "Actual power value UL2/IL2",
+                    "Description": "Actual power value U2/I2",
                     "Unit": "Var"
                 },
                 "ACT_PQS3": {
                     "ChannelName": "Q3",
-                    "Description": "Actual power value UL3/IL3",
+                    "Description": "Actual power value U3/I3",
                     "Unit": "Var"
                 },
                 "ACT_PQS4": {
@@ -2156,17 +2156,17 @@
                 },
                 "ACT_PQS1": {
                     "ChannelName": "S1",
-                    "Description": "Actual power value UL1/IL1",
+                    "Description": "Actual power value U1/I1",
                     "Unit": "VA"
                 },
                 "ACT_PQS2": {
                     "ChannelName": "S2",
-                    "Description": "Actual power value UL2/IL2",
+                    "Description": "Actual power value U2/I2",
                     "Unit": "VA"
                 },
                 "ACT_PQS3": {
                     "ChannelName": "S3",
-                    "Description": "Actual power value UL3/IL3",
+                    "Description": "Actual power value U3/I3",
                     "Unit": "VA"
                 },
                 "ACT_PQS4": {
@@ -2361,17 +2361,17 @@
                 },
                 "ACT_PQS1": {
                     "ChannelName": "P1",
-                    "Description": "Actual power value UL1/IL1",
+                    "Description": "Actual power value U1/I1",
                     "Unit": "W"
                 },
                 "ACT_PQS2": {
                     "ChannelName": "P2",
-                    "Description": "Actual power value UL2/IL2",
+                    "Description": "Actual power value U2/I2",
                     "Unit": "W"
                 },
                 "ACT_PQS3": {
                     "ChannelName": "P3",
-                    "Description": "Actual power value UL3/IL3",
+                    "Description": "Actual power value U3/I3",
                     "Unit": "W"
                 },
                 "ACT_PQS4": {
@@ -2571,17 +2571,17 @@
                 },
                 "ACT_PQS1": {
                     "ChannelName": "Q1",
-                    "Description": "Actual power value UL1/IL1",
+                    "Description": "Actual power value U1/I1",
                     "Unit": "Var"
                 },
                 "ACT_PQS2": {
                     "ChannelName": "Q2",
-                    "Description": "Actual power value UL2/IL2",
+                    "Description": "Actual power value U2/I2",
                     "Unit": "Var"
                 },
                 "ACT_PQS3": {
                     "ChannelName": "Q3",
-                    "Description": "Actual power value UL3/IL3",
+                    "Description": "Actual power value U3/I3",
                     "Unit": "Var"
                 },
                 "ACT_PQS4": {
@@ -2675,17 +2675,17 @@
                 },
                 "ACT_PQS1": {
                     "ChannelName": "S1",
-                    "Description": "Actual power value UL1/IL1",
+                    "Description": "Actual power value U1/I1",
                     "Unit": "VA"
                 },
                 "ACT_PQS2": {
                     "ChannelName": "S2",
-                    "Description": "Actual power value UL2/IL2",
+                    "Description": "Actual power value U2/I2",
                     "Unit": "VA"
                 },
                 "ACT_PQS3": {
                     "ChannelName": "S3",
-                    "Description": "Actual power value UL3/IL3",
+                    "Description": "Actual power value U3/I3",
                     "Unit": "VA"
                 },
                 "ACT_PQS4": {
