@@ -8,13 +8,12 @@
 namespace RANGEMODULE
 {
 
-cRangeMeasChannel::cRangeMeasChannel(const ChannelRangeObserver::SystemObserverPtr channelRangeObserver,
+cRangeMeasChannel::cRangeMeasChannel(const ChannelRangeObserver::ChannelPtr croChannel,
                                      NetworkConnectionInfo pcbsocket,
                                      VeinTcp::AbstractTcpNetworkFactoryPtr tcpNetworkFactory,
                                      QString name, quint8 chnnr, QString moduleName) :
-    cBaseMeasChannel(pcbsocket, tcpNetworkFactory, name, chnnr,
+    cBaseMeasChannel(croChannel, pcbsocket, tcpNetworkFactory, name, chnnr,
                        QString("%1/RangeMeasChannel/%2").arg(moduleName, name)),
-    m_channelRangeObserver(channelRangeObserver),
     m_preScaling(1)
 {
     m_pcbInterface = std::make_shared<Zera::cPCBInterface>();

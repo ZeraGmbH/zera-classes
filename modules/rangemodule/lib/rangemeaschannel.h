@@ -1,7 +1,6 @@
 #ifndef RANGEMEASCHANNEL_H
 #define RANGEMEASCHANNEL_H
 
-#include "cro_systemobserver.h"
 #include <pcbinterface.h>
 #include <basemeaschannel.h>
 #include <rangeinfo.h>
@@ -40,7 +39,7 @@ class cRangeMeasChannel: public cBaseMeasChannel
 {
     Q_OBJECT
 public:
-    cRangeMeasChannel(const ChannelRangeObserver::SystemObserverPtr channelRangeObserver,
+    cRangeMeasChannel(const ChannelRangeObserver::ChannelPtr croChannel,
                       NetworkConnectionInfo pcbsocket,
                       VeinTcp::AbstractTcpNetworkFactoryPtr tcpNetworkFactory,
                       QString name, quint8 chnnr, QString moduleName);
@@ -99,7 +98,6 @@ protected slots:
     void catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant answer) override;
 
 private:
-    const ChannelRangeObserver::SystemObserverPtr m_channelRangeObserver;
     QStringList m_RangeNameList; // a list of all ranges
     QHash<QString, cRangeInfoWithConstantValues> m_RangeInfoHash; // a list of available and selectable ranges, alias will be the key
     QHash<QString, cRangeInfoWithConstantValues> m_RangeInfoHashWorking;

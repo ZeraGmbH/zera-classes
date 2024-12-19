@@ -46,9 +46,7 @@ void cRangeModule::setupModule()
 {
     emit addEventSystem(m_pModuleValidator);
     cBaseMeasModule::setupModule();
-
-    cRangeModuleConfigData *pConfData;
-    pConfData = qobject_cast<cRangeModuleConfiguration*>(m_pConfiguration.get())->getConfigurationData();
+    cRangeModuleConfigData *pConfData = qobject_cast<cRangeModuleConfiguration*>(m_pConfiguration.get())->getConfigurationData();
 
     m_pChannelCountInfo = new VfModuleMetaData(QString("ChannelCount"), QVariant(pConfData->m_nChannelCount));
     veinModuleMetaDataList.append(m_pChannelCountInfo);
@@ -56,13 +54,15 @@ void cRangeModule::setupModule()
     m_pGroupCountInfo = new VfModuleMetaData(QString("GroupCount"), QVariant(pConfData->m_nGroupCount));
     veinModuleMetaDataList.append(m_pGroupCountInfo);
 
-
     // first we build a list of our meas channels
+    ChannelRangeObserver::SystemObserverPtr observer = getSharedChannelRangeObserver();
     for (int i = 0; i < pConfData->m_nChannelCount; i ++) {
-        cRangeMeasChannel* pchn = new cRangeMeasChannel(getSharedChannelRangeObserver(),
+        QString channeMName = pConfData->m_senseChannelList.at(i);
+        const ChannelRangeObserver::ChannelPtr croChannel = observer->getChannel(channeMName);
+        cRangeMeasChannel* pchn = new cRangeMeasChannel(croChannel,
                                                         getNetworkConfig()->m_pcbServiceConnectionInfo,
                                                         getNetworkConfig()->m_tcpNetworkFactory,
-                                                        pConfData->m_senseChannelList.at(i),
+                                                        channeMName,
                                                         i+1,
                                                         getVeinModuleName());
         m_rangeMeasChannelList.append(pchn);

@@ -6,11 +6,10 @@
 namespace REFERENCEMODULE
 {
 
-cReferenceMeasChannel::cReferenceMeasChannel(const ChannelRangeObserver::SystemObserverPtr channelRangeObserver, NetworkConnectionInfo pcbsocket, VeinTcp::AbstractTcpNetworkFactoryPtr tcpNetworkFactory,
+cReferenceMeasChannel::cReferenceMeasChannel(const ChannelRangeObserver::ChannelPtr croChannel, NetworkConnectionInfo pcbsocket, VeinTcp::AbstractTcpNetworkFactoryPtr tcpNetworkFactory,
                                              QString name, quint8 chnnr, QString moduleName) :
-    cBaseMeasChannel(pcbsocket, tcpNetworkFactory, name, chnnr,
-                       QString("%1/cReferenceMeasChannel/%2").arg(moduleName, name)),
-    m_channelRangeObserver(channelRangeObserver)
+    cBaseMeasChannel(croChannel, pcbsocket, tcpNetworkFactory, name, chnnr,
+                       QString("%1/cReferenceMeasChannel/%2").arg(moduleName, name))
 {
     m_pcbInterface = std::make_shared<Zera::cPCBInterface>();
 

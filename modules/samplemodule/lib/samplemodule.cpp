@@ -73,16 +73,17 @@ void cSampleModule::setupModule()
 {
     emit addEventSystem(m_pModuleValidator);
     cBaseMeasModule::setupModule();
-
-    cSampleModuleConfigData *pConfData;
-    pConfData = qobject_cast<cSampleModuleConfiguration*>(m_pConfiguration.get())->getConfigurationData();
+    cSampleModuleConfigData *pConfData = qobject_cast<cSampleModuleConfiguration*>(m_pConfiguration.get())->getConfigurationData();
 
     // first we build a list of our pll meas channels, that hold informations for other activists
+    ChannelRangeObserver::SystemObserverPtr observer = getSharedChannelRangeObserver();
     for (int i = 0; i < pConfData->m_ObsermaticConfPar.m_npllChannelCount; i ++) {
-        cPllMeasChannel* pllchn = new cPllMeasChannel(getSharedChannelRangeObserver(),
+        QString channeMName = pConfData->m_ObsermaticConfPar.m_pllChannelList.at(i);
+        const ChannelRangeObserver::ChannelPtr croChannel = observer->getChannel(channeMName);
+        cPllMeasChannel* pllchn = new cPllMeasChannel(croChannel,
                                                       getNetworkConfig()->m_pcbServiceConnectionInfo,
                                                       getNetworkConfig()->m_tcpNetworkFactory,
-                                                      pConfData->m_ObsermaticConfPar.m_pllChannelList.at(i),
+                                                      channeMName,
                                                       i+1,
                                                       getVeinModuleName());
         m_pllMeasChannelList.append(pllchn);

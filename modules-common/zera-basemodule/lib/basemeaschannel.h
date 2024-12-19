@@ -1,6 +1,7 @@
 #ifndef BASEMEASCHANNEL_H
 #define BASEMEASCHANNEL_H
 
+#include "cro_channel.h"
 #include "moduleactivist.h"
 #include "networkconnectioninfo.h"
 #include <pcbinterface.h>
@@ -11,7 +12,8 @@ class cBaseMeasChannel: public cModuleActivist
     Q_OBJECT
 
 public:
-    cBaseMeasChannel(NetworkConnectionInfo pcbsocket,
+    cBaseMeasChannel(ChannelRangeObserver::ChannelPtr croChannel,
+                     NetworkConnectionInfo pcbsocket,
                      VeinTcp::AbstractTcpNetworkFactoryPtr tcpNetworkFactory,
                      QString channelName, quint8 chnnr,
                      QString moduleChannelInfo);
@@ -22,6 +24,7 @@ public:
     QString getUnit();
 
 protected:
+    const ChannelRangeObserver::ChannelPtr m_croChannel;
     NetworkConnectionInfo m_pcbNetworkInfo;
     VeinTcp::AbstractTcpNetworkFactoryPtr m_tcpNetworkFactory;
     QString m_sName; // the channel's system name

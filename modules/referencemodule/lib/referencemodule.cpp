@@ -74,17 +74,18 @@ void cReferenceModule::setupModule()
 {
     emit addEventSystem(m_pModuleValidator);
     cBaseMeasModule::setupModule();
-
     cReferenceModuleConfigData *pConfData = qobject_cast<cReferenceModuleConfiguration*>(m_pConfiguration.get())->getConfigurationData();
 
     // setting of mode has been done by seperate mode module
     // first we build a list of our meas channels
-    for (int i = 0; i < pConfData->m_nChannelCount; i ++)
-    {
-        cReferenceMeasChannel* pchn = new cReferenceMeasChannel(getSharedChannelRangeObserver(),
+    ChannelRangeObserver::SystemObserverPtr observer = getSharedChannelRangeObserver();
+    for (int i = 0; i < pConfData->m_nChannelCount; i ++) {
+        QString channeMName = pConfData->m_referenceChannelList.at(i);
+        const ChannelRangeObserver::ChannelPtr croChannel = observer->getChannel(channeMName);
+        cReferenceMeasChannel* pchn = new cReferenceMeasChannel(croChannel,
                                                                 getNetworkConfig()->m_pcbServiceConnectionInfo,
                                                                 getNetworkConfig()->m_tcpNetworkFactory,
-                                                                pConfData->m_referenceChannelList.at(i),
+                                                                channeMName,
                                                                 i+1,
                                                                 getVeinModuleName());
         m_ReferenceMeasChannelList.append(pchn);
