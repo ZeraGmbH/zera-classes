@@ -42,7 +42,6 @@ protected:
     cSCPIServer *m_pSCPIServer; // our server for the world
 
 private slots:
-    void activationStart() override;
     void activationExec() override;
     void activationDone() override;
     virtual void activationFinished() override;

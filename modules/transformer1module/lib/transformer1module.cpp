@@ -81,13 +81,6 @@ void cTransformer1Module::stopMeas()
 }
 
 
-void cTransformer1Module::activationStart()
-{
-    m_nActivationIt = 0; // we start with the first
-    emit activationContinue();
-}
-
-
 void cTransformer1Module::activationExec()
 {
     m_ModuleActivistList.at(m_nActivationIt)->activate();
