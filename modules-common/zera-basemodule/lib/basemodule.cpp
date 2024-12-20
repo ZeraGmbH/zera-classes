@@ -48,16 +48,13 @@ BaseModule::BaseModule(ModuleFactoryParam moduleParam, std::shared_ptr<BaseModul
     m_pStateRun->addTransition(this, &BaseModule::sigRunFailed, m_pStateIdle); // in case of error we fall back to idle
     m_pStateRUNStart = new QState(m_pStateRun);
     m_pStateRUNDone = new QState(m_pStateRun);
-    m_pStateRUNDeactivate = new QState(m_pStateRun);
     m_pStateRUNConfSetup = new QState(m_pStateRun);
     m_pStateRUNStart->addTransition(this, &BaseModule::activationReady, m_pStateRUNDone);
-    m_pStateRUNDone->addTransition(this, &BaseModule::sigConfiguration, m_pStateRUNDeactivate);
-    m_pStateRUNDeactivate->addTransition(this, &BaseModule::deactivationReady, m_pStateRUNConfSetup);
+    m_pStateRUNDone->addTransition(this, &BaseModule::sigConfiguration, m_pStateRUNConfSetup);
     m_pStateRUNConfSetup->addTransition(this, &BaseModule::sigConfDone, m_pStateRUNStart );
     m_pStateRun->setInitialState(m_pStateRUNStart);
     connect(m_pStateRUNStart, &QState::entered, this, &BaseModule::entryRunStart);
     connect(m_pStateRUNDone, &QState::entered, this, &BaseModule::entryRunDone);
-    connect(m_pStateRUNDeactivate, &QState::entered, this, &BaseModule::entryRunDeactivate);
     connect(m_pStateRUNConfSetup, &QState::entered, this, &BaseModule::entryConfSetup);
 
     m_stateMachine.addState(m_pStateIdle);
@@ -108,7 +105,6 @@ BaseModule::~BaseModule()
 
     delete m_pStateRUNStart;
     delete m_pStateRUNDone;
-    delete m_pStateRUNDeactivate;
     delete m_pStateRUNConfSetup;
 
     delete m_pStateIdle;
@@ -330,9 +326,4 @@ void BaseModule::entryRunDone()
     startMeas();
     m_nStatus = activated;
     emit moduleActivated();
-}
-
-void BaseModule::entryRunDeactivate()
-{
-    m_DeactivationMachine.start();
 }
