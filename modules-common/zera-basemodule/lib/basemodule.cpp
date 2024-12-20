@@ -126,7 +126,7 @@ void BaseModule::stopModule()
 
 void BaseModule::startDestroy()
 {
-    connect(this, &ZeraModules::VirtualModule::deactivationReady,
+    connect(this, &BaseModule::deactivationReady,
             this, &ZeraModules::VirtualModule::moduleDeactivated);
     if(!m_DeactivationMachine.isRunning())
         m_DeactivationMachine.start();

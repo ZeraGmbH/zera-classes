@@ -45,6 +45,11 @@ public:
     QList<cSCPIInfo*> scpiCommandList; // a list of commands that work without existing component, it uses a component's validation data for additional queries
 
 signals:
+    // signals emitted by modules
+    void activationReady();
+    void deactivationReady();
+
+    // state machine control
     void sigRun();
     void sigRunFailed();
     void sigStop();
