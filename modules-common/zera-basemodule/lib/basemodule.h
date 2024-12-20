@@ -69,7 +69,6 @@ protected:
 
     QState *m_pStateIdle;
     QState *m_pStateRun;
-    QFinalState *m_pStateFinished;
 
     // additional states for IDLE
     QState* m_pStateIDLEIdle;
@@ -78,7 +77,6 @@ protected:
     // additional states for RUN
     QState* m_pStateRUNStart;
     QState* m_pStateRUNDone;
-    QState* m_pStateRUNConfSetup;
 
     // our states for base modules activation statemachine
     QState m_ActivationStartState;

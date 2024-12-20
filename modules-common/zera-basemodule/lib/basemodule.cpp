@@ -28,11 +28,8 @@ BaseModule::BaseModule(ModuleFactoryParam moduleParam, std::shared_ptr<BaseModul
     m_pStateIdle->setObjectName("IDLE");
     m_pStateRun = new QState();
     m_pStateRun->setObjectName("RUN");
-    m_pStateFinished = new QFinalState();
-    m_pStateFinished->setObjectName("FINISH");
 
     // we set up our IDLE state here
-
     m_pStateIdle->addTransition(this, &BaseModule::sigRun, m_pStateRun); // after sigRun we leave idle
     m_pStateIDLEIdle = new QState(m_pStateIdle); // the initial state for idle
     m_pStateIDLEConfSetup = new QState(m_pStateIdle); // same
@@ -44,22 +41,16 @@ BaseModule::BaseModule(ModuleFactoryParam moduleParam, std::shared_ptr<BaseModul
     connect(m_pStateIDLEConfSetup, &QState::entered, this, &BaseModule::entryConfSetup);
 
     // we set up our RUN state here
-
     m_pStateRun->addTransition(this, &BaseModule::sigRunFailed, m_pStateIdle); // in case of error we fall back to idle
     m_pStateRUNStart = new QState(m_pStateRun);
     m_pStateRUNDone = new QState(m_pStateRun);
-    m_pStateRUNConfSetup = new QState(m_pStateRun);
     m_pStateRUNStart->addTransition(this, &BaseModule::activationReady, m_pStateRUNDone);
-    m_pStateRUNDone->addTransition(this, &BaseModule::sigConfiguration, m_pStateRUNConfSetup);
-    m_pStateRUNConfSetup->addTransition(this, &BaseModule::sigConfDone, m_pStateRUNStart );
     m_pStateRun->setInitialState(m_pStateRUNStart);
     connect(m_pStateRUNStart, &QState::entered, this, &BaseModule::entryRunStart);
     connect(m_pStateRUNDone, &QState::entered, this, &BaseModule::entryRunDone);
-    connect(m_pStateRUNConfSetup, &QState::entered, this, &BaseModule::entryConfSetup);
 
     m_stateMachine.addState(m_pStateIdle);
     m_stateMachine.addState(m_pStateRun);
-    m_stateMachine.addState(m_pStateFinished);
     m_stateMachine.setInitialState(m_pStateIdle);
 
     m_stateMachine.start();
@@ -105,11 +96,9 @@ BaseModule::~BaseModule()
 
     delete m_pStateRUNStart;
     delete m_pStateRUNDone;
-    delete m_pStateRUNConfSetup;
 
     delete m_pStateIdle;
     delete m_pStateRun;
-    delete m_pStateFinished;
 }
 
 void BaseModule::startModule()
