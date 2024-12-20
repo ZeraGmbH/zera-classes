@@ -51,7 +51,6 @@ signals:
     void sigStopFailed();
     void sigConfiguration(); // emitting this signal starts configuration
     void sigConfDone(); // emitted when configuration is done regardless of good or not
-    void sigReconfigureContinue();
 
     void activationContinue();
     void activationNext();
