@@ -125,7 +125,6 @@ private:
 
     int m_nStatus;
 private slots:
-    void entryIdle();
     void entryIDLEIdle();
 
     void entryConfSetup();

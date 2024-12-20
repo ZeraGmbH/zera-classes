@@ -37,7 +37,6 @@ BaseModule::BaseModule(ModuleFactoryParam moduleParam, std::shared_ptr<BaseModul
     m_pStateIDLEConfSetup->addTransition(this, &BaseModule::sigConfDone, m_pStateIDLEIdle);
     m_pStateIdle->setInitialState(m_pStateIDLEIdle);
     connect(m_pStateIDLEIdle, &QState::entered, this, &BaseModule::entryIDLEIdle);
-    connect(m_pStateIdle, &QState::entered, this, &BaseModule::entryIdle);
     connect(m_pStateIDLEConfSetup, &QState::entered, this, &BaseModule::entryConfSetup);
 
     // we set up our RUN state here
@@ -265,10 +264,6 @@ const ModuleNetworkParamsPtr BaseModule::getNetworkConfig() const
 const ChannelRangeObserver::SystemObserverPtr BaseModule::getSharedChannelRangeObserver() const
 {
     return m_moduleParam.m_moduleSharedData->m_channelRangeObserver;
-}
-
-void BaseModule::entryIdle()
-{
 }
 
 void BaseModule::entryIDLEIdle()
