@@ -169,13 +169,6 @@ void cReferenceModule::deactivationStart()
     emit deactivationContinue();
 }
 
-
-void cReferenceModule::deactivationExec()
-{
-    m_ModuleActivistList.at(m_nActivationIt)->deactivate();
-}
-
-
 void cReferenceModule::deactivationDone()
 {
     m_nActivationIt++;

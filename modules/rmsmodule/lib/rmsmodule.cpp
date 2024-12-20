@@ -87,20 +87,6 @@ void cRmsModule::activationFinished()
     emit activationReady();
 }
 
-
-void cRmsModule::deactivationStart()
-{
-    m_nActivationIt = 0; // we start with the first
-    emit deactivationContinue();
-}
-
-
-void cRmsModule::deactivationExec()
-{
-    m_ModuleActivistList.at(m_nActivationIt)->deactivate();
-}
-
-
 void cRmsModule::deactivationDone()
 {
     m_nActivationIt++;

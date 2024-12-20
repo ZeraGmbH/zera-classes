@@ -90,20 +90,6 @@ void cBurden1Module::activationFinished()
     emit activationReady();
 }
 
-
-void cBurden1Module::deactivationStart()
-{
-    m_nActivationIt = 0; // we start with the first
-    emit deactivationContinue();
-}
-
-
-void cBurden1Module::deactivationExec()
-{
-    m_ModuleActivistList.at(m_nActivationIt)->deactivate();
-}
-
-
 void cBurden1Module::deactivationDone()
 {
     m_nActivationIt++;

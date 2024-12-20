@@ -80,17 +80,6 @@ void cBleModule::activationFinished()
     emit activationReady();
 }
 
-void cBleModule::deactivationStart()
-{
-    m_nActivationIt = 0; // we start with the first
-    emit deactivationContinue();
-}
-
-void cBleModule::deactivationExec()
-{
-    m_ModuleActivistList.at(m_nActivationIt)->deactivate();
-}
-
 void cBleModule::deactivationDone()
 {
     m_nActivationIt++;

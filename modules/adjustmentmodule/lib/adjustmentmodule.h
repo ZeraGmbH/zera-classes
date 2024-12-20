@@ -27,8 +27,6 @@ public:
 private slots:
     void activationFinished() override;
 
-    void deactivationStart() override;
-    void deactivationExec() override;
     void deactivationDone() override;
     void deactivationFinished() override;
 private:

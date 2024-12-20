@@ -214,6 +214,22 @@ void BaseModule::activationDone()
         emit activationContinue();
 }
 
+void BaseModule::deactivationStart()
+{
+    // Interim - we intend to replace all this by tasks
+    if(!m_ModuleActivistList.isEmpty()) {
+        m_nActivationIt = 0; // we start with the first
+        emit deactivationContinue();
+    }
+}
+
+void BaseModule::deactivationExec()
+{
+    // Interim - we intend to replace all this by tasks
+    if(!m_ModuleActivistList.isEmpty())
+        m_ModuleActivistList.at(m_nActivationIt)->deactivate();
+}
+
 void BaseModule::exportMetaData()
 {
     QJsonObject jsonObj;

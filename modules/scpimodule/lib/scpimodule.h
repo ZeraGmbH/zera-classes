@@ -44,8 +44,6 @@ protected:
 private slots:
     virtual void activationFinished() override;
 
-    virtual void deactivationStart() override;
-    virtual void deactivationExec() override;
     virtual void deactivationDone() override;
     virtual void deactivationFinished() override;
 private:

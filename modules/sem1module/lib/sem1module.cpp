@@ -89,20 +89,6 @@ void cSem1Module::activationFinished()
     emit activationReady();
 }
 
-
-void cSem1Module::deactivationStart()
-{
-    m_nActivationIt = 0; // we start with the first
-    emit deactivationContinue();
-}
-
-
-void cSem1Module::deactivationExec()
-{
-    m_ModuleActivistList.at(m_nActivationIt)->deactivate();
-}
-
-
 void cSem1Module::deactivationDone()
 {
     m_nActivationIt++;

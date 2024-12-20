@@ -89,20 +89,6 @@ void cOsciModule::activationFinished()
     emit activationReady();
 }
 
-
-void cOsciModule::deactivationStart()
-{
-    m_nActivationIt = 0; // we start with the first
-    emit deactivationContinue();
-}
-
-
-void cOsciModule::deactivationExec()
-{
-    m_ModuleActivistList.at(m_nActivationIt)->deactivate();
-}
-
-
 void cOsciModule::deactivationDone()
 {
     m_nActivationIt++;

@@ -114,8 +114,8 @@ protected slots:
     void activationDone(); // loop to exec or end up on finished
     virtual void activationFinished() = 0;
 
-    virtual void deactivationStart() = 0;
-    virtual void deactivationExec() = 0;
+    virtual void deactivationStart(); // there are custom overrides around
+    void deactivationExec();
     virtual void deactivationDone() = 0;
     virtual void deactivationFinished() = 0;
 private:

@@ -91,20 +91,6 @@ void cPower2Module::activationFinished()
 
 }
 
-
-void cPower2Module::deactivationStart()
-{
-    m_nActivationIt = 0; // we start with the first
-    emit deactivationContinue();
-}
-
-
-void cPower2Module::deactivationExec()
-{
-    m_ModuleActivistList.at(m_nActivationIt)->deactivate();
-}
-
-
 void cPower2Module::deactivationDone()
 {
     m_nActivationIt++;
