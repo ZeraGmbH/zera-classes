@@ -90,9 +90,4 @@ void cSCPIModule::activationFinished()
     emit activationReady();
 }
 
-void cSCPIModule::deactivationFinished()
-{
-    emit deactivationReady();
-}
-
 }

@@ -95,9 +95,4 @@ void cThdnModule::activationFinished()
     emit activationReady();
 }
 
-void cThdnModule::deactivationFinished()
-{
-    emit deactivationReady();
-}
-
 }

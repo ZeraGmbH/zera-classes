@@ -63,7 +63,3 @@ void SourceModule::activationFinished()
     emit activationReady();
 }
 
-void SourceModule::deactivationFinished()
-{
-    emit deactivationReady();
-}

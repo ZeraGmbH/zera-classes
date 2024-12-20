@@ -91,9 +91,4 @@ void cPower2Module::activationFinished()
 
 }
 
-void cPower2Module::deactivationFinished()
-{
-    emit deactivationReady();
-}
-
 }

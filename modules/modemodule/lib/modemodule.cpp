@@ -90,9 +90,4 @@ void cModeModule::activationFinished()
     emit activationReady();
 }
 
-void cModeModule::deactivationFinished()
-{
-    emit deactivationReady();
-}
-
 }

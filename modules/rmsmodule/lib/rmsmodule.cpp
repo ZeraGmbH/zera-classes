@@ -87,9 +87,4 @@ void cRmsModule::activationFinished()
     emit activationReady();
 }
 
-void cRmsModule::deactivationFinished()
-{
-    emit deactivationReady();
-}
-
 }

@@ -23,7 +23,6 @@ public:
 
 private slots:
     void activationFinished() override;
-    void deactivationFinished() override;
 private:
     cTransformer1ModuleObservation *m_pTransformer1ModuleObservation;
     cTransformer1ModuleMeasProgram *m_pMeasProgram; // our measuring program, lets say the working horse

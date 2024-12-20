@@ -89,9 +89,4 @@ void cSec1Module::activationFinished()
     emit activationReady();
 }
 
-void cSec1Module::deactivationFinished()
-{
-    emit deactivationReady();
-}
-
 }

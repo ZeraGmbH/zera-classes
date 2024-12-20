@@ -89,9 +89,4 @@ void cDftModule::activationFinished()
     emit activationReady();
 }
 
-void cDftModule::deactivationFinished()
-{
-    emit deactivationReady();
-}
-
 }

@@ -24,7 +24,6 @@ private slots:
     void activationFinished() override;
 
     void deactivationStart() override;
-    void deactivationFinished() override;
 private:
     cReferenceModuleMeasProgram *m_pMeasProgram; // our measuring program, lets say the working horse
     cReferenceAdjustment *m_pReferenceAdjustment; // our justifying and normation program

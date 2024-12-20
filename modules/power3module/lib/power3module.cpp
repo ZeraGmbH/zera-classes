@@ -90,9 +90,4 @@ void cPower3Module::activationFinished()
     emit activationReady();
 }
 
-void cPower3Module::deactivationFinished()
-{
-    emit deactivationReady();
-}
-
 }

@@ -169,9 +169,4 @@ void cReferenceModule::deactivationStart()
     emit deactivationContinue();
 }
 
-void cReferenceModule::deactivationFinished()
-{
-    emit deactivationReady();
-}
-
 }

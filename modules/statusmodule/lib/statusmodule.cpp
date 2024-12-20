@@ -91,9 +91,4 @@ void cStatusModule::activationFinished()
     emit activationReady();
 }
 
-void cStatusModule::deactivationFinished()
-{
-    emit deactivationReady();
-}
-
 }

@@ -88,10 +88,4 @@ void cLambdaModule::activationFinished()
 
     emit activationReady();
 }
-
-void cLambdaModule::deactivationFinished()
-{
-    emit deactivationReady();
-}
-
 }

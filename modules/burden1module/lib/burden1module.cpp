@@ -89,9 +89,4 @@ void cBurden1Module::activationFinished()
     emit activationReady();
 }
 
-void cBurden1Module::deactivationFinished()
-{
-    emit deactivationReady();
-}
-
 }

@@ -164,11 +164,6 @@ void cRangeModule::deactivationStart()
     emit deactivationContinue();
 }
 
-void cRangeModule::deactivationFinished()
-{
-    emit deactivationReady();
-}
-
 void cRangeModule::setPeakRmsAndFrequencyValues(const QVector<float>* const values)
 {
     /* values:

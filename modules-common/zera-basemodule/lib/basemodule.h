@@ -117,7 +117,7 @@ protected slots:
     virtual void deactivationStart(); // there are custom overrides around
     void deactivationExec();
     void deactivationDone();
-    virtual void deactivationFinished() = 0;
+    void deactivationFinished();
 private:
     const ModuleFactoryParam m_moduleParam;
     bool m_bConfCmd;

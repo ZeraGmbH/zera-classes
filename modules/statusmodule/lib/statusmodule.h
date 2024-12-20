@@ -20,7 +20,6 @@ public:
 
 private slots:
     void activationFinished() override;
-    void deactivationFinished() override;
 private:
     cStatusModuleInit *m_pStatusModuleInit;
     void setupModule() override; // after xml configuration we can setup and export our module

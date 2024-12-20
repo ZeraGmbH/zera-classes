@@ -85,8 +85,3 @@ void cAdjustmentModule::activationFinished()
 
     emit activationReady();
 }
-
-void cAdjustmentModule::deactivationFinished()
-{
-    emit deactivationReady();
-}

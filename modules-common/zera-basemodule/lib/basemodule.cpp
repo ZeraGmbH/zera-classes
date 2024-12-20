@@ -239,6 +239,11 @@ void BaseModule::deactivationDone()
         emit deactivationContinue();
 }
 
+void BaseModule::deactivationFinished()
+{
+    emit deactivationReady();
+}
+
 void BaseModule::exportMetaData()
 {
     QJsonObject jsonObj;
