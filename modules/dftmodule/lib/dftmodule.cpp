@@ -89,17 +89,6 @@ void cDftModule::activationFinished()
     emit activationReady();
 }
 
-void cDftModule::deactivationDone()
-{
-    m_nActivationIt++;
-
-    if (m_nActivationIt < m_ModuleActivistList.count())
-        emit deactivationNext(); // and iterate over our list
-    else
-        emit deactivationContinue();
-}
-
-
 void cDftModule::deactivationFinished()
 {
     emit deactivationReady();

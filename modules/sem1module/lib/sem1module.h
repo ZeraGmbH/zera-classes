@@ -21,8 +21,6 @@ public:
 
 private slots:
     void activationFinished() override;
-
-    void deactivationDone() override;
     void deactivationFinished() override;
 private:
     void setupModule() override; // after xml configuration we can setup and export our module

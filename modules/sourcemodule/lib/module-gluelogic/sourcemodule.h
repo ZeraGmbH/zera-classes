@@ -27,9 +27,6 @@ private slots:
     // entered immediately - no interim states for now
     void activationFinished() override;
     void deactivationFinished() override;
-
-    // sigh - we have to add overrides to not being pure virtual
-    void deactivationDone() override {}
 private:
     QState m_stateSwitchAllOff;
     VfModuleRpc *m_rpcEventSystem;

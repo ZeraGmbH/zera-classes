@@ -21,8 +21,6 @@ public:
 
 private slots:
     void activationFinished() override;
-
-    void deactivationDone() override;
     void deactivationFinished() override;
 private:
     cModeModuleInit *m_pModeModuleInit;

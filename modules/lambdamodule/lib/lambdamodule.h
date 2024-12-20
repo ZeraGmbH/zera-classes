@@ -17,8 +17,6 @@ public:
     QByteArray getConfiguration() const override;
 private slots:
     void activationFinished() override;
-
-    void deactivationDone() override;
     void deactivationFinished() override;
 private:
     cLambdaModuleMeasProgram *m_pMeasProgram; // our measuring program, lets say the working horse

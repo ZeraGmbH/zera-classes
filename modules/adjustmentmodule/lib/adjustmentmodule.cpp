@@ -86,18 +86,6 @@ void cAdjustmentModule::activationFinished()
     emit activationReady();
 }
 
-
-void cAdjustmentModule::deactivationDone()
-{
-    m_nActivationIt++;
-
-    if (m_nActivationIt < m_ModuleActivistList.count())
-        emit deactivationNext(); // and iterate over our list
-    else
-        emit deactivationContinue();
-}
-
-
 void cAdjustmentModule::deactivationFinished()
 {
     emit deactivationReady();
