@@ -20,7 +20,17 @@ public:
     QByteArray getConfiguration() const override;
     cPllMeasChannel* getPllMeasChannel(QString name);
 
-protected:
+private slots:
+    void activationStart() override;
+    void activationExec() override;
+    void activationDone() override;
+    void activationFinished() override;
+
+    void deactivationStart() override;
+    void deactivationExec() override;
+    void deactivationDone() override;
+    void deactivationFinished() override;
+private:
     cSampleModuleMeasProgram *m_pMeasProgram; // our measuring program, lets say the working horse
     cPllObsermatic *m_pPllObsermatic; // our pll handling
 
@@ -40,21 +50,8 @@ protected:
     QState m_DeactivationDoneState;
     QFinalState m_DeactivationFinishedState;
 
-private:
-    qint32 m_nActivationIt;
     QList<cPllMeasChannel*> m_pllMeasChannelList; // our pll meas channels
     QList<cSampleChannel*>  m_sampleChannelList;
-
-private slots:
-    void activationStart() override;
-    void activationExec() override;
-    void activationDone() override;
-    void activationFinished() override;
-
-    void deactivationStart() override;
-    void deactivationExec() override;
-    void deactivationDone() override;
-    void deactivationFinished() override;
 };
 
 }

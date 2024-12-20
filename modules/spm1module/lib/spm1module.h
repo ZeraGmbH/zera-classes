@@ -18,7 +18,18 @@ public:
 
     cSpm1Module(ModuleFactoryParam moduleParam);
     QByteArray getConfiguration() const override;
-protected:
+
+private slots:
+    void activationStart() override;
+    void activationExec() override;
+    void activationDone() override;
+    void activationFinished() override;
+
+    void deactivationStart() override;
+    void deactivationExec() override;
+    void deactivationDone() override;
+    void deactivationFinished() override;
+private:
     cSpm1ModuleMeasProgram *m_pMeasProgram; // our measuring program, lets say the working horse
     void setupModule() override; // after xml configuration we can setup and export our module
     void startMeas() override; // we make the measuring program start here
@@ -36,19 +47,6 @@ protected:
     QState m_DeactivationDoneState;
     QFinalState m_DeactivationFinishedState;
 
-private:
-    qint32 m_nActivationIt;
-
-private slots:
-    void activationStart() override;
-    void activationExec() override;
-    void activationDone() override;
-    void activationFinished() override;
-
-    void deactivationStart() override;
-    void deactivationExec() override;
-    void deactivationDone() override;
-    void deactivationFinished() override;
 };
 
 }

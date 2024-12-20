@@ -96,6 +96,8 @@ protected:
     QFinalState m_DeactivationFinishedState;
 
     QList<cModuleActivist*> m_ModuleActivistList;
+    qint32 m_nActivationIt;
+
     std::shared_ptr<BaseModuleConfiguration> m_pConfiguration; // our xml configuration
     QString m_sModuleDescription;
 
