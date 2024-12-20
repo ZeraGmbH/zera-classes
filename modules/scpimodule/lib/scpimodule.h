@@ -41,11 +41,7 @@ public:
 protected:
     cSCPIServer *m_pSCPIServer; // our server for the world
 
-    void setupModule() override; // after xml configuration we can setup and export our module
-    void startMeas() override; // we make the measuring program start here
-    void stopMeas() override;
-
-protected slots:
+private slots:
     void activationStart() override;
     void activationExec() override;
     void activationDone() override;
@@ -55,9 +51,10 @@ protected slots:
     virtual void deactivationExec() override;
     virtual void deactivationDone() override;
     virtual void deactivationFinished() override;
-
 private:
-    qint32 m_nActivationIt;
+    void setupModule() override; // after xml configuration we can setup and export our module
+    void startMeas() override; // we make the measuring program start here
+    void stopMeas() override;
 };
 
 }

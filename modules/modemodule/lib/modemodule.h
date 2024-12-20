@@ -19,7 +19,17 @@ public:
     cModeModule(ModuleFactoryParam moduleParam);
     QByteArray getConfiguration() const override;
 
-protected:
+private slots:
+    void activationStart() override;
+    void activationExec() override;
+    void activationDone() override;
+    void activationFinished() override;
+
+    void deactivationStart() override;
+    void deactivationExec() override;
+    void deactivationDone() override;
+    void deactivationFinished() override;
+private:
     cModeModuleInit *m_pModeModuleInit;
     void setupModule() override; // after xml configuration we can setup and export our module
     void startMeas() override; // we make the measuring program start here
@@ -36,20 +46,6 @@ protected:
     QState m_DeactivationExecState;
     QState m_DeactivationDoneState;
     QFinalState m_DeactivationFinishedState;
-
-private:
-    qint32 m_nActivationIt;
-
-private slots:
-    void activationStart() override;
-    void activationExec() override;
-    void activationDone() override;
-    void activationFinished() override;
-
-    void deactivationStart() override;
-    void deactivationExec() override;
-    void deactivationDone() override;
-    void deactivationFinished() override;
 };
 
 }

@@ -46,7 +46,6 @@ protected slots:
 private:
     VfModuleMetaData* m_pChannelCountInfo;
     VfModuleMetaData* m_pGroupCountInfo;
-    qint32 m_nActivationIt;
 
 private slots:
     void setPeakRmsAndFrequencyValues(const QVector<float>* const values);

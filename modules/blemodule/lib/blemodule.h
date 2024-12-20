@@ -16,7 +16,7 @@ public:
     cBleModule(ModuleFactoryParam moduleParam);
     QByteArray getConfiguration() const override;
 
-protected:
+private:
     cBleModuleMeasProgram *m_pMeasProgram; // our measuring program, lets say the working horse
     void setupModule() override; // after xml configuration we can setup and export our module
     void startMeas() override; // we make the measuring program start here
@@ -33,9 +33,6 @@ protected:
     QState m_DeactivationExecState;
     QState m_DeactivationDoneState;
     QFinalState m_DeactivationFinishedState;
-
-private:
-    qint32 m_nActivationIt;
 
 private slots:
     void activationStart() override;

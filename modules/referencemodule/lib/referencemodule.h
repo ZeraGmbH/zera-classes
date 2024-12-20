@@ -19,7 +19,18 @@ public:
     cReferenceModule(ModuleFactoryParam moduleParam);
     QByteArray getConfiguration() const override;
     virtual cReferenceMeasChannel* getMeasChannel(QString name); // also used for callback
-protected:
+private slots:
+    void activationStart() override;
+    void activationExec() override;
+    void activationDone() override;
+    void activationAdjustment();
+    void activationFinished() override;
+
+    void deactivationStart() override;
+    void deactivationExec() override;
+    void deactivationDone() override;
+    void deactivationFinished() override;
+private:
     cReferenceModuleMeasProgram *m_pMeasProgram; // our measuring program, lets say the working horse
     cReferenceAdjustment *m_pReferenceAdjustment; // our justifying and normation program
     QList<cReferenceMeasChannel*> m_ReferenceMeasChannelList; // our meas channels
@@ -40,20 +51,6 @@ protected:
     QState m_DeactivationDoneState;
     QFinalState m_DeactivationFinishedState;
 
-private:
-    qint32 m_nActivationIt;
-
-private slots:
-    void activationStart() override;
-    void activationExec() override;
-    void activationDone() override;
-    void activationAdjustment();
-    void activationFinished() override;
-
-    void deactivationStart() override;
-    void deactivationExec() override;
-    void deactivationDone() override;
-    void deactivationFinished() override;
 };
 
 }
