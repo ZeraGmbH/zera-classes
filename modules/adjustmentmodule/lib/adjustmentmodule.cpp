@@ -87,19 +87,6 @@ void cAdjustmentModule::activationFinished()
 }
 
 
-void cAdjustmentModule::deactivationStart()
-{
-    m_nActivationIt = 0; // we start with the first
-    emit deactivationContinue();
-}
-
-
-void cAdjustmentModule::deactivationExec()
-{
-    m_ModuleActivistList.at(m_nActivationIt)->deactivate();
-}
-
-
 void cAdjustmentModule::deactivationDone()
 {
     m_nActivationIt++;

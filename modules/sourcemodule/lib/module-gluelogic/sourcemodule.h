@@ -29,8 +29,6 @@ private slots:
     void deactivationFinished() override;
 
     // sigh - we have to add overrides to not being pure virtual
-    void deactivationStart() override {}
-    void deactivationExec() override {}
     void deactivationDone() override {}
 private:
     QState m_stateSwitchAllOff;

@@ -90,20 +90,6 @@ void cModeModule::activationFinished()
     emit activationReady();
 }
 
-
-void cModeModule::deactivationStart()
-{
-    m_nActivationIt = 0; // we start with the first
-    emit deactivationContinue();
-}
-
-
-void cModeModule::deactivationExec()
-{
-    m_ModuleActivistList.at(m_nActivationIt)->deactivate();
-}
-
-
 void cModeModule::deactivationDone()
 {
     m_nActivationIt++;

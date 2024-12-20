@@ -89,20 +89,6 @@ void cLambdaModule::activationFinished()
     emit activationReady();
 }
 
-
-void cLambdaModule::deactivationStart()
-{
-    m_nActivationIt = 0; // we start with the first
-    emit deactivationContinue();
-}
-
-
-void cLambdaModule::deactivationExec()
-{
-    m_ModuleActivistList.at(m_nActivationIt)->deactivate();
-}
-
-
 void cLambdaModule::deactivationDone()
 {
     m_nActivationIt++;

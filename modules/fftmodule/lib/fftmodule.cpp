@@ -95,20 +95,6 @@ void cFftModule::activationFinished()
     emit activationReady();
 }
 
-
-void cFftModule::deactivationStart()
-{
-    m_nActivationIt = 0; // we start with the first
-    emit deactivationContinue();
-}
-
-
-void cFftModule::deactivationExec()
-{
-    m_ModuleActivistList.at(m_nActivationIt)->deactivate();
-}
-
-
 void cFftModule::deactivationDone()
 {
     m_nActivationIt++;

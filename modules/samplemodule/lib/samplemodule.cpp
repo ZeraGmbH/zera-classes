@@ -156,13 +156,6 @@ void cSampleModule::deactivationStart()
     emit deactivationContinue();
 }
 
-
-void cSampleModule::deactivationExec()
-{
-    m_ModuleActivistList.at(m_nActivationIt)->deactivate();
-}
-
-
 void cSampleModule::deactivationDone()
 {
     m_nActivationIt++;

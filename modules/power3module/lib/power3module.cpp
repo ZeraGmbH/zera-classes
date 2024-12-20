@@ -90,20 +90,6 @@ void cPower3Module::activationFinished()
     emit activationReady();
 }
 
-
-void cPower3Module::deactivationStart()
-{
-    m_nActivationIt = 0; // we start with the first
-    emit deactivationContinue();
-}
-
-
-void cPower3Module::deactivationExec()
-{
-    m_ModuleActivistList.at(m_nActivationIt)->deactivate();
-}
-
-
 void cPower3Module::deactivationDone()
 {
     m_nActivationIt++;

@@ -95,20 +95,6 @@ void cThdnModule::activationFinished()
     emit activationReady();
 }
 
-
-void cThdnModule::deactivationStart()
-{
-    m_nActivationIt = 0; // we start with the first
-    emit deactivationContinue();
-}
-
-
-void cThdnModule::deactivationExec()
-{
-    m_ModuleActivistList.at(m_nActivationIt)->deactivate();
-}
-
-
 void cThdnModule::deactivationDone()
 {
     m_nActivationIt++;

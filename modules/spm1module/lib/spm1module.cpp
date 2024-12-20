@@ -89,20 +89,6 @@ void cSpm1Module::activationFinished()
     emit activationReady();
 }
 
-
-void cSpm1Module::deactivationStart()
-{
-    m_nActivationIt = 0; // we start with the first
-    emit deactivationContinue();
-}
-
-
-void cSpm1Module::deactivationExec()
-{
-    m_ModuleActivistList.at(m_nActivationIt)->deactivate();
-}
-
-
 void cSpm1Module::deactivationDone()
 {
     m_nActivationIt++;

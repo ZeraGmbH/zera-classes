@@ -90,20 +90,6 @@ void cSCPIModule::activationFinished()
     emit activationReady();
 }
 
-
-void cSCPIModule::deactivationStart()
-{
-    m_nActivationIt = 0; // we start with the first
-    emit deactivationContinue();
-}
-
-
-void cSCPIModule::deactivationExec()
-{
-    m_ModuleActivistList.at(m_nActivationIt)->deactivate();
-}
-
-
 void cSCPIModule::deactivationDone()
 {
     m_nActivationIt++;

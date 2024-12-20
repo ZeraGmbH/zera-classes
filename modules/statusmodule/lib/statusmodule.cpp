@@ -91,20 +91,6 @@ void cStatusModule::activationFinished()
     emit activationReady();
 }
 
-
-void cStatusModule::deactivationStart()
-{
-    m_nActivationIt = 0; // we start with the first
-    emit deactivationContinue();
-}
-
-
-void cStatusModule::deactivationExec()
-{
-    m_ModuleActivistList.at(m_nActivationIt)->deactivate();
-}
-
-
 void cStatusModule::deactivationDone()
 {
     m_nActivationIt++;

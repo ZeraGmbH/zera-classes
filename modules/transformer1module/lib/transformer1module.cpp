@@ -91,20 +91,6 @@ void cTransformer1Module::activationFinished()
     emit activationReady();
 }
 
-
-void cTransformer1Module::deactivationStart()
-{
-    m_nActivationIt = 0; // we start with the first
-    emit deactivationContinue();
-}
-
-
-void cTransformer1Module::deactivationExec()
-{
-    m_ModuleActivistList.at(m_nActivationIt)->deactivate();
-}
-
-
 void cTransformer1Module::deactivationDone()
 {
     m_nActivationIt++;

@@ -164,13 +164,6 @@ void cRangeModule::deactivationStart()
     emit deactivationContinue();
 }
 
-
-void cRangeModule::deactivationExec()
-{
-    m_ModuleActivistList.at(m_nActivationIt)->deactivate();
-}
-
-
 void cRangeModule::deactivationDone()
 {
     m_nActivationIt++;
