@@ -81,17 +81,6 @@ void cStatusModule::stopMeas()
 }
 
 
-void cStatusModule::activationDone()
-{
-    m_nActivationIt++;
-
-    if (m_nActivationIt < m_ModuleActivistList.count())
-        emit activationNext(); // and iterate over our list
-    else
-        emit activationContinue();
-}
-
-
 void cStatusModule::activationFinished()
 {
     // now we still have to export the json interface information, then we are ready

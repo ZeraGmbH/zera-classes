@@ -120,17 +120,6 @@ void cRangeModule::stopMeas()
 }
 
 
-void cRangeModule::activationDone()
-{
-    m_nActivationIt++;
-
-    if (m_nActivationIt < m_ModuleActivistList.count())
-        emit activationNext(); // and iterate over our list
-    else
-        emit activationContinue();
-}
-
-
 void cRangeModule::activationFinished()
 {
     // set new actual values PEAK,RMS,FREQ in channel class

@@ -21,7 +21,6 @@ public:
     cPllMeasChannel* getPllMeasChannel(QString name);
 
 private slots:
-    void activationDone() override;
     void activationFinished() override;
 
     void deactivationStart() override;

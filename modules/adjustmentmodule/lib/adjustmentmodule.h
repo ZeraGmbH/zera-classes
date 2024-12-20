@@ -25,7 +25,6 @@ public:
     cAdjustmentModule(ModuleFactoryParam moduleParam);
     QByteArray getConfiguration() const override;
 private slots:
-    void activationDone() override;
     void activationFinished() override;
 
     void deactivationStart() override;
