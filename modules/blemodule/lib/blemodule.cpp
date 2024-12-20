@@ -80,16 +80,6 @@ void cBleModule::activationFinished()
     emit activationReady();
 }
 
-void cBleModule::deactivationDone()
-{
-    m_nActivationIt++;
-
-    if (m_nActivationIt < m_ModuleActivistList.count())
-        emit deactivationNext(); // and iterate over our list
-    else
-        emit deactivationContinue();
-}
-
 void cBleModule::deactivationFinished()
 {
     emit deactivationReady();

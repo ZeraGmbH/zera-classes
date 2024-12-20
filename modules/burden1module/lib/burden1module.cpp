@@ -79,7 +79,6 @@ void cBurden1Module::stopMeas()
     m_pMeasProgram->stop();
 }
 
-
 void cBurden1Module::activationFinished()
 {
     m_pModuleValidator->setParameterMap(m_veinModuleParameterMap);
@@ -89,17 +88,6 @@ void cBurden1Module::activationFinished()
 
     emit activationReady();
 }
-
-void cBurden1Module::deactivationDone()
-{
-    m_nActivationIt++;
-
-    if (m_nActivationIt < m_ModuleActivistList.count())
-        emit deactivationNext(); // and iterate over our list
-    else
-        emit deactivationContinue();
-}
-
 
 void cBurden1Module::deactivationFinished()
 {

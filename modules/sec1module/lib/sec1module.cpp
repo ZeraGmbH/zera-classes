@@ -89,17 +89,6 @@ void cSec1Module::activationFinished()
     emit activationReady();
 }
 
-void cSec1Module::deactivationDone()
-{
-    m_nActivationIt++;
-
-    if (m_nActivationIt < m_ModuleActivistList.count())
-        emit deactivationNext(); // and iterate over our list
-    else
-        emit deactivationContinue();
-}
-
-
 void cSec1Module::deactivationFinished()
 {
     emit deactivationReady();

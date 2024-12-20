@@ -20,8 +20,6 @@ public:
 
 private slots:
     void activationFinished() override;
-
-    void deactivationDone() override;
     void deactivationFinished() override;
 private:
     cStatusModuleInit *m_pStatusModuleInit;

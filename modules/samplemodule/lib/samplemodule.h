@@ -22,9 +22,7 @@ public:
 
 private slots:
     void activationFinished() override;
-
     void deactivationStart() override;
-    void deactivationDone() override;
     void deactivationFinished() override;
 private:
     cSampleModuleMeasProgram *m_pMeasProgram; // our measuring program, lets say the working horse

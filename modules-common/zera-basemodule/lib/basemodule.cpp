@@ -230,6 +230,15 @@ void BaseModule::deactivationExec()
         m_ModuleActivistList.at(m_nActivationIt)->deactivate();
 }
 
+void BaseModule::deactivationDone()
+{
+    m_nActivationIt++;
+    if (m_nActivationIt < m_ModuleActivistList.count())
+        emit deactivationNext(); // and iterate over our list
+    else
+        emit deactivationContinue();
+}
+
 void BaseModule::exportMetaData()
 {
     QJsonObject jsonObj;

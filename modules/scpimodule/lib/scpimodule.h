@@ -43,8 +43,6 @@ protected:
 
 private slots:
     virtual void activationFinished() override;
-
-    virtual void deactivationDone() override;
     virtual void deactivationFinished() override;
 private:
     void setupModule() override; // after xml configuration we can setup and export our module

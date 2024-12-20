@@ -19,8 +19,6 @@ public:
 
 private slots:
     void activationFinished() override;
-
-    void deactivationDone() override;
     void deactivationFinished() override;
 private:
     cRmsModuleMeasProgram *m_pMeasProgram; // our measuring program, lets say the working horse

@@ -95,17 +95,6 @@ void cThdnModule::activationFinished()
     emit activationReady();
 }
 
-void cThdnModule::deactivationDone()
-{
-    m_nActivationIt++;
-
-    if (m_nActivationIt < m_ModuleActivistList.count())
-        emit deactivationNext(); // and iterate over our list
-    else
-        emit deactivationContinue();
-}
-
-
 void cThdnModule::deactivationFinished()
 {
     emit deactivationReady();

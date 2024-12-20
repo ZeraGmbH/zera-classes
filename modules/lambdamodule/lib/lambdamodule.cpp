@@ -89,17 +89,6 @@ void cLambdaModule::activationFinished()
     emit activationReady();
 }
 
-void cLambdaModule::deactivationDone()
-{
-    m_nActivationIt++;
-
-    if (m_nActivationIt < m_ModuleActivistList.count())
-        emit deactivationNext(); // and iterate over our list
-    else
-        emit deactivationContinue();
-}
-
-
 void cLambdaModule::deactivationFinished()
 {
     emit deactivationReady();

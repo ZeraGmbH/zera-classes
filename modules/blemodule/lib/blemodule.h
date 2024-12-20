@@ -36,8 +36,6 @@ private:
 
 private slots:
     void activationFinished() override;
-
-    void deactivationDone() override;
     void deactivationFinished() override;
 };
 

@@ -156,17 +156,6 @@ void cSampleModule::deactivationStart()
     emit deactivationContinue();
 }
 
-void cSampleModule::deactivationDone()
-{
-    m_nActivationIt++;
-
-    if (m_nActivationIt < m_ModuleActivistList.count())
-        emit deactivationNext(); // and iterate over our list
-    else
-        emit deactivationContinue();
-}
-
-
 void cSampleModule::deactivationFinished()
 {
     emit deactivationReady();
