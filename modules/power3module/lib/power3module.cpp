@@ -80,13 +80,6 @@ void cPower3Module::stopMeas()
 }
 
 
-void cPower3Module::activationStart()
-{
-    m_nActivationIt = 0; // we start with the first
-    emit activationContinue();
-}
-
-
 void cPower3Module::activationExec()
 {
     m_ModuleActivistList.at(m_nActivationIt)->activate();

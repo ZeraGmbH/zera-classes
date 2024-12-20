@@ -190,6 +190,14 @@ void BaseModule::unsetModule()
     m_ModuleActivistList.clear();
 }
 
+void BaseModule::activationStart()
+{
+    // Interim - we intend to replace all this by tasks
+    if(!m_ModuleActivistList.isEmpty())
+        m_nActivationIt = 0; // we start with the first
+        emit activationContinue();
+}
+
 void BaseModule::exportMetaData()
 {
     QJsonObject jsonObj;

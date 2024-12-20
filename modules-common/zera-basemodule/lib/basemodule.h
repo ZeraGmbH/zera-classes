@@ -109,7 +109,7 @@ protected:
     VeinEvent::EventSystem *m_pModuleEventSystem;
 
 protected slots:
-    virtual void activationStart() = 0;
+    void activationStart();
     virtual void activationExec() = 0;
     virtual void activationDone() = 0; // loop to exec or end up on finished
     virtual void activationFinished() = 0;

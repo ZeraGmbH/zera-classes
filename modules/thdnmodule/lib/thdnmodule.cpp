@@ -85,13 +85,6 @@ void cThdnModule::stopMeas()
 }
 
 
-void cThdnModule::activationStart()
-{
-    m_nActivationIt = 0; // we start with the first
-    emit activationContinue();
-}
-
-
 void cThdnModule::activationExec()
 {
     m_ModuleActivistList.at(m_nActivationIt)->activate();

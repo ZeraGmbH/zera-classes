@@ -33,7 +33,6 @@ protected:
     void stopMeas() override;
 
 protected slots:
-    void activationStart() override;
     void activationExec() override;
     void activationDone() override;
     void activationFinished() override;

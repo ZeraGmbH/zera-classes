@@ -81,13 +81,6 @@ void cStatusModule::stopMeas()
 }
 
 
-void cStatusModule::activationStart()
-{
-    m_nActivationIt = 0; // we start with the first
-    emit activationContinue();
-}
-
-
 void cStatusModule::activationExec()
 {
     m_ModuleActivistList.at(m_nActivationIt)->activate();

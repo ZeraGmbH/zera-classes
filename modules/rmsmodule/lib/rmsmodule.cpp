@@ -77,13 +77,6 @@ void cRmsModule::stopMeas()
 }
 
 
-void cRmsModule::activationStart()
-{
-    m_nActivationIt = 0; // we start with the first
-    emit activationContinue();
-}
-
-
 void cRmsModule::activationExec()
 {
     m_ModuleActivistList.at(m_nActivationIt)->activate();

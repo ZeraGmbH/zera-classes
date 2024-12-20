@@ -76,13 +76,6 @@ void cPower1Module::stopMeas()
 }
 
 
-void cPower1Module::activationStart()
-{
-    m_nActivationIt = 0; // we start with the first
-    emit activationContinue();
-}
-
-
 void cPower1Module::activationExec()
 {
     m_ModuleActivistList.at(m_nActivationIt)->activate();

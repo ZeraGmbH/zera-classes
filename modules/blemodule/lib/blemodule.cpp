@@ -70,12 +70,6 @@ void cBleModule::stopMeas()
     m_pMeasProgram->stop();
 }
 
-void cBleModule::activationStart()
-{
-    m_nActivationIt = 0; // we start with the first
-    emit activationContinue();
-}
-
 void cBleModule::activationExec()
 {
     m_ModuleActivistList.at(m_nActivationIt)->activate();

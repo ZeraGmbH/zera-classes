@@ -79,13 +79,6 @@ void cSpm1Module::stopMeas()
 }
 
 
-void cSpm1Module::activationStart()
-{
-    m_nActivationIt = 0; // we start with the first
-    emit activationContinue();
-}
-
-
 void cSpm1Module::activationExec()
 {
     m_ModuleActivistList.at(m_nActivationIt)->activate();
