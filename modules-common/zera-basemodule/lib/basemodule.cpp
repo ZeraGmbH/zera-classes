@@ -200,8 +200,18 @@ void BaseModule::activationStart()
 
 void BaseModule::activationExec()
 {
+    // Interim - we intend to replace all this by tasks
     if(!m_ModuleActivistList.isEmpty())
         m_ModuleActivistList.at(m_nActivationIt)->activate();
+}
+
+void BaseModule::activationDone()
+{
+    m_nActivationIt++;
+    if (m_nActivationIt < m_ModuleActivistList.count())
+        emit activationNext(); // and iterate over our list
+    else
+        emit activationContinue();
 }
 
 void BaseModule::exportMetaData()

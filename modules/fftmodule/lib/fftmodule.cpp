@@ -85,17 +85,6 @@ void cFftModule::stopMeas()
 }
 
 
-void cFftModule::activationDone()
-{
-    m_nActivationIt++;
-
-    if (m_nActivationIt < m_ModuleActivistList.count())
-        emit activationNext(); // and iterate over our list
-    else
-        emit activationContinue();
-}
-
-
 void cFftModule::activationFinished()
 {
     m_pModuleValidator->setParameterMap(m_veinModuleParameterMap);

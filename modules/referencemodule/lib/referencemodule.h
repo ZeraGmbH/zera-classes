@@ -20,7 +20,6 @@ public:
     QByteArray getConfiguration() const override;
     virtual cReferenceMeasChannel* getMeasChannel(QString name); // also used for callback
 private slots:
-    void activationDone() override;
     void activationAdjustment();
     void activationFinished() override;
 

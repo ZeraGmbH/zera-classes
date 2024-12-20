@@ -85,17 +85,6 @@ void cThdnModule::stopMeas()
 }
 
 
-void cThdnModule::activationDone()
-{
-    m_nActivationIt++;
-
-    if (m_nActivationIt < m_ModuleActivistList.count())
-        emit activationNext(); // and iterate over our list
-    else
-        emit activationContinue();
-}
-
-
 void cThdnModule::activationFinished()
 {
     m_pModuleValidator->setParameterMap(m_veinModuleParameterMap);

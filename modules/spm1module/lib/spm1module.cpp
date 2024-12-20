@@ -79,17 +79,6 @@ void cSpm1Module::stopMeas()
 }
 
 
-void cSpm1Module::activationDone()
-{
-    m_nActivationIt++;
-
-    if (m_nActivationIt < m_ModuleActivistList.count())
-        emit activationNext(); // and iterate over our list
-    else
-        emit activationContinue();
-}
-
-
 void cSpm1Module::activationFinished()
 {
     m_pModuleValidator->setParameterMap(m_veinModuleParameterMap);

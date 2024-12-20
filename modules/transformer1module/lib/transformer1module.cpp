@@ -81,17 +81,6 @@ void cTransformer1Module::stopMeas()
 }
 
 
-void cTransformer1Module::activationDone()
-{
-    m_nActivationIt++;
-
-    if (m_nActivationIt < m_ModuleActivistList.count())
-        emit activationNext(); // and iterate over our list
-    else
-        emit activationContinue();
-}
-
-
 void cTransformer1Module::activationFinished()
 {
     m_pModuleValidator->setParameterMap(m_veinModuleParameterMap);

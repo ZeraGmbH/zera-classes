@@ -70,16 +70,6 @@ void cBleModule::stopMeas()
     m_pMeasProgram->stop();
 }
 
-void cBleModule::activationDone()
-{
-    m_nActivationIt++;
-
-    if (m_nActivationIt < m_ModuleActivistList.count())
-        emit activationNext(); // and iterate over our list
-    else
-        emit activationContinue();
-}
-
 void cBleModule::activationFinished()
 {
     m_pModuleValidator->setParameterMap(m_veinModuleParameterMap);

@@ -80,17 +80,6 @@ void cBurden1Module::stopMeas()
 }
 
 
-void cBurden1Module::activationDone()
-{
-    m_nActivationIt++;
-
-    if (m_nActivationIt < m_ModuleActivistList.count())
-        emit activationNext(); // and iterate over our list
-    else
-        emit activationContinue();
-}
-
-
 void cBurden1Module::activationFinished()
 {
     m_pModuleValidator->setParameterMap(m_veinModuleParameterMap);

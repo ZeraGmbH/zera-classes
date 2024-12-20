@@ -133,17 +133,6 @@ void cReferenceModule::stopMeas()
 }
 
 
-void cReferenceModule::activationDone()
-{
-    m_nActivationIt++;
-
-    if (m_nActivationIt < m_ModuleActivistList.count())
-        emit activationNext(); // and iterate over our list
-    else
-        emit activationContinue();
-}
-
-
 void cReferenceModule::activationAdjustment()
 {
     // we connect the measurement output to our adjustment module

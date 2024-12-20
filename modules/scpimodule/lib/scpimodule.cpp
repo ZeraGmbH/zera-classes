@@ -80,17 +80,6 @@ void cSCPIModule::stopMeas()
 }
 
 
-void cSCPIModule::activationDone()
-{
-    m_nActivationIt++;
-
-    if (m_nActivationIt < m_ModuleActivistList.count())
-        emit activationNext(); // and iterate over our list
-    else
-        emit activationContinue();
-}
-
-
 void cSCPIModule::activationFinished()
 {
     m_pModuleValidator->setParameterMap(m_veinModuleParameterMap);

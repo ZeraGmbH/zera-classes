@@ -80,17 +80,6 @@ void cPower2Module::stopMeas()
 }
 
 
-void cPower2Module::activationDone()
-{
-    m_nActivationIt++;
-
-    if (m_nActivationIt < m_ModuleActivistList.count())
-        emit activationNext(); // and iterate over our list
-    else
-        emit activationContinue();
-}
-
-
 void cPower2Module::activationFinished()
 {
     m_pModuleValidator->setParameterMap(m_veinModuleParameterMap);

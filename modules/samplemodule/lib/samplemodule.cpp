@@ -128,16 +128,6 @@ void cSampleModule::stopMeas()
 }
 
 
-void cSampleModule::activationDone()
-{
-    m_nActivationIt++;
-    if (m_nActivationIt < m_ModuleActivistList.count())
-        emit activationNext(); // and iterate over our list
-    else
-        emit activationContinue();
-}
-
-
 void cSampleModule::activationFinished()
 {
     // we connect the measurement output to our pll obsermatic module
