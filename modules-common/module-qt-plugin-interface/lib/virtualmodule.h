@@ -31,10 +31,6 @@ public:
     virtual void startDestroy() = 0;
 
 signals:
-    // signals to be used by activation and deactivation statemachine when ready
-    void activationReady();
-    void deactivationReady();
-
     // signals for modulemanager notification
     void moduleActivated();
     void moduleDeactivated();
