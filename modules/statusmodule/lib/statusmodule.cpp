@@ -81,12 +81,6 @@ void cStatusModule::stopMeas()
 }
 
 
-void cStatusModule::activationExec()
-{
-    m_ModuleActivistList.at(m_nActivationIt)->activate();
-}
-
-
 void cStatusModule::activationDone()
 {
     m_nActivationIt++;

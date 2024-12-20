@@ -80,12 +80,6 @@ void cPower2Module::stopMeas()
 }
 
 
-void cPower2Module::activationExec()
-{
-    m_ModuleActivistList.at(m_nActivationIt)->activate();
-}
-
-
 void cPower2Module::activationDone()
 {
     m_nActivationIt++;

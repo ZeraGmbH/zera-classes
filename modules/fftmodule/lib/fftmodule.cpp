@@ -85,12 +85,6 @@ void cFftModule::stopMeas()
 }
 
 
-void cFftModule::activationExec()
-{
-    m_ModuleActivistList.at(m_nActivationIt)->activate();
-}
-
-
 void cFftModule::activationDone()
 {
     m_nActivationIt++;

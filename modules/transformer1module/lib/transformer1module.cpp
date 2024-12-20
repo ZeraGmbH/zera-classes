@@ -81,12 +81,6 @@ void cTransformer1Module::stopMeas()
 }
 
 
-void cTransformer1Module::activationExec()
-{
-    m_ModuleActivistList.at(m_nActivationIt)->activate();
-}
-
-
 void cTransformer1Module::activationDone()
 {
     m_nActivationIt++;

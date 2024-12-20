@@ -80,12 +80,6 @@ void cSCPIModule::stopMeas()
 }
 
 
-void cSCPIModule::activationExec()
-{
-    m_ModuleActivistList.at(m_nActivationIt)->activate();
-}
-
-
 void cSCPIModule::activationDone()
 {
     m_nActivationIt++;

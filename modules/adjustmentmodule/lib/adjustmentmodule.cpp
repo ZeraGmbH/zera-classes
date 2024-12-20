@@ -77,10 +77,6 @@ void cAdjustmentModule::stopMeas()
 }
 
 
-void cAdjustmentModule::activationExec()
-{
-    m_ModuleActivistList.at(m_nActivationIt)->activate();
-}
 
 
 void cAdjustmentModule::activationDone()

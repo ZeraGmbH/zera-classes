@@ -18,7 +18,6 @@ public:
     QByteArray getConfiguration() const override;
 
 private slots:
-    void activationExec() override;
     void activationDone() override;
     void activationFinished() override;
 

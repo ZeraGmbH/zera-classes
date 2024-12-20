@@ -198,6 +198,12 @@ void BaseModule::activationStart()
         emit activationContinue();
 }
 
+void BaseModule::activationExec()
+{
+    if(!m_ModuleActivistList.isEmpty())
+        m_ModuleActivistList.at(m_nActivationIt)->activate();
+}
+
 void BaseModule::exportMetaData()
 {
     QJsonObject jsonObj;

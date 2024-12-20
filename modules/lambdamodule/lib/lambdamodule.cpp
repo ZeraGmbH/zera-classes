@@ -79,12 +79,6 @@ void cLambdaModule::stopMeas()
 }
 
 
-void cLambdaModule::activationExec()
-{
-    m_ModuleActivistList.at(m_nActivationIt)->activate();
-}
-
-
 void cLambdaModule::activationDone()
 {
     m_nActivationIt++;

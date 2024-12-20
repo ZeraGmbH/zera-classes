@@ -79,12 +79,6 @@ void cDftModule::stopMeas()
 }
 
 
-void cDftModule::activationExec()
-{
-    m_ModuleActivistList.at(m_nActivationIt)->activate();
-}
-
-
 void cDftModule::activationDone()
 {
     m_nActivationIt++;

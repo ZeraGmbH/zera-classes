@@ -128,12 +128,6 @@ void cSampleModule::stopMeas()
 }
 
 
-void cSampleModule::activationExec()
-{
-    m_ModuleActivistList.at(m_nActivationIt)->activate();
-}
-
-
 void cSampleModule::activationDone()
 {
     m_nActivationIt++;
