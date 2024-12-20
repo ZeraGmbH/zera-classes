@@ -21,7 +21,6 @@ public:
 
 private slots:
     void activationFinished() override;
-    void deactivationFinished() override;
 private:
     cModeModuleInit *m_pModeModuleInit;
     void setupModule() override; // after xml configuration we can setup and export our module

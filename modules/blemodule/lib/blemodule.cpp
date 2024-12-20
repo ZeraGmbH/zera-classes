@@ -80,9 +80,4 @@ void cBleModule::activationFinished()
     emit activationReady();
 }
 
-void cBleModule::deactivationFinished()
-{
-    emit deactivationReady();
-}
-
 }

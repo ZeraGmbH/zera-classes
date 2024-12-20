@@ -21,7 +21,6 @@ public:
     QByteArray getConfiguration() const override;
 private slots:
     void activationFinished() override;
-    void deactivationFinished() override;
 private:
     void setupModule() override; // after xml configuration we can setup and export our module
     void startMeas() override; // we make the measuring program start here

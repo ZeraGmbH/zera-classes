@@ -23,7 +23,6 @@ public:
 private slots:
     void activationFinished() override;
     void deactivationStart() override;
-    void deactivationFinished() override;
 private:
     cSampleModuleMeasProgram *m_pMeasProgram; // our measuring program, lets say the working horse
     cPllObsermatic *m_pPllObsermatic; // our pll handling

@@ -21,7 +21,6 @@ public:
     QByteArray getConfiguration() const override;
 private slots:
     void activationFinished() override;
-    void deactivationFinished() override;
 private:
     cPower1ModuleMeasProgram *m_pMeasProgram; // our measuring program, lets say the working horse
     void setupModule() override; // after xml configuration we can setup and export our module

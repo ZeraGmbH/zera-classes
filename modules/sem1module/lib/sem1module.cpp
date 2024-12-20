@@ -89,9 +89,4 @@ void cSem1Module::activationFinished()
     emit activationReady();
 }
 
-void cSem1Module::deactivationFinished()
-{
-    emit deactivationReady();
-}
-
 }

@@ -91,9 +91,4 @@ void cTransformer1Module::activationFinished()
     emit activationReady();
 }
 
-void cTransformer1Module::deactivationFinished()
-{
-    emit deactivationReady();
-}
-
 }

@@ -26,7 +26,6 @@ protected:
 private slots:
     // entered immediately - no interim states for now
     void activationFinished() override;
-    void deactivationFinished() override;
 private:
     QState m_stateSwitchAllOff;
     VfModuleRpc *m_rpcEventSystem;

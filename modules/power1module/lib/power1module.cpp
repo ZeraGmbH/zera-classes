@@ -86,9 +86,4 @@ void cPower1Module::activationFinished()
     emit activationReady();
 }
 
-void cPower1Module::deactivationFinished()
-{
-    emit deactivationReady();
-}
-
 }

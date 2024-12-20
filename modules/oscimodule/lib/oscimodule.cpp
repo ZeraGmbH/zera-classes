@@ -89,9 +89,4 @@ void cOsciModule::activationFinished()
     emit activationReady();
 }
 
-void cOsciModule::deactivationFinished()
-{
-    emit deactivationReady();
-}
-
 }

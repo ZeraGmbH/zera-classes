@@ -36,7 +36,6 @@ protected slots:
     void activationFinished() override;
 
     void deactivationStart() override;
-    void deactivationFinished() override;
 
 private:
     VfModuleMetaData* m_pChannelCountInfo;

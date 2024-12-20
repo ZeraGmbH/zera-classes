@@ -89,9 +89,4 @@ void cSpm1Module::activationFinished()
     emit activationReady();
 }
 
-void cSpm1Module::deactivationFinished()
-{
-    emit deactivationReady();
-}
-
 }

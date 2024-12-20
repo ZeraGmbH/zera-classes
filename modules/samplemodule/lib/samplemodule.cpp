@@ -156,9 +156,4 @@ void cSampleModule::deactivationStart()
     emit deactivationContinue();
 }
 
-void cSampleModule::deactivationFinished()
-{
-    emit deactivationReady();
-}
-
 }
