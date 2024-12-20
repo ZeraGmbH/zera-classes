@@ -120,12 +120,6 @@ void cRangeModule::stopMeas()
 }
 
 
-void cRangeModule::activationExec()
-{
-    m_ModuleActivistList.at(m_nActivationIt)->activate();
-}
-
-
 void cRangeModule::activationDone()
 {
     m_nActivationIt++;

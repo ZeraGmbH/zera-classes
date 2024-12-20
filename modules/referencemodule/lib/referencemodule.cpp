@@ -133,12 +133,6 @@ void cReferenceModule::stopMeas()
 }
 
 
-void cReferenceModule::activationExec()
-{
-    m_ModuleActivistList.at(m_nActivationIt)->activate();
-}
-
-
 void cReferenceModule::activationDone()
 {
     m_nActivationIt++;

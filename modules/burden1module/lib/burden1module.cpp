@@ -80,12 +80,6 @@ void cBurden1Module::stopMeas()
 }
 
 
-void cBurden1Module::activationExec()
-{
-    m_ModuleActivistList.at(m_nActivationIt)->activate();
-}
-
-
 void cBurden1Module::activationDone()
 {
     m_nActivationIt++;

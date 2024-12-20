@@ -85,12 +85,6 @@ void cThdnModule::stopMeas()
 }
 
 
-void cThdnModule::activationExec()
-{
-    m_ModuleActivistList.at(m_nActivationIt)->activate();
-}
-
-
 void cThdnModule::activationDone()
 {
     m_nActivationIt++;

@@ -79,12 +79,6 @@ void cSem1Module::stopMeas()
 }
 
 
-void cSem1Module::activationExec()
-{
-    m_ModuleActivistList.at(m_nActivationIt)->activate();
-}
-
-
 void cSem1Module::activationDone()
 {
     m_nActivationIt++;

@@ -29,7 +29,6 @@ private slots:
     void deactivationFinished() override;
 
     // sigh - we have to add overrides to not being pure virtual
-    void activationExec() override {}
     void activationDone() override {}
 
     void deactivationStart() override {}

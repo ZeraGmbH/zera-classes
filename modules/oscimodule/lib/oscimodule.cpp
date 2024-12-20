@@ -79,12 +79,6 @@ void cOsciModule::stopMeas()
 }
 
 
-void cOsciModule::activationExec()
-{
-    m_ModuleActivistList.at(m_nActivationIt)->activate();
-}
-
-
 void cOsciModule::activationDone()
 {
     m_nActivationIt++;

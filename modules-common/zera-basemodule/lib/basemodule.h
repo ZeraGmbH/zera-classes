@@ -110,7 +110,7 @@ protected:
 
 protected slots:
     void activationStart();
-    virtual void activationExec() = 0;
+    void activationExec();
     virtual void activationDone() = 0; // loop to exec or end up on finished
     virtual void activationFinished() = 0;
 
