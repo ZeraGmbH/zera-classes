@@ -11,34 +11,6 @@ cBleModule::cBleModule(ModuleFactoryParam moduleParam) :
     m_sModuleName = QString("%1%2").arg(BaseModuleName).arg(moduleParam.m_moduleNum);
     m_sModuleDescription = QString("This module measures configured number of harmonic power values from configured input values");
     m_sSCPIModuleName = QString("%1%2").arg(BaseSCPIModuleName).arg(moduleParam.m_moduleNum);
-
-    m_ActivationStartState.addTransition(this, &cBleModule::activationContinue, &m_ActivationExecState);
-    m_ActivationExecState.addTransition(this, &cBleModule::activationContinue, &m_ActivationDoneState);
-    m_ActivationDoneState.addTransition(this, &cBleModule::activationNext, &m_ActivationExecState);
-    m_ActivationDoneState.addTransition(this, &cBleModule::activationContinue, &m_ActivationFinishedState);
-    m_ActivationMachine.addState(&m_ActivationStartState);
-    m_ActivationMachine.addState(&m_ActivationExecState);
-    m_ActivationMachine.addState(&m_ActivationDoneState);
-    m_ActivationMachine.addState(&m_ActivationFinishedState);
-    m_ActivationMachine.setInitialState(&m_ActivationStartState);
-    connect(&m_ActivationStartState, &QState::entered, this, &cBleModule::activationStart);
-    connect(&m_ActivationExecState, &QState::entered, this, &cBleModule::activationExec);
-    connect(&m_ActivationDoneState, &QState::entered, this, &cBleModule::activationDone);
-    connect(&m_ActivationFinishedState, &QState::entered, this, &cBleModule::activationFinished);
-
-    m_DeactivationStartState.addTransition(this, &cBleModule::deactivationContinue, &m_DeactivationExecState);
-    m_DeactivationExecState.addTransition(this, &cBleModule::deactivationContinue, &m_DeactivationDoneState);
-    m_DeactivationDoneState.addTransition(this, &cBleModule::deactivationNext, &m_DeactivationExecState);
-    m_DeactivationDoneState.addTransition(this, &cBleModule::deactivationContinue, &m_DeactivationFinishedState);
-    m_DeactivationMachine.addState(&m_DeactivationStartState);
-    m_DeactivationMachine.addState(&m_DeactivationExecState);
-    m_DeactivationMachine.addState(&m_DeactivationDoneState);
-    m_DeactivationMachine.addState(&m_DeactivationFinishedState);
-    m_DeactivationMachine.setInitialState(&m_DeactivationStartState);
-    connect(&m_DeactivationStartState, &QState::entered, this, &cBleModule::deactivationStart);
-    connect(&m_DeactivationExecState, &QState::entered, this, &cBleModule::deactivationExec);
-    connect(&m_DeactivationDoneState, &QState::entered, this, &cBleModule::deactivationDone);
-    connect(&m_DeactivationFinishedState, &QState::entered, this, &cBleModule::deactivationFinished);
 }
 
 void cBleModule::setupModule()
