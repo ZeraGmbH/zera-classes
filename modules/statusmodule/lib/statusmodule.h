@@ -18,8 +18,6 @@ public:
     cStatusModule(ModuleFactoryParam moduleParam);
     QByteArray getConfiguration() const override;
 
-private slots:
-    void activationFinished() override;
 private:
     cStatusModuleInit *m_pStatusModuleInit;
     void setupModule() override; // after xml configuration we can setup and export our module

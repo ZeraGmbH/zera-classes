@@ -40,13 +40,10 @@ cAdjustmentModule::cAdjustmentModule(ModuleFactoryParam moduleParam) :
 
 }
 
-
 QByteArray cAdjustmentModule::getConfiguration() const
 {
     return m_pConfiguration->exportConfiguration();
 }
-
-
 
 void cAdjustmentModule::setupModule()
 {
@@ -64,24 +61,12 @@ void cAdjustmentModule::setupModule()
         m_ModuleActivistList.at(i)->generateVeinInterface();
 }
 
-
 void cAdjustmentModule::startMeas()
 {
     m_pMeasProgram->start();
 }
 
-
 void cAdjustmentModule::stopMeas()
 {
     m_pMeasProgram->stop();
-}
-
-void cAdjustmentModule::activationFinished()
-{
-    m_pModuleValidator->setParameterMap(m_veinModuleParameterMap);
-
-    // now we still have to export the json interface information
-    exportMetaData();
-
-    emit activationReady();
 }

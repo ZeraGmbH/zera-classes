@@ -63,27 +63,14 @@ void cPower1Module::setupModule()
         m_ModuleActivistList.at(i)->generateVeinInterface();
 }
 
-
 void cPower1Module::startMeas()
 {
     m_pMeasProgram->start();
 }
 
-
 void cPower1Module::stopMeas()
 {
     m_pMeasProgram->stop();
-}
-
-
-void cPower1Module::activationFinished()
-{
-    m_pModuleValidator->setParameterMap(m_veinModuleParameterMap);
-
-    // now we still have to export the json interface information
-    exportMetaData();
-
-    emit activationReady();
 }
 
 }

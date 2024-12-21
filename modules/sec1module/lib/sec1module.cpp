@@ -41,15 +41,12 @@ cSec1Module::cSec1Module(ModuleFactoryParam moduleParam) :
     connect(&m_DeactivationExecState, &QState::entered, this, &cSec1Module::deactivationExec);
     connect(&m_DeactivationDoneState, &QState::entered, this, &cSec1Module::deactivationDone);
     connect(&m_DeactivationFinishedState, &QState::entered, this, &cSec1Module::deactivationFinished);
-
 }
-
 
 QByteArray cSec1Module::getConfiguration() const
 {
     return m_pConfiguration->exportConfiguration();
 }
-
 
 void cSec1Module::setupModule()
 {
@@ -66,27 +63,14 @@ void cSec1Module::setupModule()
         m_ModuleActivistList.at(i)->generateVeinInterface();
 }
 
-
 void cSec1Module::startMeas()
 {
     m_pMeasProgram->start();
 }
 
-
 void cSec1Module::stopMeas()
 {
     m_pMeasProgram->stop();
-}
-
-
-void cSec1Module::activationFinished()
-{
-    m_pModuleValidator->setParameterMap(m_veinModuleParameterMap);
-
-    // now we still have to export the json interface information
-    exportMetaData();
-
-    emit activationReady();
 }
 
 }

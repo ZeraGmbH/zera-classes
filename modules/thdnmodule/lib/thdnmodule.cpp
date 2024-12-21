@@ -46,16 +46,12 @@ cThdnModule::cThdnModule(ModuleFactoryParam moduleParam) :
     connect(&m_DeactivationExecState, &QAbstractState::entered, this, &cThdnModule::deactivationExec);
     connect(&m_DeactivationDoneState, &QAbstractState::entered, this, &cThdnModule::deactivationDone);
     connect(&m_DeactivationFinishedState, &QAbstractState::entered, this, &cThdnModule::deactivationFinished);
-
 }
-
 
 QByteArray cThdnModule::getConfiguration() const
 {
     return m_pConfiguration->exportConfiguration();
 }
-
-
 
 void cThdnModule::setupModule()
 {
@@ -72,27 +68,14 @@ void cThdnModule::setupModule()
         m_ModuleActivistList.at(i)->generateVeinInterface();
 }
 
-
 void cThdnModule::startMeas()
 {
     m_pMeasProgram->start();
 }
 
-
 void cThdnModule::stopMeas()
 {
     m_pMeasProgram->stop();
-}
-
-
-void cThdnModule::activationFinished()
-{
-    m_pModuleValidator->setParameterMap(m_veinModuleParameterMap);
-    // now we still have to export the json interface information
-
-    exportMetaData();
-
-    emit activationReady();
 }
 
 }

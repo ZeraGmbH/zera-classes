@@ -41,16 +41,12 @@ cTransformer1Module::cTransformer1Module(ModuleFactoryParam moduleParam) :
     connect(&m_DeactivationExecState, &QState::entered, this, &cTransformer1Module::deactivationExec);
     connect(&m_DeactivationDoneState, &QState::entered, this, &cTransformer1Module::deactivationDone);
     connect(&m_DeactivationFinishedState, &QState::entered, this, &cTransformer1Module::deactivationFinished);
-
 }
-
 
 QByteArray cTransformer1Module::getConfiguration() const
 {
     return m_pConfiguration->exportConfiguration();
 }
-
-
 
 void cTransformer1Module::setupModule()
 {
@@ -68,27 +64,14 @@ void cTransformer1Module::setupModule()
         m_ModuleActivistList.at(i)->generateVeinInterface();
 }
 
-
 void cTransformer1Module::startMeas()
 {
     m_pMeasProgram->start();
 }
 
-
 void cTransformer1Module::stopMeas()
 {
     m_pMeasProgram->stop();
-}
-
-
-void cTransformer1Module::activationFinished()
-{
-    m_pModuleValidator->setParameterMap(m_veinModuleParameterMap);
-
-    // now we still have to export the json interface information
-    exportMetaData();
-
-    emit activationReady();
 }
 
 }

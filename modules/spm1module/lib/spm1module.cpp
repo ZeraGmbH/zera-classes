@@ -41,15 +41,12 @@ cSpm1Module::cSpm1Module(ModuleFactoryParam moduleParam) :
     connect(&m_DeactivationExecState, &QState::entered, this, &cSpm1Module::deactivationExec);
     connect(&m_DeactivationDoneState, &QState::entered, this, &cSpm1Module::deactivationDone);
     connect(&m_DeactivationFinishedState, &QState::entered, this, &cSpm1Module::deactivationFinished);
-
 }
-
 
 QByteArray cSpm1Module::getConfiguration() const
 {
     return m_pConfiguration->exportConfiguration();
 }
-
 
 void cSpm1Module::setupModule()
 {
@@ -66,27 +63,14 @@ void cSpm1Module::setupModule()
         m_ModuleActivistList.at(i)->generateVeinInterface();
 }
 
-
 void cSpm1Module::startMeas()
 {
     m_pMeasProgram->start();
 }
 
-
 void cSpm1Module::stopMeas()
 {
     m_pMeasProgram->stop();
-}
-
-
-void cSpm1Module::activationFinished()
-{
-    m_pModuleValidator->setParameterMap(m_veinModuleParameterMap);
-
-    // now we still have to export the json interface information
-    exportMetaData();
-
-    emit activationReady();
 }
 
 }

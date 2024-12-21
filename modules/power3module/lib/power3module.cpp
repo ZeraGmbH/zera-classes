@@ -40,16 +40,12 @@ cPower3Module::cPower3Module(ModuleFactoryParam moduleParam) :
     connect(&m_DeactivationExecState, &QState::entered, this, &cPower3Module::deactivationExec);
     connect(&m_DeactivationDoneState, &QState::entered, this, &cPower3Module::deactivationDone);
     connect(&m_DeactivationFinishedState, &QState::entered, this, &cPower3Module::deactivationFinished);
-
 }
-
 
 QByteArray cPower3Module::getConfiguration() const
 {
     return m_pConfiguration->exportConfiguration();
 }
-
-
 
 void cPower3Module::setupModule()
 {
@@ -67,27 +63,14 @@ void cPower3Module::setupModule()
         m_ModuleActivistList.at(i)->generateVeinInterface();
 }
 
-
 void cPower3Module::startMeas()
 {
     m_pMeasProgram->start();
 }
 
-
 void cPower3Module::stopMeas()
 {
     m_pMeasProgram->stop();
-}
-
-
-void cPower3Module::activationFinished()
-{
-    m_pModuleValidator->setParameterMap(m_veinModuleParameterMap);
-
-    // now we still have to export the json interface information
-    exportMetaData();
-
-    emit activationReady();
 }
 
 }

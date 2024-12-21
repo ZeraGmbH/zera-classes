@@ -45,15 +45,12 @@ cSampleModule::cSampleModule(ModuleFactoryParam moduleParam) :
     connect(&m_DeactivationExecState, &QState::entered, this, &cSampleModule::deactivationExec);
     connect(&m_DeactivationDoneState, &QState::entered, this, &cSampleModule::deactivationDone);
     connect(&m_DeactivationFinishedState, &QState::entered, this, &cSampleModule::deactivationFinished);
-
 }
-
 
 QByteArray cSampleModule::getConfiguration() const
 {
     return m_pConfiguration->exportConfiguration();
 }
-
 
 cPllMeasChannel* cSampleModule::getPllMeasChannel(QString name)
 {
@@ -64,7 +61,6 @@ cPllMeasChannel* cSampleModule::getPllMeasChannel(QString name)
         if ((p_pllmc->getName()) == name)
             return p_pllmc;
     }
-
     return p_pllmc;
 }
 
@@ -115,18 +111,15 @@ void cSampleModule::setupModule()
         m_ModuleActivistList.at(i)->generateVeinInterface();
 }
 
-
 void cSampleModule::startMeas()
 {
     m_pMeasProgram->start();
 }
 
-
 void cSampleModule::stopMeas()
 {
     m_pMeasProgram->stop();
 }
-
 
 void cSampleModule::activationFinished()
 {

@@ -12,6 +12,8 @@ class cBaseMeasModule : public BaseModule
 public:
     cBaseMeasModule(ModuleFactoryParam moduleParam, std::shared_ptr<BaseModuleConfiguration> modcfg);
     VfEventSytemModuleParam* m_pModuleValidator;
+protected slots:
+    void activationFinished() override;
 };
 
 #endif // BASEMEASMODULE

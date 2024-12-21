@@ -70,14 +70,4 @@ void cBleModule::stopMeas()
     m_pMeasProgram->stop();
 }
 
-void cBleModule::activationFinished()
-{
-    m_pModuleValidator->setParameterMap(m_veinModuleParameterMap);
-
-    // now we still have to export the json interface information
-    exportMetaData();
-
-    emit activationReady();
-}
-
 }

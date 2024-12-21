@@ -49,13 +49,10 @@ cFftModule::cFftModule(ModuleFactoryParam moduleParam) :
 
 }
 
-
 QByteArray cFftModule::getConfiguration() const
 {
     return m_pConfiguration->exportConfiguration();
 }
-
-
 
 void cFftModule::setupModule()
 {
@@ -72,27 +69,14 @@ void cFftModule::setupModule()
         m_ModuleActivistList.at(i)->generateVeinInterface();
 }
 
-
 void cFftModule::startMeas()
 {
     m_pMeasProgram->start();
 }
 
-
 void cFftModule::stopMeas()
 {
     m_pMeasProgram->stop();
-}
-
-
-void cFftModule::activationFinished()
-{
-    m_pModuleValidator->setParameterMap(m_veinModuleParameterMap);
-
-    // now we still have to export the json interface information
-    exportMetaData();
-
-    emit activationReady();
 }
 
 }

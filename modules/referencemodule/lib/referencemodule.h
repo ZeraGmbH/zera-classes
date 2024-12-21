@@ -19,10 +19,9 @@ public:
     cReferenceModule(ModuleFactoryParam moduleParam);
     QByteArray getConfiguration() const override;
     virtual cReferenceMeasChannel* getMeasChannel(QString name); // also used for callback
+
 private slots:
     void activationAdjustment();
-    void activationFinished() override;
-
     void deactivationStart() override;
 private:
     cReferenceModuleMeasProgram *m_pMeasProgram; // our measuring program, lets say the working horse

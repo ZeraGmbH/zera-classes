@@ -43,12 +43,10 @@ cStatusModule::cStatusModule(ModuleFactoryParam moduleParam) :
 
 }
 
-
 QByteArray cStatusModule::getConfiguration() const
 {
     return m_pConfiguration->exportConfiguration();
 }
-
 
 void cStatusModule::setupModule()
 {
@@ -68,27 +66,14 @@ void cStatusModule::setupModule()
         m_ModuleActivistList.at(i)->generateVeinInterface();
 }
 
-
 void cStatusModule::startMeas()
 {
     // nothing to start here
 }
 
-
 void cStatusModule::stopMeas()
 {
     // also nothing to stop
-}
-
-
-void cStatusModule::activationFinished()
-{
-    // now we still have to export the json interface information, then we are ready
-
-    m_pModuleValidator->setParameterMap(m_veinModuleParameterMap);
-    exportMetaData();
-
-    emit activationReady();
 }
 
 }

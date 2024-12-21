@@ -43,13 +43,10 @@ cBurden1Module::cBurden1Module(ModuleFactoryParam moduleParam) :
 
 }
 
-
 QByteArray cBurden1Module::getConfiguration() const
 {
     return m_pConfiguration->exportConfiguration();
 }
-
-
 
 void cBurden1Module::setupModule()
 {
@@ -67,26 +64,14 @@ void cBurden1Module::setupModule()
         m_ModuleActivistList.at(i)->generateVeinInterface();
 }
 
-
 void cBurden1Module::startMeas()
 {
     m_pMeasProgram->start();
 }
 
-
 void cBurden1Module::stopMeas()
 {
     m_pMeasProgram->stop();
-}
-
-void cBurden1Module::activationFinished()
-{
-    m_pModuleValidator->setParameterMap(m_veinModuleParameterMap);
-
-    // now we still have to export the json interface information
-    exportMetaData();
-
-    emit activationReady();
 }
 
 }

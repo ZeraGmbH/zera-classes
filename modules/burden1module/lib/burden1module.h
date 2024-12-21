@@ -16,8 +16,6 @@ public:
     cBurden1Module(ModuleFactoryParam moduleParam);
     QByteArray getConfiguration() const override;
 
-private slots:
-    void activationFinished() override;
 private:
     cBurden1ModuleMeasProgram *m_pMeasProgram; // our measuring program, lets say the working horse
     void setupModule() override; // after xml configuration we can setup and export our module

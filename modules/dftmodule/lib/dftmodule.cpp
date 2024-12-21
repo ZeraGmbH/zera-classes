@@ -40,16 +40,12 @@ cDftModule::cDftModule(ModuleFactoryParam moduleParam) :
     connect(&m_DeactivationExecState, &QState::entered, this, &cDftModule::deactivationExec);
     connect(&m_DeactivationDoneState, &QState::entered, this, &cDftModule::deactivationDone);
     connect(&m_DeactivationFinishedState, &QState::entered, this, &cDftModule::deactivationFinished);
-
 }
-
 
 QByteArray cDftModule::getConfiguration() const
 {
     return m_pConfiguration->exportConfiguration();
 }
-
-
 
 void cDftModule::setupModule()
 {
@@ -66,27 +62,14 @@ void cDftModule::setupModule()
         m_ModuleActivistList.at(i)->generateVeinInterface();
 }
 
-
 void cDftModule::startMeas()
 {
     m_pMeasProgram->start();
 }
 
-
 void cDftModule::stopMeas()
 {
     m_pMeasProgram->stop();
-}
-
-
-void cDftModule::activationFinished()
-{
-    m_pModuleValidator->setParameterMap(m_veinModuleParameterMap);
-
-    // now we still have to export the json interface information
-    exportMetaData();
-
-    emit activationReady();
 }
 
 }
