@@ -24,18 +24,6 @@ private:
     void stopMeas() override;
 
     cSem1ModuleMeasProgram *m_pMeasProgram; // our measuring program, lets say the working horse
-    // our states for base modules activation statemacine
-    QState m_ActivationStartState;
-    QState m_ActivationExecState;
-    QState m_ActivationDoneState;
-    QFinalState m_ActivationFinishedState;
-
-    // our states for base modules deactivation statemacine
-    QState m_DeactivationStartState;
-    QState m_DeactivationExecState;
-    QState m_DeactivationDoneState;
-    QFinalState m_DeactivationFinishedState;
-
 };
 
 }
