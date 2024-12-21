@@ -17,34 +17,6 @@ cSampleModule::cSampleModule(ModuleFactoryParam moduleParam) :
     m_sModuleName = QString("%1%2").arg(BaseModuleName).arg(moduleParam.m_moduleNum);
     m_sModuleDescription = QString("This module is responsible for pll range setting\n, pll channel selection and automatic");
     m_sSCPIModuleName = QString("%1%2").arg(BaseSCPIModuleName).arg(moduleParam.m_moduleNum);
-
-    m_ActivationStartState.addTransition(this, &cSampleModule::activationContinue, &m_ActivationExecState);
-    m_ActivationExecState.addTransition(this, &cSampleModule::activationContinue, &m_ActivationDoneState);
-    m_ActivationDoneState.addTransition(this, &cSampleModule::activationNext, &m_ActivationExecState);
-    m_ActivationDoneState.addTransition(this, &cSampleModule::activationContinue, &m_ActivationFinishedState);
-    m_ActivationMachine.addState(&m_ActivationStartState);
-    m_ActivationMachine.addState(&m_ActivationExecState);
-    m_ActivationMachine.addState(&m_ActivationDoneState);
-    m_ActivationMachine.addState(&m_ActivationFinishedState);
-    m_ActivationMachine.setInitialState(&m_ActivationStartState);
-    connect(&m_ActivationStartState, &QState::entered, this, &cSampleModule::activationStart);
-    connect(&m_ActivationExecState, &QState::entered, this, &cSampleModule::activationExec);
-    connect(&m_ActivationDoneState, &QState::entered, this, &cSampleModule::activationDone);
-    connect(&m_ActivationFinishedState, &QState::entered, this, &cSampleModule::activationFinished);
-
-    m_DeactivationStartState.addTransition(this, &cSampleModule::deactivationContinue, &m_DeactivationExecState);
-    m_DeactivationExecState.addTransition(this, &cSampleModule::deactivationContinue, &m_DeactivationDoneState);
-    m_DeactivationDoneState.addTransition(this, &cSampleModule::deactivationNext, &m_DeactivationExecState);
-    m_DeactivationDoneState.addTransition(this, &cSampleModule::deactivationContinue, &m_DeactivationFinishedState);
-    m_DeactivationMachine.addState(&m_DeactivationStartState);
-    m_DeactivationMachine.addState(&m_DeactivationExecState);
-    m_DeactivationMachine.addState(&m_DeactivationDoneState);
-    m_DeactivationMachine.addState(&m_DeactivationFinishedState);
-    m_DeactivationMachine.setInitialState(&m_DeactivationStartState);
-    connect(&m_DeactivationStartState, &QState::entered, this, &cSampleModule::deactivationStart);
-    connect(&m_DeactivationExecState, &QState::entered, this, &cSampleModule::deactivationExec);
-    connect(&m_DeactivationDoneState, &QState::entered, this, &cSampleModule::deactivationDone);
-    connect(&m_DeactivationFinishedState, &QState::entered, this, &cSampleModule::deactivationFinished);
 }
 
 cPllMeasChannel* cSampleModule::getPllMeasChannel(QString name)
