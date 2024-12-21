@@ -9,35 +9,6 @@ cAdjustmentModule::cAdjustmentModule(ModuleFactoryParam moduleParam) :
     m_sModuleName = QString("%1%2").arg(BaseModuleName).arg(moduleParam.m_moduleNum);
     m_sModuleDescription = QString("This module supports commands for adjustment for a configured number of measuring channels");
     m_sSCPIModuleName = QString("%1%2").arg(BaseSCPIModuleName).arg(moduleParam.m_moduleNum);
-
-    m_ActivationStartState.addTransition(this, &cAdjustmentModule::activationContinue, &m_ActivationExecState);
-    m_ActivationExecState.addTransition(this, &cAdjustmentModule::activationContinue, &m_ActivationDoneState);
-    m_ActivationDoneState.addTransition(this, &cAdjustmentModule::activationNext, &m_ActivationExecState);
-    m_ActivationDoneState.addTransition(this, &cAdjustmentModule::activationContinue, &m_ActivationFinishedState);
-    m_ActivationMachine.addState(&m_ActivationStartState);
-    m_ActivationMachine.addState(&m_ActivationExecState);
-    m_ActivationMachine.addState(&m_ActivationDoneState);
-    m_ActivationMachine.addState(&m_ActivationFinishedState);
-    m_ActivationMachine.setInitialState(&m_ActivationStartState);
-    connect(&m_ActivationStartState, &QState::entered, this, &cAdjustmentModule::activationStart);
-    connect(&m_ActivationExecState, &QState::entered, this, &cAdjustmentModule::activationExec);
-    connect(&m_ActivationDoneState, &QState::entered, this, &cAdjustmentModule::activationDone);
-    connect(&m_ActivationFinishedState, &QState::entered, this, &cAdjustmentModule::activationFinished);
-
-    m_DeactivationStartState.addTransition(this, &cAdjustmentModule::deactivationContinue, &m_DeactivationExecState);
-    m_DeactivationExecState.addTransition(this, &cAdjustmentModule::deactivationContinue, &m_DeactivationDoneState);
-    m_DeactivationDoneState.addTransition(this, &cAdjustmentModule::deactivationNext, &m_DeactivationExecState);
-    m_DeactivationDoneState.addTransition(this, &cAdjustmentModule::deactivationContinue, &m_DeactivationFinishedState);
-    m_DeactivationMachine.addState(&m_DeactivationStartState);
-    m_DeactivationMachine.addState(&m_DeactivationExecState);
-    m_DeactivationMachine.addState(&m_DeactivationDoneState);
-    m_DeactivationMachine.addState(&m_DeactivationFinishedState);
-    m_DeactivationMachine.setInitialState(&m_DeactivationStartState);
-    connect(&m_DeactivationStartState, &QState::entered, this, &cAdjustmentModule::deactivationStart);
-    connect(&m_DeactivationExecState, &QState::entered, this, &cAdjustmentModule::deactivationExec);
-    connect(&m_DeactivationDoneState, &QState::entered, this, &cAdjustmentModule::deactivationDone);
-    connect(&m_DeactivationFinishedState, &QState::entered, this, &cAdjustmentModule::deactivationFinished);
-
 }
 
 void cAdjustmentModule::setupModule()
