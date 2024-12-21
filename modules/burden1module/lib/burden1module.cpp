@@ -12,35 +12,6 @@ cBurden1Module::cBurden1Module(ModuleFactoryParam moduleParam) :
     m_sModuleName = QString("%1%2").arg(BaseModuleName).arg(moduleParam.m_moduleNum);
     m_sModuleDescription = QString("This module measures configured number burden and powerfactor from configured input dft values");
     m_sSCPIModuleName = QString("%1%2").arg(BaseSCPIModuleName).arg(moduleParam.m_moduleNum);
-
-    m_ActivationStartState.addTransition(this, &cBurden1Module::activationContinue, &m_ActivationExecState);
-    m_ActivationExecState.addTransition(this, &cBurden1Module::activationContinue, &m_ActivationDoneState);
-    m_ActivationDoneState.addTransition(this, &cBurden1Module::activationNext, &m_ActivationExecState);
-    m_ActivationDoneState.addTransition(this, &cBurden1Module::activationContinue, &m_ActivationFinishedState);
-    m_ActivationMachine.addState(&m_ActivationStartState);
-    m_ActivationMachine.addState(&m_ActivationExecState);
-    m_ActivationMachine.addState(&m_ActivationDoneState);
-    m_ActivationMachine.addState(&m_ActivationFinishedState);
-    m_ActivationMachine.setInitialState(&m_ActivationStartState);
-    connect(&m_ActivationStartState, &QState::entered, this, &cBurden1Module::activationStart);
-    connect(&m_ActivationExecState, &QState::entered, this, &cBurden1Module::activationExec);
-    connect(&m_ActivationDoneState, &QState::entered, this, &cBurden1Module::activationDone);
-    connect(&m_ActivationFinishedState, &QState::entered, this, &cBurden1Module::activationFinished);
-
-    m_DeactivationStartState.addTransition(this, &cBurden1Module::deactivationContinue, &m_DeactivationExecState);
-    m_DeactivationExecState.addTransition(this, &cBurden1Module::deactivationContinue, &m_DeactivationDoneState);
-    m_DeactivationDoneState.addTransition(this, &cBurden1Module::deactivationNext, &m_DeactivationExecState);
-    m_DeactivationDoneState.addTransition(this, &cBurden1Module::deactivationContinue, &m_DeactivationFinishedState);
-    m_DeactivationMachine.addState(&m_DeactivationStartState);
-    m_DeactivationMachine.addState(&m_DeactivationExecState);
-    m_DeactivationMachine.addState(&m_DeactivationDoneState);
-    m_DeactivationMachine.addState(&m_DeactivationFinishedState);
-    m_DeactivationMachine.setInitialState(&m_DeactivationStartState);
-    connect(&m_DeactivationStartState, &QState::entered, this, &cBurden1Module::deactivationStart);
-    connect(&m_DeactivationExecState, &QState::entered, this, &cBurden1Module::deactivationExec);
-    connect(&m_DeactivationDoneState, &QState::entered, this, &cBurden1Module::deactivationDone);
-    connect(&m_DeactivationFinishedState, &QState::entered, this, &cBurden1Module::deactivationFinished);
-
 }
 
 void cBurden1Module::setupModule()
