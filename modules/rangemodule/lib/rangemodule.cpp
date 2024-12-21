@@ -21,13 +21,6 @@ cRangeModule::cRangeModule(ModuleFactoryParam moduleParam) :
     m_sSCPIModuleName = QString("%1%2").arg(BaseSCPIModuleName).arg(moduleParam.m_moduleNum);
 }
 
-
-QByteArray cRangeModule::getConfiguration() const
-{
-    return m_pConfiguration->exportConfiguration();
-}
-
-
 cRangeMeasChannel *cRangeModule::getMeasChannel(QString name)
 {
     cRangeMeasChannel* p_rmc = 0;
@@ -37,10 +30,8 @@ cRangeMeasChannel *cRangeModule::getMeasChannel(QString name)
         if ((p_rmc->getName()) == name)
             return p_rmc;
     }
-
     return p_rmc;
 }
-
 
 void cRangeModule::setupModule()
 {
@@ -107,18 +98,15 @@ void cRangeModule::setupModule()
 
 }
 
-
 void cRangeModule::startMeas()
 {
     m_pMeasProgram->start();
 }
 
-
 void cRangeModule::stopMeas()
 {
     m_pMeasProgram->stop();
 }
-
 
 void cRangeModule::activationFinished()
 {
@@ -143,7 +131,6 @@ void cRangeModule::activationFinished()
 
     emit activationReady();
 }
-
 
 void cRangeModule::deactivationStart()
 {

@@ -43,11 +43,6 @@ cTransformer1Module::cTransformer1Module(ModuleFactoryParam moduleParam) :
     connect(&m_DeactivationFinishedState, &QState::entered, this, &cTransformer1Module::deactivationFinished);
 }
 
-QByteArray cTransformer1Module::getConfiguration() const
-{
-    return m_pConfiguration->exportConfiguration();
-}
-
 void cTransformer1Module::setupModule()
 {
     emit addEventSystem(m_pModuleValidator);

@@ -41,11 +41,6 @@ cBleModule::cBleModule(ModuleFactoryParam moduleParam) :
     connect(&m_DeactivationFinishedState, &QState::entered, this, &cBleModule::deactivationFinished);
 }
 
-QByteArray cBleModule::getConfiguration() const
-{
-    return m_pConfiguration->exportConfiguration();
-}
-
 void cBleModule::setupModule()
 {
     emit addEventSystem(m_pModuleValidator);

@@ -42,15 +42,7 @@ cModeModule::cModeModule(ModuleFactoryParam moduleParam) :
     connect(&m_DeactivationExecState, &QState::entered, this, &cModeModule::deactivationExec);
     connect(&m_DeactivationDoneState, &QState::entered, this, &cModeModule::deactivationDone);
     connect(&m_DeactivationFinishedState, &QState::entered, this, &cModeModule::deactivationFinished);
-
 }
-
-
-QByteArray cModeModule::getConfiguration() const
-{
-    return m_pConfiguration->exportConfiguration();
-}
-
 
 void cModeModule::setupModule()
 {
@@ -70,18 +62,15 @@ void cModeModule::setupModule()
         m_ModuleActivistList.at(i)->generateVeinInterface();
 }
 
-
 void cModeModule::startMeas()
 {
     // nothing to start here
 }
 
-
 void cModeModule::stopMeas()
 {
     // also nothing to stop
 }
-
 
 void cModeModule::activationFinished()
 {

@@ -19,7 +19,6 @@ public:
     static constexpr const char* BaseSCPIModuleName = "TR1";
 
     cTransformer1Module(ModuleFactoryParam moduleParam);
-    QByteArray getConfiguration() const override;
 
 private:
     cTransformer1ModuleObservation *m_pTransformer1ModuleObservation;

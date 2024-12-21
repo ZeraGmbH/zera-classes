@@ -49,11 +49,6 @@ cFftModule::cFftModule(ModuleFactoryParam moduleParam) :
 
 }
 
-QByteArray cFftModule::getConfiguration() const
-{
-    return m_pConfiguration->exportConfiguration();
-}
-
 void cFftModule::setupModule()
 {
     emit addEventSystem(m_pModuleValidator);

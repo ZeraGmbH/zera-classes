@@ -42,11 +42,6 @@ cLambdaModule::cLambdaModule(ModuleFactoryParam moduleParam) :
 
 }
 
-QByteArray cLambdaModule::getConfiguration() const
-{
-    return m_pConfiguration->exportConfiguration();
-}
-
 void cLambdaModule::setupModule()
 {
     emit addEventSystem(m_pModuleValidator);

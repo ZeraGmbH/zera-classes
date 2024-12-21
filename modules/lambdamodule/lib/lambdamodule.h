@@ -14,7 +14,6 @@ public:
     static constexpr const char* BaseSCPIModuleName = "LAM";
 
     cLambdaModule(ModuleFactoryParam moduleParam);
-    QByteArray getConfiguration() const override;
 
 private:
     cLambdaModuleMeasProgram *m_pMeasProgram; // our measuring program, lets say the working horse

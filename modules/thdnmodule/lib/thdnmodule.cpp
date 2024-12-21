@@ -48,11 +48,6 @@ cThdnModule::cThdnModule(ModuleFactoryParam moduleParam) :
     connect(&m_DeactivationFinishedState, &QAbstractState::entered, this, &cThdnModule::deactivationFinished);
 }
 
-QByteArray cThdnModule::getConfiguration() const
-{
-    return m_pConfiguration->exportConfiguration();
-}
-
 void cThdnModule::setupModule()
 {
     emit addEventSystem(m_pModuleValidator);

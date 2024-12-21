@@ -43,11 +43,6 @@ cPower2Module::cPower2Module(ModuleFactoryParam moduleParam) :
 
 }
 
-QByteArray cPower2Module::getConfiguration() const
-{
-    return m_pConfiguration->exportConfiguration();
-}
-
 void cPower2Module::setupModule()
 {
     emit addEventSystem(m_pModuleValidator);

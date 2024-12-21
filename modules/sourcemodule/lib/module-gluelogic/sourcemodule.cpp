@@ -13,11 +13,6 @@ SourceModule::SourceModule(ModuleFactoryParam moduleParam) :
     Q_INIT_RESOURCE(resource);
 }
 
-QByteArray SourceModule::getConfiguration() const
-{
-    return m_pConfiguration->exportConfiguration();
-}
-
 VfModuleRpc *SourceModule::getRpcEventSystem() const
 {
     return m_rpcEventSystem;

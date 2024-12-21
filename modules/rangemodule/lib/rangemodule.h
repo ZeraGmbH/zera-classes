@@ -20,7 +20,6 @@ public:
     static constexpr const char* BaseModuleName = "RangeModule";
     static constexpr const char* BaseSCPIModuleName = "RNG";
     cRangeModule(ModuleFactoryParam moduleParam);
-    QByteArray getConfiguration() const override;
     virtual cRangeMeasChannel* getMeasChannel(QString name); // also used for callback
 
 protected:

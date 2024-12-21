@@ -49,12 +49,6 @@ cReferenceModule::cReferenceModule(ModuleFactoryParam moduleParam) :
     connect(&m_DeactivationFinishedState, &QStateMachine::entered, this, &cReferenceModule::deactivationFinished);
 }
 
-
-QByteArray cReferenceModule::getConfiguration() const
-{
-    return m_pConfiguration->exportConfiguration();
-}
-
 cReferenceMeasChannel *cReferenceModule::getMeasChannel(QString name)
 {
     cReferenceMeasChannel* p_rmc = 0;
@@ -64,10 +58,8 @@ cReferenceMeasChannel *cReferenceModule::getMeasChannel(QString name)
         if ((p_rmc->getName()) == name)
             return p_rmc;
     }
-
     return p_rmc;
 }
-
 
 void cReferenceModule::setupModule()
 {

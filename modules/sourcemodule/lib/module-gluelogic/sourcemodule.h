@@ -13,7 +13,6 @@ public:
     static constexpr const char* BaseSCPIModuleName = "SRC";
 
     SourceModule(ModuleFactoryParam moduleParam);
-    QByteArray getConfiguration() const override;
     VfModuleRpc *getRpcEventSystem() const;
 
 protected:

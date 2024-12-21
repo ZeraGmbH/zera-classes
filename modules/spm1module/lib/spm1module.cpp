@@ -43,11 +43,6 @@ cSpm1Module::cSpm1Module(ModuleFactoryParam moduleParam) :
     connect(&m_DeactivationFinishedState, &QState::entered, this, &cSpm1Module::deactivationFinished);
 }
 
-QByteArray cSpm1Module::getConfiguration() const
-{
-    return m_pConfiguration->exportConfiguration();
-}
-
 void cSpm1Module::setupModule()
 {
     emit addEventSystem(m_pModuleValidator);

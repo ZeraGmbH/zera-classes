@@ -17,7 +17,6 @@ public:
     static constexpr const char* BaseSCPIModuleName = "THD";
 
     cThdnModule(ModuleFactoryParam moduleParam);
-    QByteArray getConfiguration() const override;
 
 private:
     cThdnModuleMeasProgram *m_pMeasProgram; // our measuring program, lets say the working horse

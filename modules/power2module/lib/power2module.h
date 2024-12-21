@@ -18,7 +18,6 @@ public:
     static constexpr const char* BaseSCPIModuleName = "PW2";
 
     cPower2Module(ModuleFactoryParam moduleParam);
-    QByteArray getConfiguration() const override;
 
 private:
     cPower2ModuleMeasProgram *m_pMeasProgram; // our measuring program, lets say the working horse
