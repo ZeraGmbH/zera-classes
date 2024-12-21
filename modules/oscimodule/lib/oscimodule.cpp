@@ -43,13 +43,10 @@ cOsciModule::cOsciModule(ModuleFactoryParam moduleParam) :
 
 }
 
-
 QByteArray cOsciModule::getConfiguration() const
 {
     return m_pConfiguration->exportConfiguration();
 }
-
-
 
 void cOsciModule::setupModule()
 {
@@ -66,27 +63,14 @@ void cOsciModule::setupModule()
         m_ModuleActivistList.at(i)->generateVeinInterface();
 }
 
-
 void cOsciModule::startMeas()
 {
     m_pMeasProgram->start();
 }
 
-
 void cOsciModule::stopMeas()
 {
     m_pMeasProgram->stop();
-}
-
-
-void cOsciModule::activationFinished()
-{
-    m_pModuleValidator->setParameterMap(m_veinModuleParameterMap);
-    // now we still have to export the json interface information
-
-    exportMetaData();
-
-    emit activationReady();
 }
 
 }

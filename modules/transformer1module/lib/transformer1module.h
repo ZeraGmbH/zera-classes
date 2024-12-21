@@ -21,8 +21,6 @@ public:
     cTransformer1Module(ModuleFactoryParam moduleParam);
     QByteArray getConfiguration() const override;
 
-private slots:
-    void activationFinished() override;
 private:
     cTransformer1ModuleObservation *m_pTransformer1ModuleObservation;
     cTransformer1ModuleMeasProgram *m_pMeasProgram; // our measuring program, lets say the working horse

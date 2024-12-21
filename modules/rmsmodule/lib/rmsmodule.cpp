@@ -41,13 +41,10 @@ cRmsModule::cRmsModule(ModuleFactoryParam moduleParam) :
     connect(&m_DeactivationFinishedState, &QAbstractState::entered, this, &cRmsModule::deactivationFinished);
 }
 
-
 QByteArray cRmsModule::getConfiguration() const
 {
     return m_pConfiguration->exportConfiguration();
 }
-
-
 
 void cRmsModule::setupModule()
 {
@@ -64,27 +61,14 @@ void cRmsModule::setupModule()
         m_ModuleActivistList.at(i)->generateVeinInterface();
 }
 
-
 void cRmsModule::startMeas()
 {
     m_pMeasProgram->start();
 }
 
-
 void cRmsModule::stopMeas()
 {
     m_pMeasProgram->stop();
-}
-
-
-void cRmsModule::activationFinished()
-{
-    m_pModuleValidator->setParameterMap(m_veinModuleParameterMap);
-
-    // now we still have to export the json interface information
-    exportMetaData();
-
-    emit activationReady();
 }
 
 }

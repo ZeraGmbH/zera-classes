@@ -55,7 +55,6 @@ QByteArray cReferenceModule::getConfiguration() const
     return m_pConfiguration->exportConfiguration();
 }
 
-
 cReferenceMeasChannel *cReferenceModule::getMeasChannel(QString name)
 {
     cReferenceMeasChannel* p_rmc = 0;
@@ -120,18 +119,15 @@ void cReferenceModule::setupModule()
         m_ModuleActivistList.at(i)->generateVeinInterface();
 }
 
-
 void cReferenceModule::startMeas()
 {
     m_pMeasProgram->start();
 }
 
-
 void cReferenceModule::stopMeas()
 {
     m_pMeasProgram->stop();
 }
-
 
 void cReferenceModule::activationAdjustment()
 {
@@ -140,19 +136,6 @@ void cReferenceModule::activationAdjustment()
 
     m_pReferenceAdjustment->activate();
 }
-
-
-
-void cReferenceModule::activationFinished()
-{
-    m_pModuleValidator->setParameterMap(m_veinModuleParameterMap);
-
-    // now we still have to export the json interface information
-    exportMetaData();
-
-    emit activationReady();
-}
-
 
 void cReferenceModule::deactivationStart()
 {

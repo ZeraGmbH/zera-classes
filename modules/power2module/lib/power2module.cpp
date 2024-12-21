@@ -43,13 +43,10 @@ cPower2Module::cPower2Module(ModuleFactoryParam moduleParam) :
 
 }
 
-
 QByteArray cPower2Module::getConfiguration() const
 {
     return m_pConfiguration->exportConfiguration();
 }
-
-
 
 void cPower2Module::setupModule()
 {
@@ -67,28 +64,14 @@ void cPower2Module::setupModule()
         m_ModuleActivistList.at(i)->generateVeinInterface();
 }
 
-
 void cPower2Module::startMeas()
 {
     m_pMeasProgram->start();
 }
 
-
 void cPower2Module::stopMeas()
 {
     m_pMeasProgram->stop();
-}
-
-
-void cPower2Module::activationFinished()
-{
-    m_pModuleValidator->setParameterMap(m_veinModuleParameterMap);
-
-    // now we still have to export the json interface information
-    exportMetaData();
-
-    emit activationReady();
-
 }
 
 }

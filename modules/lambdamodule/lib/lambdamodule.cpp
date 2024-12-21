@@ -42,13 +42,10 @@ cLambdaModule::cLambdaModule(ModuleFactoryParam moduleParam) :
 
 }
 
-
 QByteArray cLambdaModule::getConfiguration() const
 {
     return m_pConfiguration->exportConfiguration();
 }
-
-
 
 void cLambdaModule::setupModule()
 {
@@ -66,26 +63,14 @@ void cLambdaModule::setupModule()
         m_ModuleActivistList.at(i)->generateVeinInterface();
 }
 
-
 void cLambdaModule::startMeas()
 {
     m_pMeasProgram->start();
 }
-
 
 void cLambdaModule::stopMeas()
 {
     m_pMeasProgram->stop();
 }
 
-
-void cLambdaModule::activationFinished()
-{
-    m_pModuleValidator->setParameterMap(m_veinModuleParameterMap);
-
-    // now we still have to export the json interface information
-    exportMetaData();
-
-    emit activationReady();
-}
 }

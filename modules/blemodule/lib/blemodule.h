@@ -33,9 +33,6 @@ private:
     QState m_DeactivationExecState;
     QState m_DeactivationDoneState;
     QFinalState m_DeactivationFinishedState;
-
-private slots:
-    void activationFinished() override;
 };
 
 }

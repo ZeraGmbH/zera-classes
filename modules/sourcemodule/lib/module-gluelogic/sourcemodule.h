@@ -23,9 +23,6 @@ protected:
     void startMeas() override; // we make the measuring program start here
     void stopMeas() override;
 
-private slots:
-    // entered immediately - no interim states for now
-    void activationFinished() override;
 private:
     QState m_stateSwitchAllOff;
     VfModuleRpc *m_rpcEventSystem;
