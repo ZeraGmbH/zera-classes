@@ -52,8 +52,6 @@ BaseModule::BaseModule(ModuleFactoryParam moduleParam, std::shared_ptr<BaseModul
     m_stateMachine.addState(m_pStateRun);
     m_stateMachine.setInitialState(m_pStateIdle);
 
-    m_stateMachine.start();
-
     // now we set up our machines for activating, deactivating a module
     m_ActivationStartState.addTransition(this, &BaseModule::activationContinue, &m_ActivationExecState);
     m_ActivationExecState.addTransition(this, &BaseModule::activationContinue, &m_ActivationDoneState);
@@ -107,6 +105,8 @@ void BaseModule::startModule()
         startMeas();
     }
     else {
+        if(!m_stateMachine.isRunning())
+            m_stateMachine.start();
         m_bStartCmd = true; // otherwise we keep in mind that we should configure when machine starts
     }
 }
