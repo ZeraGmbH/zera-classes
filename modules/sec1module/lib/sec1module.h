@@ -18,7 +18,6 @@ public:
     static constexpr const char* BaseSCPIModuleName = "EC01";
 
     cSec1Module(ModuleFactoryParam moduleParam);
-    QByteArray getConfiguration() const override;
 
 private:
     void setupModule() override; // after xml configuration we can setup and export our module

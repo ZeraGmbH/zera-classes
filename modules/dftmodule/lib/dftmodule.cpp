@@ -42,11 +42,6 @@ cDftModule::cDftModule(ModuleFactoryParam moduleParam) :
     connect(&m_DeactivationFinishedState, &QState::entered, this, &cDftModule::deactivationFinished);
 }
 
-QByteArray cDftModule::getConfiguration() const
-{
-    return m_pConfiguration->exportConfiguration();
-}
-
 void cDftModule::setupModule()
 {
     emit addEventSystem(m_pModuleValidator);

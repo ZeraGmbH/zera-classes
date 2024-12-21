@@ -17,7 +17,6 @@ public:
     static constexpr const char* BaseSCPIModuleName = "MOD";
 
     cModeModule(ModuleFactoryParam moduleParam);
-    QByteArray getConfiguration() const override;
 
 private slots:
     void activationFinished() override;

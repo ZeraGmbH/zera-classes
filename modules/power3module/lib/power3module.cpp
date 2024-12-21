@@ -42,11 +42,6 @@ cPower3Module::cPower3Module(ModuleFactoryParam moduleParam) :
     connect(&m_DeactivationFinishedState, &QState::entered, this, &cPower3Module::deactivationFinished);
 }
 
-QByteArray cPower3Module::getConfiguration() const
-{
-    return m_pConfiguration->exportConfiguration();
-}
-
 void cPower3Module::setupModule()
 {
     emit addEventSystem(m_pModuleValidator);

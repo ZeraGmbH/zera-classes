@@ -41,11 +41,6 @@ cRmsModule::cRmsModule(ModuleFactoryParam moduleParam) :
     connect(&m_DeactivationFinishedState, &QAbstractState::entered, this, &cRmsModule::deactivationFinished);
 }
 
-QByteArray cRmsModule::getConfiguration() const
-{
-    return m_pConfiguration->exportConfiguration();
-}
-
 void cRmsModule::setupModule()
 {
     emit addEventSystem(m_pModuleValidator);

@@ -47,11 +47,6 @@ cSampleModule::cSampleModule(ModuleFactoryParam moduleParam) :
     connect(&m_DeactivationFinishedState, &QState::entered, this, &cSampleModule::deactivationFinished);
 }
 
-QByteArray cSampleModule::getConfiguration() const
-{
-    return m_pConfiguration->exportConfiguration();
-}
-
 cPllMeasChannel* cSampleModule::getPllMeasChannel(QString name)
 {
     cPllMeasChannel* p_pllmc = 0;
@@ -63,7 +58,6 @@ cPllMeasChannel* cSampleModule::getPllMeasChannel(QString name)
     }
     return p_pllmc;
 }
-
 
 void cSampleModule::setupModule()
 {
@@ -138,7 +132,6 @@ void cSampleModule::activationFinished()
     exportMetaData();
     emit activationReady();
 }
-
 
 void cSampleModule::deactivationStart()
 {

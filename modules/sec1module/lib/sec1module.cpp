@@ -43,11 +43,6 @@ cSec1Module::cSec1Module(ModuleFactoryParam moduleParam) :
     connect(&m_DeactivationFinishedState, &QState::entered, this, &cSec1Module::deactivationFinished);
 }
 
-QByteArray cSec1Module::getConfiguration() const
-{
-    return m_pConfiguration->exportConfiguration();
-}
-
 void cSec1Module::setupModule()
 {
     emit addEventSystem(m_pModuleValidator);

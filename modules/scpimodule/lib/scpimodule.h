@@ -28,7 +28,6 @@ public:
     static constexpr const char* BaseSCPIModuleName = "SCP";
 
     cSCPIModule(ModuleFactoryParam moduleParam);
-    QByteArray getConfiguration() const override;
     cSCPIServer* getSCPIServer();
 
     QMultiHash<QString, SCPIClientInfoPtr> scpiParameterCmdInfoHash; // a hash to memorize what was in progress for which client

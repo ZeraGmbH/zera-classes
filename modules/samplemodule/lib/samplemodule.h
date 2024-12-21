@@ -17,7 +17,6 @@ public:
     static constexpr const char* BaseSCPIModuleName = "SAM";
 
     cSampleModule(ModuleFactoryParam moduleParam);
-    QByteArray getConfiguration() const override;
     cPllMeasChannel* getPllMeasChannel(QString name);
 
 private slots:

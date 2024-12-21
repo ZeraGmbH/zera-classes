@@ -23,7 +23,6 @@ public:
     static constexpr const char* BaseModuleName = "AdjustmentModule";
     static constexpr const char* BaseSCPIModuleName = "ADJ";
     cAdjustmentModule(ModuleFactoryParam moduleParam);
-    QByteArray getConfiguration() const override;
 
 private:
     cAdjustmentModuleMeasProgram *m_pMeasProgram; // our measuring program, lets say the working horse

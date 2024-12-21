@@ -17,7 +17,6 @@ public:
     static constexpr const char* BaseSCPIModuleName = "PM01";
 
     cSpm1Module(ModuleFactoryParam moduleParam);
-    QByteArray getConfiguration() const override;
 
 private:
     cSpm1ModuleMeasProgram *m_pMeasProgram; // our measuring program, lets say the working horse

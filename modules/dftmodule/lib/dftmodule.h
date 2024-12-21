@@ -17,7 +17,6 @@ public:
     static constexpr const char* BaseSCPIModuleName = "DFT";
 
     cDftModule(ModuleFactoryParam moduleParam);
-    QByteArray getConfiguration() const override;
 
 private:
     cDftModuleMeasProgram *m_pMeasProgram; // our measuring program, lets say the working horse

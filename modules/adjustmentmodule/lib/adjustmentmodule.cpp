@@ -40,11 +40,6 @@ cAdjustmentModule::cAdjustmentModule(ModuleFactoryParam moduleParam) :
 
 }
 
-QByteArray cAdjustmentModule::getConfiguration() const
-{
-    return m_pConfiguration->exportConfiguration();
-}
-
 void cAdjustmentModule::setupModule()
 {
     emit addEventSystem(m_pModuleValidator);

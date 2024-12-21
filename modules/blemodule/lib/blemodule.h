@@ -14,7 +14,6 @@ public:
     static constexpr const char* BaseSCPIModuleName = "BLE";
 
     cBleModule(ModuleFactoryParam moduleParam);
-    QByteArray getConfiguration() const override;
 
 private:
     cBleModuleMeasProgram *m_pMeasProgram; // our measuring program, lets say the working horse

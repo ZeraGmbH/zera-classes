@@ -30,18 +30,10 @@ cSCPIModule::cSCPIModule(ModuleFactoryParam moduleParam) :
     m_pModuleValidator = new VfEventSytemModuleParam(moduleParam.m_entityId, moduleParam.m_storagesystem);
 }
 
-
-QByteArray cSCPIModule::getConfiguration() const
-{
-    return m_pConfiguration->exportConfiguration();
-}
-
-
 cSCPIServer *cSCPIModule::getSCPIServer()
 {
     return m_pSCPIServer;
 }
-
 
 void cSCPIModule::setupModule()
 {
@@ -67,18 +59,15 @@ void cSCPIModule::setupModule()
         m_ModuleActivistList.at(i)->generateVeinInterface();
 }
 
-
 void cSCPIModule::startMeas()
 {
     // we don't start the interface expl.
 }
 
-
 void cSCPIModule::stopMeas()
 {
     // we don't stop the interface expl.
 }
-
 
 void cSCPIModule::activationFinished()
 {

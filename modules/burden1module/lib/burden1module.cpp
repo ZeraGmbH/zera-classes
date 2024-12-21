@@ -43,11 +43,6 @@ cBurden1Module::cBurden1Module(ModuleFactoryParam moduleParam) :
 
 }
 
-QByteArray cBurden1Module::getConfiguration() const
-{
-    return m_pConfiguration->exportConfiguration();
-}
-
 void cBurden1Module::setupModule()
 {
     emit addEventSystem(m_pModuleValidator);

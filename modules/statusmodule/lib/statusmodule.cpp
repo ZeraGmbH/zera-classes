@@ -43,11 +43,6 @@ cStatusModule::cStatusModule(ModuleFactoryParam moduleParam) :
 
 }
 
-QByteArray cStatusModule::getConfiguration() const
-{
-    return m_pConfiguration->exportConfiguration();
-}
-
 void cStatusModule::setupModule()
 {
     emit addEventSystem(m_pModuleValidator);

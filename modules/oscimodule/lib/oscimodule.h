@@ -17,7 +17,6 @@ public:
     static constexpr const char* BaseSCPIModuleName = "OSC";
 
     cOsciModule(ModuleFactoryParam moduleParam);
-    QByteArray getConfiguration() const override;
 
 private:
     cOsciModuleMeasProgram *m_pMeasProgram; // our measuring program, lets say the working horse

@@ -16,7 +16,6 @@ public:
     static constexpr const char* BaseSCPIModuleName = "DEV";
 
     cStatusModule(ModuleFactoryParam moduleParam);
-    QByteArray getConfiguration() const override;
 
 private:
     cStatusModuleInit *m_pStatusModuleInit;

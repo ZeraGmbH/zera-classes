@@ -43,11 +43,6 @@ cOsciModule::cOsciModule(ModuleFactoryParam moduleParam) :
 
 }
 
-QByteArray cOsciModule::getConfiguration() const
-{
-    return m_pConfiguration->exportConfiguration();
-}
-
 void cOsciModule::setupModule()
 {
     emit addEventSystem(m_pModuleValidator);

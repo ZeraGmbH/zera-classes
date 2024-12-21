@@ -190,6 +190,11 @@ void BaseModule::unsetModule()
     m_ModuleActivistList.clear();
 }
 
+QByteArray BaseModule::getConfiguration() const
+{
+    return m_pConfiguration->exportConfiguration();
+}
+
 void BaseModule::activationStart()
 {
     // Interim - we intend to replace all this by tasks
