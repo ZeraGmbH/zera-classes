@@ -18,34 +18,6 @@ cThdnModule::cThdnModule(ModuleFactoryParam moduleParam) :
     m_sModuleName = QString("%1%2").arg(BaseModuleName).arg(moduleParam.m_moduleNum);
     m_sModuleDescription = QString("This module measures thdn values for configured channels");
     m_sSCPIModuleName = QString("%1%2").arg(BaseSCPIModuleName).arg(moduleParam.m_moduleNum);
-
-    m_ActivationStartState.addTransition(this, &cThdnModule::activationContinue, &m_ActivationExecState);
-    m_ActivationExecState.addTransition(this, &cThdnModule::activationContinue, &m_ActivationDoneState);
-    m_ActivationDoneState.addTransition(this, &cThdnModule::activationNext, &m_ActivationExecState);
-    m_ActivationDoneState.addTransition(this, &cThdnModule::activationContinue, &m_ActivationFinishedState);
-    m_ActivationMachine.addState(&m_ActivationStartState);
-    m_ActivationMachine.addState(&m_ActivationExecState);
-    m_ActivationMachine.addState(&m_ActivationDoneState);
-    m_ActivationMachine.addState(&m_ActivationFinishedState);
-    m_ActivationMachine.setInitialState(&m_ActivationStartState);
-    connect(&m_ActivationStartState, &QAbstractState::entered, this, &cThdnModule::activationStart);
-    connect(&m_ActivationExecState, &QAbstractState::entered, this, &cThdnModule::activationExec);
-    connect(&m_ActivationDoneState, &QAbstractState::entered, this, &cThdnModule::activationDone);
-    connect(&m_ActivationFinishedState, &QAbstractState::entered, this, &cThdnModule::activationFinished);
-
-    m_DeactivationStartState.addTransition(this, &cThdnModule::deactivationContinue, &m_DeactivationExecState);
-    m_DeactivationExecState.addTransition(this, &cThdnModule::deactivationContinue, &m_DeactivationDoneState);
-    m_DeactivationDoneState.addTransition(this, &cThdnModule::deactivationNext, &m_DeactivationExecState);
-    m_DeactivationDoneState.addTransition(this, &cThdnModule::deactivationContinue, &m_DeactivationFinishedState);
-    m_DeactivationMachine.addState(&m_DeactivationStartState);
-    m_DeactivationMachine.addState(&m_DeactivationExecState);
-    m_DeactivationMachine.addState(&m_DeactivationDoneState);
-    m_DeactivationMachine.addState(&m_DeactivationFinishedState);
-    m_DeactivationMachine.setInitialState(&m_DeactivationStartState);
-    connect(&m_DeactivationStartState, &QAbstractState::entered, this, &cThdnModule::deactivationStart);
-    connect(&m_DeactivationExecState, &QAbstractState::entered, this, &cThdnModule::deactivationExec);
-    connect(&m_DeactivationDoneState, &QAbstractState::entered, this, &cThdnModule::deactivationDone);
-    connect(&m_DeactivationFinishedState, &QAbstractState::entered, this, &cThdnModule::deactivationFinished);
 }
 
 void cThdnModule::setupModule()
