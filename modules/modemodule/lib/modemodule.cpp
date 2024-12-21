@@ -14,34 +14,6 @@ cModeModule::cModeModule(ModuleFactoryParam moduleParam) :
     m_sModuleName = QString("%1%2").arg(BaseModuleName).arg(moduleParam.m_moduleNum);
     m_sModuleDescription = QString("This module is responsible for setting measuring mode and resetting dsp adjustment data");
     m_sSCPIModuleName = QString("%1%2").arg(BaseSCPIModuleName).arg(moduleParam.m_moduleNum);
-
-    m_ActivationStartState.addTransition(this, &cModeModule::activationContinue, &m_ActivationExecState);
-    m_ActivationExecState.addTransition(this, &cModeModule::activationContinue, &m_ActivationDoneState);
-    m_ActivationDoneState.addTransition(this, &cModeModule::activationNext, &m_ActivationExecState);
-    m_ActivationDoneState.addTransition(this, &cModeModule::activationContinue, &m_ActivationFinishedState);
-    m_ActivationMachine.addState(&m_ActivationStartState);
-    m_ActivationMachine.addState(&m_ActivationExecState);
-    m_ActivationMachine.addState(&m_ActivationDoneState);
-    m_ActivationMachine.addState(&m_ActivationFinishedState);
-    m_ActivationMachine.setInitialState(&m_ActivationStartState);
-    connect(&m_ActivationStartState, &QState::entered, this, &cModeModule::activationStart);
-    connect(&m_ActivationExecState, &QState::entered, this, &cModeModule::activationExec);
-    connect(&m_ActivationDoneState, &QState::entered, this, &cModeModule::activationDone);
-    connect(&m_ActivationFinishedState, &QState::entered, this, &cModeModule::activationFinished);
-
-    m_DeactivationStartState.addTransition(this, &cModeModule::deactivationContinue, &m_DeactivationExecState);
-    m_DeactivationExecState.addTransition(this, &cModeModule::deactivationContinue, &m_DeactivationDoneState);
-    m_DeactivationDoneState.addTransition(this, &cModeModule::deactivationNext, &m_DeactivationExecState);
-    m_DeactivationDoneState.addTransition(this, &cModeModule::deactivationContinue, &m_DeactivationFinishedState);
-    m_DeactivationMachine.addState(&m_DeactivationStartState);
-    m_DeactivationMachine.addState(&m_DeactivationExecState);
-    m_DeactivationMachine.addState(&m_DeactivationDoneState);
-    m_DeactivationMachine.addState(&m_DeactivationFinishedState);
-    m_DeactivationMachine.setInitialState(&m_DeactivationStartState);
-    connect(&m_DeactivationStartState, &QState::entered, this, &cModeModule::deactivationStart);
-    connect(&m_DeactivationExecState, &QState::entered, this, &cModeModule::deactivationExec);
-    connect(&m_DeactivationDoneState, &QState::entered, this, &cModeModule::deactivationDone);
-    connect(&m_DeactivationFinishedState, &QState::entered, this, &cModeModule::deactivationFinished);
 }
 
 void cModeModule::setupModule()
