@@ -43,10 +43,7 @@ cReferenceAdjustment::cReferenceAdjustment(cReferenceModule* module, cReferenceM
     m_deactivationMachine.addState(&m_deactivationInitState);
     m_deactivationMachine.addState(&m_deactivationDoneState);
 
-    if(m_pModule->getDemo())
-        m_deactivationMachine.setInitialState(&m_deactivationDoneState);
-    else
-        m_deactivationMachine.setInitialState(&m_deactivationInitState);
+    m_deactivationMachine.setInitialState(&m_deactivationInitState);
 
     connect(&m_deactivationInitState, &QState::entered, this, &cReferenceAdjustment::deactivationInit);
     connect(&m_deactivationDoneState, &QState::entered, this, &cReferenceAdjustment::deactivationDone);
@@ -61,10 +58,7 @@ cReferenceAdjustment::cReferenceAdjustment(cReferenceModule* module, cReferenceM
     m_referenceAdjustMachine.addState(&m_set10VRangeState);
     m_referenceAdjustMachine.addState(&m_referenceAdjustDoneState);
 
-    if(m_pModule->getDemo())
-        m_referenceAdjustMachine.setInitialState(&m_referenceAdjustDoneState);
-    else
-        m_referenceAdjustMachine.setInitialState(&m_readGainCorrState);
+    m_referenceAdjustMachine.setInitialState(&m_readGainCorrState);
 
     connect(&m_readGainCorrState, &QState::entered, this, &cReferenceAdjustment::readGainCorr);
     connect(&m_readOffset2CorrState, &QState::entered, this, &cReferenceAdjustment::readOffset2Corr);
@@ -133,15 +127,13 @@ void cReferenceAdjustment::activationDone()
 {
     // we fetch a handle for gain correction and offset2 correction for
     // all possible channels because we do not know which channels become active
-    if(!m_pModule->getDemo()) {
-        m_pGainCorrectionDSP = m_dspInterface->getMemHandle("GainCorrection");
-        m_pGainCorrectionDSP->addVarItem( new cDspVar("GAINCORRECTION",32, DSPDATA::vDspIntVar));
-        m_fGainCorr = m_pGainCorrectionDSP->data("GAINCORRECTION");
+    m_pGainCorrectionDSP = m_dspInterface->getMemHandle("GainCorrection");
+    m_pGainCorrectionDSP->addVarItem( new cDspVar("GAINCORRECTION",32, DSPDATA::vDspIntVar));
+    m_fGainCorr = m_pGainCorrectionDSP->data("GAINCORRECTION");
 
-        m_pOffset2CorrectionDSP = m_dspInterface->getMemHandle("OffsetCorrection");
-        m_pOffset2CorrectionDSP->addVarItem( new cDspVar("OFFSETCORRECTION2",32, DSPDATA::vDspIntVar));
-        m_fOffset2Corr = m_pOffset2CorrectionDSP->data("OFFSETCORRECTION2");
-    }
+    m_pOffset2CorrectionDSP = m_dspInterface->getMemHandle("OffsetCorrection");
+    m_pOffset2CorrectionDSP->addVarItem( new cDspVar("OFFSETCORRECTION2",32, DSPDATA::vDspIntVar));
+    m_fOffset2Corr = m_pOffset2CorrectionDSP->data("OFFSETCORRECTION2");
 
     m_nIgnoreCount = m_pConfigData->m_nIgnore;
     m_bAdjustmentDone = false;
