@@ -4351,8 +4351,8 @@
         "INF_Adjusted": "5",
         "INF_CTRLVersion": "{\"Relay controller version\":\"Unknown\",\"System controller version\":\"Unknown\"}",
         "INF_CpuInfo": "",
-        "INF_DSPServerVersion": "V42.0",
-        "INF_DSPVersion": "DEVICE: Unknown;PCB: Unknown;LCA: Unknown;CTRL: Unknown",
+        "INF_DSPServerVersion": "zdsp1d V1.11",
+        "INF_DSPVersion": "DSPLCA: V0.0;DSP V0.00",
         "INF_DeviceType": "unknown",
         "INF_FPGAVersion": "Unknown",
         "INF_ModuleInterface": {
