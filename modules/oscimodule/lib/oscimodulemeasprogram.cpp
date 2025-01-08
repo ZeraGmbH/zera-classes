@@ -175,61 +175,57 @@ void cOsciModuleMeasProgram::deleteDspVarList()
 
 void cOsciModuleMeasProgram::setDspCmdList()
 {
-    QString s;
     ChannelRangeObserver::SystemObserverPtr observer = m_pModule->getSharedChannelRangeObserver();
     int samples = observer->getSampleRate();
     QString referenceChannel = getConfData()->m_RefChannel.m_sPar;
     int referenceDspChannel = observer->getChannel(referenceChannel)->m_dspChannel;
-    m_dspInterface->addCycListItem( s = "STARTCHAIN(1,1,0x0101)"); // aktiv, prozessnr. (dummy),hauptkette 1 subkette 1 start
-        m_dspInterface->addCycListItem( s = QString("CLEARN(%1,MEASSIGNAL)").arg(m_veinActValueList.count() * samples) ); // clear meassignal
-        m_dspInterface->addCycListItem( s = QString("SETVAL(GAPCOUNT,%1)").arg(getConfData()->m_nGap)); // we start with the first period
-        m_dspInterface->addCycListItem( s = QString("SETVAL(GAPPAR,%1)").arg(getConfData()->m_nGap+1)); // our value to reload gap
-        m_dspInterface->addCycListItem( s = QString("SETVAL(REFCHN,%1)").arg(referenceDspChannel));
-        m_dspInterface->addCycListItem( s = QString("SETVAL(DEBUGCOUNT,0)"));
-        m_dspInterface->addCycListItem( s = "DEACTIVATECHAIN(1,0x0101)"); // ende prozessnr., hauptkette 1 subkette 1
-    m_dspInterface->addCycListItem( s = "STOPCHAIN(1,0x0101)"); // ende prozessnr., hauptkette 1 subkette 1
+    m_dspInterface->addCycListItem("STARTCHAIN(1,1,0x0101)"); // aktiv, prozessnr. (dummy),hauptkette 1 subkette 1 start
+        m_dspInterface->addCycListItem(QString("CLEARN(%1,MEASSIGNAL)").arg(m_veinActValueList.count() * samples) ); // clear meassignal
+        m_dspInterface->addCycListItem(QString("SETVAL(GAPCOUNT,%1)").arg(getConfData()->m_nGap)); // we start with the first period
+        m_dspInterface->addCycListItem(QString("SETVAL(GAPPAR,%1)").arg(getConfData()->m_nGap+1)); // our value to reload gap
+        m_dspInterface->addCycListItem(QString("SETVAL(REFCHN,%1)").arg(referenceDspChannel));
+        m_dspInterface->addCycListItem(QString("SETVAL(DEBUGCOUNT,0)"));
+        m_dspInterface->addCycListItem("DEACTIVATECHAIN(1,0x0101)"); // ende prozessnr., hauptkette 1 subkette 1
+    m_dspInterface->addCycListItem("STOPCHAIN(1,0x0101)"); // ende prozessnr., hauptkette 1 subkette 1
 
     // now lets do our sampling job if necessary
 
 
     // next 3 commands for debug purpose , will be removed later
-    // m_dspInterface->addCycListItem( s = "INC(DEBUGCOUNT)");
-    // m_dspInterface->addCycListItem( s = "TESTVCSKIPLT(DEBUGCOUNT,1000)");
-    // m_dspInterface->addCycListItem( s = "BREAK(1)");
+    // m_dspInterface->addCycListItem("INC(DEBUGCOUNT)");
+    // m_dspInterface->addCycListItem("TESTVCSKIPLT(DEBUGCOUNT,1000)");
+    // m_dspInterface->addCycListItem("BREAK(1)");
 
-    m_dspInterface->addCycListItem( s = "INC(GAPCOUNT)");
-    m_dspInterface->addCycListItem( s = "ACTIVATECHAIN(1,0x0102)");
-    m_dspInterface->addCycListItem( s = "TESTVVSKIPEQ(GAPCOUNT,GAPPAR)");
-    m_dspInterface->addCycListItem( s = "DEACTIVATECHAIN(1,0x0102)");
+    m_dspInterface->addCycListItem("INC(GAPCOUNT)");
+    m_dspInterface->addCycListItem("ACTIVATECHAIN(1,0x0102)");
+    m_dspInterface->addCycListItem("TESTVVSKIPEQ(GAPCOUNT,GAPPAR)");
+    m_dspInterface->addCycListItem("DEACTIVATECHAIN(1,0x0102)");
 
-    m_dspInterface->addCycListItem( s = "STARTCHAIN(0,1,0x0102)");
-        m_dspInterface->addCycListItem( s = "SETVAL((GAPCOUNT,0)"); // next gap
+    m_dspInterface->addCycListItem("STARTCHAIN(0,1,0x0102)");
+        m_dspInterface->addCycListItem("SETVAL((GAPCOUNT,0)"); // next gap
 
         // we compute the phase of our reference channel first
-        m_dspInterface->addCycListItem( s = QString("COPYDATAIND(REFCHN,0,WORKSPACE)"));
-        m_dspInterface->addCycListItem( s = QString("DFT(1,WORKSPACE,DFTREF)"));
-        m_dspInterface->addCycListItem( s = QString("GENADR(WORKSPACE,DFTREF,IPOLADR)"));
+        m_dspInterface->addCycListItem("COPYDATAIND(REFCHN,0,WORKSPACE)");
+        m_dspInterface->addCycListItem("DFT(1,WORKSPACE,DFTREF)");
+        m_dspInterface->addCycListItem("GENADR(WORKSPACE,DFTREF,IPOLADR)");
 
         // now we do all necessary for each channel we work on
-        for (int i = 0; i < m_veinActValueList.count(); i++)
-        {
+        for (int i = 0; i < m_veinActValueList.count(); i++) {
             QString channelMName = getConfData()->m_valueChannelList[i];
             int dspChannel = observer->getChannel(channelMName)->m_dspChannel;
-            m_dspInterface->addCycListItem( s = QString("COPYMEM(%1,MEASSIGNAL+%2,WORKSPACE)").arg(samples).arg(i * samples));
-            m_dspInterface->addCycListItem( s = QString("COPYDATA(CH%1,0,WORKSPACE+%2)").arg(dspChannel).arg(samples));
+            m_dspInterface->addCycListItem(QString("COPYMEM(%1,MEASSIGNAL+%2,WORKSPACE)").arg(samples).arg(i * samples));
+            m_dspInterface->addCycListItem(QString("COPYDATA(CH%1,0,WORKSPACE+%2)").arg(dspChannel).arg(samples));
 
-            m_dspInterface->addCycListItem( s = QString("INTERPOLATIONIND(%1,IPOLADR,VALXOSCI+%2)")
+            m_dspInterface->addCycListItem(QString("INTERPOLATIONIND(%1,IPOLADR,VALXOSCI+%2)")
                                              .arg(getConfData()->m_nInterpolation)
                                              .arg(i * getConfData()->m_nInterpolation));
-            m_dspInterface->addCycListItem( s = QString("COPYMEM(%1,WORKSPACE+%2,MEASSIGNAL+%3)").arg(samples).arg(samples).arg(i * samples));
-
+            m_dspInterface->addCycListItem(QString("COPYMEM(%1,WORKSPACE+%2,MEASSIGNAL+%3)").arg(samples).arg(samples).arg(i*samples));
         }
 
-        m_dspInterface->addCycListItem( s = QString("DSPINTTRIGGER(0x0,0x%1)").arg(irqNr)); // send interrupt to module
-        m_dspInterface->addCycListItem( s = "DEACTIVATECHAIN(1,0x0102)");
+        m_dspInterface->addCycListItem(QString("DSPINTTRIGGER(0x0,0x%1)").arg(irqNr)); // send interrupt to module
+        m_dspInterface->addCycListItem("DEACTIVATECHAIN(1,0x0102)");
 
-    m_dspInterface->addCycListItem( s = "STOPCHAIN(1,0x0102)"); // end processnr., mainchain 1 subchain 2
-
+    m_dspInterface->addCycListItem("STOPCHAIN(1,0x0102)"); // end processnr., mainchain 1 subchain 2
 }
 
 
