@@ -126,37 +126,35 @@ void cSampleModuleMeasProgram::deleteDspVarList()
 
 void cSampleModuleMeasProgram::setDspCmdList()
 {
-    QString s;
-
-    m_dspInterface->addCycListItem( s = "STARTCHAIN(1,1,0x0101)"); // aktiv, prozessnr. (dummy),hauptkette 1 subkette 1 start
-        m_dspInterface->addCycListItem( s = QString("CLEARN(%1,MEASSIGNAL)").arg(m_nSamples)); // clear meassignal
-        m_dspInterface->addCycListItem( s = QString("CLEARN(%1,FILTER)").arg(2*m_ChannelList.count()+1)); // clear the whole filter incl. count
-        m_dspInterface->addCycListItem( s = QString("SETVAL(TIPAR,%1)").arg(getConfData()->m_fMeasInterval*1000.0)); // initial ti time  /* todo variabel */
-        m_dspInterface->addCycListItem( s = "GETSTIME(TISTART)"); // einmal ti start setzen
-        m_dspInterface->addCycListItem( s = "DEACTIVATECHAIN(1,0x0101)"); // ende prozessnr., hauptkette 1 subkette 1
-    m_dspInterface->addCycListItem( s = "STOPCHAIN(1,0x0101)"); // ende prozessnr., hauptkette 1 subkette 1
+    m_dspInterface->addCycListItem("STARTCHAIN(1,1,0x0101)"); // aktiv, prozessnr. (dummy),hauptkette 1 subkette 1 start
+        m_dspInterface->addCycListItem(QString("CLEARN(%1,MEASSIGNAL)").arg(m_nSamples)); // clear meassignal
+        m_dspInterface->addCycListItem(QString("CLEARN(%1,FILTER)").arg(2*m_ChannelList.count()+1)); // clear the whole filter incl. count
+        m_dspInterface->addCycListItem(QString("SETVAL(TIPAR,%1)").arg(getConfData()->m_fMeasInterval*1000.0)); // initial ti time  /* todo variabel */
+        m_dspInterface->addCycListItem("GETSTIME(TISTART)"); // einmal ti start setzen
+        m_dspInterface->addCycListItem("DEACTIVATECHAIN(1,0x0101)"); // ende prozessnr., hauptkette 1 subkette 1
+    m_dspInterface->addCycListItem("STOPCHAIN(1,0x0101)"); // ende prozessnr., hauptkette 1 subkette 1
 
     // we compute or copy our wanted actual values
     for (int i = 0; i < m_ChannelList.count(); i++)
     {
         cPllMeasChannel* schn = m_pModule->getPllMeasChannel(m_ChannelList.at(i));
-        m_dspInterface->addCycListItem( s = QString("COPYDATA(CH%1,0,MEASSIGNAL)").arg(schn->getDSPChannelNr())); // for each channel we work on
-        m_dspInterface->addCycListItem( s = QString("RMS(MEASSIGNAL,CHXRMS+%1)").arg(i));
+        m_dspInterface->addCycListItem(QString("COPYDATA(CH%1,0,MEASSIGNAL)").arg(schn->getDSPChannelNr())); // for each channel we work on
+        m_dspInterface->addCycListItem(QString("RMS(MEASSIGNAL,CHXRMS+%1)").arg(i));
     }
 
     // and filter them
-    m_dspInterface->addCycListItem( s = QString("AVERAGE1(%1,CHXRMS,FILTER)").arg(m_ChannelList.count())); // we add results to filter
+    m_dspInterface->addCycListItem(QString("AVERAGE1(%1,CHXRMS,FILTER)").arg(m_ChannelList.count())); // we add results to filter
 
-    m_dspInterface->addCycListItem( s = "TESTTIMESKIPNEX(TISTART,TIPAR)");
-    m_dspInterface->addCycListItem( s = "ACTIVATECHAIN(1,0x0102)");
+    m_dspInterface->addCycListItem("TESTTIMESKIPNEX(TISTART,TIPAR)");
+    m_dspInterface->addCycListItem("ACTIVATECHAIN(1,0x0102)");
 
-    m_dspInterface->addCycListItem( s = "STARTCHAIN(0,1,0x0102)");
-        m_dspInterface->addCycListItem( s = "GETSTIME(TISTART)"); // set new system time
-        m_dspInterface->addCycListItem( s = QString("CMPAVERAGE1(%1,FILTER,CHXRMSF)").arg(m_ChannelList.count()));
-        m_dspInterface->addCycListItem( s = QString("CLEARN(%1,FILTER)").arg(2*m_ChannelList.count()+1));
-        m_dspInterface->addCycListItem( s = QString("DSPINTTRIGGER(0x0,0x%1)").arg(irqNr)); // send interrupt to module
-        m_dspInterface->addCycListItem( s = "DEACTIVATECHAIN(1,0x0102)");
-    m_dspInterface->addCycListItem( s = "STOPCHAIN(1,0x0102)"); // end processnr., mainchain 1 subchain 2
+    m_dspInterface->addCycListItem("STARTCHAIN(0,1,0x0102)");
+        m_dspInterface->addCycListItem("GETSTIME(TISTART)"); // set new system time
+        m_dspInterface->addCycListItem(QString("CMPAVERAGE1(%1,FILTER,CHXRMSF)").arg(m_ChannelList.count()));
+        m_dspInterface->addCycListItem(QString("CLEARN(%1,FILTER)").arg(2*m_ChannelList.count()+1));
+        m_dspInterface->addCycListItem(QString("DSPINTTRIGGER(0x0,0x%1)").arg(irqNr)); // send interrupt to module
+        m_dspInterface->addCycListItem("DEACTIVATECHAIN(1,0x0102)");
+    m_dspInterface->addCycListItem("STOPCHAIN(1,0x0102)"); // end processnr., mainchain 1 subchain 2
 }
 
 void cSampleModuleMeasProgram::deleteDspCmdList()
