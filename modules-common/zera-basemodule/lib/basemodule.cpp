@@ -156,37 +156,30 @@ void BaseModule::setupModule()
     veinModuleMetaDataList.append(m_pModuleDescription);
 }
 
-
 void BaseModule::unsetModule()
 {
-    for (auto veinModuleMetaData : qAsConst(veinModuleMetaDataList)) {
+    for (auto veinModuleMetaData : qAsConst(veinModuleMetaDataList))
         delete veinModuleMetaData;
-    }
     veinModuleMetaDataList.clear();
 
-    for (auto veinModuleComponent : qAsConst(veinModuleComponentList)) {
+    for (auto veinModuleComponent : qAsConst(veinModuleComponentList))
         delete veinModuleComponent;
-    }
     veinModuleComponentList.clear();
 
-    for (auto veinModuleActvalue : qAsConst(veinModuleActvalueList)) {
+    for (auto veinModuleActvalue : qAsConst(veinModuleActvalueList))
         delete veinModuleActvalue;
-    }
     veinModuleActvalueList.clear();
 
-    for (auto scpiCommand : qAsConst(scpiCommandList)) {
+    for (auto scpiCommand : qAsConst(scpiCommandList))
         delete scpiCommand;
-    }
     scpiCommandList.clear();
 
-    for (auto veinModuleParameter : qAsConst(m_veinModuleParameterMap)) {
+    for (auto veinModuleParameter : qAsConst(m_veinModuleParameterMap))
         delete veinModuleParameter;
-    }
     m_veinModuleParameterMap.clear();
 
-    for (auto ModuleActivist : qAsConst(m_ModuleActivistList)) {
+    for (auto ModuleActivist : qAsConst(m_ModuleActivistList))
         delete ModuleActivist;
-    }
     m_ModuleActivistList.clear();
 }
 
@@ -276,16 +269,13 @@ void BaseModule::exportMetaData()
 
     QJsonArray jsonArr;
     // and then all the command information for actual values, parameters and for add. commands without components
-    for (int i = 0; i < scpiCommandList.count(); i++) {
+    for (int i = 0; i < scpiCommandList.count(); i++)
         scpiCommandList.at(i)->appendSCPIInfo(jsonArr);
-    }
-    for (int i = 0; i < veinModuleActvalueList.count(); i++) {
+    for (int i = 0; i < veinModuleActvalueList.count(); i++)
         veinModuleActvalueList.at(i)->exportSCPIInfo(jsonArr);
-    }
 
-    for (int i = 0; i < keyList.count(); i++) {
+    for (int i = 0; i < keyList.count(); i++)
         m_veinModuleParameterMap[keyList.at(i)]->exportSCPIInfo(jsonArr);
-    }
 
     QJsonObject jsonObj4;
     jsonObj4.insert("Name", m_sSCPIModuleName);
