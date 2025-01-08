@@ -198,43 +198,42 @@ void cThdnModuleMeasProgram::deleteDspVarList()
 
 void cThdnModuleMeasProgram::setDspCmdList()
 {
-    QString s;
     ChannelRangeObserver::SystemObserverPtr observer = m_pModule->getSharedChannelRangeObserver();
     int samples = observer->getSampleRate();
-    m_dspInterface->addCycListItem( s = "STARTCHAIN(1,1,0x0101)"); // aktiv, prozessnr. (dummy),hauptkette 1 subkette 1 start
-        m_dspInterface->addCycListItem( s = QString("CLEARN(%1,MEASSIGNAL)").arg(samples) ); // clear meassignal
-        m_dspInterface->addCycListItem( s = QString("CLEARN(%1,FILTER)").arg(2*m_veinActValueList.count()+1) ); // clear the whole filter incl. count
+    m_dspInterface->addCycListItem("STARTCHAIN(1,1,0x0101)"); // aktiv, prozessnr. (dummy),hauptkette 1 subkette 1 start
+        m_dspInterface->addCycListItem(QString("CLEARN(%1,MEASSIGNAL)").arg(samples) ); // clear meassignal
+        m_dspInterface->addCycListItem(QString("CLEARN(%1,FILTER)").arg(2*m_veinActValueList.count()+1) ); // clear the whole filter incl. count
 
         if (getConfData()->m_bmovingWindow)
-            m_dspInterface->addCycListItem( s = QString("SETVAL(TIPAR,%1)").arg(getConfData()->m_fmovingwindowInterval*1000.0)); // initial ti time
+            m_dspInterface->addCycListItem(QString("SETVAL(TIPAR,%1)").arg(getConfData()->m_fmovingwindowInterval*1000.0)); // initial ti time
         else
-            m_dspInterface->addCycListItem( s = QString("SETVAL(TIPAR,%1)").arg(getConfData()->m_fMeasInterval.m_fValue*1000.0)); // initial ti time
+            m_dspInterface->addCycListItem(QString("SETVAL(TIPAR,%1)").arg(getConfData()->m_fMeasInterval.m_fValue*1000.0)); // initial ti time
 
-        m_dspInterface->addCycListItem( s = "GETSTIME(TISTART)"); // einmal ti start setzen
-        m_dspInterface->addCycListItem( s = "DEACTIVATECHAIN(1,0x0101)"); // ende prozessnr., hauptkette 1 subkette 1
-    m_dspInterface->addCycListItem( s = "STOPCHAIN(1,0x0101)"); // ende prozessnr., hauptkette 1 subkette 1
+        m_dspInterface->addCycListItem("GETSTIME(TISTART)"); // einmal ti start setzen
+        m_dspInterface->addCycListItem("DEACTIVATECHAIN(1,0x0101)"); // ende prozessnr., hauptkette 1 subkette 1
+    m_dspInterface->addCycListItem("STOPCHAIN(1,0x0101)"); // ende prozessnr., hauptkette 1 subkette 1
 
     // we compute or copy our wanted actual values
     for (int i = 0; i < m_veinActValueList.count(); i++) {
         QString channelMName = getConfData()->m_valueChannelList[i];
         int dspChannel = observer->getChannel(channelMName)->m_dspChannel;
-        m_dspInterface->addCycListItem( s = QString("COPYDATA(CH%1,0,MEASSIGNAL)").arg(dspChannel));
-        m_dspInterface->addCycListItem( s = QString("THDN(MEASSIGNAL,VALXTHDN+%1)").arg(i));
+        m_dspInterface->addCycListItem(QString("COPYDATA(CH%1,0,MEASSIGNAL)").arg(dspChannel));
+        m_dspInterface->addCycListItem(QString("THDN(MEASSIGNAL,VALXTHDN+%1)").arg(i));
     }
 
     // and filter them
-    m_dspInterface->addCycListItem( s = QString("AVERAGE1(%1,VALXTHDN,FILTER)").arg(m_veinActValueList.count())); // we add results to filter
+    m_dspInterface->addCycListItem(QString("AVERAGE1(%1,VALXTHDN,FILTER)").arg(m_veinActValueList.count())); // we add results to filter
 
-    m_dspInterface->addCycListItem( s = "TESTTIMESKIPNEX(TISTART,TIPAR)");
-    m_dspInterface->addCycListItem( s = "ACTIVATECHAIN(1,0x0102)");
+    m_dspInterface->addCycListItem("TESTTIMESKIPNEX(TISTART,TIPAR)");
+    m_dspInterface->addCycListItem("ACTIVATECHAIN(1,0x0102)");
 
-    m_dspInterface->addCycListItem( s = "STARTCHAIN(0,1,0x0102)");
-        m_dspInterface->addCycListItem( s = "GETSTIME(TISTART)"); // set new system time
-        m_dspInterface->addCycListItem( s = QString("CMPAVERAGE1(%1,FILTER,VALXTHDNF)").arg(m_veinActValueList.count()));
-        m_dspInterface->addCycListItem( s = QString("CLEARN(%1,FILTER)").arg(2*m_veinActValueList.count()+1) );
-        m_dspInterface->addCycListItem( s = QString("DSPINTTRIGGER(0x0,0x%1)").arg(irqNr)); // send interrupt to module
-        m_dspInterface->addCycListItem( s = "DEACTIVATECHAIN(1,0x0102)");
-    m_dspInterface->addCycListItem( s = "STOPCHAIN(1,0x0102)"); // end processnr., mainchain 1 subchain 2
+    m_dspInterface->addCycListItem("STARTCHAIN(0,1,0x0102)");
+        m_dspInterface->addCycListItem("GETSTIME(TISTART)"); // set new system time
+        m_dspInterface->addCycListItem(QString("CMPAVERAGE1(%1,FILTER,VALXTHDNF)").arg(m_veinActValueList.count()));
+        m_dspInterface->addCycListItem(QString("CLEARN(%1,FILTER)").arg(2*m_veinActValueList.count()+1) );
+        m_dspInterface->addCycListItem(QString("DSPINTTRIGGER(0x0,0x%1)").arg(irqNr)); // send interrupt to module
+        m_dspInterface->addCycListItem("DEACTIVATECHAIN(1,0x0102)");
+    m_dspInterface->addCycListItem("STOPCHAIN(1,0x0102)"); // end processnr., mainchain 1 subchain 2
 }
 
 
