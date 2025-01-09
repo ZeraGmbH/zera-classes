@@ -3,7 +3,6 @@
 
 #include "rmsmodulemeasprogram.h"
 #include <basemeasmodule.h>
-#include <QFinalState>
 
 namespace RMSMODULE
 {
@@ -22,7 +21,7 @@ private:
     void startMeas() override; // we make the measuring program start here
     void stopMeas() override;
 
-    cRmsModuleMeasProgram *m_pMeasProgram; // our measuring program, lets say the working horse
+    cRmsModuleMeasProgram *m_pMeasProgram = nullptr;
 };
 
 }

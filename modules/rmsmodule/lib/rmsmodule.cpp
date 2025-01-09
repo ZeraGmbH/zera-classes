@@ -1,7 +1,6 @@
 #include "rmsmodule.h"
 #include "rmsmoduleconfiguration.h"
 #include "cro_systemobserverfetchtask.h"
-#include <errormessages.h>
 
 namespace RMSMODULE
 {
