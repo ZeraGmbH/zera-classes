@@ -16,7 +16,7 @@ public:
     cLambdaModule(ModuleFactoryParam moduleParam);
 
 private:
-    cLambdaModuleMeasProgram *m_pMeasProgram; // our measuring program, lets say the working horse
+    cLambdaModuleMeasProgram *m_pMeasProgram = nullptr;
     void setupModule() override; // after xml configuration we can setup and export our module
     void startMeas() override; // we make the measuring program start here
     void stopMeas() override;

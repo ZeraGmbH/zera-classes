@@ -1,6 +1,5 @@
 #include "lambdamodule.h"
 #include "lambdamoduleconfiguration.h"
-#include <errormessages.h>
 
 namespace LAMBDAMODULE
 {
