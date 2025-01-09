@@ -18,9 +18,6 @@ cSampleModuleMeasProgram::cSampleModuleMeasProgram(cSampleModule* module, std::s
     m_ChannelList = getConfData()->m_ObsermaticConfPar.m_pllChannelList;
     m_dspInterface = m_pModule->getServiceInterfaceFactory()->createDspInterfaceSample(m_ChannelList);
 
-    // As long as there are no tasks - ignore error
-    m_channelRangeObserverScanState.addTransition(
-        m_pModule->getSharedChannelRangeObserver().get(), &ChannelRangeObserver::SystemObserver::sigFullScanFinished,&m_resourceManagerConnectState);
     m_IdentifyState.addTransition(this, &cSampleModuleMeasProgram::activationContinue, &m_dspserverConnectState);
     m_claimPGRMemState.addTransition(this, &cSampleModuleMeasProgram::activationContinue, &m_claimUSERMemState);
     m_claimUSERMemState.addTransition(this, &cSampleModuleMeasProgram::activationContinue, &m_var2DSPState);
@@ -28,7 +25,6 @@ cSampleModuleMeasProgram::cSampleModuleMeasProgram(cSampleModule* module, std::s
     m_cmd2DSPState.addTransition(this, &cSampleModuleMeasProgram::activationContinue, &m_activateDSPState);
     m_activateDSPState.addTransition(this, &cSampleModuleMeasProgram::activationContinue, &m_loadDSPDoneState);
 
-    m_activationMachine.addState(&m_channelRangeObserverScanState);
     m_activationMachine.addState(&m_resourceManagerConnectState);
     m_activationMachine.addState(&m_IdentifyState);
     m_activationMachine.addState(&m_dspserverConnectState);
@@ -39,9 +35,8 @@ cSampleModuleMeasProgram::cSampleModuleMeasProgram(cSampleModule* module, std::s
     m_activationMachine.addState(&m_activateDSPState);
     m_activationMachine.addState(&m_loadDSPDoneState);
 
-    m_activationMachine.setInitialState(&m_channelRangeObserverScanState);
+    m_activationMachine.setInitialState(&m_resourceManagerConnectState);
 
-    connect(&m_channelRangeObserverScanState, &QState::entered, this, &cSampleModuleMeasProgram::startFetchCommonRanges);
     connect(&m_resourceManagerConnectState, &QState::entered, this, &cSampleModuleMeasProgram::resourceManagerConnect);
     connect(&m_IdentifyState, &QState::entered, this, &cSampleModuleMeasProgram::sendRMIdent);
     connect(&m_dspserverConnectState, &QState::entered, this, &cSampleModuleMeasProgram::dspserverConnect);
@@ -257,11 +252,6 @@ cSampleModuleConfigData *cSampleModuleMeasProgram::getConfData()
 void cSampleModuleMeasProgram::setInterfaceActualValues(QVector<float>)
 {
     // we have no interface ......
-}
-
-void cSampleModuleMeasProgram::startFetchCommonRanges()
-{
-    m_pModule->getSharedChannelRangeObserver()->startFullScan();
 }
 
 void cSampleModuleMeasProgram::resourceManagerConnect()

@@ -23,13 +23,13 @@ private slots:
     void activationFinished() override;
     void deactivationStart() override;
 private:
-    cSampleModuleMeasProgram *m_pMeasProgram; // our measuring program, lets say the working horse
-    cPllObsermatic *m_pPllObsermatic; // our pll handling
-
     void setupModule() override; // after xml configuration we can setup and export our module
+    TaskTemplatePtr getModuleSetUpTask() override;
     void startMeas() override; // we make the measuring program start here
     void stopMeas() override;
 
+    cSampleModuleMeasProgram *m_pMeasProgram; // our measuring program, lets say the working horse
+    cPllObsermatic *m_pPllObsermatic; // our pll handling
     QList<cPllMeasChannel*> m_pllMeasChannelList; // our pll meas channels
     QList<cSampleChannel*>  m_sampleChannelList;
 };
