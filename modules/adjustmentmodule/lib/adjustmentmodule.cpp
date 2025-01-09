@@ -1,7 +1,6 @@
 #include "adjustmentmodule.h"
 #include "adjustmentmoduleconfiguration.h"
 #include "adjustmentmodulemeasprogram.h"
-#include <errormessages.h>
 
 cAdjustmentModule::cAdjustmentModule(ModuleFactoryParam moduleParam) :
     cBaseMeasModule(moduleParam, std::shared_ptr<BaseModuleConfiguration>(new cAdjustmentModuleConfiguration()))
