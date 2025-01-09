@@ -1,7 +1,5 @@
 #include "statusmodule.h"
 #include "statusmoduleconfiguration.h"
-#include "statusmoduleconfigdata.h"
-#include "statusmoduleinit.h"
 
 namespace STATUSMODULE
 {

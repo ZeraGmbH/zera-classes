@@ -14,13 +14,14 @@ public:
     static constexpr const char* BaseModuleName = "StatusModule";
     static constexpr const char* BaseSCPIModuleName = "DEV";
 
-    cStatusModule(ModuleFactoryParam moduleParam);
+    explicit cStatusModule(ModuleFactoryParam moduleParam);
 
 private:
-    cStatusModuleInit *m_pStatusModuleInit;
     void setupModule() override; // after xml configuration we can setup and export our module
     void startMeas() override; // we make the measuring program start here
     void stopMeas() override;
+
+    cStatusModuleInit *m_pStatusModuleInit = nullptr;
 };
 
 }
