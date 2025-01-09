@@ -1,8 +1,5 @@
 #include "spm1module.h"
 #include "spm1moduleconfiguration.h"
-#include "spm1modulemeasprogram.h"
-#include <vfmodulecomponent.h>
-#include <vfmodulemetadata.h>
 
 namespace SPM1MODULE
 {
@@ -11,7 +8,7 @@ cSpm1Module::cSpm1Module(ModuleFactoryParam moduleParam) :
     cBaseMeasModule(moduleParam, std::shared_ptr<BaseModuleConfiguration>(new cSpm1ModuleConfiguration()))
 {
     m_sModuleName = QString("%1%2").arg(BaseModuleName).arg(moduleParam.m_moduleNum);
-    m_sModuleDescription = QString("This module povides a configurable error calculator");
+    m_sModuleDescription = QString("This module provides a configurable power error calculator");
     m_sSCPIModuleName = QString(BaseSCPIModuleName);
 }
 

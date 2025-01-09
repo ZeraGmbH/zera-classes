@@ -6066,7 +6066,7 @@
                 }
             },
             "ModuleInfo": {
-                "Description": "This module povides a configurable error calculator",
+                "Description": "This module provides a configurable power error calculator",
                 "Name": "SPM1Module1"
             },
             "SCPIInfo": {
