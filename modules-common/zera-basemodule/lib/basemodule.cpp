@@ -1,19 +1,12 @@
 #include "basemodule.h"
-#include "basemoduleconfiguration.h"
-#include "vfmodulemetadata.h"
-#include "vfmoduleactvalue.h"
 #include "vfmodulecomponent.h"
-#include "vfmoduleparameter.h"
 #include "vf_server_entity_add.h"
 #include "vf_server_entity_remove.h"
 #include "taskactivationstatemachinewrapper.h"
 #include <tasklambdarunner.h>
 #include <taskcontainersequence.h>
-#include "scpiinfo.h"
-#include <virtualmodule.h>
 #include <QJsonArray>
 #include <QJsonDocument>
-#include <QFile>
 
 BaseModule::BaseModule(ModuleFactoryParam moduleParam, std::shared_ptr<BaseModuleConfiguration> modcfg) :
     ZeraModules::VirtualModule(moduleParam.m_moduleNum, moduleParam.m_entityId),

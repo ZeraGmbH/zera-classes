@@ -8,8 +8,6 @@
 #include <vfmoduleactvalue.h>
 #include <vfmoduleparameter.h>
 #include <virtualmodule.h>
-#include <xmlsettings.h>
-#include <ve_eventsystem.h>
 #include <vs_abstracteventsystem.h>
 
 class BaseModule : public ZeraModules::VirtualModule
@@ -100,7 +98,6 @@ private:
     const ModuleFactoryParam m_moduleParam;
     TaskTemplatePtr m_startupTask;
     bool m_moduleIsFullySetUp = false;
-private slots:
 };
 
 #endif // BASEMODULE_H
