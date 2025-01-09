@@ -234,19 +234,15 @@ void BaseModule::exportMetaData()
     QJsonObject jsonObj;
     QJsonObject jsonObj2;
 
-    for (int i = 0; i < veinModuleMetaDataList.count(); i++) {
+    for (int i = 0; i < veinModuleMetaDataList.count(); i++)
         veinModuleMetaDataList.at(i)->exportMetaData(jsonObj2);
-    }
     jsonObj.insert("ModuleInfo", jsonObj2);
 
     QJsonObject jsonObj3;
-    for (int i = 0; i < veinModuleComponentList.count(); i++) {
+    for (int i = 0; i < veinModuleComponentList.count(); i++)
         veinModuleComponentList.at(i)->exportMetaData(jsonObj3);
-    }
-
-    for (int i = 0; i < veinModuleActvalueList.count(); i++) {
+    for (int i = 0; i < veinModuleActvalueList.count(); i++)
         veinModuleActvalueList.at(i)->exportMetaData(jsonObj3);
-    }
 
     QList<QString> keyList;
     keyList = m_veinModuleParameterMap.keys();
