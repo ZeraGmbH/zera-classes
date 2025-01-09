@@ -1,15 +1,8 @@
 #include "rangemodule.h"
 #include "rangemoduleconfiguration.h"
 #include "rangemoduleconfigdata.h"
-#include "rangemeaschannel.h"
-#include "rangemodulemeasprogram.h"
-#include "rangeobsermatic.h"
 #include "adjustment.h"
-#include <vfmodulecomponent.h>
-#include <vfmodulemetadata.h>
 #include "cro_systemobserverfetchtask.h"
-#include <QDebug>
-#include <QByteArray>
 
 namespace RANGEMODULE
 {
@@ -22,11 +15,10 @@ cRangeModule::cRangeModule(ModuleFactoryParam moduleParam) :
     m_sSCPIModuleName = QString("%1%2").arg(BaseSCPIModuleName).arg(moduleParam.m_moduleNum);
 }
 
-cRangeMeasChannel *cRangeModule::getMeasChannel(QString name)
+cRangeMeasChannel *cRangeModule::getMeasChannel(const QString &name)
 {
     cRangeMeasChannel* p_rmc = 0;
-    for (int i = 0; i < m_rangeMeasChannelList.count(); i++)
-    {
+    for (int i = 0; i < m_rangeMeasChannelList.count(); i++) {
         p_rmc =  m_rangeMeasChannelList.at(i);
         if ((p_rmc->getName()) == name)
             return p_rmc;
@@ -148,7 +140,7 @@ void cRangeModule::deactivationStart()
     disconnect(m_pRangeObsermatic->m_pRangingSignal, &VfModuleComponent::sigValueChanged, m_pMeasProgram, &cRangeModuleMeasProgram::syncRanging);
 
     for (int i = 0; i < m_rangeMeasChannelList.count(); i ++) {
-        cRangeMeasChannel* pchn = m_rangeMeasChannelList.at(i);
+        const cRangeMeasChannel* pchn = m_rangeMeasChannelList.at(i);
         disconnect(pchn, &cRangeMeasChannel::cmdDone, m_pRangeObsermatic, &cRangeObsermatic::catchChannelReply);
         disconnect(pchn, &cRangeMeasChannel::newRangeList, m_pRangeObsermatic, &cRangeObsermatic::catchChannelNewRangeList);
     }

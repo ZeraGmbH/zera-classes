@@ -9,7 +9,6 @@
 #include <dspinterface.h>
 #include <pcbinterface.h>
 #include <timertemplateqt.h>
-#include <QFinalState>
 
 namespace RANGEMODULE
 {
