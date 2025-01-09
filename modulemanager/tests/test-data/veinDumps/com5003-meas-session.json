@@ -874,7 +874,7 @@
         "PAR_PreScalingEnabledGroup0": 0,
         "PAR_PreScalingEnabledGroup1": 0,
         "PAR_PreScalingEnabledGroup2": 0,
-        "PAR_PreScalingGroup0": "1/1",
+        "PAR_PreScalingGroup0": "1/1*(1)",
         "PAR_PreScalingGroup1": "1/1",
         "PAR_PreScalingGroup2": "1/1",
         "PAR_RangeAutomatic": 0,
