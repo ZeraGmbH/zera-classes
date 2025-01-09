@@ -2,11 +2,9 @@
 #define FFTMODULE_H
 
 #include "basemeasmodule.h"
-#include <QFinalState>
 
 namespace FFTMODULE {
 
-class cFftModuleConfiguration;
 class cFftModuleMeasProgram;
 
 class cFftModule : public cBaseMeasModule
@@ -24,7 +22,7 @@ private:
     void startMeas() override; // we make the measuring program start here
     void stopMeas() override;
 
-    cFftModuleMeasProgram *m_pMeasProgram; // our measuring program, lets say the working horse
+    cFftModuleMeasProgram *m_pMeasProgram = nullptr;
 };
 
 }

@@ -1,14 +1,7 @@
 #include "fftmodule.h"
 #include "fftmoduleconfiguration.h"
 #include "fftmodulemeasprogram.h"
-#include <vfmodulecomponent.h>
-#include <vfmodulemetadata.h>
 #include "cro_systemobserverfetchtask.h"
-#include <QByteArray>
-#include <QJsonDocument>
-#include <QJsonObject>
-#include <QJsonArray>
-#include <QJsonValue>
 
 namespace FFTMODULE
 {
