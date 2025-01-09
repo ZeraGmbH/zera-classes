@@ -1,12 +1,6 @@
 #include "referencemodule.h"
 #include "referencemoduleconfiguration.h"
-#include "referencemoduleconfigdata.h"
-#include "referencemeaschannel.h"
-#include "referencemodulemeasprogram.h"
-#include "referenceadjustment.h"
 #include "cro_systemobserverfetchtask.h"
-#include <vfmodulecomponent.h>
-#include <vfmodulemetadata.h>
 
 namespace REFERENCEMODULE
 {
@@ -50,11 +44,10 @@ cReferenceModule::cReferenceModule(ModuleFactoryParam moduleParam) :
     connect(&m_DeactivationFinishedState, &QStateMachine::entered, this, &cReferenceModule::deactivationFinished);
 }
 
-cReferenceMeasChannel *cReferenceModule::getMeasChannel(QString name)
+cReferenceMeasChannel *cReferenceModule::getMeasChannel(const QString &name)
 {
     cReferenceMeasChannel* p_rmc = 0;
-    for (int i = 0; i < m_ReferenceMeasChannelList.count(); i++)
-    {
+    for (int i = 0; i < m_ReferenceMeasChannelList.count(); i++) {
         p_rmc =  m_ReferenceMeasChannelList.at(i);
         if ((p_rmc->getName()) == name)
             return p_rmc;
@@ -71,8 +64,7 @@ void cReferenceModule::setupModule()
 
     // setting of mode has been done by seperate mode module
     // first we build a list of our meas channels
-    for (int i = 0; i < pConfData->m_nChannelCount; i ++)
-    {
+    for (int i = 0; i < pConfData->m_nChannelCount; i ++) {
         cReferenceMeasChannel* pchn = new cReferenceMeasChannel(getSharedChannelRangeObserver(),
                                                                 getNetworkConfig()->m_pcbServiceConnectionInfo,
                                                                 getNetworkConfig()->m_tcpNetworkFactory,
@@ -96,8 +88,7 @@ void cReferenceModule::setupModule()
     connect(m_pReferenceAdjustment, &cReferenceAdjustment::deactivated, this, &cReferenceModule::deactivationContinue);
 
     // we have to connect all cmddone from our reference meas channels to refernce adjustment
-    for (int i = 0; i < m_ReferenceMeasChannelList.count(); i ++)
-    {
+    for (int i = 0; i < m_ReferenceMeasChannelList.count(); i ++) {
         cReferenceMeasChannel* pchn = m_ReferenceMeasChannelList.at(i);
         connect(pchn, &cReferenceMeasChannel::cmdDone, m_pReferenceAdjustment, &cReferenceAdjustment::catchChannelReply);
     }
@@ -139,10 +130,8 @@ void cReferenceModule::deactivationStart()
 {
     // we first disconnect all what we connected when activation took place
     disconnect(m_pMeasProgram, &cReferenceModuleMeasProgram::actualValues, m_pReferenceAdjustment, &cReferenceAdjustment::ActionHandler);
-
-    for (int i = 0; i < m_ReferenceMeasChannelList.count(); i ++)
-    {
-        cReferenceMeasChannel* pchn = m_ReferenceMeasChannelList.at(i);
+    for (int i = 0; i<m_ReferenceMeasChannelList.count(); i++) {
+        const cReferenceMeasChannel* pchn = m_ReferenceMeasChannelList.at(i);
         disconnect(pchn, &cReferenceMeasChannel::cmdDone, m_pReferenceAdjustment, &cReferenceAdjustment::catchChannelReply);
     }
 

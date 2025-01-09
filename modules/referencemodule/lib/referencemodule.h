@@ -5,7 +5,6 @@
 #include "referencemodulemeasprogram.h"
 #include "referenceadjustment.h"
 #include <basemeasmodule.h>
-#include <QFinalState>
 
 namespace REFERENCEMODULE
 {
@@ -17,7 +16,7 @@ public:
     static constexpr const char* BaseSCPIModuleName = "REF";
 
     cReferenceModule(ModuleFactoryParam moduleParam);
-    virtual cReferenceMeasChannel* getMeasChannel(QString name); // also used for callback
+    cReferenceMeasChannel* getMeasChannel(const QString &name); // also used for callback
 
 private slots:
     void activationAdjustment();
@@ -28,7 +27,7 @@ private:
     void startMeas() override; // we make the measuring program start here
     void stopMeas() override;
 
-    cReferenceModuleMeasProgram *m_pMeasProgram; // our measuring program, lets say the working horse
+    cReferenceModuleMeasProgram *m_pMeasProgram = nullptr;
     cReferenceAdjustment *m_pReferenceAdjustment; // our justifying and normation program
     QList<cReferenceMeasChannel*> m_ReferenceMeasChannelList; // our meas channels
 
