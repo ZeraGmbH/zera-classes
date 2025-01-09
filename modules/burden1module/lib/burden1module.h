@@ -16,7 +16,7 @@ public:
     cBurden1Module(ModuleFactoryParam moduleParam);
 
 private:
-    cBurden1ModuleMeasProgram *m_pMeasProgram; // our measuring program, lets say the working horse
+    cBurden1ModuleMeasProgram *m_pMeasProgram = nullptr;
     void setupModule() override; // after xml configuration we can setup and export our module
     void startMeas() override; // we make the measuring program start here
     void stopMeas() override;

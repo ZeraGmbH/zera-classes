@@ -1,7 +1,6 @@
 #include "burden1module.h"
 #include "burden1moduleconfiguration.h"
 #include "burden1modulemeasprogram.h"
-#include <errormessages.h>
 
 namespace BURDEN1MODULE
 {
