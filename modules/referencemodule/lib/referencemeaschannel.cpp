@@ -17,14 +17,12 @@ cReferenceMeasChannel::cReferenceMeasChannel(ChannelRangeObserver::ChannelPtr ch
 
     // setting up statemachine for "activating" reference meas channel
     // m_pcbConnectionState.addTransition is done in pcbConnection
-    m_readUnitState.addTransition(this, &cReferenceMeasChannel::activationContinue, &m_readRangelistState);
     m_readRangelistState.addTransition(this, &cReferenceMeasChannel::activationContinue, &m_readRangeProperties1State);
     m_readRangeProperties1State.addTransition(this, &cReferenceMeasChannel::activationContinue, &m_readRangeProperties2State);
     m_readRangeProperties2State.addTransition(&m_rangeQueryMachine, &QStateMachine::finished, &m_readRangeProperties3State);
     m_readRangeProperties3State.addTransition(this, &cReferenceMeasChannel::activationLoop, &m_readRangeProperties1State);
     m_readRangeProperties3State.addTransition(this, &cReferenceMeasChannel::activationContinue, &m_activationDoneState);
     m_activationMachine.addState(&m_pcbConnectionState);
-    m_activationMachine.addState(&m_readUnitState);
     m_activationMachine.addState(&m_readRangelistState);
     m_activationMachine.addState(&m_readRangeProperties1State);
     m_activationMachine.addState(&m_readRangeProperties2State);
@@ -34,7 +32,6 @@ cReferenceMeasChannel::cReferenceMeasChannel(ChannelRangeObserver::ChannelPtr ch
     m_activationMachine.setInitialState(&m_pcbConnectionState);
 
     connect(&m_pcbConnectionState, &QState::entered, this, &cReferenceMeasChannel::pcbConnection);
-    connect(&m_readUnitState, &QState::entered, this, &cReferenceMeasChannel::readUnit);
     connect(&m_readRangelistState, &QState::entered, this, &cReferenceMeasChannel::readRangelist);
     connect(&m_readRangeProperties1State, &QState::entered, this, &cReferenceMeasChannel::readRangeProperties1);
     connect(&m_readRangeProperties3State, &QState::entered, this, &cReferenceMeasChannel::readRangeProperties3);
@@ -91,15 +88,6 @@ void cReferenceMeasChannel::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QV
     int cmd = m_MsgNrCmdList.take(msgnr);
     switch (cmd)
     {
-    case readunit:
-        if (reply == ack) {
-            m_sUnit = answer.toString();
-            emit activationContinue();
-        }
-        else
-            notifyError(readunitErrMsg);
-        break;
-
     case readrangelist:
         if (reply == ack)
         {
@@ -185,17 +173,11 @@ void cReferenceMeasChannel::pcbConnection()
     m_pcbClient = Zera::Proxy::getInstance()->getConnectionSmart(m_pcbNetworkInfo.m_sIP,
                                                                  m_pcbNetworkInfo.m_nPort,
                                                                  m_tcpNetworkFactory);
-    m_pcbConnectionState.addTransition(m_pcbClient.get(), &Zera::ProxyClient::connected, &m_readUnitState);
+    m_pcbConnectionState.addTransition(m_pcbClient.get(), &Zera::ProxyClient::connected, &m_readRangelistState);
 
     m_pcbInterface->setClientSmart(m_pcbClient);
     connect(m_pcbInterface.get(), &Zera::cPCBInterface::serverAnswer, this, &cReferenceMeasChannel::catchInterfaceAnswer);
     Zera::Proxy::getInstance()->startConnectionSmart(m_pcbClient);
-}
-
-
-void cReferenceMeasChannel::readUnit()
-{
-    m_MsgNrCmdList[m_pcbInterface->getUnit(getMName())] = readunit;
 }
 
 

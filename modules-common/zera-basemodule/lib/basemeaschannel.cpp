@@ -30,6 +30,6 @@ QString cBaseMeasChannel::getAlias()
 
 QString cBaseMeasChannel::getUnit()
 {
-    return m_sUnit;
+    return m_channelObserver->m_unit;
 }
 

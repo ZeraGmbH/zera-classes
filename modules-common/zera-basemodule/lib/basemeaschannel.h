@@ -30,8 +30,6 @@ protected:
 
     Zera::PcbInterfacePtr m_pcbInterface;
 
-    // the things we have to query from our pcb server
-    QString m_sUnit;
     QHash<quint32, int> m_MsgNrCmdList;
 
 protected slots:

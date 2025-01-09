@@ -19,20 +19,17 @@ cRangeMeasChannel::cRangeMeasChannel(ChannelRangeObserver::ChannelPtr channelObs
 
     // setting up statemachine for "activating" meas channel
     // m_pcbConnectionState.addTransition is done in pcbConnection
-    m_readUnitState.addTransition(this, &cRangeMeasChannel::activationContinue, &m_readRangeAndProperties);
     m_readRangeAndProperties.addTransition(&m_rangeQueryMachine, &QStateMachine::finished, &m_resetStatusState);
     m_resetStatusState.addTransition(this, &cRangeMeasChannel::activationContinue, &m_setNotifierRangeCat);
     m_setNotifierRangeCat.addTransition(this, &cRangeMeasChannel::activationContinue, &m_activationDoneState);
 
     m_activationMachine.addState(&m_pcbConnectionState);
-    m_activationMachine.addState(&m_readUnitState);
     m_activationMachine.addState(&m_readRangeAndProperties);
     m_activationMachine.addState(&m_resetStatusState);
     m_activationMachine.addState(&m_setNotifierRangeCat);
     m_activationMachine.addState(&m_activationDoneState);
 
     connect(&m_pcbConnectionState, &QState::entered, this, &cRangeMeasChannel::pcbConnection);
-    connect(&m_readUnitState, &QState::entered, this, &cRangeMeasChannel::readUnit);
     connect(&m_readRangeAndProperties, &QState::entered, this, &cRangeMeasChannel::readRangeAndProperties);
     connect(&m_resetStatusState, &QState::entered, this, &cRangeMeasChannel::resetStatusSlot);
     connect(&m_setNotifierRangeCat, &QState::entered, this, &cRangeMeasChannel::setNotifierRangeCat);
@@ -430,15 +427,6 @@ void cRangeMeasChannel::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVaria
                 notifyError(unregisterpcbnotifierErrMsg);
             break;
 
-        case readunit:
-            if (reply == ack) {
-                m_sUnit = answer.toString();
-                emit activationContinue();
-            }
-            else
-                notifyError(readunitErrMsg);
-            break;
-
         case readrangelist:
             if (reply == ack) {
                 m_RangeNameList = answer.toStringList();
@@ -712,17 +700,11 @@ void cRangeMeasChannel::pcbConnection()
     m_pcbClient = Zera::Proxy::getInstance()->getConnectionSmart(m_pcbNetworkInfo.m_sIP,
                                                                  m_pcbNetworkInfo.m_nPort,
                                                                  m_tcpNetworkFactory);
-    m_pcbConnectionState.addTransition(m_pcbClient.get(), &Zera::ProxyClient::connected, &m_readUnitState);
+    m_pcbConnectionState.addTransition(m_pcbClient.get(), &Zera::ProxyClient::connected, &m_readRangeAndProperties);
 
     m_pcbInterface->setClientSmart(m_pcbClient);
     connect(m_pcbInterface.get(), &Zera::cPCBInterface::serverAnswer, this, &cRangeMeasChannel::catchInterfaceAnswer);
     Zera::Proxy::getInstance()->startConnectionSmart(m_pcbClient);
-}
-
-
-void cRangeMeasChannel::readUnit()
-{
-    m_MsgNrCmdList[m_pcbInterface->getUnit(getMName())] = readunit;
 }
 
 
