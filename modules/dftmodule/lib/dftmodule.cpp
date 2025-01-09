@@ -2,7 +2,6 @@
 #include "dftmoduleconfiguration.h"
 #include "dftmodulemeasprogram.h"
 #include "cro_systemobserverfetchtask.h"
-#include <errormessages.h>
 
 namespace DFTMODULE
 {

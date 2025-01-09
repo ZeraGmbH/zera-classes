@@ -2,11 +2,9 @@
 #define DFTMODULE_H
 
 #include "basemeasmodule.h"
-#include <QFinalState>
 
 namespace DFTMODULE {
 
-class cDftModuleConfiguration;
 class cDftModuleMeasProgram;
 
 class cDftModule : public cBaseMeasModule
@@ -23,7 +21,7 @@ private:
     TaskTemplatePtr getModuleSetUpTask() override;
     void startMeas() override; // we make the measuring program start here
     void stopMeas() override;
-    cDftModuleMeasProgram *m_pMeasProgram; // our measuring program, lets say the working horse
+    cDftModuleMeasProgram *m_pMeasProgram = nullptr;
 };
 
 }
