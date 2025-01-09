@@ -36,7 +36,7 @@ public:
     cPllMeasChannel(ChannelRangeObserver::ChannelPtr channelObserver,
                     NetworkConnectionInfo pcbsocket,
                     VeinTcp::AbstractTcpNetworkFactoryPtr tcpNetworkFactory,
-                    quint8 chnnr, QString moduleName);
+                    QString moduleName);
     void generateVeinInterface() override;
     quint32 setyourself4PLL(QString samplesysname); // a statemachine gets started that returns cmdDone(quint32 cmdnr)
     quint32 setPLLMode(QString samplesysname, QString mode);

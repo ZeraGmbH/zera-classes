@@ -38,7 +38,6 @@ void cSampleModule::setupModule()
         cPllMeasChannel* pllchn = new cPllMeasChannel(getSharedChannelRangeObserver()->getChannel(channelMName),
                                                       getNetworkConfig()->m_pcbServiceConnectionInfo,
                                                       getNetworkConfig()->m_tcpNetworkFactory,
-                                                      i+1,
                                                       getVeinModuleName());
         m_pllMeasChannelList.append(pllchn);
         m_ModuleActivistList.append(pllchn);
@@ -47,7 +46,7 @@ void cSampleModule::setupModule()
     }
 
     // next we instantiate an object of sample channel so we can switch sample frequency ranges
-    cSampleChannel* schn = new cSampleChannel(this, *pConfData, 1);
+    cSampleChannel* schn = new cSampleChannel(this, *pConfData);
 
     m_sampleChannelList.append(schn); // we hold a list although we only have 1
     m_ModuleActivistList.append(schn);

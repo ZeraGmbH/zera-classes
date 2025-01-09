@@ -39,7 +39,7 @@ public:
     cRangeMeasChannel(ChannelRangeObserver::ChannelPtr channelObserver,
                       NetworkConnectionInfo pcbsocket,
                       VeinTcp::AbstractTcpNetworkFactoryPtr tcpNetworkFactory,
-                      quint8 chnnr, QString moduleName);
+                      QString moduleName);
     void generateVeinInterface() override;
 
     quint32 setRange(QString range); // a statemachine gets started that returns cmdDone(quint32 cmdnr)

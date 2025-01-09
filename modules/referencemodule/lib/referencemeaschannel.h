@@ -35,8 +35,9 @@ class cReferenceMeasChannel: public cBaseMeasChannel
 
 public:
     cReferenceMeasChannel(ChannelRangeObserver::ChannelPtr channelObserver,
-                          NetworkConnectionInfo pcbsocket, VeinTcp::AbstractTcpNetworkFactoryPtr tcpNetworkFactory,
-                          quint8 chnnr, QString moduleName);
+                          NetworkConnectionInfo pcbsocket,
+                          VeinTcp::AbstractTcpNetworkFactoryPtr tcpNetworkFactory,
+                          QString moduleName);
     void generateVeinInterface() override;
 
     quint32 setRange(QString range); // a statemachine gets started that returns cmdDone(quint32 cmdnr)

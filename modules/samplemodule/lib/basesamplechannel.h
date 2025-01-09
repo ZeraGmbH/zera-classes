@@ -9,12 +9,11 @@ class cBaseSampleChannel: public cModuleActivist
     Q_OBJECT
 
 public:
-    cBaseSampleChannel(QString name, quint8 chnnr, QString moduleChannelName);
+    cBaseSampleChannel(QString name, QString moduleChannelName);
     QString getName();
     QString getAlias();
 protected:
     QString m_sName; // the channel's system name
-    quint8 m_nChannelNr; // the number of our channel for naming purpose
 
     Zera::PcbInterfacePtr m_pPCBInterface;
 
@@ -22,7 +21,6 @@ protected:
     QString m_sAlias; // the channel' alias
     QString m_sUnit; // we don't need but for api satisfaction ...
     QString m_sDescription; // we take description from resource manager
-    quint16 m_nPort; // and also the port adress of pcb server
     QHash<quint32, int> m_MsgNrCmdList;
 
 protected slots:

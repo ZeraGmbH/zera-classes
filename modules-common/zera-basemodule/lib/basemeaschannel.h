@@ -14,7 +14,7 @@ class cBaseMeasChannel: public cModuleActivist
 public:
     cBaseMeasChannel(NetworkConnectionInfo pcbsocket,
                      VeinTcp::AbstractTcpNetworkFactoryPtr tcpNetworkFactory,
-                     ChannelRangeObserver::ChannelPtr channelObserver, quint8 chnnr,
+                     ChannelRangeObserver::ChannelPtr channelObserver,
                      QString moduleChannelInfo);
 
     quint8 getDSPChannelNr() const;
@@ -26,7 +26,6 @@ protected:
     NetworkConnectionInfo m_pcbNetworkInfo;
     VeinTcp::AbstractTcpNetworkFactoryPtr m_tcpNetworkFactory;
     ChannelRangeObserver::ChannelPtr m_channelObserver;
-    quint8 m_nChannelNr; // the number of our channel for naming purpose
 
     Zera::PcbInterfacePtr m_pcbInterface;
 

@@ -69,7 +69,6 @@ void cReferenceModule::setupModule()
         cReferenceMeasChannel* pchn = new cReferenceMeasChannel(getSharedChannelRangeObserver()->getChannel(channelMName),
                                                                 getNetworkConfig()->m_pcbServiceConnectionInfo,
                                                                 getNetworkConfig()->m_tcpNetworkFactory,
-                                                                i+1,
                                                                 getVeinModuleName());
         m_ReferenceMeasChannelList.append(pchn);
         m_ModuleActivistList.append(pchn);

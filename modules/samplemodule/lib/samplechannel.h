@@ -21,7 +21,7 @@ class cSampleChannel: public cBaseSampleChannel
 {
     Q_OBJECT
 public:
-    cSampleChannel(cSampleModule* module, cSampleModuleConfigData& configdata, quint8 chnnr);
+    cSampleChannel(cSampleModule* module, cSampleModuleConfigData& configdata);
     ~cSampleChannel();
     void generateVeinInterface() override;
 signals:

@@ -47,7 +47,6 @@ void cRangeModule::setupModule()
         cRangeMeasChannel* pchn = new cRangeMeasChannel(getSharedChannelRangeObserver()->getChannel(channelMName),
                                                         getNetworkConfig()->m_pcbServiceConnectionInfo,
                                                         getNetworkConfig()->m_tcpNetworkFactory,
-                                                        i+1,
                                                         getVeinModuleName());
         m_rangeMeasChannelList.append(pchn);
         m_ModuleActivistList.append(pchn);

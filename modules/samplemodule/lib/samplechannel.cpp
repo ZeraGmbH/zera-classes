@@ -12,9 +12,9 @@
 namespace SAMPLEMODULE
 {
 
-cSampleChannel::cSampleChannel(cSampleModule* module, cSampleModuleConfigData& configdata, quint8 chnnr) :
-    cBaseSampleChannel(configdata.m_ObsermaticConfPar.m_sSampleSystem, chnnr,
-                         QString("%1/SampleChannel No %2").arg(module->getVeinModuleName()).arg(chnnr)),
+cSampleChannel::cSampleChannel(cSampleModule* module, cSampleModuleConfigData& configdata) :
+    cBaseSampleChannel(configdata.m_ObsermaticConfPar.m_sSampleSystem,
+                         QString("%1/SampleChannel No 1").arg(module->getVeinModuleName())),
     m_pModule(module),
     m_ConfigData(configdata)
 {

@@ -8,9 +8,8 @@ namespace SAMPLEMODULE
 
 cPllMeasChannel::cPllMeasChannel(ChannelRangeObserver::ChannelPtr channelObserver,
                                  NetworkConnectionInfo pcbsocket,
-                                 VeinTcp::AbstractTcpNetworkFactoryPtr tcpNetworkFactory,
-                                 quint8 chnnr, QString moduleName) :
-    cBaseMeasChannel(pcbsocket, tcpNetworkFactory, channelObserver, chnnr,
+                                 VeinTcp::AbstractTcpNetworkFactoryPtr tcpNetworkFactory, QString moduleName) :
+    cBaseMeasChannel(pcbsocket, tcpNetworkFactory, channelObserver,
                        QString("%1/PllMeasChannel/%2").arg(moduleName, channelObserver->getMName()))
 {
     m_pcbInterface = std::make_shared<Zera::cPCBInterface>();
