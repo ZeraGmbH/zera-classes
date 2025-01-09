@@ -1,14 +1,6 @@
 #include "thdnmodule.h"
 #include "thdnmoduleconfiguration.h"
-#include "thdnmodulemeasprogram.h"
 #include "cro_systemobserverfetchtask.h"
-#include <vfmodulecomponent.h>
-#include <vfmodulemetadata.h>
-#include <QByteArray>
-#include <QJsonDocument>
-#include <QJsonObject>
-#include <QJsonArray>
-#include <QJsonValue>
 
 namespace THDNMODULE
 {
