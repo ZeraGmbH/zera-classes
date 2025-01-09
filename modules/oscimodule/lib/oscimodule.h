@@ -19,10 +19,12 @@ public:
     cOsciModule(ModuleFactoryParam moduleParam);
 
 private:
-    cOsciModuleMeasProgram *m_pMeasProgram; // our measuring program, lets say the working horse
     void setupModule() override; // after xml configuration we can setup and export our module
+    TaskTemplatePtr getModuleSetUpTask() override;
     void startMeas() override; // we make the measuring program start here
     void stopMeas() override;
+
+    cOsciModuleMeasProgram *m_pMeasProgram; // our measuring program, lets say the working horse
 };
 
 }
