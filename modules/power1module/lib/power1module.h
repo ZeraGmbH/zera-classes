@@ -1,12 +1,10 @@
 #ifndef POWER1MODULE_H
 #define POWER1MODULE_H
 
+#include "power1modulemeasprogram.h"
 #include "basemeasmodule.h"
 
 namespace POWER1MODULE {
-
-class cPower1ModuleConfiguration;
-class cPower1ModuleMeasProgram;
 
 class cPower1Module : public cBaseMeasModule
 {
@@ -23,7 +21,7 @@ private:
     void startMeas() override; // we make the measuring program start here
     void stopMeas() override;
 
-    cPower1ModuleMeasProgram *m_pMeasProgram; // our measuring program, lets say the working horse
+    cPower1ModuleMeasProgram *m_pMeasProgram = nullptr;
 };
 
 }

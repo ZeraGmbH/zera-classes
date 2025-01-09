@@ -1,8 +1,6 @@
 #include "power1module.h"
 #include "power1moduleconfiguration.h"
-#include "power1modulemeasprogram.h"
 #include "cro_systemobserverfetchtask.h"
-#include <errormessages.h>
 
 namespace POWER1MODULE
 {
