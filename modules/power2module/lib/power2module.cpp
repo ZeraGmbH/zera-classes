@@ -2,7 +2,6 @@
 #include "power2moduleconfiguration.h"
 #include "power2modulemeasprogram.h"
 #include "cro_systemobserverfetchtask.h"
-#include <errormessages.h>
 
 namespace POWER2MODULE
 {

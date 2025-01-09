@@ -6,7 +6,6 @@
 namespace POWER2MODULE
 {
 
-class cPower2ModuleConfiguration;
 class cPower2ModuleMeasProgram;
 
 class cPower2Module : public cBaseMeasModule
@@ -24,7 +23,7 @@ private:
     void startMeas() override; // we make the measuring program start here
     void stopMeas() override;
 
-    cPower2ModuleMeasProgram *m_pMeasProgram; // our measuring program, lets say the working horse
+    cPower2ModuleMeasProgram *m_pMeasProgram = nullptr;
 };
 
 }
