@@ -1,13 +1,10 @@
 #ifndef OSCIMODULE_H
 #define OSCIMODULE_H
 
+#include "oscimodulemeasprogram.h"
 #include "basemeasmodule.h"
-#include <QFinalState>
 
 namespace OSCIMODULE {
-
-class cOsciModuleConfiguration;
-class cOsciModuleMeasProgram;
 
 class cOsciModule : public cBaseMeasModule
 {
@@ -24,7 +21,7 @@ private:
     void startMeas() override; // we make the measuring program start here
     void stopMeas() override;
 
-    cOsciModuleMeasProgram *m_pMeasProgram; // our measuring program, lets say the working horse
+    cOsciModuleMeasProgram *m_pMeasProgram = nullptr;
 };
 
 }

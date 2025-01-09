@@ -2,7 +2,6 @@
 #include "oscimoduleconfiguration.h"
 #include "oscimodulemeasprogram.h"
 #include "cro_systemobserverfetchtask.h"
-#include <errormessages.h>
 
 namespace OSCIMODULE
 {
