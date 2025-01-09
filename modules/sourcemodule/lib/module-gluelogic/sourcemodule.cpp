@@ -2,9 +2,9 @@
 #include "moduleconfigurationnull.h"
 
 SourceModule::SourceModule(ModuleFactoryParam moduleParam) :
-    cBaseMeasModule(moduleParam, std::make_shared<ModuleConfigurationNull>())
+    cBaseMeasModule(moduleParam, std::make_shared<ModuleConfigurationNull>()),
+    m_rpcEventSystem(new VfModuleRpc(moduleParam.m_entityId))
 {
-    m_rpcEventSystem = new VfModuleRpc(moduleParam.m_entityId);
     m_sModuleName = QString("%1%2").arg(BaseModuleName).arg(moduleParam.m_moduleNum);
     m_sModuleDescription = QString("Module to access voltage and current sources");
     m_sSCPIModuleName = QString("%1%2").arg(BaseSCPIModuleName).arg(moduleParam.m_moduleNum);

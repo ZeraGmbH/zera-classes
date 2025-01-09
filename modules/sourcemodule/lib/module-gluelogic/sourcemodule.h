@@ -12,11 +12,11 @@ public:
     static constexpr const char* BaseModuleName = "SourceModule";
     static constexpr const char* BaseSCPIModuleName = "SRC";
 
-    SourceModule(ModuleFactoryParam moduleParam);
+    explicit SourceModule(ModuleFactoryParam moduleParam);
     VfModuleRpc *getRpcEventSystem() const;
 
 protected:
-    SourceModuleProgram *m_pProgram; // our program, lets say the working horse
+    SourceModuleProgram *m_pProgram = nullptr;
 
     void setupModule() override; // after xml configuration we can setup and export our module
     void startMeas() override; // we make the measuring program start here
@@ -24,7 +24,7 @@ protected:
 
 private:
     QState m_stateSwitchAllOff;
-    VfModuleRpc *m_rpcEventSystem;
+    VfModuleRpc *m_rpcEventSystem = nullptr;
 };
 
 #endif // SOURCEMODULE_H
