@@ -70,7 +70,7 @@ void BaseModule::startSetupTask()
         return true;
         },
         true));
-    startTasks->addSub(getSetUpTask());
+    startTasks->addSub(getModuleSetUpTask());
     if(requiresStateMachineStart()) {
         TaskActivationStateMachineWrapperPtr activationStatemachineTask = TaskActivationStateMachineWrapper::create(&m_ActivationMachine);
         connect(this, &BaseModule::activationReady,
@@ -222,7 +222,7 @@ void BaseModule::deactivationFinished()
     emit deactivationReady();
 }
 
-TaskTemplatePtr BaseModule::getSetUpTask()
+TaskTemplatePtr BaseModule::getModuleSetUpTask()
 {
     return TaskLambdaRunner::create([]() {
         return true;

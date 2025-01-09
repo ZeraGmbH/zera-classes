@@ -92,7 +92,7 @@ protected slots:
     void deactivationDone();
     void deactivationFinished();
 private:
-    virtual TaskTemplatePtr getSetUpTask(); // Default implementation noop
+    virtual TaskTemplatePtr getModuleSetUpTask(); // Default implementation noop / TODO add activist tasks
     // As log as there are state machines in modules
     bool requiresStateMachineStart() { return true; }
     void startSetupTask();
