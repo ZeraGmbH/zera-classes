@@ -1,8 +1,6 @@
 #include "sec1module.h"
 #include "sec1moduleconfiguration.h"
 #include "sec1modulemeasprogram.h"
-#include <QJsonDocument>
-#include <QJsonObject>
 
 namespace SEC1MODULE
 {
@@ -11,7 +9,7 @@ cSec1Module::cSec1Module(ModuleFactoryParam moduleParam) :
     cBaseMeasModule(moduleParam, std::shared_ptr<BaseModuleConfiguration>(new cSec1ModuleConfiguration()))
 {
     m_sModuleName = QString("%1%2").arg(BaseModuleName).arg(moduleParam.m_moduleNum);
-    m_sModuleDescription = QString("This module povides a configurable error calculator");
+    m_sModuleDescription = QString("This module provides a configurable error calculator");
     m_sSCPIModuleName = QString(BaseSCPIModuleName);
 }
 

@@ -3670,7 +3670,7 @@
                 }
             },
             "ModuleInfo": {
-                "Description": "This module povides a configurable error calculator",
+                "Description": "This module provides a configurable error calculator",
                 "Name": "SEC1Module1"
             },
             "SCPIInfo": {
@@ -4262,7 +4262,7 @@
                 }
             },
             "ModuleInfo": {
-                "Description": "This module povides a configurable error calculator",
+                "Description": "This module provides a configurable error calculator",
                 "Name": "SEC1Module2"
             },
             "SCPIInfo": {
