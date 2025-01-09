@@ -1,8 +1,5 @@
 #include "transformer1module.h"
 #include "transformer1moduleconfiguration.h"
-#include "transformer1modulemeasprogram.h"
-#include <vfmodulecomponent.h>
-#include <vfmodulemetadata.h>
 
 namespace TRANSFORMER1MODULE
 {
