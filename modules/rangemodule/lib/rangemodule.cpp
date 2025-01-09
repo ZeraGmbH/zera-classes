@@ -7,6 +7,7 @@
 #include "adjustment.h"
 #include <vfmodulecomponent.h>
 #include <vfmodulemetadata.h>
+#include "cro_systemobserverfetchtask.h"
 #include <QDebug>
 #include <QByteArray>
 
@@ -96,6 +97,11 @@ void cRangeModule::setupModule()
     for (int i = 0; i < m_ModuleActivistList.count(); i++)
         m_ModuleActivistList.at(i)->generateVeinInterface();
 
+}
+
+TaskTemplatePtr cRangeModule::getModuleSetUpTask()
+{
+    return ChannelRangeObserver::SystemObserverFetchTask::create(getSharedChannelRangeObserver());
 }
 
 void cRangeModule::startMeas()

@@ -23,9 +23,6 @@ cRangeModuleMeasProgram::cRangeModuleMeasProgram(cRangeModule* module, std::shar
     m_bIgnore = false;
     m_ChannelList = getConfData()->m_senseChannelList;
 
-    // As long as there are no tasks - ignore error
-    m_channelRangeObserverScanState.addTransition(
-        m_pModule->getSharedChannelRangeObserver().get(), &ChannelRangeObserver::SystemObserver::sigFullScanFinished,&m_resourceManagerConnectState);
     m_IdentifyState.addTransition(this, &cRangeModuleMeasProgram::activationContinue, &m_dspserverConnectState);
     m_claimPGRMemState.addTransition(this, &cRangeModuleMeasProgram::activationContinue, &m_claimUSERMemState);
     m_claimUSERMemState.addTransition(this, &cRangeModuleMeasProgram::activationContinue, &m_var2DSPState);
@@ -33,7 +30,6 @@ cRangeModuleMeasProgram::cRangeModuleMeasProgram(cRangeModule* module, std::shar
     m_cmd2DSPState.addTransition(this, &cRangeModuleMeasProgram::activationContinue, &m_activateDSPState);
     m_activateDSPState.addTransition(this, &cRangeModuleMeasProgram::activationContinue, &m_loadDSPDoneState);
 
-    m_activationMachine.addState(&m_channelRangeObserverScanState);
     m_activationMachine.addState(&m_resourceManagerConnectState);
     m_activationMachine.addState(&m_IdentifyState);
     m_activationMachine.addState(&m_dspserverConnectState);
@@ -44,7 +40,6 @@ cRangeModuleMeasProgram::cRangeModuleMeasProgram(cRangeModule* module, std::shar
     m_activationMachine.addState(&m_activateDSPState);
     m_activationMachine.addState(&m_loadDSPDoneState);
 
-    connect(&m_channelRangeObserverScanState, &QState::entered, this, &cRangeModuleMeasProgram::startFetchCommonRanges);
     connect(&m_resourceManagerConnectState, &QState::entered, this, &cRangeModuleMeasProgram::resourceManagerConnect);
     connect(&m_IdentifyState, &QState::entered, this, &cRangeModuleMeasProgram::sendRMIdent);
     connect(&m_dspserverConnectState, &QState::entered, this, &cRangeModuleMeasProgram::dspserverConnect);
@@ -69,7 +64,7 @@ cRangeModuleMeasProgram::cRangeModuleMeasProgram(cRangeModule* module, std::shar
     connect(&m_freeUSERMemState, &QState::entered, this, &cRangeModuleMeasProgram::freeUSERMem);
     connect(&m_unloadDSPDoneState, &QState::entered, this, &cRangeModuleMeasProgram::deactivateDSPdone);
 
-    m_activationMachine.setInitialState(&m_channelRangeObserverScanState);
+    m_activationMachine.setInitialState(&m_resourceManagerConnectState);
     m_deactivationMachine.setInitialState(&m_deactivateDSPState);
 
     // setting up statemachine for data acquisition
@@ -385,11 +380,6 @@ void cRangeModuleMeasProgram::setInterfaceActualValues(QVector<float> *actualVal
         for(int rmsNo=0; rmsNo<m_ChannelList.count(); rmsNo++)
             m_veinRmsValueList.at(rmsNo)->setValue(QVariant((*actualValues)[rmsNo+rmsOffsetInActual]));
     }
-}
-
-void cRangeModuleMeasProgram::startFetchCommonRanges()
-{
-    m_pModule->getSharedChannelRangeObserver()->startFullScan();
 }
 
 void cRangeModuleMeasProgram::resourceManagerConnect()
