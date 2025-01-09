@@ -65,12 +65,12 @@ BaseModule::~BaseModule()
 void BaseModule::startSetupTask()
 {
     TaskContainerInterfacePtr startTasks = TaskContainerSequence::create();
+    startTasks->addSub(getModuleSetUpTask());
     startTasks->addSub(TaskLambdaRunner::create([this]() {
-        setupModule();
-        return true;
+            setupModule();
+            return true;
         },
         true));
-    startTasks->addSub(getModuleSetUpTask());
     if(requiresStateMachineStart()) {
         TaskActivationStateMachineWrapperPtr activationStatemachineTask = TaskActivationStateMachineWrapper::create(&m_ActivationMachine);
         connect(this, &BaseModule::activationReady,
@@ -78,10 +78,10 @@ void BaseModule::startSetupTask()
         startTasks->addSub(std::move(activationStatemachineTask));
     }
     startTasks->addSub(TaskLambdaRunner::create([this]() {
-        startMeas();
-        m_moduleIsFullySetUp = true;
-        emit moduleActivated();
-        return true;
+            startMeas();
+            m_moduleIsFullySetUp = true;
+            emit moduleActivated();
+            return true;
         },
         true));
     m_startupTask = std::move(startTasks);
