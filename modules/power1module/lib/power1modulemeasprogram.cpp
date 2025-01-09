@@ -21,9 +21,6 @@ cPower1ModuleMeasProgram::cPower1ModuleMeasProgram(cPower1Module* module, std::s
 {
     m_dspInterface = m_pModule->getServiceInterfaceFactory()->createDspInterfacePower1(&m_measModeSelector);
 
-    // As long as there are no tasks - ignore error
-    m_channelRangeObserverScanState.addTransition(
-        m_pModule->getSharedChannelRangeObserver().get(), &ChannelRangeObserver::SystemObserver::sigFullScanFinished,&m_resourceManagerConnectState);
     m_IdentifyState.addTransition(this, &cModuleActivist::activationContinue, &m_claimResourcesSourceState);
 
     m_claimResourcesSourceState.addTransition(this, &cModuleActivist::activationContinue, &m_claimResourceSourceState);
@@ -54,7 +51,6 @@ cPower1ModuleMeasProgram::cPower1ModuleMeasProgram(cPower1Module* module, std::s
     m_cmd2DSPState.addTransition(this, &cModuleActivist::activationContinue, &m_activateDSPState);
     m_activateDSPState.addTransition(this, &cModuleActivist::activationContinue, &m_loadDSPDoneState);
 
-    m_activationMachine.addState(&m_channelRangeObserverScanState);
     m_activationMachine.addState(&m_resourceManagerConnectState);
     m_activationMachine.addState(&m_IdentifyState);
 
@@ -82,9 +78,8 @@ cPower1ModuleMeasProgram::cPower1ModuleMeasProgram(cPower1Module* module, std::s
     m_activationMachine.addState(&m_activateDSPState);
     m_activationMachine.addState(&m_loadDSPDoneState);
 
-    m_activationMachine.setInitialState(&m_channelRangeObserverScanState);
+    m_activationMachine.setInitialState(&m_resourceManagerConnectState);
 
-    connect(&m_channelRangeObserverScanState, &QState::entered, this, &cPower1ModuleMeasProgram::startFetchCommonRanges);
     connect(&m_resourceManagerConnectState, &QAbstractState::entered, this, &cPower1ModuleMeasProgram::resourceManagerConnect);
     connect(&m_IdentifyState, &QAbstractState::entered, this, &cPower1ModuleMeasProgram::sendRMIdent);
 
@@ -692,11 +687,6 @@ void cPower1ModuleMeasProgram::setInterfaceActualValues(QVector<float> *actualVa
         for (int i = 0; i < 4; i++)
             m_veinActValueList.at(i)->setValue(QVariant((double)actualValues->at(i)));
     }
-}
-
-void cPower1ModuleMeasProgram::startFetchCommonRanges()
-{
-    m_pModule->getSharedChannelRangeObserver()->startFullScan();
 }
 
 void cPower1ModuleMeasProgram::resourceManagerConnect()
