@@ -49,7 +49,7 @@ cReferenceMeasChannel *cReferenceModule::getMeasChannel(const QString &name)
     cReferenceMeasChannel* p_rmc = 0;
     for (int i = 0; i < m_ReferenceMeasChannelList.count(); i++) {
         p_rmc =  m_ReferenceMeasChannelList.at(i);
-        if ((p_rmc->getName()) == name)
+        if ((p_rmc->getMName()) == name)
             return p_rmc;
     }
     return p_rmc;
@@ -65,10 +65,10 @@ void cReferenceModule::setupModule()
     // setting of mode has been done by seperate mode module
     // first we build a list of our meas channels
     for (int i = 0; i < pConfData->m_nChannelCount; i ++) {
-        cReferenceMeasChannel* pchn = new cReferenceMeasChannel(getSharedChannelRangeObserver(),
+        const QString channelMName = pConfData->m_referenceChannelList.at(i);
+        cReferenceMeasChannel* pchn = new cReferenceMeasChannel(getSharedChannelRangeObserver()->getChannel(channelMName),
                                                                 getNetworkConfig()->m_pcbServiceConnectionInfo,
                                                                 getNetworkConfig()->m_tcpNetworkFactory,
-                                                                pConfData->m_referenceChannelList.at(i),
                                                                 i+1,
                                                                 getVeinModuleName());
         m_ReferenceMeasChannelList.append(pchn);

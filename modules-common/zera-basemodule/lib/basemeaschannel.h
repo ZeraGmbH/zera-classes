@@ -2,6 +2,7 @@
 #define BASEMEASCHANNEL_H
 
 #include "moduleactivist.h"
+#include "cro_channel.h"
 #include "networkconnectioninfo.h"
 #include <pcbinterface.h>
 #include <abstracttcpnetworkfactory.h>
@@ -13,24 +14,23 @@ class cBaseMeasChannel: public cModuleActivist
 public:
     cBaseMeasChannel(NetworkConnectionInfo pcbsocket,
                      VeinTcp::AbstractTcpNetworkFactoryPtr tcpNetworkFactory,
-                     QString channelName, quint8 chnnr,
+                     ChannelRangeObserver::ChannelPtr channelObserver, quint8 chnnr,
                      QString moduleChannelInfo);
 
     quint8 getDSPChannelNr();
-    QString getName();
+    QString getMName();
     QString getAlias();
     QString getUnit();
 
 protected:
     NetworkConnectionInfo m_pcbNetworkInfo;
     VeinTcp::AbstractTcpNetworkFactoryPtr m_tcpNetworkFactory;
-    QString m_sName; // the channel's system name
+    ChannelRangeObserver::ChannelPtr m_channelObserver;
     quint8 m_nChannelNr; // the number of our channel for naming purpose
 
     Zera::PcbInterfacePtr m_pcbInterface;
 
     // the things we have to query from our pcb server
-    quint8 m_nDspChannel; // the dsp's channel where samples come in
     QString m_sAlias; // the channel' alias
     QString m_sUnit;
     QHash<quint32, int> m_MsgNrCmdList;

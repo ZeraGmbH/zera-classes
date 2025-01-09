@@ -18,7 +18,7 @@ cPllMeasChannel* cSampleModule::getPllMeasChannel(const QString &name)
     cPllMeasChannel* p_pllmc = 0;
     for (int i = 0; i < m_pllMeasChannelList.count(); i++) {
         p_pllmc =  m_pllMeasChannelList.at(i);
-        if ((p_pllmc->getName()) == name)
+        if ((p_pllmc->getMName()) == name)
             return p_pllmc;
     }
     return p_pllmc;
@@ -34,10 +34,10 @@ void cSampleModule::setupModule()
 
     // first we build a list of our pll meas channels, that hold informations for other activists
     for (int i = 0; i < pConfData->m_ObsermaticConfPar.m_npllChannelCount; i ++) {
-        cPllMeasChannel* pllchn = new cPllMeasChannel(getSharedChannelRangeObserver(),
+        const QString channelMName = pConfData->m_ObsermaticConfPar.m_pllChannelList.at(i);
+        cPllMeasChannel* pllchn = new cPllMeasChannel(getSharedChannelRangeObserver()->getChannel(channelMName),
                                                       getNetworkConfig()->m_pcbServiceConnectionInfo,
                                                       getNetworkConfig()->m_tcpNetworkFactory,
-                                                      pConfData->m_ObsermaticConfPar.m_pllChannelList.at(i),
                                                       i+1,
                                                       getVeinModuleName());
         m_pllMeasChannelList.append(pllchn);

@@ -27,6 +27,7 @@ public:
             VeinTcp::AbstractTcpNetworkFactoryPtr tcpFactory);
     void startFetch();
     // TODO: What if we are asked while fetching?
+    const QString getMName() const;
     const QStringList getAllRangeNames() const;
     const QStringList getAvailRangeNames() const;
     const RangePtr getRange(const QString &rangeName) const;

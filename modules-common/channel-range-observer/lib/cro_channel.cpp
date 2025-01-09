@@ -30,6 +30,11 @@ void Channel::startFetch()
     startAllRangesTasks();
 }
 
+const QString Channel::getMName() const
+{
+    return m_channelMName;
+}
+
 const QStringList Channel::getAllRangeNames() const
 {
     return m_allRangeNamesOrderedByServer;

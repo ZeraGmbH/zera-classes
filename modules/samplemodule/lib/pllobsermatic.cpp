@@ -179,7 +179,7 @@ void cPllObsermatic::sendPllChannel(QString systemChannelRequested)
 void cPllObsermatic::newPllChannel(QVariant channelAlias)
 {
     if(!m_ConfPar.m_ObsermaticConfPar.m_bpllFixed) {
-        QString systemName = m_pllMeasChannelHash[channelAlias.toString()]->getName();
+        QString systemName = m_pllMeasChannelHash[channelAlias.toString()]->getMName();
         // Isn't this obsolete? Vein transfers changes only.
         if(systemName != m_ConfPar.m_ObsermaticConfPar.m_pllSystemChannel.m_sPar)
             sendPllChannel(systemName);
@@ -206,7 +206,7 @@ void cPllObsermatic::setNewPLLChannel()
     m_pVeinPllChannelAlias->setValue(QVariant(m_sNewPllChannelAlias));
 
     if(m_pllMeasChannelHash.contains(m_sNewPllChannelAlias)) { // (2 slower)
-        QString systemName = m_pllMeasChannelHash[m_sNewPllChannelAlias]->getName();
+        QString systemName = m_pllMeasChannelHash[m_sNewPllChannelAlias]->getMName();
         m_ConfPar.m_ObsermaticConfPar.m_pllSystemChannel.m_sPar = systemName;
         emit m_pModule->parameterChanged();
     }

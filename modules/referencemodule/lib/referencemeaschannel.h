@@ -1,7 +1,6 @@
 #ifndef REFERENCEMEASCHANNEL_H
 #define REFERENCEMEASCHANNEL_H
 
-#include "cro_systemobserver.h"
 #include <rangeinfo.h>
 #include <QHash>
 #include <QStringList>
@@ -16,7 +15,6 @@ namespace REFERENCEMODULE
 
 enum rangemeaschannelCmds
 {
-    readdspchannel,
     readchnalias,
     readunit,
     readrangelist,
@@ -38,9 +36,9 @@ class cReferenceMeasChannel: public cBaseMeasChannel
     Q_OBJECT
 
 public:
-    cReferenceMeasChannel(const ChannelRangeObserver::SystemObserverPtr channelRangeObserver,
+    cReferenceMeasChannel(ChannelRangeObserver::ChannelPtr channelObserver,
                           NetworkConnectionInfo pcbsocket, VeinTcp::AbstractTcpNetworkFactoryPtr tcpNetworkFactory,
-                          QString name, quint8 chnnr, QString moduleName);
+                          quint8 chnnr, QString moduleName);
     void generateVeinInterface() override;
 
     quint32 setRange(QString range); // a statemachine gets started that returns cmdDone(quint32 cmdnr)
@@ -52,7 +50,6 @@ protected slots:
     void catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant answer) override;
 
 private:
-    const ChannelRangeObserver::SystemObserverPtr m_channelRangeObserver;
     QStringList m_RangeNameList; // a list of all ranges
     QHash<QString, cRangeInfoBase> m_RangeInfoHash; // a list of available and selectable ranges, alias will be the key
     QString m_sNewRange;
@@ -64,7 +61,6 @@ private:
 
     // statemachine for activating a referencemeaschannel
     QState m_pcbConnectionState; // we try to get a connection to our pcb server
-    QState m_readDspChannelState; // we query our dsp channel
     QState m_readChnAliasState; // we query our alias
     QState m_readUnitState; // we read the meas channel unit volt ampere ...
     QState m_readRangelistState; // we query our range list
@@ -92,7 +88,6 @@ private:
 
 private slots:
     void pcbConnection();
-    void readDspChannel();
     void readChnAlias();
     void readUnit();
     void readRangelist();

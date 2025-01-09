@@ -2,24 +2,25 @@
 
 cBaseMeasChannel::cBaseMeasChannel(NetworkConnectionInfo pcbsocket,
                                    VeinTcp::AbstractTcpNetworkFactoryPtr tcpNetworkFactory,
-                                   QString channelName, quint8 chnnr,
+                                   ChannelRangeObserver::ChannelPtr channelObserver,
+                                   quint8 chnnr,
                                    QString moduleChannelInfo) :
     cModuleActivist(moduleChannelInfo),
     m_pcbNetworkInfo(pcbsocket),
     m_tcpNetworkFactory(tcpNetworkFactory),
-    m_sName(channelName),
+    m_channelObserver(channelObserver),
     m_nChannelNr(chnnr)
 {
 }
 
 quint8 cBaseMeasChannel::getDSPChannelNr()
 {
-    return m_nDspChannel;
+    return m_channelObserver->m_dspChannel;
 }
 
-QString cBaseMeasChannel::getName()
+QString cBaseMeasChannel::getMName()
 {
-    return m_sName;
+    return m_channelObserver->getMName();
 }
 
 QString cBaseMeasChannel::getAlias()

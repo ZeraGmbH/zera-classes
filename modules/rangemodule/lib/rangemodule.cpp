@@ -20,7 +20,7 @@ cRangeMeasChannel *cRangeModule::getMeasChannel(const QString &name)
     cRangeMeasChannel* p_rmc = 0;
     for (int i = 0; i < m_rangeMeasChannelList.count(); i++) {
         p_rmc =  m_rangeMeasChannelList.at(i);
-        if ((p_rmc->getName()) == name)
+        if ((p_rmc->getMName()) == name)
             return p_rmc;
     }
     return p_rmc;
@@ -43,10 +43,10 @@ void cRangeModule::setupModule()
 
     // first we build a list of our meas channels
     for (int i = 0; i < pConfData->m_nChannelCount; i ++) {
-        cRangeMeasChannel* pchn = new cRangeMeasChannel(getSharedChannelRangeObserver(),
+        const QString channelMName = pConfData->m_senseChannelList.at(i);
+        cRangeMeasChannel* pchn = new cRangeMeasChannel(getSharedChannelRangeObserver()->getChannel(channelMName),
                                                         getNetworkConfig()->m_pcbServiceConnectionInfo,
                                                         getNetworkConfig()->m_tcpNetworkFactory,
-                                                        pConfData->m_senseChannelList.at(i),
                                                         i+1,
                                                         getVeinModuleName());
         m_rangeMeasChannelList.append(pchn);

@@ -1,7 +1,6 @@
 #ifndef PLLMEASCHANNEL_H
 #define PLLMEASCHANNEL_H
 
-#include "cro_systemobserver.h"
 #include "rangeinfo.h"
 #include <basemeaschannel.h>
 #include <pcbinterface.h>
@@ -12,7 +11,6 @@ namespace SAMPLEMODULE
 
 enum pllmeaschannelCmds
 {
-    readdspchannel,
     readchnalias,
     readunit,
     readrangelist,
@@ -37,10 +35,10 @@ class cPllMeasChannel:public cBaseMeasChannel
 {
     Q_OBJECT
 public:
-    cPllMeasChannel(const ChannelRangeObserver::SystemObserverPtr channelRangeObserver,
+    cPllMeasChannel(ChannelRangeObserver::ChannelPtr channelObserver,
                     NetworkConnectionInfo pcbsocket,
                     VeinTcp::AbstractTcpNetworkFactoryPtr tcpNetworkFactory,
-                    QString name, quint8 chnnr, QString moduleName);
+                    quint8 chnnr, QString moduleName);
     void generateVeinInterface() override;
     quint32 setyourself4PLL(QString samplesysname); // a statemachine gets started that returns cmdDone(quint32 cmdnr)
     quint32 setPLLMode(QString samplesysname, QString mode);
@@ -50,14 +48,12 @@ signals:
 protected slots:
     void catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant answer) override;
 private:
-    const ChannelRangeObserver::SystemObserverPtr m_channelRangeObserver;
     QStringList m_RangeNameList; // a list of all ranges
     QHash<QString, cRangeInfoWithConstantValues> m_RangeInfoHash; // a list of available and selectable ranges, alias will be the key
     QString m_sActRange; // the actual range set (name)
 
     // statemachine for activating a rangemeaschannel
     QState m_pcbConnectionState; // we try to get a connection to our pcb server
-    QState m_readDspChannelState; // we query our dsp channel
     QState m_readChnAliasState; // we query our alias
     QState m_readUnitState; // we read the meas channel unit volt ampere ...
     QState m_readRangelistState; // we query our range list
@@ -89,7 +85,6 @@ private:
 
 private slots:
     void pcbConnection();
-    void readDspChannel();
     void readChnAlias();
     void readUnit();
     void readRangelist();

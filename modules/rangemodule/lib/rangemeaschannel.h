@@ -1,7 +1,6 @@
 #ifndef RANGEMEASCHANNEL_H
 #define RANGEMEASCHANNEL_H
 
-#include "cro_systemobserver.h"
 #include <pcbinterface.h>
 #include <basemeaschannel.h>
 #include <rangeinfo.h>
@@ -12,7 +11,6 @@ namespace RANGEMODULE
 
 enum rangemeaschannelCmds
 {
-    readdspchannel,
     readchnalias,
     readunit,
     readrangelist,
@@ -40,10 +38,10 @@ class cRangeMeasChannel: public cBaseMeasChannel
 {
     Q_OBJECT
 public:
-    cRangeMeasChannel(const ChannelRangeObserver::SystemObserverPtr channelRangeObserver,
+    cRangeMeasChannel(ChannelRangeObserver::ChannelPtr channelObserver,
                       NetworkConnectionInfo pcbsocket,
                       VeinTcp::AbstractTcpNetworkFactoryPtr tcpNetworkFactory,
-                      QString name, quint8 chnnr, QString moduleName);
+                      quint8 chnnr, QString moduleName);
     void generateVeinInterface() override;
 
     quint32 setRange(QString range); // a statemachine gets started that returns cmdDone(quint32 cmdnr)
@@ -99,7 +97,6 @@ protected slots:
     void catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant answer) override;
 
 private:
-    const ChannelRangeObserver::SystemObserverPtr m_channelRangeObserver;
     QStringList m_RangeNameList; // a list of all ranges
     QHash<QString, cRangeInfoWithConstantValues> m_RangeInfoHash; // a list of available and selectable ranges, alias will be the key
     QHash<QString, cRangeInfoWithConstantValues> m_RangeInfoHashWorking;
@@ -120,7 +117,6 @@ private:
 
     // statemachine for activating a rangemeaschannel
     QState m_pcbConnectionState; // we try to get a connection to our pcb server
-    QState m_readDspChannelState; // we query our dsp channel
     QState m_readChnAliasState; // we query our alias
     QState m_readUnitState; // we read the meas channel unit volt ampere ...
     QState m_readRangeAndProperties; // we query our range list and all their properties
@@ -156,7 +152,6 @@ private:
 
 private slots:
     void pcbConnection();
-    void readDspChannel();
     void readChnAlias();
     void readUnit();
     void readRangeAndProperties();
