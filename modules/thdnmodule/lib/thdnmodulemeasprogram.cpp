@@ -33,9 +33,6 @@ cThdnModuleMeasProgram::cThdnModuleMeasProgram(cThdnModule *module, std::shared_
 {
     m_dspInterface = m_pModule->getServiceInterfaceFactory()->createDspInterfaceThdn(getConfData()->m_valueChannelList);
 
-    // As long as there are no tasks - ignore error
-    m_channelRangeObserverScanState.addTransition(
-        m_pModule->getSharedChannelRangeObserver().get(), &ChannelRangeObserver::SystemObserver::sigFullScanFinished,&m_resourceManagerConnectState);
     m_IdentifyState.addTransition(this, &cThdnModuleMeasProgram::activationContinue, &m_pcbserverConnectState);
     m_pcbserverConnectState.addTransition(this, &cThdnModuleMeasProgram::activationContinue, &m_dspserverConnectState);
 
@@ -45,7 +42,6 @@ cThdnModuleMeasProgram::cThdnModuleMeasProgram(cThdnModule *module, std::shared_
     m_cmd2DSPState.addTransition(this, &cThdnModuleMeasProgram::activationContinue, &m_activateDSPState);
     m_activateDSPState.addTransition(this, &cThdnModuleMeasProgram::activationContinue, &m_loadDSPDoneState);
 
-    m_activationMachine.addState(&m_channelRangeObserverScanState);
     m_activationMachine.addState(&m_resourceManagerConnectState);
     m_activationMachine.addState(&m_IdentifyState);
     m_activationMachine.addState(&m_pcbserverConnectState);
@@ -57,9 +53,8 @@ cThdnModuleMeasProgram::cThdnModuleMeasProgram(cThdnModule *module, std::shared_
     m_activationMachine.addState(&m_activateDSPState);
     m_activationMachine.addState(&m_loadDSPDoneState);
 
-    m_activationMachine.setInitialState(&m_channelRangeObserverScanState);
+    m_activationMachine.setInitialState(&m_resourceManagerConnectState);
 
-    connect(&m_channelRangeObserverScanState, &QState::entered, this, &cThdnModuleMeasProgram::startFetchCommonRanges);
     connect(&m_resourceManagerConnectState, &QAbstractState::entered, this, &cThdnModuleMeasProgram::resourceManagerConnect);
     connect(&m_IdentifyState, &QAbstractState::entered, this, &cThdnModuleMeasProgram::sendRMIdent);
     connect(&m_pcbserverConnectState, &QAbstractState::entered, this, &cThdnModuleMeasProgram::pcbserverConnect);
@@ -382,11 +377,6 @@ void cThdnModuleMeasProgram::setInterfaceActualValues(QVector<float> *actualValu
         for (int i = 0; i < m_veinActValueList.count(); i++)
             m_veinActValueList.at(i)->setValue(QVariant((double)actualValues->at(i))); // and set entities
     }
-}
-
-void cThdnModuleMeasProgram::startFetchCommonRanges()
-{
-    m_pModule->getSharedChannelRangeObserver()->startFullScan();
 }
 
 void cThdnModuleMeasProgram::resourceManagerConnect()
