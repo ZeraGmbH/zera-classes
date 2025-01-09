@@ -91,7 +91,7 @@ void test_range_module_regression::injectActualValuesWithPreScaling()
 {
     ModuleManagerTestRunner testRunner(":/session-range-test.json");
     testRunner.setVfComponent(rangeEntityId, "PAR_PreScalingEnabledGroup0", true);
-    testRunner.setVfComponent(rangeEntityId, "PAR_PreScalingGroup0", "2/1");
+    testRunner.setVfComponent(rangeEntityId, "PAR_PreScalingGroup0", "2/1*(1)");
 
     const QList<TestDspInterfacePtr>& dspInterfaces = testRunner.getDspInterfaceList();
     QCOMPARE(dspInterfaces.count(), 3);

@@ -153,7 +153,8 @@ void cRangeObsermatic::generateVeinInterface()
 
         pParameter->setUnit("");
         pParameter->setValidator(new cRegExValidator("^[1-9][0-9]*\\/[1-9][0-9]*(\\*\\((1|sqrt\\(3\\)|1\\/sqrt\\(3\\))\\))?$"));
-
+        if(m_GroupList.at(i).contains("UL1"))
+            pParameter->setValue("1/1*(1)");
 
         m_RangeGroupPreScalingList.append(pParameter);
         m_pModule->m_veinModuleParameterMap[key] = pParameter;
