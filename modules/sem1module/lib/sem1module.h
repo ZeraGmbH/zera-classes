@@ -23,7 +23,7 @@ private:
     void startMeas() override; // we make the measuring program start here
     void stopMeas() override;
 
-    cSem1ModuleMeasProgram *m_pMeasProgram; // our measuring program, lets say the working horse
+    cSem1ModuleMeasProgram *m_pMeasProgram = nullptr;
 };
 
 }

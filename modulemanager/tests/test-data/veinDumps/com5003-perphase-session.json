@@ -5267,7 +5267,7 @@
                 }
             },
             "ModuleInfo": {
-                "Description": "This module povides a configurable error calculator",
+                "Description": "This module provides a configurable energy error calculator",
                 "Name": "SEM1Module1"
             },
             "SCPIInfo": {
