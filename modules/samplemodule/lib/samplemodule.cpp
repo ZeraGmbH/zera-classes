@@ -1,13 +1,6 @@
 #include "samplemodule.h"
 #include "samplemoduleconfiguration.h"
-#include "samplemoduleconfigdata.h"
-#include "samplechannel.h"
-#include "pllmeaschannel.h"
-#include "samplemodulemeasprogram.h"
-#include "pllobsermatic.h"
 #include "cro_systemobserverfetchtask.h"
-#include <vfmodulecomponent.h>
-#include <vfmodulemetadata.h>
 
 namespace SAMPLEMODULE
 {
@@ -20,11 +13,10 @@ cSampleModule::cSampleModule(ModuleFactoryParam moduleParam) :
     m_sSCPIModuleName = QString("%1%2").arg(BaseSCPIModuleName).arg(moduleParam.m_moduleNum);
 }
 
-cPllMeasChannel* cSampleModule::getPllMeasChannel(QString name)
+cPllMeasChannel* cSampleModule::getPllMeasChannel(const QString &name)
 {
     cPllMeasChannel* p_pllmc = 0;
-    for (int i = 0; i < m_pllMeasChannelList.count(); i++)
-    {
+    for (int i = 0; i < m_pllMeasChannelList.count(); i++) {
         p_pllmc =  m_pllMeasChannelList.at(i);
         if ((p_pllmc->getName()) == name)
             return p_pllmc;

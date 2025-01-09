@@ -17,7 +17,7 @@ public:
     static constexpr const char* BaseSCPIModuleName = "SAM";
 
     cSampleModule(ModuleFactoryParam moduleParam);
-    cPllMeasChannel* getPllMeasChannel(QString name);
+    cPllMeasChannel* getPllMeasChannel(const QString &name);
 
 private slots:
     void activationFinished() override;
@@ -28,8 +28,8 @@ private:
     void startMeas() override; // we make the measuring program start here
     void stopMeas() override;
 
-    cSampleModuleMeasProgram *m_pMeasProgram; // our measuring program, lets say the working horse
-    cPllObsermatic *m_pPllObsermatic; // our pll handling
+    cSampleModuleMeasProgram *m_pMeasProgram = nullptr;
+    cPllObsermatic *m_pPllObsermatic = nullptr;
     QList<cPllMeasChannel*> m_pllMeasChannelList; // our pll meas channels
     QList<cSampleChannel*>  m_sampleChannelList;
 };
