@@ -2,23 +2,15 @@
 #define SCPIMODULE_H
 
 #include "scpiclientinfo.h"
+#include "scpiserver.h"
+#include "signalconnectiondelegate.h"
+#include "scpimeasure.h"
 #include "basemodule.h"
 #include "vfeventsytemmoduleparam.h"
-#include <QFinalState>
-
-namespace VeinEvent
-{
-    class EventSystem;
-    class AbstractEventSystem;
-}
 
 namespace SCPIMODULE {
 
-class cSCPIServer;
-class cSignalConnectionDelegate;
-class cSCPIMeasure;
 class SCPIEventSystem;
-
 
 class cSCPIModule : public BaseModule
 {
@@ -38,10 +30,10 @@ public:
     VfEventSytemModuleParam* m_pModuleValidator;
 
 protected:
-    cSCPIServer *m_pSCPIServer; // our server for the world
+    cSCPIServer *m_pSCPIServer = nullptr;
 
 private slots:
-    virtual void activationFinished() override;
+    void activationFinished() override;
 private:
     void setupModule() override; // after xml configuration we can setup and export our module
     void startMeas() override; // we make the measuring program start here

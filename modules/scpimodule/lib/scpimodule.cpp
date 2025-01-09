@@ -1,33 +1,19 @@
 #include "scpimodule.h"
 #include "scpimoduleconfiguration.h"
 #include "scpimoduleconfigdata.h"
-#include "scpiserver.h"
 #include "scpieventsystem.h"
-#include <vfmodulemetadata.h>
-#include <vfmoduleactvalue.h>
-#include <vfmoduleparameter.h>
-#include <scpiinfo.h>
-#include <vs_abstracteventsystem.h>
-#include <ve_commandevent.h>
-#include <vcmp_entitydata.h>
-#include <QJsonDocument>
-#include <QJsonObject>
-#include <QJsonArray>
-#include <QJsonValue>
-
 
 namespace SCPIMODULE
 {
 
 cSCPIModule::cSCPIModule(ModuleFactoryParam moduleParam) :
-    BaseModule(moduleParam, std::shared_ptr<BaseModuleConfiguration>(new cSCPIModuleConfiguration()))
+    BaseModule(moduleParam, std::shared_ptr<BaseModuleConfiguration>(new cSCPIModuleConfiguration())),
+    m_pSCPIEventSystem(new SCPIEventSystem(this)),
+    m_pModuleValidator(new VfEventSytemModuleParam(moduleParam.m_entityId, moduleParam.m_storagesystem))
 {
     m_sModuleName = QString("%1%2").arg(BaseModuleName).arg(moduleParam.m_moduleNum);
     m_sModuleDescription = QString("This module provides a scpi interface depending on the actual session running");
     m_sSCPIModuleName = QString("%1%2").arg(BaseSCPIModuleName).arg(moduleParam.m_moduleNum);
-
-    m_pSCPIEventSystem = new SCPIEventSystem(this);
-    m_pModuleValidator = new VfEventSytemModuleParam(moduleParam.m_entityId, moduleParam.m_storagesystem);
 }
 
 cSCPIServer *cSCPIModule::getSCPIServer()
@@ -43,8 +29,7 @@ void cSCPIModule::setupModule()
     m_pModuleEventSystem = m_pSCPIEventSystem;
     BaseModule::setupModule();
 
-    cSCPIModuleConfigData *pConfData;
-    pConfData = qobject_cast<cSCPIModuleConfiguration*>(m_pConfiguration.get())->getConfigurationData();
+    cSCPIModuleConfigData *pConfData = qobject_cast<cSCPIModuleConfiguration*>(m_pConfiguration.get())->getConfigurationData();
 
     // we only have this activist
     m_pSCPIServer = new cSCPIServer(this, *pConfData);
