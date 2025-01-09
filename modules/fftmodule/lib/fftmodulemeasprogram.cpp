@@ -18,9 +18,6 @@ cFftModuleMeasProgram::cFftModuleMeasProgram(cFftModule* module, std::shared_ptr
 {
     m_dspInterface = m_pModule->getServiceInterfaceFactory()->createDspInterfaceFft(getConfData()->m_valueChannelList, getConfData()->m_nFftOrder);
 
-    // As long as there are no tasks - ignore error
-    m_channelRangeObserverScanState.addTransition(
-        m_pModule->getSharedChannelRangeObserver().get(), &ChannelRangeObserver::SystemObserver::sigFullScanFinished,&m_resourceManagerConnectState);
     m_IdentifyState.addTransition(this, &cFftModuleMeasProgram::activationContinue, &m_pcbserverConnectState);
     m_pcbserverConnectState.addTransition(this, &cFftModuleMeasProgram::activationContinue, &m_dspserverConnectState);
     m_claimPGRMemState.addTransition(this, &cFftModuleMeasProgram::activationContinue, &m_claimUSERMemState);
@@ -29,7 +26,6 @@ cFftModuleMeasProgram::cFftModuleMeasProgram(cFftModule* module, std::shared_ptr
     m_cmd2DSPState.addTransition(this, &cFftModuleMeasProgram::activationContinue, &m_activateDSPState);
     m_activateDSPState.addTransition(this, &cFftModuleMeasProgram::activationContinue, &m_loadDSPDoneState);
 
-    m_activationMachine.addState(&m_channelRangeObserverScanState);
     m_activationMachine.addState(&m_resourceManagerConnectState);
     m_activationMachine.addState(&m_IdentifyState);
     m_activationMachine.addState(&m_pcbserverConnectState);
@@ -41,9 +37,8 @@ cFftModuleMeasProgram::cFftModuleMeasProgram(cFftModule* module, std::shared_ptr
     m_activationMachine.addState(&m_activateDSPState);
     m_activationMachine.addState(&m_loadDSPDoneState);
 
-    m_activationMachine.setInitialState(&m_channelRangeObserverScanState);
+    m_activationMachine.setInitialState(&m_resourceManagerConnectState);
 
-    connect(&m_channelRangeObserverScanState, &QState::entered, this, &cFftModuleMeasProgram::startFetchCommonRanges);
     connect(&m_resourceManagerConnectState, &QState::entered, this, &cFftModuleMeasProgram::resourceManagerConnect);
     connect(&m_IdentifyState, &QState::entered, this, &cFftModuleMeasProgram::sendRMIdent);
     connect(&m_pcbserverConnectState, &QState::entered, this, &cFftModuleMeasProgram::pcbserverConnect);
@@ -419,11 +414,6 @@ void cFftModuleMeasProgram::setInterfaceActualValues(QVector<float> *actualValue
             m_DCValueList.at(channel)->setValue(fftList[0]);
         }
     }
-}
-
-void cFftModuleMeasProgram::startFetchCommonRanges()
-{
-    m_pModule->getSharedChannelRangeObserver()->startFullScan();
 }
 
 void cFftModuleMeasProgram::resourceManagerConnect()
