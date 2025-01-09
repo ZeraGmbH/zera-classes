@@ -23,12 +23,14 @@ private slots:
     void activationAdjustment();
     void deactivationStart() override;
 private:
+    void setupModule() override; // after xml configuration we can setup and export our module
+    TaskTemplatePtr getModuleSetUpTask() override;
+    void startMeas() override; // we make the measuring program start here
+    void stopMeas() override;
+
     cReferenceModuleMeasProgram *m_pMeasProgram; // our measuring program, lets say the working horse
     cReferenceAdjustment *m_pReferenceAdjustment; // our justifying and normation program
     QList<cReferenceMeasChannel*> m_ReferenceMeasChannelList; // our meas channels
-    void setupModule() override; // after xml configuration we can setup and export our module
-    void startMeas() override; // we make the measuring program start here
-    void stopMeas() override;
 
     // our states for base modules activation statemacine
     QState m_ActivationStartState;

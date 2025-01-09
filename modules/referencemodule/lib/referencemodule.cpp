@@ -4,6 +4,7 @@
 #include "referencemeaschannel.h"
 #include "referencemodulemeasprogram.h"
 #include "referenceadjustment.h"
+#include "cro_systemobserverfetchtask.h"
 #include <vfmodulecomponent.h>
 #include <vfmodulemetadata.h>
 
@@ -109,6 +110,11 @@ void cReferenceModule::setupModule()
 
     for (int i = 0; i < m_ModuleActivistList.count(); i++)
         m_ModuleActivistList.at(i)->generateVeinInterface();
+}
+
+TaskTemplatePtr cReferenceModule::getModuleSetUpTask()
+{
+    return ChannelRangeObserver::SystemObserverFetchTask::create(getSharedChannelRangeObserver());
 }
 
 void cReferenceModule::startMeas()
