@@ -1,6 +1,5 @@
 #include "blemodule.h"
 #include "blemoduleconfiguration.h"
-#include <errormessages.h>
 
 namespace BLEMODULE
 {
