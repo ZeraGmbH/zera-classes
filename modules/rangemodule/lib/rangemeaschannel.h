@@ -11,7 +11,6 @@ namespace RANGEMODULE
 
 enum rangemeaschannelCmds
 {
-    readchnalias,
     readunit,
     readrangelist,
 
@@ -117,7 +116,6 @@ private:
 
     // statemachine for activating a rangemeaschannel
     QState m_pcbConnectionState; // we try to get a connection to our pcb server
-    QState m_readChnAliasState; // we query our alias
     QState m_readUnitState; // we read the meas channel unit volt ampere ...
     QState m_readRangeAndProperties; // we query our range list and all their properties
     QState m_resetStatusState; // we reset our measuring channel when activated
@@ -152,7 +150,6 @@ private:
 
 private slots:
     void pcbConnection();
-    void readChnAlias();
     void readUnit();
     void readRangeAndProperties();
     void resetStatusSlot();

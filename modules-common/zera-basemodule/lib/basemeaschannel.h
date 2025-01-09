@@ -17,8 +17,8 @@ public:
                      ChannelRangeObserver::ChannelPtr channelObserver, quint8 chnnr,
                      QString moduleChannelInfo);
 
-    quint8 getDSPChannelNr();
-    QString getMName();
+    quint8 getDSPChannelNr() const;
+    QString getMName() const;
     QString getAlias();
     QString getUnit();
 
@@ -31,7 +31,6 @@ protected:
     Zera::PcbInterfacePtr m_pcbInterface;
 
     // the things we have to query from our pcb server
-    QString m_sAlias; // the channel' alias
     QString m_sUnit;
     QHash<quint32, int> m_MsgNrCmdList;
 

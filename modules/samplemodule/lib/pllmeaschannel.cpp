@@ -17,7 +17,6 @@ cPllMeasChannel::cPllMeasChannel(ChannelRangeObserver::ChannelPtr channelObserve
 
     // setting up statemachine for "activating" pll meas channel
     // m_pcbConnectionState.addTransition is done in pcbConnection
-    m_readChnAliasState.addTransition(this, &cPllMeasChannel::activationContinue, &m_readUnitState);
     m_readUnitState.addTransition(this, &cPllMeasChannel::activationContinue, &m_readRangelistState);
     m_readRangelistState.addTransition(this, &cPllMeasChannel::activationContinue, &m_readRangeProperties1State);
     m_readRangeProperties1State.addTransition(this, &cPllMeasChannel::activationContinue, &m_readRangeProperties2State);
@@ -26,7 +25,6 @@ cPllMeasChannel::cPllMeasChannel(ChannelRangeObserver::ChannelPtr channelObserve
     m_readRangeProperties3State.addTransition(this, &cPllMeasChannel::activationContinue, &m_setSenseChannelRangeNotifierState);
     m_setSenseChannelRangeNotifierState.addTransition(this, &cPllMeasChannel::activationContinue, &m_activationDoneState);
     m_activationMachine.addState(&m_pcbConnectionState);
-    m_activationMachine.addState(&m_readChnAliasState);
     m_activationMachine.addState(&m_readUnitState);
     m_activationMachine.addState(&m_readRangelistState);
     m_activationMachine.addState(&m_readRangeProperties1State);
@@ -38,7 +36,6 @@ cPllMeasChannel::cPllMeasChannel(ChannelRangeObserver::ChannelPtr channelObserve
     m_activationMachine.setInitialState(&m_pcbConnectionState);
 
     connect(&m_pcbConnectionState, &QState::entered, this, &cPllMeasChannel::pcbConnection);
-    connect(&m_readChnAliasState, &QState::entered, this, &cPllMeasChannel::readChnAlias);
     connect(&m_readUnitState, &QState::entered, this, &cPllMeasChannel::readUnit);
     connect(&m_readRangelistState, &QState::entered, this, &cPllMeasChannel::readRangelist);
     connect(&m_readRangeProperties1State, &QState::entered, this, &cPllMeasChannel::readRangeProperties1);
@@ -151,14 +148,6 @@ void cPllMeasChannel::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant
             else
                 notifyError(getRangeErrMsg);
             break;
-        case readchnalias:
-            if (reply == ack) {
-                m_sAlias = answer.toString();
-                emit activationContinue();
-            }
-            else
-                notifyError(readaliasErrMsg);
-            break;
         case readunit:
             if (reply == ack) {
                 m_sUnit = answer.toString();
@@ -244,17 +233,11 @@ void cPllMeasChannel::pcbConnection()
     m_pcbClient = Zera::Proxy::getInstance()->getConnectionSmart(m_pcbNetworkInfo.m_sIP,
                                                                  m_pcbNetworkInfo.m_nPort,
                                                                  m_tcpNetworkFactory);
-    m_pcbConnectionState.addTransition(m_pcbClient.get(), &Zera::ProxyClient::connected, &m_readChnAliasState);
+    m_pcbConnectionState.addTransition(m_pcbClient.get(), &Zera::ProxyClient::connected, &m_readUnitState);
 
     m_pcbInterface->setClientSmart(m_pcbClient);
     connect(m_pcbInterface.get(), &Zera::cPCBInterface::serverAnswer, this, &cPllMeasChannel::catchInterfaceAnswer);
     Zera::Proxy::getInstance()->startConnectionSmart(m_pcbClient);
-}
-
-
-void cPllMeasChannel::readChnAlias()
-{
-    m_MsgNrCmdList[m_pcbInterface->getAlias(getMName())] = readchnalias;
 }
 
 
