@@ -19,9 +19,6 @@ cRmsModuleMeasProgram::cRmsModuleMeasProgram(cRmsModule* module,
 {
     m_dspInterface = m_pModule->getServiceInterfaceFactory()->createDspInterfaceRms(getConfData()->m_valueChannelList);
 
-    // As long as there are no tasks - ignore error
-    m_channelRangeObserverScanState.addTransition(
-        m_pModule->getSharedChannelRangeObserver().get(), &ChannelRangeObserver::SystemObserver::sigFullScanFinished,&m_resourceManagerConnectState);
     m_IdentifyState.addTransition(this, &cRmsModuleMeasProgram::activationContinue, &m_pcbserverConnectState);
     m_pcbserverConnectState.addTransition(this, &cRmsModuleMeasProgram::activationContinue, &m_dspserverConnectState);
     m_claimPGRMemState.addTransition(this, &cRmsModuleMeasProgram::activationContinue, &m_claimUSERMemState);
@@ -30,7 +27,6 @@ cRmsModuleMeasProgram::cRmsModuleMeasProgram(cRmsModule* module,
     m_cmd2DSPState.addTransition(this, &cRmsModuleMeasProgram::activationContinue, &m_activateDSPState);
     m_activateDSPState.addTransition(this, &cRmsModuleMeasProgram::activationContinue, &m_loadDSPDoneState);
 
-    m_activationMachine.addState(&m_channelRangeObserverScanState);
     m_activationMachine.addState(&m_resourceManagerConnectState);
     m_activationMachine.addState(&m_IdentifyState);
     m_activationMachine.addState(&m_pcbserverConnectState);
@@ -42,9 +38,8 @@ cRmsModuleMeasProgram::cRmsModuleMeasProgram(cRmsModule* module,
     m_activationMachine.addState(&m_activateDSPState);
     m_activationMachine.addState(&m_loadDSPDoneState);
 
-    m_activationMachine.setInitialState(&m_channelRangeObserverScanState);
+    m_activationMachine.setInitialState(&m_resourceManagerConnectState);
 
-    connect(&m_channelRangeObserverScanState, &QState::entered, this, &cRmsModuleMeasProgram::startFetchCommonRanges);
     connect(&m_resourceManagerConnectState, &QAbstractState::entered, this, &cRmsModuleMeasProgram::resourceManagerConnect);
     connect(&m_IdentifyState, &QAbstractState::entered, this, &cRmsModuleMeasProgram::sendRMIdent);
     connect(&m_pcbserverConnectState, &QAbstractState::entered, this, &cRmsModuleMeasProgram::pcbserverConnect);
@@ -430,11 +425,6 @@ void cRmsModuleMeasProgram::setInterfaceActualValues(QVector<float> *actualValue
         for (int i = 0; i < m_veinActValueList.count(); i++)
             m_veinActValueList.at(i)->setValue(QVariant((*actualValues)[i])); // and set entities
     }
-}
-
-void cRmsModuleMeasProgram::startFetchCommonRanges()
-{
-    m_pModule->getSharedChannelRangeObserver()->startFullScan();
 }
 
 void cRmsModuleMeasProgram::resourceManagerConnect()
