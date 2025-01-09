@@ -2,12 +2,9 @@
 #define MODEMODULE_H
 
 #include "basemeasmodule.h"
-#include <QFinalState>
+#include "modemoduleinit.h"
 
 namespace MODEMODULE {
-
-class cModeModuleConfiguration;
-class cModeModuleInit;
 
 class cModeModule : public cBaseMeasModule
 {
@@ -21,10 +18,11 @@ public:
 private slots:
     void activationFinished() override;
 private:
-    cModeModuleInit *m_pModeModuleInit;
     void setupModule() override; // after xml configuration we can setup and export our module
     void startMeas() override; // we make the measuring program start here
     void stopMeas() override;
+
+    cModeModuleInit *m_pModeModuleInit = nullptr;
 };
 
 }

@@ -1,9 +1,5 @@
 #include "modemodule.h"
 #include "modemoduleconfiguration.h"
-#include "modemoduleconfigdata.h"
-#include "modemoduleinit.h"
-#include <vfmodulecomponent.h>
-#include <vfmodulemetadata.h>
 
 namespace MODEMODULE
 {
