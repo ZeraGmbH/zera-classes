@@ -4,8 +4,6 @@
 #include "power3modulemeasprogram.h"
 #include <basemeasmodule.h>
 
-class cModuleError;
-
 namespace POWER3MODULE
 {
 class cPower3Module : public cBaseMeasModule
@@ -18,7 +16,7 @@ public:
     cPower3Module(ModuleFactoryParam moduleParam);
 
 private:
-    cPower3ModuleMeasProgram *m_pMeasProgram; // our measuring program, lets say the working horse
+    cPower3ModuleMeasProgram *m_pMeasProgram = nullptr;
     void setupModule() override; // after xml configuration we can setup and export our module
     void startMeas() override; // we make the measuring program start here
     void stopMeas() override;

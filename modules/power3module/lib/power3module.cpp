@@ -1,7 +1,5 @@
 #include "power3module.h"
 #include "power3moduleconfiguration.h"
-#include "power3modulemeasprogram.h"
-#include <errormessages.h>
 
 namespace POWER3MODULE
 {
