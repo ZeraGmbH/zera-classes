@@ -99,7 +99,6 @@ cRangeModuleConfigData *cRangeModuleConfiguration::getConfigurationData()
 void cRangeModuleConfiguration::configXMLInfo(QString key)
 {
     bool ok;
-    int n;
 
     if (m_ConfigXMLMap.contains(key))
     {
@@ -143,7 +142,7 @@ void cRangeModuleConfiguration::configXMLInfo(QString key)
             for (int i = 0; i < m_pRangeModulConfigData->m_nGroupCount; i++)
             {
                  m_ConfigXMLMap[QString("rangemodconfpar:configuration:sense:group:gr%1:n").arg(i+1)] = setGroup1ChannelCount+i;
-                 m_pRangeModulConfigData->m_GroupCountList.append(n=0); // and the needed lists
+                 m_pRangeModulConfigData->m_GroupCountList.append(0); // and the needed lists
                  m_pRangeModulConfigData->m_GroupList.append(QStringList());
             }
             break;

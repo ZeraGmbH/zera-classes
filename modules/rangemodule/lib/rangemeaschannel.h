@@ -42,7 +42,7 @@ public:
                       QString moduleName);
     void generateVeinInterface() override;
 
-    quint32 setRange(QString range); // a statemachine gets started that returns cmdDone(quint32 cmdnr)
+    quint32 setRange(const QString &range); // a statemachine gets started that returns cmdDone(quint32 cmdnr)
     quint32 readGainCorrection(double amplitude); // dito
     quint32 readPhaseCorrection(double frequency); // dito
     quint32 readOffsetCorrection(double amplitude); // dito
@@ -52,21 +52,21 @@ public:
     double getPhaseCorrection(); // returns last read phase correction
     double getOffsetCorrection(); // returns last read offset correction
     bool isHWOverload(); // test if we have some hardware overload condition
-    double getUrValue(QString range); // returns upper range value of range
+    double getUrValue(const QString &range); // returns upper range value of range
     double getUrValue(); // returns upper range of actual range
-    double getRejection(QString range);
+    double getRejection(const QString &range);
     double getRejection(); // return nominal (100%) rejection of actual range
-    double getOVRRejection(QString range);
+    double getOVRRejection(const QString &range);
     double getOVRRejection();
     double getMaxRangeUrvalueMax(); // returns the max. upper range value including reserve of channel including overload reserve
     double getRangeUrvalueMax(); // returns the max. upper range value including reserve of actual range
-    bool isPossibleRange(QString range); // returns true if range is available
+    bool isPossibleRange(const QString &range); // returns true if range is available
     bool isRMSOverload(double ampl); // test if ampl is overload condition
     bool isADCOverload(double ampl); // test if ampl is adc overload condition
 
-    QString getOptRange(double rms, QString rngAlias); // returns opt. range alias
+    QString getOptRange(double rms, const QString &rngAlias); // returns opt. range alias
     QString getMaxRange(); // returns alias of the range with max ur value
-    QString getMaxRange(QString rngAlias); // returns alias of the range with max ur value
+    QString getMaxRange(const QString &rngAlias); // returns alias of the range with max ur value
     QString getRangeListAlias();
 
     double getPreScaling() const;

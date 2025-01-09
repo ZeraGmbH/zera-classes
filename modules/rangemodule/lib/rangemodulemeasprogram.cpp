@@ -243,6 +243,7 @@ void cRangeModuleMeasProgram::deleteDspCmdList()
 
 void cRangeModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant answer)
 {
+    Q_UNUSED(answer)
     if (msgnr == 0) { // 0 was reserved for async. messages
         restartDspWachdog();
         // we got an interrupt from our cmd chain and have to fetch our actual values
@@ -349,13 +350,9 @@ void cRangeModuleMeasProgram::setActualValuesNames()
 
 void cRangeModuleMeasProgram::setSCPIMeasInfo()
 {
-    cRangeMeasChannel* mchn;
-    cSCPIInfo* pSCPIInfo;
-
-    for (int i = 0; i < m_ChannelList.count(); i++)
-    {
-        mchn = m_pModule->getMeasChannel(m_ChannelList.at(i));
-        pSCPIInfo = new cSCPIInfo("MEASURE", mchn->getAlias(), "8", m_veinActValueList.at(i)->getName(), "0", m_veinActValueList.at(i)->getUnit());
+    for (int i = 0; i < m_ChannelList.count(); i++) {
+        cRangeMeasChannel* mchn = m_pModule->getMeasChannel(m_ChannelList.at(i));
+        cSCPIInfo* pSCPIInfo = new cSCPIInfo("MEASURE", mchn->getAlias(), "8", m_veinActValueList.at(i)->getName(), "0", m_veinActValueList.at(i)->getUnit());
         m_veinActValueList.at(i)->setSCPIInfo(pSCPIInfo);
     }
 }

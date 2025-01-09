@@ -89,7 +89,7 @@ cRangeMeasChannel::cRangeMeasChannel(ChannelRangeObserver::ChannelPtr channelObs
 }
 
 
-quint32 cRangeMeasChannel::setRange(QString range)
+quint32 cRangeMeasChannel::setRange(const QString &range)
 {
     m_sNewRange = range; // alias !!!!
     m_sActRange = range;
@@ -172,7 +172,7 @@ quint32 cRangeMeasChannel::readPhaseCorrection(double frequency)
 }
 
 
-bool cRangeMeasChannel::isPossibleRange(QString range)
+bool cRangeMeasChannel::isPossibleRange(const QString &range)
 {
     return m_RangeInfoHash.contains(range);
 }
@@ -180,7 +180,7 @@ bool cRangeMeasChannel::isPossibleRange(QString range)
 
 bool cRangeMeasChannel::isRMSOverload(double ampl)
 {
-    cRangeInfoWithConstantValues& ri = m_RangeInfoHash[m_sActRange];
+    const cRangeInfoWithConstantValues &ri = m_RangeInfoHash[m_sActRange];
     double ovrRejectionFactor = ri.ovrejection / ri.rejection;
     return ((ri.urvalue * ovrRejectionFactor) < ampl);
 }
@@ -188,12 +188,12 @@ bool cRangeMeasChannel::isRMSOverload(double ampl)
 
 bool cRangeMeasChannel::isADCOverload(double ampl)
 {
-    cRangeInfoWithConstantValues& ri = m_RangeInfoHash[m_sActRange];
+    const cRangeInfoWithConstantValues &ri = m_RangeInfoHash[m_sActRange];
     return (fabs(ri.adcrejection - ampl) < 8.0);
 }
 
 
-QString cRangeMeasChannel::getOptRange(double rms, QString rngAlias)
+QString cRangeMeasChannel::getOptRange(double rms, const QString &rngAlias)
 {
     qint32 actRngType = -1;
     if (m_RangeInfoHash.contains(rngAlias)) {
@@ -259,11 +259,10 @@ QString cRangeMeasChannel::getMaxRange()
 {
     QList<cRangeInfoWithConstantValues> riList = m_RangeInfoHash.values();
     double newAmpl = -1.0;
-    double newUrvalue;
-    int i, p = -1;
+    int p=-1;
 
-    for (i = 0; i < riList.count(); i++) {
-        newUrvalue = riList.at(i).urvalue;
+    for (int i = 0; i < riList.count(); i++) {
+        double newUrvalue = riList.at(i).urvalue;
         if (newUrvalue > newAmpl) {
             newAmpl = newUrvalue;
             p=i;
@@ -274,7 +273,7 @@ QString cRangeMeasChannel::getMaxRange()
 }
 
 
-QString cRangeMeasChannel::getMaxRange(QString rngAlias)
+QString cRangeMeasChannel::getMaxRange(const QString &rngAlias)
 {
     qint32 actRngType = -1;
     if (m_RangeInfoHash.contains(rngAlias)) {
@@ -343,7 +342,7 @@ bool cRangeMeasChannel::isHWOverload()
 }
 
 
-double cRangeMeasChannel::getUrValue(QString range)
+double cRangeMeasChannel::getUrValue(const QString &range)
 {
     return m_RangeInfoHash[range].urvalue;
 }
@@ -355,7 +354,7 @@ double cRangeMeasChannel::getUrValue()
 }
 
 
-double cRangeMeasChannel::getRejection(QString range)
+double cRangeMeasChannel::getRejection(const QString &range)
 {
     return m_RangeInfoHash[range].rejection;
 }
@@ -367,7 +366,7 @@ double cRangeMeasChannel::getRejection()
 }
 
 
-double cRangeMeasChannel::getOVRRejection(QString range)
+double cRangeMeasChannel::getOVRRejection(const QString &range)
 {
     return m_RangeInfoHash[range].ovrejection;
 }
@@ -400,7 +399,6 @@ void cRangeMeasChannel::generateVeinInterface()
 void cRangeMeasChannel::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant answer)
 {
     bool ok;
-    int errcount;
 
     if (msgnr == 0) {// 0 was reserved for async. messages
         QString sintnr;
@@ -421,6 +419,7 @@ void cRangeMeasChannel::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVaria
     else
     {
         int cmd = m_MsgNrCmdList.take(msgnr);
+        int errcount = 0;
         switch (cmd)
         {
         case unregisterNotifiers:

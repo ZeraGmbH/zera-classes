@@ -144,10 +144,10 @@ void cAdjustManagement::generateVeinInterface()
     connect(m_ParIgnoreRmsValues, &VfModuleParameter::sigValueChanged, this, &cAdjustManagement::parIgnoreRmsValuesChanged);
 
     VfModuleParameter *pParameter;
-    QString key;
     for (int i = 0; i < m_ChannelNameList.count(); i++) {
+        QString key = QString("PAR_InvertPhase%1").arg(i+1);
         pParameter = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
-                                           key = QString("PAR_InvertPhase%1").arg(i+1),
+                                           key,
                                            QString("Inverted Phase"),
                                            QVariant(m_adjustmentConfig->m_senseChannelInvertParameter[i].m_nActive));
         pParameter->setValidator(new cBoolValidator());
@@ -306,13 +306,9 @@ void cAdjustManagement::getGainCorrFromPcbServer()
 
 void cAdjustManagement::prepareGainCorrForDspServer()
 {
-    cRangeMeasChannel *measChannel;
-    float fCorr;
-
-    if (m_bActive)
-    {
-        measChannel = m_ChannelList.at(m_nChannelIt);
-        fCorr = measChannel->getGainCorrection();
+    if (m_bActive) {
+        cRangeMeasChannel *measChannel = m_ChannelList.at(m_nChannelIt);
+        float fCorr = measChannel->getGainCorrection();
         if (measChannel->getInvertedPhaseState())
             fCorr = fCorr * -1;
         m_fGainCorr[measChannel->getDSPChannelNr()] = fCorr*getIgnoreRmsCorrFactor();
@@ -320,8 +316,7 @@ void cAdjustManagement::prepareGainCorrForDspServer()
         m_nChannelIt++;
         if (m_nChannelIt < m_ChannelNameList.count())
             emit repeatStateMachine();
-        else
-        {
+        else {
             m_nChannelIt = 0;
             emit activationContinue();
         }
@@ -353,13 +348,9 @@ void cAdjustManagement::getPhaseCorrFromPcbServer()
 
 void cAdjustManagement::preparePhaseCorrForDspServer()
 {
-    cRangeMeasChannel *measChannel;
-    float fCorr;
-
-    if (m_bActive)
-    {
-        measChannel = m_ChannelList.at(m_nChannelIt);
-        fCorr = measChannel->getPhaseCorrection();
+    if (m_bActive) {
+        cRangeMeasChannel *measChannel = m_ChannelList.at(m_nChannelIt);
+        float fCorr = measChannel->getPhaseCorrection();
         m_fPhaseCorr[measChannel->getDSPChannelNr()] = fCorr;
         m_nChannelIt++;
         if (m_nChannelIt < m_ChannelNameList.count())
@@ -385,13 +376,9 @@ void cAdjustManagement::getOffsetCorrFromPcbServer()
 
 void cAdjustManagement::prepareOffsetCorrForDspServer()
 {
-    cRangeMeasChannel *measChannel;
-    float fCorr;
-
-    if (m_bActive)
-    {
-        measChannel = m_ChannelList.at(m_nChannelIt);
-        fCorr = measChannel->getOffsetCorrection();
+    if (m_bActive) {
+        cRangeMeasChannel *measChannel = m_ChannelList.at(m_nChannelIt);
+        float fCorr = measChannel->getOffsetCorrection();
         double preScale=measChannel->getPreScaling();
         // Offset is an summand. It must be multiplied with the
         // scale factor.
@@ -415,14 +402,11 @@ void cAdjustManagement::getCorrDone()
 
 void cAdjustManagement::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant answer)
 {
-    bool ok;
-
-    if (msgnr == 0) // 0 was reserved for async. messages
-    {
+    Q_UNUSED(answer)
+    if (msgnr == 0) { // 0 was reserved for async. messages
         // that we will ignore
     }
-    else
-    {
+    else {
         // because rangemodulemeasprogram, adjustment and rangeobsermatic share the same dsp interface
         if (m_MsgNrCmdList.contains(msgnr))
         {
@@ -521,11 +505,3 @@ void cAdjustManagement::parInvertedPhaseStateChanged(QVariant newValue)
 }
 
 }
-
-
-
-
-
-
-
-

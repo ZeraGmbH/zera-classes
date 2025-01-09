@@ -137,7 +137,7 @@ private slots:
     void readStatus();
     void analyzeStatus();
 
-    void newRange(QVariant range);
+    void onNewRange(QVariant range);
     void newRangeAuto(QVariant rauto);
     void newGrouping(QVariant rgrouping);
     void newOverload(QVariant overload);
