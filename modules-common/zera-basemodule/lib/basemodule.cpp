@@ -6,6 +6,9 @@
 #include "vfmoduleparameter.h"
 #include "vf_server_entity_add.h"
 #include "vf_server_entity_remove.h"
+#include "taskactivationstatemachinewrapper.h"
+#include <tasklambdarunner.h>
+#include <taskcontainersequence.h>
 #include "scpiinfo.h"
 #include <virtualmodule.h>
 #include <QJsonArray>
@@ -17,40 +20,11 @@ BaseModule::BaseModule(ModuleFactoryParam moduleParam, std::shared_ptr<BaseModul
     m_pConfiguration(modcfg),
     m_moduleParam(moduleParam)
 {
-    m_bStartCmd = m_bStopCmd = m_bStateMachineStarted = false;
-
-    m_nStatus = untouched;
     m_pConfiguration->setConfiguration(moduleParam.m_configXmlData);
-    m_bConfCmd = m_pConfiguration->isConfigured();
-
-    // our states from virtualmodule (interface)
-    m_pStateIdle = new QState();
-    m_pStateIdle->setObjectName("IDLE");
-    m_pStateRun = new QState();
-    m_pStateRun->setObjectName("RUN");
-
-    // we set up our IDLE state here
-    m_pStateIdle->addTransition(this, &BaseModule::sigRun, m_pStateRun); // after sigRun we leave idle
-    m_pStateIDLEIdle = new QState(m_pStateIdle); // the initial state for idle
-    m_pStateIDLEConfSetup = new QState(m_pStateIdle); // same
-    m_pStateIDLEIdle->addTransition(this, &BaseModule::sigConfiguration, m_pStateIDLEConfSetup);
-    m_pStateIDLEConfSetup->addTransition(this, &BaseModule::sigConfDone, m_pStateIDLEIdle);
-    m_pStateIdle->setInitialState(m_pStateIDLEIdle);
-    connect(m_pStateIDLEIdle, &QState::entered, this, &BaseModule::entryIDLEIdle);
-    connect(m_pStateIDLEConfSetup, &QState::entered, this, &BaseModule::entryConfSetup);
-
-    // we set up our RUN state here
-    m_pStateRun->addTransition(this, &BaseModule::sigRunFailed, m_pStateIdle); // in case of error we fall back to idle
-    m_pStateRUNStart = new QState(m_pStateRun);
-    m_pStateRUNDone = new QState(m_pStateRun);
-    m_pStateRUNStart->addTransition(this, &BaseModule::activationReady, m_pStateRUNDone);
-    m_pStateRun->setInitialState(m_pStateRUNStart);
-    connect(m_pStateRUNStart, &QState::entered, this, &BaseModule::entryRunStart);
-    connect(m_pStateRUNDone, &QState::entered, this, &BaseModule::entryRunDone);
-
-    m_stateMachine.addState(m_pStateIdle);
-    m_stateMachine.addState(m_pStateRun);
-    m_stateMachine.setInitialState(m_pStateIdle);
+    if(!m_pConfiguration->isConfigured()) {
+        qCritical("Module config incomplete on module entity ID %i / Num %i", moduleParam.m_entityId, moduleParam.m_moduleNum);
+        return;
+    }
 
     // now we set up our machines for activating, deactivating a module
     m_ActivationStartState.addTransition(this, &BaseModule::activationContinue, &m_ActivationExecState);
@@ -82,45 +56,52 @@ BaseModule::BaseModule(ModuleFactoryParam moduleParam, std::shared_ptr<BaseModul
     connect(&m_DeactivationFinishedState, &QState::entered, this, &BaseModule::deactivationFinished);
 }
 
-
 BaseModule::~BaseModule()
 {
     emit m_pModuleEventSystem->sigSendEvent(VfServerEntityRemove::generateEvent(getEntityId()));
     unsetModule();
+}
 
-    delete m_pStateIDLEIdle;
-    delete m_pStateIDLEConfSetup;
-
-    delete m_pStateRUNStart;
-    delete m_pStateRUNDone;
-
-    delete m_pStateIdle;
-    delete m_pStateRun;
+void BaseModule::startSetupTask()
+{
+    TaskContainerInterfacePtr startTasks = TaskContainerSequence::create();
+    startTasks->addSub(TaskLambdaRunner::create([this]() {
+        setupModule();
+        return true;
+        },
+        true));
+    startTasks->addSub(getSetUpTask());
+    if(requiresStateMachineStart()) {
+        TaskActivationStateMachineWrapperPtr activationStatemachineTask = TaskActivationStateMachineWrapper::create(&m_ActivationMachine);
+        connect(this, &BaseModule::activationReady,
+                activationStatemachineTask.get(), &TaskActivationStateMachineWrapper::onActivationFinished);
+        startTasks->addSub(std::move(activationStatemachineTask));
+    }
+    startTasks->addSub(TaskLambdaRunner::create([this]() {
+        startMeas();
+        m_moduleIsFullySetUp = true;
+        emit moduleActivated();
+        return true;
+        },
+        true));
+    m_startupTask = std::move(startTasks);
+    m_startupTask->start();
 }
 
 void BaseModule::startModule()
 {
-    if (m_bStateMachineStarted) {
-        emit sigRun(); // if our statemachine is already started we emit signal at once
+    if(m_moduleIsFullySetUp)
         startMeas();
-    }
-    else {
-        if(!m_stateMachine.isRunning())
-            m_stateMachine.start();
-        m_bStartCmd = true; // otherwise we keep in mind that we should configure when machine starts
-    }
+    else
+        startSetupTask();
 }
 
 void BaseModule::stopModule()
 {
-    if (m_bStateMachineStarted) {
-        emit sigStop(); // if our statemachine is already started we emit signal at once
+    if(m_moduleIsFullySetUp)
         stopMeas();
-    }
-    else {
-        m_bStopCmd = true; // otherwise we keep in mind that we should configure when machine starts
-    }
-
+    else
+        qCritical("Stopping a module not set up is not (yet?) supported!");
 }
 
 void BaseModule::startDestroy()
@@ -242,6 +223,13 @@ void BaseModule::deactivationFinished()
     emit deactivationReady();
 }
 
+TaskTemplatePtr BaseModule::getSetUpTask()
+{
+    return TaskLambdaRunner::create([]() {
+        return true;
+    });
+}
+
 void BaseModule::exportMetaData()
 {
     QJsonObject jsonObj;
@@ -313,50 +301,4 @@ const ModuleNetworkParamsPtr BaseModule::getNetworkConfig() const
 const ChannelRangeObserver::SystemObserverPtr BaseModule::getSharedChannelRangeObserver() const
 {
     return m_moduleParam.m_moduleSharedData->m_channelRangeObserver;
-}
-
-void BaseModule::entryIDLEIdle()
-{
-    m_bStateMachineStarted = true; // event loop has activated our statemachine
-    if (m_bConfCmd) {
-        m_bConfCmd = false;
-        emit sigConfiguration();
-    }
-    else {
-        if (m_bStartCmd) {
-            m_bStartCmd = false;
-            emit sigRun();
-        }
-        else {
-            if (m_bStopCmd)
-            {
-                m_bStopCmd = false;
-                emit sigStop();
-            }
-        }
-    }
-}
-
-void BaseModule::entryConfSetup()
-{
-    setupModule();
-    m_nStatus = setup;
-    emit sigConfDone();
-}
-
-void BaseModule::entryRunStart()
-{
-    if (m_nStatus == setup) { // we must be set up (configured and interface represents configuration)
-        m_ActivationMachine.start();
-    }
-    else {
-        emit sigRunFailed(); // otherwise we are not able to run
-    }
-}
-
-void BaseModule::entryRunDone()
-{
-    startMeas();
-    m_nStatus = activated;
-    emit moduleActivated();
 }

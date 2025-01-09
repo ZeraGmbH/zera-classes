@@ -12,14 +12,6 @@
 #include <ve_eventsystem.h>
 #include <vs_abstracteventsystem.h>
 
-enum Status
-{
-    untouched,  // we just got new configuration data that is not yet analyzed
-    setup,      // we have setup our interface
-    activated   // we have activated the module
-};
-
-
 class BaseModule : public ZeraModules::VirtualModule
 {
 Q_OBJECT
@@ -47,21 +39,13 @@ public:
 
 signals:
     // signals emitted by modules
-    void activationReady();
-    void deactivationReady();
-
-    // state machine control
-    void sigRun();
-    void sigRunFailed();
-    void sigStop();
-    void sigStopFailed();
-    void sigConfiguration(); // emitting this signal starts configuration
-    void sigConfDone(); // emitted when configuration is done regardless of good or not
-
     void activationContinue();
     void activationNext();
+    void activationReady();
+
     void deactivationContinue();
     void deactivationNext();
+    void deactivationReady();
 
 protected:
     virtual void setupModule(); // after xml configuration we can setup and export our module
@@ -69,20 +53,8 @@ protected:
     virtual void startMeas() =  0;
     virtual void stopMeas() = 0;
 
-    QStateMachine m_stateMachine;
     QStateMachine m_ActivationMachine; // we use statemachine for module activation
     QStateMachine m_DeactivationMachine; // and deactivation
-
-    QState *m_pStateIdle;
-    QState *m_pStateRun;
-
-    // additional states for IDLE
-    QState* m_pStateIDLEIdle;
-    QState* m_pStateIDLEConfSetup;
-
-    // additional states for RUN
-    QState* m_pStateRUNStart;
-    QState* m_pStateRUNDone;
 
     // our states for base modules activation statemachine
     QState m_ActivationStartState;
@@ -120,20 +92,15 @@ protected slots:
     void deactivationDone();
     void deactivationFinished();
 private:
+    virtual TaskTemplatePtr getSetUpTask(); // Default implementation noop
+    // As log as there are state machines in modules
+    bool requiresStateMachineStart() { return true; }
+    void startSetupTask();
+
     const ModuleFactoryParam m_moduleParam;
-    bool m_bConfCmd;
-    bool m_bStartCmd;
-    bool m_bStopCmd;
-    bool m_bStateMachineStarted;
-
-    int m_nStatus;
+    TaskTemplatePtr m_startupTask;
+    bool m_moduleIsFullySetUp = false;
 private slots:
-    void entryIDLEIdle();
-
-    void entryConfSetup();
-
-    void entryRunStart();
-    void entryRunDone();
 };
 
 #endif // BASEMODULE_H
