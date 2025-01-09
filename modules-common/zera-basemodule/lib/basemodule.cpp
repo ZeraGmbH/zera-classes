@@ -172,16 +172,16 @@ QByteArray BaseModule::getConfiguration() const
 void BaseModule::activationStart()
 {
     // Interim - we intend to replace all this by tasks
-    if(!m_ModuleActivistList.isEmpty())
+    if(!m_ModuleActivistList.isEmpty()) {
         m_nActivationIt = 0; // we start with the first
         emit activationContinue();
+    }
 }
 
 void BaseModule::activationExec()
 {
     // Interim - we intend to replace all this by tasks
-    if(!m_ModuleActivistList.isEmpty())
-        m_ModuleActivistList.at(m_nActivationIt)->activate();
+    m_ModuleActivistList.at(m_nActivationIt)->activate();
 }
 
 void BaseModule::activationDone()
@@ -205,8 +205,7 @@ void BaseModule::deactivationStart()
 void BaseModule::deactivationExec()
 {
     // Interim - we intend to replace all this by tasks
-    if(!m_ModuleActivistList.isEmpty())
-        m_ModuleActivistList.at(m_nActivationIt)->deactivate();
+    m_ModuleActivistList.at(m_nActivationIt)->deactivate();
 }
 
 void BaseModule::deactivationDone()
