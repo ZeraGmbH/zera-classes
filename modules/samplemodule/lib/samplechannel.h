@@ -33,7 +33,6 @@ private:
     QString getName();
     QString getAlias();
     void setRangeValidator();
-    void setChannelNameMetaInfo();
 
     QString m_sName; // the channel's system name
     cSampleModule* m_pModule;

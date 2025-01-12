@@ -118,20 +118,6 @@ void cSampleChannel::setRangeValidator()
 }
 
 
-void cSampleChannel::setChannelNameMetaInfo()
-{
-    QString s,s1,s2;
-
-    s1 = s2 = m_sAlias;
-    s1.remove(QRegExp("[1-9][0-9]?"));
-    s2.remove(s1);
-    //m_pChannelEntity->setValue(m_sAlias, m_pPeer);
-
-    s = s1 + "%1" + QString(";%1;[%2]").arg(s2).arg("");
-    // m_pChannelEntity->setValue(s, m_pPeer);
-}
-
-
 void cSampleChannel::pcbConnection()
 {
     m_pPCBClient = Zera::Proxy::getInstance()->getConnectionSmart(m_pModule->getNetworkConfig()->m_pcbServiceConnectionInfo,
@@ -158,9 +144,7 @@ void cSampleChannel::readRangelist()
 
 void cSampleChannel::activationDone()
 {
-    setChannelNameMetaInfo(); // we set our real name now
     setRangeValidator(); // and the list of possible ranges
-
     connect(m_pChannelRange, &VfModuleParameter::sigValueChanged, this, &cSampleChannel::newPLLRange);
     emit activated();
 }
