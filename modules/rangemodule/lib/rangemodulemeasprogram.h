@@ -52,7 +52,6 @@ private:
     cRangeModule* m_pModule; // the module we live in
     bool m_bRanging;
     bool m_bIgnore;
-    quint16 m_nSamples;
     QStringList m_ChannelList; // the list of actual values we work on
 
     VfModuleComponent *m_pMeasureSignal;
