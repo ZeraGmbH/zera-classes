@@ -54,17 +54,15 @@ cSampleChannel::~cSampleChannel()
 
 void cSampleChannel::generateVeinInterface()
 {
-    QString key;
-    cSCPIInfo *scpiInfo;
-
+    QString key = QString("PAR_ChannelRange");
     m_pChannelRange = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
-                                               key = QString("PAR_ChannelRange"),
-                                               QString("Sampling channel's range"),
-                                               QVariant(m_ConfigData.m_ObsermaticConfPar.m_pllRange.m_sPar));
+                                            key,
+                                            QString("Sampling channel's range"),
+                                            QVariant(m_ConfigData.m_ObsermaticConfPar.m_pllRange.m_sPar));
 
     m_pModule->m_veinModuleParameterMap[key] = m_pChannelRange; // for modules use
 
-    scpiInfo = new cSCPIInfo("CONFIGURATION", "SRANGE", "10", m_pChannelRange->getName(), "0", "");
+    cSCPIInfo *scpiInfo = new cSCPIInfo("CONFIGURATION", "SRANGE", "10", m_pChannelRange->getName(), "0", "");
     m_pChannelRange->setSCPIInfo(scpiInfo);
     // later we still have to set the validator for this component
 }
