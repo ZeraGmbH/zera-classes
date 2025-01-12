@@ -92,9 +92,10 @@ void cSampleModuleMeasProgram::generateVeinInterface()
 
 void cSampleModuleMeasProgram::setDspVarList()
 {
+    int samples = m_pModule->getSharedChannelRangeObserver()->getSamplesPerPeriod();
     // we fetch a handle for sampled data and other temporary values
     m_pTmpDataDsp = m_dspInterface->getMemHandle("TmpData");
-    m_pTmpDataDsp->addVarItem( new cDspVar("MEASSIGNAL", m_nSamples, DSPDATA::vDspTemp));
+    m_pTmpDataDsp->addVarItem( new cDspVar("MEASSIGNAL", samples, DSPDATA::vDspTemp));
     m_pTmpDataDsp->addVarItem( new cDspVar("TISTART",1, DSPDATA::vDspTemp, DSPDATA::dInt));
     m_pTmpDataDsp->addVarItem( new cDspVar("CHXRMS",m_ChannelList.count(), DSPDATA::vDspTemp));
     m_pTmpDataDsp->addVarItem( new cDspVar("FILTER",2 * m_ChannelList.count(),DSPDATA::vDspTemp));
@@ -121,8 +122,9 @@ void cSampleModuleMeasProgram::deleteDspVarList()
 
 void cSampleModuleMeasProgram::setDspCmdList()
 {
+    int samples = m_pModule->getSharedChannelRangeObserver()->getSamplesPerPeriod();
     m_dspInterface->addCycListItem("STARTCHAIN(1,1,0x0101)"); // aktiv, prozessnr. (dummy),hauptkette 1 subkette 1 start
-        m_dspInterface->addCycListItem(QString("CLEARN(%1,MEASSIGNAL)").arg(m_nSamples)); // clear meassignal
+        m_dspInterface->addCycListItem(QString("CLEARN(%1,MEASSIGNAL)").arg(samples)); // clear meassignal
         m_dspInterface->addCycListItem(QString("CLEARN(%1,FILTER)").arg(2*m_ChannelList.count()+1)); // clear the whole filter incl. count
         m_dspInterface->addCycListItem(QString("SETVAL(TIPAR,%1)").arg(getConfData()->m_fMeasInterval*1000.0)); // initial ti time  /* todo variabel */
         m_dspInterface->addCycListItem("GETSTIME(TISTART)"); // einmal ti start setzen
@@ -284,7 +286,6 @@ void cSampleModuleMeasProgram::dspserverConnect()
 
 void cSampleModuleMeasProgram::claimPGRMem()
 {
-    m_nSamples = m_pModule->getSharedChannelRangeObserver()->getSamplesPerPeriod();
     setDspVarList(); // first we set the var list for our dsp
     setDspCmdList(); // and the cmd list he has to work on
 
