@@ -1316,27 +1316,6 @@ bool cPower1ModuleMeasProgram::canChangePhaseMask(std::shared_ptr<MeasMode> mode
     return hasVarMask && hasMultipleMeasSystems && !disablePhase;
 }
 
-QString cPower1ModuleMeasProgram::getChannelNameEarlyHack(QString channelName)
-{
-    if(channelName == "m0")
-        return "U1";
-    if(channelName == "m1")
-        return "U2";
-    if(channelName == "m2")
-        return "U3";
-    if(channelName == "m3")
-        return "I1";
-    if(channelName == "m4")
-        return "I2";
-    if(channelName == "m5")
-        return "I3";
-    if(channelName == "m6")
-        return "UAUX";
-    if(channelName == "m7")
-        return "IAUX";
-    return "";
-}
-
 QString cPower1ModuleMeasProgram::getPhasePowerDescription(int measSystemNo)
 {
     QString strDescription;
@@ -1347,8 +1326,9 @@ QString cPower1ModuleMeasProgram::getPhasePowerDescription(int measSystemNo)
             // We found nothing useful filled at the time of call - so hack
             QStringList powerChannels = getConfData()->m_sMeasSystemList[measSystemNo].split(",");
             if(powerChannels.count() == 2) {
-                QString name0 = getChannelNameEarlyHack(powerChannels[0]);
-                QString name1 = getChannelNameEarlyHack(powerChannels[1]);
+                ChannelRangeObserver::SystemObserverPtr observer = m_pModule->getSharedChannelRangeObserver();
+                QString name0 = observer->getChannel(powerChannels[0])->m_alias;
+                QString name1 = observer->getChannel(powerChannels[1])->m_alias;
                 strDescription = QString("Actual power value %1/%2").arg(name0, name1);
             }
         }

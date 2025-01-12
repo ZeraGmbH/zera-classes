@@ -2009,7 +2009,7 @@
                 },
                 "ACT_PQS1": {
                     "ChannelName": "P1",
-                    "Description": "Actual power value U1/IAUX",
+                    "Description": "Actual power value UL1/IAUX",
                     "Unit": "W"
                 },
                 "ACT_PQS2": {
@@ -2202,7 +2202,7 @@
                 },
                 "ACT_PQS1": {
                     "ChannelName": "P1",
-                    "Description": "Actual power value U2/IAUX",
+                    "Description": "Actual power value UL2/IAUX",
                     "Unit": "W"
                 },
                 "ACT_PQS2": {
@@ -2395,7 +2395,7 @@
                 },
                 "ACT_PQS1": {
                     "ChannelName": "P1",
-                    "Description": "Actual power value U3/IAUX",
+                    "Description": "Actual power value UL3/IAUX",
                     "Unit": "W"
                 },
                 "ACT_PQS2": {
