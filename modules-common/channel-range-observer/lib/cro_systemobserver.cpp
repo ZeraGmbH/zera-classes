@@ -39,9 +39,9 @@ const ChannelPtr SystemObserver::getChannel(QString channelMName) const
     return std::make_shared<Channel>("", NetworkConnectionInfo(), m_tcpFactory);
 }
 
-const int SystemObserver::getSampleRate() const
+const int SystemObserver::getSamplesPerPeriod() const
 {
-    return m_sampleRate;
+    return m_samplesPerPeriod;
 }
 
 void SystemObserver::clear()
@@ -64,7 +64,7 @@ void SystemObserver::doStartFullScan()
                                                        TRANSACTION_TIMEOUT, [=] { notifyError("Get available channels failed");}));
     m_currentTasks->addSub(TaskLambdaRunner::create([&]() {
         TaskContainerInterfacePtr allChannelsDetailsTasks = TaskContainerParallel::create();
-        allChannelsDetailsTasks->addSub(TaskGetSampleRate::create(m_pcbInterface, m_sampleRate,
+        allChannelsDetailsTasks->addSub(TaskGetSampleRate::create(m_pcbInterface, m_samplesPerPeriod,
                                                                   TRANSACTION_TIMEOUT, [=] { notifyError("Get sample rate failed");}));
         for(const QString &channelMName : qAsConst(m_tempChannelMNames)) {
             ChannelPtr channelObserver = std::make_shared<Channel>(channelMName, m_netInfo, m_tcpFactory);

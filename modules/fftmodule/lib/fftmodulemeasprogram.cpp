@@ -167,7 +167,7 @@ quint16 FFTMODULE::cFftModuleMeasProgram::calcFftResultLenHalf(quint8 fftOrder)
 
 void cFftModuleMeasProgram::setDspVarList()
 {
-    int samples = m_pModule->getSharedChannelRangeObserver()->getSampleRate();
+    int samples = m_pModule->getSharedChannelRangeObserver()->getSamplesPerPeriod();
     m_nfftLen = calcFftResultLenHalf(getConfData()->m_nFftOrder);
     // we fetch a handle for sampled data and other temporary values
     // global data segment is 1k words and lies on 1k boundary, so we put fftinput and fftouptut
@@ -212,7 +212,7 @@ void cFftModuleMeasProgram::deleteDspVarList()
 void cFftModuleMeasProgram::setDspCmdList()
 {
     ChannelRangeObserver::SystemObserverPtr observer = m_pModule->getSharedChannelRangeObserver();
-    int samples = observer->getSampleRate();
+    int samples = observer->getSamplesPerPeriod();
     QString referenceChannel = getConfData()->m_RefChannel.m_sPar;
     int referenceDspChannel = observer->getChannel(referenceChannel)->m_dspChannel;
     m_dspInterface->addCycListItem("STARTCHAIN(1,1,0x0101)"); // aktiv, prozessnr. (dummy),hauptkette 1 subkette 1 start

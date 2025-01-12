@@ -139,7 +139,7 @@ void cOsciModuleMeasProgram::generateVeinInterface()
 void cOsciModuleMeasProgram::setDspVarList()
 {
     // we fetch a handle for sampled data and other temporary values
-    int samples = m_pModule->getSharedChannelRangeObserver()->getSampleRate();
+    int samples = m_pModule->getSharedChannelRangeObserver()->getSamplesPerPeriod();
     m_pTmpDataDsp = m_dspInterface->getMemHandle("TmpData");
     m_pTmpDataDsp->addVarItem( new cDspVar("MEASSIGNAL", m_veinActValueList.count() * samples, DSPDATA::vDspTemp));
     m_pTmpDataDsp->addVarItem(new cDspVar("WORKSPACE", 2 * samples, DSPDATA::vDspTemp));
@@ -171,7 +171,7 @@ void cOsciModuleMeasProgram::deleteDspVarList()
 void cOsciModuleMeasProgram::setDspCmdList()
 {
     ChannelRangeObserver::SystemObserverPtr observer = m_pModule->getSharedChannelRangeObserver();
-    int samples = observer->getSampleRate();
+    int samples = observer->getSamplesPerPeriod();
     QString referenceChannel = getConfData()->m_RefChannel.m_sPar;
     int referenceDspChannel = observer->getChannel(referenceChannel)->m_dspChannel;
     m_dspInterface->addCycListItem("STARTCHAIN(1,1,0x0101)"); // aktiv, prozessnr. (dummy),hauptkette 1 subkette 1 start

@@ -295,7 +295,7 @@ void cPower2ModuleMeasProgram::generateVeinInterface()
 
 void cPower2ModuleMeasProgram::setDspVarList()
 {
-    int samples = m_pModule->getSharedChannelRangeObserver()->getSampleRate();
+    int samples = m_pModule->getSharedChannelRangeObserver()->getSamplesPerPeriod();
     // we fetch a handle for sampled data and other temporary values
     m_pTmpDataDsp = m_dspInterface->getMemHandle("TmpData");
     m_pTmpDataDsp->addVarItem( new cDspVar("MEASSIGNAL1", samples, DSPDATA::vDspTemp)); // we need 2 signals for our computations
@@ -339,7 +339,7 @@ void cPower2ModuleMeasProgram::deleteDspVarList()
 
 QStringList cPower2ModuleMeasProgram::dspCmdInitVars(int dspInitialSelectCode)
 {
-    int samples = m_pModule->getSharedChannelRangeObserver()->getSampleRate();
+    int samples = m_pModule->getSharedChannelRangeObserver()->getSamplesPerPeriod();
     QStringList dspCmdList;
     dspCmdList.append("STARTCHAIN(1,1,0x0101)"); // aktiv, prozessnr. (dummy),hauptkette 1 subkette 1 start
     dspCmdList.append(QString("CLEARN(%1,MEASSIGNAL1)").arg(samples) ); // clear meassignal
@@ -373,7 +373,7 @@ void cPower2ModuleMeasProgram::setDspCmdList()
     //MeasModeBroker measBroker(Power2DspModeFunctionCatalog::get(measSytemCount));
 
     // we set up all our lists for wanted measuring modes, this gets much more performance
-    int samples = m_pModule->getSharedChannelRangeObserver()->getSampleRate();
+    int samples = m_pModule->getSharedChannelRangeObserver()->getSamplesPerPeriod();
     QStringList dspMModesCommandList;
     for (int i = 0; i < confdata->m_nMeasModeCount; i++) {
         cMeasModeInfo mInfo = MeasModeCatalog::getInfo(confdata->m_sMeasmodeList.at(i));

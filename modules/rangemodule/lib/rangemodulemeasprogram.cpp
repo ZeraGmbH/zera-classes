@@ -411,7 +411,7 @@ void cRangeModuleMeasProgram::dspserverConnect()
 
 void cRangeModuleMeasProgram::claimPGRMem()
 {
-    m_nSamples = m_pModule->getSharedChannelRangeObserver()->getSampleRate();
+    m_nSamples = m_pModule->getSharedChannelRangeObserver()->getSamplesPerPeriod();
     setDspVarList(); // first we set the var list for our dsp
     setDspCmdList(); // and the cmd list he has to work on
 

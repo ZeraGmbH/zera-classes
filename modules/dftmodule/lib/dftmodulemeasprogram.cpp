@@ -205,7 +205,7 @@ void cDftModuleMeasProgram::generateVeinInterface()
 
 void cDftModuleMeasProgram::setDspVarList()
 {
-    int samples = m_pModule->getSharedChannelRangeObserver()->getSampleRate();
+    int samples = m_pModule->getSharedChannelRangeObserver()->getSamplesPerPeriod();
     // we fetch a handle for sampled data and other temporary values
     m_pTmpDataDsp = m_dspInterface->getMemHandle("TmpData");
     m_pTmpDataDsp->addVarItem( new cDspVar("MEASSIGNAL", samples, DSPDATA::vDspTemp));
@@ -239,7 +239,7 @@ void cDftModuleMeasProgram::deleteDspVarList()
 void cDftModuleMeasProgram::setDspCmdList()
 {
     ChannelRangeObserver::SystemObserverPtr observer = m_pModule->getSharedChannelRangeObserver();
-    int samples = observer->getSampleRate();
+    int samples = observer->getSamplesPerPeriod();
     m_dspInterface->addCycListItem("STARTCHAIN(1,1,0x0101)"); // aktiv, prozessnr. (dummy),hauptkette 1 subkette 1 start
         m_dspInterface->addCycListItem(QString("CLEARN(%1,MEASSIGNAL)").arg(samples) ); // clear meassignal
         m_dspInterface->addCycListItem(QString("CLEARN(%1,FILTER)").arg(2*2*m_veinActValueList.count()+1) ); // clear the whole filter incl. count

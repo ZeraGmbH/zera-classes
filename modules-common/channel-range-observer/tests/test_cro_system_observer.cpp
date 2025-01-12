@@ -177,7 +177,7 @@ void test_cro_system_observer::checkSampleRate()
     observer.startFullScan();
     TimeMachineObject::feedEventLoop();
 
-    QCOMPARE(observer.getSampleRate(), 504);
+    QCOMPARE(observer.getSamplesPerPeriod(), 504);
 }
 
 void test_cro_system_observer::checkValidChannels()

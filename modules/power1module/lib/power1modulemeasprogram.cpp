@@ -367,7 +367,7 @@ void cPower1ModuleMeasProgram::generateVeinInterface()
 
 void cPower1ModuleMeasProgram::setDspVarList()
 {
-    int samples = m_pModule->getSharedChannelRangeObserver()->getSampleRate();
+    int samples = m_pModule->getSharedChannelRangeObserver()->getSamplesPerPeriod();
     m_dspVars.setupVarList(m_dspInterface.get(), getConfData(), samples);
     m_ModuleActualValues.resize(m_dspVars.getActualValues()->getSize()); // we provide a vector for generated actual values
     m_nDspMemUsed = m_dspVars.getMemUsed();
@@ -424,7 +424,7 @@ void cPower1ModuleMeasProgram::setDspCmdList()
 
     QStringList dspMModesCommandList = setupMeasModes(dspChainGen);
     std::shared_ptr<MeasMode> mode = m_measModeSelector.getCurrMode();
-    int samples = m_pModule->getSharedChannelRangeObserver()->getSampleRate();
+    int samples = m_pModule->getSharedChannelRangeObserver()->getSamplesPerPeriod();
     QStringList dspInitVarsList = Power1DspCmdGenerator::getCmdsInitVars(mode,
                                                                          samples,
                                                                          calcTiTime(),
