@@ -19,7 +19,7 @@ SystemObserver::SystemObserver(const NetworkConnectionInfo &netInfo, VeinTcp::Ab
 
 void SystemObserver::startFullScan()
 {
-    if(m_channelNameToChannel.isEmpty())
+    if(m_channelMNameToChannel.isEmpty())
         doStartFullScan();
     else
         emit sigFullScanFinished(true);
@@ -27,13 +27,13 @@ void SystemObserver::startFullScan()
 
 const QStringList SystemObserver::getChannelMNames() const
 {
-    return m_channelNameToChannel.keys();
+    return m_channelMNameToChannel.keys();
 }
 
 const ChannelPtr SystemObserver::getChannel(QString channelMName) const
 {
-    auto iter = m_channelNameToChannel.constFind(channelMName);
-    if(iter != m_channelNameToChannel.constEnd())
+    auto iter = m_channelMNameToChannel.constFind(channelMName);
+    if(iter != m_channelMNameToChannel.constEnd())
         return iter.value();
     qWarning("SystemObserver: Channel data not found for %s!", qPrintable(channelMName));
     return std::make_shared<Channel>("", NetworkConnectionInfo(), m_tcpFactory);
@@ -46,7 +46,7 @@ const int SystemObserver::getSampleRate() const
 
 void SystemObserver::clear()
 {
-    m_channelNameToChannel.clear();
+    m_channelMNameToChannel.clear();
 }
 
 void SystemObserver::preparePcbInterface()
@@ -68,7 +68,7 @@ void SystemObserver::doStartFullScan()
                                                                   TRANSACTION_TIMEOUT, [=] { notifyError("Get sample rate failed");}));
         for(const QString &channelMName : qAsConst(m_tempChannelMNames)) {
             ChannelPtr channelObserver = std::make_shared<Channel>(channelMName, m_netInfo, m_tcpFactory);
-            m_channelNameToChannel[channelMName] = channelObserver;
+            m_channelMNameToChannel[channelMName] = channelObserver;
 
             allChannelsDetailsTasks->addSub(ChannelFetchTask::create(channelObserver));
             connect(channelObserver.get(), &Channel::sigFetchComplete,

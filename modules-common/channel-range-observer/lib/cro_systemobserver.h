@@ -24,7 +24,7 @@ signals:
     friend class SystemObserverResetter;
 
 protected:
-    QMap<QString, ChannelPtr> m_channelNameToChannel;
+    QMap<QString, ChannelPtr> m_channelMNameToChannel;
 
 private:
     void clear();
