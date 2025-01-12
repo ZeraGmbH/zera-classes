@@ -13,13 +13,12 @@ namespace SAMPLEMODULE
 {
 
 cSampleChannel::cSampleChannel(cSampleModule* module, cSampleModuleConfigData& configdata) :
-    cBaseSampleChannel(configdata.m_ObsermaticConfPar.m_sSampleSystem,
-                         QString("%1/SampleChannel No 1").arg(module->getVeinModuleName())),
+    cModuleActivist(QString("%1/SampleChannel No 1").arg(module->getVeinModuleName())),
+    m_sName(configdata.m_ObsermaticConfPar.m_sSampleSystem),
     m_pModule(module),
-    m_ConfigData(configdata)
+    m_ConfigData(configdata),
+    m_pPCBInterface(std::make_shared<Zera::cPCBInterface>())
 {
-    m_pPCBInterface = std::make_shared<Zera::cPCBInterface>();
-
     // setting up statemachine for "activating" sample channel
     // m_pcbConnectionState.addTransition is done in pcbConnection
     m_readChnAliasState.addTransition(this, &cSampleChannel::activationContinue, &m_readRangelistState);
@@ -101,6 +100,16 @@ void cSampleChannel::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant 
             notifyError(setRangeErrMsg);
         break;
     }
+}
+
+QString cSampleChannel::getName()
+{
+    return m_sName;
+}
+
+QString cSampleChannel::getAlias()
+{
+    return m_sAlias;
 }
 
 
