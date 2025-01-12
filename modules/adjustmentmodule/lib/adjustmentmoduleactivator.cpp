@@ -1,5 +1,4 @@
 #include "adjustmentmoduleactivator.h"
-#include "taskchannelscheckavail.h"
 #include "taskchannelgetalias.h"
 #include "taskchannelgetrangelist.h"
 #include "taskregisternotifier.h"
@@ -63,10 +62,6 @@ void AdjustmentModuleActivator::onReloadRanges(bool ok)
 void AdjustmentModuleActivator::addStaticActivationTasks()
 {
     m_activationTasks.addSub(m_commonObjects->m_pcbConnection.createConnectionTask());
-    m_activationTasks.addSub(TaskChannelsCheckAvail::create(
-                             m_commonObjects->m_pcbConnection.getInterface(),
-                             m_configuredChannels,
-                             TRANSACTION_TIMEOUT,[&]{ notifyError(resourceErrMsg); }));
 }
 
 void AdjustmentModuleActivator::addDynChannelActivationTasks()
