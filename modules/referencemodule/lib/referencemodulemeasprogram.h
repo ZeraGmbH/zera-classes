@@ -45,7 +45,6 @@ private:
     void deleteDspCmdList();
 
     cReferenceModule* m_pModule; // the module we live in
-    quint16 m_nSamples;
     QStringList m_ChannelList; // the list of actual values we work on
     cDspMeasData* m_pTmpDataDsp;
     cDspMeasData* m_pParameterDSP;
