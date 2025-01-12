@@ -48,7 +48,6 @@ void cSampleModule::setupModule()
     // next we instantiate an object of sample channel so we can switch sample frequency ranges
     cSampleChannel* schn = new cSampleChannel(this, *pConfData);
 
-    m_sampleChannelList.append(schn); // we hold a list although we only have 1
     m_ModuleActivistList.append(schn);
     connect(schn, &cSampleChannel::activated, this, &cSampleModule::activationContinue);
     connect(schn, &cSampleChannel::deactivated, this, &cSampleModule::deactivationContinue);

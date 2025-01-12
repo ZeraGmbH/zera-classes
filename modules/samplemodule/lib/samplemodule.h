@@ -31,7 +31,6 @@ private:
     cSampleModuleMeasProgram *m_pMeasProgram = nullptr;
     cPllObsermatic *m_pPllObsermatic = nullptr;
     QList<cPllMeasChannel*> m_pllMeasChannelList; // our pll meas channels
-    QList<cSampleChannel*>  m_sampleChannelList;
 };
 
 }
