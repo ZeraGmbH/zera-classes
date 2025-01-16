@@ -1,7 +1,6 @@
 #ifndef TEST_ADJ_MODULE_PHASE_H
 #define TEST_ADJ_MODULE_PHASE_H
 
-#include "modulemanagertestrunner.h"
 #include <QObject>
 
 class test_adj_module_phase : public QObject
@@ -28,7 +27,6 @@ private slots:
 
     void denyRangeNotSet();
 private:
-    void setActualTestValues(ModuleManagerTestRunner &testRunner);
     double adjustAngle(double angle);
 };
 

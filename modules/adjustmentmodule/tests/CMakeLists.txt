@@ -12,14 +12,15 @@ function(SETUP_QTESTS_MODULE)
         )
         target_link_libraries(${_testname}
             PRIVATE
-            zera-modulemanager-testlib
+            Zera::VfConvenientCode
             adjustmentmodule-static
-            module-testlib
+            adjmodule-testlib
             rangemodule-static
             dftmodule-static
             fftmodule-static
             rmsmodule-static
-            Zera::VfConvenientCode
+            zera-modulemanager-testlib
+            module-testlib
             scpimodule-testlib
         )
     endforeach()

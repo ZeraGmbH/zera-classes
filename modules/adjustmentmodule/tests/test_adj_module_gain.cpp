@@ -1,7 +1,6 @@
 #include "test_adj_module_gain.h"
-#include "adjustmentmodule.h"
 #include "adjustmentmodulemeasprogram.h"
-#include "testdspvalues.h"
+#include "adjmoduletesthelper.h"
 #include <scpimoduleclientblocked.h>
 #include <QTest>
 
@@ -26,7 +25,7 @@ void test_adj_module_gain::noActValuesWithPermission()
 void test_adj_module_gain::validActValuesWithPermission()
 {
     ModuleManagerTestRunner testRunner(":/session-minimal.json", true);
-    setActualTestValues(testRunner);
+    AdjModuleTestHelper::setActualTestValues(testRunner, testvoltage, testcurrent, testangle, testfrequency);
 
     ScpiModuleClientBlocked scpiClient;
     QString response = scpiClient.sendReceive("calc:adj1:ampl UL1,250V,100;|*stb?");
@@ -36,7 +35,7 @@ void test_adj_module_gain::validActValuesWithPermission()
 void test_adj_module_gain::validActValuesWithoutPermission()
 {
     ModuleManagerTestRunner testRunner(":/session-minimal.json", false);
-    setActualTestValues(testRunner);
+    AdjModuleTestHelper::setActualTestValues(testRunner, testvoltage, testcurrent, testangle, testfrequency);
 
     ScpiModuleClientBlocked scpiClient;
     QString response = scpiClient.sendReceive("calc:adj1:ampl UL1,250V,100;|*stb?");
@@ -46,7 +45,7 @@ void test_adj_module_gain::validActValuesWithoutPermission()
 void test_adj_module_gain::outOfLimitLower()
 {
     ModuleManagerTestRunner testRunner(":/session-minimal.json", true);
-    setActualTestValues(testRunner);
+    AdjModuleTestHelper::setActualTestValues(testRunner, testvoltage, testcurrent, testangle, testfrequency);
 
     double adjRefVoltage = testvoltage * (1-maxAmplitudeErrorPercent/100) - limitOffset;
     QByteArray send = QString("calc:adj1:ampl UL1,250V,%1;|*stb?").arg(adjRefVoltage).toLatin1();
@@ -58,7 +57,7 @@ void test_adj_module_gain::outOfLimitLower()
 void test_adj_module_gain::outOfLimitUpper()
 {
     ModuleManagerTestRunner testRunner(":/session-minimal.json", true);
-    setActualTestValues(testRunner);
+    AdjModuleTestHelper::setActualTestValues(testRunner, testvoltage, testcurrent, testangle, testfrequency);
 
     double adjRefVoltage = testvoltage * (1+maxAmplitudeErrorPercent/100) + limitOffset;
     QByteArray send = QString("calc:adj1:ampl UL1,250V,%1;|*stb?").arg(adjRefVoltage).toLatin1();
@@ -70,7 +69,7 @@ void test_adj_module_gain::outOfLimitUpper()
 void test_adj_module_gain::withinLimitLower()
 {
     ModuleManagerTestRunner testRunner(":/session-minimal.json", true);
-    setActualTestValues(testRunner);
+    AdjModuleTestHelper::setActualTestValues(testRunner, testvoltage, testcurrent, testangle, testfrequency);
 
     double adjRefVoltage = testvoltage * (1-maxAmplitudeErrorPercent/100) + limitOffset;
     QByteArray send = QString("calc:adj1:ampl UL1,250V,%1;|*stb?").arg(adjRefVoltage).toLatin1();
@@ -82,7 +81,7 @@ void test_adj_module_gain::withinLimitLower()
 void test_adj_module_gain::withinLimitUpper()
 {
     ModuleManagerTestRunner testRunner(":/session-minimal.json", true);
-    setActualTestValues(testRunner);
+    AdjModuleTestHelper::setActualTestValues(testRunner, testvoltage, testcurrent, testangle, testfrequency);
 
     double adjRefVoltage = testvoltage * (1+maxAmplitudeErrorPercent/100) - limitOffset;
     QByteArray send = QString("calc:adj1:ampl UL1,250V,%1;|*stb?").arg(adjRefVoltage).toLatin1();
@@ -94,23 +93,11 @@ void test_adj_module_gain::withinLimitUpper()
 void test_adj_module_gain::denyRangeNotSet()
 {
     ModuleManagerTestRunner testRunner(":/session-minimal.json", true);
-    setActualTestValues(testRunner);
+    AdjModuleTestHelper::setActualTestValues(testRunner, testvoltage, testcurrent, testangle, testfrequency);
 
     double adjRefCurrent = testcurrent * (1+maxAmplitudeErrorPercent/100) - limitOffset;
     QByteArray send = QString("calc:adj1:ampl IL1,2.5A,%1;|*stb?").arg(adjRefCurrent).toLatin1();
     ScpiModuleClientBlocked scpiClient;
     QString response = scpiClient.sendReceive(send);
     QCOMPARE(response, "+4");
-}
-
-void test_adj_module_gain::setActualTestValues(ModuleManagerTestRunner &testRunner)
-{
-    const QList<TestDspInterfacePtr>& dspInterfaces = testRunner.getDspInterfaceList();
-    TestDspValues dspValues(dspInterfaces[DSP_INTERFACE_DFT]->getValueList());
-    dspValues.setAllValuesSymmetric(testvoltage, testcurrent, testangle, testfrequency);
-    dspValues.fireAllActualValues(
-        dspInterfaces[DSP_INTERFACE_DFT],
-        dspInterfaces[DSP_INTERFACE_FFT],
-        dspInterfaces[DSP_INTERFACE_RANGE_PROGRAM], // Range is for frequency only
-        dspInterfaces[DSP_INTERFACE_RMS]);
 }

@@ -1,7 +1,6 @@
 #ifndef TEST_ADJ_MODULE_GAIN_H
 #define TEST_ADJ_MODULE_GAIN_H
 
-#include "modulemanagertestrunner.h"
 #include <QObject>
 
 class test_adj_module_gain : public QObject
@@ -19,9 +18,6 @@ private slots:
     void withinLimitUpper();
 
     void denyRangeNotSet();
-
-private:
-    void setActualTestValues(ModuleManagerTestRunner &testRunner);
 };
 
 #endif // TEST_ADJ_MODULE_GAIN_H

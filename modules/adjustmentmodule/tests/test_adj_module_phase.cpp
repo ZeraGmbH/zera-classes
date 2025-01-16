@@ -1,7 +1,6 @@
 #include "test_adj_module_phase.h"
-#include "adjustmentmodule.h"
 #include "adjustmentmodulemeasprogram.h"
-#include "testdspvalues.h"
+#include "adjmoduletesthelper.h"
 #include <scpimoduleclientblocked.h>
 #include <QTest>
 
@@ -26,7 +25,7 @@ void test_adj_module_phase::noActValuesWithPermission()
 void test_adj_module_phase::validActValuesWithPermission()
 {
     ModuleManagerTestRunner testRunner(":/session-minimal.json", true);
-    setActualTestValues(testRunner);
+    AdjModuleTestHelper::setActualTestValues(testRunner, testvoltage, testcurrent, testangle, testfrequency);
 
     ScpiModuleClientBlocked scpiClient;
     QString response = scpiClient.sendReceive("calc:adj1:phas IL1,10A,0;|*stb?");
@@ -36,7 +35,7 @@ void test_adj_module_phase::validActValuesWithPermission()
 void test_adj_module_phase::validActValuesWithoutPermission()
 {
     ModuleManagerTestRunner testRunner(":/session-minimal.json", false);
-    setActualTestValues(testRunner);
+    AdjModuleTestHelper::setActualTestValues(testRunner, testvoltage, testcurrent, testangle, testfrequency);
 
     ScpiModuleClientBlocked scpiClient;
     QString response = scpiClient.sendReceive("calc:adj1:phas IL1,10A,0;|*stb?");
@@ -46,7 +45,7 @@ void test_adj_module_phase::validActValuesWithoutPermission()
 void test_adj_module_phase::absOutOfRangeLower()
 {
     ModuleManagerTestRunner testRunner(":/session-minimal.json", true);
-    setActualTestValues(testRunner);
+    AdjModuleTestHelper::setActualTestValues(testRunner, testvoltage, testcurrent, testangle, testfrequency);
 
     ScpiModuleClientBlocked scpiClient;
     QString response = scpiClient.sendReceive("calc:adj1:phas IL1,10A,-0.0001;|*stb?");
@@ -56,7 +55,7 @@ void test_adj_module_phase::absOutOfRangeLower()
 void test_adj_module_phase::absOutOfRangeUpper()
 {
     ModuleManagerTestRunner testRunner(":/session-minimal.json", true);
-    setActualTestValues(testRunner);
+    AdjModuleTestHelper::setActualTestValues(testRunner, testvoltage, testcurrent, testangle, testfrequency);
 
     ScpiModuleClientBlocked scpiClient;
     QString response = scpiClient.sendReceive("calc:adj1:phas IL1,10A,360.0001;|*stb?");
@@ -66,7 +65,7 @@ void test_adj_module_phase::absOutOfRangeUpper()
 void test_adj_module_phase::outOfLimitLowerIL1()
 {
     ModuleManagerTestRunner testRunner(":/session-minimal.json", true);
-    setActualTestValues(testRunner);
+    AdjModuleTestHelper::setActualTestValues(testRunner, testvoltage, testcurrent, testangle, testfrequency);
 
     double adjRefAngle = adjustAngle(-maxPhaseErrorDegrees - limitOffset);
     QByteArray send = QString("calc:adj1:phas IL1,10A,%1;|*stb?").arg(adjRefAngle).toLatin1();
@@ -78,7 +77,7 @@ void test_adj_module_phase::outOfLimitLowerIL1()
 void test_adj_module_phase::outOfLimitUpperIL1()
 {
     ModuleManagerTestRunner testRunner(":/session-minimal.json", true);
-    setActualTestValues(testRunner);
+    AdjModuleTestHelper::setActualTestValues(testRunner, testvoltage, testcurrent, testangle, testfrequency);
 
     double adjRefAngle = adjustAngle(+maxPhaseErrorDegrees + limitOffset);
     QByteArray send = QString("calc:adj1:phas IL1,10A,%1;|*stb?").arg(adjRefAngle).toLatin1();
@@ -90,7 +89,7 @@ void test_adj_module_phase::outOfLimitUpperIL1()
 void test_adj_module_phase::withinLimitLowerIL1()
 {
     ModuleManagerTestRunner testRunner(":/session-minimal.json", true);
-    setActualTestValues(testRunner);
+    AdjModuleTestHelper::setActualTestValues(testRunner, testvoltage, testcurrent, testangle, testfrequency);
 
     double adjRefAngle = adjustAngle(-maxPhaseErrorDegrees + limitOffset);
     QByteArray send = QString("calc:adj1:phas IL1,10A,%1;|*stb?").arg(adjRefAngle).toLatin1();
@@ -102,7 +101,7 @@ void test_adj_module_phase::withinLimitLowerIL1()
 void test_adj_module_phase::withinLimitUpperIL1()
 {
     ModuleManagerTestRunner testRunner(":/session-minimal.json", true);
-    setActualTestValues(testRunner);
+    AdjModuleTestHelper::setActualTestValues(testRunner, testvoltage, testcurrent, testangle, testfrequency);
 
     double adjRefAngle = adjustAngle(+maxPhaseErrorDegrees - limitOffset);
     QByteArray send = QString("calc:adj1:phas IL1,10A,%1;|*stb?").arg(adjRefAngle).toLatin1();
@@ -114,7 +113,7 @@ void test_adj_module_phase::withinLimitUpperIL1()
 void test_adj_module_phase::outOfLimitLowerUL2()
 {
     ModuleManagerTestRunner testRunner(":/session-minimal.json", true);
-    setActualTestValues(testRunner);
+    AdjModuleTestHelper::setActualTestValues(testRunner, testvoltage, testcurrent, testangle, testfrequency);
 
     double adjRefAngle = adjustAngle(angleUL2 + maxPhaseErrorDegrees + limitOffset);
     QByteArray send = QString("calc:adj1:phas UL2,250V,%1;|*stb?").arg(adjRefAngle).toLatin1();
@@ -126,7 +125,7 @@ void test_adj_module_phase::outOfLimitLowerUL2()
 void test_adj_module_phase::outOfLimitUpperUL2()
 {
     ModuleManagerTestRunner testRunner(":/session-minimal.json", true);
-    setActualTestValues(testRunner);
+    AdjModuleTestHelper::setActualTestValues(testRunner, testvoltage, testcurrent, testangle, testfrequency);
 
     double adjRefAngle = adjustAngle(angleUL2 - maxPhaseErrorDegrees - limitOffset);
     QByteArray send = QString("calc:adj1:phas UL2,250V,%1;|*stb?").arg(adjRefAngle).toLatin1();
@@ -138,7 +137,7 @@ void test_adj_module_phase::outOfLimitUpperUL2()
 void test_adj_module_phase::withinLimitLowerUL2()
 {
     ModuleManagerTestRunner testRunner(":/session-minimal.json", true);
-    setActualTestValues(testRunner);
+    AdjModuleTestHelper::setActualTestValues(testRunner, testvoltage, testcurrent, testangle, testfrequency);
 
     double adjRefAngle = adjustAngle(angleUL2 + maxPhaseErrorDegrees - limitOffset);
     QByteArray send = QString("calc:adj1:phas UL2,250V,%1;|*stb?").arg(adjRefAngle).toLatin1();
@@ -150,7 +149,7 @@ void test_adj_module_phase::withinLimitLowerUL2()
 void test_adj_module_phase::withinLimitUpperUL2()
 {
     ModuleManagerTestRunner testRunner(":/session-minimal.json", true);
-    setActualTestValues(testRunner);
+    AdjModuleTestHelper::setActualTestValues(testRunner, testvoltage, testcurrent, testangle, testfrequency);
 
     double adjRefAngle = adjustAngle(angleUL2 - maxPhaseErrorDegrees + limitOffset);
     QByteArray send = QString("calc:adj1:phas UL2,250V,%1;|*stb?").arg(adjRefAngle).toLatin1();
@@ -162,25 +161,13 @@ void test_adj_module_phase::withinLimitUpperUL2()
 void test_adj_module_phase::denyRangeNotSet()
 {
     ModuleManagerTestRunner testRunner(":/session-minimal.json", true);
-    setActualTestValues(testRunner);
+    AdjModuleTestHelper::setActualTestValues(testRunner, testvoltage, testcurrent, testangle, testfrequency);
 
     double adjRefAngle = adjustAngle(angleUL2 - maxPhaseErrorDegrees + limitOffset);
     QByteArray send = QString("calc:adj1:phas UL2,8V,%1;|*stb?").arg(adjRefAngle).toLatin1();
     ScpiModuleClientBlocked scpiClient;
     QString response = scpiClient.sendReceive(send);
     QCOMPARE(response, "+4");
-}
-
-void test_adj_module_phase::setActualTestValues(ModuleManagerTestRunner &testRunner)
-{
-    const QList<TestDspInterfacePtr>& dspInterfaces = testRunner.getDspInterfaceList();
-    TestDspValues dspValues(dspInterfaces[DSP_INTERFACE_DFT]->getValueList());
-    dspValues.setAllValuesSymmetric(testvoltage, testcurrent, testangle, testfrequency);
-    dspValues.fireAllActualValues(
-        dspInterfaces[DSP_INTERFACE_DFT],
-        dspInterfaces[DSP_INTERFACE_FFT],
-        dspInterfaces[DSP_INTERFACE_RANGE_PROGRAM], // Range is for frequency only
-        dspInterfaces[DSP_INTERFACE_RMS]);
 }
 
 double test_adj_module_phase::adjustAngle(double angle)
