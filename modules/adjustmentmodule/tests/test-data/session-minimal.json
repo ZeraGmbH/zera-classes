@@ -7,12 +7,12 @@
         },
         {
           "name" : "rmsmodule",
-          "configFile" : "mt310s2-rmsmodule.xml",
+          "configFile" : ":/mt310s2-rmsmodule-no-movingwindow.xml",
           "id": 1040
         },
         {
           "name" : "dftmodule",
-          "configFile" : "mt310s2-dftmodule.xml",
+          "configFile" : ":/mt310s2-dftmodule-no-movingwindow-ref.xml",
           "id": 1050
         },
         {

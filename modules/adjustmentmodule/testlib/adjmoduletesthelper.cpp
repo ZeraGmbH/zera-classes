@@ -15,3 +15,12 @@ void AdjModuleTestHelper::setActualTestValues(ModuleManagerTestRunner &testRunne
         dspInterfaces[DSP_INTERFACE_RANGE_PROGRAM], // Range is for frequency only
         dspInterfaces[DSP_INTERFACE_RMS]);
 }
+
+AdjModuleTestHelper::TAdjNodeValues AdjModuleTestHelper::parseNode(const QString &scpiResponse)
+{
+    const QStringList nodeList = scpiResponse.split(";", Qt::SkipEmptyParts);
+    TAdjNodeValues node;
+    node.m_correction = nodeList[0].toDouble();
+    node.m_loadPoint = nodeList[1].toDouble();
+    return node;
+}

@@ -66,7 +66,7 @@ void test_adj_module_gain::outOfLimitUpper()
     QCOMPARE(response, "+4");
 }
 
-void test_adj_module_gain::withinLimitLower()
+void test_adj_module_gain::oneNodeWithinLimitLower()
 {
     ModuleManagerTestRunner testRunner(":/session-minimal.json", true);
     AdjModuleTestHelper::setActualTestValues(testRunner, testvoltage, testcurrent, testangle, testfrequency);
@@ -76,18 +76,96 @@ void test_adj_module_gain::withinLimitLower()
     ScpiModuleClientBlocked scpiClient;
     QString response = scpiClient.sendReceive(send);
     QCOMPARE(response, "+0");
+
+    response = scpiClient.sendReceive("calc:adj1:send? 6307,SENSE:M0:250V:CORRECTION:GAIN:NODE:0?;");
+    AdjModuleTestHelper::TAdjNodeValues node = AdjModuleTestHelper::parseNode(response);
+    QCOMPARE(node.m_loadPoint, adjRefVoltage);
+    QCOMPARE(node.m_correction, adjRefVoltage/testvoltage);
+
+    response = scpiClient.sendReceive("calc:adj1:send? 6307,SENSE:M0:250V:CORRECTION:GAIN:NODE:1?;");
+    node = AdjModuleTestHelper::parseNode(response);
+    QCOMPARE(node.m_loadPoint, adjRefVoltage);
+    QCOMPARE(node.m_correction, adjRefVoltage/testvoltage);
+
+    response = scpiClient.sendReceive("calc:adj1:send? 6307,SENSE:M0:250V:CORRECTION:GAIN:NODE:2?;");
+    node = AdjModuleTestHelper::parseNode(response);
+    QCOMPARE(node.m_loadPoint, adjRefVoltage);
+    QCOMPARE(node.m_correction, adjRefVoltage/testvoltage);
+
+    response = scpiClient.sendReceive("calc:adj1:send? 6307,SENSE:M0:250V:CORRECTION:GAIN:NODE:3?;");
+    node = AdjModuleTestHelper::parseNode(response);
+    QCOMPARE(node.m_loadPoint, adjRefVoltage);
+    QCOMPARE(node.m_correction, adjRefVoltage/testvoltage);
 }
 
-void test_adj_module_gain::withinLimitUpper()
+void test_adj_module_gain::oneNodeWithinLimitUpper()
 {
     ModuleManagerTestRunner testRunner(":/session-minimal.json", true);
-    AdjModuleTestHelper::setActualTestValues(testRunner, testvoltage, testcurrent, testangle, testfrequency);
+    ScpiModuleClientBlocked scpiClient;
 
+    AdjModuleTestHelper::setActualTestValues(testRunner, testvoltage, testcurrent, testangle, testfrequency);
     double adjRefVoltage = testvoltage * (1+maxAmplitudeErrorPercent/100) - limitOffset;
     QByteArray send = QString("calc:adj1:ampl UL1,250V,%1;|*stb?").arg(adjRefVoltage).toLatin1();
-    ScpiModuleClientBlocked scpiClient;
     QString response = scpiClient.sendReceive(send);
     QCOMPARE(response, "+0");
+
+    response = scpiClient.sendReceive("calc:adj1:send? 6307,SENSE:M0:250V:CORRECTION:GAIN:NODE:0?;");
+    AdjModuleTestHelper::TAdjNodeValues node = AdjModuleTestHelper::parseNode(response);
+    QCOMPARE(node.m_loadPoint, adjRefVoltage);
+    QCOMPARE(node.m_correction, adjRefVoltage/testvoltage);
+
+    response = scpiClient.sendReceive("calc:adj1:send? 6307,SENSE:M0:250V:CORRECTION:GAIN:NODE:1?;");
+    node = AdjModuleTestHelper::parseNode(response);
+    QCOMPARE(node.m_loadPoint, adjRefVoltage);
+    QCOMPARE(node.m_correction, adjRefVoltage/testvoltage);
+
+    response = scpiClient.sendReceive("calc:adj1:send? 6307,SENSE:M0:250V:CORRECTION:GAIN:NODE:2?;");
+    node = AdjModuleTestHelper::parseNode(response);
+    QCOMPARE(node.m_loadPoint, adjRefVoltage);
+    QCOMPARE(node.m_correction, adjRefVoltage/testvoltage);
+
+    response = scpiClient.sendReceive("calc:adj1:send? 6307,SENSE:M0:250V:CORRECTION:GAIN:NODE:3?;");
+    node = AdjModuleTestHelper::parseNode(response);
+    QCOMPARE(node.m_loadPoint, adjRefVoltage);
+    QCOMPARE(node.m_correction, adjRefVoltage/testvoltage);
+}
+
+void test_adj_module_gain::twoNodesCheckNodesGenerated()
+{
+    ModuleManagerTestRunner testRunner(":/session-minimal.json", true);
+    ScpiModuleClientBlocked scpiClient;
+
+    AdjModuleTestHelper::setActualTestValues(testRunner, testvoltage, testcurrent, testangle, testfrequency);
+    double adjRefVoltage = testvoltage * (1+maxAmplitudeErrorPercent/100) - limitOffset;
+    QByteArray send = QString("calc:adj1:ampl UL1,250V,%1;|*stb?").arg(adjRefVoltage).toLatin1();
+    QString response = scpiClient.sendReceive(send);
+    QCOMPARE(response, "+0");
+
+    AdjModuleTestHelper::setActualTestValues(testRunner, 2*testvoltage, testcurrent, testangle, testfrequency);
+    double adjRefVoltage2 = 2*adjRefVoltage;
+    send = QString("calc:adj1:ampl UL1,250V,%1;|*stb?").arg(adjRefVoltage2).toLatin1();
+    response = scpiClient.sendReceive(send);
+    QCOMPARE(response, "+0");
+
+    response = scpiClient.sendReceive("calc:adj1:send? 6307,SENSE:M0:250V:CORRECTION:GAIN:NODE:0?;");
+    AdjModuleTestHelper::TAdjNodeValues node = AdjModuleTestHelper::parseNode(response);
+    QCOMPARE(node.m_loadPoint, adjRefVoltage);
+    QCOMPARE(node.m_correction, adjRefVoltage/testvoltage);
+
+    response = scpiClient.sendReceive("calc:adj1:send? 6307,SENSE:M0:250V:CORRECTION:GAIN:NODE:1?;");
+    node = AdjModuleTestHelper::parseNode(response);
+    QCOMPARE(node.m_loadPoint, adjRefVoltage2);
+    QCOMPARE(node.m_correction, adjRefVoltage2/(2*testvoltage));
+
+    response = scpiClient.sendReceive("calc:adj1:send? 6307,SENSE:M0:250V:CORRECTION:GAIN:NODE:2?;");
+    node = AdjModuleTestHelper::parseNode(response);
+    QCOMPARE(node.m_loadPoint, adjRefVoltage2);
+    QCOMPARE(node.m_correction, adjRefVoltage2/(2*testvoltage));
+
+    response = scpiClient.sendReceive("calc:adj1:send? 6307,SENSE:M0:250V:CORRECTION:GAIN:NODE:3?;");
+    node = AdjModuleTestHelper::parseNode(response);
+    QCOMPARE(node.m_loadPoint, adjRefVoltage2);
+    QCOMPARE(node.m_correction, adjRefVoltage2/(2*testvoltage));
 }
 
 void test_adj_module_gain::denyRangeNotSet()

@@ -14,8 +14,10 @@ private slots:
     // from here on with permission
     void outOfLimitLower();
     void outOfLimitUpper();
-    void withinLimitLower();
-    void withinLimitUpper();
+
+    void oneNodeWithinLimitLower();
+    void oneNodeWithinLimitUpper();
+    void twoNodesCheckNodesGenerated();
 
     void denyRangeNotSet();
 };

@@ -1,5 +1,7 @@
 <RCC>
     <qresource prefix="/">
+        <file>mt310s2-dftmodule-no-movingwindow-ref.xml</file>
+        <file>mt310s2-rmsmodule-no-movingwindow.xml</file>
         <file>dumpInitial.json</file>
         <file>session-minimal.json</file>
         <file>session-minimal-dc.json</file>
