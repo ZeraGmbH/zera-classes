@@ -1,3 +1,5 @@
+add_definitions(-DHTML_DOCS_PATH_TEST="${CMAKE_CURRENT_BINARY_DIR}/")
+
 # Inspired by
 # https://github.com/KDAB/kdabtv/blob/master/Qt-Widgets-and-more/UnitTests/Tests/CMakeLists.txt
 function(SETUP_QTESTS_SCPIDOC)
@@ -13,5 +15,11 @@ endfunction()
 
 SETUP_QTESTS_SCPIDOC (
     test_sessionnamesmappingjson
+    test_scpi_doc_gen_smoke
     )
 
+
+target_sources(test_scpi_doc_gen_smoke
+    PRIVATE
+    ${XML_SCHEMA_RESOURCES_ALL}
+)
