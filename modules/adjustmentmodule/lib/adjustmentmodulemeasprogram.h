@@ -128,6 +128,7 @@ private:
     double cmpPhase(QVariant var);
     double symAngle(double ang);
     double calcAdjAbsoluteError();
+    double calcAdjAbsoluteErrorNeg();
     bool checkRangeIsWanted(QString adjType);
 
     cAdjustmentModule* m_pModule;
