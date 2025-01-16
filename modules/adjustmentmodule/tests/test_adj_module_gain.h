@@ -17,7 +17,11 @@ private slots:
 
     void oneNodeWithinLimitLower();
     void oneNodeWithinLimitUpper();
+
     void twoNodesCheckNodesGenerated();
+    void oneNodeCheckCorrectionsCalculated();
+    void twoNodesCheckCorrectionsCalculatedLinear();
+    void twoNodesCheckCorrectionsCalculatedNonLinear();
 
     void denyRangeNotSet();
 };

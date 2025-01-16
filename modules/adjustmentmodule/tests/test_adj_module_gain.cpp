@@ -168,6 +168,111 @@ void test_adj_module_gain::twoNodesCheckNodesGenerated()
     QCOMPARE(node.m_correction, adjRefVoltage2/(2*testvoltage));
 }
 
+void test_adj_module_gain::oneNodeCheckCorrectionsCalculated()
+{
+    ModuleManagerTestRunner testRunner(":/session-minimal.json", true);
+    ScpiModuleClientBlocked scpiClient;
+
+    AdjModuleTestHelper::setActualTestValues(testRunner, testvoltage, testcurrent, testangle, testfrequency);
+    double adjRefVoltage = testvoltage * (1+maxAmplitudeErrorPercent/100) - limitOffset;
+    QByteArray send = QString("calc:adj1:ampl UL1,250V,%1;|*stb?").arg(adjRefVoltage).toLatin1();
+    QString response = scpiClient.sendReceive(send);
+    QCOMPARE(response, "+0");
+    response = scpiClient.sendReceive("calc:adj1:comp 1;|*stb?");
+    QCOMPARE(response, "+0");
+
+    response = scpiClient.sendReceive("calc:adj1:send? 6307,SENSE:M0:250V:CORRECTION:GAIN:COEFFICIENT:0?;");
+    double adjCoefficient = response.toDouble();
+    QCOMPARE(adjCoefficient, adjRefVoltage/testvoltage);
+
+    response = scpiClient.sendReceive("calc:adj1:send? 6307,SENSE:M0:250V:CORRECTION:GAIN:COEFFICIENT:1?;");
+    adjCoefficient = response.toDouble();
+    QCOMPARE(adjCoefficient, 0.0);
+
+    response = scpiClient.sendReceive("calc:adj1:send? 6307,SENSE:M0:250V:CORRECTION:GAIN:COEFFICIENT:2?;");
+    adjCoefficient = response.toDouble();
+    QCOMPARE(adjCoefficient, 0.0);
+
+    response = scpiClient.sendReceive("calc:adj1:send? 6307,SENSE:M0:250V:CORRECTION:GAIN:COEFFICIENT:3?;");
+    adjCoefficient = response.toDouble();
+    QCOMPARE(adjCoefficient, 0.0);
+}
+
+void test_adj_module_gain::twoNodesCheckCorrectionsCalculatedLinear()
+{
+    ModuleManagerTestRunner testRunner(":/session-minimal.json", true);
+    ScpiModuleClientBlocked scpiClient;
+
+    AdjModuleTestHelper::setActualTestValues(testRunner, testvoltage, testcurrent, testangle, testfrequency);
+    double adjRefVoltage = testvoltage * (1+maxAmplitudeErrorPercent/100) - limitOffset;
+    QByteArray send = QString("calc:adj1:ampl UL1,250V,%1;|*stb?").arg(adjRefVoltage).toLatin1();
+    QString response = scpiClient.sendReceive(send);
+    QCOMPARE(response, "+0");
+
+    AdjModuleTestHelper::setActualTestValues(testRunner, 2*testvoltage, testcurrent, testangle, testfrequency);
+    double adjRefVoltage2 = 2*adjRefVoltage;
+    send = QString("calc:adj1:ampl UL1,250V,%1;|*stb?").arg(adjRefVoltage2).toLatin1();
+    response = scpiClient.sendReceive(send);
+    QCOMPARE(response, "+0");
+
+    response = scpiClient.sendReceive("calc:adj1:comp 1;|*stb?");
+    QCOMPARE(response, "+0");
+
+    response = scpiClient.sendReceive("calc:adj1:send? 6307,SENSE:M0:250V:CORRECTION:GAIN:COEFFICIENT:0?;");
+    double adjCoefficient = response.toDouble();
+    QCOMPARE(adjCoefficient, adjRefVoltage/testvoltage);
+
+    response = scpiClient.sendReceive("calc:adj1:send? 6307,SENSE:M0:250V:CORRECTION:GAIN:COEFFICIENT:1?;");
+    adjCoefficient = response.toDouble();
+    QCOMPARE(adjCoefficient, 0.0);
+
+    response = scpiClient.sendReceive("calc:adj1:send? 6307,SENSE:M0:250V:CORRECTION:GAIN:COEFFICIENT:2?;");
+    adjCoefficient = response.toDouble();
+    QCOMPARE(adjCoefficient, 0.0);
+
+    response = scpiClient.sendReceive("calc:adj1:send? 6307,SENSE:M0:250V:CORRECTION:GAIN:COEFFICIENT:3?;");
+    adjCoefficient = response.toDouble();
+    QCOMPARE(adjCoefficient, 0.0);
+}
+
+void test_adj_module_gain::twoNodesCheckCorrectionsCalculatedNonLinear()
+{
+    ModuleManagerTestRunner testRunner(":/session-minimal.json", true);
+    ScpiModuleClientBlocked scpiClient;
+
+    double error = 1.01;
+    AdjModuleTestHelper::setActualTestValues(testRunner, testvoltage, testcurrent, testangle, testfrequency);
+    QByteArray send = QString("calc:adj1:ampl UL1,250V,%1;|*stb?").arg(testvoltage*error).toLatin1();
+    QString response = scpiClient.sendReceive(send);
+    QCOMPARE(response, "+0");
+
+    // 200V on disaligned
+    AdjModuleTestHelper::setActualTestValues(testRunner, 2*testvoltage, testcurrent, testangle, testfrequency);
+    send = QString("calc:adj1:ampl UL1,250V,%1;|*stb?").arg(2*testvoltage*error*error).toLatin1();
+    response = scpiClient.sendReceive(send);
+    QCOMPARE(response, "+0");
+
+    response = scpiClient.sendReceive("calc:adj1:comp 1;|*stb?");
+    QCOMPARE(response, "+0");
+
+    // let's consider this a regression test and trust coefficients for now
+    response = scpiClient.sendReceive("calc:adj1:send? 6307,SENSE:M0:250V:CORRECTION:GAIN:COEFFICIENT:0?;");
+    double adjCoefficient = response.toDouble();
+    QCOMPARE(adjCoefficient, 1.0001);
+
+    response = scpiClient.sendReceive("calc:adj1:send? 6307,SENSE:M0:250V:CORRECTION:GAIN:COEFFICIENT:1?;");
+    adjCoefficient = response.toDouble();
+    QCOMPARE(adjCoefficient, 9.80392e-05);
+
+    response = scpiClient.sendReceive("calc:adj1:send? 6307,SENSE:M0:250V:CORRECTION:GAIN:COEFFICIENT:2?;");
+    adjCoefficient = response.toDouble();
+    QCOMPARE(adjCoefficient, 0.0);
+
+    response = scpiClient.sendReceive("calc:adj1:send? 6307,SENSE:M0:250V:CORRECTION:GAIN:COEFFICIENT:3?;");
+    adjCoefficient = response.toDouble();
+    QCOMPARE(adjCoefficient, 0.0);
+}
+
 void test_adj_module_gain::denyRangeNotSet()
 {
     ModuleManagerTestRunner testRunner(":/session-minimal.json", true);
