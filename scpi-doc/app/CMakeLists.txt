@@ -7,7 +7,6 @@ add_executable(scpi-doc-generator
 
 target_link_libraries(scpi-doc-generator
     PRIVATE
-    zera-modulemanager-testlib
     scpi-doc-lib
 )
 
