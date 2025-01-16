@@ -54,5 +54,5 @@ void ScpiDocGenerator::createHtml(QString zenuxRelease, QFileInfo sessionXml, QS
                 << htmlPath;
     sh.start("/bin/sh", paramList);
     sh.waitForFinished();
-    printf("%s", qPrintable(sh.readAll()));
+    qInfo("%s", qPrintable(sh.readAll()));
 }
