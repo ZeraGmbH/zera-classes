@@ -14,6 +14,7 @@ private slots:
     // from here on with permission
     void outOfLimitLower();
     void outOfLimitUpper();
+    void denyRangeNotSet();
 
     void oneNodeWithinLimitLower();
     void oneNodeWithinLimitUpper();
@@ -23,7 +24,6 @@ private slots:
     void twoNodesCheckCorrectionsCalculatedLinear();
     void twoNodesCheckCorrectionsCalculatedNonLinear();
 
-    void denyRangeNotSet();
 };
 
 #endif // TEST_ADJ_MODULE_GAIN_H

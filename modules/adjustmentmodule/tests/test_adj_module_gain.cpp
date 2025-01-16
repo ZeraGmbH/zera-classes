@@ -15,8 +15,8 @@ constexpr double limitOffset = 0.1;
 void test_adj_module_gain::noActValuesWithPermission()
 {
     ModuleManagerTestRunner testRunner(":/session-minimal.json", true);
-
     ScpiModuleClientBlocked scpiClient;
+
     // Init is missing by intention
     QString response = scpiClient.sendReceive("calc:adj1:ampl UL1,250V,199.9893000801;|*stb?");
     QCOMPARE(response, "+4");
@@ -25,9 +25,9 @@ void test_adj_module_gain::noActValuesWithPermission()
 void test_adj_module_gain::validActValuesWithPermission()
 {
     ModuleManagerTestRunner testRunner(":/session-minimal.json", true);
-    AdjModuleTestHelper::setActualTestValues(testRunner, testvoltage, testcurrent, testangle, testfrequency);
-
     ScpiModuleClientBlocked scpiClient;
+
+    AdjModuleTestHelper::setActualTestValues(testRunner, testvoltage, testcurrent, testangle, testfrequency);
     QString response = scpiClient.sendReceive("calc:adj1:ampl UL1,250V,100;|*stb?");
     QCOMPARE(response, "+0");
 }
@@ -35,9 +35,9 @@ void test_adj_module_gain::validActValuesWithPermission()
 void test_adj_module_gain::validActValuesWithoutPermission()
 {
     ModuleManagerTestRunner testRunner(":/session-minimal.json", false);
-    AdjModuleTestHelper::setActualTestValues(testRunner, testvoltage, testcurrent, testangle, testfrequency);
-
     ScpiModuleClientBlocked scpiClient;
+
+    AdjModuleTestHelper::setActualTestValues(testRunner, testvoltage, testcurrent, testangle, testfrequency);
     QString response = scpiClient.sendReceive("calc:adj1:ampl UL1,250V,100;|*stb?");
     QCOMPARE(response, "+4");
 }
@@ -45,11 +45,11 @@ void test_adj_module_gain::validActValuesWithoutPermission()
 void test_adj_module_gain::outOfLimitLower()
 {
     ModuleManagerTestRunner testRunner(":/session-minimal.json", true);
-    AdjModuleTestHelper::setActualTestValues(testRunner, testvoltage, testcurrent, testangle, testfrequency);
+    ScpiModuleClientBlocked scpiClient;
 
+    AdjModuleTestHelper::setActualTestValues(testRunner, testvoltage, testcurrent, testangle, testfrequency);
     double adjRefVoltage = testvoltage * (1-maxAmplitudeErrorPercent/100) - limitOffset;
     QByteArray send = QString("calc:adj1:ampl UL1,250V,%1;|*stb?").arg(adjRefVoltage).toLatin1();
-    ScpiModuleClientBlocked scpiClient;
     QString response = scpiClient.sendReceive(send);
     QCOMPARE(response, "+4");
 }
@@ -57,11 +57,23 @@ void test_adj_module_gain::outOfLimitLower()
 void test_adj_module_gain::outOfLimitUpper()
 {
     ModuleManagerTestRunner testRunner(":/session-minimal.json", true);
-    AdjModuleTestHelper::setActualTestValues(testRunner, testvoltage, testcurrent, testangle, testfrequency);
+    ScpiModuleClientBlocked scpiClient;
 
+    AdjModuleTestHelper::setActualTestValues(testRunner, testvoltage, testcurrent, testangle, testfrequency);
     double adjRefVoltage = testvoltage * (1+maxAmplitudeErrorPercent/100) + limitOffset;
     QByteArray send = QString("calc:adj1:ampl UL1,250V,%1;|*stb?").arg(adjRefVoltage).toLatin1();
+    QString response = scpiClient.sendReceive(send);
+    QCOMPARE(response, "+4");
+}
+
+void test_adj_module_gain::denyRangeNotSet()
+{
+    ModuleManagerTestRunner testRunner(":/session-minimal.json", true);
     ScpiModuleClientBlocked scpiClient;
+
+    AdjModuleTestHelper::setActualTestValues(testRunner, testvoltage, testcurrent, testangle, testfrequency);
+    double adjRefCurrent = testcurrent * (1+maxAmplitudeErrorPercent/100) - limitOffset;
+    QByteArray send = QString("calc:adj1:ampl IL1,2.5A,%1;|*stb?").arg(adjRefCurrent).toLatin1();
     QString response = scpiClient.sendReceive(send);
     QCOMPARE(response, "+4");
 }
@@ -69,11 +81,11 @@ void test_adj_module_gain::outOfLimitUpper()
 void test_adj_module_gain::oneNodeWithinLimitLower()
 {
     ModuleManagerTestRunner testRunner(":/session-minimal.json", true);
-    AdjModuleTestHelper::setActualTestValues(testRunner, testvoltage, testcurrent, testangle, testfrequency);
+    ScpiModuleClientBlocked scpiClient;
 
+    AdjModuleTestHelper::setActualTestValues(testRunner, testvoltage, testcurrent, testangle, testfrequency);
     double adjRefVoltage = testvoltage * (1-maxAmplitudeErrorPercent/100) + limitOffset;
     QByteArray send = QString("calc:adj1:ampl UL1,250V,%1;|*stb?").arg(adjRefVoltage).toLatin1();
-    ScpiModuleClientBlocked scpiClient;
     QString response = scpiClient.sendReceive(send);
     QCOMPARE(response, "+0");
 
@@ -246,7 +258,6 @@ void test_adj_module_gain::twoNodesCheckCorrectionsCalculatedNonLinear()
     QString response = scpiClient.sendReceive(send);
     QCOMPARE(response, "+0");
 
-    // 200V on disaligned
     AdjModuleTestHelper::setActualTestValues(testRunner, 2*testvoltage, testcurrent, testangle, testfrequency);
     send = QString("calc:adj1:ampl UL1,250V,%1;|*stb?").arg(2*testvoltage*error*error).toLatin1();
     response = scpiClient.sendReceive(send);
@@ -271,16 +282,4 @@ void test_adj_module_gain::twoNodesCheckCorrectionsCalculatedNonLinear()
     response = scpiClient.sendReceive("calc:adj1:send? 6307,SENSE:M0:250V:CORRECTION:GAIN:COEFFICIENT:3?;");
     adjCoefficient = response.toDouble();
     QCOMPARE(adjCoefficient, 0.0);
-}
-
-void test_adj_module_gain::denyRangeNotSet()
-{
-    ModuleManagerTestRunner testRunner(":/session-minimal.json", true);
-    AdjModuleTestHelper::setActualTestValues(testRunner, testvoltage, testcurrent, testangle, testfrequency);
-
-    double adjRefCurrent = testcurrent * (1+maxAmplitudeErrorPercent/100) - limitOffset;
-    QByteArray send = QString("calc:adj1:ampl IL1,2.5A,%1;|*stb?").arg(adjRefCurrent).toLatin1();
-    ScpiModuleClientBlocked scpiClient;
-    QString response = scpiClient.sendReceive(send);
-    QCOMPARE(response, "+4");
 }
