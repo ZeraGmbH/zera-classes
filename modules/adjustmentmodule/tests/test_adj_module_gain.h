@@ -25,6 +25,8 @@ private slots:
 
     void twoNodesCheckNodesGenerated();
     void twoNodesCheckNodesGeneratedInverted();
+
+    // Test on correction values should go zenux-services
     void oneNodeCheckCorrectionsCalculated();
     void oneNodeCheckCorrectionsCalculatedInverted();
     void twoNodesCheckCorrectionsCalculatedLinear();
