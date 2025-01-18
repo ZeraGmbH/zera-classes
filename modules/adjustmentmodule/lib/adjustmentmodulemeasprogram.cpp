@@ -218,7 +218,7 @@ void cAdjustmentModuleMeasProgram::setInterfaceValidation()
     m_pPARAdjustOffset->setValidator(adjValidatord);
 
     // validator for angle adjustment
-    dValidator = cDoubleValidator(0, 360,1e-7);
+    dValidator = cDoubleValidator(-360, 360,1e-7);
     adjValidatord = new cAdjustValidator3d(this);
     for (int i = 0; i < getConfData()->m_nAdjustmentChannelCount; i++) {
         sysName = getConfData()->m_AdjChannelList.at(i);
