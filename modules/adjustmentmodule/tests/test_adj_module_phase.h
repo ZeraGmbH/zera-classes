@@ -23,6 +23,13 @@ private slots:
     void oneNodeWithinLimitUpperIL1();
     void oneNodeOnPointIL1();
 
+    void outOfLimitLowerIL1_180();
+    void outOfLimitUpperIL1_180();
+    // TODO where is lack of accuracy introduced?
+    void oneNodewithinLimitLowerIL1_180();
+    void oneNodewithinLimitUpperIL1_180();
+    void oneNodeOnPointIL1_180();
+
     void outOfLimitLowerUL2();
     void outOfLimitUpperUL2();
     void withinLimitLowerUL2();

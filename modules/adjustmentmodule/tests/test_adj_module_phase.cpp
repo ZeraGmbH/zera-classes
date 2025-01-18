@@ -1,6 +1,7 @@
 #include "test_adj_module_phase.h"
 #include "adjustmentmodulemeasprogram.h"
 #include "adjmoduletesthelper.h"
+#include <cmath>
 #include <scpimoduleclientblocked.h>
 #include <QTest>
 
@@ -176,6 +177,105 @@ void test_adj_module_phase::oneNodeOnPointIL1()
     AdjModuleTestHelper::TAdjNodeValues node = AdjModuleTestHelper::parseNode(response);
     QCOMPARE(node.m_loadPoint, testfrequency);
     QCOMPARE(node.m_correction, nodeValExpected);
+}
+
+constexpr double angle180 = 180.0; // 180 is special see cAdjustmentModuleMeasProgram::symAngle
+
+void test_adj_module_phase::outOfLimitLowerIL1_180()
+{
+    ModuleManagerTestRunner testRunner(":/session-minimal.json", true);
+    AdjModuleTestHelper::setActualTestValues(testRunner, testvoltage, testcurrent, angle180, testfrequency);
+
+    const double adjRefAngle = angle180 - maxPhaseErrorDegrees - limitOffset;
+    QVERIFY(adjRefAngle > 0);
+    QByteArray send = QString("calc:adj1:phas IL1,10A,%1;|*stb?").arg(adjRefAngle).toLatin1();
+    ScpiModuleClientBlocked scpiClient;
+    QString response = scpiClient.sendReceive(send);
+    QCOMPARE(response, "+4");
+}
+
+void test_adj_module_phase::outOfLimitUpperIL1_180()
+{
+    ModuleManagerTestRunner testRunner(":/session-minimal.json", true);
+    AdjModuleTestHelper::setActualTestValues(testRunner, testvoltage, testcurrent, angle180, testfrequency);
+
+    const double adjRefAngle = angle180 + maxPhaseErrorDegrees + limitOffset;
+    QVERIFY(adjRefAngle > 0);
+    QByteArray send = QString("calc:adj1:phas IL1,10A,%1;|*stb?").arg(adjRefAngle).toLatin1();
+    ScpiModuleClientBlocked scpiClient;
+    QString response = scpiClient.sendReceive(send);
+    QCOMPARE(response, "+4");
+}
+
+// Hmm we see some acurracy loss on 180°:
+// Casting to float on QCOMPARE worked on X86-64 but failed on qemu-arm (OE) with
+// |    Actual   (float(node.m_correction)): 5e-06
+// |    Expected (float(nodeValExpected))  : 0
+static constexpr double epsilon180 = 2e-5;
+
+void test_adj_module_phase::oneNodewithinLimitLowerIL1_180()
+{
+    ModuleManagerTestRunner testRunner(":/session-minimal.json", true);
+    AdjModuleTestHelper::setActualTestValues(testRunner, testvoltage, testcurrent, angle180, testfrequency);
+
+    const double adjRefAngle = angle180 - maxPhaseErrorDegrees + limitOffset;
+    QVERIFY(adjRefAngle > 0);
+    QByteArray send = QString("calc:adj1:phas IL1,10A,%1;|*stb?").arg(adjRefAngle).toLatin1();
+    ScpiModuleClientBlocked scpiClient;
+    QString response = scpiClient.sendReceive(send);
+    QCOMPARE(response, "+0");
+
+    double nodeValExpected = cAdjustmentModuleMeasProgram::symAngle(angle180-adjRefAngle);
+    response = scpiClient.sendReceive("calc:adj1:send? 6307,SENSE:M3:10A:CORRECTION:PHASE:NODE:0?;");
+    AdjModuleTestHelper::TAdjNodeValues node = AdjModuleTestHelper::parseNode(response);
+    QCOMPARE(node.m_loadPoint, testfrequency);
+    if(fabs(node.m_correction-nodeValExpected) > epsilon180) {
+        qWarning("Too huge deviation: Expected %f, got %f", nodeValExpected, node.m_correction);
+        QVERIFY(false);
+    }
+}
+
+void test_adj_module_phase::oneNodewithinLimitUpperIL1_180()
+{
+    ModuleManagerTestRunner testRunner(":/session-minimal.json", true);
+    AdjModuleTestHelper::setActualTestValues(testRunner, testvoltage, testcurrent, angle180, testfrequency);
+
+    const double adjRefAngle = angle180 + maxPhaseErrorDegrees - limitOffset;
+    QVERIFY(adjRefAngle > 0);
+    QByteArray send = QString("calc:adj1:phas IL1,10A,%1;|*stb?").arg(adjRefAngle).toLatin1();
+    ScpiModuleClientBlocked scpiClient;
+    QString response = scpiClient.sendReceive(send);
+    QCOMPARE(response, "+0");
+
+    double nodeValExpected = cAdjustmentModuleMeasProgram::symAngle(angle180-adjRefAngle);
+    response = scpiClient.sendReceive("calc:adj1:send? 6307,SENSE:M3:10A:CORRECTION:PHASE:NODE:0?;");
+    AdjModuleTestHelper::TAdjNodeValues node = AdjModuleTestHelper::parseNode(response);
+    QCOMPARE(node.m_loadPoint, testfrequency);
+    if(fabs(node.m_correction-nodeValExpected) > epsilon180) {
+        qWarning("Too huge deviation: Expected %f, got %f", nodeValExpected, node.m_correction);
+        QVERIFY(false);
+    }
+}
+
+void test_adj_module_phase::oneNodeOnPointIL1_180()
+{
+    ModuleManagerTestRunner testRunner(":/session-minimal.json", true);
+    AdjModuleTestHelper::setActualTestValues(testRunner, testvoltage, testcurrent, angle180, testfrequency);
+
+    const double adjRefAngle = angle180;
+    QByteArray send = QString("calc:adj1:phas IL1,10A,%1;|*stb?").arg(adjRefAngle).toLatin1();
+    ScpiModuleClientBlocked scpiClient;
+    QString response = scpiClient.sendReceive(send);
+    QCOMPARE(response, "+0");
+
+    double nodeValExpected = cAdjustmentModuleMeasProgram::symAngle(angle180-adjRefAngle);
+    response = scpiClient.sendReceive("calc:adj1:send? 6307,SENSE:M3:10A:CORRECTION:PHASE:NODE:0?;");
+    AdjModuleTestHelper::TAdjNodeValues node = AdjModuleTestHelper::parseNode(response);
+    QCOMPARE(node.m_loadPoint, testfrequency);
+    if(fabs(node.m_correction-nodeValExpected) > epsilon180) {
+        qWarning("Too huge deviation: Expected %f, got %f", nodeValExpected, node.m_correction);
+        QVERIFY(false);
+    }
 }
 
 constexpr double angleUL2 = 120;
