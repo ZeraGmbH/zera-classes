@@ -13,12 +13,15 @@ private slots:
 
     // from here on with permission
     void absOutOfRangeLower();
+    void absWithinRangeLower();
     void absOutOfRangeUpper();
+    void absWithinRangeUpper();
 
     void outOfLimitLowerIL1();
     void outOfLimitUpperIL1();
-    void withinLimitLowerIL1();
-    void withinLimitUpperIL1();
+    void oneNodeWithinLimitLowerIL1();
+    void oneNodeWithinLimitUpperIL1();
+    void oneNodeOnPointIL1();
 
     void outOfLimitLowerUL2();
     void outOfLimitUpperUL2();
@@ -28,6 +31,7 @@ private slots:
     void denyRangeNotSet();
 private:
     double adjustAngle(double angle);
+    double adjustAngleWithNeg(double angle);
 };
 
 #endif // TEST_ADJ_MODULE_PHASE_H
