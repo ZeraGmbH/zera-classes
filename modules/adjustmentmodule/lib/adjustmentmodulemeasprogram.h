@@ -70,6 +70,7 @@ class cAdjustmentModuleMeasProgram: public cBaseMeasWorkProgram
 public:
     cAdjustmentModuleMeasProgram(cAdjustmentModule* module, std::shared_ptr<BaseModuleConfiguration> pConfiguration);
     void generateVeinInterface() override;
+    static double symAngle(double ang);
 
 signals:
     void computationContinue();
@@ -126,7 +127,6 @@ private:
     void setInterfaceValidation();
     void setAdjustEnvironment(QVariant var);
     double cmpPhase(QVariant var);
-    double symAngle(double ang);
     double calcAdjAbsoluteError();
     double calcAdjAbsoluteErrorNeg();
     bool checkRangeIsWanted(QString adjType);
