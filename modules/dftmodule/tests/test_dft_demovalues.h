@@ -12,9 +12,9 @@ private slots:
     void addCurrent();
     void setSymmetric();
 private:
-    float gradToRad(float grad);
+    double gradToRad(double grad);
     std::complex<float> getDspValue(QString valueChannelName, QVector<float> dspValues);
-    std::complex<float> getExpectedValue(float amplitude, float angle);
+    std::complex<float> getExpectedValue(double amplitude, double angle);
     static const QStringList mtRmsLayout;
 };
 

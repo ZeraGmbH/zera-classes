@@ -9,15 +9,15 @@ DemoValuesDspDft::DemoValuesDspDft(QStringList valueChannelList, int dftOrder) :
         m_values.insert(valueName, std::complex<float>());
 }
 
-void DemoValuesDspDft::setValue(QString valueChannelName, std::complex<float> value)
+void DemoValuesDspDft::setValue(QString valueChannelName, std::complex<double> value)
 {
     if(m_values.contains(valueChannelName))
         m_values[valueChannelName] = value;
 }
 
-void DemoValuesDspDft::setAllValuesSymmetric(float voltage, float current, float angleUi, bool invertedSequence)
+void DemoValuesDspDft::setAllValuesSymmetric(double voltage, double current, double angleUi, bool invertedSequence)
 {
-    float multiplier = M_SQRT2;
+    double multiplier = M_SQRT2;
     if(m_dftOrder == 0)
         // see comment in cDftModuleMeasProgram::dataReadDSP()
         multiplier = 2;
@@ -26,7 +26,7 @@ void DemoValuesDspDft::setAllValuesSymmetric(float voltage, float current, float
     int currAngle = 0;
     for(const auto &channel : qAsConst(voltageChannelNames)) {
         if(m_values.contains(channel)) {
-            m_values[channel] = std::polar(voltage * multiplier, -float(currAngle) * float(M_PI) / 180);
+            m_values[channel] = std::polar(voltage * multiplier, -double(currAngle) * M_PI / 180);
             currAngle = nextSymmetricAngle(currAngle);
         }
     }
@@ -34,7 +34,7 @@ void DemoValuesDspDft::setAllValuesSymmetric(float voltage, float current, float
     currAngle = 0;
     for(const auto &channel : qAsConst(currentChannelNames)) {
         if(m_values.contains(channel)) {
-            m_values[channel] = std::polar(current * multiplier, -(float(currAngle)+angleUi) * float(M_PI) / 180);
+            m_values[channel] = std::polar(current * multiplier, -(double(currAngle)+angleUi) * M_PI / 180);
             currAngle = nextSymmetricAngle(currAngle);
         }
     }
