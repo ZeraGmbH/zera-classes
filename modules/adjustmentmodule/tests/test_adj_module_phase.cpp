@@ -1,7 +1,6 @@
 #include "test_adj_module_phase.h"
 #include "adjustmentmodulemeasprogram.h"
 #include "adjmoduletesthelper.h"
-#include <cmath>
 #include <scpimoduleclientblocked.h>
 #include <QTest>
 
@@ -207,12 +206,6 @@ void test_adj_module_phase::outOfLimitUpperIL1_180()
     QCOMPARE(response, "+4");
 }
 
-// Hmm we see some acurracy loss on 180°:
-// Casting to float on QCOMPARE worked on X86-64 but failed on qemu-arm (OE) with
-// |    Actual   (float(node.m_correction)): 5e-06
-// |    Expected (float(nodeValExpected))  : 0
-static constexpr double epsilon180 = 2e-5;
-
 void test_adj_module_phase::oneNodewithinLimitLowerIL1_180()
 {
     ModuleManagerTestRunner testRunner(":/session-minimal.json", true);
@@ -229,10 +222,7 @@ void test_adj_module_phase::oneNodewithinLimitLowerIL1_180()
     response = scpiClient.sendReceive("calc:adj1:send? 6307,SENSE:M3:10A:CORRECTION:PHASE:NODE:0?;");
     AdjModuleTestHelper::TAdjNodeValues node = AdjModuleTestHelper::parseNode(response);
     QCOMPARE(node.m_loadPoint, testfrequency);
-    if(fabs(node.m_correction-nodeValExpected) > epsilon180) {
-        qWarning("Too huge deviation: Expected %f, got %f", nodeValExpected, node.m_correction);
-        QVERIFY(false);
-    }
+    QCOMPARE(node.m_correction, nodeValExpected);
 }
 
 void test_adj_module_phase::oneNodewithinLimitUpperIL1_180()
@@ -251,10 +241,7 @@ void test_adj_module_phase::oneNodewithinLimitUpperIL1_180()
     response = scpiClient.sendReceive("calc:adj1:send? 6307,SENSE:M3:10A:CORRECTION:PHASE:NODE:0?;");
     AdjModuleTestHelper::TAdjNodeValues node = AdjModuleTestHelper::parseNode(response);
     QCOMPARE(node.m_loadPoint, testfrequency);
-    if(fabs(node.m_correction-nodeValExpected) > epsilon180) {
-        qWarning("Too huge deviation: Expected %f, got %f", nodeValExpected, node.m_correction);
-        QVERIFY(false);
-    }
+    QCOMPARE(node.m_correction, nodeValExpected);
 }
 
 void test_adj_module_phase::oneNodeOnPointIL1_180()
@@ -272,10 +259,7 @@ void test_adj_module_phase::oneNodeOnPointIL1_180()
     response = scpiClient.sendReceive("calc:adj1:send? 6307,SENSE:M3:10A:CORRECTION:PHASE:NODE:0?;");
     AdjModuleTestHelper::TAdjNodeValues node = AdjModuleTestHelper::parseNode(response);
     QCOMPARE(node.m_loadPoint, testfrequency);
-    if(fabs(node.m_correction-nodeValExpected) > epsilon180) {
-        qWarning("Too huge deviation: Expected %f, got %f", nodeValExpected, node.m_correction);
-        QVERIFY(false);
-    }
+    QCOMPARE(node.m_correction, nodeValExpected);
 }
 
 constexpr double angleUL2 = 120;
