@@ -2,7 +2,6 @@
 #define SAMPLEMODULE_H
 
 #include "samplemodulemeasprogram.h"
-#include "samplechannel.h"
 #include "pllmeaschannel.h"
 #include "pllobsermatic.h"
 #include <basemeasmodule.h>

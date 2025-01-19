@@ -45,13 +45,6 @@ void cSampleModule::setupModule()
         connect(pllchn, &cPllMeasChannel::deactivated, this, &cSampleModule::deactivationContinue);
     }
 
-    // next we instantiate an object of sample channel so we can switch sample frequency ranges
-    cSampleChannel* schn = new cSampleChannel(this, *pConfData);
-
-    m_ModuleActivistList.append(schn);
-    connect(schn, &cSampleChannel::activated, this, &cSampleModule::activationContinue);
-    connect(schn, &cSampleChannel::deactivated, this, &cSampleModule::deactivationContinue);
-
     // we need some program that does the pll handling (observation, automatic, setting)
     m_pPllObsermatic = new cPllObsermatic(this, *pConfData);
     m_ModuleActivistList.append(m_pPllObsermatic);

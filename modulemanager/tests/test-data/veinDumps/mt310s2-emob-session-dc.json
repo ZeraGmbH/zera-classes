@@ -1010,16 +1010,6 @@
                 "INF_ModuleInterface": {
                     "Description": "Module's interface details"
                 },
-                "PAR_ChannelRange": {
-                    "Description": "Sampling channel's range",
-                    "Validation": {
-                        "Data": [
-                            "F50Hz",
-                            "F20Hz"
-                        ],
-                        "Type": "STRING"
-                    }
-                },
                 "PAR_PllAutomaticOnOff": {
                     "Description": "PLL automatic on/off",
                     "Validation": {
@@ -1058,14 +1048,6 @@
                 "Cmd": [
                     [
                         "CONFIGURATION",
-                        "SRANGE",
-                        "10",
-                        "PAR_ChannelRange",
-                        "0",
-                        ""
-                    ],
-                    [
-                        "CONFIGURATION",
                         "PLLAUTO",
                         "10",
                         "PAR_PllAutomaticOnOff",
@@ -1084,7 +1066,6 @@
                 "Name": "SAM1"
             }
         },
-        "PAR_ChannelRange": "F70Hz",
         "PAR_PllAutomaticOnOff": 0,
         "PAR_PllChannel": "",
         "SIG_PLL": 0
