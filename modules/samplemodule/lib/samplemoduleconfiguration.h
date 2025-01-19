@@ -19,7 +19,6 @@ enum moduleconfigstate
     setMeasureInterval,
     setSampleSystem, // we only support 1 system
     setPllChannelCount, // the number of sense channels the pll can be set to
-    setSampleSystemRange,
 
     setPllChannel1 = 16, // max. 32 channels
     setPllChannel = 48, // the pll setting we start with

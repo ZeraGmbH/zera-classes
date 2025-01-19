@@ -25,7 +25,6 @@
         <sample>
             <pllauto>1</pllauto>
             <pllchannel>m0</pllchannel>
-            <range>F70Hz</range>
         </sample>
     </parameter>
 </samplemodconfpar>

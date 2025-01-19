@@ -30,7 +30,6 @@ struct cObsermaticConfPar
     quint8 m_npllChannelCount; // how many channels for pll setting
     QStringList m_pllChannelList; // a list of channel system names the pll can be set to
     stringParameter m_pllSystemChannel;
-    stringParameter m_pllRange;
 };
 
 class cSampleModuleConfigData

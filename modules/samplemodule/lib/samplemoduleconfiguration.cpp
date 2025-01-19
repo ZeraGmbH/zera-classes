@@ -43,7 +43,6 @@ void cSampleModuleConfiguration::setConfiguration(QByteArray xmlString)
 
     m_ConfigXMLMap["samplemodconfpar:parameter:sample:pllauto"] = setPllAutomatic;
     m_ConfigXMLMap["samplemodconfpar:parameter:sample:pllchannel"] = setPllChannel;
-    m_ConfigXMLMap["samplemodconfpar:parameter:sample:range"] = setSampleSystemRange;
 
     if (m_pXMLReader->loadSchema(defaultXSDFile))
         m_pXMLReader->loadXMLFromString(QString::fromUtf8(xmlString.data(), xmlString.size()));
@@ -60,8 +59,6 @@ QByteArray cSampleModuleConfiguration::exportConfiguration()
 
     stringParameter* sPar;
     sPar = &m_pSampleModulConfigData->m_ObsermaticConfPar.m_pllSystemChannel;
-    m_pXMLReader->setValue(sPar->m_sKey, sPar->m_sPar);
-    sPar = &m_pSampleModulConfigData->m_ObsermaticConfPar.m_pllRange;
     m_pXMLReader->setValue(sPar->m_sKey, sPar->m_sPar);
 
     return m_pXMLReader->getXMLConfig().toUtf8();
@@ -109,10 +106,6 @@ void cSampleModuleConfiguration::configXMLInfo(QString key)
         case setPllChannel:
             m_pSampleModulConfigData->m_ObsermaticConfPar.m_pllSystemChannel.m_sKey = key;
             m_pSampleModulConfigData->m_ObsermaticConfPar.m_pllSystemChannel.m_sPar = m_pXMLReader->getValue(key);
-            break;
-        case setSampleSystemRange:
-            m_pSampleModulConfigData->m_ObsermaticConfPar.m_pllRange.m_sKey = key;
-            m_pSampleModulConfigData->m_ObsermaticConfPar.m_pllRange.m_sPar = m_pXMLReader->getValue(key);
             break;
         case setMeasureInterval:
             m_pSampleModulConfigData->m_fMeasInterval = m_pXMLReader->getValue(key).toDouble(&ok);

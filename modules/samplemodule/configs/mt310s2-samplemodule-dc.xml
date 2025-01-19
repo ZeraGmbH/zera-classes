@@ -25,7 +25,6 @@
         <sample>
             <pllauto>0</pllauto>
             <pllchannel>13Hz_DPLL</pllchannel>
-            <range>F70Hz</range>
         </sample>
     </parameter>
 </samplemodconfpar>
