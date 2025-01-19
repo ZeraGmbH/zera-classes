@@ -18,16 +18,21 @@ private slots:
     void absWithinRangeUpper();
 
     void outOfLimitLowerIL1();
+    void outOfLimitLowerIL1Neg();
     void outOfLimitUpperIL1();
+    void outOfLimitUpperIL1Neg();
     void oneNodeWithinLimitLowerIL1();
+    void oneNodeWithinLimitLowerIL1Neg();
     void oneNodeWithinLimitUpperIL1();
     void oneNodeOnPointIL1();
 
     void outOfLimitLowerIL1_180();
     void outOfLimitUpperIL1_180();
     void oneNodewithinLimitLowerIL1_180();
+    void oneNodewithinLimitLowerIL1_180Neg();
     void oneNodewithinLimitUpperIL1_180();
     void oneNodeOnPointIL1_180();
+    void oneNodeOnPointIL1_180Neg();
 
     void outOfLimitLowerUL2();
     void outOfLimitUpperUL2();

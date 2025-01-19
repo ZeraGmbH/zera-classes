@@ -47,7 +47,7 @@ void test_adj_module_phase::absOutOfRangeLower()
     AdjModuleTestHelper::setActualTestValues(testRunner, testvoltage, testcurrent, zeroangle, testfrequency);
 
     ScpiModuleClientBlocked scpiClient;
-    QString response = scpiClient.sendReceive("calc:adj1:phas IL1,10A,-0.0001;|*stb?");
+    QString response = scpiClient.sendReceive("calc:adj1:phas IL1,10A,-360.0001;|*stb?");
     QCOMPARE(response, "+4");
 }
 
@@ -57,7 +57,7 @@ void test_adj_module_phase::absWithinRangeLower()
     AdjModuleTestHelper::setActualTestValues(testRunner, testvoltage, testcurrent, zeroangle, testfrequency);
 
     ScpiModuleClientBlocked scpiClient;
-    QString response = scpiClient.sendReceive("calc:adj1:phas IL1,10A,0.0000;|*stb?");
+    QString response = scpiClient.sendReceive("calc:adj1:phas IL1,10A,-360.0000;|*stb?");
     QCOMPARE(response, "+0");
 }
 
@@ -94,6 +94,19 @@ void test_adj_module_phase::outOfLimitLowerIL1()
     QCOMPARE(response, "+4");
 }
 
+void test_adj_module_phase::outOfLimitLowerIL1Neg()
+{
+    ModuleManagerTestRunner testRunner(":/session-minimal.json", true);
+    AdjModuleTestHelper::setActualTestValues(testRunner, testvoltage, testcurrent, zeroangle, testfrequency);
+
+    const double adjRefAngle = adjustAngleWithNeg(zeroangle - maxPhaseErrorDegrees - limitOffset);
+    QVERIFY(adjRefAngle < 0);
+    QByteArray send = QString("calc:adj1:phas IL1,10A,%1;|*stb?").arg(adjRefAngle).toLatin1();
+    ScpiModuleClientBlocked scpiClient;
+    QString response = scpiClient.sendReceive(send);
+    QCOMPARE(response, "+4");
+}
+
 void test_adj_module_phase::outOfLimitUpperIL1()
 {
     ModuleManagerTestRunner testRunner(":/session-minimal.json", true);
@@ -101,6 +114,19 @@ void test_adj_module_phase::outOfLimitUpperIL1()
 
     const double adjRefAngle = adjustAngle(zeroangle + maxPhaseErrorDegrees + limitOffset);
     QVERIFY(adjRefAngle > 0);
+    QByteArray send = QString("calc:adj1:phas IL1,10A,%1;|*stb?").arg(adjRefAngle).toLatin1();
+    ScpiModuleClientBlocked scpiClient;
+    QString response = scpiClient.sendReceive(send);
+    QCOMPARE(response, "+4");
+}
+
+void test_adj_module_phase::outOfLimitUpperIL1Neg()
+{
+    ModuleManagerTestRunner testRunner(":/session-minimal.json", true);
+    AdjModuleTestHelper::setActualTestValues(testRunner, testvoltage, testcurrent, zeroangle, testfrequency);
+
+    const double adjRefAngle = -360 + adjustAngle(zeroangle + maxPhaseErrorDegrees + limitOffset);
+    QVERIFY(adjRefAngle < 0);
     QByteArray send = QString("calc:adj1:phas IL1,10A,%1;|*stb?").arg(adjRefAngle).toLatin1();
     ScpiModuleClientBlocked scpiClient;
     QString response = scpiClient.sendReceive(send);
@@ -137,6 +163,29 @@ void test_adj_module_phase::oneNodeWithinLimitLowerIL1()
 
     response = scpiClient.sendReceive("calc:adj1:send? 6307,SENSE:M3:10A:CORRECTION:PHASE:NODE:3?;");
     node = AdjModuleTestHelper::parseNode(response);
+    QCOMPARE(node.m_loadPoint, testfrequency);
+    QCOMPARE(node.m_correction, nodeValExpected);
+}
+
+void test_adj_module_phase::oneNodeWithinLimitLowerIL1Neg()
+{
+    ModuleManagerTestRunner testRunner(":/session-minimal.json", true);
+    AdjModuleTestHelper::setActualTestValues(testRunner, testvoltage, testcurrent, zeroangle, testfrequency);
+
+    const double adjRefAngle = zeroangle - maxPhaseErrorDegrees + limitOffset;
+    QVERIFY(adjRefAngle < 0);
+    // see oneNodeWithinLimitLowerIL1
+    const double adjRefAngleNotNeg = adjustAngle(-maxPhaseErrorDegrees + limitOffset);
+    QCOMPARE(cAdjustmentModuleMeasProgram::symAngle(adjRefAngle), cAdjustmentModuleMeasProgram::symAngle(adjRefAngleNotNeg));
+
+    QByteArray send = QString("calc:adj1:phas IL1,10A,%1;|*stb?").arg(adjRefAngle).toLatin1();
+    ScpiModuleClientBlocked scpiClient;
+    QString response = scpiClient.sendReceive(send);
+    QCOMPARE(response, "+0");
+
+    double nodeValExpected = cAdjustmentModuleMeasProgram::symAngle(zeroangle-adjRefAngle);
+    response = scpiClient.sendReceive("calc:adj1:send? 6307,SENSE:M3:10A:CORRECTION:PHASE:NODE:0?;");
+    AdjModuleTestHelper::TAdjNodeValues node = AdjModuleTestHelper::parseNode(response);
     QCOMPARE(node.m_loadPoint, testfrequency);
     QCOMPARE(node.m_correction, nodeValExpected);
 }
@@ -225,6 +274,25 @@ void test_adj_module_phase::oneNodewithinLimitLowerIL1_180()
     QCOMPARE(node.m_correction, nodeValExpected);
 }
 
+void test_adj_module_phase::oneNodewithinLimitLowerIL1_180Neg()
+{
+    ModuleManagerTestRunner testRunner(":/session-minimal.json", true);
+    AdjModuleTestHelper::setActualTestValues(testRunner, testvoltage, testcurrent, angle180, testfrequency);
+
+    const double adjRefAngle = -angle180 - maxPhaseErrorDegrees + limitOffset;
+    QVERIFY(adjRefAngle < 0);
+    QByteArray send = QString("calc:adj1:phas IL1,10A,%1;|*stb?").arg(adjRefAngle).toLatin1();
+    ScpiModuleClientBlocked scpiClient;
+    QString response = scpiClient.sendReceive(send);
+    QCOMPARE(response, "+0");
+
+    double nodeValExpected = cAdjustmentModuleMeasProgram::symAngle(angle180-adjRefAngle);
+    response = scpiClient.sendReceive("calc:adj1:send? 6307,SENSE:M3:10A:CORRECTION:PHASE:NODE:0?;");
+    AdjModuleTestHelper::TAdjNodeValues node = AdjModuleTestHelper::parseNode(response);
+    QCOMPARE(node.m_loadPoint, testfrequency);
+    QCOMPARE(node.m_correction, nodeValExpected);
+}
+
 void test_adj_module_phase::oneNodewithinLimitUpperIL1_180()
 {
     ModuleManagerTestRunner testRunner(":/session-minimal.json", true);
@@ -250,6 +318,24 @@ void test_adj_module_phase::oneNodeOnPointIL1_180()
     AdjModuleTestHelper::setActualTestValues(testRunner, testvoltage, testcurrent, angle180, testfrequency);
 
     const double adjRefAngle = angle180;
+    QByteArray send = QString("calc:adj1:phas IL1,10A,%1;|*stb?").arg(adjRefAngle).toLatin1();
+    ScpiModuleClientBlocked scpiClient;
+    QString response = scpiClient.sendReceive(send);
+    QCOMPARE(response, "+0");
+
+    double nodeValExpected = cAdjustmentModuleMeasProgram::symAngle(angle180-adjRefAngle);
+    response = scpiClient.sendReceive("calc:adj1:send? 6307,SENSE:M3:10A:CORRECTION:PHASE:NODE:0?;");
+    AdjModuleTestHelper::TAdjNodeValues node = AdjModuleTestHelper::parseNode(response);
+    QCOMPARE(node.m_loadPoint, testfrequency);
+    QCOMPARE(node.m_correction, nodeValExpected);
+}
+
+void test_adj_module_phase::oneNodeOnPointIL1_180Neg()
+{
+    ModuleManagerTestRunner testRunner(":/session-minimal.json", true);
+    AdjModuleTestHelper::setActualTestValues(testRunner, testvoltage, testcurrent, angle180, testfrequency);
+
+    const double adjRefAngle = -angle180;
     QByteArray send = QString("calc:adj1:phas IL1,10A,%1;|*stb?").arg(adjRefAngle).toLatin1();
     ScpiModuleClientBlocked scpiClient;
     QString response = scpiClient.sendReceive(send);
