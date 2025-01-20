@@ -10,11 +10,11 @@ class ScpiIfaceExportGenerator
 public:
     ScpiIfaceExportGenerator();
     ~ScpiIfaceExportGenerator();
-    QString getSessionScpiIface(QString device, QString session);
     void getAllSessionsScpiIfaceXmls(QString device, QString xmlDir);
 private:
     void createModman(QString device);
     void destroyModules();
+    QString getSessionScpiIface(QString session);
     void setDevice(QString device);
     void createXml(QString completeFileName, QString contents);
     std::unique_ptr<TestLicenseSystem> m_licenseSystem;
