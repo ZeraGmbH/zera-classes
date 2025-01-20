@@ -42,14 +42,11 @@ void ScpiIfaceExportGenerator::setDevice(QString device)
     }
 }
 
-QString ScpiIfaceExportGenerator::getSessionScpiIface(QString device, QString session)
+QString ScpiIfaceExportGenerator::getSessionScpiIface(QString session)
 {
-    QString scpiIface;
-    if(m_modmanConfig->getAvailableSessions().contains(session)) {
-        m_modman->changeSessionFile(session);
-        m_modman->waitUntilModulesAreReady();
-        scpiIface = m_modmanSetupFacade->getStorageSystem()->getDb()->getStoredValue(9999, "ACT_DEV_IFACE").toString();
-    }
+    m_modman->changeSessionFile(session);
+    m_modman->waitUntilModulesAreReady();
+    QString  scpiIface = m_modmanSetupFacade->getStorageSystem()->getDb()->getStoredValue(9999, "ACT_DEV_IFACE").toString();
     return scpiIface;
 }
 
@@ -58,7 +55,7 @@ void ScpiIfaceExportGenerator::getAllSessionsScpiIfaceXmls(QString device, QStri
     QString scpiIface;
     setDevice(device);
     for(const QString &session: m_modmanConfig->getAvailableSessions()) {
-        scpiIface = getSessionScpiIface(device, session);
+        scpiIface = getSessionScpiIface(session);
         QString xmlFileName(xmlDir + session);
         xmlFileName.replace("json", "xml");
         createXml(xmlFileName, scpiIface);
