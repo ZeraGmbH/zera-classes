@@ -10,12 +10,15 @@ class SessionExportGenerator
 public:
     SessionExportGenerator();
     ~SessionExportGenerator();
+
+    void setDevice(QString device);
+    QStringList getAvailableSessions();
+    void changeSession(QString session);
+    void generateDevIfaceXml(QString xmlDir);
     void getAllSessionsScpiIfaceXmls(QString device, QString xmlDir);
 private:
     void createModman(QString device);
     void destroyModules();
-    QString getSessionScpiIface(QString session);
-    void setDevice(QString device);
     void createXml(QString completeFileName, QString contents);
     std::unique_ptr<TestLicenseSystem> m_licenseSystem;
     ModulemanagerConfig *m_modmanConfig;
