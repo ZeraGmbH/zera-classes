@@ -15,6 +15,7 @@ public:
     QStringList getAvailableSessions();
     void changeSession(QString session);
     void generateDevIfaceXml(QString xmlDir);
+    QByteArray getVeinDump();
 private:
     void createModman(QString device);
     void destroyModules();

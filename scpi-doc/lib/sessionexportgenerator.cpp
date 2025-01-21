@@ -1,5 +1,6 @@
 #include "sessionexportgenerator.h"
 #include "factoryserviceinterfaces.h"
+#include <vs_dumpjson.h>
 #include <QFile>
 
 SessionExportGenerator::SessionExportGenerator()
@@ -60,6 +61,11 @@ void SessionExportGenerator::generateDevIfaceXml(QString xmlDir)
     QString xmlFileName(xmlDir + currentSession);
     xmlFileName.replace("json", "xml");
     createXml(xmlFileName, scpiIface);
+}
+
+QByteArray SessionExportGenerator::getVeinDump()
+{
+    return VeinStorage::DumpJson::dumpToByteArray(m_modmanSetupFacade->getStorageSystem()->getDb(), QList<int>(), QList<int>() << 9999);
 }
 
 void SessionExportGenerator::createXml(QString completeFileName, QString contents)
