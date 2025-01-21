@@ -14,9 +14,9 @@ public:
     cSCPICatalogCmdDelegate(QString cmdParent, QString cmd, quint8 type, cSCPIModule* scpimodule, cSCPICmdInfo* scpicmdinfo);
     virtual ~cSCPICatalogCmdDelegate();
     virtual void executeSCPI(cSCPIClient *client, QString& sInput) override;
-    void setOutput(cSCPICmdInfo* scpicmdinfo);
     void setOutput(QVariant modInterface);
 private:
+    void setOutput(cSCPICmdInfo* scpicmdinfo);
     cSCPIModule* m_pModule;
     cSCPICmdInfo* m_pSCPICmdInfo;
     QString m_sAnswer;

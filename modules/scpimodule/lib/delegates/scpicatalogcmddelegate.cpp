@@ -30,12 +30,6 @@ void cSCPICatalogCmdDelegate::executeSCPI(cSCPIClient *client, QString &sInput)
         client->receiveStatus(ZSCPI::nak);
 }
 
-void cSCPICatalogCmdDelegate::setOutput(cSCPICmdInfo *scpicmdinfo)
-{
-    QVariant ModInterface = m_pModule->getStorageDb()->getStoredValue(scpicmdinfo->entityId, QString("INF_ModuleInterface"));
-    setOutput(ModInterface);
-}
-
 void cSCPICatalogCmdDelegate::setOutput(QVariant modInterface)
 {
     QJsonDocument jsonDoc = QJsonDocument::fromJson(modInterface.toByteArray());
@@ -55,8 +49,11 @@ void cSCPICatalogCmdDelegate::setOutput(QVariant modInterface)
     }
 }
 
+void cSCPICatalogCmdDelegate::setOutput(cSCPICmdInfo *scpicmdinfo)
+{
+    QVariant ModInterface = m_pModule->getStorageDb()->getStoredValue(scpicmdinfo->entityId, QString("INF_ModuleInterface"));
+    setOutput(ModInterface);
 }
 
 
-
-
+}
