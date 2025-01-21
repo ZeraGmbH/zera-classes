@@ -8,20 +8,13 @@ DevicesExportGenerator::DevicesExportGenerator(QString zenuxRelease, QString htm
     m_zenuxRelease(zenuxRelease),
     m_htmlOutPath(htmlOutPath)
 {
+    qputenv("QT_FATAL_CRITICALS", "1");
+    m_xmlDirPath = m_htmlOutPath + "scpi-xmls/";
 }
 
 void DevicesExportGenerator::exportAll()
 {
-    qputenv("QT_FATAL_CRITICALS", "1");
-
-    SessionNamesMappingJson sessionNamesMapping(ModulemanagerConfig::getConfigFileNameFull());
-    if(!sessionNamesMapping.storeMappedJsonFile(m_htmlOutPath + "SessionNamesMapping.json"))
-        qFatal("Session names mapping json file could not be created!");
-
-    QString xmlDirPath = m_htmlOutPath + "scpi-xmls/";
-    QDir().mkdir(xmlDirPath);
-    QString htmlDirPath = m_htmlOutPath + "html-docs/";
-    QDir().mkdir(htmlDirPath);
+    QDir().mkdir(m_xmlDirPath);
 
     SessionExportGenerator sessionExportGenerator;
     QStringList devices = {"mt310s2", "com5003"};
@@ -29,29 +22,11 @@ void DevicesExportGenerator::exportAll()
         sessionExportGenerator.setDevice(device);
         for(const QString &session: sessionExportGenerator.getAvailableSessions()) {
             sessionExportGenerator.changeSession(session);
-            sessionExportGenerator.generateDevIfaceXml(xmlDirPath);
+            sessionExportGenerator.generateDevIfaceXml(m_xmlDirPath);
             m_veinDumps[session] = sessionExportGenerator.getVeinDump();
         }
     }
-
-    QDir xmlDir(xmlDirPath);
-    QString htmlPath;
-    QString sessionName;
-    for(auto xmlFile: xmlDir.entryInfoList({"*.xml"})) {
-        htmlPath = htmlDirPath + xmlFile.fileName().replace("xml", "html");
-        sessionName = sessionNamesMapping.getSessionNameForExternalUsers(xmlFile.fileName().replace("xml", "json"));
-        createHtml(xmlFile, sessionName, "false", htmlPath);
-    }
-
-    QFileInfo mtDefaultSessionXml(xmlDirPath + "/mt310s2-meas-session.xml");
-    htmlPath = htmlDirPath + mtDefaultSessionXml.fileName().replace("meas-session.xml", "adjustment.html");
-    createHtml(mtDefaultSessionXml, "", "true", htmlPath);
-
-    QFileInfo comDefaultSessionXml(xmlDirPath + "/com5003-meas-session.xml");
-    htmlPath = htmlDirPath + comDefaultSessionXml.fileName().replace("meas-session.xml", "adjustment.html");
-    createHtml(comDefaultSessionXml, "", "true", htmlPath);
-
-    xmlDir.removeRecursively();
+    createScpiDocHtmls();
 }
 
 VeinDumps DevicesExportGenerator::getVeinDumps()
@@ -59,7 +34,36 @@ VeinDumps DevicesExportGenerator::getVeinDumps()
     return m_veinDumps;
 }
 
-void DevicesExportGenerator::createHtml(QFileInfo sessionXml, QString sessionName, QString adjustment, QString htmlPath)
+void DevicesExportGenerator::createScpiDocHtmls()
+{
+    SessionNamesMappingJson sessionNamesMapping(ModulemanagerConfig::getConfigFileNameFull());
+    if(!sessionNamesMapping.storeMappedJsonFile(m_htmlOutPath + "SessionNamesMapping.json"))
+        qFatal("Session names mapping json file could not be created!");
+
+    QString htmlDirPath = m_htmlOutPath + "html-docs/";
+    QDir().mkdir(htmlDirPath);
+
+    QDir xmlDir(m_xmlDirPath);
+    QString htmlPath;
+    QString sessionName;
+    for(auto xmlFile: xmlDir.entryInfoList({"*.xml"})) {
+        htmlPath = htmlDirPath + xmlFile.fileName().replace("xml", "html");
+        sessionName = sessionNamesMapping.getSessionNameForExternalUsers(xmlFile.fileName().replace("xml", "json"));
+        convertXmlToHtml(xmlFile, sessionName, "false", htmlPath);
+    }
+
+    QFileInfo mtDefaultSessionXml(m_xmlDirPath + "/mt310s2-meas-session.xml");
+    htmlPath = htmlDirPath + mtDefaultSessionXml.fileName().replace("meas-session.xml", "adjustment.html");
+    convertXmlToHtml(mtDefaultSessionXml, "", "true", htmlPath);
+
+    QFileInfo comDefaultSessionXml(m_xmlDirPath + "/com5003-meas-session.xml");
+    htmlPath = htmlDirPath + comDefaultSessionXml.fileName().replace("meas-session.xml", "adjustment.html");
+    convertXmlToHtml(comDefaultSessionXml, "", "true", htmlPath);
+
+    xmlDir.removeRecursively();
+}
+
+void DevicesExportGenerator::convertXmlToHtml(QFileInfo sessionXml, QString sessionName, QString adjustment, QString htmlPath)
 {
     QProcess sh;
     QStringList paramList;
