@@ -2,21 +2,17 @@
 #define DEVICESEXPORTGENERATOR_H
 
 #include <QString>
-#include <QFileInfo>
+#include <QHash>
 
 typedef QHash<QString/*sessionName*/, QByteArray/*veinDump*/> VeinDumps;
 
 class DevicesExportGenerator
 {
 public:
-    DevicesExportGenerator(QString zenuxRelease, QString htmlOutPath);
+    DevicesExportGenerator(QString xmlDirPath);
     void exportAll();
     VeinDumps getVeinDumps();
 private:
-    void createScpiDocHtmls();
-    void convertXmlToHtml(QFileInfo sessionXml, QString sessionName, QString adjustment, QString htmlPath);
-    QString m_zenuxRelease;
-    QString m_htmlOutPath;
     QString m_xmlDirPath;
     VeinDumps m_veinDumps;
 };
