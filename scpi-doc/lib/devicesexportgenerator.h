@@ -13,9 +13,11 @@ public:
     void exportAll();
     VeinDumps getVeinDumps();
 private:
-    void createHtml(QFileInfo sessionXml, QString sessionName, QString adjustment, QString htmlPath);
+    void createScpiDocHtmls();
+    void convertXmlToHtml(QFileInfo sessionXml, QString sessionName, QString adjustment, QString htmlPath);
     QString m_zenuxRelease;
     QString m_htmlOutPath;
+    QString m_xmlDirPath;
     VeinDumps m_veinDumps;
 };
 
