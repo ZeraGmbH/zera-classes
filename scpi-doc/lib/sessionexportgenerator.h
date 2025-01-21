@@ -15,7 +15,6 @@ public:
     QStringList getAvailableSessions();
     void changeSession(QString session);
     void generateDevIfaceXml(QString xmlDir);
-    void getAllSessionsScpiIfaceXmls(QString device, QString xmlDir);
 private:
     void createModman(QString device);
     void destroyModules();

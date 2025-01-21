@@ -62,16 +62,6 @@ void SessionExportGenerator::generateDevIfaceXml(QString xmlDir)
     createXml(xmlFileName, scpiIface);
 }
 
-void SessionExportGenerator::getAllSessionsScpiIfaceXmls(QString device, QString xmlDir)
-{
-    QString scpiIface;
-    setDevice(device);
-    for(const QString &session: m_modmanConfig->getAvailableSessions()) {
-        changeSession(session);
-        generateDevIfaceXml(xmlDir);
-    }
-}
-
 void SessionExportGenerator::createXml(QString completeFileName, QString contents)
 {
     QFile xmlFile(completeFileName);

@@ -18,8 +18,14 @@ void ScpiDocGenerator::createDocs(QString zenuxRelease, QString htmlOutPath)
     QDir().mkdir(htmlDirPath);
 
     SessionExportGenerator sessionExportGenerator;
-    sessionExportGenerator.getAllSessionsScpiIfaceXmls("mt310s2", xmlDirPath);
-    sessionExportGenerator.getAllSessionsScpiIfaceXmls("com5003", xmlDirPath);
+    QStringList devices = {"mt310s2", "com5003"};
+    for(const QString &device: devices) {
+        sessionExportGenerator.setDevice(device);
+        for(const QString &session: sessionExportGenerator.getAvailableSessions()) {
+            sessionExportGenerator.changeSession(session);
+            sessionExportGenerator.generateDevIfaceXml(xmlDirPath);
+        }
+    }
 
     QDir xmlDir(xmlDirPath);
     QString htmlPath;
