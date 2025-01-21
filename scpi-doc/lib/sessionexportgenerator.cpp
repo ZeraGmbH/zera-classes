@@ -1,20 +1,20 @@
-#include "scpiifaceexportgenerator.h"
+#include "sessionexportgenerator.h"
 #include "factoryserviceinterfaces.h"
 #include <QFile>
 
-ScpiIfaceExportGenerator::ScpiIfaceExportGenerator()
+SessionExportGenerator::SessionExportGenerator()
 {
     ModuleManagerSetupFacade::registerMetaTypeStreamOperators();
     ModulemanagerConfig::setDemoDevice("mt310s2", false);
     m_modmanConfig = ModulemanagerConfig::getInstance();
 }
 
-ScpiIfaceExportGenerator::~ScpiIfaceExportGenerator()
+SessionExportGenerator::~SessionExportGenerator()
 {
     destroyModules();
 }
 
-void ScpiIfaceExportGenerator::createModman(QString device)
+void SessionExportGenerator::createModman(QString device)
 {
     qInfo("Create modman for device: %s\n", qPrintable(device));
     ModulemanagerConfig::setDemoDevice(device, false);
@@ -27,13 +27,13 @@ void ScpiIfaceExportGenerator::createModman(QString device)
     m_modman->startAllTestServices(device, false);
 }
 
-void ScpiIfaceExportGenerator::destroyModules()
+void SessionExportGenerator::destroyModules()
 {
     if(m_modman)
         m_modman->destroyModulesAndWaitUntilAllShutdown();
 }
 
-void ScpiIfaceExportGenerator::setDevice(QString device)
+void SessionExportGenerator::setDevice(QString device)
 {
     if(m_device != device) {
         destroyModules();
@@ -42,7 +42,7 @@ void ScpiIfaceExportGenerator::setDevice(QString device)
     }
 }
 
-QString ScpiIfaceExportGenerator::getSessionScpiIface(QString session)
+QString SessionExportGenerator::getSessionScpiIface(QString session)
 {
     m_modman->changeSessionFile(session);
     m_modman->waitUntilModulesAreReady();
@@ -50,7 +50,7 @@ QString ScpiIfaceExportGenerator::getSessionScpiIface(QString session)
     return scpiIface;
 }
 
-void ScpiIfaceExportGenerator::getAllSessionsScpiIfaceXmls(QString device, QString xmlDir)
+void SessionExportGenerator::getAllSessionsScpiIfaceXmls(QString device, QString xmlDir)
 {
     QString scpiIface;
     setDevice(device);
@@ -62,7 +62,7 @@ void ScpiIfaceExportGenerator::getAllSessionsScpiIfaceXmls(QString device, QStri
     }
 }
 
-void ScpiIfaceExportGenerator::createXml(QString completeFileName, QString contents)
+void SessionExportGenerator::createXml(QString completeFileName, QString contents)
 {
     QFile xmlFile(completeFileName);
     xmlFile.open(QFile::ReadWrite);

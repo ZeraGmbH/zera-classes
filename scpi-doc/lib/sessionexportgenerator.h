@@ -1,15 +1,15 @@
-#ifndef SCPIIFACEEXPORTGENERATOR_H
-#define SCPIIFACEEXPORTGENERATOR_H
+#ifndef SESSIONEXPORTGENERATOR_H
+#define SESSIONEXPORTGENERATOR_H
 
 #include "testlicensesystem.h"
 #include "testmodulemanager.h"
 #include "modulemanagerconfig.h"
 
-class ScpiIfaceExportGenerator
+class SessionExportGenerator
 {
 public:
-    ScpiIfaceExportGenerator();
-    ~ScpiIfaceExportGenerator();
+    SessionExportGenerator();
+    ~SessionExportGenerator();
     void getAllSessionsScpiIfaceXmls(QString device, QString xmlDir);
 private:
     void createModman(QString device);
@@ -24,4 +24,4 @@ private:
     QString m_device;
 };
 
-#endif // SCPIIFACEEXPORTGENERATOR_H
+#endif // SESSIONEXPORTGENERATOR_H

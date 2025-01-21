@@ -1,5 +1,5 @@
 #include "scpidocgenerator.h"
-#include "scpiifaceexportgenerator.h"
+#include "sessionexportgenerator.h"
 #include "sessionnamesmappingjson.h"
 #include <QProcess>
 #include <QDir>
@@ -17,9 +17,9 @@ void ScpiDocGenerator::createDocs(QString zenuxRelease, QString htmlOutPath)
     QString htmlDirPath = htmlOutPath + "html-docs/";
     QDir().mkdir(htmlDirPath);
 
-    ScpiIfaceExportGenerator scpiIfaceExportGenerator;
-    scpiIfaceExportGenerator.getAllSessionsScpiIfaceXmls("mt310s2", xmlDirPath);
-    scpiIfaceExportGenerator.getAllSessionsScpiIfaceXmls("com5003", xmlDirPath);
+    SessionExportGenerator sessionExportGenerator;
+    sessionExportGenerator.getAllSessionsScpiIfaceXmls("mt310s2", xmlDirPath);
+    sessionExportGenerator.getAllSessionsScpiIfaceXmls("com5003", xmlDirPath);
 
     QDir xmlDir(xmlDirPath);
     QString htmlPath;
