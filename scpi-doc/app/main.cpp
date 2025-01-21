@@ -1,4 +1,5 @@
 #include "devicesexportgenerator.h"
+#include "scpidocshtmlgenerator.h"
 #include <QCoreApplication>
 #include <QCommandLineParser>
 
@@ -10,6 +11,8 @@ int main(int argc, char *argv[])
     parser.addOption(zenuxVersion);
     parser.process(a);
     QString zenuxRelease = parser.value(zenuxVersion);
-    DevicesExportGenerator devicesExportGenerator(zenuxRelease, QStringLiteral(HTML_DOCS_PATH));
+    QString devIfaceXmlsPath = QStringLiteral(HTML_DOCS_PATH) + "scpi-xmls/";
+    DevicesExportGenerator devicesExportGenerator(devIfaceXmlsPath);
     devicesExportGenerator.exportAll();
+    ScpiDocsHtmlGenerator::createScpiDocHtmls(zenuxRelease, QStringLiteral(HTML_DOCS_PATH), devIfaceXmlsPath);
 }
