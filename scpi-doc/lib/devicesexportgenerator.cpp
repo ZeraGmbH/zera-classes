@@ -4,17 +4,23 @@
 #include <QProcess>
 #include <QDir>
 
-void DevicesExportGenerator::createDocs(QString zenuxRelease, QString htmlOutPath)
+DevicesExportGenerator::DevicesExportGenerator(QString zenuxRelease, QString htmlOutPath) :
+    m_zenuxRelease(zenuxRelease),
+    m_htmlOutPath(htmlOutPath)
+{
+}
+
+void DevicesExportGenerator::exportAll()
 {
     qputenv("QT_FATAL_CRITICALS", "1");
 
     SessionNamesMappingJson sessionNamesMapping(ModulemanagerConfig::getConfigFileNameFull());
-    if(!sessionNamesMapping.storeMappedJsonFile(htmlOutPath + "SessionNamesMapping.json"))
+    if(!sessionNamesMapping.storeMappedJsonFile(m_htmlOutPath + "SessionNamesMapping.json"))
         qFatal("Session names mapping json file could not be created!");
 
-    QString xmlDirPath = htmlOutPath + "scpi-xmls/";
+    QString xmlDirPath = m_htmlOutPath + "scpi-xmls/";
     QDir().mkdir(xmlDirPath);
-    QString htmlDirPath = htmlOutPath + "html-docs/";
+    QString htmlDirPath = m_htmlOutPath + "html-docs/";
     QDir().mkdir(htmlDirPath);
 
     SessionExportGenerator sessionExportGenerator;
@@ -24,6 +30,7 @@ void DevicesExportGenerator::createDocs(QString zenuxRelease, QString htmlOutPat
         for(const QString &session: sessionExportGenerator.getAvailableSessions()) {
             sessionExportGenerator.changeSession(session);
             sessionExportGenerator.generateDevIfaceXml(xmlDirPath);
+            m_veinDumps[session] = sessionExportGenerator.getVeinDump();
         }
     }
 
@@ -33,27 +40,32 @@ void DevicesExportGenerator::createDocs(QString zenuxRelease, QString htmlOutPat
     for(auto xmlFile: xmlDir.entryInfoList({"*.xml"})) {
         htmlPath = htmlDirPath + xmlFile.fileName().replace("xml", "html");
         sessionName = sessionNamesMapping.getSessionNameForExternalUsers(xmlFile.fileName().replace("xml", "json"));
-        createHtml(zenuxRelease, xmlFile, sessionName, "false", htmlPath);
+        createHtml(xmlFile, sessionName, "false", htmlPath);
     }
 
     QFileInfo mtDefaultSessionXml(xmlDirPath + "/mt310s2-meas-session.xml");
     htmlPath = htmlDirPath + mtDefaultSessionXml.fileName().replace("meas-session.xml", "adjustment.html");
-    createHtml(zenuxRelease, mtDefaultSessionXml, "", "true", htmlPath);
+    createHtml(mtDefaultSessionXml, "", "true", htmlPath);
 
     QFileInfo comDefaultSessionXml(xmlDirPath + "/com5003-meas-session.xml");
     htmlPath = htmlDirPath + comDefaultSessionXml.fileName().replace("meas-session.xml", "adjustment.html");
-    createHtml(zenuxRelease, comDefaultSessionXml, "", "true", htmlPath);
+    createHtml(comDefaultSessionXml, "", "true", htmlPath);
 
     xmlDir.removeRecursively();
 }
 
-void DevicesExportGenerator::createHtml(QString zenuxRelease, QFileInfo sessionXml, QString sessionName, QString adjustment, QString htmlPath)
+VeinDumps DevicesExportGenerator::getVeinDumps()
+{
+    return m_veinDumps;
+}
+
+void DevicesExportGenerator::createHtml(QFileInfo sessionXml, QString sessionName, QString adjustment, QString htmlPath)
 {
     QProcess sh;
     QStringList paramList;
     paramList = QStringList()
                 << QStringLiteral(SCPI_DOC_SOURCE_PATH) + "/create-html"
-                << zenuxRelease
+                << m_zenuxRelease
                 << sessionXml.filePath()
                 << sessionName
                 << adjustment

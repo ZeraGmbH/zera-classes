@@ -4,12 +4,19 @@
 #include <QString>
 #include <QFileInfo>
 
+typedef QHash<QString/*sessionName*/, QByteArray/*veinDump*/> VeinDumps;
+
 class DevicesExportGenerator
 {
 public:
-    static void createDocs(QString zenuxRelease, QString htmlOutPath);
+    DevicesExportGenerator(QString zenuxRelease, QString htmlOutPath);
+    void exportAll();
+    VeinDumps getVeinDumps();
 private:
-    static void createHtml(QString zenuxRelease, QFileInfo sessionXml, QString sessionName, QString adjustment, QString htmlPath);
+    void createHtml(QFileInfo sessionXml, QString sessionName, QString adjustment, QString htmlPath);
+    QString m_zenuxRelease;
+    QString m_htmlOutPath;
+    VeinDumps m_veinDumps;
 };
 
 #endif // DEVICESEXPORTGENERATOR_H

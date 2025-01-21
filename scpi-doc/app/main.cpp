@@ -10,5 +10,6 @@ int main(int argc, char *argv[])
     parser.addOption(zenuxVersion);
     parser.process(a);
     QString zenuxRelease = parser.value(zenuxVersion);
-    DevicesExportGenerator::createDocs(zenuxRelease, QStringLiteral(HTML_DOCS_PATH));
+    DevicesExportGenerator devicesExportGenerator(zenuxRelease, QStringLiteral(HTML_DOCS_PATH));
+    devicesExportGenerator.exportAll();
 }
