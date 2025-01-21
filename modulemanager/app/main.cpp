@@ -27,7 +27,7 @@
 static bool serverStarted = false;
 static VeinNet::NetworkSystem *netSystem = nullptr;
 static VeinNet::TcpSystem *tcpSystem = nullptr;
-static ModuleManagerSetupFacade *modManSetupFacade = nullptr;
+static std::unique_ptr<ModuleManagerSetupFacade> modManSetupFacade;
 static VeinStorage::AbstractComponentPtr entititesComponent;
 
 static QString getDemoDeviceName(int argc, char *argv[])
@@ -134,7 +134,7 @@ int main(int argc, char *argv[])
 
     QString licenseUrl = QString("file://%1/license-keys").arg(OPERATOR_HOME);
     LicenseSystem *licenseSystem = new LicenseSystem({QUrl(licenseUrl)}, app.get());
-    modManSetupFacade = new ModuleManagerSetupFacade(licenseSystem, mmConfig->isDevMode(), app.get());
+    modManSetupFacade = std::make_unique<ModuleManagerSetupFacade>(licenseSystem, mmConfig->isDevMode());
 
     AbstractFactoryServiceInterfacesPtr serviceInterfaceFactory;
     if(demoMode)
@@ -142,7 +142,7 @@ int main(int argc, char *argv[])
     else
         serviceInterfaceFactory = std::make_unique<FactoryServiceInterfaces>();
     ZeraModules::ModuleManager *modMan = new ZeraModules::ModuleManager(
-        modManSetupFacade,
+        modManSetupFacade.get(),
         serviceInterfaceFactory,
         VeinTcp::TcpNetworkFactory::create(),
         demoMode,
