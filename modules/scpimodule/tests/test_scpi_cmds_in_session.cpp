@@ -166,3 +166,11 @@ void test_scpi_cmds_in_session::multilineCommandsLastOpc()
     QCOMPARE(client.sendReceive("SENSE:RNG1:UL3:RANGE?"), "8V");
     QCOMPARE(client.sendReceive("SENSE:RNG1:UAUX:RANGE?"), "8V");
 }
+
+void test_scpi_cmds_in_session::catalogFormat()
+{
+    ModuleManagerTestRunner testRunner(":/mt310s2-meas-session.json");
+    ScpiModuleClientBlocked client;
+    QString sessionCatalog = client.sendReceive("CONFIGURATION:SYST:SESSION:CATALOG?");
+    QCOMPARE(sessionCatalog, "Default;EMOB AC;EMOB DC;DC: 4*Voltage / 1*Current");
+}
