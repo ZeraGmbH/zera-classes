@@ -21,6 +21,5 @@ target_link_libraries(scpi-doc-lib
     Qt5::Core
     zera-modulemanager-lib
     zera-modulemanager-testlib
-    Zera::VfFrameworkTest
     )
 
