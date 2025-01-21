@@ -46,12 +46,12 @@ void cSCPICatalogCmdDelegate::setOutput(QVariant modInterface)
     QJsonArray jsonArr;
     jsonArr = jsonObj["Data"].toArray();
 
-    QVariantList vaList = jsonArr.toVariantList();
-    m_sAnswer = vaList.at(0).toString();
-    int n = vaList.count();
-    if (n > 1) {
-        for (int i = 1; i < vaList.count(); i++)
-            m_sAnswer = m_sAnswer +";" + vaList.at(i).toString();
+    const QVariantList vaList = jsonArr.toVariantList();
+    m_sAnswer.clear();
+    for(int i=0; i<vaList.count(); ++i) {
+        if(i>0)
+            m_sAnswer += ";";
+        m_sAnswer += vaList.at(i).toString();
     }
 }
 
