@@ -1,4 +1,4 @@
-#include "scpidocgenerator.h"
+#include "devicesexportgenerator.h"
 #include <QCoreApplication>
 #include <QCommandLineParser>
 
@@ -10,5 +10,5 @@ int main(int argc, char *argv[])
     parser.addOption(zenuxVersion);
     parser.process(a);
     QString zenuxRelease = parser.value(zenuxVersion);
-    ScpiDocGenerator::createDocs(zenuxRelease, QStringLiteral(HTML_DOCS_PATH));
+    DevicesExportGenerator::createDocs(zenuxRelease, QStringLiteral(HTML_DOCS_PATH));
 }

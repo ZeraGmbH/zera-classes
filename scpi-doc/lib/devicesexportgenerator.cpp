@@ -1,10 +1,10 @@
-#include "scpidocgenerator.h"
+#include "devicesexportgenerator.h"
 #include "sessionexportgenerator.h"
 #include "sessionnamesmappingjson.h"
 #include <QProcess>
 #include <QDir>
 
-void ScpiDocGenerator::createDocs(QString zenuxRelease, QString htmlOutPath)
+void DevicesExportGenerator::createDocs(QString zenuxRelease, QString htmlOutPath)
 {
     qputenv("QT_FATAL_CRITICALS", "1");
 
@@ -47,7 +47,7 @@ void ScpiDocGenerator::createDocs(QString zenuxRelease, QString htmlOutPath)
     xmlDir.removeRecursively();
 }
 
-void ScpiDocGenerator::createHtml(QString zenuxRelease, QFileInfo sessionXml, QString sessionName, QString adjustment, QString htmlPath)
+void DevicesExportGenerator::createHtml(QString zenuxRelease, QFileInfo sessionXml, QString sessionName, QString adjustment, QString htmlPath)
 {
     QProcess sh;
     QStringList paramList;
