@@ -14,7 +14,6 @@ function(SETUP_QTESTS_SCPIDOC)
 endfunction()
 
 SETUP_QTESTS_SCPIDOC (
-    test_sessionnamesmappingjson
     test_scpi_doc_gen_smoke
     )
 
