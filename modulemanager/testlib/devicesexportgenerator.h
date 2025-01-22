@@ -1,6 +1,7 @@
 #ifndef DEVICESEXPORTGENERATOR_H
 #define DEVICESEXPORTGENERATOR_H
 
+#include <lxdmsessionchangeparam.h>
 #include <QString>
 #include <QHash>
 
@@ -10,7 +11,7 @@ class DevicesExportGenerator
 {
 public:
     DevicesExportGenerator(QString xmlDirPath);
-    void exportAll(bool useDevModmanConfig);
+    void exportAll(bool useDevModmanConfig, const LxdmSessionChangeParam &lxdmParam);
     VeinDumps getVeinDumps();
 private:
     QString m_xmlDirPath;

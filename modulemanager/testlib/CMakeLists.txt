@@ -27,6 +27,7 @@ target_link_libraries(zera-modulemanager-testlib
     module-service-interfaces-testlib
     Zera::VfConvenientCode
     Zera::veinserver-testlib
+    Zera::veinserver-demolib
     Zera::VfFrameworkTest
 )
 

@@ -3,6 +3,7 @@
 #include "scpidocshtmlgenerator.h"
 #include "modulemanagerconfig.h"
 #include <testloghelpers.h>
+#include <mocklxdmsessionchangeparamgenerator.h>
 #include <QTest>
 
 QTEST_MAIN(test_modman_regression_all_sessions)
@@ -15,7 +16,7 @@ void test_modman_regression_all_sessions::initTestCase()
 
     m_devIfaceXmlsPath = QStringLiteral(HTML_DOCS_PATH_TEST) + "scpi-xmls/";
     DevicesExportGenerator devicesExportGenerator(m_devIfaceXmlsPath);
-    devicesExportGenerator.exportAll(true);
+    devicesExportGenerator.exportAll(true, MockLxdmSessionChangeParamGenerator::generateTestSessionChanger(false));
     m_veinDumps = devicesExportGenerator.getVeinDumps();
 }
 

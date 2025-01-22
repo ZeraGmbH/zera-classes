@@ -8,7 +8,7 @@
 class SessionExportGenerator
 {
 public:
-    SessionExportGenerator(bool useDevModmanConfig);
+    SessionExportGenerator(bool useDevModmanConfig, const LxdmSessionChangeParam &lxdmParam);
     ~SessionExportGenerator();
 
     void setDevice(QString device);
@@ -20,12 +20,14 @@ private:
     void createModman(QString device);
     void destroyModules();
     void createXml(QString completeFileName, QString contents);
+
     std::unique_ptr<TestLicenseSystem> m_licenseSystem;
     ModulemanagerConfig *m_modmanConfig;
     std::unique_ptr<ModuleManagerSetupFacade> m_modmanSetupFacade;
     std::unique_ptr<TestModuleManager> m_modman;
     QString m_device;
     bool m_useDevModmanConfig;
+    const LxdmSessionChangeParam m_lxdmParam;
 };
 
 #endif // SESSIONEXPORTGENERATOR_H

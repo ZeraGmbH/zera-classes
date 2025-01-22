@@ -28,7 +28,7 @@
         "INF_ModuleInterface": {
             "ComponentInfo": {
                 "EntityName": {
-                    "Desciption": "Module's name"
+                    "Description": "Module's name"
                 },
                 "INF_ModuleInterface": {
                     "Description": "Module's interface details"
@@ -42,6 +42,16 @@
                             "EMOB AC",
                             "EMOB DC",
                             "Changing energy direction"
+                        ],
+                        "Type": "STRING"
+                    }
+                },
+                "XSession": {
+                    "Description": "XSession name",
+                    "Validation": {
+                        "Data": [
+                            "Foo",
+                            "Bar"
                         ],
                         "Type": "STRING"
                     }
@@ -63,9 +73,25 @@
                     ],
                     [
                         "CONFIGURATION",
+                        "XSESSION",
+                        "10",
+                        "XSession",
+                        "0",
+                        ""
+                    ],
+                    [
+                        "CONFIGURATION",
                         "SESSION:CATALOG",
                         "2",
                         "Session",
+                        "1",
+                        ""
+                    ],
+                    [
+                        "CONFIGURATION",
+                        "XSESSION:CATALOG",
+                        "2",
+                        "XSession",
                         "1",
                         ""
                     ]
@@ -81,7 +107,8 @@
             "mt310s2-emob-session-ac.json",
             "mt310s2-emob-session-dc.json",
             "mt310s2-ced-session.json"
-        ]
+        ],
+        "XSession": "Bar"
     },
     "1000": {
         "EntityName": "ModeModule1",

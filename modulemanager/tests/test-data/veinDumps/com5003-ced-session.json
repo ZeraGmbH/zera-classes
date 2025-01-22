@@ -30,7 +30,7 @@
         "INF_ModuleInterface": {
             "ComponentInfo": {
                 "EntityName": {
-                    "Desciption": "Module's name"
+                    "Description": "Module's name"
                 },
                 "INF_ModuleInterface": {
                     "Description": "Module's interface details"
@@ -43,6 +43,16 @@
                             "Changing energy direction",
                             "Reference",
                             "3 Systems / 2 Wires"
+                        ],
+                        "Type": "STRING"
+                    }
+                },
+                "XSession": {
+                    "Description": "XSession name",
+                    "Validation": {
+                        "Data": [
+                            "Foo",
+                            "Bar"
                         ],
                         "Type": "STRING"
                     }
@@ -64,9 +74,25 @@
                     ],
                     [
                         "CONFIGURATION",
+                        "XSESSION",
+                        "10",
+                        "XSession",
+                        "0",
+                        ""
+                    ],
+                    [
+                        "CONFIGURATION",
                         "SESSION:CATALOG",
                         "2",
                         "Session",
+                        "1",
+                        ""
+                    ],
+                    [
+                        "CONFIGURATION",
+                        "XSESSION:CATALOG",
+                        "2",
+                        "XSession",
                         "1",
                         ""
                     ]
@@ -81,7 +107,8 @@
             "com5003-ced-session.json",
             "com5003-ref-session.json",
             "com5003-perphase-session.json"
-        ]
+        ],
+        "XSession": "Bar"
     },
     "1000": {
         "EntityName": "ModeModule1",

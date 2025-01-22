@@ -1,6 +1,7 @@
 #include "devicesexportgenerator.h"
 #include "scpidocshtmlgenerator.h"
 #include "modulemanagerconfig.h"
+#include "mocklxdmsessionchangeparamgenerator.h"
 #include <QCoreApplication>
 #include <QCommandLineParser>
 
@@ -18,7 +19,8 @@ int main(int argc, char *argv[])
     QString sessionMapJsonPath = QStringLiteral(HTML_DOCS_PATH) + "SessionNamesMapping.json";
 
     DevicesExportGenerator devicesExportGenerator(devIfaceXmlsPath);
-    devicesExportGenerator.exportAll(false);
+
+    devicesExportGenerator.exportAll(false, MockLxdmSessionChangeParamGenerator::generateDemoSessionChanger());
     ScpiDocsHtmlGenerator::createScpiDocHtmls(ModulemanagerConfig::getConfigFileNameFull(),
                                               zenuxRelease,
                                               htmlOutPath,
