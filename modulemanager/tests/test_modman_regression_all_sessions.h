@@ -14,10 +14,12 @@ private slots:
     void allSessionsVeinDumps();
     void uniqueEntityNameEntityIdPairsCom5003();
     void uniqueEntityNameEntityIdPairsMt310s2();
+    void testGenerateScpiDocs();
 private:
     bool checkUniqueEntityIdNames(const QString& device);
     AbstractFactoryServiceInterfacesPtr m_serviceInterfaceFactory;
     VeinDumps m_veinDumps;
+    QString m_devIfaceXmlsPath;
 };
 
 #endif // TEST_MODMAN_REGRESSION_ALL_SESSIONS_H

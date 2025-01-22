@@ -1,5 +1,7 @@
 #include "test_modman_regression_all_sessions.h"
 #include "testmodulemanager.h"
+#include "scpidocshtmlgenerator.h"
+#include "modulemanagerconfig.h"
 #include <testloghelpers.h>
 #include <QTest>
 
@@ -11,8 +13,8 @@ void test_modman_regression_all_sessions::initTestCase()
     TestModuleManager::enableTests();
     qputenv("QT_FATAL_CRITICALS", "1");
 
-    QString devIfaceXmlsPath = QStringLiteral(HTML_DOCS_PATH_TEST) + "scpi-xmls/";
-    DevicesExportGenerator devicesExportGenerator(devIfaceXmlsPath);
+    m_devIfaceXmlsPath = QStringLiteral(HTML_DOCS_PATH_TEST) + "scpi-xmls/";
+    DevicesExportGenerator devicesExportGenerator(m_devIfaceXmlsPath);
     devicesExportGenerator.exportAll(true);
     m_veinDumps = devicesExportGenerator.getVeinDumps();
 }
@@ -40,6 +42,18 @@ void test_modman_regression_all_sessions::uniqueEntityNameEntityIdPairsCom5003()
 void test_modman_regression_all_sessions::uniqueEntityNameEntityIdPairsMt310s2()
 {
     QVERIFY(checkUniqueEntityIdNames("mt310s2"));
+}
+
+void test_modman_regression_all_sessions::testGenerateScpiDocs()
+{
+    QString htmlOutPath = QStringLiteral(HTML_DOCS_PATH_TEST) + "html-docs/";
+    QString sessionMapJsonPath = QStringLiteral(HTML_DOCS_PATH_TEST) + "SessionNamesMapping.json";
+
+    ScpiDocsHtmlGenerator::createScpiDocHtmls(ModulemanagerConfig::getConfigFileNameFull(),
+                                              "test_scpi_doc_gen_smoke",
+                                              htmlOutPath,
+                                              m_devIfaceXmlsPath,
+                                              sessionMapJsonPath);
 }
 
 bool test_modman_regression_all_sessions::checkUniqueEntityIdNames(const QString &device)
