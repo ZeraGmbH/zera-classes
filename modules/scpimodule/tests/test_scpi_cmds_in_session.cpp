@@ -169,7 +169,7 @@ void test_scpi_cmds_in_session::multilineCommandsLastOpc()
 
 void test_scpi_cmds_in_session::catalogFormat()
 {
-    ModuleManagerTestRunner testRunner(":/mt310s2-meas-session.json");
+    ModuleManagerTestRunner testRunner(":/session-scpi-only.json");
     ScpiModuleClientBlocked client;
     QString sessionCatalog = client.sendReceive("CONFIGURATION:SYST:SESSION:CATALOG?");
     QCOMPARE(sessionCatalog, "Default;EMOB AC;EMOB DC;DC: 4*Voltage / 1*Current");
