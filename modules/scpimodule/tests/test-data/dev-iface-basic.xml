@@ -6,7 +6,7 @@
   <CONFIGURATION Type="Model,Node">
    <SYST Type="Node">
     <NAMESESSION ValidPar="Default,EMOB AC,EMOB DC,DC: 4*Voltage / 1*Current" Description="Session name" ScpiPath="CONFIGURATION:SYST:NAMESESSION" DataType="STRING" Type="Query,Command+Par"/>
-    <XSESSION ScpiPath="CONFIGURATION:SYST:XSESSION" DataType="STRING" Description="XSession name" Type="Query,Command+Par">
+    <XSESSION ValidPar="Foo,Bar" Description="XSession name" Type="Query,Command+Par" ScpiPath="CONFIGURATION:SYST:XSESSION" DataType="STRING">
      <CATALOG ScpiPath="CONFIGURATION:SYST:XSESSION:CATALOG" Type="Query"/>
     </XSESSION>
     <SESSION Type="Node">

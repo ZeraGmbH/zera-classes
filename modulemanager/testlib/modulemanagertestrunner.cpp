@@ -1,11 +1,14 @@
 #include "modulemanagertestrunner.h"
 #include "vf_client_component_setter.h"
+#include <mocklxdmsessionchangeparamgenerator.h>
 #include <timemachineobject.h>
 
 ModuleManagerTestRunner::ModuleManagerTestRunner(QString sessionFileName, bool initialAdjPermission, QString deviceName)
 {
     m_licenseSystem = std::make_unique<TestLicenseSystem>();
-    m_modmanFacade = std::make_unique<ModuleManagerSetupFacade>(m_licenseSystem.get());
+    m_modmanFacade = std::make_unique<ModuleManagerSetupFacade>(m_licenseSystem.get(),
+                                                                false,
+                                                                MockLxdmSessionChangeParamGenerator::generateTestSessionChanger());
     m_serviceInterfaceFactory = std::make_shared<TestFactoryServiceInterfaces>();
     m_modMan = std::make_unique<TestModuleManager>(m_modmanFacade.get(), m_serviceInterfaceFactory);
     m_modMan->loadAllAvailableModulePlugins();
