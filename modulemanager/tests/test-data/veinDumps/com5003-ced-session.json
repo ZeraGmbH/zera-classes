@@ -40,10 +40,9 @@
                     "Validation": {
                         "Data": [
                             "Default",
-                            "DC: 4*Voltage / 1*Current",
-                            "EMOB AC",
-                            "EMOB DC",
-                            "Changing energy direction"
+                            "Changing energy direction",
+                            "Reference",
+                            "3 Systems / 2 Wires"
                         ],
                         "Type": "STRING"
                     }
@@ -78,11 +77,10 @@
         "ModulesPaused": false,
         "Session": "com5003-ced-session.json",
         "SessionsAvailable": [
-            "mt310s2-meas-session.json",
-            "mt310s2-dc-session.json",
-            "mt310s2-emob-session-ac.json",
-            "mt310s2-emob-session-dc.json",
-            "mt310s2-ced-session.json"
+            "com5003-meas-session.json",
+            "com5003-ced-session.json",
+            "com5003-ref-session.json",
+            "com5003-perphase-session.json"
         ]
     },
     "1000": {

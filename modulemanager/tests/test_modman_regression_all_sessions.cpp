@@ -37,6 +37,7 @@ void test_modman_regression_all_sessions::allSessionsVeinDumps()
     QFETCH(QString, sessionFileName);
     qInfo("Device %s / session file: %s", qPrintable(device), qPrintable(sessionFileName));
 
+    ModulemanagerConfig::setDemoDevice(device, true);
     TestLicenseSystem licenseSystem;
     ModuleManagerSetupFacade modManSetupFacade(&licenseSystem);
     TestModuleManager modMan(&modManSetupFacade, m_serviceInterfaceFactory);
@@ -83,6 +84,7 @@ bool test_modman_regression_all_sessions::checkUniqueEntityIdNames(const QString
 
     const QStringList sessionFileNames = getSessionFileNames(device);
     for(const QString &sessionFileName : sessionFileNames) {
+        ModulemanagerConfig::setDemoDevice(device, true);
         TestLicenseSystem licenseSystem;
         ModuleManagerSetupFacade modManSetupFacade(&licenseSystem);
         TestModuleManager modMan(&modManSetupFacade, m_serviceInterfaceFactory);
