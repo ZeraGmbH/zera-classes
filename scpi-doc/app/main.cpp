@@ -1,5 +1,6 @@
 #include "devicesexportgenerator.h"
 #include "scpidocshtmlgenerator.h"
+#include "modulemanagerconfig.h"
 #include <QCoreApplication>
 #include <QCommandLineParser>
 
@@ -14,5 +15,5 @@ int main(int argc, char *argv[])
     QString devIfaceXmlsPath = QStringLiteral(HTML_DOCS_PATH) + "scpi-xmls/";
     DevicesExportGenerator devicesExportGenerator(devIfaceXmlsPath);
     devicesExportGenerator.exportAll();
-    ScpiDocsHtmlGenerator::createScpiDocHtmls(zenuxRelease, QStringLiteral(HTML_DOCS_PATH), devIfaceXmlsPath);
+    ScpiDocsHtmlGenerator::createScpiDocHtmls(ModulemanagerConfig::getConfigFileNameFull(), zenuxRelease, QStringLiteral(HTML_DOCS_PATH), devIfaceXmlsPath);
 }
