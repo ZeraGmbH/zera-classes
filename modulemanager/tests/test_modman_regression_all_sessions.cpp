@@ -20,38 +20,21 @@ void test_modman_regression_all_sessions::initTestCase()
 
 void test_modman_regression_all_sessions::allSessionsVeinDumps_data()
 {
-    QTest::addColumn<QString>("device");
+    QString devIfaceXmlsPath = QStringLiteral(HTML_DOCS_PATH_TEST) + "scpi-xmls/";
+    DevicesExportGenerator devicesExportGenerator(devIfaceXmlsPath);
+    devicesExportGenerator.exportAll(true);
+    m_veinDumps = devicesExportGenerator.getVeinDumps();
+
     QTest::addColumn<QString>("sessionFileName");
-    const QStringList devices = QStringList() << "com5003" << "mt310s2";
-    for(const QString &device : devices) {
-        const QStringList sessionFileNames = getSessionFileNames(device);
-        for(const QString &sessionFileName : sessionFileNames) {
-            QTest::newRow(sessionFileName.toLatin1()) << device << sessionFileName;
-        }
-    }
+    for (const QString &sessionFileName: m_veinDumps.keys())
+        QTest::newRow(sessionFileName.toLatin1()) << sessionFileName;
 }
 
 void test_modman_regression_all_sessions::allSessionsVeinDumps()
 {
-    QFETCH(QString, device);
     QFETCH(QString, sessionFileName);
-    qInfo("Device %s / session file: %s", qPrintable(device), qPrintable(sessionFileName));
-
-    ModulemanagerConfig::setDemoDevice(device, true);
-    TestLicenseSystem licenseSystem;
-    ModuleManagerSetupFacade modManSetupFacade(&licenseSystem);
-    TestModuleManager modMan(&modManSetupFacade, m_serviceInterfaceFactory);
-    modMan.loadAllAvailableModulePlugins();
-    modMan.setupConnections();
-    modMan.startAllTestServices(device, false);
-    modMan.changeSessionFile(sessionFileName);
-    modMan.waitUntilModulesAreReady();
-
     QByteArray jsonExpected = TestLogHelpers::loadFile(QString(":/veinDumps/%1").arg(sessionFileName));
-    QByteArray jsonDumped = VeinStorage::DumpJson::dumpToByteArray(modManSetupFacade.getStorageSystem()->getDb(), QList<int>(), QList<int>() << 9999);
-
-    modMan.destroyModulesAndWaitUntilAllShutdown();
-
+    QByteArray jsonDumped = m_veinDumps.value(sessionFileName);
     QVERIFY(TestLogHelpers::compareAndLogOnDiff(jsonExpected, jsonDumped));
 }
 
