@@ -3,15 +3,14 @@
 #include <QDir>
 #include <qprocess.h>
 
-void ScpiDocsHtmlGenerator::createScpiDocHtmls(QString modmanConfigFile, QString zenuxRelease, QString docsPath, QString xmlDirPath)
+void ScpiDocsHtmlGenerator::createScpiDocHtmls(QString modmanConfigFile, QString zenuxRelease, QString htmlDirPath, QString xmlDirPath, QString sessionMapPath)
 {
     qputenv("QT_FATAL_CRITICALS", "1");
 
     SessionNamesMappingJson sessionNamesMapping(modmanConfigFile);
-    if(!sessionNamesMapping.storeMappedJsonFile(docsPath + "SessionNamesMapping.json"))
+    if(!sessionNamesMapping.storeMappedJsonFile(sessionMapPath))
         qFatal("Session names mapping json file could not be created!");
 
-    QString htmlDirPath = docsPath + "html-docs/";
     QDir().mkdir(htmlDirPath);
 
     QDir xmlDir(xmlDirPath);
