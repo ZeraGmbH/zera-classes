@@ -15,7 +15,6 @@ private slots:
     void uniqueEntityNameEntityIdPairsCom5003();
     void uniqueEntityNameEntityIdPairsMt310s2();
 private:
-    const QStringList getSessionFileNames(const QString deviceName);
     bool checkUniqueEntityIdNames(const QString& device);
     AbstractFactoryServiceInterfacesPtr m_serviceInterfaceFactory;
     VeinDumps m_veinDumps;
