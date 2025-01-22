@@ -11,9 +11,17 @@ int main(int argc, char *argv[])
     QCommandLineOption zenuxVersion("z", "Specify a Zenux release version after -z", "value");
     parser.addOption(zenuxVersion);
     parser.process(a);
+
     QString zenuxRelease = parser.value(zenuxVersion);
     QString devIfaceXmlsPath = QStringLiteral(HTML_DOCS_PATH) + "scpi-xmls/";
+    QString htmlOutPath = QStringLiteral(HTML_DOCS_PATH) + "html-docs/";
+    QString sessionMapJsonPath = QStringLiteral(HTML_DOCS_PATH) + "SessionNamesMapping.json";
+
     DevicesExportGenerator devicesExportGenerator(devIfaceXmlsPath);
     devicesExportGenerator.exportAll();
-    ScpiDocsHtmlGenerator::createScpiDocHtmls(ModulemanagerConfig::getConfigFileNameFull(), zenuxRelease, QStringLiteral(HTML_DOCS_PATH), devIfaceXmlsPath);
+    ScpiDocsHtmlGenerator::createScpiDocHtmls(ModulemanagerConfig::getConfigFileNameFull(),
+                                              zenuxRelease,
+                                              htmlOutPath,
+                                              devIfaceXmlsPath,
+                                              sessionMapJsonPath);
 }
