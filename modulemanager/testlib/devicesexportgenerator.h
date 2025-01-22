@@ -10,7 +10,7 @@ class DevicesExportGenerator
 {
 public:
     DevicesExportGenerator(QString xmlDirPath);
-    void exportAll();
+    void exportAll(bool useDevModmanConfig);
     VeinDumps getVeinDumps();
 private:
     QString m_xmlDirPath;

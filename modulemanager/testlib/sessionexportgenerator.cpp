@@ -3,10 +3,11 @@
 #include <vs_dumpjson.h>
 #include <QFile>
 
-SessionExportGenerator::SessionExportGenerator()
+SessionExportGenerator::SessionExportGenerator(bool useDevModmanConfig) :
+    m_useDevModmanConfig(useDevModmanConfig)
 {
     ModuleManagerSetupFacade::registerMetaTypeStreamOperators();
-    ModulemanagerConfig::setDemoDevice("mt310s2", false);
+    ModulemanagerConfig::setDemoDevice("mt310s2", m_useDevModmanConfig);
     m_modmanConfig = ModulemanagerConfig::getInstance();
 }
 
@@ -18,7 +19,7 @@ SessionExportGenerator::~SessionExportGenerator()
 void SessionExportGenerator::createModman(QString device)
 {
     qInfo("Create modman for device: %s\n", qPrintable(device));
-    ModulemanagerConfig::setDemoDevice(device, false);
+    ModulemanagerConfig::setDemoDevice(device, m_useDevModmanConfig);
     m_licenseSystem = std::make_unique<TestLicenseSystem>();
     m_modmanSetupFacade = std::make_unique<ModuleManagerSetupFacade>(m_licenseSystem.get(), m_modmanConfig->isDevMode());
     m_modman = std::make_unique<TestModuleManager>(m_modmanSetupFacade.get(), std::make_shared<FactoryServiceInterfaces>());
