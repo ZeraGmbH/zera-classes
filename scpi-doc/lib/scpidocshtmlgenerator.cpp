@@ -1,14 +1,13 @@
 #include "scpidocshtmlgenerator.h"
 #include "sessionnamesmappingjson.h"
-#include "modulemanagerconfig.h"
 #include <QDir>
 #include <qprocess.h>
 
-void ScpiDocsHtmlGenerator::createScpiDocHtmls(QString zenuxRelease, QString docsPath, QString xmlDirPath)
+void ScpiDocsHtmlGenerator::createScpiDocHtmls(QString modmanConfigFile, QString zenuxRelease, QString docsPath, QString xmlDirPath)
 {
     qputenv("QT_FATAL_CRITICALS", "1");
 
-    SessionNamesMappingJson sessionNamesMapping(ModulemanagerConfig::getConfigFileNameFull());
+    SessionNamesMappingJson sessionNamesMapping(modmanConfigFile);
     if(!sessionNamesMapping.storeMappedJsonFile(docsPath + "SessionNamesMapping.json"))
         qFatal("Session names mapping json file could not be created!");
 
