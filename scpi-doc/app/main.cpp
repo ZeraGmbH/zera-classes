@@ -18,7 +18,7 @@ int main(int argc, char *argv[])
     QString sessionMapJsonPath = QStringLiteral(HTML_DOCS_PATH) + "SessionNamesMapping.json";
 
     DevicesExportGenerator devicesExportGenerator(devIfaceXmlsPath);
-    devicesExportGenerator.exportAll();
+    devicesExportGenerator.exportAll(false);
     ScpiDocsHtmlGenerator::createScpiDocHtmls(ModulemanagerConfig::getConfigFileNameFull(),
                                               zenuxRelease,
                                               htmlOutPath,

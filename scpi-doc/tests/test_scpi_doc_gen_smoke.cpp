@@ -13,7 +13,7 @@ void test_scpi_doc_gen_smoke::generateAllDocs()
     QString sessionMapJsonPath = QStringLiteral(HTML_DOCS_PATH_TEST) + "SessionNamesMapping.json";
 
     DevicesExportGenerator devicesExportGenerator(devIfaceXmlsPath);
-    devicesExportGenerator.exportAll();
+    devicesExportGenerator.exportAll(true);
     ScpiDocsHtmlGenerator::createScpiDocHtmls(ModulemanagerConfig::getConfigFileNameFull(),
                                               "test_scpi_doc_gen_smoke",
                                               htmlOutPath,

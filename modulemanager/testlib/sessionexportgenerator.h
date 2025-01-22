@@ -8,7 +8,7 @@
 class SessionExportGenerator
 {
 public:
-    SessionExportGenerator();
+    SessionExportGenerator(bool useDevModmanConfig);
     ~SessionExportGenerator();
 
     void setDevice(QString device);
@@ -25,6 +25,7 @@ private:
     std::unique_ptr<ModuleManagerSetupFacade> m_modmanSetupFacade;
     std::unique_ptr<TestModuleManager> m_modman;
     QString m_device;
+    bool m_useDevModmanConfig;
 };
 
 #endif // SESSIONEXPORTGENERATOR_H
