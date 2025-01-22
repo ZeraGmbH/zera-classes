@@ -1,6 +1,6 @@
 {
     "0": {
-        "DevMode": false,
+        "DevMode": true,
         "Entities": [
             0,
             1000,
