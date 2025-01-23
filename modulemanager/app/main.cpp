@@ -20,6 +20,7 @@
 #include <vf_export.h>
 #include <vf_files.h>
 #include <tcpnetworkfactory.h>
+#include "mocklxdmsessionchangeparamgenerator.h"
 
 #include <QDebug>
 #include <QCommandLineParser>
@@ -134,7 +135,11 @@ int main(int argc, char *argv[])
 
     QString licenseUrl = QString("file://%1/license-keys").arg(OPERATOR_HOME);
     LicenseSystem *licenseSystem = new LicenseSystem({QUrl(licenseUrl)}, app.get());
-    modManSetupFacade = std::make_unique<ModuleManagerSetupFacade>(licenseSystem, mmConfig->isDevMode());
+    if(!demoMode)
+        modManSetupFacade = std::make_unique<ModuleManagerSetupFacade>(licenseSystem, demoMode);
+    else
+        modManSetupFacade = std::make_unique<ModuleManagerSetupFacade>(licenseSystem, demoMode,
+            MockLxdmSessionChangeParamGenerator::generateDemoSessionChanger());
 
     AbstractFactoryServiceInterfacesPtr serviceInterfaceFactory;
     if(demoMode)
