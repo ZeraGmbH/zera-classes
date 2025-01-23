@@ -21,7 +21,7 @@ add_custom_target(json-schemas ALL
 set(LOGGER_CONFIG_SCHEMA_CMDS)
 foreach(config ${LOGGER_CONFIG_FILES})
   list(APPEND LOGGER_CONFIG_SCHEMA_CMDS
-      COMMAND export PYTHONWARNINGS='ignore' && ${JSONSCHEMA} -i ${config} ${LOGGER_CONFIGS_SCHEMA} || (echo \"Error: Schema validation failed in '${config}'\" 1>&2$<SEMICOLON> exit 1)
+      COMMAND export PYTHONWARNINGS='ignore' && ${JSONSCHEMA} -i ${config} ${LOGGER_CONFIGS_SCHEMA} || (echo \"JSON validation failed in '${config}'\" 1>&2$<SEMICOLON> exit 1)
     )
 endforeach()
 
@@ -34,7 +34,7 @@ add_custom_target(logger-config-files ALL
 set(SESSION_SCHEMA_CMDS)
 foreach(config ${SESSION_FILES})
   list(APPEND SESSION_SCHEMA_CMDS
-      COMMAND export PYTHONWARNINGS='ignore' && ${JSONSCHEMA} -i ${config} ${SESSION_SCHEMA} || (echo \"Error: Schema validation failed in '${config}'\" 1>&2$<SEMICOLON> exit 1)
+      COMMAND export PYTHONWARNINGS='ignore' && ${JSONSCHEMA} -i ${config} ${SESSION_SCHEMA} || (echo \"JSON validation failed in '${config}'\" 1>&2$<SEMICOLON> exit 1)
     )
 endforeach()
 
