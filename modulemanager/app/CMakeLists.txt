@@ -12,7 +12,7 @@ target_link_libraries(zera-modulemanager
     PRIVATE
     Qt5::Gui
     zera-modulemanager-lib
-    Zera::veinserver-demolib
+    Zera::xsession-change-demolib
 )
 
 install(TARGETS zera-modulemanager
