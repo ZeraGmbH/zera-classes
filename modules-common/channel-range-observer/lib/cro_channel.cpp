@@ -131,8 +131,10 @@ TaskTemplatePtr Channel::getRangesRegisterChangeNotificationTask()
 void Channel::onInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant answer)
 {
     Q_UNUSED(reply)
-    if (msgnr == 0 && answer == notificationStr)
+    if (msgnr == 0 && answer == notificationStr) {
+        notifyRangeChangeReported();
         startFetch();
+    }
 }
 
 TaskTemplatePtr Channel::getFetchFinalTask()
@@ -148,6 +150,12 @@ void Channel::setAvailableRanges()
     for(const QString &rangeName : qAsConst(m_allRangeNamesOrderedByServer))
         if(m_rangeNameToRange[rangeName]->m_available)
             m_availableRangeNames.append(rangeName);
+}
+
+void Channel::notifyRangeChangeReported()
+{
+    m_rangeChangeInterruptCount++;
+    emit sigRangeChangeReported(m_channelMName, m_rangeChangeInterruptCount);
 }
 
 void Channel::notifyError(const QString &errMsg)

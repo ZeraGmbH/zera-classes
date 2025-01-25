@@ -32,6 +32,7 @@ public:
     const QStringList getAvailRangeNames() const;
     const RangePtr getRange(const QString &rangeName) const;
 signals:
+    void sigRangeChangeReported(QString channelMName, int interruptCounter);
     void sigFetchComplete(QString channelMName, bool ok);
 
 private slots:
@@ -45,12 +46,14 @@ private:
     TaskTemplatePtr getRangesRegisterChangeNotificationTask();
     TaskTemplatePtr getFetchFinalTask();
     void setAvailableRanges();
+    void notifyRangeChangeReported();
     static void notifyError(const QString &errMsg);
 
     const QString m_channelMName;
     QStringList m_allRangeNamesOrderedByServer;
     QStringList m_availableRangeNames;
     QHash<QString, RangePtr> m_rangeNameToRange;
+    int m_rangeChangeInterruptCount = 0;
 
     const NetworkConnectionInfo m_netInfo;
     const VeinTcp::AbstractTcpNetworkFactoryPtr m_tcpFactory;

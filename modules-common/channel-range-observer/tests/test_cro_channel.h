@@ -32,6 +32,8 @@ private slots:
     void checkAvailableRangesMtAdj();
     void checkAvailableRangesMtSequence();
     void checkScanTwiceAvailableRangesMtAdj();
+
+    void notifyRangeChangeByClampComeAndGo();
 private:
     void setupServers();
     void setupClient();
