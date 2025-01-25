@@ -98,7 +98,7 @@ void Channel::startAllRangesTasks()
     m_currentTasks->addSub(std::move(task));
     connect(m_currentTasks.get(), &TaskTemplate::sigFinish, this, [&](bool ok) {
         m_valid = ok;
-        emit sigFetchComplete(m_channelMName, ok);
+        emit sigChannelFetchComplete(m_channelMName, ok);
     });
     m_currentTasks->start();
 }

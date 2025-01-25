@@ -33,7 +33,7 @@ public:
     const RangePtr getRange(const QString &rangeName) const;
 signals:
     void sigRangeChangeReported(QString channelMName, int interruptCounter);
-    void sigFetchComplete(QString channelMName, bool ok);
+    void sigChannelFetchComplete(QString channelMName, bool ok);
 
 private slots:
     void onInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant answer);
