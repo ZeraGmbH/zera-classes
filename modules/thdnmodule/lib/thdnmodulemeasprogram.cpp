@@ -211,7 +211,7 @@ void cThdnModuleMeasProgram::setDspCmdList()
     // we compute or copy our wanted actual values
     for (int i = 0; i < m_veinActValueList.count(); i++) {
         QString channelMName = getConfData()->m_valueChannelList[i];
-        int dspChannel = observer->getChannel(channelMName)->m_dspChannel;
+        int dspChannel = observer->getChannel(channelMName)->getDspChannel();
         m_dspInterface->addCycListItem(QString("COPYDATA(CH%1,0,MEASSIGNAL)").arg(dspChannel));
         m_dspInterface->addCycListItem(QString("THDN(MEASSIGNAL,VALXTHDN+%1)").arg(i));
     }

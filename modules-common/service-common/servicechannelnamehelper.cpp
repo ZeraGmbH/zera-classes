@@ -33,8 +33,8 @@ ServiceChannelNameHelper::TChannelAliasUnit ServiceChannelNameHelper::getChannel
     TChannelAliasUnit ret;
     for(const QString &channelMName : channelNameList) {
         const ChannelRangeObserver::ChannelPtr channel = observer->getChannel(channelMName);
-        aliasedChannels.replace(channelMName, channel->m_alias);
-        ret.m_channelUnit = channel->m_unit;
+        aliasedChannels.replace(channelMName, channel->getAlias());
+        ret.m_channelUnit = channel->getUnit();
     }
     ret.m_channelAlias = aliasedChannels;
     return ret;

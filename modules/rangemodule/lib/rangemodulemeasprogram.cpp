@@ -194,7 +194,7 @@ void cRangeModuleMeasProgram::setDspCmdList()
     {
         const ChannelRangeObserver::ChannelPtr channel =
             m_pModule->getSharedChannelRangeObserver()->getChannel(m_ChannelList.at(i));
-        m_dspInterface->addCycListItem(QString("COPYDATA(CH%1,0,MEASSIGNAL)").arg(channel->m_dspChannel)); // for each channel we work on
+        m_dspInterface->addCycListItem(QString("COPYDATA(CH%1,0,MEASSIGNAL)").arg(channel->getDspChannel())); // for each channel we work on
         m_dspInterface->addCycListItem(QString("SETPEAK(MEASSIGNAL,CHXPEAK+%1)").arg(i)); // here we have signal with dc regardless subdc is configured
         //m_dspInterface->addCycListItem(QString("COPYDATA(CH%1,0,MEASSIGNAL)").arg(chnnr)); // for each channel we work on
         m_dspInterface->addCycListItem(QString("MULCCV(MEASSIGNAL,MEASSIGNAL,CHXRMS+%1)").arg(i));

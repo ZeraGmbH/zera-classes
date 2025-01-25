@@ -186,15 +186,15 @@ void test_cro_system_observer::checkValidChannels()
     observer.startFullScan();
     TimeMachineObject::feedEventLoop();
 
-    QCOMPARE(observer.getChannel("m0")->m_valid, true);
-    QCOMPARE(observer.getChannel("m1")->m_valid, true);
-    QCOMPARE(observer.getChannel("m2")->m_valid, true);
-    QCOMPARE(observer.getChannel("m3")->m_valid, true);
-    QCOMPARE(observer.getChannel("m4")->m_valid, true);
-    QCOMPARE(observer.getChannel("m5")->m_valid, true);
-    QCOMPARE(observer.getChannel("m6")->m_valid, true);
-    QCOMPARE(observer.getChannel("m7")->m_valid, true);
-    QCOMPARE(observer.getChannel("foo")->m_valid, false);
+    QCOMPARE(observer.getChannel("m0")->isValid(), true);
+    QCOMPARE(observer.getChannel("m1")->isValid(), true);
+    QCOMPARE(observer.getChannel("m2")->isValid(), true);
+    QCOMPARE(observer.getChannel("m3")->isValid(), true);
+    QCOMPARE(observer.getChannel("m4")->isValid(), true);
+    QCOMPARE(observer.getChannel("m5")->isValid(), true);
+    QCOMPARE(observer.getChannel("m6")->isValid(), true);
+    QCOMPARE(observer.getChannel("m7")->isValid(), true);
+    QCOMPARE(observer.getChannel("foo")->isValid(), false);
 }
 
 void test_cro_system_observer::checkAlias()
@@ -203,14 +203,14 @@ void test_cro_system_observer::checkAlias()
     observer.startFullScan();
     TimeMachineObject::feedEventLoop();
 
-    QCOMPARE(observer.getChannel("m0")->m_alias, "UL1");
-    QCOMPARE(observer.getChannel("m1")->m_alias, "UL2");
-    QCOMPARE(observer.getChannel("m2")->m_alias, "UL3");
-    QCOMPARE(observer.getChannel("m3")->m_alias, "IL1");
-    QCOMPARE(observer.getChannel("m4")->m_alias, "IL2");
-    QCOMPARE(observer.getChannel("m5")->m_alias, "IL3");
-    QCOMPARE(observer.getChannel("m6")->m_alias, "UAUX");
-    QCOMPARE(observer.getChannel("m7")->m_alias, "IAUX");
+    QCOMPARE(observer.getChannel("m0")->getAlias(), "UL1");
+    QCOMPARE(observer.getChannel("m1")->getAlias(), "UL2");
+    QCOMPARE(observer.getChannel("m2")->getAlias(), "UL3");
+    QCOMPARE(observer.getChannel("m3")->getAlias(), "IL1");
+    QCOMPARE(observer.getChannel("m4")->getAlias(), "IL2");
+    QCOMPARE(observer.getChannel("m5")->getAlias(), "IL3");
+    QCOMPARE(observer.getChannel("m6")->getAlias(), "UAUX");
+    QCOMPARE(observer.getChannel("m7")->getAlias(), "IAUX");
 }
 
 void test_cro_system_observer::checkDspChannel()
@@ -219,14 +219,14 @@ void test_cro_system_observer::checkDspChannel()
     observer.startFullScan();
     TimeMachineObject::feedEventLoop();
 
-    QCOMPARE(observer.getChannel("m0")->m_dspChannel, 0);
-    QCOMPARE(observer.getChannel("m1")->m_dspChannel, 2);
-    QCOMPARE(observer.getChannel("m2")->m_dspChannel, 4);
-    QCOMPARE(observer.getChannel("m3")->m_dspChannel, 1);
-    QCOMPARE(observer.getChannel("m4")->m_dspChannel, 3);
-    QCOMPARE(observer.getChannel("m5")->m_dspChannel, 5);
-    QCOMPARE(observer.getChannel("m6")->m_dspChannel, 6);
-    QCOMPARE(observer.getChannel("m7")->m_dspChannel, 7);
+    QCOMPARE(observer.getChannel("m0")->getDspChannel(), 0);
+    QCOMPARE(observer.getChannel("m1")->getDspChannel(), 2);
+    QCOMPARE(observer.getChannel("m2")->getDspChannel(), 4);
+    QCOMPARE(observer.getChannel("m3")->getDspChannel(), 1);
+    QCOMPARE(observer.getChannel("m4")->getDspChannel(), 3);
+    QCOMPARE(observer.getChannel("m5")->getDspChannel(), 5);
+    QCOMPARE(observer.getChannel("m6")->getDspChannel(), 6);
+    QCOMPARE(observer.getChannel("m7")->getDspChannel(), 7);
 }
 
 void test_cro_system_observer::checkUnit()
@@ -235,8 +235,8 @@ void test_cro_system_observer::checkUnit()
     observer.startFullScan();
     TimeMachineObject::feedEventLoop();
 
-    QCOMPARE(observer.getChannel("m0")->m_unit, "V");
-    QCOMPARE(observer.getChannel("m3")->m_unit, "A");
+    QCOMPARE(observer.getChannel("m0")->getUnit(), "V");
+    QCOMPARE(observer.getChannel("m3")->getUnit(), "A");
 }
 
 void test_cro_system_observer::checkRanges()
@@ -302,7 +302,7 @@ void test_cro_system_observer::getDataForInvalidChannel()
     observer.startFullScan();
     TimeMachineObject::feedEventLoop();
 
-    QCOMPARE(observer.getChannel("foo")->m_valid, false);
+    QCOMPARE(observer.getChannel("foo")->isValid(), false);
 }
 
 void test_cro_system_observer::invalidScan()

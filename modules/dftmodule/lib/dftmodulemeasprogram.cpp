@@ -259,12 +259,12 @@ void cDftModuleMeasProgram::setDspCmdList()
         QStringList channelMNameList = getConfData()->m_valueChannelList.at(i).split('-');
         // we have 1 or 2 entries for each value
         if (channelMNameList.count() == 1) {
-            int dspChannel = observer->getChannel(channelMNameList[0])->m_dspChannel;
+            int dspChannel = observer->getChannel(channelMNameList[0])->getDspChannel();
             m_dspInterface->addCycListItem(QString("COPYDATA(CH%1,0,MEASSIGNAL)").arg(dspChannel));
         }
         else {
-            int dspChannel0 = observer->getChannel(channelMNameList[0])->m_dspChannel;
-            int dspChannel1 = observer->getChannel(channelMNameList[1])->m_dspChannel;
+            int dspChannel0 = observer->getChannel(channelMNameList[0])->getDspChannel();
+            int dspChannel1 = observer->getChannel(channelMNameList[1])->getDspChannel();
             m_dspInterface->addCycListItem(QString("COPYDIFF(CH%1,CH%2,MEASSIGNAL)").arg(dspChannel0).arg(dspChannel1));
         }
         m_dspInterface->addCycListItem(QString("DFT(%1,MEASSIGNAL,VALXDFT+%2)").arg(getConfData()->m_nDftOrder).arg(2*i));
@@ -429,7 +429,7 @@ void cDftModuleMeasProgram::setRefChannelValidator()
     for(const QString &channelMName : channelMNames) {
         if(getConfData()->m_valueChannelList.contains(channelMName)) {
             ChannelRangeObserver::ChannelPtr channel = observer->getChannel(channelMName);
-            QString alias = channel->m_alias;
+            const QString alias = channel->getAlias();
             channelAliases.append(alias);
             m_ChannelSystemNameHash[alias] = channelMName;
         }

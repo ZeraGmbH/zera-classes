@@ -13,7 +13,7 @@ cBaseMeasChannel::cBaseMeasChannel(NetworkConnectionInfo pcbsocket,
 
 quint8 cBaseMeasChannel::getDSPChannelNr() const
 {
-    return m_channelObserver->m_dspChannel;
+    return m_channelObserver->getDspChannel();
 }
 
 QString cBaseMeasChannel::getMName() const
@@ -23,11 +23,10 @@ QString cBaseMeasChannel::getMName() const
 
 QString cBaseMeasChannel::getAlias()
 {
-    return m_channelObserver->m_alias;
+    return m_channelObserver->getAlias();
 }
 
 QString cBaseMeasChannel::getUnit()
 {
-    return m_channelObserver->m_unit;
+    return m_channelObserver->getUnit();
 }
-

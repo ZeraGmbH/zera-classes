@@ -173,7 +173,7 @@ void cOsciModuleMeasProgram::setDspCmdList()
     ChannelRangeObserver::SystemObserverPtr observer = m_pModule->getSharedChannelRangeObserver();
     int samples = observer->getSamplesPerPeriod();
     QString referenceChannel = getConfData()->m_RefChannel.m_sPar;
-    int referenceDspChannel = observer->getChannel(referenceChannel)->m_dspChannel;
+    int referenceDspChannel = observer->getChannel(referenceChannel)->getDspChannel();
     m_dspInterface->addCycListItem("STARTCHAIN(1,1,0x0101)"); // aktiv, prozessnr. (dummy),hauptkette 1 subkette 1 start
         m_dspInterface->addCycListItem(QString("CLEARN(%1,MEASSIGNAL)").arg(m_veinActValueList.count() * samples) ); // clear meassignal
         m_dspInterface->addCycListItem(QString("SETVAL(GAPCOUNT,%1)").arg(getConfData()->m_nGap)); // we start with the first period
@@ -207,7 +207,7 @@ void cOsciModuleMeasProgram::setDspCmdList()
         // now we do all necessary for each channel we work on
         for (int i = 0; i < m_veinActValueList.count(); i++) {
             QString channelMName = getConfData()->m_valueChannelList[i];
-            int dspChannel = observer->getChannel(channelMName)->m_dspChannel;
+            int dspChannel = observer->getChannel(channelMName)->getDspChannel();
             m_dspInterface->addCycListItem(QString("COPYMEM(%1,MEASSIGNAL+%2,WORKSPACE)").arg(samples).arg(i * samples));
             m_dspInterface->addCycListItem(QString("COPYDATA(CH%1,0,WORKSPACE+%2)").arg(dspChannel).arg(samples));
 
@@ -523,7 +523,7 @@ void cOsciModuleMeasProgram::newRefChannel(QVariant chn)
     getConfData()->m_RefChannel.m_sPar = channelMName;
     ChannelRangeObserver::SystemObserverPtr observer = m_pModule->getSharedChannelRangeObserver();
     ChannelRangeObserver::ChannelPtr channel = observer->getChannel(channelMName);
-    int dspChannel = channel->m_dspChannel;
+    int dspChannel = channel->getDspChannel();
     m_pParameterDSP->setVarData(QString("REFCHN:%1;").arg(dspChannel));
     m_MsgNrCmdList[m_dspInterface->dspMemoryWrite(m_pParameterDSP)] = writeparameter;
     emit m_pModule->parameterChanged();

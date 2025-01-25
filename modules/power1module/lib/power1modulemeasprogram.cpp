@@ -383,11 +383,11 @@ MeasSystemChannels cPower1ModuleMeasProgram::getMeasChannelUIPairs()
 {
     ChannelRangeObserver::SystemObserverPtr observer = m_pModule->getSharedChannelRangeObserver();
     MeasSystemChannels measChannelUIPairList;
-    for(auto &measChannelPair : getConfData()->m_sMeasSystemList) {
+    for(const auto &measChannelPair : getConfData()->m_sMeasSystemList) {
         QStringList channelPairSplit = measChannelPair.split(',');
         MeasSystemChannel measChannel;
-        measChannel.voltageChannel = observer->getChannel(channelPairSplit.at(0))->m_dspChannel;
-        measChannel.currentChannel = observer->getChannel(channelPairSplit.at(1))->m_dspChannel;
+        measChannel.voltageChannel = observer->getChannel(channelPairSplit.at(0))->getDspChannel();
+        measChannel.currentChannel = observer->getChannel(channelPairSplit.at(1))->getDspChannel();
         measChannelUIPairList.append(measChannel);
     }
     return measChannelUIPairList;
@@ -1327,8 +1327,8 @@ QString cPower1ModuleMeasProgram::getPhasePowerDescription(int measSystemNo)
             QStringList powerChannels = getConfData()->m_sMeasSystemList[measSystemNo].split(",");
             if(powerChannels.count() == 2) {
                 ChannelRangeObserver::SystemObserverPtr observer = m_pModule->getSharedChannelRangeObserver();
-                QString name0 = observer->getChannel(powerChannels[0])->m_alias;
-                QString name1 = observer->getChannel(powerChannels[1])->m_alias;
+                const QString name0 = observer->getChannel(powerChannels[0])->getAlias();
+                const QString name1 = observer->getChannel(powerChannels[1])->getAlias();
                 strDescription = QString("Actual power value %1/%2").arg(name0, name1);
             }
         }

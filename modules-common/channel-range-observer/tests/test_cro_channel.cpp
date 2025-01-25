@@ -122,9 +122,9 @@ void test_cro_channel::fetchCheckChannelDataM0()
     channel.startFetch();
     TimeMachineObject::feedEventLoop();
 
-    QCOMPARE(channel.m_alias, "UL1");
-    QCOMPARE(channel.m_unit, "V");
-    QCOMPARE(channel.m_dspChannel, 0);
+    QCOMPARE(channel.getAlias(), "UL1");
+    QCOMPARE(channel.getUnit(), "V");
+    QCOMPARE(channel.getDspChannel(), 0);
 }
 
 void test_cro_channel::fetchCheckChannelDataM3()
@@ -133,9 +133,9 @@ void test_cro_channel::fetchCheckChannelDataM3()
     channel.startFetch();
     TimeMachineObject::feedEventLoop();
 
-    QCOMPARE(channel.m_alias, "IL1");
-    QCOMPARE(channel.m_unit, "A");
-    QCOMPARE(channel.m_dspChannel, 1);
+    QCOMPARE(channel.getAlias(), "IL1");
+    QCOMPARE(channel.getUnit(), "A");
+    QCOMPARE(channel.getDspChannel(), 1);
 }
 
 void test_cro_channel::refetchAlthoughNotSuggestedWorks()

@@ -17,17 +17,16 @@ class Channel : public QObject
 {
     Q_OBJECT
 public:
-    bool m_valid = false;
-    QString m_alias;
-    QString m_unit;
-    int m_dspChannel = 0;
-
     Channel(const QString &channelMName,
             const NetworkConnectionInfo &netInfo,
             VeinTcp::AbstractTcpNetworkFactoryPtr tcpFactory);
-    void startFetch();
     // TODO: What if we are asked while fetching?
+    void startFetch();
     const QString getMName() const;
+    bool isValid() const;
+    QString getAlias() const;
+    QString getUnit() const;
+    int getDspChannel() const;
     const QStringList getAllRangeNames() const;
     const QStringList getAvailRangeNames() const;
     const RangePtr getRange(const QString &rangeName) const;
@@ -50,6 +49,11 @@ private:
     static void notifyError(const QString &errMsg);
 
     const QString m_channelMName;
+    bool m_valid = false;
+    QString m_alias;
+    QString m_unit;
+    int m_dspChannel = 0;
+
     QStringList m_allRangeNamesOrderedByServer;
     QStringList m_availableRangeNames;
     QHash<QString, RangePtr> m_rangeNameToRange;

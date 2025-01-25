@@ -361,11 +361,11 @@ void cPower2ModuleMeasProgram::setDspCmdList()
     ChannelRangeObserver::SystemObserverPtr observer = m_pModule->getSharedChannelRangeObserver();
     MeasSystemChannels measChannelPairList;
     cPower2ModuleConfigData *confdata = getConfData();
-    for(auto &measChannelPair : confdata->m_sMeasSystemList) {
+    for(const auto &measChannelPair : confdata->m_sMeasSystemList) {
         QStringList channelPairSplit = measChannelPair.split(',');
         MeasSystemChannel measChannel;
-        measChannel.voltageChannel = observer->getChannel(channelPairSplit.at(0))->m_dspChannel;
-        measChannel.currentChannel = observer->getChannel(channelPairSplit.at(1))->m_dspChannel;
+        measChannel.voltageChannel = observer->getChannel(channelPairSplit.at(0))->getDspChannel();
+        measChannel.currentChannel = observer->getChannel(channelPairSplit.at(1))->getDspChannel();
         measChannelPairList.append(measChannel);
     }
 

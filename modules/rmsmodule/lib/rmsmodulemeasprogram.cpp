@@ -238,12 +238,12 @@ void cRmsModuleMeasProgram::setDspCmdList()
         QStringList channelMNameList = getConfData()->m_valueChannelList.at(i).split('-');
         // we have 1 or 2 entries for each value
         if (channelMNameList.count() == 1) {
-            int dspChannel = observer->getChannel(channelMNameList[0])->m_dspChannel;
+            int dspChannel = observer->getChannel(channelMNameList[0])->getDspChannel();
             m_dspInterface->addCycListItem(QString("COPYDATA(CH%1,0,MEASSIGNAL)").arg(dspChannel));
         }
         else {
-            int dspChannel0 = observer->getChannel(channelMNameList[0])->m_dspChannel;
-            int dspChannel1 = observer->getChannel(channelMNameList[1])->m_dspChannel;
+            int dspChannel0 = observer->getChannel(channelMNameList[0])->getDspChannel();
+            int dspChannel1 = observer->getChannel(channelMNameList[1])->getDspChannel();
             m_dspInterface->addCycListItem(QString("COPYDIFF(CH%1,CH%2,MEASSIGNAL)").arg(dspChannel0).arg(dspChannel1));
         }
         m_dspInterface->addCycListItem(QString("MULCCV(MEASSIGNAL,MEASSIGNAL,VALXRMS+%1)").arg(i));

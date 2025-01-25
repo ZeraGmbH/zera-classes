@@ -54,6 +54,26 @@ const RangePtr Channel::getRange(const QString &rangeName) const
     return nullptr;
 }
 
+bool Channel::isValid() const
+{
+    return m_valid;
+}
+
+QString Channel::getAlias() const
+{
+    return m_alias;
+}
+
+QString Channel::getUnit() const
+{
+    return m_unit;
+}
+
+int Channel::getDspChannel() const
+{
+    return m_dspChannel;
+}
+
 void Channel::clearRanges()
 {
     m_allRangeNamesOrderedByServer.clear();

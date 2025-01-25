@@ -214,7 +214,7 @@ void cFftModuleMeasProgram::setDspCmdList()
     ChannelRangeObserver::SystemObserverPtr observer = m_pModule->getSharedChannelRangeObserver();
     int samples = observer->getSamplesPerPeriod();
     QString referenceChannel = getConfData()->m_RefChannel.m_sPar;
-    int referenceDspChannel = observer->getChannel(referenceChannel)->m_dspChannel;
+    int referenceDspChannel = observer->getChannel(referenceChannel)->getDspChannel();
     m_dspInterface->addCycListItem("STARTCHAIN(1,1,0x0101)"); // aktiv, prozessnr. (dummy),hauptkette 1 subkette 1 start
         m_dspInterface->addCycListItem(QString("CLEARN(%1,MEASSIGNAL)").arg(2*samples) ); // clear meassignal
         m_dspInterface->addCycListItem(QString("CLEARN(%1,FILTER)").arg(2 * 2 * m_nfftLen * m_veinActValueList.count()+1) ); // clear the whole filter incl. count
@@ -243,7 +243,7 @@ void cFftModuleMeasProgram::setDspCmdList()
     // we compute or copy our wanted actual values
     for (int i = 0; i < getConfData()->m_valueChannelList.count(); i++) {
         QString channelMName = getConfData()->m_valueChannelList[i];
-        int dspChannel = observer->getChannel(channelMName)->m_dspChannel;
+        int dspChannel = observer->getChannel(channelMName)->getDspChannel();
         m_dspInterface->addCycListItem(QString("COPYDATA(CH%1,0,MEASSIGNAL)").arg(dspChannel) );
         m_dspInterface->addCycListItem(QString("COPYDATA(CH%1,0,MEASSIGNAL+%2)").arg(dspChannel).arg(samples));
         m_dspInterface->addCycListItem(QString("INTERPOLATIONIND(%1,IPOLADR,FFTINPUT)").arg(m_nfftLen));
@@ -609,7 +609,7 @@ void cFftModuleMeasProgram::newRefChannel(QVariant chn)
     getConfData()->m_RefChannel.m_sPar = channelMName;
     ChannelRangeObserver::SystemObserverPtr observer = m_pModule->getSharedChannelRangeObserver();
     ChannelRangeObserver::ChannelPtr channel = observer->getChannel(channelMName);
-    int dspChannel = channel->m_dspChannel;
+    int dspChannel = channel->getDspChannel();
     m_pParameterDSP->setVarData(QString("REFCHN:%1;").arg(dspChannel));
     m_MsgNrCmdList[m_dspInterface->dspMemoryWrite(m_pParameterDSP)] = writeparameter;
     emit m_pModule->parameterChanged();
