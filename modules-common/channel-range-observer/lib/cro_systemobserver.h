@@ -20,7 +20,7 @@ public:
     const int getSamplesPerPeriod() const;
 signals:
     void sigFullScanFinished(bool ok);
-    void sigFetchComplete(QString channelMName, bool ok);
+    void sigFetchDone(QString channelMName, bool ok);
     friend class SystemObserverResetter;
 
 protected:

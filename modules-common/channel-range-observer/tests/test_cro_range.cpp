@@ -51,7 +51,7 @@ void test_cro_range::defaultOnStartup()
 void test_cro_range::fetchAvailable()
 {
     Range range("m0", "250V", netInfo, m_tcpFactory);
-    QSignalSpy spy(&range, &Range::sigFetchComplete);
+    QSignalSpy spy(&range, &Range::sigFetchDoneRange);
     range.startFetch();
     TimeMachineObject::feedEventLoop();
 
@@ -65,7 +65,7 @@ void test_cro_range::fetchAvailable()
 void test_cro_range::fetchNotAvailable()
 {
     Range range("m3", "2mV", netInfo, m_tcpFactory);
-    QSignalSpy spy(&range, &Range::sigFetchComplete);
+    QSignalSpy spy(&range, &Range::sigFetchDoneRange);
     range.startFetch();
     TimeMachineObject::feedEventLoop();
 
@@ -79,7 +79,7 @@ void test_cro_range::fetchNotAvailable()
 void test_cro_range::fetchInvalidChannel()
 {
     Range range("foo", "5000V", netInfo, m_tcpFactory);
-    QSignalSpy spy(&range, &Range::sigFetchComplete);
+    QSignalSpy spy(&range, &Range::sigFetchDoneRange);
     range.startFetch();
     TimeMachineObject::feedEventLoop();
 
@@ -93,7 +93,7 @@ void test_cro_range::fetchInvalidChannel()
 void test_cro_range::fetchInvalidRange()
 {
     Range range("m0", "foo", netInfo, m_tcpFactory);
-    QSignalSpy spy(&range, &Range::sigFetchComplete);
+    QSignalSpy spy(&range, &Range::sigFetchDoneRange);
     range.startFetch();
     TimeMachineObject::feedEventLoop();
 
@@ -107,7 +107,7 @@ void test_cro_range::fetchInvalidRange()
 void test_cro_range::fetchTwice()
 {
     Range range("m0", "250V", netInfo, m_tcpFactory);
-    QSignalSpy spy(&range, &Range::sigFetchComplete);
+    QSignalSpy spy(&range, &Range::sigFetchDoneRange);
 
     range.startFetch();
     TimeMachineObject::feedEventLoop();
@@ -152,7 +152,7 @@ void test_cro_range::fetchByTaskInvalid()
 void test_cro_range::refetchAlthoughNotSuggestedWorks()
 {
     Range range("m0", "250V", netInfo, m_tcpFactory);
-    QSignalSpy spy(&range, &Range::sigFetchComplete);
+    QSignalSpy spy(&range, &Range::sigFetchDoneRange);
 
     range.startFetch();
     TimeMachineObject::feedEventLoop();
@@ -171,7 +171,7 @@ void test_cro_range::refetchAlthoughNotSuggestedWorks()
 void test_cro_range::checkUrValue()
 {
     Range range("m0", "250V", netInfo, m_tcpFactory);
-    QSignalSpy spy(&range, &Range::sigFetchComplete);
+    QSignalSpy spy(&range, &Range::sigFetchDoneRange);
     range.startFetch();
     TimeMachineObject::feedEventLoop();
 
@@ -211,7 +211,7 @@ void test_cro_range::checkType()
 void test_cro_range::checkRejection()
 {
     Range range("m0", "250V", netInfo, m_tcpFactory);
-    QSignalSpy spy(&range, &Range::sigFetchComplete);
+    QSignalSpy spy(&range, &Range::sigFetchDoneRange);
     range.startFetch();
     TimeMachineObject::feedEventLoop();
 
@@ -222,7 +222,7 @@ void test_cro_range::checkRejection()
 void test_cro_range::checkOvRejection()
 {
     Range range("m0", "250V", netInfo, m_tcpFactory);
-    QSignalSpy spy(&range, &Range::sigFetchComplete);
+    QSignalSpy spy(&range, &Range::sigFetchDoneRange);
     range.startFetch();
     TimeMachineObject::feedEventLoop();
 
@@ -233,7 +233,7 @@ void test_cro_range::checkOvRejection()
 void test_cro_range::checkAdcRejection()
 {
     Range range("m0", "250V", netInfo, m_tcpFactory);
-    QSignalSpy spy(&range, &Range::sigFetchComplete);
+    QSignalSpy spy(&range, &Range::sigFetchDoneRange);
     range.startFetch();
     TimeMachineObject::feedEventLoop();
 

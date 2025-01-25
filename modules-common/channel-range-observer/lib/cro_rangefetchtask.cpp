@@ -10,7 +10,7 @@ RangeFetchTaskPtr RangeFetchTask::create(RangePtr range)
 RangeFetchTask::RangeFetchTask(RangePtr range) :
     m_range(range)
 {
-    connect(m_range.get(), &Range::sigFetchComplete,
+    connect(m_range.get(), &Range::sigFetchDoneRange,
             this, &RangeFetchTask::onRangeFetched);
 }
 

@@ -25,7 +25,7 @@ public:
           VeinTcp::AbstractTcpNetworkFactoryPtr tcpFactory);
     void startFetch();
 signals:
-    void sigFetchComplete(QString channelMName, QString rangeName, bool ok);
+    void sigFetchDoneRange(QString channelMName, QString rangeName, bool ok);
 
 private:
     void preparePcbInterface();

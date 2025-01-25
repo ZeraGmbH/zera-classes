@@ -71,8 +71,8 @@ void SystemObserver::doStartFullScan()
             m_channelMNameToChannel[channelMName] = channelObserver;
 
             allChannelsDetailsTasks->addSub(ChannelFetchTask::create(channelObserver));
-            connect(channelObserver.get(), &Channel::sigChannelFetchComplete,
-                    this, &SystemObserver::sigFetchComplete);
+            connect(channelObserver.get(), &Channel::sigFetchDoneChannel,
+                    this, &SystemObserver::sigFetchDone);
         }
         m_tempChannelMNames.clear();
         m_currentTasks->addSub(std::move(allChannelsDetailsTasks));

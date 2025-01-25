@@ -60,7 +60,7 @@ void Range::startFetch()
 
     m_currentTasks->addSub(std::move(rangesTasks));
     connect(m_currentTasks.get(), &TaskTemplate::sigFinish, this, [&](bool ok) {
-        emit sigFetchComplete(m_channelMName, m_rangeName, ok);
+        emit sigFetchDoneRange(m_channelMName, m_rangeName, ok);
     });
     m_currentTasks->start();
 }

@@ -53,7 +53,7 @@ void test_cro_channel::emptyOnStartup()
 void test_cro_channel::fetchDirect()
 {
     Channel channel("m0", netInfo, m_tcpFactory);
-    QSignalSpy spy(&channel, &Channel::sigChannelFetchComplete);
+    QSignalSpy spy(&channel, &Channel::sigFetchDoneChannel);
 
     channel.startFetch();
     TimeMachineObject::feedEventLoop();
@@ -66,7 +66,7 @@ void test_cro_channel::fetchDirect()
 void test_cro_channel::fetchDirectTwice()
 {
     Channel channel("m0", netInfo, m_tcpFactory);
-    QSignalSpy spy(&channel, &Channel::sigChannelFetchComplete);
+    QSignalSpy spy(&channel, &Channel::sigFetchDoneChannel);
 
     channel.startFetch();
     TimeMachineObject::feedEventLoop();
@@ -79,7 +79,7 @@ void test_cro_channel::fetchDirectTwice()
 void test_cro_channel::fetchInvalidChannel()
 {
     Channel channel("foo", netInfo, m_tcpFactory);
-    QSignalSpy spy(&channel, &Channel::sigChannelFetchComplete);
+    QSignalSpy spy(&channel, &Channel::sigFetchDoneChannel);
 
     channel.startFetch();
     TimeMachineObject::feedEventLoop();
@@ -141,7 +141,7 @@ void test_cro_channel::fetchCheckChannelDataM3()
 void test_cro_channel::refetchAlthoughNotSuggestedWorks()
 {
     Channel channel("m0", netInfo, m_tcpFactory);
-    QSignalSpy spy(&channel, &Channel::sigChannelFetchComplete);
+    QSignalSpy spy(&channel, &Channel::sigFetchDoneChannel);
 
     channel.startFetch();
     TimeMachineObject::feedEventLoop();
@@ -242,7 +242,7 @@ void test_cro_channel::checkAvailableRangesMtAdj()
     channel.startFetch();
     TimeMachineObject::feedEventLoop();
 
-    QSignalSpy spy(&channel, &Channel::sigChannelFetchComplete);
+    QSignalSpy spy(&channel, &Channel::sigFetchDoneChannel);
     m_pcbInterface->setMMode("ADJ");
     TimeMachineObject::feedEventLoop();
     QCOMPARE(spy.count(), 1);
@@ -268,7 +268,7 @@ void test_cro_channel::checkAvailableRangesMtSequence()
                                      << "500mA" << "250mA" << "100mA" << "50mA" << "25mA";
     QCOMPARE(rangeNamesReceived, rangeNamesExpected);
 
-    QSignalSpy spy(&channel, &Channel::sigChannelFetchComplete);
+    QSignalSpy spy(&channel, &Channel::sigFetchDoneChannel);
     m_pcbInterface->setMMode("ADJ");
     TimeMachineObject::feedEventLoop();
     QCOMPARE(spy.count(), 1);
@@ -300,7 +300,7 @@ void test_cro_channel::checkScanTwiceAvailableRangesMtAdj()
     channel.startFetch();
     TimeMachineObject::feedEventLoop();
 
-    QSignalSpy spy(&channel, &Channel::sigChannelFetchComplete);
+    QSignalSpy spy(&channel, &Channel::sigFetchDoneChannel);
     m_pcbInterface->setMMode("ADJ");
     TimeMachineObject::feedEventLoop();
     QCOMPARE(spy.count(), 1);

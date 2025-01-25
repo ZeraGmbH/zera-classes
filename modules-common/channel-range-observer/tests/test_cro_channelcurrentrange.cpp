@@ -52,7 +52,7 @@ void test_cro_channelcurrentrange::noRangeOnStartup()
 void test_cro_channelcurrentrange::signalsForValidFetch()
 {
     ChannelCurrentRange ccr("m0", netInfo, m_tcpFactory);
-    QSignalSpy spy(&ccr, &ChannelCurrentRange::sigFetchComplete);
+    QSignalSpy spy(&ccr, &ChannelCurrentRange::sigFetchDoneCurrentRange);
 
     ccr.startObserve();
     TimeMachineObject::feedEventLoop();
@@ -67,7 +67,7 @@ void test_cro_channelcurrentrange::signalsForInvalidPort()
 {
     const NetworkConnectionInfo netInfoInvalid("127.0.0.1", 42);
     ChannelCurrentRange ccr("m0", netInfoInvalid, m_tcpFactory);
-    QSignalSpy spy(&ccr, &ChannelCurrentRange::sigFetchComplete);
+    QSignalSpy spy(&ccr, &ChannelCurrentRange::sigFetchDoneCurrentRange);
 
     ccr.startObserve();
     TimeMachineForTest::getInstance()->processTimers(CONNECTION_TIMEOUT);
@@ -81,7 +81,7 @@ void test_cro_channelcurrentrange::signalsForInvalidPort()
 void test_cro_channelcurrentrange::signalsForInvalidChannel()
 {
     ChannelCurrentRange ccr("foo", netInfo, m_tcpFactory);
-    QSignalSpy spy(&ccr, &ChannelCurrentRange::sigFetchComplete);
+    QSignalSpy spy(&ccr, &ChannelCurrentRange::sigFetchDoneCurrentRange);
 
     ccr.startObserve();
     TimeMachineObject::feedEventLoop();
@@ -108,7 +108,7 @@ void test_cro_channelcurrentrange::handleRangeChange()
     ccr.startObserve();
     TimeMachineObject::feedEventLoop();
 
-    QSignalSpy spy(&ccr, &ChannelCurrentRange::sigFetchComplete);
+    QSignalSpy spy(&ccr, &ChannelCurrentRange::sigFetchDoneCurrentRange);
     m_pcbInterface->setRange("m0", "8V");
     TimeMachineObject::feedEventLoop();
 
@@ -127,7 +127,7 @@ void test_cro_channelcurrentrange::startObserveTwiceHandleRangeChange()
     ccr.startObserve();
     TimeMachineObject::feedEventLoop();
 
-    QSignalSpy spy(&ccr, &ChannelCurrentRange::sigFetchComplete);
+    QSignalSpy spy(&ccr, &ChannelCurrentRange::sigFetchDoneCurrentRange);
     m_pcbInterface->setRange("m0", "8V");
     TimeMachineObject::feedEventLoop();
 
