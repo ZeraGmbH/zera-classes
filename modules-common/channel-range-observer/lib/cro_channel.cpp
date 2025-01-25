@@ -150,7 +150,7 @@ void Channel::setAvailableRanges()
             m_availableRangeNames.append(rangeName);
 }
 
-void Channel::notifyError(QString errMsg)
+void Channel::notifyError(const QString &errMsg)
 {
     qWarning("Channel error: %s", qPrintable(errMsg));
 }

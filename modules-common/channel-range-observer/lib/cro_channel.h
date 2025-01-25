@@ -45,7 +45,7 @@ private:
     TaskTemplatePtr getRangesRegisterChangeNotificationTask();
     TaskTemplatePtr getFetchFinalTask();
     void setAvailableRanges();
-    static void notifyError(QString errMsg);
+    static void notifyError(const QString &errMsg);
 
     const QString m_channelMName;
     QStringList m_allRangeNamesOrderedByServer;
