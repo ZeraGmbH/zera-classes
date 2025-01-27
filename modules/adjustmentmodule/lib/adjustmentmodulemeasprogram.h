@@ -128,7 +128,6 @@ private:
     void setAdjustEnvironment(QVariant var);
     double cmpPhase(QVariant var);
     double calcAdjAbsoluteError();
-    double calcAdjAbsoluteErrorNeg();
     bool checkRangeIsWanted(QString adjType);
 
     cAdjustmentModule* m_pModule;

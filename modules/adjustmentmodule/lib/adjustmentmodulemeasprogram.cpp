@@ -487,11 +487,6 @@ double cAdjustmentModuleMeasProgram::calcAdjAbsoluteError()
     return fabs(100 * (m_AdjustTargetValue - m_AdjustActualValue) / m_AdjustActualValue);
 }
 
-double cAdjustmentModuleMeasProgram::calcAdjAbsoluteErrorNeg()
-{
-    return fabs(100 * (-m_AdjustTargetValue - m_AdjustActualValue) / m_AdjustActualValue);
-}
-
 bool cAdjustmentModuleMeasProgram::checkRangeIsWanted(QString adjType)
 {
     const VeinStorage::AbstractDatabase *storageDb = m_pModule->getStorageDb();
@@ -518,10 +513,8 @@ void cAdjustmentModuleMeasProgram::setAdjustAmplitudeStartCommand(QVariant var)
 
     const VeinStorage::AbstractDatabase *storageDb = m_pModule->getStorageDb();
     m_AdjustActualValue = storageDb->getStoredValue(adjustEntity, adjustComponent).toDouble();
-    bool outOfLimits = calcAdjAbsoluteError() > maxAmplitudeErrorPercent;
-    if(outOfLimits)
-        outOfLimits = calcAdjAbsoluteErrorNeg() > maxAmplitudeErrorPercent;
-    if(outOfLimits) {
+    double actWantedError = calcAdjAbsoluteError();
+    if(actWantedError > maxAmplitudeErrorPercent) {
         notifyError(QString("Amplitude to adjust is out of limit! Wanted: %1 / Current: %2").arg(m_AdjustTargetValue).arg(m_AdjustActualValue));
         m_pPARAdjustAmplitude->setError();
         return;
