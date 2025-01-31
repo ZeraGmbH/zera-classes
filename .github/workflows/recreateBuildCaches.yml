@@ -65,7 +65,7 @@ jobs:
 
       - name: Upload source artifact
         if: ${{ github.event_name != 'pull_request' }}
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: source-cache-${{ matrix.compiler }}
           path: /github/home/source-cache-files.tar.xz
@@ -79,7 +79,7 @@ jobs:
 
       - name: Upload build artifact
         if: ${{ github.event_name != 'pull_request' }}
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: build-cache-${{ matrix.compiler }}
           path: /github/home/build-cache-files.tar.xz
