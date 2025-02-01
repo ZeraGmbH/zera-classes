@@ -136,10 +136,10 @@ bool cAdjustmentModuleMeasProgram::checkExternalVeinComponents()
     return ok;
 }
 
-void cAdjustmentModuleMeasProgram::setAdjustEnvironment(QVariant var)
+void cAdjustmentModuleMeasProgram::setAdjustEnvironment(VfModuleParameter *veinParam, QVariant paramValue)
 {
-    m_currEnv.m_paramValue = var;
-    QStringList sl = var.toString().split(',');
+    m_currEnv.m_paramValue = paramValue;
+    QStringList sl = m_currEnv.m_paramValue.toString().split(',');
     m_currEnv.m_channelAlias = sl.at(0);
     m_currEnv.m_rangeName = sl.at(1);
     m_currEnv.m_targetValue = sl.at(2).toDouble();
@@ -508,9 +508,9 @@ bool cAdjustmentModuleMeasProgram::checkRangeIsWanted(QString adjType)
     return true;
 }
 
-void cAdjustmentModuleMeasProgram::setAdjustAmplitudeStartCommand(QVariant var)
+void cAdjustmentModuleMeasProgram::setAdjustAmplitudeStartCommand(QVariant paramValue)
 {
-    setAdjustEnvironment(var);
+    setAdjustEnvironment(m_pPARAdjustAmplitude, paramValue);
     if(!checkRangeIsWanted("gain")) {
         m_pPARAdjustAmplitude->setError();
         return;
@@ -559,9 +559,9 @@ void cAdjustmentModuleMeasProgram::adjustamplitudeSetNode()
     adjPhaseGainIterators->m_nAdjustGainIt++;
 }
 
-void cAdjustmentModuleMeasProgram::setAdjustPhaseStartCommand(QVariant var)
+void cAdjustmentModuleMeasProgram::setAdjustPhaseStartCommand(QVariant paramValue)
 {
-    setAdjustEnvironment(var);
+    setAdjustEnvironment(m_pPARAdjustPhase, paramValue);
     if(!checkRangeIsWanted("phase")) {
         m_pPARAdjustPhase->setError();
         return;
@@ -610,9 +610,9 @@ void cAdjustmentModuleMeasProgram::adjustphaseSetNode()
     adjPhaseGainIterators->m_nAdjustPhaseIt++;
 }
 
-void cAdjustmentModuleMeasProgram::setAdjustOffsetStartCommand(QVariant var)
+void cAdjustmentModuleMeasProgram::setAdjustOffsetStartCommand(QVariant paramValue)
 {
-    setAdjustEnvironment(var);
+    setAdjustEnvironment(m_pPARAdjustOffset, paramValue);
     if(!checkRangeIsWanted("offset")) {
         m_pPARAdjustOffset->setError();
         return;
