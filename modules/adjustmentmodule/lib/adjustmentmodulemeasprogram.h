@@ -139,7 +139,7 @@ private:
         QString m_channelMName;
         QString m_channelAlias;
         QString m_rangeName;
-        QVariant m_receivedPar;
+        QVariant m_paramValue;
         double m_targetValue = 0.0;
         double m_actualValue = 0.0;
         double m_AdjustFrequency = 0.0;
