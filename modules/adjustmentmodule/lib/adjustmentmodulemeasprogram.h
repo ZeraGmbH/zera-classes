@@ -104,15 +104,15 @@ private slots:
     void setAdjustOffsetStatusStartCommand(QVariant var);
     void setAdjustInitStartCommand(QVariant var);
 
-    void setAdjustAmplitudeStartCommand(QVariant var);
+    void setAdjustAmplitudeStartCommand(QVariant paramValue);
     void adjustamplitudeGetCorr();
     void adjustamplitudeSetNode();
 
-    void setAdjustPhaseStartCommand(QVariant var);
+    void setAdjustPhaseStartCommand(QVariant paramValue);
     void adjustphaseGetCorr();
     void adjustphaseSetNode();
 
-    void setAdjustOffsetStartCommand(QVariant var);
+    void setAdjustOffsetStartCommand(QVariant paramValue);
 
     void transparentDataSend2Port(QVariant var);
     void writePCBAdjustmentData(QVariant var);
@@ -125,7 +125,7 @@ private:
     cAdjustmentModuleConfigData* getConfData();
     bool checkExternalVeinComponents();
     void setInterfaceValidation();
-    void setAdjustEnvironment(QVariant var);
+    void setAdjustEnvironment(VfModuleParameter* veinParam, QVariant paramValue);
     double cmpPhase(QVariant var);
     double calcAbsoluteError(double actualValue, double targetValue);
     double calcAdjAbsoluteError();
@@ -140,6 +140,7 @@ private:
         QString m_channelAlias;
         QString m_rangeName;
         QVariant m_paramValue;
+        VfModuleParameter* m_veinParam = nullptr;
         double m_targetValue = 0.0;
         double m_actualValue = 0.0;
         double m_AdjustFrequency = 0.0;
