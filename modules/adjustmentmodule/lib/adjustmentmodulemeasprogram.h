@@ -127,6 +127,7 @@ private:
     void setInterfaceValidation();
     void setAdjustEnvironment(QVariant var);
     double cmpPhase(QVariant var);
+    double calcAbsoluteError(double actualValue, double targetValue);
     double calcAdjAbsoluteError();
     bool checkRangeIsWanted(QString adjType);
 
@@ -134,15 +135,16 @@ private:
     // we use the following 7 parameters globally defined for easier
     // use within statemachines ... we have to keep in mind that adjustment
     // commands can only be used in sequence not in parallel
-    QString m_sAdjustSysName;
-    QString m_sAdjustChannel;
-    QString m_sAdjustRange;
-    double m_AdjustTargetValue;
-    double m_AdjustActualValue;
-    double m_AdjustFrequency;
-    double m_AdjustCorrection;
-
-    QVariant m_receivedPar;
+    struct TCurrentAdjEnvironment {
+        QString m_channelMName;
+        QString m_channelAlias;
+        QString m_rangeName;
+        QVariant m_receivedPar;
+        double m_targetValue = 0.0;
+        double m_actualValue = 0.0;
+        double m_AdjustFrequency = 0.0;
+        double m_AdjustCorrection = 0.0;
+    } m_currEnv;
 
     AdjustmentModuleCommonPtr m_commonObjects;
     AdjustmentModuleActivator m_activator;
