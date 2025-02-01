@@ -171,7 +171,12 @@ private:
     QStateMachine m_storageMachine;
     QState m_storageStartState;
     QFinalState m_storageFinishState;
-    int storageType;
+    enum StorageType {
+        UNDEFINED = 0,
+        INTERNAL = 1,
+        CLAMP = 2
+    };
+    StorageType m_storageType = UNDEFINED;
 
     // statemachine for amplitude adjustment
     QStateMachine m_adjustAmplitudeMachine;
