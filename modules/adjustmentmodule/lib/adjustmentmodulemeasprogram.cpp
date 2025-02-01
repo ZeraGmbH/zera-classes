@@ -111,7 +111,7 @@ bool cAdjustmentModuleMeasProgram::checkExternalVeinComponents()
     for (int i = 0; ok && i<getConfData()->m_nAdjustmentChannelCount; i++) {
         // we test if all configured actual value data exist
         QString chn = getConfData()->m_AdjChannelList.at(i);
-        adjInfo = getConfData()->m_AdjChannelInfoHash[chn]->amplitudeAdjInfo;
+        adjInfo = getConfData()->m_AdjChannelInfoHash[chn]->rmsAdjInfo;
         const QString errMagTemplate = "Entity %1 / component %2 not found";
         if (adjInfo.m_bAvail && !storageDb->hasStoredValue(adjInfo.m_nEntity, adjInfo.m_sComponent)) {
             notifyError(errMagTemplate.arg(adjInfo.m_nEntity).arg(adjInfo.m_sComponent));
@@ -122,7 +122,7 @@ bool cAdjustmentModuleMeasProgram::checkExternalVeinComponents()
             notifyError(errMagTemplate.arg(adjInfo.m_nEntity).arg(adjInfo.m_sComponent));
             ok = false;
         }
-        adjInfo = getConfData()->m_AdjChannelInfoHash[chn]->offsetAdjInfo;
+        adjInfo = getConfData()->m_AdjChannelInfoHash[chn]->dcAdjInfo;
         if (adjInfo.m_bAvail && !storageDb->hasStoredValue(adjInfo.m_nEntity, adjInfo.m_sComponent)) {
             notifyError(errMagTemplate.arg(adjInfo.m_nEntity).arg(adjInfo.m_sComponent));
             ok = false;
@@ -190,50 +190,50 @@ void cAdjustmentModuleMeasProgram::setInterfaceValidation()
     // we must set the validators for the adjustment commands now
     // we know the channel names and their ranges now
     // ....very special validator
-    AdjustChannelInfo* adjChnInfo;
-    QString sysName;
 
-    // first the validator for amplitude adjustment
+    // first the validator for gain adjustment
     cDoubleValidator dValidator = cDoubleValidator(0, 2000,1e-7);
-    cAdjustValidator3d* adjValidatord = new cAdjustValidator3d(this);
+    cAdjustValidator3d* adjValidator = new cAdjustValidator3d(this);
     for (int i = 0; i < getConfData()->m_nAdjustmentChannelCount; i++) {
-        sysName = getConfData()->m_AdjChannelList.at(i);
-        if (getConfData()->m_AdjChannelInfoHash[sysName]->amplitudeAdjInfo.m_bAvail) {
-            adjChnInfo = m_commonObjects->m_adjustChannelInfoHash[getConfData()->m_AdjChannelList.at(i)].get();
-            adjValidatord->addValidator(adjChnInfo->m_sAlias, adjChnInfo->m_sRangelist, dValidator);
+        QString sysName = getConfData()->m_AdjChannelList.at(i);
+        if (getConfData()->m_AdjChannelInfoHash[sysName]->rmsAdjInfo.m_bAvail) {
+            const AdjustChannelInfo* adjChnInfo = m_commonObjects->m_adjustChannelInfoHash[getConfData()->m_AdjChannelList.at(i)].get();
+            adjValidator->addValidator(adjChnInfo->m_sAlias, adjChnInfo->m_sRangelist, dValidator);
         }
     }
-    m_pPARAdjustAmplitude->setValidator(adjValidatord);
+    m_pPARAdjustAmplitude->setValidator(adjValidator);
 
     // validator for offset adjustment
     cDoubleValidator dOffsetValidator = cDoubleValidator(-2000, 2000,1e-7);
-    adjValidatord = new cAdjustValidator3d(this);
+    adjValidator = new cAdjustValidator3d(this);
     for (int i = 0; i < getConfData()->m_nAdjustmentChannelCount; i++) {
-        sysName = getConfData()->m_AdjChannelList.at(i);
-        if (getConfData()->m_AdjChannelInfoHash[sysName]->offsetAdjInfo.m_bAvail) {
-            adjChnInfo = m_commonObjects->m_adjustChannelInfoHash[getConfData()->m_AdjChannelList.at(i)].get();
-            adjValidatord->addValidator(adjChnInfo->m_sAlias, adjChnInfo->m_sRangelist, dOffsetValidator);
+        QString sysName = getConfData()->m_AdjChannelList.at(i);
+        if (getConfData()->m_AdjChannelInfoHash[sysName]->dcAdjInfo.m_bAvail) {
+            const AdjustChannelInfo* adjChnInfo = m_commonObjects->m_adjustChannelInfoHash[getConfData()->m_AdjChannelList.at(i)].get();
+            adjValidator->addValidator(adjChnInfo->m_sAlias, adjChnInfo->m_sRangelist, dOffsetValidator);
         }
     }
-    m_pPARAdjustOffset->setValidator(adjValidatord);
+    m_pPARAdjustOffset->setValidator(adjValidator);
 
-    // validator for angle adjustment
+    // validator for phase adjustment
     dValidator = cDoubleValidator(-360.0, 360.0, 1e-7);
-    adjValidatord = new cAdjustValidator3d(this);
+    adjValidator = new cAdjustValidator3d(this);
     for (int i = 0; i < getConfData()->m_nAdjustmentChannelCount; i++) {
-        sysName = getConfData()->m_AdjChannelList.at(i);
+        QString sysName = getConfData()->m_AdjChannelList.at(i);
         if (getConfData()->m_AdjChannelInfoHash[sysName]->phaseAdjInfo.m_bAvail) {
-            adjChnInfo = m_commonObjects->m_adjustChannelInfoHash[getConfData()->m_AdjChannelList.at(i)].get();
-            adjValidatord->addValidator(adjChnInfo->m_sAlias, adjChnInfo->m_sRangelist, dValidator);
+            const AdjustChannelInfo* adjChnInfo =
+                m_commonObjects->m_adjustChannelInfoHash[getConfData()->m_AdjChannelList.at(i)].get();
+            adjValidator->addValidator(adjChnInfo->m_sAlias, adjChnInfo->m_sRangelist, dValidator);
         }
     }
-    m_pPARAdjustPhase->setValidator(adjValidatord);
+    m_pPARAdjustPhase->setValidator(adjValidator);
 
     // validator for adjustment status setting
     cIntValidator iValidator = cIntValidator(0,255);
     cAdjustValidator3i* adjValidatori = new cAdjustValidator3i(this);
     for (int i = 0; i < getConfData()->m_nAdjustmentChannelCount; i++) {
-        adjChnInfo = m_commonObjects->m_adjustChannelInfoHash[getConfData()->m_AdjChannelList.at(i)].get();
+        const AdjustChannelInfo* adjChnInfo =
+            m_commonObjects->m_adjustChannelInfoHash[getConfData()->m_AdjChannelList.at(i)].get();
         adjValidatori->addValidator(adjChnInfo->m_sAlias, adjChnInfo->m_sRangelist, iValidator);
     }
     m_pPARAdjustGainStatus->setValidator(adjValidatori);
@@ -244,12 +244,14 @@ void cAdjustmentModuleMeasProgram::setInterfaceValidation()
 
     cAdjustValidator2* adjInitValidator = new cAdjustValidator2(this);
     for (int i = 0; i < getConfData()->m_nAdjustmentChannelCount; i++) {
-        adjChnInfo = m_commonObjects->m_adjustChannelInfoHash[getConfData()->m_AdjChannelList.at(i)].get();
+        const AdjustChannelInfo* adjChnInfo =
+            m_commonObjects->m_adjustChannelInfoHash[getConfData()->m_AdjChannelList.at(i)].get();
         adjInitValidator->addValidator(adjChnInfo->m_sAlias, adjChnInfo->m_sRangelist);
     }
     m_pPARAdjustInit->setValidator(adjInitValidator);
 
-    cAdjustValidatorFine* adjValidatorFine = new cAdjustValidatorFine(); // we accept every thing here and test command when we work on it
+    // we accept every thing here and test command when we work on it
+    cAdjustValidatorFine* adjValidatorFine = new cAdjustValidatorFine();
     m_pPARAdjustSend->setValidator(adjValidatorFine);
     adjValidatorFine = new cAdjustValidatorFine();
     m_pPARAdjustPCBData->setValidator(adjValidatorFine);
@@ -508,13 +510,13 @@ void cAdjustmentModuleMeasProgram::setAdjustAmplitudeStartCommand(QVariant var)
         return;
     }
 
-    int adjustEntity = getConfData()->m_AdjChannelInfoHash[m_sAdjustSysName]->amplitudeAdjInfo.m_nEntity;
-    QString adjustComponent = getConfData()->m_AdjChannelInfoHash[m_sAdjustSysName]->amplitudeAdjInfo.m_sComponent;
+    int adjustEntity = getConfData()->m_AdjChannelInfoHash[m_sAdjustSysName]->rmsAdjInfo.m_nEntity;
+    QString adjustComponent = getConfData()->m_AdjChannelInfoHash[m_sAdjustSysName]->rmsAdjInfo.m_sComponent;
 
     const VeinStorage::AbstractDatabase *storageDb = m_pModule->getStorageDb();
     m_AdjustActualValue = storageDb->getStoredValue(adjustEntity, adjustComponent).toDouble();
-    double actWantedError = calcAdjAbsoluteError();
-    if(actWantedError > maxAmplitudeErrorPercent) {
+    bool outOfLimits = calcAdjAbsoluteError() > maxAmplitudeErrorPercent;
+    if(outOfLimits) {
         notifyError(QString("Amplitude to adjust is out of limit! Wanted: %1 / Current: %2").arg(m_AdjustTargetValue).arg(m_AdjustActualValue));
         m_pPARAdjustAmplitude->setError();
         return;
@@ -593,8 +595,8 @@ void cAdjustmentModuleMeasProgram::setAdjustOffsetStartCommand(QVariant var)
         return;
     }
 
-    int adjustEntity = getConfData()->m_AdjChannelInfoHash[m_sAdjustSysName]->offsetAdjInfo.m_nEntity;
-    QString adjustComponent = getConfData()->m_AdjChannelInfoHash[m_sAdjustSysName]->offsetAdjInfo.m_sComponent;
+    int adjustEntity = getConfData()->m_AdjChannelInfoHash[m_sAdjustSysName]->dcAdjInfo.m_nEntity;
+    QString adjustComponent = getConfData()->m_AdjChannelInfoHash[m_sAdjustSysName]->dcAdjInfo.m_sComponent;
     double adjustActualValue = m_pModule->getStorageDb()->getStoredValue(adjustEntity, adjustComponent).toDouble();
     m_offsetTasks.addSub(TaskOffset::create(m_commonObjects->m_pcbConnection.getInterface(),
                                             m_sAdjustSysName, m_sAdjustRange,

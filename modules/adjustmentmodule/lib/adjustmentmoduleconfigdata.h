@@ -18,9 +18,9 @@ class cAdjChannelInfo
 public:
     cAdjChannelInfo(){}
 
-    adjInfoType amplitudeAdjInfo;
+    adjInfoType rmsAdjInfo;
     adjInfoType phaseAdjInfo;
-    adjInfoType offsetAdjInfo;
+    adjInfoType dcAdjInfo;
     adjInfoType rangeAdjInfo;
 };
 
