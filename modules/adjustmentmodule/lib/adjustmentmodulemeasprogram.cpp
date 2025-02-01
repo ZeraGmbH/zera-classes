@@ -432,18 +432,18 @@ void cAdjustmentModuleMeasProgram::computationFinished()
 
 void cAdjustmentModuleMeasProgram::storageStartCommand(QVariant var)
 {
-    int par = var.toInt();
-    if ((par == 1) || (par == 2)) {
-        storageType = par;
+    StorageType par = static_cast<StorageType>(var.toInt());
+    if(par == INTERNAL || par == CLAMP) {
+        m_storageType = par;
         m_storageMachine.start();
     }
 }
 
 void cAdjustmentModuleMeasProgram::storageStart()
 {
-    if (storageType == 1) // internal
+    if(m_storageType == INTERNAL)
         m_MsgNrCmdList[m_commonObjects->m_pcbConnection.getInterface()->adjustStorage()] = adjuststorage;
-    else                  // clamp
+    else //if(m_storageType == CLAMP) // there are no tests for this yet
         m_MsgNrCmdList[m_commonObjects->m_pcbConnection.getInterface()->adjustStorageClamp()] = adjuststorage;
 }
 
