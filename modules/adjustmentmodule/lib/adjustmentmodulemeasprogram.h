@@ -149,18 +149,18 @@ private:
     QHash<quint32, int> m_MsgNrCmdList;
     QHash<QString, cAdjustIterators*> m_adjustIteratorHash;
 
-    VfModuleParameter* m_pPARComputation;
-    VfModuleParameter* m_pPARStorage;
-    VfModuleParameter* m_pPARAdjustGainStatus;
-    VfModuleParameter* m_pPARAdjustPhaseStatus;
-    VfModuleParameter* m_pPARAdjustOffsetStatus;
-    VfModuleParameter* m_pPARAdjustInit;
-    VfModuleParameter* m_pPARAdjustAmplitude;
-    VfModuleParameter* m_pPARAdjustPhase;
-    VfModuleParameter* m_pPARAdjustOffset;
-    VfModuleParameter* m_pPARAdjustSend;
-    VfModuleParameter* m_pPARAdjustPCBData;
-    VfModuleParameter* m_pPARAdjustClampData;
+    VfModuleParameter* m_pPARComputation = nullptr;
+    VfModuleParameter* m_pPARStorage = nullptr;
+    VfModuleParameter* m_pPARAdjustGainStatus = nullptr;
+    VfModuleParameter* m_pPARAdjustPhaseStatus = nullptr;
+    VfModuleParameter* m_pPARAdjustOffsetStatus = nullptr;
+    VfModuleParameter* m_pPARAdjustInit = nullptr;
+    VfModuleParameter* m_pPARAdjustAmplitude = nullptr;
+    VfModuleParameter* m_pPARAdjustPhase = nullptr;
+    VfModuleParameter* m_pPARAdjustOffset = nullptr;
+    VfModuleParameter* m_pPARAdjustSend = nullptr;
+    VfModuleParameter* m_pPARAdjustPCBData = nullptr;
+    VfModuleParameter* m_pPARAdjustClampData = nullptr;
 
     // statemachine for computation of adjustment values
     QStateMachine m_computationMachine;
