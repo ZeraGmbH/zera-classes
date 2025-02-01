@@ -35,23 +35,18 @@ void cAdjustValidator3d::addValidator(QString chnName, QStringList rList, cDoubl
 
 bool cAdjustValidator3d::isValidParam(QVariant &newValue)
 {
-    QStringList sl;
-
-    sl = newValue.toString().split(',');
-    if (sl.count() == 3)
-    {
-        QString key;
-        key = sl.at(0);
+    QStringList sl = newValue.toString().split(',');
+    if (sl.count() == 3) {
+        QString key = sl.at(0);
         if (m_adjustValidatorHash.contains(key))
-            if (m_adjustValidatorHash[key]->rangeList.contains(sl.at(1)))
-            {
+            if (m_adjustValidatorHash[key]->rangeList.contains(sl.at(1))) {
                 QVariant var;
                 var = (QVariant)(sl.at(2).toDouble());
                 if (m_adjustValidatorHash[key]->dValidator.isValidParam(var))
                     return true;
             }
     }
-
+    qWarning("cAdjustValidator3d: Param %s is invalid!", qPrintable(newValue.toString()));
     return false;
 }
 
