@@ -22,7 +22,7 @@ cAdjustmentModuleMeasProgram::cAdjustmentModuleMeasProgram(cAdjustmentModule* mo
 
     connect(&m_offsetTasks, &TaskTemplate::sigFinish, [&](bool ok) {
         if(ok)
-            m_pPARAdjustOffset->setValue(m_currEnv.m_receivedPar);
+            m_pPARAdjustOffset->setValue(m_currEnv.m_paramValue);
     });
 
     m_computationStartState.addTransition(this, &cAdjustmentModuleMeasProgram::computationContinue, &m_computationFinishState);
@@ -138,7 +138,7 @@ bool cAdjustmentModuleMeasProgram::checkExternalVeinComponents()
 
 void cAdjustmentModuleMeasProgram::setAdjustEnvironment(QVariant var)
 {
-    m_currEnv.m_receivedPar = var;
+    m_currEnv.m_paramValue = var;
     QStringList sl = var.toString().split(',');
     m_currEnv.m_channelAlias = sl.at(0);
     m_currEnv.m_rangeName = sl.at(1);
@@ -646,7 +646,7 @@ void cAdjustmentModuleMeasProgram::transparentDataSend2Port(QVariant var)
 
 void cAdjustmentModuleMeasProgram::writePCBAdjustmentData(QVariant var)
 {
-    m_currEnv.m_receivedPar = var;
+    m_currEnv.m_paramValue = var;
     m_MsgNrCmdList[m_commonObjects->m_pcbConnection.getInterface()->setPCBAdjustmentData(var.toString())] = setpcbadjustmentdata;
 }
 
@@ -657,7 +657,7 @@ void cAdjustmentModuleMeasProgram::readPCBAdjustmentData(QVariant)
 
 void cAdjustmentModuleMeasProgram::writeCLAMPAdjustmentData(QVariant var)
 {
-    m_currEnv.m_receivedPar = var;
+    m_currEnv.m_paramValue = var;
     m_MsgNrCmdList[m_commonObjects->m_pcbConnection.getInterface()->setClampAdjustmentData(var.toString())] = setclampadjustmentdata;
 }
 
@@ -738,7 +738,7 @@ void cAdjustmentModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 re
             case setgainnode:
                 if (reply == ack) {
                     emit adjustamplitudeContinue();
-                    m_pPARAdjustAmplitude->setValue(m_currEnv.m_receivedPar);
+                    m_pPARAdjustAmplitude->setValue(m_currEnv.m_paramValue);
                 }
                 else {
                     emit adjustError();
@@ -749,7 +749,7 @@ void cAdjustmentModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 re
 
             case setoffsetnode:
                 if (reply == ack) {
-                    m_pPARAdjustOffset->setValue(m_currEnv.m_receivedPar);
+                    m_pPARAdjustOffset->setValue(m_currEnv.m_paramValue);
                     emit adjustoffsetContinue();
                 }
                 else {
@@ -773,7 +773,7 @@ void cAdjustmentModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 re
 
             case setphasenode:
                 if (reply == ack) {
-                    m_pPARAdjustPhase->setValue(m_currEnv.m_receivedPar);
+                    m_pPARAdjustPhase->setValue(m_currEnv.m_paramValue);
                     emit adjustphaseContinue();
                 }
                 else {
@@ -800,7 +800,7 @@ void cAdjustmentModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 re
 
             case setpcbadjustmentdata:
                 if (reply == ack)
-                    m_pPARAdjustPCBData->setValue(m_currEnv.m_receivedPar);
+                    m_pPARAdjustPCBData->setValue(m_currEnv.m_paramValue);
                 else {
                     m_pPARAdjustPCBData->setError();
                     notifyError(writePCBXMLMSG);
@@ -818,7 +818,7 @@ void cAdjustmentModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 re
 
             case setclampadjustmentdata:
                 if (reply == ack)
-                    m_pPARAdjustClampData->setValue(m_currEnv.m_receivedPar);
+                    m_pPARAdjustClampData->setValue(m_currEnv.m_paramValue);
                 else {
                     m_pPARAdjustClampData->setError();
                     notifyError(writeClampXMLMSG);
