@@ -13,20 +13,20 @@ static const char* calcCmd = "calc:adj1:dcam ";
 
 void test_adj_module_gain_dc::init()
 {
-    if(!m_testRunner) {
+    if(!m_testRunner)
         m_testRunner = std::make_unique<ModuleManagerTestRunner>(":/session-minimal-dc.json", true);
+    if(!m_scpiClient)
         m_scpiClient = std::make_unique<ScpiModuleClientBlocked>();
-    }
     QString response = m_scpiClient->sendReceive("*cls|CALC:ADJ1:INIT UAUX,250V;|*stb?");
     QCOMPARE(response, "+0");
 }
 
 void test_adj_module_gain_dc::destroyCommonTestRunner()
 {
-    if(m_scpiClient) {
+    if(m_scpiClient)
         m_scpiClient = nullptr;
+    if(m_testRunner)
         m_testRunner = nullptr;
-    }
 }
 
 void test_adj_module_gain_dc::noActValuesWithPermission()

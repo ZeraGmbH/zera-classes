@@ -26,10 +26,10 @@ private slots:
 
     void oneNodeWithinLimitLower();
     void oneNodeWithinLimitLowerNeg1();
-    void oneNodeWithinLimitLowerNeg2(); // ALARM: What makes our interpolation on range adjustment out of it???
+    void oneNodeWithinLimitLowerNeg2(); // TODO: What makes our interpolation on range adjustment out of it???
     void oneNodeWithinLimitUpper();
     void oneNodeWithinLimitUpperNeg1();
-    void oneNodeWithinLimitUpperNeg2(); // ALARM: What makes our interpolation on range adjustment out of it???
+    void oneNodeWithinLimitUpperNeg2(); // TODO: What makes our interpolation on range adjustment out of it???
 
 private:
     void destroyCommonTestRunner();
