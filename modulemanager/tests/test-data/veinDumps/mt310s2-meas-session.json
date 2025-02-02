@@ -5322,6 +5322,15 @@
                         "Type": "ADJUSTDATA"
                     }
                 },
+                "PAR_AdjustAmplitudeDc": {
+                    "Description": "One amplitude adjustment node for DC",
+                    "Validation": {
+                        "Data": [
+                            "not subject"
+                        ],
+                        "Type": "ADJUSTDATA"
+                    }
+                },
                 "PAR_AdjustCLAMPData": {
                     "Description": "Get and set clamp adjustment data",
                     "Validation": {
@@ -5442,6 +5451,14 @@
                     ],
                     [
                         "CALCULATE",
+                        "DCAMPLITUDE",
+                        "10",
+                        "PAR_AdjustAmplitudeDc",
+                        "0",
+                        ""
+                    ],
+                    [
+                        "CALCULATE",
                         "CLAMP",
                         "18",
                         "PAR_AdjustCLAMPData",
@@ -5533,6 +5550,7 @@
             }
         },
         "PAR_AdjustAmplitude": "",
+        "PAR_AdjustAmplitudeDc": "",
         "PAR_AdjustCLAMPData": "",
         "PAR_AdjustGainStatus": 0,
         "PAR_AdjustInit": 0,

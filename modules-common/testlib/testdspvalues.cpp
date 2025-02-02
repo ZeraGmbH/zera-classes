@@ -25,6 +25,30 @@ void TestDspValues::setAllValuesSymmetric(float voltage, float current, float an
     }
 }
 
+void TestDspValues::setAllValuesSymmetricAc(float voltage, float current, float angleUi, float frequency, bool invertedSequence)
+{
+    m_dftValues->setAllValuesSymmetric(voltage, current, angleUi, invertedSequence);
+    for(int channel=0; channel<m_channelList.count(); channel++) {
+        float value = ServiceChannelNameHelper::isCurrent(m_channelList[channel]) ? current : voltage;
+        m_fftValues->setValue(channel, 0, 0, 0); // DC
+        m_rangeValues->setRmsValue(channel, value);
+        m_rangeValues->setFrequency(frequency);
+        m_rmsValues->setAllValuesSymmetric(voltage, current);
+    }
+}
+
+void TestDspValues::setAllValuesSymmetricDc(float voltage, float current)
+{
+    m_dftValues->setAllValuesSymmetric(0, 0, 0, false);
+    for(int channel=0; channel<m_channelList.count(); channel++) {
+        float value = ServiceChannelNameHelper::isCurrent(m_channelList[channel]) ? current : voltage;
+        m_fftValues->setValue(channel, 0, value, 0); // DC
+        m_rangeValues->setRmsValue(channel, value);
+        m_rangeValues->setFrequency(0);
+        m_rmsValues->setAllValuesSymmetric(0, 0);
+    }
+}
+
 void TestDspValues::fireDftActualValues(MockDspInterfacePtr dspDft)
 {
     dspDft->fireActValInterrupt(m_dftValues->getDspValues(), 0 /* dummy */);

@@ -8,6 +8,10 @@ class AdjModuleTestHelper
 public:
     static void setActualTestValues(ModuleManagerTestRunner &testRunner,
                                     float testvoltage, float testcurrent, float testangle, float testfrequency);
+    static void setAllValuesSymmetricAc(ModuleManagerTestRunner &testRunner,
+                                        float testvoltage, float testcurrent, float testangle, float testfrequency);
+    static void setAllValuesSymmetricDc(ModuleManagerTestRunner &testRunner,
+                                        float voltage, float current);
     struct TAdjNodeValues
     {
         double m_loadPoint = 0.0;

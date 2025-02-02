@@ -7,13 +7,11 @@ QTEST_MAIN(test_adj_module_offset)
 
 constexpr double testvoltage = 120;
 constexpr double testcurrent = 10;
-constexpr double testangle = 0;
-constexpr double testfrequency = 50;
 
 void test_adj_module_offset::validActValuesWithPermission()
 {
     ModuleManagerTestRunner testRunner(":/session-minimal-dc.json", true);
-    AdjModuleTestHelper::setActualTestValues(testRunner, testvoltage, testcurrent, testangle, testfrequency);
+    AdjModuleTestHelper::setAllValuesSymmetricDc(testRunner, testvoltage, testcurrent);
 
     ScpiModuleClientBlocked scpiClient;
     QString response = scpiClient.sendReceive("calc:adj1:offs UAUX,250V,0;|*stb?");
@@ -23,7 +21,7 @@ void test_adj_module_offset::validActValuesWithPermission()
 void test_adj_module_offset::validActValuesWithoutPermission()
 {
     ModuleManagerTestRunner testRunner(":/session-minimal.json", false);
-    AdjModuleTestHelper::setActualTestValues(testRunner, testvoltage, testcurrent, testangle, testfrequency);
+    AdjModuleTestHelper::setAllValuesSymmetricDc(testRunner, testvoltage, testcurrent);
 
     ScpiModuleClientBlocked scpiClient;
     QString response = scpiClient.sendReceive("calc:adj1:offs UAUX,250V,0;|*stb?");
@@ -33,7 +31,7 @@ void test_adj_module_offset::validActValuesWithoutPermission()
 void test_adj_module_offset::denyNonOffsetChannel()
 {
     ModuleManagerTestRunner testRunner(":/session-minimal-dc.json", true);
-    AdjModuleTestHelper::setActualTestValues(testRunner, testvoltage, testcurrent, testangle, testfrequency);
+    AdjModuleTestHelper::setAllValuesSymmetricDc(testRunner, testvoltage, testcurrent);
 
     ScpiModuleClientBlocked scpiClient;
     QString response = scpiClient.sendReceive("calc:adj1:offs UL1,250V,0;|*stb?");
@@ -43,7 +41,7 @@ void test_adj_module_offset::denyNonOffsetChannel()
 void test_adj_module_offset::denyRangeNotSet()
 {
     ModuleManagerTestRunner testRunner(":/session-minimal-dc.json", true);
-    AdjModuleTestHelper::setActualTestValues(testRunner, testvoltage, testcurrent, testangle, testfrequency);
+    AdjModuleTestHelper::setAllValuesSymmetricDc(testRunner, testvoltage, testcurrent);
 
     ScpiModuleClientBlocked scpiClient;
     QString response = scpiClient.sendReceive("calc:adj1:offs UAUX,8V,0;|*stb?");

@@ -13,6 +13,8 @@ class TestDspValues
 public:
     TestDspValues(QStringList valueChannelList);
     void setAllValuesSymmetric(float voltage, float current, float angleUi, float frequency, bool invertedSequence = false);
+    void setAllValuesSymmetricAc(float voltage, float current, float angleUi, float frequency, bool invertedSequence = false);
+    void setAllValuesSymmetricDc(float voltage, float current);
 
     void fireDftActualValues(MockDspInterfacePtr dspDft);
     void fireFftActualValues(MockDspInterfacePtr dspFft);
