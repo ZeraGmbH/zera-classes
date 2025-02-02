@@ -1,12 +1,16 @@
 #ifndef TEST_ADJ_MODULE_PHASE_H
 #define TEST_ADJ_MODULE_PHASE_H
 
+#include "modulemanagertestrunner.h"
+#include "scpimoduleclientblocked.h"
 #include <QObject>
 
 class test_adj_module_phase : public QObject
 {
     Q_OBJECT
 private slots:
+    void init();
+
     void noActValuesWithPermission();
     void validActValuesWithPermission();
     void validActValuesWithoutPermission();
@@ -43,6 +47,10 @@ private slots:
 private:
     double adjustAngle(double angle);
     double adjustAngleWithNeg(double angle);
+    void destroyCommonTestRunner();
+
+    std::unique_ptr<ModuleManagerTestRunner> m_testRunner;
+    std::unique_ptr<ScpiModuleClientBlocked> m_scpiClient;
 };
 
 #endif // TEST_ADJ_MODULE_PHASE_H
