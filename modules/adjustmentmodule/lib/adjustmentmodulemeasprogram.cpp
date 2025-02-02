@@ -141,6 +141,7 @@ bool cAdjustmentModuleMeasProgram::setAdjustEnvironment(VfModuleParameter *veinP
                                                         const QString &errorInfo)
 {
     m_currEnv.m_paramValue = paramValue;
+    m_currEnv.m_veinParam = veinParam;
     QStringList sl = m_currEnv.m_paramValue.toString().split(',');
     m_currEnv.m_channelAlias = sl.at(0);
     m_currEnv.m_rangeName = sl.at(1);
@@ -530,7 +531,7 @@ void cAdjustmentModuleMeasProgram::setAdjustAmplitudeStartCommand(QVariant param
         notifyError(QString("Gain to adjust is out of limit! Wanted: %1 / Current: %2")
                         .arg(m_currEnv.m_targetValue)
                         .arg(m_currEnv.m_actualValue));
-        m_pPARAdjustAmplitude->setError();
+        m_currEnv.m_veinParam->setError();
         return;
     }
     m_adjustAmplitudeMachine.start();
@@ -729,19 +730,19 @@ void cAdjustmentModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 re
                 else {
                     emit adjustError();
                     notifyError(readGainCorrErrMsg);
-                    m_pPARAdjustAmplitude->setError();
+                    m_currEnv.m_veinParam->setError();
                 }
                 break;
 
             case setgainnode:
                 if (reply == ack) {
                     emit adjustamplitudeContinue();
-                    m_pPARAdjustAmplitude->setValue(m_currEnv.m_paramValue);
+                    m_currEnv.m_veinParam->setValue(m_currEnv.m_paramValue);
                 }
                 else {
                     emit adjustError();
                     notifyError(setGainNodeErrMsg);
-                    m_pPARAdjustAmplitude->setError();
+                    m_currEnv.m_veinParam->setError();
                 }
                 break;
 
