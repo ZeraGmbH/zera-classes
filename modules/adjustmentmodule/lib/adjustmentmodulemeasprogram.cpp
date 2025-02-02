@@ -136,7 +136,9 @@ bool cAdjustmentModuleMeasProgram::checkExternalVeinComponents()
     return ok;
 }
 
-void cAdjustmentModuleMeasProgram::setAdjustEnvironment(VfModuleParameter *veinParam, QVariant paramValue)
+bool cAdjustmentModuleMeasProgram::setAdjustEnvironment(VfModuleParameter *veinParam,
+                                                        QVariant paramValue,
+                                                        const QString &errorInfo)
 {
     m_currEnv.m_paramValue = paramValue;
     QStringList sl = m_currEnv.m_paramValue.toString().split(',');
@@ -144,6 +146,11 @@ void cAdjustmentModuleMeasProgram::setAdjustEnvironment(VfModuleParameter *veinP
     m_currEnv.m_rangeName = sl.at(1);
     m_currEnv.m_targetValue = sl.at(2).toDouble();
     m_currEnv.m_channelMName = m_commonObjects->m_channelAliasHash[m_currEnv.m_channelAlias];
+    if(!checkRangeIsWanted(errorInfo)) {
+        veinParam->setError();
+        return false;
+    }
+    return true;
 }
 
 double cAdjustmentModuleMeasProgram::cmpPhase(QVariant var)
@@ -510,11 +517,8 @@ bool cAdjustmentModuleMeasProgram::checkRangeIsWanted(QString adjType)
 
 void cAdjustmentModuleMeasProgram::setAdjustAmplitudeStartCommand(QVariant paramValue)
 {
-    setAdjustEnvironment(m_pPARAdjustAmplitude, paramValue);
-    if(!checkRangeIsWanted("gain")) {
-        m_pPARAdjustAmplitude->setError();
+    if(!setAdjustEnvironment(m_pPARAdjustAmplitude, paramValue, "gain"))
         return;
-    }
 
     int adjustEntity = getConfData()->m_AdjChannelInfoHash[m_currEnv.m_channelMName]->rmsAdjInfo.m_nEntity;
     QString adjustComponent = getConfData()->m_AdjChannelInfoHash[m_currEnv.m_channelMName]->rmsAdjInfo.m_sComponent;
@@ -561,11 +565,8 @@ void cAdjustmentModuleMeasProgram::adjustamplitudeSetNode()
 
 void cAdjustmentModuleMeasProgram::setAdjustPhaseStartCommand(QVariant paramValue)
 {
-    setAdjustEnvironment(m_pPARAdjustPhase, paramValue);
-    if(!checkRangeIsWanted("phase")) {
-        m_pPARAdjustPhase->setError();
+    if(!setAdjustEnvironment(m_pPARAdjustPhase, paramValue, "phase"))
         return;
-    }
 
     int adjustEntity = getConfData()->m_AdjChannelInfoHash[m_currEnv.m_channelMName]->phaseAdjInfo.m_nEntity;
     QString adjustComponent = getConfData()->m_AdjChannelInfoHash[m_currEnv.m_channelMName]->phaseAdjInfo.m_sComponent;
@@ -612,11 +613,8 @@ void cAdjustmentModuleMeasProgram::adjustphaseSetNode()
 
 void cAdjustmentModuleMeasProgram::setAdjustOffsetStartCommand(QVariant paramValue)
 {
-    setAdjustEnvironment(m_pPARAdjustOffset, paramValue);
-    if(!checkRangeIsWanted("offset")) {
-        m_pPARAdjustOffset->setError();
+    if(!setAdjustEnvironment(m_pPARAdjustOffset, paramValue, "offset"))
         return;
-    }
 
     int adjustEntity = getConfData()->m_AdjChannelInfoHash[m_currEnv.m_channelMName]->dcAdjInfo.m_nEntity;
     QString adjustComponent = getConfData()->m_AdjChannelInfoHash[m_currEnv.m_channelMName]->dcAdjInfo.m_sComponent;

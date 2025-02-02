@@ -125,7 +125,7 @@ private:
     cAdjustmentModuleConfigData* getConfData();
     bool checkExternalVeinComponents();
     void setInterfaceValidation();
-    void setAdjustEnvironment(VfModuleParameter* veinParam, QVariant paramValue);
+    bool setAdjustEnvironment(VfModuleParameter* veinParam, QVariant paramValue,const QString &errorInfo);
     double cmpPhase(QVariant var);
     double calcAbsoluteError(double actualValue, double targetValue);
     double calcAdjAbsoluteError();
