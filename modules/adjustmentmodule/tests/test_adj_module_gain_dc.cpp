@@ -23,10 +23,8 @@ void test_adj_module_gain_dc::init()
 
 void test_adj_module_gain_dc::destroyCommonTestRunner()
 {
-    if(m_scpiClient)
-        m_scpiClient = nullptr;
-    if(m_testRunner)
-        m_testRunner = nullptr;
+    m_scpiClient = nullptr;
+    m_testRunner = nullptr;
 }
 
 void test_adj_module_gain_dc::noActValuesWithPermission()
