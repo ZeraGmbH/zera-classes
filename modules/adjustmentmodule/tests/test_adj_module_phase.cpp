@@ -25,10 +25,8 @@ void test_adj_module_phase::init()
 
 void test_adj_module_phase::destroyCommonTestRunner()
 {
-    if(m_scpiClient)
-        m_scpiClient = nullptr;
-    if(m_testRunner)
-        m_testRunner = nullptr;
+    m_scpiClient = nullptr;
+    m_testRunner = nullptr;
 }
 
 void test_adj_module_phase::noActValuesWithPermission()

@@ -29,10 +29,8 @@ void test_adj_module_gain::resetLooksLikeABugOnInit()
 
 void test_adj_module_gain::destroyCommonTestRunner()
 {
-    if(m_scpiClient)
-        m_scpiClient = nullptr;
-    if(m_testRunner)
-        m_testRunner = nullptr;
+    m_scpiClient = nullptr;
+    m_testRunner = nullptr;
 }
 
 void test_adj_module_gain::noActValuesWithPermission()
