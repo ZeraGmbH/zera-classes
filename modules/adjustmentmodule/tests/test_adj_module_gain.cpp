@@ -27,7 +27,7 @@ void test_adj_module_gain::validActValuesWithPermission()
     ModuleManagerTestRunner testRunner(":/session-minimal.json", true);
     ScpiModuleClientBlocked scpiClient;
 
-    AdjModuleTestHelper::setActualTestValues(testRunner, testvoltage, testcurrent, testangle, testfrequency);
+    AdjModuleTestHelper::setAllValuesSymmetricAc(testRunner, testvoltage, testcurrent, testangle, testfrequency);
     QString response = scpiClient.sendReceive("calc:adj1:ampl UL1,250V,100;|*stb?");
     QCOMPARE(response, "+0");
 }
@@ -37,7 +37,7 @@ void test_adj_module_gain::validActValuesWithoutPermission()
     ModuleManagerTestRunner testRunner(":/session-minimal.json", false);
     ScpiModuleClientBlocked scpiClient;
 
-    AdjModuleTestHelper::setActualTestValues(testRunner, testvoltage, testcurrent, testangle, testfrequency);
+    AdjModuleTestHelper::setAllValuesSymmetricAc(testRunner, testvoltage, testcurrent, testangle, testfrequency);
     QString response = scpiClient.sendReceive("calc:adj1:ampl UL1,250V,100;|*stb?");
     QCOMPARE(response, "+4");
 }
@@ -47,7 +47,7 @@ void test_adj_module_gain::outOfLimitLower()
     ModuleManagerTestRunner testRunner(":/session-minimal.json", true);
     ScpiModuleClientBlocked scpiClient;
 
-    AdjModuleTestHelper::setActualTestValues(testRunner, testvoltage, testcurrent, testangle, testfrequency);
+    AdjModuleTestHelper::setAllValuesSymmetricAc(testRunner, testvoltage, testcurrent, testangle, testfrequency);
     double adjRefVoltage = testvoltage * (1-maxAmplitudeErrorPercent/100) - limitOffset;
     QByteArray send = QString("calc:adj1:ampl UL1,250V,%1;|*stb?").arg(adjRefVoltage).toLatin1();
     QString response = scpiClient.sendReceive(send);
@@ -59,7 +59,7 @@ void test_adj_module_gain::outOfLimitUpper()
     ModuleManagerTestRunner testRunner(":/session-minimal.json", true);
     ScpiModuleClientBlocked scpiClient;
 
-    AdjModuleTestHelper::setActualTestValues(testRunner, testvoltage, testcurrent, testangle, testfrequency);
+    AdjModuleTestHelper::setAllValuesSymmetricAc(testRunner, testvoltage, testcurrent, testangle, testfrequency);
     double adjRefVoltage = testvoltage * (1+maxAmplitudeErrorPercent/100) + limitOffset;
     QByteArray send = QString("calc:adj1:ampl UL1,250V,%1;|*stb?").arg(adjRefVoltage).toLatin1();
     QString response = scpiClient.sendReceive(send);
@@ -71,9 +71,19 @@ void test_adj_module_gain::denyRangeNotSet()
     ModuleManagerTestRunner testRunner(":/session-minimal.json", true);
     ScpiModuleClientBlocked scpiClient;
 
-    AdjModuleTestHelper::setActualTestValues(testRunner, testvoltage, testcurrent, testangle, testfrequency);
-    double adjRefCurrent = testcurrent * (1+maxAmplitudeErrorPercent/100) - limitOffset;
-    QByteArray send = QString("calc:adj1:ampl IL1,2.5A,%1;|*stb?").arg(adjRefCurrent).toLatin1();
+    AdjModuleTestHelper::setAllValuesSymmetricAc(testRunner, testvoltage, testcurrent, testangle, testfrequency);
+    QByteArray send = QString("calc:adj1:ampl UL1,8V,%1;|*stb?").arg(testvoltage).toLatin1();
+    QString response = scpiClient.sendReceive(send);
+    QCOMPARE(response, "+4");
+}
+
+void test_adj_module_gain::withinLimitLowerButDcValues()
+{
+    ModuleManagerTestRunner testRunner(":/session-minimal.json", true);
+    ScpiModuleClientBlocked scpiClient;
+
+    AdjModuleTestHelper::setAllValuesSymmetricDc(testRunner, testvoltage, testcurrent);
+    QByteArray send = QString("calc:adj1:ampl UL1,250V,%1;|*stb?").arg(testvoltage).toLatin1();
     QString response = scpiClient.sendReceive(send);
     QCOMPARE(response, "+4");
 }
@@ -83,7 +93,7 @@ void test_adj_module_gain::oneNodeWithinLimitLower()
     ModuleManagerTestRunner testRunner(":/session-minimal.json", true);
     ScpiModuleClientBlocked scpiClient;
 
-    AdjModuleTestHelper::setActualTestValues(testRunner, testvoltage, testcurrent, testangle, testfrequency);
+    AdjModuleTestHelper::setAllValuesSymmetricAc(testRunner, testvoltage, testcurrent, testangle, testfrequency);
     double adjRefVoltage = testvoltage * (1-maxAmplitudeErrorPercent/100) + limitOffset;
     QByteArray send = QString("calc:adj1:ampl UL1,250V,%1;|*stb?").arg(adjRefVoltage).toLatin1();
     QString response = scpiClient.sendReceive(send);
@@ -115,7 +125,7 @@ void test_adj_module_gain::oneNodeWithinLimitUpper()
     ModuleManagerTestRunner testRunner(":/session-minimal.json", true);
     ScpiModuleClientBlocked scpiClient;
 
-    AdjModuleTestHelper::setActualTestValues(testRunner, testvoltage, testcurrent, testangle, testfrequency);
+    AdjModuleTestHelper::setAllValuesSymmetricAc(testRunner, testvoltage, testcurrent, testangle, testfrequency);
     double adjRefVoltage = testvoltage * (1+maxAmplitudeErrorPercent/100) - limitOffset;
     QByteArray send = QString("calc:adj1:ampl UL1,250V,%1;|*stb?").arg(adjRefVoltage).toLatin1();
     QString response = scpiClient.sendReceive(send);
@@ -147,13 +157,13 @@ void test_adj_module_gain::twoNodesCheckNodesGenerated()
     ModuleManagerTestRunner testRunner(":/session-minimal.json", true);
     ScpiModuleClientBlocked scpiClient;
 
-    AdjModuleTestHelper::setActualTestValues(testRunner, testvoltage, testcurrent, testangle, testfrequency);
+    AdjModuleTestHelper::setAllValuesSymmetricAc(testRunner, testvoltage, testcurrent, testangle, testfrequency);
     double adjRefVoltage = testvoltage * (1+maxAmplitudeErrorPercent/100) - limitOffset;
     QByteArray send = QString("calc:adj1:ampl UL1,250V,%1;|*stb?").arg(adjRefVoltage).toLatin1();
     QString response = scpiClient.sendReceive(send);
     QCOMPARE(response, "+0");
 
-    AdjModuleTestHelper::setActualTestValues(testRunner, 2*testvoltage, testcurrent, testangle, testfrequency);
+    AdjModuleTestHelper::setAllValuesSymmetricAc(testRunner, 2*testvoltage, testcurrent, testangle, testfrequency);
     double adjRefVoltage2 = 2*adjRefVoltage;
     send = QString("calc:adj1:ampl UL1,250V,%1;|*stb?").arg(adjRefVoltage2).toLatin1();
     response = scpiClient.sendReceive(send);
@@ -185,7 +195,7 @@ void test_adj_module_gain::oneNodeCheckCorrectionsCalculated()
     ModuleManagerTestRunner testRunner(":/session-minimal.json", true);
     ScpiModuleClientBlocked scpiClient;
 
-    AdjModuleTestHelper::setActualTestValues(testRunner, testvoltage, testcurrent, testangle, testfrequency);
+    AdjModuleTestHelper::setAllValuesSymmetricAc(testRunner, testvoltage, testcurrent, testangle, testfrequency);
     double adjRefVoltage = testvoltage * (1+maxAmplitudeErrorPercent/100) - limitOffset;
     QByteArray send = QString("calc:adj1:ampl UL1,250V,%1;|*stb?").arg(adjRefVoltage).toLatin1();
     QString response = scpiClient.sendReceive(send);
@@ -215,13 +225,13 @@ void test_adj_module_gain::twoNodesCheckCorrectionsCalculatedLinear()
     ModuleManagerTestRunner testRunner(":/session-minimal.json", true);
     ScpiModuleClientBlocked scpiClient;
 
-    AdjModuleTestHelper::setActualTestValues(testRunner, testvoltage, testcurrent, testangle, testfrequency);
+    AdjModuleTestHelper::setAllValuesSymmetricAc(testRunner, testvoltage, testcurrent, testangle, testfrequency);
     double adjRefVoltage = testvoltage * (1+maxAmplitudeErrorPercent/100) - limitOffset;
     QByteArray send = QString("calc:adj1:ampl UL1,250V,%1;|*stb?").arg(adjRefVoltage).toLatin1();
     QString response = scpiClient.sendReceive(send);
     QCOMPARE(response, "+0");
 
-    AdjModuleTestHelper::setActualTestValues(testRunner, 2*testvoltage, testcurrent, testangle, testfrequency);
+    AdjModuleTestHelper::setAllValuesSymmetricAc(testRunner, 2*testvoltage, testcurrent, testangle, testfrequency);
     double adjRefVoltage2 = 2*adjRefVoltage;
     send = QString("calc:adj1:ampl UL1,250V,%1;|*stb?").arg(adjRefVoltage2).toLatin1();
     response = scpiClient.sendReceive(send);
@@ -253,12 +263,12 @@ void test_adj_module_gain::twoNodesCheckCorrectionsCalculatedNonLinear()
     ScpiModuleClientBlocked scpiClient;
 
     double error = 1.01;
-    AdjModuleTestHelper::setActualTestValues(testRunner, testvoltage, testcurrent, testangle, testfrequency);
+    AdjModuleTestHelper::setAllValuesSymmetricAc(testRunner, testvoltage, testcurrent, testangle, testfrequency);
     QByteArray send = QString("calc:adj1:ampl UL1,250V,%1;|*stb?").arg(testvoltage*error).toLatin1();
     QString response = scpiClient.sendReceive(send);
     QCOMPARE(response, "+0");
 
-    AdjModuleTestHelper::setActualTestValues(testRunner, 2*testvoltage, testcurrent, testangle, testfrequency);
+    AdjModuleTestHelper::setAllValuesSymmetricAc(testRunner, 2*testvoltage, testcurrent, testangle, testfrequency);
     send = QString("calc:adj1:ampl UL1,250V,%1;|*stb?").arg(2*testvoltage*error*error).toLatin1();
     response = scpiClient.sendReceive(send);
     QCOMPARE(response, "+0");

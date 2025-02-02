@@ -211,6 +211,18 @@ void cAdjustmentModuleMeasProgram::setInterfaceValidation()
     }
     m_pPARAdjustAmplitude->setValidator(adjValidator);
 
+    // validator for dc-gain adjustment
+    dValidator = cDoubleValidator(-2000, 2000, 1e-7);
+    adjValidator = new cAdjustValidator3d(this);
+    for (int i = 0; i < getConfData()->m_nAdjustmentChannelCount; i++) {
+        QString sysName = getConfData()->m_AdjChannelList.at(i);
+        if (getConfData()->m_AdjChannelInfoHash[sysName]->dcAdjInfo.m_bAvail) {
+            const AdjustChannelInfo* adjChnInfo = m_commonObjects->m_adjustChannelInfoHash[getConfData()->m_AdjChannelList.at(i)].get();
+            adjValidator->addValidator(adjChnInfo->m_sAlias, adjChnInfo->m_sRangelist, dValidator);
+        }
+    }
+    m_pPARAdjustAmplitudeDc->setValidator(adjValidator);
+
     // validator for offset adjustment
     cDoubleValidator dOffsetValidator = cDoubleValidator(-2000, 2000, 1e-7);
     adjValidator = new cAdjustValidator3d(this);
@@ -357,8 +369,21 @@ void cAdjustmentModuleMeasProgram::generateVeinInterface()
     scpiInfo = new cSCPIInfo("CALCULATE", "AMPLITUDE", "10", m_pPARAdjustAmplitude->getName(), "0", "");
     m_pPARAdjustAmplitude->setSCPIInfo(scpiInfo);
     // we will set the validator later after activation we will know the channel names and their ranges
-    connect(m_pPARAdjustAmplitude, &VfModuleParameter::sigValueChanged, this, &cAdjustmentModuleMeasProgram::setAdjustAmplitudeStartCommand);
+    connect(m_pPARAdjustAmplitude, &VfModuleParameter::sigValueChanged, this,
+            &cAdjustmentModuleMeasProgram::setAdjustAmplitudeStartCommand);
 
+    m_pPARAdjustAmplitudeDc = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
+                                                  key = QString("PAR_AdjustAmplitudeDc"),
+                                                  QString("One amplitude adjustment node for DC"),
+                                                  QVariant(QString("")),
+                                                  true); // deferred notification necessary
+
+    m_pModule->m_veinModuleParameterMap[key] = m_pPARAdjustAmplitudeDc;
+    scpiInfo = new cSCPIInfo("CALCULATE", "DCAMPLITUDE", "10", m_pPARAdjustAmplitudeDc->getName(), "0", "");
+    m_pPARAdjustAmplitudeDc->setSCPIInfo(scpiInfo);
+    // we will set the validator later after activation we will know the channel names and their ranges
+    connect(m_pPARAdjustAmplitudeDc, &VfModuleParameter::sigValueChanged, this,
+            &cAdjustmentModuleMeasProgram::setAdjustAmplitudeStartCommandDc);
 
     m_pPARAdjustPhase = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
                                                  key = QString("PAR_AdjustPhase"),
@@ -502,6 +527,11 @@ double cAdjustmentModuleMeasProgram::calcAdjAbsoluteError()
     return calcAbsoluteError(m_currEnv.m_actualValue, m_currEnv.m_targetValue);
 }
 
+double cAdjustmentModuleMeasProgram::calcAdjAbsoluteErrorNeg()
+{
+    return calcAbsoluteError(m_currEnv.m_actualValue, -m_currEnv.m_targetValue);
+}
+
 bool cAdjustmentModuleMeasProgram::checkRangeIsWanted(QString adjType)
 {
     const VeinStorage::AbstractDatabase *storageDb = m_pModule->getStorageDb();
@@ -514,6 +544,29 @@ bool cAdjustmentModuleMeasProgram::checkRangeIsWanted(QString adjType)
         return false;
     }
     return true;
+}
+
+void cAdjustmentModuleMeasProgram::setAdjustAmplitudeStartCommandDc(QVariant paramValue)
+{
+    if(!setAdjustEnvironment(m_pPARAdjustAmplitudeDc, paramValue, "gain"))
+        return;
+
+    int adjustEntity = getConfData()->m_AdjChannelInfoHash[m_currEnv.m_channelMName]->dcAdjInfo.m_nEntity;
+    QString adjustComponent = getConfData()->m_AdjChannelInfoHash[m_currEnv.m_channelMName]->dcAdjInfo.m_sComponent;
+
+    const VeinStorage::AbstractDatabase *storageDb = m_pModule->getStorageDb();
+    m_currEnv.m_actualValue = storageDb->getStoredValue(adjustEntity, adjustComponent).toDouble();
+    bool outOfLimits = calcAdjAbsoluteError() > maxAmplitudeErrorPercent;
+    if(outOfLimits)
+        outOfLimits = calcAdjAbsoluteErrorNeg() > maxAmplitudeErrorPercent;
+    if(outOfLimits) {
+        notifyError(QString("Gain (DC) to adjust is out of limit! Wanted: %1 / Current: %2")
+                        .arg(m_currEnv.m_targetValue)
+                        .arg(m_currEnv.m_actualValue));
+        m_pPARAdjustAmplitudeDc->setError();
+        return;
+    }
+    m_adjustAmplitudeMachine.start();
 }
 
 void cAdjustmentModuleMeasProgram::setAdjustAmplitudeStartCommand(QVariant paramValue)

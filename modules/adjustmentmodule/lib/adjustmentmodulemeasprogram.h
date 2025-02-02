@@ -104,6 +104,7 @@ private slots:
     void setAdjustOffsetStatusStartCommand(QVariant var);
     void setAdjustInitStartCommand(QVariant var);
 
+    void setAdjustAmplitudeStartCommandDc(QVariant paramValue);
     void setAdjustAmplitudeStartCommand(QVariant paramValue);
     void adjustamplitudeGetCorr();
     void adjustamplitudeSetNode();
@@ -129,6 +130,7 @@ private:
     double cmpPhase(QVariant var);
     double calcAbsoluteError(double actualValue, double targetValue);
     double calcAdjAbsoluteError();
+    double calcAdjAbsoluteErrorNeg();
     bool checkRangeIsWanted(QString adjType);
 
     cAdjustmentModule* m_pModule;
@@ -159,6 +161,7 @@ private:
     VfModuleParameter* m_pPARAdjustOffsetStatus = nullptr;
     VfModuleParameter* m_pPARAdjustInit = nullptr;
     VfModuleParameter* m_pPARAdjustAmplitude = nullptr;
+    VfModuleParameter* m_pPARAdjustAmplitudeDc = nullptr;
     VfModuleParameter* m_pPARAdjustPhase = nullptr;
     VfModuleParameter* m_pPARAdjustOffset = nullptr;
     VfModuleParameter* m_pPARAdjustSend = nullptr;

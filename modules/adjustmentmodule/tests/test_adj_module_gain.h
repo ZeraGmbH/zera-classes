@@ -15,6 +15,7 @@ private slots:
     void outOfLimitLower();
     void outOfLimitUpper();
     void denyRangeNotSet();
+    void withinLimitLowerButDcValues();
 
     void oneNodeWithinLimitLower();
     void oneNodeWithinLimitUpper();

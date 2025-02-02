@@ -16,6 +16,30 @@ void AdjModuleTestHelper::setActualTestValues(ModuleManagerTestRunner &testRunne
         dspInterfaces[DSP_INTERFACE_RMS]);
 }
 
+void AdjModuleTestHelper::setAllValuesSymmetricAc(ModuleManagerTestRunner &testRunner, float testvoltage, float testcurrent, float testangle, float testfrequency)
+{
+    const QList<TestDspInterfacePtr>& dspInterfaces = testRunner.getDspInterfaceList();
+    TestDspValues dspValues(dspInterfaces[DSP_INTERFACE_DFT]->getValueList());
+    dspValues.setAllValuesSymmetricAc(testvoltage, testcurrent, testangle, testfrequency);
+    dspValues.fireAllActualValues(
+        dspInterfaces[DSP_INTERFACE_DFT],
+        dspInterfaces[DSP_INTERFACE_FFT],
+        dspInterfaces[DSP_INTERFACE_RANGE_PROGRAM],
+        dspInterfaces[DSP_INTERFACE_RMS]);
+}
+
+void AdjModuleTestHelper::setAllValuesSymmetricDc(ModuleManagerTestRunner &testRunner, float voltage, float current)
+{
+    const QList<TestDspInterfacePtr>& dspInterfaces = testRunner.getDspInterfaceList();
+    TestDspValues dspValues(dspInterfaces[DSP_INTERFACE_DFT]->getValueList());
+    dspValues.setAllValuesSymmetricDc(voltage, current);
+    dspValues.fireAllActualValues(
+        dspInterfaces[DSP_INTERFACE_DFT],
+        dspInterfaces[DSP_INTERFACE_FFT],
+        dspInterfaces[DSP_INTERFACE_RANGE_PROGRAM],
+        dspInterfaces[DSP_INTERFACE_RMS]);
+}
+
 AdjModuleTestHelper::TAdjNodeValues AdjModuleTestHelper::parseNode(const QString &scpiResponse)
 {
     const QStringList nodeList = scpiResponse.split(";", Qt::SkipEmptyParts);
