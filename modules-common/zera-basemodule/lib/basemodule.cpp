@@ -64,12 +64,12 @@ void BaseModule::startSetupTask()
             return true;
         },
         true));
-    if(requiresStateMachineStart()) {
-        TaskActivationStateMachineWrapperPtr activationStatemachineTask = TaskActivationStateMachineWrapper::create(&m_ActivationMachine);
-        connect(this, &BaseModule::activationReady,
-                activationStatemachineTask.get(), &TaskActivationStateMachineWrapper::onActivationFinished);
-        startTasks->addSub(std::move(activationStatemachineTask));
-    }
+
+    TaskActivationStateMachineWrapperPtr activationStatemachineTask = TaskActivationStateMachineWrapper::create(&m_ActivationMachine);
+    connect(this, &BaseModule::activationReady,
+            activationStatemachineTask.get(), &TaskActivationStateMachineWrapper::onActivationFinished);
+    startTasks->addSub(std::move(activationStatemachineTask));
+
     startTasks->addSub(TaskLambdaRunner::create([this]() {
             startMeas();
             m_moduleIsFullySetUp = true;
