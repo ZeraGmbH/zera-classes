@@ -1,6 +1,6 @@
 #include "test_range_automatic.h"
 #include "demovaluesdsprange.h"
-#include "modulemanagertestrunner.h"
+#include "vf_client_component_setter.h"
 #include <timemachinefortest.h>
 #include <QTest>
 
@@ -11,12 +11,99 @@ static QString UL1RangeComponent("PAR_Channel1Range");
 static QString IL1RangeComponent("PAR_Channel4Range");
 static QString RangeAutomaticComponent("PAR_RangeAutomatic");
 
+void test_range_automatic::init()
+{
+    m_licenseSystem = std::make_unique<TestLicenseSystem>();
+    m_serviceInterfaceFactory = std::make_shared<TestFactoryServiceInterfaces>();
+    m_modmanSetupFacade = std::make_unique<ModuleManagerSetupFacade>(m_licenseSystem.get());
+    m_modMan = std::make_unique<TestModuleManager>(m_modmanSetupFacade.get(), m_serviceInterfaceFactory);
+
+    m_modMan->loadAllAvailableModulePlugins();
+    m_modMan->setupConnections();
+    m_modMan->startAllTestServices("mt310s2", false);
+    m_modMan->loadSession(":/session-minimal.json");
+    m_modMan->waitUntilModulesAreReady();
+}
+
+void test_range_automatic::cleanup()
+{
+    m_modMan->destroyModulesAndWaitUntilAllShutdown();
+    m_modMan = nullptr;
+    TimeMachineObject::feedEventLoop();
+    m_modmanSetupFacade = nullptr;
+    m_serviceInterfaceFactory = nullptr;
+    m_licenseSystem = nullptr;
+}
+
 void test_range_automatic::defaultRangesAndSetting()
 {
-    ModuleManagerTestRunner testRunner(":/session-minimal.json");
-    QCOMPARE(testRunner.getVfComponent(rangeEntityId, UL1RangeComponent), "250V");
-    QCOMPARE(testRunner.getVfComponent(rangeEntityId, IL1RangeComponent), "10A");
-    QCOMPARE(testRunner.getVfComponent(rangeEntityId, RangeAutomaticComponent), 0);
+    QCOMPARE(getVfComponent(rangeEntityId, UL1RangeComponent), "250V");
+    QCOMPARE(getVfComponent(rangeEntityId, IL1RangeComponent), "10A");
+    QCOMPARE(getVfComponent(rangeEntityId, RangeAutomaticComponent), 0);
+}
+
+void test_range_automatic::testRangeAutomatic()
+{
+    fireNewRmsValues(4);
+    setVfComponent(rangeEntityId, RangeAutomaticComponent, 1);
+    QCOMPARE(getVfComponent(rangeEntityId, UL1RangeComponent), "8V");
+    QCOMPARE(getVfComponent(rangeEntityId, IL1RangeComponent), "5A");
+
+    fireNewRmsValues(0);
+    //After setting new range (above 8V, 5A), all range related processing is disabled for 1 Actual value interrupt cycle.
+    //So, fire an extra interrupt.
+    fireNewRmsValues(0);
+    TimeMachineObject::feedEventLoop();
+    QCOMPARE(getVfComponent(rangeEntityId, UL1RangeComponent), "100mV");
+    QCOMPARE(getVfComponent(rangeEntityId, IL1RangeComponent), "25mA");
+
+    fireNewRmsValues(15);
+    //After setting new range (above 100mV, 25mA), all range related processing is disabled for 1 Actual value interrupt cycle.
+    //So, fire an extra interrupt.
+    fireNewRmsValues(15);
+    QCOMPARE(getVfComponent(rangeEntityId, UL1RangeComponent), "250V");
+    QCOMPARE(getVfComponent(rangeEntityId, IL1RangeComponent), "10A");
+}
+
+void test_range_automatic::enableAndDisableRangeAutomatic()
+{
+    fireNewRmsValues(0);
+
+    setVfComponent(rangeEntityId, RangeAutomaticComponent, 1);
+    QCOMPARE(getVfComponent(rangeEntityId, UL1RangeComponent), "100mV");
+    QCOMPARE(getVfComponent(rangeEntityId, IL1RangeComponent), "25mA");
+
+    setVfComponent(rangeEntityId, RangeAutomaticComponent, 0);
+    QCOMPARE(getVfComponent(rangeEntityId, UL1RangeComponent), "100mV"); //unchanged
+    QCOMPARE(getVfComponent(rangeEntityId, IL1RangeComponent), "25mA"); //unchanged
+}
+
+void test_range_automatic::softOverloadWithRangeAutomatic()
+{
+    fireNewRmsValues(4);
+    setVfComponent(rangeEntityId, RangeAutomaticComponent, 1);
+    QCOMPARE(getVfComponent(rangeEntityId, UL1RangeComponent), "8V");
+    QCOMPARE(getVfComponent(rangeEntityId, IL1RangeComponent), "5A");
+
+    //Introduce overload condition
+    fireNewRmsValues(15);
+    QCOMPARE(getVfComponent(rangeEntityId, "PAR_Overload"), 0);
+    //After setting new range (above 8V, 5A), all range related processing is disabled for 1 Actual value interrupt cycle
+    //So, fire an extra interrupt.
+    fireNewRmsValues(15);
+    TimeMachineObject::feedEventLoop();
+    QCOMPARE(getVfComponent(rangeEntityId, "PAR_Overload"), 1);
+    QCOMPARE(getVfComponent(rangeEntityId, UL1RangeComponent), "250V");
+    QCOMPARE(getVfComponent(rangeEntityId, IL1RangeComponent), "10A");
+
+    //Remove overload condition
+    fireNewRmsValues(0.5);
+    QCOMPARE(getVfComponent(rangeEntityId, "PAR_Overload"), 1);
+    //After setting new range (above 8V, 5A), all range related processing is disabled for 1 Actual value interrupt cycle
+    //So, fire an extra interrupt.
+    fireNewRmsValues(0.5);
+    QCOMPARE(getVfComponent(rangeEntityId, UL1RangeComponent), "8V");
+    QCOMPARE(getVfComponent(rangeEntityId, IL1RangeComponent), "500mA");
 }
 
 enum dspInterfaces{
@@ -27,83 +114,25 @@ enum dspInterfaces{
 
 static constexpr int rangeChannelCount = 8;
 
-void test_range_automatic::testRangeAutomatic()
+void test_range_automatic::fireNewRmsValues(float rmsValue)
 {
-    ModuleManagerTestRunner testRunner(":/session-minimal.json");
-
-    const QList<TestDspInterfacePtr>& dspInterfaces = testRunner.getDspInterfaceList();
-    fireNewRmsValues(dspInterfaces[dspInterfaces::RangeModuleMeasProgram], 4);
-    testRunner.setVfComponent(rangeEntityId, RangeAutomaticComponent, 1);
-    QCOMPARE(testRunner.getVfComponent(rangeEntityId, UL1RangeComponent), "8V");
-    QCOMPARE(testRunner.getVfComponent(rangeEntityId, IL1RangeComponent), "5A");
-
-    fireNewRmsValues(dspInterfaces[dspInterfaces::RangeModuleMeasProgram], 0);
-    //After setting new range (above 8V, 5A), all range related processing is disabled for 1 Actual value interrupt cycle.
-    //So, fire an extra interrupt.
-    fireNewRmsValues(dspInterfaces[dspInterfaces::RangeModuleMeasProgram], 0);
-    TimeMachineObject::feedEventLoop();
-    QCOMPARE(testRunner.getVfComponent(rangeEntityId, UL1RangeComponent), "100mV");
-    QCOMPARE(testRunner.getVfComponent(rangeEntityId, IL1RangeComponent), "25mA");
-
-    fireNewRmsValues(dspInterfaces[dspInterfaces::RangeModuleMeasProgram], 15);
-    //After setting new range (above 100mV, 25mA), all range related processing is disabled for 1 Actual value interrupt cycle.
-    //So, fire an extra interrupt.
-    fireNewRmsValues(dspInterfaces[dspInterfaces::RangeModuleMeasProgram], 15);
-    QCOMPARE(testRunner.getVfComponent(rangeEntityId, UL1RangeComponent), "250V");
-    QCOMPARE(testRunner.getVfComponent(rangeEntityId, IL1RangeComponent), "10A");
-}
-
-void test_range_automatic::enableAndDisableRangeAutomatic()
-{
-    ModuleManagerTestRunner testRunner(":/session-minimal.json");
-    const QList<TestDspInterfacePtr>& dspInterfaces = testRunner.getDspInterfaceList();
-    fireNewRmsValues(dspInterfaces[dspInterfaces::RangeModuleMeasProgram], 0);
-
-    testRunner.setVfComponent(rangeEntityId, RangeAutomaticComponent, 1);
-    QCOMPARE(testRunner.getVfComponent(rangeEntityId, UL1RangeComponent), "100mV");
-    QCOMPARE(testRunner.getVfComponent(rangeEntityId, IL1RangeComponent), "25mA");
-
-    testRunner.setVfComponent(rangeEntityId, RangeAutomaticComponent, 0);
-    QCOMPARE(testRunner.getVfComponent(rangeEntityId, UL1RangeComponent), "100mV"); //unchanged
-    QCOMPARE(testRunner.getVfComponent(rangeEntityId, IL1RangeComponent), "25mA"); //unchanged
-}
-
-void test_range_automatic::softOverloadWithRangeAutomatic()
-{
-    ModuleManagerTestRunner testRunner(":/session-minimal.json");
-
-    const QList<TestDspInterfacePtr>& dspInterfaces = testRunner.getDspInterfaceList();
-    fireNewRmsValues(dspInterfaces[dspInterfaces::RangeModuleMeasProgram], 4);
-    testRunner.setVfComponent(rangeEntityId, RangeAutomaticComponent, 1);
-    QCOMPARE(testRunner.getVfComponent(rangeEntityId, UL1RangeComponent), "8V");
-    QCOMPARE(testRunner.getVfComponent(rangeEntityId, IL1RangeComponent), "5A");
-
-    //Introduce overload condition
-    fireNewRmsValues(dspInterfaces[dspInterfaces::RangeModuleMeasProgram], 15);
-    QCOMPARE(testRunner.getVfComponent(rangeEntityId, "PAR_Overload"), 0);
-    //After setting new range (above 8V, 5A), all range related processing is disabled for 1 Actual value interrupt cycle
-    //So, fire an extra interrupt.
-    fireNewRmsValues(dspInterfaces[dspInterfaces::RangeModuleMeasProgram], 15);
-    TimeMachineObject::feedEventLoop();
-    QCOMPARE(testRunner.getVfComponent(rangeEntityId, "PAR_Overload"), 1);
-    QCOMPARE(testRunner.getVfComponent(rangeEntityId, UL1RangeComponent), "250V");
-    QCOMPARE(testRunner.getVfComponent(rangeEntityId, IL1RangeComponent), "10A");
-
-    //Remove overload condition
-    fireNewRmsValues(dspInterfaces[dspInterfaces::RangeModuleMeasProgram], 0.5);
-    QCOMPARE(testRunner.getVfComponent(rangeEntityId, "PAR_Overload"), 1);
-    //After setting new range (above 8V, 5A), all range related processing is disabled for 1 Actual value interrupt cycle
-    //So, fire an extra interrupt.
-    fireNewRmsValues(dspInterfaces[dspInterfaces::RangeModuleMeasProgram], 0.5);
-    QCOMPARE(testRunner.getVfComponent(rangeEntityId, UL1RangeComponent), "8V");
-    QCOMPARE(testRunner.getVfComponent(rangeEntityId, IL1RangeComponent), "500mA");
-}
-
-void test_range_automatic::fireNewRmsValues(const TestDspInterfacePtr &dspInterface, float rmsValue)
-{
+    TestDspInterfacePtr dspInterface = m_serviceInterfaceFactory->getInterfaceList()[dspInterfaces::RangeModuleMeasProgram];
     DemoValuesDspRange rangeValues(rangeChannelCount);
     for(int i = 0; i < rangeChannelCount; i++)
         rangeValues.setRmsValue(i, rmsValue);
     dspInterface->fireActValInterrupt(rangeValues.getDspValues(), /* dummy */ 0);
     TimeMachineObject::feedEventLoop();
+}
+
+void test_range_automatic::setVfComponent(int entityId, QString componentName, QVariant newValue)
+{
+    QVariant oldValue = getVfComponent(entityId, componentName);
+    QEvent* event = VfClientComponentSetter::generateEvent(entityId, componentName, oldValue, newValue);
+    emit m_modmanSetupFacade->getStorageSystem()->sigSendEvent(event); // could be any event system
+    TimeMachineObject::feedEventLoop();
+}
+
+QVariant test_range_automatic::getVfComponent(int entityId, QString componentName)
+{
+    return m_modmanSetupFacade->getStorageSystem()->getDb()->getStoredValue(entityId, componentName);
 }
