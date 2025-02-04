@@ -22,6 +22,7 @@ public:
     ModuleManagerSetupFacade* getModManFacade();
     ZeraModules::VirtualModule *getModule(QString uniqueName, int entityId);
     void setVfComponent(int entityId, QString componentName, QVariant newValue);
+    QVariant getVfComponent(int entityId, QString componentName);
     void start(QString sessionFileName);
 private:
     std::unique_ptr<TestLicenseSystem> m_licenseSystem;

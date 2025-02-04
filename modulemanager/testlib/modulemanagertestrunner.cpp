@@ -69,3 +69,8 @@ void ModuleManagerTestRunner::setVfComponent(int entityId, QString componentName
     emit m_modmanFacade->getStorageSystem()->sigSendEvent(event); // could be any event system
     TimeMachineObject::feedEventLoop();
 }
+
+QVariant ModuleManagerTestRunner::getVfComponent(int entityId, QString componentName)
+{
+    return getVeinStorageSystem()->getDb()->getStoredValue(entityId, componentName);
+}
