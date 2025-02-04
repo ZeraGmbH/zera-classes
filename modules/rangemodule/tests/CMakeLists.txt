@@ -16,9 +16,19 @@ endfunction()
 SETUP_QTESTS_MODULE(
     test_range_config_load
     test_range_module_regression
+    test_range_automatic
+)
+
+target_sources(test_range_config_load
+  PRIVATE
 )
 
 target_sources(test_range_module_regression
+  PRIVATE
+    test-data/test-data.qrc
+)
+
+target_sources(test_range_automatic
   PRIVATE
     test-data/test-data.qrc
 )
