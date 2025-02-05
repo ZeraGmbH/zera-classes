@@ -9,6 +9,7 @@ function(SETUP_QTESTS_MODULE)
             PRIVATE
             rangemodule-static
             zera-modulemanager-testlib
+            Zera::zdsp1d-testlib
         )
     endforeach()
 endfunction()
