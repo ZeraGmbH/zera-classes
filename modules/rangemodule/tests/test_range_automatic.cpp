@@ -1,6 +1,10 @@
 #include "test_range_automatic.h"
 #include "demovaluesdsprange.h"
 #include "vf_client_component_setter.h"
+#include <mocktcpnetworkfactory.h>
+#include <testfactoryi2cctrl.h>
+#include <testfactorydevicenodedsp.h>
+#include <tcpnetworkfactory.h>
 #include <timemachinefortest.h>
 #include <QTest>
 
@@ -20,7 +24,7 @@ void test_range_automatic::init()
 
     m_modMan->loadAllAvailableModulePlugins();
     m_modMan->setupConnections();
-    m_modMan->startAllTestServices("mt310s2", false);
+    setupServices();
     m_modMan->loadSession(":/session-minimal.json");
     m_modMan->waitUntilModulesAreReady();
 }
@@ -33,6 +37,13 @@ void test_range_automatic::cleanup()
     m_modmanSetupFacade = nullptr;
     m_serviceInterfaceFactory = nullptr;
     m_licenseSystem = nullptr;
+
+    m_dspServer = nullptr;
+    m_secServer = nullptr;
+    m_testPcbServer = nullptr;
+    TimeMachineObject::feedEventLoop();
+    m_resmanServer = nullptr;
+    TimeMachineObject::feedEventLoop();
 }
 
 void test_range_automatic::defaultRangesAndSetting()
@@ -104,6 +115,17 @@ void test_range_automatic::softOverloadWithRangeAutomatic()
     fireNewRmsValues(0.5);
     QCOMPARE(getVfComponent(rangeEntityId, UL1RangeComponent), "8V");
     QCOMPARE(getVfComponent(rangeEntityId, IL1RangeComponent), "500mA");
+}
+
+void test_range_automatic::setupServices()
+{
+    m_tcpFactory = VeinTcp::TcpNetworkFactory::create();
+    m_resmanServer = std::make_unique<ResmanRunFacade>(m_tcpFactory);
+    TimeMachineObject::feedEventLoop();
+    m_testPcbServer = std::make_unique<MockMt310s2d>(std::make_shared<TestFactoryI2cCtrl>(false), m_tcpFactory);
+    m_secServer = std::make_unique<MockSec1000d>(m_tcpFactory);
+    m_dspServer = std::make_unique<MockZdsp1d>(std::make_shared<TestFactoryDeviceNodeDsp>(), m_tcpFactory);
+    TimeMachineObject::feedEventLoop();
 }
 
 enum dspInterfaces{
