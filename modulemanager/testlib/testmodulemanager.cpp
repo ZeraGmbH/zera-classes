@@ -6,7 +6,6 @@
 #include <testfactoryi2cctrl.h>
 #include <timemachineobject.h>
 #include <timerfactoryqtfortest.h>
-#include <tcpnetworkfactory.h>
 #include <QDir>
 
 bool TestModuleManager::prepareOe()
@@ -31,11 +30,12 @@ void TestModuleManager::pointToInstalledSessionFiles()
 }
 
 TestModuleManager::TestModuleManager(ModuleManagerSetupFacade *setupFacade,
-                                     AbstractFactoryServiceInterfacesPtr serviceInterfaceFactory) :
+                                     AbstractFactoryServiceInterfacesPtr serviceInterfaceFactory,
+                                     VeinTcp::AbstractTcpNetworkFactoryPtr tcpNetworkFactory) :
     ModuleManager(
         setupFacade,
         serviceInterfaceFactory,
-        VeinTcp::TcpNetworkFactory::create(),
+        tcpNetworkFactory,
         // This is a hack to modify static test environment before ModuleManager starts using them
         prepareOe())
 {
