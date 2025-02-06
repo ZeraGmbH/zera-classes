@@ -5,7 +5,11 @@
 #include <testfactoryi2cctrl.h>
 #include <testfactorydevicenodedsp.h>
 #include <tcpnetworkfactory.h>
+#include <clamp.h>
+#include <clampfactorytest.h>
+#include <mocki2ceepromiofactory.h>
 #include <timemachinefortest.h>
+#include <timerfactoryqtfortest.h>
 #include <QTest>
 
 QTEST_MAIN(test_range_automatic)
@@ -13,14 +17,24 @@ QTEST_MAIN(test_range_automatic)
 static int constexpr rangeEntityId = 1020;
 static QString UL1RangeComponent("PAR_Channel1Range");
 static QString IL1RangeComponent("PAR_Channel4Range");
+static QString IL2RangeComponent("PAR_Channel5Range");
 static QString RangeAutomaticComponent("PAR_RangeAutomatic");
+static QString RangeGroupingComponent("PAR_ChannelGrouping");
+
+void test_range_automatic::initTestCase()
+{
+    ClampFactoryTest::enableTest();
+    MockI2cEEpromIoFactory::enableMock();
+    m_tcpFactory = VeinTcp::MockTcpNetworkFactory::create();
+    TimerFactoryQtForTest::enableTest();
+}
 
 void test_range_automatic::init()
 {
     m_licenseSystem = std::make_unique<TestLicenseSystem>();
     m_serviceInterfaceFactory = std::make_shared<TestFactoryServiceInterfaces>();
     m_modmanSetupFacade = std::make_unique<ModuleManagerSetupFacade>(m_licenseSystem.get());
-    m_modMan = std::make_unique<TestModuleManager>(m_modmanSetupFacade.get(), m_serviceInterfaceFactory);
+    m_modMan = std::make_unique<TestModuleManager>(m_modmanSetupFacade.get(), m_serviceInterfaceFactory, m_tcpFactory);
 
     m_modMan->loadAllAvailableModulePlugins();
     m_modMan->setupConnections();
@@ -117,12 +131,27 @@ void test_range_automatic::softOverloadWithRangeAutomatic()
     QCOMPARE(getVfComponent(rangeEntityId, IL1RangeComponent), "500mA");
 }
 
+void test_range_automatic::addAndSelectClamp()
+{
+    setVfComponent(rangeEntityId, RangeGroupingComponent, 0);
+    m_testPcbServer->addClamp(cClamp::CL120A, "IL1");
+    TimeMachineObject::feedEventLoop();
+
+    setVfComponent(rangeEntityId, IL1RangeComponent, "100mA");
+    QCOMPARE(getVfComponent(rangeEntityId, IL1RangeComponent), "100mA");
+    QCOMPARE(getVfComponent(rangeEntityId, IL2RangeComponent), "10A"); //default
+
+    setVfComponent(rangeEntityId, IL1RangeComponent, "C10A");
+    QCOMPARE(getVfComponent(rangeEntityId, IL1RangeComponent), "C10A");
+    QCOMPARE(getVfComponent(rangeEntityId, IL2RangeComponent), "10A");
+}
+
 void test_range_automatic::setupServices()
 {
-    m_tcpFactory = VeinTcp::TcpNetworkFactory::create();
+    TimeMachineForTest::reset();
     m_resmanServer = std::make_unique<ResmanRunFacade>(m_tcpFactory);
     TimeMachineObject::feedEventLoop();
-    m_testPcbServer = std::make_unique<MockMt310s2d>(std::make_shared<TestFactoryI2cCtrl>(false), m_tcpFactory);
+    m_testPcbServer = std::make_unique<TestServerForSenseInterfaceMt310s2>(std::make_shared<TestFactoryI2cCtrl>(true), m_tcpFactory);
     m_secServer = std::make_unique<MockSec1000d>(m_tcpFactory);
     m_dspServer = std::make_unique<MockZdsp1d>(std::make_shared<TestFactoryDeviceNodeDsp>(), m_tcpFactory);
     TimeMachineObject::feedEventLoop();

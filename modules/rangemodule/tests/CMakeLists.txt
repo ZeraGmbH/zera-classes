@@ -10,6 +10,7 @@ function(SETUP_QTESTS_MODULE)
             rangemodule-static
             zera-modulemanager-testlib
             Zera::zdsp1d-testlib
+            Zera::mt310s2d-testlib
         )
     endforeach()
 endfunction()

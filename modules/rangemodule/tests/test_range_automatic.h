@@ -3,7 +3,7 @@
 
 #include "testfactoryserviceinterfaces.h"
 #include "testmodulemanager.h"
-#include <mockmt310s2d.h>
+#include <testserverforsenseinterfacemt310s2.h>
 #include <mocksec1000d.h>
 #include <mockzdsp1d.h>
 #include <resmanrunfacade.h>
@@ -14,6 +14,7 @@ class test_range_automatic : public QObject
 {
     Q_OBJECT
 private slots:
+    void initTestCase();
     void init();
     void cleanup();
 
@@ -21,6 +22,7 @@ private slots:
     void testRangeAutomatic();
     void enableAndDisableRangeAutomatic();
     void softOverloadWithRangeAutomatic();
+    void addAndSelectClamp();
 private:
     void setupServices();
     void fireNewRmsValues(float rmsValue);
@@ -34,7 +36,7 @@ private:
     TestDspInterfacePtr m_rangeModuleMeasProgramDspInterface;
 
     VeinTcp::AbstractTcpNetworkFactoryPtr m_tcpFactory;
-    std::unique_ptr<MockMt310s2d> m_testPcbServer;
+    std::unique_ptr<TestServerForSenseInterfaceMt310s2> m_testPcbServer;
     std::unique_ptr<MockSec1000d> m_secServer;
     std::unique_ptr<MockZdsp1d> m_dspServer;
     std::unique_ptr<ResmanRunFacade> m_resmanServer;
