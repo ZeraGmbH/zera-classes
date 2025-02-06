@@ -23,6 +23,9 @@ private slots:
     void enableAndDisableRangeAutomatic();
     void softOverloadWithRangeAutomatic();
     void addAndSelectClamp();
+    void selectClampThenRangeAutomatic();
+    void removeClamp();
+    void removeClampWithRangeAutomatic();
 private:
     void setupServices();
     void fireNewRmsValues(float rmsValue);

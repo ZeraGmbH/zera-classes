@@ -146,6 +146,67 @@ void test_range_automatic::addAndSelectClamp()
     QCOMPARE(getVfComponent(rangeEntityId, IL2RangeComponent), "10A");
 }
 
+void test_range_automatic::selectClampThenRangeAutomatic()
+{
+    setVfComponent(rangeEntityId, RangeGroupingComponent, 0);
+    m_testPcbServer->addClamp(cClamp::CL120A, "IL1");
+    TimeMachineObject::feedEventLoop();
+    setVfComponent(rangeEntityId, IL1RangeComponent, "C10A");
+
+    fireNewRmsValues(4);
+    setVfComponent(rangeEntityId, RangeAutomaticComponent, 1);
+    QCOMPARE(getVfComponent(rangeEntityId, UL1RangeComponent), "8V");
+    QCOMPARE(getVfComponent(rangeEntityId, IL1RangeComponent), "C5A");
+
+    fireNewRmsValues(25); //overload
+    //After setting new range (above 8V, C5A), all range related processing is disabled for 1 Actual value interrupt cycle
+    //So, fire an extra interrupt.
+    fireNewRmsValues(25);
+    QCOMPARE(getVfComponent(rangeEntityId, "PAR_Overload"), 1);
+    QCOMPARE(getVfComponent(rangeEntityId, UL1RangeComponent), "250V");
+    QCOMPARE(getVfComponent(rangeEntityId, IL1RangeComponent), "C100A");
+
+    fireNewRmsValues(25);
+    //After setting new range (above 250V, C100A), all range related processing is disabled for 1 Actual value interrupt cycle
+    //So, fire an extra interrupt.
+    fireNewRmsValues(25);
+    QCOMPARE(getVfComponent(rangeEntityId, UL1RangeComponent), "250V");
+    QCOMPARE(getVfComponent(rangeEntityId, IL1RangeComponent), "C50A");
+}
+
+void test_range_automatic::removeClamp()
+{
+    setVfComponent(rangeEntityId, RangeGroupingComponent, 0);
+    m_testPcbServer->addClamp(cClamp::CL120A, "IL1");
+    TimeMachineObject::feedEventLoop();
+    setVfComponent(rangeEntityId, IL1RangeComponent, "C50mA");
+    QCOMPARE(getVfComponent(rangeEntityId, IL1RangeComponent), "C50mA");
+
+    m_testPcbServer->removeAllClamps();
+    TimeMachineObject::feedEventLoop();
+    QCOMPARE(getVfComponent(rangeEntityId, IL1RangeComponent), "10A");//switches to max range
+}
+
+void test_range_automatic::removeClampWithRangeAutomatic()
+{
+    setVfComponent(rangeEntityId, RangeGroupingComponent, 0);
+    m_testPcbServer->addClamp(cClamp::CL120A, "IL1");
+    TimeMachineObject::feedEventLoop();
+    setVfComponent(rangeEntityId, IL1RangeComponent, "C10A");
+
+    fireNewRmsValues(4);
+    setVfComponent(rangeEntityId, RangeAutomaticComponent, 1);
+    QCOMPARE(getVfComponent(rangeEntityId, IL1RangeComponent), "C5A");
+
+    m_testPcbServer->removeAllClamps();
+    TimeMachineObject::feedEventLoop();
+    QCOMPARE(getVfComponent(rangeEntityId, IL1RangeComponent), "10A");//first switches to max
+
+    fireNewRmsValues(4);//this interrupt is ignored
+    fireNewRmsValues(4);//one more interrupt, as RangeAutomatic is called only after interrupt
+    QCOMPARE(getVfComponent(rangeEntityId, IL1RangeComponent), "5A");
+}
+
 void test_range_automatic::setupServices()
 {
     TimeMachineForTest::reset();
