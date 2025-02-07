@@ -82,8 +82,6 @@ void cRangeObsermatic::ActionHandler(QVector<float> *actualValues)
 
 void cRangeObsermatic::generateVeinInterface()
 {
-    ;
-
     VfModuleComponent *pComponent;
     VfModuleParameter *pParameter;
 
@@ -228,21 +226,17 @@ void cRangeObsermatic::generateVeinInterface()
 
 
 void cRangeObsermatic::rangeObservation()
-{   
-    bool markOverload =false;
-    qint32 nrActValues;
-
-    nrActValues = m_RangeMeasChannelList.count();
-    cRangeMeasChannel *pmChn;
-
+{
+    bool markOverload = false;
+    qint32 nrActValues = m_RangeMeasChannelList.count();
     for (int i = 0; i < nrActValues; i++) { // we test all channels
-        pmChn = m_RangeMeasChannelList.at(i);
+        cRangeMeasChannel *rangeMeasChannel = m_RangeMeasChannelList.at(i);
         // the overload observation must consider the prescaling
         float prescalingFac=getPreScale(i);
         // for test overload we take the rms value with/without dc depending on configuration
         // and for overload condition of adc test, we take the peakvalues including dc
-        bool rmsOverload = pmChn->isRMSOverload(pmChn->getRmsValue()*prescalingFac); // rms
-        bool adcOverLoad = pmChn->isADCOverload(pmChn->getPeakValueWithDc()*prescalingFac); //peak
+        bool rmsOverload = rangeMeasChannel->isRMSOverload(rangeMeasChannel->getRmsValue()*prescalingFac); // rms
+        bool adcOverLoad = rangeMeasChannel->isADCOverload(rangeMeasChannel->getPeakValueWithDc()*prescalingFac); //peak
         bool hardOverLoad = m_hardOvlList.at(i);
         if ( rmsOverload || adcOverLoad || hardOverLoad) { // if any overload ?
             qInfo("Overload channel %i / Range %s: RMS %i / ADC %i / Hard %i",
@@ -258,7 +252,7 @@ void cRangeObsermatic::rangeObservation()
             // if an overload is recovered by rangeautomatic during running measurement
 
             stringParameter sPar = m_ConfPar.m_senseChannelRangeParameter.at(i);
-            QString s = pmChn->getMaxRange(sPar.m_sPar);
+            QString s = rangeMeasChannel->getMaxRange(sPar.m_sPar);
 
             if (m_actChannelRangeList.at(i) == s) // in case ovrload was in max. range
             {
@@ -298,23 +292,22 @@ void cRangeObsermatic::rangeAutomatic()
 {
     if (m_ConfPar.m_nRangeAutoAct.m_nActive == 1) {
         bool unmarkOverload = true;
-        cRangeMeasChannel *pmChn;
 
         for (int i = 0; i < m_RangeMeasChannelList.count(); i++) { // we test all channels
             if (!m_maxOvlList.at(i)) { // no range automatic if there was overload in max range
-                pmChn = m_RangeMeasChannelList.at(i);
+                cRangeMeasChannel *rangeMeasChannel = m_RangeMeasChannelList.at(i);
 
                 if (!m_hardOvlList.at(i)) {
                     if (!m_softOvlList.at(i)) {
                         stringParameter sPar = m_ConfPar.m_senseChannelRangeParameter.at(i);
-                        sPar.m_sPar = pmChn->getOptRange(pmChn->getRmsValue()*getPreScale(i), sPar.m_sPar);
+                        sPar.m_sPar = rangeMeasChannel->getOptRange(rangeMeasChannel->getRmsValue()*getPreScale(i), sPar.m_sPar);
                         m_ConfPar.m_senseChannelRangeParameter.replace(i, sPar);
                     }
                 }
 
                 else {
                     unmarkOverload = false;
-                    m_MsgNrCmdList[pmChn->resetStatus()] = resetstatus;
+                    m_MsgNrCmdList[rangeMeasChannel->resetStatus()] = resetstatus;
                 }
             }
             else {
@@ -407,10 +400,10 @@ void cRangeObsermatic::setRanges(bool force)
         // check if channel is in group
         float preScalingFactor = getPreScale(i);
         s = m_ConfPar.m_senseChannelRangeParameter.at(i).m_sPar;
-        cRangeMeasChannel *pmChn = m_RangeMeasChannelList.at(i);
-        if (! pmChn->isPossibleRange(s)) { // we test whether this range is possible, otherwise we take the max. range
+        cRangeMeasChannel *rangeMeasChannel = m_RangeMeasChannelList.at(i);
+        if (!rangeMeasChannel->isPossibleRange(s)) { // we test whether this range is possible, otherwise we take the max. range
             stringParameter sPar = m_ConfPar.m_senseChannelRangeParameter.at(i);
-            s = pmChn->getMaxRange(sPar.m_sPar);
+            s = rangeMeasChannel->getMaxRange(sPar.m_sPar);
             sPar.m_sPar = s;
             m_ConfPar.m_senseChannelRangeParameter.replace(i, sPar);
         }
@@ -422,23 +415,23 @@ void cRangeObsermatic::setRanges(bool force)
             change = true;
 
             // set range
-            m_MsgNrCmdList[pmChn->setRange(s)] = setrange + i; // we must know which channel has changed for deferred notification
+            m_MsgNrCmdList[rangeMeasChannel->setRange(s)] = setrange + i; // we must know which channel has changed for deferred notification
             m_nRangeSetPending++;
             m_actChannelRangeList.replace(i, s);
 
             // The scaling factor is multplied with the inverse presaling value
-            quint8 dspChannel = pmChn->getDSPChannelNr();
-            m_pfScale[dspChannel] = (pmChn->getUrValue() / pmChn->getRejection()) * (1/preScalingFactor);
+            quint8 dspChannel = rangeMeasChannel->getDSPChannelNr();
+            m_pfScale[dspChannel] = (rangeMeasChannel->getUrValue() / rangeMeasChannel->getRejection()) * (1/preScalingFactor);
 
             // we first set information of channels actual urvalue
-            m_RangeActRejectionComponentList.at(i)->setValue(pmChn->getUrValue());
+            m_RangeActRejectionComponentList.at(i)->setValue(rangeMeasChannel->getUrValue());
             // we additional set information of channels actual urvalue incl. reserve
-            m_RangeActOVLRejectionComponentList.at(i)->setValue(pmChn->getRangeUrvalueMax()); // we additional set information of channels actual urvalue incl. reserve
+            m_RangeActOVLRejectionComponentList.at(i)->setValue(rangeMeasChannel->getRangeUrvalueMax()); // we additional set information of channels actual urvalue incl. reserve
 
             // reset hard overload AFTER change of range.
             if (requiresOverloadReset(i) || m_groupOvlList.at(i) || force) {
                 qInfo("Reset overload channel %i", i);
-                m_MsgNrCmdList[pmChn->resetStatus()] = resetstatus;
+                m_MsgNrCmdList[rangeMeasChannel->resetStatus()] = resetstatus;
                 m_hardOvlList.replace(i, false);
                 m_maxOvlList.replace(i, false);
                 m_groupOvlList.replace(i, false);
@@ -518,12 +511,12 @@ bool cRangeObsermatic::requiresOverloadReset(int channel)
     return (m_hardOvlList.at(channel) || m_softOvlList.at(channel)) && (m_ConfPar.m_nRangeAutoAct.m_nActive != 1 || !m_maxOvlList.at(channel));
 }
 
-float cRangeObsermatic::getPreScale(int p_idx)
+float cRangeObsermatic::getPreScale(int channelAliasIdx)
 {
     float retVal=1;
     int group=-1;
-    if(p_idx < m_ChannelAliasList.length()){
-        QString alias=m_ChannelAliasList.at(p_idx);
+    if(channelAliasIdx < m_ChannelAliasList.length()){
+        QString alias = m_ChannelAliasList.at(channelAliasIdx);
         for(int k = 0; k < m_GroupList.length();k++){
             if(m_GroupList[k].contains(alias)){
                 group=k;
@@ -588,8 +581,8 @@ void cRangeObsermatic::readGainCorrDone()
     connect(m_pParOverloadOnOff, &VfModuleParameter::sigValueChanged, this, &cRangeObsermatic::newOverload);
 
     for (int i = 0; i < m_RangeMeasChannelList.count(); i++) {
-        cRangeMeasChannel *pmChn = m_RangeMeasChannelList.at(i);
-        m_RangeOVLRejectionComponentList.at(i)->setValue(pmChn->getMaxRangeUrvalueMax());
+        cRangeMeasChannel *rangeMeasChannel = m_RangeMeasChannelList.at(i);
+        m_RangeOVLRejectionComponentList.at(i)->setValue(rangeMeasChannel->getMaxRangeUrvalueMax());
     }
 
     // we also have the information needed to set param validators and scpi information now
@@ -670,8 +663,8 @@ void cRangeObsermatic::readStatus()
 {
     if(m_bActive) {
         for (int i = 0; i < m_RangeMeasChannelList.count(); i++) { // we read status from all channels
-            cRangeMeasChannel *pmChn = m_RangeMeasChannelList.at(i);
-            m_MsgNrCmdList[pmChn->readStatus()] = readstatus;
+            cRangeMeasChannel *rangeMeasChannel = m_RangeMeasChannelList.at(i);
+            m_MsgNrCmdList[rangeMeasChannel->readStatus()] = readstatus;
             m_nReadStatusPending++;
         }
     }
@@ -681,8 +674,8 @@ void cRangeObsermatic::readStatus()
 void cRangeObsermatic::analyzeStatus()
 {
     for (int i = 0; i < m_RangeMeasChannelList.count(); i++) { // we test all channels
-        cRangeMeasChannel *pmChn = m_RangeMeasChannelList.at(i);
-        m_hardOvlList.replace(i, pmChn->isHWOverload());
+        cRangeMeasChannel *rangeMeasChannel = m_RangeMeasChannelList.at(i);
+        m_hardOvlList.replace(i, rangeMeasChannel->isHWOverload());
     }
 }
 
@@ -693,9 +686,7 @@ void cRangeObsermatic::onNewRange(QVariant range)
     VfModuleParameter *pParameter = qobject_cast<VfModuleParameter*>(sender()); // get sender of updated signal
     int index = m_RangeParameterList.indexOf(pParameter); // which channel is it
 
-    QString s;
-    s = range.toString();
-
+    QString rangeName = range.toString();
     QList<int> chnIndexlist = getGroupIndexList(index);
     // in case of active grouping we have to set all the ranges in that group if possible
     // so we fetch a list of index for all channels in group ,in case of inactive grouping
@@ -705,9 +696,9 @@ void cRangeObsermatic::onNewRange(QVariant range)
 
     for (int i = 0; i < chnIndexlist.count(); i++) {
         index = chnIndexlist.at(i);
-        if (m_RangeMeasChannelList.at(index)->isPossibleRange(s)) {
+        if (m_RangeMeasChannelList.at(index)->isPossibleRange(rangeName)) {
             stringParameter sPar = m_ConfPar.m_senseChannelRangeParameter.at(index);
-            sPar.m_sPar = s;
+            sPar.m_sPar = rangeName;
             m_ConfPar.m_senseChannelRangeParameter.replace(index, sPar);
             m_brangeSet = true;
             m_actChannelRangeNotifierList.replace(index,QString("")); // this will assure that a notification will be sent after setRanges()

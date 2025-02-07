@@ -113,16 +113,7 @@ private:
     QList<int> getGroupIndexList(int index);
     bool requiresOverloadReset(int channel);
     void startOverloadReset(int channel);
-    /**
-     * @brief getPreScale
-     *
-     * Reads prescaling factor for group with p_id
-     * p_idx is equal channel position in m_RangeMeasChannelList
-     *
-     * @param p_idx: channel id
-     * @return scalingfactor
-     */
-    float getPreScale(int p_idx);
+    float getPreScale(int channelAliasIdx);
 
 private slots:
     void dspserverConnect();
