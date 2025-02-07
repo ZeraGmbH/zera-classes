@@ -513,22 +513,21 @@ bool cRangeObsermatic::requiresOverloadReset(int channel)
 
 float cRangeObsermatic::getPreScale(int channelAliasIdx)
 {
-    float retVal = 1;
-    int group = -1;
+    float prescaleValue = 1;
+    int groupPresacalingIdxFound = -1;
     if(channelAliasIdx < m_ChannelAliasList.length()){
         QString alias = m_ChannelAliasList.at(channelAliasIdx);
         for(int groupListIdx = 0; groupListIdx<m_GroupList.length(); groupListIdx++) {
             if(m_GroupList[groupListIdx].contains(alias)) {
-                group = groupListIdx;
+                groupPresacalingIdxFound = groupListIdx;
             }
         }
     }
 
-    if(group < m_RangeGroupPreScalingList.length() && group > -1) {
-        retVal=m_RangeGroupPreScalingInfo.at(group)->getValue().toFloat();
+    if(groupPresacalingIdxFound < m_RangeGroupPreScalingList.length() && groupPresacalingIdxFound > -1) {
+        prescaleValue = m_RangeGroupPreScalingInfo.at(groupPresacalingIdxFound)->getValue().toFloat();
     }
-   // qInfo("Pre Scaling is %f", retVal);
-    return retVal;
+    return prescaleValue;
 }
 
 
