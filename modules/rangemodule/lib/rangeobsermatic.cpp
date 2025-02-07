@@ -401,20 +401,13 @@ void cRangeObsermatic::groupHandling()
 
 void cRangeObsermatic::setRanges(bool force)
 {
-    cRangeMeasChannel *pmChn;
     QString s;
-    quint8 chn;
-    bool change;
-
-    change = false;
+    bool change = false;
     for (int i = 0; i < m_RangeMeasChannelList.count(); i++) { // we set all channels if needed
-
-
         // check if channel is in group
-        float preScalingFactor=1;
-        preScalingFactor=getPreScale(i);
+        float preScalingFactor = getPreScale(i);
         s = m_ConfPar.m_senseChannelRangeParameter.at(i).m_sPar;
-        pmChn = m_RangeMeasChannelList.at(i);
+        cRangeMeasChannel *pmChn = m_RangeMeasChannelList.at(i);
         if (! pmChn->isPossibleRange(s)) { // we test whether this range is possible, otherwise we take the max. range
             stringParameter sPar = m_ConfPar.m_senseChannelRangeParameter.at(i);
             s = pmChn->getMaxRange(sPar.m_sPar);
@@ -433,11 +426,9 @@ void cRangeObsermatic::setRanges(bool force)
             m_nRangeSetPending++;
             m_actChannelRangeList.replace(i, s);
 
-            // we set the scaling factor here
-            chn = pmChn->getDSPChannelNr();
-
             // The scaling factor is multplied with the inverse presaling value
-            m_pfScale[chn] = (pmChn->getUrValue() / pmChn->getRejection()) * (1/preScalingFactor);
+            quint8 dspChannel = pmChn->getDSPChannelNr();
+            m_pfScale[dspChannel] = (pmChn->getUrValue() / pmChn->getRejection()) * (1/preScalingFactor);
 
             // we first set information of channels actual urvalue
             m_RangeActRejectionComponentList.at(i)->setValue(pmChn->getUrValue());
