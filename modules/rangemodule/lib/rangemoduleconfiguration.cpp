@@ -57,27 +57,19 @@ void cRangeModuleConfiguration::setConfiguration(QByteArray xmlString)
 
 QByteArray cRangeModuleConfiguration::exportConfiguration()
 {
-//    QList<QString> keyList = m_exportEntityList.keys();
-//    for (int i = 0; i << keyList.count(); i++)
-//        m_pXMLReader->setValue(keyList.at(i), m_exportEntityList[keyList.at(i)]);
-
     boolParameter* bPar;
     bPar = &m_pRangeModulConfigData->m_ObsermaticConfPar.m_nGroupAct;
     m_pXMLReader->setValue(bPar->m_sKey, QString("%1").arg(bPar->m_nActive));
     bPar = &m_pRangeModulConfigData->m_ObsermaticConfPar.m_nRangeAutoAct;
     m_pXMLReader->setValue(bPar->m_sKey, QString("%1").arg(bPar->m_nActive));
 
-    stringParameter sPar;
-    QList<stringParameter> sParList = m_pRangeModulConfigData->m_ObsermaticConfPar.m_senseChannelRangeParameter;
-
-    boolParameter invertPhaseState;
     QList<boolParameter> invertPhaseStateList = m_pRangeModulConfigData->m_adjustConfPar.m_senseChannelInvertParameter;
-    for (int i = 0; i < sParList.count(); i++)
-    {
-        sPar = sParList.at(i);
+    QList<stringParameter> sParList = m_pRangeModulConfigData->m_ObsermaticConfPar.m_senseChannelRangeParameter;
+    for (int i = 0; i < sParList.count(); i++) {
+        stringParameter sPar = sParList.at(i);
         m_pXMLReader->setValue(sPar.m_sKey, sPar.m_sPar);
 
-        invertPhaseState = invertPhaseStateList.at(i);
+        boolParameter invertPhaseState = invertPhaseStateList.at(i);
         m_pXMLReader->setValue(invertPhaseState.m_sKey, QString("%1").arg(invertPhaseState.m_nActive));
     }
 
