@@ -31,8 +31,16 @@ struct doubleParameter
 
 struct cObsermaticConfPar
 {
+    void setCurrentRange(int channelIdx, const QString &rangeAlias) {
+        m_senseChannelRangeParameter[channelIdx].m_sPar = rangeAlias;
+    }
+    const QString &getCurrentRange(int channelIdx) {
+        return m_senseChannelRangeParameter[channelIdx].m_sPar;
+    }
     boolParameter m_nGroupAct; // grouping active or not 1,0
     boolParameter m_nRangeAutoAct; // range automatic active or not 1,0
+private:
+    friend class cRangeModuleConfiguration;
     QList<stringParameter> m_senseChannelRangeParameter;
 };
 

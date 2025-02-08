@@ -225,7 +225,7 @@ void cRangeObsermatic::generateVeinInterface()
 }
 
 
-void cRangeObsermatic::handleOverload(int channelIdx, bool rmsOverload, bool hardOverLoad, bool adcOverLoad)
+void cRangeObsermatic::handleOverload(const int channelIdx, bool rmsOverload, bool hardOverLoad, bool adcOverLoad)
 {
     cRangeMeasChannel *rangeMeasChannel = m_RangeMeasChannelList.at(channelIdx);
     qInfo("Overload channel %i / Range %s: RMS %i / ADC %i / Hard %i",
@@ -238,16 +238,13 @@ void cRangeObsermatic::handleOverload(int channelIdx, bool rmsOverload, bool har
     // but there was an edge on this entity
 
     // if an overload is recovered by rangeautomatic during running measurement
-    stringParameter sPar = m_ConfPar.m_senseChannelRangeParameter.at(channelIdx);
-    QString maxRangeAlias = rangeMeasChannel->getMaxRange(sPar.m_sPar);
-
+    QString maxRangeAlias = rangeMeasChannel->getMaxRange(m_ConfPar.getCurrentRange(channelIdx));
     if (m_actChannelRangeList.at(channelIdx) == maxRangeAlias) { // in case ovrload was in max. range
         m_maxOvlList.replace(channelIdx, true);
         m_pComponentOverloadMax->setValue(1);
     }
 
-    sPar.m_sPar = maxRangeAlias; // we preset the max. range here
-    m_ConfPar.m_senseChannelRangeParameter.replace(channelIdx, sPar);
+    m_ConfPar.setCurrentRange(channelIdx, maxRangeAlias); // we preset the max. range here
     m_RangeOVLComponentList.at(channelIdx)->setValue(QVariant(1)); // set interface overload
     m_softOvlList.replace(channelIdx, true);
 }
@@ -302,9 +299,9 @@ void cRangeObsermatic::rangeAutomatic()
 
                 if (!m_hardOvlList.at(i)) {
                     if (!m_softOvlList.at(i)) {
-                        stringParameter sPar = m_ConfPar.m_senseChannelRangeParameter.at(i);
-                        sPar.m_sPar = rangeMeasChannel->getOptRange(rangeMeasChannel->getRmsValue()*getPreScale(i), sPar.m_sPar);
-                        m_ConfPar.m_senseChannelRangeParameter.replace(i, sPar);
+                        const QString range = m_ConfPar.getCurrentRange(i);
+                        const QString optRange = rangeMeasChannel->getOptRange(rangeMeasChannel->getRmsValue()*getPreScale(i), range);
+                        m_ConfPar.setCurrentRange(i, optRange);
                     }
                 }
 
@@ -348,16 +345,17 @@ void cRangeObsermatic::groupHandling()
                 bool groupNeedsOverloadReset = false;
                 // first we search for the range with max upper range value
                 for (int j = 0; j < indexList.count(); j++) {
-                    int k = indexList.at(j);
-                    double rngUrValue = m_RangeMeasChannelList.at(k)->getUrValue(m_ConfPar.m_senseChannelRangeParameter.at(k).m_sPar);
+                    const int k = indexList.at(j);
+                    const QString range = m_ConfPar.getCurrentRange(k);
+                    double rngUrValue = m_RangeMeasChannelList.at(k)->getUrValue(range);
                     if (maxUrValue < rngUrValue) {
                         bool allPossible = true;
                         for (int l = 0; l <indexList.count(); l++)
-                            allPossible = allPossible && m_RangeMeasChannelList.at(indexList.at(l))->isPossibleRange(m_ConfPar.m_senseChannelRangeParameter.at(k).m_sPar);
+                            allPossible = allPossible && m_RangeMeasChannelList.at(indexList.at(l))->isPossibleRange(range);
                         // but we only take the new maximum value if all channels support this range
                         if (allPossible) {
                             maxUrValue = rngUrValue;
-                            maxIndex = indexList.at(j); //
+                            maxIndex = indexList.at(j);
                         }
                     }
                     if(requiresOverloadReset(k))
@@ -378,12 +376,10 @@ void cRangeObsermatic::groupHandling()
                 //    in max range no overload reset will be sent to I2+I3 so they end up in
                 //    max range with overload -> range automatic stops until user resets
                 //    overload manually
-                QString newRange = m_ConfPar.m_senseChannelRangeParameter.at(maxIndex).m_sPar;
+                QString newRange = m_ConfPar.getCurrentRange(maxIndex);
                 for (int j = 0; j < indexList.count(); j++) {
-                    int k = indexList.at(j);
-                    stringParameter sPar = m_ConfPar.m_senseChannelRangeParameter.at(k);
-                    sPar.m_sPar = newRange;
-                    m_ConfPar.m_senseChannelRangeParameter.replace(k, sPar);
+                    const int k = indexList.at(j);
+                    m_ConfPar.setCurrentRange(k, newRange);
                     if(groupNeedsOverloadReset) {
                         qInfo("Group overload channel %i set.", k);
                         m_groupOvlList.replace(k, true);
@@ -397,30 +393,28 @@ void cRangeObsermatic::groupHandling()
 
 void cRangeObsermatic::setRanges(bool force)
 {
-    QString s;
+    QString range;
     bool change = false;
     for (int i = 0; i < m_RangeMeasChannelList.count(); i++) { // we set all channels if needed
         // check if channel is in group
         float preScalingFactor = getPreScale(i);
-        s = m_ConfPar.m_senseChannelRangeParameter.at(i).m_sPar;
+        range = m_ConfPar.getCurrentRange(i);
         cRangeMeasChannel *rangeMeasChannel = m_RangeMeasChannelList.at(i);
-        if (!rangeMeasChannel->isPossibleRange(s)) { // we test whether this range is possible, otherwise we take the max. range
-            stringParameter sPar = m_ConfPar.m_senseChannelRangeParameter.at(i);
-            s = rangeMeasChannel->getMaxRange(sPar.m_sPar);
-            sPar.m_sPar = s;
-            m_ConfPar.m_senseChannelRangeParameter.replace(i, sPar);
+        if (!rangeMeasChannel->isPossibleRange(range)) { // we test whether this range is possible, otherwise we take the max. range
+            range = rangeMeasChannel->getMaxRange(range);
+            m_ConfPar.setCurrentRange(i, range);
         }
 
-        if ( s != m_actChannelRangeList.at(i) || force) {
+        if (range != m_actChannelRangeList.at(i) || force) {
             if (!change) { // signal is only set once regardingless there is more than 1 range to change
                 m_pRangingSignal->setValue(QVariant(int(1)));
             }
             change = true;
 
             // set range
-            m_MsgNrCmdList[rangeMeasChannel->setRange(s)] = setrange + i; // we must know which channel has changed for deferred notification
+            m_MsgNrCmdList[rangeMeasChannel->setRange(range)] = setrange + i; // we must know which channel has changed for deferred notification
             m_nRangeSetPending++;
-            m_actChannelRangeList.replace(i, s);
+            m_actChannelRangeList.replace(i, range);
 
             // The scaling factor is multplied with the inverse presaling value
             quint8 dspChannel = rangeMeasChannel->getDSPChannelNr();
@@ -690,9 +684,7 @@ void cRangeObsermatic::onNewRange(QVariant range)
     for (int i = 0; i < chnIndexlist.count(); i++) {
         index = chnIndexlist.at(i);
         if (m_RangeMeasChannelList.at(index)->isPossibleRange(rangeName)) {
-            stringParameter sPar = m_ConfPar.m_senseChannelRangeParameter.at(index);
-            sPar.m_sPar = rangeName;
-            m_ConfPar.m_senseChannelRangeParameter.replace(index, sPar);
+            m_ConfPar.setCurrentRange(index, rangeName);
             m_brangeSet = true;
             m_actChannelRangeNotifierList.replace(index,QString("")); // this will assure that a notification will be sent after setRanges()
         }
