@@ -114,7 +114,7 @@ private:
     bool requiresOverloadReset(int channel);
     void startOverloadReset(int channel);
     float getPreScale(int channelAliasIdx);
-    void handleOverload(int channelIdx, bool rmsOverload, bool hardOverLoad, bool adcOverLoad);
+    void handleOverload(const int channelIdx, bool rmsOverload, bool hardOverLoad, bool adcOverLoad);
 
 private slots:
     void dspserverConnect();
