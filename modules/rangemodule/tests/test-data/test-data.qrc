@@ -1,13 +1,17 @@
 <RCC>
     <qresource prefix="/">
+        <file>configDumps/dumpAutomaticSet.xml</file>
+        <file>configDumps/dumpGroupingSet.xml</file>
+        <file>configDumps/dumpIAUXSet.xml</file>
+        <file>configDumps/dumpIAUXUnset.xml</file>
         <file>dspDumps/dumpAdjustManagement.json</file>
         <file>dspDumps/dumpMeasProgram.json</file>
         <file>dspDumps/dumpObsermatic.json</file>
-        <file>session-minimal.json</file>
-        <file>dumpInitial.json</file>
+        <file>veinDumps/dumpInitial.json</file>
+        <file>veinDumps/dumpActual.json</file>
+        <file>veinDumps/dumpActual-preScaled2.json</file>
         <file>mt310s2-rangemodule-test.xml</file>
+        <file>session-minimal.json</file>
         <file>session-range-test.json</file>
-        <file>dumpActual.json</file>
-        <file>dumpActual-preScaled2.json</file>
     </qresource>
 </RCC>

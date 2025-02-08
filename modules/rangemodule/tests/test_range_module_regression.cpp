@@ -34,7 +34,7 @@ void test_range_module_regression::veinDumpInitial()
 {
     ModuleManagerTestRunner testRunner(":/session-range-test.json");
 
-    QByteArray jsonExpected = TestLogHelpers::loadFile(":/dumpInitial.json");
+    QByteArray jsonExpected = TestLogHelpers::loadFile(":/veinDumps/dumpInitial.json");
     VeinStorage::AbstractEventSystem* veinStorage = testRunner.getVeinStorageSystem();
     QByteArray jsonDumped = VeinStorage::DumpJson::dumpToByteArray(veinStorage->getDb(), QList<int>() << rangeEntityId);
 
@@ -80,7 +80,7 @@ void test_range_module_regression::injectActualValues()
     dspInterfaces[dspInterfaces::RangeModuleMeasProgram]->fireActValInterrupt(rangeValues.getDspValues(), /* dummy */ 0);
     TimeMachineObject::feedEventLoop();
 
-    QByteArray jsonExpected = TestLogHelpers::loadFile(":/dumpActual.json");
+    QByteArray jsonExpected = TestLogHelpers::loadFile(":/veinDumps/dumpActual.json");
     VeinStorage::AbstractEventSystem* veinStorage = testRunner.getVeinStorageSystem();
     QByteArray jsonDumped = VeinStorage::DumpJson::dumpToByteArray(veinStorage->getDb(), QList<int>() << rangeEntityId);
 
@@ -111,7 +111,7 @@ void test_range_module_regression::injectActualValuesWithPreScaling()
     QCOMPARE(spyDspWrite.at(1).at(0), "PhaseCorrection");
     QCOMPARE(spyDspWrite.at(2).at(0), "OffsetCorrection");
 
-    QByteArray jsonExpected = TestLogHelpers::loadFile(":/dumpActual-preScaled2.json");
+    QByteArray jsonExpected = TestLogHelpers::loadFile(":/veinDumps/dumpActual-preScaled2.json");
     VeinStorage::AbstractEventSystem* veinStorage = testRunner.getVeinStorageSystem();
     QByteArray jsonDumped = VeinStorage::DumpJson::dumpToByteArray(veinStorage->getDb(), QList<int>() << rangeEntityId);
 

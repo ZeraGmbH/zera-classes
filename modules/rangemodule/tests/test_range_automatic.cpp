@@ -10,6 +10,8 @@
 #include <mocki2ceepromiofactory.h>
 #include <timemachinefortest.h>
 #include <timerfactoryqtfortest.h>
+#include <testloghelpers.h>
+#include <xmldocumentcompare.h>
 #include <QTest>
 
 QTEST_MAIN(test_range_automatic)
@@ -36,10 +38,14 @@ void test_range_automatic::initTestCase()
 
 void test_range_automatic::init()
 {
+    m_configDataLastStored = std::make_shared<QByteArray>();
     m_licenseSystem = std::make_unique<TestLicenseSystem>();
     m_serviceInterfaceFactory = std::make_shared<TestFactoryServiceInterfaces>();
     m_modmanSetupFacade = std::make_unique<ModuleManagerSetupFacade>(m_licenseSystem.get());
-    m_modMan = std::make_unique<TestModuleManager>(m_modmanSetupFacade.get(), m_serviceInterfaceFactory, m_tcpFactory);
+    m_modMan = std::make_unique<TestModuleManager>(m_modmanSetupFacade.get(),
+                                                   m_serviceInterfaceFactory,
+                                                   m_tcpFactory,
+                                                   m_configDataLastStored);
 
     m_modMan->loadAllAvailableModulePlugins();
     m_modMan->setupConnections();
@@ -244,6 +250,60 @@ void test_range_automatic::removeClampWithRangeAutomatic()
     fireNewRmsValues(4);//this interrupt is ignored
     fireNewRmsValues(4);//one more interrupt, as RangeAutomatic is called only after interrupt
     QCOMPARE(getVfComponent(rangeEntityId, IL1RangeComponent), "5A");
+}
+
+void test_range_automatic::checkPersitency()
+{
+    // At the time of writing range module writes config file on change of
+    // range-grouping, change of range-automatic and user changing range
+    XmlDocumentCompare compare;
+    fireNewRmsValues(4); // necessary to get reproducible results on range automatic on below
+
+    QCOMPARE(getVfComponent(rangeEntityId, RangeGroupingComponent), 1);
+    setVfComponent(rangeEntityId, RangeGroupingComponent, 0); // this causes config save
+    QByteArray expected = TestLogHelpers::loadFile(":/configDumps/dumpGroupingSet.xml");
+    QByteArray dumped = *m_configDataLastStored;
+    if(!compare.compareXml(dumped, expected))
+        QVERIFY(TestLogHelpers::compareAndLogOnDiff(expected, dumped));
+
+    fireNewRmsValues(4); // necessary to get reproducible results on range automatic on
+    QCOMPARE(getVfComponent(rangeEntityId, RangeAutomaticComponent), 0);
+    setVfComponent(rangeEntityId, RangeAutomaticComponent, 1); // this causes config save
+    expected = TestLogHelpers::loadFile(":/configDumps/dumpAutomaticSet.xml");
+    dumped = *m_configDataLastStored;
+    if(!compare.compareXml(dumped, expected))
+        QVERIFY(TestLogHelpers::compareAndLogOnDiff(expected, dumped));
+
+    // Following is about range alias "--" / name "0A" insanity:
+    // shipped configuration has "0A" / config stored gets "--"
+    setVfComponent(rangeEntityId, RangeAutomaticComponent, 0); // with automatic on we cannot change range
+    QCOMPARE(getCurrentRanges(), QStringList() << "8V" << "8V" << "8V" << "5A" << "5A" << "5A" << "8V" << "--");
+    m_testPcbServer->addClamp(cClamp::CL120A, "IAUX");
+    TimeMachineObject::feedEventLoop();
+
+    // set valid / unset valid "--"
+    setVfComponent(rangeEntityId, IAUXRangeComponent, "C50A");
+    QCOMPARE(getCurrentRanges(), QStringList() << "8V" << "8V" << "8V" << "5A" << "5A" << "5A" << "8V" << "C50A");
+    expected = TestLogHelpers::loadFile(":/configDumps/dumpIAUXSet.xml");
+    dumped = *m_configDataLastStored;
+    if(!compare.compareXml(dumped, expected))
+        QVERIFY(TestLogHelpers::compareAndLogOnDiff(expected, dumped));
+    setVfComponent(rangeEntityId, IAUXRangeComponent, "--");
+    QCOMPARE(getCurrentRanges(), QStringList() << "8V" << "8V" << "8V" << "5A" << "5A" << "5A" << "8V" << "--");
+    expected = TestLogHelpers::loadFile(":/configDumps/dumpIAUXUnset.xml");
+    dumped = *m_configDataLastStored;
+    if(!compare.compareXml(dumped, expected))
+        QVERIFY(TestLogHelpers::compareAndLogOnDiff(expected, dumped));
+
+    // set valid / unset invalid "0A"
+    setVfComponent(rangeEntityId, IAUXRangeComponent, "C50A");
+    QCOMPARE(getCurrentRanges(), QStringList() << "8V" << "8V" << "8V" << "5A" << "5A" << "5A" << "8V" << "C50A");
+    setVfComponent(rangeEntityId, IAUXRangeComponent, "0A");
+    QCOMPARE(getCurrentRanges(), QStringList() << "8V" << "8V" << "8V" << "5A" << "5A" << "5A" << "8V" << "C50A");
+    expected = TestLogHelpers::loadFile(":/configDumps/dumpIAUXSet.xml"); // Still set
+    dumped = *m_configDataLastStored;
+    if(!compare.compareXml(dumped, expected))
+        QVERIFY(TestLogHelpers::compareAndLogOnDiff(expected, dumped));
 }
 
 void test_range_automatic::setupServices()

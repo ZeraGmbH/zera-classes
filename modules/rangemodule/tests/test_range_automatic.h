@@ -26,6 +26,7 @@ private slots:
     void selectClampThenRangeAutomatic();
     void removeClamp();
     void removeClampWithRangeAutomatic();
+    void checkPersitency();
 private:
     void setupServices();
     void fireNewRmsValues(float rmsValue);
@@ -43,6 +44,7 @@ private:
     std::unique_ptr<TestServerForSenseInterfaceMt310s2> m_testPcbServer;
     std::unique_ptr<MockZdsp1d> m_dspServer;
     std::unique_ptr<ResmanRunFacade> m_resmanServer;
+    std::shared_ptr<QByteArray> m_configDataLastStored;
 };
 
 #endif // TEST_RANGE_AUTOMATIC_H

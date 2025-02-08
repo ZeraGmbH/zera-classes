@@ -11,6 +11,7 @@ function(SETUP_QTESTS_MODULE)
             zera-modulemanager-testlib
             Zera::zdsp1d-testlib
             Zera::mt310s2d-testlib
+            Zera::xml-compare-testlib
         )
     endforeach()
 endfunction()
