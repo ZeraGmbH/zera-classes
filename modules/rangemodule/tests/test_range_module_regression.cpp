@@ -21,15 +21,6 @@ void test_range_module_regression::minimalSession()
     QVERIFY(veinStorage->getDb()->hasEntity(rangeEntityId));
 }
 
-void test_range_module_regression::moduleConfigFromResource()
-{
-    ModuleManagerTestRunner testRunner(":/session-range-test.json");
-    VeinStorage::AbstractEventSystem* veinStorage = testRunner.getVeinStorageSystem();
-    QList<int> entityList = veinStorage->getDb()->getEntityList();
-    QCOMPARE(entityList.count(), 2);
-    QVERIFY(veinStorage->getDb()->hasEntity(rangeEntityId));
-}
-
 void test_range_module_regression::veinDumpInitial()
 {
     ModuleManagerTestRunner testRunner(":/session-range-test.json");

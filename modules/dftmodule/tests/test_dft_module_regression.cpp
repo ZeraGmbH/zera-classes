@@ -22,15 +22,6 @@ void test_dft_module_regression::minimalSession()
     QVERIFY(veinStorage->getDb()->hasEntity(dftEntityId));
 }
 
-void test_dft_module_regression::moduleConfigFromResource()
-{
-    ModuleManagerTestRunner testRunner(":/sessions/dft-no-movingwindow-no-ref.json");
-    VeinStorage::AbstractEventSystem* veinStorage = testRunner.getVeinStorageSystem();
-    QList<int> entityList = veinStorage->getDb()->getEntityList();
-    QCOMPARE(entityList.count(), 2);
-    QVERIFY(veinStorage->getDb()->hasEntity(dftEntityId));
-}
-
 void test_dft_module_regression::veinDumpInitial()
 {
     ModuleManagerTestRunner testRunner(":/sessions/dft-no-movingwindow-no-ref.json");

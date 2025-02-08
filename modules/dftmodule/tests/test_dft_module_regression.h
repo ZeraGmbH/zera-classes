@@ -9,7 +9,6 @@ class test_dft_module_regression : public QObject
     Q_OBJECT
 private slots:
     void minimalSession();
-    void moduleConfigFromResource();
     void veinDumpInitial();
     void checkActualValueCount();
     void injectActualValuesNoReferenceChannel();
