@@ -11,14 +11,10 @@ private slots:
     void moduleConfigFromResource();
     void veinDumpInitial();
     void checkActualValueCount();
-    void injectActualValues();
-    void injectActualValuesWithPreScaling();
-    void injectActualValuesWithCheatingDisabled();
-    void injectActualValuesWithCheatingEnabled();
+    void injectActualValuesWithCheating();
     void injectActualValuesWithCheatingAndRangeChanged();
     void injectIncreasingActualValuesWithCheatingEnabled();
     void injectActualValuesCheatingEnabledWithPreScaling();
-    void dumpDspSetup();
 };
 
 #endif // TEST_RANGE_MODULE_REGRESSION_H
