@@ -12,6 +12,7 @@
 #include <timerfactoryqtfortest.h>
 #include <testloghelpers.h>
 #include <xmldocumentcompare.h>
+#include <vs_dumpjson.h>
 #include <QTest>
 
 QTEST_MAIN(test_range_automatic)
@@ -280,6 +281,12 @@ void test_range_automatic::checkPersitency()
     QCOMPARE(getCurrentRanges(), QStringList() << "8V" << "8V" << "8V" << "5A" << "5A" << "5A" << "8V" << "--");
     m_testPcbServer->addClamp(cClamp::CL120A, "IAUX");
     TimeMachineObject::feedEventLoop();
+
+    // We are interested in vein valid ranges PAR_Channel8Range -> "--"
+    QByteArray jsonExpected = TestLogHelpers::loadFile(":/veinDumps/dumpInitialClamp.json");
+    VeinStorage::AbstractEventSystem* veinStorage = m_modmanSetupFacade->getStorageSystem();
+    QByteArray jsonDumped = VeinStorage::DumpJson::dumpToByteArray(veinStorage->getDb(), QList<int>() << rangeEntityId);
+    QVERIFY(TestLogHelpers::compareAndLogOnDiff(jsonExpected, jsonDumped));
 
     // set valid / unset valid "--"
     setVfComponent(rangeEntityId, IAUXRangeComponent, "C50A");

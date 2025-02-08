@@ -7,9 +7,10 @@
         <file>dspDumps/dumpAdjustManagement.json</file>
         <file>dspDumps/dumpMeasProgram.json</file>
         <file>dspDumps/dumpObsermatic.json</file>
-        <file>veinDumps/dumpInitial.json</file>
         <file>veinDumps/dumpActual.json</file>
         <file>veinDumps/dumpActual-preScaled2.json</file>
+        <file>veinDumps/dumpInitial.json</file>
+        <file>veinDumps/dumpInitialClamp.json</file>
         <file>mt310s2-rangemodule-test.xml</file>
         <file>session-minimal.json</file>
         <file>session-range-test.json</file>
