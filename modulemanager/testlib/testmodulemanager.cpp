@@ -31,13 +31,15 @@ void TestModuleManager::pointToInstalledSessionFiles()
 
 TestModuleManager::TestModuleManager(ModuleManagerSetupFacade *setupFacade,
                                      AbstractFactoryServiceInterfacesPtr serviceInterfaceFactory,
-                                     VeinTcp::AbstractTcpNetworkFactoryPtr tcpNetworkFactory) :
+                                     VeinTcp::AbstractTcpNetworkFactoryPtr tcpNetworkFactory,
+                                     std::shared_ptr<QByteArray> configDataLastSaved) :
     ModuleManager(
         setupFacade,
         serviceInterfaceFactory,
         tcpNetworkFactory,
         // This is a hack to modify static test environment before ModuleManager starts using them
-        prepareOe())
+        prepareOe()),
+    m_configDataLastSaved(configDataLastSaved)
 {
     enableTests();
 }
@@ -80,6 +82,11 @@ ZeraModules::VirtualModule *TestModuleManager::getModule(QString uniqueName, int
     return nullptr;
 }
 
+const QByteArray TestModuleManager::getLastStoredConfig()
+{
+    return *m_configDataLastSaved;
+}
+
 bool TestModuleManager::modulesReady()
 {
     return !m_moduleStartLock;
@@ -96,4 +103,9 @@ QStringList TestModuleManager::getModuleFileNames()
         plugins.append(libFullPath);
     }
     return plugins;
+}
+
+void TestModuleManager::saveModuleConfig(ZeraModules::ModuleData *moduleData)
+{
+    *m_configDataLastSaved = moduleData->m_module->getConfiguration();
 }
