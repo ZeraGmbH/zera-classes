@@ -473,27 +473,25 @@ void cRangeObsermatic::setRanges(bool force)
 }
 
 
-QList<int> cRangeObsermatic::getGroupIndexList(int index)
+QList<int> cRangeObsermatic::getGroupAliasIdxListForChannel(int channelAliasIdx)
 {
     QList<int> indexlist;
     if (m_ConfPar.m_nGroupAct.m_nActive == 1) {
-        QString s = m_ChannelAliasList.at(index); // we search for this channel alias
-        for (int i = 0; i < m_GroupList.count(); i++) {
-            const QStringList grouplist = m_GroupList.at(i); // we fetch 1 list of all our grouplists
-            if (grouplist.contains(s)) { // if this grouplist contains the searched item
-                for(const QString &group: grouplist)
+        QString channelAlias = m_ChannelAliasList.at(channelAliasIdx);
+        for (const QStringList &aliasesInGroup : m_GroupList) {
+            if (aliasesInGroup.contains(channelAlias)) { // if this aliasesInGroup contains the searched item
+                for(const QString &group : aliasesInGroup)
                     indexlist.append(m_ChannelAliasList.indexOf(group));
                 break;
             }
         }
         if (indexlist.isEmpty())
             // if we have a channel that is not included in a grouping list
-            indexlist.append(index);
+            indexlist.append(channelAliasIdx);
     }
     else {
-        indexlist.append(index); // we return 1 index at least
+        indexlist.append(channelAliasIdx); // we return 1 index at least
     }
-
     return indexlist;
 }
 
@@ -685,7 +683,7 @@ void cRangeObsermatic::onNewRange(QVariant range)
     int index = m_RangeParameterList.indexOf(pParameter); // which channel is it
 
     QString rangeName = range.toString();
-    QList<int> chnIndexlist = getGroupIndexList(index);
+    QList<int> chnIndexlist = getGroupAliasIdxListForChannel(index);
     // in case of active grouping we have to set all the ranges in that group if possible
     // so we fetch a list of index for all channels in group ,in case of inactive grouping
     // the list will contain only 1 index

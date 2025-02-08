@@ -110,7 +110,7 @@ private:
     void rangeAutomatic();
     void groupHandling();
     void setRanges(bool force = false); // here we really set ranges
-    QList<int> getGroupIndexList(int index);
+    QList<int> getGroupAliasIdxListForChannel(int channelAliasIdx);
     bool requiresOverloadReset(int channel);
     void startOverloadReset(int channel);
     float getPreScale(int channelAliasIdx);
