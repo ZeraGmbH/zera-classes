@@ -61,7 +61,6 @@ cRangeObsermatic::cRangeObsermatic(cRangeModule *module,
     m_writeCorrectionDSPMachine.addState(&m_writeGainCorrDoneState);
     m_writeCorrectionDSPMachine.setInitialState(&m_writeGainCorrState);
     connect(&m_writeGainCorrState, &QState::entered, this, &cRangeObsermatic::writeGainCorr);
-    connect(&m_writeGainCorrDoneState, &QState::entered, this, &cRangeObsermatic::writeGainCorrDone);
 }
 
 void cRangeObsermatic::ActionHandler(QVector<float> *actualValues)
@@ -673,12 +672,6 @@ void cRangeObsermatic::writeGainCorr()
     if (m_bActive) {
         m_MsgNrCmdList[m_dspInterface->dspMemoryWrite(m_pGainCorrection2DSP)] = writegain2corr;
     }
-}
-
-
-void cRangeObsermatic::writeGainCorrDone()
-{
-    // qInfo() << "writeGainCorrDone";
 }
 
 

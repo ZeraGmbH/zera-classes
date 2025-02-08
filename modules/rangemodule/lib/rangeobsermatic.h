@@ -133,7 +133,6 @@ private slots:
     void deactivationDone();
 
     void writeGainCorr();
-    void writeGainCorrDone();
     void readStatus();
     void analyzeStatus();
 
