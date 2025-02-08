@@ -16,8 +16,13 @@ QTEST_MAIN(test_range_automatic)
 
 static int constexpr rangeEntityId = 1020;
 static QString UL1RangeComponent("PAR_Channel1Range");
+static QString UL2RangeComponent("PAR_Channel2Range");
+static QString UL3RangeComponent("PAR_Channel3Range");
 static QString IL1RangeComponent("PAR_Channel4Range");
 static QString IL2RangeComponent("PAR_Channel5Range");
+static QString IL3RangeComponent("PAR_Channel6Range");
+static QString UAUXRangeComponent("PAR_Channel7Range");
+static QString IAUXRangeComponent("PAR_Channel8Range");
 static QString RangeAutomaticComponent("PAR_RangeAutomatic");
 static QString RangeGroupingComponent("PAR_ChannelGrouping");
 
@@ -61,9 +66,44 @@ void test_range_automatic::cleanup()
 
 void test_range_automatic::defaultRangesAndSetting()
 {
-    QCOMPARE(getVfComponent(rangeEntityId, UL1RangeComponent), "250V");
-    QCOMPARE(getVfComponent(rangeEntityId, IL1RangeComponent), "10A");
-    QCOMPARE(getVfComponent(rangeEntityId, RangeAutomaticComponent), 0);
+    QCOMPARE(getCurrentRanges(), QStringList() << "250V" << "250V" << "250V" << "10A" << "10A" << "10A" << "250V" << "--");
+}
+
+void test_range_automatic::activeGroupingChangeSingleRange()
+{
+    m_testPcbServer->addClamp(cClamp::CL120A, "IAUX");
+    TimeMachineObject::feedEventLoop();
+
+    // Initial state with grouping
+    setVfComponent(rangeEntityId, RangeGroupingComponent, 1);
+    QCOMPARE(getCurrentRanges(), QStringList() << "250V" << "250V" << "250V" << "10A" << "10A" << "10A" << "250V" << "--");
+
+    setVfComponent(rangeEntityId, UL1RangeComponent, "100mV");
+    QCOMPARE(getCurrentRanges(), QStringList() << "100mV" << "100mV" << "100mV" << "10A" << "10A" << "10A" << "250V" << "--");
+
+    setVfComponent(rangeEntityId, UL2RangeComponent, "8V");
+    QCOMPARE(getCurrentRanges(), QStringList() << "8V" << "8V" << "8V" << "10A" << "10A" << "10A" << "250V" << "--");
+
+    setVfComponent(rangeEntityId, UAUXRangeComponent, "8V");
+    QCOMPARE(getCurrentRanges(), QStringList() << "8V" << "8V" << "8V" << "10A" << "10A" << "10A" << "8V" << "--");
+
+    setVfComponent(rangeEntityId, UL3RangeComponent, "100mV");
+    QCOMPARE(getCurrentRanges(), QStringList() << "100mV" << "100mV" << "100mV" << "10A" << "10A" << "10A" << "8V" << "--");
+
+    setVfComponent(rangeEntityId, IAUXRangeComponent, "C100A");
+    QCOMPARE(getCurrentRanges(), QStringList() << "100mV" << "100mV" << "100mV" << "10A" << "10A" << "10A" << "8V" << "C100A");
+
+    setVfComponent(rangeEntityId, IL1RangeComponent, "25mA");
+    QCOMPARE(getCurrentRanges(), QStringList() << "100mV" << "100mV" << "100mV" << "25mA" << "25mA" << "25mA" << "8V" << "C100A");
+
+    setVfComponent(rangeEntityId, IL2RangeComponent, "100mA");
+    QCOMPARE(getCurrentRanges(), QStringList() << "100mV" << "100mV" << "100mV" << "100mA" << "100mA" << "100mA" << "8V" << "C100A");
+
+    setVfComponent(rangeEntityId, IL3RangeComponent, "250mA");
+    QCOMPARE(getCurrentRanges(), QStringList() << "100mV" << "100mV" << "100mV" << "250mA" << "250mA" << "250mA" << "8V" << "C100A");
+
+    setVfComponent(rangeEntityId, IAUXRangeComponent, "C50A");
+    QCOMPARE(getCurrentRanges(), QStringList() << "100mV" << "100mV" << "100mV" << "250mA" << "250mA" << "250mA" << "8V" << "C50A");
 }
 
 void test_range_automatic::testRangeAutomatic()
@@ -245,4 +285,14 @@ void test_range_automatic::setVfComponent(int entityId, QString componentName, Q
 QVariant test_range_automatic::getVfComponent(int entityId, QString componentName)
 {
     return m_modmanSetupFacade->getStorageSystem()->getDb()->getStoredValue(entityId, componentName);
+}
+
+QStringList test_range_automatic::getCurrentRanges()
+{
+    QStringList ranges;
+    for(int i = 0; i < rangeChannelCount; i++) {
+        const QString componentName = QString("PAR_Channel%1Range").arg(i+1);
+        ranges.append(getVfComponent(rangeEntityId, componentName).toString());
+    }
+    return ranges;
 }

@@ -18,6 +18,7 @@ private slots:
     void cleanup();
 
     void defaultRangesAndSetting();
+    void activeGroupingChangeSingleRange();
     void testRangeAutomatic();
     void enableAndDisableRangeAutomatic();
     void softOverloadWithRangeAutomatic();
@@ -30,6 +31,7 @@ private:
     void fireNewRmsValues(float rmsValue);
     void setVfComponent(int entityId, QString componentName, QVariant newValue);
     QVariant getVfComponent(int entityId, QString componentName);
+    QStringList getCurrentRanges();
 
     std::unique_ptr<TestLicenseSystem> m_licenseSystem;
     std::unique_ptr<ModuleManagerSetupFacade> m_modmanSetupFacade;
