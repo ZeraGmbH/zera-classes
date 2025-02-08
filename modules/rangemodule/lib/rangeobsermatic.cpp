@@ -225,6 +225,33 @@ void cRangeObsermatic::generateVeinInterface()
 }
 
 
+void cRangeObsermatic::handleOverload(int channelIdx, bool rmsOverload, bool hardOverLoad, bool adcOverLoad)
+{
+    cRangeMeasChannel *rangeMeasChannel = m_RangeMeasChannelList.at(channelIdx);
+    qInfo("Overload channel %i / Range %s: RMS %i / ADC %i / Hard %i",
+          channelIdx,
+          qPrintable(m_actChannelRangeList.at(channelIdx)),
+          rmsOverload,
+          adcOverLoad,
+          hardOverLoad);
+    // we mark each overload condition if possible (range automatic) we unmark it
+    // but there was an edge on this entity
+
+    // if an overload is recovered by rangeautomatic during running measurement
+    stringParameter sPar = m_ConfPar.m_senseChannelRangeParameter.at(channelIdx);
+    QString maxRangeAlias = rangeMeasChannel->getMaxRange(sPar.m_sPar);
+
+    if (m_actChannelRangeList.at(channelIdx) == maxRangeAlias) { // in case ovrload was in max. range
+        m_maxOvlList.replace(channelIdx, true);
+        m_pComponentOverloadMax->setValue(1);
+    }
+
+    sPar.m_sPar = maxRangeAlias; // we preset the max. range here
+    m_ConfPar.m_senseChannelRangeParameter.replace(channelIdx, sPar);
+    m_RangeOVLComponentList.at(channelIdx)->setValue(QVariant(1)); // set interface overload
+    m_softOvlList.replace(channelIdx, true);
+}
+
 void cRangeObsermatic::rangeObservation()
 {
     bool markOverload = false;
@@ -239,31 +266,8 @@ void cRangeObsermatic::rangeObservation()
         bool adcOverLoad = rangeMeasChannel->isADCOverload(rangeMeasChannel->getPeakValueWithDc()*prescalingFac); //peak
         bool hardOverLoad = m_hardOvlList.at(i);
         if ( rmsOverload || adcOverLoad || hardOverLoad) { // if any overload ?
-            qInfo("Overload channel %i / Range %s: RMS %i / ADC %i / Hard %i",
-                  i,
-                  qPrintable(m_actChannelRangeList.at(i)),
-                  rmsOverload,
-                  adcOverLoad,
-                  hardOverLoad);
             markOverload = true;
-            // we mark each overload condition if possible (range automatic) we unmark it
-            // but there was an edge on this entity
-
-            // if an overload is recovered by rangeautomatic during running measurement
-
-            stringParameter sPar = m_ConfPar.m_senseChannelRangeParameter.at(i);
-            QString s = rangeMeasChannel->getMaxRange(sPar.m_sPar);
-
-            if (m_actChannelRangeList.at(i) == s) // in case ovrload was in max. range
-            {
-                m_maxOvlList.replace(i, true);
-                m_pComponentOverloadMax->setValue(1);
-            }
-
-            sPar.m_sPar = s; // we preset the max. range here
-            m_ConfPar.m_senseChannelRangeParameter.replace(i, sPar);
-            m_RangeOVLComponentList.at(i)->setValue(QVariant(1)); // set interface overload
-            m_softOvlList.replace(i, true); //
+            handleOverload(i, rmsOverload, hardOverLoad, adcOverLoad); //
         }
         else {
             m_RangeOVLComponentList.at(i)->setValue(QVariant(0));
@@ -272,7 +276,6 @@ void cRangeObsermatic::rangeObservation()
     }
 
     disconnect(m_pParOverloadOnOff, 0, this, 0); // we don't want a signal here
-
     if (markOverload) {
         m_pParOverloadOnOff->setValue(QVariant(1));
     }
