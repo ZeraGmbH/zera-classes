@@ -475,24 +475,18 @@ void cRangeObsermatic::setRanges(bool force)
 
 QList<int> cRangeObsermatic::getGroupAliasIdxListForChannel(int channelAliasIdx)
 {
-    QList<int> indexlist;
     if (m_ConfPar.m_nGroupAct.m_nActive == 1) {
         QString channelAlias = m_ChannelAliasList.at(channelAliasIdx);
         for (const QStringList &aliasesInGroup : m_GroupList) {
-            if (aliasesInGroup.contains(channelAlias)) { // if this aliasesInGroup contains the searched item
+            if (aliasesInGroup.contains(channelAlias)) {
+                QList<int> indexlist;
                 for(const QString &group : aliasesInGroup)
                     indexlist.append(m_ChannelAliasList.indexOf(group));
-                break;
+                return indexlist;
             }
         }
-        if (indexlist.isEmpty())
-            // if we have a channel that is not included in a grouping list
-            indexlist.append(channelAliasIdx);
     }
-    else {
-        indexlist.append(channelAliasIdx); // we return 1 index at least
-    }
-    return indexlist;
+    return QList<int>() << channelAliasIdx; // grouping not active or channel in no group (AUX)
 }
 
 bool cRangeObsermatic::requiresOverloadReset(int channel)
