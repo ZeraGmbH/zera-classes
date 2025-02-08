@@ -220,9 +220,11 @@ void test_range_automatic::selectClampThenRangeAutomatic()
     QCOMPARE(getVfComponent(rangeEntityId, IL1RangeComponent), "C50A");
 }
 
-void test_range_automatic::removeClamp()
+void test_range_automatic::addRemoveClamp()
 {
     setVfComponent(rangeEntityId, RangeGroupingComponent, 0);
+
+    // range automatic OFF
     m_testPcbServer->addClamp(cClamp::CL120A, "IL1");
     TimeMachineObject::feedEventLoop();
     setVfComponent(rangeEntityId, IL1RangeComponent, "C50mA");
@@ -231,11 +233,8 @@ void test_range_automatic::removeClamp()
     m_testPcbServer->removeAllClamps();
     TimeMachineObject::feedEventLoop();
     QCOMPARE(getVfComponent(rangeEntityId, IL1RangeComponent), "10A");//switches to max range
-}
 
-void test_range_automatic::removeClampWithRangeAutomatic()
-{
-    setVfComponent(rangeEntityId, RangeGroupingComponent, 0);
+    // range automatic ON
     m_testPcbServer->addClamp(cClamp::CL120A, "IL1");
     TimeMachineObject::feedEventLoop();
     setVfComponent(rangeEntityId, IL1RangeComponent, "C10A");

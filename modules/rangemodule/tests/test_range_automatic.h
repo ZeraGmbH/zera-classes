@@ -24,8 +24,7 @@ private slots:
     void softOverloadWithRangeAutomatic();
     void addAndSelectClamp();
     void selectClampThenRangeAutomatic();
-    void removeClamp();
-    void removeClampWithRangeAutomatic();
+    void addRemoveClamp();
     void checkPersitency();
 private:
     void setupServices();
