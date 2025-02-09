@@ -41,7 +41,7 @@ class cRangeObsermatic: public cModuleActivist
 {
     Q_OBJECT
 public:
-    cRangeObsermatic(cRangeModule* module, QList<QStringList> groupList, QStringList chnlist, cObsermaticConfPar& confpar);
+    cRangeObsermatic(cRangeModule* module, QList<QStringList> groupList, cObsermaticConfPar& confpar);
     void generateVeinInterface() override;
     VfModuleComponent *m_pRangingSignal;
 signals:
@@ -53,7 +53,6 @@ public slots:
 private:
     cRangeModule *m_pModule;
     QList<QStringList> m_GroupList;
-    QStringList m_ChannelNameList; // the system names of our channels
     cObsermaticConfPar& m_ConfPar;
     DspInterfacePtr m_dspInterface;
     Zera::ProxyClientPtr m_dspClient;

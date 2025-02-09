@@ -16,12 +16,10 @@ namespace RANGEMODULE
 
 cRangeObsermatic::cRangeObsermatic(cRangeModule *module,
                                    QList<QStringList> groupList,
-                                   QStringList chnlist,
                                    cObsermaticConfPar& confpar) :
     cModuleActivist(QString("RangeObsermatic / %1").arg(qPrintable(module->getVeinModuleName()))),
     m_pModule(module),
     m_GroupList(groupList),
-    m_ChannelNameList(chnlist),
     m_ConfPar(confpar)
 {
     m_brangeSet = false;
@@ -32,7 +30,7 @@ cRangeObsermatic::cRangeObsermatic(cRangeModule *module,
     //  we set 0.0 as default value for all peak values in case that these values are needed before actual values really arrived
 
     m_dspInterface = m_pModule->getServiceInterfaceFactory()->createDspInterfaceRange(
-        m_ChannelNameList,
+        m_pModule->getSharedChannelRangeObserver()->getChannelMNames(),
         false /* just for demo COM5003 ref-session - postpone better solution now */);
 
     m_readGainCorrState.addTransition(this, &cRangeObsermatic::activationContinue, &m_readGainCorrDoneState);
@@ -85,7 +83,8 @@ void cRangeObsermatic::generateVeinInterface()
     VfModuleComponent *pComponent;
     VfModuleParameter *pParameter;
 
-    for (int i = 0; i < m_ChannelNameList.count(); i++) {
+    const QStringList channelMNames = m_pModule->getSharedChannelRangeObserver()->getChannelMNames();
+    for (int i = 0; i < channelMNames.count(); i++) {
         QString s;
         QString key = QString("PAR_Channel%1Range").arg(i+1);
         pParameter = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
@@ -100,7 +99,7 @@ void cRangeObsermatic::generateVeinInterface()
         m_actChannelRangeList.append(s); // here we also fill our internal actual channel range list
         m_actChannelRangeNotifierList.append(QString(""));
         m_ChannelAliasList.append(s); // also a list for alias names
-        m_RangeMeasChannelList.append(m_pModule->getMeasChannel(m_ChannelNameList.at(i)));
+        m_RangeMeasChannelList.append(m_pModule->getMeasChannel(channelMNames.at(i)));
 
         pComponent = new VfModuleComponent(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
                                               QString("SIG_Channel%1OVL").arg(i+1),
@@ -524,7 +523,8 @@ void cRangeObsermatic::dspserverConnect()
 {
     // the alias list is correctly filled when activating range obsermatic
     // the module has first activated the channels before activating rangeobsermatic
-    for (int i = 0; i < m_ChannelNameList.count(); i++) {
+    const QStringList channelMNames = m_pModule->getSharedChannelRangeObserver()->getChannelMNames();
+    for (int i = 0; i < channelMNames.count(); i++) {
         m_ChannelAliasList.replace(i, m_RangeMeasChannelList.at(i)->getAlias());
     }
 
@@ -554,7 +554,8 @@ void cRangeObsermatic::readGainCorrDone()
 
     // we already read all gain2corrections, set default ranges, default automatic, grouping and scaling values
     // lets now connect signals so we become alive
-    for (int i = 0; i < m_ChannelNameList.count(); i++) {
+    const QStringList channelMNames = m_pModule->getSharedChannelRangeObserver()->getChannelMNames();
+    for (int i = 0; i < channelMNames.count(); i++) {
         connect(m_RangeParameterList.at(i), &VfModuleParameter::sigValueChanged, this, &cRangeObsermatic::onNewRange);
     }
 
@@ -576,11 +577,11 @@ void cRangeObsermatic::readGainCorrDone()
 
     cStringValidator *sValidator;
     cSCPIInfo *scpiInfo;
-    for (int i = 0; i < m_ChannelNameList.count(); i++) {
+    for (int i = 0; i < channelMNames.count(); i++) {
         QString s1, s2;
         sValidator = new cStringValidator(m_RangeMeasChannelList.at(i)->getRangeListAlias());
         m_RangeParameterList.at(i)->setValidator(sValidator);
-        m_ChannelRangeValidatorHash[m_ChannelNameList.at(i)] = sValidator; // systemchannelname, stringvalidator
+        m_ChannelRangeValidatorHash[channelMNames.at(i)] = sValidator; // systemchannelname, stringvalidator
         // we also set the channels name alias and its unit
         m_RangeParameterList.at(i)->setChannelName(s1 = m_ChannelAliasList.at(i));
 
