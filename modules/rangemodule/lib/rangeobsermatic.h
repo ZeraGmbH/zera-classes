@@ -56,7 +56,6 @@ private:
     cObsermaticConfPar& m_ConfPar;
     DspInterfacePtr m_dspInterface;
     Zera::ProxyClientPtr m_dspClient;
-    QStringList m_ChannelAliasList; // the alias of our channels
     QList<cRangeMeasChannel*> m_RangeMeasChannelList;
     QHash<QString,cStringValidator*> m_ChannelRangeValidatorHash;
     QList<bool> m_softOvlList; // here we enter software detected overloads
@@ -109,10 +108,10 @@ private:
     void rangeAutomatic();
     void groupHandling();
     void setRanges(bool force = false); // here we really set ranges
-    QList<int> getGroupAliasIdxListForChannel(int channelAliasIdx);
+    QList<int> getGroupAliasIdxListForChannel(int channelIdx);
     bool requiresOverloadReset(int channel);
     void startOverloadReset(int channel);
-    float getPreScale(int channelAliasIdx);
+    float getPreScale(int channelIdx);
     void handleOverload(const int channelIdx, bool rmsOverload, bool hardOverLoad, bool adcOverLoad);
 
 private slots:
