@@ -574,14 +574,13 @@ void cRangeObsermatic::readGainCorrDone()
     const QStringList channelAliases = m_pModule->getSharedChannelRangeObserver()->getChannelAliases();
     for (int i = 0; i < channelAliases.count(); i++) {
         const QString  channelAlias = channelAliases.at(i);
-        QString s2;
         sValidator = new cStringValidator(m_RangeMeasChannelList.at(i)->getRangeListAlias());
         m_RangeParameterList.at(i)->setValidator(sValidator);
         m_ChannelRangeValidatorHash[channelMNames.at(i)] = sValidator; // systemchannelname, stringvalidator
         // we also set the channels name alias and its unit
         m_RangeParameterList.at(i)->setChannelName(channelAlias);
 
-        scpiInfo = new cSCPIInfo("SENSE", QString("%1:RANGE").arg(channelAlias), "10", m_RangeParameterList.at(i)->getName(), "0", s2);
+        scpiInfo = new cSCPIInfo("SENSE", QString("%1:RANGE").arg(channelAlias), "10", m_RangeParameterList.at(i)->getName(), "0", "");
         m_RangeParameterList.at(i)->setSCPIInfo(scpiInfo);
 
         // we want to support querying the channels ranges
@@ -589,13 +588,8 @@ void cRangeObsermatic::readGainCorrDone()
         m_pModule->scpiCommandList.append(scpiInfo);
 
         m_RangeOVLRejectionComponentList.at(i)->setChannelName(channelAlias);
-        m_RangeOVLRejectionComponentList.at(i)->setUnit(s2);
-
         m_RangeActRejectionComponentList.at(i)->setChannelName(channelAlias);
-        m_RangeActRejectionComponentList.at(i)->setUnit(s2);
-
         m_RangeActOVLRejectionComponentList.at(i)->setChannelName(channelAlias);
-        m_RangeActOVLRejectionComponentList.at(i)->setUnit(s2);
     }
 
     scpiInfo = new cSCPIInfo("CONFIGURATION", "RNGAUTO", "10", m_pParRangeAutomaticOnOff->getName(), "0", "");
