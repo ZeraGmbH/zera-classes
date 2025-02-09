@@ -98,7 +98,6 @@ void cRangeObsermatic::generateVeinInterface()
 
         m_actChannelRangeList.append(s); // here we also fill our internal actual channel range list
         m_actChannelRangeNotifierList.append(QString(""));
-        m_ChannelAliasList.append(s); // also a list for alias names
         m_RangeMeasChannelList.append(m_pModule->getMeasChannel(channelMNames.at(i)));
 
         pComponent = new VfModuleComponent(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
@@ -329,12 +328,13 @@ void cRangeObsermatic::groupHandling()
     }
     if (m_ConfPar.m_nGroupAct.m_nActive == 1) {
         QList<int> indexList;
+        const QStringList channelAliases = m_pModule->getSharedChannelRangeObserver()->getChannelAliases();
         for (int i = 0; i < m_GroupList.count(); i++) {
             indexList.clear();
             const QStringList grouplist = m_GroupList.at(i); // we fetch 1 list of all our grouplists
             for(const QString& group : grouplist) {
-                if (m_ChannelAliasList.contains(group)) // and look if all channels of that grouplist are present
-                    indexList.append(m_ChannelAliasList.indexOf(group));
+                if (channelAliases.contains(group)) // and look if all channels of that grouplist are present
+                    indexList.append(channelAliases.indexOf(group));
             }
             if (grouplist.count() == indexList.count()) {
                 // we found all entries of grouplist in our alias list, means group is completely present
@@ -469,20 +469,21 @@ void cRangeObsermatic::setRanges(bool force)
 }
 
 
-QList<int> cRangeObsermatic::getGroupAliasIdxListForChannel(int channelAliasIdx)
+QList<int> cRangeObsermatic::getGroupAliasIdxListForChannel(int channelIdx)
 {
     if (m_ConfPar.m_nGroupAct.m_nActive == 1) {
-        QString channelAlias = m_ChannelAliasList.at(channelAliasIdx);
+        const QStringList channelAliases = m_pModule->getSharedChannelRangeObserver()->getChannelAliases();
+        QString channelAlias = channelAliases.at(channelIdx);
         for (const QStringList &aliasesInGroup : m_GroupList) {
             if (aliasesInGroup.contains(channelAlias)) {
                 QList<int> indexlist;
                 for(const QString &group : aliasesInGroup)
-                    indexlist.append(m_ChannelAliasList.indexOf(group));
+                    indexlist.append(channelAliases.indexOf(group));
                 return indexlist;
             }
         }
     }
-    return QList<int>() << channelAliasIdx; // grouping not active or channel in no group (AUX)
+    return QList<int>() << channelIdx; // grouping not active or channel in no group (AUX)
 }
 
 bool cRangeObsermatic::requiresOverloadReset(int channel)
@@ -499,12 +500,13 @@ bool cRangeObsermatic::requiresOverloadReset(int channel)
     return (m_hardOvlList.at(channel) || m_softOvlList.at(channel)) && (m_ConfPar.m_nRangeAutoAct.m_nActive != 1 || !m_maxOvlList.at(channel));
 }
 
-float cRangeObsermatic::getPreScale(int channelAliasIdx)
+float cRangeObsermatic::getPreScale(int channelIdx)
 {
     float prescaleValue = 1;
     int groupPresacalingIdxFound = -1;
-    if(channelAliasIdx < m_ChannelAliasList.length()){
-        QString alias = m_ChannelAliasList.at(channelAliasIdx);
+    const QStringList channelAliases = m_pModule->getSharedChannelRangeObserver()->getChannelAliases();
+    if(channelIdx < channelAliases.length()){
+        QString alias = channelAliases.at(channelIdx);
         for(int groupListIdx = 0; groupListIdx<m_GroupList.length(); groupListIdx++) {
             if(m_GroupList[groupListIdx].contains(alias)) {
                 groupPresacalingIdxFound = groupListIdx;
@@ -521,13 +523,6 @@ float cRangeObsermatic::getPreScale(int channelAliasIdx)
 
 void cRangeObsermatic::dspserverConnect()
 {
-    // the alias list is correctly filled when activating range obsermatic
-    // the module has first activated the channels before activating rangeobsermatic
-    const QStringList channelMNames = m_pModule->getSharedChannelRangeObserver()->getChannelMNames();
-    for (int i = 0; i < channelMNames.count(); i++) {
-        m_ChannelAliasList.replace(i, m_RangeMeasChannelList.at(i)->getAlias());
-    }
-
     m_dspClient = Zera::Proxy::getInstance()->getConnectionSmart(m_pModule->getNetworkConfig()->m_dspServiceConnectionInfo,
                                                                  m_pModule->getNetworkConfig()->m_tcpNetworkFactory);
     m_dspInterface->setClientSmart(m_dspClient);
@@ -574,31 +569,32 @@ void cRangeObsermatic::readGainCorrDone()
     }
 
     // we also have the information needed to set param validators and scpi information now
-
     cStringValidator *sValidator;
     cSCPIInfo *scpiInfo;
-    for (int i = 0; i < channelMNames.count(); i++) {
-        QString s1, s2;
+    const QStringList channelAliases = m_pModule->getSharedChannelRangeObserver()->getChannelAliases();
+    for (int i = 0; i < channelAliases.count(); i++) {
+        const QString  channelAlias = channelAliases.at(i);
+        QString s2;
         sValidator = new cStringValidator(m_RangeMeasChannelList.at(i)->getRangeListAlias());
         m_RangeParameterList.at(i)->setValidator(sValidator);
         m_ChannelRangeValidatorHash[channelMNames.at(i)] = sValidator; // systemchannelname, stringvalidator
         // we also set the channels name alias and its unit
-        m_RangeParameterList.at(i)->setChannelName(s1 = m_ChannelAliasList.at(i));
+        m_RangeParameterList.at(i)->setChannelName(channelAlias);
 
-        scpiInfo = new cSCPIInfo("SENSE", QString("%1:RANGE").arg(m_ChannelAliasList.at(i)), "10", m_RangeParameterList.at(i)->getName(), "0", s2);
+        scpiInfo = new cSCPIInfo("SENSE", QString("%1:RANGE").arg(channelAlias), "10", m_RangeParameterList.at(i)->getName(), "0", s2);
         m_RangeParameterList.at(i)->setSCPIInfo(scpiInfo);
 
         // we want to support querying the channels ranges
-        scpiInfo = new cSCPIInfo("SENSE", QString("%1:RANGE:CATALOG").arg(m_ChannelAliasList.at(i)), "2", m_RangeParameterList.at(i)->getName(), "1", "");
+        scpiInfo = new cSCPIInfo("SENSE", QString("%1:RANGE:CATALOG").arg(channelAlias), "2", m_RangeParameterList.at(i)->getName(), "1", "");
         m_pModule->scpiCommandList.append(scpiInfo);
 
-        m_RangeOVLRejectionComponentList.at(i)->setChannelName(s1);
+        m_RangeOVLRejectionComponentList.at(i)->setChannelName(channelAlias);
         m_RangeOVLRejectionComponentList.at(i)->setUnit(s2);
 
-        m_RangeActRejectionComponentList.at(i)->setChannelName(s1);
+        m_RangeActRejectionComponentList.at(i)->setChannelName(channelAlias);
         m_RangeActRejectionComponentList.at(i)->setUnit(s2);
 
-        m_RangeActOVLRejectionComponentList.at(i)->setChannelName(s1);
+        m_RangeActOVLRejectionComponentList.at(i)->setChannelName(channelAlias);
         m_RangeActOVLRejectionComponentList.at(i)->setUnit(s2);
     }
 
