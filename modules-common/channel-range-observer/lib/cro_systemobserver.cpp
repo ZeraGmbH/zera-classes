@@ -30,6 +30,14 @@ const QStringList SystemObserver::getChannelMNames() const
     return m_channelMNameToChannel.keys();
 }
 
+const QStringList SystemObserver::getChannelAliases() const
+{
+    QStringList aliases;
+    for(auto iter=m_channelMNameToChannel.constBegin(); iter!=m_channelMNameToChannel.constEnd(); iter++)
+        aliases.append(iter.value()->getAlias());
+    return aliases;
+}
+
 const ChannelPtr SystemObserver::getChannel(QString channelMName) const
 {
     auto iter = m_channelMNameToChannel.constFind(channelMName);

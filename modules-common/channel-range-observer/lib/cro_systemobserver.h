@@ -16,6 +16,7 @@ public:
     SystemObserver(const NetworkConnectionInfo &netInfo, VeinTcp::AbstractTcpNetworkFactoryPtr tcpFactory);
     void startFullScan();
     const QStringList getChannelMNames() const;
+    const QStringList getChannelAliases() const;
     const ChannelPtr getChannel(QString channelMName) const;
     const int getSamplesPerPeriod() const;
 signals:
