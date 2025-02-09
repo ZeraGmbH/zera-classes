@@ -42,8 +42,8 @@ void cRangeModule::setupModule()
 
 
     // first we build a list of our meas channels
-    for (int i = 0; i < pConfData->m_nChannelCount; i ++) {
-        const QString channelMName = pConfData->m_senseChannelList.at(i);
+    const QStringList channelMNames = getSharedChannelRangeObserver()->getChannelMNames();
+    for (const QString &channelMName : channelMNames) {
         cRangeMeasChannel* pchn = new cRangeMeasChannel(getSharedChannelRangeObserver()->getChannel(channelMName),
                                                         getNetworkConfig()->m_pcbServiceConnectionInfo,
                                                         getNetworkConfig()->m_tcpNetworkFactory,
@@ -58,7 +58,6 @@ void cRangeModule::setupModule()
     // it will also do the scaling job
     m_pRangeObsermatic = new cRangeObsermatic(this,
                                               pConfData->m_GroupList,
-                                              pConfData->m_senseChannelList,
                                               pConfData->m_ObsermaticConfPar);
     m_ModuleActivistList.append(m_pRangeObsermatic);
     connect(m_pRangeObsermatic, &cRangeObsermatic::activated, this, &cRangeModule::activationContinue);
@@ -74,7 +73,7 @@ void cRangeModule::setupModule()
     }
 
     // we also need some program for adjustment
-    m_pAdjustment = new cAdjustManagement(this, pConfData->m_senseChannelList, pConfData->m_subdcChannelList, &pConfData->m_adjustConfPar);
+    m_pAdjustment = new cAdjustManagement(this, channelMNames, pConfData->m_subdcChannelList, &pConfData->m_adjustConfPar);
     m_ModuleActivistList.append(m_pAdjustment);
     connect(m_pAdjustment, &cAdjustManagement::activated, this, &cRangeModule::activationContinue);
     connect(m_pAdjustment, &cAdjustManagement::deactivated, this, &cRangeModule::deactivationContinue);

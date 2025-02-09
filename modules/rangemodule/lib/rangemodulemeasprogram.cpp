@@ -18,10 +18,10 @@ cRangeModuleMeasProgram::cRangeModuleMeasProgram(cRangeModule* module, std::shar
     m_dspWatchdogTimer(TimerFactoryQt::createSingleShot(3000)),
     m_frequencyLogStatistics(10000)
 {
-    m_dspInterface = m_pModule->getServiceInterfaceFactory()->createDspInterfaceRange(getConfData()->m_senseChannelList, getConfData()->m_session.m_sPar == "ref");
+    const QStringList channelMNames = m_pModule->getSharedChannelRangeObserver()->getChannelMNames();
+    m_dspInterface = m_pModule->getServiceInterfaceFactory()->createDspInterfaceRange(channelMNames, getConfData()->m_session.m_sPar == "ref");
     m_bRanging = false;
     m_bIgnore = false;
-    m_ChannelList = getConfData()->m_senseChannelList;
 
     m_IdentifyState.addTransition(this, &cRangeModuleMeasProgram::activationContinue, &m_dspserverConnectState);
     m_claimPGRMemState.addTransition(this, &cRangeModuleMeasProgram::activationContinue, &m_claimUSERMemState);
@@ -103,8 +103,8 @@ void cRangeModuleMeasProgram::syncRanging(QVariant sync)
 void cRangeModuleMeasProgram::generateVeinInterface()
 {
     VfModuleActvalue *pActvalue;
-
-    for (int i = 0; i < m_ChannelList.count(); i++) {
+    const QStringList channelMNames = m_pModule->getSharedChannelRangeObserver()->getChannelMNames();
+    for (int i = 0; i < channelMNames.count(); i++) {
         pActvalue = new VfModuleActvalue(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
                                             QString("ACT_Channel%1Peak").arg(i+1),
                                             QString("Actual peak value"));
@@ -122,7 +122,7 @@ void cRangeModuleMeasProgram::generateVeinInterface()
     m_veinActValueList.append(pActvalue); // we add the component for our measurement
     m_pModule->veinModuleActvalueList.append(pActvalue); // and for the modules interface
 
-    for (int i = 0; i < m_ChannelList.count(); i++) {
+    for (int i = 0; i < channelMNames.count(); i++) {
         pActvalue = new VfModuleActvalue(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
                                             QString("ACT_Channel%1Rms").arg(i+1),
                                             QString("Actual RMS value"));
@@ -141,16 +141,17 @@ void cRangeModuleMeasProgram::generateVeinInterface()
 
 void cRangeModuleMeasProgram::setDspVarList()
 {
+    const QStringList channelMNames = m_pModule->getSharedChannelRangeObserver()->getChannelMNames();
     int samples = m_pModule->getSharedChannelRangeObserver()->getSamplesPerPeriod();
     // we fetch a handle for sampled data and other temporary values
     m_pTmpDataDsp = m_dspInterface->getMemHandle("TmpData");
     m_pTmpDataDsp->addVarItem( new cDspVar("MEASSIGNAL", samples, DSPDATA::vDspTemp));
     m_pTmpDataDsp->addVarItem( new cDspVar("MAXRESET", 32, DSPDATA::vDspTemp));
     m_pTmpDataDsp->addVarItem( new cDspVar("TISTART",1, DSPDATA::vDspTemp, DSPDATA::dInt));
-    m_pTmpDataDsp->addVarItem( new cDspVar("CHXPEAK",m_ChannelList.count(), DSPDATA::vDspTemp));
-    m_pTmpDataDsp->addVarItem( new cDspVar("CHXRMS",m_ChannelList.count(), DSPDATA::vDspTemp));
+    m_pTmpDataDsp->addVarItem( new cDspVar("CHXPEAK",channelMNames.count(), DSPDATA::vDspTemp));
+    m_pTmpDataDsp->addVarItem( new cDspVar("CHXRMS",channelMNames.count(), DSPDATA::vDspTemp));
     m_pTmpDataDsp->addVarItem( new cDspVar("FREQ", 1, DSPDATA::vDspTemp));
-    m_pTmpDataDsp->addVarItem( new cDspVar("FILTER",2*(2*m_ChannelList.count()+1),DSPDATA::vDspTemp)); // filter workspace for scaled peak, rms and freq
+    m_pTmpDataDsp->addVarItem( new cDspVar("FILTER",2*(2*channelMNames.count()+1),DSPDATA::vDspTemp)); // filter workspace for scaled peak, rms and freq
     m_pTmpDataDsp->addVarItem( new cDspVar("N",1,DSPDATA::vDspTemp));
 
     // a handle for parameter
@@ -159,10 +160,10 @@ void cRangeModuleMeasProgram::setDspVarList()
 
     // and one for filtered actual values
     m_pActualValuesDSP = m_dspInterface->getMemHandle("ActualValues");
-    m_pActualValuesDSP->addVarItem( new cDspVar("CHXPEAKF",m_ChannelList.count(), DSPDATA::vDspResult)); // only copied values from channels maximum from dsp workspace
-    m_pActualValuesDSP->addVarItem( new cDspVar("CHXRMSF",m_ChannelList.count(), DSPDATA::vDspResult));
+    m_pActualValuesDSP->addVarItem( new cDspVar("CHXPEAKF",channelMNames.count(), DSPDATA::vDspResult)); // only copied values from channels maximum from dsp workspace
+    m_pActualValuesDSP->addVarItem( new cDspVar("CHXRMSF",channelMNames.count(), DSPDATA::vDspResult));
     m_pActualValuesDSP->addVarItem( new cDspVar("FREQF", 1, DSPDATA::vDspResult));
-    m_pActualValuesDSP->addVarItem( new cDspVar("CHXRAWPEAK",m_ChannelList.count(), DSPDATA::vDspResult));
+    m_pActualValuesDSP->addVarItem( new cDspVar("CHXRAWPEAK",channelMNames.count(), DSPDATA::vDspResult));
 
     m_ModuleActualValues.resize(m_pActualValuesDSP->getSize()); // we provide a vector for generated actual values
     m_nDspMemUsed = m_pTmpDataDsp->getSize() + m_pParameterDSP->getSize() + m_pActualValuesDSP->getSize();
@@ -179,10 +180,11 @@ void cRangeModuleMeasProgram::deleteDspVarList()
 
 void cRangeModuleMeasProgram::setDspCmdList()
 {
+    const QStringList channelMNames = m_pModule->getSharedChannelRangeObserver()->getChannelMNames();
     int samples = m_pModule->getSharedChannelRangeObserver()->getSamplesPerPeriod();
     m_dspInterface->addCycListItem("STARTCHAIN(1,1,0x0101)"); // aktiv, prozessnr. (dummy),hauptkette 1 subkette 1 start
         m_dspInterface->addCycListItem(QString("CLEARN(%1,MEASSIGNAL)").arg(samples) ); // clear meassignal
-        m_dspInterface->addCycListItem(QString("CLEARN(%1,FILTER)").arg(2*(2*m_ChannelList.count()+1)+1) ); // clear the whole filter incl. count
+        m_dspInterface->addCycListItem(QString("CLEARN(%1,FILTER)").arg(2*(2*channelMNames.count()+1)+1) ); // clear the whole filter incl. count
         m_dspInterface->addCycListItem(QString("SETVAL(TIPAR,%1)").arg(getConfData()->m_fMeasInterval*1000.0)); // initial ti time  /* todo variabel */
         m_dspInterface->addCycListItem("GETSTIME(TISTART)"); // einmal ti start setzen
         m_dspInterface->addCycListItem("CLKMODE(1)"); // clk mode auf 48bit einstellen
@@ -190,10 +192,10 @@ void cRangeModuleMeasProgram::setDspCmdList()
     m_dspInterface->addCycListItem("STOPCHAIN(1,0x0101)"); // ende prozessnr., hauptkette 1 subkette 1
 
     // we compute or copy our wanted actual values
-    for (int i = 0; i < m_ChannelList.count(); i++)
+    for (int i = 0; i < channelMNames.count(); i++)
     {
         const ChannelRangeObserver::ChannelPtr channel =
-            m_pModule->getSharedChannelRangeObserver()->getChannel(m_ChannelList.at(i));
+            m_pModule->getSharedChannelRangeObserver()->getChannel(channelMNames.at(i));
         m_dspInterface->addCycListItem(QString("COPYDATA(CH%1,0,MEASSIGNAL)").arg(channel->getDspChannel())); // for each channel we work on
         m_dspInterface->addCycListItem(QString("SETPEAK(MEASSIGNAL,CHXPEAK+%1)").arg(i)); // here we have signal with dc regardless subdc is configured
         //m_dspInterface->addCycListItem(QString("COPYDATA(CH%1,0,MEASSIGNAL)").arg(chnnr)); // for each channel we work on
@@ -202,31 +204,27 @@ void cRangeModuleMeasProgram::setDspCmdList()
     m_dspInterface->addCycListItem("COPYDU(1,FREQENCY,FREQ)");
 
     // and filter them
-    m_dspInterface->addCycListItem(QString("AVERAGE1(%1,CHXPEAK,FILTER)").arg(2*m_ChannelList.count()+1)); // we add results to filter
+    m_dspInterface->addCycListItem(QString("AVERAGE1(%1,CHXPEAK,FILTER)").arg(2*channelMNames.count()+1)); // we add results to filter
     m_dspInterface->addCycListItem("TESTTIMESKIPNEX(TISTART,TIPAR)");
     m_dspInterface->addCycListItem("ACTIVATECHAIN(1,0x0102)");
 
     m_dspInterface->addCycListItem("STARTCHAIN(0,1,0x0102)");
         m_dspInterface->addCycListItem("GETSTIME(TISTART)"); // set new system time
         // The following is so assember-ish: We copy CHXPEAKF, CHXRMSF and FREQF here in one line!!!
-        m_dspInterface->addCycListItem(QString("CMPAVERAGE1(%1,FILTER,CHXPEAKF)").arg(2*m_ChannelList.count()+1));
+        m_dspInterface->addCycListItem(QString("CMPAVERAGE1(%1,FILTER,CHXPEAKF)").arg(2*channelMNames.count()+1));
 
-        for (int i = 0; i < m_ChannelList.count(); i++)
+        for (int i = 0; i < channelMNames.count(); i++)
             m_dspInterface->addCycListItem(QString("SQRT(CHXRMSF+%1,CHXRMSF+%2)").arg(i).arg(i));
 
-        m_dspInterface->addCycListItem(QString("CLEARN(%1,FILTER)").arg(2*(2*m_ChannelList.count()+1)+1) );
+        m_dspInterface->addCycListItem(QString("CLEARN(%1,FILTER)").arg(2*(2*channelMNames.count()+1)+1) );
 
         m_dspInterface->addCycListItem("COPYDU(32,MAXIMUMSAMPLE,MAXRESET)"); // all raw adc maximum samples to userspace
 
-        for (int i = 0; i < m_ChannelList.count(); i++)
-        {
-            quint8 chnnr;
-
-            cRangeMeasChannel* mchn = m_pModule->getMeasChannel(m_ChannelList.at(i));
-            chnnr = mchn->getDSPChannelNr();
+        for (int i = 0; i < channelMNames.count(); i++) {
+            cRangeMeasChannel* mchn = m_pModule->getMeasChannel(channelMNames.at(i));
+            quint8 chnnr = mchn->getDSPChannelNr();
             m_dspInterface->addCycListItem(QString("COPYDU(1,MAXIMUMSAMPLE+%1,CHXRAWPEAK+%2)").arg(chnnr).arg(i)); // raw adc value maximum
             m_dspInterface->addCycListItem(QString("SETVAL(MAXRESET+%1,0.0)").arg(chnnr)); // raw adc value maximum
-
         }
         m_dspInterface->addCycListItem("COPYUD(32,MAXRESET,MAXIMUMSAMPLE)"); // reset dspworkspace maximum samples
 
@@ -342,8 +340,9 @@ cRangeModuleConfigData *cRangeModuleMeasProgram::getConfData()
 
 void cRangeModuleMeasProgram::setActualValuesNames()
 {
-    for (int i = 0; i < m_ChannelList.count(); i++) {
-        cRangeMeasChannel* mchn = m_pModule->getMeasChannel(m_ChannelList.at(i));
+    const QStringList channelMNames = m_pModule->getSharedChannelRangeObserver()->getChannelMNames();
+    for (int i = 0; i < channelMNames.count(); i++) {
+        cRangeMeasChannel* mchn = m_pModule->getMeasChannel(channelMNames.at(i));
         m_veinActValueList.at(i)->setChannelName(mchn->getAlias());
         m_veinActValueList.at(i)->setUnit(mchn->getUnit());
     }
@@ -351,8 +350,9 @@ void cRangeModuleMeasProgram::setActualValuesNames()
 
 void cRangeModuleMeasProgram::setSCPIMeasInfo()
 {
-    for (int i = 0; i < m_ChannelList.count(); i++) {
-        cRangeMeasChannel* mchn = m_pModule->getMeasChannel(m_ChannelList.at(i));
+    const QStringList channelMNames = m_pModule->getSharedChannelRangeObserver()->getChannelMNames();
+    for (int i = 0; i < channelMNames.count(); i++) {
+        cRangeMeasChannel* mchn = m_pModule->getMeasChannel(channelMNames.at(i));
         cSCPIInfo* pSCPIInfo = new cSCPIInfo("MEASURE", mchn->getAlias(), "8", m_veinActValueList.at(i)->getName(), "0", m_veinActValueList.at(i)->getUnit());
         m_veinActValueList.at(i)->setSCPIInfo(pSCPIInfo);
     }
@@ -374,8 +374,9 @@ void cRangeModuleMeasProgram::setInterfaceActualValues(QVector<float> *actualVal
         float freq = (*actualValues)[frqIndex];
         m_veinActValueList.at(i)->setValue(QVariant(freq));
         m_frequencyLogStatistics.addValue(freq);
-        int rmsOffsetInActual = m_ChannelList.count();
-        for(int rmsNo=0; rmsNo<m_ChannelList.count(); rmsNo++)
+        const QStringList channelMNames = m_pModule->getSharedChannelRangeObserver()->getChannelMNames();
+        int rmsOffsetInActual = channelMNames.count();
+        for(int rmsNo=0; rmsNo<channelMNames.count(); rmsNo++)
             m_veinRmsValueList.at(rmsNo)->setValue(QVariant((*actualValues)[rmsNo+rmsOffsetInActual]));
     }
 }
