@@ -139,6 +139,49 @@ void ModuleManager::createCommonModuleParam()
     }
 }
 
+VirtualModule *ZeraModules::ModuleManager::createModule(const QByteArray &xmlConfigData,
+                                                        int moduleEntityId,
+                                                        int moduleNum,
+                                                        const QString &uniqueName,
+                                                        AbstractModuleFactory *tmpFactory)
+{
+    ModuleFactoryParam moduleParam(moduleEntityId,
+                                   moduleNum,
+                                   xmlConfigData,
+                                   m_setupFacade->getStorageSystem(),
+                                   m_moduleSharedObjects);
+    VirtualModule *tmpModule = tmpFactory->createModule(moduleParam);
+    if(tmpModule) {
+        connect(tmpModule, &VirtualModule::addEventSystem, this, &ModuleManager::onModuleEventSystemAdded);
+        connect(tmpModule, &VirtualModule::moduleDeactivated, this, &ModuleManager::onStartModuleDelete);
+        connect(tmpModule, &VirtualModule::moduleActivated, this, [this](){
+            m_moduleStartLock=false;
+            delayedModuleStartNext();
+        });
+        m_moduleStartLock = true;
+    }
+    return tmpModule;
+}
+
+void ZeraModules::ModuleManager::doStartModule(VirtualModule *tmpModule,
+                                               const QString &uniqueName,
+                                               const QString &xmlConfigPath,
+                                               int moduleEntityId,
+                                               int moduleNum)
+{
+    ModuleData *moduleData = new ModuleData(tmpModule,
+                                            uniqueName,
+                                            xmlConfigPath,
+                                            QByteArray(),
+                                            moduleEntityId,
+                                            moduleNum);
+    connect(tmpModule, &VirtualModule::parameterChanged, this, [this, moduleData](){
+        saveModuleConfig(moduleData);
+    });
+    m_moduleList.append(moduleData);
+    tmpModule->startModule();
+}
+
 void ModuleManager::startModule(const QString &uniqueName,
                                 const QString &xmlConfigPath,
                                 const QByteArray &xmlConfigData,
@@ -155,27 +198,13 @@ void ModuleManager::startModule(const QString &uniqueName,
                   moduleEntityId,
                   qPrintable(confFileInfo.fileName()));
             createCommonModuleParam();
-            ModuleFactoryParam moduleParam(moduleEntityId,
-                                           moduleNum,
-                                           xmlConfigData,
-                                           m_setupFacade->getStorageSystem(),
-                                           m_moduleSharedObjects);
-            VirtualModule *tmpModule = tmpFactory->createModule(moduleParam);
-            if(tmpModule) {
-                connect(tmpModule, &VirtualModule::addEventSystem, this, &ModuleManager::onModuleEventSystemAdded);
-                connect(tmpModule, &VirtualModule::moduleDeactivated, this, &ModuleManager::onStartModuleDelete);
-                connect(tmpModule, &VirtualModule::moduleActivated, this, [this](){
-                    m_moduleStartLock=false;
-                    delayedModuleStartNext();
-                });
-                m_moduleStartLock = true;
-                tmpModule->startModule();
-                ModuleData *moduleData = new ModuleData(tmpModule, uniqueName, xmlConfigPath, QByteArray(), moduleEntityId, moduleNum);
-                connect(tmpModule, &VirtualModule::parameterChanged, this, [this, moduleData](){
-                    saveModuleConfig(moduleData);
-                });
-                m_moduleList.append(moduleData);
-            }
+            VirtualModule *tmpModule = createModule(xmlConfigData,
+                                                    moduleEntityId,
+                                                    moduleNum,
+                                                    uniqueName,
+                                                    tmpFactory);
+            if(tmpModule)
+                doStartModule(tmpModule, uniqueName, xmlConfigPath, moduleEntityId, moduleNum);
         }
         else if(m_setupFacade->getLicenseSystem()->serialNumberIsInitialized()) {
             if(tmpFactory != nullptr)
