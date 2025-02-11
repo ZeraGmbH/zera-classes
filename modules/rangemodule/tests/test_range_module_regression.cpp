@@ -12,6 +12,11 @@ QTEST_MAIN(test_range_module_regression)
 
 static int constexpr rangeEntityId = 1020;
 
+void test_range_module_regression::initTestCase()
+{
+    qputenv("QT_FATAL_CRITICALS", "1");
+}
+
 void test_range_module_regression::minimalSession()
 {
     ModuleManagerTestRunner testRunner(":/session-minimal.json");
