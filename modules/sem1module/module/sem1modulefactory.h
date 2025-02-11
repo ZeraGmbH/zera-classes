@@ -7,7 +7,7 @@
 namespace SEM1MODULE
 {
 
-class Sem1ModuleFactory : public QObject, public AbstractModuleFactory
+class Sem1ModuleFactory : public AbstractModuleFactory
 {
     Q_OBJECT
     Q_PLUGIN_METADATA(IID MeasurementModuleFactory_iid FILE "sem1module.json")

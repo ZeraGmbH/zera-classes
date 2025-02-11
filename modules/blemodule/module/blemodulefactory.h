@@ -7,7 +7,7 @@
 namespace BLEMODULE
 {
 
-class BleModuleFactory : public QObject, public AbstractModuleFactory
+class BleModuleFactory : public AbstractModuleFactory
 {
     Q_OBJECT
     Q_PLUGIN_METADATA(IID MeasurementModuleFactory_iid FILE "blemodule.json")

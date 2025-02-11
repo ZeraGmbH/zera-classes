@@ -7,7 +7,7 @@
 namespace TRANSFORMER1MODULE
 {
 
-class Transformer1ModuleFactory : public QObject, public AbstractModuleFactory
+class Transformer1ModuleFactory : public AbstractModuleFactory
 {
     Q_OBJECT
     Q_PLUGIN_METADATA(IID MeasurementModuleFactory_iid FILE "transformer1module.json")

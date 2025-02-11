@@ -7,7 +7,7 @@
 namespace THDNMODULE
 {
 
-class ThdnModuleFactory : public QObject, public AbstractModuleFactory
+class ThdnModuleFactory : public AbstractModuleFactory
 {
     Q_OBJECT
     Q_PLUGIN_METADATA(IID MeasurementModuleFactory_iid FILE "thdnmodule.json")

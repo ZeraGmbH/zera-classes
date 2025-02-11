@@ -7,7 +7,7 @@
 namespace SPM1MODULE
 {
 
-class Spm1ModuleFactory : public QObject, public AbstractModuleFactory
+class Spm1ModuleFactory : public AbstractModuleFactory
 {
     Q_OBJECT
     Q_PLUGIN_METADATA(IID MeasurementModuleFactory_iid FILE "spm1module.json")

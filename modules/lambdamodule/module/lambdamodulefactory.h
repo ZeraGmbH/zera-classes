@@ -7,7 +7,7 @@
 namespace LAMBDAMODULE
 {
 
-class LambdaModuleFactory : public QObject, public AbstractModuleFactory
+class LambdaModuleFactory : public AbstractModuleFactory
 {
     Q_OBJECT
     Q_PLUGIN_METADATA(IID MeasurementModuleFactory_iid FILE "lambdamodule.json")

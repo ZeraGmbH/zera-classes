@@ -7,7 +7,7 @@
 namespace POWER1MODULE
 {
 
-class Power1ModuleFactory : public QObject, public AbstractModuleFactory
+class Power1ModuleFactory : public AbstractModuleFactory
 {
     Q_OBJECT
     Q_PLUGIN_METADATA(IID MeasurementModuleFactory_iid FILE "power1module.json")
