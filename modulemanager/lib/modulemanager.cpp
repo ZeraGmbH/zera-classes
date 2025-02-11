@@ -139,12 +139,24 @@ void ModuleManager::createCommonModuleParam()
     }
 }
 
-VirtualModule *ZeraModules::ModuleManager::createModule(const QByteArray &xmlConfigData,
+VirtualModule *ZeraModules::ModuleManager::createModule(const QString &xmlConfigPath,
                                                         int moduleEntityId,
                                                         int moduleNum,
                                                         const QString &uniqueName,
                                                         AbstractModuleFactory *tmpFactory)
 {
+    QByteArray xmlConfigData;
+    if(!xmlConfigPath.isEmpty()) {
+        QFile tmpXmlConfigFile(xmlConfigPath);
+        if(tmpXmlConfigFile.open(QIODevice::Unbuffered | QIODevice::ReadOnly)) {
+            xmlConfigData = tmpXmlConfigFile.readAll();
+            tmpXmlConfigFile.close();
+        }
+        else {
+            qCritical() << "Error opening config file for module:" << uniqueName << "path:" << xmlConfigPath;
+            return nullptr;
+        }
+    }
     ModuleFactoryParam moduleParam(moduleEntityId,
                                    moduleNum,
                                    xmlConfigData,
@@ -172,7 +184,6 @@ void ZeraModules::ModuleManager::doStartModule(VirtualModule *tmpModule,
     ModuleData *moduleData = new ModuleData(tmpModule,
                                             uniqueName,
                                             xmlConfigPath,
-                                            QByteArray(),
                                             moduleEntityId,
                                             moduleNum);
     connect(tmpModule, &VirtualModule::parameterChanged, this, [this, moduleData](){
@@ -184,7 +195,6 @@ void ZeraModules::ModuleManager::doStartModule(VirtualModule *tmpModule,
 
 void ModuleManager::startModule(const QString &uniqueName,
                                 const QString &xmlConfigPath,
-                                const QByteArray &xmlConfigData,
                                 int moduleEntityId,
                                 int moduleNum)
 {
@@ -198,7 +208,7 @@ void ModuleManager::startModule(const QString &uniqueName,
                   moduleEntityId,
                   qPrintable(confFileInfo.fileName()));
             createCommonModuleParam();
-            VirtualModule *tmpModule = createModule(xmlConfigData,
+            VirtualModule *tmpModule = createModule(xmlConfigPath,
                                                     moduleEntityId,
                                                     moduleNum,
                                                     uniqueName,
@@ -215,13 +225,13 @@ void ModuleManager::startModule(const QString &uniqueName,
         }
         else {//wait for serial number initialization
             qInfo("No serialno - enqueue module %s...", qPrintable(uniqueName));
-            m_deferredStartList.enqueue(new ModuleData(nullptr, uniqueName, xmlConfigPath, xmlConfigData, moduleEntityId, moduleNum));
+            m_deferredStartList.enqueue(new ModuleData(nullptr, uniqueName, xmlConfigPath, moduleEntityId, moduleNum));
         }
     }
     else {
         // All but first are enqueued - misconception? - spam just for thos e working on..
         //qInfo("Locked - enqueue module %s...", qPrintable(uniqueModuleName));
-        m_deferredStartList.enqueue(new ModuleData(nullptr, uniqueName, xmlConfigPath, xmlConfigData, moduleEntityId, moduleNum));
+        m_deferredStartList.enqueue(new ModuleData(nullptr, uniqueName, xmlConfigPath, moduleEntityId, moduleNum));
     }
 }
 
@@ -330,7 +340,7 @@ void ModuleManager::onModuleStartNext()
     m_moduleStartLock = false;
     if(m_deferredStartList.length() > 0) {
         ModuleData *tmpData = m_deferredStartList.dequeue();
-        startModule(tmpData->m_uniqueName, tmpData->m_configPath, tmpData->m_configData, tmpData->m_moduleId, tmpData->m_moduleNum);
+        startModule(tmpData->m_uniqueName, tmpData->m_configPath, tmpData->m_moduleId, tmpData->m_moduleNum);
         delete tmpData;
     }
     else
