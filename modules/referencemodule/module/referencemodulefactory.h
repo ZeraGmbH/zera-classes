@@ -7,7 +7,7 @@
 namespace REFERENCEMODULE
 {
 
-class ReferenceModuleFactory : public QObject, public AbstractModuleFactory
+class ReferenceModuleFactory : public AbstractModuleFactory
 {
     Q_OBJECT
     Q_PLUGIN_METADATA(IID MeasurementModuleFactory_iid FILE "referencemodule.json")

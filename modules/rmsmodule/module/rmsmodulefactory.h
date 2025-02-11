@@ -7,7 +7,7 @@
 namespace RMSMODULE
 {
 
-class RmsModuleFactory : public QObject, public AbstractModuleFactory
+class RmsModuleFactory : public AbstractModuleFactory
 {
     Q_OBJECT
     Q_PLUGIN_METADATA(IID MeasurementModuleFactory_iid FILE "rmsmodule.json")

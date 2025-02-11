@@ -7,7 +7,7 @@
 namespace SAMPLEMODULE
 {
 
-class SampleModuleFactory : public QObject, public AbstractModuleFactory
+class SampleModuleFactory : public AbstractModuleFactory
 {
     Q_OBJECT
     Q_PLUGIN_METADATA(IID MeasurementModuleFactory_iid FILE "samplemodule.json")

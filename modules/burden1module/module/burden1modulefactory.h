@@ -7,7 +7,7 @@
 namespace BURDEN1MODULE
 {
 
-class Burden1ModuleFactory : public QObject, public AbstractModuleFactory
+class Burden1ModuleFactory : public AbstractModuleFactory
 {
     Q_OBJECT
     Q_PLUGIN_METADATA(IID MeasurementModuleFactory_iid FILE "burden1module.json")

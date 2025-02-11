@@ -4,7 +4,7 @@
 #include <abstractmodulefactory.h>
 #include <virtualmodule.h>
 
-class SourceModuleFactory : public QObject, public AbstractModuleFactory
+class SourceModuleFactory : public AbstractModuleFactory
 {
     Q_OBJECT
     Q_PLUGIN_METADATA(IID MeasurementModuleFactory_iid FILE "sourcemodule.json")

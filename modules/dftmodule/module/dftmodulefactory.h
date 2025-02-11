@@ -7,7 +7,7 @@
 namespace DFTMODULE
 {
 
-class DftModuleFactory : public QObject, public AbstractModuleFactory
+class DftModuleFactory : public AbstractModuleFactory
 {
     Q_OBJECT
     Q_PLUGIN_METADATA(IID MeasurementModuleFactory_iid FILE "dftmodule.json")

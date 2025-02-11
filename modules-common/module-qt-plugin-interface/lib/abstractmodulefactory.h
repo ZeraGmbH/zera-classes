@@ -6,8 +6,9 @@
 #include "modulefactoryparam.h"
 #include <QtPlugin>
 
-class AbstractModuleFactory // each module has to implement a conrete
+class AbstractModuleFactory : public QObject // each module has to implement a conrete
 {
+    Q_OBJECT
 public:
     void setModuleNumerator(ModuleGroupNumeratorPtr moduleGroupNumerator) { m_moduleGroupNumerator = std::move(moduleGroupNumerator); }
     virtual ~AbstractModuleFactory() = default;
