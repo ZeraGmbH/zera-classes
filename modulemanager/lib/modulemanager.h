@@ -89,6 +89,7 @@ private:
     JsonSessionLoader m_sessionLoader;
     QHash<QString, AbstractModuleFactory*> m_factoryTable;
     QQueue<ModuleData *> m_deferredStartList;
+    TaskTemplatePtr m_currModulePrepareTask;
 
     bool m_moduleDemoMode; // To be obsoleted: Eiter run full production or inject a test/demo service factory
 

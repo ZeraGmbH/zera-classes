@@ -167,10 +167,9 @@ VirtualModule *ZeraModules::ModuleManager::createModule(const QString &xmlConfig
         connect(tmpModule, &VirtualModule::addEventSystem, this, &ModuleManager::onModuleEventSystemAdded);
         connect(tmpModule, &VirtualModule::moduleDeactivated, this, &ModuleManager::onStartModuleDelete);
         connect(tmpModule, &VirtualModule::moduleActivated, this, [this](){
-            m_moduleStartLock=false;
+            m_moduleStartLock = false;
             delayedModuleStartNext();
         });
-        m_moduleStartLock = true;
     }
     return tmpModule;
 }
@@ -208,13 +207,24 @@ void ModuleManager::startModule(const QString &uniqueName,
                   moduleEntityId,
                   qPrintable(confFileInfo.fileName()));
             createCommonModuleParam();
-            VirtualModule *tmpModule = createModule(xmlConfigPath,
-                                                    moduleEntityId,
-                                                    moduleNum,
-                                                    uniqueName,
-                                                    tmpFactory);
-            if(tmpModule)
-                doStartModule(tmpModule, uniqueName, xmlConfigPath, moduleEntityId, moduleNum);
+            Q_ASSERT(!m_currModulePrepareTask);
+            m_currModulePrepareTask = tmpFactory->getModulePrepareTask(m_moduleSharedObjects);
+            connect(m_currModulePrepareTask.get(), &TaskTemplate::sigFinish, [=](bool ok) {
+                VirtualModule *tmpModule = nullptr;
+                if(ok)
+                    tmpModule = createModule(xmlConfigPath,
+                                             moduleEntityId,
+                                             moduleNum,
+                                             uniqueName,
+                                             tmpFactory);
+                if(tmpModule)
+                    doStartModule(tmpModule, uniqueName, xmlConfigPath, moduleEntityId, moduleNum);
+                else
+                    qCritical("Error creating module: %s / %i", qPrintable(uniqueName), moduleEntityId);
+                m_currModulePrepareTask = nullptr;
+            });
+            m_moduleStartLock = true;
+            m_currModulePrepareTask->start();
         }
         else if(m_setupFacade->getLicenseSystem()->serialNumberIsInitialized()) {
             if(tmpFactory != nullptr)
