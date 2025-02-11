@@ -72,6 +72,16 @@ private:
     virtual QStringList getModuleFileNames();
     void handleFinalModuleLoaded();
     void createCommonModuleParam();
+    VirtualModule *createModule(const QByteArray &xmlConfigData,
+                                int moduleEntityId,
+                                int moduleNum,
+                                const QString &uniqueName,
+                                AbstractModuleFactory *tmpFactory);
+    void doStartModule(VirtualModule *tmpModule,
+                       const QString &uniqueName,
+                       const QString &xmlConfigPath,
+                       int moduleEntityId,
+                       int moduleNum);
 
     std::shared_ptr<ModuleSharedData> m_moduleSharedObjects;
     ModuleManagerSetupFacade *m_setupFacade;
