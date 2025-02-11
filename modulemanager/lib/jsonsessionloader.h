@@ -12,7 +12,6 @@ public:
 signals:
     void sigLoadModule(QString uniqueModuleName,
                        QString xmlPath,
-                       QByteArray xmlData,
                        int moduleEntityId,
                        int moduleNum);
 public slots:

@@ -47,7 +47,6 @@ public slots:
     void changeSessionFile(const QString &newSessionFile);
     void startModule(const QString &uniqueName,
                      const QString &xmlConfigPath,
-                     const QByteArray &xmlConfigData,
                      int moduleEntityId,
                      int moduleNum);
     void destroyModules();
@@ -72,7 +71,7 @@ private:
     virtual QStringList getModuleFileNames();
     void handleFinalModuleLoaded();
     void createCommonModuleParam();
-    VirtualModule *createModule(const QByteArray &xmlConfigData,
+    VirtualModule *createModule(const QString &xmlConfigPath,
                                 int moduleEntityId,
                                 int moduleNum,
                                 const QString &uniqueName,
