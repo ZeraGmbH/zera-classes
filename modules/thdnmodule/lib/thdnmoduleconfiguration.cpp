@@ -36,8 +36,6 @@ void cThdnModuleConfiguration::setConfiguration(QByteArray xmlString)
     m_ConfigXMLMap["thdnmodconfpar:configuration:measure:movingwindow:time"] = setMovingwindowTime;
     m_ConfigXMLMap["thdnmodconfpar:configuration:measure:thd"] = setTHDType;
 
-    m_ConfigXMLMap["thdnmodconfpar:configuration:measure:values:n"] = setValueCount;
-
     m_ConfigXMLMap["thdnmodconfpar:parameter:interval"] = setMeasureInterval;
 
     if (m_pXMLReader->loadSchema(defaultXSDFile))
@@ -81,24 +79,10 @@ void cThdnModuleConfiguration::configXMLInfo(QString key)
         case setTHDType:
             m_pThdnModulConfigData->m_sTHDType = m_pXMLReader->getValue(key);
             break;
-        case setValueCount:
-            m_pThdnModulConfigData->m_nValueCount = m_pXMLReader->getValue(key).toInt(&ok);
-            // here we generate dynamic hash entries for value channel configuration
-            for (int i = 0; i < m_pThdnModulConfigData->m_nValueCount; i++)
-                m_ConfigXMLMap[QString("thdnmodconfpar:configuration:measure:values:val%1").arg(i+1)] = setValue1+i;
-            break;
         case setMeasureInterval:
             m_pThdnModulConfigData->m_fMeasInterval.m_sKey = key;
             m_pThdnModulConfigData->m_fMeasInterval.m_fValue = m_pXMLReader->getValue(key).toDouble(&ok);
             break;
-        default:
-            if ((cmd >= setValue1) && (cmd < setValue1 + 32))
-            {
-                cmd -= setValue1;
-                // it is command for setting value channel name
-                QString valueChannel = m_pXMLReader->getValue(key);
-                m_pThdnModulConfigData->m_valueChannelList.append(valueChannel); // for configuration of our engine
-            }
         }
         m_bConfigError |= !ok;
     }

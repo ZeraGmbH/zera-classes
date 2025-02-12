@@ -13,13 +13,10 @@ namespace THDNMODULE
 
 enum moduleconfigstate
 {
-    setValueCount,
     setMeasureInterval,
     setMovingwindowBool,
     setMovingwindowTime,
     setTHDType,
-
-    setValue1 = 20
 };
 
 
