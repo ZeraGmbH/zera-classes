@@ -33,8 +33,7 @@ cThdnModuleMeasProgram::cThdnModuleMeasProgram(cThdnModule *module, std::shared_
 {
     m_dspInterface = m_pModule->getServiceInterfaceFactory()->createDspInterfaceThdn(m_pModule->getSharedChannelRangeObserver()->getChannelMNames());
 
-    m_IdentifyState.addTransition(this, &cThdnModuleMeasProgram::activationContinue, &m_pcbserverConnectState);
-    m_pcbserverConnectState.addTransition(this, &cThdnModuleMeasProgram::activationContinue, &m_dspserverConnectState);
+    m_IdentifyState.addTransition(this, &cThdnModuleMeasProgram::activationContinue, &m_dspserverConnectState);
 
     m_claimPGRMemState.addTransition(this, &cThdnModuleMeasProgram::activationContinue, &m_claimUSERMemState);
     m_claimUSERMemState.addTransition(this, &cThdnModuleMeasProgram::activationContinue, &m_var2DSPState);
@@ -44,7 +43,6 @@ cThdnModuleMeasProgram::cThdnModuleMeasProgram(cThdnModule *module, std::shared_
 
     m_activationMachine.addState(&m_resourceManagerConnectState);
     m_activationMachine.addState(&m_IdentifyState);
-    m_activationMachine.addState(&m_pcbserverConnectState);
     m_activationMachine.addState(&m_dspserverConnectState);
     m_activationMachine.addState(&m_claimPGRMemState);
     m_activationMachine.addState(&m_claimUSERMemState);
@@ -57,7 +55,6 @@ cThdnModuleMeasProgram::cThdnModuleMeasProgram(cThdnModule *module, std::shared_
 
     connect(&m_resourceManagerConnectState, &QAbstractState::entered, this, &cThdnModuleMeasProgram::resourceManagerConnect);
     connect(&m_IdentifyState, &QAbstractState::entered, this, &cThdnModuleMeasProgram::sendRMIdent);
-    connect(&m_pcbserverConnectState, &QAbstractState::entered, this, &cThdnModuleMeasProgram::pcbserverConnect);
     connect(&m_dspserverConnectState, &QAbstractState::entered, this, &cThdnModuleMeasProgram::dspserverConnect);
     connect(&m_claimPGRMemState, &QAbstractState::entered, this, &cThdnModuleMeasProgram::claimPGRMem);
     connect(&m_claimUSERMemState, &QAbstractState::entered, this, &cThdnModuleMeasProgram::claimUSERMem);
@@ -391,16 +388,6 @@ void cThdnModuleMeasProgram::sendRMIdent()
     m_MsgNrCmdList[m_rmInterface.rmIdent(QString("ThdnModule%1").arg(m_pModule->getModuleNr()))] = sendrmident;
 }
 
-void cThdnModuleMeasProgram::pcbserverConnect()
-{
-    m_pcbClient = Zera::Proxy::getInstance()->getConnectionSmart(m_pModule->getNetworkConfig()->m_pcbServiceConnectionInfo,
-                                                                 m_pModule->getNetworkConfig()->m_tcpNetworkFactory);
-    m_pcbInterface->setClientSmart(m_pcbClient);
-    connect(m_pcbClient.get(), &Zera::ProxyClient::connected, this, &cBaseMeasProgram::activationContinue);
-    connect(m_pcbInterface.get(), &AbstractServerInterface::serverAnswer, this, &cThdnModuleMeasProgram::catchInterfaceAnswer);
-    Zera::Proxy::getInstance()->startConnectionSmart(m_pcbClient);
-}
-
 void cThdnModuleMeasProgram::dspserverConnect()
 {
     m_dspClient = Zera::Proxy::getInstance()->getConnectionSmart(m_pModule->getNetworkConfig()->m_dspServiceConnectionInfo,
@@ -475,7 +462,6 @@ void cThdnModuleMeasProgram::deactivateDSPdone()
 {
     disconnect(&m_rmInterface, 0, this, 0);
     disconnect(m_dspInterface.get(), 0, this, 0);
-    disconnect(m_pcbInterface.get(), 0, this, 0);
     emit deactivated();
 }
 
