@@ -16,7 +16,6 @@
 #include <doublevalidator.h>
 #include <intvalidator.h>
 #include <dspinterface.h>
-#include <pcbinterface.h>
 #include <math.h>
 #include <QString>
 #include <QStateMachine>
