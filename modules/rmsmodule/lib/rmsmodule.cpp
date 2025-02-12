@@ -1,6 +1,5 @@
 #include "rmsmodule.h"
 #include "rmsmoduleconfiguration.h"
-#include "cro_systemobserverfetchtask.h"
 
 namespace RMSMODULE
 {
@@ -26,11 +25,6 @@ void cRmsModule::setupModule()
 
     for (int i = 0; i < m_ModuleActivistList.count(); i++)
         m_ModuleActivistList.at(i)->generateVeinInterface();
-}
-
-TaskTemplatePtr cRmsModule::getModuleSetUpTask()
-{
-    return ChannelRangeObserver::SystemObserverFetchTask::create(getSharedChannelRangeObserver());
 }
 
 void cRmsModule::startMeas()

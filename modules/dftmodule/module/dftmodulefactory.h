@@ -14,7 +14,7 @@ class DftModuleFactory : public AbstractModuleFactory
     Q_INTERFACES(AbstractModuleFactory)
   
 public:
-    DftModuleFactory(){}
+    TaskTemplatePtr getModulePrepareTask(std::shared_ptr<ModuleSharedData> moduleSharedData) override;
     ZeraModules::VirtualModule *createModule(ModuleFactoryParam moduleParam) override;
     void destroyModule(ZeraModules::VirtualModule *module) override;
     QString getFactoryName() const override;

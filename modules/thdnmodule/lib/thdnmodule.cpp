@@ -1,6 +1,5 @@
 #include "thdnmodule.h"
 #include "thdnmoduleconfiguration.h"
-#include "cro_systemobserverfetchtask.h"
 
 namespace THDNMODULE
 {
@@ -26,11 +25,6 @@ void cThdnModule::setupModule()
 
     for (int i = 0; i < m_ModuleActivistList.count(); i++)
         m_ModuleActivistList.at(i)->generateVeinInterface();
-}
-
-TaskTemplatePtr cThdnModule::getModuleSetUpTask()
-{
-    return ChannelRangeObserver::SystemObserverFetchTask::create(getSharedChannelRangeObserver());
 }
 
 void cThdnModule::startMeas()

@@ -1,8 +1,14 @@
 #include "power1modulefactory.h"
 #include "power1module.h"
+#include "cro_systemobserverfetchtask.h"
 
 namespace POWER1MODULE
 {
+
+TaskTemplatePtr Power1ModuleFactory::getModulePrepareTask(std::shared_ptr<ModuleSharedData> moduleSharedData)
+{
+    return ChannelRangeObserver::SystemObserverFetchTask::create(moduleSharedData->m_channelRangeObserver);
+}
 
 ZeraModules::VirtualModule* Power1ModuleFactory::createModule(ModuleFactoryParam moduleParam)
 {

@@ -1,8 +1,14 @@
 #include "fftmodulefactory.h"
 #include "fftmodule.h"
+#include "cro_systemobserverfetchtask.h"
 
 namespace FFTMODULE
 {
+
+TaskTemplatePtr FftModuleFactory::getModulePrepareTask(std::shared_ptr<ModuleSharedData> moduleSharedData)
+{
+    return ChannelRangeObserver::SystemObserverFetchTask::create(moduleSharedData->m_channelRangeObserver);
+}
 
 ZeraModules::VirtualModule* FftModuleFactory::createModule(ModuleFactoryParam moduleParam)
 {

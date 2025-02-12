@@ -1,7 +1,6 @@
 #include "fftmodule.h"
 #include "fftmoduleconfiguration.h"
 #include "fftmodulemeasprogram.h"
-#include "cro_systemobserverfetchtask.h"
 
 namespace FFTMODULE
 {
@@ -27,11 +26,6 @@ void cFftModule::setupModule()
 
     for (int i = 0; i < m_ModuleActivistList.count(); i++)
         m_ModuleActivistList.at(i)->generateVeinInterface();
-}
-
-TaskTemplatePtr cFftModule::getModuleSetUpTask()
-{
-    return ChannelRangeObserver::SystemObserverFetchTask::create(getSharedChannelRangeObserver());
 }
 
 void cFftModule::startMeas()

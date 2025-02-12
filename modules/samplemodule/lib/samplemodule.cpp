@@ -1,6 +1,5 @@
 #include "samplemodule.h"
 #include "samplemoduleconfiguration.h"
-#include "cro_systemobserverfetchtask.h"
 
 namespace SAMPLEMODULE
 {
@@ -59,11 +58,6 @@ void cSampleModule::setupModule()
 
     for (int i = 0; i < m_ModuleActivistList.count(); i++)
         m_ModuleActivistList.at(i)->generateVeinInterface();
-}
-
-TaskTemplatePtr cSampleModule::getModuleSetUpTask()
-{
-    return ChannelRangeObserver::SystemObserverFetchTask::create(getSharedChannelRangeObserver());
 }
 
 void cSampleModule::startMeas()

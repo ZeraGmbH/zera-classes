@@ -1,7 +1,6 @@
 #include "oscimodule.h"
 #include "oscimoduleconfiguration.h"
 #include "oscimodulemeasprogram.h"
-#include "cro_systemobserverfetchtask.h"
 
 namespace OSCIMODULE
 {
@@ -27,11 +26,6 @@ void cOsciModule::setupModule()
 
     for (int i = 0; i < m_ModuleActivistList.count(); i++)
         m_ModuleActivistList.at(i)->generateVeinInterface();
-}
-
-TaskTemplatePtr cOsciModule::getModuleSetUpTask()
-{
-    return ChannelRangeObserver::SystemObserverFetchTask::create(getSharedChannelRangeObserver());
 }
 
 void cOsciModule::startMeas()

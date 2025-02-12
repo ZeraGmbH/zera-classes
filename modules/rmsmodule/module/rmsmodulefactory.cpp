@@ -1,10 +1,14 @@
-#include <QDebug>
-
 #include "rmsmodulefactory.h"
 #include "rmsmodule.h"
+#include "cro_systemobserverfetchtask.h"
 
 namespace RMSMODULE
 {
+
+TaskTemplatePtr RmsModuleFactory::getModulePrepareTask(std::shared_ptr<ModuleSharedData> moduleSharedData)
+{
+    return ChannelRangeObserver::SystemObserverFetchTask::create(moduleSharedData->m_channelRangeObserver);
+}
 
 ZeraModules::VirtualModule* RmsModuleFactory::createModule(ModuleFactoryParam moduleParam)
 {

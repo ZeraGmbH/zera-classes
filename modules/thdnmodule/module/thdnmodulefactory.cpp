@@ -1,8 +1,14 @@
 #include "thdnmodulefactory.h"
 #include "thdnmodule.h"
+#include "cro_systemobserverfetchtask.h"
 
 namespace THDNMODULE
 {
+
+TaskTemplatePtr ThdnModuleFactory::getModulePrepareTask(std::shared_ptr<ModuleSharedData> moduleSharedData)
+{
+    return ChannelRangeObserver::SystemObserverFetchTask::create(moduleSharedData->m_channelRangeObserver);
+}
 
 ZeraModules::VirtualModule* ThdnModuleFactory::createModule(ModuleFactoryParam moduleParam)
 {

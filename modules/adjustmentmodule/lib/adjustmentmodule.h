@@ -25,7 +25,6 @@ public:
 
 private:
     void setupModule() override; // after xml configuration we can setup and export our module
-    TaskTemplatePtr getModuleSetUpTask() override;
     void startMeas() override; // we make the measuring program start here
     void stopMeas() override;
 

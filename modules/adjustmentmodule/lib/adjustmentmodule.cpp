@@ -1,7 +1,6 @@
 #include "adjustmentmodule.h"
 #include "adjustmentmoduleconfiguration.h"
 #include "adjustmentmodulemeasprogram.h"
-#include "cro_systemobserverfetchtask.h"
 
 cAdjustmentModule::cAdjustmentModule(ModuleFactoryParam moduleParam) :
     cBaseMeasModule(moduleParam, std::shared_ptr<BaseModuleConfiguration>(new cAdjustmentModuleConfiguration()))
@@ -25,11 +24,6 @@ void cAdjustmentModule::setupModule()
 
     for (int i = 0; i < m_ModuleActivistList.count(); i++)
         m_ModuleActivistList.at(i)->generateVeinInterface();
-}
-
-TaskTemplatePtr cAdjustmentModule::getModuleSetUpTask()
-{
-    return ChannelRangeObserver::SystemObserverFetchTask::create(getSharedChannelRangeObserver());
 }
 
 void cAdjustmentModule::startMeas()
