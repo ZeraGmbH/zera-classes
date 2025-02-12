@@ -90,7 +90,6 @@ protected slots:
     void deactivationDone();
     void deactivationFinished();
 private:
-    virtual TaskTemplatePtr getModuleSetUpTask(); // Default implementation noop / TODO add activist tasks
     void startSetupTask();
 
     const ModuleFactoryParam m_moduleParam;
