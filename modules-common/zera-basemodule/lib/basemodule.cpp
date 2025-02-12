@@ -58,7 +58,6 @@ BaseModule::~BaseModule()
 void BaseModule::startSetupTask()
 {
     TaskContainerInterfacePtr startTasks = TaskContainerSequence::create();
-    startTasks->addSub(getModuleSetUpTask());
     startTasks->addSub(TaskLambdaRunner::create([this]() {
             setupModule();
             return true;
@@ -213,13 +212,6 @@ void BaseModule::deactivationDone()
 void BaseModule::deactivationFinished()
 {
     emit deactivationReady();
-}
-
-TaskTemplatePtr BaseModule::getModuleSetUpTask()
-{
-    return TaskLambdaRunner::create([]() {
-        return true;
-    });
 }
 
 void BaseModule::exportMetaData()
