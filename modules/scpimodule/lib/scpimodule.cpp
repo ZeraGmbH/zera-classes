@@ -7,7 +7,7 @@ namespace SCPIMODULE
 {
 
 cSCPIModule::cSCPIModule(ModuleFactoryParam moduleParam) :
-    BaseModule(moduleParam, std::shared_ptr<BaseModuleConfiguration>(new cSCPIModuleConfiguration())),
+    BaseModule(moduleParam, std::make_shared<cSCPIModuleConfiguration>()),
     m_pSCPIEventSystem(new SCPIEventSystem(this)),
     m_pModuleValidator(new VfEventSytemModuleParam(moduleParam.m_entityId, moduleParam.m_storagesystem))
 {

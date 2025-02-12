@@ -6,7 +6,7 @@ namespace DFTMODULE
 {
 
 cDftModule::cDftModule(ModuleFactoryParam moduleParam) :
-    cBaseMeasModule(moduleParam, std::shared_ptr<BaseModuleConfiguration>(new cDftModuleConfiguration()))
+    cBaseMeasModule(moduleParam, std::make_shared<cDftModuleConfiguration>())
 {
     m_sModuleName = QString("%1%2").arg(BaseModuleName).arg(moduleParam.m_moduleNum);
     m_sModuleDescription = QString("This module measures configured order dft values for configured channels");

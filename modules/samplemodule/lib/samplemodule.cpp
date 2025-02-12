@@ -5,7 +5,7 @@ namespace SAMPLEMODULE
 {
 
 cSampleModule::cSampleModule(ModuleFactoryParam moduleParam) :
-    cBaseMeasModule(moduleParam, std::shared_ptr<BaseModuleConfiguration>(new cSampleModuleConfiguration()))
+    cBaseMeasModule(moduleParam, std::make_shared<cSampleModuleConfiguration>())
 {
     m_sModuleName = QString("%1%2").arg(BaseModuleName).arg(moduleParam.m_moduleNum);
     m_sModuleDescription = QString("This module is responsible for pll range setting\n, pll channel selection and automatic");

@@ -6,7 +6,7 @@ namespace FFTMODULE
 {
 
 cFftModule::cFftModule(ModuleFactoryParam moduleParam) :
-    cBaseMeasModule(moduleParam, std::shared_ptr<BaseModuleConfiguration>(new cFftModuleConfiguration()))
+    cBaseMeasModule(moduleParam, std::make_unique<cFftModuleConfiguration>())
 {
     m_sModuleName = QString("%1%2").arg(BaseModuleName).arg(moduleParam.m_moduleNum);
     m_sModuleDescription = QString("This module measures configured number of fft values for configured channels");

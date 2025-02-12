@@ -6,7 +6,7 @@ namespace BURDEN1MODULE
 {
 
 cBurden1Module::cBurden1Module(ModuleFactoryParam moduleParam) :
-    cBaseMeasModule(moduleParam, std::shared_ptr<BaseModuleConfiguration>(new cBurden1ModuleConfiguration()))
+    cBaseMeasModule(moduleParam, std::make_shared<cBurden1ModuleConfiguration>())
 {
     m_sModuleName = QString("%1%2").arg(BaseModuleName).arg(moduleParam.m_moduleNum);
     m_sModuleDescription = QString("This module measures configured number burden and powerfactor from configured input dft values");

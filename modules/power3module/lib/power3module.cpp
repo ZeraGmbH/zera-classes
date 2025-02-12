@@ -5,7 +5,7 @@ namespace POWER3MODULE
 {
 
 cPower3Module::cPower3Module(ModuleFactoryParam moduleParam) :
-    cBaseMeasModule(moduleParam, std::shared_ptr<BaseModuleConfiguration>(new cPower3ModuleConfiguration()))
+    cBaseMeasModule(moduleParam, std::make_shared<cPower3ModuleConfiguration>())
 {
     m_sModuleName = QString("%1%2").arg(BaseModuleName).arg(moduleParam.m_moduleNum);
     m_sModuleDescription = QString("This module measures configured number of harmonic power values from configured input values");
