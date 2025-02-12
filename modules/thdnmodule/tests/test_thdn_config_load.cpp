@@ -7,7 +7,7 @@ QTEST_MAIN(test_thdn_config_load)
 
 void test_thdn_config_load::fileFound()
 {
-    QFile tmpXmlConfigFile(QStringLiteral(CONFIG_SOURCES_THDNMODULE) + "/" + "com5003-thdnmodule.xml");
+    QFile tmpXmlConfigFile(QStringLiteral(CONFIG_SOURCES_THDNMODULE) + "/" + "common-thdnmodule.xml");
     QVERIFY(tmpXmlConfigFile.exists());
 }
 

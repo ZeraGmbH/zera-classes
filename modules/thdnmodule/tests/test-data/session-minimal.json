@@ -2,7 +2,7 @@
     "modules" : [
         {
             "name" : "thdnmodule",
-            "configFile" : "mt310s2-thdnmodule.xml",
+            "configFile" : "common-thdnmodule.xml",
             "id": 1110
         }
     ]
