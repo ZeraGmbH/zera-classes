@@ -31,7 +31,7 @@ cThdnModuleMeasProgram::cThdnModuleMeasProgram(cThdnModule *module, std::shared_
     cBaseDspMeasProgram(pConfiguration, module->getVeinModuleName()),
     m_pModule(module)
 {
-    m_dspInterface = m_pModule->getServiceInterfaceFactory()->createDspInterfaceThdn(getConfData()->m_valueChannelList);
+    m_dspInterface = m_pModule->getServiceInterfaceFactory()->createDspInterfaceThdn(m_pModule->getSharedChannelRangeObserver()->getChannelMNames());
 
     m_IdentifyState.addTransition(this, &cThdnModuleMeasProgram::activationContinue, &m_pcbserverConnectState);
     m_pcbserverConnectState.addTransition(this, &cThdnModuleMeasProgram::activationContinue, &m_dspserverConnectState);
@@ -118,15 +118,9 @@ void cThdnModuleMeasProgram::stop()
 
 void cThdnModuleMeasProgram::generateVeinInterface()
 {
-    QString key;
-
-    VfModuleActvalue *pActvalue;
-    int n;
-    n = getConfData()->m_valueChannelList.count();
-
-    for (int i = 0; i < n; i++)
-    {
-        pActvalue = new VfModuleActvalue(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
+    int n = m_pModule->getSharedChannelRangeObserver()->getChannelMNames().count();
+    for (int i = 0; i < n; i++) {
+        VfModuleActvalue *pActvalue = new VfModuleActvalue(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
                                             QString("ACT_THD%1%2").arg(getConfData()->m_sTHDType).arg(i+1),
                                             QString("THD%1 actual value").arg(getConfData()->m_sTHDType.toLower()));
         m_veinActValueList.append(pActvalue); // we add the component for our measurement
@@ -136,6 +130,7 @@ void cThdnModuleMeasProgram::generateVeinInterface()
     m_pThdnCountInfo = new VfModuleMetaData(QString("THD%1Count").arg(getConfData()->m_sTHDType), QVariant(n));
     m_pModule->veinModuleMetaDataList.append(m_pThdnCountInfo);
 
+    QString key;
     m_pIntegrationTimeParameter = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
                                                            key = QString("PAR_Interval"),
                                                            QString("Integration time"),
@@ -210,7 +205,7 @@ void cThdnModuleMeasProgram::setDspCmdList()
 
     // we compute or copy our wanted actual values
     for (int i = 0; i < m_veinActValueList.count(); i++) {
-        QString channelMName = getConfData()->m_valueChannelList[i];
+        QString channelMName = m_pModule->getSharedChannelRangeObserver()->getChannelMNames()[i];
         int dspChannel = observer->getChannel(channelMName)->getDspChannel();
         m_dspInterface->addCycListItem(QString("COPYDATA(CH%1,0,MEASSIGNAL)").arg(dspChannel));
         m_dspInterface->addCycListItem(QString("THDN(MEASSIGNAL,VALXTHDN+%1)").arg(i));
@@ -349,11 +344,11 @@ cThdnModuleConfigData *cThdnModuleMeasProgram::getConfData()
 void cThdnModuleMeasProgram::setActualValuesNames()
 {
     ChannelRangeObserver::SystemObserverPtr observer = m_pModule->getSharedChannelRangeObserver();
-    const QStringList &channelList = getConfData()->m_valueChannelList;
-    for(int i = 0; i < channelList.count(); i++) {
-        const QString &channelMNamesEntry = getConfData()->m_valueChannelList.at(i);
+    const QStringList channelMNames = m_pModule->getSharedChannelRangeObserver()->getChannelMNames();
+    for (int i=0; i<channelMNames.count(); i++) {
+        const QString channelMName = channelMNames[i];
         ServiceChannelNameHelper::TChannelAliasUnit aliasUnit =
-            ServiceChannelNameHelper::getChannelAndUnit(channelMNamesEntry, observer);
+            ServiceChannelNameHelper::getChannelAndUnit(channelMName, observer);
         m_veinActValueList.at(i)->setChannelName(aliasUnit.m_channelAlias);
         m_veinActValueList.at(i)->setUnit("%"); // !!!
     }
@@ -361,11 +356,8 @@ void cThdnModuleMeasProgram::setActualValuesNames()
 
 void cThdnModuleMeasProgram::setSCPIMeasInfo()
 {
-    cSCPIInfo* pSCPIInfo;
-
-    for (int i = 0; i < getConfData()->m_valueChannelList.count(); i++)
-    {
-        pSCPIInfo = new cSCPIInfo("MEASURE", m_veinActValueList.at(i)->getChannelName(), "8", m_veinActValueList.at(i)->getName(), "0", QString("%"));
+    for (int i = 0; i < m_veinActValueList.count(); i++) {
+        cSCPIInfo* pSCPIInfo = new cSCPIInfo("MEASURE", m_veinActValueList.at(i)->getChannelName(), "8", m_veinActValueList.at(i)->getName(), "0", QString("%"));
         m_veinActValueList.at(i)->setSCPIInfo(pSCPIInfo);
     }
 }
@@ -382,18 +374,6 @@ void cThdnModuleMeasProgram::setInterfaceActualValues(QVector<float> *actualValu
 void cThdnModuleMeasProgram::resourceManagerConnect()
 {
     // as this is our entry point when activating the module, we do some initialization first
-    m_measChannelInfoHash.clear(); // we build up a new channel info hash
-    cMeasChannelInfo mi;
-    for (int i = 0; i < getConfData()->m_valueChannelList.count(); i++)
-    {
-        QStringList sl = getConfData()->m_valueChannelList.at(i).split('-');
-        for (int j = 0; j < sl.count(); j++)
-        {
-            QString s = sl.at(j);
-            if (!m_measChannelInfoHash.contains(s))
-                m_measChannelInfoHash[s] = mi;
-        }
-    }
 
     // we have to instantiate a working resource manager interface
     // so first we try to get a connection to resource manager over proxy

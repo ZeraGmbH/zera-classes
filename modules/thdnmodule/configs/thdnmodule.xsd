@@ -34,32 +34,6 @@
 
     <xs:complexType name="measuretype">
         <xs:sequence>
-            <xs:element name="values">
-                <xs:complexType>
-                    <xs:sequence>
-                    <xs:element name="n" minOccurs="1" maxOccurs="1">
-                        <xs:simpleType>
-                            <xs:restriction base="xs:integer">
-                                <xs:minInclusive value="1"/>
-                                <xs:maxInclusive value="12"/>
-                            </xs:restriction>
-                        </xs:simpleType>
-                    </xs:element>
-                    <xs:element name="val1" type="xs:string" minOccurs="1" maxOccurs="1"/>
-                    <xs:element name="val2" type="xs:string" minOccurs="0" maxOccurs="1"/>
-                    <xs:element name="val3" type="xs:string" minOccurs="0" maxOccurs="1"/>
-                    <xs:element name="val4" type="xs:string" minOccurs="0" maxOccurs="1"/>
-                    <xs:element name="val5" type="xs:string" minOccurs="0" maxOccurs="1"/>
-                    <xs:element name="val6" type="xs:string" minOccurs="0" maxOccurs="1"/>
-                    <xs:element name="val7" type="xs:string" minOccurs="0" maxOccurs="1"/>
-                    <xs:element name="val8" type="xs:string" minOccurs="0" maxOccurs="1"/>
-                    <xs:element name="val9" type="xs:string" minOccurs="0" maxOccurs="1"/>
-                    <xs:element name="val10" type="xs:string" minOccurs="0" maxOccurs="1"/>
-                    <xs:element name="val11" type="xs:string" minOccurs="0" maxOccurs="1"/>
-                    <xs:element name="val12" type="xs:string" minOccurs="0" maxOccurs="1"/>
-                    </xs:sequence>
-                </xs:complexType>
-            </xs:element>
             <xs:element name="movingwindow" type="movingwindowtype"/>
             <xs:element name="thd" type="thdtype"/>
         </xs:sequence>
