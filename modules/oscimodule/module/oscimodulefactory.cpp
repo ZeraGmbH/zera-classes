@@ -1,8 +1,14 @@
 #include "oscimodulefactory.h"
 #include "oscimodule.h"
+#include "cro_systemobserverfetchtask.h"
 
 namespace OSCIMODULE
 {
+
+TaskTemplatePtr OsciModuleFactory::getModulePrepareTask(std::shared_ptr<ModuleSharedData> moduleSharedData)
+{
+    return ChannelRangeObserver::SystemObserverFetchTask::create(moduleSharedData->m_channelRangeObserver);
+}
 
 ZeraModules::VirtualModule* OsciModuleFactory::createModule(ModuleFactoryParam moduleParam)
 {

@@ -14,7 +14,6 @@ class Spm1ModuleFactory : public AbstractModuleFactory
     Q_INTERFACES(AbstractModuleFactory)
   
 public:
-    Spm1ModuleFactory(){}
     ZeraModules::VirtualModule *createModule(ModuleFactoryParam moduleParam) override;
     void destroyModule(ZeraModules::VirtualModule *module) override;
     QString getFactoryName() const override;

@@ -1,5 +1,11 @@
 #include "adjustmentmodulefactory.h"
 #include "adjustmentmodule.h"
+#include "cro_systemobserverfetchtask.h"
+
+TaskTemplatePtr AdjustmentModuleFactory::getModulePrepareTask(std::shared_ptr<ModuleSharedData> moduleSharedData)
+{
+    return ChannelRangeObserver::SystemObserverFetchTask::create(moduleSharedData->m_channelRangeObserver);
+}
 
 ZeraModules::VirtualModule* AdjustmentModuleFactory::createModule(ModuleFactoryParam moduleParam)
 {

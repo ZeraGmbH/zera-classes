@@ -1,7 +1,6 @@
 #include "dftmodule.h"
 #include "dftmoduleconfiguration.h"
 #include "dftmodulemeasprogram.h"
-#include "cro_systemobserverfetchtask.h"
 
 namespace DFTMODULE
 {
@@ -27,11 +26,6 @@ void cDftModule::setupModule()
 
     for (int i = 0; i < m_ModuleActivistList.count(); i++)
         m_ModuleActivistList.at(i)->generateVeinInterface();
-}
-
-TaskTemplatePtr cDftModule::getModuleSetUpTask()
-{
-    return ChannelRangeObserver::SystemObserverFetchTask::create(getSharedChannelRangeObserver());
 }
 
 void cDftModule::startMeas()

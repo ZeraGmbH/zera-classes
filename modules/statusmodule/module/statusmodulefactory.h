@@ -16,7 +16,6 @@ class StatusModuleFactory : public AbstractModuleFactory
     Q_INTERFACES(AbstractModuleFactory)
   
 public:
-    StatusModuleFactory(){}
     ZeraModules::VirtualModule *createModule(ModuleFactoryParam moduleParam) override;
     void destroyModule(ZeraModules::VirtualModule *module) override;
     QString getFactoryName() const override;

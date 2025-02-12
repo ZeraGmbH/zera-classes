@@ -1,8 +1,14 @@
 #include "referencemodulefactory.h"
 #include "referencemodule.h"
+#include "cro_systemobserverfetchtask.h"
 
 namespace REFERENCEMODULE
 {
+
+TaskTemplatePtr ReferenceModuleFactory::getModulePrepareTask(std::shared_ptr<ModuleSharedData> moduleSharedData)
+{
+    return ChannelRangeObserver::SystemObserverFetchTask::create(moduleSharedData->m_channelRangeObserver);
+}
 
 ZeraModules::VirtualModule* ReferenceModuleFactory::createModule(ModuleFactoryParam moduleParam)
 {

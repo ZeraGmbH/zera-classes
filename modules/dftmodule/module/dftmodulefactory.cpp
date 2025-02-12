@@ -1,8 +1,14 @@
 #include "dftmodulefactory.h"
 #include "dftmodule.h"
+#include "cro_systemobserverfetchtask.h"
 
 namespace DFTMODULE
 {
+
+TaskTemplatePtr DftModuleFactory::getModulePrepareTask(std::shared_ptr<ModuleSharedData> moduleSharedData)
+{
+    return ChannelRangeObserver::SystemObserverFetchTask::create(moduleSharedData->m_channelRangeObserver);
+}
 
 ZeraModules::VirtualModule* DftModuleFactory::createModule(ModuleFactoryParam moduleParam)
 {

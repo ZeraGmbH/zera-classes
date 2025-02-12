@@ -1,7 +1,6 @@
 #include "power2module.h"
 #include "power2moduleconfiguration.h"
 #include "power2modulemeasprogram.h"
-#include "cro_systemobserverfetchtask.h"
 
 namespace POWER2MODULE
 {
@@ -28,11 +27,6 @@ void cPower2Module::setupModule()
 
     for (int i = 0; i < m_ModuleActivistList.count(); i++)
         m_ModuleActivistList.at(i)->generateVeinInterface();
-}
-
-TaskTemplatePtr cPower2Module::getModuleSetUpTask()
-{
-    return ChannelRangeObserver::SystemObserverFetchTask::create(getSharedChannelRangeObserver());
 }
 
 void cPower2Module::startMeas()

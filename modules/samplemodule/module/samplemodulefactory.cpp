@@ -1,8 +1,14 @@
 #include "samplemodulefactory.h"
 #include "samplemodule.h"
+#include "cro_systemobserverfetchtask.h"
 
 namespace SAMPLEMODULE
 {
+
+TaskTemplatePtr SampleModuleFactory::getModulePrepareTask(std::shared_ptr<ModuleSharedData> moduleSharedData)
+{
+    return ChannelRangeObserver::SystemObserverFetchTask::create(moduleSharedData->m_channelRangeObserver);
+}
 
 ZeraModules::VirtualModule* SampleModuleFactory::createModule(ModuleFactoryParam moduleParam)
 {

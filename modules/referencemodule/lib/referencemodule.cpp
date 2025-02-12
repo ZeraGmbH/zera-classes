@@ -1,6 +1,5 @@
 #include "referencemodule.h"
 #include "referencemoduleconfiguration.h"
-#include "cro_systemobserverfetchtask.h"
 
 namespace REFERENCEMODULE
 {
@@ -100,11 +99,6 @@ void cReferenceModule::setupModule()
 
     for (int i = 0; i < m_ModuleActivistList.count(); i++)
         m_ModuleActivistList.at(i)->generateVeinInterface();
-}
-
-TaskTemplatePtr cReferenceModule::getModuleSetUpTask()
-{
-    return ChannelRangeObserver::SystemObserverFetchTask::create(getSharedChannelRangeObserver());
 }
 
 void cReferenceModule::startMeas()

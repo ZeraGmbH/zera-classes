@@ -14,7 +14,6 @@ class SCPIModuleFactory : public AbstractModuleFactory
     Q_INTERFACES(AbstractModuleFactory)
   
 public:
-    SCPIModuleFactory(){}
     ZeraModules::VirtualModule *createModule(ModuleFactoryParam moduleParam) override;
     void destroyModule(ZeraModules::VirtualModule *module) override;
     QString getFactoryName() const override;

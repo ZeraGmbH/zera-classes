@@ -2,7 +2,6 @@
 #include "rangemoduleconfiguration.h"
 #include "rangemoduleconfigdata.h"
 #include "adjustment.h"
-#include "cro_systemobserverfetchtask.h"
 
 namespace RANGEMODULE
 {
@@ -87,11 +86,6 @@ void cRangeModule::setupModule()
     for (int i = 0; i < m_ModuleActivistList.count(); i++)
         m_ModuleActivistList.at(i)->generateVeinInterface();
 
-}
-
-TaskTemplatePtr cRangeModule::getModuleSetUpTask()
-{
-    return ChannelRangeObserver::SystemObserverFetchTask::create(getSharedChannelRangeObserver());
 }
 
 void cRangeModule::startMeas()

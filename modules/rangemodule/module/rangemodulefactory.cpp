@@ -1,8 +1,14 @@
 #include "rangemodulefactory.h"
 #include "rangemodule.h"
+#include "cro_systemobserverfetchtask.h"
 
 namespace RANGEMODULE
 {
+
+TaskTemplatePtr RangeModuleFactory::getModulePrepareTask(std::shared_ptr<ModuleSharedData> moduleSharedData)
+{
+    return ChannelRangeObserver::SystemObserverFetchTask::create(moduleSharedData->m_channelRangeObserver);
+}
 
 ZeraModules::VirtualModule* RangeModuleFactory::createModule(ModuleFactoryParam moduleParam)
 {
