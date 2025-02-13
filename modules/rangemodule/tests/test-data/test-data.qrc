@@ -13,6 +13,7 @@
         <file>veinDumps/dumpInitialClamp.json</file>
         <file>mt310s2-rangemodule-test.xml</file>
         <file>session-minimal.json</file>
+        <file>session-range-scpi.json</file>
         <file>session-range-test.json</file>
     </qresource>
 </RCC>

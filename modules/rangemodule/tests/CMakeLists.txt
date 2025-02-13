@@ -20,6 +20,7 @@ SETUP_QTESTS_MODULE(
     test_range_config_load
     test_range_module_regression
     test_range_automatic
+    test_range_scpi
 )
 
 target_sources(test_range_config_load
@@ -34,4 +35,16 @@ target_sources(test_range_module_regression
 target_sources(test_range_automatic
   PRIVATE
     test-data/test-data.qrc
+)
+
+target_sources(test_range_scpi
+  PRIVATE
+    test-data/test-data.qrc
+    ${XML_SCHEMA_RESOURCE_SCPIMODULE}
+)
+
+target_link_libraries(test_range_scpi
+  PRIVATE
+    scpimodule-static
+    scpimodule-testlib
 )
