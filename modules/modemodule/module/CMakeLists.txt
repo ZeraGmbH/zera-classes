@@ -1,6 +1,6 @@
 add_library(modemodule MODULE
-    ${CMAKE_CURRENT_SOURCE_DIR}/modemodulefactory.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/modemodulefactory.h
+    modemodulefactory.cpp
+    modemodulefactory.h
     )
 
 target_link_libraries(modemodule
