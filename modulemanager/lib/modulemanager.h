@@ -28,6 +28,7 @@ class ModuleManager : public QObject
 {
     Q_OBJECT
 public:
+    static QString getInstalledSessionPath();
     explicit ModuleManager(ModuleManagerSetupFacade *setupFacade,
                            AbstractFactoryServiceInterfacesPtr serviceInterfaceFactory,
                            VeinTcp::AbstractTcpNetworkFactoryPtr tcpNetworkFactory,
