@@ -25,3 +25,13 @@ target_link_libraries(rangemodule-static
     Zera::zera-log-statistics
 )
 
+export(TARGETS rangemodule-static NAMESPACE Zera:: FILE ZeraClassesTargets.cmake)
+install(TARGETS rangemodule-static
+    EXPORT ZeraClassesExport
+    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+    )
+
+install(
+    FILES ${HEADER}
+    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/rangemodule-static
+    )

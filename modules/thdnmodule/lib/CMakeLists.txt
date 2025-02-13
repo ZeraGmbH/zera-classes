@@ -26,3 +26,13 @@ target_link_libraries(thdnmodule-static
     "-Wl,--no-undefined"
     )
 
+export(TARGETS thdnmodule-static NAMESPACE Zera:: FILE ZeraClassesTargets.cmake)
+install(TARGETS thdnmodule-static
+    EXPORT ZeraClassesExport
+    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+    )
+
+install(
+    FILES ${HEADER}
+    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/thdnmodule-static
+    )

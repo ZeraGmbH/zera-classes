@@ -26,3 +26,14 @@ target_link_libraries(rmsmodule-demolib
 
 set_target_properties(rmsmodule-demolib PROPERTIES VERSION ${PROJECT_VERSION})
 set_target_properties(rmsmodule-demolib PROPERTIES SOVERSION ${PROJECT_VERSION_MAJOR})
+
+export(TARGETS rmsmodule-demolib NAMESPACE Zera:: FILE ZeraClassesTargets.cmake)
+install(TARGETS rmsmodule-demolib
+    EXPORT ZeraClassesExport
+    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+    )
+
+install(
+    FILES ${HEADER}
+    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/rmsmodule-demolib
+    )

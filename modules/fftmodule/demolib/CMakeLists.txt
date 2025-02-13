@@ -26,3 +26,14 @@ target_link_libraries(fftmodule-demolib
 
 set_target_properties(fftmodule-demolib PROPERTIES VERSION ${PROJECT_VERSION})
 set_target_properties(fftmodule-demolib PROPERTIES SOVERSION ${PROJECT_VERSION_MAJOR})
+
+export(TARGETS fftmodule-demolib NAMESPACE Zera:: FILE ZeraClassesTargets.cmake)
+install(TARGETS fftmodule-demolib
+    EXPORT ZeraClassesExport
+    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+    )
+
+install(
+    FILES ${HEADER}
+    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/fftmodule-demolib
+    )

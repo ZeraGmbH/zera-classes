@@ -14,6 +14,7 @@ add_library(zera-modulemanager-lib STATIC
 target_include_directories(zera-modulemanager-lib
     PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
+    $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/zera-modulemanager-lib>
     )
 
 target_link_libraries(zera-modulemanager-lib
@@ -35,4 +36,15 @@ target_link_libraries(zera-modulemanager-lib
     zera-json-params
     module-service-interfaces
     module-service-interfaces-demolib
+    )
+
+export(TARGETS zera-modulemanager-lib NAMESPACE Zera:: FILE ZeraClassesTargets.cmake)
+install(TARGETS zera-modulemanager-lib
+    EXPORT ZeraClassesExport
+    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+    )
+
+install(
+    FILES ${HEADER}
+    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/zera-modulemanager-lib
     )

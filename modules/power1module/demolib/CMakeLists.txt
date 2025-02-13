@@ -26,3 +26,14 @@ target_link_libraries(power1module-demolib
 
 set_target_properties(power1module-demolib PROPERTIES VERSION ${PROJECT_VERSION})
 set_target_properties(power1module-demolib PROPERTIES SOVERSION ${PROJECT_VERSION_MAJOR})
+
+export(TARGETS power1module-demolib NAMESPACE Zera:: FILE ZeraClassesTargets.cmake)
+install(TARGETS power1module-demolib
+    EXPORT ZeraClassesExport
+    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+    )
+
+install(
+    FILES ${HEADER}
+    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/power1module-demolib
+    )

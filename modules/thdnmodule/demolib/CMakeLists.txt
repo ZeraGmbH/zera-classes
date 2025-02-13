@@ -26,3 +26,14 @@ target_link_libraries(thdnmodule-demolib
 
 set_target_properties(thdnmodule-demolib PROPERTIES VERSION ${PROJECT_VERSION})
 set_target_properties(thdnmodule-demolib PROPERTIES SOVERSION ${PROJECT_VERSION_MAJOR})
+
+export(TARGETS thdnmodule-demolib NAMESPACE Zera:: FILE ZeraClassesTargets.cmake)
+install(TARGETS thdnmodule-demolib
+    EXPORT ZeraClassesExport
+    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+    )
+
+install(
+    FILES ${HEADER}
+    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/thdnmodule-demolib
+    )

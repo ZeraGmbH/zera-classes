@@ -22,3 +22,13 @@ target_link_libraries(power2module-static
     Zera::zera-timers
 )
 
+export(TARGETS power2module-static NAMESPACE Zera:: FILE ZeraClassesTargets.cmake)
+install(TARGETS power2module-static
+    EXPORT ZeraClassesExport
+    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+    )
+
+install(
+    FILES ${HEADER}
+    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/power2module-static
+    )

@@ -26,3 +26,13 @@ target_link_libraries(fftmodule-static
     "-Wl,--no-undefined"
     )
 
+export(TARGETS fftmodule-static NAMESPACE Zera:: FILE ZeraClassesTargets.cmake)
+install(TARGETS fftmodule-static
+    EXPORT ZeraClassesExport
+    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+    )
+
+install(
+    FILES ${HEADER}
+    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/fftmodule-static
+    )
