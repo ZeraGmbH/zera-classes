@@ -1,7 +1,6 @@
 #include "modemodulefactory.h"
 #include "modemodule.h"
 
-
 namespace MODEMODULE
 {
 

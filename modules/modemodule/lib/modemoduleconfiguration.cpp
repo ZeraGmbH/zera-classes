@@ -2,11 +2,17 @@
 #include "modemoduleconfigdata.h"
 #include <xmlconfigreader.h>
 
+static void initResource()
+{
+    Q_INIT_RESOURCE(modemodulexmlschema);
+}
+
 namespace MODEMODULE
 {
 
 cModeModuleConfiguration::cModeModuleConfiguration()
 {
+    initResource();
     m_pModeModulConfigData = 0;
     connect(m_pXMLReader, &Zera::XMLConfig::cReader::valueChanged, this, &cModeModuleConfiguration::configXMLInfo);
     connect(m_pXMLReader, &Zera::XMLConfig::cReader::finishedParsingXML, this, &cModeModuleConfiguration::completeConfiguration);
