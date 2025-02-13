@@ -26,3 +26,13 @@ target_link_libraries(oscimodule-static
     "-Wl,--no-undefined"
     )
 
+export(TARGETS oscimodule-static NAMESPACE Zera:: FILE ZeraClassesTargets.cmake)
+install(TARGETS oscimodule-static
+    EXPORT ZeraClassesExport
+    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+    )
+
+install(
+    FILES ${HEADER}
+    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/oscimodule-static
+    )

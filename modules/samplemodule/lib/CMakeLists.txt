@@ -26,3 +26,13 @@ target_link_libraries(samplemodule-static
     "-Wl,--no-undefined"
     )
 
+export(TARGETS samplemodule-static NAMESPACE Zera:: FILE ZeraClassesTargets.cmake)
+install(TARGETS samplemodule-static
+    EXPORT ZeraClassesExport
+    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+    )
+
+install(
+    FILES ${HEADER}
+    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/samplemodule-static
+    )

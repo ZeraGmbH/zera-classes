@@ -34,3 +34,14 @@ target_link_libraries(module-service-interfaces-demolib
 
 set_target_properties(module-service-interfaces-demolib PROPERTIES VERSION ${PROJECT_VERSION})
 set_target_properties(module-service-interfaces-demolib PROPERTIES SOVERSION ${PROJECT_VERSION_MAJOR})
+
+export(TARGETS module-service-interfaces-demolib NAMESPACE Zera:: FILE ZeraClassesTargets.cmake)
+install(TARGETS module-service-interfaces-demolib
+    EXPORT ZeraClassesExport
+    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+    )
+
+install(
+    FILES ${HEADER}
+    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/module-service-interfaces-demolib
+    )

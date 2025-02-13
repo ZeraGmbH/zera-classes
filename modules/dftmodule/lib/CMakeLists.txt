@@ -26,3 +26,13 @@ target_link_libraries(dftmodule-static
     "-Wl,--no-undefined"
     )
 
+export(TARGETS dftmodule-static NAMESPACE Zera:: FILE ZeraClassesTargets.cmake)
+install(TARGETS dftmodule-static
+    EXPORT ZeraClassesExport
+    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+    )
+
+install(
+    FILES ${HEADER}
+    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/dftmodule-static
+    )

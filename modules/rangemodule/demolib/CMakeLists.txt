@@ -26,3 +26,14 @@ target_link_libraries(rangemodule-demolib
 
 set_target_properties(rangemodule-demolib PROPERTIES VERSION ${PROJECT_VERSION})
 set_target_properties(rangemodule-demolib PROPERTIES SOVERSION ${PROJECT_VERSION_MAJOR})
+
+export(TARGETS rangemodule-demolib NAMESPACE Zera:: FILE ZeraClassesTargets.cmake)
+install(TARGETS rangemodule-demolib
+    EXPORT ZeraClassesExport
+    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+    )
+
+install(
+    FILES ${HEADER}
+    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/rangemodule-demolib
+    )

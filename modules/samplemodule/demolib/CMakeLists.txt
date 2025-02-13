@@ -26,3 +26,14 @@ target_link_libraries(samplemodule-demolib
 
 set_target_properties(samplemodule-demolib PROPERTIES VERSION ${PROJECT_VERSION})
 set_target_properties(samplemodule-demolib PROPERTIES SOVERSION ${PROJECT_VERSION_MAJOR})
+
+export(TARGETS samplemodule-demolib NAMESPACE Zera:: FILE ZeraClassesTargets.cmake)
+install(TARGETS samplemodule-demolib
+    EXPORT ZeraClassesExport
+    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+    )
+
+install(
+    FILES ${HEADER}
+    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/samplemodule-demolib
+    )
