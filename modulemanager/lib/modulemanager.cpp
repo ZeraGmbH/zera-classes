@@ -20,6 +20,11 @@ namespace ZeraModules {
 
 QString ModuleManager::m_sessionPath = MODMAN_SESSION_PATH;
 
+QString ModuleManager::getInstalledSessionPath()
+{
+    return m_sessionPath;
+}
+
 ModuleManager::ModuleManager(ModuleManagerSetupFacade *setupFacade,
                              AbstractFactoryServiceInterfacesPtr serviceInterfaceFactory,
                              VeinTcp::AbstractTcpNetworkFactoryPtr tcpNetworkFactory,
