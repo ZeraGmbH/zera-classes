@@ -1,6 +1,6 @@
 add_library(statusmodule MODULE
-    ${CMAKE_CURRENT_SOURCE_DIR}/statusmodulefactory.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/statusmodulefactory.h
+    statusmodulefactory.cpp
+    statusmodulefactory.h
     )
 
 target_link_libraries(statusmodule
