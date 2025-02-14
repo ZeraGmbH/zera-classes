@@ -25,7 +25,7 @@ cAdjustManagement::cAdjustManagement(cRangeModule *module,
     m_subdcChannelNameList(subdclist),
     m_adjustmentConfig(adjustmentConfig)
 {
-    m_dspInterface = m_pModule->getServiceInterfaceFactory()->createDspInterfaceRange(
+    m_dspInterface = m_pModule->getServiceInterfaceFactory()->createDspInterfaceRangeAdj(
         m_ChannelNameList,
         false /* just for demo COM5003 ref-session - postpone better solution now */);
     m_pcbInterface = std::make_shared<Zera::cPCBInterface>();

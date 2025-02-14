@@ -1,9 +1,23 @@
 #include "factoryserviceinterfaces.h"
 
-DspInterfacePtr FactoryServiceInterfaces::createDspInterfaceRange(QStringList valueChannelList, bool isReferencce)
+DspInterfacePtr FactoryServiceInterfaces::createDspInterfaceRangeProg(QStringList valueChannelList, bool isReference)
 {
     Q_UNUSED(valueChannelList)
-    Q_UNUSED(isReferencce)
+    Q_UNUSED(isReference)
+    return std::make_shared<Zera::cDSPInterface>();
+}
+
+DspInterfacePtr FactoryServiceInterfaces::createDspInterfaceRangeObser(QStringList valueChannelList, bool isReference)
+{
+    Q_UNUSED(valueChannelList)
+    Q_UNUSED(isReference)
+    return std::make_shared<Zera::cDSPInterface>();
+}
+
+DspInterfacePtr FactoryServiceInterfaces::createDspInterfaceRangeAdj(QStringList valueChannelList, bool isReference)
+{
+    Q_UNUSED(valueChannelList)
+    Q_UNUSED(isReference)
     return std::make_shared<Zera::cDSPInterface>();
 }
 
@@ -63,13 +77,13 @@ DspInterfacePtr FactoryServiceInterfaces::createDspInterfaceMode()
     return std::make_shared<Zera::cDSPInterface>();
 }
 
-DspInterfacePtr FactoryServiceInterfaces::createDspInterfaceRef(QStringList valueChannelList)
+DspInterfacePtr FactoryServiceInterfaces::createDspInterfaceRefProg(QStringList valueChannelList)
 {
     Q_UNUSED(valueChannelList)
     return std::make_shared<Zera::cDSPInterface>();
 }
 
-DspInterfacePtr FactoryServiceInterfaces::createDspInterfaceOther()
+DspInterfacePtr FactoryServiceInterfaces::createDspInterfaceRefAdj()
 {
     return std::make_shared<Zera::cDSPInterface>();
 }

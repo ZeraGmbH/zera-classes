@@ -10,7 +10,9 @@ typedef std::shared_ptr<Zera::cDSPInterface> DspInterfacePtr;
 class AbstractFactoryServiceInterfaces
 {
 public:
-    virtual DspInterfacePtr createDspInterfaceRange(QStringList valueChannelList, bool isReferencce) = 0;
+    virtual DspInterfacePtr createDspInterfaceRangeProg(QStringList valueChannelList, bool isReference) = 0;
+    virtual DspInterfacePtr createDspInterfaceRangeObser(QStringList valueChannelList, bool isReference) = 0;
+    virtual DspInterfacePtr createDspInterfaceRangeAdj(QStringList valueChannelList, bool isReference) = 0;
     virtual DspInterfacePtr createDspInterfaceDft(QStringList valueChannelList, int dftOrder) = 0;
     virtual DspInterfacePtr createDspInterfaceFft(QStringList valueChannelList, int fftOrder) = 0;
     virtual DspInterfacePtr createDspInterfaceRms(QStringList valueChannelList) = 0;
@@ -20,8 +22,8 @@ public:
     virtual DspInterfacePtr createDspInterfaceThdn(QStringList valueChannelList) = 0;
     virtual DspInterfacePtr createDspInterfaceOsci(QStringList valueChannelList, int interpolation) = 0;
     virtual DspInterfacePtr createDspInterfaceMode() = 0;
-    virtual DspInterfacePtr createDspInterfaceRef(QStringList valueChannelList) = 0;
-    virtual DspInterfacePtr createDspInterfaceOther() = 0;
+    virtual DspInterfacePtr createDspInterfaceRefProg(QStringList valueChannelList) = 0;
+    virtual DspInterfacePtr createDspInterfaceRefAdj() = 0;
 };
 
 typedef std::shared_ptr<AbstractFactoryServiceInterfaces> AbstractFactoryServiceInterfacesPtr;

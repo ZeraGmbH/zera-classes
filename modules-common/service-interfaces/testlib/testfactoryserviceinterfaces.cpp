@@ -1,8 +1,20 @@
 #include "testfactoryserviceinterfaces.h"
 
-DspInterfacePtr TestFactoryServiceInterfaces::createDspInterfaceRange(QStringList valueChannelList, bool isReferencce)
+DspInterfacePtr TestFactoryServiceInterfaces::createDspInterfaceRangeProg(QStringList valueChannelList, bool isReference)
 {
-    Q_UNUSED(isReferencce)
+    Q_UNUSED(isReference)
+    return createDspInterfaceCommon(0 /* dummy */, valueChannelList);
+}
+
+DspInterfacePtr TestFactoryServiceInterfaces::createDspInterfaceRangeObser(QStringList valueChannelList, bool isReference)
+{
+    Q_UNUSED(isReference)
+    return createDspInterfaceCommon(0 /* dummy */, valueChannelList);
+}
+
+DspInterfacePtr TestFactoryServiceInterfaces::createDspInterfaceRangeAdj(QStringList valueChannelList, bool isReference)
+{
+    Q_UNUSED(isReference)
     return createDspInterfaceCommon(0 /* dummy */, valueChannelList);
 }
 
@@ -56,12 +68,12 @@ DspInterfacePtr TestFactoryServiceInterfaces::createDspInterfaceMode()
     return createDspInterfaceCommon(0 /* dummy */, {});
 }
 
-DspInterfacePtr TestFactoryServiceInterfaces::createDspInterfaceRef(QStringList valueChannelList)
+DspInterfacePtr TestFactoryServiceInterfaces::createDspInterfaceRefProg(QStringList valueChannelList)
 {
     return createDspInterfaceCommon(4 /* that is what module expects currently */, valueChannelList);
 }
 
-DspInterfacePtr TestFactoryServiceInterfaces::createDspInterfaceOther()
+DspInterfacePtr TestFactoryServiceInterfaces::createDspInterfaceRefAdj()
 {
     // no test specific implementation yet
     return std::make_shared<Zera::cDSPInterface>();
