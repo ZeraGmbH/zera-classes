@@ -2,12 +2,18 @@
 #include "thdnmoduleconfigdata.h"
 #include <xmlconfigreader.h>
 
+static void initResource()
+{
+    Q_INIT_RESOURCE(thdnmodulexmlschema);
+}
+
 namespace THDNMODULE
 {
 static const char* defaultXSDFile = "://thdnmodule.xsd";
 
 cThdnModuleConfiguration::cThdnModuleConfiguration()
 {
+    initResource();
     m_pThdnModulConfigData = 0;
     connect(m_pXMLReader, &Zera::XMLConfig::cReader::valueChanged, this, &cThdnModuleConfiguration::configXMLInfo);
     connect(m_pXMLReader, &Zera::XMLConfig::cReader::finishedParsingXML, this, &cThdnModuleConfiguration::completeConfiguration);
