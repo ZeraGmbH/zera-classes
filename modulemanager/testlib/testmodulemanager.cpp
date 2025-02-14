@@ -87,6 +87,11 @@ const QByteArray TestModuleManager::getLastStoredConfig()
     return *m_configDataLastSaved;
 }
 
+VeinTcp::AbstractTcpNetworkFactoryPtr TestModuleManager::getTcpNetworkFactory()
+{
+    return m_tcpNetworkFactory;
+}
+
 bool TestModuleManager::modulesReady()
 {
     return !m_moduleStartLock;

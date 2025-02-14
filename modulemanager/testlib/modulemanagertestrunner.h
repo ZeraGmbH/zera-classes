@@ -24,6 +24,8 @@ public:
     void setVfComponent(int entityId, QString componentName, QVariant newValue);
     QVariant getVfComponent(int entityId, QString componentName);
     void start(QString sessionFileName);
+    VeinTcp::AbstractTcpNetworkFactoryPtr getTcpNetworkFactory();
+
 private:
     std::unique_ptr<TestLicenseSystem> m_licenseSystem;
     std::unique_ptr<ModuleManagerSetupFacade> m_modmanFacade;

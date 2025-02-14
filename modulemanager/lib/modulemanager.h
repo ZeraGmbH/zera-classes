@@ -65,6 +65,7 @@ protected:
     QList<ModuleData *> m_moduleList;
     bool m_moduleStartLock;
     std::unique_ptr<AbstractMockAllServices> m_mockAllServices;
+    VeinTcp::AbstractTcpNetworkFactoryPtr m_tcpNetworkFactory;
 
 private:
     virtual void saveModuleConfig(ModuleData *moduleData);
@@ -86,7 +87,6 @@ private:
     std::shared_ptr<ModuleSharedData> m_moduleSharedObjects;
     ModuleManagerSetupFacade *m_setupFacade;
     AbstractFactoryServiceInterfacesPtr m_serviceInterfaceFactory;
-    VeinTcp::AbstractTcpNetworkFactoryPtr m_tcpNetworkFactory;
     JsonSessionLoader m_sessionLoader;
     QHash<QString, AbstractModuleFactory*> m_factoryTable;
     QQueue<ModuleData *> m_deferredStartList;

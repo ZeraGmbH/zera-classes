@@ -19,6 +19,7 @@ public:
     QList<ZeraModules::ModuleData *> getModuleList();
     ZeraModules::VirtualModule *getModule(QString uniqueName, int entityId);
     const QByteArray getLastStoredConfig();
+    VeinTcp::AbstractTcpNetworkFactoryPtr getTcpNetworkFactory();
 
 private:
     static bool prepareOe();
