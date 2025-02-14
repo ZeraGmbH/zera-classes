@@ -2,12 +2,18 @@
 #include "referencemoduleconfigdata.h"
 #include <xmlconfigreader.h>
 
+static void initResource()
+{
+    Q_INIT_RESOURCE(referencemodulexmlschema);
+}
+
 namespace REFERENCEMODULE
 {
 static const char* defaultXSDFile = "://referencemodule.xsd";
 
 cReferenceModuleConfiguration::cReferenceModuleConfiguration()
 {
+    initResource();
     m_pReferenceModulConfigData = 0;
     connect(m_pXMLReader, &Zera::XMLConfig::cReader::valueChanged, this, &cReferenceModuleConfiguration::configXMLInfo);
     connect(m_pXMLReader, &Zera::XMLConfig::cReader::finishedParsingXML, this, &cReferenceModuleConfiguration::completeConfiguration);
