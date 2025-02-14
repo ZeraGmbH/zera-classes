@@ -4,7 +4,6 @@ function(SETUP_QTESTS_MODULE)
         target_sources(${_testname}
             PRIVATE
             ${XML_SCHEMA_RESOURCE_ADJUSTMENTMODULE}
-            ${XML_SCHEMA_RESOURCE_RANGEMODULE}
             ${XML_SCHEMA_RESOURCE_DFTMODULE}
             ${XML_SCHEMA_RESOURCE_FFTMODULE}
             ${XML_SCHEMA_RESOURCE_RMSMODULE}
