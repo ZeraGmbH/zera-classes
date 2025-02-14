@@ -253,6 +253,7 @@ void ModuleManager::startModule(const QString &uniqueName,
 void ModuleManager::destroyModules()
 {
     m_setupFacade->clearModuleSystems();
+    m_serviceInterfaceFactory->resetInterfaces();
     if(!m_moduleList.isEmpty()) {
         m_moduleStartLock = true;
         QElapsedTimer destroyTimer;

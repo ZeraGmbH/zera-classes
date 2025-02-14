@@ -10,9 +10,9 @@ void test_reference_regression::dumpDspSetup()
     ModuleManagerTestRunner testRunner(":/session-minimal.json", false, "com5003");
 
     const QList<TestDspInterfacePtr>& dspInterfaces = testRunner.getDspInterfaceList();
-    QCOMPARE(dspInterfaces.count(), 1);
+    QCOMPARE(dspInterfaces.count(), 2);
 
-    QString measProgramDumped = TestLogHelpers::dump(dspInterfaces[0]->dumpAll(true));
+    QString measProgramDumped = TestLogHelpers::dump(dspInterfaces[1]->dumpAll(true));
     QString measProgramExpected = TestLogHelpers::loadFile(":/dspDumps/dumpMeasProgram.json");
     QVERIFY(TestLogHelpers::compareAndLogOnDiff(measProgramExpected, measProgramDumped));
 }

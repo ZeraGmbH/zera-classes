@@ -10,6 +10,7 @@ typedef std::shared_ptr<Zera::cDSPInterface> DspInterfacePtr;
 class AbstractFactoryServiceInterfaces
 {
 public:
+    virtual void resetInterfaces() {}
     virtual DspInterfacePtr createDspInterfaceRangeProg(int entityId, QStringList valueChannelList, bool isReference) = 0;
     virtual DspInterfacePtr createDspInterfaceRangeObser(int entityId, QStringList valueChannelList, bool isReference) = 0;
     virtual DspInterfacePtr createDspInterfaceRangeAdj(int entityId, QStringList valueChannelList, bool isReference) = 0;
