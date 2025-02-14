@@ -1,6 +1,6 @@
 add_library(rmsmodule MODULE
-    ${CMAKE_CURRENT_SOURCE_DIR}/rmsmodulefactory.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/rmsmodulefactory.h
+    rmsmodulefactory.cpp
+    rmsmodulefactory.h
     )
 
 target_link_libraries(rmsmodule
