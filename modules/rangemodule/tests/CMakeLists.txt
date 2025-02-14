@@ -36,7 +36,6 @@ target_sources(test_range_automatic
 target_sources(test_range_scpi
   PRIVATE
     test-data/test-data.qrc
-    ${XML_SCHEMA_RESOURCE_SCPIMODULE}
 )
 
 target_link_libraries(test_range_scpi

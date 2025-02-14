@@ -2,12 +2,18 @@
 #include "scpimoduleconfigdata.h"
 #include <xmlconfigreader.h>
 
+static void initResource()
+{
+    Q_INIT_RESOURCE(scpimodulexmlschema);
+}
+
 namespace SCPIMODULE
 {
 static const char *defaultXSDFile = "://scpimodule.xsd";
 
 cSCPIModuleConfiguration::cSCPIModuleConfiguration()
 {
+    initResource();
     m_pSCPIModulConfigData = 0;
     connect(m_pXMLReader, &Zera::XMLConfig::cReader::valueChanged, this, &cSCPIModuleConfiguration::configXMLInfo);
     connect(m_pXMLReader, &Zera::XMLConfig::cReader::finishedParsingXML, this, &cSCPIModuleConfiguration::completeConfiguration);
