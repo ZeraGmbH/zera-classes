@@ -2,12 +2,18 @@
 #include "oscimoduleconfigdata.h"
 #include <xmlconfigreader.h>
 
+static void initResource()
+{
+    Q_INIT_RESOURCE(oscimodulexmlschema);
+}
+
 namespace OSCIMODULE
 {
 static const char* defaultXSDFile = "://oscimodule.xsd";
 
 cOsciModuleConfiguration::cOsciModuleConfiguration()
 {
+    initResource();
     m_pOsciModulConfigData = 0;
     connect(m_pXMLReader, &Zera::XMLConfig::cReader::valueChanged, this, &cOsciModuleConfiguration::configXMLInfo);
     connect(m_pXMLReader, &Zera::XMLConfig::cReader::finishedParsingXML, this, &cOsciModuleConfiguration::completeConfiguration);
