@@ -19,7 +19,10 @@ cRangeModuleMeasProgram::cRangeModuleMeasProgram(cRangeModule* module, std::shar
     m_frequencyLogStatistics(10000)
 {
     const QStringList channelMNames = m_pModule->getSharedChannelRangeObserver()->getChannelMNames();
-    m_dspInterface = m_pModule->getServiceInterfaceFactory()->createDspInterfaceRangeProg(channelMNames, getConfData()->m_session.m_sPar == "ref");
+    m_dspInterface = m_pModule->getServiceInterfaceFactory()->createDspInterfaceRangeProg(
+        m_pModule->getEntityId(),
+        channelMNames,
+        getConfData()->m_session.m_sPar == "ref");
     m_bRanging = false;
     m_bIgnore = false;
 

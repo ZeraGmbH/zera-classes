@@ -1,81 +1,94 @@
 #include "testfactoryserviceinterfaces.h"
 
-DspInterfacePtr TestFactoryServiceInterfaces::createDspInterfaceRangeProg(QStringList valueChannelList, bool isReference)
+DspInterfacePtr TestFactoryServiceInterfaces::createDspInterfaceRangeProg(int entityId, QStringList valueChannelList, bool isReference)
 {
+    Q_UNUSED(entityId)
     Q_UNUSED(isReference)
     return createDspInterfaceCommon(0 /* dummy */, valueChannelList);
 }
 
-DspInterfacePtr TestFactoryServiceInterfaces::createDspInterfaceRangeObser(QStringList valueChannelList, bool isReference)
+DspInterfacePtr TestFactoryServiceInterfaces::createDspInterfaceRangeObser(int entityId, QStringList valueChannelList, bool isReference)
 {
+    Q_UNUSED(entityId)
     Q_UNUSED(isReference)
     return createDspInterfaceCommon(0 /* dummy */, valueChannelList);
 }
 
-DspInterfacePtr TestFactoryServiceInterfaces::createDspInterfaceRangeAdj(QStringList valueChannelList, bool isReference)
+DspInterfacePtr TestFactoryServiceInterfaces::createDspInterfaceRangeAdj(int entityId, QStringList valueChannelList, bool isReference)
 {
+    Q_UNUSED(entityId)
     Q_UNUSED(isReference)
     return createDspInterfaceCommon(0 /* dummy */, valueChannelList);
 }
 
-DspInterfacePtr TestFactoryServiceInterfaces::createDspInterfaceDft(QStringList valueChannelList, int dftOrder)
+DspInterfacePtr TestFactoryServiceInterfaces::createDspInterfaceDft(int entityId, QStringList valueChannelList, int dftOrder)
 {
+    Q_UNUSED(entityId)
     Q_UNUSED(dftOrder)
     return createDspInterfaceCommon(0 /* dummy */, valueChannelList);
 }
 
-DspInterfacePtr TestFactoryServiceInterfaces::createDspInterfaceFft(QStringList valueChannelList, int fftOrder)
+DspInterfacePtr TestFactoryServiceInterfaces::createDspInterfaceFft(int entityId, QStringList valueChannelList, int fftOrder)
 {
+    Q_UNUSED(entityId)
     Q_UNUSED(fftOrder)
     return createDspInterfaceCommon(0 /* dummy */, valueChannelList);
 }
 
-DspInterfacePtr TestFactoryServiceInterfaces::createDspInterfaceRms(QStringList valueChannelList)
+DspInterfacePtr TestFactoryServiceInterfaces::createDspInterfaceRms(int entityId, QStringList valueChannelList)
 {
+    Q_UNUSED(entityId)
     return createDspInterfaceCommon(0 /* dummy */, valueChannelList);
 }
 
-DspInterfacePtr TestFactoryServiceInterfaces::createDspInterfacePower1(MeasModeSelector *measMode)
+DspInterfacePtr TestFactoryServiceInterfaces::createDspInterfacePower1(int entityId, MeasModeSelector *measMode)
 {
+    Q_UNUSED(entityId)
     Q_UNUSED(measMode)
     return createDspInterfaceCommon(0 /* dummy */, {});
 }
 
-DspInterfacePtr TestFactoryServiceInterfaces::createDspInterfacePower2(MeasModeSelector *measMode)
+DspInterfacePtr TestFactoryServiceInterfaces::createDspInterfacePower2(int entityId, MeasModeSelector *measMode)
 {
+    Q_UNUSED(entityId)
     Q_UNUSED(measMode)
     return createDspInterfaceCommon(7 /* that is what module expects currently */, {});
 }
 
-DspInterfacePtr TestFactoryServiceInterfaces::createDspInterfaceSample(QStringList valueChannelList)
+DspInterfacePtr TestFactoryServiceInterfaces::createDspInterfaceSample(int entityId, QStringList valueChannelList)
 {
+    Q_UNUSED(entityId)
     return createDspInterfaceCommon(8 /* that is what module expects currently */, valueChannelList);
 }
 
-DspInterfacePtr TestFactoryServiceInterfaces::createDspInterfaceThdn(QStringList valueChannelList)
+DspInterfacePtr TestFactoryServiceInterfaces::createDspInterfaceThdn(int entityId, QStringList valueChannelList)
 {
+    Q_UNUSED(entityId)
     return createDspInterfaceCommon(4 /* that is what module expects currently */, valueChannelList);
 }
 
-DspInterfacePtr TestFactoryServiceInterfaces::createDspInterfaceOsci(QStringList valueChannelList, int interpolation)
+DspInterfacePtr TestFactoryServiceInterfaces::createDspInterfaceOsci(int entityId, QStringList valueChannelList, int interpolation)
 {
+    Q_UNUSED(entityId)
     Q_UNUSED(interpolation)
     return createDspInterfaceCommon(6 /* that is what module expects currently */, valueChannelList);
 }
 
-DspInterfacePtr TestFactoryServiceInterfaces::createDspInterfaceMode()
+DspInterfacePtr TestFactoryServiceInterfaces::createDspInterfaceMode(int entityId)
 {
+    Q_UNUSED(entityId)
     return createDspInterfaceCommon(0 /* dummy */, {});
 }
 
-DspInterfacePtr TestFactoryServiceInterfaces::createDspInterfaceRefProg(QStringList valueChannelList)
+DspInterfacePtr TestFactoryServiceInterfaces::createDspInterfaceRefProg(int entityId, QStringList valueChannelList)
 {
+    Q_UNUSED(entityId)
     return createDspInterfaceCommon(4 /* that is what module expects currently */, valueChannelList);
 }
 
-DspInterfacePtr TestFactoryServiceInterfaces::createDspInterfaceRefAdj()
+DspInterfacePtr TestFactoryServiceInterfaces::createDspInterfaceRefAdj(int entityId)
 {
-    // no test specific implementation yet
+    Q_UNUSED(entityId)
     return std::make_shared<Zera::cDSPInterface>();
 }
 

@@ -21,7 +21,9 @@ cPower2ModuleMeasProgram::cPower2ModuleMeasProgram(cPower2Module* module, std::s
     cBaseDspMeasProgram(pConfiguration, module->getVeinModuleName()),
     m_pModule(module)
 {
-    m_dspInterface = m_pModule->getServiceInterfaceFactory()->createDspInterfacePower2(&m_measModeSelector);
+    m_dspInterface = m_pModule->getServiceInterfaceFactory()->createDspInterfacePower2(
+        m_pModule->getEntityId(),
+        &m_measModeSelector);
 
     m_IdentifyState.addTransition(this, &cPower2ModuleMeasProgram::activationContinue, &m_claimResourcesSourceState);
 

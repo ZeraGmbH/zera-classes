@@ -16,7 +16,9 @@ cReferenceModuleMeasProgram::cReferenceModuleMeasProgram(cReferenceModule* modul
     m_pModule(module)
 {
     m_ChannelList = getConfData()->m_referenceChannelList;
-    m_dspInterface = m_pModule->getServiceInterfaceFactory()->createDspInterfaceRefProg(m_ChannelList);
+    m_dspInterface = m_pModule->getServiceInterfaceFactory()->createDspInterfaceRefProg(
+        m_pModule->getEntityId(),
+        m_ChannelList);
 
     m_IdentifyState.addTransition(this, &cReferenceModuleMeasProgram::activationContinue, &m_dspserverConnectState);
     m_claimPGRMemState.addTransition(this, &cReferenceModuleMeasProgram::activationContinue, &m_claimUSERMemState);

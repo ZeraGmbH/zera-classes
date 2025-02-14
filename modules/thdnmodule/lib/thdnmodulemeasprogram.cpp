@@ -30,7 +30,9 @@ cThdnModuleMeasProgram::cThdnModuleMeasProgram(cThdnModule *module, std::shared_
     cBaseDspMeasProgram(pConfiguration, module->getVeinModuleName()),
     m_pModule(module)
 {
-    m_dspInterface = m_pModule->getServiceInterfaceFactory()->createDspInterfaceThdn(m_pModule->getSharedChannelRangeObserver()->getChannelMNames());
+    m_dspInterface = m_pModule->getServiceInterfaceFactory()->createDspInterfaceThdn(
+        m_pModule->getEntityId(),
+        m_pModule->getSharedChannelRangeObserver()->getChannelMNames());
 
     m_IdentifyState.addTransition(this, &cThdnModuleMeasProgram::activationContinue, &m_dspserverConnectState);
 

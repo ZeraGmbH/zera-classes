@@ -1,89 +1,103 @@
 #include "factoryserviceinterfaces.h"
 
-DspInterfacePtr FactoryServiceInterfaces::createDspInterfaceRangeProg(QStringList valueChannelList, bool isReference)
+DspInterfacePtr FactoryServiceInterfaces::createDspInterfaceRangeProg(int entityId, QStringList valueChannelList, bool isReference)
 {
+    Q_UNUSED(entityId)
     Q_UNUSED(valueChannelList)
     Q_UNUSED(isReference)
     return std::make_shared<Zera::cDSPInterface>();
 }
 
-DspInterfacePtr FactoryServiceInterfaces::createDspInterfaceRangeObser(QStringList valueChannelList, bool isReference)
+DspInterfacePtr FactoryServiceInterfaces::createDspInterfaceRangeObser(int entityId, QStringList valueChannelList, bool isReference)
 {
+    Q_UNUSED(entityId)
     Q_UNUSED(valueChannelList)
     Q_UNUSED(isReference)
     return std::make_shared<Zera::cDSPInterface>();
 }
 
-DspInterfacePtr FactoryServiceInterfaces::createDspInterfaceRangeAdj(QStringList valueChannelList, bool isReference)
+DspInterfacePtr FactoryServiceInterfaces::createDspInterfaceRangeAdj(int entityId, QStringList valueChannelList, bool isReference)
 {
+    Q_UNUSED(entityId)
     Q_UNUSED(valueChannelList)
     Q_UNUSED(isReference)
     return std::make_shared<Zera::cDSPInterface>();
 }
 
-DspInterfacePtr FactoryServiceInterfaces::createDspInterfaceDft(QStringList valueChannelList, int dftOrder)
+DspInterfacePtr FactoryServiceInterfaces::createDspInterfaceDft(int entityId, QStringList valueChannelList, int dftOrder)
 {
+    Q_UNUSED(entityId)
     Q_UNUSED(valueChannelList)
     Q_UNUSED(dftOrder)
     return std::make_shared<Zera::cDSPInterface>();
 }
 
-DspInterfacePtr FactoryServiceInterfaces::createDspInterfaceFft(QStringList valueChannelList, int fftOrder)
+DspInterfacePtr FactoryServiceInterfaces::createDspInterfaceFft(int entityId, QStringList valueChannelList, int fftOrder)
 {
+    Q_UNUSED(entityId)
     Q_UNUSED(valueChannelList)
     Q_UNUSED(fftOrder)
     return std::make_shared<Zera::cDSPInterface>();
 }
 
-DspInterfacePtr FactoryServiceInterfaces::createDspInterfaceRms(QStringList valueChannelList)
+DspInterfacePtr FactoryServiceInterfaces::createDspInterfaceRms(int entityId, QStringList valueChannelList)
 {
+    Q_UNUSED(entityId)
     Q_UNUSED(valueChannelList)
     return std::make_shared<Zera::cDSPInterface>();
 }
 
-DspInterfacePtr FactoryServiceInterfaces::createDspInterfacePower1(MeasModeSelector *measMode)
+DspInterfacePtr FactoryServiceInterfaces::createDspInterfacePower1(int entityId, MeasModeSelector *measMode)
 {
+    Q_UNUSED(entityId)
     Q_UNUSED(measMode)
     return std::make_shared<Zera::cDSPInterface>();
 }
 
-DspInterfacePtr FactoryServiceInterfaces::createDspInterfacePower2(MeasModeSelector *measMode)
+DspInterfacePtr FactoryServiceInterfaces::createDspInterfacePower2(int entityId, MeasModeSelector *measMode)
 {
+    Q_UNUSED(entityId)
     Q_UNUSED(measMode)
     return std::make_shared<Zera::cDSPInterface>();
 }
 
-DspInterfacePtr FactoryServiceInterfaces::createDspInterfaceSample(QStringList valueChannelList)
+DspInterfacePtr FactoryServiceInterfaces::createDspInterfaceSample(int entityId, QStringList valueChannelList)
 {
+    Q_UNUSED(entityId)
     Q_UNUSED(valueChannelList)
     return std::make_shared<Zera::cDSPInterface>();
 }
 
-DspInterfacePtr FactoryServiceInterfaces::createDspInterfaceThdn(QStringList valueChannelList)
+DspInterfacePtr FactoryServiceInterfaces::createDspInterfaceThdn(int entityId, QStringList valueChannelList)
 {
+    Q_UNUSED(entityId)
     Q_UNUSED(valueChannelList)
     return std::make_shared<Zera::cDSPInterface>();
 }
 
-DspInterfacePtr FactoryServiceInterfaces::createDspInterfaceOsci(QStringList valueChannelList, int interpolation)
+DspInterfacePtr FactoryServiceInterfaces::createDspInterfaceOsci(int entityId, QStringList valueChannelList, int interpolation)
 {
+    Q_UNUSED(entityId)
     Q_UNUSED(valueChannelList)
     Q_UNUSED(interpolation)
     return std::make_shared<Zera::cDSPInterface>();
 }
 
-DspInterfacePtr FactoryServiceInterfaces::createDspInterfaceMode()
+DspInterfacePtr FactoryServiceInterfaces::createDspInterfaceMode(int entityId)
 {
+    Q_UNUSED(entityId)
     return std::make_shared<Zera::cDSPInterface>();
 }
 
-DspInterfacePtr FactoryServiceInterfaces::createDspInterfaceRefProg(QStringList valueChannelList)
+DspInterfacePtr FactoryServiceInterfaces::createDspInterfaceRefProg(int entityId, QStringList valueChannelList)
 {
+    Q_UNUSED(entityId)
     Q_UNUSED(valueChannelList)
     return std::make_shared<Zera::cDSPInterface>();
 }
 
-DspInterfacePtr FactoryServiceInterfaces::createDspInterfaceRefAdj()
+DspInterfacePtr FactoryServiceInterfaces::createDspInterfaceRefAdj(int entityId)
 {
+    Q_UNUSED(entityId)
     return std::make_shared<Zera::cDSPInterface>();
 }

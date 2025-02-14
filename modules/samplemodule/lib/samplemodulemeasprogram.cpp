@@ -16,7 +16,9 @@ cSampleModuleMeasProgram::cSampleModuleMeasProgram(cSampleModule* module, std::s
     m_pModule(module)
 {
     m_ChannelList = getConfData()->m_ObsermaticConfPar.m_pllChannelList;
-    m_dspInterface = m_pModule->getServiceInterfaceFactory()->createDspInterfaceSample(m_ChannelList);
+    m_dspInterface = m_pModule->getServiceInterfaceFactory()->createDspInterfaceSample(
+        m_pModule->getEntityId(),
+        m_ChannelList);
 
     m_IdentifyState.addTransition(this, &cSampleModuleMeasProgram::activationContinue, &m_dspserverConnectState);
     m_claimPGRMemState.addTransition(this, &cSampleModuleMeasProgram::activationContinue, &m_claimUSERMemState);
