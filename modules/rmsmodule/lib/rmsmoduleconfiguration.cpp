@@ -2,12 +2,18 @@
 #include "rmsmoduleconfigdata.h"
 #include <xmlconfigreader.h>
 
+static void initResource()
+{
+    Q_INIT_RESOURCE(rmsmodulexmlschema);
+}
+
 namespace RMSMODULE
 {
 static const char* defaultXSDFile = "://rmsmodule.xsd";
 
 cRmsModuleConfiguration::cRmsModuleConfiguration()
 {
+    initResource();
     m_pRmsModulConfigData = 0;
     connect(m_pXMLReader, &Zera::XMLConfig::cReader::valueChanged, this, &cRmsModuleConfiguration::configXMLInfo);
     connect(m_pXMLReader, &Zera::XMLConfig::cReader::finishedParsingXML, this, &cRmsModuleConfiguration::completeConfiguration);

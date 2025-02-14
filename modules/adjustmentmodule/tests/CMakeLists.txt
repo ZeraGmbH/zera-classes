@@ -6,7 +6,6 @@ function(SETUP_QTESTS_MODULE)
             ${XML_SCHEMA_RESOURCE_ADJUSTMENTMODULE}
             ${XML_SCHEMA_RESOURCE_DFTMODULE}
             ${XML_SCHEMA_RESOURCE_FFTMODULE}
-            ${XML_SCHEMA_RESOURCE_RMSMODULE}
             ${XML_SCHEMA_RESOURCE_SCPIMODULE}
         )
         target_link_libraries(${_testname}

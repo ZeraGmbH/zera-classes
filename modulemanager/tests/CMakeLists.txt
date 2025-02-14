@@ -51,7 +51,6 @@ target_sources(test_modman_regression_all_sessions
 
 target_sources(test_modman_with_vf_logger
   PRIVATE
-    ${XML_SCHEMA_RESOURCE_RMSMODULE}
     test-data/test-data.qrc
 )
 
