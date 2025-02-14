@@ -2,11 +2,17 @@
 #include "transformer1moduleconfigdata.h"
 #include <xmlconfigreader.h>
 
+static void initResource()
+{
+    Q_INIT_RESOURCE(transformer1modulexmlschema);
+}
+
 namespace TRANSFORMER1MODULE
 {
 
 cTransformer1ModuleConfiguration::cTransformer1ModuleConfiguration()
 {
+    initResource();
     m_pTransformer1ModulConfigData = 0;
     connect(m_pXMLReader, &Zera::XMLConfig::cReader::valueChanged, this, &cTransformer1ModuleConfiguration::configXMLInfo);
     connect(m_pXMLReader, &Zera::XMLConfig::cReader::finishedParsingXML, this, &cTransformer1ModuleConfiguration::completeConfiguration);
