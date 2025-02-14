@@ -1,6 +1,6 @@
 add_library(rangemodule MODULE
-    ${CMAKE_CURRENT_SOURCE_DIR}/rangemodulefactory.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/rangemodulefactory.h
+    rangemodulefactory.cpp
+    rangemodulefactory.h
     )
 
 target_link_libraries(rangemodule
