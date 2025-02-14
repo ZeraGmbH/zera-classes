@@ -1,7 +1,6 @@
 add_definitions(-DHTML_DOCS_PATH="${CMAKE_CURRENT_BINARY_DIR}/")
 
 add_executable(scpi-doc-generator
-    ${XML_SCHEMA_RESOURCES_ALL}
     main.cpp
     )
 
