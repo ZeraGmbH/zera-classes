@@ -6,13 +6,14 @@
 
 QTEST_MAIN(test_power2_module_regression)
 
+const int powerEntityId = 1090;
+
 void test_power2_module_regression::dumpDspSetup()
 {
     ModuleManagerTestRunner testRunner(":/session-minimal.json");
-    const QList<TestDspInterfacePtr>& dspInterfaces = testRunner.getDspInterfaceList();
-    QCOMPARE(dspInterfaces.count(), 1);
+    TestDspInterfacePtr power2DspInterface = testRunner.getDspInterface(powerEntityId);
 
-    QString measProgramDumped = TestLogHelpers::dump(dspInterfaces[0]->dumpAll());
+    QString measProgramDumped = TestLogHelpers::dump(power2DspInterface->dumpAll());
     QString measProgramExpected = TestLogHelpers::loadFile(":/dspDumps/dumpMeasProgram.json");
     QVERIFY(TestLogHelpers::compareAndLogOnDiff(measProgramExpected, measProgramDumped));
 }

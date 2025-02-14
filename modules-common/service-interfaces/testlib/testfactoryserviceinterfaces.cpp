@@ -135,6 +135,14 @@ const QList<TestDspInterfacePtr> &TestFactoryServiceInterfaces::getInterfaceList
     return m_dspInterfaces;
 }
 
+TestDspInterfacePtr TestFactoryServiceInterfaces::getInterface(int entityId, DSPInterfaceType dspInterfaceType)
+{
+    if (m_dspInterfacesTyped.contains(entityId) &&
+        m_dspInterfacesTyped[entityId].contains(dspInterfaceType))
+        return m_dspInterfacesTyped[entityId][dspInterfaceType];
+    return nullptr;
+}
+
 DspInterfacePtr TestFactoryServiceInterfaces::createDspInterfaceCommon(int entityId,
                                                                        DSPInterfaceType interfaceType,
                                                                        int interruptNoHandled,

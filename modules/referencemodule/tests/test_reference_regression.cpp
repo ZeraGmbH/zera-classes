@@ -5,14 +5,17 @@
 
 QTEST_MAIN(test_reference_regression)
 
+static int constexpr refEntityId = 1001;
+
 void test_reference_regression::dumpDspSetup()
 {
     ModuleManagerTestRunner testRunner(":/session-minimal.json", false, "com5003");
 
-    const QList<TestDspInterfacePtr>& dspInterfaces = testRunner.getDspInterfaceList();
-    QCOMPARE(dspInterfaces.count(), 2);
+    TestDspInterfacePtr power2DspInterfaceAdj = testRunner.getDspInterface(refEntityId, TestFactoryServiceInterfaces::ADJUST);
+    QVERIFY(power2DspInterfaceAdj);
+    TestDspInterfacePtr power2DspInterfaceProg = testRunner.getDspInterface(refEntityId, TestFactoryServiceInterfaces::MODULEPROG);
 
-    QString measProgramDumped = TestLogHelpers::dump(dspInterfaces[1]->dumpAll(true));
+    QString measProgramDumped = TestLogHelpers::dump(power2DspInterfaceProg->dumpAll(true));
     QString measProgramExpected = TestLogHelpers::loadFile(":/dspDumps/dumpMeasProgram.json");
     QVERIFY(TestLogHelpers::compareAndLogOnDiff(measProgramExpected, measProgramDumped));
 }

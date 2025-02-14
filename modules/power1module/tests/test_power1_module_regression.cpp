@@ -40,16 +40,14 @@ void test_power1_module_regression::veinDumpInitial()
 void test_power1_module_regression::injectActualValues()
 {
     ModuleManagerTestRunner testRunner(":/session-power1-test.json");
-
-    const QList<TestDspInterfacePtr>& dspInterfaces = testRunner.getDspInterfaceList();
-    QCOMPARE(dspInterfaces.count(), 1);
+    TestDspInterfacePtr power1DspInterface = testRunner.getDspInterface(powerEntityId);
 
     QVector<float> powerValues;
     for(int i = 0; i < MeasPhaseCount; i++)
         powerValues.append(i);
     powerValues.append(powerValues[0] + powerValues[1] + powerValues[2]);
 
-    dspInterfaces[0]->fireActValInterrupt(powerValues, irqNr);
+    power1DspInterface->fireActValInterrupt(powerValues, irqNr);
     TimeMachineObject::feedEventLoop();
 
     QByteArray jsonExpected = TestLogHelpers::loadFile(":/dumpActual.json");
@@ -80,10 +78,9 @@ void test_power1_module_regression::testScpiCommandsDisabled()
 void test_power1_module_regression::dumpDspSetup()
 {
     ModuleManagerTestRunner testRunner(":/session-minimal.json");
-    const QList<TestDspInterfacePtr>& dspInterfaces = testRunner.getDspInterfaceList();
-    QCOMPARE(dspInterfaces.count(), 1);
+    TestDspInterfacePtr power1DspInterface = testRunner.getDspInterface(powerEntityId);
 
-    QString measProgramDumped = TestLogHelpers::dump(dspInterfaces[0]->dumpAll());
+    QString measProgramDumped = TestLogHelpers::dump(power1DspInterface->dumpAll());
     QString measProgramExpected = TestLogHelpers::loadFile(":/dspDumps/dumpMeasProgram.json");
     QVERIFY(TestLogHelpers::compareAndLogOnDiff(measProgramExpected, measProgramDumped));
 }
@@ -91,14 +88,13 @@ void test_power1_module_regression::dumpDspSetup()
 void test_power1_module_regression::dumpDspOnMeasModeChange()
 {
     ModuleManagerTestRunner testRunner(":/session-minimal.json");
-    const QList<TestDspInterfacePtr>& dspInterfaces = testRunner.getDspInterfaceList();
-    QCOMPARE(dspInterfaces.count(), 1);
+    TestDspInterfacePtr power1DspInterface = testRunner.getDspInterface(powerEntityId);
 
     setMeasMode(testRunner.getVfCmdEventHandlerSystemPtr(), "4LW", "3LW");
     setMeasMode(testRunner.getVfCmdEventHandlerSystemPtr(), "3LW", "2LW");
     setMeasMode(testRunner.getVfCmdEventHandlerSystemPtr(), "2LW", "4LW");
 
-    QString measProgramDumped = TestLogHelpers::dump(dspInterfaces[0]->dumpAll(true));
+    QString measProgramDumped = TestLogHelpers::dump(power1DspInterface->dumpAll(true));
     QString measProgramExpected = TestLogHelpers::loadFile(":/dspDumps/dump-measmode-change.json");
     QVERIFY(TestLogHelpers::compareAndLogOnDiff(measProgramExpected, measProgramDumped));
 }

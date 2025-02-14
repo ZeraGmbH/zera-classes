@@ -52,16 +52,15 @@ void test_burden1_module_regression::resistanceCalculation()
 void test_burden1_module_regression::voltageBurden230V1ADefaultSettings()
 {
     ModuleManagerTestRunner testRunner(":/session-minimal.json");
+    TestDspInterfacePtr dftDspInterface = testRunner.getDspInterface(dftEntityId);
 
-    const QList<TestDspInterfacePtr>& dspInterfaces = testRunner.getDspInterfaceList();
-    QCOMPARE(dspInterfaces.count(), 1);
-    QStringList valueList = dspInterfaces[0]->getValueList();
+    QStringList valueList = dftDspInterface->getValueList();
     DemoValuesDspDft dspValues(valueList, 1);
     constexpr double voltage = 230;
     constexpr double current = 5;
     constexpr double angle = 0;
     dspValues.setAllValuesSymmetric(voltage, current, angle);
-    dspInterfaces[0]->fireActValInterrupt(dspValues.getDspValues(), 0);
+    dftDspInterface->fireActValInterrupt(dspValues.getDspValues(), 0);
     TimeMachineObject::feedEventLoop();
 
     VeinStorage::AbstractEventSystem* veinStorage = testRunner.getVeinStorageSystem();
@@ -95,15 +94,15 @@ void test_burden1_module_regression::voltageBurden230V1ADefaultSettings()
 void test_burden1_module_regression::voltageBurden100V1A60DefaultSettings()
 {
     ModuleManagerTestRunner testRunner(":/session-minimal.json");
+    TestDspInterfacePtr dftDspInterface = testRunner.getDspInterface(dftEntityId);
 
-    const QList<TestDspInterfacePtr>& dspInterfaces = testRunner.getDspInterfaceList();
-    QStringList valueList = dspInterfaces[0]->getValueList();
+    QStringList valueList = dftDspInterface->getValueList();
     DemoValuesDspDft dspValues(valueList, 1);
     constexpr double voltage = 100;
     constexpr double current = 1;
     constexpr double angle = 60;
     dspValues.setAllValuesSymmetric(voltage, current, angle);
-    dspInterfaces[0]->fireActValInterrupt(dspValues.getDspValues(), 0);
+    dftDspInterface->fireActValInterrupt(dspValues.getDspValues(), 0);
     TimeMachineObject::feedEventLoop();
 
     VeinStorage::AbstractEventSystem* veinStorage = testRunner.getVeinStorageSystem();

@@ -37,11 +37,6 @@ void test_range_module_regression::veinDumpInitial()
     QVERIFY(TestLogHelpers::compareAndLogOnDiff(jsonExpected, jsonDumped));
 }
 
-enum dspInterfaces{
-    RangeObsermatic,
-    AdjustManagement,
-    RangeModuleMeasProgram
-};
 static constexpr int rangeChannelCount = 8;
 static constexpr int rangeRmsValuesCount = 8;
 static constexpr int rangePeakValuesCount = 8;
@@ -54,25 +49,25 @@ static constexpr int rangeResultCount = rangeRmsValuesCount + rangePeakValuesCou
 void test_range_module_regression::checkActualValueCount()
 {
     ModuleManagerTestRunner testRunner(":/session-range-test.json");
-    const QList<TestDspInterfacePtr>& dspInterfaces = testRunner.getDspInterfaceList();
-    QCOMPARE(dspInterfaces.count(), 3);
-
+    TestDspInterfacePtr sampleDspInterfaceProg = testRunner.getDspInterface(rangeEntityId, TestFactoryServiceInterfaces::MODULEPROG);
+    TestDspInterfacePtr sampleDspInterfaceObser = testRunner.getDspInterface(rangeEntityId, TestFactoryServiceInterfaces::OBSERVER);
+    TestDspInterfacePtr sampleDspInterfaceAdj = testRunner.getDspInterface(rangeEntityId, TestFactoryServiceInterfaces::ADJUST);
 
     // dumpDspSetup
-    QCOMPARE(dspInterfaces[dspInterfaces::RangeObsermatic]->getValueList().size(), rangeChannelCount);
-    QCOMPARE(dspInterfaces[dspInterfaces::AdjustManagement]->getValueList().size(), rangeChannelCount);
-    QCOMPARE(dspInterfaces[dspInterfaces::RangeModuleMeasProgram]->getValueList().size(), rangeChannelCount);
+    QCOMPARE(sampleDspInterfaceObser->getValueList().size(), rangeChannelCount);
+    QCOMPARE(sampleDspInterfaceAdj->getValueList().size(), rangeChannelCount);
+    QCOMPARE(sampleDspInterfaceProg->getValueList().size(), rangeChannelCount);
 
     // dumping SCALEMEM:GAINCORRECTION2 does not seem reproducable yet
-    QString obsermaticDumped = TestLogHelpers::dump(dspInterfaces[dspInterfaces::RangeObsermatic]->dumpAll());
+    QString obsermaticDumped = TestLogHelpers::dump(sampleDspInterfaceObser->dumpAll());
     QString obsermaticExpected = TestLogHelpers::loadFile(":/dspDumps/dumpObsermatic.json");
     QVERIFY(TestLogHelpers::compareAndLogOnDiff(obsermaticExpected, obsermaticDumped));
 
-    QString adjustListDumped = TestLogHelpers::dump(dspInterfaces[dspInterfaces::AdjustManagement]->dumpAll(true));
+    QString adjustListDumped = TestLogHelpers::dump(sampleDspInterfaceAdj->dumpAll(true));
     QString adjustListExpected = TestLogHelpers::loadFile(":/dspDumps/dumpAdjustManagement.json");
     QVERIFY(TestLogHelpers::compareAndLogOnDiff(adjustListExpected, adjustListDumped));
 
-    QString measProgramDumped = TestLogHelpers::dump(dspInterfaces[dspInterfaces::RangeModuleMeasProgram]->dumpAll(true));
+    QString measProgramDumped = TestLogHelpers::dump(sampleDspInterfaceProg->dumpAll(true));
     QString measProgramExpected = TestLogHelpers::loadFile(":/dspDumps/dumpMeasProgram.json");
     QVERIFY(TestLogHelpers::compareAndLogOnDiff(measProgramExpected, measProgramDumped));
 
@@ -83,7 +78,7 @@ void test_range_module_regression::checkActualValueCount()
     for(int i = 0; i < rangeChannelCount; i++)
         rangeValues.setRmsValue(i, i);
 
-    dspInterfaces[dspInterfaces::RangeModuleMeasProgram]->fireActValInterrupt(rangeValues.getDspValues(), /* dummy */ 0);
+    sampleDspInterfaceProg->fireActValInterrupt(rangeValues.getDspValues(), /* dummy */ 0);
     TimeMachineObject::feedEventLoop();
 
     QByteArray jsonExpected = TestLogHelpers::loadFile(":/veinDumps/dumpActual.json");
@@ -98,8 +93,8 @@ void test_range_module_regression::checkActualValueCount()
     testRunner.setVfComponent(rangeEntityId, "PAR_PreScalingGroup0", "2/1*(1)");
 
     TimeMachineForTest::getInstance()->processTimers(500); //for 'm_AdjustTimer'
-    dspInterfaces[dspInterfaces::RangeModuleMeasProgram]->fireActValInterrupt(rangeValues.getDspValues(), /* dummy */ 0);
-    QSignalSpy spyDspWrite(dspInterfaces[dspInterfaces::AdjustManagement].get(), &MockDspInterface::sigDspMemoryWrite);
+    sampleDspInterfaceProg->fireActValInterrupt(rangeValues.getDspValues(), /* dummy */ 0);
+    QSignalSpy spyDspWrite(sampleDspInterfaceAdj.get(), &MockDspInterface::sigDspMemoryWrite);
     TimeMachineObject::feedEventLoop();
 
     QCOMPARE(spyDspWrite.count(), 3);
@@ -116,8 +111,8 @@ void test_range_module_regression::checkActualValueCount()
 void test_range_module_regression::injectActualValuesWithCheating()
 {
     ModuleManagerTestRunner testRunner(":/session-range-test.json");
-    const QList<TestDspInterfacePtr>& dspInterfaces = testRunner.getDspInterfaceList();
-    QCOMPARE(dspInterfaces.count(), 3);
+    TestDspInterfacePtr sampleDspInterfaceProg = testRunner.getDspInterface(rangeEntityId, TestFactoryServiceInterfaces::MODULEPROG);
+    TestDspInterfacePtr sampleDspInterfaceAdj = testRunner.getDspInterface(rangeEntityId, TestFactoryServiceInterfaces::ADJUST);
 
     DemoValuesDspRange rangeValues(rangeChannelCount);
     rangeValues.setFrequency(15);
@@ -130,8 +125,8 @@ void test_range_module_regression::injectActualValuesWithCheating()
     testRunner.setVfComponent(rangeEntityId, "PAR_IgnoreRmsValues", 2);
 
     TimeMachineForTest::getInstance()->processTimers(500); //for 'm_AdjustTimer'
-    dspInterfaces[dspInterfaces::RangeModuleMeasProgram]->fireActValInterrupt(rangeValues.getDspValues(), /* dummy */ 0);
-    QSignalSpy spyDspWriteDisabled(dspInterfaces[dspInterfaces::AdjustManagement].get(), &MockDspInterface::sigDspMemoryWrite);
+    sampleDspInterfaceProg->fireActValInterrupt(rangeValues.getDspValues(), /* dummy */ 0);
+    QSignalSpy spyDspWriteDisabled(sampleDspInterfaceAdj.get(), &MockDspInterface::sigDspMemoryWrite);
     TimeMachineObject::feedEventLoop();
 
     QCOMPARE(spyDspWriteDisabled.count(), 3);
@@ -148,8 +143,8 @@ void test_range_module_regression::injectActualValuesWithCheating()
     testRunner.setVfComponent(rangeEntityId, "PAR_IgnoreRmsValues", 2);
 
     TimeMachineForTest::getInstance()->processTimers(500); //for 'm_AdjustTimer'
-    dspInterfaces[dspInterfaces::RangeModuleMeasProgram]->fireActValInterrupt(rangeValues.getDspValues(), /* dummy */ 0);
-    QSignalSpy spyDspWriteEnabled(dspInterfaces[dspInterfaces::AdjustManagement].get(), &MockDspInterface::sigDspMemoryWrite);
+    sampleDspInterfaceProg->fireActValInterrupt(rangeValues.getDspValues(), /* dummy */ 0);
+    QSignalSpy spyDspWriteEnabled(sampleDspInterfaceAdj.get(), &MockDspInterface::sigDspMemoryWrite);
     TimeMachineObject::feedEventLoop();
 
     QCOMPARE(spyDspWriteEnabled.count(), 3);
@@ -170,8 +165,8 @@ void test_range_module_regression::injectActualValuesWithCheatingAndRangeChanged
     testRunner.setVfComponent(rangeEntityId, "PAR_IgnoreRmsValuesOnOff", 1);
     testRunner.setVfComponent(rangeEntityId, "PAR_IgnoreRmsValues", 2);
 
-    const QList<TestDspInterfacePtr>& dspInterfaces = testRunner.getDspInterfaceList();
-    QCOMPARE(dspInterfaces.count(), 3);
+    TestDspInterfacePtr sampleDspInterfaceProg = testRunner.getDspInterface(rangeEntityId, TestFactoryServiceInterfaces::MODULEPROG);
+    TestDspInterfacePtr sampleDspInterfaceAdj = testRunner.getDspInterface(rangeEntityId, TestFactoryServiceInterfaces::ADJUST);
 
     DemoValuesDspRange rangeValues(rangeChannelCount);
     rangeValues.setFrequency(15);
@@ -179,8 +174,8 @@ void test_range_module_regression::injectActualValuesWithCheatingAndRangeChanged
         rangeValues.setRmsValue(i, i);
 
     TimeMachineForTest::getInstance()->processTimers(500); //for 'm_AdjustTimer'
-    dspInterfaces[dspInterfaces::RangeModuleMeasProgram]->fireActValInterrupt(rangeValues.getDspValues(), /* dummy */ 0);
-    QSignalSpy spyDspWrite(dspInterfaces[dspInterfaces::AdjustManagement].get(), &MockDspInterface::sigDspMemoryWrite);
+    sampleDspInterfaceProg->fireActValInterrupt(rangeValues.getDspValues(), /* dummy */ 0);
+    QSignalSpy spyDspWrite(sampleDspInterfaceAdj.get(), &MockDspInterface::sigDspMemoryWrite);
     TimeMachineObject::feedEventLoop();
 
     QCOMPARE(spyDspWrite.count(), 3);
@@ -195,7 +190,7 @@ void test_range_module_regression::injectActualValuesWithCheatingAndRangeChanged
     testRunner.setVfComponent(rangeEntityId, "PAR_Channel1Range", "8V");
     spyDspWrite.clear();
     TimeMachineForTest::getInstance()->processTimers(500); //for 'm_AdjustTimer'
-    dspInterfaces[dspInterfaces::RangeModuleMeasProgram]->fireActValInterrupt(rangeValues.getDspValues(), /* dummy */ 0);
+    sampleDspInterfaceProg->fireActValInterrupt(rangeValues.getDspValues(), /* dummy */ 0);
     TimeMachineObject::feedEventLoop();
 
     QCOMPARE(spyDspWrite.count(), 3);
@@ -215,7 +210,8 @@ void test_range_module_regression::injectIncreasingActualValuesWithCheatingEnabl
     testRunner.setVfComponent(rangeEntityId, "PAR_IgnoreRmsValuesOnOff", 1);
     testRunner.setVfComponent(rangeEntityId, "PAR_IgnoreRmsValues", 2);
 
-    const QList<TestDspInterfacePtr>& dspInterfaces = testRunner.getDspInterfaceList();
+    TestDspInterfacePtr sampleDspInterfaceProg = testRunner.getDspInterface(rangeEntityId, TestFactoryServiceInterfaces::MODULEPROG);
+    TestDspInterfacePtr sampleDspInterfaceAdj = testRunner.getDspInterface(rangeEntityId, TestFactoryServiceInterfaces::ADJUST);
 
     DemoValuesDspRange rangeValues(rangeChannelCount);
     rangeValues.setFrequency(15);
@@ -223,8 +219,8 @@ void test_range_module_regression::injectIncreasingActualValuesWithCheatingEnabl
         rangeValues.setRmsValue(i, 0.1);
 
     TimeMachineForTest::getInstance()->processTimers(500); //for 'm_AdjustTimer'
-    dspInterfaces[dspInterfaces::RangeModuleMeasProgram]->fireActValInterrupt(rangeValues.getDspValues(), /* dummy */ 0);
-    QSignalSpy spyDspWrite(dspInterfaces[dspInterfaces::AdjustManagement].get(), &MockDspInterface::sigDspMemoryWrite);
+    sampleDspInterfaceProg->fireActValInterrupt(rangeValues.getDspValues(), /* dummy */ 0);
+    QSignalSpy spyDspWrite(sampleDspInterfaceAdj.get(), &MockDspInterface::sigDspMemoryWrite);
     TimeMachineObject::feedEventLoop();
 
     QCOMPARE(spyDspWrite.count(), 3);
@@ -242,7 +238,7 @@ void test_range_module_regression::injectIncreasingActualValuesWithCheatingEnabl
 
     spyDspWrite.clear();
     TimeMachineForTest::getInstance()->processTimers(500); //for 'm_AdjustTimer'
-    dspInterfaces[dspInterfaces::RangeModuleMeasProgram]->fireActValInterrupt(rangeValues.getDspValues(), /* dummy */ 0);
+    sampleDspInterfaceProg->fireActValInterrupt(rangeValues.getDspValues(), /* dummy */ 0);
     TimeMachineObject::feedEventLoop();
 
     QCOMPARE(spyDspWrite.count(), 3);
@@ -264,7 +260,8 @@ void test_range_module_regression::injectActualValuesCheatingEnabledWithPreScali
     testRunner.setVfComponent(rangeEntityId, "PAR_PreScalingEnabledGroup0", true);
     testRunner.setVfComponent(rangeEntityId, "PAR_PreScalingGroup0", "2/1");
 
-    const QList<TestDspInterfacePtr>& dspInterfaces = testRunner.getDspInterfaceList();
+    TestDspInterfacePtr sampleDspInterfaceProg = testRunner.getDspInterface(rangeEntityId, TestFactoryServiceInterfaces::MODULEPROG);
+    TestDspInterfacePtr sampleDspInterfaceAdj = testRunner.getDspInterface(rangeEntityId, TestFactoryServiceInterfaces::ADJUST);
 
     DemoValuesDspRange rangeValues(rangeChannelCount);
     rangeValues.setFrequency(15);
@@ -272,8 +269,8 @@ void test_range_module_regression::injectActualValuesCheatingEnabledWithPreScali
         rangeValues.setRmsValue(i, i*2.0);
 
     TimeMachineForTest::getInstance()->processTimers(500); //for 'm_AdjustTimer'
-    dspInterfaces[dspInterfaces::RangeModuleMeasProgram]->fireActValInterrupt(rangeValues.getDspValues(), /* dummy */ 0);
-    QSignalSpy spyDspWrite(dspInterfaces[dspInterfaces::AdjustManagement].get(), &MockDspInterface::sigDspMemoryWrite);
+    sampleDspInterfaceProg->fireActValInterrupt(rangeValues.getDspValues(), /* dummy */ 0);
+    QSignalSpy spyDspWrite(sampleDspInterfaceAdj.get(), &MockDspInterface::sigDspMemoryWrite);
     TimeMachineObject::feedEventLoop();
 
     QCOMPARE(spyDspWrite.count(), 3);
