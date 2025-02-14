@@ -1,16 +1,17 @@
 file(GLOB SOURCES 
-    ${CMAKE_CURRENT_SOURCE_DIR}/*.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/delegates/*.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/scpi-clients/*.cpp
+    *.cpp
+    delegates/*.cpp
+    scpi-clients/*.cpp
     )
 
 file(GLOB HEADER
-    ${CMAKE_CURRENT_SOURCE_DIR}/*.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/delegates/*.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/scpi-clients/*.h
+    *.h
+    delegates/*.h
+    scpi-clients/*.h
     )
 
 add_library(scpimodule-static STATIC
+    scpimodulexmlschema.qrc
     ${SOURCES}
     ${HEADER}
     )

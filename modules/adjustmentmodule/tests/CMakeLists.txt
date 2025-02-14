@@ -4,7 +4,6 @@ function(SETUP_QTESTS_MODULE)
         target_sources(${_testname}
             PRIVATE
             ${XML_SCHEMA_RESOURCE_ADJUSTMENTMODULE}
-            ${XML_SCHEMA_RESOURCE_SCPIMODULE}
         )
         target_link_libraries(${_testname}
             PRIVATE
