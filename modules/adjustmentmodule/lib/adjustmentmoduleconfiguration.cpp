@@ -4,8 +4,14 @@
 
 static const char* defaultXSDFile = "://adjustmentmodule.xsd";
 
+static void initResource()
+{
+    Q_INIT_RESOURCE(adjustmentmodulexmlschema);
+}
+
 cAdjustmentModuleConfiguration::cAdjustmentModuleConfiguration()
 {
+    initResource();
     m_pAdjustmentModulConfigData = 0;
     connect(m_pXMLReader, &Zera::XMLConfig::cReader::valueChanged, this, &cAdjustmentModuleConfiguration::configXMLInfo);
     connect(m_pXMLReader, &Zera::XMLConfig::cReader::finishedParsingXML, this, &cAdjustmentModuleConfiguration::completeConfiguration);
