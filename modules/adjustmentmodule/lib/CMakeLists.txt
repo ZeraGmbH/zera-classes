@@ -1,14 +1,15 @@
 file(GLOB SOURCES
-    ${CMAKE_CURRENT_SOURCE_DIR}/*.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/tasks/*.cpp
+    *.cpp
+    tasks/*.cpp
     )
 
 file(GLOB HEADER
-    ${CMAKE_CURRENT_SOURCE_DIR}/*.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/tasks/*.h
+    *.h
+    tasks/*.h
     )
 
 add_library(adjustmentmodule-static STATIC
+    adjustmentmodulexmlschema.qrc
     ${SOURCES}
     ${HEADER}
 )
