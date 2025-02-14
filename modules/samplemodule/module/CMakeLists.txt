@@ -1,6 +1,6 @@
 add_library(samplemodule MODULE
-    ${CMAKE_CURRENT_SOURCE_DIR}/samplemodulefactory.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/samplemodulefactory.h
+    samplemodulefactory.cpp
+    samplemodulefactory.h
     )
 
 target_link_libraries(samplemodule
