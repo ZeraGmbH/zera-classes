@@ -17,7 +17,9 @@ cRmsModuleMeasProgram::cRmsModuleMeasProgram(cRmsModule* module,
     cBaseDspMeasProgram(pConfiguration, module->getVeinModuleName()),
     m_pModule(module)
 {
-    m_dspInterface = m_pModule->getServiceInterfaceFactory()->createDspInterfaceRms(getConfData()->m_valueChannelList);
+    m_dspInterface = m_pModule->getServiceInterfaceFactory()->createDspInterfaceRms(
+        m_pModule->getEntityId(),
+        getConfData()->m_valueChannelList);
 
     m_IdentifyState.addTransition(this, &cRmsModuleMeasProgram::activationContinue, &m_pcbserverConnectState);
     m_pcbserverConnectState.addTransition(this, &cRmsModuleMeasProgram::activationContinue, &m_dspserverConnectState);

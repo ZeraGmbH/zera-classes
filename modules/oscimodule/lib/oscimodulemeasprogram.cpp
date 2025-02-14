@@ -18,6 +18,7 @@ cOsciModuleMeasProgram::cOsciModuleMeasProgram(cOsciModule* module, std::shared_
     m_pModule(module)
 {
     m_dspInterface = m_pModule->getServiceInterfaceFactory()->createDspInterfaceOsci(
+        m_pModule->getEntityId(),
         getConfData()->m_valueChannelList,
         getConfData()->m_nInterpolation);
 

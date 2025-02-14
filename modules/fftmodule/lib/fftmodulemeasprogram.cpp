@@ -16,7 +16,10 @@ cFftModuleMeasProgram::cFftModuleMeasProgram(cFftModule* module, std::shared_ptr
     cBaseDspMeasProgram(pConfiguration, module->getVeinModuleName()),
     m_pModule(module)
 {
-    m_dspInterface = m_pModule->getServiceInterfaceFactory()->createDspInterfaceFft(getConfData()->m_valueChannelList, getConfData()->m_nFftOrder);
+    m_dspInterface = m_pModule->getServiceInterfaceFactory()->createDspInterfaceFft(
+        m_pModule->getEntityId(),
+        getConfData()->m_valueChannelList,
+        getConfData()->m_nFftOrder);
 
     m_IdentifyState.addTransition(this, &cFftModuleMeasProgram::activationContinue, &m_pcbserverConnectState);
     m_pcbserverConnectState.addTransition(this, &cFftModuleMeasProgram::activationContinue, &m_dspserverConnectState);

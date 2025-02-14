@@ -18,7 +18,7 @@ cModeModuleInit::cModeModuleInit(cModeModule* module, cModeModuleConfigData& con
     m_ConfigData(configData)
 {
     m_pcbInterface = std::make_shared<Zera::cPCBInterface>();
-    m_dspInterface = m_pModule->getServiceInterfaceFactory()->createDspInterfaceMode();
+    m_dspInterface = m_pModule->getServiceInterfaceFactory()->createDspInterfaceMode(m_pModule->getEntityId());
 
     m_IdentifyState.addTransition(this, &cModeModuleInit::activationContinue, &m_readResourceTypesState);
     m_readResourceTypesState.addTransition(this, &cModeModuleInit::activationContinue, &m_readResourceState);

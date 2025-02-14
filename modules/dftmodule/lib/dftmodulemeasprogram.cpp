@@ -23,6 +23,7 @@ cDftModuleMeasProgram::cDftModuleMeasProgram(cDftModule* module, std::shared_ptr
     m_pModule(module)
 {
     m_dspInterface = m_pModule->getServiceInterfaceFactory()->createDspInterfaceDft(
+        m_pModule->getEntityId(),
         getConfData()->m_valueChannelList,
         getConfData()->m_nDftOrder);
 
