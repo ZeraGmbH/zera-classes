@@ -22,6 +22,7 @@ public:
     void startDestroy() override;
     virtual void exportMetaData();
 
+    int getEntityId() const;
     QByteArray getConfiguration() const override;
     VeinStorage::AbstractDatabase *getStorageDb() const;
     bool getDemo();
