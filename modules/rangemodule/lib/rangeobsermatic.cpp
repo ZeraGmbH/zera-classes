@@ -29,7 +29,7 @@ cRangeObsermatic::cRangeObsermatic(cRangeModule *module,
 
     //  we set 0.0 as default value for all peak values in case that these values are needed before actual values really arrived
 
-    m_dspInterface = m_pModule->getServiceInterfaceFactory()->createDspInterfaceRange(
+    m_dspInterface = m_pModule->getServiceInterfaceFactory()->createDspInterfaceRangeObser(
         m_pModule->getSharedChannelRangeObserver()->getChannelMNames(),
         false /* just for demo COM5003 ref-session - postpone better solution now */);
 

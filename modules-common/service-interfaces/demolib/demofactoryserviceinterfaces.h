@@ -6,7 +6,9 @@
 class DemoFactoryServiceInterfaces : public AbstractFactoryServiceInterfaces
 {
 public:
-    DspInterfacePtr createDspInterfaceRange(QStringList valueChannelList, bool isReferencce) override;
+    DspInterfacePtr createDspInterfaceRangeProg(QStringList valueChannelList, bool isReference) override;
+    DspInterfacePtr createDspInterfaceRangeObser(QStringList valueChannelList, bool isReference) override;
+    DspInterfacePtr createDspInterfaceRangeAdj(QStringList valueChannelList, bool isReference) override;
     DspInterfacePtr createDspInterfaceDft(QStringList valueChannelList, int dftOrder) override;
     DspInterfacePtr createDspInterfaceFft(QStringList valueChannelList, int fftOrder) override;
     DspInterfacePtr createDspInterfaceRms(QStringList valueChannelList) override;
@@ -16,8 +18,8 @@ public:
     DspInterfacePtr createDspInterfaceThdn(QStringList valueChannelList) override;
     DspInterfacePtr createDspInterfaceOsci(QStringList valueChannelList, int interpolation) override;
     DspInterfacePtr createDspInterfaceMode() override;
-    DspInterfacePtr createDspInterfaceRef(QStringList valueChannelList) override;
-    DspInterfacePtr createDspInterfaceOther() override;
+    DspInterfacePtr createDspInterfaceRefProg(QStringList valueChannelList) override;
+    DspInterfacePtr createDspInterfaceRefAdj() override;
 };
 
 #endif // DEMOFACTORYSERVICEINTERFACES_H

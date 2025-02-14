@@ -16,7 +16,7 @@ cReferenceAdjustment::cReferenceAdjustment(cReferenceModule* module, cReferenceM
     m_pModule(module),
     m_pConfigData(confData)
 {
-    m_dspInterface = m_pModule->getServiceInterfaceFactory()->createDspInterfaceOther();
+    m_dspInterface = m_pModule->getServiceInterfaceFactory()->createDspInterfaceRefAdj();
     m_pPCBInterface = std::make_shared<Zera::cPCBInterface>();
 
     for (int i = 0; i < m_pConfigData->m_referenceChannelList.count(); i++) // we fetch all our real channels first
