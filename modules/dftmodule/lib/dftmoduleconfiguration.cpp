@@ -2,6 +2,11 @@
 #include "dftmoduleconfigdata.h"
 #include <xmlconfigreader.h>
 
+static void initResource()
+{
+    Q_INIT_RESOURCE(dftmodulexmlschema);
+}
+
 namespace DFTMODULE
 {
 static const char* defaultXSDFile = "://dftmodule.xsd";
@@ -9,6 +14,7 @@ static const char* defaultXSDFile = "://dftmodule.xsd";
 
 cDftModuleConfiguration::cDftModuleConfiguration()
 {
+    initResource();
     m_pDftModulConfigData = 0;
     connect(m_pXMLReader, &Zera::XMLConfig::cReader::valueChanged, this, &cDftModuleConfiguration::configXMLInfo);
     connect(m_pXMLReader, &Zera::XMLConfig::cReader::finishedParsingXML, this, &cDftModuleConfiguration::completeConfiguration);
