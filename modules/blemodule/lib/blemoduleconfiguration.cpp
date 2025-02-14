@@ -5,12 +5,18 @@
 #include "blemoduleconfiguration.h"
 #include "blemoduleconfigdata.h"
 
+static void initResource()
+{
+    Q_INIT_RESOURCE(blemodulexmlschema);
+}
+
 namespace BLEMODULE
 {
 static const char* defaultXSDFile = "://blemodule.xsd";
 
 cBleModuleConfiguration::cBleModuleConfiguration()
 {
+    initResource();
     m_pBleModulConfigData = nullptr;
     connect(m_pXMLReader, &Zera::XMLConfig::cReader::valueChanged, this, &cBleModuleConfiguration::configXMLInfo);
     connect(m_pXMLReader, &Zera::XMLConfig::cReader::finishedParsingXML, this, &cBleModuleConfiguration::completeConfiguration);
