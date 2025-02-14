@@ -2,11 +2,17 @@
 #include "sec1moduleconfigdata.h"
 #include <xmlconfigreader.h>
 
+static void initResource()
+{
+    Q_INIT_RESOURCE(sec1modulexmlschema);
+}
+
 namespace SEC1MODULE
 {
 
 cSec1ModuleConfiguration::cSec1ModuleConfiguration()
 {
+    initResource();
     m_pSec1ModulConfigData = 0;
     connect(m_pXMLReader, &Zera::XMLConfig::cReader::valueChanged, this, &cSec1ModuleConfiguration::configXMLInfo);
     connect(m_pXMLReader, &Zera::XMLConfig::cReader::finishedParsingXML, this, &cSec1ModuleConfiguration::completeConfiguration);
