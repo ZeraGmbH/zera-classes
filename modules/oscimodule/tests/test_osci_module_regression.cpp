@@ -13,11 +13,9 @@ static int constexpr osciEntityId = 1120;
 void test_osci_module_regression::dumpDspSetup()
 {
     ModuleManagerTestRunner testRunner(":/session-minimal.json");
+    TestDspInterfacePtr osciDspInterface = testRunner.getDspInterface(osciEntityId);
 
-    const QList<TestDspInterfacePtr>& dspInterfaces = testRunner.getDspInterfaceList();
-    QCOMPARE(dspInterfaces.count(), 1);
-
-    QString measProgramDumped = TestLogHelpers::dump(dspInterfaces[0]->dumpAll());
+    QString measProgramDumped = TestLogHelpers::dump(osciDspInterface->dumpAll());
     QString measProgramExpected = TestLogHelpers::loadFile(":/dspDumps/dumpMeasProgram.json");
     QVERIFY(TestLogHelpers::compareAndLogOnDiff(measProgramExpected, measProgramDumped));
 }
@@ -32,10 +30,8 @@ void test_osci_module_regression::dumpDspSetReference()
     setReferenceChannel(testRunner.getVfCmdEventHandlerSystemPtr(), "m4", "m5");
     setReferenceChannel(testRunner.getVfCmdEventHandlerSystemPtr(), "m5", "m0");
 
-    const QList<TestDspInterfacePtr>& dspInterfaces = testRunner.getDspInterfaceList();
-    QCOMPARE(dspInterfaces.count(), 1);
-
-    QString measProgramDumped = TestLogHelpers::dump(dspInterfaces[0]->dumpAll(true));
+    TestDspInterfacePtr osciDspInterface = testRunner.getDspInterface(osciEntityId);
+    QString measProgramDumped = TestLogHelpers::dump(osciDspInterface->dumpAll(true));
     QString measProgramExpected = TestLogHelpers::loadFile(":/dspDumps/dump-ref-UL1-to-other.json");
     QVERIFY(TestLogHelpers::compareAndLogOnDiff(measProgramExpected, measProgramDumped));
 }

@@ -40,22 +40,18 @@ static constexpr int fftResultCount = voltagePhaseNeutralCount + currentPhaseCou
 void test_fft_module_regression::checkActualValueCount()
 {
     ModuleManagerTestRunner testRunner(":/sessions/from-resource.json");
+    TestDspInterfacePtr fftDspInterface = testRunner.getDspInterface(fftEntityId);
 
-    const QList<TestDspInterfacePtr>& dspInterfaces = testRunner.getDspInterfaceList();
-    QCOMPARE(dspInterfaces.count(), 1);
-
-    QStringList valueList = dspInterfaces[0]->getValueList();
+    QStringList valueList = fftDspInterface->getValueList();
     QCOMPARE(valueList.count(), fftResultCount);
 }
 
 void test_fft_module_regression::injectValues()
 {
     ModuleManagerTestRunner testRunner(":/sessions/from-resource.json");
+    TestDspInterfacePtr fftDspInterface = testRunner.getDspInterface(fftEntityId);
 
-    const QList<TestDspInterfacePtr>& dspInterfaces = testRunner.getDspInterfaceList();
-    QCOMPARE(dspInterfaces.count(), 1);
-
-    DemoValuesDspFft dspValues(dspInterfaces[0]->getValueList().count());
+    DemoValuesDspFft dspValues(fftDspInterface->getValueList().count());
     dspValues.setValue(0, 0, 1, 1);
     dspValues.setValue(0, 1, 2, 0);
     dspValues.setValue(0, 2, 0, 3);
@@ -80,7 +76,7 @@ void test_fft_module_regression::injectValues()
     dspValues.setValue(5, 1, 4/M_SQRT2, 4/M_SQRT2);
     dspValues.setValue(5, 2, 6/M_SQRT2, 6/M_SQRT2);
 
-    dspInterfaces[0]->fireActValInterrupt(dspValues.getDspValues(), /* dummy */ 0);
+    fftDspInterface->fireActValInterrupt(dspValues.getDspValues(), /* dummy */ 0);
     TimeMachineObject::feedEventLoop();
 
     QByteArray jsonExpected = TestLogHelpers::loadFile(":/dumpActual.json");
@@ -93,11 +89,9 @@ void test_fft_module_regression::injectValues()
 void test_fft_module_regression::dumpDspSetup()
 {
     ModuleManagerTestRunner testRunner(":/sessions/from-resource.json");
+    TestDspInterfacePtr fftDspInterface = testRunner.getDspInterface(fftEntityId);
 
-    const QList<TestDspInterfacePtr>& dspInterfaces = testRunner.getDspInterfaceList();
-    QCOMPARE(dspInterfaces.count(), 1);
-
-    QString measProgramDumped = TestLogHelpers::dump(dspInterfaces[0]->dumpAll());
+    QString measProgramDumped = TestLogHelpers::dump(fftDspInterface->dumpAll());
     QString measProgramExpected = TestLogHelpers::loadFile(":/dspDumps/dumpMeasProgram.json");
     QVERIFY(TestLogHelpers::compareAndLogOnDiff(measProgramExpected, measProgramDumped));
 }
@@ -105,11 +99,9 @@ void test_fft_module_regression::dumpDspSetup()
 void test_fft_module_regression::dumpDspIL1ReferenceSetup()
 {
     ModuleManagerTestRunner testRunner(":/sessions/ref-IL1.json");
+    TestDspInterfacePtr fftDspInterface = testRunner.getDspInterface(fftEntityId);
 
-    const QList<TestDspInterfacePtr>& dspInterfaces = testRunner.getDspInterfaceList();
-    QCOMPARE(dspInterfaces.count(), 1);
-
-    QString measProgramDumped = TestLogHelpers::dump(dspInterfaces[0]->dumpAll());
+    QString measProgramDumped = TestLogHelpers::dump(fftDspInterface->dumpAll());
     QString measProgramExpected = TestLogHelpers::loadFile(":/dspDumps/dump-ref-IL1.json");
     QVERIFY(TestLogHelpers::compareAndLogOnDiff(measProgramExpected, measProgramDumped));
 }
@@ -124,10 +116,8 @@ void test_fft_module_regression::dumpDspSetReference()
     setReferenceChannel(testRunner.getVfCmdEventHandlerSystemPtr(), "m4", "m5");
     setReferenceChannel(testRunner.getVfCmdEventHandlerSystemPtr(), "m5", "m0");
 
-    const QList<TestDspInterfacePtr>& dspInterfaces = testRunner.getDspInterfaceList();
-    QCOMPARE(dspInterfaces.count(), 1);
-
-    QString measProgramDumped = TestLogHelpers::dump(dspInterfaces[0]->dumpAll(true));
+    TestDspInterfacePtr fftDspInterface = testRunner.getDspInterface(fftEntityId);
+    QString measProgramDumped = TestLogHelpers::dump(fftDspInterface->dumpAll(true));
     QString measProgramExpected = TestLogHelpers::loadFile(":/dspDumps/dump-ref-UL1-to-other.json");
     QVERIFY(TestLogHelpers::compareAndLogOnDiff(measProgramExpected, measProgramDumped));
 }

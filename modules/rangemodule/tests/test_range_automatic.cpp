@@ -322,17 +322,12 @@ void test_range_automatic::setupServices()
     TimeMachineObject::feedEventLoop();
 }
 
-enum dspInterfaces{
-    RangeObsermatic,
-    AdjustManagement,
-    RangeModuleMeasProgram
-};
-
 static constexpr int rangeChannelCount = 8;
 
 void test_range_automatic::fireNewRmsValues(float rmsValue)
 {
-    TestDspInterfacePtr dspInterface = m_serviceInterfaceFactory->getInterfaceList()[dspInterfaces::RangeModuleMeasProgram];
+    TestDspInterfacePtr dspInterface =
+        m_serviceInterfaceFactory->getInterface(rangeEntityId, TestFactoryServiceInterfaces::MODULEPROG);
     DemoValuesDspRange rangeValues(rangeChannelCount);
     for(int i = 0; i < rangeChannelCount; i++)
         rangeValues.setRmsValue(i, rmsValue);

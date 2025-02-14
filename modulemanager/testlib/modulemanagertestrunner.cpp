@@ -47,6 +47,12 @@ VeinStorage::AbstractEventSystem *ModuleManagerTestRunner::getVeinStorageSystem(
     return m_modmanFacade->getStorageSystem();
 }
 
+TestDspInterfacePtr ModuleManagerTestRunner::getDspInterface(int entityId,
+                                                             TestFactoryServiceInterfaces::DSPInterfaceType dspInterfaceType)
+{
+    return m_serviceInterfaceFactory->getInterface(entityId, dspInterfaceType);
+}
+
 const QList<TestDspInterfacePtr> &ModuleManagerTestRunner::getDspInterfaceList() const
 {
     return m_serviceInterfaceFactory->getInterfaceList();

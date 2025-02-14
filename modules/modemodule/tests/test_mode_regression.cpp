@@ -5,14 +5,14 @@
 
 QTEST_MAIN(test_mode_regression)
 
+static int constexpr modeEntityId = 1000;
+
 void test_mode_regression::dumpDspSetup()
 {
     ModuleManagerTestRunner testRunner(":/sessions/minimal.json");
+    TestDspInterfacePtr modeDspInterface = testRunner.getDspInterface(modeEntityId);
 
-    const QList<TestDspInterfacePtr>& dspInterfaces = testRunner.getDspInterfaceList();
-    QCOMPARE(dspInterfaces.count(), 1);
-
-    QString measProgramDumped = TestLogHelpers::dump(dspInterfaces[0]->dumpAll(true));
+    QString measProgramDumped = TestLogHelpers::dump(modeDspInterface->dumpAll(true));
     QString measProgramExpected = TestLogHelpers::loadFile(":/dspDumps/dumpMeasProgram.json");
     QVERIFY(TestLogHelpers::compareAndLogOnDiff(measProgramExpected, measProgramDumped));
 }

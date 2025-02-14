@@ -41,11 +41,10 @@ static constexpr int dftResultCount = voltagePhaseNeutralCount + voltagePhasePha
 void test_dft_module_regression::checkActualValueCount()
 {
     ModuleManagerTestRunner testRunner(":/sessions/dft-no-movingwindow-no-ref.json");
+    TestDspInterfacePtr dftDspInterface = testRunner.getDspInterface(dftEntityId);
+    QVERIFY(dftDspInterface);
 
-    const QList<TestDspInterfacePtr>& dspInterfaces = testRunner.getDspInterfaceList();
-    QCOMPARE(dspInterfaces.count(), 1);
-
-    QStringList valueList = dspInterfaces[0]->getValueList();
+    QStringList valueList = dftDspInterface->getValueList();
     QCOMPARE(valueList.count(), dftResultCount);
 }
 
@@ -53,14 +52,12 @@ void test_dft_module_regression::injectActualValuesNoReferenceChannel()
 {
     ModuleManagerTestRunner testRunner(":/sessions/dft-no-movingwindow-no-ref.json");
 
-    const QList<TestDspInterfacePtr>& dspInterfaces = testRunner.getDspInterfaceList();
-    QCOMPARE(dspInterfaces.count(), 1);
-
     QVector<float> actValues(dftResultCount * 2); // valuelist * 2 for re+im
     for(int i = 0; i<dftResultCount * 2; i++)
         actValues[i] = i;
 
-    dspInterfaces[0]->fireActValInterrupt(actValues, /*dummy*/ 0);
+    TestDspInterfacePtr dftDspInterface = testRunner.getDspInterface(dftEntityId);
+    dftDspInterface->fireActValInterrupt(actValues, /*dummy*/ 0);
     TimeMachineObject::feedEventLoop();
 
     QByteArray jsonExpected = TestLogHelpers::loadFile(":/veinDumps/dumpActual-no-ref.json");
@@ -74,12 +71,12 @@ void test_dft_module_regression::injectActualValuesReferenceChannelUL1()
 {
     ModuleManagerTestRunner testRunner(":/sessions/dft-no-movingwindow-ref.json");
 
-    const QList<TestDspInterfacePtr>& dspInterfaces = testRunner.getDspInterfaceList();
     QVector<float> actValues(dftResultCount * 2); // valuelist * 2 for re+im
     for(int i = 0; i<dftResultCount * 2; i++)
         actValues[i] = i+1;
 
-    dspInterfaces[0]->fireActValInterrupt(actValues, /*dummy*/ 0);
+    TestDspInterfacePtr dftDspInterface = testRunner.getDspInterface(dftEntityId);
+    dftDspInterface->fireActValInterrupt(actValues, /*dummy*/ 0);
     TimeMachineObject::feedEventLoop();
 
     QByteArray jsonExpected = TestLogHelpers::loadFile(":/veinDumps/dumpActual-refUL1.json");
@@ -92,14 +89,15 @@ void test_dft_module_regression::injectActualValuesReferenceChannelUL1()
 void test_dft_module_regression::injectActualValuesReferenceChannelUL2()
 {
     ModuleManagerTestRunner testRunner(":/sessions/dft-no-movingwindow-ref.json");
+
     setReferenceChannel(testRunner.getVfCmdEventHandlerSystemPtr(), "UL1", "UL2"); // Alias (fft/osci expect channel-m-name)
 
-    const QList<TestDspInterfacePtr>& dspInterfaces = testRunner.getDspInterfaceList();
     QVector<float> actValues(dftResultCount * 2); // valuelist * 2 for re+im
     for(int i = 0; i<dftResultCount * 2; i++)
         actValues[i] = i+1;
 
-    dspInterfaces[0]->fireActValInterrupt(actValues, /*dummy*/ 0);
+    TestDspInterfacePtr dftDspInterface = testRunner.getDspInterface(dftEntityId);
+    dftDspInterface->fireActValInterrupt(actValues, /*dummy*/ 0);
     TimeMachineObject::feedEventLoop();
 
     QByteArray jsonExpected = TestLogHelpers::loadFile(":/veinDumps/dumpActual-refUL2.json");
@@ -109,7 +107,7 @@ void test_dft_module_regression::injectActualValuesReferenceChannelUL2()
     QVERIFY(TestLogHelpers::compareAndLogOnDiff(jsonExpected, jsonDumped));
 
     // reference is caclulated by dftmodule -> same layout as default
-    QString measProgramDumped = TestLogHelpers::dump(dspInterfaces[0]->dumpAll(true));
+    QString measProgramDumped = TestLogHelpers::dump(dftDspInterface->dumpAll(true));
     QString measProgramExpected = TestLogHelpers::loadFile(":/dspDumps/dumpReferenceChannelChange.json");
     QVERIFY(TestLogHelpers::compareAndLogOnDiff(measProgramExpected, measProgramDumped));
 }
@@ -120,15 +118,15 @@ void test_dft_module_regression::injectActualValuesOrder0()
 {
     ModuleManagerTestRunner testRunner(":/sessions/dft-no-movingwindow-noref-order-0.json");
 
-    const QList<TestDspInterfacePtr>& dspInterfaces = testRunner.getDspInterfaceList();
-    QStringList valueList = dspInterfaces[0]->getValueList();
+    TestDspInterfacePtr dftDspInterface = testRunner.getDspInterface(dftEntityId);
+    QStringList valueList = dftDspInterface->getValueList();
     QCOMPARE(valueList.count(), comDcRefChannelCount);
 
     QVector<float> actValues(comDcRefChannelCount * 2); // valuelist * 2 for re+im
     for(int i = 0; i<comDcRefChannelCount * 2; i++)
         actValues[i] = i+1;
 
-    dspInterfaces[0]->fireActValInterrupt(actValues, /*dummy*/ 0);
+    dftDspInterface->fireActValInterrupt(actValues, /*dummy*/ 0);
     TimeMachineObject::feedEventLoop();
 
     QByteArray jsonExpected = TestLogHelpers::loadFile(":/veinDumps/dumpActual-no-ref-order-0.json");
@@ -142,11 +140,11 @@ void test_dft_module_regression::injectSymmetricalOrder0()
 {
     ModuleManagerTestRunner testRunner(":/sessions/dft-no-movingwindow-noref-order-0.json");
 
-    const QList<TestDspInterfacePtr>& dspInterfaces = testRunner.getDspInterfaceList();
-    DemoValuesDspDft dspValues(dspInterfaces[0]->getValueList(), 0);
+    TestDspInterfacePtr dftDspInterface = testRunner.getDspInterface(dftEntityId);
+    DemoValuesDspDft dspValues(dftDspInterface->getValueList(), 0);
     dspValues.setAllValuesSymmetric(20, 10, 30);
 
-    dspInterfaces[0]->fireActValInterrupt(dspValues.getDspValues(), /*dummy*/ 0);
+    dftDspInterface->fireActValInterrupt(dspValues.getDspValues(), /*dummy*/ 0);
     TimeMachineObject::feedEventLoop();
 
     QByteArray jsonExpected = TestLogHelpers::loadFile(":/veinDumps/dumpSymmetricOrder0.json");
@@ -160,11 +158,11 @@ void test_dft_module_regression::injectSymmetricalOrder1()
 {
     ModuleManagerTestRunner testRunner(":/sessions/dft-no-movingwindow-ref.json");
 
-    const QList<TestDspInterfacePtr>& dspInterfaces = testRunner.getDspInterfaceList();
-    DemoValuesDspDft dspValues(dspInterfaces[0]->getValueList(), 1);
+    TestDspInterfacePtr dftDspInterface = testRunner.getDspInterface(dftEntityId);
+    DemoValuesDspDft dspValues(dftDspInterface->getValueList(), 1);
     dspValues.setAllValuesSymmetric(230, 10, 30);
 
-    dspInterfaces[0]->fireActValInterrupt(dspValues.getDspValues(), /*dummy*/ 0);
+    dftDspInterface->fireActValInterrupt(dspValues.getDspValues(), /*dummy*/ 0);
     TimeMachineObject::feedEventLoop();
 
     QByteArray jsonExpected = TestLogHelpers::loadFile(":/veinDumps/dumpSymmetricOrder1.json");
@@ -178,10 +176,8 @@ void test_dft_module_regression::dumpDspSetup()
 {
     ModuleManagerTestRunner testRunner(":/sessions/dft-no-movingwindow-ref.json");
 
-    const QList<TestDspInterfacePtr>& dspInterfaces = testRunner.getDspInterfaceList();
-    QCOMPARE(dspInterfaces.count(), 1);
-
-    QString measProgramDumped = TestLogHelpers::dump(dspInterfaces[0]->dumpAll());
+    TestDspInterfacePtr dftDspInterface = testRunner.getDspInterface(dftEntityId);
+    QString measProgramDumped = TestLogHelpers::dump(dftDspInterface->dumpAll());
     QString measProgramExpected = TestLogHelpers::loadFile(":/dspDumps/dumpMeasProgram.json");
     QVERIFY(TestLogHelpers::compareAndLogOnDiff(measProgramExpected, measProgramDumped));
 }

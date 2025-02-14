@@ -40,26 +40,22 @@ static constexpr int rmsResultCount = voltagePhaseNeutralCount + voltagePhasePha
 void test_rms_module_regression::checkActualValueCount()
 {
     ModuleManagerTestRunner testRunner(":/session-rms-moduleconfig-from-resource.json");
+    TestDspInterfacePtr rmsDspInterface = testRunner.getDspInterface(rmsEntityId);
 
-    const QList<TestDspInterfacePtr>& dspInterfaces = testRunner.getDspInterfaceList();
-    QCOMPARE(dspInterfaces.count(), 1);
-
-    QStringList valueList = dspInterfaces[0]->getValueList();
+    QStringList valueList = rmsDspInterface->getValueList();
     QCOMPARE(valueList.count(), rmsResultCount);
 }
 
 void test_rms_module_regression::injectActualValues()
 {
     ModuleManagerTestRunner testRunner(":/session-rms-moduleconfig-from-resource.json");
-
-    const QList<TestDspInterfacePtr>& dspInterfaces = testRunner.getDspInterfaceList();
-    QCOMPARE(dspInterfaces.count(), 1);
+    TestDspInterfacePtr rmsDspInterface = testRunner.getDspInterface(rmsEntityId);
 
     QVector<float> actValues(rmsResultCount);
     for(int i = 0; i<rmsResultCount; i++)
         actValues[i] = i;
 
-    dspInterfaces[0]->fireActValInterrupt(actValues, 0 /* dummy */);
+    rmsDspInterface->fireActValInterrupt(actValues, 0 /* dummy */);
     TimeMachineObject::feedEventLoop();
 
     QByteArray jsonExpected= TestLogHelpers::loadFile(":/dumpActual.json");
@@ -72,20 +68,18 @@ void test_rms_module_regression::injectActualValues()
 void test_rms_module_regression::injectActualTwice()
 {
     ModuleManagerTestRunner testRunner(":/session-rms-moduleconfig-from-resource.json");
-
-    const QList<TestDspInterfacePtr>& dspInterfaces = testRunner.getDspInterfaceList();
-    QCOMPARE(dspInterfaces.count(), 1);
+    TestDspInterfacePtr rmsDspInterface = testRunner.getDspInterface(rmsEntityId);
 
     VeinStorage::AbstractDatabase* storageDb = testRunner.getVeinStorageSystem()->getDb();
     QVector<float> actValues(rmsResultCount);
 
     actValues[1] = 37;
-    dspInterfaces[0]->fireActValInterrupt(actValues, 0 /* dummy */);
+    rmsDspInterface->fireActValInterrupt(actValues, 0 /* dummy */);
     TimeMachineObject::feedEventLoop();
     QCOMPARE(storageDb->getStoredValue(rmsEntityId, "ACT_RMSPN2"), QVariant(37.0));
 
     actValues[1] = 42;
-    dspInterfaces[0]->fireActValInterrupt(actValues, 0 /* dummy */);
+    rmsDspInterface->fireActValInterrupt(actValues, 0 /* dummy */);
     TimeMachineObject::feedEventLoop();
     QCOMPARE(storageDb->getStoredValue(rmsEntityId, "ACT_RMSPN2"), QVariant(42.0));
 }
@@ -93,9 +87,7 @@ void test_rms_module_regression::injectActualTwice()
 void test_rms_module_regression::injectSymmetricValues()
 {
     ModuleManagerTestRunner testRunner(":/session-rms-moduleconfig-from-resource.json");
-
-    const QList<TestDspInterfacePtr>& dspInterfaces = testRunner.getDspInterfaceList();
-    QCOMPARE(dspInterfaces.count(), 1);
+    TestDspInterfacePtr rmsDspInterface = testRunner.getDspInterface(rmsEntityId);
 
     RMSMODULE::cRmsModule *rmsModule = static_cast<RMSMODULE::cRmsModule*>(testRunner.getModule("rmsmodule", rmsEntityId));
     RMSMODULE::cRmsModuleConfiguration config;
@@ -103,7 +95,7 @@ void test_rms_module_regression::injectSymmetricValues()
 
     DemoValuesDspRms demoDspValue(config.getConfigurationData()->m_valueChannelList);
     demoDspValue.setAllValuesSymmetric(230, 5);
-    dspInterfaces[0]->fireActValInterrupt(demoDspValue.getDspValues(), 0 /* dummy */);
+    rmsDspInterface->fireActValInterrupt(demoDspValue.getDspValues(), 0 /* dummy */);
     TimeMachineObject::feedEventLoop();
 
     QByteArray jsonExpected = TestLogHelpers::loadFile(":/dumpSymmetric.json");
@@ -116,11 +108,9 @@ void test_rms_module_regression::injectSymmetricValues()
 void test_rms_module_regression::dumpDspSetup()
 {
     ModuleManagerTestRunner testRunner(":/session-rms-moduleconfig-from-resource.json");
+    TestDspInterfacePtr rmsDspInterface = testRunner.getDspInterface(rmsEntityId);
 
-    const QList<TestDspInterfacePtr>& dspInterfaces = testRunner.getDspInterfaceList();
-    QCOMPARE(dspInterfaces.count(), 1);
-
-    QString measProgramDumped = TestLogHelpers::dump(dspInterfaces[0]->dumpAll());
+    QString measProgramDumped = TestLogHelpers::dump(rmsDspInterface->dumpAll());
     QString measProgramExpected = TestLogHelpers::loadFile(":/dspDumps/dumpMeasProgram.json");
     QVERIFY(TestLogHelpers::compareAndLogOnDiff(measProgramExpected, measProgramDumped));
 }

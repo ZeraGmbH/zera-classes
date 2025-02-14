@@ -29,7 +29,10 @@ public:
     DspInterfacePtr createDspInterfaceMode(int entityId) override;
     DspInterfacePtr createDspInterfaceRefProg(int entityId, QStringList valueChannelList) override;
     DspInterfacePtr createDspInterfaceRefAdj(int entityId) override;
+
     const QList<TestDspInterfacePtr>& getInterfaceList() const;
+    TestDspInterfacePtr getInterface(int entityId, DSPInterfaceType dspInterfaceType);
+
 private:
     DspInterfacePtr createDspInterfaceCommon(int entityId,
                                              DSPInterfaceType interfaceType,

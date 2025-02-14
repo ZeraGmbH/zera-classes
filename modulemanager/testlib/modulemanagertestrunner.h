@@ -17,6 +17,8 @@ public:
     ModuleManagerTestRunner(QString sessionFileName, bool initialAdjPermission = false, QString deviceName = "mt310s2");
     ~ModuleManagerTestRunner();
     VeinStorage::AbstractEventSystem *getVeinStorageSystem();
+    TestDspInterfacePtr getDspInterface(int entityId,
+                                        TestFactoryServiceInterfaces::DSPInterfaceType dspInterfaceType = TestFactoryServiceInterfaces::MODULEPROG);
     const QList<TestDspInterfacePtr>& getDspInterfaceList() const;
     VfCmdEventHandlerSystemPtr getVfCmdEventHandlerSystemPtr();
     ModuleManagerSetupFacade* getModManFacade();
