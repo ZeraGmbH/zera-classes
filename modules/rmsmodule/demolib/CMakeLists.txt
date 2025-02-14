@@ -14,6 +14,7 @@ add_library(rmsmodule-demolib STATIC
 target_include_directories(rmsmodule-demolib
     PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
+    $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/rmsmodule-demolib>
     )
 
 target_link_libraries(rmsmodule-demolib

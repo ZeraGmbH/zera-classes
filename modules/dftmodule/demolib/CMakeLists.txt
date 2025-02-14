@@ -14,6 +14,7 @@ add_library(dftmodule-demolib STATIC
 target_include_directories(dftmodule-demolib
     PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
+    $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/dftmodule-demolib>
     )
 
 target_link_libraries(dftmodule-demolib

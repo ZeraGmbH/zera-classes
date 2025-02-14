@@ -14,6 +14,7 @@ add_library(samplemodule-demolib STATIC
 target_include_directories(samplemodule-demolib
     PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
+    $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/samplemodule-demolib>
     )
 
 target_link_libraries(samplemodule-demolib

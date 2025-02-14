@@ -14,6 +14,7 @@ add_library(power2module-demolib STATIC
 target_include_directories(power2module-demolib
     PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
+    $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/power2module-demolib>
     )
 
 target_link_libraries(power2module-demolib
