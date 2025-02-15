@@ -129,7 +129,7 @@ private slots:
     void onNewRange(QVariant range);
     void newRangeAuto(QVariant rauto);
     void newGrouping(QVariant rgrouping);
-    void newOverload(QVariant overload);
+    void onVeinChangeOverload(QVariant overload);
     void preScalingChanged(QVariant unused);
 
     void catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant);
