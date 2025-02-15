@@ -247,18 +247,6 @@ void cRangeObsermatic::handleOverload(const int channelIdx, bool rmsOverload, bo
     m_softOvlList.replace(channelIdx, true);
 }
 
-void RANGEMODULE::cRangeObsermatic::setOverloadVeinComponent(bool overloadOn)
-{
-    disconnect(m_pParOverloadOnOff, 0, this, 0); // we don't want a signal here
-    if (overloadOn)
-        m_pParOverloadOnOff->setValue(QVariant(1));
-    else if (m_rangeSetManual) // only after manuell setting of range
-        m_pParOverloadOnOff->setValue(QVariant(0));
-
-    m_rangeSetManual = false;
-    connect(m_pParOverloadOnOff, &VfModuleParameter::sigValueChanged, this, &cRangeObsermatic::newOverload);
-}
-
 void cRangeObsermatic::rangeObservation()
 {
     bool markOverload = false;
@@ -546,7 +534,7 @@ void cRangeObsermatic::readGainCorrDone()
 
     connect(m_pParRangeAutomaticOnOff, &VfModuleParameter::sigValueChanged, this, &cRangeObsermatic::newRangeAuto);
     connect(m_pParGroupingOnOff, &VfModuleParameter::sigValueChanged, this, &cRangeObsermatic::newGrouping);
-    connect(m_pParOverloadOnOff, &VfModuleParameter::sigValueChanged, this, &cRangeObsermatic::newOverload);
+    connect(m_pParOverloadOnOff, &VfModuleParameter::sigValueChanged, this, &cRangeObsermatic::onVeinChangeOverload);
 
     for (int i = 0; i < m_RangeMeasChannelList.count(); i++) {
         cRangeMeasChannel *rangeMeasChannel = m_RangeMeasChannelList.at(i);
@@ -713,21 +701,28 @@ void cRangeObsermatic::newGrouping(QVariant rgrouping)
     emit m_pModule->parameterChanged();
 }
 
-// called when overload is reset
-void cRangeObsermatic::newOverload(QVariant overload)
+void cRangeObsermatic::setOverloadVeinComponent(bool overloadOn)
 {
     disconnect(m_pParOverloadOnOff, 0, this, 0); // we don't want a signal here
+    if (overloadOn)
+        m_pParOverloadOnOff->setValue(QVariant(1));
+    else if (m_rangeSetManual) // only after manuell setting of range
+        m_pParOverloadOnOff->setValue(QVariant(0));
 
-    bool ok;
-    if (overload.toInt(&ok) == 0) { // allthough there is a validation for this value we only accept 0 here
+    m_rangeSetManual = false;
+    connect(m_pParOverloadOnOff, &VfModuleParameter::sigValueChanged, this, &cRangeObsermatic::onVeinChangeOverload);
+}
+
+void cRangeObsermatic::onVeinChangeOverload(QVariant overload)
+{
+    disconnect(m_pParOverloadOnOff, 0, this, 0); // we don't want a signal here
+    if (overload.toInt() == 0) // allthough there is a validation for this value we only accept 0 here
         // and then we force setting new ranges
         setRanges(true);
-    }
 
     // in each case we reset overload here
     m_pParOverloadOnOff->setValue(0);
-
-    connect(m_pParOverloadOnOff, &VfModuleParameter::sigValueChanged, this, &cRangeObsermatic::newOverload);
+    connect(m_pParOverloadOnOff, &VfModuleParameter::sigValueChanged, this, &cRangeObsermatic::onVeinChangeOverload);
 }
 
 void cRangeObsermatic::preScalingChanged(QVariant unused)
