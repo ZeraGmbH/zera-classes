@@ -101,7 +101,7 @@ private:
     QState m_writeGainCorrRepeatState;
     QFinalState m_writeGainCorrDoneState;
 
-    bool m_brangeSet; // we set this here after we selected a new range and enable resetting stored overloadcondition
+    bool m_rangeSetManual; // we set this here after we selected a new range and enable resetting stored overloadcondition
 
     void rangeObservation();
     void rangeAutomatic();
@@ -112,6 +112,7 @@ private:
     void startOverloadReset(int channel);
     float getPreScale(int channelIdx);
     void handleOverload(const int channelIdx, bool rmsOverload, bool hardOverLoad, bool adcOverLoad);
+    void setOverloadVeinComponent(bool overloadOn);
 
 private slots:
     void dspserverConnect();

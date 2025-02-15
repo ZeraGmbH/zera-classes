@@ -22,7 +22,7 @@ cRangeObsermatic::cRangeObsermatic(cRangeModule *module,
     m_GroupList(groupList),
     m_ConfPar(confpar)
 {
-    m_brangeSet = false;
+    m_rangeSetManual = false;
     m_nWaitAfterRanging = 0;
     m_nReadStatusPending = 0;
     m_nRangeSetPending = 0;
@@ -247,6 +247,18 @@ void cRangeObsermatic::handleOverload(const int channelIdx, bool rmsOverload, bo
     m_softOvlList.replace(channelIdx, true);
 }
 
+void RANGEMODULE::cRangeObsermatic::setOverloadVeinComponent(bool overloadOn)
+{
+    disconnect(m_pParOverloadOnOff, 0, this, 0); // we don't want a signal here
+    if (overloadOn)
+        m_pParOverloadOnOff->setValue(QVariant(1));
+    else if (m_rangeSetManual) // only after manuell setting of range
+        m_pParOverloadOnOff->setValue(QVariant(0));
+
+    m_rangeSetManual = false;
+    connect(m_pParOverloadOnOff, &VfModuleParameter::sigValueChanged, this, &cRangeObsermatic::newOverload);
+}
+
 void cRangeObsermatic::rangeObservation()
 {
     bool markOverload = false;
@@ -254,7 +266,7 @@ void cRangeObsermatic::rangeObservation()
     for (int i = 0; i < nrActValues; i++) { // we test all channels
         cRangeMeasChannel *rangeMeasChannel = m_RangeMeasChannelList.at(i);
         // the overload observation must consider the prescaling
-        float prescalingFac=getPreScale(i);
+        float prescalingFac = getPreScale(i);
         // for test overload we take the rms value with/without dc depending on configuration
         // and for overload condition of adc test, we take the peakvalues including dc
         bool rmsOverload = rangeMeasChannel->isRMSOverload(rangeMeasChannel->getRmsValue()*prescalingFac); // rms
@@ -262,27 +274,14 @@ void cRangeObsermatic::rangeObservation()
         bool hardOverLoad = m_hardOvlList.at(i);
         if ( rmsOverload || adcOverLoad || hardOverLoad) { // if any overload ?
             markOverload = true;
-            handleOverload(i, rmsOverload, hardOverLoad, adcOverLoad); //
+            handleOverload(i, rmsOverload, hardOverLoad, adcOverLoad);
         }
         else {
             m_RangeOVLComponentList.at(i)->setValue(QVariant(0));
             m_softOvlList.replace(i, false);
         }
     }
-
-    disconnect(m_pParOverloadOnOff, 0, this, 0); // we don't want a signal here
-    if (markOverload) {
-        m_pParOverloadOnOff->setValue(QVariant(1));
-    }
-    else {
-        if (m_brangeSet) { // only after manuell setting of range
-            m_pParOverloadOnOff->setValue(QVariant(0));
-        }
-    }
-
-    m_brangeSet = false;
-
-    connect(m_pParOverloadOnOff, &VfModuleParameter::sigValueChanged, this, &cRangeObsermatic::newOverload);
+    setOverloadVeinComponent(markOverload);
 }
 
 
@@ -667,7 +666,7 @@ void cRangeObsermatic::onNewRange(QVariant range)
         index = chnIndexlist.at(i);
         if (m_RangeMeasChannelList.at(index)->isPossibleRange(rangeName)) {
             m_ConfPar.setCurrentRange(index, rangeName);
-            m_brangeSet = true;
+            m_rangeSetManual = true;
         }
         else {
             m_ConfPar.m_nGroupAct.m_nActive = 0;
