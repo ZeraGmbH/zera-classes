@@ -24,7 +24,19 @@ void test_range_scpi::scpiQueryAndCommand()
     QCOMPARE(client.sendReceive("CONFIGURATION:RNG1:ENABLEIGNORERMSVAL?"), "0");
     QCOMPARE(client.sendReceive("CONFIGURATION:RNG1:UL1:INVERTPHASE?"), "0");
 
-    // set valid ranges
+    // set valid ranges currently active again
+    QCOMPARE(client.sendReceive("SENSE:RNG1:UL1:RANGE 250V;|*OPC?"), "+1");
+    QCOMPARE(client.sendReceive("SENSE:RNG1:IL1:RANGE 10A;|*OPC?"), "+1");
+    QCOMPARE(client.sendReceive("SENSE:RNG1:UL1:RANGE 250V;|*STB?"), "+0");
+    QCOMPARE(client.sendReceive("SENSE:RNG1:IL1:RANGE 10A;|*STB?"), "+0");
+
+    // set valid grouping / automatic again
+    QCOMPARE(client.sendReceive("CONFIGURATION:RNG1:GROUPING 1;|*OPC?"), "+1");
+    QCOMPARE(client.sendReceive("CONFIGURATION:RNG1:RNGAUTO 0;|*OPC?"), "+1");
+    QCOMPARE(client.sendReceive("CONFIGURATION:RNG1:GROUPING 1;|*STB?"), "+0");
+    QCOMPARE(client.sendReceive("CONFIGURATION:RNG1:RNGAUTO 0;|*STB?"), "+0");
+
+    // change to valid ranges
     QCOMPARE(client.sendReceive("SENSE:RNG1:UL1:RANGE 8V;|*OPC?"), "+1");
     QCOMPARE(client.sendReceive("SENSE:RNG1:IL1:RANGE 5A;|*OPC?"), "+1");
 
@@ -33,12 +45,6 @@ void test_range_scpi::scpiQueryAndCommand()
 
     QCOMPARE(client.sendReceive("SENSE:RNG1:UL1:RANGE 8V;|*OPC?|*STB?"), "+1+0"); // Hmm where is \n?
     QCOMPARE(client.sendReceive("SENSE:RNG1:IL1:RANGE 5A;|*OPC?|*STB?"), "+1+0");
-
-    // ATTOW: That is what cRangeObsermatic::m_actChannelRangeNotifierList is for
-    QCOMPARE(client.sendReceive("SENSE:RNG1:UL1:RANGE 250V;|*OPC?"), "+1");
-    QCOMPARE(client.sendReceive("SENSE:RNG1:IL1:RANGE 10A;|*OPC?"), "+1");
-    QCOMPARE(client.sendReceive("SENSE:RNG1:UL1:RANGE 250V;|*STB?"), "+0");
-    QCOMPARE(client.sendReceive("SENSE:RNG1:IL1:RANGE 10A;|*STB?"), "+0");
 
     // set invalid ranges
     QCOMPARE(client.sendReceive("SENSE:RNG1:UL1:RANGE FOO;|*STB?"), "+4");
