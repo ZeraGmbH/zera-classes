@@ -85,19 +85,19 @@ void cRangeObsermatic::generateVeinInterface()
     VfModuleParameter *pParameter;
 
     const QStringList channelMNames = m_pModule->getSharedChannelRangeObserver()->getChannelMNames();
+    const QString unknownStr = "Unkown";
     for (int i = 0; i < channelMNames.count(); i++) {
-        QString s;
         QString key = QString("PAR_Channel%1Range").arg(i+1);
         pParameter = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
-                                              key,
-                                              QString("Channel's range"),
-                                              QVariant(s = "Unkown"),
-                                              true); // we prefer deferred notification for synchronization purpose
+                                           key,
+                                           QString("Channel's range"),
+                                           unknownStr,
+                                           true); // we prefer deferred notification for synchronization purpose
 
         m_RangeParameterList.append(pParameter); // for internal use
         m_pModule->m_veinModuleParameterMap[key] = pParameter; // for modules use
 
-        m_actChannelRangeList.append(s); // here we also fill our internal actual channel range list
+        m_actChannelRangeList.append(unknownStr); // here we also fill our internal actual channel range list
         m_RangeMeasChannelList.append(m_pModule->getMeasChannel(channelMNames.at(i)));
 
         pComponent = new VfModuleComponent(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
@@ -648,9 +648,9 @@ void cRangeObsermatic::onNewRange(QVariant range)
     // so we fetch a list of index for all channels in group, in case of inactive grouping
     // the list will contain only 1 index
     const QList<int> chnGroupIndexlist = getGroupAliasIdxListForChannel(channelIdx);
-    for (int channelIdxInGroup : chnGroupIndexlist) {
-        if (m_RangeMeasChannelList.at(channelIdxInGroup)->isPossibleRange(rangeName)) {
-            m_ConfPar.setCurrentRange(channelIdxInGroup, rangeName);
+    for (int channelIdxFromGroup : chnGroupIndexlist) {
+        if (m_RangeMeasChannelList.at(channelIdxFromGroup)->isPossibleRange(rangeName)) {
+            m_ConfPar.setCurrentRange(channelIdxFromGroup, rangeName);
             m_rangeSetManual = true;
         }
         // if we find a channel in a group that hasn't the wanted range we reset grouping!
