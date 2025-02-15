@@ -98,7 +98,6 @@ void cRangeObsermatic::generateVeinInterface()
         m_pModule->m_veinModuleParameterMap[key] = pParameter; // for modules use
 
         m_actChannelRangeList.append(s); // here we also fill our internal actual channel range list
-        m_actChannelRangeNotifierList.append(QString(""));
         m_RangeMeasChannelList.append(m_pModule->getMeasChannel(channelMNames.at(i)));
 
         pComponent = new VfModuleComponent(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
@@ -435,19 +434,6 @@ void cRangeObsermatic::setRanges(bool force)
                 m_pComponentOverloadMax->setValue(0);
             }
         }
-
-        else {
-            // the parameter delegate had memorized that there will be a deferred notification
-            // so we have to give this even in case nothing has changed. otherwise there will
-            // remain pending synchronisation marks...but we must remember when we have sent notification
-            // to ensure that we only send it once after change
-
-            if (m_actChannelRangeNotifierList.at(i) != m_actChannelRangeList.at(i))
-            {
-                m_RangeParameterList.at(i)->setValue(QVariant(m_actChannelRangeList.at(i)));
-                m_actChannelRangeNotifierList.replace(i, (m_actChannelRangeList.at(i)));
-            }
-        }
     }
 
     if (change) {
@@ -663,8 +649,13 @@ void cRangeObsermatic::analyzeStatus()
 void cRangeObsermatic::onNewRange(QVariant range)
 {
     VfModuleParameter *pParameter = qobject_cast<VfModuleParameter*>(sender()); // get sender of updated signal
-    int index = m_RangeParameterList.indexOf(pParameter); // which channel is it
+    if(range.toString() == pParameter->getValue().toString()) {
+        // notify for SCPI's sake and bail out
+        pParameter->setValue(range);
+        return;
+    }
 
+    int index = m_RangeParameterList.indexOf(pParameter); // which channel is it
     QString rangeName = range.toString();
     QList<int> chnIndexlist = getGroupAliasIdxListForChannel(index);
     // in case of active grouping we have to set all the ranges in that group if possible
@@ -678,7 +669,6 @@ void cRangeObsermatic::onNewRange(QVariant range)
         if (m_RangeMeasChannelList.at(index)->isPossibleRange(rangeName)) {
             m_ConfPar.setCurrentRange(index, rangeName);
             m_brangeSet = true;
-            m_actChannelRangeNotifierList.replace(index,QString("")); // this will assure that a notification will be sent after setRanges()
         }
         else {
             m_ConfPar.m_nGroupAct.m_nActive = 0;
@@ -821,7 +811,6 @@ void cRangeObsermatic::catchChannelReply(quint32 msgnr)
             cmd -= setrange;
             // this is our synchronization..setValue emits notification
             m_RangeParameterList.at(cmd)->setValue(QVariant(m_actChannelRangeList.at(cmd)));
-            m_actChannelRangeNotifierList.replace(cmd, (m_actChannelRangeList.at(cmd)));
             if (m_nRangeSetPending > 0) {
                 m_nRangeSetPending--;
                 if (m_nRangeSetPending == 0) {
