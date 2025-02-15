@@ -401,9 +401,10 @@ void cRangeObsermatic::setRanges(bool force)
             m_nRangeSetPending++;
             m_actChannelRangeList.replace(i, range);
 
-            // The scaling factor is multplied with the inverse presaling value
             quint8 dspChannel = rangeMeasChannel->getDSPChannelNr();
-            m_pfScale[dspChannel] = (rangeMeasChannel->getUrValue() / rangeMeasChannel->getRejection()) * (1/preScalingFactor);
+            // The scaling factor is multplied with the inverse presaling value
+            float scaleToDsp = (rangeMeasChannel->getUrValue() / rangeMeasChannel->getRejection()) * (1/preScalingFactor);
+            m_gainCorrection2DspVar->setValue(dspChannel, scaleToDsp);
 
             // we first set information of channels actual urvalue
             m_RangeActRejectionComponentList.at(i)->setValue(rangeMeasChannel->getUrValue());
@@ -507,11 +508,10 @@ void cRangeObsermatic::dspserverConnect()
 
 void cRangeObsermatic::readGainCorr()
 {
-    // qInfo() << "readGainCorr";
-    m_pGainCorrection2DSP = m_dspInterface->getMemHandle("SCALEMEM");
-    m_pGainCorrection2DSP->addVarItem( new cDspVar("GAINCORRECTION2",32, DSPDATA::vDspIntVar));
-    m_pfScale =  m_pGainCorrection2DSP->data("GAINCORRECTION2");
-    m_MsgNrCmdList[m_dspInterface->dspMemoryRead(m_pGainCorrection2DSP)] = readgain2corr;
+    m_gainCorrection2DSPMemHandle = m_dspInterface->getMemHandle("SCALEMEM");
+    m_gainCorrection2DspVar = new cDspVar("GAINCORRECTION2",32, DSPDATA::vDspIntVar);
+    m_gainCorrection2DSPMemHandle->addVarItem(m_gainCorrection2DspVar);
+    m_MsgNrCmdList[m_dspInterface->dspMemoryRead(m_gainCorrection2DSPMemHandle)] = readgain2corr;
 }
 
 
@@ -590,7 +590,9 @@ void cRangeObsermatic::deactivationInit()
     m_bActive = false;
     Zera::Proxy::getInstance()->releaseConnection(m_dspClient.get());
     disconnect(m_dspInterface.get(), 0, this, 0); // we disconnect from our dsp interface
-    m_dspInterface->deleteMemHandle(m_pGainCorrection2DSP); // and free our memory handle
+    m_dspInterface->deleteMemHandle(m_gainCorrection2DSPMemHandle); // and free our memory handle
+    m_gainCorrection2DSPMemHandle = nullptr;
+    m_gainCorrection2DspVar = nullptr; // deleteMemHandle takes care
     emit deactivationContinue();
 }
 
@@ -605,7 +607,7 @@ void cRangeObsermatic::writeGainCorr()
 {
     // qInfo() << "writeGainCorr";
     if (m_bActive) {
-        m_MsgNrCmdList[m_dspInterface->dspMemoryWrite(m_pGainCorrection2DSP)] = writegain2corr;
+        m_MsgNrCmdList[m_dspInterface->dspMemoryWrite(m_gainCorrection2DSPMemHandle)] = writegain2corr;
     }
 }
 
