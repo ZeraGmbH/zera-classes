@@ -74,7 +74,7 @@ void VfModuleParameter::setValidator(ValidatorInterface *validator)
     m_pValidator = validator;
 }
 
-void VfModuleParameter::transaction(QUuid clientId, QVariant newValue, QVariant oldValue, VeinComponent::ComponentData::Command vccmd)
+void VfModuleParameter::veinTransaction(QUuid clientId, QVariant newValue, QVariant oldValue, VeinComponent::ComponentData::Command vccmd)
 {
     mClientIdList.append(clientId);
     if (vccmd == VeinComponent::ComponentData::Command::CCMD_FETCH) {
