@@ -630,40 +630,36 @@ void cRangeObsermatic::analyzeStatus()
     }
 }
 
-
-// called when new range is selected
 void cRangeObsermatic::onNewRange(QVariant range)
 {
     VfModuleParameter *pParameter = qobject_cast<VfModuleParameter*>(sender()); // get sender of updated signal
-    if(range.toString() == pParameter->getValue().toString()) {
-        // notify for SCPI's sake and bail out
+    QString rangeName = range.toString();
+
+    // * ranges use deferred notification: new value in param 'range' / old value from getValue()
+    // * SCPI requires notification to finish command
+    // => on no change: just send notification
+    if (rangeName == pParameter->getValue().toString()) {
         pParameter->setValue(range);
         return;
     }
 
-    int index = m_RangeParameterList.indexOf(pParameter); // which channel is it
-    QString rangeName = range.toString();
-    QList<int> chnIndexlist = getGroupAliasIdxListForChannel(index);
+    int channelIdx = m_RangeParameterList.indexOf(pParameter);
     // in case of active grouping we have to set all the ranges in that group if possible
-    // so we fetch a list of index for all channels in group ,in case of inactive grouping
+    // so we fetch a list of index for all channels in group, in case of inactive grouping
     // the list will contain only 1 index
-    // if we find 1 channel in a group that hasn't the wanted range we reset grouping !
-    // let's first test if all channels have the wanted range
-
-    for (int i = 0; i < chnIndexlist.count(); i++) {
-        index = chnIndexlist.at(i);
-        if (m_RangeMeasChannelList.at(index)->isPossibleRange(rangeName)) {
-            m_ConfPar.setCurrentRange(index, rangeName);
+    const QList<int> chnGroupIndexlist = getGroupAliasIdxListForChannel(channelIdx);
+    for (int channelIdxInGroup : chnGroupIndexlist) {
+        if (m_RangeMeasChannelList.at(channelIdxInGroup)->isPossibleRange(rangeName)) {
+            m_ConfPar.setCurrentRange(channelIdxInGroup, rangeName);
             m_rangeSetManual = true;
         }
+        // if we find a channel in a group that hasn't the wanted range we reset grouping!
         else {
             m_ConfPar.m_nGroupAct.m_nActive = 0;
             m_pParGroupingOnOff->setValue(0);
         }
     }
-
     setRanges();
-
     emit m_pModule->parameterChanged();
 }
 
