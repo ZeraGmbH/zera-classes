@@ -24,7 +24,7 @@ void VfEventSytemModuleParam::processCommandEvent(VeinEvent::CommandEvent *comma
                 if (cData->oldValue() == storageDb->getStoredValue(m_entityId, componentName) ||
                         (qIsNaN(oldValue) && qIsNaN(newValue))) {
                     VfModuleParameter *param = hashIter.value();
-                    param->transaction(commandEvent->peerId(), cData->newValue(), cData->oldValue(), cData->eventCommand());
+                    param->veinTransaction(commandEvent->peerId(), cData->newValue(), cData->oldValue(), cData->eventCommand());
                     commandEvent->accept(); // it is an event for us ... the parameter will do the rest
                 }
             }

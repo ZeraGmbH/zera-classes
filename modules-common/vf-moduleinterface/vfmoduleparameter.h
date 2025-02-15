@@ -27,7 +27,7 @@ public:
     virtual void exportSCPIInfo(QJsonArray &jsArr);
     void setSCPIInfo(cSCPIInfo* scpiinfo);
     void setValidator(ValidatorInterface* validator);
-    void transaction(QUuid clientId, QVariant newValue, QVariant oldValue, VeinComponent::ComponentData::Command vccmd);
+    void veinTransaction(QUuid clientId, QVariant newValue, QVariant oldValue, VeinComponent::ComponentData::Command vccmd);
 
 private:
     bool m_bDeferredNotification; //
