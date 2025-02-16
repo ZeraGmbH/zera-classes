@@ -22,13 +22,6 @@ cRangeObsermatic::cRangeObsermatic(cRangeModule *module,
     m_GroupList(groupList),
     m_ConfPar(confpar)
 {
-    m_rangeSetManual = false;
-    m_nWaitAfterRanging = 0;
-    m_nReadStatusPending = 0;
-    m_nRangeSetPending = 0;
-
-    //  we set 0.0 as default value for all peak values in case that these values are needed before actual values really arrived
-
     m_dspInterface = m_pModule->getServiceInterfaceFactory()->createDspInterfaceRangeObser(
         m_pModule->getEntityId(),
         m_pModule->getSharedChannelRangeObserver()->getChannelMNames(),
