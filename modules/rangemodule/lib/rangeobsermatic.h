@@ -62,9 +62,9 @@ private:
     QList<bool> m_hardOvlList; // what do you think ?
     QList<bool> m_groupOvlList; // distinct group overloads: one in a group causes reset for all in the group
     QList<bool> m_maxOvlList; // here we enter overloads that occured in maximum range
-    quint32 m_nWaitAfterRanging;
-    quint32 m_nRangeSetPending;
-    quint32 m_nReadStatusPending;
+    quint32 m_nWaitAfterRanging = 0;
+    quint32 m_nRangeSetPending = 0;
+    quint32 m_nReadStatusPending = 0;
     QStringList m_actChannelRangeList; // a list of the actual ranges set
 
     // our interface entities
@@ -101,7 +101,7 @@ private:
     QState m_writeGainCorrRepeatState;
     QFinalState m_writeGainCorrDoneState;
 
-    bool m_rangeSetManual; // we set this here after we selected a new range and enable resetting stored overloadcondition
+    bool m_rangeSetManual = false; // we set this here after we selected a new range and enable resetting stored overloadcondition
 
     void rangeObservation();
     void rangeAutomatic();
