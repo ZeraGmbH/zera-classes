@@ -25,8 +25,8 @@ namespace RANGEMODULE
 
 enum rangeObsermaticCmds
 {
-    readgain2corr,
-    writegain2corr,
+    readgainscale,
+    writegainScale,
     resetstatus,
     readstatus,
 
@@ -82,8 +82,8 @@ private:
     VfModuleParameter* m_pParOverloadOnOff;
     VfModuleComponent* m_pComponentOverloadMax;
 
-    cDspMeasData* m_gainCorrection2DSPMemHandle = nullptr; // copy of dsp internal correction data
-    cDspVar *m_gainCorrection2DspVar = nullptr;
+    cDspMeasData* m_gainScaleDSPMemHandle = nullptr; // copy of dsp internal correction data
+    cDspVar *m_gainScaleDspVar = nullptr;
     QHash<quint32, int> m_MsgNrCmdList;
 
     // statemachine for activation (reading dsp correction data used for scaling)
@@ -116,13 +116,13 @@ private:
 
 private slots:
     void dspserverConnect();
-    void readGainCorr();
-    void readGainCorrDone();
+    void readGainScale();
+    void readGainScaleDone();
 
     void deactivationInit();
     void deactivationDone();
 
-    void writeGainCorr();
+    void writeGainScale();
     void readStatus();
     void analyzeStatus();
 

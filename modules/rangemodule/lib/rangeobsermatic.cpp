@@ -40,8 +40,8 @@ cRangeObsermatic::cRangeObsermatic(cRangeModule *module,
     m_activationMachine.addState(&m_readGainCorrDoneState);
 
     connect(&m_dspserverConnectState, &QState::entered, this, &cRangeObsermatic::dspserverConnect);
-    connect(&m_readGainCorrState, &QState::entered, this, &cRangeObsermatic::readGainCorr);
-    connect(&m_readGainCorrDoneState, &QState::entered, this, &cRangeObsermatic::readGainCorrDone);
+    connect(&m_readGainCorrState, &QState::entered, this, &cRangeObsermatic::readGainScale);
+    connect(&m_readGainCorrDoneState, &QState::entered, this, &cRangeObsermatic::readGainScaleDone);
 
     m_deactivationInitState.addTransition(this, &cRangeObsermatic::deactivationContinue, &m_deactivationDoneState);
     m_deactivationMachine.addState(&m_deactivationInitState);
@@ -59,7 +59,7 @@ cRangeObsermatic::cRangeObsermatic(cRangeModule *module,
     m_writeCorrectionDSPMachine.addState(&m_writeGainCorrRepeatState);
     m_writeCorrectionDSPMachine.addState(&m_writeGainCorrDoneState);
     m_writeCorrectionDSPMachine.setInitialState(&m_writeGainCorrState);
-    connect(&m_writeGainCorrState, &QState::entered, this, &cRangeObsermatic::writeGainCorr);
+    connect(&m_writeGainCorrState, &QState::entered, this, &cRangeObsermatic::writeGainScale);
 }
 
 void cRangeObsermatic::ActionHandler(QVector<float> *actualValues)
@@ -404,7 +404,7 @@ void cRangeObsermatic::setRanges(bool force)
             quint8 dspChannel = rangeMeasChannel->getDSPChannelNr();
             // The scaling factor is multplied with the inverse presaling value
             float scaleToDsp = (rangeMeasChannel->getUrValue() / rangeMeasChannel->getRejection()) * (1/preScalingFactor);
-            m_gainCorrection2DspVar->setValue(dspChannel, scaleToDsp);
+            m_gainScaleDspVar->setValue(dspChannel, scaleToDsp);
 
             // we first set information of channels actual urvalue
             m_RangeActRejectionComponentList.at(i)->setValue(rangeMeasChannel->getUrValue());
@@ -506,16 +506,16 @@ void cRangeObsermatic::dspserverConnect()
 }
 
 
-void cRangeObsermatic::readGainCorr()
+void cRangeObsermatic::readGainScale()
 {
-    m_gainCorrection2DSPMemHandle = m_dspInterface->getMemHandle("SCALEMEM");
-    m_gainCorrection2DspVar = new cDspVar("GAINCORRECTION2",32, DSPDATA::vDspIntVar);
-    m_gainCorrection2DSPMemHandle->addVarItem(m_gainCorrection2DspVar);
-    m_MsgNrCmdList[m_dspInterface->dspMemoryRead(m_gainCorrection2DSPMemHandle)] = readgain2corr;
+    m_gainScaleDSPMemHandle = m_dspInterface->getMemHandle("SCALEMEM");
+    m_gainScaleDspVar = new cDspVar("GAINCORRECTION2",32, DSPDATA::vDspIntVar);
+    m_gainScaleDSPMemHandle->addVarItem(m_gainScaleDspVar);
+    m_MsgNrCmdList[m_dspInterface->dspMemoryRead(m_gainScaleDSPMemHandle)] = readgainscale;
 }
 
 
-void cRangeObsermatic::readGainCorrDone()
+void cRangeObsermatic::readGainScaleDone()
 {
     // our initial range set from configuration
     setRanges(true);
@@ -590,9 +590,9 @@ void cRangeObsermatic::deactivationInit()
     m_bActive = false;
     Zera::Proxy::getInstance()->releaseConnection(m_dspClient.get());
     disconnect(m_dspInterface.get(), 0, this, 0); // we disconnect from our dsp interface
-    m_dspInterface->deleteMemHandle(m_gainCorrection2DSPMemHandle); // and free our memory handle
-    m_gainCorrection2DSPMemHandle = nullptr;
-    m_gainCorrection2DspVar = nullptr; // deleteMemHandle takes care
+    m_dspInterface->deleteMemHandle(m_gainScaleDSPMemHandle); // and free our memory handle
+    m_gainScaleDSPMemHandle = nullptr;
+    m_gainScaleDspVar = nullptr; // deleteMemHandle takes care
     emit deactivationContinue();
 }
 
@@ -603,12 +603,10 @@ void cRangeObsermatic::deactivationDone()
 }
 
 
-void cRangeObsermatic::writeGainCorr()
+void cRangeObsermatic::writeGainScale()
 {
-    // qInfo() << "writeGainCorr";
-    if (m_bActive) {
-        m_MsgNrCmdList[m_dspInterface->dspMemoryWrite(m_gainCorrection2DSPMemHandle)] = writegain2corr;
-    }
+    if (m_bActive)
+        m_MsgNrCmdList[m_dspInterface->dspMemoryWrite(m_gainScaleDSPMemHandle)] = writegainScale;
 }
 
 
@@ -765,13 +763,13 @@ void cRangeObsermatic::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVarian
         if (m_MsgNrCmdList.contains(msgnr)) {
             int cmd = m_MsgNrCmdList.take(msgnr);
             switch (cmd) {
-            case readgain2corr:
+            case readgainscale:
                 if (reply == ack)
                     emit activationContinue();
                 else
                     notifyError(readdspgaincorrErrMsg);
                 break;
-            case writegain2corr:
+            case writegainScale:
                 if (reply == ack)
                     emit activationContinue();
                 else
