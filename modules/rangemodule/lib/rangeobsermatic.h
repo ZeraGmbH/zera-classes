@@ -96,10 +96,10 @@ private:
     QFinalState m_deactivationDoneState;
 
     // statemachine for writing dsp correction data used for scaling
-    QStateMachine m_writeCorrectionDSPMachine;
-    QState m_writeGainCorrState;
-    QState m_writeGainCorrRepeatState;
-    QFinalState m_writeGainCorrDoneState;
+    QStateMachine m_writeDspGainScaleStateMachine;
+    QState m_writeGainScaleState;
+    QState m_writeGainScaleRepeatState;
+    QFinalState m_writeGainScaleDoneState;
 
     bool m_rangeSetManual = false; // we set this here after we selected a new range and enable resetting stored overloadcondition
 

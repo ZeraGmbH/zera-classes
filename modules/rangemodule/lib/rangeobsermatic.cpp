@@ -45,14 +45,14 @@ cRangeObsermatic::cRangeObsermatic(cRangeModule *module,
     connect(&m_deactivationInitState, &QState::entered, this, &cRangeObsermatic::deactivationInit);
     connect(&m_deactivationDoneState, &QState::entered, this, &cRangeObsermatic::deactivationDone);
 
-    m_writeGainCorrState.addTransition(this, &cRangeObsermatic::activationContinue, &m_writeGainCorrDoneState);
-    m_writeGainCorrState.addTransition(this, &cRangeObsermatic::activationRepeat, &m_writeGainCorrRepeatState);
-    m_writeGainCorrRepeatState.addTransition(this, &cRangeObsermatic::activationContinue, &m_writeGainCorrState);
-    m_writeCorrectionDSPMachine.addState(&m_writeGainCorrState);
-    m_writeCorrectionDSPMachine.addState(&m_writeGainCorrRepeatState);
-    m_writeCorrectionDSPMachine.addState(&m_writeGainCorrDoneState);
-    m_writeCorrectionDSPMachine.setInitialState(&m_writeGainCorrState);
-    connect(&m_writeGainCorrState, &QState::entered, this, &cRangeObsermatic::writeGainScale);
+    m_writeGainScaleState.addTransition(this, &cRangeObsermatic::activationContinue, &m_writeGainScaleDoneState);
+    m_writeGainScaleState.addTransition(this, &cRangeObsermatic::activationRepeat, &m_writeGainScaleRepeatState);
+    m_writeGainScaleRepeatState.addTransition(this, &cRangeObsermatic::activationContinue, &m_writeGainScaleState);
+    m_writeDspGainScaleStateMachine.addState(&m_writeGainScaleState);
+    m_writeDspGainScaleStateMachine.addState(&m_writeGainScaleRepeatState);
+    m_writeDspGainScaleStateMachine.addState(&m_writeGainScaleDoneState);
+    m_writeDspGainScaleStateMachine.setInitialState(&m_writeGainScaleState);
+    connect(&m_writeGainScaleState, &QState::entered, this, &cRangeObsermatic::writeGainScale);
 }
 
 void cRangeObsermatic::ActionHandler(QVector<float> *actualValues)
@@ -417,12 +417,10 @@ void cRangeObsermatic::setRanges(bool force)
     }
 
     if (change) {
-        if (m_writeCorrectionDSPMachine.isRunning()) {
+        if (m_writeDspGainScaleStateMachine.isRunning())
             emit activationRepeat();
-        }
-        else {
-            m_writeCorrectionDSPMachine.start(); // we write all correction after each range setting
-        }
+        else
+            m_writeDspGainScaleStateMachine.start(); // we write all correction after each range setting
     }
     // setRanges (=this function :) is called
     // * periodically in ActionHandler
