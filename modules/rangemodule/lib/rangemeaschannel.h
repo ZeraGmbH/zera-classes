@@ -48,16 +48,19 @@ public:
     quint32 readOffsetCorrection(double amplitude); // dito
     quint32 readStatus(); // read the channels status
     quint32 resetStatus(); // reset the channels status
+
     double getGainCorrection(); // returns last read gain correction
     double getPhaseCorrection(); // returns last read phase correction
     double getOffsetCorrection(); // returns last read offset correction
+
     bool isHWOverload(); // test if we have some hardware overload condition
+
     double getUrValue(const QString &range); // returns upper range value of range
-    double getUrValue(); // returns upper range of actual range
+    double getUrValueActRange(); // returns upper range of actual range
     double getRejection(const QString &range);
-    double getRejection(); // return nominal (100%) rejection of actual range
+    double getRejectionActRange(); // return nominal (100%) rejection of actual range
     double getOVRRejection(const QString &range);
-    double getOVRRejection();
+    double getOVRRejectionActRange();
     double getMaxRangeUrvalueMax(); // returns the max. upper range value including reserve of channel including overload reserve
     double getRangeUrvalueMax(); // returns the max. upper range value including reserve of actual range
     bool isPossibleRange(const QString &range); // returns true if range is available

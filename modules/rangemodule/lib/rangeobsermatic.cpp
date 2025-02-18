@@ -396,11 +396,11 @@ void cRangeObsermatic::setRanges(bool force)
 
             quint8 dspChannel = rangeMeasChannel->getDSPChannelNr();
             // The scaling factor is multplied with the inverse presaling value
-            float scaleToDsp = (rangeMeasChannel->getUrValue() / rangeMeasChannel->getRejection()) * (1/preScalingFactor);
+            float scaleToDsp = (rangeMeasChannel->getUrValueActRange() / rangeMeasChannel->getRejectionActRange()) * (1/preScalingFactor);
             m_gainScaleDspVar->setValue(dspChannel, scaleToDsp);
 
             // we first set information of channels actual urvalue
-            m_RangeActRejectionComponentList.at(i)->setValue(rangeMeasChannel->getUrValue());
+            m_RangeActRejectionComponentList.at(i)->setValue(rangeMeasChannel->getUrValueActRange());
             // we additional set information of channels actual urvalue incl. reserve
             m_RangeActOVLRejectionComponentList.at(i)->setValue(rangeMeasChannel->getRangeUrvalueMax()); // we additional set information of channels actual urvalue incl. reserve
 
