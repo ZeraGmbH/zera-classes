@@ -155,7 +155,7 @@ void cAdjustManagement::generateVeinInterface()
         m_pModule->m_veinModuleParameterMap[key] = pParameter; // for modules use
         m_invertedPhasesParList.append(pParameter);
         connect(pParameter, &VfModuleParameter::sigValueChanged, this, &cAdjustManagement::parInvertedPhaseStateChanged);
-        m_ChannelList[i]->setInvertedPhaseState(m_adjustmentConfig->m_senseChannelInvertParameter[i].m_nActive);
+        m_ChannelList[i]->getStateData()->setInvertedPhaseState(m_adjustmentConfig->m_senseChannelInvertParameter[i].m_nActive);
     }
 }
 
@@ -310,7 +310,7 @@ void cAdjustManagement::prepareGainCorrForDspServer()
     if (m_bActive) {
         cRangeMeasChannel *measChannel = m_ChannelList.at(m_nChannelIt);
         float fCorr = measChannel->getGainCorrection();
-        if (measChannel->getInvertedPhaseState())
+        if (measChannel->getStateData()->getInvertedPhaseState())
             fCorr = fCorr * -1;
         m_fGainCorr[measChannel->getDSPChannelNr()] = fCorr*getIgnoreRmsCorrFactor();
         m_fGainKeeperForFakingRmsValues[measChannel->getDSPChannelNr()] = getIgnoreRmsCorrFactor();
@@ -501,7 +501,7 @@ void cAdjustManagement::parInvertedPhaseStateChanged(QVariant newValue)
 {
     VfModuleParameter *pParameter = qobject_cast<VfModuleParameter*>(sender()); // get sender of updated signal
     int index = m_invertedPhasesParList.indexOf(pParameter); // which channel is it
-    m_ChannelList[index]->setInvertedPhaseState(newValue.toBool());
+    m_ChannelList[index]->getStateData()->setInvertedPhaseState(newValue.toBool());
     m_adjustmentConfig->m_senseChannelInvertParameter[index].m_nActive = newValue.toUInt();
     emit m_pModule->parameterChanged();
 }
