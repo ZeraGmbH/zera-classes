@@ -59,8 +59,7 @@ public:
     double getUrValue(const QString &range) const; // returns upper range value of range
     double getRejection(const QString &range);
     double getRejectionActRange(); // return nominal (100%) rejection of actual range
-    double getOVRRejection(const QString &range);
-    double getOVRRejectionActRange();
+    double getOVRRejection(const QString &range) const;
     double getMaxRangeUrvalueMax(); // returns the max. upper range value including reserve of channel including overload reserve
     double getRangeUrvalueMax(); // returns the max. upper range value including reserve of actual range
     bool isPossibleRange(const QString &range); // returns true if range is available

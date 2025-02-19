@@ -9,7 +9,8 @@ namespace RANGEMODULE
 class RangeMeasChannelConvenience
 {
 public:
-    static double getUrValueActRange(const cRangeMeasChannel *channel); // returns upper range of actual range
+    static double getUrValueActRange(const cRangeMeasChannel *channel);
+    static double getOVRRejectionActRange(const cRangeMeasChannel *channel);
 };
 
 }
