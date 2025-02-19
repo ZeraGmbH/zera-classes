@@ -375,7 +375,6 @@ void cRangeObsermatic::setRanges(bool force)
     bool change = false;
     for (int i = 0; i < m_RangeMeasChannelList.count(); i++) { // we set all channels if needed
         // check if channel is in group
-        float preScalingFactor = getPreScale(i);
         QString range = m_ConfPar.getCurrentRange(i);
         cRangeMeasChannel *rangeMeasChannel = m_RangeMeasChannelList.at(i);
         if (!rangeMeasChannel->isPossibleRange(range)) { // we test whether this range is possible, otherwise we take the max. range
@@ -397,7 +396,7 @@ void cRangeObsermatic::setRanges(bool force)
             double actUrValue = RangeMeasChannelConvenience::getUrValueRangeAct(rangeMeasChannel);
             double actRejection = RangeMeasChannelConvenience::getRejectionRangeAct(rangeMeasChannel);
             // The scaling factor is multplied with the inverse presaling value
-            float scaleToDsp = (actUrValue / actRejection) * (1/preScalingFactor);
+            float scaleToDsp = (actUrValue / actRejection) * (1 / getPreScale(i));
             quint8 dspChannel = rangeMeasChannel->getDSPChannelNr();
             m_gainScaleDspVar->setValue(dspChannel, scaleToDsp);
 
