@@ -56,10 +56,9 @@ public:
 
     bool isHWOverload(); // test if we have some hardware overload condition
 
-    double getUrValue(const QString &range) const; // returns upper range value of range
-    double getRejection(const QString &range);
-    double getRejectionActRange(); // return nominal (100%) rejection of actual range
-    double getOVRRejection(const QString &range) const;
+    double getUrValue(const QString &range) const;      // upper range value
+    double getRejection(const QString &range) const;    // nominal (100%) rejection
+    double getOVRRejection(const QString &range) const; // over (usually 125%) rejection
     double getMaxRangeUrvalueMax(); // returns the max. upper range value including reserve of channel including overload reserve
     double getRangeUrvalueMax(); // returns the max. upper range value including reserve of actual range
     bool isPossibleRange(const QString &range); // returns true if range is available
