@@ -53,3 +53,13 @@ void RangeMeasChannelStateData::setPeakValue(double peakValue)
 {
     m_peakValue = peakValue;
 }
+
+double RangeMeasChannelStateData::getPeakValueWithDc() const
+{
+    return m_peakValueWithDc;
+}
+
+void RangeMeasChannelStateData::setPeakValueWithDc(double peakValueWithDc)
+{
+    m_peakValueWithDc = peakValueWithDc;
+}
