@@ -71,9 +71,6 @@ public:
     QString getMaxRange(const QString &rngAlias); // returns alias of the range with max ur value
     QString getRangeListAlias();
 
-    double getSignalFrequency() const;
-    void setSignalFrequency(double signalFrequency);
-
     double getPeakValue() const;
     void setPeakValue(double peakValue);
 
@@ -97,7 +94,6 @@ private:
     QString m_sActRange; // the actual range set (alias)
     double m_peakValue;
     double m_peakValueWithDc;
-    double m_signalFrequency;
     double m_fGainCorrection;
     double m_fPhaseCorrection;
     double m_fOffsetCorrection;

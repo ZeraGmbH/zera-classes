@@ -583,16 +583,6 @@ void cRangeMeasChannel::setPeakValue(double peakValue)
     m_peakValue = peakValue;
 }
 
-double cRangeMeasChannel::getSignalFrequency() const
-{
-    return m_signalFrequency;
-}
-
-void cRangeMeasChannel::setSignalFrequency(double signalFrequency)
-{
-    m_signalFrequency = signalFrequency;
-}
-
 void cRangeMeasChannel::setRangeListAlias()
 {
     QString s;

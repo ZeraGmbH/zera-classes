@@ -33,3 +33,13 @@ void RangeMeasChannelStateData::setRmsValue(double rmsValue)
 {
     m_rmsValue = rmsValue;
 }
+
+double RangeMeasChannelStateData::getSignalFrequency() const
+{
+    return m_signalFrequency;
+}
+
+void RangeMeasChannelStateData::setSignalFrequency(double signalFrequency)
+{
+    m_signalFrequency = signalFrequency;
+}
