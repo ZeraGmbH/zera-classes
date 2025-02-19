@@ -394,17 +394,17 @@ void cRangeObsermatic::setRanges(bool force)
             m_nRangeSetPending++;
             m_actChannelRangeList.replace(i, range);
 
-            quint8 dspChannel = rangeMeasChannel->getDSPChannelNr();
-            double actUrValue = RangeMeasChannelConvenience::getUrValueActRange(rangeMeasChannel);
-            double actRejection = RangeMeasChannelConvenience::getRejectionActRange(rangeMeasChannel);
+            double actUrValue = RangeMeasChannelConvenience::getUrValueRangeAct(rangeMeasChannel);
+            double actRejection = RangeMeasChannelConvenience::getRejectionRangeAct(rangeMeasChannel);
             // The scaling factor is multplied with the inverse presaling value
             float scaleToDsp = (actUrValue / actRejection) * (1/preScalingFactor);
+            quint8 dspChannel = rangeMeasChannel->getDSPChannelNr();
             m_gainScaleDspVar->setValue(dspChannel, scaleToDsp);
 
             // we first set information of channels actual urvalue
             m_RangeActRejectionComponentList.at(i)->setValue(actUrValue);
             // we additional set information of channels actual urvalue incl. reserve
-            double maxUrValue = RangeMeasChannelConvenience::getUrValueMaxActRange(rangeMeasChannel);
+            double maxUrValue = RangeMeasChannelConvenience::getUrValueMaxRangeAct(rangeMeasChannel);
             m_RangeActOVLRejectionComponentList.at(i)->setValue(maxUrValue);
 
             // reset hard overload AFTER change of range.
@@ -533,7 +533,7 @@ void cRangeObsermatic::readGainScaleDone()
 
     for (int i = 0; i < m_RangeMeasChannelList.count(); i++) {
         cRangeMeasChannel *rangeMeasChannel = m_RangeMeasChannelList.at(i);
-        double maxUrMaxRange = RangeMeasChannelConvenience::getUrValueMaxMaxRange(rangeMeasChannel);
+        double maxUrMaxRange = RangeMeasChannelConvenience::getUrValueMaxRangeMax(rangeMeasChannel);
         m_RangeOVLRejectionComponentList.at(i)->setValue(maxUrMaxRange);
     }
 

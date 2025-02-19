@@ -329,7 +329,7 @@ double cAdjustManagement::getIgnoreRmsCorrFactor()
     double ignoreRmsCorrFactor = 1.0;
     cRangeMeasChannel *measChannel = m_ChannelList.at(m_nChannelIt);
     if(m_adjustmentConfig->m_ignoreRmsValuesEnable.m_nActive) {
-        double actUrValue = RangeMeasChannelConvenience::getUrValueActRange(measChannel);
+        double actUrValue = RangeMeasChannelConvenience::getUrValueRangeAct(measChannel);
         double threshold = m_adjustmentConfig->m_ignoreRmsValuesThreshold.m_fValue * actUrValue / 100;
         double unscaledRmsValues = measChannel->getRmsValue() * measChannel->getPreScaling();
         double rmsValues = unscaledRmsValues / m_fGainKeeperForFakingRmsValues[measChannel->getDSPChannelNr()];
