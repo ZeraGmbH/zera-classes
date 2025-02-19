@@ -533,7 +533,8 @@ void cRangeObsermatic::readGainScaleDone()
 
     for (int i = 0; i < m_RangeMeasChannelList.count(); i++) {
         cRangeMeasChannel *rangeMeasChannel = m_RangeMeasChannelList.at(i);
-        m_RangeOVLRejectionComponentList.at(i)->setValue(rangeMeasChannel->getMaxRangeUrvalueMax());
+        double maxUrMaxRange = RangeMeasChannelConvenience::getUrValueMaxMaxRange(rangeMeasChannel);
+        m_RangeOVLRejectionComponentList.at(i)->setValue(maxUrMaxRange);
     }
 
     // we also have the information needed to set param validators and scpi information now

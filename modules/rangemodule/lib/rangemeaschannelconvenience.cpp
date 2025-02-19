@@ -20,10 +20,19 @@ double RangeMeasChannelConvenience::getOVRRejectionActRange(const cRangeMeasChan
 
 double RangeMeasChannelConvenience::getUrValueMaxActRange(const cRangeMeasChannel *channel)
 {
-    double actUrValue = getUrValueActRange(channel);
-    double actRejection = getRejectionActRange(channel);
-    double actOVRRejection = getOVRRejectionActRange(channel);
-    return (actUrValue * actOVRRejection / actRejection);
+    double actRangeUrValue = getUrValueActRange(channel);
+    double actRangeRejection = getRejectionActRange(channel);
+    double actRangeOVRRejection = getOVRRejectionActRange(channel);
+    return (actRangeUrValue * actRangeOVRRejection / actRangeRejection);
+}
+
+double RangeMeasChannelConvenience::getUrValueMaxMaxRange(const cRangeMeasChannel *channel)
+{
+    QString maxRange = channel->getMaxRange();
+    double maxRangeUrValue = channel->getUrValue(maxRange);
+    double maxRangeRejection = channel->getRejection(maxRange);
+    double maxRangeOVRRejection = channel->getOVRRejection(maxRange);
+    return (maxRangeUrValue * maxRangeOVRRejection / maxRangeRejection);
 }
 
 }

@@ -259,7 +259,7 @@ QString cRangeMeasChannel::getOptRange(double rms, const QString &rngAlias)
 }
 
 
-QString cRangeMeasChannel::getMaxRange()
+QString cRangeMeasChannel::getMaxRange() const
 {
     QList<cRangeInfoWithConstantValues> riList = m_RangeInfoHash.values();
     double newAmpl = -1.0;
@@ -359,12 +359,6 @@ double cRangeMeasChannel::getRejection(const QString &range) const
 double cRangeMeasChannel::getOVRRejection(const QString &range) const
 {
     return m_RangeInfoHash[range].ovrejection;
-}
-
-double cRangeMeasChannel::getMaxRangeUrvalueMax()
-{
-   QString s = getMaxRange();
-   return (getUrValue(s) * getOVRRejection(s) / getRejection(s));
 }
 
 

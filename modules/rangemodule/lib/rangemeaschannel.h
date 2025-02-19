@@ -59,13 +59,12 @@ public:
     double getUrValue(const QString &range) const;      // upper range value
     double getRejection(const QString &range) const;    // nominal (100%) rejection
     double getOVRRejection(const QString &range) const; // over (usually 125%) rejection
-    double getMaxRangeUrvalueMax(); // returns the max. upper range value including reserve of channel including overload reserve
     bool isPossibleRange(const QString &range); // returns true if range is available
     bool isRMSOverload(double ampl); // test if ampl is overload condition
     bool isADCOverload(double ampl); // test if ampl is adc overload condition
 
     QString getOptRange(double rms, const QString &rngAlias); // returns opt. range alias
-    QString getMaxRange(); // returns alias of the range with max ur value
+    QString getMaxRange() const; // returns alias of the range with max ur value
     QString getMaxRange(const QString &rngAlias); // returns alias of the range with max ur value
     QString getRangeListAlias();
 
