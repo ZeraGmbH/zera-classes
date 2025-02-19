@@ -159,7 +159,7 @@ void cRangeModule::setPeakRmsAndFrequencyValues(const QVector<float>* const valu
     int iterationLength=qMin(expectedChannelCount,deliveredChannelCount);
     for(int i=0; i<iterationLength;++i) {
         RangeMeasChannelStateData *stateData = m_rangeMeasChannelList.at(i)->getStateData();
-        m_rangeMeasChannelList.at(i)->setPeakValue(values->at(i));
+        stateData->setPeakValue(values->at(i));
         stateData->setRmsValue(values->at(rmsOffset+i));
         stateData->setSignalFrequency(values->at(frequencyPos));
         m_rangeMeasChannelList.at(i)->setPeakValueWithDc(values->at(peakWithDcOffset+i));

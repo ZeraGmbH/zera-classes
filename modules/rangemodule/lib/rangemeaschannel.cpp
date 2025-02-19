@@ -573,16 +573,6 @@ void cRangeMeasChannel::setPeakValueWithDc(double peakValueWithDc)
     m_peakValueWithDc = peakValueWithDc;
 }
 
-double cRangeMeasChannel::getPeakValue() const
-{
-    return m_peakValue;
-}
-
-void cRangeMeasChannel::setPeakValue(double peakValue)
-{
-    m_peakValue = peakValue;
-}
-
 void cRangeMeasChannel::setRangeListAlias()
 {
     QString s;
