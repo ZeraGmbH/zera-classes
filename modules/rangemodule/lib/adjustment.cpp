@@ -344,7 +344,8 @@ double cAdjustManagement::getIgnoreRmsCorrFactor()
 void cAdjustManagement::getPhaseCorrFromPcbServer()
 {
     if (m_bActive){
-        double frequency=m_ChannelList.at(m_nChannelIt)->getSignalFrequency();
+        const RangeMeasChannelStateData *stateData = m_ChannelList.at(m_nChannelIt)->getStateData();
+        double frequency = stateData->getSignalFrequency();
         m_MsgNrCmdList[m_ChannelList.at(m_nChannelIt)->readPhaseCorrection(frequency)] = getphasecorr;
     }
 }
