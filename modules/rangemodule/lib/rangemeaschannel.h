@@ -71,9 +71,6 @@ public:
     QString getMaxRange(const QString &rngAlias); // returns alias of the range with max ur value
     QString getRangeListAlias();
 
-    double getPreScaling() const;
-    void setPreScaling(double preScaling);
-
     double getRmsValue() const;
     void setRmsValue(double actualValue);
 
@@ -105,7 +102,6 @@ private:
     double m_peakValueWithDc;
     double m_rmsValue;
     double m_signalFrequency;
-    double m_preScaling;
     double m_fGainCorrection;
     double m_fPhaseCorrection;
     double m_fOffsetCorrection;
