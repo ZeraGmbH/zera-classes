@@ -296,8 +296,9 @@ void cAdjustManagement::writeOffsetCorr()
 void cAdjustManagement::getGainCorrFromPcbServer()
 {
     if (m_bActive){
-        double actualValue=m_ChannelList.at(m_nChannelIt)->getRmsValue();
-        double preScalingFact=m_ChannelList[m_nChannelIt]->getStateData()->getPreScaling();
+        const RangeMeasChannelStateData *stateData = m_ChannelList.at(m_nChannelIt)->getStateData();
+        double actualValue = stateData->getRmsValue();
+        double preScalingFact = stateData->getPreScaling();
         cRangeMeasChannel *measChannel = m_ChannelList.at(m_nChannelIt);
         double unscaledActualValue = actualValue * preScalingFact / m_fGainKeeperForFakingRmsValues[measChannel->getDSPChannelNr()];
         m_MsgNrCmdList[m_ChannelList.at(m_nChannelIt)->readGainCorrection(unscaledActualValue)] = getgaincorr;
@@ -331,7 +332,8 @@ double cAdjustManagement::getIgnoreRmsCorrFactor()
     if(m_adjustmentConfig->m_ignoreRmsValuesEnable.m_nActive) {
         double actUrValue = RangeMeasChannelConvenience::getUrValueRangeAct(measChannel);
         double threshold = m_adjustmentConfig->m_ignoreRmsValuesThreshold.m_fValue * actUrValue / 100;
-        double unscaledRmsValues = measChannel->getRmsValue() * measChannel->getStateData()->getPreScaling();
+        const RangeMeasChannelStateData *stateData = measChannel->getStateData();
+        double unscaledRmsValues = stateData->getRmsValue() * stateData->getPreScaling();
         double rmsValues = unscaledRmsValues / m_fGainKeeperForFakingRmsValues[measChannel->getDSPChannelNr()];
         if(rmsValues < threshold)
             ignoreRmsCorrFactor = 1e-10;
@@ -369,9 +371,10 @@ void cAdjustManagement::preparePhaseCorrForDspServer()
 void cAdjustManagement::getOffsetCorrFromPcbServer()
 {
     if (m_bActive){
-        double actualValue=m_ChannelList.at(m_nChannelIt)->getRmsValue();
-        double preScalingFact=m_ChannelList[m_nChannelIt]->getStateData()->getPreScaling();
-        m_MsgNrCmdList[m_ChannelList.at(m_nChannelIt)->readOffsetCorrection(actualValue*preScalingFact)] = getoffsetcore;
+        const RangeMeasChannelStateData *stateData = m_ChannelList.at(m_nChannelIt)->getStateData();
+        double actualValue = stateData->getRmsValue();
+        double preScalingFact = stateData->getPreScaling();
+        m_MsgNrCmdList[m_ChannelList.at(m_nChannelIt)->readOffsetCorrection(actualValue * preScalingFact)] = getoffsetcore;
     }
 }
 

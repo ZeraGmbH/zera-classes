@@ -250,7 +250,8 @@ void cRangeObsermatic::rangeObservation()
         float prescalingFac = getPreScale(i);
         // for test overload we take the rms value with/without dc depending on configuration
         // and for overload condition of adc test, we take the peakvalues including dc
-        bool rmsOverload = rangeMeasChannel->isRMSOverload(rangeMeasChannel->getRmsValue()*prescalingFac); // rms
+        const RangeMeasChannelStateData *stateData = rangeMeasChannel->getStateData();
+        bool rmsOverload = rangeMeasChannel->isRMSOverload(stateData->getRmsValue()*prescalingFac); // rms
         bool adcOverLoad = rangeMeasChannel->isADCOverload(rangeMeasChannel->getPeakValueWithDc()*prescalingFac); //peak
         bool hardOverLoad = m_hardOvlList.at(i);
         if ( rmsOverload || adcOverLoad || hardOverLoad) { // if any overload ?
@@ -278,7 +279,8 @@ void cRangeObsermatic::rangeAutomatic()
                 if (!m_hardOvlList.at(i)) {
                     if (!m_softOvlList.at(i)) {
                         const QString range = m_ConfPar.getCurrentRange(i);
-                        const QString optRange = rangeMeasChannel->getOptRange(rangeMeasChannel->getRmsValue()*getPreScale(i), range);
+                        const RangeMeasChannelStateData *stateData = rangeMeasChannel->getStateData();
+                        const QString optRange = rangeMeasChannel->getOptRange(stateData->getRmsValue()*getPreScale(i), range);
                         m_ConfPar.setCurrentRange(i, optRange);
                     }
                 }

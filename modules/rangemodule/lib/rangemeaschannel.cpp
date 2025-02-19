@@ -593,16 +593,6 @@ void cRangeMeasChannel::setSignalFrequency(double signalFrequency)
     m_signalFrequency = signalFrequency;
 }
 
-double cRangeMeasChannel::getRmsValue() const
-{
-    return m_rmsValue;
-}
-
-void cRangeMeasChannel::setRmsValue(double actualValue)
-{
-    m_rmsValue = actualValue;
-}
-
 void cRangeMeasChannel::setRangeListAlias()
 {
     QString s;
