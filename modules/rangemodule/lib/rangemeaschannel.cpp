@@ -563,16 +563,6 @@ void cRangeMeasChannel::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVaria
     }
 }
 
-double cRangeMeasChannel::getPeakValueWithDc() const
-{
-    return m_peakValueWithDc;
-}
-
-void cRangeMeasChannel::setPeakValueWithDc(double peakValueWithDc)
-{
-    m_peakValueWithDc = peakValueWithDc;
-}
-
 void cRangeMeasChannel::setRangeListAlias()
 {
     QString s;

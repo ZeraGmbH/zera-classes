@@ -252,7 +252,7 @@ void cRangeObsermatic::rangeObservation()
         // and for overload condition of adc test, we take the peakvalues including dc
         const RangeMeasChannelStateData *stateData = rangeMeasChannel->getStateData();
         bool rmsOverload = rangeMeasChannel->isRMSOverload(stateData->getRmsValue()*prescalingFac); // rms
-        bool adcOverLoad = rangeMeasChannel->isADCOverload(rangeMeasChannel->getPeakValueWithDc()*prescalingFac); //peak
+        bool adcOverLoad = rangeMeasChannel->isADCOverload(stateData->getPeakValueWithDc()*prescalingFac); //peak
         bool hardOverLoad = m_hardOvlList.at(i);
         if ( rmsOverload || adcOverLoad || hardOverLoad) { // if any overload ?
             markOverload = true;

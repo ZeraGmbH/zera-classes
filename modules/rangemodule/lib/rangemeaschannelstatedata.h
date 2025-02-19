@@ -20,12 +20,16 @@ public:
     double getPeakValue() const;
     void setPeakValue(double peakValue);
 
+    double getPeakValueWithDc() const;
+    void setPeakValueWithDc(double peakValueWithDc);
+
 private:
     bool m_invertedPhase = false;
     double m_preScaling = 1.0;
     double m_rmsValue = 0.0;
     double m_signalFrequency = 13.0;
-    double m_peakValue = 0;
+    double m_peakValue = 0.0;
+    double m_peakValueWithDc = 0.0;
 };
 
 #endif // RANGEMEASCHANNELSTATEDATA_H
