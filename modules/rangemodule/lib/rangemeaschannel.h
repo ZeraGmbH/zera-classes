@@ -1,6 +1,7 @@
 #ifndef RANGEMEASCHANNEL_H
 #define RANGEMEASCHANNEL_H
 
+#include "rangemeaschannelstatedata.h"
 #include <pcbinterface.h>
 #include <basemeaschannel.h>
 #include <rangeinfo.h>
@@ -41,6 +42,8 @@ public:
                       VeinTcp::AbstractTcpNetworkFactoryPtr tcpNetworkFactory,
                       QString moduleName);
     void generateVeinInterface() override;
+
+    RangeMeasChannelStateData* getStateData();
 
     QString getRange() const;
     quint32 setRange(const QString &range); // a statemachine gets started that returns cmdDone(quint32 cmdnr)
@@ -83,9 +86,6 @@ public:
     double getPeakValueWithDc() const;
     void setPeakValueWithDc(double peakValueWithDc);
 
-    void setInvertedPhaseState(bool inverted);
-    bool getInvertedPhaseState();
-
 signals:
     void cmdDone(quint32 cmdnr); // to signal we are ready
     void newRangeList(); // if the channel has read new range list after async. notification
@@ -94,6 +94,7 @@ protected slots:
     void catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant answer) override;
 
 private:
+    RangeMeasChannelStateData m_stateData;
     QStringList m_RangeNameList; // a list of all ranges
     QHash<QString, cRangeInfoWithConstantValues> m_RangeInfoHash; // a list of available and selectable ranges, alias will be the key
     QHash<QString, cRangeInfoWithConstantValues> m_RangeInfoHashWorking;
@@ -110,7 +111,6 @@ private:
     double m_fOffsetCorrection;
     quint32 m_nStatus;
     QString m_sRangeListAlias; // all range alias: alias1;alias2 ....
-    bool m_invertedPhase = false;
 
     // statemachine for activating a rangemeaschannel
     QState m_pcbConnectionState; // we try to get a connection to our pcb server

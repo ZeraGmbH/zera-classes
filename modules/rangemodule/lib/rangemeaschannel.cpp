@@ -366,6 +366,11 @@ void cRangeMeasChannel::generateVeinInterface()
 {
 }
 
+RangeMeasChannelStateData *cRangeMeasChannel::getStateData()
+{
+    return &m_stateData;
+}
+
 void cRangeMeasChannel::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant answer)
 {
     bool ok;
@@ -655,16 +660,6 @@ void cRangeMeasChannel::setActionErrorcount(int Count)
     m_ActionErrorcountHash[readphasecorrection] = Count;
     m_ActionErrorcountHash[readoffsetcorrection] = Count;
     m_ActionErrorcountHash[setmeaschannelrange] = Count;
-}
-
-void cRangeMeasChannel::setInvertedPhaseState(bool inverted)
-{
-    m_invertedPhase = inverted;
-}
-
-bool cRangeMeasChannel::getInvertedPhaseState()
-{
-    return m_invertedPhase;
 }
 
 void cRangeMeasChannel::pcbConnection()
