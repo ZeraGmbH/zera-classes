@@ -15,8 +15,7 @@ cRangeMeasChannel::cRangeMeasChannel(ChannelRangeObserver::ChannelPtr channelObs
     cBaseMeasChannel(pcbsocket,
                        tcpNetworkFactory,
                        channelObserver,
-                       QString("%1/RangeMeasChannel/%2").arg(moduleName, channelObserver->getMName())),
-    m_preScaling(1)
+                       QString("%1/RangeMeasChannel/%2").arg(moduleName, channelObserver->getMName()))
 {
     m_pcbInterface = std::make_shared<Zera::cPCBInterface>();
 
@@ -603,17 +602,6 @@ void cRangeMeasChannel::setRmsValue(double actualValue)
 {
     m_rmsValue = actualValue;
 }
-
-double cRangeMeasChannel::getPreScaling() const
-{
-    return m_preScaling;
-}
-
-void cRangeMeasChannel::setPreScaling(double preScaling)
-{
-    m_preScaling = preScaling;
-}
-
 
 void cRangeMeasChannel::setRangeListAlias()
 {
