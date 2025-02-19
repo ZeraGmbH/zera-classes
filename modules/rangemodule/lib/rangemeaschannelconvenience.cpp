@@ -8,4 +8,9 @@ double RangeMeasChannelConvenience::getUrValueActRange(const cRangeMeasChannel *
     return channel->getUrValue(channel->getRange());
 }
 
+double RangeMeasChannelConvenience::getOVRRejectionActRange(const cRangeMeasChannel *channel)
+{
+    return channel->getOVRRejection(channel->getRange());
+}
+
 }

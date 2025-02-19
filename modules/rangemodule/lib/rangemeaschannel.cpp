@@ -364,17 +364,10 @@ double cRangeMeasChannel::getRejectionActRange()
 }
 
 
-double cRangeMeasChannel::getOVRRejection(const QString &range)
+double cRangeMeasChannel::getOVRRejection(const QString &range) const
 {
     return m_RangeInfoHash[range].ovrejection;
 }
-
-
-double cRangeMeasChannel::getOVRRejectionActRange()
-{
-    return m_RangeInfoHash[m_sActRange].ovrejection;
-}
-
 
 double cRangeMeasChannel::getMaxRangeUrvalueMax()
 {
@@ -386,7 +379,8 @@ double cRangeMeasChannel::getMaxRangeUrvalueMax()
 double cRangeMeasChannel::getRangeUrvalueMax()
 {
     double actUrValue = RangeMeasChannelConvenience::getUrValueActRange(this);
-    return (actUrValue * getOVRRejectionActRange() / getRejectionActRange());
+    double actOVRRejection = RangeMeasChannelConvenience::getOVRRejectionActRange(this);
+    return (actUrValue * actOVRRejection / getRejectionActRange());
 }
 
 
