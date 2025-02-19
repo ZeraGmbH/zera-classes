@@ -12,6 +12,8 @@ public:
     static double getUrValueActRange(const cRangeMeasChannel *channel);
     static double getRejectionActRange(const cRangeMeasChannel *channel);
     static double getOVRRejectionActRange(const cRangeMeasChannel *channel);
+
+    static double getUrValueMaxActRange(const cRangeMeasChannel *channel);
 };
 
 }
