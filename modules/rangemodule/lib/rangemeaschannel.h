@@ -42,6 +42,7 @@ public:
                       QString moduleName);
     void generateVeinInterface() override;
 
+    QString getRange() const;
     quint32 setRange(const QString &range); // a statemachine gets started that returns cmdDone(quint32 cmdnr)
     quint32 readGainCorrection(double amplitude); // dito
     quint32 readPhaseCorrection(double frequency); // dito
@@ -55,8 +56,7 @@ public:
 
     bool isHWOverload(); // test if we have some hardware overload condition
 
-    double getUrValue(const QString &range); // returns upper range value of range
-    double getUrValueActRange(); // returns upper range of actual range
+    double getUrValue(const QString &range) const; // returns upper range value of range
     double getRejection(const QString &range);
     double getRejectionActRange(); // return nominal (100%) rejection of actual range
     double getOVRRejection(const QString &range);

@@ -1,7 +1,7 @@
 #include "rangemodule.h"
 #include "rangemodulemeasprogram.h"
 #include "rangeobsermatic.h"
-#include "rangemeaschannel.h"
+#include "rangemeaschannelconvenience.h"
 #include <errormessages.h>
 #include <reply.h>
 #include <proxy.h>
@@ -396,11 +396,12 @@ void cRangeObsermatic::setRanges(bool force)
 
             quint8 dspChannel = rangeMeasChannel->getDSPChannelNr();
             // The scaling factor is multplied with the inverse presaling value
-            float scaleToDsp = (rangeMeasChannel->getUrValueActRange() / rangeMeasChannel->getRejectionActRange()) * (1/preScalingFactor);
+            double actUrValue = RangeMeasChannelConvenience::getUrValueActRange(rangeMeasChannel);
+            float scaleToDsp = (actUrValue / rangeMeasChannel->getRejectionActRange()) * (1/preScalingFactor);
             m_gainScaleDspVar->setValue(dspChannel, scaleToDsp);
 
             // we first set information of channels actual urvalue
-            m_RangeActRejectionComponentList.at(i)->setValue(rangeMeasChannel->getUrValueActRange());
+            m_RangeActRejectionComponentList.at(i)->setValue(actUrValue);
             // we additional set information of channels actual urvalue incl. reserve
             m_RangeActOVLRejectionComponentList.at(i)->setValue(rangeMeasChannel->getRangeUrvalueMax()); // we additional set information of channels actual urvalue incl. reserve
 
