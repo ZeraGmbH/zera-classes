@@ -71,9 +71,6 @@ public:
     QString getMaxRange(const QString &rngAlias); // returns alias of the range with max ur value
     QString getRangeListAlias();
 
-    double getPeakValue() const;
-    void setPeakValue(double peakValue);
-
     double getPeakValueWithDc() const;
     void setPeakValueWithDc(double peakValueWithDc);
 
@@ -92,7 +89,6 @@ private:
     QHash<int, int> m_ActionErrorcountHash;
     QString m_sNewRange;
     QString m_sActRange; // the actual range set (alias)
-    double m_peakValue;
     double m_peakValueWithDc;
     double m_fGainCorrection;
     double m_fPhaseCorrection;

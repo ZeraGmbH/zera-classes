@@ -43,3 +43,13 @@ void RangeMeasChannelStateData::setSignalFrequency(double signalFrequency)
 {
     m_signalFrequency = signalFrequency;
 }
+
+double RangeMeasChannelStateData::getPeakValue() const
+{
+    return m_peakValue;
+}
+
+void RangeMeasChannelStateData::setPeakValue(double peakValue)
+{
+    m_peakValue = peakValue;
+}
