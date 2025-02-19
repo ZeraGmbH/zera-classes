@@ -404,7 +404,8 @@ void cRangeObsermatic::setRanges(bool force)
             // we first set information of channels actual urvalue
             m_RangeActRejectionComponentList.at(i)->setValue(actUrValue);
             // we additional set information of channels actual urvalue incl. reserve
-            m_RangeActOVLRejectionComponentList.at(i)->setValue(rangeMeasChannel->getRangeUrvalueMax()); // we additional set information of channels actual urvalue incl. reserve
+            double maxUrValue = RangeMeasChannelConvenience::getUrValueMaxActRange(rangeMeasChannel);
+            m_RangeActOVLRejectionComponentList.at(i)->setValue(maxUrValue);
 
             // reset hard overload AFTER change of range.
             if (requiresOverloadReset(i) || m_groupOvlList.at(i) || force) {

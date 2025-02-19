@@ -368,19 +368,9 @@ double cRangeMeasChannel::getMaxRangeUrvalueMax()
 }
 
 
-double cRangeMeasChannel::getRangeUrvalueMax()
-{
-    double actUrValue = RangeMeasChannelConvenience::getUrValueActRange(this);
-    double actRejection = RangeMeasChannelConvenience::getRejectionActRange(this);
-    double actOVRRejection = RangeMeasChannelConvenience::getOVRRejectionActRange(this);
-    return (actUrValue * actOVRRejection / actRejection);
-}
-
-
 void cRangeMeasChannel::generateVeinInterface()
 {
 }
-
 
 void cRangeMeasChannel::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant answer)
 {

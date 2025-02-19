@@ -18,4 +18,12 @@ double RangeMeasChannelConvenience::getOVRRejectionActRange(const cRangeMeasChan
     return channel->getOVRRejection(channel->getRange());
 }
 
+double RangeMeasChannelConvenience::getUrValueMaxActRange(const cRangeMeasChannel *channel)
+{
+    double actUrValue = getUrValueActRange(channel);
+    double actRejection = getRejectionActRange(channel);
+    double actOVRRejection = getOVRRejectionActRange(channel);
+    return (actUrValue * actOVRRejection / actRejection);
+}
+
 }
