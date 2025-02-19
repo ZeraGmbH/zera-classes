@@ -9,12 +9,12 @@ namespace RANGEMODULE
 class RangeMeasChannelConvenience
 {
 public:
-    static double getUrValueActRange(const cRangeMeasChannel *channel);
-    static double getRejectionActRange(const cRangeMeasChannel *channel);
-    static double getOVRRejectionActRange(const cRangeMeasChannel *channel);
+    static double getUrValueRangeAct(const cRangeMeasChannel *channel);
+    static double getRejectionRangeAct(const cRangeMeasChannel *channel);
+    static double getOVRRejectionRangeAct(const cRangeMeasChannel *channel);
 
-    static double getUrValueMaxActRange(const cRangeMeasChannel *channel);
-    static double getUrValueMaxMaxRange(const cRangeMeasChannel *channel);
+    static double getUrValueMaxRangeAct(const cRangeMeasChannel *channel);
+    static double getUrValueMaxRangeMax(const cRangeMeasChannel *channel);
 };
 
 }
