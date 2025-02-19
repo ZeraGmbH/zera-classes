@@ -1,4 +1,4 @@
-#include "rangemeaschannel.h"
+#include "rangemeaschannelconvenience.h"
 #include <errormessages.h>
 #include <reply.h>
 #include <proxy.h>
@@ -104,6 +104,10 @@ quint32 cRangeMeasChannel::setRange(const QString &range)
     }
 }
 
+QString cRangeMeasChannel::getRange() const
+{
+    return m_sActRange;
+}
 
 quint32 cRangeMeasChannel::readGainCorrection(double amplitude)
 {
@@ -342,15 +346,9 @@ bool cRangeMeasChannel::isHWOverload()
 }
 
 
-double cRangeMeasChannel::getUrValue(const QString &range)
+double cRangeMeasChannel::getUrValue(const QString &range) const
 {
     return m_RangeInfoHash[range].urvalue;
-}
-
-
-double cRangeMeasChannel::getUrValueActRange()
-{
-    return m_RangeInfoHash[m_sActRange].urvalue;
 }
 
 
@@ -387,7 +385,8 @@ double cRangeMeasChannel::getMaxRangeUrvalueMax()
 
 double cRangeMeasChannel::getRangeUrvalueMax()
 {
-    return (getUrValueActRange() * getOVRRejectionActRange() / getRejectionActRange());
+    double actUrValue = RangeMeasChannelConvenience::getUrValueActRange(this);
+    return (actUrValue * getOVRRejectionActRange() / getRejectionActRange());
 }
 
 
