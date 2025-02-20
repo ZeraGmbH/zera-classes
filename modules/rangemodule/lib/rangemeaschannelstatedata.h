@@ -1,6 +1,9 @@
 #ifndef RANGEMEASCHANNELSTATEDATA_H
 #define RANGEMEASCHANNELSTATEDATA_H
 
+namespace RANGEMODULE
+{
+
 class RangeMeasChannelStateData
 {
 public:
@@ -31,5 +34,7 @@ private:
     double m_peakValue = 0.0;
     double m_peakValueWithDc = 0.0;
 };
+
+}
 
 #endif // RANGEMEASCHANNELSTATEDATA_H

@@ -1,5 +1,8 @@
 #include "rangemeaschannelstatedata.h"
 
+namespace RANGEMODULE
+{
+
 RangeMeasChannelStateData::RangeMeasChannelStateData()
 {
 }
@@ -62,4 +65,6 @@ double RangeMeasChannelStateData::getPeakValueWithDc() const
 void RangeMeasChannelStateData::setPeakValueWithDc(double peakValueWithDc)
 {
     m_peakValueWithDc = peakValueWithDc;
+}
+
 }
