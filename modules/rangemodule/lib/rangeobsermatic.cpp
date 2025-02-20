@@ -250,9 +250,9 @@ void cRangeObsermatic::rangeObservation()
         float prescalingFac = getPreScale(i);
         // for test overload we take the rms value with/without dc depending on configuration
         // and for overload condition of adc test, we take the peakvalues including dc
-        const RangeMeasChannelStateData *stateData = rangeMeasChannel->getStateData();
-        bool rmsOverload = rangeMeasChannel->isRMSOverload(stateData->getRmsValue()*prescalingFac); // rms
-        bool adcOverLoad = rangeMeasChannel->isADCOverload(stateData->getPeakValueWithDc()*prescalingFac); //peak
+        const RangeChannelData *channelData = rangeMeasChannel->getChannelData();
+        bool rmsOverload = rangeMeasChannel->isRMSOverload(channelData->getRmsValue()*prescalingFac); // rms
+        bool adcOverLoad = rangeMeasChannel->isADCOverload(channelData->getPeakValueWithDc()*prescalingFac); //peak
         bool hardOverLoad = m_hardOvlList.at(i);
         if ( rmsOverload || adcOverLoad || hardOverLoad) { // if any overload ?
             markOverload = true;
@@ -279,8 +279,8 @@ void cRangeObsermatic::rangeAutomatic()
                 if (!m_hardOvlList.at(i)) {
                     if (!m_softOvlList.at(i)) {
                         const QString range = m_ConfPar.getCurrentRange(i);
-                        const RangeMeasChannelStateData *stateData = rangeMeasChannel->getStateData();
-                        const QString optRange = rangeMeasChannel->getOptRange(stateData->getRmsValue()*getPreScale(i), range);
+                        const RangeChannelData *channelData = rangeMeasChannel->getChannelData();
+                        const QString optRange = rangeMeasChannel->getOptRange(channelData->getRmsValue()*getPreScale(i), range);
                         m_ConfPar.setCurrentRange(i, optRange);
                     }
                 }
@@ -745,7 +745,7 @@ void cRangeObsermatic::preScalingChanged(QVariant unused)
 
         m_RangeGroupPreScalingInfo.at(i)->setValue(factor);
         for(int channel = 0; channel<m_RangeMeasChannelList.length(); ++channel)
-            m_RangeMeasChannelList.at(channel)->getStateData()->setPreScaling(getPreScale(channel));
+            m_RangeMeasChannelList.at(channel)->getChannelData()->setPreScaling(getPreScale(channel));
     }
     setRanges(true);
 }

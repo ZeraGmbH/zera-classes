@@ -155,7 +155,7 @@ void cAdjustManagement::generateVeinInterface()
         m_pModule->m_veinModuleParameterMap[key] = pParameter; // for modules use
         m_invertedPhasesParList.append(pParameter);
         connect(pParameter, &VfModuleParameter::sigValueChanged, this, &cAdjustManagement::parInvertedPhaseStateChanged);
-        m_ChannelList[i]->getStateData()->setInvertedPhaseState(m_adjustmentConfig->m_senseChannelInvertParameter[i].m_nActive);
+        m_ChannelList[i]->getChannelData()->setInvertedPhaseState(m_adjustmentConfig->m_senseChannelInvertParameter[i].m_nActive);
     }
 }
 
@@ -296,9 +296,9 @@ void cAdjustManagement::writeOffsetCorr()
 void cAdjustManagement::getGainCorrFromPcbServer()
 {
     if (m_bActive){
-        const RangeMeasChannelStateData *stateData = m_ChannelList.at(m_nChannelIt)->getStateData();
-        double actualValue = stateData->getRmsValue();
-        double preScalingFact = stateData->getPreScaling();
+        const RangeChannelData *channelData = m_ChannelList.at(m_nChannelIt)->getChannelData();
+        double actualValue = channelData->getRmsValue();
+        double preScalingFact = channelData->getPreScaling();
         cRangeMeasChannel *measChannel = m_ChannelList.at(m_nChannelIt);
         double unscaledActualValue = actualValue * preScalingFact / m_fGainKeeperForFakingRmsValues[measChannel->getDSPChannelNr()];
         m_MsgNrCmdList[m_ChannelList.at(m_nChannelIt)->readGainCorrection(unscaledActualValue)] = getgaincorr;
@@ -311,7 +311,7 @@ void cAdjustManagement::prepareGainCorrForDspServer()
     if (m_bActive) {
         cRangeMeasChannel *measChannel = m_ChannelList.at(m_nChannelIt);
         float fCorr = measChannel->getGainCorrection();
-        if (measChannel->getStateData()->getInvertedPhaseState())
+        if (measChannel->getChannelData()->getInvertedPhaseState())
             fCorr = fCorr * -1;
         m_fGainCorr[measChannel->getDSPChannelNr()] = fCorr*getIgnoreRmsCorrFactor();
         m_fGainKeeperForFakingRmsValues[measChannel->getDSPChannelNr()] = getIgnoreRmsCorrFactor();
@@ -332,8 +332,8 @@ double cAdjustManagement::getIgnoreRmsCorrFactor()
     if(m_adjustmentConfig->m_ignoreRmsValuesEnable.m_nActive) {
         double actUrValue = RangeMeasChannelConvenience::getUrValueRangeAct(measChannel);
         double threshold = m_adjustmentConfig->m_ignoreRmsValuesThreshold.m_fValue * actUrValue / 100;
-        const RangeMeasChannelStateData *stateData = measChannel->getStateData();
-        double unscaledRmsValues = stateData->getRmsValue() * stateData->getPreScaling();
+        const RangeChannelData *channelData = measChannel->getChannelData();
+        double unscaledRmsValues = channelData->getRmsValue() * channelData->getPreScaling();
         double rmsValues = unscaledRmsValues / m_fGainKeeperForFakingRmsValues[measChannel->getDSPChannelNr()];
         if(rmsValues < threshold)
             ignoreRmsCorrFactor = 1e-10;
@@ -344,8 +344,8 @@ double cAdjustManagement::getIgnoreRmsCorrFactor()
 void cAdjustManagement::getPhaseCorrFromPcbServer()
 {
     if (m_bActive){
-        const RangeMeasChannelStateData *stateData = m_ChannelList.at(m_nChannelIt)->getStateData();
-        double frequency = stateData->getSignalFrequency();
+        const RangeChannelData *channelData = m_ChannelList.at(m_nChannelIt)->getChannelData();
+        double frequency = channelData->getSignalFrequency();
         m_MsgNrCmdList[m_ChannelList.at(m_nChannelIt)->readPhaseCorrection(frequency)] = getphasecorr;
     }
 }
@@ -372,9 +372,9 @@ void cAdjustManagement::preparePhaseCorrForDspServer()
 void cAdjustManagement::getOffsetCorrFromPcbServer()
 {
     if (m_bActive){
-        const RangeMeasChannelStateData *stateData = m_ChannelList.at(m_nChannelIt)->getStateData();
-        double actualValue = stateData->getRmsValue();
-        double preScalingFact = stateData->getPreScaling();
+        const RangeChannelData *channelData = m_ChannelList.at(m_nChannelIt)->getChannelData();
+        double actualValue = channelData->getRmsValue();
+        double preScalingFact = channelData->getPreScaling();
         m_MsgNrCmdList[m_ChannelList.at(m_nChannelIt)->readOffsetCorrection(actualValue * preScalingFact)] = getoffsetcore;
     }
 }
@@ -385,7 +385,7 @@ void cAdjustManagement::prepareOffsetCorrForDspServer()
     if (m_bActive) {
         cRangeMeasChannel *measChannel = m_ChannelList.at(m_nChannelIt);
         float fCorr = measChannel->getOffsetCorrection();
-        double preScale=measChannel->getStateData()->getPreScaling();
+        double preScale=measChannel->getChannelData()->getPreScaling();
         // Offset is an summand. It must be multiplied with the
         // scale factor.
         m_fOffsetCorr[measChannel->getDSPChannelNr()] = fCorr*preScale;
@@ -505,7 +505,7 @@ void cAdjustManagement::parInvertedPhaseStateChanged(QVariant newValue)
 {
     VfModuleParameter *pParameter = qobject_cast<VfModuleParameter*>(sender()); // get sender of updated signal
     int index = m_invertedPhasesParList.indexOf(pParameter); // which channel is it
-    m_ChannelList[index]->getStateData()->setInvertedPhaseState(newValue.toBool());
+    m_ChannelList[index]->getChannelData()->setInvertedPhaseState(newValue.toBool());
     m_adjustmentConfig->m_senseChannelInvertParameter[index].m_nActive = newValue.toUInt();
     emit m_pModule->parameterChanged();
 }

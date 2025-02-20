@@ -365,9 +365,9 @@ void cRangeMeasChannel::generateVeinInterface()
 {
 }
 
-RangeMeasChannelStateData *cRangeMeasChannel::getStateData()
+RangeChannelData *cRangeMeasChannel::getChannelData()
 {
-    return &m_stateData;
+    return &m_channelData;
 }
 
 void cRangeMeasChannel::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant answer)

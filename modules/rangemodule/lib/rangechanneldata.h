@@ -1,13 +1,13 @@
-#ifndef RANGEMEASCHANNELSTATEDATA_H
-#define RANGEMEASCHANNELSTATEDATA_H
+#ifndef RANGECHANNELDATA_H
+#define RANGECHANNELDATA_H
 
 namespace RANGEMODULE
 {
 
-class RangeMeasChannelStateData
+class RangeChannelData
 {
 public:
-    RangeMeasChannelStateData();
+    RangeChannelData();
     void setInvertedPhaseState(bool inverted);
     bool getInvertedPhaseState() const;
 
@@ -37,4 +37,4 @@ private:
 
 }
 
-#endif // RANGEMEASCHANNELSTATEDATA_H
+#endif // RANGECHANNELDATA_H
