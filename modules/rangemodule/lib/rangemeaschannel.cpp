@@ -84,7 +84,6 @@ cRangeMeasChannel::cRangeMeasChannel(ChannelRangeObserver::ChannelPtr channelObs
     connect(&m_rangeQueryLoopState, &QState::entered, this, &cRangeMeasChannel::rangeQueryLoop);
 
     connect(&m_rangeQueryMachine, &QStateMachine::finished, this, &cRangeMeasChannel::newRangeList);
-    setActionErrorcount(1);
 }
 
 
@@ -383,7 +382,6 @@ void cRangeMeasChannel::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVaria
             // we got a sense:chn:range:cat notifier
             // so we have to read the new range list and properties
             if (!m_rangeQueryMachine.isRunning()) {
-                setActionErrorcount(0);
                 m_rangeQueryMachine.start();
             }
             break;
@@ -393,7 +391,6 @@ void cRangeMeasChannel::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVaria
     else
     {
         int cmd = m_MsgNrCmdList.take(msgnr);
-        int errcount = 0;
         switch (cmd)
         {
         case unregisterNotifiers:
@@ -479,15 +476,11 @@ void cRangeMeasChannel::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVaria
             if (reply == ack)
                 m_sActRange = m_sNewRange;
             else {
-                errcount = m_ActionErrorcountHash.take(setmeaschannelrange);
-                errcount++;
-                m_ActionErrorcountHash[setmeaschannelrange] = errcount;
                 qWarning("Set range %s on %s failed with %i!",
                          qPrintable(m_sNewRange),
                          qPrintable(getAlias()),
                          reply);
-                if (errcount > 1)
-                    notifyError(setRangeErrMsg);
+                notifyError(setRangeErrMsg);
             } // perhaps some error output
             emit cmdDone(msgnr);
             break;
@@ -495,39 +488,24 @@ void cRangeMeasChannel::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVaria
         case readgaincorrection:
             if (reply == ack)
                 m_fGainCorrection = answer.toDouble(&ok);
-            else {
-                errcount = m_ActionErrorcountHash.take(readgaincorrection);
-                errcount++;
-                m_ActionErrorcountHash[readgaincorrection] = errcount;
-                if (errcount > 1)
-                    notifyError(readGainCorrErrMsg);
-            }
+            else
+                notifyError(readGainCorrErrMsg);
             emit cmdDone(msgnr);
             break;
 
         case readoffsetcorrection:
             if (reply == ack)
                 m_fOffsetCorrection = answer.toDouble(&ok);
-            else {
-                errcount = m_ActionErrorcountHash.take(readoffsetcorrection);
-                errcount++;
-                m_ActionErrorcountHash[readoffsetcorrection] = errcount;
-                if (errcount > 1)
-                    notifyError(readOffsetCorrErrMsg);
-            }
+            else
+                notifyError(readOffsetCorrErrMsg);
             emit cmdDone(msgnr);
             break;
 
         case readphasecorrection:
             if (reply == ack)
                 m_fPhaseCorrection = answer.toDouble(&ok);
-            else {
-                errcount = m_ActionErrorcountHash.take(readphasecorrection);
-                errcount++;
-                m_ActionErrorcountHash[readphasecorrection] = errcount;
-                if (errcount > 1)
-                    notifyError(readPhaseCorrErrMsg);
-            }
+            else
+                notifyError(readPhaseCorrErrMsg);
             emit cmdDone(msgnr);
             break;
 
@@ -598,16 +576,6 @@ void cRangeMeasChannel::setRangeListAlias()
     }
 
     m_sRangeListAlias = s;
-}
-
-
-void cRangeMeasChannel::setActionErrorcount(int Count)
-{
-    m_ActionErrorcountHash.clear();
-    m_ActionErrorcountHash[readgaincorrection] = Count;
-    m_ActionErrorcountHash[readphasecorrection] = Count;
-    m_ActionErrorcountHash[readoffsetcorrection] = Count;
-    m_ActionErrorcountHash[setmeaschannelrange] = Count;
 }
 
 void cRangeMeasChannel::pcbConnection()

@@ -83,7 +83,6 @@ private:
     QStringList m_RangeNameList; // a list of all ranges
     QHash<QString, cRangeInfoWithConstantValues> m_RangeInfoHash; // a list of available and selectable ranges, alias will be the key
     QHash<QString, cRangeInfoWithConstantValues> m_RangeInfoHashWorking;
-    QHash<int, int> m_ActionErrorcountHash;
     QString m_sNewRange;
     QString m_sActRange; // the actual range set (alias)
     double m_fGainCorrection;
@@ -123,7 +122,6 @@ private:
     Zera::ProxyClientPtr m_pcbClient;
 
     void setRangeListAlias();
-    void setActionErrorcount(int Count);
 
 private slots:
     void pcbConnection();
