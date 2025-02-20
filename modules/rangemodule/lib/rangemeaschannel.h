@@ -1,7 +1,7 @@
 #ifndef RANGEMEASCHANNEL_H
 #define RANGEMEASCHANNEL_H
 
-#include "rangemeaschannelstatedata.h"
+#include "rangechanneldata.h"
 #include <pcbinterface.h>
 #include <basemeaschannel.h>
 #include <rangeinfo.h>
@@ -43,7 +43,7 @@ public:
                       QString moduleName);
     void generateVeinInterface() override;
 
-    RangeMeasChannelStateData* getStateData();
+    RangeChannelData* getChannelData();
 
     QString getRange() const;
     quint32 setRange(const QString &range); // a statemachine gets started that returns cmdDone(quint32 cmdnr)
@@ -79,7 +79,7 @@ protected slots:
     void catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant answer) override;
 
 private:
-    RangeMeasChannelStateData m_stateData;
+    RangeChannelData m_channelData;
     QStringList m_RangeNameList; // a list of all ranges
     QHash<QString, cRangeInfoWithConstantValues> m_RangeInfoHash; // a list of available and selectable ranges, alias will be the key
     QHash<QString, cRangeInfoWithConstantValues> m_RangeInfoHashWorking;
