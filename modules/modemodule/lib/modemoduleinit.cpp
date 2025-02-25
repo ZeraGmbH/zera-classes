@@ -20,11 +20,6 @@ cModeModuleInit::cModeModuleInit(cModeModule* module, cModeModuleConfigData& con
     m_pcbInterface = std::make_shared<Zera::cPCBInterface>();
     m_dspInterface = m_pModule->getServiceInterfaceFactory()->createDspInterfaceMode(m_pModule->getEntityId());
 
-    m_IdentifyState.addTransition(this, &cModeModuleInit::activationContinue, &m_readResourceTypesState);
-    m_readResourceTypesState.addTransition(this, &cModeModuleInit::activationContinue, &m_readResourceState);
-    m_readResourceState.addTransition(this, &cModeModuleInit::activationContinue, &m_readResourceInfoState);
-    m_readResourceInfoState.addTransition(this, &cModeModuleInit::activationContinue, &m_claimResourceState);
-    m_claimResourceState.addTransition(this, &cModeModuleInit::activationContinue, &m_pcbserverConnectionState);
     // m_pcbserverConnectionState.addTransition is done in pcbserverConnection
     m_setModeState.addTransition(this, &cModeModuleInit::activationContinue, &m_dspserverConnectionState);
     // m_dspserverConnectionState.addTransition is done in dspserverConnection
@@ -37,12 +32,6 @@ cModeModuleInit::cModeModuleInit(cModeModule* module, cModeModuleConfigData& con
     m_setSubDCState.addTransition(this, &cModeModuleInit::activationContinue, &m_setSamplingSystemState);
     m_setSamplingSystemState.addTransition(this, &cModeModuleInit::activationContinue, &m_activationDoneState);
 
-    m_activationMachine.addState(&m_resourceManagerConnectState);
-    m_activationMachine.addState(&m_IdentifyState);
-    m_activationMachine.addState(&m_readResourceTypesState);
-    m_activationMachine.addState(&m_readResourceState);
-    m_activationMachine.addState(&m_readResourceInfoState);
-    m_activationMachine.addState(&m_claimResourceState);
     m_activationMachine.addState(&m_pcbserverConnectionState);
     m_activationMachine.addState(&m_setModeState);
     m_activationMachine.addState(&m_dspserverConnectionState);
@@ -56,14 +45,8 @@ cModeModuleInit::cModeModuleInit(cModeModule* module, cModeModuleConfigData& con
     m_activationMachine.addState(&m_setSamplingSystemState);
     m_activationMachine.addState(&m_activationDoneState);
 
-    m_activationMachine.setInitialState(&m_resourceManagerConnectState);
+    m_activationMachine.setInitialState(&m_pcbserverConnectionState);
 
-    connect(&m_resourceManagerConnectState, &QState::entered, this, &cModeModuleInit::resourceManagerConnect);
-    connect(&m_IdentifyState, &QState::entered, this, &cModeModuleInit::sendRMIdent);
-    connect(&m_readResourceTypesState, &QState::entered, this, &cModeModuleInit::readResourceTypes);
-    connect(&m_readResourceState, &QState::entered, this, &cModeModuleInit::readResource);
-    connect(&m_readResourceInfoState, &QState::entered, this, &cModeModuleInit::readResourceInfo);
-    connect(&m_claimResourceState, &QState::entered, this, &cModeModuleInit::claimResource);
     connect(&m_pcbserverConnectionState, &QState::entered, this, &cModeModuleInit::pcbserverConnect);
     connect(&m_setModeState, &QState::entered, this, &cModeModuleInit::setMode);
     connect(&m_dspserverConnectionState, &QState::entered, this, &cModeModuleInit::dspserverConnect);
@@ -77,13 +60,10 @@ cModeModuleInit::cModeModuleInit(cModeModule* module, cModeModuleConfigData& con
     connect(&m_setSamplingSystemState, &QState::entered, this, &cModeModuleInit::setSamplingsytem);
     connect(&m_activationDoneState, &QState::entered, this, &cModeModuleInit::activationDone);
 
-    m_freeResourceState.addTransition(this, &cModeModuleInit::deactivationContinue, &m_deactivationDoneState);
-    m_deactivationMachine.addState(&m_freeResourceState);
     m_deactivationMachine.addState(&m_deactivationDoneState);
 
-    m_deactivationMachine.setInitialState(&m_freeResourceState);
+    m_deactivationMachine.setInitialState(&m_deactivationDoneState);
 
-    connect(&m_freeResourceState, &QState::entered, this, &cModeModuleInit::freeResource);
     connect(&m_deactivationDoneState, &QState::entered, this, &cModeModuleInit::deactivationDone);
 
 }
@@ -104,56 +84,6 @@ void cModeModuleInit::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant
         if (m_MsgNrCmdList.contains(msgnr)) {
             int cmd = m_MsgNrCmdList.take(msgnr);
             switch (cmd) {
-            case MODEMODINIT::sendrmident:
-                if (reply == ack)
-                    emit activationContinue();
-                else
-                    notifyError(rmidentErrMSG);
-                break;
-
-            case MODEMODINIT::readresourcetypes:
-                if ((reply == ack) && (answer.toString().contains("SENSE")))
-                    emit activationContinue();
-                else
-                    notifyError(resourcetypeErrMsg);
-                break;
-
-            case MODEMODINIT::readresource:
-                if ((reply == ack) && (answer.toString().contains("MMODE")))
-                    emit activationContinue();
-                else
-                    notifyError(resourceErrMsg);
-                break;
-
-            case MODEMODINIT::readresourceinfo:
-            {
-                bool ok1, ok2, ok3;
-                int max, free;
-                QStringList sl;
-
-                sl = answer.toString().split(';');
-                if ((reply ==ack) && (sl.length() >= 4)) {
-                    max = sl.at(0).toInt(&ok1); // fixed position
-                    free = sl.at(1).toInt(&ok2);
-                    m_sDescription = sl.at(2);
-                    m_nPort = sl.at(3).toInt(&ok3);
-                    if (ok1 && ok2 && ok3 && ((max == free) == 1))
-                        emit activationContinue();
-                    else
-                        notifyError(resourceInfoErrMsg);
-                }
-                else
-                    notifyError(resourceInfoErrMsg);
-                break;
-            }
-
-            case MODEMODINIT::claimresource:
-                if (reply == ack)
-                    emit activationContinue();
-                else
-                    notifyError(claimresourceErrMsg);
-                break;
-
             case MODEMODINIT::setmode:
                 if (reply == ack)
                     emit activationContinue();
@@ -213,55 +143,10 @@ void cModeModuleInit::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant
     }
 }
 
-
-void cModeModuleInit::resourceManagerConnect()
-{
-    // first we try to get a connection to resource manager over proxy
-    m_rmClient = Zera::Proxy::getInstance()->getConnectionSmart(m_pModule->getNetworkConfig()->m_rmServiceConnectionInfo,
-                                                                m_pModule->getNetworkConfig()->m_tcpNetworkFactory);
-    // and then we set connection resource manager interface's connection
-    m_rmInterface.setClientSmart(m_rmClient); //
-    m_resourceManagerConnectState.addTransition(m_rmClient.get(), &Zera::ProxyClient::connected, &m_IdentifyState);
-    connect(&m_rmInterface, &Zera::cRMInterface::serverAnswer, this, &cModeModuleInit::catchInterfaceAnswer);
-    // todo insert timer for timeout and/or connect error conditions
-    Zera::Proxy::getInstance()->startConnectionSmart(m_rmClient);
-}
-
-
-void cModeModuleInit::sendRMIdent()
-{
-    m_MsgNrCmdList[m_rmInterface.rmIdent(QString("ModeModuleInit%1").arg(m_pModule->getModuleNr()))] = MODEMODINIT::sendrmident;
-}
-
-
-void cModeModuleInit::readResourceTypes()
-{
-    m_MsgNrCmdList[m_rmInterface.getResourceTypes()] = MODEMODINIT::readresourcetypes;
-}
-
-
-void cModeModuleInit::readResource()
-{
-    m_MsgNrCmdList[m_rmInterface.getResources("SENSE")] = MODEMODINIT::readresource;
-}
-
-
-void cModeModuleInit::readResourceInfo()
-{
-    m_MsgNrCmdList[m_rmInterface.getResourceInfo("SENSE", "MMODE")] = MODEMODINIT::readresourceinfo;
-}
-
-
-void cModeModuleInit::claimResource()
-{
-    m_MsgNrCmdList[m_rmInterface.setResource("SENSE", "MMODE", 1)] = MODEMODINIT::claimresource;
-}
-
-
 void cModeModuleInit::pcbserverConnect()
 {
     m_pPCBClient = Zera::Proxy::getInstance()->getConnectionSmart(m_pModule->getNetworkConfig()->m_pcbServiceConnectionInfo.m_sIP,
-                                                                  m_nPort,
+                                                                  m_pModule->getNetworkConfig()->m_pcbServiceConnectionInfo.m_nPort,
                                                                   m_pModule->getNetworkConfig()->m_tcpNetworkFactory);
     m_pcbserverConnectionState.addTransition(m_pPCBClient.get(), &Zera::ProxyClient::connected, &m_setModeState);
 
@@ -396,18 +281,9 @@ void cModeModuleInit::activationDone()
 }
 
 
-void cModeModuleInit::freeResource()
-{
-    Zera::Proxy::getInstance()->releaseConnection(m_dspClient.get());
-    Zera::Proxy::getInstance()->releaseConnection(m_pPCBClient.get());
-    m_MsgNrCmdList[m_rmInterface.freeResource("SENSE", "MMODE")] = MODEMODINIT::freeresource;
-}
-
-
 void cModeModuleInit::deactivationDone()
 {
     // and disconnect from our servers afterwards
-    disconnect(&m_rmInterface, 0, this, 0);
     disconnect(m_pcbInterface.get(), 0, this, 0);
     emit deactivated();
 }

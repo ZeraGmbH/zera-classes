@@ -17,11 +17,6 @@ namespace MODEMODINIT {
 
 enum modemoduleinitCmds
 {
-    sendrmident,
-    readresourcetypes,
-    readresource,
-    readresourceinfo,
-    claimresource,
     setmode,
     writegaincorr,
     writegaincorr2,
@@ -61,21 +56,10 @@ private:
     Zera::ProxyClientPtr m_pPCBClient;
     DspInterfacePtr m_dspInterface; // our interface to dsp
     Zera::ProxyClientPtr m_dspClient;
-    Zera::cRMInterface m_rmInterface;
-    Zera::ProxyClientPtr m_rmClient;
-
-    QString m_sDescription;
-    quint16 m_nPort; // the port adress of pcb server
 
     cDspMeasData* m_pCorrectionDSP;
 
     // statemachine for activating gets the following states
-    QState m_resourceManagerConnectState;
-    QState m_IdentifyState;
-    QState m_readResourceTypesState; // we ask for a list of all resources
-    QState m_readResourceState; // we look for our resource needed
-    QState m_readResourceInfoState; // we look for resource specification
-    QState m_claimResourceState;
     QState m_pcbserverConnectionState; // we try to get a connection to our pcb server
     QState m_setModeState;
     QState m_dspserverConnectionState;
@@ -87,16 +71,9 @@ private:
     QFinalState m_activationDoneState;
 
     // statemachine for deactivating
-    QState m_freeResourceState;
     QFinalState m_deactivationDoneState;
 
 private slots:
-    void resourceManagerConnect();
-    void sendRMIdent();
-    void readResourceTypes();
-    void readResource();
-    void readResourceInfo();
-    void claimResource();
     void pcbserverConnect();
     void setMode();
     void dspserverConnect();
@@ -110,7 +87,6 @@ private slots:
     void setSamplingsytem();
     void activationDone();
 
-    void freeResource();
     void deactivationDone();
 };
 
