@@ -183,10 +183,10 @@ void BLEMODULE::cBleModuleMeasProgram::switchBluetooth(bool on)
 
 void cBleModuleMeasProgram::handleDemoActualValues()
 {
-    m_pTemperatureCAct->setValue("22.1");
-    m_pTemperatureFAct->setValue("71.78");
-    m_pHumidityAct->setValue("34.0");
-    m_pAirPressureAct->setValue("990.9");
+    m_pTemperatureCAct->setValue(22.1);
+    m_pTemperatureFAct->setValue(71.78);
+    m_pHumidityAct->setValue(34.0);
+    m_pAirPressureAct->setValue(990.9);
     m_pWarningFlagsAct->setValue(quint32(0));
     m_pErrorFlagsAct->setValue(quint32(0));
 }
