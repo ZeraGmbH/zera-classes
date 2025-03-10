@@ -248,6 +248,13 @@
         </xs:sequence>
     </xs:complexType>
 
+    <xs:simpleType name="qreffreqType">
+        <xs:restriction base="xs:decimal">
+            <xs:minInclusive value="10.0"/>
+            <xs:maxInclusive value="200.0"/>
+        </xs:restriction>
+    </xs:simpleType>
+
     <xs:element name="pow1modconfpar">
         <xs:complexType>
             <xs:sequence>
@@ -266,6 +273,7 @@
                             <xs:element name="measuringmode" type="measuringmodeType"/>
                             <xs:element name="modePhases" type="modePhaseType"/>
                             <xs:element name="interval" type="measureintervalType"/>
+                            <xs:element name="qrefFreq" type="qreffreqType" minOccurs="0" maxOccurs="1"/>
                         </xs:sequence>
                     </xs:complexType>
                 </xs:element>

@@ -97,7 +97,9 @@ private:
     };
     RangeMaxVals calcMaxRangeValues(std::shared_ptr<MeasMode> mode);
     QStringList setupMeasModes(DspChainIdGen &dspChainGen);
+
     void setNominalPowerForQref(const RangeMaxVals &maxVals);
+    void generateVeinInterfaceForQrefFreq();
 
     cPower1Module* m_pModule;
     MeasModeSelector m_measModeSelector;
@@ -113,6 +115,7 @@ private:
     VfModuleParameter* m_pIntegrationParameter;
     VfModuleParameter* m_pMeasuringmodeParameter;
     VfModuleParameter* m_pMModePhaseSelectParameter;
+    VfModuleParameter* m_QREFFrequencyParameter = nullptr;
     cStringValidator * m_MModePhaseSelectValidator;
     VfModuleActvalue *m_MModeCanChangePhaseMask;
     VfModuleActvalue *m_MModePowerDisplayName;
@@ -243,6 +246,7 @@ private slots:
     void newIntegrationPeriod(QVariant period);
     void newMeasMode(QVariant mm);
     void newPhaseList(QVariant phaseList);
+    void newQRefFrequency(QVariant frequency);
 
     void updatePreScaling();
     void onModeTransactionOk();

@@ -58,7 +58,7 @@ void cPower1ModuleConfiguration::validateAndSetConfig(QByteArray xmlString, QStr
     m_ConfigXMLMap["pow1modconfpar:parameter:modePhases:n"] = setModePhaseCount;
     m_ConfigXMLMap["pow1modconfpar:parameter:interval:time"] = setMeasureIntervalTime;
     m_ConfigXMLMap["pow1modconfpar:parameter:interval:period"] = setMeasureIntervalPeriod;
-
+    m_ConfigXMLMap["pow1modconfpar:parameter:qrefFreq"] = setQREFFrequency;
 
     if (m_pXMLReader->loadSchema(xsdFilename))
         m_pXMLReader->loadXMLFromString(QString::fromUtf8(xmlString.data(), xmlString.size()));
@@ -76,12 +76,18 @@ QByteArray cPower1ModuleConfiguration::exportConfiguration()
     doubleParameter* dPar;
     dPar = &m_pPower1ModulConfigData->m_fMeasIntervalTime;
     m_pXMLReader->setValue(dPar->m_sKey, QString("%1").arg(dPar->m_fValue));
+
     intParameter* iPar;
     iPar = &m_pPower1ModulConfigData->m_nMeasIntervalPeriod;
     m_pXMLReader->setValue(iPar->m_sKey, QString("%1").arg(iPar->m_nValue));
+
     stringParameter* sPar;
     sPar = &m_pPower1ModulConfigData->m_sMeasuringMode;
     m_pXMLReader->setValue(sPar->m_sKey, sPar->m_sValue);
+
+    dPar = &m_pPower1ModulConfigData->m_qrefFrequency;
+    m_pXMLReader->setValue(dPar->m_sKey, QString("%1").arg(dPar->m_fValue));
+
     return m_pXMLReader->getXMLConfig().toUtf8();
 }
 
@@ -175,6 +181,10 @@ void cPower1ModuleConfiguration::configXMLInfo(QString key)
         case setMeasureIntervalPeriod:
             m_pPower1ModulConfigData->m_nMeasIntervalPeriod.m_sKey = key;
             m_pPower1ModulConfigData->m_nMeasIntervalPeriod.m_nValue = m_pXMLReader->getValue(key).toInt(&ok);
+            break;
+        case setQREFFrequency:
+            m_pPower1ModulConfigData->m_qrefFrequency.m_sKey = key;
+            m_pPower1ModulConfigData->m_qrefFrequency.m_fValue = m_pXMLReader->getValue(key).toDouble(&ok);
             break;
 
         default:
