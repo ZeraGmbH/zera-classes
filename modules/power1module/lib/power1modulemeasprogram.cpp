@@ -1098,6 +1098,14 @@ cPower1ModuleMeasProgram::RangeMaxVals cPower1ModuleMeasProgram::calcMaxRangeVal
     return maxVals;
 }
 
+void cPower1ModuleMeasProgram::setNominalPowerForQref(const RangeMaxVals &maxVals)
+{
+    double pmax = maxVals.maxU * maxVals.maxI; // MQREF
+    QString datalist = QString("NOMPOWER:%1;").arg(pmax, 0, 'g', 7);
+    m_dspVars.getNominalPower()->setVarData(datalist);
+    m_MsgNrCmdList[m_dspInterface->dspMemoryWrite(m_dspVars.getNominalPower())] = setqrefnominalpower;
+}
+
 void cPower1ModuleMeasProgram::foutParamsToDsp()
 {
     std::shared_ptr<MeasMode> mode = m_measModeSelector.getCurrMode();
@@ -1149,10 +1157,7 @@ void cPower1ModuleMeasProgram::foutParamsToDsp()
             m_FoutConstParameterList.at(i)->setValue(0.0);
     }
 
-    double pmax = maxVals.maxU * maxVals.maxI; // MQREF
-    QString datalist = QString("NOMPOWER:%1;").arg(pmax, 0, 'g', 7);
-    m_dspVars.getNominalPower()->setVarData(datalist);
-    m_MsgNrCmdList[m_dspInterface->dspMemoryWrite(m_dspVars.getNominalPower())] = setqrefnominalpower;
+    setNominalPowerForQref(maxVals);
 }
 
 void cPower1ModuleMeasProgram::setFoutPowerModes()
