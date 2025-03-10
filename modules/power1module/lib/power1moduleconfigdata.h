@@ -49,6 +49,11 @@ class cPower1ModuleConfigData
 {
 public:
     cPower1ModuleConfigData(){}
+    bool supportsVariableQrefFrequency() {
+        return m_sMeasmodeList.contains("QREF") &&
+               hasQrefFrequency();
+    }
+    bool hasQrefFrequency() { return !m_qrefFrequency.m_sKey.isEmpty(); }
 
     quint8 m_nMeasModeCount; // how many measurement modes do we support
     QStringList m_sMeasmodeList; // a list of our measurement modes
@@ -69,6 +74,7 @@ public:
     bool m_disablephaseselect = false;
     bool m_bmovingWindow;
     bool m_enableScpiCommands;
+    doubleParameter m_qrefFrequency;
 };
 
 }

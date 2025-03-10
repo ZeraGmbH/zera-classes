@@ -30,6 +30,7 @@ enum moduleconfigstate
     setModePhaseCount,
     setMeasureIntervalTime,
     setMeasureIntervalPeriod,
+    setQREFFrequency,
 
     setMeasMode1 = 32, // we leave some place for additional cmds
     setMeasModePhases1 = setMeasMode1 + 32,

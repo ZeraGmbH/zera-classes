@@ -257,6 +257,7 @@ void cPower1ModuleMeasProgram::generateVeinInterface()
         QPair<VeinStorage::AbstractComponentPtr, VeinStorage::AbstractComponentPtr> tmpScalePair(scaleInputU, scaleInputI);
         m_scalingInputs.append(tmpScalePair);
     }
+    generateVeinInterfaceForQrefFreq();
 
     for(const auto &ele : qAsConst(m_scalingInputs)) {
         if(ele.first != nullptr && ele.second != nullptr) {
@@ -945,6 +946,9 @@ void cPower1ModuleMeasProgram::activateDSPdone()
     connect(m_pMModePhaseSelectParameter, &VfModuleComponent::sigValueChanged, this, &cPower1ModuleMeasProgram::newPhaseList);
     connect(&m_measModeSelector, &MeasModeSelector::sigTransactionOk,
             this, &cPower1ModuleMeasProgram::onModeTransactionOk);
+    if (getConfData()->supportsVariableQrefFrequency())
+        connect(m_QREFFrequencyParameter, &VfModuleComponent::sigValueChanged,
+                this, &cPower1ModuleMeasProgram::newQRefFrequency);
 
     readUrvalueList = m_measChannelInfoHash.keys(); // once we read all actual range urvalues
     if (!m_readUpperRangeValueMachine.isRunning())
@@ -1106,6 +1110,22 @@ void cPower1ModuleMeasProgram::setNominalPowerForQref(const RangeMaxVals &maxVal
     m_MsgNrCmdList[m_dspInterface->dspMemoryWrite(m_dspVars.getNominalPower())] = setqrefnominalpower;
 }
 
+void cPower1ModuleMeasProgram::generateVeinInterfaceForQrefFreq()
+{
+    if(getConfData()->supportsVariableQrefFrequency()) {
+        const QString paramLabel = "PAR_FOUT_QREF_FREQ";
+        m_QREFFrequencyParameter = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
+                                                        paramLabel,
+                                                        QString("QREF mode output frequency"),
+                                                        QVariant(getConfData()->m_qrefFrequency.m_fValue));
+        if(getConfData()->m_enableScpiCommands)
+            m_QREFFrequencyParameter->setSCPIInfo(new cSCPIInfo("CONFIGURATION",QString("QKHZ"), "10", m_QREFFrequencyParameter->getName(), "0", "kHz"));
+        cDoubleValidator *validator = new cDoubleValidator(10.0, 200.0, 0.1);
+        m_QREFFrequencyParameter->setValidator(validator);
+        m_pModule->m_veinModuleParameterMap[paramLabel] = m_QREFFrequencyParameter; // for modules use
+    }
+}
+
 void cPower1ModuleMeasProgram::foutParamsToDsp()
 {
     std::shared_ptr<MeasMode> mode = m_measModeSelector.getCurrMode();
@@ -1247,6 +1267,15 @@ void cPower1ModuleMeasProgram::updatesForMModeChange()
 void cPower1ModuleMeasProgram::newPhaseList(QVariant phaseList)
 {
     m_measModeSelector.tryChangeMask(phaseList.toString());
+}
+
+void cPower1ModuleMeasProgram::newQRefFrequency(QVariant frequency)
+{
+    getConfData()->m_qrefFrequency.m_fValue = frequency.toDouble();
+
+    // TODO
+
+    emit m_pModule->parameterChanged();
 }
 
 void cPower1ModuleMeasProgram::updatePreScaling()
