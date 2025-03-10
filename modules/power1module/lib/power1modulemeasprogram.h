@@ -97,6 +97,7 @@ private:
     };
     RangeMaxVals calcMaxRangeValues(std::shared_ptr<MeasMode> mode);
     QStringList setupMeasModes(DspChainIdGen &dspChainGen);
+    void setNominalPowerForQref(const RangeMaxVals &maxVals);
 
     cPower1Module* m_pModule;
     MeasModeSelector m_measModeSelector;
