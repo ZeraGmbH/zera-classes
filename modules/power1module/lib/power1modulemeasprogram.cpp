@@ -1102,9 +1102,15 @@ cPower1ModuleMeasProgram::RangeMaxVals cPower1ModuleMeasProgram::calcMaxRangeVal
     return maxVals;
 }
 
-void cPower1ModuleMeasProgram::setNominalPowerForQref(const RangeMaxVals &maxVals)
+void cPower1ModuleMeasProgram::setNominalPowerForQref()
 {
+    std::shared_ptr<MeasMode> mode = m_measModeSelector.getCurrMode();
+    RangeMaxVals maxVals = calcMaxRangeValues(mode);
     double pmax = maxVals.maxU * maxVals.maxI; // MQREF
+    if (getConfData()->supportsVariableQrefFrequency()) {
+        constexpr double nominalFrequencyKhz = 200;
+        pmax = pmax * getConfData()->m_qrefFrequency.m_fValue / nominalFrequencyKhz;
+    }
     QString datalist = QString("NOMPOWER:%1;").arg(pmax, 0, 'g', 7);
     m_dspVars.getNominalPower()->setVarData(datalist);
     m_MsgNrCmdList[m_dspInterface->dspMemoryWrite(m_dspVars.getNominalPower())] = setqrefnominalpower;
@@ -1177,7 +1183,7 @@ void cPower1ModuleMeasProgram::foutParamsToDsp()
             m_FoutConstParameterList.at(i)->setValue(0.0);
     }
 
-    setNominalPowerForQref(maxVals);
+    setNominalPowerForQref();
 }
 
 void cPower1ModuleMeasProgram::setFoutPowerModes()
@@ -1272,9 +1278,7 @@ void cPower1ModuleMeasProgram::newPhaseList(QVariant phaseList)
 void cPower1ModuleMeasProgram::newQRefFrequency(QVariant frequency)
 {
     getConfData()->m_qrefFrequency.m_fValue = frequency.toDouble();
-
-    // TODO
-
+    setNominalPowerForQref();
     emit m_pModule->parameterChanged();
 }
 
