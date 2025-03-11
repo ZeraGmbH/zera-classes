@@ -933,12 +933,16 @@ QString cSec1ModuleMeasProgram::getEnergyUnit()
 
 void cSec1ModuleMeasProgram::initDutConstantUnit(QStringList sl)
 {
-    QString lastDutUnit = getConfData()->m_sDutConstantUnit.m_sPar;
-    if(lastDutUnit.isEmpty() || !sl.contains(lastDutUnit)) {
-        m_sDutConstantUnit = sl.at(0);
-    }
+    if(sl.isEmpty())
+        m_sDutConstantUnit.clear();
     else {
-        m_sDutConstantUnit = lastDutUnit;
+        QString lastDutUnit = getConfData()->m_sDutConstantUnit.m_sPar;
+        if(lastDutUnit.isEmpty() || !sl.contains(lastDutUnit)) {
+            m_sDutConstantUnit = sl.at(0);
+        }
+        else {
+            m_sDutConstantUnit = lastDutUnit;
+        }
     }
     m_pDutConstantUnitPar->setValue(m_sDutConstantUnit);
 }

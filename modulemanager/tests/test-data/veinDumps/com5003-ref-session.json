@@ -1126,10 +1126,10 @@
         "ACT_PQS2": null,
         "ACT_PQS3": null,
         "ACT_PQS4": null,
-        "ACT_PowerDisplayName": "P",
+        "ACT_PowerDisplayName": "",
         "EntityName": "POWER1Module1",
         "INF_ModeTypes": [
-            "P"
+            ""
         ],
         "INF_ModuleInterface": {
             "ComponentInfo": {
@@ -1140,24 +1140,20 @@
                     "Description": "Number of max measurement systems for current measurement mode"
                 },
                 "ACT_PQS1": {
-                    "ChannelName": "P1",
-                    "Description": "Actual power value REF1/REF4",
-                    "Unit": "W"
+                    "ChannelName": "1",
+                    "Description": "Actual power value REF1/REF4"
                 },
                 "ACT_PQS2": {
-                    "ChannelName": "P2",
-                    "Description": "Actual power value REF2/REF5",
-                    "Unit": "W"
+                    "ChannelName": "2",
+                    "Description": "Actual power value REF2/REF5"
                 },
                 "ACT_PQS3": {
-                    "ChannelName": "P3",
-                    "Description": "Actual power value REF3/REF6",
-                    "Unit": "W"
+                    "ChannelName": "3",
+                    "Description": "Actual power value REF3/REF6"
                 },
                 "ACT_PQS4": {
-                    "ChannelName": "PS",
-                    "Description": "Actual power value sum all phases",
-                    "Unit": "W"
+                    "ChannelName": "S",
+                    "Description": "Actual power value sum all phases"
                 },
                 "ACT_PowerDisplayName": {
                     "Description": "Power display name (P/Q/S)"
@@ -1231,35 +1227,35 @@
                     ],
                     [
                         "MEASURE",
-                        "P1",
+                        "1",
                         "8",
                         "ACT_PQS1",
                         "0",
-                        "W"
+                        ""
                     ],
                     [
                         "MEASURE",
-                        "P2",
+                        "2",
                         "8",
                         "ACT_PQS2",
                         "0",
-                        "W"
+                        ""
                     ],
                     [
                         "MEASURE",
-                        "P3",
+                        "3",
                         "8",
                         "ACT_PQS3",
                         "0",
-                        "W"
+                        ""
                     ],
                     [
                         "MEASURE",
-                        "PS",
+                        "S",
                         "8",
                         "ACT_PQS4",
                         "0",
-                        "W"
+                        ""
                     ],
                     [
                         "CONFIGURATION",
@@ -1334,11 +1330,11 @@
                 },
                 "ACT_Energy": {
                     "Description": "Energy since last start",
-                    "Unit": "kWh"
+                    "Unit": "kh"
                 },
                 "ACT_EnergyFinal": {
                     "Description": "Energy of last measurement",
-                    "Unit": "kWh"
+                    "Unit": "kh"
                 },
                 "ACT_MeasNum": {
                     "Description": "Multiple measurements: Count"
@@ -1402,8 +1398,6 @@
                     "Description": "DUT constant unit",
                     "Validation": {
                         "Data": [
-                            "I/kWh",
-                            "Wh/I"
                         ],
                         "Type": "STRING"
                     }
@@ -1484,7 +1478,7 @@
                 },
                 "PAR_Energy": {
                     "Description": "Energy value",
-                    "Unit": "kWh",
+                    "Unit": "kh",
                     "Validation": {
                         "Data": [
                             0,
@@ -1547,7 +1541,7 @@
                     "Description": "REF input",
                     "Validation": {
                         "Data": [
-                            "P"
+                            ""
                         ],
                         "Type": "STRING"
                     }
@@ -1881,7 +1875,7 @@
         },
         "PAR_ClientActiveNotify": 0,
         "PAR_Continuous": 0,
-        "PAR_DUTConstUnit": "I/kWh",
+        "PAR_DUTConstUnit": "",
         "PAR_DutConstant": 38750000,
         "PAR_DutConstantAuto": 0,
         "PAR_DutConstantIScaleDenom": "1",
@@ -1896,7 +1890,7 @@
         "PAR_MeasCount": 1,
         "PAR_MeasWait": 0,
         "PAR_RefConstant": 500000000,
-        "PAR_RefInput": "P",
+        "PAR_RefInput": "",
         "PAR_ResultUnit": "ppm",
         "PAR_StartStop": 0,
         "PAR_Target": 1000000,
