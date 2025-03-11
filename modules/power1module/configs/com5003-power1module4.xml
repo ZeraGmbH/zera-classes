@@ -5,7 +5,7 @@
     <configuration>
         <measure>
             <modes>
-                <n>11</n>
+                <n>12</n>
                 <m1>4LW</m1>
                 <m2>3LW</m2>
                 <m3>2LW</m3>
@@ -17,6 +17,7 @@
                 <m9>4LSg</m9>
                 <m10>2LS</m10>
                 <m11>2LSg</m11>
+                <m12>QREF</m12>
             </modes>
             <system>
                 <pms1>m0,m3</pms1>
@@ -67,5 +68,6 @@
             <time>1</time>
             <period>200</period>
         </interval>
+        <qrefFreq>200.0</qrefFreq>
     </parameter>
 </pow1modconfpar>
