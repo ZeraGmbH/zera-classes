@@ -686,8 +686,12 @@ void cPower1ModuleMeasProgram::setFoutMetaInfo()
 void cPower1ModuleMeasProgram::setInterfaceActualValues(QVector<float> *actualValues)
 {
     if (m_bActive) { // maybe we are deactivating !!!!
-        for (int i = 0; i < MeasPhaseCount+SumValueCount; i++)
-            m_veinActValueList.at(i)->setValue(QVariant((double)actualValues->at(i)));
+        for (int i = 0; i < MeasPhaseCount+SumValueCount; i++) {
+            if(m_measModeSelector.getCurrMode()->getName() != "QREF")
+                m_veinActValueList.at(i)->setValue(QVariant((double)actualValues->at(i)));
+            else
+                m_veinActValueList.at(i)->setValue(QVariant((double)0.0));
+        }
     }
 }
 
