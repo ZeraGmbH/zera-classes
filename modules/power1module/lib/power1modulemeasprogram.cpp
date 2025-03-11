@@ -685,9 +685,8 @@ void cPower1ModuleMeasProgram::setFoutMetaInfo()
 
 void cPower1ModuleMeasProgram::setInterfaceActualValues(QVector<float> *actualValues)
 {
-    if (m_bActive) // maybe we are deactivating !!!!
-    {
-        for (int i = 0; i < 4; i++)
+    if (m_bActive) { // maybe we are deactivating !!!!
+        for (int i = 0; i < MeasPhaseCount+SumValueCount; i++)
             m_veinActValueList.at(i)->setValue(QVariant((double)actualValues->at(i)));
     }
 }
