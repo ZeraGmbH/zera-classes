@@ -1129,7 +1129,7 @@ void cPower1ModuleMeasProgram::generateVeinInterfaceForQrefFreq()
                                                         QVariant(getConfData()->m_qrefFrequency.m_fValue));
         if(getConfData()->m_enableScpiCommands)
             m_QREFFrequencyParameter->setSCPIInfo(new cSCPIInfo("CONFIGURATION",QString("QKHZ"), "10", m_QREFFrequencyParameter->getName(), "0", "kHz"));
-        cDoubleValidator *validator = new cDoubleValidator(10.0, 200.0, 0.1);
+        cDoubleValidator *validator = new cDoubleValidator(0.001, 200.0, 0.001);
         m_QREFFrequencyParameter->setValidator(validator);
         m_pModule->m_veinModuleParameterMap[paramLabel] = m_QREFFrequencyParameter; // for modules use
     }
