@@ -1114,7 +1114,7 @@ void cPower1ModuleMeasProgram::setNominalPowerForQref()
         constexpr double nominalFrequencyKhz = 200;
         pmax = pmax * getConfData()->m_qrefFrequency.m_fValue / nominalFrequencyKhz;
     }
-    QString datalist = QString("NOMPOWER:%1;").arg(pmax, 0, 'g', 7);
+    QString datalist = QString("NOMPOWER:%1;").arg(pmax, 0, 'g', 9);
     m_dspVars.getNominalPower()->setVarData(datalist);
     m_MsgNrCmdList[m_dspInterface->dspMemoryWrite(m_dspVars.getNominalPower())] = setqrefnominalpower;
 }
@@ -1157,7 +1157,7 @@ void cPower1ModuleMeasProgram::foutParamsToDsp()
                     frScale = frScale * scaleTotal;
                 }
             }
-            datalist += QString("%1,").arg(frScale, 0, 'g', 7);
+            datalist += QString("%1,").arg(frScale, 0, 'g', 9);
         }
         datalist.resize(datalist.size()-1);
         datalist += ";";
