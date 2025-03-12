@@ -2676,9 +2676,9 @@
                     "Description": "QREF mode output frequency",
                     "Validation": {
                         "Data": [
-                            10,
+                            0.001,
                             200,
-                            0.1
+                            0.001
                         ],
                         "Type": "DOUBLE"
                     }
