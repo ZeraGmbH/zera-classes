@@ -4,7 +4,9 @@ function(SETUP_QTESTS_MODULE)
         target_link_libraries(${_testname}
             PRIVATE
             power1module-static
+            scpimodule-testlib
             zera-modulemanager-testlib
+            Zera::xml-compare-testlib
         )
     endforeach()
 endfunction()

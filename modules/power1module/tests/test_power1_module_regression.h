@@ -13,6 +13,8 @@ private slots:
     void testScpiCommandsDisabled();
     void dumpDspSetup();
     void dumpDspOnMeasModeChange();
+    void scpiDumpMtPower1Module1();
+    void scpiDumpMtPower1Module4(); // ATTOW we are interested in QKHZ / unit
 private:
     void setMeasMode(VfCmdEventHandlerSystemPtr vfCmdEventHandlerSystem,
                      QString measModeOld, // MUST be correct - otherwise ignored

@@ -2674,6 +2674,7 @@
                 },
                 "PAR_FOUT_QREF_FREQ": {
                     "Description": "QREF mode output frequency",
+                    "Unit": "kHz",
                     "Validation": {
                         "Data": [
                             0.001,

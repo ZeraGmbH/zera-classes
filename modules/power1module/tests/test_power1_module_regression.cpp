@@ -1,12 +1,16 @@
 #include "test_power1_module_regression.h"
 #include "modulemanagertestrunner.h"
+#include "modulemanagerconfig.h"
 #include "power1modulemeasprogram.h"
+#include "scpimoduleclientblocked.h"
 #include <timemachineobject.h>
 #include <testloghelpers.h>
 #include <vs_dumpjson.h>
 #include <vf_entity_component_event_item.h>
 #include <vf_client_component_setter.h>
 #include <timemachineobject.h>
+#include <xmldocumentcompare.h>
+#include <testloghelpers.h>
 #include <QJsonArray>
 #include <QTest>
 
@@ -16,7 +20,7 @@ const int powerEntityId = 1070;
 
 void test_power1_module_regression::minimalSession()
 {
-    ModuleManagerTestRunner testRunner(":/session-minimal.json");
+    ModuleManagerTestRunner testRunner(":/sessions/session-minimal.json");
     VeinStorage::AbstractEventSystem* veinStorage = testRunner.getVeinStorageSystem();
     VeinStorage::AbstractDatabase* storageDb = veinStorage->getDb();
 
@@ -27,7 +31,7 @@ void test_power1_module_regression::minimalSession()
 
 void test_power1_module_regression::veinDumpInitial()
 {
-    ModuleManagerTestRunner testRunner(":/session-power1-test.json");
+    ModuleManagerTestRunner testRunner(":/sessions/session-power1-test.json");
 
     QByteArray jsonExpected = TestLogHelpers::loadFile(":/dumpInitial.json");
     VeinStorage::AbstractEventSystem* veinStorage = testRunner.getVeinStorageSystem();
@@ -39,7 +43,7 @@ void test_power1_module_regression::veinDumpInitial()
 
 void test_power1_module_regression::injectActualValues()
 {
-    ModuleManagerTestRunner testRunner(":/session-power1-test.json");
+    ModuleManagerTestRunner testRunner(":/sessions/session-power1-test.json");
     TestDspInterfacePtr power1DspInterface = testRunner.getDspInterface(powerEntityId);
 
     QVector<float> powerValues;
@@ -59,7 +63,7 @@ void test_power1_module_regression::injectActualValues()
 
 void test_power1_module_regression::testScpiCommandsDisabled()
 {
-    ModuleManagerTestRunner testRunner(":/session-power1-withoutScpi-test.json");
+    ModuleManagerTestRunner testRunner(":/sessions/session-power1-withoutScpi-test.json");
 
     QByteArray jsonExpected = TestLogHelpers::loadFile(":/dumpInitial-withoutScpi.json");
     VeinStorage::AbstractEventSystem* veinStorage = testRunner.getVeinStorageSystem();
@@ -77,7 +81,7 @@ void test_power1_module_regression::testScpiCommandsDisabled()
 
 void test_power1_module_regression::dumpDspSetup()
 {
-    ModuleManagerTestRunner testRunner(":/session-minimal.json");
+    ModuleManagerTestRunner testRunner(":/sessions/session-minimal.json");
     TestDspInterfacePtr power1DspInterface = testRunner.getDspInterface(powerEntityId);
 
     QString measProgramDumped = TestLogHelpers::dump(power1DspInterface->dumpAll());
@@ -87,7 +91,7 @@ void test_power1_module_regression::dumpDspSetup()
 
 void test_power1_module_regression::dumpDspOnMeasModeChange()
 {
-    ModuleManagerTestRunner testRunner(":/session-minimal.json");
+    ModuleManagerTestRunner testRunner(":/sessions/session-minimal.json");
     TestDspInterfacePtr power1DspInterface = testRunner.getDspInterface(powerEntityId);
 
     setMeasMode(testRunner.getVfCmdEventHandlerSystemPtr(), "4LW", "3LW");
@@ -97,6 +101,44 @@ void test_power1_module_regression::dumpDspOnMeasModeChange()
     QString measProgramDumped = TestLogHelpers::dump(power1DspInterface->dumpAll(true));
     QString measProgramExpected = TestLogHelpers::loadFile(":/dspDumps/dump-measmode-change.json");
     QVERIFY(TestLogHelpers::compareAndLogOnDiff(measProgramExpected, measProgramDumped));
+}
+
+void test_power1_module_regression::scpiDumpMtPower1Module1()
+{
+    ModulemanagerConfig::setDemoDevice("mt310s2", false);
+    ModuleManagerTestRunner testRunner(":/sessions/session-power1module1-scpi.json");
+
+    ScpiModuleClientBlocked client;
+    QString dumped = client.sendReceive("dev:iface?", false);
+
+    QFile ifaceBaseXmlFile("://scpiDumps/session-power1module1-scpi.xml");
+    QVERIFY(ifaceBaseXmlFile.open(QIODevice::Unbuffered | QIODevice::ReadOnly));
+    QString expected = ifaceBaseXmlFile.readAll();
+
+    XmlDocumentCompare compare;
+    bool ok = compare.compareXml(dumped, expected);
+    if(!ok)
+        TestLogHelpers::compareAndLogOnDiff(expected, dumped);
+    QVERIFY(ok);
+}
+
+void test_power1_module_regression::scpiDumpMtPower1Module4()
+{
+    ModulemanagerConfig::setDemoDevice("mt310s2", false);
+    ModuleManagerTestRunner testRunner(":/sessions/session-power1module4-scpi.json");
+
+    ScpiModuleClientBlocked client;
+    QString dumped = client.sendReceive("dev:iface?", false);
+
+    QFile ifaceBaseXmlFile("://scpiDumps/session-power1module4-scpi.xml");
+    QVERIFY(ifaceBaseXmlFile.open(QIODevice::Unbuffered | QIODevice::ReadOnly));
+    QString expected = ifaceBaseXmlFile.readAll();
+
+    XmlDocumentCompare compare;
+    bool ok = compare.compareXml(dumped, expected);
+    if(!ok)
+        TestLogHelpers::compareAndLogOnDiff(expected, dumped);
+    QVERIFY(ok);
 }
 
 void test_power1_module_regression::setMeasMode(VfCmdEventHandlerSystemPtr vfCmdEventHandlerSystem,

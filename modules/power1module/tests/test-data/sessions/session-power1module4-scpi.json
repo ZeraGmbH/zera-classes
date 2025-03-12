@@ -1,0 +1,14 @@
+{
+    "modules" : [
+        {
+          "name" : "power1module",
+          "configFile" : "mt310s2-power1module4.xml",
+          "id": 1073
+        },
+        {
+            "name" : "scpimodule",
+            "configFile" : "demo-scpimodule.xml",
+            "id": 9999
+        }
+    ]
+}
