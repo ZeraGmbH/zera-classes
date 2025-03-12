@@ -2406,7 +2406,7 @@
                     "Description": "Frequency output constant"
                 },
                 "PAR_FOUT_QREF_FREQ": {
-                    "Description": "QREF mode output frequency",
+                    "Description": "Fixed frequency output mode (QREF): frequency value",
                     "Unit": "kHz",
                     "Validation": {
                         "Data": [
@@ -2536,7 +2536,7 @@
                     ],
                     [
                         "CONFIGURATION",
-                        "QKHZ",
+                        "FIXFREQ",
                         "10",
                         "PAR_FOUT_QREF_FREQ",
                         "0",

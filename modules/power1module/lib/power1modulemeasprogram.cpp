@@ -1125,12 +1125,12 @@ void cPower1ModuleMeasProgram::generateVeinInterfaceForQrefFreq()
         const QString paramLabel = "PAR_FOUT_QREF_FREQ";
         m_QREFFrequencyParameter = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
                                                         paramLabel,
-                                                        QString("QREF mode output frequency"),
+                                                        QString("Fixed frequency output mode (QREF): frequency value"),
                                                         QVariant(getConfData()->m_qrefFrequency.m_fValue));
         const QString unit = "kHz";
         m_QREFFrequencyParameter->setUnit(unit);
         if(getConfData()->m_enableScpiCommands)
-            m_QREFFrequencyParameter->setSCPIInfo(new cSCPIInfo("CONFIGURATION",QString("QKHZ"), "10", m_QREFFrequencyParameter->getName(), "0", unit));
+            m_QREFFrequencyParameter->setSCPIInfo(new cSCPIInfo("CONFIGURATION",QString("FIXFREQ"), "10", m_QREFFrequencyParameter->getName(), "0", unit));
         cDoubleValidator *validator = new cDoubleValidator(0.001, 200.0, 0.001);
         m_QREFFrequencyParameter->setValidator(validator);
         m_pModule->m_veinModuleParameterMap[paramLabel] = m_QREFFrequencyParameter; // for modules use
