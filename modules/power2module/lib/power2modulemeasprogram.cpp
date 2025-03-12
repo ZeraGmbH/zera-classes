@@ -1207,7 +1207,7 @@ void cPower2ModuleMeasProgram::foutParamsToDsp()
                     frScale=frScale*scale;
                 }
             }*/
-            datalist += QString("%1,").arg(frScale, 0, 'g', 7);
+            datalist += QString("%1,").arg(frScale, 0, 'g', 9);
         }
         datalist.resize(datalist.size()-1);
         datalist += ";";
@@ -1235,7 +1235,7 @@ void cPower2ModuleMeasProgram::foutParamsToDsp()
     }
 
     double pmax = maxVals.maxU * maxVals.maxI; // MQREF
-    QString datalist = QString("NOMPOWER:%1;").arg(pmax, 0, 'g', 7);
+    QString datalist = QString("NOMPOWER:%1;").arg(pmax, 0, 'g', 9);
     m_pNomPower->setVarData(datalist);
     m_MsgNrCmdList[m_dspInterface->dspMemoryWrite(m_pNomPower)] = setqrefnominalpower;
 }
