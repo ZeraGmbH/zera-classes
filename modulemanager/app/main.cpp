@@ -85,7 +85,7 @@ int main(int argc, char *argv[])
     std::unique_ptr<QCoreApplication> app;
     if(demoMode) {
         app = std::make_unique<QGuiApplication>(argc, argv);
-        ModulemanagerConfig::setDemoDevice(demoDeviceName, true);
+        ModulemanagerConfig::setDemoDevice(demoDeviceName);
     }
     else
         app = std::make_unique<QCoreApplication>(argc, argv);

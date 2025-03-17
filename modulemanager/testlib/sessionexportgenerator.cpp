@@ -3,12 +3,11 @@
 #include <vs_dumpjson.h>
 #include <QFile>
 
-SessionExportGenerator::SessionExportGenerator(bool useDevModmanConfig, const LxdmSessionChangeParam &lxdmParam) :
-    m_useDevModmanConfig(useDevModmanConfig),
+SessionExportGenerator::SessionExportGenerator(const LxdmSessionChangeParam &lxdmParam) :
     m_lxdmParam(lxdmParam)
 {
     ModuleManagerSetupFacade::registerMetaTypeStreamOperators();
-    ModulemanagerConfig::setDemoDevice("mt310s2", m_useDevModmanConfig);
+    ModulemanagerConfig::setDemoDevice("mt310s2");
     m_modmanConfig = ModulemanagerConfig::getInstance();
 }
 
@@ -20,7 +19,7 @@ SessionExportGenerator::~SessionExportGenerator()
 void SessionExportGenerator::createModman(QString device)
 {
     qInfo("Create modman for device: %s\n", qPrintable(device));
-    ModulemanagerConfig::setDemoDevice(device, m_useDevModmanConfig);
+    ModulemanagerConfig::setDemoDevice(device);
     m_licenseSystem = std::make_unique<TestLicenseSystem>();
     m_modmanSetupFacade = std::make_unique<ModuleManagerSetupFacade>(m_licenseSystem.get(),
                                                                      m_modmanConfig->isDevMode(),

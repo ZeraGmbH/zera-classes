@@ -1,6 +1,6 @@
 {
     "0": {
-        "DevMode": true,
+        "DevMode": false,
         "Entities": [
             0,
             1000,
@@ -38,10 +38,9 @@
                     "Validation": {
                         "Data": [
                             "Default",
-                            "DC: 4*Voltage / 1*Current",
                             "EMOB AC",
                             "EMOB DC",
-                            "Changing energy direction"
+                            "DC: 4*Voltage / 1*Current"
                         ],
                         "Type": "STRING"
                     }
@@ -102,11 +101,10 @@
         "ModulesPaused": false,
         "Session": "mt310s2-dc-session.json",
         "SessionsAvailable": [
-            "mt310s2-meas-session-dev.json",
-            "mt310s2-dc-session.json",
+            "mt310s2-meas-session.json",
             "mt310s2-emob-session-ac.json",
             "mt310s2-emob-session-dc.json",
-            "mt310s2-ced-session.json"
+            "mt310s2-dc-session.json"
         ],
         "XSession": "Bar"
     },

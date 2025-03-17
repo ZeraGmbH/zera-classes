@@ -7,7 +7,7 @@ class test_modman_config : public QObject
 {
     Q_OBJECT
 private slots:
-    void loadDevConfig();
+    void loadConfig();
     void verifySessionsCount();
     void pcbServiceConnectionInfo();
     void dspServiceConnectionInfo();

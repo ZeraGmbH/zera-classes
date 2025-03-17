@@ -1,6 +1,6 @@
 {
     "0": {
-        "DevMode": true,
+        "DevMode": false,
         "Entities": [
             0,
             1000,
@@ -46,10 +46,9 @@
                     "Validation": {
                         "Data": [
                             "Default",
-                            "DC: 4*Voltage / 1*Current",
                             "EMOB AC",
                             "EMOB DC",
-                            "Changing energy direction"
+                            "DC: 4*Voltage / 1*Current"
                         ],
                         "Type": "STRING"
                     }
@@ -111,10 +110,9 @@
         "Session": "mt310s2-meas-session.json",
         "SessionsAvailable": [
             "mt310s2-meas-session.json",
-            "mt310s2-dc-session.json",
             "mt310s2-emob-session-ac.json",
             "mt310s2-emob-session-dc.json",
-            "mt310s2-ced-session.json"
+            "mt310s2-dc-session.json"
         ],
         "XSession": "Bar"
     },
@@ -2620,7 +2618,6 @@
         "ACT_PowerDisplayName": "P",
         "EntityName": "POWER1Module4",
         "INF_ModeTypes": [
-            "",
             "P",
             "Q",
             "S"
@@ -2672,18 +2669,6 @@
                     "ChannelName": "Fout1",
                     "Description": "Frequency output constant"
                 },
-                "PAR_FOUT_QREF_FREQ": {
-                    "Description": "Fixed frequency output mode (QREF): frequency value",
-                    "Unit": "kHz",
-                    "Validation": {
-                        "Data": [
-                            0.001,
-                            200,
-                            0.001
-                        ],
-                        "Type": "DOUBLE"
-                    }
-                },
                 "PAR_Interval": {
                     "Description": "Integration time",
                     "Unit": "s",
@@ -2725,8 +2710,7 @@
                             "4LS",
                             "4LSg",
                             "2LS",
-                            "2LSg",
-                            "QREF"
+                            "2LSg"
                         ],
                         "Type": "STRING"
                     }
@@ -2802,14 +2786,6 @@
                     ],
                     [
                         "CONFIGURATION",
-                        "FIXFREQ",
-                        "10",
-                        "PAR_FOUT_QREF_FREQ",
-                        "0",
-                        "kHz"
-                    ],
-                    [
-                        "CONFIGURATION",
                         "TINTEGRATION",
                         "10",
                         "PAR_Interval",
@@ -2838,7 +2814,6 @@
         },
         "PAR_FOUT0": "fOUT",
         "PAR_FOUTConstant0": 96000000,
-        "PAR_FOUT_QREF_FREQ": 200,
         "PAR_Interval": 1,
         "PAR_MeasModePhaseSelect": "111",
         "PAR_MeasuringMode": "4LW",

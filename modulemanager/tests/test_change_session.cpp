@@ -101,7 +101,7 @@ void test_change_session::changeSessionMt310s2SCPICmd()
 
 void test_change_session::changeSessionCom5003FromComponent()
 {
-    ModulemanagerConfig::setDemoDevice("com5003", false);
+    ModulemanagerConfig::setDemoDevice("com5003");
     TestLicenseSystem licenseSystem;
     ModuleManagerSetupFacade modManSetupFacade(&licenseSystem);
 
@@ -122,7 +122,7 @@ void test_change_session::changeSessionCom5003FromComponent()
 
 void test_change_session::changeSessionCom5003SCPICmd()
 {
-    ModulemanagerConfig::setDemoDevice("com5003", false);
+    ModulemanagerConfig::setDemoDevice("com5003");
     TestLicenseSystem licenseSystem;
     ModuleManagerSetupFacade modManSetupFacade(&licenseSystem);
 
@@ -142,7 +142,7 @@ void test_change_session::changeSessionCom5003SCPICmd()
 
 void test_change_session::testSessionCatalogScpiCmd()
 {
-    ModulemanagerConfig::setDemoDevice("mt310s2", false);
+    ModulemanagerConfig::setDemoDevice("mt310s2");
     TestLicenseSystem licenseSystem;
     ModuleManagerSetupFacade modManSetupFacade(&licenseSystem);
 
