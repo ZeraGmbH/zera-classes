@@ -20,9 +20,9 @@
         }
     },
     "mt310s2" : {
-        "availableSessions" : ["mt310s2-meas-session.json", "mt310s2-dc-session.json", "mt310s2-emob-session-ac.json", "mt310s2-emob-session-dc.json", "mt310s2-ced-session.json"],
+        "availableSessions" : ["mt310s2-meas-session-dev.json", "mt310s2-dc-session.json", "mt310s2-emob-session-ac.json", "mt310s2-emob-session-dc.json", "mt310s2-ced-session.json"],
         "sessionDisplayStrings" : ["Default", "DC: 4*Voltage / 1*Current", "EMOB AC", "EMOB DC", "Changing energy direction"],
-        "defaultSession" : "mt310s2-meas-session.json",
+        "defaultSession" : "mt310s2-meas-session-dev.json",
         "customerdataSystemEnabled" : true
     },
     "com5003" : {

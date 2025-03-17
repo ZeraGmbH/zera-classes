@@ -102,7 +102,7 @@
         "ModulesPaused": false,
         "Session": "mt310s2-dc-session.json",
         "SessionsAvailable": [
-            "mt310s2-meas-session.json",
+            "mt310s2-meas-session-dev.json",
             "mt310s2-dc-session.json",
             "mt310s2-emob-session-ac.json",
             "mt310s2-emob-session-dc.json",
