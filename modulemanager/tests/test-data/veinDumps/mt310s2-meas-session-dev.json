@@ -9,14 +9,25 @@
             1040,
             1050,
             1060,
+            1070,
+            1071,
+            1072,
             1073,
+            1078,
+            1079,
+            1100,
             1110,
             1111,
             1120,
             1130,
+            1140,
             1150,
+            1160,
+            1161,
+            1170,
             1190,
             1200,
+            1210,
             1300,
             1400,
             9999
@@ -97,7 +108,7 @@
             }
         },
         "ModulesPaused": false,
-        "Session": "mt310s2-emob-session-dc.json",
+        "Session": "mt310s2-meas-session-dev.json",
         "SessionsAvailable": [
             "mt310s2-meas-session-dev.json",
             "mt310s2-dc-session.json",
@@ -1024,7 +1035,7 @@
         "SIG_Ranging": 0
     },
     "1030": {
-        "ACT_PllFixed": true,
+        "ACT_PllFixed": false,
         "EntityName": "SampleModule1",
         "INF_ModuleInterface": {
             "ComponentInfo": {
@@ -1093,9 +1104,9 @@
                 "Name": "SAM1"
             }
         },
-        "PAR_PllAutomaticOnOff": 0,
-        "PAR_PllChannel": "",
-        "SIG_PLL": 0
+        "PAR_PllAutomaticOnOff": 1,
+        "PAR_PllChannel": "UL1",
+        "SIG_PLL": 1
     },
     "1040": {
         "ACT_RMSPN1": null,
@@ -1992,15 +2003,15 @@
         "PAR_RefChannel": "m0",
         "SIG_Measuring": 1
     },
-    "1073": {
-        "ACT_CanChangePhaseMask": false,
-        "ACT_MaxMeasSysCount": 1,
+    "1070": {
+        "ACT_CanChangePhaseMask": true,
+        "ACT_MaxMeasSysCount": 3,
         "ACT_PQS1": null,
         "ACT_PQS2": null,
         "ACT_PQS3": null,
         "ACT_PQS4": null,
         "ACT_PowerDisplayName": "P",
-        "EntityName": "POWER1Module4",
+        "EntityName": "POWER1Module1",
         "INF_ModeTypes": [
             "P"
         ],
@@ -2014,17 +2025,17 @@
                 },
                 "ACT_PQS1": {
                     "ChannelName": "P1",
-                    "Description": "Actual power value UAUX/IAUX",
+                    "Description": "Actual power value UL1/IL1",
                     "Unit": "W"
                 },
                 "ACT_PQS2": {
                     "ChannelName": "P2",
-                    "Description": "Unused in this session phase 2",
+                    "Description": "Actual power value UL2/IL2",
                     "Unit": "W"
                 },
                 "ACT_PQS3": {
                     "ChannelName": "P3",
-                    "Description": "Unused in this session phase 3",
+                    "Description": "Actual power value UL3/IL3",
                     "Unit": "W"
                 },
                 "ACT_PQS4": {
@@ -2048,7 +2059,7 @@
                     "Description": "Frequency output name"
                 },
                 "PAR_FOUTConstant0": {
-                    "ChannelName": "Fout1",
+                    "ChannelName": "Fout2",
                     "Description": "Frequency output constant"
                 },
                 "PAR_Interval": {
@@ -2067,7 +2078,14 @@
                     "Description": "Active phases selection mask",
                     "Validation": {
                         "Data": [
-                            "1"
+                            "000",
+                            "100",
+                            "010",
+                            "110",
+                            "001",
+                            "101",
+                            "011",
+                            "111"
                         ],
                         "Type": "STRING"
                     }
@@ -2076,6 +2094,8 @@
                     "Description": "Measuring mode",
                     "Validation": {
                         "Data": [
+                            "4LW",
+                            "3LW",
                             "2LW"
                         ],
                         "Type": "STRING"
@@ -2088,7 +2108,7 @@
             "ModuleInfo": {
                 "Description": "This module measures power with configured measuring and integration modes",
                 "FOUTCount": "1",
-                "Name": "POWER1Module4",
+                "Name": "POWER1Module1",
                 "NominalFrequency": "200000",
                 "PQSCount": "4"
             },
@@ -2175,15 +2195,1015 @@
                         ""
                     ]
                 ],
+                "Name": "POW1"
+            }
+        },
+        "PAR_FOUT0": "",
+        "PAR_FOUTConstant0": 96000000,
+        "PAR_Interval": 1,
+        "PAR_MeasModePhaseSelect": "111",
+        "PAR_MeasuringMode": "4LW",
+        "SIG_Measuring": 1
+    },
+    "1071": {
+        "ACT_CanChangePhaseMask": true,
+        "ACT_MaxMeasSysCount": 3,
+        "ACT_PQS1": null,
+        "ACT_PQS2": null,
+        "ACT_PQS3": null,
+        "ACT_PQS4": null,
+        "ACT_PowerDisplayName": "Q",
+        "EntityName": "POWER1Module2",
+        "INF_ModeTypes": [
+            "Q"
+        ],
+        "INF_ModuleInterface": {
+            "ComponentInfo": {
+                "ACT_CanChangePhaseMask": {
+                    "Description": "Boolean indicator that current measurement mode can change phase mask"
+                },
+                "ACT_MaxMeasSysCount": {
+                    "Description": "Number of max measurement systems for current measurement mode"
+                },
+                "ACT_PQS1": {
+                    "ChannelName": "Q1",
+                    "Description": "Actual power value UL1/IL1",
+                    "Unit": "Var"
+                },
+                "ACT_PQS2": {
+                    "ChannelName": "Q2",
+                    "Description": "Actual power value UL2/IL2",
+                    "Unit": "Var"
+                },
+                "ACT_PQS3": {
+                    "ChannelName": "Q3",
+                    "Description": "Actual power value UL3/IL3",
+                    "Unit": "Var"
+                },
+                "ACT_PQS4": {
+                    "ChannelName": "QS",
+                    "Description": "Actual power value sum all phases",
+                    "Unit": "Var"
+                },
+                "ACT_PowerDisplayName": {
+                    "Description": "Power display name (P/Q/S)"
+                },
+                "EntityName": {
+                    "Description": "Module's name"
+                },
+                "INF_ModeTypes": {
+                    "Description": "Display names (P/Q/S) of available modes"
+                },
+                "INF_ModuleInterface": {
+                    "Description": "Module's interface details"
+                },
+                "PAR_FOUT0": {
+                    "Description": "Frequency output name"
+                },
+                "PAR_FOUTConstant0": {
+                    "ChannelName": "Fout3",
+                    "Description": "Frequency output constant"
+                },
+                "PAR_Interval": {
+                    "Description": "Integration time",
+                    "Unit": "s",
+                    "Validation": {
+                        "Data": [
+                            1,
+                            100,
+                            0.5
+                        ],
+                        "Type": "DOUBLE"
+                    }
+                },
+                "PAR_MeasModePhaseSelect": {
+                    "Description": "Active phases selection mask",
+                    "Validation": {
+                        "Data": [
+                            "000",
+                            "100",
+                            "010",
+                            "110",
+                            "001",
+                            "101",
+                            "011",
+                            "111"
+                        ],
+                        "Type": "STRING"
+                    }
+                },
+                "PAR_MeasuringMode": {
+                    "Description": "Measuring mode",
+                    "Validation": {
+                        "Data": [
+                            "4LB",
+                            "3LB",
+                            "2LB"
+                        ],
+                        "Type": "STRING"
+                    }
+                },
+                "SIG_Measuring": {
+                    "Description": "Signal indicating measurement activity"
+                }
+            },
+            "ModuleInfo": {
+                "Description": "This module measures power with configured measuring and integration modes",
+                "FOUTCount": "1",
+                "Name": "POWER1Module2",
+                "NominalFrequency": "200000",
+                "PQSCount": "4"
+            },
+            "SCPIInfo": {
+                "Cmd": [
+                    [
+                        "CONFIGURATION",
+                        "MMODE:CATALOG",
+                        "2",
+                        "PAR_MeasuringMode",
+                        "1",
+                        ""
+                    ],
+                    [
+                        "MEASURE",
+                        "Q1",
+                        "8",
+                        "ACT_PQS1",
+                        "0",
+                        "Var"
+                    ],
+                    [
+                        "MEASURE",
+                        "Q2",
+                        "8",
+                        "ACT_PQS2",
+                        "0",
+                        "Var"
+                    ],
+                    [
+                        "MEASURE",
+                        "Q3",
+                        "8",
+                        "ACT_PQS3",
+                        "0",
+                        "Var"
+                    ],
+                    [
+                        "MEASURE",
+                        "QS",
+                        "8",
+                        "ACT_PQS4",
+                        "0",
+                        "Var"
+                    ],
+                    [
+                        "CONFIGURATION",
+                        "M0OUT",
+                        "2",
+                        "PAR_FOUT0",
+                        "0",
+                        ""
+                    ],
+                    [
+                        "CONFIGURATION",
+                        "M0CONSTANT",
+                        "2",
+                        "PAR_FOUTConstant0",
+                        "0",
+                        ""
+                    ],
+                    [
+                        "CONFIGURATION",
+                        "TINTEGRATION",
+                        "10",
+                        "PAR_Interval",
+                        "0",
+                        "s"
+                    ],
+                    [
+                        "CONFIGURATION",
+                        "MEASMODEPHASESELECT",
+                        "10",
+                        "PAR_MeasModePhaseSelect",
+                        "0",
+                        ""
+                    ],
+                    [
+                        "CONFIGURATION",
+                        "MMODE",
+                        "10",
+                        "PAR_MeasuringMode",
+                        "0",
+                        ""
+                    ]
+                ],
+                "Name": "POW2"
+            }
+        },
+        "PAR_FOUT0": "",
+        "PAR_FOUTConstant0": 96000000,
+        "PAR_Interval": 1,
+        "PAR_MeasModePhaseSelect": "111",
+        "PAR_MeasuringMode": "4LB",
+        "SIG_Measuring": 1
+    },
+    "1072": {
+        "ACT_CanChangePhaseMask": true,
+        "ACT_MaxMeasSysCount": 3,
+        "ACT_PQS1": null,
+        "ACT_PQS2": null,
+        "ACT_PQS3": null,
+        "ACT_PQS4": null,
+        "ACT_PowerDisplayName": "S",
+        "EntityName": "POWER1Module3",
+        "INF_ModeTypes": [
+            "S"
+        ],
+        "INF_ModuleInterface": {
+            "ComponentInfo": {
+                "ACT_CanChangePhaseMask": {
+                    "Description": "Boolean indicator that current measurement mode can change phase mask"
+                },
+                "ACT_MaxMeasSysCount": {
+                    "Description": "Number of max measurement systems for current measurement mode"
+                },
+                "ACT_PQS1": {
+                    "ChannelName": "S1",
+                    "Description": "Actual power value UL1/IL1",
+                    "Unit": "VA"
+                },
+                "ACT_PQS2": {
+                    "ChannelName": "S2",
+                    "Description": "Actual power value UL2/IL2",
+                    "Unit": "VA"
+                },
+                "ACT_PQS3": {
+                    "ChannelName": "S3",
+                    "Description": "Actual power value UL3/IL3",
+                    "Unit": "VA"
+                },
+                "ACT_PQS4": {
+                    "ChannelName": "SS",
+                    "Description": "Actual power value sum all phases",
+                    "Unit": "VA"
+                },
+                "ACT_PowerDisplayName": {
+                    "Description": "Power display name (P/Q/S)"
+                },
+                "EntityName": {
+                    "Description": "Module's name"
+                },
+                "INF_ModeTypes": {
+                    "Description": "Display names (P/Q/S) of available modes"
+                },
+                "INF_ModuleInterface": {
+                    "Description": "Module's interface details"
+                },
+                "PAR_FOUT0": {
+                    "Description": "Frequency output name"
+                },
+                "PAR_FOUTConstant0": {
+                    "ChannelName": "Fout4",
+                    "Description": "Frequency output constant"
+                },
+                "PAR_Interval": {
+                    "Description": "Integration time",
+                    "Unit": "s",
+                    "Validation": {
+                        "Data": [
+                            1,
+                            100,
+                            0.5
+                        ],
+                        "Type": "DOUBLE"
+                    }
+                },
+                "PAR_MeasModePhaseSelect": {
+                    "Description": "Active phases selection mask",
+                    "Validation": {
+                        "Data": [
+                            "000",
+                            "100",
+                            "010",
+                            "110",
+                            "001",
+                            "101",
+                            "011",
+                            "111"
+                        ],
+                        "Type": "STRING"
+                    }
+                },
+                "PAR_MeasuringMode": {
+                    "Description": "Measuring mode",
+                    "Validation": {
+                        "Data": [
+                            "4LS",
+                            "4LSg",
+                            "2LS",
+                            "2LSg"
+                        ],
+                        "Type": "STRING"
+                    }
+                },
+                "SIG_Measuring": {
+                    "Description": "Signal indicating measurement activity"
+                }
+            },
+            "ModuleInfo": {
+                "Description": "This module measures power with configured measuring and integration modes",
+                "FOUTCount": "1",
+                "Name": "POWER1Module3",
+                "NominalFrequency": "200000",
+                "PQSCount": "4"
+            },
+            "SCPIInfo": {
+                "Cmd": [
+                    [
+                        "CONFIGURATION",
+                        "MMODE:CATALOG",
+                        "2",
+                        "PAR_MeasuringMode",
+                        "1",
+                        ""
+                    ],
+                    [
+                        "MEASURE",
+                        "S1",
+                        "8",
+                        "ACT_PQS1",
+                        "0",
+                        "VA"
+                    ],
+                    [
+                        "MEASURE",
+                        "S2",
+                        "8",
+                        "ACT_PQS2",
+                        "0",
+                        "VA"
+                    ],
+                    [
+                        "MEASURE",
+                        "S3",
+                        "8",
+                        "ACT_PQS3",
+                        "0",
+                        "VA"
+                    ],
+                    [
+                        "MEASURE",
+                        "SS",
+                        "8",
+                        "ACT_PQS4",
+                        "0",
+                        "VA"
+                    ],
+                    [
+                        "CONFIGURATION",
+                        "M0OUT",
+                        "2",
+                        "PAR_FOUT0",
+                        "0",
+                        ""
+                    ],
+                    [
+                        "CONFIGURATION",
+                        "M0CONSTANT",
+                        "2",
+                        "PAR_FOUTConstant0",
+                        "0",
+                        ""
+                    ],
+                    [
+                        "CONFIGURATION",
+                        "TINTEGRATION",
+                        "10",
+                        "PAR_Interval",
+                        "0",
+                        "s"
+                    ],
+                    [
+                        "CONFIGURATION",
+                        "MEASMODEPHASESELECT",
+                        "10",
+                        "PAR_MeasModePhaseSelect",
+                        "0",
+                        ""
+                    ],
+                    [
+                        "CONFIGURATION",
+                        "MMODE",
+                        "10",
+                        "PAR_MeasuringMode",
+                        "0",
+                        ""
+                    ]
+                ],
+                "Name": "POW3"
+            }
+        },
+        "PAR_FOUT0": "",
+        "PAR_FOUTConstant0": 96000000,
+        "PAR_Interval": 1,
+        "PAR_MeasModePhaseSelect": "111",
+        "PAR_MeasuringMode": "4LS",
+        "SIG_Measuring": 1
+    },
+    "1073": {
+        "ACT_CanChangePhaseMask": true,
+        "ACT_MaxMeasSysCount": 3,
+        "ACT_PQS1": null,
+        "ACT_PQS2": null,
+        "ACT_PQS3": null,
+        "ACT_PQS4": null,
+        "ACT_PowerDisplayName": "P",
+        "EntityName": "POWER1Module4",
+        "INF_ModeTypes": [
+            "",
+            "P",
+            "Q",
+            "S"
+        ],
+        "INF_ModuleInterface": {
+            "ComponentInfo": {
+                "ACT_CanChangePhaseMask": {
+                    "Description": "Boolean indicator that current measurement mode can change phase mask"
+                },
+                "ACT_MaxMeasSysCount": {
+                    "Description": "Number of max measurement systems for current measurement mode"
+                },
+                "ACT_PQS1": {
+                    "ChannelName": "P1",
+                    "Description": "Actual power value UL1/IL1",
+                    "Unit": "W"
+                },
+                "ACT_PQS2": {
+                    "ChannelName": "P2",
+                    "Description": "Actual power value UL2/IL2",
+                    "Unit": "W"
+                },
+                "ACT_PQS3": {
+                    "ChannelName": "P3",
+                    "Description": "Actual power value UL3/IL3",
+                    "Unit": "W"
+                },
+                "ACT_PQS4": {
+                    "ChannelName": "PS",
+                    "Description": "Actual power value sum all phases",
+                    "Unit": "W"
+                },
+                "ACT_PowerDisplayName": {
+                    "Description": "Power display name (P/Q/S)"
+                },
+                "EntityName": {
+                    "Description": "Module's name"
+                },
+                "INF_ModeTypes": {
+                    "Description": "Display names (P/Q/S) of available modes"
+                },
+                "INF_ModuleInterface": {
+                    "Description": "Module's interface details"
+                },
+                "PAR_FOUT0": {
+                    "Description": "Frequency output name"
+                },
+                "PAR_FOUTConstant0": {
+                    "ChannelName": "Fout1",
+                    "Description": "Frequency output constant"
+                },
+                "PAR_FOUT_QREF_FREQ": {
+                    "Description": "Fixed frequency output mode (QREF): frequency value",
+                    "Unit": "kHz",
+                    "Validation": {
+                        "Data": [
+                            0.001,
+                            200,
+                            0.001
+                        ],
+                        "Type": "DOUBLE"
+                    }
+                },
+                "PAR_Interval": {
+                    "Description": "Integration time",
+                    "Unit": "s",
+                    "Validation": {
+                        "Data": [
+                            1,
+                            100,
+                            0.5
+                        ],
+                        "Type": "DOUBLE"
+                    }
+                },
+                "PAR_MeasModePhaseSelect": {
+                    "Description": "Active phases selection mask",
+                    "Validation": {
+                        "Data": [
+                            "000",
+                            "100",
+                            "010",
+                            "110",
+                            "001",
+                            "101",
+                            "011",
+                            "111"
+                        ],
+                        "Type": "STRING"
+                    }
+                },
+                "PAR_MeasuringMode": {
+                    "Description": "Measuring mode",
+                    "Validation": {
+                        "Data": [
+                            "4LW",
+                            "3LW",
+                            "2LW",
+                            "4LB",
+                            "3LB",
+                            "2LB",
+                            "4LS",
+                            "4LSg",
+                            "2LS",
+                            "2LSg",
+                            "QREF"
+                        ],
+                        "Type": "STRING"
+                    }
+                },
+                "SIG_Measuring": {
+                    "Description": "Signal indicating measurement activity"
+                }
+            },
+            "ModuleInfo": {
+                "Description": "This module measures power with configured measuring and integration modes",
+                "FOUTCount": "1",
+                "Name": "POWER1Module4",
+                "NominalFrequency": "200000",
+                "PQSCount": "4"
+            },
+            "SCPIInfo": {
+                "Cmd": [
+                    [
+                        "CONFIGURATION",
+                        "MMODE:CATALOG",
+                        "2",
+                        "PAR_MeasuringMode",
+                        "1",
+                        ""
+                    ],
+                    [
+                        "MEASURE",
+                        "P1",
+                        "8",
+                        "ACT_PQS1",
+                        "0",
+                        "W"
+                    ],
+                    [
+                        "MEASURE",
+                        "P2",
+                        "8",
+                        "ACT_PQS2",
+                        "0",
+                        "W"
+                    ],
+                    [
+                        "MEASURE",
+                        "P3",
+                        "8",
+                        "ACT_PQS3",
+                        "0",
+                        "W"
+                    ],
+                    [
+                        "MEASURE",
+                        "PS",
+                        "8",
+                        "ACT_PQS4",
+                        "0",
+                        "W"
+                    ],
+                    [
+                        "CONFIGURATION",
+                        "M0OUT",
+                        "2",
+                        "PAR_FOUT0",
+                        "0",
+                        ""
+                    ],
+                    [
+                        "CONFIGURATION",
+                        "M0CONSTANT",
+                        "2",
+                        "PAR_FOUTConstant0",
+                        "0",
+                        ""
+                    ],
+                    [
+                        "CONFIGURATION",
+                        "FIXFREQ",
+                        "10",
+                        "PAR_FOUT_QREF_FREQ",
+                        "0",
+                        "kHz"
+                    ],
+                    [
+                        "CONFIGURATION",
+                        "TINTEGRATION",
+                        "10",
+                        "PAR_Interval",
+                        "0",
+                        "s"
+                    ],
+                    [
+                        "CONFIGURATION",
+                        "MEASMODEPHASESELECT",
+                        "10",
+                        "PAR_MeasModePhaseSelect",
+                        "0",
+                        ""
+                    ],
+                    [
+                        "CONFIGURATION",
+                        "MMODE",
+                        "10",
+                        "PAR_MeasuringMode",
+                        "0",
+                        ""
+                    ]
+                ],
                 "Name": "POW4"
             }
         },
         "PAR_FOUT0": "fOUT",
-        "PAR_FOUTConstant0": 2.88e+21,
+        "PAR_FOUTConstant0": 96000000,
+        "PAR_FOUT_QREF_FREQ": 200,
         "PAR_Interval": 1,
-        "PAR_MeasModePhaseSelect": "1",
-        "PAR_MeasuringMode": "2LW",
+        "PAR_MeasModePhaseSelect": "111",
+        "PAR_MeasuringMode": "4LW",
         "SIG_Measuring": 1
+    },
+    "1078": {
+        "ACT_CanChangePhaseMask": false,
+        "ACT_MaxMeasSysCount": 3,
+        "ACT_PQS1": null,
+        "ACT_PQS2": null,
+        "ACT_PQS3": null,
+        "ACT_PQS4": null,
+        "ACT_PowerDisplayName": "Q",
+        "EntityName": "POWER1Module98",
+        "INF_ModeTypes": [
+            "Q"
+        ],
+        "INF_ModuleInterface": {
+            "ComponentInfo": {
+                "ACT_CanChangePhaseMask": {
+                    "Description": "Boolean indicator that current measurement mode can change phase mask"
+                },
+                "ACT_MaxMeasSysCount": {
+                    "Description": "Number of max measurement systems for current measurement mode"
+                },
+                "ACT_PQS1": {
+                    "ChannelName": "Q1",
+                    "Description": "Actual power value UL1/IL1",
+                    "Unit": "Var"
+                },
+                "ACT_PQS2": {
+                    "ChannelName": "Q2",
+                    "Description": "Actual power value UL2/IL2",
+                    "Unit": "Var"
+                },
+                "ACT_PQS3": {
+                    "ChannelName": "Q3",
+                    "Description": "Actual power value UL3/IL3",
+                    "Unit": "Var"
+                },
+                "ACT_PQS4": {
+                    "ChannelName": "QS",
+                    "Description": "Actual power value sum all phases",
+                    "Unit": "Var"
+                },
+                "ACT_PowerDisplayName": {
+                    "Description": "Power display name (P/Q/S)"
+                },
+                "EntityName": {
+                    "Description": "Module's name"
+                },
+                "INF_ModeTypes": {
+                    "Description": "Display names (P/Q/S) of available modes"
+                },
+                "INF_ModuleInterface": {
+                    "Description": "Module's interface details"
+                },
+                "PAR_Interval": {
+                    "Description": "Integration time",
+                    "Unit": "s",
+                    "Validation": {
+                        "Data": [
+                            1,
+                            100,
+                            0.5
+                        ],
+                        "Type": "DOUBLE"
+                    }
+                },
+                "PAR_MeasModePhaseSelect": {
+                    "Description": "Active phases selection mask",
+                    "Validation": {
+                        "Data": [
+                            "111"
+                        ],
+                        "Type": "STRING"
+                    }
+                },
+                "PAR_MeasuringMode": {
+                    "Description": "Measuring mode",
+                    "Validation": {
+                        "Data": [
+                            "4LB"
+                        ],
+                        "Type": "STRING"
+                    }
+                },
+                "SIG_Measuring": {
+                    "Description": "Signal indicating measurement activity"
+                }
+            },
+            "ModuleInfo": {
+                "Description": "This module measures power with configured measuring and integration modes",
+                "FOUTCount": "0",
+                "Name": "POWER1Module98",
+                "NominalFrequency": "200000",
+                "PQSCount": "4"
+            },
+            "SCPIInfo": {
+                "Cmd": [
+                ],
+                "Name": "POW98"
+            }
+        },
+        "PAR_Interval": 1,
+        "PAR_MeasModePhaseSelect": "111",
+        "PAR_MeasuringMode": "4LB",
+        "SIG_Measuring": 1
+    },
+    "1079": {
+        "ACT_CanChangePhaseMask": false,
+        "ACT_MaxMeasSysCount": 3,
+        "ACT_PQS1": null,
+        "ACT_PQS2": null,
+        "ACT_PQS3": null,
+        "ACT_PQS4": null,
+        "ACT_PowerDisplayName": "S",
+        "EntityName": "POWER1Module99",
+        "INF_ModeTypes": [
+            "S"
+        ],
+        "INF_ModuleInterface": {
+            "ComponentInfo": {
+                "ACT_CanChangePhaseMask": {
+                    "Description": "Boolean indicator that current measurement mode can change phase mask"
+                },
+                "ACT_MaxMeasSysCount": {
+                    "Description": "Number of max measurement systems for current measurement mode"
+                },
+                "ACT_PQS1": {
+                    "ChannelName": "S1",
+                    "Description": "Actual power value UL1/IL1",
+                    "Unit": "VA"
+                },
+                "ACT_PQS2": {
+                    "ChannelName": "S2",
+                    "Description": "Actual power value UL2/IL2",
+                    "Unit": "VA"
+                },
+                "ACT_PQS3": {
+                    "ChannelName": "S3",
+                    "Description": "Actual power value UL3/IL3",
+                    "Unit": "VA"
+                },
+                "ACT_PQS4": {
+                    "ChannelName": "SS",
+                    "Description": "Actual power value sum all phases",
+                    "Unit": "VA"
+                },
+                "ACT_PowerDisplayName": {
+                    "Description": "Power display name (P/Q/S)"
+                },
+                "EntityName": {
+                    "Description": "Module's name"
+                },
+                "INF_ModeTypes": {
+                    "Description": "Display names (P/Q/S) of available modes"
+                },
+                "INF_ModuleInterface": {
+                    "Description": "Module's interface details"
+                },
+                "PAR_Interval": {
+                    "Description": "Integration time",
+                    "Unit": "s",
+                    "Validation": {
+                        "Data": [
+                            1,
+                            100,
+                            0.5
+                        ],
+                        "Type": "DOUBLE"
+                    }
+                },
+                "PAR_MeasModePhaseSelect": {
+                    "Description": "Active phases selection mask",
+                    "Validation": {
+                        "Data": [
+                            "111"
+                        ],
+                        "Type": "STRING"
+                    }
+                },
+                "PAR_MeasuringMode": {
+                    "Description": "Measuring mode",
+                    "Validation": {
+                        "Data": [
+                            "4LS"
+                        ],
+                        "Type": "STRING"
+                    }
+                },
+                "SIG_Measuring": {
+                    "Description": "Signal indicating measurement activity"
+                }
+            },
+            "ModuleInfo": {
+                "Description": "This module measures power with configured measuring and integration modes",
+                "FOUTCount": "0",
+                "Name": "POWER1Module99",
+                "NominalFrequency": "200000",
+                "PQSCount": "4"
+            },
+            "SCPIInfo": {
+                "Cmd": [
+                ],
+                "Name": "POW99"
+            }
+        },
+        "PAR_Interval": 1,
+        "PAR_MeasModePhaseSelect": "111",
+        "PAR_MeasuringMode": "4LS",
+        "SIG_Measuring": 1
+    },
+    "1100": {
+        "ACT_HPP1": null,
+        "ACT_HPP2": null,
+        "ACT_HPP3": null,
+        "ACT_HPQ1": null,
+        "ACT_HPQ2": null,
+        "ACT_HPQ3": null,
+        "ACT_HPS1": null,
+        "ACT_HPS2": null,
+        "ACT_HPS3": null,
+        "EntityName": "Power3Module1",
+        "INF_ModuleInterface": {
+            "ComponentInfo": {
+                "ACT_HPP1": {
+                    "ChannelName": "P1",
+                    "Description": "Harmonic power active values",
+                    "Unit": "W"
+                },
+                "ACT_HPP2": {
+                    "ChannelName": "P2",
+                    "Description": "Harmonic power active values",
+                    "Unit": "W"
+                },
+                "ACT_HPP3": {
+                    "ChannelName": "P3",
+                    "Description": "Harmonic power active values",
+                    "Unit": "W"
+                },
+                "ACT_HPQ1": {
+                    "ChannelName": "Q1",
+                    "Description": "Harmonic power reactive values",
+                    "Unit": "Var"
+                },
+                "ACT_HPQ2": {
+                    "ChannelName": "Q2",
+                    "Description": "Harmonic power reactive values",
+                    "Unit": "Var"
+                },
+                "ACT_HPQ3": {
+                    "ChannelName": "Q3",
+                    "Description": "Harmonic power reactive values",
+                    "Unit": "Var"
+                },
+                "ACT_HPS1": {
+                    "ChannelName": "S1",
+                    "Description": "Harmonic power apparent values",
+                    "Unit": "VA"
+                },
+                "ACT_HPS2": {
+                    "ChannelName": "S2",
+                    "Description": "Harmonic power apparent values",
+                    "Unit": "VA"
+                },
+                "ACT_HPS3": {
+                    "ChannelName": "S3",
+                    "Description": "Harmonic power apparent values",
+                    "Unit": "VA"
+                },
+                "EntityName": {
+                    "Description": "Module's name"
+                },
+                "INF_ModuleInterface": {
+                    "Description": "Module's interface details"
+                },
+                "SIG_Measuring": {
+                    "Description": "Signal indicating measurement activity"
+                }
+            },
+            "ModuleInfo": {
+                "Description": "This module measures configured number of harmonic power values from configured input values",
+                "HPWCount": "3",
+                "Name": "Power3Module1"
+            },
+            "SCPIInfo": {
+                "Cmd": [
+                    [
+                        "MEASURE",
+                        "P1",
+                        "8",
+                        "ACT_HPP1",
+                        "0",
+                        "W"
+                    ],
+                    [
+                        "MEASURE",
+                        "Q1",
+                        "8",
+                        "ACT_HPQ1",
+                        "0",
+                        "Var"
+                    ],
+                    [
+                        "MEASURE",
+                        "S1",
+                        "8",
+                        "ACT_HPS1",
+                        "0",
+                        "VA"
+                    ],
+                    [
+                        "MEASURE",
+                        "P2",
+                        "8",
+                        "ACT_HPP2",
+                        "0",
+                        "W"
+                    ],
+                    [
+                        "MEASURE",
+                        "Q2",
+                        "8",
+                        "ACT_HPQ2",
+                        "0",
+                        "Var"
+                    ],
+                    [
+                        "MEASURE",
+                        "S2",
+                        "8",
+                        "ACT_HPS2",
+                        "0",
+                        "VA"
+                    ],
+                    [
+                        "MEASURE",
+                        "P3",
+                        "8",
+                        "ACT_HPP3",
+                        "0",
+                        "W"
+                    ],
+                    [
+                        "MEASURE",
+                        "Q3",
+                        "8",
+                        "ACT_HPQ3",
+                        "0",
+                        "Var"
+                    ],
+                    [
+                        "MEASURE",
+                        "S3",
+                        "8",
+                        "ACT_HPS3",
+                        "0",
+                        "VA"
+                    ]
+                ],
+                "Name": "PW31"
+            }
+        },
+        "SIG_Measuring": 0
     },
     "1110": {
         "ACT_THDN1": null,
@@ -2679,7 +3699,7 @@
         "ACT_MulResult": "{\"countFail\":0,\"countPass\":0,\"countUnfinish\":0,\"idxMax\":-1,\"idxMin\":-1,\"limits\":[],\"mean\":null,\"range\":null,\"stddevN\":null,\"stddevN1\":null,\"values\":[]}",
         "ACT_Progress": 0,
         "ACT_Rating": -1,
-        "ACT_RefFreqInput": "fo0",
+        "ACT_RefFreqInput": "fo1",
         "ACT_Result": 0,
         "ACT_StartTime": null,
         "ACT_Status": 0,
@@ -2819,7 +3839,8 @@
                     "Description": "DUT input",
                     "Validation": {
                         "Data": [
-                            "SC1"
+                            "SC1",
+                            "HK1"
                         ],
                         "Type": "STRING"
                     }
@@ -2901,7 +3922,9 @@
                     "Description": "REF input",
                     "Validation": {
                         "Data": [
-                            "P DC"
+                            "P",
+                            "Q",
+                            "S"
                         ],
                         "Type": "STRING"
                     }
@@ -3250,11 +4273,106 @@
         "PAR_MeasCount": 1,
         "PAR_MeasWait": 0,
         "PAR_RefConstant": 500000000,
-        "PAR_RefInput": "P DC",
+        "PAR_RefInput": "P",
         "PAR_ResultUnit": "%",
         "PAR_StartStop": 0,
         "PAR_Target": 500000,
         "PAR_Uplimit": 10
+    },
+    "1140": {
+        "ACT_Lambda1": null,
+        "ACT_Lambda2": null,
+        "ACT_Lambda3": null,
+        "ACT_Lambda4": 0,
+        "ACT_Load1": "",
+        "ACT_Load2": "",
+        "ACT_Load3": "",
+        "ACT_Load4": "",
+        "EntityName": "LambdaModule1",
+        "INF_ModuleInterface": {
+            "ComponentInfo": {
+                "ACT_Lambda1": {
+                    "ChannelName": "Lambda1",
+                    "Description": "Actual lambda value"
+                },
+                "ACT_Lambda2": {
+                    "ChannelName": "Lambda2",
+                    "Description": "Actual lambda value"
+                },
+                "ACT_Lambda3": {
+                    "ChannelName": "Lambda3",
+                    "Description": "Actual lambda value"
+                },
+                "ACT_Lambda4": {
+                    "ChannelName": "Lambda4",
+                    "Description": "Actual lambda value"
+                },
+                "ACT_Load1": {
+                    "Description": "load type"
+                },
+                "ACT_Load2": {
+                    "Description": "load type"
+                },
+                "ACT_Load3": {
+                    "Description": "load type"
+                },
+                "ACT_Load4": {
+                    "Description": "load type"
+                },
+                "EntityName": {
+                    "Description": "Module's name"
+                },
+                "INF_ModuleInterface": {
+                    "Description": "Module's interface details"
+                },
+                "SIG_Measuring": {
+                    "Description": "Signal indicating measurement activity"
+                }
+            },
+            "ModuleInfo": {
+                "Description": "This module measures configured number of harmonic power values from configured input values",
+                "LambdaCount": "4",
+                "Name": "LambdaModule1"
+            },
+            "SCPIInfo": {
+                "Cmd": [
+                    [
+                        "MEASURE",
+                        "Lambda1",
+                        "8",
+                        "ACT_Lambda1",
+                        "0",
+                        ""
+                    ],
+                    [
+                        "MEASURE",
+                        "Lambda2",
+                        "8",
+                        "ACT_Lambda2",
+                        "0",
+                        ""
+                    ],
+                    [
+                        "MEASURE",
+                        "Lambda3",
+                        "8",
+                        "ACT_Lambda3",
+                        "0",
+                        ""
+                    ],
+                    [
+                        "MEASURE",
+                        "Lambda4",
+                        "8",
+                        "ACT_Lambda4",
+                        "0",
+                        ""
+                    ]
+                ],
+                "Name": "LAM1"
+            }
+        },
+        "SIG_Measuring": 0
     },
     "1150": {
         "EntityName": "StatusModule1",
@@ -3461,6 +4579,752 @@
         "INF_ReleaseNr": "",
         "INF_Schnubbel": 0,
         "PAR_SerialNr": "Unknown"
+    },
+    "1160": {
+        "ACT_Burden1": null,
+        "ACT_Burden2": null,
+        "ACT_Burden3": null,
+        "ACT_PFactor1": null,
+        "ACT_PFactor2": null,
+        "ACT_PFactor3": null,
+        "ACT_Ratio1": null,
+        "ACT_Ratio2": null,
+        "ACT_Ratio3": null,
+        "EntityName": "Burden1Module1",
+        "INF_ModuleInterface": {
+            "ComponentInfo": {
+                "ACT_Burden1": {
+                    "ChannelName": "BRD1",
+                    "Description": "Burden actual value Sb",
+                    "Unit": "VA"
+                },
+                "ACT_Burden2": {
+                    "ChannelName": "BRD2",
+                    "Description": "Burden actual value Sb",
+                    "Unit": "VA"
+                },
+                "ACT_Burden3": {
+                    "ChannelName": "BRD3",
+                    "Description": "Burden actual value Sb",
+                    "Unit": "VA"
+                },
+                "ACT_PFactor1": {
+                    "ChannelName": "POF1",
+                    "Description": "Burden powerfactor cos(β)"
+                },
+                "ACT_PFactor2": {
+                    "ChannelName": "POF2",
+                    "Description": "Burden powerfactor cos(β)"
+                },
+                "ACT_PFactor3": {
+                    "ChannelName": "POF3",
+                    "Description": "Burden powerfactor cos(β)"
+                },
+                "ACT_Ratio1": {
+                    "ChannelName": "RAT1",
+                    "Description": "Burden ratio value Sn",
+                    "Unit": "%"
+                },
+                "ACT_Ratio2": {
+                    "ChannelName": "RAT2",
+                    "Description": "Burden ratio value Sn",
+                    "Unit": "%"
+                },
+                "ACT_Ratio3": {
+                    "ChannelName": "RAT3",
+                    "Description": "Burden ratio value Sn",
+                    "Unit": "%"
+                },
+                "EntityName": {
+                    "Description": "Module's name"
+                },
+                "INF_ModuleInterface": {
+                    "Description": "Module's interface details"
+                },
+                "PAR_NominalBurden": {
+                    "Description": "Nominal burden",
+                    "Unit": "VA",
+                    "Validation": {
+                        "Data": [
+                            0.001,
+                            10000,
+                            0.001
+                        ],
+                        "Type": "DOUBLE"
+                    }
+                },
+                "PAR_NominalRange": {
+                    "Description": "Nominal range",
+                    "Unit": "A",
+                    "Validation": {
+                        "Data": [
+                            0.001,
+                            10000,
+                            0.001
+                        ],
+                        "Type": "DOUBLE"
+                    }
+                },
+                "PAR_NominalRangeFactor": {
+                    "Description": "Nominal range factor",
+                    "Validation": {
+                        "Data": [
+                            "1",
+                            "sqrt(3)",
+                            "1/sqrt(3)",
+                            "1/3"
+                        ],
+                        "Type": "STRING"
+                    }
+                },
+                "PAR_WCrosssection": {
+                    "Description": "Wire crosssection value",
+                    "Unit": "mm²",
+                    "Validation": {
+                        "Data": [
+                            0.1,
+                            100,
+                            0.1
+                        ],
+                        "Type": "DOUBLE"
+                    }
+                },
+                "PAR_WireLength": {
+                    "Description": "Wire length value",
+                    "Unit": "m",
+                    "Validation": {
+                        "Data": [
+                            0,
+                            100,
+                            0.1
+                        ],
+                        "Type": "DOUBLE"
+                    }
+                },
+                "SIG_Measuring": {
+                    "Description": "Signal indicating measurement activity"
+                }
+            },
+            "ModuleInfo": {
+                "BRSCount": "3",
+                "Description": "This module measures configured number burden and powerfactor from configured input dft values",
+                "Name": "Burden1Module1"
+            },
+            "SCPIInfo": {
+                "Cmd": [
+                    [
+                        "MEASURE",
+                        "BRD1",
+                        "8",
+                        "ACT_Burden1",
+                        "0",
+                        "VA"
+                    ],
+                    [
+                        "MEASURE",
+                        "POF1",
+                        "8",
+                        "ACT_PFactor1",
+                        "0",
+                        ""
+                    ],
+                    [
+                        "MEASURE",
+                        "RAT1",
+                        "8",
+                        "ACT_Ratio1",
+                        "0",
+                        "%"
+                    ],
+                    [
+                        "MEASURE",
+                        "BRD2",
+                        "8",
+                        "ACT_Burden2",
+                        "0",
+                        "VA"
+                    ],
+                    [
+                        "MEASURE",
+                        "POF2",
+                        "8",
+                        "ACT_PFactor2",
+                        "0",
+                        ""
+                    ],
+                    [
+                        "MEASURE",
+                        "RAT2",
+                        "8",
+                        "ACT_Ratio2",
+                        "0",
+                        "%"
+                    ],
+                    [
+                        "MEASURE",
+                        "BRD3",
+                        "8",
+                        "ACT_Burden3",
+                        "0",
+                        "VA"
+                    ],
+                    [
+                        "MEASURE",
+                        "POF3",
+                        "8",
+                        "ACT_PFactor3",
+                        "0",
+                        ""
+                    ],
+                    [
+                        "MEASURE",
+                        "RAT3",
+                        "8",
+                        "ACT_Ratio3",
+                        "0",
+                        "%"
+                    ],
+                    [
+                        "CONFIGURATION",
+                        "BURDEN",
+                        "10",
+                        "PAR_NominalBurden",
+                        "0",
+                        "VA"
+                    ],
+                    [
+                        "CONFIGURATION",
+                        "RANGE",
+                        "10",
+                        "PAR_NominalRange",
+                        "0",
+                        "A"
+                    ],
+                    [
+                        "CONFIGURATION",
+                        "RFACTOR",
+                        "10",
+                        "PAR_NominalRangeFactor",
+                        "0",
+                        ""
+                    ],
+                    [
+                        "CONFIGURATION",
+                        "WCSection",
+                        "10",
+                        "PAR_WCrosssection",
+                        "0",
+                        "mm²"
+                    ],
+                    [
+                        "CONFIGURATION",
+                        "WLENGTH",
+                        "10",
+                        "PAR_WireLength",
+                        "0",
+                        "m"
+                    ]
+                ],
+                "Name": "BD11"
+            }
+        },
+        "PAR_NominalBurden": 1,
+        "PAR_NominalRange": 1,
+        "PAR_NominalRangeFactor": "1",
+        "PAR_WCrosssection": 1,
+        "PAR_WireLength": 1,
+        "SIG_Measuring": 0
+    },
+    "1161": {
+        "ACT_Burden1": null,
+        "ACT_Burden2": null,
+        "ACT_Burden3": null,
+        "ACT_PFactor1": null,
+        "ACT_PFactor2": null,
+        "ACT_PFactor3": null,
+        "ACT_Ratio1": null,
+        "ACT_Ratio2": null,
+        "ACT_Ratio3": null,
+        "EntityName": "Burden1Module2",
+        "INF_ModuleInterface": {
+            "ComponentInfo": {
+                "ACT_Burden1": {
+                    "ChannelName": "BRD1",
+                    "Description": "Burden actual value Sb",
+                    "Unit": "VA"
+                },
+                "ACT_Burden2": {
+                    "ChannelName": "BRD2",
+                    "Description": "Burden actual value Sb",
+                    "Unit": "VA"
+                },
+                "ACT_Burden3": {
+                    "ChannelName": "BRD3",
+                    "Description": "Burden actual value Sb",
+                    "Unit": "VA"
+                },
+                "ACT_PFactor1": {
+                    "ChannelName": "POF1",
+                    "Description": "Burden powerfactor cos(β)"
+                },
+                "ACT_PFactor2": {
+                    "ChannelName": "POF2",
+                    "Description": "Burden powerfactor cos(β)"
+                },
+                "ACT_PFactor3": {
+                    "ChannelName": "POF3",
+                    "Description": "Burden powerfactor cos(β)"
+                },
+                "ACT_Ratio1": {
+                    "ChannelName": "RAT1",
+                    "Description": "Burden ratio value Sn",
+                    "Unit": "%"
+                },
+                "ACT_Ratio2": {
+                    "ChannelName": "RAT2",
+                    "Description": "Burden ratio value Sn",
+                    "Unit": "%"
+                },
+                "ACT_Ratio3": {
+                    "ChannelName": "RAT3",
+                    "Description": "Burden ratio value Sn",
+                    "Unit": "%"
+                },
+                "EntityName": {
+                    "Description": "Module's name"
+                },
+                "INF_ModuleInterface": {
+                    "Description": "Module's interface details"
+                },
+                "PAR_NominalBurden": {
+                    "Description": "Nominal burden",
+                    "Unit": "VA",
+                    "Validation": {
+                        "Data": [
+                            0.001,
+                            10000,
+                            0.001
+                        ],
+                        "Type": "DOUBLE"
+                    }
+                },
+                "PAR_NominalRange": {
+                    "Description": "Nominal range",
+                    "Unit": "V",
+                    "Validation": {
+                        "Data": [
+                            0.001,
+                            10000,
+                            0.001
+                        ],
+                        "Type": "DOUBLE"
+                    }
+                },
+                "PAR_NominalRangeFactor": {
+                    "Description": "Nominal range factor",
+                    "Validation": {
+                        "Data": [
+                            "1",
+                            "sqrt(3)",
+                            "1/sqrt(3)",
+                            "1/3"
+                        ],
+                        "Type": "STRING"
+                    }
+                },
+                "PAR_WCrosssection": {
+                    "Description": "Wire crosssection value",
+                    "Unit": "mm²",
+                    "Validation": {
+                        "Data": [
+                            0.1,
+                            100,
+                            0.1
+                        ],
+                        "Type": "DOUBLE"
+                    }
+                },
+                "PAR_WireLength": {
+                    "Description": "Wire length value",
+                    "Unit": "m",
+                    "Validation": {
+                        "Data": [
+                            0,
+                            100,
+                            0.1
+                        ],
+                        "Type": "DOUBLE"
+                    }
+                },
+                "SIG_Measuring": {
+                    "Description": "Signal indicating measurement activity"
+                }
+            },
+            "ModuleInfo": {
+                "BRSCount": "3",
+                "Description": "This module measures configured number burden and powerfactor from configured input dft values",
+                "Name": "Burden1Module2"
+            },
+            "SCPIInfo": {
+                "Cmd": [
+                    [
+                        "MEASURE",
+                        "BRD1",
+                        "8",
+                        "ACT_Burden1",
+                        "0",
+                        "VA"
+                    ],
+                    [
+                        "MEASURE",
+                        "POF1",
+                        "8",
+                        "ACT_PFactor1",
+                        "0",
+                        ""
+                    ],
+                    [
+                        "MEASURE",
+                        "RAT1",
+                        "8",
+                        "ACT_Ratio1",
+                        "0",
+                        "%"
+                    ],
+                    [
+                        "MEASURE",
+                        "BRD2",
+                        "8",
+                        "ACT_Burden2",
+                        "0",
+                        "VA"
+                    ],
+                    [
+                        "MEASURE",
+                        "POF2",
+                        "8",
+                        "ACT_PFactor2",
+                        "0",
+                        ""
+                    ],
+                    [
+                        "MEASURE",
+                        "RAT2",
+                        "8",
+                        "ACT_Ratio2",
+                        "0",
+                        "%"
+                    ],
+                    [
+                        "MEASURE",
+                        "BRD3",
+                        "8",
+                        "ACT_Burden3",
+                        "0",
+                        "VA"
+                    ],
+                    [
+                        "MEASURE",
+                        "POF3",
+                        "8",
+                        "ACT_PFactor3",
+                        "0",
+                        ""
+                    ],
+                    [
+                        "MEASURE",
+                        "RAT3",
+                        "8",
+                        "ACT_Ratio3",
+                        "0",
+                        "%"
+                    ],
+                    [
+                        "CONFIGURATION",
+                        "BURDEN",
+                        "10",
+                        "PAR_NominalBurden",
+                        "0",
+                        "VA"
+                    ],
+                    [
+                        "CONFIGURATION",
+                        "RANGE",
+                        "10",
+                        "PAR_NominalRange",
+                        "0",
+                        "V"
+                    ],
+                    [
+                        "CONFIGURATION",
+                        "RFACTOR",
+                        "10",
+                        "PAR_NominalRangeFactor",
+                        "0",
+                        ""
+                    ],
+                    [
+                        "CONFIGURATION",
+                        "WCSection",
+                        "10",
+                        "PAR_WCrosssection",
+                        "0",
+                        "mm²"
+                    ],
+                    [
+                        "CONFIGURATION",
+                        "WLENGTH",
+                        "10",
+                        "PAR_WireLength",
+                        "0",
+                        "m"
+                    ]
+                ],
+                "Name": "BD12"
+            }
+        },
+        "PAR_NominalBurden": 1,
+        "PAR_NominalRange": 1,
+        "PAR_NominalRangeFactor": "1",
+        "PAR_WCrosssection": 1,
+        "PAR_WireLength": 1,
+        "SIG_Measuring": 0
+    },
+    "1170": {
+        "ACT_Angle1": null,
+        "ACT_Error1": null,
+        "ACT_INSecondary1": null,
+        "ACT_IXPrimary1": null,
+        "ACT_IXSecondary1": null,
+        "ACT_Ratio1": null,
+        "EntityName": "Transformer1Module1",
+        "INF_ModuleInterface": {
+            "ComponentInfo": {
+                "ACT_Angle1": {
+                    "ChannelName": "ANG1",
+                    "Description": "Transformer angle deviation value",
+                    "Unit": "°"
+                },
+                "ACT_Error1": {
+                    "ChannelName": "ERR1",
+                    "Description": "Transformer transmission error value",
+                    "Unit": "%"
+                },
+                "ACT_INSecondary1": {
+                    "ChannelName": "INSEC1",
+                    "Description": "Reference N secondary input",
+                    "Unit": "A"
+                },
+                "ACT_IXPrimary1": {
+                    "ChannelName": "IXPRIM1",
+                    "Description": "DUT test primary input",
+                    "Unit": "A"
+                },
+                "ACT_IXSecondary1": {
+                    "ChannelName": "IXSEC1",
+                    "Description": "DUT secondary input",
+                    "Unit": "A"
+                },
+                "ACT_Ratio1": {
+                    "ChannelName": "RAT1",
+                    "Description": "Transformer ratio value"
+                },
+                "EntityName": {
+                    "Description": "Module's name"
+                },
+                "INF_ModuleInterface": {
+                    "Description": "Module's interface details"
+                },
+                "PAR_DutPrimary": {
+                    "Description": "DUT primary value",
+                    "Unit": "A",
+                    "Validation": {
+                        "Data": [
+                            1e-06,
+                            1000000,
+                            1e-06
+                        ],
+                        "Type": "DOUBLE"
+                    }
+                },
+                "PAR_DutSecondary": {
+                    "Description": "DUT secondary value",
+                    "Unit": "A",
+                    "Validation": {
+                        "Data": [
+                            1e-06,
+                            1000000,
+                            1e-06
+                        ],
+                        "Type": "DOUBLE"
+                    }
+                },
+                "PAR_PrimClampPrim": {
+                    "Description": "Clamp primary value",
+                    "Unit": "A",
+                    "Validation": {
+                        "Data": [
+                            1e-06,
+                            1000000,
+                            1e-06
+                        ],
+                        "Type": "DOUBLE"
+                    }
+                },
+                "PAR_PrimClampSec": {
+                    "Description": "Primary clamp secondary value",
+                    "Unit": "A",
+                    "Validation": {
+                        "Data": [
+                            1e-06,
+                            1000000,
+                            1e-06
+                        ],
+                        "Type": "DOUBLE"
+                    }
+                },
+                "PAR_SecClampPrim": {
+                    "Description": "Secondary clamp primary value",
+                    "Unit": "A",
+                    "Validation": {
+                        "Data": [
+                            1e-06,
+                            1000000,
+                            1e-06
+                        ],
+                        "Type": "DOUBLE"
+                    }
+                },
+                "PAR_SecClampSec": {
+                    "Description": "Secondary clamp secondary value",
+                    "Unit": "A",
+                    "Validation": {
+                        "Data": [
+                            1e-06,
+                            1000000,
+                            1e-06
+                        ],
+                        "Type": "DOUBLE"
+                    }
+                },
+                "SIG_Measuring": {
+                    "Description": "Signal indicating measurement activity"
+                }
+            },
+            "ModuleInfo": {
+                "Description": "This module measures configured number transformer errors from configured input dft values",
+                "Name": "Transformer1Module1",
+                "TRSCount": "1"
+            },
+            "SCPIInfo": {
+                "Cmd": [
+                    [
+                        "MEASURE",
+                        "ERR1",
+                        "8",
+                        "ACT_Error1",
+                        "0",
+                        "%"
+                    ],
+                    [
+                        "MEASURE",
+                        "ANG1",
+                        "8",
+                        "ACT_Angle1",
+                        "0",
+                        "°"
+                    ],
+                    [
+                        "MEASURE",
+                        "RAT1",
+                        "8",
+                        "ACT_Ratio1",
+                        "0",
+                        ""
+                    ],
+                    [
+                        "MEASURE",
+                        "INSEC1",
+                        "8",
+                        "ACT_INSecondary1",
+                        "0",
+                        "A"
+                    ],
+                    [
+                        "MEASURE",
+                        "IXSEC1",
+                        "8",
+                        "ACT_IXSecondary1",
+                        "0",
+                        "A"
+                    ],
+                    [
+                        "MEASURE",
+                        "IXPRIM1",
+                        "8",
+                        "ACT_IXPrimary1",
+                        "0",
+                        "A"
+                    ],
+                    [
+                        "CONFIGURATION",
+                        "DUTPRIMARY",
+                        "10",
+                        "PAR_DutPrimary",
+                        "0",
+                        "A"
+                    ],
+                    [
+                        "CONFIGURATION",
+                        "DUTSECONDARY",
+                        "10",
+                        "PAR_DutSecondary",
+                        "0",
+                        "A"
+                    ],
+                    [
+                        "CONFIGURATION",
+                        "PCPRIMARY",
+                        "10",
+                        "PAR_PrimClampPrim",
+                        "0",
+                        "A"
+                    ],
+                    [
+                        "CONFIGURATION",
+                        "PCSECONDARY",
+                        "10",
+                        "PAR_PrimClampSec",
+                        "0",
+                        "A"
+                    ],
+                    [
+                        "CONFIGURATION",
+                        "SCPRIMARY",
+                        "10",
+                        "PAR_SecClampPrim",
+                        "0",
+                        "A"
+                    ],
+                    [
+                        "CONFIGURATION",
+                        "SCSECONDARY",
+                        "10",
+                        "PAR_SecClampSec",
+                        "0",
+                        "A"
+                    ]
+                ],
+                "Name": "TR11"
+            }
+        },
+        "PAR_DutPrimary": 2,
+        "PAR_DutSecondary": 2.1,
+        "PAR_PrimClampPrim": 1.1,
+        "PAR_PrimClampSec": 1.2,
+        "PAR_SecClampPrim": 1.3,
+        "PAR_SecClampSec": 1.4,
+        "SIG_Measuring": 0
     },
     "1190": {
         "EntityName": "AdjustmentModule1",
@@ -3728,7 +5592,7 @@
         "ACT_MeasTime": 0,
         "ACT_Power": 0,
         "ACT_Rating": -1,
-        "ACT_RefFreqInput": "fo0",
+        "ACT_RefFreqInput": "fo1",
         "ACT_Result": 0,
         "ACT_StartTime": null,
         "ACT_Status": 0,
@@ -3818,7 +5682,9 @@
                     "Description": "Ref input",
                     "Validation": {
                         "Data": [
-                            "P DC"
+                            "P",
+                            "Q",
+                            "S"
                         ],
                         "Type": "STRING"
                     }
@@ -4067,11 +5933,366 @@
         "PAR_Lolimit": -10,
         "PAR_MeasTime": 120,
         "PAR_RefConstant": 0,
-        "PAR_RefInput": "P DC",
+        "PAR_RefInput": "P",
         "PAR_StartStop": 0,
         "PAR_T0Input": 0,
         "PAR_T1input": 0,
         "PAR_TXUNIT": "kWh",
+        "PAR_Targeted": 1,
+        "PAR_Uplimit": 10
+    },
+    "1210": {
+        "ACT_EndTime": null,
+        "ACT_Energy": 0,
+        "ACT_MeasTime": 0,
+        "ACT_Power": 0,
+        "ACT_Rating": -1,
+        "ACT_RefFreqInput": "fo1",
+        "ACT_Result": 0,
+        "ACT_StartTime": null,
+        "ACT_Status": 0,
+        "ACT_Time": 0,
+        "EntityName": "SPM1Module1",
+        "INF_ModuleInterface": {
+            "ComponentInfo": {
+                "ACT_EndTime": {
+                    "Description": "Last measurement: End time (dd-MM-yyyy HH:mm:ss)"
+                },
+                "ACT_Energy": {
+                    "Description": "Energy since last start",
+                    "Unit": "kWh"
+                },
+                "ACT_MeasTime": {
+                    "Description": "Last measurement: Duration [ms]"
+                },
+                "ACT_Power": {
+                    "Description": "Mean power since last start",
+                    "Unit": "kW"
+                },
+                "ACT_Rating": {
+                    "Description": "Evaluation last measurement"
+                },
+                "ACT_RefFreqInput": {
+                    "Description": "Reference frequency input to find power module"
+                },
+                "ACT_Result": {
+                    "Description": "Result of last measurement",
+                    "Unit": "%"
+                },
+                "ACT_StartTime": {
+                    "Description": "Last measurement: Start time (dd-MM-yyyy HH:mm:ss)"
+                },
+                "ACT_Status": {
+                    "Description": "State: 0:Idle 1:First pulse wait 2:Started 4:Ready 8:Aborted"
+                },
+                "ACT_Time": {
+                    "Description": "Measurement time information",
+                    "Unit": "s"
+                },
+                "EntityName": {
+                    "Description": "Module's name"
+                },
+                "INF_ModuleInterface": {
+                    "Description": "Module's interface details"
+                },
+                "PAR_ClientActiveNotify": {
+                    "Description": "By changing this component, a client asks us for max actualize performance",
+                    "Validation": {
+                        "Data": [
+                            0,
+                            2147483647,
+                            1
+                        ],
+                        "Type": "INTEGER"
+                    }
+                },
+                "PAR_Lolimit": {
+                    "Description": "Error limit: lower",
+                    "Unit": "%",
+                    "Validation": {
+                        "Data": [
+                            -100,
+                            100,
+                            1e-06
+                        ],
+                        "Type": "DOUBLE"
+                    }
+                },
+                "PAR_MeasTime": {
+                    "Description": "Measurement time",
+                    "Unit": "s",
+                    "Validation": {
+                        "Data": [
+                            1,
+                            4294967,
+                            1
+                        ],
+                        "Type": "INTEGER"
+                    }
+                },
+                "PAR_RefConstant": {
+                    "Description": "Reference meter constant"
+                },
+                "PAR_RefInput": {
+                    "Description": "Ref input",
+                    "Validation": {
+                        "Data": [
+                            "P",
+                            "Q",
+                            "S"
+                        ],
+                        "Type": "STRING"
+                    }
+                },
+                "PAR_StartStop": {
+                    "Description": "Start/stop measurement (start=1, stop=0)",
+                    "Validation": {
+                        "Data": [
+                            0,
+                            1,
+                            1
+                        ],
+                        "Type": "INTEGER"
+                    }
+                },
+                "PAR_T0Input": {
+                    "Description": "Start energy value",
+                    "Unit": "kW",
+                    "Validation": {
+                        "Data": [
+                            0,
+                            10000000,
+                            1e-07
+                        ],
+                        "Type": "DOUBLE"
+                    }
+                },
+                "PAR_T1input": {
+                    "Description": "Final energy value",
+                    "Unit": "kW",
+                    "Validation": {
+                        "Data": [
+                            0,
+                            10000000,
+                            1e-07
+                        ],
+                        "Type": "DOUBLE"
+                    }
+                },
+                "PAR_TXUNIT": {
+                    "Description": "Energy unit",
+                    "Validation": {
+                        "Data": [
+                            "MW",
+                            "kW",
+                            "W"
+                        ],
+                        "Type": "STRING"
+                    }
+                },
+                "PAR_Targeted": {
+                    "Description": "Stop mode",
+                    "Validation": {
+                        "Data": [
+                            0,
+                            1,
+                            1
+                        ],
+                        "Type": "INTEGER"
+                    }
+                },
+                "PAR_Uplimit": {
+                    "Description": "Error limit: upper",
+                    "Unit": "%",
+                    "Validation": {
+                        "Data": [
+                            -100,
+                            100,
+                            1e-06
+                        ],
+                        "Type": "DOUBLE"
+                    }
+                }
+            },
+            "ModuleInfo": {
+                "Description": "This module provides a configurable power error calculator",
+                "Name": "SPM1Module1"
+            },
+            "SCPIInfo": {
+                "Cmd": [
+                    [
+                        "CALCULATE",
+                        "0001:ENDTIME",
+                        "2",
+                        "ACT_EndTime",
+                        "0",
+                        ""
+                    ],
+                    [
+                        "CALCULATE",
+                        "0001:ENERGY",
+                        "2",
+                        "ACT_Energy",
+                        "0",
+                        ""
+                    ],
+                    [
+                        "CALCULATE",
+                        "0001:MMEASTIME",
+                        "2",
+                        "ACT_MeasTime",
+                        "0",
+                        ""
+                    ],
+                    [
+                        "CALCULATE",
+                        "0001:POWER",
+                        "2",
+                        "ACT_Power",
+                        "0",
+                        ""
+                    ],
+                    [
+                        "CALCULATE",
+                        "0001:RATING",
+                        "2",
+                        "ACT_Rating",
+                        "0",
+                        ""
+                    ],
+                    [
+                        "CALCULATE",
+                        "0001:REFFREQINPUT",
+                        "2",
+                        "ACT_RefFreqInput",
+                        "0",
+                        ""
+                    ],
+                    [
+                        "CALCULATE",
+                        "0001:RESULT",
+                        "2",
+                        "ACT_Result",
+                        "0",
+                        "%"
+                    ],
+                    [
+                        "CALCULATE",
+                        "0001:STRTTIME",
+                        "2",
+                        "ACT_StartTime",
+                        "0",
+                        ""
+                    ],
+                    [
+                        "CALCULATE",
+                        "0001:STATUS",
+                        "2",
+                        "ACT_Status",
+                        "0",
+                        ""
+                    ],
+                    [
+                        "CALCULATE",
+                        "0001:TIME",
+                        "2",
+                        "ACT_Time",
+                        "0",
+                        "s"
+                    ],
+                    [
+                        "CALCULATE",
+                        "0001:LOLIMIT",
+                        "10",
+                        "PAR_Lolimit",
+                        "0",
+                        "%"
+                    ],
+                    [
+                        "CALCULATE",
+                        "0001:MTIME",
+                        "10",
+                        "PAR_MeasTime",
+                        "0",
+                        "s"
+                    ],
+                    [
+                        "CALCULATE",
+                        "0001:REFCONSTANT",
+                        "2",
+                        "PAR_RefConstant",
+                        "0",
+                        ""
+                    ],
+                    [
+                        "CALCULATE",
+                        "0001:REFSOURCE",
+                        "10",
+                        "PAR_RefInput",
+                        "0",
+                        ""
+                    ],
+                    [
+                        "CALCULATE",
+                        "0001:START",
+                        "10",
+                        "PAR_StartStop",
+                        "0",
+                        ""
+                    ],
+                    [
+                        "CALCULATE",
+                        "0001:T0INPUT",
+                        "10",
+                        "PAR_T0Input",
+                        "0",
+                        ""
+                    ],
+                    [
+                        "CALCULATE",
+                        "0001:T1INPUT",
+                        "10",
+                        "PAR_T1input",
+                        "0",
+                        ""
+                    ],
+                    [
+                        "CALCULATE",
+                        "0001:TXUNIT",
+                        "10",
+                        "PAR_TXUNIT",
+                        "0",
+                        ""
+                    ],
+                    [
+                        "CALCULATE",
+                        "0001:MODE",
+                        "10",
+                        "PAR_Targeted",
+                        "0",
+                        ""
+                    ],
+                    [
+                        "CALCULATE",
+                        "0001:UPLIMIT",
+                        "10",
+                        "PAR_Uplimit",
+                        "0",
+                        "%"
+                    ]
+                ],
+                "Name": "PM01"
+            }
+        },
+        "PAR_ClientActiveNotify": 0,
+        "PAR_Lolimit": -10,
+        "PAR_MeasTime": 120,
+        "PAR_RefConstant": 0,
+        "PAR_RefInput": "P",
+        "PAR_StartStop": 0,
+        "PAR_T0Input": 0,
+        "PAR_T1input": 0,
+        "PAR_TXUNIT": "kW",
         "PAR_Targeted": 1,
         "PAR_Uplimit": 10
     },
