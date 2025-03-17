@@ -16,7 +16,7 @@ void test_modman_regression_all_sessions::initTestCase()
 
     m_devIfaceXmlsPath = QStringLiteral(HTML_DOCS_PATH_TEST) + "scpi-xmls/";
     DevicesExportGenerator devicesExportGenerator(m_devIfaceXmlsPath);
-    devicesExportGenerator.exportAll(true, MockLxdmSessionChangeParamGenerator::generateTestSessionChanger(false));
+    devicesExportGenerator.exportAll(MockLxdmSessionChangeParamGenerator::generateTestSessionChanger(false));
     m_veinDumps = devicesExportGenerator.getVeinDumps();
 }
 

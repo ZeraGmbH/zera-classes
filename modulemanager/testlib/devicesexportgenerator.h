@@ -11,7 +11,7 @@ class DevicesExportGenerator
 {
 public:
     DevicesExportGenerator(QString xmlDirPath);
-    void exportAll(bool useDevModmanConfig, const LxdmSessionChangeParam &lxdmParam);
+    void exportAll(const LxdmSessionChangeParam &lxdmParam);
     VeinDumps getVeinDumps();
 private:
     QString m_xmlDirPath;

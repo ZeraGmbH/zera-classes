@@ -39,7 +39,7 @@ void test_scpi_cmds_in_session::initialTestClient()
 
 void test_scpi_cmds_in_session::minScpiDevIface()
 {
-    ModulemanagerConfig::setDemoDevice("mt310s2", false);
+    ModulemanagerConfig::setDemoDevice("mt310s2");
     ModuleManagerTestRunner testRunner(":/session-scpi-only.json");
 
     ScpiModuleClientBlocked client;

@@ -20,7 +20,7 @@ int main(int argc, char *argv[])
 
     DevicesExportGenerator devicesExportGenerator(devIfaceXmlsPath);
 
-    devicesExportGenerator.exportAll(false, MockLxdmSessionChangeParamGenerator::generateDemoSessionChanger());
+    devicesExportGenerator.exportAll(MockLxdmSessionChangeParamGenerator::generateDemoSessionChanger());
     ScpiDocsHtmlGenerator::createScpiDocHtmls(ModulemanagerConfig::getConfigFileNameFull(),
                                               zenuxRelease,
                                               htmlOutPath,

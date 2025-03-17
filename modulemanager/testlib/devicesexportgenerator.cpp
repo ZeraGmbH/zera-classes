@@ -8,11 +8,11 @@ DevicesExportGenerator::DevicesExportGenerator(QString xmlDirPath) :
 {
 }
 
-void DevicesExportGenerator::exportAll(bool useDevModmanConfig, const LxdmSessionChangeParam &lxdmParam)
+void DevicesExportGenerator::exportAll(const LxdmSessionChangeParam &lxdmParam)
 {
     QDir().mkdir(m_xmlDirPath);
 
-    SessionExportGenerator sessionExportGenerator(useDevModmanConfig, lxdmParam);
+    SessionExportGenerator sessionExportGenerator(lxdmParam);
     QStringList devices = {"mt310s2", "com5003"};
     for(const QString &device: devices) {
         sessionExportGenerator.setDevice(device);

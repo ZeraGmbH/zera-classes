@@ -105,7 +105,7 @@ void test_power1_module_regression::dumpDspOnMeasModeChange()
 
 void test_power1_module_regression::scpiDumpMtPower1Module1()
 {
-    ModulemanagerConfig::setDemoDevice("mt310s2", false);
+    ModulemanagerConfig::setDemoDevice("mt310s2");
     ModuleManagerTestRunner testRunner(":/sessions/session-power1module1-scpi.json");
 
     ScpiModuleClientBlocked client;
@@ -124,7 +124,7 @@ void test_power1_module_regression::scpiDumpMtPower1Module1()
 
 void test_power1_module_regression::scpiDumpMtPower1Module4()
 {
-    ModulemanagerConfig::setDemoDevice("mt310s2", false);
+    ModulemanagerConfig::setDemoDevice("mt310s2");
     ModuleManagerTestRunner testRunner(":/sessions/session-power1module4-scpi.json");
 
     ScpiModuleClientBlocked client;
