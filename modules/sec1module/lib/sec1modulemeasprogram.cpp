@@ -539,7 +539,7 @@ void cSec1ModuleMeasProgram::updateProgress(quint32 dUTPulseCounterActual)
             m_fProgress = 0.0;
         }
         deduceMeasStartTime(dUTPulseCounterActual);
-        m_pDutPulsesAct->setValue(dUTPulseCounterActual);
+        m_pDutPulsesAct->setValue(m_nDUTPulseCounterStart + 1 - dUTPulseCounterActual);
         m_pProgressAct->setValue(QVariant(m_fProgress));
     }
 }
