@@ -3391,6 +3391,7 @@
         "SIG_Measuring": 1
     },
     "1130": {
+        "ACT_DutPulses": 0,
         "ACT_EndTime": null,
         "ACT_Energy": 0,
         "ACT_EnergyFinal": 0,
@@ -3407,6 +3408,9 @@
         "EntityName": "SEC1Module1",
         "INF_ModuleInterface": {
             "ComponentInfo": {
+                "ACT_DutPulses": {
+                    "Description": "Pulse count of the DUT"
+                },
                 "ACT_EndTime": {
                     "Description": "Last measurement (sequence): End time (dd-MM-yyyy HH:mm:ss)"
                 },
@@ -3681,6 +3685,14 @@
             },
             "SCPIInfo": {
                 "Cmd": [
+                    [
+                        "CALCULATE",
+                        "0001:PULSES",
+                        "2",
+                        "ACT_DutPulses",
+                        "0",
+                        ""
+                    ],
                     [
                         "CALCULATE",
                         "0001:ENDTIME",
@@ -3981,6 +3993,7 @@
         "PAR_Uplimit": 10
     },
     "1131": {
+        "ACT_DutPulses": 0,
         "ACT_EndTime": null,
         "ACT_Energy": 0,
         "ACT_EnergyFinal": 0,
@@ -3997,6 +4010,9 @@
         "EntityName": "SEC1Module2",
         "INF_ModuleInterface": {
             "ComponentInfo": {
+                "ACT_DutPulses": {
+                    "Description": "Pulse count of the DUT"
+                },
                 "ACT_EndTime": {
                     "Description": "Last measurement (sequence): End time (dd-MM-yyyy HH:mm:ss)"
                 },
@@ -4273,6 +4289,14 @@
             },
             "SCPIInfo": {
                 "Cmd": [
+                    [
+                        "CALCULATE",
+                        "0002:PULSES",
+                        "2",
+                        "ACT_DutPulses",
+                        "0",
+                        ""
+                    ],
                     [
                         "CALCULATE",
                         "0002:ENDTIME",
