@@ -385,6 +385,13 @@ void cSec1ModuleMeasProgram::generateVeinInterface()
     m_pModule->m_veinModuleParameterMap[key] = m_pProgressAct; // and for the modules interface
     m_pProgressAct->setSCPIInfo(new cSCPIInfo("CALCULATE", QString("%1:PROGRESS").arg(modNr), "2", m_pProgressAct->getName(), "0", ""));
 
+    m_pDutPulsesAct = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
+                                            key = QString("ACT_DutPulses"),
+                                            QString("Pulse count of the DUT"),
+                                            QVariant((quint32)0));
+    m_pModule->m_veinModuleParameterMap[key] = m_pDutPulsesAct;
+    m_pDutPulsesAct->setSCPIInfo(new cSCPIInfo("CALCULATE", QString("%1:PULSES").arg(modNr), "2", m_pDutPulsesAct->getName(), "0", ""));
+
     m_pEnergyAct = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
                                             key = QString("ACT_Energy"),
                                             QString("Energy since last start"),
@@ -532,6 +539,7 @@ void cSec1ModuleMeasProgram::updateProgress(quint32 dUTPulseCounterActual)
             m_fProgress = 0.0;
         }
         deduceMeasStartTime(dUTPulseCounterActual);
+        m_pDutPulsesAct->setValue(dUTPulseCounterActual);
         m_pProgressAct->setValue(QVariant(m_fProgress));
     }
 }

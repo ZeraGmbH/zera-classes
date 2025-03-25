@@ -248,6 +248,7 @@ private:
     VfModuleParameter* m_pDutTypeMeasurePoint;
     VfModuleParameter* m_pDutConstantIScaleNum;
     VfModuleParameter* m_pDutConstantUnitPar;
+    VfModuleParameter* m_pDutPulsesAct;
     VfModuleParameter* m_pMRatePar;
     VfModuleParameter* m_pTargetPar;
     VfModuleParameter* m_pEnergyPar;
