@@ -347,18 +347,11 @@ void cOsciModuleMeasProgram::setActualValuesNames()
         const QString &channelMNamesEntry = getConfData()->m_valueChannelList.at(i);
         ServiceChannelNameHelper::TChannelAliasUnit aliasUnit =
             ServiceChannelNameHelper::getChannelAndUnit(channelMNamesEntry, observer);
-        m_veinActValueList.at(i)->setChannelName(aliasUnit.m_channelAlias);
-        m_veinActValueList.at(i)->setUnit(aliasUnit.m_channelUnit);
-    }
-}
-
-void cOsciModuleMeasProgram::setSCPIMeasInfo()
-{
-    cSCPIInfo* pSCPIInfo;
-
-    for (int i = 0; i < getConfData()->m_valueChannelList.count(); i++)
-    {
-        pSCPIInfo = new cSCPIInfo("MEASURE", m_veinActValueList.at(i)->getChannelName(), "8", m_veinActValueList.at(i)->getName(), "0", m_veinActValueList.at(i)->getUnit());
+        const QString &channelName = aliasUnit.m_channelAlias;
+        const QString &channelUnit = aliasUnit.m_channelUnit;
+        m_veinActValueList.at(i)->setChannelName(channelName);
+        m_veinActValueList.at(i)->setUnit(channelUnit);
+        cSCPIInfo* pSCPIInfo = new cSCPIInfo("MEASURE", channelName, "8", m_veinActValueList.at(i)->getName(), "0", channelUnit);
         m_veinActValueList.at(i)->setSCPIInfo(pSCPIInfo);
     }
 }
@@ -468,7 +461,6 @@ void cOsciModuleMeasProgram::activateDSPdone()
     m_bActive = true;
 
     setActualValuesNames();
-    setSCPIMeasInfo();
 
     m_pMeasureSignal->setValue(QVariant(1));
     connect(m_pRefChannelParameter, &VfModuleParameter::sigValueChanged, this, &cOsciModuleMeasProgram::newRefChannel);

@@ -85,7 +85,6 @@ private:
     QFinalState m_dataAcquisitionDoneState;
 
     void setActualValuesNames();
-    void setSCPIMeasInfo();
 
 private slots:
     void setInterfaceActualValues(QVector<float> *actualValues);
