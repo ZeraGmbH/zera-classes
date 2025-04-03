@@ -215,7 +215,6 @@ void test_cro_range::checkRejection()
     range.startFetch();
     TimeMachineObject::feedEventLoop();
 
-    // Value taken from Mt310s2SenseInterface::setChannelAndRanges
     QCOMPARE(range.m_rejection, 4415057.0);
 }
 
@@ -226,7 +225,6 @@ void test_cro_range::checkOvRejection()
     range.startFetch();
     TimeMachineObject::feedEventLoop();
 
-    // Value taken from Mt310s2SenseInterface::setChannelAndRanges
     QCOMPARE(range.m_ovrejection, 5518821.0);
 }
 

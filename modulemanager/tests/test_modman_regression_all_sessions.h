@@ -14,6 +14,7 @@ private slots:
     void allSessionsVeinDumps();
     void uniqueEntityNameEntityIdPairsCom5003();
     void uniqueEntityNameEntityIdPairsMt310s2();
+    void uniqueEntityNameEntityIdPairsMt581s2();
     void testGenerateScpiDocs();
 private:
     bool checkUniqueEntityIdNames(const QString& device);

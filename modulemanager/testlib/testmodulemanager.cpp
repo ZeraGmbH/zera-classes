@@ -49,10 +49,13 @@ void TestModuleManager::startAllTestServices(QString deviceName, bool initialAdj
     if (m_mockAllServices)
         m_mockAllServices = nullptr;
 
-    if(deviceName == "mt310s2")
-        m_mockAllServices = std::make_unique<TestAllServicesMt310s2>(std::make_shared<TestFactoryI2cCtrl>(initialAdjPermission));
+    if(deviceName == "mt310s2" || deviceName == "mt581s2")
+        m_mockAllServices = std::make_unique<TestAllServicesMt310s2>(
+            deviceName,
+            std::make_shared<TestFactoryI2cCtrl>(initialAdjPermission));
     else if(deviceName == "com5003")
-        m_mockAllServices = std::make_unique<TestAllServicesCom5003>(std::make_shared<TestFactoryI2cCtrl>(initialAdjPermission));
+        m_mockAllServices = std::make_unique<TestAllServicesCom5003>(
+            std::make_shared<TestFactoryI2cCtrl>(initialAdjPermission));
 }
 
 void TestModuleManager::destroyModulesAndWaitUntilAllShutdown()

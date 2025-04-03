@@ -45,6 +45,11 @@ void test_modman_regression_all_sessions::uniqueEntityNameEntityIdPairsMt310s2()
     QVERIFY(checkUniqueEntityIdNames("mt310s2"));
 }
 
+void test_modman_regression_all_sessions::uniqueEntityNameEntityIdPairsMt581s2()
+{
+    QVERIFY(checkUniqueEntityIdNames("mt581s2"));
+}
+
 void test_modman_regression_all_sessions::testGenerateScpiDocs()
 {
     QString htmlOutPath = QStringLiteral(HTML_DOCS_PATH_TEST) + "html-docs/";
