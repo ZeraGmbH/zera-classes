@@ -1,16 +1,3 @@
-add_library(testhelpers STATIC
-    )
-
-target_include_directories(testhelpers
-    PUBLIC
-    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
-    )
-
-target_link_libraries(testhelpers
-    PUBLIC
-    Qt5::Test
-    )
-
 list(JOIN LOGGER_CONFIG_FILES "," C_LOGGER_CONFIG_FILES)
 add_definitions(-DLOGGER_CONFIG_FILES="${C_LOGGER_CONFIG_FILES}")
 
@@ -24,7 +11,6 @@ function(SETUP_QTESTS_MODULEMANAGER)
     foreach(_testname ${ARGN})
         target_link_libraries(${_testname}
             PUBLIC
-            testhelpers
             zera-modulemanager-lib
             zera-modulemanager-testlib
             scpi-doc-lib
