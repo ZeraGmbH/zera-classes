@@ -20,12 +20,12 @@ function(SETUP_QTESTS_MODULEMANAGER)
 endfunction()
 
 SETUP_QTESTS_MODULEMANAGER(
+    test_change_session
     test_jsonconfigfiles
     test_modman_config
-    test_plugin_load
     test_modman_regression_all_sessions
     test_modman_with_vf_logger
-    test_change_session
+    test_plugin_load
     test_sessionnamesmappingjson
     )
 
