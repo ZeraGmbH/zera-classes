@@ -27,3 +27,14 @@ target_link_libraries(scpimodule-testlib
 
 set_target_properties(scpimodule-testlib PROPERTIES VERSION ${PROJECT_VERSION})
 set_target_properties(scpimodule-testlib PROPERTIES SOVERSION ${PROJECT_VERSION_MAJOR})
+
+export(TARGETS scpimodule-testlib NAMESPACE Zera:: FILE ZeraClassesTargets.cmake)
+install(TARGETS scpimodule-testlib
+    EXPORT ZeraClassesExport
+    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+    )
+
+install(
+    FILES ${HEADER}
+    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/scpimodule-testlib
+    )
