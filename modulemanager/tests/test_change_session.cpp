@@ -2,7 +2,9 @@
 #include "testfactoryserviceinterfaces.h"
 #include "modulemanagerconfig.h"
 #include "scpimoduleclientblocked.h"
+#include "testmodulemanager.h"
 #include "vf_client_component_setter.h"
+#include <modulemanagersetupfacade.h>
 #include <testlicensesystem.h>
 #include <zera-jsonfileloader.h>
 #include <timemachineobject.h>

@@ -38,8 +38,3 @@ target_sources(test_modman_with_vf_logger
   PRIVATE
     test-data/test-data.qrc
 )
-
-target_sources(test_change_session
-  PRIVATE
-)
-
