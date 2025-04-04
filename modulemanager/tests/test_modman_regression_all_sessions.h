@@ -12,6 +12,7 @@ private slots:
 
     void allSessionsVeinDumps_data();
     void allSessionsVeinDumps();
+    void allSessionsScpiIo();
     void uniqueEntityNameEntityIdPairsCom5003();
     void uniqueEntityNameEntityIdPairsMt310s2();
     void uniqueEntityNameEntityIdPairsMt581s2();
@@ -20,6 +21,7 @@ private:
     bool checkUniqueEntityIdNames(const QString& device);
     AbstractFactoryServiceInterfacesPtr m_serviceInterfaceFactory;
     VeinDumps m_veinDumps;
+    ScpiIoDumps m_scpiIoDumps;
     QString m_devIfaceXmlsPath;
 };
 

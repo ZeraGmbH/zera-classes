@@ -11,13 +11,14 @@ public:
     SessionExportGenerator(const LxdmSessionChangeParam &lxdmParam);
     ~SessionExportGenerator();
 
-    void setDevice(QString device);
+    void setDevice(QString device, AbstractFactoryServiceInterfacesPtr serviceInterFaceFactory);
     QStringList getAvailableSessions();
     void changeSession(QString session);
     void generateDevIfaceXml(QString xmlDir);
+    QString sendScpi(const QByteArray &scpi);
     QByteArray getVeinDump();
 private:
-    void createModman(QString device);
+    void createModman(QString device, AbstractFactoryServiceInterfacesPtr serviceInterFaceFactory);
     void destroyModules();
     void createXml(QString completeFileName, QString contents);
 

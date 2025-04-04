@@ -1,5 +1,5 @@
 #include "sessionexportgenerator.h"
-#include "factoryserviceinterfaces.h"
+#include "scpimoduleclientblocked.h"
 #include <vs_dumpjson.h>
 #include <QFile>
 
@@ -16,7 +16,7 @@ SessionExportGenerator::~SessionExportGenerator()
     destroyModules();
 }
 
-void SessionExportGenerator::createModman(QString device)
+void SessionExportGenerator::createModman(QString device, AbstractFactoryServiceInterfacesPtr serviceInterFaceFactory)
 {
     qInfo("Create modman for device: %s\n", qPrintable(device));
     ModulemanagerConfig::setDemoDevice(device);
@@ -24,7 +24,7 @@ void SessionExportGenerator::createModman(QString device)
     m_modmanSetupFacade = std::make_unique<ModuleManagerSetupFacade>(m_licenseSystem.get(),
                                                                      m_modmanConfig->isDevMode(),
                                                                      m_lxdmParam);
-    m_modman = std::make_unique<TestModuleManager>(m_modmanSetupFacade.get(), std::make_shared<FactoryServiceInterfaces>());
+    m_modman = std::make_unique<TestModuleManager>(m_modmanSetupFacade.get(), serviceInterFaceFactory);
 
     m_modman->loadAllAvailableModulePlugins();
     m_modman->setupConnections();
@@ -37,11 +37,11 @@ void SessionExportGenerator::destroyModules()
         m_modman->destroyModulesAndWaitUntilAllShutdown();
 }
 
-void SessionExportGenerator::setDevice(QString device)
+void SessionExportGenerator::setDevice(QString device, AbstractFactoryServiceInterfacesPtr serviceInterFaceFactory)
 {
     if(m_device != device) {
         destroyModules();
-        createModman(device);
+        createModman(device, serviceInterFaceFactory);
         m_device = device;
     }
 }
@@ -64,6 +64,12 @@ void SessionExportGenerator::generateDevIfaceXml(QString xmlDir)
     QString xmlFileName(xmlDir + currentSession);
     xmlFileName.replace("json", "xml");
     createXml(xmlFileName, scpiIface);
+}
+
+QString SessionExportGenerator::sendScpi(const QByteArray &scpi)
+{
+    ScpiModuleClientBlocked scpiClient;
+    return scpiClient.sendReceive(scpi);
 }
 
 QByteArray SessionExportGenerator::getVeinDump()

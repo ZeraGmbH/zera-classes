@@ -5,6 +5,7 @@
 #include "servicechannelnamehelper.h"
 #include <errormessages.h>
 #include <movingwindowfilter.h>
+#include <scpi.h>
 #include <timerfactoryqt.h>
 #include <reply.h>
 #include <proxy.h>
@@ -417,7 +418,7 @@ void cDftModuleMeasProgram::setSCPIMeasInfo()
         m_veinPolarValue.at(i)->setSCPIInfo(pSCPIInfo);
     }
 
-    pSCPIInfo = new cSCPIInfo("MEASURE", "RFIELD", "8", m_pRFieldActualValue->getName(), "0", "");
+    pSCPIInfo = new cSCPIInfo("MEASURE", "RFIELD", SCPI::isCmdwP, m_pRFieldActualValue->getName(), SCPI::isComponent, "");
     m_pRFieldActualValue->setSCPIInfo(pSCPIInfo);
 }
 

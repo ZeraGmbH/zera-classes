@@ -1,8 +1,10 @@
 #include "test_modman_regression_all_sessions.h"
+#include "demofactoryserviceinterfaces.h"
 #include "testmodulemanager.h"
 #include "scpidocshtmlgenerator.h"
 #include "modulemanagerconfig.h"
 #include <testloghelpers.h>
+#include <timerfactoryqtfortest.h>
 #include <mocklxdmsessionchangeparamgenerator.h>
 #include <QTest>
 
@@ -12,12 +14,16 @@ void test_modman_regression_all_sessions::initTestCase()
 {
     ModuleManagerSetupFacade::registerMetaTypeStreamOperators();
     TestModuleManager::enableTests();
+    TimerFactoryQtForTest::enableTest();
     qputenv("QT_FATAL_CRITICALS", "1");
 
     m_devIfaceXmlsPath = QStringLiteral(HTML_DOCS_PATH_TEST) + "scpi-xmls/";
     DevicesExportGenerator devicesExportGenerator(m_devIfaceXmlsPath);
-    devicesExportGenerator.exportAll(MockLxdmSessionChangeParamGenerator::generateTestSessionChanger(false));
+    devicesExportGenerator.exportAll(MockLxdmSessionChangeParamGenerator::generateTestSessionChanger(false),
+                                     std::make_shared<DemoFactoryServiceInterfaces>(), "MEASURE?");
     m_veinDumps = devicesExportGenerator.getVeinDumps();
+    m_scpiIoDumps = devicesExportGenerator.getScpiIoDumps();
+    qInfo("foo");
 }
 
 void test_modman_regression_all_sessions::allSessionsVeinDumps_data()
@@ -33,6 +39,14 @@ void test_modman_regression_all_sessions::allSessionsVeinDumps()
     QByteArray jsonExpected = TestLogHelpers::loadFile(QString(":/veinDumps/%1").arg(sessionFileName));
     QByteArray jsonDumped = m_veinDumps.value(sessionFileName);
     QVERIFY(TestLogHelpers::compareAndLogOnDiff(jsonExpected, jsonDumped));
+}
+
+void test_modman_regression_all_sessions::allSessionsScpiIo()
+{
+    /*QFETCH(QString, sessionFileName);
+    QByteArray jsonExpected = TestLogHelpers::loadFile(QString(":/veinDumps/%1").arg(sessionFileName));
+    QByteArray jsonDumped = m_veinDumps.value(sessionFileName);
+    QVERIFY(TestLogHelpers::compareAndLogOnDiff(jsonExpected, jsonDumped));*/
 }
 
 void test_modman_regression_all_sessions::uniqueEntityNameEntityIdPairsCom5003()

@@ -22,6 +22,7 @@ add_definitions(-DOE_INSTALL_ROOT="${OE_INSTALL_ROOT}")
 target_link_libraries(zera-modulemanager-testlib
     PUBLIC
     Qt5::Core
+    Qt5::Test
     Zera::zera-timers-testlib
     Zera::zenuxservicecommon-testlib
     zera-modulemanager-lib
