@@ -13,13 +13,16 @@ class test_modman_regression_all_sessions_scpi : public QObject
     Q_OBJECT
 private slots:
     void initTestCase();
-    void initTestCase_data();
     void init();
     void cleanup();
 
-    void testScpiMeasure();
+    void testScpi_data();
+    void testScpi();
+
 private:
-    QByteArray deduceDevice(const QString &sessionFileName);
+    static QString deduceDevice(const QString &sessionFileName);
+    static QString formatForDump(const QString &scpiResponse);
+    static QString genFilePath(QString sessionFile, const QString &scpiCmd);
 
     AbstractFactoryServiceInterfacesPtr m_serviceInterfaceFactory;
     std::unique_ptr<TestLicenseSystem> m_licenseSystem;
@@ -27,13 +30,8 @@ private:
     std::unique_ptr<TestModuleManager> m_modMan;
     SCPIMODULE::ScpiModuleForTest *m_scpiModule = nullptr;
     SCPIMODULE::ScpiTestClient *m_scpiclient = nullptr;
-    QString m_scpiResponse;
-    struct TestRow {
-        QByteArray testName;
-        QString deviceName;
-        QString sessionFile;
-    };
-    QList<TestRow> m_testRowData;
+    QStringList m_scpiResponses;
+    QString m_lastSessionFile;
 };
 
 #endif // TEST_MODMAN_REGRESSION_ALL_SESSIONS_SCPI_H
