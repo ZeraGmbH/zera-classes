@@ -8,7 +8,9 @@ class DemoDspInterfaceRange : public MockDspInterface
 {
     Q_OBJECT
 public:
-    DemoDspInterfaceRange(QStringList valueChannelList, bool isReference);
+    DemoDspInterfaceRange(QStringList valueChannelList,
+                          bool isReference,
+                          std::function<double()> valueGenerator);
 private slots:
     void onTimer();
 private:
@@ -18,6 +20,7 @@ private:
     QStringList m_valueChannelList;
     bool m_isReference;
     TimerTemplateQtPtr m_periodicTimer;
+    std::function<double()> m_valueGenerator;
 };
 
 #endif // DEMODSPINTERFACERANGE_H

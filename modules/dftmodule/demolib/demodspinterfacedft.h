@@ -8,7 +8,13 @@ class DemoDspInterfaceDft : public MockDspInterface
 {
     Q_OBJECT
 public:
-    DemoDspInterfaceDft(QStringList valueChannelList, int dftOrder);
+    enum ValueTypes {
+        RotatingValues,
+        FixedValues
+    };
+    DemoDspInterfaceDft(QStringList valueChannelList,
+                        int dftOrder,
+                        ValueTypes valueType);
 private slots:
     void onTimer();
 private:
@@ -16,6 +22,7 @@ private:
     int m_dftOrder;
     TimerTemplateQtPtr m_periodicTimer;
     int m_currentAngle = 0;
+    ValueTypes m_valueType;
 };
 
 #endif // DEMODSPINTERFACEDFT_H
