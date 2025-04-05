@@ -107,27 +107,30 @@ int cSCPIMeasure::entityID()
     return m_pSCPICmdInfo->entityId;
 }
 
+QString cSCPIMeasure::convertVariantToString(const QVariant &value)
+{
+    if (value.canConvert<int>() || value.canConvert<double>())
+        return QString("%1").arg(value.toDouble(), 0, 'g', 8);
+    return value.toString();
+}
 
 QString cSCPIMeasure::setAnswer(QVariant qvar)
 {
     QString s;
-
-    if (qvar.canConvert<QVariantList>())
-    {
+    if (qvar.canConvert<QVariantList>()) {
         QSequentialIterable iterable = qvar.value<QSequentialIterable>();
-
-        s = QString("%1:%2:[%3]:").arg(m_pSCPICmdInfo->scpiModuleName, m_pSCPICmdInfo->scpiCommand, m_pSCPICmdInfo->unit);
-        foreach (const QVariant &v, iterable)
-            s += (v.toString()+",");
+        s = QString("%1:%2:[%3]:")
+                .arg(m_pSCPICmdInfo->scpiModuleName, m_pSCPICmdInfo->scpiCommand, m_pSCPICmdInfo->unit);
+        for (const QVariant &v : iterable)
+            s += (convertVariantToString(v) + ",");
         s = s.remove(s.count()-1, 1);
-
     }
     else
-        s = QString("%1:%2:[%3]:%4").arg(m_pSCPICmdInfo->scpiModuleName, m_pSCPICmdInfo->scpiCommand, m_pSCPICmdInfo->unit).arg(qvar.toString());
-
-    return (s);
+        s = QString("%1:%2:[%3]:%4")
+                .arg(m_pSCPICmdInfo->scpiModuleName, m_pSCPICmdInfo->scpiCommand, m_pSCPICmdInfo->unit)
+                .arg(convertVariantToString(qvar));
+    return s;
 }
-
 
 void cSCPIMeasure::measure()
 {

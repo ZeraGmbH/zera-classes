@@ -49,6 +49,7 @@ signals:
     void sigFetchDone(QString);
 
 private:
+    static QString convertVariantToString(const QVariant &value);
     QMultiHash<QString, cSCPIMeasure*> *m_scpiMeasureHash;
     cSCPICmdInfo *m_pSCPICmdInfo;
 
