@@ -35,6 +35,11 @@ target_sources(test_modman_regression_all_sessions
     test-data/test-data.qrc
 )
 
+target_sources(test_modman_regression_all_sessions_scpi
+  PRIVATE
+    test-data/test-data.qrc
+)
+
 target_sources(test_modman_with_vf_logger
   PRIVATE
     test-data/test-data.qrc
