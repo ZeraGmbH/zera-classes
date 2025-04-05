@@ -24,6 +24,7 @@ SETUP_QTESTS_MODULEMANAGER(
     test_jsonconfigfiles
     test_modman_config
     test_modman_regression_all_sessions
+    test_modman_regression_all_sessions_scpi
     test_modman_with_vf_logger
     test_plugin_load
     test_sessionnamesmappingjson
