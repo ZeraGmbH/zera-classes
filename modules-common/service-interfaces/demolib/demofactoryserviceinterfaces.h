@@ -2,10 +2,17 @@
 #define DEMOFACTORYSERVICEINTERFACES_H
 
 #include "abstractfactoryserviceinterfaces.h"
+#include <functional>
 
 class DemoFactoryServiceInterfaces : public AbstractFactoryServiceInterfaces
 {
 public:
+    enum ValueTypes {
+        RandomValues,
+        FixedValues
+    };
+    DemoFactoryServiceInterfaces(ValueTypes valueType = RandomValues);
+
     DspInterfacePtr createDspInterfaceRangeProg(int entityId, QStringList valueChannelList, bool isReference) override;
     DspInterfacePtr createDspInterfaceRangeObser(int entityId, QStringList valueChannelList, bool isReference) override;
     DspInterfacePtr createDspInterfaceRangeAdj(int entityId, QStringList valueChannelList, bool isReference) override;
@@ -20,6 +27,9 @@ public:
     DspInterfacePtr createDspInterfaceMode(int entityId) override;
     DspInterfacePtr createDspInterfaceRefProg(int entityId, QStringList valueChannelList) override;
     DspInterfacePtr createDspInterfaceRefAdj(int entityId) override;
+private:
+    ValueTypes m_valueType;
+    std::function<double()> m_valueGenerator;
 };
 
 #endif // DEMOFACTORYSERVICEINTERFACES_H

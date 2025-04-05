@@ -2,10 +2,13 @@
 #include "demovaluesdspdft.h"
 #include <timerfactoryqt.h>
 
-DemoDspInterfaceDft::DemoDspInterfaceDft(QStringList valueChannelList, int dftOrder) :
+DemoDspInterfaceDft::DemoDspInterfaceDft(QStringList valueChannelList,
+                                         int dftOrder,
+                                         ValueTypes valueType) :
     m_valueChannelList(valueChannelList),
     m_dftOrder(dftOrder),
-    m_periodicTimer(TimerFactoryQt::createPeriodic(500))
+    m_periodicTimer(TimerFactoryQt::createPeriodic(500)),
+    m_valueType(valueType)
 {
     connect(m_periodicTimer.get(), &TimerTemplateQt::sigExpired,
             this, &DemoDspInterfaceDft::onTimer);
@@ -19,9 +22,11 @@ void DemoDspInterfaceDft::onTimer()
     DemoValuesDspDft dftValues(m_valueChannelList, m_dftOrder);
     QVector<float> demoValues;
     if(m_dftOrder > 0) {
-        m_currentAngle += 7.5;
-        if(m_currentAngle > 359)
-            m_currentAngle = 0;
+        if (m_valueType == RotatingValues) {
+            m_currentAngle += 7.5;
+            if(m_currentAngle > 359)
+                m_currentAngle = 0;
+        }
         dftValues.setAllValuesSymmetric(230, 1, m_currentAngle, false);
         demoValues = dftValues.getDspValues();
     }

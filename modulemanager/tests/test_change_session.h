@@ -1,7 +1,7 @@
 #ifndef TEST_CHANGE_SESSION_H
 #define TEST_CHANGE_SESSION_H
 
-#include "testmodulemanager.h"
+#include "abstractfactoryserviceinterfaces.h"
 #include <QObject>
 
 class test_change_session : public QObject

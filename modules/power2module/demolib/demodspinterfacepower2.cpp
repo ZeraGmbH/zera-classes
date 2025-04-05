@@ -1,9 +1,11 @@
 #include "demodspinterfacepower2.h"
 #include <timerfactoryqt.h>
 
-DemoDspInterfacePower2::DemoDspInterfacePower2(MeasModeSelector *measMode) :
+DemoDspInterfacePower2::DemoDspInterfacePower2(MeasModeSelector *measMode,
+                                               std::function<double()> valueGenerator) :
     m_measMode(measMode),
-    m_periodicTimer(TimerFactoryQt::createPeriodic(500))
+    m_periodicTimer(TimerFactoryQt::createPeriodic(500)),
+    m_valueGenerator(valueGenerator)
 {
     connect(m_periodicTimer.get(), &TimerTemplateQt::sigExpired,
             this, &DemoDspInterfacePower2::onTimer);
@@ -22,7 +24,7 @@ void DemoDspInterfacePower2::onTimer()
     for(int powerType=0; powerType < powerTypes; powerType++) {
         double phaseVal[MeasPhaseCount];
         for(int phase=0; phase<MeasPhaseCount; phase++) {
-            double randPlusMinusOne = 2.0 * (double)rand() / RAND_MAX - 1.0;
+            double randPlusMinusOne = 2.0 * m_valueGenerator() - 1.0;
             phaseVal[phase] = current*voltage + randPlusMinusOne;
             valuesDemo.append(phaseVal[phase]);
         }
