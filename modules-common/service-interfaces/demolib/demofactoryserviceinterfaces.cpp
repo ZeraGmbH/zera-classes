@@ -13,14 +13,33 @@ static double generatorFixed() {
     return 1.0;
 }
 
+static double generatorReproducibleChange() {
+    constexpr double initValue = 0.9;
+    static double value = initValue;
+    value += 0.001;
+    if (value > 1.0)
+        value = initValue;
+    return value;
+}
+
 static double generatorRandom() {
     return (double)rand() / double(RAND_MAX);
 }
 
 DemoFactoryServiceInterfaces::DemoFactoryServiceInterfaces(ValueTypes valueType) :
-    m_valueType(valueType),
-    m_valueGenerator(valueType == RandomValues ? generatorRandom : generatorFixed)
+    m_valueType(valueType)
 {
+    switch(valueType) {
+    case RandomValues:
+        m_valueGenerator = generatorRandom;
+        break;
+    case FixedValues:
+        m_valueGenerator = generatorFixed;
+        break;
+    case ReproducableChangeValues:
+        m_valueGenerator = generatorReproducibleChange;
+        break;
+    }
 }
 
 DspInterfacePtr DemoFactoryServiceInterfaces::createDspInterfaceRangeProg(int entityId, QStringList valueChannelList, bool isReference)

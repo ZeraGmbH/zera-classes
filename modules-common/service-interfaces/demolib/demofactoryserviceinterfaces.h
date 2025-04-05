@@ -9,9 +9,10 @@ class DemoFactoryServiceInterfaces : public AbstractFactoryServiceInterfaces
 public:
     enum ValueTypes {
         RandomValues,
-        FixedValues
+        FixedValues,
+        ReproducableChangeValues
     };
-    DemoFactoryServiceInterfaces(ValueTypes valueType = RandomValues);
+    explicit DemoFactoryServiceInterfaces(ValueTypes valueType = RandomValues);
 
     DspInterfacePtr createDspInterfaceRangeProg(int entityId, QStringList valueChannelList, bool isReference) override;
     DspInterfacePtr createDspInterfaceRangeObser(int entityId, QStringList valueChannelList, bool isReference) override;
@@ -28,7 +29,7 @@ public:
     DspInterfacePtr createDspInterfaceRefProg(int entityId, QStringList valueChannelList) override;
     DspInterfacePtr createDspInterfaceRefAdj(int entityId) override;
 private:
-    ValueTypes m_valueType;
+    ValueTypes m_valueType = RandomValues;
     std::function<double()> m_valueGenerator;
 };
 
