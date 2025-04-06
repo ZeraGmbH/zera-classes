@@ -5,6 +5,7 @@
 #include <regexvalidator.h>
 #include <errormessages.h>
 #include <reply.h>
+#include <scpi.h>
 
 namespace BLEMODULE
 {
@@ -49,7 +50,7 @@ void cBleModuleMeasProgram::generateVeinInterface()
                                               QString("Current temperature in degree Celsius"),
                                               QVariant(qQNaN()));
     m_pTemperatureCAct->setUnit("°C");
-    m_pTemperatureCAct->setSCPIInfo(new cSCPIInfo("STATUS", "TEMP:CELSIUS", "2", m_pTemperatureCAct->getName(), "0", m_pTemperatureCAct->getUnit()));
+    m_pTemperatureCAct->setSCPIInfo(new cSCPIInfo("STATUS", "TEMP:CELSIUS", SCPI::isQuery, m_pTemperatureCAct->getName(), SCPI::isComponent));
 
     m_pModule->m_veinModuleParameterMap[key] = m_pTemperatureCAct; // and for the modules interface
 
@@ -58,7 +59,7 @@ void cBleModuleMeasProgram::generateVeinInterface()
                                              QString("Current temperature in degree Fahrenheit"),
                                              QVariant(qQNaN()));
     m_pTemperatureFAct->setUnit("°F");
-    m_pTemperatureFAct->setSCPIInfo(new cSCPIInfo("STATUS", "TEMP:FAHRENHEIT", "2", m_pTemperatureFAct->getName(), "0", m_pTemperatureFAct->getUnit()));
+    m_pTemperatureFAct->setSCPIInfo(new cSCPIInfo("STATUS", "TEMP:FAHRENHEIT", SCPI::isQuery, m_pTemperatureFAct->getName(), SCPI::isComponent));
     m_pModule->m_veinModuleParameterMap[key] = m_pTemperatureFAct;
 
     m_pHumidityAct = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
@@ -66,7 +67,7 @@ void cBleModuleMeasProgram::generateVeinInterface()
                                           QString("Current relative humidity in percent"),
                                           QVariant(qQNaN()));
     m_pHumidityAct->setUnit("%");
-    m_pHumidityAct->setSCPIInfo(new cSCPIInfo("STATUS", "HUMID", "2", m_pHumidityAct->getName(), "0", m_pHumidityAct->getUnit()));
+    m_pHumidityAct->setSCPIInfo(new cSCPIInfo("STATUS", "HUMID", SCPI::isQuery, m_pHumidityAct->getName(), SCPI::isComponent));
     m_pModule->m_veinModuleParameterMap[key] = m_pHumidityAct;
 
     m_pAirPressureAct = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
@@ -74,7 +75,7 @@ void cBleModuleMeasProgram::generateVeinInterface()
                                              QString("Current atmospheric pressure in hPa"),
                                              QVariant(qQNaN()));
     m_pAirPressureAct->setUnit("hPa");
-    m_pAirPressureAct->setSCPIInfo(new cSCPIInfo("STATUS", "AIRPR", "2", m_pAirPressureAct->getName(), "0", m_pAirPressureAct->getUnit()));
+    m_pAirPressureAct->setSCPIInfo(new cSCPIInfo("STATUS", "AIRPR", SCPI::isQuery, m_pAirPressureAct->getName(), SCPI::isComponent));
     m_pModule->m_veinModuleParameterMap[key] = m_pAirPressureAct;
 
     m_pWarningFlagsAct = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
