@@ -64,7 +64,6 @@ bool cModuleInterface::setupInterface()
                     scpiCmdInfo->componentName = jsonCmdArr[3].toString();
                     scpiCmdInfo->veinComponentInfo = jsonComponentInfo[scpiCmdInfo->componentName].toObject();
                     scpiCmdInfo->refType = jsonCmdArr[4].toString();
-                    scpiCmdInfo->unit = jsonCmdArr[5].toString();
 
                     addSCPICommand(scpiCmdInfo); // we add our command now
                 }

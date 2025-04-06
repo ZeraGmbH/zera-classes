@@ -15,7 +15,6 @@ public:
     QString scpiModel;
     QString scpiCommand;
     QString scpiCommandType;
-    QString unit;
     int entityId;
     QString componentName;
     QString refType; // 0 means component itself otherwise the component's validation data

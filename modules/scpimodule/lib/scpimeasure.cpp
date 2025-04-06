@@ -117,17 +117,18 @@ QString cSCPIMeasure::convertVariantToString(const QVariant &value)
 QString cSCPIMeasure::setAnswer(QVariant qvar)
 {
     QString s;
+    const QString unit = m_pSCPICmdInfo->veinComponentInfo["Unit"].toString();
     if (qvar.canConvert<QVariantList>()) {
         QSequentialIterable iterable = qvar.value<QSequentialIterable>();
         s = QString("%1:%2:[%3]:")
-                .arg(m_pSCPICmdInfo->scpiModuleName, m_pSCPICmdInfo->scpiCommand, m_pSCPICmdInfo->unit);
+                .arg(m_pSCPICmdInfo->scpiModuleName, m_pSCPICmdInfo->scpiCommand, unit);
         for (const QVariant &v : iterable)
             s += (convertVariantToString(v) + ",");
         s = s.remove(s.count()-1, 1);
     }
     else
         s = QString("%1:%2:[%3]:%4")
-                .arg(m_pSCPICmdInfo->scpiModuleName, m_pSCPICmdInfo->scpiCommand, m_pSCPICmdInfo->unit)
+                .arg(m_pSCPICmdInfo->scpiModuleName, m_pSCPICmdInfo->scpiCommand, unit)
                 .arg(convertVariantToString(qvar));
     return s;
 }
