@@ -5,6 +5,7 @@
 #include <reply.h>
 #include <proxy.h>
 #include <doublevalidator.h>
+#include <scpi.h>
 #include <stringvalidator.h>
 #include <math.h>
 #include <timerfactoryqt.h>
@@ -130,7 +131,7 @@ void cFftModuleMeasProgram::generateVeinInterface()
                                                            QString("Integration time"),
                                                            QVariant(getConfData()->m_fMeasInterval.m_fValue));
     m_pIntegrationTimeParameter->setUnit("s");
-    m_pIntegrationTimeParameter->setSCPIInfo(new cSCPIInfo("CONFIGURATION","TINTEGRATION", "10", "PAR_Interval", "0", "s"));
+    m_pIntegrationTimeParameter->setSCPIInfo(new cSCPIInfo("CONFIGURATION","TINTEGRATION", SCPI::isQuery|SCPI::isCmdwP, "PAR_Interval", SCPI::isComponent));
 
     m_pModule->m_veinModuleParameterMap[key] = m_pIntegrationTimeParameter; // for modules use
 
@@ -148,7 +149,7 @@ void cFftModuleMeasProgram::generateVeinInterface()
     sValidator = new cStringValidator(getConfData()->m_valueChannelList);
     m_pRefChannelParameter->setValidator(sValidator);
 
-    m_pRefChannelParameter->setSCPIInfo(new cSCPIInfo("CONFIGURATION","REFCHANNEL", "10", "PAR_RefChannel", "0", ""));
+    m_pRefChannelParameter->setSCPIInfo(new cSCPIInfo("CONFIGURATION","REFCHANNEL", SCPI::isQuery|SCPI::isCmdwP, "PAR_RefChannel", SCPI::isComponent));
     m_pModule->m_veinModuleParameterMap[key] = m_pRefChannelParameter; // for modules use
 
     m_pMeasureSignal = new VfModuleComponent(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
@@ -378,9 +379,9 @@ void cFftModuleMeasProgram::setSCPIMeasInfo()
 
     for (int i = 0; i < getConfData()->m_valueChannelList.count(); i++)
     {
-        pSCPIInfo = new cSCPIInfo("MEASURE", m_veinActValueList.at(i)->getChannelName(), "8", m_veinActValueList.at(i)->getName(), "0", m_veinActValueList.at(i)->getUnit());
+        pSCPIInfo = new cSCPIInfo("MEASURE", m_veinActValueList.at(i)->getChannelName(), SCPI::isCmdwP, m_veinActValueList.at(i)->getName(), SCPI::isComponent);
         m_veinActValueList.at(i)->setSCPIInfo(pSCPIInfo);
-        pSCPIInfo = new cSCPIInfo("MEASURE", m_DCValueList.at(i)->getChannelName() + "_DC", "8", m_DCValueList.at(i)->getName(), "0", m_DCValueList.at(i)->getUnit());
+        pSCPIInfo = new cSCPIInfo("MEASURE", m_DCValueList.at(i)->getChannelName() + "_DC", SCPI::isCmdwP, m_DCValueList.at(i)->getName(), SCPI::isComponent);
         m_DCValueList.at(i)->setSCPIInfo(pSCPIInfo);
     }
 }
