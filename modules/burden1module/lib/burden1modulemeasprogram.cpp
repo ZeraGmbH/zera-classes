@@ -5,6 +5,7 @@
 #include <errormessages.h>
 #include <reply.h>
 #include <doublevalidator.h>
+#include <scpi.h>
 #include <stringvalidator.h>
 #include <scpiinfo.h>
 
@@ -53,7 +54,7 @@ void cBurden1ModuleMeasProgram::generateVeinInterface()
 {
     VfModuleActvalue *pActvalue;
     cSCPIInfo* pSCPIInfo;
-    QString key, s;
+    QString key;
 
     for (int i = 0; i < getConfData()->m_nBurdenSystemCount; i++)
     {
@@ -63,7 +64,7 @@ void cBurden1ModuleMeasProgram::generateVeinInterface()
         pActvalue->setChannelName(QString("BRD%1").arg(i+1));
         pActvalue->setUnit("VA");
 
-        pSCPIInfo = new cSCPIInfo("MEASURE", pActvalue->getChannelName(), "8", pActvalue->getName(), "0", pActvalue->getUnit());
+        pSCPIInfo = new cSCPIInfo("MEASURE", pActvalue->getChannelName(), SCPI::isCmdwP, pActvalue->getName(), SCPI::isComponent);
         pActvalue->setSCPIInfo(pSCPIInfo);
 
         m_veinActValueList.append(pActvalue); // we add the component for our measurement
@@ -75,7 +76,7 @@ void cBurden1ModuleMeasProgram::generateVeinInterface()
         pActvalue->setChannelName(QString("POF%1").arg(i+1));
         pActvalue->setUnit("");
 
-        pSCPIInfo = new cSCPIInfo("MEASURE", pActvalue->getChannelName(), "8", pActvalue->getName(), "0", pActvalue->getUnit());
+        pSCPIInfo = new cSCPIInfo("MEASURE", pActvalue->getChannelName(), SCPI::isCmdwP, pActvalue->getName(), SCPI::isComponent);
         pActvalue->setSCPIInfo(pSCPIInfo);
 
         m_veinActValueList.append(pActvalue); // we add the component for our measurement
@@ -87,7 +88,7 @@ void cBurden1ModuleMeasProgram::generateVeinInterface()
         pActvalue->setChannelName(QString("RAT%1").arg(i+1));
         pActvalue->setUnit("%");
 
-        pSCPIInfo = new cSCPIInfo("MEASURE", pActvalue->getChannelName(), "8", pActvalue->getName(), "0", pActvalue->getUnit());
+        pSCPIInfo = new cSCPIInfo("MEASURE", pActvalue->getChannelName(), SCPI::isCmdwP, pActvalue->getName(), SCPI::isComponent);
         pActvalue->setSCPIInfo(pSCPIInfo);
 
         m_veinActValueList.append(pActvalue); // we add the component for our measurement
@@ -98,9 +99,8 @@ void cBurden1ModuleMeasProgram::generateVeinInterface()
                                                         key = QString("PAR_NominalRange"),
                                                         QString("Nominal range"),
                                                         QVariant(getConfData()->nominalRange.m_fValue));
-    s = QString(getConfData()->m_Unit);
-    m_pNominalRangeParameter->setUnit(s);
-    m_pNominalRangeParameter->setSCPIInfo(new cSCPIInfo("CONFIGURATION","RANGE", "10", "PAR_NominalRange", "0", s));
+    m_pNominalRangeParameter->setUnit(getConfData()->m_Unit);
+    m_pNominalRangeParameter->setSCPIInfo(new cSCPIInfo("CONFIGURATION","RANGE", SCPI::isQuery|SCPI::isCmdwP, "PAR_NominalRange", SCPI::isComponent));
 
     cDoubleValidator *dValidator;
     dValidator = new cDoubleValidator(0.001, 10000.0, 0.001);
@@ -111,7 +111,7 @@ void cBurden1ModuleMeasProgram::generateVeinInterface()
                                                               key = QString("PAR_NominalRangeFactor"),
                                                               QString("Nominal range factor"),
                                                               QVariant(getConfData()->nominalRangeFactor.m_sPar));
-    m_pNominalRangeFactorParameter->setSCPIInfo(new cSCPIInfo("CONFIGURATION","RFACTOR", "10", "PAR_NominalRangeFactor", "0", ""));
+    m_pNominalRangeFactorParameter->setSCPIInfo(new cSCPIInfo("CONFIGURATION","RFACTOR", SCPI::isQuery|SCPI::isCmdwP, "PAR_NominalRangeFactor", SCPI::isComponent));
 
     cStringValidator *sValidator;
     sValidator = new cStringValidator(QString("1;sqrt(3);1/sqrt(3);1/3"));
@@ -123,9 +123,8 @@ void cBurden1ModuleMeasProgram::generateVeinInterface()
                                                          key = QString("PAR_NominalBurden"),
                                                          QString("Nominal burden"),
                                                          QVariant(getConfData()->nominalBurden.m_fValue));
-    s = QString("VA");
-    m_pNominalBurdenParameter->setUnit(s);
-    m_pNominalBurdenParameter->setSCPIInfo(new cSCPIInfo("CONFIGURATION","BURDEN", "10", "PAR_NominalBurden", "0", s));
+    m_pNominalBurdenParameter->setUnit("VA");
+    m_pNominalBurdenParameter->setSCPIInfo(new cSCPIInfo("CONFIGURATION","BURDEN", SCPI::isQuery|SCPI::isCmdwP, "PAR_NominalBurden", SCPI::isComponent));
 
     dValidator = new cDoubleValidator(0.001, 10000.0, 0.001);
     m_pNominalBurdenParameter->setValidator(dValidator);
@@ -136,9 +135,8 @@ void cBurden1ModuleMeasProgram::generateVeinInterface()
                                                       key = QString("PAR_WireLength"),
                                                       QString("Wire length value"),
                                                       QVariant(getConfData()->wireLength.m_fValue));
-    s = QString("m");
-    m_pWireLengthParameter->setUnit(s);
-    m_pWireLengthParameter->setSCPIInfo(new cSCPIInfo("CONFIGURATION","WLENGTH", "10", "PAR_WireLength", "0", s));
+    m_pWireLengthParameter->setUnit("m");
+    m_pWireLengthParameter->setSCPIInfo(new cSCPIInfo("CONFIGURATION","WLENGTH", SCPI::isQuery|SCPI::isCmdwP, "PAR_WireLength", SCPI::isComponent));
 
     dValidator = new cDoubleValidator(0.0, 100.0, 0.1);
     m_pWireLengthParameter->setValidator(dValidator);
@@ -149,9 +147,8 @@ void cBurden1ModuleMeasProgram::generateVeinInterface()
                                                             key = QString("PAR_WCrosssection"),
                                                             QString("Wire crosssection value"),
                                                             QVariant(getConfData()->wireCrosssection.m_fValue));
-    s = QString("mm²");
-    m_pWireCrosssectionParameter->setUnit(s);
-    m_pWireCrosssectionParameter->setSCPIInfo(new cSCPIInfo("CONFIGURATION","WCSection", "10", "PAR_WCrosssection", "0", s));
+    m_pWireCrosssectionParameter->setUnit("mm²");
+    m_pWireCrosssectionParameter->setSCPIInfo(new cSCPIInfo("CONFIGURATION","WCSection", SCPI::isQuery|SCPI::isCmdwP, "PAR_WCrosssection", SCPI::isComponent));
 
     dValidator = new cDoubleValidator(0.1, 100.0, 0.1);
     m_pWireCrosssectionParameter->setValidator(dValidator);
