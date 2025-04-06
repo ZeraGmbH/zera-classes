@@ -136,112 +136,98 @@
                         "BRD1",
                         "8",
                         "ACT_Burden1",
-                        "0",
-                        "VA"
+                        "0"
                     ],
                     [
                         "MEASURE",
                         "POF1",
                         "8",
                         "ACT_PFactor1",
-                        "0",
-                        ""
+                        "0"
                     ],
                     [
                         "MEASURE",
                         "RAT1",
                         "8",
                         "ACT_Ratio1",
-                        "0",
-                        "%"
+                        "0"
                     ],
                     [
                         "MEASURE",
                         "BRD2",
                         "8",
                         "ACT_Burden2",
-                        "0",
-                        "VA"
+                        "0"
                     ],
                     [
                         "MEASURE",
                         "POF2",
                         "8",
                         "ACT_PFactor2",
-                        "0",
-                        ""
+                        "0"
                     ],
                     [
                         "MEASURE",
                         "RAT2",
                         "8",
                         "ACT_Ratio2",
-                        "0",
-                        "%"
+                        "0"
                     ],
                     [
                         "MEASURE",
                         "BRD3",
                         "8",
                         "ACT_Burden3",
-                        "0",
-                        "VA"
+                        "0"
                     ],
                     [
                         "MEASURE",
                         "POF3",
                         "8",
                         "ACT_PFactor3",
-                        "0",
-                        ""
+                        "0"
                     ],
                     [
                         "MEASURE",
                         "RAT3",
                         "8",
                         "ACT_Ratio3",
-                        "0",
-                        "%"
+                        "0"
                     ],
                     [
                         "CONFIGURATION",
                         "BURDEN",
                         "10",
                         "PAR_NominalBurden",
-                        "0",
-                        "VA"
+                        "0"
                     ],
                     [
                         "CONFIGURATION",
                         "RANGE",
                         "10",
                         "PAR_NominalRange",
-                        "0",
-                        "A"
+                        "0"
                     ],
                     [
                         "CONFIGURATION",
                         "RFACTOR",
                         "10",
                         "PAR_NominalRangeFactor",
-                        "0",
-                        ""
+                        "0"
                     ],
                     [
                         "CONFIGURATION",
                         "WCSection",
                         "10",
                         "PAR_WCrosssection",
-                        "0",
-                        "mm²"
+                        "0"
                     ],
                     [
                         "CONFIGURATION",
                         "WLENGTH",
                         "10",
                         "PAR_WireLength",
-                        "0",
-                        "m"
+                        "0"
                     ]
                 ],
                 "Name": "BD11"
@@ -391,112 +377,98 @@
                         "BRD1",
                         "8",
                         "ACT_Burden1",
-                        "0",
-                        "VA"
+                        "0"
                     ],
                     [
                         "MEASURE",
                         "POF1",
                         "8",
                         "ACT_PFactor1",
-                        "0",
-                        ""
+                        "0"
                     ],
                     [
                         "MEASURE",
                         "RAT1",
                         "8",
                         "ACT_Ratio1",
-                        "0",
-                        "%"
+                        "0"
                     ],
                     [
                         "MEASURE",
                         "BRD2",
                         "8",
                         "ACT_Burden2",
-                        "0",
-                        "VA"
+                        "0"
                     ],
                     [
                         "MEASURE",
                         "POF2",
                         "8",
                         "ACT_PFactor2",
-                        "0",
-                        ""
+                        "0"
                     ],
                     [
                         "MEASURE",
                         "RAT2",
                         "8",
                         "ACT_Ratio2",
-                        "0",
-                        "%"
+                        "0"
                     ],
                     [
                         "MEASURE",
                         "BRD3",
                         "8",
                         "ACT_Burden3",
-                        "0",
-                        "VA"
+                        "0"
                     ],
                     [
                         "MEASURE",
                         "POF3",
                         "8",
                         "ACT_PFactor3",
-                        "0",
-                        ""
+                        "0"
                     ],
                     [
                         "MEASURE",
                         "RAT3",
                         "8",
                         "ACT_Ratio3",
-                        "0",
-                        "%"
+                        "0"
                     ],
                     [
                         "CONFIGURATION",
                         "BURDEN",
                         "10",
                         "PAR_NominalBurden",
-                        "0",
-                        "VA"
+                        "0"
                     ],
                     [
                         "CONFIGURATION",
                         "RANGE",
                         "10",
                         "PAR_NominalRange",
-                        "0",
-                        "V"
+                        "0"
                     ],
                     [
                         "CONFIGURATION",
                         "RFACTOR",
                         "10",
                         "PAR_NominalRangeFactor",
-                        "0",
-                        ""
+                        "0"
                     ],
                     [
                         "CONFIGURATION",
                         "WCSection",
                         "10",
                         "PAR_WCrosssection",
-                        "0",
-                        "mm²"
+                        "0"
                     ],
                     [
                         "CONFIGURATION",
                         "WLENGTH",
                         "10",
                         "PAR_WireLength",
-                        "0",
-                        "m"
+                        "0"
                     ]
                 ],
                 "Name": "BD12"

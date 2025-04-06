@@ -56,32 +56,28 @@
                         "NAMESESSION",
                         "10",
                         "Session",
-                        "0",
-                        ""
+                        "0"
                     ],
                     [
                         "CONFIGURATION",
                         "XSESSION",
                         "10",
                         "XSession",
-                        "0",
-                        ""
+                        "0"
                     ],
                     [
                         "CONFIGURATION",
                         "SESSION:CATALOG",
                         "2",
                         "Session",
-                        "1",
-                        ""
+                        "1"
                     ],
                     [
                         "CONFIGURATION",
                         "XSESSION:CATALOG",
                         "2",
                         "XSession",
-                        "1",
-                        ""
+                        "1"
                     ]
                 ],
                 "Name": "SYST"
@@ -592,240 +588,210 @@
                         "REF1:RANGE:CATALOG",
                         "2",
                         "PAR_Channel1Range",
-                        "1",
-                        ""
+                        "1"
                     ],
                     [
                         "SENSE",
                         "REF2:RANGE:CATALOG",
                         "2",
                         "PAR_Channel2Range",
-                        "1",
-                        ""
+                        "1"
                     ],
                     [
                         "SENSE",
                         "REF3:RANGE:CATALOG",
                         "2",
                         "PAR_Channel3Range",
-                        "1",
-                        ""
+                        "1"
                     ],
                     [
                         "SENSE",
                         "REF4:RANGE:CATALOG",
                         "2",
                         "PAR_Channel4Range",
-                        "1",
-                        ""
+                        "1"
                     ],
                     [
                         "SENSE",
                         "REF5:RANGE:CATALOG",
                         "2",
                         "PAR_Channel5Range",
-                        "1",
-                        ""
+                        "1"
                     ],
                     [
                         "SENSE",
                         "REF6:RANGE:CATALOG",
                         "2",
                         "PAR_Channel6Range",
-                        "1",
-                        ""
+                        "1"
                     ],
                     [
                         "MEASURE",
                         "REF1",
                         "8",
                         "ACT_Channel1Peak",
-                        "0",
-                        "V"
+                        "0"
                     ],
                     [
                         "MEASURE",
                         "REF2",
                         "8",
                         "ACT_Channel2Peak",
-                        "0",
-                        "V"
+                        "0"
                     ],
                     [
                         "MEASURE",
                         "REF3",
                         "8",
                         "ACT_Channel3Peak",
-                        "0",
-                        "V"
+                        "0"
                     ],
                     [
                         "MEASURE",
                         "REF4",
                         "8",
                         "ACT_Channel4Peak",
-                        "0",
-                        "V"
+                        "0"
                     ],
                     [
                         "MEASURE",
                         "REF5",
                         "8",
                         "ACT_Channel5Peak",
-                        "0",
-                        "V"
+                        "0"
                     ],
                     [
                         "MEASURE",
                         "REF6",
                         "8",
                         "ACT_Channel6Peak",
-                        "0",
-                        "V"
+                        "0"
                     ],
                     [
                         "MEASURE",
                         "F",
                         "8",
                         "ACT_Frequency",
-                        "0",
-                        "Hz"
+                        "0"
                     ],
                     [
                         "SENSE",
                         "REF1:RANGE",
                         "10",
                         "PAR_Channel1Range",
-                        "0",
-                        ""
+                        "0"
                     ],
                     [
                         "SENSE",
                         "REF2:RANGE",
                         "10",
                         "PAR_Channel2Range",
-                        "0",
-                        ""
+                        "0"
                     ],
                     [
                         "SENSE",
                         "REF3:RANGE",
                         "10",
                         "PAR_Channel3Range",
-                        "0",
-                        ""
+                        "0"
                     ],
                     [
                         "SENSE",
                         "REF4:RANGE",
                         "10",
                         "PAR_Channel4Range",
-                        "0",
-                        ""
+                        "0"
                     ],
                     [
                         "SENSE",
                         "REF5:RANGE",
                         "10",
                         "PAR_Channel5Range",
-                        "0",
-                        ""
+                        "0"
                     ],
                     [
                         "SENSE",
                         "REF6:RANGE",
                         "10",
                         "PAR_Channel6Range",
-                        "0",
-                        ""
+                        "0"
                     ],
                     [
                         "CONFIGURATION",
                         "GROUPING",
                         "10",
                         "PAR_ChannelGrouping",
-                        "0",
-                        ""
+                        "0"
                     ],
                     [
                         "CONFIGURATION",
                         "IGNORERMSVAL",
                         "10",
                         "PAR_IgnoreRmsValues",
-                        "0",
-                        "%"
+                        "0"
                     ],
                     [
                         "CONFIGURATION",
                         "ENABLEIGNORERMSVAL",
                         "10",
                         "PAR_IgnoreRmsValuesOnOff",
-                        "0",
-                        ""
+                        "0"
                     ],
                     [
                         "CONFIGURATION",
                         "REF1:INVERTPHASE",
                         "10",
                         "PAR_InvertPhase1",
-                        "0",
-                        ""
+                        "0"
                     ],
                     [
                         "CONFIGURATION",
                         "REF2:INVERTPHASE",
                         "10",
                         "PAR_InvertPhase2",
-                        "0",
-                        ""
+                        "0"
                     ],
                     [
                         "CONFIGURATION",
                         "REF3:INVERTPHASE",
                         "10",
                         "PAR_InvertPhase3",
-                        "0",
-                        ""
+                        "0"
                     ],
                     [
                         "CONFIGURATION",
                         "REF4:INVERTPHASE",
                         "10",
                         "PAR_InvertPhase4",
-                        "0",
-                        ""
+                        "0"
                     ],
                     [
                         "CONFIGURATION",
                         "REF5:INVERTPHASE",
                         "10",
                         "PAR_InvertPhase5",
-                        "0",
-                        ""
+                        "0"
                     ],
                     [
                         "CONFIGURATION",
                         "REF6:INVERTPHASE",
                         "10",
                         "PAR_InvertPhase6",
-                        "0",
-                        ""
+                        "0"
                     ],
                     [
                         "SENSE",
                         "OVERLOAD",
                         "10",
                         "PAR_Overload",
-                        "0",
-                        ""
+                        "0"
                     ],
                     [
                         "CONFIGURATION",
                         "RNGAUTO",
                         "10",
                         "PAR_RangeAutomatic",
-                        "0",
-                        ""
+                        "0"
                     ]
                 ],
                 "Name": "RNG1"
@@ -996,120 +962,105 @@
                         "REF1",
                         "8",
                         "ACT_DFTPN1",
-                        "0",
-                        "V"
+                        "0"
                     ],
                     [
                         "MEASURE",
                         "REF1",
                         "8",
                         "ACT_POL_DFTPN1",
-                        "0",
-                        "V"
+                        "0"
                     ],
                     [
                         "MEASURE",
                         "REF2",
                         "8",
                         "ACT_DFTPN2",
-                        "0",
-                        "V"
+                        "0"
                     ],
                     [
                         "MEASURE",
                         "REF2",
                         "8",
                         "ACT_POL_DFTPN2",
-                        "0",
-                        "V"
+                        "0"
                     ],
                     [
                         "MEASURE",
                         "REF3",
                         "8",
                         "ACT_DFTPN3",
-                        "0",
-                        "V"
+                        "0"
                     ],
                     [
                         "MEASURE",
                         "REF3",
                         "8",
                         "ACT_POL_DFTPN3",
-                        "0",
-                        "V"
+                        "0"
                     ],
                     [
                         "MEASURE",
                         "REF4",
                         "8",
                         "ACT_DFTPN4",
-                        "0",
-                        "V"
+                        "0"
                     ],
                     [
                         "MEASURE",
                         "REF4",
                         "8",
                         "ACT_POL_DFTPN4",
-                        "0",
-                        "V"
+                        "0"
                     ],
                     [
                         "MEASURE",
                         "REF5",
                         "8",
                         "ACT_DFTPN5",
-                        "0",
-                        "V"
+                        "0"
                     ],
                     [
                         "MEASURE",
                         "REF5",
                         "8",
                         "ACT_POL_DFTPN5",
-                        "0",
-                        "V"
+                        "0"
                     ],
                     [
                         "MEASURE",
                         "REF6",
                         "8",
                         "ACT_DFTPN6",
-                        "0",
-                        "V"
+                        "0"
                     ],
                     [
                         "MEASURE",
                         "REF6",
                         "8",
                         "ACT_POL_DFTPN6",
-                        "0",
-                        "V"
+                        "0"
                     ],
                     [
                         "MEASURE",
                         "RFIELD",
                         "8",
                         "ACT_RFIELD",
-                        "0",
-                        ""
+                        "0"
                     ],
                     [
                         "CONFIGURATION",
                         "TINTEGRATION",
                         "10",
                         "PAR_Interval",
-                        "0",
-                        "s"
+                        "0"
                     ],
                     [
                         "CONFIGURATION",
                         "REFCHANNEL",
                         "10",
                         "PAR_RefChannel",
-                        "0",
-                        ""
+                        "0"
                     ]
                 ],
                 "Name": "DFT1"
@@ -1222,80 +1173,70 @@
                         "MMODE:CATALOG",
                         "2",
                         "PAR_MeasuringMode",
-                        "1",
-                        ""
+                        "1"
                     ],
                     [
                         "MEASURE",
                         "1",
                         "8",
                         "ACT_PQS1",
-                        "0",
-                        ""
+                        "0"
                     ],
                     [
                         "MEASURE",
                         "2",
                         "8",
                         "ACT_PQS2",
-                        "0",
-                        ""
+                        "0"
                     ],
                     [
                         "MEASURE",
                         "3",
                         "8",
                         "ACT_PQS3",
-                        "0",
-                        ""
+                        "0"
                     ],
                     [
                         "MEASURE",
                         "S",
                         "8",
                         "ACT_PQS4",
-                        "0",
-                        ""
+                        "0"
                     ],
                     [
                         "CONFIGURATION",
                         "M0OUT",
                         "2",
                         "PAR_FOUT0",
-                        "0",
-                        ""
+                        "0"
                     ],
                     [
                         "CONFIGURATION",
                         "M0CONSTANT",
                         "2",
                         "PAR_FOUTConstant0",
-                        "0",
-                        ""
+                        "0"
                     ],
                     [
                         "CONFIGURATION",
                         "TINTEGRATION",
                         "10",
                         "PAR_Interval",
-                        "0",
-                        "s"
+                        "0"
                     ],
                     [
                         "CONFIGURATION",
                         "MEASMODEPHASESELECT",
                         "10",
                         "PAR_MeasModePhaseSelect",
-                        "0",
-                        ""
+                        "0"
                     ],
                     [
                         "CONFIGURATION",
                         "MMODE",
                         "10",
                         "PAR_MeasuringMode",
-                        "0",
-                        ""
+                        "0"
                     ]
                 ],
                 "Name": "POW1"
@@ -1606,280 +1547,245 @@
                         "0001:PULSES",
                         "2",
                         "ACT_DutPulses",
-                        "0",
-                        ""
+                        "0"
                     ],
                     [
                         "CALCULATE",
                         "0001:ENDTIME",
                         "2",
                         "ACT_EndTime",
-                        "0",
-                        ""
+                        "0"
                     ],
                     [
                         "CALCULATE",
                         "0001:ENERGY",
                         "2",
                         "ACT_Energy",
-                        "0",
-                        ""
+                        "0"
                     ],
                     [
                         "CALCULATE",
                         "0001:ENFINAL",
                         "2",
                         "ACT_EnergyFinal",
-                        "0",
-                        ""
+                        "0"
                     ],
                     [
                         "CALCULATE",
                         "0001:MEASNUM",
                         "2",
                         "ACT_MeasNum",
-                        "0",
-                        ""
+                        "0"
                     ],
                     [
                         "CALCULATE",
                         "0001:MMEASTIME",
                         "2",
                         "ACT_MeasTime",
-                        "0",
-                        ""
+                        "0"
                     ],
                     [
                         "CALCULATE",
                         "0001:MULCOUNT",
                         "2",
                         "ACT_MulCount",
-                        "0",
-                        ""
+                        "0"
                     ],
                     [
                         "CALCULATE",
                         "0001:STJARRAY",
                         "2",
                         "ACT_MulResult",
-                        "0",
-                        ""
+                        "0"
                     ],
                     [
                         "CALCULATE",
                         "0001:PROGRESS",
                         "2",
                         "ACT_Progress",
-                        "0",
-                        ""
+                        "0"
                     ],
                     [
                         "CALCULATE",
                         "0001:RATING",
                         "2",
                         "ACT_Rating",
-                        "0",
-                        ""
+                        "0"
                     ],
                     [
                         "CALCULATE",
                         "0001:REFFREQINPUT",
                         "2",
                         "ACT_RefFreqInput",
-                        "0",
-                        ""
+                        "0"
                     ],
                     [
                         "CALCULATE",
                         "0001:RESULT",
                         "2",
                         "ACT_Result",
-                        "0",
-                        ""
+                        "0"
                     ],
                     [
                         "CALCULATE",
                         "0001:STRTTIME",
                         "2",
                         "ACT_StartTime",
-                        "0",
-                        ""
+                        "0"
                     ],
                     [
                         "CALCULATE",
                         "0001:STATUS",
                         "2",
                         "ACT_Status",
-                        "0",
-                        ""
+                        "0"
                     ],
                     [
                         "CALCULATE",
                         "0001:CONTINUOUS",
                         "10",
                         "PAR_Continuous",
-                        "0",
-                        ""
+                        "0"
                     ],
                     [
                         "CALCULATE",
                         "0001:DCUNIT",
                         "10",
                         "PAR_DUTConstUnit",
-                        "0",
-                        ""
+                        "0"
                     ],
                     [
                         "CALCULATE",
                         "0001:DUTCONSTANT",
                         "10",
                         "PAR_DutConstant",
-                        "0",
-                        ""
+                        "0"
                     ],
                     [
                         "CALCULATE",
                         "0001:AUTODUTCONSTANT",
                         "10",
                         "PAR_DutConstantAuto",
-                        "0",
-                        ""
+                        "0"
                     ],
                     [
                         "CONFIGURATION",
                         "0001:DUTCONSTANTISCALEDENOM",
                         "10",
                         "PAR_DutConstantIScaleDenom",
-                        "0",
-                        ""
+                        "0"
                     ],
                     [
                         "CONFIGURATION",
                         "0001:DUTCONSTANTISCALENUM",
                         "10",
                         "PAR_DutConstantIScaleNum",
-                        "0",
-                        ""
+                        "0"
                     ],
                     [
                         "CONFIGURATION",
                         "0001:DUTCONSTANTUSCALEDENOM",
                         "10",
                         "PAR_DutConstantUScaleDenom",
-                        "0",
-                        ""
+                        "0"
                     ],
                     [
                         "CONFIGURATION",
                         "0001:DUTCONSTANTUSCALENUM",
                         "10",
                         "PAR_DutConstantUScaleNum",
-                        "0",
-                        ""
+                        "0"
                     ],
                     [
                         "CALCULATE",
                         "0001:DUTSOURCE",
                         "10",
                         "PAR_DutInput",
-                        "0",
-                        ""
+                        "0"
                     ],
                     [
                         "CONFIGURATION",
                         "0001:DUTCONSTANTMEASUREPOINT",
                         "10",
                         "PAR_DutTypeMeasurePoint",
-                        "0",
-                        ""
+                        "0"
                     ],
                     [
                         "CALCULATE",
                         "0001:PARENERGY",
                         "10",
                         "PAR_Energy",
-                        "0",
-                        ""
+                        "0"
                     ],
                     [
                         "CALCULATE",
                         "0001:LOLIMIT",
                         "10",
                         "PAR_Lolimit",
-                        "0",
-                        "%"
+                        "0"
                     ],
                     [
                         "CALCULATE",
                         "0001:MRATE",
                         "10",
                         "PAR_MRate",
-                        "0",
-                        ""
+                        "0"
                     ],
                     [
                         "CALCULATE",
                         "0001:MCOUNT",
                         "10",
                         "PAR_MeasCount",
-                        "0",
-                        ""
+                        "0"
                     ],
                     [
                         "CALCULATE",
                         "0001:MWAIT",
                         "10",
                         "PAR_MeasWait",
-                        "0",
-                        ""
+                        "0"
                     ],
                     [
                         "CALCULATE",
                         "0001:REFCONSTANT",
                         "10",
                         "PAR_RefConstant",
-                        "0",
-                        ""
+                        "0"
                     ],
                     [
                         "CALCULATE",
                         "0001:REFSOURCE",
                         "10",
                         "PAR_RefInput",
-                        "0",
-                        ""
+                        "0"
                     ],
                     [
                         "CALCULATE",
                         "0001:RESULTUNIT",
                         "10",
                         "PAR_ResultUnit",
-                        "0",
-                        ""
+                        "0"
                     ],
                     [
                         "CALCULATE",
                         "0001:START",
                         "10",
                         "PAR_StartStop",
-                        "0",
-                        ""
+                        "0"
                     ],
                     [
                         "CALCULATE",
                         "0001:TARGET",
                         "10",
                         "PAR_Target",
-                        "0",
-                        ""
+                        "0"
                     ],
                     [
                         "CALCULATE",
                         "0001:UPLIMIT",
                         "10",
                         "PAR_Uplimit",
-                        "0",
-                        "%"
+                        "0"
                     ]
                 ],
                 "Name": "EC01"
@@ -1989,104 +1895,91 @@
                         "ADJCHKSUM",
                         "2",
                         "INF_AdjChksum",
-                        "0",
-                        ""
+                        "0"
                     ],
                     [
                         "STATUS",
                         "ADJUSTMENT",
                         "2",
                         "INF_Adjusted",
-                        "0",
-                        ""
+                        "0"
                     ],
                     [
                         "STATUS",
                         "VERSION:CONTROLER",
                         "2",
                         "INF_CTRLVersion",
-                        "0",
-                        ""
+                        "0"
                     ],
                     [
                         "STATUS",
                         "CPUINFO",
                         "2",
                         "INF_CpuInfo",
-                        "0",
-                        ""
+                        "0"
                     ],
                     [
                         "STATUS",
                         "VERSION:DSPSERVER",
                         "2",
                         "INF_DSPServerVersion",
-                        "0",
-                        ""
+                        "0"
                     ],
                     [
                         "STATUS",
                         "VERSION:DSP",
                         "2",
                         "INF_DSPVersion",
-                        "0",
-                        ""
+                        "0"
                     ],
                     [
                         "STATUS",
                         "DEVTYPE",
                         "2",
                         "INF_DeviceType",
-                        "0",
-                        ""
+                        "0"
                     ],
                     [
                         "STATUS",
                         "VERSION:FPGA",
                         "2",
                         "INF_FPGAVersion",
-                        "0",
-                        ""
+                        "0"
                     ],
                     [
                         "STATUS",
                         "VERSION:PCBSERVER",
                         "2",
                         "INF_PCBServerVersion",
-                        "0",
-                        ""
+                        "0"
                     ],
                     [
                         "STATUS",
                         "VERSION:PCB",
                         "2",
                         "INF_PCBVersion",
-                        "0",
-                        ""
+                        "0"
                     ],
                     [
                         "STATUS",
                         "RELEASE",
                         "2",
                         "INF_ReleaseNr",
-                        "0",
-                        ""
+                        "0"
                     ],
                     [
                         "STATUS",
                         "AUTHORIZATION",
                         "2",
                         "INF_Schnubbel",
-                        "0",
-                        ""
+                        "0"
                     ],
                     [
                         "STATUS",
                         "SERIAL",
                         "10",
                         "PAR_SerialNr",
-                        "0",
-                        ""
+                        "0"
                     ]
                 ],
                 "Name": "DEV1"
@@ -2165,32 +2058,28 @@
                         "AIRPR",
                         "2",
                         "ACT_AirPressure",
-                        "0",
-                        "hPa"
+                        "0"
                     ],
                     [
                         "STATUS",
                         "HUMID",
                         "2",
                         "ACT_Humidity",
-                        "0",
-                        "%"
+                        "0"
                     ],
                     [
                         "STATUS",
                         "TEMP:CELSIUS",
                         "2",
                         "ACT_TemperatureC",
-                        "0",
-                        "°C"
+                        "0"
                     ],
                     [
                         "STATUS",
                         "TEMP:FAHRENHEIT",
                         "2",
                         "ACT_TemperatureF",
-                        "0",
-                        "°F"
+                        "0"
                     ]
                 ],
                 "Name": "BLE1"

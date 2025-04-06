@@ -115,80 +115,70 @@
                         "MMODE:CATALOG",
                         "2",
                         "PAR_MeasuringMode",
-                        "1",
-                        ""
+                        "1"
                     ],
                     [
                         "MEASURE",
                         "P1",
                         "8",
                         "ACT_PQS1",
-                        "0",
-                        "W"
+                        "0"
                     ],
                     [
                         "MEASURE",
                         "P2",
                         "8",
                         "ACT_PQS2",
-                        "0",
-                        "W"
+                        "0"
                     ],
                     [
                         "MEASURE",
                         "P3",
                         "8",
                         "ACT_PQS3",
-                        "0",
-                        "W"
+                        "0"
                     ],
                     [
                         "MEASURE",
                         "PS",
                         "8",
                         "ACT_PQS4",
-                        "0",
-                        "W"
+                        "0"
                     ],
                     [
                         "CONFIGURATION",
                         "M0OUT",
                         "2",
                         "PAR_FOUT0",
-                        "0",
-                        ""
+                        "0"
                     ],
                     [
                         "CONFIGURATION",
                         "M0CONSTANT",
                         "2",
                         "PAR_FOUTConstant0",
-                        "0",
-                        ""
+                        "0"
                     ],
                     [
                         "CONFIGURATION",
                         "TINTEGRATION",
                         "10",
                         "PAR_Interval",
-                        "0",
-                        "s"
+                        "0"
                     ],
                     [
                         "CONFIGURATION",
                         "MEASMODEPHASESELECT",
                         "10",
                         "PAR_MeasModePhaseSelect",
-                        "0",
-                        ""
+                        "0"
                     ],
                     [
                         "CONFIGURATION",
                         "MMODE",
                         "10",
                         "PAR_MeasuringMode",
-                        "0",
-                        ""
+                        "0"
                     ]
                 ],
                 "Name": "POW1"

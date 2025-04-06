@@ -170,120 +170,105 @@
                         "UL1",
                         "8",
                         "ACT_DFTPN1",
-                        "0",
-                        "V"
+                        "0"
                     ],
                     [
                         "MEASURE",
                         "U1",
                         "8",
                         "ACT_POL_DFTPN1",
-                        "0",
-                        "V"
+                        "0"
                     ],
                     [
                         "MEASURE",
                         "UL2",
                         "8",
                         "ACT_DFTPN2",
-                        "0",
-                        "V"
+                        "0"
                     ],
                     [
                         "MEASURE",
                         "U2",
                         "8",
                         "ACT_POL_DFTPN2",
-                        "0",
-                        "V"
+                        "0"
                     ],
                     [
                         "MEASURE",
                         "UL3",
                         "8",
                         "ACT_DFTPN3",
-                        "0",
-                        "V"
+                        "0"
                     ],
                     [
                         "MEASURE",
                         "U3",
                         "8",
                         "ACT_POL_DFTPN3",
-                        "0",
-                        "V"
+                        "0"
                     ],
                     [
                         "MEASURE",
                         "IL1",
                         "8",
                         "ACT_DFTPN4",
-                        "0",
-                        "A"
+                        "0"
                     ],
                     [
                         "MEASURE",
                         "I1",
                         "8",
                         "ACT_POL_DFTPN4",
-                        "0",
-                        "A"
+                        "0"
                     ],
                     [
                         "MEASURE",
                         "IL2",
                         "8",
                         "ACT_DFTPN5",
-                        "0",
-                        "A"
+                        "0"
                     ],
                     [
                         "MEASURE",
                         "I2",
                         "8",
                         "ACT_POL_DFTPN5",
-                        "0",
-                        "A"
+                        "0"
                     ],
                     [
                         "MEASURE",
                         "IL3",
                         "8",
                         "ACT_DFTPN6",
-                        "0",
-                        "A"
+                        "0"
                     ],
                     [
                         "MEASURE",
                         "I3",
                         "8",
                         "ACT_POL_DFTPN6",
-                        "0",
-                        "A"
+                        "0"
                     ],
                     [
                         "MEASURE",
                         "RFIELD",
                         "8",
                         "ACT_RFIELD",
-                        "0",
-                        ""
+                        "0"
                     ],
                     [
                         "CONFIGURATION",
                         "TINTEGRATION",
                         "10",
                         "PAR_Interval",
-                        "0",
-                        "s"
+                        "0"
                     ],
                     [
                         "CONFIGURATION",
                         "REFCHANNEL",
                         "10",
                         "PAR_RefChannel",
-                        "0",
-                        ""
+                        "0"
                     ]
                 ],
                 "Name": "DFT1"

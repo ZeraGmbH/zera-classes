@@ -142,104 +142,91 @@
                         "AMPLITUDE",
                         "10",
                         "PAR_AdjustAmplitude",
-                        "0",
-                        ""
+                        "0"
                     ],
                     [
                         "CALCULATE",
                         "DCAMPLITUDE",
                         "10",
                         "PAR_AdjustAmplitudeDc",
-                        "0",
-                        ""
+                        "0"
                     ],
                     [
                         "CALCULATE",
                         "CLAMP",
                         "18",
                         "PAR_AdjustCLAMPData",
-                        "0",
-                        ""
+                        "0"
                     ],
                     [
                         "CALCULATE",
                         "GSTATUS",
                         "10",
                         "PAR_AdjustGainStatus",
-                        "0",
-                        ""
+                        "0"
                     ],
                     [
                         "CALCULATE",
                         "INIT",
                         "10",
                         "PAR_AdjustInit",
-                        "0",
-                        ""
+                        "0"
                     ],
                     [
                         "CALCULATE",
                         "OSTATUS",
                         "10",
                         "PAR_AdjustOffsetStatus",
-                        "0",
-                        ""
+                        "0"
                     ],
                     [
                         "CALCULATE",
                         "PCB",
                         "18",
                         "PAR_AdjustPCBData",
-                        "0",
-                        ""
+                        "0"
                     ],
                     [
                         "CALCULATE",
                         "PHASE",
                         "10",
                         "PAR_AdjustPhase",
-                        "0",
-                        ""
+                        "0"
                     ],
                     [
                         "CALCULATE",
                         "PSTATUS",
                         "10",
                         "PAR_AdjustPhaseStatus",
-                        "0",
-                        ""
+                        "0"
                     ],
                     [
                         "CALCULATE",
                         "SEND",
                         "2",
                         "PAR_AdjustSend",
-                        "0",
-                        ""
+                        "0"
                     ],
                     [
                         "CALCULATE",
                         "OFFSET",
                         "10",
                         "PAR_Adjustoffset",
-                        "0",
-                        ""
+                        "0"
                     ],
                     [
                         "CALCULATE",
                         "COMPUTATION",
                         "10",
                         "PAR_Computation",
-                        "0",
-                        ""
+                        "0"
                     ],
                     [
                         "CALCULATE",
                         "STORAGE",
                         "10",
                         "PAR_Storage",
-                        "0",
-                        ""
+                        "0"
                     ]
                 ],
                 "Name": "ADJ1"

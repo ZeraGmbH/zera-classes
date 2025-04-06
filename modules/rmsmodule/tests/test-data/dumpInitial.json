@@ -104,96 +104,84 @@
                         "UL1",
                         "8",
                         "ACT_RMSPN1",
-                        "0",
-                        "V"
+                        "0"
                     ],
                     [
                         "MEASURE",
                         "UL2",
                         "8",
                         "ACT_RMSPN2",
-                        "0",
-                        "V"
+                        "0"
                     ],
                     [
                         "MEASURE",
                         "UL3",
                         "8",
                         "ACT_RMSPN3",
-                        "0",
-                        "V"
+                        "0"
                     ],
                     [
                         "MEASURE",
                         "UL1-UL2",
                         "8",
                         "ACT_RMSPP1",
-                        "0",
-                        "V"
+                        "0"
                     ],
                     [
                         "MEASURE",
                         "UL3-UL2",
                         "8",
                         "ACT_RMSPP2",
-                        "0",
-                        "V"
+                        "0"
                     ],
                     [
                         "MEASURE",
                         "UL3-UL1",
                         "8",
                         "ACT_RMSPP3",
-                        "0",
-                        "V"
+                        "0"
                     ],
                     [
                         "MEASURE",
                         "IL1",
                         "8",
                         "ACT_RMSPN4",
-                        "0",
-                        "A"
+                        "0"
                     ],
                     [
                         "MEASURE",
                         "IL2",
                         "8",
                         "ACT_RMSPN5",
-                        "0",
-                        "A"
+                        "0"
                     ],
                     [
                         "MEASURE",
                         "IL3",
                         "8",
                         "ACT_RMSPN6",
-                        "0",
-                        "A"
+                        "0"
                     ],
                     [
                         "MEASURE",
                         "UAUX",
                         "8",
                         "ACT_RMSPN7",
-                        "0",
-                        "V"
+                        "0"
                     ],
                     [
                         "MEASURE",
                         "IAUX",
                         "8",
                         "ACT_RMSPN8",
-                        "0",
-                        "A"
+                        "0"
                     ],
                     [
                         "CONFIGURATION",
                         "TINTEGRATION",
                         "10",
                         "PAR_Interval",
-                        "0",
-                        "s"
+                        "0"
                     ]
                 ],
                 "Name": "RMS1"
