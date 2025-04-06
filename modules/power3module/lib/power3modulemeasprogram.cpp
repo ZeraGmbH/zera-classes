@@ -4,6 +4,7 @@
 #include "power3moduleconfiguration.h"
 #include <errormessages.h>
 #include <reply.h>
+#include <scpi.h>
 
 namespace POWER3MODULE
 {
@@ -57,18 +58,16 @@ cPower3ModuleConfigData *cPower3ModuleMeasProgram::getConfData()
 
 void cPower3ModuleMeasProgram::generateVeinInterface()
 {
-    VfModuleActvalue *pActvalue;
-    cSCPIInfo* pSCPIInfo;
-
-    for (int i = 0; i < getConfData()->m_nPowerSystemCount; i++)
-    {
+    for (int i = 0; i < getConfData()->m_nPowerSystemCount; i++) {
+        VfModuleActvalue *pActvalue;
+        cSCPIInfo* pSCPIInfo;
         pActvalue = new VfModuleActvalue(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
                                             QString("ACT_HPP%1").arg(i+1),
                                             QString("Harmonic power active values"));
         pActvalue->setChannelName(QString("P%1").arg(i+1)); // we take "system" as name because we export real- and imaginary part
         pActvalue->setUnit("W");
 
-        pSCPIInfo = new cSCPIInfo("MEASURE", pActvalue->getChannelName(), "8", pActvalue->getName(), "0", pActvalue->getUnit());
+        pSCPIInfo = new cSCPIInfo("MEASURE", pActvalue->getChannelName(), SCPI::isCmdwP, pActvalue->getName(), SCPI::isComponent);
         pActvalue->setSCPIInfo(pSCPIInfo);
 
         m_veinActValueList.append(pActvalue); // we add the component for our measurement
@@ -80,7 +79,7 @@ void cPower3ModuleMeasProgram::generateVeinInterface()
         pActvalue->setChannelName(QString("Q%1").arg(i+1)); // we take "system" as name because we export real- and imaginary part
         pActvalue->setUnit("Var");
 
-        pSCPIInfo = new cSCPIInfo("MEASURE", pActvalue->getChannelName(), "8", pActvalue->getName(), "0", pActvalue->getUnit());
+        pSCPIInfo = new cSCPIInfo("MEASURE", pActvalue->getChannelName(), SCPI::isCmdwP, pActvalue->getName(), SCPI::isComponent);
         pActvalue->setSCPIInfo(pSCPIInfo);
 
         m_veinActValueList.append(pActvalue); // we add the component for our measurement
@@ -92,12 +91,11 @@ void cPower3ModuleMeasProgram::generateVeinInterface()
         pActvalue->setChannelName(QString("S%1").arg(i+1)); // we take "system" as name because we export real- and imaginary part
         pActvalue->setUnit("VA");
 
-        pSCPIInfo = new cSCPIInfo("MEASURE", pActvalue->getChannelName(), "8", pActvalue->getName(), "0", pActvalue->getUnit());
+        pSCPIInfo = new cSCPIInfo("MEASURE", pActvalue->getChannelName(), SCPI::isCmdwP, pActvalue->getName(), SCPI::isComponent);
         pActvalue->setSCPIInfo(pSCPIInfo);
 
         m_veinActValueList.append(pActvalue); // we add the component for our measurement
         m_pModule->veinModuleActvalueList.append(pActvalue); // and for the modules interface
-
     }
 
     m_pHPWCountInfo = new VfModuleMetaData(QString("HPWCount"), QVariant(getConfData()->m_nPowerSystemCount));
