@@ -3,6 +3,7 @@
 #include "lambdamoduleconfiguration.h"
 #include <errormessages.h>
 #include <reply.h>
+#include <scpi.h>
 
 namespace LAMBDAMODULE
 {
@@ -49,7 +50,7 @@ void cLambdaModuleMeasProgram::generateVeinInterface()
         pActvalue->setChannelName(QString("Lambda%1").arg(i+1));
         pActvalue->setUnit("");
 
-        pSCPIInfo = new cSCPIInfo("MEASURE", pActvalue->getChannelName(), "8", pActvalue->getName(), "0", pActvalue->getUnit());
+        pSCPIInfo = new cSCPIInfo("MEASURE", pActvalue->getChannelName(), SCPI::isCmdwP, pActvalue->getName(), SCPI::isComponent);
         pActvalue->setSCPIInfo(pSCPIInfo);
 
         m_veinLambdaActValues.append(pActvalue); // we add the component for our measurement
