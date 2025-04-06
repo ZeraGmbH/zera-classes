@@ -5,6 +5,7 @@
 #include "measmodephasesetstrategy4wire.h"
 #include "veinvalidatorphasestringgenerator.h"
 #include <measmodecatalog.h>
+#include <scpi.h>
 #include <stringvalidator.h>
 #include <doublevalidator.h>
 #include <intvalidator.h>
@@ -244,7 +245,7 @@ void cPower2ModuleMeasProgram::generateVeinInterface()
                                                          QString("Measuring mode"),
                                                          QVariant(getConfData()->m_sMeasuringMode.m_sValue));
 
-    m_pMeasuringmodeParameter->setSCPIInfo(new cSCPIInfo("CONFIGURATION","MMODE", "10", "PAR_MeasuringMode", "0", ""));
+    m_pMeasuringmodeParameter->setSCPIInfo(new cSCPIInfo("CONFIGURATION","MMODE", SCPI::isQuery|SCPI::isCmdwP, "PAR_MeasuringMode", SCPI::isComponent));
     cStringValidator *sValidator = new cStringValidator(getConfData()->m_sMeasmodeList);
     m_pMeasuringmodeParameter->setValidator(sValidator);
     m_pModule->m_veinModuleParameterMap[key] = m_pMeasuringmodeParameter; // for modules use
@@ -271,14 +272,14 @@ void cPower2ModuleMeasProgram::generateVeinInterface()
 
     if (btime)
     {
-        m_pIntegrationParameter->setSCPIInfo(new cSCPIInfo("CONFIGURATION","TINTEGRATION", "10", "PAR_Interval", "0", unit));
+        m_pIntegrationParameter->setSCPIInfo(new cSCPIInfo("CONFIGURATION","TINTEGRATION", SCPI::isQuery|SCPI::isCmdwP, "PAR_Interval", SCPI::isComponent));
         cDoubleValidator *dValidator;
         dValidator = new cDoubleValidator(1.0, 100.0, 0.5);
         m_pIntegrationParameter->setValidator(dValidator);
     }
     else
     {
-        m_pIntegrationParameter->setSCPIInfo(new cSCPIInfo("CONFIGURATION","TPERIOD", "10", "PAR_Interval", "0", unit));
+        m_pIntegrationParameter->setSCPIInfo(new cSCPIInfo("CONFIGURATION","TPERIOD", SCPI::isQuery|SCPI::isCmdwP, "PAR_Interval", SCPI::isComponent));
         cIntValidator *iValidator;
         iValidator = new cIntValidator(5, 5000, 1);
         m_pIntegrationParameter->setValidator(iValidator);
@@ -762,11 +763,8 @@ quint8 cPower2ModuleMeasProgram::cmpActualValIndex(freqoutconfiguration frconf)
 
 void cPower2ModuleMeasProgram::setSCPIMeasInfo()
 {
-    cSCPIInfo* pSCPIInfo;
-
-    for (int i = 0; i < 12; i++)
-    {
-        pSCPIInfo = new cSCPIInfo("MEASURE", m_veinActValueList.at(i)->getChannelName(), "8", m_veinActValueList.at(i)->getName(), "0", m_veinActValueList.at(i)->getUnit());
+    for (int i = 0; i < 12; i++) {
+        cSCPIInfo* pSCPIInfo = new cSCPIInfo("MEASURE", m_veinActValueList.at(i)->getChannelName(), SCPI::isCmdwP, m_veinActValueList.at(i)->getName(), SCPI::isComponent);
         m_veinActValueList.at(i)->setSCPIInfo(pSCPIInfo);
     }
 }
