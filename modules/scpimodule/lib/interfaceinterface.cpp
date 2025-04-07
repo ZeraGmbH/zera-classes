@@ -35,7 +35,7 @@ bool cInterfaceInterface::setupInterface()
 
     // for module integrity we also have to add this command to the scpi command list (exported at INF_ModuleInterface
     cSCPIInfo *scpiInfo;
-    scpiInfo = new cSCPIInfo("", QString("DEVICE:IFACE"), "2", "", "0", "");
+    scpiInfo = new cSCPIInfo("", QString("DEVICE:IFACE"), SCPI::isQuery, "", SCPI::isComponent);
     m_pModule->scpiCommandList.append(scpiInfo);
     return true;
 }
