@@ -89,7 +89,6 @@ void SourceModuleProgram::generateVeinInterface()
                                                             QString("All source parameters in JSON"),
                                                             QJsonObject());
         sourceVeinInterface->setVeinDeviceParameterComponent(pVeinParam);
-        //pVeinParam->setSCPIInfo(new cSCPIInfo("CONFIGURATION","RANGE", "10", "PAR_NominalRange", "0", s));
         jsonValidator = new cJsonParamValidator();
         sourceVeinInterface->setVeinDeviceParameterValidator(jsonValidator);
         pVeinParam->setValidator(jsonValidator);
