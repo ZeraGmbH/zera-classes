@@ -130,6 +130,11 @@
         "id": 1210
       },
       {
+        "name" : "spm1module",
+        "configFile" : "mt310s2-spm1module.xml",
+        "id": 1210
+      },
+      {
         "name" : "sourcemodule",
         "configFile" : "",
         "id": 1300

@@ -30,7 +30,6 @@
             1210,
             1300,
             1400,
-            1500,
             9999
         ],
         "EntityName": "_System",
@@ -6867,27 +6866,5 @@
         },
         "PAR_BluetoothOn": 0,
         "PAR_MacAddress": "00:00:00:00:00:00"
-    },
-    "1500": {
-        "EntityName": "SfcModule1",
-        "INF_ModuleInterface": {
-            "ComponentInfo": {
-                "EntityName": {
-                    "Description": "Module's name"
-                },
-                "INF_ModuleInterface": {
-                    "Description": "Module's interface details"
-                }
-            },
-            "ModuleInfo": {
-                "Description": "This module provides the amount of flanks seen by the FPGA",
-                "Name": "SfcModule1"
-            },
-            "SCPIInfo": {
-                "Cmd": [
-                ],
-                "Name": "SFC1"
-            }
-        }
     }
 }
