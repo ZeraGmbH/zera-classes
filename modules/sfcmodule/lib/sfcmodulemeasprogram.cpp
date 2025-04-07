@@ -4,6 +4,7 @@
 #include <errormessages.h>
 #include <intvalidator.h>
 #include <reply.h>
+#include <scpi.h>
 
 namespace SFCMODULE
 {
@@ -46,7 +47,7 @@ void cSfcModuleMeasProgram::generateVeinInterface()
                                          key = QString("PAR_StartStop"),
                                          QString("Start/stop measurement (start=1, stop=0)"),
                                          QVariant((int)0));
-    m_pStartStop->setSCPIInfo(new cSCPIInfo("CALCULATE", QString("START"), "10", m_pStartStop->getName(), "0", ""));
+    m_pStartStop->setSCPIInfo(new cSCPIInfo("CALCULATE", QString("START"), SCPI::isCmdwP | SCPI::isQuery, m_pStartStop->getName(), SCPI::isComponent));
     m_pModule->m_veinModuleParameterMap[key] = m_pStartStop;
     cIntValidator *iValidator;
     iValidator = new cIntValidator(0,1,1);
