@@ -105,10 +105,22 @@ cSfcModuleMeasProgram::cSfcModuleMeasProgram(cSfcModule *module, std::shared_ptr
     connect(&m_calcResultAndResetIntState, &QState::entered, this, &cSfcModuleMeasProgram::setECResultAndResetInt);
     connect(&m_FinalState, &QState::entered, this, &cSfcModuleMeasProgram::checkForRestart);
 
-    m_deactivationMachine.addState(&m_deactivateDoneState);
-    m_deactivationMachine.setInitialState(&m_deactivateDoneState);
+    // setting up statemachine to free the occupied resources
+    m_stopECalculatorState.addTransition(this, &cSfcModuleMeasProgram::deactivationContinue, &m_freeECalculatorState);
+    m_freeECalculatorState.addTransition(this, &cSfcModuleMeasProgram::deactivationContinue, &m_freeECResource);
+    m_freeECResource.addTransition(this, &cSfcModuleMeasProgram::deactivationContinue, &m_deactivationDoneState);
 
-    connect(&m_deactivateDoneState, &QState::entered, this, &cSfcModuleMeasProgram::deactivateMeasDone);
+    m_deactivationMachine.addState(&m_stopECalculatorState);
+    m_deactivationMachine.addState(&m_freeECalculatorState);
+    m_deactivationMachine.addState(&m_freeECResource);
+    m_deactivationMachine.addState(&m_deactivationDoneState);
+
+    m_deactivationMachine.setInitialState(&m_stopECalculatorState);
+
+    connect(&m_stopECalculatorState, &QState::entered, this, &cSfcModuleMeasProgram::stopECCalculator);
+    connect(&m_freeECalculatorState, &QState::entered, this, &cSfcModuleMeasProgram::freeECalculator);
+    connect(&m_freeECResource, &QState::entered, this, &cSfcModuleMeasProgram::freeECResource);
+    connect(&m_deactivationDoneState, &QState::entered, this, &cSfcModuleMeasProgram::deactivationDone);
 
     m_resourceTypeList.addTypesFromConfig(getConfData()->m_dutInpList);
 }
@@ -387,6 +399,26 @@ void cSfcModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QV
                 else
                     notifyError(writesecregisterErrMsg);
                 break;
+            case stopmeas:
+                if (reply == ack) {
+                    emit deactivationContinue();
+                }
+                else
+                    notifyError(stopmeasErrMsg);
+                break;
+            case freeecalcunits:
+                if (reply == ack) // we only continue if sec server manager acknowledges
+                    emit deactivationContinue();
+                else
+                    notifyError(freesececalcunitErrMsg);
+                break;
+
+            case freeecresource:
+                if (reply == ack)
+                    emit deactivationContinue();
+                else
+                    notifyError(freeresourceErrMsg);
+                break;
             }
         }
     }
@@ -482,6 +514,32 @@ void cSfcModuleMeasProgram::setECResultAndResetInt()
 void cSfcModuleMeasProgram::checkForRestart()
 {
 
+}
+
+void cSfcModuleMeasProgram::stopECCalculator()
+{
+    m_MsgNrCmdList[m_pSECInterface->stop(m_masterErrCalcName)] = stopmeas;
+
+}
+
+void cSfcModuleMeasProgram::freeECalculator()
+{
+    m_bActive = false;
+    m_MsgNrCmdList[m_pSECInterface->freeECalcUnits()] = freeecalcunits;
+}
+
+void cSfcModuleMeasProgram::freeECResource()
+{
+    m_MsgNrCmdList[m_rmInterface.freeResource("SEC1", "ECALCULATOR")] = freeecresource;
+}
+
+void cSfcModuleMeasProgram::deactivationDone()
+{
+    disconnect(&m_rmInterface, 0, this, 0);
+    disconnect(m_pSECInterface.get(), 0, this, 0);
+    disconnect(m_pcbInterface.get(), 0, this, 0);
+
+    emit deactivateMeasDone();
 }
 
 }
