@@ -4,6 +4,7 @@
 #include <QJsonArray>
 #include <QStringList>
 
+#include <scpi.h>
 #include <vs_abstracteventsystem.h>
 #include <doublevalidator.h>
 #include <vfmoduleactvalue.h>
@@ -84,7 +85,7 @@ void cTransformer1ModuleMeasProgram::generateVeinInterface()
         pActvalue->setChannelName(QString("ERR%1").arg(i+1));
         pActvalue->setUnit("%");
 
-        pSCPIInfo = new cSCPIInfo("MEASURE", pActvalue->getChannelName(), "8", pActvalue->getName(), "0", pActvalue->getUnit());
+        pSCPIInfo = new cSCPIInfo("MEASURE", pActvalue->getChannelName(), SCPI::isCmdwP, pActvalue->getName(), SCPI::isComponent);
         pActvalue->setSCPIInfo(pSCPIInfo);
 
         m_veinActValueList.append(pActvalue); // we add the component for our measurement
@@ -96,7 +97,7 @@ void cTransformer1ModuleMeasProgram::generateVeinInterface()
         pActvalue->setChannelName(QString("ANG%1").arg(i+1));
         pActvalue->setUnit("°");
 
-        pSCPIInfo = new cSCPIInfo("MEASURE", pActvalue->getChannelName(), "8", pActvalue->getName(), "0", pActvalue->getUnit());
+        pSCPIInfo = new cSCPIInfo("MEASURE", pActvalue->getChannelName(), SCPI::isCmdwP, pActvalue->getName(), SCPI::isComponent);
         pActvalue->setSCPIInfo(pSCPIInfo);
 
         m_veinActValueList.append(pActvalue); // we add the component for our measurement
@@ -108,7 +109,7 @@ void cTransformer1ModuleMeasProgram::generateVeinInterface()
         pActvalue->setChannelName(QString("RAT%1").arg(i+1));
         pActvalue->setUnit("");
 
-        pSCPIInfo = new cSCPIInfo("MEASURE", pActvalue->getChannelName(), "8", pActvalue->getName(), "0", pActvalue->getUnit());
+        pSCPIInfo = new cSCPIInfo("MEASURE", pActvalue->getChannelName(), SCPI::isCmdwP, pActvalue->getName(), SCPI::isComponent);
         pActvalue->setSCPIInfo(pSCPIInfo);
 
         m_veinActValueList.append(pActvalue); // we add the component for our measurement
@@ -120,7 +121,7 @@ void cTransformer1ModuleMeasProgram::generateVeinInterface()
         pActvalue->setChannelName(QString("INSEC%1").arg(i+1));
         pActvalue->setUnit(QString(getConfData()->m_clampUnit[0]));
 
-        pSCPIInfo = new cSCPIInfo("MEASURE", pActvalue->getChannelName(), "8", pActvalue->getName(), "0", pActvalue->getUnit());
+        pSCPIInfo = new cSCPIInfo("MEASURE", pActvalue->getChannelName(), SCPI::isCmdwP, pActvalue->getName(), SCPI::isComponent);
         pActvalue->setSCPIInfo(pSCPIInfo);
 
         m_veinActValueList.append(pActvalue); // we add the component for our measurement
@@ -132,7 +133,7 @@ void cTransformer1ModuleMeasProgram::generateVeinInterface()
         pActvalue->setChannelName(QString("IXSEC%1").arg(i+1));
         pActvalue->setUnit(QString(getConfData()->m_clampUnit[2]));
 
-        pSCPIInfo = new cSCPIInfo("MEASURE", pActvalue->getChannelName(), "8", pActvalue->getName(), "0", pActvalue->getUnit());
+        pSCPIInfo = new cSCPIInfo("MEASURE", pActvalue->getChannelName(), SCPI::isCmdwP, pActvalue->getName(), SCPI::isComponent);
         pActvalue->setSCPIInfo(pSCPIInfo);
 
         m_veinActValueList.append(pActvalue); // we add the component for our measurement
@@ -144,7 +145,7 @@ void cTransformer1ModuleMeasProgram::generateVeinInterface()
         pActvalue->setChannelName(QString("IXPRIM%1").arg(i+1));
         pActvalue->setUnit(QString(getConfData()->m_clampUnit[4]));
 
-        pSCPIInfo = new cSCPIInfo("MEASURE", pActvalue->getChannelName(), "8", pActvalue->getName(), "0", pActvalue->getUnit());
+        pSCPIInfo = new cSCPIInfo("MEASURE", pActvalue->getChannelName(), SCPI::isCmdwP, pActvalue->getName(), SCPI::isComponent);
         pActvalue->setSCPIInfo(pSCPIInfo);
 
         m_veinActValueList.append(pActvalue); // we add the component for our measurement
@@ -157,7 +158,7 @@ void cTransformer1ModuleMeasProgram::generateVeinInterface()
                                                          QVariant(getConfData()->primClampPrim.m_fValue));
     s = QString(getConfData()->m_clampUnit[0]);
     m_pPrimClampPrimParameter->setUnit(s);
-    m_pPrimClampPrimParameter->setSCPIInfo(new cSCPIInfo("CONFIGURATION","PCPRIMARY", "10", "PAR_PrimClampPrim", "0", s));
+    m_pPrimClampPrimParameter->setSCPIInfo(new cSCPIInfo("CONFIGURATION","PCPRIMARY", SCPI::isQuery|SCPI::isCmdwP, "PAR_PrimClampPrim", SCPI::isComponent));
 
     cDoubleValidator *dValidator;
     dValidator = new cDoubleValidator(0.000001, 1000000.0, 0.000001);
@@ -171,7 +172,7 @@ void cTransformer1ModuleMeasProgram::generateVeinInterface()
                                                         QVariant(getConfData()->primClampSec.m_fValue));
     s = QString(getConfData()->m_clampUnit[1]);
     m_pPrimClampSecParameter->setUnit(s);
-    m_pPrimClampSecParameter->setSCPIInfo(new cSCPIInfo("CONFIGURATION","PCSECONDARY", "10", "PAR_PrimClampSec", "0", s));
+    m_pPrimClampSecParameter->setSCPIInfo(new cSCPIInfo("CONFIGURATION","PCSECONDARY", SCPI::isQuery|SCPI::isCmdwP, "PAR_PrimClampSec", SCPI::isComponent));
 
     dValidator = new cDoubleValidator(0.000001, 1000000.0, 0.000001);
     m_pPrimClampSecParameter->setValidator(dValidator);
@@ -184,7 +185,7 @@ void cTransformer1ModuleMeasProgram::generateVeinInterface()
                                                         QVariant(getConfData()->secClampPrim.m_fValue));
     s = QString(getConfData()->m_clampUnit[2]);
     m_pSecClampPrimParameter->setUnit(s);
-    m_pSecClampPrimParameter->setSCPIInfo(new cSCPIInfo("CONFIGURATION","SCPRIMARY", "10", "PAR_SecClampPrim", "0", s));
+    m_pSecClampPrimParameter->setSCPIInfo(new cSCPIInfo("CONFIGURATION","SCPRIMARY", SCPI::isQuery|SCPI::isCmdwP, "PAR_SecClampPrim", SCPI::isComponent));
 
     dValidator = new cDoubleValidator(0.000001, 1000000.0, 0.000001);
     m_pSecClampPrimParameter->setValidator(dValidator);
@@ -197,7 +198,7 @@ void cTransformer1ModuleMeasProgram::generateVeinInterface()
                                                        QVariant(getConfData()->secClampSec.m_fValue));
     s = QString(getConfData()->m_clampUnit[3]);
     m_pSecClampSecParameter->setUnit(s);
-    m_pSecClampSecParameter->setSCPIInfo(new cSCPIInfo("CONFIGURATION","SCSECONDARY", "10", "PAR_SecClampSec", "0", s));
+    m_pSecClampSecParameter->setSCPIInfo(new cSCPIInfo("CONFIGURATION","SCSECONDARY", SCPI::isQuery|SCPI::isCmdwP, "PAR_SecClampSec", SCPI::isComponent));
 
     dValidator = new cDoubleValidator(0.000001, 1000000.0, 0.000001);
     m_pSecClampSecParameter->setValidator(dValidator);
@@ -210,7 +211,7 @@ void cTransformer1ModuleMeasProgram::generateVeinInterface()
                                                    QVariant(getConfData()->dutPrim.m_fValue));
     s = QString(getConfData()->m_clampUnit[4]);
     m_pPrimDutParameter->setUnit(s);
-    m_pPrimDutParameter->setSCPIInfo(new cSCPIInfo("CONFIGURATION","DUTPRIMARY", "10", "PAR_DutPrimary", "0", s));
+    m_pPrimDutParameter->setSCPIInfo(new cSCPIInfo("CONFIGURATION","DUTPRIMARY", SCPI::isQuery|SCPI::isCmdwP, "PAR_DutPrimary", SCPI::isComponent));
 
     dValidator = new cDoubleValidator(0.000001, 1000000.0, 0.000001);
     m_pPrimDutParameter->setValidator(dValidator);
@@ -223,7 +224,7 @@ void cTransformer1ModuleMeasProgram::generateVeinInterface()
                                                   QVariant(getConfData()->dutSec.m_fValue));
     s = QString(getConfData()->m_clampUnit[5]);
     m_pSecDutParameter->setUnit(s);
-    m_pSecDutParameter->setSCPIInfo(new cSCPIInfo("CONFIGURATION","DUTSECONDARY", "10", "PAR_DutSecondary", "0", s));
+    m_pSecDutParameter->setSCPIInfo(new cSCPIInfo("CONFIGURATION","DUTSECONDARY", SCPI::isQuery|SCPI::isCmdwP, "PAR_DutSecondary", SCPI::isComponent));
 
     dValidator = new cDoubleValidator(0.000001, 1000000.0, 0.000001);
     m_pSecDutParameter->setValidator(dValidator);
