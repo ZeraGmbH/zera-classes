@@ -52,22 +52,6 @@ void VfModuleParameter::exportMetaData(QJsonObject &jsObj)
     jsObj.insert(m_sName, jsonObj);
 }
 
-void VfModuleParameter::exportSCPIInfo(QJsonArray &jsArr)
-{
-    if (m_scpiInfo) {
-        m_scpiInfo->appendSCPIInfo(jsArr);
-    }
-}
-
-void VfModuleParameter::setScpiInfo(const QString &model, const QString &cmd, int cmdTypeMask, const QString &veinComponentName, SCPI::eSCPIEntryType entryType)
-{
-    m_scpiInfo = std::make_unique<ScpiVeinComponentInfo>(model,
-                                                         cmd,
-                                                         cmdTypeMask,
-                                                         veinComponentName,
-                                                         entryType);
-}
-
 void VfModuleParameter::setValidator(ValidatorInterface *validator)
 {
     if(m_pValidator)

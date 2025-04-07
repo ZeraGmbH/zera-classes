@@ -34,6 +34,25 @@ void VfModuleComponent::exportMetaData(QJsonObject &jsObj)
     jsObj.insert(m_sName, jsonObj);
 }
 
+void VfModuleComponent::exportSCPIInfo(QJsonArray &jsArr)
+{
+    if (m_scpiInfo)
+        m_scpiInfo->appendSCPIInfo(jsArr);
+}
+
+void VfModuleComponent::setScpiInfo(const QString &model,
+                                    const QString &cmd,
+                                    int cmdTypeMask,
+                                    const QString &veinComponentName,
+                                    SCPI::eSCPIEntryType entryType)
+{
+    m_scpiInfo = std::make_unique<ScpiVeinComponentInfo>(model,
+                                                         cmd,
+                                                         cmdTypeMask,
+                                                         veinComponentName,
+                                                         entryType);
+}
+
 void VfModuleComponent::setChannelName(QString name)
 {
     m_sChannelName = name;
