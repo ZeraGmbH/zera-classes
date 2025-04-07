@@ -25,6 +25,12 @@ enum sfcmoduleCmds
     readrefInputalias,
     readdutInputalias,
     setsecintnotifier,
+
+    freeecalcunits,
+    freeecresource,
+
+    stopmeas,
+
     readintregister,
     resetintregister,
     readvicount
@@ -69,7 +75,10 @@ private:
     bool m_bMeasurementRunning = false;
 
     // statemachine for deactivating
-    QFinalState m_deactivateDoneState;
+    QState m_stopECalculatorState; // we stop running measurement
+    QState m_freeECalculatorState; // we give back our ecalcunits to sec server
+    QState m_freeECResource; // and also give them back to the resource manager
+    QFinalState m_deactivationDoneState;
 
     VfModuleParameter* m_pStartStopPar;
     VfModuleParameter* m_pFlankCountAct;
@@ -146,6 +155,11 @@ private slots:
     void setRating();
     void setECResultAndResetInt();
     void checkForRestart();
+
+    void stopECCalculator();
+    void freeECalculator();
+    void freeECResource();
+    void deactivationDone();
 };
 
 }
