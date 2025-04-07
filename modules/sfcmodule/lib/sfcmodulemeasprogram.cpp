@@ -434,8 +434,7 @@ void cSfcModuleMeasProgram::generateVeinInterface()
     m_pStartStopPar->setValidator(new cIntValidator(0,1,1));
     m_pStartStopPar->setScpiInfo("CALCULATE", "START",
                                  SCPI::isCmdwP | SCPI::isQuery,
-                                 m_pStartStopPar->getName(),
-                                 SCPI::isComponent);
+                                 m_pStartStopPar->getName());
     m_pModule->m_veinModuleParameterMap[key] = m_pStartStopPar;
 
     m_pFlankCountAct = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
@@ -444,8 +443,7 @@ void cSfcModuleMeasProgram::generateVeinInterface()
                                              QVariant((int)0));
     m_pFlankCountAct->setScpiInfo("CALCULATE", "FLANKCOUNT",
                                   SCPI::isQuery,
-                                  m_pFlankCountAct->getName(),
-                                  SCPI::isComponent);
+                                  m_pFlankCountAct->getName());
     m_pModule->m_veinModuleParameterMap[key] = m_pFlankCountAct;
 
     m_pLedStateAct = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
@@ -454,8 +452,7 @@ void cSfcModuleMeasProgram::generateVeinInterface()
                                              QVariant((int)0));
     m_pLedStateAct->setScpiInfo("CALCULATE", "LEDSTATUS",
                                 SCPI::isQuery,
-                                m_pLedStateAct->getName(),
-                                SCPI::isComponent);
+                                m_pLedStateAct->getName());
     m_pModule->m_veinModuleParameterMap[key] = m_pLedStateAct;
 
     m_pLedInitialStateAct = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
@@ -464,8 +461,7 @@ void cSfcModuleMeasProgram::generateVeinInterface()
                                            QVariant((int)0));
     m_pLedInitialStateAct->setScpiInfo("CALCULATE", "LEDSTATUS",
                                        SCPI::isQuery,
-                                       m_pLedInitialStateAct->getName(),
-                                       SCPI::isComponent);
+                                       m_pLedInitialStateAct->getName());
     m_pModule->m_veinModuleParameterMap[key] = m_pLedInitialStateAct;
 }
 

@@ -176,7 +176,7 @@ void cDftModuleMeasProgram::generateVeinInterface()
                                                            QString("Integration time"),
                                                            QVariant(getConfData()->m_fMeasInterval.m_fValue));
     m_pIntegrationTimeParameter->setUnit("s");
-    m_pIntegrationTimeParameter->setScpiInfo("CONFIGURATION","TINTEGRATION", SCPI::isQuery|SCPI::isCmdwP, "PAR_Interval", SCPI::isComponent);
+    m_pIntegrationTimeParameter->setScpiInfo("CONFIGURATION","TINTEGRATION", SCPI::isQuery|SCPI::isCmdwP, "PAR_Interval");
     m_pIntegrationTimeParameter->setValidator(new cDoubleValidator(1.0, 100.0, 0.5));
     m_pModule->m_veinModuleParameterMap[key] = m_pIntegrationTimeParameter; // for modules use
 
@@ -187,7 +187,7 @@ void cDftModuleMeasProgram::generateVeinInterface()
                                                    QString("Reference channel"),
                                                    refChannelAliasConfigured);
 
-    m_pRefChannelParameter->setScpiInfo("CONFIGURATION","REFCHANNEL", SCPI::isQuery|SCPI::isCmdwP, "PAR_RefChannel", SCPI::isComponent);
+    m_pRefChannelParameter->setScpiInfo("CONFIGURATION","REFCHANNEL", SCPI::isQuery|SCPI::isCmdwP, "PAR_RefChannel");
 
     m_pModule->m_veinModuleParameterMap[key] = m_pRefChannelParameter; // for modules use
     // we must set validator after activation because we don't know the channel names here
@@ -404,13 +404,13 @@ void cDftModuleMeasProgram::setSCPIMeasInfo()
 {
     for (int i = 0; i < getConfData()->m_valueChannelList.count(); i++) {
         QString channelName = m_veinPolarValue.at(i)->getChannelName();
-        m_veinActValueList.at(i)->setScpiInfo("MEASURE", channelName, SCPI::isCmdwP, m_veinActValueList.at(i)->getName(), SCPI::isComponent);
+        m_veinActValueList.at(i)->setScpiInfo("MEASURE", channelName, SCPI::isCmdwP, m_veinActValueList.at(i)->getName());
 
         // Try hard to find unique names with four letters...
         QString polarChannelName = channelName.replace("L", "").replace("-", "").replace("AUX", "4");
-        m_veinPolarValue.at(i)->setScpiInfo("MEASURE", polarChannelName, SCPI::isCmdwP, m_veinPolarValue.at(i)->getName(), SCPI::isComponent);
+        m_veinPolarValue.at(i)->setScpiInfo("MEASURE", polarChannelName, SCPI::isCmdwP, m_veinPolarValue.at(i)->getName());
     }
-    m_pRFieldActualValue->setScpiInfo("MEASURE", "RFIELD", SCPI::isCmdwP, m_pRFieldActualValue->getName(), SCPI::isComponent);
+    m_pRFieldActualValue->setScpiInfo("MEASURE", "RFIELD", SCPI::isCmdwP, m_pRFieldActualValue->getName());
 }
 
 

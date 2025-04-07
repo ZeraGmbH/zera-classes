@@ -14,7 +14,7 @@ public:
                      const QString &cmd,
                      int cmdTypeMask, // e.g SCPI::isQuery|SCPI::isCmdwP
                      const QString &veinComponentName,
-                     SCPI::eSCPIEntryType entryType);
+                     SCPI::eSCPIEntryType entryType = SCPI::isComponent);
 private:
     std::unique_ptr<ScpiVeinComponentInfo> m_scpiInfo;
 };

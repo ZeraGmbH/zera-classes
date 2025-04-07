@@ -226,7 +226,7 @@ void cPower1ModuleMeasProgram::generateVeinInterface()
                                                           QString("Frequency output constant"),
                                                           QVariant(0.0));
         if(getConfData()->m_enableScpiCommands)
-            pFoutParameter->setScpiInfo("CONFIGURATION",QString("M%1CONSTANT").arg(i), SCPI::isQuery, pFoutParameter->getName(), SCPI::isComponent);
+            pFoutParameter->setScpiInfo("CONFIGURATION",QString("M%1CONSTANT").arg(i), SCPI::isQuery, pFoutParameter->getName());
 
         m_FoutConstParameterList.append(pFoutParameter);
         m_pModule->m_veinModuleParameterMap[key] = pFoutParameter; // for modules use
@@ -237,7 +237,7 @@ void cPower1ModuleMeasProgram::generateVeinInterface()
                                                           QString("Frequency output name"),
                                                           QVariant(foutName));
         if(getConfData()->m_enableScpiCommands)
-            pFoutParameter->setScpiInfo("CONFIGURATION",QString("M%1OUT").arg(i), SCPI::isQuery, pFoutParameter->getName(), SCPI::isComponent);
+            pFoutParameter->setScpiInfo("CONFIGURATION",QString("M%1OUT").arg(i), SCPI::isQuery, pFoutParameter->getName());
 
         m_pModule->m_veinModuleParameterMap[key] = pFoutParameter; // for modules use
 
@@ -275,21 +275,24 @@ void cPower1ModuleMeasProgram::generateVeinInterface()
                                                          QString("Measuring mode"),
                                                          QVariant(getConfData()->m_sMeasuringMode.m_sValue));
     if(getConfData()->m_enableScpiCommands)
-        m_pMeasuringmodeParameter->setScpiInfo("CONFIGURATION","MMODE", SCPI::isQuery|SCPI::isCmdwP, "PAR_MeasuringMode", SCPI::isComponent);
+        m_pMeasuringmodeParameter->setScpiInfo("CONFIGURATION","MMODE", SCPI::isQuery|SCPI::isCmdwP, "PAR_MeasuringMode");
 
     cStringValidator *sValidator = new cStringValidator(getConfData()->m_sMeasmodeList);
     m_pMeasuringmodeParameter->setValidator(sValidator);
     m_pModule->m_veinModuleParameterMap[key] = m_pMeasuringmodeParameter; // for modules use
 
     if(getConfData()->m_enableScpiCommands)
-        m_pModule->scpiCommandList.append(new ScpiVeinComponentInfo("CONFIGURATION", QString("MMODE:CATALOG"), SCPI::isQuery, m_pMeasuringmodeParameter->getName(), SCPI::isCatalog));
+        m_pModule->scpiCommandList.append(new ScpiVeinComponentInfo("CONFIGURATION", QString("MMODE:CATALOG"),
+                                                                    SCPI::isQuery,
+                                                                    m_pMeasuringmodeParameter->getName(),
+                                                                    SCPI::isCatalog));
 
     m_pMModePhaseSelectParameter = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
                                                          key = QString("PAR_MeasModePhaseSelect"),
                                                          QString("Active phases selection mask"),
                                                          getInitialPhaseOnOffVeinVal());
     if(getConfData()->m_enableScpiCommands)
-        m_pMModePhaseSelectParameter->setScpiInfo("CONFIGURATION","MEASMODEPHASESELECT", SCPI::isQuery|SCPI::isCmdwP, "PAR_MeasModePhaseSelect", SCPI::isComponent);
+        m_pMModePhaseSelectParameter->setScpiInfo("CONFIGURATION","MEASMODEPHASESELECT", SCPI::isQuery|SCPI::isCmdwP, "PAR_MeasModePhaseSelect");
     m_MModePhaseSelectValidator = new cStringValidator("");
     m_pMModePhaseSelectParameter->setValidator(m_MModePhaseSelectValidator);
     m_pModule->m_veinModuleParameterMap[key] = m_pMModePhaseSelectParameter; // for modules use
@@ -342,12 +345,12 @@ void cPower1ModuleMeasProgram::generateVeinInterface()
     m_pIntegrationParameter->setUnit(unit);
     if (btime) {
         if(getConfData()->m_enableScpiCommands)
-            m_pIntegrationParameter->setScpiInfo("CONFIGURATION","TINTEGRATION", SCPI::isQuery|SCPI::isCmdwP, "PAR_Interval", SCPI::isComponent);
+            m_pIntegrationParameter->setScpiInfo("CONFIGURATION","TINTEGRATION", SCPI::isQuery|SCPI::isCmdwP, "PAR_Interval");
         m_pIntegrationParameter->setValidator(new cDoubleValidator(1.0, 100.0, 0.5));
     }
     else {
         if(getConfData()->m_enableScpiCommands)
-            m_pIntegrationParameter->setScpiInfo("CONFIGURATION","TPERIOD", SCPI::isQuery|SCPI::isCmdwP, "PAR_Interval", SCPI::isComponent);
+            m_pIntegrationParameter->setScpiInfo("CONFIGURATION","TPERIOD", SCPI::isQuery|SCPI::isCmdwP, "PAR_Interval");
         m_pIntegrationParameter->setValidator(new cIntValidator(5, 5000, 1));
     }
     m_pModule->m_veinModuleParameterMap[key] = m_pIntegrationParameter; // for modules use
@@ -658,7 +661,7 @@ void cPower1ModuleMeasProgram::setSCPIMeasInfo()
 {
     if(getConfData()->m_enableScpiCommands) {
         for (int i = 0; i < MeasPhaseCount+SumValueCount; i++)
-            m_veinActValueList.at(i)->setScpiInfo("MEASURE", m_veinActValueList.at(i)->getChannelName(), SCPI::isCmdwP, m_veinActValueList.at(i)->getName(), SCPI::isComponent);
+            m_veinActValueList.at(i)->setScpiInfo("MEASURE", m_veinActValueList.at(i)->getChannelName(), SCPI::isCmdwP, m_veinActValueList.at(i)->getName());
     }
 }
 
@@ -1115,7 +1118,7 @@ void cPower1ModuleMeasProgram::generateVeinInterfaceForQrefFreq()
         const QString unit = "kHz";
         m_QREFFrequencyParameter->setUnit(unit);
         if(getConfData()->m_enableScpiCommands)
-            m_QREFFrequencyParameter->setScpiInfo("CONFIGURATION",QString("FIXFREQ"), SCPI::isQuery|SCPI::isCmdwP, m_QREFFrequencyParameter->getName(), SCPI::isComponent);
+            m_QREFFrequencyParameter->setScpiInfo("CONFIGURATION",QString("FIXFREQ"), SCPI::isQuery|SCPI::isCmdwP, m_QREFFrequencyParameter->getName());
         cDoubleValidator *validator = new cDoubleValidator(0.001, 200.0, 0.001);
         m_QREFFrequencyParameter->setValidator(validator);
         m_pModule->m_veinModuleParameterMap[paramLabel] = m_QREFFrequencyParameter; // for modules use

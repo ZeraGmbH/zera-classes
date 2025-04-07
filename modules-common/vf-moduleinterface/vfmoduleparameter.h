@@ -29,7 +29,7 @@ public:
                      const QString &cmd,
                      int cmdTypeMask, // e.g SCPI::isQuery|SCPI::isCmdwP
                      const QString &veinComponentName,
-                     SCPI::eSCPIEntryType entryType);
+                     SCPI::eSCPIEntryType entryType = SCPI::isComponent);
     void setValidator(ValidatorInterface* validator);
     void veinTransaction(QUuid clientId, QVariant newValue, QVariant oldValue, VeinComponent::ComponentData::Command vccmd);
 

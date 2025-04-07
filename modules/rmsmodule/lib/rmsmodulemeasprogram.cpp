@@ -162,11 +162,11 @@ void cRmsModuleMeasProgram::generateVeinInterface()
                                                            val);
     m_pIntegrationParameter->setUnit(unit);
     if (timeIntegration) {
-        m_pIntegrationParameter->setScpiInfo("CONFIGURATION","TINTEGRATION", SCPI::isQuery|SCPI::isCmdwP, "PAR_Interval", SCPI::isComponent);
+        m_pIntegrationParameter->setScpiInfo("CONFIGURATION","TINTEGRATION", SCPI::isQuery|SCPI::isCmdwP, "PAR_Interval");
         m_pIntegrationParameter->setValidator(new cDoubleValidator(1.0, 100.0, 0.5));
     }
     else {
-        m_pIntegrationParameter->setScpiInfo("CONFIGURATION","TPERIOD", SCPI::isQuery|SCPI::isCmdwP, "PAR_Interval", SCPI::isComponent);
+        m_pIntegrationParameter->setScpiInfo("CONFIGURATION","TPERIOD", SCPI::isQuery|SCPI::isCmdwP, "PAR_Interval");
         m_pIntegrationParameter->setValidator(new cIntValidator(5, 5000, 1));
     }
     m_pModule->m_veinModuleParameterMap[key] = m_pIntegrationParameter; // for modules use
@@ -411,7 +411,7 @@ void cRmsModuleMeasProgram::setActualValuesNames()
 void cRmsModuleMeasProgram::setSCPIMeasInfo()
 {
     for (int i = 0; i < getConfData()->m_valueChannelList.count(); i++)
-        m_veinActValueList.at(i)->setScpiInfo("MEASURE", m_veinActValueList.at(i)->getChannelName(), SCPI::isCmdwP, m_veinActValueList.at(i)->getName(), SCPI::isComponent);
+        m_veinActValueList.at(i)->setScpiInfo("MEASURE", m_veinActValueList.at(i)->getChannelName(), SCPI::isCmdwP, m_veinActValueList.at(i)->getName());
 }
 
 void cRmsModuleMeasProgram::setInterfaceActualValues(QVector<float> *actualValues)

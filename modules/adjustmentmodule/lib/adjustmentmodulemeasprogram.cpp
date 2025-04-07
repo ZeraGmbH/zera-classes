@@ -285,7 +285,7 @@ void cAdjustmentModuleMeasProgram::generateVeinInterface()
                                                  QVariant(int(0)),
                                                  false); // no deferred notification necessary
 
-    m_pPARComputation->setScpiInfo("CALCULATE", "COMPUTATION", SCPI::isQuery|SCPI::isCmdwP, m_pPARComputation->getName(), SCPI::isComponent);
+    m_pPARComputation->setScpiInfo("CALCULATE", "COMPUTATION", SCPI::isQuery|SCPI::isCmdwP, m_pPARComputation->getName());
     m_pPARComputation->setValidator(new cIntValidator(0,1));
     m_pModule->m_veinModuleParameterMap[key] = m_pPARComputation;
     connect(m_pPARComputation, &VfModuleParameter::sigValueChanged, this, &cAdjustmentModuleMeasProgram::computationStartCommand);
@@ -297,7 +297,7 @@ void cAdjustmentModuleMeasProgram::generateVeinInterface()
                                              QVariant(int(0)),
                                              true); // deferred notification necessary
 
-    m_pPARStorage->setScpiInfo("CALCULATE", "STORAGE", SCPI::isQuery|SCPI::isCmdwP, m_pPARStorage->getName(), SCPI::isComponent);
+    m_pPARStorage->setScpiInfo("CALCULATE", "STORAGE", SCPI::isQuery|SCPI::isCmdwP, m_pPARStorage->getName());
     m_pPARStorage->setValidator(new cIntValidator(1,2));
     m_pModule->m_veinModuleParameterMap[key] = m_pPARStorage;
     connect(m_pPARStorage, &VfModuleParameter::sigValueChanged, this, &cAdjustmentModuleMeasProgram::storageStartCommand);
@@ -308,7 +308,7 @@ void cAdjustmentModuleMeasProgram::generateVeinInterface()
                                                   QString("Gain adjustment status"),
                                                   QVariant(int(0)),
                                                   true); // deferred notification necessary
-    m_pPARAdjustGainStatus->setScpiInfo("CALCULATE", "GSTATUS", SCPI::isQuery|SCPI::isCmdwP, m_pPARAdjustGainStatus->getName(), SCPI::isComponent);
+    m_pPARAdjustGainStatus->setScpiInfo("CALCULATE", "GSTATUS", SCPI::isQuery|SCPI::isCmdwP, m_pPARAdjustGainStatus->getName());
     m_pModule->m_veinModuleParameterMap[key] = m_pPARAdjustGainStatus;
     connect(m_pPARAdjustGainStatus, &VfModuleParameter::sigValueChanged, this, &cAdjustmentModuleMeasProgram::setAdjustGainStatusStartCommand);
 
@@ -317,7 +317,7 @@ void cAdjustmentModuleMeasProgram::generateVeinInterface()
                                                        QString("Phase adjustment status"),
                                                        QVariant(int(0)),
                                                        true); // deferred notification necessary
-    m_pPARAdjustPhaseStatus->setScpiInfo("CALCULATE", "PSTATUS", SCPI::isQuery|SCPI::isCmdwP, m_pPARAdjustPhaseStatus->getName(), SCPI::isComponent);
+    m_pPARAdjustPhaseStatus->setScpiInfo("CALCULATE", "PSTATUS", SCPI::isQuery|SCPI::isCmdwP, m_pPARAdjustPhaseStatus->getName());
     m_pModule->m_veinModuleParameterMap[key] = m_pPARAdjustPhaseStatus;
     connect(m_pPARAdjustPhaseStatus, &VfModuleParameter::sigValueChanged, this, &cAdjustmentModuleMeasProgram::setAdjustPhaseStatusStartCommand);
 
@@ -327,7 +327,7 @@ void cAdjustmentModuleMeasProgram::generateVeinInterface()
                                                         QVariant(int(0)),
                                                         true); // deferred notification necessary
 
-    m_pPARAdjustOffsetStatus->setScpiInfo("CALCULATE", "OSTATUS", SCPI::isQuery|SCPI::isCmdwP, m_pPARAdjustOffsetStatus->getName(), SCPI::isComponent);
+    m_pPARAdjustOffsetStatus->setScpiInfo("CALCULATE", "OSTATUS", SCPI::isQuery|SCPI::isCmdwP, m_pPARAdjustOffsetStatus->getName());
     m_pModule->m_veinModuleParameterMap[key] = m_pPARAdjustOffsetStatus;
     connect(m_pPARAdjustOffsetStatus, &VfModuleParameter::sigValueChanged, this, &cAdjustmentModuleMeasProgram::setAdjustOffsetStatusStartCommand);
 
@@ -336,7 +336,7 @@ void cAdjustmentModuleMeasProgram::generateVeinInterface()
                                                 QString("Initialize adjustment data"),
                                                 QVariant(int(0)),
                                                 false); // no deferred notification necessary
-    m_pPARAdjustInit->setScpiInfo("CALCULATE", "INIT", SCPI::isQuery|SCPI::isCmdwP, m_pPARAdjustInit->getName(), SCPI::isComponent);
+    m_pPARAdjustInit->setScpiInfo("CALCULATE", "INIT", SCPI::isQuery|SCPI::isCmdwP, m_pPARAdjustInit->getName());
     m_pModule->m_veinModuleParameterMap[key] = m_pPARAdjustInit;
     connect(m_pPARAdjustInit, &VfModuleParameter::sigValueChanged, this, &cAdjustmentModuleMeasProgram::setAdjustInitStartCommand);
 
@@ -345,7 +345,7 @@ void cAdjustmentModuleMeasProgram::generateVeinInterface()
                                                      QString("One amplitude adjustment node"),
                                                      QVariant(QString("")),
                                                      true); // deferred notification necessary
-    m_pPARAdjustAmplitude->setScpiInfo("CALCULATE", "AMPLITUDE", SCPI::isQuery|SCPI::isCmdwP, m_pPARAdjustAmplitude->getName(), SCPI::isComponent);
+    m_pPARAdjustAmplitude->setScpiInfo("CALCULATE", "AMPLITUDE", SCPI::isQuery|SCPI::isCmdwP, m_pPARAdjustAmplitude->getName());
     m_pModule->m_veinModuleParameterMap[key] = m_pPARAdjustAmplitude;
     // we will set the validator later after activation we will know the channel names and their ranges
     connect(m_pPARAdjustAmplitude, &VfModuleParameter::sigValueChanged, this,
@@ -356,7 +356,7 @@ void cAdjustmentModuleMeasProgram::generateVeinInterface()
                                                   QString("One amplitude adjustment node for DC"),
                                                   QVariant(QString("")),
                                                   true); // deferred notification necessary
-    m_pPARAdjustAmplitudeDc->setScpiInfo("CALCULATE", "DCAMPLITUDE", SCPI::isQuery|SCPI::isCmdwP, m_pPARAdjustAmplitudeDc->getName(), SCPI::isComponent);
+    m_pPARAdjustAmplitudeDc->setScpiInfo("CALCULATE", "DCAMPLITUDE", SCPI::isQuery|SCPI::isCmdwP, m_pPARAdjustAmplitudeDc->getName());
     m_pModule->m_veinModuleParameterMap[key] = m_pPARAdjustAmplitudeDc;
     // we will set the validator later after activation we will know the channel names and their ranges
     connect(m_pPARAdjustAmplitudeDc, &VfModuleParameter::sigValueChanged, this,
@@ -367,7 +367,7 @@ void cAdjustmentModuleMeasProgram::generateVeinInterface()
                                                  QString("One phase adjustment node"),
                                                  QVariant(QString("")),
                                                  true); // no deferred notification necessary
-    m_pPARAdjustPhase->setScpiInfo("CALCULATE", "PHASE", SCPI::isQuery|SCPI::isCmdwP, m_pPARAdjustPhase->getName(), SCPI::isComponent);
+    m_pPARAdjustPhase->setScpiInfo("CALCULATE", "PHASE", SCPI::isQuery|SCPI::isCmdwP, m_pPARAdjustPhase->getName());
     m_pModule->m_veinModuleParameterMap[key] = m_pPARAdjustPhase;
     // we will set the validator later after activation we will know the channel names and their ranges
     connect(m_pPARAdjustPhase, &VfModuleParameter::sigValueChanged, this, &cAdjustmentModuleMeasProgram::setAdjustPhaseStartCommand);
@@ -377,7 +377,7 @@ void cAdjustmentModuleMeasProgram::generateVeinInterface()
                                                   QString("One offset adjustment node"),
                                                   QVariant(QString("")),
                                                   true); // no deferred notification necessary
-    m_pPARAdjustOffset->setScpiInfo("CALCULATE", "OFFSET", SCPI::isQuery|SCPI::isCmdwP, m_pPARAdjustOffset->getName(), SCPI::isComponent);
+    m_pPARAdjustOffset->setScpiInfo("CALCULATE", "OFFSET", SCPI::isQuery|SCPI::isCmdwP, m_pPARAdjustOffset->getName());
     m_pModule->m_veinModuleParameterMap[key] = m_pPARAdjustOffset;
     // we will set the validator later after activation we will know the channel names and their ranges
     connect(m_pPARAdjustOffset, &VfModuleParameter::sigValueChanged, this, &cAdjustmentModuleMeasProgram::setAdjustOffsetStartCommand);
@@ -388,7 +388,7 @@ void cAdjustmentModuleMeasProgram::generateVeinInterface()
                                                 QVariant(QString("")),
                                                 false,
                                                 true); // deferred query notification necessary !!!!!
-    m_pPARAdjustSend->setScpiInfo("CALCULATE", "SEND", SCPI::isQuery, m_pPARAdjustSend->getName(), SCPI::isComponent);
+    m_pPARAdjustSend->setScpiInfo("CALCULATE", "SEND", SCPI::isQuery, m_pPARAdjustSend->getName());
     m_pModule->m_veinModuleParameterMap[key] = m_pPARAdjustSend;
     // we will set the validator later after activation we will know the channel names and their ranges
     connect(m_pPARAdjustSend, &VfModuleParameter::sigValueQuery, this, &cAdjustmentModuleMeasProgram::transparentDataSend2Port);
@@ -399,7 +399,7 @@ void cAdjustmentModuleMeasProgram::generateVeinInterface()
                                                    QVariant(QString("")),
                                                    true,  // deferred command notification necessary !!!!!
                                                    true); // deferred query notification necessary !!!!!
-    m_pPARAdjustPCBData->setScpiInfo("CALCULATE", "PCB", SCPI::isQuery|SCPI::isXMLCmd, m_pPARAdjustPCBData->getName(), SCPI::isComponent);
+    m_pPARAdjustPCBData->setScpiInfo("CALCULATE", "PCB", SCPI::isQuery|SCPI::isXMLCmd, m_pPARAdjustPCBData->getName());
     m_pModule->m_veinModuleParameterMap[key] = m_pPARAdjustPCBData;
     // we will set the validator later after activation we will know the channel names and their ranges
     connect(m_pPARAdjustPCBData, &VfModuleParameter::sigValueChanged, this, &cAdjustmentModuleMeasProgram::writePCBAdjustmentData);
@@ -411,7 +411,7 @@ void cAdjustmentModuleMeasProgram::generateVeinInterface()
                                                      QVariant(QString("")),
                                                      true, // deferred command notification necessary !!!!!
                                                      true); // deferred query notification necessary !!!!!
-    m_pPARAdjustClampData->setScpiInfo("CALCULATE", "CLAMP", SCPI::isQuery|SCPI::isXMLCmd, m_pPARAdjustClampData->getName(), SCPI::isComponent);
+    m_pPARAdjustClampData->setScpiInfo("CALCULATE", "CLAMP", SCPI::isQuery|SCPI::isXMLCmd, m_pPARAdjustClampData->getName());
     m_pModule->m_veinModuleParameterMap[key] = m_pPARAdjustClampData;
     // we will set the validator later after activation we will know the channel names and their ranges
     connect(m_pPARAdjustClampData, &VfModuleParameter::sigValueChanged, this, &cAdjustmentModuleMeasProgram::writeCLAMPAdjustmentData);

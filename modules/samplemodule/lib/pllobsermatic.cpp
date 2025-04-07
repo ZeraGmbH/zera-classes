@@ -48,7 +48,7 @@ void cPllObsermatic::generateVeinInterface()
                                              QVariant(""));
     m_pModule->m_veinModuleParameterMap[key] = m_pVeinPllChannelAlias; // for modules use
     // later we have to set the validator for m_pPLLChannel
-    m_pVeinPllChannelAlias->setScpiInfo("CONFIGURATION", "PLLREFERENCE", SCPI::isQuery|SCPI::isCmdwP, m_pVeinPllChannelAlias->getName(), SCPI::isComponent);
+    m_pVeinPllChannelAlias->setScpiInfo("CONFIGURATION", "PLLREFERENCE", SCPI::isQuery|SCPI::isCmdwP, m_pVeinPllChannelAlias->getName());
 
     m_pParPllAutomaticOnOff = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
                                                        key = QString("PAR_PllAutomaticOnOff"),
@@ -56,7 +56,7 @@ void cPllObsermatic::generateVeinInterface()
                                                        QVariant(m_ConfPar.m_ObsermaticConfPar.m_npllAutoAct.m_nActive));
     m_pModule->m_veinModuleParameterMap[key] = m_pParPllAutomaticOnOff; // for modules use
     m_pParPllAutomaticOnOff->setValidator(new cBoolValidator());
-    m_pParPllAutomaticOnOff->setScpiInfo("CONFIGURATION", "PLLAUTO", SCPI::isQuery|SCPI::isCmdwP, m_pParPllAutomaticOnOff->getName(), SCPI::isComponent);
+    m_pParPllAutomaticOnOff->setScpiInfo("CONFIGURATION", "PLLAUTO", SCPI::isQuery|SCPI::isCmdwP, m_pParPllAutomaticOnOff->getName());
 
     m_pPllFixed = new VfModuleComponent(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
                                        QString("ACT_PllFixed"),
