@@ -32,16 +32,18 @@ public slots:
     void setError(); // here we have to emit event for error notification
 
 protected:
-    void sendNotification(VeinComponent::ComponentData::Command vcmd);
-    VeinEvent::EventSystem *m_pEventSystem;
     QString m_sName;
     QString m_sDescription;
     QVariant m_vValue;
     QString m_sChannelName;
     QString m_sChannelUnit;
     QList<QUuid> mClientIdList;
+
 private:
+    void sendNotification(VeinComponent::ComponentData::Command vcmd);
+
     int m_nEntityId;
+    VeinEvent::EventSystem *m_pEventSystem;
     std::unique_ptr<ScpiVeinComponentInfo> m_scpiInfo;
 };
 
