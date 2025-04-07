@@ -49,7 +49,7 @@ private:
 
     cRmsModule* m_pModule;
     ActualValueStartStopHandler m_startStopHandler;
-    QList<VfModuleActvalue*> m_veinActValueList; // the list of actual values we work on
+    QList<VfModuleComponent*> m_veinActValueList; // the list of actual values we work on
     QHash<QString, cMeasChannelInfo> m_measChannelInfoHash;
 
     VfModuleComponent *m_pMeasureSignal;

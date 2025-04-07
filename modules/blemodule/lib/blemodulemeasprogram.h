@@ -3,7 +3,6 @@
 
 #include "blemoduleconfigdata.h"
 #include "basemeasworkprogram.h"
-#include "vfmoduleactvalue.h"
 #include "vfmoduleparameter.h"
 #include <bluetoothconveniencefacade.h>
 #include <efentoenvironmentsensor.h>
@@ -44,7 +43,7 @@ private:
     void handleDemoActualValues();
 
     cBleModule* m_pModule;
-    QList<VfModuleActvalue*> m_veinActValueList; // the list of actual values we work on
+    QList<VfModuleComponent*> m_veinActValueList; // the list of actual values we work on
 
     // statemachine for activating gets the following states
     QFinalState m_activationDoneState;

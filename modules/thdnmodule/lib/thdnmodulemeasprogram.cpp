@@ -12,7 +12,6 @@
 #include <vfmodulemetadata.h>
 #include <vfmodulecomponent.h>
 #include <vfmoduleparameter.h>
-#include <vfmoduleactvalue.h>
 #include <doublevalidator.h>
 #include <intvalidator.h>
 #include <dspinterface.h>
@@ -118,7 +117,7 @@ void cThdnModuleMeasProgram::generateVeinInterface()
 {
     int n = m_pModule->getSharedChannelRangeObserver()->getChannelMNames().count();
     for (int i = 0; i < n; i++) {
-        VfModuleActvalue *pActvalue = new VfModuleActvalue(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
+        VfModuleComponent *pActvalue = new VfModuleComponent(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
                                             QString("ACT_THD%1%2").arg(getConfData()->m_sTHDType).arg(i+1),
                                             QString("THD%1 actual value").arg(getConfData()->m_sTHDType.toLower()));
         m_veinActValueList.append(pActvalue); // we add the component for our measurement

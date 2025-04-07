@@ -106,17 +106,17 @@ void cRangeModuleMeasProgram::syncRanging(QVariant sync)
 
 void cRangeModuleMeasProgram::generateVeinInterface()
 {
-    VfModuleActvalue *pActvalue;
+    VfModuleComponent *pActvalue;
     const QStringList channelMNames = m_pModule->getSharedChannelRangeObserver()->getChannelMNames();
     for (int i = 0; i < channelMNames.count(); i++) {
-        pActvalue = new VfModuleActvalue(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
+        pActvalue = new VfModuleComponent(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
                                             QString("ACT_Channel%1Peak").arg(i+1),
                                             QString("Actual peak value"));
         m_veinActValueList.append(pActvalue); // we add the component for our measurement
         m_pModule->veinModuleActvalueList.append(pActvalue); // and for the modules interface
     }
 
-    pActvalue = new VfModuleActvalue(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
+    pActvalue = new VfModuleComponent(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
                                         QString("ACT_Frequency"),
                                         QString("Actual frequency"));
 
@@ -127,7 +127,7 @@ void cRangeModuleMeasProgram::generateVeinInterface()
     m_pModule->veinModuleActvalueList.append(pActvalue); // and for the modules interface
 
     for (int i = 0; i < channelMNames.count(); i++) {
-        pActvalue = new VfModuleActvalue(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
+        pActvalue = new VfModuleComponent(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
                                             QString("ACT_Channel%1Rms").arg(i+1),
                                             QString("Actual RMS value"));
         m_veinRmsValueList.append(pActvalue); // we add the component for our measurement

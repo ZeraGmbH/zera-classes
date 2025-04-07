@@ -21,7 +21,7 @@ namespace  Server {
 }
 
 class BaseModule;
-class VfModuleActvalue;
+class VfModuleComponent;
 class VfModuleMetaData;
 class VfModuleComponent;
 class VfModuleParameter;

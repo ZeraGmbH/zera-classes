@@ -5,12 +5,12 @@ SourceVeinInterface::SourceVeinInterface()
 {
 }
 
-VfModuleActvalue *SourceVeinInterface::getVeinDeviceInfoComponent()
+VfModuleComponent *SourceVeinInterface::getVeinDeviceInfoComponent()
 {
     return m_veinDeviceInfo;
 }
 
-VfModuleActvalue *SourceVeinInterface::getVeinDeviceStateComponent()
+VfModuleComponent *SourceVeinInterface::getVeinDeviceStateComponent()
 {
     return m_veinDeviceState;
 }
@@ -25,12 +25,12 @@ cJsonParamValidator *SourceVeinInterface::getVeinDeviceParameterValidator()
     return m_veinDeviceParameterValidator;
 }
 
-void SourceVeinInterface::setVeinDeviceInfoComponent(VfModuleActvalue *veinDeviceInfo)
+void SourceVeinInterface::setVeinDeviceInfoComponent(VfModuleComponent *veinDeviceInfo)
 {
     m_veinDeviceInfo = veinDeviceInfo;
 }
 
-void SourceVeinInterface::setVeinDeviceStateComponent(VfModuleActvalue *veinDeviceState)
+void SourceVeinInterface::setVeinDeviceStateComponent(VfModuleComponent *veinDeviceState)
 {
     m_veinDeviceState = veinDeviceState;
 }

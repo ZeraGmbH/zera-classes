@@ -54,8 +54,8 @@ private:
     bool m_bIgnore;
 
     VfModuleComponent *m_pMeasureSignal;
-    QList<VfModuleActvalue*> m_veinActValueList;
-    QList<VfModuleActvalue*> m_veinRmsValueList;
+    QList<VfModuleComponent*> m_veinActValueList;
+    QList<VfModuleComponent*> m_veinRmsValueList;
     TimerTemplateQtPtr m_dspWatchdogTimer;
 
     cDspMeasData* m_pTmpDataDsp;

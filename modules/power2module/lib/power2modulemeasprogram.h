@@ -89,7 +89,7 @@ private:
     QMap<QString, cFoutInfo> m_FoutInfoMap; // a list with frequency output information for each channel
     QHash<int, QString> m_NotifierInfoHash; // a list with channel information for each notifier
 
-    QList<VfModuleActvalue*> m_veinActValueList; // the list of actual values we work on
+    QList<VfModuleComponent*> m_veinActValueList; // the list of actual values we work on
     VfModuleMetaData* m_pPQSCountInfo; // the number of values we produce
     VfModuleMetaData* m_pFoutCount; // number of our frequence outputs
     VfModuleMetaData* m_pNomFrequencyInfo; // the modules nominal frequency

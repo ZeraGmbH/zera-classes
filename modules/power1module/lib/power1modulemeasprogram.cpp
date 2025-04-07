@@ -200,10 +200,10 @@ void cPower1ModuleMeasProgram::stop()
 void cPower1ModuleMeasProgram::generateVeinInterface()
 {
     QString key;
-    VfModuleActvalue *pActvalue;
+    VfModuleComponent *pActvalue;
     for (int i = 0; i < MeasPhaseCount+SumValueCount; i++) {
         QString strDescription = getPhasePowerDescription(i);
-        pActvalue = new VfModuleActvalue(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
+        pActvalue = new VfModuleComponent(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
                                             QString("ACT_PQS%1").arg(i+1),
                                             strDescription);
         m_veinActValueList.append(pActvalue); // we add the component for our measurement
@@ -297,21 +297,21 @@ void cPower1ModuleMeasProgram::generateVeinInterface()
     m_pMModePhaseSelectParameter->setValidator(m_MModePhaseSelectValidator);
     m_pModule->m_veinModuleParameterMap[key] = m_pMModePhaseSelectParameter; // for modules use
 
-    m_MModeCanChangePhaseMask = new VfModuleActvalue(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
+    m_MModeCanChangePhaseMask = new VfModuleComponent(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
                                      QString("ACT_CanChangePhaseMask"),
                                      QString("Boolean indicator that current measurement mode can change phase mask"),
                                      QVariant(false) );
     m_veinActValueList.append(m_MModeCanChangePhaseMask); // we add the component for our measurement
     m_pModule->veinModuleActvalueList.append(m_MModeCanChangePhaseMask); // and for the modules interface
 
-    m_MModePowerDisplayName = new VfModuleActvalue(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
+    m_MModePowerDisplayName = new VfModuleComponent(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
                                                    QString("ACT_PowerDisplayName"),
                                                    QString("Power display name (P/Q/S)"),
                                                    QVariant("") );
     m_veinActValueList.append(m_MModePowerDisplayName);
     m_pModule->veinModuleActvalueList.append(m_MModePowerDisplayName);
 
-    m_MModeMaxMeasSysCount = new VfModuleActvalue(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
+    m_MModeMaxMeasSysCount = new VfModuleComponent(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
                                                      QString("ACT_MaxMeasSysCount"),
                                                      QString("Number of max measurement systems for current measurement mode"),
                                                      QVariant(3) );

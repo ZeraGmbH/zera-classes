@@ -7,7 +7,6 @@
 #include <scpi.h>
 #include <vs_abstracteventsystem.h>
 #include <doublevalidator.h>
-#include <vfmoduleactvalue.h>
 #include <vfmodulemetadata.h>
 #include <vfmoduleparameter.h>
 
@@ -72,12 +71,12 @@ cTransformer1ModuleConfigData *cTransformer1ModuleMeasProgram::getConfData()
 
 void cTransformer1ModuleMeasProgram::generateVeinInterface()
 {
-    VfModuleActvalue *pActvalue;
+    VfModuleComponent *pActvalue;
     QString key;
 
     for (int i = 0; i < getConfData()->m_nTransformerSystemCount; i++)
     {
-        pActvalue = new VfModuleActvalue(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
+        pActvalue = new VfModuleComponent(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
                                             QString("ACT_Error%1").arg(i+1),
                                             QString("Transformer transmission error value"));
         pActvalue->setChannelName(QString("ERR%1").arg(i+1));
@@ -87,7 +86,7 @@ void cTransformer1ModuleMeasProgram::generateVeinInterface()
         m_veinActValueList.append(pActvalue); // we add the component for our measurement
         m_pModule->veinModuleActvalueList.append(pActvalue); // and for the modules interface
 
-        pActvalue = new VfModuleActvalue(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
+        pActvalue = new VfModuleComponent(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
                                             QString("ACT_Angle%1").arg(i+1),
                                             QString("Transformer angle deviation value"));
         pActvalue->setChannelName(QString("ANG%1").arg(i+1));
@@ -97,7 +96,7 @@ void cTransformer1ModuleMeasProgram::generateVeinInterface()
         m_veinActValueList.append(pActvalue); // we add the component for our measurement
         m_pModule->veinModuleActvalueList.append(pActvalue); // and for the modules interface
 
-        pActvalue = new VfModuleActvalue(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
+        pActvalue = new VfModuleComponent(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
                                             QString("ACT_Ratio%1").arg(i+1),
                                             QString("Transformer ratio value"));
         pActvalue->setChannelName(QString("RAT%1").arg(i+1));
@@ -107,7 +106,7 @@ void cTransformer1ModuleMeasProgram::generateVeinInterface()
         m_veinActValueList.append(pActvalue); // we add the component for our measurement
         m_pModule->veinModuleActvalueList.append(pActvalue); // and for the modules interface
 
-        pActvalue = new VfModuleActvalue(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
+        pActvalue = new VfModuleComponent(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
                                             QString("ACT_INSecondary%1").arg(i+1),
                                             QString("Reference N secondary input"));
         pActvalue->setChannelName(QString("INSEC%1").arg(i+1));
@@ -117,7 +116,7 @@ void cTransformer1ModuleMeasProgram::generateVeinInterface()
         m_veinActValueList.append(pActvalue); // we add the component for our measurement
         m_pModule->veinModuleActvalueList.append(pActvalue); // and for the modules interface
 
-        pActvalue = new VfModuleActvalue(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
+        pActvalue = new VfModuleComponent(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
                                             QString("ACT_IXSecondary%1").arg(i+1),
                                             QString("DUT secondary input"));
         pActvalue->setChannelName(QString("IXSEC%1").arg(i+1));
@@ -127,7 +126,7 @@ void cTransformer1ModuleMeasProgram::generateVeinInterface()
         m_veinActValueList.append(pActvalue); // we add the component for our measurement
         m_pModule->veinModuleActvalueList.append(pActvalue); // and for the modules interface
 
-        pActvalue = new VfModuleActvalue(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
+        pActvalue = new VfModuleComponent(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
                                             QString("ACT_IXPrimary%1").arg(i+1),
                                             QString("DUT test primary input"));
         pActvalue->setChannelName(QString("IXPRIM%1").arg(i+1));

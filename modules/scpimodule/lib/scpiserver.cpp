@@ -11,7 +11,6 @@
 //#include <QtSerialPort/QSerialPortInfo>
 
 #include <vfmoduleparameter.h>
-#include <vfmoduleactvalue.h>
 #include <boolvalidator.h>
 
 #include "errormessages.h"
@@ -90,13 +89,13 @@ void cSCPIServer::generateVeinInterface()
     connect(m_pVeinParamSerialOn, &VfModuleParameter::sigValueChanged, this, &cSCPIServer::newSerialOn);
     m_pModule->m_veinModuleParameterMap[key] = m_pVeinParamSerialOn; // auto delete / meta-data / scpi
 
-    m_pVeinSerialScpiDevFileName = new VfModuleActvalue(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
+    m_pVeinSerialScpiDevFileName = new VfModuleComponent(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
                                                     QString("ACT_SerialScpiDeviceFile"),
                                                     QString("Device file name for serial SCPI"),
                                                     QVariant(m_ConfigData.m_SerialDevice.m_sDevice) );
     m_pModule->veinModuleActvalueList.append(m_pVeinSerialScpiDevFileName); // auto delete / meta-data / scpi
 
-    m_veinDevIface = new VfModuleActvalue(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
+    m_veinDevIface = new VfModuleComponent(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
                                                      QString("ACT_DEV_IFACE"),
                                                      QString("SCPI interface description for current session"),
                                                      QVariant("") );

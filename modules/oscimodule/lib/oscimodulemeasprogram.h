@@ -50,7 +50,7 @@ private:
 
     cOsciModule* m_pModule;
     ActualValueStartStopHandler m_startStopHandler;
-    QList<VfModuleActvalue*> m_veinActValueList; // the list of actual values we work on
+    QList<VfModuleComponent*> m_veinActValueList; // the list of actual values we work on
     VfModuleMetaData* m_pOsciCountInfo;
     VfModuleComponent* m_pMeasureSignal;
     VfModuleParameter* m_pRefChannelParameter;

@@ -30,8 +30,8 @@ private:
     cLambdaModuleConfigData* getConfData();
 
     cLambdaModule* m_pModule;
-    QList<VfModuleActvalue*> m_veinLambdaActValues;
-    QList<VfModuleActvalue*> m_veinLoadTypeList;
+    QList<VfModuleComponent*> m_veinLambdaActValues;
+    QList<VfModuleComponent*> m_veinLoadTypeList;
     VfModuleMetaData* m_pLAMBDACountInfo; // the number of values we produce
     VfModuleComponent* m_pMeasureSignal;
 

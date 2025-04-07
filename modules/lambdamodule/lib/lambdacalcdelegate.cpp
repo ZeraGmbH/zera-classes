@@ -1,8 +1,8 @@
 #include "lambdacalcdelegate.h"
 
 LambdaCalcDelegate::LambdaCalcDelegate(bool activePowerMeasModeAvail,
-                                       QList<VfModuleActvalue *> veinLambdaActValues,
-                                       QList<VfModuleActvalue *> veinLoadTypeValues) :
+                                       QList<VfModuleComponent *> veinLambdaActValues,
+                                       QList<VfModuleComponent *> veinLoadTypeValues) :
     m_activePowerMeasModeAvail(activePowerMeasModeAvail),
     m_veinLambdaActValues(veinLambdaActValues),
     m_veinLoadTypeValues(veinLoadTypeValues)

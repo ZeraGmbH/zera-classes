@@ -6,7 +6,7 @@
 #include <QList>
 #include <complex>
 
-class VfModuleActvalue;
+class VfModuleComponent;
 
 namespace TRANSFORMER1MODULE
 {
@@ -19,8 +19,8 @@ class cTransformer1MeasDelegate : public QObject
 
 public:
     cTransformer1MeasDelegate(){}
-    cTransformer1MeasDelegate(VfModuleActvalue *acttrfError, VfModuleActvalue *acttrfAngleError, VfModuleActvalue *acttrfRatio,
-                              VfModuleActvalue *actinsec, VfModuleActvalue *actixsec, VfModuleActvalue *ixprim, bool withSignal = false);
+    cTransformer1MeasDelegate(VfModuleComponent *acttrfError, VfModuleComponent *acttrfAngleError, VfModuleComponent *acttrfRatio,
+                              VfModuleComponent *actinsec, VfModuleComponent *actixsec, VfModuleComponent *ixprim, bool withSignal = false);
 
 public slots:
     void actValueInput1(QVariant val);
@@ -36,12 +36,12 @@ signals:
     void measuring(int);
 
 private:
-    VfModuleActvalue *m_pActTransformerError; // output is transmission error
-    VfModuleActvalue *m_pActTransformerAngleError; // and angle error
-    VfModuleActvalue *m_pActTransformerRatio; // and computed actual ratio
-    VfModuleActvalue *m_pActINSecondary;
-    VfModuleActvalue *m_pActIXSecondary;
-    VfModuleActvalue *m_pActIXPrimary;
+    VfModuleComponent *m_pActTransformerError; // output is transmission error
+    VfModuleComponent *m_pActTransformerAngleError; // and angle error
+    VfModuleComponent *m_pActTransformerRatio; // and computed actual ratio
+    VfModuleComponent *m_pActINSecondary;
+    VfModuleComponent *m_pActIXSecondary;
+    VfModuleComponent *m_pActIXPrimary;
 
     bool m_bSignal;
 

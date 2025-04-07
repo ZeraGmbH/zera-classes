@@ -100,13 +100,13 @@ void cOsciModuleMeasProgram::generateVeinInterface()
 {
     QString key;
 
-    VfModuleActvalue *pActvalue;
+    VfModuleComponent *pActvalue;
     int n;
     n = getConfData()->m_valueChannelList.count();
 
     for (int i = 0; i < n; i++)
     {
-        pActvalue = new VfModuleActvalue(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
+        pActvalue = new VfModuleComponent(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
                                             QString("ACT_OSCI%1").arg(i+1),
                                             QString("Measures samples"));
         m_veinActValueList.append(pActvalue); // we add the component for our measurement

@@ -3,7 +3,6 @@
 
 #include "secmeasinputdictionary.h"
 #include "sfcmoduleconfigdata.h"
-#include "vfmoduleactvalue.h"
 #include "vfmoduleparameter.h"
 #include <QStateMachine>
 #include <QState>
@@ -62,7 +61,7 @@ private:
     Zera::ProxyClient* m_pSECClient;
     Zera::ProxyClient* m_pPCBClient;
 
-    QList<VfModuleActvalue *> m_veinActValueList; // the list of actual values we work on
+    QList<VfModuleComponent *> m_veinActValueList; // the list of actual values we work on
     qint32 m_nIt;
     QString m_sIt;
     QString m_masterErrCalcName;

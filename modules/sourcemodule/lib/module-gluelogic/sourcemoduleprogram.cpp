@@ -2,7 +2,6 @@
 #include "sourcemodule.h"
 #include "sourcedevicemanager.h"
 #include "sourcedevicefacade.h"
-#include <vfmoduleactvalue.h>
 #include <vfmoduleparameter.h>
 #include <intvalidator.h>
 #include <jsonparamvalidator.h>
@@ -35,13 +34,13 @@ void SourceModuleProgram::generateVeinInterface()
 
     // common components
     QString key;
-    m_pVeinMaxCountAct = new VfModuleActvalue(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
+    m_pVeinMaxCountAct = new VfModuleComponent(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
                                                     QString("ACT_MaxSources"),
                                                     QString("Max source devices"),
                                                     QVariant(maxSources) );
     m_pModule->veinModuleActvalueList.append(m_pVeinMaxCountAct); // auto delete / meta-data / scpi
 
-    m_pVeinCountAct = new VfModuleActvalue(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
+    m_pVeinCountAct = new VfModuleComponent(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
                                                     QString("ACT_CountSources"),
                                                     QString("Active source count"),
                                                     QVariant(0) );
@@ -63,20 +62,20 @@ void SourceModuleProgram::generateVeinInterface()
     m_pModule->getRpcEventSystem()->addRpc(m_sharedPtrRpcRemoveInterface);
 
     // per source components
-    VfModuleActvalue* pVeinAct;
+    VfModuleComponent* pVeinAct;
     VfModuleParameter* pVeinParam;
     cJsonParamValidator *jsonValidator;
     for(int souceCount=0; souceCount<maxSources; souceCount++) {
         SourceVeinInterface* sourceVeinInterface = new SourceVeinInterface;
         // device info (Don' movit down - our clients need it first!!)
-        pVeinAct = new VfModuleActvalue(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
+        pVeinAct = new VfModuleComponent(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
                                             QString("ACT_DeviceInfo%1").arg(souceCount),
                                             QString("Source info/capabiliities in JSON"),
                                             QJsonObject());
         sourceVeinInterface->setVeinDeviceInfoComponent(pVeinAct);
         m_pModule->veinModuleActvalueList.append(pVeinAct); // auto delete / meta-data / scpi
 
-        pVeinAct = new VfModuleActvalue(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
+        pVeinAct = new VfModuleComponent(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
                                             QString("ACT_DeviceState%1").arg(souceCount),
                                             QString("Source status in JSON"),
                                             QJsonObject());

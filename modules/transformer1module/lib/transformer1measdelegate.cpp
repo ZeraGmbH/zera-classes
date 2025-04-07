@@ -1,15 +1,11 @@
-#include <QDebug>
-
-#include <vfmoduleactvalue.h>
-#include <useratan.h>
-
 #include "transformer1measdelegate.h"
-
+#include "vfmodulecomponent.h"
+#include <useratan.h>
 
 namespace  TRANSFORMER1MODULE
 {
 
-cTransformer1MeasDelegate::cTransformer1MeasDelegate(VfModuleActvalue *acttrfError, VfModuleActvalue *acttrfAngleError, VfModuleActvalue *acttrfRatio, VfModuleActvalue *actinsec, VfModuleActvalue *actixsec, VfModuleActvalue *ixprim, bool withSignal)
+cTransformer1MeasDelegate::cTransformer1MeasDelegate(VfModuleComponent *acttrfError, VfModuleComponent *acttrfAngleError, VfModuleComponent *acttrfRatio, VfModuleComponent *actinsec, VfModuleComponent *actixsec, VfModuleComponent *ixprim, bool withSignal)
     :m_pActTransformerError(acttrfError), m_pActTransformerAngleError(acttrfAngleError), m_pActTransformerRatio(acttrfRatio), m_pActINSecondary(actinsec), m_pActIXSecondary(actixsec), m_pActIXPrimary(ixprim), m_bSignal(withSignal)
 {
 }
@@ -17,8 +13,7 @@ cTransformer1MeasDelegate::cTransformer1MeasDelegate(VfModuleActvalue *acttrfErr
 
 void cTransformer1MeasDelegate::actValueInput1(QVariant val)
 {
-    QList<double> list;
-    list = val.value<QList<double> >();
+    QList<double> list = val.value<QList<double> >();
     if (list.count() >= 2) // normaly this is true, but we test to avoid crashing
     {
         inp1 = std::complex<double>(list.at(0), list.at(1));

@@ -31,8 +31,8 @@ private:
     SourceDeviceManager* m_pSourceDeviceManager = nullptr;
     SourceModule* m_pModule; // the module we live in
 
-    VfModuleActvalue* m_pVeinMaxCountAct;
-    VfModuleActvalue* m_pVeinCountAct;
+    VfModuleComponent* m_pVeinMaxCountAct;
+    VfModuleComponent* m_pVeinCountAct;
     VfModuleParameter* m_pVeinDemoSourceCount = nullptr;
     VfCpp::cVeinModuleRpc::Ptr m_sharedPtrRpcScanInterface;
     VfCpp::cVeinModuleRpc::Ptr m_sharedPtrRpcRemoveInterface;

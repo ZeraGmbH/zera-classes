@@ -6,7 +6,7 @@ QTEST_MAIN(test_lambdacalcdelegate)
 
 void test_lambdacalcdelegate::measModeAvail3LW()
 {
-    LambdaCalcDelegate delegate(true, QList<VfModuleActvalue *>(), QList<VfModuleActvalue *>());
+    LambdaCalcDelegate delegate(true, QList<VfModuleComponent *>(), QList<VfModuleComponent *>());
 
     delegate.handleActivePowerChange(0, 1.0);
     delegate.handleActivePowerChange(1, 0.0);
@@ -26,7 +26,7 @@ void test_lambdacalcdelegate::measModeAvail3LW()
 
 void test_lambdacalcdelegate::measModeNotAvail3LW()
 {
-    LambdaCalcDelegate delegate(false, QList<VfModuleActvalue *>(), QList<VfModuleActvalue *>());
+    LambdaCalcDelegate delegate(false, QList<VfModuleComponent *>(), QList<VfModuleComponent *>());
 
     delegate.handleActivePowerChange(0, 1.0);
     delegate.handleActivePowerChange(1, 0.0);
@@ -46,7 +46,7 @@ void test_lambdacalcdelegate::measModeNotAvail3LW()
 
 void test_lambdacalcdelegate::measModeAvailPhaseMask110()
 {
-    LambdaCalcDelegate delegate(true, QList<VfModuleActvalue *>(), QList<VfModuleActvalue *>());
+    LambdaCalcDelegate delegate(true, QList<VfModuleComponent *>(), QList<VfModuleComponent *>());
 
     delegate.handleActivePowerChange(0, 1.0);
     delegate.handleActivePowerChange(1, 1.0);
@@ -66,7 +66,7 @@ void test_lambdacalcdelegate::measModeAvailPhaseMask110()
 
 void test_lambdacalcdelegate::measModeNotAvailPhaseMask110()
 {
-    LambdaCalcDelegate delegate(false, QList<VfModuleActvalue *>(), QList<VfModuleActvalue *>());
+    LambdaCalcDelegate delegate(false, QList<VfModuleComponent *>(), QList<VfModuleComponent *>());
 
     delegate.handleActivePowerChange(0, 1.0);
     delegate.handleActivePowerChange(1, 1.0);

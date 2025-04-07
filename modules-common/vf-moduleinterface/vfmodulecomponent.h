@@ -9,7 +9,7 @@ class VfModuleComponent: public QObject
 {
     Q_OBJECT
 public:
-    VfModuleComponent(int entityId, VeinEvent::EventSystem *eventsystem, QString name, QString description, QVariant initval);
+    VfModuleComponent(int entityId, VeinEvent::EventSystem *eventsystem, QString name, QString description, QVariant initval = QVariant());
     ~VfModuleComponent();
 
     void setChannelName(QString name); // channel name for json export can be empty

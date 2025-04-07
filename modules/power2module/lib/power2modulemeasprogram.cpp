@@ -205,15 +205,15 @@ void cPower2ModuleMeasProgram::stop()
 void cPower2ModuleMeasProgram::generateVeinInterface()
 {
     QString key;
-    VfModuleActvalue *pActvalue;
+    VfModuleComponent *pActvalue;
     for (int i = 0; i < MeasPhaseCount+SumValueCount; i++) {
-        pActvalue = new VfModuleActvalue(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
+        pActvalue = new VfModuleComponent(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
                                             QString("ACT_PP%1").arg(i+1),
                                             QString("Actual value positive power"));
         m_veinActValueList.append(pActvalue); // we add the component for our measurement
         m_pModule->veinModuleActvalueList.append(pActvalue); // and for the modules interface
 
-        pActvalue = new VfModuleActvalue(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
+        pActvalue = new VfModuleComponent(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
                                             QString("ACT_PM%1").arg(i+1),
                                             QString("Actual value negative power"));
         m_veinActValueList.append(pActvalue); // we add the component for our measurement
@@ -224,7 +224,7 @@ void cPower2ModuleMeasProgram::generateVeinInterface()
             strDescription = QString("Actual power value phase %1").arg(i+1);
         else
             strDescription = QString("Actual power value sum all phases");
-        pActvalue = new VfModuleActvalue(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
+        pActvalue = new VfModuleComponent(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
                                             QString("ACT_P%1").arg(i+1),
                                             strDescription);
         m_veinActValueList.append(pActvalue); // we add the component for our measurement

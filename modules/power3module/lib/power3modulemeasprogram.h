@@ -4,7 +4,6 @@
 #include "power3moduleconfigdata.h"
 #include "power3measdelegate.h"
 #include <basemeasworkprogram.h>
-#include <vfmoduleactvalue.h>
 #include <vfmodulemetadata.h>
 #include <QFinalState>
 #include <memory>
@@ -31,7 +30,7 @@ private:
     cPower3ModuleConfigData* getConfData();
 
     cPower3Module* m_pModule;
-    QList<VfModuleActvalue*> m_veinActValueList; // the list of actual values we work on
+    QList<VfModuleComponent*> m_veinActValueList; // the list of actual values we work on
     VfModuleMetaData* m_pHPWCountInfo; // the number of values we produce
     VfModuleComponent* m_pMeasureSignal;
 

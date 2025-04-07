@@ -107,7 +107,7 @@ private:
     QMap<QString, cFoutInfo> m_FoutInfoMap; // a list with frequency output information for each channel
     QHash<int, QString> m_NotifierInfoHash; // a list with channel information for each notifier
 
-    QList<VfModuleActvalue*> m_veinActValueList; // the list of actual values we work on
+    QList<VfModuleComponent*> m_veinActValueList; // the list of actual values we work on
     QList<VfModuleParameter*> m_FoutConstParameterList; // a list of foutconstant parameter
     VfModuleMetaData* m_pPQSCountInfo; // the number of values we produce
     VfModuleMetaData* m_pFoutCount; // number of our frequence outputs
@@ -117,9 +117,9 @@ private:
     VfModuleParameter* m_pMModePhaseSelectParameter;
     VfModuleParameter* m_QREFFrequencyParameter = nullptr;
     cStringValidator * m_MModePhaseSelectValidator;
-    VfModuleActvalue *m_MModeCanChangePhaseMask;
-    VfModuleActvalue *m_MModePowerDisplayName;
-    VfModuleActvalue *m_MModeMaxMeasSysCount;
+    VfModuleComponent *m_MModeCanChangePhaseMask;
+    VfModuleComponent *m_MModePowerDisplayName;
+    VfModuleComponent *m_MModeMaxMeasSysCount;
     VfModuleParameter* m_pConstantParameter;
     VfModuleComponent* m_pMeasureSignal;
     VfModuleComponent *m_MModesTypes;

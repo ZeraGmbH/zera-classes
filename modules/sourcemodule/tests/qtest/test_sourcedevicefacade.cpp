@@ -9,7 +9,6 @@
 #include "timerfactoryqtfortest.h"
 #include "timemachinefortest.h"
 #include <vfmoduleparameter.h>
-#include <vfmoduleactvalue.h>
 #include <jsonparamvalidator.h>
 
 #include <QString>
@@ -51,8 +50,8 @@ static constexpr int defaultEntityId = 1;
 struct TVeinObjects
 {
     SourceVeinInterface veinInterface;
-    VfModuleActvalue veinActDeviceState;
-    VfModuleActvalue veinActDeviceInfo;
+    VfModuleComponent veinActDeviceState;
+    VfModuleComponent veinActDeviceInfo;
     VfModuleParameter veinDeviceParameter;
     cJsonParamValidator veinDeviceParameterValidator;
     TVeinObjects(QJsonObject jsonStructure, VeinEvent::EventSystem *veinEventSystem) :

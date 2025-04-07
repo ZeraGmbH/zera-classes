@@ -1,16 +1,11 @@
-#include <QDebug>
-#include <math.h>
-
-#include <vfmoduleactvalue.h>
-#include <useratan.h>
-
 #include "burden1measdelegate.h"
-
+#include "vfmodulecomponent.h"
+#include <useratan.h>
 
 namespace  BURDEN1MODULE
 {
 
-cBurden1MeasDelegate::cBurden1MeasDelegate(VfModuleActvalue *actburden, VfModuleActvalue *actpowerfactor, VfModuleActvalue *actrelburden, QString mode, bool withSignal)
+cBurden1MeasDelegate::cBurden1MeasDelegate(VfModuleComponent *actburden, VfModuleComponent *actpowerfactor, VfModuleComponent *actrelburden, QString mode, bool withSignal)
     :m_pActBurden(actburden), m_pActPowerFactor(actpowerfactor), m_pActRelativeBurden(actrelburden), m_sMode(mode), m_bSignal(withSignal)
 {
 }

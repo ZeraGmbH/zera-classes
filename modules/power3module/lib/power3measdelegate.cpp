@@ -1,15 +1,11 @@
-#include <QDebug>
-
-#include <vfmoduleactvalue.h>
-#include <math.h>
-
 #include "power3measdelegate.h"
+#include "vfmodulecomponent.h"
+#include <cmath>
 
-
-namespace  POWER3MODULE
+namespace POWER3MODULE
 {
 
-cPower3MeasDelegate::cPower3MeasDelegate(VfModuleActvalue *pactvalue, VfModuleActvalue *qactvalue, VfModuleActvalue *sactvalue, bool withSignal)
+cPower3MeasDelegate::cPower3MeasDelegate(VfModuleComponent *pactvalue, VfModuleComponent *qactvalue, VfModuleComponent *sactvalue, bool withSignal)
     :m_ppActValue(pactvalue), m_pqActValue(qactvalue), m_psActValue(sactvalue), m_bSignal(withSignal)
 {
 }

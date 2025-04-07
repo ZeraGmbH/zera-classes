@@ -53,8 +53,8 @@ private:
 
     cFftModule* m_pModule;
     ActualValueStartStopHandler m_startStopHandler;
-    QList<VfModuleActvalue*> m_veinActValueList; // the list of actual values we work on
-    QList<VfModuleActvalue*> m_DCValueList;
+    QList<VfModuleComponent*> m_veinActValueList; // the list of actual values we work on
+    QList<VfModuleComponent*> m_DCValueList;
     VfModuleMetaData* m_pFFTCountInfo;
     VfModuleMetaData* m_pFFTOrderInfo;
     VfModuleComponent* m_pMeasureSignal;

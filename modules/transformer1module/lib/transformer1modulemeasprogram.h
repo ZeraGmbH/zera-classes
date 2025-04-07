@@ -6,7 +6,7 @@
 #include <QList>
 #include <QFinalState>
 
-class VfModuleActvalue;
+class VfModuleComponent;
 class VfModuleMetaData;
 class VfModuleComponent;
 class VfModuleParameter;
@@ -35,7 +35,7 @@ private:
     cTransformer1ModuleConfigData* getConfData();
 
     cTransformer1Module* m_pModule;
-    QList<VfModuleActvalue*> m_veinActValueList; // the list of actual values we work on
+    QList<VfModuleComponent*> m_veinActValueList; // the list of actual values we work on
     VfModuleMetaData* m_pTRSCountInfo; // the number of transformer system we are configured for
     VfModuleComponent* m_pMeasureSignal;
 

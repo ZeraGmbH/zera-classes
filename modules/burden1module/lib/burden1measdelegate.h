@@ -6,7 +6,7 @@
 #include <QList>
 #include <complex>
 
-class VfModuleActvalue;
+class VfModuleComponent;
 
 namespace BURDEN1MODULE
 {
@@ -15,7 +15,7 @@ class cBurden1MeasDelegate : public QObject
 {
     Q_OBJECT
 public:
-    cBurden1MeasDelegate(VfModuleActvalue *actburden, VfModuleActvalue *actpowerfactor, VfModuleActvalue *actrelburden, QString mode, bool withSignal = false);
+    cBurden1MeasDelegate(VfModuleComponent *actburden, VfModuleComponent *actpowerfactor, VfModuleComponent *actrelburden, QString mode, bool withSignal = false);
     static double calcWireResistence(double wireLenMeter, double wireCrossSectionMillimeterSquare);
 public slots:
     void actValueInput1(QVariant val);
@@ -30,9 +30,9 @@ signals:
 
 private:
     void computeOutput();
-    VfModuleActvalue *m_pActBurden; // output is actual burden corrected to nominal burden
-    VfModuleActvalue *m_pActPowerFactor; // and angle cosß
-    VfModuleActvalue *m_pActRelativeBurden; // % value of nominal burden
+    VfModuleComponent *m_pActBurden; // output is actual burden corrected to nominal burden
+    VfModuleComponent *m_pActPowerFactor; // and angle cosß
+    VfModuleComponent *m_pActRelativeBurden; // % value of nominal burden
     QString m_sMode;
 
     bool m_bSignal;

@@ -107,7 +107,7 @@ void cRmsModuleMeasProgram::stop()
 
 void cRmsModuleMeasProgram::generateVeinInterface()
 {
-    VfModuleActvalue *pActvalue;
+    VfModuleComponent *pActvalue;
     int n,p;
     n = p = 0; //
     QString channelDescription;
@@ -119,7 +119,7 @@ void cRmsModuleMeasProgram::generateVeinInterface()
                 channelDescription = QString("Actual rms value phase/neutral");
             else //current channels
                 channelDescription = QString("Actual rms value");
-            pActvalue = new VfModuleActvalue(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
+            pActvalue = new VfModuleComponent(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
                                              QString("ACT_RMSPN%1").arg(n+1),
                                              channelDescription);
             m_veinActValueList.append(pActvalue); // we add the component for our measurement
@@ -127,7 +127,7 @@ void cRmsModuleMeasProgram::generateVeinInterface()
             n++;
         }
         else {
-            pActvalue = new VfModuleActvalue(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
+            pActvalue = new VfModuleComponent(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
                                                 QString("ACT_RMSPP%1").arg(p+1),
                                                 QString("Actual rms value phase/phase"));
             m_veinActValueList.append(pActvalue); // we add the component for our measurement

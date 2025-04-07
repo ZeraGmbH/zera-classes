@@ -10,7 +10,6 @@
 #include "scpiserialclient.h"
 #include "tcpserverlimitedconn.h"
 #include <vfmoduleparameter.h>
-#include <vfmoduleactvalue.h>
 #include <QTimer>
 #include <QFinalState>
 #include <QFile>
@@ -76,8 +75,8 @@ private:
     QTimer m_SerialTestTimer;
     bool m_bSerialScpiActive;
     VfModuleParameter* m_pVeinParamSerialOn = nullptr;
-    VfModuleActvalue* m_pVeinSerialScpiDevFileName = nullptr;
-    VfModuleActvalue* m_veinDevIface = nullptr;
+    VfModuleComponent* m_pVeinSerialScpiDevFileName = nullptr;
+    VfModuleComponent* m_veinDevIface = nullptr;
     VfModuleParameter* m_optionalScpiQueue = nullptr;
 
 };

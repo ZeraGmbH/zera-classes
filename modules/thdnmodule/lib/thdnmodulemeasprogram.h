@@ -21,7 +21,7 @@ class QFinalState;
 class VfModuleComponent;
 class VfModuleParameter;
 class VfModuleMetaData;
-class VfModuleActvalue;
+class VfModuleComponent;
 class cMovingwindowFilter;
 
 
@@ -68,7 +68,7 @@ private:
 
     cThdnModule* m_pModule;
     ActualValueStartStopHandler m_startStopHandler;
-    QList<VfModuleActvalue*> m_veinActValueList; // the list of actual values we work on
+    QList<VfModuleComponent*> m_veinActValueList; // the list of actual values we work on
     VfModuleMetaData* m_pThdnCountInfo;
     VfModuleComponent* m_pMeasureSignal;
     VfModuleParameter* m_pIntegrationTimeParameter;

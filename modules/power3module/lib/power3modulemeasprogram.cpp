@@ -59,8 +59,8 @@ cPower3ModuleConfigData *cPower3ModuleMeasProgram::getConfData()
 void cPower3ModuleMeasProgram::generateVeinInterface()
 {
     for (int i = 0; i < getConfData()->m_nPowerSystemCount; i++) {
-        VfModuleActvalue *pActvalue;
-        pActvalue = new VfModuleActvalue(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
+        VfModuleComponent *pActvalue;
+        pActvalue = new VfModuleComponent(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
                                             QString("ACT_HPP%1").arg(i+1),
                                             QString("Harmonic power active values"));
         pActvalue->setChannelName(QString("P%1").arg(i+1)); // we take "system" as name because we export real- and imaginary part
@@ -69,7 +69,7 @@ void cPower3ModuleMeasProgram::generateVeinInterface()
         m_veinActValueList.append(pActvalue); // we add the component for our measurement
         m_pModule->veinModuleActvalueList.append(pActvalue); // and for the modules interface
 
-        pActvalue = new VfModuleActvalue(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
+        pActvalue = new VfModuleComponent(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
                                             QString("ACT_HPQ%1").arg(i+1),
                                             QString("Harmonic power reactive values"));
         pActvalue->setChannelName(QString("Q%1").arg(i+1)); // we take "system" as name because we export real- and imaginary part
@@ -78,7 +78,7 @@ void cPower3ModuleMeasProgram::generateVeinInterface()
         m_veinActValueList.append(pActvalue); // we add the component for our measurement
         m_pModule->veinModuleActvalueList.append(pActvalue); // and for the modules interface
 
-        pActvalue = new VfModuleActvalue(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
+        pActvalue = new VfModuleComponent(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
                                             QString("ACT_HPS%1").arg(i+1),
                                             QString("Harmonic power apparent values"));
         pActvalue->setChannelName(QString("S%1").arg(i+1)); // we take "system" as name because we export real- and imaginary part
