@@ -2,6 +2,7 @@
 #include "pllmeaschannel.h"
 #include "samplemodule.h"
 #include <errormessages.h>
+#include <scpi.h>
 #include <scpiinfo.h>
 #include <stringvalidator.h>
 #include <boolvalidator.h>
@@ -50,7 +51,7 @@ void cPllObsermatic::generateVeinInterface()
     m_pModule->m_veinModuleParameterMap[key] = m_pVeinPllChannelAlias; // for modules use
 
     // later we have to set the validator for m_pPLLChannel
-    cSCPIInfo *scpiInfo = new cSCPIInfo("CONFIGURATION", "PLLREFERENCE", "10", m_pVeinPllChannelAlias->getName(), "0", "");
+    cSCPIInfo *scpiInfo = new cSCPIInfo("CONFIGURATION", "PLLREFERENCE", SCPI::isQuery|SCPI::isCmdwP, m_pVeinPllChannelAlias->getName(), SCPI::isComponent);
     m_pVeinPllChannelAlias->setSCPIInfo(scpiInfo);
 
     m_pParPllAutomaticOnOff = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
@@ -61,7 +62,7 @@ void cPllObsermatic::generateVeinInterface()
     m_pModule->m_veinModuleParameterMap[key] = m_pParPllAutomaticOnOff; // for modules use
 
     m_pParPllAutomaticOnOff->setValidator(new cBoolValidator());
-    scpiInfo = new cSCPIInfo("CONFIGURATION", "PLLAUTO", "10", m_pParPllAutomaticOnOff->getName(), "0", "");
+    scpiInfo = new cSCPIInfo("CONFIGURATION", "PLLAUTO", SCPI::isQuery|SCPI::isCmdwP, m_pParPllAutomaticOnOff->getName(), SCPI::isComponent);
     m_pParPllAutomaticOnOff->setSCPIInfo(scpiInfo);
 
     m_pPllFixed = new VfModuleComponent(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
