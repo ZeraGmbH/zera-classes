@@ -9,6 +9,11 @@ namespace SFCMODULE
 
 enum moduleconfigstate
 {
+    setDutInputCount,
+
+    setDutInputPar,
+
+    setDutInput1Name = 32,
 };
 
 // moduleconfiguration holds configuration data as well as parameter

@@ -20,6 +20,7 @@ target_include_directories(sfcmodule-static
 target_link_libraries(sfcmodule-static
     PUBLIC
     zera-basemodule
+    modules-common-sec
     zera-meas-mode-management
     Zera::zera-math
     # ask linker to help us finding unresolved symbols
