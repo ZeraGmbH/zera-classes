@@ -4,6 +4,7 @@
 #include <proxy.h>
 #include <errormessages.h>
 #include <regexvalidator.h>
+#include <scpi.h>
 #include <sysinfo.h>
 #include <timerfactoryqt.h>
 #include <QFile>
@@ -130,7 +131,7 @@ void cStatusModuleInit::generateVeinInterface()
                                                    QVariant(QString("")) );
 
     m_pModule->m_veinModuleParameterMap[key] = m_pPCBServerVersion; // for modules use
-    m_pPCBServerVersion->setSCPIInfo(new cSCPIInfo("STATUS", "VERSION:PCBSERVER", "2", key , "0", ""));
+    m_pPCBServerVersion->setSCPIInfo(new cSCPIInfo("STATUS", "VERSION:PCBSERVER", SCPI::isQuery, key , SCPI::isComponent));
 
 
     m_pPCBVersion = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
@@ -139,7 +140,7 @@ void cStatusModuleInit::generateVeinInterface()
                                                    QVariant(QString("")) );
 
     m_pModule->m_veinModuleParameterMap[key] = m_pPCBVersion;
-    m_pPCBVersion->setSCPIInfo(new cSCPIInfo("STATUS", "VERSION:PCB", "2", key , "0", ""));
+    m_pPCBVersion->setSCPIInfo(new cSCPIInfo("STATUS", "VERSION:PCB", SCPI::isQuery, key , SCPI::isComponent));
 
 
     m_pCtrlVersion = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
@@ -148,7 +149,7 @@ void cStatusModuleInit::generateVeinInterface()
                                               QVariant(QString("") ));
 
     m_pModule->m_veinModuleParameterMap[key] = m_pCtrlVersion;
-    m_pCtrlVersion->setSCPIInfo(new cSCPIInfo("STATUS", "VERSION:CONTROLER", "2", key, "0", ""));
+    m_pCtrlVersion->setSCPIInfo(new cSCPIInfo("STATUS", "VERSION:CONTROLER", SCPI::isQuery, key, SCPI::isComponent));
 
 
     m_pFPGAVersion = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
@@ -157,7 +158,7 @@ void cStatusModuleInit::generateVeinInterface()
                                               QVariant(QString("") ));
 
     m_pModule->m_veinModuleParameterMap[key] = m_pFPGAVersion;
-    m_pFPGAVersion->setSCPIInfo(new cSCPIInfo("STATUS", "VERSION:FPGA", "2", key, "0", ""));
+    m_pFPGAVersion->setSCPIInfo(new cSCPIInfo("STATUS", "VERSION:FPGA", SCPI::isQuery, key, SCPI::isComponent));
 
 
     m_pSerialNumber = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
@@ -166,7 +167,7 @@ void cStatusModuleInit::generateVeinInterface()
                                                QVariant(QString("") ), true, false); // we select deferred notification
 
     m_pModule->m_veinModuleParameterMap[key] = m_pSerialNumber;
-    m_pSerialNumber->setSCPIInfo(new cSCPIInfo("STATUS", "SERIAL", "10", key, "0", ""));
+    m_pSerialNumber->setSCPIInfo(new cSCPIInfo("STATUS", "SERIAL", SCPI::isQuery|SCPI::isCmdwP, key, SCPI::isComponent));
     cRegExValidator *regValidator;
     regValidator = new cRegExValidator("^\\d{9}$");
     m_pSerialNumber->setValidator(regValidator);
@@ -177,7 +178,7 @@ void cStatusModuleInit::generateVeinInterface()
                                                    QVariant(QString("") ));
 
     m_pModule->m_veinModuleParameterMap[key] = m_pDSPServerVersion;
-    m_pDSPServerVersion->setSCPIInfo(new cSCPIInfo("STATUS", "VERSION:DSPSERVER", "2", key, "0", ""));
+    m_pDSPServerVersion->setSCPIInfo(new cSCPIInfo("STATUS", "VERSION:DSPSERVER", SCPI::isQuery, key, SCPI::isComponent));
 
 
     m_pDSPProgramVersion = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
@@ -186,7 +187,7 @@ void cStatusModuleInit::generateVeinInterface()
                                                     QVariant(QString("") ));
 
     m_pModule->m_veinModuleParameterMap[key] = m_pDSPProgramVersion;
-    m_pDSPProgramVersion->setSCPIInfo(new cSCPIInfo("STATUS", "VERSION:DSP", "2", key, "0", ""));
+    m_pDSPProgramVersion->setSCPIInfo(new cSCPIInfo("STATUS", "VERSION:DSP", SCPI::isQuery, key, SCPI::isComponent));
 
 
     m_pReleaseNumber = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
@@ -195,7 +196,7 @@ void cStatusModuleInit::generateVeinInterface()
                                                 QVariant(QString("") ));
 
     m_pModule->m_veinModuleParameterMap[key] = m_pReleaseNumber;
-    m_pReleaseNumber->setSCPIInfo(new cSCPIInfo("STATUS", "RELEASE", "2", key, "0", ""));
+    m_pReleaseNumber->setSCPIInfo(new cSCPIInfo("STATUS", "RELEASE", SCPI::isQuery, key, SCPI::isComponent));
 
     m_pDeviceType = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
                                                 key = QString("INF_DeviceType"),
@@ -203,7 +204,7 @@ void cStatusModuleInit::generateVeinInterface()
                                                 QVariant(QString()));
 
     m_pModule->m_veinModuleParameterMap[key] = m_pDeviceType;
-    m_pDeviceType->setSCPIInfo(new cSCPIInfo("STATUS", "DEVTYPE", "2", key, "0", ""));
+    m_pDeviceType->setSCPIInfo(new cSCPIInfo("STATUS", "DEVTYPE", SCPI::isQuery, key, SCPI::isComponent));
 
     m_pCPUInfo = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
                                                 key = QString("INF_CpuInfo"),
@@ -211,7 +212,7 @@ void cStatusModuleInit::generateVeinInterface()
                                                 QVariant(QString("")));
 
     m_pModule->m_veinModuleParameterMap[key] = m_pCPUInfo;
-    m_pCPUInfo->setSCPIInfo(new cSCPIInfo("STATUS", "CPUINFO", "2", key, "0", ""));
+    m_pCPUInfo->setSCPIInfo(new cSCPIInfo("STATUS", "CPUINFO", SCPI::isQuery, key, SCPI::isComponent));
 
     m_pAdjustmentStatus = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
                                                    key = QString("INF_Adjusted"),
@@ -219,7 +220,7 @@ void cStatusModuleInit::generateVeinInterface()
                                                    QVariant(""));
 
     m_pModule->m_veinModuleParameterMap[key] = m_pAdjustmentStatus;
-    m_pAdjustmentStatus->setSCPIInfo(new cSCPIInfo("STATUS", "ADJUSTMENT", "2", key, "0", ""));
+    m_pAdjustmentStatus->setSCPIInfo(new cSCPIInfo("STATUS", "ADJUSTMENT", SCPI::isQuery, key, SCPI::isComponent));
 
     m_pAdjustmentChksum = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
                                                    key = QString("INF_AdjChksum"),
@@ -227,7 +228,7 @@ void cStatusModuleInit::generateVeinInterface()
                                                    QVariant(""));
 
     m_pModule->m_veinModuleParameterMap[key] = m_pAdjustmentChksum;
-    m_pAdjustmentChksum->setSCPIInfo(new cSCPIInfo("STATUS", "ADJCHKSUM", "2", key, "0", ""));
+    m_pAdjustmentChksum->setSCPIInfo(new cSCPIInfo("STATUS", "ADJCHKSUM", SCPI::isQuery, key, SCPI::isComponent));
 
     m_pSchnubbelStatus = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
                                                key = QString("INF_Schnubbel"),
@@ -235,7 +236,7 @@ void cStatusModuleInit::generateVeinInterface()
                                                QVariant(0));
 
     m_pModule->m_veinModuleParameterMap[key] = m_pSchnubbelStatus;
-    m_pSchnubbelStatus->setSCPIInfo(new cSCPIInfo("STATUS", "AUTHORIZATION", "2", key, "0", ""));
+    m_pSchnubbelStatus->setSCPIInfo(new cSCPIInfo("STATUS", "AUTHORIZATION", SCPI::isQuery, key, SCPI::isComponent));
 
     m_pAccumulatorStatus = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
                                                key = QString("INF_AccumulatorStatus"),
@@ -250,8 +251,8 @@ void cStatusModuleInit::generateVeinInterface()
 
     m_pModule->m_veinModuleParameterMap[key] = m_pAccumulatorSoc;
     if (m_ConfigData.m_accumulator) {
-        m_pAccumulatorSoc->setSCPIInfo(new cSCPIInfo("STATUS", "ACCUSOC", "2", key, "0", ""));
-        m_pAccumulatorStatus->setSCPIInfo(new cSCPIInfo("STATUS", "ACCUSTATUS", "2", key, "0", ""));
+        m_pAccumulatorSoc->setSCPIInfo(new cSCPIInfo("STATUS", "ACCUSOC", SCPI::isQuery, key, SCPI::isComponent));
+        m_pAccumulatorStatus->setSCPIInfo(new cSCPIInfo("STATUS", "ACCUSTATUS", SCPI::isQuery, key, SCPI::isComponent));
     }
 }
 
