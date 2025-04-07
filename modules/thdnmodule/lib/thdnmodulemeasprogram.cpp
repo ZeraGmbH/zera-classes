@@ -8,6 +8,7 @@
 #include <movingwindowfilter.h>
 #include <proxy.h>
 #include <proxyclient.h>
+#include <scpi.h>
 #include <scpiinfo.h>
 #include <vfmodulemetadata.h>
 #include <vfmodulecomponent.h>
@@ -134,7 +135,7 @@ void cThdnModuleMeasProgram::generateVeinInterface()
                                                            QString("Integration time"),
                                                            QVariant(getConfData()->m_fMeasInterval.m_fValue));
     m_pIntegrationTimeParameter->setUnit("s");
-    m_pIntegrationTimeParameter->setSCPIInfo(new cSCPIInfo("CONFIGURATION","TINTEGRATION", "10", "PAR_Interval", "0", "s"));
+    m_pIntegrationTimeParameter->setSCPIInfo(new cSCPIInfo("CONFIGURATION","TINTEGRATION", SCPI::isQuery|SCPI::isCmdwP, "PAR_Interval", SCPI::isComponent));
 
     m_pModule->m_veinModuleParameterMap[key] = m_pIntegrationTimeParameter; // for modules use
 
@@ -355,7 +356,7 @@ void cThdnModuleMeasProgram::setActualValuesNames()
 void cThdnModuleMeasProgram::setSCPIMeasInfo()
 {
     for (int i = 0; i < m_veinActValueList.count(); i++) {
-        cSCPIInfo* pSCPIInfo = new cSCPIInfo("MEASURE", m_veinActValueList.at(i)->getChannelName(), "8", m_veinActValueList.at(i)->getName(), "0", QString("%"));
+        cSCPIInfo* pSCPIInfo = new cSCPIInfo("MEASURE", m_veinActValueList.at(i)->getChannelName(), SCPI::isCmdwP, m_veinActValueList.at(i)->getName(), SCPI::isComponent);
         m_veinActValueList.at(i)->setSCPIInfo(pSCPIInfo);
     }
 }
