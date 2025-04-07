@@ -6,6 +6,7 @@
 #include <errormessages.h>
 #include <reply.h>
 #include <proxy.h>
+#include <scpi.h>
 #include <timerfactoryqt.h>
 #include <math.h>
 
@@ -120,7 +121,7 @@ void cRangeModuleMeasProgram::generateVeinInterface()
                                         QString("Actual frequency"));
 
     pActvalue->setUnit("Hz");
-    pActvalue->setSCPIInfo(new cSCPIInfo("MEASURE","F", "8", "ACT_Frequency", "0", "Hz"));
+    pActvalue->setSCPIInfo(new cSCPIInfo("MEASURE","F", SCPI::isCmdwP, "ACT_Frequency", SCPI::isComponent));
 
     m_veinActValueList.append(pActvalue); // we add the component for our measurement
     m_pModule->veinModuleActvalueList.append(pActvalue); // and for the modules interface
@@ -356,7 +357,7 @@ void cRangeModuleMeasProgram::setSCPIMeasInfo()
     const QStringList channelMNames = m_pModule->getSharedChannelRangeObserver()->getChannelMNames();
     for (int i = 0; i < channelMNames.count(); i++) {
         cRangeMeasChannel* mchn = m_pModule->getMeasChannel(channelMNames.at(i));
-        cSCPIInfo* pSCPIInfo = new cSCPIInfo("MEASURE", mchn->getAlias(), "8", m_veinActValueList.at(i)->getName(), "0", m_veinActValueList.at(i)->getUnit());
+        cSCPIInfo* pSCPIInfo = new cSCPIInfo("MEASURE", mchn->getAlias(), SCPI::isCmdwP, m_veinActValueList.at(i)->getName(), SCPI::isComponent);
         m_veinActValueList.at(i)->setSCPIInfo(pSCPIInfo);
     }
 }
