@@ -4,6 +4,7 @@
 #include "sfcmoduleconfigdata.h"
 #include "basemeasworkprogram.h"
 #include "vfmoduleactvalue.h"
+#include "vfmoduleparameter.h"
 #include <QStateMachine>
 #include <QState>
 #include <QFinalState>
@@ -40,9 +41,12 @@ private:
     // statemachine for deactivating
     QFinalState m_deactivateDoneState;
 
+    VfModuleParameter* m_pStartStop;
+
 private slots:
     void activateDone();
     void deactivateMeasDone();
+    void onStartStopChanged();
 };
 
 }
