@@ -1,5 +1,17 @@
 <?xml version="1.0"?>
 <sfcmodconfpar>
     <configuration>
+        <measure>
+            <dutinput>
+                <n>2</n>
+                <inp1>sh0</inp1>
+                <inp2>hk0</inp2>
+            </dutinput>
+        </measure>
     </configuration>
+    <parameter>
+        <measure>
+            <dutinput>sh0</dutinput>
+        </measure>
+    </parameter>
 </sfcmodconfpar>

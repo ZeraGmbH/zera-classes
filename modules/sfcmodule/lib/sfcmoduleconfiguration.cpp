@@ -40,6 +40,9 @@ void cSfcModuleConfiguration::setConfiguration(QByteArray xmlString)
     // so now we can set up
     // initializing hash tasfc for xml configuration
 
+    m_ConfigXMLMap["sfcmodconfpar:configuration:measure:dutinput:n"] = setDutInputCount;
+    m_ConfigXMLMap["sfcmodconfpar:parameter:measure:dutinput"] = setDutInputPar;
+
     if (m_pXMLReader->loadSchema(defaultXSDFile))
         m_pXMLReader->loadXMLFromString(QString::fromUtf8(xmlString.data(), xmlString.size()));
     else
@@ -64,6 +67,24 @@ void cSfcModuleConfiguration::configXMLInfo(QString key)
         int cmd = m_ConfigXMLMap[key];
         switch (cmd)
         {
+        case setDutInputCount:
+            m_pSfcModulConfigData->m_nDutInpCount = m_pXMLReader->getValue(key).toInt(&ok);
+            for (int i = 0; i < m_pSfcModulConfigData->m_nDutInpCount; i++) {
+                m_ConfigXMLMap[QString("sfcmodconfpar:configuration:measure:dutinput:inp%1").arg(i+1)] = setDutInput1Name+i;
+                m_pSfcModulConfigData->m_dutInpList.append(QString());
+            }
+            break;
+        case setDutInputPar:
+            m_pSfcModulConfigData->m_sDutInput.m_sKey = key;
+            m_pSfcModulConfigData->m_sDutInput.m_sPar = m_pXMLReader->getValue(key);
+            break;
+        default:
+            if ((cmd >= setDutInput1Name) && (cmd < setDutInput1Name + 32)) {
+                cmd -= setDutInput1Name;
+                QString name = m_pXMLReader->getValue(key);
+                m_pSfcModulConfigData->m_dutInpList.replace(cmd, name);
+            }
+            break;
         }
         m_bConfigError |= !ok;
     }
