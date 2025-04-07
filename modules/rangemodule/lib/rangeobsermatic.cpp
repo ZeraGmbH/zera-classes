@@ -10,6 +10,7 @@
 #include <doublevalidator.h>
 #include <boolvalidator.h>
 #include <math.h>
+#include <scpi.h>
 
 namespace RANGEMODULE
 {
@@ -550,11 +551,11 @@ void cRangeObsermatic::readGainScaleDone()
         // we also set the channels name alias and its unit
         m_RangeParameterList.at(i)->setChannelName(channelAlias);
 
-        scpiInfo = new cSCPIInfo("SENSE", QString("%1:RANGE").arg(channelAlias), "10", m_RangeParameterList.at(i)->getName(), "0", "");
+        scpiInfo = new cSCPIInfo("SENSE", QString("%1:RANGE").arg(channelAlias), SCPI::isQuery|SCPI::isCmdwP, m_RangeParameterList.at(i)->getName(), SCPI::isComponent);
         m_RangeParameterList.at(i)->setSCPIInfo(scpiInfo);
 
         // we want to support querying the channels ranges
-        scpiInfo = new cSCPIInfo("SENSE", QString("%1:RANGE:CATALOG").arg(channelAlias), "2", m_RangeParameterList.at(i)->getName(), "1", "");
+        scpiInfo = new cSCPIInfo("SENSE", QString("%1:RANGE:CATALOG").arg(channelAlias), SCPI::isQuery, m_RangeParameterList.at(i)->getName(), SCPI::isCatalog);
         m_pModule->scpiCommandList.append(scpiInfo);
 
         m_RangeOVLRejectionComponentList.at(i)->setChannelName(channelAlias);
@@ -562,15 +563,15 @@ void cRangeObsermatic::readGainScaleDone()
         m_RangeActOVLRejectionComponentList.at(i)->setChannelName(channelAlias);
     }
 
-    scpiInfo = new cSCPIInfo("CONFIGURATION", "RNGAUTO", "10", m_pParRangeAutomaticOnOff->getName(), "0", "");
+    scpiInfo = new cSCPIInfo("CONFIGURATION", "RNGAUTO", SCPI::isQuery|SCPI::isCmdwP, m_pParRangeAutomaticOnOff->getName(), SCPI::isComponent);
     m_pParRangeAutomaticOnOff->setValidator(new cBoolValidator());
     m_pParRangeAutomaticOnOff->setSCPIInfo(scpiInfo);
 
-    scpiInfo = new cSCPIInfo("CONFIGURATION", "GROUPING", "10", m_pParGroupingOnOff->getName(), "0", "");
+    scpiInfo = new cSCPIInfo("CONFIGURATION", "GROUPING", SCPI::isQuery|SCPI::isCmdwP, m_pParGroupingOnOff->getName(), SCPI::isComponent);
     m_pParGroupingOnOff->setValidator(new cBoolValidator());
     m_pParGroupingOnOff->setSCPIInfo(scpiInfo);
 
-    scpiInfo = new cSCPIInfo("SENSE", "OVERLOAD", "10", m_pParOverloadOnOff->getName(), "0", "");
+    scpiInfo = new cSCPIInfo("SENSE", "OVERLOAD", SCPI::isQuery|SCPI::isCmdwP, m_pParOverloadOnOff->getName(), SCPI::isComponent);
     m_pParOverloadOnOff->setValidator(new cBoolValidator());
     m_pParOverloadOnOff->setSCPIInfo(scpiInfo);
 

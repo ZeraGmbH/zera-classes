@@ -7,6 +7,7 @@
 #include <errormessages.h>
 #include <reply.h>
 #include <proxy.h>
+#include <scpi.h>
 #include <timerfactoryqt.h>
 #include <vfmodulecomponent.h>
 #include <dspinterface.h>
@@ -130,7 +131,7 @@ void cAdjustManagement::generateVeinInterface()
 
     m_ParIgnoreRmsValuesOnOff->setValidator(new cBoolValidator());
     m_pModule->m_veinModuleParameterMap["PAR_IgnoreRmsValuesOnOff"] = m_ParIgnoreRmsValuesOnOff;
-    m_ParIgnoreRmsValuesOnOff->setSCPIInfo(new cSCPIInfo("CONFIGURATION","ENABLEIGNORERMSVAL", "10", m_ParIgnoreRmsValuesOnOff->getName(), "0", ""));
+    m_ParIgnoreRmsValuesOnOff->setSCPIInfo(new cSCPIInfo("CONFIGURATION","ENABLEIGNORERMSVAL", SCPI::isQuery|SCPI::isCmdwP, m_ParIgnoreRmsValuesOnOff->getName(), SCPI::isComponent));
     connect(m_ParIgnoreRmsValuesOnOff, &VfModuleParameter::sigValueChanged, this, &cAdjustManagement::parIgnoreRmsValuesOnOffChanged);
 
     m_ParIgnoreRmsValues = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
@@ -141,7 +142,7 @@ void cAdjustManagement::generateVeinInterface()
     m_ParIgnoreRmsValues->setValidator(new cDoubleValidator(0, 2, 1e-1));
     m_pModule->m_veinModuleParameterMap["PAR_IgnoreRmsValues"] = m_ParIgnoreRmsValues;
     m_ParIgnoreRmsValues->setUnit("%");
-    m_ParIgnoreRmsValues->setSCPIInfo(new cSCPIInfo("CONFIGURATION","IGNORERMSVAL", "10", m_ParIgnoreRmsValues->getName(), "0", m_ParIgnoreRmsValues->getUnit()));
+    m_ParIgnoreRmsValues->setSCPIInfo(new cSCPIInfo("CONFIGURATION","IGNORERMSVAL", SCPI::isQuery|SCPI::isCmdwP, m_ParIgnoreRmsValues->getName(), SCPI::isComponent));
     connect(m_ParIgnoreRmsValues, &VfModuleParameter::sigValueChanged, this, &cAdjustManagement::parIgnoreRmsValuesChanged);
 
     VfModuleParameter *pParameter;
@@ -242,7 +243,7 @@ void cAdjustManagement::activationDone()
     m_fGainKeeperForFakingRmsValues.resize(32); //prepared for 32 dsp channels
     for(int i = 0; i < m_ChannelList.count(); i++) {
         m_fGainKeeperForFakingRmsValues[m_ChannelList.at(i)->getDSPChannelNr()] = 1;
-        m_invertedPhasesParList.at(i)->setSCPIInfo(new cSCPIInfo("CONFIGURATION",QString("%1:INVERTPHASE").arg(m_ChannelList.at(i)->getAlias()), "10", m_invertedPhasesParList.at(i)->getName(), "0", ""));
+        m_invertedPhasesParList.at(i)->setSCPIInfo(new cSCPIInfo("CONFIGURATION",QString("%1:INVERTPHASE").arg(m_ChannelList.at(i)->getAlias()), SCPI::isQuery|SCPI::isCmdwP, m_invertedPhasesParList.at(i)->getName(), SCPI::isComponent));
     }
     m_bActive = true;
     emit activated();
