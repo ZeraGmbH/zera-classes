@@ -7,7 +7,6 @@
 #include <doublevalidator.h>
 #include <scpi.h>
 #include <stringvalidator.h>
-#include <scpiinfo.h>
 
 namespace BURDEN1MODULE
 {
@@ -52,21 +51,16 @@ cBurden1ModuleConfigData *cBurden1ModuleMeasProgram::getConfData()
 
 void cBurden1ModuleMeasProgram::generateVeinInterface()
 {
-    VfModuleActvalue *pActvalue;
-    cSCPIInfo* pSCPIInfo;
-    QString key;
 
-    for (int i = 0; i < getConfData()->m_nBurdenSystemCount; i++)
-    {
+    for (int i = 0; i < getConfData()->m_nBurdenSystemCount; i++) {
+        VfModuleActvalue *pActvalue;
+        QString key;
         pActvalue = new VfModuleActvalue(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
                                             QString("ACT_Burden%1").arg(i+1),
                                             QString("Burden actual value Sb"));
         pActvalue->setChannelName(QString("BRD%1").arg(i+1));
         pActvalue->setUnit("VA");
-
-        pSCPIInfo = new cSCPIInfo("MEASURE", pActvalue->getChannelName(), SCPI::isCmdwP, pActvalue->getName(), SCPI::isComponent);
-        pActvalue->setSCPIInfo(pSCPIInfo);
-
+        pActvalue->setScpiInfo("MEASURE", pActvalue->getChannelName(), SCPI::isCmdwP, pActvalue->getName(), SCPI::isComponent);
         m_veinActValueList.append(pActvalue); // we add the component for our measurement
         m_pModule->veinModuleActvalueList.append(pActvalue); // and for the modules interface
 
@@ -75,10 +69,7 @@ void cBurden1ModuleMeasProgram::generateVeinInterface()
                                             QString("Burden powerfactor cos(β)"));
         pActvalue->setChannelName(QString("POF%1").arg(i+1));
         pActvalue->setUnit("");
-
-        pSCPIInfo = new cSCPIInfo("MEASURE", pActvalue->getChannelName(), SCPI::isCmdwP, pActvalue->getName(), SCPI::isComponent);
-        pActvalue->setSCPIInfo(pSCPIInfo);
-
+        pActvalue->setScpiInfo("MEASURE", pActvalue->getChannelName(), SCPI::isCmdwP, pActvalue->getName(), SCPI::isComponent);
         m_veinActValueList.append(pActvalue); // we add the component for our measurement
         m_pModule->veinModuleActvalueList.append(pActvalue); // and for the modules interface
 
@@ -87,60 +78,45 @@ void cBurden1ModuleMeasProgram::generateVeinInterface()
                                             QString("Burden ratio value Sn"));
         pActvalue->setChannelName(QString("RAT%1").arg(i+1));
         pActvalue->setUnit("%");
-
-        pSCPIInfo = new cSCPIInfo("MEASURE", pActvalue->getChannelName(), SCPI::isCmdwP, pActvalue->getName(), SCPI::isComponent);
-        pActvalue->setSCPIInfo(pSCPIInfo);
-
+        pActvalue->setScpiInfo("MEASURE", pActvalue->getChannelName(), SCPI::isCmdwP, pActvalue->getName(), SCPI::isComponent);
         m_veinActValueList.append(pActvalue); // we add the component for our measurement
         m_pModule->veinModuleActvalueList.append(pActvalue); // and for the modules interface
     }
 
+    QString key;
     m_pNominalRangeParameter = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
-                                                        key = QString("PAR_NominalRange"),
-                                                        QString("Nominal range"),
-                                                        QVariant(getConfData()->nominalRange.m_fValue));
+                                                     key = QString("PAR_NominalRange"),
+                                                     QString("Nominal range"),
+                                                     QVariant(getConfData()->nominalRange.m_fValue));
     m_pNominalRangeParameter->setUnit(getConfData()->m_Unit);
-    m_pNominalRangeParameter->setSCPIInfo(new cSCPIInfo("CONFIGURATION","RANGE", SCPI::isQuery|SCPI::isCmdwP, "PAR_NominalRange", SCPI::isComponent));
-
-    cDoubleValidator *dValidator;
-    dValidator = new cDoubleValidator(0.001, 10000.0, 0.001);
-    m_pNominalRangeParameter->setValidator(dValidator);
+    m_pNominalRangeParameter->setScpiInfo("CONFIGURATION","RANGE", SCPI::isQuery|SCPI::isCmdwP, "PAR_NominalRange", SCPI::isComponent);
+    m_pNominalRangeParameter->setValidator(new cDoubleValidator(0.001, 10000.0, 0.001));
     m_pModule->m_veinModuleParameterMap[key] = m_pNominalRangeParameter; // for modules use
 
     m_pNominalRangeFactorParameter = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
-                                                              key = QString("PAR_NominalRangeFactor"),
-                                                              QString("Nominal range factor"),
-                                                              QVariant(getConfData()->nominalRangeFactor.m_sPar));
-    m_pNominalRangeFactorParameter->setSCPIInfo(new cSCPIInfo("CONFIGURATION","RFACTOR", SCPI::isQuery|SCPI::isCmdwP, "PAR_NominalRangeFactor", SCPI::isComponent));
-
-    cStringValidator *sValidator;
-    sValidator = new cStringValidator(QString("1;sqrt(3);1/sqrt(3);1/3"));
-    m_pNominalRangeFactorParameter->setValidator(sValidator);
+                                                           key = QString("PAR_NominalRangeFactor"),
+                                                           QString("Nominal range factor"),
+                                                           QVariant(getConfData()->nominalRangeFactor.m_sPar));
+    m_pNominalRangeFactorParameter->setScpiInfo("CONFIGURATION","RFACTOR", SCPI::isQuery|SCPI::isCmdwP, "PAR_NominalRangeFactor", SCPI::isComponent);
+    m_pNominalRangeFactorParameter->setValidator(new cStringValidator(QString("1;sqrt(3);1/sqrt(3);1/3")));
     m_pModule->m_veinModuleParameterMap[key] = m_pNominalRangeFactorParameter; // for modules use
-
 
     m_pNominalBurdenParameter = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
                                                          key = QString("PAR_NominalBurden"),
                                                          QString("Nominal burden"),
                                                          QVariant(getConfData()->nominalBurden.m_fValue));
     m_pNominalBurdenParameter->setUnit("VA");
-    m_pNominalBurdenParameter->setSCPIInfo(new cSCPIInfo("CONFIGURATION","BURDEN", SCPI::isQuery|SCPI::isCmdwP, "PAR_NominalBurden", SCPI::isComponent));
-
-    dValidator = new cDoubleValidator(0.001, 10000.0, 0.001);
-    m_pNominalBurdenParameter->setValidator(dValidator);
-
+    m_pNominalBurdenParameter->setScpiInfo("CONFIGURATION","BURDEN", SCPI::isQuery|SCPI::isCmdwP, "PAR_NominalBurden", SCPI::isComponent);
+    m_pNominalBurdenParameter->setValidator(new cDoubleValidator(0.001, 10000.0, 0.001));
     m_pModule->m_veinModuleParameterMap[key] = m_pNominalBurdenParameter; // for modules use
 
     m_pWireLengthParameter = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
-                                                      key = QString("PAR_WireLength"),
-                                                      QString("Wire length value"),
-                                                      QVariant(getConfData()->wireLength.m_fValue));
+                                                   key = QString("PAR_WireLength"),
+                                                   QString("Wire length value"),
+                                                   QVariant(getConfData()->wireLength.m_fValue));
     m_pWireLengthParameter->setUnit("m");
-    m_pWireLengthParameter->setSCPIInfo(new cSCPIInfo("CONFIGURATION","WLENGTH", SCPI::isQuery|SCPI::isCmdwP, "PAR_WireLength", SCPI::isComponent));
-
-    dValidator = new cDoubleValidator(0.0, 100.0, 0.1);
-    m_pWireLengthParameter->setValidator(dValidator);
-
+    m_pWireLengthParameter->setScpiInfo("CONFIGURATION","WLENGTH", SCPI::isQuery|SCPI::isCmdwP, "PAR_WireLength", SCPI::isComponent);
+    m_pWireLengthParameter->setValidator(new cDoubleValidator(0.0, 100.0, 0.1));
     m_pModule->m_veinModuleParameterMap[key] = m_pWireLengthParameter; // for modules use
 
     m_pWireCrosssectionParameter = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
@@ -148,11 +124,8 @@ void cBurden1ModuleMeasProgram::generateVeinInterface()
                                                             QString("Wire crosssection value"),
                                                             QVariant(getConfData()->wireCrosssection.m_fValue));
     m_pWireCrosssectionParameter->setUnit("mm²");
-    m_pWireCrosssectionParameter->setSCPIInfo(new cSCPIInfo("CONFIGURATION","WCSection", SCPI::isQuery|SCPI::isCmdwP, "PAR_WCrosssection", SCPI::isComponent));
-
-    dValidator = new cDoubleValidator(0.1, 100.0, 0.1);
-    m_pWireCrosssectionParameter->setValidator(dValidator);
-
+    m_pWireCrosssectionParameter->setScpiInfo("CONFIGURATION","WCSection", SCPI::isQuery|SCPI::isCmdwP, "PAR_WCrosssection", SCPI::isComponent);
+    m_pWireCrosssectionParameter->setValidator(new cDoubleValidator(0.1, 100.0, 0.1));
     m_pModule->m_veinModuleParameterMap[key] = m_pWireCrosssectionParameter; // for modules use
 
     m_pBRSCountInfo = new VfModuleMetaData(QString("BRSCount"), QVariant(getConfData()->m_nBurdenSystemCount));
@@ -162,7 +135,6 @@ void cBurden1ModuleMeasProgram::generateVeinInterface()
                                                 QString("SIG_Measuring"),
                                                 QString("Signal indicating measurement activity"),
                                                 QVariant(0));
-
     m_pModule->veinModuleComponentList.append(m_pMeasureSignal);
 }
 

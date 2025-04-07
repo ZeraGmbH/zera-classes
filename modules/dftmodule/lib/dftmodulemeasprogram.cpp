@@ -9,7 +9,6 @@
 #include <timerfactoryqt.h>
 #include <reply.h>
 #include <proxy.h>
-#include <scpiinfo.h>
 #include <stringvalidator.h>
 #include <doublevalidator.h>
 #include <math.h>
@@ -177,13 +176,10 @@ void cDftModuleMeasProgram::generateVeinInterface()
                                                            QString("Integration time"),
                                                            QVariant(getConfData()->m_fMeasInterval.m_fValue));
     m_pIntegrationTimeParameter->setUnit("s");
-    m_pIntegrationTimeParameter->setSCPIInfo(new cSCPIInfo("CONFIGURATION","TINTEGRATION", SCPI::isQuery|SCPI::isCmdwP, "PAR_Interval", SCPI::isComponent));
-
+    m_pIntegrationTimeParameter->setScpiInfo("CONFIGURATION","TINTEGRATION", SCPI::isQuery|SCPI::isCmdwP, "PAR_Interval", SCPI::isComponent);
+    m_pIntegrationTimeParameter->setValidator(new cDoubleValidator(1.0, 100.0, 0.5));
     m_pModule->m_veinModuleParameterMap[key] = m_pIntegrationTimeParameter; // for modules use
 
-    cDoubleValidator *dValidator;
-    dValidator = new cDoubleValidator(1.0, 100.0, 0.5);
-    m_pIntegrationTimeParameter->setValidator(dValidator);
 
     QString refChannelAliasConfigured = getConfData()->m_sRefChannel.m_sPar;
     m_pRefChannelParameter = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
@@ -191,7 +187,7 @@ void cDftModuleMeasProgram::generateVeinInterface()
                                                    QString("Reference channel"),
                                                    refChannelAliasConfigured);
 
-    m_pRefChannelParameter->setSCPIInfo(new cSCPIInfo("CONFIGURATION","REFCHANNEL", SCPI::isQuery|SCPI::isCmdwP, "PAR_RefChannel", SCPI::isComponent));
+    m_pRefChannelParameter->setScpiInfo("CONFIGURATION","REFCHANNEL", SCPI::isQuery|SCPI::isCmdwP, "PAR_RefChannel", SCPI::isComponent);
 
     m_pModule->m_veinModuleParameterMap[key] = m_pRefChannelParameter; // for modules use
     // we must set validator after activation because we don't know the channel names here
@@ -406,20 +402,15 @@ void cDftModuleMeasProgram::setActualValuesNames()
 
 void cDftModuleMeasProgram::setSCPIMeasInfo()
 {
-    cSCPIInfo* pSCPIInfo;
     for (int i = 0; i < getConfData()->m_valueChannelList.count(); i++) {
         QString channelName = m_veinPolarValue.at(i)->getChannelName();
-        pSCPIInfo = new cSCPIInfo("MEASURE", channelName, SCPI::isCmdwP, m_veinActValueList.at(i)->getName(), SCPI::isComponent);
-        m_veinActValueList.at(i)->setSCPIInfo(pSCPIInfo);
+        m_veinActValueList.at(i)->setScpiInfo("MEASURE", channelName, SCPI::isCmdwP, m_veinActValueList.at(i)->getName(), SCPI::isComponent);
 
         // Try hard to find unique names with four letters...
         QString polarChannelName = channelName.replace("L", "").replace("-", "").replace("AUX", "4");
-        pSCPIInfo = new cSCPIInfo("MEASURE", polarChannelName, SCPI::isCmdwP, m_veinPolarValue.at(i)->getName(), SCPI::isComponent);
-        m_veinPolarValue.at(i)->setSCPIInfo(pSCPIInfo);
+        m_veinPolarValue.at(i)->setScpiInfo("MEASURE", polarChannelName, SCPI::isCmdwP, m_veinPolarValue.at(i)->getName(), SCPI::isComponent);
     }
-
-    pSCPIInfo = new cSCPIInfo("MEASURE", "RFIELD", SCPI::isCmdwP, m_pRFieldActualValue->getName(), SCPI::isComponent);
-    m_pRFieldActualValue->setSCPIInfo(pSCPIInfo);
+    m_pRFieldActualValue->setScpiInfo("MEASURE", "RFIELD", SCPI::isCmdwP, m_pRFieldActualValue->getName(), SCPI::isComponent);
 }
 
 

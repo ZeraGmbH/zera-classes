@@ -431,45 +431,43 @@ void cSfcModuleMeasProgram::generateVeinInterface()
                                          key = QString("PAR_StartStop"),
                                          QString("Start/stop measurement (start=1, stop=0)"),
                                          QVariant((int)0));
-    m_pStartStopPar->setSCPIInfo(new cSCPIInfo("CALCULATE", QString("START"), SCPI::isCmdwP | SCPI::isQuery, m_pStartStopPar->getName(), SCPI::isComponent));
+    m_pStartStopPar->setValidator(new cIntValidator(0,1,1));
+    m_pStartStopPar->setScpiInfo("CALCULATE", "START",
+                                 SCPI::isCmdwP | SCPI::isQuery,
+                                 m_pStartStopPar->getName(),
+                                 SCPI::isComponent);
     m_pModule->m_veinModuleParameterMap[key] = m_pStartStopPar;
-    cIntValidator *iValidator;
-    iValidator = new cIntValidator(0,1,1);
-    m_pStartStopPar->setValidator(iValidator);
 
     m_pFlankCountAct = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
                                              key = QString("ACT_FlankCount"),
                                              QString("Measurement of flank count"),
                                              QVariant((int)0));
-    m_pFlankCountAct->setSCPIInfo(new cSCPIInfo("CALCULATE", QString("FLANKCOUNT"),
-                                                SCPI::isQuery,
-                                                m_pFlankCountAct->getName(),
-                                                SCPI::isComponent));
+    m_pFlankCountAct->setScpiInfo("CALCULATE", "FLANKCOUNT",
+                                  SCPI::isQuery,
+                                  m_pFlankCountAct->getName(),
+                                  SCPI::isComponent);
     m_pModule->m_veinModuleParameterMap[key] = m_pFlankCountAct;
 
     m_pLedStateAct = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
                                              key = QString("ACT_LedState"),
                                              QString("Current state of scanning head LED (on=1, off=0)"),
                                              QVariant((int)0));
-    m_pLedStateAct->setSCPIInfo(new cSCPIInfo("CALCULATE", QString("LEDSTATUS"),
-                                                SCPI::isQuery,
-                                                m_pLedStateAct->getName(),
-                                                SCPI::isComponent));
+    m_pLedStateAct->setScpiInfo("CALCULATE", "LEDSTATUS",
+                                SCPI::isQuery,
+                                m_pLedStateAct->getName(),
+                                SCPI::isComponent);
     m_pModule->m_veinModuleParameterMap[key] = m_pLedStateAct;
 
     m_pLedInitialStateAct = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
                                            key = QString("ACT_InitialLedState"),
                                            QString("Initial state of scanning head LED (on=1, off=0)"),
                                            QVariant((int)0));
-    m_pLedInitialStateAct->setSCPIInfo(new cSCPIInfo("CALCULATE", QString("LEDSTATUS"),
-                                              SCPI::isQuery,
-                                              m_pLedInitialStateAct->getName(),
-                                              SCPI::isComponent));
+    m_pLedInitialStateAct->setScpiInfo("CALCULATE", "LEDSTATUS",
+                                       SCPI::isQuery,
+                                       m_pLedInitialStateAct->getName(),
+                                       SCPI::isComponent);
     m_pModule->m_veinModuleParameterMap[key] = m_pLedInitialStateAct;
-
 }
-
-
 
 void cSfcModuleMeasProgram::deactivateMeasDone()
 {

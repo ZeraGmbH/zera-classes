@@ -1,27 +1,29 @@
 #include "vfmoduleactvalue.h"
-#include "scpiinfo.h"
 
-VfModuleActvalue::VfModuleActvalue(int entityId,  VeinEvent::EventSystem *eventsystem, QString name, QString description, QVariant initval)
-    :VfModuleComponent(entityId, eventsystem, name, description, initval)
+VfModuleActvalue::VfModuleActvalue(int entityId,
+                                   VeinEvent::EventSystem *eventsystem,
+                                   QString name,
+                                   QString description,
+                                   QVariant initval) :
+    VfModuleComponent(entityId, eventsystem, name, description, initval)
 {
-    m_pscpiInfo = 0;
-}
-
-VfModuleActvalue::~VfModuleActvalue()
-{
-    if (m_pscpiInfo) {
-        delete m_pscpiInfo;
-    }
 }
 
 void VfModuleActvalue::exportSCPIInfo(QJsonArray &jsArr)
 {
-    if (m_pscpiInfo) {
-        m_pscpiInfo->appendSCPIInfo(jsArr);
-    }
+    if (m_scpiInfo)
+        m_scpiInfo->appendSCPIInfo(jsArr);
 }
 
-void VfModuleActvalue::setSCPIInfo(cSCPIInfo *scpiinfo)
+void VfModuleActvalue::setScpiInfo(const QString &model,
+                                   const QString &cmd,
+                                   int cmdTypeMask,
+                                   const QString &veinComponentName,
+                                   SCPI::eSCPIEntryType entryType)
 {
-    m_pscpiInfo = scpiinfo;
+    m_scpiInfo = std::make_unique<ScpiVeinComponentInfo>(model,
+                                                         cmd,
+                                                         cmdTypeMask,
+                                                         veinComponentName,
+                                                         entryType);
 }

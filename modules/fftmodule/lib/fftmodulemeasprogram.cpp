@@ -131,13 +131,10 @@ void cFftModuleMeasProgram::generateVeinInterface()
                                                            QString("Integration time"),
                                                            QVariant(getConfData()->m_fMeasInterval.m_fValue));
     m_pIntegrationTimeParameter->setUnit("s");
-    m_pIntegrationTimeParameter->setSCPIInfo(new cSCPIInfo("CONFIGURATION","TINTEGRATION", SCPI::isQuery|SCPI::isCmdwP, "PAR_Interval", SCPI::isComponent));
-
+    m_pIntegrationTimeParameter->setScpiInfo("CONFIGURATION","TINTEGRATION", SCPI::isQuery|SCPI::isCmdwP, "PAR_Interval", SCPI::isComponent);
+    m_pIntegrationTimeParameter->setValidator(new cDoubleValidator(1.0, 100.0, 0.5));
     m_pModule->m_veinModuleParameterMap[key] = m_pIntegrationTimeParameter; // for modules use
 
-    cDoubleValidator *dValidator;
-    dValidator = new cDoubleValidator(1.0, 100.0, 0.5);
-    m_pIntegrationTimeParameter->setValidator(dValidator);
 
     QString refChannelMNameConfigured = getConfData()->m_RefChannel.m_sPar;
     m_pRefChannelParameter = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
@@ -149,7 +146,7 @@ void cFftModuleMeasProgram::generateVeinInterface()
     sValidator = new cStringValidator(getConfData()->m_valueChannelList);
     m_pRefChannelParameter->setValidator(sValidator);
 
-    m_pRefChannelParameter->setSCPIInfo(new cSCPIInfo("CONFIGURATION","REFCHANNEL", SCPI::isQuery|SCPI::isCmdwP, "PAR_RefChannel", SCPI::isComponent));
+    m_pRefChannelParameter->setScpiInfo("CONFIGURATION","REFCHANNEL", SCPI::isQuery|SCPI::isCmdwP, "PAR_RefChannel", SCPI::isComponent);
     m_pModule->m_veinModuleParameterMap[key] = m_pRefChannelParameter; // for modules use
 
     m_pMeasureSignal = new VfModuleComponent(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
@@ -375,14 +372,9 @@ cFftModuleConfigData *cFftModuleMeasProgram::getConfData()
 
 void cFftModuleMeasProgram::setSCPIMeasInfo()
 {
-    cSCPIInfo* pSCPIInfo;
-
-    for (int i = 0; i < getConfData()->m_valueChannelList.count(); i++)
-    {
-        pSCPIInfo = new cSCPIInfo("MEASURE", m_veinActValueList.at(i)->getChannelName(), SCPI::isCmdwP, m_veinActValueList.at(i)->getName(), SCPI::isComponent);
-        m_veinActValueList.at(i)->setSCPIInfo(pSCPIInfo);
-        pSCPIInfo = new cSCPIInfo("MEASURE", m_DCValueList.at(i)->getChannelName() + "_DC", SCPI::isCmdwP, m_DCValueList.at(i)->getName(), SCPI::isComponent);
-        m_DCValueList.at(i)->setSCPIInfo(pSCPIInfo);
+    for (int i = 0; i < getConfData()->m_valueChannelList.count(); i++) {
+        m_veinActValueList.at(i)->setScpiInfo("MEASURE", m_veinActValueList.at(i)->getChannelName(), SCPI::isCmdwP, m_veinActValueList.at(i)->getName(), SCPI::isComponent);
+        m_DCValueList.at(i)->setScpiInfo("MEASURE", m_DCValueList.at(i)->getChannelName() + "_DC", SCPI::isCmdwP, m_DCValueList.at(i)->getName(), SCPI::isComponent);
     }
 }
 

@@ -46,54 +46,53 @@ void cBleModuleMeasProgram::generateVeinInterface()
 {
     QString key;
     m_pTemperatureCAct = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
-                                              key = QString("ACT_TemperatureC"),
-                                              QString("Current temperature in degree Celsius"),
-                                              QVariant(qQNaN()));
+                                               key = QString("ACT_TemperatureC"),
+                                               QString("Current temperature in degree Celsius"),
+                                               QVariant(qQNaN()));
     m_pTemperatureCAct->setUnit("°C");
-    m_pTemperatureCAct->setSCPIInfo(new cSCPIInfo("STATUS", "TEMP:CELSIUS", SCPI::isQuery, m_pTemperatureCAct->getName(), SCPI::isComponent));
-
+    m_pTemperatureCAct->setScpiInfo("STATUS", "TEMP:CELSIUS", SCPI::isQuery, m_pTemperatureCAct->getName(), SCPI::isComponent);
     m_pModule->m_veinModuleParameterMap[key] = m_pTemperatureCAct; // and for the modules interface
 
     m_pTemperatureFAct = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
-                                             key = QString("ACT_TemperatureF"),
-                                             QString("Current temperature in degree Fahrenheit"),
-                                             QVariant(qQNaN()));
+                                               key = QString("ACT_TemperatureF"),
+                                               QString("Current temperature in degree Fahrenheit"),
+                                               QVariant(qQNaN()));
     m_pTemperatureFAct->setUnit("°F");
-    m_pTemperatureFAct->setSCPIInfo(new cSCPIInfo("STATUS", "TEMP:FAHRENHEIT", SCPI::isQuery, m_pTemperatureFAct->getName(), SCPI::isComponent));
+    m_pTemperatureFAct->setScpiInfo("STATUS", "TEMP:FAHRENHEIT", SCPI::isQuery, m_pTemperatureFAct->getName(), SCPI::isComponent);
     m_pModule->m_veinModuleParameterMap[key] = m_pTemperatureFAct;
 
     m_pHumidityAct = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
-                                          key = QString("ACT_Humidity"),
-                                          QString("Current relative humidity in percent"),
-                                          QVariant(qQNaN()));
+                                           key = QString("ACT_Humidity"),
+                                           QString("Current relative humidity in percent"),
+                                           QVariant(qQNaN()));
     m_pHumidityAct->setUnit("%");
-    m_pHumidityAct->setSCPIInfo(new cSCPIInfo("STATUS", "HUMID", SCPI::isQuery, m_pHumidityAct->getName(), SCPI::isComponent));
+    m_pHumidityAct->setScpiInfo("STATUS", "HUMID", SCPI::isQuery, m_pHumidityAct->getName(), SCPI::isComponent);
     m_pModule->m_veinModuleParameterMap[key] = m_pHumidityAct;
 
     m_pAirPressureAct = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
-                                             key = QString("ACT_AirPressure"),
-                                             QString("Current atmospheric pressure in hPa"),
-                                             QVariant(qQNaN()));
+                                              key = QString("ACT_AirPressure"),
+                                              QString("Current atmospheric pressure in hPa"),
+                                              QVariant(qQNaN()));
     m_pAirPressureAct->setUnit("hPa");
-    m_pAirPressureAct->setSCPIInfo(new cSCPIInfo("STATUS", "AIRPR", SCPI::isQuery, m_pAirPressureAct->getName(), SCPI::isComponent));
+    m_pAirPressureAct->setScpiInfo("STATUS", "AIRPR", SCPI::isQuery, m_pAirPressureAct->getName(), SCPI::isComponent);
     m_pModule->m_veinModuleParameterMap[key] = m_pAirPressureAct;
 
     m_pWarningFlagsAct = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
-                                              key = QString("ACT_WarningFlags"),
-                                              QString("Current warning flags"),
-                                              QVariant((quint32)0));
+                                               key = QString("ACT_WarningFlags"),
+                                               QString("Current warning flags"),
+                                               QVariant((quint32)0));
     m_pModule->m_veinModuleParameterMap[key] = m_pWarningFlagsAct;
 
     m_pErrorFlagsAct = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
-                                            key = QString("ACT_ErrorFlags"),
-                                            QString("Current error flags"),
-                                            QVariant(quint32(0)));
+                                             key = QString("ACT_ErrorFlags"),
+                                             QString("Current error flags"),
+                                             QVariant(quint32(0)));
     m_pModule->m_veinModuleParameterMap[key] = m_pErrorFlagsAct;
 
     m_pBluetoothOnOff = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
-                                key = QString("PAR_BluetoothOn"),
-                                QString("Bluetooth on"),
-                                QVariant(getConfData()->m_bluetoothOn.m_nActive)); // bool validator ruins true/false
+                                              key = QString("PAR_BluetoothOn"),
+                                              QString("Bluetooth on"),
+                                              QVariant(getConfData()->m_bluetoothOn.m_nActive)); // bool validator ruins true/false
     m_pBluetoothOnOff->setValidator(new cBoolValidator);
     m_pModule->m_veinModuleParameterMap[key] = m_pBluetoothOnOff;
     connect(m_pBluetoothOnOff, &VfModuleComponent::sigValueChanged,

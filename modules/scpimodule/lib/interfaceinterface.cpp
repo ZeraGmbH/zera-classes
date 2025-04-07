@@ -1,7 +1,6 @@
 #include "scpiclient.h"
 #include "interfaceinterface.h"
 #include "scpiinterface.h"
-#include "scpiinfo.h"
 #include "scpimodule.h"
 #include "scpiinterfacedelegate.h"
 #include <scpi.h>
@@ -34,8 +33,8 @@ bool cInterfaceInterface::setupInterface()
     connect(delegate, &cSCPIInterfaceDelegate::signalExecuteSCPI, this, &cInterfaceInterface::executeCmd);
 
     // for module integrity we also have to add this command to the scpi command list (exported at INF_ModuleInterface
-    cSCPIInfo *scpiInfo;
-    scpiInfo = new cSCPIInfo("", QString("DEVICE:IFACE"), SCPI::isQuery, "", SCPI::isComponent);
+    ScpiVeinComponentInfo *scpiInfo;
+    scpiInfo = new ScpiVeinComponentInfo("", QString("DEVICE:IFACE"), SCPI::isQuery, "", SCPI::isComponent);
     m_pModule->scpiCommandList.append(scpiInfo);
     return true;
 }

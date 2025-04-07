@@ -60,16 +60,12 @@ void cPower3ModuleMeasProgram::generateVeinInterface()
 {
     for (int i = 0; i < getConfData()->m_nPowerSystemCount; i++) {
         VfModuleActvalue *pActvalue;
-        cSCPIInfo* pSCPIInfo;
         pActvalue = new VfModuleActvalue(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
                                             QString("ACT_HPP%1").arg(i+1),
                                             QString("Harmonic power active values"));
         pActvalue->setChannelName(QString("P%1").arg(i+1)); // we take "system" as name because we export real- and imaginary part
         pActvalue->setUnit("W");
-
-        pSCPIInfo = new cSCPIInfo("MEASURE", pActvalue->getChannelName(), SCPI::isCmdwP, pActvalue->getName(), SCPI::isComponent);
-        pActvalue->setSCPIInfo(pSCPIInfo);
-
+        pActvalue->setScpiInfo("MEASURE", pActvalue->getChannelName(), SCPI::isCmdwP, pActvalue->getName(), SCPI::isComponent);
         m_veinActValueList.append(pActvalue); // we add the component for our measurement
         m_pModule->veinModuleActvalueList.append(pActvalue); // and for the modules interface
 
@@ -78,10 +74,7 @@ void cPower3ModuleMeasProgram::generateVeinInterface()
                                             QString("Harmonic power reactive values"));
         pActvalue->setChannelName(QString("Q%1").arg(i+1)); // we take "system" as name because we export real- and imaginary part
         pActvalue->setUnit("Var");
-
-        pSCPIInfo = new cSCPIInfo("MEASURE", pActvalue->getChannelName(), SCPI::isCmdwP, pActvalue->getName(), SCPI::isComponent);
-        pActvalue->setSCPIInfo(pSCPIInfo);
-
+        pActvalue->setScpiInfo("MEASURE", pActvalue->getChannelName(), SCPI::isCmdwP, pActvalue->getName(), SCPI::isComponent);
         m_veinActValueList.append(pActvalue); // we add the component for our measurement
         m_pModule->veinModuleActvalueList.append(pActvalue); // and for the modules interface
 
@@ -90,10 +83,7 @@ void cPower3ModuleMeasProgram::generateVeinInterface()
                                             QString("Harmonic power apparent values"));
         pActvalue->setChannelName(QString("S%1").arg(i+1)); // we take "system" as name because we export real- and imaginary part
         pActvalue->setUnit("VA");
-
-        pSCPIInfo = new cSCPIInfo("MEASURE", pActvalue->getChannelName(), SCPI::isCmdwP, pActvalue->getName(), SCPI::isComponent);
-        pActvalue->setSCPIInfo(pSCPIInfo);
-
+        pActvalue->setScpiInfo("MEASURE", pActvalue->getChannelName(), SCPI::isCmdwP, pActvalue->getName(), SCPI::isComponent);
         m_veinActValueList.append(pActvalue); // we add the component for our measurement
         m_pModule->veinModuleActvalueList.append(pActvalue); // and for the modules interface
     }

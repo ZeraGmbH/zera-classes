@@ -122,7 +122,7 @@ void cOsciModuleMeasProgram::generateVeinInterface()
                                                    QString("Reference channel"),
                                                    refChannelMNameConfigured);
 
-    m_pRefChannelParameter->setSCPIInfo(new cSCPIInfo("CONFIGURATION","REFCHANNEL", SCPI::isQuery|SCPI::isCmdwP, "PAR_RefChannel", SCPI::isComponent));
+    m_pRefChannelParameter->setScpiInfo("CONFIGURATION","REFCHANNEL", SCPI::isQuery|SCPI::isCmdwP, "PAR_RefChannel", SCPI::isComponent);
 
     m_pModule->m_veinModuleParameterMap[key] = m_pRefChannelParameter; // for modules use
 
@@ -352,8 +352,7 @@ void cOsciModuleMeasProgram::setActualValuesNames()
         const QString &channelUnit = aliasUnit.m_channelUnit;
         m_veinActValueList.at(i)->setChannelName(channelName);
         m_veinActValueList.at(i)->setUnit(channelUnit);
-        cSCPIInfo* pSCPIInfo = new cSCPIInfo("MEASURE", channelName, SCPI::isCmdwP, m_veinActValueList.at(i)->getName(), SCPI::isComponent);
-        m_veinActValueList.at(i)->setSCPIInfo(pSCPIInfo);
+        m_veinActValueList.at(i)->setScpiInfo("MEASURE", channelName, SCPI::isCmdwP, m_veinActValueList.at(i)->getName(), SCPI::isComponent);
     }
 }
 

@@ -42,17 +42,13 @@ cLambdaModuleConfigData *cLambdaModuleMeasProgram::getConfData()
 void cLambdaModuleMeasProgram::generateVeinInterface()
 {
     VfModuleActvalue *pActvalue;
-    cSCPIInfo* pSCPIInfo;
     for (int i = 0; i < getConfData()->m_nLambdaSystemCount; i++) {
         pActvalue = new VfModuleActvalue(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
                                             QString("ACT_Lambda%1").arg(i+1),
                                             QString("Actual lambda value"));
         pActvalue->setChannelName(QString("Lambda%1").arg(i+1));
         pActvalue->setUnit("");
-
-        pSCPIInfo = new cSCPIInfo("MEASURE", pActvalue->getChannelName(), SCPI::isCmdwP, pActvalue->getName(), SCPI::isComponent);
-        pActvalue->setSCPIInfo(pSCPIInfo);
-
+        pActvalue->setScpiInfo("MEASURE", pActvalue->getChannelName(), SCPI::isCmdwP, pActvalue->getName(), SCPI::isComponent);
         m_veinLambdaActValues.append(pActvalue); // we add the component for our measurement
         m_pModule->veinModuleActvalueList.append(pActvalue); // and for the modules interface
 

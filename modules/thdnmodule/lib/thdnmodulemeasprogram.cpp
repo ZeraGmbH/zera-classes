@@ -9,7 +9,6 @@
 #include <proxy.h>
 #include <proxyclient.h>
 #include <scpi.h>
-#include <scpiinfo.h>
 #include <vfmodulemetadata.h>
 #include <vfmodulecomponent.h>
 #include <vfmoduleparameter.h>
@@ -135,13 +134,9 @@ void cThdnModuleMeasProgram::generateVeinInterface()
                                                            QString("Integration time"),
                                                            QVariant(getConfData()->m_fMeasInterval.m_fValue));
     m_pIntegrationTimeParameter->setUnit("s");
-    m_pIntegrationTimeParameter->setSCPIInfo(new cSCPIInfo("CONFIGURATION","TINTEGRATION", SCPI::isQuery|SCPI::isCmdwP, "PAR_Interval", SCPI::isComponent));
-
+    m_pIntegrationTimeParameter->setScpiInfo("CONFIGURATION","TINTEGRATION", SCPI::isQuery|SCPI::isCmdwP, "PAR_Interval", SCPI::isComponent);
+    m_pIntegrationTimeParameter->setValidator(new cDoubleValidator(1.0, 100.0, 0.5));
     m_pModule->m_veinModuleParameterMap[key] = m_pIntegrationTimeParameter; // for modules use
-
-    cDoubleValidator *dValidator;
-    dValidator = new cDoubleValidator(1.0, 100.0, 0.5);
-    m_pIntegrationTimeParameter->setValidator(dValidator);
 
     m_pMeasureSignal = new VfModuleComponent(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
                                                 QString("SIG_Measuring"),
@@ -355,10 +350,8 @@ void cThdnModuleMeasProgram::setActualValuesNames()
 
 void cThdnModuleMeasProgram::setSCPIMeasInfo()
 {
-    for (int i = 0; i < m_veinActValueList.count(); i++) {
-        cSCPIInfo* pSCPIInfo = new cSCPIInfo("MEASURE", m_veinActValueList.at(i)->getChannelName(), SCPI::isCmdwP, m_veinActValueList.at(i)->getName(), SCPI::isComponent);
-        m_veinActValueList.at(i)->setSCPIInfo(pSCPIInfo);
-    }
+    for (int i = 0; i < m_veinActValueList.count(); i++)
+        m_veinActValueList.at(i)->setScpiInfo("MEASURE", m_veinActValueList.at(i)->getChannelName(), SCPI::isCmdwP, m_veinActValueList.at(i)->getName(), SCPI::isComponent);
 }
 
 void cThdnModuleMeasProgram::setInterfaceActualValues(QVector<float> *actualValues)

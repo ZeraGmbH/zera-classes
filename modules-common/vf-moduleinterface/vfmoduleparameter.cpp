@@ -1,20 +1,17 @@
 #include "vfmoduleparameter.h"
 #include "validatorinterface.h"
-#include "scpiinfo.h"
 
 VfModuleParameter::VfModuleParameter(int entityId, VeinEvent::EventSystem *eventsystem, QString name, QString description, QVariant initval, bool deferredNotification, bool deferredQueryNotification)
     :VfModuleComponent(entityId, eventsystem, name, description, initval),
       m_bDeferredNotification(deferredNotification),
       m_bDeferredQueryNotification(deferredQueryNotification),
-      m_pValidator(nullptr),
-      m_pscpiInfo(nullptr)
+      m_pValidator(nullptr)
 {
 }
 
 VfModuleParameter::~VfModuleParameter()
 {
     delete m_pValidator;
-    delete m_pscpiInfo;
 }
 
 bool VfModuleParameter::hasDeferredNotification()
@@ -57,14 +54,18 @@ void VfModuleParameter::exportMetaData(QJsonObject &jsObj)
 
 void VfModuleParameter::exportSCPIInfo(QJsonArray &jsArr)
 {
-    if (m_pscpiInfo) {
-        m_pscpiInfo->appendSCPIInfo(jsArr);
+    if (m_scpiInfo) {
+        m_scpiInfo->appendSCPIInfo(jsArr);
     }
 }
 
-void VfModuleParameter::setSCPIInfo(cSCPIInfo *scpiinfo)
+void VfModuleParameter::setScpiInfo(const QString &model, const QString &cmd, int cmdTypeMask, const QString &veinComponentName, SCPI::eSCPIEntryType entryType)
 {
-    m_pscpiInfo = scpiinfo;
+    m_scpiInfo = std::make_unique<ScpiVeinComponentInfo>(model,
+                                                         cmd,
+                                                         cmdTypeMask,
+                                                         veinComponentName,
+                                                         entryType);
 }
 
 void VfModuleParameter::setValidator(ValidatorInterface *validator)
