@@ -7,6 +7,7 @@
 #include <proxy.h>
 #include <doublevalidator.h>
 #include <intvalidator.h>
+#include <scpi.h>
 #include <timerfactoryqt.h>
 
 namespace RMSMODULE
@@ -161,12 +162,12 @@ void cRmsModuleMeasProgram::generateVeinInterface()
                                                            val);
     m_pIntegrationParameter->setUnit(unit);
     if (timeIntegration) {
-        m_pIntegrationParameter->setSCPIInfo(new cSCPIInfo("CONFIGURATION","TINTEGRATION", "10", "PAR_Interval", "0", "s"));
+        m_pIntegrationParameter->setSCPIInfo(new cSCPIInfo("CONFIGURATION","TINTEGRATION", SCPI::isQuery|SCPI::isCmdwP, "PAR_Interval", SCPI::isComponent));
         cDoubleValidator *dValidator = new cDoubleValidator(1.0, 100.0, 0.5);
         m_pIntegrationParameter->setValidator(dValidator);
     }
     else {
-        m_pIntegrationParameter->setSCPIInfo(new cSCPIInfo("CONFIGURATION","TPERIOD", "10", "PAR_Interval", "0", ""));
+        m_pIntegrationParameter->setSCPIInfo(new cSCPIInfo("CONFIGURATION","TPERIOD", SCPI::isQuery|SCPI::isCmdwP, "PAR_Interval", SCPI::isComponent));
         cIntValidator *iValidator = new cIntValidator(5, 5000, 1);
         m_pIntegrationParameter->setValidator(iValidator);
     }
@@ -415,7 +416,7 @@ void cRmsModuleMeasProgram::setSCPIMeasInfo()
 
     for (int i = 0; i < getConfData()->m_valueChannelList.count(); i++)
     {
-        pSCPIInfo = new cSCPIInfo("MEASURE", m_veinActValueList.at(i)->getChannelName(), "8", m_veinActValueList.at(i)->getName(), "0", m_veinActValueList.at(i)->getUnit());
+        pSCPIInfo = new cSCPIInfo("MEASURE", m_veinActValueList.at(i)->getChannelName(), SCPI::isCmdwP, m_veinActValueList.at(i)->getName(), SCPI::isComponent);
         m_veinActValueList.at(i)->setSCPIInfo(pSCPIInfo);
     }
 }
