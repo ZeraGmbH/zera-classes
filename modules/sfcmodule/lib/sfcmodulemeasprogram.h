@@ -8,6 +8,7 @@
 #include <QStateMachine>
 #include <QState>
 #include <QFinalState>
+#include <secinterface.h>
 
 namespace SFCMODULE
 {
@@ -33,6 +34,7 @@ private:
     cSfcModuleConfigData *getConfData();
 
     cSfcModule *m_pModule;
+    std::unique_ptr<Zera::cSECInterface> m_pSECInterface;
     QList<VfModuleActvalue *> m_veinActValueList; // the list of actual values we work on
 
     // statemachine for activating gets the following states
@@ -41,12 +43,15 @@ private:
     // statemachine for deactivating
     QFinalState m_deactivateDoneState;
 
-    VfModuleParameter* m_pStartStop;
+    VfModuleParameter* m_pStartStopPar;
+    VfModuleParameter* m_pFlankCountAct;
+    VfModuleParameter* m_pLedStateAct;
+    VfModuleParameter* m_pLedInitialStateAct;
 
 private slots:
     void activateDone();
     void deactivateMeasDone();
-    void onStartStopChanged();
+    void onStartStopChanged(QVariant newValue);
 };
 
 }
