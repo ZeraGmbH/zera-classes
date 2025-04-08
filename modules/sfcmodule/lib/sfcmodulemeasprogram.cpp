@@ -127,6 +127,8 @@ cSfcModuleMeasProgram::cSfcModuleMeasProgram(cSfcModule *module, std::shared_ptr
 
 cSfcModuleMeasProgram::~cSfcModuleMeasProgram()
 {
+    Zera::Proxy::getInstance()->releaseConnection(m_pSECClient);
+    Zera::Proxy::getInstance()->releaseConnection(m_pPCBClient);
 }
 
 void cSfcModuleMeasProgram::start()
@@ -487,27 +489,27 @@ void cSfcModuleMeasProgram::resetIntRegister()
 
 void cSfcModuleMeasProgram::readMTCountact()
 {
-
+    interruptContinue();
 }
 
 void cSfcModuleMeasProgram::setECResult()
 {
-
+    interruptContinue();
 }
 
 void cSfcModuleMeasProgram::setRating()
 {
-
+    interruptContinue();
 }
 
 void cSfcModuleMeasProgram::setECResultAndResetInt()
 {
-
+    interruptContinue();
 }
 
 void cSfcModuleMeasProgram::checkForRestart()
 {
-
+    interruptContinue();
 }
 
 void cSfcModuleMeasProgram::stopECCalculator()
