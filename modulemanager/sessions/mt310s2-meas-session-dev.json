@@ -130,11 +130,6 @@
         "id": 1210
       },
       {
-        "name" : "spm1module",
-        "configFile" : "mt310s2-spm1module.xml",
-        "id": 1210
-      },
-      {
         "name" : "sourcemodule",
         "configFile" : "",
         "id": 1300
@@ -143,11 +138,6 @@
         "name" : "blemodule",
         "configFile" : "blemodule.xml",
         "id": 1400
-      },
-      {
-        "name" : "sfcmodule",
-        "configFile" : "sfcmodule.xml",
-        "id": 1500
       },
       {
         "name" : "scpimodule",
