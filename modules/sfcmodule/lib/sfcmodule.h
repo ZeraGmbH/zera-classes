@@ -16,11 +16,10 @@ public:
     cSfcModule(ModuleFactoryParam moduleParam);
 
 protected:
-    cSfcModuleMeasProgram *m_pMeasProgram;                  // our measuring program, lets say the working horse
-    virtual void setupModule();                             // after xml configuration we can setup and export our module
-    virtual void startMeas();                               // we make the measuring program start here
-    virtual void stopMeas();
-
+    cSfcModuleMeasProgram *m_pMeasProgram;
+    virtual void setupModule() override;
+    virtual void startMeas() override;
+    virtual void stopMeas() override;
 };
 
 }
