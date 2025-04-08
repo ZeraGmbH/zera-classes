@@ -7,6 +7,7 @@
 #include <scpi.h>
 #include <proxy.h>
 #include <proxyclient.h>
+#include <timerfactoryqt.h>
 
 namespace SFCMODULE
 {
@@ -78,6 +79,33 @@ cSfcModuleMeasProgram::cSfcModuleMeasProgram(cSfcModule *module, std::shared_ptr
     connect(&m_activationDoneState, &QState::entered, this, &cSfcModuleMeasProgram::activationDone);
 
 
+    // setting up statemachine used when starting a measurement
+    m_setMeaspulsesState.addTransition(this, &cSfcModuleMeasProgram::setupContinue, &m_setMasterMuxState);
+    m_setMasterMuxState.addTransition(this, &cSfcModuleMeasProgram::setupContinue, &m_setMasterMeasModeState);
+    m_setMasterMeasModeState.addTransition(this, &cSfcModuleMeasProgram::setupContinue, &m_enableInterruptState);
+    m_enableInterruptState.addTransition(this, &cSfcModuleMeasProgram::setupContinue, &m_startMeasurementState);
+    m_startMeasurementState.addTransition(this, &cSfcModuleMeasProgram::setupContinue, &m_startMeasurementDoneState);
+
+    m_startMeasurementMachine.addState(&m_setMeaspulsesState);
+    m_startMeasurementMachine.addState(&m_setMasterMuxState);
+    m_startMeasurementMachine.addState(&m_setMasterMeasModeState);
+    m_startMeasurementMachine.addState(&m_enableInterruptState);
+    m_startMeasurementMachine.addState(&m_startMeasurementState);
+    m_startMeasurementMachine.addState(&m_startMeasurementDoneState);
+
+    if(m_pModule->getDemo())
+        m_startMeasurementMachine.setInitialState(&m_startMeasurementState);
+    else
+        m_startMeasurementMachine.setInitialState(&m_setMeaspulsesState);
+
+    connect(&m_setMeaspulsesState, &QState::entered, this, &cSfcModuleMeasProgram::setMeaspulses);
+    connect(&m_setMasterMuxState, &QState::entered, this, &cSfcModuleMeasProgram::setMasterMux);
+    connect(&m_setMasterMeasModeState, &QState::entered, this, &cSfcModuleMeasProgram::setMasterMeasMode);
+    connect(&m_enableInterruptState, &QState::entered, this, &cSfcModuleMeasProgram::enableInterrupt);
+    connect(&m_startMeasurementState, &QState::entered, this, &cSfcModuleMeasProgram::startMeasurement);
+    connect(&m_startMeasurementDoneState, &QState::entered, this, &cSfcModuleMeasProgram::startMeasurementDone);
+
+
     // setting up statemachine for interrupt handling (Interrupt is thrown on measuremnt finished)
     m_readIntRegisterState.addTransition(this, &cSfcModuleMeasProgram::interruptContinue, &m_readMTCountactState);
     m_readMTCountactState.addTransition(this, &cSfcModuleMeasProgram::interruptContinue, &m_calcResultAndResetIntState);
@@ -138,6 +166,18 @@ void cSfcModuleMeasProgram::handleSECInterrupt()
 {
     if (!m_InterrupthandlingStateMachine.isRunning())
         m_InterrupthandlingStateMachine.start();
+}
+
+void cSfcModuleMeasProgram::updateProgress(quint32 flankCountActual)
+{
+    m_pFlankCountAct->setValue(flankCountActual);
+}
+
+void cSfcModuleMeasProgram::stopMeasurement(bool bAbort)
+{
+    m_bMeasurementRunning = false;
+    m_MsgNrCmdList[m_pSECInterface->stop(m_masterErrCalcName)] = stopmeas;
+    m_ActualizeTimer->stop();
 }
 
 void cSfcModuleMeasProgram::resourceManagerConnect()
@@ -267,7 +307,11 @@ void cSfcModuleMeasProgram::setsecINTNotifier()
 void cSfcModuleMeasProgram::activationDone()
 {
     connect(m_pStartStopPar, &VfModuleParameter::sigValueChanged, this, &cSfcModuleMeasProgram::onStartStopChanged);
+    m_ActualizeTimer = TimerFactoryQt::createPeriodic(m_nActualizeIntervallLowFreq);
+    connect(m_ActualizeTimer.get(), &TimerTemplateQt::sigExpired, this, &cSfcModuleMeasProgram::Actualize);
+
     m_bActive = true;
+
     emit activated();
 }
 
@@ -337,7 +381,6 @@ void cSfcModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QV
                 sl = answer.toString().split(';');
                 if ((reply == ack) && (sl.length() >= 2)) {
                     m_masterErrCalcName = sl.at(0);
-                    m_slaveErrCalcName = sl.at(1);
                     emit activationContinue();
                 }
                 else
@@ -396,6 +439,48 @@ void cSfcModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QV
                 else
                     notifyError(freeresourceErrMsg);
                 break;
+            case enableinterrupt:
+            case setmeaspulses:
+                if (reply == ack)
+                    emit setupContinue();
+                else
+                    notifyError(writesecregisterErrMsg);
+                break;
+
+            case setmastermux:
+                if (reply == ack)
+                    emit setupContinue();
+                else
+                    notifyError(setmuxErrMsg);
+                break;
+
+            case setmastermeasmode:
+                if (reply == ack)
+                {
+                    emit setupContinue();
+                }
+                else
+                    notifyError(setcmdidErrMsg);
+                break;
+
+            case startmeasurement:
+                if (reply == ack)
+                {
+                    emit setupContinue();
+                }
+                else
+                    notifyError(startmeasErrMsg);
+                break;
+            case actualizeprogress:
+            {
+                if (reply == ack) {
+                    // Still running and not waiting for next?
+                    updateProgress(answer.toUInt());
+                }
+                else
+                    notifyError(readsecregisterErrMsg);
+                break;
+            }
             }
         }
     }
@@ -449,7 +534,13 @@ void cSfcModuleMeasProgram::deactivateMeasDone()
 
 void cSfcModuleMeasProgram::onStartStopChanged(QVariant newValue)
 {
-    qInfo("kick off ec flank count thingy");
+    bool ok;
+    if(newValue.toInt(&ok) > 0)
+    {
+        if (!m_startMeasurementMachine.isRunning())
+            m_startMeasurementMachine.start();
+    }else
+        stopMeasurement(true);
 }
 
 void cSfcModuleMeasProgram::readIntRegister()
@@ -511,6 +602,50 @@ void cSfcModuleMeasProgram::deactivationDone()
     disconnect(m_pcbInterface.get(), 0, this, 0);
 
     emit deactivateMeasDone();
+}
+
+void cSfcModuleMeasProgram::setMeaspulses()
+{
+    if(!m_pModule->getDemo())
+        m_MsgNrCmdList[m_pSECInterface->writeRegister(m_masterErrCalcName, ECALCREG::MTCNTin, m_nDUTPulseCounterStart)] = setmeaspulses;
+}
+
+void cSfcModuleMeasProgram::setMasterMux()
+{
+    QString dutInputName = getConfData()->m_sDutInput.m_sPar;
+    m_MsgNrCmdList[m_pSECInterface->setMux(m_masterErrCalcName, dutInputName)] = setmastermux;
+}
+
+void cSfcModuleMeasProgram::setMasterMeasMode()
+{
+    m_MsgNrCmdList[m_pSECInterface->setCmdid(m_masterErrCalcName, ECALCCMDID::COUNTEDGE)] = setmastermeasmode;
+}
+
+void cSfcModuleMeasProgram::enableInterrupt()
+{
+    m_MsgNrCmdList[m_pSECInterface->writeRegister(m_masterErrCalcName, ECALCREG::INTMASK, ECALCINT::MTCount0)] = enableinterrupt;
+}
+
+void cSfcModuleMeasProgram::startMeasurement()
+{
+    m_pFlankCountAct->setValue(m_measuredFlanks);
+    if(!m_pModule->getDemo())
+        m_MsgNrCmdList[m_pSECInterface->start(m_masterErrCalcName)] = startmeasurement;
+}
+
+void cSfcModuleMeasProgram::startMeasurementDone()
+{
+    Actualize();
+    m_ActualizeTimer->start();
+}
+
+void cSfcModuleMeasProgram::Actualize()
+{
+    if(m_bMeasurementRunning) {
+        if(!m_pModule->getDemo()) {
+            m_MsgNrCmdList[m_pSECInterface->readRegister(m_masterErrCalcName, ECALCREG::MTCNTact)] = actualizeprogress;
+        }
+    }
 }
 
 }
