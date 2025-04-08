@@ -9,10 +9,15 @@
 #include <QFinalState>
 #include <secinterface.h>
 #include <basemeasprogram.h>
+#include <timertemplateqt.h>
 #include "secresourcetypelist.h"
 
 namespace SFCMODULE
 {
+
+namespace ECALCCMDID {
+enum { COUNTEDGE = 1, COUNTRESET, ERRORMEASMASTER, ERRORMEASSLAVE};
+}
 
 enum sfcmoduleCmds
 {
@@ -32,7 +37,15 @@ enum sfcmoduleCmds
 
     readintregister,
     resetintregister,
-    readvicount
+    readvicount,
+
+    setmeaspulses,
+    setmastermux,
+    setmastermeasmode,
+    enableinterrupt,
+    startmeasurement,
+
+    actualizeprogress,
 };
 
 
@@ -47,6 +60,7 @@ public:
 
 signals:
     void interruptContinue();
+    void setupContinue();
 public slots:
     void start() override; // difference between start and stop is that actual values
     void stop() override;  // in interface are not updated when stop
@@ -65,13 +79,17 @@ private:
     qint32 m_nIt;
     QString m_sIt;
     QString m_masterErrCalcName;
-    QString m_slaveErrCalcName;
     QList<QString> m_sItList; // for interation over x Input hash
     SecResourceTypeList m_resourceTypeList;
     QHash<QString,QString> m_ResourceHash; // resourcetype, resourcelist ; seperated
     SecMeasInputDictionary m_dutInputDictionary;
     quint32 m_nIntReg = 0;
     bool m_bMeasurementRunning = false;
+    quint32 m_nDUTPulseCounterStart = 0;
+    quint32 m_measuredFlanks = 0;
+
+    TimerTemplateQtPtr m_ActualizeTimer; // after timed out we actualize progressvalue
+    static constexpr quint32 m_nActualizeIntervallLowFreq = 1000;
 
     // statemachine for deactivating
     QState m_stopECalculatorState; // we stop running measurement
@@ -107,6 +125,15 @@ private:
 
     QFinalState m_activationDoneState; // and then we have finished
 
+    // statemachine for starting error measurement
+    QStateMachine m_startMeasurementMachine;
+    QState m_setMeaspulsesState; // we set the desired measpulses
+    QState m_setMasterMuxState; // we set the Input selectors
+    QState m_setMasterMeasModeState; // and the meas modes
+    QState m_enableInterruptState;
+    QState m_startMeasurementState;
+    QFinalState m_startMeasurementDoneState; // here we start it
+
 
     // statemachine for interrupthandling;
     QStateMachine m_InterrupthandlingStateMachine;
@@ -117,6 +144,8 @@ private:
 
 
     void handleSECInterrupt();
+    void updateProgress(quint32 flankCountActual);
+    void stopMeasurement(bool bAbort);
 
 private slots:
     void resourceManagerConnect();
@@ -152,6 +181,15 @@ private slots:
     void freeECalculator();
     void freeECResource();
     void deactivationDone();
+
+    void setMeaspulses();
+    void setMasterMux();
+    void setMasterMeasMode();
+    void enableInterrupt();
+    void startMeasurement();
+    void startMeasurementDone();
+
+    void Actualize();
 };
 
 }
