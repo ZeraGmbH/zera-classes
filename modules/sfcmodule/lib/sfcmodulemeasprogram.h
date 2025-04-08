@@ -98,10 +98,6 @@ private:
     QState m_fetchECalcUnitsState; // we try to fetch 2 error calc units from sec server
     QState m_pcbServerConnectState; // connect to pcb server
 
-    QState m_readREFInputsState; // init to read all ref Input informations
-    QState m_readREFInputAliasState; // read for 1 Input
-    QState m_readREFInputDoneState;
-
     QState m_readDUTInputsState; // init to read all ref Input informations
     QState m_readDUTInputAliasState; // read for 1 Input
     QState m_readDUTInputDoneState;
@@ -133,9 +129,6 @@ private slots:
     void ecalcServerConnect();
     void fetchECalcUnits();
     void pcbServerConnect();
-    void readREFInputs();
-    void readREFInputAlias();
-    void readREFInputDone();
     void readDUTInputs();
     void readDUTInputAlias();
     void readDUTInputDone();

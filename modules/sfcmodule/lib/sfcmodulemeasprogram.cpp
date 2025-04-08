@@ -29,11 +29,7 @@ cSfcModuleMeasProgram::cSfcModuleMeasProgram(cSfcModule *module, std::shared_ptr
     m_fetchECalcUnitsState.addTransition(this, &cSfcModuleMeasProgram::activationContinue, &m_pcbServerConnectState);
 
     //m_pcbServerConnectState.addTransition(this, &cSfcModuleMeasProgram::activationContinue, &m_pcbServerConnectState);
-    //transition from this state to m_readREFInputsState....is done in pcbServerConnect
-    m_readREFInputsState.addTransition(this, &cSfcModuleMeasProgram::activationContinue, &m_readREFInputAliasState);
-    m_readREFInputAliasState.addTransition(this, &cSfcModuleMeasProgram::activationContinue, &m_readREFInputDoneState);
-    m_readREFInputDoneState.addTransition(this, &cSfcModuleMeasProgram::activationLoop, &m_readREFInputAliasState);
-    m_readREFInputDoneState.addTransition(this, &cSfcModuleMeasProgram::activationContinue, &m_readDUTInputsState);
+    //transition from this state to m_readDUTInputsState....is done in pcbServerConnect
     m_readDUTInputsState.addTransition(this, &cSfcModuleMeasProgram::activationContinue, &m_readDUTInputAliasState);
     m_readDUTInputAliasState.addTransition(this, &cSfcModuleMeasProgram::activationContinue, &m_readDUTInputDoneState);
     m_readDUTInputDoneState.addTransition(this, &cSfcModuleMeasProgram::activationLoop, &m_readDUTInputAliasState);
@@ -55,9 +51,6 @@ cSfcModuleMeasProgram::cSfcModuleMeasProgram(cSfcModule *module, std::shared_ptr
     m_activationMachine.addState(&m_ecalcServerConnectState);
     m_activationMachine.addState(&m_fetchECalcUnitsState);
     m_activationMachine.addState(&m_pcbServerConnectState);
-    m_activationMachine.addState(&m_readREFInputsState);
-    m_activationMachine.addState(&m_readREFInputAliasState);
-    m_activationMachine.addState(&m_readREFInputDoneState);
     m_activationMachine.addState(&m_readDUTInputsState);
     m_activationMachine.addState(&m_readDUTInputAliasState);
     m_activationMachine.addState(&m_readDUTInputDoneState);
@@ -77,9 +70,6 @@ cSfcModuleMeasProgram::cSfcModuleMeasProgram(cSfcModule *module, std::shared_ptr
     connect(&m_ecalcServerConnectState, &QState::entered, this, &cSfcModuleMeasProgram::ecalcServerConnect);
     connect(&m_fetchECalcUnitsState, &QState::entered, this, &cSfcModuleMeasProgram::fetchECalcUnits);
     connect(&m_pcbServerConnectState, &QState::entered, this, &cSfcModuleMeasProgram::pcbServerConnect);
-    connect(&m_readREFInputsState, &QState::entered, this, &cSfcModuleMeasProgram::readREFInputs);
-    connect(&m_readREFInputAliasState, &QState::entered, this, &cSfcModuleMeasProgram::readREFInputAlias);
-    connect(&m_readREFInputDoneState, &QState::entered, this, &cSfcModuleMeasProgram::readREFInputDone);
     connect(&m_readDUTInputsState, &QState::entered, this, &cSfcModuleMeasProgram::readDUTInputs);
     connect(&m_readDUTInputAliasState, &QState::entered, this, &cSfcModuleMeasProgram::readDUTInputAlias);
     connect(&m_readDUTInputDoneState, &QState::entered, this, &cSfcModuleMeasProgram::readDUTInputDone);
@@ -238,25 +228,10 @@ void cSfcModuleMeasProgram::pcbServerConnect()
                                                              m_pModule->getNetworkConfig()->m_tcpNetworkFactory);
     // and then we set ecalcalculator interface's connection
     m_pcbInterface->setClient(m_pPCBClient); //
-    m_pcbServerConnectState.addTransition(m_pPCBClient, &Zera::ProxyClient::connected, &m_readREFInputsState);
-    connect(m_pcbInterface.get(), &AbstractServerInterface::serverAnswer, this, &cSfcModuleMeasProgram::catchInterfaceAnswer);
+    m_pcbServerConnectState.addTransition(m_pPCBClient, &Zera::ProxyClient::connected, &m_readDUTInputsState);
+    connect(m_pcbInterface.get(), &Zera::cPCBInterface::serverAnswer, this, &cSfcModuleMeasProgram::catchInterfaceAnswer);
     // todo insert timer for timeout and/or connect error conditions
     Zera::Proxy::getInstance()->startConnection(m_pPCBClient);
-}
-
-void cSfcModuleMeasProgram::readREFInputs()
-{
-    emit activationContinue();
-}
-
-void cSfcModuleMeasProgram::readREFInputAlias()
-{
-    emit activationContinue();
-}
-
-void cSfcModuleMeasProgram::readREFInputDone()
-{
-    emit activationContinue();
 }
 
 void cSfcModuleMeasProgram::readDUTInputs()
