@@ -16,7 +16,7 @@ namespace SFCMODULE
 {
 
 namespace ECALCCMDID {
-enum { COUNTEDGE = 1, COUNTRESET, ERRORMEASMASTER, ERRORMEASSLAVE};
+enum { COUNTEDGE = 1, COUNTRESET, ARM = 128};
 }
 
 enum sfcmoduleCmds
@@ -39,13 +39,13 @@ enum sfcmoduleCmds
     resetintregister,
     readvicount,
 
-    setmeaspulses,
     setmastermux,
     setmastermeasmode,
     enableinterrupt,
     startmeasurement,
 
     actualizeprogress,
+    test
 };
 
 
@@ -127,7 +127,6 @@ private:
 
     // statemachine for starting error measurement
     QStateMachine m_startMeasurementMachine;
-    QState m_setMeaspulsesState; // we set the desired measpulses
     QState m_setMasterMuxState; // we set the Input selectors
     QState m_setMasterMeasModeState; // and the meas modes
     QState m_enableInterruptState;
@@ -138,8 +137,6 @@ private:
     // statemachine for interrupthandling;
     QStateMachine m_InterrupthandlingStateMachine;
     QState m_readIntRegisterState;
-    QState m_readMTCountactState;
-    QState m_calcResultAndResetIntState;
     QFinalState m_FinalState;
 
 
@@ -171,10 +168,6 @@ private slots:
 
     void readIntRegister();
     void resetIntRegister();
-    void readMTCountact();
-    void setECResult();
-    void setRating();
-    void setECResultAndResetInt();
     void checkForRestart();
 
     void stopECCalculator();
@@ -182,7 +175,6 @@ private slots:
     void freeECResource();
     void deactivationDone();
 
-    void setMeaspulses();
     void setMasterMux();
     void setMasterMeasMode();
     void enableInterrupt();
