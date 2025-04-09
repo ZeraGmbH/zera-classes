@@ -21,6 +21,5 @@ target_link_libraries(statusmodule-static
     zera-basemodule
     Zera::zera-timers
     Zera::zenuxservicecommon
-    Zera::service-interfaces
 )
 
