@@ -29,7 +29,6 @@ protected:
     static QString m_configFileName;
 private:
     ModulemanagerConfig();
-    const QString getDevNameFromUBoot();
     QJsonObject getDeviceJson();
     void setDeviceJson(QJsonObject devJson);
     void save();
