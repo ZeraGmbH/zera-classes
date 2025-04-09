@@ -143,7 +143,6 @@ private:
     QVariant wantedSerialNr;
 
     QString findReleaseNr();
-    QString findDeviceType();
     QString findCpuInfo();
 
 private slots:
