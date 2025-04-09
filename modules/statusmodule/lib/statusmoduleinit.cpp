@@ -4,6 +4,7 @@
 #include <proxy.h>
 #include <errormessages.h>
 #include <regexvalidator.h>
+#include <zenuxdevicedetection.h>
 #include <scpi.h>
 #include <sysinfo.h>
 #include <timerfactoryqt.h>
@@ -470,25 +471,6 @@ QString cStatusModuleInit::findReleaseNr()
     return releaseNr;
 }
 
-QString cStatusModuleInit::findDeviceType()
-{
-    QString devType = QStringLiteral("unknown");
-    QString procKernelParamFilename = QStringLiteral("/proc/cmdline");
-    QFile file(procKernelParamFilename);
-    if(file.open(QIODevice::ReadOnly)) {
-        const QStringList kernelParams = QString::fromLatin1(file.readAll()).split(QStringLiteral(" "));
-        QString paramSearch = QStringLiteral("zera_device=");
-        for(auto param : kernelParams) {
-            if(param.contains(paramSearch)) {
-                devType = param.replace(paramSearch, QString()).trimmed();
-                break;
-            }
-        }
-        file.close();
-    }
-    return devType;
-}
-
 QString cStatusModuleInit::findCpuInfo()
 {
     QString cpuInfo;
@@ -655,7 +637,9 @@ void cStatusModuleInit::registerPCBVersionNotifier()
 void cStatusModuleInit::activationDone()
 {
     m_sReleaseNumber = findReleaseNr();
-    m_sDeviceType = findDeviceType();
+    m_sDeviceType = ZenuxDeviceDetection::getDeviceNameFromKernelParam();
+    if (m_sDeviceType.isEmpty())
+        m_sDeviceType = QStringLiteral("unknown");
     m_sCPUInfo = findCpuInfo();
     setInterfaceComponents();
     connect(m_pSerialNumber, &VfModuleParameter::sigValueChanged, this, &cStatusModuleInit::newSerialNumber);
