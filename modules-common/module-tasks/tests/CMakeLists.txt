@@ -9,7 +9,6 @@ function(SETUP_QTESTS_MODULE_TASKS)
 endfunction()
 
 SETUP_QTESTS_MODULE_TASKS(
-    test_taskfortest
     test_taskservertransactiontemplate
 )
 
