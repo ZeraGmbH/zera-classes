@@ -172,7 +172,7 @@ void cAdjustManagement::pcbserverConnect()
                                                                  m_pModule->getNetworkConfig()->m_tcpNetworkFactory);
     m_pcbInterface->setClientSmart(m_pcbClient);
     m_pcbserverConnectState.addTransition(m_pcbClient.get(), &Zera::ProxyClient::connected, &m_dspserverConnectState);
-    connect(m_pcbInterface.get(), &Zera::cPCBInterface::serverAnswer, this, &cAdjustManagement::catchInterfaceAnswer);
+    connect(m_pcbInterface.get(), &AbstractServerInterface::serverAnswer, this, &cAdjustManagement::catchInterfaceAnswer);
     Zera::Proxy::getInstance()->startConnectionSmart(m_pcbClient);
 }
 

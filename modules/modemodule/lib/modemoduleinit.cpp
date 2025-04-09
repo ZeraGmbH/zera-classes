@@ -151,7 +151,7 @@ void cModeModuleInit::pcbserverConnect()
     m_pcbserverConnectionState.addTransition(m_pPCBClient.get(), &Zera::ProxyClient::connected, &m_setModeState);
 
     m_pcbInterface->setClientSmart(m_pPCBClient);
-    connect(m_pcbInterface.get(), &Zera::cPCBInterface::serverAnswer, this, &cModeModuleInit::catchInterfaceAnswer);
+    connect(m_pcbInterface.get(), &AbstractServerInterface::serverAnswer, this, &cModeModuleInit::catchInterfaceAnswer);
     Zera::Proxy::getInstance()->startConnectionSmart(m_pPCBClient);
 }
 

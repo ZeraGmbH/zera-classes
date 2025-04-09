@@ -27,7 +27,7 @@ TaskOffsetGetCorrection::TaskOffsetGetCorrection(Zera::PcbInterfacePtr pcbInterf
 
 void TaskOffsetGetCorrection::start()
 {
-    connect(m_pcbInterface.get(), &Zera::cPCBInterface::serverAnswer,
+    connect(m_pcbInterface.get(), &AbstractServerInterface::serverAnswer,
             this, &TaskOffsetGetCorrection::onServerAnswer);
     m_msgnr = m_pcbInterface->getAdjOffsetCorrection(m_channelMName, m_rangeName, m_ourActualValue);
 }

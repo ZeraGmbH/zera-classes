@@ -224,7 +224,7 @@ void cPllMeasChannel::pcbConnection()
     m_pcbConnectionState.addTransition(m_pcbClient.get(), &Zera::ProxyClient::connected, &m_readRangelistState);
 
     m_pcbInterface->setClientSmart(m_pcbClient);
-    connect(m_pcbInterface.get(), &Zera::cPCBInterface::serverAnswer, this, &cPllMeasChannel::catchInterfaceAnswer);
+    connect(m_pcbInterface.get(), &AbstractServerInterface::serverAnswer, this, &cPllMeasChannel::catchInterfaceAnswer);
     Zera::Proxy::getInstance()->startConnectionSmart(m_pcbClient);
 }
 

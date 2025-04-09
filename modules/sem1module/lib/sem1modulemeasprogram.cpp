@@ -859,7 +859,7 @@ void cSem1ModuleMeasProgram::pcbServerConnect()
     // and then we set ecalcalculator interface's connection
     m_pcbInterface->setClient(m_pPCBClient); //
     m_pcbServerConnectState.addTransition(m_pPCBClient, &Zera::ProxyClient::connected, &m_readREFInputsState);
-    connect(m_pcbInterface.get(), &Zera::cPCBInterface::serverAnswer, this, &cSem1ModuleMeasProgram::catchInterfaceAnswer);
+    connect(m_pcbInterface.get(), &AbstractServerInterface::serverAnswer, this, &cSem1ModuleMeasProgram::catchInterfaceAnswer);
     Zera::Proxy::getInstance()->startConnection(m_pPCBClient);
 }
 

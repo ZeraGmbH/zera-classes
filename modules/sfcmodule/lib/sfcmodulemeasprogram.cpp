@@ -237,7 +237,7 @@ void cSfcModuleMeasProgram::pcbServerConnect()
     // and then we set ecalcalculator interface's connection
     m_pcbInterface->setClient(m_pPCBClient); //
     m_pcbServerConnectState.addTransition(m_pPCBClient, &Zera::ProxyClient::connected, &m_readREFInputsState);
-    connect(m_pcbInterface.get(), &Zera::cPCBInterface::serverAnswer, this, &cSfcModuleMeasProgram::catchInterfaceAnswer);
+    connect(m_pcbInterface.get(), &AbstractServerInterface::serverAnswer, this, &cSfcModuleMeasProgram::catchInterfaceAnswer);
     // todo insert timer for timeout and/or connect error conditions
     Zera::Proxy::getInstance()->startConnection(m_pPCBClient);
 }

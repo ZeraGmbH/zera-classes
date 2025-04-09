@@ -35,7 +35,7 @@ void TaskOffsetSetNode::start()
     }
     double Corr = (m_targetValue - rawActual) * m_rngVals.m_rejection / m_rngVals.m_rejectionValue;
 
-    connect(m_pcbInterface.get(), &Zera::cPCBInterface::serverAnswer,
+    connect(m_pcbInterface.get(), &AbstractServerInterface::serverAnswer,
             this, &TaskOffsetSetNode::onServerAnswer);
     m_msgnr = m_pcbInterface->setOffsetNode(m_channelMName, m_rangeName, 0, Corr, m_targetValue);
 }

@@ -32,7 +32,7 @@ void ChannelRangeObserver::ChannelCurrentRange::preparePcbInterface()
 {
     m_pcbInterface = std::make_shared<Zera::cPCBInterface>();
     m_pcbInterface->setClientSmart(m_pcbClient);
-    connect(m_pcbInterface.get(), &Zera::cPCBInterface::serverAnswer,
+    connect(m_pcbInterface.get(), &AbstractServerInterface::serverAnswer,
             this, &ChannelCurrentRange::onInterfaceAnswer);
 }
 

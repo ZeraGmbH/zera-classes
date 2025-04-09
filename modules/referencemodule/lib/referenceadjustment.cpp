@@ -97,7 +97,7 @@ void cReferenceAdjustment::pcbserverConnect()
     m_pcbserverConnectState.addTransition(m_pPCBClient.get(), &Zera::ProxyClient::connected, &m_set0VRangeState);
 
     m_pPCBInterface->setClientSmart(m_pPCBClient);
-    connect(m_pPCBInterface.get(), &Zera::cPCBInterface::serverAnswer, this, &cReferenceAdjustment::catchInterfaceAnswer);
+    connect(m_pPCBInterface.get(), &AbstractServerInterface::serverAnswer, this, &cReferenceAdjustment::catchInterfaceAnswer);
     Zera::Proxy::getInstance()->startConnectionSmart(m_pPCBClient);
 }
 

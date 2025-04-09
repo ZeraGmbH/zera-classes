@@ -531,7 +531,7 @@ void cStatusModuleInit::pcbserverConnect()
     m_pcbserverConnectionState.addTransition(m_pPCBClient.get(), &Zera::ProxyClient::connected, &m_pcbserverReadVersionState);
 
     m_pPCBInterface->setClientSmart(m_pPCBClient);
-    connect(m_pPCBInterface.get(), &Zera::cPCBInterface::serverAnswer, this, &cStatusModuleInit::catchInterfaceAnswer);
+    connect(m_pPCBInterface.get(), &AbstractServerInterface::serverAnswer, this, &cStatusModuleInit::catchInterfaceAnswer);
     Zera::Proxy::getInstance()->startConnectionSmart(m_pPCBClient);
 }
 

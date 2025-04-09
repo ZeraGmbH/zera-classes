@@ -586,7 +586,7 @@ void cRangeMeasChannel::pcbConnection()
     m_pcbConnectionState.addTransition(m_pcbClient.get(), &Zera::ProxyClient::connected, &m_readRangeAndProperties);
 
     m_pcbInterface->setClientSmart(m_pcbClient);
-    connect(m_pcbInterface.get(), &Zera::cPCBInterface::serverAnswer, this, &cRangeMeasChannel::catchInterfaceAnswer);
+    connect(m_pcbInterface.get(), &AbstractServerInterface::serverAnswer, this, &cRangeMeasChannel::catchInterfaceAnswer);
     Zera::Proxy::getInstance()->startConnectionSmart(m_pcbClient);
 }
 
