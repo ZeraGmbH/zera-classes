@@ -436,7 +436,7 @@ void cFftModuleMeasProgram::resourceManagerConnect()
     // todo insert timer for timeout and/or connect error conditions.....
     // and then we set resource manager interface's connection
     m_rmInterface.setClientSmart(m_rmClient); //
-    connect(&m_rmInterface, &Zera::cRMInterface::serverAnswer, this, &cFftModuleMeasProgram::catchInterfaceAnswer);
+    connect(&m_rmInterface, &AbstractServerInterface::serverAnswer, this, &cFftModuleMeasProgram::catchInterfaceAnswer);
     Zera::Proxy::getInstance()->startConnectionSmart(m_rmClient);
 }
 

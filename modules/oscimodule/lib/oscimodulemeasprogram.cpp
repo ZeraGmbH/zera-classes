@@ -400,7 +400,7 @@ void cOsciModuleMeasProgram::resourceManagerConnect()
     // and then we set resource manager interface's connection
     m_rmInterface.setClientSmart(m_rmClient);
     m_resourceManagerConnectState.addTransition(m_rmClient.get(), &Zera::ProxyClient::connected, &m_IdentifyState);
-    connect(&m_rmInterface, &Zera::cRMInterface::serverAnswer, this, &cOsciModuleMeasProgram::catchInterfaceAnswer);
+    connect(&m_rmInterface, &AbstractServerInterface::serverAnswer, this, &cOsciModuleMeasProgram::catchInterfaceAnswer);
     Zera::Proxy::getInstance()->startConnectionSmart(m_rmClient);
 }
 

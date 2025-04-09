@@ -156,7 +156,7 @@ void cSfcModuleMeasProgram::resourceManagerConnect()
     // and then we set connection resource manager interface's connection
     m_rmInterface.setClientSmart(m_rmClient);
     resourceManagerConnectState.addTransition(m_rmClient.get(), &Zera::ProxyClient::connected, &m_IdentifyState);
-    connect(&m_rmInterface, &Zera::cRMInterface::serverAnswer, this, &cSfcModuleMeasProgram::catchInterfaceAnswer);
+    connect(&m_rmInterface, &AbstractServerInterface::serverAnswer, this, &cSfcModuleMeasProgram::catchInterfaceAnswer);
     // todo insert timer for timeout and/or connect error conditions
     Zera::Proxy::getInstance()->startConnectionSmart(m_rmClient);
 }
