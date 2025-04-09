@@ -1,6 +1,5 @@
 #include "modulemanagerconfig.h"
 #include <zera-jsonfileloader.h>
-#include <zenuxdevicedetection.h>
 #include <QDir>
 #include <QJsonArray>
 #include <QFile>
@@ -127,6 +126,27 @@ bool ModulemanagerConfig::isDevMode()
     return m_jsonConfig["devMode"].toBool();
 }
 
+const QString ModulemanagerConfig::getDevNameFromUBoot()
+{
+    QString strDeviceName;
+    // Check for kernel cmdline param which u-boot should set
+    QFile procFileCmdLine(QLatin1String("/proc/cmdline"));
+    if(procFileCmdLine.open(QIODevice::ReadOnly)) {
+        QString cmdLine = procFileCmdLine.readAll();
+        procFileCmdLine.close();
+        // Extract 'zera_device=<device_name>'
+        QRegExp regExp(QLatin1String("\\bzera_device=[^ ]*"));
+        if(regExp.indexIn(cmdLine) != -1) {
+            strDeviceName = regExp.cap(0);
+            // The following should go in regex above but...
+            strDeviceName.replace(QLatin1String("zera_device="), QLatin1String(""));
+            strDeviceName.replace(QLatin1String("\n"), QLatin1String(""));
+            qInfo() << "ZERA Device from kernel cmdline: " << strDeviceName;
+        }
+    }
+    return strDeviceName;
+}
+
 QJsonObject ModulemanagerConfig::getDeviceJson()
 {
     return isValid() ? m_jsonConfig[m_deviceName].toObject() : QJsonObject();
@@ -146,7 +166,7 @@ ModulemanagerConfig::ModulemanagerConfig()
 {
     m_jsonConfig = cJsonFileLoader::loadJsonFile(getConfigFileNameFull());
     if(m_deviceName.isEmpty()) {
-        m_deviceName = ZenuxDeviceDetection::getDeviceNameFromKernelParam();
+        m_deviceName = getDevNameFromUBoot();
         if(m_deviceName.isEmpty() && isValid()) {
             m_deviceName = m_jsonConfig["deviceName"].toString();
         }
