@@ -168,7 +168,7 @@ void cModeModuleInit::dspserverConnect()
                                                                  m_pModule->getNetworkConfig()->m_tcpNetworkFactory);
     m_dspInterface->setClientSmart(m_dspClient);
     m_dspserverConnectionState.addTransition(m_dspClient.get(), &Zera::ProxyClient::connected, &m_writeGainCorrState);
-    connect(m_dspInterface.get(), &Zera::cDSPInterface::serverAnswer, this, &cModeModuleInit::catchInterfaceAnswer);
+    connect(m_dspInterface.get(), &AbstractServerInterface::serverAnswer, this, &cModeModuleInit::catchInterfaceAnswer);
     Zera::Proxy::getInstance()->startConnectionSmart(m_dspClient);
 }
 

@@ -593,7 +593,7 @@ void cStatusModuleInit::dspserverConnect()
                                                              m_pModule->getNetworkConfig()->m_tcpNetworkFactory);
     m_pDSPInterface->setClient(m_pDSPClient);
     m_dspserverConnectionState.addTransition(m_pDSPClient, &Zera::ProxyClient::connected, &m_dspserverReadVersionState);
-    connect(m_pDSPInterface, &Zera::cDSPInterface::serverAnswer, this, &cStatusModuleInit::catchInterfaceAnswer);
+    connect(m_pDSPInterface, &AbstractServerInterface::serverAnswer, this, &cStatusModuleInit::catchInterfaceAnswer);
     Zera::Proxy::getInstance()->startConnection(m_pDSPClient);
 }
 
