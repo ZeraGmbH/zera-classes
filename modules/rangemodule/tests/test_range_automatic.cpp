@@ -174,7 +174,7 @@ void test_range_automatic::softOverloadWithRangeAutomatic()
     //So, fire an extra interrupt.
     fireNewRmsValues(0.5);
     QCOMPARE(getVfComponent(rangeEntityId, UL1RangeComponent), "8V");
-    QCOMPARE(getVfComponent(rangeEntityId, IL1RangeComponent), "500mA");
+    QCOMPARE(getVfComponent(rangeEntityId, IL1RangeComponent), "1.0A");
 }
 
 void test_range_automatic::addAndSelectClamp()
