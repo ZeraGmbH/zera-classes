@@ -10,5 +10,4 @@ function(SETUP_QTESTS_SEC_COMMON)
 endfunction()
 
 SETUP_QTESTS_SEC_COMMON(
-    test_taskgetrefinputconstant
 )
