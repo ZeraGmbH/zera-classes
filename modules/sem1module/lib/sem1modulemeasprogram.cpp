@@ -841,7 +841,7 @@ void cSem1ModuleMeasProgram::ecalcServerConnect()
     // and then we set ecalcalculator interface's connection
     m_pSECInterface->setClient(m_pSECClient); //
     m_ecalcServerConnectState.addTransition(m_pSECClient, &Zera::ProxyClient::connected, &m_fetchECalcUnitsState);
-    connect(m_pSECInterface, &Zera::cSECInterface::serverAnswer, this, &cSem1ModuleMeasProgram::catchInterfaceAnswer);
+    connect(m_pSECInterface, &AbstractServerInterface::serverAnswer, this, &cSem1ModuleMeasProgram::catchInterfaceAnswer);
     // todo insert timer for timeout and/or connect error conditions
     Zera::Proxy::getInstance()->startConnection(m_pSECClient);
 }
