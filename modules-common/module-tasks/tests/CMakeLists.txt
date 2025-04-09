@@ -3,14 +3,10 @@ function(SETUP_QTESTS_MODULE_TASKS)
     foreach(_testname ${ARGN})
         target_link_libraries(${_testname}
             PUBLIC
-            module-tasks-testlib
+            module-tasks
+            Zera::scpi-testlib
             )
     endforeach()
 endfunction()
 
-SETUP_QTESTS_MODULE_TASKS(
-    test_taskservertransactiontemplate
-)
-
 add_subdirectory(pcb-server)
-
