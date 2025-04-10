@@ -492,7 +492,7 @@ void cSfcModuleMeasProgram::generateVeinInterface()
     m_pFlankCountAct = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
                                              key = QString("ACT_FlankCount"),
                                              QString("Measurement of flank count"),
-                                             QVariant((int)0));
+                                             QVariant((quint32)0));
     m_pFlankCountAct->setScpiInfo("CALCULATE", "FLANKCOUNT",
                                   SCPI::isQuery,
                                   m_pFlankCountAct->getName());
@@ -510,7 +510,7 @@ void cSfcModuleMeasProgram::generateVeinInterface()
     m_pLedInitialStateAct = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
                                            key = QString("ACT_InitialLedState"),
                                            QString("Initial state of scanning head LED (on=1, off=0)"),
-                                           QVariant((quint32)0));
+                                           QVariant((int)0));
     m_pLedInitialStateAct->setScpiInfo("CALCULATE", "LEDSTATUS",
                                        SCPI::isQuery,
                                        m_pLedInitialStateAct->getName());
