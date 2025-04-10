@@ -11,6 +11,7 @@ function(SETUP_QTESTS_MODULE)
             fftmodule-static
             rmsmodule-static
             zera-modulemanager-testlib
+            module-testlib
             scpimodule-testlib
         )
     endforeach()
