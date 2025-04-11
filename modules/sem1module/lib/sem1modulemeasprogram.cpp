@@ -436,6 +436,7 @@ void cSem1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, Q
 
             case fetchecalcunits:
             {
+                qInfo("SEM: Units fetched: %s", qPrintable(answer.toString()));
                 QStringList sl = answer.toString().split(';');
                 if ((reply == ack) && (sl.length() >= 3)) {
                     m_masterErrCalcName = sl.at(0);

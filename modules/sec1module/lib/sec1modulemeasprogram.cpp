@@ -589,6 +589,7 @@ void cSec1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, Q
 
             case fetchecalcunits:
             {
+                qInfo("SEC: Units fetched: %s", qPrintable(answer.toString()));
                 QStringList sl;
                 sl = answer.toString().split(';');
                 if ((reply == ack) && (sl.length() >= 2)) {

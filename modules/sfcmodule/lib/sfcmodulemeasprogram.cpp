@@ -368,6 +368,7 @@ void cSfcModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QV
 
             case fetchecalcunits:
             {
+                qInfo("SFC: Units fetched: %s", qPrintable(answer.toString()));
                 QStringList sl;
                 sl = answer.toString().split(';');
                 if ((reply == ack) && (sl.length() >= 2)) {
