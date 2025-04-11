@@ -197,6 +197,8 @@ bool cRangeMeasChannel::isADCOverload(double ampl)
 
 QString cRangeMeasChannel::getOptRange(double peak, const QString &rngAlias)
 {
+    double rms = peak / M_SQRT2;
+
     qint32 actRngType = -1;
     if (m_RangeInfoHash.contains(rngAlias)) {
         // if we know this rngalias we take that's type for searching max range
@@ -234,15 +236,15 @@ QString cRangeMeasChannel::getOptRange(double peak, const QString &rngAlias)
         // actual range?
         if(rngAlias == ri.alias) {
             // are we in hysteresis area?
-            if(peak > newUrvalue * ovrRejectionFactor * enterRangeLimit &&
-                    peak < newUrvalue * ovrRejectionFactor * keepRangeLimit) {
+            if(rms > newUrvalue * ovrRejectionFactor * enterRangeLimit &&
+                    rms < newUrvalue * ovrRejectionFactor * keepRangeLimit) {
                 // let's keep actual range
                 p=i;
                 break;
             }
         }
         // (re-)enter range
-        if ((peak <= newUrvalue * ovrRejectionFactor * enterRangeLimit) && (newUrvalue < newAmpl) && (ri.type == actRngType)) {
+        if ((rms <= newUrvalue * ovrRejectionFactor * enterRangeLimit) && (newUrvalue < newAmpl) && (ri.type == actRngType)) {
             newAmpl = newUrvalue;
             p=i;
         }
