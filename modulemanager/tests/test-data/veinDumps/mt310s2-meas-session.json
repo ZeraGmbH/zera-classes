@@ -30,7 +30,6 @@
             1210,
             1300,
             1400,
-            1500,
             9999
         ],
         "EntityName": "_System",
@@ -6867,79 +6866,5 @@
         },
         "PAR_BluetoothOn": 0,
         "PAR_MacAddress": "00:00:00:00:00:00"
-    },
-    "1500": {
-        "ACT_FlankCount": 0,
-        "ACT_InitialLedState": 0,
-        "ACT_LedState": 0,
-        "EntityName": "SfcModule1",
-        "INF_ModuleInterface": {
-            "ComponentInfo": {
-                "ACT_FlankCount": {
-                    "Description": "Measurement of flank count"
-                },
-                "ACT_InitialLedState": {
-                    "Description": "Initial state of scanning head LED (on=1, off=0)"
-                },
-                "ACT_LedState": {
-                    "Description": "Current state of scanning head LED (on=1, off=0)"
-                },
-                "EntityName": {
-                    "Description": "Module's name"
-                },
-                "INF_ModuleInterface": {
-                    "Description": "Module's interface details"
-                },
-                "PAR_StartStop": {
-                    "Description": "Start/stop measurement (start=1, stop=0)",
-                    "Validation": {
-                        "Data": [
-                            0,
-                            1,
-                            1
-                        ],
-                        "Type": "INTEGER"
-                    }
-                }
-            },
-            "ModuleInfo": {
-                "Description": "This module provides the amount of flanks seen by the FPGA",
-                "Name": "SfcModule1"
-            },
-            "SCPIInfo": {
-                "Cmd": [
-                    [
-                        "CALCULATE",
-                        "FLANKCOUNT",
-                        "2",
-                        "ACT_FlankCount",
-                        "0"
-                    ],
-                    [
-                        "CALCULATE",
-                        "LEDSTATUS",
-                        "2",
-                        "ACT_InitialLedState",
-                        "0"
-                    ],
-                    [
-                        "CALCULATE",
-                        "LEDSTATUS",
-                        "2",
-                        "ACT_LedState",
-                        "0"
-                    ],
-                    [
-                        "CALCULATE",
-                        "START",
-                        "10",
-                        "PAR_StartStop",
-                        "0"
-                    ]
-                ],
-                "Name": "SFC1"
-            }
-        },
-        "PAR_StartStop": 0
     }
 }
