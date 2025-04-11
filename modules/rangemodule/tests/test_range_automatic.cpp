@@ -136,6 +136,152 @@ void test_range_automatic::testRangeAutomatic()
     QCOMPARE(getVfComponent(rangeEntityId, IL1RangeComponent), "10A");
 }
 
+void test_range_automatic::testRangeAutomaticIncreaseU()
+{
+    // Increasing uses hysteresis region
+    // Logic of hysteresis to stay in range needs this conditions
+    // (rms > Urvalue_range * 1.25 * 0.95) && (rms < Urvalue_range * 1.25 * 0.99)
+
+    fireNewRmsValues(0.1);     // switch to 100mV range  set U-Range to 100mV
+    fireNewRmsValues(0.1);     // extra interrupt
+    setVfComponent(rangeEntityId, RangeAutomaticComponent, 1);
+    QCOMPARE(getVfComponent(rangeEntityId, UL1RangeComponent), "100mV");
+
+    fireNewRmsValues(0.1213);   // set rms to 100mV * 1.25 * 0.97 to stay in U-Range 100mV
+    fireNewRmsValues(0.1213);
+    QCOMPARE(getVfComponent(rangeEntityId, UL1RangeComponent), "100mV");
+
+    fireNewRmsValues(0.125);   // set rms to 100mV * 1.25 * 1,0 to switch in U-Range 8V
+    fireNewRmsValues(0.125);
+    QCOMPARE(getVfComponent(rangeEntityId, UL1RangeComponent), "8V");
+
+    // test hysteresis from range 8V
+    fireNewRmsValues(9.7);   // set rms 8V * 1.25 * 0.97 to stay in U-Range 8V
+    fireNewRmsValues(9.7);
+    QCOMPARE(getVfComponent(rangeEntityId, UL1RangeComponent), "8V");
+
+    fireNewRmsValues(10);   // set rms to 8V * 1.25 * 1.0 to switch in U-Range to 250V
+    fireNewRmsValues(10);
+    QCOMPARE(getVfComponent(rangeEntityId, UL1RangeComponent), "250V");
+}
+
+
+void test_range_automatic::testRangeAutomaticDecreaseU()
+{
+    // Decreasing uses NOT hysteresis region
+    // Logic of hysteresis to stay in range needs this conditions
+    // (rms > Urvalue_range * 1.25 * 0.95) && (rms < Urvalue_range * 1.25 * 0.99)
+
+    fireNewRmsValues(250);     // switch to 250V set U-Range to 250V
+    fireNewRmsValues(250);     // extra interrupt
+    setVfComponent(rangeEntityId, RangeAutomaticComponent, 1);
+    QCOMPARE(getVfComponent(rangeEntityId, UL1RangeComponent), "250V");
+
+    fireNewRmsValues(9.7);     // set rms to 8V * 1.25 * 0.97 to stay in U-Range 250V
+    fireNewRmsValues(9.7);
+    QCOMPARE(getVfComponent(rangeEntityId, UL1RangeComponent), "250V");
+
+    fireNewRmsValues(9.5);     // set rms to 8V * 1.25 * 0.95 to switch in U-Range 8V
+    fireNewRmsValues(9.5);
+    QCOMPARE(getVfComponent(rangeEntityId, UL1RangeComponent), "8V");
+
+    fireNewRmsValues(0.121);   // set rms to 0.1V * 1.25 * 0.97 to stay in U-Range 8V
+    fireNewRmsValues(0.121);
+    QCOMPARE(getVfComponent(rangeEntityId, UL1RangeComponent), "8V");
+
+    fireNewRmsValues(0.118);   // set rms to 0.1V * 1.25 * 0.95 to switch in U-Range 0.1V
+    fireNewRmsValues(0.118);
+    QCOMPARE(getVfComponent(rangeEntityId, UL1RangeComponent), "100mV");
+}
+
+
+void test_range_automatic::testRangeAutomaticIncreaseLowRangesI()
+{
+    // Logic of hysteresis to stay in range needs this conditions
+    // (rms > Urvalue_range * 1.25 * 0.95) && (rms < Urvalue_range * 1.25 * 0.99)
+
+    // test hysteresis from range 25mA up to 100mA
+    fireNewRmsValues(0);     // switch to 25mA range
+    fireNewRmsValues(0);     // extra interrupt
+    setVfComponent(rangeEntityId, RangeAutomaticComponent, 1);
+    QCOMPARE(getVfComponent(rangeEntityId, IL1RangeComponent), "25mA");
+
+    fireNewRmsValues(0.03031);   // set rms to 25mA * 1.25 * 0.97 to stay in I-Range 25mA
+    fireNewRmsValues(0.03031);
+    QCOMPARE(getVfComponent(rangeEntityId, IL1RangeComponent), "25mA");
+
+    fireNewRmsValues(0.03125);   // set rms to 25mA * 1.25 * 1.0 to switch in I-Range 50mA
+    fireNewRmsValues(0.03125);
+    QCOMPARE(getVfComponent(rangeEntityId, IL1RangeComponent), "50mA");
+
+    fireNewRmsValues(0.06063);   // set rms to 50mA * 1.25 * 0.97 to stay in I-Range 50mA
+    fireNewRmsValues(0.06063);
+    QCOMPARE(getVfComponent(rangeEntityId, IL1RangeComponent), "50mA");
+
+    fireNewRmsValues(0.0625);   // set rms to 50mA * 1.25 * 1.0 to switch in I-Range 100mA
+    fireNewRmsValues(0.0625);
+    QCOMPARE(getVfComponent(rangeEntityId, IL1RangeComponent), "100mA");
+}
+
+
+void test_range_automatic::testRangeAutomaticIncreaseHighRangesI()
+{
+    // Logic of hysteresis to stay in range needs this conditions
+    // (rms > Urvalue_range * 1.25 * 0.95) && (rms < Urvalue_range * 1.25 * 0.99)
+
+    // test hysteresis from range 2.5A up to 10A
+    fireNewRmsValues(2);     // switch to 2.5A range because of overload we switch to highest I-range
+    fireNewRmsValues(2);     // extra interrupt
+    setVfComponent(rangeEntityId, RangeAutomaticComponent, 1);
+    QCOMPARE(getVfComponent(rangeEntityId, IL1RangeComponent), "2.5A");
+
+    fireNewRmsValues(3.031);   // set rms to 2.5A * 1.25 * 0.97 to stay in I-Range 2.5A
+    fireNewRmsValues(3.031);
+    QCOMPARE(getVfComponent(rangeEntityId, IL1RangeComponent), "2.5A");
+
+    fireNewRmsValues(3.125);   // set rms to 2.5A * 1.25 * 1.0 to switch in I-Range 5A
+    fireNewRmsValues(3.125);
+    QCOMPARE(getVfComponent(rangeEntityId, IL1RangeComponent), "5A");
+
+    fireNewRmsValues(6.063);   // set rms to 5.0A * 1.25 * 0.97 to stay in I-Range 5A
+    fireNewRmsValues(6.063);
+    QCOMPARE(getVfComponent(rangeEntityId, IL1RangeComponent), "5A");
+
+    fireNewRmsValues(6.25);   // set rms to 5.0A * 1.25 * 1.0 to switch in I-Range 10A
+    fireNewRmsValues(6.25);
+    QCOMPARE(getVfComponent(rangeEntityId, IL1RangeComponent), "10A");
+}
+
+
+void test_range_automatic::testRangeAutomaticDecreaseI()
+{
+    // Decreasing uses NOT hysteresis region
+    // Logic of hysteresis to stay in range needs this conditions
+    // (rms > Urvalue_range * 1.25 * 0.95) && (rms < Urvalue_range * 1.25 * 0.99)
+
+    fireNewRmsValues(10);      // switch to 10A set I-Range to 10A
+    fireNewRmsValues(10);      // extra interrupt
+    setVfComponent(rangeEntityId, RangeAutomaticComponent, 1);
+    QCOMPARE(getVfComponent(rangeEntityId, IL1RangeComponent), "10A");
+
+    fireNewRmsValues(6.062);   // set rms to 5A * 1.25 * 0.97 to stay in I-Range 10A
+    fireNewRmsValues(6.062);
+    QCOMPARE(getVfComponent(rangeEntityId, IL1RangeComponent), "10A");
+
+    fireNewRmsValues(5.937);   // set rms to 5A * 1.25 * 0.95 to switch in I-Range 5A
+    fireNewRmsValues(5.937);
+    QCOMPARE(getVfComponent(rangeEntityId, IL1RangeComponent), "5A");
+
+    fireNewRmsValues(3.031);   // set rms to 2.5A * 1.25 * 0.97 to stay in I-Range 5A
+    fireNewRmsValues(3.031);
+    QCOMPARE(getVfComponent(rangeEntityId, IL1RangeComponent), "5A");
+
+    fireNewRmsValues(2.968);   // set rms to 2.5A * 1.25 * 0.95 to switch in I-Range 2.5A
+    fireNewRmsValues(2.968);
+    QCOMPARE(getVfComponent(rangeEntityId, IL1RangeComponent), "2.5A");
+}
+
+
 void test_range_automatic::enableAndDisableRangeAutomatic()
 {
     fireNewRmsValues(0);
