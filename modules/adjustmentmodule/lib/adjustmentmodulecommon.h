@@ -12,7 +12,7 @@ public:
     AdjustChannelInfo() = default;
 
     QString m_sAlias;
-    QStringList m_sRangelist;
+    std::shared_ptr<QStringList> m_sRangelist = std::make_unique<QStringList>();
 };
 
 struct AdjustmentModuleCommon

@@ -10,15 +10,15 @@ class TaskChannelGetRangeList : public TaskServerTransactionTemplate
 public:
     static TaskTemplatePtr create(Zera::PcbInterfacePtr pcbInterface,
                                    QString channelName,
-                                   QStringList &targetRangeList,
+                                   std::shared_ptr<QStringList> rangeList,
                                    int timeout, std::function<void()> additionalErrorHandler = []{});
-    TaskChannelGetRangeList(Zera::PcbInterfacePtr pcbInterface, QString channelName, QStringList &targetRangeList);
+    TaskChannelGetRangeList(Zera::PcbInterfacePtr pcbInterface, QString channelName, std::shared_ptr<QStringList>rangeList);
 private:
     quint32 sendToServer() override;
     bool handleCheckedServerAnswer(QVariant answer) override;
     Zera::PcbInterfacePtr m_pcbInterface;
     QString m_channelName;
-    QStringList &m_targetRangeList;
+    std::shared_ptr<QStringList> m_rangeList;
 };
 
 #endif // TASKCHANNELREADRANGES_H

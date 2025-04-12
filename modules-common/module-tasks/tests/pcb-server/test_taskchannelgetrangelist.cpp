@@ -14,7 +14,7 @@ static const char* defaultResponse = "250V;8V;100mV";
 void test_taskchannelgetrangelist::checkScpiSend()
 {
     PcbInitForTest pcb;
-    QStringList rangeList;
+    std::shared_ptr<QStringList> rangeList = std::make_shared<QStringList>();
     TaskTemplatePtr task = TaskChannelGetRangeList::create(pcb.getPcbInterface(),
                                                            channelMName,
                                                            rangeList,
@@ -32,7 +32,7 @@ void test_taskchannelgetrangelist::returnsRangeListProperly()
 {
     PcbInitForTest pcb;
     pcb.getProxyClient()->setAnswers(ServerTestAnswerList() << ServerTestAnswer(ack, defaultResponse));
-    QStringList rangeList;
+    std::shared_ptr<QStringList> rangeList = std::make_shared<QStringList>();
     TaskTemplatePtr task = TaskChannelGetRangeList::create(pcb.getPcbInterface(),
                                                            channelMName,
                                                            rangeList,
@@ -40,14 +40,14 @@ void test_taskchannelgetrangelist::returnsRangeListProperly()
     task->start();
     TimeMachineObject::feedEventLoop();
     QStringList expectedRanges = QString(defaultResponse).split(";");
-    QCOMPARE(rangeList, expectedRanges);
+    QCOMPARE(*rangeList, expectedRanges);
 }
 
 void test_taskchannelgetrangelist::timeoutAndErrFunc()
 {
     PcbInitForTest pcb;
     int localErrorCount = 0;
-    QStringList rangeList;
+    std::shared_ptr<QStringList> rangeList = std::make_shared<QStringList>();
     TaskTemplatePtr task = TaskChannelGetRangeList::create(pcb.getPcbInterface(),
                                                            channelMName,
                                                            rangeList,

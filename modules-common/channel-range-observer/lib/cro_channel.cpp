@@ -37,7 +37,7 @@ const QString Channel::getMName() const
 
 const QStringList Channel::getAllRangeNames() const
 {
-    return m_allRangeNamesOrderedByServer;
+    return *m_allRangeNamesOrderedByServer;
 }
 
 const QStringList Channel::getAvailRangeNames() const
@@ -76,7 +76,7 @@ int Channel::getDspChannel() const
 
 void Channel::clearRanges()
 {
-    m_allRangeNamesOrderedByServer.clear();
+    m_allRangeNamesOrderedByServer->clear();
     m_availableRangeNames.clear();
     m_rangeNameToRange.clear();
 }
@@ -105,7 +105,7 @@ void Channel::startAllRangesTasks()
     task->addSub(TaskLambdaRunner::create([&]() {
         TaskContainerInterfacePtr allRangesTasks = TaskContainerParallel::create();
         allRangesTasks->addSub(getChannelReadDetailsTask());
-        for(const QString &rangeName : qAsConst(m_allRangeNamesOrderedByServer)) {
+        for (const QString &rangeName : *m_allRangeNamesOrderedByServer) {
             RangePtr newRange = std::make_shared<Range>(m_channelMName, rangeName, m_netInfo, m_tcpFactory);
             m_rangeNameToRange[rangeName] = newRange;
             allRangesTasks->addSub(RangeFetchTask::create(newRange));
@@ -167,7 +167,7 @@ TaskTemplatePtr Channel::getFetchFinalTask()
 
 void Channel::setAvailableRanges()
 {
-    for(const QString &rangeName : qAsConst(m_allRangeNamesOrderedByServer))
+    for(const QString &rangeName : *m_allRangeNamesOrderedByServer)
         if(m_rangeNameToRange[rangeName]->m_available)
             m_availableRangeNames.append(rangeName);
 }

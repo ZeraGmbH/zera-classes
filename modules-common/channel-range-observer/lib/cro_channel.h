@@ -54,7 +54,7 @@ private:
     QString m_unit;
     int m_dspChannel = 0;
 
-    QStringList m_allRangeNamesOrderedByServer;
+    std::shared_ptr<QStringList> m_allRangeNamesOrderedByServer = std::make_shared<QStringList>();
     QStringList m_availableRangeNames;
     QHash<QString, RangePtr> m_rangeNameToRange;
     int m_rangeChangeInterruptCount = 0;

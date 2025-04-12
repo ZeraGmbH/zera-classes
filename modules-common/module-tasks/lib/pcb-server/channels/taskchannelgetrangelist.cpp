@@ -4,24 +4,24 @@
 
 TaskTemplatePtr TaskChannelGetRangeList::create(Zera::PcbInterfacePtr pcbInterface,
                                                 QString channelName,
-                                                QStringList &targetRangeList,
+                                                std::shared_ptr<QStringList> rangeList,
                                                 int timeout, std::function<void ()> additionalErrorHandler)
 {
     return TaskDecoratorTimeout::wrapTimeout(timeout,
                                              std::make_unique<TaskChannelGetRangeList>(
                                                  pcbInterface,
                                                  channelName,
-                                                 targetRangeList),
+                                                 rangeList),
                                              additionalErrorHandler);
 }
 
 TaskChannelGetRangeList::TaskChannelGetRangeList(Zera::PcbInterfacePtr pcbInterface,
                                                  QString channelName,
-                                                 QStringList &targetRangeList) :
+                                                 std::shared_ptr<QStringList> rangeList) :
     TaskServerTransactionTemplate(pcbInterface),
     m_pcbInterface(pcbInterface),
     m_channelName(channelName),
-    m_targetRangeList(targetRangeList)
+    m_rangeList(rangeList)
 {
 }
 
@@ -32,6 +32,6 @@ quint32 TaskChannelGetRangeList::sendToServer()
 
 bool TaskChannelGetRangeList::handleCheckedServerAnswer(QVariant answer)
 {
-    m_targetRangeList = answer.toStringList();
+    *m_rangeList = answer.toStringList();
     return true;
 }
