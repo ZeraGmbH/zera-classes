@@ -15,8 +15,8 @@ class Range : public QObject
 public:
     bool m_available = false;
     int m_type = 0;
-    double m_urValue = 0.0;
-    std::shared_ptr<double> m_rejection = std::make_shared<double>(0.0);;
+    std::shared_ptr<double> m_urValue = std::make_shared<double>(0.0);
+    std::shared_ptr<double> m_rejection = std::make_shared<double>(0.0);
     std::shared_ptr<double> m_ovrejection = std::make_shared<double>(0.0);
     std::shared_ptr<double> m_adcrejection = std::make_shared<double>(0.0);
 

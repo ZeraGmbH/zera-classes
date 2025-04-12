@@ -15,11 +15,11 @@ static double defaultUrValue = 123456.0; // although treated as double - it is m
 void test_taskrangegeturvalue::checkScpiSend()
 {
     PcbInitForTest pcb;
-    double urValue;
+    std::shared_ptr<double> urValue = std::make_shared<double>();
     TaskTemplatePtr task = TaskRangeGetUrValue::create(pcb.getPcbInterface(),
-                                                         channelMName, rangeName,
-                                                         urValue,
-                                                         EXPIRE_INFINITE);
+                                                       channelMName, rangeName,
+                                                       urValue,
+                                                       EXPIRE_INFINITE);
     task->start();
     TimeMachineObject::feedEventLoop();
     QStringList scpiSent = pcb.getProxyClient()->getReceivedCommands();
@@ -33,28 +33,28 @@ void test_taskrangegeturvalue::returnsUrValueProperly()
 {
     PcbInitForTest pcb;
     pcb.getProxyClient()->setAnswers(ServerTestAnswerList() << ServerTestAnswer(ack, QString("%1").arg(defaultUrValue)));
-    double urValue = 0.0;
+    std::shared_ptr<double> urValue = std::make_shared<double>(0.0);
     TaskTemplatePtr task = TaskRangeGetUrValue::create(pcb.getPcbInterface(),
-                                                         channelMName, rangeName,
-                                                         urValue,
-                                                         EXPIRE_INFINITE);
+                                                       channelMName, rangeName,
+                                                       urValue,
+                                                       EXPIRE_INFINITE);
     task->start();
     TimeMachineObject::feedEventLoop();
-    QCOMPARE(urValue, defaultUrValue);
+    QCOMPARE(*urValue, defaultUrValue);
 }
 
 void test_taskrangegeturvalue::timeoutAndErrFunc()
 {
     PcbInitForTest pcb;
     int localErrorCount = 0;
-    double urValue = 0.0;
+    std::shared_ptr<double> urValue = std::make_shared<double>();
     TaskTemplatePtr task = TaskRangeGetUrValue::create(pcb.getPcbInterface(),
-                                                         channelMName, rangeName,
-                                                         urValue,
-                                                         DEFAULT_EXPIRE,
-                                                         [&]{
-                                                             localErrorCount++;
-                                                         });
+                                                       channelMName, rangeName,
+                                                       urValue,
+                                                       DEFAULT_EXPIRE,
+                                                       [&]{
+                                                           localErrorCount++;
+                                                       });
     TaskTestHelper helper(task.get());
     task->start();
     TimeMachineForTest::getInstance()->processTimers(DEFAULT_EXPIRE_WAIT);

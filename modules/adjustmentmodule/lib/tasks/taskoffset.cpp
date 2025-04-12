@@ -34,7 +34,7 @@ TaskOffset::TaskOffset(Zera::PcbInterfacePtr pcbInterface,
         }));
     addSub(TaskRangeGetUrValue::create(pcbInterface,
                                          channelMName, rangeName,
-                                         m_rangeVals.m_rejectionValue,
+                                         m_rangeVals.m_urValue,
                                          perTransactionTimout, [&]{
         m_perTransactionErrorHandler(readrangeurvalueErrMsg);
     }));

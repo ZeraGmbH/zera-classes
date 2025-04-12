@@ -30,11 +30,12 @@ void TaskOffsetSetNode::start()
 {
     double rawActual = m_actualValue;
     const double rejection = *m_rngVals.m_rejection;
+    const double urValue = *m_rngVals.m_urValue;
     if(fabs(rejection) > 1e-3) {
         rawActual = m_actualValue -
-                m_rngVals.m_correction * m_rngVals.m_rejectionValue / rejection;
+                m_rngVals.m_correction * urValue / rejection;
     }
-    double Corr = (m_targetValue - rawActual) * rejection / m_rngVals.m_rejectionValue;
+    double Corr = (m_targetValue - rawActual) * rejection / urValue;
 
     connect(m_pcbInterface.get(), &AbstractServerInterface::serverAnswer,
             this, &TaskOffsetSetNode::onServerAnswer);

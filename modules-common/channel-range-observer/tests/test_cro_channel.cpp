@@ -180,9 +180,9 @@ void test_cro_channel::checkUrValue()
     channel.startFetch();
     TimeMachineObject::feedEventLoop();
 
-    QCOMPARE(channel.getRange("250V")->m_urValue, 250.0);
-    QCOMPARE(channel.getRange("8V")->m_urValue, 8.0);
-    QCOMPARE(channel.getRange("100mV")->m_urValue, 0.1);
+    QCOMPARE(*channel.getRange("250V")->m_urValue, 250.0);
+    QCOMPARE(*channel.getRange("8V")->m_urValue, 8.0);
+    QCOMPARE(*channel.getRange("100mV")->m_urValue, 0.1);
 }
 
 void test_cro_channel::checkOrderingVoltageRanges()

@@ -45,7 +45,7 @@ void test_cro_range::defaultOnStartup()
 {
     Range range("m0", "250V", netInfo, m_tcpFactory);
     QCOMPARE(range.m_available, false);
-    QCOMPARE(range.m_urValue, 0.0);
+    QCOMPARE(*range.m_urValue, 0.0);
 }
 
 void test_cro_range::fetchAvailable()
@@ -175,7 +175,7 @@ void test_cro_range::checkUrValue()
     range.startFetch();
     TimeMachineObject::feedEventLoop();
 
-    QCOMPARE(range.m_urValue, 250);
+    QCOMPARE(*range.m_urValue, 250);
 }
 
 void test_cro_range::checkType()

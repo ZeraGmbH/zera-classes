@@ -12,7 +12,7 @@ public:
     {
         double m_correction;
         std::shared_ptr<double> m_rejection = std::make_shared<double>();
-        double m_rejectionValue;
+        std::shared_ptr<double> m_urValue = std::make_shared<double>();
     };
     static TaskTemplatePtr create(Zera::PcbInterfacePtr pcbInterface,
                                    QString channelMName, QString rangeName,
