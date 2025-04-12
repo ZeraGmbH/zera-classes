@@ -10,12 +10,12 @@ class VfEventSytemModuleParam : public VfEventSystemCommandFilter
 {
     Q_OBJECT
 public:
-    VfEventSytemModuleParam(int entityId, VeinStorage::AbstractEventSystem* storageSystem);
+    VfEventSytemModuleParam(int entityId, const VeinStorage::AbstractEventSystem* storageSystem);
     virtual void processCommandEvent(VeinEvent::CommandEvent *commandEvent);
     void setParameterMap(const QMap<QString, VfModuleParameter *> &parameterHash);
 private:
     int m_entityId;
-    VeinStorage::AbstractEventSystem* m_storageSystem;
+    const VeinStorage::AbstractEventSystem* m_storageSystem;
     QMap<QString, VfModuleParameter*> m_parameterHash;
 };
 

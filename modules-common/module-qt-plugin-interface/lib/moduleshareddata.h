@@ -22,7 +22,7 @@ public:
 
     const ModuleNetworkParamsPtr m_networkParams;
     const AbstractFactoryServiceInterfacesPtr m_serviceInterfaceFactory;
-    VeinStorage::AbstractEventSystem* m_storagesystem;
+    const VeinStorage::AbstractEventSystem* m_storagesystem;
     const ChannelRangeObserver::SystemObserverPtr m_channelRangeObserver;
     const bool m_demo;
 private:
