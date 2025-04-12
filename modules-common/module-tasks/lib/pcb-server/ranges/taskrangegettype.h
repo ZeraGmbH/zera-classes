@@ -10,18 +10,18 @@ class TaskRangeGetType : public TaskServerTransactionTemplate
 public:
     static TaskTemplatePtr create(Zera::PcbInterfacePtr pcbInterface,
                                   QString channelMName, QString rangeName,
-                                  int &valueReceived,
+                                  std::shared_ptr<int> valueReceived,
                                   int timeout, std::function<void()> additionalErrorHandler = []{});
     TaskRangeGetType(Zera::PcbInterfacePtr pcbInterface,
                      QString channelMName, QString rangeName,
-                     int &valueReceived);
+                     std::shared_ptr<int> valueReceived);
 private:
     quint32 sendToServer() override;
     bool handleCheckedServerAnswer(QVariant answer) override;
     Zera::PcbInterfacePtr m_pcbInterface;
     QString m_channelMName;
     QString m_rangeName;
-    int &m_valueReceived;
+    std::shared_ptr<int> m_valueReceived;
 };
 
 #endif // TASKRANGEGETTYPE_H

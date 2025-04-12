@@ -15,7 +15,7 @@ static const int defaultType = 42;
 void test_taskrangegettype::checkScpiSend()
 {
     PcbInitForTest pcb;
-    int type;
+    std::shared_ptr<int> type = std::make_shared<int>();
     TaskTemplatePtr task = TaskRangeGetType::create(pcb.getPcbInterface(),
                                                            channelMName, rangeName,
                                                            type,
@@ -33,21 +33,21 @@ void test_taskrangegettype::returnsTypeProperly()
 {
     PcbInitForTest pcb;
     pcb.getProxyClient()->setAnswers(ServerTestAnswerList() << ServerTestAnswer(ack, QString("%1").arg(defaultType)));
-    int type = 0;
+    std::shared_ptr<int> type = std::make_shared<int>(0);
     TaskTemplatePtr task = TaskRangeGetType::create(pcb.getPcbInterface(),
                                                     channelMName, rangeName,
                                                     type,
                                                     EXPIRE_INFINITE);
     task->start();
     TimeMachineObject::feedEventLoop();
-    QCOMPARE(type, defaultType);
+    QCOMPARE(*type, defaultType);
 }
 
 void test_taskrangegettype::timeoutAndErrFunc()
 {
     PcbInitForTest pcb;
     int localErrorCount = 0;
-    int type = 0;
+    std::shared_ptr<int> type = std::make_shared<int>(0);
     TaskTemplatePtr task = TaskRangeGetType::create(pcb.getPcbInterface(),
                                                     channelMName, rangeName,
                                                     type,

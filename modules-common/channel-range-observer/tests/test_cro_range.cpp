@@ -198,14 +198,14 @@ void test_cro_range::checkType()
     range1.startFetch();
     TimeMachineObject::feedEventLoop();
 
-    QCOMPARE(range1.m_type, Direct + modeAC + modeADJ);
+    QCOMPARE(*range1.m_type, Direct + modeAC + modeADJ);
 
     // internal clamp voltage range (don't show up on mode 'AC')
     Range range2("m3", "2mV", netInfo, m_tcpFactory);
     range2.startFetch();
     TimeMachineObject::feedEventLoop();
 
-    QCOMPARE(range2.m_type, Direct + modeADJ);
+    QCOMPARE(*range2.m_type, Direct + modeADJ);
 }
 
 void test_cro_range::checkRejection()
