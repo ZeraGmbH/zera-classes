@@ -10,18 +10,18 @@ class TaskRangeGetAdcRejection : public TaskServerTransactionTemplate
 public:
     static TaskTemplatePtr create(Zera::PcbInterfacePtr pcbInterface,
                                   QString channelMName, QString rangeName,
-                                  double &valueReceived,
+                                  std::shared_ptr<double> valueReceived,
                                   int timeout, std::function<void()> additionalErrorHandler = []{});
     TaskRangeGetAdcRejection(Zera::PcbInterfacePtr pcbInterface,
                              QString channelMName, QString rangeName,
-                             double &valueReceived);
+                             std::shared_ptr<double> valueReceived);
 private:
     quint32 sendToServer() override;
     bool handleCheckedServerAnswer(QVariant answer) override;
     Zera::PcbInterfacePtr m_pcbInterface;
     QString m_channelMName;
     QString m_rangeName;
-    double &m_valueReceived;
+    std::shared_ptr<double> m_valueReceived;
 };
 
 #endif // TASKRANGEGETADCREJECTION_H

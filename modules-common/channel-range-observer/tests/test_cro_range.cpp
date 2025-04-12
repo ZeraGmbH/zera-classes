@@ -236,7 +236,7 @@ void test_cro_range::checkAdcRejection()
     TimeMachineObject::feedEventLoop();
 
     // check mt310s2senserange.cpp / adcRejectionMt310s2
-    QCOMPARE(range.m_adcrejection, 8388607.0);
+    QCOMPARE(*range.m_adcrejection, 8388607.0);
 }
 
 void test_cro_range::setupServers()

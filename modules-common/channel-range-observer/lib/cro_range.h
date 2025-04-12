@@ -18,7 +18,7 @@ public:
     double m_urValue = 0.0;
     double m_rejection = 0.0;
     double m_ovrejection = 0.0;
-    double m_adcrejection = 0.0;
+    std::shared_ptr<double> m_adcrejection = std::make_shared<double>(0.0);
 
     Range(const QString &channelMName, const QString &rangeName,
           const NetworkConnectionInfo &netInfo,
