@@ -5,17 +5,24 @@
 #include "abstractfactoryserviceinterfaces.h"
 #include "cro_systemobserver.h"
 
+namespace VeinStorage
+{
+class AbstractEventSystem;
+}
+
 class ModuleSharedData
 {
 public:
     ModuleSharedData(ModuleNetworkParamsPtr networkParams,
                      AbstractFactoryServiceInterfacesPtr serviceInterfaceFactory,
+                     VeinStorage::AbstractEventSystem* storagesystem,
                      ChannelRangeObserver::SystemObserverPtr channelRangeObserver,
                      bool demo);
     virtual ~ModuleSharedData();
 
     const ModuleNetworkParamsPtr m_networkParams;
     const AbstractFactoryServiceInterfacesPtr m_serviceInterfaceFactory;
+    VeinStorage::AbstractEventSystem* m_storagesystem;
     const ChannelRangeObserver::SystemObserverPtr m_channelRangeObserver;
     const bool m_demo;
 private:

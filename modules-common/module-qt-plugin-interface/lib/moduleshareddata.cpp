@@ -3,11 +3,12 @@
 int ModuleSharedData::m_instanceCount = 0;
 
 ModuleSharedData::ModuleSharedData(ModuleNetworkParamsPtr networkParams,
-                                   AbstractFactoryServiceInterfacesPtr serviceInterfaceFactory,
+                                   AbstractFactoryServiceInterfacesPtr serviceInterfaceFactory, VeinStorage::AbstractEventSystem *storagesystem,
                                    ChannelRangeObserver::SystemObserverPtr channelRangeObserver,
                                    bool demo) :
     m_networkParams(networkParams),
     m_serviceInterfaceFactory(serviceInterfaceFactory),
+    m_storagesystem(storagesystem),
     m_channelRangeObserver(channelRangeObserver),
     m_demo(demo)
 {

@@ -139,6 +139,7 @@ void ModuleManager::createCommonModuleParam()
             std::make_shared<ChannelRangeObserver::SystemObserver>(mmConfig->getPcbConnectionInfo(), m_tcpNetworkFactory);
         m_moduleSharedObjects = std::make_shared<ModuleSharedData>(networkParams,
                                                                    m_serviceInterfaceFactory,
+                                                                   m_setupFacade->getStorageSystem(),
                                                                    channelRangeObserver,
                                                                    m_moduleDemoMode);
     }
@@ -165,7 +166,6 @@ VirtualModule *ZeraModules::ModuleManager::createModule(const QString &xmlConfig
     ModuleFactoryParam moduleParam(moduleEntityId,
                                    moduleNum,
                                    xmlConfigData,
-                                   m_setupFacade->getStorageSystem(),
                                    m_moduleSharedObjects);
     VirtualModule *tmpModule = tmpFactory->createModule(moduleParam);
     if(tmpModule) {

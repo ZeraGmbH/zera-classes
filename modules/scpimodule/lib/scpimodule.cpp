@@ -9,7 +9,7 @@ namespace SCPIMODULE
 cSCPIModule::cSCPIModule(ModuleFactoryParam moduleParam) :
     BaseModule(moduleParam, std::make_shared<cSCPIModuleConfiguration>()),
     m_pSCPIEventSystem(new SCPIEventSystem(this)),
-    m_pModuleValidator(new VfEventSytemModuleParam(moduleParam.m_entityId, moduleParam.m_storagesystem))
+    m_pModuleValidator(new VfEventSytemModuleParam(moduleParam.m_entityId, moduleParam.m_moduleSharedData->m_storagesystem))
 {
     m_sModuleName = QString("%1%2").arg(BaseModuleName).arg(moduleParam.m_moduleNum);
     m_sModuleDescription = QString("This module provides a scpi interface depending on the actual session running");

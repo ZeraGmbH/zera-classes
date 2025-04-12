@@ -265,7 +265,7 @@ int BaseModule::getEntityId() const
 
 VeinStorage::AbstractDatabase *BaseModule::getStorageDb() const
 {
-    return m_moduleParam.m_storagesystem->getDb();
+    return m_moduleParam.m_moduleSharedData->m_storagesystem->getDb();
 }
 
 bool BaseModule::getDemo()
