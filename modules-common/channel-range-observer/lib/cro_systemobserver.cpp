@@ -49,7 +49,7 @@ const ChannelPtr SystemObserver::getChannel(QString channelMName) const
 
 const int SystemObserver::getSamplesPerPeriod() const
 {
-    return m_samplesPerPeriod;
+    return *m_samplesPerPeriod;
 }
 
 void SystemObserver::clear()

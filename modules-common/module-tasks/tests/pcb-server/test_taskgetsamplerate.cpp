@@ -11,10 +11,10 @@ QTEST_MAIN(test_taskgetsamplerate)
 void test_taskgetsamplerate::checkScpiSend()
 {
     PcbInitForTest pcb;
-    int samplingRate;
+    std::shared_ptr<int> samplingRate = std::make_shared<int>();
     TaskTemplatePtr task = TaskGetSampleRate::create(pcb.getPcbInterface(),
-                                                       samplingRate,
-                                                       EXPIRE_INFINITE);
+                                                     samplingRate,
+                                                     EXPIRE_INFINITE);
     task->start();
     TimeMachineObject::feedEventLoop();
     QStringList scpiSent = pcb.getProxyClient()->getReceivedCommands();
@@ -22,33 +22,32 @@ void test_taskgetsamplerate::checkScpiSend()
     QString scpiExpectedPath = QString("SAMPLE:SRATE");
     ScpiFullCmdCheckerForTest scpiChecker(scpiExpectedPath, SCPI::isQuery);
     QVERIFY(scpiChecker.matches(scpiSent[0]));
-
 }
 
 void test_taskgetsamplerate::returnsSampleRateProperly()
 {
     PcbInitForTest pcb;
     pcb.getProxyClient()->setAnswers(ServerTestAnswerList() << ServerTestAnswer(ack, "504"));
-    int sampleRate;
+    std::shared_ptr<int> samplingRate = std::make_shared<int>();
     TaskTemplatePtr task = TaskGetSampleRate::create(pcb.getPcbInterface(),
-                                                       sampleRate,
-                                                       EXPIRE_INFINITE);
+                                                     samplingRate,
+                                                     EXPIRE_INFINITE);
     task->start();
     TimeMachineObject::feedEventLoop();
-    QCOMPARE(sampleRate, 504);
+    QCOMPARE(*samplingRate, 504);
 }
 
 void test_taskgetsamplerate::timeoutAndErrFunc()
 {
     PcbInitForTest pcb;
     int localErrorCount = 0;
-    int sampleRate;
+    std::shared_ptr<int> samplingRate = std::make_shared<int>();
     TaskTemplatePtr task = TaskGetSampleRate::create(pcb.getPcbInterface(),
-                                                       sampleRate,
-                                                       DEFAULT_EXPIRE,
-                                                       [&]{
-                                                           localErrorCount++;
-                                                       });
+                                                     samplingRate,
+                                                     DEFAULT_EXPIRE,
+                                                     [&]{
+                                                         localErrorCount++;
+                                                     });
     TaskTestHelper helper(task.get());
     task->start();
     TimeMachineForTest::getInstance()->processTimers(DEFAULT_EXPIRE_WAIT);

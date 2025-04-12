@@ -39,7 +39,7 @@ private:
     const Zera::ProxyClientPtr m_pcbClient;
     Zera::PcbInterfacePtr m_pcbInterface;
 
-    int m_samplesPerPeriod = 0;
+    std::shared_ptr<int> m_samplesPerPeriod = std::make_shared<int>(0);
     TaskContainerInterfacePtr m_currentTasks;
     std::shared_ptr<QStringList> m_tempChannelMNames;
 };
