@@ -66,7 +66,7 @@ QString Channel::getAlias() const
 
 QString Channel::getUnit() const
 {
-    return m_unit;
+    return *m_unit;
 }
 
 int Channel::getDspChannel() const

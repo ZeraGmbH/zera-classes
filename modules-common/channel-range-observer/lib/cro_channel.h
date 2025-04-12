@@ -51,7 +51,7 @@ private:
     const QString m_channelMName;
     bool m_valid = false;
     QString m_alias;
-    QString m_unit;
+    std::shared_ptr<QString> m_unit = std::make_shared<QString>();
     int m_dspChannel = 0;
 
     std::shared_ptr<QStringList> m_allRangeNamesOrderedByServer = std::make_shared<QStringList>();

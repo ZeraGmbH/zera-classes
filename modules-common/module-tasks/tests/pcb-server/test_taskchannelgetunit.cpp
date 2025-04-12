@@ -14,7 +14,7 @@ static const char* defaultResponse = "V";
 void test_taskchannelgetunit::checkScpiSend()
 {
     PcbInitForTest pcb;
-    QString channelAlias;
+    std::shared_ptr<QString> channelAlias = std::make_shared<QString>();
     TaskTemplatePtr task = TaskChannelGetUnit::create(pcb.getPcbInterface(),
                                                       channelName,
                                                       channelAlias,
@@ -32,21 +32,21 @@ void test_taskchannelgetunit::returnsAliasProperly()
 {
     PcbInitForTest pcb;
     pcb.getProxyClient()->setAnswers(ServerTestAnswerList() << ServerTestAnswer(ack, QString(defaultResponse)));
-    QString channelAlias;
+    std::shared_ptr<QString> channelAlias = std::make_shared<QString>();
     TaskTemplatePtr task = TaskChannelGetUnit::create(pcb.getPcbInterface(),
                                                       channelName,
                                                       channelAlias,
                                                       EXPIRE_INFINITE);
     task->start();
     TimeMachineObject::feedEventLoop();
-    QCOMPARE(channelAlias, defaultResponse);
+    QCOMPARE(*channelAlias, defaultResponse);
 }
 
 void test_taskchannelgetunit::timeoutAndErrFunc()
 {
     PcbInitForTest pcb;
     int localErrorCount = 0;
-    QString channelAlias;
+    std::shared_ptr<QString> channelAlias = std::make_shared<QString>();
     TaskTemplatePtr task = TaskChannelGetUnit::create(pcb.getPcbInterface(),
                                                       channelName,
                                                       channelAlias,

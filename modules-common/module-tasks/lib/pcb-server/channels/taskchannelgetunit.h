@@ -9,17 +9,17 @@ class TaskChannelGetUnit : public TaskServerTransactionTemplate
     Q_OBJECT
 public:
     static TaskTemplatePtr create(Zera::PcbInterfacePtr pcbInterface, QString channelName,
-                                  QString& valueReceived,
+                                  std::shared_ptr<QString> valueReceived,
                                   int timeout, std::function<void()> additionalErrorHandler = []{});
     TaskChannelGetUnit(Zera::PcbInterfacePtr pcbInterface,
                        QString channelName,
-                       QString& valueReceived);
+                       std::shared_ptr<QString> valueReceived);
 private:
     quint32 sendToServer() override;
     bool handleCheckedServerAnswer(QVariant answer) override;
     Zera::PcbInterfacePtr m_pcbInterface;
     QString m_channelName;
-    QString& m_valueReceived;
+    std::shared_ptr<QString> m_valueReceived;
 };
 
 #endif // TASKCHANNELGETUNIT_H
