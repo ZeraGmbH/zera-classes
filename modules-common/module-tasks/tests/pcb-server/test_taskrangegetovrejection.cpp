@@ -15,7 +15,7 @@ static double defaultOvRejection = 123456.0; // although treated as double - it 
 void test_taskrangegetovrejection::checkScpiSend()
 {
     PcbInitForTest pcb;
-    double ovRejection;
+    std::shared_ptr<double> ovRejection = std::make_shared<double>();
     TaskTemplatePtr task = TaskRangeGetOvRejection::create(pcb.getPcbInterface(),
                                                              channelMName, rangeName,
                                                              ovRejection,
@@ -33,21 +33,21 @@ void test_taskrangegetovrejection::returnsOvrRejectionProperly()
 {
     PcbInitForTest pcb;
     pcb.getProxyClient()->setAnswers(ServerTestAnswerList() << ServerTestAnswer(ack, QString("%1").arg(defaultOvRejection)));
-    double ovRejection = 0.0;
+    std::shared_ptr<double> ovRejection = std::make_shared<double>(0.0);
     TaskTemplatePtr task = TaskRangeGetOvRejection::create(pcb.getPcbInterface(),
                                                              channelMName, rangeName,
                                                              ovRejection,
                                                              EXPIRE_INFINITE);
     task->start();
     TimeMachineObject::feedEventLoop();
-    QCOMPARE(ovRejection, defaultOvRejection);
+    QCOMPARE(*ovRejection, defaultOvRejection);
 }
 
 void test_taskrangegetovrejection::timeoutAndErrFunc()
 {
     PcbInitForTest pcb;
     int localErrorCount = 0;
-    double ovRejection = 0.0;
+    std::shared_ptr<double> ovRejection = std::make_shared<double>(0.0);
     TaskTemplatePtr task = TaskRangeGetOvRejection::create(pcb.getPcbInterface(),
                                                              channelMName, rangeName,
                                                              ovRejection,

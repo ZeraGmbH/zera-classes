@@ -225,7 +225,7 @@ void test_cro_range::checkOvRejection()
     range.startFetch();
     TimeMachineObject::feedEventLoop();
 
-    QCOMPARE(range.m_ovrejection, 5518821.0);
+    QCOMPARE(*range.m_ovrejection, 5518821.0);
 }
 
 void test_cro_range::checkAdcRejection()
