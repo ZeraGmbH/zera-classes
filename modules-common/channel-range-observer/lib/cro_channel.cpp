@@ -168,7 +168,7 @@ TaskTemplatePtr Channel::getFetchFinalTask()
 void Channel::setAvailableRanges()
 {
     for(const QString &rangeName : *m_allRangeNamesOrderedByServer)
-        if(*m_rangeNameToRange[rangeName]->m_available)
+        if(*m_rangeNameToRange[rangeName]->m_available == true)
             m_availableRangeNames.append(rangeName);
 }
 
