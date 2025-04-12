@@ -21,7 +21,7 @@ void test_taskrefpowerfetchconstant::checkScpiSend()
     QCoreApplication::processEvents();
     QStringList scpiSent = pcb.getProxyClient()->getReceivedCommands();
     QCOMPARE(scpiSent.count(), 1);
-    QString scpiExpectedPath = QString("SOUR:%1:CONS").arg(refPowerName);
+    QString scpiExpectedPath = QString("SOURCE:%1:CONSTANT").arg(refPowerName);
     ScpiFullCmdCheckerForTest scpiChecker(scpiExpectedPath, SCPI::isQuery);
     QVERIFY(scpiChecker.matches(scpiSent[0]));
 }

@@ -26,7 +26,6 @@ TaskGetScpiStringList::TaskGetScpiStringList(AbstractServerInterfacePtr interfac
 quint32 TaskGetScpiStringList::sendToServer()
 {
     return m_interface->scpiCommand(m_scpiCmd);
-
 }
 
 bool TaskGetScpiStringList::handleCheckedServerAnswer(QVariant answer)
