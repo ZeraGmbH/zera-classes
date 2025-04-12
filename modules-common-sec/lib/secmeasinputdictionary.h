@@ -23,10 +23,10 @@ private:
     // input name: "f0" / "f1"... or DUT ec0
     // alias "P" / "Q"...
     // displayed "P AC" / "P DC"...
-    QHash<QString /* refInputName */, QString /* resource */> m_resourceHash;
-    QHash<QString /* refInputName */, QString /* alias */> m_aliasHash;
-    QHash<QString /* displayName */, QString /* refInputName */> m_displayHash;
-    QMap<int /* notifyId */, QString /* refInputName */> m_notificationIdHash;
+    QHash<QString /* refPowerName */, QString /* resource */> m_resourceHash;
+    QHash<QString /* refPowerName */, QString /* alias */> m_aliasHash;
+    QHash<QString /* displayName */, QString /* refPowerName */> m_displayHash;
+    QMap<int /* notifyId */, QString /* refPowerName */> m_notificationIdHash;
 };
 
 #endif // SECMEASINPUTDICTIONARY_H

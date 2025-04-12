@@ -2,7 +2,7 @@
 #define SEM1MODULEMEASPROGRAM_H
 
 #include "secinterface.h"
-#include "secrefconstantobserver.h"
+#include "refpowerconstantobserver.h"
 #include "secresourcetypelist.h"
 #include "sem1moduleconfigdata.h"
 #include <basemeasprogram.h>
@@ -67,7 +67,7 @@ public slots:
 
 private slots:
     void catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant answer);
-    void onRefConstantChanged(QString refInputName);
+    void onRefConstantChanged(QString refPowerName);
     void resourceManagerConnect();
     void sendRMIdent();
     void testSEC1Resource();
@@ -211,7 +211,7 @@ private:
     SecResourceTypeList m_resourceTypeList;
     QHash<QString,QString> m_ResourceHash; // resourcetype, resourcelist ; seperated
     SecMeasInputDictionary m_refInputDictionary;
-    SecRefConstantObserver m_refConstantObserver;
+    RefPowerConstantObserver m_refConstantObserver;
     QHash<QString, double> mEnergyUnitFactorHash;
 
     QStringList m_REFAliasList; // we want to have an ordered list with Input alias

@@ -653,7 +653,7 @@ void cSpm1ModuleMeasProgram::setUnits()
 
 void cSpm1ModuleMeasProgram::actualizeRefConstant()
 {
-    double constant = m_refConstantObserver.getRefConstant(getConfData()->m_sRefInput.m_sPar);
+    double constant = m_refConstantObserver.getConstant(getConfData()->m_sRefInput.m_sPar);
     m_pRefConstantPar->setValue(QVariant(constant));
     newRefConstant(QVariant(constant));
 }
@@ -668,9 +668,9 @@ void cSpm1ModuleMeasProgram::setStatus(quint32 status)
     m_pStatusAct->setValue(QVariant::fromValue<quint32>(status));
 }
 
-void cSpm1ModuleMeasProgram::onRefConstantChanged(QString refInputName)
+void cSpm1ModuleMeasProgram::onRefConstantChanged(QString refPowerName)
 {
-    if(getConfData()->m_sRefInput.m_sPar == refInputName) {
+    if(getConfData()->m_sRefInput.m_sPar == refPowerName) {
         stopMeasurement(true);
         actualizeRefConstant();
     }
@@ -812,12 +812,12 @@ void cSpm1ModuleMeasProgram::testSpmInputs()
     qint32 refInCountLeftToCheck = refInpList.count();
     QStringList resourceTypeList = m_resourceTypeList.getResourceTypeList();
     for (int refInputNo = 0; refInputNo < refInpList.count(); refInputNo++) {
-        QString refInputName = refInpList[refInputNo].inputName;
+        QString refPowerName = refInpList[refInputNo].inputName;
         for (int resourceTypeNo = 0; resourceTypeNo < resourceTypeList.count(); resourceTypeNo++) {
             QString resourcelist = m_ResourceHash[resourceTypeList[resourceTypeNo]];
-            if (resourcelist.contains(refInputName)) {
+            if (resourcelist.contains(refPowerName)) {
                 refInCountLeftToCheck--;
-                m_refInputDictionary.addReferenceInput(refInputName, resourceTypeList[resourceTypeNo]);
+                m_refInputDictionary.addReferenceInput(refPowerName, resourceTypeList[resourceTypeNo]);
                 break;
             }
         }
@@ -887,10 +887,10 @@ void cSpm1ModuleMeasProgram::readREFInputDone()
 void cSpm1ModuleMeasProgram::setpcbREFConstantNotifier()
 {
     if (getConfData()->m_nRefInpCount > 0) {
-        connect(&m_refConstantObserver, &SecRefConstantObserver::sigRegistrationFinished, this, [this](bool ok) {
+        connect(&m_refConstantObserver, &RefPowerConstantObserver::sigRegistrationFinished, this, [this](bool ok) {
             if(ok) {
                 actualizeRefConstant();
-                connect(&m_refConstantObserver, &SecRefConstantObserver::sigRefConstantChanged,
+                connect(&m_refConstantObserver, &RefPowerConstantObserver::sigRefConstantChanged,
                         this, &cSpm1ModuleMeasProgram::onRefConstantChanged);
                 emit activationContinue();
             }
@@ -1006,8 +1006,8 @@ void cSpm1ModuleMeasProgram::setMasterMux()
 
 void cSpm1ModuleMeasProgram::setSlaveMux()
 {
-    QString refInputName = getConfData()->m_sRefInput.m_sPar;
-    m_MsgNrCmdList[m_pSECInterface->setMux(m_slaveErrCalcName, refInputName)] = setslavemux;
+    QString refPowerName = getConfData()->m_sRefInput.m_sPar;
+    m_MsgNrCmdList[m_pSECInterface->setMux(m_slaveErrCalcName, refPowerName)] = setslavemux;
 }
 
 
@@ -1193,15 +1193,15 @@ void cSpm1ModuleMeasProgram::newRefConstant(QVariant refconst)
 
 void cSpm1ModuleMeasProgram::newRefInput(QVariant refinput)
 {
-    QString refInputName = m_refInputDictionary.getInputNameFromDisplayedName(refinput.toString());
-    getConfData()->m_sRefInput.m_sPar = refInputName;
+    QString refPowerName = m_refInputDictionary.getInputNameFromDisplayedName(refinput.toString());
+    getConfData()->m_sRefInput.m_sPar = refPowerName;
     actualizeRefConstant();
     setInterfaceComponents();
 
     // if the reference input changes P <-> Q <-> S it is necessary to change energyunit and powerunit and their validators
     setValidators();
     setUnits();
-    m_pRefFreqInput->setValue(refInputName);
+    m_pRefFreqInput->setValue(refPowerName);
 
     emit m_pModule->parameterChanged();
 }

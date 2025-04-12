@@ -7,7 +7,7 @@
 #include "multipleresulthelper.h"
 #include "secmeasinputdictionary.h"
 #include "secresourcetypelist.h"
-#include "secrefconstantobserver.h"
+#include "refpowerconstantobserver.h"
 #include <doublevalidator.h>
 #include <stringvalidator.h>
 #include <basemeasprogram.h>
@@ -68,7 +68,7 @@ public slots:
     void stop() override;
 private slots:
     void catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant answer);
-    void onRefConstantChanged(QString refInputName);
+    void onRefConstantChanged(QString refPowerName);
     void resourceManagerConnect();
     void sendRMIdent();
     void testSEC1Resource();
@@ -226,7 +226,7 @@ private:
     QHash<QString,QString> m_ResourceHash; // resourcetype, resourcelist ; seperated
     SecMeasInputDictionary m_refInputDictionary;
     SecMeasInputDictionary m_dutInputDictionary;
-    SecRefConstantObserver m_refConstantObserver;
+    RefPowerConstantObserver m_refConstantObserver;
 
     QStringList m_REFAliasList; // we want to have an ordered list with Input alias
     QStringList m_DUTAliasList;

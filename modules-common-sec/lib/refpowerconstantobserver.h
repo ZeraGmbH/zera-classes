@@ -1,22 +1,22 @@
-#ifndef SECREFCONSTANTOBSERVER_H
-#define SECREFCONSTANTOBSERVER_H
+#ifndef REFPOWERCONSTANTOBSERVER_H
+#define REFPOWERCONSTANTOBSERVER_H
 
 #include <pcbinterface.h>
 #include <tasktemplate.h>
 #include <unordered_map>
 
-class SecRefConstantObserver : public QObject
+class RefPowerConstantObserver : public QObject
 {
     Q_OBJECT
 public:
     void registerNofifications(Zera::PcbInterfacePtr pcbInterface,
-                               QStringList refInputNameList,
+                               QStringList refPowerNameList,
                                std::function<void ()> additionalErrorHandler = []{});
     // unregister is done once per module. So it is not upon us.
-    double getRefConstant(QString refChannnel);
+    double getConstant(QString refChannnel);
 signals:
     void sigRegistrationFinished(bool ok);
-    void sigRefConstantChanged(QString refInputName);
+    void sigRefConstantChanged(QString refPowerName);
 
 private slots:
     void onFinishKillTaskObject(bool ok, int taskId);
@@ -25,20 +25,20 @@ private slots:
 private:
     void connectPcbServerNotificationSlot();
     TaskTemplatePtr createNotificationTasks(Zera::PcbInterfacePtr pcbInterface,
-                                            QStringList refInputNameList,
+                                            QStringList refPowerNameList,
                                             std::function<void ()> additionalErrorHandler);
-    TaskTemplatePtr createRefConstantFetchTasks(QStringList refInputNameList,
+    TaskTemplatePtr createRefConstantFetchTasks(QStringList refPowerNameList,
                                                 std::function<void ()> additionalErrorHandler = []{});
-    TaskTemplatePtr createSingleFetchTask(QString refInputName, std::function<void ()> additionalErrorHandler = []{});
+    TaskTemplatePtr createSingleFetchTask(QString refPowerName, std::function<void ()> additionalErrorHandler = []{});
     void tryStartSingleConstantFetch(int notifyId);
     void startTask(TaskTemplatePtr task);
-    void makeSureSharedPtrToRefConstIsCreated(QString refInputName);
+    void makeSureSharedPtrToRefPowerConstIsCreated(QString refPowerName);
 
     Zera::PcbInterfacePtr m_pcbInterface;
-    QHash<QString/* refInputName */, std::shared_ptr<double>> m_refConstants;
+    QHash<QString/* refPowerName */, std::shared_ptr<double>> m_refPowerConstants;
     std::unordered_map<int /*taskId*/, TaskTemplatePtr> m_pendingTaskIds;
-    QHash<int /*taskId*/, QString /* refInputName */> m_pendingSingleFetchTaskIds;
-    QMap<int /* notifyId */, QString /* refInputName */> m_registerdNotifications;
+    QHash<int /*taskId*/, QString /* refPowerName */> m_pendingSingleFetchTaskIds;
+    QMap<int /* notifyId */, QString /* refPowerName */> m_registerdNotifications;
 };
 
-#endif // SECREFCONSTANTOBSERVER_H
+#endif // REFPOWERCONSTANTOBSERVER_H
