@@ -29,11 +29,12 @@ TaskOffsetSetNode::TaskOffsetSetNode(Zera::PcbInterfacePtr pcbInterface,
 void TaskOffsetSetNode::start()
 {
     double rawActual = m_actualValue;
-    if(fabs(m_rngVals.m_rejection) > 1e-3) {
+    const double rejection = *m_rngVals.m_rejection;
+    if(fabs(rejection) > 1e-3) {
         rawActual = m_actualValue -
-                m_rngVals.m_correction * m_rngVals.m_rejectionValue / m_rngVals.m_rejection;
+                m_rngVals.m_correction * m_rngVals.m_rejectionValue / rejection;
     }
-    double Corr = (m_targetValue - rawActual) * m_rngVals.m_rejection / m_rngVals.m_rejectionValue;
+    double Corr = (m_targetValue - rawActual) * rejection / m_rngVals.m_rejectionValue;
 
     connect(m_pcbInterface.get(), &AbstractServerInterface::serverAnswer,
             this, &TaskOffsetSetNode::onServerAnswer);

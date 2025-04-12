@@ -11,7 +11,7 @@ public:
     struct RangeVals
     {
         double m_correction;
-        double m_rejection;
+        std::shared_ptr<double> m_rejection = std::make_shared<double>();
         double m_rejectionValue;
     };
     static TaskTemplatePtr create(Zera::PcbInterfacePtr pcbInterface,

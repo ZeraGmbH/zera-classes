@@ -3,7 +3,7 @@
 
 TaskTemplatePtr TaskRangeGetRejection::create(Zera::PcbInterfacePtr pcbInterface,
                                               QString channelMName, QString rangeName,
-                                              double &valueReceived,
+                                              std::shared_ptr<double> valueReceived,
                                               int timeout, std::function<void ()> additionalErrorHandler)
 {
     return TaskDecoratorTimeout::wrapTimeout(timeout,
@@ -15,8 +15,8 @@ TaskTemplatePtr TaskRangeGetRejection::create(Zera::PcbInterfacePtr pcbInterface
 }
 
 TaskRangeGetRejection::TaskRangeGetRejection(Zera::PcbInterfacePtr pcbInterface,
-                                                 QString channelMName, QString rangeName,
-                                                 double &valueReceived) :
+                                             QString channelMName, QString rangeName,
+                                             std::shared_ptr<double> valueReceived) :
     TaskServerTransactionTemplate(pcbInterface),
     m_pcbInterface(pcbInterface),
     m_channelMName(channelMName), m_rangeName(rangeName),
@@ -32,6 +32,6 @@ quint32 TaskRangeGetRejection::sendToServer()
 bool TaskRangeGetRejection::handleCheckedServerAnswer(QVariant answer)
 {
     bool ok;
-    m_valueReceived = answer.toDouble(&ok);
+    *m_valueReceived = answer.toDouble(&ok);
     return ok;
 }

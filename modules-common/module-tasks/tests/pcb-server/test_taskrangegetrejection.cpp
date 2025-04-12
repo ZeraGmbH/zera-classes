@@ -15,7 +15,7 @@ static double defaultRejection = 123456.0; // although treated as double - it is
 void test_taskrangegetrejection::checkScpiSend()
 {
     PcbInitForTest pcb;
-    double rejection;
+    std::shared_ptr<double> rejection = std::make_shared<double>();
     TaskTemplatePtr task = TaskRangeGetRejection::create(pcb.getPcbInterface(),
                                                             channelMName, rangeName,
                                                             rejection,
@@ -33,21 +33,21 @@ void test_taskrangegetrejection::returnsRejectionProperly()
 {
     PcbInitForTest pcb;
     pcb.getProxyClient()->setAnswers(ServerTestAnswerList() << ServerTestAnswer(ack, QString("%1").arg(defaultRejection)));
-    double rejection = 0.0;
+    std::shared_ptr<double> rejection = std::make_shared<double>(0.0);
     TaskTemplatePtr task = TaskRangeGetRejection::create(pcb.getPcbInterface(),
                                                             channelMName, rangeName,
                                                             rejection,
                                                             EXPIRE_INFINITE);
     task->start();
     TimeMachineObject::feedEventLoop();
-    QCOMPARE(rejection, defaultRejection);
+    QCOMPARE(*rejection, defaultRejection);
 }
 
 void test_taskrangegetrejection::timeoutAndErrFunc()
 {
     PcbInitForTest pcb;
     int localErrorCount = 0;
-    double rejection = 0.0;
+    std::shared_ptr<double> rejection = std::make_shared<double>(0.0);
     TaskTemplatePtr task = TaskRangeGetRejection::create(pcb.getPcbInterface(),
                                                             channelMName, rangeName,
                                                             rejection,
