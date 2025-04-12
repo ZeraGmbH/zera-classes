@@ -52,7 +52,7 @@ private:
     bool m_valid = false;
     QString m_alias;
     std::shared_ptr<QString> m_unit = std::make_shared<QString>();
-    int m_dspChannel = 0;
+    std::shared_ptr<int> m_dspChannel = std::make_shared<int>(0);
 
     std::shared_ptr<QStringList> m_allRangeNamesOrderedByServer = std::make_shared<QStringList>();
     QStringList m_availableRangeNames;

@@ -3,7 +3,7 @@
 
 TaskTemplatePtr TaskChannelGetDspChannel::create(Zera::PcbInterfacePtr pcbInterface,
                                                  QString channelName,
-                                                 int &valueReceived,
+                                                 std::shared_ptr<int> valueReceived,
                                                  int timeout,
                                                  std::function<void()> additionalErrorHandler)
 {
@@ -17,7 +17,7 @@ TaskTemplatePtr TaskChannelGetDspChannel::create(Zera::PcbInterfacePtr pcbInterf
 
 TaskChannelGetDspChannel::TaskChannelGetDspChannel(Zera::PcbInterfacePtr pcbInterface,
                                                    QString channelName,
-                                                   int &valueReceived) :
+                                                   std::shared_ptr<int> valueReceived) :
     TaskServerTransactionTemplate(pcbInterface),
     m_pcbInterface(pcbInterface),
     m_channelName(channelName),
@@ -33,6 +33,6 @@ quint32 TaskChannelGetDspChannel::sendToServer()
 bool TaskChannelGetDspChannel::handleCheckedServerAnswer(QVariant answer)
 {
     bool ok;
-    m_valueReceived = answer.toInt(&ok);
+    *m_valueReceived = answer.toInt(&ok);
     return ok;
 }

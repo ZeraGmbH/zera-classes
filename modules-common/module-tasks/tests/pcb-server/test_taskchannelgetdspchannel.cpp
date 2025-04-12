@@ -13,7 +13,7 @@ static const char* channelName = "m0";
 void test_taskchannelgetdspchannel::checkScpiSend()
 {
     PcbInitForTest pcb;
-    int dspChannel;
+    std::shared_ptr<int> dspChannel = std::make_shared<int>();
     TaskTemplatePtr task = TaskChannelGetDspChannel::create(pcb.getPcbInterface(),
                                                             channelName,
                                                             dspChannel,
@@ -31,21 +31,21 @@ void test_taskchannelgetdspchannel::returnsDspChannelProperly()
 {
     PcbInitForTest pcb;
     pcb.getProxyClient()->setAnswers(ServerTestAnswerList() << ServerTestAnswer(ack, QString("42")));
-    int dspChannel;
+    std::shared_ptr<int> dspChannel = std::make_shared<int>();
     TaskTemplatePtr task = TaskChannelGetDspChannel::create(pcb.getPcbInterface(),
                                                             channelName,
                                                             dspChannel,
                                                             EXPIRE_INFINITE);
     task->start();
     TimeMachineObject::feedEventLoop();
-    QCOMPARE(dspChannel, 42);
+    QCOMPARE(*dspChannel, 42);
 }
 
 void test_taskchannelgetdspchannel::timeoutAndErrFunc()
 {
     PcbInitForTest pcb;
     int localErrorCount = 0;
-    int dspChannel;
+    std::shared_ptr<int> dspChannel = std::make_shared<int>();
     TaskTemplatePtr task = TaskChannelGetDspChannel::create(pcb.getPcbInterface(),
                                                             channelName,
                                                             dspChannel,

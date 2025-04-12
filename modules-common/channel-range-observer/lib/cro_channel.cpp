@@ -71,7 +71,7 @@ QString Channel::getUnit() const
 
 int Channel::getDspChannel() const
 {
-    return m_dspChannel;
+    return *m_dspChannel;
 }
 
 void Channel::clearRanges()
