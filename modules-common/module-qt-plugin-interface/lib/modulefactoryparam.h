@@ -1,10 +1,8 @@
 #ifndef MEASUREMENTMODULEFACTORYPARAM_H
 #define MEASUREMENTMODULEFACTORYPARAM_H
 
-#include "modulenetworkparams.h"
+#include "moduleshareddata.h"
 #include "modulegroupnumerator.h"
-#include "abstractfactoryserviceinterfaces.h"
-#include "cro_systemobserver.h"
 #include <abstracttcpnetworkfactory.h>
 
 namespace VeinStorage
@@ -12,24 +10,6 @@ namespace VeinStorage
 class AbstractEventSystem;
 }
 
-class ModuleSharedData
-{
-public:
-    ModuleSharedData(ModuleNetworkParamsPtr networkParams,
-                     AbstractFactoryServiceInterfacesPtr serviceInterfaceFactory,
-                     ChannelRangeObserver::SystemObserverPtr channelRangeObserver,
-                     bool demo);
-    virtual ~ModuleSharedData();
-
-    const ModuleNetworkParamsPtr m_networkParams;
-    const AbstractFactoryServiceInterfacesPtr m_serviceInterfaceFactory;
-    const ChannelRangeObserver::SystemObserverPtr m_channelRangeObserver;
-    const bool m_demo;
-private:
-    static int m_instanceCount;
-};
-
-typedef std::shared_ptr<ModuleSharedData> ModuleSharedDataPtr;
 
 struct ModuleFactoryParam
 {
