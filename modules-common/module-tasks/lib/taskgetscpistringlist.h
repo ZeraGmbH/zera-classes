@@ -2,7 +2,6 @@
 #define TASKGETSCPISTRINGLIST_H
 
 #include "taskservertransactiontemplate.h"
-#include <pcbinterface.h>
 
 class TaskGetScpiStringList : public TaskServerTransactionTemplate
 {
