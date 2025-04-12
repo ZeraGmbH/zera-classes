@@ -41,7 +41,7 @@ private:
 
     int m_samplesPerPeriod = 0;
     TaskContainerInterfacePtr m_currentTasks;
-    QStringList m_tempChannelMNames;
+    std::shared_ptr<QStringList> m_tempChannelMNames;
 };
 
 typedef std::shared_ptr<SystemObserver> SystemObserverPtr;

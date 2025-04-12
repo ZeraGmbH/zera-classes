@@ -13,7 +13,7 @@ static const char* defaultResponse = "m0;m1;m2;m6;m3;m4;m5;m7";
 void test_taskchannelgetavail::checkScpiSend()
 {
     PcbInitForTest pcb;
-    QStringList channelList;
+    std::shared_ptr<QStringList> channelList = std::make_shared<QStringList>();
     TaskTemplatePtr task = TaskChannelGetAvail::create(pcb.getPcbInterface(),
                                                        channelList,
                                                        EXPIRE_INFINITE);
@@ -30,21 +30,21 @@ void test_taskchannelgetavail::returnsChannelListProperly()
 {
     PcbInitForTest pcb;
     pcb.getProxyClient()->setAnswers(ServerTestAnswerList() << ServerTestAnswer(ack, defaultResponse));
-    QStringList channelList;
+    std::shared_ptr<QStringList> channelList = std::make_shared<QStringList>();
     TaskTemplatePtr task = TaskChannelGetAvail::create(pcb.getPcbInterface(),
                                                        channelList,
                                                        EXPIRE_INFINITE);
     task->start();
     TimeMachineObject::feedEventLoop();
     QStringList expectedRanges = QString(defaultResponse).split(";");
-    QCOMPARE(channelList, expectedRanges);
+    QCOMPARE(*channelList, expectedRanges);
 }
 
 void test_taskchannelgetavail::timeoutAndErrFunc()
 {
     PcbInitForTest pcb;
     int localErrorCount = 0;
-    QStringList channelList;
+    std::shared_ptr<QStringList> channelList = std::make_shared<QStringList>();
     TaskTemplatePtr task = TaskChannelGetAvail::create(pcb.getPcbInterface(),
                                                            channelList,
                                                            DEFAULT_EXPIRE,

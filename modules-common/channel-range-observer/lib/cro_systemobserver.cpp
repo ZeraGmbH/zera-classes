@@ -68,13 +68,14 @@ void SystemObserver::doStartFullScan()
     preparePcbInterface();
     m_currentTasks = TaskContainerSequence::create();
     m_currentTasks->addSub(getPcbConnectionTask());
+    m_tempChannelMNames = std::make_shared<QStringList>();
     m_currentTasks->addSub(TaskChannelGetAvail::create(m_pcbInterface, m_tempChannelMNames,
                                                        TRANSACTION_TIMEOUT, [=] { notifyError("Get available channels failed");}));
     m_currentTasks->addSub(TaskLambdaRunner::create([&]() {
         TaskContainerInterfacePtr allChannelsDetailsTasks = TaskContainerParallel::create();
         allChannelsDetailsTasks->addSub(TaskGetSampleRate::create(m_pcbInterface, m_samplesPerPeriod,
                                                                   TRANSACTION_TIMEOUT, [=] { notifyError("Get sample rate failed");}));
-        for(const QString &channelMName : qAsConst(m_tempChannelMNames)) {
+        for(const QString &channelMName : *m_tempChannelMNames) {
             ChannelPtr channelObserver = std::make_shared<Channel>(channelMName, m_netInfo, m_tcpFactory);
             m_channelMNameToChannel[channelMName] = channelObserver;
 
@@ -82,7 +83,6 @@ void SystemObserver::doStartFullScan()
             connect(channelObserver.get(), &Channel::sigFetchDoneChannel,
                     this, &SystemObserver::sigFetchDone);
         }
-        m_tempChannelMNames.clear();
         m_currentTasks->addSub(std::move(allChannelsDetailsTasks));
         return true;
     }));
