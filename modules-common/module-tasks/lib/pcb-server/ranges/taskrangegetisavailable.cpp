@@ -3,7 +3,7 @@
 
 TaskTemplatePtr TaskRangeGetIsAvailable::create(Zera::PcbInterfacePtr pcbInterface,
                                                 QString channelMName, QString rangeName,
-                                                bool &valueReceived,
+                                                std::shared_ptr<bool> valueReceived,
                                                 int timeout, std::function<void ()> additionalErrorHandler)
 {
     return TaskDecoratorTimeout::wrapTimeout(timeout,
@@ -18,7 +18,7 @@ TaskTemplatePtr TaskRangeGetIsAvailable::create(Zera::PcbInterfacePtr pcbInterfa
 TaskRangeGetIsAvailable::TaskRangeGetIsAvailable(Zera::PcbInterfacePtr pcbInterface,
                                                  QString channelMName,
                                                  QString rangeName,
-                                                 bool &valueReceived) :
+                                                 std::shared_ptr<bool> valueReceived) :
     TaskServerTransactionTemplate(pcbInterface),
     m_pcbInterface(pcbInterface),
     m_channelMName(channelMName), m_rangeName(rangeName),
@@ -33,6 +33,6 @@ quint32 TaskRangeGetIsAvailable::sendToServer()
 
 bool TaskRangeGetIsAvailable::handleCheckedServerAnswer(QVariant answer)
 {
-    m_valueReceived = answer.toBool();
+    *m_valueReceived = answer.toBool();
     return true;
 }

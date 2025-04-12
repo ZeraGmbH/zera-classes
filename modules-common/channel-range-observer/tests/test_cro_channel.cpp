@@ -217,10 +217,10 @@ void test_cro_channel::checkRangeAvailable()
     channel.startFetch();
     TimeMachineObject::feedEventLoop();
 
-    QCOMPARE(channel.getRange("10A")->m_available, true);
-    QCOMPARE(channel.getRange("500mA")->m_available, true);
-    QCOMPARE(channel.getRange("8V")->m_available, false);
-    QCOMPARE(channel.getRange("500mV")->m_available, false);
+    QCOMPARE(*channel.getRange("10A")->m_available, true);
+    QCOMPARE(*channel.getRange("500mA")->m_available, true);
+    QCOMPARE(*channel.getRange("8V")->m_available, false);
+    QCOMPARE(*channel.getRange("500mV")->m_available, false);
 }
 
 void test_cro_channel::checkAvailableRangesMtDefaultAc()

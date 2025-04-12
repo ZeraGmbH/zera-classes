@@ -44,7 +44,7 @@ void test_cro_range::cleanup()
 void test_cro_range::defaultOnStartup()
 {
     Range range("m0", "250V", netInfo, m_tcpFactory);
-    QCOMPARE(range.m_available, false);
+    QCOMPARE(*range.m_available, false);
     QCOMPARE(*range.m_urValue, 0.0);
 }
 
@@ -59,7 +59,7 @@ void test_cro_range::fetchAvailable()
     QCOMPARE(spy[0][0], "m0");
     QCOMPARE(spy[0][1], "250V");
     QCOMPARE(spy[0][2], true);
-    QCOMPARE(range.m_available, true);
+    QCOMPARE(*range.m_available, true);
 }
 
 void test_cro_range::fetchNotAvailable()
@@ -73,7 +73,7 @@ void test_cro_range::fetchNotAvailable()
     QCOMPARE(spy[0][0], "m3");
     QCOMPARE(spy[0][1], "2mV");
     QCOMPARE(spy[0][2], true);
-    QCOMPARE(range.m_available, false);
+    QCOMPARE(*range.m_available, false);
 }
 
 void test_cro_range::fetchInvalidChannel()
@@ -87,7 +87,7 @@ void test_cro_range::fetchInvalidChannel()
     QCOMPARE(spy[0][0], "foo");
     QCOMPARE(spy[0][1], "5000V");
     QCOMPARE(spy[0][2], false);
-    QCOMPARE(range.m_available, false);
+    QCOMPARE(*range.m_available, false);
 }
 
 void test_cro_range::fetchInvalidRange()
@@ -101,7 +101,7 @@ void test_cro_range::fetchInvalidRange()
     QCOMPARE(spy[0][0], "m0");
     QCOMPARE(spy[0][1], "foo");
     QCOMPARE(spy[0][2], false);
-    QCOMPARE(range.m_available, false);
+    QCOMPARE(*range.m_available, false);
 }
 
 void test_cro_range::fetchTwice()
@@ -165,7 +165,7 @@ void test_cro_range::refetchAlthoughNotSuggestedWorks()
     QCOMPARE(spy[0][0], "m0");
     QCOMPARE(spy[0][1], "250V");
     QCOMPARE(spy[0][2], true);
-    QCOMPARE(range.m_available, true);
+    QCOMPARE(*range.m_available, true);
 }
 
 void test_cro_range::checkUrValue()

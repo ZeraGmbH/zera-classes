@@ -15,7 +15,7 @@ static const bool defaultAvailValue = true;
 void test_taskrangegetisavailable::checkScpiSend()
 {
     PcbInitForTest pcb;
-    bool isAvailable;
+    std::shared_ptr<bool> isAvailable = std::make_shared<bool>();
     TaskTemplatePtr task = TaskRangeGetIsAvailable::create(pcb.getPcbInterface(),
                                                            channelMName, rangeName,
                                                            isAvailable,
@@ -33,21 +33,21 @@ void test_taskrangegetisavailable::returnsIsAvailProperly()
 {
     PcbInitForTest pcb;
     pcb.getProxyClient()->setAnswers(ServerTestAnswerList() << ServerTestAnswer(ack, QString("%1").arg(defaultAvailValue)));
-    bool isAvailable = !defaultAvailValue;
+    std::shared_ptr<bool> isAvailable = std::make_shared<bool>(!defaultAvailValue);
     TaskTemplatePtr task = TaskRangeGetIsAvailable::create(pcb.getPcbInterface(),
                                                            channelMName, rangeName,
                                                            isAvailable,
                                                            EXPIRE_INFINITE);
     task->start();
     TimeMachineObject::feedEventLoop();
-    QCOMPARE(isAvailable, defaultAvailValue);
+    QCOMPARE(*isAvailable, defaultAvailValue);
 }
 
 void test_taskrangegetisavailable::timeoutAndErrFunc()
 {
     PcbInitForTest pcb;
     int localErrorCount = 0;
-    bool isAvailable = !defaultAvailValue;
+    std::shared_ptr<bool> isAvailable = std::make_shared<bool>(!defaultAvailValue);
     TaskTemplatePtr task = TaskRangeGetIsAvailable::create(pcb.getPcbInterface(),
                                                            channelMName, rangeName,
                                                            isAvailable,

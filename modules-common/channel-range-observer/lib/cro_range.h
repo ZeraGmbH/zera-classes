@@ -13,7 +13,7 @@ class Range : public QObject
 {
     Q_OBJECT
 public:
-    bool m_available = false;
+    std::shared_ptr<bool> m_available = std::make_shared<bool>(false);
     std::shared_ptr<int> m_type = std::make_shared<int>(0);
     std::shared_ptr<double> m_urValue = std::make_shared<double>(0.0);
     std::shared_ptr<double> m_rejection = std::make_shared<double>(0.0);
