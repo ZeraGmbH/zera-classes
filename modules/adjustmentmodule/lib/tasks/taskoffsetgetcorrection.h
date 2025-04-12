@@ -24,7 +24,7 @@ private:
     QString m_rangeName;
     double m_ourActualValue;
     double &m_correctionValue;
-    quint32 m_msgnr;
+    quint32 m_msgnr = 0;
 };
 
 #endif // TASKOFFSETGETCORRECTION_H

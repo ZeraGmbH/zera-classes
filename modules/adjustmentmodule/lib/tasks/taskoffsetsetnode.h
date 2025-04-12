@@ -31,7 +31,7 @@ private:
     double m_actualValue;
     double m_targetValue;
     RangeVals &m_rngVals;
-    quint32 m_msgnr;
+    quint32 m_msgnr = 0;
 };
 
 #endif // TASKSETOFFSETNODE_H
