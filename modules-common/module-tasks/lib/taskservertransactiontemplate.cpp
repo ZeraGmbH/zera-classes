@@ -2,15 +2,15 @@
 #include <reply.h>
 
 TaskServerTransactionTemplate::TaskServerTransactionTemplate(AbstractServerInterfacePtr server) :
-    m_abstractServer(server)
+    m_interface(server)
 {
 }
 
 void TaskServerTransactionTemplate::start()
 {
-    connect(m_abstractServer.get(), &AbstractServerInterface::serverAnswer,
+    connect(m_interface.get(), &AbstractServerInterface::serverAnswer,
             this, &TaskServerTransactionTemplate::onServerAnswer);
-    connect(m_abstractServer.get(), &AbstractServerInterface::tcpError,
+    connect(m_interface.get(), &AbstractServerInterface::tcpError,
             this, &TaskServerTransactionTemplate::onServerError);
     m_msgnr = sendToServer();
 }
