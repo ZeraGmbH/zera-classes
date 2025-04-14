@@ -37,6 +37,10 @@ class cRangeMeasChannel: public cBaseMeasChannel
 {
     Q_OBJECT
 public:
+
+    const double keepRangeLimit = 0.99;
+    const double enterRangeLimit = 0.95;
+
     cRangeMeasChannel(ChannelRangeObserver::ChannelPtr channelObserver,
                       NetworkConnectionInfo pcbsocket,
                       VeinTcp::AbstractTcpNetworkFactoryPtr tcpNetworkFactory,

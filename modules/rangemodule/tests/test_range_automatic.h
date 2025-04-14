@@ -9,6 +9,7 @@
 #include <testlicensesystem.h>
 #include <QObject>
 
+
 class test_range_automatic : public QObject
 {
     Q_OBJECT
