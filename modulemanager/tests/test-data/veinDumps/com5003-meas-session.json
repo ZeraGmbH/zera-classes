@@ -5162,7 +5162,7 @@
         "PAR_ClientActiveNotify": 0,
         "PAR_Lolimit": -10,
         "PAR_MeasTime": 120,
-        "PAR_RefConstant": 0,
+        "PAR_RefConstant": 2500000,
         "PAR_RefInput": "P",
         "PAR_StartStop": 0,
         "PAR_T0Input": 0,
