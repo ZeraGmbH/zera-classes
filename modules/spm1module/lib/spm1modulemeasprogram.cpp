@@ -371,22 +371,10 @@ void cSpm1ModuleMeasProgram::generateVeinInterface()
 
 void cSpm1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant answer)
 {
-    bool ok;
-
     if (msgnr == 0) // 0 was reserved for async. messages
-    {
-        QString sintnr;
-        sintnr = answer.toString().section(':', 1, 1);
-        int service = sintnr.toInt(&ok);
-        switch (service)
-        {
-        default:
-            // we must fetch the measured impuls count, compute the error and set corresponding entity
-            handleSECInterrupt();
-        }
-    }
-    else
-    {
+        // we must fetch the measured impuls count, compute the error and set corresponding entity
+        handleSECInterrupt();
+    else {
         if (m_MsgNrCmdList.contains(msgnr))
         {
             int cmd = m_MsgNrCmdList.take(msgnr);
@@ -474,7 +462,7 @@ void cSpm1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, Q
                 if (reply == ack) {
                     // keep last values on (pending) abort / ignore post final responses
                     if((getStatus() & ECALCSTATUS::ABORT) == 0 && !m_finalResultStateMachine.isRunning()) {
-                        m_nEnergyCounterActual = answer.toUInt(&ok);
+                        m_nEnergyCounterActual = answer.toUInt();
                         m_fEnergy = 1.0 * m_nEnergyCounterActual / (m_pRefConstantPar->getValue().toDouble() * mPowerUnitFactorHash[m_pInputUnitPar->getValue().toString()]);
                         m_pEnergyAct->setValue(m_fEnergy); // in kWh
                     }
@@ -490,7 +478,7 @@ void cSpm1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, Q
                 if (reply == ack) {
                     // keep last values on (pending) abort / ignore post final responses
                     if((getStatus() & ECALCSTATUS::ABORT) == 0 && !m_finalResultStateMachine.isRunning()) {
-                        m_fTimeSecondsActual = double(answer.toUInt(&ok)) * 0.001;
+                        m_fTimeSecondsActual = double(answer.toUInt()) * 0.001;
                         m_fPower = m_fEnergy * 3600.0 / (m_fTimeSecondsActual); // in kW
                         m_pPowerAct->setValue(m_fPower);
                         m_pTimeAct->setValue(m_fTimeSecondsActual);
@@ -507,7 +495,7 @@ void cSpm1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, Q
                     quint32 status = getStatus();
                     if((status & ECALCSTATUS::ABORT) == 0 && !m_finalResultStateMachine.isRunning()) {
                         // once ready we leave status ready (continous mode)
-                        setStatus((status & ECALCSTATUS::READY) | (answer.toUInt(&ok) & 7));
+                        setStatus((status & ECALCSTATUS::READY) | (answer.toUInt() & 7));
                     }
                 }
                 else
@@ -568,7 +556,7 @@ void cSpm1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, Q
 
             case readintregister:
                 if (reply == ack) {
-                    m_nIntReg = answer.toInt(&ok) & 7;
+                    m_nIntReg = answer.toInt() & 7;
                     emit interruptContinue();
                 }
                 else
@@ -587,7 +575,7 @@ void cSpm1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, Q
                     // see cSec1ModuleMeasProgram::catchInterfaceAnswer /
                     // case readvicount
                     if((getStatus() & ECALCSTATUS::ABORT) == 0)
-                        m_nEnergyCounterFinal = answer.toLongLong(&ok);
+                        m_nEnergyCounterFinal = answer.toLongLong();
                     emit interruptContinue();
                 }
                 else
@@ -595,7 +583,7 @@ void cSpm1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, Q
                 break;
             case readtcount:
                 if (reply == ack) {
-                    m_fTimeSecondsFinal = double(answer.toLongLong(&ok)) * 0.001;
+                    m_fTimeSecondsFinal = double(answer.toLongLong()) * 0.001;
                     emit interruptContinue();
                 }
                 else
