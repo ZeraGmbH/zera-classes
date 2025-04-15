@@ -221,7 +221,7 @@ void test_range_automatic::testRangeAutomaticIncreaseLowRangesI()
     QCOMPARE(getVfComponent(rangeEntityId, IL1RangeComponent), "50mA");
 
     fireNewRmsValues(0.05 * ovrRejectionFactor * midOfHysteresis);     // stay in I-Range 50mA
-    fireNewRmsValues(0.05 * ovrRejectionFactor * midOfHysteresis); //0.06063);
+    fireNewRmsValues(0.05 * ovrRejectionFactor * midOfHysteresis);
     QCOMPARE(getVfComponent(rangeEntityId, IL1RangeComponent), "50mA");
 
     fireNewRmsValues(0.05 * ovrRejectionFactor * outsideRangeLimit);   // switch in I-Range 100mA
@@ -236,7 +236,7 @@ void test_range_automatic::testRangeAutomaticIncreaseHighRangesI()
     // (rms > Urvalue_range * ovrRejectionFactor * enterRangeLimit) && (rms < Urvalue_range * ovrRejectionFactor * keepRangeLimit)
 
     // test hysteresis from range 2.5A up to 10A
-    fireNewRmsValues(2);     // switch to 2.5A range because of overload we switch to highest I-range
+    fireNewRmsValues(2);     // switch to 2.5A range
     fireNewRmsValues(2);     // extra interrupt
     setVfComponent(rangeEntityId, RangeAutomaticComponent, 1);
     QCOMPARE(getVfComponent(rangeEntityId, IL1RangeComponent), "2.5A");
@@ -274,7 +274,7 @@ void test_range_automatic::testRangeAutomaticDecreaseI()
     fireNewRmsValues(5 * ovrRejectionFactor * midOfHysteresis);
     QCOMPARE(getVfComponent(rangeEntityId, IL1RangeComponent), "10A");
 
-    fireNewRmsValues(5 * ovrRejectionFactor * enterRangeLimit);   // switch in I-Range 5A  todo: 5 does not work!
+    fireNewRmsValues(5 * ovrRejectionFactor * enterRangeLimit);        // switch in I-Range 5A
     fireNewRmsValues(5 * ovrRejectionFactor * enterRangeLimit);
     QCOMPARE(getVfComponent(rangeEntityId, IL1RangeComponent), "5A");
 
@@ -282,7 +282,7 @@ void test_range_automatic::testRangeAutomaticDecreaseI()
     fireNewRmsValues(2.5 * ovrRejectionFactor * midOfHysteresis);
     QCOMPARE(getVfComponent(rangeEntityId, IL1RangeComponent), "5A");
 
-    fireNewRmsValues(2.5 * ovrRejectionFactor * enterRangeLimit);   // switch in I-Range 2.5A
+    fireNewRmsValues(2.5 * ovrRejectionFactor * enterRangeLimit);      // switch in I-Range 2.5A
     fireNewRmsValues(2.5 * ovrRejectionFactor * enterRangeLimit);
     QCOMPARE(getVfComponent(rangeEntityId, IL1RangeComponent), "2.5A");
 }
