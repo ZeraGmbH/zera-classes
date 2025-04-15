@@ -84,7 +84,7 @@ cRangeModuleMeasProgram::cRangeModuleMeasProgram(cRangeModule* module, std::shar
 
     connect(&m_frequencyLogStatistics, &LogStatisticsAsyncFloat::sigNewStatistics, [](float min, float max, float avg, int msgCnt) {
         Q_UNUSED(msgCnt)
-        qInfo("Measured frequency (Hz) min: %.1f, max: %.1f, mean: %.1f",
+        qInfo("Measured frequency (Hz) min: %.3f, max: %.3f, mean: %.3f",
               min, max, avg);
     });
 
