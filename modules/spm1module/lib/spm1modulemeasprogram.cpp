@@ -40,10 +40,7 @@ cSpm1ModuleMeasProgram::cSpm1ModuleMeasProgram(cSpm1Module* module, std::shared_
     m_readREFInputsState.addTransition(this, &cSpm1ModuleMeasProgram::activationContinue, &m_readREFInputAliasState);
     m_readREFInputAliasState.addTransition(this, &cSpm1ModuleMeasProgram::activationContinue, &m_readREFInputDoneState);
     m_readREFInputDoneState.addTransition(this, &cSpm1ModuleMeasProgram::activationLoop, &m_readREFInputAliasState);
-    if(m_pModule->getDemo())
-        m_readREFInputDoneState.addTransition(this, &cSpm1ModuleMeasProgram::activationContinue, &m_activationDoneState);
-    else
-        m_readREFInputDoneState.addTransition(this, &cSpm1ModuleMeasProgram::activationContinue, &m_setpcbREFConstantNotifierState);
+    m_readREFInputDoneState.addTransition(this, &cSpm1ModuleMeasProgram::activationContinue, &m_setpcbREFConstantNotifierState);
 
     m_setpcbREFConstantNotifierState.addTransition(this, &cSpm1ModuleMeasProgram::activationContinue, &m_setsecINTNotifierState);
     m_setsecINTNotifierState.addTransition(this, &cSpm1ModuleMeasProgram::activationContinue, &m_activationDoneState);
