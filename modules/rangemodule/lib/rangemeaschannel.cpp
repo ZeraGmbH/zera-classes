@@ -195,8 +195,9 @@ bool cRangeMeasChannel::isADCOverload(double ampl)
 }
 
 
-QString cRangeMeasChannel::getOptRange(double rms, const QString &rngAlias)
+QString cRangeMeasChannel::getOptRange(double peak, const QString &rngAlias)
 {
+    double rms = peak / M_SQRT2;
     qint32 actRngType = -1;
     if (m_RangeInfoHash.contains(rngAlias)) {
         // if we know this rngalias we take that's type for searching max range
@@ -224,8 +225,6 @@ QString cRangeMeasChannel::getOptRange(double rms, const QString &rngAlias)
 
     // keep area < 1: avoid overload because overload passes maximum range and
     // that wastes our time unnecessesarily
-    const double keepRangeLimit = 0.99;
-    const double enterRangeLimit = 0.95;
 
     for (i = 0; i < riList.count(); i++) {
         const cRangeInfoWithConstantValues& ri = riList.at(i);

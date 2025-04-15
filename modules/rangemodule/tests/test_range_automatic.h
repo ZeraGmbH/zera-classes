@@ -9,6 +9,7 @@
 #include <testlicensesystem.h>
 #include <QObject>
 
+
 class test_range_automatic : public QObject
 {
     Q_OBJECT
@@ -20,6 +21,11 @@ private slots:
     void defaultRangesAndSetting();
     void activeGroupingChangeSingleRange();
     void testRangeAutomatic();
+    void testRangeAutomaticIncreaseU();
+    void testRangeAutomaticDecreaseU();
+    void testRangeAutomaticIncreaseLowRangesI();
+    void testRangeAutomaticIncreaseHighRangesI();
+    void testRangeAutomaticDecreaseI();
     void enableAndDisableRangeAutomatic();
     void softOverloadWithRangeAutomatic();
     void addAndSelectClamp();

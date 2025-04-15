@@ -281,7 +281,7 @@ void cRangeObsermatic::rangeAutomatic()
                     if (!m_softOvlList.at(i)) {
                         const QString range = m_ConfPar.getCurrentRange(i);
                         const RangeChannelData *channelData = rangeMeasChannel->getChannelData();
-                        const QString optRange = rangeMeasChannel->getOptRange(channelData->getRmsValue()*getPreScale(i), range);
+                        const QString optRange = rangeMeasChannel->getOptRange(channelData->getPeakValue()*getPreScale(i), range);
                         m_ConfPar.setCurrentRange(i, optRange);
                     }
                 }

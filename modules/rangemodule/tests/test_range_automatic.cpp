@@ -136,6 +136,158 @@ void test_range_automatic::testRangeAutomatic()
     QCOMPARE(getVfComponent(rangeEntityId, IL1RangeComponent), "10A");
 }
 
+constexpr double ovrRejectionFactor = 1.2499999;
+constexpr double enterRangeLimit    = 0.9499999;
+constexpr double midOfHysteresis    = 0.97; // (keepRangeLimit + enterRangeLimit) / 2;
+constexpr double keepRangeLimit     = 0.99;
+constexpr double outsideRangeLimit  = 1.0;
+
+
+void test_range_automatic::testRangeAutomaticIncreaseU()
+{
+    // Increasing uses hysteresis region
+    // Logic of hysteresis to stay in range needs this conditions
+    // (rms > Urvalue_range * ovrRejectionFactor * enterRangeLimit) && (rms < Urvalue_range * ovrRejectionFactor * keepRangeLimit)
+
+    fireNewRmsValues(0.1);     // set U-Range to 100mV
+    fireNewRmsValues(0.1);     // extra interrupt
+    setVfComponent(rangeEntityId, RangeAutomaticComponent, 1);
+    QCOMPARE(getVfComponent(rangeEntityId, UL1RangeComponent), "100mV");
+
+    fireNewRmsValues(0.1 * ovrRejectionFactor * midOfHysteresis);      // stay in U-Range 100mV
+    fireNewRmsValues(0.1 * ovrRejectionFactor * midOfHysteresis);      // extra interrupt
+    QCOMPARE(getVfComponent(rangeEntityId, UL1RangeComponent), "100mV");
+
+    fireNewRmsValues(0.1 * ovrRejectionFactor * outsideRangeLimit);    // switch in U-Range 8V
+    fireNewRmsValues(0.1 * ovrRejectionFactor * outsideRangeLimit);    // extra interrupt
+    QCOMPARE(getVfComponent(rangeEntityId, UL1RangeComponent), "8V");
+
+    fireNewRmsValues(8 * ovrRejectionFactor * midOfHysteresis);        // stay in U-Range 8V
+    fireNewRmsValues(8 * ovrRejectionFactor * midOfHysteresis);        // extra interrupt
+    QCOMPARE(getVfComponent(rangeEntityId, UL1RangeComponent), "8V");
+
+    fireNewRmsValues(8 * ovrRejectionFactor * outsideRangeLimit);      // switch in U-Range to 250V
+    fireNewRmsValues(8 * ovrRejectionFactor * outsideRangeLimit);
+    QCOMPARE(getVfComponent(rangeEntityId, UL1RangeComponent), "250V");
+}
+
+
+void test_range_automatic::testRangeAutomaticDecreaseU()
+{
+    // Decreasing uses NOT hysteresis region
+    // Logic of hysteresis to stay in range needs this conditions
+    // (rms > Urvalue_range * ovrRejectionFactor * enterRangeLimit) && (rms < Urvalue_range * ovrRejectionFactor * keepRangeLimit)
+
+    fireNewRmsValues(250);     // switch to 250V set U-Range to 250V
+    fireNewRmsValues(250);     // extra interrupt
+    setVfComponent(rangeEntityId, RangeAutomaticComponent, 1);
+    QCOMPARE(getVfComponent(rangeEntityId, UL1RangeComponent), "250V");
+
+    fireNewRmsValues(8 * ovrRejectionFactor *  midOfHysteresis);       // stay in U-Range 250V
+    fireNewRmsValues(8 * ovrRejectionFactor *  midOfHysteresis);       // extra interrupt
+    QCOMPARE(getVfComponent(rangeEntityId, UL1RangeComponent), "250V");
+
+    fireNewRmsValues(8 * ovrRejectionFactor * enterRangeLimit);        // switch in U-Range 8V
+    fireNewRmsValues(8 * ovrRejectionFactor * enterRangeLimit);
+    QCOMPARE(getVfComponent(rangeEntityId, UL1RangeComponent), "8V");
+
+    fireNewRmsValues(0.1 * ovrRejectionFactor * midOfHysteresis);      // stay in U-Range 8V
+    fireNewRmsValues(0.1 * ovrRejectionFactor * midOfHysteresis);
+    QCOMPARE(getVfComponent(rangeEntityId, UL1RangeComponent), "8V");
+
+    fireNewRmsValues(0.1 * ovrRejectionFactor * enterRangeLimit);      // switch in U-Range 0.1V
+    fireNewRmsValues(0.1 * ovrRejectionFactor * enterRangeLimit);
+    QCOMPARE(getVfComponent(rangeEntityId, UL1RangeComponent), "100mV");
+}
+
+
+void test_range_automatic::testRangeAutomaticIncreaseLowRangesI()
+{
+    // Logic of hysteresis to stay in range needs this conditions
+    // (rms > Urvalue_range * ovrRejectionFactor * enterRangeLimit) && (rms < Urvalue_range * ovrRejectionFactor * keepRangeLimit)
+
+    // test hysteresis from range 25mA up to 100mA
+    fireNewRmsValues(0);         // switch to 25mA range
+    fireNewRmsValues(0);         // extra interrupt
+    setVfComponent(rangeEntityId, RangeAutomaticComponent, 1);
+    QCOMPARE(getVfComponent(rangeEntityId, IL1RangeComponent), "25mA");
+
+    fireNewRmsValues(0.025 * ovrRejectionFactor * midOfHysteresis);    // stay in I-Range 25mA
+    fireNewRmsValues(0.025 * ovrRejectionFactor * midOfHysteresis);
+    QCOMPARE(getVfComponent(rangeEntityId, IL1RangeComponent), "25mA");
+
+    fireNewRmsValues(0.025 * ovrRejectionFactor * outsideRangeLimit);  // switch in I-Range 50mA
+    fireNewRmsValues(0.025 * ovrRejectionFactor * outsideRangeLimit);
+    QCOMPARE(getVfComponent(rangeEntityId, IL1RangeComponent), "50mA");
+
+    fireNewRmsValues(0.05 * ovrRejectionFactor * midOfHysteresis);     // stay in I-Range 50mA
+    fireNewRmsValues(0.05 * ovrRejectionFactor * midOfHysteresis);
+    QCOMPARE(getVfComponent(rangeEntityId, IL1RangeComponent), "50mA");
+
+    fireNewRmsValues(0.05 * ovrRejectionFactor * outsideRangeLimit);   // switch in I-Range 100mA
+    fireNewRmsValues(0.05 * ovrRejectionFactor * outsideRangeLimit);
+    QCOMPARE(getVfComponent(rangeEntityId, IL1RangeComponent), "100mA");
+}
+
+
+void test_range_automatic::testRangeAutomaticIncreaseHighRangesI()
+{
+    // Logic of hysteresis to stay in range needs this conditions
+    // (rms > Urvalue_range * ovrRejectionFactor * enterRangeLimit) && (rms < Urvalue_range * ovrRejectionFactor * keepRangeLimit)
+
+    // test hysteresis from range 2.5A up to 10A
+    fireNewRmsValues(2);     // switch to 2.5A range
+    fireNewRmsValues(2);     // extra interrupt
+    setVfComponent(rangeEntityId, RangeAutomaticComponent, 1);
+    QCOMPARE(getVfComponent(rangeEntityId, IL1RangeComponent), "2.5A");
+
+    fireNewRmsValues(2.5 * ovrRejectionFactor * midOfHysteresis);      // stay in I-Range 2.5A
+    fireNewRmsValues(2.5 * ovrRejectionFactor * midOfHysteresis);
+    QCOMPARE(getVfComponent(rangeEntityId, IL1RangeComponent), "2.5A");
+
+    fireNewRmsValues(2.5 * ovrRejectionFactor * outsideRangeLimit);    // switch in I-Range 5A
+    fireNewRmsValues(2.5 * ovrRejectionFactor * outsideRangeLimit);
+    QCOMPARE(getVfComponent(rangeEntityId, IL1RangeComponent), "5A");
+
+    fireNewRmsValues(5 * ovrRejectionFactor * midOfHysteresis);        // stay in I-Range 5A
+    fireNewRmsValues(5 * ovrRejectionFactor * midOfHysteresis);
+    QCOMPARE(getVfComponent(rangeEntityId, IL1RangeComponent), "5A");
+
+    fireNewRmsValues(5 * ovrRejectionFactor * outsideRangeLimit);      // switch in I-Range 10A
+    fireNewRmsValues(5 * ovrRejectionFactor * outsideRangeLimit);
+    QCOMPARE(getVfComponent(rangeEntityId, IL1RangeComponent), "10A");
+}
+
+
+void test_range_automatic::testRangeAutomaticDecreaseI()
+{
+    // Decreasing uses NOT hysteresis region
+    // Logic of hysteresis to stay in range needs this conditions
+    // (rms > Urvalue_range * ovrRejectionFactor * enterRangeLimit) && (rms < Urvalue_range * ovrRejectionFactor * keepRangeLimit)
+
+    fireNewRmsValues(10);      // switch to 10A set I-Range to 10A
+    fireNewRmsValues(10);      // extra interrupt
+    setVfComponent(rangeEntityId, RangeAutomaticComponent, 1);
+    QCOMPARE(getVfComponent(rangeEntityId, IL1RangeComponent), "10A");
+
+    fireNewRmsValues(5 * ovrRejectionFactor * midOfHysteresis);        // stay in I-Range 10A
+    fireNewRmsValues(5 * ovrRejectionFactor * midOfHysteresis);
+    QCOMPARE(getVfComponent(rangeEntityId, IL1RangeComponent), "10A");
+
+    fireNewRmsValues(5 * ovrRejectionFactor * enterRangeLimit);        // switch in I-Range 5A
+    fireNewRmsValues(5 * ovrRejectionFactor * enterRangeLimit);
+    QCOMPARE(getVfComponent(rangeEntityId, IL1RangeComponent), "5A");
+
+    fireNewRmsValues(2.5 * ovrRejectionFactor * midOfHysteresis);      // stay in I-Range 5A
+    fireNewRmsValues(2.5 * ovrRejectionFactor * midOfHysteresis);
+    QCOMPARE(getVfComponent(rangeEntityId, IL1RangeComponent), "5A");
+
+    fireNewRmsValues(2.5 * ovrRejectionFactor * enterRangeLimit);      // switch in I-Range 2.5A
+    fireNewRmsValues(2.5 * ovrRejectionFactor * enterRangeLimit);
+    QCOMPARE(getVfComponent(rangeEntityId, IL1RangeComponent), "2.5A");
+}
+
+
 void test_range_automatic::enableAndDisableRangeAutomatic()
 {
     fireNewRmsValues(0);
