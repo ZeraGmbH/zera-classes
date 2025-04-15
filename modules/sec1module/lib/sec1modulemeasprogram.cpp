@@ -529,24 +529,11 @@ void cSec1ModuleMeasProgram::updateProgress(quint32 dUTPulseCounterActual)
 
 void cSec1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant answer)
 {
-    bool ok;
-
     if (msgnr == 0) // 0 was reserved for async. messages
-    {
-        QString sintnr;
-        sintnr = answer.toString().section(':', 1, 1);
-        int service = sintnr.toInt(&ok);
-        switch (service)
-        {
-        default:
-            // we must fetch the measured impuls count, compute the error and set corresponding entity
-            handleSECInterrupt();
-        }
-    }
-    else
-    {
-        if (m_MsgNrCmdList.contains(msgnr))
-        {
+        // we must fetch the measured impuls count, compute the error and set corresponding entity
+        handleSECInterrupt();
+    else {
+        if (m_MsgNrCmdList.contains(msgnr)) {
             int cmd = m_MsgNrCmdList.take(msgnr);
             switch (cmd)
             {
@@ -658,7 +645,7 @@ void cSec1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, Q
                 if (reply == ack) {
                     // Still running and not waiting for next?
                     if(m_bMeasurementRunning && (getStatus() & ECALCSTATUS::WAIT) == 0) {
-                        m_nEnergyCounterActual = answer.toUInt(&ok);
+                        m_nEnergyCounterActual = answer.toUInt();
                         m_fEnergy = m_nEnergyCounterActual / getConfData()->m_fRefConstant.m_fPar;
                         m_pEnergyAct->setValue(m_fEnergy);
                         if (m_bFirstMeas) {
@@ -681,7 +668,7 @@ void cSec1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, Q
                     quint32 status = getStatus();
                     if(m_bMeasurementRunning && (status & ECALCSTATUS::WAIT) == 0) {
                         // once ready we leave status ready (continous mode)
-                        setStatus((status & ECALCSTATUS::READY) | (answer.toUInt(&ok) & 7));
+                        setStatus((status & ECALCSTATUS::READY) | (answer.toUInt() & 7));
                     }
                 }
                 else
@@ -750,7 +737,7 @@ void cSec1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, Q
             case readintregister:
                 if (reply == ack)
                 {
-                    m_nIntReg = answer.toInt(&ok) & 7;
+                    m_nIntReg = answer.toInt() & 7;
                     emit interruptContinue();
                 }
                 else
@@ -774,7 +761,7 @@ void cSec1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, Q
                     // * Stop it (all OK up here)
                     // * Change DUT constant/unit -> Crap results
                     if(m_bMeasurementRunning) {
-                        m_nEnergyCounterFinal = answer.toLongLong(&ok);
+                        m_nEnergyCounterFinal = answer.toLongLong();
                     }
                     emit interruptContinue();
                 }
