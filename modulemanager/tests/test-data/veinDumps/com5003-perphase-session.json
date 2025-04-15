@@ -3799,11 +3799,11 @@
         "PAR_MRate": 10,
         "PAR_MeasCount": 1,
         "PAR_MeasWait": 0,
-        "PAR_RefConstant": 7500000,
+        "PAR_RefConstant": 500000000,
         "PAR_RefInput": "P 1",
         "PAR_ResultUnit": "%",
         "PAR_StartStop": 0,
-        "PAR_Target": 7500,
+        "PAR_Target": 500000,
         "PAR_Uplimit": 10
     },
     "1131": {
@@ -4368,11 +4368,11 @@
         "PAR_MRate": 10,
         "PAR_MeasCount": 1,
         "PAR_MeasWait": 0,
-        "PAR_RefConstant": 7500000,
+        "PAR_RefConstant": 500000000,
         "PAR_RefInput": "P 1",
         "PAR_ResultUnit": "%",
         "PAR_StartStop": 0,
-        "PAR_Target": 7500,
+        "PAR_Target": 500000,
         "PAR_Uplimit": 10
     },
     "1140": {
