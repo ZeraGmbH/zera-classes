@@ -130,6 +130,11 @@
         "id": 1210
       },
       {
+        "name" : "sfcmodule",
+        "configFile" : "sfcmodule.xml",
+        "id": 1220
+      },
+      {
         "name" : "sourcemodule",
         "configFile" : "",
         "id": 1300
