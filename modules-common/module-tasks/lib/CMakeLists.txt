@@ -1,5 +1,6 @@
 file(GLOB HEADER
     ${CMAKE_CURRENT_SOURCE_DIR}/*.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/dsp-server/*.h
     ${CMAKE_CURRENT_SOURCE_DIR}/pcb-server/*.h
     ${CMAKE_CURRENT_SOURCE_DIR}/pcb-server/channels/*.h
     ${CMAKE_CURRENT_SOURCE_DIR}/pcb-server/ranges/*.h
@@ -7,6 +8,7 @@ file(GLOB HEADER
     )
 file(GLOB SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/*.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/dsp-server/*.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/pcb-server/*.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/pcb-server/channels/*.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/pcb-server/ranges/*.cpp
@@ -28,6 +30,7 @@ target_link_libraries(module-tasks
 target_include_directories(module-tasks
     PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/dsp-server>
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/pcb-server>
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/pcb-server/channels>
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/pcb-server/ranges>

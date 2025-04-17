@@ -9,4 +9,5 @@ function(SETUP_QTESTS_MODULE_TASKS)
     endforeach()
 endfunction()
 
+add_subdirectory(dsp-server)
 add_subdirectory(pcb-server)
