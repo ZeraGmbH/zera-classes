@@ -17,7 +17,6 @@ private slots:
     void initTestCase();
     void init();
     void cleanup();
-
     void defaultRangesAndSetting();
     void activeGroupingChangeSingleRange();
     void testRangeAutomatic();
@@ -26,6 +25,9 @@ private slots:
     void testRangeAutomaticIncreaseLowRangesI();
     void testRangeAutomaticIncreaseHighRangesI();
     void testRangeAutomaticDecreaseI();
+
+    void checkRmsOverload();
+
     void enableAndDisableRangeAutomatic();
     void softOverloadWithRangeAutomatic();
     void addAndSelectClamp();
@@ -34,7 +36,7 @@ private slots:
     void checkPersitency();
 private:
     void setupServices();
-    void fireNewRmsValues(float rmsValue);
+    void fireNewRmsValues(float rmsValue, bool includeIAux);
     void setVfComponent(int entityId, QString componentName, QVariant newValue);
     QVariant getVfComponent(int entityId, QString componentName);
     QStringList getCurrentRanges();
@@ -50,6 +52,8 @@ private:
     std::unique_ptr<MockZdsp1d> m_dspServer;
     std::unique_ptr<ResmanRunFacade> m_resmanServer;
     std::shared_ptr<QByteArray> m_configDataLastStored;
+    static constexpr bool withIaux = true;
+    static constexpr bool withoutIaux = false;
 };
 
 #endif // TEST_RANGE_AUTOMATIC_H
