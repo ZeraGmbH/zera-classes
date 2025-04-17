@@ -461,7 +461,7 @@ void cRangeModuleMeasProgram::activateDSPdone()
 void cRangeModuleMeasProgram::deactivateDSP()
 {
     m_bActive = false;
-    m_MsgNrCmdList[m_dspInterface->deactivateInterface()] = deactivatedsp; // wat wohl
+    m_MsgNrCmdList[m_dspInterface->deactivateAll()] = deactivatedsp; // wat wohl
 }
 
 
