@@ -1,9 +1,9 @@
-#ifndef TASKGETSCPISTRINGLIST_H
-#define TASKGETSCPISTRINGLIST_H
+#ifndef TASKSCPIGETSTRINGLIST_H
+#define TASKSCPIGETSTRINGLIST_H
 
 #include "taskservertransactiontemplate.h"
 
-class TaskGetScpiStringList : public TaskServerTransactionTemplate
+class TaskScpiGetStringList : public TaskServerTransactionTemplate
 {
     Q_OBJECT
 public:
@@ -11,7 +11,7 @@ public:
                                   const QString &scpiCmd,
                                   std::shared_ptr<QStringList> result,
                                   int timeout, std::function<void()> additionalErrorHandler = []{});
-    TaskGetScpiStringList(AbstractServerInterfacePtr interface,
+    TaskScpiGetStringList(AbstractServerInterfacePtr interface,
                           const QString &scpiCmd,
                           std::shared_ptr<QStringList> result);
 
@@ -22,4 +22,4 @@ private:
     const std::shared_ptr<QStringList> m_result;
 };
 
-#endif // TASKGETSCPISTRINGLIST_H
+#endif // TASKSCPIGETSTRINGLIST_H

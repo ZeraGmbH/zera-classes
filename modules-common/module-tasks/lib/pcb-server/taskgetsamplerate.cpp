@@ -1,11 +1,11 @@
 #include "taskgetsamplerate.h"
-#include "taskgetscpiint.h"
+#include "taskscpigetint.h"
 
 TaskTemplatePtr TaskGetSampleRate::create(Zera::PcbInterfacePtr pcbInterface,
                                           std::shared_ptr<int> valueReceived,
                                           int timeout, std::function<void ()> additionalErrorHandler)
 {
-    return TaskGetScpiInt::create(pcbInterface,
+    return TaskScpiGetInt::create(pcbInterface,
                                   "SAMPLE:SRATE?",
                                   valueReceived,
                                   timeout,

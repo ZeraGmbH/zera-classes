@@ -1,5 +1,5 @@
 #include "taskrefpowerfetchconstant.h"
-#include "taskgetscpidouble.h"
+#include "taskscpigetdouble.h"
 
 TaskTemplatePtr TaskRefPowerFetchConstant::create(Zera::PcbInterfacePtr pcbInterface,
                                                   QString refPowerName,
@@ -7,7 +7,7 @@ TaskTemplatePtr TaskRefPowerFetchConstant::create(Zera::PcbInterfacePtr pcbInter
                                                   int timeout,
                                                   std::function<void ()> additionalErrorHandler)
 {
-    return TaskGetScpiDouble::create(pcbInterface,
+    return TaskScpiGetDouble::create(pcbInterface,
                                      QString("SOURCE:%1:CONSTANT?").arg(refPowerName),
                                      refPowerConstantReceived,
                                      timeout,

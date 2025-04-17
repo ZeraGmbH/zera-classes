@@ -1,13 +1,13 @@
-#include "taskgetscpistring.h"
+#include "taskscpigetstring.h"
 #include <taskdecoratortimeout.h>
 
-TaskTemplatePtr TaskGetScpiString::create(AbstractServerInterfacePtr interface,
+TaskTemplatePtr TaskScpiGetString::create(AbstractServerInterfacePtr interface,
                                           const QString &scpiCmd,
                                           std::shared_ptr<QString> result,
                                           int timeout, std::function<void ()> additionalErrorHandler)
 {
     return TaskDecoratorTimeout::wrapTimeout(timeout,
-                                             std::make_unique<TaskGetScpiString>(
+                                             std::make_unique<TaskScpiGetString>(
                                                  interface,
                                                  scpiCmd,
                                                  result),
@@ -15,7 +15,7 @@ TaskTemplatePtr TaskGetScpiString::create(AbstractServerInterfacePtr interface,
 
 }
 
-TaskGetScpiString::TaskGetScpiString(AbstractServerInterfacePtr interface,
+TaskScpiGetString::TaskScpiGetString(AbstractServerInterfacePtr interface,
                                      const QString &scpiCmd,
                                      std::shared_ptr<QString> result) :
     TaskServerTransactionTemplate(interface),
@@ -24,12 +24,12 @@ TaskGetScpiString::TaskGetScpiString(AbstractServerInterfacePtr interface,
 {
 }
 
-quint32 TaskGetScpiString::sendToServer()
+quint32 TaskScpiGetString::sendToServer()
 {
     return m_interface->scpiCommand(m_scpiCmd);
 }
 
-bool TaskGetScpiString::handleCheckedServerAnswer(QVariant answer)
+bool TaskScpiGetString::handleCheckedServerAnswer(QVariant answer)
 {
     *m_result = answer.toString();
     return true;

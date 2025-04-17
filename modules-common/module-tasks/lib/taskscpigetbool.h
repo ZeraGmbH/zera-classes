@@ -1,25 +1,25 @@
-#ifndef TASKGETSCPIINT_H
-#define TASKGETSCPIINT_H
+#ifndef TASKSCPIGETBOOL_H
+#define TASKSCPIGETBOOL_H
 
 #include "taskservertransactiontemplate.h"
 
-class TaskGetScpiInt : public TaskServerTransactionTemplate
+class TaskScpiGetBool : public TaskServerTransactionTemplate
 {
     Q_OBJECT
 public:
     static TaskTemplatePtr create(AbstractServerInterfacePtr interface,
                                   const QString &scpiCmd,
-                                  std::shared_ptr<int> result,
+                                  std::shared_ptr<bool> result,
                                   int timeout, std::function<void()> additionalErrorHandler = []{});
-    TaskGetScpiInt(AbstractServerInterfacePtr interface,
-                   const QString &scpiCmd,
-                   std::shared_ptr<int> result);
+    TaskScpiGetBool(AbstractServerInterfacePtr interface,
+                    const QString &scpiCmd,
+                    std::shared_ptr<bool> result);
 
 private:
     quint32 sendToServer() override;
     bool handleCheckedServerAnswer(QVariant answer) override;
     const QString m_scpiCmd;
-    const std::shared_ptr<int> m_result;
+    const std::shared_ptr<bool> m_result;
 };
 
-#endif // TASKGETSCPIINT_H
+#endif // TASKSCPIGETBOOL_H

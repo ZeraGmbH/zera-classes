@@ -1,20 +1,20 @@
-#include "taskgetscpibool.h"
+#include "taskscpigetbool.h"
 #include <taskdecoratortimeout.h>
 
-TaskTemplatePtr TaskGetScpiBool::create(AbstractServerInterfacePtr interface,
+TaskTemplatePtr TaskScpiGetBool::create(AbstractServerInterfacePtr interface,
                                         const QString &scpiCmd,
                                         std::shared_ptr<bool> result,
                                         int timeout, std::function<void ()> additionalErrorHandler)
 {
     return TaskDecoratorTimeout::wrapTimeout(timeout,
-                                             std::make_unique<TaskGetScpiBool>(
+                                             std::make_unique<TaskScpiGetBool>(
                                                  interface,
                                                  scpiCmd,
                                                  result),
                                              additionalErrorHandler);
 }
 
-TaskGetScpiBool::TaskGetScpiBool(AbstractServerInterfacePtr interface,
+TaskScpiGetBool::TaskScpiGetBool(AbstractServerInterfacePtr interface,
                                  const QString &scpiCmd,
                                  std::shared_ptr<bool> result) :
     TaskServerTransactionTemplate(interface),
@@ -23,12 +23,12 @@ TaskGetScpiBool::TaskGetScpiBool(AbstractServerInterfacePtr interface,
 {
 }
 
-quint32 TaskGetScpiBool::sendToServer()
+quint32 TaskScpiGetBool::sendToServer()
 {
     return m_interface->scpiCommand(m_scpiCmd);
 }
 
-bool TaskGetScpiBool::handleCheckedServerAnswer(QVariant answer)
+bool TaskScpiGetBool::handleCheckedServerAnswer(QVariant answer)
 {
     *m_result = answer.toBool();
     return true;

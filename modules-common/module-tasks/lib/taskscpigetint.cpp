@@ -1,20 +1,20 @@
-#include "taskgetscpiint.h"
+#include "taskscpigetint.h"
 #include <taskdecoratortimeout.h>
 
-TaskTemplatePtr TaskGetScpiInt::create(AbstractServerInterfacePtr interface,
+TaskTemplatePtr TaskScpiGetInt::create(AbstractServerInterfacePtr interface,
                                        const QString &scpiCmd,
                                        std::shared_ptr<int> result,
                                        int timeout, std::function<void ()> additionalErrorHandler)
 {
     return TaskDecoratorTimeout::wrapTimeout(timeout,
-                                             std::make_unique<TaskGetScpiInt>(
+                                             std::make_unique<TaskScpiGetInt>(
                                                  interface,
                                                  scpiCmd,
                                                  result),
                                              additionalErrorHandler);
 }
 
-TaskGetScpiInt::TaskGetScpiInt(AbstractServerInterfacePtr interface,
+TaskScpiGetInt::TaskScpiGetInt(AbstractServerInterfacePtr interface,
                                const QString &scpiCmd,
                                std::shared_ptr<int> result) :
     TaskServerTransactionTemplate(interface),
@@ -23,12 +23,12 @@ TaskGetScpiInt::TaskGetScpiInt(AbstractServerInterfacePtr interface,
 {
 }
 
-quint32 TaskGetScpiInt::sendToServer()
+quint32 TaskScpiGetInt::sendToServer()
 {
     return m_interface->scpiCommand(m_scpiCmd);
 }
 
-bool TaskGetScpiInt::handleCheckedServerAnswer(QVariant answer)
+bool TaskScpiGetInt::handleCheckedServerAnswer(QVariant answer)
 {
     bool ok;
     *m_result = answer.toInt(&ok);
