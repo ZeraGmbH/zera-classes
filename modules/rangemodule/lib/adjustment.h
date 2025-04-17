@@ -4,7 +4,7 @@
 #include "rangemodule.h"
 #include "rangemoduleconfigdata.h"
 #include <moduleactivist.h>
-#include "abstractfactoryserviceinterfaces.h"
+#include <dspinterface.h>
 #include <networkconnectioninfo.h>
 #include <dspinterface.h>
 #include <pcbinterface.h>
@@ -49,7 +49,7 @@ private:
     QStringList m_ChannelNameList; // the list of channels (names) we work on
     QStringList m_subdcChannelNameList; // the list of channels we have to subtract dc
     adjustConfPar *m_adjustmentConfig;
-    DspInterfacePtr m_dspInterface;
+    Zera::DspInterfacePtr m_dspInterface;
     Zera::ProxyClientPtr m_dspClient;
     Zera::PcbInterfacePtr m_pcbInterface;
     Zera::ProxyClientPtr m_pcbClient;

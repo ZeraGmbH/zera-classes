@@ -3,7 +3,7 @@
 
 #include "referencemoduleconfigdata.h"
 #include "referencemeaschannel.h"
-#include "abstractfactoryserviceinterfaces.h"
+#include <dspinterface.h>
 #include <moduleactivist.h>
 #include <dspinterface.h>
 #include <pcbinterface.h>
@@ -38,7 +38,7 @@ signals:
 private:
     cReferenceModule* m_pModule; // the module we live in
     cReferenceModuleConfigData* m_pConfigData;
-    DspInterfacePtr m_dspInterface;
+    Zera::DspInterfacePtr m_dspInterface;
     Zera::ProxyClientPtr m_dspClient;
     Zera::PcbInterfacePtr m_pPCBInterface;
     Zera::ProxyClientPtr m_pPCBClient;

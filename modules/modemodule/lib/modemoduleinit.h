@@ -2,7 +2,7 @@
 #define MODEMODULEINIT_H
 
 #include "moduleactivist.h"
-#include "abstractfactoryserviceinterfaces.h"
+#include <dspinterface.h>
 #include <rminterface.h>
 #include <dspinterface.h>
 #include <pcbinterface.h>
@@ -54,7 +54,7 @@ private:
 
     Zera::PcbInterfacePtr m_pcbInterface;
     Zera::ProxyClientPtr m_pPCBClient;
-    DspInterfacePtr m_dspInterface; // our interface to dsp
+    Zera::DspInterfacePtr m_dspInterface; // our interface to dsp
     Zera::ProxyClientPtr m_dspClient;
 
     cDspMeasData* m_pCorrectionDSP;

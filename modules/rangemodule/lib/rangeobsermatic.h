@@ -4,7 +4,7 @@
 #include "rangemoduleconfigdata.h"
 #include "rangemeaschannel.h"
 #include <moduleactivist.h>
-#include "abstractfactoryserviceinterfaces.h"
+#include <dspinterface.h>
 #include <vfmoduleparameter.h>
 #include <networkconnectioninfo.h>
 #include <stringvalidator.h>
@@ -54,7 +54,7 @@ private:
     cRangeModule *m_pModule;
     QList<QStringList> m_GroupList;
     cObsermaticConfPar& m_ConfPar;
-    DspInterfacePtr m_dspInterface;
+    Zera::DspInterfacePtr m_dspInterface;
     Zera::ProxyClientPtr m_dspClient;
     QList<cRangeMeasChannel*> m_RangeMeasChannelList;
     QHash<QString,cStringValidator*> m_ChannelRangeValidatorHash;
