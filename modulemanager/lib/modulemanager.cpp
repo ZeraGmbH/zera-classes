@@ -250,9 +250,14 @@ void ModuleManager::startModule(const QString &uniqueName,
     }
 }
 
-void ModuleManager::destroyModules()
+void ZeraModules::ModuleManager::disconnectModulesFromVein()
 {
     m_setupFacade->clearModuleSystems();
+}
+
+void ModuleManager::destroyModules()
+{
+    disconnectModulesFromVein();
     m_serviceInterfaceFactory->resetInterfaces();
     if(!m_moduleList.isEmpty()) {
         m_moduleStartLock = true;

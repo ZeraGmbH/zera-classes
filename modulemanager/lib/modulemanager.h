@@ -83,6 +83,7 @@ private:
                        const QString &xmlConfigPath,
                        int moduleEntityId,
                        int moduleNum);
+    void disconnectModulesFromVein();
 
     std::shared_ptr<ModuleSharedData> m_moduleSharedObjects;
     ModuleManagerSetupFacade *m_setupFacade;
@@ -98,7 +99,6 @@ private:
     QList<QString> m_sessionsAvailable;
 
     QElapsedTimer m_timerAllModulesLoaded;
-
 };
 }
 
