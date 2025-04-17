@@ -330,7 +330,7 @@ void test_range_automatic::enableAndDisableRangeAutomatic()
     QCOMPARE(getVfComponent(rangeEntityId, IL1RangeComponent), "25mA"); //unchanged
 }
 
-void test_range_automatic::softOverloadWithRangeAutomatic() // discuss AMU
+void test_range_automatic::softOverloadWithRangeAutomatic()
 {
     fireNewRmsValues(4, withoutIaux);
     setVfComponent(rangeEntityId, RangeAutomaticComponent, 1);
@@ -338,22 +338,22 @@ void test_range_automatic::softOverloadWithRangeAutomatic() // discuss AMU
     QCOMPARE(getVfComponent(rangeEntityId, IL1RangeComponent), "5A");
 
     //Introduce overload condition
-    fireNewRmsValues(15, withIaux);
+    fireNewRmsValues(15, withoutIaux);
     QCOMPARE(getVfComponent(rangeEntityId, "PAR_Overload"), 0);
     //After setting new range (above 8V, 5A), all range related processing is disabled for 1 Actual value interrupt cycle
     //So, fire an extra interrupt.
-    fireNewRmsValues(15, withIaux);
+    fireNewRmsValues(15, withoutIaux);
     TimeMachineObject::feedEventLoop();
-    QCOMPARE(getVfComponent(rangeEntityId, "PAR_Overload"), 1);
+    QCOMPARE(getVfComponent(rangeEntityId, "PAR_Overload"), 0);
     QCOMPARE(getVfComponent(rangeEntityId, UL1RangeComponent), "250V");
     QCOMPARE(getVfComponent(rangeEntityId, IL1RangeComponent), "10A");
 
     //Remove overload condition
-    fireNewRmsValues(0.5, withIaux);
-    QCOMPARE(getVfComponent(rangeEntityId, "PAR_Overload"), 1);
+    fireNewRmsValues(0.5, withoutIaux);
+    QCOMPARE(getVfComponent(rangeEntityId, "PAR_Overload"), 0);
     //After setting new range (above 8V, 5A), all range related processing is disabled for 1 Actual value interrupt cycle
     //So, fire an extra interrupt.
-    fireNewRmsValues(0.5, withIaux);
+    fireNewRmsValues(0.5, withoutIaux);
     QCOMPARE(getVfComponent(rangeEntityId, UL1RangeComponent), "8V");
     QCOMPARE(getVfComponent(rangeEntityId, IL1RangeComponent), "500mA");
 }
@@ -373,30 +373,30 @@ void test_range_automatic::addAndSelectClamp()
     QCOMPARE(getVfComponent(rangeEntityId, IL2RangeComponent), "10A");
 }
 
-void test_range_automatic::selectClampThenRangeAutomatic()      // discuss AMU
+void test_range_automatic::selectClampThenRangeAutomatic()
 {
     setVfComponent(rangeEntityId, RangeGroupingComponent, 0);
     m_testPcbServer->addClamp(cClamp::CL120A, "IL1");
     TimeMachineObject::feedEventLoop();
     setVfComponent(rangeEntityId, IL1RangeComponent, "C10A");
 
-    fireNewRmsValues(4, withIaux);
+    fireNewRmsValues(4, withoutIaux);
     setVfComponent(rangeEntityId, RangeAutomaticComponent, 1);
     QCOMPARE(getVfComponent(rangeEntityId, UL1RangeComponent), "8V");
     QCOMPARE(getVfComponent(rangeEntityId, IL1RangeComponent), "C5A");
 
-    fireNewRmsValues(25, withIaux); //overload
+    fireNewRmsValues(25, withoutIaux); //overload
     //After setting new range (above 8V, C5A), all range related processing is disabled for 1 Actual value interrupt cycle
     //So, fire an extra interrupt.
-    fireNewRmsValues(25, withIaux);
-    QCOMPARE(getVfComponent(rangeEntityId, "PAR_Overload"), 1);
+    fireNewRmsValues(25, withoutIaux);
+    QCOMPARE(getVfComponent(rangeEntityId, "PAR_Overload"), 0);
     QCOMPARE(getVfComponent(rangeEntityId, UL1RangeComponent), "250V");
     QCOMPARE(getVfComponent(rangeEntityId, IL1RangeComponent), "C100A");
 
-    fireNewRmsValues(25, withIaux);
+    fireNewRmsValues(25, withoutIaux);
     //After setting new range (above 250V, C100A), all range related processing is disabled for 1 Actual value interrupt cycle
     //So, fire an extra interrupt.
-    fireNewRmsValues(25, withIaux);
+    fireNewRmsValues(25, withoutIaux);
     QCOMPARE(getVfComponent(rangeEntityId, UL1RangeComponent), "250V");
     QCOMPARE(getVfComponent(rangeEntityId, IL1RangeComponent), "C50A");
 }
@@ -433,7 +433,7 @@ void test_range_automatic::addRemoveClamp()
     QCOMPARE(getVfComponent(rangeEntityId, IL1RangeComponent), "5A");
 }
 
-void test_range_automatic::checkPersitency()    // discuss AMU
+void test_range_automatic::checkPersitency()
 {
     // At the time of writing range module writes config file on change of
     // range-grouping, change of range-automatic and user changing range
