@@ -188,10 +188,12 @@ bool cRangeMeasChannel::isRMSOverload(double ampl)
 }
 
 
-bool cRangeMeasChannel::isADCOverload(double ampl)
+bool cRangeMeasChannel::isADCOverload(double peak)
 {
     const cRangeInfoWithConstantValues &ri = m_RangeInfoHash[m_sActRange];
-    return (fabs(ri.adcrejection - ampl) < 8.0);
+    double ovrRejectionFactor = ri.ovrejection / ri.rejection;
+    double overloadlimit = ri.urvalue * ovrRejectionFactor * M_SQRT2;
+    return (overloadlimit < peak);
 }
 
 
