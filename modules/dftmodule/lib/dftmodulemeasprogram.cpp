@@ -62,14 +62,17 @@ cDftModuleMeasProgram::cDftModuleMeasProgram(cDftModule* module, std::shared_ptr
     connect(&m_loadDSPDoneState, &QState::entered, this, &cDftModuleMeasProgram::activateDSPdone);
 
     // setting up statemachine for unloading dsp and setting resources free
+    m_deactivateDSPState.addTransition(this, &cDftModuleMeasProgram::deactivationContinue, &m_freePGRMemState);
     m_freePGRMemState.addTransition(this, &cDftModuleMeasProgram::deactivationContinue, &m_freeUSERMemState);
     m_freeUSERMemState.addTransition(this, &cDftModuleMeasProgram::deactivationContinue, &m_unloadDSPDoneState);
+    m_deactivationMachine.addState(&m_deactivateDSPState);
     m_deactivationMachine.addState(&m_freePGRMemState);
     m_deactivationMachine.addState(&m_freeUSERMemState);
     m_deactivationMachine.addState(&m_unloadDSPDoneState);
 
-    m_deactivationMachine.setInitialState(&m_freePGRMemState);
+    m_deactivationMachine.setInitialState(&m_deactivateDSPState);
 
+    connect(&m_deactivateDSPState, &QState::entered, this, &cDftModuleMeasProgram::deactivateDSP);
     connect(&m_freePGRMemState, &QState::entered, this, &cDftModuleMeasProgram::freePGRMem);
     connect(&m_freeUSERMemState, &QState::entered, this, &cDftModuleMeasProgram::freeUSERMem);
     connect(&m_unloadDSPDoneState, &QState::entered, this, &cDftModuleMeasProgram::deactivateDSPdone);
@@ -579,9 +582,16 @@ void cDftModuleMeasProgram::activateDSPdone()
     emit activated();
 }
 
-void cDftModuleMeasProgram::freePGRMem()
+
+void cDftModuleMeasProgram::deactivateDSP()
 {
     m_bActive = false;
+    m_MsgNrCmdList[m_dspInterface->deactivateInterface()] = deactivatedsp; // wat wohl
+}
+
+
+void cDftModuleMeasProgram::freePGRMem()
+{
     Zera::Proxy::getInstance()->releaseConnection(m_dspClient.get()); // no async. messages anymore
     deleteDspVarList(); // so we can destroy our actual var list
     deleteDspCmdList(); // and command list
@@ -589,10 +599,12 @@ void cDftModuleMeasProgram::freePGRMem()
     m_MsgNrCmdList[m_rmInterface.freeResource("DSP1", "PGRMEMC")] = freepgrmem;
 }
 
+
 void cDftModuleMeasProgram::freeUSERMem()
 {
     m_MsgNrCmdList[m_rmInterface.freeResource("DSP1", "USERMEM")] = freeusermem;
 }
+
 
 void cDftModuleMeasProgram::deactivateDSPdone()
 {

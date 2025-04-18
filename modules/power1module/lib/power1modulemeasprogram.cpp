@@ -112,6 +112,7 @@ cPower1ModuleMeasProgram::cPower1ModuleMeasProgram(cPower1Module* module, std::s
     connect(&m_loadDSPDoneState, &QAbstractState::entered, this, &cPower1ModuleMeasProgram::activateDSPdone);
 
     // setting up statemachine for unloading dsp and setting resources free
+    m_deactivateDSPState.addTransition(this, &cModuleActivist::deactivationContinue, &m_freePGRMemState);
     m_freePGRMemState.addTransition(this, &cModuleActivist::deactivationContinue, &m_freeUSERMemState);
     m_freeUSERMemState.addTransition(this, &cModuleActivist::deactivationContinue, &m_freeFreqOutputsState);
 
@@ -125,6 +126,7 @@ cPower1ModuleMeasProgram::cPower1ModuleMeasProgram(cPower1Module* module, std::s
     m_resetNotifierDoneState.addTransition(this, &cModuleActivist::deactivationContinue, &m_unloadDSPDoneState);
     m_resetNotifierDoneState.addTransition(this, &cModuleActivist::deactivationLoop, &m_resetNotifierState);
 
+    m_deactivationMachine.addState(&m_deactivateDSPState);
     m_deactivationMachine.addState(&m_freePGRMemState);
     m_deactivationMachine.addState(&m_freeUSERMemState);
 
@@ -137,9 +139,9 @@ cPower1ModuleMeasProgram::cPower1ModuleMeasProgram(cPower1Module* module, std::s
     m_deactivationMachine.addState(&m_resetNotifierDoneState);
 
     m_deactivationMachine.addState(&m_unloadDSPDoneState);
+    m_deactivationMachine.setInitialState(&m_deactivateDSPState);
 
-    m_deactivationMachine.setInitialState(&m_freePGRMemState);
-
+    connect(&m_deactivateDSPState, &QAbstractState::entered, this, &cPower1ModuleMeasProgram::deactivateDSP);
     connect(&m_freePGRMemState, &QAbstractState::entered, this, &cPower1ModuleMeasProgram::freePGRMem);
     connect(&m_freeUSERMemState, &QAbstractState::entered, this, &cPower1ModuleMeasProgram::freeUSERMem);
 
@@ -946,9 +948,16 @@ void cPower1ModuleMeasProgram::activateDSPdone()
     emit activated();
 }
 
-void cPower1ModuleMeasProgram::freePGRMem()
+
+void cPower1ModuleMeasProgram::deactivateDSP()
 {
     m_bActive = false;
+    m_MsgNrCmdList[m_dspInterface->deactivateInterface()] = deactivatedsp; // wat wohl
+}
+
+
+void cPower1ModuleMeasProgram::freePGRMem()
+{
     Zera::Proxy::getInstance()->releaseConnection(m_dspClient.get());
     deleteDspVarList();
     deleteDspCmdList();

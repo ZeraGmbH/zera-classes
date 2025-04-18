@@ -57,14 +57,17 @@ cOsciModuleMeasProgram::cOsciModuleMeasProgram(cOsciModule* module, std::shared_
     connect(&m_loadDSPDoneState, &QState::entered, this, &cOsciModuleMeasProgram::activateDSPdone);
 
     // setting up statemachine for unloading dsp and setting resources free
+    m_deactivateDSPState.addTransition(this, &cOsciModuleMeasProgram::deactivationContinue, &m_freePGRMemState);
     m_freePGRMemState.addTransition(this, &cOsciModuleMeasProgram::deactivationContinue, &m_freeUSERMemState);
     m_freeUSERMemState.addTransition(this, &cOsciModuleMeasProgram::deactivationContinue, &m_unloadDSPDoneState);
+    m_deactivationMachine.addState(&m_deactivateDSPState);
     m_deactivationMachine.addState(&m_freePGRMemState);
     m_deactivationMachine.addState(&m_freeUSERMemState);
     m_deactivationMachine.addState(&m_unloadDSPDoneState);
 
-    m_deactivationMachine.setInitialState(&m_freePGRMemState);
+    m_deactivationMachine.setInitialState(&m_deactivateDSPState);
 
+    connect(&m_deactivateDSPState, &QState::entered, this, &cOsciModuleMeasProgram::deactivateDSP);
     connect(&m_freePGRMemState, &QState::entered, this, &cOsciModuleMeasProgram::freePGRMem);
     connect(&m_freeUSERMemState, &QState::entered, this, &cOsciModuleMeasProgram::freeUSERMem);
     connect(&m_unloadDSPDoneState, &QState::entered, this, &cOsciModuleMeasProgram::deactivateDSPdone);
@@ -464,9 +467,14 @@ void cOsciModuleMeasProgram::activateDSPdone()
     emit activated();
 }
 
-void cOsciModuleMeasProgram::freePGRMem()
+void cOsciModuleMeasProgram::deactivateDSP()
 {
     m_bActive = false;
+    m_MsgNrCmdList[m_dspInterface->deactivateInterface()] = deactivatedsp; // wat wohl
+}
+
+void cOsciModuleMeasProgram::freePGRMem()
+{
     Zera::Proxy::getInstance()->releaseConnection(m_dspClient.get());
     deleteDspVarList();
     deleteDspCmdList();
