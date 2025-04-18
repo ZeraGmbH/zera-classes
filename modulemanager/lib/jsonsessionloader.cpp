@@ -20,7 +20,7 @@ const QString &JsonSessionLoader::getSessionFilePath() const
 void JsonSessionLoader::loadSession(QString filePath)
 {
     QJsonParseError jsonError;
-    qInfo() << "Loading session:" << filePath;
+    qInfo() << "Loading session file:" << filePath;
     QJsonObject rootObj = cJsonFileLoader::loadJsonFile(filePath, &jsonError);
     if(!rootObj.isEmpty()) {
         if(jsonError.error == QJsonParseError::NoError) {
