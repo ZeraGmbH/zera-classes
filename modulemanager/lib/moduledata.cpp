@@ -11,16 +11,4 @@ ModuleData::ModuleData(VirtualModule *module, const QString &name, const QString
 {
 }
 
-ModuleData *ModuleData::findModuleByPointer(QList<ModuleData*> moduleDataList, VirtualModule *module)
-{
-    ModuleData *retVal = nullptr;
-    for(ModuleData *tmpData : moduleDataList) {
-        if(tmpData->m_module == module) {
-            retVal = tmpData;
-            break;
-        }
-    }
-    return retVal;
-}
-
 }
