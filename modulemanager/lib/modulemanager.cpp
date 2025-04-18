@@ -31,9 +31,9 @@ ModuleManager::ModuleManager(ModuleManagerSetupFacade *setupFacade,
                              bool moduleDemoMode, QObject *parent) :
     QObject(parent),
     m_moduleStartLock(false),
+    m_tcpNetworkFactory(tcpNetworkFactory),
     m_setupFacade(setupFacade),
     m_serviceInterfaceFactory(serviceInterfaceFactory),
-    m_tcpNetworkFactory(tcpNetworkFactory),
     m_moduleDemoMode(moduleDemoMode)
 {
     m_timerAllModulesLoaded.start();
