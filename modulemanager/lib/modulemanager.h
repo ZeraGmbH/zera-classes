@@ -71,6 +71,7 @@ private:
     virtual void saveModuleConfig(ModuleData *moduleData);
     virtual void saveDefaultSession();
     virtual QStringList getModuleFileNames();
+    ModuleNetworkParamsPtr getNetworkParams();
     void handleFinalModuleLoaded();
     void createCommonModuleParam();
     VirtualModule *createModule(const QString &xmlConfigPath,

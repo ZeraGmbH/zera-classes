@@ -129,15 +129,9 @@ void ModuleManager::createCommonModuleParam()
 {
     if(!m_moduleSharedObjects) {
         ModulemanagerConfig *mmConfig = ModulemanagerConfig::getInstance();
-        ModuleNetworkParamsPtr networkParams = std::make_shared<ModuleNetworkParams>(
-            m_tcpNetworkFactory,
-            mmConfig->getPcbConnectionInfo(),
-            mmConfig->getDspConnectionInfo(),
-            mmConfig->getSecConnectionInfo(),
-            mmConfig->getResmanConnectionInfo());
         ChannelRangeObserver::SystemObserverPtr channelRangeObserver =
             std::make_shared<ChannelRangeObserver::SystemObserver>(mmConfig->getPcbConnectionInfo(), m_tcpNetworkFactory);
-        m_moduleSharedObjects = std::make_shared<ModuleSharedData>(networkParams,
+        m_moduleSharedObjects = std::make_shared<ModuleSharedData>(getNetworkParams(),
                                                                    m_serviceInterfaceFactory,
                                                                    m_setupFacade->getStorageSystem(),
                                                                    channelRangeObserver,
@@ -253,6 +247,19 @@ void ModuleManager::startModule(const QString &uniqueName,
 void ZeraModules::ModuleManager::disconnectModulesFromVein()
 {
     m_setupFacade->clearModuleSystems();
+}
+
+ModuleNetworkParamsPtr ZeraModules::ModuleManager::getNetworkParams()
+{
+    ModulemanagerConfig *mmConfig = ModulemanagerConfig::getInstance();
+    ModuleNetworkParamsPtr networkParams = std::make_shared<ModuleNetworkParams>(
+        m_tcpNetworkFactory,
+        mmConfig->getPcbConnectionInfo(),
+        mmConfig->getDspConnectionInfo(),
+        mmConfig->getSecConnectionInfo(),
+        mmConfig->getResmanConnectionInfo());
+
+    return networkParams;
 }
 
 void ModuleManager::destroyModules()
