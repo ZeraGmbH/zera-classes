@@ -49,6 +49,14 @@ void TaskAllModulesDestroy::onFinish(bool ok)
 TaskContainerInterfacePtr TaskAllModulesDestroy::createTasks()
 {
     TaskContainerInterfacePtr tasks = TaskContainerSequence::create();
+    const Zera::ProxyClientPtr client = Zera::Proxy::getInstance()->getConnectionSmart(m_networkParams->m_dspServiceConnectionInfo,
+                                                                                       m_networkParams->m_tcpNetworkFactory);
+    tasks->addSub(TaskServerConnectionStart::create(client, CONNECTION_TIMEOUT));
+
+    Zera::DspInterfacePtr dspInterface = std::make_shared<Zera::cDSPInterface>();
+    dspInterface->setClientSmart(client);
+    tasks->addSub(TaskRemoveCmdListsForAllClients::create(dspInterface, TRANSACTION_TIMEOUT,
+                                                          []{ qCritical("Remove all DSP command lists failed!"); }));
     tasks->addSub(createModuleDeactivationTasks());
     return tasks;
 }
