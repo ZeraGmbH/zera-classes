@@ -114,7 +114,6 @@ cPower2ModuleMeasProgram::cPower2ModuleMeasProgram(cPower2Module* module, std::s
     connect(&m_loadDSPDoneState, &QAbstractState::entered, this, &cPower2ModuleMeasProgram::activateDSPdone);
 
     // setting up statemachine for unloading dsp and setting resources free
-    m_deactivateDSPState.addTransition(this, &cPower2ModuleMeasProgram::deactivationContinue, &m_freePGRMemState);
     m_freePGRMemState.addTransition(this, &cPower2ModuleMeasProgram::deactivationContinue, &m_freeUSERMemState);
     m_freeUSERMemState.addTransition(this, &cPower2ModuleMeasProgram::deactivationContinue, &m_freeFreqOutputsState);
 
@@ -128,7 +127,6 @@ cPower2ModuleMeasProgram::cPower2ModuleMeasProgram(cPower2Module* module, std::s
     m_resetNotifierDoneState.addTransition(this, &cPower2ModuleMeasProgram::deactivationContinue, &m_unloadDSPDoneState);
     m_resetNotifierDoneState.addTransition(this, &cPower2ModuleMeasProgram::deactivationLoop, &m_resetNotifierState);
 
-    m_deactivationMachine.addState(&m_deactivateDSPState);
     m_deactivationMachine.addState(&m_freePGRMemState);
     m_deactivationMachine.addState(&m_freeUSERMemState);
 
@@ -142,9 +140,8 @@ cPower2ModuleMeasProgram::cPower2ModuleMeasProgram(cPower2Module* module, std::s
 
     m_deactivationMachine.addState(&m_unloadDSPDoneState);
 
-    m_deactivationMachine.setInitialState(&m_deactivateDSPState);
+    m_deactivationMachine.setInitialState(&m_freePGRMemState);
 
-    connect(&m_deactivateDSPState, &QAbstractState::entered, this, &cPower2ModuleMeasProgram::deactivateDSP);
     connect(&m_freePGRMemState, &QAbstractState::entered, this, &cPower2ModuleMeasProgram::freePGRMem);
     connect(&m_freeUSERMemState, &QAbstractState::entered, this, &cPower2ModuleMeasProgram::freeUSERMem);
 
@@ -1029,16 +1026,9 @@ void cPower2ModuleMeasProgram::activateDSPdone()
     emit activated();
 }
 
-
-void cPower2ModuleMeasProgram::deactivateDSP()
-{
-    m_bActive = false;
-    m_MsgNrCmdList[m_dspInterface->deactivateInterface()] = deactivatedsp; // wat wohl
-}
-
-
 void cPower2ModuleMeasProgram::freePGRMem()
 {
+    m_bActive = false;
     Zera::Proxy::getInstance()->releaseConnection(m_dspClient.get());
     deleteDspVarList();
     deleteDspCmdList();
