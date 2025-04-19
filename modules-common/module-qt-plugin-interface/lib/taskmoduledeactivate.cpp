@@ -19,7 +19,9 @@ void TaskModuleDeactivate::start()
     qInfo("Start deactivate %s / %i...", qPrintable(m_module->getVeinModuleName()), m_module->getEntityId());
     connect(m_module, &ZeraModules::VirtualModule::moduleDeactivated, this, [this]() {
         qInfo("%s / %i deactivated.", qPrintable(m_module->getVeinModuleName()), m_module->getEntityId());
-        finishTask(true);
+
+        // see TaskAllModulesDestroy::createModuleDestroyTasks for rant on design flaw
+        finishTaskQueued(true);
     });
     m_moduleFactory->destroyModule(m_module);
 }
