@@ -165,7 +165,6 @@ private:
     QFinalState m_loadDSPDoneState;
 
     // statemachine for deactivating
-    QState m_deactivateDSPState;
     QState m_freePGRMemState;
     QState m_freeUSERMemState;
 
@@ -222,7 +221,6 @@ private slots:
     void activateDSP();
     void activateDSPdone();
 
-    void deactivateDSP();
     void freePGRMem();
     void freeUSERMem();
     void freeFreqOutputs();

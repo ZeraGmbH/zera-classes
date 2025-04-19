@@ -50,17 +50,14 @@ cSampleModuleMeasProgram::cSampleModuleMeasProgram(cSampleModule* module, std::s
     connect(&m_loadDSPDoneState, &QState::entered, this, &cSampleModuleMeasProgram::activateDSPdone);
 
     // setting up statemachine for unloading dsp and setting resources free
-    m_deactivateDSPState.addTransition(this, &cSampleModuleMeasProgram::deactivationContinue, &m_freePGRMemState);
     m_freePGRMemState.addTransition(this, &cSampleModuleMeasProgram::deactivationContinue, &m_freeUSERMemState);
     m_freeUSERMemState.addTransition(this, &cSampleModuleMeasProgram::deactivationContinue, &m_unloadDSPDoneState);
-    m_deactivationMachine.addState(&m_deactivateDSPState);
     m_deactivationMachine.addState(&m_freePGRMemState);
     m_deactivationMachine.addState(&m_freeUSERMemState);
     m_deactivationMachine.addState(&m_unloadDSPDoneState);
 
-    m_deactivationMachine.setInitialState(&m_deactivateDSPState);
+    m_deactivationMachine.setInitialState(&m_freePGRMemState);
 
-    connect(&m_deactivateDSPState, &QState::entered, this, &cSampleModuleMeasProgram::deactivateDSP);
     connect(&m_freePGRMemState, &QState::entered, this, &cSampleModuleMeasProgram::freePGRMem);
     connect(&m_freeUSERMemState, &QState::entered, this, &cSampleModuleMeasProgram::freeUSERMem);
     connect(&m_unloadDSPDoneState, &QState::entered, this, &cSampleModuleMeasProgram::deactivateDSPdone);
@@ -320,16 +317,9 @@ void cSampleModuleMeasProgram::activateDSPdone()
     emit activated();
 }
 
-void cSampleModuleMeasProgram::deactivateDSP()
-{
-    m_bActive = false;
-    m_MsgNrCmdList[m_dspInterface->deactivateInterface()] = deactivatedsp; // wat wohl
-}
-
 void cSampleModuleMeasProgram::freePGRMem()
 {
-    // we always destroy the whole interface even in case of new configuration while running
-    // so the list are gone anyway
+    m_bActive = false;
     m_MsgNrCmdList[m_rmInterface.freeResource("DSP1", "PGRMEMC")] = freepgrmem;
 }
 
