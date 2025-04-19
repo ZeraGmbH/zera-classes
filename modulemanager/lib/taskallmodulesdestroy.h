@@ -25,7 +25,7 @@ private slots:
     void onFinish(bool ok);
 private:
     TaskContainerInterfacePtr createTasks();
-    TaskContainerInterfacePtr createModuleDeactivationTasks();
+    TaskContainerInterfacePtr createModuleDestroyTasks();
 
     const QList<ModuleData*> m_modules;
     const QHash<QString, AbstractModuleFactory*> m_factoryTable;
