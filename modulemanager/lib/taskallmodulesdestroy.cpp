@@ -57,11 +57,11 @@ TaskContainerInterfacePtr TaskAllModulesDestroy::createTasks()
     dspInterface->setClientSmart(client);
     tasks->addSub(TaskRemoveCmdListsForAllClients::create(dspInterface, TRANSACTION_TIMEOUT,
                                                           []{ qCritical("Remove all DSP command lists failed!"); }));
-    tasks->addSub(createModuleDeactivationTasks());
+    tasks->addSub(createModuleDestroyTasks());
     return tasks;
 }
 
-TaskContainerInterfacePtr TaskAllModulesDestroy::createModuleDeactivationTasks()
+TaskContainerInterfacePtr TaskAllModulesDestroy::createModuleDestroyTasks()
 {
     TaskContainerInterfacePtr tasks = TaskContainerParallel::create();
     for (ModuleData* moduleData : m_modules) { // TaskContainerParallel reverses order which is intended here
