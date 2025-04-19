@@ -54,10 +54,10 @@ public slots:
     void setModulesPaused(bool t_paused);
 
 private slots:
-    void onAllModulesDestroyed();
-
+    void onStartModuleDelete();
     void delayedModuleStartNext();
     void onModuleStartNext();
+    void onDestroyModule(QObject *object);
     void onModuleEventSystemAdded(VeinEvent::EventSystem *t_eventSystem);
 
 protected:
@@ -93,7 +93,6 @@ private:
     QHash<QString, AbstractModuleFactory*> m_factoryTable;
     QQueue<ModuleData *> m_deferredStartList;
     TaskTemplatePtr m_currModulePrepareTask;
-    TaskTemplatePtr m_allModulesDestroyTask;
 
     bool m_moduleDemoMode; // To be obsoleted: Eiter run full production or inject a test/demo service factory
 
