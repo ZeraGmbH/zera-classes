@@ -64,14 +64,17 @@ cThdnModuleMeasProgram::cThdnModuleMeasProgram(cThdnModule *module, std::shared_
     connect(&m_loadDSPDoneState, &QAbstractState::entered, this, &cThdnModuleMeasProgram::activateDSPdone);
 
     // setting up statemachine for unloading dsp and setting resources free
+    m_deactivateDSPState.addTransition(this, &cThdnModuleMeasProgram::deactivationContinue, &m_freePGRMemState);
     m_freePGRMemState.addTransition(this, &cThdnModuleMeasProgram::deactivationContinue, &m_freeUSERMemState);
     m_freeUSERMemState.addTransition(this, &cThdnModuleMeasProgram::deactivationContinue, &m_unloadDSPDoneState);
+    m_deactivationMachine.addState(&m_deactivateDSPState);
     m_deactivationMachine.addState(&m_freePGRMemState);
     m_deactivationMachine.addState(&m_freeUSERMemState);
     m_deactivationMachine.addState(&m_unloadDSPDoneState);
 
-    m_deactivationMachine.setInitialState(&m_freePGRMemState);
+    m_deactivationMachine.setInitialState(&m_deactivateDSPState);
 
+    connect(&m_deactivateDSPState, &QAbstractState::entered, this, &cThdnModuleMeasProgram::deactivateDSP);
     connect(&m_freePGRMemState, &QAbstractState::entered, this, &cThdnModuleMeasProgram::freePGRMem);
     connect(&m_freeUSERMemState, &QAbstractState::entered, this, &cThdnModuleMeasProgram::freeUSERMem);
     connect(&m_unloadDSPDoneState, &QAbstractState::entered, this, &cThdnModuleMeasProgram::deactivateDSPdone);
@@ -429,9 +432,14 @@ void cThdnModuleMeasProgram::activateDSPdone()
     emit activated();
 }
 
-void cThdnModuleMeasProgram::freePGRMem()
+void cThdnModuleMeasProgram::deactivateDSP()
 {
     m_bActive = false;
+    m_MsgNrCmdList[m_dspInterface->deactivateInterface()] = deactivatedsp; // wat wohl
+}
+
+void cThdnModuleMeasProgram::freePGRMem()
+{
     Zera::Proxy::getInstance()->releaseConnection(m_dspClient.get()); // no async. messages anymore
     deleteDspVarList(); // so we can destroy our actual var list
     deleteDspCmdList(); // and command list

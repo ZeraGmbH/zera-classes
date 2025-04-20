@@ -55,18 +55,21 @@ cRangeModuleMeasProgram::cRangeModuleMeasProgram(cRangeModule* module, std::shar
     connect(&m_loadDSPDoneState, &QState::entered, this, &cRangeModuleMeasProgram::activateDSPdone);
 
     // setting up statemachine for unloading dsp and setting resources free
+    m_deactivateDSPState.addTransition(this, &cRangeModuleMeasProgram::deactivationContinue, &m_freePGRMemState);
     m_freePGRMemState.addTransition(this, &cRangeModuleMeasProgram::deactivationContinue, &m_freeUSERMemState);
     m_freeUSERMemState.addTransition(this, &cRangeModuleMeasProgram::deactivationContinue, &m_unloadDSPDoneState);
+    m_deactivationMachine.addState(&m_deactivateDSPState);
     m_deactivationMachine.addState(&m_freePGRMemState);
     m_deactivationMachine.addState(&m_freeUSERMemState);
     m_deactivationMachine.addState(&m_unloadDSPDoneState);
 
+    connect(&m_deactivateDSPState, &QState::entered, this, &cRangeModuleMeasProgram::deactivateDSP);
     connect(&m_freePGRMemState, &QState::entered, this, &cRangeModuleMeasProgram::freePGRMem);
     connect(&m_freeUSERMemState, &QState::entered, this, &cRangeModuleMeasProgram::freeUSERMem);
     connect(&m_unloadDSPDoneState, &QState::entered, this, &cRangeModuleMeasProgram::deactivateDSPdone);
 
     m_activationMachine.setInitialState(&m_resourceManagerConnectState);
-    m_deactivationMachine.setInitialState(&m_freePGRMemState);
+    m_deactivationMachine.setInitialState(&m_deactivateDSPState);
 
     // setting up statemachine for data acquisition
     m_dataAcquisitionState.addTransition(this, &cRangeModuleMeasProgram::dataAquisitionContinue, &m_dataAcquisitionDoneState);
@@ -443,6 +446,7 @@ void cRangeModuleMeasProgram::activateDSP()
     m_MsgNrCmdList[m_dspInterface->activateInterface()] = activatedsp; // aktiviert die var- und cmd-listen im dsp
 }
 
+
 void cRangeModuleMeasProgram::activateDSPdone()
 {
     m_bActive = true;
@@ -453,9 +457,16 @@ void cRangeModuleMeasProgram::activateDSPdone()
     emit activated();
 }
 
-void cRangeModuleMeasProgram::freePGRMem()
+
+void cRangeModuleMeasProgram::deactivateDSP()
 {
     m_bActive = false;
+    m_MsgNrCmdList[m_dspInterface->deactivateInterface()] = deactivatedsp; // wat wohl
+}
+
+
+void cRangeModuleMeasProgram::freePGRMem()
+{
     Zera::Proxy::getInstance()->releaseConnection(m_dspClient.get());
     deleteDspVarList();
     deleteDspCmdList();
@@ -463,10 +474,12 @@ void cRangeModuleMeasProgram::freePGRMem()
     m_MsgNrCmdList[m_rmInterface.freeResource("DSP1", "PGRMEMC")] = freepgrmem;
 }
 
+
 void cRangeModuleMeasProgram::freeUSERMem()
 {
     m_MsgNrCmdList[m_rmInterface.freeResource("DSP1", "USERMEM")] = freeusermem;
 }
+
 
 void cRangeModuleMeasProgram::deactivateDSPdone()
 {
