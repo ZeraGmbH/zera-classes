@@ -16,7 +16,6 @@ public:
     void startAllTestServices(QString deviceName, bool initialAdjPermission);
     void destroyModulesAndWaitUntilAllShutdown();
     void waitUntilModulesAreReady();
-    QList<ZeraModules::ModuleData *> getModuleList();
     ZeraModules::VirtualModule *getModule(QString uniqueName, int entityId);
     const QByteArray getLastStoredConfig();
     VeinTcp::AbstractTcpNetworkFactoryPtr getTcpNetworkFactory();

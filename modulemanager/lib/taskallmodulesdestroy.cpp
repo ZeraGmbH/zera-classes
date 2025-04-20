@@ -7,22 +7,26 @@
 #include <dspinterface.h>
 #include <taskcontainersequence.h>
 #include <taskcontainerparallel.h>
+#include <tasklambdarunner.h>
 #include <proxy.h>
 
 namespace ZeraModules
 {
 
-TaskTemplatePtr TaskAllModulesDestroy::create(const QList<ModuleData *> &modules,
+TaskTemplatePtr TaskAllModulesDestroy::create(std::unique_ptr<QList<ModuleData *>> modules,
                                               const QHash<QString, AbstractModuleFactory*> &factoryTable,
                                               const ModuleNetworkParamsPtr &networkParams)
 {
-    return std::make_unique<TaskAllModulesDestroy>(modules, factoryTable, networkParams);
+    if (modules != nullptr)
+        return std::make_unique<TaskAllModulesDestroy>(std::move(modules), factoryTable, networkParams);
+    else
+        return std::make_unique<TaskLambdaRunner>([](){ return true;}, true);
 }
 
-TaskAllModulesDestroy::TaskAllModulesDestroy(const QList<ModuleData *> &modules,
+TaskAllModulesDestroy::TaskAllModulesDestroy(std::unique_ptr<QList<ModuleData *>> modules,
                                              const QHash<QString, AbstractModuleFactory *> &factoryTable,
                                              const ModuleNetworkParamsPtr &networkParams) :
-    m_modules(modules),
+    m_modules(std::move(modules)),
     m_factoryTable(factoryTable),
     m_networkParams(networkParams)
 {
@@ -37,8 +41,16 @@ void TaskAllModulesDestroy::start()
     m_tasks->start();
 }
 
+void ZeraModules::TaskAllModulesDestroy::cleanupModuleData()
+{
+    for(ModuleData *moduleData : *m_modules)
+        delete moduleData;
+    m_modules->clear();
+}
+
 void TaskAllModulesDestroy::onFinish(bool ok)
 {
+    cleanupModuleData();
     if(ok)
         qInfo("All modules destroyed within within %llims", m_timerDuration.elapsed());
     else
@@ -64,8 +76,8 @@ TaskContainerInterfacePtr TaskAllModulesDestroy::createTasks()
 TaskContainerInterfacePtr TaskAllModulesDestroy::createModuleDestroyTasks()
 {
     TaskContainerInterfacePtr tasks = TaskContainerParallel::create();
-    for (int entry=m_modules.count()-1; entry>=0; entry--) { // reversed order is intended here
-        const ModuleData* moduleData = m_modules[entry];
+    for (int entry=m_modules->count()-1; entry>=0; entry--) { // reversed order is intended here
+        const ModuleData* moduleData = m_modules->at(entry);
         TaskContainerInterfacePtr tasksModule = TaskContainerSequence::create();
         AbstractModuleFactory* factory = m_factoryTable[moduleData->m_uniqueName];
         tasksModule->addSub(TaskModuleDeactivate::create(moduleData->m_module, factory));

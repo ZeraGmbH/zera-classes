@@ -55,11 +55,13 @@ ModuleManager::ModuleManager(ModuleManagerSetupFacade *setupFacade,
 
 ModuleManager::~ModuleManager()
 {
-    for(ModuleData *module : qAsConst(m_moduleList)) {
-        m_factoryTable.value(module->m_uniqueName)->destroyModule(module->m_module);
-        delete module;
+    if(m_moduleList != nullptr) {
+        for(ModuleData *module : qAsConst(*m_moduleList)) {
+            m_factoryTable.value(module->m_uniqueName)->destroyModule(module->m_module);
+            delete module;
+        }
+        m_moduleList->clear();
     }
-    m_moduleList.clear();
 }
 
 QStringList ModuleManager::getModuleFileNames()
@@ -186,7 +188,9 @@ void ZeraModules::ModuleManager::doStartModule(VirtualModule *tmpModule,
     connect(tmpModule, &VirtualModule::parameterChanged, this, [this, moduleData](){
         saveModuleConfig(moduleData);
     });
-    m_moduleList.append(moduleData);
+    if (m_moduleList == nullptr)
+        m_moduleList = std::make_unique<QList<ModuleData *>>();
+    m_moduleList->append(moduleData);
     tmpModule->startModule();
 }
 
@@ -265,10 +269,10 @@ void ModuleManager::destroyModules()
 {
     disconnectModulesFromVein();
     m_serviceInterfaceFactory->resetInterfaces();
-    if(!m_moduleList.isEmpty()) {
+    if(m_moduleList != nullptr && !m_moduleList->isEmpty()) {
         m_moduleStartLock = true;
         ModuleNetworkParamsPtr networkParams = getNetworkParams();
-        m_allModulesDestroyTask = TaskAllModulesDestroy::create(m_moduleList, m_factoryTable, networkParams);
+        m_allModulesDestroyTask = TaskAllModulesDestroy::create(std::move(m_moduleList), m_factoryTable, networkParams);
         connect(m_allModulesDestroyTask.get(), &TaskTemplate::sigFinish,
                 this, &ModuleManager::onAllModulesDestroyed);
         m_allModulesDestroyTask->start();
@@ -306,19 +310,18 @@ void ModuleManager::changeSessionFile(const QString &newSessionFile)
 
 void ModuleManager::setModulesPaused(bool t_paused)
 {
-    for(ModuleData *module : qAsConst(m_moduleList)) {
-        if(t_paused)
-            module->m_module->stopModule();
-        else
-            module->m_module->startModule();
+    if(m_moduleList != nullptr) {
+        for(ModuleData *module : qAsConst(*m_moduleList)) {
+            if(t_paused)
+                module->m_module->stopModule();
+            else
+                module->m_module->startModule();
+        }
     }
 }
 
 void ModuleManager::onAllModulesDestroyed()
 {
-    for(ModuleData *moduleData : qAsConst(m_moduleList))
-        delete moduleData;
-    m_moduleList.clear();
     m_timerAllModulesLoaded.start();
     onModuleStartNext();
 }

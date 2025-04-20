@@ -62,7 +62,7 @@ private slots:
 
 protected:
     static QString m_sessionPath;
-    QList<ModuleData *> m_moduleList;
+    std::unique_ptr<QList<ModuleData *>> m_moduleList;
     bool m_moduleStartLock;
     std::unique_ptr<AbstractMockAllServices> m_mockAllServices;
     VeinTcp::AbstractTcpNetworkFactoryPtr m_tcpNetworkFactory;

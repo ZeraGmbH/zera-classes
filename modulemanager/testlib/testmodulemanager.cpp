@@ -71,16 +71,13 @@ void TestModuleManager::waitUntilModulesAreReady()
     while(!modulesReady());
 }
 
-QList<ZeraModules::ModuleData *> TestModuleManager::getModuleList()
-{
-    return m_moduleList;
-}
-
 ZeraModules::VirtualModule *TestModuleManager::getModule(QString uniqueName, int entityId)
 {
-    for(const auto &moduleInfo : qAsConst(m_moduleList)) {
-        if(moduleInfo->m_uniqueName == uniqueName && moduleInfo->m_moduleId == entityId)
-            return moduleInfo->m_module;
+    if(m_moduleList != nullptr) {
+        for(const auto &moduleInfo : qAsConst(*m_moduleList)) {
+            if(moduleInfo->m_uniqueName == uniqueName && moduleInfo->m_moduleId == entityId)
+                return moduleInfo->m_module;
+        }
     }
     return nullptr;
 }
