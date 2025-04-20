@@ -64,7 +64,8 @@ TaskContainerInterfacePtr TaskAllModulesDestroy::createTasks()
 TaskContainerInterfacePtr TaskAllModulesDestroy::createModuleDestroyTasks()
 {
     TaskContainerInterfacePtr tasks = TaskContainerParallel::create();
-    for (ModuleData* moduleData : m_modules) { // TaskContainerParallel reverses order which is intended here
+    for (int entry=m_modules.count()-1; entry>=0; entry--) { // reversed order is intended here
+        const ModuleData* moduleData = m_modules[entry];
         TaskContainerInterfacePtr tasksModule = TaskContainerSequence::create();
         AbstractModuleFactory* factory = m_factoryTable[moduleData->m_uniqueName];
         tasksModule->addSub(TaskModuleDeactivate::create(moduleData->m_module, factory));
