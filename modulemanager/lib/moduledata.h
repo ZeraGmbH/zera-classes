@@ -10,7 +10,6 @@ class ModuleData
 {
 public:
     ModuleData(VirtualModule *module, const QString &name, const QString &confPath, int moduleEntityId, int moduleNum);
-    static ModuleData *findModuleByPointer(QList<ModuleData*> moduleDataList, VirtualModule *module);
 
     VirtualModule *m_module;
     const QString m_uniqueName;
