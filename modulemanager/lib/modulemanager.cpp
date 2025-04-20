@@ -30,6 +30,7 @@ ModuleManager::ModuleManager(ModuleManagerSetupFacade *setupFacade,
                              VeinTcp::AbstractTcpNetworkFactoryPtr tcpNetworkFactory,
                              bool moduleDemoMode, QObject *parent) :
     QObject(parent),
+    m_moduleDataList(createModuleDataList()),
     m_moduleStartLock(false),
     m_tcpNetworkFactory(tcpNetworkFactory),
     m_setupFacade(setupFacade),
@@ -55,13 +56,11 @@ ModuleManager::ModuleManager(ModuleManagerSetupFacade *setupFacade,
 
 ModuleManager::~ModuleManager()
 {
-    if(m_moduleList != nullptr) {
-        for(ModuleData *module : qAsConst(*m_moduleList)) {
-            m_factoryTable.value(module->m_uniqueName)->destroyModule(module->m_module);
-            delete module;
-        }
-        m_moduleList->clear();
+    for(ModuleData *module : qAsConst(*m_moduleDataList)) {
+        m_factoryTable.value(module->m_uniqueName)->destroyModule(module->m_module);
+        delete module;
     }
+    m_moduleDataList->clear();
 }
 
 QStringList ModuleManager::getModuleFileNames()
@@ -72,6 +71,11 @@ QStringList ModuleManager::getModuleFileNames()
     for(auto &name : moduleDir.entryList(QDir::Files))
         fullNames.append(moduleDir.absoluteFilePath(name));
     return fullNames;
+}
+
+std::unique_ptr<QList<ModuleData *> > ModuleManager::createModuleDataList()
+{
+    return std::make_unique<QList<ModuleData *>>();
 }
 
 void ZeraModules::ModuleManager::handleFinalModuleLoaded()
@@ -188,9 +192,7 @@ void ZeraModules::ModuleManager::doStartModule(VirtualModule *tmpModule,
     connect(tmpModule, &VirtualModule::parameterChanged, this, [this, moduleData](){
         saveModuleConfig(moduleData);
     });
-    if (m_moduleList == nullptr)
-        m_moduleList = std::make_unique<QList<ModuleData *>>();
-    m_moduleList->append(moduleData);
+    m_moduleDataList->append(moduleData);
     tmpModule->startModule();
 }
 
@@ -269,10 +271,11 @@ void ModuleManager::destroyModules()
 {
     disconnectModulesFromVein();
     m_serviceInterfaceFactory->resetInterfaces();
-    if(m_moduleList != nullptr && !m_moduleList->isEmpty()) {
+    if(!m_moduleDataList->isEmpty()) {
         m_moduleStartLock = true;
         ModuleNetworkParamsPtr networkParams = getNetworkParams();
-        m_allModulesDestroyTask = TaskAllModulesDestroy::create(std::move(m_moduleList), m_factoryTable, networkParams);
+        m_allModulesDestroyTask = TaskAllModulesDestroy::create(std::move(m_moduleDataList), m_factoryTable, networkParams);
+        m_moduleDataList = createModuleDataList();
         connect(m_allModulesDestroyTask.get(), &TaskTemplate::sigFinish,
                 this, &ModuleManager::onAllModulesDestroyed);
         m_allModulesDestroyTask->start();
@@ -310,13 +313,11 @@ void ModuleManager::changeSessionFile(const QString &newSessionFile)
 
 void ModuleManager::setModulesPaused(bool t_paused)
 {
-    if(m_moduleList != nullptr) {
-        for(ModuleData *module : qAsConst(*m_moduleList)) {
-            if(t_paused)
-                module->m_module->stopModule();
-            else
-                module->m_module->startModule();
-        }
+    for(ModuleData *module : qAsConst(*m_moduleDataList)) {
+        if(t_paused)
+            module->m_module->stopModule();
+        else
+            module->m_module->startModule();
     }
 }
 

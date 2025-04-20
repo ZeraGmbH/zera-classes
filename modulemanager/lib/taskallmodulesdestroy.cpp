@@ -7,26 +7,22 @@
 #include <dspinterface.h>
 #include <taskcontainersequence.h>
 #include <taskcontainerparallel.h>
-#include <tasklambdarunner.h>
 #include <proxy.h>
 
 namespace ZeraModules
 {
 
-TaskTemplatePtr TaskAllModulesDestroy::create(std::unique_ptr<QList<ModuleData *>> modules,
+TaskTemplatePtr TaskAllModulesDestroy::create(std::unique_ptr<QList<ModuleData *>> moduledataList,
                                               const QHash<QString, AbstractModuleFactory*> &factoryTable,
                                               const ModuleNetworkParamsPtr &networkParams)
 {
-    if (modules != nullptr)
-        return std::make_unique<TaskAllModulesDestroy>(std::move(modules), factoryTable, networkParams);
-    else
-        return std::make_unique<TaskLambdaRunner>([](){ return true;}, true);
+    return std::make_unique<TaskAllModulesDestroy>(std::move(moduledataList), factoryTable, networkParams);
 }
 
-TaskAllModulesDestroy::TaskAllModulesDestroy(std::unique_ptr<QList<ModuleData *>> modules,
+TaskAllModulesDestroy::TaskAllModulesDestroy(std::unique_ptr<QList<ModuleData *>> moduledataList,
                                              const QHash<QString, AbstractModuleFactory *> &factoryTable,
                                              const ModuleNetworkParamsPtr &networkParams) :
-    m_modules(std::move(modules)),
+    m_moduledataList(std::move(moduledataList)),
     m_factoryTable(factoryTable),
     m_networkParams(networkParams)
 {
@@ -43,9 +39,9 @@ void TaskAllModulesDestroy::start()
 
 void ZeraModules::TaskAllModulesDestroy::cleanupModuleData()
 {
-    for(ModuleData *moduleData : *m_modules)
+    for(ModuleData *moduleData : *m_moduledataList)
         delete moduleData;
-    m_modules->clear();
+    m_moduledataList->clear();
 }
 
 void TaskAllModulesDestroy::onFinish(bool ok)
@@ -76,8 +72,8 @@ TaskContainerInterfacePtr TaskAllModulesDestroy::createTasks()
 TaskContainerInterfacePtr TaskAllModulesDestroy::createModuleDestroyTasks()
 {
     TaskContainerInterfacePtr tasks = TaskContainerParallel::create();
-    for (int entry=m_modules->count()-1; entry>=0; entry--) { // reversed order is intended here
-        const ModuleData* moduleData = m_modules->at(entry);
+    for (int entry=m_moduledataList->count()-1; entry>=0; entry--) { // reversed order is intended here
+        const ModuleData* moduleData = m_moduledataList->at(entry);
         TaskContainerInterfacePtr tasksModule = TaskContainerSequence::create();
         AbstractModuleFactory* factory = m_factoryTable[moduleData->m_uniqueName];
         tasksModule->addSub(TaskModuleDeactivate::create(moduleData->m_module, factory));

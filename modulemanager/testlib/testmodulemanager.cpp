@@ -73,11 +73,9 @@ void TestModuleManager::waitUntilModulesAreReady()
 
 ZeraModules::VirtualModule *TestModuleManager::getModule(QString uniqueName, int entityId)
 {
-    if(m_moduleList != nullptr) {
-        for(const auto &moduleInfo : qAsConst(*m_moduleList)) {
-            if(moduleInfo->m_uniqueName == uniqueName && moduleInfo->m_moduleId == entityId)
-                return moduleInfo->m_module;
-        }
+    for(const auto &moduleInfo : qAsConst(*m_moduleDataList)) {
+        if(moduleInfo->m_uniqueName == uniqueName && moduleInfo->m_moduleId == entityId)
+            return moduleInfo->m_module;
     }
     return nullptr;
 }

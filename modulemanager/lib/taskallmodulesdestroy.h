@@ -13,10 +13,10 @@ class TaskAllModulesDestroy : public TaskTemplate
 {
     Q_OBJECT
 public:
-    static TaskTemplatePtr create(std::unique_ptr<QList<ModuleData *>> modules,
+    static TaskTemplatePtr create(std::unique_ptr<QList<ModuleData *>> moduledataList,
                                   const QHash<QString, AbstractModuleFactory*> &factoryTable,
                                   const ModuleNetworkParamsPtr &networkParams);
-    TaskAllModulesDestroy(std::unique_ptr<QList<ModuleData *>> modules,
+    TaskAllModulesDestroy(std::unique_ptr<QList<ModuleData *>> moduledataList,
                           const QHash<QString, AbstractModuleFactory*> &factoryTable,
                           const ModuleNetworkParamsPtr &networkParams);
     void start() override;
@@ -28,7 +28,7 @@ private:
     TaskContainerInterfacePtr createModuleDestroyTasks();
     void cleanupModuleData();
 
-    std::unique_ptr<QList<ModuleData *>> m_modules;
+    std::unique_ptr<QList<ModuleData *>> m_moduledataList;
     const QHash<QString, AbstractModuleFactory*> m_factoryTable;
     const ModuleNetworkParamsPtr m_networkParams;
     TaskContainerInterfacePtr m_tasks;
