@@ -1,6 +1,6 @@
 #include "modulemanager.h"
 #include "modulemanagerconfig.h"
-#include "moduledata.h"
+#include "taskallmodulesdestroy.h"
 #include "licensesystem.h"
 #include "demoallservicescom5003.h"
 #include "demoallservicesmt310s2.h"
@@ -37,8 +37,6 @@ ModuleManager::ModuleManager(ModuleManagerSetupFacade *setupFacade,
     m_serviceInterfaceFactory(serviceInterfaceFactory),
     m_moduleDemoMode(moduleDemoMode)
 {
-    m_timerAllModulesLoaded.start();
-
     ModulemanagerConfig *mmConfig = ModulemanagerConfig::getInstance();
     QStringList sessionList = mmConfig->getAvailableSessions();
 
@@ -91,6 +89,8 @@ void ZeraModules::ModuleManager::handleFinalModuleLoaded()
 bool ModuleManager::loadAllAvailableModulePlugins()
 {
     bool retVal = false;
+    QElapsedTimer duration;
+    duration.start();
     for(auto& fileName : getModuleFileNames()) {
         QPluginLoader loader(fileName);
         AbstractModuleFactory *module = qobject_cast<AbstractModuleFactory *>(loader.instance());
@@ -102,7 +102,7 @@ bool ModuleManager::loadAllAvailableModulePlugins()
         else
             qWarning() << "Error string:\n" << loader.errorString();
     }
-    qInfo("Modules analyse took %llims", m_timerAllModulesLoaded.elapsed());
+    qInfo("Modules analyse took %llims", duration.elapsed());
     return retVal;
 }
 
@@ -170,7 +170,6 @@ VirtualModule *ZeraModules::ModuleManager::createModule(const QString &xmlConfig
     VirtualModule *tmpModule = tmpFactory->createModule(moduleParam);
     if(tmpModule) {
         connect(tmpModule, &VirtualModule::addEventSystem, this, &ModuleManager::onModuleEventSystemAdded);
-        connect(tmpModule, &VirtualModule::moduleDeactivated, this, &ModuleManager::onStartModuleDelete);
         connect(tmpModule, &VirtualModule::moduleActivated, this, [this](){
             m_moduleStartLock = false;
             delayedModuleStartNext();
@@ -274,18 +273,12 @@ void ModuleManager::destroyModules()
     m_serviceInterfaceFactory->resetInterfaces();
     if(!m_moduleDataList->isEmpty()) {
         m_moduleStartLock = true;
-        QElapsedTimer destroyTimer;
-        destroyTimer.start();
-        for(int i = m_moduleDataList->length()-1; i>=0; i--) { // seems we don't want to destroy _SYSTEM...
-            VirtualModule *toDestroy = m_moduleDataList->at(i)->m_module;
-            QString tmpModuleName = m_moduleDataList->at(i)->m_uniqueName;
-            if(m_factoryTable.contains(tmpModuleName)) {
-                qInfo() << "Destroying module:" << tmpModuleName;
-                m_factoryTable.value(tmpModuleName)->destroyModule(toDestroy);
-            }
-        }
-        qInfo("All modules destroyed within %llims", destroyTimer.elapsed());
-        m_timerAllModulesLoaded.start();
+        ModuleNetworkParamsPtr networkParams = getNetworkParams();
+        m_allModulesDestroyTask = TaskAllModulesDestroy::create(std::move(m_moduleDataList), m_factoryTable, networkParams);
+        m_moduleDataList = createModuleDataList();
+        connect(m_allModulesDestroyTask.get(), &TaskTemplate::sigFinish,
+                this, &ModuleManager::onAllModulesDestroyed);
+        m_allModulesDestroyTask->start();
     }
 }
 
@@ -296,6 +289,7 @@ bool ModuleManager::loadSession(const QString sessionFileNameFull)
         if(m_moduleStartLock == false) { // do not mess up the state machines
             sessionSwitched = true;
             destroyModules();
+            m_timerAllModulesLoaded.start();
             emit sigSessionSwitched(sessionFileNameFull);
         }
         else
@@ -327,34 +321,10 @@ void ModuleManager::setModulesPaused(bool t_paused)
     }
 }
 
-void ModuleManager::onStartModuleDelete()
+void ModuleManager::onAllModulesDestroyed()
 {
-    VirtualModule *toDelete = qobject_cast<VirtualModule*>(QObject::sender());
-    if(toDelete) {
-        ModuleData *tmpData = ModuleData::findModuleByPointer(*m_moduleDataList, toDelete);
-        if(tmpData) {
-            qInfo() << "Start delete module:" << tmpData->m_uniqueName;
-            connect(toDelete, &VirtualModule::destroyed, this, &ModuleManager::onDestroyModule);
-            toDelete->deleteLater();
-        }
-        else
-            qWarning() << "Could not find data for VirtualModule" << toDelete;
-    }
-}
-
-void ModuleManager::onDestroyModule(QObject *object)
-{
-    VirtualModule *toDelete = static_cast<VirtualModule*>(object);
-    if(toDelete) {
-        ModuleData *tmpData = ModuleData::findModuleByPointer(*m_moduleDataList, toDelete);
-        if(tmpData) {
-            qInfo() << "Deleted module:" << tmpData->m_uniqueName;
-            m_moduleDataList->removeAll(tmpData);
-            delete tmpData;
-        }
-    }
-    if(m_moduleDataList->isEmpty())
-        onModuleStartNext();
+    m_timerAllModulesLoaded.start();
+    onModuleStartNext();
 }
 
 void ModuleManager::delayedModuleStartNext()
