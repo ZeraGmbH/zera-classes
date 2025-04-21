@@ -431,6 +431,7 @@ void cThdnModuleMeasProgram::activateDSPdone()
 
 void cThdnModuleMeasProgram::freePGRMem()
 {
+    m_dataAcquisitionMachine.stop();
     m_bActive = false;
     Zera::Proxy::getInstance()->releaseConnection(m_dspClient.get()); // no async. messages anymore
     deleteDspVarList(); // so we can destroy our actual var list
@@ -454,7 +455,8 @@ void cThdnModuleMeasProgram::deactivateDSPdone()
 void cThdnModuleMeasProgram::dataAcquisitionDSP()
 {
     m_pMeasureSignal->setValue(QVariant(0));
-    m_MsgNrCmdList[m_dspInterface->dataAcquisition(m_pActualValuesDSP)] = dataaquistion; // we start our data aquisition now
+    if(m_bActive)
+        m_MsgNrCmdList[m_dspInterface->dataAcquisition(m_pActualValuesDSP)] = dataaquistion; // we start our data aquisition now
 }
 
 void cThdnModuleMeasProgram::dataReadDSP()

@@ -319,6 +319,7 @@ void cSampleModuleMeasProgram::activateDSPdone()
 
 void cSampleModuleMeasProgram::freePGRMem()
 {
+    m_dataAcquisitionMachine.stop();
     m_bActive = false;
     m_MsgNrCmdList[m_rmInterface.freeResource("DSP1", "PGRMEMC")] = freepgrmem;
 }
@@ -337,7 +338,8 @@ void cSampleModuleMeasProgram::deactivateDSPdone()
 
 void cSampleModuleMeasProgram::dataAcquisitionDSP()
 {
-    m_MsgNrCmdList[m_dspInterface->dataAcquisition(m_pActualValuesDSP)] = dataaquistion; // we start our data aquisition now
+    if (m_bActive)
+        m_MsgNrCmdList[m_dspInterface->dataAcquisition(m_pActualValuesDSP)] = dataaquistion; // we start our data aquisition now
 }
 
 void cSampleModuleMeasProgram::dataReadDSP()

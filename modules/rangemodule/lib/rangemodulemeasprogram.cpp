@@ -455,6 +455,7 @@ void cRangeModuleMeasProgram::activateDSPdone()
 
 void cRangeModuleMeasProgram::freePGRMem()
 {
+    m_dataAcquisitionMachine.stop();
     m_bActive = false;
     Zera::Proxy::getInstance()->releaseConnection(m_dspClient.get());
     deleteDspVarList();
@@ -479,7 +480,8 @@ void cRangeModuleMeasProgram::deactivateDSPdone()
 void cRangeModuleMeasProgram::dataAcquisitionDSP()
 {
     m_pMeasureSignal->setValue(QVariant(0));
-    m_MsgNrCmdList[m_dspInterface->dataAcquisition(m_pActualValuesDSP)] = dataaquistion; // we start our data aquisition now
+    if (m_bActive)
+        m_MsgNrCmdList[m_dspInterface->dataAcquisition(m_pActualValuesDSP)] = dataaquistion; // we start our data aquisition now
 }
 
 

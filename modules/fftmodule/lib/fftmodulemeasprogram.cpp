@@ -506,6 +506,7 @@ void cFftModuleMeasProgram::activateDSPdone()
 
 void cFftModuleMeasProgram::freePGRMem()
 {
+    m_dataAcquisitionMachine.stop();
     m_bActive = false;
     Zera::Proxy::getInstance()->releaseConnection(m_dspClient.get());
     deleteDspVarList();
@@ -530,7 +531,8 @@ void cFftModuleMeasProgram::deactivateDSPdone()
 void cFftModuleMeasProgram::dataAcquisitionDSP()
 {
     m_pMeasureSignal->setValue(QVariant(0));
-    m_MsgNrCmdList[m_dspInterface->dataAcquisition(m_pActualValuesDSP)] = dataaquistion; // we start our data aquisition now
+    if(m_bActive)
+        m_MsgNrCmdList[m_dspInterface->dataAcquisition(m_pActualValuesDSP)] = dataaquistion; // we start our data aquisition now
 }
 
 void cFftModuleMeasProgram::dataReadDSP()

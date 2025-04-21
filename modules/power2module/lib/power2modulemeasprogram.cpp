@@ -1028,6 +1028,7 @@ void cPower2ModuleMeasProgram::activateDSPdone()
 
 void cPower2ModuleMeasProgram::freePGRMem()
 {
+    m_dataAcquisitionMachine.stop();
     m_bActive = false;
     Zera::Proxy::getInstance()->releaseConnection(m_dspClient.get());
     deleteDspVarList();
@@ -1118,14 +1119,14 @@ void cPower2ModuleMeasProgram::deactivateDSPdone()
 void cPower2ModuleMeasProgram::dataAcquisitionDSP()
 {
     m_pMeasureSignal->setValue(QVariant(0));
-    m_MsgNrCmdList[m_dspInterface->dataAcquisition(m_pActualValuesDSP)] = dataaquistion; // we start our data aquisition now
+    if(m_bActive)
+        m_MsgNrCmdList[m_dspInterface->dataAcquisition(m_pActualValuesDSP)] = dataaquistion; // we start our data aquisition now
 }
 
 
 void cPower2ModuleMeasProgram::dataReadDSP()
 {
-    if (m_bActive)
-    {
+    if (m_bActive) {
         m_ModuleActualValues = m_pActualValuesDSP->getData();
         emit actualValues(&m_ModuleActualValues); // and send them
         m_pMeasureSignal->setValue(QVariant(1)); // signal measuring
