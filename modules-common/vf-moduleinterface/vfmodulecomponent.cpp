@@ -6,6 +6,8 @@
 #include <ve_eventsystem.h>
 #include "vfmodulecomponent.h"
 
+int VfModuleComponent::m_instanceCount = 0;
+
 VfModuleComponent::VfModuleComponent(int entityId, VeinEvent::EventSystem *eventsystem, QString name, QString description, QVariant initval) :
     m_pEventSystem(eventsystem),
     m_sName(name),
@@ -13,11 +15,13 @@ VfModuleComponent::VfModuleComponent(int entityId, VeinEvent::EventSystem *event
     m_vValue(initval),
     m_nEntityId(entityId)
 {
+    m_instanceCount++;
     sendNotification(VeinComponent::ComponentData::Command::CCMD_ADD);
 }
 
 VfModuleComponent::~VfModuleComponent()
 {
+    m_instanceCount--;
     // Entities are removed as a whole -> no component remove
 }
 
@@ -38,6 +42,11 @@ void VfModuleComponent::exportSCPIInfo(QJsonArray &jsArr)
 {
     if (m_scpiInfo)
         m_scpiInfo->appendSCPIInfo(jsArr);
+}
+
+int VfModuleComponent::getInstanceCount()
+{
+    return m_instanceCount;
 }
 
 void VfModuleComponent::setScpiInfo(const QString &model,

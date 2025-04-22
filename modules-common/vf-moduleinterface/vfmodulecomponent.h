@@ -25,6 +25,7 @@ public:
                      const QString &veinComponentName,
                      SCPI::eSCPIEntryType entryType = SCPI::isComponent);
     void exportSCPIInfo(QJsonArray &jsArr);
+    static int getInstanceCount();
 signals:
     void sigValueChanged(QVariant); // we connect here if we want to do something on changed values
 public slots:
@@ -45,6 +46,8 @@ private:
     int m_nEntityId;
     VeinEvent::EventSystem *m_pEventSystem;
     std::unique_ptr<ScpiVeinComponentInfo> m_scpiInfo;
+
+    static int m_instanceCount;
 };
 
 #endif // VEINMODULECOMPONENT_H
