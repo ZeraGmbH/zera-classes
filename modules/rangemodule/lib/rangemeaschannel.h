@@ -68,7 +68,7 @@ public:
     double getOVRRejection(const QString &range) const; // over (usually 125%) rejection
     bool isPossibleRange(const QString &range); // returns true if range is available
     bool isRMSOverload(double ampl); // test if ampl is overload condition
-    bool isADCOverload(double ampl); // test if ampl is adc overload condition
+    bool isPeakOverload(double ampl); // test if ampl is adc overload condition
 
     QString getOptRange(double rms, const QString &rngAlias); // returns opt. range alias
     QString getMaxRange() const; // returns alias of the range with max ur value

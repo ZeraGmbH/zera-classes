@@ -188,7 +188,7 @@ bool cRangeMeasChannel::isRMSOverload(double ampl)
 }
 
 
-bool cRangeMeasChannel::isADCOverload(double peak)
+bool cRangeMeasChannel::isPeakOverload(double peak)
 {
     const cRangeInfoWithConstantValues &ri = m_RangeInfoHash[m_sActRange];
     if ((m_sActRange == "--") || (ri.urvalue < 0.000001))
