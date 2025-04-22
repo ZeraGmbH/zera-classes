@@ -217,14 +217,14 @@ void cRangeObsermatic::generateVeinInterface()
 }
 
 
-void cRangeObsermatic::handleOverload(const int channelIdx, bool rmsOverload, bool hardOverLoad, bool adcOverLoad)
+void cRangeObsermatic::handleOverload(const int channelIdx, bool rmsOverload, bool hardOverLoad, bool peakOverLoad)
 {
     cRangeMeasChannel *rangeMeasChannel = m_RangeMeasChannelList.at(channelIdx);
-    qInfo("Overload channel %i / Range %s: RMS %i / ADC %i / Hard %i",
+    qInfo("Overload channel %i / Range %s: RMS %i / PEAK %i / Hard %i",
           channelIdx,
           qPrintable(m_actChannelRangeList.at(channelIdx)),
           rmsOverload,
-          adcOverLoad,
+          peakOverLoad,
           hardOverLoad);
     // we mark each overload condition if possible (range automatic) we unmark it
     // but there was an edge on this entity
@@ -253,11 +253,11 @@ void cRangeObsermatic::rangeObservation()
         // and for overload condition of adc test, we take the peakvalues including dc
         const RangeChannelData *channelData = rangeMeasChannel->getChannelData();
         bool rmsOverload = rangeMeasChannel->isRMSOverload(channelData->getRmsValue()*prescalingFac); // rms
-        bool adcOverLoad = rangeMeasChannel->isADCOverload(channelData->getPeakValueWithDc()*prescalingFac); //peak
+        bool peakOverLoad = rangeMeasChannel->isPeakOverload(channelData->getPeakValue()*prescalingFac); //peak
         bool hardOverLoad = m_hardOvlList.at(i);
-        if ( rmsOverload || adcOverLoad || hardOverLoad) { // if any overload ?
+        if ( rmsOverload || peakOverLoad || hardOverLoad) { // if any overload ?
             markOverload = true;
-            handleOverload(i, rmsOverload, hardOverLoad, adcOverLoad);
+            handleOverload(i, rmsOverload, hardOverLoad, peakOverLoad);
         }
         else {
             m_RangeOVLComponentList.at(i)->setValue(QVariant(0));
