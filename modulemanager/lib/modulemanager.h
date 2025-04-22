@@ -42,6 +42,7 @@ public:
 signals:
     void sigSessionSwitched(const QString &newSessionFile);
     void sigModulesLoaded(const QString &t_sessionPath, const QStringList &t_sessionsAvailable);
+    void sigModulesUnloaded();
 
 public slots:
     bool loadSession(const QString sessionFileNameFull);

@@ -323,6 +323,7 @@ void ModuleManager::setModulesPaused(bool t_paused)
 
 void ModuleManager::onAllModulesDestroyed()
 {
+    emit sigModulesUnloaded();
     m_timerAllModulesLoaded.start();
     onModuleStartNext();
 }
