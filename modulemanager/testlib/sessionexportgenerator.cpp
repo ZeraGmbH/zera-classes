@@ -71,6 +71,11 @@ QByteArray SessionExportGenerator::getVeinDump()
     return VeinStorage::DumpJson::dumpToByteArray(m_modmanSetupFacade->getStorageSystem()->getDb(), QList<int>(), QList<int>() << 9999);
 }
 
+QList<TestModuleManager::TModuleInstances> SessionExportGenerator::getInstanceCountsOnModulesDestroyed()
+{
+    return m_modman->getInstanceCountsOnModulesDestroyed();
+}
+
 void SessionExportGenerator::createXml(QString completeFileName, QString contents)
 {
     QFile xmlFile(completeFileName);

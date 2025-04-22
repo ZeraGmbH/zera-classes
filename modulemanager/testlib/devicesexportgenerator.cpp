@@ -21,10 +21,16 @@ void DevicesExportGenerator::exportAll(const LxdmSessionChangeParam &lxdmParam)
             sessionExportGenerator.generateDevIfaceXml(m_xmlDirPath);
             m_veinDumps[session] = sessionExportGenerator.getVeinDump();
         }
+        m_instanceCounts.append(sessionExportGenerator.getInstanceCountsOnModulesDestroyed());
     }
 }
 
 VeinDumps DevicesExportGenerator::getVeinDumps()
 {
     return m_veinDumps;
+}
+
+QList<TestModuleManager::TModuleInstances> DevicesExportGenerator::getInstanceCountsOnModulesDestroyed()
+{
+    return m_instanceCounts;
 }

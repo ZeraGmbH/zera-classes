@@ -16,6 +16,7 @@ public:
     void changeSession(QString session);
     void generateDevIfaceXml(QString xmlDir);
     QByteArray getVeinDump();
+    QList<TestModuleManager::TModuleInstances> getInstanceCountsOnModulesDestroyed();
 private:
     void createModman(QString device);
     void destroyModules();
