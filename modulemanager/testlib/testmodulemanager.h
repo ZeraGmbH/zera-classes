@@ -19,6 +19,15 @@ public:
     ZeraModules::VirtualModule *getModule(QString uniqueName, int entityId);
     const QByteArray getLastStoredConfig();
     VeinTcp::AbstractTcpNetworkFactoryPtr getTcpNetworkFactory();
+    struct TModuleInstances {
+        int m_componentCount = 0;
+        int m_validatorCount = 0;
+        int m_commandFilterCount = 0;
+    };
+    QList<TModuleInstances> getInstanceCountsOnModulesDestroyed();
+
+private slots:
+    void onAllModulesDestroyed();
 
 private:
     static bool prepareOe();
@@ -30,6 +39,7 @@ private:
     void saveDefaultSession() override {};
 
     std::shared_ptr<QByteArray> m_configDataLastSaved;
+    QList<TModuleInstances> m_instantCountsOnModulesDestroyed;
 };
 
 #endif // TESTMODULEMANAGER_H

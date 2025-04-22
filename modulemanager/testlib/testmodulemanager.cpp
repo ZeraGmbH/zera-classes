@@ -3,6 +3,8 @@
 #include "testallservicesmt310s2.h"
 #include "modulemanagerconfigtest.h"
 #include "jsonsessionloadertest.h"
+#include <vfmodulecomponent.h>
+#include <vfeventsytemmoduleparam.h>
 #include <testfactoryi2cctrl.h>
 #include <timemachineobject.h>
 #include <timerfactoryqtfortest.h>
@@ -42,6 +44,8 @@ TestModuleManager::TestModuleManager(ModuleManagerSetupFacade *setupFacade,
     m_configDataLastSaved(configDataLastSaved)
 {
     enableTests();
+    connect(this, &ModuleManager::sigModulesUnloaded, this,
+            &TestModuleManager::onAllModulesDestroyed);
 }
 
 void TestModuleManager::startAllTestServices(QString deviceName, bool initialAdjPermission)
@@ -88,6 +92,20 @@ const QByteArray TestModuleManager::getLastStoredConfig()
 VeinTcp::AbstractTcpNetworkFactoryPtr TestModuleManager::getTcpNetworkFactory()
 {
     return m_tcpNetworkFactory;
+}
+
+void TestModuleManager::onAllModulesDestroyed()
+{
+    m_instantCountsOnModulesDestroyed.append( {
+        VfModuleComponent::getInstanceCount(),
+        VfEventSytemModuleParam::getInstanceCount(), // validators
+        VfEventSystemCommandFilter::getInstanceCount()
+    } );
+}
+
+QList<TestModuleManager::TModuleInstances> TestModuleManager::getInstanceCountsOnModulesDestroyed()
+{
+    return m_instantCountsOnModulesDestroyed;
 }
 
 bool TestModuleManager::modulesReady()
