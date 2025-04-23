@@ -34,27 +34,27 @@ void SourceModuleProgram::generateVeinInterface()
 
     // common components
     QString key;
-    m_pVeinMaxCountAct = new VfModuleComponent(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
+    m_pVeinMaxCountAct = new VfModuleComponent(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
                                                     QString("ACT_MaxSources"),
                                                     QString("Max source devices"),
                                                     QVariant(maxSources) );
     m_pModule->veinModuleActvalueList.append(m_pVeinMaxCountAct); // auto delete / meta-data / scpi
 
-    m_pVeinCountAct = new VfModuleComponent(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
+    m_pVeinCountAct = new VfModuleComponent(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
                                                     QString("ACT_CountSources"),
                                                     QString("Active source count"),
                                                     QVariant(0) );
     m_pModule->veinModuleActvalueList.append(m_pVeinCountAct); // auto delete / meta-data / scpi
 
     // RPCs
-    m_sharedPtrRpcScanInterface = VfCpp::cVeinModuleRpc::Ptr(new VfCpp::cVeinModuleRpc(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
+    m_sharedPtrRpcScanInterface = VfCpp::cVeinModuleRpc::Ptr(new VfCpp::cVeinModuleRpc(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
                                              this, "RPC_ScanInterface",
                                              VfCpp::cVeinModuleRpc::Param({{"p_type", "int"},{"p_deviceInfo", "QString"}}),
                                              false, // !!! threaded on: signals do not reach theit slots
                                              false));
     m_pModule->getRpcEventSystem()->addRpc(m_sharedPtrRpcScanInterface);
 
-    m_sharedPtrRpcRemoveInterface = VfCpp::cVeinModuleRpc::Ptr(new VfCpp::cVeinModuleRpc(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
+    m_sharedPtrRpcRemoveInterface = VfCpp::cVeinModuleRpc::Ptr(new VfCpp::cVeinModuleRpc(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
                                              this, "RPC_CloseSource",
                                              VfCpp::cVeinModuleRpc::Param({{"p_deviceInfo", "QString"}}),
                                              false, // !!! threaded on: signals do not reach theit slots
@@ -68,14 +68,14 @@ void SourceModuleProgram::generateVeinInterface()
     for(int souceCount=0; souceCount<maxSources; souceCount++) {
         SourceVeinInterface* sourceVeinInterface = new SourceVeinInterface;
         // device info (Don' movit down - our clients need it first!!)
-        pVeinAct = new VfModuleComponent(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
+        pVeinAct = new VfModuleComponent(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
                                             QString("ACT_DeviceInfo%1").arg(souceCount),
                                             QString("Source info/capabiliities in JSON"),
                                             QJsonObject());
         sourceVeinInterface->setVeinDeviceInfoComponent(pVeinAct);
         m_pModule->veinModuleActvalueList.append(pVeinAct); // auto delete / meta-data / scpi
 
-        pVeinAct = new VfModuleComponent(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
+        pVeinAct = new VfModuleComponent(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
                                             QString("ACT_DeviceState%1").arg(souceCount),
                                             QString("Source status in JSON"),
                                             QJsonObject());
@@ -83,7 +83,7 @@ void SourceModuleProgram::generateVeinInterface()
         m_pModule->veinModuleActvalueList.append(pVeinAct); // auto delete / meta-data / scpi
 
         // device param
-        pVeinParam = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
+        pVeinParam = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
                                                             key = QString("PAR_SourceState%1").arg(souceCount),
                                                             QString("All source parameters in JSON"),
                                                             QJsonObject());
@@ -95,7 +95,7 @@ void SourceModuleProgram::generateVeinInterface()
 
         m_arrVeinIoInterfaces.append(sourceVeinInterface);
     }
-    m_pVeinDemoSourceCount = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
+    m_pVeinDemoSourceCount = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
                                                    key = QString("PAR_DemoSources"),
                                                    QString("Number of demo sources"),
                                                    QVariant(int(0)));

@@ -204,13 +204,13 @@ void cPower2ModuleMeasProgram::generateVeinInterface()
     QString key;
     VfModuleComponent *pActvalue;
     for (int i = 0; i < MeasPhaseCount+SumValueCount; i++) {
-        pActvalue = new VfModuleComponent(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
+        pActvalue = new VfModuleComponent(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
                                             QString("ACT_PP%1").arg(i+1),
                                             QString("Actual value positive power"));
         m_veinActValueList.append(pActvalue); // we add the component for our measurement
         m_pModule->veinModuleActvalueList.append(pActvalue); // and for the modules interface
 
-        pActvalue = new VfModuleComponent(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
+        pActvalue = new VfModuleComponent(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
                                             QString("ACT_PM%1").arg(i+1),
                                             QString("Actual value negative power"));
         m_veinActValueList.append(pActvalue); // we add the component for our measurement
@@ -221,7 +221,7 @@ void cPower2ModuleMeasProgram::generateVeinInterface()
             strDescription = QString("Actual power value phase %1").arg(i+1);
         else
             strDescription = QString("Actual power value sum all phases");
-        pActvalue = new VfModuleComponent(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
+        pActvalue = new VfModuleComponent(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
                                             QString("ACT_P%1").arg(i+1),
                                             strDescription);
         m_veinActValueList.append(pActvalue); // we add the component for our measurement
@@ -237,7 +237,7 @@ void cPower2ModuleMeasProgram::generateVeinInterface()
     m_pModule->veinModuleMetaDataList.append(m_pFoutCount);
 
     // our parameters we deal with
-    m_pMeasuringmodeParameter = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
+    m_pMeasuringmodeParameter = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
                                                          key = QString("PAR_MeasuringMode"),
                                                          QString("Measuring mode"),
                                                          QVariant(getConfData()->m_sMeasuringMode.m_sValue));
@@ -261,7 +261,7 @@ void cPower2ModuleMeasProgram::generateVeinInterface()
         unit = QString("period");
     }
 
-    m_pIntegrationParameter = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
+    m_pIntegrationParameter = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
                                                        key = QString("PAR_Interval"),
                                                        s,
                                                        val);
@@ -276,7 +276,7 @@ void cPower2ModuleMeasProgram::generateVeinInterface()
     }
     m_pModule->m_veinModuleParameterMap[key] = m_pIntegrationParameter; // for modules use
 
-    m_pMeasureSignal = new VfModuleComponent(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
+    m_pMeasureSignal = new VfModuleComponent(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
                                                 QString("SIG_Measuring"),
                                                 QString("Signal indicating measurement activity"),
                                                 QVariant(0));

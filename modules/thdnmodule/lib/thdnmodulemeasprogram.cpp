@@ -114,7 +114,7 @@ void cThdnModuleMeasProgram::generateVeinInterface()
 {
     int n = m_pModule->getSharedChannelRangeObserver()->getChannelMNames().count();
     for (int i = 0; i < n; i++) {
-        VfModuleComponent *pActvalue = new VfModuleComponent(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
+        VfModuleComponent *pActvalue = new VfModuleComponent(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
                                             QString("ACT_THD%1%2").arg(getConfData()->m_sTHDType).arg(i+1),
                                             QString("THD%1 actual value").arg(getConfData()->m_sTHDType.toLower()));
         m_veinActValueList.append(pActvalue); // we add the component for our measurement
@@ -125,7 +125,7 @@ void cThdnModuleMeasProgram::generateVeinInterface()
     m_pModule->veinModuleMetaDataList.append(m_pThdnCountInfo);
 
     QString key;
-    m_pIntegrationTimeParameter = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
+    m_pIntegrationTimeParameter = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
                                                            key = QString("PAR_Interval"),
                                                            QString("Integration time"),
                                                            QVariant(getConfData()->m_fMeasInterval.m_fValue));
@@ -134,7 +134,7 @@ void cThdnModuleMeasProgram::generateVeinInterface()
     m_pIntegrationTimeParameter->setValidator(new cDoubleValidator(1.0, 100.0, 0.5));
     m_pModule->m_veinModuleParameterMap[key] = m_pIntegrationTimeParameter; // for modules use
 
-    m_pMeasureSignal = new VfModuleComponent(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
+    m_pMeasureSignal = new VfModuleComponent(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
                                                 QString("SIG_Measuring"),
                                                 QString("Signal indicating measurement activity"),
                                                 QVariant(0));

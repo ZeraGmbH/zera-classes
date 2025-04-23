@@ -103,7 +103,7 @@ void cOsciModuleMeasProgram::generateVeinInterface()
 
     for (int i = 0; i < n; i++)
     {
-        pActvalue = new VfModuleComponent(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
+        pActvalue = new VfModuleComponent(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
                                             QString("ACT_OSCI%1").arg(i+1),
                                             QString("Measures samples"));
         m_veinActValueList.append(pActvalue); // we add the component for our measurement
@@ -114,7 +114,7 @@ void cOsciModuleMeasProgram::generateVeinInterface()
     m_pModule->veinModuleMetaDataList.append(m_pOsciCountInfo);
 
     QString refChannelMNameConfigured = getConfData()->m_RefChannel.m_sPar;
-    m_pRefChannelParameter = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
+    m_pRefChannelParameter = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
                                                    key = QString("PAR_RefChannel"),
                                                    QString("Reference channel"),
                                                    refChannelMNameConfigured);
@@ -127,7 +127,7 @@ void cOsciModuleMeasProgram::generateVeinInterface()
     sValidator = new cStringValidator(getConfData()->m_valueChannelList);
     m_pRefChannelParameter->setValidator(sValidator);
 
-    m_pMeasureSignal = new VfModuleComponent(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
+    m_pMeasureSignal = new VfModuleComponent(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
                                                 QString("SIG_Measuring"),
                                                 QString("Signal indicating measurement activity"),
                                                 QVariant(0));

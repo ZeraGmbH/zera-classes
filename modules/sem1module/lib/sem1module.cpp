@@ -15,7 +15,7 @@ cSem1Module::cSem1Module(ModuleFactoryParam moduleParam) :
 
 void cSem1Module::setupModule()
 {
-    emit addEventSystem(m_pModuleValidator);
+    emit addEventSystem(getValidatorEventSystem());
     cBaseMeasModule::setupModule();
 
     // we only have this activist

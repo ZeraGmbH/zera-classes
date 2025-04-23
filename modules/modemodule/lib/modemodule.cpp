@@ -14,7 +14,7 @@ cModeModule::cModeModule(ModuleFactoryParam moduleParam) :
 
 void cModeModule::setupModule()
 {
-    emit addEventSystem(m_pModuleValidator);
+    emit addEventSystem(getValidatorEventSystem());
     cBaseMeasModule::setupModule();
 
     cModeModuleConfigData *pConfData;

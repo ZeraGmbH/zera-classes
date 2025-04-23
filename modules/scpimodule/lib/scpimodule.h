@@ -27,8 +27,8 @@ public:
     QList<cSignalConnectionDelegate*> sConnectDelegateList;
     QMultiHash<QString, cSCPIMeasure*> scpiMeasureHash;
 
+    VfEventSytemModuleParam *getValidatorEventSystem();
     SCPIEventSystem* m_pSCPIEventSystem;
-    VfEventSytemModuleParam* m_pModuleValidator;
 
 protected:
     cSCPIServer *m_pSCPIServer = nullptr;
@@ -39,6 +39,7 @@ private:
     void setupModule() override; // after xml configuration we can setup and export our module
     void startMeas() override; // we make the measuring program start here
     void stopMeas() override;
+    VfEventSytemModuleParam* m_pModuleValidator;
 };
 
 }

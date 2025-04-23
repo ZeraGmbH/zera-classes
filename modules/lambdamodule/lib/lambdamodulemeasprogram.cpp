@@ -43,7 +43,7 @@ void cLambdaModuleMeasProgram::generateVeinInterface()
 {
     VfModuleComponent *pActvalue;
     for (int i = 0; i < getConfData()->m_nLambdaSystemCount; i++) {
-        pActvalue = new VfModuleComponent(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
+        pActvalue = new VfModuleComponent(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
                                             QString("ACT_Lambda%1").arg(i+1),
                                             QString("Actual lambda value"));
         pActvalue->setChannelName(QString("Lambda%1").arg(i+1));
@@ -52,7 +52,7 @@ void cLambdaModuleMeasProgram::generateVeinInterface()
         m_veinLambdaActValues.append(pActvalue); // we add the component for our measurement
         m_pModule->veinModuleActvalueList.append(pActvalue); // and for the modules interface
 
-        pActvalue = new VfModuleComponent(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
+        pActvalue = new VfModuleComponent(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
                                          QString("ACT_Load%1").arg(i+1),
                                          QString("load type"));
         m_veinLoadTypeList.append(pActvalue);
@@ -62,7 +62,7 @@ void cLambdaModuleMeasProgram::generateVeinInterface()
     m_pLAMBDACountInfo = new VfModuleMetaData(QString("LambdaCount"), QVariant(getConfData()->m_nLambdaSystemCount));
     m_pModule->veinModuleMetaDataList.append(m_pLAMBDACountInfo);
 
-    m_pMeasureSignal = new VfModuleComponent(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
+    m_pMeasureSignal = new VfModuleComponent(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
                                                 QString("SIG_Measuring"),
                                                 QString("Signal indicating measurement activity"),
                                                 QVariant(0));

@@ -125,13 +125,13 @@ void cDftModuleMeasProgram::generateVeinInterface()
                 channelDescriptionCartesian = QString("Actual value / cartesian format: re,im");
                 channelDescriptionPolar = QString("Actual value / polar format: abs,rad[0,2π],deg[0,360]");
             }
-            pActvalue = new VfModuleComponent(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
+            pActvalue = new VfModuleComponent(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
                                                 QString("ACT_DFTPN%1").arg(n+1),
                                                 channelDescriptionCartesian);
             m_veinActValueList.append(pActvalue); // we add the component for our measurement
             m_pModule->veinModuleActvalueList.append(pActvalue); // and for the modules interface
 
-            pActvalue = new VfModuleComponent(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
+            pActvalue = new VfModuleComponent(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
                                              QString("ACT_POL_DFTPN%1").arg(n+1),
                                              channelDescriptionPolar);
             m_veinPolarValue.append(pActvalue); // we add the component for our measurement
@@ -140,13 +140,13 @@ void cDftModuleMeasProgram::generateVeinInterface()
             n++;
         }
         else {
-            pActvalue = new VfModuleComponent(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
+            pActvalue = new VfModuleComponent(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
                                                 QString("ACT_DFTPP%1").arg(p+1),
                                                 QString("Actual value phase/phase / cartesian format: re,im"));
             m_veinActValueList.append(pActvalue); // we add the component for our measurement
             m_pModule->veinModuleActvalueList.append(pActvalue); // and for the modules interface
 
-            pActvalue = new VfModuleComponent(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
+            pActvalue = new VfModuleComponent(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
                                              QString("ACT_POL_DFTPP%1").arg(p+1),
                                              QString("Actual value phase/phase / polar format: abs,rad[0,2π],deg[0,360]"));
             m_veinPolarValue.append(pActvalue); // we add the component for our measurement
@@ -156,7 +156,7 @@ void cDftModuleMeasProgram::generateVeinInterface()
         }
     }
 
-    m_pRFieldActualValue = new VfModuleComponent(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
+    m_pRFieldActualValue = new VfModuleComponent(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
                                                    QString("ACT_RFIELD"),
                                                    QString("Phase sequence"));
 
@@ -169,7 +169,7 @@ void cDftModuleMeasProgram::generateVeinInterface()
     m_pDFTOrderInfo = new VfModuleMetaData(QString("DFTOrder"), QVariant(getConfData()->m_nDftOrder));
 
     QString key;
-    m_pIntegrationTimeParameter = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
+    m_pIntegrationTimeParameter = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
                                                            key = QString("PAR_Interval"),
                                                            QString("Integration time"),
                                                            QVariant(getConfData()->m_fMeasInterval.m_fValue));
@@ -180,7 +180,7 @@ void cDftModuleMeasProgram::generateVeinInterface()
 
 
     QString refChannelAliasConfigured = getConfData()->m_sRefChannel.m_sPar;
-    m_pRefChannelParameter = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
+    m_pRefChannelParameter = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
                                                    key = QString("PAR_RefChannel"),
                                                    QString("Reference channel"),
                                                    refChannelAliasConfigured);
@@ -190,7 +190,7 @@ void cDftModuleMeasProgram::generateVeinInterface()
     m_pModule->m_veinModuleParameterMap[key] = m_pRefChannelParameter; // for modules use
     // we must set validator after activation because we don't know the channel names here
 
-    m_pMeasureSignal = new VfModuleComponent(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
+    m_pMeasureSignal = new VfModuleComponent(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
                                                 QString("SIG_Measuring"),
                                                 QString("Signal indicating measurement activity"),
                                                 QVariant(0));

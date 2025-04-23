@@ -201,7 +201,7 @@ void cPower1ModuleMeasProgram::generateVeinInterface()
     VfModuleComponent *pActvalue;
     for (int i = 0; i < MeasPhaseCount+SumValueCount; i++) {
         QString strDescription = getPhasePowerDescription(i);
-        pActvalue = new VfModuleComponent(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
+        pActvalue = new VfModuleComponent(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
                                             QString("ACT_PQS%1").arg(i+1),
                                             strDescription);
         m_veinActValueList.append(pActvalue); // we add the component for our measurement
@@ -219,7 +219,7 @@ void cPower1ModuleMeasProgram::generateVeinInterface()
 
     for (int i = 0; i < getConfData()->m_nFreqOutputCount; i++) {
         // Note: Although components are 'PAR_' they are not changable currently
-        pFoutParameter = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
+        pFoutParameter = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
                                                           key = QString("PAR_FOUTConstant%1").arg(i),
                                                           QString("Frequency output constant"),
                                                           QVariant(0.0));
@@ -230,7 +230,7 @@ void cPower1ModuleMeasProgram::generateVeinInterface()
         m_pModule->m_veinModuleParameterMap[key] = pFoutParameter; // for modules use
 
         QString foutName =  getConfData()->m_FreqOutputConfList.at(i).m_sFreqOutNameDisplayed;
-        pFoutParameter = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
+        pFoutParameter = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
                                                           key = QString("PAR_FOUT%1").arg(i),
                                                           QString("Frequency output name"),
                                                           QVariant(foutName));
@@ -268,7 +268,7 @@ void cPower1ModuleMeasProgram::generateVeinInterface()
     }
 
     // our parameters we deal with
-    m_pMeasuringmodeParameter = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
+    m_pMeasuringmodeParameter = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
                                                          key = QString("PAR_MeasuringMode"),
                                                          QString("Measuring mode"),
                                                          QVariant(getConfData()->m_sMeasuringMode.m_sValue));
@@ -285,7 +285,7 @@ void cPower1ModuleMeasProgram::generateVeinInterface()
                                                                     m_pMeasuringmodeParameter->getName(),
                                                                     SCPI::isCatalog));
 
-    m_pMModePhaseSelectParameter = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
+    m_pMModePhaseSelectParameter = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
                                                          key = QString("PAR_MeasModePhaseSelect"),
                                                          QString("Active phases selection mask"),
                                                          getInitialPhaseOnOffVeinVal());
@@ -295,28 +295,28 @@ void cPower1ModuleMeasProgram::generateVeinInterface()
     m_pMModePhaseSelectParameter->setValidator(m_MModePhaseSelectValidator);
     m_pModule->m_veinModuleParameterMap[key] = m_pMModePhaseSelectParameter; // for modules use
 
-    m_MModeCanChangePhaseMask = new VfModuleComponent(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
+    m_MModeCanChangePhaseMask = new VfModuleComponent(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
                                      QString("ACT_CanChangePhaseMask"),
                                      QString("Boolean indicator that current measurement mode can change phase mask"),
                                      QVariant(false) );
     m_veinActValueList.append(m_MModeCanChangePhaseMask); // we add the component for our measurement
     m_pModule->veinModuleActvalueList.append(m_MModeCanChangePhaseMask); // and for the modules interface
 
-    m_MModePowerDisplayName = new VfModuleComponent(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
+    m_MModePowerDisplayName = new VfModuleComponent(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
                                                    QString("ACT_PowerDisplayName"),
                                                    QString("Power display name (P/Q/S)"),
                                                    QVariant("") );
     m_veinActValueList.append(m_MModePowerDisplayName);
     m_pModule->veinModuleActvalueList.append(m_MModePowerDisplayName);
 
-    m_MModeMaxMeasSysCount = new VfModuleComponent(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
+    m_MModeMaxMeasSysCount = new VfModuleComponent(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
                                                      QString("ACT_MaxMeasSysCount"),
                                                      QString("Number of max measurement systems for current measurement mode"),
                                                      QVariant(3) );
     m_veinActValueList.append(m_MModeMaxMeasSysCount); // we add the component for our measurement
     m_pModule->veinModuleActvalueList.append(m_MModeMaxMeasSysCount); // and for the modules interface
 
-    m_MModesTypes = new VfModuleComponent(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
+    m_MModesTypes = new VfModuleComponent(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
                                           QString("INF_ModeTypes"),
                                           QString("Display names (P/Q/S) of available modes"),
                                           QVariant(QStringList()));
@@ -336,7 +336,7 @@ void cPower1ModuleMeasProgram::generateVeinInterface()
         unit = QString("period");
     }
 
-    m_pIntegrationParameter = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
+    m_pIntegrationParameter = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
                                                        key = QString("PAR_Interval"),
                                                        s,
                                                        val);
@@ -353,7 +353,7 @@ void cPower1ModuleMeasProgram::generateVeinInterface()
     }
     m_pModule->m_veinModuleParameterMap[key] = m_pIntegrationParameter; // for modules use
 
-    m_pMeasureSignal = new VfModuleComponent(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
+    m_pMeasureSignal = new VfModuleComponent(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
                                                 QString("SIG_Measuring"),
                                                 QString("Signal indicating measurement activity"),
                                                 QVariant(0));
@@ -1104,7 +1104,7 @@ void cPower1ModuleMeasProgram::generateVeinInterfaceForQrefFreq()
 {
     if(getConfData()->supportsVariableQrefFrequency()) {
         const QString paramLabel = "PAR_FOUT_QREF_FREQ";
-        m_QREFFrequencyParameter = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
+        m_QREFFrequencyParameter = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
                                                         paramLabel,
                                                         QString("Fixed frequency output mode (QREF): frequency value"),
                                                         QVariant(getConfData()->m_qrefFrequency.m_fValue));

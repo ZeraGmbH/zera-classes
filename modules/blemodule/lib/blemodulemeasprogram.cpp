@@ -45,7 +45,7 @@ cBleModuleConfigData *cBleModuleMeasProgram::getConfData()
 void cBleModuleMeasProgram::generateVeinInterface()
 {
     QString key;
-    m_pTemperatureCAct = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
+    m_pTemperatureCAct = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
                                                key = QString("ACT_TemperatureC"),
                                                QString("Current temperature in degree Celsius"),
                                                QVariant(qQNaN()));
@@ -53,7 +53,7 @@ void cBleModuleMeasProgram::generateVeinInterface()
     m_pTemperatureCAct->setScpiInfo("STATUS", "TEMP:CELSIUS", SCPI::isQuery, m_pTemperatureCAct->getName());
     m_pModule->m_veinModuleParameterMap[key] = m_pTemperatureCAct; // and for the modules interface
 
-    m_pTemperatureFAct = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
+    m_pTemperatureFAct = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
                                                key = QString("ACT_TemperatureF"),
                                                QString("Current temperature in degree Fahrenheit"),
                                                QVariant(qQNaN()));
@@ -61,7 +61,7 @@ void cBleModuleMeasProgram::generateVeinInterface()
     m_pTemperatureFAct->setScpiInfo("STATUS", "TEMP:FAHRENHEIT", SCPI::isQuery, m_pTemperatureFAct->getName());
     m_pModule->m_veinModuleParameterMap[key] = m_pTemperatureFAct;
 
-    m_pHumidityAct = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
+    m_pHumidityAct = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
                                            key = QString("ACT_Humidity"),
                                            QString("Current relative humidity in percent"),
                                            QVariant(qQNaN()));
@@ -69,7 +69,7 @@ void cBleModuleMeasProgram::generateVeinInterface()
     m_pHumidityAct->setScpiInfo("STATUS", "HUMID", SCPI::isQuery, m_pHumidityAct->getName());
     m_pModule->m_veinModuleParameterMap[key] = m_pHumidityAct;
 
-    m_pAirPressureAct = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
+    m_pAirPressureAct = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
                                               key = QString("ACT_AirPressure"),
                                               QString("Current atmospheric pressure in hPa"),
                                               QVariant(qQNaN()));
@@ -77,19 +77,19 @@ void cBleModuleMeasProgram::generateVeinInterface()
     m_pAirPressureAct->setScpiInfo("STATUS", "AIRPR", SCPI::isQuery, m_pAirPressureAct->getName());
     m_pModule->m_veinModuleParameterMap[key] = m_pAirPressureAct;
 
-    m_pWarningFlagsAct = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
+    m_pWarningFlagsAct = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
                                                key = QString("ACT_WarningFlags"),
                                                QString("Current warning flags"),
                                                QVariant((quint32)0));
     m_pModule->m_veinModuleParameterMap[key] = m_pWarningFlagsAct;
 
-    m_pErrorFlagsAct = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
+    m_pErrorFlagsAct = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
                                              key = QString("ACT_ErrorFlags"),
                                              QString("Current error flags"),
                                              QVariant(quint32(0)));
     m_pModule->m_veinModuleParameterMap[key] = m_pErrorFlagsAct;
 
-    m_pBluetoothOnOff = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
+    m_pBluetoothOnOff = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
                                               key = QString("PAR_BluetoothOn"),
                                               QString("Bluetooth on"),
                                               QVariant(getConfData()->m_bluetoothOn.m_nActive)); // bool validator ruins true/false
@@ -98,7 +98,7 @@ void cBleModuleMeasProgram::generateVeinInterface()
     connect(m_pBluetoothOnOff, &VfModuleComponent::sigValueChanged,
             this, &cBleModuleMeasProgram::onVeinBluetoothOnChanged);
 
-    m_pMacAddress = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
+    m_pMacAddress = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
                                           key = QString("PAR_MacAddress"),
                                           QString("MAC address of environment sensor"),
                                           QVariant("00:00:00:00:00:00"));

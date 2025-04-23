@@ -116,7 +116,7 @@ void cRmsModuleMeasProgram::generateVeinInterface()
                 channelDescription = QString("Actual rms value phase/neutral");
             else //current channels
                 channelDescription = QString("Actual rms value");
-            pActvalue = new VfModuleComponent(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
+            pActvalue = new VfModuleComponent(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
                                              QString("ACT_RMSPN%1").arg(n+1),
                                              channelDescription);
             m_veinActValueList.append(pActvalue); // we add the component for our measurement
@@ -124,7 +124,7 @@ void cRmsModuleMeasProgram::generateVeinInterface()
             n++;
         }
         else {
-            pActvalue = new VfModuleComponent(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
+            pActvalue = new VfModuleComponent(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
                                                 QString("ACT_RMSPP%1").arg(p+1),
                                                 QString("Actual rms value phase/phase"));
             m_veinActValueList.append(pActvalue); // we add the component for our measurement
@@ -153,7 +153,7 @@ void cRmsModuleMeasProgram::generateVeinInterface()
         unit = QString("period");
     }
     QString key;
-    m_pIntegrationParameter = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
+    m_pIntegrationParameter = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
                                                            key = QString("PAR_Interval"),
                                                            intervalDescription,
                                                            val);
@@ -168,7 +168,7 @@ void cRmsModuleMeasProgram::generateVeinInterface()
     }
     m_pModule->m_veinModuleParameterMap[key] = m_pIntegrationParameter; // for modules use
 
-    m_pMeasureSignal = new VfModuleComponent(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
+    m_pMeasureSignal = new VfModuleComponent(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
                                                 QString("SIG_Measuring"),
                                                 QString("Signal indicating measurement activity"),
                                                 QVariant(0));

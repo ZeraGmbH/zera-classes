@@ -14,7 +14,7 @@ cThdnModule::cThdnModule(ModuleFactoryParam moduleParam) :
 
 void cThdnModule::setupModule()
 {
-    emit addEventSystem(m_pModuleValidator);
+    emit addEventSystem(getValidatorEventSystem());
     cBaseMeasModule::setupModule();
 
     // we need some program that does the measuring on dsp

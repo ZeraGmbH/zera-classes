@@ -25,7 +25,7 @@ cPllMeasChannel* cSampleModule::getPllMeasChannel(const QString &name)
 
 void cSampleModule::setupModule()
 {
-    emit addEventSystem(m_pModuleValidator);
+    emit addEventSystem(getValidatorEventSystem());
     cBaseMeasModule::setupModule();
 
     cSampleModuleConfigData *pConfData;
@@ -82,7 +82,7 @@ void cSampleModule::activationFinished()
         connect(pllchn, &cPllMeasChannel::cmdDone, m_pPllObsermatic, &cPllObsermatic::catchChannelReply);
     }
 
-    m_pModuleValidator->setParameterMap(m_veinModuleParameterMap);
+    getValidatorEventSystem()->setParameterMap(m_veinModuleParameterMap);
     // now we still have to export the json interface information
     exportMetaData();
     emit activationReady();

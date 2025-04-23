@@ -42,7 +42,7 @@ void cPllObsermatic::ActionHandler(QVector<float> *actualValues)
 void cPllObsermatic::generateVeinInterface()
 {
     QString key;
-    m_pVeinPllChannelAlias = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
+    m_pVeinPllChannelAlias = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
                                              key = QString("PAR_PllChannel"),
                                              QString("PLL reference channel"),
                                              QVariant(""));
@@ -50,7 +50,7 @@ void cPllObsermatic::generateVeinInterface()
     // later we have to set the validator for m_pPLLChannel
     m_pVeinPllChannelAlias->setScpiInfo("CONFIGURATION", "PLLREFERENCE", SCPI::isQuery|SCPI::isCmdwP, m_pVeinPllChannelAlias->getName());
 
-    m_pParPllAutomaticOnOff = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
+    m_pParPllAutomaticOnOff = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
                                                        key = QString("PAR_PllAutomaticOnOff"),
                                                        QString("PLL automatic on/off"),
                                                        QVariant(m_ConfPar.m_ObsermaticConfPar.m_npllAutoAct.m_nActive));
@@ -58,13 +58,13 @@ void cPllObsermatic::generateVeinInterface()
     m_pParPllAutomaticOnOff->setValidator(new cBoolValidator());
     m_pParPllAutomaticOnOff->setScpiInfo("CONFIGURATION", "PLLAUTO", SCPI::isQuery|SCPI::isCmdwP, m_pParPllAutomaticOnOff->getName());
 
-    m_pPllFixed = new VfModuleComponent(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
+    m_pPllFixed = new VfModuleComponent(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
                                        QString("ACT_PllFixed"),
                                        QString("PLL fixed channel / mode"),
                                        QVariant(m_ConfPar.m_ObsermaticConfPar.m_bpllFixed));
     m_pModule->veinModuleComponentList.append(m_pPllFixed);
 
-    m_pPllSignal = new VfModuleComponent(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
+    m_pPllSignal = new VfModuleComponent(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
                                             QString("SIG_PLL"),
                                             QString("Signal on pll channel changing"),
                                             QVariant(0));

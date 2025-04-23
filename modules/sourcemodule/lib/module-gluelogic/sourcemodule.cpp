@@ -25,7 +25,7 @@ VfModuleRpc *SourceModule::getRpcEventSystem() const
 
 void SourceModule::setupModule()
 {
-    emit addEventSystem(m_pModuleValidator);
+    emit addEventSystem(getValidatorEventSystem());
     emit addEventSystem(m_rpcEventSystem);
     BaseModule::setupModule();
 

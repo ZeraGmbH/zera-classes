@@ -14,7 +14,7 @@ cTransformer1Module::cTransformer1Module(ModuleFactoryParam moduleParam) :
 
 void cTransformer1Module::setupModule()
 {
-    emit addEventSystem(m_pModuleValidator);
+    emit addEventSystem(getValidatorEventSystem());
 
     cBaseMeasModule::setupModule();
 

@@ -465,7 +465,7 @@ void cSfcModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QV
 void cSfcModuleMeasProgram::generateVeinInterface()
 {
     QString key;
-    m_pStartStopPar = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
+    m_pStartStopPar = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
                                          key = QString("PAR_StartStop"),
                                          QString("Start/stop measurement (start=1, stop=0)"),
                                          QVariant((int)0));
@@ -475,7 +475,7 @@ void cSfcModuleMeasProgram::generateVeinInterface()
                                  m_pStartStopPar->getName());
     m_pModule->m_veinModuleParameterMap[key] = m_pStartStopPar;
 
-    m_pFlankCountAct = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
+    m_pFlankCountAct = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
                                              key = QString("ACT_FlankCount"),
                                              QString("Measurement of flank count"),
                                              QVariant((quint32)0));
@@ -484,7 +484,7 @@ void cSfcModuleMeasProgram::generateVeinInterface()
                                   m_pFlankCountAct->getName());
     m_pModule->m_veinModuleParameterMap[key] = m_pFlankCountAct;
 
-    m_pLedStateAct = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
+    m_pLedStateAct = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
                                              key = QString("ACT_LedState"),
                                              QString("Current state of scanning head LED (on=1, off=0)"),
                                              QVariant((int)0));
@@ -493,7 +493,7 @@ void cSfcModuleMeasProgram::generateVeinInterface()
                                 m_pLedStateAct->getName());
     m_pModule->m_veinModuleParameterMap[key] = m_pLedStateAct;
 
-    m_pLedInitialStateAct = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
+    m_pLedInitialStateAct = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
                                            key = QString("ACT_InitialLedState"),
                                            QString("Initial state of scanning head LED (on=1, off=0)"),
                                            QVariant((int)0));

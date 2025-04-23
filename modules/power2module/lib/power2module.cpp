@@ -15,7 +15,7 @@ cPower2Module::cPower2Module(ModuleFactoryParam moduleParam) :
 
 void cPower2Module::setupModule()
 {
-    emit addEventSystem(m_pModuleValidator);
+    emit addEventSystem(getValidatorEventSystem());
 
     cBaseMeasModule::setupModule();
 

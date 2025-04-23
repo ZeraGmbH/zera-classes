@@ -117,14 +117,14 @@ void cAdjustManagement::ActionHandler(QVector<float> *actualValues)
 
 void cAdjustManagement::generateVeinInterface()
 {
-    m_pAdjustmentInfo = new VfModuleComponent(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
+    m_pAdjustmentInfo = new VfModuleComponent(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
                                                  QString("INF_Adjusted"),
                                                  QString("Adjustment information"),
                                                  QVariant(0));
 
     m_pModule->veinModuleComponentList.append(m_pAdjustmentInfo);
 
-    m_ParIgnoreRmsValuesOnOff = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
+    m_ParIgnoreRmsValuesOnOff = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
                                                       QString("PAR_IgnoreRmsValuesOnOff"),
                                                       QString("Enable or disable channel ignore limit option"),
                                                       QVariant(m_adjustmentConfig->m_ignoreRmsValuesEnable.m_nActive));
@@ -134,7 +134,7 @@ void cAdjustManagement::generateVeinInterface()
     m_ParIgnoreRmsValuesOnOff->setScpiInfo("CONFIGURATION","ENABLEIGNORERMSVAL", SCPI::isQuery|SCPI::isCmdwP, m_ParIgnoreRmsValuesOnOff->getName());
     connect(m_ParIgnoreRmsValuesOnOff, &VfModuleParameter::sigValueChanged, this, &cAdjustManagement::parIgnoreRmsValuesOnOffChanged);
 
-    m_ParIgnoreRmsValues = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
+    m_ParIgnoreRmsValues = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
                                                  QString("PAR_IgnoreRmsValues"),
                                                  QString("Percentage of nominal range below which channel values are ignored"),
                                                  QVariant(m_adjustmentConfig->m_ignoreRmsValuesThreshold.m_fValue));
@@ -148,7 +148,7 @@ void cAdjustManagement::generateVeinInterface()
     VfModuleParameter *pParameter;
     for (int i = 0; i < m_ChannelNameList.count(); i++) {
         QString key = QString("PAR_InvertPhase%1").arg(i+1);
-        pParameter = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
+        pParameter = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
                                            key,
                                            QString("Inverted Phase"),
                                            QVariant(m_adjustmentConfig->m_senseChannelInvertParameter[i].m_nActive));

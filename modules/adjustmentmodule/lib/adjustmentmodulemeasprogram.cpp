@@ -279,7 +279,7 @@ void cAdjustmentModuleMeasProgram::generateVeinInterface()
 {
     QString key;
 
-    m_pPARComputation = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
+    m_pPARComputation = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
                                                  key = QString("PAR_Computation"),
                                                  QString("Start computation of adjustment coefficients"),
                                                  QVariant(int(0)),
@@ -291,7 +291,7 @@ void cAdjustmentModuleMeasProgram::generateVeinInterface()
     connect(m_pPARComputation, &VfModuleParameter::sigValueChanged, this, &cAdjustmentModuleMeasProgram::computationStartCommand);
 
 
-    m_pPARStorage = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
+    m_pPARStorage = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
                                              key = QString("PAR_Storage"),
                                              QString("Save adjustment data"),
                                              QVariant(int(0)),
@@ -303,7 +303,7 @@ void cAdjustmentModuleMeasProgram::generateVeinInterface()
     connect(m_pPARStorage, &VfModuleParameter::sigValueChanged, this, &cAdjustmentModuleMeasProgram::storageStartCommand);
 
 
-    m_pPARAdjustGainStatus = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
+    m_pPARAdjustGainStatus = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
                                                   key = QString("PAR_AdjustGainStatus"),
                                                   QString("Gain adjustment status"),
                                                   QVariant(int(0)),
@@ -312,7 +312,7 @@ void cAdjustmentModuleMeasProgram::generateVeinInterface()
     m_pModule->m_veinModuleParameterMap[key] = m_pPARAdjustGainStatus;
     connect(m_pPARAdjustGainStatus, &VfModuleParameter::sigValueChanged, this, &cAdjustmentModuleMeasProgram::setAdjustGainStatusStartCommand);
 
-    m_pPARAdjustPhaseStatus = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
+    m_pPARAdjustPhaseStatus = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
                                                        key = QString("PAR_AdjustPhaseStatus"),
                                                        QString("Phase adjustment status"),
                                                        QVariant(int(0)),
@@ -321,7 +321,7 @@ void cAdjustmentModuleMeasProgram::generateVeinInterface()
     m_pModule->m_veinModuleParameterMap[key] = m_pPARAdjustPhaseStatus;
     connect(m_pPARAdjustPhaseStatus, &VfModuleParameter::sigValueChanged, this, &cAdjustmentModuleMeasProgram::setAdjustPhaseStatusStartCommand);
 
-    m_pPARAdjustOffsetStatus = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
+    m_pPARAdjustOffsetStatus = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
                                                         key = QString("PAR_AdjustOffsetStatus"),
                                                         QString("Offset adjustment status"),
                                                         QVariant(int(0)),
@@ -331,7 +331,7 @@ void cAdjustmentModuleMeasProgram::generateVeinInterface()
     m_pModule->m_veinModuleParameterMap[key] = m_pPARAdjustOffsetStatus;
     connect(m_pPARAdjustOffsetStatus, &VfModuleParameter::sigValueChanged, this, &cAdjustmentModuleMeasProgram::setAdjustOffsetStatusStartCommand);
 
-    m_pPARAdjustInit = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
+    m_pPARAdjustInit = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
                                                 key = QString("PAR_AdjustInit"),
                                                 QString("Initialize adjustment data"),
                                                 QVariant(int(0)),
@@ -340,7 +340,7 @@ void cAdjustmentModuleMeasProgram::generateVeinInterface()
     m_pModule->m_veinModuleParameterMap[key] = m_pPARAdjustInit;
     connect(m_pPARAdjustInit, &VfModuleParameter::sigValueChanged, this, &cAdjustmentModuleMeasProgram::setAdjustInitStartCommand);
 
-    m_pPARAdjustAmplitude = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
+    m_pPARAdjustAmplitude = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
                                                      key = QString("PAR_AdjustAmplitude"),
                                                      QString("One amplitude adjustment node"),
                                                      QVariant(QString("")),
@@ -351,7 +351,7 @@ void cAdjustmentModuleMeasProgram::generateVeinInterface()
     connect(m_pPARAdjustAmplitude, &VfModuleParameter::sigValueChanged, this,
             &cAdjustmentModuleMeasProgram::setAdjustAmplitudeStartCommand);
 
-    m_pPARAdjustAmplitudeDc = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
+    m_pPARAdjustAmplitudeDc = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
                                                   key = QString("PAR_AdjustAmplitudeDc"),
                                                   QString("One amplitude adjustment node for DC"),
                                                   QVariant(QString("")),
@@ -362,7 +362,7 @@ void cAdjustmentModuleMeasProgram::generateVeinInterface()
     connect(m_pPARAdjustAmplitudeDc, &VfModuleParameter::sigValueChanged, this,
             &cAdjustmentModuleMeasProgram::setAdjustAmplitudeStartCommandDc);
 
-    m_pPARAdjustPhase = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
+    m_pPARAdjustPhase = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
                                                  key = QString("PAR_AdjustPhase"),
                                                  QString("One phase adjustment node"),
                                                  QVariant(QString("")),
@@ -372,7 +372,7 @@ void cAdjustmentModuleMeasProgram::generateVeinInterface()
     // we will set the validator later after activation we will know the channel names and their ranges
     connect(m_pPARAdjustPhase, &VfModuleParameter::sigValueChanged, this, &cAdjustmentModuleMeasProgram::setAdjustPhaseStartCommand);
 
-    m_pPARAdjustOffset = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
+    m_pPARAdjustOffset = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
                                                   key = QString("PAR_Adjustoffset"),
                                                   QString("One offset adjustment node"),
                                                   QVariant(QString("")),
@@ -382,7 +382,7 @@ void cAdjustmentModuleMeasProgram::generateVeinInterface()
     // we will set the validator later after activation we will know the channel names and their ranges
     connect(m_pPARAdjustOffset, &VfModuleParameter::sigValueChanged, this, &cAdjustmentModuleMeasProgram::setAdjustOffsetStartCommand);
 
-    m_pPARAdjustSend = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
+    m_pPARAdjustSend = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
                                                 key = QString("PAR_AdjustSend"),
                                                 QString("Send command to specified port"),
                                                 QVariant(QString("")),
@@ -393,7 +393,7 @@ void cAdjustmentModuleMeasProgram::generateVeinInterface()
     // we will set the validator later after activation we will know the channel names and their ranges
     connect(m_pPARAdjustSend, &VfModuleParameter::sigValueQuery, this, &cAdjustmentModuleMeasProgram::transparentDataSend2Port);
 
-    m_pPARAdjustPCBData = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
+    m_pPARAdjustPCBData = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
                                                    key = QString("PAR_AdjustPCBData"),
                                                    QString("Get and set pcb adjustment data"),
                                                    QVariant(QString("")),
@@ -405,7 +405,7 @@ void cAdjustmentModuleMeasProgram::generateVeinInterface()
     connect(m_pPARAdjustPCBData, &VfModuleParameter::sigValueChanged, this, &cAdjustmentModuleMeasProgram::writePCBAdjustmentData);
     connect(m_pPARAdjustPCBData, &VfModuleParameter::sigValueQuery, this, &cAdjustmentModuleMeasProgram::readPCBAdjustmentData);
 
-    m_pPARAdjustClampData = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
+    m_pPARAdjustClampData = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
                                                      key = QString("PAR_AdjustCLAMPData"),
                                                      QString("Get and set clamp adjustment data"),
                                                      QVariant(QString("")),

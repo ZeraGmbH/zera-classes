@@ -14,7 +14,7 @@ cSfcModule::cSfcModule(ModuleFactoryParam moduleParam) : cBaseMeasModule(moduleP
 
 void cSfcModule::setupModule()
 {
-    emit addEventSystem(m_pModuleValidator);
+    emit addEventSystem(getValidatorEventSystem());
 
     cBaseMeasModule::setupModule();
 

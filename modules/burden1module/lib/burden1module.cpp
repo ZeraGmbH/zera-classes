@@ -15,7 +15,7 @@ cBurden1Module::cBurden1Module(ModuleFactoryParam moduleParam) :
 
 void cBurden1Module::setupModule()
 {
-    emit addEventSystem(m_pModuleValidator);
+    emit addEventSystem(getValidatorEventSystem());
 
     cBaseMeasModule::setupModule();
 

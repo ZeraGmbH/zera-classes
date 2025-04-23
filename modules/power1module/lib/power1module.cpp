@@ -14,7 +14,7 @@ cPower1Module::cPower1Module(ModuleFactoryParam moduleParam) :
 
 void cPower1Module::setupModule()
 {
-    emit addEventSystem(m_pModuleValidator);
+    emit addEventSystem(getValidatorEventSystem());
     cBaseMeasModule::setupModule();
 
     // we need some program that does the measuring on dsp

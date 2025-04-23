@@ -12,7 +12,7 @@ cAdjustmentModule::cAdjustmentModule(ModuleFactoryParam moduleParam) :
 
 void cAdjustmentModule::setupModule()
 {
-    emit addEventSystem(m_pModuleValidator);
+    emit addEventSystem(getValidatorEventSystem());
 
     cBaseMeasModule::setupModule();
 

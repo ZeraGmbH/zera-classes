@@ -14,7 +14,7 @@ cBleModule::cBleModule(ModuleFactoryParam moduleParam) :
 
 void cBleModule::setupModule()
 {
-    emit addEventSystem(m_pModuleValidator);
+    emit addEventSystem(getValidatorEventSystem());
     cBaseMeasModule::setupModule();
 
     m_pMeasProgram = new cBleModuleMeasProgram(this, m_pConfiguration);

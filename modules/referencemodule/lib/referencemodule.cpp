@@ -56,7 +56,7 @@ cReferenceMeasChannel *cReferenceModule::getMeasChannel(const QString &name)
 
 void cReferenceModule::setupModule()
 {
-    emit addEventSystem(m_pModuleValidator);
+    emit addEventSystem(getValidatorEventSystem());
     cBaseMeasModule::setupModule();
 
     cReferenceModuleConfigData *pConfData = qobject_cast<cReferenceModuleConfiguration*>(m_pConfiguration.get())->getConfigurationData();

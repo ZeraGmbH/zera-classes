@@ -55,7 +55,7 @@ void cBurden1ModuleMeasProgram::generateVeinInterface()
     for (int i = 0; i < getConfData()->m_nBurdenSystemCount; i++) {
         VfModuleComponent *pActvalue;
         QString key;
-        pActvalue = new VfModuleComponent(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
+        pActvalue = new VfModuleComponent(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
                                             QString("ACT_Burden%1").arg(i+1),
                                             QString("Burden actual value Sb"));
         pActvalue->setChannelName(QString("BRD%1").arg(i+1));
@@ -64,7 +64,7 @@ void cBurden1ModuleMeasProgram::generateVeinInterface()
         m_veinActValueList.append(pActvalue); // we add the component for our measurement
         m_pModule->veinModuleActvalueList.append(pActvalue); // and for the modules interface
 
-        pActvalue = new VfModuleComponent(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
+        pActvalue = new VfModuleComponent(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
                                             QString("ACT_PFactor%1").arg(i+1),
                                             QString("Burden powerfactor cos(β)"));
         pActvalue->setChannelName(QString("POF%1").arg(i+1));
@@ -73,7 +73,7 @@ void cBurden1ModuleMeasProgram::generateVeinInterface()
         m_veinActValueList.append(pActvalue); // we add the component for our measurement
         m_pModule->veinModuleActvalueList.append(pActvalue); // and for the modules interface
 
-        pActvalue = new VfModuleComponent(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
+        pActvalue = new VfModuleComponent(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
                                             QString("ACT_Ratio%1").arg(i+1),
                                             QString("Burden ratio value Sn"));
         pActvalue->setChannelName(QString("RAT%1").arg(i+1));
@@ -84,7 +84,7 @@ void cBurden1ModuleMeasProgram::generateVeinInterface()
     }
 
     QString key;
-    m_pNominalRangeParameter = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
+    m_pNominalRangeParameter = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
                                                      key = QString("PAR_NominalRange"),
                                                      QString("Nominal range"),
                                                      QVariant(getConfData()->nominalRange.m_fValue));
@@ -93,7 +93,7 @@ void cBurden1ModuleMeasProgram::generateVeinInterface()
     m_pNominalRangeParameter->setValidator(new cDoubleValidator(0.001, 10000.0, 0.001));
     m_pModule->m_veinModuleParameterMap[key] = m_pNominalRangeParameter; // for modules use
 
-    m_pNominalRangeFactorParameter = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
+    m_pNominalRangeFactorParameter = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
                                                            key = QString("PAR_NominalRangeFactor"),
                                                            QString("Nominal range factor"),
                                                            QVariant(getConfData()->nominalRangeFactor.m_sPar));
@@ -101,7 +101,7 @@ void cBurden1ModuleMeasProgram::generateVeinInterface()
     m_pNominalRangeFactorParameter->setValidator(new cStringValidator(QString("1;sqrt(3);1/sqrt(3);1/3")));
     m_pModule->m_veinModuleParameterMap[key] = m_pNominalRangeFactorParameter; // for modules use
 
-    m_pNominalBurdenParameter = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
+    m_pNominalBurdenParameter = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
                                                          key = QString("PAR_NominalBurden"),
                                                          QString("Nominal burden"),
                                                          QVariant(getConfData()->nominalBurden.m_fValue));
@@ -110,7 +110,7 @@ void cBurden1ModuleMeasProgram::generateVeinInterface()
     m_pNominalBurdenParameter->setValidator(new cDoubleValidator(0.001, 10000.0, 0.001));
     m_pModule->m_veinModuleParameterMap[key] = m_pNominalBurdenParameter; // for modules use
 
-    m_pWireLengthParameter = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
+    m_pWireLengthParameter = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
                                                    key = QString("PAR_WireLength"),
                                                    QString("Wire length value"),
                                                    QVariant(getConfData()->wireLength.m_fValue));
@@ -119,7 +119,7 @@ void cBurden1ModuleMeasProgram::generateVeinInterface()
     m_pWireLengthParameter->setValidator(new cDoubleValidator(0.0, 100.0, 0.1));
     m_pModule->m_veinModuleParameterMap[key] = m_pWireLengthParameter; // for modules use
 
-    m_pWireCrosssectionParameter = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
+    m_pWireCrosssectionParameter = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
                                                             key = QString("PAR_WCrosssection"),
                                                             QString("Wire crosssection value"),
                                                             QVariant(getConfData()->wireCrosssection.m_fValue));
@@ -131,7 +131,7 @@ void cBurden1ModuleMeasProgram::generateVeinInterface()
     m_pBRSCountInfo = new VfModuleMetaData(QString("BRSCount"), QVariant(getConfData()->m_nBurdenSystemCount));
     m_pModule->veinModuleMetaDataList.append(m_pBRSCountInfo);
 
-    m_pMeasureSignal = new VfModuleComponent(m_pModule->getEntityId(), m_pModule->m_pModuleValidator,
+    m_pMeasureSignal = new VfModuleComponent(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
                                                 QString("SIG_Measuring"),
                                                 QString("Signal indicating measurement activity"),
                                                 QVariant(0));

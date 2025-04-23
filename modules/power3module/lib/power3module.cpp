@@ -14,7 +14,7 @@ cPower3Module::cPower3Module(ModuleFactoryParam moduleParam) :
 
 void cPower3Module::setupModule()
 {
-    emit addEventSystem(m_pModuleValidator);
+    emit addEventSystem(getValidatorEventSystem());
 
     cBaseMeasModule::setupModule();
 

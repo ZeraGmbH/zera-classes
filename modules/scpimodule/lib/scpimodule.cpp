@@ -26,9 +26,14 @@ cSCPIServer *cSCPIModule::getSCPIServer()
     return m_pSCPIServer;
 }
 
+VfEventSytemModuleParam *cSCPIModule::getValidatorEventSystem()
+{
+    return m_pModuleValidator;
+}
+
 void cSCPIModule::setupModule()
 {
-    emit addEventSystem(m_pModuleValidator);
+    emit addEventSystem(getValidatorEventSystem());
     emit addEventSystem(m_pSCPIEventSystem);
 
     m_pModuleEventSystem = m_pSCPIEventSystem;
@@ -61,7 +66,7 @@ void cSCPIModule::stopMeas()
 
 void cSCPIModule::activationFinished()
 {
-    m_pModuleValidator->setParameterMap(m_veinModuleParameterMap);
+    getValidatorEventSystem()->setParameterMap(m_veinModuleParameterMap);
 
     // we post meta information once again because it's complete now
     exportMetaData();

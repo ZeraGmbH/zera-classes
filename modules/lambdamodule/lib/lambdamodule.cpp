@@ -14,7 +14,7 @@ cLambdaModule::cLambdaModule(ModuleFactoryParam moduleParam) :
 
 void cLambdaModule::setupModule()
 {
-    emit addEventSystem(m_pModuleValidator);
+    emit addEventSystem(getValidatorEventSystem());
 
     cBaseMeasModule::setupModule();
 

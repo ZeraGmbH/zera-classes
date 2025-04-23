@@ -77,7 +77,7 @@ protected:
     VfModuleComponent *m_pModuleInterfaceComponent; // here we export the modules interface as json file
     VfModuleComponent *m_pModuleEntityName;
 
-    VeinEvent::EventSystem *m_pModuleEventSystem;
+    VeinEvent::EventSystem *m_pModuleEventSystem = nullptr;
 
 protected slots:
     void activationStart();
