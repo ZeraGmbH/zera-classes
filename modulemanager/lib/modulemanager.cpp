@@ -145,11 +145,11 @@ void ModuleManager::createCommonModuleParam()
     }
 }
 
-VirtualModule *ZeraModules::ModuleManager::createModule(const QString &xmlConfigPath,
-                                                        int moduleEntityId,
-                                                        int moduleNum,
-                                                        const QString &uniqueName,
-                                                        AbstractModuleFactory *tmpFactory)
+VirtualModule *ModuleManager::createModule(const QString &xmlConfigPath,
+                                           int moduleEntityId,
+                                           int moduleNum,
+                                           const QString &uniqueName,
+                                           AbstractModuleFactory *tmpFactory)
 {
     QByteArray xmlConfigData;
     if(!xmlConfigPath.isEmpty()) {
