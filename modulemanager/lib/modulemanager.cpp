@@ -111,7 +111,7 @@ void ModuleManager::setupConnections()
     //start the next module as soon as the PAR_SerialNr component is avaiable
     connect(m_setupFacade->getLicenseSystem(), &LicenseSystem::sigSerialNumberInitialized, this, &ModuleManager::delayedModuleStartNext);
 
-    QObject::connect(&m_sessionLoader, &JsonSessionLoader::sigLoadModule, this, &ZeraModules::ModuleManager::startModule);
+    QObject::connect(&m_sessionLoader, &JsonSessionLoader::sigModuleInfoParsed, this, &ZeraModules::ModuleManager::startModule);
     QObject::connect(this, &ZeraModules::ModuleManager::sigSessionSwitched, &m_sessionLoader, &JsonSessionLoader::loadSession);
 
     ModulemanagerConfig *mmConfig = ModulemanagerConfig::getInstance();

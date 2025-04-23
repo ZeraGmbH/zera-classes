@@ -10,7 +10,7 @@ public:
     explicit JsonSessionLoader(QObject *parent = nullptr);
     const QString &getSessionFilePath() const;
 signals:
-    void sigLoadModule(QString uniqueModuleName,
+    void sigModuleInfoParsed(QString uniqueModuleName,
                        QString xmlPath,
                        int moduleEntityId,
                        int moduleNum);

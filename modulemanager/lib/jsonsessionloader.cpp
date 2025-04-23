@@ -56,5 +56,5 @@ void JsonSessionLoader::parseModule(QJsonObject moduleObject)
     QString moduleName = moduleObject.value("name").toString();
     int moduleEntityId = moduleObject.value("id").toInt();
     int moduleNum = moduleObject.value("module_num").toInt();
-    emit sigLoadModule(moduleName, configFileNameFull, moduleEntityId, moduleNum);
+    emit sigModuleInfoParsed(moduleName, configFileNameFull, moduleEntityId, moduleNum);
 }
