@@ -72,7 +72,7 @@ private:
     virtual void saveModuleConfig(ModuleData *moduleData);
     virtual void saveDefaultSession();
     virtual QStringList getModuleFileNames();
-    static std::unique_ptr<QList<ModuleData *>> createModuleDataList();
+    static std::unique_ptr<QList<ModuleData *>> createEmptyModuleDataList();
     ModuleNetworkParamsPtr getNetworkParams();
     void handleFinalModuleLoaded();
     void createCommonModuleParam();

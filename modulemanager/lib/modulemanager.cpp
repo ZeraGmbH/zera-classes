@@ -30,7 +30,7 @@ ModuleManager::ModuleManager(ModuleManagerSetupFacade *setupFacade,
                              VeinTcp::AbstractTcpNetworkFactoryPtr tcpNetworkFactory,
                              bool moduleDemoMode, QObject *parent) :
     QObject(parent),
-    m_moduleDataList(createModuleDataList()),
+    m_moduleDataList(createEmptyModuleDataList()),
     m_moduleStartLock(false),
     m_tcpNetworkFactory(tcpNetworkFactory),
     m_setupFacade(setupFacade),
@@ -73,7 +73,7 @@ QStringList ModuleManager::getModuleFileNames()
     return fullNames;
 }
 
-std::unique_ptr<QList<ModuleData *> > ModuleManager::createModuleDataList()
+std::unique_ptr<QList<ModuleData *> > ModuleManager::createEmptyModuleDataList()
 {
     return std::make_unique<QList<ModuleData *>>();
 }
@@ -275,7 +275,7 @@ void ModuleManager::destroyModules()
         m_moduleStartLock = true;
         ModuleNetworkParamsPtr networkParams = getNetworkParams();
         m_allModulesDestroyTask = TaskAllModulesDestroy::create(std::move(m_moduleDataList), m_factoryTable, networkParams);
-        m_moduleDataList = createModuleDataList();
+        m_moduleDataList = createEmptyModuleDataList();
         connect(m_allModulesDestroyTask.get(), &TaskTemplate::sigFinish,
                 this, &ModuleManager::onAllModulesDestroyed);
         m_allModulesDestroyTask->start();
