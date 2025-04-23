@@ -52,6 +52,7 @@ BaseModule::BaseModule(ModuleFactoryParam moduleParam, std::shared_ptr<BaseModul
 BaseModule::~BaseModule()
 {
     emit m_pModuleEventSystem->sigSendEvent(VfServerEntityRemove::generateEvent(getEntityId()));
+    delete m_pModuleEventSystem;
     unsetModule();
 }
 

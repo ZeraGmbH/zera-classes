@@ -16,6 +16,11 @@ cSCPIModule::cSCPIModule(ModuleFactoryParam moduleParam) :
     m_sSCPIModuleName = QString("%1%2").arg(BaseSCPIModuleName).arg(moduleParam.m_moduleNum);
 }
 
+cSCPIModule::~cSCPIModule()
+{
+    delete m_pModuleValidator;
+}
+
 cSCPIServer *cSCPIModule::getSCPIServer()
 {
     return m_pSCPIServer;

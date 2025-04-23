@@ -13,6 +13,11 @@ SourceModule::SourceModule(ModuleFactoryParam moduleParam) :
     Q_INIT_RESOURCE(resource);
 }
 
+SourceModule::~SourceModule()
+{
+    delete m_rpcEventSystem;
+}
+
 VfModuleRpc *SourceModule::getRpcEventSystem() const
 {
     return m_rpcEventSystem;

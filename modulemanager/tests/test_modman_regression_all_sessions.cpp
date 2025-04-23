@@ -1,5 +1,4 @@
 #include "test_modman_regression_all_sessions.h"
-#include "testmodulemanager.h"
 #include "scpidocshtmlgenerator.h"
 #include "modulemanagerconfig.h"
 #include <testloghelpers.h>
@@ -18,6 +17,7 @@ void test_modman_regression_all_sessions::initTestCase()
     DevicesExportGenerator devicesExportGenerator(m_devIfaceXmlsPath);
     devicesExportGenerator.exportAll(MockLxdmSessionChangeParamGenerator::generateTestSessionChanger(false));
     m_veinDumps = devicesExportGenerator.getVeinDumps();
+    m_instanceCountsOnModulesDestroyed = devicesExportGenerator.getInstanceCountsOnModulesDestroyed();
 }
 
 void test_modman_regression_all_sessions::allSessionsVeinDumps_data()
@@ -60,6 +60,14 @@ void test_modman_regression_all_sessions::testGenerateScpiDocs()
                                               htmlOutPath,
                                               m_devIfaceXmlsPath,
                                               sessionMapJsonPath);
+}
+
+void test_modman_regression_all_sessions::checkObjectsProperlyDeleted()
+{
+    TestModuleManager::TModuleInstances cumulatedInstanceCounts = m_instanceCountsOnModulesDestroyed.last();
+    QCOMPARE(cumulatedInstanceCounts.m_componentCount, 0);
+    QCOMPARE(cumulatedInstanceCounts.m_validatorCount, 0);
+    QCOMPARE(cumulatedInstanceCounts.m_commandFilterCount, 0);
 }
 
 bool test_modman_regression_all_sessions::checkUniqueEntityIdNames(const QString &device)
