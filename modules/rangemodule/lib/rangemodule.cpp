@@ -154,7 +154,7 @@ void cRangeModule::setPeakRmsAndFrequencyValues(const QVector<float>* const valu
     int deliveredChannelCount=(values->length()-1)/3;
     int rmsOffset=deliveredChannelCount;
     int frequencyPos=2*deliveredChannelCount;
-    int peakWithDcOffset=deliveredChannelCount+1;
+    int peakWithDcOffset=(2*deliveredChannelCount)+1;
     // prevent potential out of range access
     int iterationLength=qMin(expectedChannelCount,deliveredChannelCount);
     for(int i=0; i<iterationLength;++i) {
