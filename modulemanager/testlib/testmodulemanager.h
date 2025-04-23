@@ -21,8 +21,7 @@ public:
     VeinTcp::AbstractTcpNetworkFactoryPtr getTcpNetworkFactory();
     struct TModuleInstances {
         int m_componentCount = 0;
-        int m_validatorCount = 0;
-        int m_commandFilterCount = 0;
+        int m_eventSystemCount;
     };
     QList<TModuleInstances> getInstanceCountsOnModulesDestroyed();
 

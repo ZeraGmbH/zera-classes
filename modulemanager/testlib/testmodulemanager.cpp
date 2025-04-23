@@ -4,7 +4,6 @@
 #include "modulemanagerconfigtest.h"
 #include "jsonsessionloadertest.h"
 #include <vfmodulecomponent.h>
-#include <vfeventsytemmoduleparam.h>
 #include <testfactoryi2cctrl.h>
 #include <timemachineobject.h>
 #include <timerfactoryqtfortest.h>
@@ -98,8 +97,7 @@ void TestModuleManager::onAllModulesDestroyed()
 {
     m_instantCountsOnModulesDestroyed.append( {
         VfModuleComponent::getInstanceCount(),
-        VfEventSytemModuleParam::getInstanceCount(), // validators
-        VfEventSystemCommandFilter::getInstanceCount()
+        VeinEvent::EventSystem::getInstanceCount()
     } );
 }
 

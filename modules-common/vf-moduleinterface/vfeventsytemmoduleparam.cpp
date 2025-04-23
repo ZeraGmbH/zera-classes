@@ -1,18 +1,10 @@
 #include "vfeventsytemmoduleparam.h"
 
-int VfEventSytemModuleParam::m_instanceCount = 0;
-
 VfEventSytemModuleParam::VfEventSytemModuleParam(int entityId, const VeinStorage::AbstractEventSystem *storageSystem) :
     VfEventSystemCommandFilter(VeinEvent::CommandEvent::EventSubtype::TRANSACTION),
     m_entityId(entityId),
     m_storageSystem(storageSystem)
 {
-    m_instanceCount++;
-}
-
-VfEventSytemModuleParam::~VfEventSytemModuleParam()
-{
-    m_instanceCount--;
 }
 
 void VfEventSytemModuleParam::processCommandEvent(VeinEvent::CommandEvent *commandEvent)
@@ -43,9 +35,4 @@ void VfEventSytemModuleParam::processCommandEvent(VeinEvent::CommandEvent *comma
 void VfEventSytemModuleParam::setParameterMap(const QMap<QString, VfModuleParameter *> &parameterHash)
 {
     m_parameterHash = parameterHash;
-}
-
-int VfEventSytemModuleParam::getInstanceCount()
-{
-    return m_instanceCount;
 }
