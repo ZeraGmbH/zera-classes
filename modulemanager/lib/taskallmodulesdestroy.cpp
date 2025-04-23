@@ -35,18 +35,18 @@ void TaskAllModulesDestroy::start()
     m_tasks = createTasks();
     connect(m_tasks.get(), &TaskTemplate::sigFinish, this, &TaskAllModulesDestroy::onFinish);
     m_tasks->start();
+    cleanupModuleData();
 }
 
-void ZeraModules::TaskAllModulesDestroy::cleanupModuleData()
+void TaskAllModulesDestroy::cleanupModuleData()
 {
     for(ModuleData *moduleData : *m_moduledataList)
         delete moduleData;
-    m_moduledataList->clear();
+    m_moduledataList.reset();
 }
 
 void TaskAllModulesDestroy::onFinish(bool ok)
 {
-    cleanupModuleData();
     if(ok)
         qInfo("All modules destroyed within within %llims", m_timerDuration.elapsed());
     else
@@ -76,16 +76,10 @@ TaskContainerInterfacePtr TaskAllModulesDestroy::createModuleDestroyTasks()
         const ModuleData* moduleData = m_moduledataList->at(entry);
         TaskContainerInterfacePtr tasksModule = TaskContainerSequence::create();
         AbstractModuleFactory* factory = m_factoryTable[moduleData->m_uniqueName];
-        tasksModule->addSub(TaskModuleDeactivate::create(moduleData->m_module, factory));
 
-        // Insane utter obscurity at its best:
-        // Delayed delete (deleteLater) is necessary due to nasty state machine layout in modules:
-        // Module activist's state machine emits signal 'deactivated' which is DIRECT connected
-        // to module's 'deactivationContinue' signal which progresses state machine and fires
-        // 'deactivationReady' which in turn is direct connected to 'moduleDeactivated'.
-        // Long story short: module's deactivation state machine fires before module activist's
-        // state machine is finished. So work around by delayed delete.
+        tasksModule->addSub(TaskModuleDeactivate::create(moduleData->m_module, factory));
         tasksModule->addSub(TaskModuleDelayedDelete::create(moduleData->m_module));
+
         tasks->addSub(std::move(tasksModule));
     }
     return tasks;
