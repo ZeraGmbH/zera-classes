@@ -101,7 +101,8 @@ void TestModuleManager::onAllModulesDestroyed()
         VfModuleComponent::getInstanceCount(),
         VeinEvent::EventSystem::getInstanceCount(),
         cModuleActivist::getInstanceCount(),
-        Zera::cInterfacePrivate::getInstanceCount()
+        Zera::cInterfacePrivate::getInstanceCount(),
+        cDspVar::getInstanceCount()
     } );
 }
 
