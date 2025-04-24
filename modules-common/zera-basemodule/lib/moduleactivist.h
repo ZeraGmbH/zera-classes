@@ -11,6 +11,8 @@ class cModuleActivist: public QObject
     Q_OBJECT
 public:
     cModuleActivist(QString notifyHeaderString);
+    ~cModuleActivist();
+    static int getInstanceCount();
 signals:
     void activated(); // is emitted after the activist is completely activated
     void activationContinue(); // for activist progress in activation statemachine
@@ -29,6 +31,7 @@ protected:
     QString m_notifyHeaderString;
     QStateMachine m_activationMachine;
     QStateMachine m_deactivationMachine;
+    static int m_instanceCount;
 };
 
 #endif // MODULEACITIVIST_H

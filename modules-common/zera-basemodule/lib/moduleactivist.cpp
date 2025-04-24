@@ -1,8 +1,21 @@
 #include "moduleactivist.h"
 
+int cModuleActivist::m_instanceCount = 0;
+
 cModuleActivist::cModuleActivist(QString notifyHeaderString) :
     m_notifyHeaderString(notifyHeaderString)
 {
+    m_instanceCount++;
+}
+
+cModuleActivist::~cModuleActivist()
+{
+    m_instanceCount--;
+}
+
+int cModuleActivist::getInstanceCount()
+{
+    return m_instanceCount;
 }
 
 void cModuleActivist::activate()
