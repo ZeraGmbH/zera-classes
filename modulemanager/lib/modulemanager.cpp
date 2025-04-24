@@ -303,7 +303,11 @@ bool ModuleManager::loadSession(const QString sessionFileNameFull)
 void ModuleManager::changeSessionFile(const QString &newSessionFile)
 {
     if(m_sessionFile != newSessionFile) {
-        const QString sessionFileNameFull = QDir::cleanPath(QString("%1/%2").arg(m_sessionPath, newSessionFile));
+        QString sessionFileNameFull;
+        if(!newSessionFile.startsWith(":/"))
+            sessionFileNameFull = QDir::cleanPath(QString("%1/%2").arg(m_sessionPath, newSessionFile));
+        else
+            sessionFileNameFull = newSessionFile;
         if(loadSession(sessionFileNameFull))
             m_sessionFile = newSessionFile;
         else
