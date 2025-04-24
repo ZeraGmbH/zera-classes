@@ -30,6 +30,11 @@ SETUP_QTESTS_MODULEMANAGER(
     test_sessionnamesmappingjson
     )
 
+target_sources(test_change_session
+  PRIVATE
+    test-data/test-data.qrc
+)
+
 target_sources(test_modman_regression_all_sessions
   PRIVATE
     test-data/test-data.qrc

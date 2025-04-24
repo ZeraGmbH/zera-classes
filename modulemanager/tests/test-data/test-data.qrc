@@ -21,6 +21,8 @@
         <file>scpiDumps/other/mt310s2-meas-session</file>
 
         <file>sessions/session-minimal-rms.json</file>
+        <file>sessions/session-problematic-0.json</file>
+        <file>sessions/session-problematic-1.json</file>
 
         <file>veinDumps/com5003-ced-session.json</file>
         <file>veinDumps/com5003-meas-session.json</file>
