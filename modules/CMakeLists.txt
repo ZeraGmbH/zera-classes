@@ -1,3 +1,4 @@
+add_subdirectory(apimodule)
 add_subdirectory(adjustmentmodule)
 add_subdirectory(blemodule)
 add_subdirectory(burden1module)

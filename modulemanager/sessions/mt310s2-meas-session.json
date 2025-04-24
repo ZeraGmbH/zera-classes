@@ -145,6 +145,11 @@
         "id": 1400
       },
       {
+        "name" : "apimodule",
+        "configFile" : "apimodule.xml",
+        "id": 1500
+      },
+      {
         "name" : "scpimodule",
         "configFile" : "mt310s2-scpimodule.xml",
         "id": 9999
