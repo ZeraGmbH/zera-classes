@@ -43,6 +43,11 @@ cReferenceModule::cReferenceModule(ModuleFactoryParam moduleParam) :
     connect(&m_DeactivationFinishedState, &QStateMachine::entered, this, &cReferenceModule::deactivationFinished);
 }
 
+cReferenceModule::~cReferenceModule()
+{
+    delete m_pReferenceAdjustment; // not in m_ModuleActivistList
+}
+
 cReferenceMeasChannel *cReferenceModule::getMeasChannel(const QString &name)
 {
     cReferenceMeasChannel* p_rmc = 0;
@@ -75,12 +80,10 @@ void cReferenceModule::setupModule()
         connect(pchn, &cReferenceMeasChannel::deactivated, this, &cReferenceModule::deactivationContinue);
     }
 
-    // then we need some program for adjustment
-    m_pReferenceAdjustment = new cReferenceAdjustment(this, pConfData);
-    //m_ModuleActivistList.append(m_pReferenceAdjustment);
-    // we don't actvate this per our activation loop
+    // we don't actvate this per our activation loop in m_ModuleActivistList
     // instead adjustment is activated after all other activists
     // means that module emits activationReady after reference measurement adjustment is finished
+    m_pReferenceAdjustment = new cReferenceAdjustment(this, pConfData);
 
     connect(m_pReferenceAdjustment, &cReferenceAdjustment::activated, this, &cReferenceModule::activationContinue);
     connect(m_pReferenceAdjustment, &cReferenceAdjustment::deactivated, this, &cReferenceModule::deactivationContinue);

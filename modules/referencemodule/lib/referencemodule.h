@@ -15,7 +15,8 @@ public:
     static constexpr const char* BaseModuleName = "REFERENCEModule";
     static constexpr const char* BaseSCPIModuleName = "REF";
 
-    cReferenceModule(ModuleFactoryParam moduleParam);
+    explicit cReferenceModule(ModuleFactoryParam moduleParam);
+    ~cReferenceModule();
     cReferenceMeasChannel* getMeasChannel(const QString &name); // also used for callback
 
 private slots:

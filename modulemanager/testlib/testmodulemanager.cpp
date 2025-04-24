@@ -3,6 +3,7 @@
 #include "testallservicesmt310s2.h"
 #include "modulemanagerconfigtest.h"
 #include "jsonsessionloadertest.h"
+#include "moduleactivist.h"
 #include <vfmodulecomponent.h>
 #include <testfactoryi2cctrl.h>
 #include <timemachineobject.h>
@@ -97,7 +98,8 @@ void TestModuleManager::onAllModulesDestroyed()
 {
     m_instantCountsOnModulesDestroyed.append( {
         VfModuleComponent::getInstanceCount(),
-        VeinEvent::EventSystem::getInstanceCount()
+        VeinEvent::EventSystem::getInstanceCount(),
+        cModuleActivist::getInstanceCount()
     } );
 }
 
