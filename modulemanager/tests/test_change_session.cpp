@@ -143,12 +143,13 @@ void test_change_session::changeSessionCom5003SCPICmd()
     modMan.destroyModulesAndWaitUntilAllShutdown();
 }
 
-void test_change_session::changeSessionMt310s2MultipleProblematicModules()
+void test_change_session::changeSessionMt310s2MultipleProblematicRangeModule()
 {
     // Background:
     // Changing sessions multiple times eats memory and CPU cycles.
-    // Looking at the logs we find two modules with rising set up time: samplemodule
-    // and rangemodule. Let's isolate this here and see if it helps fixing.
+    // Looking at the logs we find two modules with rising set up time: rangemodule
+    // and samplemodule (test below). Let's isolate this here and see if it helps
+    // fixing.
     //
     // More background:
     // * Valgrind memcheck does not work since it does not support accessing
@@ -166,7 +167,29 @@ void test_change_session::changeSessionMt310s2MultipleProblematicModules()
 
     constexpr int countSessionChange = 1000;
     for (int sessionNo=0; sessionNo<countSessionChange; sessionNo++) {
-        const QString sessionFileName = QString(":/sessions/session-problematic-%1.json").arg(sessionNo%2);
+        const QString sessionFileName = QString(":/sessions/session-problematic-range-%1.json").arg(sessionNo%2);
+        qInfo("%i: Session: %s", sessionNo, qPrintable(sessionFileName));
+        modMan.changeSessionFile(sessionFileName);
+        modMan.waitUntilModulesAreReady();
+    }
+    modMan.destroyModulesAndWaitUntilAllShutdown();
+}
+
+void test_change_session::changeSessionMt310s2MultipleProblematicSampleModule()
+{
+    QSKIP("This takes ages and is just there to isolate mem-eaters on multiple session change");
+
+    TestLicenseSystem licenseSystem;
+    ModuleManagerSetupFacade modManSetupFacade(&licenseSystem);
+
+    TestModuleManager modMan(&modManSetupFacade, m_serviceInterfaceFactory);
+    modMan.loadAllAvailableModulePlugins();
+    modMan.setupConnections();
+    modMan.startAllTestServices("mt310s2", false);
+
+    constexpr int countSessionChange = 1000;
+    for (int sessionNo=0; sessionNo<countSessionChange; sessionNo++) {
+        const QString sessionFileName = QString(":/sessions/session-problematic-sample-%1.json").arg(sessionNo%2);
         qInfo("%i: Session: %s", sessionNo, qPrintable(sessionFileName));
         modMan.changeSessionFile(sessionFileName);
         modMan.waitUntilModulesAreReady();

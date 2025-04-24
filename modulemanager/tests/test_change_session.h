@@ -18,7 +18,8 @@ private slots:
     void changeSessionCom5003FromComponent();
     void changeSessionCom5003SCPICmd();
 
-    void changeSessionMt310s2MultipleProblematicModules();
+    void changeSessionMt310s2MultipleProblematicSampleModule();
+    void changeSessionMt310s2MultipleProblematicRangeModule();
 
     void testSessionCatalogScpiCmd();
 private:

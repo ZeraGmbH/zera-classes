@@ -1,0 +1,14 @@
+{
+    "modules" : [
+      {
+        "name" : "statusmodule",
+        "configFile" : "mt310s2-statusmodule.xml",
+        "id": 1150
+      },
+      {
+        "name" : "rangemodule",
+        "configFile" : "mt310s2-rangemodule.xml",
+        "id": 1020
+      }
+    ]
+}
