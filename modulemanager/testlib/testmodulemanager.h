@@ -23,6 +23,7 @@ public:
         int m_componentCount = 0;
         int m_eventSystemCount = 0;
         int m_activistCount = 0;
+        int m_serviceInterfaceCount = 0;
     };
     QList<TModuleInstances> getInstanceCountsOnModulesDestroyed();
 

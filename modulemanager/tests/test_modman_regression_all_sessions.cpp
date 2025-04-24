@@ -67,6 +67,7 @@ void test_modman_regression_all_sessions::checkObjectsProperlyDeleted()
     TestModuleManager::TModuleInstances cumulatedInstanceCounts = m_instanceCountsOnModulesDestroyed.last();
     QCOMPARE(cumulatedInstanceCounts.m_componentCount, 0);
     QCOMPARE(cumulatedInstanceCounts.m_activistCount, 0);
+    QCOMPARE(cumulatedInstanceCounts.m_serviceInterfaceCount, 0);
     constexpr int licenseStorageSystemModuleIntrospection_EventSystemCount = 4;
     QCOMPARE(cumulatedInstanceCounts.m_eventSystemCount, licenseStorageSystemModuleIntrospection_EventSystemCount);
 }
