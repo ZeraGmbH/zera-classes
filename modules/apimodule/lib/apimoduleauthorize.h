@@ -19,6 +19,11 @@ public slots:
 
 private:
     cApiModule* m_module;
+
+    VfModuleParameter* m_pPendingRequestPar;
+    VfModuleParameter* m_pRequestStatusAct;
+    VfModuleParameter* m_pTrustListAct;
+    VfModuleParameter* m_pTrustListChangeCountAct;
 };
 }
 

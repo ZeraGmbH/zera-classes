@@ -13,14 +13,16 @@ public:
     static constexpr const char *BaseModuleName = "ApiModule";
     static constexpr const char *BaseSCPIModuleName = "API";
 
+    VfEventSytemModuleParam* getValidatorEventSystem();
+
     cApiModule(ModuleFactoryParam moduleParam);
 
 private slots:
     void activationFinished() override;
 protected:
-    virtual void setupModule();                             // after xml configuration we can setup and export our module
-    virtual void startMeas();                               // we make the measuring program start here
-    virtual void stopMeas();
+    void setupModule() override;                             // after xml configuration we can setup and export our module
+    void startMeas() override;                               // we make the measuring program start here
+    void stopMeas() override;
 
     VfEventSytemModuleParam* m_pModuleValidator;
 };
