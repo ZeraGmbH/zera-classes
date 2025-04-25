@@ -1,16 +1,17 @@
 #ifndef APIMODULEREQUESTVALIDATOR_H
 #define APIMODULEREQUESTVALIDATOR_H
 
-#include <validatorinterface.h>
+#include <jsonparamvalidator.h>
 
 namespace APIMODULE
 {
-class cApiModuleRequestValidator : public ValidatorInterface
+class cApiModuleRequestValidator : public cJsonParamValidator
 {
 public:
     cApiModuleRequestValidator();
     bool isValidParam(QVariant& newValue) override;
-    void exportMetaData(QJsonObject& jsObj) override;
+private:
+    QJsonObject m_pendingRequestParams;
 };
 }
 #endif // APIMODULEREQUESTVALIDATOR_H
