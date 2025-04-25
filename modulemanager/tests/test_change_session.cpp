@@ -155,6 +155,10 @@ void test_change_session::changeSessionMt310s2MultipleProblematicRangeModule()
     // * Valgrind memcheck does not work since it does not support accessing
     //   files -> module plugins.
     // * Yes btop displays significant rise of memory consumption.
+    // * After playing around with this it seems that memory rise is common to all
+    //   modules - seems rangemodule/samplemodule is slowdown is another story or
+    //   a symtom caused by dangling objects still linked in to something...
+
     QSKIP("This takes ages and is just there to isolate mem-eaters on multiple session change");
 
     TestLicenseSystem licenseSystem;
