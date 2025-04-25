@@ -35,8 +35,10 @@ cModuleInterface::~cModuleInterface()
     for(const auto &delegate : qAsConst(m_scpiMeasureDelegateHash))
         delete delegate;
     m_scpiMeasureDelegateHash.clear();
-    for(auto measureObject: m_measureObjectsToDelete)
+    for (auto measureObject: m_measureObjectsToDelete)
         delete measureObject;
+    for (auto scpiCmdInfo : m_scpiCmdInfosToDelete)
+        delete scpiCmdInfo;
 }
 
 bool cModuleInterface::setupInterface()
@@ -57,6 +59,7 @@ bool cModuleInterface::setupInterface()
                 QJsonArray jsonScpiCmdArr = jsonScpiInfo["Cmd"].toArray();
                 for (int j = 0; j < jsonScpiCmdArr.count(); j++) {
                     cSCPICmdInfo *scpiCmdInfo = new cSCPICmdInfo();
+                    m_scpiCmdInfosToDelete.append(scpiCmdInfo);
                     scpiCmdInfo->scpiModuleName = scpiModuleName;
                     scpiCmdInfo->entityId = entityID;
                     QJsonArray jsonCmdArr = jsonScpiCmdArr[j].toArray();
