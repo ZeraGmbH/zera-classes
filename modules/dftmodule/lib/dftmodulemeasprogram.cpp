@@ -167,6 +167,7 @@ void cDftModuleMeasProgram::generateVeinInterface()
     m_pDFTPPCountInfo = new VfModuleMetaData(QString("DFTPPCount"), QVariant(p));
     m_pModule->veinModuleMetaDataList.append(m_pDFTPPCountInfo);
     m_pDFTOrderInfo = new VfModuleMetaData(QString("DFTOrder"), QVariant(getConfData()->m_nDftOrder));
+    m_pModule->veinModuleMetaDataList.append(m_pDFTOrderInfo);
 
     QString key;
     m_pIntegrationTimeParameter = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
