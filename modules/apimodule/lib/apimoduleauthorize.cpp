@@ -21,9 +21,9 @@ void cApiModuleAuthorize::generateVeinInterface()
 
     m_pPendingRequestPar = new VfModuleParameter(m_module->getEntityId(), m_module->getValidatorEventSystem(),
                                                  QString("PAR_PendingRequest"),
-                                                 QString("Json structure with Name(string), Type(string->Certificate,Basic,PublicKey), Token(string)"),
+                                                 QString("Json structure with name(string), type(string->Certificate,Basic,PublicKey), token(string)"),
                                                  QJsonObject());
-    m_pPendingRequestPar->setValidator(new cRegExValidator(".*"));
+    m_pPendingRequestPar->setValidator(new cApiModuleRequestValidator());
     m_pPendingRequestPar->setScpiInfo("AUTH", "PENDINGREQUEST", SCPI::isQuery | SCPI::isCmdwP, m_pPendingRequestPar->getName());
     m_module->m_veinModuleParameterMap[m_pPendingRequestPar->getName()] = m_pPendingRequestPar;
 

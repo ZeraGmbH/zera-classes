@@ -11,7 +11,6 @@ class cApiModuleAuthorize : public cModuleActivist
 {
 public:
     cApiModuleAuthorize(cApiModule *module);
-
 public slots:
     void generateVeinInterface() override;
     void activate() override;
