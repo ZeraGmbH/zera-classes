@@ -37,6 +37,8 @@ cSfcModuleMeasProgram::cSfcModuleMeasProgram(cSfcModule *module, std::shared_ptr
     m_readDUTInputDoneState.addTransition(this, &cSfcModuleMeasProgram::activationContinue, &m_setpcbREFConstantNotifierState);
 
     m_setpcbREFConstantNotifierState.addTransition(this, &cSfcModuleMeasProgram::activationContinue, &m_setsecINTNotifierState);
+    m_setMasterMuxState.addTransition(this, &cSfcModuleMeasProgram::setupContinue, &m_setMasterMeasModeState);
+    m_setMasterMeasModeState.addTransition(this, &cSfcModuleMeasProgram::setupContinue, &m_enableInterruptState);
     m_setsecINTNotifierState.addTransition(this, &cSfcModuleMeasProgram::activationContinue, &m_activationDoneState);
 
     m_activationMachine.addState(&resourceManagerConnectState);
@@ -54,6 +56,8 @@ cSfcModuleMeasProgram::cSfcModuleMeasProgram(cSfcModule *module, std::shared_ptr
     m_activationMachine.addState(&m_readDUTInputDoneState);
     m_activationMachine.addState(&m_setpcbREFConstantNotifierState);
     m_activationMachine.addState(&m_setsecINTNotifierState);
+    m_activationMachine.addState(&m_setMasterMuxState);
+    m_activationMachine.addState(&m_setMasterMeasModeState);
     m_activationMachine.addState(&m_activationDoneState);
 
     m_activationMachine.setInitialState(&resourceManagerConnectState);
@@ -73,17 +77,16 @@ cSfcModuleMeasProgram::cSfcModuleMeasProgram(cSfcModule *module, std::shared_ptr
     connect(&m_readDUTInputDoneState, &QState::entered, this, &cSfcModuleMeasProgram::readDUTInputDone);
     connect(&m_setpcbREFConstantNotifierState, &QState::entered, this, &cSfcModuleMeasProgram::setpcbREFConstantNotifier);
     connect(&m_setsecINTNotifierState, &QState::entered, this, &cSfcModuleMeasProgram::setsecINTNotifier);
+    connect(&m_setMasterMuxState, &QState::entered, this, &cSfcModuleMeasProgram::setMasterMux);
+    connect(&m_setMasterMeasModeState, &QState::entered, this, &cSfcModuleMeasProgram::setMasterMeasMode);
     connect(&m_activationDoneState, &QState::entered, this, &cSfcModuleMeasProgram::activationDone);
 
 
     // setting up statemachine used when starting a measurement
-    m_setMasterMuxState.addTransition(this, &cSfcModuleMeasProgram::setupContinue, &m_setMasterMeasModeState);
-    m_setMasterMeasModeState.addTransition(this, &cSfcModuleMeasProgram::setupContinue, &m_enableInterruptState);
     m_enableInterruptState.addTransition(this, &cSfcModuleMeasProgram::setupContinue, &m_startMeasurementState);
     m_startMeasurementState.addTransition(this, &cSfcModuleMeasProgram::setupContinue, &m_startMeasurementDoneState);
 
-    m_startMeasurementMachine.addState(&m_setMasterMuxState);
-    m_startMeasurementMachine.addState(&m_setMasterMeasModeState);
+
     m_startMeasurementMachine.addState(&m_enableInterruptState);
     m_startMeasurementMachine.addState(&m_startMeasurementState);
     m_startMeasurementMachine.addState(&m_startMeasurementDoneState);
@@ -91,10 +94,9 @@ cSfcModuleMeasProgram::cSfcModuleMeasProgram(cSfcModule *module, std::shared_ptr
     if(m_pModule->getDemo())
         m_startMeasurementMachine.setInitialState(&m_startMeasurementState);
     else
-        m_startMeasurementMachine.setInitialState(&m_setMasterMuxState);
+        m_startMeasurementMachine.setInitialState(&m_enableInterruptState);
 
-    connect(&m_setMasterMuxState, &QState::entered, this, &cSfcModuleMeasProgram::setMasterMux);
-    connect(&m_setMasterMeasModeState, &QState::entered, this, &cSfcModuleMeasProgram::setMasterMeasMode);
+
     connect(&m_enableInterruptState, &QState::entered, this, &cSfcModuleMeasProgram::enableInterrupt);
     connect(&m_startMeasurementState, &QState::entered, this, &cSfcModuleMeasProgram::startMeasurement);
     connect(&m_startMeasurementDoneState, &QState::entered, this, &cSfcModuleMeasProgram::startMeasurementDone);
@@ -292,12 +294,26 @@ void cSfcModuleMeasProgram::setsecINTNotifier()
     m_MsgNrCmdList[m_pSECInterface->registerNotifier(QString("ECAL:%1:R%2?").arg(m_masterErrCalcName).arg(ECALCREG::INTREG))] = setsecintnotifier;
 }
 
+void cSfcModuleMeasProgram::setMasterMux()
+{
+    QString dutInputName = getConfData()->m_sDutInput.m_sPar;
+    m_MsgNrCmdList[m_pSECInterface->setMux(m_masterErrCalcName, dutInputName)] = setmastermux;
+}
+
+void cSfcModuleMeasProgram::setMasterMeasMode()
+{
+    //m_MsgNrCmdList[m_pSECInterface->setCmdid(m_masterErrCalcName, ECALCCMDID::COUNTEDGE)] = setmastermeasmode;
+    m_MsgNrCmdList[m_pSECInterface->writeRegister(m_masterErrCalcName, ECALCREG::CMD, ECALCCMDID::COUNTEDGE)] = enableinterrupt;
+}
+
 void cSfcModuleMeasProgram::activationDone()
 {
     connect(m_pStartStopPar, &VfModuleParameter::sigValueChanged, this, &cSfcModuleMeasProgram::onStartStopChanged);
     m_ActualizeTimer = TimerFactoryQt::createPeriodic(m_nActualizeIntervallLowFreq);
     connect(m_ActualizeTimer.get(), &TimerTemplateQt::sigExpired, this, &cSfcModuleMeasProgram::Actualize);
 
+    m_ContinousTimer = TimerFactoryQt::createPeriodic(m_nActualizeIntervallLowFreq);
+    connect(m_ContinousTimer.get(), &TimerTemplateQt::sigExpired, this, &cSfcModuleMeasProgram::readStatusRegister);
     m_bActive = true;
 
     emit activated();
@@ -447,6 +463,16 @@ void cSfcModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QV
                 else
                     notifyError(startmeasErrMsg);
                 break;
+            case readstatus:
+                if (reply == ack)
+                {
+                    quint32 statusRegister = answer.toUInt();
+
+                    m_pLedStateAct->setValue(statusRegister & 0x100);
+                    m_pLedInitialStateAct->setValue(statusRegister & 0x200);
+                }
+                else
+                    notifyError(readsecregisterErrMsg);
             case actualizeprogress:
             {
                 if (reply == ack) {
@@ -560,17 +586,7 @@ void cSfcModuleMeasProgram::deactivationDone()
     emit deactivateMeasDone();
 }
 
-void cSfcModuleMeasProgram::setMasterMux()
-{
-    QString dutInputName = getConfData()->m_sDutInput.m_sPar;
-    m_MsgNrCmdList[m_pSECInterface->setMux(m_masterErrCalcName, dutInputName)] = setmastermux;
-}
 
-void cSfcModuleMeasProgram::setMasterMeasMode()
-{
-    //m_MsgNrCmdList[m_pSECInterface->setCmdid(m_masterErrCalcName, ECALCCMDID::COUNTEDGE)] = setmastermeasmode;
-    m_MsgNrCmdList[m_pSECInterface->writeRegister(m_masterErrCalcName, ECALCREG::CMD, ECALCCMDID::COUNTEDGE)] = enableinterrupt;
-}
 
 void cSfcModuleMeasProgram::enableInterrupt()
 {
@@ -589,9 +605,8 @@ void cSfcModuleMeasProgram::startMeasurement()
 void cSfcModuleMeasProgram::startMeasurementDone()
 {
     m_bMeasurementRunning = true;
-    if(!m_pModule->getDemo())
-        m_MsgNrCmdList[m_pSECInterface->readRegister(m_masterErrCalcName, ECALCREG::CMD)] = test;
     Actualize();
+    readStatusRegister();
     m_ActualizeTimer->start();
 }
 
@@ -602,6 +617,12 @@ void cSfcModuleMeasProgram::Actualize()
             m_MsgNrCmdList[m_pSECInterface->readRegister(m_masterErrCalcName, ECALCREG::MTCNTact)] = actualizeprogress;
         }
     }
+}
+
+void cSfcModuleMeasProgram::readStatusRegister()
+{
+    if(!m_pModule->getDemo())
+        m_MsgNrCmdList[m_pSECInterface->readRegister(m_masterErrCalcName, ECALCREG::STATUS)] = readstatus;
 }
 
 }
