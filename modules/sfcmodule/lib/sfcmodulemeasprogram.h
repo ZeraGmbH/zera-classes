@@ -45,7 +45,7 @@ enum sfcmoduleCmds
     startmeasurement,
 
     actualizeprogress,
-    test
+    readstatus
 };
 
 
@@ -90,6 +90,7 @@ private:
 
     TimerTemplateQtPtr m_ActualizeTimer; // after timed out we actualize progressvalue
     static constexpr quint32 m_nActualizeIntervallLowFreq = 1000;
+    TimerTemplateQtPtr m_ContinousTimer;
 
     // statemachine for deactivating
     QState m_stopECalculatorState; // we stop running measurement
@@ -182,6 +183,7 @@ private slots:
     void startMeasurementDone();
 
     void Actualize();
+    void readStatusRegister();
 };
 
 }
