@@ -20,9 +20,8 @@ public:
     const QByteArray getLastStoredConfig();
     VeinTcp::AbstractTcpNetworkFactoryPtr getTcpNetworkFactory();
     struct TModuleInstances {
-        int m_veinMetaDataCount = 0;
-        int m_veinComponentCount = 0;
-        int m_veinEventSystemCount = 0;
+        int m_componentCount = 0;
+        int m_eventSystemCount = 0;
         int m_activistCount = 0;
         int m_serviceInterfaceCount = 0;
         int m_dspVarCount = 0;

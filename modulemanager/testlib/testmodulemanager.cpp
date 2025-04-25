@@ -5,7 +5,6 @@
 #include "jsonsessionloadertest.h"
 #include "moduleactivist.h"
 #include <interface_p.h>
-#include <vfmodulemetadata.h>
 #include <vfmodulecomponent.h>
 #include <testfactoryi2cctrl.h>
 #include <timemachineobject.h>
@@ -99,7 +98,6 @@ VeinTcp::AbstractTcpNetworkFactoryPtr TestModuleManager::getTcpNetworkFactory()
 void TestModuleManager::onAllModulesDestroyed()
 {
     m_instantCountsOnModulesDestroyed.append( {
-        VfModuleMetaData::getInstanceCount(),
         VfModuleComponent::getInstanceCount(),
         VeinEvent::EventSystem::getInstanceCount(),
         cModuleActivist::getInstanceCount(),
