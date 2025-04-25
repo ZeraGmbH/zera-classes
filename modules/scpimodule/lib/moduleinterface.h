@@ -47,6 +47,8 @@ private:
     void setXmlComponentInfo(ScpiBaseDelegate* delegate, const QJsonObject &componentInfo);
     void setXmlComponentValidatorInfo(ScpiBaseDelegate* delegate, const QJsonObject &componentInfo);
     QJsonArray getValidatorEntries(QJsonObject validator);
+
+    QList<cSCPIMeasure*> m_measureObjectsToDelete;
 };
 
 }

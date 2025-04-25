@@ -35,6 +35,8 @@ cModuleInterface::~cModuleInterface()
     for(const auto &delegate : qAsConst(m_scpiMeasureDelegateHash))
         delete delegate;
     m_scpiMeasureDelegateHash.clear();
+    for(auto measureObject: m_measureObjectsToDelete)
+        delete measureObject;
 }
 
 bool cModuleInterface::setupInterface()
@@ -105,6 +107,7 @@ void cModuleInterface::addSCPICommand(cSCPICmdInfo *scpiCmdInfo)
     if (scpiCmdInfo->scpiModel == "MEASURE") {
         // in case of measure model we have to add several commands for each value
         cSCPIMeasure* measureObject = new cSCPIMeasure(&m_pModule->scpiMeasureHash, scpiCmdInfo);
+        m_measureObjectsToDelete.append(measureObject);
 
         addSCPIMeasureCommand(QString(""), QString("MEASURE"), SCPI::isNode | SCPI::isQuery, SCPIModelType::measure, measureObject);
         addSCPIMeasureCommand(QString(""), QString("CONFIGURE"), SCPI::isNode | SCPI::isCmd, SCPIModelType::configure, measureObject);
