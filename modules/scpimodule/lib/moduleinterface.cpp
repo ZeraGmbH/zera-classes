@@ -151,7 +151,12 @@ void cModuleInterface::addSCPICommand(cSCPICmdInfo *scpiCmdInfo)
 }
 
 
-void cModuleInterface::addSCPIMeasureCommand(QString cmdparent, QString cmd, quint8 cmdType, quint8 measCode, cSCPIMeasure *measureObject, QJsonObject veinComponentInfo)
+void cModuleInterface::addSCPIMeasureCommand(QString cmdparent,
+                                             QString cmd,
+                                             quint8 cmdType,
+                                             quint8 measCode,
+                                             cSCPIMeasure *measureObject,
+                                             QJsonObject veinComponentInfo)
 {
     QString cmdcomplete = QString("%1:%2").arg(cmdparent, cmd);
     cSCPIMeasureDelegate* delegate;

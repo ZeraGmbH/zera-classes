@@ -2,6 +2,7 @@
 #define SCPIMODULEINTERFACE_H
 
 #include "baseinterface.h"
+#include "scpibasedelegate.h"
 #include <QHash>
 #include <QJsonObject>
 #include <QJsonArray>
@@ -16,7 +17,6 @@ namespace SCPIModelType {
 class cSCPIModule;
 class cSCPICmdInfo;
 class cSCPIInterface;
-class ScpiBaseDelegate;
 class cSCPIParameterDelegate;
 class cSCPICatalogCmdDelegate;
 class cSCPIMeasure;
@@ -27,12 +27,11 @@ class cSCPIMeasureDelegate;
 class cModuleInterface: public cBaseInterface
 {
     Q_OBJECT
-
 public:
     cModuleInterface(cSCPIModule* module, cSCPIInterface* iface);
     virtual ~cModuleInterface();
 
-    virtual bool setupInterface();
+    virtual bool setupInterface() override;
     virtual void actualizeInterface(QVariant modInterface);
 
     QHash<QString, cSCPIMeasureDelegate*>* getSCPIMeasDelegateHash();
@@ -43,7 +42,12 @@ private:
     QHash<QString, cSCPICatalogCmdDelegate*> m_scpiPropertyDelegateHash; // a hash with property delegates taht might need actualization when something changes
 
     void addSCPICommand(cSCPICmdInfo *scpiCmdInfo);
-    void addSCPIMeasureCommand(QString cmdparent, QString cmd,  quint8 cmdType, quint8 measCode, cSCPIMeasure* measureObject, QJsonObject veinComponentInfo = QJsonObject());
+    void addSCPIMeasureCommand(QString cmdparent,
+                               QString cmd,
+                               quint8 cmdType,
+                               quint8 measCode,
+                               cSCPIMeasure* measureObject,
+                               QJsonObject veinComponentInfo = QJsonObject());
     void setXmlComponentInfo(ScpiBaseDelegate* delegate, const QJsonObject &componentInfo);
     void setXmlComponentValidatorInfo(ScpiBaseDelegate* delegate, const QJsonObject &componentInfo);
     QJsonArray getValidatorEntries(QJsonObject validator);
