@@ -1267,6 +1267,7 @@
                 }
             },
             "ModuleInfo": {
+                "DFTOrder": "1",
                 "DFTPNCount": "6",
                 "DFTPPCount": "3",
                 "Description": "This module measures configured order dft values for configured channels",
