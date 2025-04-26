@@ -1,8 +1,10 @@
 #ifndef TESTMODULEMANAGER_H
 #define TESTMODULEMANAGER_H
 
+#include <abstracttestallservices.h>
 #include <modulemanager.h>
 #include <tcpnetworkfactory.h>
+#include <zdspserver.h>
 
 class TestModuleManager : public ZeraModules::ModuleManager
 {
@@ -29,6 +31,8 @@ public:
     };
     QList<TModuleInstances> getInstanceCountsOnModulesDestroyed();
 
+    ZDspServer *getDspServer();
+
 private slots:
     void onAllModulesDestroyed();
 
@@ -43,6 +47,7 @@ private:
 
     std::shared_ptr<QByteArray> m_configDataLastSaved;
     QList<TModuleInstances> m_instantCountsOnModulesDestroyed;
+    std::unique_ptr<AbstractTestAllServices> m_testAllServices;
 };
 
 #endif // TESTMODULEMANAGER_H

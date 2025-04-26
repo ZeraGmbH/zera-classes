@@ -1,4 +1,5 @@
 #include "demofactoryserviceinterfaces.h"
+#include "demomodulemanager.h"
 #include "factoryserviceinterfaces.h"
 #include "jsonloggercontentloader.h"
 #include "modulemanager.h"
@@ -141,19 +142,24 @@ int main(int argc, char *argv[])
         modManSetupFacade = std::make_unique<ModuleManagerSetupFacade>(licenseSystem, demoMode,
             MockLxdmSessionChangeParamGenerator::generateDemoSessionChanger());
 
-    AbstractFactoryServiceInterfacesPtr serviceInterfaceFactory;
-    if(demoMode)
-        serviceInterfaceFactory = std::make_unique<DemoFactoryServiceInterfaces>();
-    else
-        serviceInterfaceFactory = std::make_unique<FactoryServiceInterfaces>();
-    ZeraModules::ModuleManager *modMan = new ZeraModules::ModuleManager(
-        modManSetupFacade.get(),
-        serviceInterfaceFactory,
-        VeinTcp::TcpNetworkFactory::create(),
-        demoMode,
-        app.get());
-    if(demoMode)
-        modMan->startAllDemoServices(demoDeviceName);
+    ZeraModules::ModuleManager *modMan;
+    if(demoMode) {
+        DemoModuleManager* demoModMan = new DemoModuleManager(
+            modManSetupFacade.get(),
+            std::make_unique<DemoFactoryServiceInterfaces>(),
+            VeinTcp::TcpNetworkFactory::create(),
+            app.get());
+        demoModMan->startAllDemoServices(demoDeviceName);
+        modMan = demoModMan;
+    }
+    else {
+        modMan = new ZeraModules::ModuleManager(
+            modManSetupFacade.get(),
+            std::make_unique<FactoryServiceInterfaces>(),
+            VeinTcp::TcpNetworkFactory::create(),
+            false,
+            app.get());
+    }
 
     // setup vein modules
     VeinLogger::DatabaseLogger *dataLoggerSystem = new VeinLogger::DatabaseLogger(

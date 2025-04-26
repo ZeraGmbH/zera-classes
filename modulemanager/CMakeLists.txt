@@ -66,6 +66,7 @@ install(
 
 enable_testing()
 add_subdirectory(app)
+add_subdirectory(demolib)
 add_subdirectory(lib)
 add_subdirectory(systemd)
 add_subdirectory(tests)

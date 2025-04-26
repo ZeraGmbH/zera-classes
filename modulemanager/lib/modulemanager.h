@@ -6,7 +6,6 @@
 #include "modulefactoryparam.h"
 #include "modulemanagersetupfacade.h"
 #include "moduledata.h"
-#include "abstractmockallservices.h"
 #include <abstracttcpnetworkfactory.h>
 #include <virtualmodule.h>
 #include <QVariant>
@@ -38,7 +37,6 @@ public:
     bool loadAllAvailableModulePlugins();
     void setupConnections();
     void loadDefaultSession();
-    void startAllDemoServices(QString deviceName);
 signals:
     void sigSessionSwitched(const QString &newSessionFile);
     void sigModulesLoaded(const QString &t_sessionPath, const QStringList &t_sessionsAvailable);
@@ -65,7 +63,6 @@ protected:
     static QString m_sessionPath;
     std::unique_ptr<QList<ModuleData *>> m_moduleDataList;
     bool m_moduleStartLock;
-    std::unique_ptr<AbstractMockAllServices> m_mockAllServices;
     VeinTcp::AbstractTcpNetworkFactoryPtr m_tcpNetworkFactory;
 
 private:

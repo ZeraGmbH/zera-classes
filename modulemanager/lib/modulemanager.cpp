@@ -2,8 +2,6 @@
 #include "modulemanagerconfig.h"
 #include "taskallmodulesdestroy.h"
 #include "licensesystem.h"
-#include "demoallservicescom5003.h"
-#include "demoallservicesmt310s2.h"
 
 #include <ve_eventsystem.h>
 
@@ -359,16 +357,6 @@ void ModuleManager::onModuleStartNext()
 void ModuleManager::onModuleEventSystemAdded(VeinEvent::EventSystem *t_eventSystem)
 {
     m_setupFacade->addModuleSystem(t_eventSystem);
-}
-
-void ModuleManager::startAllDemoServices(QString deviceName)
-{
-    if (m_mockAllServices)
-        m_mockAllServices = nullptr;
-    if(deviceName == "mt310s2" || deviceName == "mt581s2")
-        m_mockAllServices = std::make_unique<DemoAllServicesMt310s2>(deviceName);
-    else if(deviceName == "com5003")
-        m_mockAllServices = std::make_unique<DemoAllServicesCom5003>();
 }
 
 void ModuleManager::saveModuleConfig(ModuleData *moduleData)

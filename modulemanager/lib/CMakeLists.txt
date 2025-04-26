@@ -28,7 +28,6 @@ target_link_libraries(zera-modulemanager-lib
     Zera::VfTcp
     Zera::VfCpp
     Zera::ModmanBase
-    Zera::zenuxservicecommon-demolib
     Zera::service-interfaces
     VeinMeta::VfLogger
     VeinMeta::VfExport

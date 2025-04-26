@@ -52,15 +52,15 @@ TestModuleManager::TestModuleManager(ModuleManagerSetupFacade *setupFacade,
 
 void TestModuleManager::startAllTestServices(QString deviceName, bool initialAdjPermission)
 {
-    if (m_mockAllServices)
-        m_mockAllServices = nullptr;
+    if (m_testAllServices)
+        m_testAllServices = nullptr;
 
     if(deviceName == "mt310s2" || deviceName == "mt581s2")
-        m_mockAllServices = std::make_unique<TestAllServicesMt310s2>(
+        m_testAllServices = std::make_unique<TestAllServicesMt310s2>(
             deviceName,
             std::make_shared<TestFactoryI2cCtrl>(initialAdjPermission));
     else if(deviceName == "com5003")
-        m_mockAllServices = std::make_unique<TestAllServicesCom5003>(
+        m_testAllServices = std::make_unique<TestAllServicesCom5003>(
             std::make_shared<TestFactoryI2cCtrl>(initialAdjPermission));
 }
 
@@ -94,6 +94,11 @@ const QByteArray TestModuleManager::getLastStoredConfig()
 VeinTcp::AbstractTcpNetworkFactoryPtr TestModuleManager::getTcpNetworkFactory()
 {
     return m_tcpNetworkFactory;
+}
+
+ZDspServer *TestModuleManager::getDspServer()
+{
+    return m_testAllServices->getZdsp1dServer();
 }
 
 void TestModuleManager::onAllModulesDestroyed()
