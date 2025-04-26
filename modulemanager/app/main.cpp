@@ -78,6 +78,29 @@ static void startNetwork(QObject *parent)
     }
 }
 
+static ZeraModules::ModuleManager *createModMan(bool demoMode,
+                                                const QString& demoDeviceName,
+                                                QObject* parent)
+{
+    if(demoMode) {
+        DemoModuleManager* demoModMan = new DemoModuleManager(
+            modManSetupFacade.get(),
+            std::make_unique<DemoFactoryServiceInterfaces>(),
+            VeinTcp::TcpNetworkFactory::create(),
+            parent);
+        demoModMan->startAllDemoServices(demoDeviceName);
+        return demoModMan;
+    }
+    else {
+        return new ZeraModules::ModuleManager(
+            modManSetupFacade.get(),
+            std::make_unique<FactoryServiceInterfaces>(),
+            VeinTcp::TcpNetworkFactory::create(),
+            false,
+            parent);
+    }
+}
+
 int main(int argc, char *argv[])
 {
     QString demoDeviceName = getDemoDeviceName(argc, argv);
@@ -141,25 +164,7 @@ int main(int argc, char *argv[])
     else
         modManSetupFacade = std::make_unique<ModuleManagerSetupFacade>(licenseSystem, demoMode,
             MockLxdmSessionChangeParamGenerator::generateDemoSessionChanger());
-
-    ZeraModules::ModuleManager *modMan;
-    if(demoMode) {
-        DemoModuleManager* demoModMan = new DemoModuleManager(
-            modManSetupFacade.get(),
-            std::make_unique<DemoFactoryServiceInterfaces>(),
-            VeinTcp::TcpNetworkFactory::create(),
-            app.get());
-        demoModMan->startAllDemoServices(demoDeviceName);
-        modMan = demoModMan;
-    }
-    else {
-        modMan = new ZeraModules::ModuleManager(
-            modManSetupFacade.get(),
-            std::make_unique<FactoryServiceInterfaces>(),
-            VeinTcp::TcpNetworkFactory::create(),
-            false,
-            app.get());
-    }
+    ZeraModules::ModuleManager *modMan = createModMan(demoMode, demoDeviceName, app.get());
 
     // setup vein modules
     VeinLogger::DatabaseLogger *dataLoggerSystem = new VeinLogger::DatabaseLogger(
