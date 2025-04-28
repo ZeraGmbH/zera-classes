@@ -27,6 +27,11 @@ bool cApiModuleRequestValidator::isValidParam(QVariant &newValue)
     bool valid = cJsonParamValidator::isValidParam(newValue);
     if (valid)
         newValue = newValue.toJsonObject();
+    else if(newValue.toJsonObject() == QJsonObject()) {
+        valid = true;
+        newValue = newValue.toJsonObject();
+    }
+
     return valid;
 }
 
