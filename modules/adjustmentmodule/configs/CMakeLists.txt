@@ -2,7 +2,7 @@ file(GLOB XML_CONFIGS
     *.xml
 )
 
-add_custom_target(adjutmentmodule-configs
+add_custom_target(adjustmentmodule-configs
     SOURCES ${XML_CONFIGS}
     )
 
