@@ -20,6 +20,7 @@ private:
     cApiModule* m_module;
 
     VfModuleParameter* m_pPendingRequestPar;
+    VfModuleComponent* m_pPendingRequestAct;
     VfModuleComponent* m_pRequestStatusAct;
     VfModuleComponent* m_pTrustListAct;
     VfModuleComponent* m_pTrustListChangeCountAct;

@@ -13,7 +13,6 @@ cApiModuleAuthorize::cApiModuleAuthorize(cApiModule *module): cModuleActivist(mo
 
 void cApiModuleAuthorize::generateVeinInterface()
 {
-    // tbd actpendingrequest
     m_pRequestStatusAct = new VfModuleComponent(m_module->getEntityId(), m_module->getValidatorEventSystem(),
                                                 QString("ACT_RequestStatus"),
                                                 QString("Flag state for request status: 1=running, 2=accepted"),
@@ -27,6 +26,12 @@ void cApiModuleAuthorize::generateVeinInterface()
     m_pPendingRequestPar->setValidator(new cApiModuleRequestValidator());
     m_pPendingRequestPar->setScpiInfo("AUTH", "PENDINGREQUEST", SCPI::isQuery | SCPI::isCmdwP, m_pPendingRequestPar->getName());
     m_module->m_veinModuleParameterMap[m_pPendingRequestPar->getName()] = m_pPendingRequestPar;
+
+    m_pPendingRequestAct = new VfModuleComponent(m_module->getEntityId(), m_module->getValidatorEventSystem(),
+                                                 QString("ACT_PendingRequest"),
+                                                 QString("Json structure with name(string), type(string->Certificate,Basic,PublicKey), token(string)"),
+                                                 QJsonObject());
+    m_pPendingRequestAct->setScpiInfo("AUTH", "PENDINGREQUEST", SCPI::isQuery, m_pPendingRequestPar->getName());
 
     m_pTrustListAct = new VfModuleComponent(m_module->getEntityId(), m_module->getValidatorEventSystem(),
                                                 QString("ACT_TrustList"),
