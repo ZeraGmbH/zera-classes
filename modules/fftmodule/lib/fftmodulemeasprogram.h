@@ -46,7 +46,6 @@ protected slots:
 private:
     cFftModuleConfigData* getConfData();
     void setDspVarList();
-    void deleteDspVarList();
     void setDspCmdList();
     void deleteDspCmdList();
     quint16 calcFftResultLenHalf(quint8 fftOrder);

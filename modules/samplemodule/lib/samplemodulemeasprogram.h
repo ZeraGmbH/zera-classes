@@ -45,7 +45,6 @@ protected slots:
 private:
     cSampleModuleConfigData* getConfData();
     void setDspVarList();
-    void deleteDspVarList();
     void setDspCmdList();
     void deleteDspCmdList();
 

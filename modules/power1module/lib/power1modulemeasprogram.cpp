@@ -371,11 +371,6 @@ void cPower1ModuleMeasProgram::setDspVarList()
 }
 
 
-void cPower1ModuleMeasProgram::deleteDspVarList()
-{
-    m_dspVars.deleteVarList(m_dspInterface.get());
-}
-
 MeasSystemChannels cPower1ModuleMeasProgram::getMeasChannelUIPairs()
 {
     ChannelRangeObserver::SystemObserverPtr observer = m_pModule->getSharedChannelRangeObserver();
@@ -951,7 +946,6 @@ void cPower1ModuleMeasProgram::freePGRMem()
     m_dataAcquisitionMachine.stop();
     m_bActive = false;
     Zera::Proxy::getInstance()->releaseConnection(m_dspClient.get());
-    deleteDspVarList();
     deleteDspCmdList();
 
     m_MsgNrCmdList[m_rmInterface.freeResource("DSP1", "PGRMEMC")] = freepgrmem;

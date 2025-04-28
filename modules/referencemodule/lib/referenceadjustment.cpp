@@ -208,8 +208,6 @@ void cReferenceAdjustment::deactivationInit()
     m_bActive = false;
     Zera::Proxy::getInstance()->releaseConnection(m_dspClient.get());
     Zera::Proxy::getInstance()->releaseConnection(m_pPCBClient.get());
-    m_dspInterface->deleteMemHandle(m_pGainCorrectionDSP);
-    m_dspInterface->deleteMemHandle(m_pOffset2CorrectionDSP);
     emit deactivationContinue();
 }
 

@@ -10,7 +10,6 @@ class Power1DspVarGenerator
 public:
     Power1DspVarGenerator();
     void setupVarList(Zera::cDSPInterface* pDSPInterFace, const POWER1MODULE::cPower1ModuleConfigData* confData, quint32 sampleRate);
-    void deleteVarList(Zera::cDSPInterface* pDSPInterFace);
     cDspMeasData* getActualValues();
     cDspMeasData* getFreqScale();
     cDspMeasData* getNominalPower();

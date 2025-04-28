@@ -43,7 +43,6 @@ protected slots:
 private:
     cRmsModuleConfigData* getConfData();
     void setDspVarList();
-    void deleteDspVarList();
     void setDspCmdList();
     void deleteDspCmdList();
 

@@ -44,7 +44,6 @@ protected slots:
 private:
     cOsciModuleConfigData* getConfData();
     void setDspVarList();
-    void deleteDspVarList();
     void setDspCmdList();
     void deleteDspCmdList();
 

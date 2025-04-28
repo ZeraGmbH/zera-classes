@@ -112,13 +112,6 @@ void cSampleModuleMeasProgram::setDspVarList()
     m_nDspMemUsed = m_pTmpDataDsp->getSize() + m_pParameterDSP->getSize() + m_pActualValuesDSP->getSize();
 }
 
-void cSampleModuleMeasProgram::deleteDspVarList()
-{
-    m_dspInterface->deleteMemHandle(m_pTmpDataDsp);
-    m_dspInterface->deleteMemHandle(m_pParameterDSP);
-    m_dspInterface->deleteMemHandle(m_pActualValuesDSP);
-}
-
 void cSampleModuleMeasProgram::setDspCmdList()
 {
     int samples = m_pModule->getSharedChannelRangeObserver()->getSamplesPerPeriod();

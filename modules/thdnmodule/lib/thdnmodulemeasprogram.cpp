@@ -167,15 +167,6 @@ void cThdnModuleMeasProgram::setDspVarList()
     m_nDspMemUsed = m_pTmpDataDsp->getSize() + m_pParameterDSP->getSize() + m_pActualValuesDSP->getSize();
 }
 
-
-void cThdnModuleMeasProgram::deleteDspVarList()
-{
-    m_dspInterface->deleteMemHandle(m_pTmpDataDsp);
-    m_dspInterface->deleteMemHandle(m_pParameterDSP);
-    m_dspInterface->deleteMemHandle(m_pActualValuesDSP);
-}
-
-
 void cThdnModuleMeasProgram::setDspCmdList()
 {
     ChannelRangeObserver::SystemObserverPtr observer = m_pModule->getSharedChannelRangeObserver();
@@ -434,8 +425,7 @@ void cThdnModuleMeasProgram::freePGRMem()
     m_dataAcquisitionMachine.stop();
     m_bActive = false;
     Zera::Proxy::getInstance()->releaseConnection(m_dspClient.get()); // no async. messages anymore
-    deleteDspVarList(); // so we can destroy our actual var list
-    deleteDspCmdList(); // and command list
+    deleteDspCmdList();
 
     m_MsgNrCmdList[m_rmInterface.freeResource("DSP1", "PGRMEMC")] = freepgrmem;
 }

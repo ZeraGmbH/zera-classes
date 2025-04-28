@@ -56,13 +56,6 @@ void Power1DspVarGenerator::setupVarList(Zera::cDSPInterface *pDSPInterFace, con
             nomPowerSize;
 }
 
-void Power1DspVarGenerator::deleteVarList(Zera::cDSPInterface *pDSPInterFace)
-{
-    pDSPInterFace->deleteMemHandle(m_pTmpDataDsp);
-    pDSPInterFace->deleteMemHandle(m_pParameterDSP);
-    pDSPInterFace->deleteMemHandle(m_pActualValuesDSP);
-}
-
 cDspMeasData *Power1DspVarGenerator::getActualValues()
 {
     return m_pActualValuesDSP;

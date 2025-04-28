@@ -60,7 +60,6 @@ protected slots:
 private:
     cPower2ModuleConfigData* getConfData();
     void setDspVarList();
-    void deleteDspVarList();
     void setDspCmdList();
     void deleteDspCmdList();
 

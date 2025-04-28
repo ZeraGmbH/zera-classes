@@ -583,9 +583,6 @@ void cRangeObsermatic::deactivationInit()
     m_bActive = false;
     Zera::Proxy::getInstance()->releaseConnection(m_dspClient.get());
     disconnect(m_dspInterface.get(), 0, this, 0); // we disconnect from our dsp interface
-    m_dspInterface->deleteMemHandle(m_gainScaleDSPMemHandle); // and free our memory handle
-    m_gainScaleDSPMemHandle = nullptr;
-    m_gainScaleDspVar = nullptr; // deleteMemHandle takes care
     emit deactivationContinue();
 }
 

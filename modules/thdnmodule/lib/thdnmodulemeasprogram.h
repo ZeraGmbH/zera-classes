@@ -62,7 +62,6 @@ protected slots:
 private:
     cThdnModuleConfigData* getConfData();
     void setDspVarList();
-    void deleteDspVarList();
     void setDspCmdList();
     void deleteDspCmdList();
 

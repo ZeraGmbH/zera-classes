@@ -45,7 +45,6 @@ protected slots:
 private:
     cDftModuleConfigData* getConfData();
     void setDspVarList();
-    void deleteDspVarList();
     void setDspCmdList();
     void deleteDspCmdList();
     void turnVectorsToRefChannel();

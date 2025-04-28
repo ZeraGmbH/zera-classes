@@ -259,10 +259,6 @@ void cAdjustManagement::deactivationInit()
     for (int i = 0; i < m_ChannelList.count(); i++)
         disconnect(m_ChannelList.at(i), 0, this, 0);
 
-    m_dspInterface->deleteMemHandle(m_pGainCorrectionDSP);
-    m_dspInterface->deleteMemHandle(m_pPhaseCorrectionDSP);
-    m_dspInterface->deleteMemHandle(m_pOffsetCorrectionDSP);
-
     emit deactivationContinue();
 }
 

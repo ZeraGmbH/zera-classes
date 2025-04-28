@@ -115,15 +115,6 @@ void cReferenceModuleMeasProgram::setDspVarList()
     m_nDspMemUsed = m_pTmpDataDsp->getSize() + m_pParameterDSP->getSize() + m_pActualValuesDSP->getSize();
 }
 
-
-void cReferenceModuleMeasProgram::deleteDspVarList()
-{
-    m_dspInterface->deleteMemHandle(m_pTmpDataDsp);
-    m_dspInterface->deleteMemHandle(m_pParameterDSP);
-    m_dspInterface->deleteMemHandle(m_pActualValuesDSP);
-}
-
-
 void cReferenceModuleMeasProgram::setDspCmdList()
 {
     int samples = m_pModule->getSharedChannelRangeObserver()->getSamplesPerPeriod();
@@ -341,7 +332,6 @@ void cReferenceModuleMeasProgram::freePGRMem()
     m_dataAcquisitionMachine.stop();
     m_bActive = false;
     Zera::Proxy::getInstance()->releaseConnection(m_dspClient.get());
-    deleteDspVarList();
     deleteDspCmdList();
 
     m_MsgNrCmdList[m_rmInterface.freeResource("DSP1", "PGRMEMC")] = freepgrmem;
