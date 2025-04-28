@@ -128,11 +128,11 @@ void cReferenceAdjustment::activationDone()
     // we fetch a handle for gain correction and offset2 correction for
     // all possible channels because we do not know which channels become active
     m_pGainCorrectionDSP = m_dspInterface->getMemHandle("GainCorrection");
-    m_pGainCorrectionDSP->addVarItem( new cDspVar("GAINCORRECTION",32, DSPDATA::vDspIntVar));
+    m_pGainCorrectionDSP->addDspVar("GAINCORRECTION",32, DSPDATA::vDspIntVar);
     m_fGainCorr = m_pGainCorrectionDSP->data("GAINCORRECTION");
 
     m_pOffset2CorrectionDSP = m_dspInterface->getMemHandle("OffsetCorrection");
-    m_pOffset2CorrectionDSP->addVarItem( new cDspVar("OFFSETCORRECTION2",32, DSPDATA::vDspIntVar));
+    m_pOffset2CorrectionDSP->addDspVar("OFFSETCORRECTION2",32, DSPDATA::vDspIntVar);
     m_fOffset2Corr = m_pOffset2CorrectionDSP->data("OFFSETCORRECTION2");
 
     m_nIgnoreCount = m_pConfigData->m_nIgnore;
