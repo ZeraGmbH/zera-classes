@@ -113,7 +113,7 @@ void cApiModuleAuthorize::onGuiDialogFinished(QVariant dialogFinished)
     if(dialogFinished == true)
     {
         QJsonArray readList = readTrustList();
-        if(jsonArrayContains(readList, m_pRequestStatusAct->getValue().toJsonObject())){
+        if(jsonArrayContains(readList, m_pPendingRequestAct->getValue().toJsonObject())){
             m_pTrustListAct->setValue(readList);
             m_pTrustListChangeCountAct->setValue(m_pTrustListChangeCountAct->getValue().toInt() + 1);
             m_pRequestStatusAct->setValue(2);
@@ -122,6 +122,7 @@ void cApiModuleAuthorize::onGuiDialogFinished(QVariant dialogFinished)
         {
             m_pRequestStatusAct->setValue(0);
         }
+        m_pPendingRequestAct->setValue(QJsonObject());
     }
 }
 
