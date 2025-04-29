@@ -211,7 +211,7 @@ void ModuleManager::startModule(const QString &uniqueName,
             createCommonModuleParam();
             Q_ASSERT(!m_currModulePrepareTask);
             m_currModulePrepareTask = tmpFactory->getModulePrepareTask(m_moduleSharedObjects);
-            connect(m_currModulePrepareTask.get(), &TaskTemplate::sigFinish, [=](bool ok) {
+            connect(m_currModulePrepareTask.get(), &TaskTemplate::sigFinish, this, [=](bool ok) {
                 VirtualModule *tmpModule = nullptr;
                 if(ok)
                     tmpModule = createModule(xmlConfigPath,
