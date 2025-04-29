@@ -11,7 +11,7 @@ cApiModuleRequestValidator::cApiModuleRequestValidator() {
 
     QJsonObject type;
     type.insert("type", "string");
-    zjParams.insert("type", type);
+    zjParams.insert("tokenType", type);
 
     QJsonObject token;
     token.insert("type", "string");
