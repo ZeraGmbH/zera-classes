@@ -314,7 +314,10 @@ void cSfcModuleMeasProgram::activationDone()
 
     m_ContinousTimer = TimerFactoryQt::createPeriodic(m_nActualizeIntervallLowFreq);
     connect(m_ContinousTimer.get(), &TimerTemplateQt::sigExpired, this, &cSfcModuleMeasProgram::readStatusRegister);
+
     m_bActive = true;
+
+    m_ContinousTimer->start();
 
     emit activated();
 }
@@ -468,8 +471,8 @@ void cSfcModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QV
                 {
                     quint32 statusRegister = answer.toUInt();
 
-                    m_pLedStateAct->setValue(statusRegister & 0x100);
-                    m_pLedInitialStateAct->setValue(statusRegister & 0x200);
+                    m_pLedStateAct->setValue((statusRegister & 0x100) == 0 ? 0 : 1);
+                    m_pLedInitialStateAct->setValue((statusRegister & 0x200) == 0 ? 0 : 1);
                 }
                 else
                     notifyError(readsecregisterErrMsg);
@@ -568,7 +571,10 @@ void cSfcModuleMeasProgram::stopECCalculator()
 
 void cSfcModuleMeasProgram::freeECalculator()
 {
+    m_ContinousTimer->stop();
+
     m_bActive = false;
+
     m_MsgNrCmdList[m_pSECInterface->freeECalcUnits()] = freeecalcunits;
 }
 
@@ -621,8 +627,7 @@ void cSfcModuleMeasProgram::Actualize()
 
 void cSfcModuleMeasProgram::readStatusRegister()
 {
-    if(!m_pModule->getDemo())
-        m_MsgNrCmdList[m_pSECInterface->readRegister(m_masterErrCalcName, ECALCREG::STATUS)] = readstatus;
+    m_MsgNrCmdList[m_pSECInterface->readRegister(m_masterErrCalcName, ECALCREG::STATUS)] = readstatus;
 }
 
 }
