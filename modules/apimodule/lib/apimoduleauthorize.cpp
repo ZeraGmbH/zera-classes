@@ -53,8 +53,8 @@ void cApiModuleAuthorize::generateVeinInterface()
                                                  QString("boolean if GUI dialog finished"),
                                                  QVariant(false));
     m_pGuiDialogFinished->setValidator(new cBoolValidator());
-    m_pGuiDialogFinished->setScpiInfo("AUTH", "GUIDIALOGFINISHED", SCPI::isQuery | SCPI::isCmdwP, m_pPendingRequestPar->getName());
-    m_module->m_veinModuleParameterMap[m_pPendingRequestPar->getName()] = m_pGuiDialogFinished;
+    m_pGuiDialogFinished->setScpiInfo("AUTH", "GUIDIALOGFINISHED", SCPI::isQuery | SCPI::isCmdwP, m_pGuiDialogFinished->getName());
+    m_module->m_veinModuleParameterMap[m_pGuiDialogFinished->getName()] = m_pGuiDialogFinished;
 
     connect(m_pPendingRequestPar, &VfModuleParameter::sigValueChanged, this, &cApiModuleAuthorize::onNewPendingRequest);
     connect(m_pGuiDialogFinished, &VfModuleParameter::sigValueChanged, this, &cApiModuleAuthorize::onGuiDialogFinished);
