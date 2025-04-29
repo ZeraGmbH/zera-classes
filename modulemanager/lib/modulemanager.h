@@ -43,7 +43,7 @@ signals:
     void sigModulesUnloaded();
 
 public slots:
-    bool loadSession(const QString sessionFileNameFull);
+    bool loadSession(const QString &sessionFileNameFull);
     void changeSessionFile(const QString &newSessionFile);
     void startModule(const QString &uniqueName,
                      const QString &xmlConfigPath,

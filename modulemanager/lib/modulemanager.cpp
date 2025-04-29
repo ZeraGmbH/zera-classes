@@ -280,7 +280,7 @@ void ModuleManager::destroyModules()
     }
 }
 
-bool ModuleManager::loadSession(const QString sessionFileNameFull)
+bool ModuleManager::loadSession(const QString &sessionFileNameFull)
 {
     bool sessionSwitched = false;
     if(QFile::exists(sessionFileNameFull)) {
