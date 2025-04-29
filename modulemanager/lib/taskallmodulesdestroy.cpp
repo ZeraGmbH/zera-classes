@@ -40,7 +40,7 @@ void TaskAllModulesDestroy::start()
 
 void TaskAllModulesDestroy::cleanupModuleData()
 {
-    for(ModuleData *moduleData : *m_moduledataList)
+    for (ModuleData *moduleData : qAsConst(*m_moduledataList))
         delete moduleData;
     m_moduledataList.reset();
 }
