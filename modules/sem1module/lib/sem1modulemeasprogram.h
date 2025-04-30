@@ -56,7 +56,6 @@ class cSem1ModuleMeasProgram: public cBaseMeasProgram
     Q_OBJECT
 public:
     cSem1ModuleMeasProgram(cSem1Module* module, std::shared_ptr<BaseModuleConfiguration> pConfiguration);
-    virtual ~cSem1ModuleMeasProgram();
     void generateVeinInterface() override;
 signals:
     void setupContinue();
@@ -151,7 +150,7 @@ private:
     void calculateMeasTime();
 
     cSem1Module* m_pModule; // the module we live in
-    Zera::cSECInterface* m_pSECInterface;
+    Zera::cSECInterfacePtr m_secInterface;
 
     // statemachine for activating gets the following states
     QState resourceManagerConnectState; // connect to resource manager
@@ -203,10 +202,6 @@ private:
     QState m_readFinalEnergyCounterState;
     QState m_readFinalTimeCounterState;
     QFinalState m_setEMResultState;
-
-    Zera::ProxyClientPtr m_rmClient;
-    Zera::ProxyClient* m_pSECClient;
-    Zera::ProxyClient* m_pPCBClient;
 
     SecResourceTypeList m_resourceTypeList;
     QHash<QString,QString> m_ResourceHash; // resourcetype, resourcelist ; seperated
