@@ -12,6 +12,12 @@ namespace APIMODULE
 {
 cApiModuleAuthorize::cApiModuleAuthorize(cApiModule *module): cModuleActivist(module->getVeinModuleName()), m_module(module)
 {
+    // tbd:
+    // - user handling
+    // - on demo, change m_trustListPath to something else, writable by demo. otherwise you have to create a "fake" /opt/websam-vein-api/authorize dir
+    // - make m_trustListPath available through VfModuleComponent? avoids redefenition in GUI part
+    // - make onNewPendingRequest rpc, when async rpc through rest is available
+
 }
 
 void cApiModuleAuthorize::generateVeinInterface()
@@ -100,7 +106,6 @@ bool cApiModuleAuthorize::jsonArrayContains(const QJsonArray &array, const QJson
 
 void cApiModuleAuthorize::onNewPendingRequest(QVariant pendingRequest)
 {
-    // tbd replace with rpc?
     if(m_pPendingRequestPar->getValue().toJsonObject() != QJsonObject() && m_pRequestStatusAct->getValue() != 1) {
         m_pRequestStatusAct->setValue(1);
         m_pGuiDialogFinished->setValue(false);
