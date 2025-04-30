@@ -36,7 +36,7 @@ private slots:
     void checkPersitency();
 private:
     void setupServices();
-    void fireNewRmsValues(float rmsValue, bool includeIAux);
+    void fireNewActualValues(float rmsValue, bool includeIAux);
     void setVfComponent(int entityId, QString componentName, QVariant newValue);
     QVariant getVfComponent(int entityId, QString componentName);
     QStringList getCurrentRanges();
