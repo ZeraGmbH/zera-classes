@@ -70,7 +70,7 @@ public:
     bool isRMSOverload(double ampl); // test if ampl is overload condition
     bool isPeakOverload(double ampl); // test if ampl is adc overload condition
 
-    QString getOptRange(double rms, const QString &rngAlias); // returns opt. range alias
+    QString getOptRange(double rms, double peak, const QString &rngAlias); // returns opt. range alias
     QString getMaxRange() const; // returns alias of the range with max ur value
     QString getMaxRange(const QString &rngAlias); // returns alias of the range with max ur value
     QString getRangeListAlias();
@@ -126,6 +126,7 @@ private:
     Zera::ProxyClientPtr m_pcbClient;
 
     void setRangeListAlias();
+    QString findOptimalRange(double actualValue, const QString &actRngAlias, qint32 actRngType, double extraRejectionFactor);
 
 private slots:
     void pcbConnection();

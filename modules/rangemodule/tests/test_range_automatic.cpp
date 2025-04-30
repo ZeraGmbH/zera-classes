@@ -523,6 +523,21 @@ void test_range_automatic::abnormalSinePeakOverloadRangeAutomatic()
     QCOMPARE(getVfComponent(rangeEntityId, IL1RangeComponent), "10A");
 }
 
+void test_range_automatic::rmsOverloadRangeAutomaticDC()
+{
+    fireNewActualValues(4, 4, withoutIaux); //DC: Same RMS and Peak value
+    setVfComponent(rangeEntityId, RangeAutomaticComponent, 1);
+    QCOMPARE(getVfComponent(rangeEntityId, UL1RangeComponent), "8V");
+    QCOMPARE(getVfComponent(rangeEntityId, IL1RangeComponent), "5A");
+
+    //Introduce RMS overload
+    fireNewActualValues(11, 11, withoutIaux); //DC: Same RMS and Peak value
+    //Extra interrupt needed after range change
+    fireNewActualValues(11, 11, withoutIaux); //Same RMS and Peak value, as in case of DC
+    QCOMPARE(getVfComponent(rangeEntityId, UL1RangeComponent), "250V");
+    QCOMPARE(getVfComponent(rangeEntityId, IL1RangeComponent), "10A");
+}
+
 void test_range_automatic::setupServices()
 {
     TimeMachineForTest::reset();

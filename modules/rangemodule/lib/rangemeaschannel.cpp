@@ -199,9 +199,8 @@ bool cRangeMeasChannel::isPeakOverload(double peak)
 }
 
 
-QString cRangeMeasChannel::getOptRange(double peak, const QString &rngAlias)
+QString cRangeMeasChannel::getOptRange(double rms, double peak, const QString &rngAlias)
 {
-    double rms = peak / M_SQRT2;
     qint32 actRngType = -1;
     if (m_RangeInfoHash.contains(rngAlias)) {
         // if we know this rngalias we take that's type for searching max range
@@ -213,7 +212,16 @@ QString cRangeMeasChannel::getOptRange(double peak, const QString &rngAlias)
             actRngType = m_RangeInfoHash[m_sActRange].type;
         }
     }
+    QString newRangeRmsStr = findOptimalRange(rms, rngAlias, actRngType, 1);
+    double newRangeRmsUrValue = m_RangeInfoHash[newRangeRmsStr].urvalue;
+    QString newRangePeakStr = findOptimalRange(peak, rngAlias, actRngType, M_SQRT2);
+    double newRangePeakUrValue = m_RangeInfoHash[newRangePeakStr].urvalue;
 
+    return newRangePeakUrValue > newRangeRmsUrValue ? newRangePeakStr : newRangeRmsStr;
+}
+
+QString cRangeMeasChannel::findOptimalRange(double actualValue, const QString &actRngAlias, qint32 actRngType, double extraRejectionFactor)
+{
     QList<cRangeInfoWithConstantValues> riList = m_RangeInfoHash.values();
     double newAmpl = 1e32;
     int i, p = -1;
@@ -233,19 +241,19 @@ QString cRangeMeasChannel::getOptRange(double peak, const QString &rngAlias)
     for (i = 0; i < riList.count(); i++) {
         const cRangeInfoWithConstantValues& ri = riList.at(i);
         double newUrvalue = ri.urvalue;
-        double ovrRejectionFactor = ri.ovrejection / ri.rejection; // typically 1.25
+        double ovrRejectionFactor = (ri.ovrejection / ri.rejection) * extraRejectionFactor; // typically 1.25
         // actual range?
-        if(rngAlias == ri.alias) {
+        if(actRngAlias == ri.alias) {
             // are we in hysteresis area?
-            if(rms > newUrvalue * ovrRejectionFactor * enterRangeLimit &&
-                    rms < newUrvalue * ovrRejectionFactor * keepRangeLimit) {
+            if(actualValue > newUrvalue * ovrRejectionFactor * enterRangeLimit &&
+                actualValue < newUrvalue * ovrRejectionFactor * keepRangeLimit) {
                 // let's keep actual range
                 p=i;
                 break;
             }
         }
         // (re-)enter range
-        if ((rms <= newUrvalue * ovrRejectionFactor * enterRangeLimit) && (newUrvalue < newAmpl) && (ri.type == actRngType)) {
+        if ((actualValue <= newUrvalue * ovrRejectionFactor * enterRangeLimit) && (newUrvalue < newAmpl) && (ri.type == actRngType)) {
             newAmpl = newUrvalue;
             p=i;
         }
@@ -255,10 +263,9 @@ QString cRangeMeasChannel::getOptRange(double peak, const QString &rngAlias)
         return riList.at(p).alias;
     }
     else {
-        return getMaxRange(rngAlias); // we return maximum range in case of overload condition
+        return getMaxRange(actRngAlias); // we return maximum range in case of overload condition
     }
 }
-
 
 QString cRangeMeasChannel::getMaxRange() const
 {
