@@ -34,6 +34,9 @@ private slots:
     void selectClampThenRangeAutomatic();
     void addRemoveClamp();
     void checkPersitency();
+
+    void normalSineRmsOverloadWithRangeAutomatic();
+    void abnormalSinePeakOverloadRangeAutomatic();
 private:
     void setupServices();
     void fireNewActualValues(float rmsValue, bool includeIAux);
