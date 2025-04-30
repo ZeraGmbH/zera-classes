@@ -39,7 +39,7 @@ void cApiModuleAuthorize::generateVeinInterface()
     m_pTrustListAct = new VfModuleComponent(m_module->getEntityId(), m_module->getValidatorEventSystem(),
                                                 QString("ACT_TrustList"),
                                                 QString("Json array of trusted clients"),
-                                                QJsonArray());
+                                                readTrustList());
     m_pTrustListAct->setScpiInfo("AUTH", "TRUSTLIST", SCPI::isQuery, m_pTrustListAct->getName());
 
     m_pTrustListChangeCountAct = new VfModuleComponent(m_module->getEntityId(), m_module->getValidatorEventSystem(),
@@ -74,7 +74,6 @@ QJsonArray cApiModuleAuthorize::readTrustList()
 {
     QFile file(m_trustListPath);
     if (!file.open(QIODevice::ReadOnly)) {
-        qWarning() << "Failed to open file:" << file.errorString();
         return QJsonArray(); // Return empty array on error
     }
     QByteArray jsonData = file.readAll();
@@ -101,10 +100,14 @@ bool cApiModuleAuthorize::jsonArrayContains(const QJsonArray &array, const QJson
 
 void cApiModuleAuthorize::onNewPendingRequest(QVariant pendingRequest)
 {
-    if(m_pRequestStatusAct->getValue() != 1) {
+    // tbd replace with rpc?
+    if(m_pPendingRequestPar->getValue().toJsonObject() != QJsonObject() && m_pRequestStatusAct->getValue() != 1) {
         m_pRequestStatusAct->setValue(1);
         m_pGuiDialogFinished->setValue(false);
-        m_pPendingRequestAct->setValue(pendingRequest.toJsonObject());
+        if(!jsonArrayContains(m_pTrustListAct->getValue().toJsonArray(), m_pPendingRequestPar->getValue().toJsonObject()))
+            m_pPendingRequestAct->setValue(pendingRequest.toJsonObject());
+        else
+            m_pRequestStatusAct->setValue(2);
     }
 }
 
@@ -123,6 +126,7 @@ void cApiModuleAuthorize::onGuiDialogFinished(QVariant dialogFinished)
             m_pRequestStatusAct->setValue(0);
         }
         m_pPendingRequestAct->setValue(QJsonObject());
+        m_pPendingRequestPar->setValue(QJsonObject());
     }
 }
 
