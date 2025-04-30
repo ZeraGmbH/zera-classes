@@ -106,8 +106,10 @@ void cApiModuleAuthorize::onNewPendingRequest(QVariant pendingRequest)
         m_pGuiDialogFinished->setValue(false);
         if(!jsonArrayContains(m_pTrustListAct->getValue().toJsonArray(), m_pPendingRequestPar->getValue().toJsonObject()))
             m_pPendingRequestAct->setValue(pendingRequest.toJsonObject());
-        else
+        else {
             m_pRequestStatusAct->setValue(2);
+            m_pPendingRequestPar->setValue(QJsonObject());
+        }
     }
 }
 
