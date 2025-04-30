@@ -19,8 +19,7 @@ cSpm1ModuleMeasProgram::cSpm1ModuleMeasProgram(cSpm1Module* module, std::shared_
     cBaseMeasProgram(pConfiguration, module->getVeinModuleName()),
     m_pModule(module)
 {
-    // we have to instantiate a working resource manager and secserver interface
-    m_pSECInterface = new Zera::cSECInterface();
+    m_secInterface = std::make_unique<Zera::cSECInterface>();
     m_pcbInterface = std::make_shared<Zera::cPCBInterface>();
 
     m_IdentifyState.addTransition(this, &cSpm1ModuleMeasProgram::activationContinue, &m_testSEC1ResourceState);
@@ -180,13 +179,6 @@ cSpm1ModuleMeasProgram::cSpm1ModuleMeasProgram(cSpm1Module* module, std::shared_
 
     m_ActualizeTimer = TimerFactoryQt::createPeriodic(m_nActualizeIntervallLowFreq);
     m_resourceTypeList.addTypesFromConfig(getConfData()->m_refInpList);
-}
-
-cSpm1ModuleMeasProgram::~cSpm1ModuleMeasProgram()
-{
-    delete m_pSECInterface;
-    Zera::Proxy::getInstance()->releaseConnection(m_pSECClient);
-    Zera::Proxy::getInstance()->releaseConnection(m_pPCBClient);
 }
 
 void cSpm1ModuleMeasProgram::start()
@@ -815,35 +807,31 @@ void cSpm1ModuleMeasProgram::testSpmInputs()
 
 void cSpm1ModuleMeasProgram::ecalcServerConnect()
 {
-    // we try to get a connection to ecalc server over proxy
-    m_pSECClient = Zera::Proxy::getInstance()->getConnection(m_pModule->getNetworkConfig()->m_secServiceConnectionInfo,
-                                                             m_pModule->getNetworkConfig()->m_tcpNetworkFactory);
-    // and then we set ecalcalculator interface's connection
-    m_pSECInterface->setClient(m_pSECClient); //
-    m_ecalcServerConnectState.addTransition(m_pSECClient, &Zera::ProxyClient::connected, &m_fetchECalcUnitsState);
-    connect(m_pSECInterface, &AbstractServerInterface::serverAnswer, this, &cSpm1ModuleMeasProgram::catchInterfaceAnswer);
-    // todo insert timer for timeout and/or connect error conditions
-    Zera::Proxy::getInstance()->startConnection(m_pSECClient);
+    Zera::ProxyClientPtr secClient = Zera::Proxy::getInstance()->getConnectionSmart(
+        m_pModule->getNetworkConfig()->m_secServiceConnectionInfo,
+        m_pModule->getNetworkConfig()->m_tcpNetworkFactory);
+    m_secInterface->setClientSmart(secClient);
+    m_ecalcServerConnectState.addTransition(secClient.get(), &Zera::ProxyClient::connected, &m_fetchECalcUnitsState);
+    connect(m_secInterface.get(), &AbstractServerInterface::serverAnswer, this, &cSpm1ModuleMeasProgram::catchInterfaceAnswer);
+    Zera::Proxy::getInstance()->startConnectionSmart(secClient);
 }
 
 
 void cSpm1ModuleMeasProgram::fetchECalcUnits()
 {
-    m_MsgNrCmdList[m_pSECInterface->setECalcUnit(3)] = fetchecalcunits; // we need 3 ecalc units to cascade
+    m_MsgNrCmdList[m_secInterface->setECalcUnit(3)] = fetchecalcunits; // we need 3 ecalc units to cascade
 }
 
 
 void cSpm1ModuleMeasProgram::pcbServerConnect()
 {
-    // we try to get a connection to ecalc server over proxy
-    m_pPCBClient = Zera::Proxy::getInstance()->getConnection(m_pModule->getNetworkConfig()->m_pcbServiceConnectionInfo,
-                                                             m_pModule->getNetworkConfig()->m_tcpNetworkFactory);
-    // and then we set ecalcalculator interface's connection
-    m_pcbInterface->setClient(m_pPCBClient); //
-    m_pcbServerConnectState.addTransition(m_pPCBClient, &Zera::ProxyClient::connected, &m_readREFInputsState);
+    m_pcbClient = Zera::Proxy::getInstance()->getConnectionSmart(
+        m_pModule->getNetworkConfig()->m_pcbServiceConnectionInfo,
+        m_pModule->getNetworkConfig()->m_tcpNetworkFactory);
+    m_pcbInterface->setClientSmart(m_pcbClient);
+    m_pcbServerConnectState.addTransition(m_pcbClient.get(), &Zera::ProxyClient::connected, &m_readREFInputsState);
     connect(m_pcbInterface.get(), &AbstractServerInterface::serverAnswer, this, &cSpm1ModuleMeasProgram::catchInterfaceAnswer);
-    // todo insert timer for timeout and/or connect error conditions
-    Zera::Proxy::getInstance()->startConnection(m_pPCBClient);
+    Zera::Proxy::getInstance()->startConnectionSmart(m_pcbClient);
 }
 
 
@@ -890,7 +878,7 @@ void cSpm1ModuleMeasProgram::setpcbREFConstantNotifier()
 
 void cSpm1ModuleMeasProgram::setsecINTNotifier()
 {
-    m_MsgNrCmdList[m_pSECInterface->registerNotifier(QString("ECAL:%1:R%2?").arg(m_masterErrCalcName).arg(ECALCREG::INTREG))] = setsecintnotifier;
+    m_MsgNrCmdList[m_secInterface->registerNotifier(QString("ECAL:%1:R%2?").arg(m_masterErrCalcName).arg(ECALCREG::INTREG))] = setsecintnotifier;
 }
 
 
@@ -933,7 +921,7 @@ void cSpm1ModuleMeasProgram::stopECCalculator()
 void cSpm1ModuleMeasProgram::freeECalculator()
 {
     m_bActive = false;
-    m_MsgNrCmdList[m_pSECInterface->freeECalcUnits()] = freeecalcunits;
+    m_MsgNrCmdList[m_secInterface->freeECalcUnits()] = freeecalcunits;
 }
 
 
@@ -946,7 +934,7 @@ void cSpm1ModuleMeasProgram::freeECResource()
 void cSpm1ModuleMeasProgram::deactivationDone()
 {
     disconnect(&m_rmInterface, 0, this, 0);
-    disconnect(m_pSECInterface, 0, this, 0);
+    disconnect(m_secInterface.get(), 0, this, 0);
     disconnect(m_pcbInterface.get(), 0, this, 0);
 
     disconnect(m_pStartStopPar, 0, this, 0);
@@ -962,13 +950,13 @@ void cSpm1ModuleMeasProgram::deactivationDone()
 
 void cSpm1ModuleMeasProgram::setSync()
 {
-    m_MsgNrCmdList[m_pSECInterface->setSync(m_slaveErrCalcName, m_masterErrCalcName)] = setsync;
+    m_MsgNrCmdList[m_secInterface->setSync(m_slaveErrCalcName, m_masterErrCalcName)] = setsync;
 }
 
 
 void cSpm1ModuleMeasProgram::setSync2()
 {
-    m_MsgNrCmdList[m_pSECInterface->setSync(m_slave2ErrCalcName, m_masterErrCalcName)] = setsync;
+    m_MsgNrCmdList[m_secInterface->setSync(m_slave2ErrCalcName, m_masterErrCalcName)] = setsync;
 }
 
 
@@ -979,44 +967,44 @@ void cSpm1ModuleMeasProgram::setMeaspulses()
     else
         m_nTimerCountStart = m_pMeasTimePar->getValue().toLongLong() * 1000;
 
-    m_MsgNrCmdList[m_pSECInterface->writeRegister(m_masterErrCalcName, ECALCREG::MTCNTin, m_nTimerCountStart)] = setmeaspulses;
+    m_MsgNrCmdList[m_secInterface->writeRegister(m_masterErrCalcName, ECALCREG::MTCNTin, m_nTimerCountStart)] = setmeaspulses;
 }
 
 
 void cSpm1ModuleMeasProgram::setMasterMux()
 {
-    m_MsgNrCmdList[m_pSECInterface->setMux(m_masterErrCalcName, QString("t1ms"))] = setmastermux; // to be discussed
+    m_MsgNrCmdList[m_secInterface->setMux(m_masterErrCalcName, QString("t1ms"))] = setmastermux; // to be discussed
 }
 
 
 void cSpm1ModuleMeasProgram::setSlaveMux()
 {
     QString refPowerName = getConfData()->m_sRefInput.m_sPar;
-    m_MsgNrCmdList[m_pSECInterface->setMux(m_slaveErrCalcName, refPowerName)] = setslavemux;
+    m_MsgNrCmdList[m_secInterface->setMux(m_slaveErrCalcName, refPowerName)] = setslavemux;
 }
 
 
 void cSpm1ModuleMeasProgram::setSlave2Mux()
 {
-    m_MsgNrCmdList[m_pSECInterface->setMux(m_slave2ErrCalcName, QString("t1ms"))] = setslavemux;
+    m_MsgNrCmdList[m_secInterface->setMux(m_slave2ErrCalcName, QString("t1ms"))] = setslavemux;
 }
 
 
 void cSpm1ModuleMeasProgram::setMasterMeasMode()
 {
-    m_MsgNrCmdList[m_pSECInterface->setCmdid(m_masterErrCalcName, ECALCCMDID::SINGLEERRORMASTER)] = setmastermeasmode;
+    m_MsgNrCmdList[m_secInterface->setCmdid(m_masterErrCalcName, ECALCCMDID::SINGLEERRORMASTER)] = setmastermeasmode;
 }
 
 
 void cSpm1ModuleMeasProgram::setSlaveMeasMode()
 {
-    m_MsgNrCmdList[m_pSECInterface->setCmdid(m_slaveErrCalcName, ECALCCMDID::ERRORMEASSLAVE)] = setslavemeasmode;
+    m_MsgNrCmdList[m_secInterface->setCmdid(m_slaveErrCalcName, ECALCCMDID::ERRORMEASSLAVE)] = setslavemeasmode;
 }
 
 
 void cSpm1ModuleMeasProgram::setSlave2MeasMode()
 {
-    m_MsgNrCmdList[m_pSECInterface->setCmdid(m_slave2ErrCalcName, ECALCCMDID::ERRORMEASSLAVE)] = setslavemeasmode;
+    m_MsgNrCmdList[m_secInterface->setCmdid(m_slave2ErrCalcName, ECALCCMDID::ERRORMEASSLAVE)] = setslavemeasmode;
 }
 
 
@@ -1025,7 +1013,7 @@ void cSpm1ModuleMeasProgram::enableInterrupt()
     // in case of targeted mode we want an interrupt when ready
     // in case of not targeted mode we set the time to maximum and the user will stop the measurement by pressing stop
     // so we program enable int. in any case
-    m_MsgNrCmdList[m_pSECInterface->writeRegister(m_masterErrCalcName, ECALCREG::INTMASK, ECALCINT::MTCount0)] = enableinterrupt;
+    m_MsgNrCmdList[m_secInterface->writeRegister(m_masterErrCalcName, ECALCREG::INTMASK, ECALCINT::MTCount0)] = enableinterrupt;
 }
 
 
@@ -1037,7 +1025,7 @@ void cSpm1ModuleMeasProgram::startMeasurement()
     m_measEndDateTime = QDateTime();
     setDateTime(m_measEndDateTime, m_pMeasEndTime);
     if(!m_pModule->getDemo())
-        m_MsgNrCmdList[m_pSECInterface->start(m_masterErrCalcName)] = startmeasurement;
+        m_MsgNrCmdList[m_secInterface->start(m_masterErrCalcName)] = startmeasurement;
     setStatus(ECALCSTATUS::ARMED);
     if(m_pModule->getDemo()) {
         updateDemoMeasurementResults();
@@ -1059,27 +1047,27 @@ void cSpm1ModuleMeasProgram::startMeasurementDone()
 
 void cSpm1ModuleMeasProgram::readIntRegister()
 {
-    m_MsgNrCmdList[m_pSECInterface->readRegister(m_masterErrCalcName, ECALCREG::INTREG)] = readintregister;
+    m_MsgNrCmdList[m_secInterface->readRegister(m_masterErrCalcName, ECALCREG::INTREG)] = readintregister;
 }
 
 
 void cSpm1ModuleMeasProgram::resetIntRegister()
 {
-    m_MsgNrCmdList[m_pSECInterface->intAck(m_masterErrCalcName, 0xF)] = resetintregister; // we reset all here
+    m_MsgNrCmdList[m_secInterface->intAck(m_masterErrCalcName, 0xF)] = resetintregister; // we reset all here
 }
 
 
 void cSpm1ModuleMeasProgram::readVICountact()
 {
-    m_MsgNrCmdList[m_pSECInterface->readRegister(m_slaveErrCalcName, ECALCREG::MTCNTfin)] = readvicount;
+    m_MsgNrCmdList[m_secInterface->readRegister(m_slaveErrCalcName, ECALCREG::MTCNTfin)] = readvicount;
 }
 
 void cSpm1ModuleMeasProgram::readTCountact()
 {
-    m_MsgNrCmdList[m_pSECInterface->readRegister(m_slave2ErrCalcName, ECALCREG::MTCNTfin)] = readtcount;
+    m_MsgNrCmdList[m_secInterface->readRegister(m_slave2ErrCalcName, ECALCREG::MTCNTfin)] = readtcount;
     // non targeted has been stopped already in newStartStop()
     if(getConfData()->m_bTargeted.m_nActive) {
-        m_MsgNrCmdList[m_pSECInterface->stop(m_masterErrCalcName)] = stopmeas;
+        m_MsgNrCmdList[m_secInterface->stop(m_masterErrCalcName)] = stopmeas;
     }
     m_pStartStopPar->setValue(QVariant(0)); // restart enable
     setStatus(ECALCSTATUS::READY);
@@ -1155,7 +1143,7 @@ void cSpm1ModuleMeasProgram::newStartStop(QVariant startstop)
             stopMeasurement(true);
         }
         else {
-            m_MsgNrCmdList[m_pSECInterface->stop(m_masterErrCalcName)] = stopmeas;
+            m_MsgNrCmdList[m_secInterface->stop(m_masterErrCalcName)] = stopmeas;
             m_ActualizeTimer->stop();
             // if we are not "targeted" we handle pressing stop as if the
             // measurement became ready and an interrupt occured
@@ -1256,9 +1244,9 @@ void cSpm1ModuleMeasProgram::newLowerLimit(QVariant limit)
 void cSpm1ModuleMeasProgram::Actualize()
 {
     if(!m_pModule->getDemo()) {
-        m_MsgNrCmdList[m_pSECInterface->readRegister(m_masterErrCalcName, ECALCREG::STATUS)] = actualizestatus;
-        m_MsgNrCmdList[m_pSECInterface->readRegister(m_slaveErrCalcName, ECALCREG::MTCNTact)] = actualizeenergy;
-        m_MsgNrCmdList[m_pSECInterface->readRegister(m_slave2ErrCalcName, ECALCREG::MTCNTact)] = actualizepower;
+        m_MsgNrCmdList[m_secInterface->readRegister(m_masterErrCalcName, ECALCREG::STATUS)] = actualizestatus;
+        m_MsgNrCmdList[m_secInterface->readRegister(m_slaveErrCalcName, ECALCREG::MTCNTact)] = actualizeenergy;
+        m_MsgNrCmdList[m_secInterface->readRegister(m_slave2ErrCalcName, ECALCREG::MTCNTact)] = actualizepower;
     }
 }
 
@@ -1274,7 +1262,7 @@ void cSpm1ModuleMeasProgram::stopMeasurement(bool bAbort)
 {
     if(bAbort)
         setStatus(ECALCSTATUS::ABORT);
-    m_MsgNrCmdList[m_pSECInterface->stop(m_masterErrCalcName)] = stopmeas;
+    m_MsgNrCmdList[m_secInterface->stop(m_masterErrCalcName)] = stopmeas;
     m_pStartStopPar->setValue(QVariant(0));
     m_ActualizeTimer->stop();
 }
