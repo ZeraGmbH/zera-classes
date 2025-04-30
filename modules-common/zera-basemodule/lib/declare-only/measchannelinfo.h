@@ -8,7 +8,7 @@
 struct cMeasChannelInfo
 {
     double m_fUrValue; // the channels actual upper range value
-    Zera::cPCBInterface* pcbIFace;
+    Zera::PcbInterfacePtr pcbIFace;
 };
 
 #endif // MEASCHANNELINFO_H

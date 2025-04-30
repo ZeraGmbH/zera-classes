@@ -748,17 +748,16 @@ void cPower1ModuleMeasProgram::pcbserverConnect4measChannels()
     for (int i = 0; i < infoReadList.count(); i++) {
         QString key = infoReadList.at(i);
         cMeasChannelInfo mi = m_measChannelInfoHash.take(key);
-        Zera::ProxyClient* pcbClient = Zera::Proxy::getInstance()->getConnection(m_pModule->getNetworkConfig()->m_pcbServiceConnectionInfo,
-                                                                                 m_pModule->getNetworkConfig()->m_tcpNetworkFactory);
-        m_pcbClientList.append(pcbClient);
-        Zera::cPCBInterface* pcbIFace = new Zera::cPCBInterface();
-        m_pcbIFaceList.append(pcbIFace);
-        pcbIFace->setClient(pcbClient);
-        mi.pcbIFace = pcbIFace;
+        Zera::ProxyClientPtr pcbClient = Zera::Proxy::getInstance()->getConnectionSmart(
+            m_pModule->getNetworkConfig()->m_pcbServiceConnectionInfo,
+            m_pModule->getNetworkConfig()->m_tcpNetworkFactory);
+        Zera::PcbInterfacePtr pcbInterface = std::make_shared<Zera::cPCBInterface>();
+        pcbInterface->setClientSmart(pcbClient);
+        mi.pcbIFace = pcbInterface;
         m_measChannelInfoHash[key] = mi;
-        connect(pcbClient, &Zera::ProxyClient::connected, this, &cPower1ModuleMeasProgram::monitorConnection); // here we wait until all connections are established
-        connect(pcbIFace, &AbstractServerInterface::serverAnswer, this, &cPower1ModuleMeasProgram::catchInterfaceAnswer);
-        Zera::Proxy::getInstance()->startConnection(pcbClient);
+        connect(pcbClient.get(), &Zera::ProxyClient::connected, this, &cPower1ModuleMeasProgram::monitorConnection); // here we wait until all connections are established
+        connect(pcbInterface.get(), &AbstractServerInterface::serverAnswer, this, &cPower1ModuleMeasProgram::catchInterfaceAnswer);
+        Zera::Proxy::getInstance()->startConnectionSmart(pcbClient);
     }
 }
 
@@ -770,18 +769,17 @@ void cPower1ModuleMeasProgram::pcbserverConnect4freqChannels()
         for (int i = 0; i < infoReadList.count(); i++) {
             QString key = infoReadList.at(i);
             cFoutInfo fi = m_FoutInfoMap.take(key);
-            Zera::ProxyClient* pcbClient = Zera::Proxy::getInstance()->getConnection(m_pModule->getNetworkConfig()->m_pcbServiceConnectionInfo,
-                                                                                     m_pModule->getNetworkConfig()->m_tcpNetworkFactory);
-            m_pcbClientList.append(pcbClient);
-            Zera::cPCBInterface* pcbIFace = new Zera::cPCBInterface();
-            m_pcbIFaceList.append(pcbIFace);
-            pcbIFace->setClient(pcbClient);
-            fi.pcbIFace = pcbIFace;
+            Zera::ProxyClientPtr pcbClient = Zera::Proxy::getInstance()->getConnectionSmart(
+                m_pModule->getNetworkConfig()->m_pcbServiceConnectionInfo,
+                m_pModule->getNetworkConfig()->m_tcpNetworkFactory);
+            Zera::PcbInterfacePtr pcbInterface = std::make_shared<Zera::cPCBInterface>();
+            pcbInterface->setClientSmart(pcbClient);
+            fi.pcbIFace = pcbInterface;
             fi.name = key;
             m_FoutInfoMap[key] = fi;
-            connect(pcbClient, &Zera::ProxyClient::connected, this, &cPower1ModuleMeasProgram::monitorConnection); // here we wait until all connections are established
-            connect(pcbIFace, &AbstractServerInterface::serverAnswer, this, &cPower1ModuleMeasProgram::catchInterfaceAnswer);
-            Zera::Proxy::getInstance()->startConnection(pcbClient);
+            connect(pcbClient.get(), &Zera::ProxyClient::connected, this, &cPower1ModuleMeasProgram::monitorConnection); // here we wait until all connections are established
+            connect(pcbInterface.get(), &AbstractServerInterface::serverAnswer, this, &cPower1ModuleMeasProgram::catchInterfaceAnswer);
+            Zera::Proxy::getInstance()->startConnectionSmart(pcbClient);
         }
     }
     else
@@ -1011,18 +1009,6 @@ void cPower1ModuleMeasProgram::resetNotifierDone()
 
 void cPower1ModuleMeasProgram::deactivateDSPdone()
 {
-    if (m_pcbIFaceList.count() > 0)
-    {
-        for (int i = 0; i < m_pcbIFaceList.count(); i++)
-        {
-            Zera::Proxy::getInstance()->releaseConnection(m_pcbClientList.at(i));
-            delete m_pcbIFaceList.at(i);
-        }
-
-        m_pcbClientList.clear();
-        m_pcbIFaceList.clear();
-    }
-
     disconnect(&m_rmInterface, 0, this, 0);
     disconnect(m_dspInterface.get(), 0, this, 0);
 
