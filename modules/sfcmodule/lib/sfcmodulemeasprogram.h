@@ -55,7 +55,6 @@ class cSfcModuleMeasProgram : public cBaseMeasProgram
     Q_OBJECT
 public:
     cSfcModuleMeasProgram(cSfcModule *module, std::shared_ptr<BaseModuleConfiguration> pConfiguration);
-    virtual ~cSfcModuleMeasProgram();
     void generateVeinInterface() override; // here we export our interface (entities)
 
 signals:
@@ -69,11 +68,7 @@ private:
     cSfcModuleConfigData *getConfData();
 
     cSfcModule *m_pModule;
-    std::unique_ptr<Zera::cSECInterface> m_pSECInterface;
-
-    Zera::ProxyClientPtr m_rmClient;
-    Zera::ProxyClient* m_pSECClient;
-    Zera::ProxyClient* m_pPCBClient;
+    Zera::cSECInterfacePtr m_secInterface;
 
     QList<VfModuleComponent *> m_veinActValueList; // the list of actual values we work on
     qint32 m_nIt;
