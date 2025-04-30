@@ -18,6 +18,13 @@ void DemoValuesDspRange::setRmsPeakDCValue(int channel, float rmsValue)
     m_dcValues[channel] = peakValue;
 }
 
+void DemoValuesDspRange::setRmsPeakDCValue(int channel, float rmsValue, float peakValue)
+{
+    m_peakValues[channel] = peakValue;
+    m_rmsValues[channel] = rmsValue;
+    m_dcValues[channel] = peakValue;
+}
+
 void DemoValuesDspRange::setFrequency(float frequency)
 {
     m_freqValue[0] = frequency;

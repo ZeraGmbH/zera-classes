@@ -521,6 +521,22 @@ void test_range_automatic::fireNewActualValues(float rmsValue, bool includeIAux)
     TimeMachineObject::feedEventLoop();
 }
 
+void test_range_automatic::fireNewActualValues(float rmsValue, float peakValue, bool includeIAux)
+{
+    TestDspInterfacePtr dspInterface =
+        m_serviceInterfaceFactory->getInterface(rangeEntityId, TestFactoryServiceInterfaces::MODULEPROG);
+
+    DemoValuesDspRange rangeValues(rangeChannelCount);
+    for(int i = 0; i < rangeChannelCount; i++) {
+        if ((i == 7) && !includeIAux)
+            rangeValues.setRmsPeakDCValue(i, 0, 0);
+        else
+            rangeValues.setRmsPeakDCValue(i, rmsValue, peakValue);
+    }
+    dspInterface->fireActValInterrupt(rangeValues.getDspValues(), /* dummy */ 0);
+    TimeMachineObject::feedEventLoop();
+}
+
 void test_range_automatic::setVfComponent(int entityId, QString componentName, QVariant newValue)
 {
     QVariant oldValue = getVfComponent(entityId, componentName);
