@@ -3,6 +3,7 @@
 #include "modulemanagerconfig.h"
 #include <testloghelpers.h>
 #include <mocklxdmsessionchangeparamgenerator.h>
+#include <proxyclient_p.h>
 #include <QTest>
 
 QTEST_MAIN(test_modman_regression_all_sessions)
@@ -73,7 +74,9 @@ void test_modman_regression_all_sessions::checkObjectsProperlyDeleted()
     QCOMPARE(cumulatedInstanceCounts.m_dspVarCount, 0);
     constexpr int licenseStorageSystemModuleIntrospection_EventSystemCount = 4;
     QCOMPARE(cumulatedInstanceCounts.m_veinEventSystemCount, licenseStorageSystemModuleIntrospection_EventSystemCount);
+
     QCOMPARE(ProtonetCommand::getInstanceCount(), 0); // for zenux-services
+    QCOMPARE(Zera::ProxyClientPrivate::getInstanceCount(), 0);
 }
 
 bool test_modman_regression_all_sessions::checkUniqueEntityIdNames(const QString &device)
