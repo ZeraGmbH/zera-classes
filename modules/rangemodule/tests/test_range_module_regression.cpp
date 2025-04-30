@@ -76,7 +76,7 @@ void test_range_module_regression::checkActualValueCount()
     DemoValuesDspRange rangeValues(rangeChannelCount);
     rangeValues.setFrequency(15);
     for(int i = 0; i < rangeChannelCount; i++)
-        rangeValues.setRmsValue(i, i);
+        rangeValues.setRmsPeakDCValue(i, i);
 
     sampleDspInterfaceProg->fireActValInterrupt(rangeValues.getDspValues(), /* dummy */ 0);
     TimeMachineObject::feedEventLoop();
@@ -117,7 +117,7 @@ void test_range_module_regression::injectActualValuesWithCheating()
     DemoValuesDspRange rangeValues(rangeChannelCount);
     rangeValues.setFrequency(15);
     for(int i = 0; i < rangeChannelCount; i++)
-        rangeValues.setRmsValue(i, i);
+        rangeValues.setRmsPeakDCValue(i, i);
 
 
     // cheating disabled
@@ -171,7 +171,7 @@ void test_range_module_regression::injectActualValuesWithCheatingAndRangeChanged
     DemoValuesDspRange rangeValues(rangeChannelCount);
     rangeValues.setFrequency(15);
     for(int i = 0; i < rangeChannelCount; i++)
-        rangeValues.setRmsValue(i, i);
+        rangeValues.setRmsPeakDCValue(i, i);
 
     TimeMachineForTest::getInstance()->processTimers(500); //for 'm_AdjustTimer'
     sampleDspInterfaceProg->fireActValInterrupt(rangeValues.getDspValues(), /* dummy */ 0);
@@ -216,7 +216,7 @@ void test_range_module_regression::injectIncreasingActualValuesWithCheatingEnabl
     DemoValuesDspRange rangeValues(rangeChannelCount);
     rangeValues.setFrequency(15);
     for(int i = 0; i < rangeChannelCount; i++)
-        rangeValues.setRmsValue(i, 0.1);
+        rangeValues.setRmsPeakDCValue(i, 0.1);
 
     TimeMachineForTest::getInstance()->processTimers(500); //for 'm_AdjustTimer'
     sampleDspInterfaceProg->fireActValInterrupt(rangeValues.getDspValues(), /* dummy */ 0);
@@ -234,7 +234,7 @@ void test_range_module_regression::injectIncreasingActualValuesWithCheatingEnabl
     QCOMPARE(expectedGainCorr, actualGainCorr);
 
     for(int i = 0; i < rangeChannelCount; i++)
-        rangeValues.setRmsValue(i, 10);
+        rangeValues.setRmsPeakDCValue(i, 10);
 
     spyDspWrite.clear();
     TimeMachineForTest::getInstance()->processTimers(500); //for 'm_AdjustTimer'
@@ -266,7 +266,7 @@ void test_range_module_regression::injectActualValuesCheatingEnabledWithPreScali
     DemoValuesDspRange rangeValues(rangeChannelCount);
     rangeValues.setFrequency(15);
     for(int i = 0; i < rangeChannelCount; i++)
-        rangeValues.setRmsValue(i, i*2.0);
+        rangeValues.setRmsPeakDCValue(i, i*2.0);
 
     TimeMachineForTest::getInstance()->processTimers(500); //for 'm_AdjustTimer'
     sampleDspInterfaceProg->fireActValInterrupt(rangeValues.getDspValues(), /* dummy */ 0);

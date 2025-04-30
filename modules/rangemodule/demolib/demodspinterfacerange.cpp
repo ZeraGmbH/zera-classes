@@ -22,7 +22,7 @@ void DemoDspInterfaceRange::onTimer()
     QVector<float> randomChannelRMS = demoChannelRms();
     DemoValuesDspRange rangeValues(m_valueChannelList.count());
     for(int channel=0; channel<m_valueChannelList.count(); channel++)
-        rangeValues.setRmsValue(channel, randomChannelRMS[channel]);
+        rangeValues.setRmsPeakDCValue(channel, randomChannelRMS[channel]);
     rangeValues.setFrequency(demoFrequency());
     fireActValInterrupt(rangeValues.getDspValues(), 0 /* dummy */);
 }

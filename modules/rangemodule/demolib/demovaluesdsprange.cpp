@@ -10,7 +10,7 @@ DemoValuesDspRange::DemoValuesDspRange(int channels) :
 {
 }
 
-void DemoValuesDspRange::setRmsValue(int channel, float rmsValue)
+void DemoValuesDspRange::setRmsPeakDCValue(int channel, float rmsValue)
 {
     float peakValue = rmsValue * M_SQRT2;
     m_peakValues[channel] = peakValue;
