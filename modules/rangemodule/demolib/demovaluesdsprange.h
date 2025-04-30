@@ -7,7 +7,7 @@ class DemoValuesDspRange
 {
 public:
     DemoValuesDspRange(int channels);
-    void setRmsValue(int channel, float rmsValue);
+    void setRmsPeakDCValue(int channel, float rmsValue);
     void setFrequency(float frequency);
     QVector<float> getDspValues();
 private:

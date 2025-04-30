@@ -513,9 +513,9 @@ void test_range_automatic::fireNewRmsValues(float rmsValue, bool includeIAux)
     DemoValuesDspRange rangeValues(rangeChannelCount);
     for(int i = 0; i < rangeChannelCount; i++) {
         if ((i == 7) && !includeIAux)
-            rangeValues.setRmsValue(i, 0);
+            rangeValues.setRmsPeakDCValue(i, 0);
         else
-            rangeValues.setRmsValue(i, rmsValue);
+            rangeValues.setRmsPeakDCValue(i, rmsValue);
     }
     dspInterface->fireActValInterrupt(rangeValues.getDspValues(), /* dummy */ 0);
     TimeMachineObject::feedEventLoop();

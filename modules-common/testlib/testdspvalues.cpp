@@ -19,7 +19,7 @@ void TestDspValues::setAllValuesSymmetric(float voltage, float current, float an
     for(int channel=0; channel<m_channelList.count(); channel++) {
         float value = ServiceChannelNameHelper::isCurrent(m_channelList[channel]) ? current : voltage;
         m_fftValues->setValue(channel, 0, value, 0);
-        m_rangeValues->setRmsValue(channel, value);
+        m_rangeValues->setRmsPeakDCValue(channel, value);
         m_rangeValues->setFrequency(frequency);
         m_rmsValues->setAllValuesSymmetric(voltage, current);
     }
@@ -31,7 +31,7 @@ void TestDspValues::setAllValuesSymmetricAc(float voltage, float current, float 
     for(int channel=0; channel<m_channelList.count(); channel++) {
         float value = ServiceChannelNameHelper::isCurrent(m_channelList[channel]) ? current : voltage;
         m_fftValues->setValue(channel, 0, 0, 0); // DC
-        m_rangeValues->setRmsValue(channel, value);
+        m_rangeValues->setRmsPeakDCValue(channel, value);
         m_rangeValues->setFrequency(frequency);
         m_rmsValues->setAllValuesSymmetric(voltage, current);
     }
@@ -43,7 +43,7 @@ void TestDspValues::setAllValuesSymmetricDc(float voltage, float current)
     for(int channel=0; channel<m_channelList.count(); channel++) {
         float value = ServiceChannelNameHelper::isCurrent(m_channelList[channel]) ? current : voltage;
         m_fftValues->setValue(channel, 0, value, 0); // DC
-        m_rangeValues->setRmsValue(channel, value);
+        m_rangeValues->setRmsPeakDCValue(channel, value);
         m_rangeValues->setFrequency(0);
         m_rmsValues->setAllValuesSymmetric(0, 0);
     }
