@@ -59,7 +59,6 @@ class cStatusModuleInit: public cModuleActivist
     Q_OBJECT
 public:
     cStatusModuleInit(cStatusModule* module, cStatusModuleConfigData& configData);
-    virtual ~cStatusModuleInit();
     void generateVeinInterface() override;
 signals:
     void activationError();
@@ -75,8 +74,8 @@ private:
 
     Zera::PcbInterfacePtr m_pPCBInterface;
     Zera::ProxyClientPtr m_pPCBClient;
-    Zera::cDSPInterface *m_pDSPInterface;
-    Zera::ProxyClient *m_pDSPClient;
+    Zera::DspInterfacePtr m_dspInterface;
+    Zera::ProxyClientPtr m_dspClient;
 
     // statemachine for activating gets the following states
     QState m_pcbserverConnectionState; // we try to get a connection to our pcb server
