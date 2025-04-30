@@ -73,6 +73,7 @@ void test_modman_regression_all_sessions::checkObjectsProperlyDeleted()
     QCOMPARE(cumulatedInstanceCounts.m_dspVarCount, 0);
     constexpr int licenseStorageSystemModuleIntrospection_EventSystemCount = 4;
     QCOMPARE(cumulatedInstanceCounts.m_veinEventSystemCount, licenseStorageSystemModuleIntrospection_EventSystemCount);
+    QCOMPARE(ProtonetCommand::getInstanceCount(), 0); // for zenux-services
 }
 
 bool test_modman_regression_all_sessions::checkUniqueEntityIdNames(const QString &device)
