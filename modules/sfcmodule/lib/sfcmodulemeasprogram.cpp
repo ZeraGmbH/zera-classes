@@ -471,8 +471,8 @@ void cSfcModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QV
                 {
                     quint32 statusRegister = answer.toUInt();
 
-                    m_pLedStateAct->setValue((statusRegister & 0x100) == 0 ? 0 : 1);
-                    m_pLedInitialStateAct->setValue((statusRegister & 0x200) == 0 ? 0 : 1);
+                    m_pLedStateAct->setValue((statusRegister & 0x100) == 0 ? 1 : 0);
+                    m_pLedInitialStateAct->setValue((statusRegister & 0x200) == 0 ? 1 : 0);
                 }
                 else
                     notifyError(readsecregisterErrMsg);
