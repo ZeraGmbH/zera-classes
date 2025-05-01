@@ -3,6 +3,7 @@
 #include "modulemanagerconfig.h"
 #include <testloghelpers.h>
 #include <mocklxdmsessionchangeparamgenerator.h>
+#include <openfiletrackertestdefaults.h>
 #include <proxyclient_p.h>
 #include <QTest>
 
@@ -13,6 +14,7 @@ void test_modman_regression_all_sessions::initTestCase()
     ModuleManagerSetupFacade::registerMetaTypeStreamOperators();
     TestModuleManager::enableTests();
     qputenv("QT_FATAL_CRITICALS", "1");
+    m_openFileTracker = std::make_unique<TestOpenFileTracker>();
 
     m_devIfaceXmlsPath = QStringLiteral(HTML_DOCS_PATH_TEST) + "scpi-xmls/";
     DevicesExportGenerator devicesExportGenerator(m_devIfaceXmlsPath);
@@ -77,6 +79,17 @@ void test_modman_regression_all_sessions::checkObjectsProperlyDeleted()
 
     QCOMPARE(ProtonetCommand::getInstanceCount(), 0); // for zenux-services
     QCOMPARE(Zera::ProxyClientPrivate::getInstanceCount(), 0);
+}
+
+void test_modman_regression_all_sessions::checkFilesProperlyClosed()
+{
+    SKIP_TESTS_ON_RELEASE_BUILD
+    const QMap<QString, int> openFilesTotal = m_openFileTracker->getOpenFilesTotal();
+    for (auto iter=openFilesTotal.constBegin(); iter!=openFilesTotal.constEnd(); iter++)
+        qInfo("%s accessed %i time(s)", qPrintable(iter.key()), iter.value());
+    QVERIFY(openFilesTotal.count() > 0);
+    const QHash<QString, int> openFiles = m_openFileTracker->getOpenFiles();
+    QCOMPARE(openFiles.count(), 0);
 }
 
 bool test_modman_regression_all_sessions::checkUniqueEntityIdNames(const QString &device)
