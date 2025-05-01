@@ -73,7 +73,7 @@ cSampleModuleMeasProgram::cSampleModuleMeasProgram(cSampleModule* module, std::s
 
 cSampleModuleMeasProgram::~cSampleModuleMeasProgram()
 {
-    Zera::Proxy::getInstance()->releaseConnection(m_dspClient.get());
+    Zera::Proxy::getInstance()->releaseConnectionSmart(m_dspClient);
 }
 
 void cSampleModuleMeasProgram::start()

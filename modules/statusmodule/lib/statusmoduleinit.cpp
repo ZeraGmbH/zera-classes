@@ -643,8 +643,8 @@ void cStatusModuleInit::activationDone()
 
 void cStatusModuleInit::deactivationDone()
 {
-    Zera::Proxy::getInstance()->releaseConnection(m_dspClient.get());
-    Zera::Proxy::getInstance()->releaseConnection(m_pPCBClient.get());
+    Zera::Proxy::getInstance()->releaseConnectionSmart(m_dspClient);
+    Zera::Proxy::getInstance()->releaseConnectionSmart(m_pPCBClient);
     disconnect(m_dspClient.get(), 0, this, 0);
     disconnect(m_pPCBInterface.get(), 0, this, 0);
     emit deactivated();

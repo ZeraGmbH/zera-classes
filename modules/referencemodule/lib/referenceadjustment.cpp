@@ -206,8 +206,8 @@ void cReferenceAdjustment::referenceAdjustDone()
 void cReferenceAdjustment::deactivationInit()
 {
     m_bActive = false;
-    Zera::Proxy::getInstance()->releaseConnection(m_dspClient.get());
-    Zera::Proxy::getInstance()->releaseConnection(m_pPCBClient.get());
+    Zera::Proxy::getInstance()->releaseConnectionSmart(m_dspClient);
+    Zera::Proxy::getInstance()->releaseConnectionSmart(m_pPCBClient);
     emit deactivationContinue();
 }
 

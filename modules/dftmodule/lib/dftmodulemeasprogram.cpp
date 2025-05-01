@@ -575,7 +575,7 @@ void cDftModuleMeasProgram::freePGRMem()
 {
     m_dataAcquisitionMachine.stop();
     m_bActive = false;
-    Zera::Proxy::getInstance()->releaseConnection(m_dspClient.get()); // no async. messages anymore
+    Zera::Proxy::getInstance()->releaseConnectionSmart(m_dspClient); // no async. messages anymore
     deleteDspCmdList();
 
     m_MsgNrCmdList[m_rmInterface.freeResource("DSP1", "PGRMEMC")] = freepgrmem;

@@ -624,7 +624,7 @@ void cRangeMeasChannel::deactivationResetNotifiers()
 
 void cRangeMeasChannel::deactivationDone()
 {
-    Zera::Proxy::getInstance()->releaseConnection(m_pcbClient.get());
+    Zera::Proxy::getInstance()->releaseConnectionSmart(m_pcbClient);
     // and disconnect for our servers afterwards
     disconnect(m_pcbInterface.get(), 0, this, 0);
     emit deactivated();

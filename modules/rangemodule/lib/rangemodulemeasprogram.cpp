@@ -448,7 +448,7 @@ void cRangeModuleMeasProgram::freePGRMem()
 {
     m_dataAcquisitionMachine.stop();
     m_bActive = false;
-    Zera::Proxy::getInstance()->releaseConnection(m_dspClient.get());
+    Zera::Proxy::getInstance()->releaseConnectionSmart(m_dspClient);
     deleteDspCmdList();
 
     m_MsgNrCmdList[m_rmInterface.freeResource("DSP1", "PGRMEMC")] = freepgrmem;

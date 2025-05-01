@@ -253,7 +253,7 @@ void cAdjustManagement::activationDone()
 void cAdjustManagement::deactivationInit()
 {
     m_bActive = false;
-    Zera::Proxy::getInstance()->releaseConnection(m_dspClient.get());
+    Zera::Proxy::getInstance()->releaseConnectionSmart(m_dspClient);
     disconnect(m_dspInterface.get(), 0, this, 0);
 
     for (int i = 0; i < m_ChannelList.count(); i++)
