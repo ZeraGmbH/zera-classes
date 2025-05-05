@@ -495,32 +495,40 @@ void test_range_automatic::checkPersitency()
 
 void test_range_automatic::normalSineRmsOverloadWithRangeAutomatic()
 {
-    fireNewActualValues(4, withoutIaux);
+    fireNewActualValues(0.05, withoutIaux);
     setVfComponent(rangeEntityId, RangeAutomaticComponent, 1);
-    QCOMPARE(getVfComponent(rangeEntityId, UL1RangeComponent), "8V");
-    QCOMPARE(getVfComponent(rangeEntityId, IL1RangeComponent), "5A");
+    QCOMPARE(getVfComponent(rangeEntityId, UL1RangeComponent), "100mV");
+    QCOMPARE(getVfComponent(rangeEntityId, IL1RangeComponent), "50mA");
 
     //Introduce RMS overload
-    fireNewActualValues(10.5, withoutIaux);
+    fireNewActualValues(1, withoutIaux);
     //Extra interrupt needed after range change
-    fireNewActualValues(10.5, withoutIaux);
-    QCOMPARE(getVfComponent(rangeEntityId, UL1RangeComponent), "250V");
+    fireNewActualValues(1, withoutIaux);
+    QCOMPARE(getVfComponent(rangeEntityId, UL1RangeComponent), "250V"); //After overload we go to max ranges
     QCOMPARE(getVfComponent(rangeEntityId, IL1RangeComponent), "10A");
+    fireNewActualValues(1, withoutIaux);
+    fireNewActualValues(1, withoutIaux);
+    QCOMPARE(getVfComponent(rangeEntityId, UL1RangeComponent), "8V"); //new range
+    QCOMPARE(getVfComponent(rangeEntityId, IL1RangeComponent), "1.0A");
 }
 
 void test_range_automatic::abnormalSinePeakOverloadRangeAutomatic()
 {
-    fireNewActualValues(4, withoutIaux);
+    fireNewActualValues(0.05, withoutIaux);
     setVfComponent(rangeEntityId, RangeAutomaticComponent, 1);
-    QCOMPARE(getVfComponent(rangeEntityId, UL1RangeComponent), "8V");
-    QCOMPARE(getVfComponent(rangeEntityId, IL1RangeComponent), "5A");
+    QCOMPARE(getVfComponent(rangeEntityId, UL1RangeComponent), "100mV");
+    QCOMPARE(getVfComponent(rangeEntityId, IL1RangeComponent), "50mA");
 
     //Introduce Peak overload only (special abnormal sine signal which has only peak overload)
-    fireNewActualValues(4, 15, withoutIaux); //rms is still 4
+    fireNewActualValues(0.05, 1, withoutIaux); //rms is still 0.05
     //Extra interrupt needed after range change
-    fireNewActualValues(4, 15, withoutIaux);
-    QCOMPARE(getVfComponent(rangeEntityId, UL1RangeComponent), "250V");
+    fireNewActualValues(0.05, 1, withoutIaux);
+    QCOMPARE(getVfComponent(rangeEntityId, UL1RangeComponent), "250V"); //After overload we go to max ranges
     QCOMPARE(getVfComponent(rangeEntityId, IL1RangeComponent), "10A");
+    fireNewActualValues(0.05, 1, withoutIaux);
+    fireNewActualValues(0.05, 1, withoutIaux);
+    QCOMPARE(getVfComponent(rangeEntityId, UL1RangeComponent), "8V"); //new range
+    QCOMPARE(getVfComponent(rangeEntityId, IL1RangeComponent), "1.0A");
 }
 
 void test_range_automatic::rmsOverloadRangeAutomaticDC()
