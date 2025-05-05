@@ -19,6 +19,7 @@ target_include_directories(apimodule-static
 
 target_link_libraries(apimodule-static
     PUBLIC
+    vf-cpp-module-wrappers
     zera-basemodule
     zera-meas-mode-management
     Zera::zera-math
