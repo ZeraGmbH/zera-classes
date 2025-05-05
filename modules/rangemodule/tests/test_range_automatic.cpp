@@ -525,17 +525,40 @@ void test_range_automatic::abnormalSinePeakOverloadRangeAutomatic()
 
 void test_range_automatic::rmsOverloadRangeAutomaticDC()
 {
-    fireNewActualValues(4, 4, withoutIaux); //DC: Same RMS and Peak value
+    fireNewActualValues(4, 4, withoutIaux); //Same RMS and Peak value, to imitate DC
     setVfComponent(rangeEntityId, RangeAutomaticComponent, 1);
     QCOMPARE(getVfComponent(rangeEntityId, UL1RangeComponent), "8V");
     QCOMPARE(getVfComponent(rangeEntityId, IL1RangeComponent), "5A");
 
     //Introduce RMS overload
-    fireNewActualValues(11, 11, withoutIaux); //DC: Same RMS and Peak value
+    fireNewActualValues(10, 10, withoutIaux);
     //Extra interrupt needed after range change
-    fireNewActualValues(11, 11, withoutIaux); //Same RMS and Peak value, as in case of DC
+    fireNewActualValues(10, 10, withoutIaux);
     QCOMPARE(getVfComponent(rangeEntityId, UL1RangeComponent), "250V");
     QCOMPARE(getVfComponent(rangeEntityId, IL1RangeComponent), "10A");
+    fireNewActualValues(10, 10, withoutIaux);
+    fireNewActualValues(10, 10, withoutIaux);
+    QCOMPARE(getVfComponent(rangeEntityId, UL1RangeComponent), "250V");
+    QCOMPARE(getVfComponent(rangeEntityId, IL1RangeComponent), "10A");
+}
+
+void test_range_automatic::peakOverloadRangeAutomaticDC()
+{
+    fireNewActualValues(0.08, 0.08, withoutIaux); //Same RMS and Peak value
+    setVfComponent(rangeEntityId, RangeAutomaticComponent, 1);
+    QCOMPARE(getVfComponent(rangeEntityId, UL1RangeComponent), "100mV");
+    QCOMPARE(getVfComponent(rangeEntityId, IL1RangeComponent), "100mA");
+
+    //Introduce Peak overload
+    fireNewActualValues(0.08, 0.2, withoutIaux); //Generate a peak overload
+    //Extra interrupt needed after range change
+    fireNewActualValues(0.08, 0.2, withoutIaux);
+    QCOMPARE(getVfComponent(rangeEntityId, UL1RangeComponent), "250V"); //After overload we go to max ranges
+    QCOMPARE(getVfComponent(rangeEntityId, IL1RangeComponent), "10A");
+    fireNewActualValues(0.08, 0.2, withoutIaux);
+    fireNewActualValues(0.08, 0.2, withoutIaux);
+    QCOMPARE(getVfComponent(rangeEntityId, UL1RangeComponent), "8V"); //Now we have the final ranges
+    QCOMPARE(getVfComponent(rangeEntityId, IL1RangeComponent), "250mA");
 }
 
 void test_range_automatic::setupServices()

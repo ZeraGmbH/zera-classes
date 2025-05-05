@@ -38,6 +38,7 @@ private slots:
     void normalSineRmsOverloadWithRangeAutomatic();
     void abnormalSinePeakOverloadRangeAutomatic();
     void rmsOverloadRangeAutomaticDC();
+    void peakOverloadRangeAutomaticDC();
 private:
     void setupServices();
     void fireNewActualValues(float rmsValue, bool includeIAux);
