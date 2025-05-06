@@ -84,8 +84,11 @@ void cApiModuleAuthorize::generateVeinInterface()
 
     connect(m_pPendingRequestPar, &VfModuleParameter::sigValueChanged, this, &cApiModuleAuthorize::onNewPendingRequest);
 
-    // Must always queue to allow RPC call to work properly.
+    // May all be fired in RPC startup code and must delay sending the response.
     connect(m_pGuiDialogFinished, &VfModuleParameter::sigValueChanged, this, &cApiModuleAuthorize::onGuiDialogFinished, Qt::QueuedConnection);
+
+    connect(this, &cApiModuleAuthorize::finishDialog, this, &cApiModuleAuthorize::onGuiDialogFinished, Qt::QueuedConnection);
+    connect(this, &cApiModuleAuthorize::rejectRpc, this, &cApiModuleAuthorize::onRpcRejected, Qt::QueuedConnection);
 }
 
 void cApiModuleAuthorize::activate()
@@ -140,6 +143,16 @@ void cApiModuleAuthorize::onNewPendingRequest(QVariant pendingRequest)
     }
 }
 
+void cApiModuleAuthorize::onRpcRejected(QUuid uuid)
+{
+    m_sharedPtrRpcAuthenticateInterface->sendRpcResult(
+       uuid,
+       VfCpp::cVeinModuleRpc::RPCResultCodes::RPC_EINVAL,
+       "trust request already active",
+       0
+    );
+}
+
 void cApiModuleAuthorize::onGuiDialogFinished(QVariant dialogFinished)
 {
     qint32 status = 0;
@@ -177,27 +190,31 @@ void cApiModuleAuthorize::onGuiDialogFinished(QVariant dialogFinished)
 
 QVariant cApiModuleAuthorize::RPC_Authenticate(QVariantMap p_params)
 {
-    // Dialog already open.
-    if(m_pRequestStatusAct->getValue() == 1) return false;
+    // Cancel any outstandig request.
+    if(!m_rpcRequest.isNull()) emit rejectRpc(m_rpcRequest);
 
     // Remember identifier of the RPC call.
     m_rpcRequest = p_params[VeinComponent::RemoteProcedureData::s_callIdString].toUuid();
 
-    // Create new request object.
-    QJsonObject request;
-    request["name"] = p_params["p_displayName"].toString();
-    request["tokenType"] = p_params["p_tokenType"].toString();
-    request["token"] = p_params["p_token"].toString();
+    // Dialog is open - force close and finish this RPC call.
+    if (m_pRequestStatusAct->getValue() == 1)
+        emit finishDialog(true);
+    else{
+        // Create new request object.
+        QJsonObject request;
+        request["name"] = p_params["p_displayName"].toString();
+        request["tokenType"] = p_params["p_tokenType"].toString();
+        request["token"] = p_params["p_token"].toString();
 
-    if(!jsonArrayContains(m_pTrustListAct->getValue().toJsonArray(), request)){
-        // Force dialog to open.
-        m_pRequestStatusAct->setValue(1);
-        m_pGuiDialogFinished->setValue(false);
-        m_pPendingRequestAct->setValue(request);
-    }
-    else {
-        // Simulate dialog closed.
-        emit onGuiDialogFinished(true);
+        // See if we alrady know this trust - eventually simulate dialog close.
+        if(jsonArrayContains(m_pTrustListAct->getValue().toJsonArray(), request))
+            emit finishDialog(true);
+        else{
+            // Force dialog to open.
+            m_pRequestStatusAct->setValue(1);
+            m_pGuiDialogFinished->setValue(false);
+            m_pPendingRequestAct->setValue(request);
+        }
     }
 
     return QVariant();

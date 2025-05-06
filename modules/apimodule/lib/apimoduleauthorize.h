@@ -40,9 +40,14 @@ private:
 
     VfCpp::cVeinModuleRpc::Ptr m_sharedPtrRpcAuthenticateInterface;
 
+signals:
+    void finishDialog(QVariant dialogFinished);
+    void rejectRpc(QUuid uuid);
+
 private slots:
     void onNewPendingRequest(QVariant pendingRequest);
     void onGuiDialogFinished(QVariant dialogFinished);
+    void onRpcRejected(QUuid uuid);
 };
 }
 
