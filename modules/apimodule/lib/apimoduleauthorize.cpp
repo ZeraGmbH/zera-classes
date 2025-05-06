@@ -77,7 +77,7 @@ void cApiModuleAuthorize::generateVeinInterface()
                 {"p_token", "QString"}
             }),
             false, // not using thread
-            false // blocking
+            false // not blocking
     ));
 
     m_module->getRpcEventSystem()->addRpc(m_sharedPtrRpcAuthenticateInterface);
