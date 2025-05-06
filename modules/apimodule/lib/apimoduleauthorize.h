@@ -31,7 +31,6 @@ private:
     cApiModule* m_module;
     QUuid m_rpcRequest;
 
-    VfModuleParameter* m_pPendingRequestPar;
     VfModuleParameter* m_pGuiDialogFinished;
     VfModuleComponent* m_pPendingRequestAct;
     VfModuleComponent* m_pRequestStatusAct;
@@ -45,7 +44,6 @@ signals:
     void rejectRpc(QUuid uuid);
 
 private slots:
-    void onNewPendingRequest(QVariant pendingRequest);
     void onGuiDialogFinished(QVariant dialogFinished);
     void onRpcRejected(QUuid uuid);
 };
