@@ -11,7 +11,19 @@ VfEventSytemModuleParam *cApiModule::getValidatorEventSystem()
     return m_pModuleValidator;
 }
 
-cApiModule::cApiModule(ModuleFactoryParam moduleParam) : BaseModule(moduleParam, std::make_shared<cApiModuleConfiguration>()),
+cApiModule::~cApiModule()
+{
+    delete m_rpcEventSystem;
+}
+
+VfModuleRpc *cApiModule::getRpcEventSystem() const
+{
+    return m_rpcEventSystem;
+}
+
+cApiModule::cApiModule(ModuleFactoryParam moduleParam)
+    : BaseModule(moduleParam, std::make_shared<cApiModuleConfiguration>()),
+    m_rpcEventSystem(new VfModuleRpc(moduleParam.m_entityId)),
     m_pModuleValidator(new VfEventSytemModuleParam(moduleParam.m_entityId, moduleParam.m_moduleSharedData->m_storagesystem))
 {
     m_sModuleName = QString(BaseModuleName);
@@ -33,10 +45,12 @@ void cApiModule::activationFinished()
 void cApiModule::setupModule()
 {
     emit addEventSystem(getValidatorEventSystem());
+    emit addEventSystem(m_rpcEventSystem);
     emit addEventSystem(m_pModuleEventSystem);
 
     cApiModuleAuthorize* moduleActivist = new cApiModuleAuthorize(this);
     m_ModuleActivistList.append(moduleActivist);
+
     BaseModule::setupModule();
 
     moduleActivist->generateVeinInterface();

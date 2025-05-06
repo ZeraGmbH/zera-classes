@@ -3,6 +3,7 @@
 
 #include "vfeventsytemmoduleparam.h"
 #include <basemodule.h>
+#include <vfmodulerpc.h>
 
 namespace APIMODULE
 {
@@ -14,8 +15,10 @@ public:
     static constexpr const char *BaseSCPIModuleName = "API";
 
     VfEventSytemModuleParam* getValidatorEventSystem();
+    VfModuleRpc *getRpcEventSystem() const;
 
     cApiModule(ModuleFactoryParam moduleParam);
+    ~cApiModule();
 
 private slots:
     void activationFinished() override;
@@ -24,7 +27,8 @@ protected:
     void startMeas() override;                               // we make the measuring program start here
     void stopMeas() override;
 
-    VfEventSytemModuleParam* m_pModuleValidator;
+    VfEventSytemModuleParam* m_pModuleValidator = nullptr;
+    VfModuleRpc *m_rpcEventSystem = nullptr;
 };
 
 }
