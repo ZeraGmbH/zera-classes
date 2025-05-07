@@ -144,7 +144,7 @@ void SourceModuleProgram::onSourceScanFinished(int slotPosition, QUuid uuid, QSt
         updateDemoCount();
     }
     m_sharedPtrRpcScanInterface->sendRpcResult(uuid,
-                                               sourceAdded ? VfCpp::cVeinModuleRpc::RPCResultCodes::RPC_SUCCESS : VfCpp::cVeinModuleRpc::RPCResultCodes::RPC_EINVAL,
+                                               sourceAdded ? VeinComponent::RemoteProcedureData::RPCResultCodes::RPC_SUCCESS : VeinComponent::RemoteProcedureData::RPCResultCodes::RPC_EINVAL,
                                                errorMsg,
                                                sourceAdded);
 }
@@ -156,7 +156,7 @@ void SourceModuleProgram::onSourceDeviceRemoved(int slot, QUuid uuid, QString er
     if(!uuid.isNull()) {
         bool ok = errorMsg.isEmpty();
         m_sharedPtrRpcRemoveInterface->sendRpcResult(uuid,
-                                                     ok ? VfCpp::cVeinModuleRpc::RPCResultCodes::RPC_SUCCESS : VfCpp::cVeinModuleRpc::RPCResultCodes::RPC_EINVAL,
+                                                     ok ? VeinComponent::RemoteProcedureData::RPCResultCodes::RPC_SUCCESS : VeinComponent::RemoteProcedureData::RPCResultCodes::RPC_EINVAL,
                                                      errorMsg,
                                                      ok);
     }
