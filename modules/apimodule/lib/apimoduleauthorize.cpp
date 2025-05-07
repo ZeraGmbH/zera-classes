@@ -159,7 +159,7 @@ void cApiModuleAuthorize::onGuiDialogFinished(QVariant dialogFinished)
         m_sharedPtrRpcAuthenticateInterface->sendRpcResult(uuid,
             VeinComponent::RemoteProcedureData::RPCResultCodes::RPC_SUCCESS,
             "",
-            status
+            status == 2
         );
     }
 }
