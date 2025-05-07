@@ -58,6 +58,14 @@ void cApiModuleAuthorize::generateVeinInterface()
     m_pGuiDialogFinished->setScpiInfo("AUTH", "GUIDIALOGFINISHED", SCPI::isQuery | SCPI::isCmdwP, m_pGuiDialogFinished->getName());
     m_module->m_veinModuleParameterMap[m_pGuiDialogFinished->getName()] = m_pGuiDialogFinished;
 
+    m_pReloadTrustList = new VfModuleParameter(m_module->getEntityId(), m_module->getValidatorEventSystem(),
+                                                 QString("PAR_ReloadTrustList"),
+                                                 QString("set boolean to true to reload trust list"),
+                                                 QVariant(false));
+    m_pReloadTrustList->setValidator(new cBoolValidator());
+    m_pReloadTrustList->setScpiInfo("AUTH", "RELOADTRUSTLIST", SCPI::isQuery | SCPI::isCmdwP, m_pReloadTrustList->getName());
+    m_module->m_veinModuleParameterMap[m_pReloadTrustList->getName()] = m_pReloadTrustList;
+
     m_sharedPtrRpcAuthenticateInterface = VfCpp::cVeinModuleRpc::Ptr(
         new VfCpp::cVeinModuleRpc(
             m_module->getEntityId(),
@@ -74,6 +82,8 @@ void cApiModuleAuthorize::generateVeinInterface()
     ));
 
     m_module->getRpcEventSystem()->addRpc(m_sharedPtrRpcAuthenticateInterface);
+
+    connect(m_pReloadTrustList, &VfModuleParameter::sigValueChanged, this, &cApiModuleAuthorize::onReloadTrustList);
 
     // May all be fired in RPC startup code and must delay sending the response.
     connect(m_pGuiDialogFinished, &VfModuleParameter::sigValueChanged, this, &cApiModuleAuthorize::onGuiDialogFinished, Qt::QueuedConnection);
@@ -128,6 +138,14 @@ void cApiModuleAuthorize::onRpcRejected(QUuid uuid)
        "trust request already active",
        0
     );
+}
+
+void cApiModuleAuthorize::onReloadTrustList(QVariant reload){
+    if (reload == false) return;
+
+    m_pTrustListAct->setValue(readTrustList());
+    m_pTrustListChangeCountAct->setValue(m_pTrustListChangeCountAct->getValue().toInt() + 1);
+    m_pReloadTrustList->setValue(false);
 }
 
 void cApiModuleAuthorize::onGuiDialogFinished(QVariant dialogFinished)

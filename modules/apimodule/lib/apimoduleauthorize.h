@@ -32,6 +32,7 @@ private:
     QUuid m_rpcRequest;
 
     VfModuleParameter* m_pGuiDialogFinished;
+    VfModuleParameter* m_pReloadTrustList;
     VfModuleComponent* m_pPendingRequestAct;
     VfModuleComponent* m_pRequestStatusAct;
     VfModuleComponent* m_pTrustListAct;
@@ -46,6 +47,7 @@ signals:
 private slots:
     void onGuiDialogFinished(QVariant dialogFinished);
     void onRpcRejected(QUuid uuid);
+    void onReloadTrustList(QVariant reload);
 };
 }
 
