@@ -8,6 +8,7 @@
 #include <QFile>
 #include <QUuid>
 #include <scpi.h>
+#include <vcmp_remoteproceduredata.h>
 
 namespace APIMODULE
 {
@@ -123,7 +124,7 @@ void cApiModuleAuthorize::onRpcRejected(QUuid uuid)
 {
     m_sharedPtrRpcAuthenticateInterface->sendRpcResult(
        uuid,
-       VfCpp::cVeinModuleRpc::RPCResultCodes::RPC_EINVAL,
+       VeinComponent::RemoteProcedureData::RPCResultCodes::RPC_EINVAL,
        "trust request already active",
        0
     );
@@ -156,7 +157,7 @@ void cApiModuleAuthorize::onGuiDialogFinished(QVariant dialogFinished)
         m_rpcRequest = QUuid();
 
         m_sharedPtrRpcAuthenticateInterface->sendRpcResult(uuid,
-            VfCpp::cVeinModuleRpc::RPCResultCodes::RPC_SUCCESS,
+            VeinComponent::RemoteProcedureData::RPCResultCodes::RPC_SUCCESS,
             "",
             status
         );
