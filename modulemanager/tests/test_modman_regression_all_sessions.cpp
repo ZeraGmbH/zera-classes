@@ -3,7 +3,6 @@
 #include "modulemanagerconfig.h"
 #include <testloghelpers.h>
 #include <mocklxdmsessionchangeparamgenerator.h>
-#include <openfiletrackertestdefaults.h>
 #include <proxyclient_p.h>
 #include <QTest>
 
@@ -83,7 +82,6 @@ void test_modman_regression_all_sessions::checkObjectsProperlyDeleted()
 
 void test_modman_regression_all_sessions::checkFilesProperlyClosed()
 {
-    SKIP_TESTS_ON_RELEASE_BUILD
     const QMap<QString, int> openFilesTotal = m_openFileTracker->getOpenFilesTotal();
     for (auto iter=openFilesTotal.constBegin(); iter!=openFilesTotal.constEnd(); iter++)
         qInfo("%s accessed %i time(s)", qPrintable(iter.key()), iter.value());
