@@ -6950,11 +6950,6 @@
         "ACT_RequestStatus": 0,
         "ACT_TLChangeCount": 0,
         "ACT_TrustList": [
-            {
-                "name": "I am Groot",
-                "token": "theUser:TZUmQoEhZqKq9berBxHwd8/q+t5Cu9OVLuRkNWvSNYj4b8gCwuf+GAe6gXfTa0Cp2qpifQZsPBOpRc/LeeAu1w==",
-                "tokenType": "Basic"
-            }
         ],
         "EntityName": "ApiModule",
         "INF_ModuleInterface": {
