@@ -16,12 +16,7 @@ cApiModuleAuthorize::cApiModuleAuthorize(cApiModule *module):
     cModuleActivist(module->getVeinModuleName()),
     m_module(module)
 {
-    // tbd:
-    // - user handling
-    // - on demo, change m_trustListPath to something else, writable by demo. otherwise you have to create a "fake" /opt/websam-vein-api/authorize dir
-    // - make m_trustListPath available through VfModuleComponent? avoids redefenition in GUI part
-    // - make onNewPendingRequest rpc, when async rpc through rest is available
-
+    // [TBD] common m_trustListPath for module and UI, BETTER SOLUTION (to be found, discussion with AM): only module handles the file
 }
 
 void cApiModuleAuthorize::generateVeinInterface()
