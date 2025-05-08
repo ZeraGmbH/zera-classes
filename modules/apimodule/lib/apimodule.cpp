@@ -8,23 +8,18 @@ namespace APIMODULE
 
 VfEventSytemModuleParam *cApiModule::getValidatorEventSystem()
 {
-    return m_pModuleValidator;
-}
-
-cApiModule::~cApiModule()
-{
-    delete m_rpcEventSystem;
+    return m_spModuleValidator.get();
 }
 
 VfModuleRpc *cApiModule::getRpcEventSystem() const
 {
-    return m_rpcEventSystem;
+    return m_spRpcEventSystem.get();
 }
 
 cApiModule::cApiModule(ModuleFactoryParam moduleParam)
     : BaseModule(moduleParam, std::make_shared<cApiModuleConfiguration>()),
-    m_rpcEventSystem(new VfModuleRpc(moduleParam.m_entityId)),
-    m_pModuleValidator(new VfEventSytemModuleParam(moduleParam.m_entityId, moduleParam.m_moduleSharedData->m_storagesystem))
+    m_spRpcEventSystem(std::make_shared<VfModuleRpc>(moduleParam.m_entityId)),
+    m_spModuleValidator(std::make_shared<VfEventSytemModuleParam>(moduleParam.m_entityId, moduleParam.m_moduleSharedData->m_storagesystem))
 {
     m_sModuleName = QString(BaseModuleName);
     m_sModuleDescription = QString("This module supports API access");
@@ -45,7 +40,7 @@ void cApiModule::activationFinished()
 void cApiModule::setupModule()
 {
     emit addEventSystem(getValidatorEventSystem());
-    emit addEventSystem(m_rpcEventSystem);
+    emit addEventSystem(m_spRpcEventSystem.get());
     emit addEventSystem(m_pModuleEventSystem);
 
     cApiModuleAuthorize* moduleActivist = new cApiModuleAuthorize(this);

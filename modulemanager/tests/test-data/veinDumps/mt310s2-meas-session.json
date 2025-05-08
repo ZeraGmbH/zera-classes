@@ -31,6 +31,7 @@
             1220,
             1300,
             1400,
+            1500,
             9999
         ],
         "EntityName": "_System",
@@ -6942,5 +6943,74 @@
         },
         "PAR_BluetoothOn": 0,
         "PAR_MacAddress": "00:00:00:00:00:00"
+    },
+    "1500": {
+        "ACT_PendingRequest": {
+        },
+        "ACT_RequestStatus": 0,
+        "ACT_TLChangeCount": 0,
+        "ACT_TrustList": [
+            {
+                "name": "I am Groot",
+                "token": "theUser:TZUmQoEhZqKq9berBxHwd8/q+t5Cu9OVLuRkNWvSNYj4b8gCwuf+GAe6gXfTa0Cp2qpifQZsPBOpRc/LeeAu1w==",
+                "tokenType": "Basic"
+            }
+        ],
+        "EntityName": "ApiModule",
+        "INF_ModuleInterface": {
+            "ComponentInfo": {
+                "EntityName": {
+                    "Description": "Module's name"
+                },
+                "INF_ModuleInterface": {
+                    "Description": "Module's interface details"
+                },
+                "PAR_GuiDialogFinished": {
+                    "Description": "boolean if GUI dialog finished",
+                    "Validation": {
+                        "Data": [
+                            0,
+                            1
+                        ],
+                        "Type": "BOOL"
+                    }
+                },
+                "PAR_ReloadTrustList": {
+                    "Description": "set boolean to true to reload trust list",
+                    "Validation": {
+                        "Data": [
+                            0,
+                            1
+                        ],
+                        "Type": "BOOL"
+                    }
+                }
+            },
+            "ModuleInfo": {
+                "Description": "This module supports API access",
+                "Name": "ApiModule"
+            },
+            "SCPIInfo": {
+                "Cmd": [
+                    [
+                        "AUTH",
+                        "GUIDIALOGFINISHED",
+                        "10",
+                        "PAR_GuiDialogFinished",
+                        "0"
+                    ],
+                    [
+                        "AUTH",
+                        "RELOADTRUSTLIST",
+                        "10",
+                        "PAR_ReloadTrustList",
+                        "0"
+                    ]
+                ],
+                "Name": "API"
+            }
+        },
+        "PAR_GuiDialogFinished": false,
+        "PAR_ReloadTrustList": false
     }
 }

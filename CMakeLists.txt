@@ -87,6 +87,7 @@ endmacro()
 # Notes
 # * SET_MODULE_ENV !MUST! be set before add_subdirectory
 # * Modules not added here don't support common module folder layout (yet)
+SET_MODULE_ENV(apimodule)
 SET_MODULE_ENV(adjustmentmodule)
 SET_MODULE_ENV(blemodule)
 SET_MODULE_ENV(burden1module)

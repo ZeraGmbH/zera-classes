@@ -21,34 +21,34 @@ cApiModuleAuthorize::cApiModuleAuthorize(cApiModule *module):
 
 void cApiModuleAuthorize::generateVeinInterface()
 {
-    m_pRequestStatusAct = new VfModuleComponent(m_module->getEntityId(), m_module->getValidatorEventSystem(),
+    m_spRequestStatusAct = std::make_shared<VfModuleComponent>(m_module->getEntityId(), m_module->getValidatorEventSystem(),
                                                 QString("ACT_RequestStatus"),
                                                 QString("Flag state for request status: 1=running, 2=accepted"),
-                                                QVariant((int)0));
-    m_pRequestStatusAct->setScpiInfo("AUTH", "REQUESTSTATE", SCPI::isQuery, m_pRequestStatusAct->getName());
+                                                (int)0);
+    m_spRequestStatusAct->setScpiInfo("AUTH", "REQUESTSTATE", SCPI::isQuery, m_spRequestStatusAct->getName());
 
-    m_pPendingRequestAct = new VfModuleComponent(m_module->getEntityId(), m_module->getValidatorEventSystem(),
+    m_spPendingRequestAct = std::make_shared<VfModuleComponent>(m_module->getEntityId(), m_module->getValidatorEventSystem(),
                                                  QString("ACT_PendingRequest"),
                                                  QString("Json structure with name(string), tokenType(string->Certificate,Basic,PublicKey), token(string)"),
                                                  QJsonObject());
-    m_pPendingRequestAct->setScpiInfo("AUTH", "PENDINGREQUEST", SCPI::isQuery, m_pPendingRequestAct->getName());
+    m_spPendingRequestAct->setScpiInfo("AUTH", "PENDINGREQUEST", SCPI::isQuery, m_spPendingRequestAct->getName());
 
-    m_pTrustListAct = new VfModuleComponent(m_module->getEntityId(), m_module->getValidatorEventSystem(),
+    m_spTrustListAct = std::make_shared<VfModuleComponent>(m_module->getEntityId(), m_module->getValidatorEventSystem(),
                                                 QString("ACT_TrustList"),
                                                 QString("Json array of trusted clients"),
                                                 readTrustList());
-    m_pTrustListAct->setScpiInfo("AUTH", "TRUSTLIST", SCPI::isQuery, m_pTrustListAct->getName());
+    m_spTrustListAct->setScpiInfo("AUTH", "TRUSTLIST", SCPI::isQuery, m_spTrustListAct->getName());
 
-    m_pTrustListChangeCountAct = new VfModuleComponent(m_module->getEntityId(), m_module->getValidatorEventSystem(),
+    m_spTrustListChangeCountAct = std::make_shared<VfModuleComponent>(m_module->getEntityId(), m_module->getValidatorEventSystem(),
                                             QString("ACT_TLChangeCount"),
                                             QString("Change count of Trust List"),
-                                            QVariant((int)0));
-    m_pTrustListChangeCountAct->setScpiInfo("AUTH", "TLCHANGECOUNT", SCPI::isQuery, m_pTrustListChangeCountAct->getName());
+                                            (int)0);
+    m_spTrustListChangeCountAct->setScpiInfo("AUTH", "TLCHANGECOUNT", SCPI::isQuery, m_spTrustListChangeCountAct->getName());
 
     m_pGuiDialogFinished = new VfModuleParameter(m_module->getEntityId(), m_module->getValidatorEventSystem(),
                                                  QString("PAR_GuiDialogFinished"),
                                                  QString("boolean if GUI dialog finished"),
-                                                 QVariant(false));
+                                                 false);
     m_pGuiDialogFinished->setValidator(new cBoolValidator());
     m_pGuiDialogFinished->setScpiInfo("AUTH", "GUIDIALOGFINISHED", SCPI::isQuery | SCPI::isCmdwP, m_pGuiDialogFinished->getName());
     m_module->m_veinModuleParameterMap[m_pGuiDialogFinished->getName()] = m_pGuiDialogFinished;
@@ -56,12 +56,12 @@ void cApiModuleAuthorize::generateVeinInterface()
     m_pReloadTrustList = new VfModuleParameter(m_module->getEntityId(), m_module->getValidatorEventSystem(),
                                                  QString("PAR_ReloadTrustList"),
                                                  QString("set boolean to true to reload trust list"),
-                                                 QVariant(false));
+                                                 false);
     m_pReloadTrustList->setValidator(new cBoolValidator());
     m_pReloadTrustList->setScpiInfo("AUTH", "RELOADTRUSTLIST", SCPI::isQuery | SCPI::isCmdwP, m_pReloadTrustList->getName());
     m_module->m_veinModuleParameterMap[m_pReloadTrustList->getName()] = m_pReloadTrustList;
 
-    m_sharedPtrRpcAuthenticateInterface = VfCpp::cVeinModuleRpc::Ptr(
+    m_spRpcAuthenticateInterface = VfCpp::cVeinModuleRpc::Ptr(
         new VfCpp::cVeinModuleRpc(
             m_module->getEntityId(),
             m_module->getValidatorEventSystem(),
@@ -76,7 +76,7 @@ void cApiModuleAuthorize::generateVeinInterface()
             false // not blocking
     ));
 
-    m_module->getRpcEventSystem()->addRpc(m_sharedPtrRpcAuthenticateInterface);
+    m_module->getRpcEventSystem()->addRpc(m_spRpcAuthenticateInterface);
 
     connect(m_pReloadTrustList, &VfModuleParameter::sigValueChanged, this, &cApiModuleAuthorize::onReloadTrustList);
 
@@ -127,7 +127,7 @@ bool cApiModuleAuthorize::jsonArrayContains(const QJsonArray &array, const QJson
 
 void cApiModuleAuthorize::onRpcRejected(QUuid uuid)
 {
-    m_sharedPtrRpcAuthenticateInterface->sendRpcResult(
+    m_spRpcAuthenticateInterface->sendRpcResult(
        uuid,
        VeinComponent::RemoteProcedureData::RPCResultCodes::RPC_EINVAL,
        "trust request already active",
@@ -140,8 +140,8 @@ void cApiModuleAuthorize::onReloadTrustList(QVariant reload){
 
     m_pReloadTrustList->setValue(false);
 
-    m_pTrustListAct->setValue(readTrustList());
-    m_pTrustListChangeCountAct->setValue(m_pTrustListChangeCountAct->getValue().toInt() + 1);
+    m_spTrustListAct->setValue(readTrustList());
+    m_spTrustListChangeCountAct->setValue(m_spTrustListChangeCountAct->getValue().toInt() + 1);
 }
 
 void cApiModuleAuthorize::onGuiDialogFinished(QVariant dialogFinished)
@@ -152,17 +152,17 @@ void cApiModuleAuthorize::onGuiDialogFinished(QVariant dialogFinished)
     {
         QJsonArray readList = readTrustList();
 
-        if(jsonArrayContains(readList, m_pPendingRequestAct->getValue().toJsonObject())){
-            m_pTrustListAct->setValue(readList);
-            m_pTrustListChangeCountAct->setValue(m_pTrustListChangeCountAct->getValue().toInt() + 1);
-            m_pRequestStatusAct->setValue(status = 2);
+        if(jsonArrayContains(readList, m_spPendingRequestAct->getValue().toJsonObject())){
+            m_spTrustListAct->setValue(readList);
+            m_spTrustListChangeCountAct->setValue(m_spTrustListChangeCountAct->getValue().toInt() + 1);
+            m_spRequestStatusAct->setValue(status = 2);
         }
         else
         {
-            m_pRequestStatusAct->setValue(status = 0);
+            m_spRequestStatusAct->setValue(status = 0);
         }
 
-        m_pPendingRequestAct->setValue(QJsonObject());
+        m_spPendingRequestAct->setValue(QJsonObject());
     }
 
     QUuid uuid = m_rpcRequest;
@@ -170,7 +170,7 @@ void cApiModuleAuthorize::onGuiDialogFinished(QVariant dialogFinished)
     if(!uuid.isNull()){
         m_rpcRequest = QUuid();
 
-        m_sharedPtrRpcAuthenticateInterface->sendRpcResult(uuid,
+        m_spRpcAuthenticateInterface->sendRpcResult(uuid,
             VeinComponent::RemoteProcedureData::RPCResultCodes::RPC_SUCCESS,
             "",
             status == 2
@@ -187,7 +187,7 @@ QVariant cApiModuleAuthorize::RPC_Authenticate(QVariantMap p_params)
     m_rpcRequest = p_params[VeinComponent::RemoteProcedureData::s_callIdString].toUuid();
 
     // Dialog is open - force close and finish this RPC call.
-    if (m_pRequestStatusAct->getValue() == 1)
+    if (m_spRequestStatusAct->getValue() == 1)
         emit finishDialog(true);
     else{
         // Create new request object.
@@ -197,13 +197,13 @@ QVariant cApiModuleAuthorize::RPC_Authenticate(QVariantMap p_params)
         request["token"] = p_params["p_token"].toString();
 
         // See if we alrady know this trust - eventually simulate dialog close.
-        if(jsonArrayContains(m_pTrustListAct->getValue().toJsonArray(), request))
+        if(jsonArrayContains(m_spTrustListAct->getValue().toJsonArray(), request))
             emit finishDialog(true);
         else{
             // Force dialog to open.
-            m_pRequestStatusAct->setValue(1);
+            m_spRequestStatusAct->setValue(1);
             m_pGuiDialogFinished->setValue(false);
-            m_pPendingRequestAct->setValue(request);
+            m_spPendingRequestAct->setValue(request);
         }
     }
 

@@ -33,12 +33,13 @@ private:
 
     VfModuleParameter* m_pGuiDialogFinished;
     VfModuleParameter* m_pReloadTrustList;
-    VfModuleComponent* m_pPendingRequestAct;
-    VfModuleComponent* m_pRequestStatusAct;
-    VfModuleComponent* m_pTrustListAct;
-    VfModuleComponent* m_pTrustListChangeCountAct;
 
-    VfCpp::cVeinModuleRpc::Ptr m_sharedPtrRpcAuthenticateInterface;
+    std::shared_ptr<VfModuleComponent> m_spPendingRequestAct;
+    std::shared_ptr<VfModuleComponent> m_spRequestStatusAct;
+    std::shared_ptr<VfModuleComponent> m_spTrustListAct;
+    std::shared_ptr<VfModuleComponent> m_spTrustListChangeCountAct;
+
+    VfCpp::cVeinModuleRpc::Ptr m_spRpcAuthenticateInterface;
 
 signals:
     void finishDialog(QVariant dialogFinished);

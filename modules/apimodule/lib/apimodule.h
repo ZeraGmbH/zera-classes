@@ -18,7 +18,6 @@ public:
     VfModuleRpc *getRpcEventSystem() const;
 
     cApiModule(ModuleFactoryParam moduleParam);
-    ~cApiModule();
 
 private slots:
     void activationFinished() override;
@@ -27,8 +26,8 @@ protected:
     void startMeas() override;                               // we make the measuring program start here
     void stopMeas() override;
 
-    VfEventSytemModuleParam* m_pModuleValidator = nullptr;
-    VfModuleRpc *m_rpcEventSystem = nullptr;
+    std::shared_ptr<VfEventSytemModuleParam> m_spModuleValidator;
+    std::shared_ptr<VfModuleRpc> m_spRpcEventSystem;
 };
 
 }
