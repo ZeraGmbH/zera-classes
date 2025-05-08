@@ -143,9 +143,10 @@ void cApiModuleAuthorize::onRpcRejected(QUuid uuid)
 void cApiModuleAuthorize::onReloadTrustList(QVariant reload){
     if (reload == false) return;
 
+    m_pReloadTrustList->setValue(false);
+
     m_pTrustListAct->setValue(readTrustList());
     m_pTrustListChangeCountAct->setValue(m_pTrustListChangeCountAct->getValue().toInt() + 1);
-    m_pReloadTrustList->setValue(false);
 }
 
 void cApiModuleAuthorize::onGuiDialogFinished(QVariant dialogFinished)
