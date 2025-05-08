@@ -13,3 +13,8 @@ SETUP_QTESTS_MODULE(
     test_api_config_load
     test_api_trust_authentication
 )
+
+target_sources(test_api_trust_authentication
+  PRIVATE
+    test-data/test-data.qrc
+)
