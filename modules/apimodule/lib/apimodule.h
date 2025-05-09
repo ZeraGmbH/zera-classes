@@ -17,6 +17,8 @@ public:
     VfEventSytemModuleParam* getValidatorEventSystem();
     VfModuleRpc *getRpcEventSystem() const;
 
+    void setTrustListPath(const QString &path);
+
     cApiModule(ModuleFactoryParam moduleParam);
 
 private slots:
