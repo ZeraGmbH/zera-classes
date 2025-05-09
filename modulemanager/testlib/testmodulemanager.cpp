@@ -10,6 +10,7 @@
 #include <testfactoryi2cctrl.h>
 #include <timemachineobject.h>
 #include <timerfactoryqtfortest.h>
+#include <scpinode.h>
 #include <QDir>
 
 bool TestModuleManager::prepareOe()
@@ -109,7 +110,9 @@ void TestModuleManager::onAllModulesDestroyed()
         VeinEvent::EventSystem::getInstanceCount(),
         cModuleActivist::getInstanceCount(),
         Zera::cInterfacePrivate::getInstanceCount(),
-        cDspVar::getInstanceCount()
+        cDspVar::getInstanceCount(),
+        ScpiNode::getInstanceCount(),
+        cSCPIObject::getInstanceCount()
     } );
 }
 
