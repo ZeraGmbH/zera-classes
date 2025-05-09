@@ -4,19 +4,19 @@
 namespace SCPIMODULE {
 
 ScpiBaseDelegate::ScpiBaseDelegate() :
-    cSCPIObject("", 0)
+    ScpiObject("", 0)
 {
 }
 
 ScpiBaseDelegate::ScpiBaseDelegate(QString cmdParent, QString cmd, quint8 type) :
-    cSCPIObject(cmd, type),
+    ScpiObject(cmd, type),
     m_sCmdParent(cmdParent)
 {
 }
 
-void ScpiBaseDelegate::setCommand(cSCPI *scpiCmdInterface)
+void ScpiBaseDelegate::setCommand(cSCPI *scpiCmdInterface, ScpiBaseDelegatePtr delegate)
 {
-    scpiCmdInterface->insertScpiCmd(m_sCmdParent.split(":", Qt::SkipEmptyParts), this);
+    scpiCmdInterface->insertScpiCmd(m_sCmdParent.split(":", Qt::SkipEmptyParts), delegate);
 }
 
 }

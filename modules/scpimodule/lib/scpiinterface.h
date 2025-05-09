@@ -2,6 +2,7 @@
 #define SCPIINTERFACE_H
 
 #include "scpi.h"
+#include "scpibasedelegate.h"
 #include <QObject>
 #include <QString>
 #include <QList>
@@ -13,7 +14,6 @@ class cSCPI;
 namespace SCPIMODULE
 {
 
-class ScpiBaseDelegate;
 class cSCPIClient;
 
 struct cmdInfos {
@@ -31,7 +31,7 @@ public:
     virtual ~cSCPIInterface();
 
     void exportSCPIModelXML(QString &xml, QMap<QString, QString> modelListBaseEntry);
-    void addSCPICommand(ScpiBaseDelegate* delegate);
+    void addSCPICommand(ScpiBaseDelegatePtr delegate);
     bool executeCmd(cSCPIClient* client, QString cmd);
     void checkAmbiguousShortNames();
     void setEnableQueue(bool enable);

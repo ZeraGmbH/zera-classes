@@ -30,10 +30,6 @@ cModuleInterface::cModuleInterface(cSCPIModule* module, cSCPIInterface *iface)
 
 cModuleInterface::~cModuleInterface()
 {
-    while(!m_scpiDelegateList.isEmpty())
-        delete m_scpiDelegateList.takeLast();
-    for(const auto &delegate : qAsConst(m_scpiMeasureDelegateHash))
-        delete delegate;
     m_scpiMeasureDelegateHash.clear();
     for (auto measureObject: m_measureObjectsToDelete)
         delete measureObject;
@@ -100,7 +96,7 @@ void cModuleInterface::actualizeInterface(QVariant modInterface)
     }
 }
 
-QHash<QString, cSCPIMeasureDelegate *> *cModuleInterface::getSCPIMeasDelegateHash()
+QHash<QString, cSCPIMeasureDelegatePtr> *cModuleInterface::getSCPIMeasDelegateHash()
 {
     return &m_scpiMeasureDelegateHash;
 }
@@ -136,16 +132,15 @@ void cModuleInterface::addSCPICommand(cSCPICmdInfo *scpiCmdInfo)
         QStringList nodeNames = cmdComplete.split(':');
         QString cmdNode = nodeNames.takeLast();
         QString cmdParent = nodeNames.join(':');
-        ScpiBaseDelegate* delegate;
+        ScpiBaseDelegatePtr delegate;
         if (scpiCmdInfo->refType == "0") {
-            delegate = new cSCPIParameterDelegate(cmdParent, cmdNode, scpiCmdInfo->scpiCommandType.toInt(), m_pModule, scpiCmdInfo);
+            delegate = std::make_shared<cSCPIParameterDelegate>(cmdParent, cmdNode, scpiCmdInfo->scpiCommandType.toInt(), m_pModule, scpiCmdInfo);
             setXmlComponentInfo(delegate, scpiCmdInfo->veinComponentInfo);
         }
         else {
-            delegate = new cSCPICatalogCmdDelegate(cmdParent, cmdNode, scpiCmdInfo->scpiCommandType.toInt(), m_pModule, scpiCmdInfo);
-            m_scpiPropertyDelegateHash[cmdComplete] = static_cast<cSCPICatalogCmdDelegate*>(delegate); // for easier access if we need to change answers of this delegate
+            delegate = std::make_shared<cSCPICatalogCmdDelegate>(cmdParent, cmdNode, scpiCmdInfo->scpiCommandType.toInt(), m_pModule, scpiCmdInfo);
+            m_scpiPropertyDelegateHash[cmdComplete] = static_cast<cSCPICatalogCmdDelegate*>(delegate.get()); // for easier access if we need to change answers of this delegate
         }
-        m_scpiDelegateList.append(delegate); // for clean up .....
         m_pSCPIInterface->addSCPICommand(delegate);
     }
 }
@@ -159,20 +154,20 @@ void cModuleInterface::addSCPIMeasureCommand(QString cmdparent,
                                              QJsonObject veinComponentInfo)
 {
     QString cmdcomplete = QString("%1:%2").arg(cmdparent, cmd);
-    cSCPIMeasureDelegate* delegate;
+    cSCPIMeasureDelegatePtr delegate;
     if (m_scpiMeasureDelegateHash.contains(cmdcomplete)) {
         delegate = m_scpiMeasureDelegateHash.value(cmdcomplete);
         delegate->addscpimeasureObject(measureObject);
     }
     else {
-        delegate = new cSCPIMeasureDelegate(cmdparent, cmd, cmdType , measCode, measureObject);
+        delegate = std::make_shared<cSCPIMeasureDelegate>(cmdparent, cmd, cmdType , measCode, measureObject);
         m_scpiMeasureDelegateHash[cmdcomplete] = delegate;
         m_pSCPIInterface->addSCPICommand(delegate);
     }
     setXmlComponentInfo(delegate, veinComponentInfo);
 }
 
-void cModuleInterface::setXmlComponentInfo(ScpiBaseDelegate *delegate, const QJsonObject &componentInfo)
+void cModuleInterface::setXmlComponentInfo(ScpiBaseDelegatePtr delegate, const QJsonObject &componentInfo)
 {
     QString desc = componentInfo["Description"].toString();
     if(!desc.isEmpty())
@@ -183,7 +178,7 @@ void cModuleInterface::setXmlComponentInfo(ScpiBaseDelegate *delegate, const QJs
         delegate->setXmlAttribute("Unit", unit);
 }
 
-void cModuleInterface::setXmlComponentValidatorInfo(ScpiBaseDelegate *delegate, const QJsonObject &componentInfo)
+void cModuleInterface::setXmlComponentValidatorInfo(ScpiBaseDelegatePtr delegate, const QJsonObject &componentInfo)
 {
     QJsonObject validator = componentInfo["Validation"].toObject();
     QString validatorType = validator["Type"].toString();

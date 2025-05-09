@@ -112,7 +112,7 @@ void TestModuleManager::onAllModulesDestroyed()
         Zera::cInterfacePrivate::getInstanceCount(),
         cDspVar::getInstanceCount(),
         ScpiNode::getInstanceCount(),
-        cSCPIObject::getInstanceCount()
+        ScpiObject::getInstanceCount()
     } );
 }
 

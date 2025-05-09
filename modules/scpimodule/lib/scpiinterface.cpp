@@ -29,9 +29,9 @@ void cSCPIInterface::exportSCPIModelXML(QString &xml, QMap<QString, QString> mod
     m_pSCPICmdInterface->exportSCPIModelXML(xml, modelListBaseEntry);
 }
 
-void cSCPIInterface::addSCPICommand(ScpiBaseDelegate *delegate)
+void cSCPIInterface::addSCPICommand(ScpiBaseDelegatePtr delegate)
 {
-    delegate->setCommand(m_pSCPICmdInterface);
+    delegate->setCommand(m_pSCPICmdInterface, delegate);
 }
 
 void cSCPIInterface::waitForBlockingCmd(cSCPIClient *client)
@@ -43,13 +43,13 @@ void cSCPIInterface::waitForBlockingCmd(cSCPIClient *client)
 
 bool cSCPIInterface::executeCmd(cSCPIClient *client, QString cmd)
 {
-    cSCPIObject* scpiObject;
+    ScpiObjectPtr scpiObject;
     cmdInfos cmdInfo;
     cmdInfo.cmd = cmd;
     cmdInfo.client = client;
     if ( (scpiObject = m_pSCPICmdInterface->getSCPIObject(cmd)) != 0)
     {
-        ScpiBaseDelegate* scpiDelegate = static_cast<ScpiBaseDelegate*>(scpiObject);
+        ScpiBaseDelegate* scpiDelegate = static_cast<ScpiBaseDelegate*>(scpiObject.get());
         if(m_enableScpiQueue) {
             m_scpiCmdInExec.enqueue(cmdInfo);
             if(m_scpiCmdInExec.count() == 1) { // The list was empty before, so we need to trigger the execution machinery
@@ -126,12 +126,12 @@ void cSCPIInterface::removeCommand(cSCPIClient *client)
 void cSCPIInterface::checkAllCmds()
 {
     if(!m_scpiCmdInExec.isEmpty()) {
-         cSCPIObject* scpiObject;
+         ScpiObjectPtr scpiObject;
          cmdInfos cmdInfo = m_scpiCmdInExec.head();
          cSCPIClient *client = cmdInfo.client;
          QString cmd = cmdInfo.cmd;
          if ( (scpiObject = m_pSCPICmdInterface->getSCPIObject(cmd)) != 0) {
-             ScpiBaseDelegate* scpiDelegate = static_cast<ScpiBaseDelegate*>(scpiObject);
+             ScpiBaseDelegate* scpiDelegate = static_cast<ScpiBaseDelegate*>(scpiObject.get());
              if(m_enableScpiQueue) {
                  connect(client, &cSCPIClient::commandAnswered, this, &cSCPIInterface::removeCommand);
                  waitForBlockingCmd(client);
@@ -144,7 +144,7 @@ void cSCPIInterface::checkAllCmds()
                      cSCPIClient *client = cmdInfo.client;
                      QString cmd = cmdInfo.cmd;
                      if ( (scpiObject = m_pSCPICmdInterface->getSCPIObject(cmd)) != 0) {
-                         ScpiBaseDelegate* scpiDelegate = static_cast<ScpiBaseDelegate*>(scpiObject);
+                         ScpiBaseDelegate* scpiDelegate = static_cast<ScpiBaseDelegate*>(scpiObject.get());
                          scpiDelegate->executeSCPI(client, cmd);
                      }
                  }

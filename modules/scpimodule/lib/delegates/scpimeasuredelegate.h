@@ -29,6 +29,8 @@ private:
     QList<cSCPIMeasure*> m_scpimeasureObjectList;
 };
 
+typedef std::shared_ptr<cSCPIMeasureDelegate> cSCPIMeasureDelegatePtr;
+
 }
 
 #endif // SCPIMEASUREDELEGATE_H

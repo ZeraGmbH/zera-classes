@@ -33,7 +33,7 @@ public:
     void setComponentName(QString componentName);
     QString getComponentName();
 
-    QHash<cSCPIMeasureDelegate*, cSCPIMeasureDelegate*> m_SCPIMeasureDelegateHash;
+    QHash<cSCPIMeasureDelegate*, cSCPIMeasureDelegatePtr> m_SCPIMeasureDelegateHash;
 
 signals:
     void commandAnswered(cSCPIClient* client);

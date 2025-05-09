@@ -6,7 +6,7 @@
 
 namespace SCPIMODULE {
 
-class cSCPIInterfaceDelegate: public ScpiBaseDelegate
+class cSCPIInterfaceDelegate : public ScpiBaseDelegate
 {
     Q_OBJECT
 public:
@@ -17,6 +17,8 @@ signals:
 private:
     quint16 m_nCmdCode;
 };
+
+typedef std::shared_ptr<cSCPIInterfaceDelegate> cSCPIInterfaceDelegatePtr;
 
 }
 

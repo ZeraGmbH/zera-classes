@@ -15,27 +15,17 @@ cInterfaceInterface::cInterfaceInterface(cSCPIModule *module, cSCPIInterface *if
 {
 }
 
-
-cInterfaceInterface::~cInterfaceInterface()
-{
-    for (int i = 0; i < m_scpiInterfaceDelegateList.count(); i++ )
-        delete m_scpiInterfaceDelegateList.at(i);
-}
-
-
 bool cInterfaceInterface::setupInterface()
 {
-    cSCPIInterfaceDelegate* delegate = new cSCPIInterfaceDelegate(QString("DEVICE"), QString("IFACE"),
-                                                                  SCPI::isQuery, deviceinterfacecmd);
-    m_scpiInterfaceDelegateList.append(delegate);
+    cSCPIInterfaceDelegatePtr delegate = std::make_shared<cSCPIInterfaceDelegate>(
+        QString("DEVICE"), QString("IFACE"), SCPI::isQuery, deviceinterfacecmd);
     m_pSCPIInterface->addSCPICommand(delegate);
-    connect(delegate, &cSCPIInterfaceDelegate::signalExecuteSCPI, this, &cInterfaceInterface::executeCmd);
+    connect(delegate.get(), &cSCPIInterfaceDelegate::signalExecuteSCPI, this, &cInterfaceInterface::executeCmd);
 
     // for module integrity we also have to add this command to the scpi command list (exported at INF_ModuleInterface)
     m_pModule->scpiCommandList.append(new ScpiVeinComponentInfo("", QString("DEVICE:IFACE"), SCPI::isQuery, ""));
     return true;
 }
-
 
 void cInterfaceInterface::executeCmd(cSCPIClient *client, int cmdCode, const QString &sInput)
 {

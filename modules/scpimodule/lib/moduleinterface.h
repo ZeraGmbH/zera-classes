@@ -3,6 +3,7 @@
 
 #include "baseinterface.h"
 #include "scpibasedelegate.h"
+#include "scpimeasuredelegate.h"
 #include <QHash>
 #include <QJsonObject>
 #include <QJsonArray>
@@ -20,7 +21,6 @@ class cSCPIInterface;
 class cSCPIParameterDelegate;
 class cSCPICatalogCmdDelegate;
 class cSCPIMeasure;
-class cSCPIMeasureDelegate;
 
 // the class for our module interface connections
 
@@ -34,11 +34,10 @@ public:
     virtual bool setupInterface() override;
     virtual void actualizeInterface(QVariant modInterface);
 
-    QHash<QString, cSCPIMeasureDelegate*>* getSCPIMeasDelegateHash();
+    QHash<QString, cSCPIMeasureDelegatePtr>* getSCPIMeasDelegateHash();
 
 private:
-    QList<ScpiBaseDelegate*> m_scpiDelegateList; // our delegatelist for parameter cmd's ... needed to clean up
-    QHash<QString, cSCPIMeasureDelegate*> m_scpiMeasureDelegateHash; // a hash for measure cmd's ... needed for clean up and search for existing cmd
+    QHash<QString, cSCPIMeasureDelegatePtr> m_scpiMeasureDelegateHash; // a hash for measure cmd's ... needed for clean up and search for existing cmd
     QHash<QString, cSCPICatalogCmdDelegate*> m_scpiPropertyDelegateHash; // a hash with property delegates taht might need actualization when something changes
 
     void addSCPICommand(cSCPICmdInfo *scpiCmdInfo);
@@ -48,8 +47,8 @@ private:
                                quint8 measCode,
                                cSCPIMeasure* measureObject,
                                QJsonObject veinComponentInfo = QJsonObject());
-    void setXmlComponentInfo(ScpiBaseDelegate* delegate, const QJsonObject &componentInfo);
-    void setXmlComponentValidatorInfo(ScpiBaseDelegate* delegate, const QJsonObject &componentInfo);
+    void setXmlComponentInfo(ScpiBaseDelegatePtr delegate, const QJsonObject &componentInfo);
+    void setXmlComponentValidatorInfo(ScpiBaseDelegatePtr delegate, const QJsonObject &componentInfo);
     QJsonArray getValidatorEntries(QJsonObject validator);
 
     QList<cSCPICmdInfo*> m_scpiCmdInfosToDelete;

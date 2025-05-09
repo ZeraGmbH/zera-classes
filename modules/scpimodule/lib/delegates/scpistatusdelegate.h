@@ -6,7 +6,7 @@
 
 namespace SCPIMODULE {
 
-class cSCPIStatusDelegate: public ScpiBaseDelegate
+class cSCPIStatusDelegate : public ScpiBaseDelegate
 {
     Q_OBJECT
 public:
@@ -18,6 +18,8 @@ private:
     quint8 m_nCmdCode;
     quint8 m_nStatusIndex;
 };
+
+typedef std::shared_ptr<cSCPIStatusDelegate> cSCPIStatusDelegatePtr;
 
 }
 
