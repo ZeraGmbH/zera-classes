@@ -21,12 +21,13 @@ public slots:
     void deactivate() override;
 
     QVariant RPC_Authenticate(QVariantMap p_params);
+    void setTrustListPath(const QString &path);
 
 private:
     QJsonArray readTrustList();
     bool jsonArrayContains(const QJsonArray& array, const QJsonObject& target);
 
-    const QString m_trustListPath = "/opt/websam-vein-api/authorize/trustlist.json";
+    QString m_trustListPath = "/opt/websam-vein-api/authorize/trustlist.json";
 
     cApiModule* m_module;
     QUuid m_rpcRequest;
