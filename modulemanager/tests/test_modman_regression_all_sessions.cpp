@@ -13,11 +13,15 @@ void test_modman_regression_all_sessions::initTestCase()
     ModuleManagerSetupFacade::registerMetaTypeStreamOperators();
     TestModuleManager::enableTests();
     qputenv("QT_FATAL_CRITICALS", "1");
+
     m_openFileTracker = std::make_unique<TestOpenFileTracker>();
 
     m_devIfaceXmlsPath = QStringLiteral(HTML_DOCS_PATH_TEST) + "scpi-xmls/";
+    m_memAllocTracker.start();
     DevicesExportGenerator devicesExportGenerator(m_devIfaceXmlsPath);
     devicesExportGenerator.exportAll(MockLxdmSessionChangeParamGenerator::generateTestSessionChanger(false));
+    m_memAllocTracker.stop();
+
     m_veinDumps = devicesExportGenerator.getVeinDumps();
     m_instanceCountsOnModulesDestroyed = devicesExportGenerator.getInstanceCountsOnModulesDestroyed();
 }
@@ -88,6 +92,12 @@ void test_modman_regression_all_sessions::checkFilesProperlyClosed()
     QVERIFY(openFilesTotal.count() > 0);
     const QHash<QString, int> openFiles = m_openFileTracker->getOpenFiles();
     QCOMPARE(openFiles.count(), 0);
+}
+
+void test_modman_regression_all_sessions::analyzeNonFreedMemory()
+{
+    MemoryAllocTracker::MemsAllocated memsNotDeallocated = m_memAllocTracker.getRawMemRegions();
+    qInfo("Memory chunks not deallocated: %i", memsNotDeallocated.count());
 }
 
 bool test_modman_regression_all_sessions::checkUniqueEntityIdNames(const QString &device)
