@@ -15,12 +15,16 @@ class cBaseInterface: public QObject
 
 public:
     cBaseInterface(cSCPIModule *module, cSCPIInterface* iface);
+    virtual ~cBaseInterface();
     virtual bool setupInterface() = 0;
 
+    static int getInstanceCount();
 protected:
     cSCPIModule* m_pModule;
     cSCPIInterface* m_pSCPIInterface;
 
+private:
+    static int m_interfaceCount;
 };
 
 }

@@ -28,9 +28,11 @@ public:
         int m_activistCount = 0;
         int m_serviceInterfaceCount = 0;
         int m_dspVarCount = 0;
+
         int m_scpiNodes = 0;
         int m_scpiObjects = 0;
         int m_scpiDelegates = 0;
+        int m_scpiInterfaces = 0;
     };
     QList<TModuleInstances> getInstanceCountsOnModulesDestroyed();
 
