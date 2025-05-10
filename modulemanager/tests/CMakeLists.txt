@@ -19,6 +19,7 @@ function(SETUP_QTESTS_MODULEMANAGER)
             PUBLIC
             -Wl,--whole-archive
             Zera::testlib-openfiles
+            Zera::testlib-memallocs
             -Wl,--no-whole-archive
 
             Qt5::Test

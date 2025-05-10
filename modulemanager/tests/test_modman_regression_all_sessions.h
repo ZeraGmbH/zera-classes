@@ -5,6 +5,7 @@
 #include "testmodulemanager.h"
 #include <abstractfactoryserviceinterfaces.h>
 #include <testopenfiletracker.h>
+#include <memoryalloctracker.h>
 
 class test_modman_regression_all_sessions : public QObject
 {
@@ -18,8 +19,10 @@ private slots:
     void uniqueEntityNameEntityIdPairsMt310s2();
     void uniqueEntityNameEntityIdPairsMt581s2();
     void testGenerateScpiDocs();
+
     void checkObjectsProperlyDeleted();
     void checkFilesProperlyClosed();
+    void analyzeNonFreedMemory();
 private:
     bool checkUniqueEntityIdNames(const QString& device);
     AbstractFactoryServiceInterfacesPtr m_serviceInterfaceFactory;
@@ -27,6 +30,7 @@ private:
     QList<TestModuleManager::TModuleInstances> m_instanceCountsOnModulesDestroyed;
     QString m_devIfaceXmlsPath;
     std::unique_ptr<TestOpenFileTracker> m_openFileTracker;
+    MemoryAllocTracker m_memAllocTracker;
 };
 
 #endif // TEST_MODMAN_REGRESSION_ALL_SESSIONS_H
