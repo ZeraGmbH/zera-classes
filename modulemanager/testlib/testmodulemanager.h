@@ -30,6 +30,7 @@ public:
         int m_dspVarCount = 0;
         int m_scpiNodes = 0;
         int m_scpiObjects = 0;
+        int m_scpiDelegates = 0;
     };
     QList<TModuleInstances> getInstanceCountsOnModulesDestroyed();
 

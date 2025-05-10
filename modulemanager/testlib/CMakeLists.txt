@@ -25,6 +25,7 @@ target_link_libraries(zera-modulemanager-testlib
     Zera::zera-timers-testlib
     Zera::zenuxservicecommon-testlib
     zera-modulemanager-lib
+    scpimodule-static
     scpimodule-testlib
     module-service-interfaces-testlib
     Zera::VfConvenientCode
