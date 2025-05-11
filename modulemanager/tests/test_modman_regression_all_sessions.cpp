@@ -1,6 +1,9 @@
 #include "test_modman_regression_all_sessions.h"
 #include "scpidocshtmlgenerator.h"
 #include "modulemanagerconfig.h"
+#include "scpimeasure.h"
+#include "scpibasedelegate.h"
+#include "baseinterface.h"
 #include <testloghelpers.h>
 #include <mocklxdmsessionchangeparamgenerator.h>
 #include <proxyclient_p.h>
@@ -75,6 +78,10 @@ void test_modman_regression_all_sessions::checkObjectsProperlyDeleted()
     QCOMPARE(cumulatedInstanceCounts.m_dspVarCount, 0);
     constexpr int licenseStorageSystemModuleIntrospection_EventSystemCount = 4;
     QCOMPARE(cumulatedInstanceCounts.m_veinEventSystemCount, licenseStorageSystemModuleIntrospection_EventSystemCount);
+
+    QCOMPARE(SCPIMODULE::cBaseInterface::getInstanceCount(), 0);
+    QCOMPARE(SCPIMODULE::cSCPIMeasure::getInstanceCount(), 0);
+    QCOMPARE(SCPIMODULE::ScpiBaseDelegate::getInstanceCount(), 0);
 
     QCOMPARE(ProtonetCommand::getInstanceCount(), 0); // for zenux-services
     QCOMPARE(Zera::ProxyClientPrivate::getInstanceCount(), 0);

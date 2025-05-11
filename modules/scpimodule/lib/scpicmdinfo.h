@@ -3,6 +3,7 @@
 
 #include <QString>
 #include <QJsonObject>
+#include <memory>
 
 namespace SCPIMODULE
 {
@@ -21,6 +22,8 @@ public:
 
     QJsonObject veinComponentInfo;
 };
+
+typedef std::shared_ptr<cSCPICmdInfo> cSCPICmdInfoPtr;
 
 }
 

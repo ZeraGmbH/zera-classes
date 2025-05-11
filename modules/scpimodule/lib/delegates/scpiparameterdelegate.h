@@ -12,14 +12,13 @@ class cSCPIParameterDelegate: public ScpiBaseDelegate
 {
     Q_OBJECT
 public:
-    cSCPIParameterDelegate(QString cmdParent, QString cmd, quint8 type, cSCPIModule* scpimodule, cSCPICmdInfo* scpicmdinfo);
-    virtual ~cSCPIParameterDelegate();
+    cSCPIParameterDelegate(QString cmdParent, QString cmd, quint8 type, cSCPIModule* scpimodule, cSCPICmdInfoPtr scpicmdinfo);
     void executeSCPI(cSCPIClient *client, QString& sInput) override;
 signals:
     void clientinfoSignal(QString, SCPIMODULE::SCPIClientInfoPtr);
 private:
     cSCPIModule* m_pModule;
-    cSCPICmdInfo* m_pSCPICmdInfo;
+    cSCPICmdInfoPtr m_pSCPICmdInfo;
 };
 
 }

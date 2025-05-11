@@ -4,6 +4,7 @@
 #include "baseinterface.h"
 #include "scpibasedelegate.h"
 #include "scpimeasuredelegate.h"
+#include "scpicmdinfo.h"
 #include <QHash>
 #include <QJsonObject>
 #include <QJsonArray>
@@ -16,7 +17,6 @@ namespace SCPIModelType {
 }
 
 class cSCPIModule;
-class cSCPICmdInfo;
 class cSCPIInterface;
 class cSCPIParameterDelegate;
 class cSCPICatalogCmdDelegate;
@@ -40,7 +40,7 @@ private:
     QHash<QString, cSCPIMeasureDelegatePtr> m_scpiMeasureDelegateHash; // a hash for measure cmd's ... needed for clean up and search for existing cmd
     QHash<QString, cSCPICatalogCmdDelegate*> m_scpiPropertyDelegateHash; // a hash with property delegates taht might need actualization when something changes
 
-    void addSCPICommand(cSCPICmdInfo *scpiCmdInfo);
+    void addSCPICommand(cSCPICmdInfoPtr scpiCmdInfo);
     void addSCPIMeasureCommand(QString cmdparent,
                                QString cmd,
                                quint8 cmdType,
@@ -51,7 +51,6 @@ private:
     void setXmlComponentValidatorInfo(ScpiBaseDelegatePtr delegate, const QJsonObject &componentInfo);
     QJsonArray getValidatorEntries(QJsonObject validator);
 
-    QList<cSCPICmdInfo*> m_scpiCmdInfosToDelete;
     QList<cSCPIMeasure*> m_measureObjectsToDelete;
 };
 

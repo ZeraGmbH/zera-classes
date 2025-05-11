@@ -7,18 +7,17 @@
 
 namespace SCPIMODULE {
 
-class cSCPICatalogCmdDelegate: public ScpiBaseDelegate
+class cSCPICatalogCmdDelegate : public ScpiBaseDelegate
 {
     Q_OBJECT
 public:
-    cSCPICatalogCmdDelegate(QString cmdParent, QString cmd, quint8 type, cSCPIModule* scpimodule, cSCPICmdInfo* scpicmdinfo);
-    virtual ~cSCPICatalogCmdDelegate();
+    cSCPICatalogCmdDelegate(QString cmdParent, QString cmd, quint8 type, cSCPIModule* scpimodule, cSCPICmdInfoPtr scpicmdinfo);
     virtual void executeSCPI(cSCPIClient *client, QString& sInput) override;
     void setOutput(QVariant modInterface);
 private:
-    void setOutput(cSCPICmdInfo* scpicmdinfo);
+    void setOutput(cSCPICmdInfoPtr scpicmdinfo);
     cSCPIModule* m_pModule;
-    cSCPICmdInfo* m_pSCPICmdInfo;
+    cSCPICmdInfoPtr m_pSCPICmdInfo;
     QString m_sAnswer;
 };
 

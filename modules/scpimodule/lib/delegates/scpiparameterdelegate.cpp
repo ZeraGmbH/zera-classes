@@ -7,14 +7,13 @@
 
 namespace SCPIMODULE {
 
-cSCPIParameterDelegate::cSCPIParameterDelegate(QString cmdParent, QString cmd, quint8 type, cSCPIModule *scpimodule,  cSCPICmdInfo* scpicmdinfo)
-    :ScpiBaseDelegate(cmdParent, cmd, type), m_pModule(scpimodule), m_pSCPICmdInfo(scpicmdinfo)
+cSCPIParameterDelegate::cSCPIParameterDelegate(QString cmdParent,
+                                               QString cmd,
+                                               quint8 type,
+                                               cSCPIModule *scpimodule,
+                                               cSCPICmdInfoPtr scpicmdinfo) :
+    ScpiBaseDelegate(cmdParent, cmd, type), m_pModule(scpimodule), m_pSCPICmdInfo(scpicmdinfo)
 {
-}
-
-cSCPIParameterDelegate::~cSCPIParameterDelegate()
-{
-    delete m_pSCPICmdInfo;
 }
 
 void cSCPIParameterDelegate::executeSCPI(cSCPIClient *client, QString &sInput)

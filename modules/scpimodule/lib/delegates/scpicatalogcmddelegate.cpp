@@ -9,15 +9,14 @@
 
 namespace SCPIMODULE {
 
-cSCPICatalogCmdDelegate::cSCPICatalogCmdDelegate(QString cmdParent, QString cmd, quint8 type, cSCPIModule *scpimodule,  cSCPICmdInfo* scpicmdinfo)
-    :ScpiBaseDelegate(cmdParent, cmd, type), m_pModule(scpimodule), m_pSCPICmdInfo(scpicmdinfo)
+cSCPICatalogCmdDelegate::cSCPICatalogCmdDelegate(QString cmdParent,
+                                                 QString cmd,
+                                                 quint8 type,
+                                                 cSCPIModule *scpimodule,
+                                                 cSCPICmdInfoPtr scpicmdinfo) :
+    ScpiBaseDelegate(cmdParent, cmd, type), m_pModule(scpimodule), m_pSCPICmdInfo(scpicmdinfo)
 {
     setOutput(m_pSCPICmdInfo);
-}
-
-cSCPICatalogCmdDelegate::~cSCPICatalogCmdDelegate()
-{
-    delete m_pSCPICmdInfo;
 }
 
 void cSCPICatalogCmdDelegate::executeSCPI(cSCPIClient *client, QString &sInput)
@@ -49,7 +48,7 @@ void cSCPICatalogCmdDelegate::setOutput(QVariant modInterface)
     }
 }
 
-void cSCPICatalogCmdDelegate::setOutput(cSCPICmdInfo *scpicmdinfo)
+void cSCPICatalogCmdDelegate::setOutput(cSCPICmdInfoPtr scpicmdinfo)
 {
     QVariant ModInterface = m_pModule->getStorageDb()->getStoredValue(scpicmdinfo->entityId, QString("INF_ModuleInterface"));
     setOutput(ModInterface);

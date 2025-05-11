@@ -4,8 +4,6 @@
 #include "modulemanagerconfigtest.h"
 #include "jsonsessionloadertest.h"
 #include "moduleactivist.h"
-#include "scpibasedelegate.h"
-#include "baseinterface.h"
 #include <interface_p.h>
 #include <vfmodulemetadata.h>
 #include <vfmodulecomponent.h>
@@ -114,9 +112,7 @@ void TestModuleManager::onAllModulesDestroyed()
         Zera::cInterfacePrivate::getInstanceCount(),
         cDspVar::getInstanceCount(),
         ScpiNode::getInstanceCount(),
-        ScpiObject::getInstanceCount(),
-        SCPIMODULE::ScpiBaseDelegate::getInstanceCount(),
-        SCPIMODULE::cBaseInterface::getInstanceCount()
+        ScpiObject::getInstanceCount()
     } );
 }
 

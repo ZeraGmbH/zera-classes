@@ -30,7 +30,7 @@ public:
     void generateVeinInterface() override;
     cModuleInterface* getModuleInterface();
     void appendClient(cSCPIClient *client);
-    cSCPIInterface* getScpiInterface() const;
+    cSCPIInterface* getScpiInterface();
 private slots:
     void addSCPIClient();
     void deleteSCPIClient(cSCPIClient *client);
@@ -53,13 +53,13 @@ private:
     cSCPIModule* m_pModule;
     cSCPIModuleConfigData& m_ConfigData;
     TcpServerLimitedConn* m_pTcpServer;
-    cSCPIInterface* m_pSCPIInterface;
+    cSCPIInterface m_scpiInterface;
     QList<cSCPIClient*> m_SCPIClientList;
 
-    cModuleInterface* m_pModuleInterface;
-    cInterfaceInterface* m_pInterfaceInterface;
-    cStatusInterface* m_pStatusInterface;
-    cIEEE4882Interface* m_pIEEE488Interface;
+    cModuleInterface m_moduleInterface;
+    cInterfaceInterface m_interfaceInterface;
+    cStatusInterface m_statusInterface;
+    cIEEE4882Interface m_ieee488Interface;
 
     // statemachine for activating gets the following states
     QState m_setupTCPServerState;

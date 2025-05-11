@@ -8,6 +8,7 @@ namespace SCPIMODULE
 
 cSCPIModule::cSCPIModule(ModuleFactoryParam moduleParam) :
     BaseModule(moduleParam, std::make_shared<cSCPIModuleConfiguration>()),
+    m_scpiMeasureHash(std::make_shared<QMultiHash<QString, cSCPIMeasure*>>()),
     m_pSCPIEventSystem(new SCPIEventSystem(this)),
     m_pModuleValidator(new VfEventSytemModuleParam(moduleParam.m_entityId, moduleParam.m_moduleSharedData->m_storagesystem))
 {

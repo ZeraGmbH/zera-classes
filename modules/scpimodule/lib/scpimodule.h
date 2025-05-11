@@ -7,6 +7,7 @@
 #include "scpimeasure.h"
 #include "basemodule.h"
 #include "vfeventsytemmoduleparam.h"
+#include <memory>
 
 namespace SCPIMODULE {
 
@@ -25,7 +26,7 @@ public:
 
     QMultiHash<QString, SCPIClientInfoPtr> scpiParameterCmdInfoHash; // a hash to memorize what was in progress for which client
     QList<cSignalConnectionDelegate*> sConnectDelegateList;
-    QMultiHash<QString, cSCPIMeasure*> scpiMeasureHash;
+    std::shared_ptr<QMultiHash<QString, cSCPIMeasure*>> m_scpiMeasureHash;
 
     VfEventSytemModuleParam *getValidatorEventSystem();
     SCPIEventSystem* m_pSCPIEventSystem;

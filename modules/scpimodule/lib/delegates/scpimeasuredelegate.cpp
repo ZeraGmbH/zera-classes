@@ -6,7 +6,11 @@
 
 namespace SCPIMODULE {
 
-cSCPIMeasureDelegate::cSCPIMeasureDelegate(QString cmdParent, QString cmd, quint8 type, quint8 measCode, cSCPIMeasure* scpimeasureobject) :
+cSCPIMeasureDelegate::cSCPIMeasureDelegate(QString cmdParent,
+                                           QString cmd,
+                                           quint8 type,
+                                           quint8 measCode,
+                                           cSCPIMeasure* scpimeasureobject) :
     ScpiBaseDelegate(cmdParent, cmd, type),
     m_nMeasCode(measCode),
     m_nPending(0)

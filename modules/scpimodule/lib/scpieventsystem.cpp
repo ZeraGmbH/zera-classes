@@ -68,7 +68,7 @@ void SCPIEventSystem::handleComponentData(VeinEvent::CommandEvent *commandEvent)
         }
 
         // then it looks for measurement values
-        const QList<cSCPIMeasure*> scpiMeasureList = m_pModule->scpiMeasureHash.values(componentName);
+        const QList<cSCPIMeasure*> scpiMeasureList = m_pModule->m_scpiMeasureHash->values(componentName);
         for(int i = 0; i < scpiMeasureList.count(); i++) {
             cSCPIMeasure *scpiMeasure = scpiMeasureList.at(i);
             if(scpiMeasure->entityID() == entityId)

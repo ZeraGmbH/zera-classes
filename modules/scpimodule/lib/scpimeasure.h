@@ -1,39 +1,33 @@
 #ifndef SCPIMEASURE_H
 #define SCPIMEASURE_H
 
+#include "scpicmdinfo.h"
 #include <QObject>
 #include <QStateMachine>
 #include <QState>
 #include <QFinalState>
 #include <QList>
-
-
-class QEvent;
-
+#include <memory>
 
 namespace SCPIMODULE
 {
 
-class cSCPIModule;
-class cSCPICmdInfo;
-
-
 enum signalCode {measCont, readCont, initCont, fetchCont};
 
-
-class cSCPIMeasure: public QObject
+class cSCPIMeasure : public QObject
 {
     Q_OBJECT
-
 public:
-    cSCPIMeasure(QMultiHash<QString, cSCPIMeasure*> *scpiMeasureHash, cSCPICmdInfo *scpicmdinfo, QObject *parent=0);
-    cSCPIMeasure(const cSCPIMeasure &obj, QObject *parent=0);
+    cSCPIMeasure(std::shared_ptr<QMultiHash<QString, cSCPIMeasure*>> scpiMeasureHash,
+                 cSCPICmdInfoPtr scpicmdinfo);
+    cSCPIMeasure(const cSCPIMeasure &obj);
     virtual ~cSCPIMeasure();
 
     void receiveMeasureValue(QVariant qvar);
     void execute(quint8 cmd); //
     int entityID();
 
+    static int getInstanceCount();
 
 signals:
     void measContinue();
@@ -50,8 +44,8 @@ signals:
 
 private:
     static QString convertVariantToString(const QVariant &value);
-    QMultiHash<QString, cSCPIMeasure*> *m_scpiMeasureHash;
-    cSCPICmdInfo *m_pSCPICmdInfo;
+    std::shared_ptr<QMultiHash<QString, cSCPIMeasure*>> m_scpiMeasureHash;
+    cSCPICmdInfoPtr m_pSCPICmdInfo;
 
     void initialize();
 
@@ -88,6 +82,7 @@ private:
     QList<int> signalList;
 
     bool m_bInitPending;
+    static int m_instanceCount;
 
 private slots:
     void measure();
@@ -111,9 +106,7 @@ private slots:
     void fetchSync();
     void fetchFetch();
     void fetchDone();
-
 };
-
 
 }
 

@@ -35,16 +35,15 @@ constexpr int serialPollTimerPeriod = 1000;
 cSCPIServer::cSCPIServer(cSCPIModule *module, cSCPIModuleConfigData &configData) :
     cModuleActivist(module->getVeinModuleName()),
     m_pModule(module),
-    m_ConfigData(configData)
+    m_ConfigData(configData),
+    m_scpiInterface(m_ConfigData.m_sDeviceName),
+    m_moduleInterface(m_pModule, &m_scpiInterface),
+    m_interfaceInterface(m_pModule, &m_scpiInterface),
+    m_statusInterface(m_pModule, &m_scpiInterface),
+    m_ieee488Interface(m_pModule, &m_scpiInterface)
 {
     m_bSerialScpiActive = false;
     m_bActive = false;
-
-    m_pSCPIInterface = new cSCPIInterface(m_ConfigData.m_sDeviceName); // our scpi interface with cmd interpreter
-    m_pModuleInterface = new cModuleInterface(m_pModule, m_pSCPIInterface); // the modules interface
-    m_pInterfaceInterface = new cInterfaceInterface(m_pModule, m_pSCPIInterface); // the interfaces interface
-    m_pStatusInterface = new cStatusInterface(m_pModule, m_pSCPIInterface); // the scpi status interface
-    m_pIEEE488Interface = new cIEEE4882Interface(m_pModule, m_pSCPIInterface); // the ieee448-2 interface
 
     m_pTcpServer = new TcpServerLimitedConn(m_ConfigData, m_SCPIClientList);
     connect(m_pTcpServer, &QTcpServer::newConnection, this, &cSCPIServer::addSCPIClient);
@@ -67,13 +66,6 @@ cSCPIServer::cSCPIServer(cSCPIModule *module, cSCPIModuleConfigData &configData)
 
 cSCPIServer::~cSCPIServer()
 {
-    // Commented are not deleted - but this requires deep investigations
-    // we had our double-delete fiasco and things are ugly connected in here...
-    /*delete m_pIEEE488Interface;
-    delete m_pStatusInterface;
-    delete m_pInterfaceInterface;
-    delete m_pModuleInterface;*/
-    delete m_pSCPIInterface;
     delete m_pTcpServer;
     deleteSerialPort();
 }
@@ -111,7 +103,7 @@ void cSCPIServer::generateVeinInterface()
 
 cModuleInterface *cSCPIServer::getModuleInterface()
 {
-    return m_pModuleInterface;
+    return &m_moduleInterface;
 }
 
 void cSCPIServer::appendClient(cSCPIClient* client)
@@ -121,9 +113,9 @@ void cSCPIServer::appendClient(cSCPIClient* client)
         client->setAuthorisation(true);
 }
 
-cSCPIInterface *cSCPIServer::getScpiInterface() const
+cSCPIInterface *cSCPIServer::getScpiInterface()
 {
-    return m_pSCPIInterface;
+    return &m_scpiInterface;
 }
 
 void cSCPIServer::createSerialScpi()
@@ -138,7 +130,7 @@ void cSCPIServer::createSerialScpi()
             m_pSerialPort->setParity(QSerialPort::NoParity);
             m_pSerialPort->setFlowControl(QSerialPort::NoFlowControl);
 
-            m_pSerialClient = new cSCPISerialClient(m_pSerialPort, m_pModule, m_ConfigData, m_pSCPIInterface);
+            m_pSerialClient = new cSCPISerialClient(m_pSerialPort, m_pModule, m_ConfigData, &m_scpiInterface);
             appendClient(m_pSerialClient);
             qInfo("Serial SCPI client connected / Active clients: %i", m_SCPIClientList.count());
             m_bSerialScpiActive = true;
@@ -174,7 +166,7 @@ void cSCPIServer::addSCPIClient()
 {
     if(m_pTcpServer->hasPendingConnections()) {
         QTcpSocket* socket = m_pTcpServer->nextPendingConnection();
-        cSCPIEthClient* client = new cSCPIEthClient(socket, m_pModule, m_ConfigData, m_pSCPIInterface); // each client our interface;
+        cSCPIEthClient* client = new cSCPIEthClient(socket, m_pModule, m_ConfigData, &m_scpiInterface); // each client our interface;
         appendClient(client);
         qInfo("Network SCPI client (%s) connected / Active clients: %i", qPrintable(client->getPeerAddress()), m_SCPIClientList.count());
         connect(socket, &QTcpSocket::disconnected, this, [=]() {
@@ -204,10 +196,10 @@ void cSCPIServer::setupTCPServer()
 {
     // before we can call listen we must set up a valid interface that clients can connect to
     QString errorMsg;
-    bool ok = m_pModuleInterface->setupInterface();
-    ok = ok && m_pInterfaceInterface->setupInterface();
-    ok = ok && m_pStatusInterface->setupInterface();
-    ok = ok && m_pIEEE488Interface->setupInterface();
+    bool ok = m_moduleInterface.setupInterface();
+    ok = ok && m_interfaceInterface.setupInterface();
+    ok = ok && m_statusInterface.setupInterface();
+    ok = ok && m_ieee488Interface.setupInterface();
     if (!ok)
         errorMsg = interfacejsonErrMsg;
 
@@ -227,11 +219,11 @@ void cSCPIServer::setupTCPServer()
 
 void cSCPIServer::activationDone()
 {
-    m_pSCPIInterface->checkAmbiguousShortNames();
+    m_scpiInterface.checkAmbiguousShortNames();
 
     QMap<QString, QString> modelListBaseEntry({{"RELEASE", SysInfo::getReleaseNr()}});
     QString xml;
-    m_pSCPIInterface->exportSCPIModelXML(xml, modelListBaseEntry);
+    m_scpiInterface.exportSCPIModelXML(xml, modelListBaseEntry);
     m_veinDevIface->setValue(xml);
     m_optionalScpiQueue->setValue(m_ConfigData.m_enableScpiQueue.m_nActive);
     m_bActive = true;
@@ -291,7 +283,7 @@ void cSCPIServer::controlScpiQueue(QVariant scpiQueue)
     bool queueActiveNew = scpiQueue.toInt();
     bool queueActiveOld = m_ConfigData.m_enableScpiQueue.m_nActive;
     m_ConfigData.m_enableScpiQueue.m_nActive = queueActiveNew;
-    m_pSCPIInterface->setEnableQueue(queueActiveNew);
+    m_scpiInterface.setEnableQueue(queueActiveNew);
     if(queueActiveNew != queueActiveOld)
         emit m_pModule->parameterChanged();
 }

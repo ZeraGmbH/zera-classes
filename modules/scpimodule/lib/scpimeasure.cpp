@@ -1,43 +1,37 @@
-#include <QCoreApplication>
-#include <QVariant>
-
-#include <scpi.h>
-#include <ve_commandevent.h>
-#include <vcmp_componentdata.h>
-
-#include "scpimodule.h"
 #include "scpicmdinfo.h"
 #include "scpimeasure.h"
 #include "moduleinterface.h"
-
+#include <scpi.h>
+#include <ve_commandevent.h>
+#include <vcmp_componentdata.h>
+#include <QVariant>
 
 namespace SCPIMODULE
 {
 
-cSCPIMeasure::cSCPIMeasure(QMultiHash<QString, cSCPIMeasure*> *scpiMeasureHash, cSCPICmdInfo *scpicmdinfo, QObject *parent) :
-    QObject(parent),
+int cSCPIMeasure::m_instanceCount = 0;
+
+cSCPIMeasure::cSCPIMeasure(std::shared_ptr<QMultiHash<QString, cSCPIMeasure *> > scpiMeasureHash, cSCPICmdInfoPtr scpicmdinfo) :
     m_scpiMeasureHash(scpiMeasureHash),
     m_pSCPICmdInfo(scpicmdinfo)
 {
     initialize();
+    m_instanceCount++;
 }
 
-
-cSCPIMeasure::cSCPIMeasure(const cSCPIMeasure &obj, QObject *parent)
-  : QObject(parent)
+cSCPIMeasure::cSCPIMeasure(const cSCPIMeasure &obj) :
+    m_scpiMeasureHash(obj.m_scpiMeasureHash),
+    m_pSCPICmdInfo(std::make_shared<cSCPICmdInfo>(*obj.m_pSCPICmdInfo))
 {
-    m_scpiMeasureHash = obj.m_scpiMeasureHash;
-    m_pSCPICmdInfo = new cSCPICmdInfo(*obj.m_pSCPICmdInfo);
     initialize();
+    m_instanceCount++;
 }
-
 
 cSCPIMeasure::~cSCPIMeasure()
 {
+    m_instanceCount--;
     m_scpiMeasureHash->remove(m_pSCPICmdInfo->componentName, this);
-    delete m_pSCPICmdInfo;
 }
-
 
 void cSCPIMeasure::receiveMeasureValue(QVariant qvar)
 {
@@ -105,6 +99,11 @@ void cSCPIMeasure::execute(quint8 cmd)
 int cSCPIMeasure::entityID()
 {
     return m_pSCPICmdInfo->entityId;
+}
+
+int cSCPIMeasure::getInstanceCount()
+{
+    return m_instanceCount;
 }
 
 QString cSCPIMeasure::convertVariantToString(const QVariant &value)

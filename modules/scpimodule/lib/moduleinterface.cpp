@@ -33,8 +33,6 @@ cModuleInterface::~cModuleInterface()
     m_scpiMeasureDelegateHash.clear();
     for (auto measureObject: m_measureObjectsToDelete)
         delete measureObject;
-    for (auto scpiCmdInfo : m_scpiCmdInfosToDelete)
-        delete scpiCmdInfo;
 }
 
 bool cModuleInterface::setupInterface()
@@ -54,8 +52,7 @@ bool cModuleInterface::setupInterface()
 
                 QJsonArray jsonScpiCmdArr = jsonScpiInfo["Cmd"].toArray();
                 for (int j = 0; j < jsonScpiCmdArr.count(); j++) {
-                    cSCPICmdInfo *scpiCmdInfo = new cSCPICmdInfo();
-                    m_scpiCmdInfosToDelete.append(scpiCmdInfo);
+                    cSCPICmdInfoPtr scpiCmdInfo = std::make_shared<cSCPICmdInfo>();
                     scpiCmdInfo->scpiModuleName = scpiModuleName;
                     scpiCmdInfo->entityId = entityID;
                     QJsonArray jsonCmdArr = jsonScpiCmdArr[j].toArray();
@@ -101,11 +98,11 @@ QHash<QString, cSCPIMeasureDelegatePtr> *cModuleInterface::getSCPIMeasDelegateHa
     return &m_scpiMeasureDelegateHash;
 }
 
-void cModuleInterface::addSCPICommand(cSCPICmdInfo *scpiCmdInfo)
+void cModuleInterface::addSCPICommand(cSCPICmdInfoPtr scpiCmdInfo)
 {
     if (scpiCmdInfo->scpiModel == "MEASURE") {
         // in case of measure model we have to add several commands for each value
-        cSCPIMeasure* measureObject = new cSCPIMeasure(&m_pModule->scpiMeasureHash, scpiCmdInfo);
+        cSCPIMeasure* measureObject = new cSCPIMeasure(m_pModule->m_scpiMeasureHash, scpiCmdInfo);
         m_measureObjectsToDelete.append(measureObject);
 
         addSCPIMeasureCommand(QString(""), QString("MEASURE"), SCPI::isNode | SCPI::isQuery, SCPIModelType::measure, measureObject);
