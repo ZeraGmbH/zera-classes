@@ -180,13 +180,15 @@ void ZeraModules::ModuleManager::doStartModule(VirtualModule *tmpModule,
                                                const QString &uniqueName,
                                                const QString &xmlConfigPath,
                                                int moduleEntityId,
-                                               int moduleNum)
+                                               int moduleNum,
+                                               bool licensable)
 {
     ModuleData *moduleData = new ModuleData(tmpModule,
                                             uniqueName,
                                             xmlConfigPath,
                                             moduleEntityId,
-                                            moduleNum);
+                                            moduleNum,
+                                            licensable);
     connect(tmpModule, &VirtualModule::parameterChanged, this, [this, moduleData](){
         saveModuleConfig(moduleData);
     });
@@ -197,12 +199,13 @@ void ZeraModules::ModuleManager::doStartModule(VirtualModule *tmpModule,
 void ModuleManager::startModule(const QString &uniqueName,
                                 const QString &xmlConfigPath,
                                 int moduleEntityId,
-                                int moduleNum)
+                                int moduleNum,
+                                bool licensable)
 {
     // do not allow starting until all modules are shut down
     if(m_moduleStartLock == false) {
         AbstractModuleFactory *tmpFactory = m_factoryTable.value(uniqueName);
-        if(tmpFactory && m_setupFacade->getLicenseSystem()->isSystemLicensed(uniqueName)) {
+        if(tmpFactory && (!licensable || m_setupFacade->getLicenseSystem()->isSystemLicensed(uniqueName))) {
             const QFileInfo confFileInfo(xmlConfigPath);
             qInfo("Creating module: %s / EntityId: %i / Config: %s",
                   qPrintable(uniqueName),
@@ -220,7 +223,7 @@ void ModuleManager::startModule(const QString &uniqueName,
                                              uniqueName,
                                              tmpFactory);
                 if(tmpModule)
-                    doStartModule(tmpModule, uniqueName, xmlConfigPath, moduleEntityId, moduleNum);
+                    doStartModule(tmpModule, uniqueName, xmlConfigPath, moduleEntityId, moduleNum, licensable);
                 else
                     qCritical("Error creating module: %s / %i", qPrintable(uniqueName), moduleEntityId);
                 m_currModulePrepareTask = nullptr;
@@ -237,13 +240,13 @@ void ModuleManager::startModule(const QString &uniqueName,
         }
         else {//wait for serial number initialization
             qInfo("No serialno - enqueue module %s...", qPrintable(uniqueName));
-            m_deferredStartList.enqueue(new ModuleData(nullptr, uniqueName, xmlConfigPath, moduleEntityId, moduleNum));
+            m_deferredStartList.enqueue(new ModuleData(nullptr, uniqueName, xmlConfigPath, moduleEntityId, moduleNum, licensable));
         }
     }
     else {
         // All but first are enqueued - misconception? - spam just for thos e working on..
         //qInfo("Locked - enqueue module %s...", qPrintable(uniqueModuleName));
-        m_deferredStartList.enqueue(new ModuleData(nullptr, uniqueName, xmlConfigPath, moduleEntityId, moduleNum));
+        m_deferredStartList.enqueue(new ModuleData(nullptr, uniqueName, xmlConfigPath, moduleEntityId, moduleNum, licensable));
     }
 }
 
@@ -347,7 +350,7 @@ void ModuleManager::onModuleStartNext()
     m_moduleStartLock = false;
     if(m_deferredStartList.length() > 0) {
         ModuleData *tmpData = m_deferredStartList.dequeue();
-        startModule(tmpData->m_uniqueName, tmpData->m_configPath, tmpData->m_moduleId, tmpData->m_moduleNum);
+        startModule(tmpData->m_uniqueName, tmpData->m_configPath, tmpData->m_moduleId, tmpData->m_moduleNum, tmpData->m_licensable);
         delete tmpData;
     }
     else

@@ -38,7 +38,8 @@
       {
         "name" : "blemodule",
         "configFile" : "blemodule.xml",
-        "id": 1400
+        "id": 1400,
+        "licensable": true
       },
       {
         "name" : "scpimodule",

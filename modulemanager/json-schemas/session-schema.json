@@ -17,6 +17,9 @@
                 },
                 "id": {
                     "type": "integer"
+                },
+                "licensable": {
+                    "type": "boolean"
                 }
             },
             "additionalProperties": false
