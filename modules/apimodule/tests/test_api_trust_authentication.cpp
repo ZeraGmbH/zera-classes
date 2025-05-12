@@ -71,7 +71,6 @@ QVariant test_api_trust_authentication::getVfComponent(const QString& componentN
 void test_api_trust_authentication::rpcRequestWillTriggerGUI() {
     // Should be idle.
     QVERIFY(getVfComponent("ACT_TrustList").toList().isEmpty());
-    QCOMPARE(getVfComponent("ACT_RequestStatus"), 0);
     QCOMPARE(getVfComponent("ACT_PendingRequest"), QJsonObject());
     QCOMPARE(getVfComponent("ACT_TLChangeCount"), 1);
     QCOMPARE(getVfComponent("PAR_GuiDialogFinished"), false);
@@ -109,7 +108,6 @@ void test_api_trust_authentication::rpcRequestWillTriggerGUI() {
     trust["tokenType"] = "PublicKey";
     trust["token"] = "-- PEM --";
 
-    QCOMPARE(getVfComponent("ACT_RequestStatus"), 1);
     QCOMPARE(getVfComponent("ACT_PendingRequest"), trust);
 
     // RPC should not be done.
@@ -140,7 +138,6 @@ void test_api_trust_authentication::rpcRequestWillTriggerGUI() {
 
     QCOMPARE(actTrusts.length(), 1);
     QCOMPARE(actTrusts[0], trust);
-    QCOMPARE(getVfComponent("ACT_RequestStatus"), 2);
     QCOMPARE(getVfComponent("ACT_PendingRequest"), QJsonObject());
     QCOMPARE(getVfComponent("ACT_TLChangeCount"), 2);
     QCOMPARE(getVfComponent("PAR_GuiDialogFinished"), true);

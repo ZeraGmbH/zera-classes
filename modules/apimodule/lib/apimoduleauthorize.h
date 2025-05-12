@@ -36,11 +36,12 @@ private:
     VfModuleParameter* m_pReloadTrustList;
 
     std::shared_ptr<VfModuleComponent> m_spPendingRequestAct;
-    std::shared_ptr<VfModuleComponent> m_spRequestStatusAct;
     std::shared_ptr<VfModuleComponent> m_spTrustListAct;
     std::shared_ptr<VfModuleComponent> m_spTrustListChangeCountAct;
 
     VfCpp::cVeinModuleRpc::Ptr m_spRpcAuthenticateInterface;
+
+    bool m_bDialogIsOpen;
 
 signals:
     void finishDialog(QVariant dialogFinished);

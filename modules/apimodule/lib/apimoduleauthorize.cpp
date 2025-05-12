@@ -15,19 +15,14 @@ namespace APIMODULE
     cApiModuleAuthorize::cApiModuleAuthorize(cApiModule *module):
         cModuleActivist(module->getVeinModuleName()),
         m_trustListPath("/opt/websam-vein-api/authorize/trustlist.json"),
-        m_module(module)
+        m_module(module),
+        m_bDialogIsOpen(false)
     {
         // [TBD] common m_trustListPath for module and UI, BETTER SOLUTION (to be found, discussion with AM): only module handles the file
     }
 
     void cApiModuleAuthorize::generateVeinInterface()
     {
-        m_spRequestStatusAct = std::make_shared<VfModuleComponent>(m_module->getEntityId(), m_module->getValidatorEventSystem(),
-                                                    QString("ACT_RequestStatus"),
-                                                    QString("Flag state for request status: 1=running, 2=accepted"),
-                                                    (int)0);
-        m_spRequestStatusAct->setScpiInfo("AUTH", "REQUESTSTATE", SCPI::isQuery, m_spRequestStatusAct->getName());
-
         m_spPendingRequestAct = std::make_shared<VfModuleComponent>(m_module->getEntityId(), m_module->getValidatorEventSystem(),
                                                      QString("ACT_PendingRequest"),
                                                      QString("Json structure with name(string), tokenType(string->Certificate,Basic,PublicKey), token(string)"),
@@ -147,7 +142,9 @@ namespace APIMODULE
 
     void cApiModuleAuthorize::onGuiDialogFinished(QVariant dialogFinished)
     {
-        qint32 status = 0;
+        m_bDialogIsOpen = false;
+
+        bool added = false;
 
         if(dialogFinished == true)
         {
@@ -156,11 +153,8 @@ namespace APIMODULE
             if(jsonArrayContains(readList, m_spPendingRequestAct->getValue().toJsonObject())){
                 m_spTrustListAct->setValue(readList);
                 m_spTrustListChangeCountAct->setValue(m_spTrustListChangeCountAct->getValue().toInt() + 1);
-                m_spRequestStatusAct->setValue(status = 2);
-            }
-            else
-            {
-                m_spRequestStatusAct->setValue(status = 0);
+
+                added = true;
             }
 
             m_spPendingRequestAct->setValue(QJsonObject());
@@ -176,7 +170,7 @@ namespace APIMODULE
             uuid,
             VeinComponent::RemoteProcedureData::RPCResultCodes::RPC_SUCCESS,
             "",
-            status == 2
+            added
         );
     }
 
@@ -189,7 +183,7 @@ namespace APIMODULE
         m_rpcRequest = p_params[VeinComponent::RemoteProcedureData::s_callIdString].toUuid();
 
         // Dialog is open - force close and finish this RPC call.
-        if (m_spRequestStatusAct->getValue() == 1)
+        if (m_bDialogIsOpen)
             emit finishDialog(true);
         else{
             // Create new request object.
@@ -202,8 +196,9 @@ namespace APIMODULE
             if(jsonArrayContains(m_spTrustListAct->getValue().toJsonArray(), request))
                 emit finishDialog(true);
             else{
+                m_bDialogIsOpen = true;
+
                 // Force dialog to open.
-                m_spRequestStatusAct->setValue(1);
                 m_pGuiDialogFinished->setValue(false);
                 m_spPendingRequestAct->setValue(request);
             }
