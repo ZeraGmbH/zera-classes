@@ -56,5 +56,6 @@ void JsonSessionLoader::parseModule(QJsonObject moduleObject)
     QString moduleName = moduleObject.value("name").toString();
     int moduleEntityId = moduleObject.value("id").toInt();
     int moduleNum = moduleObject.value("module_num").toInt();
-    emit sigModuleInfoParsed(moduleName, configFileNameFull, moduleEntityId, moduleNum);
+    bool licensable = moduleObject.value("licensable").toBool();
+    emit sigModuleInfoParsed(moduleName, configFileNameFull, moduleEntityId, moduleNum, licensable);
 }

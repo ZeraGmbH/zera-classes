@@ -13,7 +13,8 @@ signals:
     void sigModuleInfoParsed(QString uniqueModuleName,
                        QString xmlPath,
                        int moduleEntityId,
-                       int moduleNum);
+                       int moduleNum,
+                       bool licensable);
 public slots:
     void loadSession(QString filePath);
 protected:

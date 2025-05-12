@@ -48,7 +48,8 @@ public slots:
     void startModule(const QString &uniqueName,
                      const QString &xmlConfigPath,
                      int moduleEntityId,
-                     int moduleNum);
+                     int moduleNum,
+                     bool licensable);
     void destroyModules();
     void setModulesPaused(bool t_paused);
 
@@ -82,7 +83,8 @@ private:
                        const QString &uniqueName,
                        const QString &xmlConfigPath,
                        int moduleEntityId,
-                       int moduleNum);
+                       int moduleNum,
+                       bool licensable);
     void disconnectModulesFromVein();
 
     std::shared_ptr<ModuleSharedData> m_moduleSharedObjects;
