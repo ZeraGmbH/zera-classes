@@ -42,6 +42,11 @@
         "licensable": true
       },
       {
+        "name" : "apimodule",
+        "configFile" : "apimodule.xml",
+        "id": 1500
+      },
+      {
         "name" : "scpimodule",
         "configFile" : "com5003-scpimodule.xml",
         "id": 9999
