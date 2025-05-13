@@ -12,9 +12,9 @@
 
 namespace APIMODULE
 {
-    cApiModuleAuthorize::cApiModuleAuthorize(cApiModule *module):
+cApiModuleAuthorize::cApiModuleAuthorize(cApiModule *module, QString persistencyBasePath):
         cModuleActivist(module->getVeinModuleName()),
-        m_trustListPath("/opt/websam-vein-api/authorize/trustlist.json"),
+        m_trustListPath(persistencyBasePath + "/opt/websam-vein-api/authorize/trustlist.json"),
         m_module(module),
         m_bDialogIsOpen(false)
     {

@@ -17,7 +17,8 @@ public:
                      AbstractFactoryServiceInterfacesPtr serviceInterfaceFactory,
                      VeinStorage::AbstractEventSystem* storagesystem,
                      ChannelRangeObserver::SystemObserverPtr channelRangeObserver,
-                     bool demo);
+                     bool demo,
+                     QString persistencyBasePath);
     virtual ~ModuleSharedData();
 
     const ModuleNetworkParamsPtr m_networkParams;
@@ -25,6 +26,7 @@ public:
     const VeinStorage::AbstractEventSystem* m_storagesystem;
     const ChannelRangeObserver::SystemObserverPtr m_channelRangeObserver;
     const bool m_demo;
+    const QString m_persistencyBasePath;
 private:
     static int m_instanceCount;
 };

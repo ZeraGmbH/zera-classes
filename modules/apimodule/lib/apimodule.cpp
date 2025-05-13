@@ -19,7 +19,8 @@ namespace APIMODULE
     cApiModule::cApiModule(ModuleFactoryParam moduleParam)
         : BaseModule(moduleParam, std::make_shared<cApiModuleConfiguration>()),
         m_spRpcEventSystem(std::make_shared<VfModuleRpc>(moduleParam.m_entityId)),
-        m_spModuleValidator(std::make_shared<VfEventSytemModuleParam>(moduleParam.m_entityId, moduleParam.m_moduleSharedData->m_storagesystem))
+        m_spModuleValidator(std::make_shared<VfEventSytemModuleParam>(moduleParam.m_entityId, moduleParam.m_moduleSharedData->m_storagesystem)),
+        m_persistencyBasePath(moduleParam.m_moduleSharedData->m_persistencyBasePath)
     {
         m_sModuleName = QString(BaseModuleName);
         m_sModuleDescription = QString("This module supports API access");
@@ -42,7 +43,7 @@ namespace APIMODULE
         emit addEventSystem(m_spRpcEventSystem.get());
         emit addEventSystem(m_pModuleEventSystem);
 
-        cApiModuleAuthorize* moduleActivist = new cApiModuleAuthorize(this);
+        cApiModuleAuthorize* moduleActivist = new cApiModuleAuthorize(this, m_persistencyBasePath);
         m_ModuleActivistList.append(moduleActivist);
 
         BaseModule::setupModule();

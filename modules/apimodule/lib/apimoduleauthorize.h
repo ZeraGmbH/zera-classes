@@ -14,7 +14,7 @@ class cApiModuleAuthorize : public cModuleActivist
     Q_OBJECT
 
 public:
-    cApiModuleAuthorize(cApiModule *module);
+    cApiModuleAuthorize(cApiModule *module, QString persistencyBasePath);
 public slots:
     void generateVeinInterface() override;
     void activate() override;
