@@ -30,6 +30,7 @@ protected:
 
     std::shared_ptr<VfEventSytemModuleParam> m_spModuleValidator;
     std::shared_ptr<VfModuleRpc> m_spRpcEventSystem;
+    QString m_persistencyBasePath;
 };
 
 }

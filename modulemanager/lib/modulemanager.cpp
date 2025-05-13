@@ -139,7 +139,8 @@ void ModuleManager::createCommonModuleParam()
                                                                    m_serviceInterfaceFactory,
                                                                    m_setupFacade->getStorageSystem(),
                                                                    channelRangeObserver,
-                                                                   m_moduleDemoMode);
+                                                                   m_moduleDemoMode,
+                                                                   m_setupFacade->getPersistencyBasePath());
     }
 }
 

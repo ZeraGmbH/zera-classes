@@ -23,7 +23,8 @@ void SessionExportGenerator::createModman(QString device)
     m_licenseSystem = std::make_unique<TestLicenseSystem>();
     m_modmanSetupFacade = std::make_unique<ModuleManagerSetupFacade>(m_licenseSystem.get(),
                                                                      m_modmanConfig->isDevMode(),
-                                                                     m_lxdmParam);
+                                                                     m_lxdmParam,
+                                                                     "/tmp/" + QUuid::createUuid().toString(QUuid::WithoutBraces));
     m_modman = std::make_unique<TestModuleManager>(m_modmanSetupFacade.get(), std::make_shared<FactoryServiceInterfaces>());
 
     m_modman->loadAllAvailableModulePlugins();
