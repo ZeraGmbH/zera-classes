@@ -169,7 +169,7 @@ void test_sourcescanner::scannerReportsInvalidSourceAfterBrokenIo()
     ioDevice->open(QString());
     SourceScanner::Ptr scanner = SourceScanner::create(ioDevice, std::make_unique<SourceScannerIoDemo>());
 
-    SourceProperties props(SOURCE_MT_COMMON, "", "", SourceProtocols::ZERA_SERIAL);
+    SourceProperties props(SOURCE_MT_COMMON, "", "", SourceProtocols::ZERA_SERIAL, SourceProperties::EXTERNAL);
     QCOMPARE(props.wasSet(), true);
 
     connect(scanner.get(), &SourceScanner::sigScanFinished, [&] (SourceScanner::Ptr scanner){
@@ -201,7 +201,7 @@ void test_sourcescanner::scannerReportsInvalidSourceAfterDemoIoResponseError()
             entry->getTransfer(idx)->getDemoResponder()->activateErrorResponse();
     }
 
-    SourceProperties props(SOURCE_MT_COMMON, "", "", SourceProtocols::ZERA_SERIAL);
+    SourceProperties props(SOURCE_MT_COMMON, "", "", SourceProtocols::ZERA_SERIAL, SourceProperties::EXTERNAL);
     QCOMPARE(props.wasSet(), true);
 
     SourceScanner::Ptr scanner = SourceScanner::create(ioDevice, std::move(ioStrategy));
@@ -234,7 +234,7 @@ void test_sourcescanner::scannerReportsInvalidSourceAfterZeraIoResponseError()
             entry->getTransfer(idx)->getDemoResponder()->activateErrorResponse();
     }
 
-    SourceProperties props(SOURCE_MT_COMMON, "", "", SourceProtocols::ZERA_SERIAL);
+    SourceProperties props(SOURCE_MT_COMMON, "", "", SourceProtocols::ZERA_SERIAL, SourceProperties::EXTERNAL);
     QCOMPARE(props.wasSet(), true);
 
     SourceScanner::Ptr scanner = SourceScanner::create(ioDevice, std::move(ioStrategy));

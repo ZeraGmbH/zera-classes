@@ -27,13 +27,15 @@ void test_sourceio::gettersOK()
     SourceProperties sourceProperties(SOURCE_MT_COMMON,
                                       name,
                                       version,
-                                      SourceProtocols::ZERA_SERIAL);
+                                      SourceProtocols::ZERA_SERIAL,
+                                      SourceProperties::EXTERNAL);
     SourceIo sourceIo(ioDevice, sourceProperties);
 
     QCOMPARE(type, sourceIo.getProperties().getType());
     QCOMPARE(name, sourceIo.getProperties().getName());
     QCOMPARE(version, sourceIo.getProperties().getVersion());
     QCOMPARE(SourceProtocols::ZERA_SERIAL, sourceIo.getProperties().getProtocol());
+    QCOMPARE(SourceProperties::EXTERNAL, sourceIo.getProperties().getLocation());
 }
 
 void test_sourceio::signalResponses()

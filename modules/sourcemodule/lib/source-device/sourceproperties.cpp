@@ -7,13 +7,14 @@ SourceProperties::SourceProperties()
 SourceProperties::SourceProperties(SupportedSourceTypes type,
                                    QString name,
                                    QString version,
-                                   SourceProtocols protocol) :
+                                   SourceProtocols protocol,
+                                   eLocation location) :
     m_wasSet(true),
     m_type(type),
     m_name(name),
     m_version(version),
-    m_protocol(protocol)
-
+    m_protocol(protocol),
+    m_location(location)
 {
 }
 
@@ -40,4 +41,9 @@ QString SourceProperties::getVersion() const
 SourceProtocols SourceProperties::getProtocol() const
 {
     return m_protocol;
+}
+
+SourceProperties::eLocation SourceProperties::getLocation() const
+{
+    return m_location;
 }

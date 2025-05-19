@@ -20,7 +20,8 @@ SourceProperties SourceScannerIoDemo::evalResponses(IoQueueGroup::Ptr ioGroup)
         props = SourceProperties(sourceType,
                                  structureApi.getDeviceName(),
                                  structureApi.getDeviceVersion(),
-                                 SourceProtocols::ZERA_SERIAL);
+                                 SourceProtocols::ZERA_SERIAL,
+                                 SourceProperties::EXTERNAL);
     }
     return props;
 }

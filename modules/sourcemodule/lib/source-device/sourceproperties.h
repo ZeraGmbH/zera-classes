@@ -9,16 +9,22 @@ class SourceProperties
 {
 public:
     SourceProperties(); // unset
+    enum eLocation {
+        EXTERNAL,
+        BUILTIN
+    };
     SourceProperties(SupportedSourceTypes type,
                      QString name,
                      QString version,
-                     SourceProtocols protocol);
+                     SourceProtocols protocol,
+                     eLocation location);
 
     bool wasSet() const;
     SupportedSourceTypes getType() const;
     QString getName() const;
     QString getVersion() const;
     SourceProtocols getProtocol() const;
+    eLocation getLocation() const;
 
 private:
     bool m_wasSet = false;
@@ -26,6 +32,7 @@ private:
     QString m_name;
     QString m_version;
     SourceProtocols m_protocol;
+    eLocation m_location = EXTERNAL;
 };
 
 #endif // SOURCEPROPERTIES_H

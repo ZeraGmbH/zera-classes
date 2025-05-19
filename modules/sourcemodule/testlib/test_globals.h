@@ -27,7 +27,7 @@ class DefaultTestSourceProperties : public SourceProperties
 {
 public:
     DefaultTestSourceProperties() :
-        SourceProperties(SOURCE_MT_COMMON, "", "", SourceProtocols::ZERA_SERIAL)
+        SourceProperties(SOURCE_MT_COMMON, "", "", SourceProtocols::ZERA_SERIAL, SourceProperties::EXTERNAL)
     {}
 };
 

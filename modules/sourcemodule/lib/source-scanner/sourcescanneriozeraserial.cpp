@@ -121,7 +121,11 @@ SourceProperties SourceScannerIoZeraSerial::extractProperties(IoTransferDataSing
     QByteArray sendCmd = detectInfo.queryStr;
     QByteArray version = extractVersionFromResponse(ioData);
     QByteArray name = extractNameFromResponse(ioData, version, sendCmd);
-    SourceProperties sourceProperties(sourceType, name, version, SourceProtocols::ZERA_SERIAL);
+    SourceProperties sourceProperties(sourceType,
+                                      name,
+                                      version,
+                                      SourceProtocols::ZERA_SERIAL,
+                                      SourceProperties::EXTERNAL);
     return sourceProperties;
 }
 
