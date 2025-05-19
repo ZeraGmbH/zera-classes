@@ -14,7 +14,7 @@ class IoDeviceBase : public QObject
 public:
     typedef QSharedPointer<IoDeviceBase> Ptr;
     IoDeviceBase(IoDeviceTypes type);
-    virtual bool open(QString) = 0;
+    virtual bool open(QString strDeviceInfo) = 0;
     virtual void close() = 0;
     virtual bool isOpen() = 0;
     virtual int sendAndReceive(IoTransferDataSingle::Ptr ioTransferData) = 0;
