@@ -151,20 +151,23 @@ SourceDeviceFacade::Ptr SourceDeviceManager::getSourceController(int slotNo)
     return sourceController;
 }
 
+int SourceDeviceManager::tryAddSourceToFreeSlot(IoDeviceBase::Ptr ioDevice, SourceProperties props)
+{
+    int freeSlot = findFreeSlot();
+    if(freeSlot >= 0)
+        addSource(freeSlot, SourceDeviceFacade::Ptr::create(ioDevice, props));
+    return freeSlot;
+}
+
 void SourceDeviceManager::onScanFinished(SourceScanner::Ptr scanner)
 {
     disconnect(scanner.get(), &SourceScanner::sigScanFinished, this, &SourceDeviceManager::onScanFinished);
     SourceProperties props = scanner->getSourcePropertiesFound();
     QString erorDesc;
     int freeSlot = -1;
-    SourceDeviceFacade::Ptr sourceControllerFound = nullptr;
     if(props.wasSet()) {
-        freeSlot = findFreeSlot();
-        if(freeSlot >= 0) {
-            sourceControllerFound = SourceDeviceFacade::Ptr::create(scanner->getIoDevice(), scanner->getSourcePropertiesFound());
-            addSource(freeSlot, sourceControllerFound);
-        }
-        else
+        freeSlot = tryAddSourceToFreeSlot(scanner->getIoDevice(), props);
+        if(freeSlot < 0)
             erorDesc = QStringLiteral("Slots full");
     }
     else
