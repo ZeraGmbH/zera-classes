@@ -14,6 +14,7 @@ public:
     void setModuleNumerator(ModuleGroupNumeratorPtr moduleGroupNumerator) { m_moduleGroupNumerator = std::move(moduleGroupNumerator); }
     virtual ~AbstractModuleFactory() = default;
     virtual TaskTemplatePtr getModulePrepareTask(std::shared_ptr<ModuleSharedData> moduleSharedData) {
+        Q_UNUSED(moduleSharedData)
         return TaskLambdaRunner::create([]() { return true; });
     }
     virtual ZeraModules::VirtualModule *createModule(ModuleFactoryParam moduleParam) = 0;
