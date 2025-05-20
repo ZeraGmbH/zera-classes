@@ -10,7 +10,6 @@ SourceModule::SourceModule(ModuleFactoryParam moduleParam) :
     m_sSCPIModuleName = QString("%1%2").arg(BaseSCPIModuleName).arg(moduleParam.m_moduleNum);
 
     m_ActivationMachine.setInitialState(&m_ActivationFinishedState);
-    Q_INIT_RESOURCE(resource);
 }
 
 SourceModule::~SourceModule()
