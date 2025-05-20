@@ -2,11 +2,9 @@
 #define SOURCESCANNER_H
 
 #include "sourcescannertemplate.h"
-#include "sourceprotocols.h"
-#include "sourceio.h"
 #include "sourceproperties.h"
-#include "iodevicetypes.h"
-#include "idkeeper.h"
+#include "iodevicebase.h"
+#include "ioqueue.h"
 #include <QObject>
 #include <QUuid>
 

@@ -5,7 +5,6 @@
 #include <QSharedPointer>
 #include "ioqueuegroup.h"
 #include "ioqueuegrouplistfind.h"
-#include "ioqueuebehaviors.h"
 #include "iodevicebase.h"
 #include "idkeeper.h"
 

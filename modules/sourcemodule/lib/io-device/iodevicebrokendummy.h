@@ -2,7 +2,6 @@
 #define IODEVICEBROKENDUMMY_H
 
 #include "iodevicebase.h"
-
 #include <QObject>
 
 class IoDeviceBrokenDummy : public IoDeviceBase

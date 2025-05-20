@@ -5,7 +5,6 @@
 #include <timersingleshotqt.h>
 #include <QList>
 #include <QByteArray>
-#include <memory>
 
 static constexpr int demoIoDefaultTimeout = 1000;
 

@@ -2,7 +2,6 @@
 #define SOURCESCANNERACTIONZERASERIAL_H
 
 #include "sourcescannertemplate.h"
-#include "ioqueuegrouplistfind.h"
 
 class SourceScannerIoZeraSerial : public SourceScannerTemplate
 {

@@ -1,6 +1,5 @@
 #include "iodevicebase.h"
 
-
 IoDeviceBase::IoDeviceBase(IoDeviceTypes type) :
     m_type(type)
 {

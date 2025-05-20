@@ -1,6 +1,5 @@
 #include "iogroupgenerator.h"
 #include "sourceactions.h"
-#include "iodevicebase.h"
 #include "sourcezerastatequeryevaluator.h"
 
 IoGroupGenerator::IoGroupGenerator(JsonStructApi jsonStructApi) :
