@@ -35,6 +35,7 @@ private slots:
     void onSourceDeviceRemoved(int slot, QUuid uuid, QString errorMsg);
     void newDemoSourceCount(QVariant getDemoCount);
 private:
+    bool tryAddNewSource(int slotPosition);
     void updateDemoCount();
     SourceDeviceManager* m_pSourceDeviceManager = nullptr;
     SourceModule* m_pModule; // the module we live in

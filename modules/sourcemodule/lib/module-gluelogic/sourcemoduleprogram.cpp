@@ -156,7 +156,7 @@ void SourceModuleProgram::updateDemoCount()
     m_bDeafenDemoChange = false;
 }
 
-void SourceModuleProgram::onSourceScanFinished(int slotPosition, QUuid uuid, QString errorMsg)
+bool SourceModuleProgram::tryAddNewSource(int slotPosition)
 {
     bool sourceAdded = slotPosition >= 0;
     if(sourceAdded) {
@@ -165,6 +165,12 @@ void SourceModuleProgram::onSourceScanFinished(int slotPosition, QUuid uuid, QSt
         m_pVeinCountAct->setValue(QVariant(m_pSourceDeviceManager->getActiveSlotCount()));
         updateDemoCount();
     }
+    return sourceAdded;
+}
+
+void SourceModuleProgram::onSourceScanFinished(int slotPosition, QUuid uuid, QString errorMsg)
+{
+    bool sourceAdded = tryAddNewSource(slotPosition);
     m_sharedPtrRpcScanInterface->sendRpcResult(uuid,
                                                sourceAdded ? VeinComponent::RemoteProcedureData::RPCResultCodes::RPC_SUCCESS : VeinComponent::RemoteProcedureData::RPCResultCodes::RPC_EINVAL,
                                                errorMsg,
