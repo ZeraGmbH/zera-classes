@@ -8,8 +8,6 @@ SourceModule::SourceModule(ModuleFactoryParam moduleParam) :
     m_sModuleName = QString("%1%2").arg(BaseModuleName).arg(moduleParam.m_moduleNum);
     m_sModuleDescription = QString("Module to access voltage and current sources");
     m_sSCPIModuleName = QString("%1%2").arg(BaseSCPIModuleName).arg(moduleParam.m_moduleNum);
-
-    m_ActivationMachine.setInitialState(&m_ActivationFinishedState);
 }
 
 SourceModule::~SourceModule()
@@ -30,6 +28,7 @@ void SourceModule::setupModule()
 
     m_pProgram = new SourceModuleProgram(this, m_pConfiguration);
     m_ModuleActivistList.append(m_pProgram);
+    connect(m_pProgram, &SourceModuleProgram::activated, this, &SourceModule::activationContinue);
 
     m_DeactivationMachine.addState(&m_stateSwitchAllOff);
     connect(&m_stateSwitchAllOff, &QState::entered, this, [&]() {

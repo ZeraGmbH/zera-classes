@@ -4,6 +4,8 @@
 #include "basemeasworkprogram.h"
 #include "sourceveininterface.h"
 #include "sourcedevicemanager.h"
+#include <pcbinterface.h>
+#include <taskcontainerinterface.h>
 #include <vf-cpp-rpc.h>
 #include <QUuid>
 
@@ -20,12 +22,18 @@ public:
 signals:
     void sigLastSourceRemoved();
 public slots:
+    void activate() override;
     // Make cBaseMeasWorkProgram happy...
     void start() override {}
     void stop() override {}
 
     QVariant RPC_ScanInterface(QVariantMap p_params);
     QVariant RPC_CloseSource(QVariantMap p_params);
+
+private slots:
+    void onSourceScanFinished(int slotPosition, QUuid uuid, QString errorMsg);
+    void onSourceDeviceRemoved(int slot, QUuid uuid, QString errorMsg);
+    void newDemoSourceCount(QVariant getDemoCount);
 private:
     void updateDemoCount();
     SourceDeviceManager* m_pSourceDeviceManager = nullptr;
@@ -39,10 +47,11 @@ private:
 
     QVector<SourceVeinInterface*> m_arrVeinIoInterfaces;
     bool m_bDeafenDemoChange = false;
-private slots:
-    void onSourceScanFinished(int slotPosition, QUuid uuid, QString errorMsg);
-    void onSourceDeviceRemoved(int slot, QUuid uuid, QString errorMsg);
-    void newDemoSourceCount(QVariant getDemoCount);
+
+    Zera::ProxyClientPtr m_pcbClient;
+    Zera::PcbInterfacePtr m_pcbInterface;
+    std::shared_ptr<QString> m_serverResponseSourceCapabilities;
+    std::unique_ptr<TaskContainerInterface> m_internalSourceCapabilityQueryTask;
 };
 
 #endif // SOURCEMODULEPROGRAM_H

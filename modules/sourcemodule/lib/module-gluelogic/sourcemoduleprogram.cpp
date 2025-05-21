@@ -2,9 +2,13 @@
 #include "sourcemodule.h"
 #include "sourcedevicemanager.h"
 #include "sourcedevicefacade.h"
+#include "taskgetinternalsourcecapabilities.h"
 #include <vfmoduleparameter.h>
 #include <intvalidator.h>
 #include <jsonparamvalidator.h>
+#include <taskcontainersequence.h>
+#include <taskserverconnectionstart.h>
+#include <proxy.h>
 
 SourceModuleProgram::SourceModuleProgram(SourceModule* module, std::shared_ptr<BaseModuleConfiguration> pConfiguration) :
     cBaseMeasWorkProgram(pConfiguration, module->getVeinModuleName()),
@@ -108,6 +112,24 @@ void SourceModuleProgram::generateVeinInterface()
 void SourceModuleProgram::startDestroy()
 {
     m_pSourceDeviceManager->closeAll();
+}
+
+void SourceModuleProgram::activate()
+{
+    m_pcbClient = Zera::Proxy::getInstance()->getConnectionSmart(m_pModule->getNetworkConfig()->m_pcbServiceConnectionInfo,
+                                                                 m_pModule->getNetworkConfig()->m_tcpNetworkFactory);
+    m_pcbInterface = std::make_shared<Zera::cPCBInterface>();
+    m_pcbInterface->setClientSmart(m_pcbClient);
+    m_serverResponseSourceCapabilities = std::make_shared<QString>();
+
+    m_internalSourceCapabilityQueryTask = TaskContainerSequence::create();
+    m_internalSourceCapabilityQueryTask->addSub(TaskServerConnectionStart::create(m_pcbClient, CONNECTION_TIMEOUT));
+    m_internalSourceCapabilityQueryTask->addSub(TaskGetInternalSourceCapabilities::create(m_pcbInterface,
+                                                                          m_serverResponseSourceCapabilities,
+                                                                          TRANSACTION_TIMEOUT));
+    connect(m_internalSourceCapabilityQueryTask.get(), &TaskTemplate::sigFinish,
+            this, &SourceModuleProgram::activated);
+    m_internalSourceCapabilityQueryTask->start();
 }
 
 QVariant SourceModuleProgram::RPC_ScanInterface(QVariantMap p_params)
