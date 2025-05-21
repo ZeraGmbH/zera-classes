@@ -6,17 +6,14 @@
 
 #include <QVariant>
 
-IoIdGenerator SourceDeviceFacade::m_idGenerator;
-
 SourceDeviceFacade::SourceDeviceFacade(IoDeviceBase::Ptr ioDevice, SourceProperties properties) :
-    m_ioDevice(ioDevice),
+    SourceDeviceFacadeTemplate(ioDevice),
     m_sourceIo(ISourceIo::Ptr(new SourceIo(ioDevice, properties))),
     m_transactionNotifierStatus(SourceTransactionStartNotifier::Ptr::create(m_sourceIo)),
     m_transactionNotifierSwitch(SourceTransactionStartNotifier::Ptr::create(m_sourceIo)),
     m_statePoller(SourceStatePeriodicPoller::Ptr::create(m_transactionNotifierStatus)),
     m_stateController(m_transactionNotifierSwitch, m_transactionNotifierStatus, m_statePoller),
-    m_switcher(m_sourceIo, m_transactionNotifierSwitch),
-    m_ID(m_idGenerator.nextID())
+    m_switcher(m_sourceIo, m_transactionNotifierSwitch)
 {
     m_deviceStatusJsonApi.setDeviceInfo(m_ioDevice->getDeviceInfo());
     connect(&m_stateController, &SourceStateController::sigStateChanged,
@@ -25,16 +22,6 @@ SourceDeviceFacade::SourceDeviceFacade(IoDeviceBase::Ptr ioDevice, SourcePropert
             this, &SourceDeviceFacade::onSourceSwitchFinished);
     connect(ioDevice.get(), &IoDeviceBase::sigDisconnected, this,
             &SourceDeviceFacade::onIoDeviceClosed);
-}
-
-QString SourceDeviceFacade::getIoDeviceInfo() const
-{
-    return m_ioDevice->getDeviceInfo();
-}
-
-bool SourceDeviceFacade::hasDemoIo() const
-{
-    return m_ioDevice->getType() == IoDeviceTypes::DEMO;
 }
 
 QStringList SourceDeviceFacade::getLastErrors() const
@@ -62,11 +49,6 @@ void SourceDeviceFacade::switchLoad(QJsonObject params)
     JsonParamApi paramApi;
     paramApi.setParams(params);
     m_switcher.switchState(paramApi);
-}
-
-int SourceDeviceFacade::getId()
-{
-    return m_ID;
 }
 
 void SourceDeviceFacade::onSourceStateChanged(SourceStateController::States state)
