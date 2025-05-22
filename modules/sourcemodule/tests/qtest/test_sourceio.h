@@ -2,7 +2,7 @@
 #define QTUNITTESTSOURCEDEVICE_H
 
 #include <QObject>
-#include "sourceio.h"
+#include "sourceioextserial.h"
 
 class test_sourceio : public QObject
 {

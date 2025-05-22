@@ -1,11 +1,11 @@
-#include "sourcedevicefacade.h"
+#include "sourcedeviceextserial.h"
 #include <vfmoduleparameter.h>
 #include <jsonparamvalidator.h>
 #include "sourceswitchjson.h"
 #include <QVariant>
 
-SourceDeviceFacade::SourceDeviceFacade(IoDeviceBase::Ptr ioDevice, SourceProperties properties) :
-    SourceDeviceFacadeTemplate(ioDevice, ISourceIo::Ptr(new SourceIo(ioDevice, properties))),
+SourceDeviceExtSerial::SourceDeviceExtSerial(IoDeviceBase::Ptr ioDevice, SourceProperties properties) :
+    SourceDeviceTemplate(ioDevice, std::make_shared<SourceIoExtSerial>(ioDevice, properties)),
     m_transactionNotifierStatus(SourceTransactionStartNotifier::Ptr::create(m_sourceIo)),
     m_transactionNotifierSwitch(SourceTransactionStartNotifier::Ptr::create(m_sourceIo)),
     m_statePoller(SourceStatePeriodicPoller::Ptr::create(m_transactionNotifierStatus)),
@@ -13,14 +13,14 @@ SourceDeviceFacade::SourceDeviceFacade(IoDeviceBase::Ptr ioDevice, SourcePropert
 {
     m_switcher = std::make_unique<SourceSwitchJson>(m_sourceIo, m_transactionNotifierSwitch);
     connect(&m_stateController, &SourceStateController::sigStateChanged,
-            this, &SourceDeviceFacade::onSourceStateChanged);
+            this, &SourceDeviceExtSerial::onSourceStateChanged);
     connect(m_switcher.get(), &SourceSwitchJson::sigSwitchFinished,
-            this, &SourceDeviceFacade::onSourceSwitchFinished);
+            this, &SourceDeviceExtSerial::onSourceSwitchFinished);
     connect(ioDevice.get(), &IoDeviceBase::sigDisconnected, this,
-            &SourceDeviceFacade::onIoDeviceClosed);
+            &SourceDeviceExtSerial::onIoDeviceClosed);
 }
 
-bool SourceDeviceFacade::close(QUuid uuid)
+bool SourceDeviceExtSerial::close(QUuid uuid)
 {
     bool closeRequested = tryDemoCloseByUsbDisconnect(uuid);
     if(!m_closeRequested && !closeRequested) {
@@ -35,7 +35,7 @@ bool SourceDeviceFacade::close(QUuid uuid)
     return closeRequested;
 }
 
-void SourceDeviceFacade::onSourceSwitchFinished()
+void SourceDeviceExtSerial::onSourceSwitchFinished()
 {
     setVeinParamState(m_switcher->getCurrLoadState().getParams());
     if(m_closeRequested) {
@@ -43,31 +43,31 @@ void SourceDeviceFacade::onSourceSwitchFinished()
     }
 }
 
-void SourceDeviceFacade::onIoDeviceClosed()
+void SourceDeviceExtSerial::onIoDeviceClosed()
 {
     doFinalCloseActivities();
 }
 
-void SourceDeviceFacade::doFinalCloseActivities()
+void SourceDeviceExtSerial::doFinalCloseActivities()
 {
     resetVeinComponents();
     emit sigClosed(getId(), m_closeUuid);
 }
 
-void SourceDeviceFacade::setStatusPollTime(int ms)
+void SourceDeviceExtSerial::setStatusPollTime(int ms)
 {
     m_statePoller->setPollTime(ms);
 }
 
-void SourceDeviceFacade::enableCloseRequested(QUuid uuid)
+void SourceDeviceExtSerial::enableCloseRequested(QUuid uuid)
 {
     m_closeRequested = true;
     m_closeUuid = uuid;
 }
 
-bool SourceDeviceFacade::m_demoCloseByUsbDisconnect = false;
+bool SourceDeviceExtSerial::m_demoCloseByUsbDisconnect = false;
 
-bool SourceDeviceFacade::tryDemoCloseByUsbDisconnect(QUuid uuid)
+bool SourceDeviceExtSerial::tryDemoCloseByUsbDisconnect(QUuid uuid)
 {
     bool closeRequested = false;
     if(hasDemoIo() && !m_closeRequested) {

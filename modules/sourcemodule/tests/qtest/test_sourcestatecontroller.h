@@ -1,6 +1,7 @@
 #include <QObject>
 
 #include "iodevicefactory.h"
+#include "ioqueuegrouplistfind.h"
 #include "sourcedeviceerrorinjection-forunittest.h"
 
 class test_sourcestatecontroller : public QObject
@@ -35,8 +36,8 @@ private slots:
     void pollStopsAfterErrorAndRestartsAfterSuccessfulSwitch();
 private:
     void setDemoResonseErrorIdx(int idx);
-    ISourceIo::Ptr m_sourceIo;
-    ISourceIo::Ptr m_sourceIoWithError;
+    AbstractSourceIoPtr m_sourceIo;
+    AbstractSourceIoPtr m_sourceIoWithError;
     IoDeviceBase::Ptr m_ioDevice;
     IoQueueGroupListPtr m_listIoGroupsReceived;
 };

@@ -1,4 +1,4 @@
-#include "sourcedevicefacadetemplate.h"
+#include "sourcedevicetemplate.h"
 #include "iodevicetypes.h"
 #include "vfmodulecomponent.h"
 #include "vfmoduleparameter.h"
@@ -6,9 +6,9 @@
 #include <jsonparamvalidator.h>
 #include "jsonstructureloader.h"
 
-IoIdGenerator SourceDeviceFacadeTemplate::m_idGenerator;
+IoIdGenerator SourceDeviceTemplate::m_idGenerator;
 
-SourceDeviceFacadeTemplate::SourceDeviceFacadeTemplate(IoDeviceBase::Ptr ioDevice, ISourceIo::Ptr sourceIo) :
+SourceDeviceTemplate::SourceDeviceTemplate(IoDeviceBase::Ptr ioDevice, AbstractSourceIoPtr sourceIo) :
     m_ioDevice(ioDevice),
     m_sourceIo(sourceIo),
     m_ID(m_idGenerator.nextID())
@@ -16,37 +16,37 @@ SourceDeviceFacadeTemplate::SourceDeviceFacadeTemplate(IoDeviceBase::Ptr ioDevic
     m_deviceStatusJsonApi.setDeviceInfo(m_ioDevice->getDeviceInfo());
 }
 
-void SourceDeviceFacadeTemplate::setVeinInterface(SourceVeinInterface *veinInterface)
+void SourceDeviceTemplate::setVeinInterface(SourceVeinInterface *veinInterface)
 {
     m_veinInterface = veinInterface;
     setVeinParamStructure(JsonStructureLoader::loadJsonStructure(m_sourceIo->getProperties()));
     setVeinParamState(m_switcher->getCurrLoadState().getParams());
     setVeinDeviceState(m_deviceStatusJsonApi.getJsonStatus());
     connect(m_veinInterface, &SourceVeinInterface::sigNewLoadParams,
-            this, &SourceDeviceFacadeTemplate::switchLoad);
+            this, &SourceDeviceTemplate::switchLoad);
 }
 
-int SourceDeviceFacadeTemplate::getId()
+int SourceDeviceTemplate::getId()
 {
     return m_ID;
 }
 
-QString SourceDeviceFacadeTemplate::getIoDeviceInfo() const
+QString SourceDeviceTemplate::getIoDeviceInfo() const
 {
     return m_ioDevice->getDeviceInfo();
 }
 
-bool SourceDeviceFacadeTemplate::hasDemoIo() const
+bool SourceDeviceTemplate::hasDemoIo() const
 {
     return m_ioDevice->getType() == IoDeviceTypes::DEMO;
 }
 
-QStringList SourceDeviceFacadeTemplate::getLastErrors() const
+QStringList SourceDeviceTemplate::getLastErrors() const
 {
     return m_deviceStatusJsonApi.getErrors();
 }
 
-void SourceDeviceFacadeTemplate::setVeinParamStructure(QJsonObject paramStruct)
+void SourceDeviceTemplate::setVeinParamStructure(QJsonObject paramStruct)
 {
     if(m_veinInterface) {
         m_veinInterface->getVeinDeviceInfoComponent()->setValue(paramStruct);
@@ -54,39 +54,39 @@ void SourceDeviceFacadeTemplate::setVeinParamStructure(QJsonObject paramStruct)
     }
 }
 
-void SourceDeviceFacadeTemplate::setVeinDeviceState(QJsonObject deviceState)
+void SourceDeviceTemplate::setVeinDeviceState(QJsonObject deviceState)
 {
     if(m_veinInterface)
         m_veinInterface->getVeinDeviceStateComponent()->setValue(deviceState);
 }
 
-void SourceDeviceFacadeTemplate::setVeinParamState(QJsonObject paramState)
+void SourceDeviceTemplate::setVeinParamState(QJsonObject paramState)
 {
     if(m_veinInterface) {
         m_veinInterface->getVeinDeviceParameterComponent()->setValue(paramState);
     }
 }
 
-void SourceDeviceFacadeTemplate::resetVeinComponents()
+void SourceDeviceTemplate::resetVeinComponents()
 {
     if(m_veinInterface) {
         setVeinParamStructure(QJsonObject());
         setVeinParamState(QJsonObject());
         setVeinDeviceState(QJsonObject());
         disconnect(m_veinInterface, &SourceVeinInterface::sigNewLoadParams,
-                   this, &SourceDeviceFacadeTemplate::switchLoad);
+                   this, &SourceDeviceTemplate::switchLoad);
         m_veinInterface = nullptr;
     }
 }
 
-void SourceDeviceFacadeTemplate::switchLoad(QJsonObject params)
+void SourceDeviceTemplate::switchLoad(QJsonObject params)
 {
     JsonParamApi paramApi;
     paramApi.setParams(params);
     m_switcher->switchState(paramApi);
 }
 
-void SourceDeviceFacadeTemplate::onSourceStateChanged(SourceStateController::States state)
+void SourceDeviceTemplate::onSourceStateChanged(SourceStateController::States state)
 {
     if(state == SourceStateController::States::SWITCH_BUSY) {
         m_deviceStatusJsonApi.clearWarningsErrors();
@@ -101,7 +101,7 @@ void SourceDeviceFacadeTemplate::onSourceStateChanged(SourceStateController::Sta
     setVeinDeviceState(m_deviceStatusJsonApi.getJsonStatus());
 }
 
-void SourceDeviceFacadeTemplate::handleErrorState(SourceStateController::States state)
+void SourceDeviceTemplate::handleErrorState(SourceStateController::States state)
 {
     // All errors need love: translation / helpful status messages
     if(state == SourceStateController::States::ERROR_SWITCH) {

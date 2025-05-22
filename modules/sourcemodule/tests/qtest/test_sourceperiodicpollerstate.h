@@ -1,7 +1,10 @@
 #ifndef SOURCESTATEPERIODICPOLLER_H
 #define SOURCESTATEPERIODICPOLLER_H
 
-#include "sourceperiodicpollerstate.h"
+#include "abstractsourceio.h"
+#include "iodevicebase.h"
+#include "ioqueuegrouplistfind.h"
+#include "sourcetransactionstartnotifier.h"
 #include <QObject>
 
 class test_sourceperiodicpollerstate : public QObject
@@ -21,7 +24,7 @@ private slots:
     void pollStopNotification();
     void pollChangeTimeNotification();
 private:
-    ISourceIo::Ptr m_sourceIo;
+    AbstractSourceIoPtr m_sourceIo;
     IoDeviceBase::Ptr m_ioDevice;
     IoQueueGroupListPtr m_listIoGroupsReceived;
     SourceTransactionStartNotifier::Ptr m_transactionNotifier;

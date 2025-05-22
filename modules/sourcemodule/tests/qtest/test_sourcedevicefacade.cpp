@@ -1,7 +1,7 @@
 #include "test_sourcedevicefacade.h"
 #include "test_globals.h"
 #include "veincomponentsetnotifier-forunittest.h"
-#include "sourcedevicefacade.h"
+#include "sourcedeviceextserial.h"
 #include "sourceveininterface.h"
 #include "iodevicefactory.h"
 #include "jsonstructureloader.h"
@@ -23,21 +23,21 @@ void test_sourcedevicefacade::init()
 void test_sourcedevicefacade::checkDeviceInfo()
 {
     IoDeviceBase::Ptr ioDevice = createOpenDemoIoDevice();
-    SourceDeviceFacade sourceFacade(ioDevice, DefaultTestSourceProperties());
+    SourceDeviceExtSerial sourceFacade(ioDevice, DefaultTestSourceProperties());
     QCOMPARE(ioDevice->getDeviceInfo(), sourceFacade.getIoDeviceInfo());
 }
 
 void test_sourcedevicefacade::checkDemoOn()
 {
     IoDeviceBase::Ptr ioDevice = createOpenDemoIoDevice();
-    SourceDeviceFacade sourceFacade(ioDevice, DefaultTestSourceProperties());
+    SourceDeviceExtSerial sourceFacade(ioDevice, DefaultTestSourceProperties());
     QCOMPARE(sourceFacade.hasDemoIo(), true);
 }
 
 void test_sourcedevicefacade::checkDemoOff()
 {
     IoDeviceBase::Ptr ioDevice = IoDeviceFactory::createIoDevice(IoDeviceTypes::BROKEN);
-    SourceDeviceFacade sourceFacade(ioDevice, DefaultTestSourceProperties());
+    SourceDeviceExtSerial sourceFacade(ioDevice, DefaultTestSourceProperties());
     QCOMPARE(sourceFacade.hasDemoIo(), false);
 }
 
@@ -89,7 +89,7 @@ void test_sourcedevicefacade::checkVeinInitialStatus()
         statesReceived.append(jsonState);
     });
 
-    SourceDeviceFacade sourceFacade(ioDevice, DefaultTestSourceProperties());
+    SourceDeviceExtSerial sourceFacade(ioDevice, DefaultTestSourceProperties());
     sourceFacade.setVeinInterface(&vein.veinInterface);
 
     QCoreApplication::processEvents();
@@ -118,7 +118,7 @@ void test_sourcedevicefacade::checkVeinInitialInfo()
         infosReceived.append(jsonInfo);
     });
 
-    SourceDeviceFacade sourceFacade(ioDevice, DefaultTestSourceProperties());
+    SourceDeviceExtSerial sourceFacade(ioDevice, DefaultTestSourceProperties());
     sourceFacade.setVeinInterface(&vein.veinInterface);
 
     QCoreApplication::processEvents();
@@ -144,7 +144,7 @@ void test_sourcedevicefacade::checkVeinInitialLoad()
         loadsReceived.append(jsonInfo);
     });
 
-    SourceDeviceFacade sourceFacade(ioDevice, DefaultTestSourceProperties());
+    SourceDeviceExtSerial sourceFacade(ioDevice, DefaultTestSourceProperties());
     sourceFacade.setVeinInterface(&vein.veinInterface);
 
     QCoreApplication::processEvents();
@@ -173,7 +173,7 @@ void test_sourcedevicefacade::checkVeinSwitchTwoStateChanges()
         statesReceived.append(jsonState);
     });
 
-    SourceDeviceFacade sourceFacade(ioDevice, DefaultTestSourceProperties());
+    SourceDeviceExtSerial sourceFacade(ioDevice, DefaultTestSourceProperties());
     sourceFacade.setStatusPollTime(0);
     sourceFacade.setVeinInterface(&vein.veinInterface);
 
@@ -206,7 +206,7 @@ void test_sourcedevicefacade::checkVeinSwitchChangesLoad()
         loadsReceived.append(jsonInfo);
     });
 
-    SourceDeviceFacade sourceFacade(ioDevice, DefaultTestSourceProperties());
+    SourceDeviceExtSerial sourceFacade(ioDevice, DefaultTestSourceProperties());
     sourceFacade.setVeinInterface(&vein.veinInterface);
 
     QCoreApplication::processEvents(); // initial vein processing
@@ -251,7 +251,7 @@ void test_sourcedevicefacade::checkVeinSwitchError()
         }
     });
 
-    SourceDeviceFacade sourceFacade(ioDevice, DefaultTestSourceProperties());
+    SourceDeviceExtSerial sourceFacade(ioDevice, DefaultTestSourceProperties());
     sourceFacade.setVeinInterface(&vein.veinInterface);
     sourceFacade.setStatusPollTime(10000); // never
 
@@ -305,7 +305,7 @@ void test_sourcedevicefacade::checkVeinStateError()
         }
     });
 
-    SourceDeviceFacade sourceFacade(ioDevice, DefaultTestSourceProperties());
+    SourceDeviceExtSerial sourceFacade(ioDevice, DefaultTestSourceProperties());
     sourceFacade.setVeinInterface(&vein.veinInterface);
     sourceFacade.setStatusPollTime(0);
 

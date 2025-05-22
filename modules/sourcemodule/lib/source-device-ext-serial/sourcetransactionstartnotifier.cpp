@@ -1,11 +1,11 @@
 #include "sourcetransactionstartnotifier.h"
 
-SourceTransactionStartNotifier::SourceTransactionStartNotifier(ISourceIo::Ptr sourceIo) :
+SourceTransactionStartNotifier::SourceTransactionStartNotifier(AbstractSourceIoPtr sourceIo) :
     m_sourceIo(sourceIo)
 {
 }
 
-ISourceIo::Ptr SourceTransactionStartNotifier::getSourceIo()
+AbstractSourceIoPtr SourceTransactionStartNotifier::getSourceIo()
 {
     return m_sourceIo;
 }

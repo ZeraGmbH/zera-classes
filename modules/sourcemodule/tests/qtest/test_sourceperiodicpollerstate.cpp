@@ -1,4 +1,5 @@
 #include "test_sourceperiodicpollerstate.h"
+#include "sourceioextserial.h"
 #include "sourcestateperiodicpollerfortest.h"
 #include "test_globals.h"
 #include "sourceperiodicpollerstate.h"
@@ -21,9 +22,9 @@ void test_sourceperiodicpollerstate::init()
     m_listIoGroupsReceived.clear();
 
     m_ioDevice = createOpenDemoIoDevice();
-    m_sourceIo = ISourceIo::Ptr(new SourceIo(m_ioDevice, DefaultTestSourceProperties()));
+    m_sourceIo = std::make_shared<SourceIoExtSerial>(m_ioDevice, DefaultTestSourceProperties());
     m_transactionNotifier = SourceTransactionStartNotifier::Ptr::create(m_sourceIo);
-    connect(m_sourceIo.get(), &ISourceIo::sigResponseReceived,
+    connect(m_sourceIo.get(), &AbstractSourceIo::sigResponseReceived,
             this, &test_sourceperiodicpollerstate::onIoQueueGroupFinished);
 }
 

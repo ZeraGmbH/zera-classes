@@ -1,7 +1,7 @@
 #ifndef SOURCEDEVICEOBJCONTAINER_H
 #define SOURCEDEVICEOBJCONTAINER_H
 
-#include "sourcedevicefacadetemplate.h"
+#include "sourcedevicetemplate.h"
 #include "sourceproperties.h"
 #include "sourcetransactionstartnotifier.h"
 #include "sourcestatecontroller.h"
@@ -9,11 +9,11 @@
 #include <QUuid>
 #include <QJsonObject>
 
-class SourceDeviceFacade : public SourceDeviceFacadeTemplate
+class SourceDeviceExtSerial : public SourceDeviceTemplate
 {
     Q_OBJECT
 public:
-    SourceDeviceFacade(IoDeviceBase::Ptr ioDevice, SourceProperties properties);
+    SourceDeviceExtSerial(IoDeviceBase::Ptr ioDevice, SourceProperties properties);
 
     void setStatusPollTime(int ms) override;
 

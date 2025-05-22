@@ -1,9 +1,11 @@
 #include "sourcedevicemanager.h"
 #include "iodevicefactory.h"
 #include "iodevicedemo.h"
+#include "sourcedeviceinternal.h"
+#include "sourceiointernal.h"
 #include "sourcescanneriodemo.h"
 #include "sourcescanneriozeraserial.h"
-#include "sourcedevicefacade.h"
+#include "sourcedeviceextserial.h"
 #include <random>
 
 // DEMO helper
@@ -15,7 +17,7 @@ static bool randomBool() {
 
 SourceDeviceManager::SourceDeviceManager(int countSlots, QObject *parent) :
     QObject(parent),
-    m_sourceControllers(QVector<SourceDeviceFacadeTemplate::Ptr>(countSlots, nullptr)),
+    m_sourceControllers(QVector<SourceDeviceTemplate::Ptr>(countSlots, nullptr)),
     m_activeSlots(QVector<bool>(countSlots, false))
 {
     connect(this, &SourceDeviceManager::sigSlotRemovedQueued,
@@ -24,7 +26,13 @@ SourceDeviceManager::SourceDeviceManager(int countSlots, QObject *parent) :
 
 void SourceDeviceManager::addInternalSource(QString sourceJsonStruct)
 {
-
+    int freeSlot = findFreeSlot();
+    if(freeSlot >= 0) {
+        IoDeviceBase::Ptr ioDevice = IoDeviceFactory::createIoDevice(IoDeviceTypes::SCPI_NET);
+        AbstractSourceIoPtr sourceIo = std::make_shared<SourceIoInternal>();
+        SourceDeviceTemplate::Ptr sourceDevice = std::make_shared<SourceDeviceInternal>(ioDevice, sourceIo);
+        //addSource(freeSlot, std::make_shared<SourceDeviceExtSerial>(ioDevice, props));
+    }
 }
 
 void SourceDeviceManager::startSourceScan(const IoDeviceTypes ioDeviceType, const QString deviceInfo, const QUuid uuid)
@@ -102,7 +110,7 @@ void SourceDeviceManager::closeSource(int slotNo, const QUuid uuid)
 void SourceDeviceManager::closeSource(QString ioDeviceInfo, const QUuid uuid)
 {
     for(int slot = 0; slot<getSlotCount(); ++slot) {
-        SourceDeviceFacadeTemplate::Ptr sourceController = getSourceController(slot);
+        SourceDeviceTemplate::Ptr sourceController = getSourceController(slot);
         if(sourceController && sourceController->getIoDeviceInfo() == ioDeviceInfo) {
             closeSource(slot, uuid);
             return;
@@ -115,7 +123,7 @@ void SourceDeviceManager::closeAll()
 {
     checkHandleAllClosed();
     for(int slot = 0; slot<getSlotCount(); ++slot) {
-        SourceDeviceFacadeTemplate::Ptr sourceController = getSourceController(slot);
+        SourceDeviceTemplate::Ptr sourceController = getSourceController(slot);
         if(sourceController) {
             closeSource(slot, QUuid());
         }
@@ -149,9 +157,9 @@ int SourceDeviceManager::getDemoCount()
     return demoCount;
 }
 
-SourceDeviceFacadeTemplate::Ptr SourceDeviceManager::getSourceController(int slotNo)
+SourceDeviceTemplate::Ptr SourceDeviceManager::getSourceController(int slotNo)
 {
-    SourceDeviceFacadeTemplate::Ptr sourceController;
+    SourceDeviceTemplate::Ptr sourceController;
     if(isValidSlotNo(slotNo) && m_activeSlots[slotNo])
         sourceController = m_sourceControllers.at(slotNo);
     return sourceController;
@@ -161,7 +169,7 @@ int SourceDeviceManager::tryAddSourceToFreeSlot(IoDeviceBase::Ptr ioDevice, Sour
 {
     int freeSlot = findFreeSlot();
     if(freeSlot >= 0)
-        addSource(freeSlot, std::make_shared<SourceDeviceFacade>(ioDevice, props));
+        addSource(freeSlot, std::make_shared<SourceDeviceExtSerial>(ioDevice, props));
     return freeSlot;
 }
 
@@ -189,7 +197,7 @@ void SourceDeviceManager::onSourceClosed(int facadeId, QUuid uuid)
             if(sourceController->getId() == facadeId) {
                 QString lastError = sourceController->getLastErrors().join(" / ");
                 m_activeSlots[slotNo] = false;
-                disconnect(sourceController.get(), &SourceDeviceFacadeTemplate::sigClosed,
+                disconnect(sourceController.get(), &SourceDeviceTemplate::sigClosed,
                            this, &SourceDeviceManager::onSourceClosed);
                 emit sigSlotRemovedQueued(slotNo, uuid, lastError);
                 break;
@@ -218,11 +226,11 @@ int SourceDeviceManager::findFreeSlot()
     return freeSlotNo;
 }
 
-void SourceDeviceManager::addSource(int slotPos, SourceDeviceFacadeTemplate::Ptr deviceController)
+void SourceDeviceManager::addSource(int slotPos, SourceDeviceTemplate::Ptr deviceController)
 {
     m_sourceControllers[slotPos] = deviceController;
     m_activeSlots[slotPos] = true;
-    connect(deviceController.get(), &SourceDeviceFacadeTemplate::sigClosed,
+    connect(deviceController.get(), &SourceDeviceTemplate::sigClosed,
             this, &SourceDeviceManager::onSourceClosed);
 }
 
@@ -230,7 +238,7 @@ bool SourceDeviceManager::tryStartDemoDeviceRemove(int slotNo)
 {
     bool removeStarted = false;
     if(m_activeSlots[slotNo]) {
-        SourceDeviceFacadeTemplate::Ptr source = m_sourceControllers[slotNo];
+        SourceDeviceTemplate::Ptr source = m_sourceControllers[slotNo];
         if(source->hasDemoIo()) {
             source->close(QUuid());
             removeStarted = true;

@@ -1,5 +1,5 @@
-#ifndef SOURCEDEVICEFACADETEMPLATE_H
-#define SOURCEDEVICEFACADETEMPLATE_H
+#ifndef SOURCEDEVICETEMPLATE_H
+#define SOURCEDEVICETEMPLATE_H
 
 #include "iodevicebase.h"
 #include "idgenerator.h"
@@ -7,14 +7,15 @@
 #include "sourcestatecontroller.h"
 #include "jsondevicestatusapi.h"
 #include "abstractsourceswitchjson.h"
+#include <QUuid>
 #include <memory>
 
-class SourceDeviceFacadeTemplate : public QObject
+class SourceDeviceTemplate : public QObject
 {
     Q_OBJECT
 public:
-    typedef std::shared_ptr<SourceDeviceFacadeTemplate> Ptr;
-    SourceDeviceFacadeTemplate(IoDeviceBase::Ptr ioDevice, ISourceIo::Ptr sourceIo);
+    typedef std::shared_ptr<SourceDeviceTemplate> Ptr;
+    SourceDeviceTemplate(IoDeviceBase::Ptr ioDevice, AbstractSourceIoPtr sourceIo);
     void setVeinInterface(SourceVeinInterface* veinInterface);
 
     virtual void setStatusPollTime(int ms) = 0;
@@ -42,10 +43,10 @@ protected:
     SourceVeinInterface* m_veinInterface = nullptr;
     JsonDeviceStatusApi m_deviceStatusJsonApi;
     std::unique_ptr<AbstractSourceSwitchJson> m_switcher;
-    ISourceIo::Ptr m_sourceIo;
+    AbstractSourceIoPtr m_sourceIo;
 private:
     static IoIdGenerator m_idGenerator;
     int m_ID;
 };
 
-#endif // SOURCEDEVICEFACADETEMPLATE_H
+#endif // SOURCEDEVICETEMPLATE_H

@@ -12,7 +12,7 @@ SourceStateController::SourceStateController(SourceTransactionStartNotifier::Ptr
             this, &SourceStateController::onSwitchTransactionStarted);
     connect(m_sourceNotificationStateQuery.get(), &SourceTransactionStartNotifier::sigTransationStarted,
             this, &SourceStateController::onStateQueryTransationStarted);
-    connect(m_sourceIo.get(), &SourceIo::sigResponseReceived,
+    connect(m_sourceIo.get(), &SourceIoExtSerial::sigResponseReceived,
             this, &SourceStateController::onResponseReceived);
 }
 

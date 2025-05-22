@@ -1,6 +1,6 @@
 #include "test_sourceswitchjson.h"
 #include "test_globals.h"
-#include "sourceio.h"
+#include "sourceioextserial.h"
 #include "sourceswitchjson.h"
 #include "sourcedeviceerrorinjection-forunittest.h"
 #include "timerfactoryqtfortest.h"
@@ -18,7 +18,7 @@ void test_sourceswitchjson::signalSwitch()
     IoDeviceBase::Ptr ioDevice = createOpenDemoIoDevice();
     setDemoIoFixedTimeout(ioDevice, 0);
     DefaultTestSourceProperties sourceProperties;
-    SourceIo::Ptr sourceIo = SourceIo::Ptr(new SourceIo(ioDevice, sourceProperties));
+    AbstractSourceIoPtr sourceIo = std::make_shared<SourceIoExtSerial>(ioDevice, sourceProperties);
     SourceTransactionStartNotifier::Ptr notifyWrapperSwitch = SourceTransactionStartNotifier::Ptr::create(sourceIo);
     SourceSwitchJson switcher(sourceIo, notifyWrapperSwitch);
 
@@ -37,9 +37,9 @@ void test_sourceswitchjson::signalSwitchAfterError()
 {
     IoDeviceBase::Ptr ioDevice = createOpenDemoIoDevice();
     setDemoIoFixedTimeout(ioDevice, 0);
-    ISourceIo::Ptr sourceIo = ISourceIo::Ptr(new SourceIo(ioDevice, DefaultTestSourceProperties()));
+    AbstractSourceIoPtr sourceIo = std::make_shared<SourceIoExtSerial>(ioDevice, DefaultTestSourceProperties());
     SourceIoErrorInjection *pSourceIoWithError = new SourceIoErrorInjection(sourceIo);
-    ISourceIo::Ptr sourceIoWithError = ISourceIo::Ptr(pSourceIoWithError);
+    AbstractSourceIoPtr sourceIoWithError = AbstractSourceIoPtr(pSourceIoWithError);
     pSourceIoWithError->setDemoResonseErrorIdx(0);
     SourceTransactionStartNotifier::Ptr notifyWrapperSwitch = SourceTransactionStartNotifier::Ptr::create(sourceIoWithError);
     SourceSwitchJson switcher(sourceIoWithError, notifyWrapperSwitch);
@@ -59,7 +59,7 @@ void test_sourceswitchjson::twoSignalsSwitchSameTwice()
 {
     IoDeviceBase::Ptr ioDevice = createOpenDemoIoDevice();
     setDemoIoFixedTimeout(ioDevice, 0);
-    ISourceIo::Ptr sourceIo = ISourceIo::Ptr(new SourceIo(ioDevice, DefaultTestSourceProperties()));
+    AbstractSourceIoPtr sourceIo = std::make_shared<SourceIoExtSerial>(ioDevice, DefaultTestSourceProperties());
     SourceTransactionStartNotifier::Ptr notifyWrapperSwitch = SourceTransactionStartNotifier::Ptr::create(sourceIo);
     SourceSwitchJson switcher(sourceIo, notifyWrapperSwitch);
 
@@ -79,9 +79,9 @@ void test_sourceswitchjson::currentAndRequestedParamOnError()
 {
     IoDeviceBase::Ptr ioDevice = createOpenDemoIoDevice();
     setDemoIoFixedTimeout(ioDevice, 0);
-    ISourceIo::Ptr sourceIo = ISourceIo::Ptr(new SourceIo(ioDevice, DefaultTestSourceProperties()));
+    AbstractSourceIoPtr sourceIo = std::make_shared<SourceIoExtSerial>(ioDevice, DefaultTestSourceProperties());
     SourceIoErrorInjection *pSourceIoWithError = new SourceIoErrorInjection(sourceIo);
-    ISourceIo::Ptr sourceIoWithError = ISourceIo::Ptr(pSourceIoWithError);
+    AbstractSourceIoPtr sourceIoWithError = AbstractSourceIoPtr(pSourceIoWithError);
     pSourceIoWithError->setDemoResonseErrorIdx(0);
     SourceTransactionStartNotifier::Ptr notifyWrapperSwitch = SourceTransactionStartNotifier::Ptr::create(sourceIoWithError);
     SourceSwitchJson switcher(sourceIoWithError, notifyWrapperSwitch);
@@ -106,7 +106,7 @@ void test_sourceswitchjson::changeParamOnSuccess()
 {
     IoDeviceBase::Ptr ioDevice = createOpenDemoIoDevice();
     setDemoIoFixedTimeout(ioDevice, 0);
-    ISourceIo::Ptr sourceIo = ISourceIo::Ptr(new SourceIo(ioDevice, DefaultTestSourceProperties()));
+    AbstractSourceIoPtr sourceIo = std::make_shared<SourceIoExtSerial>(ioDevice, DefaultTestSourceProperties());
     SourceTransactionStartNotifier::Ptr notifyWrapperSwitch = SourceTransactionStartNotifier::Ptr::create(sourceIo);
     SourceSwitchJson switcher(sourceIo, notifyWrapperSwitch);
 

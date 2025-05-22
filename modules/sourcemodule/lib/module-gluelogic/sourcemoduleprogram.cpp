@@ -1,13 +1,14 @@
 #include "sourcemoduleprogram.h"
 #include "sourcemodule.h"
 #include "sourcedevicemanager.h"
-#include "sourcedevicefacade.h"
+#include "sourcedeviceextserial.h"
 #include "taskgetinternalsourcecapabilities.h"
 #include <vfmoduleparameter.h>
 #include <intvalidator.h>
 #include <jsonparamvalidator.h>
 #include <taskcontainersequence.h>
 #include <taskserverconnectionstart.h>
+#include <tasklambdarunner.h>
 #include <proxy.h>
 
 SourceModuleProgram::SourceModuleProgram(SourceModule* module, std::shared_ptr<BaseModuleConfiguration> pConfiguration) :
@@ -127,6 +128,12 @@ void SourceModuleProgram::activate()
     m_internalSourceCapabilityQueryTask->addSub(TaskGetInternalSourceCapabilities::create(m_pcbInterface,
                                                                           m_serverResponseSourceCapabilities,
                                                                           TRANSACTION_TIMEOUT));
+    m_internalSourceCapabilityQueryTask->addSub(TaskLambdaRunner::create([&]() {
+        if (!m_serverResponseSourceCapabilities->isEmpty())
+            m_pSourceDeviceManager->addInternalSource(*m_serverResponseSourceCapabilities);
+        return true;
+    }));
+
     connect(m_internalSourceCapabilityQueryTask.get(), &TaskTemplate::sigFinish,
             this, &SourceModuleProgram::activated);
     m_internalSourceCapabilityQueryTask->start();
@@ -160,7 +167,7 @@ bool SourceModuleProgram::tryAddNewSource(int slotPosition)
 {
     bool sourceAdded = slotPosition >= 0;
     if(sourceAdded) {
-        SourceDeviceFacadeTemplate::Ptr deviceContainer = m_pSourceDeviceManager->getSourceController(slotPosition);
+        SourceDeviceTemplate::Ptr deviceContainer = m_pSourceDeviceManager->getSourceController(slotPosition);
         deviceContainer->setVeinInterface(m_arrVeinIoInterfaces[slotPosition]);
         m_pVeinCountAct->setValue(QVariant(m_pSourceDeviceManager->getActiveSlotCount()));
         updateDemoCount();

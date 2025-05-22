@@ -1,7 +1,7 @@
 #include "test_sourceio.h"
 #include "test_globals.h"
 #include "iodevicefactory.h"
-#include "sourceio.h"
+#include "sourceioextserial.h"
 #include "jsonstructureloader.h"
 #include "timerfactoryqtfortest.h"
 #include "timemachinefortest.h"
@@ -29,7 +29,7 @@ void test_sourceio::gettersOK()
                                       version,
                                       SourceProtocols::ZERA_SERIAL,
                                       SourceProperties::EXTERNAL);
-    SourceIo sourceIo(ioDevice, sourceProperties);
+    SourceIoExtSerial sourceIo(ioDevice, sourceProperties);
 
     QCOMPARE(type, sourceIo.getProperties().getType());
     QCOMPARE(name, sourceIo.getProperties().getName());
@@ -41,10 +41,10 @@ void test_sourceio::gettersOK()
 void test_sourceio::signalResponses()
 {
     IoDeviceBase::Ptr ioDevice = createOpenDemoIoDevice();
-    SourceIo sourceIo(ioDevice, DefaultTestSourceProperties());
+    SourceIoExtSerial sourceIo(ioDevice, DefaultTestSourceProperties());
 
     int countResponseReceived = 0;
-    connect(&sourceIo, &SourceIo::sigResponseReceived, [&] {
+    connect(&sourceIo, &SourceIoExtSerial::sigResponseReceived, [&] {
         countResponseReceived++;
     });
 
@@ -69,10 +69,10 @@ void test_sourceio::signalResponses()
 void test_sourceio::signalResponsesOnOneError()
 {
     IoDeviceBase::Ptr ioDevice = createOpenDemoIoDevice();
-    SourceIo sourceIo(ioDevice, DefaultTestSourceProperties());
+    SourceIoExtSerial sourceIo(ioDevice, DefaultTestSourceProperties());
 
     int countResponseReceived = 0;
-    connect(&sourceIo, &SourceIo::sigResponseReceived, [&] {
+    connect(&sourceIo, &SourceIoExtSerial::sigResponseReceived, [&] {
         countResponseReceived++;
     });
 
@@ -98,10 +98,10 @@ void test_sourceio::signalResponsesOnOneError()
 void test_sourceio::signalResponsesOnTwoErrors()
 {
     IoDeviceBase::Ptr ioDevice = createOpenDemoIoDevice();
-    SourceIo sourceIo(ioDevice, DefaultTestSourceProperties());
+    SourceIoExtSerial sourceIo(ioDevice, DefaultTestSourceProperties());
 
     int countResponseReceived = 0;
-    connect(&sourceIo, &SourceIo::sigResponseReceived, [&] {
+    connect(&sourceIo, &SourceIoExtSerial::sigResponseReceived, [&] {
         countResponseReceived++;
     });
 

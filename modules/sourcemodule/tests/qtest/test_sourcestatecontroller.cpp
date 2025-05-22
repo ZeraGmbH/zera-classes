@@ -2,8 +2,6 @@
 #include "test_globals.h"
 #include "sourcestatecontroller.h"
 #include "sourceswitchjson.h"
-#include "iodevicedemo.h"
-#include "jsonstructureloader.h"
 #include "sourcestateperiodicpollerfortest.h"
 #include "sourcedeviceerrorinjection-forunittest.h"
 #include "timerfactoryqtfortest.h"
@@ -26,9 +24,9 @@ void test_sourcestatecontroller::init()
     m_listIoGroupsReceived.clear();
 
     m_ioDevice = createOpenDemoIoDevice();
-    m_sourceIo = ISourceIo::Ptr(new SourceIo(m_ioDevice, DefaultTestSourceProperties()));
-    m_sourceIoWithError = ISourceIo::Ptr(new SourceIoErrorInjection(m_sourceIo));
-    connect(m_sourceIoWithError.get(), &ISourceIo::sigResponseReceived,
+    m_sourceIo = std::make_shared<SourceIoExtSerial>(m_ioDevice, DefaultTestSourceProperties());
+    m_sourceIoWithError = std::make_shared<SourceIoErrorInjection>(m_sourceIo);
+    connect(m_sourceIoWithError.get(), &AbstractSourceIo::sigResponseReceived,
             this, &test_sourcestatecontroller::onIoQueueGroupFinished);
 }
 

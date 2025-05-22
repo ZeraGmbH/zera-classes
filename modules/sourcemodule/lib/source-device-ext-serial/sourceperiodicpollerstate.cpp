@@ -1,16 +1,18 @@
 #include "sourceperiodicpollerstate.h"
+#include "jsonstructureloader.h"
 #include <timerfactoryqt.h>
 
 SourceStatePeriodicPoller::SourceStatePeriodicPoller(SourceTransactionStartNotifier::Ptr sourceIoWithNotificationQuery, int pollTime) :
     m_pollTimer(TimerFactoryQt::createPeriodic(pollTime)),
     m_sourceNotificationStateQuery(sourceIoWithNotificationQuery),
-    m_sourceIo(m_sourceNotificationStateQuery->getSourceIo())
+    m_sourceIo(m_sourceNotificationStateQuery->getSourceIo()),
+    m_ioGroupGenerator(JsonStructureLoader::loadJsonStructure(m_sourceIo->getProperties()))
 {
     connect(m_pollTimer.get(), &TimerTemplateQt::sigExpired,
             this, &SourceStatePeriodicPoller::onPollTimer);
     connect(m_sourceNotificationStateQuery.get(), &SourceTransactionStartNotifier::sigTransationStarted,
             this, &SourceStatePeriodicPoller::onStateQueryTransationStarted);
-    connect(m_sourceIo.get(), &SourceIo::sigResponseReceived,
+    connect(m_sourceIo.get(), &AbstractSourceIo::sigResponseReceived,
             this, &SourceStatePeriodicPoller::onResponseReceived);
     startPeriodicPoll();
 }
@@ -37,7 +39,7 @@ bool SourceStatePeriodicPoller::tryStartPollNow()
 {
     bool bStarted = false;
     if(!m_PendingStateQueryIds.hasPending()) {
-        IoQueueGroup::Ptr transferGroup = m_sourceIo->getIoGroupGenerator().generateStatusPollGroup();
+        IoQueueGroup::Ptr transferGroup = m_ioGroupGenerator.generateStatusPollGroup();
         m_sourceNotificationStateQuery->startTransactionWithNotify(transferGroup);
         bStarted = true;
     }

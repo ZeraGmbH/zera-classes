@@ -1,7 +1,7 @@
 #ifndef SOURCEINTERACTORSTATUS_H
 #define SOURCEINTERACTORSTATUS_H
 
-#include "sourceio.h"
+#include "sourceioextserial.h"
 #include "sourcetransactionstartnotifier.h"
 #include "sourceperiodicpollerstate.h"
 #include <QObject>
@@ -39,7 +39,7 @@ private:
     void setPollingOnStateChange();
     void handleSwitchResponse(const IoQueueGroup::Ptr transferGroup);
     void handleStateResponse(const IoQueueGroup::Ptr transferGroup);
-    ISourceIo::Ptr m_sourceIo;
+    AbstractSourceIoPtr m_sourceIo;
     SourceTransactionStartNotifier::Ptr m_sourceNotificationSwitch;
     SourceTransactionStartNotifier::Ptr m_sourceNotificationStateQuery;
     SourceStatePeriodicPoller::Ptr m_sourceStatePoller;

@@ -1,10 +1,10 @@
 #include "sourcedeviceerrorinjection-forunittest.h"
 
-SourceIoErrorInjection::SourceIoErrorInjection(Ptr sourceUnderTest) :
+SourceIoErrorInjection::SourceIoErrorInjection(AbstractSourceIoPtr sourceUnderTest) :
     m_sourceUnderTest(sourceUnderTest)
 {
-    connect(m_sourceUnderTest.get(), &ISourceIo::sigResponseReceived,
-            this, &ISourceIo::sigResponseReceived);
+    connect(m_sourceUnderTest.get(), &AbstractSourceIo::sigResponseReceived,
+            this, &AbstractSourceIo::sigResponseReceived);
 }
 
 int SourceIoErrorInjection::startTransaction(IoQueueGroup::Ptr transferGroup)
@@ -15,11 +15,6 @@ int SourceIoErrorInjection::startTransaction(IoQueueGroup::Ptr transferGroup)
         ioData->getDemoResponder()->activateErrorResponse();
     }
     return m_sourceUnderTest->startTransaction(transferGroup);
-}
-
-IoGroupGenerator SourceIoErrorInjection::getIoGroupGenerator() const
-{
-    return m_sourceUnderTest->getIoGroupGenerator();
 }
 
 SourceProperties SourceIoErrorInjection::getProperties() const
