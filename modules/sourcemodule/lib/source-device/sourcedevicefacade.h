@@ -7,7 +7,6 @@
 #include "sourcetransactionstartnotifier.h"
 #include "sourcestatecontroller.h"
 #include "sourceswitchjson.h"
-#include "jsondevicestatusapi.h"
 #include "sourceveininterface.h"
 
 #include <QObject>
@@ -26,8 +25,6 @@ public:
     void setStatusPollTime(int ms);
     void switchLoad(QJsonObject params);
 
-    QStringList getLastErrors() const;
-
     bool close(QUuid uuid);
 
 private slots:
@@ -37,10 +34,6 @@ private slots:
 private:
     void handleErrorState(SourceStateController::States state);
     void doFinalCloseActivities();
-    void setVeinParamStructure(QJsonObject paramStruct);
-    void setVeinParamState(QJsonObject paramState);
-    void setVeinDeviceState(QJsonObject deviceState);
-    void resetVeinComponents();
     void enableCloseRequested(QUuid uuid);
     bool tryDemoCloseByUsbDisconnect(QUuid uuid);
     ISourceIo::Ptr m_sourceIo;
@@ -51,7 +44,6 @@ private:
     SourceSwitchJson m_switcher;
     QUuid m_closeUuid;
     bool m_closeRequested = false;
-    JsonDeviceStatusApi m_deviceStatusJsonApi;
     static bool m_demoCloseByUsbDisconnect;
 };
 

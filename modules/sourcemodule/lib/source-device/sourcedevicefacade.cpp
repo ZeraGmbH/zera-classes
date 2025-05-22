@@ -15,18 +15,12 @@ SourceDeviceFacade::SourceDeviceFacade(IoDeviceBase::Ptr ioDevice, SourcePropert
     m_stateController(m_transactionNotifierSwitch, m_transactionNotifierStatus, m_statePoller),
     m_switcher(m_sourceIo, m_transactionNotifierSwitch)
 {
-    m_deviceStatusJsonApi.setDeviceInfo(m_ioDevice->getDeviceInfo());
     connect(&m_stateController, &SourceStateController::sigStateChanged,
             this, &SourceDeviceFacade::onSourceStateChanged);
     connect(&m_switcher, &SourceSwitchJson::sigSwitchFinished,
             this, &SourceDeviceFacade::onSourceSwitchFinished);
     connect(ioDevice.get(), &IoDeviceBase::sigDisconnected, this,
             &SourceDeviceFacade::onIoDeviceClosed);
-}
-
-QStringList SourceDeviceFacade::getLastErrors() const
-{
-    return m_deviceStatusJsonApi.getErrors();
 }
 
 bool SourceDeviceFacade::close(QUuid uuid)
@@ -117,40 +111,6 @@ void SourceDeviceFacade::setVeinInterface(SourceVeinInterface *veinInterface)
 void SourceDeviceFacade::setStatusPollTime(int ms)
 {
     m_statePoller->setPollTime(ms);
-}
-
-void SourceDeviceFacade::setVeinParamStructure(QJsonObject paramStruct)
-{
-    if(m_veinInterface) {
-        m_veinInterface->getVeinDeviceInfoComponent()->setValue(paramStruct);
-        m_veinInterface->getVeinDeviceParameterValidator()->setJSonParameterStructure(paramStruct);
-    }
-}
-
-void SourceDeviceFacade::setVeinParamState(QJsonObject paramState)
-{
-    if(m_veinInterface) {
-        m_veinInterface->getVeinDeviceParameterComponent()->setValue(paramState);
-    }
-}
-
-void SourceDeviceFacade::setVeinDeviceState(QJsonObject deviceState)
-{
-    if(m_veinInterface) {
-        m_veinInterface->getVeinDeviceStateComponent()->setValue(deviceState);
-    }
-}
-
-void SourceDeviceFacade::resetVeinComponents()
-{
-    if(m_veinInterface) {
-        setVeinParamStructure(QJsonObject());
-        setVeinParamState(QJsonObject());
-        setVeinDeviceState(QJsonObject());
-        disconnect(m_veinInterface, &SourceVeinInterface::sigNewLoadParams,
-                   this, &SourceDeviceFacade::switchLoad);
-        m_veinInterface = nullptr;
-    }
 }
 
 void SourceDeviceFacade::enableCloseRequested(QUuid uuid)

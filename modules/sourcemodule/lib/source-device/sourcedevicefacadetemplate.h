@@ -5,6 +5,7 @@
 #include "idgenerator.h"
 #include "sourceveininterface.h"
 #include "sourcestatecontroller.h"
+#include "jsondevicestatusapi.h"
 
 class SourceDeviceFacadeTemplate : public QObject
 {
@@ -18,7 +19,7 @@ public:
     int getId();
     QString getIoDeviceInfo() const;
     bool hasDemoIo() const;
-    virtual QStringList getLastErrors() const = 0;
+    QStringList getLastErrors() const;
 
     virtual bool close(QUuid uuid) = 0;
 signals:
@@ -26,8 +27,14 @@ signals:
 
 protected:
     void handleErrorState(SourceStateController::States state);
+    void setVeinParamStructure(QJsonObject paramStruct);
+    void setVeinDeviceState(QJsonObject deviceState);
+    void setVeinParamState(QJsonObject paramState);
+    void resetVeinComponents();
+
     IoDeviceBase::Ptr m_ioDevice;
     SourceVeinInterface* m_veinInterface = nullptr;
+    JsonDeviceStatusApi m_deviceStatusJsonApi;
 private:
     static IoIdGenerator m_idGenerator;
     int m_ID;
