@@ -4,7 +4,7 @@
 #include <QObject>
 #include <QString>
 #include <QUuid>
-#include "sourcedevicefacade.h"
+#include "sourcedevicefacadetemplate.h"
 #include "sourcescanner.h"
 
 class SourceDeviceManager : public QObject
@@ -21,7 +21,7 @@ public:
 
     int getSlotCount();
     int getActiveSlotCount();
-    SourceDeviceFacade::Ptr getSourceController(int slotNo);
+    SourceDeviceFacadeTemplate::Ptr getSourceController(int slotNo);
     int getDemoCount();
 signals:
     void sigSourceScanFinished(int slotNo, QUuid uuid, QString errorMsg);
@@ -37,10 +37,10 @@ private:
     bool isValidSlotNo(int slotNo);
     int findFreeSlot();
     int tryAddSourceToFreeSlot(IoDeviceBase::Ptr ioDevice, SourceProperties props);
-    void addSource(int slotPos, SourceDeviceFacade::Ptr deviceController);
+    void addSource(int slotPos, SourceDeviceFacadeTemplate::Ptr deviceController);
     bool tryStartDemoDeviceRemove(int slotNo);
     void checkHandleAllClosed();
-    QVector<SourceDeviceFacade::Ptr> m_sourceControllers;
+    QVector<SourceDeviceFacadeTemplate::Ptr> m_sourceControllers;
     QVector<bool> m_activeSlots;
 };
 

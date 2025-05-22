@@ -7,11 +7,13 @@
 #include "sourcestatecontroller.h"
 #include "jsondevicestatusapi.h"
 #include "abstractsourceswitchjson.h"
+#include <memory>
 
 class SourceDeviceFacadeTemplate : public QObject
 {
     Q_OBJECT
 public:
+    typedef std::shared_ptr<SourceDeviceFacadeTemplate> Ptr;
     SourceDeviceFacadeTemplate(IoDeviceBase::Ptr ioDevice, ISourceIo::Ptr sourceIo);
     void setVeinInterface(SourceVeinInterface* veinInterface);
 

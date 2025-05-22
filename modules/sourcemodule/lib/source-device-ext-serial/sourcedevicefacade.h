@@ -8,13 +8,11 @@
 #include <QObject>
 #include <QUuid>
 #include <QJsonObject>
-#include <memory>
 
 class SourceDeviceFacade : public SourceDeviceFacadeTemplate
 {
     Q_OBJECT
 public:
-    typedef std::shared_ptr<SourceDeviceFacade> Ptr;
     SourceDeviceFacade(IoDeviceBase::Ptr ioDevice, SourceProperties properties);
 
     void setStatusPollTime(int ms) override;
