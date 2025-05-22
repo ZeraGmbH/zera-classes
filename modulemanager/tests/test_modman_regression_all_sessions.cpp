@@ -23,6 +23,7 @@ void test_modman_regression_all_sessions::initTestCase()
     devicesExportGenerator.exportAll(MockLxdmSessionChangeParamGenerator::generateTestSessionChanger(false));
     m_veinDumps = devicesExportGenerator.getVeinDumps();
     m_instanceCountsOnModulesDestroyed = devicesExportGenerator.getInstanceCountsOnModulesDestroyed();
+    m_memoryLeakTrees = devicesExportGenerator.getMemoryLeakTrees();
 }
 
 void test_modman_regression_all_sessions::allSessionsVeinDumps_data()
@@ -95,6 +96,17 @@ void test_modman_regression_all_sessions::checkFilesProperlyClosed()
     QVERIFY(openFilesTotal.count() > 0);
     const QHash<QString, int> openFiles = m_openFileTracker->getOpenFiles();
     QCOMPARE(openFiles.count(), 0);
+}
+
+void test_modman_regression_all_sessions::checkMemoryLeaks()
+{
+    int chunksTotal = 0;
+    for (const auto &backtrace : m_memoryLeakTrees) {
+        const BacktraceTreeGenerator::TreeEntry *rootEntry = backtrace->getRootEntry();
+        qInfo("Chunks %i / Memory %i", rootEntry->m_callCount, rootEntry->m_totalAlloc);
+        chunksTotal += rootEntry->m_callCount;
+    }
+    qInfo("Chunks total: %i", chunksTotal);
 }
 
 bool test_modman_regression_all_sessions::checkUniqueEntityIdNames(const QString &device)

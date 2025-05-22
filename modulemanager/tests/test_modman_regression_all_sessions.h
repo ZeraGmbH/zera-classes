@@ -20,11 +20,15 @@ private slots:
     void testGenerateScpiDocs();
     void checkObjectsProperlyDeleted();
     void checkFilesProperlyClosed();
+
+    void checkMemoryLeaks();
 private:
     bool checkUniqueEntityIdNames(const QString& device);
     AbstractFactoryServiceInterfacesPtr m_serviceInterfaceFactory;
     VeinDumps m_veinDumps;
     QList<TestModuleManager::TModuleInstances> m_instanceCountsOnModulesDestroyed;
+    Backtraces m_memoryLeakTrees;
+
     QString m_devIfaceXmlsPath;
     std::unique_ptr<TestOpenFileTracker> m_openFileTracker;
 };
