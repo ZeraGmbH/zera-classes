@@ -160,7 +160,7 @@ int SourceDeviceManager::tryAddSourceToFreeSlot(IoDeviceBase::Ptr ioDevice, Sour
 {
     int freeSlot = findFreeSlot();
     if(freeSlot >= 0)
-        addSource(freeSlot, SourceDeviceFacade::Ptr::create(ioDevice, props));
+        addSource(freeSlot, std::make_shared<SourceDeviceFacade>(ioDevice, props));
     return freeSlot;
 }
 

@@ -6,15 +6,17 @@
 #include "sourceveininterface.h"
 #include "sourcestatecontroller.h"
 #include "jsondevicestatusapi.h"
+#include "abstractsourceswitchjson.h"
 
 class SourceDeviceFacadeTemplate : public QObject
 {
     Q_OBJECT
 public:
     SourceDeviceFacadeTemplate(IoDeviceBase::Ptr ioDevice, ISourceIo::Ptr sourceIo);
-    virtual void setVeinInterface(SourceVeinInterface* veinInterface) = 0;
+    void setVeinInterface(SourceVeinInterface* veinInterface);
+
     virtual void setStatusPollTime(int ms) = 0;
-    virtual void switchLoad(QJsonObject params) = 0;
+    void switchLoad(QJsonObject params);
 
     int getId();
     QString getIoDeviceInfo() const;
@@ -25,6 +27,8 @@ public:
 signals:
     void sigClosed(int facadeId, QUuid uuid);
 
+protected slots:
+    void onSourceStateChanged(SourceStateController::States state);
 protected:
     void handleErrorState(SourceStateController::States state);
     void setVeinParamStructure(QJsonObject paramStruct);
@@ -35,6 +39,7 @@ protected:
     IoDeviceBase::Ptr m_ioDevice;
     SourceVeinInterface* m_veinInterface = nullptr;
     JsonDeviceStatusApi m_deviceStatusJsonApi;
+    std::unique_ptr<AbstractSourceSwitchJson> m_switcher;
     ISourceIo::Ptr m_sourceIo;
 private:
     static IoIdGenerator m_idGenerator;

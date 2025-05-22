@@ -1,7 +1,6 @@
 #ifndef SOURCEDEVICE_H
 #define SOURCEDEVICE_H
 
-#include "supportedsources.h"
 #include "sourceproperties.h"
 #include "iogroupgenerator.h"
 #include "ioqueue.h"

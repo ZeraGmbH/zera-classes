@@ -1,9 +1,7 @@
 #include "sourcedevicefacade.h"
-#include "jsonstructureloader.h"
-#include "messagetexts.h"
 #include <vfmoduleparameter.h>
 #include <jsonparamvalidator.h>
-
+#include "sourceswitchjson.h"
 #include <QVariant>
 
 SourceDeviceFacade::SourceDeviceFacade(IoDeviceBase::Ptr ioDevice, SourceProperties properties) :
@@ -11,12 +9,12 @@ SourceDeviceFacade::SourceDeviceFacade(IoDeviceBase::Ptr ioDevice, SourcePropert
     m_transactionNotifierStatus(SourceTransactionStartNotifier::Ptr::create(m_sourceIo)),
     m_transactionNotifierSwitch(SourceTransactionStartNotifier::Ptr::create(m_sourceIo)),
     m_statePoller(SourceStatePeriodicPoller::Ptr::create(m_transactionNotifierStatus)),
-    m_stateController(m_transactionNotifierSwitch, m_transactionNotifierStatus, m_statePoller),
-    m_switcher(m_sourceIo, m_transactionNotifierSwitch)
+    m_stateController(m_transactionNotifierSwitch, m_transactionNotifierStatus, m_statePoller)
 {
+    m_switcher = std::make_unique<SourceSwitchJson>(m_sourceIo, m_transactionNotifierSwitch);
     connect(&m_stateController, &SourceStateController::sigStateChanged,
             this, &SourceDeviceFacade::onSourceStateChanged);
-    connect(&m_switcher, &SourceSwitchJson::sigSwitchFinished,
+    connect(m_switcher.get(), &SourceSwitchJson::sigSwitchFinished,
             this, &SourceDeviceFacade::onSourceSwitchFinished);
     connect(ioDevice.get(), &IoDeviceBase::sigDisconnected, this,
             &SourceDeviceFacade::onIoDeviceClosed);
@@ -29,39 +27,17 @@ bool SourceDeviceFacade::close(QUuid uuid)
         closeRequested = true;
         enableCloseRequested(uuid);
         m_statePoller->stopPeriodicPoll();
-        if(m_switcher.getCurrLoadState().getOn())
-            m_switcher.switchOff();
+        if(m_switcher->getCurrLoadState().getOn())
+            m_switcher->switchOff();
         else
             doFinalCloseActivities();
     }
     return closeRequested;
 }
 
-void SourceDeviceFacade::switchLoad(QJsonObject params)
-{
-    JsonParamApi paramApi;
-    paramApi.setParams(params);
-    m_switcher.switchState(paramApi);
-}
-
-void SourceDeviceFacade::onSourceStateChanged(SourceStateController::States state)
-{
-    if(state == SourceStateController::States::SWITCH_BUSY) {
-        m_deviceStatusJsonApi.clearWarningsErrors();
-        m_deviceStatusJsonApi.setBusy(true);
-    }
-    else if(state == SourceStateController::States::IDLE) {
-        m_deviceStatusJsonApi.setBusy(false);
-    }
-    else {
-        handleErrorState(state);
-    }
-    setVeinDeviceState(m_deviceStatusJsonApi.getJsonStatus());
-}
-
 void SourceDeviceFacade::onSourceSwitchFinished()
 {
-    setVeinParamState(m_switcher.getCurrLoadState().getParams());
+    setVeinParamState(m_switcher->getCurrLoadState().getParams());
     if(m_closeRequested) {
         doFinalCloseActivities();
     }
@@ -72,39 +48,10 @@ void SourceDeviceFacade::onIoDeviceClosed()
     doFinalCloseActivities();
 }
 
-void SourceDeviceFacade::handleErrorState(SourceStateController::States state)
-{
-    // All errors need love: translation / helpful status messages
-    if(state == SourceStateController::States::ERROR_SWITCH) {
-        MessageTexts::Texts msgTxtId = m_switcher.getRequestedLoadState().getOn() ?
-                    MessageTexts::ERR_SWITCH_ON :
-                    MessageTexts::ERR_SWITCH_OFF;
-        m_deviceStatusJsonApi.addError(MessageTexts::getText(msgTxtId));
-    }
-    else if(state == SourceStateController::States::ERROR_POLL) {
-        m_deviceStatusJsonApi.addError(MessageTexts::getText(MessageTexts::ERR_STATUS_POLL));
-    }
-
-    else {
-        qCritical("Unhandled source state!");
-    }
-    m_deviceStatusJsonApi.setBusy(false);
-}
-
 void SourceDeviceFacade::doFinalCloseActivities()
 {
     resetVeinComponents();
     emit sigClosed(getId(), m_closeUuid);
-}
-
-void SourceDeviceFacade::setVeinInterface(SourceVeinInterface *veinInterface)
-{
-    m_veinInterface = veinInterface;
-    setVeinParamStructure(JsonStructureLoader::loadJsonStructure(m_sourceIo->getProperties()));
-    setVeinParamState(m_switcher.getCurrLoadState().getParams());
-    setVeinDeviceState(m_deviceStatusJsonApi.getJsonStatus());
-    connect(m_veinInterface, &SourceVeinInterface::sigNewLoadParams,
-            this, &SourceDeviceFacade::switchLoad);
 }
 
 void SourceDeviceFacade::setStatusPollTime(int ms)
