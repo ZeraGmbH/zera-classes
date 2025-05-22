@@ -36,7 +36,6 @@ private:
     void doFinalCloseActivities();
     void enableCloseRequested(QUuid uuid);
     bool tryDemoCloseByUsbDisconnect(QUuid uuid);
-    ISourceIo::Ptr m_sourceIo;
     SourceTransactionStartNotifier::Ptr m_transactionNotifierStatus;
     SourceTransactionStartNotifier::Ptr m_transactionNotifierSwitch;
     SourceStatePeriodicPoller::Ptr m_statePoller;

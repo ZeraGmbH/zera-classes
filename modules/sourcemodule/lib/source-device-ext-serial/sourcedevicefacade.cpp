@@ -7,8 +7,7 @@
 #include <QVariant>
 
 SourceDeviceFacade::SourceDeviceFacade(IoDeviceBase::Ptr ioDevice, SourceProperties properties) :
-    SourceDeviceFacadeTemplate(ioDevice),
-    m_sourceIo(ISourceIo::Ptr(new SourceIo(ioDevice, properties))),
+    SourceDeviceFacadeTemplate(ioDevice, ISourceIo::Ptr(new SourceIo(ioDevice, properties))),
     m_transactionNotifierStatus(SourceTransactionStartNotifier::Ptr::create(m_sourceIo)),
     m_transactionNotifierSwitch(SourceTransactionStartNotifier::Ptr::create(m_sourceIo)),
     m_statePoller(SourceStatePeriodicPoller::Ptr::create(m_transactionNotifierStatus)),

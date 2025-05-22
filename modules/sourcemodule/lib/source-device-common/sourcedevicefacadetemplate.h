@@ -11,7 +11,7 @@ class SourceDeviceFacadeTemplate : public QObject
 {
     Q_OBJECT
 public:
-    SourceDeviceFacadeTemplate(IoDeviceBase::Ptr ioDevice);
+    SourceDeviceFacadeTemplate(IoDeviceBase::Ptr ioDevice, ISourceIo::Ptr sourceIo);
     virtual void setVeinInterface(SourceVeinInterface* veinInterface) = 0;
     virtual void setStatusPollTime(int ms) = 0;
     virtual void switchLoad(QJsonObject params) = 0;
@@ -35,6 +35,7 @@ protected:
     IoDeviceBase::Ptr m_ioDevice;
     SourceVeinInterface* m_veinInterface = nullptr;
     JsonDeviceStatusApi m_deviceStatusJsonApi;
+    ISourceIo::Ptr m_sourceIo;
 private:
     static IoIdGenerator m_idGenerator;
     int m_ID;

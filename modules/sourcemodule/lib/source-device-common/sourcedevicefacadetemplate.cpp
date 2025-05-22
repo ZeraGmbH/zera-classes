@@ -6,8 +6,9 @@
 
 IoIdGenerator SourceDeviceFacadeTemplate::m_idGenerator;
 
-SourceDeviceFacadeTemplate::SourceDeviceFacadeTemplate(IoDeviceBase::Ptr ioDevice) :
+SourceDeviceFacadeTemplate::SourceDeviceFacadeTemplate(IoDeviceBase::Ptr ioDevice, ISourceIo::Ptr sourceIo) :
     m_ioDevice(ioDevice),
+    m_sourceIo(sourceIo),
     m_ID(m_idGenerator.nextID())
 {
     m_deviceStatusJsonApi.setDeviceInfo(m_ioDevice->getDeviceInfo());
