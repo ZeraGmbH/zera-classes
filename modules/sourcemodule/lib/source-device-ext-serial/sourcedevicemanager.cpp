@@ -21,6 +21,11 @@ SourceDeviceManager::SourceDeviceManager(int countSlots, QObject *parent) :
             this, &SourceDeviceManager::sigSlotRemoved, Qt::QueuedConnection);
 }
 
+void SourceDeviceManager::addInternalSource(QString sourceJsonStruct)
+{
+
+}
+
 void SourceDeviceManager::startSourceScan(const IoDeviceTypes ioDeviceType, const QString deviceInfo, const QUuid uuid)
 {
     if(getActiveSlotCount() >= m_sourceControllers.count()) {

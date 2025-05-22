@@ -3,7 +3,8 @@ file(GLOB SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/io-queue/*.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/message-texts/*.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/module-gluelogic/*.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/source-device/*.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/source-device-ext-serial/*.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/source-device-common/*.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/source-protocols/*.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/source-scanner/*.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/transaction-ids/*.cpp
@@ -15,7 +16,8 @@ file(GLOB HEADER
     ${CMAKE_CURRENT_SOURCE_DIR}/io-queue/*.h
     ${CMAKE_CURRENT_SOURCE_DIR}/message-texts/*.h
     ${CMAKE_CURRENT_SOURCE_DIR}/module-gluelogic/*.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/source-device/*.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/source-device-ext-serial/*.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/source-device-common/*.h
     ${CMAKE_CURRENT_SOURCE_DIR}/source-protocols/*.h
     ${CMAKE_CURRENT_SOURCE_DIR}/source-scanner/*.h
     ${CMAKE_CURRENT_SOURCE_DIR}/transaction-ids/*.h
@@ -49,7 +51,8 @@ target_include_directories(sourcemodule-static
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/io-queue>
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/message-texts>
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/module-gluelogic>
-    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/source-device>
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/source-device-ext-serial>
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/source-device-common>
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/source-protocols>
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/source-scanner>
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/transaction-ids>
