@@ -1,22 +1,20 @@
 #ifndef SOURCEINTERACTORSWITCH_H
 #define SOURCEINTERACTORSWITCH_H
 
+#include "abstractsourceswitchjson.h"
 #include "sourceio.h"
 #include "sourcetransactionstartnotifier.h"
 #include "persistentjsonstate.h"
-#include <QObject>
 
-class SourceSwitchJson : public QObject
+class SourceSwitchJson : public AbstractSourceSwitchJson
 {
     Q_OBJECT
 public:
     SourceSwitchJson(ISourceIo::Ptr sourceIo, SourceTransactionStartNotifier::Ptr sourceNotificationSwitch);
-    void switchState(JsonParamApi paramState);
-    void switchOff();
-    JsonParamApi getCurrLoadState();
-    JsonParamApi getRequestedLoadState();
-signals:
-    void sigSwitchFinished();
+    void switchState(JsonParamApi paramState) override;
+    void switchOff() override;
+    JsonParamApi getCurrLoadState() override;
+    JsonParamApi getRequestedLoadState() override;
 
 private slots:
     void onSwitchTransactionStarted(int dataGroupId);
