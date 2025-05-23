@@ -209,7 +209,7 @@ void cPower1ModuleMeasProgram::generateVeinInterface()
 
     m_pPQSCountInfo = new VfModuleMetaData(QString("PQSCount"), QVariant(MeasPhaseCount+SumValueCount));
     m_pModule->veinModuleMetaDataList.append(m_pPQSCountInfo);
-    m_pNomFrequencyInfo =  new VfModuleMetaData(QString("NominalFrequency"), QVariant(getConfData()->m_nNominalFrequency));
+    m_pNomFrequencyInfo =  new VfModuleMetaData(QString("NominalFrequency"), QVariant(getConfData()->m_nNominalFrequency.m_nValue));
     m_pModule->veinModuleMetaDataList.append(m_pNomFrequencyInfo);
     m_pFoutCount = new VfModuleMetaData(QString("FOUTCount"), QVariant(getConfData()->m_nFreqOutputCount));
     m_pModule->veinModuleMetaDataList.append(m_pFoutCount);
@@ -256,6 +256,14 @@ void cPower1ModuleMeasProgram::generateVeinInterface()
         m_scalingInputs.append(tmpScalePair);
     }
     generateVeinInterfaceForQrefFreq();
+
+    m_pNominalFrequency = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
+                                                key = QString("PAR_FOUT_NOMINAL_FREQ"),
+                                                QString("Nominal frequency"),
+                                                QVariant(getConfData()->m_nNominalFrequency.m_nValue));
+    m_pNominalFrequency->setUnit("Hz");
+    m_pNominalFrequency->setValidator(new cIntValidator(10000, 200000, 1));
+    m_pModule->m_veinModuleParameterMap[key] = m_pNominalFrequency; // for modules use
 
     for(const auto &ele : qAsConst(m_scalingInputs)) {
         if(ele.first != nullptr && ele.second != nullptr) {
@@ -929,6 +937,7 @@ void cPower1ModuleMeasProgram::activateDSPdone()
     if (getConfData()->supportsVariableQrefFrequency())
         connect(m_QREFFrequencyParameter, &VfModuleComponent::sigValueChanged,
                 this, &cPower1ModuleMeasProgram::newQRefFrequency);
+    connect(m_pNominalFrequency,&VfModuleParameter::sigValueChanged, this, &cPower1ModuleMeasProgram::newNominalFrequency);
 
     readUrvalueList = m_measChannelInfoHash.keys(); // once we read all actual range urvalues
     if (!m_readUpperRangeValueMachine.isRunning())
@@ -1101,7 +1110,7 @@ void cPower1ModuleMeasProgram::foutParamsToDsp()
     std::shared_ptr<MeasMode> mode = m_measModeSelector.getCurrMode();
     RangeMaxVals maxVals = calcMaxRangeValues(mode);
     double cfak = mode->getActiveMeasSysCount();
-    double constantImpulsePerWs = getConfData()->m_nNominalFrequency / (cfak * maxVals.maxU * maxVals.maxI);
+    double constantImpulsePerWs = m_pNominalFrequency->getValue().toDouble() / (cfak * maxVals.maxU * maxVals.maxI);
     bool isValidConstant = !isinf(constantImpulsePerWs);
     if (isValidConstant && getConfData()->m_nFreqOutputCount > 0) { // dsp-interface will crash for missing parts...
         QString datalist = "FREQSCALE:";
@@ -1242,6 +1251,13 @@ void cPower1ModuleMeasProgram::newQRefFrequency(QVariant frequency)
     setNominalPowerForQref();
     emit m_pModule->parameterChanged();
 }
+
+void cPower1ModuleMeasProgram::newNominalFrequency(QVariant frequency)
+{
+    getConfData()->m_nNominalFrequency.m_nValue = frequency.toInt();
+    emit m_pModule->parameterChanged();
+}
+
 
 void cPower1ModuleMeasProgram::updatePreScaling()
 {
