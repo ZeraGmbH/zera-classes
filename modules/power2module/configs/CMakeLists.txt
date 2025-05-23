@@ -1,13 +1,18 @@
 file(GLOB XML_CONFIGS
-    ${CMAKE_CURRENT_SOURCE_DIR}/*.xml
+    *.xml
 )
 
-add_custom_target(power2module-configs
-    SOURCES ${XML_CONFIGS}
+file(GLOB XSD_SCHEMA
+    ${CMAKE_CURRENT_SOURCE_DIR}/../lib/*.xsd
+    )
+file(TO_NATIVE_PATH ${XSD_SCHEMA} XSD_SCHEMA_ABS)
+
+add_custom_target(power2module-configs ALL
+    SOURCES ${XSD_SCHEMA} ${XML_CONFIGS}
+    COMMAND xmllint --noout --schema ${XSD_SCHEMA_ABS} ${XML_CONFIGS}
     )
 
 install(
     FILES ${XML_CONFIGS}
     DESTINATION ${SET_MODMAN_CONFIG_PATH}
     )
-
