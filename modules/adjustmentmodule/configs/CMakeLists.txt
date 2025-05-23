@@ -8,7 +8,6 @@ file(GLOB XSD_SCHEMA
 file(TO_NATIVE_PATH ${XSD_SCHEMA} XSD_SCHEMA_ABS)
 
 add_custom_target(adjustmentmodule-configs ALL
-    DEPENDS ${XSD_SCHEMA_ABS} ${XML_CONFIGS}
     SOURCES ${XSD_SCHEMA_ABS} ${XML_CONFIGS}
     COMMAND xmllint --noout --schema ${XSD_SCHEMA_ABS} ${XML_CONFIGS}
     )
