@@ -1,18 +1,23 @@
 file(GLOB XML_CONFIGS
-    ${CMAKE_CURRENT_SOURCE_DIR}/*.xml
-    ${CMAKE_CURRENT_SOURCE_DIR}/ced/*.xml
-    ${CMAKE_CURRENT_SOURCE_DIR}/emob/*.xml
-    ${CMAKE_CURRENT_SOURCE_DIR}/lem_dc/*.xml
-    ${CMAKE_CURRENT_SOURCE_DIR}/ref/*.xml
-    ${CMAKE_CURRENT_SOURCE_DIR}/perphase/*.xml
+    *.xml
+    ced/*.xml
+    emob/*.xml
+    lem_dc/*.xml
+    ref/*.xml
+    perphase/*.xml
 )
 
-add_custom_target(power1module-configs
-    SOURCES ${XML_CONFIGS}
+file(GLOB XSD_SCHEMA
+    ${CMAKE_CURRENT_SOURCE_DIR}/../lib/*.xsd
+    )
+file(TO_NATIVE_PATH ${XSD_SCHEMA} XSD_SCHEMA_ABS)
+
+add_custom_target(power1module-configs ALL
+    SOURCES ${XSD_SCHEMA} ${XML_CONFIGS}
+    COMMAND xmllint --noout --schema ${XSD_SCHEMA_ABS} ${XML_CONFIGS}
     )
 
 install(
     FILES ${XML_CONFIGS}
     DESTINATION ${SET_MODMAN_CONFIG_PATH}
     )
-
