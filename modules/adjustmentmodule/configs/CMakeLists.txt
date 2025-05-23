@@ -5,7 +5,7 @@ file(GLOB XML_CONFIGS
 file(GLOB XSD_SCHEMA
     ${CMAKE_CURRENT_SOURCE_DIR}/../lib/*.xsd
     )
-file(REAL_PATH ${XSD_SCHEMA} XSD_SCHEMA_ABS)
+file(TO_NATIVE_PATH ${XSD_SCHEMA} XSD_SCHEMA_ABS)
 
 add_custom_target(adjustmentmodule-configs ALL
     DEPENDS ${XSD_SCHEMA_ABS} ${XML_CONFIGS}
