@@ -1958,6 +1958,18 @@
                     "ChannelName": "Fout1",
                     "Description": "Frequency output constant"
                 },
+                "PAR_FOUT_NOMINAL_FREQ": {
+                    "Description": "Nominal frequency",
+                    "Unit": "Hz",
+                    "Validation": {
+                        "Data": [
+                            10000,
+                            200000,
+                            1
+                        ],
+                        "Type": "INTEGER"
+                    }
+                },
                 "PAR_Interval": {
                     "Description": "Integration time",
                     "Unit": "s",
@@ -2085,6 +2097,7 @@
         },
         "PAR_FOUT0": "fOUT",
         "PAR_FOUTConstant0": 96000000,
+        "PAR_FOUT_NOMINAL_FREQ": 200000,
         "PAR_Interval": 1,
         "PAR_MeasModePhaseSelect": "111",
         "PAR_MeasuringMode": "4LW",
@@ -2148,6 +2161,18 @@
                 "PAR_FOUTConstant0": {
                     "ChannelName": "Fout2",
                     "Description": "Frequency output constant"
+                },
+                "PAR_FOUT_NOMINAL_FREQ": {
+                    "Description": "Nominal frequency",
+                    "Unit": "Hz",
+                    "Validation": {
+                        "Data": [
+                            10000,
+                            200000,
+                            1
+                        ],
+                        "Type": "INTEGER"
+                    }
                 },
                 "PAR_Interval": {
                     "Description": "Integration time",
@@ -2276,6 +2301,7 @@
         },
         "PAR_FOUT0": "",
         "PAR_FOUTConstant0": 96000000,
+        "PAR_FOUT_NOMINAL_FREQ": 200000,
         "PAR_Interval": 1,
         "PAR_MeasModePhaseSelect": "111",
         "PAR_MeasuringMode": "4LB",
@@ -2339,6 +2365,18 @@
                 "PAR_FOUTConstant0": {
                     "ChannelName": "Fout3",
                     "Description": "Frequency output constant"
+                },
+                "PAR_FOUT_NOMINAL_FREQ": {
+                    "Description": "Nominal frequency",
+                    "Unit": "Hz",
+                    "Validation": {
+                        "Data": [
+                            10000,
+                            200000,
+                            1
+                        ],
+                        "Type": "INTEGER"
+                    }
                 },
                 "PAR_Interval": {
                     "Description": "Integration time",
@@ -2467,6 +2505,7 @@
         },
         "PAR_FOUT0": "",
         "PAR_FOUTConstant0": 96000000,
+        "PAR_FOUT_NOMINAL_FREQ": 200000,
         "PAR_Interval": 1,
         "PAR_MeasModePhaseSelect": "111",
         "PAR_MeasuringMode": "4LS",
@@ -2524,6 +2563,18 @@
                 "INF_ModuleInterface": {
                     "Description": "Module's interface details"
                 },
+                "PAR_FOUT_NOMINAL_FREQ": {
+                    "Description": "Nominal frequency",
+                    "Unit": "Hz",
+                    "Validation": {
+                        "Data": [
+                            10000,
+                            200000,
+                            1
+                        ],
+                        "Type": "INTEGER"
+                    }
+                },
                 "PAR_Interval": {
                     "Description": "Integration time",
                     "Unit": "s",
@@ -2571,6 +2622,7 @@
                 "Name": "POW98"
             }
         },
+        "PAR_FOUT_NOMINAL_FREQ": 200000,
         "PAR_Interval": 1,
         "PAR_MeasModePhaseSelect": "111",
         "PAR_MeasuringMode": "4LB",
@@ -2628,6 +2680,18 @@
                 "INF_ModuleInterface": {
                     "Description": "Module's interface details"
                 },
+                "PAR_FOUT_NOMINAL_FREQ": {
+                    "Description": "Nominal frequency",
+                    "Unit": "Hz",
+                    "Validation": {
+                        "Data": [
+                            10000,
+                            200000,
+                            1
+                        ],
+                        "Type": "INTEGER"
+                    }
+                },
                 "PAR_Interval": {
                     "Description": "Integration time",
                     "Unit": "s",
@@ -2675,6 +2739,7 @@
                 "Name": "POW99"
             }
         },
+        "PAR_FOUT_NOMINAL_FREQ": 200000,
         "PAR_Interval": 1,
         "PAR_MeasModePhaseSelect": "111",
         "PAR_MeasuringMode": "4LS",

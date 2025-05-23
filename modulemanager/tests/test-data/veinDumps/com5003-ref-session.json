@@ -1127,6 +1127,18 @@
                     "ChannelName": "Fout1",
                     "Description": "Frequency output constant"
                 },
+                "PAR_FOUT_NOMINAL_FREQ": {
+                    "Description": "Nominal frequency",
+                    "Unit": "Hz",
+                    "Validation": {
+                        "Data": [
+                            10000,
+                            200000,
+                            1
+                        ],
+                        "Type": "INTEGER"
+                    }
+                },
                 "PAR_Interval": {
                     "Description": "Integration time",
                     "Unit": "s",
@@ -1246,6 +1258,7 @@
         },
         "PAR_FOUT0": "fOUT1",
         "PAR_FOUTConstant0": 12000000000,
+        "PAR_FOUT_NOMINAL_FREQ": 1000000,
         "PAR_Interval": 1,
         "PAR_MeasModePhaseSelect": "111",
         "PAR_MeasuringMode": "QREF",
