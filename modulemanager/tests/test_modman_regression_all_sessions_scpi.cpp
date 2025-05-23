@@ -13,10 +13,6 @@ void test_modman_regression_all_sessions_scpi::initTestCase()
     TimerFactoryQtForTest::enableTest();
     TestModuleManager::enableTests();
 
-    // As long as we have no build time test in zera-classes (see zenux-services)
-    // this is the test for all XML/XSD.
-    Zera::XMLConfig::cReader::activateSchemaValidation(true);
-
     // TODO on lambdamodule: With fixed values lambdamodule causes empty SCPI return
     // TODO on SCPI: With fixed values SCPI can return just semicolons
     m_serviceInterfaceFactory = std::make_shared<DemoFactoryServiceInterfaces>(DemoFactoryServiceInterfaces::ReproducableChangeValues);
