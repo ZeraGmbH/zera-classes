@@ -71,6 +71,9 @@ QByteArray cPower1ModuleConfiguration::exportConfiguration()
     dPar = &m_pPower1ModulConfigData->m_qrefFrequency;
     m_pXMLReader->setValue(dPar->m_sKey, QString("%1").arg(dPar->m_fValue));
 
+    iPar = &m_pPower1ModulConfigData->m_nNominalFrequency;
+    m_pXMLReader->setValue(iPar->m_sKey, QString("%1").arg(iPar->m_nValue));
+
     return m_pXMLReader->getXMLConfig().toUtf8();
 }
 
@@ -123,7 +126,8 @@ void cPower1ModuleConfiguration::configXMLInfo(QString key)
             m_pPower1ModulConfigData->m_fmovingwindowInterval = m_pXMLReader->getValue(key).toDouble(&ok);
             break;
         case setNominalFrequency:
-            m_pPower1ModulConfigData->m_nNominalFrequency = m_pXMLReader->getValue(key).toInt(&ok);
+            m_pPower1ModulConfigData->m_nNominalFrequency.m_sKey = key;
+            m_pPower1ModulConfigData->m_nNominalFrequency.m_nValue = m_pXMLReader->getValue(key).toInt(&ok);
             break;
         case setFrequencyActualizationMode:
             m_pPower1ModulConfigData->m_sFreqActualizationMode = m_pXMLReader->getValue(key);
