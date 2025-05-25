@@ -9,7 +9,6 @@ file(GLOB HEADER
     )
 
 add_library(rangemodule-static STATIC
-    rangemodulexmlschema.qrc
     ${SOURCES}
     ${HEADER}
 )

@@ -16,6 +16,7 @@ void test_range_config_load::fileFound()
 void test_range_config_load::allFilesLoaded()
 {
     const QFileInfoList fileList = QDir(QStringLiteral(CONFIG_SOURCES_RANGEMODULE)).entryInfoList(QStringList() << "*.xml");
+    QVERIFY(!fileList.isEmpty());
     for(const auto &fileInfo : fileList) {
         QFile configFile(fileInfo.absoluteFilePath());
         qInfo("Load %s...", qPrintable(configFile.fileName()));

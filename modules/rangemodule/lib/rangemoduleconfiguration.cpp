@@ -5,18 +5,11 @@
 #include "rangemoduleconfiguration.h"
 #include "rangemoduleconfigdata.h"
 
-static void initResource()
-{
-    Q_INIT_RESOURCE(rangemodulexmlschema);
-}
-
 namespace RANGEMODULE
 {
 
 cRangeModuleConfiguration::cRangeModuleConfiguration()
 {
-    initResource();
-    m_pRangeModulConfigData = 0;
     connect(m_pXMLReader, &Zera::XMLConfig::cReader::valueChanged, this, &cRangeModuleConfiguration::configXMLInfo);
     connect(m_pXMLReader, &Zera::XMLConfig::cReader::finishedParsingXML, this, &cRangeModuleConfiguration::completeConfiguration);
 }

@@ -55,7 +55,7 @@ protected slots:
     virtual void completeConfiguration(bool ok);
 
 private:
-    cRangeModuleConfigData *m_pRangeModulConfigData;  // configuration
+    cRangeModuleConfigData *m_pRangeModulConfigData = nullptr;  // configuration
 };
 
 }
