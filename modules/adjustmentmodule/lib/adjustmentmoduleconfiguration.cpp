@@ -2,8 +2,6 @@
 #include "adjustmentmoduleconfigdata.h"
 #include <xmlconfigreader.h>
 
-static const char* defaultXSDFile = "://adjustmentmodule.xsd";
-
 static void initResource()
 {
     Q_INIT_RESOURCE(adjustmentmodulexmlschema);
@@ -26,11 +24,6 @@ cAdjustmentModuleConfiguration::~cAdjustmentModuleConfiguration()
 
 void cAdjustmentModuleConfiguration::setConfiguration(QByteArray xmlString)
 {
-    validateAndSetConfig(xmlString, defaultXSDFile);
-}
-
-void cAdjustmentModuleConfiguration::validateAndSetConfig(QByteArray xmlString, QString xsdFilename)
-{
     m_bConfigured = m_bConfigError = false;
 
     if (m_pAdjustmentModulConfigData) delete m_pAdjustmentModulConfigData;
@@ -49,11 +42,7 @@ void cAdjustmentModuleConfiguration::validateAndSetConfig(QByteArray xmlString, 
     m_ConfigXMLMap["adjmodconfpar:configuration:adjustment:channel:n"] = setChannelCount;
     // rest of hash table is initialized dynamically depending on channel count
 
-    if (m_pXMLReader->loadSchema(xsdFilename))
-        m_pXMLReader->loadXMLFromString(QString::fromUtf8(xmlString.data(), xmlString.size()));
-    else
-        m_bConfigError = true;
-
+    m_pXMLReader->loadXMLFromString(QString::fromUtf8(xmlString.data(), xmlString.size()));
 }
 
 

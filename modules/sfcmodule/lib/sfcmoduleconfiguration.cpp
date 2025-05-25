@@ -12,8 +12,6 @@ static void initResource()
 
 namespace SFCMODULE
 {
-static const char *defaultXSDFile = "://sfcmodule.xsd";
-
 cSfcModuleConfiguration::cSfcModuleConfiguration()
 {
     initResource();
@@ -43,10 +41,7 @@ void cSfcModuleConfiguration::setConfiguration(QByteArray xmlString)
     m_ConfigXMLMap["sfcmodconfpar:configuration:measure:dutinput:n"] = setDutInputCount;
     m_ConfigXMLMap["sfcmodconfpar:parameter:measure:dutinput"] = setDutInputPar;
 
-    if (m_pXMLReader->loadSchema(defaultXSDFile))
-        m_pXMLReader->loadXMLFromString(QString::fromUtf8(xmlString.data(), xmlString.size()));
-    else
-        m_bConfigError = true;
+    m_pXMLReader->loadXMLFromString(QString::fromUtf8(xmlString.data(), xmlString.size()));
 }
 
 QByteArray cSfcModuleConfiguration::exportConfiguration()

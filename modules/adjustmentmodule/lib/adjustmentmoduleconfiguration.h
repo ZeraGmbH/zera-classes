@@ -54,7 +54,6 @@ protected slots:
 private slots:
     void completeConfiguration(bool ok);
 private:
-    void validateAndSetConfig(QByteArray xmlString, QString xsdFilename);
     cAdjustmentModuleConfigData *m_pAdjustmentModulConfigData;  // configuration
 };
 

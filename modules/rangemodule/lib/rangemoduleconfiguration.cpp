@@ -54,10 +54,7 @@ void cRangeModuleConfiguration::setConfiguration(QByteArray xmlString)
     m_ConfigXMLMap["rangemodconfpar:parameter:sense:grouping"] = setGrouping;
     m_ConfigXMLMap["rangemodconfpar:parameter:sense:rangeauto"] = setRangeAutomatic;
 
-    if (m_pXMLReader->loadSchema(defaultXSDFile))
-        m_pXMLReader->loadXMLFromString(QString::fromUtf8(xmlString.data(), xmlString.size()));
-    else
-        m_bConfigError = true;
+    m_pXMLReader->loadXMLFromString(QString::fromUtf8(xmlString.data(), xmlString.size()));
 }
 
 

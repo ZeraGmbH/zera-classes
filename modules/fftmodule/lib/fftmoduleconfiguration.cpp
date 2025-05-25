@@ -9,8 +9,6 @@ static void initResource()
 
 namespace FFTMODULE
 {
-static const char* defaultXSDFile = "://fftmodule.xsd";
-
 cFftModuleConfiguration::cFftModuleConfiguration()
 {
     initResource();
@@ -46,10 +44,7 @@ void cFftModuleConfiguration::setConfiguration(QByteArray xmlString)
     m_ConfigXMLMap["fftmodconfpar:parameter:refchannel"] = setRefChannel;
     m_ConfigXMLMap["fftmodconfpar:parameter:interval"] = setMeasureInterval;
 
-    if (m_pXMLReader->loadSchema(defaultXSDFile))
-        m_pXMLReader->loadXMLFromString(QString::fromUtf8(xmlString.data(), xmlString.size()));
-    else
-        m_bConfigError = true;
+    m_pXMLReader->loadXMLFromString(QString::fromUtf8(xmlString.data(), xmlString.size()));
 }
 
 

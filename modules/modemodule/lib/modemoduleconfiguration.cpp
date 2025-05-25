@@ -42,10 +42,7 @@ void cModeModuleConfiguration::setConfiguration(QByteArray xmlString)
     m_ConfigXMLMap["modemodconfpar:configuration:dsp:sampling:signalperiod"] = setSamplingSigPeriod;
     m_ConfigXMLMap["modemodconfpar:configuration:dsp:sampling:measureperiod"] = setSamplingMeasPeriod;
 
-    if (m_pXMLReader->loadSchema(defaultXSDFile))
-        m_pXMLReader->loadXMLFromString(QString::fromUtf8(xmlString.data(), xmlString.size()));
-    else
-        m_bConfigError = true;
+    m_pXMLReader->loadXMLFromString(QString::fromUtf8(xmlString.data(), xmlString.size()));
 }
 
 

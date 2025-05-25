@@ -48,10 +48,7 @@ void cTransformer1ModuleConfiguration::setConfiguration(QByteArray xmlString)
     m_ConfigXMLMap["trf1modconfpar:parameter:primdut"] = setPrimDut;
     m_ConfigXMLMap["trf1modconfpar:parameter:secdut"] = setSecDut;
 
-    if (m_pXMLReader->loadSchema(defaultXSDFile))
-        m_pXMLReader->loadXMLFromString(QString::fromUtf8(xmlString.data(), xmlString.size()));
-    else
-        m_bConfigError = true;
+    m_pXMLReader->loadXMLFromString(QString::fromUtf8(xmlString.data(), xmlString.size()));
 }
 
 

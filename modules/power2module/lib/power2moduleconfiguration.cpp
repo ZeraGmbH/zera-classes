@@ -10,9 +10,6 @@ static void initResource()
 
 namespace POWER2MODULE
 {
-
-static const char* defaultXSDFile = "://power2module.xsd";
-
 cPower2ModuleConfiguration::cPower2ModuleConfiguration()
 {
     initResource();
@@ -27,11 +24,6 @@ cPower2ModuleConfiguration::~cPower2ModuleConfiguration()
 }
 
 void cPower2ModuleConfiguration::setConfiguration(QByteArray xmlString)
-{
-    validateAndSetConfig(xmlString, defaultXSDFile);
-}
-
-void POWER2MODULE::cPower2ModuleConfiguration::validateAndSetConfig(QByteArray xmlString, QString xsdFilename)
 {
     m_bConfigured = m_bConfigError = false;
 
@@ -61,10 +53,7 @@ void POWER2MODULE::cPower2ModuleConfiguration::validateAndSetConfig(QByteArray x
     m_ConfigXMLMap["pow2modconfpar:parameter:interval:time"] = setMeasureIntervalTime;
     m_ConfigXMLMap["pow2modconfpar:parameter:interval:period"] = setMeasureIntervalPeriod;
 
-    if (m_pXMLReader->loadSchema(xsdFilename))
-        m_pXMLReader->loadXMLFromString(QString::fromUtf8(xmlString.data(), xmlString.size()));
-    else
-        m_bConfigError = true;
+    m_pXMLReader->loadXMLFromString(QString::fromUtf8(xmlString.data(), xmlString.size()));
 }
 
 QByteArray cPower2ModuleConfiguration::exportConfiguration()

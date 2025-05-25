@@ -9,8 +9,6 @@ static void initResource()
 
 namespace REFERENCEMODULE
 {
-static const char* defaultXSDFile = "://referencemodule.xsd";
-
 cReferenceModuleConfiguration::cReferenceModuleConfiguration()
 {
     initResource();
@@ -42,10 +40,7 @@ void cReferenceModuleConfiguration::setConfiguration(QByteArray xmlString)
     m_ConfigXMLMap["referencemodconfpar:configuration:measure:interval"] = setMeasureInterval;
     m_ConfigXMLMap["referencemodconfpar:configuration:measure:ignore"] = setMeasureIgnore;
 
-    if (m_pXMLReader->loadSchema(defaultXSDFile))
-        m_pXMLReader->loadXMLFromString(QString::fromUtf8(xmlString.data(), xmlString.size()));
-    else
-        m_bConfigError = true;
+    m_pXMLReader->loadXMLFromString(QString::fromUtf8(xmlString.data(), xmlString.size()));
 }
 
 

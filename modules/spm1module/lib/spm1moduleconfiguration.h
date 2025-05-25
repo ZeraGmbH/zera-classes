@@ -35,8 +35,6 @@ enum moduleconfigstate
 
 class cSpm1ModuleConfigData;
 
-const QString defaultXSDFile = "://spm1module.xsd";
-
 // spm1moduleconfiguration holds configuration data as well as parameter
 
 class cSpm1ModuleConfiguration: public BaseModuleConfiguration

@@ -10,8 +10,6 @@ static void initResource()
 
 namespace STATUSMODULE
 {
-static const char* defaultXSDFile = "://statusmodule.xsd";
-
 cStatusModuleConfiguration::cStatusModuleConfiguration()
 {
     initResource();
@@ -28,11 +26,6 @@ cStatusModuleConfiguration::~cStatusModuleConfiguration()
 
 void cStatusModuleConfiguration::setConfiguration(QByteArray xmlString)
 {
-    validateAndSetConfig(xmlString, defaultXSDFile);
-}
-
-void STATUSMODULE::cStatusModuleConfiguration::validateAndSetConfig(QByteArray xmlString, QString xsdFilename)
-{
     m_bConfigured = m_bConfigError = false;
 
     if (m_pStatusModulConfigData) delete m_pStatusModulConfigData;
@@ -44,10 +37,7 @@ void STATUSMODULE::cStatusModuleConfiguration::validateAndSetConfig(QByteArray x
     // initializing hash table for xml configuration
     m_ConfigXMLMap["statusmodconfpar:configuration:accumulator"] = setAccumulator;
 
-    if (m_pXMLReader->loadSchema(xsdFilename))
-        m_pXMLReader->loadXMLFromString(QString::fromUtf8(xmlString.data(), xmlString.size()));
-    else
-        m_bConfigError = true;
+    m_pXMLReader->loadXMLFromString(QString::fromUtf8(xmlString.data(), xmlString.size()));
 }
 
 QByteArray cStatusModuleConfiguration::exportConfiguration()

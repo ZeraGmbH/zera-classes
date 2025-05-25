@@ -12,8 +12,6 @@ static void initResource()
 
 namespace APIMODULE
 {
-    static const char *defaultXSDFile = "://apimodule.xsd";
-
     cApiModuleConfiguration::cApiModuleConfiguration()
     {
         initResource();
@@ -40,10 +38,7 @@ namespace APIMODULE
         // so now we can set up
         // initializing hash table for xml configuration
 
-        if (m_pXMLReader->loadSchema(defaultXSDFile))
-            m_pXMLReader->loadXMLFromString(QString::fromUtf8(xmlString.data(), xmlString.size()));
-        else
-            m_bConfigError = true;
+        m_pXMLReader->loadXMLFromString(QString::fromUtf8(xmlString.data(), xmlString.size()));
     }
 
     QByteArray cApiModuleConfiguration::exportConfiguration()

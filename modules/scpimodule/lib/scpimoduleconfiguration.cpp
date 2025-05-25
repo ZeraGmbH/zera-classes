@@ -9,8 +9,6 @@ static void initResource()
 
 namespace SCPIMODULE
 {
-static const char *defaultXSDFile = "://scpimodule.xsd";
-
 cSCPIModuleConfiguration::cSCPIModuleConfiguration()
 {
     initResource();
@@ -25,11 +23,6 @@ cSCPIModuleConfiguration::~cSCPIModuleConfiguration()
 }
 
 void cSCPIModuleConfiguration::setConfiguration(QByteArray xmlString)
-{
-    validateAndSetConfig(xmlString, defaultXSDFile);
-}
-
-void cSCPIModuleConfiguration::validateAndSetConfig(QByteArray xmlString, QString xsdFilename)
 {
     m_bConfigured = m_bConfigError = false;
 
@@ -56,10 +49,7 @@ void cSCPIModuleConfiguration::validateAndSetConfig(QByteArray xmlString, QStrin
     m_ConfigXMLMap["scpimodconfpar:configuration:connectivity:status:operationmeasure:n"] = setOperationMeasureStatusBitCount;
     m_ConfigXMLMap["scpimodconfpar:configuration:scpiqueue"] = setScpiQueue;
 
-    if (m_pXMLReader->loadSchema(xsdFilename))
-        m_pXMLReader->loadXMLFromString(QString::fromUtf8(xmlString.data(), xmlString.size()));
-    else
-        m_bConfigError = true;
+    m_pXMLReader->loadXMLFromString(QString::fromUtf8(xmlString.data(), xmlString.size()));
 }
 
 

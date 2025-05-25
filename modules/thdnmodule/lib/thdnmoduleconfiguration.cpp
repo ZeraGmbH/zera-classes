@@ -9,8 +9,6 @@ static void initResource()
 
 namespace THDNMODULE
 {
-static const char* defaultXSDFile = "://thdnmodule.xsd";
-
 cThdnModuleConfiguration::cThdnModuleConfiguration()
 {
     initResource();
@@ -44,10 +42,7 @@ void cThdnModuleConfiguration::setConfiguration(QByteArray xmlString)
 
     m_ConfigXMLMap["thdnmodconfpar:parameter:interval"] = setMeasureInterval;
 
-    if (m_pXMLReader->loadSchema(defaultXSDFile))
-        m_pXMLReader->loadXMLFromString(QString::fromUtf8(xmlString.data(), xmlString.size()));
-    else
-        m_bConfigError = true;
+    m_pXMLReader->loadXMLFromString(QString::fromUtf8(xmlString.data(), xmlString.size()));
 }
 
 

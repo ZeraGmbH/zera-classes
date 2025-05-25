@@ -9,8 +9,6 @@ static void initResource()
 
 namespace SAMPLEMODULE
 {
-static const char* defaultXSDFile = "://samplemodule.xsd";
-
 cSampleModuleConfiguration::cSampleModuleConfiguration()
 {
     initResource();
@@ -50,10 +48,7 @@ void cSampleModuleConfiguration::setConfiguration(QByteArray xmlString)
     m_ConfigXMLMap["samplemodconfpar:parameter:sample:pllauto"] = setPllAutomatic;
     m_ConfigXMLMap["samplemodconfpar:parameter:sample:pllchannel"] = setPllChannel;
 
-    if (m_pXMLReader->loadSchema(defaultXSDFile))
-        m_pXMLReader->loadXMLFromString(QString::fromUtf8(xmlString.data(), xmlString.size()));
-    else
-        m_bConfigError = true;
+    m_pXMLReader->loadXMLFromString(QString::fromUtf8(xmlString.data(), xmlString.size()));
 }
 
 

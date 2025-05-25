@@ -10,8 +10,6 @@ static void initResource()
 namespace BURDEN1MODULE
 {
 
-static const char* defaultXSDFile = "://burden1module.xsd";
-
 cBurden1ModuleConfiguration::cBurden1ModuleConfiguration()
 {
     initResource();
@@ -47,10 +45,7 @@ void cBurden1ModuleConfiguration::setConfiguration(QByteArray xmlString)
     m_ConfigXMLMap["brd1modconfpar:parameter:wirelength"] = setWireLength;
     m_ConfigXMLMap["brd1modconfpar:parameter:wirecrosssection"] = setWireCrosssection;
 
-    if (m_pXMLReader->loadSchema(defaultXSDFile))
-        m_pXMLReader->loadXMLFromString(QString::fromUtf8(xmlString.data(), xmlString.size()));
-    else
-        m_bConfigError = true;
+    m_pXMLReader->loadXMLFromString(QString::fromUtf8(xmlString.data(), xmlString.size()));
 }
 
 QByteArray cBurden1ModuleConfiguration::exportConfiguration()

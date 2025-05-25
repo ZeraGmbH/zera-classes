@@ -54,10 +54,7 @@ void cSec1ModuleConfiguration::setConfiguration(QByteArray xmlString)
     m_ConfigXMLMap["sec1modconfpar:parameter:measure:lowerlimit"] = setLowerLimit;
     m_ConfigXMLMap["sec1modconfpar:parameter:measure:resultunit"] = setResultUnit;
 
-    if (m_pXMLReader->loadSchema(defaultXSDFile))
-        m_pXMLReader->loadXMLFromString(QString::fromUtf8(xmlString.data(), xmlString.size()));
-    else
-        m_bConfigError = true;
+    m_pXMLReader->loadXMLFromString(QString::fromUtf8(xmlString.data(), xmlString.size()));
 }
 
 

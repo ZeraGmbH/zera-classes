@@ -33,8 +33,6 @@ enum moduleconfigstate
 
 class cTransformer1ModuleConfigData;
 
-const QString defaultXSDFile = "://transformer1module.xsd";
-
 // moduleconfiguration holds configuration data as well as parameter
 
 class cTransformer1ModuleConfiguration: public BaseModuleConfiguration

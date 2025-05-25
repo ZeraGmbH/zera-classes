@@ -40,10 +40,7 @@ void cPower3ModuleConfiguration::setConfiguration(QByteArray xmlString)
     m_ConfigXMLMap["pow3modconfpar:configuration:measure:inputentity"] = setInputModule;
     m_ConfigXMLMap["pow3modconfpar:configuration:measure:system:n"] = setSystemCount;
 
-    if (m_pXMLReader->loadSchema(defaultXSDFile))
-        m_pXMLReader->loadXMLFromString(QString::fromUtf8(xmlString.data(), xmlString.size()));
-    else
-        m_bConfigError = true;
+    m_pXMLReader->loadXMLFromString(QString::fromUtf8(xmlString.data(), xmlString.size()));
 }
 
 

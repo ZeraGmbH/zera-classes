@@ -9,8 +9,6 @@ static void initResource()
 
 namespace OSCIMODULE
 {
-static const char* defaultXSDFile = "://oscimodule.xsd";
-
 cOsciModuleConfiguration::cOsciModuleConfiguration()
 {
     initResource();
@@ -44,10 +42,7 @@ void cOsciModuleConfiguration::setConfiguration(QByteArray xmlString)
 
     m_ConfigXMLMap["oscimodconfpar:parameter:refchannel"] = setRefChannel;
 
-    if (m_pXMLReader->loadSchema(defaultXSDFile))
-        m_pXMLReader->loadXMLFromString(QString::fromUtf8(xmlString.data(), xmlString.size()));
-    else
-        m_bConfigError = true;
+    m_pXMLReader->loadXMLFromString(QString::fromUtf8(xmlString.data(), xmlString.size()));
 }
 
 

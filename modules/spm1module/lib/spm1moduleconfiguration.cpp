@@ -48,10 +48,7 @@ void cSpm1ModuleConfiguration::setConfiguration(QByteArray xmlString)
     m_ConfigXMLMap["spm1modconfpar:parameter:measure:upperlimit"] = setUpperLimit;
     m_ConfigXMLMap["spm1modconfpar:parameter:measure:lowerlimit"] = setLowerLimit;
 
-    if (m_pXMLReader->loadSchema(defaultXSDFile))
-        m_pXMLReader->loadXMLFromString(QString::fromUtf8(xmlString.data(), xmlString.size()));
-    else
-        m_bConfigError = true;
+    m_pXMLReader->loadXMLFromString(QString::fromUtf8(xmlString.data(), xmlString.size()));
 }
 
 

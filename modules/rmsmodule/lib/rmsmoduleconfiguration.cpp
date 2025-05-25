@@ -9,8 +9,6 @@ static void initResource()
 
 namespace RMSMODULE
 {
-static const char* defaultXSDFile = "://rmsmodule.xsd";
-
 cRmsModuleConfiguration::cRmsModuleConfiguration()
 {
     initResource();
@@ -46,10 +44,7 @@ void cRmsModuleConfiguration::setConfiguration(QByteArray xmlString)
     m_ConfigXMLMap["rmsmodconfpar:parameter:interval:time"] = setMeasureIntervalTime;
     m_ConfigXMLMap["rmsmodconfpar:parameter:interval:period"] = setMeasureIntervalPeriod;
 
-    if (m_pXMLReader->loadSchema(defaultXSDFile))
-        m_pXMLReader->loadXMLFromString(QString::fromUtf8(xmlString.data(), xmlString.size()));
-    else
-        m_bConfigError = true;
+    m_pXMLReader->loadXMLFromString(QString::fromUtf8(xmlString.data(), xmlString.size()));
 }
 
 

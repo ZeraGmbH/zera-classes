@@ -12,8 +12,6 @@ static void initResource()
 
 namespace BLEMODULE
 {
-static const char* defaultXSDFile = "://blemodule.xsd";
-
 cBleModuleConfiguration::cBleModuleConfiguration()
 {
     initResource();
@@ -43,10 +41,7 @@ void cBleModuleConfiguration::setConfiguration(QByteArray xmlString)
     m_ConfigXMLMap["blemodconfpar:parameter:bluetoothon"] = setBluetoothOn;
     m_ConfigXMLMap["blemodconfpar:parameter:macaddress"] = setMacAddress;
 
-    if (m_pXMLReader->loadSchema(defaultXSDFile))
-        m_pXMLReader->loadXMLFromString(QString::fromUtf8(xmlString.data(), xmlString.size()));
-    else
-        m_bConfigError = true;
+    m_pXMLReader->loadXMLFromString(QString::fromUtf8(xmlString.data(), xmlString.size()));
 }
 
 

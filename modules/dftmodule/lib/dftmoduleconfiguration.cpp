@@ -9,8 +9,6 @@ static void initResource()
 
 namespace DFTMODULE
 {
-static const char* defaultXSDFile = "://dftmodule.xsd";
-
 
 cDftModuleConfiguration::cDftModuleConfiguration()
 {
@@ -51,10 +49,7 @@ void cDftModuleConfiguration::setConfiguration(QByteArray xmlString)
     m_ConfigXMLMap["dftmodconfpar:parameter:interval"] = setMeasureInterval;
     m_ConfigXMLMap["dftmodconfpar:parameter:refchannel"] = setRefChannel;
 
-    if (m_pXMLReader->loadSchema(defaultXSDFile))
-        m_pXMLReader->loadXMLFromString(QString::fromUtf8(xmlString.data(), xmlString.size()));
-    else
-        m_bConfigError = true;
+    m_pXMLReader->loadXMLFromString(QString::fromUtf8(xmlString.data(), xmlString.size()));
 }
 
 

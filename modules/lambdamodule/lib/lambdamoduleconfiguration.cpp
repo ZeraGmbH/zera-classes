@@ -9,8 +9,6 @@ static void initResource()
 
 namespace LAMBDAMODULE
 {
-static const char* defaultXSDFile = "://lambdamodule.xsd";
-
 cLambdaModuleConfiguration::cLambdaModuleConfiguration()
 {
     initResource();
@@ -44,10 +42,7 @@ void cLambdaModuleConfiguration::setConfiguration(QByteArray xmlString)
     m_ConfigXMLMap["lambdamodconfpar:configuration:measure:activepmeasmode:componentmeasmodephase"] = setActivePMeasModePhaseSelectComponent;
     m_ConfigXMLMap["lambdamodconfpar:configuration:measure:system:n"] = setSystemCount;
 
-    if (m_pXMLReader->loadSchema(defaultXSDFile))
-        m_pXMLReader->loadXMLFromString(QString::fromUtf8(xmlString.data(), xmlString.size()));
-    else
-        m_bConfigError = true;
+    m_pXMLReader->loadXMLFromString(QString::fromUtf8(xmlString.data(), xmlString.size()));
 }
 
 
