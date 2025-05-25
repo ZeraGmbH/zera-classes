@@ -7,7 +7,6 @@ file(GLOB HEADER
     )
 
 add_library(modemodule-static STATIC
-    modemodulexmlschema.qrc
     ${SOURCES}
     ${HEADER}
 )

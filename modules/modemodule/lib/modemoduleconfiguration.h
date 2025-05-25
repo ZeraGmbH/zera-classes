@@ -40,7 +40,7 @@ protected slots:
     virtual void completeConfiguration(bool ok);
 
 private:
-    cModeModuleConfigData *m_pModeModulConfigData;  // configuration
+    cModeModuleConfigData *m_pModeModulConfigData = nullptr;  // configuration
 };
 
 }
