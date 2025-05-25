@@ -50,7 +50,7 @@ protected slots:
     virtual void completeConfiguration(bool ok);
 
 private:
-    cTransformer1ModuleConfigData *m_pTransformer1ModulConfigData;  // configuration
+    cTransformer1ModuleConfigData *m_pTransformer1ModulConfigData = nullptr;  // configuration
 };
 
 }

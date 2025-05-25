@@ -7,7 +7,6 @@ file(GLOB HEADER
     )
 
 add_library(transformer1module-static STATIC
-    transformer1modulexmlschema.qrc
     ${SOURCES}
     ${HEADER}
 )
