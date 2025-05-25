@@ -13,19 +13,25 @@ void test_adjustment_config_load::fileFound()
     QVERIFY(tmpXmlConfigFile.exists());
 }
 
-void test_adjustment_config_load::fileLoaded()
+void test_adjustment_config_load::allFilesLoaded()
 {
-    QFile tmpXmlConfigFile(QStringLiteral(CONFIG_SOURCES_ADJUSTMENTMODULE) + "/" + "com5003-adjustmentmodule.xml");
-    QVERIFY(tmpXmlConfigFile.open(QIODevice::Unbuffered | QIODevice::ReadOnly));
-    std::unique_ptr<cAdjustmentModuleConfiguration> conf = std::make_unique<cAdjustmentModuleConfiguration>();
-    conf->setConfiguration(tmpXmlConfigFile.readAll());
-
-    QCOMPARE(conf->isConfigured(), true);
+    const QFileInfoList fileList = QDir(QStringLiteral(CONFIG_SOURCES_APIMODULE)).entryInfoList(QStringList() << "*.xml");
+    QVERIFY(!fileList.isEmpty());
+    for (const auto &fileInfo : fileList)
+    {
+        QFile configFile(fileInfo.absoluteFilePath());
+        qInfo("Load %s...", qPrintable(configFile.fileName()));
+        QVERIFY(configFile.open(QIODevice::Unbuffered | QIODevice::ReadOnly));
+        cAdjustmentModuleConfiguration conf;
+        conf.setConfiguration(configFile.readAll());
+        QVERIFY(conf.isConfigured());
+    }
 }
 
 void test_adjustment_config_load::writtenXmlIsStillValid()
 {
     const QFileInfoList fileList = QDir(QStringLiteral(CONFIG_SOURCES_ADJUSTMENTMODULE)).entryInfoList(QStringList() << "*.xml");
+    QVERIFY(!fileList.isEmpty());
     bool allOk = true;
     for(const auto &fileInfo : fileList) {
         QByteArray xmlConfOrig = TestLogHelpers::loadFile(fileInfo.absoluteFilePath());

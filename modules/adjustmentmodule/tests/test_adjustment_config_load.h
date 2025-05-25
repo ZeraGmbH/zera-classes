@@ -8,7 +8,7 @@ class test_adjustment_config_load : public QObject
     Q_OBJECT
 private slots:
     void fileFound();
-    void fileLoaded();
+    void allFilesLoaded();
     void writtenXmlIsStillValid();
 };
 
