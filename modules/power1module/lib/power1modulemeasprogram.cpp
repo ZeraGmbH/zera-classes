@@ -198,10 +198,9 @@ void cPower1ModuleMeasProgram::stop()
 void cPower1ModuleMeasProgram::generateVeinInterface()
 {
     QString key;
-    VfModuleComponent *pActvalue;
     for (int i = 0; i < MeasPhaseCount+SumValueCount; i++) {
         QString strDescription = getPhasePowerDescription(i);
-        pActvalue = new VfModuleComponent(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
+        VfModuleComponent *pActvalue = new VfModuleComponent(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
                                             QString("ACT_PQS%1").arg(i+1),
                                             strDescription);
         m_veinActValueList.append(pActvalue); // we add the component for our measurement
@@ -375,7 +374,7 @@ MeasSystemChannels cPower1ModuleMeasProgram::getMeasChannelUIPairs()
 {
     ChannelRangeObserver::SystemObserverPtr observer = m_pModule->getSharedChannelRangeObserver();
     MeasSystemChannels measChannelUIPairList;
-    for(const auto &measChannelPair : getConfData()->m_sMeasSystemList) {
+    for(const auto &measChannelPair : qAsConst(getConfData()->m_sMeasSystemList)) {
         QStringList channelPairSplit = measChannelPair.split(',');
         MeasSystemChannel measChannel;
         measChannel.voltageChannel = observer->getChannel(channelPairSplit.at(0))->getDspChannel();
@@ -412,7 +411,7 @@ QStringList cPower1ModuleMeasProgram::setupMeasModes(DspChainIdGen& dspChainGen)
 void cPower1ModuleMeasProgram::setDspCmdList()
 {
     DspChainIdGen dspChainGen;
-    cPower1ModuleConfigData *confdata = getConfData();
+    const cPower1ModuleConfigData *confdata = getConfData();
 
     QStringList dspMModesCommandList = setupMeasModes(dspChainGen);
     std::shared_ptr<MeasMode> mode = m_measModeSelector.getCurrMode();
@@ -572,7 +571,6 @@ void cPower1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply,
                 else
                     notifyError(readdspchannelErrMsg);
                 break;
-            break;
 
             case readsourceformfactor:
                 if (reply == ack) {
@@ -681,7 +679,7 @@ void cPower1ModuleMeasProgram::resourceManagerConnect()
     // as this is our entry point when activating the module, we do some initialization first
     m_measChannelInfoHash.clear(); // we build up a new channel info hash
     cMeasChannelInfo mi;
-    for(auto &measSystem : getConfData()->m_sMeasSystemList) {
+    for(const auto &measSystem : qAsConst(getConfData()->m_sMeasSystemList)) {
         QStringList sl = measSystem.split(',');
         for (int j = 0; j < sl.count(); j++) {
             QString s = sl.at(j);
@@ -1179,12 +1177,8 @@ QString cPower1ModuleMeasProgram::getInitialPhaseOnOffVeinVal()
 {
     cPower1ModuleConfigData *confData = getConfData();
     QString phaseOnOff;
-    if(phaseOnOff.isEmpty()) {
-        QString defaultPhaseMask;
-        for(int phase=0; phase<confData->m_sMeasSystemList.count(); phase++)
-            defaultPhaseMask.append("1");
-        phaseOnOff = defaultPhaseMask;
-    }
+    for(int phase=0; phase<confData->m_sMeasSystemList.count(); phase++)
+        phaseOnOff.append("1");
     return phaseOnOff;
 }
 
