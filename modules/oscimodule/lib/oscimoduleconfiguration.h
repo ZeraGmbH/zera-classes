@@ -42,7 +42,7 @@ protected slots:
     virtual void completeConfiguration(bool ok);
 
 private:
-    cOsciModuleConfigData *m_pOsciModulConfigData;  // configuration
+    cOsciModuleConfigData *m_pOsciModulConfigData = nullptr;  // configuration
 };
 
 }

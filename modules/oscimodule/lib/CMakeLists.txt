@@ -7,7 +7,6 @@ file(GLOB HEADER
     )
 
 add_library(oscimodule-static STATIC
-    oscimodulexmlschema.qrc
     ${SOURCES}
     ${HEADER}
     )
