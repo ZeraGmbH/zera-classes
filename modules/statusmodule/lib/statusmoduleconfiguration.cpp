@@ -3,17 +3,10 @@
 #include "statusmoduleconfigdata.h"
 #include <xmlconfigreader.h>
 
-static void initResource()
-{
-    Q_INIT_RESOURCE(statusmodulexmlschema);
-}
-
 namespace STATUSMODULE
 {
 cStatusModuleConfiguration::cStatusModuleConfiguration()
 {
-    initResource();
-    m_pStatusModulConfigData = 0;
     connect(m_pXMLReader, &Zera::XMLConfig::cReader::valueChanged, this, &cStatusModuleConfiguration::configXMLInfo);
     connect(m_pXMLReader, &Zera::XMLConfig::cReader::finishedParsingXML, this, &cStatusModuleConfiguration::completeConfiguration);
 }

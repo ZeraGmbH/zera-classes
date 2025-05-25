@@ -7,7 +7,6 @@ file(GLOB HEADER
     )
 
 add_library(statusmodule-static STATIC
-    statusmodulexmlschema.qrc
     ${SOURCES}
     ${HEADER}
 )

@@ -1,5 +1,0 @@
-<RCC>
-    <qresource prefix="/">
-        <file>statusmodule.xsd</file>
-    </qresource>
-</RCC>

@@ -33,7 +33,7 @@ protected slots:
     virtual void configXMLInfo(QString key);
     virtual void completeConfiguration(bool ok);
 private:
-    cStatusModuleConfigData *m_pStatusModulConfigData;  // configuration
+    cStatusModuleConfigData *m_pStatusModulConfigData = nullptr;  // configuration
 };
 
 }
