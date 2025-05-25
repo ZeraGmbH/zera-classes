@@ -4,6 +4,7 @@
 #include "scpimeasure.h"
 #include "scpibasedelegate.h"
 #include "baseinterface.h"
+#include <backtracetreegenerator.h>
 #include <testloghelpers.h>
 #include <mocklxdmsessionchangeparamgenerator.h>
 #include <proxyclient_p.h>
@@ -19,8 +20,10 @@ void test_modman_regression_all_sessions::initTestCase()
     m_openFileTracker = std::make_unique<TestOpenFileTracker>();
 
     m_devIfaceXmlsPath = QStringLiteral(HTML_DOCS_PATH_TEST) + "scpi-xmls/";
+    m_memoryAllocTracker.start();
     DevicesExportGenerator devicesExportGenerator(m_devIfaceXmlsPath);
     devicesExportGenerator.exportAll(MockLxdmSessionChangeParamGenerator::generateTestSessionChanger(false));
+    m_memoryAllocTracker.stop();
     m_veinDumps = devicesExportGenerator.getVeinDumps();
     m_instanceCountsOnModulesDestroyed = devicesExportGenerator.getInstanceCountsOnModulesDestroyed();
 }
@@ -95,6 +98,12 @@ void test_modman_regression_all_sessions::checkFilesProperlyClosed()
     QVERIFY(openFilesTotal.count() > 0);
     const QHash<QString, int> openFiles = m_openFileTracker->getOpenFiles();
     QCOMPARE(openFiles.count(), 0);
+}
+
+void test_modman_regression_all_sessions::checkMemoryLeaks()
+{
+    BacktraceTreeGenerator backtraceTreeGenerator(m_memoryAllocTracker.getAllocationsTimeSorted());
+    qInfo("Chunks total: %i", m_memoryAllocTracker.getAllocCount());
 }
 
 bool test_modman_regression_all_sessions::checkUniqueEntityIdNames(const QString &device)

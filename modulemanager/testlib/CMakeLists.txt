@@ -32,6 +32,7 @@ target_link_libraries(zera-modulemanager-testlib
     Zera::veinserver-testlib
     Zera::xsession-change-demolib
     Zera::VfFrameworkTest
+    Zera::testlib-memallocs
 )
 
 set_target_properties(zera-modulemanager-testlib PROPERTIES VERSION ${PROJECT_VERSION})
