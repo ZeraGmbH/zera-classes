@@ -14,6 +14,7 @@ void test_rms_config_load::fileFound()
 void test_rms_config_load::allFilesLoaded()
 {
     const QFileInfoList fileList = QDir(QStringLiteral(CONFIG_SOURCES_RMSMODULE)).entryInfoList(QStringList() << "*.xml");
+    QVERIFY(!fileList.isEmpty());
     for(const auto &fileInfo : fileList) {
         QFile configFile(fileInfo.absoluteFilePath());
         qInfo("Load %s...", qPrintable(configFile.fileName()));

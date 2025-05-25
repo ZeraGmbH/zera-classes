@@ -7,7 +7,6 @@ file(GLOB HEADER
     )
 
 add_library(rmsmodule-static STATIC
-    rmsmodulexmlschema.qrc
     ${SOURCES}
     ${HEADER}
 )

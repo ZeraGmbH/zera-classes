@@ -44,7 +44,7 @@ protected slots:
     virtual void completeConfiguration(bool ok);
 
 private:
-    cRmsModuleConfigData *m_pRmsModulConfigData;  // configuration
+    cRmsModuleConfigData *m_pRmsModulConfigData = nullptr;  // configuration
 };
 
 }
