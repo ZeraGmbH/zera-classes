@@ -11,7 +11,6 @@ file(GLOB HEADER
     )
 
 add_library(scpimodule-static STATIC
-    scpimodulexmlschema.qrc
     ${SOURCES}
     ${HEADER}
     )
