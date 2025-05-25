@@ -9,7 +9,6 @@ file(GLOB HEADER
     )
 
 add_library(adjustmentmodule-static STATIC
-    adjustmentmodulexmlschema.qrc
     ${SOURCES}
     ${HEADER}
 )

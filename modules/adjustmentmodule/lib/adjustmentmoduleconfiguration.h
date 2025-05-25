@@ -54,7 +54,7 @@ protected slots:
 private slots:
     void completeConfiguration(bool ok);
 private:
-    cAdjustmentModuleConfigData *m_pAdjustmentModulConfigData;  // configuration
+    cAdjustmentModuleConfigData *m_pAdjustmentModulConfigData = nullptr;  // configuration
 };
 
 #endif // ADJUSTMENTMODULCONFIGURATION_H
