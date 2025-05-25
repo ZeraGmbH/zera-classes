@@ -2,17 +2,10 @@
 #include "fftmoduleconfigdata.h"
 #include <xmlconfigreader.h>
 
-static void initResource()
-{
-    Q_INIT_RESOURCE(fftmodulexmlschema);
-}
-
 namespace FFTMODULE
 {
 cFftModuleConfiguration::cFftModuleConfiguration()
 {
-    initResource();
-    m_pFftModulConfigData = 0;
     connect(m_pXMLReader, &Zera::XMLConfig::cReader::valueChanged, this, &cFftModuleConfiguration::configXMLInfo);
     connect(m_pXMLReader, &Zera::XMLConfig::cReader::finishedParsingXML, this, &cFftModuleConfiguration::completeConfiguration);
 }

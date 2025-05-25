@@ -7,7 +7,6 @@ file(GLOB HEADER
     )
 
 add_library(fftmodule-static STATIC
-    fftmodulexmlschema.qrc
     ${SOURCES}
     ${HEADER}
     )

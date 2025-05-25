@@ -44,7 +44,7 @@ protected slots:
     virtual void completeConfiguration(bool ok);
 
 private:
-    cFftModuleConfigData *m_pFftModulConfigData;  // configuration
+    cFftModuleConfigData *m_pFftModulConfigData = nullptr;  // configuration
 };
 
 }
