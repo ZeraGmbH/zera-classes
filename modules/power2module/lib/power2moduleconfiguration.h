@@ -65,7 +65,7 @@ protected slots:
     virtual void completeConfiguration(bool ok);
 private:
     void addMeasSys(QString val);
-    cPower2ModuleConfigData *m_pPower2ModulConfigData;  // configuration
+    cPower2ModuleConfigData *m_pPower2ModulConfigData = nullptr;  // configuration
 };
 
 }

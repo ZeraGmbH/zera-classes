@@ -3,17 +3,10 @@
 #include "foutinfo.h"
 #include <xmlconfigreader.h>
 
-static void initResource()
-{
-    Q_INIT_RESOURCE(power2modulexmlschema);
-}
-
 namespace POWER2MODULE
 {
 cPower2ModuleConfiguration::cPower2ModuleConfiguration()
 {
-    initResource();
-    m_pPower2ModulConfigData = 0;
     connect(m_pXMLReader, &Zera::XMLConfig::cReader::valueChanged, this, &cPower2ModuleConfiguration::configXMLInfo);
     connect(m_pXMLReader, &Zera::XMLConfig::cReader::finishedParsingXML, this, &cPower2ModuleConfiguration::completeConfiguration);
 }

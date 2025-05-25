@@ -7,7 +7,6 @@ file(GLOB HEADER
     )
 
 add_library(power2module-static STATIC
-    power2modulexmlschema.qrc
     ${SOURCES}
     ${HEADER}
 )
