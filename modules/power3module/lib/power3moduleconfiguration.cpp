@@ -2,18 +2,11 @@
 #include "power3moduleconfigdata.h"
 #include <xmlconfigreader.h>
 
-static void initResource()
-{
-    Q_INIT_RESOURCE(power3modulexmlschema);
-}
-
 namespace POWER3MODULE
 {
 
 cPower3ModuleConfiguration::cPower3ModuleConfiguration()
 {
-    initResource();
-    m_pPower3ModulConfigData = 0;
     connect(m_pXMLReader, &Zera::XMLConfig::cReader::valueChanged, this, &cPower3ModuleConfiguration::configXMLInfo);
     connect(m_pXMLReader, &Zera::XMLConfig::cReader::finishedParsingXML, this, &cPower3ModuleConfiguration::completeConfiguration);
 }

@@ -7,7 +7,6 @@ file(GLOB HEADER
     )
 
 add_library(power3module-static STATIC
-    power3modulexmlschema.qrc
     ${SOURCES}
     ${HEADER}
 )

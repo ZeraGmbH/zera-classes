@@ -42,7 +42,7 @@ protected slots:
     virtual void completeConfiguration(bool ok);
 
 private:
-    cPower3ModuleConfigData *m_pPower3ModulConfigData;  // configuration
+    cPower3ModuleConfigData *m_pPower3ModulConfigData = nullptr;  // configuration
 };
 
 }
