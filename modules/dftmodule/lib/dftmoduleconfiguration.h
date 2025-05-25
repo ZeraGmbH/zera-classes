@@ -49,7 +49,7 @@ private slots:
     virtual void completeConfiguration(bool ok);
 
 private:
-    cDftModuleConfigData *m_pDftModulConfigData;  // configuration
+    cDftModuleConfigData *m_pDftModulConfigData = nullptr;  // configuration
 };
 
 }

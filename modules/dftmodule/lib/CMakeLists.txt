@@ -7,7 +7,6 @@ file(GLOB HEADER
     )
 
 add_library(dftmodule-static STATIC
-    dftmodulexmlschema.qrc
     ${SOURCES}
     ${HEADER}
     )

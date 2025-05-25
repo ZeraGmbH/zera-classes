@@ -2,18 +2,11 @@
 #include "dftmoduleconfigdata.h"
 #include <xmlconfigreader.h>
 
-static void initResource()
-{
-    Q_INIT_RESOURCE(dftmodulexmlschema);
-}
-
 namespace DFTMODULE
 {
 
 cDftModuleConfiguration::cDftModuleConfiguration()
 {
-    initResource();
-    m_pDftModulConfigData = 0;
     connect(m_pXMLReader, &Zera::XMLConfig::cReader::valueChanged, this, &cDftModuleConfiguration::configXMLInfo);
     connect(m_pXMLReader, &Zera::XMLConfig::cReader::finishedParsingXML, this, &cDftModuleConfiguration::completeConfiguration);
 }
