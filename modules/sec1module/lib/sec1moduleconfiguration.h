@@ -57,7 +57,7 @@ protected slots:
 
 private:
     // QHash<QString, VeinEntity*> m_exportEntityList; // we hold a list of all our entities for export
-    cSec1ModuleConfigData *m_pSec1ModulConfigData;  // configuration
+    cSec1ModuleConfigData *m_pSec1ModulConfigData = nullptr;  // configuration
 };
 
 }
