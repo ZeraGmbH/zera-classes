@@ -30,7 +30,7 @@ protected slots:
     virtual void completeConfiguration(bool ok);
 
 private:
-    cBleModuleConfigData *m_pBleModulConfigData;  // configuration
+    cBleModuleConfigData *m_pBleModulConfigData = nullptr;  // configuration
 };
 
 }

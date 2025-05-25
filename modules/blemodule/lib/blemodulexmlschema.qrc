@@ -1,5 +1,0 @@
-<RCC>
-    <qresource prefix="/">
-        <file>blemodule.xsd</file>
-    </qresource>
-</RCC>

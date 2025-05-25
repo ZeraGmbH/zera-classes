@@ -7,7 +7,6 @@ file(GLOB HEADER
     )
 
 add_library(blemodule-static STATIC
-    blemodulexmlschema.qrc
     ${SOURCES}
     ${HEADER}
     )
