@@ -2,17 +2,10 @@
 #include "samplemoduleconfigdata.h"
 #include <xmlconfigreader.h>
 
-static void initResource()
-{
-    Q_INIT_RESOURCE(samplemodulexmlschema);
-}
-
 namespace SAMPLEMODULE
 {
 cSampleModuleConfiguration::cSampleModuleConfiguration()
 {
-    initResource();
-    m_pSampleModulConfigData = 0;
     connect(m_pXMLReader, &Zera::XMLConfig::cReader::valueChanged, this, &cSampleModuleConfiguration::configXMLInfo);
     connect(m_pXMLReader, &Zera::XMLConfig::cReader::finishedParsingXML, this, &cSampleModuleConfiguration::completeConfiguration);
 }

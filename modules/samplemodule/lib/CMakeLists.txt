@@ -7,7 +7,6 @@ file(GLOB HEADER
     )
 
 add_library(samplemodule-static STATIC
-    samplemodulexmlschema.qrc
     ${SOURCES}
     ${HEADER}
     )
