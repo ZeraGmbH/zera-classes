@@ -7,7 +7,6 @@ file(GLOB HEADER
     )
 
 add_library(sem1module-static STATIC
-    sem1modulexmlschema.qrc
     ${SOURCES}
     ${HEADER}
 )

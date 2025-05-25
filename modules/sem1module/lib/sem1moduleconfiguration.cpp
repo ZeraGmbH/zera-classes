@@ -2,18 +2,11 @@
 #include "sem1moduleconfigdata.h"
 #include <xmlconfigreader.h>
 
-static void initResource()
-{
-    Q_INIT_RESOURCE(sem1modulexmlschema);
-}
-
 namespace SEM1MODULE
 {
 
 cSem1ModuleConfiguration::cSem1ModuleConfiguration()
 {
-    initResource();
-    m_pSem1ModulConfigData = 0;
     connect(m_pXMLReader, &Zera::XMLConfig::cReader::valueChanged, this, &cSem1ModuleConfiguration::configXMLInfo);
     connect(m_pXMLReader, &Zera::XMLConfig::cReader::finishedParsingXML, this, &cSem1ModuleConfiguration::completeConfiguration);
 }
