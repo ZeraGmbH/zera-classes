@@ -7,7 +7,6 @@ file(GLOB HEADER
     )
 
 add_library(spm1module-static STATIC
-    spm1modulexmlschema.qrc
     ${SOURCES}
     ${HEADER}
 )

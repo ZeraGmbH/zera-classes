@@ -2,18 +2,11 @@
 #include "spm1moduleconfigdata.h"
 #include <xmlconfigreader.h>
 
-static void initResource()
-{
-    Q_INIT_RESOURCE(spm1modulexmlschema);
-}
-
 namespace SPM1MODULE
 {
 
 cSpm1ModuleConfiguration::cSpm1ModuleConfiguration()
 {
-    initResource();
-    m_pSpm1ModulConfigData = 0;
     connect(m_pXMLReader, &Zera::XMLConfig::cReader::valueChanged, this, &cSpm1ModuleConfiguration::configXMLInfo);
     connect(m_pXMLReader, &Zera::XMLConfig::cReader::finishedParsingXML, this, &cSpm1ModuleConfiguration::completeConfiguration);
 }
