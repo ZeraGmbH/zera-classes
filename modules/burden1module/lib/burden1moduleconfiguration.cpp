@@ -2,18 +2,11 @@
 #include <QString>
 #include <xmlconfigreader.h>
 
-static void initResource()
-{
-    Q_INIT_RESOURCE(burden1modulexmlschema);
-}
-
 namespace BURDEN1MODULE
 {
 
 cBurden1ModuleConfiguration::cBurden1ModuleConfiguration()
 {
-    initResource();
-    m_pBurden1ModulConfigData = 0;
     connect(m_pXMLReader, &Zera::XMLConfig::cReader::valueChanged, this, &cBurden1ModuleConfiguration::configXMLInfo);
     connect(m_pXMLReader, &Zera::XMLConfig::cReader::finishedParsingXML, this, &cBurden1ModuleConfiguration::completeConfiguration);
 }

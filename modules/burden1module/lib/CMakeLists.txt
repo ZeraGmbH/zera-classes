@@ -7,7 +7,6 @@ file(GLOB HEADER
     )
 
 add_library(burden1module-static STATIC
-    burden1modulexmlschema.qrc
     ${SOURCES}
     ${HEADER}
 )

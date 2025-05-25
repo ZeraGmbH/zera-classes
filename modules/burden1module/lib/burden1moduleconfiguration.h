@@ -40,7 +40,7 @@ protected slots:
 private slots:
     void completeConfiguration(bool ok);
 private:
-    cBurden1ModuleConfigData *m_pBurden1ModulConfigData;  // configuration
+    cBurden1ModuleConfigData *m_pBurden1ModulConfigData = nullptr;  // configuration
 };
 
 }
