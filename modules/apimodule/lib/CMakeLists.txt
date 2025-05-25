@@ -7,7 +7,6 @@ file(GLOB HEADER
     )
 
 add_library(apimodule-static STATIC
-    apimodulexmlschema.qrc
     ${SOURCES}
     ${HEADER}
     )

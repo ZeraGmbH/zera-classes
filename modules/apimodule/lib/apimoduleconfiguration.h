@@ -28,7 +28,7 @@ namespace APIMODULE
         virtual void completeConfiguration(bool ok);
 
     private:
-        cApiModuleConfigData *m_pApiModulConfigData; // configuration
+        cApiModuleConfigData *m_pApiModulConfigData = nullptr; // configuration
     };
 
 }

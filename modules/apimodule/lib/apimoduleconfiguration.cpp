@@ -5,17 +5,10 @@
 #include "apimoduleconfiguration.h"
 #include "apimoduleconfigdata.h"
 
-static void initResource()
-{
-    Q_INIT_RESOURCE(apimodulexmlschema);
-}
-
 namespace APIMODULE
 {
     cApiModuleConfiguration::cApiModuleConfiguration()
     {
-        initResource();
-        m_pApiModulConfigData = nullptr;
         connect(m_pXMLReader, &Zera::XMLConfig::cReader::valueChanged, this, &cApiModuleConfiguration::configXMLInfo);
         connect(m_pXMLReader, &Zera::XMLConfig::cReader::finishedParsingXML, this, &cApiModuleConfiguration::completeConfiguration);
     }

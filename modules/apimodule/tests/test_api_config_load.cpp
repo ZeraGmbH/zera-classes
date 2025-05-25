@@ -12,7 +12,8 @@ void test_api_config_load::fileFound()
 
 void test_api_config_load::allFilesLoaded()
 {
-    QFileInfoList fileList = QDir(QStringLiteral(CONFIG_SOURCES_APIMODULE)).entryInfoList(QStringList() << "*.xml");
+    const QFileInfoList fileList = QDir(QStringLiteral(CONFIG_SOURCES_APIMODULE)).entryInfoList(QStringList() << "*.xml");
+    QVERIFY(!fileList.isEmpty());
     for (const auto &fileInfo : fileList)
     {
         QFile configFile(fileInfo.absoluteFilePath());
