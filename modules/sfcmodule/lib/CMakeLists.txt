@@ -7,7 +7,6 @@ file(GLOB HEADER
     )
 
 add_library(sfcmodule-static STATIC
-    sfcmodulexmlschema.qrc
     ${SOURCES}
     ${HEADER}
     )

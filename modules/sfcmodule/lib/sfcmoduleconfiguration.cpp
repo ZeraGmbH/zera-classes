@@ -5,17 +5,10 @@
 #include "sfcmoduleconfiguration.h"
 #include "sfcmoduleconfigdata.h"
 
-static void initResource()
-{
-    Q_INIT_RESOURCE(sfcmodulexmlschema);
-}
-
 namespace SFCMODULE
 {
 cSfcModuleConfiguration::cSfcModuleConfiguration()
 {
-    initResource();
-    m_pSfcModulConfigData = nullptr;
     connect(m_pXMLReader, &Zera::XMLConfig::cReader::valueChanged, this, &cSfcModuleConfiguration::configXMLInfo);
     connect(m_pXMLReader, &Zera::XMLConfig::cReader::finishedParsingXML, this, &cSfcModuleConfiguration::completeConfiguration);
 }

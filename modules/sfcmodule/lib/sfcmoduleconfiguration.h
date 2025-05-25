@@ -33,7 +33,7 @@ protected slots:
     virtual void completeConfiguration(bool ok);
 
 private:
-    cSfcModuleConfigData *m_pSfcModulConfigData; // configuration
+    cSfcModuleConfigData *m_pSfcModulConfigData = nullptr; // configuration
 };
 
 }
