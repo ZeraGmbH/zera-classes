@@ -2,17 +2,10 @@
 #include "lambdamoduleconfigdata.h"
 #include <xmlconfigreader.h>
 
-static void initResource()
-{
-    Q_INIT_RESOURCE(lambdamodulexmlschema);
-}
-
 namespace LAMBDAMODULE
 {
 cLambdaModuleConfiguration::cLambdaModuleConfiguration()
 {
-    initResource();
-    m_pLambdaModulConfigData = 0;
     connect(m_pXMLReader, &Zera::XMLConfig::cReader::valueChanged, this, &cLambdaModuleConfiguration::configXMLInfo);
     connect(m_pXMLReader, &Zera::XMLConfig::cReader::finishedParsingXML, this, &cLambdaModuleConfiguration::completeConfiguration);
 }

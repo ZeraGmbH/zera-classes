@@ -38,7 +38,7 @@ protected slots:
     void configXMLInfo(QString key) override;
     void completeConfiguration(bool ok);
 private:
-    cLambdaModuleConfigData *m_pLambdaModulConfigData;  // configuration
+    cLambdaModuleConfigData *m_pLambdaModulConfigData = nullptr;  // configuration
 };
 
 }

@@ -7,7 +7,6 @@ file(GLOB HEADER
     )
 
 add_library(lambdamodule-static STATIC
-    lambdamodulexmlschema.qrc
     ${SOURCES}
     ${HEADER}
     )
