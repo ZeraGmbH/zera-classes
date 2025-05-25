@@ -7,7 +7,6 @@ file(GLOB HEADER
     )
 
 add_library(thdnmodule-static STATIC
-    thdnmodulexmlschema.qrc
     ${SOURCES}
     ${HEADER}
     )

@@ -40,7 +40,7 @@ protected slots:
     virtual void completeConfiguration(bool ok);
 
 private:
-    cThdnModuleConfigData *m_pThdnModulConfigData;  // configuration
+    cThdnModuleConfigData *m_pThdnModulConfigData = nullptr;  // configuration
 };
 
 }
