@@ -42,7 +42,7 @@ protected slots:
     virtual void completeConfiguration(bool ok);
 
 private:
-    cReferenceModuleConfigData *m_pReferenceModulConfigData;  // configuration
+    cReferenceModuleConfigData *m_pReferenceModulConfigData = nullptr;  // configuration
 };
 
 }
