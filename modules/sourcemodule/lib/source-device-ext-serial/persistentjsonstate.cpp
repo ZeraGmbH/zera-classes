@@ -13,11 +13,6 @@ PersistentJsonState::PersistentJsonState(const QJsonObject deviceCapabilities)
     m_jsonStatePersistenceHelper.setJsonParamStructure(deviceCapabilities);
 }
 
-PersistentJsonState::PersistentJsonState(SupportedSourceTypes type, QString deviceName, QString deviceVersion)
-{
-    init(type, deviceName, deviceVersion);
-}
-
 PersistentJsonState::PersistentJsonState(SourceProperties properties)
 {
     init(properties.getType(), properties.getName(), properties.getVersion());

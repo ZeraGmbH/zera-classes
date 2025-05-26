@@ -10,7 +10,6 @@ class PersistentJsonState
 {
 public:
     PersistentJsonState(const QJsonObject deviceCapabilities);
-    PersistentJsonState(SupportedSourceTypes type, QString deviceName, QString deviceVersion);
     PersistentJsonState(SourceProperties properties);
 
     QJsonObject getJsonStructure() const;
