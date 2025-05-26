@@ -58,8 +58,6 @@ target_include_directories(sourcemodule-static
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/vein>
     )
 
-add_definitions(-DZC_DEV_STATE_PATH="${CMAKE_INSTALL_SYSCONFDIR}/zera/states")
-
 file(GLOB SOURCE_DEVINFO
     ${CMAKE_CURRENT_SOURCE_DIR}/source-device-ext-serial/deviceinfo/*.json
 )
