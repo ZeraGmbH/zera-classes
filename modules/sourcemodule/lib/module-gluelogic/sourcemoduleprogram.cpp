@@ -28,7 +28,8 @@ SourceModuleProgram::~SourceModuleProgram()
 void SourceModuleProgram::generateVeinInterface()
 {
     // source manager
-    int maxSources = 4;
+    constexpr int maxSources = 5;
+    constexpr int demoCount = maxSources-1;
     m_pSourceDeviceManager = new SourceDeviceManager(maxSources);
     connect(m_pSourceDeviceManager, &SourceDeviceManager::sigAllSlotsRemoved,
             this, &SourceModuleProgram::sigLastSourceRemoved);
@@ -104,10 +105,10 @@ void SourceModuleProgram::generateVeinInterface()
                                                    key = QString("PAR_DemoSources"),
                                                    QString("Number of demo sources"),
                                                    QVariant(int(0)));
-    m_pVeinDemoSourceCount->setValidator(new cIntValidator(0, maxSources));
+    m_pVeinDemoSourceCount->setValidator(new cIntValidator(0, demoCount));
     connect(m_pVeinDemoSourceCount, &VfModuleParameter::sigValueChanged, this, &SourceModuleProgram::newDemoSourceCount);
     m_pModule->m_veinModuleParameterMap[key] = m_pVeinDemoSourceCount; // auto delete / meta-data / scpi
-    newDemoSourceCount(QVariant(m_pModule->getDemo() ? maxSources : 0));
+    newDemoSourceCount(QVariant(m_pModule->getDemo() ? demoCount : 0));
 }
 
 void SourceModuleProgram::startDestroy()
