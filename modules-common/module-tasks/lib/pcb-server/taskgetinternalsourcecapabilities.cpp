@@ -1,11 +1,12 @@
 #include "taskgetinternalsourcecapabilities.h"
 #include "taskdecoratortimeout.h"
 #include <reply.h>
+#include <QJsonDocument>
 
 TaskTemplatePtr TaskGetInternalSourceCapabilities::create(Zera::PcbInterfacePtr pcbInterface,
-                                                  std::shared_ptr<QString> jsonCapabilities,
-                                                  int timeout,
-                                                  std::function<void ()> additionalErrorHandler)
+                                                          std::shared_ptr<QJsonObject> jsonCapabilities,
+                                                          int timeout,
+                                                          std::function<void ()> additionalErrorHandler)
 {
     return TaskDecoratorTimeout::wrapTimeout(timeout,
                                              std::make_unique<TaskGetInternalSourceCapabilities>(pcbInterface, jsonCapabilities),
@@ -13,7 +14,7 @@ TaskTemplatePtr TaskGetInternalSourceCapabilities::create(Zera::PcbInterfacePtr 
 }
 
 TaskGetInternalSourceCapabilities::TaskGetInternalSourceCapabilities(Zera::PcbInterfacePtr pcbInterface,
-                                                     std::shared_ptr<QString> jsonCapabilities) :
+                                                                     std::shared_ptr<QJsonObject> jsonCapabilities) :
     m_pcbInterface(pcbInterface),
     m_jsonCapabilities(jsonCapabilities)
 {
@@ -37,7 +38,7 @@ void TaskGetInternalSourceCapabilities::onServerAnswer(quint32 msgnr, quint8 rep
 {
     if(m_msgnr == msgnr) {
         if (reply == ack)
-            *m_jsonCapabilities = answer.toString();
+            *m_jsonCapabilities = QJsonDocument::fromJson(answer.toString().toUtf8()).object();
         finishTask(true);
     }
 }

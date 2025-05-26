@@ -24,7 +24,7 @@ SourceDeviceManager::SourceDeviceManager(int countSlots, QObject *parent) :
             this, &SourceDeviceManager::sigSlotRemoved, Qt::QueuedConnection);
 }
 
-void SourceDeviceManager::addInternalSource(QString sourceJsonStruct)
+void SourceDeviceManager::addInternalSource(const QJsonObject &sourceJsonStruct)
 {
     int freeSlot = findFreeSlot();
     if(freeSlot >= 0) {

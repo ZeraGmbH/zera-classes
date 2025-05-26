@@ -7,6 +7,7 @@
 #include <pcbinterface.h>
 #include <taskcontainerinterface.h>
 #include <vf-cpp-rpc.h>
+#include <QJsonObject>
 #include <QUuid>
 
 class SourceModule;
@@ -51,7 +52,7 @@ private:
 
     Zera::ProxyClientPtr m_pcbClient;
     Zera::PcbInterfacePtr m_pcbInterface;
-    std::shared_ptr<QString> m_serverResponseSourceCapabilities;
+    std::shared_ptr<QJsonObject> m_capabilitiesInternalSource;
     std::unique_ptr<TaskContainerInterface> m_internalSourceCapabilityQueryTask;
 };
 

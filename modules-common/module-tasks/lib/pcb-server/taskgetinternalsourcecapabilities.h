@@ -3,16 +3,17 @@
 
 #include <pcbinterface.h>
 #include <tasktemplate.h>
+#include <QJsonObject>
 
 class TaskGetInternalSourceCapabilities : public TaskTemplate
 {
     Q_OBJECT
 public:
     static TaskTemplatePtr create(Zera::PcbInterfacePtr pcbInterface,
-                                  std::shared_ptr<QString> jsonCapabilities,
+                                  std::shared_ptr<QJsonObject> jsonCapabilities,
                                   int timeout, std::function<void()> additionalErrorHandler = []{});
     TaskGetInternalSourceCapabilities(Zera::PcbInterfacePtr pcbInterface,
-                              std::shared_ptr<QString> jsonCapabilities);
+                                      std::shared_ptr<QJsonObject> jsonCapabilities);
     void start() override;
 
 private slots:
@@ -21,7 +22,7 @@ private slots:
 private:
     quint32 sendToServer();
     Zera::PcbInterfacePtr m_pcbInterface;
-    std::shared_ptr<QString> m_jsonCapabilities;
+    std::shared_ptr<QJsonObject> m_jsonCapabilities;
     quint32 m_msgnr = 0;
 };
 

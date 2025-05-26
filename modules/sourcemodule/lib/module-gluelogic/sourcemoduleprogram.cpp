@@ -121,16 +121,16 @@ void SourceModuleProgram::activate()
                                                                  m_pModule->getNetworkConfig()->m_tcpNetworkFactory);
     m_pcbInterface = std::make_shared<Zera::cPCBInterface>();
     m_pcbInterface->setClientSmart(m_pcbClient);
-    m_serverResponseSourceCapabilities = std::make_shared<QString>();
+    m_capabilitiesInternalSource = std::make_shared<QJsonObject>();
 
     m_internalSourceCapabilityQueryTask = TaskContainerSequence::create();
     m_internalSourceCapabilityQueryTask->addSub(TaskServerConnectionStart::create(m_pcbClient, CONNECTION_TIMEOUT));
     m_internalSourceCapabilityQueryTask->addSub(TaskGetInternalSourceCapabilities::create(m_pcbInterface,
-                                                                          m_serverResponseSourceCapabilities,
-                                                                          TRANSACTION_TIMEOUT));
+                                                                                          m_capabilitiesInternalSource,
+                                                                                          TRANSACTION_TIMEOUT));
     m_internalSourceCapabilityQueryTask->addSub(TaskLambdaRunner::create([&]() {
-        if (!m_serverResponseSourceCapabilities->isEmpty())
-            m_pSourceDeviceManager->addInternalSource(*m_serverResponseSourceCapabilities);
+        if (!m_capabilitiesInternalSource->isEmpty())
+            m_pSourceDeviceManager->addInternalSource(*m_capabilitiesInternalSource);
         return true;
     }));
 
