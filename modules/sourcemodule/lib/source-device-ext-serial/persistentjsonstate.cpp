@@ -1,6 +1,5 @@
 #include "persistentjsonstate.h"
 #include "jsonfilenames.h"
-#include "jsonstructureloader.h"
 #include "jsonstructapi.h"
 
 PersistentJsonState::PersistentJsonState(const QJsonObject deviceCapabilities)

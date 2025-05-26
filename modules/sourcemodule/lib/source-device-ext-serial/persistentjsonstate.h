@@ -7,7 +7,7 @@
 class PersistentJsonState
 {
 public:
-    PersistentJsonState(const QJsonObject deviceCapabilities);
+    explicit PersistentJsonState(const QJsonObject deviceCapabilities);
 
     QJsonObject getJsonStructure() const;
 
