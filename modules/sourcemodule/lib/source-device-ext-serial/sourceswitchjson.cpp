@@ -4,12 +4,11 @@
 SourceSwitchJson::SourceSwitchJson(AbstractSourceIoPtr sourceIo, SourceTransactionStartNotifier::Ptr sourceNotificationSwitch) :
     m_sourceIo(sourceIo),
     m_ioGroupGenerator(sourceIo->getCapabilities()),
-    m_sourceNotificationSwitch(sourceNotificationSwitch)
+    m_sourceNotificationSwitch(sourceNotificationSwitch),
+    m_persistentParamState(PersistentJsonState(sourceIo->getCapabilities())),
+    m_paramsCurrent(m_persistentParamState.loadJsonState()),
+    m_paramsRequested(m_paramsCurrent)
 {
-    m_persistentParamState = new PersistentJsonState(sourceIo->getCapabilities());
-    m_paramsCurrent = m_persistentParamState->loadJsonState();
-    m_paramsRequested = m_paramsCurrent;
-
     connect(m_sourceNotificationSwitch.get(), &SourceTransactionStartNotifier::sigTransationStarted,
             this, &SourceSwitchJson::onSwitchTransactionStarted);
     connect(m_sourceIo.get(), &SourceIoExtSerial::sigResponseReceived,
@@ -48,16 +47,15 @@ void SourceSwitchJson::onSwitchTransactionStarted(int dataGroupId)
 void SourceSwitchJson::onResponseReceived(const IoQueueGroup::Ptr transferGroup)
 {
     int groupId = transferGroup->getGroupId();
-    if(m_pendingSwitchIds.isPendingAndRemoveIf(groupId)) {
+    if(m_pendingSwitchIds.isPendingAndRemoveIf(groupId))
         handleSwitchResponse(transferGroup);
-    }
 }
 
 void SourceSwitchJson::handleSwitchResponse(const IoQueueGroup::Ptr transferGroup)
 {
     if(transferGroup->passedAll()) {
         m_paramsCurrent = m_paramsRequested;
-        m_persistentParamState->saveJsonState(m_paramsCurrent);
+        m_persistentParamState.saveJsonState(m_paramsCurrent);
     }
     emit sigSwitchFinished();
 }

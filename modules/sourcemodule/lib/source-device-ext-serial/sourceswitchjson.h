@@ -26,9 +26,9 @@ private:
     IoGroupGenerator m_ioGroupGenerator;
     SourceTransactionStartNotifier::Ptr m_sourceNotificationSwitch;
     IdKeeperMulti m_pendingSwitchIds;
-    PersistentJsonState* m_persistentParamState;
-    JsonParamApi m_paramsRequested;
+    PersistentJsonState m_persistentParamState;
     JsonParamApi m_paramsCurrent;
+    JsonParamApi m_paramsRequested;
 };
 
 #endif // SOURCEINTERACTORSWITCH_H
