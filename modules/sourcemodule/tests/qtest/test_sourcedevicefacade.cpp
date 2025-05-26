@@ -149,7 +149,7 @@ void test_sourcedevicefacade::checkVeinInitialLoad()
 
     QCoreApplication::processEvents();
     QJsonObject jsonLoadParams = vein.veinDeviceParameter.getValue().toJsonObject();
-    PersistentJsonState persistentState((DefaultTestSourceProperties()));
+    PersistentJsonState persistentState(JsonStructureLoader::loadJsonStructure(DefaultTestSourceProperties()));
     JsonParamApi paramApi = persistentState.loadJsonState();
     QJsonObject jsonLoadParamsDefault = paramApi.getParams();
     QCOMPARE(jsonLoadParams, jsonLoadParamsDefault);
@@ -217,7 +217,7 @@ void test_sourcedevicefacade::checkVeinSwitchChangesLoad()
     sourceFacade.switchLoad(jsonLoadParamsOn);
 
     TimeMachineForTest::getInstance()->processTimers(shortQtEventTimeout);
-    PersistentJsonState persistentState((DefaultTestSourceProperties()));
+    PersistentJsonState persistentState(JsonStructureLoader::loadJsonStructure(DefaultTestSourceProperties()));
     JsonParamApi paramApiDefault = persistentState.loadJsonState();
     QJsonObject jsonLoadParamsDefault = paramApiDefault.getParams();
 
@@ -263,7 +263,7 @@ void test_sourcedevicefacade::checkVeinSwitchError()
     sourceFacade.switchLoad(jsonLoadParamsOn);
 
     TimeMachineForTest::getInstance()->processTimers(50);
-    PersistentJsonState persistentState((DefaultTestSourceProperties()));
+    PersistentJsonState persistentState(JsonStructureLoader::loadJsonStructure(DefaultTestSourceProperties()));
     JsonParamApi paramApiDefault = persistentState.loadJsonState();
     QJsonObject jsonLoadParamsDefault = paramApiDefault.getParams();
 
@@ -310,7 +310,7 @@ void test_sourcedevicefacade::checkVeinStateError()
     sourceFacade.setStatusPollTime(0);
 
     TimeMachineForTest::getInstance()->processTimers(50);
-    PersistentJsonState persistentState((DefaultTestSourceProperties()));
+    PersistentJsonState persistentState(JsonStructureLoader::loadJsonStructure(DefaultTestSourceProperties()));
     JsonParamApi paramApiDefault = persistentState.loadJsonState();
     QJsonObject jsonLoadParamsDefault = paramApiDefault.getParams();
 
