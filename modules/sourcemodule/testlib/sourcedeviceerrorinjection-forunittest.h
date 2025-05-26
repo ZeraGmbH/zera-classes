@@ -9,7 +9,7 @@ public:
     SourceIoErrorInjection(AbstractSourceIoPtr sourceUnderTest);
 
     int startTransaction(IoQueueGroup::Ptr transferGroup) override;
-    SourceProperties getProperties() const override;
+    QJsonObject getCapabilities() const override;
 
     void setDemoResonseErrorIdx(int idx);
 

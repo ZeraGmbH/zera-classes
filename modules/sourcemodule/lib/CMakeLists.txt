@@ -26,14 +26,10 @@ file(GLOB HEADER
     ${CMAKE_CURRENT_SOURCE_DIR}/vein/*.h
     )
 
-file(GLOB RESOURCES 
-    ${CMAKE_CURRENT_SOURCE_DIR}/*.qrc
-    )
-
 add_library(sourcemodule-static STATIC
     ${SOURCES}
     ${HEADER}
-    ${RESOURCES}
+    source-device-ext-serial/source_device_info.qrc
     )
 
 target_link_libraries(sourcemodule-static
@@ -61,3 +57,33 @@ target_include_directories(sourcemodule-static
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/transaction-ids>
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/vein>
     )
+
+add_definitions(-DZC_DEV_STATE_PATH="${CMAKE_INSTALL_SYSCONFDIR}/zera/states")
+
+file(GLOB SOURCE_DEVINFO
+    ${CMAKE_CURRENT_SOURCE_DIR}/source-device-ext-serial/deviceinfo/*.json
+)
+
+# Note 1: In OE we do not (yet) have jsonlint-php so it must be optional
+# Note 2: In case we make COMMAND in target below conditional on JSONLINT,
+#         qt-creator does not display source-capabilities. That's what the
+#         'echo' dance is for
+find_program(JSONLINT NAMES jsonlint-php echo)
+if(${JSONLINT} MATCHES ".*echo.*")
+    message(WARNING "Program jsonlint-php not found. On Fedora install php-jsonlint")
+endif()
+
+# check for valid devinfo / display in qt-creator
+add_custom_target(source-deviceinfo-dont-forget-qrc ALL
+    SOURCES ${SOURCE_DEVINFO}
+    COMMAND ${JSONLINT} ${SOURCE_DEVINFO}
+    )
+
+# check if all configs made it into source_device_info.qrc
+foreach(sourceconfigfile ${SOURCE_DEVINFO})
+    get_filename_component(filename ${sourceconfigfile} NAME)
+    file(STRINGS ${CMAKE_CURRENT_SOURCE_DIR}/source-device-ext-serial/source_device_info.qrc lines REGEX "${filename}")
+    if(NOT lines)
+        message(FATAL_ERROR "${filename} was not added to source_device_info.qrc - source will not work!!")
+    endif()
+endforeach()

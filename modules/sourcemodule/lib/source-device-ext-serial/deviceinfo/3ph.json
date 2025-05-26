@@ -1,0 +1,109 @@
+{
+    "Name": "Demo-3ph",
+    "Version": "---",
+    "HasReferenceMeter": false,
+    "IoPrefix": "S",
+
+    "zj_params": {
+        "on": {
+            "type": "bool",
+            "default": false
+        }
+    },
+
+    "zj_param_templates": {
+        "voltage_rms": {
+            "type": "number",
+            "min": 20.0,
+            "max": 500.0,
+            "decimals": 3,
+            "default": 230.0
+        },
+        "current_rms": {
+            "type": "number",
+            "min": 0.001,
+            "max": 120.0,
+            "decimals": 3,
+            "default": 5.0
+        },
+        "angle": {
+            "type": "number",
+            "min": 0.0,
+            "max": 359.999,
+            "decimals": 3
+        },
+        "phase_onoff": {
+            "type": "bool",
+            "default": true
+        }
+    },
+
+    "Frequency": {
+        "zj_params": {
+            "val": {
+                "type": "number",
+                "min": 16.0,
+                "max": 70.0,
+                "decimals": 2,
+                "default": 50.0
+            },
+            "type": {
+                "type": "oneof-list",
+                "list": [ "var", "sync" ],
+                "default": "var"
+            }
+        }
+    },
+    
+    "UPhaseMax": 3,
+    "U1": {
+        "zj_params": {
+            "rms": { "zj_param_template": "voltage_rms" },
+            "angle": { "zj_param_template": "angle", "default": 0.0 },
+            "on": { "zj_param_template": "phase_onoff" }
+        },
+        "supportsHarmonics": false
+    },
+    "U2": {
+        "zj_params": {
+            "rms": { "zj_param_template": "voltage_rms" },
+            "angle": { "zj_param_template": "angle", "default": 120.0 },
+            "on": { "zj_param_template": "phase_onoff" }
+        },
+        "supportsHarmonics": false
+    },
+    "U3": {
+        "zj_params": {
+            "rms": { "zj_param_template": "voltage_rms" },
+            "angle": { "zj_param_template": "angle", "default": 240.0 },
+            "on": { "zj_param_template": "phase_onoff" }
+        },
+        "supportsHarmonics": false
+    },
+
+    "IPhaseMax": 3,
+    "I1": {
+        "zj_params": {
+            "rms": { "zj_param_template": "current_rms" },
+            "angle": { "zj_param_template": "angle", "default": 0.0 },
+            "on": { "zj_param_template": "phase_onoff" }
+        },
+        "supportsHarmonics": false
+    },
+    "I2": {
+        "zj_params": {
+            "rms": { "zj_param_template": "current_rms" },
+            "angle": { "zj_param_template": "angle", "default": 120.0 },
+            "on": { "zj_param_template": "phase_onoff" }
+        },
+        "supportsHarmonics": false
+    },
+    "I3": {
+        "zj_params": {
+            "rms": { "zj_param_template": "current_rms" },
+            "angle": { "zj_param_template": "angle", "default": 240.0 },
+            "on": { "zj_param_template": "phase_onoff" }
+        },
+        "supportsHarmonics": false
+    }
+}

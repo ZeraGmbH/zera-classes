@@ -29,9 +29,9 @@ void SourceDeviceManager::addInternalSource(const QJsonObject &sourceJsonStruct)
     int freeSlot = findFreeSlot();
     if(freeSlot >= 0) {
         IoDeviceBase::Ptr ioDevice = IoDeviceFactory::createIoDevice(IoDeviceTypes::SCPI_NET);
-        AbstractSourceIoPtr sourceIo = std::make_shared<SourceIoInternal>();
+        AbstractSourceIoPtr sourceIo = std::make_shared<SourceIoInternal>(sourceJsonStruct);
         SourceDeviceTemplate::Ptr sourceDevice = std::make_shared<SourceDeviceInternal>(ioDevice, sourceIo);
-        //addSource(freeSlot, std::make_shared<SourceDeviceExtSerial>(ioDevice, props));
+        addSource(freeSlot, sourceDevice);
     }
 }
 
@@ -165,7 +165,7 @@ SourceDeviceTemplate::Ptr SourceDeviceManager::getSourceController(int slotNo)
     return sourceController;
 }
 
-int SourceDeviceManager::tryAddSourceToFreeSlot(IoDeviceBase::Ptr ioDevice, SourceProperties props)
+int SourceDeviceManager::tryAddExtSerialSource(IoDeviceBase::Ptr ioDevice, SourceProperties props)
 {
     int freeSlot = findFreeSlot();
     if(freeSlot >= 0)
@@ -180,7 +180,7 @@ void SourceDeviceManager::onScanFinished(SourceScanner::Ptr scanner)
     QString erorDesc;
     int freeSlot = -1;
     if(props.wasSet()) {
-        freeSlot = tryAddSourceToFreeSlot(scanner->getIoDevice(), props);
+        freeSlot = tryAddExtSerialSource(scanner->getIoDevice(), props);
         if(freeSlot < 0)
             erorDesc = QStringLiteral("Slots full");
     }

@@ -36,7 +36,7 @@ signals:
 private:
     bool isValidSlotNo(int slotNo);
     int findFreeSlot();
-    int tryAddSourceToFreeSlot(IoDeviceBase::Ptr ioDevice, SourceProperties props);
+    int tryAddExtSerialSource(IoDeviceBase::Ptr ioDevice, SourceProperties props);
     void addSource(int slotPos, SourceDeviceTemplate::Ptr deviceController);
     bool tryStartDemoDeviceRemove(int slotNo);
     void checkHandleAllClosed();

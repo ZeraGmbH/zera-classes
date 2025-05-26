@@ -3,6 +3,7 @@
 
 #include "abstractsourceio.h"
 #include "ioqueue.h"
+#include "sourceproperties.h"
 
 /*
  * Obtain group generator
@@ -18,14 +19,14 @@ class SourceIoExtSerial : public AbstractSourceIo
 public:
     SourceIoExtSerial(IoDeviceBase::Ptr ioDevice, SourceProperties sourceProperties);
     int startTransaction(IoQueueGroup::Ptr transferGroup) override;
-    SourceProperties getProperties() const override;
+    QJsonObject getCapabilities() const override;
 
 private slots:
     void onIoGroupFinished(IoQueueGroup::Ptr transferGroup);
 private:
     IoDeviceBase::Ptr m_ioDevice;
     IoQueue m_ioQueue;
-    SourceProperties m_sourceProperties;
+    QJsonObject m_capabilities;
 };
 
 #endif // SOURCEDEVICE_H

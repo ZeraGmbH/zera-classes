@@ -1,6 +1,7 @@
 #include "sourceiointernal.h"
 
-SourceIoInternal::SourceIoInternal()
+SourceIoInternal::SourceIoInternal(const QJsonObject capabilities) :
+    m_capabilities(capabilities)
 {
 }
 
@@ -9,7 +10,7 @@ int SourceIoInternal::startTransaction(IoQueueGroup::Ptr transferGroup)
 
 }
 
-SourceProperties SourceIoInternal::getProperties() const
+QJsonObject SourceIoInternal::getCapabilities() const
 {
-
+    return m_capabilities;
 }

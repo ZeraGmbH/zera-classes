@@ -1,0 +1,8 @@
+<RCC>
+    <qresource prefix="/">
+        <file>deviceinfo/4ph-harmonics.json</file>
+        <file>deviceinfo/3ph-current-only.json</file>
+        <file>deviceinfo/3ph.json</file>
+        <file>deviceinfo/1ph.json</file>
+    </qresource>
+</RCC>

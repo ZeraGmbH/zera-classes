@@ -2,14 +2,17 @@
 #define SOURCEIOINTERNAL_H
 
 #include "abstractsourceio.h"
+#include <QJsonObject>
 
 class SourceIoInternal : public AbstractSourceIo
 {
     Q_OBJECT
 public:
-    SourceIoInternal();
+    SourceIoInternal(const QJsonObject capabilities);
     int startTransaction(IoQueueGroup::Ptr transferGroup) override;
-    SourceProperties getProperties() const override;
+    QJsonObject getCapabilities() const override;
+private:
+    const QJsonObject m_capabilities;
 };
 
 #endif // SOURCEIOINTERNAL_H

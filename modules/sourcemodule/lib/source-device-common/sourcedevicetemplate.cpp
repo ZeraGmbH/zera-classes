@@ -19,7 +19,7 @@ SourceDeviceTemplate::SourceDeviceTemplate(IoDeviceBase::Ptr ioDevice, AbstractS
 void SourceDeviceTemplate::setVeinInterface(SourceVeinInterface *veinInterface)
 {
     m_veinInterface = veinInterface;
-    setVeinParamStructure(JsonStructureLoader::loadJsonStructure(m_sourceIo->getProperties()));
+    setVeinParamStructure(m_sourceIo->getCapabilities());
     setVeinParamState(m_switcher->getCurrLoadState().getParams());
     setVeinDeviceState(m_deviceStatusJsonApi.getJsonStatus());
     connect(m_veinInterface, &SourceVeinInterface::sigNewLoadParams,

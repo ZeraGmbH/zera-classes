@@ -1,8 +1,6 @@
 #include "test_sourceio.h"
 #include "test_globals.h"
-#include "iodevicefactory.h"
 #include "sourceioextserial.h"
-#include "jsonstructureloader.h"
 #include "timerfactoryqtfortest.h"
 #include "timemachinefortest.h"
 #include <zera-json-params-state.h>
@@ -12,30 +10,6 @@ QTEST_MAIN(test_sourceio)
 void test_sourceio::init()
 {
     TimerFactoryQtForTest::enableTest();
-}
-
-void test_sourceio::gettersOK()
-{
-    QString name = "fooName";
-    QString version = "fooVersion";
-    SupportedSourceTypes type = SOURCE_MT_COMMON;
-    QString info = "fooInfo";
-
-    IoDeviceBase::Ptr ioDevice = IoDeviceFactory::createIoDevice(IoDeviceTypes::DEMO);
-    ioDevice->open(info);
-
-    SourceProperties sourceProperties(SOURCE_MT_COMMON,
-                                      name,
-                                      version,
-                                      SourceProtocols::ZERA_SERIAL,
-                                      SourceProperties::EXTERNAL);
-    SourceIoExtSerial sourceIo(ioDevice, sourceProperties);
-
-    QCOMPARE(type, sourceIo.getProperties().getType());
-    QCOMPARE(name, sourceIo.getProperties().getName());
-    QCOMPARE(version, sourceIo.getProperties().getVersion());
-    QCOMPARE(SourceProtocols::ZERA_SERIAL, sourceIo.getProperties().getProtocol());
-    QCOMPARE(SourceProperties::EXTERNAL, sourceIo.getProperties().getLocation());
 }
 
 void test_sourceio::signalResponses()

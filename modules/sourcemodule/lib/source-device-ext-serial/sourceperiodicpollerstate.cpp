@@ -6,7 +6,7 @@ SourceStatePeriodicPoller::SourceStatePeriodicPoller(SourceTransactionStartNotif
     m_pollTimer(TimerFactoryQt::createPeriodic(pollTime)),
     m_sourceNotificationStateQuery(sourceIoWithNotificationQuery),
     m_sourceIo(m_sourceNotificationStateQuery->getSourceIo()),
-    m_ioGroupGenerator(JsonStructureLoader::loadJsonStructure(m_sourceIo->getProperties()))
+    m_ioGroupGenerator(m_sourceIo->getCapabilities())
 {
     connect(m_pollTimer.get(), &TimerTemplateQt::sigExpired,
             this, &SourceStatePeriodicPoller::onPollTimer);

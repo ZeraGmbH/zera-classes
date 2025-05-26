@@ -2,7 +2,6 @@
 #define QTUNITTESTSOURCEDEVICE_H
 
 #include <QObject>
-#include "sourceioextserial.h"
 
 class test_sourceio : public QObject
 {
@@ -11,7 +10,6 @@ class test_sourceio : public QObject
 private slots:
     void init();
 
-    void gettersOK();
     void signalResponses();
     void signalResponsesOnOneError();
     void signalResponsesOnTwoErrors();

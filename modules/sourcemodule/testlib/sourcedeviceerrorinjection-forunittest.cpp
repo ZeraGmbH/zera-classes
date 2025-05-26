@@ -17,9 +17,9 @@ int SourceIoErrorInjection::startTransaction(IoQueueGroup::Ptr transferGroup)
     return m_sourceUnderTest->startTransaction(transferGroup);
 }
 
-SourceProperties SourceIoErrorInjection::getProperties() const
+QJsonObject SourceIoErrorInjection::getCapabilities() const
 {
-    return m_sourceUnderTest->getProperties();
+    return m_sourceUnderTest->getCapabilities();
 }
 
 void SourceIoErrorInjection::setDemoResonseErrorIdx(int idx)

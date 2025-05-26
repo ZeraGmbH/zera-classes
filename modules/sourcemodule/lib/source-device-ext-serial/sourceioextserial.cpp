@@ -1,8 +1,9 @@
 #include "sourceioextserial.h"
+#include "jsonstructureloader.h"
 
 SourceIoExtSerial::SourceIoExtSerial(IoDeviceBase::Ptr ioDevice, SourceProperties sourceProperties) :
     m_ioDevice(ioDevice),
-    m_sourceProperties(sourceProperties)
+    m_capabilities(JsonStructureLoader::loadJsonStructure(sourceProperties))
 {
     m_ioQueue.setIoDevice(ioDevice);
 
@@ -16,9 +17,9 @@ int SourceIoExtSerial::startTransaction(IoQueueGroup::Ptr transferGroup)
     return transferGroup->getGroupId();
 }
 
-SourceProperties SourceIoExtSerial::getProperties() const
+QJsonObject SourceIoExtSerial::getCapabilities() const
 {
-    return m_sourceProperties;
+    return m_capabilities;
 }
 
 void SourceIoExtSerial::onIoGroupFinished(IoQueueGroup::Ptr transferGroup)

@@ -1,13 +1,12 @@
 #include "sourceswitchjson.h"
-#include "jsonstructureloader.h"
 #include "sourceioextserial.h"
 
 SourceSwitchJson::SourceSwitchJson(AbstractSourceIoPtr sourceIo, SourceTransactionStartNotifier::Ptr sourceNotificationSwitch) :
     m_sourceIo(sourceIo),
-    m_ioGroupGenerator(JsonStructureLoader::loadJsonStructure(sourceIo->getProperties())),
+    m_ioGroupGenerator(sourceIo->getCapabilities()),
     m_sourceNotificationSwitch(sourceNotificationSwitch)
 {
-    m_persistentParamState = new PersistentJsonState(sourceIo->getProperties());
+    m_persistentParamState = new PersistentJsonState(sourceIo->getCapabilities());
     m_paramsCurrent = m_persistentParamState->loadJsonState();
     m_paramsRequested = m_paramsCurrent;
 
