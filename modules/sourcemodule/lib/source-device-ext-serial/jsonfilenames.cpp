@@ -12,18 +12,6 @@ QString JsonFilenames::getJsonStructurePath(SupportedSourceTypes type)
     return filePath;
 }
 
-QString JsonFilenames::getJsonStatePath(QString deviceName, QString deviceVersion)
-{
-    QString fileName = deviceName;
-    if(!deviceVersion.isEmpty()) {
-        fileName += "-" + deviceVersion;
-    }
-    fileName += ".json";
-    QString statePath = getJsonStateDir();
-    createDirIfNotExist(statePath);
-    return statePath + fileName;
-}
-
 QString JsonFilenames::getJsonFileName(SupportedSourceTypes type)
 {
     Q_INIT_RESOURCE(source_device_info);
@@ -49,17 +37,3 @@ QString JsonFilenames::getJsonFileName(SupportedSourceTypes type)
     return fileName;
 }
 
-QString JsonFilenames::getJsonStateDir()
-{
-    QString statePath(ZC_DEV_STATE_PATH);
-    if(!statePath.endsWith("/")) {
-        statePath += "/";
-    }
-    return statePath;
-}
-
-void JsonFilenames::createDirIfNotExist(QString path)
-{
-    QDir dir;
-    dir.mkpath(path);
-}

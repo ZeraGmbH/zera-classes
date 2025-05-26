@@ -1,5 +1,5 @@
 #include "persistentjsonstate.h"
-#include "jsonfilenames.h"
+#include "jsonstatefilenames.h"
 #include "jsonstructapi.h"
 
 PersistentJsonState::PersistentJsonState(const QJsonObject deviceCapabilities)
@@ -7,7 +7,7 @@ PersistentJsonState::PersistentJsonState(const QJsonObject deviceCapabilities)
     JsonStructApi structApi(deviceCapabilities);
     QString deviceName = structApi.getDeviceName();
     QString deviceVersion = structApi.getDeviceVersion();
-    m_stateFileName = JsonFilenames::getJsonStatePath(deviceName, deviceVersion);
+    m_stateFileName = JsonStateFilenames::getJsonStatePath(deviceName, deviceVersion);
     m_jsonStatePersistenceHelper.setStateFilePath(m_stateFileName);
     m_jsonStatePersistenceHelper.setJsonParamStructure(deviceCapabilities);
 }
