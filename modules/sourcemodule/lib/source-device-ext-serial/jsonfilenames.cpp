@@ -12,14 +12,6 @@ QString JsonFilenames::getJsonStructurePath(SupportedSourceTypes type)
     return filePath;
 }
 
-QString JsonFilenames::getJsonStatePath(SupportedSourceTypes type)
-{
-    QString fileName = getJsonFileName(type);
-    QString statePath = getJsonStateDir();
-    createDirIfNotExist(statePath);
-    return statePath + fileName;
-}
-
 QString JsonFilenames::getJsonStatePath(QString deviceName, QString deviceVersion)
 {
     QString fileName = deviceName;
@@ -55,13 +47,6 @@ QString JsonFilenames::getJsonFileName(SupportedSourceTypes type)
         break;
     }
     return fileName;
-}
-
-QString JsonFilenames::getJsonSourcesConnectedFileName()
-{
-    QString statePath = getJsonStateDir();
-    createDirIfNotExist(statePath);
-    return statePath + "sources-connected.json";
 }
 
 QString JsonFilenames::getJsonStateDir()
