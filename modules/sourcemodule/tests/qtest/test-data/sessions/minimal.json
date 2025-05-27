@@ -1,0 +1,10 @@
+{
+    "modules" : [
+      {
+        "name" : "sourcemodule",
+        "configFile" : "",
+        "id": 1300,
+        "licensable": true
+      }
+    ]
+}

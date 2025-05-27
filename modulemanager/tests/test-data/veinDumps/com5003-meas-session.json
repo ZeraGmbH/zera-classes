@@ -5743,8 +5743,6 @@
                 }
             }
         },
-        "ACT_DeviceInfo4": {
-        },
         "ACT_DeviceState0": {
             "busy": false,
             "deviceinfo": "Demo",
@@ -5777,9 +5775,7 @@
             "warnings": [
             ]
         },
-        "ACT_DeviceState4": {
-        },
-        "ACT_MaxSources": 5,
+        "ACT_MaxSources": 4,
         "EntityName": "SourceModule1",
         "INF_ModuleInterface": {
             "ComponentInfo": {
@@ -5798,9 +5794,6 @@
                 "ACT_DeviceInfo3": {
                     "Description": "Source info/capabiliities in JSON"
                 },
-                "ACT_DeviceInfo4": {
-                    "Description": "Source info/capabiliities in JSON"
-                },
                 "ACT_DeviceState0": {
                     "Description": "Source status in JSON"
                 },
@@ -5811,9 +5804,6 @@
                     "Description": "Source status in JSON"
                 },
                 "ACT_DeviceState3": {
-                    "Description": "Source status in JSON"
-                },
-                "ACT_DeviceState4": {
                     "Description": "Source status in JSON"
                 },
                 "ACT_MaxSources": {
@@ -5852,11 +5842,6 @@
                     }
                 },
                 "PAR_SourceState3": {
-                    "Description": "All source parameters in JSON",
-                    "Validation": {
-                    }
-                },
-                "PAR_SourceState4": {
                     "Description": "All source parameters in JSON",
                     "Validation": {
                     }
@@ -5995,8 +5980,6 @@
                 "rms": 230
             },
             "on": false
-        },
-        "PAR_SourceState4": {
         }
     },
     "1400": {

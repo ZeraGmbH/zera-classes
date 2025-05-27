@@ -14,6 +14,7 @@ void SourceDeviceInternal::setStatusPollTime(int ms)
 
 bool SourceDeviceInternal::close(QUuid uuid)
 {
-    Q_UNUSED(uuid);
-    return false;
+    resetVeinComponents();
+    emit sigClosed(getId(), uuid);
+    return true;
 }

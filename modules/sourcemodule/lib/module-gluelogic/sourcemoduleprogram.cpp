@@ -1,7 +1,6 @@
 #include "sourcemoduleprogram.h"
 #include "sourcemodule.h"
 #include "sourcedevicemanager.h"
-#include "sourcedeviceextserial.h"
 #include "taskgetinternalsourcecapabilities.h"
 #include <vfmoduleparameter.h>
 #include <intvalidator.h>
@@ -20,16 +19,16 @@ SourceModuleProgram::SourceModuleProgram(SourceModule* module, std::shared_ptr<B
 SourceModuleProgram::~SourceModuleProgram()
 {
     delete m_pSourceDeviceManager;
-    while(m_arrVeinIoInterfaces.size()) {
+    while(m_arrVeinIoInterfaces.size())
         delete m_arrVeinIoInterfaces.takeLast();
-    }
 }
+
+static constexpr int maxSources = 4;
+static constexpr int initialDemoCount = maxSources;
 
 void SourceModuleProgram::generateVeinInterface()
 {
     // source manager
-    constexpr int maxSources = 5;
-    constexpr int demoCount = maxSources-1;
     m_pSourceDeviceManager = new SourceDeviceManager(maxSources);
     connect(m_pSourceDeviceManager, &SourceDeviceManager::sigAllSlotsRemoved,
             this, &SourceModuleProgram::sigLastSourceRemoved);
@@ -105,10 +104,9 @@ void SourceModuleProgram::generateVeinInterface()
                                                    key = QString("PAR_DemoSources"),
                                                    QString("Number of demo sources"),
                                                    QVariant(int(0)));
-    m_pVeinDemoSourceCount->setValidator(new cIntValidator(0, demoCount));
+    m_pVeinDemoSourceCount->setValidator(new cIntValidator(0, initialDemoCount));
     connect(m_pVeinDemoSourceCount, &VfModuleParameter::sigValueChanged, this, &SourceModuleProgram::newDemoSourceCount);
     m_pModule->m_veinModuleParameterMap[key] = m_pVeinDemoSourceCount; // auto delete / meta-data / scpi
-    newDemoSourceCount(QVariant(m_pModule->getDemo() ? demoCount : 0));
 }
 
 void SourceModuleProgram::startDestroy()
@@ -136,8 +134,17 @@ void SourceModuleProgram::activate()
     }));
 
     connect(m_internalSourceCapabilityQueryTask.get(), &TaskTemplate::sigFinish,
-            this, &SourceModuleProgram::activated);
+            this, &SourceModuleProgram::onActivated);
     m_internalSourceCapabilityQueryTask->start();
+}
+
+void SourceModuleProgram::onActivated()
+{
+    int demoCountToSet = 0;
+    if (m_pModule->getDemo() && m_capabilitiesInternalSource->isEmpty())
+        demoCountToSet = initialDemoCount;
+    newDemoSourceCount(demoCountToSet);
+    emit activated();
 }
 
 QVariant SourceModuleProgram::RPC_ScanInterface(QVariantMap p_params)

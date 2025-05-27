@@ -1,0 +1,7 @@
+<RCC>
+    <qresource prefix="/">
+        <file>sessions/minimal.json</file>
+        <file>veinDumps/dumpInitialMt310s2.json</file>
+        <file>veinDumps/dumpInitialMt581s2.json</file>
+    </qresource>
+</RCC>

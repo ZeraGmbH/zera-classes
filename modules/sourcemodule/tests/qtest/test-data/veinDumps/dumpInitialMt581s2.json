@@ -1,0 +1,112 @@
+{
+    "1300": {
+        "ACT_CountSources": 0,
+        "ACT_DeviceInfo0": {
+        },
+        "ACT_DeviceInfo1": {
+        },
+        "ACT_DeviceInfo2": {
+        },
+        "ACT_DeviceInfo3": {
+        },
+        "ACT_DeviceState0": {
+        },
+        "ACT_DeviceState1": {
+        },
+        "ACT_DeviceState2": {
+        },
+        "ACT_DeviceState3": {
+        },
+        "ACT_MaxSources": 4,
+        "EntityName": "SourceModule1",
+        "INF_ModuleInterface": {
+            "ComponentInfo": {
+                "ACT_CountSources": {
+                    "Description": "Active source count"
+                },
+                "ACT_DeviceInfo0": {
+                    "Description": "Source info/capabiliities in JSON"
+                },
+                "ACT_DeviceInfo1": {
+                    "Description": "Source info/capabiliities in JSON"
+                },
+                "ACT_DeviceInfo2": {
+                    "Description": "Source info/capabiliities in JSON"
+                },
+                "ACT_DeviceInfo3": {
+                    "Description": "Source info/capabiliities in JSON"
+                },
+                "ACT_DeviceState0": {
+                    "Description": "Source status in JSON"
+                },
+                "ACT_DeviceState1": {
+                    "Description": "Source status in JSON"
+                },
+                "ACT_DeviceState2": {
+                    "Description": "Source status in JSON"
+                },
+                "ACT_DeviceState3": {
+                    "Description": "Source status in JSON"
+                },
+                "ACT_MaxSources": {
+                    "Description": "Max source devices"
+                },
+                "EntityName": {
+                    "Description": "Module's name"
+                },
+                "INF_ModuleInterface": {
+                    "Description": "Module's interface details"
+                },
+                "PAR_DemoSources": {
+                    "Description": "Number of demo sources",
+                    "Validation": {
+                        "Data": [
+                            0,
+                            4,
+                            0
+                        ],
+                        "Type": "INTEGER"
+                    }
+                },
+                "PAR_SourceState0": {
+                    "Description": "All source parameters in JSON",
+                    "Validation": {
+                    }
+                },
+                "PAR_SourceState1": {
+                    "Description": "All source parameters in JSON",
+                    "Validation": {
+                    }
+                },
+                "PAR_SourceState2": {
+                    "Description": "All source parameters in JSON",
+                    "Validation": {
+                    }
+                },
+                "PAR_SourceState3": {
+                    "Description": "All source parameters in JSON",
+                    "Validation": {
+                    }
+                }
+            },
+            "ModuleInfo": {
+                "Description": "Module to access voltage and current sources",
+                "Name": "SourceModule1"
+            },
+            "SCPIInfo": {
+                "Cmd": [
+                ],
+                "Name": "SRC1"
+            }
+        },
+        "PAR_DemoSources": 0,
+        "PAR_SourceState0": {
+        },
+        "PAR_SourceState1": {
+        },
+        "PAR_SourceState2": {
+        },
+        "PAR_SourceState3": {
+        }
+    }
+}

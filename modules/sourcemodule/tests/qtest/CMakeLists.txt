@@ -8,6 +8,7 @@ function(SETUP_QTESTS_MODULE)
             PRIVATE
             sourcemodule-static
             sourcemodule-testlib
+            zera-modulemanager-testlib
         )
     endforeach()
 endfunction()
@@ -23,4 +24,10 @@ SETUP_QTESTS_MODULE(
    test_sourceperiodicpollerstate
    test_sourceswitchjson
    test_sourcedevicefacade
+   test_source_full
+)
+
+target_sources(test_source_full
+  PRIVATE
+    test-data/test-data.qrc
 )

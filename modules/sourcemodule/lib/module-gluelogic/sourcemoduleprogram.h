@@ -22,8 +22,11 @@ public:
     void startDestroy();
 signals:
     void sigLastSourceRemoved();
-public slots:
+
+private slots:
     void activate() override;
+    void onActivated();
+
     // Make cBaseMeasWorkProgram happy...
     void start() override {}
     void stop() override {}
@@ -31,7 +34,6 @@ public slots:
     QVariant RPC_ScanInterface(QVariantMap p_params);
     QVariant RPC_CloseSource(QVariantMap p_params);
 
-private slots:
     void onSourceScanFinished(int slotPosition, QUuid uuid, QString errorMsg);
     void onSourceDeviceRemoved(int slot, QUuid uuid, QString errorMsg);
     void newDemoSourceCount(QVariant getDemoCount);

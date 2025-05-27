@@ -1,0 +1,811 @@
+{
+    "1300": {
+        "ACT_CountSources": 4,
+        "ACT_DeviceInfo0": {
+            "Frequency": {
+                "zj_params": {
+                    "type": {
+                        "default": "var",
+                        "list": [
+                            "var",
+                            "sync"
+                        ],
+                        "type": "oneof-list"
+                    },
+                    "val": {
+                        "decimals": 2,
+                        "default": 50,
+                        "max": 70,
+                        "min": 16,
+                        "type": "number"
+                    }
+                }
+            },
+            "HasReferenceMeter": false,
+            "I1": {
+                "supportsHarmonics": false,
+                "zj_params": {
+                    "angle": {
+                        "decimals": 3,
+                        "default": 0,
+                        "max": 359.999,
+                        "min": 0,
+                        "type": "number"
+                    },
+                    "on": {
+                        "default": true,
+                        "type": "bool"
+                    },
+                    "rms": {
+                        "decimals": 3,
+                        "default": 5,
+                        "max": 120,
+                        "min": 0.001,
+                        "type": "number"
+                    }
+                }
+            },
+            "I2": {
+                "supportsHarmonics": false,
+                "zj_params": {
+                    "angle": {
+                        "decimals": 3,
+                        "default": 120,
+                        "max": 359.999,
+                        "min": 0,
+                        "type": "number"
+                    },
+                    "on": {
+                        "default": true,
+                        "type": "bool"
+                    },
+                    "rms": {
+                        "decimals": 3,
+                        "default": 5,
+                        "max": 120,
+                        "min": 0.001,
+                        "type": "number"
+                    }
+                }
+            },
+            "I3": {
+                "supportsHarmonics": false,
+                "zj_params": {
+                    "angle": {
+                        "decimals": 3,
+                        "default": 240,
+                        "max": 359.999,
+                        "min": 0,
+                        "type": "number"
+                    },
+                    "on": {
+                        "default": true,
+                        "type": "bool"
+                    },
+                    "rms": {
+                        "decimals": 3,
+                        "default": 5,
+                        "max": 120,
+                        "min": 0.001,
+                        "type": "number"
+                    }
+                }
+            },
+            "IPhaseMax": 3,
+            "IoPrefix": "S",
+            "Name": "Demo-3ph",
+            "U1": {
+                "supportsHarmonics": false,
+                "zj_params": {
+                    "angle": {
+                        "decimals": 3,
+                        "default": 0,
+                        "max": 359.999,
+                        "min": 0,
+                        "type": "number"
+                    },
+                    "on": {
+                        "default": true,
+                        "type": "bool"
+                    },
+                    "rms": {
+                        "decimals": 3,
+                        "default": 230,
+                        "max": 500,
+                        "min": 20,
+                        "type": "number"
+                    }
+                }
+            },
+            "U2": {
+                "supportsHarmonics": false,
+                "zj_params": {
+                    "angle": {
+                        "decimals": 3,
+                        "default": 120,
+                        "max": 359.999,
+                        "min": 0,
+                        "type": "number"
+                    },
+                    "on": {
+                        "default": true,
+                        "type": "bool"
+                    },
+                    "rms": {
+                        "decimals": 3,
+                        "default": 230,
+                        "max": 500,
+                        "min": 20,
+                        "type": "number"
+                    }
+                }
+            },
+            "U3": {
+                "supportsHarmonics": false,
+                "zj_params": {
+                    "angle": {
+                        "decimals": 3,
+                        "default": 240,
+                        "max": 359.999,
+                        "min": 0,
+                        "type": "number"
+                    },
+                    "on": {
+                        "default": true,
+                        "type": "bool"
+                    },
+                    "rms": {
+                        "decimals": 3,
+                        "default": 230,
+                        "max": 500,
+                        "min": 20,
+                        "type": "number"
+                    }
+                }
+            },
+            "UPhaseMax": 3,
+            "Version": "---",
+            "zj_params": {
+                "on": {
+                    "default": false,
+                    "type": "bool"
+                }
+            }
+        },
+        "ACT_DeviceInfo1": {
+            "Frequency": {
+                "zj_params": {
+                    "type": {
+                        "default": "sync",
+                        "list": [
+                            "sync"
+                        ],
+                        "type": "oneof-list"
+                    },
+                    "val": {
+                        "decimals": 2,
+                        "default": 50,
+                        "max": 70,
+                        "min": 16,
+                        "type": "number"
+                    }
+                }
+            },
+            "HasReferenceMeter": false,
+            "I1": {
+                "supportsHarmonics": false,
+                "zj_params": {
+                    "angle": {
+                        "decimals": 3,
+                        "default": 0,
+                        "max": 359.999,
+                        "min": 0,
+                        "type": "number"
+                    },
+                    "on": {
+                        "default": true,
+                        "type": "bool"
+                    },
+                    "rms": {
+                        "decimals": 3,
+                        "default": 1,
+                        "max": 20,
+                        "min": 0.001,
+                        "type": "number"
+                    }
+                }
+            },
+            "I2": {
+                "supportsHarmonics": false,
+                "zj_params": {
+                    "angle": {
+                        "decimals": 3,
+                        "default": 120,
+                        "max": 359.999,
+                        "min": 0,
+                        "type": "number"
+                    },
+                    "on": {
+                        "default": true,
+                        "type": "bool"
+                    },
+                    "rms": {
+                        "decimals": 3,
+                        "default": 1,
+                        "max": 20,
+                        "min": 0.001,
+                        "type": "number"
+                    }
+                }
+            },
+            "I3": {
+                "supportsHarmonics": false,
+                "zj_params": {
+                    "angle": {
+                        "decimals": 3,
+                        "default": 240,
+                        "max": 359.999,
+                        "min": 0,
+                        "type": "number"
+                    },
+                    "on": {
+                        "default": true,
+                        "type": "bool"
+                    },
+                    "rms": {
+                        "decimals": 3,
+                        "default": 1,
+                        "max": 20,
+                        "min": 0.001,
+                        "type": "number"
+                    }
+                }
+            },
+            "IPhaseMax": 3,
+            "IoPrefix": "S",
+            "Name": "Demo-3ph-current-only",
+            "UPhaseMax": 0,
+            "Version": "---",
+            "zj_params": {
+                "on": {
+                    "default": false,
+                    "type": "bool"
+                }
+            }
+        },
+        "ACT_DeviceInfo2": {
+            "Frequency": {
+                "zj_params": {
+                    "type": {
+                        "default": "var",
+                        "list": [
+                            "var",
+                            "sync"
+                        ],
+                        "type": "oneof-list"
+                    },
+                    "val": {
+                        "decimals": 2,
+                        "default": 50,
+                        "max": 70,
+                        "min": 16,
+                        "type": "number"
+                    }
+                }
+            },
+            "HasReferenceMeter": false,
+            "I1": {
+                "supportsHarmonics": false,
+                "zj_params": {
+                    "angle": {
+                        "decimals": 3,
+                        "default": 0,
+                        "max": 359.999,
+                        "min": 0,
+                        "type": "number"
+                    },
+                    "on": {
+                        "default": true,
+                        "type": "bool"
+                    },
+                    "rms": {
+                        "decimals": 3,
+                        "default": 5,
+                        "max": 40,
+                        "min": 0.001,
+                        "type": "number"
+                    }
+                }
+            },
+            "IPhaseMax": 1,
+            "IoPrefix": "S",
+            "Name": "Demo-1ph",
+            "U1": {
+                "supportsHarmonics": false,
+                "zj_params": {
+                    "angle": {
+                        "decimals": 3,
+                        "default": 0,
+                        "max": 359.999,
+                        "min": 0,
+                        "type": "number"
+                    },
+                    "on": {
+                        "default": true,
+                        "type": "bool"
+                    },
+                    "rms": {
+                        "decimals": 3,
+                        "default": 230,
+                        "max": 500,
+                        "min": 20,
+                        "type": "number"
+                    }
+                }
+            },
+            "UPhaseMax": 1,
+            "Version": "---",
+            "zj_params": {
+                "on": {
+                    "default": false,
+                    "type": "bool"
+                }
+            }
+        },
+        "ACT_DeviceInfo3": {
+            "Frequency": {
+                "zj_params": {
+                    "type": {
+                        "default": "var",
+                        "list": [
+                            "var",
+                            "sync"
+                        ],
+                        "type": "oneof-list"
+                    },
+                    "val": {
+                        "decimals": 2,
+                        "default": 50,
+                        "max": 70,
+                        "min": 16,
+                        "type": "number"
+                    }
+                }
+            },
+            "HasReferenceMeter": true,
+            "I1": {
+                "supportsHarmonics": true,
+                "zj_params": {
+                    "angle": {
+                        "decimals": 3,
+                        "default": 0,
+                        "max": 359.999,
+                        "min": 0,
+                        "type": "number"
+                    },
+                    "on": {
+                        "default": true,
+                        "type": "bool"
+                    },
+                    "rms": {
+                        "decimals": 3,
+                        "default": 10,
+                        "max": 200,
+                        "min": 0.001,
+                        "type": "number"
+                    }
+                }
+            },
+            "I2": {
+                "supportsHarmonics": true,
+                "zj_params": {
+                    "angle": {
+                        "decimals": 3,
+                        "default": 120,
+                        "max": 359.999,
+                        "min": 0,
+                        "type": "number"
+                    },
+                    "on": {
+                        "default": true,
+                        "type": "bool"
+                    },
+                    "rms": {
+                        "decimals": 3,
+                        "default": 10,
+                        "max": 200,
+                        "min": 0.001,
+                        "type": "number"
+                    }
+                }
+            },
+            "I3": {
+                "supportsHarmonics": true,
+                "zj_params": {
+                    "angle": {
+                        "decimals": 3,
+                        "default": 240,
+                        "max": 359.999,
+                        "min": 0,
+                        "type": "number"
+                    },
+                    "on": {
+                        "default": true,
+                        "type": "bool"
+                    },
+                    "rms": {
+                        "decimals": 3,
+                        "default": 10,
+                        "max": 200,
+                        "min": 0.001,
+                        "type": "number"
+                    }
+                }
+            },
+            "I4": {
+                "supportsHarmonics": true,
+                "zj_params": {
+                    "angle": {
+                        "decimals": 3,
+                        "default": 0,
+                        "max": 359.999,
+                        "min": 0,
+                        "type": "number"
+                    },
+                    "on": {
+                        "default": true,
+                        "type": "bool"
+                    },
+                    "rms": {
+                        "decimals": 3,
+                        "default": 10,
+                        "max": 200,
+                        "min": 0.001,
+                        "type": "number"
+                    }
+                }
+            },
+            "IPhaseMax": 4,
+            "IoPrefix": "",
+            "Name": "Demo-4ph-harmonics",
+            "U1": {
+                "supportsHarmonics": true,
+                "zj_params": {
+                    "angle": {
+                        "decimals": 3,
+                        "default": 0,
+                        "max": 359.999,
+                        "min": 0,
+                        "type": "number"
+                    },
+                    "on": {
+                        "default": true,
+                        "type": "bool"
+                    },
+                    "rms": {
+                        "decimals": 3,
+                        "default": 230,
+                        "max": 300,
+                        "min": 40,
+                        "type": "number"
+                    }
+                }
+            },
+            "U2": {
+                "supportsHarmonics": true,
+                "zj_params": {
+                    "angle": {
+                        "decimals": 3,
+                        "default": 120,
+                        "max": 359.999,
+                        "min": 0,
+                        "type": "number"
+                    },
+                    "on": {
+                        "default": true,
+                        "type": "bool"
+                    },
+                    "rms": {
+                        "decimals": 3,
+                        "default": 230,
+                        "max": 300,
+                        "min": 40,
+                        "type": "number"
+                    }
+                }
+            },
+            "U3": {
+                "supportsHarmonics": true,
+                "zj_params": {
+                    "angle": {
+                        "decimals": 3,
+                        "default": 240,
+                        "max": 359.999,
+                        "min": 0,
+                        "type": "number"
+                    },
+                    "on": {
+                        "default": true,
+                        "type": "bool"
+                    },
+                    "rms": {
+                        "decimals": 3,
+                        "default": 230,
+                        "max": 300,
+                        "min": 40,
+                        "type": "number"
+                    }
+                }
+            },
+            "U4": {
+                "supportsHarmonics": true,
+                "zj_params": {
+                    "angle": {
+                        "decimals": 3,
+                        "default": 0,
+                        "max": 359.999,
+                        "min": 0,
+                        "type": "number"
+                    },
+                    "on": {
+                        "default": true,
+                        "type": "bool"
+                    },
+                    "rms": {
+                        "decimals": 3,
+                        "default": 230,
+                        "max": 300,
+                        "min": 40,
+                        "type": "number"
+                    }
+                }
+            },
+            "UPhaseMax": 4,
+            "Version": "---",
+            "zj_params": {
+                "on": {
+                    "default": false,
+                    "type": "bool"
+                }
+            }
+        },
+        "ACT_DeviceState0": {
+            "busy": false,
+            "deviceinfo": "Demo",
+            "errors": [
+            ],
+            "warnings": [
+            ]
+        },
+        "ACT_DeviceState1": {
+            "busy": false,
+            "deviceinfo": "Demo",
+            "errors": [
+            ],
+            "warnings": [
+            ]
+        },
+        "ACT_DeviceState2": {
+            "busy": false,
+            "deviceinfo": "Demo",
+            "errors": [
+            ],
+            "warnings": [
+            ]
+        },
+        "ACT_DeviceState3": {
+            "busy": false,
+            "deviceinfo": "Demo",
+            "errors": [
+            ],
+            "warnings": [
+            ]
+        },
+        "ACT_MaxSources": 4,
+        "EntityName": "SourceModule1",
+        "INF_ModuleInterface": {
+            "ComponentInfo": {
+                "ACT_CountSources": {
+                    "Description": "Active source count"
+                },
+                "ACT_DeviceInfo0": {
+                    "Description": "Source info/capabiliities in JSON"
+                },
+                "ACT_DeviceInfo1": {
+                    "Description": "Source info/capabiliities in JSON"
+                },
+                "ACT_DeviceInfo2": {
+                    "Description": "Source info/capabiliities in JSON"
+                },
+                "ACT_DeviceInfo3": {
+                    "Description": "Source info/capabiliities in JSON"
+                },
+                "ACT_DeviceState0": {
+                    "Description": "Source status in JSON"
+                },
+                "ACT_DeviceState1": {
+                    "Description": "Source status in JSON"
+                },
+                "ACT_DeviceState2": {
+                    "Description": "Source status in JSON"
+                },
+                "ACT_DeviceState3": {
+                    "Description": "Source status in JSON"
+                },
+                "ACT_MaxSources": {
+                    "Description": "Max source devices"
+                },
+                "EntityName": {
+                    "Description": "Module's name"
+                },
+                "INF_ModuleInterface": {
+                    "Description": "Module's interface details"
+                },
+                "PAR_DemoSources": {
+                    "Description": "Number of demo sources",
+                    "Validation": {
+                        "Data": [
+                            0,
+                            4,
+                            0
+                        ],
+                        "Type": "INTEGER"
+                    }
+                },
+                "PAR_SourceState0": {
+                    "Description": "All source parameters in JSON",
+                    "Validation": {
+                    }
+                },
+                "PAR_SourceState1": {
+                    "Description": "All source parameters in JSON",
+                    "Validation": {
+                    }
+                },
+                "PAR_SourceState2": {
+                    "Description": "All source parameters in JSON",
+                    "Validation": {
+                    }
+                },
+                "PAR_SourceState3": {
+                    "Description": "All source parameters in JSON",
+                    "Validation": {
+                    }
+                }
+            },
+            "ModuleInfo": {
+                "Description": "Module to access voltage and current sources",
+                "Name": "SourceModule1"
+            },
+            "SCPIInfo": {
+                "Cmd": [
+                ],
+                "Name": "SRC1"
+            }
+        },
+        "PAR_DemoSources": 4,
+        "PAR_SourceState0": {
+            "Frequency": {
+                "type": "var",
+                "val": 50
+            },
+            "I1": {
+                "angle": 0,
+                "on": true,
+                "rms": 5
+            },
+            "I2": {
+                "angle": 120,
+                "on": true,
+                "rms": 5
+            },
+            "I3": {
+                "angle": 240,
+                "on": true,
+                "rms": 5
+            },
+            "U1": {
+                "angle": 0,
+                "on": true,
+                "rms": 230
+            },
+            "U2": {
+                "angle": 120,
+                "on": true,
+                "rms": 230
+            },
+            "U3": {
+                "angle": 240,
+                "on": true,
+                "rms": 230
+            },
+            "on": false
+        },
+        "PAR_SourceState1": {
+            "Frequency": {
+                "type": "sync",
+                "val": 50
+            },
+            "I1": {
+                "angle": 0,
+                "on": true,
+                "rms": 1
+            },
+            "I2": {
+                "angle": 120,
+                "on": true,
+                "rms": 1
+            },
+            "I3": {
+                "angle": 240,
+                "on": true,
+                "rms": 1
+            },
+            "on": false
+        },
+        "PAR_SourceState2": {
+            "Frequency": {
+                "type": "var",
+                "val": 50
+            },
+            "I1": {
+                "angle": 0,
+                "on": true,
+                "rms": 5
+            },
+            "U1": {
+                "angle": 0,
+                "on": true,
+                "rms": 230
+            },
+            "on": false
+        },
+        "PAR_SourceState3": {
+            "Frequency": {
+                "type": "var",
+                "val": 50
+            },
+            "I1": {
+                "angle": 0,
+                "on": true,
+                "rms": 10
+            },
+            "I2": {
+                "angle": 120,
+                "on": true,
+                "rms": 10
+            },
+            "I3": {
+                "angle": 240,
+                "on": true,
+                "rms": 10
+            },
+            "I4": {
+                "angle": 0,
+                "on": true,
+                "rms": 10
+            },
+            "U1": {
+                "angle": 0,
+                "on": true,
+                "rms": 230
+            },
+            "U2": {
+                "angle": 120,
+                "on": true,
+                "rms": 230
+            },
+            "U3": {
+                "angle": 240,
+                "on": true,
+                "rms": 230
+            },
+            "U4": {
+                "angle": 0,
+                "on": true,
+                "rms": 230
+            },
+            "on": false
+        }
+    }
+}
