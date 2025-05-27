@@ -2,7 +2,6 @@
 #include "iodevicefactory.h"
 #include "iodevicedemo.h"
 #include "sourcedeviceinternal.h"
-#include "sourceiointernal.h"
 #include "sourcescanneriodemo.h"
 #include "sourcescanneriozeraserial.h"
 #include "sourcedeviceextserial.h"
@@ -29,8 +28,7 @@ void SourceDeviceManager::addInternalSource(const QJsonObject &sourceJsonStruct)
     int freeSlot = findFreeSlot();
     if(freeSlot >= 0) {
         IoDeviceBase::Ptr ioDevice = IoDeviceFactory::createIoDevice(IoDeviceTypes::SCPI_NET);
-        AbstractSourceIoPtr sourceIo = std::make_shared<SourceIoInternal>(sourceJsonStruct);
-        SourceDeviceTemplate::Ptr sourceDevice = std::make_shared<SourceDeviceInternal>(ioDevice, sourceIo);
+        SourceDeviceTemplate::Ptr sourceDevice = std::make_shared<SourceDeviceInternal>(ioDevice, sourceJsonStruct);
         addSource(freeSlot, sourceDevice);
     }
 }

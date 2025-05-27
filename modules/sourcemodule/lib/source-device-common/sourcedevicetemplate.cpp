@@ -4,13 +4,12 @@
 #include "vfmoduleparameter.h"
 #include "messagetexts.h"
 #include <jsonparamvalidator.h>
-#include "jsonstructureloader.h"
 
 IoIdGenerator SourceDeviceTemplate::m_idGenerator;
 
-SourceDeviceTemplate::SourceDeviceTemplate(IoDeviceBase::Ptr ioDevice, AbstractSourceIoPtr sourceIo) :
+SourceDeviceTemplate::SourceDeviceTemplate(IoDeviceBase::Ptr ioDevice, const QJsonObject &sourceJsonStruct) :
+    m_sourceJsonStruct(sourceJsonStruct),
     m_ioDevice(ioDevice),
-    m_sourceIo(sourceIo),
     m_ID(m_idGenerator.nextID())
 {
     m_deviceStatusJsonApi.setDeviceInfo(m_ioDevice->getDeviceInfo());
@@ -19,7 +18,7 @@ SourceDeviceTemplate::SourceDeviceTemplate(IoDeviceBase::Ptr ioDevice, AbstractS
 void SourceDeviceTemplate::setVeinInterface(SourceVeinInterface *veinInterface)
 {
     m_veinInterface = veinInterface;
-    setVeinParamStructure(m_sourceIo->getCapabilities());
+    setVeinParamStructure(m_sourceJsonStruct);
     setVeinParamState(m_switcher->getCurrLoadState().getParams());
     setVeinDeviceState(m_deviceStatusJsonApi.getJsonStatus());
     connect(m_veinInterface, &SourceVeinInterface::sigNewLoadParams,

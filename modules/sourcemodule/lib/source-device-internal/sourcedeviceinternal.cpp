@@ -1,8 +1,10 @@
 #include "sourcedeviceinternal.h"
+#include "sourceswitchjsoninternal.h"
 
-SourceDeviceInternal::SourceDeviceInternal(IoDeviceBase::Ptr ioDevice, AbstractSourceIoPtr sourceIo) :
-    SourceDeviceTemplate(ioDevice, sourceIo)
+SourceDeviceInternal::SourceDeviceInternal(IoDeviceBase::Ptr ioDevice, const QJsonObject &sourceJsonStruct) :
+    SourceDeviceTemplate(ioDevice, sourceJsonStruct)
 {
+    m_switcher = std::make_unique<SourceSwitchJsonInternal>();
 }
 
 void SourceDeviceInternal::setStatusPollTime(int ms)

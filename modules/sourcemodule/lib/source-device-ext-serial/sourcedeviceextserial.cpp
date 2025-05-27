@@ -2,10 +2,12 @@
 #include <vfmoduleparameter.h>
 #include <jsonparamvalidator.h>
 #include "sourceswitchjson.h"
+#include "jsonstructureloader.h"
 #include <QVariant>
 
 SourceDeviceExtSerial::SourceDeviceExtSerial(IoDeviceBase::Ptr ioDevice, SourceProperties properties) :
-    SourceDeviceTemplate(ioDevice, std::make_shared<SourceIoExtSerial>(ioDevice, properties)),
+    SourceDeviceTemplate(ioDevice, JsonStructureLoader::loadJsonStructure(properties)),
+    m_sourceIo(std::make_shared<SourceIoExtSerial>(ioDevice, properties)),
     m_transactionNotifierStatus(SourceTransactionStartNotifier::Ptr::create(m_sourceIo)),
     m_transactionNotifierSwitch(SourceTransactionStartNotifier::Ptr::create(m_sourceIo)),
     m_statePoller(SourceStatePeriodicPoller::Ptr::create(m_transactionNotifierStatus)),

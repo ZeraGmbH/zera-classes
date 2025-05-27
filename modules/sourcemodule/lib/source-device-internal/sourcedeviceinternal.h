@@ -7,7 +7,7 @@ class SourceDeviceInternal : public SourceDeviceTemplate
 {
     Q_OBJECT
 public:
-    explicit SourceDeviceInternal(IoDeviceBase::Ptr ioDevice, AbstractSourceIoPtr sourceIo);
+    explicit SourceDeviceInternal(IoDeviceBase::Ptr ioDevice, const QJsonObject &sourceJsonStruct);
 
     void setStatusPollTime(int ms) override;
     bool close(QUuid uuid) override;

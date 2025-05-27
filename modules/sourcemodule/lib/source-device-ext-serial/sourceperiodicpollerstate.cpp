@@ -1,5 +1,4 @@
 #include "sourceperiodicpollerstate.h"
-#include "jsonstructureloader.h"
 #include <timerfactoryqt.h>
 
 SourceStatePeriodicPoller::SourceStatePeriodicPoller(SourceTransactionStartNotifier::Ptr sourceIoWithNotificationQuery, int pollTime) :

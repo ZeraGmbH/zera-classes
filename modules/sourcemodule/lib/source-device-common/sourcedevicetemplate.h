@@ -15,7 +15,8 @@ class SourceDeviceTemplate : public QObject
     Q_OBJECT
 public:
     typedef std::shared_ptr<SourceDeviceTemplate> Ptr;
-    SourceDeviceTemplate(IoDeviceBase::Ptr ioDevice, AbstractSourceIoPtr sourceIo);
+    SourceDeviceTemplate(IoDeviceBase::Ptr ioDevice, const QJsonObject &sourceJsonStruct);
+
     void setVeinInterface(SourceVeinInterface* veinInterface);
 
     virtual void setStatusPollTime(int ms) = 0;
@@ -39,11 +40,11 @@ protected:
     void setVeinParamState(QJsonObject paramState);
     void resetVeinComponents();
 
+    const QJsonObject m_sourceJsonStruct;
     IoDeviceBase::Ptr m_ioDevice;
     SourceVeinInterface* m_veinInterface = nullptr;
     JsonDeviceStatusApi m_deviceStatusJsonApi;
     std::unique_ptr<AbstractSourceSwitchJson> m_switcher;
-    AbstractSourceIoPtr m_sourceIo;
 private:
     static IoIdGenerator m_idGenerator;
     int m_ID;
