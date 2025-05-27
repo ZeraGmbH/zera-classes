@@ -14,7 +14,7 @@ QString JsonStateFilenames::getJsonStatePath(const QString &deviceName, const QS
 
 QString JsonStateFilenames::getJsonStateDir()
 {
-    QString statePath(ZC_DEV_STATE_PATH);
+    QString statePath(SOURCE_STATE_PATH);
     if(!statePath.endsWith("/"))
         statePath += "/";
     return statePath;

@@ -23,6 +23,8 @@ bool TestModuleManager::prepareOe()
 
 void TestModuleManager::enableTests()
 {
+    QDir dir;
+    dir.rmpath(SOURCE_STATE_PATH);
     TimerFactoryQtForTest::enableTest();
     prepareOe();
 }
