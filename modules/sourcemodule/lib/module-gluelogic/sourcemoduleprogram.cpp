@@ -131,7 +131,7 @@ void SourceModuleProgram::activate()
                                                                                           TRANSACTION_TIMEOUT));
     m_internalSourceCapabilityQueryTask->addSub(TaskLambdaRunner::create([&]() {
         if (!m_capabilitiesInternalSource->isEmpty())
-            m_pSourceDeviceManager->addInternalSource(*m_capabilitiesInternalSource);
+            m_pSourceDeviceManager->addInternalSource(*m_capabilitiesInternalSource, m_pcbInterface);
         return true;
     }));
 

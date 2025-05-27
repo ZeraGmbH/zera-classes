@@ -1,6 +1,7 @@
 #include "sourcedevicemanager.h"
 #include "iodevicefactory.h"
 #include "iodevicedemo.h"
+#include "iodevicezerascpinet.h"
 #include "sourcedeviceinternal.h"
 #include "sourcescanneriodemo.h"
 #include "sourcescanneriozeraserial.h"
@@ -23,11 +24,11 @@ SourceDeviceManager::SourceDeviceManager(int countSlots, QObject *parent) :
             this, &SourceDeviceManager::sigSlotRemoved, Qt::QueuedConnection);
 }
 
-void SourceDeviceManager::addInternalSource(const QJsonObject &sourceJsonStruct)
+void SourceDeviceManager::addInternalSource(const QJsonObject &sourceJsonStruct, Zera::PcbInterfacePtr pcbInterface)
 {
     int freeSlot = findFreeSlot();
     if(freeSlot >= 0) {
-        IoDeviceBase::Ptr ioDevice = IoDeviceFactory::createIoDevice(IoDeviceTypes::SCPI_NET);
+        IoDeviceBase::Ptr ioDevice = IoDeviceBase::Ptr(new IoDeviceZeraSCPINet(pcbInterface));
         SourceDeviceTemplate::Ptr sourceDevice = std::make_shared<SourceDeviceInternal>(ioDevice, sourceJsonStruct);
         addSource(freeSlot, sourceDevice);
     }
