@@ -1,7 +1,175 @@
 {
     "1300": {
-        "ACT_CountSources": 0,
+        "ACT_CountSources": 1,
         "ACT_DeviceInfo0": {
+            "Frequency": {
+                "zj_params": {
+                    "type": {
+                        "default": "var",
+                        "list": [
+                            "var",
+                            "sync"
+                        ],
+                        "type": "oneof-list"
+                    },
+                    "val": {
+                        "decimals": 2,
+                        "default": 50,
+                        "max": 70,
+                        "min": 16,
+                        "type": "number"
+                    }
+                }
+            },
+            "HasReferenceMeter": false,
+            "I1": {
+                "supportsHarmonics": false,
+                "zj_params": {
+                    "angle": {
+                        "decimals": 3,
+                        "default": 0,
+                        "max": 359.999,
+                        "min": 0,
+                        "type": "number"
+                    },
+                    "on": {
+                        "default": true,
+                        "type": "bool"
+                    },
+                    "rms": {
+                        "decimals": 3,
+                        "default": 5,
+                        "max": 120,
+                        "min": 0.001,
+                        "type": "number"
+                    }
+                }
+            },
+            "I2": {
+                "supportsHarmonics": false,
+                "zj_params": {
+                    "angle": {
+                        "decimals": 3,
+                        "default": 120,
+                        "max": 359.999,
+                        "min": 0,
+                        "type": "number"
+                    },
+                    "on": {
+                        "default": true,
+                        "type": "bool"
+                    },
+                    "rms": {
+                        "decimals": 3,
+                        "default": 5,
+                        "max": 120,
+                        "min": 0.001,
+                        "type": "number"
+                    }
+                }
+            },
+            "I3": {
+                "supportsHarmonics": false,
+                "zj_params": {
+                    "angle": {
+                        "decimals": 3,
+                        "default": 240,
+                        "max": 359.999,
+                        "min": 0,
+                        "type": "number"
+                    },
+                    "on": {
+                        "default": true,
+                        "type": "bool"
+                    },
+                    "rms": {
+                        "decimals": 3,
+                        "default": 5,
+                        "max": 120,
+                        "min": 0.001,
+                        "type": "number"
+                    }
+                }
+            },
+            "IPhaseMax": 3,
+            "Name": "MT581s2",
+            "U1": {
+                "supportsHarmonics": false,
+                "zj_params": {
+                    "angle": {
+                        "decimals": 3,
+                        "default": 0,
+                        "max": 359.999,
+                        "min": 0,
+                        "type": "number"
+                    },
+                    "on": {
+                        "default": true,
+                        "type": "bool"
+                    },
+                    "rms": {
+                        "decimals": 3,
+                        "default": 230,
+                        "max": 500,
+                        "min": 20,
+                        "type": "number"
+                    }
+                }
+            },
+            "U2": {
+                "supportsHarmonics": false,
+                "zj_params": {
+                    "angle": {
+                        "decimals": 3,
+                        "default": 120,
+                        "max": 359.999,
+                        "min": 0,
+                        "type": "number"
+                    },
+                    "on": {
+                        "default": true,
+                        "type": "bool"
+                    },
+                    "rms": {
+                        "decimals": 3,
+                        "default": 230,
+                        "max": 500,
+                        "min": 20,
+                        "type": "number"
+                    }
+                }
+            },
+            "U3": {
+                "supportsHarmonics": false,
+                "zj_params": {
+                    "angle": {
+                        "decimals": 3,
+                        "default": 240,
+                        "max": 359.999,
+                        "min": 0,
+                        "type": "number"
+                    },
+                    "on": {
+                        "default": true,
+                        "type": "bool"
+                    },
+                    "rms": {
+                        "decimals": 3,
+                        "default": 230,
+                        "max": 500,
+                        "min": 20,
+                        "type": "number"
+                    }
+                }
+            },
+            "UPhaseMax": 3,
+            "Version": "---",
+            "zj_params": {
+                "on": {
+                    "default": false,
+                    "type": "bool"
+                }
+            }
         },
         "ACT_DeviceInfo1": {
         },
@@ -10,6 +178,12 @@
         "ACT_DeviceInfo3": {
         },
         "ACT_DeviceState0": {
+            "busy": false,
+            "deviceinfo": "",
+            "errors": [
+            ],
+            "warnings": [
+            ]
         },
         "ACT_DeviceState1": {
         },
@@ -101,6 +275,41 @@
         },
         "PAR_DemoSources": 0,
         "PAR_SourceState0": {
+            "Frequency": {
+                "type": "var",
+                "val": 50
+            },
+            "I1": {
+                "angle": 0,
+                "on": true,
+                "rms": 5
+            },
+            "I2": {
+                "angle": 120,
+                "on": true,
+                "rms": 5
+            },
+            "I3": {
+                "angle": 240,
+                "on": true,
+                "rms": 5
+            },
+            "U1": {
+                "angle": 0,
+                "on": true,
+                "rms": 230
+            },
+            "U2": {
+                "angle": 120,
+                "on": true,
+                "rms": 230
+            },
+            "U3": {
+                "angle": 240,
+                "on": true,
+                "rms": 230
+            },
+            "on": false
         },
         "PAR_SourceState1": {
         },

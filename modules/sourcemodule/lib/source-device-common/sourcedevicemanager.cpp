@@ -31,6 +31,7 @@ void SourceDeviceManager::addInternalSource(const QJsonObject &sourceJsonStruct,
         IoDeviceBase::Ptr ioDevice = IoDeviceBase::Ptr(new IoDeviceZeraSCPINet(pcbInterface));
         SourceDeviceTemplate::Ptr sourceDevice = std::make_shared<SourceDeviceInternal>(ioDevice, sourceJsonStruct);
         addSource(freeSlot, sourceDevice);
+        emit sigSourceScanFinished(freeSlot, QUuid::createUuid(), "");
     }
 }
 

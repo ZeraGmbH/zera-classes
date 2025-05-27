@@ -4,7 +4,7 @@
 SourceDeviceInternal::SourceDeviceInternal(IoDeviceBase::Ptr ioDevice, const QJsonObject &sourceJsonStruct) :
     SourceDeviceTemplate(ioDevice, sourceJsonStruct)
 {
-    m_switcher = std::make_unique<SourceSwitchJsonInternal>();
+    m_switcher = std::make_unique<SourceSwitchJsonInternal>(sourceJsonStruct);
 }
 
 void SourceDeviceInternal::setStatusPollTime(int ms)
