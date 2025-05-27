@@ -1,4 +1,4 @@
-file(GLOB RESOURCES 
+file(GLOB RESOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/*.qrc
     )
 

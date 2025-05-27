@@ -58,20 +58,8 @@ set(SET_MODMAN_AUTOMOUNT_PATH "/media/" CACHE STRING "Automount path")
 set(SET_MODMAN_DEFAULT_SESSION "modulemanager_config.json" CACHE STRING "Default session")
 set(SET_SESSION_FILES_SOURCE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/modulemanager/sessions")
 
-add_definitions(-DOPERATOR_HOME="${OPERATOR_HOME}")
-add_definitions(-DMODMAN_SESSION_PATH="${SET_MODMAN_SESSION_PATH}")
-add_definitions(-DMODMAN_DEFAULT_SESSION="${SET_MODMAN_DEFAULT_SESSION}")
 add_definitions(-DMODMAN_CONFIG_PATH="${SET_MODMAN_CONFIG_PATH}")
-add_definitions(-DMODMAN_MODULE_PATH="${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_LIBDIR}/zera-modules/")
-add_definitions(-DMODMAN_CUSTOMERDATA_PATH="${OPERATOR_HOME}/customerdata/")
-add_definitions(-DMODMAN_CONTENTSET_PATH="${SET_MODMAN_CONTENTSET_PATH}")
-add_definitions(-DMODMAN_AUTOMOUNT_PATH="${SET_MODMAN_AUTOMOUNT_PATH}")
-add_definitions(-DMODMAN_LOGGER_LOCAL_PATH="${OPERATOR_HOME}/logger")
-add_definitions(-DSESSION_FILES_SOURCE_PATH="${SET_SESSION_FILES_SOURCE_PATH}")
 add_definitions(-DSOURCE_STATE_PATH="${CMAKE_INSTALL_SYSCONFDIR}/zera/sourcestates")
-file(GLOB SESSION_FILES ${SET_SESSION_FILES_SOURCE_PATH}/*.json)
-list(JOIN SESSION_FILES "," C_SESSION_FILES)
-add_definitions(-DSESSION_FILES="${C_SESSION_FILES}")
 
 
 macro(SET_MODULE_ENV MODULE_NAME)
@@ -113,10 +101,7 @@ SET_MODULE_ENV(statusmodule)
 SET_MODULE_ENV(thdnmodule)
 SET_MODULE_ENV(transformer1module)
 
-add_compile_definitions(MODULE_PLUGIN_BUILD_PATH="${MODULE_PLUGIN_BUILD_PATH}")
-
 enable_testing()
-
 # Inspired by
 # https://github.com/KDAB/kdabtv/blob/master/Qt-Widgets-and-more/UnitTests/Tests/CMakeLists.txt
 function(SETUP_QTESTS)
