@@ -62,45 +62,6 @@ add_definitions(-DMODMAN_CONFIG_PATH="${SET_MODMAN_CONFIG_PATH}")
 add_definitions(-DSOURCE_STATE_PATH="${CMAKE_INSTALL_SYSCONFDIR}/zera/sourcestates")
 
 
-macro(SET_MODULE_ENV MODULE_NAME)
-    string(TOUPPER ${MODULE_NAME} MODULE_NAME_UPPER)
-    set(MODULE_CONFIG_PATH "${CMAKE_CURRENT_SOURCE_DIR}/modules/${MODULE_NAME}/configs")
-    set(MODULE_PLUGIN_BUILD_PATH "${MODULE_PLUGIN_BUILD_PATH} ${CMAKE_CURRENT_BINARY_DIR}/modules/${MODULE_NAME}/module")
-
-    # Pass source paths to configs for tests. This is module-global to allow e.g
-    # scpimodule running tests with other modules
-    add_compile_definitions(CONFIG_SOURCES_${MODULE_NAME_UPPER}="${MODULE_CONFIG_PATH}")
-endmacro()
-
-# Notes
-# * SET_MODULE_ENV !MUST! be set before add_subdirectory
-# * Modules not added here don't support common module folder layout (yet)
-SET_MODULE_ENV(apimodule)
-SET_MODULE_ENV(adjustmentmodule)
-SET_MODULE_ENV(blemodule)
-SET_MODULE_ENV(burden1module)
-SET_MODULE_ENV(dftmodule)
-SET_MODULE_ENV(fftmodule)
-SET_MODULE_ENV(lambdamodule)
-SET_MODULE_ENV(modemodule)
-SET_MODULE_ENV(oscimodule)
-SET_MODULE_ENV(power1module)
-SET_MODULE_ENV(power2module)
-SET_MODULE_ENV(power3module)
-SET_MODULE_ENV(rangemodule)
-SET_MODULE_ENV(referencemodule)
-SET_MODULE_ENV(rmsmodule)
-SET_MODULE_ENV(samplemodule)
-SET_MODULE_ENV(scpimodule)
-SET_MODULE_ENV(sec1module)
-SET_MODULE_ENV(sem1module)
-SET_MODULE_ENV(sfcmodule)
-SET_MODULE_ENV(sourcemodule)
-SET_MODULE_ENV(spm1module)
-SET_MODULE_ENV(statusmodule)
-SET_MODULE_ENV(thdnmodule)
-SET_MODULE_ENV(transformer1module)
-
 enable_testing()
 # Inspired by
 # https://github.com/KDAB/kdabtv/blob/master/Qt-Widgets-and-more/UnitTests/Tests/CMakeLists.txt

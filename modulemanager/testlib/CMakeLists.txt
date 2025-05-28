@@ -1,5 +1,3 @@
-add_compile_definitions(MODULE_PLUGIN_BUILD_PATH="${MODULE_PLUGIN_BUILD_PATH}")
-
 file(GLOB SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/*.cpp
     )
@@ -24,6 +22,7 @@ add_definitions(-DOE_INSTALL_ROOT="${OE_INSTALL_ROOT}")
 target_link_libraries(zera-modulemanager-testlib
     PUBLIC
     Qt5::Core
+    test-plugin-paths
     Zera::zera-timers-testlib
     Zera::zenuxservicecommon-testlib
     zera-modulemanager-lib

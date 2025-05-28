@@ -1,6 +1,7 @@
 #include "testmodulemanager.h"
 #include "testallservicescom5003.h"
 #include "testallservicesmt310s2.h"
+#include "test_plugin_paths.h"
 #include "modulemanagerconfigtest.h"
 #include "jsonsessionloadertest.h"
 #include "moduleactivist.h"
@@ -130,7 +131,7 @@ bool TestModuleManager::modulesReady()
 
 QStringList TestModuleManager::getModuleFileNames()
 {
-    QString strBuildPath = MODULE_PLUGIN_BUILD_PATH;
+    QString strBuildPath = TestPluginPaths::getPaths();
     QStringList buildPaths = strBuildPath.split(" ", Qt::SkipEmptyParts);
     QStringList plugins;
     for(auto &buildPath : buildPaths) {
