@@ -27,26 +27,22 @@ cApiModuleAuthorize::cApiModuleAuthorize(cApiModule *module, QString persistency
                                                      QString("ACT_PendingRequest"),
                                                      QString("Json structure with name(string), tokenType(string->Certificate,Basic,PublicKey), token(string)"),
                                                      QJsonObject());
-        m_spPendingRequestAct->setScpiInfo("AUTH", "PENDINGREQUEST", SCPI::isQuery, m_spPendingRequestAct->getName());
 
         m_spTrustListAct = std::make_shared<VfModuleComponent>(m_module->getEntityId(), m_module->getValidatorEventSystem(),
                                                     QString("ACT_TrustList"),
                                                     QString("Json array of trusted clients"),
                                                     readTrustList());
-        m_spTrustListAct->setScpiInfo("AUTH", "TRUSTLIST", SCPI::isQuery, m_spTrustListAct->getName());
 
         m_spTrustListChangeCountAct = std::make_shared<VfModuleComponent>(m_module->getEntityId(), m_module->getValidatorEventSystem(),
                                                 QString("ACT_TLChangeCount"),
                                                 QString("Change count of Trust List"),
                                                 (int)0);
-        m_spTrustListChangeCountAct->setScpiInfo("AUTH", "TLCHANGECOUNT", SCPI::isQuery, m_spTrustListChangeCountAct->getName());
 
         m_pGuiDialogFinished = new VfModuleParameter(m_module->getEntityId(), m_module->getValidatorEventSystem(),
                                                      QString("PAR_GuiDialogFinished"),
                                                      QString("boolean if GUI dialog finished"),
                                                      false);
         m_pGuiDialogFinished->setValidator(new cBoolValidator());
-        m_pGuiDialogFinished->setScpiInfo("AUTH", "GUIDIALOGFINISHED", SCPI::isQuery | SCPI::isCmdwP, m_pGuiDialogFinished->getName());
         m_module->m_veinModuleParameterMap[m_pGuiDialogFinished->getName()] = m_pGuiDialogFinished;
 
         m_pReloadTrustList = new VfModuleParameter(m_module->getEntityId(), m_module->getValidatorEventSystem(),
@@ -54,7 +50,6 @@ cApiModuleAuthorize::cApiModuleAuthorize(cApiModule *module, QString persistency
                                                      QString("set boolean to true to reload trust list"),
                                                      false);
         m_pReloadTrustList->setValidator(new cBoolValidator());
-        m_pReloadTrustList->setScpiInfo("AUTH", "RELOADTRUSTLIST", SCPI::isQuery | SCPI::isCmdwP, m_pReloadTrustList->getName());
         m_module->m_veinModuleParameterMap[m_pReloadTrustList->getName()] = m_pReloadTrustList;
 
         m_spRpcAuthenticateInterface = VfCpp::cVeinModuleRpc::Ptr(
