@@ -30,8 +30,6 @@ signals:
 private slots:
     void onScanFinished(SourceScanner::Ptr scanner);
     void onSourceClosed(int facadeId, QUuid uuid);
-signals:
-    void sigSlotRemovedQueued(int slotNo, QUuid uuid, QString errorMsg);
 private:
     bool isValidSlotNo(int slotNo);
     int findFreeSlot();
@@ -39,6 +37,7 @@ private:
     void addSource(int slotPos, SourceDeviceTemplate::Ptr deviceController);
     bool tryStartDemoDeviceRemove(int slotNo);
     void checkHandleAllClosed();
+    void emitSigSlotRemoved(int slotNo, QUuid uuid, QString errorMsg);
     QVector<SourceDeviceTemplate::Ptr> m_sourceControllers;
     QVector<bool> m_activeSlots;
 };

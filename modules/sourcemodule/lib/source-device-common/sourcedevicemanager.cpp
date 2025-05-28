@@ -20,8 +20,6 @@ SourceDeviceManager::SourceDeviceManager(int countSlots, QObject *parent) :
     m_sourceControllers(QVector<SourceDeviceTemplate::Ptr>(countSlots, nullptr)),
     m_activeSlots(QVector<bool>(countSlots, false))
 {
-    connect(this, &SourceDeviceManager::sigSlotRemovedQueued,
-            this, &SourceDeviceManager::sigSlotRemoved, Qt::QueuedConnection);
 }
 
 void SourceDeviceManager::addInternalSource(const QJsonObject &sourceJsonStruct, Zera::PcbInterfacePtr pcbInterface)
@@ -104,7 +102,7 @@ void SourceDeviceManager::closeSource(int slotNo, const QUuid uuid)
     if(isValidSlotNo(slotNo) && m_activeSlots[slotNo])
         closeRequested = m_sourceControllers[slotNo]->close(uuid);
     if(!closeRequested)
-        emit sigSlotRemovedQueued(-1, uuid, QStringLiteral("No source found at slot %1").arg(slotNo));
+        emitSigSlotRemoved(-1, uuid, QStringLiteral("No source found at slot %1").arg(slotNo));
 }
 
 void SourceDeviceManager::closeSource(QString ioDeviceInfo, const QUuid uuid)
@@ -116,7 +114,7 @@ void SourceDeviceManager::closeSource(QString ioDeviceInfo, const QUuid uuid)
             return;
         }
     }
-    emit sigSlotRemovedQueued(-1, uuid, QString("No source found at %1").arg(ioDeviceInfo));
+    emitSigSlotRemoved(-1, uuid, QString("No source found at %1").arg(ioDeviceInfo));
 }
 
 void SourceDeviceManager::closeAll()
@@ -199,7 +197,7 @@ void SourceDeviceManager::onSourceClosed(int facadeId, QUuid uuid)
                 m_activeSlots[slotNo] = false;
                 disconnect(sourceController.get(), &SourceDeviceTemplate::sigClosed,
                            this, &SourceDeviceManager::onSourceClosed);
-                emit sigSlotRemovedQueued(slotNo, uuid, lastError);
+                emitSigSlotRemoved(slotNo, uuid, lastError);
                 break;
             }
         }
@@ -252,5 +250,15 @@ void SourceDeviceManager::checkHandleAllClosed()
     if(getActiveSlotCount() == 0) {
         emit sigAllSlotsRemoved();
     }
+}
+
+void SourceDeviceManager::emitSigSlotRemoved(int slotNo, QUuid uuid, QString errorMsg)
+{
+    QMetaObject::invokeMethod(this,
+                              "sigSlotRemoved",
+                              Qt::QueuedConnection,
+                              Q_ARG(int, slotNo),
+                              Q_ARG(QUuid, uuid),
+                              Q_ARG(QString, errorMsg));
 }
 
