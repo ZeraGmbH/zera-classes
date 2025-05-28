@@ -3,9 +3,6 @@
 IoDeviceBase::IoDeviceBase(IoDeviceTypes type) :
     m_type(type)
 {
-    connect(this, &IoDeviceBase::sigIoFinishedQueued,
-            this, &IoDeviceBase::sigIoFinished,
-            Qt::QueuedConnection);
 }
 
 void IoDeviceBase::prepareSendAndReceive(IoTransferDataSingle::Ptr ioTransferData)
@@ -16,6 +13,15 @@ void IoDeviceBase::prepareSendAndReceive(IoTransferDataSingle::Ptr ioTransferDat
         qCritical("Do not reuse IoTransferDataSingle");
     }
     m_currIoId.setPending(m_IDGenerator.nextID());
+}
+
+void IoDeviceBase::emitSigIoFinished(int ioID, bool ioDeviceError)
+{
+    QMetaObject::invokeMethod(this,
+                              "sigIoFinished",
+                              Qt::QueuedConnection,
+                              Q_ARG(int, ioID),
+                              Q_ARG(bool, ioDeviceError));
 }
 
 QString IoDeviceBase::getDeviceInfo()

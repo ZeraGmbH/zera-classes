@@ -54,7 +54,7 @@ int IoDeviceZeraSerial::sendAndReceive(IoTransferDataSingle::Ptr ioTransferData)
         m_serialIO.sendAndReceive(ioTransferData->getBytesSend(), &m_bytesReceived);
     }
     if(!m_serialIO.isIOPending()) {
-        emit sigIoFinishedQueued(m_currIoId.getPending(), true);
+        emitSigIoFinished(m_currIoId.getPending(), true);
     }
     return m_currIoId.getPending();
 }
@@ -107,7 +107,7 @@ bool IoDeviceZeraSerial::isOpen()
 void IoDeviceZeraSerial::onIoFinished()
 {
     m_ioTransferData->setDataReceived(m_bytesReceived);
-    emit sigIoFinishedQueued(m_currIoId.getPending(), false);
+    emitSigIoFinished(m_currIoId.getPending(), false);
 }
 
 void IoDeviceZeraSerial::onDeviceFileGone(QString)

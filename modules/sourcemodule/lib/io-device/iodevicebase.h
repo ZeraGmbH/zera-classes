@@ -22,11 +22,12 @@ public:
     IoDeviceTypes getType() { return m_type; }
 signals:
     void sigDisconnected();
-    void sigIoFinished(int ioID, bool ioDeviceError); // users connect this signal
+    void sigIoFinished(int ioID, bool ioDeviceError);
 
 protected:
     virtual void setReadTimeoutNextIo(int) {};
     void prepareSendAndReceive(IoTransferDataSingle::Ptr ioTransferData);
+    void emitSigIoFinished(int ioID, bool ioDeviceError);
     QString m_strDeviceInfo;
     IoIdGenerator m_IDGenerator;
     IdKeeperSingle m_currIoId;
@@ -34,8 +35,6 @@ protected:
 
 private:
     IoDeviceTypes m_type;
-signals: // sub classes emit this to ensure queue
-    void sigIoFinishedQueued(int ioID, bool ioDeviceError);
 };
 
 #endif // IODEVICEBASE_H

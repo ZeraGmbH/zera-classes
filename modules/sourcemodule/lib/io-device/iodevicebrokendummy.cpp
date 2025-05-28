@@ -8,7 +8,7 @@ IoDeviceBrokenDummy::IoDeviceBrokenDummy(IoDeviceTypes type) :
 int IoDeviceBrokenDummy::sendAndReceive(IoTransferDataSingle::Ptr ioTransferData)
 {
     prepareSendAndReceive(ioTransferData);
-    emit sigIoFinishedQueued(m_currIoId.getPending(), true);
+    emitSigIoFinished(m_currIoId.getPending(), true);
     return m_currIoId.getPending();
 }
 
