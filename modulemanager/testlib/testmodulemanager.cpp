@@ -24,8 +24,8 @@ bool TestModuleManager::prepareOe()
 
 void TestModuleManager::enableTests()
 {
-    QDir dir;
-    dir.rmpath(SOURCE_STATE_PATH);
+    QDir dir(SOURCE_STATE_PATH);
+    dir.removeRecursively();
     TimerFactoryQtForTest::enableTest();
     prepareOe();
 }
