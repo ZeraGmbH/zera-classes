@@ -6175,20 +6175,6 @@
             },
             "SCPIInfo": {
                 "Cmd": [
-                    [
-                        "AUTH",
-                        "GUIDIALOGFINISHED",
-                        "10",
-                        "PAR_GuiDialogFinished",
-                        "0"
-                    ],
-                    [
-                        "AUTH",
-                        "RELOADTRUSTLIST",
-                        "10",
-                        "PAR_ReloadTrustList",
-                        "0"
-                    ]
                 ],
                 "Name": "API"
             }
