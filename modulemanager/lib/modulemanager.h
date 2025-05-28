@@ -3,15 +3,15 @@
 
 #include "abstractfactoryserviceinterfaces.h"
 #include "jsonsessionloader.h"
-#include "modulefactoryparam.h"
 #include "modulemanagersetupfacade.h"
 #include "moduledata.h"
+#include "modulenetworkparams.h"
+#include "moduleshareddata.h"
 #include <abstracttcpnetworkfactory.h>
 #include <virtualmodule.h>
 #include <QVariant>
 #include <QHash>
 #include <QQueue>
-#include <QTimer>
 #include <QElapsedTimer>
 
 namespace VeinEvent
