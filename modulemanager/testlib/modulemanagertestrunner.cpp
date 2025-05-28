@@ -37,11 +37,6 @@ void ModuleManagerTestRunner::start(QString sessionFileName)
     m_modmanFacade->addSubsystem(m_vfCmdEventHandlerSystem.get());
 }
 
-VeinTcp::AbstractTcpNetworkFactoryPtr ModuleManagerTestRunner::getTcpNetworkFactory()
-{
-    return m_modMan->getTcpNetworkFactory();
-}
-
 VeinStorage::AbstractEventSystem *ModuleManagerTestRunner::getVeinStorageSystem()
 {
     return m_modmanFacade->getStorageSystem();

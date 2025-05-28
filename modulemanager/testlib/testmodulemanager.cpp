@@ -95,11 +95,6 @@ const QByteArray TestModuleManager::getLastStoredConfig()
     return *m_configDataLastSaved;
 }
 
-VeinTcp::AbstractTcpNetworkFactoryPtr TestModuleManager::getTcpNetworkFactory()
-{
-    return m_tcpNetworkFactory;
-}
-
 ZDspServer *TestModuleManager::getDspServer()
 {
     return m_testAllServices->getZdsp1dServer();
