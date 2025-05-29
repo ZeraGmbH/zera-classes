@@ -9,7 +9,6 @@ file(GLOB SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/source-protocols/*.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/source-scanner/*.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/transaction-ids/*.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/vein/*.cpp
     )
 
 file(GLOB HEADER
@@ -23,7 +22,6 @@ file(GLOB HEADER
     ${CMAKE_CURRENT_SOURCE_DIR}/source-protocols/*.h
     ${CMAKE_CURRENT_SOURCE_DIR}/source-scanner/*.h
     ${CMAKE_CURRENT_SOURCE_DIR}/transaction-ids/*.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/vein/*.h
     )
 
 add_library(sourcemodule-static STATIC
@@ -55,7 +53,6 @@ target_include_directories(sourcemodule-static
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/source-protocols>
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/source-scanner>
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/transaction-ids>
-    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/vein>
     )
 
 add_definitions(-DZC_DEV_STATE_PATH="${CMAKE_INSTALL_SYSCONFDIR}/zera/states")
