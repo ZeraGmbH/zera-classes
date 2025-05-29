@@ -67,11 +67,9 @@ void SourceModuleProgram::generateVeinInterface()
     m_pModule->getRpcEventSystem()->addRpc(m_sharedPtrRpcRemoveInterface);
 
     // per source components
-    VfModuleComponent* pVeinAct;
-    VfModuleParameter* pVeinParam;
-    cJsonParamValidator *jsonValidator;
     for(int souceCount=0; souceCount<maxSources; souceCount++) {
         SourceVeinInterface* sourceVeinInterface = new SourceVeinInterface;
+        VfModuleComponent* pVeinAct;
         // device info (Don' movit down - our clients need it first!!)
         pVeinAct = new VfModuleComponent(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
                                             QString("ACT_DeviceInfo%1").arg(souceCount),
@@ -88,12 +86,12 @@ void SourceModuleProgram::generateVeinInterface()
         m_pModule->veinModuleActvalueList.append(pVeinAct); // auto delete / meta-data / scpi
 
         // device param
-        pVeinParam = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
-                                                            key = QString("PAR_SourceState%1").arg(souceCount),
-                                                            QString("All source parameters in JSON"),
-                                                            QJsonObject());
+        VfModuleParameter* pVeinParam = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
+                                                              key = QString("PAR_SourceState%1").arg(souceCount),
+                                                              QString("All source parameters in JSON"),
+                                                              QJsonObject());
         sourceVeinInterface->setVeinDeviceParameterComponent(pVeinParam);
-        jsonValidator = new cJsonParamValidator();
+        cJsonParamValidator *jsonValidator = new cJsonParamValidator();
         sourceVeinInterface->setVeinDeviceParameterValidator(jsonValidator);
         pVeinParam->setValidator(jsonValidator);
         m_pModule->m_veinModuleParameterMap[key] = pVeinParam; // auto delete / meta-data / scpi
