@@ -27,12 +27,13 @@ void VfEventSytemModuleParam::processCommandEvent(VeinEvent::CommandEvent *comma
                     param->veinTransaction(commandEvent->peerId(), cData->newValue(), cData->oldValue(), cData->eventCommand());
                     commandEvent->accept(); // it is an event for us ... the parameter will do the rest
                 }
-                else
-                    qCritical("Ignore param change due to old different in %i/%s: Old param %s / old storage %s",
+                // WTF is the idea ignoring those with improper old values???
+                /*else
+                    qWarning("Ignore param change due to old different in %i/%s: Old param %s / old storage %s",
                               m_entityId,
                               qPrintable(componentName),
                               qPrintable(cData->oldValue().toString()),
-                              qPrintable(storageDb->getStoredValue(m_entityId, componentName).toString()));
+                              qPrintable(storageDb->getStoredValue(m_entityId, componentName).toString()));*/
             }
         }
     }
