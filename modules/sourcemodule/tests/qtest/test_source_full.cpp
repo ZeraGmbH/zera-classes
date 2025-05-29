@@ -11,6 +11,11 @@ QTEST_MAIN(test_source_full)
 
 static int constexpr sourceEntityId = 1300;
 
+void test_source_full::initTestCase()
+{
+    qputenv("QT_FATAL_CRITICALS", "1");
+}
+
 void test_source_full::cleanup()
 {
     if (m_testRunner) {

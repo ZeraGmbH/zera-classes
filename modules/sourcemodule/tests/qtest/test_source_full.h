@@ -12,6 +12,7 @@ class test_source_full : public QObject
 {
     Q_OBJECT
 private slots:
+    void initTestCase();
     void cleanup();
 
     void entity_avail_mt310s2();
