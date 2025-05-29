@@ -338,14 +338,14 @@ void cSpm1ModuleMeasProgram::generateVeinInterface()
     m_pMeasStartTime = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
                                              key = QString("ACT_StartTime"),
                                              QString("Last measurement: Start time (dd-MM-yyyy HH:mm:ss)"),
-                                             QVariant(QDateTime()));
+                                             QString());
     m_pMeasStartTime->setScpiInfo("CALCULATE", QString("%1:STRTTIME").arg(modNr), SCPI::isQuery, m_pMeasStartTime->getName());
     m_pModule->m_veinModuleParameterMap[key] = m_pMeasStartTime; // and for the modules interface
 
     m_pMeasEndTime = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
                                            key = QString("ACT_EndTime"),
                                            QString("Last measurement: End time (dd-MM-yyyy HH:mm:ss)"),
-                                           QVariant(QDateTime()));
+                                           QString());
     m_pMeasEndTime->setScpiInfo("CALCULATE",  QString("%1:ENDTIME").arg(modNr), SCPI::isQuery, m_pMeasEndTime->getName());
     m_pModule->m_veinModuleParameterMap[key] = m_pMeasEndTime; // and for the modules interface
 

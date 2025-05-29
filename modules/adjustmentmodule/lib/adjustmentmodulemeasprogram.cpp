@@ -333,8 +333,8 @@ void cAdjustmentModuleMeasProgram::generateVeinInterface()
 
     m_pPARAdjustInit = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
                                                 key = QString("PAR_AdjustInit"),
-                                                QString("Initialize adjustment data"),
-                                                QVariant(int(0)),
+                                                QString("Initialize adjustment data [channel-name,range-name] e.g IAUX,C200A"),
+                                                QString(),
                                                 false); // no deferred notification necessary
     m_pPARAdjustInit->setScpiInfo("CALCULATE", "INIT", SCPI::isQuery|SCPI::isCmdwP, m_pPARAdjustInit->getName());
     m_pModule->m_veinModuleParameterMap[key] = m_pPARAdjustInit;

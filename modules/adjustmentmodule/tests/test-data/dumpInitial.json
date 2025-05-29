@@ -46,7 +46,7 @@
                     }
                 },
                 "PAR_AdjustInit": {
-                    "Description": "Initialize adjustment data",
+                    "Description": "Initialize adjustment data [channel-name,range-name] e.g IAUX,C200A",
                     "Validation": {
                         "Data": [
                             "not subject"
@@ -236,7 +236,7 @@
         "PAR_AdjustAmplitudeDc": "",
         "PAR_AdjustCLAMPData": "",
         "PAR_AdjustGainStatus": 0,
-        "PAR_AdjustInit": 0,
+        "PAR_AdjustInit": "",
         "PAR_AdjustOffsetStatus": 0,
         "PAR_AdjustPCBData": "",
         "PAR_AdjustPhase": "",

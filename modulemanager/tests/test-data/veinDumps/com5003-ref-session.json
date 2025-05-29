@@ -1253,7 +1253,7 @@
     },
     "1130": {
         "ACT_DutPulses": 0,
-        "ACT_EndTime": null,
+        "ACT_EndTime": "",
         "ACT_Energy": 0,
         "ACT_EnergyFinal": 0,
         "ACT_MeasNum": 0,
@@ -1264,7 +1264,7 @@
         "ACT_Rating": -1,
         "ACT_RefFreqInput": "fo0",
         "ACT_Result": 0,
-        "ACT_StartTime": null,
+        "ACT_StartTime": "",
         "ACT_Status": 0,
         "EntityName": "SEC1Module1",
         "INF_ModuleInterface": {
