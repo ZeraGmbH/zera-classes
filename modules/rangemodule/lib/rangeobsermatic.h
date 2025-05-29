@@ -110,7 +110,7 @@ private:
     QList<int> getGroupAliasIdxListForChannel(int channelIdx);
     bool requiresOverloadReset(int channel);
     void startOverloadReset(int channel);
-    float getPreScale(int channelIdx);
+    double getPreScale(int channelIdx);
     void handleOverload(const int channelIdx, bool rmsOverload, bool hardOverLoad, bool adcOverLoad);
     void setOverloadVeinComponent(bool overloadOn);
 

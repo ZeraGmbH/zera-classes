@@ -248,7 +248,7 @@ void cRangeObsermatic::rangeObservation()
     for (int i = 0; i < nrActValues; i++) { // we test all channels
         cRangeMeasChannel *rangeMeasChannel = m_RangeMeasChannelList.at(i);
         // the overload observation must consider the prescaling
-        float prescalingFac = getPreScale(i);
+        double prescalingFac = getPreScale(i);
         // for test overload we take the rms value with/without dc depending on configuration
         // and for overload condition of adc test, we take the peakvalues including dc
         const RangeChannelData *channelData = rangeMeasChannel->getChannelData();
@@ -399,7 +399,7 @@ void cRangeObsermatic::setRanges(bool force)
             double actUrValue = RangeMeasChannelConvenience::getUrValueRangeAct(rangeMeasChannel);
             double actRejection = RangeMeasChannelConvenience::getRejectionRangeAct(rangeMeasChannel);
             // The scaling factor is multplied with the inverse presaling value
-            float scaleToDsp = (actUrValue / actRejection) * (1 / getPreScale(i));
+            double scaleToDsp = (actUrValue / actRejection) * (1 / getPreScale(i));
             quint8 dspChannel = rangeMeasChannel->getDSPChannelNr();
             m_gainScaleDspVar->setValue(dspChannel, scaleToDsp);
 
@@ -471,9 +471,9 @@ bool cRangeObsermatic::requiresOverloadReset(int channel)
            (m_ConfPar.m_nRangeAutoAct.m_nActive != 1 || !m_maxOvlList.at(channel));
 }
 
-float cRangeObsermatic::getPreScale(int channelIdx)
+double cRangeObsermatic::getPreScale(int channelIdx)
 {
-    float prescaleValue = 1;
+    double prescaleValue = 1;
     int groupPresacalingIdxFound = -1;
     const QStringList channelAliases = m_pModule->getSharedChannelRangeObserver()->getChannelAliases();
     if(channelIdx < channelAliases.length()){
@@ -486,7 +486,7 @@ float cRangeObsermatic::getPreScale(int channelIdx)
     }
 
     if(groupPresacalingIdxFound < m_RangeGroupPreScalingList.length() && groupPresacalingIdxFound > -1) {
-        prescaleValue = m_RangeGroupPreScalingInfo.at(groupPresacalingIdxFound)->getValue().toFloat();
+        prescaleValue = m_RangeGroupPreScalingInfo.at(groupPresacalingIdxFound)->getValue().toDouble();
     }
     return prescaleValue;
 }
@@ -715,15 +715,15 @@ void cRangeObsermatic::preScalingChanged(QVariant unused)
 {
     Q_UNUSED(unused)
     for(int i=0;i<m_RangeGroupPreScalingInfo.length();++i){
-        float factor=1;
+        double factor = 1;
         if(i < m_RangeGroupPreScalingList.length()) {
             if(m_RangeGroupPreScalingEnabledList.at(i)->getValue().toBool() == true) {
                 QString equation=m_RangeGroupPreScalingList.at(i)->getValue().toString();
                 QStringList fac=equation.split("*");
                 if(fac.length()>0){
-                    float num=fac.at(0).split("/")[1].toFloat();
-                    float denom=fac.at(0).split("/")[0].toFloat();
-                    factor=num/denom;
+                    double num = fac.at(0).split("/")[1].toDouble();
+                    double denom = fac.at(0).split("/")[0].toDouble();
+                    factor = num / denom;
                 }
                 // the correction factor is the inverse of the transformer ratio
                 if(fac.length()>1){
