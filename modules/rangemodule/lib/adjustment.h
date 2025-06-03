@@ -51,8 +51,6 @@ private:
     adjustConfPar *m_adjustmentConfig;
     Zera::DspInterfacePtr m_dspInterface;
     Zera::ProxyClientPtr m_dspClient;
-    Zera::PcbInterfacePtr m_pcbInterface;
-    Zera::ProxyClientPtr m_pcbClient;
     QList<cRangeMeasChannel*> m_ChannelList; // here the real channel list
     QList<cRangeMeasChannel*> m_subDCChannelList;
     // Those are the actual values without preSacling
@@ -67,7 +65,6 @@ private:
     QList<VfModuleParameter*> m_invertedPhasesParList;
 
     // statemachine for activating gets the following states
-    QState m_pcbserverConnectState;
     QState m_dspserverConnectState;
     QState m_readGainCorrState;
     QState m_readPhaseCorrState;
@@ -103,7 +100,6 @@ private:
 
 
 private slots:
-    void pcbserverConnect();
     void dspserverConnect();
     void readGainCorr();
     void readPhaseCorr();

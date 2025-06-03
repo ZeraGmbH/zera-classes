@@ -30,11 +30,15 @@ cAdjustManagement::cAdjustManagement(cRangeModule *module,
         m_pModule->getEntityId(),
         m_ChannelNameList,
         false /* just for demo COM5003 ref-session - postpone better solution now */);
-    m_pcbInterface = std::make_shared<Zera::cPCBInterface>();
 
     m_bAdjustTrigger = false;
-    for (int i = 0; i < m_ChannelNameList.count(); i++) // we fetch all our real channels first
+    for (int i = 0; i < m_ChannelNameList.count(); i++) {
+        // we fetch all our real channels first
         m_ChannelList.append(m_pModule->getMeasChannel(m_ChannelNameList.at(i)));
+        // we connect cmddone of our meas channels so we get informed if commands are finished
+        connect(m_ChannelList.at(i), &cRangeMeasChannel::cmdDone, this, &cAdjustManagement::catchChannelReply);
+    }
+
     for (int i = 0; i < m_subdcChannelNameList.count(); i++) // we fetch all our real channels first
         m_subDCChannelList.append(m_pModule->getMeasChannel(m_subdcChannelNameList.at(i)));
 
@@ -43,15 +47,13 @@ cAdjustManagement::cAdjustManagement(cRangeModule *module,
     m_readPhaseCorrState.addTransition(this, &cAdjustManagement::activationContinue, &m_readOffsetCorrState);
     m_readOffsetCorrState.addTransition(this, &cAdjustManagement::activationContinue, &m_setSubDCState);
     m_setSubDCState.addTransition(this, &cAdjustManagement::activationContinue, &m_activationDoneState);
-    m_activationMachine.addState(&m_pcbserverConnectState);
     m_activationMachine.addState(&m_dspserverConnectState);
     m_activationMachine.addState(&m_readGainCorrState);
     m_activationMachine.addState(&m_readPhaseCorrState);
     m_activationMachine.addState(&m_readOffsetCorrState);
     m_activationMachine.addState(&m_setSubDCState);
     m_activationMachine.addState(&m_activationDoneState);
-    m_activationMachine.setInitialState(&m_pcbserverConnectState);
-    connect(&m_pcbserverConnectState, &QState::entered, this, &cAdjustManagement::pcbserverConnect);
+    m_activationMachine.setInitialState(&m_dspserverConnectState);
     connect(&m_dspserverConnectState, &QState::entered, this, &cAdjustManagement::dspserverConnect);
     connect(&m_readGainCorrState, &QState::entered, this, &cAdjustManagement::readGainCorr);
     connect(&m_readPhaseCorrState, &QState::entered, this, &cAdjustManagement::readPhaseCorr);
@@ -160,23 +162,6 @@ void cAdjustManagement::generateVeinInterface()
     }
 }
 
-
-void cAdjustManagement::pcbserverConnect()
-{
-    // we connect cmddone of our meas channels so we get informed if commands are finished
-    for (int i = 0; i < m_ChannelList.count(); i++)
-        connect(m_ChannelList.at(i), &cRangeMeasChannel::cmdDone, this, &cAdjustManagement::catchChannelReply);
-
-    // we set up our pcb server connection
-    m_pcbClient = Zera::Proxy::getInstance()->getConnectionSmart(m_pModule->getNetworkConfig()->m_pcbServiceConnectionInfo,
-                                                                 m_pModule->getNetworkConfig()->m_tcpNetworkFactory);
-    m_pcbInterface->setClientSmart(m_pcbClient);
-    m_pcbserverConnectState.addTransition(m_pcbClient.get(), &Zera::ProxyClient::connected, &m_dspserverConnectState);
-    connect(m_pcbInterface.get(), &AbstractServerInterface::serverAnswer, this, &cAdjustManagement::catchInterfaceAnswer);
-    Zera::Proxy::getInstance()->startConnectionSmart(m_pcbClient);
-}
-
-
 void cAdjustManagement::dspserverConnect()
 {
     // we set up our dsp server connection
@@ -187,7 +172,6 @@ void cAdjustManagement::dspserverConnect()
     connect(m_dspInterface.get(), &AbstractServerInterface::serverAnswer, this, &cAdjustManagement::catchInterfaceAnswer);
     Zera::Proxy::getInstance()->startConnectionSmart(m_dspClient);
 }
-
 
 void cAdjustManagement::readGainCorr()
 {
