@@ -70,7 +70,6 @@ private:
     QState m_dataAcquisitionState;
     QFinalState m_dataAcquisitionDoneState;
 
-    Zera::ProxyClientPtr m_rmClient;
     TimerTemplateQtPtr m_demoPeriodicTimer;
 
 private slots:

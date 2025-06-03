@@ -82,7 +82,6 @@ private:
     QState m_dataAcquisitionState;
     QFinalState m_dataAcquisitionDoneState;
 
-    Zera::ProxyClientPtr m_rmClient;
     LogStatisticsAsyncFloat m_frequencyLogStatistics;
 
     void setActualValuesNames();

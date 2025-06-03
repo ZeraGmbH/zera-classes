@@ -75,8 +75,6 @@ private:
     QState m_dataAcquisitionState;
     QFinalState m_dataAcquisitionDoneState;
 
-    Zera::ProxyClientPtr m_rmClient;
-
 private slots:
     void setInterfaceActualValues(QVector<float>);
 
