@@ -70,7 +70,6 @@ private:
     // statemachine for activating gets the following states
     QState m_resourceManagerConnectState;
     QState m_IdentifyState;
-    QState m_pcbserverConnectState;
     QState m_dspserverConnectState;
     QState m_claimPGRMemState;
     QState m_claimUSERMemState;
@@ -101,7 +100,6 @@ private slots:
     void resourceManagerConnect();
     void sendRMIdent();
 
-    void pcbserverConnect();
     void dspserverConnect();
     void claimPGRMem();
     void claimUSERMem();
