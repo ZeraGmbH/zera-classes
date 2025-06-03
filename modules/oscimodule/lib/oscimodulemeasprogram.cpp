@@ -23,8 +23,7 @@ cOsciModuleMeasProgram::cOsciModuleMeasProgram(cOsciModule* module, std::shared_
         getConfData()->m_valueChannelList,
         getConfData()->m_nInterpolation);
 
-    m_IdentifyState.addTransition(this, &cOsciModuleMeasProgram::activationContinue, &m_pcbserverConnectState);
-    m_pcbserverConnectState.addTransition(this, &cOsciModuleMeasProgram::activationContinue, &m_dspserverConnectState);
+    m_IdentifyState.addTransition(this, &cOsciModuleMeasProgram::activationContinue, &m_dspserverConnectState);
 
     m_claimPGRMemState.addTransition(this, &cOsciModuleMeasProgram::activationContinue, &m_claimUSERMemState);
     m_claimUSERMemState.addTransition(this, &cOsciModuleMeasProgram::activationContinue, &m_var2DSPState);
@@ -34,7 +33,6 @@ cOsciModuleMeasProgram::cOsciModuleMeasProgram(cOsciModule* module, std::shared_
 
     m_activationMachine.addState(&m_resourceManagerConnectState);
     m_activationMachine.addState(&m_IdentifyState);
-    m_activationMachine.addState(&m_pcbserverConnectState);
     m_activationMachine.addState(&m_dspserverConnectState);
     m_activationMachine.addState(&m_claimPGRMemState);
     m_activationMachine.addState(&m_claimUSERMemState);
@@ -47,7 +45,6 @@ cOsciModuleMeasProgram::cOsciModuleMeasProgram(cOsciModule* module, std::shared_
 
     connect(&m_resourceManagerConnectState, &QState::entered, this, &cOsciModuleMeasProgram::resourceManagerConnect);
     connect(&m_IdentifyState, &QState::entered, this, &cOsciModuleMeasProgram::sendRMIdent);
-    connect(&m_pcbserverConnectState, &QState::entered, this, &cOsciModuleMeasProgram::pcbserverConnect);
     connect(&m_dspserverConnectState, &QState::entered, this, &cOsciModuleMeasProgram::dspserverConnect);
     connect(&m_claimPGRMemState, &QState::entered, this, &cOsciModuleMeasProgram::claimPGRMem);
     connect(&m_claimUSERMemState, &QState::entered, this, &cOsciModuleMeasProgram::claimUSERMem);
@@ -399,16 +396,6 @@ void cOsciModuleMeasProgram::sendRMIdent()
     m_MsgNrCmdList[m_rmInterface.rmIdent(QString("OsciModule%1").arg(m_pModule->getModuleNr()))] = sendrmident;
 }
 
-void cOsciModuleMeasProgram::pcbserverConnect()
-{
-    m_pcbClient = Zera::Proxy::getInstance()->getConnectionSmart(m_pModule->getNetworkConfig()->m_pcbServiceConnectionInfo,
-                                                                 m_pModule->getNetworkConfig()->m_tcpNetworkFactory);
-    m_pcbInterface->setClientSmart(m_pcbClient);
-    connect(m_pcbClient.get(), &Zera::ProxyClient::connected, this, &cBaseMeasProgram::activationContinue);
-    connect(m_pcbInterface.get(), &AbstractServerInterface::serverAnswer, this, &cOsciModuleMeasProgram::catchInterfaceAnswer);
-    Zera::Proxy::getInstance()->startConnectionSmart(m_pcbClient);
-}
-
 void cOsciModuleMeasProgram::dspserverConnect()
 {
     m_dspClient = Zera::Proxy::getInstance()->getConnectionSmart(m_pModule->getNetworkConfig()->m_dspServiceConnectionInfo,
@@ -476,7 +463,6 @@ void cOsciModuleMeasProgram::deactivateDSPdone()
 {
     disconnect(&m_rmInterface, 0, this, 0);
     disconnect(m_dspInterface.get(), 0, this, 0);
-    disconnect(m_pcbInterface.get(), 0, this, 0);
     emit deactivated();
 }
 
