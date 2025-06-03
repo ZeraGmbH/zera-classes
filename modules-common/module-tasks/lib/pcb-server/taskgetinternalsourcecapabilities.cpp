@@ -31,7 +31,7 @@ void TaskGetInternalSourceCapabilities::start()
 
 quint32 TaskGetInternalSourceCapabilities::sendToServer()
 {
-    return m_pcbInterface->scpiCommand("SOURCE:CAPABILITIES?");
+    return m_pcbInterface->scpiCommand("UISRC:CAPABILITIES?");
 }
 
 void TaskGetInternalSourceCapabilities::onServerAnswer(quint32 msgnr, quint8 reply, QVariant answer)
