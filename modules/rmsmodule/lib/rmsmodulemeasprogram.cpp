@@ -22,8 +22,7 @@ cRmsModuleMeasProgram::cRmsModuleMeasProgram(cRmsModule* module,
         m_pModule->getEntityId(),
         getConfData()->m_valueChannelList);
 
-    m_IdentifyState.addTransition(this, &cRmsModuleMeasProgram::activationContinue, &m_pcbserverConnectState);
-    m_pcbserverConnectState.addTransition(this, &cRmsModuleMeasProgram::activationContinue, &m_dspserverConnectState);
+    m_IdentifyState.addTransition(this, &cRmsModuleMeasProgram::activationContinue, &m_dspserverConnectState);
     m_claimPGRMemState.addTransition(this, &cRmsModuleMeasProgram::activationContinue, &m_claimUSERMemState);
     m_claimUSERMemState.addTransition(this, &cRmsModuleMeasProgram::activationContinue, &m_var2DSPState);
     m_var2DSPState.addTransition(this, &cRmsModuleMeasProgram::activationContinue, &m_cmd2DSPState);
@@ -32,7 +31,6 @@ cRmsModuleMeasProgram::cRmsModuleMeasProgram(cRmsModule* module,
 
     m_activationMachine.addState(&m_resourceManagerConnectState);
     m_activationMachine.addState(&m_IdentifyState);
-    m_activationMachine.addState(&m_pcbserverConnectState);
     m_activationMachine.addState(&m_dspserverConnectState);
     m_activationMachine.addState(&m_claimPGRMemState);
     m_activationMachine.addState(&m_claimUSERMemState);
@@ -45,7 +43,6 @@ cRmsModuleMeasProgram::cRmsModuleMeasProgram(cRmsModule* module,
 
     connect(&m_resourceManagerConnectState, &QAbstractState::entered, this, &cRmsModuleMeasProgram::resourceManagerConnect);
     connect(&m_IdentifyState, &QAbstractState::entered, this, &cRmsModuleMeasProgram::sendRMIdent);
-    connect(&m_pcbserverConnectState, &QAbstractState::entered, this, &cRmsModuleMeasProgram::pcbserverConnect);
     connect(&m_dspserverConnectState, &QAbstractState::entered, this, &cRmsModuleMeasProgram::dspserverConnect);
     connect(&m_claimPGRMemState, &QAbstractState::entered, this, &cRmsModuleMeasProgram::claimPGRMem);
     connect(&m_claimUSERMemState, &QAbstractState::entered, this, &cRmsModuleMeasProgram::claimUSERMem);
@@ -444,16 +441,6 @@ void cRmsModuleMeasProgram::sendRMIdent()
     m_MsgNrCmdList[m_rmInterface.rmIdent(QString("RmsModule%1").arg(m_pModule->getModuleNr()))] = sendrmident;
 }
 
-void cRmsModuleMeasProgram::pcbserverConnect()
-{
-    m_pcbClient = Zera::Proxy::getInstance()->getConnectionSmart(m_pModule->getNetworkConfig()->m_pcbServiceConnectionInfo,
-                                                                 m_pModule->getNetworkConfig()->m_tcpNetworkFactory);
-    m_pcbInterface->setClientSmart(m_pcbClient);
-    connect(m_pcbClient.get(), &Zera::ProxyClient::connected, this, &cBaseMeasProgram::activationContinue);
-    connect(m_pcbInterface.get(), &AbstractServerInterface::serverAnswer, this, &cRmsModuleMeasProgram::catchInterfaceAnswer);
-    Zera::Proxy::getInstance()->startConnectionSmart(m_pcbClient);
-}
-
 void cRmsModuleMeasProgram::dspserverConnect()
 {
     m_dspClient = Zera::Proxy::getInstance()->getConnectionSmart(m_pModule->getNetworkConfig()->m_dspServiceConnectionInfo,
@@ -463,7 +450,6 @@ void cRmsModuleMeasProgram::dspserverConnect()
     connect(m_dspInterface.get(), &AbstractServerInterface::serverAnswer, this, &cRmsModuleMeasProgram::catchInterfaceAnswer);
     Zera::Proxy::getInstance()->startConnectionSmart(m_dspClient);
 }
-
 
 void cRmsModuleMeasProgram::claimPGRMem()
 {
@@ -535,7 +521,6 @@ void cRmsModuleMeasProgram::deactivateDSPdone()
 {
     disconnect(&m_rmInterface, 0, this, 0);
     disconnect(m_dspInterface.get(), 0, this, 0);
-    disconnect(m_pcbInterface.get(), 0, this, 0);
     emit deactivated();
 }
 
