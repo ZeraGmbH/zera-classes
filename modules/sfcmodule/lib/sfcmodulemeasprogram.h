@@ -69,6 +69,8 @@ private:
 
     cSfcModule *m_pModule;
     Zera::cSECInterfacePtr m_secInterface;
+    Zera::PcbInterfacePtr m_pcbInterface;
+    Zera::ProxyClientPtr m_pcbClient;
 
     QList<VfModuleComponent *> m_veinActValueList; // the list of actual values we work on
     qint32 m_nIt;

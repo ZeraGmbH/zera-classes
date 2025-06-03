@@ -21,11 +21,10 @@ namespace SEC1MODULE
 
 cSec1ModuleMeasProgram::cSec1ModuleMeasProgram(cSec1Module* module, std::shared_ptr<BaseModuleConfiguration> pConfiguration) :
     cBaseMeasProgram(pConfiguration, module->getVeinModuleName()),
-    m_pModule(module)
+    m_pModule(module),
+    m_secInterface(std::make_unique<Zera::cSECInterface>()),
+    m_pcbInterface(std::make_shared<Zera::cPCBInterface>())
 {
-    m_secInterface = std::make_unique<Zera::cSECInterface>();
-    m_pcbInterface = std::make_shared<Zera::cPCBInterface>();
-
     m_IdentifyState.addTransition(this, &cSec1ModuleMeasProgram::activationContinue, &m_testSEC1ResourceState);
     m_testSEC1ResourceState.addTransition(this, &cSec1ModuleMeasProgram::activationContinue, &m_setECResourceState); // test presence of sec1 resource
     m_setECResourceState.addTransition(this, &cSec1ModuleMeasProgram::activationContinue, &m_readResourcesState); // claim 2 ecalculator units

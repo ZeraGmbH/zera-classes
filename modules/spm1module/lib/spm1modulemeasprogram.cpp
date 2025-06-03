@@ -17,11 +17,10 @@ namespace SPM1MODULE
 
 cSpm1ModuleMeasProgram::cSpm1ModuleMeasProgram(cSpm1Module* module, std::shared_ptr<BaseModuleConfiguration> pConfiguration) :
     cBaseMeasProgram(pConfiguration, module->getVeinModuleName()),
-    m_pModule(module)
+    m_pModule(module),
+    m_secInterface(std::make_unique<Zera::cSECInterface>()),
+    m_pcbInterface(std::make_shared<Zera::cPCBInterface>())
 {
-    m_secInterface = std::make_unique<Zera::cSECInterface>();
-    m_pcbInterface = std::make_shared<Zera::cPCBInterface>();
-
     m_IdentifyState.addTransition(this, &cSpm1ModuleMeasProgram::activationContinue, &m_testSEC1ResourceState);
     m_testSEC1ResourceState.addTransition(this, &cSpm1ModuleMeasProgram::activationContinue, &m_setECResourceState); // test presence of sec1 resource
     m_setECResourceState.addTransition(this, &cSpm1ModuleMeasProgram::activationContinue, &m_readResourcesState); // claim 3 ecalculator units

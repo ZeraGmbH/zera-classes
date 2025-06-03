@@ -4,7 +4,6 @@
 #include "basemoduleconfiguration.h"
 #include "moduleactivist.h"
 #include "basemodule.h"
-#include <pcbinterface.h>
 #include <rminterface.h>
 
 class cBaseMeasProgram: public cModuleActivist
@@ -23,9 +22,6 @@ protected:
     std::shared_ptr<BaseModuleConfiguration> m_pConfiguration;
     Zera::cRMInterface m_rmInterface;
     Zera::ProxyClientPtr m_rmClient;
-
-    Zera::PcbInterfacePtr m_pcbInterface;
-    Zera::ProxyClientPtr m_pcbClient;
 
     quint8 m_nConnectionCount;
 

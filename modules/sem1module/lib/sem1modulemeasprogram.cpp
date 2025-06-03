@@ -18,12 +18,10 @@ namespace SEM1MODULE
 
 cSem1ModuleMeasProgram::cSem1ModuleMeasProgram(cSem1Module* module, std::shared_ptr<BaseModuleConfiguration> pConfiguration) :
     cBaseMeasProgram(pConfiguration, module->getVeinModuleName()),
-    m_pModule(module)
+    m_pModule(module),
+    m_secInterface(std::make_unique<Zera::cSECInterface>()),
+    m_pcbInterface(std::make_shared<Zera::cPCBInterface>())
 {
-    // we have to instantiate a working resource manager and secserver interface
-    m_secInterface = std::make_unique<Zera::cSECInterface>();
-    m_pcbInterface = std::make_shared<Zera::cPCBInterface>();
-
     m_IdentifyState.addTransition(this, &cSem1ModuleMeasProgram::activationContinue, &m_testSEC1ResourceState);
     m_testSEC1ResourceState.addTransition(this, &cSem1ModuleMeasProgram::activationContinue, &m_setECResourceState); // test presence of sec1 resource
     m_setECResourceState.addTransition(this, &cSem1ModuleMeasProgram::activationContinue, &m_readResourcesState); // claim 3 ecalculator units
