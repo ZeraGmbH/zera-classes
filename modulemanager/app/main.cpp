@@ -244,10 +244,6 @@ int main(int argc, char *argv[])
     });
 
     modMan->setupConnections();
-    QObject::connect(modMan, &ZeraModules::ModuleManager::sigSessionSwitched, [&dataLoggerSystem]() {
-        //disable logging to prevent data logging between session switching
-        dataLoggerSystem->setLoggingEnabled(false);
-    });
 
     bool modulesFound = modMan->loadAllAvailableModulePlugins();
     if(!modulesFound) {
