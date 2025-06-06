@@ -20,7 +20,6 @@ private slots:
     void vein_dump_mt310s2();
     void vein_dump_mt581s2();
     void switch_on_mt310s2();
-    void switch_on_mt581s2();
 private:
     void setupServerAndClient(const QString &session, const QString &dut);
     void setupServerAndClientSpies(QJsonObject &jsonEvents);

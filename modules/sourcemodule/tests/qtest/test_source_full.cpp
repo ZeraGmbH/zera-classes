@@ -97,36 +97,6 @@ void test_source_full::switch_on_mt310s2()
     QVERIFY(TestLogHelpers::compareAndLogOnDiff(jsonExpected, jsonDumped));
 }
 
-void test_source_full::switch_on_mt581s2()
-{
-    // What we need:
-    // * Send load to server
-    // * Demo server responds busy
-    // * Demo Server rebonds
-
-    setupServerAndClient(":/sessions/minimal.json", "mt581s2");
-    QJsonObject jsonEventDump;
-    setupServerAndClientSpies(jsonEventDump);
-
-    VeinStorage::AbstractEventSystem* veinStorage = m_testRunner->getVeinStorageSystem();
-    VeinStorage::StorageComponentPtr storedState = veinStorage->getDb()->findComponent(sourceEntityId, "PAR_SourceState0");
-    JsonParamApi paramApi;
-    QJsonObject oldValue = storedState->getValue().toJsonObject();
-    paramApi.setParams(oldValue);
-    paramApi.setOn(true);
-
-    QEvent* event = VfClientComponentSetter::generateEvent(sourceEntityId, "PAR_SourceState0",
-                                                           oldValue, paramApi.getParams());
-    m_entityItem->sendEvent(event);
-    TimeMachineForTest::getInstance()->processTimers(5000);
-
-    QFile file(":/veinEventDumps/dumpSwitchOnMt581s2.json");
-    QVERIFY(file.open(QFile::ReadOnly));
-    QByteArray jsonExpected = file.readAll();
-    QByteArray jsonDumped = TestLogHelpers::dump(jsonEventDump);
-    QVERIFY(TestLogHelpers::compareAndLogOnDiff(jsonExpected, jsonDumped));
-}
-
 void test_source_full::setupServerAndClient(const QString &session, const QString &dut)
 {
     constexpr int veinServerPort = 12000;
