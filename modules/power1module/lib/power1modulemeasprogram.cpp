@@ -264,6 +264,7 @@ void cPower1ModuleMeasProgram::generateVeinInterface()
     m_pNominalFrequency->setUnit("Hz");
     m_pNominalFrequency->setValidator(new cIntValidator(10000, 200000, 1));
     m_pModule->m_veinModuleParameterMap[key] = m_pNominalFrequency; // for modules use
+    connect(m_pNominalFrequency, &VfModuleParameter::sigValueChanged, this, &cPower1ModuleMeasProgram::foutParamsToDsp);
 
     for(const auto &ele : qAsConst(m_scalingInputs)) {
         if(ele.first != nullptr && ele.second != nullptr) {
