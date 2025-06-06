@@ -150,7 +150,7 @@ void cStatusModuleInit::generateVeinInterface()
     m_pSerialNumber = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
                                             key = QString("PAR_SerialNr"),
                                             QString("Serial number"),
-                                            QVariant(QString("") ), true, false); // we select deferred notification
+                                            QVariant(QString("") ), true); // we select deferred notification
     m_pSerialNumber->setScpiInfo("STATUS", "SERIAL", SCPI::isQuery|SCPI::isCmdwP, key);
     m_pSerialNumber->setValidator(new cRegExValidator("^\\d{9}$"));
     m_pModule->m_veinModuleParameterMap[key] = m_pSerialNumber;

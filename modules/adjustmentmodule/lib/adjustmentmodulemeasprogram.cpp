@@ -382,40 +382,43 @@ void cAdjustmentModuleMeasProgram::generateVeinInterface()
     // we will set the validator later after activation we will know the channel names and their ranges
     connect(m_pPARAdjustOffset, &VfModuleParameter::sigValueChanged, this, &cAdjustmentModuleMeasProgram::setAdjustOffsetStartCommand);
 
-    m_pPARAdjustSend = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
-                                                key = QString("PAR_AdjustSend"),
-                                                QString("Send command to specified port"),
-                                                QVariant(QString("")),
-                                                false,
-                                                true); // deferred query notification necessary !!!!!
+    m_pPARAdjustSend = new VfModuleParameterDeferredQuery ( // deferred query notification necessary !!!!!
+        m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
+        key = QString("PAR_AdjustSend"),
+        QString("Send command to specified port"),
+        QVariant(QString("")),
+        false);
     m_pPARAdjustSend->setScpiInfo("CALCULATE", "SEND", SCPI::isQuery, m_pPARAdjustSend->getName());
     m_pModule->m_veinModuleParameterMap[key] = m_pPARAdjustSend;
     // we will set the validator later after activation we will know the channel names and their ranges
-    connect(m_pPARAdjustSend, &VfModuleParameter::sigValueQuery, this, &cAdjustmentModuleMeasProgram::transparentDataSend2Port);
+    connect(m_pPARAdjustSend, &VfModuleParameterDeferredQuery::sigValueQuery, this,
+            &cAdjustmentModuleMeasProgram::transparentDataSend2Port);
 
-    m_pPARAdjustPCBData = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
-                                                   key = QString("PAR_AdjustPCBData"),
-                                                   QString("Get and set pcb adjustment data"),
-                                                   QVariant(QString("")),
-                                                   true,  // deferred command notification necessary !!!!!
-                                                   true); // deferred query notification necessary !!!!!
+    m_pPARAdjustPCBData = new VfModuleParameterDeferredQuery( // deferred query notification necessary !!!!!
+        m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
+        key = QString("PAR_AdjustPCBData"),
+        QString("Get and set pcb adjustment data"),
+        QVariant(QString("")),
+        true);
     m_pPARAdjustPCBData->setScpiInfo("CALCULATE", "PCB", SCPI::isQuery|SCPI::isXMLCmd, m_pPARAdjustPCBData->getName());
     m_pModule->m_veinModuleParameterMap[key] = m_pPARAdjustPCBData;
     // we will set the validator later after activation we will know the channel names and their ranges
     connect(m_pPARAdjustPCBData, &VfModuleParameter::sigValueChanged, this, &cAdjustmentModuleMeasProgram::writePCBAdjustmentData);
-    connect(m_pPARAdjustPCBData, &VfModuleParameter::sigValueQuery, this, &cAdjustmentModuleMeasProgram::readPCBAdjustmentData);
+    connect(m_pPARAdjustPCBData, &VfModuleParameterDeferredQuery::sigValueQuery,
+            this, &cAdjustmentModuleMeasProgram::readPCBAdjustmentData);
 
-    m_pPARAdjustClampData = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
-                                                     key = QString("PAR_AdjustCLAMPData"),
-                                                     QString("Get and set clamp adjustment data"),
-                                                     QVariant(QString("")),
-                                                     true, // deferred command notification necessary !!!!!
-                                                     true); // deferred query notification necessary !!!!!
+    m_pPARAdjustClampData = new VfModuleParameterDeferredQuery ( // deferred query notification necessary !!!!!
+        m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
+        key = QString("PAR_AdjustCLAMPData"),
+        QString("Get and set clamp adjustment data"),
+        QVariant(QString("")),
+        true); // deferred command notification necessary !!!!!
     m_pPARAdjustClampData->setScpiInfo("CALCULATE", "CLAMP", SCPI::isQuery|SCPI::isXMLCmd, m_pPARAdjustClampData->getName());
     m_pModule->m_veinModuleParameterMap[key] = m_pPARAdjustClampData;
     // we will set the validator later after activation we will know the channel names and their ranges
     connect(m_pPARAdjustClampData, &VfModuleParameter::sigValueChanged, this, &cAdjustmentModuleMeasProgram::writeCLAMPAdjustmentData);
-    connect(m_pPARAdjustClampData, &VfModuleParameter::sigValueQuery, this, &cAdjustmentModuleMeasProgram::readCLAMPAdjustmentData);
+    connect(m_pPARAdjustClampData, &VfModuleParameterDeferredQuery::sigValueQuery,
+            this, &cAdjustmentModuleMeasProgram::readCLAMPAdjustmentData);
 }
 
 void cAdjustmentModuleMeasProgram::computationStartCommand(QVariant var)

@@ -6,6 +6,7 @@
 #include "adjustmentmoduleactivator.h"
 #include "basemeasworkprogram.h"
 #include "taskcontainerparallel.h"
+#include "vfmoduleparameterdeferredquery.h"
 #include <QObject>
 #include <QList>
 #include <QHash>
@@ -164,9 +165,9 @@ private:
     VfModuleParameter* m_pPARAdjustAmplitudeDc = nullptr;
     VfModuleParameter* m_pPARAdjustPhase = nullptr;
     VfModuleParameter* m_pPARAdjustOffset = nullptr;
-    VfModuleParameter* m_pPARAdjustSend = nullptr;
-    VfModuleParameter* m_pPARAdjustPCBData = nullptr;
-    VfModuleParameter* m_pPARAdjustClampData = nullptr;
+    VfModuleParameterDeferredQuery* m_pPARAdjustSend = nullptr;
+    VfModuleParameterDeferredQuery* m_pPARAdjustPCBData = nullptr;
+    VfModuleParameterDeferredQuery* m_pPARAdjustClampData = nullptr;
 
     // statemachine for computation of adjustment values
     QStateMachine m_computationMachine;
