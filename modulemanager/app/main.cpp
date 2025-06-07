@@ -78,6 +78,13 @@ static void startNetwork(QObject *parent)
     }
 }
 
+static VeinTcp::AbstractTcpNetworkFactoryPtr serviceNetworkFactory;
+static VeinTcp::AbstractTcpNetworkFactoryPtr getServiceNetworkFactory() {
+    if (serviceNetworkFactory == nullptr)
+        serviceNetworkFactory = VeinTcp::TcpNetworkFactory::create();
+    return serviceNetworkFactory;
+}
+
 static ZeraModules::ModuleManager *createModMan(bool demoMode,
                                                 const QString& demoDeviceName,
                                                 QObject* parent)
@@ -86,7 +93,7 @@ static ZeraModules::ModuleManager *createModMan(bool demoMode,
         DemoModuleManager* demoModMan = new DemoModuleManager(
             modManSetupFacade.get(),
             std::make_unique<DemoFactoryServiceInterfaces>(),
-            VeinTcp::TcpNetworkFactory::create(),
+            getServiceNetworkFactory(),
             parent);
         demoModMan->startAllDemoServices(demoDeviceName);
         return demoModMan;
@@ -95,7 +102,7 @@ static ZeraModules::ModuleManager *createModMan(bool demoMode,
         return new ZeraModules::ModuleManager(
             modManSetupFacade.get(),
             std::make_unique<FactoryServiceInterfaces>(),
-            VeinTcp::TcpNetworkFactory::create(),
+            getServiceNetworkFactory(),
             false,
             parent);
     }
