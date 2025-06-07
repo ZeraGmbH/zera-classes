@@ -145,20 +145,24 @@ int main(int argc, char *argv[])
         return -ENODEV;
     }
 
+    qInfo("Register MetaTypeStreamOperators...");
     ModuleManagerSetupFacade::registerMetaTypeStreamOperators();
 
     QStringList loggingFilters = QStringList() << QString("%1.debug=false").arg(VEIN_EVENT().categoryName()) <<
                                                   QString("%1.debug=false").arg(VEIN_NET_VERBOSE().categoryName()) <<
                                                   QString("%1.debug=false").arg(VEIN_NET_INTRO_VERBOSE().categoryName()) << //< Introspection logging is still enabled
                                                   QString("%1.debug=false").arg(VEIN_NET_TCP_VERBOSE().categoryName());
+    qInfo("Set logging filter rules...");
     QLoggingCategory::setFilterRules(loggingFilters.join("\n"));
 
     const VeinLogger::DBFactory sqliteFactory = [](){
         return new VeinLogger::SQLiteDB();
     };
 
+    qInfo("Create license system...");
     QString licenseUrl = QString("file://%1/license-keys").arg(OPERATOR_HOME);
     LicenseSystem *licenseSystem = new LicenseSystem({QUrl(licenseUrl)}, app.get());
+    qInfo("Create modman objects...");
     if(!demoMode)
         modManSetupFacade = std::make_unique<ModuleManagerSetupFacade>(licenseSystem, demoMode);
     else
