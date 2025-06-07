@@ -20,8 +20,9 @@ void VfEventSytemModuleParam::processCommandEvent(VeinEvent::CommandEvent *comma
                 // we only take new values if the old values are equal
                 double oldValue = cData->oldValue().toDouble();
                 const VeinStorage::AbstractDatabase *storageDb = m_storageSystem->getDb();
-                double newValue = storageDb->getStoredValue(m_entityId, componentName).toDouble();
-                if (cData->oldValue() == storageDb->getStoredValue(m_entityId, componentName) ||
+                QVariant storedValue = storageDb->getStoredValue(m_entityId, componentName);
+                double newValue = storedValue.toDouble();
+                if (cData->oldValue() == storedValue ||
                         (qIsNaN(oldValue) && qIsNaN(newValue))) {
                     VfModuleParameter *param = hashIter.value();
                     param->veinTransaction(commandEvent->peerId(), cData->newValue(), cData->oldValue(), cData->eventCommand());
