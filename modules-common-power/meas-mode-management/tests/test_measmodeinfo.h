@@ -11,6 +11,7 @@ private slots:
     void threeWireActiveIsThreeWire();
     void threeWireReactiveIsThreeWire();
     void threeWireApparentIsThreeWire();
+    void threeWireApparentGeometricIsThreeWire();
 };
 
 #endif // TEST_MEASMODEINFO_H

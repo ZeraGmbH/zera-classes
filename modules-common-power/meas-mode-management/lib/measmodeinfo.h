@@ -16,6 +16,7 @@ enum measmodes
     m3lw,
     m3lb,
     m3ls,
+    m3lsg,
     m2lw,
     m2lb,
     m2ls,

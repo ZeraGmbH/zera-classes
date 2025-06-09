@@ -36,3 +36,11 @@ void test_measmodeinfo::threeWireApparentIsThreeWire()
     QVERIFY(info.isThreeWire());
 }
 
+void test_measmodeinfo::threeWireApparentGeometricIsThreeWire()
+{
+    cMeasModeInfo info = MeasModeCatalog::getInfo("3LSg");
+    QVERIFY(info.isThreeWire());
+    info = MeasModeCatalog::getInfo(m3lsg);
+    QVERIFY(info.isThreeWire());
+}
+
