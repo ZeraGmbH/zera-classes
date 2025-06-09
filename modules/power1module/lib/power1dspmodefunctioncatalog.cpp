@@ -1,8 +1,6 @@
 #include "power1dspmodefunctioncatalog.h"
-#include "measmodecatalog.h"
 #include "measmodephasesetstrategy4wire.h"
 #include "measmodephasesetstrategy2wire.h"
-#include "measmodephasesetstrategyphasesvar.h"
 #include "measmodephasesetstrategyphasesfixed.h"
 #include "measmodephasesetstrategyxwire.h"
 
