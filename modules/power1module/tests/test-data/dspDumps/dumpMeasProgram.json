@@ -113,7 +113,7 @@
                     "TypeData": "DSPDATA::dFloat"
                 },
                 {
-                    "Name": "FAK",
+                    "Name": "CONST_HALF",
                     "Segment": "DSPDATA::localSegment",
                     "Size": 1,
                     "TypeData": "DSPDATA::dFloat"
@@ -142,7 +142,7 @@
         "SETVAL(XMMODEPHASE0,1)",
         "SETVAL(XMMODEPHASE1,1)",
         "SETVAL(XMMODEPHASE2,1)",
-        "SETVAL(FAK,0.5)",
+        "SETVAL(CONST_HALF,0.5)",
         "SETVAL(TIPAR,500)",
         "GETSTIME(TISTART)",
         "DEACTIVATECHAIN(1,0x0105)",
