@@ -17,6 +17,7 @@ void MeasModeCatalog::setupHashes()
     addInfoToHashes(cMeasModeInfo("4LSg", "S", "W", m4lsg));
     addInfoToHashes(cMeasModeInfo("3LW", "P", "W", m3lw));
     addInfoToHashes(cMeasModeInfo("3LB", "Q", "Var", m3lb));
+    addInfoToHashes(cMeasModeInfo("3LS", "S", "VA", m3ls));
     addInfoToHashes(cMeasModeInfo("2LW", "P", "W", m2lw));
     addInfoToHashes(cMeasModeInfo("2LB", "Q", "Var", m2lb));
     addInfoToHashes(cMeasModeInfo("2LS", "S", "VA", m2ls));
@@ -59,6 +60,7 @@ QSet<measmodes> MeasModeCatalog::getThreeWireModes()
     if(m_threeWireSet.isEmpty()) {
         m_threeWireSet.insert(m3lw);
         m_threeWireSet.insert(m3lb);
+        m_threeWireSet.insert(m3ls);
     }
     return m_threeWireSet;
 }

@@ -10,6 +10,7 @@ private slots:
     void fourWireIsNotThreeWire();
     void threeWireActiveIsThreeWire();
     void threeWireReactiveIsThreeWire();
+    void threeWireApparentIsThreeWire();
 };
 
 #endif // TEST_MEASMODEINFO_H

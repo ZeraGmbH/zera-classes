@@ -29,8 +29,8 @@ void test_measmodecatalog::allModesHaveACatalogEntry()
 
 void test_measmodecatalog::reminderForThreeWire()
 {
-    int expectedMeasModeCount = 16;
-    int expectedThreeWireModeCount = 2;
+    int expectedMeasModeCount = 17;
+    int expectedThreeWireModeCount = 3; // 3LW / 3LB / 3LS
 
     int threeWireModeCount = 0;
     for(int modeId=MeasModeFirst; modeId<MeasModeCount; modeId++) {

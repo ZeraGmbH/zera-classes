@@ -28,3 +28,11 @@ void test_measmodeinfo::threeWireReactiveIsThreeWire()
     QVERIFY(info.isThreeWire());
 }
 
+void test_measmodeinfo::threeWireApparentIsThreeWire()
+{
+    cMeasModeInfo info = MeasModeCatalog::getInfo("3LS");
+    QVERIFY(info.isThreeWire());
+    info = MeasModeCatalog::getInfo(m3ls);
+    QVERIFY(info.isThreeWire());
+}
+

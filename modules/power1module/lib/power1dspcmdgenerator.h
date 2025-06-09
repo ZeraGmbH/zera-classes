@@ -17,6 +17,7 @@ public:
     static QStringList getCmdsMMode4LBK(int dspSelectCode, MeasSystemChannels measChannelPairList, DspChainIdGen& idGen);
     static QStringList getCmdsMMode3LW(int dspSelectCode, MeasSystemChannels measChannelPairList, DspChainIdGen& idGen);
     static QStringList getCmdsMMode3LB(int dspSelectCode, MeasSystemChannels measChannelPairList, DspChainIdGen& idGen);
+    static QStringList getCmdsMMode3LS(int dspSelectCode, MeasSystemChannels measChannelPairList, DspChainIdGen& idGen);
     static QStringList getCmdsMModeXLW(int dspSelectCode, MeasSystemChannels measChannelPairList, DspChainIdGen& idGen);
     static QStringList getCmdsMModeXLB(int dspSelectCode, MeasSystemChannels measChannelPairList, DspChainIdGen& idGen);
     static QStringList getCmdsMModeXLS(int dspSelectCode, MeasSystemChannels measChannelPairList, DspChainIdGen& idGen);
