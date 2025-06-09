@@ -89,6 +89,61 @@ void test_power1_module_regression::dumpDspSetup()
     QVERIFY(TestLogHelpers::compareAndLogOnDiff(measProgramExpected, measProgramDumped));
 }
 
+const int powerEntityIdP1 = 1070;
+const int powerEntityIdP2 = 1071;
+const int powerEntityIdP3 = 1072;
+const int powerEntityIdP4 = 1073;
+
+void test_power1_module_regression::dumpDspSetupMt310s2Pow1To4()
+{
+    ModuleManagerTestRunner testRunner(":/sessions/session-mt310s2-p1-p4.json", "mt310s2");
+
+    TestDspInterfacePtr power1DspInterfaceP1 = testRunner.getDspInterface(powerEntityIdP1);
+    QString measProgramDumpedP1 = TestLogHelpers::dump(power1DspInterfaceP1->dumpAll());
+    QString measProgramExpectedP1 = TestLogHelpers::loadFile(":/dspDumps/dumpMeasProgramMt310s2P1.json");
+    QVERIFY(TestLogHelpers::compareAndLogOnDiff(measProgramExpectedP1, measProgramDumpedP1));
+
+    TestDspInterfacePtr power1DspInterfaceP2 = testRunner.getDspInterface(powerEntityIdP2);
+    QString measProgramDumpedP2 = TestLogHelpers::dump(power1DspInterfaceP2->dumpAll());
+    QString measProgramExpectedP2 = TestLogHelpers::loadFile(":/dspDumps/dumpMeasProgramMt310s2P2.json");
+    QVERIFY(TestLogHelpers::compareAndLogOnDiff(measProgramExpectedP2, measProgramDumpedP2));
+
+    TestDspInterfacePtr power1DspInterfaceP3 = testRunner.getDspInterface(powerEntityIdP3);
+    QString measProgramDumpedP3 = TestLogHelpers::dump(power1DspInterfaceP3->dumpAll());
+    QString measProgramExpectedP3 = TestLogHelpers::loadFile(":/dspDumps/dumpMeasProgramMt310s2P3.json");
+    QVERIFY(TestLogHelpers::compareAndLogOnDiff(measProgramExpectedP3, measProgramDumpedP3));
+
+    TestDspInterfacePtr power1DspInterfaceP4 = testRunner.getDspInterface(powerEntityIdP4);
+    QString measProgramDumpedP4 = TestLogHelpers::dump(power1DspInterfaceP4->dumpAll());
+    QString measProgramExpectedP4 = TestLogHelpers::loadFile(":/dspDumps/dumpMeasProgramMt310s2P4.json");
+    QVERIFY(TestLogHelpers::compareAndLogOnDiff(measProgramExpectedP4, measProgramDumpedP4));
+}
+
+void test_power1_module_regression::dumpDspSetupCom5003Pow1To4()
+{
+    ModuleManagerTestRunner testRunner(":/sessions/session-com5003-p1-p4.json", "com5003");
+
+    TestDspInterfacePtr power1DspInterfaceP1 = testRunner.getDspInterface(powerEntityIdP1);
+    QString measProgramDumpedP1 = TestLogHelpers::dump(power1DspInterfaceP1->dumpAll());
+    QString measProgramExpectedP1 = TestLogHelpers::loadFile(":/dspDumps/dumpMeasProgramCom5003P1.json");
+    QVERIFY(TestLogHelpers::compareAndLogOnDiff(measProgramExpectedP1, measProgramDumpedP1));
+
+    TestDspInterfacePtr power1DspInterfaceP2 = testRunner.getDspInterface(powerEntityIdP2);
+    QString measProgramDumpedP2 = TestLogHelpers::dump(power1DspInterfaceP2->dumpAll());
+    QString measProgramExpectedP2 = TestLogHelpers::loadFile(":/dspDumps/dumpMeasProgramCom5003P2.json");
+    QVERIFY(TestLogHelpers::compareAndLogOnDiff(measProgramExpectedP2, measProgramDumpedP2));
+
+    TestDspInterfacePtr power1DspInterfaceP3 = testRunner.getDspInterface(powerEntityIdP3);
+    QString measProgramDumpedP3 = TestLogHelpers::dump(power1DspInterfaceP3->dumpAll());
+    QString measProgramExpectedP3 = TestLogHelpers::loadFile(":/dspDumps/dumpMeasProgramCom5003P3.json");
+    QVERIFY(TestLogHelpers::compareAndLogOnDiff(measProgramExpectedP3, measProgramDumpedP3));
+
+    TestDspInterfacePtr power1DspInterfaceP4 = testRunner.getDspInterface(powerEntityIdP4);
+    QString measProgramDumpedP4 = TestLogHelpers::dump(power1DspInterfaceP4->dumpAll());
+    QString measProgramExpectedP4 = TestLogHelpers::loadFile(":/dspDumps/dumpMeasProgramCom5003P4.json");
+    QVERIFY(TestLogHelpers::compareAndLogOnDiff(measProgramExpectedP4, measProgramDumpedP4));
+}
+
 void test_power1_module_regression::dumpDspOnMeasModeChange()
 {
     ModuleManagerTestRunner testRunner(":/sessions/session-minimal.json");

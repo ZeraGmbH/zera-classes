@@ -2,11 +2,21 @@
     <qresource prefix="/">
         <file>dspDumps/dump-measmode-change.json</file>
         <file>dspDumps/dumpMeasProgram.json</file>
+        <file>dspDumps//dumpMeasProgramCom5003P1.json</file>
+        <file>dspDumps//dumpMeasProgramCom5003P2.json</file>
+        <file>dspDumps//dumpMeasProgramCom5003P3.json</file>
+        <file>dspDumps//dumpMeasProgramCom5003P4.json</file>
+        <file>dspDumps//dumpMeasProgramMt310s2P1.json</file>
+        <file>dspDumps//dumpMeasProgramMt310s2P2.json</file>
+        <file>dspDumps//dumpMeasProgramMt310s2P3.json</file>
+        <file>dspDumps//dumpMeasProgramMt310s2P4.json</file>
 
         <file>scpiDumps/session-power1module1-scpi.xml</file>
         <file>scpiDumps/session-power1module4-scpi.xml</file>
 
+        <file>sessions/session-com5003-p1-p4.json</file>
         <file>sessions/session-minimal.json</file>
+        <file>sessions/session-mt310s2-p1-p4.json</file>
         <file>sessions/session-power1module1-scpi.json</file>
         <file>sessions/session-power1module4-scpi.json</file>
         <file>sessions/session-power1-test.json</file>

@@ -1,0 +1,241 @@
+{
+    "1-MemGroups": {
+        "ActualValues": {
+            "Size": 4,
+            "UserMemSize": 4,
+            "Variables": [
+                {
+                    "Name": "VALPQSF",
+                    "Segment": "DSPDATA::localSegment",
+                    "Size": 4,
+                    "TypeData": "DSPDATA::dFloat"
+                }
+            ]
+        },
+        "FrequencyScale": {
+            "Size": 1,
+            "UserMemSize": 1,
+            "Variables": [
+                {
+                    "Name": "FREQSCALE",
+                    "Segment": "DSPDATA::localSegment",
+                    "Size": 1,
+                    "TypeData": "DSPDATA::dFloat"
+                }
+            ]
+        },
+        "Parameter": {
+            "Size": 6,
+            "UserMemSize": 6,
+            "Variables": [
+                {
+                    "Name": "TIPAR",
+                    "Segment": "DSPDATA::localSegment",
+                    "Size": 1,
+                    "TypeData": "DSPDATA::dInt"
+                },
+                {
+                    "Name": "TISTART",
+                    "Segment": "DSPDATA::localSegment",
+                    "Size": 1,
+                    "TypeData": "DSPDATA::dInt"
+                },
+                {
+                    "Name": "MMODE",
+                    "Segment": "DSPDATA::localSegment",
+                    "Size": 1,
+                    "TypeData": "DSPDATA::dInt"
+                },
+                {
+                    "Name": "XMMODEPHASE0",
+                    "Segment": "DSPDATA::localSegment",
+                    "Size": 1,
+                    "TypeData": "DSPDATA::dInt"
+                },
+                {
+                    "Name": "XMMODEPHASE1",
+                    "Segment": "DSPDATA::localSegment",
+                    "Size": 1,
+                    "TypeData": "DSPDATA::dInt"
+                },
+                {
+                    "Name": "XMMODEPHASE2",
+                    "Segment": "DSPDATA::localSegment",
+                    "Size": 1,
+                    "TypeData": "DSPDATA::dInt"
+                }
+            ]
+        },
+        "QRefScale": {
+            "Size": 1,
+            "UserMemSize": 1,
+            "Variables": [
+                {
+                    "Name": "NOMPOWER",
+                    "Segment": "DSPDATA::localSegment",
+                    "Size": 1,
+                    "TypeData": "DSPDATA::dFloat"
+                }
+            ]
+        },
+        "TmpData": {
+            "Size": 1027,
+            "UserMemSize": 1027,
+            "Variables": [
+                {
+                    "Name": "MEASSIGNAL1",
+                    "Segment": "DSPDATA::localSegment",
+                    "Size": 504,
+                    "TypeData": "DSPDATA::dFloat"
+                },
+                {
+                    "Name": "MEASSIGNAL2",
+                    "Segment": "DSPDATA::localSegment",
+                    "Size": 504,
+                    "TypeData": "DSPDATA::dFloat"
+                },
+                {
+                    "Name": "VALPQS",
+                    "Segment": "DSPDATA::localSegment",
+                    "Size": 4,
+                    "TypeData": "DSPDATA::dFloat"
+                },
+                {
+                    "Name": "TEMP1",
+                    "Segment": "DSPDATA::localSegment",
+                    "Size": 2,
+                    "TypeData": "DSPDATA::dFloat"
+                },
+                {
+                    "Name": "TEMP2",
+                    "Segment": "DSPDATA::localSegment",
+                    "Size": 2,
+                    "TypeData": "DSPDATA::dFloat"
+                },
+                {
+                    "Name": "CONST_HALF",
+                    "Segment": "DSPDATA::localSegment",
+                    "Size": 1,
+                    "TypeData": "DSPDATA::dFloat"
+                },
+                {
+                    "Name": "CONST_1_DIV_SQRT3",
+                    "Segment": "DSPDATA::localSegment",
+                    "Size": 1,
+                    "TypeData": "DSPDATA::dFloat"
+                },
+                {
+                    "Name": "FILTER",
+                    "Segment": "DSPDATA::localSegment",
+                    "Size": 8,
+                    "TypeData": "DSPDATA::dFloat"
+                },
+                {
+                    "Name": "N",
+                    "Segment": "DSPDATA::localSegment",
+                    "Size": 1,
+                    "TypeData": "DSPDATA::dFloat"
+                }
+            ]
+        }
+    },
+    "2-CmdList": [
+        "STARTCHAIN(1,1,0x0105)",
+        "CLEARN(504,MEASSIGNAL1)",
+        "CLEARN(504,MEASSIGNAL2)",
+        "CLEARN(9,FILTER)",
+        "SETVAL(MMODE,32)",
+        "SETVAL(XMMODEPHASE0,1)",
+        "SETVAL(XMMODEPHASE1,1)",
+        "SETVAL(XMMODEPHASE2,1)",
+        "SETVAL(CONST_HALF,0.5)",
+        "SETVAL(CONST_1_DIV_SQRT3,0.57735027)",
+        "SETVAL(TIPAR,500)",
+        "GETSTIME(TISTART)",
+        "DEACTIVATECHAIN(1,0x0105)",
+        "STOPCHAIN(1,0x0105)",
+        "SETVAL(VALPQS+0,0.0)",
+        "SETVAL(VALPQS+1,0.0)",
+        "SETVAL(VALPQS+2,0.0)",
+        "ACTIVATECHAIN(1,0x0101)",
+        "TESTVCSKIPEQ(MMODE,32)",
+        "DEACTIVATECHAIN(1,0x0101)",
+        "TESTVCSKIPEQ(XMMODEPHASE0,1)",
+        "DEACTIVATECHAIN(1,0x0101)",
+        "STARTCHAIN(0,1,0x0101)",
+        "COPYDATA(CH0,0,MEASSIGNAL1)",
+        "COPYDATA(CH1,0,MEASSIGNAL2)",
+        "DFT(1,MEASSIGNAL1,TEMP1)",
+        "DFT(1,MEASSIGNAL2,TEMP2)",
+        "MULVVV(TEMP1,TEMP2+1,VALPQS+0)",
+        "MULVVV(TEMP2,TEMP1+1,TEMP1)",
+        "SUBVVV(TEMP1,VALPQS+0,VALPQS+0)",
+        "MULVVV(CONST_HALF,VALPQS+0,VALPQS+0)",
+        "STOPCHAIN(1,0x0101)",
+        "ACTIVATECHAIN(1,0x0102)",
+        "TESTVCSKIPEQ(MMODE,32)",
+        "DEACTIVATECHAIN(1,0x0102)",
+        "TESTVCSKIPEQ(XMMODEPHASE1,1)",
+        "DEACTIVATECHAIN(1,0x0102)",
+        "STARTCHAIN(0,1,0x0102)",
+        "COPYDATA(CH2,0,MEASSIGNAL1)",
+        "COPYDATA(CH3,0,MEASSIGNAL2)",
+        "DFT(1,MEASSIGNAL1,TEMP1)",
+        "DFT(1,MEASSIGNAL2,TEMP2)",
+        "MULVVV(TEMP1,TEMP2+1,VALPQS+1)",
+        "MULVVV(TEMP2,TEMP1+1,TEMP1)",
+        "SUBVVV(TEMP1,VALPQS+1,VALPQS+1)",
+        "MULVVV(CONST_HALF,VALPQS+1,VALPQS+1)",
+        "STOPCHAIN(1,0x0102)",
+        "ACTIVATECHAIN(1,0x0103)",
+        "TESTVCSKIPEQ(MMODE,32)",
+        "DEACTIVATECHAIN(1,0x0103)",
+        "TESTVCSKIPEQ(XMMODEPHASE2,1)",
+        "DEACTIVATECHAIN(1,0x0103)",
+        "STARTCHAIN(0,1,0x0103)",
+        "COPYDATA(CH4,0,MEASSIGNAL1)",
+        "COPYDATA(CH5,0,MEASSIGNAL2)",
+        "DFT(1,MEASSIGNAL1,TEMP1)",
+        "DFT(1,MEASSIGNAL2,TEMP2)",
+        "MULVVV(TEMP1,TEMP2+1,VALPQS+2)",
+        "MULVVV(TEMP2,TEMP1+1,TEMP1)",
+        "SUBVVV(TEMP1,VALPQS+2,VALPQS+2)",
+        "MULVVV(CONST_HALF,VALPQS+2,VALPQS+2)",
+        "STOPCHAIN(1,0x0103)",
+        "ACTIVATECHAIN(1,0x0104)",
+        "TESTVCSKIPEQ(MMODE,33)",
+        "DEACTIVATECHAIN(1,0x0104)",
+        "STARTCHAIN(0,1,0x0104)",
+        "COPYDIFF(CH0,CH2,MEASSIGNAL1)",
+        "COPYDATA(CH1,0,MEASSIGNAL2)",
+        "DFT(1,MEASSIGNAL1,TEMP1)",
+        "DFT(1,MEASSIGNAL2,TEMP2)",
+        "MULVVV(TEMP1,TEMP2+1,VALPQS)",
+        "MULVVV(TEMP2,TEMP1+1,TEMP1)",
+        "SUBVVV(TEMP1,VALPQS,VALPQS)",
+        "MULVVV(CONST_HALF,VALPQS,VALPQS)",
+        "SETVAL(VALPQS+1,0.0)",
+        "COPYDIFF(CH4,CH2,MEASSIGNAL1)",
+        "COPYDATA(CH5,0,MEASSIGNAL2)",
+        "DFT(1,MEASSIGNAL1,TEMP1)",
+        "DFT(1,MEASSIGNAL2,TEMP2)",
+        "MULVVV(TEMP1,TEMP2+1,VALPQS+2)",
+        "MULVVV(TEMP2,TEMP1+1,TEMP1)",
+        "SUBVVV(TEMP1,VALPQS+2,VALPQS+2)",
+        "MULVVV(CONST_HALF,VALPQS+2,VALPQS+2)",
+        "STOPCHAIN(1,0x0104)",
+        "ADDVVV(VALPQS,VALPQS+1,VALPQS+3)",
+        "ADDVVV(VALPQS+2,VALPQS+3,VALPQS+3)",
+        "AVERAGE1(4,VALPQS,FILTER)",
+        "CMPCLK(512,VALPQS+3,FREQSCALE+0)",
+        "TESTTIMESKIPNEX(TISTART,TIPAR)",
+        "ACTIVATECHAIN(1,0x0106)",
+        "STARTCHAIN(0,1,0x0106)",
+        "GETSTIME(TISTART)",
+        "CMPAVERAGE1(4,FILTER,VALPQSF)",
+        "CLEARN(9,FILTER)",
+        "DSPINTTRIGGER(0x0,0x0)",
+        "DEACTIVATECHAIN(1,0x0106)",
+        "STOPCHAIN(1,0x0106)"
+    ]
+}

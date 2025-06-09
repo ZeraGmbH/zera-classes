@@ -12,6 +12,8 @@ private slots:
     void injectActualValues();
     void testScpiCommandsDisabled();
     void dumpDspSetup();
+    void dumpDspSetupMt310s2Pow1To4();
+    void dumpDspSetupCom5003Pow1To4();
     void dumpDspOnMeasModeChange();
     void scpiDumpMtPower1Module1();
     void scpiDumpMtPower1Module4(); // ATTOW we are interested in QKHZ / unit
