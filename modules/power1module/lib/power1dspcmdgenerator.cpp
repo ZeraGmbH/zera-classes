@@ -19,6 +19,8 @@ QStringList Power1DspCmdGenerator::getCmdsInitVars(std::shared_ptr<MeasMode> ini
         cmdList.append(QString("SETVAL(%1)").arg(phaseStr)); // initial phases
     }
     cmdList.append("SETVAL(CONST_HALF,0.5)");
+    cmdList.append("SETVAL(CONST_1_DIV_SQRT3,0.57735027)");
+
 
     cmdList.append(QString("SETVAL(TIPAR,%1)").arg(integrationTime)); // initial ti time
     if(startTiTime)

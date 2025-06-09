@@ -16,6 +16,7 @@ void Power1DspVarGenerator::setupVarList(Zera::cDSPInterface *pDSPInterFace, con
     m_pTmpDataDsp->addDspVar("TEMP1", 2, DSPDATA::vDspTemp); // we need 2 temp. vars also for complex
     m_pTmpDataDsp->addDspVar("TEMP2", 2, DSPDATA::vDspTemp);
     m_pTmpDataDsp->addDspVar("CONST_HALF", 1, DSPDATA::vDspTemp);
+    m_pTmpDataDsp->addDspVar("CONST_1_DIV_SQRT3", 1, DSPDATA::vDspTemp);
     m_pTmpDataDsp->addDspVar("FILTER", 2*(MeasPhaseCount+SumValueCount), DSPDATA::vDspTemp);
     m_pTmpDataDsp->addDspVar("N",1,DSPDATA::vDspTemp);
     quint32 tmpDataSize = m_pTmpDataDsp->getSize();
