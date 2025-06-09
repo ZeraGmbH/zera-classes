@@ -5,7 +5,7 @@
     <configuration>
         <measure>
             <modes>
-                <n>12</n>
+                <n>13</n>
                 <m1>4LW</m1>
                 <m2>3LW</m2>
                 <m3>2LW</m3>
@@ -15,9 +15,10 @@
                 <m7>2LB</m7>
                 <m8>4LS</m8>
                 <m9>4LSg</m9>
-                <m10>2LS</m10>
-                <m11>2LSg</m11>
-                <m12>QREF</m12>
+                <m10>3LS</m10>
+                <m11>2LS</m11>
+                <m12>2LSg</m12>
+                <m13>QREF</m13>
             </modes>
             <system>
                 <pms1>m0,m3</pms1>

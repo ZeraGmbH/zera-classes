@@ -18,6 +18,7 @@
         <xs:enumeration value="4LSg"/>
         <xs:enumeration value="3LW"/>
         <xs:enumeration value="3LB"/>
+        <xs:enumeration value="3LS"/>
         <xs:enumeration value="2LW"/>
         <xs:enumeration value="2LB"/>
         <xs:enumeration value="2LS"/>

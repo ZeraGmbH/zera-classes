@@ -5,11 +5,12 @@
     <configuration>
         <measure>
             <modes>
-                <n>4</n>
+                <n>5</n>
                 <m1>4LS</m1>
                 <m2>4LSg</m2>
-                <m3>2LS</m3>
-                <m4>2LSg</m4>
+                <m3>3LS</m3>
+                <m4>2LS</m4>
+                <m5>2LSg</m5>
             </modes>
             <system>
                 <pms1>m0,m3</pms1>
