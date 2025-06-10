@@ -22,7 +22,6 @@
 #include <vf_files.h>
 #include <tcpnetworkfactory.h>
 #include "mocklxdmsessionchangeparamgenerator.h"
-#include <proxy.h>
 
 #include <QDebug>
 #include <QCommandLineParser>
@@ -109,43 +108,12 @@ static ZeraModules::ModuleManager *createModMan(bool demoMode,
     }
 }
 
-static ZeraModules::ModuleManager *modMan = nullptr;
-static std::unique_ptr<QCoreApplication> app;
-Zera::ProxyClientPtr m_dummyPcbClient;
-static bool startModmanRequired = false;
-
-void startModman()
-{
-    modMan->loadDefaultSession();
-    VeinStorage::AbstractEventSystem *storage = modManSetupFacade->getStorageSystem();
-    entititesComponent = storage->getDb()->getFutureComponent(0, "Entities");
-    QObject::connect(entititesComponent.get(), &VeinStorage::AbstractComponent::sigValueChange, entititesComponent.get(), [&] (QVariant newValue) {
-        if(newValue.isValid())
-            startNetwork(app.get());
-    });
-}
-
-static void openDummyPcbConnectionToStartServiceEarly()
-{
-    // Due to atmel updater conflicting with mt310s2d.service, mt310s2d.service
-    // is started by socket connection. To avoid statusmodule waiting for
-    // mt310s2d.service to start completely, start it early
-    ModulemanagerConfig* mmConfig = ModulemanagerConfig::getInstance();
-    m_dummyPcbClient = Zera::Proxy::getInstance()->getConnectionSmart(
-                           mmConfig->getPcbConnectionInfo(),
-                           getServiceNetworkFactory()),
-    QObject::connect(m_dummyPcbClient.get(), &Zera::ProxyClient::connected, [&]() {
-        if (startModmanRequired)
-            startModman();
-    });
-    Zera::Proxy::getInstance()->startConnectionSmart(m_dummyPcbClient);
-}
-
 int main(int argc, char *argv[])
 {
     QString demoDeviceName = getDemoDeviceName(argc, argv);
     bool demoMode = !demoDeviceName.isEmpty();
 
+    std::unique_ptr<QCoreApplication> app;
     if(demoMode) {
         app = std::make_unique<QGuiApplication>(argc, argv);
         ModulemanagerConfig::setDemoDevice(demoDeviceName);
@@ -207,8 +175,7 @@ int main(int argc, char *argv[])
     else
         modManSetupFacade = std::make_unique<ModuleManagerSetupFacade>(licenseSystem, demoMode,
             MockLxdmSessionChangeParamGenerator::generateDemoSessionChanger());
-    modMan = createModMan(demoMode, demoDeviceName, app.get());
-    openDummyPcbConnectionToStartServiceEarly();
+    ZeraModules::ModuleManager *modMan = createModMan(demoMode, demoDeviceName, app.get());
 
     // setup vein modules
     VeinLogger::DatabaseLogger *dataLoggerSystem = new VeinLogger::DatabaseLogger(
@@ -294,8 +261,15 @@ int main(int argc, char *argv[])
         qCritical() << "[Zera-Module-Manager] No modules found";
         quit(demoMode);
     }
-    else
-        startModmanRequired = true;
+    else {
+        modMan->loadDefaultSession();
+        VeinStorage::AbstractEventSystem *storage = modManSetupFacade->getStorageSystem();
+        entititesComponent = storage->getDb()->getFutureComponent(0, "Entities");
+        QObject::connect(entititesComponent.get(), &VeinStorage::AbstractComponent::sigValueChange, entititesComponent.get(), [&] (QVariant newValue) {
+            if(newValue.isValid())
+                startNetwork(app.get());
+        });
+    }
 
     return exec(demoMode);
 }
