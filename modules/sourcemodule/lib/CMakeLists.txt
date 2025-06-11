@@ -35,7 +35,7 @@ target_link_libraries(sourcemodule-static
     vf-cpp-module-wrappers
     zera-basemodule
     serialportasyncblock
-    Zera::source-control-common-lib
+    Zera::source-json-io-lib
     Zera::zera-timers
     # ask linker to help us finding unresolved symbols
     "-Wl,--no-undefined"
