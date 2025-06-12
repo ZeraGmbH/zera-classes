@@ -1111,14 +1111,10 @@ void cPower1ModuleMeasProgram::foutParamsToDsp()
     std::shared_ptr<MeasMode> mode = m_measModeSelector.getCurrMode();
     RangeMaxVals maxVals = calcMaxRangeValues(mode);
     double cfak = mode->getActiveMeasSysCount();
-
-    double constantImpulsePerWs;
-    if(mode->getName() == "QREF")
-        constantImpulsePerWs = 200000.0;
-    else
-        constantImpulsePerWs = m_pNominalFrequency->getValue().toDouble();
-    constantImpulsePerWs = constantImpulsePerWs / (cfak * maxVals.maxU * maxVals.maxI);
-    //double constantImpulsePerWs = m_pNominalFrequency->getValue().toDouble() / (cfak * maxVals.maxU * maxVals.maxI);
+    double nomFrequency = 200000.0;
+    if(mode->getName() != "QREF")
+        nomFrequency = m_pNominalFrequency->getValue().toDouble();
+    double constantImpulsePerWs = nomFrequency / (cfak * maxVals.maxU * maxVals.maxI);
 
     bool isValidConstant = !isinf(constantImpulsePerWs);
     if (isValidConstant && getConfData()->m_nFreqOutputCount > 0) { // dsp-interface will crash for missing parts...
