@@ -249,27 +249,33 @@ QStringList Power1DspCmdGenerator::getCmdsMMode3LSg(int dspSelectCode, MeasSyste
     cmdList.append(DspAtomicCommandGen::getStartChainInactive(chainId));
 
     // S1
-    cmdList.append(QString("COPYDATA(CH%1,0,MEASSIGNAL1)").arg(measChannelPairList[0].voltageChannel));
+    // MEASSIGNAL1 = UL1-UL2
+    cmdList.append(QString("COPYDIFF(CH%1,CH%2,MEASSIGNAL1)")
+                       .arg(measChannelPairList[0].voltageChannel)
+                       .arg(measChannelPairList[1].voltageChannel));
+    // MEASSIGNAL2 = IL1
     cmdList.append(QString("COPYDATA(CH%1,0,MEASSIGNAL2)").arg(measChannelPairList[0].currentChannel));
 
     cmdList.append("MULCCV(MEASSIGNAL1,MEASSIGNAL2,TEMP1)"); // P
     cmdList.append("ROTATE(MEASSIGNAL2,270.0)");
     cmdList.append("MULCCV(MEASSIGNAL1,MEASSIGNAL2,TEMP2)"); // Q
-    cmdList.append(QString("ADDVVG(TEMP1,TEMP2,VALPQS+0)"));
-    cmdList.append("MULVVV(CONST_1_5,VALPQS+0,VALPQS+0)");
+    cmdList.append("ADDVVG(TEMP1,TEMP2,VALPQS+0)"); // sqrt(P*P + Q*Q)
 
     // S2 = 0
     cmdList.append("SETVAL(VALPQS+1,0.0)");
 
     // S3
-    cmdList.append(QString("COPYDATA(CH%1,0,MEASSIGNAL1)").arg(measChannelPairList[2].voltageChannel));
+    // MEASSIGNAL1 = UL3-UL1
+    cmdList.append(QString("COPYDIFF(CH%1,CH%2,MEASSIGNAL1)")
+                       .arg(measChannelPairList[2].voltageChannel)
+                       .arg(measChannelPairList[1].voltageChannel));
+    // MEASSIGNAL2 = IL3
     cmdList.append(QString("COPYDATA(CH%1,0,MEASSIGNAL2)").arg(measChannelPairList[2].currentChannel));
 
     cmdList.append("MULCCV(MEASSIGNAL1,MEASSIGNAL2,TEMP1)"); // P
     cmdList.append("ROTATE(MEASSIGNAL2,270.0)");
     cmdList.append("MULCCV(MEASSIGNAL1,MEASSIGNAL2,TEMP2)"); // Q
-    cmdList.append(QString("ADDVVG(TEMP1,TEMP2,VALPQS+2)"));
-    cmdList.append("MULVVV(CONST_1_5,VALPQS+2,VALPQS+2)");
+    cmdList.append("ADDVVG(TEMP1,TEMP2,VALPQS+2)");          // sqrt(P*P + Q*Q)
 
     cmdList.append(DspAtomicCommandGen::getStopChain(chainId));
     return cmdList;
