@@ -7,6 +7,7 @@ class test_power1_module_regression : public QObject
 {
     Q_OBJECT
 private slots:
+    void initTestCase();
     void minimalSession();
     void veinDumpInitial();
     void injectActualValues();
