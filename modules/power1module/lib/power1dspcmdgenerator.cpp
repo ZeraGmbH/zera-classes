@@ -20,7 +20,7 @@ QStringList Power1DspCmdGenerator::getCmdsInitVars(std::shared_ptr<MeasMode> ini
     }
     cmdList.append("SETVAL(CONST_HALF,0.5)");
     cmdList.append("SETVAL(CONST_1_DIV_SQRT3,0.57735027)");
-
+    cmdList.append("SETVAL(CONST_1_5,1.5)");
 
     cmdList.append(QString("SETVAL(TIPAR,%1)").arg(integrationTime)); // initial ti time
     if(startTiTime)
@@ -212,6 +212,8 @@ QStringList Power1DspCmdGenerator::getCmdsMMode3LS(int dspSelectCode, MeasSystem
     cmdList.append(QString("MULVVV(TEMP1,TEMP2,VALPQS+0)"));
     // S1 = RMS(UL1-UL2) * RMS(IL1) / sqrt(3)
     cmdList.append("MULVVV(CONST_1_DIV_SQRT3,VALPQS+0,VALPQS+0)");
+    // S1 = 1.5* RMS(UL1-UL2) * RMS(IL1) / sqrt(3)
+    cmdList.append("MULVVV(CONST_1_5,VALPQS+0,VALPQS+0)");
 
     // S2 = 0
     cmdList.append("SETVAL(VALPQS+1,0.0)");
@@ -231,6 +233,43 @@ QStringList Power1DspCmdGenerator::getCmdsMMode3LS(int dspSelectCode, MeasSystem
     cmdList.append(QString("MULVVV(TEMP1,TEMP2,VALPQS+2)"));
     // S3 = RMS(UL3-UL1) * RMS(IL3) / sqrt(3)
     cmdList.append("MULVVV(CONST_1_DIV_SQRT3,VALPQS+2,VALPQS+2)");
+    // S3 = 1.5* RMS(UL1-UL2) * RMS(IL1) / sqrt(3)
+    cmdList.append("MULVVV(CONST_1_5,VALPQS+2,VALPQS+2)");
+
+    cmdList.append(DspAtomicCommandGen::getStopChain(chainId));
+    return cmdList;
+}
+
+QStringList Power1DspCmdGenerator::getCmdsMMode3LSg(int dspSelectCode, MeasSystemChannels measChannelPairList, DspChainIdGen &idGen)
+{
+    quint16 chainId = idGen.getNextChainId();
+    QStringList cmdList;
+    cmdList.append(DspAtomicCommandGen::getActivateChain(chainId));
+    cmdList.append(getCmdsSkipOnMModeNotSelected(dspSelectCode, chainId));
+    cmdList.append(DspAtomicCommandGen::getStartChainInactive(chainId));
+
+    // S1
+    cmdList.append(QString("COPYDATA(CH%1,0,MEASSIGNAL1)").arg(measChannelPairList[0].voltageChannel));
+    cmdList.append(QString("COPYDATA(CH%1,0,MEASSIGNAL2)").arg(measChannelPairList[0].currentChannel));
+
+    cmdList.append("MULCCV(MEASSIGNAL1,MEASSIGNAL2,TEMP1)"); // P
+    cmdList.append("ROTATE(MEASSIGNAL2,270.0)");
+    cmdList.append("MULCCV(MEASSIGNAL1,MEASSIGNAL2,TEMP2)"); // Q
+    cmdList.append(QString("ADDVVG(TEMP1,TEMP2,VALPQS+0)"));
+    cmdList.append("MULVVV(CONST_1_5,VALPQS+0,VALPQS+0)");
+
+    // S2 = 0
+    cmdList.append("SETVAL(VALPQS+1,0.0)");
+
+    // S3
+    cmdList.append(QString("COPYDATA(CH%1,0,MEASSIGNAL1)").arg(measChannelPairList[2].voltageChannel));
+    cmdList.append(QString("COPYDATA(CH%1,0,MEASSIGNAL2)").arg(measChannelPairList[2].currentChannel));
+
+    cmdList.append("MULCCV(MEASSIGNAL1,MEASSIGNAL2,TEMP1)"); // P
+    cmdList.append("ROTATE(MEASSIGNAL2,270.0)");
+    cmdList.append("MULCCV(MEASSIGNAL1,MEASSIGNAL2,TEMP2)"); // Q
+    cmdList.append(QString("ADDVVG(TEMP1,TEMP2,VALPQS+2)"));
+    cmdList.append("MULVVV(CONST_1_5,VALPQS+2,VALPQS+2)");
 
     cmdList.append(DspAtomicCommandGen::getStopChain(chainId));
     return cmdList;

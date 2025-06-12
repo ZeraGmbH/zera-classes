@@ -79,8 +79,8 @@
             ]
         },
         "TmpData": {
-            "Size": 1027,
-            "UserMemSize": 1027,
+            "Size": 1028,
+            "UserMemSize": 1028,
             "Variables": [
                 {
                     "Name": "MEASSIGNAL1",
@@ -125,6 +125,12 @@
                     "TypeData": "DSPDATA::dFloat"
                 },
                 {
+                    "Name": "CONST_1_5",
+                    "Segment": "DSPDATA::localSegment",
+                    "Size": 1,
+                    "TypeData": "DSPDATA::dFloat"
+                },
+                {
                     "Name": "FILTER",
                     "Segment": "DSPDATA::localSegment",
                     "Size": 8,
@@ -150,6 +156,7 @@
         "SETVAL(XMMODEPHASE2,1)",
         "SETVAL(CONST_HALF,0.5)",
         "SETVAL(CONST_1_DIV_SQRT3,0.57735027)",
+        "SETVAL(CONST_1_5,1.5)",
         "SETVAL(TIPAR,500)",
         "GETSTIME(TISTART)",
         "DEACTIVATECHAIN(1,0x0107)",
