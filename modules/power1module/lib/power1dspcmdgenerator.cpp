@@ -30,9 +30,8 @@ QStringList Power1DspCmdGenerator::getCmdsInitVars(std::shared_ptr<MeasMode> ini
     return cmdList;
 }
 
-QStringList Power1DspCmdGenerator::getCmdsInitOutputVars(DspChainIdGen &idGen)
+QStringList Power1DspCmdGenerator::getCmdsInitOutputVars()
 {
-    Q_UNUSED(idGen)
     QStringList cmdList;
     for(int phase=0; phase<MeasPhaseCount; phase++)
         cmdList.append(QString("SETVAL(VALPQS+%1,0.0)").arg(phase));
@@ -374,7 +373,7 @@ QStringList Power1DspCmdGenerator::getCmdsMModeXLSg(int dspSelectCode, MeasSyste
 }
 
 
-QStringList Power1DspCmdGenerator::getCmdsSumAndAverage(DspChainIdGen &idGen)
+QStringList Power1DspCmdGenerator::getCmdsSumAndAverage(const DspChainIdGen &idGen)
 {
     Q_UNUSED(idGen)
     QStringList cmdList;
@@ -387,7 +386,7 @@ QStringList Power1DspCmdGenerator::getCmdsSumAndAverage(DspChainIdGen &idGen)
 }
 
 QStringList Power1DspCmdGenerator::getCmdsFreqOutput(const POWER1MODULE::cPower1ModuleConfigData *configData,
-                                                     const QMap<QString, cFoutInfo> foutInfoHash,
+                                                     const QMap<QString, cFoutInfo> &foutInfoHash,
                                                      int irqNo,
                                                      DspChainIdGen &idGen)
 {
