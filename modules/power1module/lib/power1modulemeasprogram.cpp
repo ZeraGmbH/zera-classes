@@ -213,9 +213,8 @@ void cPower1ModuleMeasProgram::generateVeinInterface()
     m_pModule->veinModuleMetaDataList.append(m_pNomFrequencyInfo);
     m_pFoutCount = new VfModuleMetaData(QString("FOUTCount"), QVariant(getConfData()->m_nFreqOutputCount));
     m_pModule->veinModuleMetaDataList.append(m_pFoutCount);
-
     VfModuleParameter* pFoutParameter;
-
+    QString foutName = "";
     for (int i = 0; i < getConfData()->m_nFreqOutputCount; i++) {
         // Note: Although components are 'PAR_' they are not changable currently
         pFoutParameter = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
@@ -228,7 +227,7 @@ void cPower1ModuleMeasProgram::generateVeinInterface()
         m_FoutConstParameterList.append(pFoutParameter);
         m_pModule->m_veinModuleParameterMap[key] = pFoutParameter; // for modules use
 
-        QString foutName =  getConfData()->m_FreqOutputConfList.at(i).m_sFreqOutNameDisplayed;
+        foutName =  getConfData()->m_FreqOutputConfList.at(i).m_sFreqOutNameDisplayed;
         pFoutParameter = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
                                                           key = QString("PAR_FOUT%1").arg(i),
                                                           QString("Frequency output name"),
@@ -255,7 +254,6 @@ void cPower1ModuleMeasProgram::generateVeinInterface()
         QPair<VeinStorage::AbstractComponentPtr, VeinStorage::AbstractComponentPtr> tmpScalePair(scaleInputU, scaleInputI);
         m_scalingInputs.append(tmpScalePair);
     }
-    generateVeinInterfaceForQrefFreq();
 
     m_pNominalFrequency = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
                                                 key = QString("PAR_FOUT_NOMINAL_FREQ"),
@@ -265,6 +263,13 @@ void cPower1ModuleMeasProgram::generateVeinInterface()
     m_pNominalFrequency->setValidator(new cIntValidator(10000, 200000, 1));
     m_pModule->m_veinModuleParameterMap[key] = m_pNominalFrequency; // for modules use
     connect(m_pNominalFrequency, &VfModuleParameter::sigValueChanged, this, &cPower1ModuleMeasProgram::foutParamsToDsp);
+
+    if(foutName == "fOUT") {
+        if(getConfData()->m_enableScpiCommands)
+            m_pNominalFrequency->setScpiInfo("CONFIGURATION",QString("NOMINAL_FREQ"), SCPI::isQuery|SCPI::isCmdwP, "PAR_FOUT_NOMINAL_FREQ");
+    }
+
+    generateVeinInterfaceForQrefFreq();
 
     for(const auto &ele : qAsConst(m_scalingInputs)) {
         if(ele.first != nullptr && ele.second != nullptr) {
