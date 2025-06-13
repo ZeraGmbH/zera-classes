@@ -8,6 +8,11 @@ QTEST_MAIN(test_power2_module_regression)
 
 const int powerEntityId = 1090;
 
+void test_power2_module_regression::initTestCase()
+{
+    qputenv("QT_FATAL_CRITICALS", "1");
+}
+
 void test_power2_module_regression::dumpDspSetup()
 {
     ModuleManagerTestRunner testRunner(":/session-minimal.json");
