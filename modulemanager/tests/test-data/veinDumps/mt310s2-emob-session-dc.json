@@ -2059,6 +2059,13 @@
                     ],
                     [
                         "CONFIGURATION",
+                        "NOMINAL_FREQ",
+                        "10",
+                        "PAR_FOUT_NOMINAL_FREQ",
+                        "0"
+                    ],
+                    [
+                        "CONFIGURATION",
                         "TINTEGRATION",
                         "10",
                         "PAR_Interval",
