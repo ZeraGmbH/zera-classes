@@ -23,7 +23,7 @@ public:
     static QStringList getCmdsMModeXLB(int dspSelectCode, MeasSystemChannels measChannelPairList, DspChainIdGen& idGen);
     static QStringList getCmdsMModeXLS(int dspSelectCode, MeasSystemChannels measChannelPairList, DspChainIdGen& idGen);
     static QStringList getCmdsMModeXLSg(int dspSelectCode, MeasSystemChannels measChannelPairList, DspChainIdGen& idGen);
-    static QStringList getCmdsSumAndAverage(const DspChainIdGen &idGen);
+    static QStringList getCmdsSumAndAverage(DspChainIdGen &idGen);
     static QStringList getCmdsFreqOutput(const POWER1MODULE::cPower1ModuleConfigData *configData,
                                          const QMap<QString, cFoutInfo> &foutInfoMap,
                                          int irqNo, DspChainIdGen& idGen);

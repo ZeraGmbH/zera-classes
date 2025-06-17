@@ -70,7 +70,7 @@ QStringList Power1DspCmdGenerator::getCmdsMMode4LBK(int dspSelectCode, MeasSyste
     cmdList.append(QString("COPYDIFF(CH%1,CH%2,MEASSIGNAL1)")
                           .arg(measChannelPairList[1].voltageChannel)
                           .arg(measChannelPairList[2].voltageChannel));
-    cmdList.append("MULCV(MEASSIGNAL1,0.57735027)"); // we correct 1/sqrt(3)
+    cmdList.append("MULCV(MEASSIGNAL1,0.57735027)"); // we correct 1/√3
     cmdList.append(QString("COPYDATA(CH%1,0,MEASSIGNAL2)").arg(measChannelPairList[0].currentChannel));
 
     cmdList.append("DFT(1,MEASSIGNAL1,TEMP1)");
@@ -86,7 +86,7 @@ QStringList Power1DspCmdGenerator::getCmdsMMode4LBK(int dspSelectCode, MeasSyste
     cmdList.append(QString("COPYDIFF(CH%1,CH%2,MEASSIGNAL1)")
                           .arg(measChannelPairList[2].voltageChannel)
                           .arg(measChannelPairList[0].voltageChannel));
-    cmdList.append("MULCV(MEASSIGNAL1,0.57735027)"); // we correct 1/sqrt(3)
+    cmdList.append("MULCV(MEASSIGNAL1,0.57735027)"); // we correct 1/√3
     cmdList.append(QString("COPYDATA(CH%1,0,MEASSIGNAL2)").arg(measChannelPairList[1].currentChannel));
     cmdList.append("DFT(1,MEASSIGNAL1,TEMP1)");
     cmdList.append("DFT(1,MEASSIGNAL2,TEMP2)");
@@ -101,7 +101,7 @@ QStringList Power1DspCmdGenerator::getCmdsMMode4LBK(int dspSelectCode, MeasSyste
     cmdList.append(QString("COPYDIFF(CH%1,CH%2,MEASSIGNAL1)")
                           .arg(measChannelPairList[0].voltageChannel)
                           .arg(measChannelPairList[1].voltageChannel));
-    cmdList.append("MULCV(MEASSIGNAL1,0.57735027)"); // we correct 1/sqrt(3)
+    cmdList.append("MULCV(MEASSIGNAL1,0.57735027)"); // we correct 1/√3
     cmdList.append(QString("COPYDATA(CH%1,0,MEASSIGNAL2)").arg(measChannelPairList[2].currentChannel));
 
     cmdList.append("DFT(1,MEASSIGNAL1,TEMP1)");
@@ -213,9 +213,9 @@ QStringList Power1DspCmdGenerator::getCmdsMMode3LS(int dspSelectCode, MeasSystem
     cmdList.append("RMS(MEASSIGNAL2,TEMP2)");
     // S1 = RMS(UL1-UL2) * RMS(IL1)
     cmdList.append(QString("MULVVV(TEMP1,TEMP2,VALPQS+0)"));
-    // S1 = RMS(UL1-UL2) * RMS(IL1) / sqrt(3)
+    // S1 = RMS(UL1-UL2) * RMS(IL1) / √3
     cmdList.append("MULVVV(CONST_1_DIV_SQRT3,VALPQS+0,VALPQS+0)");
-    // S1 = 1.5* RMS(UL1-UL2) * RMS(IL1) / sqrt(3)
+    // S1 = 1.5* RMS(UL1-UL2) * RMS(IL1) / √3
     cmdList.append("MULVVV(CONST_1_5,VALPQS+0,VALPQS+0)");
 
     // S2 = 0
@@ -234,9 +234,9 @@ QStringList Power1DspCmdGenerator::getCmdsMMode3LS(int dspSelectCode, MeasSystem
     cmdList.append("RMS(MEASSIGNAL2,TEMP2)");
     // S3 = RMS(UL3-UL1) * RMS(IL3)
     cmdList.append(QString("MULVVV(TEMP1,TEMP2,VALPQS+2)"));
-    // S3 = RMS(UL3-UL1) * RMS(IL3) / sqrt(3)
+    // S3 = RMS(UL3-UL1) * RMS(IL3) / √3
     cmdList.append("MULVVV(CONST_1_DIV_SQRT3,VALPQS+2,VALPQS+2)");
-    // S3 = 1.5* RMS(UL1-UL2) * RMS(IL1) / sqrt(3)
+    // S3 = 1.5* RMS(UL1-UL2) * RMS(IL1) / √3
     cmdList.append("MULVVV(CONST_1_5,VALPQS+2,VALPQS+2)");
 
     cmdList.append(DspAtomicCommandGen::getStopChain(chainId));
@@ -262,7 +262,7 @@ QStringList Power1DspCmdGenerator::getCmdsMMode3LSg(int dspSelectCode, MeasSyste
     cmdList.append("MULCCV(MEASSIGNAL1,MEASSIGNAL2,VAL_APPARENT_P+0)"); // P
     cmdList.append("ROTATE(MEASSIGNAL2,270.0)");
     cmdList.append("MULCCV(MEASSIGNAL1,MEASSIGNAL2,VAL_APPARENT_Q+0)"); // Q
-    cmdList.append("ADDVVG(VAL_APPARENT_P+0,VAL_APPARENT_Q+0,VALPQS+0)"); // sqrt(P*P + Q*Q)
+    cmdList.append("ADDVVG(VAL_APPARENT_P+0,VAL_APPARENT_Q+0,VALPQS+0)"); // √(P² + Q²)
 
     // S2 = 0
     cmdList.append("SETVAL(VALPQS+1,0.0)");
@@ -278,7 +278,7 @@ QStringList Power1DspCmdGenerator::getCmdsMMode3LSg(int dspSelectCode, MeasSyste
     cmdList.append("MULCCV(MEASSIGNAL1,MEASSIGNAL2,VAL_APPARENT_P+2)"); // P
     cmdList.append("ROTATE(MEASSIGNAL2,270.0)");
     cmdList.append("MULCCV(MEASSIGNAL1,MEASSIGNAL2,VAL_APPARENT_Q+2)"); // Q
-    cmdList.append("ADDVVG(VAL_APPARENT_P+2,VAL_APPARENT_Q+2,VALPQS+2)");          // sqrt(P*P + Q*Q)
+    cmdList.append("ADDVVG(VAL_APPARENT_P+2,VAL_APPARENT_Q+2,VALPQS+2)");          // √(P² + Q²)
 
     cmdList.append(DspAtomicCommandGen::getStopChain(chainId));
     return cmdList;
@@ -319,10 +319,10 @@ QStringList Power1DspCmdGenerator::getCmdsMModeXLB(int dspSelectCode, MeasSystem
 
         cmdList.append("DFT(1,MEASSIGNAL1,TEMP1)");
         cmdList.append("DFT(1,MEASSIGNAL2,TEMP2)");
-        cmdList.append(QString("MULVVV(TEMP1,TEMP2+1,VALPQS+%1)").arg(phase));              // VALPQS = Ure*Iim
-        cmdList.append(QString("MULVVV(TEMP2,TEMP1+1,TEMP1)"));                             // TEMP1  = Ire*Uim
-        cmdList.append(QString("SUBVVV(TEMP1,VALPQS+%1,VALPQS+%2)").arg(phase).arg(phase)); // VALPQS = Ire*Uim - Ure*Iim
-        cmdList.append(QString("MULVVV(CONST_HALF,VALPQS+%1,VALPQS+%2)").arg(phase).arg(phase));   // VALPQS = CONST_HALF * (Ire*Uim - Ure*Iim)
+        cmdList.append(QString("MULVVV(TEMP1,TEMP2+1,VALPQS+%1)").arg(phase));          // VALPQS = Ure*Iim
+        cmdList.append(QString("MULVVV(TEMP2,TEMP1+1,TEMP1)"));                         // TEMP1  = Ire*Uim
+        cmdList.append(QString("SUBVVV(TEMP1,VALPQS+%1,VALPQS+%1)").arg(phase));        // VALPQS = Ire*Uim - Ure*Iim
+        cmdList.append(QString("MULVVV(CONST_HALF,VALPQS+%1,VALPQS+%1)").arg(phase));   // VALPQS = 0.5 * (Ire*Uim - Ure*Iim)
         //cmdList.append("ROTATE(MEASSIGNAL2,270.0)");
         //cmdList.append(QString("MULCCV(MEASSIGNAL1,MEASSIGNAL2,VALPQS+%1)").arg(phase));
 
@@ -377,15 +377,37 @@ QStringList Power1DspCmdGenerator::getCmdsMModeXLSg(int dspSelectCode, MeasSyste
 }
 
 
-QStringList Power1DspCmdGenerator::getCmdsSumAndAverage(const DspChainIdGen &idGen)
+QStringList Power1DspCmdGenerator::getCmdsSumAndAverage(DspChainIdGen &idGen)
 {
-    Q_UNUSED(idGen)
     QStringList cmdList;
-    // we have to compute sum of our power systems
-    cmdList.append("ADDVVV(VALPQS,VALPQS+1,VALPQS+3)");
+
+    // If MMODE_SUM == sum_phasevals
+    quint16 chainIdPhaseSum = idGen.getNextChainId();
+    cmdList.append(DspAtomicCommandGen::getActivateChain(chainIdPhaseSum));
+    cmdList.append(getCmdsSkipOnUnequal("MMODE_SUM", sum_phasevals, chainIdPhaseSum));
+    cmdList.append(DspAtomicCommandGen::getStartChainInactive(chainIdPhaseSum));
+    cmdList.append("ADDVVV(VALPQS+0,VALPQS+1,VALPQS+3)");
     cmdList.append("ADDVVV(VALPQS+2,VALPQS+3,VALPQS+3)");
+    cmdList.append(DspAtomicCommandGen::getStopChain(chainIdPhaseSum));
+
+    // If MMODE_SUM == sum_phase_pq_geom
+    quint16 chainIdPhasePQGeom = idGen.getNextChainId();
+    cmdList.append(DspAtomicCommandGen::getActivateChain(chainIdPhasePQGeom));
+    cmdList.append(getCmdsSkipOnUnequal("MMODE_SUM", sum_phase_pq_geom, chainIdPhasePQGeom));
+    cmdList.append(DspAtomicCommandGen::getStartChainInactive(chainIdPhasePQGeom));
+    // TEMP1 = ∑P
+    cmdList.append("ADDVVV(VAL_APPARENT_P+0,VAL_APPARENT_P+1,TEMP1)");
+    cmdList.append("ADDVVV(VAL_APPARENT_P+2,TEMP1,TEMP1)");
+    // TEMP2 = ∑Q
+    cmdList.append("ADDVVV(VAL_APPARENT_Q+0,VAL_APPARENT_Q+1,TEMP2)");
+    cmdList.append("ADDVVV(VAL_APPARENT_Q+2,TEMP2,TEMP2)");
+     // VALPQS+3 = √((∑P)² + (∑Q)²)
+    cmdList.append("ADDVVG(TEMP1,TEMP2,VALPQS+3)");
+    cmdList.append(DspAtomicCommandGen::getStopChain(chainIdPhasePQGeom));
+
     // and filter all our values (MeasPhaseCount ???)
     cmdList.append("AVERAGE1(4,VALPQS,FILTER)"); // we add results to filter
+
     return cmdList;
 }
 
