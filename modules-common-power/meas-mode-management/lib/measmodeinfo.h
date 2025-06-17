@@ -28,6 +28,12 @@ enum measmodes
     mqref
 };
 
+enum sumtypes
+{
+    sum_phasevals = 0,
+    sum_phase_pq_geom
+};
+
 constexpr int MeasModeFirst = m4lw;
 constexpr int MeasModeCount = mqref+1;
 
@@ -41,6 +47,7 @@ public:
     QString getActvalName() const;
     QString getUnitName() const;
     measmodes getCode() const;
+    sumtypes getSumTypeCode() const;
     bool isThreeWire() const;
 private:
     QString m_sName;

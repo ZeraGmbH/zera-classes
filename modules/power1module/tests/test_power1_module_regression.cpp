@@ -154,12 +154,34 @@ void test_power1_module_regression::dumpDspOnMeasModeChange()
     ModuleManagerTestRunner testRunner(":/sessions/session-minimal.json");
     TestDspInterfacePtr power1DspInterface = testRunner.getDspInterface(powerEntityId);
 
-    setMeasMode(testRunner.getVfCmdEventHandlerSystemPtr(), "4LW", "3LW");
-    setMeasMode(testRunner.getVfCmdEventHandlerSystemPtr(), "3LW", "2LW");
-    setMeasMode(testRunner.getVfCmdEventHandlerSystemPtr(), "2LW", "4LW");
+    setMeasMode(powerEntityId, testRunner.getVfCmdEventHandlerSystemPtr(), "4LW", "3LW");
+    setMeasMode(powerEntityId, testRunner.getVfCmdEventHandlerSystemPtr(), "3LW", "2LW");
+    setMeasMode(powerEntityId, testRunner.getVfCmdEventHandlerSystemPtr(), "2LW", "4LW");
 
     QString measProgramDumped = TestLogHelpers::dump(power1DspInterface->dumpAll(true));
     QString measProgramExpected = TestLogHelpers::loadFile(":/dspDumps/dump-measmode-change.json");
+    QVERIFY(TestLogHelpers::compareAndLogOnDiff(measProgramExpected, measProgramDumped));
+}
+
+void test_power1_module_regression::dumpDspOnMeasModeChangeApparentGeom()
+{
+    ModuleManagerTestRunner testRunner(":/sessions/session-com5003-p1-p4.json", "com5003");
+    TestDspInterfacePtr power1DspInterface = testRunner.getDspInterface(powerEntityIdP4);
+
+    setMeasMode(powerEntityIdP4, testRunner.getVfCmdEventHandlerSystemPtr(), "4LW", "4LS");
+    setMeasMode(powerEntityIdP4, testRunner.getVfCmdEventHandlerSystemPtr(), "4LS", "4LSg");
+    setMeasMode(powerEntityIdP4, testRunner.getVfCmdEventHandlerSystemPtr(), "4LSg", "4LW");
+
+    setMeasMode(powerEntityIdP4, testRunner.getVfCmdEventHandlerSystemPtr(), "4LW", "3LS");
+    setMeasMode(powerEntityIdP4, testRunner.getVfCmdEventHandlerSystemPtr(), "3LS", "3LSg");
+    setMeasMode(powerEntityIdP4, testRunner.getVfCmdEventHandlerSystemPtr(), "3LSg", "4LW");
+
+    setMeasMode(powerEntityIdP4, testRunner.getVfCmdEventHandlerSystemPtr(), "4LW", "2LS");
+    setMeasMode(powerEntityIdP4, testRunner.getVfCmdEventHandlerSystemPtr(), "2LS", "2LSg");
+    setMeasMode(powerEntityIdP4, testRunner.getVfCmdEventHandlerSystemPtr(), "2LSg", "4LW");
+
+    QString measProgramDumped = TestLogHelpers::dump(power1DspInterface->dumpAll(true));
+    QString measProgramExpected = TestLogHelpers::loadFile(":/dspDumps/dump-measmode-change-apparent-geometric.json");
     QVERIFY(TestLogHelpers::compareAndLogOnDiff(measProgramExpected, measProgramDumped));
 }
 
@@ -201,11 +223,12 @@ void test_power1_module_regression::scpiDumpMtPower1Module4()
     QVERIFY(ok);
 }
 
-void test_power1_module_regression::setMeasMode(VfCmdEventHandlerSystemPtr vfCmdEventHandlerSystem,
+void test_power1_module_regression::setMeasMode(int entityId,
+                                                VfCmdEventHandlerSystemPtr vfCmdEventHandlerSystem,
                                                 QString measModeOld,
                                                 QString measModeNew)
 {
-    VfCmdEventItemEntityPtr entityItem = VfEntityComponentEventItem::create(powerEntityId);
+    VfCmdEventItemEntityPtr entityItem = VfEntityComponentEventItem::create(entityId);
     vfCmdEventHandlerSystem->addItem(entityItem);
 
     VfClientComponentSetterPtr setter = VfClientComponentSetter::create("PAR_MeasuringMode", entityItem);

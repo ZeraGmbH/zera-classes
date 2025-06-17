@@ -30,6 +30,8 @@ void Power1DspVarGenerator::setupVarList(Zera::cDSPInterface *pDSPInterFace, con
     // we use tistart as parameter, so we can finish actual measuring interval bei setting 0
     m_pParameterDSP->addDspVar("TISTART",1, DSPDATA::vDspParam, DSPDATA::dInt);
     m_pParameterDSP->addDspVar("MMODE",1, DSPDATA::vDspParam, DSPDATA::dInt);
+    m_pParameterDSP->addDspVar("MMODE_SUM",1, DSPDATA::vDspParam, DSPDATA::dInt);
+
     // for meas modes with phase wise enable disable
     for(int phase=0; phase<MeasPhaseCount; phase++) {
         QString varName = QString("XMMODEPHASE%1").arg(phase);

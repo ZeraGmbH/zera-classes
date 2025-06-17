@@ -1,6 +1,7 @@
 <RCC>
     <qresource prefix="/">
         <file>dspDumps/dump-measmode-change.json</file>
+        <file>dspDumps/dump-measmode-change-apparent-geometric.json</file>
         <file>dspDumps/dumpMeasProgram.json</file>
         <file>dspDumps//dumpMeasProgramCom5003P1.json</file>
         <file>dspDumps//dumpMeasProgramCom5003P2.json</file>

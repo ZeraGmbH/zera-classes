@@ -10,6 +10,7 @@ public:
     MeasMode(QString modeName, int dspSelectCode, int measSysCount, MeasModePhaseSetStrategyPtr measModePhaseSetter);
     QString getName() const;
     int getDspSelectCode() const;
+    int getDspSumSelectCode() const;
     bool hasVarMask() const;
     bool canChangeMask(QString mask) const;
     bool tryChangeMask(QString mask);

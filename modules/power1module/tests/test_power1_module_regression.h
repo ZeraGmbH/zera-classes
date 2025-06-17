@@ -16,10 +16,12 @@ private slots:
     void dumpDspSetupMt310s2Pow1To4();
     void dumpDspSetupCom5003Pow1To4();
     void dumpDspOnMeasModeChange();
+    void dumpDspOnMeasModeChangeApparentGeom();
     void scpiDumpMtPower1Module1();
     void scpiDumpMtPower1Module4(); // ATTOW we are interested in QKHZ / unit
 private:
-    void setMeasMode(VfCmdEventHandlerSystemPtr vfCmdEventHandlerSystem,
+    void setMeasMode(int entityId,
+                     VfCmdEventHandlerSystemPtr vfCmdEventHandlerSystem,
                      QString measModeOld, // MUST be correct - otherwise ignored
                      QString measModeNew);
 };

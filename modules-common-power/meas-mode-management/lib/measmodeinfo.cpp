@@ -34,6 +34,20 @@ measmodes cMeasModeInfo::getCode() const
     return m_nCode;
 }
 
+sumtypes cMeasModeInfo::getSumTypeCode() const
+{
+    switch (m_nCode)
+    {
+    case m4lsg:
+    case m3lsg:
+    case m2lsg:
+    case mXlsg:
+        return sum_phase_pq_geom;
+    default:
+        return sum_phasevals;
+    }
+}
+
 bool cMeasModeInfo::isThreeWire() const
 {
     return MeasModeCatalog::getThreeWireModes().contains(m_nCode);

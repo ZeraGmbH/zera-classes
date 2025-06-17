@@ -12,6 +12,7 @@ QStringList Power1DspCmdGenerator::getCmdsInitVars(std::shared_ptr<MeasMode> ini
     cmdList.append(QString("CLEARN(%1,MEASSIGNAL2)").arg(samplesPerPeroid) ); // clear meassignal
     cmdList.append(QString("CLEARN(%1,FILTER)").arg(2*(MeasPhaseCount+SumValueCount)+1) ); // clear the whole filter incl. count
     cmdList.append(QString("SETVAL(MMODE,%1)").arg(initialMMode->getDspSelectCode()));
+    cmdList.append(QString("SETVAL(MMODE_SUM,%1)").arg(initialMMode->getDspSumSelectCode()));
 
     QString modeMask = initialMMode->getCurrentMask();
     for(int phase=0; phase<modeMask.size(); phase++) {

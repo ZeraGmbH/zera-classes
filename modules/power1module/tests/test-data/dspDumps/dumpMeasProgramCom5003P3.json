@@ -25,8 +25,8 @@
             ]
         },
         "Parameter": {
-            "Size": 6,
-            "UserMemSize": 6,
+            "Size": 7,
+            "UserMemSize": 7,
             "Variables": [
                 {
                     "Name": "TIPAR",
@@ -42,6 +42,12 @@
                 },
                 {
                     "Name": "MMODE",
+                    "Segment": "DSPDATA::localSegment",
+                    "Size": 1,
+                    "TypeData": "DSPDATA::dInt"
+                },
+                {
+                    "Name": "MMODE_SUM",
                     "Segment": "DSPDATA::localSegment",
                     "Size": 1,
                     "TypeData": "DSPDATA::dInt"
@@ -163,6 +169,7 @@
         "CLEARN(504,MEASSIGNAL2)",
         "CLEARN(9,FILTER)",
         "SETVAL(MMODE,32)",
+        "SETVAL(MMODE_SUM,0)",
         "SETVAL(XMMODEPHASE0,1)",
         "SETVAL(XMMODEPHASE1,1)",
         "SETVAL(XMMODEPHASE2,1)",

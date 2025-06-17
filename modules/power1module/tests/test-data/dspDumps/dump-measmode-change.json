@@ -25,8 +25,8 @@
             ]
         },
         "Parameter": {
-            "Size": 6,
-            "UserMemSize": 6,
+            "Size": 7,
+            "UserMemSize": 7,
             "Variables": [
                 {
                     "Name": "TIPAR",
@@ -42,6 +42,12 @@
                 },
                 {
                     "Name": "MMODE",
+                    "Segment": "DSPDATA::localSegment",
+                    "Size": 1,
+                    "TypeData": "DSPDATA::dInt"
+                },
+                {
+                    "Name": "MMODE_SUM",
                     "Segment": "DSPDATA::localSegment",
                     "Size": 1,
                     "TypeData": "DSPDATA::dInt"
@@ -163,6 +169,7 @@
         "CLEARN(504,MEASSIGNAL2)",
         "CLEARN(9,FILTER)",
         "SETVAL(MMODE,32)",
+        "SETVAL(MMODE_SUM,0)",
         "SETVAL(XMMODEPHASE0,1)",
         "SETVAL(XMMODEPHASE1,1)",
         "SETVAL(XMMODEPHASE2,1)",
@@ -242,6 +249,7 @@
         "WriteNo: 0000 / Handle:Variable: FrequencyScale:FREQSCALE": 150120000,
         "WriteNo: 0001 / Handle:Variable: QRefScale:NOMPOWER": 2500,
         "WriteNo: 0002 / Handle:Variable: Parameter:MMODE": 33,
+        "WriteNo: 0002 / Handle:Variable: Parameter:MMODE_SUM": 0,
         "WriteNo: 0002 / Handle:Variable: Parameter:TIPAR": 500,
         "WriteNo: 0002 / Handle:Variable: Parameter:TISTART": 0,
         "WriteNo: 0002 / Handle:Variable: Parameter:XMMODEPHASE0": 1,
@@ -250,6 +258,7 @@
         "WriteNo: 0003 / Handle:Variable: FrequencyScale:FREQSCALE": 150120000,
         "WriteNo: 0004 / Handle:Variable: QRefScale:NOMPOWER": 2500,
         "WriteNo: 0005 / Handle:Variable: Parameter:MMODE": 32,
+        "WriteNo: 0005 / Handle:Variable: Parameter:MMODE_SUM": 0,
         "WriteNo: 0005 / Handle:Variable: Parameter:TIPAR": 500,
         "WriteNo: 0005 / Handle:Variable: Parameter:TISTART": 0,
         "WriteNo: 0005 / Handle:Variable: Parameter:XMMODEPHASE0": 1,
@@ -258,6 +267,7 @@
         "WriteNo: 0006 / Handle:Variable: FrequencyScale:FREQSCALE": 450360000,
         "WriteNo: 0007 / Handle:Variable: QRefScale:NOMPOWER": 2500,
         "WriteNo: 0008 / Handle:Variable: Parameter:MMODE": 32,
+        "WriteNo: 0008 / Handle:Variable: Parameter:MMODE_SUM": 0,
         "WriteNo: 0008 / Handle:Variable: Parameter:TIPAR": 500,
         "WriteNo: 0008 / Handle:Variable: Parameter:TISTART": 0,
         "WriteNo: 0008 / Handle:Variable: Parameter:XMMODEPHASE0": 1,

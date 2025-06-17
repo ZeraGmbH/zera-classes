@@ -8,6 +8,9 @@ MeasMode::MeasMode(QString modeName, int dspSelectCode, int measSysCount, MeasMo
     m_measModePhaseSetter(std::move(measModePhaseSetter)),
     m_measSysCount(measSysCount)
 {
+#ifndef QT_NO_DEBUG
+    qInfo("Add %s / DSP selection code %i", qPrintable(modeName), dspSelectCode);
+#endif
 }
 
 QString MeasMode::getName() const
@@ -18,6 +21,11 @@ QString MeasMode::getName() const
 int MeasMode::getDspSelectCode() const
 {
     return m_dspSelectCode;
+}
+
+int MeasMode::getDspSumSelectCode() const
+{
+    return m_measModeInfo.getSumTypeCode();
 }
 
 bool MeasMode::hasVarMask() const
