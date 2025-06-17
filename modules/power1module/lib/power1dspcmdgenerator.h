@@ -28,6 +28,7 @@ public:
                                          const QMap<QString, cFoutInfo> &foutInfoMap,
                                          int irqNo, DspChainIdGen& idGen);
 private:
+    static QStringList getCmdsSkipOnUnequal(const QString& varName, int varValue, quint16 chainId);
     static QStringList getCmdsSkipOnMModeNotSelected(int dspSelectCode, quint16 chainId);
     static QStringList getCmdsSkipOnPhaseNotSelected(int phase, quint16 chainId);
 };

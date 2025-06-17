@@ -468,12 +468,17 @@ QStringList Power1DspCmdGenerator::getCmdsFreqOutput(const POWER1MODULE::cPower1
     return cmdList;
 }
 
-QStringList Power1DspCmdGenerator::getCmdsSkipOnMModeNotSelected(int dspSelectCode, quint16 chainId)
+QStringList Power1DspCmdGenerator::getCmdsSkipOnUnequal(const QString &varName, int varValue, quint16 chainId)
 {
     QStringList cmdList;
-    cmdList.append(QString("TESTVCSKIPEQ(MMODE,%1)").arg(dspSelectCode));
+    cmdList.append(QString("TESTVCSKIPEQ(%1,%2)").arg(varName).arg(varValue));
     cmdList.append(DspAtomicCommandGen::getDeactivateChain(chainId));
     return cmdList;
+}
+
+QStringList Power1DspCmdGenerator::getCmdsSkipOnMModeNotSelected(int dspSelectCode, quint16 chainId)
+{
+    return getCmdsSkipOnUnequal("MMODE", dspSelectCode, chainId);
 }
 
 QStringList Power1DspCmdGenerator::getCmdsSkipOnPhaseNotSelected(int phase, quint16 chainId)
