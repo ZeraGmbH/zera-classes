@@ -259,10 +259,10 @@ QStringList Power1DspCmdGenerator::getCmdsMMode3LSg(int dspSelectCode, MeasSyste
     // MEASSIGNAL2 = IL1
     cmdList.append(QString("COPYDATA(CH%1,0,MEASSIGNAL2)").arg(measChannelPairList[0].currentChannel));
 
-    cmdList.append("MULCCV(MEASSIGNAL1,MEASSIGNAL2,VAL_APPARENT_P+0)"); // P
+    cmdList.append("MULCCV(MEASSIGNAL1,MEASSIGNAL2,VAL_APPARENT_P+0)");     // P
     cmdList.append("ROTATE(MEASSIGNAL2,270.0)");
-    cmdList.append("MULCCV(MEASSIGNAL1,MEASSIGNAL2,VAL_APPARENT_Q+0)"); // Q
-    cmdList.append("ADDVVG(VAL_APPARENT_P+0,VAL_APPARENT_Q+0,VALPQS+0)"); // √(P² + Q²)
+    cmdList.append("MULCCV(MEASSIGNAL1,MEASSIGNAL2,VAL_APPARENT_Q+0)");     // Q
+    cmdList.append("ADDVVG(VAL_APPARENT_P+0,VAL_APPARENT_Q+0,VALPQS+0)");   // √(P² + Q²)
 
     // S2 = 0
     cmdList.append("SETVAL(VALPQS+1,0.0)");
@@ -275,10 +275,10 @@ QStringList Power1DspCmdGenerator::getCmdsMMode3LSg(int dspSelectCode, MeasSyste
     // MEASSIGNAL2 = IL3
     cmdList.append(QString("COPYDATA(CH%1,0,MEASSIGNAL2)").arg(measChannelPairList[2].currentChannel));
 
-    cmdList.append("MULCCV(MEASSIGNAL1,MEASSIGNAL2,VAL_APPARENT_P+2)"); // P
+    cmdList.append("MULCCV(MEASSIGNAL1,MEASSIGNAL2,VAL_APPARENT_P+2)");     // P
     cmdList.append("ROTATE(MEASSIGNAL2,270.0)");
-    cmdList.append("MULCCV(MEASSIGNAL1,MEASSIGNAL2,VAL_APPARENT_Q+2)"); // Q
-    cmdList.append("ADDVVG(VAL_APPARENT_P+2,VAL_APPARENT_Q+2,VALPQS+2)");          // √(P² + Q²)
+    cmdList.append("MULCCV(MEASSIGNAL1,MEASSIGNAL2,VAL_APPARENT_Q+2)");     // Q
+    cmdList.append("ADDVVG(VAL_APPARENT_P+2,VAL_APPARENT_Q+2,VALPQS+2)");   // √(P² + Q²)
 
     cmdList.append(DspAtomicCommandGen::getStopChain(chainId));
     return cmdList;
