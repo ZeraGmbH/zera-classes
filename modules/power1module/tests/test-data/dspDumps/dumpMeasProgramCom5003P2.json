@@ -79,8 +79,8 @@
             ]
         },
         "TmpData": {
-            "Size": 1028,
-            "UserMemSize": 1028,
+            "Size": 1034,
+            "UserMemSize": 1034,
             "Variables": [
                 {
                     "Name": "MEASSIGNAL1",
@@ -98,6 +98,18 @@
                     "Name": "VALPQS",
                     "Segment": "DSPDATA::localSegment",
                     "Size": 4,
+                    "TypeData": "DSPDATA::dFloat"
+                },
+                {
+                    "Name": "VAL_APPARENT_P",
+                    "Segment": "DSPDATA::localSegment",
+                    "Size": 3,
+                    "TypeData": "DSPDATA::dFloat"
+                },
+                {
+                    "Name": "VAL_APPARENT_Q",
+                    "Segment": "DSPDATA::localSegment",
+                    "Size": 3,
                     "TypeData": "DSPDATA::dFloat"
                 },
                 {
@@ -162,8 +174,14 @@
         "DEACTIVATECHAIN(1,0x0106)",
         "STOPCHAIN(1,0x0106)",
         "SETVAL(VALPQS+0,0.0)",
+        "SETVAL(VAL_APPARENT_P+0,0.0)",
+        "SETVAL(VAL_APPARENT_Q+0,0.0)",
         "SETVAL(VALPQS+1,0.0)",
+        "SETVAL(VAL_APPARENT_P+1,0.0)",
+        "SETVAL(VAL_APPARENT_Q+1,0.0)",
         "SETVAL(VALPQS+2,0.0)",
+        "SETVAL(VAL_APPARENT_P+2,0.0)",
+        "SETVAL(VAL_APPARENT_Q+2,0.0)",
         "ACTIVATECHAIN(1,0x0101)",
         "TESTVCSKIPEQ(MMODE,32)",
         "DEACTIVATECHAIN(1,0x0101)",

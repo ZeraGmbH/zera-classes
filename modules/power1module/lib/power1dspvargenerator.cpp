@@ -13,6 +13,8 @@ void Power1DspVarGenerator::setupVarList(Zera::cDSPInterface *pDSPInterFace, con
     m_pTmpDataDsp->addDspVar("MEASSIGNAL1", sampleRate, DSPDATA::vDspTemp); // we need 2 signals for our computations
     m_pTmpDataDsp->addDspVar("MEASSIGNAL2", sampleRate, DSPDATA::vDspTemp);
     m_pTmpDataDsp->addDspVar("VALPQS", MeasPhaseCount+SumValueCount, DSPDATA::vDspTemp); // here x1, x2, x3 , xs will land
+    m_pTmpDataDsp->addDspVar("VAL_APPARENT_P", MeasPhaseCount, DSPDATA::vDspTemp);
+    m_pTmpDataDsp->addDspVar("VAL_APPARENT_Q", MeasPhaseCount, DSPDATA::vDspTemp);
     m_pTmpDataDsp->addDspVar("TEMP1", 2, DSPDATA::vDspTemp); // we need 2 temp. vars also for complex
     m_pTmpDataDsp->addDspVar("TEMP2", 2, DSPDATA::vDspTemp);
     m_pTmpDataDsp->addDspVar("CONST_HALF", 1, DSPDATA::vDspTemp);
