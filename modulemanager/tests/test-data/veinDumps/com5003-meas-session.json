@@ -1830,6 +1830,13 @@
                     ],
                     [
                         "CONFIGURATION",
+                        "NOMINAL_FREQ",
+                        "10",
+                        "PAR_FOUT_NOMINAL_FREQ",
+                        "0"
+                    ],
+                    [
+                        "CONFIGURATION",
                         "TINTEGRATION",
                         "10",
                         "PAR_Interval",
@@ -2032,6 +2039,13 @@
                         "M0CONSTANT",
                         "2",
                         "PAR_FOUTConstant0",
+                        "0"
+                    ],
+                    [
+                        "CONFIGURATION",
+                        "NOMINAL_FREQ",
+                        "10",
+                        "PAR_FOUT_NOMINAL_FREQ",
                         "0"
                     ],
                     [
@@ -2240,6 +2254,13 @@
                         "M0CONSTANT",
                         "2",
                         "PAR_FOUTConstant0",
+                        "0"
+                    ],
+                    [
+                        "CONFIGURATION",
+                        "NOMINAL_FREQ",
+                        "10",
+                        "PAR_FOUT_NOMINAL_FREQ",
                         "0"
                     ],
                     [
@@ -2475,6 +2496,13 @@
                     ],
                     [
                         "CONFIGURATION",
+                        "NOMINAL_FREQ",
+                        "10",
+                        "PAR_FOUT_NOMINAL_FREQ",
+                        "0"
+                    ],
+                    [
+                        "CONFIGURATION",
                         "FIXFREQ",
                         "10",
                         "PAR_FOUT_QREF_FREQ",
@@ -2566,18 +2594,6 @@
                 "INF_ModuleInterface": {
                     "Description": "Module's interface details"
                 },
-                "PAR_FOUT_NOMINAL_FREQ": {
-                    "Description": "Nominal frequency",
-                    "Unit": "Hz",
-                    "Validation": {
-                        "Data": [
-                            10000,
-                            200000,
-                            1
-                        ],
-                        "Type": "INTEGER"
-                    }
-                },
                 "PAR_Interval": {
                     "Description": "Integration time",
                     "Unit": "s",
@@ -2625,7 +2641,6 @@
                 "Name": "POW98"
             }
         },
-        "PAR_FOUT_NOMINAL_FREQ": 200000,
         "PAR_Interval": 1,
         "PAR_MeasModePhaseSelect": "111",
         "PAR_MeasuringMode": "4LB",
@@ -2683,18 +2698,6 @@
                 "INF_ModuleInterface": {
                     "Description": "Module's interface details"
                 },
-                "PAR_FOUT_NOMINAL_FREQ": {
-                    "Description": "Nominal frequency",
-                    "Unit": "Hz",
-                    "Validation": {
-                        "Data": [
-                            10000,
-                            200000,
-                            1
-                        ],
-                        "Type": "INTEGER"
-                    }
-                },
                 "PAR_Interval": {
                     "Description": "Integration time",
                     "Unit": "s",
@@ -2742,7 +2745,6 @@
                 "Name": "POW99"
             }
         },
-        "PAR_FOUT_NOMINAL_FREQ": 200000,
         "PAR_Interval": 1,
         "PAR_MeasModePhaseSelect": "111",
         "PAR_MeasuringMode": "4LS",

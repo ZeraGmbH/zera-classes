@@ -99,6 +99,7 @@ private:
 
     void setNominalPowerForQref();
     void generateVeinInterfaceForQrefFreq();
+    void generateVeinInterfaceNominalFreq();
 
     cPower1Module* m_pModule;
     MeasModeSelector m_measModeSelector;
@@ -115,7 +116,7 @@ private:
     VfModuleParameter* m_pMeasuringmodeParameter;
     VfModuleParameter* m_pMModePhaseSelectParameter;
     VfModuleParameter* m_QREFFrequencyParameter = nullptr;
-    VfModuleParameter* m_pNominalFrequency;
+    VfModuleParameter* m_pNominalFrequency = nullptr;
     cStringValidator * m_MModePhaseSelectValidator;
     VfModuleComponent *m_MModeCanChangePhaseMask;
     VfModuleComponent *m_MModePowerDisplayName;

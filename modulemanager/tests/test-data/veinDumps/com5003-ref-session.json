@@ -1233,6 +1233,13 @@
                     ],
                     [
                         "CONFIGURATION",
+                        "NOMINAL_FREQ",
+                        "10",
+                        "PAR_FOUT_NOMINAL_FREQ",
+                        "0"
+                    ],
+                    [
+                        "CONFIGURATION",
                         "TINTEGRATION",
                         "10",
                         "PAR_Interval",
@@ -1257,7 +1264,7 @@
             }
         },
         "PAR_FOUT0": "fOUT1",
-        "PAR_FOUTConstant0": 2400000000,
+        "PAR_FOUTConstant0": 12000000000,
         "PAR_FOUT_NOMINAL_FREQ": 1000000,
         "PAR_Interval": 1,
         "PAR_MeasModePhaseSelect": "111",
