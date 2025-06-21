@@ -24,6 +24,7 @@ function(SETUP_QTESTS_MODULEMANAGER)
             Qt5::Test
             zera-modulemanager-lib
             zera-modulemanager-testlib
+            Zera::testlib-memallocs
             scpi-doc-lib
             scpimodule-testlib
             )

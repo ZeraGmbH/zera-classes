@@ -1,5 +1,4 @@
 #include "test_change_session.h"
-#include "modulemanagertestrunner.h"
 #include "testfactoryserviceinterfaces.h"
 #include "modulemanagerconfig.h"
 #include "scpimoduleclientblocked.h"
@@ -9,6 +8,8 @@
 #include <testlicensesystem.h>
 #include <zera-jsonfileloader.h>
 #include <timemachineobject.h>
+#include <memoryalloctracker.h>
+#include <backtracetreegenerator.h>
 #include <QJsonArray>
 #include <QTest>
 
@@ -145,38 +146,37 @@ void test_change_session::changeSessionCom5003SCPICmd()
 
 void test_change_session::changeSessionMt310s2MultipleProblematicRangeModule()
 {
-    // Background:
-    // Changing sessions multiple times eats memory and CPU cycles.
-    // Looking at the logs we find two modules with rising set up time: rangemodule
-    // and samplemodule (test below). Let's isolate this here and see if it helps
-    // fixing.
-    //
-    // More background:
-    // * Valgrind memcheck does not work since it does not support accessing
-    //   files -> module plugins.
-    // * Yes btop displays significant rise of memory consumption.
-    // * After playing around with this it seems that memory rise is common to all
-    //   modules - seems rangemodule/samplemodule is slowdown is another story or
-    //   a symtom caused by dangling objects still linked in to something...
+    QSKIP("Mem test takes ages...");
 
-    QSKIP("This takes ages and is just there to isolate mem-eaters on multiple session change");
+    // control object's lifetime to play around
+    std::unique_ptr<TestLicenseSystem> licenseSystem = std::make_unique<TestLicenseSystem>();
+    std::unique_ptr<ModuleManagerSetupFacade> modManSetupFacade = std::make_unique<ModuleManagerSetupFacade>(licenseSystem.get());
 
-    TestLicenseSystem licenseSystem;
-    ModuleManagerSetupFacade modManSetupFacade(&licenseSystem);
+    std::unique_ptr<TestModuleManager> modMan = std::make_unique<TestModuleManager>(modManSetupFacade.get(), m_serviceInterfaceFactory);
+    modMan->loadAllAvailableModulePlugins();
+    modMan->setupConnections();
+    modMan->startAllTestServices("mt310s2", false);
 
-    TestModuleManager modMan(&modManSetupFacade, m_serviceInterfaceFactory);
-    modMan.loadAllAvailableModulePlugins();
-    modMan.setupConnections();
-    modMan.startAllTestServices("mt310s2", false);
+    MemoryAllocTracker memAllocTracker;
+    memAllocTracker.start();
 
-    constexpr int countSessionChange = 1000;
+    constexpr int countSessionChange = 10;
     for (int sessionNo=0; sessionNo<countSessionChange; sessionNo++) {
         const QString sessionFileName = QString(":/sessions/session-problematic-range-%1.json").arg(sessionNo%2);
         qInfo("%i: Session: %s", sessionNo, qPrintable(sessionFileName));
-        modMan.changeSessionFile(sessionFileName);
-        modMan.waitUntilModulesAreReady();
+        modMan->changeSessionFile(sessionFileName);
+        modMan->waitUntilModulesAreReady();
     }
-    modMan.destroyModulesAndWaitUntilAllShutdown();
+
+    modMan->destroyModulesAndWaitUntilAllShutdown();
+    modMan.reset();
+    modManSetupFacade.reset();
+    licenseSystem.reset();
+
+    QTest::qWait(10000); // wait for QArrayData::allocate relax (QAbstractSocket)
+    memAllocTracker.stop();
+    BacktraceTreeGenerator allocTree(memAllocTracker.getAllocationsTimeSorted());
+    qInfo("Unfreed %i", allocTree.getEntryList()->count());
 }
 
 void test_change_session::changeSessionMt310s2MultipleProblematicSampleModule()
