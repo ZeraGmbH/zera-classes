@@ -110,7 +110,8 @@ void TestModuleManager::onAllModulesDestroyed()
         Zera::cInterfacePrivate::getInstanceCount(),
         cDspVar::getInstanceCount(),
         ScpiNode::getInstanceCount(),
-        ScpiObject::getInstanceCount()
+        ScpiObject::getInstanceCount(),
+        VeinTcp::TcpPeer::getInstanceCount()
     } );
 }
 

@@ -79,6 +79,11 @@ void test_modman_regression_all_sessions::checkObjectsProperlyDeleted()
     constexpr int licenseStorageSystemModuleIntrospection_EventSystemCount = 4;
     QCOMPARE(cumulatedInstanceCounts.m_veinEventSystemCount, licenseStorageSystemModuleIntrospection_EventSystemCount);
 
+    constexpr int serverPeers = 10;
+    QCOMPARE(cumulatedInstanceCounts.m_veinTcpPeerCount, serverPeers);
+    constexpr int peersLeftServerDown = 0;
+    QCOMPARE(VeinTcp::TcpPeer::getInstanceCount(), peersLeftServerDown);
+
     QCOMPARE(SCPIMODULE::cBaseInterface::getInstanceCount(), 0);
     QCOMPARE(SCPIMODULE::cSCPIMeasure::getInstanceCount(), 0);
     QCOMPARE(SCPIMODULE::ScpiBaseDelegate::getInstanceCount(), 0);

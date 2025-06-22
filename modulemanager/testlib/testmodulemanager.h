@@ -30,6 +30,8 @@ public:
 
         int m_scpiNodes = 0;
         int m_scpiObjects = 0;
+
+        int m_veinTcpPeerCount = 0;
     };
     QList<TModuleInstances> getInstanceCountsOnModulesDestroyed();
 
