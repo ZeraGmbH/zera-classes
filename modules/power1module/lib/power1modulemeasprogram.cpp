@@ -1121,7 +1121,7 @@ void cPower1ModuleMeasProgram::foutParamsToDsp()
     std::shared_ptr<MeasMode> mode = m_measModeSelector.getCurrMode();
     RangeMaxVals maxVals = calcMaxRangeValues(mode);
     double cfak = mode->getActiveMeasSysCount();
-    double nomFrequency = getConfData()->m_nNominalFrequency.m_nValue;
+    double nomFrequency = getConfData()->m_nNominalFrequencyDefault.m_nValue;
     if(m_pNominalFrequency && mode->getName() != "QREF")
         nomFrequency = m_pNominalFrequency->getValue().toDouble();
     double constantImpulsePerWs = nomFrequency / (cfak * maxVals.maxU * maxVals.maxI);

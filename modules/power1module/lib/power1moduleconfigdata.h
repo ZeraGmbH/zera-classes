@@ -62,6 +62,7 @@ public:
     QStringList m_sMeasSystemList; // our measuring systems "m0,m1"
     QString m_sIntegrationMode; // we integrate over time or periods
     intParameter m_nNominalFrequency; // our nominal frequency output for full range power
+    intParameter m_nNominalFrequencyDefault;
     QString m_sFreqActualizationMode; // signalperiod or integrationtime
     quint8 m_nFreqOutputCount; // how many frequency ouptuts do we support
     QList<freqoutconfiguration> m_FreqOutputConfList; // a list of configuration values for each frequency output

@@ -40,6 +40,7 @@ void cPower1ModuleConfiguration::setConfiguration(QByteArray xmlString)
     m_ConfigXMLMap["pow1modconfpar:configuration:measure:movingwindow:time"] = setMovingwindowTime;
 
     m_ConfigXMLMap["pow1modconfpar:configuration:frequencyoutput:frequency"] = setNominalFrequency;
+    m_ConfigXMLMap["pow1modconfpar:configuration:frequencyoutput:frequencydefault"] = setNominalFrequencyDefault;
     m_ConfigXMLMap["pow1modconfpar:configuration:frequencyoutput:frequencyact"] = setFrequencyActualizationMode;
     m_ConfigXMLMap["pow1modconfpar:configuration:frequencyoutput:output:n"] = setFrequencyOutputCount;
 

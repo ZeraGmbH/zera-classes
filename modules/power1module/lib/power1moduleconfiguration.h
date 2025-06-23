@@ -22,6 +22,7 @@ enum moduleconfigstate
     setMovingwindowBool,
     setMovingwindowTime,
     setNominalFrequency,
+    setNominalFrequencyDefault,
     setFrequencyActualizationMode,
     setFrequencyOutputCount,
     setEnableScpiCommands,
