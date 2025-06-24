@@ -130,6 +130,9 @@ void cPower1ModuleConfiguration::configXMLInfo(QString key)
             m_pPower1ModulConfigData->m_nNominalFrequency.m_sKey = key;
             m_pPower1ModulConfigData->m_nNominalFrequency.m_nValue = m_pXMLReader->getValue(key).toInt(&ok);
             break;
+        case setNominalFrequencyDefault:
+            m_pPower1ModulConfigData->m_nNominalFrequencyDefault.m_sKey = key;
+            m_pPower1ModulConfigData->m_nNominalFrequencyDefault.m_nValue = m_pXMLReader->getValue(key).toInt(&ok);
         case setFrequencyActualizationMode:
             m_pPower1ModulConfigData->m_sFreqActualizationMode = m_pXMLReader->getValue(key);
             break;
