@@ -19,6 +19,7 @@
         </measure>
         <frequencyoutput>
             <frequency>1000000</frequency>
+            <frequencydefault>1000000</frequencydefault>
             <frequencyact>signalperiod</frequencyact>
             <output>
                 <n>1</n>

@@ -1715,6 +1715,18 @@
                     "ChannelName": "Fout1",
                     "Description": "Frequency output constant"
                 },
+                "PAR_FOUT_NOMINAL_FREQ": {
+                    "Description": "Nominal frequency",
+                    "Unit": "Hz",
+                    "Validation": {
+                        "Data": [
+                            10000,
+                            200000,
+                            1
+                        ],
+                        "Type": "INTEGER"
+                    }
+                },
                 "PAR_Interval": {
                     "Description": "Integration time",
                     "Unit": "s",
@@ -1818,6 +1830,13 @@
                     ],
                     [
                         "CONFIGURATION",
+                        "NOMINAL_FREQ",
+                        "10",
+                        "PAR_FOUT_NOMINAL_FREQ",
+                        "0"
+                    ],
+                    [
+                        "CONFIGURATION",
                         "TINTEGRATION",
                         "10",
                         "PAR_Interval",
@@ -1843,6 +1862,7 @@
         },
         "PAR_FOUT0": "fOUT1",
         "PAR_FOUTConstant0": 2500000,
+        "PAR_FOUT_NOMINAL_FREQ": 200000,
         "PAR_Interval": 1,
         "PAR_MeasModePhaseSelect": "111",
         "PAR_MeasuringMode": "4LW",
@@ -1906,6 +1926,18 @@
                 "PAR_FOUTConstant0": {
                     "ChannelName": "Fout2",
                     "Description": "Frequency output constant"
+                },
+                "PAR_FOUT_NOMINAL_FREQ": {
+                    "Description": "Nominal frequency",
+                    "Unit": "Hz",
+                    "Validation": {
+                        "Data": [
+                            10000,
+                            200000,
+                            1
+                        ],
+                        "Type": "INTEGER"
+                    }
                 },
                 "PAR_Interval": {
                     "Description": "Integration time",
@@ -2011,6 +2043,13 @@
                     ],
                     [
                         "CONFIGURATION",
+                        "NOMINAL_FREQ",
+                        "10",
+                        "PAR_FOUT_NOMINAL_FREQ",
+                        "0"
+                    ],
+                    [
+                        "CONFIGURATION",
                         "TINTEGRATION",
                         "10",
                         "PAR_Interval",
@@ -2036,6 +2075,7 @@
         },
         "PAR_FOUT0": "fOUT2",
         "PAR_FOUTConstant0": 2500000,
+        "PAR_FOUT_NOMINAL_FREQ": 200000,
         "PAR_Interval": 1,
         "PAR_MeasModePhaseSelect": "111",
         "PAR_MeasuringMode": "4LB",
@@ -2099,6 +2139,18 @@
                 "PAR_FOUTConstant0": {
                     "ChannelName": "Fout3",
                     "Description": "Frequency output constant"
+                },
+                "PAR_FOUT_NOMINAL_FREQ": {
+                    "Description": "Nominal frequency",
+                    "Unit": "Hz",
+                    "Validation": {
+                        "Data": [
+                            10000,
+                            200000,
+                            1
+                        ],
+                        "Type": "INTEGER"
+                    }
                 },
                 "PAR_Interval": {
                     "Description": "Integration time",
@@ -2206,6 +2258,13 @@
                     ],
                     [
                         "CONFIGURATION",
+                        "NOMINAL_FREQ",
+                        "10",
+                        "PAR_FOUT_NOMINAL_FREQ",
+                        "0"
+                    ],
+                    [
+                        "CONFIGURATION",
                         "TINTEGRATION",
                         "10",
                         "PAR_Interval",
@@ -2231,6 +2290,7 @@
         },
         "PAR_FOUT0": "fOUT3",
         "PAR_FOUTConstant0": 2500000,
+        "PAR_FOUT_NOMINAL_FREQ": 200000,
         "PAR_Interval": 1,
         "PAR_MeasModePhaseSelect": "111",
         "PAR_MeasuringMode": "4LS",
@@ -2297,6 +2357,18 @@
                 "PAR_FOUTConstant0": {
                     "ChannelName": "Fout4",
                     "Description": "Frequency output constant"
+                },
+                "PAR_FOUT_NOMINAL_FREQ": {
+                    "Description": "Nominal frequency",
+                    "Unit": "Hz",
+                    "Validation": {
+                        "Data": [
+                            10000,
+                            200000,
+                            1
+                        ],
+                        "Type": "INTEGER"
+                    }
                 },
                 "PAR_FOUT_QREF_FREQ": {
                     "Description": "Fixed frequency output mode (QREF): frequency value",
@@ -2424,6 +2496,13 @@
                     ],
                     [
                         "CONFIGURATION",
+                        "NOMINAL_FREQ",
+                        "10",
+                        "PAR_FOUT_NOMINAL_FREQ",
+                        "0"
+                    ],
+                    [
+                        "CONFIGURATION",
                         "FIXFREQ",
                         "10",
                         "PAR_FOUT_QREF_FREQ",
@@ -2456,6 +2535,7 @@
         },
         "PAR_FOUT0": "fOUT4",
         "PAR_FOUTConstant0": 2500000,
+        "PAR_FOUT_NOMINAL_FREQ": 200000,
         "PAR_FOUT_QREF_FREQ": 200,
         "PAR_Interval": 1,
         "PAR_MeasModePhaseSelect": "111",

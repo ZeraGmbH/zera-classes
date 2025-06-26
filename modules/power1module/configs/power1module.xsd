@@ -165,7 +165,15 @@
             <xs:element name="frequency" minOccurs="1" maxOccurs="1">
                 <xs:simpleType>
                     <xs:restriction base="xs:integer">
-                        <xs:minInclusive value="20000"/>
+                        <xs:minInclusive value="10000"/>
+                        <xs:maxInclusive value="1000000"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="frequencydefault" minOccurs="1" maxOccurs="1">
+                <xs:simpleType>
+                    <xs:restriction base="xs:integer">
+                        <xs:minInclusive value="10000"/>
                         <xs:maxInclusive value="1000000"/>
                     </xs:restriction>
                 </xs:simpleType>

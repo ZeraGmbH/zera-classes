@@ -209,13 +209,12 @@ void cPower1ModuleMeasProgram::generateVeinInterface()
 
     m_pPQSCountInfo = new VfModuleMetaData(QString("PQSCount"), QVariant(MeasPhaseCount+SumValueCount));
     m_pModule->veinModuleMetaDataList.append(m_pPQSCountInfo);
-    m_pNomFrequencyInfo =  new VfModuleMetaData(QString("NominalFrequency"), QVariant(getConfData()->m_nNominalFrequency));
+    m_pNomFrequencyInfo =  new VfModuleMetaData(QString("NominalFrequency"), QVariant(getConfData()->m_nNominalFrequency.m_nValue));
     m_pModule->veinModuleMetaDataList.append(m_pNomFrequencyInfo);
     m_pFoutCount = new VfModuleMetaData(QString("FOUTCount"), QVariant(getConfData()->m_nFreqOutputCount));
     m_pModule->veinModuleMetaDataList.append(m_pFoutCount);
-
     VfModuleParameter* pFoutParameter;
-
+    bool foutDisplayNameFound = false;
     for (int i = 0; i < getConfData()->m_nFreqOutputCount; i++) {
         // Note: Although components are 'PAR_' they are not changable currently
         pFoutParameter = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
@@ -228,7 +227,8 @@ void cPower1ModuleMeasProgram::generateVeinInterface()
         m_FoutConstParameterList.append(pFoutParameter);
         m_pModule->m_veinModuleParameterMap[key] = pFoutParameter; // for modules use
 
-        QString foutName =  getConfData()->m_FreqOutputConfList.at(i).m_sFreqOutNameDisplayed;
+        QString foutName = getConfData()->m_FreqOutputConfList.at(i).m_sFreqOutNameDisplayed;
+        foutDisplayNameFound = !foutName.isEmpty();
         pFoutParameter = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
                                                           key = QString("PAR_FOUT%1").arg(i),
                                                           QString("Frequency output name"),
@@ -255,6 +255,9 @@ void cPower1ModuleMeasProgram::generateVeinInterface()
         QPair<VeinStorage::AbstractComponentPtr, VeinStorage::AbstractComponentPtr> tmpScalePair(scaleInputU, scaleInputI);
         m_scalingInputs.append(tmpScalePair);
     }
+
+    if (foutDisplayNameFound)
+        generateVeinInterfaceNominalFreq();
     generateVeinInterfaceForQrefFreq();
 
     for(const auto &ele : qAsConst(m_scalingInputs)) {
@@ -929,6 +932,8 @@ void cPower1ModuleMeasProgram::activateDSPdone()
     if (getConfData()->supportsVariableQrefFrequency())
         connect(m_QREFFrequencyParameter, &VfModuleComponent::sigValueChanged,
                 this, &cPower1ModuleMeasProgram::newQRefFrequency);
+    if (m_pNominalFrequency)
+        connect(m_pNominalFrequency,&VfModuleParameter::sigValueChanged, this, &cPower1ModuleMeasProgram::newNominalFrequency);
 
     readUrvalueList = m_measChannelInfoHash.keys(); // once we read all actual range urvalues
     if (!m_readUpperRangeValueMachine.isRunning())
@@ -1096,12 +1101,31 @@ void cPower1ModuleMeasProgram::generateVeinInterfaceForQrefFreq()
     }
 }
 
+void POWER1MODULE::cPower1ModuleMeasProgram::generateVeinInterfaceNominalFreq()
+{
+    QString key = "PAR_FOUT_NOMINAL_FREQ";
+    m_pNominalFrequency = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
+                                                key,
+                                                QString("Nominal frequency"),
+                                                QVariant(getConfData()->m_nNominalFrequency.m_nValue));
+    m_pNominalFrequency->setUnit("Hz");
+    m_pNominalFrequency->setValidator(new cIntValidator(10000, 200000, 1));
+    m_pModule->m_veinModuleParameterMap[key] = m_pNominalFrequency; // for modules use
+    connect(m_pNominalFrequency, &VfModuleParameter::sigValueChanged, this, &cPower1ModuleMeasProgram::foutParamsToDsp);
+    if(getConfData()->m_enableScpiCommands)
+        m_pNominalFrequency->setScpiInfo("CONFIGURATION",QString("NOMINAL_FREQ"), SCPI::isQuery|SCPI::isCmdwP, "PAR_FOUT_NOMINAL_FREQ");
+}
+
 void cPower1ModuleMeasProgram::foutParamsToDsp()
 {
     std::shared_ptr<MeasMode> mode = m_measModeSelector.getCurrMode();
     RangeMaxVals maxVals = calcMaxRangeValues(mode);
     double cfak = mode->getActiveMeasSysCount();
-    double constantImpulsePerWs = getConfData()->m_nNominalFrequency / (cfak * maxVals.maxU * maxVals.maxI);
+    double nomFrequency = getConfData()->m_nNominalFrequencyDefault.m_nValue;
+    if(m_pNominalFrequency && mode->getName() != "QREF")
+        nomFrequency = m_pNominalFrequency->getValue().toDouble();
+    double constantImpulsePerWs = nomFrequency / (cfak * maxVals.maxU * maxVals.maxI);
+
     bool isValidConstant = !isinf(constantImpulsePerWs);
     if (isValidConstant && getConfData()->m_nFreqOutputCount > 0) { // dsp-interface will crash for missing parts...
         QString datalist = "FREQSCALE:";
@@ -1242,6 +1266,13 @@ void cPower1ModuleMeasProgram::newQRefFrequency(QVariant frequency)
     setNominalPowerForQref();
     emit m_pModule->parameterChanged();
 }
+
+void cPower1ModuleMeasProgram::newNominalFrequency(QVariant frequency)
+{
+    getConfData()->m_nNominalFrequency.m_nValue = frequency.toInt();
+    emit m_pModule->parameterChanged();
+}
+
 
 void cPower1ModuleMeasProgram::updatePreScaling()
 {
