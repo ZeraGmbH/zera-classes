@@ -9,6 +9,10 @@
             "Comment": "DFTModule"
         },
         {
+            "EntityId": 1060,
+            "Comment": "FFTModule"
+        },
+        {
             "EntityId": 1110,
             "Comment": "THDNModule"
         },
