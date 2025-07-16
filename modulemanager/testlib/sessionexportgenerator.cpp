@@ -3,6 +3,9 @@
 #include <vs_dumpjson.h>
 #include <QFile>
 
+constexpr int system_entity = 0;
+constexpr int scpi_module_entity = 9999;
+
 SessionExportGenerator::SessionExportGenerator(const LxdmSessionChangeParam &lxdmParam) :
     m_lxdmParam(lxdmParam)
 {
@@ -60,8 +63,8 @@ void SessionExportGenerator::changeSession(QString session)
 
 void SessionExportGenerator::generateDevIfaceXml(QString xmlDir)
 {
-    QString scpiIface = m_modmanSetupFacade->getStorageSystem()->getDb()->getStoredValue(9999, "ACT_DEV_IFACE").toString();
-    QString currentSession = m_modmanSetupFacade->getStorageSystem()->getDb()->getStoredValue(0, "Session").toString();
+    QString scpiIface = m_modmanSetupFacade->getStorageSystem()->getDb()->getStoredValue(scpi_module_entity, "ACT_DEV_IFACE").toString();
+    QString currentSession = m_modmanSetupFacade->getStorageSystem()->getDb()->getStoredValue(system_entity, "Session").toString();
     QString xmlFileName(xmlDir + currentSession);
     xmlFileName.replace("json", "xml");
     createXml(xmlFileName, scpiIface);
@@ -69,7 +72,7 @@ void SessionExportGenerator::generateDevIfaceXml(QString xmlDir)
 
 QByteArray SessionExportGenerator::getVeinDump()
 {
-    return VeinStorage::DumpJson::dumpToByteArray(m_modmanSetupFacade->getStorageSystem()->getDb(), QList<int>(), QList<int>() << 9999);
+    return VeinStorage::DumpJson::dumpToByteArray(m_modmanSetupFacade->getStorageSystem()->getDb(), QList<int>(), QList<int>() << scpi_module_entity);
 }
 
 QList<TestModuleManager::TModuleInstances> SessionExportGenerator::getInstanceCountsOnModulesDestroyed()
