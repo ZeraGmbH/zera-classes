@@ -4,12 +4,9 @@
 #include "testlicensesystem.h"
 #include "testmodulemanager.h"
 #include "modulemanagerconfig.h"
-#include <vl_databaselogger.h>
-#include <QObject>
 
-class SessionExportGenerator: public QObject
+class SessionExportGenerator
 {
-    Q_OBJECT
 public:
     SessionExportGenerator(const LxdmSessionChangeParam &lxdmParam);
     ~SessionExportGenerator();
@@ -30,8 +27,6 @@ private:
     std::unique_ptr<ModuleManagerSetupFacade> m_modmanSetupFacade;
     std::unique_ptr<TestModuleManager> m_modman;
     QString m_device;
-    std::unique_ptr<VeinLogger::DatabaseLogger> m_dataLoggerSystem;
-    bool m_dataLoggerSystemInitialized = false;
     const LxdmSessionChangeParam m_lxdmParam;
 };
 

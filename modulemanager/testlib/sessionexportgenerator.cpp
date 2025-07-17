@@ -1,10 +1,5 @@
 #include "sessionexportgenerator.h"
 #include "factoryserviceinterfaces.h"
-#include <timemachineobject.h>
-#include <jsonloggercontentloader.h>
-#include <jsonloggercontentsessionloader.h>
-#include <loggercontentsetconfig.h>
-#include <vl_sqlitedb.h>
 #include <vs_dumpjson.h>
 #include <QFile>
 
@@ -34,39 +29,10 @@ void SessionExportGenerator::createModman(QString device)
                                                                      m_lxdmParam,
                                                                      "/tmp/" + QUuid::createUuid().toString(QUuid::WithoutBraces));
     m_modman = std::make_unique<TestModuleManager>(m_modmanSetupFacade.get(), std::make_shared<FactoryServiceInterfaces>());
-    const VeinLogger::DBFactory sqliteFactory = [](){
-        return new VeinLogger::SQLiteDB();
-    };
-    m_dataLoggerSystem = std::make_unique<VeinLogger::DatabaseLogger>(
-        m_modmanSetupFacade->getStorageSystem(),
-        sqliteFactory,
-        this,
-        QList<int>()
-            << 0    /* SYSTEM */
-            << 1150 /* STATUS */);;
-
-    //setup logger
-    VeinLogger::LoggerContentSetConfig::setJsonEnvironment(MODMAN_CONTENTSET_PATH, std::make_shared<JsonLoggerContentLoader>());
-    VeinLogger::LoggerContentSetConfig::setJsonEnvironment(MODMAN_SESSION_PATH, std::make_shared<JsonLoggerContentSessionLoader>());
-
-    m_dataLoggerSystemInitialized = false;
-    connect(m_modmanSetupFacade->getLicenseSystem(), &LicenseSystemInterface::sigSerialNumberInitialized, [&](){
-        if(m_licenseSystem->isSystemLicensed(m_dataLoggerSystem->entityName()))
-        {
-            if(!m_dataLoggerSystemInitialized)
-            {
-                m_dataLoggerSystemInitialized = true;
-                qInfo("Starting DataLoggerSystem...");
-                m_modmanSetupFacade->addSubsystem(m_dataLoggerSystem.get());
-            }
-        }
-    });
 
     m_modman->loadAllAvailableModulePlugins();
     m_modman->setupConnections();
     m_modman->startAllTestServices(device, false);
-    m_modmanSetupFacade->getLicenseSystem()->setDeviceSerial("foo");
-    TimeMachineObject::feedEventLoop();
 }
 
 void SessionExportGenerator::destroyModules()
