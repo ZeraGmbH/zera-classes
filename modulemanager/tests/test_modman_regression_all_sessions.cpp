@@ -19,8 +19,8 @@ void test_modman_regression_all_sessions::initTestCase()
     m_openFileTracker = std::make_unique<TestOpenFileTracker>();
 
     m_devIfaceXmlsPath = QStringLiteral(HTML_DOCS_PATH_TEST) + "scpi-xmls/";
-    DevicesExportGenerator devicesExportGenerator(m_devIfaceXmlsPath);
-    devicesExportGenerator.exportAll(MockLxdmSessionChangeParamGenerator::generateTestSessionChanger(false));
+    DevicesExportGenerator devicesExportGenerator(m_devIfaceXmlsPath, MockLxdmSessionChangeParamGenerator::generateTestSessionChanger(false));
+    devicesExportGenerator.exportAll();
     m_veinDumps = devicesExportGenerator.getVeinDumps();
     m_instanceCountsOnModulesDestroyed = devicesExportGenerator.getInstanceCountsOnModulesDestroyed();
 }
