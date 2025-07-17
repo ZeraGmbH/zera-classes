@@ -8,9 +8,6 @@ MeasMode::MeasMode(QString modeName, int dspSelectCode, int measSysCount, MeasMo
     m_measModePhaseSetter(std::move(measModePhaseSetter)),
     m_measSysCount(measSysCount)
 {
-#ifndef QT_NO_DEBUG
-    qInfo("Add %s / DSP selection code %i", qPrintable(modeName), dspSelectCode);
-#endif
 }
 
 QString MeasMode::getName() const
