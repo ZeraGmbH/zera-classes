@@ -82,8 +82,8 @@ void test_modman_regression_all_sessions::checkObjectsProperlyDeleted()
     QCOMPARE(cumulatedInstanceCounts.m_activistCount, 0);
     QCOMPARE(cumulatedInstanceCounts.m_serviceInterfaceCount, 0);
     QCOMPARE(cumulatedInstanceCounts.m_dspVarCount, 0);
-    constexpr int licenseStorageSystemModuleIntrospection_EventSystemCount = 4;
-    QCOMPARE(cumulatedInstanceCounts.m_veinEventSystemCount, licenseStorageSystemModuleIntrospection_EventSystemCount);
+    constexpr int licenseStorageSystemModuleIntrospectionVfLogger_EventSystemCount = 5;
+    QCOMPARE(cumulatedInstanceCounts.m_veinEventSystemCount, licenseStorageSystemModuleIntrospectionVfLogger_EventSystemCount);
 
     constexpr int serverPeers = 10;
     QCOMPARE(cumulatedInstanceCounts.m_veinTcpPeerCount, serverPeers);
