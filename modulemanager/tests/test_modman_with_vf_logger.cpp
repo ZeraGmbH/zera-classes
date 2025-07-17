@@ -30,7 +30,7 @@ void test_modman_with_vf_logger::loggerComponentsCreated()
 
     QList<QString> loggerComponents = m_storage->getDb()->getComponentList(dataLoggerEntityId);
 
-    QCOMPARE(loggerComponents.count(), 16);
+    QCOMPARE(loggerComponents.count(), 15);
     QVERIFY(loggerComponents.contains("availableContentSets"));
     QVERIFY(loggerComponents.contains("currentContentSets"));
     QVERIFY(loggerComponents.contains("DatabaseFile"));
