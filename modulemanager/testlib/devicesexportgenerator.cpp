@@ -3,27 +3,23 @@
 #include <QProcess>
 #include <QDir>
 
-DevicesExportGenerator::DevicesExportGenerator(QString xmlDirPath, LxdmSessionChangeParam lxdmParam) :
-    m_xmlDirPath(xmlDirPath),
+DevicesExportGenerator::DevicesExportGenerator(LxdmSessionChangeParam lxdmParam) :
     m_lxdmParam(lxdmParam)
 {
 }
 
-void DevicesExportGenerator::exportAll()
+void DevicesExportGenerator::exportDevIfaceXmls(QString xmlDir)
 {
-    QDir().mkdir(m_xmlDirPath);
+    m_xmlDir = xmlDir;
+    QDir().mkdir(m_xmlDir);
+    exportSelected(true, false);
+}
 
-    SessionExportGenerator sessionExportGenerator(m_lxdmParam);
-    QStringList devices = {"mt310s2", "com5003"};
-    for(const QString &device: devices) {
-        sessionExportGenerator.setDevice(device);
-        for(const QString &session: sessionExportGenerator.getAvailableSessions()) {
-            sessionExportGenerator.changeSession(session);
-            sessionExportGenerator.generateDevIfaceXml(m_xmlDirPath);
-            m_veinDumps[session] = sessionExportGenerator.getVeinDump();
-        }
-        m_instanceCounts.append(sessionExportGenerator.getInstanceCountsOnModulesDestroyed());
-    }
+void DevicesExportGenerator::exportAll(QString xmlDir)
+{
+    m_xmlDir = xmlDir;
+    QDir().mkdir(m_xmlDir);
+    exportSelected(true, true);
 }
 
 VeinDumps DevicesExportGenerator::getVeinDumps()
@@ -34,4 +30,21 @@ VeinDumps DevicesExportGenerator::getVeinDumps()
 QList<TestModuleManager::TModuleInstances> DevicesExportGenerator::getInstanceCountsOnModulesDestroyed()
 {
     return m_instanceCounts;
+}
+
+void DevicesExportGenerator::exportSelected(bool exportXmls, bool exportVeindumps)
+{
+    SessionExportGenerator sessionExportGenerator(m_lxdmParam);
+    QStringList devices = {"mt310s2", "com5003"};
+    for(const QString &device: devices) {
+        sessionExportGenerator.setDevice(device);
+        for(const QString &session: sessionExportGenerator.getAvailableSessions()) {
+            sessionExportGenerator.changeSession(session);
+            if(exportXmls)
+                sessionExportGenerator.generateDevIfaceXml(m_xmlDir);
+            if(exportVeindumps)
+                m_veinDumps[session] = sessionExportGenerator.getVeinDump();
+        }
+        m_instanceCounts.append(sessionExportGenerator.getInstanceCountsOnModulesDestroyed());
+    }
 }
