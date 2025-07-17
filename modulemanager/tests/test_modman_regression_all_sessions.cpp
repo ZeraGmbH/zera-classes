@@ -65,6 +65,12 @@ void test_modman_regression_all_sessions::testGenerateScpiDocs()
                                               htmlOutPath,
                                               m_devIfaceXmlsPath,
                                               sessionMapJsonPath);
+
+    int adjustmentHtmls = 2;
+    int totalHtmlFiles = m_veinDumps.keys().count() + adjustmentHtmls;
+    QDir htmlDir(QStringLiteral(HTML_DOCS_PATH_TEST) + "html-docs/");
+    htmlDir.setFilter(QDir::Files);
+    QCOMPARE(htmlDir.count(), totalHtmlFiles);
 }
 
 void test_modman_regression_all_sessions::checkObjectsProperlyDeleted()
