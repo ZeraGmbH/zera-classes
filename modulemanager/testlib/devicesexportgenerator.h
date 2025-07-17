@@ -11,13 +11,15 @@ typedef QHash<QString/*sessionName*/, QByteArray/*veinDump*/> VeinDumps;
 class DevicesExportGenerator
 {
 public:
-    DevicesExportGenerator(QString xmlDirPath, LxdmSessionChangeParam lxdmParam);
-    void exportAll();
+    DevicesExportGenerator(LxdmSessionChangeParam lxdmParam);
+    void exportDevIfaceXmls(QString xmlDir);
+    void exportAll(QString xmlDir);
     VeinDumps getVeinDumps();
     QList<TestModuleManager::TModuleInstances> getInstanceCountsOnModulesDestroyed();
 private:
+    void exportSelected(bool exportXmls, bool exportVeindumps);
     LxdmSessionChangeParam m_lxdmParam;
-    QString m_xmlDirPath;
+    QString m_xmlDir;
     VeinDumps m_veinDumps;
     QList<TestModuleManager::TModuleInstances> m_instanceCounts;
 };
