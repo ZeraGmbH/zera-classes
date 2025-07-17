@@ -17,7 +17,13 @@ public:
     VeinDumps getVeinDumps();
     QList<TestModuleManager::TModuleInstances> getInstanceCountsOnModulesDestroyed();
 private:
-    void exportSelected(bool exportXmls, bool exportVeindumps);
+    struct exportEnabler {
+        bool exportXmls;
+        bool exportVeindumps;
+    };
+
+    void exportSelected(exportEnabler selectionFlags);
+
     LxdmSessionChangeParam m_lxdmParam;
     QString m_xmlDir;
     VeinDumps m_veinDumps;

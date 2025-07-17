@@ -12,14 +12,16 @@ void DevicesExportGenerator::exportDevIfaceXmls(QString xmlDir)
 {
     m_xmlDir = xmlDir;
     QDir().mkdir(m_xmlDir);
-    exportSelected(true, false);
+    exportEnabler selectionFlags {true, false};
+    exportSelected(selectionFlags);
 }
 
 void DevicesExportGenerator::exportAll(QString xmlDir)
 {
     m_xmlDir = xmlDir;
     QDir().mkdir(m_xmlDir);
-    exportSelected(true, true);
+    exportEnabler selectionFlags {true, true};
+    exportSelected(selectionFlags);
 }
 
 VeinDumps DevicesExportGenerator::getVeinDumps()
@@ -32,7 +34,7 @@ QList<TestModuleManager::TModuleInstances> DevicesExportGenerator::getInstanceCo
     return m_instanceCounts;
 }
 
-void DevicesExportGenerator::exportSelected(bool exportXmls, bool exportVeindumps)
+void DevicesExportGenerator::exportSelected(exportEnabler selectionFlags)
 {
     SessionExportGenerator sessionExportGenerator(m_lxdmParam);
     QStringList devices = {"mt310s2", "com5003"};
@@ -40,9 +42,9 @@ void DevicesExportGenerator::exportSelected(bool exportXmls, bool exportVeindump
         sessionExportGenerator.setDevice(device);
         for(const QString &session: sessionExportGenerator.getAvailableSessions()) {
             sessionExportGenerator.changeSession(session);
-            if(exportXmls)
+            if(selectionFlags.exportXmls)
                 sessionExportGenerator.generateDevIfaceXml(m_xmlDir);
-            if(exportVeindumps)
+            if(selectionFlags.exportVeindumps)
                 m_veinDumps[session] = sessionExportGenerator.getVeinDump();
         }
         m_instanceCounts.append(sessionExportGenerator.getInstanceCountsOnModulesDestroyed());
