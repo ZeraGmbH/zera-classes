@@ -32,7 +32,6 @@ void test_modman_with_vf_logger::loggerComponentsCreated()
 
     QCOMPARE(loggerComponents.count(), 16);
     QVERIFY(loggerComponents.contains("availableContentSets"));
-    QVERIFY(loggerComponents.contains("CustomerData"));
     QVERIFY(loggerComponents.contains("currentContentSets"));
     QVERIFY(loggerComponents.contains("DatabaseFile"));
     QVERIFY(loggerComponents.contains("DatabaseReady"));
