@@ -3,7 +3,6 @@
         "DevMode": false,
         "Entities": [
             0,
-            2,
             1000,
             1001,
             1020,
@@ -2159,30 +2158,5 @@
         },
         "PAR_GuiDialogFinished": false,
         "PAR_ReloadTrustList": false
-    },
-    "2": {
-        "CustomerData": "",
-        "DatabaseFile": "",
-        "DatabaseReady": false,
-        "EntityName": "_LoggingSystem",
-        "ExistingSessions": [
-        ],
-        "LoggedComponents": {
-        },
-        "LoggingEnabled": false,
-        "LoggingStatus": "No database selected",
-        "ScheduledLoggingCountdown": 0,
-        "ScheduledLoggingDuration": null,
-        "ScheduledLoggingEnabled": false,
-        "availableContentSets": [
-            "ZeraDCReference",
-            "ZeraQuartzReference",
-            "ZeraAll"
-        ],
-        "currentContentSets": [
-        ],
-        "guiContext": "",
-        "sessionName": "",
-        "transactionName": ""
     }
 }
