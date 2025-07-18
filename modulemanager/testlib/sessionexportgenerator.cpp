@@ -7,6 +7,7 @@
 #include <loggercontentsetconfig.h>
 #include <vl_sqlitedb.h>
 #include <vs_dumpjson.h>
+#include <testsqlitedb.h>
 #include <QFile>
 #include <QDir>
 
@@ -37,8 +38,10 @@ void SessionExportGenerator::createModman(QString device)
                                                                      m_lxdmParam,
                                                                      "/tmp/" + QUuid::createUuid().toString(QUuid::WithoutBraces));
     m_modman = std::make_unique<TestModuleManager>(m_modmanSetupFacade.get(), std::make_shared<FactoryServiceInterfaces>());
-    const VeinLogger::DBFactory sqliteFactory = [](){
-        return new VeinLogger::SQLiteDB();
+
+    m_testSignaller = std::make_unique<TestDbAddSignaller>();
+    const VeinLogger::DBFactory sqliteFactory = [=]() -> VeinLogger::AbstractLoggerDB* {
+        return new TestSQLiteDB(m_testSignaller.get());
     };
     m_dataLoggerSystem = std::make_unique<VeinLogger::DatabaseLogger>(
         m_modmanSetupFacade->getStorageSystem(),
