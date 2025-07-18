@@ -5,6 +5,7 @@
 #include "testmodulemanager.h"
 #include "modulemanagerconfig.h"
 #include <testdbaddsignaller.h>
+#include <vf_cmd_event_handler_system.h>
 #include <vl_databaselogger.h>
 #include <QObject>
 
@@ -26,6 +27,9 @@ private:
     void createModman(QString device);
     void destroyModules();
     void createXml(QString completeFileName, QString contents);
+    void createSnapshot(QStringList contentSets, QString snapshotName);
+    QJsonObject getLoggedValues(QString snapshotName);
+    void clearSnapshotName();
     void setVfComponent(int entityId, QString componentName, QVariant newValue);
     QVariant getVfComponent(int entityId, QString componentName);
 
@@ -38,6 +42,7 @@ private:
     std::unique_ptr<VeinLogger::DatabaseLogger> m_dataLoggerSystem;
     bool m_dataLoggerSystemInitialized = false;
     const LxdmSessionChangeParam m_lxdmParam;
+    VfCmdEventHandlerSystemPtr m_cmdHandler;
 };
 
 #endif // SESSIONEXPORTGENERATOR_H

@@ -5,6 +5,8 @@
 #include <jsonloggercontentloader.h>
 #include <jsonloggercontentsessionloader.h>
 #include <loggercontentsetconfig.h>
+#include <vcmp_remoteproceduredata.h>
+#include <vf_client_rpc_invoker.h>
 #include <vl_sqlitedb.h>
 #include <vs_dumpjson.h>
 #include <testsqlitedb.h>
@@ -59,7 +61,7 @@ void SessionExportGenerator::createModman(QString device)
     VeinLogger::LoggerContentSetConfig::setJsonEnvironment(OE_MODMAN_SESSION_PATH, std::make_shared<JsonLoggerContentSessionLoader>());
 
     m_dataLoggerSystemInitialized = false;
-    connect(m_modmanSetupFacade->getLicenseSystem(), &LicenseSystemInterface::sigSerialNumberInitialized, [&](){
+    connect(m_modmanSetupFacade->getLicenseSystem(), &LicenseSystemInterface::sigSerialNumberInitialized, this, [&](){
         if(m_licenseSystem->isSystemLicensed(m_dataLoggerSystem->entityName()))
         {
             if(!m_dataLoggerSystemInitialized)
@@ -70,12 +72,18 @@ void SessionExportGenerator::createModman(QString device)
             }
         }
     });
+    m_cmdHandler = VfCmdEventHandlerSystem::create(); //Extra VfCmdEventHandlerSystemPtr for VfClientRPCInvoker used later
+    m_modmanSetupFacade->addSubsystem((m_cmdHandler.get()));
 
     m_modman->loadAllAvailableModulePlugins();
     m_modman->setupConnections();
     m_modman->startAllTestServices(device, false);
     m_modmanSetupFacade->getLicenseSystem()->setDeviceSerial("foo");
     TimeMachineObject::feedEventLoop();
+
+    QFile::remove("/tmp/test.db");
+    setVfComponent(vf_logger_entity, "DatabaseFile", "/tmp/test.db");
+    setVfComponent(vf_logger_entity, "sessionName", device + "TestSession");
 }
 
 void SessionExportGenerator::destroyModules()
@@ -116,11 +124,21 @@ void SessionExportGenerator::generateDevIfaceXml(QString xmlDir)
 void SessionExportGenerator::generateSnapshotJsons(QString snapshotDir)
 {
     QString currentSession = getVfComponent(system_entity, "Session").toString();
-    QStringList availableContentSets = getVfComponent(vf_logger_entity, "availableContentSets").toStringList();
-    for(QString contentSet: availableContentSets) {
-        QString snapshotFileName = currentSession.replace(".json", "") + '-' + contentSet + ".json";
-        QFile snapshotFile(snapshotDir + snapshotFileName);
+    const QStringList availableContentSets = getVfComponent(vf_logger_entity, "availableContentSets").toStringList();
+    for(const QString &contentSet: availableContentSets) {
+        QString snapshotName = currentSession.replace(".json", "") + '-' + contentSet;
+
+        createSnapshot(QStringList() << contentSet, snapshotName);
+        QJsonObject snapshotContents = getLoggedValues(snapshotName);
+
+        QFile snapshotFile(snapshotDir + snapshotName + ".json");
         snapshotFile.open(QFile::ReadWrite);
+        QTextStream data(&snapshotFile);
+        QJsonDocument Doc(snapshotContents);
+        QByteArray ba = Doc.toJson();
+        data << QString(ba);
+
+        clearSnapshotName();
     }
 }
 
@@ -140,6 +158,40 @@ void SessionExportGenerator::createXml(QString completeFileName, QString content
     xmlFile.open(QFile::ReadWrite);
     QTextStream data(&xmlFile);
     data << contents;
+}
+
+void SessionExportGenerator::createSnapshot(QStringList contentSets, QString snapshotName)
+{
+    setVfComponent(vf_logger_entity, "currentContentSets", contentSets);
+    setVfComponent(vf_logger_entity, "transactionName", snapshotName);
+    setVfComponent(vf_logger_entity, "LoggingEnabled", true);
+    setVfComponent(vf_logger_entity, "LoggingEnabled", false);
+}
+
+QJsonObject SessionExportGenerator::getLoggedValues(QString snapshotName)
+{
+    VfClientRPCInvokerPtr rpc = VfClientRPCInvoker::create(vf_logger_entity);
+    m_cmdHandler->addItem(rpc);
+
+    QVariantMap result;
+    connect(rpc.get(), &VfClientRPCInvoker::sigRPCFinished, [&result](bool ok, QUuid identifier, const QVariantMap &resultData) {
+        result = resultData;
+    });
+
+    QVariantMap rpcParams;
+    rpcParams.insert("p_transaction", snapshotName);
+    rpc->invokeRPC("RPC_displayActualValues", rpcParams);
+    TimeMachineObject::feedEventLoop();
+    m_cmdHandler->removeItem(rpc);
+
+    if(result.contains(VeinComponent::RemoteProcedureData::s_returnString))
+        return result[VeinComponent::RemoteProcedureData::s_returnString].toJsonObject();
+    return QJsonObject();
+}
+
+void SessionExportGenerator::clearSnapshotName()
+{
+    setVfComponent(vf_logger_entity, "transactionName", "");
 }
 
 void SessionExportGenerator::setVfComponent(int entityId, QString componentName, QVariant newValue)

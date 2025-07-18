@@ -7015,15 +7015,16 @@
         "PAR_ReloadTrustList": false
     },
     "2": {
-        "DatabaseFile": "",
-        "DatabaseReady": false,
+        "DatabaseFile": "/tmp/test.db",
+        "DatabaseReady": true,
         "EntityName": "_LoggingSystem",
         "ExistingSessions": [
+            "mt310s2TestSession"
         ],
         "LoggedComponents": {
         },
         "LoggingEnabled": false,
-        "LoggingStatus": "No database selected",
+        "LoggingStatus": "Database loaded",
         "ScheduledLoggingCountdown": 0,
         "ScheduledLoggingDuration": null,
         "ScheduledLoggingEnabled": false,
@@ -7039,7 +7040,7 @@
         "currentContentSets": [
         ],
         "guiContext": "",
-        "sessionName": "",
+        "sessionName": "mt310s2TestSession",
         "transactionName": ""
     }
 }
