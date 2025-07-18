@@ -12,15 +12,17 @@ void DevicesExportGenerator::exportDevIfaceXmls(QString xmlDir)
 {
     m_xmlDir = xmlDir;
     QDir().mkdir(m_xmlDir);
-    exportEnabler selectionFlags {true, false};
+    exportEnabler selectionFlags {true, false, false};
     exportSelected(selectionFlags);
 }
 
-void DevicesExportGenerator::exportAll(QString xmlDir)
+void DevicesExportGenerator::exportAll(QString xmlDir, QString snapshotDir)
 {
     m_xmlDir = xmlDir;
     QDir().mkdir(m_xmlDir);
-    exportEnabler selectionFlags {true, true};
+    m_snapshotDir = snapshotDir;
+    QDir().mkdir(m_snapshotDir);
+    exportEnabler selectionFlags {true, true, true};
     exportSelected(selectionFlags);
 }
 
@@ -46,6 +48,8 @@ void DevicesExportGenerator::exportSelected(exportEnabler selectionFlags)
                 sessionExportGenerator.generateDevIfaceXml(m_xmlDir);
             if(selectionFlags.exportVeindumps)
                 m_veinDumps[session] = sessionExportGenerator.getVeinDump();
+            if(selectionFlags.exportSnapshots)
+                sessionExportGenerator.generateSnapshotJsons(m_snapshotDir);
         }
         m_instanceCounts.append(sessionExportGenerator.getInstanceCountsOnModulesDestroyed());
     }

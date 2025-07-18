@@ -18,6 +18,7 @@ public:
     QStringList getAvailableSessions();
     void changeSession(QString session);
     void generateDevIfaceXml(QString xmlDir);
+    void generateSnapshotJsons(QString snapshotDir);
     QByteArray getVeinDump();
     QList<TestModuleManager::TModuleInstances> getInstanceCountsOnModulesDestroyed();
 private:

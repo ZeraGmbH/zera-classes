@@ -3,6 +3,7 @@ add_definitions(-DLOGGER_CONFIG_FILES="${C_LOGGER_CONFIG_FILES}")
 
 add_definitions(-DOE_INSTALL_ROOT="${OE_INSTALL_ROOT}")
 add_definitions(-DHTML_DOCS_PATH_TEST="${CMAKE_CURRENT_BINARY_DIR}/")
+add_definitions(-DSNAPSHOT_JSONS_PATH_TEST="${CMAKE_CURRENT_BINARY_DIR}/")
 
 # Inspired by
 # https://github.com/KDAB/kdabtv/blob/master/Qt-Widgets-and-more/UnitTests/Tests/CMakeLists.txt
