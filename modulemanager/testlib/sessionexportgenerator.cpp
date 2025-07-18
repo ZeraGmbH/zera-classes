@@ -1,5 +1,6 @@
 #include "sessionexportgenerator.h"
 #include "factoryserviceinterfaces.h"
+#include "vf_client_component_setter.h"
 #include <timemachineobject.h>
 #include <jsonloggercontentloader.h>
 #include <jsonloggercontentsessionloader.h>
@@ -101,8 +102,8 @@ void SessionExportGenerator::changeSession(QString session)
 
 void SessionExportGenerator::generateDevIfaceXml(QString xmlDir)
 {
-    QString scpiIface = m_modmanSetupFacade->getStorageSystem()->getDb()->getStoredValue(scpi_module_entity, "ACT_DEV_IFACE").toString();
-    QString currentSession = m_modmanSetupFacade->getStorageSystem()->getDb()->getStoredValue(system_entity, "Session").toString();
+    QString scpiIface = getVfComponent(scpi_module_entity, "ACT_DEV_IFACE").toString();
+    QString currentSession = getVfComponent(system_entity, "Session").toString();
     QString xmlFileName(xmlDir + currentSession);
     xmlFileName.replace("json", "xml");
     createXml(xmlFileName, scpiIface);
@@ -110,8 +111,8 @@ void SessionExportGenerator::generateDevIfaceXml(QString xmlDir)
 
 void SessionExportGenerator::generateSnapshotJsons(QString snapshotDir)
 {
-    QString currentSession = m_modmanSetupFacade->getStorageSystem()->getDb()->getStoredValue(system_entity, "Session").toString();
-    QStringList availableContentSets = m_modmanSetupFacade->getStorageSystem()->getDb()->getStoredValue(vf_logger_entity, "availableContentSets").toStringList();
+    QString currentSession = getVfComponent(system_entity, "Session").toString();
+    QStringList availableContentSets = getVfComponent(vf_logger_entity, "availableContentSets").toStringList();
     for(QString contentSet: availableContentSets) {
         QString snapshotFileName = currentSession.replace(".json", "") + '-' + contentSet + ".json";
         QFile snapshotFile(snapshotDir + snapshotFileName);
@@ -135,4 +136,17 @@ void SessionExportGenerator::createXml(QString completeFileName, QString content
     xmlFile.open(QFile::ReadWrite);
     QTextStream data(&xmlFile);
     data << contents;
+}
+
+void SessionExportGenerator::setVfComponent(int entityId, QString componentName, QVariant newValue)
+{
+    QVariant oldValue = m_modmanSetupFacade->getStorageSystem()->getDb()->getStoredValue(entityId, componentName);
+    QEvent* event = VfClientComponentSetter::generateEvent(entityId, componentName, oldValue, newValue);
+    emit m_modmanSetupFacade->getStorageSystem()->sigSendEvent(event);
+    TimeMachineObject::feedEventLoop();
+}
+
+QVariant SessionExportGenerator::getVfComponent(int entityId, QString componentName)
+{
+    return m_modmanSetupFacade->getStorageSystem()->getDb()->getStoredValue(entityId, componentName);
 }
