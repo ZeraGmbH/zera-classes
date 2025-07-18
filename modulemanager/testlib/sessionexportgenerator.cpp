@@ -7,6 +7,7 @@
 #include <vl_sqlitedb.h>
 #include <vs_dumpjson.h>
 #include <QFile>
+#include <QDir>
 
 constexpr int system_entity = 0;
 constexpr int scpi_module_entity = 9999;
@@ -46,8 +47,10 @@ void SessionExportGenerator::createModman(QString device)
             << 1150 /* STATUS */);;
 
     //setup logger
-    VeinLogger::LoggerContentSetConfig::setJsonEnvironment(MODMAN_CONTENTSET_PATH, std::make_shared<JsonLoggerContentLoader>());
-    VeinLogger::LoggerContentSetConfig::setJsonEnvironment(MODMAN_SESSION_PATH, std::make_shared<JsonLoggerContentSessionLoader>());
+    QString OE_MODMAN_CONTENTSET_PATH = QDir::cleanPath(QString(OE_INSTALL_ROOT) + "/" + QString(MODMAN_CONTENTSET_PATH));
+    QString OE_MODMAN_SESSION_PATH = QDir::cleanPath(QString(OE_INSTALL_ROOT) + "/" + QString(MODMAN_SESSION_PATH));
+    VeinLogger::LoggerContentSetConfig::setJsonEnvironment(OE_MODMAN_CONTENTSET_PATH, std::make_shared<JsonLoggerContentLoader>());
+    VeinLogger::LoggerContentSetConfig::setJsonEnvironment(OE_MODMAN_SESSION_PATH, std::make_shared<JsonLoggerContentSessionLoader>());
 
     m_dataLoggerSystemInitialized = false;
     connect(m_modmanSetupFacade->getLicenseSystem(), &LicenseSystemInterface::sigSerialNumberInitialized, [&](){
