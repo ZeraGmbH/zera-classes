@@ -6214,15 +6214,16 @@
         "PAR_ReloadTrustList": false
     },
     "2": {
-        "DatabaseFile": "",
-        "DatabaseReady": false,
+        "DatabaseFile": "/tmp/test.db",
+        "DatabaseReady": true,
         "EntityName": "_LoggingSystem",
         "ExistingSessions": [
+            "com5003TestSession"
         ],
         "LoggedComponents": {
         },
         "LoggingEnabled": false,
-        "LoggingStatus": "No database selected",
+        "LoggingStatus": "Database loaded",
         "ScheduledLoggingCountdown": 0,
         "ScheduledLoggingDuration": null,
         "ScheduledLoggingEnabled": false,
@@ -6236,7 +6237,7 @@
         "currentContentSets": [
         ],
         "guiContext": "",
-        "sessionName": "",
+        "sessionName": "com5003TestSession",
         "transactionName": ""
     }
 }
