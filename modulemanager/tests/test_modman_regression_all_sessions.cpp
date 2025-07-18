@@ -19,8 +19,9 @@ void test_modman_regression_all_sessions::initTestCase()
     m_openFileTracker = std::make_unique<TestOpenFileTracker>();
 
     m_devIfaceXmlsPath = QStringLiteral(HTML_DOCS_PATH_TEST) + "scpi-xmls/";
+    m_snapshotJsonsPath = QStringLiteral(SNAPSHOT_JSONS_PATH_TEST) + "snapshots/";
     DevicesExportGenerator devicesExportGenerator(MockLxdmSessionChangeParamGenerator::generateTestSessionChanger(false));
-    devicesExportGenerator.exportAll(m_devIfaceXmlsPath);
+    devicesExportGenerator.exportAll(m_devIfaceXmlsPath, m_snapshotJsonsPath);
     m_veinDumps = devicesExportGenerator.getVeinDumps();
     m_instanceCountsOnModulesDestroyed = devicesExportGenerator.getInstanceCountsOnModulesDestroyed();
 }
@@ -71,6 +72,14 @@ void test_modman_regression_all_sessions::testGenerateScpiDocs()
     QDir htmlDir(htmlOutPath);
     htmlDir.setFilter(QDir::Files);
     QCOMPARE(htmlDir.count(), totalHtmlFiles);
+}
+
+void test_modman_regression_all_sessions::testGenerateSnapshotJson()
+{
+    int totalSnapshots = 40;
+    QDir snapshotsDir(m_snapshotJsonsPath);
+    snapshotsDir.setFilter(QDir::Files);
+    QCOMPARE(snapshotsDir.count(), totalSnapshots);
 }
 
 void test_modman_regression_all_sessions::checkObjectsProperlyDeleted()

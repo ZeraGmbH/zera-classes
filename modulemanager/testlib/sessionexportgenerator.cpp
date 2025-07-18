@@ -11,6 +11,7 @@
 
 constexpr int system_entity = 0;
 constexpr int scpi_module_entity = 9999;
+constexpr int vf_logger_entity = 2;
 
 SessionExportGenerator::SessionExportGenerator(const LxdmSessionChangeParam &lxdmParam) :
     m_lxdmParam(lxdmParam)
@@ -105,6 +106,17 @@ void SessionExportGenerator::generateDevIfaceXml(QString xmlDir)
     QString xmlFileName(xmlDir + currentSession);
     xmlFileName.replace("json", "xml");
     createXml(xmlFileName, scpiIface);
+}
+
+void SessionExportGenerator::generateSnapshotJsons(QString snapshotDir)
+{
+    QString currentSession = m_modmanSetupFacade->getStorageSystem()->getDb()->getStoredValue(system_entity, "Session").toString();
+    QStringList availableContentSets = m_modmanSetupFacade->getStorageSystem()->getDb()->getStoredValue(vf_logger_entity, "availableContentSets").toStringList();
+    for(QString contentSet: availableContentSets) {
+        QString snapshotFileName = currentSession.replace(".json", "") + '-' + contentSet + ".json";
+        QFile snapshotFile(snapshotDir + snapshotFileName);
+        snapshotFile.open(QFile::ReadWrite);
+    }
 }
 
 QByteArray SessionExportGenerator::getVeinDump()

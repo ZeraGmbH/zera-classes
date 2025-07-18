@@ -18,6 +18,7 @@ private slots:
     void uniqueEntityNameEntityIdPairsMt310s2();
     void uniqueEntityNameEntityIdPairsMt581s2();
     void testGenerateScpiDocs();
+    void testGenerateSnapshotJson();
     void checkObjectsProperlyDeleted();
     void checkFilesProperlyClosed();
 private:
@@ -26,6 +27,7 @@ private:
     VeinDumps m_veinDumps;
     QList<TestModuleManager::TModuleInstances> m_instanceCountsOnModulesDestroyed;
     QString m_devIfaceXmlsPath;
+    QString m_snapshotJsonsPath;
     std::unique_ptr<TestOpenFileTracker> m_openFileTracker;
 };
 
