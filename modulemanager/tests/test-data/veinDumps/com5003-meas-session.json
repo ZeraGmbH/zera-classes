@@ -6214,7 +6214,6 @@
         "PAR_ReloadTrustList": false
     },
     "2": {
-        "CustomerData": "",
         "DatabaseFile": "",
         "DatabaseReady": false,
         "EntityName": "_LoggingSystem",
