@@ -25,6 +25,8 @@ private:
     void createModman(QString device);
     void destroyModules();
     void createXml(QString completeFileName, QString contents);
+    void setVfComponent(int entityId, QString componentName, QVariant newValue);
+    QVariant getVfComponent(int entityId, QString componentName);
 
     std::unique_ptr<TestLicenseSystem> m_licenseSystem;
     ModulemanagerConfig *m_modmanConfig;
