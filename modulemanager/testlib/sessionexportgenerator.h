@@ -4,6 +4,7 @@
 #include "testlicensesystem.h"
 #include "testmodulemanager.h"
 #include "modulemanagerconfig.h"
+#include <testdbaddsignaller.h>
 #include <vl_databaselogger.h>
 #include <QObject>
 
@@ -33,6 +34,7 @@ private:
     std::unique_ptr<ModuleManagerSetupFacade> m_modmanSetupFacade;
     std::unique_ptr<TestModuleManager> m_modman;
     QString m_device;
+    std::unique_ptr<TestDbAddSignaller> m_testSignaller;
     std::unique_ptr<VeinLogger::DatabaseLogger> m_dataLoggerSystem;
     bool m_dataLoggerSystemInitialized = false;
     const LxdmSessionChangeParam m_lxdmParam;
