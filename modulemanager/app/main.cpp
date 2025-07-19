@@ -26,6 +26,7 @@
 
 #include <QDebug>
 #include <QCommandLineParser>
+#include <memory>
 
 static bool serverStarted = false;
 static VeinNet::NetworkSystem *netSystem = nullptr;
@@ -195,7 +196,7 @@ int main(int argc, char *argv[])
     QLoggingCategory::setFilterRules(loggingFilters.join("\n"));
 
     const VeinLogger::DBFactory sqliteFactory = [](){
-        return new VeinLogger::SQLiteDB();
+        return std::make_shared<VeinLogger::SQLiteDB>();
     };
 
     qInfo("Create license system...");

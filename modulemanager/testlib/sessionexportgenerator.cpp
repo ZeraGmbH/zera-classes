@@ -10,6 +10,7 @@
 #include <testsqlitedb.h>
 #include <QFile>
 #include <QDir>
+#include <memory>
 
 constexpr int system_entity = 0;
 constexpr int scpi_module_entity = 9999;
@@ -40,8 +41,8 @@ void SessionExportGenerator::createModman(QString device)
     m_modman = std::make_unique<TestModuleManager>(m_modmanSetupFacade.get(), std::make_shared<FactoryServiceInterfaces>());
 
     m_testSignaller = std::make_unique<TestDbAddSignaller>();
-    const VeinLogger::DBFactory sqliteFactory = [=]() -> VeinLogger::AbstractLoggerDB* {
-        return new TestSQLiteDB(m_testSignaller.get());
+    const VeinLogger::DBFactory sqliteFactory = [=]() -> std::shared_ptr<VeinLogger::AbstractLoggerDB> {
+        return std::make_shared<TestSQLiteDB>(m_testSignaller.get());
     };
     m_dataLoggerSystem = std::make_unique<VeinLogger::DatabaseLogger>(
         m_modmanSetupFacade->getStorageSystem(),

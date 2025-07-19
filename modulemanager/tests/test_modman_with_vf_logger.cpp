@@ -158,7 +158,7 @@ void test_modman_with_vf_logger::createModmanWithLogger()
             this, &test_modman_with_vf_logger::onSerialNoLicensed);
 
     const VeinLogger::DBFactory sqliteFactory = [](){
-        return new VeinLogger::SQLiteDB();
+        return std::make_shared<VeinLogger::SQLiteDB>();
     };
     m_dataLoggerSystem = std::make_unique<VeinLogger::DatabaseLogger>(mmFacade->getStorageSystem(), sqliteFactory);
 }
