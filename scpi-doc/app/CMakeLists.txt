@@ -1,4 +1,4 @@
-add_definitions(-DHTML_DOCS_PATH="${CMAKE_CURRENT_BINARY_DIR}/")
+add_definitions(-DEXPORT_DOCS_PATH="${CMAKE_CURRENT_BINARY_DIR}/")
 
 add_executable(scpi-doc-generator
     main.cpp
