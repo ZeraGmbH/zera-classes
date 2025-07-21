@@ -42,8 +42,9 @@ void SessionExportGenerator::createModman(QString device)
                                                                      "/tmp/" + QUuid::createUuid().toString(QUuid::WithoutBraces));
     m_modman = std::make_unique<TestModuleManager>(m_modmanSetupFacade.get(), std::make_shared<FactoryServiceInterfaces>());
 
+    //setup logger
     m_testSignaller = std::make_unique<TestDbAddSignaller>();
-    const VeinLogger::DBFactory sqliteFactory = [=]() -> std::shared_ptr<VeinLogger::AbstractLoggerDB> {
+    const VeinLogger::DBFactory sqliteFactory = [this]() {
         return std::make_shared<TestSQLiteDB>(m_testSignaller.get());
     };
     m_dataLoggerSystem = std::make_unique<VeinLogger::DatabaseLogger>(
@@ -52,9 +53,8 @@ void SessionExportGenerator::createModman(QString device)
         this,
         QList<int>()
             << 0    /* SYSTEM */
-            << 1150 /* STATUS */);;
+            << 1150 /* STATUS */);
 
-    //setup logger
     QString OE_MODMAN_CONTENTSET_PATH = QDir::cleanPath(QString(OE_INSTALL_ROOT) + "/" + QString(MODMAN_CONTENTSET_PATH));
     QString OE_MODMAN_SESSION_PATH = QDir::cleanPath(QString(OE_INSTALL_ROOT) + "/" + QString(MODMAN_SESSION_PATH));
     VeinLogger::LoggerContentSetConfig::setJsonEnvironment(OE_MODMAN_CONTENTSET_PATH, std::make_shared<JsonLoggerContentLoader>());
