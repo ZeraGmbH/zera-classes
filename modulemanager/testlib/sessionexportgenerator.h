@@ -26,9 +26,9 @@ public:
 private:
     void createModman(QString device);
     void destroyModules();
-    void createXml(QString completeFileName, QString contents);
+    void createAndWriteFile(QString completeFileName, QString contents);
     void createSnapshot(QStringList contentSets, QString snapshotName);
-    QJsonObject getLoggedValues(QString snapshotName);
+    QString getLoggedValues(QString snapshotName);
     void clearSnapshotName();
     void setVfComponent(int entityId, QString componentName, QVariant newValue);
     QVariant getVfComponent(int entityId, QString componentName);
