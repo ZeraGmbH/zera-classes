@@ -74,12 +74,14 @@ void test_modman_regression_all_sessions::testGenerateScpiDocs()
     QCOMPARE(htmlDir.count(), totalHtmlFiles);
 }
 
-void test_modman_regression_all_sessions::testGenerateSnapshotJson()
+void test_modman_regression_all_sessions::testGenerateSnapshots()
 {
-    int totalSnapshots = 40;
-    QDir snapshotsDir(m_snapshotJsonsPath);
-    snapshotsDir.setFilter(QDir::Files);
-    QCOMPARE(snapshotsDir.count(), totalSnapshots);
+    QDir snapshotsDumpedDir(m_snapshotJsonsPath);
+    snapshotsDumpedDir.setFilter(QDir::Files);
+    QDir snapshotsExpectedDir(":/snapshots/");
+    snapshotsExpectedDir.setFilter(QDir::Files);
+
+    QCOMPARE(snapshotsDumpedDir.count(), snapshotsExpectedDir.count());
 }
 
 void test_modman_regression_all_sessions::checkObjectsProperlyDeleted()

@@ -18,7 +18,7 @@ private slots:
     void uniqueEntityNameEntityIdPairsMt310s2();
     void uniqueEntityNameEntityIdPairsMt581s2();
     void testGenerateScpiDocs();
-    void testGenerateSnapshotJson();
+    void testGenerateSnapshots();
     void checkObjectsProperlyDeleted();
     void checkFilesProperlyClosed();
 private:

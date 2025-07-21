@@ -1,0 +1,40 @@
+{
+    "0": {
+        "DevMode": 0,
+        "Entities": "9999;1150;1020;1400;1500;1000;1070;1130;1001;1050;0;2",
+        "ModulesPaused": 0,
+        "Session": "com5003-ref-session.json",
+        "SessionsAvailable": "com5003-meas-session.json;com5003-ced-session.json;com5003-ref-session.json;com5003-perphase-session.json",
+        "XSession": "Bar"
+    },
+    "1050": {
+        "ACT_DFTPN1": "",
+        "ACT_DFTPN2": "",
+        "ACT_DFTPN3": "",
+        "ACT_DFTPN4": "",
+        "ACT_DFTPN5": "",
+        "ACT_DFTPN6": "",
+        "PAR_Interval": 2,
+        "PAR_RefChannel": "UL1"
+    },
+    "1150": {
+        "INF_AccumulatorSoc": 0,
+        "INF_AccumulatorStatus": 0,
+        "INF_AdjChksum": "0xffff",
+        "INF_Adjusted": 5,
+        "INF_CTRLVersion": "{\"Relay controller version\":\"Unknown\"}",
+        "INF_CpuInfo": "",
+        "INF_DSPServerVersion": "zdsp1d V1.11",
+        "INF_DSPVersion": "DSPLCA: V0.0;DSP V0.00",
+        "INF_DeviceType": "unknown",
+        "INF_FPGAVersion": "Unknown",
+        "INF_PCBServerVersion": "V42.0",
+        "INF_PCBVersion": "{\"Relay PCB version\":\"Unknown\"}",
+        "INF_ReleaseNr": "",
+        "INF_Schnubbel": 0,
+        "PAR_SerialNr": "Unknown"
+    },
+    "Contentsets": [
+        "ZeraDCReference"
+    ]
+}
