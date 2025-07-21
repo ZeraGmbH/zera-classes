@@ -118,7 +118,7 @@ void SessionExportGenerator::generateDevIfaceXml(QString xmlDir)
     QString currentSession = getVfComponent(system_entity, "Session").toString();
     QString xmlFileName(xmlDir + currentSession);
     xmlFileName.replace("json", "xml");
-    createXml(xmlFileName, scpiIface);
+    createAndWriteFile(xmlFileName, scpiIface);
 }
 
 void SessionExportGenerator::generateSnapshotJsons(QString snapshotDir)
@@ -127,18 +127,10 @@ void SessionExportGenerator::generateSnapshotJsons(QString snapshotDir)
     const QStringList availableContentSets = getVfComponent(vf_logger_entity, "availableContentSets").toStringList();
     for(const QString &contentSet: availableContentSets) {
         QString snapshotName = currentSession.replace(".json", "") + '-' + contentSet;
-
         createSnapshot(QStringList() << contentSet, snapshotName);
-        QJsonObject snapshotContents = getLoggedValues(snapshotName);
-
-        QFile snapshotFile(snapshotDir + snapshotName + ".json");
-        snapshotFile.open(QFile::ReadWrite);
-        QTextStream data(&snapshotFile);
-        QJsonDocument Doc(snapshotContents);
-        QByteArray ba = Doc.toJson();
-        data << QString(ba);
-
-        clearSnapshotName();
+        QString snapshotContents = getLoggedValues(snapshotName);
+        createAndWriteFile(snapshotDir + snapshotName + ".json", snapshotContents);
+        clearSnapshotName(); //so that vein-dumps are always clean and independent from snapshots/transaction details
     }
 }
 
@@ -152,7 +144,7 @@ QList<TestModuleManager::TModuleInstances> SessionExportGenerator::getInstanceCo
     return m_modman->getInstanceCountsOnModulesDestroyed();
 }
 
-void SessionExportGenerator::createXml(QString completeFileName, QString contents)
+void SessionExportGenerator::createAndWriteFile(QString completeFileName, QString contents)
 {
     QFile xmlFile(completeFileName);
     xmlFile.open(QFile::ReadWrite);
@@ -168,7 +160,7 @@ void SessionExportGenerator::createSnapshot(QStringList contentSets, QString sna
     setVfComponent(vf_logger_entity, "LoggingEnabled", false);
 }
 
-QJsonObject SessionExportGenerator::getLoggedValues(QString snapshotName)
+QString SessionExportGenerator::getLoggedValues(QString snapshotName)
 {
     VfClientRPCInvokerPtr rpc = VfClientRPCInvoker::create(vf_logger_entity);
     m_cmdHandler->addItem(rpc);
@@ -184,9 +176,13 @@ QJsonObject SessionExportGenerator::getLoggedValues(QString snapshotName)
     TimeMachineObject::feedEventLoop();
     m_cmdHandler->removeItem(rpc);
 
-    if(result.contains(VeinComponent::RemoteProcedureData::s_returnString))
-        return result[VeinComponent::RemoteProcedureData::s_returnString].toJsonObject();
-    return QJsonObject();
+    if(result.contains(VeinComponent::RemoteProcedureData::s_returnString)) {
+        QJsonObject returnedJson = result[VeinComponent::RemoteProcedureData::s_returnString].toJsonObject();
+        QJsonDocument Doc(returnedJson);
+        QByteArray ba = Doc.toJson();
+        return QString(ba);
+    }
+    return QString();
 }
 
 void SessionExportGenerator::clearSnapshotName()
