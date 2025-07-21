@@ -14,13 +14,13 @@ int main(int argc, char *argv[])
     parser.process(a);
 
     QString zenuxRelease = parser.value(zenuxVersion);
-    QString devIfaceXmlsPath = QStringLiteral(HTML_DOCS_PATH) + "scpi-xmls/";
-    QString htmlOutPath = QStringLiteral(HTML_DOCS_PATH) + "html-docs/";
-    QString sessionMapJsonPath = QStringLiteral(HTML_DOCS_PATH) + "SessionNamesMapping.json";
+    QString devIfaceXmlsPath = QStringLiteral(EXPORT_DOCS_PATH) + "scpi-xmls/";
+    QString htmlOutPath = QStringLiteral(EXPORT_DOCS_PATH) + "html-docs/";
+    QString sessionMapJsonPath = QStringLiteral(EXPORT_DOCS_PATH) + "SessionNamesMapping.json";
 
     DevicesExportGenerator devicesExportGenerator(MockLxdmSessionChangeParamGenerator::generateDemoSessionChanger());
 
-    devicesExportGenerator.exportDevIfaceXmls(devIfaceXmlsPath);
+    devicesExportGenerator.exportAll(devIfaceXmlsPath, QStringLiteral(EXPORT_DOCS_PATH) + "snapshots/"); //snapshots part is to be ignored
     ScpiDocsHtmlGenerator::createScpiDocHtmls(ModulemanagerConfig::getConfigFileNameFull(),
                                               zenuxRelease,
                                               htmlOutPath,
