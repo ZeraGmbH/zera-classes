@@ -91,7 +91,7 @@ void test_modman_regression_all_sessions::testGenerateSnapshots()
     QFETCH(QString, snapshotName);
     QByteArray jsonExpected = TestLogHelpers::loadFile(QString(":/snapshots/%1").arg(snapshotName));
     QByteArray jsonDumped = TestLogHelpers::loadFile(QString(m_snapshotJsonsPath + "%1").arg(snapshotName));
-    //QVERIFY(TestLogHelpers::compareAndLogOnDiff(jsonExpected, jsonDumped));
+    QVERIFY(TestLogHelpers::compareAndLogOnDiff(jsonExpected, jsonDumped));
 }
 
 void test_modman_regression_all_sessions::checkObjectsProperlyDeleted()
