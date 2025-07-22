@@ -129,7 +129,7 @@ void SessionExportGenerator::generateSnapshotJsons(QString snapshotDir)
         QString snapshotName = currentSession.replace(".json", "") + '-' + contentSet;
         createSnapshot(QStringList() << contentSet, snapshotName);
         QString snapshotContents = getLoggedValues(snapshotName);
-        createAndWriteFile(snapshotDir + snapshotName + ".json", snapshotContents);
+        createAndWriteFile(QDir::cleanPath(snapshotDir + "/" + snapshotName + ".json"), snapshotContents);
         clearSnapshotName(); //so that vein-dumps are always clean and independent from snapshots/transaction details
     }
 }
