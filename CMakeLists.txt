@@ -93,6 +93,7 @@ add_subdirectory(modules-common)
 add_subdirectory(modules-common-power)
 add_subdirectory(modules-common-sec)
 add_subdirectory(scpi-doc)
+add_subdirectory(logging-snapshots)
 
 write_basic_package_version_file(
     ZeraClassesConfigVersion.cmake
