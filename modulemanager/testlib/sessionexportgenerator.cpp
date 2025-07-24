@@ -2,8 +2,8 @@
 #include "factoryserviceinterfaces.h"
 #include "vf_client_component_setter.h"
 #include <timemachineobject.h>
-#include <jsonloggercontentloader.h>
-#include <jsonloggercontentsessionloader.h>
+#include <contentsetsotherfromcontentsetsconfig.h>
+#include <contentsetszeraallfrommodmansessions.h>
 #include <loggercontentsetconfig.h>
 #include <vcmp_remoteproceduredata.h>
 #include <vf_client_rpc_invoker.h>
@@ -57,8 +57,8 @@ void SessionExportGenerator::createModman(QString device)
 
     QString OE_MODMAN_CONTENTSET_PATH = QDir::cleanPath(QString(OE_INSTALL_ROOT) + "/" + QString(MODMAN_CONTENTSET_PATH));
     QString OE_MODMAN_SESSION_PATH = QDir::cleanPath(QString(OE_INSTALL_ROOT) + "/" + QString(MODMAN_SESSION_PATH));
-    VeinLogger::LoggerContentSetConfig::setJsonEnvironment(OE_MODMAN_CONTENTSET_PATH, std::make_shared<JsonLoggerContentLoader>());
-    VeinLogger::LoggerContentSetConfig::setJsonEnvironment(OE_MODMAN_SESSION_PATH, std::make_shared<JsonLoggerContentSessionLoader>());
+    VeinLogger::LoggerContentSetConfig::setJsonEnvironment(OE_MODMAN_CONTENTSET_PATH, std::make_shared<ContentSetsOtherFromContentSetsConfig>());
+    VeinLogger::LoggerContentSetConfig::setJsonEnvironment(OE_MODMAN_SESSION_PATH, std::make_shared<ContentSetsZeraAllFromModmanSessions>());
 
     m_dataLoggerSystemInitialized = false;
     connect(m_modmanSetupFacade->getLicenseSystem(), &LicenseSystemInterface::sigSerialNumberInitialized, this, [&](){

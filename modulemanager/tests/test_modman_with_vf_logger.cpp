@@ -1,6 +1,6 @@
 #include "test_modman_with_vf_logger.h"
-#include <jsonloggercontentloader.h>
-#include <jsonloggercontentsessionloader.h>
+#include <contentsetsotherfromcontentsetsconfig.h>
+#include <contentsetszeraallfrommodmansessions.h>
 #include <loggercontentsetconfig.h>
 #include "vl_sqlitedb.h"
 #include <timemachineobject.h>
@@ -116,8 +116,8 @@ void test_modman_with_vf_logger::contentSetsSelectValidList()
 // code to setup test environment
 void test_modman_with_vf_logger::initTestCase()
 {
-    VeinLogger::LoggerContentSetConfig::setJsonEnvironment(":/contentsets/", std::make_shared<JsonLoggerContentLoader>());
-    VeinLogger::LoggerContentSetConfig::setJsonEnvironment(":/sessions/", std::make_shared<JsonLoggerContentSessionLoader>());
+    VeinLogger::LoggerContentSetConfig::setJsonEnvironment(":/contentsets/", std::make_shared<ContentSetsOtherFromContentSetsConfig>());
+    VeinLogger::LoggerContentSetConfig::setJsonEnvironment(":/sessions/", std::make_shared<ContentSetsZeraAllFromModmanSessions>());
 }
 
 void test_modman_with_vf_logger::init()

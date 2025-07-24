@@ -1,15 +1,15 @@
 #include "demofactoryserviceinterfaces.h"
 #include "demomodulemanager.h"
 #include "factoryserviceinterfaces.h"
-#include "jsonloggercontentloader.h"
 #include "modulemanager.h"
 #include "modulemanagerconfig.h"
 #include "customerdatasystem.h"
 #include "licensesystem.h"
-#include "jsonloggercontentsessionloader.h"
 
 #include <QGuiApplication>
 
+#include <contentsetsotherfromcontentsetsconfig.h>
+#include <contentsetszeraallfrommodmansessions.h>
 #include <ve_commandevent.h>
 #include <vcmp_componentdata.h>
 #include <vn_networksystem.h>
@@ -229,8 +229,8 @@ int main(int argc, char *argv[])
     vfFiles::vf_files *filesModule = new vfFiles::vf_files(fileAccessController);
 
     //setup logger
-    VeinLogger::LoggerContentSetConfig::setJsonEnvironment(MODMAN_CONTENTSET_PATH, std::make_shared<JsonLoggerContentLoader>());
-    VeinLogger::LoggerContentSetConfig::setJsonEnvironment(MODMAN_SESSION_PATH, std::make_shared<JsonLoggerContentSessionLoader>());
+    VeinLogger::LoggerContentSetConfig::setJsonEnvironment(MODMAN_CONTENTSET_PATH, std::make_shared<ContentSetsOtherFromContentSetsConfig>());
+    VeinLogger::LoggerContentSetConfig::setJsonEnvironment(MODMAN_SESSION_PATH, std::make_shared<ContentSetsZeraAllFromModmanSessions>());
 
     // files entity
     qInfo("Starting vf-files...");

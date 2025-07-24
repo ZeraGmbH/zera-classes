@@ -176,18 +176,6 @@
         "PAR_BluetoothOn": 0,
         "PAR_MacAddress": "00:00:00:00:00:00"
     },
-    "1500": {
-        "ACT_PendingRequest": "",
-        "ACT_TLChangeCount": 0,
-        "ACT_TrustList": "",
-        "PAR_GuiDialogFinished": 0,
-        "PAR_ReloadTrustList": 0
-    },
-    "9999": {
-        "ACT_SerialScpiDeviceFile": "/dev/ttyUSB0",
-        "PAR_OptionalScpiQueue": 0,
-        "PAR_SerialScpiActive": 0
-    },
     "Contentsets": [
         "ZeraDCReference",
         "ZeraQuartzReference",
