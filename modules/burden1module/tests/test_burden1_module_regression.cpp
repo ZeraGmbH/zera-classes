@@ -31,7 +31,7 @@ void test_burden1_module_regression::veinDumpInitial()
 
     QByteArray jsonDumped = VeinStorage::DumpJson::dumpToByteArray(veinStorage->getDb(), QList<int>() << dftBurdenCurrentId << dftBurdenVoltageId);
     QByteArray jsonExpected = TestLogHelpers::loadFile(":/dumpInitial.json");
-    QVERIFY(TestLogHelpers::compareAndLogOnDiff(jsonExpected, jsonDumped));
+    QVERIFY(TestLogHelpers::compareAndLogOnDiffJson(jsonExpected, jsonDumped));
 }
 
 void test_burden1_module_regression::resistanceCalculation()

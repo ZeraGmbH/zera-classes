@@ -14,5 +14,5 @@ void test_mode_regression::dumpDspSetup()
 
     QString measProgramDumped = TestLogHelpers::dump(modeDspInterface->dumpAll(true));
     QString measProgramExpected = TestLogHelpers::loadFile(":/dspDumps/dumpMeasProgram.json");
-    QVERIFY(TestLogHelpers::compareAndLogOnDiff(measProgramExpected, measProgramDumped));
+    QVERIFY(TestLogHelpers::compareAndLogOnDiffJson(measProgramExpected, measProgramDumped));
 }

@@ -466,7 +466,7 @@ void test_range_automatic::checkPersitency()
     QByteArray jsonExpected = TestLogHelpers::loadFile(":/veinDumps/dumpInitialClamp.json");
     VeinStorage::AbstractEventSystem* veinStorage = m_modmanSetupFacade->getStorageSystem();
     QByteArray jsonDumped = VeinStorage::DumpJson::dumpToByteArray(veinStorage->getDb(), QList<int>() << rangeEntityId);
-    QVERIFY(TestLogHelpers::compareAndLogOnDiff(jsonExpected, jsonDumped));
+    QVERIFY(TestLogHelpers::compareAndLogOnDiffJson(jsonExpected, jsonDumped));
 
     // set valid / unset valid "--"
     setVfComponent(rangeEntityId, IAUXRangeComponent, "C50A");

@@ -49,7 +49,7 @@ void test_adj_module_regression::veinDumpInitial()
     // just dump adjustment module to reduce FF on changing other modules
     QByteArray jsonDumped = VeinStorage::DumpJson::dumpToByteArray(veinStorage->getDb(), QList<int>() << adjEntityId);
 
-    QVERIFY(TestLogHelpers::compareAndLogOnDiff(jsonExpected, jsonDumped));
+    QVERIFY(TestLogHelpers::compareAndLogOnDiffJson(jsonExpected, jsonDumped));
 }
 
 void test_adj_module_regression::dspInterfacesChange()

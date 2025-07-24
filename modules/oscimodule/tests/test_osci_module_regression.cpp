@@ -17,7 +17,7 @@ void test_osci_module_regression::dumpDspSetup()
 
     QString measProgramDumped = TestLogHelpers::dump(osciDspInterface->dumpAll());
     QString measProgramExpected = TestLogHelpers::loadFile(":/dspDumps/dumpMeasProgram.json");
-    QVERIFY(TestLogHelpers::compareAndLogOnDiff(measProgramExpected, measProgramDumped));
+    QVERIFY(TestLogHelpers::compareAndLogOnDiffJson(measProgramExpected, measProgramDumped));
 }
 
 void test_osci_module_regression::dumpDspSetReference()
@@ -33,7 +33,7 @@ void test_osci_module_regression::dumpDspSetReference()
     TestDspInterfacePtr osciDspInterface = testRunner.getDspInterface(osciEntityId);
     QString measProgramDumped = TestLogHelpers::dump(osciDspInterface->dumpAll(true));
     QString measProgramExpected = TestLogHelpers::loadFile(":/dspDumps/dump-ref-UL1-to-other.json");
-    QVERIFY(TestLogHelpers::compareAndLogOnDiff(measProgramExpected, measProgramDumped));
+    QVERIFY(TestLogHelpers::compareAndLogOnDiffJson(measProgramExpected, measProgramDumped));
 }
 
 void test_osci_module_regression::setReferenceChannel(VfCmdEventHandlerSystemPtr vfCmdEventHandlerSystem, QString channelMNameOld, QString channelMNameNew)

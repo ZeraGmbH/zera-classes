@@ -17,5 +17,5 @@ void test_reference_regression::dumpDspSetup()
 
     QString measProgramDumped = TestLogHelpers::dump(power2DspInterfaceProg->dumpAll(true));
     QString measProgramExpected = TestLogHelpers::loadFile(":/dspDumps/dumpMeasProgram.json");
-    QVERIFY(TestLogHelpers::compareAndLogOnDiff(measProgramExpected, measProgramDumped));
+    QVERIFY(TestLogHelpers::compareAndLogOnDiffJson(measProgramExpected, measProgramDumped));
 }

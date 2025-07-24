@@ -57,7 +57,7 @@ void test_source_full::vein_dump_mt310s2()
     VeinStorage::AbstractEventSystem* veinStorage = m_testRunner->getVeinStorageSystem();
 
     QByteArray jsonDumped = VeinStorage::DumpJson::dumpToByteArray(veinStorage->getDb(), QList<int>() << sourceEntityId);
-    QVERIFY(TestLogHelpers::compareAndLogOnDiff(jsonExpected, jsonDumped));
+    QVERIFY(TestLogHelpers::compareAndLogOnDiffJson(jsonExpected, jsonDumped));
 }
 
 void test_source_full::vein_dump_mt581s2()
@@ -67,7 +67,7 @@ void test_source_full::vein_dump_mt581s2()
     VeinStorage::AbstractEventSystem* veinStorage = m_testRunner->getVeinStorageSystem();
 
     QByteArray jsonDumped = VeinStorage::DumpJson::dumpToByteArray(veinStorage->getDb(), QList<int>() << sourceEntityId);
-    QVERIFY(TestLogHelpers::compareAndLogOnDiff(jsonExpected, jsonDumped));
+    QVERIFY(TestLogHelpers::compareAndLogOnDiffJson(jsonExpected, jsonDumped));
 }
 
 void test_source_full::switch_on_mt310s2()
@@ -94,7 +94,7 @@ void test_source_full::switch_on_mt310s2()
     QVERIFY(file.open(QFile::ReadOnly));
     QByteArray jsonExpected = file.readAll();
     QByteArray jsonDumped = TestLogHelpers::dump(jsonEventDump);
-    QVERIFY(TestLogHelpers::compareAndLogOnDiff(jsonExpected, jsonDumped));
+    QVERIFY(TestLogHelpers::compareAndLogOnDiffJson(jsonExpected, jsonDumped));
 }
 
 void test_source_full::setupServerAndClient(const QString &session, const QString &dut)

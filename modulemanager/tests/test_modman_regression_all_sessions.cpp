@@ -38,7 +38,7 @@ void test_modman_regression_all_sessions::allSessionsVeinDumps()
     QFETCH(QString, sessionFileName);
     QByteArray jsonExpected = TestLogHelpers::loadFile(QString(":/veinDumps/%1").arg(sessionFileName));
     QByteArray jsonDumped = m_veinDumps.value(sessionFileName);
-    QVERIFY(TestLogHelpers::compareAndLogOnDiff(jsonExpected, jsonDumped));
+    QVERIFY(TestLogHelpers::compareAndLogOnDiffJson(jsonExpected, jsonDumped));
 }
 
 void test_modman_regression_all_sessions::uniqueEntityNameEntityIdPairsCom5003()
@@ -91,7 +91,7 @@ void test_modman_regression_all_sessions::testGenerateSnapshots()
     QFETCH(QString, snapshotName);
     QByteArray jsonExpected = TestLogHelpers::loadFile(QString(":/snapshots/%1").arg(snapshotName));
     QByteArray jsonDumped = TestLogHelpers::loadFile(QString(m_snapshotJsonsPath + "%1").arg(snapshotName));
-    QVERIFY(TestLogHelpers::compareAndLogOnDiff(jsonExpected, jsonDumped));
+    QVERIFY(TestLogHelpers::compareAndLogOnDiffJson(jsonExpected, jsonDumped));
 }
 
 void test_modman_regression_all_sessions::checkObjectsProperlyDeleted()
