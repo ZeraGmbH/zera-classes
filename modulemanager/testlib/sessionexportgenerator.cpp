@@ -147,9 +147,8 @@ QList<TestModuleManager::TModuleInstances> SessionExportGenerator::getInstanceCo
 void SessionExportGenerator::createAndWriteFile(QString completeFileName, QString contents)
 {
     QFile xmlFile(completeFileName);
-    xmlFile.open(QFile::ReadWrite);
-    QTextStream data(&xmlFile);
-    data << contents;
+    xmlFile.open(QFile::WriteOnly);
+    xmlFile.write(contents.toUtf8());
 }
 
 void SessionExportGenerator::createSnapshot(QStringList contentSets, QString snapshotName)
