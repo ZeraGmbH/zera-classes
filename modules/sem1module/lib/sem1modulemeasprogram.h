@@ -119,6 +119,7 @@ private slots:
     void newUnit(QVariant unit);
     void newUpperLimit(QVariant limit);
     void newLowerLimit(QVariant limit);
+    void newPushButton(QVariant pushbutton);
 
     void Actualize();
     void clientActivationChanged(bool bActive);
@@ -242,7 +243,7 @@ private:
     VfModuleParameter* m_pMeasStartTime;
     VfModuleParameter* m_pMeasEndTime;
     VfModuleParameter* m_pMeasDurationMs;
-
+    VfModuleParameter* m_pPressPushButton;
     VfModuleParameter* m_pClientNotifierPar;
     ClientActiveComponent m_ClientActiveNotifier;
 
