@@ -4181,6 +4181,17 @@
                         "Type": "INTEGER"
                     }
                 },
+                "PAR_PushButton": {
+                    "Description": "Activate Pushbutton",
+                    "Validation": {
+                        "Data": [
+                            0,
+                            1,
+                            1
+                        ],
+                        "Type": "INTEGER"
+                    }
+                },
                 "PAR_RefConstant": {
                     "Description": "Reference meter constant"
                 },
@@ -4358,6 +4369,13 @@
                     ],
                     [
                         "CALCULATE",
+                        "0001:PBPRESS",
+                        "4",
+                        "PAR_PushButton",
+                        "0"
+                    ],
+                    [
+                        "CALCULATE",
                         "0001:REFCONSTANT",
                         "2",
                         "PAR_RefConstant",
@@ -4419,6 +4437,7 @@
         "PAR_ClientActiveNotify": 0,
         "PAR_Lolimit": -10,
         "PAR_MeasTime": 120,
+        "PAR_PushButton": 0,
         "PAR_RefConstant": 2.88e+21,
         "PAR_RefInput": "P 1",
         "PAR_StartStop": 0,
