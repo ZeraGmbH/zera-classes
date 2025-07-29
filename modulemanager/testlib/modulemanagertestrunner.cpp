@@ -7,7 +7,7 @@
 #include <timemachineobject.h>
 #include <QDir>
 
-ModuleManagerTestRunner::ModuleManagerTestRunner(QString sessionFileName, bool initialAdjPermission, QString deviceName, LxdmSessionChangeParam lxdmParam)
+ModuleManagerTestRunner::ModuleManagerTestRunner(QString sessionFileName, bool initialAdjPermission, QString deviceName, LxdmSessionChangeParam lxdmParam, bool addVfLogger)
 {
     m_licenseSystem = std::make_unique<TestLicenseSystem>();
     m_modmanFacade = std::make_unique<ModuleManagerSetupFacade>(m_licenseSystem.get(),
@@ -20,6 +20,8 @@ ModuleManagerTestRunner::ModuleManagerTestRunner(QString sessionFileName, bool i
     m_modMan->startAllTestServices(deviceName, initialAdjPermission);
     m_vfCmdEventHandlerSystem = std::make_shared<VfCmdEventHandlerSystem>();
     m_modmanFacade->addSubsystem(m_vfCmdEventHandlerSystem.get());
+    if(addVfLogger)
+        setupVfLogger();
     if(!sessionFileName.isEmpty())
         start(sessionFileName);
 }

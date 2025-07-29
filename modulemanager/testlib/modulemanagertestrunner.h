@@ -20,9 +20,9 @@ public:
     ModuleManagerTestRunner(QString sessionFileName,
                             bool initialAdjPermission = false,
                             QString deviceName = "mt310s2",
-                            LxdmSessionChangeParam lxdmParam = MockLxdmSessionChangeParamGenerator::generateTestSessionChanger());
+                            LxdmSessionChangeParam lxdmParam = MockLxdmSessionChangeParamGenerator::generateTestSessionChanger(),
+                            bool addVfLogger = false);
     ~ModuleManagerTestRunner();
-    void setupVfLogger();
     VeinStorage::AbstractEventSystem *getVeinStorageSystem();
     TestDspInterfacePtr getDspInterface(int entityId,
                                         TestFactoryServiceInterfaces::DSPInterfaceType dspInterfaceType = TestFactoryServiceInterfaces::MODULEPROG);
@@ -36,6 +36,8 @@ public:
     QList<TestModuleManager::TModuleInstances> getInstanceCountsOnModulesDestroyed();
 
 private:
+    void setupVfLogger();
+
     std::unique_ptr<TestLicenseSystem> m_licenseSystem;
     std::unique_ptr<ModuleManagerSetupFacade> m_modmanFacade;
     std::unique_ptr<TestModuleManager> m_modMan;
