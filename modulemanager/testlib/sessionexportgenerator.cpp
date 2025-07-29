@@ -27,8 +27,7 @@ void SessionExportGenerator::createModman(QString device)
 {
     qInfo("Create modman for device: %s\n", qPrintable(device));
     ModulemanagerConfig::setDemoDevice(device);
-    m_modmanTestRunner = std::make_unique<ModuleManagerTestRunner>("", false, device, m_lxdmParam);
-    m_modmanTestRunner->setupVfLogger();
+    m_modmanTestRunner = std::make_unique<ModuleManagerTestRunner>("", false, device, m_lxdmParam, true);
 
     QFile::remove("/tmp/test.db");
     m_modmanTestRunner->setVfComponent(vf_logger_entity, "DatabaseFile", "/tmp/test.db");
