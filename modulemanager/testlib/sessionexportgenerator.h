@@ -1,7 +1,7 @@
 #ifndef SESSIONEXPORTGENERATOR_H
 #define SESSIONEXPORTGENERATOR_H
 
-#include "testlicensesystem.h"
+#include "modulemanagertestrunner.h"
 #include "testmodulemanager.h"
 #include "modulemanagerconfig.h"
 #include <testdbaddsignaller.h>
@@ -25,24 +25,15 @@ public:
     QList<TestModuleManager::TModuleInstances> getInstanceCountsOnModulesDestroyed();
 private:
     void createModman(QString device);
-    void destroyModules();
     void createAndWriteFile(QString completeFileName, QString contents);
     void createSnapshot(QStringList contentSets, QString snapshotName);
     QString getLoggedValues(QString snapshotName);
     void clearSnapshotName();
-    void setVfComponent(int entityId, QString componentName, QVariant newValue);
-    QVariant getVfComponent(int entityId, QString componentName);
 
-    std::unique_ptr<TestLicenseSystem> m_licenseSystem;
+    std::unique_ptr<ModuleManagerTestRunner> m_modmanTestRunner;
     ModulemanagerConfig *m_modmanConfig;
-    std::unique_ptr<ModuleManagerSetupFacade> m_modmanSetupFacade;
-    std::unique_ptr<TestModuleManager> m_modman;
     QString m_device;
-    std::unique_ptr<TestDbAddSignaller> m_testSignaller;
-    std::unique_ptr<VeinLogger::DatabaseLogger> m_dataLoggerSystem;
-    bool m_dataLoggerSystemInitialized = false;
     const LxdmSessionChangeParam m_lxdmParam;
-    VfCmdEventHandlerSystemPtr m_cmdHandler;
 };
 
 #endif // SESSIONEXPORTGENERATOR_H

@@ -7,6 +7,8 @@
 #include "testfactoryserviceinterfaces.h"
 #include "testmodulemanager.h"
 #include "vf_cmd_event_handler_system.h"
+#include <testdbaddsignaller.h>
+#include <vl_databaselogger.h>
 #include <mocklxdmsessionchangeparamgenerator.h>
 #include <QObject>
 #include <memory>
@@ -20,6 +22,7 @@ public:
                             QString deviceName = "mt310s2",
                             LxdmSessionChangeParam lxdmParam = MockLxdmSessionChangeParamGenerator::generateTestSessionChanger());
     ~ModuleManagerTestRunner();
+    void setupVfLogger();
     VeinStorage::AbstractEventSystem *getVeinStorageSystem();
     TestDspInterfacePtr getDspInterface(int entityId,
                                         TestFactoryServiceInterfaces::DSPInterfaceType dspInterfaceType = TestFactoryServiceInterfaces::MODULEPROG);
@@ -30,6 +33,7 @@ public:
     void setVfComponent(int entityId, QString componentName, QVariant newValue);
     QVariant getVfComponent(int entityId, QString componentName);
     void start(QString sessionFileName);
+    QList<TestModuleManager::TModuleInstances> getInstanceCountsOnModulesDestroyed();
 
 private:
     std::unique_ptr<TestLicenseSystem> m_licenseSystem;
@@ -38,6 +42,9 @@ private:
     TestFactoryServiceInterfacesPtr m_serviceInterfaceFactory;
 
     VfCmdEventHandlerSystemPtr m_vfCmdEventHandlerSystem;
+    std::unique_ptr<TestDbAddSignaller> m_testSignaller;
+    std::unique_ptr<VeinLogger::DatabaseLogger> m_dataLoggerSystem;
+    bool m_dataLoggerSystemInitialized = false;
 };
 
 #endif // MODULEMANAGERTESTRUNNER_H
