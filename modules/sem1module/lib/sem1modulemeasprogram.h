@@ -45,8 +45,8 @@ enum sem1moduleCmds
     readintregister,
     resetintregister,
     readvicount,
-    readtcount
-
+    readtcount,
+    activatepushbutton
 };
 
 class cSem1Module;

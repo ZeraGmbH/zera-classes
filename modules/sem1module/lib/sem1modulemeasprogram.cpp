@@ -593,7 +593,9 @@ void cSem1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, Q
                 else
                     notifyError(readsecregisterErrMsg);
                 break;
-
+            case activatepushbutton:
+                qWarning("reply pushbutton: %i", reply);
+                break;
             }
         }
     }
@@ -1139,8 +1141,8 @@ void cSem1ModuleMeasProgram::newPushButton(QVariant pushbutton)
         return;
     }
     if (pb == 1) {
-        qInfo("newPushButton: 1");
-        m_pcbInterface->activatePushButton();       // send actication via I2C to Emob
+        qWarning("newPushButton: 1");
+        m_MsgNrCmdList[m_pcbInterface->activatePushButton()] = activatepushbutton;       // send actication via I2C to Emob
         m_pPressPushButton->setValue(0);
     }
 }
