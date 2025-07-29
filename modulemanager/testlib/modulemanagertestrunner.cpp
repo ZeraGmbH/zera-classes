@@ -13,6 +13,8 @@ ModuleManagerTestRunner::ModuleManagerTestRunner(QString sessionFileName, bool i
     m_modMan->loadAllAvailableModulePlugins();
     m_modMan->setupConnections();
     m_modMan->startAllTestServices(deviceName, initialAdjPermission);
+    m_vfCmdEventHandlerSystem = std::make_shared<VfCmdEventHandlerSystem>();
+    m_modmanFacade->addSubsystem(m_vfCmdEventHandlerSystem.get());
     if(!sessionFileName.isEmpty())
         start(sessionFileName);
 }
@@ -32,8 +34,6 @@ void ModuleManagerTestRunner::start(QString sessionFileName)
 {
     m_modMan->loadSession(sessionFileName);
     m_modMan->waitUntilModulesAreReady();
-    m_vfCmdEventHandlerSystem = std::make_shared<VfCmdEventHandlerSystem>();
-    m_modmanFacade->addSubsystem(m_vfCmdEventHandlerSystem.get());
 }
 
 VeinStorage::AbstractEventSystem *ModuleManagerTestRunner::getVeinStorageSystem()
