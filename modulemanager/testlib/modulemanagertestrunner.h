@@ -7,6 +7,7 @@
 #include "testfactoryserviceinterfaces.h"
 #include "testmodulemanager.h"
 #include "vf_cmd_event_handler_system.h"
+#include <mocklxdmsessionchangeparamgenerator.h>
 #include <QObject>
 #include <memory>
 
@@ -14,7 +15,10 @@ class ModuleManagerTestRunner : public QObject
 {
     Q_OBJECT
 public:
-    ModuleManagerTestRunner(QString sessionFileName, bool initialAdjPermission = false, QString deviceName = "mt310s2");
+    ModuleManagerTestRunner(QString sessionFileName,
+                            bool initialAdjPermission = false,
+                            QString deviceName = "mt310s2",
+                            LxdmSessionChangeParam lxdmParam = MockLxdmSessionChangeParamGenerator::generateTestSessionChanger());
     ~ModuleManagerTestRunner();
     VeinStorage::AbstractEventSystem *getVeinStorageSystem();
     TestDspInterfacePtr getDspInterface(int entityId,
