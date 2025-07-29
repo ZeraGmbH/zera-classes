@@ -360,7 +360,7 @@ void cSem1ModuleMeasProgram::generateVeinInterface()
 
     m_pPressPushButton = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
                                             key = QString("PAR_PushButton"),
-                                            QString("Activate Pushbutton"),
+                                            QString("Activate pushbutton (param = 1)"),
                                             QVariant((int)0));
     m_pPressPushButton->setScpiInfo("CALCULATE", QString("%1:PBPRESS").arg(modNr), SCPI::isCmdwP, m_pPressPushButton->getName());
     m_pPressPushButton->setValidator(new cIntValidator(0, 1, 1));
@@ -594,7 +594,8 @@ void cSem1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, Q
                     notifyError(readsecregisterErrMsg);
                 break;
             case activatepushbutton:
-                qWarning("reply pushbutton: %i", reply);
+                if (reply != ack)
+                    notifyError(pushbuttonErrMsg);
                 break;
             }
         }
@@ -1141,15 +1142,12 @@ void cSem1ModuleMeasProgram::newPushButton(QVariant pushbutton)
         return;
     }
     if (pb == 1) {
-        qWarning("newPushButton: 1");
         m_MsgNrCmdList[m_pcbInterface->activatePushButton()] = activatepushbutton;       // send actication via I2C to Emob
         m_pPressPushButton->setValue(0);
     }
     else if (pb == 0) {
         qWarning("newPushButton: 0");
     }
-    else
-        qWarning("newPushButton: unvalid");
 }
 
 void cSem1ModuleMeasProgram::newRefConstant(QVariant refconst)
