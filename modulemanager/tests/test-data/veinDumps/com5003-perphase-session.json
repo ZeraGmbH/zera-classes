@@ -5063,7 +5063,7 @@
                     }
                 },
                 "PAR_PushButton": {
-                    "Description": "Activate Pushbutton",
+                    "Description": "Activate pushbutton (param = 1)",
                     "Validation": {
                         "Data": [
                             0,
