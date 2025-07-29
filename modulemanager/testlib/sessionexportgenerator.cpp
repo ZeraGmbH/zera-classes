@@ -42,6 +42,11 @@ void SessionExportGenerator::createModman(QString device)
                                                                      "/tmp/" + QUuid::createUuid().toString(QUuid::WithoutBraces));
     m_modman = std::make_unique<TestModuleManager>(m_modmanSetupFacade.get(), std::make_shared<FactoryServiceInterfaces>());
 
+    m_modman->loadAllAvailableModulePlugins();
+    m_modman->setupConnections();
+    m_modman->startAllTestServices(device, false);
+
+
     //setup logger
     m_testSignaller = std::make_unique<TestDbAddSignaller>();
     const VeinLogger::DBFactory sqliteFactory = [this]() {
@@ -75,9 +80,6 @@ void SessionExportGenerator::createModman(QString device)
     m_cmdHandler = VfCmdEventHandlerSystem::create(); //Extra VfCmdEventHandlerSystemPtr for VfClientRPCInvoker used later
     m_modmanSetupFacade->addSubsystem((m_cmdHandler.get()));
 
-    m_modman->loadAllAvailableModulePlugins();
-    m_modman->setupConnections();
-    m_modman->startAllTestServices(device, false);
     m_modmanSetupFacade->getLicenseSystem()->setDeviceSerial("foo");
     TimeMachineObject::feedEventLoop();
 
