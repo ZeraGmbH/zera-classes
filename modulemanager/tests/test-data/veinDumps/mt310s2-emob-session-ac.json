@@ -4316,6 +4316,17 @@
                         "Type": "INTEGER"
                     }
                 },
+                "PAR_EmobPushButton": {
+                    "Description": "Activate EMOB-pushbutton (push=1)",
+                    "Validation": {
+                        "Data": [
+                            0,
+                            1,
+                            1
+                        ],
+                        "Type": "INTEGER"
+                    }
+                },
                 "PAR_Lolimit": {
                     "Description": "Error limit: lower",
                     "Unit": "%",
@@ -4335,17 +4346,6 @@
                         "Data": [
                             1,
                             4294967,
-                            1
-                        ],
-                        "Type": "INTEGER"
-                    }
-                },
-                "PAR_PushButton": {
-                    "Description": "Activate pushbutton (param = 1)",
-                    "Validation": {
-                        "Data": [
-                            0,
-                            1,
                             1
                         ],
                         "Type": "INTEGER"
@@ -4511,6 +4511,13 @@
                     ],
                     [
                         "CALCULATE",
+                        "0001:PBPRESS",
+                        "8",
+                        "PAR_EmobPushButton",
+                        "0"
+                    ],
+                    [
+                        "CALCULATE",
                         "0001:LOLIMIT",
                         "10",
                         "PAR_Lolimit",
@@ -4521,13 +4528,6 @@
                         "0001:MTIME",
                         "10",
                         "PAR_MeasTime",
-                        "0"
-                    ],
-                    [
-                        "CALCULATE",
-                        "0001:PBPRESS",
-                        "8",
-                        "PAR_PushButton",
                         "0"
                     ],
                     [
@@ -4591,9 +4591,9 @@
             }
         },
         "PAR_ClientActiveNotify": 0,
+        "PAR_EmobPushButton": 0,
         "PAR_Lolimit": -10,
         "PAR_MeasTime": 120,
-        "PAR_PushButton": 0,
         "PAR_RefConstant": 96000000,
         "PAR_RefInput": "P AC",
         "PAR_StartStop": 0,

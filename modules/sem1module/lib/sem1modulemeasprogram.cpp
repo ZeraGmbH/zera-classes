@@ -359,8 +359,8 @@ void cSem1ModuleMeasProgram::generateVeinInterface()
     m_pModule->m_veinModuleParameterMap[key] = m_pMeasDurationMs; // and for the modules interface
 
     m_pPressPushButton = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
-                                            key = QString("PAR_PushButton"),
-                                            QString("Activate pushbutton (param = 1)"),
+                                            key = QString("PAR_EmobPushButton"),
+                                            QString("Activate EMOB-pushbutton (push=1)"),
                                             QVariant((int)0));
     m_pPressPushButton->setScpiInfo("CALCULATE", QString("%1:PBPRESS").arg(modNr), SCPI::isCmdwP, m_pPressPushButton->getName());
     m_pPressPushButton->setValidator(new cIntValidator(0, 1, 1));
