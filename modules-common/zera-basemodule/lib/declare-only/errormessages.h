@@ -91,4 +91,5 @@
 
 #define releaseNumberErrMsg "Release number not found"
 
+#define pushbuttonErrMsg "Pushbutton activate failed"
 #endif // ERRORMESSAGES_H

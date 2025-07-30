@@ -442,6 +442,7 @@
         "ACT_Status": 0,
         "ACT_Time": 0,
         "PAR_ClientActiveNotify": 0,
+        "PAR_EmobPushButton": 0,
         "PAR_Lolimit": -10,
         "PAR_MeasTime": 120,
         "PAR_RefConstant": 96000000,

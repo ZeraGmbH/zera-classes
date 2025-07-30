@@ -5380,6 +5380,17 @@
                         "Type": "INTEGER"
                     }
                 },
+                "PAR_EmobPushButton": {
+                    "Description": "Activate EMOB-pushbutton (push=1)",
+                    "Validation": {
+                        "Data": [
+                            0,
+                            1,
+                            1
+                        ],
+                        "Type": "INTEGER"
+                    }
+                },
                 "PAR_Lolimit": {
                     "Description": "Error limit: lower",
                     "Unit": "%",
@@ -5566,6 +5577,13 @@
                     ],
                     [
                         "CALCULATE",
+                        "0001:PBPRESS",
+                        "8",
+                        "PAR_EmobPushButton",
+                        "0"
+                    ],
+                    [
+                        "CALCULATE",
                         "0001:LOLIMIT",
                         "10",
                         "PAR_Lolimit",
@@ -5639,6 +5657,7 @@
             }
         },
         "PAR_ClientActiveNotify": 0,
+        "PAR_EmobPushButton": 0,
         "PAR_Lolimit": -10,
         "PAR_MeasTime": 120,
         "PAR_RefConstant": 96000000,
