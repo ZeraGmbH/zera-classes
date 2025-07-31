@@ -29,7 +29,6 @@ target_link_libraries(zera-modulemanager-testlib
     scpimodule-static
     scpimodule-testlib
     module-service-interfaces-testlib
-    module-testlib
     Zera::VfConvenientCode
     Zera::veinserver-testlib
     Zera::xsession-change-demolib
