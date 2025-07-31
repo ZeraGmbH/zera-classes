@@ -1,5 +1,4 @@
 #include "sessionexportgenerator.h"
-#include "testdspvalues.h"
 #include <timemachineobject.h>
 #include <vcmp_remoteproceduredata.h>
 #include <vf_client_rpc_invoker.h>
@@ -52,7 +51,6 @@ QStringList SessionExportGenerator::getAvailableSessions()
 void SessionExportGenerator::changeSession(QString session)
 {
     m_modmanTestRunner->start(session);
-    fireActualValues(session);
 }
 
 void SessionExportGenerator::generateDevIfaceXml(QString xmlDir)
@@ -85,52 +83,6 @@ QByteArray SessionExportGenerator::getVeinDump()
 QList<TestModuleManager::TModuleInstances> SessionExportGenerator::getInstanceCountsOnModulesDestroyed()
 {
     return m_modmanTestRunner->getInstanceCountsOnModulesDestroyed();
-}
-
-void SessionExportGenerator::fireActualValues(QString session)
-{
-    constexpr double testvoltage = 120;
-    constexpr double testcurrent = 10;
-    constexpr double testangle = 0;
-    constexpr double testfrequency = 50;
-
-    enum dspInterfaceOrder { // For doc and test
-        DSP_INTERFACE_RANGE_OBSERMATIC = 1,
-        DSP_INTERFACE_RANGE_ADJUSTMENT,
-        DSP_INTERFACE_RANGE_PROGRAM,
-        DSP_INTERFACE_RMS = 5,
-        DSP_INTERFACE_DFT,
-        DSP_INTERFACE_FFT,
-
-        DSP_INTERFACE_COUNT
-    };
-
-    const QList<TestDspInterfacePtr>& dspInterfaces = m_modmanTestRunner->getDspInterfaceList();
-    TestDspValues dspValues(dspInterfaces[DSP_INTERFACE_DFT]->getValueList());
-    if(session.contains("meas") || session.contains("perphase") || session.contains("ced")) {
-        dspValues.setAllValuesSymmetric(testvoltage, testcurrent, testangle, testfrequency);
-        dspValues.fireAllActualValues(
-            dspInterfaces[DSP_INTERFACE_DFT],
-            dspInterfaces[DSP_INTERFACE_FFT],
-            dspInterfaces[DSP_INTERFACE_RANGE_PROGRAM], // Range is for frequency only
-            dspInterfaces[DSP_INTERFACE_RMS]);
-    }
-    else if(session.contains("ac")) {
-        dspValues.setAllValuesSymmetricAc(testvoltage, testcurrent, testangle, testfrequency);
-        dspValues.fireAllActualValues(
-            dspInterfaces[DSP_INTERFACE_DFT],
-            dspInterfaces[DSP_INTERFACE_FFT],
-            dspInterfaces[DSP_INTERFACE_RANGE_PROGRAM],
-            dspInterfaces[DSP_INTERFACE_RMS]);
-    }
-    else if(session.contains("dc")) {
-        dspValues.setAllValuesSymmetricDc(testvoltage, testcurrent);
-        dspValues.fireAllActualValues(
-            dspInterfaces[DSP_INTERFACE_DFT],
-            dspInterfaces[DSP_INTERFACE_FFT],
-            dspInterfaces[DSP_INTERFACE_RANGE_PROGRAM],
-            dspInterfaces[DSP_INTERFACE_RMS]);
-    }
 }
 
 void SessionExportGenerator::createAndWriteFile(QString completeFileName, QString contents)
