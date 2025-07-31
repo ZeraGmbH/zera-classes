@@ -146,15 +146,15 @@ void test_iodevice::demoResponseList()
 
     m_ioDataForSingleUse = IoTransferDataSingle::Ptr::create("", "0");
     ioDevice->sendAndReceive(m_ioDataForSingleUse);
-    QCoreApplication::processEvents(); // one I/O at a time
+    TimeMachineObject::feedEventLoop(); // one I/O at a time
 
     m_ioDataForSingleUse = IoTransferDataSingle::Ptr::create("", "1");
     ioDevice->sendAndReceive(m_ioDataForSingleUse);
-    QCoreApplication::processEvents();
+    TimeMachineObject::feedEventLoop();
 
     m_ioDataForSingleUse = IoTransferDataSingle::Ptr::create("", "2");
     ioDevice->sendAndReceive(m_ioDataForSingleUse);
-    QCoreApplication::processEvents();
+    TimeMachineObject::feedEventLoop();
 
     QCOMPARE(m_ioFinishReceiveCount, 3);
     QCOMPARE(m_listReceivedData[0], "0\r");
@@ -235,13 +235,13 @@ void test_iodevice::demoDelayFollowsDelay()
     // huge timeout must be ignored
     m_ioDataForSingleUse = IoTransferDataSingle::Ptr::create("", "\r", "", 5000);
     ioDevice->sendAndReceive(m_ioDataForSingleUse);
-    QCoreApplication::processEvents();
+    TimeMachineObject::feedEventLoop();
     QCOMPARE(m_ioFinishReceiveCount, 1);
 
     demoIoDevice->setResponseDelay(false, 5000);
     m_ioDataForSingleUse = IoTransferDataSingle::Ptr::create("", "");
     ioDevice->sendAndReceive(m_ioDataForSingleUse);
-    QCoreApplication::processEvents();
+    TimeMachineObject::feedEventLoop();
 
     QCOMPARE(m_ioFinishReceiveCount, 1);
 }
@@ -254,12 +254,12 @@ void test_iodevice::demoDelayFollowsTimeout()
     m_ioDataForSingleUse = IoTransferDataSingle::Ptr::create("", "\r", "", 0);
     demoIoDevice->setResponseDelay(true, 5000 /* must be ignored */);
     ioDevice->sendAndReceive(m_ioDataForSingleUse);
-    QCoreApplication::processEvents();
+    TimeMachineObject::feedEventLoop();
     QCOMPARE(m_ioFinishReceiveCount, 1);
 
     m_ioDataForSingleUse = IoTransferDataSingle::Ptr::create("", "\r", "", 5000);
     ioDevice->sendAndReceive(m_ioDataForSingleUse);
-    QCoreApplication::processEvents();
+    TimeMachineObject::feedEventLoop();
     QCOMPARE(m_ioFinishReceiveCount, 1);
 }
 
@@ -305,7 +305,7 @@ void test_iodevice::checkNotifications(IoDeviceBase::Ptr ioDevice, int total, in
     ioDevice->sendAndReceive(dummyIoData);
     QCOMPARE(m_ioFinishReceiveCount, 0); // check for queued
     QCOMPARE(m_errorsReceived, 0);
-    QCoreApplication::processEvents();
+    TimeMachineObject::feedEventLoop();
     QCOMPARE(m_ioFinishReceiveCount, total);
     QCOMPARE(m_errorsReceived, errors);
 }

@@ -2,7 +2,6 @@
 #include "sourceioextserial.h"
 #include "sourcestateperiodicpollerfortest.h"
 #include "test_globals.h"
-#include "sourceperiodicpollerstate.h"
 #include "timerfactoryqtfortest.h"
 #include "timemachinefortest.h"
 
@@ -84,7 +83,7 @@ void test_sourceperiodicpollerstate::pollStopNotification()
 void test_sourceperiodicpollerstate::pollChangeTimeNotification()
 {
     SourceStatePeriodicPollerForTest poller(m_transactionNotifier, 500);
-    QCoreApplication::processEvents();
+    TimeMachineObject::feedEventLoop();
     QCOMPARE(m_listIoGroupsReceived.count(), 0);
     poller.setPollTime(10);
     TimeMachineForTest::getInstance()->processTimers(20);
