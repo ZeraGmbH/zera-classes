@@ -18,7 +18,7 @@ void test_taskrefpowerfetchconstant::checkScpiSend()
                                                              refContantReceived,
                                                              EXPIRE_INFINITE);
     task->start();
-    QCoreApplication::processEvents();
+    TimeMachineObject::feedEventLoop();
     QStringList scpiSent = pcb.getProxyClient()->getReceivedCommands();
     QCOMPARE(scpiSent.count(), 1);
     QString scpiExpectedPath = QString("SOURCE:%1:CONSTANT").arg(refPowerName);
@@ -39,7 +39,7 @@ void test_taskrefpowerfetchconstant::returnsConstantProperly()
                                                              refContantReceived,
                                                              EXPIRE_INFINITE);
     task->start();
-    QCoreApplication::processEvents();
+    TimeMachineObject::feedEventLoop();
     double dblConstantExpected = QString(defaultResponse).toDouble();
     QCOMPARE(*refContantReceived, dblConstantExpected);
 }
