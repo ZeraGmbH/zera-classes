@@ -37,7 +37,8 @@ enum statusmoduleinitCmds
     registerAccumulatorSocNotifier,
     readPCBServerAccumulatorSoc,
     registerCtrlVersionChange,
-    registerPCBVersionChange
+    registerPCBVersionChange,
+    readEmobConnectState
 };
 
 enum NOTIFIER_IDS
@@ -138,6 +139,7 @@ private:
     VfModuleParameter *m_pSchnubbelStatus;
     VfModuleParameter *m_pAccumulatorStatus;
     VfModuleParameter *m_pAccumulatorSoc;
+    VfModuleParameter *m_pEmobConnected;
 
     QVariant wantedSerialNr;
 

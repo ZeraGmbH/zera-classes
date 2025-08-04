@@ -4510,6 +4510,7 @@
         "INF_DSPServerVersion": "zdsp1d V1.11",
         "INF_DSPVersion": "DSPLCA: V0.0;DSP V0.00",
         "INF_DeviceType": "unknown",
+        "INF_EmobConnected": 0,
         "INF_FPGAVersion": "Unknown",
         "INF_ModuleInterface": {
             "ComponentInfo": {
@@ -4542,6 +4543,9 @@
                 },
                 "INF_DeviceType": {
                     "Description": "Device type"
+                },
+                "INF_EmobConnected": {
+                    "Description": ""
                 },
                 "INF_FPGAVersion": {
                     "Description": "FPGA version"
@@ -4622,6 +4626,13 @@
                         "DEVTYPE",
                         "2",
                         "INF_DeviceType",
+                        "0"
+                    ],
+                    [
+                        "STATUS",
+                        "EMOBCONNECTED",
+                        "2",
+                        "INF_EmobConnected",
                         "0"
                     ],
                     [

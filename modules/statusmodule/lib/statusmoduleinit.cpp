@@ -225,6 +225,13 @@ void cStatusModuleInit::generateVeinInterface()
         m_pAccumulatorSoc->setScpiInfo("STATUS", "ACCUSOC", SCPI::isQuery, key);
         m_pAccumulatorStatus->setScpiInfo("STATUS", "ACCUSTATUS", SCPI::isQuery, key);
     }
+
+    m_pEmobConnected = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
+                                               key = QString("INF_EmobConnected"),
+                                               QString(""),
+                                               QVariant(0));
+    m_pEmobConnected->setScpiInfo("STATUS", "EMOBCONNECTED", SCPI::isQuery, key);
+    m_pModule->m_veinModuleParameterMap[key] = m_pEmobConnected;
 }
 
 
@@ -332,6 +339,7 @@ void cStatusModuleInit::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVaria
                 if (reply == ack) {
                     m_sCtrlVersion = answer.toString();
                     m_pCtrlVersion->setValue(m_sCtrlVersion);
+                    answer.toString().contains("Emob") ? m_pEmobConnected->setValue(1) : m_pEmobConnected->setValue(0);
                     emit activationContinue();
                 }
                 else

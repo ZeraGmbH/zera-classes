@@ -205,6 +205,7 @@
         "INF_DSPServerVersion": "zdsp1d V1.11",
         "INF_DSPVersion": "DSPLCA: V0.0;DSP V0.00",
         "INF_DeviceType": "unknown",
+        "INF_EmobConnected": 0,
         "INF_FPGAVersion": "Unknown",
         "INF_PCBServerVersion": "V42.0",
         "INF_PCBVersion": "{\"Relay PCB version\":\"Unknown\"}",
