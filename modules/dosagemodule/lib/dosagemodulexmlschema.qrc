@@ -1,0 +1,5 @@
+<RCC>
+    <qresource prefix="/">
+        <file>dosagemodule.xsd</file>
+    </qresource>
+</RCC>
