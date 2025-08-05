@@ -1,0 +1,100 @@
+name: Generate Logging Snapshots
+on:
+  push:
+    branches:
+      - master
+  workflow_dispatch:
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    container:
+      image: schnitzeltony/fedora-qt5:32
+    steps:
+      - name: Echo github environment
+        run: |
+          echo "Home: $HOME"
+          echo "Workspace: $GITHUB_WORKSPACE"
+          echo "CPUs: $(getconf _NPROCESSORS_ONLN)"
+      # Prepare source code for incremental build
+      - name: Download source artifact last build
+        uses: dawidd6/action-download-artifact@v3
+        with:
+          workflow: recreateBuildCaches.yml
+          name: source-cache-gcc
+          check_artifacts: true
+        continue-on-error: true
+
+      - name: Untar source files last build
+        run: |
+          mkdir -p "$GITHUB_WORKSPACE"
+          if [ -e source-cache-files.tar.xz ]; then
+            tar -xf source-cache-files.tar.xz -C /
+            rm source-cache-files.tar.xz
+          else
+            echo 'source-cache-files.tar.xz not found'
+          fi
+      - name: Checkout git
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      # Prepare last build files for incremental build
+      - name: Download build artifact
+        uses: dawidd6/action-download-artifact@v3
+        with:
+          workflow: recreateBuildCaches.yml
+          name: build-cache-gcc
+          check_artifacts: true
+        continue-on-error: true
+
+      - name: Untar build files
+        run: |
+          mkdir -p "$HOME/targetbuild"
+          if [ -e build-cache-files.tar.xz ]; then
+            tar -xf build-cache-files.tar.xz -C /
+            rm build-cache-files.tar.xz
+          else
+            echo 'build-cache-files.tar.xz not found'
+          fi
+      # Get zera-metaproject sysroot
+      # * mandatory
+      # * zera-metaproject's generator workflow name must be set
+      - name: Download zera-metaproject's install artifact
+        uses: dawidd6/action-download-artifact@v3
+        with:
+          repo: ZeraGmbH/zera-metaproject
+          name: install-artifact
+          workflow: buildAndExportArtifact.yml
+
+      - name: Untar zera-metaproject's install artifact
+        run: |
+            tar -xf install_files.tar.xz -C /
+            rm install_files.tar.xz
+      - name: Build
+        run: |
+          mkdir -p "$HOME/targetbuild"
+          cd "$HOME/targetbuild"
+          cmake $GITHUB_WORKSPACE \
+           -DCMAKE_PREFIX_PATH="$HOME/install/usr;/usr" \
+           -DCMAKE_INSTALL_PREFIX:PATH="$HOME/install/usr" \
+           -DCMAKE_INSTALL_SYSCONFDIR="$HOME/install/etc"
+           make -j $(getconf _NPROCESSORS_ONLN)
+           make -j $(getconf _NPROCESSORS_ONLN) install
+
+      - name: run logging-snapshots-generator
+        run: |
+          cd $HOME/targetbuild/logging-snapshots/app
+          ./logging-snapshots
+          mv $HOME/targetbuild/logging-snapshots/app/snapshots $HOME/snapshots
+
+      - name: Tar snapshots
+        run: |
+          tar -c -I 'xz -T0' -f $HOME/snapshots.tar.xz "$HOME/snapshots"
+
+      - name: 'Upload snapshots artifact'
+        uses: actions/upload-artifact@v4
+        with:
+          name: snapshots
+          path: /github/home/snapshots.tar.xz
+          retention-days: 1
