@@ -5,8 +5,8 @@
             <inputentity>1070</inputentity>
             <system>
                 <n>2</n>
-                <dos1>ACT_PQS1</dos1>
-                <dos2>ACT_PQS2</dos2>
+                <dos1>ACT_PQS1,1</dos1>
+                <dos2>ACT_PQS2,2</dos2>
             </system>
         </measure>
     </configuration>
