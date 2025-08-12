@@ -9,6 +9,10 @@ namespace DOSAGEMODULE
 
 enum moduleconfigstate
 {
+    setInputModule,
+    setSystemCount,
+
+    setMeasSystem1 = 10 // we leave some place for additional cmds
 };
 
 // moduleconfiguration holds configuration data as well as parameter

@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+
+    <xs:simpleType name="anztype">
+        <xs:restriction base="xs:integer">
+            <xs:maxInclusive value='10'/>
+            <xs:minInclusive value='1'/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:complexType name="measuretype">
+        <xs:sequence>
+            <xs:element name="inputentity" type="xs:integer" minOccurs="1" maxOccurs="1"/>
+            <xs:element name="system">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="n" type="anztype" minOccurs="1" maxOccurs="1"/>
+                        <xs:element name="dos1" type="xs:string" minOccurs="1" maxOccurs="1"/>
+                        <xs:element name="dos2" type="xs:string" minOccurs="0" maxOccurs="1"/>
+                        <xs:element name="dos3" type="xs:string" minOccurs="0" maxOccurs="1"/>
+                        <xs:element name="dos4" type="xs:string" minOccurs="0" maxOccurs="1"/>
+                        <xs:element name="dos5" type="xs:string" minOccurs="0" maxOccurs="1"/>
+                        <xs:element name="dos6" type="xs:string" minOccurs="0" maxOccurs="1"/>
+                        <xs:element name="dos7" type="xs:string" minOccurs="0" maxOccurs="1"/>
+                        <xs:element name="dos8" type="xs:string" minOccurs="0" maxOccurs="1"/>
+                        <xs:element name="dos9" type="xs:string" minOccurs="0" maxOccurs="1"/>
+                        <xs:element name="dos10" type="xs:string" minOccurs="0" maxOccurs="1"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+
+
+    <xs:element name="dosagemodconfpar">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="configuration">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="measure" type="measuretype"/>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+	
+</xs:schema> 
+
+
+

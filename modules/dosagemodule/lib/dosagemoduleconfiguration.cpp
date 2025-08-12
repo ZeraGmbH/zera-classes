@@ -5,6 +5,7 @@
 #include "dosagemoduleconfiguration.h"
 #include "dosagemoduleconfigdata.h"
 
+
 static void initResource()
 {
     Q_INIT_RESOURCE(dosagemodulexmlschema);
@@ -40,10 +41,22 @@ void cDosageModuleConfiguration::setConfiguration(QByteArray xmlString)
     // so now we can set up
     // initializing hash table for xml configuration
 
-    if (m_pXMLReader->loadSchema(defaultXSDFile))
-        m_pXMLReader->loadXMLFromString(QString::fromUtf8(xmlString.data(), xmlString.size()));
+    m_ConfigXMLMap["dosagemodconfpar:configuration:measure:inputentity"] = setInputModule;
+    m_ConfigXMLMap["dosagemodconfpar:configuration:measure:system:n"] = setSystemCount;
+
+    // was is den 4 Power componenten???
+
+
+    m_pXMLReader->loadXMLFromString(QString::fromUtf8(xmlString.data(), xmlString.size()));
+
+    if (m_bConfigError)
+        qWarning("m_bConfigError = true");
     else
-        m_bConfigError = true;
+        qWarning("m_bConfigError = false");
+    if (m_bConfigured)
+        qWarning("m_bConfigured = true");
+    else
+        qWarning("m_bConfigured = false");
 }
 
 QByteArray cDosageModuleConfiguration::exportConfiguration()
@@ -56,19 +69,59 @@ cDosageModuleConfigData *cDosageModuleConfiguration::getConfigurationData()
     return m_pDosageModulConfigData;
 }
 
+
 void cDosageModuleConfiguration::configXMLInfo(QString key)
 {
+    bool ok;
+
     if (m_ConfigXMLMap.contains(key))
     {
-        bool ok = true;
+        ok = true;
         int cmd = m_ConfigXMLMap[key];
         switch (cmd)
         {
+            case setInputModule:
+                m_pDosageModulConfigData->m_nModuleId = m_pXMLReader->getValue(key).toInt(&ok);
+                break;
+            case setSystemCount:
+            {
+                dosagesystemconfiguration dsc;
+                dsc.m_ComponentName = "ACT_PQS0";  // is dummy
+
+                m_pDosageModulConfigData->m_nDosageSystemCount = m_pXMLReader->getValue(key).toInt(&ok);
+                for (int i = 0; i < m_pDosageModulConfigData->m_nDosageSystemCount; i++)    // generate dynamic hash entries for value channel configuration
+                {
+                    m_ConfigXMLMap[QString("dosagemodconfpar:configuration:measure:system:dos%1").arg(i+1)] = setMeasSystem1+i;
+                    m_pDosageModulConfigData->m_DosageSystemConfigList.append(dsc);
+                }
+                break;
+            }
+            default:
+
+                // here we decode the dyn. generated cmd's
+                if ((cmd >= setMeasSystem1) && (cmd < (setMeasSystem1 * 2)))
+                {
+                    cmd -= setMeasSystem1;
+                    // it is command for setting measuring mode
+                    QString dosageSystem = m_pXMLReader->getValue(key);
+                    QStringList dosChannels = dosageSystem.split(",");  // currently component and limit
+                    dosagesystemconfiguration dsc = m_pDosageModulConfigData->m_DosageSystemConfigList.at(cmd);
+                    dsc.m_ComponentName = dosChannels.at(0);
+                    dsc.m_fUpperLimit = dosChannels.at(1).toDouble();
+                    m_pDosageModulConfigData->m_DosageSystemConfigList.replace(cmd, dsc);
+                }
+                else
+                    qWarning("Error DosageModule: cmd is out of range");
         }
-        m_bConfigError |= !ok;
+
+        if (!m_bConfigError)        // replaces: m_bConfigError |= !ok;
+            m_bConfigError = !ok;
     }
     else
+    {
         m_bConfigError = true;
+        qWarning("cmd: %s has no case", qPrintable(key));
+    }
 }
 
 void cDosageModuleConfiguration::completeConfiguration(bool ok)

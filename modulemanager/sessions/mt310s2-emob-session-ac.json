@@ -124,7 +124,7 @@
       },
       {
         "name" : "dosagemodule",
-        "configFile" : "dosagemodule.xml",
+        "configFile" : "mt310s2-dosagemodule-EMOB-AC.xml",
         "id": 1600
       },
       {
