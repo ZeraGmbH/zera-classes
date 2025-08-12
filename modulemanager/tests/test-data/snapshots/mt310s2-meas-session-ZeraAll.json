@@ -1,7 +1,7 @@
 {
     "0": {
         "DevMode": 0,
-        "Entities": "0;2;1000;1020;1030;1040;1050;1060;1070;1071;1072;1073;1078;1079;1100;1110;1111;1120;1130;1140;1150;1160;1161;1170;1190;1200;1210;1220;1300;1400;1500;9999",
+        "Entities": "0;2;1000;1020;1030;1040;1050;1060;1070;1071;1072;1073;1078;1079;1100;1110;1111;1120;1130;1140;1150;1160;1161;1170;1190;1200;1210;1220;1300;1400;1500;1600;9999",
         "ModulesPaused": 0,
         "Session": "mt310s2-meas-session.json",
         "SessionsAvailable": "mt310s2-meas-session.json;mt310s2-emob-session-ac.json;mt310s2-emob-session-dc.json;mt310s2-dc-session.json",
@@ -509,6 +509,9 @@
         "ACT_WarningFlags": 0,
         "PAR_BluetoothOn": 0,
         "PAR_MacAddress": "00:00:00:00:00:00"
+    },
+    "1600": {
+        "ACT_PowerAboveLimit": ""
     },
     "Contentsets": [
         "ZeraActualValues",
