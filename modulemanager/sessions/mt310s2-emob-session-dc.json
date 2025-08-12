@@ -94,11 +94,6 @@
         "id": 1500
       },
       {
-        "name" : "dosagemodule",
-        "configFile" : "dosagemodule.xml",
-        "id": 1600
-      },
-      {
         "name" : "scpimodule",
         "configFile" : "mt310s2-scpimodule.xml",
         "id": 9999

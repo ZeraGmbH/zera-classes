@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<dosagemodconfpar>
+    <configuration>
+        <measure>
+            <inputentity>1070</inputentity>
+            <system>
+                <n>4</n>
+                <dos1>ACT_PQS1,10</dos1>
+                <dos2>ACT_PQS2,20</dos2>
+                <dos3>ACT_PQS3,30</dos3>
+                <dos4>ACT_PQS4,50</dos4>
+            </system>
+        </measure>
+    </configuration>
+</dosagemodconfpar>
+
