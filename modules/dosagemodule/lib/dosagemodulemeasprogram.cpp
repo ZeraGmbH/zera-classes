@@ -66,7 +66,8 @@ void cDosageModuleMeasProgram::setupMeasureProgram()
         dosagepoweranalyser dpaTemp;
         dpaTemp.m_fUpperLimit = item.m_fUpperLimit;
         dpaTemp.m_ComponentName = item.m_ComponentName;
-        dpaTemp.m_component = m_pModule->getStorageDb()->findComponent(getConfData()->m_nModuleId, item.m_ComponentName);
+        dpaTemp.m_nEntity = item.m_nEntity;
+        dpaTemp.m_component = m_pModule->getStorageDb()->findComponent(dpaTemp.m_nEntity, dpaTemp.m_ComponentName);
         m_PowerToAnalyseList.append(dpaTemp);
     }
 }
@@ -96,7 +97,7 @@ void cDosageModuleMeasProgram::onActualize()
         tmpVal = m_PowerToAnalyseList[i].m_component->getValue().toFloat();
         if (tmpVal > m_PowerToAnalyseList[i].m_fUpperLimit) {
             exceedFlag = true;
-            qWarning("Component: %s is about upper limit", qPrintable(m_PowerToAnalyseList[i].m_ComponentName));
+            qWarning("Entity: %i Component: %s exceeds upper limit", m_PowerToAnalyseList[i].m_nEntity, qPrintable(m_PowerToAnalyseList[i].m_ComponentName));
             break;
         }
     }

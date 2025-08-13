@@ -41,22 +41,9 @@ void cDosageModuleConfiguration::setConfiguration(QByteArray xmlString)
     // so now we can set up
     // initializing hash table for xml configuration
 
-    m_ConfigXMLMap["dosagemodconfpar:configuration:measure:inputentity"] = setInputModule;
     m_ConfigXMLMap["dosagemodconfpar:configuration:measure:system:n"] = setSystemCount;
 
-    // was is den 4 Power componenten???
-
-
     m_pXMLReader->loadXMLFromString(QString::fromUtf8(xmlString.data(), xmlString.size()));
-
-    if (m_bConfigError)
-        qWarning("m_bConfigError = true");
-    else
-        qWarning("m_bConfigError = false");
-    if (m_bConfigured)
-        qWarning("m_bConfigured = true");
-    else
-        qWarning("m_bConfigured = false");
 }
 
 QByteArray cDosageModuleConfiguration::exportConfiguration()
@@ -80,9 +67,6 @@ void cDosageModuleConfiguration::configXMLInfo(QString key)
         int cmd = m_ConfigXMLMap[key];
         switch (cmd)
         {
-            case setInputModule:
-                m_pDosageModulConfigData->m_nModuleId = m_pXMLReader->getValue(key).toInt(&ok);
-                break;
             case setSystemCount:
             {
                 dosagesystemconfiguration dsc;
@@ -104,10 +88,11 @@ void cDosageModuleConfiguration::configXMLInfo(QString key)
                     cmd -= setMeasSystem1;
                     // it is command for setting measuring mode
                     QString dosageSystem = m_pXMLReader->getValue(key);
-                    QStringList dosChannels = dosageSystem.split(",");  // currently component and limit
+                    QStringList dosChannels = dosageSystem.split(",");  // currently: entity, component and limit
                     dosagesystemconfiguration dsc = m_pDosageModulConfigData->m_DosageSystemConfigList.at(cmd);
-                    dsc.m_ComponentName = dosChannels.at(0);
-                    dsc.m_fUpperLimit = dosChannels.at(1).toDouble();
+                    dsc.m_nEntity = dosChannels.at(0).toInt();
+                    dsc.m_ComponentName = dosChannels.at(1);
+                    dsc.m_fUpperLimit = dosChannels.at(2).toDouble();
                     m_pDosageModulConfigData->m_DosageSystemConfigList.replace(cmd, dsc);
                 }
                 else

@@ -10,6 +10,7 @@ namespace DOSAGEMODULE
 
 struct dosagesystemconfiguration
 {
+    int m_nEntity;
     QString m_ComponentName;
     double m_fUpperLimit;
 };
