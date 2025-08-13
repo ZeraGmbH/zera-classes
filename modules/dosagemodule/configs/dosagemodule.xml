@@ -2,10 +2,9 @@
 <dosagemodconfpar>
     <configuration>
         <measure>
-            <inputentity>1070</inputentity>
             <system>
                 <n>1</n>
-                <dos1>ACT_PQS1,10</dos1>
+                <dos1>1070,ACT_PQS1,10</dos1>
             </system>
         </measure>
     </configuration>
