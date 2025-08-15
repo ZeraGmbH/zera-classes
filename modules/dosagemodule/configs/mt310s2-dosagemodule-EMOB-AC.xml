@@ -5,7 +5,7 @@
             <system>
                 <n>2</n>
                 <dos1>1070,ACT_PQS1,10</dos1>
-                <dos2>1040,ACT_RMSPN4,0.3</dos2>
+                <dos2>1040,ACT_RMSPN4,0.1</dos2>
             </system>
         </measure>
     </configuration>

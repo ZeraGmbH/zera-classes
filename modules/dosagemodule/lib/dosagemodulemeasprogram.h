@@ -49,7 +49,7 @@ private:
     //void newValueDetected(QVariant value, QString component, double upperLimit);
 
     cDosageModule *m_pModule;
-//    QList<VfModuleActvalue *> m_veinActValueList; // the list of actual values we work on
+    //QList<VfModuleActvalue *> m_veinActValueList; // the list of actual values we work on
 
     VfModuleParameter* m_pPowerDetected;
 
