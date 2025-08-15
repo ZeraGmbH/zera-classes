@@ -3,11 +3,12 @@
     <configuration>
         <measure>
             <system>
-                <n>1</n>
-                <dos1>1070,ACT_PQS1,10</dos1>
+                <n>3</n>
+                <dos1>1078,ACT_PQS1,10</dos1>
+                <dos2>1078,ACT_PQS2,10</dos2>
+                <dos3>1078,ACT_PQS3,10</dos3>
             </system>
         </measure>
     </configuration>
 </dosagemodconfpar>
 
-  

@@ -1,0 +1,19 @@
+{
+    "modules" : [
+        {
+            "name" : "power1module",
+            "configFile" : "mt310s2-power1module.xml",
+            "id": 1070
+        },
+        {
+            "name" : "rmsmodule",
+            "configFile" : "mt310s2-rmsmodule.xml",
+            "id": 1040
+        },
+        {
+            "name" : "dosagemodule",
+            "configFile" : "mt310s2-dosagemodule-DEF.xml",
+            "id": 1600
+        }
+    ]
+}

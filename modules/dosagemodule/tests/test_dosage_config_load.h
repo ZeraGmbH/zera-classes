@@ -9,6 +9,7 @@ class test_dosage_config_load : public QObject
 private slots:
     void fileFound();
     void allFilesLoaded();
+    void allFilesFormatCheckLight();
 };
 
 #endif // TEST_DOSAGE_CONFIG_LOAD_H

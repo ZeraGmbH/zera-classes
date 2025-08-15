@@ -60,15 +60,17 @@ void cDosageModuleMeasProgram::generateVeinInterface()
 
 void cDosageModuleMeasProgram::setupMeasureProgram()
 {
-    qint8 testCnt;
-
     for(auto &item : getConfData()->m_DosageSystemConfigList) {
-        dosagepoweranalyser dpaTemp;
-        dpaTemp.m_fUpperLimit = item.m_fUpperLimit;
-        dpaTemp.m_ComponentName = item.m_ComponentName;
-        dpaTemp.m_nEntity = item.m_nEntity;
-        dpaTemp.m_component = m_pModule->getStorageDb()->findComponent(dpaTemp.m_nEntity, dpaTemp.m_ComponentName);
-        m_PowerToAnalyseList.append(dpaTemp);
+        if (m_pModule->getStorageDb()->findComponent(item.m_nEntity, item.m_ComponentName) != nullptr) {
+            dosagepoweranalyser dpaTemp;
+            dpaTemp.m_fUpperLimit = item.m_fUpperLimit;
+            dpaTemp.m_ComponentName = item.m_ComponentName;
+            dpaTemp.m_nEntity = item.m_nEntity;
+            dpaTemp.m_component = m_pModule->getStorageDb()->findComponent(dpaTemp.m_nEntity, dpaTemp.m_ComponentName);
+            m_PowerToAnalyseList.append(dpaTemp);
+            }
+         else
+            qWarning("ERROR dosagemodule: Entity (%i) or component (%s) is not available", item.m_nEntity, qPrintable(item.m_ComponentName));
     }
 }
 
