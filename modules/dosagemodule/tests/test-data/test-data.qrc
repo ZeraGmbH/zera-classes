@@ -2,5 +2,6 @@
     <qresource prefix="/">
         <file>dumpInitial.json</file>
         <file>session-minimal.json</file>
+        <file>mt310s2-dosagemodule-test.xml</file>
     </qresource>
 </RCC>
