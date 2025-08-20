@@ -3,10 +3,12 @@
     <configuration>
         <measure>
             <system>
-                <n>3</n>
-                <dos1>1078,ACT_PQS1,10</dos1>
-                <dos2>1078,ACT_PQS2,10</dos2>
-                <dos3>1078,ACT_PQS3,10</dos3>
+                <n>5</n>
+                <dos1>1070,ACT_PQS1,10</dos1>
+                <dos2>1070,ACT_PQS2,20</dos2>
+                <dos3>1040,ACT_RMSPN4,0.3</dos3>
+                <dos4>1040,ACT_RMSPN5,0.4</dos4>
+                <dos5>1040,ACT_RMSPN6,0.5</dos5>
             </system>
         </measure>
     </configuration>
