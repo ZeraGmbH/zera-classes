@@ -4,9 +4,8 @@
 #include <proxy.h>
 #include <errormessages.h>
 #include <regexvalidator.h>
-#include <zenuxdevicedetection.h>
 #include <scpi.h>
-#include <sysinfo.h>
+#include <zenuxdeviceinfo.h>
 #include <timerfactoryqt.h>
 #include <QFile>
 #include <intvalidator.h>
@@ -453,38 +452,6 @@ void cStatusModuleInit::notifyActivationError(QVariant value)
     emit activationError();
 }
 
-QString cStatusModuleInit::findReleaseNr()
-{
-    QString releaseNr;
-
-    releaseNr = SysInfo::getReleaseNr();
-    if (releaseNr == "")
-        notifyError(releaseNumberErrMsg);
-
-    return releaseNr;
-}
-
-QString cStatusModuleInit::findCpuInfo()
-{
-    QString cpuInfo;
-    QString eepromDumpFile = QStringLiteral("/tmp/varsom-eeprom.dump");
-    QFile file(eepromDumpFile);
-    if(file.open(QIODevice::ReadOnly)) {
-        QByteArray eepromDump = file.readAll();
-        file.close();
-        // valid dump?
-        if(eepromDump.count() >= 64 && eepromDump.left(4) == QByteArray("WARI")) {
-            // structure taken from u-boot-variscite / mx6var_eeprom_v1.h
-            QString partNumber = eepromDump.mid(4, 16);
-            QString assembly = eepromDump.mid(20, 16);
-            QString date = eepromDump.mid(36, 16);
-            //int version = eepromDump.at(52);
-            cpuInfo = QString("{\"PartNumber\":\"%1\",\"Assembly\":\"%2\",\"Date\":\"%3\"}").arg(partNumber).arg(assembly).arg(date);
-        }
-    }
-    return cpuInfo;
-}
-
 void cStatusModuleInit::getSchnubbelStatus()
 {
     m_MsgNrCmdList[m_pPCBInterface->getAuthorizationStatus()] = STATUSMODINIT::readPCBServerSchnubbelStatus;
@@ -629,11 +596,11 @@ void cStatusModuleInit::registerPCBVersionNotifier()
 
 void cStatusModuleInit::activationDone()
 {
-    m_sReleaseNumber = findReleaseNr();
-    m_sDeviceType = ZenuxDeviceDetection::getDeviceNameFromKernelParam();
+    m_sReleaseNumber = ZenuxDeviceInfo::getZenuxRelease();
+    m_sDeviceType = ZenuxDeviceInfo::getDeviceNameFromKernelParam();
     if (m_sDeviceType.isEmpty())
         m_sDeviceType = QStringLiteral("unknown");
-    m_sCPUInfo = findCpuInfo();
+    m_sCPUInfo = ZenuxDeviceInfo::getCpuInfo();
     setInterfaceComponents();
     connect(m_pSerialNumber, &VfModuleParameter::sigValueChanged, this, &cStatusModuleInit::newSerialNumber);
     m_bActive = true;

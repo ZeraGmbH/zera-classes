@@ -5,7 +5,7 @@
 #include "scpiinterfacedelegate.h"
 #include <scpi.h>
 #include <zscpi_response_definitions.h>
-#include <sysinfo.h>
+#include <zenuxdeviceinfo.h>
 
 namespace SCPIMODULE
 {
@@ -38,7 +38,7 @@ void cInterfaceInterface::executeCmd(cSCPIClient *client, int cmdCode, const QSt
         if (cmd.isQuery())
         {
             QString xml;
-            QMap<QString, QString> modelListBaseEntry({{"RELEASE", SysInfo::getReleaseNr()}});
+            QMap<QString, QString> modelListBaseEntry({{"RELEASE", ZenuxDeviceInfo::getZenuxRelease()}});
             m_pSCPIInterface->exportSCPIModelXML(xml, modelListBaseEntry);
             client->receiveAnswer(xml);
         }

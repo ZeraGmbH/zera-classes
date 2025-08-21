@@ -1,6 +1,6 @@
 #include "ieee488-2.h"
 #include "scpiclient.h"
-#include <sysinfo.h>
+#include <zenuxdeviceinfo.h>
 
 namespace SCPIMODULE
 {
@@ -199,7 +199,7 @@ void cIEEE4882::setStatusByte(quint8 stb, quint8)
 QString cIEEE4882::getIdentification()
 {
     QString companyName QStringLiteral("ZERA GmbH Koenigswinter");
-    QString releaseNr = SysInfo::getReleaseNr();
+    QString releaseNr = ZenuxDeviceInfo::getZenuxRelease();
     if(releaseNr.isEmpty())
         releaseNr = QStringLiteral("unknokwn-release");
     QString serialNr = m_serNoComponent->getValue().toString();

@@ -25,7 +25,7 @@
 #include "statusinterface.h"
 #include "ieee4882interface.h"
 #include "scpimoduleconfigdata.h"
-#include <sysinfo.h>
+#include <zenuxdeviceinfo.h>
 
 namespace SCPIMODULE
 {
@@ -221,7 +221,7 @@ void cSCPIServer::activationDone()
 {
     m_scpiInterface.checkAmbiguousShortNames();
 
-    QMap<QString, QString> modelListBaseEntry({{"RELEASE", SysInfo::getReleaseNr()}});
+    QMap<QString, QString> modelListBaseEntry({{"RELEASE", ZenuxDeviceInfo::getZenuxRelease()}});
     QString xml;
     m_scpiInterface.exportSCPIModelXML(xml, modelListBaseEntry);
     m_veinDevIface->setValue(xml);

@@ -141,9 +141,6 @@ private:
 
     QVariant wantedSerialNr;
 
-    QString findReleaseNr();
-    QString findCpuInfo();
-
 private slots:
     void setInterfaceComponents();
     void pcbserverConnect();

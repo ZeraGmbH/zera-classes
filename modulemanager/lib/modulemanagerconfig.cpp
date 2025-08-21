@@ -1,6 +1,6 @@
 #include "modulemanagerconfig.h"
 #include <zera-jsonfileloader.h>
-#include <zenuxdevicedetection.h>
+#include <zenuxdeviceinfo.h>
 #include <QDir>
 #include <QJsonArray>
 #include <QFile>
@@ -146,7 +146,7 @@ ModulemanagerConfig::ModulemanagerConfig()
 {
     m_jsonConfig = cJsonFileLoader::loadJsonFile(getConfigFileNameFull());
     if(m_deviceName.isEmpty()) {
-        m_deviceName = ZenuxDeviceDetection::getDeviceNameFromKernelParam();
+        m_deviceName = ZenuxDeviceInfo::getDeviceNameFromKernelParam();
         if(m_deviceName.isEmpty() && isValid()) {
             m_deviceName = m_jsonConfig["deviceName"].toString();
         }
