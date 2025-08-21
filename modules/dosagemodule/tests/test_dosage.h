@@ -9,9 +9,11 @@ class test_dosage : public QObject
     Q_OBJECT
 private slots:
     void initTestCase();
-    void testDosageAllBelowLimits();
-    void testDosageRmsUpperLimits();
-    void testDosagePowUpperLimits();
+    void testDosageMaxAllBelowLimits();
+    void testDosageMaxRmsUpperLimits();
+    void testDosageMaxPowUpperLimits();
+    void testDosageMinPowBelowLimits();
+    void testDosageMinPowUpperLimits();
 };
 
 #endif // TEST_DOSAGE_H
