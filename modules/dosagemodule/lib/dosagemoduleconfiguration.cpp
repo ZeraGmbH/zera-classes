@@ -96,7 +96,7 @@ void cDosageModuleConfiguration::configXMLInfo(QString key)
                     m_pDosageModulConfigData->m_DosageSystemConfigList.replace(cmd, dsc);
                 }
                 else
-                    qWarning("Error DosageModule: cmd is out of range");
+                    qWarning("Error dosagemodule: cmd (%i) is out of range", cmd);
         }
 
         if (!m_bConfigError)        // replaces: m_bConfigError |= !ok;

@@ -12,7 +12,7 @@
         },
         {
             "name" : "dosagemodule",
-            "configFile" : ":/mt310s2-dosagemodule-min_test.xml",
+            "configFile" : ":/mt310s2-dosagemodule-max_test.xml",
             "id": 1600
         }
     ]

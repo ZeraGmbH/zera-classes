@@ -25,9 +25,9 @@ void test_dosage::initTestCase()
     TimerFactoryQtForTest::enableTest();
 }
 
-void test_dosage::testDosageAllBelowLimits()
+void test_dosage::testDosageMaxAllBelowLimits()
 {
-    ModuleManagerTestRunner testRunner(":/session-minimal.json");
+    ModuleManagerTestRunner testRunner(":/session-maximal.json");
     TestDspInterfacePtr dspRmsInterface = testRunner.getDspInterface(rmsEntityId);
     TestDspInterfacePtr dspPowInterface = testRunner.getDspInterface(power1EntityId);
 
@@ -38,17 +38,17 @@ void test_dosage::testDosageAllBelowLimits()
 
     QVector<float> powActValues;
     for(int i = 0; i < MeasPhaseCount; i++)
-        powActValues.append(1);
-    powActValues.append(1);
+        powActValues.append(1.0);
+    powActValues.append(1.0);
     dspPowInterface->fireActValInterrupt(powActValues, 0 /* dummy */);
 
     TimeMachineForTest::getInstance()->processTimers(1000);
     QVERIFY(!testRunner.getVfComponent(dosageEntityId, "ACT_PowerAboveLimit").toBool());
 }
 
-void test_dosage::testDosageRmsUpperLimits()
+void test_dosage::testDosageMaxRmsUpperLimits()
 {
-    ModuleManagerTestRunner testRunner(":/session-minimal.json");
+    ModuleManagerTestRunner testRunner(":/session-maximal.json");
     TestDspInterfacePtr dspRmsInterface = testRunner.getDspInterface(rmsEntityId);
     TestDspInterfacePtr dspPowInterface = testRunner.getDspInterface(power1EntityId);
 
@@ -67,9 +67,9 @@ void test_dosage::testDosageRmsUpperLimits()
     QVERIFY(testRunner.getVfComponent(dosageEntityId, "ACT_PowerAboveLimit").toBool());
 }
 
-void test_dosage::testDosagePowUpperLimits()
+void test_dosage::testDosageMaxPowUpperLimits()
 {
-    ModuleManagerTestRunner testRunner(":/session-minimal.json");
+    ModuleManagerTestRunner testRunner(":/session-maximal.json");
     TestDspInterfacePtr dspRmsInterface = testRunner.getDspInterface(rmsEntityId);
     TestDspInterfacePtr dspPowInterface = testRunner.getDspInterface(power1EntityId);
 
@@ -77,6 +77,36 @@ void test_dosage::testDosagePowUpperLimits()
     for(int i = 0; i < rmsResultCount; i++)
         rmsActValues.append(0.3);
     dspRmsInterface->fireActValInterrupt(rmsActValues, 0 /* dummy */);
+
+    QVector<float> powActValues;
+    for(int i = 0; i < MeasPhaseCount; i++)
+        powActValues.append(4);
+    powActValues.append(3);
+    dspPowInterface->fireActValInterrupt(powActValues, 0 /* dummy */);
+
+    TimeMachineForTest::getInstance()->processTimers(1000);
+    QVERIFY(testRunner.getVfComponent(dosageEntityId, "ACT_PowerAboveLimit").toBool());
+}
+
+void test_dosage::testDosageMinPowBelowLimits()
+{
+    ModuleManagerTestRunner testRunner(":/session-minimal.json");
+    TestDspInterfacePtr dspPowInterface = testRunner.getDspInterface(power1EntityId);
+
+    QVector<float> powActValues;
+    for(int i = 0; i < MeasPhaseCount; i++)
+        powActValues.append(1.0);
+    powActValues.append(1.0);
+    dspPowInterface->fireActValInterrupt(powActValues, 0 /* dummy */);
+
+    TimeMachineForTest::getInstance()->processTimers(1000);
+    QVERIFY(!testRunner.getVfComponent(dosageEntityId, "ACT_PowerAboveLimit").toBool());
+}
+
+void test_dosage::testDosageMinPowUpperLimits()
+{
+    ModuleManagerTestRunner testRunner(":/session-minimal.json");
+    TestDspInterfacePtr dspPowInterface = testRunner.getDspInterface(power1EntityId);
 
     QVector<float> powActValues;
     for(int i = 0; i < MeasPhaseCount; i++)

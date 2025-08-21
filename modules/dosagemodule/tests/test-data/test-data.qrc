@@ -2,6 +2,8 @@
     <qresource prefix="/">
         <file>dumpInitial.json</file>
         <file>session-minimal.json</file>
-        <file>mt310s2-dosagemodule-test.xml</file>
+        <file>session-maximal.json</file>
+        <file>mt310s2-dosagemodule-min_test.xml</file>
+        <file>mt310s2-dosagemodule-max_test.xml</file>
     </qresource>
 </RCC>

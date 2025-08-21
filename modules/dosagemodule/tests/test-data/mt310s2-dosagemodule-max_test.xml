@@ -3,7 +3,7 @@
     <configuration>
         <measure>
             <system>
-                <n>15</n>
+                <n>10</n>
                 <dos1>1070,ACT_PQS1,1.01</dos1>
                 <dos2>1070,ACT_PQS2,2.01</dos2>
                 <dos3>1070,ACT_PQS3,3.01</dos3>
@@ -14,11 +14,6 @@
                 <dos8>1040,ACT_RMSPN4,0.41</dos8>
                 <dos9>1040,ACT_RMSPN5,0.51</dos9>
                 <dos10>1040,ACT_RMSPN6,0.61</dos10>
-                <dos11>1040,ACT_RMSPN7,0.71</dos11>
-                <dos12>1040,ACT_RMSPN8,0.81</dos12>
-                <dos13>1040,ACT_RMSPP1,0.51</dos13>
-                <dos14>1040,ACT_RMSPP2,0.51</dos14>
-                <dos15>1040,ACT_RMSPP3,0.51</dos15>
             </system>
         </measure>
     </configuration>

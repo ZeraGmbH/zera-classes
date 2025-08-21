@@ -70,7 +70,7 @@ void cDosageModuleMeasProgram::setupMeasureProgram()
             m_PowerToAnalyseList.append(dpaTemp);
             }
          else
-            qWarning("ERROR dosagemodule: Entity (%i) or component (%s) is not available", item.m_nEntity, qPrintable(item.m_ComponentName));
+            qWarning("Error dosagemodule: Entity (%i) or component (%s) is not available", item.m_nEntity, qPrintable(item.m_ComponentName));
     }
 }
 
@@ -99,14 +99,11 @@ void cDosageModuleMeasProgram::onActualize()
         tmpVal = m_PowerToAnalyseList[i].m_component->getValue().toFloat();
         if (tmpVal > m_PowerToAnalyseList[i].m_fUpperLimit) {
             exceedFlag = true;
-            qWarning("Entity: %i Component: %s exceeds upper limit", m_PowerToAnalyseList[i].m_nEntity, qPrintable(m_PowerToAnalyseList[i].m_ComponentName));
+            qInfo("Entity: %i Component: %s exceeds upper limit", m_PowerToAnalyseList[i].m_nEntity, qPrintable(m_PowerToAnalyseList[i].m_ComponentName));
             break;
         }
     }
-    if (exceedFlag)
-        m_pPowerDetected->setValue(true);
-    else
-        m_pPowerDetected->setValue(false);
+    m_pPowerDetected->setValue(exceedFlag);
 }
 
 }
