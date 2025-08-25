@@ -94,6 +94,11 @@
         "id": 1500
       },
       {
+        "name" : "dosagemodule",
+        "configFile" : "mt310s2-dosagemodule-EMOB-DC.xml",
+        "id": 1600
+      },
+      {
         "name" : "scpimodule",
         "configFile" : "mt310s2-scpimodule.xml",
         "id": 9999

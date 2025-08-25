@@ -14,6 +14,7 @@ private slots:
     void testDosageMaxPowUpperLimits();
     void testDosageMinPowBelowLimits();
     void testDosageMinPowUpperLimits();
+    void testDosageDcAllBelowLimits();
 };
 
 #endif // TEST_DOSAGE_H

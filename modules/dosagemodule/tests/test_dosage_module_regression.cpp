@@ -7,23 +7,23 @@
 QTEST_MAIN(test_dosage_module_regression)
 
 static int constexpr rmsEntityId = 1040;
-static int constexpr power1EntityId = 1070;
+static int constexpr power1module1EntityId = 1070;
 static int constexpr dosageEntityId = 1600;
 
 void test_dosage_module_regression::minimalSession()
 {
-    ModuleManagerTestRunner testRunner(":/session-minimal.json");
+    ModuleManagerTestRunner testRunner(":/def-session-maximal.json");
     VeinStorage::AbstractEventSystem* veinStorage = testRunner.getVeinStorageSystem();
     QList<int> entityList = veinStorage->getDb()->getEntityList();
     QCOMPARE(entityList.count(), 4);
     QVERIFY(veinStorage->getDb()->hasEntity(rmsEntityId));
-    QVERIFY(veinStorage->getDb()->hasEntity(power1EntityId));
+    QVERIFY(veinStorage->getDb()->hasEntity(power1module1EntityId));
     QVERIFY(veinStorage->getDb()->hasEntity(dosageEntityId));
 }
 
 void test_dosage_module_regression::veinDumpInitial()
 {
-    ModuleManagerTestRunner testRunner(":/session-minimal.json");
+    ModuleManagerTestRunner testRunner(":/def-session-maximal.json");
     VeinStorage::AbstractEventSystem* veinStorage = testRunner.getVeinStorageSystem();
     QByteArray jsonDumped = VeinStorage::DumpJson::dumpToByteArray(veinStorage->getDb(), QList<int>() << dosageEntityId);
     QByteArray jsonExpected = TestLogHelpers::loadFile(":/dumpInitial.json");
