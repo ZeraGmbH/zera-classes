@@ -4,11 +4,10 @@
         <measure>
             <system>
                 <n>3</n>
-                <dos1>1060,ACT_PDC8,0.1</dos1>
-                <dos2>1073,ACT_PQS1,5.0</dos2>
-                <dos3>1073,ACT_PQS4,5.0</dos3>
+                <dos1>1060,ACT_DC8,2.0</dos1>
+                <dos2>1073,ACT_PQS1,1.0</dos2>
+                <dos3>1073,ACT_PQS4,1.0</dos3>
             </system>
         </measure>
     </configuration>
 </dosagemodconfpar>
-
