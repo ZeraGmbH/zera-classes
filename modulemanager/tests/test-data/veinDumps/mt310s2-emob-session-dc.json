@@ -22,6 +22,7 @@
             1300,
             1400,
             1500,
+            1600,
             9999
         ],
         "EntityName": "_System",
@@ -4937,6 +4938,46 @@
         },
         "PAR_GuiDialogFinished": false,
         "PAR_ReloadTrustList": false
+    },
+    "1600": {
+        "ACT_PowerAboveLimit": null,
+        "EntityName": "DosageModule1",
+        "INF_ModuleInterface": {
+            "ComponentInfo": {
+                "ACT_PowerAboveLimit": {
+                    "Description": "Power is higher than configured limit",
+                    "Validation": {
+                        "Data": [
+                            0,
+                            1
+                        ],
+                        "Type": "BOOL"
+                    }
+                },
+                "EntityName": {
+                    "Description": "Module's name"
+                },
+                "INF_ModuleInterface": {
+                    "Description": "Module's interface details"
+                }
+            },
+            "ModuleInfo": {
+                "Description": "This module provides electrical values to control a dosage",
+                "Name": "DosageModule1"
+            },
+            "SCPIInfo": {
+                "Cmd": [
+                    [
+                        "STATUS",
+                        "POWER",
+                        "2",
+                        "ACT_ExceedsLimit",
+                        "0"
+                    ]
+                ],
+                "Name": "DOS1"
+            }
+        }
     },
     "2": {
         "DatabaseFile": "/tmp/test.db",

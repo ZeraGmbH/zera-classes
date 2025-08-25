@@ -119,7 +119,6 @@ void test_dosage::testDosageMinPowUpperLimits()
     QVERIFY(testRunner.getVfComponent(dosageEntityId, "ACT_PowerAboveLimit").toBool());
 }
 
-
 void test_dosage::testDosageDcAllBelowLimits()
 {
     ModuleManagerTestRunner testRunner(":/dc-session.json");
@@ -135,7 +134,6 @@ void test_dosage::testDosageDcAllBelowLimits()
     dspValues.setValue(5, 0, 2, 0);
     dspValues.setValue(6, 0, 2, 0);
     dspValues.setValue(7, 0, 1.9, 0);
-
     dspFftInterface->fireActValInterrupt(dspValues.getDspValues(), 0 /* dummy */);
 
     QVector<float> powActValues;
