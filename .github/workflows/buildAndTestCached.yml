@@ -108,5 +108,6 @@ jobs:
       - name: Unittest
         run: |
           cd "$HOME/targetbuild"
+          export QT_QPA_PLATFORM=offscreen
           ctest -V
 
