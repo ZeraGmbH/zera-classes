@@ -7040,7 +7040,7 @@
         "INF_ModuleInterface": {
             "ComponentInfo": {
                 "ACT_PowerAboveLimit": {
-                    "Description": "Power is higher than configured limit",
+                    "Description": "Energy monitoring (if > configured limit: true)",
                     "Validation": {
                         "Data": [
                             0,
@@ -7066,7 +7066,7 @@
                         "STATUS",
                         "POWER",
                         "2",
-                        "ACT_ExceedsLimit",
+                        "ACT_PowerAboveLimit",
                         "0"
                     ]
                 ],
