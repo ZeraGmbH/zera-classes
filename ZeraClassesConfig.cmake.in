@@ -1,6 +1,6 @@
 include(CMakeFindDependencyMacro)
 
-find_dependency(Qt5 COMPONENTS Core Network Qml Test CONFIG REQUIRED)
+find_dependency(Qt5 COMPONENTS Core Network Gui Test CONFIG REQUIRED)
 find_dependency(GTest REQUIRED)
 find_dependency(ZenuxCore REQUIRED)
 find_dependency(ZeraMicroController REQUIRED)
@@ -12,5 +12,7 @@ find_dependency(zera-json-params REQUIRED)
 find_dependency(SCPI REQUIRED)
 find_dependency(serialportasyncblock REQUIRED)
 find_dependency(ZenuxServices REQUIRED)
+find_dependency(ZenuxLegacyComponents REQUIRED)
+find_dependency(BlePlayground REQUIRED)
 
 include("${CMAKE_CURRENT_LIST_DIR}/ZeraClassesTargets.cmake")
