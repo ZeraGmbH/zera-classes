@@ -50,10 +50,10 @@ void cDosageModuleMeasProgram::generateVeinInterface()
 
     m_pPowerDetected = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
                                                   key = QString("ACT_PowerAboveLimit"),
-                                                  QString("Power is higher than configured limit"),
+                                                  QString("Energy monitoring (if > configured limit: true)"),
                                                   QVariant(qQNaN()));
     m_pPowerDetected->setValidator(new cBoolValidator());
-    m_pPowerDetected->setScpiInfo("STATUS", "POWER", SCPI::isQuery, "ACT_ExceedsLimit");
+    m_pPowerDetected->setScpiInfo("STATUS", "POWER", SCPI::isQuery, m_pPowerDetected->getName());
     m_pModule->m_veinModuleParameterMap[key] = m_pPowerDetected; // and for the modules interface
 }
 
