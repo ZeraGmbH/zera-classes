@@ -2,6 +2,7 @@
 Description=Zera Module Manager
 
 [Service]
+Environment=QT_QPA_PLATFORM=offscreen
 ExecStart=/usr/bin/zera-modulemanager
 Type=simple
 User=zera-services
