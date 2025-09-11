@@ -66,7 +66,7 @@ jobs:
       # * mandatory
       # * zera-metaproject's generator workflow name must be set
       - name: Download zera-metaproject's install artifact
-        uses: dawidd6/action-download-artifact@v3
+        uses: dawidd6/action-download-artifact@v6
         with:
           repo: ZeraGmbH/zera-metaproject
           name: install-artifact
