@@ -21,7 +21,7 @@ jobs:
 
       # Prepare source code for incremental build
       - name: Download source artifact last build
-        uses: dawidd6/action-download-artifact@v3
+        uses: dawidd6/action-download-artifact@v6
         with:
           workflow: recreateBuildCaches.yml
           name: source-cache-gcc
@@ -45,7 +45,7 @@ jobs:
 
       # Prepare last build files for incremental build
       - name: Download build artifact
-        uses: dawidd6/action-download-artifact@v3
+        uses: dawidd6/action-download-artifact@v6
         with:
           workflow: recreateBuildCaches.yml
           name: build-cache-gcc
