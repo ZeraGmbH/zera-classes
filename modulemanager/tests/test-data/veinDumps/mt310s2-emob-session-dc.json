@@ -4940,7 +4940,7 @@
         "PAR_ReloadTrustList": false
     },
     "1600": {
-        "ACT_PowerAboveLimit": null,
+        "ACT_PowerAboveLimit": false,
         "EntityName": "DosageModule1",
         "INF_ModuleInterface": {
             "ComponentInfo": {

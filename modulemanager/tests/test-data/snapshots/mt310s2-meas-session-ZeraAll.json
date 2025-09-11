@@ -511,7 +511,7 @@
         "PAR_MacAddress": "00:00:00:00:00:00"
     },
     "1600": {
-        "ACT_PowerAboveLimit": ""
+        "ACT_PowerAboveLimit": 0
     },
     "Contentsets": [
         "ZeraActualValues",
