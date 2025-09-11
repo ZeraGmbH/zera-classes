@@ -99,7 +99,7 @@ void cDosageModuleMeasProgram::onActualize()
         tmpVal = m_PowerToAnalyseList[i].m_component->getValue().toFloat();
         if (tmpVal > m_PowerToAnalyseList[i].m_fUpperLimit) {
             exceedFlag = true;
-            qInfo("Entity: %i Component: %s exceeds upper limit", m_PowerToAnalyseList[i].m_nEntity, qPrintable(m_PowerToAnalyseList[i].m_ComponentName));
+            //qInfo("Entity: %i Component: %s exceeds upper limit", m_PowerToAnalyseList[i].m_nEntity, qPrintable(m_PowerToAnalyseList[i].m_ComponentName));
             break;
         }
     }
