@@ -147,12 +147,10 @@ int main(int argc, char *argv[])
     QString demoDeviceName = getDemoDeviceName(argc, argv);
     bool demoMode = !demoDeviceName.isEmpty();
 
+    app = std::make_unique<QGuiApplication>(argc, argv);
     if(demoMode) {
-        app = std::make_unique<QGuiApplication>(argc, argv);
         ModulemanagerConfig::setDemoDevice(demoDeviceName);
     }
-    else
-        app = std::make_unique<QCoreApplication>(argc, argv);
 
     ModulemanagerConfig* mmConfig = ModulemanagerConfig::getInstance();
     QString configFileName = mmConfig->getConfigFileNameFull();
