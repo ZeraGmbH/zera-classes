@@ -29,7 +29,8 @@ void test_modman_regression_all_sessions::initTestCase()
 void test_modman_regression_all_sessions::allSessionsVeinDumps_data()
 {
     QTest::addColumn<QString>("sessionFileName");
-    for (const QString &sessionFileName: m_veinDumps.keys())
+    const QStringList sessionFileNames = m_veinDumps.keys();
+    for (const QString &sessionFileName : sessionFileNames)
         QTest::newRow(sessionFileName.toLatin1()) << sessionFileName;
 }
 
@@ -68,7 +69,7 @@ void test_modman_regression_all_sessions::testGenerateScpiDocs_data()
                                               sessionMapJsonPath);
 
     int adjustmentHtmls = 2;
-    int totalHtmlFiles = m_veinDumps.keys().count() + adjustmentHtmls;
+    int totalHtmlFiles = m_veinDumps.count() + adjustmentHtmls;
     QDir htmlDir(htmlOutPath);
     htmlDir.setFilter(QDir::Files);
     QCOMPARE(htmlDir.count(), totalHtmlFiles);
@@ -86,7 +87,7 @@ void test_modman_regression_all_sessions::testGenerateScpiDocs()
 
 void test_modman_regression_all_sessions::testGenerateSnapshots_data()
 {
-    QStringList expectedSnapshotsList = QDir(":/snapshots/").entryList(QStringList({"*.json"}));
+    const QStringList expectedSnapshotsList = QDir(":/snapshots/").entryList(QStringList({"*.json"}));
     QTest::addColumn<QString>("snapshotName");
     for (const QString &snapshot: expectedSnapshotsList)
         QTest::newRow(snapshot.toLatin1()) << snapshot;
@@ -150,7 +151,8 @@ bool test_modman_regression_all_sessions::checkUniqueEntityIdNames(const QString
     QMap<int, EntityNameWithOccurance> entityIdNamesInSession;
     QMap<int, QList<EntityNameWithOccurance>> entityIdNamesDouble;
 
-    for(const QString &sessionFileName: m_veinDumps.keys()) {
+    const QStringList sessionFileNames = m_veinDumps.keys();
+    for(const QString &sessionFileName : sessionFileNames) {
         if(sessionFileName.contains(device)) {
             QJsonObject jsonDumped = QJsonDocument::fromJson(m_veinDumps.value(sessionFileName)).object();
             for(auto iter=jsonDumped.constBegin(); iter!=jsonDumped.constEnd(); ++iter) {
