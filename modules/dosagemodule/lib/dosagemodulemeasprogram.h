@@ -14,19 +14,9 @@
 namespace DOSAGEMODULE
 {
 
-struct name
-{
-    name() {}
-};
-
 struct dosagepoweranalyser : dosagesystemconfiguration
 {
     VeinStorage::StorageComponentPtr m_component;
-};
-
-
-enum dosagemoduleCmds
-{
 };
 
 class cDosageModule;
@@ -46,10 +36,7 @@ public slots:
 private:
     cDosageModuleConfigData *getConfData();
 
-    //void newValueDetected(QVariant value, QString component, double upperLimit);
-
     cDosageModule *m_pModule;
-    //QList<VfModuleActvalue *> m_veinActValueList; // the list of actual values we work on
 
     VfModuleParameter* m_pPowerDetected;
 
