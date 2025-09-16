@@ -969,23 +969,9 @@
                     ],
                     [
                         "MEASURE",
-                        "REF1",
-                        "8",
-                        "ACT_POL_DFTPN1",
-                        "0"
-                    ],
-                    [
-                        "MEASURE",
                         "REF2",
                         "8",
                         "ACT_DFTPN2",
-                        "0"
-                    ],
-                    [
-                        "MEASURE",
-                        "REF2",
-                        "8",
-                        "ACT_POL_DFTPN2",
                         "0"
                     ],
                     [
@@ -997,23 +983,9 @@
                     ],
                     [
                         "MEASURE",
-                        "REF3",
-                        "8",
-                        "ACT_POL_DFTPN3",
-                        "0"
-                    ],
-                    [
-                        "MEASURE",
                         "REF4",
                         "8",
                         "ACT_DFTPN4",
-                        "0"
-                    ],
-                    [
-                        "MEASURE",
-                        "REF4",
-                        "8",
-                        "ACT_POL_DFTPN4",
                         "0"
                     ],
                     [
@@ -1025,23 +997,9 @@
                     ],
                     [
                         "MEASURE",
-                        "REF5",
-                        "8",
-                        "ACT_POL_DFTPN5",
-                        "0"
-                    ],
-                    [
-                        "MEASURE",
                         "REF6",
                         "8",
                         "ACT_DFTPN6",
-                        "0"
-                    ],
-                    [
-                        "MEASURE",
-                        "REF6",
-                        "8",
-                        "ACT_POL_DFTPN6",
                         "0"
                     ],
                     [

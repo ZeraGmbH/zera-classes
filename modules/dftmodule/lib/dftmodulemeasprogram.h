@@ -95,6 +95,7 @@ private:
     void setSCPIMeasInfo();
     void setRefChannelValidator();
     void initRFieldMeasurement();
+    bool isConfiguredForDcRef();
 
     cMovingwindowFilter m_movingwindowFilter;
 

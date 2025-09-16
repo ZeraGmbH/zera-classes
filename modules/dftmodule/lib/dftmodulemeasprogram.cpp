@@ -393,9 +393,11 @@ void cDftModuleMeasProgram::setSCPIMeasInfo()
         QString channelName = m_veinPolarValue.at(i)->getChannelName();
         m_veinActValueList.at(i)->setScpiInfo("MEASURE", channelName, SCPI::isCmdwP, m_veinActValueList.at(i)->getName());
 
-        // Try hard to find unique names with four letters...
-        QString polarChannelName = channelName.replace("L", "").replace("-", "").replace("AUX", "4");
-        m_veinPolarValue.at(i)->setScpiInfo("MEASURE", polarChannelName, SCPI::isCmdwP, m_veinPolarValue.at(i)->getName());
+        if (!isConfiguredForDcRef()) {
+            // Try hard to find unique names with four letters...
+            QString polarChannelName = channelName.replace("L", "").replace("-", "").replace("AUX", "4");
+            m_veinPolarValue.at(i)->setScpiInfo("MEASURE", polarChannelName, SCPI::isCmdwP, m_veinPolarValue.at(i)->getName());
+        }
     }
     m_pRFieldActualValue->setScpiInfo("MEASURE", "RFIELD", SCPI::isCmdwP, m_pRFieldActualValue->getName());
 }
@@ -423,6 +425,11 @@ void cDftModuleMeasProgram::initRFieldMeasurement()
     QString s;
     for (int i = 0; i < getConfData()->m_rfieldChannelList.length(); i++)
         rfieldActvalueIndexList.append(getConfData()->m_valueChannelList.indexOf(s = getConfData()->m_rfieldChannelList.at(i)));
+}
+
+bool cDftModuleMeasProgram::isConfiguredForDcRef()
+{
+    return getConfData()->m_nDftOrder == 0;
 }
 
 
@@ -639,7 +646,7 @@ void cDftModuleMeasProgram::dataReadDSP()
         // dft(0) is a speciality. sin and cos in dsp are set so that we get amplitude rather than energy.
         // so dc is multiplied  by sqrt(2) * sqrt(2) = 2
         // used in COM5003 ref session
-        if (getConfData()->m_nDftOrder == 0) {
+        if (isConfiguredForDcRef()) {
             for (int i = 0; i < m_veinActValueList.count(); i++) {
                 double re = m_ModuleActualValues[i*2] * 0.5;
                 m_ModuleActualValues.replace(i*2, re);
