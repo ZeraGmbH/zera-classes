@@ -32,11 +32,11 @@ target_link_libraries(zera-modulemanager-lib
     Zera::ModmanBase
     Zera::service-interfaces
     Zera::zenux-device-info
+    Zera::zera-json-params
     VeinMeta::VfLogger
     VeinMeta::VfExport
     VeinMeta::VfFiles
     module-qt-plugin-interface
-    zera-json-params
     module-service-interfaces
     module-service-interfaces-demolib
     )
