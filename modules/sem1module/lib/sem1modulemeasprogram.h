@@ -46,7 +46,8 @@ enum sem1moduleCmds
     resetintregister,
     readvicount,
     readtcount,
-    activatepushbutton
+    activatepushbutton,
+    reademoblockstate
 };
 
 class cSem1Module;
@@ -150,6 +151,8 @@ private:
     static void setDateTime(QDateTime var, VfModuleParameter* veinParam);
     void calculateMeasTime();
 
+    qint8 getEmobLockState();
+
     cSem1Module* m_pModule; // the module we live in
     Zera::cSECInterfacePtr m_secInterface;
     Zera::PcbInterfacePtr m_pcbInterface;
@@ -244,6 +247,7 @@ private:
     VfModuleParameter* m_pMeasEndTime;
     VfModuleParameter* m_pMeasDurationMs;
     VfModuleParameter* m_pPressPushButton;
+    VfModuleParameter* m_pEmobLockState;
     VfModuleParameter* m_pClientNotifierPar;
     ClientActiveComponent m_ClientActiveNotifier;
 
@@ -263,6 +267,7 @@ private:
     QDateTime m_measStartDateTime;
     QDateTime m_measEndDateTime;
     int m_measDuration;
+    qint8 m_emobLockState;
 
     // Some decisions - we have enough of configration params around
     static constexpr quint32 m_nActualizeIntervallLowFreq = 1000;
