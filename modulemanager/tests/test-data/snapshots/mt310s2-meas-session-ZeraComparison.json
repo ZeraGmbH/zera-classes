@@ -271,6 +271,7 @@
         "PAR_SerialNr": "Unknown"
     },
     "1200": {
+        "ACT_EmobLockState": 0,
         "ACT_EndTime": "",
         "ACT_Energy": 0,
         "ACT_MeasTime": 0,
