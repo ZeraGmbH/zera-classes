@@ -608,9 +608,11 @@ void cSem1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, Q
                 break;
             case reademoblockstate:
                 if (reply == ack)
-                    m_emobLockState = answer.toInt();
+                    qWarning("reply == ack");
+                    m_pEmobLockState->setValue(answer.toInt());
                 else
-                    m_emobLockState = emobstate_error;
+                    qWarning("reply != ack");
+                    m_pEmobLockState->setValue(emobstate_error);
                 break;
             }
         }
@@ -768,15 +770,6 @@ void cSem1ModuleMeasProgram::calculateMeasTime()
     m_measDuration = m_measStartDateTime.msecsTo(m_measEndDateTime);
     m_pMeasDurationMs->setValue(m_measDuration);
 }
-
-qint8 cSem1ModuleMeasProgram::getEmobLockState()
-{
-    m_emobLockState = 42;
-    // hier die i2c abfrage???
-
-    return m_emobLockState;
-}
-
 
 void cSem1ModuleMeasProgram::resourceManagerConnect()
 {
