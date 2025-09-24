@@ -178,6 +178,7 @@ cSem1ModuleMeasProgram::cSem1ModuleMeasProgram(cSem1Module* module, std::shared_
     mEnergyUnitFactorHash["VAh"] = 0.001;
 
     m_ActualizeTimer = TimerFactoryQt::createPeriodic(m_nActualizeIntervallLowFreq);
+    m_RequestTimer = TimerFactoryQt::createPeriodic(m_nRequestTimer);
 
     m_resourceTypeList.addTypesFromConfig(getConfData()->m_refInpList);
 }
@@ -605,6 +606,12 @@ void cSem1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, Q
                 if (reply != ack)
                     notifyError(pushbuttonErrMsg);
                 break;
+            case reademoblockstate:
+                if (reply == ack)
+                    m_emobLockState = answer.toInt();
+                else
+                    m_emobLockState = emobstate_error;
+                break;
             }
         }
     }
@@ -934,6 +941,9 @@ void cSem1ModuleMeasProgram::activationDone()
     setValidators();
     setUnits();
 
+    connect(m_RequestTimer.get(), &TimerTemplateQt::sigExpired, this, &cSem1ModuleMeasProgram::onEmobRequest);
+    m_RequestTimer->start();
+
     m_bActive = true;
     emit activated();
 }
@@ -1251,6 +1261,12 @@ void cSem1ModuleMeasProgram::Actualize()
         m_MsgNrCmdList[m_secInterface->readRegister(m_slaveErrCalcName, ECALCREG::MTCNTact)] = actualizeenergy;
         m_MsgNrCmdList[m_secInterface->readRegister(m_slave2ErrCalcName, ECALCREG::MTCNTact)] = actualizepower;
     }
+}
+
+void cSem1ModuleMeasProgram::onEmobRequest()
+{
+    qWarning("Slot: onEmobRequest()");
+    m_MsgNrCmdList[m_pcbInterface->readEmobConnectionState()] = reademoblockstate;
 }
 
 void cSem1ModuleMeasProgram::clientActivationChanged(bool bActive)
