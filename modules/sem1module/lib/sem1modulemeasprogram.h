@@ -286,7 +286,6 @@ private:
     QDateTime m_measStartDateTime;
     QDateTime m_measEndDateTime;
     int m_measDuration;
-    qint16 m_emobLockState;
 
     // Some decisions - we have enough of configration params around
     static constexpr quint32 m_nActualizeIntervallLowFreq = 1000;
