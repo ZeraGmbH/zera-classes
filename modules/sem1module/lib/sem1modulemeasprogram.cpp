@@ -607,12 +607,14 @@ void cSem1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, Q
                     notifyError(pushbuttonErrMsg);
                 break;
             case reademoblockstate:
-                if (reply == ack)
+                if (reply == ack) {
                     qWarning("reply == ack");
                     m_pEmobLockState->setValue(answer.toInt());
-                else
+                }
+                else {
                     qWarning("reply != ack");
                     m_pEmobLockState->setValue(emobstate_error);
+                }
                 break;
             }
         }
