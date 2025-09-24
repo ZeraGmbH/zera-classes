@@ -50,6 +50,19 @@ enum sem1moduleCmds
     reademoblockstate
 };
 
+
+//CPU5975/EMOB_CTRL.h
+enum reademoblockstate
+{
+    emobstate_unknown,
+    emobstate_open,
+    emobstate_locking,
+    emobstate_locked,
+    emobstate_error
+};
+
+
+
 class cSem1Module;
 
 class cSem1ModuleMeasProgram: public cBaseMeasProgram
@@ -121,6 +134,8 @@ private slots:
     void newUpperLimit(QVariant limit);
     void newLowerLimit(QVariant limit);
     void newPushButton(QVariant pushbutton);
+
+    void onEmobRequest();
 
     void Actualize();
     void clientActivationChanged(bool bActive);
@@ -251,6 +266,10 @@ private:
     VfModuleParameter* m_pClientNotifierPar;
     ClientActiveComponent m_ClientActiveNotifier;
 
+    // vars dealing with emob lock state request
+    TimerTemplateQtPtr m_RequestTimer;
+    static constexpr quint32 m_nRequestTimer = 1000;
+
     // vars dealing with error measurement
     TimerTemplateQtPtr m_ActualizeTimer; // after timed out we actualize progressvalue
     double m_fResult = 0.0; // error value in %
@@ -267,7 +286,7 @@ private:
     QDateTime m_measStartDateTime;
     QDateTime m_measEndDateTime;
     int m_measDuration;
-    qint8 m_emobLockState;
+    qint16 m_emobLockState;
 
     // Some decisions - we have enough of configration params around
     static constexpr quint32 m_nActualizeIntervallLowFreq = 1000;
