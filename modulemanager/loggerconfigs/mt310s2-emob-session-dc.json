@@ -25,34 +25,6 @@
             "Comment": "Power1ModuleDC"
         }
     ],
-    "ZeraHarmonics" : [
-        {
-            "EntityId": 1020,
-            "Comment": "RangeModule"
-        },
-        {
-            "EntityId": 1110,
-            "Comment": "THDNModule1"
-        },
-        {
-            "EntityId": 1111,
-            "Comment": "THDNModule2"
-        },
-        {
-            "EntityId": 1060,
-            "Comment": "FFTModule"
-        }
-    ],
-    "ZeraCurves" : [
-        {
-            "EntityId": 1020,
-            "Comment": "RangeModule"
-        },
-        {
-            "EntityId": 1120,
-            "Comment": "OSCIModule"
-        }
-    ],
     "ZeraComparison": [
         {
             "EntityId": 1020,

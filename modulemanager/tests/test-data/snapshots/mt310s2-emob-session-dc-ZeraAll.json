@@ -345,8 +345,6 @@
     "Contentsets": [
         "ZeraActualValues",
         "ZeraComparison",
-        "ZeraCurves",
-        "ZeraHarmonics",
         "ZeraAll"
     ]
 }
