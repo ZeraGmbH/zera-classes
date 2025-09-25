@@ -10,10 +10,8 @@ DevicesExportGenerator::DevicesExportGenerator(LxdmSessionChangeParam lxdmParam)
 
 void DevicesExportGenerator::exportAll(QString xmlDir, QString snapshotDir)
 {
-    m_xmlDir = xmlDir;
-    QDir().mkdir(m_xmlDir);
-    m_snapshotDir = snapshotDir;
-    QDir().mkdir(m_snapshotDir);
+    prepareDirectory(xmlDir);
+    prepareDirectory(snapshotDir);
 
     SessionExportGenerator sessionExportGenerator(m_lxdmParam);
     QStringList devices = {"mt310s2", "com5003"};
@@ -21,9 +19,9 @@ void DevicesExportGenerator::exportAll(QString xmlDir, QString snapshotDir)
         sessionExportGenerator.setDevice(device);
         for(const QString &session: sessionExportGenerator.getAvailableSessions()) {
             sessionExportGenerator.changeSession(session);
-            sessionExportGenerator.generateDevIfaceXml(m_xmlDir);
+            sessionExportGenerator.generateDevIfaceXml(xmlDir);
             m_veinDumps[session] = sessionExportGenerator.getVeinDump();
-            sessionExportGenerator.generateSnapshotJsons(m_snapshotDir);
+            sessionExportGenerator.generateSnapshotJsons(snapshotDir);
         }
         m_instanceCounts.append(sessionExportGenerator.getInstanceCountsOnModulesDestroyed());
     }
@@ -37,4 +35,12 @@ VeinDumps DevicesExportGenerator::getVeinDumps()
 QList<TestModuleManager::TModuleInstances> DevicesExportGenerator::getInstanceCountsOnModulesDestroyed()
 {
     return m_instanceCounts;
+}
+
+void DevicesExportGenerator::prepareDirectory(QString path)
+{
+    QDir dir(path);
+    if(dir.exists())
+        dir.removeRecursively(); //Removes the directory, including all its contents
+    dir.mkpath(path);
 }

@@ -16,9 +16,8 @@ public:
     VeinDumps getVeinDumps();
     QList<TestModuleManager::TModuleInstances> getInstanceCountsOnModulesDestroyed();
 private:
+    void prepareDirectory(QString path);
     LxdmSessionChangeParam m_lxdmParam;
-    QString m_xmlDir;
-    QString m_snapshotDir;
     VeinDumps m_veinDumps;
     QList<TestModuleManager::TModuleInstances> m_instanceCounts;
 };
