@@ -30,8 +30,6 @@ public:
     cIEEE4882* getIEEE4882();
     QUuid getClientId();
     void addSCPIClientInfo(QString key, SCPIMODULE::SCPIClientInfoPtr info);
-    void setComponentName(QString componentName);
-    QString getComponentName();
 
     QHash<cSCPIMeasureDelegate*, cSCPIMeasureDelegatePtr> m_SCPIMeasureDelegateHash;
 
@@ -63,7 +61,6 @@ private:
     cSCPIModuleConfigData& m_ConfigData;
 
     QList<cSCPIStatus*> m_SCPIStatusList;
-    QString m_componentName;
 
     QHash<cSCPIMeasure*, cSCPIMeasure*> m_SCPIMeasureTranslationHash;
     QUuid m_clientId;

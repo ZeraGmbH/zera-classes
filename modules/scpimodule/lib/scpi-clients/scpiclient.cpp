@@ -108,16 +108,6 @@ void cSCPIClient::addSCPIClientInfo(QString key, SCPIClientInfoPtr info)
     m_scpiClientInfoHash.insert(key, info);
 }
 
-void cSCPIClient::setComponentName(QString componentName)
-{
-    m_componentName = componentName;
-}
-
-QString cSCPIClient::getComponentName()
-{
-    return m_componentName;
-}
-
 void cSCPIClient::removeSCPIClientInfo(QString key)
 {
     m_scpiClientInfoHash.remove(key);
