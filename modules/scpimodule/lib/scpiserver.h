@@ -31,9 +31,10 @@ public:
     cModuleInterface* getModuleInterface();
     void appendClient(cSCPIClient *client);
     cSCPIInterface* getScpiInterface();
+public slots:
+    void deleteSCPIClient(SCPIMODULE::cSCPIClient *client);
 private slots:
     void addSCPIClient();
-    void deleteSCPIClient(cSCPIClient *client);
     void TCPError(QAbstractSocket::SocketError);
 
     void setupTCPServer();
