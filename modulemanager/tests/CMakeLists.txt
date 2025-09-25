@@ -40,6 +40,7 @@ SETUP_QTESTS_MODULEMANAGER(
     test_modman_regression_all_sessions_scpi
     test_modman_with_vf_logger
     test_plugin_load
+    test_scpi_penetrate
     test_sessionnamesmappingjson
     )
 
@@ -54,6 +55,11 @@ target_sources(test_modman_regression_all_sessions
 )
 
 target_sources(test_modman_regression_all_sessions_scpi
+  PRIVATE
+    test-data/test-data.qrc
+)
+
+target_sources(test_scpi_penetrate
   PRIVATE
     test-data/test-data.qrc
 )
