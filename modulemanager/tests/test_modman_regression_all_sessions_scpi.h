@@ -20,6 +20,7 @@ private slots:
     void testScpi();
 
 private:
+    QStringList getAvailableSessions();
     static QString deduceDevice(const QString &sessionFileName);
     static QString formatForDump(const QString &scpiResponse);
     static QString genFilePath(QString sessionFile, const QString &scpiCmd);

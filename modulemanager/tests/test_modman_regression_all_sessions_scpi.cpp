@@ -75,8 +75,7 @@ void test_modman_regression_all_sessions_scpi::testScpi_data()
                                                "mt310s2-meas-session-dev.json" <<
                                                "mt310s2-ced-session.json";
 
-    const QString sessionPath = m_modMan->getInstalledSessionPath();
-    const QStringList sessionList = QDir(sessionPath).entryList(QStringList({"*.json"}));
+    const QStringList sessionList = getAvailableSessions();
     QTest::addColumn<QString>("sessionFile");
     QTest::addColumn<QString>("scpiCmd");
     for (const QString &session : sessionList) {
@@ -104,6 +103,12 @@ void test_modman_regression_all_sessions_scpi::testScpi()
     qInfo("File with expected: %s", qPrintable(expectedFilePath));
     QByteArray expected = TestLogHelpers::loadFile(expectedFilePath);
     QVERIFY(TestLogHelpers::compareAndLogOnDiff(expected, dumped));
+}
+
+QStringList test_modman_regression_all_sessions_scpi::getAvailableSessions()
+{
+    const QString sessionPath = m_modMan->getInstalledSessionPath();
+    return QDir(sessionPath).entryList(QStringList({"*.json"}));
 }
 
 QString test_modman_regression_all_sessions_scpi::deduceDevice(const QString &sessionFileName)
