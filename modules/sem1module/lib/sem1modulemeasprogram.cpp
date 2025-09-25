@@ -607,14 +607,10 @@ void cSem1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, Q
                     notifyError(pushbuttonErrMsg);
                 break;
             case reademoblockstate:
-                if (reply == ack) {
-                    qWarning("reply == ack");
+                if (reply == ack)
                     m_pEmobLockState->setValue(answer.toInt());
-                }
-                else {
-                    qWarning("reply != ack");
+                else
                     m_pEmobLockState->setValue(emobstate_error);
-                }
                 break;
             }
         }
@@ -1260,7 +1256,6 @@ void cSem1ModuleMeasProgram::Actualize()
 
 void cSem1ModuleMeasProgram::onEmobRequest()
 {
-    qWarning("Slot: onEmobRequest()");
     m_MsgNrCmdList[m_pcbInterface->readEmobConnectionState()] = reademoblockstate;
 }
 

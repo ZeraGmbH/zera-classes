@@ -268,7 +268,7 @@ private:
 
     // vars dealing with emob lock state request
     TimerTemplateQtPtr m_RequestTimer;
-    static constexpr quint32 m_nRequestTimer = 1000;
+    static constexpr quint32 m_nRequestTimer = 2500;
 
     // vars dealing with error measurement
     TimerTemplateQtPtr m_ActualizeTimer; // after timed out we actualize progressvalue
