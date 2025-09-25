@@ -1,7 +1,6 @@
 <RCC>
     <qresource prefix="/">
         <file>contentsets/session-minimal-rms.json</file>
-
         <file>scpiDumps/measure/com5003-ced-session</file>
         <file>scpiDumps/measure/com5003-meas-session</file>
         <file>scpiDumps/measure/com5003-perphase-session</file>
@@ -10,7 +9,6 @@
         <file>scpiDumps/measure/mt310s2-emob-session-ac</file>
         <file>scpiDumps/measure/mt310s2-emob-session-dc</file>
         <file>scpiDumps/measure/mt310s2-meas-session</file>
-
         <file>scpiDumps/other/com5003-ced-session</file>
         <file>scpiDumps/other/com5003-meas-session</file>
         <file>scpiDumps/other/com5003-perphase-session</file>
@@ -19,63 +17,48 @@
         <file>scpiDumps/other/mt310s2-emob-session-ac</file>
         <file>scpiDumps/other/mt310s2-emob-session-dc</file>
         <file>scpiDumps/other/mt310s2-meas-session</file>
-
         <file>sessions/session-minimal-rms.json</file>
         <file>sessions/session-problematic-range-0.json</file>
         <file>sessions/session-problematic-range-1.json</file>
         <file>sessions/session-problematic-sample-0.json</file>
         <file>sessions/session-problematic-sample-1.json</file>
-
         <file>veinDumps/com5003-ced-session.json</file>
         <file>veinDumps/com5003-meas-session.json</file>
         <file>veinDumps/com5003-perphase-session.json</file>
         <file>veinDumps/com5003-ref-session.json</file>
-
         <file>veinDumps/mt310s2-dc-session.json</file>
         <file>veinDumps/mt310s2-emob-session-ac.json</file>
         <file>veinDumps/mt310s2-emob-session-dc.json</file>
         <file>veinDumps/mt310s2-meas-session.json</file>
-
         <file>snapshots/com5003-perphase-session-ZeraAll.json</file>
         <file>snapshots/com5003-perphase-session-ZeraHarmonics.json</file>
         <file>snapshots/com5003-perphase-session-ZeraCurves.json</file>
         <file>snapshots/com5003-perphase-session-ZeraComparison.json</file>
         <file>snapshots/com5003-perphase-session-ZeraActualValues.json</file>
-
         <file>snapshots/com5003-ref-session-ZeraAll.json</file>
         <file>snapshots/com5003-ref-session-ZeraQuartzReference.json</file>
         <file>snapshots/com5003-ref-session-ZeraDCReference.json</file>
-
         <file>snapshots/com5003-ced-session-ZeraAll.json</file>
         <file>snapshots/com5003-ced-session-ZeraHarmonics.json</file>
         <file>snapshots/com5003-ced-session-ZeraCurves.json</file>
         <file>snapshots/com5003-ced-session-ZeraComparison.json</file>
         <file>snapshots/com5003-ced-session-ZeraActualValues.json</file>
-
         <file>snapshots/com5003-meas-session-ZeraAll.json</file>
         <file>snapshots/com5003-meas-session-ZeraHarmonics.json</file>
         <file>snapshots/com5003-meas-session-ZeraCurves.json</file>
         <file>snapshots/com5003-meas-session-ZeraComparison.json</file>
         <file>snapshots/com5003-meas-session-ZeraActualValues.json</file>
-
         <file>snapshots/mt310s2-dc-session-ZeraAll.json</file>
-        <file>snapshots/mt310s2-dc-session-ZeraHarmonics.json</file>
-        <file>snapshots/mt310s2-dc-session-ZeraCurves.json</file>
         <file>snapshots/mt310s2-dc-session-ZeraComparison.json</file>
         <file>snapshots/mt310s2-dc-session-ZeraActualValues.json</file>
-
         <file>snapshots/mt310s2-emob-session-dc-ZeraAll.json</file>
-        <file>snapshots/mt310s2-emob-session-dc-ZeraHarmonics.json</file>
-        <file>snapshots/mt310s2-emob-session-dc-ZeraCurves.json</file>
         <file>snapshots/mt310s2-emob-session-dc-ZeraComparison.json</file>
         <file>snapshots/mt310s2-emob-session-dc-ZeraActualValues.json</file>
-
         <file>snapshots/mt310s2-emob-session-ac-ZeraAll.json</file>
         <file>snapshots/mt310s2-emob-session-ac-ZeraHarmonics.json</file>
         <file>snapshots/mt310s2-emob-session-ac-ZeraCurves.json</file>
         <file>snapshots/mt310s2-emob-session-ac-ZeraComparison.json</file>
         <file>snapshots/mt310s2-emob-session-ac-ZeraActualValues.json</file>
-
         <file>snapshots/mt310s2-meas-session-ZeraAll.json</file>
         <file>snapshots/mt310s2-meas-session-ZeraTransformer.json</file>
         <file>snapshots/mt310s2-meas-session-ZeraHarmonics.json</file>

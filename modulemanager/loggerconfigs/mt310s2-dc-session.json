@@ -49,34 +49,6 @@
             "Comment": "LambdaModule"
         }
     ],
-    "ZeraHarmonics" : [
-        {
-            "EntityId": 1110,
-            "Comment": "THDNModule"
-        },
-        {
-            "EntityId": 1060,
-            "Comment": "FFTModule"
-        },
-        {
-            "EntityId": 1020,
-            "Comment": "RangeModule"
-        },
-        {
-            "EntityId": 1100,
-            "Comment": "POWER3Module"
-        }
-    ],
-    "ZeraCurves" : [
-        {
-            "EntityId": 1120,
-            "Comment": "OSCIModule"
-        },
-        {
-            "EntityId": 1020,
-            "Comment": "RangeModule"
-        }
-    ],
     "ZeraComparison": [
         {
             "EntityId": 1130,
