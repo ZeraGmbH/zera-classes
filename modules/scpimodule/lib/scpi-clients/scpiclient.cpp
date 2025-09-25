@@ -124,7 +124,7 @@ void cSCPIClient::removeSCPIClientInfo(QString key)
     execCmd();
 }
 
-void cSCPIClient::testCmd()
+void cSCPIClient::execPendingCmds()
 {
     while (cmdAvail()) {
         // if we have complete commands

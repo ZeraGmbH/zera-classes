@@ -16,7 +16,7 @@ void ScpiTestClient::sendScpiCmds(QString cmds)
             line += "\n";
         m_sInputFifo.append(line);
     }
-    testCmd();
+    execPendingCmds();
 }
 
 cSCPIInterface* ScpiTestClient::getScpiInterface()

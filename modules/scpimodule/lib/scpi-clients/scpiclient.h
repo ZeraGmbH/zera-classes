@@ -52,7 +52,7 @@ protected:
     QString m_activeCmd;
     QChar m_endChar;
 
-    void testCmd();
+    void execPendingCmds();
     bool cmdAvail();
     void takeCmd();
     void execCmd();

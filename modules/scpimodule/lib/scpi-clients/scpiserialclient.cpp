@@ -55,7 +55,7 @@ void cSCPISerialClient::cmdInput()
             singleCmd.clear();
         }
     }
-    testCmd();
+    execPendingCmds();
 }
 
 }

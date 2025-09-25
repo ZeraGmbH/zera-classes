@@ -44,7 +44,7 @@ void cSCPIEthClient::cmdInput()
         totalInput.append(inputLine);
     }
     qInfo("Network SCPI command input: %s", qPrintable(makeBareScpiInPrintable(totalInput)));
-    testCmd();
+    execPendingCmds();
 }
 
 void cSCPIEthClient::onDisconnect()
