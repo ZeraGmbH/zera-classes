@@ -64,7 +64,7 @@ void test_scpi_penetrate::penetrateRangeSet_data()
                                              "com5003-meas-session.json";
     for (const QString &session : sessionList) {
         if (sessionToTest.contains(session)) {
-            const QStringList scpiCmds{"SENSE:RNG1:IL1:RANGE 5A;", "SENSE:RNG1:IL1:RANGE 10A;"};
+            const QStringList scpiCmds{"SENSE:RNG1:IL1:RANGE 10A;", "SENSE:RNG1:IL1:RANGE 5A;", "SENSE:RNG1:IL2:RANGE 10A;", "SENSE:RNG1:IL2:RANGE 5A;"};
             QTest::newRow(session.toLatin1() + ":") << session << scpiCmds;
         }
     }
