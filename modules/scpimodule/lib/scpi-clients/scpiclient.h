@@ -36,7 +36,7 @@ public:
     QHash<cSCPIMeasureDelegate*, cSCPIMeasureDelegatePtr> m_SCPIMeasureDelegateHash;
 
 signals:
-    void commandAnswered(cSCPIClient* client);
+    void commandAnswered(SCPIMODULE::cSCPIClient* client);
 
 public slots:
     void receiveStatus(quint8 stat);
