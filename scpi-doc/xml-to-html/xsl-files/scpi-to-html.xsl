@@ -511,7 +511,7 @@
 
       <!-- Sampling values -->
       <xsl:if test="$SAMFound != ''">
-        <h1 id="SamplingConfigs"><xsl:value-of select="$SamplingConfigsHeading"/></h1>
+        <h2 id="SamplingConfigs"><xsl:value-of select="$SamplingConfigsHeading"/></h2>
         <xsl:call-template name="SamplingConfigs"/>
       </xsl:if>
 
