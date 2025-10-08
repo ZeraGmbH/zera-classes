@@ -1,6 +1,7 @@
 #include "test_api_trust_authentication.h"
 
 #include <QTest>
+#include <vf_rpc_invoker.h>
 
 #include "mocktcpnetworkfactory.h"
 #include "timerfactoryqtfortest.h"
@@ -82,8 +83,7 @@ void test_api_trust_authentication::rpcRequestWillTriggerGUI() {
     args["p_token"] = "-- PEM --";
     args["p_tokenType"] = "PublicKey";
 
-    VfClientRPCInvokerPtr rpc = VfClientRPCInvoker::create(API_ENTITY_ID);
-
+    VfRPCInvokerPtr rpc = VfRPCInvoker::create(API_ENTITY_ID, std::make_unique<VfClientRPCInvoker>());
     m_cmdHandler->addItem(rpc);
 
     rpc->setEventSystem(m_modmanSetupFacade->getSystemModuleEventSystem());
@@ -91,7 +91,7 @@ void test_api_trust_authentication::rpcRequestWillTriggerGUI() {
     QUuid resultId;
     QVariantMap result;
 
-    connect(rpc.get(), &VfClientRPCInvoker::sigRPCFinished, [&resultId, &result](bool ok, QUuid identifier, const QVariantMap &resultData) {
+    connect(rpc.get(), &VfRPCInvoker::sigRPCFinished, [&resultId, &result](bool ok, QUuid identifier, const QVariantMap &resultData) {
         QVERIFY(ok);
 
         resultId = identifier;

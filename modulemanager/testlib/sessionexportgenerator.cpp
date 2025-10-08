@@ -3,6 +3,7 @@
 #include <timemachineobject.h>
 #include <vcmp_remoteproceduredata.h>
 #include <vf_client_rpc_invoker.h>
+#include <vf_rpc_invoker.h>
 #include <vs_dumpjson.h>
 #include <QFile>
 #include <QDir>
@@ -104,11 +105,11 @@ void SessionExportGenerator::createSnapshot(QStringList contentSets, QString sna
 
 QString SessionExportGenerator::getLoggedValues(QString snapshotName)
 {
-    VfClientRPCInvokerPtr rpc = VfClientRPCInvoker::create(vf_logger_entity);
+    VfRPCInvokerPtr rpc= VfRPCInvoker::create(vf_logger_entity, std::make_unique<VfClientRPCInvoker>());
     m_modmanTestRunner->getVfCmdEventHandlerSystemPtr()->addItem(rpc);
 
     QVariantMap result;
-    connect(rpc.get(), &VfClientRPCInvoker::sigRPCFinished, [&result](bool ok, QUuid identifier, const QVariantMap &resultData) {
+    connect(rpc.get(), &VfRPCInvoker::sigRPCFinished, [&result](bool ok, QUuid identifier, const QVariantMap &resultData) {
         result = resultData;
     });
 
