@@ -215,15 +215,16 @@ void cStatusModuleInit::generateVeinInterface()
                                                QString("Accumulator status"),
                                                QVariant(0));
     m_pModule->m_veinModuleParameterMap[key] = m_pAccumulatorStatus;
+    if (m_ConfigData.m_accumulator)
+        m_pAccumulatorStatus->setScpiInfo("STATUS", "ACCUSTATUS", SCPI::isQuery, key);
+
     m_pAccumulatorSoc = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
                                                key = QString("INF_AccumulatorSoc"),
                                                QString("Accumulator state of charge"),
                                                QVariant(int(0)));
     m_pModule->m_veinModuleParameterMap[key] = m_pAccumulatorSoc;
-    if (m_ConfigData.m_accumulator) {
+    if (m_ConfigData.m_accumulator)
         m_pAccumulatorSoc->setScpiInfo("STATUS", "ACCUSOC", SCPI::isQuery, key);
-        m_pAccumulatorStatus->setScpiInfo("STATUS", "ACCUSTATUS", SCPI::isQuery, key);
-    }
 }
 
 
