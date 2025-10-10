@@ -136,6 +136,12 @@ void VfModuleComponent::sendNotification(VeinComponent::ComponentData::Command v
     QUuid id; // null id
     if (!mClientIdList.isEmpty()) {
         id = mClientIdList.takeFirst();
+        if(m_sName.contains("PAR_Channel"))
+            qInfo()
+                << "VfModuleComponent::sendNotification: component="
+                << m_sName << "total clientIds="
+                << mClientIdList.count() << "sent to client="
+                << id << "value=" << m_vValue;
     }
     event->setPeerId(id);
     emit m_pEventSystem->sigSendEvent(event);

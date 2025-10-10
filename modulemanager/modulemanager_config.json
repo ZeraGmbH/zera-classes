@@ -1,5 +1,5 @@
 {
-    "deviceName" : "mt310s2",
+    "deviceName" : "com5003",
     "devMode" : false,
     "connectivity" : {
         "pcbService": {

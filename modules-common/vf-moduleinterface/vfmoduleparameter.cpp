@@ -63,6 +63,12 @@ void VfModuleParameter::handleNoFetchVeinTransaction(QVariant newValue)
 void VfModuleParameter::veinTransaction(QUuid clientId, QVariant newValue, QVariant oldValue, VeinComponent::ComponentData::Command vccmd)
 {
     mClientIdList.append(clientId);
+    if(m_sName.contains("PAR_Channel"))
+        qInfo()
+            << "VfModuleParameter::veinTransaction: component=" << m_sName
+            << " total clientIds=" << mClientIdList.count()
+            << " last client=" << clientId
+            << "newValue" << newValue.toString();
     if (vccmd == VeinComponent::ComponentData::Command::CCMD_FETCH)
         setValue(oldValue); // this will send notification event
     else

@@ -93,11 +93,13 @@ quint32 cRangeMeasChannel::setRange(const QString &range)
     m_sActRange = range;
 
     if (m_bActive) {
+        qInfo() << "cRangeMeasChannel::setRange; Range=" << range;
         quint32 msgnr = m_pcbInterface->setRange(getMName(), m_RangeInfoHash[range].name); // we set range per name not alias
         m_MsgNrCmdList[msgnr] = setmeaschannelrange;
         return msgnr;
     }
     else {
+        qInfo() << "cRangeMeasChannel::setRange skipped !" << range;
         return 1;
     }
 }
@@ -481,6 +483,7 @@ void cRangeMeasChannel::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVaria
             break;
 
         case setmeaschannelrange:
+            qInfo() << "cRangeMeasChannel::setmeaschannelrange: Respose=" << reply << "Value=" << m_sNewRange;
             if (reply == ack)
                 m_sActRange = m_sNewRange;
             else {

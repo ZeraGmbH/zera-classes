@@ -67,7 +67,7 @@ void cRangeObsermatic::ActionHandler(QVector<float> *actualValues)
             rangeObservation(); // first we test for overload conditions
             rangeAutomatic(); // let rangeautomatic do its job
             groupHandling(); // and look for grouping channels if necessary
-            setRanges(); // set the new ranges now
+            //setRanges(); // set the new ranges now
         }
     }
 }
@@ -419,6 +419,8 @@ void cRangeObsermatic::setRanges(bool force)
                 m_pComponentOverloadMax->setValue(0);
             }
         }
+        else if(range == m_actChannelRangeList.at(i) && !force && i==0)
+            qInfo() << "cRangeObsermatic::setRanges:: range=" << range << "actual=" << m_actChannelRangeList.at(i);
     }
 
     if (change) {
@@ -624,16 +626,18 @@ void cRangeObsermatic::onNewRange(QVariant range)
 {
     VfModuleParameter *pParameter = qobject_cast<VfModuleParameter*>(sender()); // get sender of updated signal
     QString rangeName = range.toString();
+    int channelIdx = m_RangeParameterList.indexOf(pParameter);
+    qInfo("cRangeObsermatic::onNewRange: New range request");
 
     // * ranges use deferred notification: new value in param 'range' / old value from getValue()
     // * SCPI requires notification to finish command
     // => on no change: just send notification
     if (rangeName == pParameter->getValue().toString()) {
+        qInfo("cRangeObsermatic::onNewRange: this range is already applied.");
         pParameter->setValue(range);
         return;
     }
 
-    int channelIdx = m_RangeParameterList.indexOf(pParameter);
     // in case of active grouping we have to set all the ranges in that group if possible
     // so we fetch a list of index for all channels in group, in case of inactive grouping
     // the list will contain only 1 index
@@ -663,7 +667,7 @@ void cRangeObsermatic::newRangeAuto(QVariant rauto)
         //qInfo() << "Range Automatic on";
         rangeAutomatic(); // call once if switched to automatic
         groupHandling(); // check for grouping
-        setRanges();
+        //setRanges();
     }
     else {
         //qInfo() << "Range Automatic off";
@@ -681,7 +685,7 @@ void cRangeObsermatic::newGrouping(QVariant rgrouping)
 
     if ( m_ConfPar.m_nGroupAct.m_nActive == 1 ) {
         groupHandling(); // call once if switched to grouphandling
-        setRanges();
+        //setRanges();
     }
 
     emit m_pModule->parameterChanged();
@@ -704,7 +708,7 @@ void cRangeObsermatic::onVeinChangeOverload(QVariant overload)
     disconnect(m_pParOverloadOnOff, 0, this, 0); // we don't want a signal here
     if (overload.toInt() == 0) // allthough there is a validation for this value we only accept 0 here
         // and then we force setting new ranges
-        setRanges(true);
+        //setRanges(true);
 
     // in each case we reset overload here
     m_pParOverloadOnOff->setValue(0);
@@ -740,7 +744,7 @@ void cRangeObsermatic::preScalingChanged(QVariant unused)
         for(int channel = 0; channel<m_RangeMeasChannelList.length(); ++channel)
             m_RangeMeasChannelList.at(channel)->getChannelData()->setPreScaling(getPreScale(channel));
     }
-    setRanges(true);
+    //setRanges(true);
 }
 
 void cRangeObsermatic::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant)
@@ -809,7 +813,7 @@ void cRangeObsermatic::catchChannelNewRangeList()
     mchn = qobject_cast<cRangeMeasChannel*>(QObject::sender());
     m_ChannelRangeValidatorHash[mchn->getMName()]->setValidator(mchn->getRangeListAlias());
     m_pModule->exportMetaData();
-    setRanges(true); // after a new range list was detected, we force setting ranges because it may be that the actual range disappeared
+    //setRanges(true); // after a new range list was detected, we force setting ranges because it may be that the actual range disappeared
 }
 
 }
