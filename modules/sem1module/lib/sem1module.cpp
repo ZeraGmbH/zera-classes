@@ -6,16 +6,24 @@ namespace SEM1MODULE
 {
 
 cSem1Module::cSem1Module(ModuleFactoryParam moduleParam) :
-    cBaseMeasModule(moduleParam, std::make_shared<cSem1ModuleConfiguration>())
+    cBaseMeasModule(moduleParam, std::make_shared<cSem1ModuleConfiguration>()),
+    m_spRpcEventSystem(std::make_shared<VfModuleRpcSimplified>(moduleParam.m_entityId))
 {
     m_sModuleName = QString("%1%2").arg(BaseModuleName).arg(moduleParam.m_moduleNum);
     m_sModuleDescription = QString("This module provides a configurable energy error calculator");
     m_sSCPIModuleName = QString(BaseSCPIModuleName);
 }
 
+VfModuleRpcSimplified *cSem1Module::getRpcEventSystem()
+{
+    return m_spRpcEventSystem.get();
+}
+
 void cSem1Module::setupModule()
 {
     emit addEventSystem(getValidatorEventSystem());
+    emit addEventSystem(m_spRpcEventSystem.get());
+
     cBaseMeasModule::setupModule();
 
     // we only have this activist

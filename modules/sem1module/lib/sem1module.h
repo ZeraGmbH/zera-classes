@@ -3,6 +3,7 @@
 
 #include "sem1modulemeasprogram.h"
 #include <basemeasmodule.h>
+#include <vfmodulerpcsimplified.h>
 
 namespace SEM1MODULE
 {
@@ -17,6 +18,7 @@ public:
     static constexpr const char* BaseSCPIModuleName = "EM01";
 
     cSem1Module(ModuleFactoryParam moduleParam);
+    VfModuleRpcSimplified *getRpcEventSystem();
 
 private:
     void setupModule() override; // after xml configuration we can setup and export our module
@@ -24,6 +26,7 @@ private:
     void stopMeas() override;
 
     cSem1ModuleMeasProgram *m_pMeasProgram = nullptr;
+    std::shared_ptr<VfModuleRpcSimplified> m_spRpcEventSystem;
 };
 
 }
