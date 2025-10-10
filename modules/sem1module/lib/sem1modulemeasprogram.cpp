@@ -8,6 +8,7 @@
 #include <doublevalidator.h>
 #include <intvalidator.h>
 #include <stringvalidator.h>
+#include <vf-cpp-rpc-signature.h>
 #include <reply.h>
 #include <proxy.h>
 #include <math.h>
@@ -374,6 +375,11 @@ void cSem1ModuleMeasProgram::generateVeinInterface()
     m_pEmobLockState->setScpiInfo("CALCULATE", QString("%1:LOCKSTATE").arg(modNr), SCPI::isQuery, m_pEmobLockState->getName());
     m_pEmobLockState->setValidator(new cIntValidator(0, 1, 1));
     m_pModule->m_veinModuleParameterMap[key] = m_pEmobLockState; // for modules use
+
+    m_rpcReadLockState = std::make_shared<RPCReadLockState>(m_pModule->getValidatorEventSystem(), m_pModule->getEntityId());
+    connect(m_rpcReadLockState.get(), &RPCReadLockState::sigReadLockState, this, &cSem1ModuleMeasProgram::onReadLockState);
+    connect(this, &cSem1ModuleMeasProgram::emobLockStateCompleted, m_rpcReadLockState.get(), &RPCReadLockState::onReadLockStateCompleted);
+    m_pModule->getRpcEventSystem()->addRpc(m_rpcReadLockState);
 }
 
 
@@ -1257,6 +1263,12 @@ void cSem1ModuleMeasProgram::Actualize()
 void cSem1ModuleMeasProgram::onEmobRequest()
 {
     m_MsgNrCmdList[m_pcbInterface->readEmobConnectionState()] = reademoblockstate;
+}
+
+void cSem1ModuleMeasProgram::onReadLockState(const QUuid &callId)
+{
+    m_MsgNrCmdList[m_pcbInterface->readEmobConnectionState()] = reademoblockstate;
+    emit emobLockStateCompleted(callId, true, "", m_pEmobLockState->getValue());
 }
 
 void cSem1ModuleMeasProgram::clientActivationChanged(bool bActive)
