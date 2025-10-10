@@ -8,6 +8,7 @@
 #include <doublevalidator.h>
 #include <intvalidator.h>
 #include <stringvalidator.h>
+#include <vf-cpp-rpc-signature.h>
 #include <reply.h>
 #include <proxy.h>
 #include <math.h>
@@ -178,6 +179,7 @@ cSem1ModuleMeasProgram::cSem1ModuleMeasProgram(cSem1Module* module, std::shared_
     mEnergyUnitFactorHash["VAh"] = 0.001;
 
     m_ActualizeTimer = TimerFactoryQt::createPeriodic(m_nActualizeIntervallLowFreq);
+    m_RequestTimer = TimerFactoryQt::createPeriodic(m_nRequestTimer);
 
     m_resourceTypeList.addTypesFromConfig(getConfData()->m_refInpList);
 }
@@ -364,7 +366,20 @@ void cSem1ModuleMeasProgram::generateVeinInterface()
                                             QVariant((int)0));
     m_pPressPushButton->setScpiInfo("CALCULATE", QString("%1:PBPRESS").arg(modNr), SCPI::isCmdwP, m_pPressPushButton->getName());
     m_pPressPushButton->setValidator(new cIntValidator(0, 1, 1));
-    m_pModule->m_veinModuleParameterMap[key] =  m_pPressPushButton; // for modules use
+    m_pModule->m_veinModuleParameterMap[key] = m_pPressPushButton; // for modules use
+
+    m_pEmobLockState = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
+                                               key = QString("ACT_EmobLockState"),
+                                               QString("State: 0:Unknown 1:Open 2:Locking 3:Locked 4:Error"),    //enum from -> CPU5975/EMOB_CTRL.h
+                                               QVariant((int)0));
+    m_pEmobLockState->setScpiInfo("CALCULATE", QString("%1:LOCKSTATE").arg(modNr), SCPI::isQuery, m_pEmobLockState->getName());
+    m_pEmobLockState->setValidator(new cIntValidator(0, 1, 1));
+    m_pModule->m_veinModuleParameterMap[key] = m_pEmobLockState; // for modules use
+
+    m_rpcReadLockState = std::make_shared<RPCReadLockState>(m_pModule->getValidatorEventSystem(), m_pModule->getEntityId());
+    connect(m_rpcReadLockState.get(), &RPCReadLockState::sigReadLockState, this, &cSem1ModuleMeasProgram::onReadLockState);
+    connect(this, &cSem1ModuleMeasProgram::emobLockStateCompleted, m_rpcReadLockState.get(), &RPCReadLockState::onReadLockStateCompleted);
+    m_pModule->getRpcEventSystem()->addRpc(m_rpcReadLockState);
 }
 
 
@@ -596,6 +611,12 @@ void cSem1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, Q
             case activatepushbutton:
                 if (reply != ack)
                     notifyError(pushbuttonErrMsg);
+                break;
+            case reademoblockstate:
+                if (reply == ack)
+                    m_pEmobLockState->setValue(answer.toInt());
+                else
+                    m_pEmobLockState->setValue(emobstate_error);
                 break;
             }
         }
@@ -917,6 +938,9 @@ void cSem1ModuleMeasProgram::activationDone()
     setValidators();
     setUnits();
 
+    connect(m_RequestTimer.get(), &TimerTemplateQt::sigExpired, this, &cSem1ModuleMeasProgram::onEmobRequest);
+    m_RequestTimer->start();
+
     m_bActive = true;
     emit activated();
 }
@@ -1234,6 +1258,17 @@ void cSem1ModuleMeasProgram::Actualize()
         m_MsgNrCmdList[m_secInterface->readRegister(m_slaveErrCalcName, ECALCREG::MTCNTact)] = actualizeenergy;
         m_MsgNrCmdList[m_secInterface->readRegister(m_slave2ErrCalcName, ECALCREG::MTCNTact)] = actualizepower;
     }
+}
+
+void cSem1ModuleMeasProgram::onEmobRequest()
+{
+    m_MsgNrCmdList[m_pcbInterface->readEmobConnectionState()] = reademoblockstate;
+}
+
+void cSem1ModuleMeasProgram::onReadLockState(const QUuid &callId)
+{
+    m_MsgNrCmdList[m_pcbInterface->readEmobConnectionState()] = reademoblockstate;
+    emit emobLockStateCompleted(callId, true, "", m_pEmobLockState->getValue());
 }
 
 void cSem1ModuleMeasProgram::clientActivationChanged(bool bActive)

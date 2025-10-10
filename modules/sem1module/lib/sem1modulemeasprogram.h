@@ -1,12 +1,13 @@
 #ifndef SEM1MODULEMEASPROGRAM_H
 #define SEM1MODULEMEASPROGRAM_H
 
+#include "rpcreadlockstate.h"
 #include "secinterface.h"
 #include "refpowerconstantobserver.h"
 #include "secresourcetypelist.h"
 #include "sem1moduleconfigdata.h"
-#include <basemeasprogram.h>
 #include "secmeasinputdictionary.h"
+#include <basemeasprogram.h>
 #include <clientactivecomponent.h>
 #include <memory>
 #include <timerperiodicqt.h>
@@ -46,8 +47,22 @@ enum sem1moduleCmds
     resetintregister,
     readvicount,
     readtcount,
-    activatepushbutton
+    activatepushbutton,
+    reademoblockstate
 };
+
+
+//CPU5975/EMOB_CTRL.h
+enum reademoblockstate
+{
+    emobstate_unknown,
+    emobstate_open,
+    emobstate_locking,
+    emobstate_locked,
+    emobstate_error
+};
+
+
 
 class cSem1Module;
 
@@ -60,6 +75,7 @@ public:
 signals:
     void setupContinue();
     void interruptContinue();
+    void emobLockStateCompleted(const QUuid &callId, bool success, QString errorMsg, QVariant value);
 public slots:
     void start() override;
     void stop() override;
@@ -121,6 +137,9 @@ private slots:
     void newLowerLimit(QVariant limit);
     void newPushButton(QVariant pushbutton);
 
+    void onEmobRequest();
+    void onReadLockState(const QUuid &callId);
+
     void Actualize();
     void clientActivationChanged(bool bActive);
     void stopMeasurement(bool bAbort);
@@ -149,6 +168,8 @@ private:
     static void setDateTimeNow(QDateTime &var, VfModuleParameter* veinParam);
     static void setDateTime(QDateTime var, VfModuleParameter* veinParam);
     void calculateMeasTime();
+
+    qint8 getEmobLockState();
 
     cSem1Module* m_pModule; // the module we live in
     Zera::cSECInterfacePtr m_secInterface;
@@ -244,8 +265,16 @@ private:
     VfModuleParameter* m_pMeasEndTime;
     VfModuleParameter* m_pMeasDurationMs;
     VfModuleParameter* m_pPressPushButton;
+    VfModuleParameter* m_pEmobLockState;
     VfModuleParameter* m_pClientNotifierPar;
     ClientActiveComponent m_ClientActiveNotifier;
+
+    std::shared_ptr<RPCReadLockState> m_rpcReadLockState;
+    QMap<QString, VfCpp::VfCppRpcSimplifiedPtr> m_rpcSimplifiedList;
+
+    // vars dealing with emob lock state request
+    TimerTemplateQtPtr m_RequestTimer;
+    static constexpr quint32 m_nRequestTimer = 2500;
 
     // vars dealing with error measurement
     TimerTemplateQtPtr m_ActualizeTimer; // after timed out we actualize progressvalue
