@@ -23,7 +23,6 @@ void test_sessionnamesmappingjson::testSessionNames()
 {
     ModulemanagerConfigTest::supportOeTests();
     ModulemanagerConfig::setDemoDevice("mt310s2");
-    ModulemanagerConfig* mmConfig = ModulemanagerConfig::getInstance();
     SessionNamesMappingJson sessionNamesMapping(ModulemanagerConfig::getConfigFileNameFull());
 
     QCOMPARE(sessionNamesMapping.getSessionNameForExternalUsers("mt310s2-meas-session.json"), "Default");
