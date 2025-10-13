@@ -2494,6 +2494,7 @@
         "ACT_PowerDisplayName": "P",
         "EntityName": "POWER1Module4",
         "INF_ModeTypes": [
+            "",
             "P",
             "Q",
             "S"
@@ -2557,6 +2558,18 @@
                         "Type": "INTEGER"
                     }
                 },
+                "PAR_FOUT_QREF_FREQ": {
+                    "Description": "Fixed frequency output mode (QREF): frequency value",
+                    "Unit": "kHz",
+                    "Validation": {
+                        "Data": [
+                            0.001,
+                            200,
+                            0.001
+                        ],
+                        "Type": "DOUBLE"
+                    }
+                },
                 "PAR_Interval": {
                     "Description": "Integration time",
                     "Unit": "s",
@@ -2598,7 +2611,8 @@
                             "4LS",
                             "4LSg",
                             "2LS",
-                            "2LSg"
+                            "2LSg",
+                            "QREF"
                         ],
                         "Type": "STRING"
                     }
@@ -2674,6 +2688,13 @@
                     ],
                     [
                         "CONFIGURATION",
+                        "FIXFREQ",
+                        "10",
+                        "PAR_FOUT_QREF_FREQ",
+                        "0"
+                    ],
+                    [
+                        "CONFIGURATION",
                         "TINTEGRATION",
                         "10",
                         "PAR_Interval",
@@ -2700,6 +2721,7 @@
         "PAR_FOUT0": "fOUT",
         "PAR_FOUTConstant0": 96000000,
         "PAR_FOUT_NOMINAL_FREQ": 200000,
+        "PAR_FOUT_QREF_FREQ": 200,
         "PAR_Interval": 1,
         "PAR_MeasModePhaseSelect": "111",
         "PAR_MeasuringMode": "4LW",

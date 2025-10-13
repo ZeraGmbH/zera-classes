@@ -14,12 +14,13 @@
     </SESSION>
    </SYST>
    <POW1 Type="Node">
-    <MMODE DataType="STRING" Description="Measuring mode" ScpiPath="CONFIGURATION:POW1:MMODE" ValidPar="4LW,3LW,2LW,4LB,3LB,2LB,4LS,4LSg,2LS,2LSg" Type="Query,Command+Par">
+    <MMODE DataType="STRING" ValidPar="4LW,3LW,2LW,4LB,3LB,2LB,4LS,4LSg,2LS,2LSg,QREF" Type="Query,Command+Par" ScpiPath="CONFIGURATION:POW1:MMODE" Description="Measuring mode">
      <CATALOG ScpiPath="CONFIGURATION:POW1:MMODE:CATALOG" Type="Query"/>
     </MMODE>
     <M0OUT Description="Frequency output name" ScpiPath="CONFIGURATION:POW1:M0OUT" Type="Query"/>
     <M0CONSTANT Description="Frequency output constant" ScpiPath="CONFIGURATION:POW1:M0CONSTANT" Type="Query"/>
     <NOMINAL_FREQ Unit="Hz" DataType="INTEGER" Description="Nominal frequency" ScpiPath="CONFIGURATION:POW1:NOMINAL_FREQ" Min="10000" Max="200000" Type="Query,Command+Par"/>
+    <FIXFREQ DataType="DOUBLE" Unit="kHz" Max="200" Min="0.001" Type="Query,Command+Par" ScpiPath="CONFIGURATION:POW1:FIXFREQ" Description="Fixed frequency output mode (QREF): frequency value"/>
     <TINTEGRATION Unit="s" DataType="DOUBLE" Description="Integration time" ScpiPath="CONFIGURATION:POW1:TINTEGRATION" Min="1" Max="100" Type="Query,Command+Par"/>
     <MEASMODEPHASESELECT DataType="STRING" Description="Active phases selection mask" ScpiPath="CONFIGURATION:POW1:MEASMODEPHASESELECT" ValidPar="000,100,010,110,001,101,011,111" Type="Query,Command+Par"/>
    </POW1>

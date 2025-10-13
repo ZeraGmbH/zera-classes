@@ -52,7 +52,7 @@
       },
       {
         "name" : "power1module",
-        "configFile" : "mt310s2-power1module4-with-qref.xml",
+        "configFile" : "mt310s2-power1module4.xml",
         "id": 1073
       },
       {
