@@ -4108,15 +4108,7 @@
         "INF_ModuleInterface": {
             "ComponentInfo": {
                 "ACT_EmobLockState": {
-                    "Description": "State: 0:Unknown 1:Open 2:Locking 3:Locked 4:Error",
-                    "Validation": {
-                        "Data": [
-                            0,
-                            1,
-                            1
-                        ],
-                        "Type": "INTEGER"
-                    }
+                    "Description": "State: 0:Unknown 1:Open 2:Locking 3:Locked 4:Error"
                 },
                 "ACT_EndTime": {
                     "Description": "Last measurement: End time (dd-MM-yyyy HH:mm:ss)"
@@ -4297,13 +4289,6 @@
                 "Cmd": [
                     [
                         "CALCULATE",
-                        "0001:LOCKSTATE",
-                        "2",
-                        "ACT_EmobLockState",
-                        "0"
-                    ],
-                    [
-                        "CALCULATE",
                         "0001:ENDTIME",
                         "2",
                         "ACT_EndTime",
@@ -4450,7 +4435,16 @@
                         "0"
                     ]
                 ],
-                "Name": "EM01"
+                "Name": "EM01",
+                "RPC": [
+                    [
+                        "CALCULATE",
+                        "0001:RPC_readLockState()",
+                        "2",
+                        "ACT_EmobLockState",
+                        "0"
+                    ]
+                ]
             }
         },
         "PAR_ClientActiveNotify": 0,

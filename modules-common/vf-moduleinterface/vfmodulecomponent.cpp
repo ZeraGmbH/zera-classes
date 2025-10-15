@@ -44,6 +44,12 @@ void VfModuleComponent::exportSCPIInfo(QJsonArray &jsArr)
         m_scpiInfo->appendSCPIInfo(jsArr);
 }
 
+void VfModuleComponent::exportRpcSCPIInfo(QJsonArray &jsArr)
+{
+    if (m_RpcScpiInfo)
+        m_RpcScpiInfo->appendSCPIInfo(jsArr);
+}
+
 int VfModuleComponent::getInstanceCount()
 {
     return m_instanceCount;
@@ -60,6 +66,15 @@ void VfModuleComponent::setScpiInfo(const QString &model,
                                                          cmdTypeMask,
                                                          veinComponentName,
                                                          entryType);
+}
+
+void VfModuleComponent::setRPCScpiInfo(const QString &model, const QString &cmd, int cmdTypeMask, const QString &veinComponentName, SCPI::eSCPIEntryType entryType)
+{
+    m_RpcScpiInfo = std::make_unique<ScpiVeinComponentInfo>(model,
+                                                            cmd,
+                                                            cmdTypeMask,
+                                                            veinComponentName,
+                                                            entryType);
 }
 
 void VfModuleComponent::setChannelName(QString name)

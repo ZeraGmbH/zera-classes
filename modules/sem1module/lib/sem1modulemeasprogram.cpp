@@ -372,14 +372,14 @@ void cSem1ModuleMeasProgram::generateVeinInterface()
                                                key = QString("ACT_EmobLockState"),
                                                QString("State: 0:Unknown 1:Open 2:Locking 3:Locked 4:Error"),    //enum from -> CPU5975/EMOB_CTRL.h
                                                QVariant((int)0));
-    m_pEmobLockState->setScpiInfo("CALCULATE", QString("%1:LOCKSTATE").arg(modNr), SCPI::isQuery, m_pEmobLockState->getName());
-    m_pEmobLockState->setValidator(new cIntValidator(0, 1, 1));
     m_pModule->m_veinModuleParameterMap[key] = m_pEmobLockState; // for modules use
 
     m_rpcReadLockState = std::make_shared<RPCReadLockState>(m_pModule->getValidatorEventSystem(), m_pModule->getEntityId());
     connect(m_rpcReadLockState.get(), &RPCReadLockState::sigReadLockState, this, &cSem1ModuleMeasProgram::onReadLockState);
     connect(this, &cSem1ModuleMeasProgram::emobLockStateCompleted, m_rpcReadLockState.get(), &RPCReadLockState::onReadLockStateCompleted);
     m_pModule->getRpcEventSystem()->addRpc(m_rpcReadLockState);
+
+    m_pEmobLockState->setRPCScpiInfo("CALCULATE", QString("%1:%2").arg(modNr).arg(m_rpcReadLockState->getSignature()), SCPI::isQuery, m_pEmobLockState->getName());
 }
 
 
