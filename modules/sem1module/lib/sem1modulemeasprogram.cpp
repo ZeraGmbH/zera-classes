@@ -614,9 +614,9 @@ void cSem1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, Q
                 break;
             case reademoblockstate:
                 if (reply == ack)
-                    m_pEmobLockState->setValue(answer.toInt());
+                    emit sigLockStateRead(true, answer.toInt());
                 else
-                    m_pEmobLockState->setValue(emobstate_error);
+                    emit sigLockStateRead(false, emobstate_error);
                 break;
             }
         }
@@ -1268,7 +1268,13 @@ void cSem1ModuleMeasProgram::onEmobRequest()
 void cSem1ModuleMeasProgram::onReadLockState(const QUuid &callId)
 {
     m_MsgNrCmdList[m_pcbInterface->readEmobConnectionState()] = reademoblockstate;
-    emit emobLockStateCompleted(callId, true, "", m_pEmobLockState->getValue());
+    connect(this, &cSem1ModuleMeasProgram::sigLockStateRead, this, [=](bool success, QVariant value){
+        if(success)
+            emit emobLockStateCompleted(callId, true, "", value);
+        else
+            emit emobLockStateCompleted(callId, true, value, value); // should be false / Fix in Vf-cpp-simplified::SendRpcError
+    });
+
 }
 
 void cSem1ModuleMeasProgram::clientActivationChanged(bool bActive)

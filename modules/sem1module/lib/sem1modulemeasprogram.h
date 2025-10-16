@@ -75,7 +75,9 @@ public:
 signals:
     void setupContinue();
     void interruptContinue();
-    void emobLockStateCompleted(const QUuid &callId, bool success, QString errorMsg, QVariant value);
+    void emobLockStateCompleted(const QUuid &callId, bool success, QVariant errorMsg, QVariant value);
+    void sigLockStateRead(bool success, QVariant value);
+
 public slots:
     void start() override;
     void stop() override;
