@@ -138,8 +138,6 @@ private slots:
     void newUpperLimit(QVariant limit);
     void newLowerLimit(QVariant limit);
     void newPushButton(QVariant pushbutton);
-
-    void onEmobRequest();
     void onReadLockState(const QUuid &callId);
 
     void Actualize();
@@ -274,8 +272,6 @@ private:
     std::shared_ptr<RPCReadLockState> m_rpcReadLockState;
     QMap<QString, VfCpp::VfCppRpcSimplifiedPtr> m_rpcSimplifiedList;
 
-    // vars dealing with emob lock state request
-    TimerTemplateQtPtr m_RequestTimer;
     static constexpr quint32 m_nRequestTimer = 2500;
 
     // vars dealing with error measurement
