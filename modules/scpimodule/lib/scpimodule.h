@@ -7,6 +7,7 @@
 #include "scpimeasure.h"
 #include "basemodule.h"
 #include "vfeventsytemmoduleparam.h"
+#include <vf_cmd_event_handler_system.h>
 #include <memory>
 
 namespace SCPIMODULE {
@@ -30,6 +31,7 @@ public:
 
     VfEventSytemModuleParam *getValidatorEventSystem();
     SCPIEventSystem* m_pSCPIEventSystem;
+    VfCmdEventHandlerSystemPtr getCmdEventHandlerSystem();
     QStringList getRpcCmdList();
     void setRpcCmdList(QStringList rpcCmdList);
 
@@ -43,6 +45,7 @@ private:
     void startMeas() override; // we make the measuring program start here
     void stopMeas() override;
     VfEventSytemModuleParam* m_pModuleValidator;
+    VfCmdEventHandlerSystemPtr m_cmdEventHandlerSystem;
     QStringList m_rpcCmdList;
 };
 

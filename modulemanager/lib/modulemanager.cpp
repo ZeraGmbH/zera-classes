@@ -169,6 +169,8 @@ VirtualModule *ModuleManager::createModule(const QString &xmlConfigPath,
     VirtualModule *tmpModule = tmpFactory->createModule(moduleParam);
     if(tmpModule) {
         connect(tmpModule, &VirtualModule::addEventSystem, this, &ModuleManager::onModuleEventSystemAdded);
+        connect(tmpModule, &VirtualModule::addEventSubSystem, this, &ModuleManager::onEventSubSystemAdded);
+        connect(tmpModule, &VirtualModule::removeEventSubSystem, this, &ModuleManager::onEventSubSystemRemoved);
         connect(tmpModule, &VirtualModule::moduleActivated, this, [this](){
             m_moduleStartLock = false;
             delayedModuleStartNext();
@@ -361,6 +363,16 @@ void ModuleManager::onModuleStartNext()
 void ModuleManager::onModuleEventSystemAdded(VeinEvent::EventSystem *t_eventSystem)
 {
     m_setupFacade->addModuleSystem(t_eventSystem);
+}
+
+void ModuleManager::onEventSubSystemAdded(VeinEvent::EventSystem *t_eventSystem)
+{
+    m_setupFacade->addSubsystem(t_eventSystem);
+}
+
+void ModuleManager::onEventSubSystemRemoved(VeinEvent::EventSystem *t_eventSystem)
+{
+    m_setupFacade->clearSubSystem(t_eventSystem);
 }
 
 void ModuleManager::saveModuleConfig(ModuleData *moduleData)

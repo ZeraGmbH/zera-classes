@@ -59,6 +59,8 @@ private slots:
     void delayedModuleStartNext();
     void onModuleStartNext();
     void onModuleEventSystemAdded(VeinEvent::EventSystem *t_eventSystem);
+    void onEventSubSystemAdded(VeinEvent::EventSystem *t_eventSystem);
+    void onEventSubSystemRemoved(VeinEvent::EventSystem *t_eventSystem);
 
 protected:
     static QString m_sessionPath;

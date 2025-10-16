@@ -35,6 +35,8 @@ signals:
     void moduleActivated();
     void moduleDeactivated();
     void addEventSystem(VeinEvent::EventSystem*);
+    void addEventSubSystem(VeinEvent::EventSystem*);
+    void removeEventSubSystem(VeinEvent::EventSystem*);
     void parameterChanged();
 
 protected:

@@ -15,11 +15,13 @@ cSCPIModule::cSCPIModule(ModuleFactoryParam moduleParam) :
     m_sModuleName = QString("%1%2").arg(BaseModuleName).arg(moduleParam.m_moduleNum);
     m_sModuleDescription = QString("This module provides a scpi interface depending on the actual session running");
     m_sSCPIModuleName = QString("%1%2").arg(BaseSCPIModuleName).arg(moduleParam.m_moduleNum);
+    m_cmdEventHandlerSystem = VfCmdEventHandlerSystem::create();
 }
 
 cSCPIModule::~cSCPIModule()
 {
     delete m_pModuleValidator;
+    emit removeEventSubSystem(m_cmdEventHandlerSystem.get());
 }
 
 cSCPIServer *cSCPIModule::getSCPIServer()
@@ -30,6 +32,11 @@ cSCPIServer *cSCPIModule::getSCPIServer()
 VfEventSytemModuleParam *cSCPIModule::getValidatorEventSystem()
 {
     return m_pModuleValidator;
+}
+
+VfCmdEventHandlerSystemPtr cSCPIModule::getCmdEventHandlerSystem()
+{
+    return m_cmdEventHandlerSystem;
 }
 
 QStringList cSCPIModule::getRpcCmdList()
@@ -44,6 +51,8 @@ void cSCPIModule::setRpcCmdList(QStringList rpcCmdList)
 
 void cSCPIModule::setupModule()
 {
+    emit addEventSubSystem(m_cmdEventHandlerSystem.get());
+
     emit addEventSystem(getValidatorEventSystem());
     emit addEventSystem(m_pSCPIEventSystem);
 
