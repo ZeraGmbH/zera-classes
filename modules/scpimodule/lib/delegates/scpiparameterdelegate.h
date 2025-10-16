@@ -17,6 +17,8 @@ public:
 signals:
     void clientinfoSignal(QString, SCPIMODULE::SCPIClientInfoPtr);
 private:
+    void executeScpiRpc(cSCPIClient *client, QString& sInput);
+    bool isCommandRPC(QString& sInput);
     cSCPIModule* m_pModule;
     cSCPICmdInfoPtr m_pSCPICmdInfo;
 };

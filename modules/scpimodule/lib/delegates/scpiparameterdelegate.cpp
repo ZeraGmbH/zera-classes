@@ -2,6 +2,8 @@
 #include "scpieventsystem.h"
 #include "scpiclient.h"
 #include <scpicommand.h>
+#include <vf_server_rpc_invoker.h>
+#include <vf_rpc_invoker.h>
 #include <zscpi_response_definitions.h>
 #include <vcmp_componentdata.h>
 
@@ -25,43 +27,72 @@ void cSCPIParameterDelegate::executeSCPI(cSCPIClient *client, QString &sInput)
          (cmd.isCommand(1) && ((scpiCmdType & SCPI::isCmdwP) > 0)) ||  // test if we got an allowed cmd + 1 parameter
          ((scpiCmdType & SCPI::isXMLCmd) > 0) ) // test if we expext an xml command
     {
-        VeinComponent::ComponentData *cData;
-        cData = new VeinComponent::ComponentData();
-        cData->setEntityId(m_pSCPICmdInfo->entityId);
-        cData->setEventOrigin(VeinEvent::EventData::EventOrigin::EO_LOCAL);
-        cData->setEventTarget(VeinEvent::EventData::EventTarget::ET_ALL);
-        cData->setComponentName(m_pSCPICmdInfo->componentName);
-        cData->setOldValue(m_pModule->getStorageDb()->getStoredValue(m_pSCPICmdInfo->entityId, m_pSCPICmdInfo->componentName));
-        if (bQuery) {
-            if (cmd.isQuery(1))
-                cData->setNewValue(cmd.getParam(0));
-            cData->setCommand(VeinComponent::ComponentData::Command::CCMD_FETCH);
+        if(isCommandRPC(sInput)) {
+            executeScpiRpc(client, sInput);
         }
         else {
-            if ((scpiCmdType & SCPI::isXMLCmd) > 0)
-                cData->setNewValue(cmd.getParam()); // if we expect an xml command we take all text behind the command
+            VeinComponent::ComponentData *cData;
+            cData = new VeinComponent::ComponentData();
+            cData->setEntityId(m_pSCPICmdInfo->entityId);
+            cData->setEventOrigin(VeinEvent::EventData::EventOrigin::EO_LOCAL);
+            cData->setEventTarget(VeinEvent::EventData::EventTarget::ET_ALL);
+            cData->setComponentName(m_pSCPICmdInfo->componentName);
+            cData->setOldValue(m_pModule->getStorageDb()->getStoredValue(m_pSCPICmdInfo->entityId, m_pSCPICmdInfo->componentName));
+            if (bQuery) {
+                if (cmd.isQuery(1))
+                    cData->setNewValue(cmd.getParam(0));
+                cData->setCommand(VeinComponent::ComponentData::Command::CCMD_FETCH);
+            }
+            else {
+                if ((scpiCmdType & SCPI::isXMLCmd) > 0)
+                    cData->setNewValue(cmd.getParam()); // if we expect an xml command we take all text behind the command
+                else
+                    cData->setNewValue(cmd.getParam(0));
+                cData->setCommand(VeinComponent::ComponentData::Command::CCMD_SET);
+            }
+            VeinEvent::CommandEvent *event;
+            event = new VeinEvent::CommandEvent(VeinEvent::CommandEvent::EventSubtype::TRANSACTION, cData);
+            event->setPeerId(client->getClientId());
+
+            // we memorize : for component (componentname) the client to set something
+            SCPIClientInfoPtr clientinfo;
+            if (bQuery)
+                clientinfo = std::make_shared<cSCPIClientInfo>(client, m_pSCPICmdInfo->entityId, SCPIMODULE::parQuery);
             else
-                cData->setNewValue(cmd.getParam(0));
-            cData->setCommand(VeinComponent::ComponentData::Command::CCMD_SET);
+                clientinfo = std::make_shared<cSCPIClientInfo>(client, m_pSCPICmdInfo->entityId, SCPIMODULE::parcmd);
+
+            m_pModule->scpiParameterCmdInfoHash.insert(m_pSCPICmdInfo->componentName, clientinfo);
+            client->addSCPIClientInfo(m_pSCPICmdInfo->componentName, clientinfo);
+
+            m_pModule->m_pSCPIEventSystem->sigSendEvent(event);
         }
-        VeinEvent::CommandEvent *event;
-        event = new VeinEvent::CommandEvent(VeinEvent::CommandEvent::EventSubtype::TRANSACTION, cData);
-        event->setPeerId(client->getClientId());
-
-        // we memorize : for component (componentname) the client to set something
-        SCPIClientInfoPtr clientinfo;
-        if (bQuery)
-            clientinfo = std::make_shared<cSCPIClientInfo>(client, m_pSCPICmdInfo->entityId, SCPIMODULE::parQuery);
-        else
-            clientinfo = std::make_shared<cSCPIClientInfo>(client, m_pSCPICmdInfo->entityId, SCPIMODULE::parcmd);
-
-        m_pModule->scpiParameterCmdInfoHash.insert(m_pSCPICmdInfo->componentName, clientinfo);
-        client->addSCPIClientInfo(m_pSCPICmdInfo->componentName, clientinfo);
-
-        m_pModule->m_pSCPIEventSystem->sigSendEvent(event);
     }
     else
         client->receiveStatus(ZSCPI::nak);
+}
+
+void cSCPIParameterDelegate::executeScpiRpc(cSCPIClient *client, QString &sInput)
+{
+    for(QString RpcCmd: m_pModule->getRpcCmdList()) {
+        if(sInput.contains(RpcCmd, Qt::CaseInsensitive)) {
+            VfRPCInvokerPtr rpcInvoker = VfRPCInvoker::create(m_pSCPICmdInfo->entityId, std::make_unique<VfServerRPCInvoker>()); // will client rpc invoker work ?
+            connect(rpcInvoker.get(), &VfRPCInvoker::sigRPCFinished, this, [=](bool ok, QUuid identifier, const QVariantMap &resultData) {
+                QVariant returnData = resultData["RemoteProcedureData::Return"];
+                client->receiveAnswer(returnData.toString(), true);
+            });
+            m_pModule->getCmdEventHandlerSystem()->addItem(rpcInvoker);
+            rpcInvoker->invokeRPC("RPC_readLockState", QVariantMap());
+        }
+    }
+}
+
+bool cSCPIParameterDelegate::isCommandRPC(QString &sInput)
+{
+    bool found = false;
+    for(QString RpcCmd: m_pModule->getRpcCmdList())
+        if(sInput.contains(RpcCmd, Qt::CaseInsensitive))
+            found = true;
+    return found;
 }
 
 }
