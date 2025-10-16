@@ -14,10 +14,10 @@ void RPCReadLockState::callRPCFunction(const QUuid &callId, const QVariantMap &p
     emit sigReadLockState(callId);
 }
 
-void RPCReadLockState::onReadLockStateCompleted(const QUuid &callId, bool success, QString errorMsg, QVariant value)
+void RPCReadLockState::onReadLockStateCompleted(const QUuid &callId, bool success, QVariant errorMsg, QVariant value)
 {
     if(success)
         sendRpcResult(callId, value);
     else
-        sendRpcError(callId, errorMsg);
+        sendRpcError(callId, errorMsg.toString()); // Change in VfCppRpcSimplified errorMsg to QVariant
 }
