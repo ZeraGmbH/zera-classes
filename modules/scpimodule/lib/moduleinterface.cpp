@@ -38,6 +38,7 @@ cModuleInterface::~cModuleInterface()
 bool cModuleInterface::setupInterface()
 {
     bool ok = true;
+    QStringList rpcList;
     const VeinStorage::AbstractDatabase* storageDb = m_pModule->getStorageDb();
     const QList<int> entityIdList = storageDb->getEntityList();
     for(auto entityID : entityIdList) {
@@ -65,6 +66,24 @@ bool cModuleInterface::setupInterface()
 
                     addSCPICommand(scpiCmdInfo); // we add our command now
                 }
+
+                QJsonArray jsonRpcScpiCmdArr = jsonScpiInfo["RPC"].toArray();
+                for (int j = 0; j < jsonRpcScpiCmdArr.count(); j++) {
+                    cSCPICmdInfoPtr scpiCmdInfo = std::make_shared<cSCPICmdInfo>();
+                    scpiCmdInfo->scpiModuleName = scpiModuleName;
+                    scpiCmdInfo->entityId = entityID;
+                    QJsonArray jsonCmdArr = jsonRpcScpiCmdArr[j].toArray();
+                    scpiCmdInfo->scpiModel = jsonCmdArr[0].toString();
+                    scpiCmdInfo->scpiCommand = jsonCmdArr[1].toString();
+                    scpiCmdInfo->scpiCommandType = jsonCmdArr[2].toString();
+                    scpiCmdInfo->componentName = jsonCmdArr[3].toString();
+                    scpiCmdInfo->veinComponentInfo = jsonComponentInfo[scpiCmdInfo->componentName].toObject();
+                    scpiCmdInfo->refType = jsonCmdArr[4].toString();
+                    rpcList.append(scpiCmdInfo->scpiCommand);
+
+                    addSCPICommand(scpiCmdInfo); // we add our command now
+                }
+                m_pModule->setRpcCmdList(rpcList);
             }
             else
                 ok = false;

@@ -32,6 +32,16 @@ VfEventSytemModuleParam *cSCPIModule::getValidatorEventSystem()
     return m_pModuleValidator;
 }
 
+QStringList cSCPIModule::getRpcCmdList()
+{
+    return m_rpcCmdList;
+}
+
+void cSCPIModule::setRpcCmdList(QStringList rpcCmdList)
+{
+    m_rpcCmdList = rpcCmdList;
+}
+
 void cSCPIModule::setupModule()
 {
     emit addEventSystem(getValidatorEventSystem());

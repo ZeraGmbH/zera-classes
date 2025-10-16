@@ -30,6 +30,8 @@ public:
 
     VfEventSytemModuleParam *getValidatorEventSystem();
     SCPIEventSystem* m_pSCPIEventSystem;
+    QStringList getRpcCmdList();
+    void setRpcCmdList(QStringList rpcCmdList);
 
 protected:
     cSCPIServer *m_pSCPIServer = nullptr;
@@ -41,6 +43,7 @@ private:
     void startMeas() override; // we make the measuring program start here
     void stopMeas() override;
     VfEventSytemModuleParam* m_pModuleValidator;
+    QStringList m_rpcCmdList;
 };
 
 }
