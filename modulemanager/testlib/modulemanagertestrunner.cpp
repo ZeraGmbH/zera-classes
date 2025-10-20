@@ -85,6 +85,11 @@ QList<TestModuleManager::TModuleInstances> ModuleManagerTestRunner::getInstanceC
     return m_modMan->getInstanceCountsOnModulesDestroyed();
 }
 
+void ModuleManagerTestRunner::setRangeGetSetDelay(int rangeGetSetDelay)
+{
+    m_modMan->setRangeGetSetDelay(rangeGetSetDelay);
+}
+
 VeinStorage::AbstractEventSystem *ModuleManagerTestRunner::getVeinStorageSystem()
 {
     return m_modmanFacade->getStorageSystem();

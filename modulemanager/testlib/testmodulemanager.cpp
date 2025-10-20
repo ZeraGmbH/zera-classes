@@ -100,6 +100,11 @@ ZDspServer *TestModuleManager::getDspServer()
     return m_testAllServices->getZdsp1dServer();
 }
 
+void TestModuleManager::setRangeGetSetDelay(int rangeGetSetDelay)
+{
+    m_testAllServices->setRangeGetSetDelay(rangeGetSetDelay);
+}
+
 void TestModuleManager::onAllModulesDestroyed()
 {
     m_instantCountsOnModulesDestroyed.append( {
