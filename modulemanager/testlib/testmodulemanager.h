@@ -36,6 +36,7 @@ public:
     QList<TModuleInstances> getInstanceCountsOnModulesDestroyed();
 
     ZDspServer *getDspServer();
+    void setRangeGetSetDelay(int rangeGetSetDelay);
 
 private slots:
     void onAllModulesDestroyed();

@@ -34,6 +34,7 @@ public:
     QVariant getVfComponent(int entityId, QString componentName);
     void start(QString sessionFileName);
     QList<TestModuleManager::TModuleInstances> getInstanceCountsOnModulesDestroyed();
+    void setRangeGetSetDelay(int rangeGetSetDelay);
 
 private:
     void setupVfLogger();
