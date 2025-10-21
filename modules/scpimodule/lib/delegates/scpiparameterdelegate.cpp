@@ -6,6 +6,7 @@
 #include <vf_rpc_invoker.h>
 #include <zscpi_response_definitions.h>
 #include <vcmp_componentdata.h>
+#include <vcmp_remoteproceduredata.h>
 
 namespace SCPIMODULE {
 
@@ -77,7 +78,12 @@ void cSCPIParameterDelegate::executeScpiRpc(cSCPIClient *client, QString &sInput
         if(sInput.contains(RpcCmd, Qt::CaseInsensitive)) {
             VfRPCInvokerPtr rpcInvoker = VfRPCInvoker::create(m_pSCPICmdInfo->entityId, std::make_unique<VfServerRPCInvoker>()); // will client rpc invoker work ?
             connect(rpcInvoker.get(), &VfRPCInvoker::sigRPCFinished, this, [=](bool ok, QUuid identifier, const QVariantMap &resultData) {
-                QVariant returnData = resultData["RemoteProcedureData::Return"];
+                QVariant returnData;
+                bool rpcSuccessful = (resultData[VeinComponent::RemoteProcedureData::s_resultCodeString] == VeinComponent::RemoteProcedureData::RPCResultCodes::RPC_SUCCESS);
+                if(rpcSuccessful)
+                    returnData = resultData[VeinComponent::RemoteProcedureData::s_returnString];
+                else
+                    returnData = resultData[VeinComponent::RemoteProcedureData::s_errorMessageString];
                 client->receiveAnswer(returnData.toString(), true);
             });
             m_pModule->getCmdEventHandlerSystem()->addItem(rpcInvoker);

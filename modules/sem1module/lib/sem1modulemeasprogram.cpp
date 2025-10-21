@@ -1263,7 +1263,7 @@ void cSem1ModuleMeasProgram::onReadLockState(const QUuid &callId)
         if(success)
             emit emobLockStateCompleted(callId, true, "", value);
         else
-            emit emobLockStateCompleted(callId, true, value, value); // should be false / Fix in Vf-cpp-simplified::SendRpcError
+            emit emobLockStateCompleted(callId, false, value, value);
     });
 
 }

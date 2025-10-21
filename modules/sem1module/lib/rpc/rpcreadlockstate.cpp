@@ -19,5 +19,5 @@ void RPCReadLockState::onReadLockStateCompleted(const QUuid &callId, bool succes
     if(success)
         sendRpcResult(callId, value);
     else
-        sendRpcError(callId, errorMsg.toString()); // Change in VfCppRpcSimplified errorMsg to QVariant
+        sendRpcError(callId, errorMsg.toString());
 }
