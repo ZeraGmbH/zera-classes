@@ -28,7 +28,7 @@ void cSCPIParameterDelegate::executeSCPI(cSCPIClient *client, QString &sInput)
          ((scpiCmdType & SCPI::isXMLCmd) > 0) ) // test if we expext an xml command
     {
         if(isCommandRPC(sInput)) {
-            executeScpiRpc(client, sInput);
+            executeScpiRpc(client, sInput, cmd);
         }
         else {
             VeinComponent::ComponentData *cData;
@@ -71,9 +71,9 @@ void cSCPIParameterDelegate::executeSCPI(cSCPIClient *client, QString &sInput)
         client->receiveStatus(ZSCPI::nak);
 }
 
-void cSCPIParameterDelegate::executeScpiRpc(cSCPIClient *client, QString &sInput)
+void cSCPIParameterDelegate::executeScpiRpc(cSCPIClient *client, QString &sInput, cSCPICommand cmd)
 {
-    for(QString RpcCmd: m_pModule->getRpcCmdList()) {
+    for(QString RpcCmd: m_pModule->getRpcCmdData().keys()) {
         if(sInput.contains(RpcCmd, Qt::CaseInsensitive)) {
             VfRPCInvokerPtr rpcInvoker = VfRPCInvoker::create(m_pSCPICmdInfo->entityId, std::make_unique<VfServerRPCInvoker>()); // will client rpc invoker work ?
             connect(rpcInvoker.get(), &VfRPCInvoker::sigRPCFinished, this, [=](bool ok, QUuid identifier, const QVariantMap &resultData) {
@@ -81,7 +81,22 @@ void cSCPIParameterDelegate::executeScpiRpc(cSCPIClient *client, QString &sInput
                 client->receiveAnswer(returnData.toString(), true);
             });
             m_pModule->getCmdEventHandlerSystem()->addItem(rpcInvoker);
-            rpcInvoker->invokeRPC("RPC_readLockState", QVariantMap());
+
+            QString RPC = sInput.section(':', -1);
+            QString RPCName = extractRpcName(RPC);
+            QStringList parameterNames = extractRpcParams(RPC);
+            QStringList parameterValues = cmd.getParamList();
+            QStringList parameterTypes = m_pModule->getRpcCmdData().value(RpcCmd).split(",");
+            QVariantMap params;
+
+            if(parameterValues.count() != parameterTypes.count() || parameterNames.count() != parameterValues.count()) {
+                //QAssert()
+            }
+            for(int i=0; i<parameterValues.count(); i++) {
+                QVariant variantValue = convertParamStrToType(parameterValues[i], parameterTypes[i]);
+                params[parameterNames[i]] = variantValue;
+            }
+            rpcInvoker->invokeRPC(RPCName, params);
         }
     }
 }
@@ -89,10 +104,50 @@ void cSCPIParameterDelegate::executeScpiRpc(cSCPIClient *client, QString &sInput
 bool cSCPIParameterDelegate::isCommandRPC(QString &sInput)
 {
     bool found = false;
-    for(QString RpcCmd: m_pModule->getRpcCmdList())
+    for(QString RpcCmd: m_pModule->getRpcCmdData().keys())
         if(sInput.contains(RpcCmd, Qt::CaseInsensitive))
             found = true;
     return found;
+}
+
+QVariant cSCPIParameterDelegate::convertParamStrToType(QString parameter, QString type)
+{
+    if (type == "int")
+        return parameter.toInt();
+    else if (type == "double")
+        return parameter.toDouble();
+    else if (type == "float")
+        return parameter.toFloat();
+    else if (type == "bool") {
+        QString entry = parameter.trimmed().toLower();
+        if(entry == "true" || entry == "1")
+            return true;
+        else if(entry == "false" || entry== "0")
+            return false;
+        else
+            return QVariant();
+    }
+    else if (type == "QString")
+        return parameter;
+    return QVariant();
+}
+
+QStringList cSCPIParameterDelegate::extractRpcParams(QString RPC)
+{
+    // RPC_name(type p_paramName1, type p_paramName2)
+    QString params;
+    QRegularExpression re("\\((.*)\\)");
+    QRegularExpressionMatch match = re.match(RPC);
+
+    if (match.hasMatch())
+        params = match.captured(1).trimmed();
+    return params.split(",", Qt::SkipEmptyParts);
+}
+
+QString cSCPIParameterDelegate::extractRpcName(QString RPC)
+{
+    QString RPCName = RPC.section('(', 0, 0);
+    return RPCName;
 }
 
 }

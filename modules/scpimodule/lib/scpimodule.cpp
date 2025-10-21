@@ -39,14 +39,14 @@ VfCmdEventHandlerSystemPtr cSCPIModule::getCmdEventHandlerSystem()
     return m_cmdEventHandlerSystem;
 }
 
-QStringList cSCPIModule::getRpcCmdList()
+QMap<QString, QString> cSCPIModule::getRpcCmdData()
 {
-    return m_rpcCmdList;
+    return m_rpcCmdData;
 }
 
-void cSCPIModule::setRpcCmdList(QStringList rpcCmdList)
+void cSCPIModule::setRpcCmdData(QMap<QString, QString> rpcCmdData)
 {
-    m_rpcCmdList = rpcCmdList;
+    m_rpcCmdData = rpcCmdData;
 }
 
 void cSCPIModule::setupModule()

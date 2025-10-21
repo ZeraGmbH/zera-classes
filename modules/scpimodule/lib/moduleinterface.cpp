@@ -38,7 +38,7 @@ cModuleInterface::~cModuleInterface()
 bool cModuleInterface::setupInterface()
 {
     bool ok = true;
-    QStringList rpcList;
+    QMap<QString, QString> rpcData;
     const VeinStorage::AbstractDatabase* storageDb = m_pModule->getStorageDb();
     const QList<int> entityIdList = storageDb->getEntityList();
     for(auto entityID : entityIdList) {
@@ -79,11 +79,12 @@ bool cModuleInterface::setupInterface()
                     scpiCmdInfo->componentName = jsonCmdArr[3].toString();
                     scpiCmdInfo->veinComponentInfo = jsonComponentInfo[scpiCmdInfo->componentName].toObject();
                     scpiCmdInfo->refType = jsonCmdArr[4].toString();
-                    rpcList.append(scpiCmdInfo->scpiCommand);
+                    QString parametersType = jsonCmdArr[5].toString();
+                    rpcData.insert(jsonCmdArr[1].toString(), parametersType);
 
                     addSCPICommand(scpiCmdInfo); // we add our command now
                 }
-                m_pModule->setRpcCmdList(rpcList);
+                m_pModule->setRpcCmdData(rpcData);
             }
             else
                 ok = false;
