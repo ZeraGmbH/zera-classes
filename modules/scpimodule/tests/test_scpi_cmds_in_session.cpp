@@ -9,6 +9,7 @@
 #include <scpiserver.h>
 #include <statusmodule.h>
 #include <rangemodule.h>
+#include <vf_entity_rpc_event_handler.h>
 #include <xmldocumentcompare.h>
 #include <QTest>
 
@@ -174,3 +175,50 @@ void test_scpi_cmds_in_session::catalogFormat()
     QString sessionCatalog = client.sendReceive("CONFIGURATION:SYST:SESSION:CATALOG?");
     QCOMPARE(sessionCatalog, "Default;EMOB AC;EMOB DC;DC: 4*Voltage / 1*Current");
 }
+
+void test_scpi_cmds_in_session::executeRpcQueryWrongRpcName()
+{
+    ModuleManagerTestRunner testRunner(":/mt310s2-meas-session.json");
+    ScpiModuleClientBlocked client;
+    QString status = client.sendReceive("CALCULATE:EM01:0001:RPC_FOO()?");
+    QCOMPARE(status, "");
+}
+
+void test_scpi_cmds_in_session::executeRpcQuery()
+{
+    ModuleManagerTestRunner testRunner(":/mt310s2-meas-session.json");
+    ScpiModuleClientBlocked client;
+    QString status = client.sendReceive("CALCULATE:EM01:0001:RPC_READLOCKSTATE()?");
+    QCOMPARE(status, "4");
+}
+
+void test_scpi_cmds_in_session::executeRpcQueryInvalidParams()
+{
+    ModuleManagerTestRunner testRunner("");
+    vfEntityRpcEventHandler *rpcEventHandler = new vfEntityRpcEventHandler();
+    testRunner.getModManFacade()->addSubsystem(rpcEventHandler->getVeinEntity());
+    rpcEventHandler->initOnce();
+    TimeMachineObject::feedEventLoop();
+    testRunner.start(":/mt310s2-meas-session.json");
+    TimeMachineObject::feedEventLoop();
+
+    ScpiModuleClientBlocked client;
+    QString answer = client.sendReceive("CALCULATE:RPC_FORTEST(p_param)? 7;");
+    QCOMPARE(answer, "");
+}
+
+void test_scpi_cmds_in_session::executeRpcQueryOneParam()
+{
+    ModuleManagerTestRunner testRunner("");
+    vfEntityRpcEventHandler *rpcEventHandler = new vfEntityRpcEventHandler();
+    testRunner.getModManFacade()->addSubsystem(rpcEventHandler->getVeinEntity());
+    rpcEventHandler->initOnce();
+    TimeMachineObject::feedEventLoop();
+    testRunner.start(":/mt310s2-meas-session.json");
+    TimeMachineObject::feedEventLoop();
+
+    ScpiModuleClientBlocked client;
+    QString answer = client.sendReceive("CALCULATE:RPC_FORTEST(p_param)? true;");
+    QCOMPARE(answer, "false");
+}
+

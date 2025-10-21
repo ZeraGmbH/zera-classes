@@ -18,6 +18,11 @@ private slots:
     void closeSocketOnPendingWriteStbQueryNoCrasher();
     void multilineCommandsLastOpc();
     void catalogFormat();
+
+    void executeRpcQueryWrongRpcName();
+    void executeRpcQuery();
+    void executeRpcQueryInvalidParams();
+    void executeRpcQueryOneParam();
 };
 
 #endif // TEST_SCPI_CMDS_IN_SESSION_H

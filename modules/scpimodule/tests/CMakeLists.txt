@@ -14,6 +14,7 @@ function(SETUP_QTESTS_MODULE)
             zera-modulemanager-testlib
             Zera::xml-compare-testlib
             Zera::zera-timers-testlib
+            Zera::VfConvenientCodeTest
         )
     endforeach()
 endfunction()
