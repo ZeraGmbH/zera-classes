@@ -68,13 +68,14 @@ void VfModuleComponent::setScpiInfo(const QString &model,
                                                          entryType);
 }
 
-void VfModuleComponent::setRPCScpiInfo(const QString &model, const QString &cmd, int cmdTypeMask, const QString &veinComponentName, SCPI::eSCPIEntryType entryType)
+void VfModuleComponent::setRPCScpiInfo(const QString &model, const QString &cmd, int cmdTypeMask, const QString &veinComponentName, const QString &rpcParamsType, SCPI::eSCPIEntryType entryType)
 {
     m_RpcScpiInfo = std::make_unique<ScpiVeinComponentInfo>(model,
                                                             cmd,
                                                             cmdTypeMask,
                                                             veinComponentName,
                                                             entryType);
+    m_RpcScpiInfo->setRpcParams(rpcParamsType);
 }
 
 void VfModuleComponent::setChannelName(QString name)

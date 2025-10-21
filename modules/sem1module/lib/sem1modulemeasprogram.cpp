@@ -378,7 +378,7 @@ void cSem1ModuleMeasProgram::generateVeinInterface()
     connect(this, &cSem1ModuleMeasProgram::emobLockStateCompleted, m_rpcReadLockState.get(), &RPCReadLockState::onReadLockStateCompleted);
     m_pModule->getRpcEventSystem()->addRpc(m_rpcReadLockState);
 
-    m_pEmobLockState->setRPCScpiInfo("CALCULATE", QString("%1:%2").arg(modNr).arg(m_rpcReadLockState->getSignature()), SCPI::isQuery, m_pEmobLockState->getName());
+    m_pEmobLockState->setRPCScpiInfo("CALCULATE", QString("%1:%2").arg(modNr).arg(m_rpcReadLockState->getSignature()), SCPI::isQuery, m_pEmobLockState->getName(), "");
 }
 
 

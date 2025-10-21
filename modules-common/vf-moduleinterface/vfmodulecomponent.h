@@ -27,6 +27,7 @@ public:
     void setRPCScpiInfo(const QString &model, const QString &cmd,
                      int cmdTypeMask, // e.g SCPI::isQuery|SCPI::isCmdwP
                      const QString &veinComponentName,
+                     const QString &rpcParamsType,
                      SCPI::eSCPIEntryType entryType = SCPI::isComponent);
     void exportSCPIInfo(QJsonArray &jsArr);
     void exportRpcSCPIInfo(QJsonArray &jsArr);
