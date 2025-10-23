@@ -3,7 +3,7 @@
 
 #include <abstracttestallservices.h>
 #include <modulemanager.h>
-#include <tcpnetworkfactory.h>
+#include <mocktcpnetworkfactory.h>
 #include <zdspserver.h>
 
 class TestModuleManager : public ZeraModules::ModuleManager
@@ -13,7 +13,7 @@ public:
 
     explicit TestModuleManager(ModuleManagerSetupFacade *setupFacade,
                                AbstractFactoryServiceInterfacesPtr serviceInterfaceFactory,
-                               VeinTcp::AbstractTcpNetworkFactoryPtr tcpNetworkFactory = VeinTcp::TcpNetworkFactory::create(),
+                               VeinTcp::AbstractTcpNetworkFactoryPtr tcpNetworkFactory = VeinTcp::MockTcpNetworkFactory::create(),
                                std::shared_ptr<QByteArray> configDataLastSaved = std::make_shared<QByteArray>());
     void startAllTestServices(QString deviceName, bool initialAdjPermission);
     void destroyModulesAndWaitUntilAllShutdown();
@@ -53,6 +53,7 @@ private:
     std::shared_ptr<QByteArray> m_configDataLastSaved;
     QList<TModuleInstances> m_instantCountsOnModulesDestroyed;
     std::unique_ptr<AbstractTestAllServices> m_testAllServices;
+    VeinTcp::AbstractTcpNetworkFactoryPtr m_tcpNetworkFactory;
 };
 
 #endif // TESTMODULEMANAGER_H

@@ -47,6 +47,7 @@ TestModuleManager::TestModuleManager(ModuleManagerSetupFacade *setupFacade,
         tcpNetworkFactory,
         // This is a hack to modify static test environment before ModuleManager starts using them
         prepareOe()),
+    m_tcpNetworkFactory(tcpNetworkFactory),
     m_configDataLastSaved(configDataLastSaved)
 {
     enableTests();
@@ -62,9 +63,11 @@ void TestModuleManager::startAllTestServices(QString deviceName, bool initialAdj
     if(deviceName == "mt310s2" || deviceName == "mt581s2")
         m_testAllServices = std::make_unique<TestAllServicesMt310s2>(
             deviceName,
+            m_tcpNetworkFactory,
             std::make_shared<TestFactoryI2cCtrl>(initialAdjPermission));
     else if(deviceName == "com5003")
         m_testAllServices = std::make_unique<TestAllServicesCom5003>(
+            m_tcpNetworkFactory,
             std::make_shared<TestFactoryI2cCtrl>(initialAdjPermission));
 }
 
