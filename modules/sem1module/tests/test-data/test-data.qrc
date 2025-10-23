@@ -1,0 +1,6 @@
+<RCC>
+    <qresource prefix="/">
+        <file>mt310s2-meas-session.json</file>
+    </qresource>
+</RCC>
+

@@ -1258,14 +1258,14 @@ void cSem1ModuleMeasProgram::Actualize()
 
 void cSem1ModuleMeasProgram::onReadLockState(const QUuid &callId)
 {
-    m_MsgNrCmdList[m_pcbInterface->readEmobConnectionState()] = reademoblockstate;
+    disconnect(this, &cSem1ModuleMeasProgram::sigLockStateRead, nullptr, nullptr);
     connect(this, &cSem1ModuleMeasProgram::sigLockStateRead, this, [=](bool success, QVariant value){
         if(success)
             emit emobLockStateCompleted(callId, true, "", value);
         else
             emit emobLockStateCompleted(callId, false, value, value);
     });
-
+    m_MsgNrCmdList[m_pcbInterface->readEmobConnectionState()] = reademoblockstate;
 }
 
 void cSem1ModuleMeasProgram::clientActivationChanged(bool bActive)
