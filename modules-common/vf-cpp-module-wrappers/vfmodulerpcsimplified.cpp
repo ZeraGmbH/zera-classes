@@ -13,20 +13,29 @@ void VfModuleRpcSimplified::processCommandEvent(VeinEvent::CommandEvent *command
     if(commandEvent->eventData()->entityId() == m_entityId &&
         commandEvent->eventData()->type() == VeinComponent::RemoteProcedureData::dataType()) {
         VeinComponent::RemoteProcedureData *rpcData = static_cast<VeinComponent::RemoteProcedureData *>(commandEvent->eventData());
+        bool rpcFound = false;
+        QString procedureName;
         if(rpcData->command() == VeinComponent::RemoteProcedureData::Command::RPCMD_CALL) {
-            if(m_rpcHash.contains(rpcData->procedureName())) {
+            for (auto it = m_rpcHash.constBegin(); it != m_rpcHash.constEnd(); ++it) {
+                procedureName = it.key();
+                if (procedureName.contains(rpcData->procedureName(), Qt::CaseInsensitive)) {
+                    rpcFound = true;
+                    break ;
+                }
+            }
+            if(rpcFound) {
                 const QUuid callId = rpcData->invokationData().value(VeinComponent::RemoteProcedureData::s_callIdString).toUuid();
                 Q_ASSERT(!callId.isNull());
-                m_rpcHash[rpcData->procedureName()]->callFunction(callId,
-                                                                  commandEvent->peerId(),
-                                                                  rpcData->invokationData());
+                m_rpcHash[procedureName]->callFunction(callId,
+                                                       commandEvent->peerId(),
+                                                       rpcData->invokationData());
                 commandEvent->accept();
             }
             else {
-                VF_ASSERT(false, QStringC(QString("No remote procedure with entityId: %1 name: %2").arg(m_entityId).arg(rpcData->procedureName())));
+                VF_ASSERT(false, QStringC(QString("No remote procedure with entityId: %1 name: %2").arg(m_entityId).arg(procedureName)));
                 VeinComponent::ErrorData *eData = new VeinComponent::ErrorData();
                 eData->setEntityId(m_entityId);
-                eData->setErrorDescription(QString("No remote procedure with name: %1").arg(rpcData->procedureName()));
+                eData->setErrorDescription(QString("No remote procedure with name: %1").arg(procedureName));
                 eData->setOriginalData(rpcData);
                 eData->setEventOrigin(VeinEvent::EventData::EventOrigin::EO_LOCAL);
                 eData->setEventTarget(VeinEvent::EventData::EventTarget::ET_ALL);
