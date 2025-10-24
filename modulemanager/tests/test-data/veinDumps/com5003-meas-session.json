@@ -4924,7 +4924,6 @@
         "PAR_Storage": 0
     },
     "1200": {
-        "ACT_EmobLockState": 0,
         "ACT_EndTime": "",
         "ACT_Energy": 0,
         "ACT_MeasTime": 0,
@@ -4938,9 +4937,6 @@
         "EntityName": "SEM1Module1",
         "INF_ModuleInterface": {
             "ComponentInfo": {
-                "ACT_EmobLockState": {
-                    "Description": "State: 0:Unknown 1:Open 2:Locking 3:Locked 4:Error"
-                },
                 "ACT_EndTime": {
                     "Description": "Last measurement: End time (dd-MM-yyyy HH:mm:ss)"
                 },
@@ -5271,7 +5267,7 @@
                         "CALCULATE",
                         "0001:RPC_readLockState()",
                         "2",
-                        "ACT_EmobLockState",
+                        "",
                         "0",
                         ""
                     ]
