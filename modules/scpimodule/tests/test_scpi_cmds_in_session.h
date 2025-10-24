@@ -20,9 +20,10 @@ private slots:
     void catalogFormat();
 
     void executeRpcQueryWrongRpcName();
-    void executeRpcQuery();
+    void executeRpcReadLockStateQuery();
     void executeRpcQueryInvalidParams();
     void executeRpcQueryOneParam();
+    void executeRpcQueryParams();
 };
 
 #endif // TEST_SCPI_CMDS_IN_SESSION_H

@@ -184,7 +184,7 @@ void test_scpi_cmds_in_session::executeRpcQueryWrongRpcName()
     QCOMPARE(status, "");
 }
 
-void test_scpi_cmds_in_session::executeRpcQuery()
+void test_scpi_cmds_in_session::executeRpcReadLockStateQuery()
 {
     ModuleManagerTestRunner testRunner(":/mt310s2-meas-session.json");
     ScpiModuleClientBlocked client;
@@ -220,5 +220,20 @@ void test_scpi_cmds_in_session::executeRpcQueryOneParam()
     ScpiModuleClientBlocked client;
     QString answer = client.sendReceive("CALCULATE:RPC_FORTEST(p_param)? true;");
     QCOMPARE(answer, "false");
+}
+
+void test_scpi_cmds_in_session::executeRpcQueryParams()
+{
+    ModuleManagerTestRunner testRunner("");
+    vfEntityRpcEventHandler *rpcEventHandler = new vfEntityRpcEventHandler();
+    testRunner.getModManFacade()->addSubsystem(rpcEventHandler->getVeinEntity());
+    rpcEventHandler->initOnce();
+    TimeMachineObject::feedEventLoop();
+    testRunner.start(":/mt310s2-meas-session.json");
+    TimeMachineObject::feedEventLoop();
+
+    ScpiModuleClientBlocked client;
+    QString answer = client.sendReceive("CALCULATE:RPCRETURNTEXT(p_input,p_readOnly)? foo;true;");
+    QCOMPARE(answer, "foo");
 }
 

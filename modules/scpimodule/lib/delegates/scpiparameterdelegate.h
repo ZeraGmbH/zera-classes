@@ -17,11 +17,6 @@ public:
 signals:
     void clientinfoSignal(QString, SCPIMODULE::SCPIClientInfoPtr);
 private:
-    void executeScpiRpc(cSCPIClient *client, QString& sInput, cSCPICommand cmd);
-    bool isCommandRPC(QString& sInput);
-    QVariant convertParamStrToType(QString parameter, QString type);
-    QStringList extractRpcParams(QString RPC);
-    QString extractRpcName(QString RPC);
     cSCPIModule* m_pModule;
     cSCPICmdInfoPtr m_pSCPICmdInfo;
 };

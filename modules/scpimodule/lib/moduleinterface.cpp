@@ -18,6 +18,7 @@
 #include "scpiparameterdelegate.h"
 #include "scpicatalogcmddelegate.h"
 #include "scpimeasuredelegate.h"
+#include "scpirpcdelegate.h"
 
 
 namespace SCPIMODULE
@@ -82,7 +83,7 @@ bool cModuleInterface::setupInterface()
                     QString parametersType = jsonCmdArr[5].toString();
                     rpcData.insert(jsonCmdArr[1].toString(), parametersType);
 
-                    addSCPICommand(scpiCmdInfo); // we add our command now
+                    addRPCCommand(scpiCmdInfo);
                 }
                 m_pModule->setRpcCmdData(rpcData);
             }
@@ -162,6 +163,17 @@ void cModuleInterface::addSCPICommand(cSCPICmdInfoPtr scpiCmdInfo)
     }
 }
 
+void cModuleInterface::addRPCCommand(cSCPICmdInfoPtr scpiCmdInfo)
+{
+    QString cmdComplete = QString("%1:%2:%3").arg(scpiCmdInfo->scpiModel, scpiCmdInfo->scpiModuleName, scpiCmdInfo->scpiCommand);
+    QStringList nodeNames = cmdComplete.split(':');
+    QString cmdNode = nodeNames.takeLast();
+    QString cmdParent = nodeNames.join(':');
+    ScpiBaseDelegatePtr delegate;
+    delegate = std::make_shared<cSCPIRpcDelegate>(cmdParent, cmdNode, scpiCmdInfo->scpiCommandType.toInt(), m_pModule, scpiCmdInfo);
+    setXmlComponentInfo(delegate, scpiCmdInfo->veinComponentInfo);
+    m_pSCPIInterface->addSCPICommand(delegate);
+}
 
 void cModuleInterface::addSCPIMeasureCommand(QString cmdparent,
                                              QString cmd,

@@ -41,6 +41,7 @@ private:
     QHash<QString, cSCPICatalogCmdDelegate*> m_scpiPropertyDelegateHash; // a hash with property delegates taht might need actualization when something changes
 
     void addSCPICommand(cSCPICmdInfoPtr scpiCmdInfo);
+    void addRPCCommand(cSCPICmdInfoPtr scpiCmdInfo);
     void addSCPIMeasureCommand(QString cmdparent,
                                QString cmd,
                                quint8 cmdType,
