@@ -7,6 +7,7 @@
 #include <zscpi_response_definitions.h>
 #include <vcmp_componentdata.h>
 #include <vcmp_remoteproceduredata.h>
+#include <QRegularExpression>
 
 namespace SCPIMODULE {
 
