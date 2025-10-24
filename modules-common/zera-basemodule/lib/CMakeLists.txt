@@ -21,6 +21,7 @@ target_link_libraries(zera-basemodule
     module-service-interfaces
     Zera::service-interfaces
     Zera::zenux-device-info
+    Zera::VfCpp
     PRIVATE
     Zera::zera-xmlconfig
     Zera::zera-timers

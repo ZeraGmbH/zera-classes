@@ -24,13 +24,7 @@ public:
                      int cmdTypeMask, // e.g SCPI::isQuery|SCPI::isCmdwP
                      const QString &veinComponentName,
                      SCPI::eSCPIEntryType entryType = SCPI::isComponent);
-    void setRPCScpiInfo(const QString &model, const QString &cmd,
-                     int cmdTypeMask, // e.g SCPI::isQuery|SCPI::isCmdwP
-                     const QString &veinComponentName,
-                     const QString &rpcParamsType,
-                     SCPI::eSCPIEntryType entryType = SCPI::isComponent);
     void exportSCPIInfo(QJsonArray &jsArr);
-    void exportRpcSCPIInfo(QJsonArray &jsArr);
     static int getInstanceCount();
 signals:
     void sigValueChanged(QVariant); // we connect here if we want to do something on changed values

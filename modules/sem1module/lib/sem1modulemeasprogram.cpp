@@ -372,6 +372,8 @@ void cSem1ModuleMeasProgram::generateVeinInterface()
     connect(this, &cSem1ModuleMeasProgram::emobLockStateCompleted, m_rpcReadLockState.get(), &RPCReadLockState::onReadLockStateCompleted);
     m_pModule->getRpcEventSystem()->addRpc(m_rpcReadLockState);
 
+    m_pModule->m_veinModuleRPCMap[key] = m_rpcReadLockState; // for modules use
+    m_rpcReadLockState->setRPCScpiInfo("CALCULATE", QString("%1:%2").arg(modNr).arg(m_rpcReadLockState->getSignature()), SCPI::isQuery, m_rpcReadLockState->getParamterType());
 }
 
 

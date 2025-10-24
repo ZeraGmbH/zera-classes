@@ -245,10 +245,12 @@ void BaseModule::exportMetaData()
         veinModuleActvalueList.at(i)->exportSCPIInfo(jsonArr);
 
 
-    for (int i = 0; i < keyList.count(); i++) {
+    for (int i = 0; i < keyList.count(); i++)
         m_veinModuleParameterMap[keyList.at(i)]->exportSCPIInfo(jsonArr);
-        m_veinModuleParameterMap[keyList.at(i)]->exportRpcSCPIInfo(jsonRpc);
-    }
+
+    keyList = m_veinModuleRPCMap.keys();
+    for (int i = 0; i < keyList.count(); i++)
+        m_veinModuleRPCMap[keyList.at(i)]->exportRpcSCPIInfo(jsonRpc);
 
     QJsonObject jsonObj4;
     jsonObj4.insert("Name", m_sSCPIModuleName);
