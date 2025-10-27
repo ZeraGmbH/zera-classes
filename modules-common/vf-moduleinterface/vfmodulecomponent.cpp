@@ -49,6 +49,11 @@ int VfModuleComponent::getInstanceCount()
     return m_instanceCount;
 }
 
+void VfModuleComponent::sendDummyNotificationForRangeChange()
+{
+    sendNotification(VeinComponent::ComponentData::Command::CCMD_SET);
+}
+
 void VfModuleComponent::setScpiInfo(const QString &model,
                                     const QString &cmd,
                                     int cmdTypeMask,

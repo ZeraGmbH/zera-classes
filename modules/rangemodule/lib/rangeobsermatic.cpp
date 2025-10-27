@@ -419,6 +419,8 @@ void cRangeObsermatic::setRanges(bool force)
                 m_pComponentOverloadMax->setValue(0);
             }
         }
+        else // for condition (range == m_actChannelRangeList.at(i)) => in-case the 'range' is already being processed by services
+            m_RangeParameterList.at(i)->sendDummyNotificationForRangeChange();
     }
 
     if (change) {

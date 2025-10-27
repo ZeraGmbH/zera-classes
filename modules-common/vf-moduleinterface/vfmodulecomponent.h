@@ -26,6 +26,8 @@ public:
                      SCPI::eSCPIEntryType entryType = SCPI::isComponent);
     void exportSCPIInfo(QJsonArray &jsArr);
     static int getInstanceCount();
+    void sendDummyNotificationForRangeChange();
+
 signals:
     void sigValueChanged(QVariant); // we connect here if we want to do something on changed values
 public slots:
