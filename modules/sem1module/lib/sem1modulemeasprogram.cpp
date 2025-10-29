@@ -9,6 +9,7 @@
 #include <intvalidator.h>
 #include <stringvalidator.h>
 #include <vf-cpp-rpc-signature.h>
+#include <vf-cpp-rpc-helper.h>
 #include <reply.h>
 #include <proxy.h>
 #include <math.h>
@@ -373,7 +374,10 @@ void cSem1ModuleMeasProgram::generateVeinInterface()
     m_pModule->getRpcEventSystem()->addRpc(m_rpcReadLockState);
 
     m_pModule->m_veinModuleRPCMap[key] = m_rpcReadLockState; // for modules use
-    m_rpcReadLockState->setRPCScpiInfo("CALCULATE", QString("%1:%2").arg(modNr).arg(m_rpcReadLockState->getSignature()), SCPI::isQuery, m_rpcReadLockState->getParamterType());
+    m_rpcReadLockState->setRPCScpiInfo("CALCULATE",
+                                       QString("%1:%2").arg(modNr).arg(m_rpcReadLockState->getSignature()),
+                                       SCPI::isQuery,
+                                       VfCppRpcHelper::getRpcTypesFromSignature(m_rpcReadLockState->getSignature()));
 }
 
 
