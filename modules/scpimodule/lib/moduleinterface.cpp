@@ -169,8 +169,7 @@ void cModuleInterface::addRPCCommand(cSCPICmdInfoPtr scpiCmdInfo)
     QStringList nodeNames = cmdComplete.split(':');
     QString cmdNode = nodeNames.takeLast();
     QString cmdParent = nodeNames.join(':');
-    ScpiBaseDelegatePtr delegate;
-    delegate = std::make_shared<cSCPIRpcDelegate>(cmdParent, cmdNode, scpiCmdInfo->scpiCommandType.toInt(), m_pModule, scpiCmdInfo);
+    ScpiBaseDelegatePtr delegate = std::make_shared<cSCPIRpcDelegate>(cmdParent, cmdNode, scpiCmdInfo->scpiCommandType.toInt(), m_pModule, scpiCmdInfo);
     setXmlComponentInfo(delegate, scpiCmdInfo->veinComponentInfo);
     m_pSCPIInterface->addSCPICommand(delegate);
 }
