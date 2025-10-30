@@ -1,6 +1,6 @@
 #include "scpirpcdelegate.h"
 #include <zscpi_response_definitions.h>
-#include <vf_server_rpc_invoker.h>
+#include <vf_client_rpc_invoker.h>
 #include <vf_rpc_invoker.h>
 #include <vcmp_remoteproceduredata.h>
 #include <vf-cpp-rpc-helper.h>
@@ -27,7 +27,7 @@ void SCPIMODULE::cSCPIRpcDelegate::executeSCPI(cSCPIClient *client, QString &sIn
 
 void SCPIMODULE::cSCPIRpcDelegate::executeScpiRpc(cSCPIClient *client, QString &sInput)
 {
-    VfRPCInvokerPtr rpcInvoker = VfRPCInvoker::create(m_scpicmdinfo->entityId, std::make_unique<VfServerRPCInvoker>()); // will client rpc invoker work ?
+    VfRPCInvokerPtr rpcInvoker = VfRPCInvoker::create(m_scpicmdinfo->entityId, std::make_unique<VfClientRPCInvoker>());
     connect(rpcInvoker.get(), &VfRPCInvoker::sigRPCFinished, this, [=](bool ok, QUuid identifier, const QVariantMap &resultData) {
         Q_UNUSED(ok)
         Q_UNUSED(identifier)
