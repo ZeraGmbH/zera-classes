@@ -1,11 +1,16 @@
 #include "test_read_lock_state.h"
-#include "modulemanagertestrunner.h"
 #include "scpimoduleclientblocked.h"
+#include <testloghelpers.h>
 #include <QTest>
 
 QTEST_MAIN(test_read_lock_state)
 
 static int constexpr semEntityId = 1200;
+
+void test_read_lock_state::cleanup()
+{
+    m_veinEventDump = QJsonObject();
+}
 
 void test_read_lock_state::readEmobPushButtonValue()
 {
@@ -36,25 +41,61 @@ void test_read_lock_state::pressAndReadEmobPushButtonValue()
 void test_read_lock_state::readLockStateWrongRpcName()
 {
     ModuleManagerTestRunner testRunner(":/mt310s2-meas-session.json");
+    setupSpy(testRunner);
+
     ScpiModuleClientBlocked client;
     QString status = client.sendReceive("CALCULATE:EM01:0001:FOO?");
     QCOMPARE(status, "");
+
+    QFile file(":/vein-event-dumps/dumpReadLockStateWrongRpcName.json");
+    QVERIFY(file.open(QFile::ReadOnly));
+    QByteArray jsonExpected = file.readAll();
+    QByteArray jsonDumped = TestLogHelpers::dump(m_veinEventDump);
+    QVERIFY(TestLogHelpers::compareAndLogOnDiffJson(jsonExpected, jsonDumped));
 }
 
 void test_read_lock_state::readLockStateCorrectRpcName()
 {
     ModuleManagerTestRunner testRunner(":/mt310s2-meas-session.json");
+    setupSpy(testRunner);
+
     ScpiModuleClientBlocked client;
     QString status = client.sendReceive("CALCULATE:EM01:0001:EMLOCKSTATE?");
     QCOMPARE(status, "4");
+
+    QFile file(":/vein-event-dumps/dumpReadLockStateCorrectRpcName.json");
+    QVERIFY(file.open(QFile::ReadOnly));
+    QByteArray jsonExpected = file.readAll();
+    QByteArray jsonDumped = TestLogHelpers::dump(m_veinEventDump);
+    QVERIFY(TestLogHelpers::compareAndLogOnDiffJson(jsonExpected, jsonDumped));
 }
 
 void test_read_lock_state::readLockStateTwice()
 {
     ModuleManagerTestRunner testRunner(":/mt310s2-meas-session.json");
+    setupSpy(testRunner);
+
     ScpiModuleClientBlocked client;
     QString status1 = client.sendReceive("CALCULATE:EM01:0001:EMLOCKSTATE?");
     QString status2 = client.sendReceive("CALCULATE:EM01:0001:EMLOCKSTATE?");
     QCOMPARE(status1, "4");
     QCOMPARE(status1, status2);
+
+    QFile file(":/vein-event-dumps/dumpReadLockStateTwice.json");
+    QVERIFY(file.open(QFile::ReadOnly));
+    QByteArray jsonExpected = file.readAll();
+    QByteArray jsonDumped = TestLogHelpers::dump(m_veinEventDump);
+    QVERIFY(TestLogHelpers::compareAndLogOnDiffJson(jsonExpected, jsonDumped));
+}
+
+void test_read_lock_state::setupSpy(ModuleManagerTestRunner &modmanRunner)
+{
+    ModuleManagerSetupFacade* modManFacade = modmanRunner.getModManFacade();
+    m_serverCmdEventSpyTop = std::make_unique<TestJsonSpyEventSystem>(&m_veinEventDump, "server-enter");
+    modManFacade->prependModuleSystem(m_serverCmdEventSpyTop.get());
+
+    m_serverCmdEventSpyBottom = std::make_unique<TestJsonSpyEventSystem>(&m_veinEventDump, "server-fallthrough");
+    connect(modManFacade->getEventHandler(), &VeinEvent::EventHandler::sigEventAccepted,
+            m_serverCmdEventSpyBottom.get(), &TestJsonSpyEventSystem::onEventAccepted);
+    modManFacade->addSubsystem(m_serverCmdEventSpyBottom.get());
 }

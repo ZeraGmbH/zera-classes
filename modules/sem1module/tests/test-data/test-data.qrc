@@ -1,5 +1,8 @@
 <RCC>
     <qresource prefix="/">
+        <file>vein-event-dumps/dumpReadLockStateCorrectRpcName.json</file>
+        <file>vein-event-dumps/dumpReadLockStateTwice.json</file>
+        <file>vein-event-dumps/dumpReadLockStateWrongRpcName.json</file>
         <file>mt310s2-meas-session.json</file>
     </qresource>
 </RCC>
