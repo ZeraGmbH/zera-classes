@@ -29,10 +29,12 @@ void SCPIMODULE::cSCPIRpcDelegate::executeSCPI(cSCPIClient *client, QString &sIn
 
 void SCPIMODULE::cSCPIRpcDelegate::executeScpiRpc(cSCPIClient *client, QString &sInput, cSCPICommand cmd)
 {
-    for(QString RpcCmd: m_pModule->getRpcCmdData().keys()) {
+    for(const QString &RpcCmd: m_pModule->getRpcCmdData().keys()) {
         if(sInput.contains(RpcCmd, Qt::CaseInsensitive)) {
             VfRPCInvokerPtr rpcInvoker = VfRPCInvoker::create(m_scpicmdinfo->entityId, std::make_unique<VfServerRPCInvoker>()); // will client rpc invoker work ?
             connect(rpcInvoker.get(), &VfRPCInvoker::sigRPCFinished, this, [=](bool ok, QUuid identifier, const QVariantMap &resultData) {
+                Q_UNUSED(ok)
+                Q_UNUSED(identifier)
                 QVariant returnData;
                 bool rpcSuccessful = (resultData[VeinComponent::RemoteProcedureData::s_resultCodeString] == VeinComponent::RemoteProcedureData::RPCResultCodes::RPC_SUCCESS);
                 if(rpcSuccessful)
