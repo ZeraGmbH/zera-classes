@@ -1,21 +1,19 @@
 #include "test_read_lock_state.h"
-#include "scpimoduleclientblocked.h"
 #include <testloghelpers.h>
+#include <timemachineobject.h>
+#include <vf_client_rpc_invoker.h>
+#include <QSignalSpy>
 #include <QTest>
 
 QTEST_MAIN(test_read_lock_state)
 
 static int constexpr semEntityId = 1200;
-
-void test_read_lock_state::cleanup()
-{
-    m_veinEventDump = QJsonObject();
-}
+static int constexpr serverPort = 4711;
+static constexpr int systemEntityId = 0;
 
 void test_read_lock_state::readEmobPushButtonValue()
 {
-    ModuleManagerTestRunner testRunner(":/mt310s2-meas-session.json");
-    VeinStorage::AbstractEventSystem* veinStorage = testRunner.getVeinStorageSystem();
+    VeinStorage::AbstractEventSystem* veinStorage = m_testRunner->getVeinStorageSystem();
     VeinStorage::AbstractDatabase *dataBase = veinStorage->getDb();
     QList<int> entityList = dataBase->getEntityList();
     QVERIFY(entityList.contains(semEntityId));
@@ -27,70 +25,116 @@ void test_read_lock_state::readEmobPushButtonValue()
 
 void test_read_lock_state::pressAndReadEmobPushButtonValue()
 {
-    ModuleManagerTestRunner testRunner(":/mt310s2-meas-session.json");
-    VeinStorage::AbstractEventSystem* veinStorage = testRunner.getVeinStorageSystem();
+    VeinStorage::AbstractEventSystem* veinStorage = m_testRunner->getVeinStorageSystem();
     VeinStorage::AbstractDatabase *dataBase = veinStorage->getDb();
 
     QVariant oldValue = dataBase->getStoredValue(semEntityId, "PAR_EmobPushButton");
     QCOMPARE(oldValue, 0);
 
-    testRunner.setVfComponent(semEntityId, "PAR_EmobPushButton", 1);
+    m_testRunner->setVfComponent(semEntityId, "PAR_EmobPushButton", 1);
     QCOMPARE(dataBase->getStoredValue(semEntityId, "PAR_EmobPushButton"), 0);
 }
 
-void test_read_lock_state::readLockStateWrongRpcName()
+void test_read_lock_state::readLockStateWrongRpcNameScpi()
 {
-    ModuleManagerTestRunner testRunner(":/mt310s2-meas-session.json");
-    setupSpy(testRunner);
-
-    ScpiModuleClientBlocked client;
-    QString status = client.sendReceive("CALCULATE:EM01:0001:FOO?");
+    QString status = m_scpiClient->sendReceive("CALCULATE:EM01:0001:FOO?");
     QCOMPARE(status, "");
 
-    QFile file(":/vein-event-dumps/dumpReadLockStateWrongRpcName.json");
+    QFile file(":/vein-event-dumps/dumpReadLockStateWrongRpcNameScpi.json");
     QVERIFY(file.open(QFile::ReadOnly));
     QByteArray jsonExpected = file.readAll();
     QByteArray jsonDumped = TestLogHelpers::dump(m_veinEventDump);
     QVERIFY(TestLogHelpers::compareAndLogOnDiffJson(jsonExpected, jsonDumped));
 }
 
-void test_read_lock_state::readLockStateCorrectRpcName()
+void test_read_lock_state::readLockStateCorrectRpcNameScpi()
 {
-    ModuleManagerTestRunner testRunner(":/mt310s2-meas-session.json");
-    setupSpy(testRunner);
-
-    ScpiModuleClientBlocked client;
-    QString status = client.sendReceive("CALCULATE:EM01:0001:EMLOCKSTATE?");
+    QString status = m_scpiClient->sendReceive("CALCULATE:EM01:0001:EMLOCKSTATE?");
     QCOMPARE(status, "4");
 
-    QFile file(":/vein-event-dumps/dumpReadLockStateCorrectRpcName.json");
+    QFile file(":/vein-event-dumps/dumpReadLockStateCorrectRpcNameScpi.json");
     QVERIFY(file.open(QFile::ReadOnly));
     QByteArray jsonExpected = file.readAll();
     QByteArray jsonDumped = TestLogHelpers::dump(m_veinEventDump);
     QVERIFY(TestLogHelpers::compareAndLogOnDiffJson(jsonExpected, jsonDumped));
 }
 
-void test_read_lock_state::readLockStateTwice()
+void test_read_lock_state::readLockStateTwiceScpi()
 {
-    ModuleManagerTestRunner testRunner(":/mt310s2-meas-session.json");
-    setupSpy(testRunner);
-
-    ScpiModuleClientBlocked client;
-    QString status1 = client.sendReceive("CALCULATE:EM01:0001:EMLOCKSTATE?");
-    QString status2 = client.sendReceive("CALCULATE:EM01:0001:EMLOCKSTATE?");
+    QString status1 = m_scpiClient->sendReceive("CALCULATE:EM01:0001:EMLOCKSTATE?");
+    QString status2 = m_scpiClient->sendReceive("CALCULATE:EM01:0001:EMLOCKSTATE?");
     QCOMPARE(status1, "4");
     QCOMPARE(status1, status2);
 
-    QFile file(":/vein-event-dumps/dumpReadLockStateTwice.json");
+    QFile file(":/vein-event-dumps/dumpReadLockStateTwiceScpi.json");
     QVERIFY(file.open(QFile::ReadOnly));
     QByteArray jsonExpected = file.readAll();
     QByteArray jsonDumped = TestLogHelpers::dump(m_veinEventDump);
     QVERIFY(TestLogHelpers::compareAndLogOnDiffJson(jsonExpected, jsonDumped));
 }
 
-void test_read_lock_state::setupSpy(ModuleManagerTestRunner &modmanRunner)
+void test_read_lock_state::readLockStateTwiceVein()
 {
-    ModuleManagerSetupFacade* modManFacade = modmanRunner.getModManFacade();
+    QSignalSpy spyRpcFinish(m_rpcInvoker.get(), &VfRPCInvoker::sigRPCFinished);
+    invokeRpc("RPC_readLockState", "", 0);
+    invokeRpc("RPC_readLockState", "", 0);
+
+    QFile file(":/vein-event-dumps/dumpReadLockStateTwiceVein.json");
+    QVERIFY(file.open(QFile::ReadOnly));
+    QByteArray jsonExpected = file.readAll();
+    QByteArray jsonDumped = TestLogHelpers::dump(m_veinEventDump);
+    QVERIFY(TestLogHelpers::compareAndLogOnDiffJson(jsonExpected, jsonDumped));
+    QCOMPARE(spyRpcFinish.count(), 2);
+}
+
+void test_read_lock_state::init()
+{
+    m_testRunner = std::make_unique<ModuleManagerTestRunner>(":/mt310s2-meas-session.json");
+    m_netSystem = std::make_unique<VeinNet::NetworkSystem>();
+    m_netSystem->setOperationMode(VeinNet::NetworkSystem::VNOM_SUBSCRIPTION);
+    m_tcpSystem = std::make_unique<VeinNet::TcpSystem>(VeinTcp::MockTcpNetworkFactory::create());
+    ModuleManagerSetupFacade* modManFacade = m_testRunner->getModManFacade();
+    modManFacade->addSubsystem(m_netSystem.get());
+    modManFacade->addSubsystem(m_tcpSystem.get());
+    m_tcpSystem->startServer(serverPort);
+
+    m_veinClientStack = std::make_unique<VfCoreStackClient>(VeinTcp::MockTcpNetworkFactory::create());
+    m_veinClientStack->connectToServer("127.0.0.1", serverPort);
+    m_veinClientStack->subscribeEntity(systemEntityId);
+    m_veinClientStack->subscribeEntity(semEntityId);
+    m_rpcInvoker = std::make_shared<VfRPCInvoker>(semEntityId, std::make_unique<VfClientRPCInvoker>());
+    m_veinClientStack->addItem(m_rpcInvoker);
+    TimeMachineObject::feedEventLoop();
+
+    setupSpy();
+
+    m_scpiClient = std::make_unique<ScpiModuleClientBlocked>();
+}
+
+void test_read_lock_state::cleanup()
+{
+    m_testRunner.reset();
+    m_scpiClient.reset();
+    m_veinClientStack.reset();
+    m_netSystem.reset();
+    m_tcpSystem.reset();
+
+    m_veinEventDump = QJsonObject();
+}
+
+QUuid test_read_lock_state::invokeRpc(QString rpcName, QString paramName, QVariant paramValue)
+{
+    QVariantMap rpcParams;
+    if(!paramName.isEmpty())
+        rpcParams.insert(paramName, paramValue);
+    QUuid id = m_rpcInvoker->invokeRPC(rpcName, rpcParams);
+    TimeMachineObject::feedEventLoop();
+    return id;
+}
+
+void test_read_lock_state::setupSpy()
+{
+    ModuleManagerSetupFacade* modManFacade = m_testRunner->getModManFacade();
     m_serverCmdEventSpyTop = std::make_unique<TestJsonSpyEventSystem>(&m_veinEventDump, "server-enter");
     modManFacade->prependModuleSystem(m_serverCmdEventSpyTop.get());
 
@@ -98,4 +142,12 @@ void test_read_lock_state::setupSpy(ModuleManagerTestRunner &modmanRunner)
     connect(modManFacade->getEventHandler(), &VeinEvent::EventHandler::sigEventAccepted,
             m_serverCmdEventSpyBottom.get(), &TestJsonSpyEventSystem::onEventAccepted);
     modManFacade->addSubsystem(m_serverCmdEventSpyBottom.get());
+
+    m_clientCmdEventSpyTop = std::make_unique<TestJsonSpyEventSystem>(&m_veinEventDump, "client-enter");
+    m_veinClientStack->prependEventSystem(m_clientCmdEventSpyTop.get());
+
+    m_clientCmdEventSpyBottom = std::make_unique<TestJsonSpyEventSystem>(&m_veinEventDump, "client-fallthrough");
+    connect(m_veinClientStack->getEventHandler(), &VeinEvent::EventHandler::sigEventAccepted,
+            m_clientCmdEventSpyBottom.get(), &TestJsonSpyEventSystem::onEventAccepted);
+    m_veinClientStack->appendEventSystem(m_clientCmdEventSpyBottom.get());
 }
