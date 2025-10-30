@@ -37,7 +37,7 @@ void test_read_lock_state::readLockStateWrongRpcName()
 {
     ModuleManagerTestRunner testRunner(":/mt310s2-meas-session.json");
     ScpiModuleClientBlocked client;
-    QString status = client.sendReceive("CALCULATE:EM01:0001:RPC_READLOCKSTATEFOO()?");
+    QString status = client.sendReceive("CALCULATE:EM01:0001:FOO?");
     QCOMPARE(status, "");
 }
 
@@ -45,16 +45,16 @@ void test_read_lock_state::readLockStateCorrectRpcName()
 {
     ModuleManagerTestRunner testRunner(":/mt310s2-meas-session.json");
     ScpiModuleClientBlocked client;
-    QString status = client.sendReceive("CALCULATE:EM01:0001:RPC_READLOCKSTATE()?");
+    QString status = client.sendReceive("CALCULATE:EM01:0001:EMLOCKSTATE?");
     QCOMPARE(status, "4");
 }
 
 void test_read_lock_state::readLockStateTwice()
 {
     ModuleManagerTestRunner testRunner(":/mt310s2-meas-session.json");
-    ZeraModules::VirtualModule *module = testRunner.getModule("SEM1Module", semEntityId);
     ScpiModuleClientBlocked client;
-    QString status1 = client.sendReceive("CALCULATE:EM01:0001:RPC_READLOCKSTATE()?");
-    QString status2 = client.sendReceive("CALCULATE:EM01:0001:RPC_READLOCKSTATE()?");
+    QString status1 = client.sendReceive("CALCULATE:EM01:0001:EMLOCKSTATE?");
+    QString status2 = client.sendReceive("CALCULATE:EM01:0001:EMLOCKSTATE?");
+    QCOMPARE(status1, "4");
     QCOMPARE(status1, status2);
 }

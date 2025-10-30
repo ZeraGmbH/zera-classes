@@ -5315,9 +5315,9 @@
                 "RPC": [
                     [
                         "CALCULATE",
-                        "0001:RPC_readLockState()",
+                        "0001:EMLOCKSTATE",
                         "2",
-                        "",
+                        "RPC_readLockState()",
                         "0"
                     ]
                 ]

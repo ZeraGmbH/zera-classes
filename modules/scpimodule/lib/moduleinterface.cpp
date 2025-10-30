@@ -39,7 +39,6 @@ cModuleInterface::~cModuleInterface()
 bool cModuleInterface::setupInterface()
 {
     bool ok = true;
-    QMap<QString, QString> rpcData;
     const VeinStorage::AbstractDatabase* storageDb = m_pModule->getStorageDb();
     const QList<int> entityIdList = storageDb->getEntityList();
     for(auto entityID : entityIdList) {
@@ -61,8 +60,8 @@ bool cModuleInterface::setupInterface()
                     scpiCmdInfo->scpiModel = jsonCmdArr[0].toString();
                     scpiCmdInfo->scpiCommand = jsonCmdArr[1].toString();
                     scpiCmdInfo->scpiCommandType = jsonCmdArr[2].toString();
-                    scpiCmdInfo->componentName = jsonCmdArr[3].toString();
-                    scpiCmdInfo->veinComponentInfo = jsonComponentInfo[scpiCmdInfo->componentName].toObject();
+                    scpiCmdInfo->componentOrRpcName = jsonCmdArr[3].toString();
+                    scpiCmdInfo->veinComponentInfo = jsonComponentInfo[scpiCmdInfo->componentOrRpcName].toObject();
                     scpiCmdInfo->refType = jsonCmdArr[4].toString();
 
                     addSCPICommand(scpiCmdInfo); // we add our command now
@@ -77,15 +76,11 @@ bool cModuleInterface::setupInterface()
                     scpiCmdInfo->scpiModel = jsonCmdArr[0].toString();
                     scpiCmdInfo->scpiCommand = jsonCmdArr[1].toString();
                     scpiCmdInfo->scpiCommandType = jsonCmdArr[2].toString();
-                    scpiCmdInfo->componentName = jsonCmdArr[3].toString();
-                    scpiCmdInfo->veinComponentInfo = jsonComponentInfo[scpiCmdInfo->componentName].toObject();
+                    scpiCmdInfo->componentOrRpcName = jsonCmdArr[3].toString();
+                    scpiCmdInfo->veinComponentInfo = jsonComponentInfo[scpiCmdInfo->componentOrRpcName].toObject();
                     scpiCmdInfo->refType = jsonCmdArr[4].toString();
-                    QString parametersType = jsonCmdArr[5].toString();
-                    rpcData.insert(jsonCmdArr[1].toString(), parametersType);
-
                     addRPCCommand(scpiCmdInfo);
                 }
-                m_pModule->setRpcCmdData(rpcData);
             }
             else
                 ok = false;

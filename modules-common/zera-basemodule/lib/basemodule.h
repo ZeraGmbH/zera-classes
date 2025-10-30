@@ -36,7 +36,7 @@ public:
     QList<VfModuleComponent*> veinModuleActvalueList; // actvalues are components that need an interface
     QMap<QString, VfModuleParameter*> m_veinModuleParameterMap; // parameters are components that need an interface and validation
     QMap<QString, std::shared_ptr<VfCpp::VfCppRpcSimplified>> m_veinModuleRPCMap; // parameters are components that need an interface and validation
-    QList<ScpiVeinComponentInfo*> scpiCommandList; // a list of commands that work without existing component, it uses a component's validation data for additional queries
+    QList<VfModuleMetaInfoContainer*> scpiCommandList; // a list of commands that work without existing component, it uses a component's validation data for additional queries
 
 signals:
     // signals emitted by modules

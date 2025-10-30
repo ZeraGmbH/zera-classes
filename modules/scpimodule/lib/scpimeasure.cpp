@@ -30,12 +30,12 @@ cSCPIMeasure::cSCPIMeasure(const cSCPIMeasure &obj) :
 cSCPIMeasure::~cSCPIMeasure()
 {
     m_instanceCount--;
-    m_scpiMeasureHash->remove(m_pSCPICmdInfo->componentName, this);
+    m_scpiMeasureHash->remove(m_pSCPICmdInfo->componentOrRpcName, this);
 }
 
 void cSCPIMeasure::receiveMeasureValue(QVariant qvar)
 {
-    m_scpiMeasureHash->remove(m_pSCPICmdInfo->componentName, this);
+    m_scpiMeasureHash->remove(m_pSCPICmdInfo->componentOrRpcName, this);
     m_sAnswer = setAnswer(qvar);
 
     // we emit all expected signals
@@ -154,7 +154,7 @@ void cSCPIMeasure::measureInit()
     // the module's eventsystem will look for notifications on this and will
     // then call the receiveMeasureValue slot, so we synchronized on next measurement value
     if (!m_bInitPending)
-        m_scpiMeasureHash->insert(m_pSCPICmdInfo->componentName, this);
+        m_scpiMeasureHash->insert(m_pSCPICmdInfo->componentOrRpcName, this);
 
     signalList.append(measCont); // measure statemachine waits for measure value
 }
@@ -201,7 +201,7 @@ void cSCPIMeasure::readInit()
     // the module's eventsystem will look for notifications on this and will
     // then call the receiveMeasureValue slot, so we synchronized on next measurement value
     if (!m_bInitPending)
-        m_scpiMeasureHash->insert(m_pSCPICmdInfo->componentName, this);
+        m_scpiMeasureHash->insert(m_pSCPICmdInfo->componentOrRpcName, this);
 
     signalList.append(readCont); // read statemachine waits for measure value
 }
@@ -226,7 +226,7 @@ void cSCPIMeasure::init()
     // then call the initDone slot, so we synchronized on next measurement value
 
     m_bInitPending = true;
-    m_scpiMeasureHash->insert(m_pSCPICmdInfo->componentName, this);
+    m_scpiMeasureHash->insert(m_pSCPICmdInfo->componentOrRpcName, this);
 
     signalList.append(initCont); // init statemachine waits for measure value
 }

@@ -3,7 +3,6 @@
 
 #include "vfmodulecomponent.h"
 #include "validatorinterface.h"
-#include <scpiveincomponentinfo.h>
 #include <QUuid>
 
 class VfModuleParameter: public VfModuleComponent

@@ -23,7 +23,7 @@ bool cInterfaceInterface::setupInterface()
     connect(delegate.get(), &cSCPIInterfaceDelegate::signalExecuteSCPI, this, &cInterfaceInterface::executeCmd);
 
     // for module integrity we also have to add this command to the scpi command list (exported at INF_ModuleInterface)
-    m_pModule->scpiCommandList.append(new ScpiVeinComponentInfo("", QString("DEVICE:IFACE"), SCPI::isQuery, ""));
+    m_pModule->scpiCommandList.append(new VfModuleMetaInfoContainer("", QString("DEVICE:IFACE"), SCPI::isQuery, ""));
     return true;
 }
 

@@ -39,16 +39,6 @@ VfCmdEventHandlerSystemPtr cSCPIModule::getCmdEventHandlerSystem()
     return m_cmdEventHandlerSystem;
 }
 
-QMap<QString, QString> cSCPIModule::getRpcCmdData()
-{
-    return m_rpcCmdData;
-}
-
-void cSCPIModule::setRpcCmdData(QMap<QString, QString> rpcCmdData)
-{
-    m_rpcCmdData = rpcCmdData;
-}
-
 void cSCPIModule::setupModule()
 {
     emit addEventSubSystem(m_cmdEventHandlerSystem.get());

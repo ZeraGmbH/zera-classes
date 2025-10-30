@@ -34,8 +34,8 @@ void cSCPIParameterDelegate::executeSCPI(cSCPIClient *client, QString &sInput)
         cData->setEntityId(m_pSCPICmdInfo->entityId);
         cData->setEventOrigin(VeinEvent::EventData::EventOrigin::EO_LOCAL);
         cData->setEventTarget(VeinEvent::EventData::EventTarget::ET_ALL);
-        cData->setComponentName(m_pSCPICmdInfo->componentName);
-        cData->setOldValue(m_pModule->getStorageDb()->getStoredValue(m_pSCPICmdInfo->entityId, m_pSCPICmdInfo->componentName));
+        cData->setComponentName(m_pSCPICmdInfo->componentOrRpcName);
+        cData->setOldValue(m_pModule->getStorageDb()->getStoredValue(m_pSCPICmdInfo->entityId, m_pSCPICmdInfo->componentOrRpcName));
         if (bQuery) {
             if (cmd.isQuery(1))
                 cData->setNewValue(cmd.getParam(0));
@@ -59,8 +59,8 @@ void cSCPIParameterDelegate::executeSCPI(cSCPIClient *client, QString &sInput)
         else
             clientinfo = std::make_shared<cSCPIClientInfo>(client, m_pSCPICmdInfo->entityId, SCPIMODULE::parcmd);
 
-        m_pModule->scpiParameterCmdInfoHash.insert(m_pSCPICmdInfo->componentName, clientinfo);
-        client->addSCPIClientInfo(m_pSCPICmdInfo->componentName, clientinfo);
+        m_pModule->scpiParameterCmdInfoHash.insert(m_pSCPICmdInfo->componentOrRpcName, clientinfo);
+        client->addSCPIClientInfo(m_pSCPICmdInfo->componentOrRpcName, clientinfo);
 
         m_pModule->m_pSCPIEventSystem->sigSendEvent(event);
     }

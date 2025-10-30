@@ -17,7 +17,7 @@ public:
     QString scpiCommand;
     QString scpiCommandType;
     int entityId;
-    QString componentName;
+    QString componentOrRpcName;
     QString refType; // 0 means component itself otherwise the component's validation data
 
     QJsonObject veinComponentInfo;

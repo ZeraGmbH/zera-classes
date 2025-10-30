@@ -34,7 +34,7 @@ void cSCPICatalogCmdDelegate::setOutput(QVariant modInterface)
     QJsonDocument jsonDoc = QJsonDocument::fromJson(modInterface.toByteArray());
     QJsonObject jsonObj = jsonDoc.object();
     jsonObj = jsonObj["ComponentInfo"].toObject();
-    jsonObj = jsonObj[m_pSCPICmdInfo->componentName].toObject();
+    jsonObj = jsonObj[m_pSCPICmdInfo->componentOrRpcName].toObject();
     jsonObj = jsonObj["Validation"].toObject();
     QJsonArray jsonArr;
     jsonArr = jsonObj["Data"].toArray();

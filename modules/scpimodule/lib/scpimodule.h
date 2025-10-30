@@ -32,8 +32,6 @@ public:
     VfEventSytemModuleParam *getValidatorEventSystem();
     SCPIEventSystem* m_pSCPIEventSystem;
     VfCmdEventHandlerSystemPtr getCmdEventHandlerSystem();
-    QMap<QString, QString> getRpcCmdData();
-    void setRpcCmdData(QMap<QString, QString> rpcCmdData);
 
 protected:
     cSCPIServer *m_pSCPIServer = nullptr;
@@ -46,7 +44,6 @@ private:
     void stopMeas() override;
     VfEventSytemModuleParam* m_pModuleValidator;
     VfCmdEventHandlerSystemPtr m_cmdEventHandlerSystem;
-    QMap<QString, QString> m_rpcCmdData;
 };
 
 }

@@ -55,7 +55,7 @@ void VfModuleComponent::setScpiInfo(const QString &model,
                                     const QString &veinComponentName,
                                     SCPI::eSCPIEntryType entryType)
 {
-    m_scpiInfo = std::make_unique<ScpiVeinComponentInfo>(model,
+    m_scpiInfo = std::make_unique<VfModuleMetaInfoContainer>(model,
                                                          cmd,
                                                          cmdTypeMask,
                                                          veinComponentName,

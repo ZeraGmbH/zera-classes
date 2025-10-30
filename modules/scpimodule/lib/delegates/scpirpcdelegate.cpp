@@ -3,6 +3,7 @@
 #include <vf_server_rpc_invoker.h>
 #include <vf_rpc_invoker.h>
 #include <vcmp_remoteproceduredata.h>
+#include <vf-cpp-rpc-helper.h>
 #include <QRegularExpression>
 
 SCPIMODULE::cSCPIRpcDelegate::cSCPIRpcDelegate(QString cmdParent, QString cmd, quint8 type, cSCPIModule *scpimodule, cSCPICmdInfoPtr scpicmdinfo) :
@@ -14,63 +15,52 @@ void SCPIMODULE::cSCPIRpcDelegate::executeSCPI(cSCPIClient *client, QString &sIn
 {
     quint8 scpiCmdType = getType();
     cSCPICommand cmd = sInput;
-    QString RPC = sInput.section(':', -1);
-    int paramsNumber = extractRpcParams(RPC).count();
-    bool bQuery = cmd.isQuery() || cmd.isQuery(paramsNumber); // we allow queries without or with 1 parameter
+    QStringList scpiExpectedParameters = extractRpcParams(m_scpicmdinfo->componentOrRpcName);
+    int scpiExpectedParametersCount = scpiExpectedParameters.count();
+
+    bool bQuery = cmd.isQuery() || cmd.isQuery(scpiExpectedParametersCount);
     if ( (bQuery && ((scpiCmdType & SCPI::isQuery) > 0))) // test if we got an allowed query
-    {
-        if(isCommandRPC(sInput)) {
-            executeScpiRpc(client, sInput, cmd);
-        }
-    }
+        executeScpiRpc(client, sInput);
     else
         client->receiveStatus(ZSCPI::nak);
 }
 
-void SCPIMODULE::cSCPIRpcDelegate::executeScpiRpc(cSCPIClient *client, QString &sInput, cSCPICommand cmd)
+void SCPIMODULE::cSCPIRpcDelegate::executeScpiRpc(cSCPIClient *client, QString &sInput)
 {
-    for(const QString &RpcCmd: m_pModule->getRpcCmdData().keys()) {
-        if(sInput.contains(RpcCmd, Qt::CaseInsensitive)) {
-            VfRPCInvokerPtr rpcInvoker = VfRPCInvoker::create(m_scpicmdinfo->entityId, std::make_unique<VfServerRPCInvoker>()); // will client rpc invoker work ?
-            connect(rpcInvoker.get(), &VfRPCInvoker::sigRPCFinished, this, [=](bool ok, QUuid identifier, const QVariantMap &resultData) {
-                Q_UNUSED(ok)
-                Q_UNUSED(identifier)
-                QVariant returnData;
-                bool rpcSuccessful = (resultData[VeinComponent::RemoteProcedureData::s_resultCodeString] == VeinComponent::RemoteProcedureData::RPCResultCodes::RPC_SUCCESS);
-                if(rpcSuccessful)
-                    returnData = resultData[VeinComponent::RemoteProcedureData::s_returnString];
-                else
-                    returnData = resultData[VeinComponent::RemoteProcedureData::s_errorMessageString];
-                client->receiveAnswer(returnData.toString(), true);
-            });
-            m_pModule->getCmdEventHandlerSystem()->addItem(rpcInvoker);
+    VfRPCInvokerPtr rpcInvoker = VfRPCInvoker::create(m_scpicmdinfo->entityId, std::make_unique<VfServerRPCInvoker>()); // will client rpc invoker work ?
+    connect(rpcInvoker.get(), &VfRPCInvoker::sigRPCFinished, this, [=](bool ok, QUuid identifier, const QVariantMap &resultData) {
+        Q_UNUSED(ok)
+        Q_UNUSED(identifier)
+        QVariant returnData;
+        bool rpcSuccessful = (resultData[VeinComponent::RemoteProcedureData::s_resultCodeString] == VeinComponent::RemoteProcedureData::RPCResultCodes::RPC_SUCCESS);
+        if(rpcSuccessful)
+            returnData = resultData[VeinComponent::RemoteProcedureData::s_returnString];
+        else
+            returnData = resultData[VeinComponent::RemoteProcedureData::s_errorMessageString];
+        client->receiveAnswer(returnData.toString(), true);
+    });
+    m_pModule->getCmdEventHandlerSystem()->addItem(rpcInvoker);
 
-            QString RPC = sInput.section(':', -1);
-            QString RPCName = extractRpcName(RPC);
-            QStringList parameterNames = extractRpcParams(RPC);
-            QStringList parameterValues = cmd.getParamList();
-            QStringList parameterTypes = m_pModule->getRpcCmdData().value(RpcCmd).split(",");
-            QVariantMap params;
-
-            if(parameterValues.count() != parameterTypes.count() || parameterNames.count() != parameterValues.count()) {
-                //QAssert()
-            }
-            for(int i=0; i<parameterValues.count(); i++) {
-                QVariant variantValue = convertParamStrToType(parameterValues[i], parameterTypes[i]);
-                params[parameterNames[i]] = variantValue;
-            }
-            rpcInvoker->invokeRPC(RPCName, params);
-        }
+    QString rpcSignature = m_scpicmdinfo->componentOrRpcName;
+    QString rpcName = extractRpcName(rpcSignature);
+    const QStringList parameterList = extractRpcParams(rpcSignature);
+    QStringList parameterNames;
+    for (const QString &parameter : parameterList) {
+        QStringList paramTypeValue = parameter.split(" ");
+        if (paramTypeValue.size() == 2)
+            parameterNames.append(paramTypeValue[1]);
     }
-}
 
-bool SCPIMODULE::cSCPIRpcDelegate::isCommandRPC(QString &sInput)
-{
-    bool found = false;
-    for(QString RpcCmd: m_pModule->getRpcCmdData().keys())
-        if(sInput.contains(RpcCmd, Qt::CaseInsensitive))
-            found = true;
-    return found;
+    cSCPICommand cmd = sInput;
+    QStringList parameterValues = cmd.getParamList();
+    QStringList parameterTypes = VfCppRpcHelper::getRpcTypesListFromSignature(rpcSignature);
+
+    QVariantMap params;
+    for(int i=0; i<parameterValues.count(); i++) {
+        QVariant variantValue = convertParamStrToType(parameterValues[i], parameterTypes[i]);
+        params[parameterNames[i]] = variantValue;
+    }
+    rpcInvoker->invokeRPC(rpcName, params);
 }
 
 QVariant SCPIMODULE::cSCPIRpcDelegate::convertParamStrToType(QString parameter, QString type)

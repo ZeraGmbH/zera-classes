@@ -188,7 +188,7 @@ void test_scpi_cmds_in_session::executeRpcReadLockStateQuery()
 {
     ModuleManagerTestRunner testRunner(":/mt310s2-meas-session.json");
     ScpiModuleClientBlocked client;
-    QString status = client.sendReceive("CALCULATE:EM01:0001:RPC_READLOCKSTATE()?");
+    QString status = client.sendReceive("CALCULATE:EM01:0001:EMLOCKSTATE?");
     QCOMPARE(status, "4");
 }
 
@@ -218,7 +218,7 @@ void test_scpi_cmds_in_session::executeRpcQueryOneParam()
     TimeMachineObject::feedEventLoop();
 
     ScpiModuleClientBlocked client;
-    QString answer = client.sendReceive("CALCULATE:RPC_FORTEST(p_param)? true;");
+    QString answer = client.sendReceive("CALCULATE:RPC1? true;");
     QCOMPARE(answer, "false");
 }
 
@@ -233,7 +233,7 @@ void test_scpi_cmds_in_session::executeRpcQueryParams()
     TimeMachineObject::feedEventLoop();
 
     ScpiModuleClientBlocked client;
-    QString answer = client.sendReceive("CALCULATE:RPCRETURNTEXT(p_input,p_readOnly)? foo;true;");
+    QString answer = client.sendReceive("CALCULATE:RPC2? foo;true;");
     QCOMPARE(answer, "foo");
 }
 
