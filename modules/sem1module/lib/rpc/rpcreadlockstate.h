@@ -1,7 +1,6 @@
 #ifndef RPCREADLOCKSTATE_H
 #define RPCREADLOCKSTATE_H
 
-#include "vfeventsytemmoduleparam.h"
 #include <vf-cpp-rpc-simplified.h>
 
 class RPCReadLockState : public VfCpp::VfCppRpcSimplified
