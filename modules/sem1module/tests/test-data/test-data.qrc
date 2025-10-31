@@ -4,7 +4,7 @@
         <file>vein-event-dumps/dumpReadLockStateTwiceScpi.json</file>
         <file>vein-event-dumps/dumpReadLockStateTwiceVein.json</file>
         <file>vein-event-dumps/dumpReadLockStateWrongRpcNameScpi.json</file>
-        <file>mt310s2-meas-session.json</file>
+        <file>sem-min-session.json</file>
     </qresource>
 </RCC>
 

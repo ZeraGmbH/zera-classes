@@ -89,7 +89,7 @@ void test_read_lock_state::readLockStateTwiceVein()
 
 void test_read_lock_state::init()
 {
-    m_testRunner = std::make_unique<ModuleManagerTestRunner>(":/mt310s2-meas-session.json");
+    m_testRunner = std::make_unique<ModuleManagerTestRunner>(":/sem-min-session.json");
     m_netSystem = std::make_unique<VeinNet::NetworkSystem>();
     m_netSystem->setOperationMode(VeinNet::NetworkSystem::VNOM_SUBSCRIPTION);
     m_tcpSystem = std::make_unique<VeinNet::TcpSystem>(VeinTcp::MockTcpNetworkFactory::create());
