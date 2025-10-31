@@ -1,8 +1,7 @@
 #include "rpcreadlockstate.h"
-#include "vfeventsytemmoduleparam.h"
 #include <vf-cpp-rpc-signature.h>
 
-RPCReadLockState::RPCReadLockState(VfEventSytemModuleParam *eventSystem, int entityId) :
+RPCReadLockState::RPCReadLockState(VeinEvent::EventSystem *eventSystem, int entityId) :
     VfCpp::VfCppRpcSimplified(eventSystem, entityId,
                               VfCpp::VfCppRpcSignature::createRpcSignature(
                                 "RPC_readLockState", VfCpp::VfCppRpcSignature::RPCParams({})) )
@@ -11,6 +10,7 @@ RPCReadLockState::RPCReadLockState(VfEventSytemModuleParam *eventSystem, int ent
 
 void RPCReadLockState::callRPCFunction(const QUuid &callId, const QVariantMap &parameters)
 {
+    Q_UNUSED(parameters) // for now
     emit sigReadLockState(callId);
 }
 
