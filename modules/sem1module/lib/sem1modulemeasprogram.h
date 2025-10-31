@@ -270,7 +270,6 @@ private:
     ClientActiveComponent m_ClientActiveNotifier;
 
     std::shared_ptr<RPCReadLockState> m_rpcReadLockState;
-    QMap<QString, VfCpp::VfCppRpcSimplifiedPtr> m_rpcSimplifiedList;
 
     static constexpr quint32 m_nRequestTimer = 2500;
 
