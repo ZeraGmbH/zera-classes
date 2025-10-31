@@ -290,7 +290,6 @@ private:
     quint32 m_nEnergyCounterActual = 0;
     double m_fProgress = 0.0; // progress value in %
     double m_fEnergy = 0.0;
-    quint32 m_nIntReg = 0;
 
     // Some decisions - we have enough of configration params around
     static constexpr quint32 m_nMulMeasStoredMax = 400;

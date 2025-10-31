@@ -723,10 +723,7 @@ void cSec1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, Q
 
             case readintregister:
                 if (reply == ack)
-                {
-                    m_nIntReg = answer.toInt() & 7;
                     emit interruptContinue();
-                }
                 else
                     notifyError(readsecregisterErrMsg);
                 break;

@@ -284,7 +284,6 @@ private:
     double m_fTimeSecondsFinal = 0.0;
     double m_fEnergy = 0.0;
     double m_fPower = 0.0;
-    quint32 m_nIntReg = 0;
 
     QDateTime m_measStartDateTime;
     QDateTime m_measEndDateTime;

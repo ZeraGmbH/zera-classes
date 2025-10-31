@@ -80,7 +80,6 @@ private:
     SecResourceTypeList m_resourceTypeList;
     QHash<QString,QString> m_ResourceHash; // resourcetype, resourcelist ; seperated
     SecMeasInputDictionary m_dutInputDictionary;
-    quint32 m_nIntReg = 0;
     bool m_bMeasurementRunning = false;
     quint32 m_nDUTPulseCounterStart = 0;
     quint32 m_measuredFlanks = 0;

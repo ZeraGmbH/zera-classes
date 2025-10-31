@@ -393,10 +393,7 @@ void cSfcModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QV
                 break;
             case readintregister:
                 if (reply == ack)
-                {
-                    m_nIntReg = answer.toInt() & 7;
                     emit interruptContinue();
-                }
                 else
                     notifyError(readsecregisterErrMsg);
                 break;
