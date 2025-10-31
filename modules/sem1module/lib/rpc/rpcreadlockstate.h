@@ -2,6 +2,7 @@
 #define RPCREADLOCKSTATE_H
 
 #include <vf-cpp-rpc-simplified.h>
+#include <QUuid>
 
 class RPCReadLockState : public VfCpp::VfCppRpcSimplified
 {
