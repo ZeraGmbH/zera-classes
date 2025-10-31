@@ -367,10 +367,11 @@ void cSem1ModuleMeasProgram::generateVeinInterface()
     m_pPressPushButton->setValidator(new cIntValidator(0, 1, 1));
     m_pModule->m_veinModuleParameterMap[key] = m_pPressPushButton; // for modules use
 
-    m_rpcReadLockState = std::make_shared<RPCReadLockState>(m_pModule->getValidatorEventSystem(), m_pModule->getEntityId());
+    VfModuleRpcSimplified *rpcEventSystem = m_pModule->getRpcEventSystem();
+    m_rpcReadLockState = std::make_shared<RPCReadLockState>(rpcEventSystem, m_pModule->getEntityId());
     connect(m_rpcReadLockState.get(), &RPCReadLockState::sigReadLockState, this, &cSem1ModuleMeasProgram::onReadLockState);
     connect(this, &cSem1ModuleMeasProgram::emobLockStateCompleted, m_rpcReadLockState.get(), &RPCReadLockState::onReadLockStateCompleted);
-    m_pModule->getRpcEventSystem()->addRpc(m_rpcReadLockState);
+    rpcEventSystem->addRpc(m_rpcReadLockState);
 
     m_pModule->m_veinModuleRPCMap[key] = m_rpcReadLockState; // for modules use
     m_rpcReadLockState->setRPCScpiInfo("CALCULATE",
