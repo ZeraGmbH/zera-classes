@@ -6,6 +6,7 @@
 
 class VfModuleRpcSimplified : public VfEventSystemCommandFilter
 {
+    Q_OBJECT
 public:
     VfModuleRpcSimplified(int entityId);
     virtual void processCommandEvent(VeinEvent::CommandEvent *commandEvent);
