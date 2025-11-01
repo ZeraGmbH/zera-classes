@@ -1,23 +1,30 @@
 #include "rpcreadlockstate.h"
+#include "taskemobreadconnectionstate.h"
 #include <vf-cpp-rpc-signature.h>
 
-RPCReadLockState::RPCReadLockState(VeinEvent::EventSystem *eventSystem, int entityId) :
+RPCReadLockState::RPCReadLockState(Zera::PcbInterfacePtr pcbInterface, VeinEvent::EventSystem *eventSystem, int entityId) :
     VfCpp::VfCppRpcSimplified(eventSystem, entityId,
                               VfCpp::VfCppRpcSignature::createRpcSignature(
-                                "RPC_readLockState", VfCpp::VfCppRpcSignature::RPCParams({})) )
+                                "RPC_readLockState", VfCpp::VfCppRpcSignature::RPCParams({})) ),
+    m_pcbInterface(pcbInterface),
+    m_lockStateReceived(std::make_shared<int>())
 {
 }
 
 void RPCReadLockState::callRPCFunction(const QUuid &callId, const QVariantMap &parameters)
 {
     Q_UNUSED(parameters) // for now
-    emit sigReadLockState(callId);
+    m_rpcCallId = callId;
+    m_readLockStateTask = TaskEmobReadConnectionState::create(m_pcbInterface, m_lockStateReceived, TRANSACTION_TIMEOUT);
+    connect(m_readLockStateTask.get(), &TaskTemplate::sigFinish,
+            this, &RPCReadLockState::onTaskFinish);
+    m_readLockStateTask->start();
 }
 
-void RPCReadLockState::onReadLockStateCompleted(const QUuid &callId, bool success, QVariant errorMsg, QVariant value)
+void RPCReadLockState::onTaskFinish(bool ok)
 {
-    if(success)
-        sendRpcResult(callId, value);
+    if(ok)
+        sendRpcResult(m_rpcCallId, *m_lockStateReceived);
     else
-        sendRpcError(callId, errorMsg.toString());
+        sendRpcError(m_rpcCallId, QString::number(Zera::cPCBInterface::emobstate_error));
 }

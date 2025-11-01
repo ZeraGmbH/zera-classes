@@ -368,9 +368,8 @@ void cSem1ModuleMeasProgram::generateVeinInterface()
     m_pModule->m_veinModuleParameterMap[key] = m_pPressPushButton; // for modules use
 
     VfModuleRpcSimplified *rpcEventSystem = m_pModule->getRpcEventSystem();
-    m_rpcReadLockState = std::make_shared<RPCReadLockState>(rpcEventSystem, m_pModule->getEntityId());
-    connect(m_rpcReadLockState.get(), &RPCReadLockState::sigReadLockState, this, &cSem1ModuleMeasProgram::onReadLockState);
-    connect(this, &cSem1ModuleMeasProgram::emobLockStateCompleted, m_rpcReadLockState.get(), &RPCReadLockState::onReadLockStateCompleted);
+
+    m_rpcReadLockState = std::make_shared<RPCReadLockState>(m_pcbInterface, rpcEventSystem, m_pModule->getEntityId());
     rpcEventSystem->addRpc(m_rpcReadLockState);
 
     m_pModule->m_veinModuleRPCMap[key] = m_rpcReadLockState; // for modules use
@@ -607,12 +606,6 @@ void cSem1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, Q
             case activatepushbutton:
                 if (reply != ack)
                     notifyError(pushbuttonErrMsg);
-                break;
-            case reademoblockstate:
-                if (reply == ack)
-                    emit sigLockStateRead(true, answer.toInt());
-                else
-                    emit sigLockStateRead(false, emobstate_error);
                 break;
             }
         }
@@ -1251,18 +1244,6 @@ void cSem1ModuleMeasProgram::Actualize()
         m_MsgNrCmdList[m_secInterface->readRegister(m_slaveErrCalcName, ECALCREG::MTCNTact)] = actualizeenergy;
         m_MsgNrCmdList[m_secInterface->readRegister(m_slave2ErrCalcName, ECALCREG::MTCNTact)] = actualizepower;
     }
-}
-
-void cSem1ModuleMeasProgram::onReadLockState(const QUuid &callId)
-{
-    disconnect(this, &cSem1ModuleMeasProgram::sigLockStateRead, nullptr, nullptr);
-    connect(this, &cSem1ModuleMeasProgram::sigLockStateRead, this, [=](bool success, QVariant value){
-        if(success)
-            emit emobLockStateCompleted(callId, true, "", value);
-        else
-            emit emobLockStateCompleted(callId, false, value, value);
-    });
-    m_MsgNrCmdList[m_pcbInterface->readEmobConnectionState()] = reademoblockstate;
 }
 
 void cSem1ModuleMeasProgram::clientActivationChanged(bool bActive)

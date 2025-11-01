@@ -48,20 +48,7 @@ enum sem1moduleCmds
     readvicount,
     readtcount,
     activatepushbutton,
-    reademoblockstate
 };
-
-
-//CPU5975/EMOB_CTRL.h
-enum reademoblockstate
-{
-    emobstate_unknown,
-    emobstate_open,
-    emobstate_locking,
-    emobstate_locked,
-    emobstate_error
-};
-
 
 
 class cSem1Module;
@@ -75,8 +62,6 @@ public:
 signals:
     void setupContinue();
     void interruptContinue();
-    void emobLockStateCompleted(const QUuid &callId, bool success, QVariant errorMsg, QVariant value);
-    void sigLockStateRead(bool success, QVariant value);
 
 public slots:
     void start() override;
@@ -138,7 +123,6 @@ private slots:
     void newUpperLimit(QVariant limit);
     void newLowerLimit(QVariant limit);
     void newPushButton(QVariant pushbutton);
-    void onReadLockState(const QUuid &callId);
 
     void Actualize();
     void clientActivationChanged(bool bActive);
