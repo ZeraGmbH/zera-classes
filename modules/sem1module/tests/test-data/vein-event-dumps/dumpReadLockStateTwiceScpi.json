@@ -17,6 +17,23 @@
             "ValidPeer": false
         },
         {
+            "Accepted (finalized) by": "VfModuleRpcSimplified",
+            "Am command event in": "server-fallthrough",
+            "Attached data": "RemoteProcedureData",
+            "ComponentCommand": "RPCMD_CALL",
+            "Entity": 1200,
+            "EventOrigin": "EO_LOCAL",
+            "EventSubtype": "TRANSACTION",
+            "EventTarget": "ET_ALL",
+            "InvokationData": {
+                "RemoteProcedureData::callParameters": {
+                }
+            },
+            "ProcedureName": "RPC_readLockState()",
+            "Valid": true,
+            "ValidPeer": false
+        },
+        {
             "Am command event in": "server-enter",
             "Attached data": "RemoteProcedureData",
             "ComponentCommand": "RPCMD_RESULT",
@@ -50,6 +67,23 @@
         },
         {
             "Am command event in": "server-enter",
+            "Attached data": "RemoteProcedureData",
+            "ComponentCommand": "RPCMD_CALL",
+            "Entity": 1200,
+            "EventOrigin": "EO_LOCAL",
+            "EventSubtype": "TRANSACTION",
+            "EventTarget": "ET_ALL",
+            "InvokationData": {
+                "RemoteProcedureData::callParameters": {
+                }
+            },
+            "ProcedureName": "RPC_readLockState()",
+            "Valid": true,
+            "ValidPeer": false
+        },
+        {
+            "Accepted (finalized) by": "VfModuleRpcSimplified",
+            "Am command event in": "server-fallthrough",
             "Attached data": "RemoteProcedureData",
             "ComponentCommand": "RPCMD_CALL",
             "Entity": 1200,

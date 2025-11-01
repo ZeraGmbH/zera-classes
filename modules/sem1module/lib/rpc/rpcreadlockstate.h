@@ -13,11 +13,10 @@ public:
     RPCReadLockState(Zera::PcbInterfacePtr pcbInterface, VeinEvent::EventSystem *eventSystem, int entityId);
 private slots:
     void callRPCFunction(const QUuid &callId, const QVariantMap &parameters) override;
-    void onTaskFinish(bool ok);
+    void onRpcTaskFinish(bool ok, QUuid rpcCallId);
 private:
     Zera::PcbInterfacePtr m_pcbInterface;
     TaskContainerInterfacePtr m_readLockStateQueue;
-    QUuid m_rpcCallId;
     std::shared_ptr<int> m_lockStateReceived;
 };
 

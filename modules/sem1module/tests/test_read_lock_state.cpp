@@ -77,9 +77,26 @@ void test_read_lock_state::readLockStateTwiceVein()
 {
     QSignalSpy spyRpcFinish(m_rpcInvoker.get(), &VfRPCInvoker::sigRPCFinished);
     invokeRpc("RPC_readLockState", "", 0);
+    TimeMachineObject::feedEventLoop();
     invokeRpc("RPC_readLockState", "", 0);
+    TimeMachineObject::feedEventLoop();
 
     QFile file(":/vein-event-dumps/dumpReadLockStateTwiceVein.json");
+    QVERIFY(file.open(QFile::ReadOnly));
+    QByteArray jsonExpected = file.readAll();
+    QByteArray jsonDumped = TestLogHelpers::dump(m_veinEventDump);
+    QVERIFY(TestLogHelpers::compareAndLogOnDiffJson(jsonExpected, jsonDumped));
+    QCOMPARE(spyRpcFinish.count(), 2);
+}
+
+void test_read_lock_state::readLockStateTwiceVeinFullQueue()
+{
+    QSignalSpy spyRpcFinish(m_rpcInvoker.get(), &VfRPCInvoker::sigRPCFinished);
+    invokeRpc("RPC_readLockState", "", 0);
+    invokeRpc("RPC_readLockState", "", 0);
+    TimeMachineObject::feedEventLoop();
+
+    QFile file(":/vein-event-dumps/dumpReadLockStateTwiceVeinFullQueue.json");
     QVERIFY(file.open(QFile::ReadOnly));
     QByteArray jsonExpected = file.readAll();
     QByteArray jsonDumped = TestLogHelpers::dump(m_veinEventDump);
@@ -128,7 +145,6 @@ QUuid test_read_lock_state::invokeRpc(QString rpcName, QString paramName, QVaria
     if(!paramName.isEmpty())
         rpcParams.insert(paramName, paramValue);
     QUuid id = m_rpcInvoker->invokeRPC(rpcName, rpcParams);
-    TimeMachineObject::feedEventLoop();
     return id;
 }
 

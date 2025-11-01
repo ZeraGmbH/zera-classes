@@ -23,6 +23,7 @@ private slots:
     void readLockStateTwiceScpi();
 
     void readLockStateTwiceVein();
+    void readLockStateTwiceVeinFullQueue();
 private:
     void setupSpy();
     QUuid invokeRpc(QString rpcName, QString paramName, QVariant paramValue);
