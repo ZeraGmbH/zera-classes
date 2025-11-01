@@ -2,8 +2,8 @@
 #define RPCREADLOCKSTATE_H
 
 #include <pcbinterface.h>
+#include <taskcontainerinterface.h>
 #include <vf-cpp-rpc-simplified.h>
-#include <tasktemplate.h>
 #include <QUuid>
 
 class RPCReadLockState : public VfCpp::VfCppRpcSimplified
@@ -16,7 +16,7 @@ private slots:
     void onTaskFinish(bool ok);
 private:
     Zera::PcbInterfacePtr m_pcbInterface;
-    TaskTemplatePtr m_readLockStateTask;
+    TaskContainerInterfacePtr m_readLockStateQueue;
     QUuid m_rpcCallId;
     std::shared_ptr<int> m_lockStateReceived;
 };

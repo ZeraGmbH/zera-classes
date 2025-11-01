@@ -1,5 +1,6 @@
 #include "rpcreadlockstate.h"
 #include "taskemobreadconnectionstate.h"
+#include <taskcontainerqueue.h>
 #include <vf-cpp-rpc-signature.h>
 
 RPCReadLockState::RPCReadLockState(Zera::PcbInterfacePtr pcbInterface, VeinEvent::EventSystem *eventSystem, int entityId) :
@@ -7,6 +8,7 @@ RPCReadLockState::RPCReadLockState(Zera::PcbInterfacePtr pcbInterface, VeinEvent
                               VfCpp::VfCppRpcSignature::createRpcSignature(
                                 "RPC_readLockState", VfCpp::VfCppRpcSignature::RPCParams({})) ),
     m_pcbInterface(pcbInterface),
+    m_readLockStateQueue(TaskContainerQueue::create()),
     m_lockStateReceived(std::make_shared<int>())
 {
 }
@@ -15,10 +17,10 @@ void RPCReadLockState::callRPCFunction(const QUuid &callId, const QVariantMap &p
 {
     Q_UNUSED(parameters) // for now
     m_rpcCallId = callId;
-    m_readLockStateTask = TaskEmobReadConnectionState::create(m_pcbInterface, m_lockStateReceived, TRANSACTION_TIMEOUT);
-    connect(m_readLockStateTask.get(), &TaskTemplate::sigFinish,
+    TaskTemplatePtr taskReadState = TaskEmobReadConnectionState::create(m_pcbInterface, m_lockStateReceived, TRANSACTION_TIMEOUT);
+    connect(taskReadState.get(), &TaskTemplate::sigFinish,
             this, &RPCReadLockState::onTaskFinish);
-    m_readLockStateTask->start();
+    m_readLockStateQueue->addSub(std::move(taskReadState));
 }
 
 void RPCReadLockState::onTaskFinish(bool ok)
