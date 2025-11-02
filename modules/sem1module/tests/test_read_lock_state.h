@@ -25,6 +25,7 @@ private slots:
     void readLockStateTwiceVein();
     void readLockStateTwiceVeinFullQueue();
 
+    void dumpDevIface();
     void dumpVeinInfModuleInterface();
 private:
     void setupSpy();

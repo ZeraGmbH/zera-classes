@@ -5,6 +5,7 @@
         <file>vein-event-dumps/dumpReadLockStateTwiceVein.json</file>
         <file>vein-event-dumps/dumpReadLockStateTwiceVeinFullQueue.json</file>
         <file>vein-event-dumps/dumpReadLockStateWrongRpcNameScpi.json</file>
+        <file>scpi-dump.xml</file>
         <file>sem-min-session.json</file>
         <file>vein-inf-moduleinterface-dump.json</file>
     </qresource>

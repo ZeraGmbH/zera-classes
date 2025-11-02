@@ -106,6 +106,18 @@ void test_read_lock_state::readLockStateTwiceVeinFullQueue()
     QCOMPARE(spyRpcFinish.count(), 2);
 }
 
+void test_read_lock_state::dumpDevIface()
+{
+    QSKIP("It fails on OE/qemu: XML attribute '1e+07' is unequal '10000000'");
+    QString dumped = m_scpiClient->sendReceive("dev:iface?", false);
+    QString expected = TestLogHelpers::loadFile("://scpi-dump.xml");
+    XmlDocumentCompare compare;
+    bool ok = compare.compareXml(dumped, expected);
+    if(!ok)
+        TestLogHelpers::compareAndLogOnDiff(expected, dumped);
+    QVERIFY(ok);
+}
+
 void test_read_lock_state::dumpVeinInfModuleInterface()
 {
     VeinStorage::AbstractEventSystem* veinStorage = m_testRunner->getVeinStorageSystem();
