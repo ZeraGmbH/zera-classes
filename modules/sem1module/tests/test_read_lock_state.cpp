@@ -3,6 +3,7 @@
 #include <timemachineobject.h>
 #include <vf_client_rpc_invoker.h>
 #include <xmldocumentcompare.h>
+#include <vs_dumpjson.h>
 #include <QSignalSpy>
 #include <QTest>
 
@@ -114,6 +115,16 @@ void test_read_lock_state::dumpDevIface()
     if(!ok)
         TestLogHelpers::compareAndLogOnDiff(expected, dumped);
     QVERIFY(ok);
+}
+
+void test_read_lock_state::dumpVeinInfModuleInterface()
+{
+    VeinStorage::AbstractEventSystem* veinStorage = m_testRunner->getVeinStorageSystem();
+    VeinStorage::AbstractDatabase* storageDb = veinStorage->getDb();
+    QByteArray jsonDumped = storageDb->getStoredValue(semEntityId, "INF_ModuleInterface").toByteArray();
+    QString jsonExpected = TestLogHelpers::loadFile("://vein-inf-moduleinterface-dump.json");
+
+    QVERIFY(TestLogHelpers::compareAndLogOnDiffJson(jsonExpected, jsonDumped));
 }
 
 void test_read_lock_state::init()

@@ -6,6 +6,7 @@ function(SETUP_QTESTS_MODULE)
             sem1module-static
             zera-modulemanager-testlib
             Zera::xml-compare-testlib
+            Zera::VfFrameworkTest
         )
     endforeach()
 endfunction()

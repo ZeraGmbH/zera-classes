@@ -26,6 +26,7 @@ private slots:
     void readLockStateTwiceVeinFullQueue();
 
     void dumpDevIface();
+    void dumpVeinInfModuleInterface();
 private:
     void setupSpy();
     QUuid invokeRpc(QString rpcName, QString paramName, QVariant paramValue);

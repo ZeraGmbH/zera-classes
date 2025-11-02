@@ -1,0 +1,338 @@
+{
+    "ComponentInfo": {
+        "ACT_EndTime": {
+            "Description": "Last measurement: End time (dd-MM-yyyy HH:mm:ss)"
+        },
+        "ACT_Energy": {
+            "Description": "Energy since last start",
+            "Unit": "kWh"
+        },
+        "ACT_MeasTime": {
+            "Description": "Last measurement: Duration [ms]"
+        },
+        "ACT_Power": {
+            "Description": "Mean power since last start",
+            "Unit": "kW"
+        },
+        "ACT_Rating": {
+            "Description": "Evaluation for the last measurement"
+        },
+        "ACT_RefFreqInput": {
+            "Description": "Reference frequency input to find power module"
+        },
+        "ACT_Result": {
+            "Description": "Result of last measurement",
+            "Unit": "%"
+        },
+        "ACT_StartTime": {
+            "Description": "Last measurement: Start time (dd-MM-yyyy HH:mm:ss)"
+        },
+        "ACT_Status": {
+            "Description": "State: 0:Idle 1:First pulse wait 2:Started 4:Ready 8:Aborted"
+        },
+        "ACT_Time": {
+            "Description": "Measurement time",
+            "Unit": "s"
+        },
+        "EntityName": {
+            "Description": "Module's name"
+        },
+        "INF_ModuleInterface": {
+            "Description": "Module's interface details"
+        },
+        "PAR_ClientActiveNotify": {
+            "Description": "By changing this component, a client asks us for max actualize performance",
+            "Validation": {
+                "Data": [
+                    0,
+                    2147483647,
+                    1
+                ],
+                "Type": "INTEGER"
+            }
+        },
+        "PAR_EmobPushButton": {
+            "Description": "Activate EMOB-pushbutton (push=1)",
+            "Validation": {
+                "Data": [
+                    0,
+                    1,
+                    1
+                ],
+                "Type": "INTEGER"
+            }
+        },
+        "PAR_Lolimit": {
+            "Description": "Error limit: lower",
+            "Unit": "%",
+            "Validation": {
+                "Data": [
+                    -100,
+                    100,
+                    1e-06
+                ],
+                "Type": "DOUBLE"
+            }
+        },
+        "PAR_MeasTime": {
+            "Description": "Measurement time",
+            "Unit": "s",
+            "Validation": {
+                "Data": [
+                    1,
+                    4294967,
+                    1
+                ],
+                "Type": "INTEGER"
+            }
+        },
+        "PAR_RefConstant": {
+            "Description": "Reference meter constant"
+        },
+        "PAR_RefInput": {
+            "Description": "Ref input",
+            "Validation": {
+                "Data": [
+                    "P",
+                    "Q",
+                    "S"
+                ],
+                "Type": "STRING"
+            }
+        },
+        "PAR_StartStop": {
+            "Description": "Start/stop measurement (start=1, stop=0)",
+            "Validation": {
+                "Data": [
+                    0,
+                    1,
+                    1
+                ],
+                "Type": "INTEGER"
+            }
+        },
+        "PAR_T0Input": {
+            "Description": "Start energy value",
+            "Unit": "kWh",
+            "Validation": {
+                "Data": [
+                    0,
+                    10000000,
+                    1e-07
+                ],
+                "Type": "DOUBLE"
+            }
+        },
+        "PAR_T1input": {
+            "Description": "Final energy value",
+            "Unit": "kWh",
+            "Validation": {
+                "Data": [
+                    0,
+                    10000000,
+                    1e-07
+                ],
+                "Type": "DOUBLE"
+            }
+        },
+        "PAR_TXUNIT": {
+            "Description": "Energy unit",
+            "Validation": {
+                "Data": [
+                    "MWh",
+                    "kWh",
+                    "Wh"
+                ],
+                "Type": "STRING"
+            }
+        },
+        "PAR_Targeted": {
+            "Description": "Stop mode",
+            "Validation": {
+                "Data": [
+                    0,
+                    1,
+                    1
+                ],
+                "Type": "INTEGER"
+            }
+        },
+        "PAR_Uplimit": {
+            "Description": "Error limit: upper",
+            "Unit": "%",
+            "Validation": {
+                "Data": [
+                    -100,
+                    100,
+                    1e-06
+                ],
+                "Type": "DOUBLE"
+            }
+        }
+    },
+    "ModuleInfo": {
+        "Description": "This module provides a configurable energy error calculator",
+        "Name": "SEM1Module1"
+    },
+    "SCPIInfo": {
+        "Cmd": [
+            [
+                "CALCULATE",
+                "0001:ENDTIME",
+                "2",
+                "ACT_EndTime",
+                "0"
+            ],
+            [
+                "CALCULATE",
+                "0001:ENERGY",
+                "2",
+                "ACT_Energy",
+                "0"
+            ],
+            [
+                "CALCULATE",
+                "0001:MMEASTIME",
+                "2",
+                "ACT_MeasTime",
+                "0"
+            ],
+            [
+                "CALCULATE",
+                "0001:POWER",
+                "2",
+                "ACT_Power",
+                "0"
+            ],
+            [
+                "CALCULATE",
+                "0001:RATING",
+                "2",
+                "ACT_Rating",
+                "0"
+            ],
+            [
+                "CALCULATE",
+                "0001:REFFREQINPUT",
+                "2",
+                "ACT_RefFreqInput",
+                "0"
+            ],
+            [
+                "CALCULATE",
+                "0001:RESULT",
+                "2",
+                "ACT_Result",
+                "0"
+            ],
+            [
+                "CALCULATE",
+                "0001:STRTTIME",
+                "2",
+                "ACT_StartTime",
+                "0"
+            ],
+            [
+                "CALCULATE",
+                "0001:STATUS",
+                "2",
+                "ACT_Status",
+                "0"
+            ],
+            [
+                "CALCULATE",
+                "0001:TIME",
+                "2",
+                "ACT_Time",
+                "0"
+            ],
+            [
+                "CALCULATE",
+                "0001:PBPRESS",
+                "8",
+                "PAR_EmobPushButton",
+                "0"
+            ],
+            [
+                "CALCULATE",
+                "0001:LOLIMIT",
+                "10",
+                "PAR_Lolimit",
+                "0"
+            ],
+            [
+                "CALCULATE",
+                "0001:MTIME",
+                "10",
+                "PAR_MeasTime",
+                "0"
+            ],
+            [
+                "CALCULATE",
+                "0001:REFCONSTANT",
+                "2",
+                "PAR_RefConstant",
+                "0"
+            ],
+            [
+                "CALCULATE",
+                "0001:REFSOURCE",
+                "10",
+                "PAR_RefInput",
+                "0"
+            ],
+            [
+                "CALCULATE",
+                "0001:START",
+                "10",
+                "PAR_StartStop",
+                "0"
+            ],
+            [
+                "CALCULATE",
+                "0001:T0INPUT",
+                "10",
+                "PAR_T0Input",
+                "0"
+            ],
+            [
+                "CALCULATE",
+                "0001:T1INPUT",
+                "10",
+                "PAR_T1input",
+                "0"
+            ],
+            [
+                "CALCULATE",
+                "0001:TXUNIT",
+                "10",
+                "PAR_TXUNIT",
+                "0"
+            ],
+            [
+                "CALCULATE",
+                "0001:MODE",
+                "10",
+                "PAR_Targeted",
+                "0"
+            ],
+            [
+                "CALCULATE",
+                "0001:UPLIMIT",
+                "10",
+                "PAR_Uplimit",
+                "0"
+            ]
+        ],
+        "Name": "EM01",
+        "RPC": [
+            [
+                "CALCULATE",
+                "0001:EMLOCKSTATE",
+                "2",
+                "RPC_readLockState()",
+                "0"
+            ]
+        ]
+    }
+}
