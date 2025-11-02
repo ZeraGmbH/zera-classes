@@ -2,6 +2,7 @@
 #define VFMODULERPC_H
 
 #include <vf-cpp-rpc-simplified.h>
+#include <vfmodulemetainfocontainer.h>
 #include <memory>
 
 class VfModuleRpc
