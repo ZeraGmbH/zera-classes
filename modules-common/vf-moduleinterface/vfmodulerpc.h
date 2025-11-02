@@ -13,8 +13,6 @@ public:
                         int cmdTypeMask, // e.g SCPI::isQuery|SCPI::isCmdwP
                         const QString &rpcSignature);
     void exportRpcSCPIInfo(QJsonArray &jsArr);
-
-signals:
 private:
     VfCpp::VfCppRpcSimplifiedPtr m_rpc;
     const QString m_description;
