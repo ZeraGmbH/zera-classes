@@ -2,6 +2,7 @@
 #include <testloghelpers.h>
 #include <timemachineobject.h>
 #include <vf_client_rpc_invoker.h>
+#include <xmldocumentcompare.h>
 #include <QSignalSpy>
 #include <QTest>
 
@@ -102,6 +103,17 @@ void test_read_lock_state::readLockStateTwiceVeinFullQueue()
     QByteArray jsonDumped = TestLogHelpers::dump(m_veinEventDump);
     QVERIFY(TestLogHelpers::compareAndLogOnDiffJson(jsonExpected, jsonDumped));
     QCOMPARE(spyRpcFinish.count(), 2);
+}
+
+void test_read_lock_state::dumpDevIface()
+{
+    QString dumped = m_scpiClient->sendReceive("dev:iface?", false);
+    QString expected = TestLogHelpers::loadFile("://scpi-dump.xml");
+    XmlDocumentCompare compare;
+    bool ok = compare.compareXml(dumped, expected);
+    if(!ok)
+        TestLogHelpers::compareAndLogOnDiff(expected, dumped);
+    QVERIFY(ok);
 }
 
 void test_read_lock_state::init()

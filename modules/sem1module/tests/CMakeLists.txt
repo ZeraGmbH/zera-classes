@@ -5,6 +5,7 @@ function(SETUP_QTESTS_MODULE)
             PRIVATE
             sem1module-static
             zera-modulemanager-testlib
+            Zera::xml-compare-testlib
         )
     endforeach()
 endfunction()
