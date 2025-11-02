@@ -5,6 +5,7 @@
 #include "basemoduleconfiguration.h"
 #include "modulefactoryparam.h"
 #include "vfmodulemetadata.h"
+#include "vfmodulerpc.h"
 #include <vfmoduleparameter.h>
 #include <virtualmodule.h>
 #include <vs_abstracteventsystem.h>
@@ -35,7 +36,7 @@ public:
     QList<VfModuleComponent*> veinModuleComponentList; // for components that need no scpi interface
     QList<VfModuleComponent*> veinModuleActvalueList; // actvalues are components that need an interface
     QMap<QString, VfModuleParameter*> m_veinModuleParameterMap; // parameters are components that need an interface and validation
-    QMap<QString, std::shared_ptr<VfCpp::VfCppRpcSimplified>> m_veinModuleRPCMap; // parameters are components that need an interface and validation
+    QMap<QString, VfModuleRpcPtr> m_veinModuleRPCMap;
     QList<VfModuleMetaInfoContainer*> scpiCommandList; // a list of commands that work without existing component, it uses a component's validation data for additional queries
 
 signals:

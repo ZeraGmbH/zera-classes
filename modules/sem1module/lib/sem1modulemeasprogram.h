@@ -1,12 +1,12 @@
 #ifndef SEM1MODULEMEASPROGRAM_H
 #define SEM1MODULEMEASPROGRAM_H
 
-#include "rpcreadlockstate.h"
 #include "secinterface.h"
 #include "refpowerconstantobserver.h"
 #include "secresourcetypelist.h"
 #include "sem1moduleconfigdata.h"
 #include "secmeasinputdictionary.h"
+#include "vfmodulerpc.h"
 #include <basemeasprogram.h>
 #include <clientactivecomponent.h>
 #include <memory>
@@ -249,11 +249,9 @@ private:
     VfModuleParameter* m_pMeasEndTime;
     VfModuleParameter* m_pMeasDurationMs;
     VfModuleParameter* m_pPressPushButton;
-    VfModuleParameter* m_pEmobLockState;
+    VfModuleRpcPtr m_pEmobLockStateRpc;
     VfModuleParameter* m_pClientNotifierPar;
     ClientActiveComponent m_ClientActiveNotifier;
-
-    std::shared_ptr<RPCReadLockState> m_rpcReadLockState;
 
     static constexpr quint32 m_nRequestTimer = 2500;
 

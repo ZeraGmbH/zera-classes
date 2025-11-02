@@ -17,6 +17,7 @@ target_link_libraries(vf-moduleinterface
     Zera::VfComponent
     Zera::ModmanBase
     Zera::SCPI
+    Zera::VfCpp
     # ask linker to help us finding unresolved symbols
     "-Wl,--no-undefined"
     )

@@ -2,6 +2,7 @@
 #include "sem1module.h"
 #include "sem1moduleconfigdata.h"
 #include "sem1moduleconfiguration.h"
+#include "rpcreadlockstate.h"
 #include <errormessages.h>
 #include <scpi.h>
 #include <unithelper.h>
@@ -369,14 +370,15 @@ void cSem1ModuleMeasProgram::generateVeinInterface()
 
     VfRpcEventSystemSimplified *rpcEventSystem = m_pModule->getRpcEventSystem();
 
-    m_rpcReadLockState = std::make_shared<RPCReadLockState>(m_pcbInterface, rpcEventSystem, m_pModule->getEntityId());
-    rpcEventSystem->addRpc(m_rpcReadLockState);
-
-    m_pModule->m_veinModuleRPCMap[key] = m_rpcReadLockState; // for modules use
-    m_rpcReadLockState->setRPCScpiInfo("CALCULATE",
-                                       QString("%1:EMLOCKSTATE").arg(modNr),
-                                       SCPI::isQuery,
-                                       m_rpcReadLockState->getSignature());
+    std::shared_ptr<RPCReadLockState> rpcEmobReadLockState = std::make_shared<RPCReadLockState>(m_pcbInterface, rpcEventSystem, m_pModule->getEntityId());
+    rpcEventSystem->addRpc(rpcEmobReadLockState);
+    m_pEmobLockStateRpc = std::make_shared<VfModuleRpc>(rpcEmobReadLockState,
+                                          "Query EMOB plug log state 0:uknown / 1:opem / 2:locking / 3:locked / 3:error");
+    m_pEmobLockStateRpc->setRPCScpiInfo("CALCULATE",
+                                        QString("%1:EMLOCKSTATE").arg(modNr),
+                                        SCPI::isQuery,
+                                        rpcEmobReadLockState->getSignature());
+    m_pModule->m_veinModuleRPCMap[rpcEmobReadLockState->getSignature()] = m_pEmobLockStateRpc; // for modules use
 }
 
 
