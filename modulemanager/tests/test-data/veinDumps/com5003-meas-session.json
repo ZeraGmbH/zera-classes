@@ -5113,7 +5113,7 @@
             },
             "RpcInfo": {
                 "RPC_readLockState()": {
-                    "Description": "Query EMOB plug log state 0:unknown / 1:open / 2:locking / 3:locked / 3:error"
+                    "Description": "EMOB plug lock state: 0:unknown 1:open 2:locking 3:locked 4:error"
                 }
             },
             "SCPIInfo": {

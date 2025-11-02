@@ -165,7 +165,7 @@
      <TXUNIT ScpiPath="CALCULATE:EM01:0001:TXUNIT" Type="Query,Command+Par" ValidPar="MWh,kWh,Wh" DataType="STRING" Description="Energy unit"/>
      <MODE ScpiPath="CALCULATE:EM01:0001:MODE" Type="Query,Command+Par" DataType="INTEGER" Max="1" Description="Stop mode" Min="0"/>
      <UPLIMIT ScpiPath="CALCULATE:EM01:0001:UPLIMIT" Type="Query,Command+Par" DataType="DOUBLE" Max="100" Unit="%" Description="Error limit: upper" Min="-100"/>
-     <EMLOCKSTATE Type="Query" Description="Query EMOB plug log state 0:unknown / 1:open / 2:locking / 3:locked / 3:error" ScpiPath="CALCULATE:EM01:0001:EMLOCKSTATE"/>
+     <EMLOCKSTATE Type="Query" Description="EMOB plug lock state: 0:unknown 1:open 2:locking 3:locked 4:error" ScpiPath="CALCULATE:EM01:0001:EMLOCKSTATE"/>
     </N_0001>
    </EM01>
   </CALCULATE>
