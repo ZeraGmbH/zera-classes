@@ -48,7 +48,6 @@ private:
     int m_nEntityId;
     VeinEvent::EventSystem *m_pEventSystem;
     std::unique_ptr<VfModuleMetaInfoContainer> m_scpiInfo;
-    std::unique_ptr<VfModuleMetaInfoContainer> m_RpcScpiInfo;
 
     static int m_instanceCount;
 };
