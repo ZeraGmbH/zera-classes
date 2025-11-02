@@ -218,46 +218,46 @@ void BaseModule::deactivationFinished()
 void BaseModule::exportMetaData()
 {
     QJsonObject jsonObj;
-    QJsonObject jsonObj2;
+    QJsonObject jsonObjModuleInfo;
 
     for (int i = 0; i < veinModuleMetaDataList.count(); i++)
-        veinModuleMetaDataList.at(i)->exportMetaData(jsonObj2);
-    jsonObj.insert("ModuleInfo", jsonObj2);
+        veinModuleMetaDataList.at(i)->exportMetaData(jsonObjModuleInfo);
+    jsonObj.insert("ModuleInfo", jsonObjModuleInfo);
 
-    QJsonObject jsonObj3;
+    QJsonObject jsonObjComponentInfo;
     for (int i = 0; i < veinModuleComponentList.count(); i++)
-        veinModuleComponentList.at(i)->exportMetaData(jsonObj3);
+        veinModuleComponentList.at(i)->exportMetaData(jsonObjComponentInfo);
     for (int i = 0; i < veinModuleActvalueList.count(); i++)
-        veinModuleActvalueList.at(i)->exportMetaData(jsonObj3);
+        veinModuleActvalueList.at(i)->exportMetaData(jsonObjComponentInfo);
 
     QList<QString> keyList;
     keyList = m_veinModuleParameterMap.keys();
     for (int i = 0; i < keyList.count(); i++)
-        m_veinModuleParameterMap[keyList.at(i)]->exportMetaData(jsonObj3);
-    jsonObj.insert("ComponentInfo", jsonObj3);
+        m_veinModuleParameterMap[keyList.at(i)]->exportMetaData(jsonObjComponentInfo);
+    jsonObj.insert("ComponentInfo", jsonObjComponentInfo);
 
-    QJsonArray jsonArr;
-    QJsonArray jsonRpc;
+    QJsonArray jsonScpiCmdArr;
     // and then all the command information for actual values, parameters and for add. commands without components
     for (int i = 0; i < scpiCommandList.count(); i++)
-        scpiCommandList.at(i)->appendSCPIInfo(jsonArr);
+        scpiCommandList.at(i)->appendSCPIInfo(jsonScpiCmdArr);
     for (int i = 0; i < veinModuleActvalueList.count(); i++)
-        veinModuleActvalueList.at(i)->exportSCPIInfo(jsonArr);
+        veinModuleActvalueList.at(i)->exportSCPIInfo(jsonScpiCmdArr);
 
 
     for (int i = 0; i < keyList.count(); i++)
-        m_veinModuleParameterMap[keyList.at(i)]->exportSCPIInfo(jsonArr);
+        m_veinModuleParameterMap[keyList.at(i)]->exportSCPIInfo(jsonScpiCmdArr);
 
     keyList = m_veinModuleRPCMap.keys();
+    QJsonArray jsonRpcScpi;
     for (int i = 0; i < keyList.count(); i++)
-        m_veinModuleRPCMap[keyList.at(i)]->exportRpcSCPIInfo(jsonRpc);
+        m_veinModuleRPCMap[keyList.at(i)]->exportRpcSCPIInfo(jsonRpcScpi);
 
-    QJsonObject jsonObj4;
-    jsonObj4.insert("Name", m_sSCPIModuleName);
-    jsonObj4.insert("Cmd", jsonArr);
-    if(!jsonRpc.isEmpty())
-        jsonObj4.insert("RPC", jsonRpc);
-    jsonObj.insert("SCPIInfo", jsonObj4);
+    QJsonObject jsonObjScpiInfo;
+    jsonObjScpiInfo.insert("Name", m_sSCPIModuleName);
+    jsonObjScpiInfo.insert("Cmd", jsonScpiCmdArr);
+    if(!jsonRpcScpi.isEmpty())
+        jsonObjScpiInfo.insert("RPC", jsonRpcScpi);
+    jsonObj.insert("SCPIInfo", jsonObjScpiInfo);
 
     QJsonDocument jsonDoc;
     jsonDoc.setObject(jsonObj);
