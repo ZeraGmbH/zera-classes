@@ -1,12 +1,12 @@
-#include "vfmodulerpc.h"
+#include "vfrpceventsystem.h"
 
-VfModuleRpc::VfModuleRpc(int entityId) :
+VfRpcEventSystem::VfRpcEventSystem(int entityId) :
     VfEventSystemCommandFilter(VeinEvent::CommandEvent::EventSubtype::TRANSACTION),
     m_entityId(entityId)
 {
 }
 
-void VfModuleRpc::processCommandEvent(VeinEvent::CommandEvent *commandEvent)
+void VfRpcEventSystem::processCommandEvent(VeinEvent::CommandEvent *commandEvent)
 {
     if(commandEvent->eventData()->entityId() == m_entityId &&
             commandEvent->eventData()->type() == VeinComponent::RemoteProcedureData::dataType()) {
@@ -37,7 +37,7 @@ void VfModuleRpc::processCommandEvent(VeinEvent::CommandEvent *commandEvent)
     }
 }
 
-void VfModuleRpc::addRpc(VfCpp::cVeinModuleRpc::Ptr rpc)
+void VfRpcEventSystem::addRpc(VfCpp::cVeinModuleRpc::Ptr rpc)
 {
     m_rpcHash[rpc->rpcName()] = rpc;
 }

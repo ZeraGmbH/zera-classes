@@ -3,7 +3,7 @@
 
 #include "vfeventsytemmoduleparam.h"
 #include <basemodule.h>
-#include <vfmodulerpc.h>
+#include <vfrpceventsystem.h>
 
 namespace APIMODULE
 {
@@ -15,7 +15,7 @@ public:
     static constexpr const char *BaseSCPIModuleName = "API";
 
     VfEventSytemModuleParam* getValidatorEventSystem();
-    VfModuleRpc *getRpcEventSystem() const;
+    VfRpcEventSystem *getRpcEventSystem() const;
 
     void setTrustListPath(const QString &path);
 
@@ -29,7 +29,7 @@ protected:
     void stopMeas() override;
 
     std::shared_ptr<VfEventSytemModuleParam> m_spModuleValidator;
-    std::shared_ptr<VfModuleRpc> m_spRpcEventSystem;
+    std::shared_ptr<VfRpcEventSystem> m_spRpcEventSystem;
     QString m_persistencyBasePath;
 };
 

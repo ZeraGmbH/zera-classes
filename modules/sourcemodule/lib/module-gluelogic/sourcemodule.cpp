@@ -3,7 +3,7 @@
 
 SourceModule::SourceModule(ModuleFactoryParam moduleParam) :
     cBaseMeasModule(moduleParam, std::make_shared<ModuleConfigurationNull>()),
-    m_rpcEventSystem(new VfModuleRpc(moduleParam.m_entityId))
+    m_rpcEventSystem(new VfRpcEventSystem(moduleParam.m_entityId))
 {
     m_sModuleName = QString("%1%2").arg(BaseModuleName).arg(moduleParam.m_moduleNum);
     m_sModuleDescription = QString("Module to access voltage and current sources");
@@ -15,7 +15,7 @@ SourceModule::~SourceModule()
     delete m_rpcEventSystem;
 }
 
-VfModuleRpc *SourceModule::getRpcEventSystem() const
+VfRpcEventSystem *SourceModule::getRpcEventSystem() const
 {
     return m_rpcEventSystem;
 }

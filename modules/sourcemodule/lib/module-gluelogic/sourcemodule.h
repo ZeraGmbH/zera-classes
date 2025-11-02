@@ -3,7 +3,7 @@
 
 #include "sourcemoduleprogram.h"
 #include <basemeasmodule.h>
-#include <vfmodulerpc.h>
+#include <vfrpceventsystem.h>
 
 class SourceModule : public cBaseMeasModule
 {
@@ -14,7 +14,7 @@ public:
 
     explicit SourceModule(ModuleFactoryParam moduleParam);
     ~SourceModule();
-    VfModuleRpc *getRpcEventSystem() const;
+    VfRpcEventSystem *getRpcEventSystem() const;
 
 protected:
     SourceModuleProgram *m_pProgram = nullptr;
@@ -25,7 +25,7 @@ protected:
 
 private:
     QState m_stateSwitchAllOff;
-    VfModuleRpc *m_rpcEventSystem = nullptr;
+    VfRpcEventSystem *m_rpcEventSystem = nullptr;
 };
 
 #endif // SOURCEMODULE_H

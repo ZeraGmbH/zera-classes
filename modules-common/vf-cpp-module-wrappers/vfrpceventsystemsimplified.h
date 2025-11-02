@@ -1,14 +1,14 @@
-#ifndef VFMODULERPCSIMPLIFIED_H
-#define VFMODULERPCSIMPLIFIED_H
+#ifndef VFRPCEVENTSYSTEMSIMPLIFIED_H
+#define VFRPCEVENTSYSTEMSIMPLIFIED_H
 
 #include <vf-cpp-rpc-simplified.h>
 #include <vfeventsystemcommandfilter.h>
 
-class VfModuleRpcSimplified : public VfEventSystemCommandFilter
+class VfRpcEventSystemSimplified : public VfEventSystemCommandFilter
 {
     Q_OBJECT
 public:
-    VfModuleRpcSimplified(int entityId);
+    VfRpcEventSystemSimplified(int entityId);
     virtual void processCommandEvent(VeinEvent::CommandEvent *commandEvent);
     void addRpc(VfCpp::VfCppRpcSimplifiedPtr rpc);
 private:
@@ -16,4 +16,4 @@ private:
     QHash<QString, VfCpp::VfCppRpcSimplifiedPtr> m_rpcHash;
 };
 
-#endif // VFMODULERPCSIMPLIFIED_H
+#endif // VFRPCEVENTSYSTEMSIMPLIFIED_H

@@ -1,14 +1,14 @@
-#include "vfmodulerpcsimplified.h"
+#include "vfrpceventsystemsimplified.h"
 #include <vcmp_errordata.h>
 #include <vcmp_remoteproceduredata.h>
 #include <ve_eventdata.h>
 
-VfModuleRpcSimplified::VfModuleRpcSimplified(int entityId):
+VfRpcEventSystemSimplified::VfRpcEventSystemSimplified(int entityId):
     VfEventSystemCommandFilter(VeinEvent::CommandEvent::EventSubtype::TRANSACTION),
     m_entityId(entityId)
 {}
 
-void VfModuleRpcSimplified::processCommandEvent(VeinEvent::CommandEvent *commandEvent)
+void VfRpcEventSystemSimplified::processCommandEvent(VeinEvent::CommandEvent *commandEvent)
 {
     if(commandEvent->eventData()->entityId() == m_entityId &&
         commandEvent->eventData()->type() == VeinComponent::RemoteProcedureData::dataType()) {
@@ -39,7 +39,7 @@ void VfModuleRpcSimplified::processCommandEvent(VeinEvent::CommandEvent *command
     }
 }
 
-void VfModuleRpcSimplified::addRpc(VfCpp::VfCppRpcSimplifiedPtr rpc)
+void VfRpcEventSystemSimplified::addRpc(VfCpp::VfCppRpcSimplifiedPtr rpc)
 {
     m_rpcHash[rpc->getSignature()] = rpc;
 }

@@ -81,7 +81,7 @@
             "ValidPeer": true
         },
         {
-            "Accepted (finalized) by": "VfModuleRpcSimplified",
+            "Accepted (finalized) by": "VfRpcEventSystemSimplified",
             "Am command event in": "server-fallthrough",
             "Attached data": "RemoteProcedureData",
             "ComponentCommand": "RPCMD_CALL",
@@ -114,7 +114,7 @@
             "ValidPeer": true
         },
         {
-            "Accepted (finalized) by": "VfModuleRpcSimplified",
+            "Accepted (finalized) by": "VfRpcEventSystemSimplified",
             "Am command event in": "server-fallthrough",
             "Attached data": "RemoteProcedureData",
             "ComponentCommand": "RPCMD_CALL",
