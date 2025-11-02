@@ -5111,6 +5111,11 @@
                 "Description": "This module provides a configurable energy error calculator",
                 "Name": "SEM1Module1"
             },
+            "RpcInfo": {
+                "RPC_readLockState()": {
+                    "Description": "Query EMOB plug log state 0:unknown / 1:open / 2:locking / 3:locked / 3:error"
+                }
+            },
             "SCPIInfo": {
                 "Cmd": [
                     [

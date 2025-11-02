@@ -236,6 +236,12 @@ void BaseModule::exportMetaData()
         m_veinModuleParameterMap[keyList.at(i)]->exportMetaData(jsonObjComponentInfo);
     jsonObj.insert("ComponentInfo", jsonObjComponentInfo);
 
+    QJsonObject jsonRpc;
+    for(const auto &rpc : qAsConst(m_veinModuleRPCMap))
+        rpc->exportMetaData(jsonRpc);
+    if (!jsonRpc.isEmpty())
+        jsonObj.insert("RpcInfo", jsonRpc);
+
     QJsonArray jsonScpiCmdArr;
     // and then all the command information for actual values, parameters and for add. commands without components
     for (int i = 0; i < scpiCommandList.count(); i++)

@@ -1,4 +1,5 @@
 #include "vfmodulerpc.h"
+#include <QJsonObject>
 
 VfModuleRpc::VfModuleRpc(VfCpp::VfCppRpcSimplifiedPtr rpc, const QString &description) :
     m_rpc(rpc),
@@ -15,8 +16,15 @@ void VfModuleRpc::setRPCScpiInfo(const QString &model, const QString &cmd, int c
                                                                 SCPI::isComponent);
 }
 
-void VfModuleRpc::exportRpcSCPIInfo(QJsonArray &jsArr)
+void VfModuleRpc::exportRpcSCPIInfo(QJsonArray &jsArr) const
 {
     if (m_rpcScpiInfo)
         m_rpcScpiInfo->appendSCPIInfo(jsArr);
+}
+
+void VfModuleRpc::exportMetaData(QJsonObject &jsObj) const
+{
+    QJsonObject rpcInfo;
+    rpcInfo.insert("Description", m_description);
+    jsObj.insert(m_rpc->getSignature(), rpcInfo);
 }

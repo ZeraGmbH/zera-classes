@@ -12,7 +12,8 @@ public:
     void setRPCScpiInfo(const QString &model, const QString &cmd,
                         int cmdTypeMask, // e.g SCPI::isQuery|SCPI::isCmdwP
                         const QString &rpcSignature);
-    void exportRpcSCPIInfo(QJsonArray &jsArr);
+    void exportRpcSCPIInfo(QJsonArray &jsArr) const;
+    void exportMetaData(QJsonObject &jsObj) const;
 private:
     VfCpp::VfCppRpcSimplifiedPtr m_rpc;
     const QString m_description;

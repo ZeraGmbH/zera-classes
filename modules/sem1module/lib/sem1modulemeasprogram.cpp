@@ -373,7 +373,7 @@ void cSem1ModuleMeasProgram::generateVeinInterface()
     std::shared_ptr<RPCReadLockState> rpcEmobReadLockState = std::make_shared<RPCReadLockState>(m_pcbInterface, rpcEventSystem, m_pModule->getEntityId());
     rpcEventSystem->addRpc(rpcEmobReadLockState);
     m_pEmobLockStateRpc = std::make_shared<VfModuleRpc>(rpcEmobReadLockState,
-                                          "Query EMOB plug log state 0:uknown / 1:opem / 2:locking / 3:locked / 3:error");
+                                          "Query EMOB plug log state 0:unknown / 1:open / 2:locking / 3:locked / 3:error");
     m_pEmobLockStateRpc->setRPCScpiInfo("CALCULATE",
                                         QString("%1:EMLOCKSTATE").arg(modNr),
                                         SCPI::isQuery,
