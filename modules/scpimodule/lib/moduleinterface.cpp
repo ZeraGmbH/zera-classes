@@ -67,6 +67,7 @@ bool cModuleInterface::setupInterface()
                     addSCPICommand(scpiCmdInfo); // we add our command now
                 }
 
+                const QJsonObject jsonRpcInfo = jsonObj["RpcInfo"].toObject();
                 QJsonArray jsonRpcScpiCmdArr = jsonScpiInfo["RPC"].toArray();
                 for (int j = 0; j < jsonRpcScpiCmdArr.count(); j++) {
                     cSCPICmdInfoPtr scpiCmdInfo = std::make_shared<cSCPICmdInfo>();
@@ -77,7 +78,7 @@ bool cModuleInterface::setupInterface()
                     scpiCmdInfo->scpiCommand = jsonCmdArr[1].toString();
                     scpiCmdInfo->scpiCommandType = jsonCmdArr[2].toString();
                     scpiCmdInfo->componentOrRpcName = jsonCmdArr[3].toString();
-                    scpiCmdInfo->veinComponentInfo = jsonComponentInfo[scpiCmdInfo->componentOrRpcName].toObject();
+                    scpiCmdInfo->veinComponentInfo = jsonRpcInfo[scpiCmdInfo->componentOrRpcName].toObject();
                     scpiCmdInfo->refType = jsonCmdArr[4].toString();
                     addRPCCommand(scpiCmdInfo);
                 }
