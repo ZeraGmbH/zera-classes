@@ -137,7 +137,7 @@ void test_scpi_cmds_in_session::devIfaceVeinComponentMultipleEntitiesForLongXml(
 
 void test_scpi_cmds_in_session::closeSocketOnPendingWriteStbQueryNoCrasher()
 {
-    ModuleManagerTestRunner testRunner(":/mt310s2-meas-session.json");
+    ModuleManagerTestRunner testRunner(":/range-min-session.json");
     ScpiModuleClientBlocked client;
     QString currRange = client.sendReceive("SENSE:RNG1:Il1:RANGE?");
     QCOMPARE(currRange, "10A");
@@ -153,7 +153,7 @@ void test_scpi_cmds_in_session::closeSocketOnPendingWriteStbQueryNoCrasher()
 
 void test_scpi_cmds_in_session::multilineCommandsLastOpc()
 {
-    ModuleManagerTestRunner testRunner(":/mt310s2-meas-session.json");
+    ModuleManagerTestRunner testRunner(":/range-min-session.json");
     ScpiModuleClientBlocked client;
     QByteArrayList commands = QByteArrayList() << "SENSE:RNG1:UL1:RANGE 8V;|SENSE:RNG1:UL2:RANGE 8V;|SENSE:RNG1:UL3:RANGE 8V;|SENSE:RNG1:UAUX:RANGE 8V;"
                                                << "*OPC?";
@@ -178,7 +178,7 @@ void test_scpi_cmds_in_session::catalogFormat()
 
 void test_scpi_cmds_in_session::executeRpcQueryWrongRpcName()
 {
-    ModuleManagerTestRunner testRunner(":/mt310s2-meas-session.json");
+    ModuleManagerTestRunner testRunner(":/session-scpi-only.json");
     ScpiModuleClientBlocked client;
     QString status = client.sendReceive("CALCULATE:EM01:0001:RPC_FOO()?");
     QCOMPARE(status, "");
@@ -186,7 +186,7 @@ void test_scpi_cmds_in_session::executeRpcQueryWrongRpcName()
 
 void test_scpi_cmds_in_session::executeRpcReadLockStateQuery()
 {
-    ModuleManagerTestRunner testRunner(":/mt310s2-meas-session.json");
+    ModuleManagerTestRunner testRunner(":/sem-min-session.json");
     ScpiModuleClientBlocked client;
     QString status = client.sendReceive("CALCULATE:EM01:0001:EMLOCKSTATE?");
     QCOMPARE(status, "4");
@@ -199,7 +199,7 @@ void test_scpi_cmds_in_session::executeRpcQueryInvalidParams()
     testRunner.getModManFacade()->addSubsystem(rpcEventHandler->getVeinEntity());
     rpcEventHandler->initOnce();
     TimeMachineObject::feedEventLoop();
-    testRunner.start(":/mt310s2-meas-session.json");
+    testRunner.start(":/session-scpi-only.json");
     TimeMachineObject::feedEventLoop();
 
     ScpiModuleClientBlocked client;
@@ -214,7 +214,7 @@ void test_scpi_cmds_in_session::executeRpcQueryOneParam()
     testRunner.getModManFacade()->addSubsystem(rpcEventHandler->getVeinEntity());
     rpcEventHandler->initOnce();
     TimeMachineObject::feedEventLoop();
-    testRunner.start(":/mt310s2-meas-session.json");
+    testRunner.start(":/session-scpi-only.json");
     TimeMachineObject::feedEventLoop();
 
     ScpiModuleClientBlocked client;
@@ -229,7 +229,7 @@ void test_scpi_cmds_in_session::executeRpcQueryParams()
     testRunner.getModManFacade()->addSubsystem(rpcEventHandler->getVeinEntity());
     rpcEventHandler->initOnce();
     TimeMachineObject::feedEventLoop();
-    testRunner.start(":/mt310s2-meas-session.json");
+    testRunner.start(":/session-scpi-only.json");
     TimeMachineObject::feedEventLoop();
 
     ScpiModuleClientBlocked client;
