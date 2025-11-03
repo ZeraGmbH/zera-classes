@@ -1,0 +1,30 @@
+{
+    "modules" : [
+      {
+        "name" : "power1module",
+        "configFile" : "mt310s2-power1module.xml",
+        "id": 1070
+      },
+      {
+        "name" : "power1module",
+        "configFile" : "mt310s2-power1module2.xml",
+        "id": 1071
+      },
+      {
+        "name" : "power1module",
+        "configFile" : "mt310s2-power1module3.xml",
+        "id": 1072
+      },
+      {
+        "name" : "sem1module",
+        "configFile" : "mt310s2-sem1module.xml",
+        "id": 1200
+      },
+      {
+        "name" : "scpimodule",
+        "configFile" : "mt310s2-scpimodule.xml",
+        "id": 9999
+      }
+    ]
+}
+
