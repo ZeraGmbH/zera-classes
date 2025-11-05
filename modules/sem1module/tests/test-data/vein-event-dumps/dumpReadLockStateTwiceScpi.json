@@ -42,8 +42,8 @@
             "EventSubtype": "NOTIFICATION",
             "EventTarget": "ET_ALL",
             "InvokationData": {
-                "RemoteProcedureData::errorMessage": "4",
-                "RemoteProcedureData::resultCode": -22
+                "RemoteProcedureData::Return": 1,
+                "RemoteProcedureData::resultCode": 0
             },
             "ProcedureName": "RPC_readLockState()",
             "Valid": true,
@@ -58,8 +58,8 @@
             "EventSubtype": "NOTIFICATION",
             "EventTarget": "ET_ALL",
             "InvokationData": {
-                "RemoteProcedureData::errorMessage": "4",
-                "RemoteProcedureData::resultCode": -22
+                "RemoteProcedureData::Return": 1,
+                "RemoteProcedureData::resultCode": 0
             },
             "ProcedureName": "RPC_readLockState()",
             "Valid": true,
@@ -107,8 +107,8 @@
             "EventSubtype": "NOTIFICATION",
             "EventTarget": "ET_ALL",
             "InvokationData": {
-                "RemoteProcedureData::errorMessage": "4",
-                "RemoteProcedureData::resultCode": -22
+                "RemoteProcedureData::Return": 1,
+                "RemoteProcedureData::resultCode": 0
             },
             "ProcedureName": "RPC_readLockState()",
             "Valid": true,
@@ -123,8 +123,8 @@
             "EventSubtype": "NOTIFICATION",
             "EventTarget": "ET_ALL",
             "InvokationData": {
-                "RemoteProcedureData::errorMessage": "4",
-                "RemoteProcedureData::resultCode": -22
+                "RemoteProcedureData::Return": 1,
+                "RemoteProcedureData::resultCode": 0
             },
             "ProcedureName": "RPC_readLockState()",
             "Valid": true,

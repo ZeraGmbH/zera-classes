@@ -25,6 +25,7 @@ target_link_libraries(sem1module-static
     vf-cpp-module-wrappers
     Zera::zera-timers
     Zera::VfCpp
+    Zera::zenuxservicecommon
     # ask linker to help us finding unresolved symbols
     "-Wl,--no-undefined"
 )

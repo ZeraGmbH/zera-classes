@@ -4,6 +4,8 @@
 #include <vf_client_rpc_invoker.h>
 #include <xmldocumentcompare.h>
 #include <vs_dumpjson.h>
+#include "controllerpersitentdata.h"
+#include <emobdefinitions.h>
 #include <QSignalSpy>
 #include <QTest>
 
@@ -63,9 +65,10 @@ void test_read_lock_state::readLockStateCorrectRpcNameScpi()
 
 void test_read_lock_state::readLockStateTwiceScpi()
 {
+    m_testRunner->fireHotplugInterrupt(QStringList()  << "IAUX");
     QString status1 = m_scpiClient->sendReceive("CALCULATE:EM01:0001:EMLOCKSTATE?");
     QString status2 = m_scpiClient->sendReceive("CALCULATE:EM01:0001:EMLOCKSTATE?");
-    QCOMPARE(status1, "4");
+    QCOMPARE(status1, QString::number(reademoblockstate::emobstate_open));
     QCOMPARE(status1, status2);
 
     QFile file(":/vein-event-dumps/dumpReadLockStateTwiceScpi.json");
@@ -161,6 +164,7 @@ void test_read_lock_state::cleanup()
     m_tcpSystem.reset();
 
     m_veinEventDump = QJsonObject();
+    ControllerPersitentData::cleanupPersitentData();
 }
 
 QUuid test_read_lock_state::invokeRpc(QString rpcName, QString paramName, QVariant paramValue)

@@ -1,5 +1,6 @@
 #include "rpcreadlockstate.h"
 #include "taskemobreadconnectionstate.h"
+#include <emobdefinitions.h>
 #include <taskcontainerqueue.h>
 #include <taskrpctaskwrapper.h>
 #include <vf-cpp-rpc-signature.h>
@@ -30,5 +31,5 @@ void RPCReadLockState::onRpcTaskFinish(bool ok, QUuid rpcCallId)
     if(ok)
         sendRpcResult(rpcCallId, *m_lockStateReceived);
     else
-        sendRpcError(rpcCallId, QString::number(Zera::cPCBInterface::emobstate_error));
+        sendRpcError(rpcCallId, QString::number(reademoblockstate::emobstate_error));
 }
