@@ -35,6 +35,7 @@ public:
     void start(QString sessionFileName);
     QList<TestModuleManager::TModuleInstances> getInstanceCountsOnModulesDestroyed();
     void setRangeGetSetDelay(int rangeGetSetDelay);
+    void fireHotplugInterrupt(const QStringList &channelAliases);
 
 private:
     void setupVfLogger();

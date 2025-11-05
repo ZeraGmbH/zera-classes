@@ -108,6 +108,11 @@ void TestModuleManager::setRangeGetSetDelay(int rangeGetSetDelay)
     m_testAllServices->setRangeGetSetDelay(rangeGetSetDelay);
 }
 
+void TestModuleManager::fireHotplugInterrupt(const QStringList &channelAliases)
+{
+    m_testAllServices->fireHotplugInterrupt(channelAliases);
+}
+
 void TestModuleManager::onAllModulesDestroyed()
 {
     m_instantCountsOnModulesDestroyed.append( {

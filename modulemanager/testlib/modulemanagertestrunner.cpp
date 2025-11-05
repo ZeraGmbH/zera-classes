@@ -90,6 +90,11 @@ void ModuleManagerTestRunner::setRangeGetSetDelay(int rangeGetSetDelay)
     m_modMan->setRangeGetSetDelay(rangeGetSetDelay);
 }
 
+void ModuleManagerTestRunner::fireHotplugInterrupt(const QStringList &channelAliases)
+{
+    m_modMan->fireHotplugInterrupt(channelAliases);
+}
+
 VeinStorage::AbstractEventSystem *ModuleManagerTestRunner::getVeinStorageSystem()
 {
     return m_modmanFacade->getStorageSystem();

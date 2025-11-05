@@ -37,6 +37,7 @@ public:
 
     ZDspServer *getDspServer();
     void setRangeGetSetDelay(int rangeGetSetDelay);
+    void fireHotplugInterrupt(const QStringList &channelAliases);
 
 private slots:
     void onAllModulesDestroyed();
