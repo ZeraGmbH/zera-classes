@@ -47,7 +47,6 @@ enum sem1moduleCmds
     resetintregister,
     readvicount,
     readtcount,
-    activatepushbutton,
 };
 
 
@@ -122,7 +121,6 @@ private slots:
     void newUnit(QVariant unit);
     void newUpperLimit(QVariant limit);
     void newLowerLimit(QVariant limit);
-    void newPushButton(QVariant pushbutton);
 
     void Actualize();
     void clientActivationChanged(bool bActive);
@@ -248,8 +246,6 @@ private:
     VfModuleParameter* m_pMeasStartTime;
     VfModuleParameter* m_pMeasEndTime;
     VfModuleParameter* m_pMeasDurationMs;
-    VfModuleParameter* m_pPressPushButton;
-    VfModuleRpcPtr m_pEmobLockStateRpc;
     VfModuleParameter* m_pClientNotifierPar;
     ClientActiveComponent m_ClientActiveNotifier;
 

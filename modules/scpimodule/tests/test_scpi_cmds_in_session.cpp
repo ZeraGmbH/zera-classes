@@ -186,9 +186,9 @@ void test_scpi_cmds_in_session::executeRpcQueryWrongRpcName()
 
 void test_scpi_cmds_in_session::executeRpcReadLockStateQuery()
 {
-    ModuleManagerTestRunner testRunner(":/sem-min-session.json");
+    ModuleManagerTestRunner testRunner(":/hotpluscontrols-min-session.json");
     ScpiModuleClientBlocked client;
-    QString status = client.sendReceive("CALCULATE:EM01:0001:EMLOCKSTATE?");
+    QString status = client.sendReceive("EMOB:HOTP1:EMLOCKSTATE?");
     QCOMPARE(status, "4");
 }
 

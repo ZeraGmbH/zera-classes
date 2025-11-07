@@ -2,7 +2,6 @@
 #include "sem1module.h"
 #include "sem1moduleconfigdata.h"
 #include "sem1moduleconfiguration.h"
-#include "rpcreadlockstate.h"
 #include <errormessages.h>
 #include <scpi.h>
 #include <unithelper.h>
@@ -359,26 +358,6 @@ void cSem1ModuleMeasProgram::generateVeinInterface()
                                         QVariant((int)0));
     m_pMeasDurationMs->setScpiInfo("CALCULATE",  QString("%1:MMEASTIME").arg(modNr), SCPI::isQuery, m_pMeasDurationMs->getName());
     m_pModule->m_veinModuleParameterMap[key] = m_pMeasDurationMs; // and for the modules interface
-
-    m_pPressPushButton = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
-                                            key = QString("PAR_EmobPushButton"),
-                                            QString("Activate EMOB-pushbutton (push=1)"),
-                                            QVariant((int)0));
-    m_pPressPushButton->setScpiInfo("CALCULATE", QString("%1:PBPRESS").arg(modNr), SCPI::isCmdwP, m_pPressPushButton->getName());
-    m_pPressPushButton->setValidator(new cIntValidator(0, 1, 1));
-    m_pModule->m_veinModuleParameterMap[key] = m_pPressPushButton; // for modules use
-
-    VfRpcEventSystemSimplified *rpcEventSystem = m_pModule->getRpcEventSystem();
-
-    std::shared_ptr<RPCReadLockState> rpcEmobReadLockState = std::make_shared<RPCReadLockState>(m_pcbInterface, rpcEventSystem, m_pModule->getEntityId());
-    rpcEventSystem->addRpc(rpcEmobReadLockState);
-    m_pEmobLockStateRpc = std::make_shared<VfModuleRpc>(rpcEmobReadLockState,
-                                          "EMOB plug lock state: 0:unknown 1:open 2:locking 3:locked 4:error");
-    m_pEmobLockStateRpc->setRPCScpiInfo("CALCULATE",
-                                        QString("%1:EMLOCKSTATE").arg(modNr),
-                                        SCPI::isQuery,
-                                        rpcEmobReadLockState->getSignature());
-    m_pModule->m_veinModuleRPCMap[rpcEmobReadLockState->getSignature()] = m_pEmobLockStateRpc; // for modules use
 }
 
 
@@ -604,10 +583,6 @@ void cSem1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, Q
                 }
                 else
                     notifyError(readsecregisterErrMsg);
-                break;
-            case activatepushbutton:
-                if (reply != ack)
-                    notifyError(pushbuttonErrMsg);
                 break;
             }
         }
@@ -924,7 +899,6 @@ void cSem1ModuleMeasProgram::activationDone()
     connect(m_pInputUnitPar, &VfModuleParameter::sigValueChanged, this, &cSem1ModuleMeasProgram::newUnit);
     connect(m_pUpperLimitPar, &VfModuleParameter::sigValueChanged, this, &cSem1ModuleMeasProgram::newUpperLimit);
     connect(m_pLowerLimitPar, &VfModuleParameter::sigValueChanged, this, &cSem1ModuleMeasProgram::newLowerLimit);
-    connect(m_pPressPushButton, &VfModuleParameter::sigValueChanged, this, &cSem1ModuleMeasProgram::newPushButton);
     setInterfaceComponents(); // actualize interface components
     setValidators();
     setUnits();
@@ -1142,23 +1116,6 @@ void cSem1ModuleMeasProgram::newStartStop(QVariant startstop)
                 m_finalResultStateMachine.start();
             }
         }
-    }
-}
-
-void cSem1ModuleMeasProgram::newPushButton(QVariant pushbutton)
-{
-    bool ok;
-    int pb = pushbutton.toInt(&ok);
-    if (!ok) {
-        qWarning("newPushButton NOT ok");
-        return;
-    }
-    if (pb == 1) {
-        m_MsgNrCmdList[m_pcbInterface->activatePushButton()] = activatepushbutton;       // send actication via I2C to Emob
-        m_pPressPushButton->setValue(0);
-    }
-    else if (pb == 0) {
-        qWarning("newPushButton: 0");
     }
 }
 
