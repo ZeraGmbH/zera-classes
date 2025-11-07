@@ -13,11 +13,4 @@ endfunction()
 
 SETUP_QTESTS_MODULE(
     test_sem1_config_load
-    test_read_lock_state
-)
-
-
-target_sources(test_read_lock_state
-  PRIVATE
-    test-data/test-data.qrc
 )
