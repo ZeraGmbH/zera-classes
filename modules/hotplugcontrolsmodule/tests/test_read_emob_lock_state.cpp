@@ -17,7 +17,6 @@ static constexpr int systemEntityId = 0;
 
 void test_read_emob_lock_state::readEmobPushButtonValue()
 {
-    QSKIP("Not yet ready.");
     VeinStorage::AbstractEventSystem* veinStorage = m_testRunner->getVeinStorageSystem();
     VeinStorage::AbstractDatabase *dataBase = veinStorage->getDb();
     QList<int> entityList = dataBase->getEntityList();
@@ -30,7 +29,6 @@ void test_read_emob_lock_state::readEmobPushButtonValue()
 
 void test_read_emob_lock_state::pressAndReadEmobPushButtonValue()
 {
-    QSKIP("Not yet ready.");
     VeinStorage::AbstractEventSystem* veinStorage = m_testRunner->getVeinStorageSystem();
     VeinStorage::AbstractDatabase *dataBase = veinStorage->getDb();
 
