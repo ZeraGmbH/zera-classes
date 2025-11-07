@@ -3,6 +3,8 @@
 
 #include "hotplugcontrolsmodule.h"
 #include "moduleactivist.h"
+#include "pcbserviceconnection.h"
+#include <taskcontainersequence.h>
 
 namespace  HOTPLUGCONTROLSMODULE {
 
@@ -15,10 +17,13 @@ public slots:
     void deactivate() override;
     void generateVeinInterface() override;
 private slots:
-    void onActivationReady();
-    void onDeactivationReady();
+    void onActivateContinue(bool ok);
 private:
     cHotplugControlsModule *m_module;
+    PcbServiceConnection m_pcbConnection;
+    TaskContainerSequence m_activationTasks;
+
+    VfModuleRpcPtr m_pEmobLockStateRpc;
 };
 
 }
