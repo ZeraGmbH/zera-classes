@@ -1,0 +1,64 @@
+<!DOCTYPE SCPIModel>
+<MODELLIST>
+ <DEVICE>MT310s2</DEVICE>
+ <RELEASE></RELEASE>
+ <MODELS>
+  <CONFIGURATION Type="Model,Node">
+   <SYST Type="Node">
+    <NAMESESSION ScpiPath="CONFIGURATION:SYST:NAMESESSION" ValidPar="Default,EMOB AC,EMOB DC,DC: 4*Voltage / 1*Current" DataType="STRING" Type="Query,Command+Par" Description="Session name"/>
+    <XSESSION ScpiPath="CONFIGURATION:SYST:XSESSION" ValidPar="Foo,Bar" DataType="STRING" Type="Query,Command+Par" Description="XSession name">
+     <CATALOG ScpiPath="CONFIGURATION:SYST:XSESSION:CATALOG" Type="Query"/>
+    </XSESSION>
+    <SESSION Type="Node">
+     <CATALOG ScpiPath="CONFIGURATION:SYST:SESSION:CATALOG" Type="Query"/>
+    </SESSION>
+   </SYST>
+  </CONFIGURATION>
+  <EMOB Type="Model,Node">
+   <HOT1 Type="Node">
+    <EMLOCKSTATE ScpiPath="EMOB:HOT1:EMLOCKSTATE" Type="Query" Description="EMOB plug lock state: 0:unknown 1:open 2:locking 3:locked 4:error"/>
+   </HOT1>
+  </EMOB>
+  <DEVICE Type="Model,Node">
+   <IFACE ScpiPath="DEVICE:IFACE" Type="Query"/>
+  </DEVICE>
+  <STATUS Type="Model,Node">
+   <QUESTIONABLE Type="Node">
+    <CONDITION ScpiPath="STATUS:QUESTIONABLE:CONDITION" Type="Query"/>
+    <PTRANSITION ScpiPath="STATUS:QUESTIONABLE:PTRANSITION" Type="Query,Command+Par"/>
+    <NTRANSITION ScpiPath="STATUS:QUESTIONABLE:NTRANSITION" Type="Query,Command+Par"/>
+    <EVENT ScpiPath="STATUS:QUESTIONABLE:EVENT" Type="Query"/>
+    <ENABLE ScpiPath="STATUS:QUESTIONABLE:ENABLE" Type="Query,Command+Par"/>
+   </QUESTIONABLE>
+   <OPERATION Type="Node">
+    <CONDITION ScpiPath="STATUS:OPERATION:CONDITION" Type="Query"/>
+    <PTRANSITION ScpiPath="STATUS:OPERATION:PTRANSITION" Type="Query,Command+Par"/>
+    <NTRANSITION ScpiPath="STATUS:OPERATION:NTRANSITION" Type="Query,Command+Par"/>
+    <EVENT ScpiPath="STATUS:OPERATION:EVENT" Type="Query"/>
+    <ENABLE ScpiPath="STATUS:OPERATION:ENABLE" Type="Query,Command+Par"/>
+    <MEASURE Type="Node">
+     <CONDITION ScpiPath="STATUS:OPERATION:MEASURE:CONDITION" Type="Query"/>
+     <PTRANSITION ScpiPath="STATUS:OPERATION:MEASURE:PTRANSITION" Type="Query,Command+Par"/>
+     <NTRANSITION ScpiPath="STATUS:OPERATION:MEASURE:NTRANSITION" Type="Query,Command+Par"/>
+     <EVENT ScpiPath="STATUS:OPERATION:MEASURE:EVENT" Type="Query"/>
+     <ENABLE ScpiPath="STATUS:OPERATION:MEASURE:ENABLE" Type="Query,Command+Par"/>
+    </MEASURE>
+   </OPERATION>
+  </STATUS>
+  <MULOPC ScpiPath="*OPC" Type="Model,Query,Command" Description="OPeration Complete"/>
+  <MULESE ScpiPath="*ESE" Type="Model,Query,Command+Par" Description="Event Status Enable"/>
+  <MULSRE ScpiPath="*SRE" Type="Model,Query,Command+Par" Description="Service Request Enable"/>
+  <MULCLS ScpiPath="*CLS" Type="Model,Command" Description="Clear Status"/>
+  <MULRST ScpiPath="*RST" Type="Model,Command" Description="Reset"/>
+  <MULIDN ScpiPath="*IDN" Type="Model,Query" Description="Identification query"/>
+  <MULESR ScpiPath="*ESR" Type="Model,Query" Description="Event Status Register"/>
+  <MULSTB ScpiPath="*STB" Type="Model,Query" Description="Status Byte query"/>
+  <MULTST ScpiPath="*TST" Type="Model,Query" Description="Self-Test query"/>
+  <SYSTEM Type="Model,Node">
+   <ERROR ScpiPath="SYSTEM:ERROR" Type="Node,Query" Description="Queries one error of internal error list">
+    <COUNT ScpiPath="SYSTEM:ERROR:COUNT" Type="Query" Description="Queries the number of error messages of internal error list"/>
+    <ALL ScpiPath="SYSTEM:ERROR:ALL" Type="Query" Description="Queries all error stored in internal error list"/>
+   </ERROR>
+  </SYSTEM>
+ </MODELS>
+</MODELLIST>
