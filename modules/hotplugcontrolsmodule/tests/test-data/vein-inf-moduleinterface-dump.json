@@ -5,6 +5,17 @@
         },
         "INF_ModuleInterface": {
             "Description": "Module's interface details"
+        },
+        "PAR_EmobPushButton": {
+            "Description": "Activate EMOB-pushbutton (push=1)",
+            "Validation": {
+                "Data": [
+                    0,
+                    1,
+                    1
+                ],
+                "Type": "INTEGER"
+            }
         }
     },
     "ModuleInfo": {
@@ -18,6 +29,13 @@
     },
     "SCPIInfo": {
         "Cmd": [
+            [
+                "EMOB",
+                "PBPRESS",
+                "8",
+                "PAR_EmobPushButton",
+                "0"
+            ]
         ],
         "Name": "HOT1",
         "RPC": [

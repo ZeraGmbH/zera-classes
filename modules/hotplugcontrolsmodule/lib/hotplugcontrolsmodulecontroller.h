@@ -8,6 +8,11 @@
 
 namespace  HOTPLUGCONTROLSMODULE {
 
+enum hotplugControlsModuleCmds
+{
+    activatepushbutton,
+};
+
 class HotplugControlsModuleController : public cModuleActivist
 {
 public:
@@ -17,12 +22,17 @@ public slots:
     void deactivate() override;
     void generateVeinInterface() override;
 private slots:
-    void onActivateContinue(bool ok);
+    void onActivateDone(bool ok);
+    void catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant answer);
+
+    void newPushButton(QVariant pushbutton);
 private:
     cHotplugControlsModule *m_module;
     PcbServiceConnection m_pcbConnection;
     TaskContainerSequence m_activationTasks;
+    QHash<quint32, int> m_MsgNrCmdList;
 
+    VfModuleParameter* m_pPressPushButton;
     VfModuleRpcPtr m_pEmobLockStateRpc;
 };
 
