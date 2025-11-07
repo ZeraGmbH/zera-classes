@@ -41,7 +41,7 @@ void test_read_emob_lock_state::pressAndReadEmobPushButtonValue()
 
 void test_read_emob_lock_state::readLockStateWrongRpcNameScpi()
 {
-    QString status = m_scpiClient->sendReceive("EMOB:HOT1:FOO?");
+    QString status = m_scpiClient->sendReceive("EMOB:HOTP1:FOO?");
     QCOMPARE(status, "");
 
     QFile file(":/vein-event-dumps/dumpReadLockStateWrongRpcNameScpi.json");
@@ -53,7 +53,7 @@ void test_read_emob_lock_state::readLockStateWrongRpcNameScpi()
 
 void test_read_emob_lock_state::readLockStateCorrectRpcNameScpi()
 {
-    QString status = m_scpiClient->sendReceive("EMOB:HOT1:EMLOCKSTATE?");
+    QString status = m_scpiClient->sendReceive("EMOB:HOTP1:EMLOCKSTATE?");
     QCOMPARE(status, "4");
 
     QFile file(":/vein-event-dumps/dumpReadLockStateCorrectRpcNameScpi.json");
@@ -66,8 +66,8 @@ void test_read_emob_lock_state::readLockStateCorrectRpcNameScpi()
 void test_read_emob_lock_state::readLockStateTwiceScpi()
 {
     m_testRunner->fireHotplugInterrupt(QStringList()  << "IAUX");
-    QString status1 = m_scpiClient->sendReceive("EMOB:HOT1:EMLOCKSTATE?");
-    QString status2 = m_scpiClient->sendReceive("EMOB:HOT1:EMLOCKSTATE?");
+    QString status1 = m_scpiClient->sendReceive("EMOB:HOTP1:EMLOCKSTATE?");
+    QString status2 = m_scpiClient->sendReceive("EMOB:HOTP1:EMLOCKSTATE?");
     QCOMPARE(status1, QString::number(reademoblockstate::emobstate_open));
     QCOMPARE(status1, status2);
 

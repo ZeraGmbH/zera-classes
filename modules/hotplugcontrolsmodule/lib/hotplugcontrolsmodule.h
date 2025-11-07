@@ -13,7 +13,7 @@ class cHotplugControlsModule : public BaseModule
     Q_OBJECT
 public:
     static constexpr const char* BaseModuleName = "HotplugControlsModule";
-    static constexpr const char* BaseSCPIModuleName = "HOT";
+    static constexpr const char* BaseSCPIModuleName = "HOTP";
 
     explicit cHotplugControlsModule(ModuleFactoryParam moduleParam);
     VfRpcEventSystemSimplified *getRpcEventSystem();
