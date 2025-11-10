@@ -104,6 +104,11 @@
         "id": 1500
       },
       {
+        "name" : "hotplugcontrolsmodule",
+        "configFile" : "hotplugcontrolsmodule.xml",
+        "id": 1700
+      },
+      {
         "name" : "scpimodule",
         "configFile" : "mt310s2-scpimodule.xml",
         "id": 9999

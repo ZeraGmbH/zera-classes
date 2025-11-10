@@ -34,6 +34,7 @@
             1400,
             1500,
             1600,
+            1700,
             9999
         ],
         "EntityName": "_System",
@@ -7076,6 +7077,61 @@
                 "Name": "DOS1"
             }
         }
+    },
+    "1700": {
+        "EntityName": "HotplugControlsModule1",
+        "INF_ModuleInterface": {
+            "ComponentInfo": {
+                "EntityName": {
+                    "Description": "Module's name"
+                },
+                "INF_ModuleInterface": {
+                    "Description": "Module's interface details"
+                },
+                "PAR_EmobPushButton": {
+                    "Description": "Activate EMOB-pushbutton (push=1)",
+                    "Validation": {
+                        "Data": [
+                            0,
+                            1,
+                            1
+                        ],
+                        "Type": "INTEGER"
+                    }
+                }
+            },
+            "ModuleInfo": {
+                "Description": "EMOB module",
+                "Name": "HotplugControlsModule1"
+            },
+            "RpcInfo": {
+                "RPC_readLockState()": {
+                    "Description": "EMOB plug lock state: 0:unknown 1:open 2:locking 3:locked 4:error"
+                }
+            },
+            "SCPIInfo": {
+                "Cmd": [
+                    [
+                        "EMOB",
+                        "PBPRESS",
+                        "8",
+                        "PAR_EmobPushButton",
+                        "0"
+                    ]
+                ],
+                "Name": "HOTP1",
+                "RPC": [
+                    [
+                        "EMOB",
+                        "EMLOCKSTATE",
+                        "2",
+                        "RPC_readLockState()",
+                        "0"
+                    ]
+                ]
+            }
+        },
+        "PAR_EmobPushButton": 0
     },
     "2": {
         "DatabaseFile": "/tmp/test.db",
