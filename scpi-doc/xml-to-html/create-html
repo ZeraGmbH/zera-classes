@@ -2,4 +2,4 @@
 BASEPATH=`dirname $0`
 
 echo "Writing $5"
-xmlstarlet tr ${BASEPATH}/xsl-files/scpi-to-html.xsl -s zenuxVersion=$1 -s sessionXml=$2 -s sessionName="$3" -s adjustmentOutput=$4 $2 > "$5"
+xmlstarlet tr ${BASEPATH}/xsl-files/scpi-to-html.xsl -s zenuxVersion=$1 -s sessionXml=$2 -s sessionName="$3" -s createAdjustmentHtml=$4 $2 > "$5"
