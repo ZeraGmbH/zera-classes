@@ -18,6 +18,8 @@
 <xsl:include href="templates/dev-iface.xsl"/>
 <xsl:include href="templates/pow-meas-prosa.xsl"/>
 <xsl:include href="templates/meas-system-chapter-number.xsl"/>
+<xsl:include href="templates/node-search.xsl"/>
+<xsl:include href="templates/emob.xsl"/>
 <xsl:include href="templates/adjustment.xsl"/>
 
 <xsl:param name="zenuxVersion"/>
@@ -344,6 +346,13 @@
   </xsl:variable>
   <xsl:variable name="SamplingConfigsHeading" select="concat($MeasSystemsChapterNo, '.', $SAMChapterNo, ' ', $SamplingConfigs)"/>
 
+  <!--In this section, we find out if a certain node is available in session-xml. Some nodes like EMOB are device and/or session specific. -->
+  <xsl:variable name="EMOBFound">
+    <xsl:call-template name="NodeSearch">
+      <xsl:with-param name="Node" select="'EMOB'"/>
+    </xsl:call-template>
+  </xsl:variable>
+
   <div class="content">
     <p>This document was created with operating system version: <b><xsl:value-of select="$zenuxVersion"/></b>.</p>
 
@@ -374,6 +383,7 @@
               </ul>
             <li><a href="#Ranges"><xsl:value-of select="$Ranges"/></a></li>
             <li><a href="#ErrorCalculators"><xsl:value-of select="$ErrorCalculators"/></a></li>
+            <xsl:if test="$EMOBFound != ''"><li><a href="#EMOB"><xsl:value-of select="$EMOB"/></a></li></xsl:if>
           </xsl:if>
           <xsl:if test="$createAdjustmentHtml = 'true'">
             <li><a href="#Adjustment"><xsl:value-of select="$Adjustment"/></a></li>
@@ -533,6 +543,14 @@
           <xsl:with-param name="ProsaSec2" select="document(concat($ProsaFolder, 'error-calculators-sec2.html'))"/>
           <xsl:with-param name="ProsaConfig" select="document(concat($ProsaFolder, 'error-calculators-config.html'))"/>
       </xsl:call-template>
+
+      <xsl:if test="$EMOBFound != ''">
+        <h1 id="EMOB"><xsl:value-of select="$EMOB"/></h1>
+        <xsl:call-template name="Emob">
+          <xsl:with-param name="Prosa" select="document(concat($ProsaFolder, 'emob.html'))"/>
+        </xsl:call-template>
+      </xsl:if>
+
     </xsl:if>
 
     <xsl:if test="$createAdjustmentHtml = 'true'">
