@@ -17,13 +17,13 @@
 <xsl:include href="templates/scpi-standard-cmds.xsl"/>
 <xsl:include href="templates/dev-iface.xsl"/>
 <xsl:include href="templates/pow-meas-prosa.xsl"/>
-<xsl:include href="templates/chapter-number.xsl"/>
+<xsl:include href="templates/meas-system-chapter-number.xsl"/>
 <xsl:include href="templates/adjustment.xsl"/>
 
 <xsl:param name="zenuxVersion"/>
 <xsl:param name="sessionXml"/>
 <xsl:param name="sessionName"/>
-<xsl:param name="adjustmentOutput"/>
+<xsl:param name="createAdjustmentHtml"/>
 
 <xsl:template match="MODELLIST">
   <!-- Sequencce as in document -->
@@ -31,7 +31,7 @@
   <title>
     <xsl:call-template name="HeaderGlobal">
       <xsl:with-param name="sessionName" select="$sessionName"/>
-      <xsl:with-param name="adjustmentData" select="$adjustmentOutput"/>
+      <xsl:with-param name="adjustmentData" select="$createAdjustmentHtml"/>
     </xsl:call-template>
   </title>
 
@@ -185,7 +185,7 @@
     <xsl:call-template name="ZeraLogo"/>
     <xsl:call-template name="HeaderGlobal">
       <xsl:with-param name="sessionName" select="$sessionName"/>
-      <xsl:with-param name="adjustmentData" select="$adjustmentOutput"/>
+      <xsl:with-param name="adjustmentData" select="$createAdjustmentHtml"/>
     </xsl:call-template>
     <button id="toggleThemeButton" class="toggleThemeButton" onclick="toggleTheme()">Toggle theme</button>
   </header>
@@ -201,17 +201,17 @@
   }
   </script>
 
-  <!--In this section, we find out which chapters are present for the input xml file and assign them a number.
-    Not every chapter is present in every mt310s2/com session-->
+  <!--In this section, we find out which 'Measurement Systems' are present in input xml file and assign them a number.
+    'Measurement Systems' are device and session specific. -->
   <xsl:variable name="DFTFound">
     <xsl:call-template name="MeasurementNodeSearch">
       <xsl:with-param name="MeasSystem" select="'DFT'"/>
     </xsl:call-template>
   </xsl:variable>
   <xsl:variable name="DFTChapterNo">
-    <xsl:call-template name="getChapterNumber">
+    <xsl:call-template name="calcMeasSystChapterNumber">
       <xsl:with-param name="LastChapterNumber" select="0"/>
-      <xsl:with-param name="ChapterAvaialble" select="$DFTFound"/>
+      <xsl:with-param name="MeasSystAvailable" select="$DFTFound"/>
     </xsl:call-template>
   </xsl:variable>
   <xsl:variable name="PhaseValuesHeading" select="concat($MeasSystemsChapterNo, '.', $DFTChapterNo, ' ', $PhaseValues)"/>
@@ -222,9 +222,9 @@
     </xsl:call-template>
   </xsl:variable>
   <xsl:variable name="POWChapterNo">
-    <xsl:call-template name="getChapterNumber">
+    <xsl:call-template name="calcMeasSystChapterNumber">
       <xsl:with-param name="LastChapterNumber" select="$DFTChapterNo"/>
-      <xsl:with-param name="ChapterAvaialble" select="$POWFound"/>
+      <xsl:with-param name="MeasSystAvailable" select="$POWFound"/>
     </xsl:call-template>
   </xsl:variable>
   <xsl:variable name="PowerMeasurementHeading" select="concat($MeasSystemsChapterNo, '.', $POWChapterNo, ' ', $PowerMeasurement)"/>
@@ -235,9 +235,9 @@
     </xsl:call-template>
   </xsl:variable>
   <xsl:variable name="FFTChapterNo">
-    <xsl:call-template name="getChapterNumber">
+    <xsl:call-template name="calcMeasSystChapterNumber">
       <xsl:with-param name="LastChapterNumber" select="$POWChapterNo"/>
-      <xsl:with-param name="ChapterAvaialble" select="$FFTFound"/>
+      <xsl:with-param name="MeasSystAvailable" select="$FFTFound"/>
     </xsl:call-template>
   </xsl:variable>
   <xsl:variable name="FFTValuesHeading" select="concat($MeasSystemsChapterNo, '.', $FFTChapterNo, ' ', $FFTValues)"/>
@@ -248,9 +248,9 @@
     </xsl:call-template>
   </xsl:variable>
   <xsl:variable name="RMSChapterNo">
-    <xsl:call-template name="getChapterNumber">
+    <xsl:call-template name="calcMeasSystChapterNumber">
       <xsl:with-param name="LastChapterNumber" select="$FFTChapterNo"/>
-      <xsl:with-param name="ChapterAvaialble" select="$RMSFound"/>
+      <xsl:with-param name="MeasSystAvailable" select="$RMSFound"/>
     </xsl:call-template>
   </xsl:variable>
   <xsl:variable name="RMSValuesHeading" select="concat($MeasSystemsChapterNo, '.', $RMSChapterNo, ' ', $RMSValues)"/>
@@ -261,9 +261,9 @@
     </xsl:call-template>
   </xsl:variable>
   <xsl:variable name="THDChapterNo">
-    <xsl:call-template name="getChapterNumber">
+    <xsl:call-template name="calcMeasSystChapterNumber">
       <xsl:with-param name="LastChapterNumber" select="$RMSChapterNo"/>
-      <xsl:with-param name="ChapterAvaialble" select="$THDFound"/>
+      <xsl:with-param name="MeasSystAvailable" select="$THDFound"/>
     </xsl:call-template>
   </xsl:variable>
   <xsl:variable name="ThdMeasurementHeading" select="concat($MeasSystemsChapterNo, '.', $THDChapterNo, ' ', $ThdMeasurement)"/>
@@ -274,9 +274,9 @@
     </xsl:call-template>
   </xsl:variable>
   <xsl:variable name="TRChapterNo">
-    <xsl:call-template name="getChapterNumber">
+    <xsl:call-template name="calcMeasSystChapterNumber">
       <xsl:with-param name="LastChapterNumber" select="$THDChapterNo"/>
-      <xsl:with-param name="ChapterAvaialble" select="$TRFound"/>
+      <xsl:with-param name="MeasSystAvailable" select="$TRFound"/>
     </xsl:call-template>
   </xsl:variable>
   <xsl:variable name="TRValuesHeading" select="concat($MeasSystemsChapterNo, '.', $TRChapterNo, ' ', $TRValues)"/>
@@ -287,9 +287,9 @@
     </xsl:call-template>
   </xsl:variable>
   <xsl:variable name="BDChapterNo">
-    <xsl:call-template name="getChapterNumber">
+    <xsl:call-template name="calcMeasSystChapterNumber">
       <xsl:with-param name="LastChapterNumber" select="$TRChapterNo"/>
-      <xsl:with-param name="ChapterAvaialble" select="$BDFound"/>
+      <xsl:with-param name="MeasSystAvailable" select="$BDFound"/>
     </xsl:call-template>
   </xsl:variable>
   <xsl:variable name="BurdenValuesHeading" select="concat($MeasSystemsChapterNo, '.', $BDChapterNo, ' ', $BurdenValues)"/>
@@ -300,9 +300,9 @@
     </xsl:call-template>
   </xsl:variable>
   <xsl:variable name="LAMChapterNo">
-    <xsl:call-template name="getChapterNumber">
+    <xsl:call-template name="calcMeasSystChapterNumber">
       <xsl:with-param name="LastChapterNumber" select="$BDChapterNo"/>
-      <xsl:with-param name="ChapterAvaialble" select="$LAMFound"/>
+      <xsl:with-param name="MeasSystAvailable" select="$LAMFound"/>
     </xsl:call-template>
   </xsl:variable>
   <xsl:variable name="LambdaValuesHeading" select="concat($MeasSystemsChapterNo, '.', $LAMChapterNo, ' ', $LambdaValues)"/>
@@ -313,9 +313,9 @@
     </xsl:call-template>
   </xsl:variable>
   <xsl:variable name="PWChapterNo">
-    <xsl:call-template name="getChapterNumber">
+    <xsl:call-template name="calcMeasSystChapterNumber">
       <xsl:with-param name="LastChapterNumber" select="$LAMChapterNo"/>
-      <xsl:with-param name="ChapterAvaialble" select="$PWFound"/>
+      <xsl:with-param name="MeasSystAvailable" select="$PWFound"/>
     </xsl:call-template>
   </xsl:variable>
   <xsl:variable name="HarmonicPowerValuesHeading" select="concat($MeasSystemsChapterNo, '.', $PWChapterNo, ' ', $HarmonicPowerValues)"/>
@@ -326,26 +326,27 @@
     </xsl:call-template>
   </xsl:variable>
   <xsl:variable name="OSCChapterNo">
-    <xsl:call-template name="getChapterNumber">
+    <xsl:call-template name="calcMeasSystChapterNumber">
       <xsl:with-param name="LastChapterNumber" select="$PWChapterNo"/>
-      <xsl:with-param name="ChapterAvaialble" select="$OSCFound"/>
+      <xsl:with-param name="MeasSystAvailable" select="$OSCFound"/>
     </xsl:call-template>
   </xsl:variable>
   <xsl:variable name="OSCValuesHeading" select="concat($MeasSystemsChapterNo, '.', $OSCChapterNo, ' ', $OSCValues)"/>
-  
+
   <xsl:variable name="SAMFound">
     <xsl:call-template name="SamplingConfigsNodeSearch"/>
   </xsl:variable>
   <xsl:variable name="SAMChapterNo">
-    <xsl:call-template name="getChapterNumber">
+    <xsl:call-template name="calcMeasSystChapterNumber">
       <xsl:with-param name="LastChapterNumber" select="$OSCChapterNo"/>
-      <xsl:with-param name="ChapterAvaialble" select="$SAMFound"/>
+      <xsl:with-param name="MeasSystAvailable" select="$SAMFound"/>
     </xsl:call-template>
   </xsl:variable>
   <xsl:variable name="SamplingConfigsHeading" select="concat($MeasSystemsChapterNo, '.', $SAMChapterNo, ' ', $SamplingConfigs)"/>
-  
+
   <div class="content">
     <p>This document was created with operating system version: <b><xsl:value-of select="$zenuxVersion"/></b>.</p>
+
     <!--Table of contents.-->
     <div class="toc">
       <h1 style="padding-top:0px;">Contents</h1>
@@ -356,7 +357,7 @@
           <li><a href="#DevIface"><xsl:value-of select="$DevIface"/></a></li>
           <li><a href="#SystemCmds"><xsl:value-of select="$SystemCmds"/></a></li>
           <li><a href="#ScpiStandardCmds"><xsl:value-of select="$ScpiStandardCmds"/></a></li>
-          <xsl:if test="$adjustmentOutput != 'true'">
+          <xsl:if test="$createAdjustmentHtml != 'true'">
             <li><a href="#MeasSystems"><xsl:value-of select="$MeasSystems"/></a></li>
               <ul>
                 <xsl:if test="$DFTFound != ''"><li><a href="#PhaseValues"><xsl:value-of select="$PhaseValuesHeading"/></a></li></xsl:if>
@@ -374,7 +375,7 @@
             <li><a href="#Ranges"><xsl:value-of select="$Ranges"/></a></li>
             <li><a href="#ErrorCalculators"><xsl:value-of select="$ErrorCalculators"/></a></li>
           </xsl:if>
-          <xsl:if test="$adjustmentOutput = 'true'">
+          <xsl:if test="$createAdjustmentHtml = 'true'">
             <li><a href="#Adjustment"><xsl:value-of select="$Adjustment"/></a></li>
           </xsl:if>
       </ul>
@@ -402,7 +403,7 @@
     <xsl:call-template name="ScpiStandardCmds"/>
     <xsl:call-template name="SystemInfo"/>
 
-    <xsl:if test="$adjustmentOutput != 'true'">
+    <xsl:if test="$createAdjustmentHtml != 'true'">
     
       <h1 id="MeasSystems"><xsl:value-of select="$MeasSystems"/></h1>
       <p><xsl:copy-of select="document(concat($ProsaFolder, 'measurement-system.html'))"/></p>
@@ -534,7 +535,7 @@
       </xsl:call-template>
     </xsl:if>
 
-    <xsl:if test="$adjustmentOutput = 'true'">
+    <xsl:if test="$createAdjustmentHtml = 'true'">
       <h1 id="Adjustment"><xsl:value-of select="$Adjustment"/></h1>
       <p><xsl:copy-of select="document(concat($ProsaFolder, 'adjustment.html'))"/></p>
       <xsl:call-template name="Adjustment"/>
