@@ -513,9 +513,6 @@
     "1600": {
         "ACT_PowerAboveLimit": 0
     },
-    "1700": {
-        "PAR_EmobPushButton": 0
-    },
     "Contentsets": [
         "ZeraActualValues",
         "ZeraBurden",

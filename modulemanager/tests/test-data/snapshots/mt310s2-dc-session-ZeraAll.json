@@ -379,9 +379,6 @@
         "PAR_BluetoothOn": 0,
         "PAR_MacAddress": "00:00:00:00:00:00"
     },
-    "1700": {
-        "PAR_EmobPushButton": 0
-    },
     "Contentsets": [
         "ZeraActualValues",
         "ZeraComparison",
