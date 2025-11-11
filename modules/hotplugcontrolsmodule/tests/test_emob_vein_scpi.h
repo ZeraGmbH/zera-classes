@@ -1,5 +1,5 @@
-#ifndef TEST_READ_EMOB_LOCK_STATE_H
-#define TEST_READ_EMOB_LOCK_STATE_H
+#ifndef TEST_EMOB_VEIN_SCPI_H
+#define TEST_EMOB_VEIN_SCPI_H
 
 #include "modulemanagertestrunner.h"
 #include "scpimoduleclientblocked.h"
@@ -9,7 +9,7 @@
 #include <QJsonObject>
 #include <vf_rpc_invoker.h>
 
-class test_read_emob_lock_state : public QObject
+class test_emob_vein_scpi : public QObject
 {
     Q_OBJECT
 private slots:
@@ -46,4 +46,4 @@ private:
     std::unique_ptr<TestJsonSpyEventSystem> m_serverCmdEventSpyBottom;
 };
 
-#endif // TEST_READ_EMOB_LOCK_STATE_H
+#endif // TEST_EMOB_VEIN_SCPI_H

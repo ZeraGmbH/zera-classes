@@ -1,4 +1,4 @@
-#include "test_read_emob_lock_state.h"
+#include "test_emob_vein_scpi.h"
 #include <testloghelpers.h>
 #include <timemachineobject.h>
 #include <vf_client_rpc_invoker.h>
@@ -9,13 +9,13 @@
 #include <QSignalSpy>
 #include <QTest>
 
-QTEST_MAIN(test_read_emob_lock_state)
+QTEST_MAIN(test_emob_vein_scpi)
 
 static int constexpr hotplugControlsEntityId = 1700;
 static int constexpr serverPort = 4711;
 static constexpr int systemEntityId = 0;
 
-void test_read_emob_lock_state::readEmobPushButtonValue()
+void test_emob_vein_scpi::readEmobPushButtonValue()
 {
     VeinStorage::AbstractEventSystem* veinStorage = m_testRunner->getVeinStorageSystem();
     VeinStorage::AbstractDatabase *dataBase = veinStorage->getDb();
@@ -27,7 +27,7 @@ void test_read_emob_lock_state::readEmobPushButtonValue()
     QCOMPARE(pressButtonValue.toString(), "0");
 }
 
-void test_read_emob_lock_state::pressAndReadEmobPushButtonValue()
+void test_emob_vein_scpi::pressAndReadEmobPushButtonValue()
 {
     VeinStorage::AbstractEventSystem* veinStorage = m_testRunner->getVeinStorageSystem();
     VeinStorage::AbstractDatabase *dataBase = veinStorage->getDb();
@@ -39,7 +39,7 @@ void test_read_emob_lock_state::pressAndReadEmobPushButtonValue()
     QCOMPARE(dataBase->getStoredValue(hotplugControlsEntityId, "PAR_EmobPushButton"), 0);
 }
 
-void test_read_emob_lock_state::readLockStateWrongRpcNameScpi()
+void test_emob_vein_scpi::readLockStateWrongRpcNameScpi()
 {
     QString status = m_scpiClient->sendReceive("EMOB:HOTP1:FOO?");
     QCOMPARE(status, "");
@@ -51,7 +51,7 @@ void test_read_emob_lock_state::readLockStateWrongRpcNameScpi()
     QVERIFY(TestLogHelpers::compareAndLogOnDiffJson(jsonExpected, jsonDumped));
 }
 
-void test_read_emob_lock_state::readLockStateCorrectRpcNameScpi()
+void test_emob_vein_scpi::readLockStateCorrectRpcNameScpi()
 {
     QString status = m_scpiClient->sendReceive("EMOB:HOTP1:EMLOCKSTATE?");
     QCOMPARE(status, "4");
@@ -63,7 +63,7 @@ void test_read_emob_lock_state::readLockStateCorrectRpcNameScpi()
     QVERIFY(TestLogHelpers::compareAndLogOnDiffJson(jsonExpected, jsonDumped));
 }
 
-void test_read_emob_lock_state::readLockStateTwiceScpi()
+void test_emob_vein_scpi::readLockStateTwiceScpi()
 {
     m_testRunner->fireHotplugInterrupt(QStringList()  << "IAUX");
     QString status1 = m_scpiClient->sendReceive("EMOB:HOTP1:EMLOCKSTATE?");
@@ -78,7 +78,7 @@ void test_read_emob_lock_state::readLockStateTwiceScpi()
     QVERIFY(TestLogHelpers::compareAndLogOnDiffJson(jsonExpected, jsonDumped));
 }
 
-void test_read_emob_lock_state::readLockStateTwiceVein()
+void test_emob_vein_scpi::readLockStateTwiceVein()
 {
     QSignalSpy spyRpcFinish(m_rpcInvoker.get(), &VfRPCInvoker::sigRPCFinished);
     invokeRpc("RPC_readLockState", "", 0);
@@ -94,7 +94,7 @@ void test_read_emob_lock_state::readLockStateTwiceVein()
     QCOMPARE(spyRpcFinish.count(), 2);
 }
 
-void test_read_emob_lock_state::readLockStateTwiceVeinFullQueue()
+void test_emob_vein_scpi::readLockStateTwiceVeinFullQueue()
 {
     QSignalSpy spyRpcFinish(m_rpcInvoker.get(), &VfRPCInvoker::sigRPCFinished);
     invokeRpc("RPC_readLockState", "", 0);
@@ -109,7 +109,7 @@ void test_read_emob_lock_state::readLockStateTwiceVeinFullQueue()
     QCOMPARE(spyRpcFinish.count(), 2);
 }
 
-void test_read_emob_lock_state::dumpDevIface()
+void test_emob_vein_scpi::dumpDevIface()
 {
     QString dumped = m_scpiClient->sendReceive("dev:iface?", false);
     QString expected = TestLogHelpers::loadFile("://scpi-dump.xml");
@@ -120,7 +120,7 @@ void test_read_emob_lock_state::dumpDevIface()
     QVERIFY(ok);
 }
 
-void test_read_emob_lock_state::dumpVeinInfModuleInterface()
+void test_emob_vein_scpi::dumpVeinInfModuleInterface()
 {
     VeinStorage::AbstractEventSystem* veinStorage = m_testRunner->getVeinStorageSystem();
     VeinStorage::AbstractDatabase* storageDb = veinStorage->getDb();
@@ -130,7 +130,7 @@ void test_read_emob_lock_state::dumpVeinInfModuleInterface()
     QVERIFY(TestLogHelpers::compareAndLogOnDiffJson(jsonExpected, jsonDumped));
 }
 
-void test_read_emob_lock_state::init()
+void test_emob_vein_scpi::init()
 {
     m_testRunner = std::make_unique<ModuleManagerTestRunner>(":/hotpluscontrols-min-session.json");
     m_netSystem = std::make_unique<VeinNet::NetworkSystem>();
@@ -154,7 +154,7 @@ void test_read_emob_lock_state::init()
     m_scpiClient = std::make_unique<ScpiModuleClientBlocked>();
 }
 
-void test_read_emob_lock_state::cleanup()
+void test_emob_vein_scpi::cleanup()
 {
     m_testRunner.reset();
     m_scpiClient.reset();
@@ -166,7 +166,7 @@ void test_read_emob_lock_state::cleanup()
     ControllerPersitentData::cleanupPersitentData();
 }
 
-QUuid test_read_emob_lock_state::invokeRpc(QString rpcName, QString paramName, QVariant paramValue)
+QUuid test_emob_vein_scpi::invokeRpc(QString rpcName, QString paramName, QVariant paramValue)
 {
     QVariantMap rpcParams;
     if(!paramName.isEmpty())
@@ -175,7 +175,7 @@ QUuid test_read_emob_lock_state::invokeRpc(QString rpcName, QString paramName, Q
     return id;
 }
 
-void test_read_emob_lock_state::setupSpy()
+void test_emob_vein_scpi::setupSpy()
 {
     ModuleManagerSetupFacade* modManFacade = m_testRunner->getModManFacade();
     m_serverCmdEventSpyTop = std::make_unique<TestJsonSpyEventSystem>(&m_veinEventDump, "server-enter");
