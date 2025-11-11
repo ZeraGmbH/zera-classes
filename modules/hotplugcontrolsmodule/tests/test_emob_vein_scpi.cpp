@@ -15,7 +15,7 @@ static int constexpr hotplugControlsEntityId = 1700;
 static int constexpr serverPort = 4711;
 static constexpr int systemEntityId = 0;
 
-void test_emob_vein_scpi::readEmobPushButtonValue()
+void test_emob_vein_scpi::readEmobPushButtonDefaultValue()
 {
     VeinStorage::AbstractEventSystem* veinStorage = m_testRunner->getVeinStorageSystem();
     VeinStorage::AbstractDatabase *dataBase = veinStorage->getDb();
@@ -39,12 +39,12 @@ void test_emob_vein_scpi::pressAndReadEmobPushButtonValue()
     QCOMPARE(dataBase->getStoredValue(hotplugControlsEntityId, "PAR_EmobPushButton"), 0);
 }
 
-void test_emob_vein_scpi::readLockStateWrongRpcNameScpi()
+void test_emob_vein_scpi::invokeInvalidRpcNameScpi()
 {
     QString status = m_scpiClient->sendReceive("EMOB:HOTP1:FOO?");
     QCOMPARE(status, "");
 
-    QFile file(":/vein-event-dumps/dumpReadLockStateWrongRpcNameScpi.json");
+    QFile file(":/vein-event-dumps/dumpinvokeInvalidRpcNameScpi.json");
     QVERIFY(file.open(QFile::ReadOnly));
     QByteArray jsonExpected = file.readAll();
     QByteArray jsonDumped = TestLogHelpers::dump(m_veinEventDump);
