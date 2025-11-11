@@ -81,7 +81,6 @@ function(SETUP_QTESTS)
             Zera::testlib-common
             Zera::tasks-base-testlib
             Zera::zera-timers-testlib
-            Zera::zera-i2c-devices-testlib
             Zera::service-interfaces-testlib
             )
     endforeach()
