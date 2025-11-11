@@ -12,10 +12,10 @@ function(SETUP_QTESTS_MODULE)
 endfunction()
 
 SETUP_QTESTS_MODULE(
-    test_read_emob_lock_state
+    test_emob_vein_scpi
 )
 
-target_sources(test_read_emob_lock_state
+target_sources(test_emob_vein_scpi
   PRIVATE
     test-data/test-data.qrc
 )
