@@ -37,7 +37,7 @@ VfEventSytemModuleParam *cHotplugControlsModule::getValidatorEventSystem()
 void cHotplugControlsModule::setupModule()
 {
     emit addEventSystem(getValidatorEventSystem());
-    emit addEventSystem(m_spRpcEventSystem.get());
+    emit addEventSystem(getRpcEventSystem());
     emit addEventSystem(m_pModuleEventSystem);
 
     HotplugControlsModuleController* moduleActivist = new HotplugControlsModuleController(this);

@@ -15,30 +15,6 @@ static int constexpr hotplugControlsEntityId = 1700;
 static int constexpr serverPort = 4711;
 static constexpr int systemEntityId = 0;
 
-void test_emob_vein_scpi::readEmobPushButtonDefaultValue()
-{
-    VeinStorage::AbstractEventSystem* veinStorage = m_testRunner->getVeinStorageSystem();
-    VeinStorage::AbstractDatabase *dataBase = veinStorage->getDb();
-    QList<int> entityList = dataBase->getEntityList();
-    QVERIFY(entityList.contains(hotplugControlsEntityId));
-
-    QVERIFY(dataBase->hasStoredValue(hotplugControlsEntityId, "PAR_EmobPushButton"));
-    QVariant pressButtonValue = dataBase->getStoredValue(hotplugControlsEntityId, "PAR_EmobPushButton");
-    QCOMPARE(pressButtonValue.toString(), "0");
-}
-
-void test_emob_vein_scpi::pressAndReadEmobPushButtonValue()
-{
-    VeinStorage::AbstractEventSystem* veinStorage = m_testRunner->getVeinStorageSystem();
-    VeinStorage::AbstractDatabase *dataBase = veinStorage->getDb();
-
-    QVariant oldValue = dataBase->getStoredValue(hotplugControlsEntityId, "PAR_EmobPushButton");
-    QCOMPARE(oldValue, 0);
-
-    m_testRunner->setVfComponent(hotplugControlsEntityId, "PAR_EmobPushButton", 1);
-    QCOMPARE(dataBase->getStoredValue(hotplugControlsEntityId, "PAR_EmobPushButton"), 0);
-}
-
 void test_emob_vein_scpi::invokeInvalidRpcNameScpi()
 {
     QString status = m_scpiClient->sendReceive("EMOB:HOTP1:FOO?");
@@ -49,6 +25,32 @@ void test_emob_vein_scpi::invokeInvalidRpcNameScpi()
     QByteArray jsonExpected = file.readAll();
     QByteArray jsonDumped = TestLogHelpers::dump(m_veinEventDump);
     QVERIFY(TestLogHelpers::compareAndLogOnDiffJson(jsonExpected, jsonDumped));
+}
+
+void test_emob_vein_scpi::activateEmobPushButtonScpi()
+{
+    m_scpiClient->sendReceive("EMOB:HOTP1:PBPRESS");
+    QFile file(":/vein-event-dumps/dumpActivateEmobPushButtonScpi.json");
+    QVERIFY(file.open(QFile::ReadOnly));
+    QByteArray jsonExpected = file.readAll();
+    QByteArray jsonDumped = TestLogHelpers::dump(m_veinEventDump);
+    QVERIFY(TestLogHelpers::compareAndLogOnDiffJson(jsonExpected, jsonDumped));
+}
+
+void test_emob_vein_scpi::activateEmobPushButtonVein()
+{
+    m_testRunner->fireHotplugInterrupt(QStringList() << "IAUX");
+
+    QSignalSpy spyRpcFinish(m_rpcInvoker.get(), &VfRPCInvoker::sigRPCFinished);
+    invokeRpc("RPC_activatePushButton", "", 0);
+    TimeMachineObject::feedEventLoop();
+
+    QFile file(":/vein-event-dumps/dumpActivateEmobPushButtonVein.json");
+    QVERIFY(file.open(QFile::ReadOnly));
+    QByteArray jsonExpected = file.readAll();
+    QByteArray jsonDumped = TestLogHelpers::dump(m_veinEventDump);
+    QVERIFY(TestLogHelpers::compareAndLogOnDiffJson(jsonExpected, jsonDumped));
+    QCOMPARE(spyRpcFinish.count(), 1);
 }
 
 void test_emob_vein_scpi::readLockStateCorrectRpcNameScpi()
@@ -65,7 +67,7 @@ void test_emob_vein_scpi::readLockStateCorrectRpcNameScpi()
 
 void test_emob_vein_scpi::readLockStateTwiceScpi()
 {
-    m_testRunner->fireHotplugInterrupt(QStringList()  << "IAUX");
+    m_testRunner->fireHotplugInterrupt(QStringList() << "IAUX");
     QString status1 = m_scpiClient->sendReceive("EMOB:HOTP1:EMLOCKSTATE?");
     QString status2 = m_scpiClient->sendReceive("EMOB:HOTP1:EMLOCKSTATE?");
     QCOMPARE(status1, QString::number(reademoblockstate::emobstate_open));

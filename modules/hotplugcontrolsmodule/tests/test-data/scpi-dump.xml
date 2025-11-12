@@ -5,60 +5,60 @@
  <MODELS>
   <CONFIGURATION Type="Model,Node">
    <SYST Type="Node">
-    <NAMESESSION ScpiPath="CONFIGURATION:SYST:NAMESESSION" Description="Session name" ValidPar="Default,EMOB AC,EMOB DC,DC: 4*Voltage / 1*Current" DataType="STRING" Type="Query,Command+Par"/>
-    <XSESSION ScpiPath="CONFIGURATION:SYST:XSESSION" Description="XSession name" ValidPar="Foo,Bar" DataType="STRING" Type="Query,Command+Par">
-     <CATALOG ScpiPath="CONFIGURATION:SYST:XSESSION:CATALOG" Type="Query"/>
+    <NAMESESSION Type="Query,Command+Par" DataType="STRING" ValidPar="Default,EMOB AC,EMOB DC,DC: 4*Voltage / 1*Current" ScpiPath="CONFIGURATION:SYST:NAMESESSION" Description="Session name"/>
+    <XSESSION Type="Query,Command+Par" DataType="STRING" ValidPar="Foo,Bar" ScpiPath="CONFIGURATION:SYST:XSESSION" Description="XSession name">
+     <CATALOG Type="Query" ScpiPath="CONFIGURATION:SYST:XSESSION:CATALOG"/>
     </XSESSION>
     <SESSION Type="Node">
-     <CATALOG ScpiPath="CONFIGURATION:SYST:SESSION:CATALOG" Type="Query"/>
+     <CATALOG Type="Query" ScpiPath="CONFIGURATION:SYST:SESSION:CATALOG"/>
     </SESSION>
    </SYST>
   </CONFIGURATION>
   <EMOB Type="Model,Node">
    <HOTP1 Type="Node">
-    <PBPRESS ScpiPath="EMOB:HOTP1:PBPRESS" Max="1" Min="0" Description="Activate EMOB-pushbutton (push=1)" DataType="INTEGER" Type="Command+Par"/>
-    <EMLOCKSTATE ScpiPath="EMOB:HOTP1:EMLOCKSTATE" Description="EMOB plug lock state: 0:unknown 1:open 2:locking 3:locked 4:error" Type="Query"/>
+    <PBPRESS Type="Command" ScpiPath="EMOB:HOTP1:PBPRESS" Description="Activate EMOB-pushbutton"/>
+    <EMLOCKSTATE Type="Query" ScpiPath="EMOB:HOTP1:EMLOCKSTATE" Description="EMOB plug lock state: 0:unknown 1:open 2:locking 3:locked 4:error"/>
    </HOTP1>
   </EMOB>
   <DEVICE Type="Model,Node">
-   <IFACE ScpiPath="DEVICE:IFACE" Type="Query"/>
+   <IFACE Type="Query" ScpiPath="DEVICE:IFACE"/>
   </DEVICE>
   <STATUS Type="Model,Node">
    <QUESTIONABLE Type="Node">
-    <CONDITION ScpiPath="STATUS:QUESTIONABLE:CONDITION" Type="Query"/>
-    <PTRANSITION ScpiPath="STATUS:QUESTIONABLE:PTRANSITION" Type="Query,Command+Par"/>
-    <NTRANSITION ScpiPath="STATUS:QUESTIONABLE:NTRANSITION" Type="Query,Command+Par"/>
-    <EVENT ScpiPath="STATUS:QUESTIONABLE:EVENT" Type="Query"/>
-    <ENABLE ScpiPath="STATUS:QUESTIONABLE:ENABLE" Type="Query,Command+Par"/>
+    <CONDITION Type="Query" ScpiPath="STATUS:QUESTIONABLE:CONDITION"/>
+    <PTRANSITION Type="Query,Command+Par" ScpiPath="STATUS:QUESTIONABLE:PTRANSITION"/>
+    <NTRANSITION Type="Query,Command+Par" ScpiPath="STATUS:QUESTIONABLE:NTRANSITION"/>
+    <EVENT Type="Query" ScpiPath="STATUS:QUESTIONABLE:EVENT"/>
+    <ENABLE Type="Query,Command+Par" ScpiPath="STATUS:QUESTIONABLE:ENABLE"/>
    </QUESTIONABLE>
    <OPERATION Type="Node">
-    <CONDITION ScpiPath="STATUS:OPERATION:CONDITION" Type="Query"/>
-    <PTRANSITION ScpiPath="STATUS:OPERATION:PTRANSITION" Type="Query,Command+Par"/>
-    <NTRANSITION ScpiPath="STATUS:OPERATION:NTRANSITION" Type="Query,Command+Par"/>
-    <EVENT ScpiPath="STATUS:OPERATION:EVENT" Type="Query"/>
-    <ENABLE ScpiPath="STATUS:OPERATION:ENABLE" Type="Query,Command+Par"/>
+    <CONDITION Type="Query" ScpiPath="STATUS:OPERATION:CONDITION"/>
+    <PTRANSITION Type="Query,Command+Par" ScpiPath="STATUS:OPERATION:PTRANSITION"/>
+    <NTRANSITION Type="Query,Command+Par" ScpiPath="STATUS:OPERATION:NTRANSITION"/>
+    <EVENT Type="Query" ScpiPath="STATUS:OPERATION:EVENT"/>
+    <ENABLE Type="Query,Command+Par" ScpiPath="STATUS:OPERATION:ENABLE"/>
     <MEASURE Type="Node">
-     <CONDITION ScpiPath="STATUS:OPERATION:MEASURE:CONDITION" Type="Query"/>
-     <PTRANSITION ScpiPath="STATUS:OPERATION:MEASURE:PTRANSITION" Type="Query,Command+Par"/>
-     <NTRANSITION ScpiPath="STATUS:OPERATION:MEASURE:NTRANSITION" Type="Query,Command+Par"/>
-     <EVENT ScpiPath="STATUS:OPERATION:MEASURE:EVENT" Type="Query"/>
-     <ENABLE ScpiPath="STATUS:OPERATION:MEASURE:ENABLE" Type="Query,Command+Par"/>
+     <CONDITION Type="Query" ScpiPath="STATUS:OPERATION:MEASURE:CONDITION"/>
+     <PTRANSITION Type="Query,Command+Par" ScpiPath="STATUS:OPERATION:MEASURE:PTRANSITION"/>
+     <NTRANSITION Type="Query,Command+Par" ScpiPath="STATUS:OPERATION:MEASURE:NTRANSITION"/>
+     <EVENT Type="Query" ScpiPath="STATUS:OPERATION:MEASURE:EVENT"/>
+     <ENABLE Type="Query,Command+Par" ScpiPath="STATUS:OPERATION:MEASURE:ENABLE"/>
     </MEASURE>
    </OPERATION>
   </STATUS>
-  <MULOPC ScpiPath="*OPC" Description="OPeration Complete" Type="Model,Query,Command"/>
-  <MULESE ScpiPath="*ESE" Description="Event Status Enable" Type="Model,Query,Command+Par"/>
-  <MULSRE ScpiPath="*SRE" Description="Service Request Enable" Type="Model,Query,Command+Par"/>
-  <MULCLS ScpiPath="*CLS" Description="Clear Status" Type="Model,Command"/>
-  <MULRST ScpiPath="*RST" Description="Reset" Type="Model,Command"/>
-  <MULIDN ScpiPath="*IDN" Description="Identification query" Type="Model,Query"/>
-  <MULESR ScpiPath="*ESR" Description="Event Status Register" Type="Model,Query"/>
-  <MULSTB ScpiPath="*STB" Description="Status Byte query" Type="Model,Query"/>
-  <MULTST ScpiPath="*TST" Description="Self-Test query" Type="Model,Query"/>
+  <MULOPC Type="Model,Query,Command" ScpiPath="*OPC" Description="OPeration Complete"/>
+  <MULESE Type="Model,Query,Command+Par" ScpiPath="*ESE" Description="Event Status Enable"/>
+  <MULSRE Type="Model,Query,Command+Par" ScpiPath="*SRE" Description="Service Request Enable"/>
+  <MULCLS Type="Model,Command" ScpiPath="*CLS" Description="Clear Status"/>
+  <MULRST Type="Model,Command" ScpiPath="*RST" Description="Reset"/>
+  <MULIDN Type="Model,Query" ScpiPath="*IDN" Description="Identification query"/>
+  <MULESR Type="Model,Query" ScpiPath="*ESR" Description="Event Status Register"/>
+  <MULSTB Type="Model,Query" ScpiPath="*STB" Description="Status Byte query"/>
+  <MULTST Type="Model,Query" ScpiPath="*TST" Description="Self-Test query"/>
   <SYSTEM Type="Model,Node">
-   <ERROR ScpiPath="SYSTEM:ERROR" Description="Queries one error of internal error list" Type="Node,Query">
-    <COUNT ScpiPath="SYSTEM:ERROR:COUNT" Description="Queries the number of error messages of internal error list" Type="Query"/>
-    <ALL ScpiPath="SYSTEM:ERROR:ALL" Description="Queries all error stored in internal error list" Type="Query"/>
+   <ERROR Type="Node,Query" ScpiPath="SYSTEM:ERROR" Description="Queries one error of internal error list">
+    <COUNT Type="Query" ScpiPath="SYSTEM:ERROR:COUNT" Description="Queries the number of error messages of internal error list"/>
+    <ALL Type="Query" ScpiPath="SYSTEM:ERROR:ALL" Description="Queries all error stored in internal error list"/>
    </ERROR>
   </SYSTEM>
  </MODELS>

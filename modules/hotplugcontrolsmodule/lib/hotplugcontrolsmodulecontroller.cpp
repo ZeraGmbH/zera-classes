@@ -1,4 +1,5 @@
 #include "hotplugcontrolsmodulecontroller.h"
+#include "rpcactivatepushbutton.h"
 #include "rpcreadlockstate.h"
 #include <errormessages.h>
 #include <intvalidator.h>
@@ -29,17 +30,19 @@ void HotplugControlsModuleController::deactivate()
 
 void HotplugControlsModuleController::generateVeinInterface()
 {
-    QString key;
-
-    m_pPressPushButton = new VfModuleParameter(m_module->getEntityId(), m_module->getValidatorEventSystem(),
-                                               key = QString("PAR_EmobPushButton"),
-                                               QString("Activate EMOB-pushbutton (push=1)"),
-                                               QVariant((int)0));
-    m_pPressPushButton->setScpiInfo("EMOB", QString("PBPRESS"), SCPI::isCmdwP, m_pPressPushButton->getName());
-    m_pPressPushButton->setValidator(new cIntValidator(0, 1, 1));
-    m_module->m_veinModuleParameterMap[key] = m_pPressPushButton; // for modules use
-
     VfRpcEventSystemSimplified *rpcEventSystem = m_module->getRpcEventSystem();
+
+    std::shared_ptr<RpcActivatePushButton> rpcEmobActivatePushButton = std::make_shared<RpcActivatePushButton>(m_pcbConnection.getInterface(),
+                                                                                                               rpcEventSystem,
+                                                                                                               m_module->getEntityId());
+    rpcEventSystem->addRpc(rpcEmobActivatePushButton);
+    m_pEmobPushButtonRpc = std::make_shared<VfModuleRpc>(rpcEmobActivatePushButton,
+                                                         "Activate EMOB-pushbutton");
+    m_pEmobPushButtonRpc->setRPCScpiInfo("EMOB",
+                                        QString("PBPRESS"),
+                                        SCPI::isCmd,
+                                        rpcEmobActivatePushButton->getSignature());
+    m_module->m_veinModuleRPCMap[rpcEmobActivatePushButton->getSignature()] = m_pEmobPushButtonRpc; // for modules use
 
     std::shared_ptr<RPCReadLockState> rpcEmobReadLockState = std::make_shared<RPCReadLockState>(m_pcbConnection.getInterface(), rpcEventSystem, m_module->getEntityId());
     rpcEventSystem->addRpc(rpcEmobReadLockState);
@@ -57,7 +60,6 @@ void HotplugControlsModuleController::onActivateDone(bool ok)
     if(ok) {
         connect(m_pcbConnection.getInterface().get(), &AbstractServerInterface::serverAnswer,
                 this, &HotplugControlsModuleController::catchInterfaceAnswer);
-        connect(m_pPressPushButton, &VfModuleParameter::sigValueChanged, this, &HotplugControlsModuleController::newPushButton);
         emit m_module->activationContinue();
     }
 }
@@ -78,23 +80,6 @@ void HotplugControlsModuleController::catchInterfaceAnswer(quint32 msgnr, quint8
                 break;
             }
         }
-    }
-}
-
-void HotplugControlsModuleController::newPushButton(QVariant pushbutton)
-{
-    bool ok;
-    int pb = pushbutton.toInt(&ok);
-    if (!ok) {
-        qWarning("newPushButton NOT ok");
-        return;
-    }
-    if (pb == 1) {
-        m_MsgNrCmdList[m_pcbConnection.getInterface()->activatePushButton()] = activatepushbutton;       // send actication via I2C to Emob
-        m_pPressPushButton->setValue(0);
-    }
-    else if (pb == 0) {
-        qWarning("newPushButton: 0");
     }
 }
 

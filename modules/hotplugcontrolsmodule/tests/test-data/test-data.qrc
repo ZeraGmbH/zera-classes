@@ -8,5 +8,7 @@
         <file>scpi-dump.xml</file>
         <file>hotpluscontrols-min-session.json</file>
         <file>vein-inf-moduleinterface-dump.json</file>
+        <file>vein-event-dumps/dumpActivateEmobPushButtonScpi.json</file>
+        <file>vein-event-dumps/dumpActivateEmobPushButtonVein.json</file>
     </qresource>
 </RCC>

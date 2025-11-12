@@ -15,10 +15,10 @@ class test_emob_vein_scpi : public QObject
 private slots:
     void cleanup();
     void init();
-    void readEmobPushButtonDefaultValue();
-    void pressAndReadEmobPushButtonValue();
-
     void invokeInvalidRpcNameScpi();
+
+    void activateEmobPushButtonScpi();
+    void activateEmobPushButtonVein();
 
     void readLockStateCorrectRpcNameScpi();
     void readLockStateTwiceScpi();

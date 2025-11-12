@@ -24,15 +24,13 @@ public slots:
 private slots:
     void onActivateDone(bool ok);
     void catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant answer);
-
-    void newPushButton(QVariant pushbutton);
 private:
     cHotplugControlsModule *m_module;
     PcbServiceConnection m_pcbConnection;
     TaskContainerSequence m_activationTasks;
     QHash<quint32, int> m_MsgNrCmdList;
 
-    VfModuleParameter* m_pPressPushButton;
+    VfModuleRpcPtr m_pEmobPushButtonRpc;
     VfModuleRpcPtr m_pEmobLockStateRpc;
 };
 
