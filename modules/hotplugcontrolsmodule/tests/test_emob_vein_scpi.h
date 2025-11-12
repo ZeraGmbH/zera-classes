@@ -21,8 +21,13 @@ private slots:
     void activateEmobPushButtonVein();
 
     void readLockStateCorrectRpcNameScpi();
-    void readLockStateTwiceScpi();
 
+    void readLockStateScpiNoParamOneEmob();
+    void readLockStateScpiNoParamMutipleHotplug();
+    void readLockStateScpiInvalidParam();
+    void readLockStateScpiValidParamMutipleHotplug();
+
+    void readLockStateTwiceScpi();
     void readLockStateTwiceVein();
     void readLockStateTwiceVeinFullQueue();
 

@@ -5,6 +5,7 @@ function(SETUP_QTESTS_MODULE)
             PRIVATE
             hotplugcontrolsmodule-static
             zera-modulemanager-testlib
+            rangemodule-static
             Zera::xml-compare-testlib
             Zera::VfFrameworkTest
         )
