@@ -180,7 +180,7 @@ void test_scpi_cmds_in_session::executeRpcQueryWrongRpcName()
 {
     ModuleManagerTestRunner testRunner(":/session-scpi-only.json");
     ScpiModuleClientBlocked client;
-    QString status = client.sendReceive("CALCULATE:EM01:0001:RPC_FOO()?");
+    QString status = client.sendReceive("CALCULATE:EM01:0001:FOO?");
     QCOMPARE(status, "");
 }
 
@@ -203,7 +203,7 @@ void test_scpi_cmds_in_session::executeRpcQueryInvalidParams()
     TimeMachineObject::feedEventLoop();
 
     ScpiModuleClientBlocked client;
-    QString answer = client.sendReceive("CALCULATE:RPC_FORTEST(p_param)? 7;");
+    QString answer = client.sendReceive("CALCULATE:RPC1? 7;");
     QCOMPARE(answer, "");
 }
 
