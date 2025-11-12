@@ -19,6 +19,7 @@ public:
     };
     static TChannelAliasUnit getChannelAndUnit(const QString &channelOrChannelPair,
                                                ChannelRangeObserver::SystemObserverPtr observer);
+    static QString getChannelMName(const QString &channelAlias, ChannelRangeObserver::SystemObserverPtr observer);
 };
 
 #endif // SERVICECHANNELNAMEHELPER_H

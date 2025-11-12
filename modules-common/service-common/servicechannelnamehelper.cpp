@@ -39,3 +39,8 @@ ServiceChannelNameHelper::TChannelAliasUnit ServiceChannelNameHelper::getChannel
     ret.m_channelAlias = aliasedChannels;
     return ret;
 }
+
+QString ServiceChannelNameHelper::getChannelMName(const QString &channelAlias, ChannelRangeObserver::SystemObserverPtr observer)
+{
+    return observer->getChannelMName(channelAlias);
+}

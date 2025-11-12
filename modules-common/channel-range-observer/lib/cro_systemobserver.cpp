@@ -47,6 +47,15 @@ const ChannelPtr SystemObserver::getChannel(QString channelMName) const
     return std::make_shared<Channel>("", NetworkConnectionInfo(), m_tcpFactory);
 }
 
+const QString SystemObserver::getChannelMName(QString alias) const
+{
+    for(auto iter=m_channelMNameToChannel.constBegin(); iter!=m_channelMNameToChannel.constEnd(); iter++) {
+        if(iter.value()->getAlias() == alias)
+            return iter.key();
+    }
+    return QString();
+}
+
 const int SystemObserver::getSamplesPerPeriod() const
 {
     return *m_samplesPerPeriod;
