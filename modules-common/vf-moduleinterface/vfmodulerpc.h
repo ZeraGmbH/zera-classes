@@ -16,11 +16,13 @@ public:
     void exportRpcSCPIInfo(QJsonArray &jsArr) const;
     void exportMetaData(QJsonObject &jsObj) const;
     void setValidator(ValidatorInterface* validator);
+    void canAcceptOptionalParam();
 private:
     VfCpp::VfCppRpcSimplifiedPtr m_rpc;
     const QString m_description;
     std::unique_ptr<VfModuleMetaInfoContainer> m_rpcScpiInfo;
     ValidatorInterface* m_pValidator;
+    bool m_optParam;
 };
 
 typedef std::shared_ptr<VfModuleRpc> VfModuleRpcPtr;

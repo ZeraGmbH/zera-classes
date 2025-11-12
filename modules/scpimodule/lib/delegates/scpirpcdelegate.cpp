@@ -58,6 +58,10 @@ void SCPIMODULE::cSCPIRpcDelegate::executeScpiRpc(cSCPIClient *client, QString &
     QStringList parameterValues = cmd.getParamList();
     QStringList parameterTypes = VfCppRpcHelper::getRpcTypesListFromSignature(rpcSignature);
 
+    if(parameterNames.size() != parameterValues.size())
+        if(m_scpicmdinfo->veinComponentInfo.contains("Optional parameter"))
+            parameterValues.append("");
+
     QVariantMap params;
     for(int i=0; i<parameterValues.count(); i++) {
         QVariant variantValue = convertParamStrToType(parameterValues[i], parameterTypes[i]);
