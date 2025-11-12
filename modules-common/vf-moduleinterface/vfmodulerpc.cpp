@@ -4,7 +4,8 @@
 VfModuleRpc::VfModuleRpc(VfCpp::VfCppRpcSimplifiedPtr rpc, const QString &description) :
     m_rpc(rpc),
     m_description(description),
-    m_pValidator(nullptr)
+    m_pValidator(nullptr),
+    m_optParam(false)
 {
 }
 
@@ -32,6 +33,8 @@ void VfModuleRpc::exportMetaData(QJsonObject &jsObj) const
         m_pValidator->exportMetaData(jsonObj2);
         rpcInfo.insert("Validation", jsonObj2);
     }
+    if(m_optParam)
+        rpcInfo.insert("Optional parameter", "");
     jsObj.insert(m_rpc->getSignature(), rpcInfo);
 }
 
@@ -40,4 +43,9 @@ void VfModuleRpc::setValidator(ValidatorInterface *validator)
     if(m_pValidator)
         delete m_pValidator;
     m_pValidator = validator;
+}
+
+void VfModuleRpc::canAcceptOptionalParam()
+{
+    m_optParam = true;
 }
