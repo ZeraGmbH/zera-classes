@@ -44,7 +44,8 @@ void HotplugControlsModuleController::generateVeinInterface()
                                         rpcEmobActivatePushButton->getSignature());
     m_module->m_veinModuleRPCMap[rpcEmobActivatePushButton->getSignature()] = m_pEmobPushButtonRpc; // for modules use
 
-    std::shared_ptr<RPCReadLockState> rpcEmobReadLockState = std::make_shared<RPCReadLockState>(m_pcbConnection.getInterface(), rpcEventSystem, m_module->getEntityId());
+    ChannelRangeObserver::SystemObserverPtr observer = m_module->getSharedChannelRangeObserver();
+    std::shared_ptr<RPCReadLockState> rpcEmobReadLockState = std::make_shared<RPCReadLockState>(m_pcbConnection.getInterface(), observer, rpcEventSystem, m_module->getEntityId());
     rpcEventSystem->addRpc(rpcEmobReadLockState);
     m_pEmobLockStateRpc = std::make_shared<VfModuleRpc>(rpcEmobReadLockState,
                                                         "EMOB plug lock state: 0:unknown 1:open 2:locking 3:locked 4:error");
@@ -52,6 +53,7 @@ void HotplugControlsModuleController::generateVeinInterface()
                                         QString("EMLOCKSTATE"),
                                         SCPI::isQuery,
                                         rpcEmobReadLockState->getSignature());
+    m_pEmobLockStateRpc->canAcceptOptionalParam();
     m_module->m_veinModuleRPCMap[rpcEmobReadLockState->getSignature()] = m_pEmobLockStateRpc; // for modules use
 }
 

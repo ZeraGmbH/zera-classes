@@ -21,6 +21,7 @@ target_include_directories(hotplugcontrolsmodule-static
 
 target_link_libraries(hotplugcontrolsmodule-static
     zera-basemodule
+    service-common
     vf-cpp-module-wrappers
     Zera::zenuxservicecommon
 )

@@ -83,9 +83,9 @@ void test_emob_vein_scpi::readLockStateTwiceScpi()
 void test_emob_vein_scpi::readLockStateTwiceVein()
 {
     QSignalSpy spyRpcFinish(m_rpcInvoker.get(), &VfRPCInvoker::sigRPCFinished);
-    invokeRpc("RPC_readLockState", "", 0);
+    invokeRpc("RPC_readLockState", "p_channelName", "");
     TimeMachineObject::feedEventLoop();
-    invokeRpc("RPC_readLockState", "", 0);
+    invokeRpc("RPC_readLockState", "p_channelName", "");
     TimeMachineObject::feedEventLoop();
 
     QFile file(":/vein-event-dumps/dumpReadLockStateTwiceVein.json");
@@ -99,8 +99,8 @@ void test_emob_vein_scpi::readLockStateTwiceVein()
 void test_emob_vein_scpi::readLockStateTwiceVeinFullQueue()
 {
     QSignalSpy spyRpcFinish(m_rpcInvoker.get(), &VfRPCInvoker::sigRPCFinished);
-    invokeRpc("RPC_readLockState", "", 0);
-    invokeRpc("RPC_readLockState", "", 0);
+    invokeRpc("RPC_readLockState", "p_channelName", "");
+    invokeRpc("RPC_readLockState", "p_channelName", "");
     TimeMachineObject::feedEventLoop();
 
     QFile file(":/vein-event-dumps/dumpReadLockStateTwiceVeinFullQueue.json");

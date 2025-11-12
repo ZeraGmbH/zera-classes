@@ -13,7 +13,7 @@ void test_taskemobreadconnectionstate::checkScpiSend()
     PcbInitForTest pcb;
     std::shared_ptr<int> connState = std::make_shared<int>();
     TaskTemplatePtr task = TaskEmobReadConnectionState::create(pcb.getPcbInterface(),
-                                                               connState,
+                                                               connState, "",
                                                                EXPIRE_INFINITE);
     task->start();
     TimeMachineObject::feedEventLoop();
@@ -30,7 +30,7 @@ void test_taskemobreadconnectionstate::returnsConnectionStateProperly()
     pcb.getProxyClient()->setAnswers(ServerTestAnswerList() << ServerTestAnswer(ack, "4"));
     std::shared_ptr<int> connState = std::make_shared<int>();
     TaskTemplatePtr task = TaskEmobReadConnectionState::create(pcb.getPcbInterface(),
-                                                               connState,
+                                                               connState, "",
                                                                EXPIRE_INFINITE);
     task->start();
     TimeMachineObject::feedEventLoop();
@@ -43,7 +43,7 @@ void test_taskemobreadconnectionstate::timeoutAndErrFunc()
     int localErrorCount = 0;
     std::shared_ptr<int> connState = std::make_shared<int>();
     TaskTemplatePtr task = TaskEmobReadConnectionState::create(pcb.getPcbInterface(),
-                                                               connState,
+                                                               connState, "",
                                                                DEFAULT_EXPIRE,
                                                                [&]{
                                                                    localErrorCount++;

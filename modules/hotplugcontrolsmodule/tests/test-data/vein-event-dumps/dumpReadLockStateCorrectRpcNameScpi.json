@@ -10,9 +10,10 @@
             "EventTarget": "ET_ALL",
             "InvokationData": {
                 "RemoteProcedureData::callParameters": {
+                    "p_channelName": ""
                 }
             },
-            "ProcedureName": "RPC_readLockState()",
+            "ProcedureName": "RPC_readLockState(QString p_channelName)",
             "Valid": true,
             "ValidPeer": false
         },
@@ -27,9 +28,10 @@
             "EventTarget": "ET_ALL",
             "InvokationData": {
                 "RemoteProcedureData::callParameters": {
+                    "p_channelName": ""
                 }
             },
-            "ProcedureName": "RPC_readLockState()",
+            "ProcedureName": "RPC_readLockState(QString p_channelName)",
             "Valid": true,
             "ValidPeer": false
         },
@@ -45,7 +47,7 @@
                 "RemoteProcedureData::errorMessage": "4",
                 "RemoteProcedureData::resultCode": -22
             },
-            "ProcedureName": "RPC_readLockState()",
+            "ProcedureName": "RPC_readLockState(QString p_channelName)",
             "Valid": true,
             "ValidPeer": false
         },
@@ -61,7 +63,7 @@
                 "RemoteProcedureData::errorMessage": "4",
                 "RemoteProcedureData::resultCode": -22
             },
-            "ProcedureName": "RPC_readLockState()",
+            "ProcedureName": "RPC_readLockState(QString p_channelName)",
             "Valid": true,
             "ValidPeer": false
         }
