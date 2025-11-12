@@ -4970,17 +4970,6 @@
                 },
                 "INF_ModuleInterface": {
                     "Description": "Module's interface details"
-                },
-                "PAR_EmobPushButton": {
-                    "Description": "Activate EMOB-pushbutton (push=1)",
-                    "Validation": {
-                        "Data": [
-                            0,
-                            1,
-                            1
-                        ],
-                        "Type": "INTEGER"
-                    }
                 }
             },
             "ModuleInfo": {
@@ -4988,22 +4977,25 @@
                 "Name": "HotplugControlsModule1"
             },
             "RpcInfo": {
+                "RPC_activatePushButton()": {
+                    "Description": "Activate EMOB-pushbutton"
+                },
                 "RPC_readLockState()": {
                     "Description": "EMOB plug lock state: 0:unknown 1:open 2:locking 3:locked 4:error"
                 }
             },
             "SCPIInfo": {
                 "Cmd": [
-                    [
-                        "EMOB",
-                        "PBPRESS",
-                        "8",
-                        "PAR_EmobPushButton",
-                        "0"
-                    ]
                 ],
                 "Name": "HOTP1",
                 "RPC": [
+                    [
+                        "EMOB",
+                        "PBPRESS",
+                        "4",
+                        "RPC_activatePushButton()",
+                        "0"
+                    ],
                     [
                         "EMOB",
                         "EMLOCKSTATE",
@@ -5013,8 +5005,7 @@
                     ]
                 ]
             }
-        },
-        "PAR_EmobPushButton": 0
+        }
     },
     "2": {
         "DatabaseFile": "/tmp/test.db",

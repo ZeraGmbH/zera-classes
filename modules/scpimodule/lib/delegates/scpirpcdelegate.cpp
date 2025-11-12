@@ -19,7 +19,10 @@ void SCPIMODULE::cSCPIRpcDelegate::executeSCPI(cSCPIClient *client, QString &sIn
     int scpiExpectedParametersCount = scpiExpectedParameters.count();
 
     bool bQuery = cmd.isQuery() || cmd.isQuery(scpiExpectedParametersCount);
-    if ( (bQuery && ((scpiCmdType & SCPI::isQuery) > 0))) // test if we got an allowed query
+    bool bCmd = cmd.isCommand(scpiExpectedParametersCount);
+    if ((bQuery && ((scpiCmdType & SCPI::isQuery) > 0)) ||
+        (bCmd && ((scpiCmdType & SCPI::isCmd) >  0)) ||
+        (bCmd && ((scpiCmdType & SCPI::isCmdwP) >  0)))
         executeScpiRpc(client, sInput);
     else
         client->receiveStatus(ZSCPI::nak);
