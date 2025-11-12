@@ -10,8 +10,6 @@
         <tr>
           <th><xsl:value-of select="$Description"/></th>
           <th><xsl:value-of select="$ScpiPath"/></th>
-          <th><xsl:value-of select="$MinMax"/></th>
-          <th><xsl:value-of select="$DataType"/></th>
           <th><xsl:value-of select="$ScpiCmdType"/></th>
         </tr>
         <!-- table data -->
@@ -22,15 +20,6 @@
               <tr>
                 <td><xsl:value-of select="@Description"/></td>
                 <td><xsl:value-of select="@ScpiPath"/></td>
-                <xsl:choose>
-                    <xsl:when test="@Min!='' and @Max!=''">
-                      <td><xsl:value-of select="@Min"/> / <xsl:value-of select="@Max"/></td>
-                    </xsl:when>
-                    <xsl:otherwise>
-                      <td></td>
-                    </xsl:otherwise>
-                  </xsl:choose>
-                <td><xsl:value-of select="@DataType"/></td>
                 <td><xsl:value-of select="@Type"/></td>
               </tr>
             </xsl:if>
