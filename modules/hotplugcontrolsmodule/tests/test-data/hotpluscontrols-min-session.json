@@ -1,6 +1,11 @@
 {
     "modules" : [
       {
+        "name" : "rangemodule",
+        "configFile" : "mt310s2-rangemodule.xml",
+        "id": 1020
+      },
+      {
         "name" : "hotplugcontrolsmodule",
         "configFile" : "hotplugcontrolsmodule.xml",
         "id": 1700

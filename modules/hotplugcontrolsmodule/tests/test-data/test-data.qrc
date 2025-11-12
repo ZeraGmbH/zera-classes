@@ -1,6 +1,10 @@
 <RCC>
     <qresource prefix="/">
         <file>vein-event-dumps/dumpReadLockStateCorrectRpcNameScpi.json</file>
+        <file>vein-event-dumps/dumpReadLockStateNoParamOneEmobScpi.json</file>
+        <file>vein-event-dumps/dumpReadLockStateNoParamMutipleHotplugScpi.json</file>
+        <file>vein-event-dumps/dumpReadLockStateInvalidParamScpi.json</file>
+        <file>vein-event-dumps/dumpReadLockStateValidParamMutipleHotplugScpi.json</file>
         <file>vein-event-dumps/dumpReadLockStateTwiceScpi.json</file>
         <file>vein-event-dumps/dumpReadLockStateTwiceVein.json</file>
         <file>vein-event-dumps/dumpReadLockStateTwiceVeinFullQueue.json</file>

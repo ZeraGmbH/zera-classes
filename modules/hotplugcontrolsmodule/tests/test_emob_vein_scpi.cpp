@@ -65,6 +65,58 @@ void test_emob_vein_scpi::readLockStateCorrectRpcNameScpi()
     QVERIFY(TestLogHelpers::compareAndLogOnDiffJson(jsonExpected, jsonDumped));
 }
 
+void test_emob_vein_scpi::readLockStateScpiNoParamOneEmob()
+{
+    m_testRunner->fireHotplugInterrupt(QStringList() << "IAUX");
+    QString status = m_scpiClient->sendReceive("EMOB:HOTP1:EMLOCKSTATE?");
+    QCOMPARE(status, QString::number(reademoblockstate::emobstate_open));
+
+    QFile file(":/vein-event-dumps/dumpReadLockStateNoParamOneEmobScpi.json");
+    QVERIFY(file.open(QFile::ReadOnly));
+    QByteArray jsonExpected = file.readAll();
+    QByteArray jsonDumped = TestLogHelpers::dump(m_veinEventDump);
+    QVERIFY(TestLogHelpers::compareAndLogOnDiffJson(jsonExpected, jsonDumped));
+}
+
+void test_emob_vein_scpi::readLockStateScpiNoParamMutipleHotplug()
+{
+    m_testRunner->fireHotplugInterrupt(QStringList() << "IL3" << "IAUX");
+    QString status1 = m_scpiClient->sendReceive("EMOB:HOTP1:EMLOCKSTATE?");
+    QCOMPARE(status1, QString::number(reademoblockstate::emobstate_error));
+
+    QFile file(":/vein-event-dumps/dumpReadLockStateNoParamMutipleHotplugScpi.json");
+    QVERIFY(file.open(QFile::ReadOnly));
+    QByteArray jsonExpected = file.readAll();
+    QByteArray jsonDumped = TestLogHelpers::dump(m_veinEventDump);
+    QVERIFY(TestLogHelpers::compareAndLogOnDiffJson(jsonExpected, jsonDumped));
+}
+
+void test_emob_vein_scpi::readLockStateScpiInvalidParam()
+{
+    m_testRunner->fireHotplugInterrupt(QStringList() << "IL3" << "IAUX");
+    QString status = m_scpiClient->sendReceive("EMOB:HOTP1:EMLOCKSTATE? FOO;");
+    QCOMPARE(status, QString::number(reademoblockstate::emobstate_error));
+
+    QFile file(":/vein-event-dumps/dumpReadLockStateInvalidParamScpi.json");
+    QVERIFY(file.open(QFile::ReadOnly));
+    QByteArray jsonExpected = file.readAll();
+    QByteArray jsonDumped = TestLogHelpers::dump(m_veinEventDump);
+    QVERIFY(TestLogHelpers::compareAndLogOnDiffJson(jsonExpected, jsonDumped));
+}
+
+void test_emob_vein_scpi::readLockStateScpiValidParamMutipleHotplug()
+{
+    m_testRunner->fireHotplugInterrupt(QStringList()  << "IL3" << "IAUX");
+    QString status = m_scpiClient->sendReceive("EMOB:HOTP1:EMLOCKSTATE? IAUX;");
+    QCOMPARE(status, QString::number(reademoblockstate::emobstate_open));
+
+    QFile file(":/vein-event-dumps/dumpReadLockStateValidParamMutipleHotplugScpi.json");
+    QVERIFY(file.open(QFile::ReadOnly));
+    QByteArray jsonExpected = file.readAll();
+    QByteArray jsonDumped = TestLogHelpers::dump(m_veinEventDump);
+    QVERIFY(TestLogHelpers::compareAndLogOnDiffJson(jsonExpected, jsonDumped));
+}
+
 void test_emob_vein_scpi::readLockStateTwiceScpi()
 {
     m_testRunner->fireHotplugInterrupt(QStringList() << "IAUX");
