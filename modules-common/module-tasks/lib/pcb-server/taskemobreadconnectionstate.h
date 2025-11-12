@@ -9,7 +9,8 @@ class TaskEmobReadConnectionState : public TaskServerTransactionTemplate
 public:
     static TaskTemplatePtr create(Zera::PcbInterfacePtr pcbInterface,
                                   std::shared_ptr<int> stateReceived,
-                                  int timeout, std::function<void()> additionalErrorHandler = []{});
+                                  QString channelMName, int timeout,
+                                  std::function<void()> additionalErrorHandler = []{});
 };
 
 #endif // TASKEMOBREADCONNECTIONSTATE_H
