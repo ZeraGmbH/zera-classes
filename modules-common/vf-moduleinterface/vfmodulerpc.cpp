@@ -9,6 +9,11 @@ VfModuleRpc::VfModuleRpc(VfCpp::VfCppRpcSimplifiedPtr rpc, const QString &descri
 {
 }
 
+VfCpp::VfCppRpcSimplifiedPtr VfModuleRpc::getRpcSimplifed()
+{
+    return m_rpc;
+}
+
 void VfModuleRpc::setRPCScpiInfo(const QString &model, const QString &cmd, int cmdTypeMask, const QString &rpcSignature)
 {
     m_rpcScpiInfo = std::make_unique<VfModuleMetaInfoContainer>(model,

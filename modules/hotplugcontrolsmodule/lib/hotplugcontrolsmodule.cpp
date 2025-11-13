@@ -24,6 +24,7 @@ VfRpcEventSystemSimplified *cHotplugControlsModule::getRpcEventSystem()
 void cHotplugControlsModule::activationFinished()
 {
     getValidatorEventSystem()->setParameterMap(m_veinModuleParameterMap);
+    getRpcEventSystem()->setRPCMap(m_veinModuleRPCMap);
 
     exportMetaData();
     emit activationReady();
