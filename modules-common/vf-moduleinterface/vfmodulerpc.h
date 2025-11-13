@@ -10,6 +10,7 @@ class VfModuleRpc
 {
 public:
     explicit VfModuleRpc(VfCpp::VfCppRpcSimplifiedPtr rpc, const QString& description);
+    VfCpp::VfCppRpcSimplifiedPtr getRpcSimplifed();
     void setRPCScpiInfo(const QString &model, const QString &cmd,
                         int cmdTypeMask, // e.g SCPI::isQuery|SCPI::isCmdwP
                         const QString &rpcSignature);

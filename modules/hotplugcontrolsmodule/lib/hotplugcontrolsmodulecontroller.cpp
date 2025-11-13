@@ -37,7 +37,6 @@ void HotplugControlsModuleController::generateVeinInterface()
                                                                                                                observer,
                                                                                                                rpcEventSystem,
                                                                                                                m_module->getEntityId());
-    rpcEventSystem->addRpc(rpcEmobActivatePushButton);
     m_pEmobPushButtonRpc = std::make_shared<VfModuleRpc>(rpcEmobActivatePushButton,
                                                          "Press EMOB-pushbutton");
     m_pEmobPushButtonRpc->setRPCScpiInfo("EMOB",
@@ -51,7 +50,6 @@ void HotplugControlsModuleController::generateVeinInterface()
                                                                                                 observer,
                                                                                                 rpcEventSystem,
                                                                                                 m_module->getEntityId());
-    rpcEventSystem->addRpc(rpcEmobReadLockState);
     m_pEmobLockStateRpc = std::make_shared<VfModuleRpc>(rpcEmobReadLockState,
                                                         "EMOB plug lock state: 0:unknown 1:open 2:locking 3:locked 4:error");
     m_pEmobLockStateRpc->setRPCScpiInfo("EMOB",

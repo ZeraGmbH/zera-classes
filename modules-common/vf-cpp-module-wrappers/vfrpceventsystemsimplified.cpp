@@ -14,12 +14,12 @@ void VfRpcEventSystemSimplified::processCommandEvent(VeinEvent::CommandEvent *co
         commandEvent->eventData()->type() == VeinComponent::RemoteProcedureData::dataType()) {
         VeinComponent::RemoteProcedureData *rpcData = static_cast<VeinComponent::RemoteProcedureData *>(commandEvent->eventData());
         if(rpcData->command() == VeinComponent::RemoteProcedureData::Command::RPCMD_CALL) {
-            if(m_rpcHash.contains(rpcData->procedureName())) {
+            if(m_veinModuleRPCMap.contains(rpcData->procedureName())) {
                 const QUuid callId = rpcData->invokationData().value(VeinComponent::RemoteProcedureData::s_callIdString).toUuid();
                 Q_ASSERT(!callId.isNull());
-                m_rpcHash[rpcData->procedureName()]->callFunction(callId,
-                                                                  commandEvent->peerId(),
-                                                                  rpcData->invokationData());
+                m_veinModuleRPCMap[rpcData->procedureName()]->getRpcSimplifed()->callFunction(callId,
+                                                                                              commandEvent->peerId(),
+                                                                                              rpcData->invokationData());
                 commandEvent->accept();
             }
             else {
@@ -39,7 +39,7 @@ void VfRpcEventSystemSimplified::processCommandEvent(VeinEvent::CommandEvent *co
     }
 }
 
-void VfRpcEventSystemSimplified::addRpc(VfCpp::VfCppRpcSimplifiedPtr rpc)
+void VfRpcEventSystemSimplified::setRPCMap(QMap<QString, VfModuleRpcPtr> veinModuleRPCMap)
 {
-    m_rpcHash[rpc->getSignature()] = rpc;
+    m_veinModuleRPCMap = veinModuleRPCMap;
 }
