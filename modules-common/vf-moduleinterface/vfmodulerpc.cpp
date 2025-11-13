@@ -1,4 +1,5 @@
 #include "vfmodulerpc.h"
+#include <vcmp_remoteproceduredata.h>
 #include <QJsonObject>
 
 VfModuleRpc::VfModuleRpc(VfCpp::VfCppRpcSimplifiedPtr rpc, const QString &description) :
@@ -53,4 +54,21 @@ void VfModuleRpc::setValidator(ValidatorInterface *validator)
 void VfModuleRpc::canAcceptOptionalParam()
 {
     m_optParam = true;
+}
+
+bool VfModuleRpc::isValidParameter(QVariantMap invokationData)
+{
+    //We handle only one param for now
+    if (m_pValidator != 0) {
+        QVariantMap paramMap = invokationData.value(VeinComponent::RemoteProcedureData::s_parameterString).toMap();
+        if(!paramMap.isEmpty()) {
+            QVariant input = paramMap.value(paramMap.firstKey());
+            if(m_optParam && input == "")
+                return true;
+            if(m_pValidator->isValidParam(input))
+                return true;
+            return false;
+        }
+    }
+    return true;
 }

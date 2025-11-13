@@ -13,6 +13,7 @@ public:
     virtual void processCommandEvent(VeinEvent::CommandEvent *commandEvent);
     void setRPCMap(QMap<QString, VfModuleRpcPtr> veinModuleRPCMap);
 private:
+    void sendErrorEvent(QString errorMsg, VeinEvent::CommandEvent *commandEvent);
     int m_entityId;
     QMap<QString, VfModuleRpcPtr> m_veinModuleRPCMap;
 };
