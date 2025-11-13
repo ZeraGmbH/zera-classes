@@ -29,7 +29,9 @@ void test_emob_vein_scpi::invokeInvalidRpcNameScpi()
 
 void test_emob_vein_scpi::activateEmobPushButtonScpi()
 {
-    m_scpiClient->sendReceive("EMOB:HOTP1:PBPRESS");
+    QString status = m_scpiClient->sendReceive("EMOB:HOTP1:PBPRESS", false);
+    QVERIFY(status.isEmpty()); //its a commad, so we dont expect any return
+
     QFile file(":/vein-event-dumps/dumpActivateEmobPushButtonScpi.json");
     QVERIFY(file.open(QFile::ReadOnly));
     QByteArray jsonExpected = file.readAll();

@@ -23,12 +23,12 @@ void SCPIMODULE::cSCPIRpcDelegate::executeSCPI(cSCPIClient *client, QString &sIn
     if ((bQuery && ((scpiCmdType & SCPI::isQuery) > 0)) ||
         (bCmd && ((scpiCmdType & SCPI::isCmd) >  0)) ||
         (bCmd && ((scpiCmdType & SCPI::isCmdwP) >  0)))
-        executeScpiRpc(client, sInput);
+        executeScpiRpc(client, sInput, bQuery);
     else
         client->receiveStatus(ZSCPI::nak);
 }
 
-void SCPIMODULE::cSCPIRpcDelegate::executeScpiRpc(cSCPIClient *client, QString &sInput)
+void SCPIMODULE::cSCPIRpcDelegate::executeScpiRpc(cSCPIClient *client, QString &sInput, bool inputIsQuery)
 {
     VfRPCInvokerPtr rpcInvoker = VfRPCInvoker::create(m_scpicmdinfo->entityId, std::make_unique<VfClientRPCInvoker>());
     connect(rpcInvoker.get(), &VfRPCInvoker::sigRPCFinished, this, [=](bool ok, QUuid identifier, const QVariantMap &resultData) {
@@ -36,11 +36,20 @@ void SCPIMODULE::cSCPIRpcDelegate::executeScpiRpc(cSCPIClient *client, QString &
         Q_UNUSED(identifier)
         QVariant returnData;
         bool rpcSuccessful = (resultData[VeinComponent::RemoteProcedureData::s_resultCodeString] == VeinComponent::RemoteProcedureData::RPCResultCodes::RPC_SUCCESS);
-        if(rpcSuccessful)
-            returnData = resultData[VeinComponent::RemoteProcedureData::s_returnString];
-        else
-            returnData = resultData[VeinComponent::RemoteProcedureData::s_errorMessageString];
-        client->receiveAnswer(returnData.toString(), true);
+
+        if(inputIsQuery) {
+            if(rpcSuccessful)
+                returnData = resultData[VeinComponent::RemoteProcedureData::s_returnString];
+            else
+                returnData = resultData[VeinComponent::RemoteProcedureData::s_errorMessageString];
+            client->receiveAnswer(returnData.toString(), true);
+        }
+        else {//in case of command
+            if(rpcSuccessful)
+                client->receiveStatus(ZSCPI::ack);
+            else
+                client->receiveStatus(ZSCPI::nak);
+        }
     });
     m_pModule->getCmdEventHandlerSystem()->addItem(rpcInvoker);
 
