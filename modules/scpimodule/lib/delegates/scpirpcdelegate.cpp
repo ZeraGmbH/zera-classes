@@ -19,10 +19,12 @@ void SCPIMODULE::cSCPIRpcDelegate::executeSCPI(cSCPIClient *client, QString &sIn
     int scpiExpectedParametersCount = scpiExpectedParameters.count();
 
     bool bQuery = cmd.isQuery() || cmd.isQuery(scpiExpectedParametersCount);
-    bool bCmd = cmd.isCommand(scpiExpectedParametersCount);
+    bool bCmd = cmd.isCommand();
+    bool bCmdwP = cmd.isCommand(scpiExpectedParametersCount) || m_scpicmdinfo->veinComponentInfo.contains("Optional parameter");
+
     if ((bQuery && ((scpiCmdType & SCPI::isQuery) > 0)) ||
         (bCmd && ((scpiCmdType & SCPI::isCmd) >  0)) ||
-        (bCmd && ((scpiCmdType & SCPI::isCmdwP) >  0)))
+        (bCmdwP && ((scpiCmdType & SCPI::isCmdwP) >  0)))
         executeScpiRpc(client, sInput, bQuery);
     else
         client->receiveStatus(ZSCPI::nak);

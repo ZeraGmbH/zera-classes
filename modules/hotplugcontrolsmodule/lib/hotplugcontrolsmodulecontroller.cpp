@@ -31,8 +31,10 @@ void HotplugControlsModuleController::deactivate()
 void HotplugControlsModuleController::generateVeinInterface()
 {
     VfRpcEventSystemSimplified *rpcEventSystem = m_module->getRpcEventSystem();
+    ChannelRangeObserver::SystemObserverPtr observer = m_module->getSharedChannelRangeObserver();
 
     std::shared_ptr<RpcActivatePushButton> rpcEmobActivatePushButton = std::make_shared<RpcActivatePushButton>(m_pcbConnection.getInterface(),
+                                                                                                               observer,
                                                                                                                rpcEventSystem,
                                                                                                                m_module->getEntityId());
     rpcEventSystem->addRpc(rpcEmobActivatePushButton);
@@ -40,12 +42,15 @@ void HotplugControlsModuleController::generateVeinInterface()
                                                          "Press EMOB-pushbutton");
     m_pEmobPushButtonRpc->setRPCScpiInfo("EMOB",
                                         QString("PBPRESS"),
-                                        SCPI::isCmd,
+                                        SCPI::isCmdwP,
                                         rpcEmobActivatePushButton->getSignature());
+    m_pEmobPushButtonRpc->canAcceptOptionalParam();
     m_module->m_veinModuleRPCMap[rpcEmobActivatePushButton->getSignature()] = m_pEmobPushButtonRpc; // for modules use
 
-    ChannelRangeObserver::SystemObserverPtr observer = m_module->getSharedChannelRangeObserver();
-    std::shared_ptr<RPCReadLockState> rpcEmobReadLockState = std::make_shared<RPCReadLockState>(m_pcbConnection.getInterface(), observer, rpcEventSystem, m_module->getEntityId());
+    std::shared_ptr<RPCReadLockState> rpcEmobReadLockState = std::make_shared<RPCReadLockState>(m_pcbConnection.getInterface(),
+                                                                                                observer,
+                                                                                                rpcEventSystem,
+                                                                                                m_module->getEntityId());
     rpcEventSystem->addRpc(rpcEmobReadLockState);
     m_pEmobLockStateRpc = std::make_shared<VfModuleRpc>(rpcEmobReadLockState,
                                                         "EMOB plug lock state: 0:unknown 1:open 2:locking 3:locked 4:error");

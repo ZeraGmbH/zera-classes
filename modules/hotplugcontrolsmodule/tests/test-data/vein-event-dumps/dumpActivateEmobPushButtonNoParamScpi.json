@@ -10,9 +10,10 @@
             "EventTarget": "ET_ALL",
             "InvokationData": {
                 "RemoteProcedureData::callParameters": {
+                    "p_channelName": ""
                 }
             },
-            "ProcedureName": "RPC_activatePushButton()",
+            "ProcedureName": "RPC_activatePushButton(QString p_channelName)",
             "Valid": true,
             "ValidPeer": false
         },
@@ -27,9 +28,10 @@
             "EventTarget": "ET_ALL",
             "InvokationData": {
                 "RemoteProcedureData::callParameters": {
+                    "p_channelName": ""
                 }
             },
-            "ProcedureName": "RPC_activatePushButton()",
+            "ProcedureName": "RPC_activatePushButton(QString p_channelName)",
             "Valid": true,
             "ValidPeer": false
         },
@@ -44,7 +46,7 @@
             "InvokationData": {
                 "RemoteProcedureData::resultCode": -22
             },
-            "ProcedureName": "RPC_activatePushButton()",
+            "ProcedureName": "RPC_activatePushButton(QString p_channelName)",
             "Valid": true,
             "ValidPeer": false
         },
@@ -59,7 +61,7 @@
             "InvokationData": {
                 "RemoteProcedureData::resultCode": -22
             },
-            "ProcedureName": "RPC_activatePushButton()",
+            "ProcedureName": "RPC_activatePushButton(QString p_channelName)",
             "Valid": true,
             "ValidPeer": false
         }
