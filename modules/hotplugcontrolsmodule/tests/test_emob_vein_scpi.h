@@ -17,7 +17,8 @@ private slots:
     void init();
     void invokeInvalidRpcNameScpi();
 
-    void activateEmobPushButtonScpi();
+    void activateEmobPushButtonNoParamScpi();
+    void activateEmobPushButtonWithParamScpi();
     void activateEmobPushButtonVein();
 
     void readLockStateCorrectRpcNameScpi();

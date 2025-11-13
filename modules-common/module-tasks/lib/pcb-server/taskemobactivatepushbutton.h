@@ -8,6 +8,7 @@ class TaskEmobActivatePushButton : public TaskServerTransactionTemplate
 {
 public:
     static TaskTemplatePtr create(Zera::PcbInterfacePtr pcbInterface,
+                                  QString channelMName,
                                   int timeout,
                                   std::function<void()> additionalErrorHandler = []{});
 };

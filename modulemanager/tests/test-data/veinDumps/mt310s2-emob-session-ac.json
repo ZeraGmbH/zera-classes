@@ -5671,8 +5671,9 @@
                 "Name": "HotplugControlsModule1"
             },
             "RpcInfo": {
-                "RPC_activatePushButton()": {
-                    "Description": "Press EMOB-pushbutton"
+                "RPC_activatePushButton(QString p_channelName)": {
+                    "Description": "Press EMOB-pushbutton",
+                    "Optional parameter": ""
                 },
                 "RPC_readLockState(QString p_channelName)": {
                     "Description": "EMOB plug lock state: 0:unknown 1:open 2:locking 3:locked 4:error",
@@ -5687,8 +5688,8 @@
                     [
                         "EMOB",
                         "PBPRESS",
-                        "4",
-                        "RPC_activatePushButton()",
+                        "8",
+                        "RPC_activatePushButton(QString p_channelName)",
                         "0"
                     ],
                     [

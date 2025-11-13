@@ -27,12 +27,26 @@ void test_emob_vein_scpi::invokeInvalidRpcNameScpi()
     QVERIFY(TestLogHelpers::compareAndLogOnDiffJson(jsonExpected, jsonDumped));
 }
 
-void test_emob_vein_scpi::activateEmobPushButtonScpi()
+void test_emob_vein_scpi::activateEmobPushButtonNoParamScpi()
 {
     QString status = m_scpiClient->sendReceive("EMOB:HOTP1:PBPRESS", false);
     QVERIFY(status.isEmpty()); //its a commad, so we dont expect any return
 
-    QFile file(":/vein-event-dumps/dumpActivateEmobPushButtonScpi.json");
+    QFile file(":/vein-event-dumps/dumpActivateEmobPushButtonNoParamScpi.json");
+    QVERIFY(file.open(QFile::ReadOnly));
+    QByteArray jsonExpected = file.readAll();
+    QByteArray jsonDumped = TestLogHelpers::dump(m_veinEventDump);
+    QVERIFY(TestLogHelpers::compareAndLogOnDiffJson(jsonExpected, jsonDumped));
+}
+
+void test_emob_vein_scpi::activateEmobPushButtonWithParamScpi()
+{
+    m_testRunner->fireHotplugInterrupt(QStringList() << "IAUX");
+
+    QString status = m_scpiClient->sendReceive("EMOB:HOTP1:PBPRESS IAUX;", false);
+    QVERIFY(status.isEmpty()); //its a commad, so we dont expect any return
+
+    QFile file(":/vein-event-dumps/dumpActivateEmobPushButtonWithParamScpi.json");
     QVERIFY(file.open(QFile::ReadOnly));
     QByteArray jsonExpected = file.readAll();
     QByteArray jsonDumped = TestLogHelpers::dump(m_veinEventDump);
@@ -44,7 +58,7 @@ void test_emob_vein_scpi::activateEmobPushButtonVein()
     m_testRunner->fireHotplugInterrupt(QStringList() << "IAUX");
 
     QSignalSpy spyRpcFinish(m_rpcInvoker.get(), &VfRPCInvoker::sigRPCFinished);
-    invokeRpc("RPC_activatePushButton", "", 0);
+    invokeRpc("RPC_activatePushButton", "p_channelName", "IAUX");
     TimeMachineObject::feedEventLoop();
 
     QFile file(":/vein-event-dumps/dumpActivateEmobPushButtonVein.json");
