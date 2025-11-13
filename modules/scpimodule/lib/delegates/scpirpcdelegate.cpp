@@ -32,10 +32,24 @@ void SCPIMODULE::cSCPIRpcDelegate::executeSCPI(cSCPIClient *client, QString &sIn
 
 void SCPIMODULE::cSCPIRpcDelegate::executeScpiRpc(cSCPIClient *client, QString &sInput, bool inputIsQuery)
 {
+    SCPIClientInfoPtr clientinfo;
+    if (inputIsQuery)
+        clientinfo = std::make_shared<cSCPIClientInfo>(client, m_scpicmdinfo->entityId, SCPIMODULE::parQuery);
+    else
+        clientinfo = std::make_shared<cSCPIClientInfo>(client, m_scpicmdinfo->entityId, SCPIMODULE::parcmd);
+
     VfRPCInvokerPtr rpcInvoker = VfRPCInvoker::create(m_scpicmdinfo->entityId, std::make_unique<VfClientRPCInvoker>());
     connect(rpcInvoker.get(), &VfRPCInvoker::sigRPCFinished, this, [=](bool ok, QUuid identifier, const QVariantMap &resultData) {
         Q_UNUSED(ok)
         Q_UNUSED(identifier)
+
+        QMetaObject::Connection myConn = connect(this, &cSCPIRpcDelegate::sigClientInfoSignal,
+                                                 clientinfo->getClient(), &cSCPIClient::removeSCPIClientInfo, Qt::QueuedConnection);
+        emit sigClientInfoSignal(m_scpicmdinfo->componentOrRpcName);
+        disconnect(myConn);
+
+        m_pModule->scpiParameterCmdInfoHash.remove(m_scpicmdinfo->componentOrRpcName, clientinfo);
+
         QVariant returnData;
         bool rpcSuccessful = (resultData[VeinComponent::RemoteProcedureData::s_resultCodeString] == VeinComponent::RemoteProcedureData::RPCResultCodes::RPC_SUCCESS);
 
@@ -78,6 +92,11 @@ void SCPIMODULE::cSCPIRpcDelegate::executeScpiRpc(cSCPIClient *client, QString &
         QVariant variantValue = convertParamStrToType(parameterValues[i], parameterTypes[i]);
         params[parameterNames[i]] = variantValue;
     }
+
+
+    m_pModule->scpiParameterCmdInfoHash.insert(m_scpicmdinfo->componentOrRpcName, clientinfo);
+    client->addSCPIClientInfo(m_scpicmdinfo->componentOrRpcName, clientinfo);
+
     rpcInvoker->invokeRPC(rpcName, params);
 }
 
