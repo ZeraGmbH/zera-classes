@@ -4978,7 +4978,7 @@
             },
             "RpcInfo": {
                 "RPC_activatePushButton()": {
-                    "Description": "Activate EMOB-pushbutton"
+                    "Description": "Press EMOB-pushbutton"
                 },
                 "RPC_readLockState(QString p_channelName)": {
                     "Description": "EMOB plug lock state: 0:unknown 1:open 2:locking 3:locked 4:error",
