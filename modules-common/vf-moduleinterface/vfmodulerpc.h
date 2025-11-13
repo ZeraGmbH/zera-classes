@@ -18,6 +18,7 @@ public:
     void exportMetaData(QJsonObject &jsObj) const;
     void setValidator(ValidatorInterface* validator);
     void canAcceptOptionalParam();
+    bool isValidParameter(QVariantMap invokationData);
 private:
     VfCpp::VfCppRpcSimplifiedPtr m_rpc;
     const QString m_description;
