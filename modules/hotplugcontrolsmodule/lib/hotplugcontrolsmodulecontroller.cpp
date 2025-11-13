@@ -37,7 +37,7 @@ void HotplugControlsModuleController::generateVeinInterface()
                                                                                                                m_module->getEntityId());
     rpcEventSystem->addRpc(rpcEmobActivatePushButton);
     m_pEmobPushButtonRpc = std::make_shared<VfModuleRpc>(rpcEmobActivatePushButton,
-                                                         "Activate EMOB-pushbutton");
+                                                         "Press EMOB-pushbutton");
     m_pEmobPushButtonRpc->setRPCScpiInfo("EMOB",
                                         QString("PBPRESS"),
                                         SCPI::isCmd,
