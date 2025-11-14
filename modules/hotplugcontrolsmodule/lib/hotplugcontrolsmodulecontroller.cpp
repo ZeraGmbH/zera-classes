@@ -44,6 +44,7 @@ void HotplugControlsModuleController::generateVeinInterface()
                                         QString("PBPRESS"),
                                         SCPI::isCmdwP,
                                         rpcEmobActivatePushButton->getSignature());
+    m_pEmobPushButtonRpc->setValidator(new cStringValidator(QString("IL1;IL2;IL3;IAUX")));
     m_pEmobPushButtonRpc->canAcceptOptionalParam();
     m_module->m_veinModuleRPCMap[rpcEmobActivatePushButton->getSignature()] = m_pEmobPushButtonRpc; // for modules use
 
