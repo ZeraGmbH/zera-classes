@@ -5673,7 +5673,16 @@
             "RpcInfo": {
                 "RPC_activatePushButton(QString p_channelName)": {
                     "Description": "Press EMOB-pushbutton",
-                    "Optional parameter": ""
+                    "Optional parameter": "",
+                    "Validation": {
+                        "Data": [
+                            "IL1",
+                            "IL2",
+                            "IL3",
+                            "IAUX"
+                        ],
+                        "Type": "STRING"
+                    }
                 },
                 "RPC_readLockState(QString p_channelName)": {
                     "Description": "EMOB plug lock state: 0:unknown 1:open 2:locking 3:locked 4:error",

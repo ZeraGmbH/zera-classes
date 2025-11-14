@@ -64,7 +64,7 @@ void SCPIMODULE::cSCPIRpcDelegate::executeScpiRpc(cSCPIClient *client, QString &
             if(rpcSuccessful)
                 client->receiveStatus(ZSCPI::ack);
             else
-                client->receiveStatus(ZSCPI::nak);
+                client->receiveStatus(ZSCPI::errval);
         }
     });
     m_pModule->getCmdEventHandlerSystem()->addItem(rpcInvoker);

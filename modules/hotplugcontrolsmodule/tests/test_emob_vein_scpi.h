@@ -17,15 +17,20 @@ private slots:
     void init();
     void invokeInvalidRpcNameScpi();
 
-    void activateEmobPushButtonNoParamScpi();
+    void activateEmobPushButtonNoEmobNoParamScpi();
+    void activateEmobPushNoParamOneEmob();
     void activateEmobPushButtonWithParamScpi();
+    void activateEmobPushNoParamMutipleHotplug();
+    void activateEmobPushInvalidParam();
+    void activateEmobPushIncorrectParam();
+    void activateEmobPushValidParamMutipleHotplug();
     void activateEmobPushButtonVein();
 
     void readLockStateCorrectRpcNameScpi();
     void readLockStateScpiNoParamOneEmob();
     void readLockStateScpiNoParamMutipleHotplug();
     void readLockStateScpiInvalidParam();
-    void readLockStateScpiWrongParam();
+    void readLockStateScpiIncorrectParam();
     void readLockStateScpiValidParamMutipleHotplug();
 
     void readLockStateTwiceScpi();

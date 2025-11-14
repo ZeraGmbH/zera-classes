@@ -5,8 +5,8 @@
  <MODELS>
   <CONFIGURATION Type="Model,Node">
    <SYST Type="Node">
-    <NAMESESSION ValidPar="Default,EMOB AC,EMOB DC,DC: 4*Voltage / 1*Current" ScpiPath="CONFIGURATION:SYST:NAMESESSION" DataType="STRING" Description="Session name" Type="Query,Command+Par"/>
-    <XSESSION ValidPar="Foo,Bar" ScpiPath="CONFIGURATION:SYST:XSESSION" DataType="STRING" Description="XSession name" Type="Query,Command+Par">
+    <NAMESESSION ScpiPath="CONFIGURATION:SYST:NAMESESSION" Description="Session name" Type="Query,Command+Par" ValidPar="Default,EMOB AC,EMOB DC,DC: 4*Voltage / 1*Current" DataType="STRING"/>
+    <XSESSION ScpiPath="CONFIGURATION:SYST:XSESSION" Description="XSession name" Type="Query,Command+Par" ValidPar="Foo,Bar" DataType="STRING">
      <CATALOG ScpiPath="CONFIGURATION:SYST:XSESSION:CATALOG" Type="Query"/>
     </XSESSION>
     <SESSION Type="Node">
@@ -14,79 +14,79 @@
     </SESSION>
    </SYST>
    <RNG1 Type="Node">
-    <GROUPING ScpiPath="CONFIGURATION:RNG1:GROUPING" Min="0" Description="Channel grouping on/off" Type="Query,Command+Par" Max="1"/>
-    <IGNORERMSVAL ScpiPath="CONFIGURATION:RNG1:IGNORERMSVAL" DataType="DOUBLE" Min="0" Description="Percentage of nominal range below which channel values are ignored" Type="Query,Command+Par" Max="2" Unit="%"/>
-    <ENABLEIGNORERMSVAL ScpiPath="CONFIGURATION:RNG1:ENABLEIGNORERMSVAL" Min="0" Description="Enable or disable channel ignore limit option" Type="Query,Command+Par" Max="1"/>
+    <GROUPING ScpiPath="CONFIGURATION:RNG1:GROUPING" Description="Channel grouping on/off" Type="Query,Command+Par" Min="0" Max="1"/>
+    <IGNORERMSVAL ScpiPath="CONFIGURATION:RNG1:IGNORERMSVAL" Description="Percentage of nominal range below which channel values are ignored" Type="Query,Command+Par" Min="0" Unit="%" DataType="DOUBLE" Max="2"/>
+    <ENABLEIGNORERMSVAL ScpiPath="CONFIGURATION:RNG1:ENABLEIGNORERMSVAL" Description="Enable or disable channel ignore limit option" Type="Query,Command+Par" Min="0" Max="1"/>
     <UL1 Type="Node">
-     <INVERTPHASE ScpiPath="CONFIGURATION:RNG1:UL1:INVERTPHASE" Min="0" Description="Inverted Phase" Type="Query,Command+Par" Max="1"/>
+     <INVERTPHASE ScpiPath="CONFIGURATION:RNG1:UL1:INVERTPHASE" Description="Inverted Phase" Type="Query,Command+Par" Min="0" Max="1"/>
     </UL1>
     <UL2 Type="Node">
-     <INVERTPHASE ScpiPath="CONFIGURATION:RNG1:UL2:INVERTPHASE" Min="0" Description="Inverted Phase" Type="Query,Command+Par" Max="1"/>
+     <INVERTPHASE ScpiPath="CONFIGURATION:RNG1:UL2:INVERTPHASE" Description="Inverted Phase" Type="Query,Command+Par" Min="0" Max="1"/>
     </UL2>
     <UL3 Type="Node">
-     <INVERTPHASE ScpiPath="CONFIGURATION:RNG1:UL3:INVERTPHASE" Min="0" Description="Inverted Phase" Type="Query,Command+Par" Max="1"/>
+     <INVERTPHASE ScpiPath="CONFIGURATION:RNG1:UL3:INVERTPHASE" Description="Inverted Phase" Type="Query,Command+Par" Min="0" Max="1"/>
     </UL3>
     <IL1 Type="Node">
-     <INVERTPHASE ScpiPath="CONFIGURATION:RNG1:IL1:INVERTPHASE" Min="0" Description="Inverted Phase" Type="Query,Command+Par" Max="1"/>
+     <INVERTPHASE ScpiPath="CONFIGURATION:RNG1:IL1:INVERTPHASE" Description="Inverted Phase" Type="Query,Command+Par" Min="0" Max="1"/>
     </IL1>
     <IL2 Type="Node">
-     <INVERTPHASE ScpiPath="CONFIGURATION:RNG1:IL2:INVERTPHASE" Min="0" Description="Inverted Phase" Type="Query,Command+Par" Max="1"/>
+     <INVERTPHASE ScpiPath="CONFIGURATION:RNG1:IL2:INVERTPHASE" Description="Inverted Phase" Type="Query,Command+Par" Min="0" Max="1"/>
     </IL2>
     <IL3 Type="Node">
-     <INVERTPHASE ScpiPath="CONFIGURATION:RNG1:IL3:INVERTPHASE" Min="0" Description="Inverted Phase" Type="Query,Command+Par" Max="1"/>
+     <INVERTPHASE ScpiPath="CONFIGURATION:RNG1:IL3:INVERTPHASE" Description="Inverted Phase" Type="Query,Command+Par" Min="0" Max="1"/>
     </IL3>
     <UAUX Type="Node">
-     <INVERTPHASE ScpiPath="CONFIGURATION:RNG1:UAUX:INVERTPHASE" Min="0" Description="Inverted Phase" Type="Query,Command+Par" Max="1"/>
+     <INVERTPHASE ScpiPath="CONFIGURATION:RNG1:UAUX:INVERTPHASE" Description="Inverted Phase" Type="Query,Command+Par" Min="0" Max="1"/>
     </UAUX>
     <IAUX Type="Node">
-     <INVERTPHASE ScpiPath="CONFIGURATION:RNG1:IAUX:INVERTPHASE" Min="0" Description="Inverted Phase" Type="Query,Command+Par" Max="1"/>
+     <INVERTPHASE ScpiPath="CONFIGURATION:RNG1:IAUX:INVERTPHASE" Description="Inverted Phase" Type="Query,Command+Par" Min="0" Max="1"/>
     </IAUX>
-    <RNGAUTO ScpiPath="CONFIGURATION:RNG1:RNGAUTO" Min="0" Description="Range automatic on/off" Type="Query,Command+Par" Max="1"/>
+    <RNGAUTO ScpiPath="CONFIGURATION:RNG1:RNGAUTO" Description="Range automatic on/off" Type="Query,Command+Par" Min="0" Max="1"/>
    </RNG1>
   </CONFIGURATION>
   <SENSE Type="Model,Node">
    <RNG1 Type="Node">
     <UL1 Type="Node">
-     <RANGE ValidPar="250V,8V,100mV" ScpiPath="SENSE:RNG1:UL1:RANGE" DataType="STRING" Description="Channel's range" Type="Query,Command+Par">
+     <RANGE ScpiPath="SENSE:RNG1:UL1:RANGE" Description="Channel's range" Type="Query,Command+Par" ValidPar="250V,8V,100mV" DataType="STRING">
       <CATALOG ScpiPath="SENSE:RNG1:UL1:RANGE:CATALOG" Type="Query"/>
      </RANGE>
     </UL1>
     <UL2 Type="Node">
-     <RANGE ValidPar="250V,8V,100mV" ScpiPath="SENSE:RNG1:UL2:RANGE" DataType="STRING" Description="Channel's range" Type="Query,Command+Par">
+     <RANGE ScpiPath="SENSE:RNG1:UL2:RANGE" Description="Channel's range" Type="Query,Command+Par" ValidPar="250V,8V,100mV" DataType="STRING">
       <CATALOG ScpiPath="SENSE:RNG1:UL2:RANGE:CATALOG" Type="Query"/>
      </RANGE>
     </UL2>
     <UL3 Type="Node">
-     <RANGE ValidPar="250V,8V,100mV" ScpiPath="SENSE:RNG1:UL3:RANGE" DataType="STRING" Description="Channel's range" Type="Query,Command+Par">
+     <RANGE ScpiPath="SENSE:RNG1:UL3:RANGE" Description="Channel's range" Type="Query,Command+Par" ValidPar="250V,8V,100mV" DataType="STRING">
       <CATALOG ScpiPath="SENSE:RNG1:UL3:RANGE:CATALOG" Type="Query"/>
      </RANGE>
     </UL3>
     <IL1 Type="Node">
-     <RANGE ValidPar="10A,5A,2.5A,1.0A,500mA,250mA,100mA,50mA,25mA" ScpiPath="SENSE:RNG1:IL1:RANGE" DataType="STRING" Description="Channel's range" Type="Query,Command+Par">
+     <RANGE ScpiPath="SENSE:RNG1:IL1:RANGE" Description="Channel's range" Type="Query,Command+Par" ValidPar="10A,5A,2.5A,1.0A,500mA,250mA,100mA,50mA,25mA" DataType="STRING">
       <CATALOG ScpiPath="SENSE:RNG1:IL1:RANGE:CATALOG" Type="Query"/>
      </RANGE>
     </IL1>
     <IL2 Type="Node">
-     <RANGE ValidPar="10A,5A,2.5A,1.0A,500mA,250mA,100mA,50mA,25mA" ScpiPath="SENSE:RNG1:IL2:RANGE" DataType="STRING" Description="Channel's range" Type="Query,Command+Par">
+     <RANGE ScpiPath="SENSE:RNG1:IL2:RANGE" Description="Channel's range" Type="Query,Command+Par" ValidPar="10A,5A,2.5A,1.0A,500mA,250mA,100mA,50mA,25mA" DataType="STRING">
       <CATALOG ScpiPath="SENSE:RNG1:IL2:RANGE:CATALOG" Type="Query"/>
      </RANGE>
     </IL2>
     <IL3 Type="Node">
-     <RANGE ValidPar="10A,5A,2.5A,1.0A,500mA,250mA,100mA,50mA,25mA" ScpiPath="SENSE:RNG1:IL3:RANGE" DataType="STRING" Description="Channel's range" Type="Query,Command+Par">
+     <RANGE ScpiPath="SENSE:RNG1:IL3:RANGE" Description="Channel's range" Type="Query,Command+Par" ValidPar="10A,5A,2.5A,1.0A,500mA,250mA,100mA,50mA,25mA" DataType="STRING">
       <CATALOG ScpiPath="SENSE:RNG1:IL3:RANGE:CATALOG" Type="Query"/>
      </RANGE>
     </IL3>
     <UAUX Type="Node">
-     <RANGE ValidPar="250V,8V,100mV" ScpiPath="SENSE:RNG1:UAUX:RANGE" DataType="STRING" Description="Channel's range" Type="Query,Command+Par">
+     <RANGE ScpiPath="SENSE:RNG1:UAUX:RANGE" Description="Channel's range" Type="Query,Command+Par" ValidPar="250V,8V,100mV" DataType="STRING">
       <CATALOG ScpiPath="SENSE:RNG1:UAUX:RANGE:CATALOG" Type="Query"/>
      </RANGE>
     </UAUX>
     <IAUX Type="Node">
-     <RANGE ValidPar="--" ScpiPath="SENSE:RNG1:IAUX:RANGE" DataType="STRING" Description="Channel's range" Type="Query,Command+Par">
+     <RANGE ScpiPath="SENSE:RNG1:IAUX:RANGE" Description="Channel's range" Type="Query,Command+Par" ValidPar="--" DataType="STRING">
       <CATALOG ScpiPath="SENSE:RNG1:IAUX:RANGE:CATALOG" Type="Query"/>
      </RANGE>
     </IAUX>
-    <OVERLOAD ScpiPath="SENSE:RNG1:OVERLOAD" Min="0" Description="Overload" Type="Query,Command+Par" Max="1"/>
+    <OVERLOAD ScpiPath="SENSE:RNG1:OVERLOAD" Description="Overload" Type="Query,Command+Par" Min="0" Max="1"/>
    </RNG1>
   </SENSE>
   <MEASURE ScpiPath="MEASURE" Type="Model,Node,Query">
@@ -156,8 +156,8 @@
   </FETCH>
   <EMOB Type="Model,Node">
    <HOTP1 Type="Node">
-    <PBPRESS ScpiPath="EMOB:HOTP1:PBPRESS" Description="Press EMOB-pushbutton" Type="Command+Par"/>
-    <EMLOCKSTATE ValidPar="IL1,IL2,IL3,IAUX" ScpiPath="EMOB:HOTP1:EMLOCKSTATE" DataType="STRING" Description="EMOB plug lock state: 0:unknown 1:open 2:locking 3:locked 4:error" Type="Query"/>
+    <PBPRESS ScpiPath="EMOB:HOTP1:PBPRESS" Description="Press EMOB-pushbutton" Type="Command+Par" ValidPar="IL1,IL2,IL3,IAUX" DataType="STRING"/>
+    <EMLOCKSTATE ScpiPath="EMOB:HOTP1:EMLOCKSTATE" Description="EMOB plug lock state: 0:unknown 1:open 2:locking 3:locked 4:error" Type="Query" ValidPar="IL1,IL2,IL3,IAUX" DataType="STRING"/>
    </HOTP1>
   </EMOB>
   <DEVICE Type="Model,Node">
