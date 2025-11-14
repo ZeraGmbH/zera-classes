@@ -19,6 +19,8 @@ void test_emob_vein_scpi::invokeInvalidRpcNameScpi()
 {
     QString status = m_scpiClient->sendReceive("EMOB:HOTP1:FOO?");
     QCOMPARE(status, "");
+    status = m_scpiClient->sendReceive("*stb?");
+    QCOMPARE(status, "+4");
 
     QFile file(":/vein-event-dumps/dumpinvokeInvalidRpcNameScpi.json");
     QVERIFY(file.open(QFile::ReadOnly));
@@ -108,7 +110,7 @@ void test_emob_vein_scpi::activateEmobPushButtonVein()
 void test_emob_vein_scpi::readLockStateCorrectRpcNameScpi()
 {
     QString status = m_scpiClient->sendReceive("EMOB:HOTP1:EMLOCKSTATE?");
-    QCOMPARE(status, "4");
+    QCOMPARE(status, QString::number(reademoblockstate::emobstate_error));
 
     QFile file(":/vein-event-dumps/dumpReadLockStateCorrectRpcNameScpi.json");
     QVERIFY(file.open(QFile::ReadOnly));
@@ -148,6 +150,8 @@ void test_emob_vein_scpi::readLockStateScpiInvalidParam()
     m_testRunner->fireHotplugInterrupt(QStringList() << "IL3" << "IAUX");
     QString status = m_scpiClient->sendReceive("EMOB:HOTP1:EMLOCKSTATE? FOO;");
     QCOMPARE(status, "");
+    status = m_scpiClient->sendReceive("*stb?");
+    QCOMPARE(status, "+4");
 
     QFile file(":/vein-event-dumps/dumpReadLockStateInvalidParamScpi.json");
     QVERIFY(file.open(QFile::ReadOnly));
