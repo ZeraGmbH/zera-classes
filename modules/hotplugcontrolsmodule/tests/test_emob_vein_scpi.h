@@ -22,10 +22,10 @@ private slots:
     void activateEmobPushButtonVein();
 
     void readLockStateCorrectRpcNameScpi();
-
     void readLockStateScpiNoParamOneEmob();
     void readLockStateScpiNoParamMutipleHotplug();
     void readLockStateScpiInvalidParam();
+    void readLockStateScpiWrongParam();
     void readLockStateScpiValidParamMutipleHotplug();
 
     void readLockStateTwiceScpi();

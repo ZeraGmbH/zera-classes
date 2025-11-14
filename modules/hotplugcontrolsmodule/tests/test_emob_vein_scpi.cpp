@@ -29,7 +29,7 @@ void test_emob_vein_scpi::invokeInvalidRpcNameScpi()
 
 void test_emob_vein_scpi::activateEmobPushButtonNoParamScpi()
 {
-    QString status = m_scpiClient->sendReceive("EMOB:HOTP1:PBPRESS", false);
+    QString status = m_scpiClient->sendReceive("EMOB:HOTP1:PBPRESS;", false);
     QVERIFY(status.isEmpty()); //its a commad, so we dont expect any return
 
     QFile file(":/vein-event-dumps/dumpActivateEmobPushButtonNoParamScpi.json");
@@ -111,13 +111,20 @@ void test_emob_vein_scpi::readLockStateScpiInvalidParam()
 {
     m_testRunner->fireHotplugInterrupt(QStringList() << "IL3" << "IAUX");
     QString status = m_scpiClient->sendReceive("EMOB:HOTP1:EMLOCKSTATE? FOO;");
-    QCOMPARE(status, QString::number(reademoblockstate::emobstate_error));
+    QCOMPARE(status, "");
 
     QFile file(":/vein-event-dumps/dumpReadLockStateInvalidParamScpi.json");
     QVERIFY(file.open(QFile::ReadOnly));
     QByteArray jsonExpected = file.readAll();
     QByteArray jsonDumped = TestLogHelpers::dump(m_veinEventDump);
     QVERIFY(TestLogHelpers::compareAndLogOnDiffJson(jsonExpected, jsonDumped));
+}
+
+void test_emob_vein_scpi::readLockStateScpiWrongParam()
+{
+    m_testRunner->fireHotplugInterrupt(QStringList() << "IL3" << "IAUX");
+    QString status = m_scpiClient->sendReceive("EMOB:HOTP1:EMLOCKSTATE? IL1;");
+    QCOMPARE(status, QString::number(reademoblockstate::emobstate_error));
 }
 
 void test_emob_vein_scpi::readLockStateScpiValidParamMutipleHotplug()

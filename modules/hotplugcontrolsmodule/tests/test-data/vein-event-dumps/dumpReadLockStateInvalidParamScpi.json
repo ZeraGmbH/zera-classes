@@ -37,33 +37,50 @@
         },
         {
             "Am command event in": "server-enter",
-            "Attached data": "RemoteProcedureData",
-            "ComponentCommand": "RPCMD_RESULT",
+            "Attached data": "ErrorData",
             "Entity": 1700,
             "EventOrigin": "EO_LOCAL",
             "EventSubtype": "NOTIFICATION",
             "EventTarget": "ET_ALL",
-            "InvokationData": {
-                "RemoteProcedureData::errorMessage": "4",
-                "RemoteProcedureData::resultCode": -22
+            "OriginalEventData": {
+                "Attached data": "RemoteProcedureData",
+                "ComponentCommand": "RPCMD_CALL",
+                "Entity": 1700,
+                "EventOrigin": "EO_LOCAL",
+                "EventTarget": "ET_ALL",
+                "InvokationData": {
+                    "RemoteProcedureData::callParameters": {
+                        "p_channelName": "FOO"
+                    }
+                },
+                "ProcedureName": "RPC_readLockState(QString p_channelName)",
+                "Valid": true
             },
-            "ProcedureName": "RPC_readLockState(QString p_channelName)",
             "Valid": true,
             "ValidPeer": false
         },
         {
+            "Accepted (finalized) by": "SCPIMODULE::SCPIEventSystem",
             "Am command event in": "server-fallthrough",
-            "Attached data": "RemoteProcedureData",
-            "ComponentCommand": "RPCMD_RESULT",
+            "Attached data": "ErrorData",
             "Entity": 1700,
             "EventOrigin": "EO_LOCAL",
             "EventSubtype": "NOTIFICATION",
             "EventTarget": "ET_ALL",
-            "InvokationData": {
-                "RemoteProcedureData::errorMessage": "4",
-                "RemoteProcedureData::resultCode": -22
+            "OriginalEventData": {
+                "Attached data": "RemoteProcedureData",
+                "ComponentCommand": "RPCMD_CALL",
+                "Entity": 1700,
+                "EventOrigin": "EO_LOCAL",
+                "EventTarget": "ET_ALL",
+                "InvokationData": {
+                    "RemoteProcedureData::callParameters": {
+                        "p_channelName": "FOO"
+                    }
+                },
+                "ProcedureName": "RPC_readLockState(QString p_channelName)",
+                "Valid": true
             },
-            "ProcedureName": "RPC_readLockState(QString p_channelName)",
             "Valid": true,
             "ValidPeer": false
         }

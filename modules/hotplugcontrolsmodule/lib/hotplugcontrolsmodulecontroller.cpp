@@ -5,6 +5,7 @@
 #include <intvalidator.h>
 #include <reply.h>
 #include <scpi.h>
+#include <stringvalidator.h>
 
 namespace HOTPLUGCONTROLSMODULE {
 
@@ -56,6 +57,7 @@ void HotplugControlsModuleController::generateVeinInterface()
                                         QString("EMLOCKSTATE"),
                                         SCPI::isQuery,
                                         rpcEmobReadLockState->getSignature());
+    m_pEmobLockStateRpc->setValidator(new cStringValidator(QString("IL1;IL2;IL3;IAUX")));
     m_pEmobLockStateRpc->canAcceptOptionalParam();
     m_module->m_veinModuleRPCMap[rpcEmobReadLockState->getSignature()] = m_pEmobLockStateRpc; // for modules use
 }
