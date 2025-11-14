@@ -5406,7 +5406,16 @@
                 },
                 "RPC_readLockState(QString p_channelName)": {
                     "Description": "EMOB plug lock state: 0:unknown 1:open 2:locking 3:locked 4:error",
-                    "Optional parameter": ""
+                    "Optional parameter": "",
+                    "Validation": {
+                        "Data": [
+                            "IL1",
+                            "IL2",
+                            "IL3",
+                            "IAUX"
+                        ],
+                        "Type": "STRING"
+                    }
                 }
             },
             "SCPIInfo": {
