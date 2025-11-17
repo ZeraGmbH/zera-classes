@@ -15,12 +15,10 @@ void SCPIMODULE::cSCPIRpcDelegate::executeSCPI(cSCPIClient *client, QString &sIn
 {
     quint8 scpiCmdType = getType();
     cSCPICommand cmd = sInput;
-    QStringList scpiExpectedParameters = extractRpcParams(m_scpicmdinfo->componentOrRpcName);
-    int scpiExpectedParametersCount = scpiExpectedParameters.count();
 
-    bool bQuery = cmd.isQuery() || cmd.isQuery(scpiExpectedParametersCount);
+    bool bQuery = cmd.isQuery() || cmd.isQuery(1);
     bool bCmd = cmd.isCommand();
-    bool bCmdwP = cmd.isCommand(scpiExpectedParametersCount) || m_scpicmdinfo->veinComponentInfo.contains("Optional parameter");
+    bool bCmdwP = cmd.isCommand(1) || m_scpicmdinfo->veinComponentInfo.contains("Optional parameter");
 
     if ((bQuery && ((scpiCmdType & SCPI::isQuery) > 0)) ||
         (bCmd && ((scpiCmdType & SCPI::isCmd) >  0)) ||
@@ -70,34 +68,29 @@ void SCPIMODULE::cSCPIRpcDelegate::executeScpiRpc(cSCPIClient *client, QString &
     m_pModule->getCmdEventHandlerSystem()->addItem(rpcInvoker);
 
     QString rpcSignature = m_scpicmdinfo->componentOrRpcName;
-    QString rpcName = extractRpcName(rpcSignature);
-    const QStringList parameterList = extractRpcParams(rpcSignature);
-    QStringList parameterNames;
-    for (const QString &parameter : parameterList) {
-        QStringList paramTypeValue = parameter.split(" ");
-        if (paramTypeValue.size() == 2)
-            parameterNames.append(paramTypeValue[1]);
-    }
+    QString rpcName = VfCppRpcHelper::getRpcName(rpcSignature);
+    const QStringList paramNamesList = VfCppRpcHelper::getRpcParamNamesList(rpcSignature);
+    int totalExpectedParams = paramNamesList.size();
+    QStringList paramTypesList = VfCppRpcHelper::getRpcTypesListFromSignature(rpcSignature);
 
     cSCPICommand cmd = sInput;
-    QStringList parameterValues = cmd.getParamList();
-    QStringList parameterTypes = VfCppRpcHelper::getRpcTypesListFromSignature(rpcSignature);
+    QStringList scpiCmdParams = cmd.getParamList();
+    int totalActualParams = scpiCmdParams.size();
 
-    if(parameterNames.size() != parameterValues.size())
-        if(m_scpicmdinfo->veinComponentInfo.contains("Optional parameter"))
-            parameterValues.append("");
+    if((totalExpectedParams > scpiCmdParams.size()) && (m_scpicmdinfo->veinComponentInfo.contains("Optional parameter")))
+        scpiCmdParams.append("");
 
-    QVariantMap params;
-    for(int i=0; i<parameterValues.count(); i++) {
-        QVariant variantValue = convertParamStrToType(parameterValues[i], parameterTypes[i]);
-        params[parameterNames[i]] = variantValue;
+    if(totalExpectedParams == scpiCmdParams.size()) {
+        QVariantMap params;
+        for(int i=0; i<scpiCmdParams.size(); i++) {
+            QVariant variantValue = convertParamStrToType(scpiCmdParams[i], paramTypesList[i]);
+            params[paramNamesList[i]] = variantValue;
+        }
+
+        m_pModule->scpiParameterCmdInfoHash.insert(m_scpicmdinfo->componentOrRpcName, clientinfo);
+        client->addSCPIClientInfo(m_scpicmdinfo->componentOrRpcName, clientinfo);
+        rpcInvoker->invokeRPC(rpcName, params);
     }
-
-
-    m_pModule->scpiParameterCmdInfoHash.insert(m_scpicmdinfo->componentOrRpcName, clientinfo);
-    client->addSCPIClientInfo(m_scpicmdinfo->componentOrRpcName, clientinfo);
-
-    rpcInvoker->invokeRPC(rpcName, params);
 }
 
 QVariant SCPIMODULE::cSCPIRpcDelegate::convertParamStrToType(QString parameter, QString type)
@@ -120,22 +113,4 @@ QVariant SCPIMODULE::cSCPIRpcDelegate::convertParamStrToType(QString parameter, 
     else if (type == "QString")
         return parameter;
     return QVariant();
-}
-
-QStringList SCPIMODULE::cSCPIRpcDelegate::extractRpcParams(QString RPC)
-{
-    // RPC_name(type p_paramName1, type p_paramName2)
-    QString params;
-    QRegularExpression re("\\((.*)\\)");
-    QRegularExpressionMatch match = re.match(RPC);
-
-    if (match.hasMatch())
-        params = match.captured(1).trimmed();
-    return params.split(",", Qt::SkipEmptyParts);
-}
-
-QString SCPIMODULE::cSCPIRpcDelegate::extractRpcName(QString RPC)
-{
-    QString RPCName = RPC.section('(', 0, 0);
-    return RPCName;
 }
