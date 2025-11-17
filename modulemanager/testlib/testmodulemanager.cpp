@@ -113,6 +113,11 @@ void TestModuleManager::fireHotplugInterrupt(const QStringList &channelAliases)
     m_testAllServices->fireHotplugInterrupt(channelAliases);
 }
 
+void TestModuleManager::fireHotplugInterruptControllerName(const AbstractMockAllServices::ChannelAliasHotplugDeviceNameMap &infoMap)
+{
+    m_testAllServices->fireHotplugInterruptControllerName(infoMap);
+}
+
 void TestModuleManager::onAllModulesDestroyed()
 {
     m_instantCountsOnModulesDestroyed.append( {

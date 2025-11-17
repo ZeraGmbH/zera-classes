@@ -138,6 +138,8 @@ private:
     VfModuleParameter *m_pSchnubbelStatus;
     VfModuleParameter *m_pAccumulatorStatus;
     VfModuleParameter *m_pAccumulatorSoc;
+    VfModuleParameter *m_pInstrument;
+    QString m_channelsConnected;
 
     QVariant wantedSerialNr;
 
@@ -164,6 +166,7 @@ private slots:
     void getSchnubbelStatus();
     void getAccumulatorStatus();
     void getAccuStateOfCharge();
+    void readInstrumentConnected(QVariant value);
 
     void activationDone();
     void deactivationDone();

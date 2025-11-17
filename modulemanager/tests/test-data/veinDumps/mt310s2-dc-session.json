@@ -3667,6 +3667,7 @@
         "INF_DSPVersion": "DSPLCA: V0.0;DSP V0.00",
         "INF_DeviceType": "unknown",
         "INF_FPGAVersion": "Unknown",
+        "INF_Instrument": "",
         "INF_ModuleInterface": {
             "ComponentInfo": {
                 "EntityName": {
@@ -3701,6 +3702,9 @@
                 },
                 "INF_FPGAVersion": {
                     "Description": "FPGA version"
+                },
+                "INF_Instrument": {
+                    "Description": "Type of instrument connected"
                 },
                 "INF_ModuleInterface": {
                     "Description": "Module's interface details"
