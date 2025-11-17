@@ -222,7 +222,7 @@ void test_scpi_cmds_in_session::executeRpcQueryOneParam()
     QCOMPARE(answer, "false");
 }
 
-void test_scpi_cmds_in_session::executeRpcQueryParams()
+void test_scpi_cmds_in_session::doNotExecuteRpcQueryMultipleParams()
 {
     ModuleManagerTestRunner testRunner("");
     vfEntityRpcEventHandler *rpcEventHandler = new vfEntityRpcEventHandler();
@@ -234,6 +234,6 @@ void test_scpi_cmds_in_session::executeRpcQueryParams()
 
     ScpiModuleClientBlocked client;
     QString answer = client.sendReceive("CALCULATE:RPC2? foo;true;");
-    QCOMPARE(answer, "foo");
+    QCOMPARE(answer, "");
 }
 

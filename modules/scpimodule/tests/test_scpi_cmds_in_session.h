@@ -23,7 +23,7 @@ private slots:
     void executeRpcReadLockStateQuery();
     void executeRpcQueryInvalidParams();
     void executeRpcQueryOneParam();
-    void executeRpcQueryParams();
+    void doNotExecuteRpcQueryMultipleParams();
 };
 
 #endif // TEST_SCPI_CMDS_IN_SESSION_H
