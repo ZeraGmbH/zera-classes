@@ -1,0 +1,10 @@
+{
+    "modules" : [
+      {
+        "name" : "statusmodule",
+        "configFile" : "mt310s2-statusmodule.xml",
+        "id": 1150
+      }
+    ]
+}
+

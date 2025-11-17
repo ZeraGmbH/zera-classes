@@ -225,6 +225,12 @@ void cStatusModuleInit::generateVeinInterface()
     m_pModule->m_veinModuleParameterMap[key] = m_pAccumulatorSoc;
     if (m_ConfigData.m_accumulator)
         m_pAccumulatorSoc->setScpiInfo("STATUS", "ACCUSOC", SCPI::isQuery, key);
+
+    m_pInstrument = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
+                                          key = QString("INF_Instrument"),
+                                          QString("Type of instrument connected"),
+                                          QVariant(""));
+    m_pModule->m_veinModuleParameterMap[key] = m_pInstrument;
 }
 
 
@@ -322,6 +328,7 @@ void cStatusModuleInit::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVaria
                 if (reply == ack) {
                     m_sPCBVersion = answer.toString();
                     m_pPCBVersion->setValue(m_sPCBVersion);
+                    readInstrumentConnected(m_sPCBVersion);
                     emit activationContinue();
                 }
                 else
@@ -468,10 +475,36 @@ void cStatusModuleInit::getAccuStateOfCharge()
     m_MsgNrCmdList[m_pPCBInterface->getAccuStateOfCharge()] = STATUSMODINIT::readPCBServerAccumulatorSoc;
 }
 
+void cStatusModuleInit::readInstrumentConnected(QVariant value)
+{
+    QString channels = "IL1, IL2, IL3, IAUX";
+    QJsonObject controller;
+    QJsonObject pcbVersion = QJsonDocument::fromJson(value.toString().toUtf8()).object();;
+    QStringList keys = pcbVersion.keys();
+    for(QString key: keys) {
+        if(channels.contains(key)) {
+            QJsonObject channelVersions= pcbVersion.value(key).toObject();
+            QJsonValue subType = channelVersions.value("Emob subtype");
+            if(subType.toString().contains("EMOB", Qt::CaseInsensitive))
+                controller.insert(key,"EMOB");
+            else
+                controller.insert(key,"MT650e");
+        }
+    }
+    if(!controller.isEmpty()) {
+        QJsonDocument Doc(controller);
+        QByteArray ba = Doc.toJson();
+        m_pInstrument->setValue(QString(ba));
+    }
+    else
+        m_pInstrument->setValue("");
+}
+
 void cStatusModuleInit::setInterfaceComponents()
 {
     m_pPCBServerVersion->setValue(QVariant(m_sPCBServerVersion));
     m_pPCBVersion->setValue(QVariant(m_sPCBVersion));
+    readInstrumentConnected(m_sPCBVersion);
     m_pCtrlVersion->setValue(QVariant(m_sCtrlVersion));
     m_pFPGAVersion->setValue(QVariant(m_sFPGAVersion));
     m_pSerialNumber->setValue(QVariant(m_sSerialNumber));

@@ -95,6 +95,11 @@ void ModuleManagerTestRunner::fireHotplugInterrupt(const QStringList &channelAli
     m_modMan->fireHotplugInterrupt(channelAliases);
 }
 
+void ModuleManagerTestRunner::fireHotplugInterruptControllerName(const AbstractMockAllServices::ChannelAliasHotplugDeviceNameMap &infoMap)
+{
+    m_modMan->fireHotplugInterruptControllerName(infoMap);
+}
+
 VeinStorage::AbstractEventSystem *ModuleManagerTestRunner::getVeinStorageSystem()
 {
     return m_modmanFacade->getStorageSystem();

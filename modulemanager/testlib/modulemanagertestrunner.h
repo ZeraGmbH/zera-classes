@@ -36,6 +36,7 @@ public:
     QList<TestModuleManager::TModuleInstances> getInstanceCountsOnModulesDestroyed();
     void setRangeGetSetDelay(int rangeGetSetDelay);
     void fireHotplugInterrupt(const QStringList &channelAliases);
+    void fireHotplugInterruptControllerName(const AbstractMockAllServices::ChannelAliasHotplugDeviceNameMap &infoMap);
 
 private:
     void setupVfLogger();
