@@ -11,6 +11,8 @@
           <th><xsl:value-of select="$Description"/></th>
           <th><xsl:value-of select="$ScpiPath"/></th>
           <th><xsl:value-of select="$ScpiCmdType"/></th>
+          <th><xsl:value-of select="$ValidPar"/></th>
+          <th><xsl:value-of select="$DataType"/></th>
         </tr>
         <!-- table data -->
         <xsl:for-each select="MODELS/EMOB">
@@ -21,6 +23,8 @@
                 <td><xsl:value-of select="@Description"/></td>
                 <td><xsl:value-of select="@ScpiPath"/></td>
                 <td><xsl:value-of select="@Type"/></td>
+                <td><xsl:value-of select="@ValidPar"/></td>
+                <td><xsl:value-of select="@DataType"/></td>
               </tr>
             </xsl:if>
           </xsl:for-each>
