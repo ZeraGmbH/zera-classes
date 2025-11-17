@@ -6,6 +6,14 @@
         <li>
             <p><b>EMOB lock state query:</b> It is recommended to use this query only when measurement is not running.<br/></p>
         </li>
+        <li>
+            <p>If there is only one EMOB controller connected to the device, then parameter to EMOB SCPI commands is optional.
+                When no parameter is specified, device will automatically work with the connected EMOB controller. <br/></p>
+        </li>
+        <li>
+            <p>If there are multiple EMOB controllers connected to the device, then parameter to EMOB SCPI commands is a must.
+                This parameter indicates to which EMOB controller the SCPI command is directed to.<br/></p>
+        </li>
     </ul>
 </body>
 </html>
