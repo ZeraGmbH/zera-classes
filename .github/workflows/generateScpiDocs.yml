@@ -98,6 +98,22 @@ jobs:
           mv $HOME/targetbuild/scpi-doc/app/SessionNamesMapping.json $HOME
           ls $HOME/
 
+      - name: Update and commit change-info.html
+        run: |
+          cd $GITHUB_WORKSPACE/scpi-doc/xml-to-html
+          sed -i "s/UpcomingRelease:/${{github.event.inputs.version}}:/g" change-info.html
+          git config --global user.name 'gitbot'
+          git config --global user.email 'gitbot@noreply.de'
+          git add change-info.html
+          if git diff --cached --quiet; then
+            echo "No changes to commit"
+          else
+            git commit -sm "Update release version in change-info.html"
+            git push
+          fi
+          mv change-info.html $HOME/html-docs
+          ls -lR $HOME/html-docs
+
       - name: Tar scpi-docs
         run: |
           tar -c -I 'xz -T0' -f $HOME/scpi_docs.tar.xz "$HOME/html-docs" "$HOME/SessionNamesMapping.json"
