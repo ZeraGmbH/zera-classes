@@ -1,0 +1,47 @@
+<html>
+<title>SCPI commands - Change info</title>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <link rel="stylesheet" type="text/css" href="css/main.css" />
+</head>
+<body>
+    <header> 
+        <img src="ZERA-Logo.svg" alt="Logo" class="logo"/>
+        SCPI commands - Change info
+        <button id="toggleThemeButton" class="toggleThemeButton" onclick="toggleTheme()">Toggle theme</button>
+    </header>
+    <footer><i>Last updated on <b><span id="current-date"></span></b></i></footer>
+    <script>
+        function toggleTheme() {
+            var element = document.body;
+            element.classList.toggle("dark-theme");
+        }
+        function getTodaysDate() {
+            const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+            const today = new Date();
+            const day = today.getDate();
+            const month = months[today.getMonth()];
+            const year = today.getFullYear();
+            const formattedDate = `${day}-${month}-${year}`;
+            return formattedDate
+        }
+        document.getElementById('current-date').textContent = getTodaysDate();
+    </script>
+    <div class="content">
+        <ul>
+            <!-- Prepend change info for upcoming release here. Remember to use exact string 'UpcomingRelease' as the header. -->
+            <li>
+                <p>
+                    <h3><b>UpcomingRelease:</b><br/></h3>
+                    Changes for MT310S2:
+                    <ul>
+                        <li>New chapter for EMOB commands is added.</li>
+                        <li>EMOB-pushbutton command changed from 'CALCULATE:EM01:0001:PBPRESS' to 'EMOB:HOTP1:PBPRESS'</li>
+                        <li>New Query for EMOB plug lock state - 'EMOB:HOTP1:EMLOCKSTATE'</li>
+                    </ul>
+                </p>
+            </li>
+        </ul>
+    </div>
+</body>
+</html>
