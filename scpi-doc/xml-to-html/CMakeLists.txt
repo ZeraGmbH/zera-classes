@@ -8,12 +8,20 @@ file(GLOB XSL_FILES
     ${CMAKE_CURRENT_SOURCE_DIR}/xsl-files/*.xsl
 )
 
+file(GLOB CSS_FILES
+    ${CMAKE_CURRENT_SOURCE_DIR}/css/*.css
+)
+
 add_custom_target(html-prosa ALL
     SOURCES ${HTML_PROSA}
 )
 
 add_custom_target(xsl-files ALL
     SOURCES ${XSL_FILES}
+)
+
+add_custom_target(css-files ALL
+    SOURCES ${CSS_FILES}
 )
 
 add_custom_target(create-html ALL
