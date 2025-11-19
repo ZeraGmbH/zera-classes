@@ -31,6 +31,17 @@ void ScpiDocsHtmlGenerator::createScpiDocHtmls(QString modmanConfigFile, QString
     convertXmlToHtml(zenuxRelease, comDefaultSessionXml, "", "true", htmlPath);
 
     xmlDir.removeRecursively();
+
+    //copy css files
+    QDir sourceCssDir(QStringLiteral(SCPI_DOC_SOURCE_PATH) + "/css");
+    QDir destCssDir(htmlDirPath + "css");
+    if (destCssDir.exists())
+        destCssDir.removeRecursively();
+    QDir().mkdir(htmlDirPath + "css");
+    for (QString &fileName: sourceCssDir.entryList(QDir::Files)) {
+        if(!QFile::copy(sourceCssDir.filePath(fileName), destCssDir.filePath(fileName)))
+            qInfo("Error copy css file.");
+    }
 }
 
 void ScpiDocsHtmlGenerator::convertXmlToHtml(QString zenuxRelease, QFileInfo sessionXml, QString sessionName, QString adjustment, QString htmlPath)

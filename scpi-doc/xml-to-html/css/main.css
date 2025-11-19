@@ -1,0 +1,139 @@
+:root {
+/*default: light-theme*/
+    --color-bg: #fbf8f8;
+    --color-fg: black;
+    --color-table-tr: #dddddd;
+    --color-table-tr-btm: #f3f3f3;
+    --color-table-border: white;
+    --color-table-border-btm: #206040;
+    --color-table-border-thickness: 2px;
+}
+.dark-theme {
+    --color-bg: #484343;
+    --color-fg: white;
+    --color-table-tr: #666565;
+    --color-table-tr-btm: #666565;
+    --color-table-border: #808080;
+    --color-table-border-btm: #808080;
+}
+body {
+    font-family: Verdana, sans-serif;
+    color: var(--color-fg);
+    background-color: var(--color-bg);
+    margin: 0px;
+    padding: 0px;
+}
+.content {
+    padding: 20px;
+}
+html {
+    scroll-padding-top: 4rem;
+}
+h1 {
+    color: #25915b;
+    font-weight: bold;
+    padding-bottom: 10px;
+    padding-top: 30px;
+}
+h2 {
+    color: #25915b;
+    font-weight: bold;
+}
+h3 {
+    color: #25915b;
+    font-weight: bold;
+}
+
+/*Table of contents*/
+.toc {
+    padding-bottom: 10px;
+}
+.toc a {
+    color: var(--color-fg);
+    text-decoration: none;
+    border-bottom: 1px solid;
+}
+.toc ul li {
+    font-size: 18;
+    line-height: 1.5;
+    list-style-type: none;
+}
+
+/*SCPI Commands tables*/
+.DataTableDiv {
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+    padding: 10px 0 15px 15px;
+    margin-top: 15px;
+    margin-bottom: 15px;
+}  
+.DataTableName {
+    font-size: large;
+}
+.DataTable {
+    border-collapse: collapse;
+    font-size: medium;
+    min-width: 300px;
+    text-align: left;
+    border: thin solid var(--color-table-border);
+}
+.DataTable tr th{
+    background-color: #206040;
+    color: #ffffff;
+    padding: 12px 15px;
+}
+.DataTable tr td{
+    padding: 12px 15px;
+}
+.DataTable tbody tr:nth-of-type(odd) {
+    background-color: var(--color-table-tr)
+}
+.DataTable tbody tr:last-of-type {
+    border-bottom: var(--color-table-border-thickness, thin) solid var(--color-table-border-btm);
+}
+
+/*header*/
+.logo {
+    height: 50px;
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #c4c4c4;
+    position: sticky;
+    color: black;
+    top: 0;
+    font-weight: bold;
+    font-size: 200%;
+    font-family: "Ubuntu", Arial, Helvetica, sans-serif;
+}
+.toggleThemeButton {
+    border: 1px solid var(--color-fg);
+    padding: .5rem;
+    background: var(--color-fg);
+    border-radius: 10px;
+    color: var(--color-bg);
+    margin-right: .5rem;
+    cursor: pointer;
+}
+.toggleThemeButton:hover {
+    opacity: 0.7;
+}
+@media print {
+    #toggleThemeButton {
+    display: none;
+    }
+}
+
+footer {
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    background-color: #c4c4c4;
+    color: black;
+    text-align: left;
+    font-size: 75%;
+}
