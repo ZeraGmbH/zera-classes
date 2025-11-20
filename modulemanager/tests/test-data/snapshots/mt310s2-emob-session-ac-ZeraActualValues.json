@@ -224,6 +224,7 @@
         "INF_DSPVersion": "DSPLCA: V0.0;DSP V0.00",
         "INF_DeviceType": "unknown",
         "INF_FPGAVersion": "Unknown",
+        "INF_HotplugChannels": "IL1,IL2,IL3,IAUX",
         "INF_Instrument": "",
         "INF_PCBServerVersion": "V42.0",
         "INF_PCBVersion": "{\"Relay PCB version\":\"Unknown\",\"System PCB version\":\"Unknown\"}",

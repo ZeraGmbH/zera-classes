@@ -41,6 +41,7 @@
 #define readschnubbelstatusErrMsg "PCB authorization status read failed"
 #define readaccumulatorstatusErrMsg "PCB accumulator status read failed"
 #define readaccumulatorsocErrMsg "PCB accumulator soc read failed"
+#define readChannelsErrMsg "PCB channels read failed"
 #define readadjchksumErrMsg "PCB adjustment chksum read failed"
 #define readPCBServerVersionErrMsg "PCB server version read failed"
 #define readPCBInfoErrMsg "PCB info read failed"

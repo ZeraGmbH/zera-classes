@@ -23,7 +23,8 @@ cStatusModuleInit::cStatusModuleInit(cStatusModule* module, cStatusModuleConfigD
     m_dspInterface = std::make_shared<Zera::cDSPInterface>();
 
     // m_pcbserverConnectionState.addTransition is done in pcbserverConnection
-    m_pcbserverReadVersionState.addTransition(this, &cStatusModuleInit::activationContinue, &m_pcbReadVersionState);
+    m_pcbserverReadVersionState.addTransition(this, &cStatusModuleInit::activationContinue, &m_pcbserverReadChannelsConnectedChange);
+    m_pcbserverReadChannelsConnectedChange.addTransition(this, &cStatusModuleInit::activationContinue, &m_pcbReadVersionState);
     m_pcbReadVersionState.addTransition(this, &cStatusModuleInit::activationContinue, &m_pcbRegisterReadVersionNotifierState);
     m_pcbRegisterReadVersionNotifierState.addTransition(this, &cStatusModuleInit::activationContinue, &m_pcbserverReadCtrlVersionState);
     m_pcbserverReadCtrlVersionState.addTransition(this, &cStatusModuleInit::activationContinue, &m_pcbserverReadFPGAVersionState);
@@ -45,6 +46,7 @@ cStatusModuleInit::cStatusModuleInit(cStatusModule* module, cStatusModuleConfigD
 
     m_activationMachine.addState(&m_pcbserverConnectionState);
     m_activationMachine.addState(&m_pcbserverReadVersionState);
+    m_activationMachine.addState(&m_pcbserverReadChannelsConnectedChange);
     m_activationMachine.addState(&m_pcbReadVersionState);
     m_activationMachine.addState(&m_pcbRegisterReadVersionNotifierState);
     m_activationMachine.addState(&m_pcbserverReadCtrlVersionState);
@@ -85,6 +87,7 @@ cStatusModuleInit::cStatusModuleInit(cStatusModule* module, cStatusModuleConfigD
     connect(&m_pcbserverReadInitialAccumulatorStatus, &QState::entered, this, &cStatusModuleInit::getAccumulatorStatus);
     connect(&m_pcbserverRegisterAccumulatorSocNotifierState, &QState::entered, this, &cStatusModuleInit::registerAccumulatorSocNotifier);
     connect(&m_pcbserverReadInitialAccumulatorSoc, &QState::entered, this, &cStatusModuleInit::getAccuStateOfCharge);
+    connect(&m_pcbserverReadChannelsConnectedChange, &QState::entered, this, &cStatusModuleInit::pcbReadChannelsConnected);
     connect(&m_pcbserverRegisterCtrlVersionChange, &QState::entered, this, &cStatusModuleInit::registerCtrlVersionsChangedNotifier);
     connect(&m_activationDoneState, &QState::entered, this, &cStatusModuleInit::activationDone);
 
@@ -231,6 +234,12 @@ void cStatusModuleInit::generateVeinInterface()
                                           QString("Type of instrument connected"),
                                           QVariant(""));
     m_pModule->m_veinModuleParameterMap[key] = m_pInstrument;
+
+    m_pChannels = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
+                                                key = QString("INF_HotplugChannels"),
+                                                QString("List of hotplug channels"),
+                                                QVariant(""));
+    m_pModule->m_veinModuleParameterMap[key] = m_pChannels;
 }
 
 
@@ -449,6 +458,19 @@ void cStatusModuleInit::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVaria
                        notifyActivationError(readaccumulatorsocErrMsg);
                 }
                 break;
+            case STATUSMODINIT::readPCBChannelsChange:
+                if(!m_ConfigData.m_channels)
+                    emit activationContinue();
+                else {
+                    if(reply == ack) {
+                        m_pChannels->setValue(answer.toString());
+                        emit activationContinue();
+                    }
+                    else {
+                        notifyActivationError(readChannelsErrMsg);
+                    }
+                }
+                break;
             }
         }
     }
@@ -477,7 +499,7 @@ void cStatusModuleInit::getAccuStateOfCharge()
 
 void cStatusModuleInit::readInstrumentConnected(QVariant value)
 {
-    QString channels = "IL1, IL2, IL3, IAUX";
+    QString channels = m_pChannels->getValue().toString();
     QJsonObject controller;
     QJsonObject pcbVersion = QJsonDocument::fromJson(value.toString().toUtf8()).object();;
     QStringList keys = pcbVersion.keys();
@@ -538,6 +560,11 @@ void cStatusModuleInit::pcbserverReadVersion()
 void cStatusModuleInit::pcbReadVersion()
 {
     m_MsgNrCmdList[m_pPCBInterface->readPCBInfo()] = STATUSMODINIT::readPCBInfo;
+}
+
+void cStatusModuleInit::pcbReadChannelsConnected()
+{
+    m_MsgNrCmdList[m_pPCBInterface->readChannelsConnected()] = STATUSMODINIT::readPCBChannelsChange;
 }
 
 void cStatusModuleInit::pcbserverReadCtrlVersion()

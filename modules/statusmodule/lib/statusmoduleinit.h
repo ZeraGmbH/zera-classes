@@ -37,7 +37,9 @@ enum statusmoduleinitCmds
     registerAccumulatorSocNotifier,
     readPCBServerAccumulatorSoc,
     registerCtrlVersionChange,
-    registerPCBVersionChange
+    registerPCBVersionChange,
+    registerPCBChannelsChange,
+    readPCBChannelsChange,
 };
 
 enum NOTIFIER_IDS
@@ -47,7 +49,7 @@ enum NOTIFIER_IDS
     accumulatorStatusNotifierID,
     accumulatorSocNotifierID,
     ctrlVersionChangeID,
-    pcbVersionChangeID
+    pcbVersionChangeID,
 };
 
 }
@@ -98,6 +100,7 @@ private:
     QState m_pcbserverRegisterAccumulatorSocNotifierState;
     QState m_pcbserverReadInitialAccumulatorSoc;
     QState m_pcbserverRegisterCtrlVersionChange;
+    QState m_pcbserverReadChannelsConnectedChange;
     QFinalState m_activationDoneState; // here we still read the release version
 
     // statemachine for adjustment-status // -checksum re-read
@@ -139,7 +142,7 @@ private:
     VfModuleParameter *m_pAccumulatorStatus;
     VfModuleParameter *m_pAccumulatorSoc;
     VfModuleParameter *m_pInstrument;
-    QString m_channelsConnected;
+    VfModuleParameter *m_pChannels;
 
     QVariant wantedSerialNr;
 
@@ -148,6 +151,7 @@ private slots:
     void pcbserverConnect();
     void pcbserverReadVersion();
     void pcbReadVersion();
+    void pcbReadChannelsConnected();
     void pcbserverReadCtrlVersion();
     void pcbserverReadFPGAVersion();
     void pcbserverReadSerialNr();
