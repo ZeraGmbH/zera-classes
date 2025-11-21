@@ -29,6 +29,7 @@ void cStatusModuleConfiguration::setConfiguration(QByteArray xmlString)
     // so now we can set up
     // initializing hash table for xml configuration
     m_ConfigXMLMap["statusmodconfpar:configuration:accumulator"] = setAccumulator;
+    m_ConfigXMLMap["statusmodconfpar:configuration:channels"] = setChannels;
 
     m_pXMLReader->loadXMLFromString(QString::fromUtf8(xmlString.data(), xmlString.size()));
 }
@@ -56,6 +57,9 @@ void cStatusModuleConfiguration::configXMLInfo(QString key)
         {
         case setAccumulator:
             m_pStatusModulConfigData->m_accumulator = m_pXMLReader->getValue(key).toInt(&ok);
+            break;
+        case setChannels:
+            m_pStatusModulConfigData->m_channels = m_pXMLReader->getValue(key).toInt(&ok);
             break;
         }
 
