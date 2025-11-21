@@ -16,6 +16,7 @@
                     <xs:complexType>
                         <xs:sequence>
                             <xs:element name="accumulator" type="yesnotype"/>
+                            <xs:element name="channels" type="yesnotype"/>
                         </xs:sequence>
                     </xs:complexType>
                 </xs:element>
