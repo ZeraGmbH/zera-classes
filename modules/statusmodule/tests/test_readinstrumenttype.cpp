@@ -46,7 +46,10 @@ void test_readInstrumentType::noControllerReadInstrumentType()
     QCOMPARE(entityList.count(), 2);
     QVERIFY(veinStorage->getDb()->hasEntity(statusEntityId));
 
-    QVariant value = m_testRunner->getVfComponent(statusEntityId, "INF_Instrument");
+    QVariant value = m_testRunner->getVfComponent(statusEntityId, "INF_HotplugChannels");
+    QCOMPARE(value.toString(), "IL1,IL2,IL3,IAUX");
+
+    value = m_testRunner->getVfComponent(statusEntityId, "INF_Instrument");
     QVERIFY(value.toJsonObject().isEmpty());
 }
 
@@ -56,6 +59,9 @@ void test_readInstrumentType::oneEmobReadInstrumentType()
     infoMap.insert("IL1", {"EMOB", cClamp::undefined});
     m_testRunner->fireHotplugInterruptControllerName(infoMap);
     TimeMachineObject::feedEventLoop();
+
+    QVariant value = m_testRunner->getVfComponent(statusEntityId, "INF_HotplugChannels");
+    QCOMPARE(value.toString(), "IL1,IL2,IL3,IAUX");
 
     QString instrumentValue = m_testRunner->getVfComponent(statusEntityId, "INF_Instrument").toString();
     QJsonDocument jsonDoc = QJsonDocument::fromJson(instrumentValue.toUtf8());
@@ -137,6 +143,8 @@ void test_readInstrumentType::TwoMt650ReadInstrumentType()
     m_testRunner->fireHotplugInterruptControllerName(infoMap);
     TimeMachineObject::feedEventLoop();
 
+    QVariant value = m_testRunner->getVfComponent(statusEntityId, "INF_HotplugChannels");
+    QCOMPARE(value.toString(), "IL1,IL2,IL3,IAUX");
     QString instrumentValue = m_testRunner->getVfComponent(statusEntityId, "INF_Instrument").toString();
     QJsonDocument jsonDoc = QJsonDocument::fromJson(instrumentValue.toUtf8());
     QJsonObject jsonObject;
@@ -148,4 +156,18 @@ void test_readInstrumentType::TwoMt650ReadInstrumentType()
     QCOMPARE(jsonObject["IL1"], "MT650e");
     QVERIFY(keys.contains("IAUX"));
     QCOMPARE(jsonObject["IAUX"], "MT650e");
+}
+
+void test_readInstrumentType::readHotplugChannelsCom5003()
+{
+    //switch to com device
+    m_testRunner.reset();
+    m_testRunner = std::make_unique<ModuleManagerTestRunner>(":/com5003-min-session.json", false, "com5003");
+    VeinStorage::AbstractEventSystem* veinStorage = m_testRunner->getVeinStorageSystem();
+    QList<int> entityList = veinStorage->getDb()->getEntityList();
+    QCOMPARE(entityList.count(), 2);
+    QVERIFY(veinStorage->getDb()->hasEntity(statusEntityId));
+
+    QVariant value = m_testRunner->getVfComponent(statusEntityId, "INF_HotplugChannels");
+    QCOMPARE(value.toString(), "");
 }

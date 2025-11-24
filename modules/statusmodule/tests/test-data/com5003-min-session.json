@@ -1,0 +1,9 @@
+{
+    "modules" : [
+      {
+        "name" : "statusmodule",
+        "configFile" : "com5003-statusmodule.xml",
+        "id": 1150
+      }
+    ]
+}
