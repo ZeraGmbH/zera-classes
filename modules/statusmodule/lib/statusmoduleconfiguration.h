@@ -14,8 +14,7 @@ namespace STATUSMODULE
 enum moduleconfigstate
 {
     setMeasStatus,
-    setAccumulator,
-    setChannels
+    setAccumulator
 };
 
 class cStatusModuleConfigData;
