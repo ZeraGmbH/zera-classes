@@ -5393,9 +5393,13 @@
         "PAR_ReloadTrustList": false
     },
     "1700": {
+        "ACT_ControllersFound": "",
         "EntityName": "HotplugControlsModule1",
         "INF_ModuleInterface": {
             "ComponentInfo": {
+                "ACT_ControllersFound": {
+                    "Description": "Detect if Emob and Mt650e are connected"
+                },
                 "EntityName": {
                     "Description": "Module's name"
                 },

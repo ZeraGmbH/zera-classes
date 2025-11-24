@@ -11,6 +11,7 @@
         <file>vein-event-dumps/dumpinvokeInvalidRpcNameScpi.json</file>
         <file>scpi-dump.xml</file>
         <file>hotpluscontrols-min-session.json</file>
+        <file>hotpluscontrols-status-session.json</file>
         <file>vein-inf-moduleinterface-dump.json</file>
         <file>vein-event-dumps/dumpActivateEmobPushButtonVein.json</file>
         <file>vein-event-dumps/dumpActivateEmobPushButtonWithParamScpi.json</file>

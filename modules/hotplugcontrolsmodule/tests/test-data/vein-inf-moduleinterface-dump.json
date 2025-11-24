@@ -1,5 +1,8 @@
 {
     "ComponentInfo": {
+        "ACT_ControllersFound": {
+            "Description": "Detect if Emob and Mt650e are connected"
+        },
         "EntityName": {
             "Description": "Module's name"
         },
