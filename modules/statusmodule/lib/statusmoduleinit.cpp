@@ -459,16 +459,12 @@ void cStatusModuleInit::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVaria
                 }
                 break;
             case STATUSMODINIT::readPCBChannelsChange:
-                if(!m_ConfigData.m_channels)
+                if(reply == ack) {
+                    m_pChannels->setValue(answer.toString());
                     emit activationContinue();
+                }
                 else {
-                    if(reply == ack) {
-                        m_pChannels->setValue(answer.toString());
-                        emit activationContinue();
-                    }
-                    else {
-                        notifyActivationError(readChannelsErrMsg);
-                    }
+                    notifyActivationError(readChannelsErrMsg);
                 }
                 break;
             }

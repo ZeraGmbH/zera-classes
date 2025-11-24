@@ -2,6 +2,5 @@
 <statusmodconfpar>
     <configuration>
         <accumulator>1</accumulator>
-        <channels>1</channels>
     </configuration>
 </statusmodconfpar>

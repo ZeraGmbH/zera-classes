@@ -9,7 +9,6 @@ class cStatusModuleConfigData
 public:
     cStatusModuleConfigData(){}
     bool m_accumulator;
-    bool m_channels;
 };
 
 }
