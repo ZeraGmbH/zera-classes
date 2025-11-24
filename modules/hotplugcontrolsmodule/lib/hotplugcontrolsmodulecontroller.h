@@ -24,6 +24,7 @@ public slots:
 private slots:
     void onActivateDone(bool ok);
     void catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant answer);
+    void controllersFound(QVariant value);
 private:
     cHotplugControlsModule *m_module;
     PcbServiceConnection m_pcbConnection;
@@ -32,6 +33,7 @@ private:
 
     VfModuleRpcPtr m_pEmobPushButtonRpc;
     VfModuleRpcPtr m_pEmobLockStateRpc;
+    VfModuleParameter *m_pControllersFound;
 };
 
 }

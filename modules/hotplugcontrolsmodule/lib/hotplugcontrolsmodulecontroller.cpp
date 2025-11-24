@@ -6,9 +6,11 @@
 #include <reply.h>
 #include <scpi.h>
 #include <stringvalidator.h>
+#include <QJsonDocument>
 
 namespace HOTPLUGCONTROLSMODULE {
 
+static int constexpr statusEntityId = 1150;
 
 HotplugControlsModuleController::HotplugControlsModuleController(cHotplugControlsModule *module) :
     cModuleActivist(module->getVeinModuleName()),
@@ -31,6 +33,7 @@ void HotplugControlsModuleController::deactivate()
 
 void HotplugControlsModuleController::generateVeinInterface()
 {
+    QString key;
     VfRpcEventSystemSimplified *rpcEventSystem = m_module->getRpcEventSystem();
     ChannelRangeObserver::SystemObserverPtr observer = m_module->getSharedChannelRangeObserver();
 
@@ -61,6 +64,19 @@ void HotplugControlsModuleController::generateVeinInterface()
     m_pEmobLockStateRpc->setValidator(new cStringValidator(QString("IL1;IL2;IL3;IAUX")));
     m_pEmobLockStateRpc->canAcceptOptionalParam();
     m_module->m_veinModuleRPCMap[rpcEmobReadLockState->getSignature()] = m_pEmobLockStateRpc; // for modules use
+
+    m_pControllersFound = new VfModuleParameter(m_module->getEntityId(), m_module->getValidatorEventSystem(),
+                                                key = QString("ACT_ControllersFound"),
+                                                QString("Detect if Emob and Mt650e are connected"),
+                                                QVariant(""));
+    m_module->m_veinModuleParameterMap[key] = m_pControllersFound;
+
+    VeinStorage::StorageComponentPtr value = m_module->getStorageDb()->findComponent(statusEntityId, "INF_Instrument");
+    if(value) {
+        connect(value.get(), &VeinStorage::AbstractComponent::sigValueChange, this, &HotplugControlsModuleController::controllersFound);
+        //On startup, we miss the slot. So call it in case the device starts with hotplugs connected
+        controllersFound(value->getValue());
+    }
 }
 
 void HotplugControlsModuleController::onActivateDone(bool ok)
@@ -89,6 +105,27 @@ void HotplugControlsModuleController::catchInterfaceAnswer(quint32 msgnr, quint8
             }
         }
     }
+}
+
+void HotplugControlsModuleController::controllersFound(QVariant value)
+{
+    bool emobFound, mt650eFound = false;
+    QJsonDocument doc = QJsonDocument::fromJson(value.toString().toUtf8());
+    QJsonObject instrumentsObj = doc.object();
+    if(!instrumentsObj.isEmpty()) {
+        for(auto it = instrumentsObj.begin(); it != instrumentsObj.end(); ++it) {
+            QString key = it.key();
+            QString value = instrumentsObj[key].toString();
+            if(value.contains("Emob", Qt::CaseInsensitive))
+                emobFound = true;
+            if(value.contains("Mt650e", Qt::CaseInsensitive))
+                mt650eFound = true;
+        }
+    }
+    if(emobFound && mt650eFound)
+        m_pControllersFound->setValue(true);
+    else
+        m_pControllersFound->setValue(false);
 }
 
 }
