@@ -21,8 +21,9 @@ private slots:
     void oneEmobOneMt650ReadInstrumentType();
     void TwoEmobsReadInstrumentType();
     void TwoMt650ReadInstrumentType();
-private:
+    void readHotplugChannelsCom5003();
 
+private:
     std::unique_ptr<ModuleManagerTestRunner> m_testRunner;
     std::unique_ptr<VeinNet::NetworkSystem> m_netSystem;
     std::unique_ptr<VeinNet::TcpSystem> m_tcpSystem;
