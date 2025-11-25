@@ -24,7 +24,7 @@ void test_hotplug_detection::noHotplug()
     QVERIFY(entityList.contains(statusEntityId));
     QVERIFY(entityList.contains(hotplugControlsEntityId));
 
-    bool ctrlersFound = testRunner.getVeinStorageSystem()->getDb()->getStoredValue(hotplugControlsEntityId, "ACT_ControllersFound").toBool();
+    QVariant ctrlersFound = testRunner.getVeinStorageSystem()->getDb()->getStoredValue(hotplugControlsEntityId, "ACT_ControllersFound");
     QCOMPARE(ctrlersFound , false);
 }
 
@@ -36,7 +36,7 @@ void test_hotplug_detection::oneEmobConnected()
     testRunner.fireHotplugInterruptControllerName(infoMap);
     TimeMachineObject::feedEventLoop();
 
-    bool ctrlersFound = testRunner.getVeinStorageSystem()->getDb()->getStoredValue(hotplugControlsEntityId, "ACT_ControllersFound").toBool();
+    QVariant ctrlersFound = testRunner.getVeinStorageSystem()->getDb()->getStoredValue(hotplugControlsEntityId, "ACT_ControllersFound");
     QCOMPARE(ctrlersFound , false);
 }
 
@@ -48,7 +48,7 @@ void test_hotplug_detection::oneMt650eConnected()
     testRunner.fireHotplugInterruptControllerName(infoMap);
     TimeMachineObject::feedEventLoop();
 
-    bool ctrlersFound = testRunner.getVeinStorageSystem()->getDb()->getStoredValue(hotplugControlsEntityId, "ACT_ControllersFound").toBool();
+    QVariant ctrlersFound = testRunner.getVeinStorageSystem()->getDb()->getStoredValue(hotplugControlsEntityId, "ACT_ControllersFound");
     QCOMPARE(ctrlersFound , false);
 }
 
@@ -61,7 +61,7 @@ void test_hotplug_detection::twoEmobsConnected()
     testRunner.fireHotplugInterruptControllerName(infoMap);
     TimeMachineObject::feedEventLoop();
 
-    bool ctrlersFound = testRunner.getVeinStorageSystem()->getDb()->getStoredValue(hotplugControlsEntityId, "ACT_ControllersFound").toBool();
+    QVariant ctrlersFound = testRunner.getVeinStorageSystem()->getDb()->getStoredValue(hotplugControlsEntityId, "ACT_ControllersFound");
     QCOMPARE(ctrlersFound , false);
 }
 
@@ -74,7 +74,7 @@ void test_hotplug_detection::twoMt650eConnected()
     testRunner.fireHotplugInterruptControllerName(infoMap);
     TimeMachineObject::feedEventLoop();
 
-    bool ctrlersFound = testRunner.getVeinStorageSystem()->getDb()->getStoredValue(hotplugControlsEntityId, "ACT_ControllersFound").toBool();
+    QVariant ctrlersFound = testRunner.getVeinStorageSystem()->getDb()->getStoredValue(hotplugControlsEntityId, "ACT_ControllersFound");
     QCOMPARE(ctrlersFound , false);
 }
 
@@ -82,7 +82,7 @@ void test_hotplug_detection::oneEmobOneMt650eConnected()
 {
     ModuleManagerTestRunner testRunner(":/hotpluscontrols-status-session.json");
     TimeMachineObject::feedEventLoop();
-    bool ctrlersFound = testRunner.getVeinStorageSystem()->getDb()->getStoredValue(hotplugControlsEntityId, "ACT_ControllersFound").toBool();
+    QVariant ctrlersFound = testRunner.getVeinStorageSystem()->getDb()->getStoredValue(hotplugControlsEntityId, "ACT_ControllersFound");
     QCOMPARE(ctrlersFound , false);
 
     AbstractMockAllServices::ChannelAliasHotplugDeviceNameMap infoMap;
@@ -91,8 +91,7 @@ void test_hotplug_detection::oneEmobOneMt650eConnected()
     testRunner.fireHotplugInterruptControllerName(infoMap);
     TimeMachineObject::feedEventLoop();
 
-    ctrlersFound = testRunner.getVeinStorageSystem()->getDb()->getStoredValue(hotplugControlsEntityId, "ACT_ControllersFound").toBool();
-    TimeMachineObject::feedEventLoop();
+    ctrlersFound = testRunner.getVeinStorageSystem()->getDb()->getStoredValue(hotplugControlsEntityId, "ACT_ControllersFound");
     QCOMPARE(ctrlersFound , true);
 }
 
