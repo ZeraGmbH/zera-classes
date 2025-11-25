@@ -109,7 +109,8 @@ void HotplugControlsModuleController::catchInterfaceAnswer(quint32 msgnr, quint8
 
 void HotplugControlsModuleController::controllersFound(QVariant value)
 {
-    bool emobFound, mt650eFound = false;
+    bool emobFound = false;
+    bool mt650eFound = false;
     QJsonDocument doc = QJsonDocument::fromJson(value.toString().toUtf8());
     QJsonObject instrumentsObj = doc.object();
     if(!instrumentsObj.isEmpty()) {
