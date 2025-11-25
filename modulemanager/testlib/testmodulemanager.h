@@ -37,8 +37,8 @@ public:
 
     ZDspServer *getDspServer();
     void setRangeGetSetDelay(int rangeGetSetDelay);
-    void fireHotplugInterrupt(const QStringList &channelAliases);
-    void fireHotplugInterruptControllerName(const AbstractMockAllServices::ChannelAliasHotplugDeviceNameMap &infoMap);
+    void fireHotplugInterruptControllerOnly(const QStringList &channelAliases);
+    void fireHotplugInterrupt(const AbstractMockAllServices::ChannelAliasHotplugDeviceNameMap &infoMap);
 
 private slots:
     void onAllModulesDestroyed();

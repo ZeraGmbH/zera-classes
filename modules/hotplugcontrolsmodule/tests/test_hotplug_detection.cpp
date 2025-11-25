@@ -33,7 +33,7 @@ void test_hotplug_detection::oneEmobConnected()
     ModuleManagerTestRunner testRunner(":/hotpluscontrols-status-session.json");
     AbstractMockAllServices::ChannelAliasHotplugDeviceNameMap infoMap;
     infoMap.insert("IL1", {"EMOB", cClamp::undefined});
-    testRunner.fireHotplugInterruptControllerName(infoMap);
+    testRunner.fireHotplugInterrupt(infoMap);
     TimeMachineObject::feedEventLoop();
 
     QVariant ctrlersFound = testRunner.getVeinStorageSystem()->getDb()->getStoredValue(hotplugControlsEntityId, "ACT_ControllersFound");
@@ -45,7 +45,7 @@ void test_hotplug_detection::oneMt650eConnected()
     ModuleManagerTestRunner testRunner(":/hotpluscontrols-status-session.json");
     AbstractMockAllServices::ChannelAliasHotplugDeviceNameMap infoMap;
     infoMap.insert("IAUX", {"Mt650e", cClamp::undefined});
-    testRunner.fireHotplugInterruptControllerName(infoMap);
+    testRunner.fireHotplugInterrupt(infoMap);
     TimeMachineObject::feedEventLoop();
 
     QVariant ctrlersFound = testRunner.getVeinStorageSystem()->getDb()->getStoredValue(hotplugControlsEntityId, "ACT_ControllersFound");
@@ -58,7 +58,7 @@ void test_hotplug_detection::twoEmobsConnected()
     AbstractMockAllServices::ChannelAliasHotplugDeviceNameMap infoMap;
     infoMap.insert("IL1", {"EMOB", cClamp::undefined});
     infoMap.insert("IL2", {"EMOB", cClamp::undefined});
-    testRunner.fireHotplugInterruptControllerName(infoMap);
+    testRunner.fireHotplugInterrupt(infoMap);
     TimeMachineObject::feedEventLoop();
 
     QVariant ctrlersFound = testRunner.getVeinStorageSystem()->getDb()->getStoredValue(hotplugControlsEntityId, "ACT_ControllersFound");
@@ -71,7 +71,7 @@ void test_hotplug_detection::twoMt650eConnected()
     AbstractMockAllServices::ChannelAliasHotplugDeviceNameMap infoMap;
     infoMap.insert("IL1", {"Mt650e", cClamp::undefined});
     infoMap.insert("IL2", {"Mt650e", cClamp::undefined});
-    testRunner.fireHotplugInterruptControllerName(infoMap);
+    testRunner.fireHotplugInterrupt(infoMap);
     TimeMachineObject::feedEventLoop();
 
     QVariant ctrlersFound = testRunner.getVeinStorageSystem()->getDb()->getStoredValue(hotplugControlsEntityId, "ACT_ControllersFound");
@@ -88,7 +88,7 @@ void test_hotplug_detection::oneEmobOneMt650eConnected()
     AbstractMockAllServices::ChannelAliasHotplugDeviceNameMap infoMap;
     infoMap.insert("IL1", {"EMOB", cClamp::undefined});
     infoMap.insert("IL2", {"Mt650e", cClamp::undefined});
-    testRunner.fireHotplugInterruptControllerName(infoMap);
+    testRunner.fireHotplugInterrupt(infoMap);
     TimeMachineObject::feedEventLoop();
 
     ctrlersFound = testRunner.getVeinStorageSystem()->getDb()->getStoredValue(hotplugControlsEntityId, "ACT_ControllersFound");

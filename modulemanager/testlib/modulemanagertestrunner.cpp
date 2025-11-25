@@ -90,14 +90,14 @@ void ModuleManagerTestRunner::setRangeGetSetDelay(int rangeGetSetDelay)
     m_modMan->setRangeGetSetDelay(rangeGetSetDelay);
 }
 
-void ModuleManagerTestRunner::fireHotplugInterrupt(const QStringList &channelAliases)
+void ModuleManagerTestRunner::fireHotplugInterruptControllerOnly(const QStringList &channelAliases)
 {
-    m_modMan->fireHotplugInterrupt(channelAliases);
+    m_modMan->fireHotplugInterruptControllerOnly(channelAliases);
 }
 
-void ModuleManagerTestRunner::fireHotplugInterruptControllerName(const AbstractMockAllServices::ChannelAliasHotplugDeviceNameMap &infoMap)
+void ModuleManagerTestRunner::fireHotplugInterrupt(const AbstractMockAllServices::ChannelAliasHotplugDeviceNameMap &infoMap)
 {
-    m_modMan->fireHotplugInterruptControllerName(infoMap);
+    m_modMan->fireHotplugInterrupt(infoMap);
 }
 
 VeinStorage::AbstractEventSystem *ModuleManagerTestRunner::getVeinStorageSystem()

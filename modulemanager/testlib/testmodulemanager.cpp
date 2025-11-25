@@ -108,14 +108,14 @@ void TestModuleManager::setRangeGetSetDelay(int rangeGetSetDelay)
     m_testAllServices->setRangeGetSetDelay(rangeGetSetDelay);
 }
 
-void TestModuleManager::fireHotplugInterrupt(const QStringList &channelAliases)
+void TestModuleManager::fireHotplugInterruptControllerOnly(const QStringList &channelAliases)
 {
-    m_testAllServices->fireHotplugInterrupt(channelAliases);
+    m_testAllServices->fireHotplugInterruptControllerOnly(channelAliases);
 }
 
-void TestModuleManager::fireHotplugInterruptControllerName(const AbstractMockAllServices::ChannelAliasHotplugDeviceNameMap &infoMap)
+void TestModuleManager::fireHotplugInterrupt(const AbstractMockAllServices::ChannelAliasHotplugDeviceNameMap &infoMap)
 {
-    m_testAllServices->fireHotplugInterruptControllerName(infoMap);
+    m_testAllServices->fireHotplugInterrupt(infoMap);
 }
 
 void TestModuleManager::onAllModulesDestroyed()

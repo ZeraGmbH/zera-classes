@@ -57,7 +57,7 @@ void test_readInstrumentType::oneEmobReadInstrumentType()
 {
     AbstractMockAllServices::ChannelAliasHotplugDeviceNameMap infoMap;
     infoMap.insert("IL1", {"EMOB", cClamp::undefined});
-    m_testRunner->fireHotplugInterruptControllerName(infoMap);
+    m_testRunner->fireHotplugInterrupt(infoMap);
     TimeMachineObject::feedEventLoop();
 
     QVariant value = m_testRunner->getVfComponent(statusEntityId, "INF_HotplugChannels");
@@ -78,7 +78,7 @@ void test_readInstrumentType::oneMt650ReadInstrumentType()
 {
     AbstractMockAllServices::ChannelAliasHotplugDeviceNameMap infoMap;
     infoMap.insert("IL1", {"Mt", cClamp::undefined});
-    m_testRunner->fireHotplugInterruptControllerName(infoMap);
+    m_testRunner->fireHotplugInterrupt(infoMap);
     TimeMachineObject::feedEventLoop();
 
     QString instrumentValue = m_testRunner->getVfComponent(statusEntityId, "INF_Instrument").toString();
@@ -97,7 +97,7 @@ void test_readInstrumentType::oneEmobOneMt650ReadInstrumentType()
     AbstractMockAllServices::ChannelAliasHotplugDeviceNameMap infoMap;
     infoMap.insert("IL1", {"Mt", cClamp::undefined});
     infoMap.insert("IAUX", {"Emob", cClamp::undefined});
-    m_testRunner->fireHotplugInterruptControllerName(infoMap);
+    m_testRunner->fireHotplugInterrupt(infoMap);
     TimeMachineObject::feedEventLoop();
 
     QString instrumentValue = m_testRunner->getVfComponent(statusEntityId, "INF_Instrument").toString();
@@ -119,7 +119,7 @@ void test_readInstrumentType::TwoEmobsReadInstrumentType()
     AbstractMockAllServices::ChannelAliasHotplugDeviceNameMap infoMap;
     infoMap.insert("IL1", {"Emob1", cClamp::undefined});
     infoMap.insert("IAUX", {"Emob2", cClamp::undefined});
-    m_testRunner->fireHotplugInterruptControllerName(infoMap);
+    m_testRunner->fireHotplugInterrupt(infoMap);
     TimeMachineObject::feedEventLoop();
 
     QString instrumentValue = m_testRunner->getVfComponent(statusEntityId, "INF_Instrument").toString();
@@ -140,7 +140,7 @@ void test_readInstrumentType::TwoMt650ReadInstrumentType()
     AbstractMockAllServices::ChannelAliasHotplugDeviceNameMap infoMap;
     infoMap.insert("IL1", {"Mt650e1", cClamp::undefined});
     infoMap.insert("IAUX", {"Mt650e2", cClamp::undefined});
-    m_testRunner->fireHotplugInterruptControllerName(infoMap);
+    m_testRunner->fireHotplugInterrupt(infoMap);
     TimeMachineObject::feedEventLoop();
 
     QVariant value = m_testRunner->getVfComponent(statusEntityId, "INF_HotplugChannels");
