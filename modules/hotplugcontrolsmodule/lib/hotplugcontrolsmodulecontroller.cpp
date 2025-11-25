@@ -68,7 +68,7 @@ void HotplugControlsModuleController::generateVeinInterface()
     m_pControllersFound = new VfModuleParameter(m_module->getEntityId(), m_module->getValidatorEventSystem(),
                                                 key = QString("ACT_ControllersFound"),
                                                 QString("Detect if Emob and Mt650e are connected"),
-                                                QVariant(""));
+                                                QVariant());
     m_module->m_veinModuleParameterMap[key] = m_pControllersFound;
 
     VeinStorage::StorageComponentPtr value = m_module->getStorageDb()->findComponent(statusEntityId, "INF_Instrument");

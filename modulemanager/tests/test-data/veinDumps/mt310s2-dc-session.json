@@ -5393,7 +5393,7 @@
         "PAR_ReloadTrustList": false
     },
     "1700": {
-        "ACT_ControllersFound": "",
+        "ACT_ControllersFound": false,
         "EntityName": "HotplugControlsModule1",
         "INF_ModuleInterface": {
             "ComponentInfo": {
