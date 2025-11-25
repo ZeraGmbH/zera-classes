@@ -6,8 +6,6 @@
 #include <testfactorydevicenodedsp.h>
 #include <tcpnetworkfactory.h>
 #include <clamp.h>
-#include <clampfactorytest.h>
-#include <mocki2ceepromiofactory.h>
 #include <timemachinefortest.h>
 #include <timerfactoryqtfortest.h>
 #include <testloghelpers.h>
@@ -31,8 +29,6 @@ static QString RangeGroupingComponent("PAR_ChannelGrouping");
 
 void test_range_automatic::initTestCase()
 {
-    ClampFactoryTest::enableTest();
-    MockI2cEEpromIoFactory::enableMock();
     m_tcpFactory = VeinTcp::MockTcpNetworkFactory::create();
     TimerFactoryQtForTest::enableTest();
 }

@@ -2,9 +2,7 @@
 #include "cro_range.h"
 #include "cro_rangefetchtask.h"
 #include <networkconnectioninfo.h>
-#include <clampfactorytest.h>
 #include <testfactoryi2cctrl.h>
-#include <mocki2ceepromiofactory.h>
 #include <mocktcpnetworkfactory.h>
 #include <timemachinefortest.h>
 #include <timerfactoryqtfortest.h>
@@ -20,8 +18,6 @@ using namespace ChannelRangeObserver;
 
 void test_cro_range::initTestCase()
 {
-    ClampFactoryTest::enableTest();
-    MockI2cEEpromIoFactory::enableMock();
     m_tcpFactory = VeinTcp::MockTcpNetworkFactory::create();
     TimerFactoryQtForTest::enableTest();
 }
