@@ -35,8 +35,15 @@ public:
     void start(QString sessionFileName);
     QList<TestModuleManager::TModuleInstances> getInstanceCountsOnModulesDestroyed();
     void setRangeGetSetDelay(int rangeGetSetDelay);
-    void fireHotplugInterruptControllerOnly(const QStringList &channelAliases);
-    void fireHotplugInterrupt(const AbstractMockAllServices::ChannelAliasHotplugDeviceNameMap &infoMap);
+
+    // hotplug full functional methods
+    void fireHotplugInterrupt(const AbstractMockAllServices::ChannelAliasHotplugDeviceNameMap &deviceMap);
+    AbstractMockAllServices::ChannelAliasHotplugDeviceNameMap getCurrentHotplugMap() const;
+
+    // hotplug convenience methods
+    void addStandardEmobControllers(const QStringList &channelAliases);
+    void removeAllHotplugDevices();
+    void addClamps(const QList<AbstractMockAllServices::clampParam> &clampParams);
 
 private:
     void setupVfLogger();

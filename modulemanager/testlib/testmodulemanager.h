@@ -37,8 +37,15 @@ public:
 
     ZDspServer *getDspServer();
     void setRangeGetSetDelay(int rangeGetSetDelay);
-    void fireHotplugInterruptControllerOnly(const QStringList &channelAliases);
-    void fireHotplugInterrupt(const AbstractMockAllServices::ChannelAliasHotplugDeviceNameMap &infoMap);
+
+    // hotplug full functional methods
+    void fireHotplugInterrupt(const AbstractMockAllServices::ChannelAliasHotplugDeviceNameMap &deviceMap);
+    AbstractMockAllServices::ChannelAliasHotplugDeviceNameMap getCurrentHotplugMap() const;
+
+    // hotplug convenience methods
+    void addStandardEmobControllers(const QStringList &channelAliases);
+    void removeAllHotplugDevices();
+    void addClamps(const QList<AbstractMockAllServices::clampParam> &clampParams);
 
 private slots:
     void onAllModulesDestroyed();

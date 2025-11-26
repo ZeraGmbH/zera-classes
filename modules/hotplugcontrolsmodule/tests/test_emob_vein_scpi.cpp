@@ -43,14 +43,14 @@ void test_emob_vein_scpi::activateEmobPushButtonNoEmobNoParamScpi()
 
 void test_emob_vein_scpi::activateEmobPushNoParamOneEmob()
 {
-    m_testRunner->fireHotplugInterruptControllerOnly(QStringList() << "IAUX");
+    m_testRunner->addStandardEmobControllers(QStringList() << "IAUX");
     QString status = m_scpiClient->sendReceive("EMOB:HOTP1:PBPRESS;|*stb?");
     QCOMPARE(status, "+0");
 }
 
 void test_emob_vein_scpi::activateEmobPushButtonWithParamScpi()
 {
-    m_testRunner->fireHotplugInterruptControllerOnly(QStringList() << "IAUX");
+    m_testRunner->addStandardEmobControllers(QStringList() << "IAUX");
 
     QString status = m_scpiClient->sendReceive("EMOB:HOTP1:PBPRESS IAUX;|*stb?");
     QCOMPARE(status, "+0");
@@ -64,14 +64,14 @@ void test_emob_vein_scpi::activateEmobPushButtonWithParamScpi()
 
 void test_emob_vein_scpi::activateEmobPushNoParamMutipleHotplug()
 {
-    m_testRunner->fireHotplugInterruptControllerOnly(QStringList() << "IL3" << "IAUX");
+    m_testRunner->addStandardEmobControllers(QStringList() << "IL3" << "IAUX");
     QString status = m_scpiClient->sendReceive("EMOB:HOTP1:PBPRESS;|*stb?");
     QCOMPARE(status, "+4");
 }
 
 void test_emob_vein_scpi::activateEmobPushInvalidParam()
 {
-    m_testRunner->fireHotplugInterruptControllerOnly(QStringList() << "IL3" << "IAUX");
+    m_testRunner->addStandardEmobControllers(QStringList() << "IL3" << "IAUX");
     QString status = m_scpiClient->sendReceive("EMOB:HOTP1:PBPRESS FOO;|*stb?");
     QCOMPARE(status, "+4");
 }
@@ -79,21 +79,21 @@ void test_emob_vein_scpi::activateEmobPushInvalidParam()
 void test_emob_vein_scpi::activateEmobPushIncorrectParam()
 {
     //valid but incorrect param
-    m_testRunner->fireHotplugInterruptControllerOnly(QStringList() << "IL3" << "IAUX");
+    m_testRunner->addStandardEmobControllers(QStringList() << "IL3" << "IAUX");
     QString status = m_scpiClient->sendReceive("EMOB:HOTP1:PBPRESS IL1;|*stb?");
     QCOMPARE(status, "+4");
 }
 
 void test_emob_vein_scpi::activateEmobPushValidParamMutipleHotplug()
 {
-    m_testRunner->fireHotplugInterruptControllerOnly(QStringList() << "IL3" << "IAUX");
+    m_testRunner->addStandardEmobControllers(QStringList() << "IL3" << "IAUX");
     QString status = m_scpiClient->sendReceive("EMOB:HOTP1:PBPRESS IL3;|*stb?");
     QCOMPARE(status, "+0");
 }
 
 void test_emob_vein_scpi::activateEmobPushButtonVein()
 {
-    m_testRunner->fireHotplugInterruptControllerOnly(QStringList() << "IAUX");
+    m_testRunner->addStandardEmobControllers(QStringList() << "IAUX");
 
     QSignalSpy spyRpcFinish(m_rpcInvoker.get(), &VfRPCInvoker::sigRPCFinished);
     invokeRpc("RPC_activatePushButton", "p_channelName", "IAUX");
@@ -121,7 +121,7 @@ void test_emob_vein_scpi::readLockStateCorrectRpcNameScpi()
 
 void test_emob_vein_scpi::readLockStateScpiNoParamOneEmob()
 {
-    m_testRunner->fireHotplugInterruptControllerOnly(QStringList() << "IAUX");
+    m_testRunner->addStandardEmobControllers(QStringList() << "IAUX");
     QString status = m_scpiClient->sendReceive("EMOB:HOTP1:EMLOCKSTATE?");
     QCOMPARE(status, QString::number(reademoblockstate::emobstate_open));
 
@@ -134,7 +134,7 @@ void test_emob_vein_scpi::readLockStateScpiNoParamOneEmob()
 
 void test_emob_vein_scpi::readLockStateScpiNoParamMutipleHotplug()
 {
-    m_testRunner->fireHotplugInterruptControllerOnly(QStringList() << "IL3" << "IAUX");
+    m_testRunner->addStandardEmobControllers(QStringList() << "IL3" << "IAUX");
     QString status1 = m_scpiClient->sendReceive("EMOB:HOTP1:EMLOCKSTATE?");
     QCOMPARE(status1, QString::number(reademoblockstate::emobstate_error));
 
@@ -147,7 +147,7 @@ void test_emob_vein_scpi::readLockStateScpiNoParamMutipleHotplug()
 
 void test_emob_vein_scpi::readLockStateScpiInvalidParam()
 {
-    m_testRunner->fireHotplugInterruptControllerOnly(QStringList() << "IL3" << "IAUX");
+    m_testRunner->addStandardEmobControllers(QStringList() << "IL3" << "IAUX");
     QString status = m_scpiClient->sendReceive("EMOB:HOTP1:EMLOCKSTATE? FOO;");
     QCOMPARE(status, "");
     status = m_scpiClient->sendReceive("*stb?");
@@ -162,14 +162,14 @@ void test_emob_vein_scpi::readLockStateScpiInvalidParam()
 
 void test_emob_vein_scpi::readLockStateScpiIncorrectParam()
 {
-    m_testRunner->fireHotplugInterruptControllerOnly(QStringList() << "IL3" << "IAUX");
+    m_testRunner->addStandardEmobControllers(QStringList() << "IL3" << "IAUX");
     QString status = m_scpiClient->sendReceive("EMOB:HOTP1:EMLOCKSTATE? IL1;");
     QCOMPARE(status, QString::number(reademoblockstate::emobstate_error));
 }
 
 void test_emob_vein_scpi::readLockStateScpiValidParamMutipleHotplug()
 {
-    m_testRunner->fireHotplugInterruptControllerOnly(QStringList()  << "IL3" << "IAUX");
+    m_testRunner->addStandardEmobControllers(QStringList()  << "IL3" << "IAUX");
     QString status = m_scpiClient->sendReceive("EMOB:HOTP1:EMLOCKSTATE? IAUX;");
     QCOMPARE(status, QString::number(reademoblockstate::emobstate_open));
 
@@ -182,7 +182,7 @@ void test_emob_vein_scpi::readLockStateScpiValidParamMutipleHotplug()
 
 void test_emob_vein_scpi::readLockStateTwiceScpi()
 {
-    m_testRunner->fireHotplugInterruptControllerOnly(QStringList() << "IAUX");
+    m_testRunner->addStandardEmobControllers(QStringList() << "IAUX");
     QString status1 = m_scpiClient->sendReceive("EMOB:HOTP1:EMLOCKSTATE?");
     QString status2 = m_scpiClient->sendReceive("EMOB:HOTP1:EMLOCKSTATE?");
     QCOMPARE(status1, QString::number(reademoblockstate::emobstate_open));
