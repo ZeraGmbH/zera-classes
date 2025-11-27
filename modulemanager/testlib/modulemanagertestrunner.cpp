@@ -108,6 +108,7 @@ void ModuleManagerTestRunner::addStandardEmobControllers(const QStringList &chan
 void ModuleManagerTestRunner::removeAllHotplugDevices()
 {
     m_modMan->removeAllHotplugDevices();
+    TimeMachineObject::feedEventLoop();
 }
 
 void ModuleManagerTestRunner::addClamps(const QList<AbstractMockAllServices::clampParam> &clampParams)
