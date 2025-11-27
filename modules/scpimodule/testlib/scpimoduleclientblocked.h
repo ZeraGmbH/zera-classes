@@ -11,7 +11,7 @@ class ScpiModuleClientBlocked : public QObject
     Q_OBJECT
 public:
     explicit ScpiModuleClientBlocked(QString ipAddress = "127.0.0.1", int port = 6320);
-    QString sendReceive(QByteArray send, bool removeLineFeedOnReceive = true);
+    QByteArray sendReceive(QByteArray send, bool removeLineFeedOnReceive = true);
     void sendMulti(QByteArrayList send);
     QByteArrayList receiveMulti();
     void closeSocket();

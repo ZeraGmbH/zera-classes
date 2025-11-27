@@ -8,7 +8,7 @@ ScpiModuleClientBlocked::ScpiModuleClientBlocked(QString ipAddress, int port)
     TimeMachineObject::feedEventLoop();
 }
 
-QString ScpiModuleClientBlocked::sendReceive(QByteArray send, bool removeLineFeedOnReceive)
+QByteArray ScpiModuleClientBlocked::sendReceive(QByteArray send, bool removeLineFeedOnReceive)
 {
     QElapsedTimer timer;
     timer.start();
@@ -16,9 +16,9 @@ QString ScpiModuleClientBlocked::sendReceive(QByteArray send, bool removeLineFee
     m_socket.write(send + "\n");
     TimeMachineObject::feedEventLoop();
 
-    QString ret = m_socket.readAll();
+    QByteArray ret = m_socket.readAll();
     if(removeLineFeedOnReceive)
-        ret.remove("\n");
+        ret.replace("\n", "");
     qInfo("Network I/O received: %s / took %llims", qPrintable(ret), timer.elapsed());
     return ret;
 }
