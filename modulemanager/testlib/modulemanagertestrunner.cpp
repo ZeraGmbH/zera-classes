@@ -113,6 +113,7 @@ void ModuleManagerTestRunner::removeAllHotplugDevices()
 void ModuleManagerTestRunner::addClamps(const QList<AbstractMockAllServices::clampParam> &clampParams)
 {
     m_modMan->addClamps(clampParams);
+    TimeMachineObject::feedEventLoop();
 }
 
 VeinStorage::AbstractEventSystem *ModuleManagerTestRunner::getVeinStorageSystem()
