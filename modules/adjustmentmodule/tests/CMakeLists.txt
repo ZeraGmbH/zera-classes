@@ -13,6 +13,7 @@ function(SETUP_QTESTS_MODULE)
             zera-modulemanager-testlib
             module-testlib
             scpimodule-testlib
+            Zera::zenuxservicecommon-demolib
         )
     endforeach()
 endfunction()

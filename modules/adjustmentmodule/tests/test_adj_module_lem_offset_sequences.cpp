@@ -1,6 +1,8 @@
 #include "test_adj_module_lem_offset_sequences.h"
+#include "adjmoduletesthelper.h"
 #include <timemachineobject.h>
 #include <controllerpersitentdata.h>
+#include <mockserverparamgenerator.h>
 #include <QTest>
 
 QTEST_MAIN(test_adj_module_lem_offset_sequences)
@@ -27,15 +29,43 @@ void test_adj_module_lem_offset_sequences::cleanup()
     m_testRunner->removeAllHotplugDevices();
 }
 
-void test_adj_module_lem_offset_sequences::dailyOffsetAdjustSequence()
+void test_adj_module_lem_offset_sequences::dailyOffsetAdjustSequenceRefZero()
 {
     setLogFileName(QTest::currentTestFunction(), QTest::currentDataTag());
     insertClamps(cClamp::CL1400VDC, cClamp::CL1200ADC1400VDC);
 
-    QVERIFY(setAllRanges("C1400V", "C1200A"));
+    QVERIFY(setRange("UL1", "C1400V"));
     QVERIFY(adjInit("UL1", "C1400V"));
     QVERIFY(adjSendOffset("UL1", "C1400V", "0.0"));
     QVERIFY(adjCompute());
+
+    QStringList coeffs = queryAllOffsetCoefficients("UL1", "C1400V");
+    QCOMPARE(coeffs.size(), 4);
+    // we adjusted with reference value 0.0 => all coeefs 0
+    QCOMPARE(coeffs[0], "0");
+    QCOMPARE(coeffs[1], "0");
+    QCOMPARE(coeffs[2], "0");
+    QCOMPARE(coeffs[3], "0");
+}
+
+void test_adj_module_lem_offset_sequences::dailyOffsetAdjustSequenceRefNonZero()
+{
+    setLogFileName(QTest::currentTestFunction(), QTest::currentDataTag());
+    insertClamps(cClamp::CL1400VDC, cClamp::CL1200ADC1400VDC);
+
+    QVERIFY(setRange("UL1", "C1400V"));
+    //AdjModuleTestHelper::setAllValuesSymmetricDc(*m_testRunner, 0.0, 0.0);
+
+    QVERIFY(adjInit("UL1", "C1400V"));
+    QVERIFY(adjSendOffset("UL1", "C1400V", "1.25"));
+    QVERIFY(adjCompute());
+
+    QStringList coeffs = queryAllOffsetCoefficients("UL1", "C1400V");
+    QCOMPARE(coeffs.size(), 4);
+    //QCOMPARE(coeffs[0], "1.25");
+    QCOMPARE(coeffs[1], "0");
+    QCOMPARE(coeffs[2], "0");
+    QCOMPARE(coeffs[3], "0");
 }
 
 void test_adj_module_lem_offset_sequences::writeAdjValuesAfterClampInserted()
@@ -171,6 +201,27 @@ bool test_adj_module_lem_offset_sequences::adjCompute()
     const QByteArray send = "CALC:ADJ1:COMP 1;|*stb?";
     QString response = m_scpiClient->sendReceive(send);
     return response == "+0";
+}
+
+QStringList test_adj_module_lem_offset_sequences::queryAllOffsetCoefficients(const QString &channelAlias, const QString &rangeName)
+{
+    cSenseSettingsPtr senseSettings = getMt310s2dSenseSettings();
+    SenseSystem::cChannelSettings* channelSetting = senseSettings->findChannelSettingByAlias1(channelAlias);
+    const QString channelMName = channelSetting->m_nameMx;
+    QStringList offsetCoeffs;
+    for(int coeffNo=0; coeffNo<=3; ++coeffNo) {
+        const QByteArray send = QString("CALC:ADJ1:SEND? 6307,SENSE:%1:%2:CORRECTION:OFFS:COEFFICIENT:%3?;").
+                                arg(channelMName, rangeName).arg(coeffNo).toLocal8Bit();
+        offsetCoeffs.append(m_scpiClient->sendReceive(send));
+    }
+    return offsetCoeffs;
+}
+
+cSenseSettingsPtr test_adj_module_lem_offset_sequences::getMt310s2dSenseSettings()
+{
+    ServerParams params = MockServerParamGenerator::createParams("mt310s2d");
+    SettingsContainerPtr serviceSettings = std::make_unique<SettingsContainer>(params);
+    return serviceSettings->getSenseSettings();
 }
 
 void test_adj_module_lem_offset_sequences::setLogFileName(const QString &currentTestFunction, const QString &currentDataTag)
