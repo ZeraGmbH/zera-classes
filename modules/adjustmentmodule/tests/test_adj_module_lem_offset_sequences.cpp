@@ -24,7 +24,6 @@ void test_adj_module_lem_offset_sequences::cleanupTestCase()
 
 void test_adj_module_lem_offset_sequences::cleanup()
 {
-    m_scpiClient->sendReceive("*CLS");
     m_testRunner->removeAllHotplugDevices();
 }
 
