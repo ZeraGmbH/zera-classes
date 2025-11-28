@@ -98,9 +98,17 @@ void HotplugControlsModuleController::catchInterfaceAnswer(quint32 msgnr, quint8
             int cmd = m_MsgNrCmdList.take(msgnr);
             switch (cmd)
             {
-            case activatepushbutton:
+            case hotplugControlsModuleCmds::activatepushbutton:
                 if (reply != ack)
                     notifyError(pushbuttonErrMsg);
+                break;
+            case hotplugControlsModuleCmds::readData:
+                if(reply != ack)
+                    notifyError(readDataErrMsg);
+                break;
+            case hotplugControlsModuleCmds::writeData:
+                if(reply != ack)
+                    notifyError(writeDataErrMsg);
                 break;
             }
         }
@@ -117,16 +125,37 @@ void HotplugControlsModuleController::controllersFound(QVariant value)
         for(auto it = instrumentsObj.begin(); it != instrumentsObj.end(); ++it) {
             QString key = it.key();
             QString value = instrumentsObj[key].toString();
-            if(value.contains("Emob", Qt::CaseInsensitive))
+            if(value.contains("EMOB", Qt::CaseInsensitive))
                 emobFound = true;
             if(value.contains("Mt650e", Qt::CaseInsensitive))
                 mt650eFound = true;
         }
     }
+    bool ctrlersFound = false;
     if(emobFound && mt650eFound)
-        m_pControllersFound->setValue(true);
-    else
-        m_pControllersFound->setValue(false);
+        ctrlersFound = true;
+    m_pControllersFound->setValue(ctrlersFound);
+    addedRemovedControllers(ctrlersFound);
+}
+
+void HotplugControlsModuleController::addedRemovedControllers(bool ctrlersFound)
+{
+    if(ctrlersFound) {
+        m_MsgNrCmdList[m_pcbConnection.getInterface()->readData()] = hotplugControlsModuleCmds::readData;
+        m_MsgNrCmdList[m_pcbConnection.getInterface()->writeData()] = hotplugControlsModuleCmds::writeData;
+    }
+    else {
+        VeinStorage::StorageComponentPtr instrument = m_module->getStorageDb()->findComponent(statusEntityId, "INF_Instrument");
+        bool emobFound = false;
+        QJsonDocument doc = QJsonDocument::fromJson(instrument->getValue().toString().toUtf8());
+        QJsonObject obj = doc.object();
+
+        for (auto it = obj.begin(); it != obj.end(); it++)
+            if (it.value().toString().contains("EMOB", Qt::CaseInsensitive))
+                emobFound = true;
+        if(emobFound)
+            m_MsgNrCmdList[m_pcbConnection.getInterface()->writeData("0")] = hotplugControlsModuleCmds::writeData;
+    }
 }
 
 }

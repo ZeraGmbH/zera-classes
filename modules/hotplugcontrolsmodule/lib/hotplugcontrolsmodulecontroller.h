@@ -11,6 +11,8 @@ namespace  HOTPLUGCONTROLSMODULE {
 enum hotplugControlsModuleCmds
 {
     activatepushbutton,
+    readData,
+    writeData
 };
 
 class HotplugControlsModuleController : public cModuleActivist
@@ -26,6 +28,8 @@ private slots:
     void catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant answer);
     void controllersFound(QVariant value);
 private:
+    void addedRemovedControllers(bool ctrlersFound);
+
     cHotplugControlsModule *m_module;
     PcbServiceConnection m_pcbConnection;
     TaskContainerSequence m_activationTasks;
