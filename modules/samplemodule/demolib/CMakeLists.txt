@@ -20,8 +20,7 @@ target_include_directories(samplemodule-demolib
 target_link_libraries(samplemodule-demolib
     PUBLIC
     samplemodule-static
-    module-service-interfaces
-    Zera::service-interfaces-demolib
+    module-service-interfaces-demolib
     Zera::zera-timers
 )
 

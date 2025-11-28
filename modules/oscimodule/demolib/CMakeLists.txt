@@ -20,8 +20,7 @@ target_include_directories(oscimodule-demolib
 target_link_libraries(oscimodule-demolib
     PUBLIC
     oscimodule-static
-    module-service-interfaces
-    Zera::service-interfaces-demolib
+    module-service-interfaces-demolib
     Zera::zera-timers
 )
 

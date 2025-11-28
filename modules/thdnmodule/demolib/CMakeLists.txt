@@ -20,8 +20,7 @@ target_include_directories(thdnmodule-demolib
 target_link_libraries(thdnmodule-demolib
     PUBLIC
     thdnmodule-static
-    module-service-interfaces
-    Zera::service-interfaces-demolib
+    module-service-interfaces-demolib
     Zera::zera-timers
 )
 
