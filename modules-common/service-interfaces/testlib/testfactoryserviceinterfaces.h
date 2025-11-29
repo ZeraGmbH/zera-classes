@@ -14,6 +14,18 @@ public:
         OBSERVER,
         ADJUST
     };
+    enum DspInterfaceInjectableTypes {
+        INJECT_NOT_SUPPORTED, // in some places this means 'not yet supported'
+
+        INJECT_RANGE_OBSERV,
+        INJECT_RANGE_ADJUST,
+        INJECT_RANGE_PROGRAM,
+        INJECT_RMS,
+        INJECT_DFT,
+        INJECT_FFT
+
+    };
+
     void resetInterfaces() override;
     Zera::DspInterfacePtr createDspInterfaceRangeProg(int entityId, QStringList valueChannelList, bool isReference) override;
     Zera::DspInterfacePtr createDspInterfaceRangeObser(int entityId, QStringList valueChannelList, bool isReference) override;
@@ -32,14 +44,17 @@ public:
 
     const QList<TestDspInterfacePtr>& getInterfaceList() const;
     TestDspInterfacePtr getInterface(int entityId, DSPInterfaceType dspInterfaceType);
+    TestDspInterfacePtr getInjectableInterface(DspInterfaceInjectableTypes injectType);
 
 private:
     Zera::DspInterfacePtr createDspInterfaceCommon(int entityId,
-                                             DSPInterfaceType interfaceType,
-                                             int interruptNoHandled,
-                                             QStringList valueChannelList);
+                                                   DspInterfaceInjectableTypes injectType,
+                                                   DSPInterfaceType interfaceType,
+                                                   int interruptNoHandled,
+                                                   QStringList valueChannelList);
     QList<TestDspInterfacePtr> m_dspInterfaces;
     QMap<int, QMap<DSPInterfaceType, TestDspInterfacePtr>> m_dspInterfacesTyped;
+    QMap<DspInterfaceInjectableTypes, TestDspInterfacePtr> m_dspInterfacesByInjectType;
 };
 
 typedef std::shared_ptr<TestFactoryServiceInterfaces> TestFactoryServiceInterfacesPtr;
