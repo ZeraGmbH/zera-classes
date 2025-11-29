@@ -140,41 +140,29 @@ void SessionExportGenerator::fireActualValues(QString session)
     constexpr double testangle = 0;
     constexpr double testfrequency = 50;
 
-    enum dspInterfaceOrder { // For doc and test
-        DSP_INTERFACE_RANGE_OBSERMATIC = 1,
-        DSP_INTERFACE_RANGE_ADJUSTMENT,
-        DSP_INTERFACE_RANGE_PROGRAM,
-        DSP_INTERFACE_RMS = 5,
-        DSP_INTERFACE_DFT,
-        DSP_INTERFACE_FFT,
-
-        DSP_INTERFACE_COUNT
-    };
-
-    const QList<TestDspInterfacePtr>& dspInterfaces = m_modmanTestRunner->getDspInterfaceList();
-    TestDspValues dspValues(dspInterfaces[DSP_INTERFACE_DFT]->getValueList());
+    TestDspValues dspValues(m_modmanTestRunner->getDspInterface(INJECT_DFT)->getValueList());
     if(session.contains("meas") || session.contains("perphase") || session.contains("ced")) {
         dspValues.setAllValuesSymmetric(testvoltage, testcurrent, testangle, testfrequency);
         dspValues.fireAllActualValues(
-            dspInterfaces[DSP_INTERFACE_DFT],
-            dspInterfaces[DSP_INTERFACE_FFT],
-            dspInterfaces[DSP_INTERFACE_RANGE_PROGRAM], // Range is for frequency only
-            dspInterfaces[DSP_INTERFACE_RMS]);
+            m_modmanTestRunner->getDspInterface(INJECT_DFT),
+            m_modmanTestRunner->getDspInterface(INJECT_FFT),
+            m_modmanTestRunner->getDspInterface(INJECT_RANGE_PROGRAM), // Range is for frequency only
+            m_modmanTestRunner->getDspInterface(INJECT_RMS));
     }
     else if(session.contains("ac")) {
         dspValues.setAllValuesSymmetricAc(testvoltage, testcurrent, testangle, testfrequency);
         dspValues.fireAllActualValues(
-            dspInterfaces[DSP_INTERFACE_DFT],
-            dspInterfaces[DSP_INTERFACE_FFT],
-            dspInterfaces[DSP_INTERFACE_RANGE_PROGRAM],
-            dspInterfaces[DSP_INTERFACE_RMS]);
+            m_modmanTestRunner->getDspInterface(INJECT_DFT),
+            m_modmanTestRunner->getDspInterface(INJECT_FFT),
+            m_modmanTestRunner->getDspInterface(INJECT_RANGE_PROGRAM),
+            m_modmanTestRunner->getDspInterface(INJECT_RMS));
     }
     else if(session.contains("dc")) {
         dspValues.setAllValuesSymmetricDc(testvoltage, testcurrent);
         dspValues.fireAllActualValues(
-            dspInterfaces[DSP_INTERFACE_DFT],
-            dspInterfaces[DSP_INTERFACE_FFT],
-            dspInterfaces[DSP_INTERFACE_RANGE_PROGRAM],
-            dspInterfaces[DSP_INTERFACE_RMS]);
+            m_modmanTestRunner->getDspInterface(INJECT_DFT),
+            m_modmanTestRunner->getDspInterface(INJECT_FFT),
+            m_modmanTestRunner->getDspInterface(INJECT_RANGE_PROGRAM),
+            m_modmanTestRunner->getDspInterface(INJECT_RMS));
     }
 }
