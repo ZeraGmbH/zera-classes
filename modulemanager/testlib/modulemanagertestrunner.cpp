@@ -132,11 +132,6 @@ TestDspInterfacePtr ModuleManagerTestRunner::getDspInterface(DspInterfaceInjecta
     return m_serviceInterfaceFactory->getInjectableInterface(injectType);
 }
 
-const QList<TestDspInterfacePtr> &ModuleManagerTestRunner::getDspInterfaceList() const
-{
-    return m_serviceInterfaceFactory->getInterfaceList();
-}
-
 VfCmdEventHandlerSystemPtr ModuleManagerTestRunner::getVfCmdEventHandlerSystemPtr()
 {
     return m_vfCmdEventHandlerSystem;
