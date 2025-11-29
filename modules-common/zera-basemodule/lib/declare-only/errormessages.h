@@ -93,4 +93,6 @@
 #define releaseNumberErrMsg "Release number not found"
 
 #define pushbuttonErrMsg "Pushbutton activate failed"
+#define readDataErrMsg "Read data from Mt650e failed"
+#define writeDataErrMsg "Write data to Emob failed"
 #endif // ERRORMESSAGES_H
