@@ -41,7 +41,6 @@ public:
     Zera::DspInterfacePtr createDspInterfaceRefProg(int entityId, QStringList valueChannelList) override;
     Zera::DspInterfacePtr createDspInterfaceRefAdj(int entityId) override;
 
-    const QList<TestDspInterfacePtr>& getInterfaceList() const;
     TestDspInterfacePtr getInterface(int entityId, DspInterfaceCreatedBy createdBy);
     TestDspInterfacePtr getInjectableInterface(DspInterfaceInjectableTypes injectType);
 
@@ -51,7 +50,6 @@ private:
                                                    DspInterfaceCreatedBy createdBy,
                                                    int interruptNoHandled,
                                                    QStringList valueChannelList);
-    QList<TestDspInterfacePtr> m_dspInterfaces;
     QMap<int, QMap<DspInterfaceCreatedBy, TestDspInterfacePtr>> m_dspInterfacesByCreatedBy;
     QMap<DspInterfaceInjectableTypes, TestDspInterfacePtr> m_dspInterfacesByInjectType;
 };

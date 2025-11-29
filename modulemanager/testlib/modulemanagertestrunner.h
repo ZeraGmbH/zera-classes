@@ -38,7 +38,6 @@ public:
 
     TestDspInterfacePtr getDspInterface(int entityId, DspInterfaceCreatedBy createdBy = MODULEPROG);
     TestDspInterfacePtr getDspInterface(DspInterfaceInjectableTypes injectType);
-    const QList<TestDspInterfacePtr>& getDspInterfaceList() const;
 
     // hotplug full functional methods
     void fireHotplugInterrupt(const AbstractMockAllServices::ChannelAliasHotplugDeviceNameMap &deviceMap);

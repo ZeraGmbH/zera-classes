@@ -2,9 +2,7 @@
 
 void TestFactoryServiceInterfaces::resetInterfaces()
 {
-    m_dspInterfaces.clear();
     m_dspInterfacesByCreatedBy.clear();
-
     m_dspInterfacesByInjectType.clear();
 }
 
@@ -146,11 +144,6 @@ Zera::DspInterfacePtr TestFactoryServiceInterfaces::createDspInterfaceRefAdj(int
                                     0 /* dummy */, {});
 }
 
-const QList<TestDspInterfacePtr> &TestFactoryServiceInterfaces::getInterfaceList() const
-{
-    return m_dspInterfaces;
-}
-
 TestDspInterfacePtr TestFactoryServiceInterfaces::getInterface(int entityId, DspInterfaceCreatedBy createdBy)
 {
     if (m_dspInterfacesByCreatedBy.contains(entityId) &&
@@ -174,7 +167,6 @@ Zera::DspInterfacePtr TestFactoryServiceInterfaces::createDspInterfaceCommon(int
 {
     Q_UNUSED(interruptNoHandled)
     TestDspInterfacePtr dspInterface = std::make_shared<TestDspInterface>(valueChannelList);
-    m_dspInterfaces.append(dspInterface);
     Q_ASSERT(!(m_dspInterfacesByCreatedBy.contains(entityId) && m_dspInterfacesByCreatedBy[entityId].contains(createdBy)));
     m_dspInterfacesByCreatedBy[entityId][createdBy] = dspInterface;
 
