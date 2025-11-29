@@ -37,7 +37,7 @@ public:
     void setRangeGetSetDelay(int rangeGetSetDelay);
 
     TestDspInterfacePtr getDspInterface(int entityId,
-                                        TestFactoryServiceInterfaces::DSPInterfaceType dspInterfaceType = TestFactoryServiceInterfaces::MODULEPROG);
+                                        DspInterfaceCreatedBy createdBy = MODULEPROG);
     const QList<TestDspInterfacePtr>& getDspInterfaceList() const;
 
     // hotplug full functional methods

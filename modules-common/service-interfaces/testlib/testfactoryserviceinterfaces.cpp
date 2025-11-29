@@ -3,7 +3,7 @@
 void TestFactoryServiceInterfaces::resetInterfaces()
 {
     m_dspInterfaces.clear();
-    m_dspInterfacesTyped.clear();
+    m_dspInterfacesByCreatedBy.clear();
 
     m_dspInterfacesByInjectType.clear();
 }
@@ -151,11 +151,11 @@ const QList<TestDspInterfacePtr> &TestFactoryServiceInterfaces::getInterfaceList
     return m_dspInterfaces;
 }
 
-TestDspInterfacePtr TestFactoryServiceInterfaces::getInterface(int entityId, DSPInterfaceType dspInterfaceType)
+TestDspInterfacePtr TestFactoryServiceInterfaces::getInterface(int entityId, DspInterfaceCreatedBy createdBy)
 {
-    if (m_dspInterfacesTyped.contains(entityId) &&
-        m_dspInterfacesTyped[entityId].contains(dspInterfaceType))
-        return m_dspInterfacesTyped[entityId][dspInterfaceType];
+    if (m_dspInterfacesByCreatedBy.contains(entityId) &&
+        m_dspInterfacesByCreatedBy[entityId].contains(createdBy))
+        return m_dspInterfacesByCreatedBy[entityId][createdBy];
     return nullptr;
 }
 
@@ -168,15 +168,15 @@ TestDspInterfacePtr TestFactoryServiceInterfaces::getInjectableInterface(DspInte
 
 Zera::DspInterfacePtr TestFactoryServiceInterfaces::createDspInterfaceCommon(int entityId,
                                                                              DspInterfaceInjectableTypes injectType,
-                                                                             DSPInterfaceType interfaceType,
+                                                                             DspInterfaceCreatedBy createdBy,
                                                                              int interruptNoHandled,
                                                                              QStringList valueChannelList)
 {
     Q_UNUSED(interruptNoHandled)
     TestDspInterfacePtr dspInterface = std::make_shared<TestDspInterface>(valueChannelList);
     m_dspInterfaces.append(dspInterface);
-    Q_ASSERT(!(m_dspInterfacesTyped.contains(entityId) && m_dspInterfacesTyped[entityId].contains(interfaceType)));
-    m_dspInterfacesTyped[entityId][interfaceType] = dspInterface;
+    Q_ASSERT(!(m_dspInterfacesByCreatedBy.contains(entityId) && m_dspInterfacesByCreatedBy[entityId].contains(createdBy)));
+    m_dspInterfacesByCreatedBy[entityId][createdBy] = dspInterface;
 
     if (injectType != INJECT_NOT_SUPPORTED) {
         Q_ASSERT(!m_dspInterfacesByInjectType.contains(injectType));

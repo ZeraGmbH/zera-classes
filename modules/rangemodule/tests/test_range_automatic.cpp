@@ -580,7 +580,7 @@ static constexpr int rangeChannelCount = 8;
 void test_range_automatic::fireNewActualValues(float rmsValue, bool includeIAux)
 {
     TestDspInterfacePtr dspInterface =
-        m_serviceInterfaceFactory->getInterface(rangeEntityId, TestFactoryServiceInterfaces::MODULEPROG);
+        m_serviceInterfaceFactory->getInterface(rangeEntityId, MODULEPROG);
 
     DemoValuesDspRange rangeValues(rangeChannelCount);
     for(int i = 0; i < rangeChannelCount; i++) {
@@ -596,7 +596,7 @@ void test_range_automatic::fireNewActualValues(float rmsValue, bool includeIAux)
 void test_range_automatic::fireNewActualValues(float rmsValue, float peakValue, bool includeIAux)
 {
     TestDspInterfacePtr dspInterface =
-        m_serviceInterfaceFactory->getInterface(rangeEntityId, TestFactoryServiceInterfaces::MODULEPROG);
+        m_serviceInterfaceFactory->getInterface(rangeEntityId, MODULEPROG);
 
     DemoValuesDspRange rangeValues(rangeChannelCount);
     for(int i = 0; i < rangeChannelCount; i++) {

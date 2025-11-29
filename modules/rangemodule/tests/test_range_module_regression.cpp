@@ -49,9 +49,9 @@ static constexpr int rangeResultCount = rangeRmsValuesCount + rangePeakValuesCou
 void test_range_module_regression::checkActualValueCount()
 {
     ModuleManagerTestRunner testRunner(":/session-range-test.json");
-    TestDspInterfacePtr sampleDspInterfaceProg = testRunner.getDspInterface(rangeEntityId, TestFactoryServiceInterfaces::MODULEPROG);
-    TestDspInterfacePtr sampleDspInterfaceObser = testRunner.getDspInterface(rangeEntityId, TestFactoryServiceInterfaces::OBSERVER);
-    TestDspInterfacePtr sampleDspInterfaceAdj = testRunner.getDspInterface(rangeEntityId, TestFactoryServiceInterfaces::ADJUST);
+    TestDspInterfacePtr sampleDspInterfaceProg = testRunner.getDspInterface(rangeEntityId, MODULEPROG);
+    TestDspInterfacePtr sampleDspInterfaceObser = testRunner.getDspInterface(rangeEntityId, OBSERVER);
+    TestDspInterfacePtr sampleDspInterfaceAdj = testRunner.getDspInterface(rangeEntityId, ADJUST);
 
     // dumpDspSetup
     QCOMPARE(sampleDspInterfaceObser->getValueList().size(), rangeChannelCount);
@@ -111,8 +111,8 @@ void test_range_module_regression::checkActualValueCount()
 void test_range_module_regression::injectActualValuesWithCheating()
 {
     ModuleManagerTestRunner testRunner(":/session-range-test.json");
-    TestDspInterfacePtr sampleDspInterfaceProg = testRunner.getDspInterface(rangeEntityId, TestFactoryServiceInterfaces::MODULEPROG);
-    TestDspInterfacePtr sampleDspInterfaceAdj = testRunner.getDspInterface(rangeEntityId, TestFactoryServiceInterfaces::ADJUST);
+    TestDspInterfacePtr sampleDspInterfaceProg = testRunner.getDspInterface(rangeEntityId, MODULEPROG);
+    TestDspInterfacePtr sampleDspInterfaceAdj = testRunner.getDspInterface(rangeEntityId, ADJUST);
 
     DemoValuesDspRange rangeValues(rangeChannelCount);
     rangeValues.setFrequency(15);
@@ -165,8 +165,8 @@ void test_range_module_regression::injectActualValuesWithCheatingAndRangeChanged
     testRunner.setVfComponent(rangeEntityId, "PAR_IgnoreRmsValuesOnOff", 1);
     testRunner.setVfComponent(rangeEntityId, "PAR_IgnoreRmsValues", 2);
 
-    TestDspInterfacePtr sampleDspInterfaceProg = testRunner.getDspInterface(rangeEntityId, TestFactoryServiceInterfaces::MODULEPROG);
-    TestDspInterfacePtr sampleDspInterfaceAdj = testRunner.getDspInterface(rangeEntityId, TestFactoryServiceInterfaces::ADJUST);
+    TestDspInterfacePtr sampleDspInterfaceProg = testRunner.getDspInterface(rangeEntityId, MODULEPROG);
+    TestDspInterfacePtr sampleDspInterfaceAdj = testRunner.getDspInterface(rangeEntityId, ADJUST);
 
     DemoValuesDspRange rangeValues(rangeChannelCount);
     rangeValues.setFrequency(15);
@@ -210,8 +210,8 @@ void test_range_module_regression::injectIncreasingActualValuesWithCheatingEnabl
     testRunner.setVfComponent(rangeEntityId, "PAR_IgnoreRmsValuesOnOff", 1);
     testRunner.setVfComponent(rangeEntityId, "PAR_IgnoreRmsValues", 2);
 
-    TestDspInterfacePtr sampleDspInterfaceProg = testRunner.getDspInterface(rangeEntityId, TestFactoryServiceInterfaces::MODULEPROG);
-    TestDspInterfacePtr sampleDspInterfaceAdj = testRunner.getDspInterface(rangeEntityId, TestFactoryServiceInterfaces::ADJUST);
+    TestDspInterfacePtr sampleDspInterfaceProg = testRunner.getDspInterface(rangeEntityId, MODULEPROG);
+    TestDspInterfacePtr sampleDspInterfaceAdj = testRunner.getDspInterface(rangeEntityId, ADJUST);
 
     DemoValuesDspRange rangeValues(rangeChannelCount);
     rangeValues.setFrequency(15);
@@ -260,8 +260,8 @@ void test_range_module_regression::injectActualValuesCheatingEnabledWithPreScali
     testRunner.setVfComponent(rangeEntityId, "PAR_PreScalingEnabledGroup0", true);
     testRunner.setVfComponent(rangeEntityId, "PAR_PreScalingGroup0", "2/1");
 
-    TestDspInterfacePtr sampleDspInterfaceProg = testRunner.getDspInterface(rangeEntityId, TestFactoryServiceInterfaces::MODULEPROG);
-    TestDspInterfacePtr sampleDspInterfaceAdj = testRunner.getDspInterface(rangeEntityId, TestFactoryServiceInterfaces::ADJUST);
+    TestDspInterfacePtr sampleDspInterfaceProg = testRunner.getDspInterface(rangeEntityId, MODULEPROG);
+    TestDspInterfacePtr sampleDspInterfaceAdj = testRunner.getDspInterface(rangeEntityId, ADJUST);
 
     DemoValuesDspRange rangeValues(rangeChannelCount);
     rangeValues.setFrequency(15);
