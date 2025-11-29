@@ -39,7 +39,7 @@ void test_adj_module_lem_offset_sequences::dailyOffsetAdjustSequenceRefZero()
     QVERIFY(adjSendOffset("UL1", "C1400V", "0.0"));
     QVERIFY(adjCompute());
 
-    QStringList coeffs = queryAllOffsetCoefficients("UL1", "C1400V");
+    QStringList coeffs = queryAdjNodesOrCoeff("UL1", "C1400V", COEFFICIENT);
     QCOMPARE(coeffs.size(), 4);
     // we adjusted with reference value 0.0 => all coeefs 0
     QCOMPARE(coeffs[0], "0");
@@ -48,21 +48,21 @@ void test_adj_module_lem_offset_sequences::dailyOffsetAdjustSequenceRefZero()
     QCOMPARE(coeffs[3], "0");
 }
 
-void test_adj_module_lem_offset_sequences::dailyOffsetAdjustSequenceRefNonZero()
+void test_adj_module_lem_offset_sequences::dailyOffsetAdjustSequenceRefNonZeroButOnSpot()
 {
     setLogFileName(QTest::currentTestFunction(), QTest::currentDataTag());
     insertClamps(cClamp::CL1400VDC, cClamp::CL1200ADC1400VDC);
 
     QVERIFY(setRange("UL1", "C1400V"));
-    //AdjModuleTestHelper::setAllValuesSymmetricDc(*m_testRunner, 0.0, 0.0);
-
+    AdjModuleTestHelper::setAllValuesSymmetricDc(*m_testRunner, 1.25, 0.0);
     QVERIFY(adjInit("UL1", "C1400V"));
     QVERIFY(adjSendOffset("UL1", "C1400V", "1.25"));
+
     QVERIFY(adjCompute());
 
-    QStringList coeffs = queryAllOffsetCoefficients("UL1", "C1400V");
+    QStringList coeffs = queryAdjNodesOrCoeff("UL1", "C1400V", COEFFICIENT);
     QCOMPARE(coeffs.size(), 4);
-    //QCOMPARE(coeffs[0], "1.25");
+    QCOMPARE(coeffs[0], "0");
     QCOMPARE(coeffs[1], "0");
     QCOMPARE(coeffs[2], "0");
     QCOMPARE(coeffs[3], "0");
@@ -203,16 +203,22 @@ bool test_adj_module_lem_offset_sequences::adjCompute()
     return response == "+0";
 }
 
-QStringList test_adj_module_lem_offset_sequences::queryAllOffsetCoefficients(const QString &channelAlias, const QString &rangeName)
+QStringList test_adj_module_lem_offset_sequences::queryAdjNodesOrCoeff(const QString &channelAlias,
+                                                                       const QString &rangeName,
+                                                                       CoeffOrNode coeffOrNode)
 {
     cSenseSettingsPtr senseSettings = getMt310s2dSenseSettings();
     SenseSystem::cChannelSettings* channelSetting = senseSettings->findChannelSettingByAlias1(channelAlias);
     const QString channelMName = channelSetting->m_nameMx;
+    const QString valueType = coeffOrNode == NODE ? "NODE" : "COEFFICIENT";
     QStringList offsetCoeffs;
     for(int coeffNo=0; coeffNo<=3; ++coeffNo) {
-        const QByteArray send = QString("CALC:ADJ1:SEND? 6307,SENSE:%1:%2:CORRECTION:OFFS:COEFFICIENT:%3?;").
-                                arg(channelMName, rangeName).arg(coeffNo).toLocal8Bit();
-        offsetCoeffs.append(m_scpiClient->sendReceive(send));
+        const QByteArray send = QString("CALC:ADJ1:SEND? 6307,SENSE:%1:%2:CORRECTION:OFFS:%3:%4?;").
+                                arg(channelMName, rangeName, valueType).arg(coeffNo).
+                                toLocal8Bit();
+        QString receive = m_scpiClient->sendReceive(send);
+        QStringList semicolonSepList = receive.split(";", Qt::SkipEmptyParts);
+        offsetCoeffs.append(semicolonSepList.join(";"));
     }
     return offsetCoeffs;
 }

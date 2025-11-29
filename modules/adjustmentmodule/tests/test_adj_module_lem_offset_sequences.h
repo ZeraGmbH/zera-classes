@@ -14,7 +14,7 @@ private slots:
     void cleanup();
 
     void dailyOffsetAdjustSequenceRefZero();
-    void dailyOffsetAdjustSequenceRefNonZero();
+    void dailyOffsetAdjustSequenceRefNonZeroButOnSpot();
     void writeAdjValuesAfterClampInserted();
 
     void allClampsPermissions_data();
@@ -31,7 +31,11 @@ private:
     bool adjInit(const QString &channelAlias, const QString &rangeName);
     bool adjSendOffset(const QString &channelAlias, const QString &rangeName, const QString& offset);
     bool adjCompute();
-    QStringList queryAllOffsetCoefficients(const QString &channelAlias, const QString &rangeName);
+    enum CoeffOrNode {
+        NODE,
+        COEFFICIENT
+    };
+    QStringList queryAdjNodesOrCoeff(const QString &channelAlias, const QString &rangeName, CoeffOrNode coeffOrNode);
     static cSenseSettingsPtr getMt310s2dSenseSettings();
 
     void setLogFileName(const QString &currentTestFunction, const QString &currentDataTag);
