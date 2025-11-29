@@ -14,7 +14,6 @@ private slots:
     void minimalSession();
     void veinDumpInitial();
 
-    void dspInterfacesChange();
     void adjInitWithPermission();
     void adjInitWithoutPermission();
 

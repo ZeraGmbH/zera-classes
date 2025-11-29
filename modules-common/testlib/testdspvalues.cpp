@@ -70,9 +70,9 @@ void TestDspValues::fireRmsActualValues(MockDspInterfacePtr dspRms)
 }
 
 void TestDspValues::fireAllActualValues(MockDspInterfacePtr dspDft,
-                                               MockDspInterfacePtr dspFft,
-                                               MockDspInterfacePtr dspRange,
-                                               MockDspInterfacePtr dspRms)
+                                        MockDspInterfacePtr dspFft,
+                                        MockDspInterfacePtr dspRange,
+                                        MockDspInterfacePtr dspRms)
 {
     fireDftActualValues(dspDft);
     fireFftActualValues(dspFft);

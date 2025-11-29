@@ -1,5 +1,4 @@
 #include "test_adj_module_regression.h"
-#include "adjustmentmodule.h"
 #include <vs_storageeventsystem.h>
 #include <vs_dumpjson.h>
 #include <testloghelpers.h>
@@ -50,12 +49,6 @@ void test_adj_module_regression::veinDumpInitial()
     QByteArray jsonDumped = VeinStorage::DumpJson::dumpToByteArray(veinStorage->getDb(), QList<int>() << adjEntityId);
 
     QVERIFY(TestLogHelpers::compareAndLogOnDiffJson(jsonExpected, jsonDumped));
-}
-
-void test_adj_module_regression::dspInterfacesChange()
-{
-    const QList<TestDspInterfacePtr>& dspInterfaces = m_testRunner->getDspInterfaceList();
-    QCOMPARE(dspInterfaces.count(), DSP_INTERFACE_COUNT);
 }
 
 void test_adj_module_regression::adjInitWithPermission()

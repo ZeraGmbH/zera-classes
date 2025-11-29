@@ -36,8 +36,8 @@ public:
     ZeraModules::VirtualModule *getModule(QString uniqueName, int entityId);
     void setRangeGetSetDelay(int rangeGetSetDelay);
 
-    TestDspInterfacePtr getDspInterface(int entityId,
-                                        DspInterfaceCreatedBy createdBy = MODULEPROG);
+    TestDspInterfacePtr getDspInterface(int entityId, DspInterfaceCreatedBy createdBy = MODULEPROG);
+    TestDspInterfacePtr getDspInterface(DspInterfaceInjectableTypes injectType);
     const QList<TestDspInterfacePtr>& getDspInterfaceList() const;
 
     // hotplug full functional methods
