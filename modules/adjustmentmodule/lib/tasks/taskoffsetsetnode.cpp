@@ -29,17 +29,19 @@ TaskOffsetSetNode::TaskOffsetSetNode(Zera::PcbInterfacePtr pcbInterface,
 void TaskOffsetSetNode::start()
 {
     double rawActual = m_actualValue;
-    const double rejection = *m_rngVals.m_rejection;
-    const double urValue = *m_rngVals.m_urValue;
-    if(fabs(rejection) > 1e-3) {
+    const double nominalAdc = *m_rngVals.m_rejection;
+    const double nominalValue = *m_rngVals.m_urValue;
+    if(fabs(nominalAdc) > 1e-3) {
+        // recalc rawActual to uncorrected
+        const double currentCorrection = m_rngVals.m_correction;
         rawActual = m_actualValue -
-                m_rngVals.m_correction * urValue / rejection;
+                currentCorrection * nominalValue / nominalAdc;
     }
-    double Corr = (m_targetValue - rawActual) * rejection / urValue;
+    double correctionAdc = (m_targetValue - rawActual) * nominalAdc / nominalValue;
 
     connect(m_pcbInterface.get(), &AbstractServerInterface::serverAnswer,
             this, &TaskOffsetSetNode::onServerAnswer);
-    m_msgnr = m_pcbInterface->setOffsetNode(m_channelMName, m_rangeName, 0, Corr, m_targetValue);
+    m_msgnr = m_pcbInterface->setOffsetNode(m_channelMName, m_rangeName, 0, correctionAdc, m_targetValue);
 }
 
 void TaskOffsetSetNode::onServerAnswer(quint32 msgnr, quint8 reply, QVariant answer)
