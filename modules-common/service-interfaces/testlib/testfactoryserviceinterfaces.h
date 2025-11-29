@@ -5,27 +5,26 @@
 #include "testdspinterface.h"
 #include <QMap>
 
+enum DspInterfaceCreatedBy {
+    MODULEPROG,
+    OBSERVER,
+    ADJUST
+};
+
+enum DspInterfaceInjectableTypes {
+    INJECT_NOT_SUPPORTED,
+
+    INJECT_RANGE_OBSERV,
+    INJECT_RANGE_ADJUST,
+    INJECT_RANGE_PROGRAM,
+    INJECT_RMS,
+    INJECT_DFT,
+    INJECT_FFT
+};
+
 class TestFactoryServiceInterfaces : public AbstractFactoryServiceInterfaces
 {
 public:
-    enum DSPInterfaceType
-    {
-        MODULEPROG,
-        OBSERVER,
-        ADJUST
-    };
-    enum DspInterfaceInjectableTypes {
-        INJECT_NOT_SUPPORTED, // in some places this means 'not yet supported'
-
-        INJECT_RANGE_OBSERV,
-        INJECT_RANGE_ADJUST,
-        INJECT_RANGE_PROGRAM,
-        INJECT_RMS,
-        INJECT_DFT,
-        INJECT_FFT
-
-    };
-
     void resetInterfaces() override;
     Zera::DspInterfacePtr createDspInterfaceRangeProg(int entityId, QStringList valueChannelList, bool isReference) override;
     Zera::DspInterfacePtr createDspInterfaceRangeObser(int entityId, QStringList valueChannelList, bool isReference) override;
@@ -43,17 +42,17 @@ public:
     Zera::DspInterfacePtr createDspInterfaceRefAdj(int entityId) override;
 
     const QList<TestDspInterfacePtr>& getInterfaceList() const;
-    TestDspInterfacePtr getInterface(int entityId, DSPInterfaceType dspInterfaceType);
+    TestDspInterfacePtr getInterface(int entityId, DspInterfaceCreatedBy createdBy);
     TestDspInterfacePtr getInjectableInterface(DspInterfaceInjectableTypes injectType);
 
 private:
     Zera::DspInterfacePtr createDspInterfaceCommon(int entityId,
                                                    DspInterfaceInjectableTypes injectType,
-                                                   DSPInterfaceType interfaceType,
+                                                   DspInterfaceCreatedBy createdBy,
                                                    int interruptNoHandled,
                                                    QStringList valueChannelList);
     QList<TestDspInterfacePtr> m_dspInterfaces;
-    QMap<int, QMap<DSPInterfaceType, TestDspInterfacePtr>> m_dspInterfacesTyped;
+    QMap<int, QMap<DspInterfaceCreatedBy, TestDspInterfacePtr>> m_dspInterfacesByCreatedBy;
     QMap<DspInterfaceInjectableTypes, TestDspInterfacePtr> m_dspInterfacesByInjectType;
 };
 
