@@ -1,43 +1,38 @@
 #include "adjmoduletesthelper.h"
-#include "adjustmentmodule.h"
-#include "testdspinterface.h"
 #include "testdspvalues.h"
 
 void AdjModuleTestHelper::setActualTestValues(ModuleManagerTestRunner &testRunner,
                                               float testvoltage, float testcurrent, float testangle, float testfrequency)
 {
-    const QList<TestDspInterfacePtr>& dspInterfaces = testRunner.getDspInterfaceList();
-    TestDspValues dspValues(dspInterfaces[DSP_INTERFACE_DFT]->getValueList());
+    TestDspValues dspValues(testRunner.getDspInterface(INJECT_DFT)->getValueList());
     dspValues.setAllValuesSymmetric(testvoltage, testcurrent, testangle, testfrequency);
     dspValues.fireAllActualValues(
-        dspInterfaces[DSP_INTERFACE_DFT],
-        dspInterfaces[DSP_INTERFACE_FFT],
-        dspInterfaces[DSP_INTERFACE_RANGE_PROGRAM], // Range is for frequency only
-        dspInterfaces[DSP_INTERFACE_RMS]);
+        testRunner.getDspInterface(INJECT_DFT),
+        testRunner.getDspInterface(INJECT_FFT),
+        testRunner.getDspInterface(INJECT_RANGE_PROGRAM), // Range is for frequency only
+        testRunner.getDspInterface(INJECT_RMS));
 }
 
 void AdjModuleTestHelper::setAllValuesSymmetricAc(ModuleManagerTestRunner &testRunner, float testvoltage, float testcurrent, float testangle, float testfrequency)
 {
-    const QList<TestDspInterfacePtr>& dspInterfaces = testRunner.getDspInterfaceList();
-    TestDspValues dspValues(dspInterfaces[DSP_INTERFACE_DFT]->getValueList());
+    TestDspValues dspValues(testRunner.getDspInterface(INJECT_DFT)->getValueList());
     dspValues.setAllValuesSymmetricAc(testvoltage, testcurrent, testangle, testfrequency);
     dspValues.fireAllActualValues(
-        dspInterfaces[DSP_INTERFACE_DFT],
-        dspInterfaces[DSP_INTERFACE_FFT],
-        dspInterfaces[DSP_INTERFACE_RANGE_PROGRAM],
-        dspInterfaces[DSP_INTERFACE_RMS]);
+        testRunner.getDspInterface(INJECT_DFT),
+        testRunner.getDspInterface(INJECT_FFT),
+        testRunner.getDspInterface(INJECT_RANGE_PROGRAM),
+        testRunner.getDspInterface(INJECT_RMS));
 }
 
 void AdjModuleTestHelper::setAllValuesSymmetricDc(ModuleManagerTestRunner &testRunner, float voltage, float current)
 {
-    const QList<TestDspInterfacePtr>& dspInterfaces = testRunner.getDspInterfaceList();
-    TestDspValues dspValues(dspInterfaces[DSP_INTERFACE_DFT]->getValueList());
+    TestDspValues dspValues(testRunner.getDspInterface(INJECT_DFT)->getValueList());
     dspValues.setAllValuesSymmetricDc(voltage, current);
     dspValues.fireAllActualValues(
-        dspInterfaces[DSP_INTERFACE_DFT],
-        dspInterfaces[DSP_INTERFACE_FFT],
-        dspInterfaces[DSP_INTERFACE_RANGE_PROGRAM],
-        dspInterfaces[DSP_INTERFACE_RMS]);
+        testRunner.getDspInterface(INJECT_DFT),
+        testRunner.getDspInterface(INJECT_FFT),
+        testRunner.getDspInterface(INJECT_RANGE_PROGRAM),
+        testRunner.getDspInterface(INJECT_RMS));
 }
 
 AdjModuleTestHelper::TAdjNodeValues AdjModuleTestHelper::parseNode(const QString &scpiResponse)

@@ -122,10 +122,14 @@ VeinStorage::AbstractEventSystem *ModuleManagerTestRunner::getVeinStorageSystem(
     return m_modmanFacade->getStorageSystem();
 }
 
-TestDspInterfacePtr ModuleManagerTestRunner::getDspInterface(int entityId,
-                                                             DspInterfaceCreatedBy createdBy)
+TestDspInterfacePtr ModuleManagerTestRunner::getDspInterface(int entityId, DspInterfaceCreatedBy createdBy)
 {
     return m_serviceInterfaceFactory->getInterface(entityId, createdBy);
+}
+
+TestDspInterfacePtr ModuleManagerTestRunner::getDspInterface(DspInterfaceInjectableTypes injectType)
+{
+    return m_serviceInterfaceFactory->getInjectableInterface(injectType);
 }
 
 const QList<TestDspInterfacePtr> &ModuleManagerTestRunner::getDspInterfaceList() const
