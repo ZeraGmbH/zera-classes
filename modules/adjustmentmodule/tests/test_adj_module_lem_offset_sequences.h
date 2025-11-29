@@ -11,10 +11,13 @@ class test_adj_module_lem_offset_sequences : public QObject
 private slots:
     void initTestCase();
     void cleanupTestCase();
+    void init();
     void cleanup();
 
-    void dailyOffsetAdjustSequenceRefZero();
-    void dailyOffsetAdjustSequenceRefNonZeroButOnSpot();
+    void adjOffsetActRefZero();
+    void adjOffsActRefNonZeroSame();
+    void adjOffsActNonZeroRefZero();
+
     void writeAdjValuesAfterClampInserted();
 
     void allClampsPermissions_data();
@@ -36,8 +39,14 @@ private:
         COEFFICIENT
     };
     QStringList queryAdjNodesOrCoeff(const QString &channelAlias, const QString &rangeName, CoeffOrNode coeffOrNode);
-    static cSenseSettingsPtr getMt310s2dSenseSettings();
+    struct NodeVal
+    {
+        double sampleOffset = 0.0;
+        double takenAt = 0.0;
+    };
+    QList<NodeVal> decodeNodes(const QStringList nodes);
 
+    static cSenseSettingsPtr getMt310s2dSenseSettings();
     void setLogFileName(const QString &currentTestFunction, const QString &currentDataTag);
 
     std::unique_ptr<ModuleManagerTestRunner> m_testRunner;
