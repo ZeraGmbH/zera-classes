@@ -23,18 +23,22 @@ public:
                             LxdmSessionChangeParam lxdmParam = MockLxdmSessionChangeParamGenerator::generateTestSessionChanger(),
                             bool addVfLogger = false);
     ~ModuleManagerTestRunner();
+
+    void start(QString sessionFileName);
+    QList<TestModuleManager::TModuleInstances> getInstanceCountsOnModulesDestroyed();
+
     VeinStorage::AbstractEventSystem *getVeinStorageSystem();
+    VfCmdEventHandlerSystemPtr getVfCmdEventHandlerSystemPtr();
+    void setVfComponent(int entityId, QString componentName, QVariant newValue);
+    QVariant getVfComponent(int entityId, QString componentName);
+
+    ModuleManagerSetupFacade* getModManFacade();
+    ZeraModules::VirtualModule *getModule(QString uniqueName, int entityId);
+    void setRangeGetSetDelay(int rangeGetSetDelay);
+
     TestDspInterfacePtr getDspInterface(int entityId,
                                         TestFactoryServiceInterfaces::DSPInterfaceType dspInterfaceType = TestFactoryServiceInterfaces::MODULEPROG);
     const QList<TestDspInterfacePtr>& getDspInterfaceList() const;
-    VfCmdEventHandlerSystemPtr getVfCmdEventHandlerSystemPtr();
-    ModuleManagerSetupFacade* getModManFacade();
-    ZeraModules::VirtualModule *getModule(QString uniqueName, int entityId);
-    void setVfComponent(int entityId, QString componentName, QVariant newValue);
-    QVariant getVfComponent(int entityId, QString componentName);
-    void start(QString sessionFileName);
-    QList<TestModuleManager::TModuleInstances> getInstanceCountsOnModulesDestroyed();
-    void setRangeGetSetDelay(int rangeGetSetDelay);
 
     // hotplug full functional methods
     void fireHotplugInterrupt(const AbstractMockAllServices::ChannelAliasHotplugDeviceNameMap &deviceMap);
