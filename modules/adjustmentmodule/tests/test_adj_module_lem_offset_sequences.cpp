@@ -24,20 +24,27 @@ void test_adj_module_lem_offset_sequences::cleanupTestCase()
     ControllerPersitentData::cleanupPersitentData();
 }
 
+void test_adj_module_lem_offset_sequences::init()
+{
+    setLogFileName(QTest::currentTestFunction(), QTest::currentDataTag());
+}
+
 void test_adj_module_lem_offset_sequences::cleanup()
 {
     m_testRunner->removeAllHotplugDevices();
 }
 
-void test_adj_module_lem_offset_sequences::dailyOffsetAdjustSequenceRefZero()
+void test_adj_module_lem_offset_sequences::adjOffsetActRefZero()
 {
-    setLogFileName(QTest::currentTestFunction(), QTest::currentDataTag());
     insertClamps(cClamp::CL1400VDC, cClamp::CL1200ADC1400VDC);
-
     QVERIFY(setRange("UL1", "C1400V"));
+    AdjModuleTestHelper::setAllValuesSymmetricDc(*m_testRunner, 0.0, 0.0);
+
     QVERIFY(adjInit("UL1", "C1400V"));
     QVERIFY(adjSendOffset("UL1", "C1400V", "0.0"));
     QVERIFY(adjCompute());
+
+    QStringList nodes = queryAdjNodesOrCoeff("UL1", "C1400V", NODE);
 
     QStringList coeffs = queryAdjNodesOrCoeff("UL1", "C1400V", COEFFICIENT);
     QCOMPARE(coeffs.size(), 4);
@@ -48,16 +55,14 @@ void test_adj_module_lem_offset_sequences::dailyOffsetAdjustSequenceRefZero()
     QCOMPARE(coeffs[3], "0");
 }
 
-void test_adj_module_lem_offset_sequences::dailyOffsetAdjustSequenceRefNonZeroButOnSpot()
+void test_adj_module_lem_offset_sequences::adjOffsActRefNonZeroSame()
 {
-    setLogFileName(QTest::currentTestFunction(), QTest::currentDataTag());
     insertClamps(cClamp::CL1400VDC, cClamp::CL1200ADC1400VDC);
-
     QVERIFY(setRange("UL1", "C1400V"));
     AdjModuleTestHelper::setAllValuesSymmetricDc(*m_testRunner, 1.25, 0.0);
+
     QVERIFY(adjInit("UL1", "C1400V"));
     QVERIFY(adjSendOffset("UL1", "C1400V", "1.25"));
-
     QVERIFY(adjCompute());
 
     QStringList coeffs = queryAdjNodesOrCoeff("UL1", "C1400V", COEFFICIENT);
@@ -68,9 +73,38 @@ void test_adj_module_lem_offset_sequences::dailyOffsetAdjustSequenceRefNonZeroBu
     QCOMPARE(coeffs[3], "0");
 }
 
+void test_adj_module_lem_offset_sequences::adjOffsActNonZeroRefZero()
+{
+    insertClamps(cClamp::CL1400VDC, cClamp::CL1200ADC1400VDC);
+    QVERIFY(setRange("UL1", "C1400V"));
+    AdjModuleTestHelper::setAllValuesSymmetricDc(*m_testRunner, 1.0, 0.0);
+
+    QVERIFY(adjInit("UL1", "C1400V"));
+    QVERIFY(adjSendOffset("UL1", "C1400V", "0.0"));
+    QVERIFY(adjCompute());
+
+    QStringList nodes = queryAdjNodesOrCoeff("UL1", "C1400V", NODE);
+    QList<NodeVal> nodeValList = decodeNodes(nodes);
+    constexpr double expectedOffset = -2832.860000;
+    QCOMPARE(nodeValList[0].sampleOffset, expectedOffset);
+    QCOMPARE(nodeValList[0].takenAt, 0.0);
+    QCOMPARE(nodeValList[1].sampleOffset, expectedOffset);
+    QCOMPARE(nodeValList[1].takenAt, 0.0);
+    QCOMPARE(nodeValList[2].sampleOffset, expectedOffset);
+    QCOMPARE(nodeValList[2].takenAt, 0.0);
+    QCOMPARE(nodeValList[3].sampleOffset, expectedOffset);
+    QCOMPARE(nodeValList[3].takenAt, 0.0);
+
+    QStringList coeffs = queryAdjNodesOrCoeff("UL1", "C1400V", COEFFICIENT);
+    QCOMPARE(coeffs.size(), 4);
+    QCOMPARE(coeffs[0], QString::number(expectedOffset));
+    QCOMPARE(coeffs[1], "0");
+    QCOMPARE(coeffs[2], "0");
+    QCOMPARE(coeffs[3], "0");
+}
+
 void test_adj_module_lem_offset_sequences::writeAdjValuesAfterClampInserted()
 {
-    setLogFileName(QTest::currentTestFunction(), QTest::currentDataTag());
     insertClamps(cClamp::CL1400VDC, cClamp::CL1200ADC1400VDC);
 }
 
@@ -123,7 +157,6 @@ void test_adj_module_lem_offset_sequences::allClampsPermissions()
         range = currentRange;
     }
 
-    setLogFileName(QTest::currentTestFunction(), QTest::currentDataTag());
     QList<AbstractMockAllServices::clampParam> clampParams;
     clampParams.append({"IAUX", cClamp::ClampTypes(clampType)});
     m_testRunner->addClamps(clampParams);
@@ -212,7 +245,7 @@ QStringList test_adj_module_lem_offset_sequences::queryAdjNodesOrCoeff(const QSt
     const QString channelMName = channelSetting->m_nameMx;
     const QString valueType = coeffOrNode == NODE ? "NODE" : "COEFFICIENT";
     QStringList offsetCoeffs;
-    for(int coeffNo=0; coeffNo<=3; ++coeffNo) {
+    for(int coeffNo=0; coeffNo<4; ++coeffNo) {
         const QByteArray send = QString("CALC:ADJ1:SEND? 6307,SENSE:%1:%2:CORRECTION:OFFS:%3:%4?;").
                                 arg(channelMName, rangeName, valueType).arg(coeffNo).
                                 toLocal8Bit();
@@ -221,6 +254,16 @@ QStringList test_adj_module_lem_offset_sequences::queryAdjNodesOrCoeff(const QSt
         offsetCoeffs.append(semicolonSepList.join(";"));
     }
     return offsetCoeffs;
+}
+
+QList<test_adj_module_lem_offset_sequences::NodeVal> test_adj_module_lem_offset_sequences::decodeNodes(const QStringList nodes)
+{
+    QList<NodeVal> decodedNodes;
+    for (int nodeNo=0; nodeNo<4; ++nodeNo) {
+        QStringList nodeParts = nodes[nodeNo].split(";");
+        decodedNodes.append({nodeParts[0].toDouble(), nodeParts[1].toDouble()});
+    }
+    return decodedNodes;
 }
 
 cSenseSettingsPtr test_adj_module_lem_offset_sequences::getMt310s2dSenseSettings()
