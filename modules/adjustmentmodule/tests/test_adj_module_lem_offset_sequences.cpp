@@ -115,7 +115,8 @@ void test_adj_module_lem_offset_sequences::allClampsPermissions_data()
     QTest::addColumn<QByteArray>("currentRange");
 
     const QList<cClamp::ClampTypes> clampTypes =
-        QList<cClamp::ClampTypes>() << cClamp::CL1400VDC << cClamp::CL8ADC1400VDC << cClamp::CL1200ADC1400VDC;
+        QList<cClamp::ClampTypes>() << cClamp::CL1400VDC << cClamp::CL8ADC1400VDC << cClamp::CL1200ADC1400VDC << // new
+                                                 cClamp::CL200ADC1000VDC << cClamp::CL1000VDC; // old
 
     for (const cClamp::ClampTypes &clampType : clampTypes) {
         QList<AbstractMockAllServices::clampParam> clampParams;
