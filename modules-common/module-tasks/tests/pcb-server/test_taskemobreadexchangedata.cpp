@@ -62,6 +62,25 @@ void test_taskemobreadexchangedata::readProperly()
     QCOMPARE(spy[0][0], true);
 }
 
+void test_taskemobreadexchangedata::readWrongChannel()
+{
+    setupServers();
+    AbstractMockAllServices::ChannelAliasHotplugDeviceNameMap infoMap;
+    infoMap.insert("IL1", {"EMOB_MOCK-00V00", cClamp::undefined});
+    m_mt310s2d->fireHotplugInterrupt(infoMap);
+    TimeMachineObject::feedEventLoop();
+
+    std::shared_ptr<QByteArray> dataReceived = std::make_shared<QByteArray>();
+    TaskTemplatePtr task = TaskEmobReadExchangeData::create(m_pcbIFace,
+                                                            dataReceived, "m4",
+                                                            EXPIRE_INFINITE);
+    QSignalSpy spy(task.get(), &TaskEmobReadExchangeData::sigFinish);
+    task->start();
+    TimeMachineObject::feedEventLoop();
+
+    QCOMPARE(spy[0][0], false);
+}
+
 void test_taskemobreadexchangedata::readNoEmob()
 {
     setupServers();

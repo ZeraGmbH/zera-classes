@@ -14,6 +14,7 @@ private slots:
 
     void timeoutAndErrFunc();
     void readProperly();
+    void readWrongChannel();
     void readNoEmob();
 private:
     void setupServers();
