@@ -17,5 +17,5 @@ SETUP_QTESTS_MODULE_TASKS(
     test_taskrefpowerfetchconstant
     test_taskgetinternalsourcecapabilities
     test_taskemobreadconnectionstate
+    test_taskemobreadexchangedata
 )
-

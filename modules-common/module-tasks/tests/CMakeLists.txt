@@ -5,6 +5,8 @@ function(SETUP_QTESTS_MODULE_TASKS)
             PUBLIC
             module-tasks
             Zera::scpi-testlib
+            Zera::vf-tcp-mock-networklib
+            Zera::zenuxservicecommon-testlib
             )
     endforeach()
 endfunction()
