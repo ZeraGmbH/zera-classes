@@ -18,4 +18,5 @@ SETUP_QTESTS_MODULE_TASKS(
     test_taskgetinternalsourcecapabilities
     test_taskemobreadconnectionstate
     test_taskemobreadexchangedata
+    test_taskemobwriteexchangedata
 )
