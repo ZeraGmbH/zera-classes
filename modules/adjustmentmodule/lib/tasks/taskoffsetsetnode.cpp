@@ -46,9 +46,7 @@ void TaskOffsetSetNode::start()
 
 void TaskOffsetSetNode::onServerAnswer(quint32 msgnr, quint8 reply, QVariant answer)
 {
-    if(m_msgnr == msgnr) {
-        if (reply == ack) {
-            finishTask(reply == ack);
-        }
-    }
+    Q_UNUSED(answer)
+    if(m_msgnr == msgnr)
+        finishTask(reply == ack);
 }
