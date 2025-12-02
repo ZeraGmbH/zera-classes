@@ -291,15 +291,17 @@
       <!-- Power modules -->
       <xsl:if test="$POWFound != ''">
         <h2 id="PowerMeasurement"><xsl:value-of select="$PowerMeasurementHeading"/></h2>
-        <xsl:variable name="prosaFile">
+        <xsl:variable name="sessionSpecificProsaFile">
           <xsl:call-template name="PowMeasProsaFile">
             <xsl:with-param name="xmlFilePath" select="$sessionXml"/>
           </xsl:call-template>
         </xsl:variable>
+        <xsl:variable name="sessionProsa" select="document($sessionSpecificProsaFile)"/>
+        <xsl:variable name="measModeProsa" select="document(concat($ProsaFolder, 'measurement-POW/meas-mode-translations.html'))"/>
         <xsl:call-template name="Measurement">
           <xsl:with-param name="MeasSystem" select="'POW'"/>
           <xsl:with-param name="PerSystemHeader" select="$PowerModule"/>
-          <xsl:with-param name="Prosa" select="document($prosaFile)"/>
+          <xsl:with-param name="Prosa" select= "$sessionProsa | $measModeProsa"/>
           <xsl:with-param name="CatalogPresent" select="'true'"/>
         </xsl:call-template>
       </xsl:if>
