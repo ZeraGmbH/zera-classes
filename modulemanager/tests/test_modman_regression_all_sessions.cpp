@@ -76,7 +76,7 @@ void test_modman_regression_all_sessions::testGenerateScpiDocs_data()
 
     QTest::addColumn<QString>("htmlFilePath");
     for(auto &fileInfo: htmlDir.entryInfoList())
-        QTest::newRow(fileInfo.fileName().toLatin1()) << fileInfo.absolutePath();
+        QTest::newRow(fileInfo.fileName().toLatin1()) << fileInfo.absoluteFilePath();
 }
 
 void test_modman_regression_all_sessions::testGenerateScpiDocs()
