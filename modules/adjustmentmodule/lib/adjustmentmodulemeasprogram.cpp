@@ -771,18 +771,6 @@ void cAdjustmentModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 re
                 }
                 break;
 
-            case setoffsetnode:
-                if (reply == ack) {
-                    m_pPARAdjustOffset->setValue(m_currEnv.m_paramValue);
-                    emit adjustoffsetContinue();
-                }
-                else {
-                    emit adjustError();
-                    notifyError(setOffsetNodeErrMsg);
-                    m_pPARAdjustOffset->setError();
-                }
-                break;
-
             case getadjphasecorrection:
                 if (reply == ack) {
                     m_currEnv.m_AdjustCorrection = answer.toDouble();

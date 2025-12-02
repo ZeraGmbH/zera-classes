@@ -39,7 +39,6 @@ enum adjustmentmoduleCmds
     setgainnode,
     getadjphasecorrection,
     setphasenode,
-    setoffsetnode,
     getpcbadjustmentdata,
     setpcbadjustmentdata,
     getclampadjustmentdata,
