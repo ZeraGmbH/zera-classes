@@ -22,18 +22,20 @@ private slots:
 
     void allClampsPermissions_data();
     void allClampsPermissions();
+    void internalNoPermission();
 
 private:
     void setupServers();
     void insertClamps(cClamp::ClampTypes clampPhase1To3, cClamp::ClampTypes clampPhaseAux);
-    bool setAutoRangeOff();
-    bool setRangeGroupingOff();
-    bool setRange(const QString &channelAlias, const QString &rangeName);
+    QString clearScpiStatus();
+    QString setAutoRangeOff();
+    QString setRangeGroupingOff();
+    QString setRange(const QString &channelAlias, const QString &rangeName);
     bool setAllRanges(const QString &voltageRangeName, const QString &currrentRangeName);
 
-    bool adjInit(const QString &channelAlias, const QString &rangeName);
-    bool adjSendOffset(const QString &channelAlias, const QString &rangeName, const QString& offset);
-    bool adjCompute();
+    QString adjInit(const QString &channelAlias, const QString &rangeName);
+    QString adjSendOffset(const QString &channelAlias, const QString &rangeName, const QString& offset);
+    QString adjCompute();
     enum CoeffOrNode {
         NODE,
         COEFFICIENT

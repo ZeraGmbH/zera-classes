@@ -11,8 +11,8 @@ void test_adj_module_lem_offset_sequences::initTestCase()
 {
     qputenv("QT_FATAL_CRITICALS", "1");
     setupServers();
-    QVERIFY(setRangeGroupingOff());
-    QVERIFY(setAutoRangeOff());
+    QCOMPARE(setRangeGroupingOff(), "+0");
+    QCOMPARE(setAutoRangeOff(), "+0");
 }
 
 void test_adj_module_lem_offset_sequences::cleanupTestCase()
@@ -37,12 +37,12 @@ void test_adj_module_lem_offset_sequences::cleanup()
 void test_adj_module_lem_offset_sequences::adjOffsetActRefZero()
 {
     insertClamps(cClamp::CL1400VDC, cClamp::CL1200ADC1400VDC);
-    QVERIFY(setRange("UL1", "C1400V"));
+    QCOMPARE(setRange("UL1", "C1400V"), "+0");
     AdjModuleTestHelper::setAllValuesSymmetricDc(*m_testRunner, 0.0, 0.0);
 
-    QVERIFY(adjInit("UL1", "C1400V"));
-    QVERIFY(adjSendOffset("UL1", "C1400V", "0.0"));
-    QVERIFY(adjCompute());
+    QCOMPARE(adjInit("UL1", "C1400V"), "+0");
+    QCOMPARE(adjSendOffset("UL1", "C1400V", "0.0"), "+0");
+    QCOMPARE(adjCompute(), "+0");
 
     QStringList nodes = queryAdjNodesOrCoeff("UL1", "C1400V", NODE);
 
@@ -58,12 +58,12 @@ void test_adj_module_lem_offset_sequences::adjOffsetActRefZero()
 void test_adj_module_lem_offset_sequences::adjOffsActRefNonZeroSame()
 {
     insertClamps(cClamp::CL1400VDC, cClamp::CL1200ADC1400VDC);
-    QVERIFY(setRange("UL1", "C1400V"));
+    QCOMPARE(setRange("UL1", "C1400V"), "+0");
     AdjModuleTestHelper::setAllValuesSymmetricDc(*m_testRunner, 1.25, 0.0);
 
-    QVERIFY(adjInit("UL1", "C1400V"));
-    QVERIFY(adjSendOffset("UL1", "C1400V", "1.25"));
-    QVERIFY(adjCompute());
+    QCOMPARE(adjInit("UL1", "C1400V"), "+0");
+    QCOMPARE(adjSendOffset("UL1", "C1400V", "1.25"), "+0");
+    QCOMPARE(adjCompute(), "+0");
 
     QStringList coeffs = queryAdjNodesOrCoeff("UL1", "C1400V", COEFFICIENT);
     QCOMPARE(coeffs.size(), 4);
@@ -76,12 +76,12 @@ void test_adj_module_lem_offset_sequences::adjOffsActRefNonZeroSame()
 void test_adj_module_lem_offset_sequences::adjOffsActNonZeroRefZero()
 {
     insertClamps(cClamp::CL1400VDC, cClamp::CL1200ADC1400VDC);
-    QVERIFY(setRange("UL1", "C1400V"));
+    QCOMPARE(setRange("UL1", "C1400V"), "+0");
     AdjModuleTestHelper::setAllValuesSymmetricDc(*m_testRunner, 1.0, 0.0);
 
-    QVERIFY(adjInit("UL1", "C1400V"));
-    QVERIFY(adjSendOffset("UL1", "C1400V", "0.0"));
-    QVERIFY(adjCompute());
+    QCOMPARE(adjInit("UL1", "C1400V"), "+0");
+    QCOMPARE(adjSendOffset("UL1", "C1400V", "0.0"), "+0");
+    QCOMPARE(adjCompute(), "+0");
 
     QStringList nodes = queryAdjNodesOrCoeff("UL1", "C1400V", NODE);
     QList<NodeVal> nodeValList = decodeNodes(nodes);
@@ -163,9 +163,25 @@ void test_adj_module_lem_offset_sequences::allClampsPermissions()
     m_testRunner->addClamps(clampParams);
 
     setRange(channel, range);
-    QVERIFY(adjInit(channel, range));
-    QVERIFY(adjSendOffset(channel, range, "0.0"));
-    QVERIFY(adjCompute());
+    QCOMPARE(adjInit(channel, range), "+0");
+    QCOMPARE(adjSendOffset(channel, range, "0.0"), "+0");
+    QCOMPARE(adjCompute(), "+0");
+}
+
+void test_adj_module_lem_offset_sequences::internalNoPermission()
+{
+    QByteArray channel = "UAUX";
+    QByteArray range = "250V";
+    QCOMPARE(setRange(channel, range), "+0");
+
+    // INIT is handled on adjustmentmodule only / no command send => always allowed :(
+    QCOMPARE(adjInit(channel, range), "+0");
+
+    QCOMPARE(adjSendOffset(channel, range, "0.0"), "+4");
+    QCOMPARE(clearScpiStatus(), "+0");
+
+    QCOMPARE(adjCompute(), "+4");
+    QCOMPARE(clearScpiStatus(), "+0");
 }
 
 void test_adj_module_lem_offset_sequences::setupServers()
@@ -185,56 +201,56 @@ void test_adj_module_lem_offset_sequences::insertClamps(cClamp::ClampTypes clamp
     m_testRunner->addClamps(clampParams);
 }
 
-bool test_adj_module_lem_offset_sequences::setAutoRangeOff()
+QString test_adj_module_lem_offset_sequences::clearScpiStatus()
+{
+    const QByteArray send = "*CLS|*STB?";
+    return m_scpiClient->sendReceive(send);
+}
+
+QString test_adj_module_lem_offset_sequences::setAutoRangeOff()
 {
     const QByteArray send = "CONFIGURATION:RNG1:RNGAUTO 0;|*stb?";
-    QString response = m_scpiClient->sendReceive(send);
-    return response == "+0";
+    return m_scpiClient->sendReceive(send);
 }
 
-bool test_adj_module_lem_offset_sequences::setRangeGroupingOff()
+QString test_adj_module_lem_offset_sequences::setRangeGroupingOff()
 {
     const QByteArray send = "CONFIGURATION:RNG1:GROUPING 0;|*stb?";
-    QString response = m_scpiClient->sendReceive(send);
-    return response == "+0";
+    return m_scpiClient->sendReceive(send);
 }
 
-bool test_adj_module_lem_offset_sequences::setRange(const QString &channelAlias, const QString &rangeName)
+QString test_adj_module_lem_offset_sequences::setRange(const QString &channelAlias, const QString &rangeName)
 {
     const QByteArray send = QString("SENSE:RNG1:%1:RANGE %2;|*stb?").arg(channelAlias, rangeName).toLocal8Bit();
-    QString response = m_scpiClient->sendReceive(send);
-    return response == "+0";
+    return m_scpiClient->sendReceive(send);
 }
 
 bool test_adj_module_lem_offset_sequences::setAllRanges(const QString &voltageRangeName, const QString &currrentRangeName)
 {
-    return setRange("UL1", voltageRangeName) &&
-           setRange("UL2", voltageRangeName) &&
-           setRange("UL3", voltageRangeName) &&
-           setRange("UAUX", voltageRangeName) &&
-           setRange("IAUX", currrentRangeName);
+    return setRange("UL1", voltageRangeName) == "+0" &&
+           setRange("UL2", voltageRangeName) == "+0" &&
+           setRange("UL3", voltageRangeName) == "+0" &&
+           setRange("UAUX", voltageRangeName) == "+0" &&
+           setRange("IAUX", currrentRangeName) == "+0";
 }
 
-bool test_adj_module_lem_offset_sequences::adjInit(const QString &channelAlias, const QString &rangeName)
+QString test_adj_module_lem_offset_sequences::adjInit(const QString &channelAlias, const QString &rangeName)
 {
     const QByteArray send = QString("CALC:ADJ1:INIT %1,%2;|*stb?").arg(channelAlias, rangeName).toLocal8Bit();
-    QString response = m_scpiClient->sendReceive(send);
-    return response == "+0";
+    return m_scpiClient->sendReceive(send);
 }
 
-bool test_adj_module_lem_offset_sequences::adjSendOffset(const QString &channelAlias, const QString &rangeName,
+QString test_adj_module_lem_offset_sequences::adjSendOffset(const QString &channelAlias, const QString &rangeName,
                                                          const QString &offset)
 {
     const QByteArray send = QString("CALC:ADJ1:OFFS %1,%2,%3;|*stb?").arg(channelAlias, rangeName, offset).toLocal8Bit();
-    QString response = m_scpiClient->sendReceive(send);
-    return response == "+0";
+    return m_scpiClient->sendReceive(send);
 }
 
-bool test_adj_module_lem_offset_sequences::adjCompute()
+QString test_adj_module_lem_offset_sequences::adjCompute()
 {
     const QByteArray send = "CALC:ADJ1:COMP 1;|*stb?";
-    QString response = m_scpiClient->sendReceive(send);
-    return response == "+0";
+    return m_scpiClient->sendReceive(send);
 }
 
 QStringList test_adj_module_lem_offset_sequences::queryAdjNodesOrCoeff(const QString &channelAlias,

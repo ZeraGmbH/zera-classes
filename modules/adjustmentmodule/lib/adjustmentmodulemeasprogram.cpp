@@ -283,7 +283,7 @@ void cAdjustmentModuleMeasProgram::generateVeinInterface()
                                                  key = QString("PAR_Computation"),
                                                  QString("Start computation of adjustment coefficients"),
                                                  QVariant(int(0)),
-                                                 false); // no deferred notification necessary
+                                                 true); // deferred notification necessary
 
     m_pPARComputation->setScpiInfo("CALCULATE", "COMPUTATION", SCPI::isQuery|SCPI::isCmdwP, m_pPARComputation->getName());
     m_pPARComputation->setValidator(new cIntValidator(0,1));
@@ -376,7 +376,7 @@ void cAdjustmentModuleMeasProgram::generateVeinInterface()
                                                   key = QString("PAR_Adjustoffset"),
                                                   QString("One offset adjustment node"),
                                                   QVariant(QString("")),
-                                                  true); // no deferred notification necessary
+                                                  true); // deferred notification necessary
     m_pPARAdjustOffset->setScpiInfo("CALCULATE", "OFFSET", SCPI::isQuery|SCPI::isCmdwP, m_pPARAdjustOffset->getName());
     m_pModule->m_veinModuleParameterMap[key] = m_pPARAdjustOffset;
     // we will set the validator later after activation we will know the channel names and their ranges
@@ -707,6 +707,7 @@ void cAdjustmentModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 re
                 else {
                     m_computationMachine.stop();
                     notifyError(adjustcomputationPCBErrMSG);
+                    m_pPARComputation->setError();
                 }
                 break;
 
