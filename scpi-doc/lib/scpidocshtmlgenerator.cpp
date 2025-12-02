@@ -11,7 +11,10 @@ void ScpiDocsHtmlGenerator::createScpiDocHtmls(QString modmanConfigFile, QString
     if(!sessionNamesMapping.storeMappedJsonFile(sessionMapPath))
         qFatal("Session names mapping json file could not be created!");
 
-    QDir().mkdir(htmlDirPath);
+    QDir dir(htmlDirPath);
+    if(dir.exists())
+        dir.removeRecursively(); //Removes the directory, including all its contents
+    dir.mkpath(htmlDirPath);
 
     QDir xmlDir(xmlDirPath);
     QString htmlPath;
