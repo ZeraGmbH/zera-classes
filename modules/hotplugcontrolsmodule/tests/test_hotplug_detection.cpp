@@ -20,7 +20,7 @@ void test_hotplug_detection::noHotplug()
     ModuleManagerTestRunner testRunner(":/hotpluscontrols-status-session.json");
     QList<int> entityList = testRunner.getVeinStorageSystem()->getDb()->getEntityList();
 
-    QCOMPARE(entityList.count(), 3);
+    QCOMPARE(entityList.count(), 4);
     QVERIFY(entityList.contains(statusEntityId));
     QVERIFY(entityList.contains(hotplugControlsEntityId));
 
@@ -38,6 +38,8 @@ void test_hotplug_detection::oneEmobConnected()
 
     QVariant ctrlersFound = testRunner.getVeinStorageSystem()->getDb()->getStoredValue(hotplugControlsEntityId, "ACT_ControllersFound");
     QCOMPARE(ctrlersFound , false);
+    int muxChannel = testRunner.getSenseSettings()->findChannelSettingByAlias1("IL1")->m_nMuxChannelNo;
+    QVERIFY(ControllerPersitentData::getData().m_hotpluggedDevices[muxChannel].emobDataReceived[0].isEmpty());
 }
 
 void test_hotplug_detection::oneMt650eConnected()
@@ -80,6 +82,9 @@ void test_hotplug_detection::twoMt650eConnected()
 
 void test_hotplug_detection::oneEmobOneMt650eConnected()
 {
+    QByteArray emobExchangeData = createTestEmobExchangeData();
+    int emobId = 0;
+
     ModuleManagerTestRunner testRunner(":/hotpluscontrols-status-session.json");
     TimeMachineObject::feedEventLoop();
     QVariant ctrlersFound = testRunner.getVeinStorageSystem()->getDb()->getStoredValue(hotplugControlsEntityId, "ACT_ControllersFound");
@@ -93,5 +98,55 @@ void test_hotplug_detection::oneEmobOneMt650eConnected()
 
     ctrlersFound = testRunner.getVeinStorageSystem()->getDb()->getStoredValue(hotplugControlsEntityId, "ACT_ControllersFound");
     QCOMPARE(ctrlersFound , true);
+    int muxChannel = testRunner.getSenseSettings()->findChannelSettingByAlias1("IL1")->m_nMuxChannelNo;
+    ControllerPersitentData::TPersitentControllerData foo = ControllerPersitentData::getData();
+    QCOMPARE(emobExchangeData, ControllerPersitentData::getData().m_hotpluggedDevices[muxChannel].emobDataReceived[emobId]);
+}
+
+void test_hotplug_detection::oneEmobOneMt650eOnStartup()
+{
+    QByteArray emobExchangeData = createTestEmobExchangeData();
+    int emobId = 0;
+
+    ModuleManagerTestRunner testRunner("");
+    AbstractMockAllServices::ChannelAliasHotplugDeviceNameMap infoMap;
+    infoMap.insert("IL1", {"EMOB", cClamp::undefined});
+    infoMap.insert("IL2", {"Mt650e", cClamp::undefined});
+    testRunner.fireHotplugInterrupt(infoMap);
+    TimeMachineObject::feedEventLoop();
+    testRunner.start(":/hotpluscontrols-status-session.json");
+
+    QVariant ctrlersFound = testRunner.getVeinStorageSystem()->getDb()->getStoredValue(hotplugControlsEntityId, "ACT_ControllersFound");
+    QCOMPARE(ctrlersFound , true);
+    int muxChannel = testRunner.getSenseSettings()->findChannelSettingByAlias1("IL1")->m_nMuxChannelNo;
+    ControllerPersitentData::TPersitentControllerData foo = ControllerPersitentData::getData();
+    QCOMPARE(emobExchangeData, ControllerPersitentData::getData().m_hotpluggedDevices[muxChannel].emobDataReceived[emobId]);
+}
+
+void test_hotplug_detection::oneEmobOnStartup()
+{
+    int emobId = 0;
+
+    ModuleManagerTestRunner testRunner("");
+    AbstractMockAllServices::ChannelAliasHotplugDeviceNameMap infoMap;
+    infoMap.insert("IL1", {"EMOB", cClamp::undefined});
+    testRunner.fireHotplugInterrupt(infoMap);
+    TimeMachineObject::feedEventLoop();
+    testRunner.start(":/hotpluscontrols-status-session.json");
+
+    QVariant ctrlersFound = testRunner.getVeinStorageSystem()->getDb()->getStoredValue(hotplugControlsEntityId, "ACT_ControllersFound");
+    QCOMPARE(ctrlersFound , false);
+    int muxChannel = testRunner.getSenseSettings()->findChannelSettingByAlias1("IL1")->m_nMuxChannelNo;
+    ControllerPersitentData::TPersitentControllerData foo = ControllerPersitentData::getData();
+    QVERIFY(ControllerPersitentData::getData().m_hotpluggedDevices[muxChannel].emobDataReceived[emobId].isEmpty());
+}
+
+QByteArray test_hotplug_detection::createTestEmobExchangeData()
+{
+    QByteArray emobExchangeData;
+    emobExchangeData.resize(256);
+    for(int i=0; i<emobExchangeData.size(); ++i)
+        emobExchangeData[i] = i;
+    return emobExchangeData;
 }
 

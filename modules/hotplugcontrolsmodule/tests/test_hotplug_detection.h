@@ -17,8 +17,11 @@ private slots:
     void twoEmobsConnected();
     void twoMt650eConnected();
     void oneEmobOneMt650eConnected();
+    void oneEmobOneMt650eOnStartup();
+    void oneEmobOnStartup();
 
 private:
+    QByteArray createTestEmobExchangeData();
 };
 
 #endif // TEST_HOTPLUG_DETECTION_H
