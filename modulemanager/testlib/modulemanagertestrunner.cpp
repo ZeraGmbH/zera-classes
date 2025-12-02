@@ -100,6 +100,11 @@ AbstractMockAllServices::ChannelAliasHotplugDeviceNameMap ModuleManagerTestRunne
     return m_modMan->getCurrentHotplugMap();
 }
 
+cSenseSettingsPtr ModuleManagerTestRunner::getSenseSettings()
+{
+    return m_modMan->getSenseSettings();
+}
+
 void ModuleManagerTestRunner::addStandardEmobControllers(const QStringList &channelAliases)
 {
     m_modMan->addStandardEmobControllers(channelAliases);

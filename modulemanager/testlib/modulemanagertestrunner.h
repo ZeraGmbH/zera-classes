@@ -42,6 +42,7 @@ public:
     // hotplug full functional methods
     void fireHotplugInterrupt(const AbstractMockAllServices::ChannelAliasHotplugDeviceNameMap &deviceMap);
     AbstractMockAllServices::ChannelAliasHotplugDeviceNameMap getCurrentHotplugMap() const;
+    cSenseSettingsPtr getSenseSettings();
 
     // hotplug convenience methods
     void addStandardEmobControllers(const QStringList &channelAliases);
