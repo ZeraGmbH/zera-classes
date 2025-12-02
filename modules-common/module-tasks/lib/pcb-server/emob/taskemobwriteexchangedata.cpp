@@ -4,7 +4,7 @@
 
 TaskTemplatePtr TaskEmobWriteExchangeData::create(Zera::PcbInterfacePtr pcbInterface,
                                                   QString channelMName, int emobIdFrom0To3,
-                                                  QByteArray exchangeDataWrite,
+                                                  std::shared_ptr<QByteArray> exchangeDataWrite,
                                                   int timeout,
                                                   std::function<void ()> additionalErrorHandler)
 {
@@ -15,7 +15,7 @@ TaskTemplatePtr TaskEmobWriteExchangeData::create(Zera::PcbInterfacePtr pcbInter
 
 TaskEmobWriteExchangeData::TaskEmobWriteExchangeData(Zera::PcbInterfacePtr pcbInterface,
                                                      QString channelMName, int emobIdFrom0To3,
-                                                     QByteArray exchangeDataWrite) :
+                                                     std::shared_ptr<QByteArray> exchangeDataWrite) :
     TaskServerTransactionTemplate(pcbInterface),
     m_channelMName(channelMName),
     m_emobIdFrom0To3(emobIdFrom0To3),
@@ -27,8 +27,8 @@ quint32 TaskEmobWriteExchangeData::sendToServer()
 {
     QString scpiCmd = QString("SYSTEM:EMOB:WRITEDATA %1;%2;").
                             arg(m_channelMName).arg(m_emobIdFrom0To3);
-    if (!m_exchangeDataWrite.isEmpty())
-        scpiCmd += HotplugControllerInterface::encodeDataToHex(m_exchangeDataWrite).join(",") + ";";
+    if (!(*m_exchangeDataWrite).isEmpty())
+        scpiCmd += HotplugControllerInterface::encodeDataToHex(*m_exchangeDataWrite).join(",") + ";";
     return m_interface->scpiCommand(scpiCmd);
 }
 
