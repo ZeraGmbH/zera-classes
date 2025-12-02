@@ -27,7 +27,7 @@ void test_taskemobwriteexchangedata::timeoutAndErrFunc()
     PcbInitForTest pcb;
     int localErrorCount = 0;
     TaskTemplatePtr task = TaskEmobWriteExchangeData::create(pcb.getPcbInterface(),
-                                                             "", 0, QByteArray(),
+                                                             "", 0, std::make_shared<QByteArray>(),
                                                              DEFAULT_EXPIRE,
                                                              [&]{
                                                                  localErrorCount++;
@@ -53,7 +53,7 @@ void test_taskemobwriteexchangedata::writeProperly()
 
     QByteArray testData = createTestEmobExchangeData();
     TaskTemplatePtr task = TaskEmobWriteExchangeData::create(m_pcbIFace,
-                                                             "m3", emobId, testData,
+                                                             "m3", emobId, std::make_shared<QByteArray>(testData),
                                                              EXPIRE_INFINITE);
     QSignalSpy spy(task.get(), &TaskEmobWriteExchangeData::sigFinish);
     task->start();
@@ -76,7 +76,7 @@ void test_taskemobwriteexchangedata::writeProperlyEmpty()
 
     QByteArray testData = QByteArray();
     TaskTemplatePtr task = TaskEmobWriteExchangeData::create(m_pcbIFace,
-                                                             "m3", emobId, testData,
+                                                             "m3", emobId, std::make_shared<QByteArray>(testData),
                                                              EXPIRE_INFINITE);
     QSignalSpy spy(task.get(), &TaskEmobWriteExchangeData::sigFinish);
     task->start();
@@ -100,7 +100,7 @@ void test_taskemobwriteexchangedata::writeWrongChannel()
 
     QByteArray testData = createTestEmobExchangeData();
     TaskTemplatePtr task = TaskEmobWriteExchangeData::create(m_pcbIFace,
-                                                             "m5", emobId, testData,
+                                                             "m5", emobId, std::make_shared<QByteArray>(testData),
                                                              EXPIRE_INFINITE);
     QSignalSpy spy(task.get(), &TaskEmobWriteExchangeData::sigFinish);
     task->start();
@@ -116,7 +116,7 @@ void test_taskemobwriteexchangedata::writeNoEmob()
     constexpr int emobId = 2;
     QByteArray testData = createTestEmobExchangeData();
     TaskTemplatePtr task = TaskEmobWriteExchangeData::create(m_pcbIFace,
-                                                             "m3", emobId, testData,
+                                                             "m3", emobId, std::make_shared<QByteArray>(testData),
                                                              EXPIRE_INFINITE);
     QSignalSpy spy(task.get(), &TaskEmobWriteExchangeData::sigFinish);
     task->start();

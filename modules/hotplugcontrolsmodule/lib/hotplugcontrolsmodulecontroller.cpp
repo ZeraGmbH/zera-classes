@@ -153,7 +153,7 @@ void HotplugControlsModuleController::readWriteData(QString emobChannelAlias, QS
                                                                      dataReceived, mt650eChannelMName,
                                                                      timeout);
         TaskTemplatePtr writeTtask = TaskEmobWriteExchangeData::create(m_pcbConnection.getInterface(),
-                                                                       emobChannelMName, emobId, *dataReceived,
+                                                                       emobChannelMName, emobId, dataReceived,
                                                                        timeout);
         tasks->addSub(std::move(readTtask));
         tasks->addSub(std::move(writeTtask));
@@ -162,7 +162,7 @@ void HotplugControlsModuleController::readWriteData(QString emobChannelAlias, QS
     else {
         if(!emobChannelMName.isEmpty()) {
             TaskTemplatePtr writeTtask = TaskEmobWriteExchangeData::create(m_pcbConnection.getInterface(),
-                                                                           emobChannelMName, emobId, QByteArray(),
+                                                                           emobChannelMName, emobId, std::make_shared<QByteArray>(),
                                                                            timeout);
             writeTtask->start();
         }
