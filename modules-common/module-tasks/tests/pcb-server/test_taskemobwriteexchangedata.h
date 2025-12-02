@@ -14,6 +14,7 @@ private slots:
 
     void timeoutAndErrFunc();
     void writeProperly();
+    void writeProperlyEmpty();
     void writeWrongChannel();
     void writeNoEmob();
 private:

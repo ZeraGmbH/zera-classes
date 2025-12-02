@@ -25,9 +25,10 @@ TaskEmobWriteExchangeData::TaskEmobWriteExchangeData(Zera::PcbInterfacePtr pcbIn
 
 quint32 TaskEmobWriteExchangeData::sendToServer()
 {
-    const QString paramData = HotplugControllerInterface::encodeDataToHex(m_exchangeDataWrite).join(",");
-    const QString scpiCmd = QString("SYSTEM:EMOB:WRITEDATA %1;%2;%3;").
-                            arg(m_channelMName).arg(m_emobIdFrom0To3).arg(paramData);
+    QString scpiCmd = QString("SYSTEM:EMOB:WRITEDATA %1;%2;").
+                            arg(m_channelMName).arg(m_emobIdFrom0To3);
+    if (!m_exchangeDataWrite.isEmpty())
+        scpiCmd += HotplugControllerInterface::encodeDataToHex(m_exchangeDataWrite).join(",") + ";";
     return m_interface->scpiCommand(scpiCmd);
 }
 

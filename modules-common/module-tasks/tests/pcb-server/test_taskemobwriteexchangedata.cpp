@@ -64,6 +64,30 @@ void test_taskemobwriteexchangedata::writeProperly()
     QCOMPARE(spy[0][0], true);
 }
 
+void test_taskemobwriteexchangedata::writeProperlyEmpty()
+{
+    setupServers();
+    const QString channelAlias = "IL1";
+    constexpr int emobId = 2;
+    AbstractMockAllServices::ChannelAliasHotplugDeviceNameMap infoMap;
+    infoMap.insert(channelAlias, {"EMOB_MOCK-00V00", cClamp::undefined});
+    m_mt310s2d->fireHotplugInterrupt(infoMap);
+    TimeMachineObject::feedEventLoop();
+
+    QByteArray testData = QByteArray();
+    TaskTemplatePtr task = TaskEmobWriteExchangeData::create(m_pcbIFace,
+                                                             "m3", emobId, testData,
+                                                             EXPIRE_INFINITE);
+    QSignalSpy spy(task.get(), &TaskEmobWriteExchangeData::sigFinish);
+    task->start();
+    TimeMachineObject::feedEventLoop();
+
+    int muxChannel = m_mt310s2d->getSenseSettings()->findChannelSettingByAlias1(channelAlias)->m_nMuxChannelNo;
+    QByteArray found = ControllerPersitentData::getData().m_hotpluggedDevices[muxChannel].emobDataReceived[emobId];
+    QCOMPARE(testData, found);
+    QCOMPARE(spy[0][0], true);
+}
+
 void test_taskemobwriteexchangedata::writeWrongChannel()
 {
     setupServers();
