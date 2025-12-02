@@ -3,6 +3,7 @@
 #include "pcbinitfortest.h"
 #include <controllerpersitentdata.h>
 #include <mocktcpnetworkfactory.h>
+#include <mocki2cctrlemob.h>
 #include <testfactoryi2cctrl.h>
 #include <timemachinefortest.h>
 #include <tasktesthelper.h>
@@ -45,8 +46,9 @@ void test_taskemobreadexchangedata::timeoutAndErrFunc()
 void test_taskemobreadexchangedata::readProperly()
 {
     setupServers();
+    const QString channelAlias = "IL1";
     AbstractMockAllServices::ChannelAliasHotplugDeviceNameMap infoMap;
-    infoMap.insert("IL1", {"EMOB_MOCK-00V00", cClamp::undefined});
+    infoMap.insert(channelAlias, {"EMOB_MOCK-00V00", cClamp::undefined});
     m_mt310s2d->fireHotplugInterrupt(infoMap);
     TimeMachineObject::feedEventLoop();
 
@@ -58,7 +60,7 @@ void test_taskemobreadexchangedata::readProperly()
     task->start();
     TimeMachineObject::feedEventLoop();
 
-    QCOMPARE(*dataReceived, ControllerPersitentData::getData().m_emobExchangeData);
+    QCOMPARE(*dataReceived, MockI2cCtrlEMOB::getDefaultExchangeData());
     QCOMPARE(spy[0][0], true);
 }
 

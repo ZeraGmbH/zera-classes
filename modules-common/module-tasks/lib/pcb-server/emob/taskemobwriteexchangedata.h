@@ -8,18 +8,19 @@ class TaskEmobWriteExchangeData : public TaskServerTransactionTemplate
 {
 public:
     static TaskTemplatePtr create(Zera::PcbInterfacePtr pcbInterface,
+                                  QString channelMName, int emobIdFrom0To3,
                                   QByteArray exchangeDataWrite,
-                                  QString channelMName,
                                   int timeout,
                                   std::function<void()> additionalErrorHandler = []{});
     TaskEmobWriteExchangeData(Zera::PcbInterfacePtr pcbInterface,
-                              QByteArray exchangeDataWrite,
-                              QString channelMName);
+                              QString channelMName, int emobIdFrom0To3,
+                              QByteArray exchangeDataWrite);
 private:
     quint32 sendToServer() override;
     bool handleCheckedServerAnswer(QVariant answer) override;
-    QByteArray m_exchangeDataWrite;
     QString m_channelMName;
+    int m_emobIdFrom0To3;
+    QByteArray m_exchangeDataWrite;
 };
 
 #endif // TASKEMOBWRITEEXCHANGEDATA_H
