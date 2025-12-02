@@ -26,10 +26,14 @@ private slots:
     void catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant answer);
     void controllersFound(QVariant value);
 private:
+    void readWriteData(QString emobChannelAlias, QString mt650eChannelAlias);
+    int getEmobId(QString emobChannelAlias);
+
     cHotplugControlsModule *m_module;
     PcbServiceConnection m_pcbConnection;
     TaskContainerSequence m_activationTasks;
     QHash<quint32, int> m_MsgNrCmdList;
+    ChannelRangeObserver::SystemObserverPtr m_observer;
 
     VfModuleRpcPtr m_pEmobPushButtonRpc;
     VfModuleRpcPtr m_pEmobLockStateRpc;
