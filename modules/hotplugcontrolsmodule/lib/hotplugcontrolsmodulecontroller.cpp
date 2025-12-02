@@ -141,13 +141,13 @@ void HotplugControlsModuleController::controllersFound(QVariant value)
 
 void HotplugControlsModuleController::readWriteData(QString emobChannelAlias, QString mt650eChannelAlias)
 {
-    int timeout = 50;
+    int timeout = 10000;
     int emobId = getEmobId(emobChannelAlias);
     QString emobChannelMName = ServiceChannelNameHelper::getChannelMName(emobChannelAlias, m_observer);
     QString mt650eChannelMName = ServiceChannelNameHelper::getChannelMName(mt650eChannelAlias, m_observer);
+    m_readWriteTasks = TaskContainerSequence::create();
 
     if(m_pControllersFound->getValue().toBool()) {
-        TaskContainerInterfacePtr tasks = TaskContainerSequence::create();
         std::shared_ptr<QByteArray> dataReceived = std::make_shared<QByteArray>();
         TaskTemplatePtr readTtask = TaskEmobReadExchangeData::create(m_pcbConnection.getInterface(),
                                                                      dataReceived, mt650eChannelMName,
@@ -155,16 +155,17 @@ void HotplugControlsModuleController::readWriteData(QString emobChannelAlias, QS
         TaskTemplatePtr writeTtask = TaskEmobWriteExchangeData::create(m_pcbConnection.getInterface(),
                                                                        emobChannelMName, emobId, dataReceived,
                                                                        timeout);
-        tasks->addSub(std::move(readTtask));
-        tasks->addSub(std::move(writeTtask));
-        tasks->start();
+        m_readWriteTasks->addSub(std::move(readTtask));
+        m_readWriteTasks->addSub(std::move(writeTtask));
+        m_readWriteTasks->start();
     }
     else {
         if(!emobChannelMName.isEmpty()) {
             TaskTemplatePtr writeTtask = TaskEmobWriteExchangeData::create(m_pcbConnection.getInterface(),
                                                                            emobChannelMName, emobId, std::make_shared<QByteArray>(),
                                                                            timeout);
-            writeTtask->start();
+            m_readWriteTasks->addSub(std::move(writeTtask));
+            m_readWriteTasks->start();
         }
     }
 }
@@ -175,7 +176,7 @@ int HotplugControlsModuleController::getEmobId(QString emobChannelAlias)
         return 0;
     else if(emobChannelAlias == "IL2")
         return 1;
-    else if(emobChannelAlias == "IL2")
+    else if(emobChannelAlias == "IL3")
         return 2;
     else
         return 3;
