@@ -26,10 +26,14 @@ QByteArray ScpiModuleClientBlocked::sendReceive(const QByteArray &send, bool rem
     TimeMachineObject::feedEventLoop();
 
     QByteArray ret = m_socket.readAll();
-    addLog(LOG_RECEIVE, ret);
-    if(removeLineFeedOnReceive)
-        ret.replace("\n", "");
-    qInfo("Network I/O received: %s / took %llims", qPrintable(ret), timer.elapsed());
+    if(!ret.isEmpty()) {
+        addLog(LOG_RECEIVE, ret);
+        if(removeLineFeedOnReceive)
+            ret.replace("\n", "");
+        qInfo("Network I/O received: %s / took %llims", qPrintable(ret), timer.elapsed());
+    }
+    else
+        qInfo("No respone received");
     return ret;
 }
 
