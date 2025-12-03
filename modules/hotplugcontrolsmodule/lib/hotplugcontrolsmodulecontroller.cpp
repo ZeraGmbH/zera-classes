@@ -1,5 +1,7 @@
 #include "hotplugcontrolsmodulecontroller.h"
 #include "rpcactivatepushbutton.h"
+#include "rpcclearerror.h"
+#include "rpcreaderror.h"
 #include "rpcreadlockstate.h"
 #include "servicechannelnamehelper.h"
 #include <taskemobreadexchangedata.h>
@@ -67,6 +69,36 @@ void HotplugControlsModuleController::generateVeinInterface()
     m_pEmobLockStateRpc->setValidator(new cStringValidator(QString("IL1;IL2;IL3;IAUX")));
     m_pEmobLockStateRpc->canAcceptOptionalParam();
     m_module->m_veinModuleRPCMap[rpcEmobReadLockState->getSignature()] = m_pEmobLockStateRpc; // for modules use
+
+    std::shared_ptr<RPCReadError> rpcEmobReadError = std::make_shared<RPCReadError>(m_pcbConnection.getInterface(),
+                                                                                        m_observer,
+                                                                                        rpcEventSystem,
+                                                                                        m_module->getEntityId());
+    m_pEmobReadErrorRpc = std::make_shared<VfModuleRpc>(rpcEmobReadError,
+                                                         "Read EMOB Errors: 0:Supply lost 1:Device error 2:Sensor error 3:Cable error 4:Overcurrent 5:Overtemperature"
+                                                         "6:locking error 7:Problem at neighbour EMOB");
+
+    m_pEmobReadErrorRpc->setRPCScpiInfo("EMOB",
+                                         QString("ERROR"),
+                                         SCPI::isQuery,
+                                         rpcEmobReadError->getSignature());
+    m_pEmobReadErrorRpc->setValidator(new cStringValidator(QString("IL1;IL2;IL3;IAUX")));
+    m_pEmobReadErrorRpc->canAcceptOptionalParam();
+    m_module->m_veinModuleRPCMap[rpcEmobReadError->getSignature()] = m_pEmobReadErrorRpc; // for modules use
+
+    std::shared_ptr<RpcClearError> rpcEmobClearError = std::make_shared<RpcClearError>(m_pcbConnection.getInterface(),
+                                                                                    m_observer,
+                                                                                    rpcEventSystem,
+                                                                                    m_module->getEntityId());
+    m_pEmobClearErrorRpc = std::make_shared<VfModuleRpc>(rpcEmobClearError,
+                                                        "Clear EMOB Errors");
+    m_pEmobClearErrorRpc->setRPCScpiInfo("EMOB",
+                                        QString("CLEARERROR"),
+                                        SCPI::isCmdwP,
+                                        rpcEmobClearError->getSignature());
+    m_pEmobClearErrorRpc->setValidator(new cStringValidator(QString("IL1;IL2;IL3;IAUX")));
+    m_pEmobClearErrorRpc->canAcceptOptionalParam();
+    m_module->m_veinModuleRPCMap[rpcEmobClearError->getSignature()] = m_pEmobClearErrorRpc; // for modules use
 
     m_pControllersFound = new VfModuleParameter(m_module->getEntityId(), m_module->getValidatorEventSystem(),
                                                 key = QString("ACT_ControllersFound"),

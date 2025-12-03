@@ -5696,6 +5696,32 @@
                         "Type": "STRING"
                     }
                 },
+                "RPC_clearError(QString p_channelName)": {
+                    "Description": "Clear EMOB Errors",
+                    "Optional parameter": "",
+                    "Validation": {
+                        "Data": [
+                            "IL1",
+                            "IL2",
+                            "IL3",
+                            "IAUX"
+                        ],
+                        "Type": "STRING"
+                    }
+                },
+                "RPC_readError(QString p_channelName)": {
+                    "Description": "Read EMOB Errors: 0:Supply lost 1:Device error 2:Sensor error 3:Cable error 4:Overcurrent 5:Overtemperature6:locking error 7:Problem at neighbour EMOB",
+                    "Optional parameter": "",
+                    "Validation": {
+                        "Data": [
+                            "IL1",
+                            "IL2",
+                            "IL3",
+                            "IAUX"
+                        ],
+                        "Type": "STRING"
+                    }
+                },
                 "RPC_readLockState(QString p_channelName)": {
                     "Description": "EMOB plug lock state: 0:unknown 1:open 2:locking 3:locked 4:error",
                     "Optional parameter": "",
@@ -5720,6 +5746,20 @@
                         "PBPRESS",
                         "8",
                         "RPC_activatePushButton(QString p_channelName)",
+                        "0"
+                    ],
+                    [
+                        "EMOB",
+                        "CLEARERROR",
+                        "8",
+                        "RPC_clearError(QString p_channelName)",
+                        "0"
+                    ],
+                    [
+                        "EMOB",
+                        "ERROR",
+                        "2",
+                        "RPC_readError(QString p_channelName)",
                         "0"
                     ],
                     [
