@@ -37,6 +37,8 @@ private:
 
     VfModuleRpcPtr m_pEmobPushButtonRpc;
     VfModuleRpcPtr m_pEmobLockStateRpc;
+    VfModuleRpcPtr m_pEmobReadErrorRpc;
+    VfModuleRpcPtr m_pEmobClearErrorRpc;
     VfModuleParameter *m_pControllersFound;
     TaskContainerInterfacePtr m_readWriteTasks;
 };

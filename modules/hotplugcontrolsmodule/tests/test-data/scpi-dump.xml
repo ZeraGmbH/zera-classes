@@ -5,8 +5,8 @@
  <MODELS>
   <CONFIGURATION Type="Model,Node">
    <SYST Type="Node">
-    <NAMESESSION ScpiPath="CONFIGURATION:SYST:NAMESESSION" Description="Session name" Type="Query,Command+Par" ValidPar="Default,EMOB AC,EMOB DC,DC: 4*Voltage / 1*Current" DataType="STRING"/>
-    <XSESSION ScpiPath="CONFIGURATION:SYST:XSESSION" Description="XSession name" Type="Query,Command+Par" ValidPar="Foo,Bar" DataType="STRING">
+    <NAMESESSION DataType="STRING" ScpiPath="CONFIGURATION:SYST:NAMESESSION" Type="Query,Command+Par" Description="Session name" ValidPar="Default,EMOB AC,EMOB DC,DC: 4*Voltage / 1*Current"/>
+    <XSESSION DataType="STRING" ScpiPath="CONFIGURATION:SYST:XSESSION" Type="Query,Command+Par" Description="XSession name" ValidPar="Foo,Bar">
      <CATALOG ScpiPath="CONFIGURATION:SYST:XSESSION:CATALOG" Type="Query"/>
     </XSESSION>
     <SESSION Type="Node">
@@ -14,150 +14,152 @@
     </SESSION>
    </SYST>
    <RNG1 Type="Node">
-    <GROUPING ScpiPath="CONFIGURATION:RNG1:GROUPING" Description="Channel grouping on/off" Type="Query,Command+Par" Min="0" Max="1"/>
-    <IGNORERMSVAL ScpiPath="CONFIGURATION:RNG1:IGNORERMSVAL" Description="Percentage of nominal range below which channel values are ignored" Type="Query,Command+Par" Min="0" Unit="%" DataType="DOUBLE" Max="2"/>
-    <ENABLEIGNORERMSVAL ScpiPath="CONFIGURATION:RNG1:ENABLEIGNORERMSVAL" Description="Enable or disable channel ignore limit option" Type="Query,Command+Par" Min="0" Max="1"/>
+    <GROUPING Max="1" ScpiPath="CONFIGURATION:RNG1:GROUPING" Type="Query,Command+Par" Min="0" Description="Channel grouping on/off"/>
+    <IGNORERMSVAL DataType="DOUBLE" Max="2" ScpiPath="CONFIGURATION:RNG1:IGNORERMSVAL" Type="Query,Command+Par" Min="0" Description="Percentage of nominal range below which channel values are ignored" Unit="%"/>
+    <ENABLEIGNORERMSVAL Max="1" ScpiPath="CONFIGURATION:RNG1:ENABLEIGNORERMSVAL" Type="Query,Command+Par" Min="0" Description="Enable or disable channel ignore limit option"/>
     <UL1 Type="Node">
-     <INVERTPHASE ScpiPath="CONFIGURATION:RNG1:UL1:INVERTPHASE" Description="Inverted Phase" Type="Query,Command+Par" Min="0" Max="1"/>
+     <INVERTPHASE Max="1" ScpiPath="CONFIGURATION:RNG1:UL1:INVERTPHASE" Type="Query,Command+Par" Min="0" Description="Inverted Phase"/>
     </UL1>
     <UL2 Type="Node">
-     <INVERTPHASE ScpiPath="CONFIGURATION:RNG1:UL2:INVERTPHASE" Description="Inverted Phase" Type="Query,Command+Par" Min="0" Max="1"/>
+     <INVERTPHASE Max="1" ScpiPath="CONFIGURATION:RNG1:UL2:INVERTPHASE" Type="Query,Command+Par" Min="0" Description="Inverted Phase"/>
     </UL2>
     <UL3 Type="Node">
-     <INVERTPHASE ScpiPath="CONFIGURATION:RNG1:UL3:INVERTPHASE" Description="Inverted Phase" Type="Query,Command+Par" Min="0" Max="1"/>
+     <INVERTPHASE Max="1" ScpiPath="CONFIGURATION:RNG1:UL3:INVERTPHASE" Type="Query,Command+Par" Min="0" Description="Inverted Phase"/>
     </UL3>
     <IL1 Type="Node">
-     <INVERTPHASE ScpiPath="CONFIGURATION:RNG1:IL1:INVERTPHASE" Description="Inverted Phase" Type="Query,Command+Par" Min="0" Max="1"/>
+     <INVERTPHASE Max="1" ScpiPath="CONFIGURATION:RNG1:IL1:INVERTPHASE" Type="Query,Command+Par" Min="0" Description="Inverted Phase"/>
     </IL1>
     <IL2 Type="Node">
-     <INVERTPHASE ScpiPath="CONFIGURATION:RNG1:IL2:INVERTPHASE" Description="Inverted Phase" Type="Query,Command+Par" Min="0" Max="1"/>
+     <INVERTPHASE Max="1" ScpiPath="CONFIGURATION:RNG1:IL2:INVERTPHASE" Type="Query,Command+Par" Min="0" Description="Inverted Phase"/>
     </IL2>
     <IL3 Type="Node">
-     <INVERTPHASE ScpiPath="CONFIGURATION:RNG1:IL3:INVERTPHASE" Description="Inverted Phase" Type="Query,Command+Par" Min="0" Max="1"/>
+     <INVERTPHASE Max="1" ScpiPath="CONFIGURATION:RNG1:IL3:INVERTPHASE" Type="Query,Command+Par" Min="0" Description="Inverted Phase"/>
     </IL3>
     <UAUX Type="Node">
-     <INVERTPHASE ScpiPath="CONFIGURATION:RNG1:UAUX:INVERTPHASE" Description="Inverted Phase" Type="Query,Command+Par" Min="0" Max="1"/>
+     <INVERTPHASE Max="1" ScpiPath="CONFIGURATION:RNG1:UAUX:INVERTPHASE" Type="Query,Command+Par" Min="0" Description="Inverted Phase"/>
     </UAUX>
     <IAUX Type="Node">
-     <INVERTPHASE ScpiPath="CONFIGURATION:RNG1:IAUX:INVERTPHASE" Description="Inverted Phase" Type="Query,Command+Par" Min="0" Max="1"/>
+     <INVERTPHASE Max="1" ScpiPath="CONFIGURATION:RNG1:IAUX:INVERTPHASE" Type="Query,Command+Par" Min="0" Description="Inverted Phase"/>
     </IAUX>
-    <RNGAUTO ScpiPath="CONFIGURATION:RNG1:RNGAUTO" Description="Range automatic on/off" Type="Query,Command+Par" Min="0" Max="1"/>
+    <RNGAUTO Max="1" ScpiPath="CONFIGURATION:RNG1:RNGAUTO" Type="Query,Command+Par" Min="0" Description="Range automatic on/off"/>
    </RNG1>
   </CONFIGURATION>
   <SENSE Type="Model,Node">
    <RNG1 Type="Node">
     <UL1 Type="Node">
-     <RANGE ScpiPath="SENSE:RNG1:UL1:RANGE" Description="Channel's range" Type="Query,Command+Par" ValidPar="250V,8V,100mV" DataType="STRING">
+     <RANGE DataType="STRING" ScpiPath="SENSE:RNG1:UL1:RANGE" Type="Query,Command+Par" Description="Channel's range" ValidPar="250V,8V,100mV">
       <CATALOG ScpiPath="SENSE:RNG1:UL1:RANGE:CATALOG" Type="Query"/>
      </RANGE>
     </UL1>
     <UL2 Type="Node">
-     <RANGE ScpiPath="SENSE:RNG1:UL2:RANGE" Description="Channel's range" Type="Query,Command+Par" ValidPar="250V,8V,100mV" DataType="STRING">
+     <RANGE DataType="STRING" ScpiPath="SENSE:RNG1:UL2:RANGE" Type="Query,Command+Par" Description="Channel's range" ValidPar="250V,8V,100mV">
       <CATALOG ScpiPath="SENSE:RNG1:UL2:RANGE:CATALOG" Type="Query"/>
      </RANGE>
     </UL2>
     <UL3 Type="Node">
-     <RANGE ScpiPath="SENSE:RNG1:UL3:RANGE" Description="Channel's range" Type="Query,Command+Par" ValidPar="250V,8V,100mV" DataType="STRING">
+     <RANGE DataType="STRING" ScpiPath="SENSE:RNG1:UL3:RANGE" Type="Query,Command+Par" Description="Channel's range" ValidPar="250V,8V,100mV">
       <CATALOG ScpiPath="SENSE:RNG1:UL3:RANGE:CATALOG" Type="Query"/>
      </RANGE>
     </UL3>
     <IL1 Type="Node">
-     <RANGE ScpiPath="SENSE:RNG1:IL1:RANGE" Description="Channel's range" Type="Query,Command+Par" ValidPar="10A,5A,2.5A,1.0A,500mA,250mA,100mA,50mA,25mA" DataType="STRING">
+     <RANGE DataType="STRING" ScpiPath="SENSE:RNG1:IL1:RANGE" Type="Query,Command+Par" Description="Channel's range" ValidPar="10A,5A,2.5A,1.0A,500mA,250mA,100mA,50mA,25mA">
       <CATALOG ScpiPath="SENSE:RNG1:IL1:RANGE:CATALOG" Type="Query"/>
      </RANGE>
     </IL1>
     <IL2 Type="Node">
-     <RANGE ScpiPath="SENSE:RNG1:IL2:RANGE" Description="Channel's range" Type="Query,Command+Par" ValidPar="10A,5A,2.5A,1.0A,500mA,250mA,100mA,50mA,25mA" DataType="STRING">
+     <RANGE DataType="STRING" ScpiPath="SENSE:RNG1:IL2:RANGE" Type="Query,Command+Par" Description="Channel's range" ValidPar="10A,5A,2.5A,1.0A,500mA,250mA,100mA,50mA,25mA">
       <CATALOG ScpiPath="SENSE:RNG1:IL2:RANGE:CATALOG" Type="Query"/>
      </RANGE>
     </IL2>
     <IL3 Type="Node">
-     <RANGE ScpiPath="SENSE:RNG1:IL3:RANGE" Description="Channel's range" Type="Query,Command+Par" ValidPar="10A,5A,2.5A,1.0A,500mA,250mA,100mA,50mA,25mA" DataType="STRING">
+     <RANGE DataType="STRING" ScpiPath="SENSE:RNG1:IL3:RANGE" Type="Query,Command+Par" Description="Channel's range" ValidPar="10A,5A,2.5A,1.0A,500mA,250mA,100mA,50mA,25mA">
       <CATALOG ScpiPath="SENSE:RNG1:IL3:RANGE:CATALOG" Type="Query"/>
      </RANGE>
     </IL3>
     <UAUX Type="Node">
-     <RANGE ScpiPath="SENSE:RNG1:UAUX:RANGE" Description="Channel's range" Type="Query,Command+Par" ValidPar="250V,8V,100mV" DataType="STRING">
+     <RANGE DataType="STRING" ScpiPath="SENSE:RNG1:UAUX:RANGE" Type="Query,Command+Par" Description="Channel's range" ValidPar="250V,8V,100mV">
       <CATALOG ScpiPath="SENSE:RNG1:UAUX:RANGE:CATALOG" Type="Query"/>
      </RANGE>
     </UAUX>
     <IAUX Type="Node">
-     <RANGE ScpiPath="SENSE:RNG1:IAUX:RANGE" Description="Channel's range" Type="Query,Command+Par" ValidPar="--" DataType="STRING">
+     <RANGE DataType="STRING" ScpiPath="SENSE:RNG1:IAUX:RANGE" Type="Query,Command+Par" Description="Channel's range" ValidPar="--">
       <CATALOG ScpiPath="SENSE:RNG1:IAUX:RANGE:CATALOG" Type="Query"/>
      </RANGE>
     </IAUX>
-    <OVERLOAD ScpiPath="SENSE:RNG1:OVERLOAD" Description="Overload" Type="Query,Command+Par" Min="0" Max="1"/>
+    <OVERLOAD Max="1" ScpiPath="SENSE:RNG1:OVERLOAD" Type="Query,Command+Par" Min="0" Description="Overload"/>
    </RNG1>
   </SENSE>
   <MEASURE ScpiPath="MEASURE" Type="Model,Node,Query">
    <RNG1 ScpiPath="MEASURE:RNG1" Type="Node,Query">
-    <UL1 ScpiPath="MEASURE:RNG1:UL1" Description="Actual peak value" Type="Query" Unit="V"/>
-    <UL2 ScpiPath="MEASURE:RNG1:UL2" Description="Actual peak value" Type="Query" Unit="V"/>
-    <UL3 ScpiPath="MEASURE:RNG1:UL3" Description="Actual peak value" Type="Query" Unit="V"/>
-    <IL1 ScpiPath="MEASURE:RNG1:IL1" Description="Actual peak value" Type="Query" Unit="A"/>
-    <IL2 ScpiPath="MEASURE:RNG1:IL2" Description="Actual peak value" Type="Query" Unit="A"/>
-    <IL3 ScpiPath="MEASURE:RNG1:IL3" Description="Actual peak value" Type="Query" Unit="A"/>
-    <UAUX ScpiPath="MEASURE:RNG1:UAUX" Description="Actual peak value" Type="Query" Unit="V"/>
-    <IAUX ScpiPath="MEASURE:RNG1:IAUX" Description="Actual peak value" Type="Query" Unit="A"/>
-    <F ScpiPath="MEASURE:RNG1:F" Description="Actual frequency" Type="Query" Unit="Hz"/>
+    <UL1 ScpiPath="MEASURE:RNG1:UL1" Type="Query" Description="Actual peak value" Unit="V"/>
+    <UL2 ScpiPath="MEASURE:RNG1:UL2" Type="Query" Description="Actual peak value" Unit="V"/>
+    <UL3 ScpiPath="MEASURE:RNG1:UL3" Type="Query" Description="Actual peak value" Unit="V"/>
+    <IL1 ScpiPath="MEASURE:RNG1:IL1" Type="Query" Description="Actual peak value" Unit="A"/>
+    <IL2 ScpiPath="MEASURE:RNG1:IL2" Type="Query" Description="Actual peak value" Unit="A"/>
+    <IL3 ScpiPath="MEASURE:RNG1:IL3" Type="Query" Description="Actual peak value" Unit="A"/>
+    <UAUX ScpiPath="MEASURE:RNG1:UAUX" Type="Query" Description="Actual peak value" Unit="V"/>
+    <IAUX ScpiPath="MEASURE:RNG1:IAUX" Type="Query" Description="Actual peak value" Unit="A"/>
+    <F ScpiPath="MEASURE:RNG1:F" Type="Query" Description="Actual frequency" Unit="Hz"/>
    </RNG1>
   </MEASURE>
   <CONFIGURE ScpiPath="CONFIGURE" Type="Model,Node,Command">
    <RNG1 ScpiPath="CONFIGURE:RNG1" Type="Node,Command">
-    <UL1 ScpiPath="CONFIGURE:RNG1:UL1" Description="Actual peak value" Type="Command" Unit="V"/>
-    <UL2 ScpiPath="CONFIGURE:RNG1:UL2" Description="Actual peak value" Type="Command" Unit="V"/>
-    <UL3 ScpiPath="CONFIGURE:RNG1:UL3" Description="Actual peak value" Type="Command" Unit="V"/>
-    <IL1 ScpiPath="CONFIGURE:RNG1:IL1" Description="Actual peak value" Type="Command" Unit="A"/>
-    <IL2 ScpiPath="CONFIGURE:RNG1:IL2" Description="Actual peak value" Type="Command" Unit="A"/>
-    <IL3 ScpiPath="CONFIGURE:RNG1:IL3" Description="Actual peak value" Type="Command" Unit="A"/>
-    <UAUX ScpiPath="CONFIGURE:RNG1:UAUX" Description="Actual peak value" Type="Command" Unit="V"/>
-    <IAUX ScpiPath="CONFIGURE:RNG1:IAUX" Description="Actual peak value" Type="Command" Unit="A"/>
-    <F ScpiPath="CONFIGURE:RNG1:F" Description="Actual frequency" Type="Command" Unit="Hz"/>
+    <UL1 ScpiPath="CONFIGURE:RNG1:UL1" Type="Command" Description="Actual peak value" Unit="V"/>
+    <UL2 ScpiPath="CONFIGURE:RNG1:UL2" Type="Command" Description="Actual peak value" Unit="V"/>
+    <UL3 ScpiPath="CONFIGURE:RNG1:UL3" Type="Command" Description="Actual peak value" Unit="V"/>
+    <IL1 ScpiPath="CONFIGURE:RNG1:IL1" Type="Command" Description="Actual peak value" Unit="A"/>
+    <IL2 ScpiPath="CONFIGURE:RNG1:IL2" Type="Command" Description="Actual peak value" Unit="A"/>
+    <IL3 ScpiPath="CONFIGURE:RNG1:IL3" Type="Command" Description="Actual peak value" Unit="A"/>
+    <UAUX ScpiPath="CONFIGURE:RNG1:UAUX" Type="Command" Description="Actual peak value" Unit="V"/>
+    <IAUX ScpiPath="CONFIGURE:RNG1:IAUX" Type="Command" Description="Actual peak value" Unit="A"/>
+    <F ScpiPath="CONFIGURE:RNG1:F" Type="Command" Description="Actual frequency" Unit="Hz"/>
    </RNG1>
   </CONFIGURE>
   <READ ScpiPath="READ" Type="Model,Node,Query">
    <RNG1 ScpiPath="READ:RNG1" Type="Node,Query">
-    <UL1 ScpiPath="READ:RNG1:UL1" Description="Actual peak value" Type="Query" Unit="V"/>
-    <UL2 ScpiPath="READ:RNG1:UL2" Description="Actual peak value" Type="Query" Unit="V"/>
-    <UL3 ScpiPath="READ:RNG1:UL3" Description="Actual peak value" Type="Query" Unit="V"/>
-    <IL1 ScpiPath="READ:RNG1:IL1" Description="Actual peak value" Type="Query" Unit="A"/>
-    <IL2 ScpiPath="READ:RNG1:IL2" Description="Actual peak value" Type="Query" Unit="A"/>
-    <IL3 ScpiPath="READ:RNG1:IL3" Description="Actual peak value" Type="Query" Unit="A"/>
-    <UAUX ScpiPath="READ:RNG1:UAUX" Description="Actual peak value" Type="Query" Unit="V"/>
-    <IAUX ScpiPath="READ:RNG1:IAUX" Description="Actual peak value" Type="Query" Unit="A"/>
-    <F ScpiPath="READ:RNG1:F" Description="Actual frequency" Type="Query" Unit="Hz"/>
+    <UL1 ScpiPath="READ:RNG1:UL1" Type="Query" Description="Actual peak value" Unit="V"/>
+    <UL2 ScpiPath="READ:RNG1:UL2" Type="Query" Description="Actual peak value" Unit="V"/>
+    <UL3 ScpiPath="READ:RNG1:UL3" Type="Query" Description="Actual peak value" Unit="V"/>
+    <IL1 ScpiPath="READ:RNG1:IL1" Type="Query" Description="Actual peak value" Unit="A"/>
+    <IL2 ScpiPath="READ:RNG1:IL2" Type="Query" Description="Actual peak value" Unit="A"/>
+    <IL3 ScpiPath="READ:RNG1:IL3" Type="Query" Description="Actual peak value" Unit="A"/>
+    <UAUX ScpiPath="READ:RNG1:UAUX" Type="Query" Description="Actual peak value" Unit="V"/>
+    <IAUX ScpiPath="READ:RNG1:IAUX" Type="Query" Description="Actual peak value" Unit="A"/>
+    <F ScpiPath="READ:RNG1:F" Type="Query" Description="Actual frequency" Unit="Hz"/>
    </RNG1>
   </READ>
   <INIT ScpiPath="INIT" Type="Model,Node,Command">
    <RNG1 ScpiPath="INIT:RNG1" Type="Node,Command">
-    <UL1 ScpiPath="INIT:RNG1:UL1" Description="Actual peak value" Type="Command" Unit="V"/>
-    <UL2 ScpiPath="INIT:RNG1:UL2" Description="Actual peak value" Type="Command" Unit="V"/>
-    <UL3 ScpiPath="INIT:RNG1:UL3" Description="Actual peak value" Type="Command" Unit="V"/>
-    <IL1 ScpiPath="INIT:RNG1:IL1" Description="Actual peak value" Type="Command" Unit="A"/>
-    <IL2 ScpiPath="INIT:RNG1:IL2" Description="Actual peak value" Type="Command" Unit="A"/>
-    <IL3 ScpiPath="INIT:RNG1:IL3" Description="Actual peak value" Type="Command" Unit="A"/>
-    <UAUX ScpiPath="INIT:RNG1:UAUX" Description="Actual peak value" Type="Command" Unit="V"/>
-    <IAUX ScpiPath="INIT:RNG1:IAUX" Description="Actual peak value" Type="Command" Unit="A"/>
-    <F ScpiPath="INIT:RNG1:F" Description="Actual frequency" Type="Command" Unit="Hz"/>
+    <UL1 ScpiPath="INIT:RNG1:UL1" Type="Command" Description="Actual peak value" Unit="V"/>
+    <UL2 ScpiPath="INIT:RNG1:UL2" Type="Command" Description="Actual peak value" Unit="V"/>
+    <UL3 ScpiPath="INIT:RNG1:UL3" Type="Command" Description="Actual peak value" Unit="V"/>
+    <IL1 ScpiPath="INIT:RNG1:IL1" Type="Command" Description="Actual peak value" Unit="A"/>
+    <IL2 ScpiPath="INIT:RNG1:IL2" Type="Command" Description="Actual peak value" Unit="A"/>
+    <IL3 ScpiPath="INIT:RNG1:IL3" Type="Command" Description="Actual peak value" Unit="A"/>
+    <UAUX ScpiPath="INIT:RNG1:UAUX" Type="Command" Description="Actual peak value" Unit="V"/>
+    <IAUX ScpiPath="INIT:RNG1:IAUX" Type="Command" Description="Actual peak value" Unit="A"/>
+    <F ScpiPath="INIT:RNG1:F" Type="Command" Description="Actual frequency" Unit="Hz"/>
    </RNG1>
   </INIT>
   <FETCH ScpiPath="FETCH" Type="Model,Node,Query">
    <RNG1 ScpiPath="FETCH:RNG1" Type="Node,Query">
-    <UL1 ScpiPath="FETCH:RNG1:UL1" Description="Actual peak value" Type="Query" Unit="V"/>
-    <UL2 ScpiPath="FETCH:RNG1:UL2" Description="Actual peak value" Type="Query" Unit="V"/>
-    <UL3 ScpiPath="FETCH:RNG1:UL3" Description="Actual peak value" Type="Query" Unit="V"/>
-    <IL1 ScpiPath="FETCH:RNG1:IL1" Description="Actual peak value" Type="Query" Unit="A"/>
-    <IL2 ScpiPath="FETCH:RNG1:IL2" Description="Actual peak value" Type="Query" Unit="A"/>
-    <IL3 ScpiPath="FETCH:RNG1:IL3" Description="Actual peak value" Type="Query" Unit="A"/>
-    <UAUX ScpiPath="FETCH:RNG1:UAUX" Description="Actual peak value" Type="Query" Unit="V"/>
-    <IAUX ScpiPath="FETCH:RNG1:IAUX" Description="Actual peak value" Type="Query" Unit="A"/>
-    <F ScpiPath="FETCH:RNG1:F" Description="Actual frequency" Type="Query" Unit="Hz"/>
+    <UL1 ScpiPath="FETCH:RNG1:UL1" Type="Query" Description="Actual peak value" Unit="V"/>
+    <UL2 ScpiPath="FETCH:RNG1:UL2" Type="Query" Description="Actual peak value" Unit="V"/>
+    <UL3 ScpiPath="FETCH:RNG1:UL3" Type="Query" Description="Actual peak value" Unit="V"/>
+    <IL1 ScpiPath="FETCH:RNG1:IL1" Type="Query" Description="Actual peak value" Unit="A"/>
+    <IL2 ScpiPath="FETCH:RNG1:IL2" Type="Query" Description="Actual peak value" Unit="A"/>
+    <IL3 ScpiPath="FETCH:RNG1:IL3" Type="Query" Description="Actual peak value" Unit="A"/>
+    <UAUX ScpiPath="FETCH:RNG1:UAUX" Type="Query" Description="Actual peak value" Unit="V"/>
+    <IAUX ScpiPath="FETCH:RNG1:IAUX" Type="Query" Description="Actual peak value" Unit="A"/>
+    <F ScpiPath="FETCH:RNG1:F" Type="Query" Description="Actual frequency" Unit="Hz"/>
    </RNG1>
   </FETCH>
   <EMOB Type="Model,Node">
    <HOTP1 Type="Node">
-    <PBPRESS ScpiPath="EMOB:HOTP1:PBPRESS" Description="Press EMOB-pushbutton" Type="Command+Par" ValidPar="IL1,IL2,IL3,IAUX" DataType="STRING"/>
-    <EMLOCKSTATE ScpiPath="EMOB:HOTP1:EMLOCKSTATE" Description="EMOB plug lock state: 0:unknown 1:open 2:locking 3:locked 4:error" Type="Query" ValidPar="IL1,IL2,IL3,IAUX" DataType="STRING"/>
+    <PBPRESS DataType="STRING" ScpiPath="EMOB:HOTP1:PBPRESS" Type="Command+Par" Description="Press EMOB-pushbutton" ValidPar="IL1,IL2,IL3,IAUX"/>
+    <CLEARERROR DataType="STRING" ScpiPath="EMOB:HOTP1:CLEARERROR" Type="Command+Par" Description="Clear EMOB Errors" ValidPar="IL1,IL2,IL3,IAUX"/>
+    <ERROR DataType="STRING" ScpiPath="EMOB:HOTP1:ERROR" Type="Query" Description="Read EMOB Errors: 0:Supply lost 1:Device error 2:Sensor error 3:Cable error 4:Overcurrent 5:Overtemperature6:locking error 7:Problem at neighbour EMOB" ValidPar="IL1,IL2,IL3,IAUX"/>
+    <EMLOCKSTATE DataType="STRING" ScpiPath="EMOB:HOTP1:EMLOCKSTATE" Type="Query" Description="EMOB plug lock state: 0:unknown 1:open 2:locking 3:locked 4:error" ValidPar="IL1,IL2,IL3,IAUX"/>
    </HOTP1>
   </EMOB>
   <DEVICE Type="Model,Node">
@@ -186,19 +188,19 @@
     </MEASURE>
    </OPERATION>
   </STATUS>
-  <MULOPC ScpiPath="*OPC" Description="OPeration Complete" Type="Model,Query,Command"/>
-  <MULESE ScpiPath="*ESE" Description="Event Status Enable" Type="Model,Query,Command+Par"/>
-  <MULSRE ScpiPath="*SRE" Description="Service Request Enable" Type="Model,Query,Command+Par"/>
-  <MULCLS ScpiPath="*CLS" Description="Clear Status" Type="Model,Command"/>
-  <MULRST ScpiPath="*RST" Description="Reset" Type="Model,Command"/>
-  <MULIDN ScpiPath="*IDN" Description="Identification query" Type="Model,Query"/>
-  <MULESR ScpiPath="*ESR" Description="Event Status Register" Type="Model,Query"/>
-  <MULSTB ScpiPath="*STB" Description="Status Byte query" Type="Model,Query"/>
-  <MULTST ScpiPath="*TST" Description="Self-Test query" Type="Model,Query"/>
+  <MULOPC ScpiPath="*OPC" Type="Model,Query,Command" Description="OPeration Complete"/>
+  <MULESE ScpiPath="*ESE" Type="Model,Query,Command+Par" Description="Event Status Enable"/>
+  <MULSRE ScpiPath="*SRE" Type="Model,Query,Command+Par" Description="Service Request Enable"/>
+  <MULCLS ScpiPath="*CLS" Type="Model,Command" Description="Clear Status"/>
+  <MULRST ScpiPath="*RST" Type="Model,Command" Description="Reset"/>
+  <MULIDN ScpiPath="*IDN" Type="Model,Query" Description="Identification query"/>
+  <MULESR ScpiPath="*ESR" Type="Model,Query" Description="Event Status Register"/>
+  <MULSTB ScpiPath="*STB" Type="Model,Query" Description="Status Byte query"/>
+  <MULTST ScpiPath="*TST" Type="Model,Query" Description="Self-Test query"/>
   <SYSTEM Type="Model,Node">
-   <ERROR ScpiPath="SYSTEM:ERROR" Description="Queries one error of internal error list" Type="Node,Query">
-    <COUNT ScpiPath="SYSTEM:ERROR:COUNT" Description="Queries the number of error messages of internal error list" Type="Query"/>
-    <ALL ScpiPath="SYSTEM:ERROR:ALL" Description="Queries all error stored in internal error list" Type="Query"/>
+   <ERROR ScpiPath="SYSTEM:ERROR" Type="Node,Query" Description="Queries one error of internal error list">
+    <COUNT ScpiPath="SYSTEM:ERROR:COUNT" Type="Query" Description="Queries the number of error messages of internal error list"/>
+    <ALL ScpiPath="SYSTEM:ERROR:ALL" Type="Query" Description="Queries all error stored in internal error list"/>
    </ERROR>
   </SYSTEM>
  </MODELS>
