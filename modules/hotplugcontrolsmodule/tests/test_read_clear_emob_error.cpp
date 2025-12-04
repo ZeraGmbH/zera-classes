@@ -26,7 +26,7 @@ void test_read_clear_emob_error::cleanup()
 void test_read_clear_emob_error::readClearErrorNoHotplugScpi()
 {
     QString status = m_scpiClient->sendReceive("EMOB:HOTP1:ERROR?");
-    QCOMPARE(status, ""); //no emob
+    QCOMPARE(status, QString::number(1<<16)); //no emob
 
     status = m_scpiClient->sendReceive("EMOB:HOTP1:CLEARERROR;|*stb?");
     QCOMPARE(status, "+4");
@@ -85,7 +85,7 @@ void test_read_clear_emob_error::readClearErrorInCorrectParamOneEmobOneMt650eScp
     TimeMachineObject::feedEventLoop();
 
     QString status = m_scpiClient->sendReceive("EMOB:HOTP1:ERROR? IL3;");
-    QCOMPARE(status, "");
+    QCOMPARE(status, QString::number(1<<16));
 
     status = m_scpiClient->sendReceive("EMOB:HOTP1:CLEARERROR IL3;|*stb?");
     QCOMPARE(status, "+4");
