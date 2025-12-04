@@ -27,3 +27,7 @@ add_custom_target(css-files ALL
 add_custom_target(create-html ALL
     SOURCES create-html
 )
+
+add_custom_target(change-info-html ALL
+    SOURCES change-info.html
+)
