@@ -101,7 +101,7 @@ jobs:
       - name: Update and commit change-info.html
         run: |
           cd $GITHUB_WORKSPACE/scpi-doc/xml-to-html
-          sed -i "s/UpcomingRelease:/${{github.event.inputs.version}}:/g" change-info.html
+          sed -i "s/UpcomingRelease:/${{github.event.inputs.version}}:/3" change-info.html
           git config --global user.name 'gitbot'
           git config --global user.email 'gitbot@noreply.de'
           git add change-info.html
