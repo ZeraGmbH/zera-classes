@@ -75,8 +75,8 @@ void HotplugControlsModuleController::generateVeinInterface()
                                                                                         rpcEventSystem,
                                                                                         m_module->getEntityId());
     m_pEmobReadErrorRpc = std::make_shared<VfModuleRpc>(rpcEmobReadError,
-                                                         "Read EMOB Errors: 0:Supply lost 1:Device error 2:Sensor error 3:Cable error 4:Overcurrent 5:Overtemperature"
-                                                         "6:locking error 7:Problem at neighbour EMOB");
+                                                         "EMOB Errors bit position: 1::Supply lost 2:Device error 3:Sensor error 4:Cable error 5:Overcurrent 6:Overtemperature"
+                                                         "7:locking error 8:Problem at neighbour EMOB");
 
     m_pEmobReadErrorRpc->setRPCScpiInfo("EMOB",
                                          QString("ERROR"),
