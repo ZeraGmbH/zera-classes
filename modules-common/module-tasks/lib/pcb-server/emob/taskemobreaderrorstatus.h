@@ -8,7 +8,7 @@ class TaskEmobReadErrorStatus : public TaskServerTransactionTemplate
 {
 public:
     static TaskTemplatePtr create(Zera::PcbInterfacePtr pcbInterface,
-                                  std::shared_ptr<int> errorStatus,
+                                  std::shared_ptr<int> emobErrorStatus,
                                   QString channelMName,
                                   int timeout,
                                   std::function<void()> additionalErrorHandler = []{});

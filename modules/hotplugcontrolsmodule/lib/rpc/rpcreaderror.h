@@ -19,7 +19,7 @@ private slots:
 private:
     Zera::PcbInterfacePtr m_pcbInterface;
     TaskContainerInterfacePtr m_readErrorQueue;
-    std::shared_ptr<int> m_errorStatus;
+    std::shared_ptr<int> m_emobErrorStatus;
     ChannelRangeObserver::SystemObserverPtr m_observer;
 };
 

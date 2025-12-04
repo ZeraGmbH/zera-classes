@@ -14,7 +14,7 @@ RPCReadError::RPCReadError(Zera::PcbInterfacePtr pcbInterface, ChannelRangeObser
                                     "RPC_readError", VfCpp::VfCppRpcSignature::RPCParams({{"p_channelName", "QString"}}))),
     m_pcbInterface(pcbInterface),
     m_readErrorQueue(TaskContainerQueue::create()),
-    m_errorStatus(std::make_shared<int>()),
+    m_emobErrorStatus(std::make_shared<int>()),
     m_observer(observer)
 {
 }
@@ -25,7 +25,7 @@ void RPCReadError::callRPCFunction(const QUuid &callId, const QVariantMap &param
     QString channelMName = ServiceChannelNameHelper::getChannelMName(channelName, m_observer);
 
     TaskTemplatePtr taskReadState = TaskEmobReadErrorStatus::create(
-        m_pcbInterface, m_errorStatus, channelMName, TRANSACTION_TIMEOUT);
+        m_pcbInterface, m_emobErrorStatus, channelMName, TRANSACTION_TIMEOUT);
     TaskRpcTransactionWrapperPtr taskRpcWrapper = TaskRpcTaskWrapper::create(std::move(taskReadState), callId);
     connect(taskRpcWrapper.get(), &TaskRpcTaskWrapper::sigRpcFinished,
             this, &RPCReadError::onRpcTaskFinish);
@@ -35,7 +35,7 @@ void RPCReadError::callRPCFunction(const QUuid &callId, const QVariantMap &param
 void RPCReadError::onRpcTaskFinish(bool ok, QUuid rpcCallId)
 {
     if(ok)
-        sendRpcResult(rpcCallId, *m_errorStatus);
+        sendRpcResult(rpcCallId, *m_emobErrorStatus);
     else
         sendRpcError(rpcCallId, QString());
 }
