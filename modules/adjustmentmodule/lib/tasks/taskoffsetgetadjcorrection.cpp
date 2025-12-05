@@ -1,14 +1,14 @@
-#include "taskoffsetgetcorrection.h"
+#include "taskoffsetgetadjcorrection.h"
 #include "taskdecoratortimeout.h"
 #include <reply.h>
 
-TaskTemplatePtr TaskOffsetGetCorrection::create(Zera::PcbInterfacePtr pcbInterface,
+TaskTemplatePtr TaskOffsetGetAdjCorrection::create(Zera::PcbInterfacePtr pcbInterface,
                                                  QString channelMName, QString rangeName, double ourActualValue,
                                                  double &correctionValue,
                                                  int timeout, std::function<void ()> additionalErrorHandler)
 {
     return TaskDecoratorTimeout::wrapTimeout(timeout,
-                                             std::make_unique<TaskOffsetGetCorrection>(
+                                             std::make_unique<TaskOffsetGetAdjCorrection>(
                                                  pcbInterface,
                                                  channelMName, rangeName, ourActualValue,
                                                  correctionValue),
@@ -16,7 +16,7 @@ TaskTemplatePtr TaskOffsetGetCorrection::create(Zera::PcbInterfacePtr pcbInterfa
 
 }
 
-TaskOffsetGetCorrection::TaskOffsetGetCorrection(Zera::PcbInterfacePtr pcbInterface,
+TaskOffsetGetAdjCorrection::TaskOffsetGetAdjCorrection(Zera::PcbInterfacePtr pcbInterface,
                                                  QString channelMName, QString rangeName, double ourActualValue,
                                                  double &correctionValue) :
     m_pcbInterface(pcbInterface),
@@ -25,14 +25,14 @@ TaskOffsetGetCorrection::TaskOffsetGetCorrection(Zera::PcbInterfacePtr pcbInterf
 {
 }
 
-void TaskOffsetGetCorrection::start()
+void TaskOffsetGetAdjCorrection::start()
 {
     connect(m_pcbInterface.get(), &AbstractServerInterface::serverAnswer,
-            this, &TaskOffsetGetCorrection::onServerAnswer);
+            this, &TaskOffsetGetAdjCorrection::onServerAnswer);
     m_msgnr = m_pcbInterface->getAdjOffsetCorrection(m_channelMName, m_rangeName, m_ourActualValue);
 }
 
-void TaskOffsetGetCorrection::onServerAnswer(quint32 msgnr, quint8 reply, QVariant answer)
+void TaskOffsetGetAdjCorrection::onServerAnswer(quint32 msgnr, quint8 reply, QVariant answer)
 {
     if(m_msgnr == msgnr) {
         if (reply == ack)

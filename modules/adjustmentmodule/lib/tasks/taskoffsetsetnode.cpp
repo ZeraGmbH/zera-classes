@@ -5,7 +5,7 @@
 
 TaskTemplatePtr TaskOffsetSetNode::create(Zera::PcbInterfacePtr pcbInterface,
                                            QString channelMName, QString rangeName,
-                                           double actualValue, double targetValue, RangeVals &rngVals,
+                                           double actualValue, double targetValue, RangeWorkStorage &rngVals,
                                            int timeout, std::function<void()> additionalErrorHandler)
 {
     return TaskDecoratorTimeout::wrapTimeout(timeout,
@@ -18,7 +18,7 @@ TaskTemplatePtr TaskOffsetSetNode::create(Zera::PcbInterfacePtr pcbInterface,
 
 TaskOffsetSetNode::TaskOffsetSetNode(Zera::PcbInterfacePtr pcbInterface,
                                      QString channelMName, QString rangeName,
-                                     double actualValue, double targetValue, RangeVals &rngVals) :
+                                     double actualValue, double targetValue, RangeWorkStorage &rngVals) :
     m_pcbInterface(pcbInterface),
     m_channelMName(channelMName), m_rangeName(rangeName),
     m_actualValue(actualValue), m_targetValue(targetValue),
@@ -33,7 +33,7 @@ void TaskOffsetSetNode::start()
     const double nominalValue = *m_rngVals.m_urValue;
     if(fabs(nominalAdc) > 1e-3) {
         // recalc rawActual to uncorrected
-        const double currentCorrection = m_rngVals.m_correction;
+        const double currentCorrection = m_rngVals.m_offsetAdjCorrection;
         rawActual = m_actualValue -
                 currentCorrection * nominalValue / nominalAdc;
     }

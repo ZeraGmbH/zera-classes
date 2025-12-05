@@ -1,5 +1,5 @@
 #include "taskoffset.h"
-#include "taskoffsetgetcorrection.h"
+#include "taskoffsetgetadjcorrection.h"
 #include "taskrangegetrejection.h"
 #include "taskrangegeturvalue.h"
 #include "errormessages.h"
@@ -20,10 +20,10 @@ TaskOffset::TaskOffset(Zera::PcbInterfacePtr pcbInterface,
                        int perTransactionTimout, std::function<void (QString)> perTransactionErrorHandler) :
     m_perTransactionErrorHandler(perTransactionErrorHandler)
 {
-    addSub(TaskOffsetGetCorrection::create(pcbInterface,
-                                           channelMName, rangeName, targetValue,
-                                           m_rangeVals.m_correction,
-                                           perTransactionTimout, [&]{
+    addSub(TaskOffsetGetAdjCorrection::create(pcbInterface,
+                                              channelMName, rangeName, targetValue,
+                                              m_rangeVals.m_offsetAdjCorrection,
+                                              perTransactionTimout, [&]{
             m_perTransactionErrorHandler(readOffsetCorrErrMsg);
         }));
     addSub(TaskRangeGetRejection::create(pcbInterface,

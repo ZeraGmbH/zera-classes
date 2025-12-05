@@ -1,10 +1,10 @@
-#ifndef TASKOFFSETGETCORRECTION_H
-#define TASKOFFSETGETCORRECTION_H
+#ifndef TASKOFFSETGETADJCORRECTION_H
+#define TASKOFFSETGETADJCORRECTION_H
 
 #include "tasktemplate.h"
 #include <pcbinterface.h>
 
-class TaskOffsetGetCorrection : public TaskTemplate
+class TaskOffsetGetAdjCorrection : public TaskTemplate
 {
     Q_OBJECT
 public:
@@ -12,7 +12,7 @@ public:
                                    QString channelMName, QString rangeName, double ourActualValue,
                                    double &correctionValue,
                                    int timeout, std::function<void()> additionalErrorHandler = []{});
-    TaskOffsetGetCorrection(Zera::PcbInterfacePtr pcbInterface,
+    TaskOffsetGetAdjCorrection(Zera::PcbInterfacePtr pcbInterface,
                             QString channelMName, QString rangeName, double ourActualValue,
                             double &correctionValue);
     void start() override;
@@ -27,4 +27,4 @@ private:
     quint32 m_msgnr = 0;
 };
 
-#endif // TASKOFFSETGETCORRECTION_H
+#endif // TASKOFFSETGETADJCORRECTION_H

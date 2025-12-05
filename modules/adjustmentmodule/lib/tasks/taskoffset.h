@@ -17,7 +17,7 @@ public:
                QString channelMName, QString rangeName, double actualValue, double targetValue,
                int perTransactionTimout, std::function<void (QString)> perTransactionErrorHandler);
 private:
-    TaskOffsetSetNode::RangeVals m_rangeVals;
+    TaskOffsetSetNode::RangeWorkStorage m_rangeVals;
     std::function<void (QString)> m_perTransactionErrorHandler;
 };
 
