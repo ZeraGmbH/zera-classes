@@ -10,7 +10,7 @@ class TaskOffsetSetNode : public TaskTemplate
 public:
     struct RangeWorkStorage
     {
-        double m_offsetAdjCorrection;
+        std::shared_ptr<double> m_offsetAdjCorrection = std::make_shared<double>();
         std::shared_ptr<double> m_rejection = std::make_shared<double>();
         std::shared_ptr<double> m_urValue = std::make_shared<double>();
     };

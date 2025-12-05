@@ -33,7 +33,7 @@ void TaskOffsetSetNode::start()
     const double nominalValue = *m_rngVals.m_urValue;
     if(fabs(nominalAdc) > 1e-3) {
         // recalc rawActual to uncorrected
-        const double currentCorrection = m_rngVals.m_offsetAdjCorrection;
+        const double currentCorrection = *m_rngVals.m_offsetAdjCorrection;
         rawActual = m_actualValue -
                 currentCorrection * nominalValue / nominalAdc;
     }

@@ -14,6 +14,7 @@ function(SETUP_QTESTS_MODULE)
             module-testlib
             scpimodule-testlib
             Zera::zenuxservicecommon-demolib
+            Zera::mt310s2d-testlib
         )
     endforeach()
 endfunction()
@@ -26,6 +27,7 @@ SETUP_QTESTS_MODULE(
     test_adj_module_phase
     test_adj_module_offset
     test_adj_module_lem_offset_sequences
+    test_taskoffsetgetadjcorrection
 )
 
 target_sources(test_adj_module_regression
