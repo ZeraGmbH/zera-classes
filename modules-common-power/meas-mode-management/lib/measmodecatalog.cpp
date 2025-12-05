@@ -14,7 +14,7 @@ void MeasModeCatalog::setupHashes()
     addInfoToHashes(cMeasModeInfo("4LB", "Q", "Var", m4lb));
     addInfoToHashes(cMeasModeInfo("4LBK", "Q", "Var", m4lbk));
     addInfoToHashes(cMeasModeInfo("4LS", "S", "VA", m4ls));
-    addInfoToHashes(cMeasModeInfo("4LSg", "S", "W", m4lsg));
+    addInfoToHashes(cMeasModeInfo("4LSg", "S", "VA", m4lsg));
     addInfoToHashes(cMeasModeInfo("3LW", "P", "W", m3lw));
     addInfoToHashes(cMeasModeInfo("3LB", "Q", "Var", m3lb));
     addInfoToHashes(cMeasModeInfo("3LS", "S", "VA", m3ls));
