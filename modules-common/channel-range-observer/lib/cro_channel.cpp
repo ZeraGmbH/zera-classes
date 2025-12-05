@@ -54,6 +54,11 @@ const RangePtr Channel::getRange(const QString &rangeName) const
     return nullptr;
 }
 
+ChannelAdjStorage *Channel::getChannelAdjStorage()
+{
+    return &m_channelAdjStorage;
+}
+
 bool Channel::isValid() const
 {
     return m_valid;
