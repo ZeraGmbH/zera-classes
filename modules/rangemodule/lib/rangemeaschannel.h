@@ -23,7 +23,7 @@ enum rangemeaschannelCmds
     readisavail,
 
     setmeaschannelrange,
-    readgaincorrection,
+    readgaincorrectioninternalandclamp,
     readoffsetcorrection,
     readphasecorrection,
     readmeaschannelstatus,
@@ -51,7 +51,7 @@ public:
 
     QString getRange() const;
     quint32 setRange(const QString &range); // a statemachine gets started that returns cmdDone(quint32 cmdnr)
-    quint32 readGainCorrection(double amplitude); // dito
+    quint32 readGainCorrectionIntarnalAndClamp(double amplitude); // dito
     quint32 readPhaseCorrection(double frequency); // dito
     quint32 readOffsetCorrection(double amplitude); // dito
     quint32 readStatus(); // read the channels status
