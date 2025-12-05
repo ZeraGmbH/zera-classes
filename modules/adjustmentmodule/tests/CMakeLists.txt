@@ -28,6 +28,7 @@ SETUP_QTESTS_MODULE(
     test_adj_module_offset
     test_adj_module_lem_offset_sequences
     test_taskoffsetgetadjcorrection
+    test_taskgaingetadjcorrection
 )
 
 target_sources(test_adj_module_regression
