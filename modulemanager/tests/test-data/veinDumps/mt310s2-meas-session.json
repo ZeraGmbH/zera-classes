@@ -7133,7 +7133,7 @@
                     }
                 },
                 "RPC_readError(QString p_channelName)": {
-                    "Description": "EMOB Errors bit position: 1::Supply lost 2:Device error 3:Sensor error 4:Cable error 5:Overcurrent 6:Overtemperature7:locking error 8:Problem at neighbour EMOB",
+                    "Description": "EMOB Errors bits:\nBit0: Supply lost\nBit1: Device error\nBit2: Sensor error\nBit3: Cable error\nBit4: Overcurrent\nBit5: Overtemperature\nBit6: locking error\nBit7: Problem at neighbour EMOB",
                     "Optional parameter": "",
                     "Validation": {
                         "Data": [
@@ -7146,7 +7146,7 @@
                     }
                 },
                 "RPC_readLockState(QString p_channelName)": {
-                    "Description": "EMOB plug lock state: 0:unknown 1:open 2:locking 3:locked 4:error",
+                    "Description": "EMOB plug lock state:\n0:unknown\n1:open\n2:locking\n3:locked\n4:error",
                     "Optional parameter": "",
                     "Validation": {
                         "Data": [

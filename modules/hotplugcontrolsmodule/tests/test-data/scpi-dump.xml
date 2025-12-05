@@ -158,8 +158,8 @@
    <HOTP1 Type="Node">
     <PBPRESS DataType="STRING" ValidPar="IL1,IL2,IL3,IAUX" Description="Press EMOB-pushbutton" ScpiPath="EMOB:HOTP1:PBPRESS" Type="Command+Par"/>
     <CLEARERROR DataType="STRING" ValidPar="IL1,IL2,IL3,IAUX" Description="Clear EMOB Errors" ScpiPath="EMOB:HOTP1:CLEARERROR" Type="Command+Par"/>
-    <ERROR DataType="STRING" ValidPar="IL1,IL2,IL3,IAUX" Description="EMOB Errors bit position: 1::Supply lost 2:Device error 3:Sensor error 4:Cable error 5:Overcurrent 6:Overtemperature7:locking error 8:Problem at neighbour EMOB" ScpiPath="EMOB:HOTP1:ERROR" Type="Query"/>
-    <EMLOCKSTATE DataType="STRING" ValidPar="IL1,IL2,IL3,IAUX" Description="EMOB plug lock state: 0:unknown 1:open 2:locking 3:locked 4:error" ScpiPath="EMOB:HOTP1:EMLOCKSTATE" Type="Query"/>
+    <ERROR Type="Query" ScpiPath="EMOB:HOTP1:ERROR" ValidPar="IL1,IL2,IL3,IAUX" Description="EMOB Errors bits:&#xa;Bit0: Supply lost&#xa;Bit1: Device error&#xa;Bit2: Sensor error&#xa;Bit3: Cable error&#xa;Bit4: Overcurrent&#xa;Bit5: Overtemperature&#xa;Bit6: locking error&#xa;Bit7: Problem at neighbour EMOB" DataType="STRING"/>
+    <EMLOCKSTATE Description="EMOB plug lock state:&#xa;0:unknown&#xa;1:open&#xa;2:locking&#xa;3:locked&#xa;4:error" Type="Query" ValidPar="IL1,IL2,IL3,IAUX" DataType="STRING" ScpiPath="EMOB:HOTP1:EMLOCKSTATE"/>
    </HOTP1>
   </EMOB>
   <DEVICE Type="Model,Node">

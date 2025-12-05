@@ -61,7 +61,12 @@ void HotplugControlsModuleController::generateVeinInterface()
                                                                                                 rpcEventSystem,
                                                                                                 m_module->getEntityId());
     m_pEmobLockStateRpc = std::make_shared<VfModuleRpc>(rpcEmobReadLockState,
-                                                        "EMOB plug lock state: 0:unknown 1:open 2:locking 3:locked 4:error");
+                                                        "EMOB plug lock state:\n"
+                                                        "0:unknown\n"
+                                                        "1:open\n"
+                                                        "2:locking\n"
+                                                        "3:locked\n"
+                                                        "4:error");
     m_pEmobLockStateRpc->setRPCScpiInfo("EMOB",
                                         QString("EMLOCKSTATE"),
                                         SCPI::isQuery,
@@ -75,8 +80,15 @@ void HotplugControlsModuleController::generateVeinInterface()
                                                                                         rpcEventSystem,
                                                                                         m_module->getEntityId());
     m_pEmobReadErrorRpc = std::make_shared<VfModuleRpc>(rpcEmobReadError,
-                                                         "EMOB Errors bit position: 1::Supply lost 2:Device error 3:Sensor error 4:Cable error 5:Overcurrent 6:Overtemperature"
-                                                         "7:locking error 8:Problem at neighbour EMOB");
+                                                        "EMOB Errors bits:\n"
+                                                        "Bit0: Supply lost\n"
+                                                        "Bit1: Device error\n"
+                                                        "Bit2: Sensor error\n"
+                                                        "Bit3: Cable error\n"
+                                                        "Bit4: Overcurrent\n"
+                                                        "Bit5: Overtemperature\n"
+                                                        "Bit6: locking error\n"
+                                                        "Bit7: Problem at neighbour EMOB");
 
     m_pEmobReadErrorRpc->setRPCScpiInfo("EMOB",
                                          QString("ERROR"),
