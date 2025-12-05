@@ -291,6 +291,7 @@ void cAdjustManagement::prepareGainCorrForDspServer()
 {
     if (m_bActive) {
         cRangeMeasChannel *measChannel = m_ChannelList.at(m_nChannelIt);
+        // TODO Phase inversion to GAINCORRECTION2
         float fCorr = measChannel->getGainCorrection();
         if (measChannel->getChannelData()->getInvertedPhaseState())
             fCorr = fCorr * -1;
