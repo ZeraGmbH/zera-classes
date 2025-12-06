@@ -24,6 +24,8 @@ TaskOffsetSetNode::TaskOffsetSetNode(Zera::PcbInterfacePtr pcbInterface,
     m_actualValue(actualValue), m_targetValue(targetValue),
     m_rngVals(rngVals)
 {
+    connect(m_pcbInterface.get(), &AbstractServerInterface::serverAnswer,
+            this, &TaskOffsetSetNode::onServerAnswer);
 }
 
 void TaskOffsetSetNode::start()
@@ -39,8 +41,6 @@ void TaskOffsetSetNode::start()
     }
     double correctionAdc = (m_targetValue - rawActual) * nominalAdc / nominalValue;
 
-    connect(m_pcbInterface.get(), &AbstractServerInterface::serverAnswer,
-            this, &TaskOffsetSetNode::onServerAnswer);
     m_msgnr = m_pcbInterface->setOffsetNode(m_channelMName, m_rangeName, 0, correctionAdc, m_targetValue);
 }
 
