@@ -30,17 +30,10 @@ TaskOffsetSetNode::TaskOffsetSetNode(Zera::PcbInterfacePtr pcbInterface,
 
 void TaskOffsetSetNode::start()
 {
-    double rawActual = m_actualValue;
-    const double nominalAdc = *m_rngVals.m_rejection;
-    const double nominalValue = *m_rngVals.m_urValue;
-    if(fabs(nominalAdc) > 1e-3) {
-        // recalc rawActual to uncorrected
-        const double currentCorrection = *m_rngVals.m_offsetAdjCorrection;
-        rawActual = m_actualValue -
-                currentCorrection * nominalValue / nominalAdc;
-    }
-    double correctionAdc = (m_targetValue - rawActual) * nominalAdc / nominalValue;
+    double uncorrectedActualValue = removeGainCorrectionApplied(m_actualValue);
+    uncorrectedActualValue = removeOffsetCorrectionApplied(uncorrectedActualValue);
 
+    double correctionAdc = calcAdcOffsetCorrection(uncorrectedActualValue);
     m_msgnr = m_pcbInterface->setOffsetNode(m_channelMName, m_rangeName, 0, correctionAdc, m_targetValue);
 }
 
@@ -49,4 +42,30 @@ void TaskOffsetSetNode::onServerAnswer(quint32 msgnr, quint8 reply, QVariant ans
     Q_UNUSED(answer)
     if(m_msgnr == msgnr)
         finishTask(reply == ack);
+}
+
+double TaskOffsetSetNode::removeGainCorrectionApplied(double value)
+{
+    double gainCorrectionApplied = *m_rngVals.m_gainAdjCorrection;
+    if (fabs(gainCorrectionApplied) > 1e-9)
+        value /= gainCorrectionApplied;
+    return value;
+}
+
+double TaskOffsetSetNode::removeOffsetCorrectionApplied(double value)
+{
+    const double nominalAdc = *m_rngVals.m_rejection;
+    const double nominalValue = *m_rngVals.m_urValue;
+    if (fabs(nominalAdc) > 1e-3) {
+        const double offsetCorrectionApplied = *m_rngVals.m_offsetAdjCorrection;
+        value = m_actualValue - offsetCorrectionApplied * nominalValue / nominalAdc;
+    }
+    return value;
+}
+
+double TaskOffsetSetNode::calcAdcOffsetCorrection(double uncorrectedActualValue)
+{
+    const double nominalAdc = *m_rngVals.m_rejection;
+    const double nominalValue = *m_rngVals.m_urValue;
+    return (m_targetValue - uncorrectedActualValue) * nominalAdc / nominalValue;
 }
