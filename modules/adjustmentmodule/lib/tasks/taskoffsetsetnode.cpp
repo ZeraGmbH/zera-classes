@@ -58,7 +58,7 @@ double TaskOffsetSetNode::removeOffsetCorrectionApplied(double value)
     const double nominalValue = *m_rngVals.m_urValue;
     if (fabs(nominalAdc) > 1e-3) {
         const double offsetCorrectionApplied = *m_rngVals.m_offsetAdjCorrection;
-        value = m_actualValue - offsetCorrectionApplied * nominalValue / nominalAdc;
+        value = value - offsetCorrectionApplied * nominalValue / nominalAdc;
     }
     return value;
 }

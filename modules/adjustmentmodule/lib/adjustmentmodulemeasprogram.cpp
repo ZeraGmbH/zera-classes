@@ -645,13 +645,15 @@ void cAdjustmentModuleMeasProgram::setAdjustOffsetStartCommand(QVariant paramVal
     int adjustEntity = getConfData()->m_AdjChannelInfoHash[m_currEnv.m_channelMName]->dcAdjInfo.m_nEntity;
     QString adjustComponent = getConfData()->m_AdjChannelInfoHash[m_currEnv.m_channelMName]->dcAdjInfo.m_sComponent;
     double adjustActualValue = m_pModule->getStorageDb()->getStoredValue(adjustEntity, adjustComponent).toDouble();
+    ChannelRangeObserver::ChannelPtr croChannel = m_pModule->getSharedChannelRangeObserver()->getChannel(m_currEnv.m_channelMName);
+    const ChannelAdjStorage adjStorage = *croChannel->getChannelAdjStorage();
     m_offsetTasks.addSub(TaskAdjustRangeOffset::create(m_commonObjects->m_pcbConnection.getInterface(),
-                                            m_currEnv.m_channelMName, m_currEnv.m_rangeName,
-                                            adjustActualValue, m_currEnv.m_targetValue,
-                                            TRANSACTION_TIMEOUT, [&](QString errorMsg){
-                             notifyError(errorMsg);
-                             m_pPARAdjustOffset->setError();
-                         }));
+                                                       m_currEnv.m_channelMName, m_currEnv.m_rangeName,
+                                                       adjustActualValue, m_currEnv.m_targetValue, adjStorage,
+                                                       TRANSACTION_TIMEOUT, [&](QString errorMsg){
+                                                           notifyError(errorMsg);
+                                                           m_pPARAdjustOffset->setError();
+                                                       }));
     m_offsetTasks.start();
 }
 
