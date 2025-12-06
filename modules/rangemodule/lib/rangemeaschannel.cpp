@@ -107,7 +107,7 @@ QString cRangeMeasChannel::getRange() const
     return m_sActRange;
 }
 
-quint32 cRangeMeasChannel::readGainCorrectionIntarnalAndClamp(double amplitude)
+quint32 cRangeMeasChannel::readGainCorrection(double amplitude)
 {
     if (m_bActive) {
         quint32 msgnr = m_pcbInterface->getGainCorrection(getMName(), m_RangeInfoHash[m_sActRange].name, amplitude);

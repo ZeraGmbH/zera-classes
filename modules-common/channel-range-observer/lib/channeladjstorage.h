@@ -4,14 +4,13 @@
 class ChannelAdjStorage
 {
 public:
-    double getLastAdjAmplitude() const;
-    void setLastAdjAmplitude(double lastAdjAmplitude);
-
-    double getLastGainCorrectionInternalAndClamp() const;
-    void setLastGainCorrectionInternalAndClamp(double lastGainCorrectionInternalAndClamp);
+    double getLastGainAdjAmplitude() const;
+    void setLastGainAdjAmplitude(double lastGainAdjAmplitude);
+    double getLastOffsetAdjAmplitude() const;
+    void setLastOffsetAdjAmplitude(double lastOffsetAdjAmplitude);
 private:
-    double m_lastAdjAmplitude = 0.0;
-    double m_lastGainCorrectionInternalAndClamp = 1.0; // reflects DSP GAINCORRECTION1
+    double m_lastGainAdjAmplitude = 0.0;
+    double m_lastOffsetAdjAmplitude = 0.0;
 };
 
 #endif // CHANNELADJSTORAGE_H

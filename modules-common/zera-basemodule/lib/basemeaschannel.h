@@ -21,6 +21,7 @@ public:
     QString getMName() const;
     QString getAlias();
     QString getUnit();
+    ChannelRangeObserver::ChannelPtr getChannelObserver();
 
 protected:
     NetworkConnectionInfo m_pcbNetworkInfo;

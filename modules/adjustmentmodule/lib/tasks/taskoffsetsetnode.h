@@ -10,6 +10,7 @@ class TaskOffsetSetNode : public TaskTemplate
 public:
     struct RangeWorkStorage
     {
+        std::shared_ptr<double> m_gainAdjCorrection = std::make_shared<double>();
         std::shared_ptr<double> m_offsetAdjCorrection = std::make_shared<double>();
         std::shared_ptr<double> m_rejection = std::make_shared<double>();
         std::shared_ptr<double> m_urValue = std::make_shared<double>();
@@ -25,6 +26,10 @@ public:
 private slots:
     void onServerAnswer(quint32 msgnr, quint8 reply, QVariant answer);
 private:
+    double removeGainCorrectionApplied(double value);
+    double removeOffsetCorrectionApplied(double value);
+    double calcAdcOffsetCorrection(double uncorrectedActualValue);
+
     Zera::PcbInterfacePtr m_pcbInterface;
     QString m_channelMName;
     QString m_rangeName;
