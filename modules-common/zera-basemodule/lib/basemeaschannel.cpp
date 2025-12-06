@@ -30,3 +30,8 @@ QString cBaseMeasChannel::getUnit()
 {
     return m_channelObserver->getUnit();
 }
+
+ChannelRangeObserver::ChannelPtr cBaseMeasChannel::getChannelObserver()
+{
+    return m_channelObserver;
+}

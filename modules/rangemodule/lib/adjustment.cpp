@@ -282,6 +282,8 @@ void cAdjustManagement::getGainCorrFromPcbServer()
         double preScalingFact = channelData->getPreScaling();
         cRangeMeasChannel *measChannel = m_ChannelList.at(m_nChannelIt);
         double unscaledActualValue = actualValue * preScalingFact / m_fGainKeeperForFakingRmsValues[measChannel->getDSPChannelNr()];
+        ChannelAdjStorage *adjStorage = measChannel->getChannelObserver()->getChannelAdjStorage();
+        adjStorage->setLastGainAdjAmplitude(unscaledActualValue);
         m_MsgNrCmdList[m_ChannelList.at(m_nChannelIt)->readGainCorrection(unscaledActualValue)] = getgaincorr;
     }
 }
@@ -353,11 +355,15 @@ void cAdjustManagement::preparePhaseCorrForDspServer()
 
 void cAdjustManagement::getOffsetCorrFromPcbServer()
 {
-    if (m_bActive){
-        const RangeChannelData *channelData = m_ChannelList.at(m_nChannelIt)->getChannelData();
+    if (m_bActive) {
+        cRangeMeasChannel* measChannel = m_ChannelList.at(m_nChannelIt);
+        const RangeChannelData *channelData = measChannel->getChannelData();
         double actualValue = channelData->getRmsValue();
         double preScalingFact = channelData->getPreScaling();
-        m_MsgNrCmdList[m_ChannelList.at(m_nChannelIt)->readOffsetCorrection(actualValue * preScalingFact)] = getoffsetcore;
+        double actualValueForOffset = actualValue * preScalingFact;
+        ChannelAdjStorage *adjStorage = measChannel->getChannelObserver()->getChannelAdjStorage();
+        adjStorage->setLastOffsetAdjAmplitude(actualValueForOffset);
+        m_MsgNrCmdList[m_ChannelList.at(m_nChannelIt)->readOffsetCorrection(actualValueForOffset)] = getoffsetcore;
     }
 }
 
