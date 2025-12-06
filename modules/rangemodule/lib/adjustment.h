@@ -93,10 +93,10 @@ private:
     cDspMeasData* m_pPhaseCorrectionDSP;
     cDspMeasData* m_pOffsetCorrectionDSP;
 
-    float* m_fGainCorr;
+    float* m_dspGainCorrValues;
     QVector<float> m_fGainKeeperForFakingRmsValues;
-    float* m_fPhaseCorr;
-    float* m_fOffsetCorr;
+    float* m_dspPhaseCorrValues;
+    float* m_dspOffsetCorrValues;
 
 
 private slots:

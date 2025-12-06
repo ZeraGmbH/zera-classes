@@ -180,15 +180,15 @@ void cAdjustManagement::readGainCorr()
 
     m_pGainCorrectionDSP = m_dspInterface->getMemHandle("GainCorrection");
     m_pGainCorrectionDSP->addDspVar("GAINCORRECTION",32, DSPDATA::vDspIntVar);
-    m_fGainCorr = m_pGainCorrectionDSP->data("GAINCORRECTION");
+    m_dspGainCorrValues = m_pGainCorrectionDSP->data("GAINCORRECTION");
 
     m_pPhaseCorrectionDSP = m_dspInterface->getMemHandle("PhaseCorrection");
     m_pPhaseCorrectionDSP->addDspVar("PHASECORRECTION",32, DSPDATA::vDspIntVar);
-    m_fPhaseCorr = m_pPhaseCorrectionDSP->data("PHASECORRECTION");
+    m_dspPhaseCorrValues = m_pPhaseCorrectionDSP->data("PHASECORRECTION");
 
     m_pOffsetCorrectionDSP = m_dspInterface->getMemHandle("OffsetCorrection");
     m_pOffsetCorrectionDSP->addDspVar("OFFSETCORRECTION",32, DSPDATA::vDspIntVar);
-    m_fOffsetCorr = m_pOffsetCorrectionDSP->data("OFFSETCORRECTION");
+    m_dspOffsetCorrValues = m_pOffsetCorrectionDSP->data("OFFSETCORRECTION");
 
     m_MsgNrCmdList[m_dspInterface->dspMemoryRead(m_pGainCorrectionDSP)] = readgaincorr;
 }
@@ -295,7 +295,7 @@ void cAdjustManagement::prepareGainCorrForDspServer()
         float fCorr = measChannel->getGainCorrection();
         if (measChannel->getChannelData()->getInvertedPhaseState())
             fCorr = fCorr * -1;
-        m_fGainCorr[measChannel->getDSPChannelNr()] = fCorr*getIgnoreRmsCorrFactor();
+        m_dspGainCorrValues[measChannel->getDSPChannelNr()] = fCorr*getIgnoreRmsCorrFactor();
         m_fGainKeeperForFakingRmsValues[measChannel->getDSPChannelNr()] = getIgnoreRmsCorrFactor();
         m_nChannelIt++;
         if (m_nChannelIt < m_ChannelNameList.count())
@@ -338,7 +338,7 @@ void cAdjustManagement::preparePhaseCorrForDspServer()
     if (m_bActive) {
         cRangeMeasChannel *measChannel = m_ChannelList.at(m_nChannelIt);
         float fCorr = measChannel->getPhaseCorrection();
-        m_fPhaseCorr[measChannel->getDSPChannelNr()] = fCorr;
+        m_dspPhaseCorrValues[measChannel->getDSPChannelNr()] = fCorr;
         m_nChannelIt++;
         if (m_nChannelIt < m_ChannelNameList.count())
             emit repeatStateMachine();
@@ -370,7 +370,7 @@ void cAdjustManagement::prepareOffsetCorrForDspServer()
         double preScale=measChannel->getChannelData()->getPreScaling();
         // Offset is an summand. It must be multiplied with the
         // scale factor.
-        m_fOffsetCorr[measChannel->getDSPChannelNr()] = fCorr*preScale;
+        m_dspOffsetCorrValues[measChannel->getDSPChannelNr()] = fCorr*preScale;
 
         m_nChannelIt++;
         if (m_nChannelIt < m_ChannelNameList.count())
