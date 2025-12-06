@@ -1,21 +1,21 @@
 #include "channeladjstorage.h"
 
-double ChannelAdjStorage::getLastAdjAmplitude() const
+double ChannelAdjStorage::getLastGainAdjAmplitude() const
 {
-    return m_lastAdjAmplitude;
+    return m_lastGainAdjAmplitude;
 }
 
-void ChannelAdjStorage::setLastAdjAmplitude(double lastAdjAmplitude)
+void ChannelAdjStorage::setLastGainAdjAmplitude(double lastGainAdjAmplitude)
 {
-    m_lastAdjAmplitude = lastAdjAmplitude;
+    m_lastGainAdjAmplitude = lastGainAdjAmplitude;
 }
 
-double ChannelAdjStorage::getLastGainCorrectionInternalAndClamp() const
+double ChannelAdjStorage::getLastOffsetAdjAmplitude() const
 {
-    return m_lastGainCorrectionInternalAndClamp;
+    return m_lastOffsetAdjAmplitude;
 }
 
-void ChannelAdjStorage::setLastGainCorrectionInternalAndClamp(double lastGainCorrectionInternalAndClamp)
+void ChannelAdjStorage::setLastOffsetAdjAmplitude(double lastOffsetAdjAmplitude)
 {
-    m_lastGainCorrectionInternalAndClamp = lastGainCorrectionInternalAndClamp;
+    m_lastOffsetAdjAmplitude = lastOffsetAdjAmplitude;
 }
