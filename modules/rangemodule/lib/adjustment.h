@@ -23,7 +23,7 @@ enum adjustmentCmds
     writephasecorr,
     writeoffsetcorr,
 
-    getgaincorrinternalandclamp,
+    getgaincorr,
     getphasecorr,
     getoffsetcore,
 

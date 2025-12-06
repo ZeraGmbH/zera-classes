@@ -282,7 +282,7 @@ void cAdjustManagement::getGainCorrFromPcbServer()
         double preScalingFact = channelData->getPreScaling();
         cRangeMeasChannel *measChannel = m_ChannelList.at(m_nChannelIt);
         double unscaledActualValue = actualValue * preScalingFact / m_fGainKeeperForFakingRmsValues[measChannel->getDSPChannelNr()];
-        m_MsgNrCmdList[m_ChannelList.at(m_nChannelIt)->readGainCorrectionIntarnalAndClamp(unscaledActualValue)] = getgaincorrinternalandclamp;
+        m_MsgNrCmdList[m_ChannelList.at(m_nChannelIt)->readGainCorrection(unscaledActualValue)] = getgaincorr;
     }
 }
 
@@ -458,7 +458,7 @@ void cAdjustManagement::catchChannelReply(quint32 msgnr)
     int cmd = m_MsgNrCmdList.take(msgnr);
     switch (cmd)
     {
-    case getgaincorrinternalandclamp:
+    case getgaincorr:
     case getphasecorr:
     case getoffsetcore:
         emit activationContinue();
