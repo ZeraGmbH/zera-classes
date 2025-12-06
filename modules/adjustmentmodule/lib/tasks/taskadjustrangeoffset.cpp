@@ -31,25 +31,25 @@ TaskAdjustRangeOffset::TaskAdjustRangeOffset(Zera::PcbInterfacePtr pcbInterface,
                                               channelMName, rangeName, targetValue,
                                               m_rangeVals.m_offsetAdjCorrection,
                                               perTransactionTimout, [&]{
-            m_perTransactionErrorHandler(readOffsetCorrErrMsg);
-        }));
+                                                  m_perTransactionErrorHandler(readOffsetCorrErrMsg);
+                                              }));
     addSub(TaskRangeGetRejection::create(pcbInterface,
-                                           channelMName, rangeName,
-                                           m_rangeVals.m_rejection,
-                                           perTransactionTimout, [&]{
-            m_perTransactionErrorHandler(readrangerejectionErrMsg);
-        }));
-    addSub(TaskRangeGetUrValue::create(pcbInterface,
                                          channelMName, rangeName,
-                                         m_rangeVals.m_urValue,
+                                         m_rangeVals.m_rejection,
                                          perTransactionTimout, [&]{
-        m_perTransactionErrorHandler(readrangeurvalueErrMsg);
-    }));
+                                             m_perTransactionErrorHandler(readrangerejectionErrMsg);
+                                         }));
+    addSub(TaskRangeGetUrValue::create(pcbInterface,
+                                       channelMName, rangeName,
+                                       m_rangeVals.m_urValue,
+                                       perTransactionTimout, [&]{
+                                           m_perTransactionErrorHandler(readrangeurvalueErrMsg);
+                                       }));
     addSub(TaskOffsetSetNode::create(pcbInterface,
                                      channelMName, rangeName,
                                      actualValue, targetValue,
                                      m_rangeVals,
                                      perTransactionTimout, [&]{
-        m_perTransactionErrorHandler(setOffsetNodeErrMsg);
-    }));
+                                         m_perTransactionErrorHandler(setOffsetNodeErrMsg);
+                                     }));
 }
