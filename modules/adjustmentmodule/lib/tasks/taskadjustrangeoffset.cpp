@@ -7,28 +7,29 @@
 
 TaskTemplatePtr TaskAdjustRangeOffset::create(Zera::PcbInterfacePtr pcbInterface,
                                               QString channelMName, QString rangeName,
-                                              double actualValue, double targetValue,
+                                              double actualValue, double targetValue, const ChannelAdjStorage &adjStorage,
                                               int perTransactionTimout, std::function<void (QString)> perTransactionErrorHandler)
 {
     return std::make_unique<TaskAdjustRangeOffset>(pcbInterface,
                                                    channelMName, rangeName,
-                                                   actualValue, targetValue,
+                                                   actualValue, targetValue, adjStorage,
                                                    perTransactionTimout, perTransactionErrorHandler);
 }
 
 TaskAdjustRangeOffset::TaskAdjustRangeOffset(Zera::PcbInterfacePtr pcbInterface,
-                       QString channelMName, QString rangeName, double actualValue, double targetValue,
-                       int perTransactionTimout, std::function<void (QString)> perTransactionErrorHandler) :
+                                             QString channelMName, QString rangeName,
+                                             double actualValue, double targetValue, const ChannelAdjStorage &adjStorage,
+                                             int perTransactionTimout, std::function<void (QString)> perTransactionErrorHandler) :
     m_perTransactionErrorHandler(perTransactionErrorHandler)
 {
     addSub(TaskGainGetAdjCorrection::create(pcbInterface,
-                                            channelMName, rangeName, targetValue,
+                                            channelMName, rangeName, adjStorage.getLastGainAdjAmplitude(),
                                             m_rangeVals.m_gainAdjCorrection,
                                             perTransactionTimout, [&]{
                                                 m_perTransactionErrorHandler(readGainCorrErrMsg);
                                             }));
     addSub(TaskOffsetGetAdjCorrection::create(pcbInterface,
-                                              channelMName, rangeName, targetValue,
+                                              channelMName, rangeName, adjStorage.getLastOffsetAdjAmplitude(),
                                               m_rangeVals.m_offsetAdjCorrection,
                                               perTransactionTimout, [&]{
                                                   m_perTransactionErrorHandler(readOffsetCorrErrMsg);
