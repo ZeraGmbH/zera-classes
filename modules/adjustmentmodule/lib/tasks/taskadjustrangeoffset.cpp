@@ -1,21 +1,21 @@
-#include "taskoffset.h"
+#include "taskadjustrangeoffset.h"
 #include "taskoffsetgetadjcorrection.h"
 #include "taskrangegetrejection.h"
 #include "taskrangegeturvalue.h"
 #include "errormessages.h"
 
-TaskTemplatePtr TaskOffset::create(Zera::PcbInterfacePtr pcbInterface,
-                                    QString channelMName, QString rangeName,
-                                    double actualValue, double targetValue,
-                                    int perTransactionTimout, std::function<void (QString)> perTransactionErrorHandler)
+TaskTemplatePtr TaskAdjustRangeOffset::create(Zera::PcbInterfacePtr pcbInterface,
+                                              QString channelMName, QString rangeName,
+                                              double actualValue, double targetValue,
+                                              int perTransactionTimout, std::function<void (QString)> perTransactionErrorHandler)
 {
-    return std::make_unique<TaskOffset>(pcbInterface,
-                                        channelMName, rangeName,
-                                        actualValue, targetValue,
-                                        perTransactionTimout, perTransactionErrorHandler);
+    return std::make_unique<TaskAdjustRangeOffset>(pcbInterface,
+                                                   channelMName, rangeName,
+                                                   actualValue, targetValue,
+                                                   perTransactionTimout, perTransactionErrorHandler);
 }
 
-TaskOffset::TaskOffset(Zera::PcbInterfacePtr pcbInterface,
+TaskAdjustRangeOffset::TaskAdjustRangeOffset(Zera::PcbInterfacePtr pcbInterface,
                        QString channelMName, QString rangeName, double actualValue, double targetValue,
                        int perTransactionTimout, std::function<void (QString)> perTransactionErrorHandler) :
     m_perTransactionErrorHandler(perTransactionErrorHandler)

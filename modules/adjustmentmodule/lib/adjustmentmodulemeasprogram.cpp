@@ -2,7 +2,7 @@
 #include "adjustmentmodule.h"
 #include "adjustvalidator.h"
 #include "adjustmentmoduleconfiguration.h"
-#include "taskoffset.h"
+#include "taskadjustrangeoffset.h"
 #include <reply.h>
 #include <proxy.h>
 #include <intvalidator.h>
@@ -645,7 +645,7 @@ void cAdjustmentModuleMeasProgram::setAdjustOffsetStartCommand(QVariant paramVal
     int adjustEntity = getConfData()->m_AdjChannelInfoHash[m_currEnv.m_channelMName]->dcAdjInfo.m_nEntity;
     QString adjustComponent = getConfData()->m_AdjChannelInfoHash[m_currEnv.m_channelMName]->dcAdjInfo.m_sComponent;
     double adjustActualValue = m_pModule->getStorageDb()->getStoredValue(adjustEntity, adjustComponent).toDouble();
-    m_offsetTasks.addSub(TaskOffset::create(m_commonObjects->m_pcbConnection.getInterface(),
+    m_offsetTasks.addSub(TaskAdjustRangeOffset::create(m_commonObjects->m_pcbConnection.getInterface(),
                                             m_currEnv.m_channelMName, m_currEnv.m_rangeName,
                                             adjustActualValue, m_currEnv.m_targetValue,
                                             TRANSACTION_TIMEOUT, [&](QString errorMsg){
