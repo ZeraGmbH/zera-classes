@@ -283,8 +283,6 @@ void cAdjustManagement::getGainCorrFromPcbServer()
         double preScalingFact = channelData->getPreScaling();
         cRangeMeasChannel *measChannel = m_ChannelList.at(m_nChannelIt);
         double unscaledActualValue = actualValue * preScalingFact / m_fGainKeeperForFakingRmsValues[measChannel->getDSPChannelNr()];
-        ChannelCommonStorage *channelCommon = measChannel->getChannelObserver()->getModuleCommonStorage();
-        channelCommon->setLastGainAdjAmplitude(unscaledActualValue);
         m_MsgNrCmdList[m_ChannelList.at(m_nChannelIt)->readGainCorrection(unscaledActualValue)] = getgaincorr;
     }
 }
@@ -363,8 +361,6 @@ void cAdjustManagement::getOffsetCorrFromPcbServer()
         double actualValue = channelData->getRmsValue();
         double preScalingFact = channelData->getPreScaling();
         double actualValueForOffset = actualValue * preScalingFact;
-        ChannelCommonStorage *channelCommon = measChannel->getChannelObserver()->getModuleCommonStorage();
-        channelCommon->setLastOffsetAdjAmplitude(actualValueForOffset);
         m_MsgNrCmdList[m_ChannelList.at(m_nChannelIt)->readOffsetCorrection(actualValueForOffset)] = getoffsetcore;
     }
 }

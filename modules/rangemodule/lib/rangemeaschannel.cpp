@@ -110,6 +110,8 @@ QString cRangeMeasChannel::getRange() const
 quint32 cRangeMeasChannel::readGainCorrection(double amplitude)
 {
     if (m_bActive) {
+        ChannelCommonStorage *channelCommon = getChannelObserver()->getModuleCommonStorage();
+        channelCommon->setLastGainAdjAmplitude(amplitude);
         quint32 msgnr = m_pcbInterface->getGainCorrection(getMName(), m_RangeInfoHash[m_sActRange].name, amplitude);
         m_MsgNrCmdList[msgnr] = readgaincorrectioninternalandclamp;
         return msgnr;
@@ -123,6 +125,8 @@ quint32 cRangeMeasChannel::readGainCorrection(double amplitude)
 quint32 cRangeMeasChannel::readOffsetCorrection(double amplitude)
 {
     if (m_bActive) {
+        ChannelCommonStorage *channelCommon = getChannelObserver()->getModuleCommonStorage();
+        channelCommon->setLastOffsetAdjAmplitude(amplitude);
         quint32 msgnr = m_pcbInterface->getOffsetCorrection(getMName(), m_RangeInfoHash[m_sActRange].name, amplitude);
         m_MsgNrCmdList[msgnr] = readoffsetcorrection;
         return msgnr;
