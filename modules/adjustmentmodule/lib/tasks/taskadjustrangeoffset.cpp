@@ -22,6 +22,8 @@ TaskAdjustRangeOffset::TaskAdjustRangeOffset(Zera::PcbInterfacePtr pcbInterface,
                                              int perTransactionTimout, std::function<void (QString)> perTransactionErrorHandler) :
     m_perTransactionErrorHandler(perTransactionErrorHandler)
 {
+    if (channelCommon.getInvertedPhaseState())
+        actualValue = -actualValue;
     addSub(TaskGainGetAdjCorrection::create(pcbInterface,
                                             channelMName, rangeName, channelCommon.getLastGainAdjAmplitude(),
                                             m_rangeVals.m_gainAdjCorrection,
