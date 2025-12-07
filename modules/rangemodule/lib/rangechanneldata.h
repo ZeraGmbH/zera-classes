@@ -8,8 +8,6 @@ class RangeChannelData
 {
 public:
     RangeChannelData();
-    void setInvertedPhaseState(bool inverted);
-    bool getInvertedPhaseState() const;
 
     double getPreScaling() const;
     void setPreScaling(double preScaling);
@@ -27,7 +25,6 @@ public:
     void setPeakValueWithDc(double peakValueWithDc);
 
 private:
-    bool m_invertedPhase = false;
     double m_preScaling = 1.0;
     double m_rmsValue = 0.0;
     double m_signalFrequency = 13.0;

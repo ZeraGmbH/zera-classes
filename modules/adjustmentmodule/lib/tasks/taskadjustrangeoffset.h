@@ -2,7 +2,7 @@
 #define TASKADJUSTRANGEOFFSET_H
 
 #include <taskcontainersequence.h>
-#include "channeladjstorage.h"
+#include "channelcommonstorage.h"
 #include "taskoffsetsetnode.h"
 #include <pcbinterface.h>
 #include <functional>
@@ -13,11 +13,11 @@ class TaskAdjustRangeOffset : public TaskContainerSequence
 public:
     static TaskTemplatePtr create(Zera::PcbInterfacePtr pcbInterface,
                                   QString channelMName, QString rangeName,
-                                  double actualValue, double targetValue, const ChannelAdjStorage &adjStorage,
+                                  double actualValue, double targetValue, const ChannelCommonStorage &channelCommon,
                                   int perTransactionTimout, std::function<void (QString)> perTransactionErrorHandler);
     TaskAdjustRangeOffset(Zera::PcbInterfacePtr pcbInterface,
                           QString channelMName, QString rangeName,
-                          double actualValue, double targetValue, const ChannelAdjStorage &adjStorage,
+                          double actualValue, double targetValue, const ChannelCommonStorage &channelCommon,
                           int perTransactionTimout, std::function<void (QString)> perTransactionErrorHandler);
 private:
     TaskOffsetSetNode::RangeWorkStorage m_rangeVals;

@@ -54,7 +54,7 @@ const RangePtr Channel::getRange(const QString &rangeName) const
     return nullptr;
 }
 
-ChannelAdjStorage *Channel::getChannelAdjStorage()
+ChannelCommonStorage *Channel::getModuleCommonStorage()
 {
     return &m_channelAdjStorage;
 }

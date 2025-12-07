@@ -1,16 +1,21 @@
-#ifndef CHANNELADJSTORAGE_H
-#define CHANNELADJSTORAGE_H
+#ifndef CHANNELCOMMONSTORAGE_H
+#define CHANNELCOMMONSTORAGE_H
 
-class ChannelAdjStorage
+class ChannelCommonStorage
 {
 public:
+    bool getInvertedPhaseState() const;
+    void setInvertedPhaseState(bool inverted);
+
     double getLastGainAdjAmplitude() const;
     void setLastGainAdjAmplitude(double lastGainAdjAmplitude);
+
     double getLastOffsetAdjAmplitude() const;
     void setLastOffsetAdjAmplitude(double lastOffsetAdjAmplitude);
 private:
+    bool m_invertPhase = false;
     double m_lastGainAdjAmplitude = 0.0;
     double m_lastOffsetAdjAmplitude = 0.0;
 };
 
-#endif // CHANNELADJSTORAGE_H
+#endif // CHANNELCOMMONSTORAGE_H

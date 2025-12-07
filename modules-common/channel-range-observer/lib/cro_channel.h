@@ -1,7 +1,7 @@
 #ifndef CRO_CHANNEL_H
 #define CRO_CHANNEL_H
 
-#include "channeladjstorage.h"
+#include "channelcommonstorage.h"
 #include "cro_range.h"
 #include <networkconnectioninfo.h>
 #include <abstracttcpnetworkfactory.h>
@@ -31,7 +31,7 @@ public:
     const QStringList getAllRangeNames() const;
     const QStringList getAvailRangeNames() const;
     const RangePtr getRange(const QString &rangeName) const;
-    ChannelAdjStorage *getChannelAdjStorage();
+    ChannelCommonStorage *getModuleCommonStorage();
 signals:
     void sigRangeChangeReported(QString channelMName, int interruptCounter);
     void sigFetchDoneChannel(QString channelMName, bool ok);
@@ -55,7 +55,7 @@ private:
     QString m_alias;
     std::shared_ptr<QString> m_unit = std::make_shared<QString>();
     std::shared_ptr<int> m_dspChannel = std::make_shared<int>(0);
-    ChannelAdjStorage m_channelAdjStorage;
+    ChannelCommonStorage m_channelAdjStorage;
 
     std::shared_ptr<QStringList> m_allRangeNamesOrderedByServer = std::make_shared<QStringList>();
     QStringList m_availableRangeNames;

@@ -7,16 +7,6 @@ RangeChannelData::RangeChannelData()
 {
 }
 
-bool RangeChannelData::getInvertedPhaseState() const
-{
-    return m_invertedPhase;
-}
-
-void RangeChannelData::setInvertedPhaseState(bool inverted)
-{
-    m_invertedPhase = inverted;
-}
-
 double RangeChannelData::getPreScaling() const
 {
     return m_preScaling;
