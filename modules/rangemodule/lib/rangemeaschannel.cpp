@@ -494,16 +494,22 @@ void cRangeMeasChannel::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVaria
             break;
 
         case readgaincorrectioninternalandclamp:
-            if (reply == ack)
+            if (reply == ack) {
                 m_fGainCorrection = answer.toDouble(&ok);
+                if (getAlias() == "UAUX")
+                    qWarning("Gain correction %s: %f", qPrintable(getAlias()), m_fGainCorrection);
+            }
             else
                 notifyError(readGainCorrErrMsg);
             emit cmdDone(msgnr);
             break;
 
         case readoffsetcorrection:
-            if (reply == ack)
+            if (reply == ack) {
                 m_fOffsetCorrection = answer.toDouble(&ok);
+                if (getAlias() == "UAUX")
+                    qWarning("Offset correction %s: %f", qPrintable(getAlias()), m_fOffsetCorrection);
+            }
             else
                 notifyError(readOffsetCorrErrMsg);
             emit cmdDone(msgnr);

@@ -282,6 +282,8 @@ void cAdjustManagement::getGainCorrFromPcbServer()
         double preScalingFact = channelData->getPreScaling();
         cRangeMeasChannel *measChannel = m_ChannelList.at(m_nChannelIt);
         double unscaledActualValue = actualValue * preScalingFact / m_fGainKeeperForFakingRmsValues[measChannel->getDSPChannelNr()];
+        if (measChannel->getAlias() == "UAUX")
+            qWarning("Gain %s: %f", qPrintable(measChannel->getAlias()), unscaledActualValue);
         ChannelAdjStorage *adjStorage = measChannel->getChannelObserver()->getChannelAdjStorage();
         adjStorage->setLastGainAdjAmplitude(unscaledActualValue);
         m_MsgNrCmdList[m_ChannelList.at(m_nChannelIt)->readGainCorrection(unscaledActualValue)] = getgaincorr;
@@ -361,6 +363,8 @@ void cAdjustManagement::getOffsetCorrFromPcbServer()
         double actualValue = channelData->getRmsValue();
         double preScalingFact = channelData->getPreScaling();
         double actualValueForOffset = actualValue * preScalingFact;
+        if (measChannel->getAlias() == "UAUX")
+            qWarning("Offset %s: %f", qPrintable(measChannel->getAlias()), actualValueForOffset);
         ChannelAdjStorage *adjStorage = measChannel->getChannelObserver()->getChannelAdjStorage();
         adjStorage->setLastOffsetAdjAmplitude(actualValueForOffset);
         m_MsgNrCmdList[m_ChannelList.at(m_nChannelIt)->readOffsetCorrection(actualValueForOffset)] = getoffsetcore;
@@ -373,6 +377,8 @@ void cAdjustManagement::prepareOffsetCorrForDspServer()
     if (m_bActive) {
         cRangeMeasChannel *measChannel = m_ChannelList.at(m_nChannelIt);
         float fCorr = measChannel->getOffsetCorrection();
+        if (measChannel->getAlias() == "UAUX")
+            qWarning("Offset correction %s: %f", qPrintable(measChannel->getAlias()), fCorr);
         double preScale=measChannel->getChannelData()->getPreScaling();
         // Offset is an summand. It must be multiplied with the
         // scale factor.
