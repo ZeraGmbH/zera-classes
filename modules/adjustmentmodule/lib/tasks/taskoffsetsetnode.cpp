@@ -47,8 +47,10 @@ void TaskOffsetSetNode::onServerAnswer(quint32 msgnr, quint8 reply, QVariant ans
 double TaskOffsetSetNode::removeGainCorrectionApplied(double value)
 {
     double gainCorrectionApplied = *m_rngVals.m_gainAdjCorrection;
+    qWarning("Gain correction applied: %f", gainCorrectionApplied);
     if (fabs(gainCorrectionApplied) > 1e-9)
         value /= gainCorrectionApplied;
+    qWarning("Value: %f", value);
     return value;
 }
 
@@ -58,7 +60,9 @@ double TaskOffsetSetNode::removeOffsetCorrectionApplied(double value)
     const double nominalValue = *m_rngVals.m_urValue;
     if (fabs(nominalAdc) > 1e-3) {
         const double offsetCorrectionApplied = *m_rngVals.m_offsetAdjCorrection;
+        qWarning("Offset correction applied: %f", offsetCorrectionApplied);
         value = value - offsetCorrectionApplied * nominalValue / nominalAdc;
+        qWarning("Value: %f", value);
     }
     return value;
 }
@@ -67,5 +71,7 @@ double TaskOffsetSetNode::calcAdcOffsetCorrection(double uncorrectedActualValue)
 {
     const double nominalAdc = *m_rngVals.m_rejection;
     const double nominalValue = *m_rngVals.m_urValue;
-    return (m_targetValue - uncorrectedActualValue) * nominalAdc / nominalValue;
+    double newCorrection = (m_targetValue - uncorrectedActualValue) * nominalAdc / nominalValue;
+    qWarning("New Offset correction: %f", newCorrection);
+    return newCorrection;
 }
