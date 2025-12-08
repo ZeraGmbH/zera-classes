@@ -125,13 +125,13 @@ jobs:
           path: /github/home/scpi_docs.tar.xz
           retention-days: 1
 
-      - uses: convictional/trigger-workflow-and-wait@v1.4.0
-        with:
-          owner: ZeraGmbH
-          repo: zenux-data
-          github_token: ${{ secrets.G_TRIGGER_WORKFLOW }}
-          workflow_file_name: uploadScpiDocs.yml
-          inputs: '{"version" : "${{ github.event.inputs.version}}"}'
-          ref: main
-          wait_workflow: false
-          propagate_failure: false
+#      - uses: convictional/trigger-workflow-and-wait@v1.4.0
+#        with:
+#          owner: ZeraGmbH
+#          repo: zenux-data
+#          github_token: ${{ secrets.G_TRIGGER_WORKFLOW }}
+#          workflow_file_name: uploadScpiDocs.yml
+#          inputs: '{"version" : "${{ github.event.inputs.version}}"}'
+#          ref: main
+#          wait_workflow: false
+#          propagate_failure: false
