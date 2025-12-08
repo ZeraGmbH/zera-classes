@@ -69,10 +69,11 @@ void test_modman_regression_all_sessions::testGenerateScpiDocs_data()
                                               sessionMapJsonPath);
 
     int adjustmentHtmls = 2;
-    int totalHtmlFiles = m_veinDumps.count() + adjustmentHtmls;
+    int cssFiles = 1;
+    int totalExpectedFiles = m_veinDumps.count() + adjustmentHtmls + cssFiles;
     QDir htmlDir(htmlOutPath);
     htmlDir.setFilter(QDir::Files);
-    QCOMPARE(htmlDir.count(), totalHtmlFiles);
+    QCOMPARE(htmlDir.count(), totalExpectedFiles);
 
     QTest::addColumn<QString>("htmlFilePath");
     for(auto &fileInfo: htmlDir.entryInfoList())
