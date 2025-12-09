@@ -35,17 +35,6 @@ void ScpiDocsHtmlGenerator::createScpiDocHtmls(QString modmanConfigFile, QString
 
     xmlDir.removeRecursively();
 
-    //copy css files
-    QDir sourceCssDir(QStringLiteral(SCPI_DOC_SOURCE_PATH) + "/css");
-    QDir destCssDir(htmlDirPath + "css");
-    if (destCssDir.exists())
-        destCssDir.removeRecursively();
-    QDir().mkdir(htmlDirPath + "css");
-    for (QString &fileName: sourceCssDir.entryList(QDir::Files)) {
-        if(!QFile::copy(sourceCssDir.filePath(fileName), destCssDir.filePath(fileName)))
-            qInfo("Error copy css file.");
-    }
-
     htmlPath = htmlDirPath + "change-info.html";
     createChangeInfo(htmlPath);
 }
