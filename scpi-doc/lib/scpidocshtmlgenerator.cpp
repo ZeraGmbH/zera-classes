@@ -45,6 +45,9 @@ void ScpiDocsHtmlGenerator::createScpiDocHtmls(QString modmanConfigFile, QString
         if(!QFile::copy(sourceCssDir.filePath(fileName), destCssDir.filePath(fileName)))
             qInfo("Error copy css file.");
     }
+
+    htmlPath = htmlDirPath + "change-info.html";
+    createChangeInfo(htmlPath);
 }
 
 void ScpiDocsHtmlGenerator::convertXmlToHtml(QString zenuxRelease, QFileInfo sessionXml, QString sessionName, QString adjustment, QString htmlPath)
@@ -57,6 +60,18 @@ void ScpiDocsHtmlGenerator::convertXmlToHtml(QString zenuxRelease, QFileInfo ses
                 << sessionXml.filePath()
                 << sessionName
                 << adjustment
+                << htmlPath;
+    sh.start("/bin/sh", paramList);
+    sh.waitForFinished();
+    qInfo("%s", qPrintable(sh.readAll()));
+}
+
+void ScpiDocsHtmlGenerator::createChangeInfo(QString htmlPath)
+{
+    QProcess sh;
+    QStringList paramList;
+    paramList = QStringList()
+                << QStringLiteral(SCPI_DOC_SOURCE_PATH) + "/create-change-info"
                 << htmlPath;
     sh.start("/bin/sh", paramList);
     sh.waitForFinished();

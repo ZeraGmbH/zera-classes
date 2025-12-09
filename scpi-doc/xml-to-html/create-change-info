@@ -1,0 +1,9 @@
+#!/bin/sh
+BASEPATH=`dirname $0`
+HTML_OUTPUT_FILE=$1
+
+cp ${BASEPATH}/change-info.html ${HTML_OUTPUT_FILE}
+
+cssContents=$(cat ${BASEPATH}/css/main.css)
+ESCAPED_DATA="$(echo "${cssContents}" | sed ':a;N;$!ba;s/\n/\\n/g' | sed 's/\$/\\$/g')"
+sed -i ':a;N;$!ba;s|<style></style>|<style>'"$ESCAPED_DATA"'</style>|g' ${HTML_OUTPUT_FILE}
