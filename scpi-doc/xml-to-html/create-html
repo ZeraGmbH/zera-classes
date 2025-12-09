@@ -7,5 +7,9 @@ sed -i 's:&#xa;:___LF___:g' $2
 echo "Writing $5"
 xmlstarlet tr ${BASEPATH}/xsl-files/scpi-to-html.xsl -s zenuxVersion=$1 -s sessionXml=$2 -s sessionName="$3" -s createAdjustmentHtml=$4 $2 > "$5"
 
+cssContents=$(cat ${BASEPATH}/css/main.css)
+ESCAPED_DATA="$(echo "${cssContents}" | sed ':a;N;$!ba;s/\n/\\n/g' | sed 's/\$/\\$/g')"
+sed -i ':a;N;$!ba;s|<style></style>|<style>'"$ESCAPED_DATA"'</style>|g' "$5"
+
 # replace xml opaque string by html linefeed
 sed -i 's:___LF___:<br/>:g' $5
