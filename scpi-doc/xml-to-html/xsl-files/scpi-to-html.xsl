@@ -38,7 +38,7 @@
   </title>
 
   <head>
-    <link rel="stylesheet" type="text/css" href="css/main.css"/>
+    <style></style>
   </head>
 
   <body>
