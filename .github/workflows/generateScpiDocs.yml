@@ -89,15 +89,6 @@ jobs:
            make -j $(getconf _NPROCESSORS_ONLN)
            make -j $(getconf _NPROCESSORS_ONLN) install
 
-      - name: run scpi-doc-generator
-        run: |
-          cd $HOME/targetbuild/scpi-doc/app
-          ./scpi-doc-generator -z${{ github.event.inputs.version}}
-          mv $HOME/targetbuild/scpi-doc/app/html-docs $HOME/html-docs
-          find $HOME/html-docs/ -name *adjustment* -delete
-          mv $HOME/targetbuild/scpi-doc/app/SessionNamesMapping.json $HOME
-          ls $HOME/
-
       - name: Update and commit change-info.html
         run: |
           cd $GITHUB_WORKSPACE/scpi-doc/xml-to-html
@@ -111,8 +102,15 @@ jobs:
             git commit -sm "Update release version in change-info.html"
             git push
           fi
-          mv change-info.html $HOME/html-docs
-          ls -lR $HOME/html-docs
+
+      - name: run scpi-doc-generator
+        run: |
+          cd $HOME/targetbuild/scpi-doc/app
+          ./scpi-doc-generator -z${{ github.event.inputs.version}}
+          mv $HOME/targetbuild/scpi-doc/app/html-docs $HOME/html-docs
+          find $HOME/html-docs/ -name *adjustment* -delete
+          mv $HOME/targetbuild/scpi-doc/app/SessionNamesMapping.json $HOME
+          ls $HOME/
 
       - name: Tar scpi-docs
         run: |
