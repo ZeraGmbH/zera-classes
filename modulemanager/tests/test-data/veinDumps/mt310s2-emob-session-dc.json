@@ -24,6 +24,7 @@
             1500,
             1600,
             1700,
+            1800,
             9999
         ],
         "EntityName": "_System",
@@ -5078,6 +5079,43 @@
                 ]
             }
         }
+    },
+    "1800": {
+        "ACT_Points": null,
+        "EntityName": "RecorderModule1",
+        "INF_ModuleInterface": {
+            "ComponentInfo": {
+                "ACT_Points": {
+                    "Description": "Number of points in a curve"
+                },
+                "EntityName": {
+                    "Description": "Module's name"
+                },
+                "INF_ModuleInterface": {
+                    "Description": "Module's interface details"
+                },
+                "PAR_StartStopRecording": {
+                    "Description": "Parameter to start/stop recording",
+                    "Validation": {
+                        "Data": [
+                            0,
+                            1
+                        ],
+                        "Type": "BOOL"
+                    }
+                }
+            },
+            "ModuleInfo": {
+                "Description": "Recorder module",
+                "Name": "RecorderModule1"
+            },
+            "SCPIInfo": {
+                "Cmd": [
+                ],
+                "Name": "REC1"
+            }
+        },
+        "PAR_StartStopRecording": false
     },
     "2": {
         "DatabaseFile": "/tmp/test.db",
