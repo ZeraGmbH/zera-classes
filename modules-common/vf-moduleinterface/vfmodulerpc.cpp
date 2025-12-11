@@ -10,8 +10,6 @@ VfModuleRpc::VfModuleRpc(VfCpp::VfCppRpcSimplifiedPtr rpc, const QString &descri
     m_optParam(false)
 {
     int totalExpectedParams = VfCppRpcHelper::getRpcParamNamesList(rpc->getSignature()).size();
-    if(totalExpectedParams > 1)
-        qCritical("SCPI commands associated with RPC defined to have more than 1 parameters, are not processed !");
 }
 
 VfCpp::VfCppRpcSimplifiedPtr VfModuleRpc::getRpcSimplifed()
