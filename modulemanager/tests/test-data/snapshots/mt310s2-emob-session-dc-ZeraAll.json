@@ -344,7 +344,7 @@
         "ACT_PowerAboveLimit": 0
     },
     "1800": {
-        "ACT_Points": "",
+        "ACT_Points": 0,
         "PAR_StartStopRecording": 0
     },
     "Contentsets": [
