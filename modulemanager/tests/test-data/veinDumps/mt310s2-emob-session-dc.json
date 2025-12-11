@@ -5081,7 +5081,7 @@
         }
     },
     "1800": {
-        "ACT_Points": null,
+        "ACT_Points": 0,
         "EntityName": "RecorderModule1",
         "INF_ModuleInterface": {
             "ComponentInfo": {
@@ -5108,6 +5108,11 @@
             "ModuleInfo": {
                 "Description": "Recorder module",
                 "Name": "RecorderModule1"
+            },
+            "RpcInfo": {
+                "RPC_ReadRecordedValues(int p_endingPoint,int p_startingPoint)": {
+                    "Description": "Read Recorded Values"
+                }
             },
             "SCPIInfo": {
                 "Cmd": [

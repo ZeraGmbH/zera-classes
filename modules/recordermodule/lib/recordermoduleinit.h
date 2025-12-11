@@ -3,6 +3,7 @@
 
 #include "moduleactivist.h"
 #include "recordermodule.h"
+#include "veindatacollector.h"
 
 class RecorderModuleInit : public cModuleActivist
 {
@@ -16,10 +17,14 @@ private slots:
     void onActivateDone(bool ok);
     void catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant answer);
 private:
+    void startStopLogging(QVariant startStopRecording);
+    void setNumberOfPointsInCurve(int num);
+
     RecorderModule *m_module;
     VfModuleComponent* m_numberOfPointsInCurve;
     VfModuleParameter* m_startStopRecording;
-    VfModuleRpcPtr m_pGetRecordedValuesRpc;
+    VfModuleRpcPtr m_pReadRecordedValuesRpc;
+    std::shared_ptr<VeinDataCollector> m_dataCollector;
 };
 
 #endif // RECORDERMODULEINIT_H
