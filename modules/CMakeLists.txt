@@ -38,6 +38,7 @@ SET_MODULE_ENV(spm1module)
 SET_MODULE_ENV(statusmodule)
 SET_MODULE_ENV(thdnmodule)
 SET_MODULE_ENV(transformer1module)
+SET_MODULE_ENV(recordermodule)
 
 # This makes MODULE_PLUGIN_BUILD_PATH available
 add_subdirectory(lib_test_plugin_paths)
@@ -69,3 +70,4 @@ add_subdirectory(spm1module)
 add_subdirectory(statusmodule)
 add_subdirectory(thdnmodule)
 add_subdirectory(transformer1module)
+add_subdirectory(recordermodule)

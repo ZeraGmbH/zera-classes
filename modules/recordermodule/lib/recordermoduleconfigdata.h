@@ -1,0 +1,9 @@
+#ifndef RECORDERMODULECONFIGDATA_H
+#define RECORDERMODULECONFIGDATA_H
+
+class RecorderModuleConfigData
+{
+public:
+};
+
+#endif // RECORDERMODULECONFIGDATA_H
