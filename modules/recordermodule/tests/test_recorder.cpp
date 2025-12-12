@@ -23,7 +23,7 @@ void test_recorder::initTestCase()
 
 void test_recorder::init()
 {
-    m_testRunner= std::make_unique<ModuleManagerTestRunner>(":/session-minimal.json");
+    m_testRunner= std::make_unique<ModuleManagerTestRunner>(":/mt310s2-emob-session-ac.json");
 }
 
 void test_recorder::cleanup()

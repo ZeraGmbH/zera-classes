@@ -2,6 +2,12 @@
 #include "rpcreadrecordedvalues.h"
 #include <boolvalidator.h>
 
+static int constexpr systemEntityId = 0;
+static int constexpr rmsEntityId = 1040;
+static int constexpr fftEntityId = 1060;
+static int constexpr powerAcEntityId = 1070;
+static int constexpr powerDcEntityId = 1073;
+
 RecorderModuleInit::RecorderModuleInit(RecorderModule *module) :
     cModuleActivist(module->getVeinModuleName()),
     m_module(module)
@@ -50,14 +56,29 @@ void RecorderModuleInit::generateVeinInterface()
     connect(m_startStopRecording, &VfModuleParameter::sigValueChanged, this, &RecorderModuleInit::startStopLogging);
 }
 
-void RecorderModuleInit::startStopLogging(QVariant startStopRecording)
+QHash<int, QStringList> RecorderModuleInit::setEntitiesAndComponentsToRecord()
 {
     QHash<int, QStringList> entitesAndComponents;
-    QStringList rmscomponents {"ACT_RMSPN1", "ACT_RMSPN2", "ACT_RMSPN3", "ACT_RMSPN4", "ACT_RMSPN5", "ACT_RMSPN6"};
-    entitesAndComponents.insert(1040, rmscomponents);
-    QStringList powerComponents {"ACT_PQS1", "ACT_PQS2", "ACT_PQS3", "ACT_PQS4"};
-    entitesAndComponents.insert(1070, powerComponents);
+    VeinStorage::StorageComponentPtr sessionName = m_module->getStorageDb()->findComponent(systemEntityId, "Session");
 
+    if(sessionName->getValue().toString().contains("mt310s2-emob-session-ac")) {
+        QStringList rmsComponents {"ACT_RMSPN1", "ACT_RMSPN2", "ACT_RMSPN3", "ACT_RMSPN4", "ACT_RMSPN5", "ACT_RMSPN6"};
+        entitesAndComponents.insert(rmsEntityId, rmsComponents);
+        QStringList powerComponents {"ACT_PQS1", "ACT_PQS2", "ACT_PQS3", "ACT_PQS4"};
+        entitesAndComponents.insert(powerAcEntityId, powerComponents);
+    }
+    else if(sessionName->getValue().toString().contains("mt310s2-emob-session-dc")) {
+        QStringList fftComponents {"ACT_DC7", "ACT_DC8"};
+        entitesAndComponents.insert(fftEntityId, fftComponents);
+        QStringList powerComponents {"ACT_PQS1"};
+        entitesAndComponents.insert(powerDcEntityId, powerComponents);
+    }
+    return entitesAndComponents;
+}
+
+void RecorderModuleInit::startStopLogging(QVariant startStopRecording)
+{
+    QHash<int, QStringList> entitesAndComponents = setEntitiesAndComponentsToRecord();
     if(startStopRecording.toBool()) {
         setNumberOfPointsInCurve(0);
         m_dataCollector->startLogging(entitesAndComponents);

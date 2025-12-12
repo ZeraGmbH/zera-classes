@@ -1,5 +1,5 @@
 <RCC>
     <qresource prefix="/">
-        <file>session-minimal.json</file>
+        <file>mt310s2-emob-session-ac.json</file>
     </qresource>
 </RCC>
