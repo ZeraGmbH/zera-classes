@@ -17,6 +17,7 @@ private slots:
     void onActivateDone(bool ok);
     void catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant answer);
 private:
+    QHash<int, QStringList> setEntitiesAndComponentsToRecord();
     void startStopLogging(QVariant startStopRecording);
     void setNumberOfPointsInCurve(int num);
 
