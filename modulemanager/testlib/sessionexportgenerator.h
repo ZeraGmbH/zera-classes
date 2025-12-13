@@ -23,6 +23,8 @@ public:
     void generateSnapshotJsons(QString snapshotDir);
     QByteArray getVeinDump();
     QList<TestModuleManager::TModuleInstances> getInstanceCountsOnModulesDestroyed();
+
+    static int getBigSessionFileCount();
 private:
     void createModman(QString device);
     void createAndWriteFile(QString completeFileName, QString contents);

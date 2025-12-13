@@ -76,6 +76,12 @@ void SessionExportGenerator::generateSnapshotJsons(QString snapshotDir)
         createAndWriteFile(QDir::cleanPath(snapshotDir + "/" + snapshotName + ".json"), snapshotContents);
         clearSnapshotName(); //so that vein-dumps are always clean and independent from snapshots/transaction details
     }
+    for (int i=0; i<getBigSessionFileCount(); ++i) {
+        QFile file(QDir::cleanPath(snapshotDir + "/" + "mt310s2-meas-session-ZeraAll.json"));
+        QString num = QString("0%1").arg(i+1).right(2);
+        QString fileName = QString("big-%1.json").arg(num);
+        file.copy(QDir::cleanPath(snapshotDir + "/" + fileName));
+    }
 }
 
 QByteArray SessionExportGenerator::getVeinDump()
@@ -86,6 +92,11 @@ QByteArray SessionExportGenerator::getVeinDump()
 QList<TestModuleManager::TModuleInstances> SessionExportGenerator::getInstanceCountsOnModulesDestroyed()
 {
     return m_modmanTestRunner->getInstanceCountsOnModulesDestroyed();
+}
+
+int SessionExportGenerator::getBigSessionFileCount()
+{
+    return 20;
 }
 
 void SessionExportGenerator::createAndWriteFile(QString completeFileName, QString contents)

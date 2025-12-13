@@ -4,6 +4,7 @@
 #include "scpimeasure.h"
 #include "scpibasedelegate.h"
 #include "baseinterface.h"
+#include "sessionexportgenerator.h"
 #include <testloghelpers.h>
 #include <mocklxdmsessionchangeparamgenerator.h>
 #include <proxyclient_p.h>
@@ -98,7 +99,7 @@ void test_modman_regression_all_sessions::testGenerateSnapshots()
 {
     QStringList dumpedSnapshotsList = QDir(m_snapshotJsonsPath).entryList(QStringList({"*.json"}));
     QStringList expectedSnapshotsList = QDir(":/snapshots/").entryList(QStringList({"*.json"}));
-    QCOMPARE(expectedSnapshotsList.count(), dumpedSnapshotsList.count());
+    QCOMPARE(expectedSnapshotsList.count()+SessionExportGenerator::getBigSessionFileCount(), dumpedSnapshotsList.count());
 
     QFETCH(QString, snapshotName);
     QByteArray jsonExpected = TestLogHelpers::loadFile(QString(":/snapshots/%1").arg(snapshotName));
