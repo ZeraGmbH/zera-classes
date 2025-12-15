@@ -25,6 +25,7 @@
                 <name>fo3</name>
                 <source>pms1</source>
                 <type>+-</type>
+                <name_displayed>f1OUT</name_displayed> <!-- Extension module -->
                 <scaling>
                     <uscale>
                         <inputentity>1020</inputentity>
