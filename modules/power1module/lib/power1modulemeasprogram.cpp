@@ -228,7 +228,8 @@ void cPower1ModuleMeasProgram::generateVeinInterface()
         m_pModule->m_veinModuleParameterMap[key] = pFoutParameter; // for modules use
 
         QString foutName = getConfData()->m_FreqOutputConfList.at(i).m_sFreqOutNameDisplayed;
-        foutDisplayNameFound = !foutName.isEmpty();
+        if (!foutName.isEmpty())
+            foutDisplayNameFound = true;
         pFoutParameter = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
                                                           key = QString("PAR_FOUT%1").arg(i),
                                                           QString("Frequency output name"),
