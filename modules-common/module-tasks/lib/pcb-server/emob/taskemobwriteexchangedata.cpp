@@ -29,11 +29,16 @@ quint32 TaskEmobWriteExchangeData::sendToServer()
                             arg(m_channelMName).arg(m_emobIdFrom0To3);
     if (!(*m_exchangeDataWrite).isEmpty()) {
         QStringList sendData = HotplugControllerInterface::encodeDataToHex(*m_exchangeDataWrite);
-        qInfo("Write EMOB exchange data to channel %s / hex: %s...", qPrintable(m_channelMName), qPrintable(sendData.join(",")));
         scpiCmd += sendData.join(",") + ";";
+        qInfo("Write EMOB exchange data to channel %s / id: %i / hex: %s...",
+              qPrintable(m_channelMName),
+              m_emobIdFrom0To3,
+              qPrintable(sendData.join(",")));
     }
     else
-        qInfo("Write empty EMOB exchange data to channel %s...", qPrintable(m_channelMName));
+        qInfo("Write empty EMOB exchange data to channel %s / id %i...",
+              qPrintable(m_channelMName),
+              m_emobIdFrom0To3);
     return m_interface->scpiCommand(scpiCmd);
 }
 
