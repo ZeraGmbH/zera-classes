@@ -3274,7 +3274,7 @@
     },
     "1130": {
         "ACT_DutPulses": 0,
-        "ACT_EndTime": null,
+        "ACT_EndTime": "",
         "ACT_Energy": 0,
         "ACT_EnergyFinal": 0,
         "ACT_MeasNum": 0,
@@ -3299,7 +3299,7 @@
         "ACT_Rating": -1,
         "ACT_RefFreqInput": "fo0",
         "ACT_Result": 0,
-        "ACT_StartTime": null,
+        "ACT_StartTime": "",
         "ACT_Status": 0,
         "EntityName": "SEC1Module1",
         "INF_ModuleInterface": {
@@ -3855,7 +3855,7 @@
     },
     "1131": {
         "ACT_DutPulses": 0,
-        "ACT_EndTime": null,
+        "ACT_EndTime": "",
         "ACT_Energy": 0,
         "ACT_EnergyFinal": 0,
         "ACT_MeasNum": 0,
@@ -3880,7 +3880,7 @@
         "ACT_Rating": -1,
         "ACT_RefFreqInput": "fo0",
         "ACT_Result": 0,
-        "ACT_StartTime": null,
+        "ACT_StartTime": "",
         "ACT_Status": 0,
         "EntityName": "SEC1Module2",
         "INF_ModuleInterface": {
@@ -4444,7 +4444,7 @@
         "ACT_Load1": "",
         "ACT_Load2": "",
         "ACT_Load3": "",
-        "ACT_Load4": null,
+        "ACT_Load4": "",
         "EntityName": "LambdaModule1",
         "INF_ModuleInterface": {
             "ComponentInfo": {
@@ -4953,7 +4953,7 @@
         "PAR_AdjustAmplitudeDc": "",
         "PAR_AdjustCLAMPData": "",
         "PAR_AdjustGainStatus": 0,
-        "PAR_AdjustInit": null,
+        "PAR_AdjustInit": "",
         "PAR_AdjustOffsetStatus": 0,
         "PAR_AdjustPCBData": "",
         "PAR_AdjustPhase": "",
@@ -4964,14 +4964,14 @@
         "PAR_Storage": 0
     },
     "1200": {
-        "ACT_EndTime": null,
+        "ACT_EndTime": "",
         "ACT_Energy": 0,
         "ACT_MeasTime": 0,
         "ACT_Power": 0,
         "ACT_Rating": -1,
         "ACT_RefFreqInput": "fo0",
         "ACT_Result": 0,
-        "ACT_StartTime": null,
+        "ACT_StartTime": "",
         "ACT_Status": 0,
         "ACT_Time": 0,
         "EntityName": "SEM1Module1",
@@ -6276,8 +6276,8 @@
         ],
         "currentContentSets": [
         ],
-        "guiContext": null,
+        "guiContext": "",
         "sessionName": "com5003TestSession",
-        "transactionName": null
+        "transactionName": ""
     }
 }
