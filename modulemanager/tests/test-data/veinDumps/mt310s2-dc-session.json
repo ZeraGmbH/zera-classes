@@ -3169,18 +3169,32 @@
     },
     "1130": {
         "ACT_DutPulses": 0,
-        "ACT_EndTime": "",
+        "ACT_EndTime": null,
         "ACT_Energy": 0,
         "ACT_EnergyFinal": 0,
         "ACT_MeasNum": 0,
         "ACT_MeasTime": 0,
         "ACT_MulCount": 0,
-        "ACT_MulResult": "{\"countFail\":0,\"countPass\":0,\"countUnfinish\":0,\"idxMax\":-1,\"idxMin\":-1,\"limits\":[],\"mean\":null,\"range\":null,\"stddevN\":null,\"stddevN1\":null,\"values\":[]}",
+        "ACT_MulResult": {
+            "countFail": 0,
+            "countPass": 0,
+            "countUnfinish": 0,
+            "idxMax": -1,
+            "idxMin": -1,
+            "limits": [
+            ],
+            "mean": null,
+            "range": null,
+            "stddevN": null,
+            "stddevN1": null,
+            "values": [
+            ]
+        },
         "ACT_Progress": 0,
         "ACT_Rating": -1,
         "ACT_RefFreqInput": "fo0",
         "ACT_Result": 0,
-        "ACT_StartTime": "",
+        "ACT_StartTime": null,
         "ACT_Status": 0,
         "EntityName": "SEC1Module1",
         "INF_ModuleInterface": {
@@ -3741,7 +3755,10 @@
         "INF_AccumulatorStatus": 0,
         "INF_AdjChksum": "0x65535",
         "INF_Adjusted": "5",
-        "INF_CTRLVersion": "{\"Relay controller version\":\"Unknown\",\"System controller version\":\"Unknown\"}",
+        "INF_CTRLVersion": {
+            "Relay controller version": "Unknown",
+            "System controller version": "Unknown"
+        },
         "INF_CpuInfo": "",
         "INF_DSPServerVersion": "zdsp1d V1.11",
         "INF_DSPVersion": "DSPLCA: V0.0;DSP V0.00",
@@ -3929,7 +3946,10 @@
             }
         },
         "INF_PCBServerVersion": "V42.0",
-        "INF_PCBVersion": "{\"Relay PCB version\":\"Unknown\",\"System PCB version\":\"Unknown\"}",
+        "INF_PCBVersion": {
+            "Relay PCB version": "Unknown",
+            "System PCB version": "Unknown"
+        },
         "INF_ReleaseNr": "",
         "INF_Schnubbel": 0,
         "PAR_SerialNr": "Unknown"
@@ -4171,7 +4191,7 @@
         "PAR_AdjustAmplitudeDc": "",
         "PAR_AdjustCLAMPData": "",
         "PAR_AdjustGainStatus": 0,
-        "PAR_AdjustInit": "",
+        "PAR_AdjustInit": null,
         "PAR_AdjustOffsetStatus": 0,
         "PAR_AdjustPCBData": "",
         "PAR_AdjustPhase": "",
@@ -4182,14 +4202,14 @@
         "PAR_Storage": 0
     },
     "1200": {
-        "ACT_EndTime": "",
+        "ACT_EndTime": null,
         "ACT_Energy": 0,
         "ACT_MeasTime": 0,
         "ACT_Power": 0,
         "ACT_Rating": -1,
         "ACT_RefFreqInput": "fo0",
         "ACT_Result": 0,
-        "ACT_StartTime": "",
+        "ACT_StartTime": null,
         "ACT_Status": 0,
         "ACT_Time": 0,
         "EntityName": "SEM1Module1",
@@ -5603,7 +5623,7 @@
         ],
         "currentContentSets": [
         ],
-        "guiContext": "",
+        "guiContext": null,
         "sessionName": "mt310s2TestSession",
         "transactionName": ""
     }

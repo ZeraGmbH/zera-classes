@@ -2972,18 +2972,32 @@
     },
     "1130": {
         "ACT_DutPulses": 0,
-        "ACT_EndTime": "",
+        "ACT_EndTime": null,
         "ACT_Energy": 0,
         "ACT_EnergyFinal": 0,
         "ACT_MeasNum": 0,
         "ACT_MeasTime": 0,
         "ACT_MulCount": 0,
-        "ACT_MulResult": "{\"countFail\":0,\"countPass\":0,\"countUnfinish\":0,\"idxMax\":-1,\"idxMin\":-1,\"limits\":[],\"mean\":null,\"range\":null,\"stddevN\":null,\"stddevN1\":null,\"values\":[]}",
+        "ACT_MulResult": {
+            "countFail": 0,
+            "countPass": 0,
+            "countUnfinish": 0,
+            "idxMax": -1,
+            "idxMin": -1,
+            "limits": [
+            ],
+            "mean": null,
+            "range": null,
+            "stddevN": null,
+            "stddevN1": null,
+            "values": [
+            ]
+        },
         "ACT_Progress": 0,
         "ACT_Rating": -1,
         "ACT_RefFreqInput": "fo0",
         "ACT_Result": 0,
-        "ACT_StartTime": "",
+        "ACT_StartTime": null,
         "ACT_Status": 0,
         "EntityName": "SEC1Module1",
         "INF_ModuleInterface": {
@@ -3539,18 +3553,32 @@
     },
     "1131": {
         "ACT_DutPulses": 0,
-        "ACT_EndTime": "",
+        "ACT_EndTime": null,
         "ACT_Energy": 0,
         "ACT_EnergyFinal": 0,
         "ACT_MeasNum": 0,
         "ACT_MeasTime": 0,
         "ACT_MulCount": 0,
-        "ACT_MulResult": "{\"countFail\":0,\"countPass\":0,\"countUnfinish\":0,\"idxMax\":-1,\"idxMin\":-1,\"limits\":[],\"mean\":null,\"range\":null,\"stddevN\":null,\"stddevN1\":null,\"values\":[]}",
+        "ACT_MulResult": {
+            "countFail": 0,
+            "countPass": 0,
+            "countUnfinish": 0,
+            "idxMax": -1,
+            "idxMin": -1,
+            "limits": [
+            ],
+            "mean": null,
+            "range": null,
+            "stddevN": null,
+            "stddevN1": null,
+            "values": [
+            ]
+        },
         "ACT_Progress": 0,
         "ACT_Rating": -1,
         "ACT_RefFreqInput": "fo0",
         "ACT_Result": 0,
-        "ACT_StartTime": "",
+        "ACT_StartTime": null,
         "ACT_Status": 0,
         "EntityName": "SEC1Module2",
         "INF_ModuleInterface": {
@@ -4114,7 +4142,7 @@
         "ACT_Load1": "",
         "ACT_Load2": "",
         "ACT_Load3": "",
-        "ACT_Load4": "",
+        "ACT_Load4": null,
         "EntityName": "LambdaModule1",
         "INF_ModuleInterface": {
             "ComponentInfo": {
@@ -4203,7 +4231,9 @@
         "INF_AccumulatorStatus": 0,
         "INF_AdjChksum": "0xffff",
         "INF_Adjusted": "5",
-        "INF_CTRLVersion": "{\"Relay controller version\":\"Unknown\"}",
+        "INF_CTRLVersion": {
+            "Relay controller version": "Unknown"
+        },
         "INF_CpuInfo": "",
         "INF_DSPServerVersion": "zdsp1d V1.11",
         "INF_DSPVersion": "DSPLCA: V0.0;DSP V0.00",
@@ -4377,7 +4407,9 @@
             }
         },
         "INF_PCBServerVersion": "V42.0",
-        "INF_PCBVersion": "{\"Relay PCB version\":\"Unknown\"}",
+        "INF_PCBVersion": {
+            "Relay PCB version": "Unknown"
+        },
         "INF_ReleaseNr": "",
         "INF_Schnubbel": 0,
         "PAR_SerialNr": "Unknown"
@@ -5360,7 +5392,7 @@
         ],
         "currentContentSets": [
         ],
-        "guiContext": "",
+        "guiContext": null,
         "sessionName": "com5003TestSession",
         "transactionName": ""
     }

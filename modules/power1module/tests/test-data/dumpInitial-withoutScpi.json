@@ -114,7 +114,7 @@
                 "Name": "POW1"
             }
         },
-        "PAR_FOUT0": "",
+        "PAR_FOUT0": null,
         "PAR_FOUTConstant0": 96000000,
         "PAR_Interval": 1,
         "PAR_MeasModePhaseSelect": "111",

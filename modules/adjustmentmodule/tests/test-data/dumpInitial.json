@@ -236,7 +236,7 @@
         "PAR_AdjustAmplitudeDc": "",
         "PAR_AdjustCLAMPData": "",
         "PAR_AdjustGainStatus": 0,
-        "PAR_AdjustInit": "",
+        "PAR_AdjustInit": null,
         "PAR_AdjustOffsetStatus": 0,
         "PAR_AdjustPCBData": "",
         "PAR_AdjustPhase": "",
