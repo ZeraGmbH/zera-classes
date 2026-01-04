@@ -20,6 +20,7 @@ public slots:
     void onSlotRemoved(int slotNo);
 
 private slots:
+    void initTestCase();
     void init();
 
     void initSlotCount();

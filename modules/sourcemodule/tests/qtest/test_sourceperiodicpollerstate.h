@@ -13,6 +13,7 @@ class test_sourceperiodicpollerstate : public QObject
 public slots:
     void onIoQueueGroupFinished(IoQueueGroup::Ptr workGroup);
 private slots:
+    void initTestCase();
     void init();
 
     void pollAutoStart();

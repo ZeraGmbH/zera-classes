@@ -7,7 +7,7 @@ class test_iotransferdata : public QObject
 {
     Q_OBJECT
 private slots:
-    void init();
+    void initTestCase();
 
     void singleDataEvalNotExecutedOnConstruct1();
     void singleDataEvalNotExecutedOnConstruct2();

@@ -1,4 +1,5 @@
 #include "test_globals.h"
+#include "iodevicedemo.h"
 #include "iodevicefactory.h"
 
 IoDeviceBase::Ptr createOpenDemoIoDevice(QString deviceInfo)

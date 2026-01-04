@@ -4,8 +4,14 @@
 #include "iodevicedemo.h"
 #include <timerfactoryqtfortest.h>
 #include <timemachinefortest.h>
+#include <QTest>
 
 QTEST_MAIN(test_iodevice)
+
+void test_iodevice::initTestCase()
+{
+    qputenv("QT_FATAL_CRITICALS", "1");
+}
 
 void test_iodevice::init()
 {

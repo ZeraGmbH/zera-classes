@@ -8,7 +8,7 @@ class test_sourceswitchjson : public QObject
     Q_OBJECT
 
 private slots:
-    void init();
+    void initTestCase();
 
     void signalSwitch();
     void signalSwitchAfterError();

@@ -8,8 +8,9 @@
 
 QTEST_MAIN(test_sourceswitchjson)
 
-void test_sourceswitchjson::init()
+void test_sourceswitchjson::initTestCase()
 {
+    qputenv("QT_FATAL_CRITICALS", "1");
     TimerFactoryQtForTest::enableTest();
 }
 

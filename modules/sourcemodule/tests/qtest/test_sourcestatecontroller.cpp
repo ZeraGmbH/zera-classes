@@ -15,9 +15,14 @@ void test_sourcestatecontroller::onIoQueueGroupFinished(IoQueueGroup::Ptr workGr
     m_listIoGroupsReceived.append(workGroup);
 }
 
+void test_sourcestatecontroller::initTestCase()
+{
+    qputenv("QT_FATAL_CRITICALS", "1");
+    TimerFactoryQtForTest::enableTest();
+}
+
 void test_sourcestatecontroller::init()
 {
-    TimerFactoryQtForTest::enableTest();
     m_sourceIo = nullptr;
     m_sourceIoWithError = nullptr;
     m_ioDevice = nullptr;

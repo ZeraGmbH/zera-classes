@@ -1,7 +1,6 @@
 #ifndef QTUNITTESTSOURCEIODEVICE_H
 #define QTUNITTESTSOURCEIODEVICE_H
 
-#include <QTest>
 #include "iodevicebase.h"
 
 class test_iodevice : public QObject
@@ -11,6 +10,7 @@ public slots:
     void onIoFinish(int ioID, bool error);
 
 private slots:
+    void initTestCase();
     void init();
 
     void generateBrokenIoDeviceForOutOfLimitType();

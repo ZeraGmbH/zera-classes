@@ -7,8 +7,9 @@
 
 QTEST_MAIN(test_sourceio)
 
-void test_sourceio::init()
+void test_sourceio::initTestCase()
 {
+    qputenv("QT_FATAL_CRITICALS", "1");
     TimerFactoryQtForTest::enableTest();
 }
 

@@ -11,7 +11,9 @@ class test_sourcescanner : public QObject
 public slots:
     void onScanFinishedForCheckInstanceCount(SourceScanner::Ptr scanner);
 private slots:
+    void initTestCase();
     void init();
+
     void scannerDiesOnNoConnection();
     void scannerSurvivesUntilSlotDirectConnection();
     void scannerSurvivesUntilSlotQueuedConnection();

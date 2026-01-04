@@ -9,10 +9,15 @@
 
 QTEST_MAIN(test_sourcescanner)
 
+void test_sourcescanner::initTestCase()
+{
+    qputenv("QT_FATAL_CRITICALS", "1");
+    TimerFactoryQtForTest::enableTest();
+}
+
 void test_sourcescanner::init()
 {
     m_scanFinishCount = 0;
-    TimerFactoryQtForTest::enableTest();
 }
 
 void test_sourcescanner::onScanFinishedForCheckInstanceCount(SourceScanner::Ptr scanner)

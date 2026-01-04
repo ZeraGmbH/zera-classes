@@ -14,6 +14,11 @@ void test_ioqueue::onIoQueueGroupFinished(IoQueueGroup::Ptr workGroup)
     m_listIoGroupsReceived.append(workGroup);
 }
 
+void test_ioqueue::initTestCase()
+{
+    qputenv("QT_FATAL_CRITICALS", "1");
+}
+
 void test_ioqueue::init()
 {
     m_listIoGroupsReceived.clear();

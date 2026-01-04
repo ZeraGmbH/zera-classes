@@ -23,11 +23,16 @@ void test_sourcedevicemanager::onSlotRemoved(int slotNo)
     m_socketsRemoved.append(slotNo);
 }
 
+void test_sourcedevicemanager::initTestCase()
+{
+    qputenv("QT_FATAL_CRITICALS", "1");
+    TimerFactoryQtForTest::enableTest();
+}
+
 void test_sourcedevicemanager::init()
 {
     m_listSourcesAdded.clear();
     m_socketsRemoved.clear();
-    TimerFactoryQtForTest::enableTest();
 }
 
 void test_sourcedevicemanager::initSlotCount()

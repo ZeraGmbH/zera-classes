@@ -1,4 +1,5 @@
 #include "test_sourcedevicefacade.h"
+#include "iodevicedemo.h"
 #include "test_globals.h"
 #include "veincomponentsetnotifier-forunittest.h"
 #include "sourcedeviceextserial.h"
@@ -15,8 +16,9 @@
 
 QTEST_MAIN(test_sourcedevicefacade)
 
-void test_sourcedevicefacade::init()
+void test_sourcedevicefacade::initTestCase()
 {
+    qputenv("QT_FATAL_CRITICALS", "1");
     TimerFactoryQtForTest::enableTest();
 }
 

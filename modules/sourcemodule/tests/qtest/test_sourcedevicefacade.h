@@ -7,7 +7,7 @@ class test_sourcedevicefacade : public QObject
 {
     Q_OBJECT
 private slots:
-    void init();
+    void initTestCase();
 
     void checkDeviceInfo();
     void checkDemoOn();

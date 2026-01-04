@@ -12,9 +12,14 @@ void test_sourceperiodicpollerstate::onIoQueueGroupFinished(IoQueueGroup::Ptr wo
     m_listIoGroupsReceived.append(workGroup);
 }
 
+void test_sourceperiodicpollerstate::initTestCase()
+{
+    qputenv("QT_FATAL_CRITICALS", "1");
+    TimerFactoryQtForTest::enableTest();
+}
+
 void test_sourceperiodicpollerstate::init()
 {
-    TimerFactoryQtForTest::enableTest();
     m_sourceIo = nullptr;
     m_ioDevice = nullptr;
     m_transactionNotifier = nullptr;

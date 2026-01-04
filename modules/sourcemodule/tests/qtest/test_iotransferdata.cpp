@@ -6,8 +6,9 @@
 
 QTEST_MAIN(test_iotransferdata)
 
-void test_iotransferdata::init()
+void test_iotransferdata::initTestCase()
 {
+    qputenv("QT_FATAL_CRITICALS", "1");
 }
 
 void test_iotransferdata::singleDataEvalNotExecutedOnConstruct1()
