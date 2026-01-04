@@ -9,7 +9,7 @@ add_executable(zera-modulemanager
 
 target_link_libraries(zera-modulemanager
     PRIVATE
-    Qt5::Gui
+    ${QTX}::Gui
     zera-modulemanager-lib
     zera-modulemanager-demolib
     Zera::xsession-change-demolib

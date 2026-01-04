@@ -13,7 +13,7 @@ add_library(module-service-interfaces SHARED
 
 target_link_libraries(module-service-interfaces
     PUBLIC
-    Qt5::Core
+    ${QTX}::Core
     zera-meas-mode-management
     module-tasks
     Zera::service-interfaces

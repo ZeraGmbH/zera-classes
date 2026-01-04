@@ -26,7 +26,7 @@ target_include_directories(scpimodule-static
 
 target_link_libraries(scpimodule-static
     PUBLIC
-    Qt5::SerialPort
+    ${QTX}::SerialPort
     zera-basemodule
     Zera::SCPI
     Zera::zera-timers

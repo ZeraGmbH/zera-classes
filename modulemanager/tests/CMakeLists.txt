@@ -22,7 +22,7 @@ function(SETUP_QTESTS_MODULEMANAGER)
             Zera::testlib-openfiles
             -Wl,--no-whole-archive
 
-            Qt5::Test
+            ${QTX}::Test
             zera-modulemanager-lib
             zera-modulemanager-testlib
             Zera::testlib-memallocs

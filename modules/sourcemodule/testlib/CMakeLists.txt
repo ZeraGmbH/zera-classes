@@ -13,7 +13,7 @@ add_library(sourcemodule-testlib STATIC
 
 target_link_libraries(sourcemodule-testlib
     PUBLIC
-    Qt5::Test
+    ${QTX}::Test
     sourcemodule-static
     Zera::VfStorage
     Zera::zera-timers-testlib

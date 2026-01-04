@@ -15,7 +15,13 @@ include(GenerateExportHeader)
 include(CMakePackageConfigHelpers)
 include(FindPkgConfig)
 
-find_package(Qt5 COMPONENTS Core Network Gui Test CONFIG REQUIRED)
+set(QT_MAJOR_VER "5" CACHE STRING "Qt major version")
+set(QTX "Qt${QT_MAJOR_VER}")
+
+find_package(${QTX} COMPONENTS Core Network Gui Test CONFIG REQUIRED)
+if("${QT_MAJOR_VER}" STREQUAL "6")
+    find_package(${QTX} COMPONENTS StateMachine REQUIRED)
+endif()
 find_package(GTest REQUIRED)
 find_package(ZenuxCore REQUIRED)
 find_package(ZeraMicroController REQUIRED)
@@ -75,7 +81,7 @@ function(SETUP_QTESTS)
             )
         target_link_libraries(${_testname}
             PUBLIC
-            Qt5::Test
+            ${QTX}::Test
             Zera::VfStorage
             Zera::VfFrameworkTest
             Zera::testlib-common

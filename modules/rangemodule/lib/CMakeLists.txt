@@ -22,10 +22,17 @@ target_include_directories(rangemodule-static
     )
 
 target_link_libraries(rangemodule-static
+    PUBLIC
     zera-basemodule
     Zera::zera-timers
     Zera::zera-log-statistics
 )
+if("${QT_MAJOR_VER}" STREQUAL "6")
+    target_link_libraries(rangemodule-static
+        PUBLIC
+            Qt6::Core5Compat
+    )
+endif()
 
 export(TARGETS rangemodule-static NAMESPACE Zera:: FILE ZeraClassesTargets.cmake)
 install(TARGETS rangemodule-static

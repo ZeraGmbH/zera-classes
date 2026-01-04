@@ -19,7 +19,7 @@ target_include_directories(test-plugin-paths
     )
 
 target_link_libraries(test-plugin-paths
-    Qt5::Core
+    ${QTX}::Core
 )
 
 set_target_properties(test-plugin-paths PROPERTIES VERSION ${PROJECT_VERSION})

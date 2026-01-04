@@ -15,13 +15,20 @@ add_library(module-qt-plugin-interface STATIC
 
 target_link_libraries(module-qt-plugin-interface
     PUBLIC
-    Qt5::Core
+    ${QTX}::Core
     module-service-interfaces
     channel-range-observer
     Zera::VfTcp
     # ask linker to help us finding unresolved symbols
     "-Wl,--no-undefined"
     )
+
+if("${QT_MAJOR_VER}" STREQUAL "6")
+    target_link_libraries(module-qt-plugin-interface
+        PUBLIC
+        ${QTX}::StateMachine
+    )
+endif()
 
 target_include_directories(module-qt-plugin-interface
     PUBLIC

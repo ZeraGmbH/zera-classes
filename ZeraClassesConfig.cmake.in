@@ -1,6 +1,6 @@
 include(CMakeFindDependencyMacro)
 
-find_dependency(Qt5 COMPONENTS Core Network Gui Test CONFIG REQUIRED)
+find_dependency(@QTX@ COMPONENTS Core Network Gui Test CONFIG REQUIRED)
 find_dependency(GTest REQUIRED)
 find_dependency(ZenuxCore REQUIRED)
 find_dependency(ZeraMicroController REQUIRED)

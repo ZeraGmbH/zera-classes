@@ -4,7 +4,7 @@ add_executable(logging-snapshots
 
 target_link_libraries(logging-snapshots
     PRIVATE
-    Qt5::Core
+    ${QTX}::Core
     zera-modulemanager-lib
     zera-modulemanager-testlib
 )

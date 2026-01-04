@@ -13,7 +13,7 @@ add_library(channel-range-observer SHARED
 
 target_link_libraries(channel-range-observer
     PUBLIC
-    Qt5::Core
+    ${QTX}::Core
     module-tasks
     module-service-interfaces
     Zera::service-interfaces

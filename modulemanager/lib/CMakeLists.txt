@@ -21,8 +21,8 @@ target_include_directories(zera-modulemanager-lib
 
 target_link_libraries(zera-modulemanager-lib
     PUBLIC
-    Qt5::Core
-    Qt5::Network
+    ${QTX}::Core
+    ${QTX}::Network
     Zera::VfEvent
     Zera::VfComponent
     Zera::VfStorage

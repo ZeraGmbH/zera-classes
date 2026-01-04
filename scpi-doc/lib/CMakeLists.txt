@@ -18,7 +18,7 @@ target_include_directories(scpi-doc-lib
 
 target_link_libraries(scpi-doc-lib
     PUBLIC
-    Qt5::Core
+    ${QTX}::Core
     zera-modulemanager-lib
     zera-modulemanager-testlib
     )
