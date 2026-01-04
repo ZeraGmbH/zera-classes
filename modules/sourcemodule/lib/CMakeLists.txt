@@ -24,6 +24,8 @@ file(GLOB HEADER
     ${CMAKE_CURRENT_SOURCE_DIR}/transaction-ids/*.h
     )
 
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC" )
+
 add_library(sourcemodule-static STATIC
     ${SOURCES}
     ${HEADER}

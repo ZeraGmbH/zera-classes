@@ -11,6 +11,8 @@ add_library(rmsmodule-static STATIC
     ${HEADER}
 )
 
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC" )
+
 target_include_directories(rmsmodule-static
     PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>

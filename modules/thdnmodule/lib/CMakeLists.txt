@@ -11,6 +11,8 @@ add_library(thdnmodule-static STATIC
     ${HEADER}
     )
 
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC" )
+
 target_include_directories(thdnmodule-static
     PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>

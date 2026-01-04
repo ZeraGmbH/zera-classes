@@ -10,6 +10,8 @@ file(GLOB HEADER
     scpi-clients/*.h
     )
 
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC" )
+
 add_library(scpimodule-static STATIC
     ${SOURCES}
     ${HEADER}
