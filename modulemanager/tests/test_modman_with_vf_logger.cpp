@@ -82,7 +82,7 @@ void test_modman_with_vf_logger::contentSetsSelectInvalid()
 {
     startModman("session-minimal-rms.json");
 
-    QCOMPARE(m_storage->getDb()->getStoredValue(dataLoggerEntityId, "currentContentSets"), QStringList());
+    QCOMPARE(m_storage->getDb()->getStoredValue(dataLoggerEntityId, "currentContentSets"), QVariantList());
 
     m_testRunner->setVfComponent(dataLoggerEntityId, "currentContentSets", "Foo");
 
@@ -95,7 +95,7 @@ void test_modman_with_vf_logger::contentSetsSelectValidList()
 {
     startModman("session-minimal-rms.json");
 
-    QCOMPARE(m_storage->getDb()->getStoredValue(dataLoggerEntityId, "currentContentSets"), QStringList());
+    QCOMPARE(m_storage->getDb()->getStoredValue(dataLoggerEntityId, "currentContentSets"), QVariantList());
 
     m_testRunner->setVfComponent(dataLoggerEntityId, "currentContentSets", QStringList() << "ZeraActualValuesTest");
 
