@@ -134,9 +134,10 @@ void test_api_trust_authentication::rpcRequestWillTriggerGUI() {
     QCOMPARE(result["RemoteProcedureData::Return"], true);
 
     // Should have completed.
-    QVariantList actTrusts(getVfComponent("ACT_TrustList").toList());
+    QVariant actTrustsRaw(getVfComponent("ACT_TrustList"));
+    QJsonArray actTrusts(actTrustsRaw.toJsonArray());
 
-    QCOMPARE(actTrusts.length(), 1);
+    QCOMPARE(actTrusts.count(), 1);
     QCOMPARE(actTrusts[0], trust);
     QCOMPARE(getVfComponent("ACT_PendingRequest"), QJsonObject());
     QCOMPARE(getVfComponent("ACT_TLChangeCount"), 2);
