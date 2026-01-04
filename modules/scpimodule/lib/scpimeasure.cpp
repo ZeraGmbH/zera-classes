@@ -5,6 +5,7 @@
 #include <ve_commandevent.h>
 #include <vcmp_componentdata.h>
 #include <QVariant>
+#include <QSequentialIterable>
 
 namespace SCPIMODULE
 {
