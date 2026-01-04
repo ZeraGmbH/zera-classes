@@ -81,7 +81,7 @@ QByteArray SourceScannerIoZeraSerial::extractVersionFromResponse(IoTransferDataS
     QByteArray bytesReceived = ioData->getBytesReceived();
     int posV;
     for(posV=bytesReceived.length()-1; posV>=0; --posV) {
-        QByteRef curr = bytesReceived[posV];
+        auto curr = bytesReceived[posV];
         if(curr == 'v' || curr == 'V') {
             break;
         }
