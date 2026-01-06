@@ -193,7 +193,6 @@ void cSem1ModuleMeasProgram::stop()
 
 void cSem1ModuleMeasProgram::generateVeinInterface()
 {
-    QString s;
     QString key;
 
     QString modNr = QString("%1").arg(m_pModule->getModuleNr(),4,10,QChar('0'));
@@ -201,7 +200,7 @@ void cSem1ModuleMeasProgram::generateVeinInterface()
     m_pRefInputPar = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
                                               key = QString("PAR_RefInput"),
                                               QString("Ref input"),
-                                              QVariant(s = "Unknown"));
+                                              QVariant("Unknown"));
     m_pRefInputPar->setScpiInfo("CALCULATE", QString("%1:REFSOURCE").arg(modNr), SCPI::isQuery|SCPI::isCmdwP, m_pRefInputPar->getName());
     m_pModule->m_veinModuleParameterMap[key] = m_pRefInputPar; // for modules use
 
