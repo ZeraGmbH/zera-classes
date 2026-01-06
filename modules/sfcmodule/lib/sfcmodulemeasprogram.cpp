@@ -483,9 +483,11 @@ void cSfcModuleMeasProgram::generateVeinInterface()
 {
     QString key;
     m_pStartStopPar = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
-                                         key = QString("PAR_StartStop"),
-                                         QString("Start/stop measurement (start=1, stop=0)"),
-                                         QVariant((int)0));
+                                            key = QString("PAR_StartStop"),
+                                            QString("Start/stop measurement:\n"
+                                                    "0: stop\n"
+                                                    "1: start"),
+                                            QVariant((int)0));
     m_pStartStopPar->setValidator(new cIntValidator(0,1,1));
     m_pStartStopPar->setScpiInfo("CALCULATE", "START",
                                  SCPI::isCmdwP | SCPI::isQuery,

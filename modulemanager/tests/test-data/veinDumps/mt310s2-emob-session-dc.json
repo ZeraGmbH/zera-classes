@@ -2623,7 +2623,7 @@
                     "Description": "Evaluation last measurement"
                 },
                 "ACT_RefFreqInput": {
-                    "Description": "Reference frequency input to find power module"
+                    "Description": "Actual frequency input (internal)"
                 },
                 "ACT_Result": {
                     "Description": "Result of last measurement"
@@ -2632,7 +2632,7 @@
                     "Description": "Last measurement (sequence): Start time (dd-MM-yyyy HH:mm:ss)"
                 },
                 "ACT_Status": {
-                    "Description": "Status: 0:Idle 1:Waiting for first pulse 2:Started 4:Ready 8:Aborted"
+                    "Description": "Status:\n0: Idle\n1: Waiting for first pulse\n2: Started\n4: Ready\n8: Aborted"
                 },
                 "EntityName": {
                     "Description": "Module's name"
@@ -2805,7 +2805,7 @@
                     "Description": "Reference meter constant"
                 },
                 "PAR_RefInput": {
-                    "Description": "REF input",
+                    "Description": "Reference input: Power module name",
                     "Validation": {
                         "Data": [
                             "P DC"
@@ -2824,7 +2824,7 @@
                     }
                 },
                 "PAR_StartStop": {
-                    "Description": "Start/stop measurement (start=1, stop=0)",
+                    "Description": "Start/stop measurement:\n0: stop\n1: start",
                     "Validation": {
                         "Data": [
                             0,
@@ -3620,7 +3620,7 @@
                     "Description": "Evaluation for the last measurement"
                 },
                 "ACT_RefFreqInput": {
-                    "Description": "Reference frequency input to find power module"
+                    "Description": "Actual frequency input (internal)"
                 },
                 "ACT_Result": {
                     "Description": "Result of last measurement",
@@ -3630,10 +3630,10 @@
                     "Description": "Last measurement: Start time (dd-MM-yyyy HH:mm:ss)"
                 },
                 "ACT_Status": {
-                    "Description": "State: 0:Idle 1:First pulse wait 2:Started 4:Ready 8:Aborted"
+                    "Description": "Status:\n0: Idle\n1: Waiting for first pulse\n2: Started\n4: Ready\n8: Aborted"
                 },
                 "ACT_Time": {
-                    "Description": "Measurement time",
+                    "Description": "Measurement time actual",
                     "Unit": "s"
                 },
                 "EntityName": {
@@ -3666,7 +3666,7 @@
                     }
                 },
                 "PAR_MeasTime": {
-                    "Description": "Measurement time",
+                    "Description": "Measurement time set",
                     "Unit": "s",
                     "Validation": {
                         "Data": [
@@ -3681,7 +3681,7 @@
                     "Description": "Reference meter constant"
                 },
                 "PAR_RefInput": {
-                    "Description": "Ref input",
+                    "Description": "Reference input: Power module name",
                     "Validation": {
                         "Data": [
                             "P DC"
@@ -3690,7 +3690,7 @@
                     }
                 },
                 "PAR_StartStop": {
-                    "Description": "Start/stop measurement (start=1, stop=0)",
+                    "Description": "Start/stop measurement:\n0: stop\n1: start",
                     "Validation": {
                         "Data": [
                             0,
@@ -3736,7 +3736,7 @@
                     }
                 },
                 "PAR_Targeted": {
-                    "Description": "Stop mode",
+                    "Description": "Stop mode:\n0: Start/Stop\n1: Duration",
                     "Validation": {
                         "Data": [
                             0,
@@ -3944,7 +3944,7 @@
                     "Description": "Module's interface details"
                 },
                 "PAR_StartStop": {
-                    "Description": "Start/stop measurement (start=1, stop=0)",
+                    "Description": "Start/stop measurement:\n0: stop\n1: start",
                     "Validation": {
                         "Data": [
                             0,

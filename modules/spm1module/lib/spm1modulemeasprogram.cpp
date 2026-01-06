@@ -195,9 +195,9 @@ void cSpm1ModuleMeasProgram::generateVeinInterface()
     QString modNr = QString("%1").arg(m_pModule->getModuleNr(),4,10,QChar('0'));
 
     m_pRefInputPar = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
-                                              key = QString("PAR_RefInput"),
-                                              QString("Ref input"),
-                                              QVariant("Unknown"));
+                                           key = QString("PAR_RefInput"),
+                                           QString("Reference input: Power module name"),
+                                           QVariant("Unknown"));
     m_pRefInputPar->setScpiInfo("CALCULATE", QString("%1:REFSOURCE").arg(modNr), SCPI::isQuery|SCPI::isCmdwP, m_pRefInputPar->getName());
     m_pModule->m_veinModuleParameterMap[key] = m_pRefInputPar; // for modules use
 
@@ -209,16 +209,19 @@ void cSpm1ModuleMeasProgram::generateVeinInterface()
     m_pModule->m_veinModuleParameterMap[key] = m_pRefConstantPar; // for modules use
 
     m_pTargetedPar = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
-                                              key = QString("PAR_Targeted"),
-                                              QString("Stop mode"),
-                                              QVariant((int)0));
+                                           key = QString("PAR_Targeted"),
+                                           QString(
+                                               "Stop mode:\n"
+                                               "0: Start/Stop\n"
+                                               "1: Duration"),
+                                           QVariant((int)0));
     m_pTargetedPar->setScpiInfo("CALCULATE", QString("%1:MODE").arg(modNr), SCPI::isQuery|SCPI::isCmdwP, m_pTargetedPar->getName());
     m_pTargetedPar->setValidator(new cIntValidator(0,1,1));
     m_pModule->m_veinModuleParameterMap[key] = m_pTargetedPar; // for modules use
 
     m_pMeasTimePar = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
                                               key = QString("PAR_MeasTime"),
-                                              QString("Measurement time"),
+                                              QString("Measurement time set"),
                                               QVariant((quint32)10));
     m_pMeasTimePar->setScpiInfo("CALCULATE", QString("%1:MTIME").arg(modNr), SCPI::isQuery|SCPI::isCmdwP, m_pMeasTimePar->getName());
     m_pMeasTimePar->setValidator(new cIntValidator(1, Zera::cSECInterface::maxSecCounterInitVal / 1000, 1)); // counter in ms
@@ -249,23 +252,30 @@ void cSpm1ModuleMeasProgram::generateVeinInterface()
     m_pModule->m_veinModuleParameterMap[key] = m_pInputUnitPar; // for modules use
 
     m_pStartStopPar = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
-                                               key = QString("PAR_StartStop"),
-                                               QString("Start/stop measurement (start=1, stop=0)"),
-                                               QVariant((int)0));
-    m_pStartStopPar->setScpiInfo("CALCULATE", QString("%1:START").arg(modNr), SCPI::isQuery|SCPI::isCmdwP, "PAR_StartStop");
+                                            key = QString("PAR_StartStop"),
+                                            QString("Start/stop measurement:\n"
+                                                    "0: stop\n"
+                                                    "1: start"),
+                                            QVariant((int)0));
+    m_pStartStopPar->setScpiInfo("CALCULATE", QString("%1:START").arg(modNr), SCPI::isQuery|SCPI::isCmdwP, m_pStartStopPar->getName());
     m_pStartStopPar->setValidator(new cIntValidator(0, 1, 1));
     m_pModule->m_veinModuleParameterMap[key] = m_pStartStopPar; // for modules use
 
     m_pStatusAct = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
-                                            key = QString("ACT_Status"),
-                                            QString("State: 0:Idle 1:First pulse wait 2:Started 4:Ready 8:Aborted"),
-                                            QVariant((quint32)0) );
+                                         key = QString("ACT_Status"),
+                                         QString("Status:\n"
+                                                 "0: Idle\n"
+                                                 "1: Waiting for first pulse\n"
+                                                 "2: Started\n"
+                                                 "4: Ready\n"
+                                                 "8: Aborted"),
+                                         QVariant((quint32)0) );
     m_pStatusAct->setScpiInfo("CALCULATE",  QString("%1:STATUS").arg(modNr), SCPI::isQuery, m_pStatusAct->getName());
     m_pModule->m_veinModuleParameterMap[key] =  m_pStatusAct; // and for the modules interface
 
     m_pTimeAct = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
                                           key = QString("ACT_Time"),
-                                          QString("Measurement time information"),
+                                          QString("Measurement time actual"),
                                           QVariant((double) 0.0));
     m_pTimeAct->setScpiInfo("CALCULATE", QString("%1:TIME").arg(modNr), SCPI::isQuery, m_pTimeAct->getName());
     m_pTimeAct->setUnit("s");
@@ -295,7 +305,7 @@ void cSpm1ModuleMeasProgram::generateVeinInterface()
 
     m_pRefFreqInput = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
                                             key = QString("ACT_RefFreqInput"),
-                                            QString("Reference frequency input to find power module"),
+                                            QString("Actual frequency input (internal)"),
                                             QVariant(getConfData()->m_sRefInput.m_sPar));
     m_pRefFreqInput->setScpiInfo("CALCULATE", QString("%1:REFFREQINPUT").arg(modNr), SCPI::isQuery, m_pRefFreqInput->getName());
     m_pModule->m_veinModuleParameterMap[key] = m_pRefFreqInput; // and for the modules interface

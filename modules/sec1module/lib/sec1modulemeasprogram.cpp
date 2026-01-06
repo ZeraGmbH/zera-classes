@@ -192,9 +192,9 @@ void cSec1ModuleMeasProgram::generateVeinInterface()
     m_pModule->m_veinModuleParameterMap[key] = m_pDutInputPar; // for modules use
 
     m_pRefInputPar = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
-                                              key = QString("PAR_RefInput"),
-                                              QString("REF input"),
-                                              QVariant("Unknown"));
+                                           key = QString("PAR_RefInput"),
+                                           QString("Reference input: Power module name"),
+                                           QVariant("Unknown"));
     m_pRefInputPar->setScpiInfo("CALCULATE", QString("%1:REFSOURCE").arg(modNr), SCPI::isQuery|SCPI::isCmdwP, m_pRefInputPar->getName());
     m_pModule->m_veinModuleParameterMap[key] = m_pRefInputPar; // for modules use
 
@@ -300,9 +300,11 @@ void cSec1ModuleMeasProgram::generateVeinInterface()
     m_pModule->m_veinModuleParameterMap[key] = m_pEnergyPar; // for modules use
 
     m_pStartStopPar = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
-                                               key = QString("PAR_StartStop"),
-                                               QString("Start/stop measurement (start=1, stop=0)"),
-                                               QVariant((int)0));
+                                            key = QString("PAR_StartStop"),
+                                            QString("Start/stop measurement:\n"
+                                                    "0: stop\n"
+                                                    "1: start"),
+                                            QVariant((int)0));
     m_pStartStopPar->setScpiInfo("CALCULATE", QString("%1:START").arg(modNr), SCPI::isQuery|SCPI::isCmdwP, m_pStartStopPar->getName());
     m_pStartStopPar->setValidator(new cIntValidator(0, 1, 1));
     m_pModule->m_veinModuleParameterMap[key] =  m_pStartStopPar; // for modules use
@@ -344,9 +346,14 @@ void cSec1ModuleMeasProgram::generateVeinInterface()
     // after configuration we still have to set the string validators
 
     m_pStatusAct = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
-                                            key = QString("ACT_Status"),
-                                            QString("Status: 0:Idle 1:Waiting for first pulse 2:Started 4:Ready 8:Aborted"),
-                                            QVariant((quint32)0) );
+                                         key = QString("ACT_Status"),
+                                         QString("Status:\n"
+                                                 "0: Idle\n"
+                                                 "1: Waiting for first pulse\n"
+                                                 "2: Started\n"
+                                                 "4: Ready\n"
+                                                 "8: Aborted"),
+                                         QVariant((quint32)0) );
     m_pStatusAct->setScpiInfo("CALCULATE",  QString("%1:STATUS").arg(modNr), SCPI::isQuery, m_pStatusAct->getName());
     m_pModule->m_veinModuleParameterMap[key] =  m_pStatusAct; // for modules use
 
@@ -387,7 +394,7 @@ void cSec1ModuleMeasProgram::generateVeinInterface()
 
     m_pRefFreqInput = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
                                             key = QString("ACT_RefFreqInput"),
-                                            QString("Reference frequency input to find power module"),
+                                            QString("Actual frequency input (internal)"),
                                             QVariant(getConfData()->m_sRefInput.m_sPar));
     m_pRefFreqInput->setScpiInfo("CALCULATE",  QString("%1:REFFREQINPUT").arg(modNr), SCPI::isQuery, m_pRefFreqInput->getName());
     m_pModule->m_veinModuleParameterMap[key] = m_pRefFreqInput; // and for the modules interface
