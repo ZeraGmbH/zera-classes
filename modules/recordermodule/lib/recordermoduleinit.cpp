@@ -1,17 +1,23 @@
 #include "recordermoduleinit.h"
 #include "rpcreadrecordedvalues.h"
 #include <boolvalidator.h>
+#include <timerfactoryqt.h>
 
 static int constexpr systemEntityId = 0;
 static int constexpr rmsEntityId = 1040;
 static int constexpr fftEntityId = 1060;
 static int constexpr powerAcEntityId = 1070;
 static int constexpr powerDcEntityId = 1073;
+static int constexpr timer = 1200000; // 20 mins
 
 RecorderModuleInit::RecorderModuleInit(RecorderModule *module) :
     cModuleActivist(module->getVeinModuleName()),
     m_module(module)
 {
+    m_stopLoggingTimer = TimerFactoryQt::createSingleShot(timer);
+    connect(m_stopLoggingTimer.get(), &TimerTemplateQt::sigExpired, this, [this]() {
+        m_startStopRecording->setValue(false); });
+
     m_dataCollector = std::make_shared<VeinDataCollector>(m_module->getStorageDb());
     connect(m_dataCollector.get(), &VeinDataCollector::newValueStored, this, &RecorderModuleInit::setNumberOfPointsInCurve);
 }
@@ -80,6 +86,7 @@ void RecorderModuleInit::startStopLogging(QVariant startStopRecording)
 {
     QHash<int, QStringList> entitesAndComponents = setEntitiesAndComponentsToRecord();
     if(startStopRecording.toBool()) {
+        m_stopLoggingTimer->start();
         setNumberOfPointsInCurve(0);
         m_dataCollector->startLogging(entitesAndComponents);
     }

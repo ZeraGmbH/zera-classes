@@ -4,6 +4,7 @@
 #include "moduleactivist.h"
 #include "recordermodule.h"
 #include "veindatacollector.h"
+#include <timersingleshotqt.h>
 
 class RecorderModuleInit : public cModuleActivist
 {
@@ -21,6 +22,7 @@ private:
     void startStopLogging(QVariant startStopRecording);
     void setNumberOfPointsInCurve(int num);
 
+    TimerTemplateQtPtr m_stopLoggingTimer;
     RecorderModule *m_module;
     VfModuleComponent* m_numberOfPointsInCurve;
     VfModuleParameter* m_startStopRecording;
