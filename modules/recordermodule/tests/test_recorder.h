@@ -14,6 +14,7 @@ private slots:
 
     void startLoggingOneRecording();
     void startLoggingMultipleRecordings();
+    void startStopRecordingTimerExpiredCheckResults();
     void startStopRecordingTimerExpired();
     void startStopTwoRecordingsNoTimerExpired();
     void startStopTwoRecordingsFirstRecordingTimerExpired();

@@ -16,7 +16,9 @@ RecorderModuleInit::RecorderModuleInit(RecorderModule *module) :
 {
     m_stopLoggingTimer = TimerFactoryQt::createSingleShot(timer);
     connect(m_stopLoggingTimer.get(), &TimerTemplateQt::sigExpired, this, [this]() {
-        m_startStopRecording->setValue(false); });
+        m_startStopRecording->setValue(false); // Does not emit sigValueChanged
+        startStopLogging(false);
+    });
 
     m_dataCollector = std::make_shared<VeinDataCollector>(m_module->getStorageDb());
     connect(m_dataCollector.get(), &VeinDataCollector::newValueStored, this, &RecorderModuleInit::setNumberOfPointsInCurve);

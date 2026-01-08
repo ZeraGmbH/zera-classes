@@ -83,6 +83,58 @@ void test_recorder::startLoggingMultipleRecordings()
     QCOMPARE(num, 3);
 }
 
+void test_recorder::startStopRecordingTimerExpiredCheckResults()
+{
+    QVariantMap components = {{"ACT_RMSPN1", QVariant()}, {"ACT_RMSPN2", QVariant()}};
+    createModule(rmsEntityId, components);
+    components = {{"SIG_Measuring", QVariant(1)}};
+    createModule(sigMeasuringEntityId, components);
+    components = {{"ACT_PQS1", QVariant()}, {"ACT_PQS2", QVariant()}};
+    createModule(powerEntityId, components);
+
+    VfRPCInvokerPtr rpc = std::make_shared<VfRPCInvoker>(recorderEntityId, std::make_unique<VfClientRPCInvoker>());
+    m_testRunner->getVfCmdEventHandlerSystemPtr()->addItem(rpc);
+
+    static int constexpr timer = 1200000; // 20 mins tolen from recordermoduleinit.cpp
+    static int constexpr timeBetweenMeasurements = 100000; // 100s
+    static int constexpr measCountLimitedByStop = timer/timeBetweenMeasurements;
+    static int constexpr measCountTried = measCountLimitedByStop+5;
+
+    m_testRunner->setVfComponent(recorderEntityId, "PAR_StartStopRecording", true);
+    fireActualValues();
+    for(int i=0; i<measCountTried; ++i) {
+        triggerDftModuleSigMeasuring();
+        TimeMachineForTest::getInstance()->processTimers(timeBetweenMeasurements);
+    }
+
+    QSignalSpy spyErr(rpc.get(), &VfRPCInvoker::sigRPCFinished);
+    QVariantMap rpcParamsErr;
+    rpcParamsErr.insert("p_startingPoint", 0);
+    rpcParamsErr.insert("p_endingPoint", measCountLimitedByStop+1);
+    rpc->invokeRPC("RPC_ReadRecordedValues", rpcParamsErr);
+    TimeMachineObject::feedEventLoop();
+
+    QVERIFY(spyErr.count() == 1);
+    QVariantMap argMapErr = spyErr[0][2].toMap();
+    QVariant errorMsgErr = argMapErr[VeinComponent::RemoteProcedureData::s_errorMessageString];
+    QVERIFY(!errorMsgErr.toString().isEmpty());
+
+    QSignalSpy spyOk(rpc.get(), &VfRPCInvoker::sigRPCFinished);
+    QVariantMap rpcParamsOk;
+    rpcParamsOk.insert("p_startingPoint", 0);
+    rpcParamsOk.insert("p_endingPoint", measCountLimitedByStop);
+    rpc->invokeRPC("RPC_ReadRecordedValues", rpcParamsOk);
+    TimeMachineObject::feedEventLoop();
+
+    QVERIFY(spyOk.count() == 1);
+    QVariantMap argMapOk = spyOk[0][2].toMap();
+    QVariant errorMsgOk = argMapOk[VeinComponent::RemoteProcedureData::s_errorMessageString];
+    QVERIFY(errorMsgOk.toString().isEmpty());
+
+    QJsonObject result = argMapOk[VeinComponent::RemoteProcedureData::s_returnString].toJsonObject();
+    QVERIFY(result.size() == measCountLimitedByStop);
+}
+
 void test_recorder::startStopRecordingTimerExpired()
 {
     QVariantMap components = {{"ACT_RMSPN1", QVariant()}, {"ACT_RMSPN2", QVariant()}};
