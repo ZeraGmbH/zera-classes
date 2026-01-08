@@ -14,7 +14,7 @@ void VeinDataCollector::startLogging(QHash<int, QStringList> entitesAndComponent
         connect(m_sigMeasuringCompo.get(), &VeinStorage::AbstractComponent::sigValueChange, this, [=](QVariant newValue){
             if(newValue.toInt() == 1) {// 1 indicates DftModule received new actual values
                 m_timeStamper->setTimestampToNow();
-                collectValues(m_timeStamper->getTimestamp(), entitesAndComponents);
+                collectValues(m_timeStamper->getTimestamp().toMSecsSinceEpoch(), entitesAndComponents);
                 emit newValueStored(m_recordedObject.count());
             }
         });
@@ -44,7 +44,7 @@ void VeinDataCollector::getStoredValues(QUuid callId, int start, int end)
         emit sigStoredValue(callId, false, "start or end not matching", QJsonObject());
 }
 
-void VeinDataCollector::collectValues(QDateTime timeStamp, QHash<int, QStringList> entitesAndComponents)
+void VeinDataCollector::collectValues(quint64 msSinceEpoch, QHash<int, QStringList> entitesAndComponents)
 {
     RecordedEntityComponents newRecord;
     for(auto entity: entitesAndComponents.keys()) {
@@ -54,8 +54,7 @@ void VeinDataCollector::collectValues(QDateTime timeStamp, QHash<int, QStringLis
         newRecord.insert(entity, componentValues);
     }
 
-    QString timeString = timeStamp.toUTC().toString("dd-MM-yyyy hh:mm:ss.zzz");
-    QJsonObject newRecordObject = QJsonObject{{timeString, convertRecordedEntityComponentsToJson(newRecord)}};
+    QJsonObject newRecordObject = QJsonObject{{QString::number(msSinceEpoch), convertRecordedEntityComponentsToJson(newRecord)}};
     appendNewRecord(newRecordObject);
 }
 

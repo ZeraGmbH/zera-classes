@@ -26,7 +26,7 @@ signals:
     void sigStoredValue(QUuid callId, bool success, QString errorMsg, QJsonObject values);
 
 private:
-    void collectValues(QDateTime timeStamp, QHash<int, QStringList> entitesAndComponents);
+    void collectValues(quint64 msSinceEpoch, QHash<int, QStringList> entitesAndComponents);
     QJsonObject convertRecordedEntityComponentsToJson(RecordedEntityComponents recordedEntityComponents);
     void appendNewRecord(QJsonObject newRecordObject);
 
