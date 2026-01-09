@@ -28,6 +28,7 @@ target_link_libraries(zera-modulemanager-testlib
     zera-modulemanager-lib
     scpimodule-static
     scpimodule-testlib
+    module-service-interfaces-demolib
     module-service-interfaces-testlib
     module-testlib
     Zera::VfConvenientCode
