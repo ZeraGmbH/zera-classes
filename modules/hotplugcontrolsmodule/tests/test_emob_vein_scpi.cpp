@@ -283,13 +283,12 @@ void test_emob_vein_scpi::cleanup()
     ControllerPersitentData::cleanupPersitentData();
 }
 
-QUuid test_emob_vein_scpi::invokeRpc(QString rpcName, QString paramName, QVariant paramValue)
+void test_emob_vein_scpi::invokeRpc(QString rpcName, QString paramName, QVariant paramValue)
 {
     QVariantMap rpcParams;
     if(!paramName.isEmpty())
         rpcParams.insert(paramName, paramValue);
-    QUuid id = m_rpcInvoker->invokeRPC(rpcName, rpcParams);
-    return id;
+    m_rpcInvoker->invokeRPC(rpcName, rpcParams);
 }
 
 void test_emob_vein_scpi::setupSpy()

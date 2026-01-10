@@ -120,7 +120,7 @@ QString SessionExportGenerator::getLoggedValues(QString snapshotName)
     m_modmanTestRunner->getVfCmdEventHandlerSystemPtr()->addItem(rpc);
 
     QVariantMap result;
-    connect(rpc.get(), &VfRPCInvoker::sigRPCFinished, [&result](bool ok, QUuid identifier, const QVariantMap &resultData) {
+    connect(rpc.get(), &VfRPCInvoker::sigRPCFinished, [&result](bool ok, const QVariantMap &resultData) {
         result = resultData;
     });
 

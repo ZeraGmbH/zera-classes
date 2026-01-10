@@ -115,7 +115,7 @@ void test_recorder::startStopRecordingTimerExpiredCheckResults()
     TimeMachineObject::feedEventLoop();
 
     QVERIFY(spyErr.count() == 1);
-    QVariantMap argMapErr = spyErr[0][2].toMap();
+    QVariantMap argMapErr = spyErr[0][1].toMap();
     QVariant errorMsgErr = argMapErr[VeinComponent::RemoteProcedureData::s_errorMessageString];
     QVERIFY(!errorMsgErr.toString().isEmpty());
 
@@ -127,7 +127,7 @@ void test_recorder::startStopRecordingTimerExpiredCheckResults()
     TimeMachineObject::feedEventLoop();
 
     QVERIFY(spyOk.count() == 1);
-    QVariantMap argMapOk = spyOk[0][2].toMap();
+    QVariantMap argMapOk = spyOk[0][1].toMap();
     QVariant errorMsgOk = argMapOk[VeinComponent::RemoteProcedureData::s_errorMessageString];
     QVERIFY(errorMsgOk.toString().isEmpty());
 
@@ -267,7 +267,7 @@ void test_recorder::invokeRpcNoValuesRecorded()
     TimeMachineObject::feedEventLoop();
 
     QVERIFY(spy.count() == 1);
-    QVariantMap argMap = spy[0][2].toMap();
+    QVariantMap argMap = spy[0][1].toMap();
     QVariant errorMsg = argMap[VeinComponent::RemoteProcedureData::s_errorMessageString];
     QVERIFY(!errorMsg.toString().isEmpty());
     QVariant result = argMap[VeinComponent::RemoteProcedureData::s_returnString];
@@ -299,7 +299,7 @@ void test_recorder::invokeRpcOneValueRecorded()
     TimeMachineObject::feedEventLoop();
 
     QVERIFY(spy.count() == 1);
-    QVariantMap argMap = spy[0][2].toMap();
+    QVariantMap argMap = spy[0][1].toMap();
     QVariant errorMsg = argMap[VeinComponent::RemoteProcedureData::s_errorMessageString];
     QVERIFY(errorMsg.toString().isEmpty());
 
@@ -347,7 +347,7 @@ void test_recorder::invokeRpcMultipleValuesRecorded()
     TimeMachineObject::feedEventLoop();
 
     QVERIFY(spy.count() == 1);
-    QVariantMap argMap = spy[0][2].toMap();
+    QVariantMap argMap = spy[0][1].toMap();
     QVariant errorMsg = argMap[VeinComponent::RemoteProcedureData::s_errorMessageString];
     QVERIFY(errorMsg.toString().isEmpty());
 

@@ -41,7 +41,7 @@ private slots:
     void dumpVeinInfModuleInterface();
 private:
     void setupSpy();
-    QUuid invokeRpc(QString rpcName, QString paramName, QVariant paramValue);
+    void invokeRpc(QString rpcName, QString paramName, QVariant paramValue);
 
     std::unique_ptr<ModuleManagerTestRunner> m_testRunner;
     std::unique_ptr<VeinNet::NetworkSystem> m_netSystem;

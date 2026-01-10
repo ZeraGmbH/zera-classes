@@ -88,17 +88,14 @@ void test_api_trust_authentication::rpcRequestWillTriggerGUI() {
 
     rpc->setEventSystem(m_modmanSetupFacade->getSystemModuleEventSystem());
 
-    QUuid resultId;
     QVariantMap result;
 
-    connect(rpc.get(), &VfRPCInvoker::sigRPCFinished, [&resultId, &result](bool ok, QUuid identifier, const QVariantMap &resultData) {
+    connect(rpc.get(), &VfRPCInvoker::sigRPCFinished, [&result](bool ok, const QVariantMap &resultData) {
         QVERIFY(ok);
-
-        resultId = identifier;
         result = resultData;
     });
 
-    const QUuid id(rpc->invokeRPC("RPC_Authenticate", args));
+    rpc->invokeRPC("RPC_Authenticate", args);
 
     TimeMachineObject::feedEventLoop();
 
@@ -111,7 +108,6 @@ void test_api_trust_authentication::rpcRequestWillTriggerGUI() {
     QCOMPARE(getVfComponent("ACT_PendingRequest"), trust);
 
     // RPC should not be done.
-    QVERIFY(resultId.isNull());
     QVERIFY(result.isEmpty());
 
     // Update trust file and simulate UI response
@@ -130,7 +126,6 @@ void test_api_trust_authentication::rpcRequestWillTriggerGUI() {
     setVfComponent("PAR_GuiDialogFinished", true);
 
     // RPC should be done.
-    QCOMPARE(resultId, id);
     QCOMPARE(result["RemoteProcedureData::Return"], true);
 
     // Should have completed.
