@@ -74,14 +74,6 @@ Zera::DspInterfacePtr FactoryServiceInterfaces::createDspInterfacePower2(int ent
     return std::make_shared<Zera::cDSPInterface>();
 }
 
-Zera::DspInterfacePtr FactoryServiceInterfaces::createDspInterfaceSample(int entityId,
-                                                                         QStringList valueChannelList)
-{
-    Q_UNUSED(entityId)
-    Q_UNUSED(valueChannelList)
-    return std::make_shared<Zera::cDSPInterface>();
-}
-
 Zera::DspInterfacePtr FactoryServiceInterfaces::createDspInterfaceThdn(int entityId,
                                                                        QStringList valueChannelList)
 {

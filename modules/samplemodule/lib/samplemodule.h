@@ -2,8 +2,6 @@
 #define SAMPLEMODULE_H
 
 #include "samplemodulemeasprogram.h"
-#include "pllmeaschannel.h"
-#include "pllobsermatic.h"
 #include <basemeasmodule.h>
 
 namespace SAMPLEMODULE
@@ -15,20 +13,17 @@ public:
     static constexpr const char* BaseModuleName = "SampleModule";
     static constexpr const char* BaseSCPIModuleName = "SAM";
 
-    cSampleModule(ModuleFactoryParam moduleParam);
-    cPllMeasChannel* getPllMeasChannel(const QString &name);
+    explicit cSampleModule(ModuleFactoryParam moduleParam);
 
 private slots:
     void activationFinished() override;
     void deactivationStart() override;
 private:
-    void setupModule() override; // after xml configuration we can setup and export our module
-    void startMeas() override; // we make the measuring program start here
-    void stopMeas() override;
+    void setupModule() override;
+    void startMeas() override { /* no start/stop */ };
+    void stopMeas() override  { /* no start/stop */ };
 
     cSampleModuleMeasProgram *m_pMeasProgram = nullptr;
-    cPllObsermatic *m_pPllObsermatic = nullptr;
-    QList<cPllMeasChannel*> m_pllMeasChannelList; // our pll meas channels
 };
 
 }

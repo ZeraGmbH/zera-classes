@@ -90,15 +90,6 @@ Zera::DspInterfacePtr TestFactoryServiceInterfaces::createDspInterfacePower2(int
                                     7 /* that is what module expects currently */, {});
 }
 
-Zera::DspInterfacePtr TestFactoryServiceInterfaces::createDspInterfaceSample(int entityId,
-                                                                             QStringList valueChannelList)
-{
-    return createDspInterfaceCommon(entityId,
-                                    INJECT_NOT_SUPPORTED,
-                                    MODULEPROG,
-                                    8 /* that is what module expects currently */, valueChannelList);
-}
-
 Zera::DspInterfacePtr TestFactoryServiceInterfaces::createDspInterfaceThdn(int entityId,
                                                                            QStringList valueChannelList)
 {
