@@ -3,9 +3,9 @@
         "ACT_Channel1Peak": 0,
         "ACT_Channel1Rms": 0,
         "ACT_Channel2Peak": 1.4142135381698608,
-        "ACT_Channel2Rms": 1,
+        "ACT_Channel2Rms": 0.5,
         "ACT_Channel3Peak": 2.8284270763397217,
-        "ACT_Channel3Rms": 2,
+        "ACT_Channel3Rms": 1,
         "ACT_Channel4Peak": 4.242640495300293,
         "ACT_Channel4Rms": 3,
         "ACT_Channel5Peak": 5.656854152679443,
@@ -51,7 +51,7 @@
                     "Unit": "V"
                 },
                 "ACT_Channel1Rms": {
-                    "Description": "Actual RMS value"
+                    "Description": "Actual RMS value (unscaled)"
                 },
                 "ACT_Channel2Peak": {
                     "ChannelName": "UL2",
@@ -59,7 +59,7 @@
                     "Unit": "V"
                 },
                 "ACT_Channel2Rms": {
-                    "Description": "Actual RMS value"
+                    "Description": "Actual RMS value (unscaled)"
                 },
                 "ACT_Channel3Peak": {
                     "ChannelName": "UL3",
@@ -67,7 +67,7 @@
                     "Unit": "V"
                 },
                 "ACT_Channel3Rms": {
-                    "Description": "Actual RMS value"
+                    "Description": "Actual RMS value (unscaled)"
                 },
                 "ACT_Channel4Peak": {
                     "ChannelName": "IL1",
@@ -75,7 +75,7 @@
                     "Unit": "A"
                 },
                 "ACT_Channel4Rms": {
-                    "Description": "Actual RMS value"
+                    "Description": "Actual RMS value (unscaled)"
                 },
                 "ACT_Channel5Peak": {
                     "ChannelName": "IL2",
@@ -83,7 +83,7 @@
                     "Unit": "A"
                 },
                 "ACT_Channel5Rms": {
-                    "Description": "Actual RMS value"
+                    "Description": "Actual RMS value (unscaled)"
                 },
                 "ACT_Channel6Peak": {
                     "ChannelName": "IL3",
@@ -91,7 +91,7 @@
                     "Unit": "A"
                 },
                 "ACT_Channel6Rms": {
-                    "Description": "Actual RMS value"
+                    "Description": "Actual RMS value (unscaled)"
                 },
                 "ACT_Channel7Peak": {
                     "ChannelName": "UAUX",
@@ -99,7 +99,7 @@
                     "Unit": "V"
                 },
                 "ACT_Channel7Rms": {
-                    "Description": "Actual RMS value"
+                    "Description": "Actual RMS value (unscaled)"
                 },
                 "ACT_Channel8Peak": {
                     "ChannelName": "IAUX",
@@ -107,7 +107,7 @@
                     "Unit": "A"
                 },
                 "ACT_Channel8Rms": {
-                    "Description": "Actual RMS value"
+                    "Description": "Actual RMS value (unscaled)"
                 },
                 "ACT_Frequency": {
                     "Description": "Actual frequency",

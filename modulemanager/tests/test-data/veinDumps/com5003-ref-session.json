@@ -181,7 +181,7 @@
                     "Unit": "V"
                 },
                 "ACT_Channel1Rms": {
-                    "Description": "Actual RMS value"
+                    "Description": "Actual RMS value (unscaled)"
                 },
                 "ACT_Channel2Peak": {
                     "ChannelName": "REF2",
@@ -189,7 +189,7 @@
                     "Unit": "V"
                 },
                 "ACT_Channel2Rms": {
-                    "Description": "Actual RMS value"
+                    "Description": "Actual RMS value (unscaled)"
                 },
                 "ACT_Channel3Peak": {
                     "ChannelName": "REF3",
@@ -197,7 +197,7 @@
                     "Unit": "V"
                 },
                 "ACT_Channel3Rms": {
-                    "Description": "Actual RMS value"
+                    "Description": "Actual RMS value (unscaled)"
                 },
                 "ACT_Channel4Peak": {
                     "ChannelName": "REF4",
@@ -205,7 +205,7 @@
                     "Unit": "V"
                 },
                 "ACT_Channel4Rms": {
-                    "Description": "Actual RMS value"
+                    "Description": "Actual RMS value (unscaled)"
                 },
                 "ACT_Channel5Peak": {
                     "ChannelName": "REF5",
@@ -213,7 +213,7 @@
                     "Unit": "V"
                 },
                 "ACT_Channel5Rms": {
-                    "Description": "Actual RMS value"
+                    "Description": "Actual RMS value (unscaled)"
                 },
                 "ACT_Channel6Peak": {
                     "ChannelName": "REF6",
@@ -221,7 +221,7 @@
                     "Unit": "V"
                 },
                 "ACT_Channel6Rms": {
-                    "Description": "Actual RMS value"
+                    "Description": "Actual RMS value (unscaled)"
                 },
                 "ACT_Frequency": {
                     "Description": "Actual frequency",

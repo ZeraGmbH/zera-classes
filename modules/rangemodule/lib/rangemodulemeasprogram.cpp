@@ -126,7 +126,7 @@ void cRangeModuleMeasProgram::generateVeinInterface()
     for (int i = 0; i < channelMNames.count(); i++) {
         pActvalue = new VfModuleComponent(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
                                             QString("ACT_Channel%1Rms").arg(i+1),
-                                            QString("Actual RMS value"));
+                                            QString("Actual RMS value (unscaled)"));
         m_veinRmsValueList.append(pActvalue); // we add the component for our measurement
         m_pModule->veinModuleActvalueList.append(pActvalue); // and for the modules interface
     }
@@ -358,17 +358,27 @@ void cRangeModuleMeasProgram::restartDspWachdog()
 void cRangeModuleMeasProgram::setInterfaceActualValues(QVector<float> *actualValues)
 {
     if (m_bActive) {// maybe we are deactivating !!!!
+        // ACT_Channel<idx>Peak
         int i;
-        for (i = 0; i < m_veinActValueList.count()-1; i++) // we set n peak values first
+        for (i = 0; i < m_veinActValueList.count()-1; i++)
             m_veinActValueList.at(i)->setValue(QVariant((*actualValues)[i]));
+
+        // ACT_Frequency
         const int frqIndex = 2*i;
         float freq = (*actualValues)[frqIndex];
         m_veinActValueList.at(i)->setValue(QVariant(freq));
         m_frequencyLogStatistics.addValue(freq);
+
+        // ACT_Channel<idx>Rms
         const QStringList channelMNames = m_pModule->getSharedChannelRangeObserver()->getChannelMNames();
         int rmsOffsetInActual = channelMNames.count();
-        for(int rmsNo=0; rmsNo<channelMNames.count(); rmsNo++)
-            m_veinRmsValueList.at(rmsNo)->setValue(QVariant((*actualValues)[rmsNo+rmsOffsetInActual]));
+        for(int channelIdx=0; channelIdx<channelMNames.count(); channelIdx++) {
+            cRangeMeasChannel* mchn = m_pModule->getMeasChannel(channelMNames.at(channelIdx));
+            float rmsValueScaled = (*actualValues)[channelIdx+rmsOffsetInActual];
+            float preScalingFact = mchn->getChannelData()->getPreScaling();
+            float rmsValue = rmsValueScaled * preScalingFact; // yes we expected 1/preScalingFact
+            m_veinRmsValueList.at(channelIdx)->setValue(QVariant(rmsValue));
+        }
     }
 }
 
