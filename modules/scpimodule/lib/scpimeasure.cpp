@@ -118,7 +118,8 @@ QString cSCPIMeasure::setAnswer(QVariant qvar)
 {
     QString s;
     const QString unit = m_pSCPICmdInfo->veinComponentInfo["Unit"].toString();
-    if (qvar.canConvert<QVariantList>()) {
+    bool isString = QMetaType::type(qvar.typeName()) == QMetaType::type("QString");
+    if (!isString && qvar.canConvert<QVariantList>()) {
         QSequentialIterable iterable = qvar.value<QSequentialIterable>();
         s = QString("%1:%2:[%3]:")
                 .arg(m_pSCPICmdInfo->scpiModuleName, m_pSCPICmdInfo->scpiCommand, unit);
