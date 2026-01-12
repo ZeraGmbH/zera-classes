@@ -9,20 +9,26 @@
 #include "demodspinterfacethdn.h"
 #include "demodspinterfaceosci.h"
 
-static double generatorFixed() {
+static double generatorFixed(int entityId) {
+    Q_UNUSED(entityId)
     return 1.0;
 }
 
-static double generatorReproducibleChange() {
+static double generatorReproducibleChange(int entityId) {
     constexpr double initValue = 0.9;
-    static double value = initValue;
+    static QMap<int, double> values;
+    double value = initValue;
+    if (values.contains(entityId))
+        value = values[entityId];
     value += 0.001;
     if (value > 1.0)
         value = initValue;
+    values[entityId] = value;
     return value;
 }
 
-static double generatorRandom() {
+static double generatorRandom(int entityId) {
+    Q_UNUSED(entityId)
     return (double)rand() / double(RAND_MAX);
 }
 
@@ -46,24 +52,21 @@ Zera::DspInterfacePtr DemoFactoryServiceInterfaces::createDspInterfaceRangeProg(
                                                                                 QStringList valueChannelList,
                                                                                 bool isReference)
 {
-    Q_UNUSED(entityId)
-    return std::make_shared<DemoDspInterfaceRange>(valueChannelList, isReference, m_valueGenerator);
+    return std::make_shared<DemoDspInterfaceRange>(entityId, valueChannelList, isReference, m_valueGenerator);
 }
 
 Zera::DspInterfacePtr DemoFactoryServiceInterfaces::createDspInterfaceRangeObser(int entityId,
                                                                                  QStringList valueChannelList,
                                                                                  bool isReference)
 {
-    Q_UNUSED(entityId)
-    return std::make_shared<DemoDspInterfaceRange>(valueChannelList, isReference, m_valueGenerator);
+    return std::make_shared<DemoDspInterfaceRange>(entityId, valueChannelList, isReference, m_valueGenerator);
 }
 
 Zera::DspInterfacePtr DemoFactoryServiceInterfaces::createDspInterfaceRangeAdj(int entityId,
                                                                                QStringList valueChannelList,
                                                                                bool isReference)
 {
-    Q_UNUSED(entityId)
-    return std::make_shared<DemoDspInterfaceRange>(valueChannelList, isReference, m_valueGenerator);
+    return std::make_shared<DemoDspInterfaceRange>(entityId, valueChannelList, isReference, m_valueGenerator);
 }
 
 Zera::DspInterfacePtr DemoFactoryServiceInterfaces::createDspInterfaceDft(int entityId,
@@ -81,51 +84,44 @@ Zera::DspInterfacePtr DemoFactoryServiceInterfaces::createDspInterfaceFft(int en
                                                                           QStringList valueChannelList,
                                                                           int fftOrder)
 {
-    Q_UNUSED(entityId)
-    return std::make_shared<DemoDspInterfaceFft>(valueChannelList, fftOrder, m_valueGenerator);
+    return std::make_shared<DemoDspInterfaceFft>(entityId, valueChannelList, fftOrder, m_valueGenerator);
 }
 
 Zera::DspInterfacePtr DemoFactoryServiceInterfaces::createDspInterfaceRms(int entityId,
                                                                           QStringList valueChannelList)
 {
-    Q_UNUSED(entityId)
-    return std::make_shared<DemoDspInterfaceRms>(valueChannelList, m_valueGenerator);
+    return std::make_shared<DemoDspInterfaceRms>(entityId, valueChannelList, m_valueGenerator);
 }
 
 Zera::DspInterfacePtr DemoFactoryServiceInterfaces::createDspInterfacePower1(int entityId,
                                                                              MeasModeSelector* measMode)
 {
-    Q_UNUSED(entityId)
-    return std::make_shared<DemoDspInterfacePower1>(measMode, m_valueGenerator);
+    return std::make_shared<DemoDspInterfacePower1>(entityId, measMode, m_valueGenerator);
 }
 
 Zera::DspInterfacePtr DemoFactoryServiceInterfaces::createDspInterfacePower2(int entityId,
                                                                              MeasModeSelector *measMode)
 {
-    Q_UNUSED(entityId)
-    return std::make_shared<DemoDspInterfacePower2>(measMode, m_valueGenerator);
+    return std::make_shared<DemoDspInterfacePower2>(entityId, measMode, m_valueGenerator);
 }
 
 Zera::DspInterfacePtr DemoFactoryServiceInterfaces::createDspInterfaceSample(int entityId,
                                                                              QStringList valueChannelList)
 {
-    Q_UNUSED(entityId)
-    return std::make_shared<DemoDspInterfaceSample>(valueChannelList, m_valueGenerator);
+    return std::make_shared<DemoDspInterfaceSample>(entityId, valueChannelList, m_valueGenerator);
 }
 
 Zera::DspInterfacePtr DemoFactoryServiceInterfaces::createDspInterfaceThdn(int entityId,
                                                                            QStringList valueChannelList)
 {
-    Q_UNUSED(entityId)
-    return std::make_shared<DemoDspInterfaceThdn>(valueChannelList, m_valueGenerator);
+    return std::make_shared<DemoDspInterfaceThdn>(entityId, valueChannelList, m_valueGenerator);
 }
 
 Zera::DspInterfacePtr DemoFactoryServiceInterfaces::createDspInterfaceOsci(int entityId,
                                                                            QStringList valueChannelList,
                                                                            int interpolation)
 {
-    Q_UNUSED(entityId)
-    return std::make_shared<DemoDspInterfaceOsci>(valueChannelList, interpolation, m_valueGenerator);
+    return std::make_shared<DemoDspInterfaceOsci>(entityId, valueChannelList, interpolation, m_valueGenerator);
 }
 
 Zera::DspInterfacePtr DemoFactoryServiceInterfaces::createDspInterfaceMode(int entityId)

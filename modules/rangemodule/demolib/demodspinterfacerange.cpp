@@ -2,9 +2,11 @@
 #include "demovaluesdsprange.h"
 #include <timerfactoryqt.h>
 
-DemoDspInterfaceRange::DemoDspInterfaceRange(QStringList valueChannelList,
+DemoDspInterfaceRange::DemoDspInterfaceRange(int entityId,
+                                             QStringList valueChannelList,
                                              bool isReference,
-                                             std::function<double()> valueGenerator) :
+                                             std::function<double (int)> valueGenerator) :
+    m_entityId(entityId),
     m_valueChannelList(valueChannelList),
     m_isReference(isReference),
     m_periodicTimer(TimerFactoryQt::createPeriodic(500)),
@@ -57,7 +59,7 @@ QVector<float> DemoDspInterfaceRange::demoChannelRms()
         if(m_valueChannelList[channel] != "m7") {
             bool isVoltage = demoChannelIsVoltage(channel);
             double baseRMS = isVoltage ? voltageBase : currentBase;
-            double randPlusMinusOne = 2.0 * m_valueGenerator() - 1.0;
+            double randPlusMinusOne = 2.0 * m_valueGenerator(m_entityId) - 1.0;
             double randOffset = 0.02 * randPlusMinusOne;
             double randRMS = (1+randOffset) * baseRMS;
             randomChannelRMS[channel] = randRMS;
@@ -71,7 +73,7 @@ QVector<float> DemoDspInterfaceRange::demoChannelRms()
 double DemoDspInterfaceRange::demoFrequency()
 {
     double freqBase= 50.0;
-    double randPlusMinusOne = 1.0 * m_valueGenerator() - 0.5;
+    double randPlusMinusOne = 1.0 * m_valueGenerator(m_entityId) - 0.5;
     double randOffset = 0.02 * randPlusMinusOne;
     double randRMS = (1+randOffset) * freqBase;
     return randRMS;

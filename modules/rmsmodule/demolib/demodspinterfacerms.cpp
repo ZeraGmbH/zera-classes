@@ -2,8 +2,10 @@
 #include "demovaluesdsprms.h"
 #include <timerfactoryqt.h>
 
-DemoDspInterfaceRms::DemoDspInterfaceRms(QStringList valueChannelList,
-                                         std::function<double()> valueGenerator) :
+DemoDspInterfaceRms::DemoDspInterfaceRms(int entityId,
+                                         QStringList valueChannelList,
+                                         std::function<double (int)> valueGenerator) :
+    m_entityId(entityId),
     m_valueChannelList(valueChannelList),
     m_periodicTimer(TimerFactoryQt::createPeriodic(500)),
     m_valueGenerator(valueGenerator)
@@ -21,7 +23,7 @@ void DemoDspInterfaceRms::onTimer()
     rmsValues.setAllValuesSymmetric(230, 1);
     QVector<float> demoValues = rmsValues.getDspValues();
     for(int i=0; i<demoValues.count(); i++) {
-        double randomVal = m_valueGenerator();
+        double randomVal = m_valueGenerator(m_entityId);
         double randomDeviation = 0.95 + 0.1 * randomVal;
         demoValues[i] *= randomDeviation;
     }

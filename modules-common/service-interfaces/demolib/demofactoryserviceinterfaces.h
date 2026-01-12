@@ -30,7 +30,7 @@ public:
     Zera::DspInterfacePtr createDspInterfaceRefAdj(int entityId) override;
 private:
     ValueTypes m_valueType = RandomValues;
-    std::function<double()> m_valueGenerator;
+    std::function<double(int)> m_valueGenerator;
 };
 
 #endif // DEMOFACTORYSERVICEINTERFACES_H

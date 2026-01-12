@@ -1,8 +1,10 @@
 #include "demodspinterfacepower1.h"
 #include <timerfactoryqt.h>
 
-DemoDspInterfacePower1::DemoDspInterfacePower1(MeasModeSelector *measMode,
-                                               std::function<double()> valueGenerator) :
+DemoDspInterfacePower1::DemoDspInterfacePower1(int entityId,
+                                               MeasModeSelector *measMode,
+                                               std::function<double (int)> valueGenerator) :
+    m_entityId(entityId),
     m_measMode(measMode),
     m_periodicTimer(TimerFactoryQt::createPeriodic(500)),
     m_valueGenerator(valueGenerator)
@@ -26,7 +28,7 @@ void DemoDspInterfacePower1::onTimer()
     for(int phase=0; phase<MeasPhaseCount; phase++) {
         double val = 0.0;
         if(phaseMask.count() > phase && phaseMask[phase] == '1') {
-            double randPlusMinusOne = 2.0 * m_valueGenerator() - 1.0;
+            double randPlusMinusOne = 2.0 * m_valueGenerator(m_entityId) - 1.0;
             val = current*voltage + randPlusMinusOne;
             if(is3Wire)
                 val *= 1.5;

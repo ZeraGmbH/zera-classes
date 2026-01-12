@@ -8,14 +8,16 @@ class DemoDspInterfaceRms : public MockDspInterface
 {
     Q_OBJECT
 public:
-    DemoDspInterfaceRms(QStringList valueChannelList,
-                        std::function<double()> valueGenerator);
+    DemoDspInterfaceRms(int entityId,
+                        QStringList valueChannelList,
+                        std::function<double(int)> valueGenerator);
 private slots:
     void onTimer();
 private:
+    int m_entityId;
     QStringList m_valueChannelList;
     TimerTemplateQtPtr m_periodicTimer;
-    std::function<double()> m_valueGenerator;
+    std::function<double(int)> m_valueGenerator;
 };
 
 #endif // DEMODSPINTERFACERMS_H

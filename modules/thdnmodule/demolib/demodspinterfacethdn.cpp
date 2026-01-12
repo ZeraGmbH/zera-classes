@@ -2,8 +2,9 @@
 #include <timerfactoryqt.h>
 #include <math.h>
 
-DemoDspInterfaceThdn::DemoDspInterfaceThdn(QStringList valueChannelList,
-                                           std::function<double()> valueGenerator) :
+DemoDspInterfaceThdn::DemoDspInterfaceThdn(int entityId, QStringList valueChannelList,
+                                           std::function<double (int)> valueGenerator) :
+    m_entityId(entityId),
     m_valueChannelList(valueChannelList),
     m_periodicTimer(TimerFactoryQt::createPeriodic(500)),
     m_valueGenerator(valueGenerator)
@@ -21,7 +22,7 @@ void DemoDspInterfaceThdn::onTimer()
     QVector<float> demoValues(valueCount);
     // This has room for enhancements...
     for(int i=0; i<valueCount; ++i) {
-        double randomVal = m_valueGenerator();
+        double randomVal = m_valueGenerator(m_entityId);
         double randomDeviation = 0.95 + 0.1 * randomVal;
         float val = (10+i) * randomDeviation;
         float thdr = val / sqrt(1 + (val * val));

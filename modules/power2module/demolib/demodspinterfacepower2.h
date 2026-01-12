@@ -9,14 +9,16 @@ class DemoDspInterfacePower2 : public MockDspInterface
 {
     Q_OBJECT
 public:
-    DemoDspInterfacePower2(MeasModeSelector* measMode,
-                           std::function<double()> valueGenerator);
+    DemoDspInterfacePower2(int entityId,
+                           MeasModeSelector* measMode,
+                           std::function<double(int)> valueGenerator);
 private slots:
     void onTimer();
 private:
+    int m_entityId;
     MeasModeSelector *m_measMode;
     TimerTemplateQtPtr m_periodicTimer;
-    std::function<double()> m_valueGenerator;
+    std::function<double(int)> m_valueGenerator;
 };
 
 #endif // DEMODSPINTERFACEPOWER2_H

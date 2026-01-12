@@ -3,9 +3,11 @@
 #include <timerfactoryqt.h>
 #include <math.h>
 
-DemoDspInterfaceOsci::DemoDspInterfaceOsci(QStringList valueChannelList,
+DemoDspInterfaceOsci::DemoDspInterfaceOsci(int entityId,
+                                           QStringList valueChannelList,
                                            int interpolation,
-                                           std::function<double()> valueGenerator) :
+                                           std::function<double (int)> valueGenerator) :
+    m_entityId(entityId),
     m_valueChannelList(valueChannelList),
     m_interpolation(interpolation),
     m_periodicTimer(TimerFactoryQt::createPeriodic(500)),
@@ -32,7 +34,7 @@ void DemoDspInterfaceOsci::onTimer()
     QVector<float> demoValues;
     float phase = 0.0;
     for(const QString &channelName : qAsConst(m_valueChannelList)) {
-        double randomVal = m_valueGenerator();
+        double randomVal = m_valueGenerator(m_entityId);
         if(channelName == "m1" || channelName == "m4") //UL2,IL2
             phase = randomVal * M_PI/2;
         else if(channelName == "m2" || channelName == "m5") //UL3,IL3

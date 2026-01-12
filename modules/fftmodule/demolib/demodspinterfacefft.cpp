@@ -3,9 +3,11 @@
 #include <timerfactoryqt.h>
 #include <math.h>
 
-DemoDspInterfaceFft::DemoDspInterfaceFft(QStringList valueChannelList,
+DemoDspInterfaceFft::DemoDspInterfaceFft(int entityId,
+                                         QStringList valueChannelList,
                                          int fftOrder,
-                                         std::function<double()> valueGenerator) :
+                                         std::function<double (int)> valueGenerator) :
+    m_entityId(entityId),
     m_valueChannelList(valueChannelList),
     m_fftOrder(fftOrder),
     m_periodicTimer(TimerFactoryQt::createPeriodic(500)),
@@ -21,7 +23,7 @@ DemoDspInterfaceFft::DemoDspInterfaceFft(QStringList valueChannelList,
 void DemoDspInterfaceFft::onTimer()
 {
     int totalChannels = m_valueChannelList.count();
-    double randomVal = m_valueGenerator();
+    double randomVal = m_valueGenerator(m_entityId);
     double randomDeviation = 0.95 + 0.1 * randomVal;
 
     DemoValuesDspFft dspValues(totalChannels);

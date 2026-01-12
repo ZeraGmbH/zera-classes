@@ -8,16 +8,18 @@ class DemoDspInterfaceFft : public MockDspInterface
 {
     Q_OBJECT
 public:
-    DemoDspInterfaceFft(QStringList valueChannelList,
+    DemoDspInterfaceFft(int entityId,
+                        QStringList valueChannelList,
                         int fftOrder,
-                        std::function<double()> valueGenerator);
+                        std::function<double(int)> valueGenerator);
 private slots:
     void onTimer();
 private:
+    int m_entityId;
     QStringList m_valueChannelList;
     int m_fftOrder;
     TimerTemplateQtPtr m_periodicTimer;
-    std::function<double()> m_valueGenerator;
+    std::function<double(int)> m_valueGenerator;
 };
 
 #endif // DEMODSPINTERFACEFFT_H
