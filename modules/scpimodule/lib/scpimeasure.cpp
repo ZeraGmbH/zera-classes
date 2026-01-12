@@ -124,7 +124,7 @@ QString cSCPIMeasure::setAnswer(QVariant qvar)
                 .arg(m_pSCPICmdInfo->scpiModuleName, m_pSCPICmdInfo->scpiCommand, unit);
         for (const QVariant &v : iterable)
             s += (convertVariantToString(v) + ",");
-        s = s.remove(s.count()-1, 1);
+        s = s.remove(s.size()-1, 1);
     }
     else
         s = QString("%1:%2:[%3]:%4")
