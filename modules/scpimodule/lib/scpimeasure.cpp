@@ -128,9 +128,10 @@ QString cSCPIMeasure::setAnswer(QVariant qvar)
         s = s.remove(s.size()-1, 1);
     }
     else
-        s = QString("%1:%2:[%3]:%4")
-                .arg(m_pSCPICmdInfo->scpiModuleName, m_pSCPICmdInfo->scpiCommand, unit)
-                .arg(convertVariantToString(qvar));
+        s = QString("%1:%2:[%3]:%4").arg(m_pSCPICmdInfo->scpiModuleName,
+                                         m_pSCPICmdInfo->scpiCommand,
+                                         unit,
+                                         convertVariantToString(qvar));
     return s;
 }
 
