@@ -4,7 +4,7 @@
 #include <scpiserver.h>
 #include <timerfactoryqtfortest.h>
 #include <timemachinefortest.h>
-#include <scpimodulefortest.h>
+#include <scpimodule.h>
 #include <QTest>
 
 QTEST_MAIN(test_scpi_queue)
@@ -40,10 +40,10 @@ void test_scpi_queue::sendStandardCmdsQueueDisabledAndEnabled()
 {
     setupServices(":/session-scpi-only.json");
 
-    SCPIMODULE::ScpiModuleForTest *scpiModule = static_cast<SCPIMODULE::ScpiModuleForTest*>(m_modMan->getModule("scpimodule", 9999));
+    SCPIMODULE::cSCPIModule *scpiModule = qobject_cast<SCPIMODULE::cSCPIModule*>(m_modMan->getModule("scpimodule", 9999));
     QVERIFY(scpiModule != nullptr);
 
-    SCPIMODULE::ScpiTestClient *client = new SCPIMODULE::ScpiTestClient(scpiModule, *scpiModule->getConfigData(), scpiModule->getScpiInterface());
+    SCPIMODULE::ScpiTestClient *client = new SCPIMODULE::ScpiTestClient(scpiModule, *scpiModule->getConfData(), scpiModule->getSCPIServer()->getScpiInterface());
     scpiModule->getSCPIServer()->appendClient(client);
 
     QStringList responses;
@@ -69,10 +69,10 @@ void test_scpi_queue::sendErroneousAndCorrectStandardCmds()
 {
     setupServices(":/session-scpi-only.json");
 
-    SCPIMODULE::ScpiModuleForTest *scpiModule = static_cast<SCPIMODULE::ScpiModuleForTest*>(m_modMan->getModule("scpimodule", 9999));
+    SCPIMODULE::cSCPIModule *scpiModule = qobject_cast<SCPIMODULE::cSCPIModule*>(m_modMan->getModule("scpimodule", 9999));
     QVERIFY(scpiModule != nullptr);
 
-    SCPIMODULE::ScpiTestClient *client = new SCPIMODULE::ScpiTestClient(scpiModule, *scpiModule->getConfigData(), scpiModule->getScpiInterface());
+    SCPIMODULE::ScpiTestClient *client = new SCPIMODULE::ScpiTestClient(scpiModule, *scpiModule->getConfData(), scpiModule->getSCPIServer()->getScpiInterface());
     scpiModule->getSCPIServer()->appendClient(client);
 
     QStringList responses;
@@ -92,10 +92,10 @@ void test_scpi_queue::sendSubSystemAndStandardCommands()
 {
     setupServices(":/session-scpi-and-range.json");
 
-    SCPIMODULE::ScpiModuleForTest *scpiModule = static_cast<SCPIMODULE::ScpiModuleForTest*>(m_modMan->getModule("scpimodule", 9999));
+    SCPIMODULE::cSCPIModule *scpiModule = qobject_cast<SCPIMODULE::cSCPIModule*>(m_modMan->getModule("scpimodule", 9999));
     QVERIFY(scpiModule != nullptr);
 
-    SCPIMODULE::ScpiTestClient *client = new SCPIMODULE::ScpiTestClient(scpiModule, *scpiModule->getConfigData(), scpiModule->getScpiInterface());
+    SCPIMODULE::ScpiTestClient *client = new SCPIMODULE::ScpiTestClient(scpiModule, *scpiModule->getConfData(), scpiModule->getSCPIServer()->getScpiInterface());
     scpiModule->getSCPIServer()->appendClient(client);
 
     QStringList responses;
@@ -127,10 +127,10 @@ void test_scpi_queue::enableAndDisableQueueWhileExecutingCmds()
 {
     setupServices(":/session-scpi-and-range.json");
 
-    SCPIMODULE::ScpiModuleForTest *scpiModule = static_cast<SCPIMODULE::ScpiModuleForTest*>(m_modMan->getModule("scpimodule", 9999));
+    SCPIMODULE::cSCPIModule *scpiModule = qobject_cast<SCPIMODULE::cSCPIModule*>(m_modMan->getModule("scpimodule", 9999));
     QVERIFY(scpiModule != nullptr);
 
-    SCPIMODULE::ScpiTestClient *client = new SCPIMODULE::ScpiTestClient(scpiModule, *scpiModule->getConfigData(), scpiModule->getScpiInterface());
+    SCPIMODULE::ScpiTestClient *client = new SCPIMODULE::ScpiTestClient(scpiModule, *scpiModule->getConfData(), scpiModule->getSCPIServer()->getScpiInterface());
     scpiModule->getSCPIServer()->appendClient(client);
 
     QStringList responses;
@@ -156,10 +156,10 @@ void test_scpi_queue::disableAndEnableQueueWhileExecutingCmds()
 {
     setupServices(":/session-scpi-and-range.json");
 
-    SCPIMODULE::ScpiModuleForTest *scpiModule = static_cast<SCPIMODULE::ScpiModuleForTest*>(m_modMan->getModule("scpimodule", 9999));
+    SCPIMODULE::cSCPIModule *scpiModule = qobject_cast<SCPIMODULE::cSCPIModule*>(m_modMan->getModule("scpimodule", 9999));
     QVERIFY(scpiModule != nullptr);
 
-    SCPIMODULE::ScpiTestClient *client = new SCPIMODULE::ScpiTestClient(scpiModule, *scpiModule->getConfigData(), scpiModule->getScpiInterface());
+    SCPIMODULE::ScpiTestClient *client = new SCPIMODULE::ScpiTestClient(scpiModule, *scpiModule->getConfData(), scpiModule->getSCPIServer()->getScpiInterface());
     scpiModule->getSCPIServer()->appendClient(client);
 
     QStringList responses;

@@ -1,7 +1,7 @@
 #include "test_range_scpi.h"
 #include "modulemanagertestrunner.h"
 #include "scpimoduleclientblocked.h"
-#include "scpimodulefortest.h"
+#include "scpimodule.h"
 #include "scpitestclient.h"
 #include <timemachineobject.h>
 #include <timerfactoryqtfortest.h>
@@ -72,9 +72,9 @@ void test_range_scpi::rangeChangeWithDelay()
     ModuleManagerTestRunner testRunner(":/session-range-scpi.json");
     testRunner.setRangeGetSetDelay(rangeChangeDelay);
 
-    SCPIMODULE::ScpiModuleForTest *scpiModule = static_cast<SCPIMODULE::ScpiModuleForTest*>(testRunner.getModule("scpimodule", 9999));
+    SCPIMODULE::cSCPIModule *scpiModule = qobject_cast<SCPIMODULE::cSCPIModule*>(testRunner.getModule("scpimodule", 9999));
     QVERIFY(scpiModule != nullptr);
-    SCPIMODULE::ScpiTestClient scpiClient(scpiModule, *scpiModule->getConfigData(), scpiModule->getScpiInterface());
+    SCPIMODULE::ScpiTestClient scpiClient(scpiModule, *scpiModule->getConfData(), scpiModule->getSCPIServer()->getScpiInterface());
     scpiClient.sendScpiCmds("CONFIGURATION:RNG1:GROUPING 0;");
     QSignalSpy spyScpiAnswer(&scpiClient, &SCPIMODULE::ScpiTestClient::sigScpiAnswer);
     QSignalSpy spyCmdProcessed(&scpiClient, &SCPIMODULE::ScpiTestClient::commandAnswered);

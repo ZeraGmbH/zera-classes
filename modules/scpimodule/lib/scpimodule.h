@@ -24,6 +24,7 @@ public:
     cSCPIModule(ModuleFactoryParam moduleParam);
     ~cSCPIModule();
     cSCPIServer* getSCPIServer();
+    cSCPIModuleConfigData *getConfData() const;
 
     QMultiHash<QString, SCPIClientInfoPtr> scpiParameterCmdInfoHash; // a hash to memorize what was in progress for which client
     QList<cSignalConnectionDelegate*> sConnectDelegateList;

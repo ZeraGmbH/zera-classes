@@ -4,7 +4,6 @@
 #include "scpimoduleclientblocked.h"
 #include <timemachineobject.h>
 #include <scpimodule.h>
-#include <scpimodulefortest.h>
 #include <scpitestclient.h>
 #include <scpiserver.h>
 #include <statusmodule.h>

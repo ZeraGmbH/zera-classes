@@ -1,5 +1,6 @@
 #include "scpimodule.h"
 #include "scpimoduleconfiguration.h"
+#include "scpimoduleconfiguration.h"
 #include "scpimoduleconfigdata.h"
 #include "scpieventsystem.h"
 
@@ -27,6 +28,11 @@ cSCPIModule::~cSCPIModule()
 cSCPIServer *cSCPIModule::getSCPIServer()
 {
     return m_pSCPIServer;
+}
+
+cSCPIModuleConfigData *cSCPIModule::getConfData() const
+{
+    return qobject_cast<cSCPIModuleConfiguration*>(m_pConfiguration.get())->getConfigurationData();
 }
 
 VfEventSytemModuleParam *cSCPIModule::getValidatorEventSystem()

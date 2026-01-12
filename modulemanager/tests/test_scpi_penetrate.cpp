@@ -42,7 +42,7 @@ void test_scpi_penetrate::init()
         QCOMPARE(m_modmanFacade->getStorageSystem()->getDb()->getStoredValue(systemEntityId, "Session").toString(), sessionFile);
         TimeMachineForTest::getInstance()->processTimers(valueWaitTime);
 
-        m_scpiModule = static_cast<SCPIMODULE::ScpiModuleForTest*>(m_modMan->getModule("scpimodule", 9999));
+        m_scpiModule = qobject_cast<SCPIMODULE::cSCPIModule*>(m_modMan->getModule("scpimodule", 9999));
         QVERIFY(m_scpiModule != nullptr);
 
         createScpiClient();
@@ -93,8 +93,8 @@ QStringList test_scpi_penetrate::getAvailableSessions()
 void test_scpi_penetrate::createScpiClient()
 {
     m_scpiclient = new SCPIMODULE::ScpiTestClient(m_scpiModule,
-                                                  *m_scpiModule->getConfigData(),
-                                                  m_scpiModule->getScpiInterface());
+                                                  *m_scpiModule->getConfData(),
+                                                  m_scpiModule->getSCPIServer()->getScpiInterface());
     m_scpiModule->getSCPIServer()->appendClient(m_scpiclient);
     connect(m_scpiclient, &SCPIMODULE::ScpiTestClient::sigScpiAnswer, m_scpiclient, [&] (const QString &response) {
         m_scpiResponses.append(formatForDump(response));
