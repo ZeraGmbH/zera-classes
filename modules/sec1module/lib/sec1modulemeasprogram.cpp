@@ -934,14 +934,10 @@ void cSec1ModuleMeasProgram::handleSECInterrupt()
 
 void cSec1ModuleMeasProgram::cmpDependencies()
 {
-    QString mode;
-    double constant;
-    bool energyPerImpulse;
 
-    mode = getConfData()->m_sMode.m_sPar;
-
-    constant = getConfData()->m_fDutConstant.m_fPar; // assumed I/kxxx because all computation is based on this
-    energyPerImpulse = m_sDutConstantUnit.contains(QString("/I"));
+    QString mode = getConfData()->m_sMode.m_sPar;
+    double constant = getConfData()->m_fDutConstant.m_fPar; // assumed I/kxxx because all computation is based on this
+    bool energyPerImpulse = m_sDutConstantUnit.contains(QString("/I"));
 
     if (energyPerImpulse)
         constant = (1.0/constant) * 1000.0; // if xxx/I we calculate in I/kxxx
@@ -950,26 +946,17 @@ void cSec1ModuleMeasProgram::cmpDependencies()
     // an instrument transformer is used.
     constant=constant*m_dutConstantScalingMem;
 
-    if (mode == "mrate")
-    {
-       // we calculate the new target value
-       getConfData()->m_nTarget.m_nPar = floor(getConfData()->m_nMRate.m_nPar * getConfData()->m_fRefConstant.m_fPar / constant);
-       getConfData()->m_fEnergy.m_fPar = getConfData()->m_nMRate.m_nPar / constant;
+    if (mode == "mrate") {
+        // we calculate the new target value
+        getConfData()->m_nTarget.m_nPar = floor(getConfData()->m_nMRate.m_nPar * getConfData()->m_fRefConstant.m_fPar / constant);
+        getConfData()->m_fEnergy.m_fPar = getConfData()->m_nMRate.m_nPar / constant;
     }
-
-    else
-
-    if (mode == "energy")
-    {
+    else if (mode == "energy") {
         // we calcute the new mrate and target
         getConfData()->m_nMRate.m_nPar = ceil(constant * getConfData()->m_fEnergy.m_fPar);
         getConfData()->m_nTarget.m_nPar = floor(getConfData()->m_nMRate.m_nPar * getConfData()->m_fRefConstant.m_fPar / constant);
     }
-
-    else
-
-    if (mode == "target")
-    {
+    else if (mode == "target") {
         constant = getConfData()->m_nMRate.m_nPar * getConfData()->m_fRefConstant.m_fPar / getConfData()->m_nTarget.m_nPar;
         if (energyPerImpulse)
             constant = (1.0/constant) * 1000.0;
