@@ -1609,13 +1609,6 @@
                     ],
                     [
                         "CALCULATE",
-                        "0001:REFFREQINPUT",
-                        "2",
-                        "ACT_RefFreqInput",
-                        "0"
-                    ],
-                    [
-                        "CALCULATE",
                         "0001:RESULT",
                         "2",
                         "ACT_Result",

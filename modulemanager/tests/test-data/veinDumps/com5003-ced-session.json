@@ -3351,13 +3351,6 @@
                     ],
                     [
                         "CALCULATE",
-                        "0001:REFFREQINPUT",
-                        "2",
-                        "ACT_RefFreqInput",
-                        "0"
-                    ],
-                    [
-                        "CALCULATE",
                         "0001:RESULT",
                         "2",
                         "ACT_Result",
@@ -3930,13 +3923,6 @@
                         "0002:RATING",
                         "2",
                         "ACT_Rating",
-                        "0"
-                    ],
-                    [
-                        "CALCULATE",
-                        "0002:REFFREQINPUT",
-                        "2",
-                        "ACT_RefFreqInput",
                         "0"
                     ],
                     [

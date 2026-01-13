@@ -310,7 +310,6 @@ void cSem1ModuleMeasProgram::generateVeinInterface()
                                             key = QString("ACT_RefFreqInput"),
                                             QString("Actual frequency input (internal)"),
                                             QVariant(getConfData()->m_sRefInput.m_sPar));
-    m_pRefFreqInput->setScpiInfo("CALCULATE", QString("%1:REFFREQINPUT").arg(modNr), SCPI::isQuery, m_pRefFreqInput->getName());
     m_pModule->m_veinModuleParameterMap[key] = m_pRefFreqInput; // and for the modules interface
 
     m_pUpperLimitPar = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
