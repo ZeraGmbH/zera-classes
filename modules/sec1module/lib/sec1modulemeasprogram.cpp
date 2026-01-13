@@ -287,7 +287,8 @@ void cSec1ModuleMeasProgram::generateVeinInterface()
 
     m_pTargetPar = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
                                             key = QString("PAR_Target"),
-                                            QString("REF pulses for 0% error - set automatically"),
+                                            QString("Reference pulses expected for 0% error\n"
+                                                    "Calculated automatically by: ReferencePulses = ReferenceConstant * NumberOfPulses / DUTConstant"),
                                             QVariant());
     m_pTargetPar->setScpiInfo("CALCULATE",QString("%1:TARGET").arg(modNr), SCPI::isQuery|SCPI::isCmdwP, m_pTargetPar->getName());
     m_pTargetPar->setValidator(new cIntValidator(1, 4294967295, 1));
@@ -330,7 +331,7 @@ void cSec1ModuleMeasProgram::generateVeinInterface()
     m_pMeasWait = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
                                            key = QString("PAR_MeasWait"),
                                            QString("Multiple measurements: Pause\n"
-                                                   "* Seconds to wait between measurements"),
+                                                   "Seconds to wait between measurements"),
                                            QVariant((int)0));
     m_pMeasWait->setScpiInfo("CALCULATE", QString("%1:MWAIT").arg(modNr), SCPI::isQuery|SCPI::isCmdwP, m_pMeasWait->getName());
     m_pMeasWait->setValidator(new cIntValidator(0, std::numeric_limits<int>::max()/1000 /* ms */, 1));

@@ -211,7 +211,7 @@ void cSpm1ModuleMeasProgram::generateVeinInterface()
     m_pTargetedPar = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
                                            key = QString("PAR_Targeted"),
                                            QString(
-                                               "Mode: How to stop measurement\n"
+                                               "Mode (how to stop measurement):\n"
                                                "0: Start/Stop (stop manually)\n"
                                                "1: Duration (stop automatic)"),
                                            QVariant((int)0));

@@ -214,9 +214,9 @@ void cSem1ModuleMeasProgram::generateVeinInterface()
     m_pTargetedPar = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
                                            key = QString("PAR_Targeted"),
                                            QString(
-                                            "Mode: How to stop measurement\n"
-                                            "0: Start/Stop (stop manually)\n"
-                                            "1: Duration (stop automatic)"),
+                                               "Mode (how to stop measurement):\n"
+                                               "0: Start/Stop (stop manually)\n"
+                                               "1: Duration (stop automatic)"),
                                            QVariant((int)0));
     m_pTargetedPar->setScpiInfo("CALCULATE", QString("%1:MODE").arg(modNr), SCPI::isQuery|SCPI::isCmdwP, m_pTargetedPar->getName());
     m_pTargetedPar->setValidator(new cIntValidator(0,1,1));

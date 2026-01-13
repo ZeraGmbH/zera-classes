@@ -3555,7 +3555,7 @@
                     }
                 },
                 "PAR_MeasWait": {
-                    "Description": "Multiple measurements: Pause\n* Seconds to wait between measurements",
+                    "Description": "Multiple measurements: Pause\nSeconds to wait between measurements",
                     "Unit": "s",
                     "Validation": {
                         "Data": [
@@ -3602,7 +3602,7 @@
                     }
                 },
                 "PAR_Target": {
-                    "Description": "REF pulses for 0% error - set automatically",
+                    "Description": "Reference pulses expected for 0% error\nCalculated automatically by: ReferencePulses = ReferenceConstant * NumberOfPulses / DUTConstant",
                     "Validation": {
                         "Data": [
                             1,
@@ -4131,7 +4131,7 @@
                     }
                 },
                 "PAR_MeasWait": {
-                    "Description": "Multiple measurements: Pause\n* Seconds to wait between measurements",
+                    "Description": "Multiple measurements: Pause\nSeconds to wait between measurements",
                     "Unit": "s",
                     "Validation": {
                         "Data": [
@@ -4178,7 +4178,7 @@
                     }
                 },
                 "PAR_Target": {
-                    "Description": "REF pulses for 0% error - set automatically",
+                    "Description": "Reference pulses expected for 0% error\nCalculated automatically by: ReferencePulses = ReferenceConstant * NumberOfPulses / DUTConstant",
                     "Validation": {
                         "Data": [
                             1,
@@ -5149,7 +5149,7 @@
                     }
                 },
                 "PAR_Targeted": {
-                    "Description": "Mode: How to stop measurement\n0: Start/Stop (stop manually)\n1: Duration (stop automatic)",
+                    "Description": "Mode (how to stop measurement):\n0: Start/Stop (stop manually)\n1: Duration (stop automatic)",
                     "Validation": {
                         "Data": [
                             0,
