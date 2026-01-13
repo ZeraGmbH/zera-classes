@@ -937,31 +937,31 @@ void cSec1ModuleMeasProgram::computeDependencies()
 {
     cSec1ModuleConfigData *confData = getConfData();
     QString mode = confData->m_sMode.m_sPar;
-    double constant = confData->m_fDutConstant.m_fPar; // assumed I/kxxx because all computation is based on this
+    double dutConstant = confData->m_fDutConstant.m_fPar; // assumed I/kxxx because all computation is based on this
     bool energyPerImpulse = m_sDutConstantUnit.contains(QString("/I"));
 
     if (energyPerImpulse)
-        constant = (1.0/constant) * 1000.0; // if xxx/I we calculate in I/kxxx
+        dutConstant = (1.0/dutConstant) * 1000.0; // if xxx/I we calculate in I/kxxx
 
-    // We can be sure DUT constant is in I/kxxx here. Therefor the constant is scaled here in case
+    // We can be sure dutConstant is in I/kxxx here. Therefore dutConstant is scaled here in case
     // an instrument transformer is used.
-    constant=constant*m_dutConstantScalingMem;
+    dutConstant = dutConstant * m_dutConstantScalingMem;
 
     if (mode == "mrate") {
         // we calculate the new target value
-        confData->m_nTarget.m_nPar = floor(confData->m_nMRate.m_nPar * confData->m_fRefConstant.m_fPar / constant);
-        confData->m_fEnergy.m_fPar = confData->m_nMRate.m_nPar / constant;
+        confData->m_nTarget.m_nPar = floor(confData->m_nMRate.m_nPar * confData->m_fRefConstant.m_fPar / dutConstant);
+        confData->m_fEnergy.m_fPar = confData->m_nMRate.m_nPar / dutConstant;
     }
     else if (mode == "energy") {
         // we calcute the new mrate and target
-        confData->m_nMRate.m_nPar = ceil(constant * confData->m_fEnergy.m_fPar);
-        confData->m_nTarget.m_nPar = floor(confData->m_nMRate.m_nPar * confData->m_fRefConstant.m_fPar / constant);
+        confData->m_nMRate.m_nPar = ceil(dutConstant * confData->m_fEnergy.m_fPar);
+        confData->m_nTarget.m_nPar = floor(confData->m_nMRate.m_nPar * confData->m_fRefConstant.m_fPar / dutConstant);
     }
     else if (mode == "target") {
-        constant = confData->m_nMRate.m_nPar * confData->m_fRefConstant.m_fPar / confData->m_nTarget.m_nPar;
+        dutConstant = confData->m_nMRate.m_nPar * confData->m_fRefConstant.m_fPar / confData->m_nTarget.m_nPar;
         if (energyPerImpulse)
-            constant = (1.0/constant) * 1000.0;
-        confData->m_fDutConstant.m_fPar = constant;
+            dutConstant = (1.0/dutConstant) * 1000.0;
+        confData->m_fDutConstant.m_fPar = dutConstant;
         confData->m_fEnergy.m_fPar = confData->m_nMRate.m_nPar / confData->m_fDutConstant.m_fPar;
     }
 }
