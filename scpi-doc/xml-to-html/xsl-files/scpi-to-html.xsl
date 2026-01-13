@@ -400,7 +400,6 @@
 
       <h1 id="ErrorCalculators"><xsl:value-of select="$ErrorCalculators"/></h1>
       <xsl:call-template name="ErrorCalculators">
-          <xsl:with-param name="Prosa" select="document(concat($ProsaFolder, 'error-calculators.html'))"/>
           <xsl:with-param name="ProsaSec1" select="document(concat($ProsaFolder, 'error-calculators-sec1.html'))"/>
           <xsl:with-param name="ProsaSec2" select="document(concat($ProsaFolder, 'error-calculators-sec2.html'))"/>
           <xsl:with-param name="ProsaConfig" select="document(concat($ProsaFolder, 'error-calculators-config.html'))"/>

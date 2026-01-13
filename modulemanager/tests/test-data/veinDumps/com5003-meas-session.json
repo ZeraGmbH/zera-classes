@@ -3315,7 +3315,7 @@
                     "Unit": "kWh"
                 },
                 "ACT_EnergyFinal": {
-                    "Description": "Energy of last measurement",
+                    "Description": "Energy of last measurement completed",
                     "Unit": "kWh"
                 },
                 "ACT_MeasNum": {
@@ -3331,7 +3331,7 @@
                     "Description": "Multiple measurements: JSON result array / statistics"
                 },
                 "ACT_Progress": {
-                    "Description": "Progress information"
+                    "Description": "Progress:\nQuery the progress of current measurement. Range is from 0 [%] to 100 [%]."
                 },
                 "ACT_Rating": {
                     "Description": "Evaluation last measurement"
@@ -3340,7 +3340,7 @@
                     "Description": "Actual frequency input (internal)"
                 },
                 "ACT_Result": {
-                    "Description": "Result of last measurement"
+                    "Description": "Result:\nError value in [%] of the last measurement completed."
                 },
                 "ACT_StartTime": {
                     "Description": "Last measurement (sequence): Start time (dd-MM-yyyy HH:mm:ss)"
@@ -3366,7 +3366,7 @@
                     }
                 },
                 "PAR_Continuous": {
-                    "Description": "Enables/disable continuous measurement",
+                    "Description": "Continuous measurement:\n0: disabled\n1: enabled",
                     "Validation": {
                         "Data": [
                             0,
@@ -3377,7 +3377,7 @@
                     }
                 },
                 "PAR_DUTConstUnit": {
-                    "Description": "DUT constant unit",
+                    "Description": "DUT constant unit:\nValid values depend on power type selected:\n* Active power (P): 'I/kWh', 'Wh/I'\n* Reactive power (Q): 'I/kVarh', 'Varh/I'\n* Apparent power (S): 'I/kVAh', 'VAh/I'",
                     "Validation": {
                         "Data": [
                             "I/kWh",
@@ -3387,7 +3387,7 @@
                     }
                 },
                 "PAR_DutConstant": {
-                    "Description": "DUT constant",
+                    "Description": "DUT constant\nThe meter constant of the device under test can be queried an set here.",
                     "Validation": {
                         "Data": [
                             1e-06,
@@ -3398,7 +3398,7 @@
                     }
                 },
                 "PAR_DutConstantAuto": {
-                    "Description": "Calculate DUT constant to get ~0% error:\n* Writing this value to 1 calculates the DUT meter constant for minimum error from the last measurement.\n* Value read is 0",
+                    "Description": "Calculate DUT constant:\n* Writing 1 calculates the DUT meter constant from last measurement.\n* Value read is 0",
                     "Validation": {
                         "Data": [
                             0,
@@ -3437,7 +3437,7 @@
                     }
                 },
                 "PAR_DutInput": {
-                    "Description": "DUT input",
+                    "Description": "DUT input\nThe source of the device under test can be queried and selected.",
                     "Validation": {
                         "Data": [
                             "SC1",
@@ -3520,7 +3520,7 @@
                     "Description": "Reference meter constant"
                 },
                 "PAR_RefInput": {
-                    "Description": "Reference input: Power module name",
+                    "Description": "Reference input:\nThe reference power source (powermodule) can be queried and selected.",
                     "Validation": {
                         "Data": [
                             "P",
@@ -3889,7 +3889,7 @@
                     "Unit": "kWh"
                 },
                 "ACT_EnergyFinal": {
-                    "Description": "Energy of last measurement",
+                    "Description": "Energy of last measurement completed",
                     "Unit": "kWh"
                 },
                 "ACT_MeasNum": {
@@ -3905,7 +3905,7 @@
                     "Description": "Multiple measurements: JSON result array / statistics"
                 },
                 "ACT_Progress": {
-                    "Description": "Progress information"
+                    "Description": "Progress:\nQuery the progress of current measurement. Range is from 0 [%] to 100 [%]."
                 },
                 "ACT_Rating": {
                     "Description": "Evaluation last measurement"
@@ -3914,7 +3914,7 @@
                     "Description": "Actual frequency input (internal)"
                 },
                 "ACT_Result": {
-                    "Description": "Result of last measurement"
+                    "Description": "Result:\nError value in [%] of the last measurement completed."
                 },
                 "ACT_StartTime": {
                     "Description": "Last measurement (sequence): Start time (dd-MM-yyyy HH:mm:ss)"
@@ -3940,7 +3940,7 @@
                     }
                 },
                 "PAR_Continuous": {
-                    "Description": "Enables/disable continuous measurement",
+                    "Description": "Continuous measurement:\n0: disabled\n1: enabled",
                     "Validation": {
                         "Data": [
                             0,
@@ -3951,7 +3951,7 @@
                     }
                 },
                 "PAR_DUTConstUnit": {
-                    "Description": "DUT constant unit",
+                    "Description": "DUT constant unit:\nValid values depend on power type selected:\n* Active power (P): 'I/kWh', 'Wh/I'\n* Reactive power (Q): 'I/kVarh', 'Varh/I'\n* Apparent power (S): 'I/kVAh', 'VAh/I'",
                     "Validation": {
                         "Data": [
                             "I/kWh",
@@ -3961,7 +3961,7 @@
                     }
                 },
                 "PAR_DutConstant": {
-                    "Description": "DUT constant",
+                    "Description": "DUT constant\nThe meter constant of the device under test can be queried an set here.",
                     "Validation": {
                         "Data": [
                             1e-06,
@@ -3972,7 +3972,7 @@
                     }
                 },
                 "PAR_DutConstantAuto": {
-                    "Description": "Calculate DUT constant to get ~0% error:\n* Writing this value to 1 calculates the DUT meter constant for minimum error from the last measurement.\n* Value read is 0",
+                    "Description": "Calculate DUT constant:\n* Writing 1 calculates the DUT meter constant from last measurement.\n* Value read is 0",
                     "Validation": {
                         "Data": [
                             0,
@@ -4011,7 +4011,7 @@
                     }
                 },
                 "PAR_DutInput": {
-                    "Description": "DUT input",
+                    "Description": "DUT input\nThe source of the device under test can be queried and selected.",
                     "Validation": {
                         "Data": [
                             "Fin1",
@@ -4096,7 +4096,7 @@
                     "Description": "Reference meter constant"
                 },
                 "PAR_RefInput": {
-                    "Description": "Reference input: Power module name",
+                    "Description": "Reference input:\nThe reference power source (powermodule) can be queried and selected.",
                     "Validation": {
                         "Data": [
                             "P",
@@ -4984,7 +4984,7 @@
                     "Description": "Actual frequency input (internal)"
                 },
                 "ACT_Result": {
-                    "Description": "Result of last measurement",
+                    "Description": "Result:\nError value in [%] of the last measurement completed.",
                     "Unit": "%"
                 },
                 "ACT_StartTime": {
@@ -5042,7 +5042,7 @@
                     "Description": "Reference meter constant"
                 },
                 "PAR_RefInput": {
-                    "Description": "Reference input: Power module name",
+                    "Description": "Reference input:\nThe reference power source (powermodule) can be queried and selected.",
                     "Validation": {
                         "Data": [
                             "P",
@@ -5064,7 +5064,7 @@
                     }
                 },
                 "PAR_T0Input": {
-                    "Description": "Start value",
+                    "Description": "Energy register: Start value",
                     "Unit": "kWh",
                     "Validation": {
                         "Data": [
@@ -5076,7 +5076,7 @@
                     }
                 },
                 "PAR_T1input": {
-                    "Description": "End value",
+                    "Description": "Energy register: End value",
                     "Unit": "kWh",
                     "Validation": {
                         "Data": [
@@ -5088,7 +5088,7 @@
                     }
                 },
                 "PAR_TXUNIT": {
-                    "Description": "Energy unit",
+                    "Description": "Energy unit:\nValid values depend on power type selected:\n* Active power (P): 'MWh', 'kWh', 'Wh'\n* Reactive power (Q): 'MVarh', 'kVarh', 'Varh'\n* Apparent power (S): 'MVAh', 'kVAh', 'VAh'",
                     "Validation": {
                         "Data": [
                             "MWh",

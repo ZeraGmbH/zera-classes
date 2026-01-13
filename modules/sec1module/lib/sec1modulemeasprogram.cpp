@@ -186,14 +186,16 @@ void cSec1ModuleMeasProgram::generateVeinInterface()
 
     m_pDutInputPar = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
                                               key = QString("PAR_DutInput"),
-                                              QString("DUT input"),
+                                              QString("DUT input\n"
+                                                      "The source of the device under test can be queried and selected."),
                                               QVariant("Unknown"));
     m_pDutInputPar->setScpiInfo("CALCULATE", QString("%1:DUTSOURCE").arg(modNr), SCPI::isQuery|SCPI::isCmdwP, m_pDutInputPar->getName());
     m_pModule->m_veinModuleParameterMap[key] = m_pDutInputPar; // for modules use
 
     m_pRefInputPar = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
                                            key = QString("PAR_RefInput"),
-                                           QString("Reference input: Power module name"),
+                                           QString("Reference input:\n"
+                                                   "The reference power source (powermodule) can be queried and selected."),
                                            QVariant("Unknown"));
     m_pRefInputPar->setScpiInfo("CALCULATE", QString("%1:REFSOURCE").arg(modNr), SCPI::isQuery|SCPI::isCmdwP, m_pRefInputPar->getName());
     m_pModule->m_veinModuleParameterMap[key] = m_pRefInputPar; // for modules use
@@ -207,7 +209,8 @@ void cSec1ModuleMeasProgram::generateVeinInterface()
 
     m_pDutConstantPar = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
                                                  key = QString("PAR_DutConstant"),
-                                                 QString("DUT constant"),
+                                                 QString("DUT constant\n"
+                                                         "The meter constant of the device under test can be queried an set here."),
                                                  QVariant((double)0.0));
     m_pDutConstantPar->setScpiInfo("CALCULATE", QString("%1:DUTCONSTANT").arg(modNr), SCPI::isQuery|SCPI::isCmdwP, m_pDutConstantPar->getName());
     m_dutConstValidator = new cDoubleValidator(1e-6, 1.0e20, 1e-6);
@@ -216,8 +219,8 @@ void cSec1ModuleMeasProgram::generateVeinInterface()
 
     m_pDutConstantAuto = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
                                             key = QString("PAR_DutConstantAuto"),
-                                            QString("Calculate DUT constant to get ~0% error:\n"
-                                                    "* Writing this value to 1 calculates the DUT meter constant for minimum error from the last measurement.\n"
+                                            QString("Calculate DUT constant:\n"
+                                                    "* Writing 1 calculates the DUT meter constant from last measurement.\n"
                                                     "* Value read is 0"),
                                             QVariant((int)0));
     m_pDutConstantAuto->setScpiInfo("CALCULATE", QString("%1:AUTODUTCONSTANT").arg(modNr), SCPI::isQuery|SCPI::isCmdwP, m_pDutConstantAuto->getName());
@@ -272,7 +275,11 @@ void cSec1ModuleMeasProgram::generateVeinInterface()
 
     m_pDutConstantUnitPar = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
                                                      key = QString("PAR_DUTConstUnit"),
-                                                     QString("DUT constant unit"),
+                                                     QString("DUT constant unit:\n"
+                                                             "Valid values depend on power type selected:\n"
+                                                             "* Active power (P): 'I/kWh', 'Wh/I'\n"
+                                                             "* Reactive power (Q): 'I/kVarh', 'Varh/I'\n"
+                                                             "* Apparent power (S): 'I/kVAh', 'VAh/I'"),
                                                      QVariant("Unknown"));
     m_pDutConstantUnitPar->setScpiInfo("CALCULATE", QString("%1:DCUNIT").arg(modNr), SCPI::isQuery|SCPI::isCmdwP, m_pDutConstantUnitPar->getName());
     m_pModule->m_veinModuleParameterMap[key] = m_pDutConstantUnitPar; // for modules use
@@ -314,7 +321,9 @@ void cSec1ModuleMeasProgram::generateVeinInterface()
 
     m_pContinuousPar = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
                                                 key = QString("PAR_Continuous"),
-                                                QString("Enables/disable continuous measurement"),
+                                                QString("Continuous measurement:\n"
+                                                        "0: disabled\n"
+                                                        "1: enabled"),
                                                 QVariant(int(0)));
     m_pContinuousPar->setScpiInfo("CALCULATE", QString("%1:CONTINUOUS").arg(modNr), SCPI::isQuery|SCPI::isCmdwP, m_pContinuousPar->getName());
     m_pContinuousPar->setValidator(new cIntValidator(0, 1, 1));
@@ -363,7 +372,8 @@ void cSec1ModuleMeasProgram::generateVeinInterface()
 
     m_pProgressAct = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
                                               key = QString("ACT_Progress"),
-                                              QString("Progress information"),
+                                              QString("Progress:\n"
+                                                      "Query the progress of current measurement. Range is from 0 [%] to 100 [%]."),
                                               QVariant((double) 0.0));
     m_pProgressAct->setScpiInfo("CALCULATE", QString("%1:PROGRESS").arg(modNr), SCPI::isQuery, m_pProgressAct->getName());
     m_pModule->m_veinModuleParameterMap[key] = m_pProgressAct; // and for the modules interface
@@ -384,14 +394,15 @@ void cSec1ModuleMeasProgram::generateVeinInterface()
 
     m_pEnergyFinalAct = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
                                                  key = QString("ACT_EnergyFinal"),
-                                                 QString("Energy of last measurement"),
+                                                 QString("Energy of last measurement completed"),
                                                  QVariant((double) 0.0));
     m_pEnergyFinalAct->setScpiInfo("CALCULATE", QString("%1:ENFINAL").arg(modNr), SCPI::isQuery, m_pEnergyFinalAct->getName());
     m_pModule->m_veinModuleParameterMap[key] = m_pEnergyFinalAct; // and for the modules interface
 
     m_pResultAct = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
                                             key = QString("ACT_Result"),
-                                            QString("Result of last measurement"),
+                                            QString("Result:\n"
+                                                    "Error value in [%] of the last measurement completed."),
                                             QVariant((double) 0.0));
     m_pResultAct->setScpiInfo("CALCULATE",  QString("%1:RESULT").arg(modNr), SCPI::isQuery, m_pResultAct->getName());
     m_pModule->m_veinModuleParameterMap[key] = m_pResultAct; // and for the modules interface

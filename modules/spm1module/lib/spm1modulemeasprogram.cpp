@@ -196,7 +196,8 @@ void cSpm1ModuleMeasProgram::generateVeinInterface()
 
     m_pRefInputPar = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
                                            key = QString("PAR_RefInput"),
-                                           QString("Reference input: Power module name"),
+                                           QString("Reference input:\n"
+                                                   "The reference power source (powermodule) can be queried and selected."),
                                            QVariant("Unknown"));
     m_pRefInputPar->setScpiInfo("CALCULATE", QString("%1:REFSOURCE").arg(modNr), SCPI::isQuery|SCPI::isCmdwP, m_pRefInputPar->getName());
     m_pModule->m_veinModuleParameterMap[key] = m_pRefInputPar; // for modules use
@@ -230,7 +231,7 @@ void cSpm1ModuleMeasProgram::generateVeinInterface()
 
     m_pT0InputPar = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
                                              key = QString("PAR_T0Input"),
-                                             QString("Start value"),
+                                             QString("Power register: Start value"),
                                              QVariant((double)0.0));
     m_pT0InputPar->setScpiInfo("CALCULATE", QString("%1:T0INPUT").arg(modNr), SCPI::isQuery|SCPI::isCmdwP, m_pT0InputPar->getName());
     m_pT0InputPar->setValidator(new cDoubleValidator(0.0, 1.0e7, 1e-7));
@@ -238,7 +239,7 @@ void cSpm1ModuleMeasProgram::generateVeinInterface()
 
     m_pT1InputPar = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
                                              key = QString("PAR_T1input"),
-                                             QString("End value"),
+                                             QString("Power register: End value"),
                                              QVariant((double)0.0));
     m_pT1InputPar->setScpiInfo("CALCULATE",  QString("%1:T1INPUT").arg(modNr), SCPI::isQuery|SCPI::isCmdwP, m_pT1InputPar->getName());
     m_pT1InputPar->setValidator(new cDoubleValidator(0.0, 1.0e7, 1e-7));
@@ -246,7 +247,11 @@ void cSpm1ModuleMeasProgram::generateVeinInterface()
 
     m_pInputUnitPar = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
                                                key = QString("PAR_TXUNIT"),
-                                               QString("Energy unit"),
+                                               QString("Power unit:\n"
+                                                       "Valid values depend on power type selected:\n"
+                                                       "* Active power (P): 'MW', 'kW', 'W'\n"
+                                                       "* Reactive power (Q): 'MVar', 'kVar', 'Var'\n"
+                                                       "* Apparent power (S): 'MVA', 'kVA', 'VA'"),
                                                QVariant("Unknown"));
     m_pInputUnitPar->setScpiInfo("CALCULATE", QString("%1:TXUNIT").arg(modNr), SCPI::isQuery|SCPI::isCmdwP, m_pInputUnitPar->getName());
     m_pModule->m_veinModuleParameterMap[key] = m_pInputUnitPar; // for modules use
@@ -297,7 +302,8 @@ void cSpm1ModuleMeasProgram::generateVeinInterface()
 
     m_pResultAct = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
                                             key = QString("ACT_Result"),
-                                            QString("Result of last measurement"),
+                                            QString("Result:\n"
+                                                    "Error value in [%] of the last measurement completed."),
                                             QVariant((double) 0.0));
     m_pResultAct->setScpiInfo("CALCULATE", QString("%1:RESULT").arg(modNr), SCPI::isQuery, m_pResultAct->getName());
     m_pResultAct->setUnit("%");
