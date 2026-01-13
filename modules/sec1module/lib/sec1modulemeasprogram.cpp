@@ -216,7 +216,9 @@ void cSec1ModuleMeasProgram::generateVeinInterface()
 
     m_pDutConstantAuto = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
                                             key = QString("PAR_DutConstantAuto"),
-                                            QString("Calculate DUT constant to get ~0% error"),
+                                            QString("Calculate DUT constant to get ~0% error:\n"
+                                                    "* Writing this value to 1 calculates the DUT meter constant for minimum error from the last measurement.\n"
+                                                    "* Value read is 0"),
                                             QVariant((int)0));
     m_pDutConstantAuto->setScpiInfo("CALCULATE", QString("%1:AUTODUTCONSTANT").arg(modNr), SCPI::isQuery|SCPI::isCmdwP, m_pDutConstantAuto->getName());
     m_pDutConstantAuto->setValidator(new cIntValidator(0, 1, 1));
@@ -224,7 +226,7 @@ void cSec1ModuleMeasProgram::generateVeinInterface()
 
     m_pDutConstantUScaleNum = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
                                                  key = QString("PAR_DutConstantUScaleNum"),
-                                                 QString("Scale the dut constant in case tranformers are used (U fraction numerator)"),
+                                                 QString("Scale the dut constant in case transformers are used (U fraction numerator)"),
                                                  QVariant("1"));
     m_pDutConstantUScaleNum->setScpiInfo("CONFIGURATION", QString("%1:DUTCONSTANTUSCALENUM").arg(modNr), SCPI::isQuery|SCPI::isCmdwP, key);
     //Match x or x/sqrt(3)
@@ -234,7 +236,7 @@ void cSec1ModuleMeasProgram::generateVeinInterface()
 
     m_pDutConstantUScaleDenom = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
                                                  key = QString("PAR_DutConstantUScaleDenom"),
-                                                 QString("Scale the dut constant in case tranformers are used (U fraction denominator)"),
+                                                 QString("Scale the dut constant in case transformers are used (U fraction denominator)"),
                                                  QVariant("1"));
     m_pDutConstantUScaleDenom->setScpiInfo("CONFIGURATION", QString("%1:DUTCONSTANTUSCALEDENOM").arg(modNr), SCPI::isQuery|SCPI::isCmdwP, key);
     //Match x or x/sqrt(3)
@@ -243,7 +245,7 @@ void cSec1ModuleMeasProgram::generateVeinInterface()
 
     m_pDutConstantIScaleNum = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
                                                  key = QString("PAR_DutConstantIScaleNum"),
-                                                 QString("Scale the dut constant in case tranformers are used (I fraction numerator)"),
+                                                 QString("Scale the dut constant in case transformers are used (I fraction numerator)"),
                                                  QVariant("1"));
     m_pDutConstantIScaleNum->setScpiInfo("CONFIGURATION", QString("%1:DUTCONSTANTISCALENUM").arg(modNr), SCPI::isQuery|SCPI::isCmdwP, key);
     //Match x or x/sqrt(3)
@@ -252,7 +254,7 @@ void cSec1ModuleMeasProgram::generateVeinInterface()
 
     m_pDutConstantIScaleDenom = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
                                                  key = QString("PAR_DutConstantIScaleDenom"),
-                                                 QString("Scale the dut constant in case tranformers are used (I fraction denominator)"),
+                                                 QString("Scale the dut constant in case transformers are used (I fraction denominator)"),
                                                  QVariant("1"));
     m_pDutConstantIScaleDenom->setScpiInfo("CONFIGURATION", QString("%1:DUTCONSTANTISCALEDENOM").arg(modNr), SCPI::isQuery|SCPI::isCmdwP, key);
     //Match x or x/sqrt(3)
@@ -261,7 +263,7 @@ void cSec1ModuleMeasProgram::generateVeinInterface()
 
     m_pDutTypeMeasurePoint = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
                                                  key = QString("PAR_DutTypeMeasurePoint"),
-                                                 QString("Scale the dut constant in case tranformers are used (Measurement point selection)"),
+                                                 QString("Scale the dut constant in case transformers are used (Measurement point selection)"),
                                                  QVariant("CsIsUs"));
     m_pDutTypeMeasurePoint->setScpiInfo("CONFIGURATION", QString("%1:DUTCONSTANTMEASUREPOINT").arg(modNr), SCPI::isQuery|SCPI::isCmdwP, key);
     //Match x or x/sqrt(3)
@@ -327,7 +329,8 @@ void cSec1ModuleMeasProgram::generateVeinInterface()
 
     m_pMeasWait = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
                                            key = QString("PAR_MeasWait"),
-                                           QString("Multiple measurements: Seconds to wait between measurements"),
+                                           QString("Multiple measurements: Pause\n"
+                                                   "* Seconds to wait between measurements"),
                                            QVariant((int)0));
     m_pMeasWait->setScpiInfo("CALCULATE", QString("%1:MWAIT").arg(modNr), SCPI::isQuery|SCPI::isCmdwP, m_pMeasWait->getName());
     m_pMeasWait->setValidator(new cIntValidator(0, std::numeric_limits<int>::max()/1000 /* ms */, 1));

@@ -211,9 +211,9 @@ void cSpm1ModuleMeasProgram::generateVeinInterface()
     m_pTargetedPar = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
                                            key = QString("PAR_Targeted"),
                                            QString(
-                                               "Stop mode:\n"
-                                               "0: Start/Stop\n"
-                                               "1: Duration"),
+                                               "Mode: How to stop measurement\n"
+                                               "0: Start/Stop (stop manually)\n"
+                                               "1: Duration (stop automatic)"),
                                            QVariant((int)0));
     m_pTargetedPar->setScpiInfo("CALCULATE", QString("%1:MODE").arg(modNr), SCPI::isQuery|SCPI::isCmdwP, m_pTargetedPar->getName());
     m_pTargetedPar->setValidator(new cIntValidator(0,1,1));
@@ -230,7 +230,7 @@ void cSpm1ModuleMeasProgram::generateVeinInterface()
 
     m_pT0InputPar = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
                                              key = QString("PAR_T0Input"),
-                                             QString("Start energy value"),
+                                             QString("Start value"),
                                              QVariant((double)0.0));
     m_pT0InputPar->setScpiInfo("CALCULATE", QString("%1:T0INPUT").arg(modNr), SCPI::isQuery|SCPI::isCmdwP, m_pT0InputPar->getName());
     m_pT0InputPar->setValidator(new cDoubleValidator(0.0, 1.0e7, 1e-7));
@@ -238,7 +238,7 @@ void cSpm1ModuleMeasProgram::generateVeinInterface()
 
     m_pT1InputPar = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
                                              key = QString("PAR_T1input"),
-                                             QString("Final energy value"),
+                                             QString("End value"),
                                              QVariant((double)0.0));
     m_pT1InputPar->setScpiInfo("CALCULATE",  QString("%1:T1INPUT").arg(modNr), SCPI::isQuery|SCPI::isCmdwP, m_pT1InputPar->getName());
     m_pT1InputPar->setValidator(new cDoubleValidator(0.0, 1.0e7, 1e-7));

@@ -3663,7 +3663,7 @@
                     }
                 },
                 "PAR_DutConstantAuto": {
-                    "Description": "Calculate DUT constant to get ~0% error",
+                    "Description": "Calculate DUT constant to get ~0% error:\n* Writing this value to 1 calculates the DUT meter constant for minimum error from the last measurement.\n* Value read is 0",
                     "Validation": {
                         "Data": [
                             0,
@@ -3674,28 +3674,28 @@
                     }
                 },
                 "PAR_DutConstantIScaleDenom": {
-                    "Description": "Scale the dut constant in case tranformers are used (I fraction denominator)",
+                    "Description": "Scale the dut constant in case transformers are used (I fraction denominator)",
                     "Validation": {
                         "Data": "^[1-9][0-9]*?$",
                         "Type": "REGEX"
                     }
                 },
                 "PAR_DutConstantIScaleNum": {
-                    "Description": "Scale the dut constant in case tranformers are used (I fraction numerator)",
+                    "Description": "Scale the dut constant in case transformers are used (I fraction numerator)",
                     "Validation": {
                         "Data": "^[1-9][0-9]*$",
                         "Type": "REGEX"
                     }
                 },
                 "PAR_DutConstantUScaleDenom": {
-                    "Description": "Scale the dut constant in case tranformers are used (U fraction denominator)",
+                    "Description": "Scale the dut constant in case transformers are used (U fraction denominator)",
                     "Validation": {
                         "Data": "^[1-9][0-9]*(\\/sqrt\\(3\\))?$",
                         "Type": "REGEX"
                     }
                 },
                 "PAR_DutConstantUScaleNum": {
-                    "Description": "Scale the dut constant in case tranformers are used (U fraction numerator)",
+                    "Description": "Scale the dut constant in case transformers are used (U fraction numerator)",
                     "Validation": {
                         "Data": "^[1-9][0-9]*(\\/sqrt\\(3\\))?$",
                         "Type": "REGEX"
@@ -3712,7 +3712,7 @@
                     }
                 },
                 "PAR_DutTypeMeasurePoint": {
-                    "Description": "Scale the dut constant in case tranformers are used (Measurement point selection)",
+                    "Description": "Scale the dut constant in case transformers are used (Measurement point selection)",
                     "Validation": {
                         "Data": [
                             "CpIpUp",
@@ -3770,7 +3770,7 @@
                     }
                 },
                 "PAR_MeasWait": {
-                    "Description": "Multiple measurements: Seconds to wait between measurements",
+                    "Description": "Multiple measurements: Pause\n* Seconds to wait between measurements",
                     "Unit": "s",
                     "Validation": {
                         "Data": [
@@ -5482,7 +5482,7 @@
                     }
                 },
                 "PAR_T0Input": {
-                    "Description": "Start energy value",
+                    "Description": "Start value",
                     "Unit": "kWh",
                     "Validation": {
                         "Data": [
@@ -5494,7 +5494,7 @@
                     }
                 },
                 "PAR_T1input": {
-                    "Description": "Final energy value",
+                    "Description": "End value",
                     "Unit": "kWh",
                     "Validation": {
                         "Data": [
@@ -5517,7 +5517,7 @@
                     }
                 },
                 "PAR_Targeted": {
-                    "Description": "Stop mode:\n0: Start/Stop\n1: Duration",
+                    "Description": "Mode: How to stop measurement\n0: Start/Stop (stop manually)\n1: Duration (stop automatic)",
                     "Validation": {
                         "Data": [
                             0,
@@ -5817,7 +5817,7 @@
                     }
                 },
                 "PAR_T0Input": {
-                    "Description": "Start energy value",
+                    "Description": "Start value",
                     "Unit": "kW",
                     "Validation": {
                         "Data": [
@@ -5829,7 +5829,7 @@
                     }
                 },
                 "PAR_T1input": {
-                    "Description": "Final energy value",
+                    "Description": "End value",
                     "Unit": "kW",
                     "Validation": {
                         "Data": [
@@ -5852,7 +5852,7 @@
                     }
                 },
                 "PAR_Targeted": {
-                    "Description": "Stop mode:\n0: Start/Stop\n1: Duration",
+                    "Description": "Mode: How to stop measurement\n0: Start/Stop (stop manually)\n1: Duration (stop automatic)",
                     "Validation": {
                         "Data": [
                             0,
