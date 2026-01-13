@@ -143,7 +143,7 @@ private:
     void initDutConstantUnit();
 
     void handleSECInterrupt();
-    void cmpDependencies();
+    void computeDependencies();
     void stopMeasurement(bool bAbort);
 
     const QString multiResultToJson();

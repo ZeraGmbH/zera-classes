@@ -847,7 +847,7 @@ cSec1ModuleConfigData *cSec1ModuleMeasProgram::getConfData()
 
 void cSec1ModuleMeasProgram::setInterfaceComponents()
 {
-    cmpDependencies(); // dependant on mode we calculate parameters by ourself
+    computeDependencies(); // dependant on mode we calculate parameters by ourself
 
     m_pDutInputPar->setValue(QVariant(m_dutInputDictionary.getAlias(getConfData()->m_sDutInput.m_sPar)));
     m_pRefInputPar->setValue(QVariant(getRefInputDisplayString(getConfData()->m_sRefInput.m_sPar)));
@@ -932,7 +932,7 @@ void cSec1ModuleMeasProgram::handleSECInterrupt()
 }
 
 
-void cSec1ModuleMeasProgram::cmpDependencies()
+void cSec1ModuleMeasProgram::computeDependencies()
 {
 
     QString mode = getConfData()->m_sMode.m_sPar;
@@ -1621,7 +1621,7 @@ void cSec1ModuleMeasProgram::newDutConstantScale(QVariant value,const QString co
     }else{
         m_dutConstantScalingMem=1;
     }
-    cmpDependencies();
+    computeDependencies();
 
 }
 
