@@ -12,4 +12,5 @@ ESCAPED_DATA="$(echo "${cssContents}" | sed ':a;N;$!ba;s/\n/\\n/g' | sed 's/\$/\
 sed -i ':a;N;$!ba;s|<style></style>|<style>'"$ESCAPED_DATA"'</style>|g' "$5"
 
 # replace xml opaque string by html linefeed
-sed -i 's:___LF___:<br/>:g' $5
+sed -i 's:___LF___\*:<br/>\&nbsp;\&nbsp;\&nbsp;\&nbsp;\&bull;:g' $5
+sed -i 's:___LF___:<br/>\&nbsp;\&nbsp;\&nbsp;\&nbsp;:g' $5
