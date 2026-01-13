@@ -849,17 +849,18 @@ void cSec1ModuleMeasProgram::setInterfaceComponents()
 {
     computeDependencies(); // dependant on mode we calculate parameters by ourself
 
-    m_pDutInputPar->setValue(QVariant(m_dutInputDictionary.getAlias(getConfData()->m_sDutInput.m_sPar)));
-    m_pRefInputPar->setValue(QVariant(getRefInputDisplayString(getConfData()->m_sRefInput.m_sPar)));
-    m_pDutConstantPar->setValue(QVariant(getConfData()->m_fDutConstant.m_fPar));
-    m_pRefConstantPar->setValue(QVariant(getConfData()->m_fRefConstant.m_fPar));
-    m_pMRatePar->setValue(QVariant(getConfData()->m_nMRate.m_nPar));
-    m_pTargetPar->setValue(QVariant(getConfData()->m_nTarget.m_nPar));
-    m_pEnergyPar->setValue(QVariant(getConfData()->m_fEnergy.m_fPar));
+    cSec1ModuleConfigData *confData = getConfData();
+    m_pDutInputPar->setValue(QVariant(m_dutInputDictionary.getAlias(confData->m_sDutInput.m_sPar)));
+    m_pRefInputPar->setValue(QVariant(getRefInputDisplayString(confData->m_sRefInput.m_sPar)));
+    m_pDutConstantPar->setValue(QVariant(confData->m_fDutConstant.m_fPar));
+    m_pRefConstantPar->setValue(QVariant(confData->m_fRefConstant.m_fPar));
+    m_pMRatePar->setValue(QVariant(confData->m_nMRate.m_nPar));
+    m_pTargetPar->setValue(QVariant(confData->m_nTarget.m_nPar));
+    m_pEnergyPar->setValue(QVariant(confData->m_fEnergy.m_fPar));
     m_pProgressAct->setValue(QVariant(double(0.0)));
-    m_pUpperLimitPar->setValue(QVariant(getConfData()->m_fUpperLimit.m_fPar));
-    m_pLowerLimitPar->setValue(QVariant(getConfData()->m_fLowerLimit.m_fPar));
-    m_pResultUnit->setValue(QVariant(getConfData()->m_sResultUnit.m_sPar));
+    m_pUpperLimitPar->setValue(QVariant(confData->m_fUpperLimit.m_fPar));
+    m_pLowerLimitPar->setValue(QVariant(confData->m_fLowerLimit.m_fPar));
+    m_pResultUnit->setValue(QVariant(confData->m_sResultUnit.m_sPar));
 }
 
 
@@ -934,9 +935,9 @@ void cSec1ModuleMeasProgram::handleSECInterrupt()
 
 void cSec1ModuleMeasProgram::computeDependencies()
 {
-
-    QString mode = getConfData()->m_sMode.m_sPar;
-    double constant = getConfData()->m_fDutConstant.m_fPar; // assumed I/kxxx because all computation is based on this
+    cSec1ModuleConfigData *confData = getConfData();
+    QString mode = confData->m_sMode.m_sPar;
+    double constant = confData->m_fDutConstant.m_fPar; // assumed I/kxxx because all computation is based on this
     bool energyPerImpulse = m_sDutConstantUnit.contains(QString("/I"));
 
     if (energyPerImpulse)
@@ -948,20 +949,20 @@ void cSec1ModuleMeasProgram::computeDependencies()
 
     if (mode == "mrate") {
         // we calculate the new target value
-        getConfData()->m_nTarget.m_nPar = floor(getConfData()->m_nMRate.m_nPar * getConfData()->m_fRefConstant.m_fPar / constant);
-        getConfData()->m_fEnergy.m_fPar = getConfData()->m_nMRate.m_nPar / constant;
+        confData->m_nTarget.m_nPar = floor(confData->m_nMRate.m_nPar * confData->m_fRefConstant.m_fPar / constant);
+        confData->m_fEnergy.m_fPar = confData->m_nMRate.m_nPar / constant;
     }
     else if (mode == "energy") {
         // we calcute the new mrate and target
-        getConfData()->m_nMRate.m_nPar = ceil(constant * getConfData()->m_fEnergy.m_fPar);
-        getConfData()->m_nTarget.m_nPar = floor(getConfData()->m_nMRate.m_nPar * getConfData()->m_fRefConstant.m_fPar / constant);
+        confData->m_nMRate.m_nPar = ceil(constant * confData->m_fEnergy.m_fPar);
+        confData->m_nTarget.m_nPar = floor(confData->m_nMRate.m_nPar * confData->m_fRefConstant.m_fPar / constant);
     }
     else if (mode == "target") {
-        constant = getConfData()->m_nMRate.m_nPar * getConfData()->m_fRefConstant.m_fPar / getConfData()->m_nTarget.m_nPar;
+        constant = confData->m_nMRate.m_nPar * confData->m_fRefConstant.m_fPar / confData->m_nTarget.m_nPar;
         if (energyPerImpulse)
             constant = (1.0/constant) * 1000.0;
-        getConfData()->m_fDutConstant.m_fPar = constant;
-        getConfData()->m_fEnergy.m_fPar = getConfData()->m_nMRate.m_nPar / getConfData()->m_fDutConstant.m_fPar;
+        confData->m_fDutConstant.m_fPar = constant;
+        confData->m_fEnergy.m_fPar = confData->m_nMRate.m_nPar / confData->m_fDutConstant.m_fPar;
     }
 }
 
@@ -1801,6 +1802,4 @@ bool cSec1ModuleMeasProgram::found(QList<TRefInput> &list, QString searched)
     return false;
 }
 
-
 }
-
