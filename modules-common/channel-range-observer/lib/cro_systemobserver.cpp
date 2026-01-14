@@ -38,6 +38,18 @@ const QStringList SystemObserver::getChannelAliases() const
     return aliases;
 }
 
+const QString SystemObserver::getChannelNamesForMardownDoc() const
+{
+    const QStringList channelMNames = getChannelMNames();
+    QStringList markDownChannels;
+    for (int channelNo=0; channelNo<channelMNames.size(); channelNo++) {
+        const QString channelMName = channelMNames[channelNo];
+        ChannelPtr channel = getChannel(channelMName);
+        markDownChannels.append(QString("* **%1**: %2").arg(channelMName, channel->getAlias()));
+    }
+    return markDownChannels.join("\n");
+}
+
 const ChannelPtr SystemObserver::getChannel(QString channelMName) const
 {
     auto iter = m_channelMNameToChannel.constFind(channelMName);

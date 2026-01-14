@@ -17,6 +17,7 @@ public:
     void startFullScan();
     const QStringList getChannelMNames() const;
     const QStringList getChannelAliases() const;
+    const QString getChannelNamesForMardownDoc() const;
     const ChannelPtr getChannel(QString channelMName) const;
     const QString getChannelMName(QString alias) const;
     const int getSamplesPerPeriod() const;
