@@ -111,9 +111,11 @@ void cOsciModuleMeasProgram::generateVeinInterface()
     m_pModule->veinModuleMetaDataList.append(m_pOsciCountInfo);
 
     QString refChannelMNameConfigured = getConfData()->m_RefChannel.m_sPar;
+    const QString channelMarkdown = m_pModule->getSharedChannelRangeObserver()->getChannelNamesForMardownDoc();
     m_pRefChannelParameter = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
                                                    key = QString("PAR_RefChannel"),
-                                                   QString("Reference channel"),
+                                                   QString("Reference channel\n"
+                                                           "%1").arg(channelMarkdown),
                                                    refChannelMNameConfigured);
 
     m_pRefChannelParameter->setScpiInfo("CONFIGURATION","REFCHANNEL", SCPI::isQuery|SCPI::isCmdwP, "PAR_RefChannel");

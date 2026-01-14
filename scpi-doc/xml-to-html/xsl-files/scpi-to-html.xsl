@@ -378,7 +378,6 @@
         <xsl:call-template name="Measurement">
           <xsl:with-param name="MeasSystem" select="'OSC'"/>
           <xsl:with-param name="PerSystemHeader" select="''"/>
-          <xsl:with-param name="Prosa" select="document(concat($ProsaFolder, 'measurement-OSC.html'))"/>
         </xsl:call-template>
       </xsl:if>
 
