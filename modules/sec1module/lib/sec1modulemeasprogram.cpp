@@ -295,7 +295,8 @@ void cSec1ModuleMeasProgram::generateVeinInterface()
     m_pTargetPar = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
                                             key = QString("PAR_Target"),
                                             QString("Reference pulses expected for 0% error\n"
-                                                    "Calculated automatically by: ReferencePulses = ReferenceConstant * NumberOfPulses / DUTConstant"),
+                                                    "Calculated automatically by:\n"
+                                                    "ReferencePulses = ReferenceConstant * NumberOfPulses / DUTConstant"),
                                             QVariant());
     m_pTargetPar->setScpiInfo("CALCULATE",QString("%1:TARGET").arg(modNr), SCPI::isQuery|SCPI::isCmdwP, m_pTargetPar->getName());
     m_pTargetPar->setValidator(new cIntValidator(1, 4294967295, 1));
@@ -373,7 +374,7 @@ void cSec1ModuleMeasProgram::generateVeinInterface()
     m_pProgressAct = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
                                               key = QString("ACT_Progress"),
                                               QString("Progress:\n"
-                                                      "Query the progress of current measurement. Range is from 0 [%] to 100 [%]."),
+                                                      "Progress of current measurement. Range is from 0 [%] to 100 [%]."),
                                               QVariant((double) 0.0));
     m_pProgressAct->setScpiInfo("CALCULATE", QString("%1:PROGRESS").arg(modNr), SCPI::isQuery, m_pProgressAct->getName());
     m_pModule->m_veinModuleParameterMap[key] = m_pProgressAct; // and for the modules interface
@@ -401,7 +402,7 @@ void cSec1ModuleMeasProgram::generateVeinInterface()
 
     m_pResultAct = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
                                             key = QString("ACT_Result"),
-                                            QString("Result:\n"
+                                            QString("Result value:\n"
                                                     "Error value in [%] of the last measurement completed."),
                                             QVariant((double) 0.0));
     m_pResultAct->setScpiInfo("CALCULATE",  QString("%1:RESULT").arg(modNr), SCPI::isQuery, m_pResultAct->getName());
@@ -441,7 +442,10 @@ void cSec1ModuleMeasProgram::generateVeinInterface()
 
     m_pRatingAct = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
                                                key = QString("ACT_Rating"),
-                                               QString("Evaluation last measurement"),
+                                               QString("Result evaluation:\n"
+                                                       "-1: unfinished\n"
+                                                       "0: failed\n"
+                                                       "1: passed"),
                                                QVariant((int) -1));
     m_pRatingAct->setScpiInfo("CALCULATE",  QString("%1:RATING").arg(modNr), SCPI::isQuery, m_pRatingAct->getName());
     m_pModule->m_veinModuleParameterMap[key] = m_pRatingAct; // and for the modules interface
@@ -455,7 +459,9 @@ void cSec1ModuleMeasProgram::generateVeinInterface()
 
     m_pMulCountAct = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
                                                key = QString("ACT_MulCount"),
-                                               QString("Multiple measurements: Count stored"),
+                                               QString("Multiple measurements: Count stored\n"
+                                                       "Maximum storage count is limited to %1.\n"
+                                                       "=> contiuous measurement count can exceed count stored").arg(m_nMulMeasStoredMax),
                                                QVariant((int) 0));
     m_pMulCountAct->setScpiInfo("CALCULATE",  QString("%1:MULCOUNT").arg(modNr), SCPI::isQuery, m_pMulCountAct->getName());
     m_pModule->m_veinModuleParameterMap[key] = m_pMulCountAct; // and for the modules interface
@@ -484,7 +490,7 @@ void cSec1ModuleMeasProgram::generateVeinInterface()
 
     m_pMeasDurationMs = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
                                              key = QString("ACT_MeasTime"),
-                                             QString("Last measurement: Duration [ms]"),
+                                             QString("Last measurement Duration [ms]"),
                                              QVariant((int)0));
     m_pMeasDurationMs->setScpiInfo("CALCULATE",  QString("%1:MMEASTIME").arg(modNr), SCPI::isQuery, m_pMeasDurationMs->getName());
     m_pModule->m_veinModuleParameterMap[key] = m_pMeasDurationMs; // and for the modules interface
