@@ -19,13 +19,13 @@
         "INF_ModuleInterface": {
             "ComponentInfo": {
                 "EntityName": {
-                    "Description": "Module's name"
+                    "Description": "<skipped>"
                 },
                 "INF_ModuleInterface": {
-                    "Description": "Module's interface details"
+                    "Description": "<skipped>"
                 },
                 "Session": {
-                    "Description": "Session name",
+                    "Description": "<skipped>",
                     "Validation": {
                         "Data": [
                             "Default",
@@ -37,7 +37,7 @@
                     }
                 },
                 "XSession": {
-                    "Description": "XSession name",
+                    "Description": "<skipped>",
                     "Validation": {
                         "Data": [
                             "Foo",
@@ -100,10 +100,10 @@
         "INF_ModuleInterface": {
             "ComponentInfo": {
                 "EntityName": {
-                    "Description": "Module's name"
+                    "Description": "<skipped>"
                 },
                 "INF_ModuleInterface": {
-                    "Description": "Module's interface details"
+                    "Description": "<skipped>"
                 }
             },
             "ModuleInfo": {
@@ -122,10 +122,10 @@
         "INF_ModuleInterface": {
             "ComponentInfo": {
                 "EntityName": {
-                    "Description": "Module's name"
+                    "Description": "<skipped>"
                 },
                 "INF_ModuleInterface": {
-                    "Description": "Module's interface details"
+                    "Description": "<skipped>"
                 }
             },
             "ModuleInfo": {
@@ -177,152 +177,152 @@
             "ComponentInfo": {
                 "ACT_Channel1Peak": {
                     "ChannelName": "REF1",
-                    "Description": "Actual peak value",
+                    "Description": "<skipped>",
                     "Unit": "V"
                 },
                 "ACT_Channel1Rms": {
-                    "Description": "Actual RMS value (unscaled)"
+                    "Description": "<skipped>"
                 },
                 "ACT_Channel2Peak": {
                     "ChannelName": "REF2",
-                    "Description": "Actual peak value",
+                    "Description": "<skipped>",
                     "Unit": "V"
                 },
                 "ACT_Channel2Rms": {
-                    "Description": "Actual RMS value (unscaled)"
+                    "Description": "<skipped>"
                 },
                 "ACT_Channel3Peak": {
                     "ChannelName": "REF3",
-                    "Description": "Actual peak value",
+                    "Description": "<skipped>",
                     "Unit": "V"
                 },
                 "ACT_Channel3Rms": {
-                    "Description": "Actual RMS value (unscaled)"
+                    "Description": "<skipped>"
                 },
                 "ACT_Channel4Peak": {
                     "ChannelName": "REF4",
-                    "Description": "Actual peak value",
+                    "Description": "<skipped>",
                     "Unit": "V"
                 },
                 "ACT_Channel4Rms": {
-                    "Description": "Actual RMS value (unscaled)"
+                    "Description": "<skipped>"
                 },
                 "ACT_Channel5Peak": {
                     "ChannelName": "REF5",
-                    "Description": "Actual peak value",
+                    "Description": "<skipped>",
                     "Unit": "V"
                 },
                 "ACT_Channel5Rms": {
-                    "Description": "Actual RMS value (unscaled)"
+                    "Description": "<skipped>"
                 },
                 "ACT_Channel6Peak": {
                     "ChannelName": "REF6",
-                    "Description": "Actual peak value",
+                    "Description": "<skipped>",
                     "Unit": "V"
                 },
                 "ACT_Channel6Rms": {
-                    "Description": "Actual RMS value (unscaled)"
+                    "Description": "<skipped>"
                 },
                 "ACT_Frequency": {
-                    "Description": "Actual frequency",
+                    "Description": "<skipped>",
                     "Unit": "Hz"
                 },
                 "EntityName": {
-                    "Description": "Module's name"
+                    "Description": "<skipped>"
                 },
                 "INF_Adjusted": {
-                    "Description": "Adjustment information"
+                    "Description": "<skipped>"
                 },
                 "INF_Channel1ActOVLREJ": {
                     "ChannelName": "REF1",
-                    "Description": "Channel's actual range peak rejection"
+                    "Description": "<skipped>"
                 },
                 "INF_Channel1ActREJ": {
                     "ChannelName": "REF1",
-                    "Description": "Channel's actual rejection"
+                    "Description": "<skipped>"
                 },
                 "INF_Channel1OVLREJ": {
                     "ChannelName": "REF1",
-                    "Description": "Channel's maximum range peak rejection"
+                    "Description": "<skipped>"
                 },
                 "INF_Channel2ActOVLREJ": {
                     "ChannelName": "REF2",
-                    "Description": "Channel's actual range peak rejection"
+                    "Description": "<skipped>"
                 },
                 "INF_Channel2ActREJ": {
                     "ChannelName": "REF2",
-                    "Description": "Channel's actual rejection"
+                    "Description": "<skipped>"
                 },
                 "INF_Channel2OVLREJ": {
                     "ChannelName": "REF2",
-                    "Description": "Channel's maximum range peak rejection"
+                    "Description": "<skipped>"
                 },
                 "INF_Channel3ActOVLREJ": {
                     "ChannelName": "REF3",
-                    "Description": "Channel's actual range peak rejection"
+                    "Description": "<skipped>"
                 },
                 "INF_Channel3ActREJ": {
                     "ChannelName": "REF3",
-                    "Description": "Channel's actual rejection"
+                    "Description": "<skipped>"
                 },
                 "INF_Channel3OVLREJ": {
                     "ChannelName": "REF3",
-                    "Description": "Channel's maximum range peak rejection"
+                    "Description": "<skipped>"
                 },
                 "INF_Channel4ActOVLREJ": {
                     "ChannelName": "REF4",
-                    "Description": "Channel's actual range peak rejection"
+                    "Description": "<skipped>"
                 },
                 "INF_Channel4ActREJ": {
                     "ChannelName": "REF4",
-                    "Description": "Channel's actual rejection"
+                    "Description": "<skipped>"
                 },
                 "INF_Channel4OVLREJ": {
                     "ChannelName": "REF4",
-                    "Description": "Channel's maximum range peak rejection"
+                    "Description": "<skipped>"
                 },
                 "INF_Channel5ActOVLREJ": {
                     "ChannelName": "REF5",
-                    "Description": "Channel's actual range peak rejection"
+                    "Description": "<skipped>"
                 },
                 "INF_Channel5ActREJ": {
                     "ChannelName": "REF5",
-                    "Description": "Channel's actual rejection"
+                    "Description": "<skipped>"
                 },
                 "INF_Channel5OVLREJ": {
                     "ChannelName": "REF5",
-                    "Description": "Channel's maximum range peak rejection"
+                    "Description": "<skipped>"
                 },
                 "INF_Channel6ActOVLREJ": {
                     "ChannelName": "REF6",
-                    "Description": "Channel's actual range peak rejection"
+                    "Description": "<skipped>"
                 },
                 "INF_Channel6ActREJ": {
                     "ChannelName": "REF6",
-                    "Description": "Channel's actual rejection"
+                    "Description": "<skipped>"
                 },
                 "INF_Channel6OVLREJ": {
                     "ChannelName": "REF6",
-                    "Description": "Channel's maximum range peak rejection"
+                    "Description": "<skipped>"
                 },
                 "INF_ModuleInterface": {
-                    "Description": "Module's interface details"
+                    "Description": "<skipped>"
                 },
                 "INF_OverloadMax": {
-                    "Description": "Maximum range overload condition"
+                    "Description": "<skipped>"
                 },
                 "INF_PreScalingInfoGroup0": {
-                    "Description": "Channel's actual range peak rejection"
+                    "Description": "<skipped>"
                 },
                 "INF_PreScalingInfoGroup1": {
-                    "Description": "Channel's actual range peak rejection"
+                    "Description": "<skipped>"
                 },
                 "INF_PreScalingInfoGroup2": {
-                    "Description": "Channel's actual range peak rejection"
+                    "Description": "<skipped>"
                 },
                 "PAR_Channel1Range": {
                     "ChannelName": "REF1",
-                    "Description": "Channel's range",
+                    "Description": "<skipped>",
                     "Validation": {
                         "Data": [
                             "R10V",
@@ -333,7 +333,7 @@
                 },
                 "PAR_Channel2Range": {
                     "ChannelName": "REF2",
-                    "Description": "Channel's range",
+                    "Description": "<skipped>",
                     "Validation": {
                         "Data": [
                             "R10V",
@@ -344,7 +344,7 @@
                 },
                 "PAR_Channel3Range": {
                     "ChannelName": "REF3",
-                    "Description": "Channel's range",
+                    "Description": "<skipped>",
                     "Validation": {
                         "Data": [
                             "R10V",
@@ -355,7 +355,7 @@
                 },
                 "PAR_Channel4Range": {
                     "ChannelName": "REF4",
-                    "Description": "Channel's range",
+                    "Description": "<skipped>",
                     "Validation": {
                         "Data": [
                             "R10V",
@@ -366,7 +366,7 @@
                 },
                 "PAR_Channel5Range": {
                     "ChannelName": "REF5",
-                    "Description": "Channel's range",
+                    "Description": "<skipped>",
                     "Validation": {
                         "Data": [
                             "R10V",
@@ -377,7 +377,7 @@
                 },
                 "PAR_Channel6Range": {
                     "ChannelName": "REF6",
-                    "Description": "Channel's range",
+                    "Description": "<skipped>",
                     "Validation": {
                         "Data": [
                             "R10V",
@@ -387,7 +387,7 @@
                     }
                 },
                 "PAR_ChannelGrouping": {
-                    "Description": "Channel grouping on/off",
+                    "Description": "<skipped>",
                     "Validation": {
                         "Data": [
                             0,
@@ -397,7 +397,7 @@
                     }
                 },
                 "PAR_IgnoreRmsValues": {
-                    "Description": "Percentage of nominal range below which channel values are ignored",
+                    "Description": "<skipped>",
                     "Unit": "%",
                     "Validation": {
                         "Data": [
@@ -409,7 +409,7 @@
                     }
                 },
                 "PAR_IgnoreRmsValuesOnOff": {
-                    "Description": "Enable or disable channel ignore limit option",
+                    "Description": "<skipped>",
                     "Validation": {
                         "Data": [
                             0,
@@ -419,7 +419,7 @@
                     }
                 },
                 "PAR_InvertPhase1": {
-                    "Description": "Inverted Phase",
+                    "Description": "<skipped>",
                     "Validation": {
                         "Data": [
                             0,
@@ -429,7 +429,7 @@
                     }
                 },
                 "PAR_InvertPhase2": {
-                    "Description": "Inverted Phase",
+                    "Description": "<skipped>",
                     "Validation": {
                         "Data": [
                             0,
@@ -439,7 +439,7 @@
                     }
                 },
                 "PAR_InvertPhase3": {
-                    "Description": "Inverted Phase",
+                    "Description": "<skipped>",
                     "Validation": {
                         "Data": [
                             0,
@@ -449,7 +449,7 @@
                     }
                 },
                 "PAR_InvertPhase4": {
-                    "Description": "Inverted Phase",
+                    "Description": "<skipped>",
                     "Validation": {
                         "Data": [
                             0,
@@ -459,7 +459,7 @@
                     }
                 },
                 "PAR_InvertPhase5": {
-                    "Description": "Inverted Phase",
+                    "Description": "<skipped>",
                     "Validation": {
                         "Data": [
                             0,
@@ -469,7 +469,7 @@
                     }
                 },
                 "PAR_InvertPhase6": {
-                    "Description": "Inverted Phase",
+                    "Description": "<skipped>",
                     "Validation": {
                         "Data": [
                             0,
@@ -479,7 +479,7 @@
                     }
                 },
                 "PAR_Overload": {
-                    "Description": "Overload",
+                    "Description": "<skipped>",
                     "Validation": {
                         "Data": [
                             0,
@@ -489,7 +489,7 @@
                     }
                 },
                 "PAR_PreScalingEnabledGroup0": {
-                    "Description": "Enable prescaling for group",
+                    "Description": "<skipped>",
                     "Validation": {
                         "Data": [
                             0,
@@ -499,7 +499,7 @@
                     }
                 },
                 "PAR_PreScalingEnabledGroup1": {
-                    "Description": "Enable prescaling for group",
+                    "Description": "<skipped>",
                     "Validation": {
                         "Data": [
                             0,
@@ -509,7 +509,7 @@
                     }
                 },
                 "PAR_PreScalingEnabledGroup2": {
-                    "Description": "Enable prescaling for group",
+                    "Description": "<skipped>",
                     "Validation": {
                         "Data": [
                             0,
@@ -519,28 +519,28 @@
                     }
                 },
                 "PAR_PreScalingGroup0": {
-                    "Description": "Scaling factor for group k (see configuration)",
+                    "Description": "<skipped>",
                     "Validation": {
                         "Data": "^[1-9][0-9]*\\/[1-9][0-9]*(\\*\\((1|sqrt\\(3\\)|1\\/sqrt\\(3\\))\\))?$",
                         "Type": "REGEX"
                     }
                 },
                 "PAR_PreScalingGroup1": {
-                    "Description": "Scaling factor for group k (see configuration)",
+                    "Description": "<skipped>",
                     "Validation": {
                         "Data": "^[1-9][0-9]*\\/[1-9][0-9]*(\\*\\((1|sqrt\\(3\\)|1\\/sqrt\\(3\\))\\))?$",
                         "Type": "REGEX"
                     }
                 },
                 "PAR_PreScalingGroup2": {
-                    "Description": "Scaling factor for group k (see configuration)",
+                    "Description": "<skipped>",
                     "Validation": {
                         "Data": "^[1-9][0-9]*\\/[1-9][0-9]*(\\*\\((1|sqrt\\(3\\)|1\\/sqrt\\(3\\))\\))?$",
                         "Type": "REGEX"
                     }
                 },
                 "PAR_RangeAutomatic": {
-                    "Description": "Range automatic on/off",
+                    "Description": "<skipped>",
                     "Validation": {
                         "Data": [
                             0,
@@ -550,28 +550,28 @@
                     }
                 },
                 "SIG_Channel1OVL": {
-                    "Description": "Channels overload status"
+                    "Description": "<skipped>"
                 },
                 "SIG_Channel2OVL": {
-                    "Description": "Channels overload status"
+                    "Description": "<skipped>"
                 },
                 "SIG_Channel3OVL": {
-                    "Description": "Channels overload status"
+                    "Description": "<skipped>"
                 },
                 "SIG_Channel4OVL": {
-                    "Description": "Channels overload status"
+                    "Description": "<skipped>"
                 },
                 "SIG_Channel5OVL": {
-                    "Description": "Channels overload status"
+                    "Description": "<skipped>"
                 },
                 "SIG_Channel6OVL": {
-                    "Description": "Channels overload status"
+                    "Description": "<skipped>"
                 },
                 "SIG_Measuring": {
-                    "Description": "Signal indicating measurement activity"
+                    "Description": "<skipped>"
                 },
                 "SIG_Ranging": {
-                    "Description": "Signal on changing ranges"
+                    "Description": "<skipped>"
                 }
             },
             "ModuleInfo": {
@@ -854,75 +854,75 @@
             "ComponentInfo": {
                 "ACT_DFTPN1": {
                     "ChannelName": "REF1",
-                    "Description": "Actual value phase/neutral / cartesian format: re,im",
+                    "Description": "<skipped>",
                     "Unit": "V"
                 },
                 "ACT_DFTPN2": {
                     "ChannelName": "REF2",
-                    "Description": "Actual value phase/neutral / cartesian format: re,im",
+                    "Description": "<skipped>",
                     "Unit": "V"
                 },
                 "ACT_DFTPN3": {
                     "ChannelName": "REF3",
-                    "Description": "Actual value phase/neutral / cartesian format: re,im",
+                    "Description": "<skipped>",
                     "Unit": "V"
                 },
                 "ACT_DFTPN4": {
                     "ChannelName": "REF4",
-                    "Description": "Actual value / cartesian format: re,im",
+                    "Description": "<skipped>",
                     "Unit": "V"
                 },
                 "ACT_DFTPN5": {
                     "ChannelName": "REF5",
-                    "Description": "Actual value / cartesian format: re,im",
+                    "Description": "<skipped>",
                     "Unit": "V"
                 },
                 "ACT_DFTPN6": {
                     "ChannelName": "REF6",
-                    "Description": "Actual value / cartesian format: re,im",
+                    "Description": "<skipped>",
                     "Unit": "V"
                 },
                 "ACT_POL_DFTPN1": {
                     "ChannelName": "REF1",
-                    "Description": "Actual value phase/neutral / polar format: abs,rad[0,2π],deg[0,360]",
+                    "Description": "<skipped>",
                     "Unit": "V"
                 },
                 "ACT_POL_DFTPN2": {
                     "ChannelName": "REF2",
-                    "Description": "Actual value phase/neutral / polar format: abs,rad[0,2π],deg[0,360]",
+                    "Description": "<skipped>",
                     "Unit": "V"
                 },
                 "ACT_POL_DFTPN3": {
                     "ChannelName": "REF3",
-                    "Description": "Actual value phase/neutral / polar format: abs,rad[0,2π],deg[0,360]",
+                    "Description": "<skipped>",
                     "Unit": "V"
                 },
                 "ACT_POL_DFTPN4": {
                     "ChannelName": "REF4",
-                    "Description": "Actual value / polar format: abs,rad[0,2π],deg[0,360]",
+                    "Description": "<skipped>",
                     "Unit": "V"
                 },
                 "ACT_POL_DFTPN5": {
                     "ChannelName": "REF5",
-                    "Description": "Actual value / polar format: abs,rad[0,2π],deg[0,360]",
+                    "Description": "<skipped>",
                     "Unit": "V"
                 },
                 "ACT_POL_DFTPN6": {
                     "ChannelName": "REF6",
-                    "Description": "Actual value / polar format: abs,rad[0,2π],deg[0,360]",
+                    "Description": "<skipped>",
                     "Unit": "V"
                 },
                 "ACT_RFIELD": {
-                    "Description": "Phase sequence"
+                    "Description": "<skipped>"
                 },
                 "EntityName": {
-                    "Description": "Module's name"
+                    "Description": "<skipped>"
                 },
                 "INF_ModuleInterface": {
-                    "Description": "Module's interface details"
+                    "Description": "<skipped>"
                 },
                 "PAR_Interval": {
-                    "Description": "Integration time",
+                    "Description": "<skipped>",
                     "Unit": "s",
                     "Validation": {
                         "Data": [
@@ -934,7 +934,7 @@
                     }
                 },
                 "PAR_RefChannel": {
-                    "Description": "Reference channel",
+                    "Description": "<skipped>",
                     "Validation": {
                         "Data": [
                             "REF1",
@@ -948,7 +948,7 @@
                     }
                 },
                 "SIG_Measuring": {
-                    "Description": "Signal indicating measurement activity"
+                    "Description": "<skipped>"
                 }
             },
             "ModuleInfo": {
@@ -1046,48 +1046,48 @@
         "INF_ModuleInterface": {
             "ComponentInfo": {
                 "ACT_CanChangePhaseMask": {
-                    "Description": "Boolean indicator that current measurement mode can change phase mask"
+                    "Description": "<skipped>"
                 },
                 "ACT_MaxMeasSysCount": {
-                    "Description": "Number of max measurement systems for current measurement mode"
+                    "Description": "<skipped>"
                 },
                 "ACT_PQS1": {
                     "ChannelName": "1",
-                    "Description": "Actual power value REF1/REF4"
+                    "Description": "<skipped>"
                 },
                 "ACT_PQS2": {
                     "ChannelName": "2",
-                    "Description": "Actual power value REF2/REF5"
+                    "Description": "<skipped>"
                 },
                 "ACT_PQS3": {
                     "ChannelName": "3",
-                    "Description": "Actual power value REF3/REF6"
+                    "Description": "<skipped>"
                 },
                 "ACT_PQS4": {
                     "ChannelName": "S",
-                    "Description": "Actual power value sum all phases"
+                    "Description": "<skipped>"
                 },
                 "ACT_PowerDisplayName": {
-                    "Description": "Power display name (P/Q/S)"
+                    "Description": "<skipped>"
                 },
                 "EntityName": {
-                    "Description": "Module's name"
+                    "Description": "<skipped>"
                 },
                 "INF_ModeTypes": {
-                    "Description": "Display names (P/Q/S) of available modes"
+                    "Description": "<skipped>"
                 },
                 "INF_ModuleInterface": {
-                    "Description": "Module's interface details"
+                    "Description": "<skipped>"
                 },
                 "PAR_FOUT0": {
-                    "Description": "Frequency output name"
+                    "Description": "<skipped>"
                 },
                 "PAR_FOUTConstant0": {
                     "ChannelName": "Fout1",
-                    "Description": "Frequency output constant"
+                    "Description": "<skipped>"
                 },
                 "PAR_FOUT_NOMINAL_FREQ": {
-                    "Description": "Nominal frequency",
+                    "Description": "<skipped>",
                     "Unit": "Hz",
                     "Validation": {
                         "Data": [
@@ -1099,7 +1099,7 @@
                     }
                 },
                 "PAR_Interval": {
-                    "Description": "Integration time",
+                    "Description": "<skipped>",
                     "Unit": "s",
                     "Validation": {
                         "Data": [
@@ -1111,7 +1111,7 @@
                     }
                 },
                 "PAR_MeasModePhaseSelect": {
-                    "Description": "Active phases selection mask",
+                    "Description": "<skipped>",
                     "Validation": {
                         "Data": [
                             "111"
@@ -1120,7 +1120,7 @@
                     }
                 },
                 "PAR_MeasuringMode": {
-                    "Description": "Measuring mode",
+                    "Description": "<skipped>",
                     "Validation": {
                         "Data": [
                             "QREF"
@@ -1129,7 +1129,7 @@
                     }
                 },
                 "SIG_Measuring": {
-                    "Description": "Signal indicating measurement activity"
+                    "Description": "<skipped>"
                 }
             },
             "ModuleInfo": {
@@ -1263,57 +1263,57 @@
         "INF_ModuleInterface": {
             "ComponentInfo": {
                 "ACT_DutPulses": {
-                    "Description": "Pulse count of the DUT"
+                    "Description": "<skipped>"
                 },
                 "ACT_EndTime": {
-                    "Description": "Last measurement (sequence): End time (dd-MM-yyyy HH:mm:ss)"
+                    "Description": "<skipped>"
                 },
                 "ACT_Energy": {
-                    "Description": "Energy since last start",
+                    "Description": "<skipped>",
                     "Unit": "kh"
                 },
                 "ACT_EnergyFinal": {
-                    "Description": "Energy of last measurement completed",
+                    "Description": "<skipped>",
                     "Unit": "kh"
                 },
                 "ACT_MeasNum": {
-                    "Description": "Multiple measurements: Count"
+                    "Description": "<skipped>"
                 },
                 "ACT_MeasTime": {
-                    "Description": "Last measurement: Duration [ms]"
+                    "Description": "<skipped>"
                 },
                 "ACT_MulCount": {
-                    "Description": "Multiple measurements: Count stored"
+                    "Description": "<skipped>"
                 },
                 "ACT_MulResult": {
-                    "Description": "Multiple measurements: JSON result array / statistics"
+                    "Description": "<skipped>"
                 },
                 "ACT_Progress": {
-                    "Description": "Progress:\nQuery the progress of current measurement. Range is from 0 [%] to 100 [%]."
+                    "Description": "<skipped>"
                 },
                 "ACT_Rating": {
-                    "Description": "Evaluation last measurement"
+                    "Description": "<skipped>"
                 },
                 "ACT_RefFreqInput": {
-                    "Description": "Actual frequency input (internal)"
+                    "Description": "<skipped>"
                 },
                 "ACT_Result": {
-                    "Description": "Result:\nError value in [%] of the last measurement completed."
+                    "Description": "<skipped>"
                 },
                 "ACT_StartTime": {
-                    "Description": "Last measurement (sequence): Start time (dd-MM-yyyy HH:mm:ss)"
+                    "Description": "<skipped>"
                 },
                 "ACT_Status": {
-                    "Description": "Status:\n0: Idle\n1: Waiting for first pulse\n2: Started\n4: Ready\n8: Aborted"
+                    "Description": "<skipped>"
                 },
                 "EntityName": {
-                    "Description": "Module's name"
+                    "Description": "<skipped>"
                 },
                 "INF_ModuleInterface": {
-                    "Description": "Module's interface details"
+                    "Description": "<skipped>"
                 },
                 "PAR_ClientActiveNotify": {
-                    "Description": "By changing this component, a client asks us for max actualize performance",
+                    "Description": "<skipped>",
                     "Validation": {
                         "Data": [
                             0,
@@ -1324,7 +1324,7 @@
                     }
                 },
                 "PAR_Continuous": {
-                    "Description": "Continuous measurement:\n0: disabled\n1: enabled",
+                    "Description": "<skipped>",
                     "Validation": {
                         "Data": [
                             0,
@@ -1335,7 +1335,7 @@
                     }
                 },
                 "PAR_DUTConstUnit": {
-                    "Description": "DUT constant unit:\nValid values depend on power type selected:\n* Active power (P): 'I/kWh', 'Wh/I'\n* Reactive power (Q): 'I/kVarh', 'Varh/I'\n* Apparent power (S): 'I/kVAh', 'VAh/I'",
+                    "Description": "<skipped>",
                     "Validation": {
                         "Data": [
                         ],
@@ -1343,7 +1343,7 @@
                     }
                 },
                 "PAR_DutConstant": {
-                    "Description": "DUT constant\nThe meter constant of the device under test can be queried an set here.",
+                    "Description": "<skipped>",
                     "Validation": {
                         "Data": [
                             1e-06,
@@ -1354,7 +1354,7 @@
                     }
                 },
                 "PAR_DutConstantAuto": {
-                    "Description": "Calculate DUT constant:\n* Writing 1 calculates the DUT meter constant from last measurement.\n* Value read is 0",
+                    "Description": "<skipped>",
                     "Validation": {
                         "Data": [
                             0,
@@ -1365,35 +1365,35 @@
                     }
                 },
                 "PAR_DutConstantIScaleDenom": {
-                    "Description": "Scale the dut constant in case transformers are used (I fraction denominator)",
+                    "Description": "<skipped>",
                     "Validation": {
                         "Data": "^[1-9][0-9]*?$",
                         "Type": "REGEX"
                     }
                 },
                 "PAR_DutConstantIScaleNum": {
-                    "Description": "Scale the dut constant in case transformers are used (I fraction numerator)",
+                    "Description": "<skipped>",
                     "Validation": {
                         "Data": "^[1-9][0-9]*$",
                         "Type": "REGEX"
                     }
                 },
                 "PAR_DutConstantUScaleDenom": {
-                    "Description": "Scale the dut constant in case transformers are used (U fraction denominator)",
+                    "Description": "<skipped>",
                     "Validation": {
                         "Data": "^[1-9][0-9]*(\\/sqrt\\(3\\))?$",
                         "Type": "REGEX"
                     }
                 },
                 "PAR_DutConstantUScaleNum": {
-                    "Description": "Scale the dut constant in case transformers are used (U fraction numerator)",
+                    "Description": "<skipped>",
                     "Validation": {
                         "Data": "^[1-9][0-9]*(\\/sqrt\\(3\\))?$",
                         "Type": "REGEX"
                     }
                 },
                 "PAR_DutInput": {
-                    "Description": "DUT input\nThe source of the device under test can be queried and selected.",
+                    "Description": "<skipped>",
                     "Validation": {
                         "Data": [
                             "Fin1",
@@ -1405,7 +1405,7 @@
                     }
                 },
                 "PAR_DutTypeMeasurePoint": {
-                    "Description": "Scale the dut constant in case transformers are used (Measurement point selection)",
+                    "Description": "<skipped>",
                     "Validation": {
                         "Data": [
                             "CpIpUp",
@@ -1417,7 +1417,7 @@
                     }
                 },
                 "PAR_Energy": {
-                    "Description": "Energy value",
+                    "Description": "<skipped>",
                     "Unit": "kh",
                     "Validation": {
                         "Data": [
@@ -1429,7 +1429,7 @@
                     }
                 },
                 "PAR_Lolimit": {
-                    "Description": "Error limit: lower",
+                    "Description": "<skipped>",
                     "Unit": "%",
                     "Validation": {
                         "Data": [
@@ -1441,7 +1441,7 @@
                     }
                 },
                 "PAR_MRate": {
-                    "Description": "Pulses to measure",
+                    "Description": "<skipped>",
                     "Validation": {
                         "Data": [
                             1,
@@ -1452,7 +1452,7 @@
                     }
                 },
                 "PAR_MeasCount": {
-                    "Description": "Multiple measurements: Number of measurements",
+                    "Description": "<skipped>",
                     "Validation": {
                         "Data": [
                             1,
@@ -1463,7 +1463,7 @@
                     }
                 },
                 "PAR_MeasWait": {
-                    "Description": "Multiple measurements: Pause\nSeconds to wait between measurements",
+                    "Description": "<skipped>",
                     "Unit": "s",
                     "Validation": {
                         "Data": [
@@ -1475,10 +1475,10 @@
                     }
                 },
                 "PAR_RefConstant": {
-                    "Description": "Reference meter constant"
+                    "Description": "<skipped>"
                 },
                 "PAR_RefInput": {
-                    "Description": "Reference input:\nThe reference power source (powermodule) can be queried and selected.",
+                    "Description": "<skipped>",
                     "Validation": {
                         "Data": [
                             ""
@@ -1487,7 +1487,7 @@
                     }
                 },
                 "PAR_ResultUnit": {
-                    "Description": "Result unit",
+                    "Description": "<skipped>",
                     "Validation": {
                         "Data": [
                             "%",
@@ -1497,7 +1497,7 @@
                     }
                 },
                 "PAR_StartStop": {
-                    "Description": "Start/stop measurement:\n0: stop\n1: start",
+                    "Description": "<skipped>",
                     "Validation": {
                         "Data": [
                             0,
@@ -1508,7 +1508,7 @@
                     }
                 },
                 "PAR_Target": {
-                    "Description": "Reference pulses expected for 0% error\nCalculated automatically by: ReferencePulses = ReferenceConstant * NumberOfPulses / DUTConstant",
+                    "Description": "<skipped>",
                     "Validation": {
                         "Data": [
                             1,
@@ -1519,7 +1519,7 @@
                     }
                 },
                 "PAR_Uplimit": {
-                    "Description": "Error limit: upper",
+                    "Description": "<skipped>",
                     "Unit": "%",
                     "Validation": {
                         "Data": [
@@ -1821,61 +1821,61 @@
         "INF_ModuleInterface": {
             "ComponentInfo": {
                 "EntityName": {
-                    "Description": "Module's name"
+                    "Description": "<skipped>"
                 },
                 "INF_AccumulatorSoc": {
-                    "Description": "Accumulator state of charge"
+                    "Description": "<skipped>"
                 },
                 "INF_AccumulatorStatus": {
-                    "Description": "Accumulator status"
+                    "Description": "<skipped>"
                 },
                 "INF_AdjChksum": {
-                    "Description": "Adjustment data checksum device"
+                    "Description": "<skipped>"
                 },
                 "INF_Adjusted": {
-                    "Description": "Adjustment information"
+                    "Description": "<skipped>"
                 },
                 "INF_CTRLVersion": {
-                    "Description": "Controller version"
+                    "Description": "<skipped>"
                 },
                 "INF_CpuInfo": {
-                    "Description": "CPU/SOM info"
+                    "Description": "<skipped>"
                 },
                 "INF_DSPServerVersion": {
-                    "Description": "DSP-server version"
+                    "Description": "<skipped>"
                 },
                 "INF_DSPVersion": {
-                    "Description": "DSP software version"
+                    "Description": "<skipped>"
                 },
                 "INF_DeviceType": {
-                    "Description": "Device type"
+                    "Description": "<skipped>"
                 },
                 "INF_FPGAVersion": {
-                    "Description": "FPGA version"
+                    "Description": "<skipped>"
                 },
                 "INF_HotplugChannels": {
-                    "Description": "List of hotplug channels"
+                    "Description": "<skipped>"
                 },
                 "INF_Instrument": {
-                    "Description": "Type of instrument connected"
+                    "Description": "<skipped>"
                 },
                 "INF_ModuleInterface": {
-                    "Description": "Module's interface details"
+                    "Description": "<skipped>"
                 },
                 "INF_PCBServerVersion": {
-                    "Description": "PCB-server version"
+                    "Description": "<skipped>"
                 },
                 "INF_PCBVersion": {
-                    "Description": "PCB version"
+                    "Description": "<skipped>"
                 },
                 "INF_ReleaseNr": {
-                    "Description": "Release number"
+                    "Description": "<skipped>"
                 },
                 "INF_Schnubbel": {
-                    "Description": "Adjustment values write permission"
+                    "Description": "<skipped>"
                 },
                 "PAR_SerialNr": {
-                    "Description": "Serial number",
+                    "Description": "<skipped>",
                     "Validation": {
                         "Data": "^\\d{9}$",
                         "Type": "REGEX"
@@ -2002,35 +2002,35 @@
         "INF_ModuleInterface": {
             "ComponentInfo": {
                 "ACT_AirPressure": {
-                    "Description": "Current atmospheric pressure in hPa",
+                    "Description": "<skipped>",
                     "Unit": "hPa"
                 },
                 "ACT_ErrorFlags": {
-                    "Description": "Current error flags"
+                    "Description": "<skipped>"
                 },
                 "ACT_Humidity": {
-                    "Description": "Current relative humidity in percent",
+                    "Description": "<skipped>",
                     "Unit": "%"
                 },
                 "ACT_TemperatureC": {
-                    "Description": "Current temperature in degree Celsius",
+                    "Description": "<skipped>",
                     "Unit": "°C"
                 },
                 "ACT_TemperatureF": {
-                    "Description": "Current temperature in degree Fahrenheit",
+                    "Description": "<skipped>",
                     "Unit": "°F"
                 },
                 "ACT_WarningFlags": {
-                    "Description": "Current warning flags"
+                    "Description": "<skipped>"
                 },
                 "EntityName": {
-                    "Description": "Module's name"
+                    "Description": "<skipped>"
                 },
                 "INF_ModuleInterface": {
-                    "Description": "Module's interface details"
+                    "Description": "<skipped>"
                 },
                 "PAR_BluetoothOn": {
-                    "Description": "Bluetooth on",
+                    "Description": "<skipped>",
                     "Validation": {
                         "Data": [
                             0,
@@ -2040,7 +2040,7 @@
                     }
                 },
                 "PAR_MacAddress": {
-                    "Description": "MAC address of environment sensor",
+                    "Description": "<skipped>",
                     "Validation": {
                         "Data": "^((([0-9A-Fa-f]{2}:){5})|(([0-9A-Fa-f]{2}){5})([0-9A-Fa-f]{2})$|^$)",
                         "Type": "REGEX"
@@ -2098,13 +2098,13 @@
         "INF_ModuleInterface": {
             "ComponentInfo": {
                 "EntityName": {
-                    "Description": "Module's name"
+                    "Description": "<skipped>"
                 },
                 "INF_ModuleInterface": {
-                    "Description": "Module's interface details"
+                    "Description": "<skipped>"
                 },
                 "PAR_GuiDialogFinished": {
-                    "Description": "boolean if GUI dialog finished",
+                    "Description": "<skipped>",
                     "Validation": {
                         "Data": [
                             0,
@@ -2114,7 +2114,7 @@
                     }
                 },
                 "PAR_ReloadTrustList": {
-                    "Description": "set boolean to true to reload trust list",
+                    "Description": "<skipped>",
                     "Validation": {
                         "Data": [
                             0,

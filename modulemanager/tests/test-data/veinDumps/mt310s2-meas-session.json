@@ -41,13 +41,13 @@
         "INF_ModuleInterface": {
             "ComponentInfo": {
                 "EntityName": {
-                    "Description": "Module's name"
+                    "Description": "<skipped>"
                 },
                 "INF_ModuleInterface": {
-                    "Description": "Module's interface details"
+                    "Description": "<skipped>"
                 },
                 "Session": {
-                    "Description": "Session name",
+                    "Description": "<skipped>",
                     "Validation": {
                         "Data": [
                             "Default",
@@ -59,7 +59,7 @@
                     }
                 },
                 "XSession": {
-                    "Description": "XSession name",
+                    "Description": "<skipped>",
                     "Validation": {
                         "Data": [
                             "Foo",
@@ -122,10 +122,10 @@
         "INF_ModuleInterface": {
             "ComponentInfo": {
                 "EntityName": {
-                    "Description": "Module's name"
+                    "Description": "<skipped>"
                 },
                 "INF_ModuleInterface": {
-                    "Description": "Module's interface details"
+                    "Description": "<skipped>"
                 }
             },
             "ModuleInfo": {
@@ -187,189 +187,189 @@
             "ComponentInfo": {
                 "ACT_Channel1Peak": {
                     "ChannelName": "UL1",
-                    "Description": "Actual peak value",
+                    "Description": "<skipped>",
                     "Unit": "V"
                 },
                 "ACT_Channel1Rms": {
-                    "Description": "Actual RMS value (unscaled)"
+                    "Description": "<skipped>"
                 },
                 "ACT_Channel2Peak": {
                     "ChannelName": "UL2",
-                    "Description": "Actual peak value",
+                    "Description": "<skipped>",
                     "Unit": "V"
                 },
                 "ACT_Channel2Rms": {
-                    "Description": "Actual RMS value (unscaled)"
+                    "Description": "<skipped>"
                 },
                 "ACT_Channel3Peak": {
                     "ChannelName": "UL3",
-                    "Description": "Actual peak value",
+                    "Description": "<skipped>",
                     "Unit": "V"
                 },
                 "ACT_Channel3Rms": {
-                    "Description": "Actual RMS value (unscaled)"
+                    "Description": "<skipped>"
                 },
                 "ACT_Channel4Peak": {
                     "ChannelName": "IL1",
-                    "Description": "Actual peak value",
+                    "Description": "<skipped>",
                     "Unit": "A"
                 },
                 "ACT_Channel4Rms": {
-                    "Description": "Actual RMS value (unscaled)"
+                    "Description": "<skipped>"
                 },
                 "ACT_Channel5Peak": {
                     "ChannelName": "IL2",
-                    "Description": "Actual peak value",
+                    "Description": "<skipped>",
                     "Unit": "A"
                 },
                 "ACT_Channel5Rms": {
-                    "Description": "Actual RMS value (unscaled)"
+                    "Description": "<skipped>"
                 },
                 "ACT_Channel6Peak": {
                     "ChannelName": "IL3",
-                    "Description": "Actual peak value",
+                    "Description": "<skipped>",
                     "Unit": "A"
                 },
                 "ACT_Channel6Rms": {
-                    "Description": "Actual RMS value (unscaled)"
+                    "Description": "<skipped>"
                 },
                 "ACT_Channel7Peak": {
                     "ChannelName": "UAUX",
-                    "Description": "Actual peak value",
+                    "Description": "<skipped>",
                     "Unit": "V"
                 },
                 "ACT_Channel7Rms": {
-                    "Description": "Actual RMS value (unscaled)"
+                    "Description": "<skipped>"
                 },
                 "ACT_Channel8Peak": {
                     "ChannelName": "IAUX",
-                    "Description": "Actual peak value",
+                    "Description": "<skipped>",
                     "Unit": "A"
                 },
                 "ACT_Channel8Rms": {
-                    "Description": "Actual RMS value (unscaled)"
+                    "Description": "<skipped>"
                 },
                 "ACT_Frequency": {
-                    "Description": "Actual frequency",
+                    "Description": "<skipped>",
                     "Unit": "Hz"
                 },
                 "EntityName": {
-                    "Description": "Module's name"
+                    "Description": "<skipped>"
                 },
                 "INF_Adjusted": {
-                    "Description": "Adjustment information"
+                    "Description": "<skipped>"
                 },
                 "INF_Channel1ActOVLREJ": {
                     "ChannelName": "UL1",
-                    "Description": "Channel's actual range peak rejection"
+                    "Description": "<skipped>"
                 },
                 "INF_Channel1ActREJ": {
                     "ChannelName": "UL1",
-                    "Description": "Channel's actual rejection"
+                    "Description": "<skipped>"
                 },
                 "INF_Channel1OVLREJ": {
                     "ChannelName": "UL1",
-                    "Description": "Channel's maximum range peak rejection"
+                    "Description": "<skipped>"
                 },
                 "INF_Channel2ActOVLREJ": {
                     "ChannelName": "UL2",
-                    "Description": "Channel's actual range peak rejection"
+                    "Description": "<skipped>"
                 },
                 "INF_Channel2ActREJ": {
                     "ChannelName": "UL2",
-                    "Description": "Channel's actual rejection"
+                    "Description": "<skipped>"
                 },
                 "INF_Channel2OVLREJ": {
                     "ChannelName": "UL2",
-                    "Description": "Channel's maximum range peak rejection"
+                    "Description": "<skipped>"
                 },
                 "INF_Channel3ActOVLREJ": {
                     "ChannelName": "UL3",
-                    "Description": "Channel's actual range peak rejection"
+                    "Description": "<skipped>"
                 },
                 "INF_Channel3ActREJ": {
                     "ChannelName": "UL3",
-                    "Description": "Channel's actual rejection"
+                    "Description": "<skipped>"
                 },
                 "INF_Channel3OVLREJ": {
                     "ChannelName": "UL3",
-                    "Description": "Channel's maximum range peak rejection"
+                    "Description": "<skipped>"
                 },
                 "INF_Channel4ActOVLREJ": {
                     "ChannelName": "IL1",
-                    "Description": "Channel's actual range peak rejection"
+                    "Description": "<skipped>"
                 },
                 "INF_Channel4ActREJ": {
                     "ChannelName": "IL1",
-                    "Description": "Channel's actual rejection"
+                    "Description": "<skipped>"
                 },
                 "INF_Channel4OVLREJ": {
                     "ChannelName": "IL1",
-                    "Description": "Channel's maximum range peak rejection"
+                    "Description": "<skipped>"
                 },
                 "INF_Channel5ActOVLREJ": {
                     "ChannelName": "IL2",
-                    "Description": "Channel's actual range peak rejection"
+                    "Description": "<skipped>"
                 },
                 "INF_Channel5ActREJ": {
                     "ChannelName": "IL2",
-                    "Description": "Channel's actual rejection"
+                    "Description": "<skipped>"
                 },
                 "INF_Channel5OVLREJ": {
                     "ChannelName": "IL2",
-                    "Description": "Channel's maximum range peak rejection"
+                    "Description": "<skipped>"
                 },
                 "INF_Channel6ActOVLREJ": {
                     "ChannelName": "IL3",
-                    "Description": "Channel's actual range peak rejection"
+                    "Description": "<skipped>"
                 },
                 "INF_Channel6ActREJ": {
                     "ChannelName": "IL3",
-                    "Description": "Channel's actual rejection"
+                    "Description": "<skipped>"
                 },
                 "INF_Channel6OVLREJ": {
                     "ChannelName": "IL3",
-                    "Description": "Channel's maximum range peak rejection"
+                    "Description": "<skipped>"
                 },
                 "INF_Channel7ActOVLREJ": {
                     "ChannelName": "UAUX",
-                    "Description": "Channel's actual range peak rejection"
+                    "Description": "<skipped>"
                 },
                 "INF_Channel7ActREJ": {
                     "ChannelName": "UAUX",
-                    "Description": "Channel's actual rejection"
+                    "Description": "<skipped>"
                 },
                 "INF_Channel7OVLREJ": {
                     "ChannelName": "UAUX",
-                    "Description": "Channel's maximum range peak rejection"
+                    "Description": "<skipped>"
                 },
                 "INF_Channel8ActOVLREJ": {
                     "ChannelName": "IAUX",
-                    "Description": "Channel's actual range peak rejection"
+                    "Description": "<skipped>"
                 },
                 "INF_Channel8ActREJ": {
                     "ChannelName": "IAUX",
-                    "Description": "Channel's actual rejection"
+                    "Description": "<skipped>"
                 },
                 "INF_Channel8OVLREJ": {
                     "ChannelName": "IAUX",
-                    "Description": "Channel's maximum range peak rejection"
+                    "Description": "<skipped>"
                 },
                 "INF_ModuleInterface": {
-                    "Description": "Module's interface details"
+                    "Description": "<skipped>"
                 },
                 "INF_OverloadMax": {
-                    "Description": "Maximum range overload condition"
+                    "Description": "<skipped>"
                 },
                 "INF_PreScalingInfoGroup0": {
-                    "Description": "Channel's actual range peak rejection"
+                    "Description": "<skipped>"
                 },
                 "INF_PreScalingInfoGroup1": {
-                    "Description": "Channel's actual range peak rejection"
+                    "Description": "<skipped>"
                 },
                 "PAR_Channel1Range": {
                     "ChannelName": "UL1",
-                    "Description": "Channel's range",
+                    "Description": "<skipped>",
                     "Validation": {
                         "Data": [
                             "250V",
@@ -381,7 +381,7 @@
                 },
                 "PAR_Channel2Range": {
                     "ChannelName": "UL2",
-                    "Description": "Channel's range",
+                    "Description": "<skipped>",
                     "Validation": {
                         "Data": [
                             "250V",
@@ -393,7 +393,7 @@
                 },
                 "PAR_Channel3Range": {
                     "ChannelName": "UL3",
-                    "Description": "Channel's range",
+                    "Description": "<skipped>",
                     "Validation": {
                         "Data": [
                             "250V",
@@ -405,7 +405,7 @@
                 },
                 "PAR_Channel4Range": {
                     "ChannelName": "IL1",
-                    "Description": "Channel's range",
+                    "Description": "<skipped>",
                     "Validation": {
                         "Data": [
                             "10A",
@@ -423,7 +423,7 @@
                 },
                 "PAR_Channel5Range": {
                     "ChannelName": "IL2",
-                    "Description": "Channel's range",
+                    "Description": "<skipped>",
                     "Validation": {
                         "Data": [
                             "10A",
@@ -441,7 +441,7 @@
                 },
                 "PAR_Channel6Range": {
                     "ChannelName": "IL3",
-                    "Description": "Channel's range",
+                    "Description": "<skipped>",
                     "Validation": {
                         "Data": [
                             "10A",
@@ -459,7 +459,7 @@
                 },
                 "PAR_Channel7Range": {
                     "ChannelName": "UAUX",
-                    "Description": "Channel's range",
+                    "Description": "<skipped>",
                     "Validation": {
                         "Data": [
                             "250V",
@@ -471,7 +471,7 @@
                 },
                 "PAR_Channel8Range": {
                     "ChannelName": "IAUX",
-                    "Description": "Channel's range",
+                    "Description": "<skipped>",
                     "Validation": {
                         "Data": [
                             "--"
@@ -480,7 +480,7 @@
                     }
                 },
                 "PAR_ChannelGrouping": {
-                    "Description": "Channel grouping on/off",
+                    "Description": "<skipped>",
                     "Validation": {
                         "Data": [
                             0,
@@ -490,7 +490,7 @@
                     }
                 },
                 "PAR_IgnoreRmsValues": {
-                    "Description": "Percentage of nominal range below which channel values are ignored",
+                    "Description": "<skipped>",
                     "Unit": "%",
                     "Validation": {
                         "Data": [
@@ -502,7 +502,7 @@
                     }
                 },
                 "PAR_IgnoreRmsValuesOnOff": {
-                    "Description": "Enable or disable channel ignore limit option",
+                    "Description": "<skipped>",
                     "Validation": {
                         "Data": [
                             0,
@@ -512,7 +512,7 @@
                     }
                 },
                 "PAR_InvertPhase1": {
-                    "Description": "Inverted Phase",
+                    "Description": "<skipped>",
                     "Validation": {
                         "Data": [
                             0,
@@ -522,7 +522,7 @@
                     }
                 },
                 "PAR_InvertPhase2": {
-                    "Description": "Inverted Phase",
+                    "Description": "<skipped>",
                     "Validation": {
                         "Data": [
                             0,
@@ -532,7 +532,7 @@
                     }
                 },
                 "PAR_InvertPhase3": {
-                    "Description": "Inverted Phase",
+                    "Description": "<skipped>",
                     "Validation": {
                         "Data": [
                             0,
@@ -542,7 +542,7 @@
                     }
                 },
                 "PAR_InvertPhase4": {
-                    "Description": "Inverted Phase",
+                    "Description": "<skipped>",
                     "Validation": {
                         "Data": [
                             0,
@@ -552,7 +552,7 @@
                     }
                 },
                 "PAR_InvertPhase5": {
-                    "Description": "Inverted Phase",
+                    "Description": "<skipped>",
                     "Validation": {
                         "Data": [
                             0,
@@ -562,7 +562,7 @@
                     }
                 },
                 "PAR_InvertPhase6": {
-                    "Description": "Inverted Phase",
+                    "Description": "<skipped>",
                     "Validation": {
                         "Data": [
                             0,
@@ -572,7 +572,7 @@
                     }
                 },
                 "PAR_InvertPhase7": {
-                    "Description": "Inverted Phase",
+                    "Description": "<skipped>",
                     "Validation": {
                         "Data": [
                             0,
@@ -582,7 +582,7 @@
                     }
                 },
                 "PAR_InvertPhase8": {
-                    "Description": "Inverted Phase",
+                    "Description": "<skipped>",
                     "Validation": {
                         "Data": [
                             0,
@@ -592,7 +592,7 @@
                     }
                 },
                 "PAR_Overload": {
-                    "Description": "Overload",
+                    "Description": "<skipped>",
                     "Validation": {
                         "Data": [
                             0,
@@ -602,7 +602,7 @@
                     }
                 },
                 "PAR_PreScalingEnabledGroup0": {
-                    "Description": "Enable prescaling for group",
+                    "Description": "<skipped>",
                     "Validation": {
                         "Data": [
                             0,
@@ -612,7 +612,7 @@
                     }
                 },
                 "PAR_PreScalingEnabledGroup1": {
-                    "Description": "Enable prescaling for group",
+                    "Description": "<skipped>",
                     "Validation": {
                         "Data": [
                             0,
@@ -622,21 +622,21 @@
                     }
                 },
                 "PAR_PreScalingGroup0": {
-                    "Description": "Scaling factor for group k (see configuration)",
+                    "Description": "<skipped>",
                     "Validation": {
                         "Data": "^[1-9][0-9]*\\/[1-9][0-9]*(\\*\\((1|sqrt\\(3\\)|1\\/sqrt\\(3\\))\\))?$",
                         "Type": "REGEX"
                     }
                 },
                 "PAR_PreScalingGroup1": {
-                    "Description": "Scaling factor for group k (see configuration)",
+                    "Description": "<skipped>",
                     "Validation": {
                         "Data": "^[1-9][0-9]*\\/[1-9][0-9]*(\\*\\((1|sqrt\\(3\\)|1\\/sqrt\\(3\\))\\))?$",
                         "Type": "REGEX"
                     }
                 },
                 "PAR_RangeAutomatic": {
-                    "Description": "Range automatic on/off",
+                    "Description": "<skipped>",
                     "Validation": {
                         "Data": [
                             0,
@@ -646,34 +646,34 @@
                     }
                 },
                 "SIG_Channel1OVL": {
-                    "Description": "Channels overload status"
+                    "Description": "<skipped>"
                 },
                 "SIG_Channel2OVL": {
-                    "Description": "Channels overload status"
+                    "Description": "<skipped>"
                 },
                 "SIG_Channel3OVL": {
-                    "Description": "Channels overload status"
+                    "Description": "<skipped>"
                 },
                 "SIG_Channel4OVL": {
-                    "Description": "Channels overload status"
+                    "Description": "<skipped>"
                 },
                 "SIG_Channel5OVL": {
-                    "Description": "Channels overload status"
+                    "Description": "<skipped>"
                 },
                 "SIG_Channel6OVL": {
-                    "Description": "Channels overload status"
+                    "Description": "<skipped>"
                 },
                 "SIG_Channel7OVL": {
-                    "Description": "Channels overload status"
+                    "Description": "<skipped>"
                 },
                 "SIG_Channel8OVL": {
-                    "Description": "Channels overload status"
+                    "Description": "<skipped>"
                 },
                 "SIG_Measuring": {
-                    "Description": "Signal indicating measurement activity"
+                    "Description": "<skipped>"
                 },
                 "SIG_Ranging": {
-                    "Description": "Signal on changing ranges"
+                    "Description": "<skipped>"
                 }
             },
             "ModuleInfo": {
@@ -1001,16 +1001,16 @@
         "INF_ModuleInterface": {
             "ComponentInfo": {
                 "ACT_PllFixed": {
-                    "Description": "PLL fixed channel / mode"
+                    "Description": "<skipped>"
                 },
                 "EntityName": {
-                    "Description": "Module's name"
+                    "Description": "<skipped>"
                 },
                 "INF_ModuleInterface": {
-                    "Description": "Module's interface details"
+                    "Description": "<skipped>"
                 },
                 "PAR_PllAutomaticOnOff": {
-                    "Description": "PLL automatic on/off",
+                    "Description": "<skipped>",
                     "Validation": {
                         "Data": [
                             0,
@@ -1020,7 +1020,7 @@
                     }
                 },
                 "PAR_PllChannel": {
-                    "Description": "PLL reference channel",
+                    "Description": "<skipped>",
                     "Validation": {
                         "Data": [
                             "UL1",
@@ -1036,7 +1036,7 @@
                     }
                 },
                 "SIG_PLL": {
-                    "Description": "Signal on pll channel changing"
+                    "Description": "<skipped>"
                 }
             },
             "ModuleInfo": {
@@ -1084,67 +1084,67 @@
             "ComponentInfo": {
                 "ACT_RMSPN1": {
                     "ChannelName": "UL1",
-                    "Description": "Actual rms value phase/neutral",
+                    "Description": "<skipped>",
                     "Unit": "V"
                 },
                 "ACT_RMSPN2": {
                     "ChannelName": "UL2",
-                    "Description": "Actual rms value phase/neutral",
+                    "Description": "<skipped>",
                     "Unit": "V"
                 },
                 "ACT_RMSPN3": {
                     "ChannelName": "UL3",
-                    "Description": "Actual rms value phase/neutral",
+                    "Description": "<skipped>",
                     "Unit": "V"
                 },
                 "ACT_RMSPN4": {
                     "ChannelName": "IL1",
-                    "Description": "Actual rms value",
+                    "Description": "<skipped>",
                     "Unit": "A"
                 },
                 "ACT_RMSPN5": {
                     "ChannelName": "IL2",
-                    "Description": "Actual rms value",
+                    "Description": "<skipped>",
                     "Unit": "A"
                 },
                 "ACT_RMSPN6": {
                     "ChannelName": "IL3",
-                    "Description": "Actual rms value",
+                    "Description": "<skipped>",
                     "Unit": "A"
                 },
                 "ACT_RMSPN7": {
                     "ChannelName": "UAUX",
-                    "Description": "Actual rms value phase/neutral",
+                    "Description": "<skipped>",
                     "Unit": "V"
                 },
                 "ACT_RMSPN8": {
                     "ChannelName": "IAUX",
-                    "Description": "Actual rms value",
+                    "Description": "<skipped>",
                     "Unit": "A"
                 },
                 "ACT_RMSPP1": {
                     "ChannelName": "UL1-UL2",
-                    "Description": "Actual rms value phase/phase",
+                    "Description": "<skipped>",
                     "Unit": "V"
                 },
                 "ACT_RMSPP2": {
                     "ChannelName": "UL3-UL2",
-                    "Description": "Actual rms value phase/phase",
+                    "Description": "<skipped>",
                     "Unit": "V"
                 },
                 "ACT_RMSPP3": {
                     "ChannelName": "UL3-UL1",
-                    "Description": "Actual rms value phase/phase",
+                    "Description": "<skipped>",
                     "Unit": "V"
                 },
                 "EntityName": {
-                    "Description": "Module's name"
+                    "Description": "<skipped>"
                 },
                 "INF_ModuleInterface": {
-                    "Description": "Module's interface details"
+                    "Description": "<skipped>"
                 },
                 "PAR_Interval": {
-                    "Description": "Integration time",
+                    "Description": "<skipped>",
                     "Unit": "s",
                     "Validation": {
                         "Data": [
@@ -1156,7 +1156,7 @@
                     }
                 },
                 "SIG_Measuring": {
-                    "Description": "Signal indicating measurement activity"
+                    "Description": "<skipped>"
                 }
             },
             "ModuleInfo": {
@@ -1287,125 +1287,125 @@
             "ComponentInfo": {
                 "ACT_DFTPN1": {
                     "ChannelName": "UL1",
-                    "Description": "Actual value phase/neutral / cartesian format: re,im",
+                    "Description": "<skipped>",
                     "Unit": "V"
                 },
                 "ACT_DFTPN2": {
                     "ChannelName": "UL2",
-                    "Description": "Actual value phase/neutral / cartesian format: re,im",
+                    "Description": "<skipped>",
                     "Unit": "V"
                 },
                 "ACT_DFTPN3": {
                     "ChannelName": "UL3",
-                    "Description": "Actual value phase/neutral / cartesian format: re,im",
+                    "Description": "<skipped>",
                     "Unit": "V"
                 },
                 "ACT_DFTPN4": {
                     "ChannelName": "IL1",
-                    "Description": "Actual value / cartesian format: re,im",
+                    "Description": "<skipped>",
                     "Unit": "A"
                 },
                 "ACT_DFTPN5": {
                     "ChannelName": "IL2",
-                    "Description": "Actual value / cartesian format: re,im",
+                    "Description": "<skipped>",
                     "Unit": "A"
                 },
                 "ACT_DFTPN6": {
                     "ChannelName": "IL3",
-                    "Description": "Actual value / cartesian format: re,im",
+                    "Description": "<skipped>",
                     "Unit": "A"
                 },
                 "ACT_DFTPN7": {
                     "ChannelName": "UAUX",
-                    "Description": "Actual value phase/neutral / cartesian format: re,im",
+                    "Description": "<skipped>",
                     "Unit": "V"
                 },
                 "ACT_DFTPN8": {
                     "ChannelName": "IAUX",
-                    "Description": "Actual value / cartesian format: re,im",
+                    "Description": "<skipped>",
                     "Unit": "A"
                 },
                 "ACT_DFTPP1": {
                     "ChannelName": "UL1-UL2",
-                    "Description": "Actual value phase/phase / cartesian format: re,im",
+                    "Description": "<skipped>",
                     "Unit": "V"
                 },
                 "ACT_DFTPP2": {
                     "ChannelName": "UL3-UL2",
-                    "Description": "Actual value phase/phase / cartesian format: re,im",
+                    "Description": "<skipped>",
                     "Unit": "V"
                 },
                 "ACT_DFTPP3": {
                     "ChannelName": "UL3-UL1",
-                    "Description": "Actual value phase/phase / cartesian format: re,im",
+                    "Description": "<skipped>",
                     "Unit": "V"
                 },
                 "ACT_POL_DFTPN1": {
                     "ChannelName": "UL1",
-                    "Description": "Actual value phase/neutral / polar format: abs,rad[0,2π],deg[0,360]",
+                    "Description": "<skipped>",
                     "Unit": "V"
                 },
                 "ACT_POL_DFTPN2": {
                     "ChannelName": "UL2",
-                    "Description": "Actual value phase/neutral / polar format: abs,rad[0,2π],deg[0,360]",
+                    "Description": "<skipped>",
                     "Unit": "V"
                 },
                 "ACT_POL_DFTPN3": {
                     "ChannelName": "UL3",
-                    "Description": "Actual value phase/neutral / polar format: abs,rad[0,2π],deg[0,360]",
+                    "Description": "<skipped>",
                     "Unit": "V"
                 },
                 "ACT_POL_DFTPN4": {
                     "ChannelName": "IL1",
-                    "Description": "Actual value / polar format: abs,rad[0,2π],deg[0,360]",
+                    "Description": "<skipped>",
                     "Unit": "A"
                 },
                 "ACT_POL_DFTPN5": {
                     "ChannelName": "IL2",
-                    "Description": "Actual value / polar format: abs,rad[0,2π],deg[0,360]",
+                    "Description": "<skipped>",
                     "Unit": "A"
                 },
                 "ACT_POL_DFTPN6": {
                     "ChannelName": "IL3",
-                    "Description": "Actual value / polar format: abs,rad[0,2π],deg[0,360]",
+                    "Description": "<skipped>",
                     "Unit": "A"
                 },
                 "ACT_POL_DFTPN7": {
                     "ChannelName": "UAUX",
-                    "Description": "Actual value phase/neutral / polar format: abs,rad[0,2π],deg[0,360]",
+                    "Description": "<skipped>",
                     "Unit": "V"
                 },
                 "ACT_POL_DFTPN8": {
                     "ChannelName": "IAUX",
-                    "Description": "Actual value / polar format: abs,rad[0,2π],deg[0,360]",
+                    "Description": "<skipped>",
                     "Unit": "A"
                 },
                 "ACT_POL_DFTPP1": {
                     "ChannelName": "UL1-UL2",
-                    "Description": "Actual value phase/phase / polar format: abs,rad[0,2π],deg[0,360]",
+                    "Description": "<skipped>",
                     "Unit": "V"
                 },
                 "ACT_POL_DFTPP2": {
                     "ChannelName": "UL3-UL2",
-                    "Description": "Actual value phase/phase / polar format: abs,rad[0,2π],deg[0,360]",
+                    "Description": "<skipped>",
                     "Unit": "V"
                 },
                 "ACT_POL_DFTPP3": {
                     "ChannelName": "UL3-UL1",
-                    "Description": "Actual value phase/phase / polar format: abs,rad[0,2π],deg[0,360]",
+                    "Description": "<skipped>",
                     "Unit": "V"
                 },
                 "ACT_RFIELD": {
-                    "Description": "Phase sequence"
+                    "Description": "<skipped>"
                 },
                 "EntityName": {
-                    "Description": "Module's name"
+                    "Description": "<skipped>"
                 },
                 "INF_ModuleInterface": {
-                    "Description": "Module's interface details"
+                    "Description": "<skipped>"
                 },
                 "PAR_Interval": {
-                    "Description": "Integration time",
+                    "Description": "<skipped>",
                     "Unit": "s",
                     "Validation": {
                         "Data": [
@@ -1417,7 +1417,7 @@
                     }
                 },
                 "PAR_RefChannel": {
-                    "Description": "Reference channel",
+                    "Description": "<skipped>",
                     "Validation": {
                         "Data": [
                             "UL1",
@@ -1433,7 +1433,7 @@
                     }
                 },
                 "SIG_Measuring": {
-                    "Description": "Signal indicating measurement activity"
+                    "Description": "<skipped>"
                 }
             },
             "ModuleInfo": {
@@ -1650,92 +1650,92 @@
             "ComponentInfo": {
                 "ACT_DC1": {
                     "ChannelName": "UL1",
-                    "Description": "DC actual value",
+                    "Description": "<skipped>",
                     "Unit": "V"
                 },
                 "ACT_DC2": {
                     "ChannelName": "UL2",
-                    "Description": "DC actual value",
+                    "Description": "<skipped>",
                     "Unit": "V"
                 },
                 "ACT_DC3": {
                     "ChannelName": "UL3",
-                    "Description": "DC actual value",
+                    "Description": "<skipped>",
                     "Unit": "V"
                 },
                 "ACT_DC4": {
                     "ChannelName": "IL1",
-                    "Description": "DC actual value",
+                    "Description": "<skipped>",
                     "Unit": "A"
                 },
                 "ACT_DC5": {
                     "ChannelName": "IL2",
-                    "Description": "DC actual value",
+                    "Description": "<skipped>",
                     "Unit": "A"
                 },
                 "ACT_DC6": {
                     "ChannelName": "IL3",
-                    "Description": "DC actual value",
+                    "Description": "<skipped>",
                     "Unit": "A"
                 },
                 "ACT_DC7": {
                     "ChannelName": "UAUX",
-                    "Description": "DC actual value",
+                    "Description": "<skipped>",
                     "Unit": "V"
                 },
                 "ACT_DC8": {
                     "ChannelName": "IAUX",
-                    "Description": "DC actual value",
+                    "Description": "<skipped>",
                     "Unit": "A"
                 },
                 "ACT_FFT1": {
                     "ChannelName": "UL1",
-                    "Description": "FFT actual values",
+                    "Description": "<skipped>",
                     "Unit": "V"
                 },
                 "ACT_FFT2": {
                     "ChannelName": "UL2",
-                    "Description": "FFT actual values",
+                    "Description": "<skipped>",
                     "Unit": "V"
                 },
                 "ACT_FFT3": {
                     "ChannelName": "UL3",
-                    "Description": "FFT actual values",
+                    "Description": "<skipped>",
                     "Unit": "V"
                 },
                 "ACT_FFT4": {
                     "ChannelName": "IL1",
-                    "Description": "FFT actual values",
+                    "Description": "<skipped>",
                     "Unit": "A"
                 },
                 "ACT_FFT5": {
                     "ChannelName": "IL2",
-                    "Description": "FFT actual values",
+                    "Description": "<skipped>",
                     "Unit": "A"
                 },
                 "ACT_FFT6": {
                     "ChannelName": "IL3",
-                    "Description": "FFT actual values",
+                    "Description": "<skipped>",
                     "Unit": "A"
                 },
                 "ACT_FFT7": {
                     "ChannelName": "UAUX",
-                    "Description": "FFT actual values",
+                    "Description": "<skipped>",
                     "Unit": "V"
                 },
                 "ACT_FFT8": {
                     "ChannelName": "IAUX",
-                    "Description": "FFT actual values",
+                    "Description": "<skipped>",
                     "Unit": "A"
                 },
                 "EntityName": {
-                    "Description": "Module's name"
+                    "Description": "<skipped>"
                 },
                 "INF_ModuleInterface": {
-                    "Description": "Module's interface details"
+                    "Description": "<skipped>"
                 },
                 "PAR_Interval": {
-                    "Description": "Integration time",
+                    "Description": "<skipped>",
                     "Unit": "s",
                     "Validation": {
                         "Data": [
@@ -1747,7 +1747,7 @@
                     }
                 },
                 "PAR_RefChannel": {
-                    "Description": "Reference channel",
+                    "Description": "<skipped>",
                     "Validation": {
                         "Data": [
                             "m0",
@@ -1763,7 +1763,7 @@
                     }
                 },
                 "SIG_Measuring": {
-                    "Description": "Signal indicating measurement activity"
+                    "Description": "<skipped>"
                 }
             },
             "ModuleInfo": {
@@ -1923,52 +1923,52 @@
         "INF_ModuleInterface": {
             "ComponentInfo": {
                 "ACT_CanChangePhaseMask": {
-                    "Description": "Boolean indicator that current measurement mode can change phase mask"
+                    "Description": "<skipped>"
                 },
                 "ACT_MaxMeasSysCount": {
-                    "Description": "Number of max measurement systems for current measurement mode"
+                    "Description": "<skipped>"
                 },
                 "ACT_PQS1": {
                     "ChannelName": "P1",
-                    "Description": "Actual power value UL1/IL1",
+                    "Description": "<skipped>",
                     "Unit": "W"
                 },
                 "ACT_PQS2": {
                     "ChannelName": "P2",
-                    "Description": "Actual power value UL2/IL2",
+                    "Description": "<skipped>",
                     "Unit": "W"
                 },
                 "ACT_PQS3": {
                     "ChannelName": "P3",
-                    "Description": "Actual power value UL3/IL3",
+                    "Description": "<skipped>",
                     "Unit": "W"
                 },
                 "ACT_PQS4": {
                     "ChannelName": "PS",
-                    "Description": "Actual power value sum all phases",
+                    "Description": "<skipped>",
                     "Unit": "W"
                 },
                 "ACT_PowerDisplayName": {
-                    "Description": "Power display name (P/Q/S)"
+                    "Description": "<skipped>"
                 },
                 "EntityName": {
-                    "Description": "Module's name"
+                    "Description": "<skipped>"
                 },
                 "INF_ModeTypes": {
-                    "Description": "Display names (P/Q/S) of available modes"
+                    "Description": "<skipped>"
                 },
                 "INF_ModuleInterface": {
-                    "Description": "Module's interface details"
+                    "Description": "<skipped>"
                 },
                 "PAR_FOUT0": {
-                    "Description": "Frequency output name"
+                    "Description": "<skipped>"
                 },
                 "PAR_FOUTConstant0": {
                     "ChannelName": "Fout2",
-                    "Description": "Frequency output constant"
+                    "Description": "<skipped>"
                 },
                 "PAR_Interval": {
-                    "Description": "Integration time",
+                    "Description": "<skipped>",
                     "Unit": "s",
                     "Validation": {
                         "Data": [
@@ -1980,7 +1980,7 @@
                     }
                 },
                 "PAR_MeasModePhaseSelect": {
-                    "Description": "Active phases selection mask",
+                    "Description": "<skipped>",
                     "Validation": {
                         "Data": [
                             "000",
@@ -1996,7 +1996,7 @@
                     }
                 },
                 "PAR_MeasuringMode": {
-                    "Description": "Measuring mode",
+                    "Description": "<skipped>",
                     "Validation": {
                         "Data": [
                             "4LW",
@@ -2007,7 +2007,7 @@
                     }
                 },
                 "SIG_Measuring": {
-                    "Description": "Signal indicating measurement activity"
+                    "Description": "<skipped>"
                 }
             },
             "ModuleInfo": {
@@ -2115,52 +2115,52 @@
         "INF_ModuleInterface": {
             "ComponentInfo": {
                 "ACT_CanChangePhaseMask": {
-                    "Description": "Boolean indicator that current measurement mode can change phase mask"
+                    "Description": "<skipped>"
                 },
                 "ACT_MaxMeasSysCount": {
-                    "Description": "Number of max measurement systems for current measurement mode"
+                    "Description": "<skipped>"
                 },
                 "ACT_PQS1": {
                     "ChannelName": "Q1",
-                    "Description": "Actual power value UL1/IL1",
+                    "Description": "<skipped>",
                     "Unit": "Var"
                 },
                 "ACT_PQS2": {
                     "ChannelName": "Q2",
-                    "Description": "Actual power value UL2/IL2",
+                    "Description": "<skipped>",
                     "Unit": "Var"
                 },
                 "ACT_PQS3": {
                     "ChannelName": "Q3",
-                    "Description": "Actual power value UL3/IL3",
+                    "Description": "<skipped>",
                     "Unit": "Var"
                 },
                 "ACT_PQS4": {
                     "ChannelName": "QS",
-                    "Description": "Actual power value sum all phases",
+                    "Description": "<skipped>",
                     "Unit": "Var"
                 },
                 "ACT_PowerDisplayName": {
-                    "Description": "Power display name (P/Q/S)"
+                    "Description": "<skipped>"
                 },
                 "EntityName": {
-                    "Description": "Module's name"
+                    "Description": "<skipped>"
                 },
                 "INF_ModeTypes": {
-                    "Description": "Display names (P/Q/S) of available modes"
+                    "Description": "<skipped>"
                 },
                 "INF_ModuleInterface": {
-                    "Description": "Module's interface details"
+                    "Description": "<skipped>"
                 },
                 "PAR_FOUT0": {
-                    "Description": "Frequency output name"
+                    "Description": "<skipped>"
                 },
                 "PAR_FOUTConstant0": {
                     "ChannelName": "Fout3",
-                    "Description": "Frequency output constant"
+                    "Description": "<skipped>"
                 },
                 "PAR_Interval": {
-                    "Description": "Integration time",
+                    "Description": "<skipped>",
                     "Unit": "s",
                     "Validation": {
                         "Data": [
@@ -2172,7 +2172,7 @@
                     }
                 },
                 "PAR_MeasModePhaseSelect": {
-                    "Description": "Active phases selection mask",
+                    "Description": "<skipped>",
                     "Validation": {
                         "Data": [
                             "000",
@@ -2188,7 +2188,7 @@
                     }
                 },
                 "PAR_MeasuringMode": {
-                    "Description": "Measuring mode",
+                    "Description": "<skipped>",
                     "Validation": {
                         "Data": [
                             "4LB",
@@ -2199,7 +2199,7 @@
                     }
                 },
                 "SIG_Measuring": {
-                    "Description": "Signal indicating measurement activity"
+                    "Description": "<skipped>"
                 }
             },
             "ModuleInfo": {
@@ -2307,52 +2307,52 @@
         "INF_ModuleInterface": {
             "ComponentInfo": {
                 "ACT_CanChangePhaseMask": {
-                    "Description": "Boolean indicator that current measurement mode can change phase mask"
+                    "Description": "<skipped>"
                 },
                 "ACT_MaxMeasSysCount": {
-                    "Description": "Number of max measurement systems for current measurement mode"
+                    "Description": "<skipped>"
                 },
                 "ACT_PQS1": {
                     "ChannelName": "S1",
-                    "Description": "Actual power value UL1/IL1",
+                    "Description": "<skipped>",
                     "Unit": "VA"
                 },
                 "ACT_PQS2": {
                     "ChannelName": "S2",
-                    "Description": "Actual power value UL2/IL2",
+                    "Description": "<skipped>",
                     "Unit": "VA"
                 },
                 "ACT_PQS3": {
                     "ChannelName": "S3",
-                    "Description": "Actual power value UL3/IL3",
+                    "Description": "<skipped>",
                     "Unit": "VA"
                 },
                 "ACT_PQS4": {
                     "ChannelName": "SS",
-                    "Description": "Actual power value sum all phases",
+                    "Description": "<skipped>",
                     "Unit": "VA"
                 },
                 "ACT_PowerDisplayName": {
-                    "Description": "Power display name (P/Q/S)"
+                    "Description": "<skipped>"
                 },
                 "EntityName": {
-                    "Description": "Module's name"
+                    "Description": "<skipped>"
                 },
                 "INF_ModeTypes": {
-                    "Description": "Display names (P/Q/S) of available modes"
+                    "Description": "<skipped>"
                 },
                 "INF_ModuleInterface": {
-                    "Description": "Module's interface details"
+                    "Description": "<skipped>"
                 },
                 "PAR_FOUT0": {
-                    "Description": "Frequency output name"
+                    "Description": "<skipped>"
                 },
                 "PAR_FOUTConstant0": {
                     "ChannelName": "Fout4",
-                    "Description": "Frequency output constant"
+                    "Description": "<skipped>"
                 },
                 "PAR_Interval": {
-                    "Description": "Integration time",
+                    "Description": "<skipped>",
                     "Unit": "s",
                     "Validation": {
                         "Data": [
@@ -2364,7 +2364,7 @@
                     }
                 },
                 "PAR_MeasModePhaseSelect": {
-                    "Description": "Active phases selection mask",
+                    "Description": "<skipped>",
                     "Validation": {
                         "Data": [
                             "000",
@@ -2380,7 +2380,7 @@
                     }
                 },
                 "PAR_MeasuringMode": {
-                    "Description": "Measuring mode",
+                    "Description": "<skipped>",
                     "Validation": {
                         "Data": [
                             "4LS",
@@ -2392,7 +2392,7 @@
                     }
                 },
                 "SIG_Measuring": {
-                    "Description": "Signal indicating measurement activity"
+                    "Description": "<skipped>"
                 }
             },
             "ModuleInfo": {
@@ -2503,52 +2503,52 @@
         "INF_ModuleInterface": {
             "ComponentInfo": {
                 "ACT_CanChangePhaseMask": {
-                    "Description": "Boolean indicator that current measurement mode can change phase mask"
+                    "Description": "<skipped>"
                 },
                 "ACT_MaxMeasSysCount": {
-                    "Description": "Number of max measurement systems for current measurement mode"
+                    "Description": "<skipped>"
                 },
                 "ACT_PQS1": {
                     "ChannelName": "P1",
-                    "Description": "Actual power value UL1/IL1",
+                    "Description": "<skipped>",
                     "Unit": "W"
                 },
                 "ACT_PQS2": {
                     "ChannelName": "P2",
-                    "Description": "Actual power value UL2/IL2",
+                    "Description": "<skipped>",
                     "Unit": "W"
                 },
                 "ACT_PQS3": {
                     "ChannelName": "P3",
-                    "Description": "Actual power value UL3/IL3",
+                    "Description": "<skipped>",
                     "Unit": "W"
                 },
                 "ACT_PQS4": {
                     "ChannelName": "PS",
-                    "Description": "Actual power value sum all phases",
+                    "Description": "<skipped>",
                     "Unit": "W"
                 },
                 "ACT_PowerDisplayName": {
-                    "Description": "Power display name (P/Q/S)"
+                    "Description": "<skipped>"
                 },
                 "EntityName": {
-                    "Description": "Module's name"
+                    "Description": "<skipped>"
                 },
                 "INF_ModeTypes": {
-                    "Description": "Display names (P/Q/S) of available modes"
+                    "Description": "<skipped>"
                 },
                 "INF_ModuleInterface": {
-                    "Description": "Module's interface details"
+                    "Description": "<skipped>"
                 },
                 "PAR_FOUT0": {
-                    "Description": "Frequency output name"
+                    "Description": "<skipped>"
                 },
                 "PAR_FOUTConstant0": {
                     "ChannelName": "Fout1",
-                    "Description": "Frequency output constant"
+                    "Description": "<skipped>"
                 },
                 "PAR_FOUT_NOMINAL_FREQ": {
-                    "Description": "Nominal frequency",
+                    "Description": "<skipped>",
                     "Unit": "Hz",
                     "Validation": {
                         "Data": [
@@ -2560,7 +2560,7 @@
                     }
                 },
                 "PAR_FOUT_QREF_FREQ": {
-                    "Description": "Fixed frequency output mode (QREF): frequency value",
+                    "Description": "<skipped>",
                     "Unit": "kHz",
                     "Validation": {
                         "Data": [
@@ -2572,7 +2572,7 @@
                     }
                 },
                 "PAR_Interval": {
-                    "Description": "Integration time",
+                    "Description": "<skipped>",
                     "Unit": "s",
                     "Validation": {
                         "Data": [
@@ -2584,7 +2584,7 @@
                     }
                 },
                 "PAR_MeasModePhaseSelect": {
-                    "Description": "Active phases selection mask",
+                    "Description": "<skipped>",
                     "Validation": {
                         "Data": [
                             "000",
@@ -2600,7 +2600,7 @@
                     }
                 },
                 "PAR_MeasuringMode": {
-                    "Description": "Measuring mode",
+                    "Description": "<skipped>",
                     "Validation": {
                         "Data": [
                             "4LW",
@@ -2619,7 +2619,7 @@
                     }
                 },
                 "SIG_Measuring": {
-                    "Description": "Signal indicating measurement activity"
+                    "Description": "<skipped>"
                 }
             },
             "ModuleInfo": {
@@ -2743,45 +2743,45 @@
         "INF_ModuleInterface": {
             "ComponentInfo": {
                 "ACT_CanChangePhaseMask": {
-                    "Description": "Boolean indicator that current measurement mode can change phase mask"
+                    "Description": "<skipped>"
                 },
                 "ACT_MaxMeasSysCount": {
-                    "Description": "Number of max measurement systems for current measurement mode"
+                    "Description": "<skipped>"
                 },
                 "ACT_PQS1": {
                     "ChannelName": "Q1",
-                    "Description": "Actual power value UL1/IL1",
+                    "Description": "<skipped>",
                     "Unit": "Var"
                 },
                 "ACT_PQS2": {
                     "ChannelName": "Q2",
-                    "Description": "Actual power value UL2/IL2",
+                    "Description": "<skipped>",
                     "Unit": "Var"
                 },
                 "ACT_PQS3": {
                     "ChannelName": "Q3",
-                    "Description": "Actual power value UL3/IL3",
+                    "Description": "<skipped>",
                     "Unit": "Var"
                 },
                 "ACT_PQS4": {
                     "ChannelName": "QS",
-                    "Description": "Actual power value sum all phases",
+                    "Description": "<skipped>",
                     "Unit": "Var"
                 },
                 "ACT_PowerDisplayName": {
-                    "Description": "Power display name (P/Q/S)"
+                    "Description": "<skipped>"
                 },
                 "EntityName": {
-                    "Description": "Module's name"
+                    "Description": "<skipped>"
                 },
                 "INF_ModeTypes": {
-                    "Description": "Display names (P/Q/S) of available modes"
+                    "Description": "<skipped>"
                 },
                 "INF_ModuleInterface": {
-                    "Description": "Module's interface details"
+                    "Description": "<skipped>"
                 },
                 "PAR_Interval": {
-                    "Description": "Integration time",
+                    "Description": "<skipped>",
                     "Unit": "s",
                     "Validation": {
                         "Data": [
@@ -2793,7 +2793,7 @@
                     }
                 },
                 "PAR_MeasModePhaseSelect": {
-                    "Description": "Active phases selection mask",
+                    "Description": "<skipped>",
                     "Validation": {
                         "Data": [
                             "111"
@@ -2802,7 +2802,7 @@
                     }
                 },
                 "PAR_MeasuringMode": {
-                    "Description": "Measuring mode",
+                    "Description": "<skipped>",
                     "Validation": {
                         "Data": [
                             "4LB"
@@ -2811,7 +2811,7 @@
                     }
                 },
                 "SIG_Measuring": {
-                    "Description": "Signal indicating measurement activity"
+                    "Description": "<skipped>"
                 }
             },
             "ModuleInfo": {
@@ -2847,45 +2847,45 @@
         "INF_ModuleInterface": {
             "ComponentInfo": {
                 "ACT_CanChangePhaseMask": {
-                    "Description": "Boolean indicator that current measurement mode can change phase mask"
+                    "Description": "<skipped>"
                 },
                 "ACT_MaxMeasSysCount": {
-                    "Description": "Number of max measurement systems for current measurement mode"
+                    "Description": "<skipped>"
                 },
                 "ACT_PQS1": {
                     "ChannelName": "S1",
-                    "Description": "Actual power value UL1/IL1",
+                    "Description": "<skipped>",
                     "Unit": "VA"
                 },
                 "ACT_PQS2": {
                     "ChannelName": "S2",
-                    "Description": "Actual power value UL2/IL2",
+                    "Description": "<skipped>",
                     "Unit": "VA"
                 },
                 "ACT_PQS3": {
                     "ChannelName": "S3",
-                    "Description": "Actual power value UL3/IL3",
+                    "Description": "<skipped>",
                     "Unit": "VA"
                 },
                 "ACT_PQS4": {
                     "ChannelName": "SS",
-                    "Description": "Actual power value sum all phases",
+                    "Description": "<skipped>",
                     "Unit": "VA"
                 },
                 "ACT_PowerDisplayName": {
-                    "Description": "Power display name (P/Q/S)"
+                    "Description": "<skipped>"
                 },
                 "EntityName": {
-                    "Description": "Module's name"
+                    "Description": "<skipped>"
                 },
                 "INF_ModeTypes": {
-                    "Description": "Display names (P/Q/S) of available modes"
+                    "Description": "<skipped>"
                 },
                 "INF_ModuleInterface": {
-                    "Description": "Module's interface details"
+                    "Description": "<skipped>"
                 },
                 "PAR_Interval": {
-                    "Description": "Integration time",
+                    "Description": "<skipped>",
                     "Unit": "s",
                     "Validation": {
                         "Data": [
@@ -2897,7 +2897,7 @@
                     }
                 },
                 "PAR_MeasModePhaseSelect": {
-                    "Description": "Active phases selection mask",
+                    "Description": "<skipped>",
                     "Validation": {
                         "Data": [
                             "111"
@@ -2906,7 +2906,7 @@
                     }
                 },
                 "PAR_MeasuringMode": {
-                    "Description": "Measuring mode",
+                    "Description": "<skipped>",
                     "Validation": {
                         "Data": [
                             "4LS"
@@ -2915,7 +2915,7 @@
                     }
                 },
                 "SIG_Measuring": {
-                    "Description": "Signal indicating measurement activity"
+                    "Description": "<skipped>"
                 }
             },
             "ModuleInfo": {
@@ -2951,57 +2951,57 @@
             "ComponentInfo": {
                 "ACT_HPP1": {
                     "ChannelName": "P1",
-                    "Description": "Harmonic power active values",
+                    "Description": "<skipped>",
                     "Unit": "W"
                 },
                 "ACT_HPP2": {
                     "ChannelName": "P2",
-                    "Description": "Harmonic power active values",
+                    "Description": "<skipped>",
                     "Unit": "W"
                 },
                 "ACT_HPP3": {
                     "ChannelName": "P3",
-                    "Description": "Harmonic power active values",
+                    "Description": "<skipped>",
                     "Unit": "W"
                 },
                 "ACT_HPQ1": {
                     "ChannelName": "Q1",
-                    "Description": "Harmonic power reactive values",
+                    "Description": "<skipped>",
                     "Unit": "Var"
                 },
                 "ACT_HPQ2": {
                     "ChannelName": "Q2",
-                    "Description": "Harmonic power reactive values",
+                    "Description": "<skipped>",
                     "Unit": "Var"
                 },
                 "ACT_HPQ3": {
                     "ChannelName": "Q3",
-                    "Description": "Harmonic power reactive values",
+                    "Description": "<skipped>",
                     "Unit": "Var"
                 },
                 "ACT_HPS1": {
                     "ChannelName": "S1",
-                    "Description": "Harmonic power apparent values",
+                    "Description": "<skipped>",
                     "Unit": "VA"
                 },
                 "ACT_HPS2": {
                     "ChannelName": "S2",
-                    "Description": "Harmonic power apparent values",
+                    "Description": "<skipped>",
                     "Unit": "VA"
                 },
                 "ACT_HPS3": {
                     "ChannelName": "S3",
-                    "Description": "Harmonic power apparent values",
+                    "Description": "<skipped>",
                     "Unit": "VA"
                 },
                 "EntityName": {
-                    "Description": "Module's name"
+                    "Description": "<skipped>"
                 },
                 "INF_ModuleInterface": {
-                    "Description": "Module's interface details"
+                    "Description": "<skipped>"
                 },
                 "SIG_Measuring": {
-                    "Description": "Signal indicating measurement activity"
+                    "Description": "<skipped>"
                 }
             },
             "ModuleInfo": {
@@ -3094,52 +3094,52 @@
             "ComponentInfo": {
                 "ACT_THDN1": {
                     "ChannelName": "UL1",
-                    "Description": "THDn actual value",
+                    "Description": "<skipped>",
                     "Unit": "%"
                 },
                 "ACT_THDN2": {
                     "ChannelName": "UL2",
-                    "Description": "THDn actual value",
+                    "Description": "<skipped>",
                     "Unit": "%"
                 },
                 "ACT_THDN3": {
                     "ChannelName": "UL3",
-                    "Description": "THDn actual value",
+                    "Description": "<skipped>",
                     "Unit": "%"
                 },
                 "ACT_THDN4": {
                     "ChannelName": "IL1",
-                    "Description": "THDn actual value",
+                    "Description": "<skipped>",
                     "Unit": "%"
                 },
                 "ACT_THDN5": {
                     "ChannelName": "IL2",
-                    "Description": "THDn actual value",
+                    "Description": "<skipped>",
                     "Unit": "%"
                 },
                 "ACT_THDN6": {
                     "ChannelName": "IL3",
-                    "Description": "THDn actual value",
+                    "Description": "<skipped>",
                     "Unit": "%"
                 },
                 "ACT_THDN7": {
                     "ChannelName": "UAUX",
-                    "Description": "THDn actual value",
+                    "Description": "<skipped>",
                     "Unit": "%"
                 },
                 "ACT_THDN8": {
                     "ChannelName": "IAUX",
-                    "Description": "THDn actual value",
+                    "Description": "<skipped>",
                     "Unit": "%"
                 },
                 "EntityName": {
-                    "Description": "Module's name"
+                    "Description": "<skipped>"
                 },
                 "INF_ModuleInterface": {
-                    "Description": "Module's interface details"
+                    "Description": "<skipped>"
                 },
                 "PAR_Interval": {
-                    "Description": "Integration time",
+                    "Description": "<skipped>",
                     "Unit": "s",
                     "Validation": {
                         "Data": [
@@ -3151,7 +3151,7 @@
                     }
                 },
                 "SIG_Measuring": {
-                    "Description": "Signal indicating measurement activity"
+                    "Description": "<skipped>"
                 }
             },
             "ModuleInfo": {
@@ -3245,52 +3245,52 @@
             "ComponentInfo": {
                 "ACT_THDR1": {
                     "ChannelName": "UL1",
-                    "Description": "THDr actual value",
+                    "Description": "<skipped>",
                     "Unit": "%"
                 },
                 "ACT_THDR2": {
                     "ChannelName": "UL2",
-                    "Description": "THDr actual value",
+                    "Description": "<skipped>",
                     "Unit": "%"
                 },
                 "ACT_THDR3": {
                     "ChannelName": "UL3",
-                    "Description": "THDr actual value",
+                    "Description": "<skipped>",
                     "Unit": "%"
                 },
                 "ACT_THDR4": {
                     "ChannelName": "IL1",
-                    "Description": "THDr actual value",
+                    "Description": "<skipped>",
                     "Unit": "%"
                 },
                 "ACT_THDR5": {
                     "ChannelName": "IL2",
-                    "Description": "THDr actual value",
+                    "Description": "<skipped>",
                     "Unit": "%"
                 },
                 "ACT_THDR6": {
                     "ChannelName": "IL3",
-                    "Description": "THDr actual value",
+                    "Description": "<skipped>",
                     "Unit": "%"
                 },
                 "ACT_THDR7": {
                     "ChannelName": "UAUX",
-                    "Description": "THDr actual value",
+                    "Description": "<skipped>",
                     "Unit": "%"
                 },
                 "ACT_THDR8": {
                     "ChannelName": "IAUX",
-                    "Description": "THDr actual value",
+                    "Description": "<skipped>",
                     "Unit": "%"
                 },
                 "EntityName": {
-                    "Description": "Module's name"
+                    "Description": "<skipped>"
                 },
                 "INF_ModuleInterface": {
-                    "Description": "Module's interface details"
+                    "Description": "<skipped>"
                 },
                 "PAR_Interval": {
-                    "Description": "Integration time",
+                    "Description": "<skipped>",
                     "Unit": "s",
                     "Validation": {
                         "Data": [
@@ -3302,7 +3302,7 @@
                     }
                 },
                 "SIG_Measuring": {
-                    "Description": "Signal indicating measurement activity"
+                    "Description": "<skipped>"
                 }
             },
             "ModuleInfo": {
@@ -3396,52 +3396,52 @@
             "ComponentInfo": {
                 "ACT_OSCI1": {
                     "ChannelName": "UL1",
-                    "Description": "Measures samples",
+                    "Description": "<skipped>",
                     "Unit": "V"
                 },
                 "ACT_OSCI2": {
                     "ChannelName": "UL2",
-                    "Description": "Measures samples",
+                    "Description": "<skipped>",
                     "Unit": "V"
                 },
                 "ACT_OSCI3": {
                     "ChannelName": "UL3",
-                    "Description": "Measures samples",
+                    "Description": "<skipped>",
                     "Unit": "V"
                 },
                 "ACT_OSCI4": {
                     "ChannelName": "IL1",
-                    "Description": "Measures samples",
+                    "Description": "<skipped>",
                     "Unit": "A"
                 },
                 "ACT_OSCI5": {
                     "ChannelName": "IL2",
-                    "Description": "Measures samples",
+                    "Description": "<skipped>",
                     "Unit": "A"
                 },
                 "ACT_OSCI6": {
                     "ChannelName": "IL3",
-                    "Description": "Measures samples",
+                    "Description": "<skipped>",
                     "Unit": "A"
                 },
                 "ACT_OSCI7": {
                     "ChannelName": "UAUX",
-                    "Description": "Measures samples",
+                    "Description": "<skipped>",
                     "Unit": "V"
                 },
                 "ACT_OSCI8": {
                     "ChannelName": "IAUX",
-                    "Description": "Measures samples",
+                    "Description": "<skipped>",
                     "Unit": "A"
                 },
                 "EntityName": {
-                    "Description": "Module's name"
+                    "Description": "<skipped>"
                 },
                 "INF_ModuleInterface": {
-                    "Description": "Module's interface details"
+                    "Description": "<skipped>"
                 },
                 "PAR_RefChannel": {
-                    "Description": "Reference channel",
+                    "Description": "<skipped>",
                     "Validation": {
                         "Data": [
                             "m0",
@@ -3457,7 +3457,7 @@
                     }
                 },
                 "SIG_Measuring": {
-                    "Description": "Signal indicating measurement activity"
+                    "Description": "<skipped>"
                 }
             },
             "ModuleInfo": {
@@ -3570,57 +3570,57 @@
         "INF_ModuleInterface": {
             "ComponentInfo": {
                 "ACT_DutPulses": {
-                    "Description": "Pulse count of the DUT"
+                    "Description": "<skipped>"
                 },
                 "ACT_EndTime": {
-                    "Description": "Last measurement (sequence): End time (dd-MM-yyyy HH:mm:ss)"
+                    "Description": "<skipped>"
                 },
                 "ACT_Energy": {
-                    "Description": "Energy since last start",
+                    "Description": "<skipped>",
                     "Unit": "kWh"
                 },
                 "ACT_EnergyFinal": {
-                    "Description": "Energy of last measurement completed",
+                    "Description": "<skipped>",
                     "Unit": "kWh"
                 },
                 "ACT_MeasNum": {
-                    "Description": "Multiple measurements: Count"
+                    "Description": "<skipped>"
                 },
                 "ACT_MeasTime": {
-                    "Description": "Last measurement: Duration [ms]"
+                    "Description": "<skipped>"
                 },
                 "ACT_MulCount": {
-                    "Description": "Multiple measurements: Count stored"
+                    "Description": "<skipped>"
                 },
                 "ACT_MulResult": {
-                    "Description": "Multiple measurements: JSON result array / statistics"
+                    "Description": "<skipped>"
                 },
                 "ACT_Progress": {
-                    "Description": "Progress:\nQuery the progress of current measurement. Range is from 0 [%] to 100 [%]."
+                    "Description": "<skipped>"
                 },
                 "ACT_Rating": {
-                    "Description": "Evaluation last measurement"
+                    "Description": "<skipped>"
                 },
                 "ACT_RefFreqInput": {
-                    "Description": "Actual frequency input (internal)"
+                    "Description": "<skipped>"
                 },
                 "ACT_Result": {
-                    "Description": "Result:\nError value in [%] of the last measurement completed."
+                    "Description": "<skipped>"
                 },
                 "ACT_StartTime": {
-                    "Description": "Last measurement (sequence): Start time (dd-MM-yyyy HH:mm:ss)"
+                    "Description": "<skipped>"
                 },
                 "ACT_Status": {
-                    "Description": "Status:\n0: Idle\n1: Waiting for first pulse\n2: Started\n4: Ready\n8: Aborted"
+                    "Description": "<skipped>"
                 },
                 "EntityName": {
-                    "Description": "Module's name"
+                    "Description": "<skipped>"
                 },
                 "INF_ModuleInterface": {
-                    "Description": "Module's interface details"
+                    "Description": "<skipped>"
                 },
                 "PAR_ClientActiveNotify": {
-                    "Description": "By changing this component, a client asks us for max actualize performance",
+                    "Description": "<skipped>",
                     "Validation": {
                         "Data": [
                             0,
@@ -3631,7 +3631,7 @@
                     }
                 },
                 "PAR_Continuous": {
-                    "Description": "Continuous measurement:\n0: disabled\n1: enabled",
+                    "Description": "<skipped>",
                     "Validation": {
                         "Data": [
                             0,
@@ -3642,7 +3642,7 @@
                     }
                 },
                 "PAR_DUTConstUnit": {
-                    "Description": "DUT constant unit:\nValid values depend on power type selected:\n* Active power (P): 'I/kWh', 'Wh/I'\n* Reactive power (Q): 'I/kVarh', 'Varh/I'\n* Apparent power (S): 'I/kVAh', 'VAh/I'",
+                    "Description": "<skipped>",
                     "Validation": {
                         "Data": [
                             "I/kWh",
@@ -3652,7 +3652,7 @@
                     }
                 },
                 "PAR_DutConstant": {
-                    "Description": "DUT constant\nThe meter constant of the device under test can be queried an set here.",
+                    "Description": "<skipped>",
                     "Validation": {
                         "Data": [
                             1e-06,
@@ -3663,7 +3663,7 @@
                     }
                 },
                 "PAR_DutConstantAuto": {
-                    "Description": "Calculate DUT constant:\n* Writing 1 calculates the DUT meter constant from last measurement.\n* Value read is 0",
+                    "Description": "<skipped>",
                     "Validation": {
                         "Data": [
                             0,
@@ -3674,35 +3674,35 @@
                     }
                 },
                 "PAR_DutConstantIScaleDenom": {
-                    "Description": "Scale the dut constant in case transformers are used (I fraction denominator)",
+                    "Description": "<skipped>",
                     "Validation": {
                         "Data": "^[1-9][0-9]*?$",
                         "Type": "REGEX"
                     }
                 },
                 "PAR_DutConstantIScaleNum": {
-                    "Description": "Scale the dut constant in case transformers are used (I fraction numerator)",
+                    "Description": "<skipped>",
                     "Validation": {
                         "Data": "^[1-9][0-9]*$",
                         "Type": "REGEX"
                     }
                 },
                 "PAR_DutConstantUScaleDenom": {
-                    "Description": "Scale the dut constant in case transformers are used (U fraction denominator)",
+                    "Description": "<skipped>",
                     "Validation": {
                         "Data": "^[1-9][0-9]*(\\/sqrt\\(3\\))?$",
                         "Type": "REGEX"
                     }
                 },
                 "PAR_DutConstantUScaleNum": {
-                    "Description": "Scale the dut constant in case transformers are used (U fraction numerator)",
+                    "Description": "<skipped>",
                     "Validation": {
                         "Data": "^[1-9][0-9]*(\\/sqrt\\(3\\))?$",
                         "Type": "REGEX"
                     }
                 },
                 "PAR_DutInput": {
-                    "Description": "DUT input\nThe source of the device under test can be queried and selected.",
+                    "Description": "<skipped>",
                     "Validation": {
                         "Data": [
                             "SC1",
@@ -3712,7 +3712,7 @@
                     }
                 },
                 "PAR_DutTypeMeasurePoint": {
-                    "Description": "Scale the dut constant in case transformers are used (Measurement point selection)",
+                    "Description": "<skipped>",
                     "Validation": {
                         "Data": [
                             "CpIpUp",
@@ -3724,7 +3724,7 @@
                     }
                 },
                 "PAR_Energy": {
-                    "Description": "Energy value",
+                    "Description": "<skipped>",
                     "Unit": "kWh",
                     "Validation": {
                         "Data": [
@@ -3736,7 +3736,7 @@
                     }
                 },
                 "PAR_Lolimit": {
-                    "Description": "Error limit: lower",
+                    "Description": "<skipped>",
                     "Unit": "%",
                     "Validation": {
                         "Data": [
@@ -3748,7 +3748,7 @@
                     }
                 },
                 "PAR_MRate": {
-                    "Description": "Pulses to measure",
+                    "Description": "<skipped>",
                     "Validation": {
                         "Data": [
                             1,
@@ -3759,7 +3759,7 @@
                     }
                 },
                 "PAR_MeasCount": {
-                    "Description": "Multiple measurements: Number of measurements",
+                    "Description": "<skipped>",
                     "Validation": {
                         "Data": [
                             1,
@@ -3770,7 +3770,7 @@
                     }
                 },
                 "PAR_MeasWait": {
-                    "Description": "Multiple measurements: Pause\nSeconds to wait between measurements",
+                    "Description": "<skipped>",
                     "Unit": "s",
                     "Validation": {
                         "Data": [
@@ -3782,10 +3782,10 @@
                     }
                 },
                 "PAR_RefConstant": {
-                    "Description": "Reference meter constant"
+                    "Description": "<skipped>"
                 },
                 "PAR_RefInput": {
-                    "Description": "Reference input:\nThe reference power source (powermodule) can be queried and selected.",
+                    "Description": "<skipped>",
                     "Validation": {
                         "Data": [
                             "P",
@@ -3796,7 +3796,7 @@
                     }
                 },
                 "PAR_ResultUnit": {
-                    "Description": "Result unit",
+                    "Description": "<skipped>",
                     "Validation": {
                         "Data": [
                             "%",
@@ -3806,7 +3806,7 @@
                     }
                 },
                 "PAR_StartStop": {
-                    "Description": "Start/stop measurement:\n0: stop\n1: start",
+                    "Description": "<skipped>",
                     "Validation": {
                         "Data": [
                             0,
@@ -3817,7 +3817,7 @@
                     }
                 },
                 "PAR_Target": {
-                    "Description": "Reference pulses expected for 0% error\nCalculated automatically by: ReferencePulses = ReferenceConstant * NumberOfPulses / DUTConstant",
+                    "Description": "<skipped>",
                     "Validation": {
                         "Data": [
                             1,
@@ -3828,7 +3828,7 @@
                     }
                 },
                 "PAR_Uplimit": {
-                    "Description": "Error limit: upper",
+                    "Description": "<skipped>",
                     "Unit": "%",
                     "Validation": {
                         "Data": [
@@ -4125,40 +4125,40 @@
             "ComponentInfo": {
                 "ACT_Lambda1": {
                     "ChannelName": "Lambda1",
-                    "Description": "Actual lambda value"
+                    "Description": "<skipped>"
                 },
                 "ACT_Lambda2": {
                     "ChannelName": "Lambda2",
-                    "Description": "Actual lambda value"
+                    "Description": "<skipped>"
                 },
                 "ACT_Lambda3": {
                     "ChannelName": "Lambda3",
-                    "Description": "Actual lambda value"
+                    "Description": "<skipped>"
                 },
                 "ACT_Lambda4": {
                     "ChannelName": "Lambda4",
-                    "Description": "Actual lambda value"
+                    "Description": "<skipped>"
                 },
                 "ACT_Load1": {
-                    "Description": "load type"
+                    "Description": "<skipped>"
                 },
                 "ACT_Load2": {
-                    "Description": "load type"
+                    "Description": "<skipped>"
                 },
                 "ACT_Load3": {
-                    "Description": "load type"
+                    "Description": "<skipped>"
                 },
                 "ACT_Load4": {
-                    "Description": "load type"
+                    "Description": "<skipped>"
                 },
                 "EntityName": {
-                    "Description": "Module's name"
+                    "Description": "<skipped>"
                 },
                 "INF_ModuleInterface": {
-                    "Description": "Module's interface details"
+                    "Description": "<skipped>"
                 },
                 "SIG_Measuring": {
-                    "Description": "Signal indicating measurement activity"
+                    "Description": "<skipped>"
                 }
             },
             "ModuleInfo": {
@@ -4222,61 +4222,61 @@
         "INF_ModuleInterface": {
             "ComponentInfo": {
                 "EntityName": {
-                    "Description": "Module's name"
+                    "Description": "<skipped>"
                 },
                 "INF_AccumulatorSoc": {
-                    "Description": "Accumulator state of charge"
+                    "Description": "<skipped>"
                 },
                 "INF_AccumulatorStatus": {
-                    "Description": "Accumulator status"
+                    "Description": "<skipped>"
                 },
                 "INF_AdjChksum": {
-                    "Description": "Adjustment data checksum device"
+                    "Description": "<skipped>"
                 },
                 "INF_Adjusted": {
-                    "Description": "Adjustment information"
+                    "Description": "<skipped>"
                 },
                 "INF_CTRLVersion": {
-                    "Description": "Controller version"
+                    "Description": "<skipped>"
                 },
                 "INF_CpuInfo": {
-                    "Description": "CPU/SOM info"
+                    "Description": "<skipped>"
                 },
                 "INF_DSPServerVersion": {
-                    "Description": "DSP-server version"
+                    "Description": "<skipped>"
                 },
                 "INF_DSPVersion": {
-                    "Description": "DSP software version"
+                    "Description": "<skipped>"
                 },
                 "INF_DeviceType": {
-                    "Description": "Device type"
+                    "Description": "<skipped>"
                 },
                 "INF_FPGAVersion": {
-                    "Description": "FPGA version"
+                    "Description": "<skipped>"
                 },
                 "INF_HotplugChannels": {
-                    "Description": "List of hotplug channels"
+                    "Description": "<skipped>"
                 },
                 "INF_Instrument": {
-                    "Description": "Type of instrument connected"
+                    "Description": "<skipped>"
                 },
                 "INF_ModuleInterface": {
-                    "Description": "Module's interface details"
+                    "Description": "<skipped>"
                 },
                 "INF_PCBServerVersion": {
-                    "Description": "PCB-server version"
+                    "Description": "<skipped>"
                 },
                 "INF_PCBVersion": {
-                    "Description": "PCB version"
+                    "Description": "<skipped>"
                 },
                 "INF_ReleaseNr": {
-                    "Description": "Release number"
+                    "Description": "<skipped>"
                 },
                 "INF_Schnubbel": {
-                    "Description": "Adjustment values write permission"
+                    "Description": "<skipped>"
                 },
                 "PAR_SerialNr": {
-                    "Description": "Serial number",
+                    "Description": "<skipped>",
                     "Validation": {
                         "Data": "^\\d{9}$",
                         "Type": "REGEX"
@@ -4422,54 +4422,54 @@
             "ComponentInfo": {
                 "ACT_Burden1": {
                     "ChannelName": "BRD1",
-                    "Description": "Burden actual value Sb",
+                    "Description": "<skipped>",
                     "Unit": "VA"
                 },
                 "ACT_Burden2": {
                     "ChannelName": "BRD2",
-                    "Description": "Burden actual value Sb",
+                    "Description": "<skipped>",
                     "Unit": "VA"
                 },
                 "ACT_Burden3": {
                     "ChannelName": "BRD3",
-                    "Description": "Burden actual value Sb",
+                    "Description": "<skipped>",
                     "Unit": "VA"
                 },
                 "ACT_PFactor1": {
                     "ChannelName": "POF1",
-                    "Description": "Burden powerfactor cos(β)"
+                    "Description": "<skipped>"
                 },
                 "ACT_PFactor2": {
                     "ChannelName": "POF2",
-                    "Description": "Burden powerfactor cos(β)"
+                    "Description": "<skipped>"
                 },
                 "ACT_PFactor3": {
                     "ChannelName": "POF3",
-                    "Description": "Burden powerfactor cos(β)"
+                    "Description": "<skipped>"
                 },
                 "ACT_Ratio1": {
                     "ChannelName": "RAT1",
-                    "Description": "Burden ratio value Sn",
+                    "Description": "<skipped>",
                     "Unit": "%"
                 },
                 "ACT_Ratio2": {
                     "ChannelName": "RAT2",
-                    "Description": "Burden ratio value Sn",
+                    "Description": "<skipped>",
                     "Unit": "%"
                 },
                 "ACT_Ratio3": {
                     "ChannelName": "RAT3",
-                    "Description": "Burden ratio value Sn",
+                    "Description": "<skipped>",
                     "Unit": "%"
                 },
                 "EntityName": {
-                    "Description": "Module's name"
+                    "Description": "<skipped>"
                 },
                 "INF_ModuleInterface": {
-                    "Description": "Module's interface details"
+                    "Description": "<skipped>"
                 },
                 "PAR_NominalBurden": {
-                    "Description": "Nominal burden",
+                    "Description": "<skipped>",
                     "Unit": "VA",
                     "Validation": {
                         "Data": [
@@ -4481,7 +4481,7 @@
                     }
                 },
                 "PAR_NominalRange": {
-                    "Description": "Nominal range",
+                    "Description": "<skipped>",
                     "Unit": "A",
                     "Validation": {
                         "Data": [
@@ -4493,7 +4493,7 @@
                     }
                 },
                 "PAR_NominalRangeFactor": {
-                    "Description": "Nominal range factor",
+                    "Description": "<skipped>",
                     "Validation": {
                         "Data": [
                             "1",
@@ -4505,7 +4505,7 @@
                     }
                 },
                 "PAR_WCrosssection": {
-                    "Description": "Wire crosssection value",
+                    "Description": "<skipped>",
                     "Unit": "mm²",
                     "Validation": {
                         "Data": [
@@ -4517,7 +4517,7 @@
                     }
                 },
                 "PAR_WireLength": {
-                    "Description": "Wire length value",
+                    "Description": "<skipped>",
                     "Unit": "m",
                     "Validation": {
                         "Data": [
@@ -4529,7 +4529,7 @@
                     }
                 },
                 "SIG_Measuring": {
-                    "Description": "Signal indicating measurement activity"
+                    "Description": "<skipped>"
                 }
             },
             "ModuleInfo": {
@@ -4663,54 +4663,54 @@
             "ComponentInfo": {
                 "ACT_Burden1": {
                     "ChannelName": "BRD1",
-                    "Description": "Burden actual value Sb",
+                    "Description": "<skipped>",
                     "Unit": "VA"
                 },
                 "ACT_Burden2": {
                     "ChannelName": "BRD2",
-                    "Description": "Burden actual value Sb",
+                    "Description": "<skipped>",
                     "Unit": "VA"
                 },
                 "ACT_Burden3": {
                     "ChannelName": "BRD3",
-                    "Description": "Burden actual value Sb",
+                    "Description": "<skipped>",
                     "Unit": "VA"
                 },
                 "ACT_PFactor1": {
                     "ChannelName": "POF1",
-                    "Description": "Burden powerfactor cos(β)"
+                    "Description": "<skipped>"
                 },
                 "ACT_PFactor2": {
                     "ChannelName": "POF2",
-                    "Description": "Burden powerfactor cos(β)"
+                    "Description": "<skipped>"
                 },
                 "ACT_PFactor3": {
                     "ChannelName": "POF3",
-                    "Description": "Burden powerfactor cos(β)"
+                    "Description": "<skipped>"
                 },
                 "ACT_Ratio1": {
                     "ChannelName": "RAT1",
-                    "Description": "Burden ratio value Sn",
+                    "Description": "<skipped>",
                     "Unit": "%"
                 },
                 "ACT_Ratio2": {
                     "ChannelName": "RAT2",
-                    "Description": "Burden ratio value Sn",
+                    "Description": "<skipped>",
                     "Unit": "%"
                 },
                 "ACT_Ratio3": {
                     "ChannelName": "RAT3",
-                    "Description": "Burden ratio value Sn",
+                    "Description": "<skipped>",
                     "Unit": "%"
                 },
                 "EntityName": {
-                    "Description": "Module's name"
+                    "Description": "<skipped>"
                 },
                 "INF_ModuleInterface": {
-                    "Description": "Module's interface details"
+                    "Description": "<skipped>"
                 },
                 "PAR_NominalBurden": {
-                    "Description": "Nominal burden",
+                    "Description": "<skipped>",
                     "Unit": "VA",
                     "Validation": {
                         "Data": [
@@ -4722,7 +4722,7 @@
                     }
                 },
                 "PAR_NominalRange": {
-                    "Description": "Nominal range",
+                    "Description": "<skipped>",
                     "Unit": "V",
                     "Validation": {
                         "Data": [
@@ -4734,7 +4734,7 @@
                     }
                 },
                 "PAR_NominalRangeFactor": {
-                    "Description": "Nominal range factor",
+                    "Description": "<skipped>",
                     "Validation": {
                         "Data": [
                             "1",
@@ -4746,7 +4746,7 @@
                     }
                 },
                 "PAR_WCrosssection": {
-                    "Description": "Wire crosssection value",
+                    "Description": "<skipped>",
                     "Unit": "mm²",
                     "Validation": {
                         "Data": [
@@ -4758,7 +4758,7 @@
                     }
                 },
                 "PAR_WireLength": {
-                    "Description": "Wire length value",
+                    "Description": "<skipped>",
                     "Unit": "m",
                     "Validation": {
                         "Data": [
@@ -4770,7 +4770,7 @@
                     }
                 },
                 "SIG_Measuring": {
-                    "Description": "Signal indicating measurement activity"
+                    "Description": "<skipped>"
                 }
             },
             "ModuleInfo": {
@@ -4901,41 +4901,41 @@
             "ComponentInfo": {
                 "ACT_Angle1": {
                     "ChannelName": "ANG1",
-                    "Description": "Transformer angle deviation value",
+                    "Description": "<skipped>",
                     "Unit": "°"
                 },
                 "ACT_Error1": {
                     "ChannelName": "ERR1",
-                    "Description": "Transformer transmission error value",
+                    "Description": "<skipped>",
                     "Unit": "%"
                 },
                 "ACT_INSecondary1": {
                     "ChannelName": "INSEC1",
-                    "Description": "Reference N secondary input",
+                    "Description": "<skipped>",
                     "Unit": "A"
                 },
                 "ACT_IXPrimary1": {
                     "ChannelName": "IXPRIM1",
-                    "Description": "DUT test primary input",
+                    "Description": "<skipped>",
                     "Unit": "A"
                 },
                 "ACT_IXSecondary1": {
                     "ChannelName": "IXSEC1",
-                    "Description": "DUT secondary input",
+                    "Description": "<skipped>",
                     "Unit": "A"
                 },
                 "ACT_Ratio1": {
                     "ChannelName": "RAT1",
-                    "Description": "Transformer ratio value"
+                    "Description": "<skipped>"
                 },
                 "EntityName": {
-                    "Description": "Module's name"
+                    "Description": "<skipped>"
                 },
                 "INF_ModuleInterface": {
-                    "Description": "Module's interface details"
+                    "Description": "<skipped>"
                 },
                 "PAR_DutPrimary": {
-                    "Description": "DUT primary value",
+                    "Description": "<skipped>",
                     "Unit": "A",
                     "Validation": {
                         "Data": [
@@ -4947,7 +4947,7 @@
                     }
                 },
                 "PAR_DutSecondary": {
-                    "Description": "DUT secondary value",
+                    "Description": "<skipped>",
                     "Unit": "A",
                     "Validation": {
                         "Data": [
@@ -4959,7 +4959,7 @@
                     }
                 },
                 "PAR_PrimClampPrim": {
-                    "Description": "Clamp primary value",
+                    "Description": "<skipped>",
                     "Unit": "A",
                     "Validation": {
                         "Data": [
@@ -4971,7 +4971,7 @@
                     }
                 },
                 "PAR_PrimClampSec": {
-                    "Description": "Primary clamp secondary value",
+                    "Description": "<skipped>",
                     "Unit": "A",
                     "Validation": {
                         "Data": [
@@ -4983,7 +4983,7 @@
                     }
                 },
                 "PAR_SecClampPrim": {
-                    "Description": "Secondary clamp primary value",
+                    "Description": "<skipped>",
                     "Unit": "A",
                     "Validation": {
                         "Data": [
@@ -4995,7 +4995,7 @@
                     }
                 },
                 "PAR_SecClampSec": {
-                    "Description": "Secondary clamp secondary value",
+                    "Description": "<skipped>",
                     "Unit": "A",
                     "Validation": {
                         "Data": [
@@ -5007,7 +5007,7 @@
                     }
                 },
                 "SIG_Measuring": {
-                    "Description": "Signal indicating measurement activity"
+                    "Description": "<skipped>"
                 }
             },
             "ModuleInfo": {
@@ -5118,13 +5118,13 @@
         "INF_ModuleInterface": {
             "ComponentInfo": {
                 "EntityName": {
-                    "Description": "Module's name"
+                    "Description": "<skipped>"
                 },
                 "INF_ModuleInterface": {
-                    "Description": "Module's interface details"
+                    "Description": "<skipped>"
                 },
                 "PAR_AdjustAmplitude": {
-                    "Description": "One amplitude adjustment node",
+                    "Description": "<skipped>",
                     "Validation": {
                         "Data": [
                             "not subject"
@@ -5133,7 +5133,7 @@
                     }
                 },
                 "PAR_AdjustAmplitudeDc": {
-                    "Description": "One amplitude adjustment node for DC",
+                    "Description": "<skipped>",
                     "Validation": {
                         "Data": [
                             "not subject"
@@ -5142,7 +5142,7 @@
                     }
                 },
                 "PAR_AdjustCLAMPData": {
-                    "Description": "Get and set clamp adjustment data",
+                    "Description": "<skipped>",
                     "Validation": {
                         "Data": [
                             "not subject"
@@ -5151,7 +5151,7 @@
                     }
                 },
                 "PAR_AdjustGainStatus": {
-                    "Description": "Gain adjustment status",
+                    "Description": "<skipped>",
                     "Validation": {
                         "Data": [
                             "not subject"
@@ -5160,7 +5160,7 @@
                     }
                 },
                 "PAR_AdjustInit": {
-                    "Description": "Initialize adjustment data [channel-name,range-name] e.g IAUX,C200A",
+                    "Description": "<skipped>",
                     "Validation": {
                         "Data": [
                             "not subject"
@@ -5169,7 +5169,7 @@
                     }
                 },
                 "PAR_AdjustOffsetStatus": {
-                    "Description": "Offset adjustment status",
+                    "Description": "<skipped>",
                     "Validation": {
                         "Data": [
                             "not subject"
@@ -5178,7 +5178,7 @@
                     }
                 },
                 "PAR_AdjustPCBData": {
-                    "Description": "Get and set pcb adjustment data",
+                    "Description": "<skipped>",
                     "Validation": {
                         "Data": [
                             "not subject"
@@ -5187,7 +5187,7 @@
                     }
                 },
                 "PAR_AdjustPhase": {
-                    "Description": "One phase adjustment node",
+                    "Description": "<skipped>",
                     "Validation": {
                         "Data": [
                             "not subject"
@@ -5196,7 +5196,7 @@
                     }
                 },
                 "PAR_AdjustPhaseStatus": {
-                    "Description": "Phase adjustment status",
+                    "Description": "<skipped>",
                     "Validation": {
                         "Data": [
                             "not subject"
@@ -5205,7 +5205,7 @@
                     }
                 },
                 "PAR_AdjustSend": {
-                    "Description": "Send command to specified port",
+                    "Description": "<skipped>",
                     "Validation": {
                         "Data": [
                             "not subject"
@@ -5214,7 +5214,7 @@
                     }
                 },
                 "PAR_Adjustoffset": {
-                    "Description": "One offset adjustment node",
+                    "Description": "<skipped>",
                     "Validation": {
                         "Data": [
                             "not subject"
@@ -5223,7 +5223,7 @@
                     }
                 },
                 "PAR_Computation": {
-                    "Description": "Start computation of adjustment coefficients",
+                    "Description": "<skipped>",
                     "Validation": {
                         "Data": [
                             0,
@@ -5234,7 +5234,7 @@
                     }
                 },
                 "PAR_Storage": {
-                    "Description": "Save adjustment data",
+                    "Description": "<skipped>",
                     "Validation": {
                         "Data": [
                             1,
@@ -5375,47 +5375,47 @@
         "INF_ModuleInterface": {
             "ComponentInfo": {
                 "ACT_EndTime": {
-                    "Description": "Last measurement: End time (dd-MM-yyyy HH:mm:ss)"
+                    "Description": "<skipped>"
                 },
                 "ACT_Energy": {
-                    "Description": "Energy since last start",
+                    "Description": "<skipped>",
                     "Unit": "kWh"
                 },
                 "ACT_MeasTime": {
-                    "Description": "Last measurement: Duration [ms]"
+                    "Description": "<skipped>"
                 },
                 "ACT_Power": {
-                    "Description": "Mean power since last start",
+                    "Description": "<skipped>",
                     "Unit": "kW"
                 },
                 "ACT_Rating": {
-                    "Description": "Evaluation for the last measurement"
+                    "Description": "<skipped>"
                 },
                 "ACT_RefFreqInput": {
-                    "Description": "Actual frequency input (internal)"
+                    "Description": "<skipped>"
                 },
                 "ACT_Result": {
-                    "Description": "Result:\nError value in [%] of the last measurement completed.",
+                    "Description": "<skipped>",
                     "Unit": "%"
                 },
                 "ACT_StartTime": {
-                    "Description": "Last measurement: Start time (dd-MM-yyyy HH:mm:ss)"
+                    "Description": "<skipped>"
                 },
                 "ACT_Status": {
-                    "Description": "Status:\n0: Idle\n1: Waiting for first pulse\n2: Started\n4: Ready\n8: Aborted"
+                    "Description": "<skipped>"
                 },
                 "ACT_Time": {
-                    "Description": "Measurement time actual",
+                    "Description": "<skipped>",
                     "Unit": "s"
                 },
                 "EntityName": {
-                    "Description": "Module's name"
+                    "Description": "<skipped>"
                 },
                 "INF_ModuleInterface": {
-                    "Description": "Module's interface details"
+                    "Description": "<skipped>"
                 },
                 "PAR_ClientActiveNotify": {
-                    "Description": "By changing this component, a client asks us for max actualize performance",
+                    "Description": "<skipped>",
                     "Validation": {
                         "Data": [
                             0,
@@ -5426,7 +5426,7 @@
                     }
                 },
                 "PAR_Lolimit": {
-                    "Description": "Error limit: lower",
+                    "Description": "<skipped>",
                     "Unit": "%",
                     "Validation": {
                         "Data": [
@@ -5438,7 +5438,7 @@
                     }
                 },
                 "PAR_MeasTime": {
-                    "Description": "Measurement time set",
+                    "Description": "<skipped>",
                     "Unit": "s",
                     "Validation": {
                         "Data": [
@@ -5450,10 +5450,10 @@
                     }
                 },
                 "PAR_RefConstant": {
-                    "Description": "Reference meter constant"
+                    "Description": "<skipped>"
                 },
                 "PAR_RefInput": {
-                    "Description": "Reference input:\nThe reference power source (powermodule) can be queried and selected.",
+                    "Description": "<skipped>",
                     "Validation": {
                         "Data": [
                             "P",
@@ -5464,7 +5464,7 @@
                     }
                 },
                 "PAR_StartStop": {
-                    "Description": "Start/stop measurement:\n0: stop\n1: start",
+                    "Description": "<skipped>",
                     "Validation": {
                         "Data": [
                             0,
@@ -5475,7 +5475,7 @@
                     }
                 },
                 "PAR_T0Input": {
-                    "Description": "Energy register: Start value",
+                    "Description": "<skipped>",
                     "Unit": "kWh",
                     "Validation": {
                         "Data": [
@@ -5487,7 +5487,7 @@
                     }
                 },
                 "PAR_T1input": {
-                    "Description": "Energy register: End value",
+                    "Description": "<skipped>",
                     "Unit": "kWh",
                     "Validation": {
                         "Data": [
@@ -5499,7 +5499,7 @@
                     }
                 },
                 "PAR_TXUNIT": {
-                    "Description": "Energy unit:\nValid values depend on power type selected:\n* Active power (P): 'MWh', 'kWh', 'Wh'\n* Reactive power (Q): 'MVarh', 'kVarh', 'Varh'\n* Apparent power (S): 'MVAh', 'kVAh', 'VAh'",
+                    "Description": "<skipped>",
                     "Validation": {
                         "Data": [
                             "MWh",
@@ -5510,7 +5510,7 @@
                     }
                 },
                 "PAR_Targeted": {
-                    "Description": "Mode (how to stop measurement):\n0: Start/Stop (stop manually)\n1: Duration (stop automatic)",
+                    "Description": "<skipped>",
                     "Validation": {
                         "Data": [
                             0,
@@ -5521,7 +5521,7 @@
                     }
                 },
                 "PAR_Uplimit": {
-                    "Description": "Error limit: upper",
+                    "Description": "<skipped>",
                     "Unit": "%",
                     "Validation": {
                         "Data": [
@@ -5703,47 +5703,47 @@
         "INF_ModuleInterface": {
             "ComponentInfo": {
                 "ACT_EndTime": {
-                    "Description": "Last measurement: End time (dd-MM-yyyy HH:mm:ss)"
+                    "Description": "<skipped>"
                 },
                 "ACT_Energy": {
-                    "Description": "Energy since last start",
+                    "Description": "<skipped>",
                     "Unit": "kWh"
                 },
                 "ACT_MeasTime": {
-                    "Description": "Last measurement: Duration [ms]"
+                    "Description": "<skipped>"
                 },
                 "ACT_Power": {
-                    "Description": "Mean power since last start",
+                    "Description": "<skipped>",
                     "Unit": "kW"
                 },
                 "ACT_Rating": {
-                    "Description": "Evaluation last measurement"
+                    "Description": "<skipped>"
                 },
                 "ACT_RefFreqInput": {
-                    "Description": "Actual frequency input (internal)"
+                    "Description": "<skipped>"
                 },
                 "ACT_Result": {
-                    "Description": "Result:\nError value in [%] of the last measurement completed.",
+                    "Description": "<skipped>",
                     "Unit": "%"
                 },
                 "ACT_StartTime": {
-                    "Description": "Last measurement: Start time (dd-MM-yyyy HH:mm:ss)"
+                    "Description": "<skipped>"
                 },
                 "ACT_Status": {
-                    "Description": "Status:\n0: Idle\n1: Waiting for first pulse\n2: Started\n4: Ready\n8: Aborted"
+                    "Description": "<skipped>"
                 },
                 "ACT_Time": {
-                    "Description": "Measurement time actual",
+                    "Description": "<skipped>",
                     "Unit": "s"
                 },
                 "EntityName": {
-                    "Description": "Module's name"
+                    "Description": "<skipped>"
                 },
                 "INF_ModuleInterface": {
-                    "Description": "Module's interface details"
+                    "Description": "<skipped>"
                 },
                 "PAR_ClientActiveNotify": {
-                    "Description": "By changing this component, a client asks us for max actualize performance",
+                    "Description": "<skipped>",
                     "Validation": {
                         "Data": [
                             0,
@@ -5754,7 +5754,7 @@
                     }
                 },
                 "PAR_Lolimit": {
-                    "Description": "Error limit: lower",
+                    "Description": "<skipped>",
                     "Unit": "%",
                     "Validation": {
                         "Data": [
@@ -5766,7 +5766,7 @@
                     }
                 },
                 "PAR_MeasTime": {
-                    "Description": "Measurement time set",
+                    "Description": "<skipped>",
                     "Unit": "s",
                     "Validation": {
                         "Data": [
@@ -5778,10 +5778,10 @@
                     }
                 },
                 "PAR_RefConstant": {
-                    "Description": "Reference meter constant"
+                    "Description": "<skipped>"
                 },
                 "PAR_RefInput": {
-                    "Description": "Reference input:\nThe reference power source (powermodule) can be queried and selected.",
+                    "Description": "<skipped>",
                     "Validation": {
                         "Data": [
                             "P",
@@ -5792,7 +5792,7 @@
                     }
                 },
                 "PAR_StartStop": {
-                    "Description": "Start/stop measurement:\n0: stop\n1: start",
+                    "Description": "<skipped>",
                     "Validation": {
                         "Data": [
                             0,
@@ -5803,7 +5803,7 @@
                     }
                 },
                 "PAR_T0Input": {
-                    "Description": "Power register: Start value",
+                    "Description": "<skipped>",
                     "Unit": "kW",
                     "Validation": {
                         "Data": [
@@ -5815,7 +5815,7 @@
                     }
                 },
                 "PAR_T1input": {
-                    "Description": "Power register: End value",
+                    "Description": "<skipped>",
                     "Unit": "kW",
                     "Validation": {
                         "Data": [
@@ -5827,7 +5827,7 @@
                     }
                 },
                 "PAR_TXUNIT": {
-                    "Description": "Power unit:\nValid values depend on power type selected:\n* Active power (P): 'MW', 'kW', 'W'\n* Reactive power (Q): 'MVar', 'kVar', 'Var'\n* Apparent power (S): 'MVA', 'kVA', 'VA'",
+                    "Description": "<skipped>",
                     "Validation": {
                         "Data": [
                             "MW",
@@ -5838,7 +5838,7 @@
                     }
                 },
                 "PAR_Targeted": {
-                    "Description": "Mode (how to stop measurement):\n0: Start/Stop (stop manually)\n1: Duration (stop automatic)",
+                    "Description": "<skipped>",
                     "Validation": {
                         "Data": [
                             0,
@@ -5849,7 +5849,7 @@
                     }
                 },
                 "PAR_Uplimit": {
-                    "Description": "Error limit: upper",
+                    "Description": "<skipped>",
                     "Unit": "%",
                     "Validation": {
                         "Data": [
@@ -6024,22 +6024,22 @@
         "INF_ModuleInterface": {
             "ComponentInfo": {
                 "ACT_FlankCount": {
-                    "Description": "Measurement of flank count"
+                    "Description": "<skipped>"
                 },
                 "ACT_InitialLedState": {
-                    "Description": "Initial state of scanning head LED (on=1, off=0)"
+                    "Description": "<skipped>"
                 },
                 "ACT_LedState": {
-                    "Description": "Current state of scanning head LED (on=1, off=0)"
+                    "Description": "<skipped>"
                 },
                 "EntityName": {
-                    "Description": "Module's name"
+                    "Description": "<skipped>"
                 },
                 "INF_ModuleInterface": {
-                    "Description": "Module's interface details"
+                    "Description": "<skipped>"
                 },
                 "PAR_StartStop": {
-                    "Description": "Start/stop measurement:\n0: stop\n1: start",
+                    "Description": "<skipped>",
                     "Validation": {
                         "Data": [
                             0,
@@ -6697,43 +6697,43 @@
         "INF_ModuleInterface": {
             "ComponentInfo": {
                 "ACT_CountSources": {
-                    "Description": "Active source count"
+                    "Description": "<skipped>"
                 },
                 "ACT_DeviceInfo0": {
-                    "Description": "Source info/capabiliities in JSON"
+                    "Description": "<skipped>"
                 },
                 "ACT_DeviceInfo1": {
-                    "Description": "Source info/capabiliities in JSON"
+                    "Description": "<skipped>"
                 },
                 "ACT_DeviceInfo2": {
-                    "Description": "Source info/capabiliities in JSON"
+                    "Description": "<skipped>"
                 },
                 "ACT_DeviceInfo3": {
-                    "Description": "Source info/capabiliities in JSON"
+                    "Description": "<skipped>"
                 },
                 "ACT_DeviceState0": {
-                    "Description": "Source status in JSON"
+                    "Description": "<skipped>"
                 },
                 "ACT_DeviceState1": {
-                    "Description": "Source status in JSON"
+                    "Description": "<skipped>"
                 },
                 "ACT_DeviceState2": {
-                    "Description": "Source status in JSON"
+                    "Description": "<skipped>"
                 },
                 "ACT_DeviceState3": {
-                    "Description": "Source status in JSON"
+                    "Description": "<skipped>"
                 },
                 "ACT_MaxSources": {
-                    "Description": "Max source devices"
+                    "Description": "<skipped>"
                 },
                 "EntityName": {
-                    "Description": "Module's name"
+                    "Description": "<skipped>"
                 },
                 "INF_ModuleInterface": {
-                    "Description": "Module's interface details"
+                    "Description": "<skipped>"
                 },
                 "PAR_DemoSources": {
-                    "Description": "Number of demo sources",
+                    "Description": "<skipped>",
                     "Validation": {
                         "Data": [
                             0,
@@ -6744,22 +6744,22 @@
                     }
                 },
                 "PAR_SourceState0": {
-                    "Description": "All source parameters in JSON",
+                    "Description": "<skipped>",
                     "Validation": {
                     }
                 },
                 "PAR_SourceState1": {
-                    "Description": "All source parameters in JSON",
+                    "Description": "<skipped>",
                     "Validation": {
                     }
                 },
                 "PAR_SourceState2": {
-                    "Description": "All source parameters in JSON",
+                    "Description": "<skipped>",
                     "Validation": {
                     }
                 },
                 "PAR_SourceState3": {
-                    "Description": "All source parameters in JSON",
+                    "Description": "<skipped>",
                     "Validation": {
                     }
                 }
@@ -6910,35 +6910,35 @@
         "INF_ModuleInterface": {
             "ComponentInfo": {
                 "ACT_AirPressure": {
-                    "Description": "Current atmospheric pressure in hPa",
+                    "Description": "<skipped>",
                     "Unit": "hPa"
                 },
                 "ACT_ErrorFlags": {
-                    "Description": "Current error flags"
+                    "Description": "<skipped>"
                 },
                 "ACT_Humidity": {
-                    "Description": "Current relative humidity in percent",
+                    "Description": "<skipped>",
                     "Unit": "%"
                 },
                 "ACT_TemperatureC": {
-                    "Description": "Current temperature in degree Celsius",
+                    "Description": "<skipped>",
                     "Unit": "°C"
                 },
                 "ACT_TemperatureF": {
-                    "Description": "Current temperature in degree Fahrenheit",
+                    "Description": "<skipped>",
                     "Unit": "°F"
                 },
                 "ACT_WarningFlags": {
-                    "Description": "Current warning flags"
+                    "Description": "<skipped>"
                 },
                 "EntityName": {
-                    "Description": "Module's name"
+                    "Description": "<skipped>"
                 },
                 "INF_ModuleInterface": {
-                    "Description": "Module's interface details"
+                    "Description": "<skipped>"
                 },
                 "PAR_BluetoothOn": {
-                    "Description": "Bluetooth on",
+                    "Description": "<skipped>",
                     "Validation": {
                         "Data": [
                             0,
@@ -6948,7 +6948,7 @@
                     }
                 },
                 "PAR_MacAddress": {
-                    "Description": "MAC address of environment sensor",
+                    "Description": "<skipped>",
                     "Validation": {
                         "Data": "^((([0-9A-Fa-f]{2}:){5})|(([0-9A-Fa-f]{2}){5})([0-9A-Fa-f]{2})$|^$)",
                         "Type": "REGEX"
@@ -7006,13 +7006,13 @@
         "INF_ModuleInterface": {
             "ComponentInfo": {
                 "EntityName": {
-                    "Description": "Module's name"
+                    "Description": "<skipped>"
                 },
                 "INF_ModuleInterface": {
-                    "Description": "Module's interface details"
+                    "Description": "<skipped>"
                 },
                 "PAR_GuiDialogFinished": {
-                    "Description": "boolean if GUI dialog finished",
+                    "Description": "<skipped>",
                     "Validation": {
                         "Data": [
                             0,
@@ -7022,7 +7022,7 @@
                     }
                 },
                 "PAR_ReloadTrustList": {
-                    "Description": "set boolean to true to reload trust list",
+                    "Description": "<skipped>",
                     "Validation": {
                         "Data": [
                             0,
@@ -7051,7 +7051,7 @@
         "INF_ModuleInterface": {
             "ComponentInfo": {
                 "ACT_PowerAboveLimit": {
-                    "Description": "Energy monitoring (if > configured limit: true)",
+                    "Description": "<skipped>",
                     "Validation": {
                         "Data": [
                             0,
@@ -7061,10 +7061,10 @@
                     }
                 },
                 "EntityName": {
-                    "Description": "Module's name"
+                    "Description": "<skipped>"
                 },
                 "INF_ModuleInterface": {
-                    "Description": "Module's interface details"
+                    "Description": "<skipped>"
                 }
             },
             "ModuleInfo": {
@@ -7091,13 +7091,13 @@
         "INF_ModuleInterface": {
             "ComponentInfo": {
                 "ACT_ControllersFound": {
-                    "Description": "Detect if Emob and Mt650e are connected"
+                    "Description": "<skipped>"
                 },
                 "EntityName": {
-                    "Description": "Module's name"
+                    "Description": "<skipped>"
                 },
                 "INF_ModuleInterface": {
-                    "Description": "Module's interface details"
+                    "Description": "<skipped>"
                 }
             },
             "ModuleInfo": {

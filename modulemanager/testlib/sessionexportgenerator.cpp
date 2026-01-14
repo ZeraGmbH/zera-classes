@@ -86,7 +86,11 @@ void SessionExportGenerator::generateSnapshotJsons(QString snapshotDir)
 
 QByteArray SessionExportGenerator::getVeinDump()
 {
-    return VeinStorage::DumpJson::dumpToByteArray(m_modmanTestRunner->getVeinStorageSystem()->getDb(), QList<int>(), QList<int>() << scpi_module_entity);
+    return VeinStorage::DumpJson::dumpToByteArray(
+        m_modmanTestRunner->getVeinStorageSystem()->getDb(),
+        QList<int>(),
+        QList<int>() << scpi_module_entity,
+        true);
 }
 
 QList<TestModuleManager::TModuleInstances> SessionExportGenerator::getInstanceCountsOnModulesDestroyed()
