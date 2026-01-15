@@ -1,20 +1,24 @@
 :root {
-/*default: light-theme*/
-    --color-bg: #fbf8f8;
-    --color-fg: black;
-    --color-table-tr: #dddddd;
-    --color-table-tr-btm: #f3f3f3;
-    --color-table-border: white;
-    --color-table-border-btm: #206040;
+    --color-zera-logo: #206040;
     --color-table-border-thickness: 2px;
+
+/*default: light-theme*/
+    --color-bg: #f8fafc;
+    --color-fg: black;
+    --color-header-footer: #f0f2f3;
+    --color-table-tr: #e9ebec;
+    --color-table-tr-btm: #f3f3f3;
+    --color-table-border: var(--color-bg);
+    --color-table-border-btm: var(--color-zera-logo);
 }
 .dark-theme {
-    --color-bg: #484343;
+    --color-bg: #09090b;
     --color-fg: white;
-    --color-table-tr: #666565;
+    --color-header-footer: #36363A;
+    --color-table-tr: #24242C;
     --color-table-tr-btm: #666565;
-    --color-table-border: #808080;
-    --color-table-border-btm: #808080;
+    --color-table-border: var(--color-bg);
+    --color-table-border-btm: var(--color-zera-logo);
 }
 body {
     font-family: Verdana, sans-serif;
@@ -32,16 +36,17 @@ html {
 h1 {
     color: #25915b;
     font-weight: bold;
-    padding-bottom: 10px;
-    padding-top: 30px;
+    margin-top: 50px;
 }
 h2 {
     color: #25915b;
     font-weight: bold;
+    margin-top: 40px;
 }
 h3 {
     color: #25915b;
     font-weight: bold;
+    margin-top: 30px;
 }
 
 /*Table of contents*/
@@ -61,9 +66,9 @@ h3 {
 
 /*SCPI Commands tables*/
 .DataTableDiv {
-    box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
-    padding: 10px 0 15px 15px;
-    margin-top: 15px;
+    /*box-shadow: 0 0 20px rgba(0, 0, 0, 0.05);*/
+    /*padding: 10px 0 15px 15px;*/
+    /*margin-top: 15px;*/
     margin-bottom: 15px;
 }  
 .DataTableName {
@@ -77,7 +82,7 @@ h3 {
     border: thin solid var(--color-table-border);
 }
 .DataTable tr th{
-    background-color: #206040;
+    background-color: var(--color-zera-logo);
     color: #ffffff;
     padding: 12px 15px;
 }
@@ -101,9 +106,9 @@ header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background-color: #c4c4c4;
+    background-color: var(--color-header-footer);
     position: sticky;
-    color: black;
+    color: var(--color-fg);
     top: 0;
     font-weight: bold;
     font-size: 200%;
@@ -132,8 +137,8 @@ footer {
     left: 0;
     bottom: 0;
     width: 100%;
-    background-color: #c4c4c4;
-    color: black;
+    background-color: var(--color-header-footer);
+    color: var(--color-fg);
     text-align: left;
     font-size: 75%;
 }
