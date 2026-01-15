@@ -10,6 +10,12 @@ private slots:
     void fileFound();
     void allFilesLoaded();
     void writtenXmlIsStillValid();
+
+    void startChannelUL1AutomaticOff();
+    void startChannelUL2AutomaticOff();
+    void startChannelFixedFreqAutomaticOff();
+
+    void startChannelIL1AutomaticOn();
 };
 
 #endif // TEST_SAMPLE_CONFIG_LOAD_H

@@ -1,6 +1,17 @@
 <RCC>
     <qresource prefix="/">
-        <file>dspDumps/dumpMeasProgram.json</file>
-        <file>session-minimal.json</file>
+        <file>module-configurations/com5003-samplemoduleIL1.xml</file>
+        <file>module-configurations/mt310s2-samplemodule-dc.xml</file>
+        <file>module-configurations/mt310s2-samplemodule-UL1.xml</file>
+        <file>module-configurations/mt310s2-samplemodule-UL2.xml</file>
+        <file>sessions/sample-only-fixed-freq.json</file>
+        <file>sessions/sample-only-UL1.json</file>
+        <file>sessions/sample-only-UL2.json</file>
+        <file>sessions/sample-only-IL1-auto-on.json</file>
+        <file>sessions/session-minimal.json</file>
+        <file>veinDumps/automaticOffUL1.json</file>
+        <file>veinDumps/automaticOffUL2.json</file>
+        <file>veinDumps/automaticOffFixedFreq.json</file>
+        <file>veinDumps/automaticOnIL1.json</file>
     </qresource>
 </RCC>

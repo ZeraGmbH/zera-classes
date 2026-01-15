@@ -1,0 +1,9 @@
+{
+    "modules" : [
+        {
+            "name" : "samplemodule",
+            "configFile" : ":/module-configurations/mt310s2-samplemodule-dc.xml",
+            "id": 1030
+        }
+    ]
+}

@@ -24,7 +24,6 @@ target_link_libraries(module-service-interfaces-demolib
     fftmodule-demolib
     rangemodule-demolib
     rmsmodule-demolib
-    samplemodule-demolib
     power1module-demolib
     power2module-demolib
     thdnmodule-demolib

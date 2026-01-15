@@ -5,7 +5,6 @@
 #include "demodspinterfacerms.h"
 #include "demodspinterfacepower1.h"
 #include "demodspinterfacepower2.h"
-#include "demodspinterfacesample.h"
 #include "demodspinterfacethdn.h"
 #include "demodspinterfaceosci.h"
 
@@ -103,12 +102,6 @@ Zera::DspInterfacePtr DemoFactoryServiceInterfaces::createDspInterfacePower2(int
                                                                              MeasModeSelector *measMode)
 {
     return std::make_shared<DemoDspInterfacePower2>(entityId, measMode, m_valueGenerator);
-}
-
-Zera::DspInterfacePtr DemoFactoryServiceInterfaces::createDspInterfaceSample(int entityId,
-                                                                             QStringList valueChannelList)
-{
-    return std::make_shared<DemoDspInterfaceSample>(entityId, valueChannelList, m_valueGenerator);
 }
 
 Zera::DspInterfacePtr DemoFactoryServiceInterfaces::createDspInterfaceThdn(int entityId,

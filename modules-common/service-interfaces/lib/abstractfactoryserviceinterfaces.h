@@ -17,7 +17,6 @@ public:
     virtual Zera::DspInterfacePtr createDspInterfaceRms(int entityId, QStringList valueChannelList) = 0;
     virtual Zera::DspInterfacePtr createDspInterfacePower1(int entityId, MeasModeSelector* measMode) = 0;
     virtual Zera::DspInterfacePtr createDspInterfacePower2(int entityId, MeasModeSelector* measMode) = 0;
-    virtual Zera::DspInterfacePtr createDspInterfaceSample(int entityId, QStringList valueChannelList) = 0;
     virtual Zera::DspInterfacePtr createDspInterfaceThdn(int entityId, QStringList valueChannelList) = 0;
     virtual Zera::DspInterfacePtr createDspInterfaceOsci(int entityId, QStringList valueChannelList, int interpolation) = 0;
     virtual Zera::DspInterfacePtr createDspInterfaceMode(int entityId) = 0;

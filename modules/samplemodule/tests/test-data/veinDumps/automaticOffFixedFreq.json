@@ -1,0 +1,74 @@
+{
+    "1030": {
+        "ACT_PllFixed": true,
+        "EntityName": "SampleModule1",
+        "INF_ModuleInterface": {
+            "ComponentInfo": {
+                "ACT_PllFixed": {
+                    "Description": "<skipped>"
+                },
+                "EntityName": {
+                    "Description": "<skipped>"
+                },
+                "INF_ModuleInterface": {
+                    "Description": "<skipped>"
+                },
+                "PAR_PllAutomaticOnOff": {
+                    "Description": "<skipped>",
+                    "Validation": {
+                        "Data": [
+                            0,
+                            1
+                        ],
+                        "Type": "BOOL"
+                    }
+                },
+                "PAR_PllChannel": {
+                    "Description": "<skipped>",
+                    "Validation": {
+                        "Data": [
+                            "UL1",
+                            "UL2",
+                            "UL3",
+                            "IL1",
+                            "IL2",
+                            "IL3",
+                            "UAUX",
+                            "IAUX"
+                        ],
+                        "Type": "STRING"
+                    }
+                },
+                "SIG_PLL": {
+                    "Description": "<skipped>"
+                }
+            },
+            "ModuleInfo": {
+                "Description": "This module is responsible for pll range setting\n, pll channel selection and automatic",
+                "Name": "SampleModule1"
+            },
+            "SCPIInfo": {
+                "Cmd": [
+                    [
+                        "CONFIGURATION",
+                        "PLLAUTO",
+                        "10",
+                        "PAR_PllAutomaticOnOff",
+                        "0"
+                    ],
+                    [
+                        "CONFIGURATION",
+                        "PLLREFERENCE",
+                        "10",
+                        "PAR_PllChannel",
+                        "0"
+                    ]
+                ],
+                "Name": "SAM1"
+            }
+        },
+        "PAR_PllAutomaticOnOff": 0,
+        "PAR_PllChannel": "",
+        "SIG_PLL": 0
+    }
+}

@@ -14,7 +14,6 @@ public:
     Zera::DspInterfacePtr createDspInterfaceRms(int entityId, QStringList valueChannelList) override;
     Zera::DspInterfacePtr createDspInterfacePower1(int entityId, MeasModeSelector* measMode) override;
     Zera::DspInterfacePtr createDspInterfacePower2(int entityId, MeasModeSelector* measMode) override;
-    Zera::DspInterfacePtr createDspInterfaceSample(int entityId, QStringList valueChannelList) override;
     Zera::DspInterfacePtr createDspInterfaceThdn(int entityId, QStringList valueChannelList) override;
     Zera::DspInterfacePtr createDspInterfaceOsci(int entityId, QStringList valueChannelList, int interpolation) override;
     Zera::DspInterfacePtr createDspInterfaceMode(int entityId) override;

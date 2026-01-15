@@ -1,0 +1,9 @@
+{
+    "modules" : [
+        {
+            "name" : "samplemodule",
+            "configFile" : ":/module-configurations/com5003-samplemoduleIL1.xml",
+            "id": 1030
+        }
+    ]
+}

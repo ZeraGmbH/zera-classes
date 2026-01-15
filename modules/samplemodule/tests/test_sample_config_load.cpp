@@ -1,6 +1,12 @@
 #include "test_sample_config_load.h"
+#include "modulemanagertestrunner.h"
+#include "pcbserviceconnection.h"
 #include "samplemoduleconfiguration.h"
+#include "taskpllchannelget.h"
+#include <vs_dumpjson.h>
+#include <mocktcpnetworkfactory.h>
 #include <testloghelpers.h>
+#include <timemachineobject.h>
 #include <QTest>
 
 QTEST_MAIN(test_sample_config_load)
@@ -46,4 +52,107 @@ void test_sample_config_load::writtenXmlIsStillValid()
         }
     }
     QVERIFY(allOk);
+}
+
+constexpr int sampleEntityd = 1030;
+
+void test_sample_config_load::startChannelUL1AutomaticOff()
+{
+    ModuleManagerTestRunner testRunner(":/sessions/sample-only-UL1.json");
+
+    VeinTcp::AbstractTcpNetworkFactoryPtr networkFactory = VeinTcp::MockTcpNetworkFactory::create();
+    PcbServiceConnection pcbConnection(NetworkConnectionInfo("127.0.0.1", 6307), networkFactory);
+
+    std::shared_ptr<QString> pllChannelMName = std::make_unique<QString>();
+    TaskContainerQueue taskQueue;
+    taskQueue.addSub(pcbConnection.createConnectionTask());
+    taskQueue.addSub(TaskPllChannelGet::create(pcbConnection.getInterface(),
+                                               pllChannelMName,
+                                               TRANSACTION_TIMEOUT));
+    TimeMachineObject::feedEventLoop();
+
+    QCOMPARE(*pllChannelMName, "m0");
+
+    VeinStorage::AbstractEventSystem* veinStorage = testRunner.getVeinStorageSystem();
+    QByteArray jsonExpected = TestLogHelpers::loadFile(":/veinDumps/automaticOffUL1.json");
+    QByteArray jsonDumped = VeinStorage::DumpJson::dumpToByteArray(veinStorage->getDb(),
+                                                                   QList<int>() << sampleEntityd,
+                                                                   QList<int>(),
+                                                                   true);
+    QVERIFY(TestLogHelpers::compareAndLogOnDiffJson(jsonExpected, jsonDumped));
+}
+
+void test_sample_config_load::startChannelUL2AutomaticOff()
+{
+    ModuleManagerTestRunner testRunner(":/sessions/sample-only-UL2.json");
+
+    VeinTcp::AbstractTcpNetworkFactoryPtr networkFactory = VeinTcp::MockTcpNetworkFactory::create();
+    PcbServiceConnection pcbConnection(NetworkConnectionInfo("127.0.0.1", 6307), networkFactory);
+
+    std::shared_ptr<QString> pllChannelMName = std::make_unique<QString>();
+    TaskContainerQueue taskQueue;
+    taskQueue.addSub(pcbConnection.createConnectionTask());
+    taskQueue.addSub(TaskPllChannelGet::create(pcbConnection.getInterface(),
+                                               pllChannelMName,
+                                               TRANSACTION_TIMEOUT));
+    TimeMachineObject::feedEventLoop();
+    QCOMPARE(*pllChannelMName, "m1");
+
+    VeinStorage::AbstractEventSystem* veinStorage = testRunner.getVeinStorageSystem();
+    QByteArray jsonExpected = TestLogHelpers::loadFile(":/veinDumps/automaticOffUL2.json");
+    QByteArray jsonDumped = VeinStorage::DumpJson::dumpToByteArray(veinStorage->getDb(),
+                                                                   QList<int>() << sampleEntityd,
+                                                                   QList<int>(),
+                                                                   true);
+    QVERIFY(TestLogHelpers::compareAndLogOnDiffJson(jsonExpected, jsonDumped));
+}
+
+void test_sample_config_load::startChannelFixedFreqAutomaticOff()
+{
+    ModuleManagerTestRunner testRunner(":/sessions/sample-only-fixed-freq.json");
+
+    VeinTcp::AbstractTcpNetworkFactoryPtr networkFactory = VeinTcp::MockTcpNetworkFactory::create();
+    PcbServiceConnection pcbConnection(NetworkConnectionInfo("127.0.0.1", 6307), networkFactory);
+
+    std::shared_ptr<QString> pllChannelMName = std::make_unique<QString>();
+    TaskContainerQueue taskQueue;
+    taskQueue.addSub(pcbConnection.createConnectionTask());
+    taskQueue.addSub(TaskPllChannelGet::create(pcbConnection.getInterface(),
+                                               pllChannelMName,
+                                               TRANSACTION_TIMEOUT));
+    TimeMachineObject::feedEventLoop();
+    QCOMPARE(*pllChannelMName, "13Hz_DPLL");
+
+    VeinStorage::AbstractEventSystem* veinStorage = testRunner.getVeinStorageSystem();
+    QByteArray jsonExpected = TestLogHelpers::loadFile(":/veinDumps/automaticOffFixedFreq.json");
+    QByteArray jsonDumped = VeinStorage::DumpJson::dumpToByteArray(veinStorage->getDb(),
+                                                                   QList<int>() << sampleEntityd,
+                                                                   QList<int>(),
+                                                                   true);
+    QVERIFY(TestLogHelpers::compareAndLogOnDiffJson(jsonExpected, jsonDumped));
+}
+
+void test_sample_config_load::startChannelIL1AutomaticOn()
+{
+    ModuleManagerTestRunner testRunner(":/sessions/sample-only-IL1-auto-on.json");
+
+    VeinTcp::AbstractTcpNetworkFactoryPtr networkFactory = VeinTcp::MockTcpNetworkFactory::create();
+    PcbServiceConnection pcbConnection(NetworkConnectionInfo("127.0.0.1", 6307), networkFactory);
+
+    std::shared_ptr<QString> pllChannelMName = std::make_unique<QString>();
+    TaskContainerQueue taskQueue;
+    taskQueue.addSub(pcbConnection.createConnectionTask());
+    taskQueue.addSub(TaskPllChannelGet::create(pcbConnection.getInterface(),
+                                               pllChannelMName,
+                                               TRANSACTION_TIMEOUT));
+    TimeMachineObject::feedEventLoop();
+    QCOMPARE(*pllChannelMName, "m3");
+
+    VeinStorage::AbstractEventSystem* veinStorage = testRunner.getVeinStorageSystem();
+    QByteArray jsonExpected = TestLogHelpers::loadFile(":/veinDumps/automaticOnIL1.json");
+    QByteArray jsonDumped = VeinStorage::DumpJson::dumpToByteArray(veinStorage->getDb(),
+                                                                   QList<int>() << sampleEntityd,
+                                                                   QList<int>(),
+                                                                   true);
+    QVERIFY(TestLogHelpers::compareAndLogOnDiffJson(jsonExpected, jsonDumped));
 }
