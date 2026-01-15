@@ -16,7 +16,7 @@ sed -i -E 's:\*\*([^*]+)\*\*:<b>\1</b>:g' $5
 sed -i -E 's:\_\_([^*]+)\_\_:<b>\1</b>:g' $5
 
 # handcrafter italic '_'
-sed -i -E 's:_([^_]+)_:<i>\1</i>:g' $5
+#sed -i -E 's:_([^_]+)_:<i>\1</i>:g' $5
 sed -i -E 's:\*([^ *][^*]*[^ *])\*:<i>\1</i>:g' $5
 
 cssContents=$(cat ${BASEPATH}/css/main.css)
