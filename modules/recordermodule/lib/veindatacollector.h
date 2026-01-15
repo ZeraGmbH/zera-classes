@@ -26,13 +26,15 @@ signals:
     void sigStoredValue(QUuid callId, bool success, QString errorMsg, QJsonObject values);
 
 private:
-    void collectValues(QDateTime timeStamp, QHash<int, QStringList> entitesAndComponents);
+    void collectValues(int msSinceStart, QHash<int, QStringList> entitesAndComponents);
     QJsonObject convertRecordedEntityComponentsToJson(RecordedEntityComponents recordedEntityComponents);
     void appendNewRecord(QJsonObject newRecordObject);
+    static QString intToStringWithLeadingDigits(int number);
 
     VeinStorage::AbstractDatabase *m_storage;
     QJsonObject m_recordedObject;
     VeinStorage::TimeStamperSettablePtr m_timeStamper;
+    VeinStorage::TimeStamperSettablePtr m_firstTimeStamp;
     VeinStorage::AbstractComponentPtr m_sigMeasuringCompo;
 };
 
