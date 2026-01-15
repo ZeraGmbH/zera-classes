@@ -21,92 +21,92 @@
             "ComponentInfo": {
                 "ACT_DC1": {
                     "ChannelName": "UL1",
-                    "Description": "DC actual value",
+                    "Description": "<skipped>",
                     "Unit": "V"
                 },
                 "ACT_DC2": {
                     "ChannelName": "UL2",
-                    "Description": "DC actual value",
+                    "Description": "<skipped>",
                     "Unit": "V"
                 },
                 "ACT_DC3": {
                     "ChannelName": "UL3",
-                    "Description": "DC actual value",
+                    "Description": "<skipped>",
                     "Unit": "V"
                 },
                 "ACT_DC4": {
                     "ChannelName": "IL1",
-                    "Description": "DC actual value",
+                    "Description": "<skipped>",
                     "Unit": "A"
                 },
                 "ACT_DC5": {
                     "ChannelName": "IL2",
-                    "Description": "DC actual value",
+                    "Description": "<skipped>",
                     "Unit": "A"
                 },
                 "ACT_DC6": {
                     "ChannelName": "IL3",
-                    "Description": "DC actual value",
+                    "Description": "<skipped>",
                     "Unit": "A"
                 },
                 "ACT_DC7": {
                     "ChannelName": "UAUX",
-                    "Description": "DC actual value",
+                    "Description": "<skipped>",
                     "Unit": "V"
                 },
                 "ACT_DC8": {
                     "ChannelName": "IAUX",
-                    "Description": "DC actual value",
+                    "Description": "<skipped>",
                     "Unit": "A"
                 },
                 "ACT_FFT1": {
                     "ChannelName": "UL1",
-                    "Description": "FFT actual values",
+                    "Description": "<skipped>",
                     "Unit": "V"
                 },
                 "ACT_FFT2": {
                     "ChannelName": "UL2",
-                    "Description": "FFT actual values",
+                    "Description": "<skipped>",
                     "Unit": "V"
                 },
                 "ACT_FFT3": {
                     "ChannelName": "UL3",
-                    "Description": "FFT actual values",
+                    "Description": "<skipped>",
                     "Unit": "V"
                 },
                 "ACT_FFT4": {
                     "ChannelName": "IL1",
-                    "Description": "FFT actual values",
+                    "Description": "<skipped>",
                     "Unit": "A"
                 },
                 "ACT_FFT5": {
                     "ChannelName": "IL2",
-                    "Description": "FFT actual values",
+                    "Description": "<skipped>",
                     "Unit": "A"
                 },
                 "ACT_FFT6": {
                     "ChannelName": "IL3",
-                    "Description": "FFT actual values",
+                    "Description": "<skipped>",
                     "Unit": "A"
                 },
                 "ACT_FFT7": {
                     "ChannelName": "UAUX",
-                    "Description": "FFT actual values",
+                    "Description": "<skipped>",
                     "Unit": "V"
                 },
                 "ACT_FFT8": {
                     "ChannelName": "IAUX",
-                    "Description": "FFT actual values",
+                    "Description": "<skipped>",
                     "Unit": "A"
                 },
                 "EntityName": {
-                    "Description": "Module's name"
+                    "Description": "<skipped>"
                 },
                 "INF_ModuleInterface": {
-                    "Description": "Module's interface details"
+                    "Description": "<skipped>"
                 },
                 "PAR_Interval": {
-                    "Description": "Integration time",
+                    "Description": "<skipped>",
                     "Unit": "s",
                     "Validation": {
                         "Data": [
@@ -118,7 +118,7 @@
                     }
                 },
                 "PAR_RefChannel": {
-                    "Description": "Reference channel",
+                    "Description": "<skipped>",
                     "Validation": {
                         "Data": [
                             "m0",
@@ -134,7 +134,7 @@
                     }
                 },
                 "SIG_Measuring": {
-                    "Description": "Signal indicating measurement activity"
+                    "Description": "<skipped>"
                 }
             },
             "ModuleInfo": {

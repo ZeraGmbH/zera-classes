@@ -28,7 +28,10 @@ void test_fft_module_regression::veinDumpInitial()
 
     QByteArray jsonExpected = TestLogHelpers::loadFile(":/dumpInitial.json");
     VeinStorage::AbstractEventSystem* veinStorage = testRunner.getVeinStorageSystem();
-    QByteArray jsonDumped = VeinStorage::DumpJson::dumpToByteArray(veinStorage->getDb(), QList<int>() << fftEntityId);
+    QByteArray jsonDumped = VeinStorage::DumpJson::dumpToByteArray(veinStorage->getDb(),
+                                                                   QList<int>() << fftEntityId,
+                                                                   QList<int>(),
+                                                                   true);
 
     QVERIFY(TestLogHelpers::compareAndLogOnDiffJson(jsonExpected, jsonDumped));
 }
@@ -81,7 +84,10 @@ void test_fft_module_regression::injectValues()
 
     QByteArray jsonExpected = TestLogHelpers::loadFile(":/dumpActual.json");
     VeinStorage::AbstractEventSystem* veinStorage = testRunner.getVeinStorageSystem();
-    QByteArray jsonDumped = VeinStorage::DumpJson::dumpToByteArray(veinStorage->getDb(), QList<int>() << fftEntityId);
+    QByteArray jsonDumped = VeinStorage::DumpJson::dumpToByteArray(veinStorage->getDb(),
+                                                                   QList<int>() << fftEntityId,
+                                                                   QList<int>(),
+                                                                   true);
 
     QVERIFY(TestLogHelpers::compareAndLogOnDiffJson(jsonExpected, jsonDumped));
 }
