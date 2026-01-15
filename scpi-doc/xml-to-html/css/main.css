@@ -1,5 +1,5 @@
 :root {
-    --color-zera-logo: #206040;
+    --color-green: #206040;
     --color-table-border-thickness: 2px;
 
 /*default: light-theme*/
@@ -9,7 +9,7 @@
     --color-table-tr: #e9ebec;
     --color-table-tr-btm: #f3f3f3;
     --color-table-border: var(--color-bg);
-    --color-table-border-btm: var(--color-zera-logo);
+    --color-table-border-btm: var(--color-green);
 }
 .dark-theme {
     --color-bg: #09090b;
@@ -18,7 +18,7 @@
     --color-table-tr: #24242C;
     --color-table-tr-btm: #666565;
     --color-table-border: var(--color-bg);
-    --color-table-border-btm: var(--color-zera-logo);
+    --color-table-border-btm: var(--color-green);
 }
 body {
     font-family: Verdana, sans-serif;
@@ -82,7 +82,7 @@ h3 {
     border: thin solid var(--color-table-border);
 }
 .DataTable tr th{
-    background-color: var(--color-zera-logo);
+    background-color: var(--color-green);
     color: #ffffff;
     padding: 12px 15px;
 }
