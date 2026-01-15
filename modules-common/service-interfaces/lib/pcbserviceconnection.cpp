@@ -2,12 +2,19 @@
 #include "taskserverconnectionstart.h"
 #include <proxy.h>
 
-PcbServiceConnection::PcbServiceConnection(ModuleNetworkParamsPtr networkParams)
+PcbServiceConnection::PcbServiceConnection(const NetworkConnectionInfo &networkInfo,
+                                           VeinTcp::AbstractTcpNetworkFactoryPtr networkFactory)
 {
-    m_pcbClient = Zera::Proxy::getInstance()->getConnectionSmart(networkParams->m_pcbServiceConnectionInfo,
-                                                                 networkParams->m_tcpNetworkFactory);
+    m_pcbClient = Zera::Proxy::getInstance()->getConnectionSmart(networkInfo,
+                                                                 networkFactory);
     m_pcbInterface = std::make_shared<Zera::cPCBInterface>();
     m_pcbInterface->setClientSmart(m_pcbClient);
+}
+
+PcbServiceConnection::PcbServiceConnection(ModuleNetworkParamsPtr networkParams) :
+    PcbServiceConnection(networkParams->m_pcbServiceConnectionInfo,
+                         networkParams->m_tcpNetworkFactory)
+{
 }
 
 TaskTemplatePtr PcbServiceConnection::createConnectionTask() const
