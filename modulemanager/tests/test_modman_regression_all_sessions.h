@@ -23,6 +23,7 @@ private slots:
     void testGenerateSnapshots();
     void checkObjectsProperlyDeleted();
     void checkFilesProperlyClosed();
+    void checkNoModuleConfigFilesWritten();
 private:
     bool checkUniqueEntityIdNames(const QString& device);
     AbstractFactoryServiceInterfacesPtr m_serviceInterfaceFactory;
@@ -31,6 +32,7 @@ private:
     QString m_devIfaceXmlsPath;
     QString m_snapshotJsonsPath;
     std::unique_ptr<TestOpenFileTracker> m_openFileTracker;
+    int m_moduleConfigFileWriteCount = 0;
 };
 
 #endif // TEST_MODMAN_REGRESSION_ALL_SESSIONS_H

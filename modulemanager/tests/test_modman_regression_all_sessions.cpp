@@ -21,10 +21,12 @@ void test_modman_regression_all_sessions::initTestCase()
 
     m_devIfaceXmlsPath = QStringLiteral(HTML_DOCS_PATH_TEST) + "scpi-xmls/";
     m_snapshotJsonsPath = QStringLiteral(SNAPSHOT_JSONS_PATH_TEST) + "snapshots/";
+
     DevicesExportGenerator devicesExportGenerator(MockLxdmSessionChangeParamGenerator::generateTestSessionChanger(false));
     devicesExportGenerator.exportAll(m_devIfaceXmlsPath, m_snapshotJsonsPath);
     m_veinDumps = devicesExportGenerator.getVeinDumps();
     m_instanceCountsOnModulesDestroyed = devicesExportGenerator.getInstanceCountsOnModulesDestroyed();
+    m_moduleConfigFileWriteCount = devicesExportGenerator.getModuleConfigWriteCounts();
 }
 
 void test_modman_regression_all_sessions::allSessionsVeinDumps_data()
@@ -141,6 +143,11 @@ void test_modman_regression_all_sessions::checkFilesProperlyClosed()
     QVERIFY(openFilesTotal.count() > 0);
     const QHash<QString, int> openFiles = m_openFileTracker->getOpenFiles();
     QCOMPARE(openFiles.count(), 0);
+}
+
+void test_modman_regression_all_sessions::checkNoModuleConfigFilesWritten()
+{
+    QCOMPARE(m_moduleConfigFileWriteCount, 0);
 }
 
 bool test_modman_regression_all_sessions::checkUniqueEntityIdNames(const QString &device)
