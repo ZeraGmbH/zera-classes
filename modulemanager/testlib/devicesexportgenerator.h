@@ -15,11 +15,13 @@ public:
     void exportAll(QString xmlDir, QString snapshotDir);
     VeinDumps getVeinDumps();
     QList<TestModuleManager::TModuleInstances> getInstanceCountsOnModulesDestroyed();
+    int getModuleConfigWriteCounts() const;
 private:
     void prepareDirectory(QString path);
     LxdmSessionChangeParam m_lxdmParam;
     VeinDumps m_veinDumps;
     QList<TestModuleManager::TModuleInstances> m_instanceCounts;
+    int m_moduleConfigFilesWritten = 0;
 };
 
 #endif // DEVICESEXPORTGENERATOR_H

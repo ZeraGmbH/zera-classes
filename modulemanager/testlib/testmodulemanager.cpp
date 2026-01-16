@@ -91,6 +91,11 @@ ZeraModules::VirtualModule *TestModuleManager::getModule(QString uniqueName, int
     return nullptr;
 }
 
+int TestModuleManager::getModuleConfigWriteCounts() const
+{
+    return m_moduleConfigCountWrites;
+}
+
 ZDspServer *TestModuleManager::getDspServer()
 {
     return m_testAllServices->getZdsp1dServer();
@@ -171,6 +176,7 @@ QStringList TestModuleManager::getModuleFileNames()
 
 void TestModuleManager::saveModuleConfig(ZeraModules::ModuleData *moduleData)
 {
+    m_moduleConfigCountWrites++;
     if(moduleData->m_configPath.startsWith("/tmp"))
         ZeraModules::ModuleManager::saveModuleConfig(moduleData);
 }

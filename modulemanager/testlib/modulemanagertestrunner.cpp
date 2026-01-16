@@ -85,6 +85,11 @@ QList<TestModuleManager::TModuleInstances> ModuleManagerTestRunner::getInstanceC
     return m_modMan->getInstanceCountsOnModulesDestroyed();
 }
 
+int ModuleManagerTestRunner::getModuleConfigWriteCounts() const
+{
+    return m_modMan->getModuleConfigWriteCounts();
+}
+
 void ModuleManagerTestRunner::setRangeGetSetDelay(int rangeGetSetDelay)
 {
     m_modMan->setRangeGetSetDelay(rangeGetSetDelay);

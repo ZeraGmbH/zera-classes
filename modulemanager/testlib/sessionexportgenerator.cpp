@@ -93,6 +93,11 @@ QByteArray SessionExportGenerator::getVeinDump()
         true);
 }
 
+int SessionExportGenerator::getModuleConfigWriteCounts() const
+{
+    return m_modmanTestRunner->getModuleConfigWriteCounts();
+}
+
 QList<TestModuleManager::TModuleInstances> SessionExportGenerator::getInstanceCountsOnModulesDestroyed()
 {
     return m_modmanTestRunner->getInstanceCountsOnModulesDestroyed();

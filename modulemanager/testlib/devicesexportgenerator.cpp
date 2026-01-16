@@ -24,6 +24,7 @@ void DevicesExportGenerator::exportAll(QString xmlDir, QString snapshotDir)
             sessionExportGenerator.generateSnapshotJsons(snapshotDir);
         }
         m_instanceCounts.append(sessionExportGenerator.getInstanceCountsOnModulesDestroyed());
+        m_moduleConfigFilesWritten += sessionExportGenerator.getModuleConfigWriteCounts();
     }
 }
 
@@ -35,6 +36,11 @@ VeinDumps DevicesExportGenerator::getVeinDumps()
 QList<TestModuleManager::TModuleInstances> DevicesExportGenerator::getInstanceCountsOnModulesDestroyed()
 {
     return m_instanceCounts;
+}
+
+int DevicesExportGenerator::getModuleConfigWriteCounts() const
+{
+    return m_moduleConfigFilesWritten;
 }
 
 void DevicesExportGenerator::prepareDirectory(QString path)

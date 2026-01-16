@@ -22,6 +22,7 @@ public:
     void generateDevIfaceXml(QString xmlDir);
     void generateSnapshotJsons(QString snapshotDir);
     QByteArray getVeinDump();
+    int getModuleConfigWriteCounts() const;
     QList<TestModuleManager::TModuleInstances> getInstanceCountsOnModulesDestroyed();
 
     static int getBigSessionFileCount();

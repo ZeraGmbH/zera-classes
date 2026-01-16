@@ -18,6 +18,7 @@ public:
     void destroyModulesAndWaitUntilAllShutdown();
     void waitUntilModulesAreReady();
     ZeraModules::VirtualModule *getModule(QString uniqueName, int entityId);
+    int getModuleConfigWriteCounts() const;
     struct TModuleInstances {
         int m_veinMetaDataCount = 0;
         int m_veinComponentCount = 0;
@@ -61,6 +62,7 @@ private:
     QList<TModuleInstances> m_instantCountsOnModulesDestroyed;
     std::unique_ptr<AbstractTestAllServices> m_testAllServices;
     VeinTcp::AbstractTcpNetworkFactoryPtr m_tcpNetworkFactory;
+    int m_moduleConfigCountWrites;
 };
 
 #endif // TESTMODULEMANAGER_H

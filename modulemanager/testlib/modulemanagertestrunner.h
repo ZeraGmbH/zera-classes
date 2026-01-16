@@ -26,6 +26,7 @@ public:
 
     void start(QString sessionFileName);
     QList<TestModuleManager::TModuleInstances> getInstanceCountsOnModulesDestroyed();
+    int getModuleConfigWriteCounts() const;
 
     VeinStorage::AbstractEventSystem *getVeinStorageSystem();
     VfCmdEventHandlerSystemPtr getVfCmdEventHandlerSystemPtr();
