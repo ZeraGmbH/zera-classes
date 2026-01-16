@@ -54,6 +54,12 @@ void test_sample_config_load::writtenXmlIsStillValid()
     QVERIFY(allOk);
 }
 
+void test_sample_config_load::noWritesOnModuleLoad()
+{
+    ModuleManagerTestRunner testRunner(":/sessions/sample-only-UL1.json");
+    QCOMPARE(testRunner.getModuleConfigWriteCounts(), 0);
+}
+
 constexpr int sampleEntityd = 1030;
 
 void test_sample_config_load::startChannelUL1AutomaticOff()

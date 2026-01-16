@@ -10,6 +10,7 @@ private slots:
     void fileFound();
     void allFilesLoaded();
     void writtenXmlIsStillValid();
+    void noWritesOnModuleLoad();
 
     void startChannelUL1AutomaticOff();
     void startChannelUL2AutomaticOff();

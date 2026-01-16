@@ -11,10 +11,16 @@ endfunction()
 
 SETUP_QTESTS_MODULE(
     test_sample_config_load
+    test_sample_persistency
     test_sample_set_channel
 )
 
 target_sources(test_sample_config_load
+  PRIVATE
+    test-data/test-data.qrc
+)
+
+target_sources(test_sample_persistency
   PRIVATE
     test-data/test-data.qrc
 )

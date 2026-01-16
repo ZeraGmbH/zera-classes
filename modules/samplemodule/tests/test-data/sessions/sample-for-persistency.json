@@ -1,0 +1,9 @@
+{
+    "modules" : [
+        {
+            "name" : "samplemodule",
+            "configFile" : "/tmp/samplemodule/module.xml",
+            "id": 1030
+        }
+    ]
+}

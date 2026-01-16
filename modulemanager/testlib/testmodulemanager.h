@@ -19,6 +19,7 @@ public:
     void waitUntilModulesAreReady();
     ZeraModules::VirtualModule *getModule(QString uniqueName, int entityId);
     int getModuleConfigWriteCounts() const;
+
     struct TModuleInstances {
         int m_veinMetaDataCount = 0;
         int m_veinComponentCount = 0;
