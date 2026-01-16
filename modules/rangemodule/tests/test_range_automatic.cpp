@@ -11,6 +11,7 @@
 #include <testloghelpers.h>
 #include <xmldocumentcompare.h>
 #include <vs_dumpjson.h>
+#include <QDir>
 #include <QTest>
 
 QTEST_MAIN(test_range_automatic)
@@ -27,6 +28,9 @@ static QString IAUXRangeComponent("PAR_Channel8Range");
 static QString RangeAutomaticComponent("PAR_RangeAutomatic");
 static QString RangeGroupingComponent("PAR_ChannelGrouping");
 
+static const char* tmpPath = "/tmp/rangemodule";
+static const char* tmpConf = "/tmp/rangemodule/module.xml";
+
 void test_range_automatic::initTestCase()
 {
     m_tcpFactory = VeinTcp::MockTcpNetworkFactory::create();
@@ -35,24 +39,27 @@ void test_range_automatic::initTestCase()
 
 void test_range_automatic::init()
 {
-    m_configDataLastStored = std::make_shared<QByteArray>();
+    TestLogHelpers::copyFile(":/mt310s2-rangemodule.xml", tmpConf);
+
     m_licenseSystem = std::make_unique<TestLicenseSystem>();
     m_serviceInterfaceFactory = std::make_shared<TestFactoryServiceInterfaces>();
     m_modmanSetupFacade = std::make_unique<ModuleManagerSetupFacade>(m_licenseSystem.get());
     m_modMan = std::make_unique<TestModuleManager>(m_modmanSetupFacade.get(),
                                                    m_serviceInterfaceFactory,
-                                                   m_tcpFactory,
-                                                   m_configDataLastStored);
+                                                   m_tcpFactory);
 
     m_modMan->loadAllAvailableModulePlugins();
     m_modMan->setupConnections();
     setupServices();
-    m_modMan->loadSession(":/session-minimal.json");
+    m_modMan->loadSession(":/session-minimal-on-tmp.json");
     m_modMan->waitUntilModulesAreReady();
 }
 
 void test_range_automatic::cleanup()
 {
+    QDir dir(tmpPath);
+    dir.removeRecursively();
+
     m_modMan->destroyModulesAndWaitUntilAllShutdown();
     m_modMan = nullptr;
     TimeMachineObject::feedEventLoop();
@@ -283,7 +290,6 @@ void test_range_automatic::testRangeAutomaticDecreaseI()
     QCOMPARE(getVfComponent(rangeEntityId, IL1RangeComponent), "2.5A");
 }
 
-
 void test_range_automatic::checkRmsOverload()
 {
     setVfComponent(rangeEntityId, RangeAutomaticComponent, 0);      // switch off range automaic
@@ -306,12 +312,7 @@ void test_range_automatic::checkRmsOverload()
     //fireNewActualValues(10.1);
     //fireNewActualValues(10.1);
     QCOMPARE(getVfComponent(rangeEntityId, "PAR_Overload"), 0);
-
-
 }
-
-
-
 
 void test_range_automatic::enableAndDisableRangeAutomatic()
 {
@@ -439,7 +440,7 @@ void test_range_automatic::checkPersitency()
     QCOMPARE(getVfComponent(rangeEntityId, RangeGroupingComponent), 1);
     setVfComponent(rangeEntityId, RangeGroupingComponent, 0); // this causes config save
     QByteArray expected = TestLogHelpers::loadFile(":/configDumps/dumpGroupingSet.xml");
-    QByteArray dumped = *m_configDataLastStored;
+    QByteArray dumped = TestLogHelpers::loadFile(tmpConf);
     if(!compare.compareXml(dumped, expected))
         QVERIFY(TestLogHelpers::compareAndLogOnDiff(expected, dumped));
 
@@ -447,7 +448,7 @@ void test_range_automatic::checkPersitency()
     QCOMPARE(getVfComponent(rangeEntityId, RangeAutomaticComponent), 0);
     setVfComponent(rangeEntityId, RangeAutomaticComponent, 1); // this causes config save
     expected = TestLogHelpers::loadFile(":/configDumps/dumpAutomaticSet.xml");
-    dumped = *m_configDataLastStored;
+    dumped = TestLogHelpers::loadFile(tmpConf);
     if(!compare.compareXml(dumped, expected))
         QVERIFY(TestLogHelpers::compareAndLogOnDiff(expected, dumped));
 
@@ -468,13 +469,13 @@ void test_range_automatic::checkPersitency()
     setVfComponent(rangeEntityId, IAUXRangeComponent, "C50A");
     QCOMPARE(getCurrentRanges(), QStringList() << "8V" << "8V" << "8V" << "5A" << "5A" << "5A" << "8V" << "C50A");
     expected = TestLogHelpers::loadFile(":/configDumps/dumpIAUXSet.xml");
-    dumped = *m_configDataLastStored;
+    dumped = TestLogHelpers::loadFile(tmpConf);
     if(!compare.compareXml(dumped, expected))
         QVERIFY(TestLogHelpers::compareAndLogOnDiff(expected, dumped));
     setVfComponent(rangeEntityId, IAUXRangeComponent, "--");
     QCOMPARE(getCurrentRanges(), QStringList() << "8V" << "8V" << "8V" << "5A" << "5A" << "5A" << "8V" << "--");
     expected = TestLogHelpers::loadFile(":/configDumps/dumpIAUXUnset.xml");
-    dumped = *m_configDataLastStored;
+    dumped = TestLogHelpers::loadFile(tmpConf);
     if(!compare.compareXml(dumped, expected))
         QVERIFY(TestLogHelpers::compareAndLogOnDiff(expected, dumped));
 
@@ -484,7 +485,7 @@ void test_range_automatic::checkPersitency()
     setVfComponent(rangeEntityId, IAUXRangeComponent, "0A");
     QCOMPARE(getCurrentRanges(), QStringList() << "8V" << "8V" << "8V" << "5A" << "5A" << "5A" << "8V" << "C50A");
     expected = TestLogHelpers::loadFile(":/configDumps/dumpIAUXSet.xml"); // Still set
-    dumped = *m_configDataLastStored;
+    dumped = TestLogHelpers::loadFile(tmpConf);
     if(!compare.compareXml(dumped, expected))
         QVERIFY(TestLogHelpers::compareAndLogOnDiff(expected, dumped));
 }

@@ -39,16 +39,14 @@ void TestModuleManager::pointToInstalledSessionFiles()
 
 TestModuleManager::TestModuleManager(ModuleManagerSetupFacade *setupFacade,
                                      AbstractFactoryServiceInterfacesPtr serviceInterfaceFactory,
-                                     VeinTcp::AbstractTcpNetworkFactoryPtr tcpNetworkFactory,
-                                     std::shared_ptr<QByteArray> configDataLastSaved) :
+                                     VeinTcp::AbstractTcpNetworkFactoryPtr tcpNetworkFactory) :
     ModuleManager(
         setupFacade,
         serviceInterfaceFactory,
         tcpNetworkFactory,
         // This is a hack to modify static test environment before ModuleManager starts using them
         prepareOe()),
-    m_tcpNetworkFactory(tcpNetworkFactory),
-    m_configDataLastSaved(configDataLastSaved)
+    m_tcpNetworkFactory(tcpNetworkFactory)
 {
     enableTests();
     connect(this, &ModuleManager::sigModulesUnloaded, this,
@@ -91,11 +89,6 @@ ZeraModules::VirtualModule *TestModuleManager::getModule(QString uniqueName, int
             return moduleInfo->m_module;
     }
     return nullptr;
-}
-
-const QByteArray TestModuleManager::getLastStoredConfig()
-{
-    return *m_configDataLastSaved;
 }
 
 ZDspServer *TestModuleManager::getDspServer()
@@ -178,5 +171,6 @@ QStringList TestModuleManager::getModuleFileNames()
 
 void TestModuleManager::saveModuleConfig(ZeraModules::ModuleData *moduleData)
 {
-    *m_configDataLastSaved = moduleData->m_module->getConfiguration();
+    if(moduleData->m_configPath.startsWith("/tmp"))
+        ZeraModules::ModuleManager::saveModuleConfig(moduleData);
 }

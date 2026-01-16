@@ -1,5 +1,11 @@
 <RCC>
     <qresource prefix="/">
+        <file>mt310s2-rangemodule.xml</file>
+        <file>mt310s2-rangemodule-test.xml</file>
+        <file>session-minimal.json</file>
+        <file>session-minimal-on-tmp.json</file>
+        <file>session-range-scpi.json</file>
+        <file>session-range-test.json</file>
         <file>configDumps/dumpAutomaticSet.xml</file>
         <file>configDumps/dumpGroupingSet.xml</file>
         <file>configDumps/dumpIAUXSet.xml</file>
@@ -11,9 +17,5 @@
         <file>veinDumps/dumpActual-preScaled2.json</file>
         <file>veinDumps/dumpInitial.json</file>
         <file>veinDumps/dumpInitialClamp.json</file>
-        <file>mt310s2-rangemodule-test.xml</file>
-        <file>session-minimal.json</file>
-        <file>session-range-scpi.json</file>
-        <file>session-range-test.json</file>
     </qresource>
 </RCC>

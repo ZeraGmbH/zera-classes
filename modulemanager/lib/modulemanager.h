@@ -63,13 +63,13 @@ private slots:
     void onEventSubSystemRemoved(VeinEvent::EventSystem *t_eventSystem);
 
 protected:
+    virtual void saveModuleConfig(ModuleData *moduleData);
     static QString m_sessionPath;
     std::unique_ptr<QList<ModuleData *>> m_moduleDataList;
     bool m_moduleStartLock;
     VeinTcp::AbstractTcpNetworkFactoryPtr m_tcpNetworkFactory;
 
 private:
-    virtual void saveModuleConfig(ModuleData *moduleData);
     virtual void saveDefaultSession();
     virtual QStringList getModuleFileNames();
     static std::unique_ptr<QList<ModuleData *>> createEmptyModuleDataList();

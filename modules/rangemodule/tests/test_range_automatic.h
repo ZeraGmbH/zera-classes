@@ -17,6 +17,7 @@ private slots:
     void initTestCase();
     void init();
     void cleanup();
+
     void defaultRangesAndSetting();
     void activeGroupingChangeSingleRange();
     void testRangeAutomatic();
@@ -57,7 +58,6 @@ private:
     std::unique_ptr<TestServerForSenseInterfaceMt310s2> m_testPcbServer;
     std::unique_ptr<MockZdsp1d> m_dspServer;
     std::unique_ptr<ResmanRunFacade> m_resmanServer;
-    std::shared_ptr<QByteArray> m_configDataLastStored;
     static constexpr bool withIaux = true;
     static constexpr bool withoutIaux = false;
 };
