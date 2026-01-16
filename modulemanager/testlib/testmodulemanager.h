@@ -62,7 +62,7 @@ private:
     QList<TModuleInstances> m_instantCountsOnModulesDestroyed;
     std::unique_ptr<AbstractTestAllServices> m_testAllServices;
     VeinTcp::AbstractTcpNetworkFactoryPtr m_tcpNetworkFactory;
-    int m_moduleConfigCountWrites;
+    int m_moduleConfigCountWrites = 0;
 };
 
 #endif // TESTMODULEMANAGER_H
