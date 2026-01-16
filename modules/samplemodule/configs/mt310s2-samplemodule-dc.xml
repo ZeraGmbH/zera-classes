@@ -2,8 +2,6 @@
 <samplemodconfpar>
     <configuration>
         <sample>
-            <system>s0</system>
-            <withpllautomatic>0</withpllautomatic>
             <pllfixed>1</pllfixed>
             <pllchannel>
                 <n>8</n>
@@ -17,9 +15,6 @@
                 <ch8>m7</ch8>
             </pllchannel>
         </sample>
-        <measure>
-            <interval>0.5</interval>
-        </measure>
     </configuration>
     <parameter>
         <sample>

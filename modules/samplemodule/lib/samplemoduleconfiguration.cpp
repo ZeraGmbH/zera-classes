@@ -29,14 +29,10 @@ void cSampleModuleConfiguration::setConfiguration(QByteArray xmlString)
     // so now we can set up
     // initializing hash table for xml configuration
 
-    m_ConfigXMLMap["samplemodconfpar:configuration:sample:system"] = setSampleSystem;
-    m_ConfigXMLMap["samplemodconfpar:configuration:sample:withpllautomatic"] = setPllAutomaticBool;
     m_ConfigXMLMap["samplemodconfpar:configuration:sample:pllfixed"] = setPllFixedBool;
 
     m_ConfigXMLMap["samplemodconfpar:configuration:sample:pllchannel:n"] = setPllChannelCount;
     // delegates for setting channels itself are generated dynamically
-
-    m_ConfigXMLMap["samplemodconfpar:configuration:measure:interval"] = setMeasureInterval;
 
     m_ConfigXMLMap["samplemodconfpar:parameter:sample:pllauto"] = setPllAutomatic;
     m_ConfigXMLMap["samplemodconfpar:parameter:sample:pllchannel"] = setPllChannel;
@@ -72,9 +68,6 @@ void cSampleModuleConfiguration::configXMLInfo(QString key)
         int cmd = m_ConfigXMLMap[key];
         switch (cmd)
         {
-        case setSampleSystem:
-            m_pSampleModulConfigData->m_ObsermaticConfPar.m_sSampleSystem = m_pXMLReader->getValue(key);
-            break;
         case setPllChannelCount:
         {
             m_pSampleModulConfigData->m_ObsermaticConfPar.m_npllChannelCount = m_pXMLReader->getValue(key).toInt(&ok);
@@ -91,18 +84,12 @@ void cSampleModuleConfiguration::configXMLInfo(QString key)
             m_pSampleModulConfigData->m_ObsermaticConfPar.m_npllAutoAct.m_sKey = key;
             m_pSampleModulConfigData->m_ObsermaticConfPar.m_npllAutoAct.m_nActive = m_pXMLReader->getValue(key).toInt(&ok);
             break;
-        case setPllAutomaticBool:
-            m_pSampleModulConfigData->m_ObsermaticConfPar.m_bpllAuto = (m_pXMLReader->getValue(key).toInt(&ok) == 1);
-            break;
         case setPllFixedBool:
             m_pSampleModulConfigData->m_ObsermaticConfPar.m_bpllFixed = (m_pXMLReader->getValue(key).toInt(&ok) == 1);
             break;
         case setPllChannel:
             m_pSampleModulConfigData->m_ObsermaticConfPar.m_pllSystemChannel.m_sKey = key;
             m_pSampleModulConfigData->m_ObsermaticConfPar.m_pllSystemChannel.m_sPar = m_pXMLReader->getValue(key);
-            break;
-        case setMeasureInterval:
-            m_pSampleModulConfigData->m_fMeasInterval = m_pXMLReader->getValue(key).toDouble(&ok);
             break;
         default:
             if ((cmd >= setPllChannel1) && (cmd < setPllChannel1 + 32))

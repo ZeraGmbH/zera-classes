@@ -13,11 +13,8 @@ namespace SAMPLEMODULE
 
 enum moduleconfigstate
 {
-    setPllAutomaticBool,
     setPllFixedBool,
     setPllAutomatic,
-    setMeasureInterval,
-    setSampleSystem, // we only support 1 system
     setPllChannelCount, // the number of sense channels the pll can be set to
 
     setPllChannel1 = 16, // max. 32 channels

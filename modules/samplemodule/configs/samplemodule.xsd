@@ -35,20 +35,6 @@
     </xs:complexType>
 
 
-    <xs:complexType name="measureintervaltype">
-        <xs:sequence>
-            <xs:element name="interval" minOccurs="1" maxOccurs="1">
-                <xs:simpleType>
-                    <xs:restriction base="xs:decimal">
-                            <xs:minInclusive value="0.1"/>
-                            <xs:maxInclusive value="5.0"/>
-                    </xs:restriction>
-                </xs:simpleType>
-            </xs:element>
-        </xs:sequence>
-    </xs:complexType>
-
-
     <xs:complexType name="parametersampletype">
         <xs:sequence>
             <xs:element name="pllauto" type="yesnotype" minOccurs="1" maxOccurs="1"/>
@@ -66,14 +52,11 @@
                             <xs:element name="sample">
                             <xs:complexType>
                                 <xs:sequence>
-                                    <xs:element name="system" type="xs:string" minOccurs="1" maxOccurs="1"/>
-                                    <xs:element name="withpllautomatic" type="yesnotype" minOccurs="1" maxOccurs="1"/>
                                     <xs:element name="pllfixed" type="yesnotype" minOccurs="1" maxOccurs="1"/>
                                     <xs:element name="pllchannel" type="pllchanneltype"/>
                                 </xs:sequence>
                             </xs:complexType>
                             </xs:element>
-                            <xs:element name="measure" type="measureintervaltype"/>
                         </xs:sequence>
                     </xs:complexType>
                 </xs:element>
