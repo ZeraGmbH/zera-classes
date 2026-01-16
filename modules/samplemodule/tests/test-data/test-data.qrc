@@ -4,6 +4,7 @@
         <file>module-configurations/mt310s2-samplemodule-dc.xml</file>
         <file>module-configurations/mt310s2-samplemodule-UL1.xml</file>
         <file>module-configurations/mt310s2-samplemodule-UL2.xml</file>
+        <file>sessions/range-and-sample.json</file>
         <file>sessions/sample-for-persistency.json</file>
         <file>sessions/sample-only-fixed-freq.json</file>
         <file>sessions/sample-only-UL1.json</file>
