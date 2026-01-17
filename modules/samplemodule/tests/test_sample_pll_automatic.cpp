@@ -27,7 +27,7 @@ void test_sample_pll_automatic::cleanup()
 void test_sample_pll_automatic::emitImmediateAfterStart()
 {
     m_testRunner = std::make_unique<ModuleManagerTestRunner>(":/sessions/range-and-sample.json");
-    PllAutomatic pllAuto(m_testRunner->getVeinStorageSystem(), QStringList() << "m0");
+    PllAutomatic pllAuto(m_testRunner->getVeinStorageDb(), QStringList() << "m0");
     QSignalSpy spy(&pllAuto, &PllAutomatic::sigSelectPllChannel);
 
     fireRangeValues(UMtAbove, QList<int>() << 0);
@@ -41,7 +41,7 @@ void test_sample_pll_automatic::emitImmediateAfterStart()
 void test_sample_pll_automatic::switchOffNoEmit()
 {
     m_testRunner = std::make_unique<ModuleManagerTestRunner>(":/sessions/range-and-sample.json");
-    PllAutomatic pllAuto(m_testRunner->getVeinStorageSystem(), QStringList() << "m0");
+    PllAutomatic pllAuto(m_testRunner->getVeinStorageDb(), QStringList() << "m0");
     QSignalSpy spy(&pllAuto, &PllAutomatic::sigSelectPllChannel);
 
     fireRangeValues(UMtAbove, QList<int>() << 0);
@@ -58,7 +58,7 @@ void test_sample_pll_automatic::switchOffNoEmit()
 void test_sample_pll_automatic::emitTwiceAfterStart()
 {
     m_testRunner = std::make_unique<ModuleManagerTestRunner>(":/sessions/range-and-sample.json");
-    PllAutomatic pllAuto(m_testRunner->getVeinStorageSystem(), QStringList() << "m0");
+    PllAutomatic pllAuto(m_testRunner->getVeinStorageDb(), QStringList() << "m0");
     pllAuto.activate(true);
     QSignalSpy spy(&pllAuto, &PllAutomatic::sigSelectPllChannel);
 
@@ -70,7 +70,7 @@ void test_sample_pll_automatic::emitTwiceAfterStart()
 void test_sample_pll_automatic::emitTwiceAfterStartStopAndMoreEmit()
 {
     m_testRunner = std::make_unique<ModuleManagerTestRunner>(":/sessions/range-and-sample.json");
-    PllAutomatic pllAuto(m_testRunner->getVeinStorageSystem(), QStringList() << "m0");
+    PllAutomatic pllAuto(m_testRunner->getVeinStorageDb(), QStringList() << "m0");
     pllAuto.activate(true);
     QSignalSpy spy(&pllAuto, &PllAutomatic::sigSelectPllChannel);
 
@@ -88,7 +88,7 @@ void test_sample_pll_automatic::emitTwiceAfterStartStopAndMoreEmit()
 void test_sample_pll_automatic::emitUL2IfUL1IsZero()
 {
     m_testRunner = std::make_unique<ModuleManagerTestRunner>(":/sessions/range-and-sample.json");
-    PllAutomatic pllAuto(m_testRunner->getVeinStorageSystem(), QStringList() << "m0" << "m1"<< "m2");
+    PllAutomatic pllAuto(m_testRunner->getVeinStorageDb(), QStringList() << "m0" << "m1"<< "m2");
     QSignalSpy spy(&pllAuto, &PllAutomatic::sigSelectPllChannel);
 
     fireRangeValues(UMtAbove, QList<int>() << 1);
@@ -104,7 +104,7 @@ constexpr int phaseCountMt = 8;
 void test_sample_pll_automatic::emitUL2IfUL1IsBelowAndUl2IsAbove()
 {
     m_testRunner = std::make_unique<ModuleManagerTestRunner>(":/sessions/range-and-sample.json");
-    PllAutomatic pllAuto(m_testRunner->getVeinStorageSystem(), QStringList() << "m0" << "m1"<< "m2");
+    PllAutomatic pllAuto(m_testRunner->getVeinStorageDb(), QStringList() << "m0" << "m1"<< "m2");
     QSignalSpy spy(&pllAuto, &PllAutomatic::sigSelectPllChannel);
 
     DemoValuesDspRange dspRangeValues(phaseCountMt);
@@ -120,7 +120,7 @@ void test_sample_pll_automatic::emitUL2IfUL1IsBelowAndUl2IsAbove()
 void test_sample_pll_automatic::emitIL1IfVoltagesAreBelow()
 {
     m_testRunner = std::make_unique<ModuleManagerTestRunner>(":/sessions/range-and-sample.json");
-    PllAutomatic pllAuto(m_testRunner->getVeinStorageSystem(), QStringList() << "m0" << "m1"<< "m2" << "m3" << "m4"<< "m5");
+    PllAutomatic pllAuto(m_testRunner->getVeinStorageDb(), QStringList() << "m0" << "m1"<< "m2" << "m3" << "m4"<< "m5");
     QSignalSpy spy(&pllAuto, &PllAutomatic::sigSelectPllChannel);
 
     DemoValuesDspRange dspRangeValues(phaseCountMt);
@@ -140,7 +140,7 @@ void test_sample_pll_automatic::emitIL1IfVoltagesAreBelow()
 void test_sample_pll_automatic::emitIL2IfLeadingAreBelow()
 {
     m_testRunner = std::make_unique<ModuleManagerTestRunner>(":/sessions/range-and-sample.json");
-    PllAutomatic pllAuto(m_testRunner->getVeinStorageSystem(), QStringList() << "m0" << "m1"<< "m2" << "m3" << "m4"<< "m5");
+    PllAutomatic pllAuto(m_testRunner->getVeinStorageDb(), QStringList() << "m0" << "m1"<< "m2" << "m3" << "m4"<< "m5");
     QSignalSpy spy(&pllAuto, &PllAutomatic::sigSelectPllChannel);
 
     DemoValuesDspRange dspRangeValues(phaseCountMt);
@@ -160,7 +160,7 @@ void test_sample_pll_automatic::emitIL2IfLeadingAreBelow()
 void test_sample_pll_automatic::emitSequence()
 {
     m_testRunner = std::make_unique<ModuleManagerTestRunner>(":/sessions/range-and-sample.json");
-    PllAutomatic pllAuto(m_testRunner->getVeinStorageSystem(), QStringList() << "m0" << "m1"<< "m2" << "m3" << "m4"<< "m5");
+    PllAutomatic pllAuto(m_testRunner->getVeinStorageDb(), QStringList() << "m0" << "m1"<< "m2" << "m3" << "m4"<< "m5");
     QSignalSpy spy(&pllAuto, &PllAutomatic::sigSelectPllChannel);
 
     DemoValuesDspRange dspRangeValues(phaseCountMt);
@@ -190,7 +190,7 @@ void test_sample_pll_automatic::emitSequence()
 void test_sample_pll_automatic::allBelowDefaultsUL1()
 {
     m_testRunner = std::make_unique<ModuleManagerTestRunner>(":/sessions/range-and-sample.json");
-    PllAutomatic pllAuto(m_testRunner->getVeinStorageSystem(), QStringList() << "m0" << "m1"<< "m2" << "m3" << "m4"<< "m5");
+    PllAutomatic pllAuto(m_testRunner->getVeinStorageDb(), QStringList() << "m0" << "m1"<< "m2" << "m3" << "m4"<< "m5");
     QSignalSpy spy(&pllAuto, &PllAutomatic::sigSelectPllChannel);
 
     DemoValuesDspRange dspRangeValues(phaseCountMt);
@@ -210,7 +210,7 @@ void test_sample_pll_automatic::allBelowDefaultsUL1()
 void test_sample_pll_automatic::emitNothingOnEmptyChannelList()
 {
     m_testRunner = std::make_unique<ModuleManagerTestRunner>(":/sessions/sample-only-UL1.json");
-    PllAutomatic pllAuto(m_testRunner->getVeinStorageSystem(), QStringList());
+    PllAutomatic pllAuto(m_testRunner->getVeinStorageDb(), QStringList());
     QSignalSpy spy(&pllAuto, &PllAutomatic::sigSelectPllChannel);
 
     pllAuto.activate(true);

@@ -132,6 +132,11 @@ VeinStorage::AbstractEventSystem *ModuleManagerTestRunner::getVeinStorageSystem(
     return m_modmanFacade->getStorageSystem();
 }
 
+VeinStorage::AbstractDatabase *ModuleManagerTestRunner::getVeinStorageDb()
+{
+    return m_modmanFacade->getStorageSystem()->getDb();
+}
+
 TestDspInterfacePtr ModuleManagerTestRunner::getDspInterface(int entityId, DspInterfaceCreatedBy createdBy)
 {
     return m_serviceInterfaceFactory->getInterface(entityId, createdBy);

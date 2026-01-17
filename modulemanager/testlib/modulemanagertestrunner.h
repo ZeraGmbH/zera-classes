@@ -29,6 +29,7 @@ public:
     int getModuleConfigWriteCounts() const;
 
     VeinStorage::AbstractEventSystem *getVeinStorageSystem();
+    VeinStorage::AbstractDatabase* getVeinStorageDb();
     VfCmdEventHandlerSystemPtr getVfCmdEventHandlerSystemPtr();
     void setVfComponent(int entityId, QString componentName, QVariant newValue);
     QVariant getVfComponent(int entityId, QString componentName);

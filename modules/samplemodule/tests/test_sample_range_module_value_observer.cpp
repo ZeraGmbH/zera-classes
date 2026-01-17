@@ -18,7 +18,7 @@ void test_sample_range_module_value_observer::fireSignalOnNewValuesTailoredRange
     m_testRunner = std::make_unique<ModuleManagerTestRunner>(":/sessions/session-minimal.json");
     createModule(RangeModuleEntityId, {{"SIG_Measuring", QVariant(1)}});
 
-    RangeModuleValueObserver observer(m_testRunner->getVeinStorageSystem());
+    RangeModuleValueObserver observer(m_testRunner->getVeinStorageDb());
     QSignalSpy spy(&observer, &RangeModuleValueObserver::sigNewValues);
 
     m_testRunner->setVfComponent(RangeModuleEntityId, "SIG_Measuring", QVariant(0));
@@ -33,7 +33,7 @@ void test_sample_range_module_value_observer::fireSignalOnNewValuesRealRangeModu
 {
     m_testRunner = std::make_unique<ModuleManagerTestRunner>(":/sessions/range-and-sample.json");
 
-    RangeModuleValueObserver observer(m_testRunner->getVeinStorageSystem());
+    RangeModuleValueObserver observer(m_testRunner->getVeinStorageDb());
     QSignalSpy spy(&observer, &RangeModuleValueObserver::sigNewValues);
 
     QCOMPARE(spy.count(), 0);
@@ -45,7 +45,7 @@ void test_sample_range_module_value_observer::fireSignalTwiceOnSameValuesRealRan
 {
     m_testRunner = std::make_unique<ModuleManagerTestRunner>(":/sessions/range-and-sample.json");
 
-    RangeModuleValueObserver observer(m_testRunner->getVeinStorageSystem());
+    RangeModuleValueObserver observer(m_testRunner->getVeinStorageDb());
     QSignalSpy spy(&observer, &RangeModuleValueObserver::sigNewValues);
 
     QCOMPARE(spy.count(), 0);
@@ -60,7 +60,7 @@ constexpr float rangeIMt = 10;
 void test_sample_range_module_value_observer::fireAndGetValidValuesMt()
 {
     m_testRunner = std::make_unique<ModuleManagerTestRunner>(":/sessions/range-and-sample.json");
-    RangeModuleValueObserver observer(m_testRunner->getVeinStorageSystem());
+    RangeModuleValueObserver observer(m_testRunner->getVeinStorageDb());
 
     fireRangeValues(42, phaseCountMt);
     QCOMPARE(observer.getRelativeRangeValue("m0"), 42/rangeUMt);
@@ -79,7 +79,7 @@ void test_sample_range_module_value_observer::fireAndGetInValidValuesMt()
 {
     m_testRunner = std::make_unique<ModuleManagerTestRunner>(":/sessions/range-and-sample.json");
 
-    RangeModuleValueObserver observer(m_testRunner->getVeinStorageSystem());
+    RangeModuleValueObserver observer(m_testRunner->getVeinStorageDb());
     fireRangeValues(42, phaseCountMt);
 
     QCOMPARE(observer.getRelativeRangeValue("m9"), float(qQNaN()));

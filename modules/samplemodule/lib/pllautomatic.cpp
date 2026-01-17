@@ -1,8 +1,8 @@
 #include "pllautomatic.h"
 
-PllAutomatic::PllAutomatic(VeinStorage::AbstractEventSystem *veinStorage, const QStringList &channelMNameList) :
+PllAutomatic::PllAutomatic(VeinStorage::AbstractDatabase *veinStorageDb, const QStringList &channelMNameList) :
     m_channelMNameList(channelMNameList),
-    m_valueObserver(veinStorage)
+    m_valueObserver(veinStorageDb)
 {
     connect(&m_valueObserver, &RangeModuleValueObserver::sigNewValues,
             this, &PllAutomatic::onNewValues);

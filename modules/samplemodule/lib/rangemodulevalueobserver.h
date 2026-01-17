@@ -2,7 +2,7 @@
 #define RANGEMODULEVALUEOBSERVER_H
 
 #include <QObject>
-#include <vs_abstracteventsystem.h>
+#include <vs_abstractdatabase.h>
 
 static constexpr int RangeModuleEntityId = 1020;
 
@@ -10,7 +10,7 @@ class RangeModuleValueObserver : public QObject
 {
     Q_OBJECT
 public:
-    RangeModuleValueObserver(VeinStorage::AbstractEventSystem* veinStorage);
+    RangeModuleValueObserver(VeinStorage::AbstractDatabase* veinStorageDb);
     float getRelativeRangeValue(const QString &channelMName) const;
 signals:
     void sigNewValues();
@@ -21,7 +21,7 @@ private:
     void createModule(int entityId, QMap<QString, QVariant> components);
     static bool isRejValueForClampMissingOnClampOnlyChannel(float rejValue);
 
-    VeinStorage::AbstractEventSystem *m_veinStorage;
+    VeinStorage::AbstractDatabase* m_veinStorageDb;
     VeinStorage::StorageComponentPtr m_rangeMeasSignalComponent;
 };
 

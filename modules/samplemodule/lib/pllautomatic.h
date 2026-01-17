@@ -2,7 +2,7 @@
 #define PLLAUTOMATIC_H
 
 #include "rangemodulevalueobserver.h"
-#include <vs_abstracteventsystem.h>
+#include <vs_abstractdatabase.h>
 
 class PllAutomatic : public QObject
 {
@@ -10,7 +10,7 @@ class PllAutomatic : public QObject
 public:
     static constexpr float RelativeAmplitudeMinForPllChannelSelection = 0.1;
 
-    explicit PllAutomatic(VeinStorage::AbstractEventSystem* veinStorage,
+    explicit PllAutomatic(VeinStorage::AbstractDatabase* veinStorageDb,
                           const QStringList &channelMNameList);
     void activate(bool on);
 signals:
