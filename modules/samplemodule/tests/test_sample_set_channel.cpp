@@ -15,14 +15,13 @@ void test_sample_set_channel::startUL1NoFixNoAutoSetInvalid()
     ModuleManagerTestRunner testRunner(":/sessions/sample-only-UL1.json");
     QCOMPARE(testRunner.getVfComponent(sampleEntityId, "PAR_PllChannel"), "UL1");
 
-    VeinTcp::AbstractTcpNetworkFactoryPtr networkFactory = VeinTcp::MockTcpNetworkFactory::create();
-    PcbServiceConnection pcbConnection(NetworkConnectionInfo("127.0.0.1", 6307), networkFactory);
-
     testRunner.setVfComponent(sampleEntityId, "PAR_PllChannel", "foo");
-    std::shared_ptr<QString> pllChannelMName = std::make_unique<QString>();
     QCOMPARE(testRunner.getVfComponent(sampleEntityId, "PAR_PllChannel"), "UL1");
 
     TaskContainerQueue taskQueue;
+    VeinTcp::AbstractTcpNetworkFactoryPtr networkFactory = VeinTcp::MockTcpNetworkFactory::create();
+    PcbServiceConnection pcbConnection(NetworkConnectionInfo("127.0.0.1", 6307), networkFactory);
+    std::shared_ptr<QString> pllChannelMName = std::make_unique<QString>();
     taskQueue.addSub(pcbConnection.createConnectionTask());
     taskQueue.addSub(TaskPllChannelGet::create(pcbConnection.getInterface(),
                                                pllChannelMName,
@@ -36,14 +35,13 @@ void test_sample_set_channel::startUL1NoFixNoAutoSetUL2()
     ModuleManagerTestRunner testRunner(":/sessions/sample-only-UL1.json");
     QCOMPARE(testRunner.getVfComponent(sampleEntityId, "PAR_PllChannel"), "UL1");
 
-    VeinTcp::AbstractTcpNetworkFactoryPtr networkFactory = VeinTcp::MockTcpNetworkFactory::create();
-    PcbServiceConnection pcbConnection(NetworkConnectionInfo("127.0.0.1", 6307), networkFactory);
-
     testRunner.setVfComponent(sampleEntityId, "PAR_PllChannel", "UL2");
-    std::shared_ptr<QString> pllChannelMName = std::make_unique<QString>();
     QCOMPARE(testRunner.getVfComponent(sampleEntityId, "PAR_PllChannel"), "UL2");
 
     TaskContainerQueue taskQueue;
+    VeinTcp::AbstractTcpNetworkFactoryPtr networkFactory = VeinTcp::MockTcpNetworkFactory::create();
+    PcbServiceConnection pcbConnection(NetworkConnectionInfo("127.0.0.1", 6307), networkFactory);
+    std::shared_ptr<QString> pllChannelMName = std::make_unique<QString>();
     taskQueue.addSub(pcbConnection.createConnectionTask());
     taskQueue.addSub(TaskPllChannelGet::create(pcbConnection.getInterface(),
                                                pllChannelMName,
@@ -57,14 +55,13 @@ void test_sample_set_channel::startIL1NoFixAutoSetUL2NoChange()
     ModuleManagerTestRunner testRunner(":/sessions/sample-only-IL1-auto-on.json");
     QCOMPARE(testRunner.getVfComponent(sampleEntityId, "PAR_PllChannel"), "IL1");
 
-    VeinTcp::AbstractTcpNetworkFactoryPtr networkFactory = VeinTcp::MockTcpNetworkFactory::create();
-    PcbServiceConnection pcbConnection(NetworkConnectionInfo("127.0.0.1", 6307), networkFactory);
-
     testRunner.setVfComponent(sampleEntityId, "PAR_PllChannel", "UL2");
-    std::shared_ptr<QString> pllChannelMName = std::make_unique<QString>();
     QCOMPARE(testRunner.getVfComponent(sampleEntityId, "PAR_PllChannel"), "IL1");
 
     TaskContainerQueue taskQueue;
+    VeinTcp::AbstractTcpNetworkFactoryPtr networkFactory = VeinTcp::MockTcpNetworkFactory::create();
+    PcbServiceConnection pcbConnection(NetworkConnectionInfo("127.0.0.1", 6307), networkFactory);
+    std::shared_ptr<QString> pllChannelMName = std::make_unique<QString>();
     taskQueue.addSub(pcbConnection.createConnectionTask());
     taskQueue.addSub(TaskPllChannelGet::create(pcbConnection.getInterface(),
                                                pllChannelMName,
@@ -78,14 +75,13 @@ void test_sample_set_channel::startFixAutoNotSetUL2NoChange()
     ModuleManagerTestRunner testRunner(":/sessions/sample-only-fixed-freq.json");
     QCOMPARE(testRunner.getVfComponent(sampleEntityId, "PAR_PllChannel"), "");
 
-    VeinTcp::AbstractTcpNetworkFactoryPtr networkFactory = VeinTcp::MockTcpNetworkFactory::create();
-    PcbServiceConnection pcbConnection(NetworkConnectionInfo("127.0.0.1", 6307), networkFactory);
-
     testRunner.setVfComponent(sampleEntityId, "PAR_PllChannel", "UL2");
-    std::shared_ptr<QString> pllChannelMName = std::make_unique<QString>();
     QCOMPARE(testRunner.getVfComponent(sampleEntityId, "PAR_PllChannel"), "");
 
     TaskContainerQueue taskQueue;
+    VeinTcp::AbstractTcpNetworkFactoryPtr networkFactory = VeinTcp::MockTcpNetworkFactory::create();
+    PcbServiceConnection pcbConnection(NetworkConnectionInfo("127.0.0.1", 6307), networkFactory);
+    std::shared_ptr<QString> pllChannelMName = std::make_unique<QString>();
     taskQueue.addSub(pcbConnection.createConnectionTask());
     taskQueue.addSub(TaskPllChannelGet::create(pcbConnection.getInterface(),
                                                pllChannelMName,
