@@ -1029,9 +1029,6 @@
                         ],
                         "Type": "STRING"
                     }
-                },
-                "SIG_PLL": {
-                    "Description": "<skipped>"
                 }
             },
             "ModuleInfo": {
@@ -1059,8 +1056,7 @@
             }
         },
         "PAR_PllAutomaticOnOff": 1,
-        "PAR_PllChannel": "UL1",
-        "SIG_PLL": 0
+        "PAR_PllChannel": "UL1"
     },
     "1040": {
         "ACT_RMSPN1": null,

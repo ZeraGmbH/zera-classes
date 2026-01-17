@@ -36,9 +36,6 @@
                         ],
                         "Type": "STRING"
                     }
-                },
-                "SIG_PLL": {
-                    "Description": "<skipped>"
                 }
             },
             "ModuleInfo": {
@@ -66,7 +63,6 @@
             }
         },
         "PAR_PllAutomaticOnOff": 1,
-        "PAR_PllChannel": "IL1",
-        "SIG_PLL": 0
+        "PAR_PllChannel": "IL1"
     }
 }

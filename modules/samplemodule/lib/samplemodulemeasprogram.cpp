@@ -42,12 +42,6 @@ void cSampleModuleMeasProgram::generateVeinInterface()
                                         QString("PLL fixed channel / mode"),
                                         QVariant(m_obsermaticConfig.m_bpllFixed));
     m_module->veinModuleComponentList.append(m_pPllFixed);
-
-    m_pPllSignal = new VfModuleComponent(m_module->getEntityId(), m_module->getValidatorEventSystem(),
-                                         QString("SIG_PLL"),
-                                         QString("Signal on pll channel changing"),
-                                         QVariant(0));
-    m_module->veinModuleComponentList.append(m_pPllSignal);
 }
 
 void cSampleModuleMeasProgram::activate()
@@ -162,7 +156,6 @@ void cSampleModuleMeasProgram::trySendPllChannel(const QString &channelAlias)
 
 void cSampleModuleMeasProgram::startSetPllChannel(const QString &channelMName)
 {
-    m_pPllSignal->setValue(1); // start pll change
     TaskTemplatePtr task = TaskPllChannelSet::create(m_pcbConnection.getInterface(),
                                                      channelMName,
                                                      TRANSACTION_TIMEOUT,
@@ -170,7 +163,6 @@ void cSampleModuleMeasProgram::startSetPllChannel(const QString &channelMName)
                                                      );
     connect(task.get(), &TaskTemplate::sigFinish, [=] () {
         setVeinPllChannelPesistent(channelMName);
-        m_pPllSignal->setValue(0); // pll change finished
     });
     m_pendingTasks.addSub(std::move(task));
     m_pendingTasks.start();

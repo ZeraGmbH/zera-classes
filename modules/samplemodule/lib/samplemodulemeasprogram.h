@@ -43,7 +43,6 @@ private:
     VfModuleParameter* m_pVeinPllChannelAlias = nullptr;
     VfModuleParameter* m_pParPllAutomaticOnOff = nullptr;
     VfModuleComponent* m_pPllFixed = nullptr;
-    VfModuleComponent* m_pPllSignal = nullptr; // we make the signal public for easy connection within module
 
     TaskContainerSequence m_pendingTasks;
 };
