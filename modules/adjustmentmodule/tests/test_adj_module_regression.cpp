@@ -30,23 +30,23 @@ void test_adj_module_regression::destroyCommonTestRunner()
 
 void test_adj_module_regression::minimalSession()
 {
-    VeinStorage::AbstractEventSystem* veinStorage = m_testRunner->getVeinStorageSystem();
-    QList<int> entityList = veinStorage->getDb()->getEntityList();
+    VeinStorage::AbstractDatabase *veinStorageDb = m_testRunner->getVeinStorageDb();
+    QList<int> entityList = veinStorageDb->getEntityList();
     QCOMPARE(entityList.count(), 7);
-    QVERIFY(veinStorage->getDb()->hasEntity(rangeEntityId));
-    QVERIFY(veinStorage->getDb()->hasEntity(rmsEntityId));
-    QVERIFY(veinStorage->getDb()->hasEntity(dftEntityId));
-    QVERIFY(veinStorage->getDb()->hasEntity(fftEntityId));
-    QVERIFY(veinStorage->getDb()->hasEntity(adjEntityId));
-    QVERIFY(veinStorage->getDb()->hasEntity(scpiEntityId));
+    QVERIFY(veinStorageDb->hasEntity(rangeEntityId));
+    QVERIFY(veinStorageDb->hasEntity(rmsEntityId));
+    QVERIFY(veinStorageDb->hasEntity(dftEntityId));
+    QVERIFY(veinStorageDb->hasEntity(fftEntityId));
+    QVERIFY(veinStorageDb->hasEntity(adjEntityId));
+    QVERIFY(veinStorageDb->hasEntity(scpiEntityId));
 }
 
 void test_adj_module_regression::veinDumpInitial()
 {
     QByteArray jsonExpected = TestLogHelpers::loadFile(":/dumpInitial.json");;
-    VeinStorage::AbstractEventSystem* veinStorage = m_testRunner->getVeinStorageSystem();
+    VeinStorage::AbstractDatabase *veinStorageDb = m_testRunner->getVeinStorageDb();
     // just dump adjustment module to reduce FF on changing other modules
-    QByteArray jsonDumped = VeinStorage::DumpJson::dumpToByteArray(veinStorage->getDb(), QList<int>() << adjEntityId);
+    QByteArray jsonDumped = VeinStorage::DumpJson::dumpToByteArray(veinStorageDb, QList<int>() << adjEntityId);
 
     QVERIFY(TestLogHelpers::compareAndLogOnDiffJson(jsonExpected, jsonDumped));
 }

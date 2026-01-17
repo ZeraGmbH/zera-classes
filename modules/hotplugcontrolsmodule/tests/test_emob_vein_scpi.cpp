@@ -239,8 +239,8 @@ void test_emob_vein_scpi::dumpDevIface()
 
 void test_emob_vein_scpi::dumpVeinInfModuleInterface()
 {
-    VeinStorage::AbstractEventSystem* veinStorage = m_testRunner->getVeinStorageSystem();
-    VeinStorage::AbstractDatabase* storageDb = veinStorage->getDb();
+    VeinStorage::AbstractDatabase *veinStorageDb = m_testRunner->getVeinStorageDb();
+    VeinStorage::AbstractDatabase* storageDb = veinStorageDb;
     QByteArray jsonDumped = storageDb->getStoredValue(hotplugControlsEntityId, "INF_ModuleInterface").toByteArray();
     QString jsonExpected = TestLogHelpers::loadFile("://vein-inf-moduleinterface-dump.json");
 

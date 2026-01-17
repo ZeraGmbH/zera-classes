@@ -35,28 +35,28 @@ void test_source_full::cleanup()
 void test_source_full::entity_avail_mt310s2()
 {
     setupServerAndClient(":/sessions/minimal.json", "mt310s2");
-    VeinStorage::AbstractEventSystem* veinStorage = m_testRunner->getVeinStorageSystem();
-    QList<int> entityList = veinStorage->getDb()->getEntityList();
+    VeinStorage::AbstractDatabase *veinStorageDb = m_testRunner->getVeinStorageDb();
+    QList<int> entityList = veinStorageDb->getEntityList();
     QCOMPARE(entityList.count(), 2);
-    QVERIFY(veinStorage->getDb()->hasEntity(sourceEntityId));
+    QVERIFY(veinStorageDb->hasEntity(sourceEntityId));
 }
 
 void test_source_full::entity_avail_mt581s2()
 {
     setupServerAndClient(":/sessions/minimal.json", "mt581s2");
-    VeinStorage::AbstractEventSystem* veinStorage = m_testRunner->getVeinStorageSystem();
-    QList<int> entityList = veinStorage->getDb()->getEntityList();
+    VeinStorage::AbstractDatabase *veinStorageDb = m_testRunner->getVeinStorageDb();
+    QList<int> entityList = veinStorageDb->getEntityList();
     QCOMPARE(entityList.count(), 2);
-    QVERIFY(veinStorage->getDb()->hasEntity(sourceEntityId));
+    QVERIFY(veinStorageDb->hasEntity(sourceEntityId));
 }
 
 void test_source_full::vein_dump_mt310s2()
 {
     setupServerAndClient(":/sessions/minimal.json", "mt310s2");
     QByteArray jsonExpected = TestLogHelpers::loadFile(":/veinDumps/dumpInitialMt310s2.json");
-    VeinStorage::AbstractEventSystem* veinStorage = m_testRunner->getVeinStorageSystem();
+    VeinStorage::AbstractDatabase *veinStorageDb = m_testRunner->getVeinStorageDb();
 
-    QByteArray jsonDumped = VeinStorage::DumpJson::dumpToByteArray(veinStorage->getDb(), QList<int>() << sourceEntityId);
+    QByteArray jsonDumped = VeinStorage::DumpJson::dumpToByteArray(veinStorageDb, QList<int>() << sourceEntityId);
     QVERIFY(TestLogHelpers::compareAndLogOnDiffJson(jsonExpected, jsonDumped));
 }
 
@@ -64,9 +64,9 @@ void test_source_full::vein_dump_mt581s2()
 {
     setupServerAndClient(":/sessions/minimal.json", "mt581s2");
     QByteArray jsonExpected = TestLogHelpers::loadFile(":/veinDumps/dumpInitialMt581s2.json");
-    VeinStorage::AbstractEventSystem* veinStorage = m_testRunner->getVeinStorageSystem();
+    VeinStorage::AbstractDatabase *veinStorageDb = m_testRunner->getVeinStorageDb();
 
-    QByteArray jsonDumped = VeinStorage::DumpJson::dumpToByteArray(veinStorage->getDb(), QList<int>() << sourceEntityId);
+    QByteArray jsonDumped = VeinStorage::DumpJson::dumpToByteArray(veinStorageDb, QList<int>() << sourceEntityId);
     QVERIFY(TestLogHelpers::compareAndLogOnDiffJson(jsonExpected, jsonDumped));
 }
 
@@ -78,8 +78,8 @@ void test_source_full::switch_on_mt310s2()
     QJsonObject jsonEventDump;
     setupServerAndClientSpies(jsonEventDump);
 
-    VeinStorage::AbstractEventSystem* veinStorage = m_testRunner->getVeinStorageSystem();
-    VeinStorage::StorageComponentPtr storedState = veinStorage->getDb()->findComponent(sourceEntityId, "PAR_SourceState0");
+    VeinStorage::AbstractDatabase *veinStorageDb = m_testRunner->getVeinStorageDb();
+    VeinStorage::StorageComponentPtr storedState = veinStorageDb->findComponent(sourceEntityId, "PAR_SourceState0");
     JsonParamApi paramApi;
     QJsonObject oldValue = storedState->getValue().toJsonObject();
     paramApi.setParams(oldValue);
@@ -140,8 +140,8 @@ void test_source_full::setupServerAndClientSpies(QJsonObject &jsonEvents)
 
 void test_source_full::setDemoSourceCount(int sourceCount)
 {
-    VeinStorage::AbstractEventSystem* veinStorage = m_testRunner->getVeinStorageSystem();
-    VeinStorage::StorageComponentPtr stored = veinStorage->getDb()->findComponent(sourceEntityId, "PAR_DemoSources");
+    VeinStorage::AbstractDatabase *veinStorageDb = m_testRunner->getVeinStorageDb();
+    VeinStorage::StorageComponentPtr stored = veinStorageDb->findComponent(sourceEntityId, "PAR_DemoSources");
     QVariant oldValue = stored->getValue();
 
     QEvent* event = VfClientComponentSetter::generateEvent(sourceEntityId, "PAR_DemoSources",

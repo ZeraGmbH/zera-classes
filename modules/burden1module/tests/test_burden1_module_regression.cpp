@@ -16,20 +16,20 @@ static int constexpr dftBurdenVoltageId = 1161;
 void test_burden1_module_regression::minimalSession()
 {
     ModuleManagerTestRunner testRunner(":/session-minimal.json");
-    VeinStorage::AbstractEventSystem* veinStorage = testRunner.getVeinStorageSystem();
-    QList<int> entityList = veinStorage->getDb()->getEntityList();
+    VeinStorage::AbstractDatabase *veinStorageDb = testRunner.getVeinStorageDb();
+    QList<int> entityList = veinStorageDb->getEntityList();
     QCOMPARE(entityList.count(), 4);
-    QVERIFY(veinStorage->getDb()->hasEntity(dftEntityId));
-    QVERIFY(veinStorage->getDb()->hasEntity(dftBurdenCurrentId));
-    QVERIFY(veinStorage->getDb()->hasEntity(dftBurdenVoltageId));
+    QVERIFY(veinStorageDb->hasEntity(dftEntityId));
+    QVERIFY(veinStorageDb->hasEntity(dftBurdenCurrentId));
+    QVERIFY(veinStorageDb->hasEntity(dftBurdenVoltageId));
 }
 
 void test_burden1_module_regression::veinDumpInitial()
 {
     ModuleManagerTestRunner testRunner(":/session-minimal.json");
-    VeinStorage::AbstractEventSystem* veinStorage = testRunner.getVeinStorageSystem();
+    VeinStorage::AbstractDatabase *veinStorageDb = testRunner.getVeinStorageDb();
 
-    QByteArray jsonDumped = VeinStorage::DumpJson::dumpToByteArray(veinStorage->getDb(), QList<int>() << dftBurdenCurrentId << dftBurdenVoltageId);
+    QByteArray jsonDumped = VeinStorage::DumpJson::dumpToByteArray(veinStorageDb, QList<int>() << dftBurdenCurrentId << dftBurdenVoltageId);
     QByteArray jsonExpected = TestLogHelpers::loadFile(":/dumpInitial.json");
     QVERIFY(TestLogHelpers::compareAndLogOnDiffJson(jsonExpected, jsonDumped));
 }
@@ -63,8 +63,8 @@ void test_burden1_module_regression::voltageBurden230V1ADefaultSettings()
     dftDspInterface->fireActValInterrupt(dspValues.getDspValues(), 0);
     TimeMachineObject::feedEventLoop();
 
-    VeinStorage::AbstractEventSystem* veinStorage = testRunner.getVeinStorageSystem();
-    VeinStorage::AbstractDatabase* storageDb = veinStorage->getDb();
+    VeinStorage::AbstractDatabase *veinStorageDb = testRunner.getVeinStorageDb();
+    VeinStorage::AbstractDatabase* storageDb = veinStorageDb;
 
     QVariant burden;
     burden = storageDb->getStoredValue(dftBurdenVoltageId, "ACT_Burden1");
@@ -105,8 +105,8 @@ void test_burden1_module_regression::voltageBurden100V1A60DefaultSettings()
     dftDspInterface->fireActValInterrupt(dspValues.getDspValues(), 0);
     TimeMachineObject::feedEventLoop();
 
-    VeinStorage::AbstractEventSystem* veinStorage = testRunner.getVeinStorageSystem();
-    VeinStorage::AbstractDatabase* storageDb = veinStorage->getDb();
+    VeinStorage::AbstractDatabase *veinStorageDb = testRunner.getVeinStorageDb();
+    VeinStorage::AbstractDatabase* storageDb = veinStorageDb;
 
     QVariant burden;
     burden = storageDb->getStoredValue(dftBurdenVoltageId, "ACT_Burden1");

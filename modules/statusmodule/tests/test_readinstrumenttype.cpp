@@ -41,10 +41,10 @@ void test_readInstrumentType::cleanup()
 
 void test_readInstrumentType::noControllerReadInstrumentType()
 {
-    VeinStorage::AbstractEventSystem* veinStorage = m_testRunner->getVeinStorageSystem();
-    QList<int> entityList = veinStorage->getDb()->getEntityList();
+    VeinStorage::AbstractDatabase *veinStorageDb = m_testRunner->getVeinStorageDb();
+    QList<int> entityList = veinStorageDb->getEntityList();
     QCOMPARE(entityList.count(), 2);
-    QVERIFY(veinStorage->getDb()->hasEntity(statusEntityId));
+    QVERIFY(veinStorageDb->hasEntity(statusEntityId));
 
     QVariant value = m_testRunner->getVfComponent(statusEntityId, "INF_HotplugChannels");
     QCOMPARE(value.toString(), "IL1,IL2,IL3,IAUX");
@@ -163,10 +163,10 @@ void test_readInstrumentType::readHotplugChannelsCom5003()
     //switch to com device
     m_testRunner.reset();
     m_testRunner = std::make_unique<ModuleManagerTestRunner>(":/com5003-min-session.json", false, "com5003");
-    VeinStorage::AbstractEventSystem* veinStorage = m_testRunner->getVeinStorageSystem();
-    QList<int> entityList = veinStorage->getDb()->getEntityList();
+    VeinStorage::AbstractDatabase *veinStorageDb = m_testRunner->getVeinStorageDb();
+    QList<int> entityList = veinStorageDb->getEntityList();
     QCOMPARE(entityList.count(), 2);
-    QVERIFY(veinStorage->getDb()->hasEntity(statusEntityId));
+    QVERIFY(veinStorageDb->hasEntity(statusEntityId));
 
     QVariant value = m_testRunner->getVfComponent(statusEntityId, "INF_HotplugChannels");
     QCOMPARE(value.toString(), "");

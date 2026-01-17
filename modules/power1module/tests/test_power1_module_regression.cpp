@@ -26,8 +26,8 @@ void test_power1_module_regression::initTestCase()
 void test_power1_module_regression::minimalSession()
 {
     ModuleManagerTestRunner testRunner(":/sessions/session-minimal.json");
-    VeinStorage::AbstractEventSystem* veinStorage = testRunner.getVeinStorageSystem();
-    VeinStorage::AbstractDatabase* storageDb = veinStorage->getDb();
+    VeinStorage::AbstractDatabase *veinStorageDb = testRunner.getVeinStorageDb();
+    VeinStorage::AbstractDatabase* storageDb = veinStorageDb;
 
     QList<int> entityList = storageDb->getEntityList();
     QCOMPARE(entityList.count(), 2);
@@ -39,8 +39,8 @@ void test_power1_module_regression::veinDumpInitial()
     ModuleManagerTestRunner testRunner(":/sessions/session-power1-test.json");
 
     QByteArray jsonExpected = TestLogHelpers::loadFile(":/dumpInitial.json");
-    VeinStorage::AbstractEventSystem* veinStorage = testRunner.getVeinStorageSystem();
-    VeinStorage::AbstractDatabase* storageDb = veinStorage->getDb();
+    VeinStorage::AbstractDatabase *veinStorageDb = testRunner.getVeinStorageDb();
+    VeinStorage::AbstractDatabase* storageDb = veinStorageDb;
     QByteArray jsonDumped = VeinStorage::DumpJson::dumpToByteArray(storageDb, QList<int>() << powerEntityId);
 
     QVERIFY(TestLogHelpers::compareAndLogOnDiffJson(jsonExpected, jsonDumped));
@@ -60,8 +60,8 @@ void test_power1_module_regression::injectActualValues()
     TimeMachineObject::feedEventLoop();
 
     QByteArray jsonExpected = TestLogHelpers::loadFile(":/dumpActual.json");
-    VeinStorage::AbstractEventSystem* veinStorage = testRunner.getVeinStorageSystem();
-    QByteArray jsonDumped = VeinStorage::DumpJson::dumpToByteArray(veinStorage->getDb(), QList<int>() << powerEntityId);
+    VeinStorage::AbstractDatabase *veinStorageDb = testRunner.getVeinStorageDb();
+    QByteArray jsonDumped = VeinStorage::DumpJson::dumpToByteArray(veinStorageDb, QList<int>() << powerEntityId);
 
     QVERIFY(TestLogHelpers::compareAndLogOnDiffJson(jsonExpected, jsonDumped));
 }
@@ -71,8 +71,8 @@ void test_power1_module_regression::testScpiCommandsDisabled()
     ModuleManagerTestRunner testRunner(":/sessions/session-power1-withoutScpi-test.json");
 
     QByteArray jsonExpected = TestLogHelpers::loadFile(":/dumpInitial-withoutScpi.json");
-    VeinStorage::AbstractEventSystem* veinStorage = testRunner.getVeinStorageSystem();
-    VeinStorage::AbstractDatabase* storageDb = veinStorage->getDb();
+    VeinStorage::AbstractDatabase *veinStorageDb = testRunner.getVeinStorageDb();
+    VeinStorage::AbstractDatabase* storageDb = veinStorageDb;
     QByteArray jsonDumped = VeinStorage::DumpJson::dumpToByteArray(storageDb, QList<int>() << powerEntityId);
 
     QVERIFY(TestLogHelpers::compareAndLogOnDiffJson(jsonExpected, jsonDumped));

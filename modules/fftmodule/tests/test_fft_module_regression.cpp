@@ -16,10 +16,10 @@ static int constexpr fftEntityId = 1060;
 void test_fft_module_regression::minimalSession()
 {
     ModuleManagerTestRunner testRunner(":/sessions/minimal.json"); // moving window is off at the time of writing
-    VeinStorage::AbstractEventSystem* veinStorage = testRunner.getVeinStorageSystem();
-    QList<int> entityList = veinStorage->getDb()->getEntityList();
+    VeinStorage::AbstractDatabase *veinStorageDb = testRunner.getVeinStorageDb();
+    QList<int> entityList = veinStorageDb->getEntityList();
     QCOMPARE(entityList.count(), 2);
-    QVERIFY(veinStorage->getDb()->hasEntity(fftEntityId));
+    QVERIFY(veinStorageDb->hasEntity(fftEntityId));
 }
 
 void test_fft_module_regression::veinDumpInitial()
@@ -27,8 +27,8 @@ void test_fft_module_regression::veinDumpInitial()
     ModuleManagerTestRunner testRunner(":/sessions/from-resource.json");
 
     QByteArray jsonExpected = TestLogHelpers::loadFile(":/dumpInitial.json");
-    VeinStorage::AbstractEventSystem* veinStorage = testRunner.getVeinStorageSystem();
-    QByteArray jsonDumped = VeinStorage::DumpJson::dumpToByteArray(veinStorage->getDb(),
+    VeinStorage::AbstractDatabase *veinStorageDb = testRunner.getVeinStorageDb();
+    QByteArray jsonDumped = VeinStorage::DumpJson::dumpToByteArray(veinStorageDb,
                                                                    QList<int>() << fftEntityId,
                                                                    QList<int>(),
                                                                    true);
@@ -83,8 +83,8 @@ void test_fft_module_regression::injectValues()
     TimeMachineObject::feedEventLoop();
 
     QByteArray jsonExpected = TestLogHelpers::loadFile(":/dumpActual.json");
-    VeinStorage::AbstractEventSystem* veinStorage = testRunner.getVeinStorageSystem();
-    QByteArray jsonDumped = VeinStorage::DumpJson::dumpToByteArray(veinStorage->getDb(),
+    VeinStorage::AbstractDatabase *veinStorageDb = testRunner.getVeinStorageDb();
+    QByteArray jsonDumped = VeinStorage::DumpJson::dumpToByteArray(veinStorageDb,
                                                                    QList<int>() << fftEntityId,
                                                                    QList<int>(),
                                                                    true);

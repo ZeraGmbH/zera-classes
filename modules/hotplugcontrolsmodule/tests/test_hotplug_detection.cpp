@@ -18,13 +18,13 @@ void test_hotplug_detection::cleanup()
 void test_hotplug_detection::noHotplug()
 {
     ModuleManagerTestRunner testRunner(":/hotpluscontrols-status-session.json");
-    QList<int> entityList = testRunner.getVeinStorageSystem()->getDb()->getEntityList();
+    QList<int> entityList = testRunner.getVeinStorageDb()->getEntityList();
 
     QCOMPARE(entityList.count(), 4);
     QVERIFY(entityList.contains(statusEntityId));
     QVERIFY(entityList.contains(hotplugControlsEntityId));
 
-    QVariant ctrlersFound = testRunner.getVeinStorageSystem()->getDb()->getStoredValue(hotplugControlsEntityId, "ACT_ControllersFound");
+    QVariant ctrlersFound = testRunner.getVeinStorageDb()->getStoredValue(hotplugControlsEntityId, "ACT_ControllersFound");
     QCOMPARE(ctrlersFound , false);
 }
 
@@ -36,7 +36,7 @@ void test_hotplug_detection::oneEmobConnected()
     testRunner.fireHotplugInterrupt(infoMap);
     TimeMachineObject::feedEventLoop();
 
-    QVariant ctrlersFound = testRunner.getVeinStorageSystem()->getDb()->getStoredValue(hotplugControlsEntityId, "ACT_ControllersFound");
+    QVariant ctrlersFound = testRunner.getVeinStorageDb()->getStoredValue(hotplugControlsEntityId, "ACT_ControllersFound");
     QCOMPARE(ctrlersFound , false);
     int muxChannel = testRunner.getSenseSettings()->findChannelSettingByAlias1("IL1")->m_nMuxChannelNo;
     QVERIFY(ControllerPersitentData::getData().m_hotpluggedDevices[muxChannel].emobDataReceived[0].isEmpty());
@@ -50,7 +50,7 @@ void test_hotplug_detection::oneMt650eConnected()
     testRunner.fireHotplugInterrupt(infoMap);
     TimeMachineObject::feedEventLoop();
 
-    QVariant ctrlersFound = testRunner.getVeinStorageSystem()->getDb()->getStoredValue(hotplugControlsEntityId, "ACT_ControllersFound");
+    QVariant ctrlersFound = testRunner.getVeinStorageDb()->getStoredValue(hotplugControlsEntityId, "ACT_ControllersFound");
     QCOMPARE(ctrlersFound , false);
 }
 
@@ -63,7 +63,7 @@ void test_hotplug_detection::twoEmobsConnected()
     testRunner.fireHotplugInterrupt(infoMap);
     TimeMachineObject::feedEventLoop();
 
-    QVariant ctrlersFound = testRunner.getVeinStorageSystem()->getDb()->getStoredValue(hotplugControlsEntityId, "ACT_ControllersFound");
+    QVariant ctrlersFound = testRunner.getVeinStorageDb()->getStoredValue(hotplugControlsEntityId, "ACT_ControllersFound");
     QCOMPARE(ctrlersFound , false);
 }
 
@@ -76,7 +76,7 @@ void test_hotplug_detection::twoMt650eConnected()
     testRunner.fireHotplugInterrupt(infoMap);
     TimeMachineObject::feedEventLoop();
 
-    QVariant ctrlersFound = testRunner.getVeinStorageSystem()->getDb()->getStoredValue(hotplugControlsEntityId, "ACT_ControllersFound");
+    QVariant ctrlersFound = testRunner.getVeinStorageDb()->getStoredValue(hotplugControlsEntityId, "ACT_ControllersFound");
     QCOMPARE(ctrlersFound , false);
 }
 
@@ -87,7 +87,7 @@ void test_hotplug_detection::oneEmobOneMt650eConnected()
 
     ModuleManagerTestRunner testRunner(":/hotpluscontrols-status-session.json");
     TimeMachineObject::feedEventLoop();
-    QVariant ctrlersFound = testRunner.getVeinStorageSystem()->getDb()->getStoredValue(hotplugControlsEntityId, "ACT_ControllersFound");
+    QVariant ctrlersFound = testRunner.getVeinStorageDb()->getStoredValue(hotplugControlsEntityId, "ACT_ControllersFound");
     QCOMPARE(ctrlersFound , false);
 
     AbstractMockAllServices::ChannelAliasHotplugDeviceNameMap infoMap;
@@ -96,7 +96,7 @@ void test_hotplug_detection::oneEmobOneMt650eConnected()
     testRunner.fireHotplugInterrupt(infoMap);
     TimeMachineObject::feedEventLoop();
 
-    ctrlersFound = testRunner.getVeinStorageSystem()->getDb()->getStoredValue(hotplugControlsEntityId, "ACT_ControllersFound");
+    ctrlersFound = testRunner.getVeinStorageDb()->getStoredValue(hotplugControlsEntityId, "ACT_ControllersFound");
     QCOMPARE(ctrlersFound , true);
     int muxChannel = testRunner.getSenseSettings()->findChannelSettingByAlias1("IL1")->m_nMuxChannelNo;
     ControllerPersitentData::TPersitentControllerData foo = ControllerPersitentData::getData();
@@ -116,7 +116,7 @@ void test_hotplug_detection::oneEmobOneMt650eOnStartup()
     TimeMachineObject::feedEventLoop();
     testRunner.start(":/hotpluscontrols-status-session.json");
 
-    QVariant ctrlersFound = testRunner.getVeinStorageSystem()->getDb()->getStoredValue(hotplugControlsEntityId, "ACT_ControllersFound");
+    QVariant ctrlersFound = testRunner.getVeinStorageDb()->getStoredValue(hotplugControlsEntityId, "ACT_ControllersFound");
     QCOMPARE(ctrlersFound , true);
     int muxChannel = testRunner.getSenseSettings()->findChannelSettingByAlias1("IL1")->m_nMuxChannelNo;
     ControllerPersitentData::TPersitentControllerData foo = ControllerPersitentData::getData();
@@ -134,7 +134,7 @@ void test_hotplug_detection::oneEmobOnStartup()
     TimeMachineObject::feedEventLoop();
     testRunner.start(":/hotpluscontrols-status-session.json");
 
-    QVariant ctrlersFound = testRunner.getVeinStorageSystem()->getDb()->getStoredValue(hotplugControlsEntityId, "ACT_ControllersFound");
+    QVariant ctrlersFound = testRunner.getVeinStorageDb()->getStoredValue(hotplugControlsEntityId, "ACT_ControllersFound");
     QCOMPARE(ctrlersFound , false);
     int muxChannel = testRunner.getSenseSettings()->findChannelSettingByAlias1("IL1")->m_nMuxChannelNo;
     ControllerPersitentData::TPersitentControllerData foo = ControllerPersitentData::getData();

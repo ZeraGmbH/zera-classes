@@ -15,10 +15,10 @@ static int constexpr rmsEntityId = 1040;
 void test_rms_module_regression::minimalSession()
 {
     ModuleManagerTestRunner testRunner(":/session-minimal.json");
-    VeinStorage::AbstractEventSystem* veinStorage = testRunner.getVeinStorageSystem();
-    QList<int> entityList = veinStorage->getDb()->getEntityList();
+    VeinStorage::AbstractDatabase *veinStorageDb = testRunner.getVeinStorageDb();
+    QList<int> entityList = veinStorageDb->getEntityList();
     QCOMPARE(entityList.count(), 2);
-    QVERIFY(veinStorage->getDb()->hasEntity(rmsEntityId));
+    QVERIFY(veinStorageDb->hasEntity(rmsEntityId));
 }
 
 void test_rms_module_regression::veinDumpInitial()
@@ -26,8 +26,8 @@ void test_rms_module_regression::veinDumpInitial()
     ModuleManagerTestRunner testRunner(":/session-rms-moduleconfig-from-resource.json");
 
     QByteArray jsonExpected = TestLogHelpers::loadFile(":/dumpInitial.json");
-    VeinStorage::AbstractEventSystem* veinStorage = testRunner.getVeinStorageSystem();
-    QByteArray jsonDumped = VeinStorage::DumpJson::dumpToByteArray(veinStorage->getDb(), QList<int>() << rmsEntityId);
+    VeinStorage::AbstractDatabase *veinStorageDb = testRunner.getVeinStorageDb();
+    QByteArray jsonDumped = VeinStorage::DumpJson::dumpToByteArray(veinStorageDb, QList<int>() << rmsEntityId);
 
     QVERIFY(TestLogHelpers::compareAndLogOnDiffJson(jsonExpected, jsonDumped));
 }
@@ -59,8 +59,8 @@ void test_rms_module_regression::injectActualValues()
     TimeMachineObject::feedEventLoop();
 
     QByteArray jsonExpected= TestLogHelpers::loadFile(":/dumpActual.json");
-    VeinStorage::AbstractEventSystem* veinStorage = testRunner.getVeinStorageSystem();
-    QByteArray jsonDumped = VeinStorage::DumpJson::dumpToByteArray(veinStorage->getDb(), QList<int>() << rmsEntityId);
+    VeinStorage::AbstractDatabase *veinStorageDb = testRunner.getVeinStorageDb();
+    QByteArray jsonDumped = VeinStorage::DumpJson::dumpToByteArray(veinStorageDb, QList<int>() << rmsEntityId);
 
     QVERIFY(TestLogHelpers::compareAndLogOnDiffJson(jsonExpected, jsonDumped));
 }
@@ -70,7 +70,7 @@ void test_rms_module_regression::injectActualTwice()
     ModuleManagerTestRunner testRunner(":/session-rms-moduleconfig-from-resource.json");
     TestDspInterfacePtr rmsDspInterface = testRunner.getDspInterface(rmsEntityId);
 
-    VeinStorage::AbstractDatabase* storageDb = testRunner.getVeinStorageSystem()->getDb();
+    VeinStorage::AbstractDatabase* storageDb = testRunner.getVeinStorageDb();
     QVector<float> actValues(rmsResultCount);
 
     actValues[1] = 37;
@@ -99,8 +99,8 @@ void test_rms_module_regression::injectSymmetricValues()
     TimeMachineObject::feedEventLoop();
 
     QByteArray jsonExpected = TestLogHelpers::loadFile(":/dumpSymmetric.json");
-    VeinStorage::AbstractEventSystem* veinStorage = testRunner.getVeinStorageSystem();
-    QByteArray jsonDumped = VeinStorage::DumpJson::dumpToByteArray(veinStorage->getDb(), QList<int>() << rmsEntityId);
+    VeinStorage::AbstractDatabase *veinStorageDb = testRunner.getVeinStorageDb();
+    QByteArray jsonDumped = VeinStorage::DumpJson::dumpToByteArray(veinStorageDb, QList<int>() << rmsEntityId);
 
     QVERIFY(TestLogHelpers::compareAndLogOnDiffJson(jsonExpected, jsonDumped));
 }

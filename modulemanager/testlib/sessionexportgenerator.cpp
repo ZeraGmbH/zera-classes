@@ -87,7 +87,7 @@ void SessionExportGenerator::generateSnapshotJsons(QString snapshotDir)
 QByteArray SessionExportGenerator::getVeinDump()
 {
     return VeinStorage::DumpJson::dumpToByteArray(
-        m_modmanTestRunner->getVeinStorageSystem()->getDb(),
+        m_modmanTestRunner->getVeinStorageDb(),
         QList<int>(),
         QList<int>() << scpi_module_entity,
         true);

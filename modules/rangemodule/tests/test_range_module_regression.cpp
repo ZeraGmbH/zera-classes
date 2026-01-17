@@ -20,10 +20,10 @@ void test_range_module_regression::initTestCase()
 void test_range_module_regression::minimalSession()
 {
     ModuleManagerTestRunner testRunner(":/session-minimal.json");
-    VeinStorage::AbstractEventSystem* veinStorage = testRunner.getVeinStorageSystem();
-    QList<int> entityList = veinStorage->getDb()->getEntityList();
+    VeinStorage::AbstractDatabase *veinStorageDb = testRunner.getVeinStorageDb();
+    QList<int> entityList = veinStorageDb->getEntityList();
     QCOMPARE(entityList.count(), 2);
-    QVERIFY(veinStorage->getDb()->hasEntity(rangeEntityId));
+    QVERIFY(veinStorageDb->hasEntity(rangeEntityId));
 }
 
 void test_range_module_regression::veinDumpInitial()
@@ -31,8 +31,8 @@ void test_range_module_regression::veinDumpInitial()
     ModuleManagerTestRunner testRunner(":/session-range-test.json");
 
     QByteArray jsonExpected = TestLogHelpers::loadFile(":/veinDumps/dumpInitial.json");
-    VeinStorage::AbstractEventSystem* veinStorage = testRunner.getVeinStorageSystem();
-    QByteArray jsonDumped = VeinStorage::DumpJson::dumpToByteArray(veinStorage->getDb(), QList<int>() << rangeEntityId);
+    VeinStorage::AbstractDatabase *veinStorageDb = testRunner.getVeinStorageDb();
+    QByteArray jsonDumped = VeinStorage::DumpJson::dumpToByteArray(veinStorageDb, QList<int>() << rangeEntityId);
 
     QVERIFY(TestLogHelpers::compareAndLogOnDiffJson(jsonExpected, jsonDumped));
 }
@@ -82,8 +82,8 @@ void test_range_module_regression::checkActualValueCount()
     TimeMachineObject::feedEventLoop();
 
     QByteArray jsonExpected = TestLogHelpers::loadFile(":/veinDumps/dumpActual.json");
-    VeinStorage::AbstractEventSystem* veinStorage = testRunner.getVeinStorageSystem();
-    QByteArray jsonDumped = VeinStorage::DumpJson::dumpToByteArray(veinStorage->getDb(), QList<int>() << rangeEntityId);
+    VeinStorage::AbstractDatabase *veinStorageDb = testRunner.getVeinStorageDb();
+    QByteArray jsonDumped = VeinStorage::DumpJson::dumpToByteArray(veinStorageDb, QList<int>() << rangeEntityId);
 
     QVERIFY(TestLogHelpers::compareAndLogOnDiffJson(jsonExpected, jsonDumped));
 
@@ -103,7 +103,7 @@ void test_range_module_regression::checkActualValueCount()
     QCOMPARE(spyDspWrite.at(2).at(0), "OffsetCorrection");
 
     jsonExpected = TestLogHelpers::loadFile(":/veinDumps/dumpActual-preScaled2.json");
-    jsonDumped = VeinStorage::DumpJson::dumpToByteArray(veinStorage->getDb(), QList<int>() << rangeEntityId);
+    jsonDumped = VeinStorage::DumpJson::dumpToByteArray(veinStorageDb, QList<int>() << rangeEntityId);
 
     QVERIFY(TestLogHelpers::compareAndLogOnDiffJson(jsonExpected, jsonDumped));
 }

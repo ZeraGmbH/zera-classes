@@ -461,8 +461,8 @@ void test_range_automatic::checkPersitency()
 
     // We are interested in vein valid ranges PAR_Channel8Range -> "--"
     QByteArray jsonExpected = TestLogHelpers::loadFile(":/veinDumps/dumpInitialClamp.json");
-    VeinStorage::AbstractEventSystem* veinStorage = m_modmanSetupFacade->getStorageSystem();
-    QByteArray jsonDumped = VeinStorage::DumpJson::dumpToByteArray(veinStorage->getDb(), QList<int>() << rangeEntityId);
+    VeinStorage::AbstractDatabase *veinStorageDb = m_modmanSetupFacade->getStorageSystem()->getDb();
+    QByteArray jsonDumped = VeinStorage::DumpJson::dumpToByteArray(veinStorageDb, QList<int>() << rangeEntityId);
     QVERIFY(TestLogHelpers::compareAndLogOnDiffJson(jsonExpected, jsonDumped));
 
     // set valid / unset valid "--"

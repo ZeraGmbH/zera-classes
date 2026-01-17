@@ -27,7 +27,7 @@ private:
 
     std::unique_ptr<ModuleManagerTestRunner> m_testRunner;
     std::unique_ptr<VeinLogger::DatabaseLogger> m_dataLoggerSystem;
-    VeinStorage::AbstractEventSystem* m_storage;
+    VeinStorage::AbstractDatabase* m_storageDb = nullptr;
     bool m_dataLoggerSystemInitialized = false;
 };
 
