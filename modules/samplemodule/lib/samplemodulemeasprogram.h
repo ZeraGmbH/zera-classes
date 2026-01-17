@@ -3,10 +3,11 @@
 
 #include "basemoduleconfiguration.h"
 #include "pcbserviceconnection.h"
+#include "pllautomatic.h"
 #include "samplemoduleconfigdata.h"
 #include "moduleactivist.h"
 #include "vfmoduleparameter.h"
-#include <taskcontainersequence.h>
+#include <taskcontainerqueue.h>
 
 namespace SAMPLEMODULE
 {
@@ -22,15 +23,16 @@ public:
     void generateVeinInterface() override;
     void activate() override;
     void deactivate() override;
+
 private slots:
     void onVeinPllChannelChanged(QVariant channelAlias);
     void onVeinPllAutoChanged(QVariant pllauto);
+    void onPllChannelChanged(QString channelMName);
 private:
     cSampleModuleConfigData* getConfData();
     QString getAlias(const QString &channelMName);
     void setPllChannelValidator();
-    void pllAutomatic();
-    void trySendPllChannel(const QString &channelAlias);
+    void trySendPllChannel(const QString &channelMName);
     void startSetPllChannel(const QString &channelMName);
     void setVeinPllChannelPesistent(const QString &channelMName);
 
@@ -44,7 +46,8 @@ private:
     VfModuleParameter* m_pParPllAutomaticOnOff = nullptr;
     VfModuleComponent* m_pPllFixed = nullptr;
 
-    TaskContainerSequence m_pendingTasks;
+    PllAutomatic m_pllAutomatic;
+    TaskContainerQueue m_pendingTasks;
 };
 
 }

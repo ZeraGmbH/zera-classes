@@ -6,6 +6,10 @@ function(SETUP_QTESTS_MODULE)
             samplemodule-static
             zera-modulemanager-testlib
         )
+        target_sources(${_testname}
+          PRIVATE
+            test-data/test-data.qrc
+        )
     endforeach()
 endfunction()
 
@@ -15,29 +19,5 @@ SETUP_QTESTS_MODULE(
     test_sample_set_channel
     test_sample_range_module_value_observer
     test_sample_pll_automatic
-)
-
-target_sources(test_sample_config_load
-  PRIVATE
-    test-data/test-data.qrc
-)
-
-target_sources(test_sample_persistency
-  PRIVATE
-    test-data/test-data.qrc
-)
-
-target_sources(test_sample_set_channel
-  PRIVATE
-    test-data/test-data.qrc
-)
-
-target_sources(test_sample_range_module_value_observer
-  PRIVATE
-    test-data/test-data.qrc
-)
-
-target_sources(test_sample_pll_automatic
-  PRIVATE
-    test-data/test-data.qrc
+    test_sample_set_pll_automatic
 )

@@ -14,8 +14,11 @@ cSampleModuleMeasProgram::cSampleModuleMeasProgram(cSampleModule* module, std::s
     m_module(module),
     m_pConfiguration(pConfiguration),
     m_obsermaticConfig(getConfData()->m_ObsermaticConfPar),
-    m_pcbConnection(m_module->getNetworkConfig())
+    m_pcbConnection(m_module->getNetworkConfig()),
+    m_pllAutomatic(m_module->getStorageDb(), m_obsermaticConfig.m_pllChannelList)
 {
+    connect(&m_pllAutomatic, &PllAutomatic::sigSelectPllChannel,
+            this, &cSampleModuleMeasProgram::onPllChannelChanged);
 }
 
 void cSampleModuleMeasProgram::generateVeinInterface()
@@ -57,6 +60,7 @@ void cSampleModuleMeasProgram::activate()
             return;
         }
         m_bActive = true;
+        m_pllAutomatic.activate(m_obsermaticConfig.m_npllAutoAct.m_nActive);
         emit activated();
     });
     m_pendingTasks.addSub(m_pcbConnection.createConnectionTask());
@@ -71,30 +75,37 @@ void cSampleModuleMeasProgram::deactivate()
 
 void cSampleModuleMeasProgram::onVeinPllChannelChanged(QVariant channelAlias)
 {
-    if(m_obsermaticConfig.m_npllAutoAct.m_nActive != 0) {
+    if (m_obsermaticConfig.m_npllAutoAct.m_nActive != 0) {
         qWarning("Cannot set PLL channel when automatic mode is on!");
         m_pVeinPllChannelAlias->setValue(getAlias(m_obsermaticConfig.m_pllSystemChannel.m_sPar));
         return;
     }
-    else if(m_obsermaticConfig.m_bpllFixed) {
+    else if (m_obsermaticConfig.m_bpllFixed) {
         qWarning("Cannot set PLL channel on fixed frequency!");
         m_pVeinPllChannelAlias->setValue("");
         return;
     }
-    trySendPllChannel(channelAlias.toString());
+    QString channelMName = m_module->getSharedChannelRangeObserver()->getChannelMName(channelAlias.toString());
+    trySendPllChannel(channelMName);
 }
 
 void cSampleModuleMeasProgram::onVeinPllAutoChanged(QVariant pllauto)
 {
-    if(!m_obsermaticConfig.m_bpllFixed) {
-        if ( pllauto.toInt() == 1) {
-            m_obsermaticConfig.m_npllAutoAct.m_nActive = 1;
-            pllAutomatic(); // call once if switched to automatic
-        }
-        else
-            m_obsermaticConfig.m_npllAutoAct.m_nActive = 0;
-        emit m_module->parameterChanged();
+    bool pllAutoOn = pllauto.toBool();
+    if (pllAutoOn && m_obsermaticConfig.m_bpllFixed) {
+        qWarning("Cannot active PLL channel on fixed frequency!");
+        m_pParPllAutomaticOnOff->setValue(0);
+        return;
     }
+
+    m_pllAutomatic.activate(pllAutoOn);
+    m_obsermaticConfig.m_npllAutoAct.m_nActive = pllAutoOn;
+    emit m_module->parameterChanged();
+}
+
+void cSampleModuleMeasProgram::onPllChannelChanged(QString channelMName)
+{
+    trySendPllChannel(channelMName);
 }
 
 cSampleModuleConfigData *cSampleModuleMeasProgram::getConfData()
@@ -123,32 +134,9 @@ void cSampleModuleMeasProgram::setPllChannelValidator()
     m_pVeinPllChannelAlias->setValidator(sValidator);
 }
 
-void cSampleModuleMeasProgram::pllAutomatic()
-{
-    if (m_bActive &&
-        m_obsermaticConfig.m_npllAutoAct.m_nActive == 1 &&
-        !m_obsermaticConfig.m_bpllFixed) {
-        int i;
-        int n = m_obsermaticConfig.m_pllChannelList.count();
-        for (i = 0; i < n; i++) {
-            /*double urValue = m_pllMeasChannelHash[ m_AliasHash[m_ConfPar.m_ObsermaticConfPar.m_pllChannelList.at(i)]]->getUrValue();
-            if (m_ActualValues[i] > urValue * 10.0 / 100.0)
-                break;*/
-        }
-        if (i == n)
-            i = 0; // if none of our channels has 10% attenuation we take the first channel
-        // now we set our new pll channel
-        const QString newChannelMName = m_obsermaticConfig.m_pllChannelList.at(i);
-        const QString newChannelAlias = getAlias(newChannelMName);
-        if (!newChannelAlias.isEmpty())
-            trySendPllChannel(newChannelAlias);
-    }
-}
-
-void cSampleModuleMeasProgram::trySendPllChannel(const QString &channelAlias)
+void cSampleModuleMeasProgram::trySendPllChannel(const QString &channelMName)
 {
     if(m_bActive && !m_obsermaticConfig.m_bpllFixed) {
-        QString channelMName = m_module->getSharedChannelRangeObserver()->getChannelMName(channelAlias);
         if(channelMName != m_obsermaticConfig.m_pllSystemChannel.m_sPar)
             startSetPllChannel(channelMName);
     }
@@ -165,7 +153,6 @@ void cSampleModuleMeasProgram::startSetPllChannel(const QString &channelMName)
         setVeinPllChannelPesistent(channelMName);
     });
     m_pendingTasks.addSub(std::move(task));
-    m_pendingTasks.start();
 }
 
 void cSampleModuleMeasProgram::setVeinPllChannelPesistent(const QString &channelMName)
