@@ -34,9 +34,8 @@ cSfcModuleMeasProgram::cSfcModuleMeasProgram(cSfcModule *module, std::shared_ptr
     m_readDUTInputsState.addTransition(this, &cSfcModuleMeasProgram::activationContinue, &m_readDUTInputAliasState);
     m_readDUTInputAliasState.addTransition(this, &cSfcModuleMeasProgram::activationContinue, &m_readDUTInputDoneState);
     m_readDUTInputDoneState.addTransition(this, &cSfcModuleMeasProgram::activationLoop, &m_readDUTInputAliasState);
-    m_readDUTInputDoneState.addTransition(this, &cSfcModuleMeasProgram::activationContinue, &m_setpcbREFConstantNotifierState);
+    m_readDUTInputDoneState.addTransition(this, &cSfcModuleMeasProgram::activationContinue, &m_setsecINTNotifierState);
 
-    m_setpcbREFConstantNotifierState.addTransition(this, &cSfcModuleMeasProgram::activationContinue, &m_setsecINTNotifierState);
     m_setMasterMuxState.addTransition(this, &cSfcModuleMeasProgram::setupContinue, &m_setMasterMeasModeState);
     m_setMasterMeasModeState.addTransition(this, &cSfcModuleMeasProgram::setupContinue, &m_enableInterruptState);
     m_setsecINTNotifierState.addTransition(this, &cSfcModuleMeasProgram::activationContinue, &m_activationDoneState);
@@ -54,7 +53,6 @@ cSfcModuleMeasProgram::cSfcModuleMeasProgram(cSfcModule *module, std::shared_ptr
     m_activationMachine.addState(&m_readDUTInputsState);
     m_activationMachine.addState(&m_readDUTInputAliasState);
     m_activationMachine.addState(&m_readDUTInputDoneState);
-    m_activationMachine.addState(&m_setpcbREFConstantNotifierState);
     m_activationMachine.addState(&m_setsecINTNotifierState);
     m_activationMachine.addState(&m_setMasterMuxState);
     m_activationMachine.addState(&m_setMasterMeasModeState);
@@ -75,7 +73,6 @@ cSfcModuleMeasProgram::cSfcModuleMeasProgram(cSfcModule *module, std::shared_ptr
     connect(&m_readDUTInputsState, &QState::entered, this, &cSfcModuleMeasProgram::readDUTInputs);
     connect(&m_readDUTInputAliasState, &QState::entered, this, &cSfcModuleMeasProgram::readDUTInputAlias);
     connect(&m_readDUTInputDoneState, &QState::entered, this, &cSfcModuleMeasProgram::readDUTInputDone);
-    connect(&m_setpcbREFConstantNotifierState, &QState::entered, this, &cSfcModuleMeasProgram::setpcbREFConstantNotifier);
     connect(&m_setsecINTNotifierState, &QState::entered, this, &cSfcModuleMeasProgram::setsecINTNotifier);
     connect(&m_setMasterMuxState, &QState::entered, this, &cSfcModuleMeasProgram::setMasterMux);
     connect(&m_setMasterMeasModeState, &QState::entered, this, &cSfcModuleMeasProgram::setMasterMeasMode);
@@ -273,11 +270,6 @@ void cSfcModuleMeasProgram::readDUTInputDone()
         emit activationContinue();
     else
         emit activationLoop();
-}
-
-void cSfcModuleMeasProgram::setpcbREFConstantNotifier()
-{
-    emit activationContinue();
 }
 
 void cSfcModuleMeasProgram::setsecINTNotifier()

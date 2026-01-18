@@ -117,7 +117,6 @@ private:
     QState m_readDUTInputAliasState; // read for 1 Input
     QState m_readDUTInputDoneState;
 
-    QState m_setpcbREFConstantNotifierState; // we get notified on refconstant changes
     QState m_setsecINTNotifierState; // we get notified on sec interrupts
 
     QFinalState m_activationDoneState; // and then we have finished
@@ -155,7 +154,6 @@ private slots:
     void readDUTInputs();
     void readDUTInputAlias();
     void readDUTInputDone();
-    void setpcbREFConstantNotifier();
     void setsecINTNotifier();
     void activationDone();
 
