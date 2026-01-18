@@ -647,7 +647,6 @@ void cSpm1ModuleMeasProgram::actualizeRefConstant()
 {
     double constant = m_refConstantObserver.getConstant(getConfData()->m_sRefInput.m_sPar);
     m_pRefConstantPar->setValue(QVariant(constant));
-    newRefConstant(QVariant(constant));
 }
 
 quint32 cSpm1ModuleMeasProgram::getStatus()
@@ -731,8 +730,7 @@ void cSpm1ModuleMeasProgram::updateDemoMeasurementResults()
 
     m_nEnergyCounterFinal = rand() % 10; //random value between 0 and 9
     m_fTimeSecondsFinal = rand() % 10 +1; //random value between 1 and 10
-
-    newRefConstant(QVariant(3600000));
+    m_pRefConstantPar->setValue(3600000);
 
     setEMResult();
     stopMeasurement(false);
@@ -1167,15 +1165,6 @@ void cSpm1ModuleMeasProgram::newStartStop(QVariant startstop)
             }
         }
     }
-}
-
-
-void cSpm1ModuleMeasProgram::newRefConstant(QVariant refconst)
-{
-    m_pRefConstantPar->setValue(refconst);
-    setInterfaceComponents();
-
-    emit m_pModule->parameterChanged();
 }
 
 
