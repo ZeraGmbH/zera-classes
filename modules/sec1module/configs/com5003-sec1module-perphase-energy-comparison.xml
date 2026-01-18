@@ -29,7 +29,6 @@
             <mode>energy</mode>
             <dutconstant>10000</dutconstant>
             <dutconstantunit>none</dutconstantunit>
-            <refconstant>5e+08</refconstant>
             <target>500000</target>
             <energy>0.001</energy>
             <mrate>10</mrate>

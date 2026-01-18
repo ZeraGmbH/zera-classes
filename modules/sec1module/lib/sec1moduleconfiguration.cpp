@@ -38,7 +38,6 @@ void cSec1ModuleConfiguration::setConfiguration(QByteArray xmlString)
     m_ConfigXMLMap["sec1modconfpar:parameter:measure:mode"] = setMeasMode;
     m_ConfigXMLMap["sec1modconfpar:parameter:measure:dutconstant"] = setDutConstant;
     m_ConfigXMLMap["sec1modconfpar:parameter:measure:dutconstantunit"] = setDutConstantUnit;
-    m_ConfigXMLMap["sec1modconfpar:parameter:measure:refconstant"] = setRefConstant;
     m_ConfigXMLMap["sec1modconfpar:parameter:measure:target"] = setTarget;
     m_ConfigXMLMap["sec1modconfpar:parameter:measure:energy"] = setEnergy;
     m_ConfigXMLMap["sec1modconfpar:parameter:measure:mrate"] = setMRate;
@@ -64,9 +63,6 @@ QByteArray cSec1ModuleConfiguration::exportConfiguration()
     stringParameter* sPar;
     sPar = &m_pSec1ModulConfigData->m_sDutConstantUnit;
     m_pXMLReader->setValue(sPar->m_sKey, sPar->m_sPar);
-
-    dPar = &m_pSec1ModulConfigData->m_fRefConstant;
-    m_pXMLReader->setValue(dPar->m_sKey, QString("%1").arg(dPar->m_fPar));
 
     dPar = &m_pSec1ModulConfigData->m_fEnergy;
     m_pXMLReader->setValue(dPar->m_sKey, QString("%1").arg(dPar->m_fPar));
@@ -155,10 +151,6 @@ void cSec1ModuleConfiguration::configXMLInfo(QString key)
         case setDutConstantUnit:
             m_pSec1ModulConfigData->m_sDutConstantUnit.m_sKey = key;
             m_pSec1ModulConfigData->m_sDutConstantUnit.m_sPar = m_pXMLReader->getValue(key);
-            break;
-        case setRefConstant:
-            m_pSec1ModulConfigData->m_fRefConstant.m_sKey = key;
-            m_pSec1ModulConfigData->m_fRefConstant.m_fPar = m_pXMLReader->getValue(key).toDouble(&ok);
             break;
         case setTarget:
             m_pSec1ModulConfigData->m_nTarget.m_sKey = key;

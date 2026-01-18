@@ -180,7 +180,6 @@
             <xs:element name="mode" type="modetype" minOccurs="1" maxOccurs="1"/>
             <xs:element name="dutconstant" type="xs:float" minOccurs="1" maxOccurs="1"/>
             <xs:element name="dutconstantunit" type="xs:string" minOccurs="1" maxOccurs="1"/>
-            <xs:element name="refconstant" type="xs:float" minOccurs="1" maxOccurs="1"/>
             <xs:element name="target" type="impulstype" minOccurs="1" maxOccurs="1"/>
             <xs:element name="energy" type="xs:float" minOccurs="1" maxOccurs="1"/>
             <xs:element name="mrate" type="impulstype" minOccurs="1" maxOccurs="1"/>

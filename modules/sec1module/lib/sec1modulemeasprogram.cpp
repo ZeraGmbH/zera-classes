@@ -659,7 +659,7 @@ void cSec1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, Q
                     // Still running and not waiting for next?
                     if(m_bMeasurementRunning && (getStatus() & ECALCSTATUS::WAIT) == 0) {
                         m_nEnergyCounterActual = answer.toUInt();
-                        m_fEnergy = m_nEnergyCounterActual / getConfData()->m_fRefConstant.m_fPar;
+                        m_fEnergy = m_nEnergyCounterActual / m_pRefConstantPar->getValue().toDouble();
                         m_pEnergyAct->setValue(m_fEnergy);
                         if (m_bFirstMeas) {
                             // keep in final until a result is calculated in
@@ -788,7 +788,6 @@ void cSec1ModuleMeasProgram::actualizeRefConstant()
 {
     double constant = m_refConstantObserver.getConstant(getConfData()->m_sRefInput.m_sPar);
     m_pRefConstantPar->setValue(QVariant(constant));
-    newRefConstant(QVariant(constant));
 }
 
 quint32 cSec1ModuleMeasProgram::getStatus()
@@ -871,7 +870,6 @@ void cSec1ModuleMeasProgram::setInterfaceComponents()
     m_pDutInputPar->setValue(QVariant(m_dutInputDictionary.getAlias(confData->m_sDutInput.m_sPar)));
     m_pRefInputPar->setValue(QVariant(getRefInputDisplayString(confData->m_sRefInput.m_sPar)));
     m_pDutConstantPar->setValue(QVariant(confData->m_fDutConstant.m_fPar));
-    m_pRefConstantPar->setValue(QVariant(confData->m_fRefConstant.m_fPar));
     m_pMRatePar->setValue(QVariant(confData->m_nMRate.m_nPar));
     m_pTargetPar->setValue(QVariant(confData->m_nTarget.m_nPar));
     m_pEnergyPar->setValue(QVariant(confData->m_fEnergy.m_fPar));
@@ -965,18 +963,19 @@ void cSec1ModuleMeasProgram::computeDependencies()
     // an instrument transformer is used.
     dutConstant = dutConstant * m_dutConstantScalingMem;
 
+    const double refConstant = m_pRefConstantPar->getValue().toDouble();
     if (mode == "mrate") {
         // we calculate the new target value
-        confData->m_nTarget.m_nPar = floor(confData->m_nMRate.m_nPar * confData->m_fRefConstant.m_fPar / dutConstant);
+        confData->m_nTarget.m_nPar = floor(confData->m_nMRate.m_nPar * refConstant / dutConstant);
         confData->m_fEnergy.m_fPar = confData->m_nMRate.m_nPar / dutConstant;
     }
     else if (mode == "energy") {
         // we calcute the new mrate and target
         confData->m_nMRate.m_nPar = ceil(dutConstant * confData->m_fEnergy.m_fPar);
-        confData->m_nTarget.m_nPar = floor(confData->m_nMRate.m_nPar * confData->m_fRefConstant.m_fPar / dutConstant);
+        confData->m_nTarget.m_nPar = floor(confData->m_nMRate.m_nPar * refConstant / dutConstant);
     }
     else if (mode == "target") {
-        dutConstant = confData->m_nMRate.m_nPar * confData->m_fRefConstant.m_fPar / confData->m_nTarget.m_nPar;
+        dutConstant = confData->m_nMRate.m_nPar * refConstant / confData->m_nTarget.m_nPar;
         if (energyPerImpulse)
             dutConstant = (1.0/dutConstant) * 1000.0;
         confData->m_fDutConstant.m_fPar = dutConstant;
@@ -1261,7 +1260,6 @@ void cSec1ModuleMeasProgram::activationDone()
         this->newDutConstantScale(val,m_pDutTypeMeasurePoint->getName());
     });
     connect(m_pDutConstantUnitPar, &VfModuleParameter::sigValueChanged, this, &cSec1ModuleMeasProgram::newDutConstantUnit);
-    connect(m_pRefConstantPar, &VfModuleParameter::sigValueChanged, this, &cSec1ModuleMeasProgram::newRefConstant);
     connect(m_pDutInputPar, &VfModuleParameter::sigValueChanged, this, &cSec1ModuleMeasProgram::newDutInput);
     connect(m_pRefInputPar, &VfModuleParameter::sigValueChanged, this, &cSec1ModuleMeasProgram::newRefInput);
     connect(m_pMRatePar, &VfModuleParameter::sigValueChanged, this, &cSec1ModuleMeasProgram::newMRate);
@@ -1432,7 +1430,7 @@ void cSec1ModuleMeasProgram::setECResult()
         setRating();
     }
 
-    m_fEnergy = 1.0 * m_nEnergyCounterFinal / getConfData()->m_fRefConstant.m_fPar;
+    m_fEnergy = 1.0 * m_nEnergyCounterFinal / m_pRefConstantPar->getValue().toDouble();
     m_pResultAct->setValue(QVariant(m_fResult));
     m_pEnergyAct->setValue(m_fEnergy);
     m_pEnergyFinalAct->setValue(m_fEnergy);
@@ -1660,17 +1658,6 @@ void cSec1ModuleMeasProgram::newDutConstantUnit(QVariant dutconstunit)
     emit m_pModule->parameterChanged();
 }
 
-
-void cSec1ModuleMeasProgram::newRefConstant(QVariant refconst)
-{
-    bool ok;
-    getConfData()->m_fRefConstant.m_fPar = refconst.toDouble(&ok);
-    setInterfaceComponents();
-
-    emit m_pModule->parameterChanged();
-}
-
-
 void cSec1ModuleMeasProgram::newDutInput(QVariant dutinput)
 {
     QString dutInputName = m_dutInputDictionary.getInputNameFromDisplayedName(dutinput.toString());
@@ -1679,7 +1666,6 @@ void cSec1ModuleMeasProgram::newDutInput(QVariant dutinput)
 
     emit m_pModule->parameterChanged();
 }
-
 
 void cSec1ModuleMeasProgram::newRefInput(QVariant refinput)
 {

@@ -52,7 +52,6 @@ public:
     stringParameter m_sMode;
     doubleParameter m_fDutConstant;
     stringParameter m_sDutConstantUnit;
-    doubleParameter m_fRefConstant;
     boolParameter m_bContinous;
     doubleParameter m_fT0Value;
     doubleParameter m_fT1Value;

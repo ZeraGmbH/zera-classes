@@ -21,7 +21,6 @@ enum moduleconfigstate
     setMeasMode,
     setDutConstant,
     setDutConstantUnit,
-    setRefConstant,
     setTarget,
     setEnergy,
     setMRate,
