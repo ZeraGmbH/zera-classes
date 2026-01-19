@@ -2,7 +2,6 @@
 #define VEINDATACOLLECTOR_H
 
 #include <vs_abstracteventsystem.h>
-#include <vs_timestampersettable.h>
 #include <QJsonObject>
 #include <QObject>
 #include <QUuid>
@@ -12,30 +11,33 @@ typedef QHash<int/*entityId*/, ComponentInfo> RecordedEntityComponents;
 typedef QMap<QString /*QDateTime in QString*/, RecordedEntityComponents> TimeStampedRecords;
 
 static constexpr int sigMeasuringEntityId = 1050; //DftModule
+static constexpr qint64 notStartedFirstTimestampValue = -1;
 
 class VeinDataCollector : public QObject
 {
     Q_OBJECT
 public:
     explicit VeinDataCollector(VeinStorage::AbstractDatabase* storage);
-    void startLogging(QHash<int, QStringList> entitesAndComponents);
+    void startLogging(const QHash<int, QStringList> &entitesAndComponents);
     void stopLogging();
     void getStoredValues(QUuid callId, int start, int end);
+    static QString intToStringWithLeadingDigits(int number);
 signals:
     void newValueStored(int num);
     void sigStoredValue(QUuid callId, bool success, QString errorMsg, QJsonObject values);
 
+private slots:
+    void onMeasuringComponentChanged(QVariant newValue);
 private:
-    void collectValues(int msSinceStart, QHash<int, QStringList> entitesAndComponents);
+    void collectValues(int msSinceStart);
     QJsonObject convertRecordedEntityComponentsToJson(RecordedEntityComponents recordedEntityComponents);
     void appendNewRecord(QJsonObject newRecordObject);
-    static QString intToStringWithLeadingDigits(int number);
 
     VeinStorage::AbstractDatabase *m_storage;
     QJsonObject m_recordedObject;
-    VeinStorage::TimeStamperSettablePtr m_timeStamper;
-    VeinStorage::TimeStamperSettablePtr m_firstTimeStamp;
-    VeinStorage::AbstractComponentPtr m_sigMeasuringCompo;
+    VeinStorage::AbstractComponentPtr m_sigMeasuringComponent;
+    QHash<int, QStringList> m_entitesAndComponentsLogged;
+    qint64 m_timeStampMsFirstRecording = notStartedFirstTimestampValue;
 };
 
 #endif // VEINDATACOLLECTOR_H

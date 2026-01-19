@@ -2,6 +2,7 @@
 #define TEST_RECORDER_H
 
 #include "modulemanagertestrunner.h"
+#include <vf_rpc_invoker.h>
 #include <QObject>
 
 class test_recorder : public QObject
@@ -13,7 +14,7 @@ private slots:
     void cleanup();
 
     void startLoggingOneRecording();
-    void startLoggingMultipleRecordings();
+    void startLoggingMultipleRecordingsAndCheckTimestamps();
     void startStopRecordingTimerExpiredCheckResults();
     void startStopRecordingTimerExpired();
     void startStopTwoRecordingsNoTimerExpired();
@@ -29,9 +30,11 @@ private:
     void createModule(int entityId, QMap<QString, QVariant> components);
     void fireActualValues();
     void triggerDftModuleSigMeasuring();
+    void createModulesManually();
+    QVariantMap callRecorderRpc(int start, int end);
 
     std::unique_ptr<ModuleManagerTestRunner> m_testRunner;
-
+    VfRPCInvokerPtr m_rpcClient;
 };
 
 #endif // TEST_RECORDER_H

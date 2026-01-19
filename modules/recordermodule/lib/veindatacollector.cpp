@@ -1,36 +1,30 @@
 #include "veindatacollector.h"
+#include <timerfactoryqt.h>
 
 VeinDataCollector::VeinDataCollector(VeinStorage::AbstractDatabase *storage) :
     m_storage(storage)
 {
-    m_timeStamper = VeinStorage::TimeStamperSettable::create();
-    m_firstTimeStamp = VeinStorage::TimeStamperSettable::create();
 }
 
-void VeinDataCollector::startLogging(QHash<int, QStringList> entitesAndComponents)
+void VeinDataCollector::startLogging(const QHash<int, QStringList> &entitesAndComponents)
 {
-    m_recordedObject = QJsonObject();
-    m_firstTimeStamp->setTimestampToNow();
-    quint64 firstTimestampMs = m_firstTimeStamp->getTimestamp().toMSecsSinceEpoch();
-    m_sigMeasuringCompo = m_storage->findComponent(sigMeasuringEntityId, "SIG_Measuring");
-    if(m_sigMeasuringCompo) {
-        connect(m_sigMeasuringCompo.get(), &VeinStorage::AbstractComponent::sigValueChange, this, [=](QVariant newValue){
-            if(newValue.toInt() == 1) {// 1 indicates DftModule received new actual values
-                m_timeStamper->setTimestampToNow();
-                qint64 timeMs = m_timeStamper->getTimestamp().toMSecsSinceEpoch();
-                int msSinceStart = timeMs - firstTimestampMs;
-                collectValues(msSinceStart, entitesAndComponents);
-                emit newValueStored(m_recordedObject.count());
-            }
-        });
+    m_sigMeasuringComponent = m_storage->findComponent(sigMeasuringEntityId, "SIG_Measuring");
+    if (m_sigMeasuringComponent == nullptr) {
+        qWarning("DftModule/SIG_Measuring component is missing.");
+        return;
     }
-    else
-        qInfo("DftModule/SIG_Measuring component is missing.");
+
+    m_entitesAndComponentsLogged = entitesAndComponents;
+    m_recordedObject = QJsonObject();
+    m_timeStampMsFirstRecording = notStartedFirstTimestampValue;
+    connect(m_sigMeasuringComponent.get(), &VeinStorage::AbstractComponent::sigValueChange,
+            this, &VeinDataCollector::onMeasuringComponentChanged);
 }
 
 void VeinDataCollector::stopLogging()
 {
-    disconnect(m_sigMeasuringCompo.get(), 0, this, 0);
+    disconnect(m_sigMeasuringComponent.get(), &VeinStorage::AbstractComponent::sigValueChange,
+               this, &VeinDataCollector::onMeasuringComponentChanged);
 }
 
 void VeinDataCollector::getStoredValues(QUuid callId, int start, int end)
@@ -49,12 +43,12 @@ void VeinDataCollector::getStoredValues(QUuid callId, int start, int end)
         emit sigStoredValue(callId, false, "start or end not matching", QJsonObject());
 }
 
-void VeinDataCollector::collectValues(int msSinceStart, QHash<int, QStringList> entitesAndComponents)
+void VeinDataCollector::collectValues(int msSinceStart)
 {
     RecordedEntityComponents newRecord;
-    for(auto entity: entitesAndComponents.keys()) {
+    for(auto entity : m_entitesAndComponentsLogged.keys()) {
         ComponentInfo componentValues;
-        for(auto componentName: entitesAndComponents.value(entity))
+        for(const QString &componentName : m_entitesAndComponentsLogged.value(entity))
             componentValues.insert(componentName, m_storage->getStoredValue(entity, componentName));
         newRecord.insert(entity, componentValues);
     }
@@ -84,4 +78,16 @@ void VeinDataCollector::appendNewRecord(QJsonObject newRecordObject)
 QString VeinDataCollector::intToStringWithLeadingDigits(int number)
 {
     return QString("0000000000%1").arg(QString::number(number)).right(10);
+}
+
+void VeinDataCollector::onMeasuringComponentChanged(QVariant newValue)
+{
+    if(newValue.toInt() == 1) {// 1 indicates DftModule received new actual values
+        qint64 nowMs = TimerFactoryQt::getCurrentTime().toMSecsSinceEpoch();
+        if (m_timeStampMsFirstRecording == notStartedFirstTimestampValue)
+            m_timeStampMsFirstRecording = nowMs;
+        qint64 msSinceStart = nowMs - m_timeStampMsFirstRecording;
+        collectValues(msSinceStart);
+        emit newValueStored(m_recordedObject.count());
+    }
 }

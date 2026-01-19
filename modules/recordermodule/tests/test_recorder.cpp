@@ -6,7 +6,6 @@
 #include <timerfactoryqtfortest.h>
 #include <vf-cpp-entity.h>
 #include <vf_client_rpc_invoker.h>
-#include <vf_rpc_invoker.h>
 #include <QSignalSpy>
 #include <QTest>
 
@@ -23,12 +22,13 @@ void test_recorder::initTestCase()
 
 void test_recorder::init()
 {
-    m_testRunner= std::make_unique<ModuleManagerTestRunner>(":/mt310s2-emob-session-ac.json");
+    m_testRunner = std::make_unique<ModuleManagerTestRunner>(":/mt310s2-emob-session-ac.json");
 }
 
 void test_recorder::cleanup()
 {
     m_testRunner = nullptr;
+    m_rpcClient = nullptr;
 }
 
 void test_recorder::startLoggingOneRecording()
@@ -36,15 +36,7 @@ void test_recorder::startLoggingOneRecording()
     QList<int> entityList = m_testRunner->getVeinStorageDb()->getEntityList();
     QCOMPARE(entityList.count(), 2);
 
-    //create modules manually to be able to set actual values
-    QVariantMap components = {{"ACT_RMSPN1", QVariant()}, {"ACT_RMSPN2", QVariant()}};
-    createModule(rmsEntityId, components);
-
-    components = {{"SIG_Measuring", QVariant(1)}};
-    createModule(sigMeasuringEntityId, components);
-
-    components = {{"ACT_PQS1", QVariant()}, {"ACT_PQS2", QVariant()}};
-    createModule(powerEntityId, components);
+    createModulesManually();
 
     entityList = m_testRunner->getVeinStorageDb()->getEntityList();
     QCOMPARE(entityList.count(), 5);
@@ -58,42 +50,33 @@ void test_recorder::startLoggingOneRecording()
     QCOMPARE(num, 1);
 }
 
-void test_recorder::startLoggingMultipleRecordings()
+void test_recorder::startLoggingMultipleRecordingsAndCheckTimestamps()
 {
-    //create modules manually to be able to set actual values
-    QVariantMap components = {{"ACT_RMSPN1", QVariant()}, {"ACT_RMSPN2", QVariant()}};
-    createModule(rmsEntityId, components);
-    components = {{"SIG_Measuring", QVariant(1)}};
-    createModule(sigMeasuringEntityId, components);
-    components = {{"ACT_PQS1", QVariant()}, {"ACT_PQS2", QVariant()}};
-    createModule(powerEntityId, components);
+    createModulesManually();
 
     m_testRunner->setVfComponent(recorderEntityId, "PAR_StartStopRecording", true);
-    fireActualValues();
-    triggerDftModuleSigMeasuring();
-    TimeMachineForTest::getInstance()->processTimers(500);
-    fireActualValues();
-    triggerDftModuleSigMeasuring();
-    TimeMachineForTest::getInstance()->processTimers(500);
-    fireActualValues();
-    triggerDftModuleSigMeasuring();
-    TimeMachineForTest::getInstance()->processTimers(500);
+    constexpr int actualValueCount = 3;
+    constexpr int measPeriodMs = 500;
+    for (int valueNo=0; valueNo<actualValueCount; valueNo++) {
+        fireActualValues();
+        triggerDftModuleSigMeasuring();
+        TimeMachineForTest::getInstance()->processTimers(measPeriodMs);
+    }
 
     QVariant num = m_testRunner->getVeinStorageDb()->getStoredValue(recorderEntityId, "ACT_Points");
-    QCOMPARE(num, 3);
+    QCOMPARE(num, actualValueCount);
+
+    QVariantMap rpcMap = callRecorderRpc(0, actualValueCount-1);
+    QJsonObject resultJson = rpcMap[VeinComponent::RemoteProcedureData::s_returnString].toJsonObject();
+    QCOMPARE(resultJson.count(), actualValueCount);
+    QVERIFY(resultJson.contains(VeinDataCollector::intToStringWithLeadingDigits(0 * measPeriodMs)));
+    QVERIFY(resultJson.contains(VeinDataCollector::intToStringWithLeadingDigits(1 * measPeriodMs)));
+    QVERIFY(resultJson.contains(VeinDataCollector::intToStringWithLeadingDigits(2 * measPeriodMs)));
 }
 
 void test_recorder::startStopRecordingTimerExpiredCheckResults()
 {
-    QVariantMap components = {{"ACT_RMSPN1", QVariant()}, {"ACT_RMSPN2", QVariant()}};
-    createModule(rmsEntityId, components);
-    components = {{"SIG_Measuring", QVariant(1)}};
-    createModule(sigMeasuringEntityId, components);
-    components = {{"ACT_PQS1", QVariant()}, {"ACT_PQS2", QVariant()}};
-    createModule(powerEntityId, components);
-
-    VfRPCInvokerPtr rpc = std::make_shared<VfRPCInvoker>(recorderEntityId, std::make_unique<VfClientRPCInvoker>());
-    m_testRunner->getVfCmdEventHandlerSystemPtr()->addItem(rpc);
+    createModulesManually();
 
     static int constexpr timer = 1200000; // 20 mins tolen from recordermoduleinit.cpp
     static int constexpr timeBetweenMeasurements = 100000; // 100s
@@ -107,27 +90,11 @@ void test_recorder::startStopRecordingTimerExpiredCheckResults()
         TimeMachineForTest::getInstance()->processTimers(timeBetweenMeasurements);
     }
 
-    QSignalSpy spyErr(rpc.get(), &VfRPCInvoker::sigRPCFinished);
-    QVariantMap rpcParamsErr;
-    rpcParamsErr.insert("p_startingPoint", 0);
-    rpcParamsErr.insert("p_endingPoint", measCountLimitedByStop+1);
-    rpc->invokeRPC("RPC_ReadRecordedValues", rpcParamsErr);
-    TimeMachineObject::feedEventLoop();
-
-    QVERIFY(spyErr.count() == 1);
-    QVariantMap argMapErr = spyErr[0][1].toMap();
+    QVariantMap argMapErr = callRecorderRpc(0, measCountLimitedByStop+1);;
     QVariant errorMsgErr = argMapErr[VeinComponent::RemoteProcedureData::s_errorMessageString];
     QVERIFY(!errorMsgErr.toString().isEmpty());
 
-    QSignalSpy spyOk(rpc.get(), &VfRPCInvoker::sigRPCFinished);
-    QVariantMap rpcParamsOk;
-    rpcParamsOk.insert("p_startingPoint", 0);
-    rpcParamsOk.insert("p_endingPoint", measCountLimitedByStop);
-    rpc->invokeRPC("RPC_ReadRecordedValues", rpcParamsOk);
-    TimeMachineObject::feedEventLoop();
-
-    QVERIFY(spyOk.count() == 1);
-    QVariantMap argMapOk = spyOk[0][1].toMap();
+    QVariantMap argMapOk = callRecorderRpc(0, measCountLimitedByStop);
     QVariant errorMsgOk = argMapOk[VeinComponent::RemoteProcedureData::s_errorMessageString];
     QVERIFY(errorMsgOk.toString().isEmpty());
 
@@ -137,12 +104,7 @@ void test_recorder::startStopRecordingTimerExpiredCheckResults()
 
 void test_recorder::startStopRecordingTimerExpired()
 {
-    QVariantMap components = {{"ACT_RMSPN1", QVariant()}, {"ACT_RMSPN2", QVariant()}};
-    createModule(rmsEntityId, components);
-    components = {{"SIG_Measuring", QVariant(1)}};
-    createModule(sigMeasuringEntityId, components);
-    components = {{"ACT_PQS1", QVariant()}, {"ACT_PQS2", QVariant()}};
-    createModule(powerEntityId, components);
+    createModulesManually();
 
     m_testRunner->setVfComponent(recorderEntityId, "PAR_StartStopRecording", true);
     fireActualValues();
@@ -158,12 +120,7 @@ void test_recorder::startStopRecordingTimerExpired()
 
 void test_recorder::startStopTwoRecordingsNoTimerExpired()
 {
-    QVariantMap components = {{"ACT_RMSPN1", QVariant()}, {"ACT_RMSPN2", QVariant()}};
-    createModule(rmsEntityId, components);
-    components = {{"SIG_Measuring", QVariant(1)}};
-    createModule(sigMeasuringEntityId, components);
-    components = {{"ACT_PQS1", QVariant()}, {"ACT_PQS2", QVariant()}};
-    createModule(powerEntityId, components);
+    createModulesManually();
 
     m_testRunner->setVfComponent(recorderEntityId, "PAR_StartStopRecording", true);
     fireActualValues();
@@ -183,12 +140,7 @@ void test_recorder::startStopTwoRecordingsNoTimerExpired()
 
 void test_recorder::startStopTwoRecordingsFirstRecordingTimerExpired()
 {
-    QVariantMap components = {{"ACT_RMSPN1", QVariant()}, {"ACT_RMSPN2", QVariant()}};
-    createModule(rmsEntityId, components);
-    components = {{"SIG_Measuring", QVariant(1)}};
-    createModule(sigMeasuringEntityId, components);
-    components = {{"ACT_PQS1", QVariant()}, {"ACT_PQS2", QVariant()}};
-    createModule(powerEntityId, components);
+    createModulesManually();
 
     m_testRunner->setVfComponent(recorderEntityId, "PAR_StartStopRecording", true);
     fireActualValues();
@@ -207,12 +159,7 @@ void test_recorder::startStopTwoRecordingsFirstRecordingTimerExpired()
 
 void test_recorder::startStopTwoRecordingsSecondRecordingTimerExpired()
 {
-    QVariantMap components = {{"ACT_RMSPN1", QVariant()}, {"ACT_RMSPN2", QVariant()}};
-    createModule(rmsEntityId, components);
-    components = {{"SIG_Measuring", QVariant(1)}};
-    createModule(sigMeasuringEntityId, components);
-    components = {{"ACT_PQS1", QVariant()}, {"ACT_PQS2", QVariant()}};
-    createModule(powerEntityId, components);
+    createModulesManually();
 
     m_testRunner->setVfComponent(recorderEntityId, "PAR_StartStopRecording", true);
     fireActualValues();
@@ -232,12 +179,7 @@ void test_recorder::startStopTwoRecordingsSecondRecordingTimerExpired()
 
 void test_recorder::startStopTwoRecordingsBothRecordingTimersExpired()
 {
-    QVariantMap components = {{"ACT_RMSPN1", QVariant()}, {"ACT_RMSPN2", QVariant()}};
-    createModule(rmsEntityId, components);
-    components = {{"SIG_Measuring", QVariant(1)}};
-    createModule(sigMeasuringEntityId, components);
-    components = {{"ACT_PQS1", QVariant()}, {"ACT_PQS2", QVariant()}};
-    createModule(powerEntityId, components);
+    createModulesManually();
 
     m_testRunner->setVfComponent(recorderEntityId, "PAR_StartStopRecording", true);
     fireActualValues();
@@ -256,50 +198,23 @@ void test_recorder::startStopTwoRecordingsBothRecordingTimersExpired()
 
 void test_recorder::invokeRpcNoValuesRecorded()
 {
-    VfRPCInvokerPtr rpc = std::make_shared<VfRPCInvoker>(recorderEntityId, std::make_unique<VfClientRPCInvoker>());
-    m_testRunner->getVfCmdEventHandlerSystemPtr()->addItem(rpc);
-
-    QSignalSpy spy(rpc.get(), &VfRPCInvoker::sigRPCFinished);
-    QVariantMap rpcParams;
-    rpcParams.insert("p_endingPoint", 1);
-    rpcParams.insert("p_startingPoint", 0);
-    rpc->invokeRPC("RPC_ReadRecordedValues", rpcParams);
-    TimeMachineObject::feedEventLoop();
-
-    QVERIFY(spy.count() == 1);
-    QVariantMap argMap = spy[0][1].toMap();
-    QVariant errorMsg = argMap[VeinComponent::RemoteProcedureData::s_errorMessageString];
+    QVariantMap errorMap = callRecorderRpc(0, 0);
+    QVariant errorMsg = errorMap[VeinComponent::RemoteProcedureData::s_errorMessageString];
     QVERIFY(!errorMsg.toString().isEmpty());
-    QVariant result = argMap[VeinComponent::RemoteProcedureData::s_returnString];
+    QVariant result = errorMap[VeinComponent::RemoteProcedureData::s_returnString];
     QVERIFY(result.toString().isEmpty());
 }
 
 void test_recorder::invokeRpcOneValueRecorded()
 {
-    QVariantMap components = {{"ACT_RMSPN1", QVariant()}, {"ACT_RMSPN2", QVariant()}};
-    createModule(rmsEntityId, components);
-    components = {{"SIG_Measuring", QVariant(1)}};
-    createModule(sigMeasuringEntityId, components);
-    components = {{"ACT_PQS1", QVariant()}, {"ACT_PQS2", QVariant()}};
-    createModule(powerEntityId, components);
+    createModulesManually();
 
     m_testRunner->setVfComponent(recorderEntityId, "PAR_StartStopRecording", true);
     fireActualValues();
     triggerDftModuleSigMeasuring();
     TimeMachineForTest::getInstance()->processTimers(500);
 
-    VfRPCInvokerPtr rpc = std::make_shared<VfRPCInvoker>(recorderEntityId, std::make_unique<VfClientRPCInvoker>());
-    m_testRunner->getVfCmdEventHandlerSystemPtr()->addItem(rpc);
-
-    QSignalSpy spy(rpc.get(), &VfRPCInvoker::sigRPCFinished);
-    QVariantMap rpcParams;
-    rpcParams.insert("p_endingPoint", 1);
-    rpcParams.insert("p_startingPoint", 0);
-    rpc->invokeRPC("RPC_ReadRecordedValues", rpcParams);
-    TimeMachineObject::feedEventLoop();
-
-    QVERIFY(spy.count() == 1);
-    QVariantMap argMap = spy[0][1].toMap();
+    QVariantMap argMap = callRecorderRpc(0, 1);
     QVariant errorMsg = argMap[VeinComponent::RemoteProcedureData::s_errorMessageString];
     QVERIFY(errorMsg.toString().isEmpty());
 
@@ -314,40 +229,18 @@ void test_recorder::invokeRpcOneValueRecorded()
 
 void test_recorder::invokeRpcMultipleValuesRecorded()
 {
-    //create modules manually to be able to set actual values
-    QVariantMap components = {{"ACT_RMSPN1", QVariant()}, {"ACT_RMSPN2", QVariant()}};
-    createModule(rmsEntityId, components);
-    components = {{"SIG_Measuring", QVariant(1)}};
-    createModule(sigMeasuringEntityId, components);
-    components = {{"ACT_PQS1", QVariant()}, {"ACT_PQS2", QVariant()}};
-    createModule(powerEntityId, components);
+    createModulesManually();
 
     m_testRunner->setVfComponent(recorderEntityId, "PAR_StartStopRecording", true);
-    fireActualValues();
-    triggerDftModuleSigMeasuring();
-    TimeMachineForTest::getInstance()->processTimers(500);
-    fireActualValues();
-    triggerDftModuleSigMeasuring();
-    TimeMachineForTest::getInstance()->processTimers(500);
-    fireActualValues();
-    triggerDftModuleSigMeasuring();
-    TimeMachineForTest::getInstance()->processTimers(500);
-    fireActualValues();
-    triggerDftModuleSigMeasuring();
-    TimeMachineForTest::getInstance()->processTimers(500);
+    constexpr int actualValueCount = 4;
+    constexpr int measPeriodMs = 500;
+    for (int valueNo=0; valueNo<actualValueCount; valueNo++) {
+        fireActualValues();
+        triggerDftModuleSigMeasuring();
+        TimeMachineForTest::getInstance()->processTimers(measPeriodMs);
+    }
 
-    VfRPCInvokerPtr rpc = std::make_shared<VfRPCInvoker>(recorderEntityId, std::make_unique<VfClientRPCInvoker>());
-    m_testRunner->getVfCmdEventHandlerSystemPtr()->addItem(rpc);
-
-    QSignalSpy spy(rpc.get(), &VfRPCInvoker::sigRPCFinished);
-    QVariantMap rpcParams;
-    rpcParams.insert("p_endingPoint", 4);
-    rpcParams.insert("p_startingPoint", 2);
-    rpc->invokeRPC("RPC_ReadRecordedValues", rpcParams);
-    TimeMachineObject::feedEventLoop();
-
-    QVERIFY(spy.count() == 1);
-    QVariantMap argMap = spy[0][1].toMap();
+    QVariantMap argMap = callRecorderRpc(2, 4);
     QVariant errorMsg = argMap[VeinComponent::RemoteProcedureData::s_errorMessageString];
     QVERIFY(errorMsg.toString().isEmpty());
 
@@ -390,4 +283,27 @@ void test_recorder::triggerDftModuleSigMeasuring()
     //"SIG_Measuring" changes from 0 to 1 when new actual values are available
     m_testRunner->setVfComponent(sigMeasuringEntityId, "SIG_Measuring", QVariant(0));
     m_testRunner->setVfComponent(sigMeasuringEntityId, "SIG_Measuring", QVariant(1));
+}
+
+void test_recorder::createModulesManually()
+{
+    QVariantMap components = {{"ACT_RMSPN1", QVariant()}, {"ACT_RMSPN2", QVariant()}};
+    createModule(rmsEntityId, components);
+    components = {{"SIG_Measuring", QVariant(1)}};
+    createModule(sigMeasuringEntityId, components);
+    components = {{"ACT_PQS1", QVariant()}, {"ACT_PQS2", QVariant()}};
+    createModule(powerEntityId, components);
+}
+
+QVariantMap test_recorder::callRecorderRpc(int start, int end)
+{
+    m_rpcClient = std::make_shared<VfRPCInvoker>(recorderEntityId, std::make_unique<VfClientRPCInvoker>());
+    m_testRunner->getVfCmdEventHandlerSystemPtr()->addItem(m_rpcClient);
+    QSignalSpy spy(m_rpcClient.get(), &VfRPCInvoker::sigRPCFinished);
+    QVariantMap rpcParams;
+    rpcParams.insert("p_startingPoint", start);
+    rpcParams.insert("p_endingPoint", end);
+    m_rpcClient->invokeRPC("RPC_ReadRecordedValues", rpcParams);
+    TimeMachineObject::feedEventLoop();
+    return spy[0][1].toMap();
 }
