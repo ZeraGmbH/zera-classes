@@ -31,11 +31,10 @@ private slots:
 private:
     void collectValues(int msSinceStart);
     QJsonObject convertRecordedEntityComponentsToJson(RecordedEntityComponents recordedEntityComponents);
-    void appendNewRecord(QJsonObject newRecordObject);
+    VeinStorage::AbstractComponentPtr getMeasSigComponent();
 
     VeinStorage::AbstractDatabase *m_storage;
     QJsonObject m_recordedObject;
-    VeinStorage::AbstractComponentPtr m_sigMeasuringComponent;
     QHash<int, QStringList> m_entitesAndComponentsLogged;
     qint64 m_timeStampMsFirstRecording = notStartedFirstTimestampValue;
 };
