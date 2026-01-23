@@ -111,7 +111,8 @@ int SessionExportGenerator::getBigSessionFileCount()
 void SessionExportGenerator::createAndWriteFile(QString completeFileName, QString contents)
 {
     QFile xmlFile(completeFileName);
-    xmlFile.open(QFile::WriteOnly);
+    if (!xmlFile.open(QFile::WriteOnly))
+        qCritical("Could not open %s", qPrintable(completeFileName));
     xmlFile.write(contents.toUtf8());
 }
 
