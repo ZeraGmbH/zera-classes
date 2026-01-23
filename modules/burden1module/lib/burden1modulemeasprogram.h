@@ -7,6 +7,7 @@
 #include <vfmoduleparameter.h>
 #include <vfmodulemetadata.h>
 #include <QFinalState>
+#include <vs_abstractcomponent.h>
 
 namespace BURDEN1MODULE
 {
@@ -19,14 +20,14 @@ class cBurden1ModuleMeasProgram: public cBaseMeasWorkProgram
 
 public:
     cBurden1ModuleMeasProgram(cBurden1Module* module, std::shared_ptr<BaseModuleConfiguration> pConfiguration);
-    virtual ~cBurden1ModuleMeasProgram();
     void generateVeinInterface() override;
 public slots:
-    virtual void start() override {};
+    virtual void start() override {}; // follow DFT
     virtual void stop() override {};
 
 private:
     cBurden1ModuleConfigData* getConfData();
+    void setParameters();
 
     cBurden1Module* m_pModule;
     QList<VfModuleComponent*> m_veinActValueList; // the list of actual values we work on
@@ -38,6 +39,7 @@ private:
     VfModuleParameter* m_pNominalBurdenParameter;
     VfModuleParameter* m_pWireLengthParameter;
     VfModuleParameter* m_pWireCrosssectionParameter;
+    VeinStorage::AbstractComponentPtr m_dftSignal;
 
     QList<cBurden1MeasDelegate*> m_Burden1MeasDelegateList;
 
@@ -56,14 +58,12 @@ private slots:
     void deactivateMeas();
     void deactivateMeasDone();
 
-    void setMeasureSignal(int signal);
-
-    void newNominalRange(QVariant nr);
-    void newNominalFactorRange(QVariant nrf);
-    void newNominalBurden(QVariant nb);
-    void newWireLength(QVariant wl);
-    void newWireCrosssection(QVariant wc);
-    void setParameters();
+    void onDftSigChange(const QVariant &value);
+    void newNominalRange(const QVariant &nr);
+    void newNominalFactorRange(const QVariant &nrf);
+    void newNominalBurden(const QVariant &nb);
+    void newWireLength(const QVariant &wl);
+    void newWireCrosssection(const QVariant &wc);
 };
 
 }

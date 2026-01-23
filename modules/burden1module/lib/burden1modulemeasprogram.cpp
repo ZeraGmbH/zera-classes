@@ -37,24 +37,15 @@ cBurden1ModuleMeasProgram::cBurden1ModuleMeasProgram(cBurden1Module* module, std
     connect(&m_deactivateDoneState, &QState::entered, this, &cBurden1ModuleMeasProgram::deactivateMeasDone);
 }
 
-
-cBurden1ModuleMeasProgram::~cBurden1ModuleMeasProgram()
-{
-    // we delete burden meas delegates on deactivation of module
-}
-
 cBurden1ModuleConfigData *cBurden1ModuleMeasProgram::getConfData()
 {
     return qobject_cast<cBurden1ModuleConfiguration*>(m_pConfiguration.get())->getConfigurationData();
 }
 
-
 void cBurden1ModuleMeasProgram::generateVeinInterface()
 {
-
     for (int i = 0; i < getConfData()->m_nBurdenSystemCount; i++) {
         VfModuleComponent *pActvalue;
-        QString key;
         pActvalue = new VfModuleComponent(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
                                             QString("ACT_Burden%1").arg(i+1),
                                             QString("Burden actual value Sb"));
@@ -138,34 +129,36 @@ void cBurden1ModuleMeasProgram::generateVeinInterface()
     m_pModule->veinModuleComponentList.append(m_pMeasureSignal);
 }
 
-
 void cBurden1ModuleMeasProgram::searchActualValues()
 {
     bool error = false;
     const VeinStorage::AbstractDatabase* storageDb = m_pModule->getStorageDb();
-    for (int i = 0; i < getConfData()->m_nBurdenSystemCount; i++) {
-        VeinStorage::AbstractComponentPtr inputVoltageVector =
-            storageDb->findComponent(getConfData()->m_nModuleId, getConfData()->m_BurdenSystemConfigList.at(i).m_sInputVoltageVector);
-        VeinStorage::AbstractComponentPtr inputCurrentVector =
-            storageDb->findComponent(getConfData()->m_nModuleId, getConfData()->m_BurdenSystemConfigList.at(i).m_sInputCurrentVector);
-        if(inputVoltageVector && inputCurrentVector) {
-            cBurden1MeasDelegate* cBMD;
-            if (i == (getConfData()->m_nBurdenSystemCount-1)) {
-                cBMD = new cBurden1MeasDelegate(m_veinActValueList.at(i*3), m_veinActValueList.at(i*3+1), m_veinActValueList.at(i*3+2), getConfData()->m_Unit, true);
-                connect(cBMD, &cBurden1MeasDelegate::measuring, this, &cBurden1ModuleMeasProgram::setMeasureSignal);
+    m_dftSignal = storageDb->findComponent(getConfData()->m_nModuleId, "SIG_Measuring");
+    if (m_dftSignal) {
+        connect(m_dftSignal.get(), &VeinStorage::AbstractComponent::sigValueChange,
+                this, &cBurden1ModuleMeasProgram::onDftSigChange);
+        for (int i = 0; i < getConfData()->m_nBurdenSystemCount; i++) {
+            VeinStorage::AbstractComponentPtr inputVectorU =
+                storageDb->findComponent(getConfData()->m_nModuleId, getConfData()->m_BurdenSystemConfigList.at(i).m_sInputVoltageVector);
+            VeinStorage::AbstractComponentPtr inputVectorI =
+                storageDb->findComponent(getConfData()->m_nModuleId, getConfData()->m_BurdenSystemConfigList.at(i).m_sInputCurrentVector);
+
+            if(inputVectorU && inputVectorI) {
+                cBurden1MeasDelegate* cBMD = new cBurden1MeasDelegate(inputVectorU,
+                                                                      inputVectorI,
+                                                                      m_veinActValueList.at(i*3),
+                                                                      m_veinActValueList.at(i*3+1),
+                                                                      m_veinActValueList.at(i*3+2),
+                                                                      getConfData()->m_Unit);
+
+                m_Burden1MeasDelegateList.append(cBMD);
             }
             else
-                cBMD = new cBurden1MeasDelegate(m_veinActValueList.at(i*3), m_veinActValueList.at(i*3+1), m_veinActValueList.at(i*3+2), getConfData()->m_Unit);
-
-            m_Burden1MeasDelegateList.append(cBMD);
-            connect(inputVoltageVector.get(), &VeinStorage::AbstractComponent::sigValueChange,
-                    cBMD, &cBurden1MeasDelegate::actValueInput1);
-            connect(inputCurrentVector.get(), &VeinStorage::AbstractComponent::sigValueChange,
-                    cBMD,  &cBurden1MeasDelegate::actValueInput2);
+                error = true;
         }
-        else
-            error = true;
     }
+    else
+        error = true;
 
     if (error)
         notifyError(confiuredVeinComponentsNotFound);
@@ -173,11 +166,9 @@ void cBurden1ModuleMeasProgram::searchActualValues()
         emit activationContinue();
 }
 
-
 void cBurden1ModuleMeasProgram::activateDone()
 {
     setParameters();
-
     connect(m_pNominalBurdenParameter, &VfModuleParameter::sigValueChanged, this, &cBurden1ModuleMeasProgram::newNominalBurden);
     connect(m_pNominalRangeParameter, &VfModuleParameter::sigValueChanged, this, &cBurden1ModuleMeasProgram::newNominalRange);
     connect(m_pNominalRangeFactorParameter, &VfModuleParameter::sigValueChanged, this, &cBurden1ModuleMeasProgram::newNominalFactorRange);
@@ -188,84 +179,67 @@ void cBurden1ModuleMeasProgram::activateDone()
     emit activated();
 }
 
-
 void cBurden1ModuleMeasProgram::deactivateMeas()
 {
     m_bActive = false;
-
     for (int i = 0; i < m_Burden1MeasDelegateList.count(); i++)
         delete m_Burden1MeasDelegateList.at(i);
-
     emit deactivationContinue();
 }
-
 
 void cBurden1ModuleMeasProgram::deactivateMeasDone()
 {
     emit deactivated();
 }
 
-
-void cBurden1ModuleMeasProgram::setMeasureSignal(int signal)
+void cBurden1ModuleMeasProgram::onDftSigChange(const QVariant &value)
 {
-    m_pMeasureSignal->setValue(signal);
+    if (value.toInt() == 1) {
+        m_pMeasureSignal->setValue(0);
+        for (int i=0; i<m_Burden1MeasDelegateList.count(); ++i)
+            m_Burden1MeasDelegateList[i]->computeOutput();
+        m_pMeasureSignal->setValue(1);
+    }
 }
 
-
-void cBurden1ModuleMeasProgram::newNominalRange(QVariant nr)
+void cBurden1ModuleMeasProgram::newNominalRange(const QVariant &nr)
 {
-    bool ok;
-    getConfData()->nominalRange.m_fValue = nr.toFloat(&ok);
+    getConfData()->nominalRange.m_fValue = nr.toFloat();
     setParameters();
-
     emit m_pModule->parameterChanged();
 }
 
-
-void cBurden1ModuleMeasProgram::newNominalFactorRange(QVariant nrf)
+void cBurden1ModuleMeasProgram::newNominalFactorRange(const QVariant &nrf)
 {
     getConfData()->nominalRangeFactor.m_sPar = nrf.toString();
     setParameters();
-
     emit m_pModule->parameterChanged();
 }
 
-
-void cBurden1ModuleMeasProgram::newNominalBurden(QVariant nb)
+void cBurden1ModuleMeasProgram::newNominalBurden(const QVariant &nb)
 {
-    bool ok;
-    getConfData()->nominalBurden.m_fValue = nb.toFloat(&ok);
+    getConfData()->nominalBurden.m_fValue = nb.toFloat();
     setParameters();
-
     emit m_pModule->parameterChanged();
 }
 
-
-void cBurden1ModuleMeasProgram::newWireLength(QVariant wl)
+void cBurden1ModuleMeasProgram::newWireLength(const QVariant &wl)
 {
-    bool ok;
-    getConfData()->wireLength.m_fValue = wl.toFloat(&ok);
+    getConfData()->wireLength.m_fValue = wl.toFloat();
     setParameters();
-
     emit m_pModule->parameterChanged();
 }
 
-
-void cBurden1ModuleMeasProgram::newWireCrosssection(QVariant wc)
+void cBurden1ModuleMeasProgram::newWireCrosssection(const QVariant &wc)
 {
-    bool ok;
-    getConfData()->wireCrosssection.m_fValue = wc.toFloat(&ok);
+    getConfData()->wireCrosssection.m_fValue = wc.toFloat();
     setParameters();
-
     emit m_pModule->parameterChanged();
 }
-
 
 void cBurden1ModuleMeasProgram::setParameters()
 {
-    // we set the parameters here
-    for (int i = 0; i < m_Burden1MeasDelegateList.count(); i++)
-    {
+    for (int i = 0; i < m_Burden1MeasDelegateList.count(); i++) {
         cBurden1MeasDelegate* tmd = m_Burden1MeasDelegateList.at(i);
         tmd->setNominalBurden(getConfData()->nominalBurden.m_fValue);
         tmd->setNominalRange(getConfData()->nominalRange.m_fValue);
@@ -276,6 +250,3 @@ void cBurden1ModuleMeasProgram::setParameters()
 }
 
 }
-
-
-

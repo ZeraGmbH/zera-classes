@@ -1,10 +1,7 @@
 #ifndef BURDEN1MEASDELEGATE
 #define BURDEN1MEASDELEGATE
 
-#include <QObject>
-#include <QVariant>
-#include <QList>
-#include <complex>
+#include <vs_abstractcomponent.h>
 
 class VfModuleComponent;
 
@@ -15,30 +12,30 @@ class cBurden1MeasDelegate : public QObject
 {
     Q_OBJECT
 public:
-    cBurden1MeasDelegate(VfModuleComponent *actburden, VfModuleComponent *actpowerfactor, VfModuleComponent *actrelburden, QString mode, bool withSignal = false);
+    cBurden1MeasDelegate(VeinStorage::AbstractComponentPtr inputVectorU,
+                         VeinStorage::AbstractComponentPtr inputVectorI,
+                         VfModuleComponent *actburden,
+                         VfModuleComponent *actpowerfactor,
+                         VfModuleComponent *actrelburden,
+                         const QString &mode);
     static double calcWireResistence(double wireLenMeter, double wireCrossSectionMillimeterSquare);
-public slots:
-    void actValueInput1(QVariant val);
-    void actValueInput2(QVariant val);
-    void setNominalBurden(QVariant val);
-    void setNominalRange(QVariant val);
-    void setNominalRangeFactor(QVariant val);
-    void setWireLength(QVariant val);
-    void setWireCrosssection(QVariant val);
-signals:
-    void measuring(int);
-
-private:
     void computeOutput();
+
+public slots:
+    void setNominalBurden(const QVariant &val);
+    void setNominalRange(const QVariant &val);
+    void setNominalRangeFactor(const QVariant &val);
+    void setWireLength(const QVariant &val);
+    void setWireCrosssection(const QVariant &val);
+private:
+    VeinStorage::AbstractComponentPtr m_inputVectorU;
+    VeinStorage::AbstractComponentPtr m_inputVectorI;
+
     VfModuleComponent *m_pActBurden; // output is actual burden corrected to nominal burden
     VfModuleComponent *m_pActPowerFactor; // and angle cosß
     VfModuleComponent *m_pActRelativeBurden; // % value of nominal burden
     QString m_sMode;
 
-    bool m_bSignal;
-
-    std::complex<double> m_fVoltageVector;
-    std::complex<double> m_fCurrentVector;
     double m_fNominalBurden;
     double m_fNominalRange;
     QString m_sNominalRangeFactor;
