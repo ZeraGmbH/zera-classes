@@ -120,10 +120,10 @@ void cPower3ModuleMeasProgram::searchActualValues()
             m_Power3MeasDelegateList.append(cPMD);
 
             connect(inputU.get(), &VeinStorage::AbstractComponent::sigValueChange,
-                    cPMD, &cPower3MeasDelegate::actValueInput1);
+                    cPMD, &cPower3MeasDelegate::actValueInputU);
 
             connect(inputI.get(), &VeinStorage::AbstractComponent::sigValueChange,
-                    cPMD, &cPower3MeasDelegate::actValueInput2);
+                    cPMD, &cPower3MeasDelegate::actValueInputI);
         }
         else
             error = true;

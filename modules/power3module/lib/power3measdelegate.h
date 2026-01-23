@@ -18,8 +18,8 @@ public:
     cPower3MeasDelegate(VfModuleComponent *pactvalue, VfModuleComponent *qactvalue, VfModuleComponent *sactvalue, bool withSignal = false);
 
 public slots:
-    void actValueInput1(QVariant val);
-    void actValueInput2(QVariant val);
+    void actValueInputU(QVariant val);
+    void actValueInputI(QVariant val);
 
 signals:
     void measuring(int);

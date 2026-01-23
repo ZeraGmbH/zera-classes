@@ -11,14 +11,14 @@ cPower3MeasDelegate::cPower3MeasDelegate(VfModuleComponent *pactvalue, VfModuleC
 }
 
 
-void cPower3MeasDelegate::actValueInput1(QVariant val)
+void cPower3MeasDelegate::actValueInputU(QVariant val)
 {
     input1 = val.value<QList<double> >();
     computeOutput();
 }
 
 
-void cPower3MeasDelegate::actValueInput2(QVariant val)
+void cPower3MeasDelegate::actValueInputI(QVariant val)
 {
     input2 = val.value<QList<double> >();
     if (m_bSignal)
