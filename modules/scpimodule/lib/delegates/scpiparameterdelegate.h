@@ -12,8 +12,8 @@ class cSCPIParameterDelegate: public ScpiBaseDelegate
 {
     Q_OBJECT
 public:
-    cSCPIParameterDelegate(QString cmdParent, QString cmd, quint8 type, cSCPIModule* scpimodule, cSCPICmdInfoPtr scpicmdinfo);
-    void executeSCPI(cSCPIClient *client, QString& sInput) override;
+    cSCPIParameterDelegate(const QString &cmdParent, const QString &cmd, quint8 type, cSCPIModule* scpimodule, cSCPICmdInfoPtr scpicmdinfo);
+    void executeSCPI(cSCPIClient *client, const QString& scpi) override;
 signals:
     void clientinfoSignal(QString, SCPIMODULE::SCPIClientInfoPtr);
 private:

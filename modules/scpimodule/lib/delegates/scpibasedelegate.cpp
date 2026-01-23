@@ -11,7 +11,7 @@ ScpiBaseDelegate::ScpiBaseDelegate() :
     m_instanceCount++;
 }
 
-ScpiBaseDelegate::ScpiBaseDelegate(QString cmdParent, QString cmd, quint8 type) :
+ScpiBaseDelegate::ScpiBaseDelegate(const QString &cmdParent, const QString &cmd, quint8 type) :
     ScpiObject(cmd, type),
     m_sCmdParent(cmdParent)
 {

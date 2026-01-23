@@ -11,8 +11,8 @@
 
 namespace SCPIMODULE {
 
-cSCPIParameterDelegate::cSCPIParameterDelegate(QString cmdParent,
-                                               QString cmd,
+cSCPIParameterDelegate::cSCPIParameterDelegate(const QString &cmdParent,
+                                               const QString &cmd,
                                                quint8 type,
                                                cSCPIModule *scpimodule,
                                                cSCPICmdInfoPtr scpicmdinfo) :
@@ -20,10 +20,10 @@ cSCPIParameterDelegate::cSCPIParameterDelegate(QString cmdParent,
 {
 }
 
-void cSCPIParameterDelegate::executeSCPI(cSCPIClient *client, QString &sInput)
+void cSCPIParameterDelegate::executeSCPI(cSCPIClient *client, const QString &scpi)
 {
     quint8 scpiCmdType = getType();
-    cSCPICommand cmd = sInput;
+    cSCPICommand cmd = scpi;
     bool bQuery = cmd.isQuery() || cmd.isQuery(1); // we allow queries without or with 1 parameter
     if ( (bQuery && ((scpiCmdType & SCPI::isQuery) > 0)) ||  // test if we got an allowed query
          (cmd.isCommand(1) && ((scpiCmdType & SCPI::isCmdwP) > 0)) ||  // test if we got an allowed cmd + 1 parameter

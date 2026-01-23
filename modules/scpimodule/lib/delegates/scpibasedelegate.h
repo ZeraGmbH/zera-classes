@@ -19,11 +19,11 @@ class ScpiBaseDelegate : public QObject, public ScpiObject
    Q_OBJECT
 public:
     ScpiBaseDelegate();
-    ScpiBaseDelegate(QString cmdParent, QString cmd, quint8 type);
+    ScpiBaseDelegate(const QString &cmdParent, const QString &cmd, quint8 type);
     virtual ~ScpiBaseDelegate();
     void setCommand(cSCPI *scpiCmdInterface, ScpiBaseDelegatePtr delegate);
     bool executeSCPI(const QString&, QString&) override { return true; } // ScpiObject requires
-    virtual void executeSCPI(cSCPIClient *client, QString& sInput) = 0;
+    virtual void executeSCPI(cSCPIClient *client, const QString &scpi) = 0;
 
     static int getInstanceCount();
 

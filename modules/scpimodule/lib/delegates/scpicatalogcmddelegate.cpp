@@ -9,8 +9,8 @@
 
 namespace SCPIMODULE {
 
-cSCPICatalogCmdDelegate::cSCPICatalogCmdDelegate(QString cmdParent,
-                                                 QString cmd,
+cSCPICatalogCmdDelegate::cSCPICatalogCmdDelegate(const QString &cmdParent,
+                                                 const QString &cmd,
                                                  quint8 type,
                                                  cSCPIModule *scpimodule,
                                                  cSCPICmdInfoPtr scpicmdinfo) :
@@ -19,17 +19,17 @@ cSCPICatalogCmdDelegate::cSCPICatalogCmdDelegate(QString cmdParent,
     setOutput(m_pSCPICmdInfo);
 }
 
-void cSCPICatalogCmdDelegate::executeSCPI(cSCPIClient *client, QString &sInput)
+void cSCPICatalogCmdDelegate::executeSCPI(cSCPIClient *client, const QString &scpi)
 {
     quint8 scpiCmdType = getType();
-    cSCPICommand cmd = sInput;
+    cSCPICommand cmd = scpi;
     if (cmd.isQuery() && ((scpiCmdType & SCPI::isQuery) > 0))// test if we got an allowed query
         client->receiveAnswer(m_sAnswer);
     else
         client->receiveStatus(ZSCPI::nak);
 }
 
-void cSCPICatalogCmdDelegate::setOutput(QVariant modInterface)
+void cSCPICatalogCmdDelegate::setOutput(const QVariant &modInterface)
 {
     QJsonDocument jsonDoc = QJsonDocument::fromJson(modInterface.toByteArray());
     QJsonObject jsonObj = jsonDoc.object();

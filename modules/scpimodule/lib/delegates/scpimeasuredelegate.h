@@ -11,10 +11,10 @@ class cSCPIMeasureDelegate: public ScpiBaseDelegate
 {
    Q_OBJECT
 public:
-    cSCPIMeasureDelegate(QString cmdParent, QString cmd, quint8 type, quint8 measCode, cSCPIMeasure* scpimeasureobject);
+    cSCPIMeasureDelegate(const QString &cmdParent, const QString &cmd, quint8 type, quint8 measCode, cSCPIMeasure* scpimeasureobject);
     cSCPIMeasureDelegate(const cSCPIMeasureDelegate& delegate,
                          QHash<cSCPIMeasure*, cSCPIMeasure*> &scpiMeasureTranslationHash);
-    virtual void executeSCPI(cSCPIClient *client, QString& sInput) override;
+    virtual void executeSCPI(cSCPIClient *client, const QString& scpi) override;
     void executeClient(cSCPIClient *client);
     void addscpimeasureObject(cSCPIMeasure* measureobject);
 

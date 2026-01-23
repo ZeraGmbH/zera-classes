@@ -11,9 +11,9 @@ class cSCPICatalogCmdDelegate : public ScpiBaseDelegate
 {
     Q_OBJECT
 public:
-    cSCPICatalogCmdDelegate(QString cmdParent, QString cmd, quint8 type, cSCPIModule* scpimodule, cSCPICmdInfoPtr scpicmdinfo);
-    virtual void executeSCPI(cSCPIClient *client, QString& sInput) override;
-    void setOutput(QVariant modInterface);
+    cSCPICatalogCmdDelegate(const QString &cmdParent, const QString &cmd, quint8 type, cSCPIModule* scpimodule, cSCPICmdInfoPtr scpicmdinfo);
+    virtual void executeSCPI(cSCPIClient *client, const QString& scpi) override;
+    void setOutput(const QVariant &modInterface);
 private:
     void setOutput(cSCPICmdInfoPtr scpicmdinfo);
     cSCPIModule* m_pModule;

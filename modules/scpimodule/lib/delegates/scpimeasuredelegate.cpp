@@ -6,8 +6,8 @@
 
 namespace SCPIMODULE {
 
-cSCPIMeasureDelegate::cSCPIMeasureDelegate(QString cmdParent,
-                                           QString cmd,
+cSCPIMeasureDelegate::cSCPIMeasureDelegate(const QString &cmdParent,
+                                           const QString &cmd,
                                            quint8 type,
                                            quint8 measCode,
                                            cSCPIMeasure* scpimeasureobject) :
@@ -37,9 +37,9 @@ cSCPIMeasureDelegate::cSCPIMeasureDelegate(const cSCPIMeasureDelegate & delegate
     }
 }
 
-void cSCPIMeasureDelegate::executeSCPI(cSCPIClient *client, QString &sInput)
+void cSCPIMeasureDelegate::executeSCPI(cSCPIClient *client, const QString &scpi)
 {
-    cSCPICommand cmd = sInput;
+    cSCPICommand cmd = scpi;
     quint8 scpiCmdType = getType();
     if ( (cmd.isQuery() && ((scpiCmdType & SCPI::isQuery) > 0)) ||
          (cmd.isCommand(0) && ((scpiCmdType & SCPI::isCmd) > 0)) ) {

@@ -6,15 +6,15 @@
 #include <vf-cpp-rpc-helper.h>
 #include <QRegularExpression>
 
-SCPIMODULE::cSCPIRpcDelegate::cSCPIRpcDelegate(QString cmdParent, QString cmd, quint8 type, cSCPIModule *scpimodule, cSCPICmdInfoPtr scpicmdinfo) :
+SCPIMODULE::cSCPIRpcDelegate::cSCPIRpcDelegate(const QString &cmdParent, const QString &cmd, quint8 type, cSCPIModule *scpimodule, cSCPICmdInfoPtr scpicmdinfo) :
     ScpiBaseDelegate(cmdParent, cmd, type), m_pModule(scpimodule), m_scpicmdinfo(scpicmdinfo)
 {
 }
 
-void SCPIMODULE::cSCPIRpcDelegate::executeSCPI(cSCPIClient *client, QString &sInput)
+void SCPIMODULE::cSCPIRpcDelegate::executeSCPI(cSCPIClient *client, const QString &scpi)
 {
     quint8 scpiCmdType = getType();
-    cSCPICommand cmd = sInput;
+    cSCPICommand cmd = scpi;
 
     bool bQuery = cmd.isQuery() || cmd.isQuery(1);
     bool bCmd = cmd.isCommand();
@@ -23,12 +23,12 @@ void SCPIMODULE::cSCPIRpcDelegate::executeSCPI(cSCPIClient *client, QString &sIn
     if ((bQuery && ((scpiCmdType & SCPI::isQuery) > 0)) ||
         (bCmd && ((scpiCmdType & SCPI::isCmd) >  0)) ||
         (bCmdwP && ((scpiCmdType & SCPI::isCmdwP) >  0)))
-        executeScpiRpc(client, sInput, bQuery);
+        executeScpiRpc(client, scpi, bQuery);
     else
         client->receiveStatus(ZSCPI::nak);
 }
 
-void SCPIMODULE::cSCPIRpcDelegate::executeScpiRpc(cSCPIClient *client, QString &sInput, bool inputIsQuery)
+void SCPIMODULE::cSCPIRpcDelegate::executeScpiRpc(cSCPIClient *client, const QString &scpi, bool inputIsQuery)
 {
     SCPIClientInfoPtr clientinfo;
     if (inputIsQuery)
@@ -72,7 +72,7 @@ void SCPIMODULE::cSCPIRpcDelegate::executeScpiRpc(cSCPIClient *client, QString &
     int totalExpectedParams = paramNamesList.size();
     QStringList paramTypesList = VfCppRpcHelper::getRpcTypesListFromSignature(rpcSignature);
 
-    cSCPICommand cmd = sInput;
+    cSCPICommand cmd = scpi;
     QStringList scpiCmdParams = cmd.getParamList();
     int totalActualParams = scpiCmdParams.size();
 
@@ -92,7 +92,7 @@ void SCPIMODULE::cSCPIRpcDelegate::executeScpiRpc(cSCPIClient *client, QString &
     }
 }
 
-QVariant SCPIMODULE::cSCPIRpcDelegate::convertParamStrToType(QString parameter, QString type)
+QVariant SCPIMODULE::cSCPIRpcDelegate::convertParamStrToType(const QString &parameter, QString type)
 {
     if (type == "int")
         return parameter.toInt();

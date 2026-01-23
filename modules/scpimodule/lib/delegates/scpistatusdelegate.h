@@ -10,10 +10,10 @@ class cSCPIStatusDelegate : public ScpiBaseDelegate
 {
     Q_OBJECT
 public:
-    cSCPIStatusDelegate(QString cmdParent, QString cmd, quint8 type, quint8 cmdCode, quint8 statindex);
-    virtual void executeSCPI(cSCPIClient *client, QString& sInput) override;
+    cSCPIStatusDelegate(const QString &cmdParent, const QString &cmd, quint8 type, quint8 cmdCode, quint8 statindex);
+    virtual void executeSCPI(cSCPIClient *client, const QString& scpi) override;
 signals:
-    void signalExecuteSCPI(cSCPIClient* client, int cmdCode, int statIndex, const QString &sInput);
+    void signalExecuteSCPI(cSCPIClient* client, int cmdCode, int statIndex, const QString &scpi);
 private:
     quint8 m_nCmdCode;
     quint8 m_nStatusIndex;

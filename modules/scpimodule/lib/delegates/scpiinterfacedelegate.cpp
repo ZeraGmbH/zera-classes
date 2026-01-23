@@ -2,7 +2,7 @@
 
 namespace SCPIMODULE {
 
-cSCPIInterfaceDelegate::cSCPIInterfaceDelegate(QString cmdParent, QString cmd, quint8 type,  quint16 cmdCode, QString cmdDescription) :
+cSCPIInterfaceDelegate::cSCPIInterfaceDelegate(const QString &cmdParent, const QString &cmd, quint8 type,  quint16 cmdCode, const QString &cmdDescription) :
     ScpiBaseDelegate(cmdParent, cmd, type),
     m_nCmdCode(cmdCode)
 {
@@ -10,9 +10,9 @@ cSCPIInterfaceDelegate::cSCPIInterfaceDelegate(QString cmdParent, QString cmd, q
         setXmlAttribute("Description", cmdDescription);
 }
 
-void cSCPIInterfaceDelegate::executeSCPI(cSCPIClient *client, QString &sInput)
+void cSCPIInterfaceDelegate::executeSCPI(cSCPIClient *client, const QString &scpi)
 {
-    emit signalExecuteSCPI(client, m_nCmdCode, sInput);
+    emit signalExecuteSCPI(client, m_nCmdCode, scpi);
 }
 
 }
