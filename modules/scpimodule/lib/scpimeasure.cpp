@@ -114,7 +114,7 @@ QString cSCPIMeasure::convertVariantToString(const QVariant &value)
     return value.toString();
 }
 
-QString cSCPIMeasure::setAnswer(QVariant qvar)
+QString cSCPIMeasure::setAnswer(const QVariant &qvar)
 {
     QString s;
     const QString unit = m_pSCPICmdInfo->veinComponentInfo["Unit"].toString();

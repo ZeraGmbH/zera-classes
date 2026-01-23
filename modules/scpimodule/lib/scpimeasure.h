@@ -78,7 +78,7 @@ private:
     QFinalState m_fetchDoneState;
 
     QString m_sAnswer;
-    QString setAnswer(QVariant qvar);
+    QString setAnswer(const QVariant &qvar);
     QList<int> signalList;
 
     bool m_bInitPending;
