@@ -7,7 +7,7 @@ QTEST_MAIN(test_power3_config_load)
 
 void test_power3_config_load::fileFound()
 {
-    QFile tmpXmlConfigFile(QStringLiteral(CONFIG_SOURCES_POWER3MODULE) + "/" + "mt310s2-power3module.xml");
+    QFile tmpXmlConfigFile(QStringLiteral(CONFIG_SOURCES_POWER3MODULE) + "/" + "common-power3module.xml");
     QVERIFY(tmpXmlConfigFile.exists());
 }
 

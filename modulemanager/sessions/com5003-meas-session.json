@@ -69,7 +69,7 @@
       },
       {
         "name" : "power3module",
-        "configFile" : "com5003-power3module.xml",
+        "configFile" : "common-power3module.xml",
         "id": 1100
       },
       {
