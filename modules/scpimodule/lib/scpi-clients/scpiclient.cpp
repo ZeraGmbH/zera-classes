@@ -167,6 +167,7 @@ void cSCPIClient::execCmd()
         if (cmd.length() == 0)
             break;
 
+        // This message is checked as is in autobuilder-dut-testsuite!
         qInfo("Executing SCPI command : %s", qPrintable(cmd));
         if (!m_pSCPIInterface->executeCmd(this, cmd))
             emit m_pIEEE4882->AddEventError(CommandError);
