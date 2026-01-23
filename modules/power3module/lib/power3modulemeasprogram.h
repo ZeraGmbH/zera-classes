@@ -19,12 +19,11 @@ class cPower3ModuleMeasProgram: public cBaseMeasWorkProgram
 
 public:
     cPower3ModuleMeasProgram(cPower3Module* module, std::shared_ptr<BaseModuleConfiguration> pConfiguration);
-    virtual ~cPower3ModuleMeasProgram();
     void generateVeinInterface() override;
 
 public slots:
-    void start() override; // difference between start and stop is that actual values
-    void stop() override; // in interface are not updated when stop
+    void start() override {}; // follow FFT
+    void stop() override {};
 
 private:
     cPower3ModuleConfigData* getConfData();
@@ -33,6 +32,7 @@ private:
     QList<VfModuleComponent*> m_veinActValueList; // the list of actual values we work on
     VfModuleMetaData* m_pHPWCountInfo; // the number of values we produce
     VfModuleComponent* m_pMeasureSignal;
+    VeinStorage::AbstractComponentPtr m_fftSignal;
 
     QList<cPower3MeasDelegate*> m_Power3MeasDelegateList;
 
@@ -46,12 +46,11 @@ private:
 
 private slots:
     void searchActualValues();
+    void onFftSigChange(const QVariant &value);
     void activateDone();
 
     void deactivateMeas();
     void deactivateMeasDone();
-
-    void setMeasureSignal(int signal);
 };
 
 }

@@ -35,26 +35,10 @@ cPower3ModuleMeasProgram::cPower3ModuleMeasProgram(cPower3Module* module, std::s
     connect(&m_deactivateDoneState, &QState::entered, this, &cPower3ModuleMeasProgram::deactivateMeasDone);
 }
 
-
-cPower3ModuleMeasProgram::~cPower3ModuleMeasProgram()
-{
-}
-
-
-void cPower3ModuleMeasProgram::start()
-{
-}
-
-
-void cPower3ModuleMeasProgram::stop()
-{
-}
-
 cPower3ModuleConfigData *cPower3ModuleMeasProgram::getConfData()
 {
     return qobject_cast<cPower3ModuleConfiguration*>(m_pConfiguration.get())->getConfigurationData();
 }
-
 
 void cPower3ModuleMeasProgram::generateVeinInterface()
 {
@@ -87,7 +71,6 @@ void cPower3ModuleMeasProgram::generateVeinInterface()
         m_veinActValueList.append(pActvalue); // we add the component for our measurement
         m_pModule->veinModuleActvalueList.append(pActvalue); // and for the modules interface
     }
-
     m_pHPWCountInfo = new VfModuleMetaData(QString("HPWCount"), QVariant(getConfData()->m_nPowerSystemCount));
     m_pModule->veinModuleMetaDataList.append(m_pHPWCountInfo);
 
@@ -99,35 +82,35 @@ void cPower3ModuleMeasProgram::generateVeinInterface()
     m_pModule->veinModuleComponentList.append(m_pMeasureSignal);
 }
 
-
 void cPower3ModuleMeasProgram::searchActualValues()
 {
     bool error = false;
     const VeinStorage::AbstractDatabase* storageDb = m_pModule->getStorageDb();
-    for (int i = 0; i < getConfData()->m_nPowerSystemCount; i++) {
-        VeinStorage::AbstractComponentPtr inputU =
-            storageDb->findComponent(getConfData()->m_nModuleId, getConfData()->m_powerSystemConfigList.at(i).m_sInputU);
-        VeinStorage::AbstractComponentPtr inputI =
-            storageDb->findComponent(getConfData()->m_nModuleId, getConfData()->m_powerSystemConfigList.at(i).m_sInputI);
-        if (inputU && inputI) {
-            cPower3MeasDelegate* cPMD;
-            if (i == (getConfData()->m_nPowerSystemCount-1)) {
-                cPMD = new cPower3MeasDelegate(m_veinActValueList.at(i*3), m_veinActValueList.at(i*3+1), m_veinActValueList.at(i*3+2),true);
-                connect(cPMD, &cPower3MeasDelegate::measuring, this, &cPower3ModuleMeasProgram::setMeasureSignal);
+    m_fftSignal = storageDb->findComponent(getConfData()->m_nModuleId, "SIG_Measuring");
+    if (m_fftSignal) {
+        connect(m_fftSignal.get(), &VeinStorage::AbstractComponent::sigValueChange,
+                this, &cPower3ModuleMeasProgram::onFftSigChange);
+        for (int i = 0; i < getConfData()->m_nPowerSystemCount; i++) {
+            VeinStorage::AbstractComponentPtr inputU =
+                storageDb->findComponent(getConfData()->m_nModuleId, getConfData()->m_powerSystemConfigList.at(i).m_sInputU);
+            VeinStorage::AbstractComponentPtr inputI =
+                storageDb->findComponent(getConfData()->m_nModuleId, getConfData()->m_powerSystemConfigList.at(i).m_sInputI);
+
+            if (inputU && inputI) {
+                cPower3MeasDelegate* cPMD;
+                cPMD = new cPower3MeasDelegate(inputU,
+                                               inputI,
+                                               m_veinActValueList.at(i*3),
+                                               m_veinActValueList.at(i*3+1),
+                                               m_veinActValueList.at(i*3+2));
+                m_Power3MeasDelegateList.append(cPMD);
             }
             else
-                cPMD = new cPower3MeasDelegate(m_veinActValueList.at(i*3), m_veinActValueList.at(i*3+1), m_veinActValueList.at(i*3+2));
-            m_Power3MeasDelegateList.append(cPMD);
-
-            connect(inputU.get(), &VeinStorage::AbstractComponent::sigValueChange,
-                    cPMD, &cPower3MeasDelegate::actValueInputU);
-
-            connect(inputI.get(), &VeinStorage::AbstractComponent::sigValueChange,
-                    cPMD, &cPower3MeasDelegate::actValueInputI);
+                error = true;
         }
-        else
-            error = true;
     }
+    else
+        error = true;
 
     if (error)
         notifyError(confiuredVeinComponentsNotFound);
@@ -135,6 +118,15 @@ void cPower3ModuleMeasProgram::searchActualValues()
         emit activationContinue();
 }
 
+void cPower3ModuleMeasProgram::onFftSigChange(const QVariant &value)
+{
+    if (value.toInt() == 1) {
+        m_pMeasureSignal->setValue(0);
+        for (int i=0; i<m_Power3MeasDelegateList.count(); ++i)
+            m_Power3MeasDelegateList[i]->computeOutput();
+        m_pMeasureSignal->setValue(1);
+    }
+}
 
 void cPower3ModuleMeasProgram::activateDone()
 {
@@ -142,31 +134,17 @@ void cPower3ModuleMeasProgram::activateDone()
     emit activated();
 }
 
-
-
 void cPower3ModuleMeasProgram::deactivateMeas()
 {
     m_bActive = false;
-
     for (int i = 0; i < m_Power3MeasDelegateList.count(); i++)
         delete m_Power3MeasDelegateList.at(i);
-
     emit deactivationContinue();
 }
-
 
 void cPower3ModuleMeasProgram::deactivateMeasDone()
 {
     emit deactivated();
 }
 
-
-void cPower3ModuleMeasProgram::setMeasureSignal(int signal)
-{
-    m_pMeasureSignal->setValue(signal);
 }
-
-}
-
-
-
