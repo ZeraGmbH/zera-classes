@@ -115,9 +115,10 @@ cSampleModuleConfigData *cSampleModuleMeasProgram::getConfData()
 
 QString cSampleModuleMeasProgram::getAlias(const QString &channelMName)
 {
-    ChannelRangeObserver::ChannelPtr channel = m_module->getSharedChannelRangeObserver()->getChannel(channelMName);
-    if (channel == nullptr)
+    ChannelRangeObserver::SystemObserverPtr observer = m_module->getSharedChannelRangeObserver();
+    if (!observer->getChannelMNames().contains(channelMName))
         return QString();
+    ChannelRangeObserver::ChannelPtr channel = observer->getChannel(channelMName);
     return channel->getAlias();
 }
 
