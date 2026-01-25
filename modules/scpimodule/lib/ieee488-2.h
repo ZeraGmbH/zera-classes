@@ -114,7 +114,7 @@ private:
     cSCPIClient* m_pClient;
     QString m_deviceFamilyFromConfig;
     quint16 m_nQueueLen; // max. entries in m_ErrEventQueue
-    const VeinStorage::StorageComponentPtr m_serNoComponent;
+    const VeinStorage::AbstractComponentPtr m_serNoComponent;
     QVector<int> m_ErrEventQueue;
 
     QString getIdentification();

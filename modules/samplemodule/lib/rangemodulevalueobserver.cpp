@@ -17,7 +17,7 @@ float RangeModuleValueObserver::getRelativeRangeValue(const QString &channelMNam
     const int idxOneBased = channelIdxZeroBased.toInt() + 1;
 
     const QString actRejComponentName = QString("INF_Channel%1ActREJ").arg(idxOneBased);
-    const VeinStorage::StorageComponentPtr actRejComponent = m_veinStorageDb->findComponent(RangeModuleEntityId, actRejComponentName);
+    const VeinStorage::AbstractComponentPtr actRejComponent = m_veinStorageDb->findComponent(RangeModuleEntityId, actRejComponentName);
     if (actRejComponent == nullptr)
         return qQNaN();
     const float rejValue = actRejComponent->getValue().toFloat();
@@ -25,7 +25,7 @@ float RangeModuleValueObserver::getRelativeRangeValue(const QString &channelMNam
         return 0;
 
     const QString actRmsComponentName = QString("ACT_Channel%1Rms").arg(idxOneBased);
-    const VeinStorage::StorageComponentPtr actRmsComponent = m_veinStorageDb->findComponent(RangeModuleEntityId, actRmsComponentName);
+    const VeinStorage::AbstractComponentPtr actRmsComponent = m_veinStorageDb->findComponent(RangeModuleEntityId, actRmsComponentName);
     if (actRmsComponent == nullptr)
         return qQNaN();
 

@@ -16,7 +16,7 @@ namespace DOSAGEMODULE
 
 struct dosagepoweranalyser : dosagesystemconfiguration
 {
-    VeinStorage::StorageComponentPtr m_component;
+    VeinStorage::AbstractComponentPtr m_component;
 };
 
 class cDosageModule;

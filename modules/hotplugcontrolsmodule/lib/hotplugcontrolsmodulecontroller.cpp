@@ -118,7 +118,7 @@ void HotplugControlsModuleController::generateVeinInterface()
                                                 QVariant());
     m_module->m_veinModuleParameterMap[key] = m_pControllersFound;
 
-    VeinStorage::StorageComponentPtr value = m_module->getStorageDb()->findComponent(statusEntityId, "INF_Instrument");
+    VeinStorage::AbstractComponentPtr value = m_module->getStorageDb()->findComponent(statusEntityId, "INF_Instrument");
     if(value) {
         connect(value.get(), &VeinStorage::AbstractComponent::sigValueChange, this, &HotplugControlsModuleController::controllersFound);
         //On startup, we miss the slot. So call it in case the device starts with hotplugs connected

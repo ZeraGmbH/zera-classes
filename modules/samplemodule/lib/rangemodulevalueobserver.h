@@ -22,7 +22,7 @@ private:
     static bool isRejValueForClampMissingOnClampOnlyChannel(float rejValue);
 
     VeinStorage::AbstractDatabase* m_veinStorageDb;
-    VeinStorage::StorageComponentPtr m_rangeMeasSignalComponent;
+    VeinStorage::AbstractComponentPtr m_rangeMeasSignalComponent;
 };
 
 #endif // RANGEMODULEVALUEOBSERVER_H

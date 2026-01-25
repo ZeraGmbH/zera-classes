@@ -67,7 +67,7 @@ void RecorderModuleInit::generateVeinInterface()
 QHash<int, QStringList> RecorderModuleInit::setEntitiesAndComponentsToRecord()
 {
     QHash<int, QStringList> entitesAndComponents;
-    VeinStorage::StorageComponentPtr sessionName = m_module->getStorageDb()->findComponent(systemEntityId, "Session");
+    VeinStorage::AbstractComponentPtr sessionName = m_module->getStorageDb()->findComponent(systemEntityId, "Session");
 
     if(sessionName->getValue().toString().contains("mt310s2-emob-session-ac")) {
         QStringList rmsComponents {"ACT_RMSPN1", "ACT_RMSPN2", "ACT_RMSPN3", "ACT_RMSPN4", "ACT_RMSPN5", "ACT_RMSPN6"};

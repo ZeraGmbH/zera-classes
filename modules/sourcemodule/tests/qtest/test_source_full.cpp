@@ -79,7 +79,7 @@ void test_source_full::switch_on_mt310s2()
     setupServerAndClientSpies(jsonEventDump);
 
     VeinStorage::AbstractDatabase *veinStorageDb = m_testRunner->getVeinStorageDb();
-    VeinStorage::StorageComponentPtr storedState = veinStorageDb->findComponent(sourceEntityId, "PAR_SourceState0");
+    VeinStorage::AbstractComponentPtr storedState = veinStorageDb->findComponent(sourceEntityId, "PAR_SourceState0");
     JsonParamApi paramApi;
     QJsonObject oldValue = storedState->getValue().toJsonObject();
     paramApi.setParams(oldValue);
@@ -141,7 +141,7 @@ void test_source_full::setupServerAndClientSpies(QJsonObject &jsonEvents)
 void test_source_full::setDemoSourceCount(int sourceCount)
 {
     VeinStorage::AbstractDatabase *veinStorageDb = m_testRunner->getVeinStorageDb();
-    VeinStorage::StorageComponentPtr stored = veinStorageDb->findComponent(sourceEntityId, "PAR_DemoSources");
+    VeinStorage::AbstractComponentPtr stored = veinStorageDb->findComponent(sourceEntityId, "PAR_DemoSources");
     QVariant oldValue = stored->getValue();
 
     QEvent* event = VfClientComponentSetter::generateEvent(sourceEntityId, "PAR_DemoSources",
