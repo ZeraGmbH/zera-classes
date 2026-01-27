@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<recordermoduleconfpar>
+    <configuration>
+        <entity-components>
+            <n>2</n>
+            <ent1><!-- RMS -->
+                <entity-id>1040</entity-id>
+                <components>ACT_RMSPN1,ACT_RMSPN2,ACT_RMSPN3,ACT_RMSPN4,ACT_RMSPN5,ACT_RMSPN6</components>
+            </ent1>
+            <ent2><!-- Power AC -->
+                <entity-id>1070</entity-id>
+                <components>ACT_PQS1,ACT_PQS2,ACT_PQS3,ACT_PQS4</components>
+            </ent2>
+        </entity-components>
+    </configuration>
+</recordermoduleconfpar>

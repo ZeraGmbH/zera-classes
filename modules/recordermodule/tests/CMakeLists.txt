@@ -11,9 +11,10 @@ endfunction()
 
 SETUP_QTESTS_MODULE(
     test_recorder
+    test_recorder_config_load
 )
 
 target_sources(test_recorder
-  PRIVATE
-  test-data/test-data.qrc
+    PRIVATE
+    test-data/test-data.qrc
 )

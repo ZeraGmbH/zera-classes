@@ -105,7 +105,7 @@
       },
       {
         "name" : "recordermodule",
-        "configFile" : "recordermodule.xml",
+        "configFile" : "recordermodule-emob-dc.xml",
         "id": 1800
       },
       {

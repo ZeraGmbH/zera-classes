@@ -1,9 +1,45 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+    <xs:simpleType name="counttype">
+        <xs:restriction base="xs:integer">
+            <xs:maxInclusive value='10'/>
+            <xs:minInclusive value='1'/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:complexType name="entitycomponenttype">
+        <xs:sequence>
+            <xs:element name="entity-id" type="xs:integer"/>
+            <xs:element name="components" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+
     <xs:element name="recordermoduleconfpar">
         <xs:complexType>
             <xs:sequence>
                 <xs:element name="configuration">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="entity-components">
+                                <xs:complexType>
+                                    <xs:sequence>
+                                        <xs:element name="n" type="counttype" minOccurs="1" maxOccurs="1"/>
+                                        <xs:element name="ent1" type="entitycomponenttype" minOccurs="1" maxOccurs="1"/>
+                                        <xs:element name="ent2" type="entitycomponenttype" minOccurs="0" maxOccurs="1"/>
+                                        <xs:element name="ent3" type="entitycomponenttype" minOccurs="0" maxOccurs="1"/>
+                                        <xs:element name="ent4" type="entitycomponenttype" minOccurs="0" maxOccurs="1"/>
+                                        <xs:element name="ent5" type="entitycomponenttype" minOccurs="0" maxOccurs="1"/>
+                                        <xs:element name="ent6" type="entitycomponenttype" minOccurs="0" maxOccurs="1"/>
+                                        <xs:element name="ent7" type="entitycomponenttype" minOccurs="0" maxOccurs="1"/>
+                                        <xs:element name="ent8" type="entitycomponenttype" minOccurs="0" maxOccurs="1"/>
+                                        <xs:element name="ent9" type="entitycomponenttype" minOccurs="0" maxOccurs="1"/>
+                                        <xs:element name="ent10" type="entitycomponenttype" minOccurs="0" maxOccurs="1"/>
+                                    </xs:sequence>
+                                </xs:complexType>
+                            </xs:element>
+                        </xs:sequence>
+                    </xs:complexType>
                 </xs:element>
             </xs:sequence>
         </xs:complexType>

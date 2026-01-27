@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<recordermoduleconfpar>
+    <configuration>
+        <entity-components>
+            <n>2</n>
+            <ent1><!-- FFT -->
+                <entity-id>1060</entity-id>
+                <components>ACT_DC7,ACT_DC8</components>
+            </ent1>
+            <ent2><!-- Power DC -->
+                <entity-id>1073</entity-id>
+                <components>ACT_PQS1</components>
+            </ent2>
+        </entity-components>
+    </configuration>
+</recordermoduleconfpar>

@@ -1,11 +1,22 @@
 #include "recordermoduleconfiguration.h"
 #include "recordermoduleconfigdata.h"
 
+
+enum moduleconfigstate
+{
+    setEntityCount,
+
+    setEntityId1 = 16, // we leave some place for additional cmds
+
+    setComponentName1 = setEntityId1 + 20,
+    setnext = setComponentName1 + 20
+};
+
+
 RecorderModuleConfiguration::RecorderModuleConfiguration()
 {
     connect(m_pXMLReader, &Zera::XMLConfig::cReader::valueChanged, this, &RecorderModuleConfiguration::configXMLInfo);
     connect(m_pXMLReader, &Zera::XMLConfig::cReader::finishedParsingXML, this, &RecorderModuleConfiguration::completeConfiguration);
-
 }
 
 RecorderModuleConfiguration::~RecorderModuleConfiguration()
@@ -25,6 +36,7 @@ void RecorderModuleConfiguration::setConfiguration(QByteArray xmlString)
 
     // so now we can set up
     // initializing hash table for xml configuration
+    m_ConfigXMLMap["recordermoduleconfpar:configuration:entity-components:n"] = setEntityCount;
 
     m_pXMLReader->loadXMLFromString(QString::fromUtf8(xmlString.data(), xmlString.size()));
 }
@@ -42,12 +54,32 @@ RecorderModuleConfigData *RecorderModuleConfiguration::getConfigurationData()
 void RecorderModuleConfiguration::configXMLInfo(QString key)
 {
     bool ok;
-    if (m_ConfigXMLMap.contains(key))
-    {
+    if (m_ConfigXMLMap.contains(key)) {
         ok = true;
         int cmd = m_ConfigXMLMap[key];
         switch (cmd)
         {
+        case setEntityCount:
+            m_pRecorderModuleConfigData->m_entityCount = m_pXMLReader->getValue(key).toInt(&ok);
+            // here we generate dynamic hash entries for value channel configuration
+            for (int i = 0; i < m_pRecorderModuleConfigData->m_entityCount; i++) {
+                m_ConfigXMLMap[QString("recordermoduleconfpar:configuration:entity-components:ent%1:entity-id").arg(i+1)] = setEntityId1+i;
+                m_ConfigXMLMap[QString("recordermoduleconfpar:configuration:entity-components:ent%1:components").arg(i+1)] = setComponentName1+i;
+                m_pRecorderModuleConfigData->m_entityConfigList.append(entityconfiguration());
+            }
+            break;
+        default:
+            // here we decode the dyn. generated cmd's
+            if (cmd >= setEntityId1 && cmd < setComponentName1) {
+                cmd -= setEntityId1;
+                int entityId = m_pXMLReader->getValue(key).toInt(&ok);
+                m_pRecorderModuleConfigData->m_entityConfigList[cmd].m_entityId = entityId;
+            }
+            else if (cmd >= setComponentName1 && cmd < setnext) {
+                cmd -= setComponentName1;
+                const QStringList componentNames = m_pXMLReader->getValue(key).split(",");
+                m_pRecorderModuleConfigData->m_entityConfigList[cmd].m_componentNames = componentNames;
+            }
         }
         m_bConfigError |= !ok;
     }
