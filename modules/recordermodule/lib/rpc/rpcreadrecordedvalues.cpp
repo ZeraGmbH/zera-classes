@@ -2,10 +2,10 @@
 #include <vf-cpp-rpc-signature.h>
 
 RPCReadRecordedValues::RPCReadRecordedValues(VeinEvent::EventSystem *eventSystem, std::shared_ptr<VeinDataCollector> collector, int entityId) :
-    m_collector(collector),
     VfCpp::VfCppRpcSimplified(eventSystem, entityId,
                               VfCpp::VfCppRpcSignature::createRpcSignature(
-                                  "RPC_ReadRecordedValues", VfCpp::VfCppRpcSignature::RPCParams({{"p_startingPoint", "int"}, {"p_endingPoint", "int"}})))
+                                  "RPC_ReadRecordedValues", VfCpp::VfCppRpcSignature::RPCParams({{"p_startingPoint", "int"}, {"p_endingPoint", "int"}}))),
+    m_collector(collector)
 {
     connect(m_collector.get(), &VeinDataCollector::sigStoredValue, this, &RPCReadRecordedValues::onRpcFinish);
 }
