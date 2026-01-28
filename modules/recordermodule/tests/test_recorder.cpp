@@ -66,7 +66,7 @@ void test_recorder::startLoggingMultipleRecordingsAndCheckTimestamps()
     QVariant num = m_testRunner->getVeinStorageDb()->getStoredValue(recorderEntityId, "ACT_Points");
     QCOMPARE(num, actualValueCount);
 
-    QVariantMap rpcMap = callRecorderRpc(0, actualValueCount-1);
+    QVariantMap rpcMap = callRecorderRpc(0, actualValueCount);
     QJsonObject resultJson = rpcMap[VeinComponent::RemoteProcedureData::s_returnString].toJsonObject();
     QCOMPARE(resultJson.count(), actualValueCount);
     QVERIFY(resultJson.contains(VeinDataCollector::intToStringWithLeadingDigits(0 * measPeriodMs)));
