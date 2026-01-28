@@ -6,10 +6,12 @@
             <ent1><!-- RMS -->
                 <entity-id>1040</entity-id>
                 <components>ACT_RMSPN1,ACT_RMSPN2,ACT_RMSPN3,ACT_RMSPN4,ACT_RMSPN5,ACT_RMSPN6</components>
+                <labels>UL1,UL2,UL3,IL1,IL2,IL3</labels>
             </ent1>
             <ent2><!-- Power AC -->
                 <entity-id>1070</entity-id>
                 <components>ACT_PQS1,ACT_PQS2,ACT_PQS3,ACT_PQS4</components>
+                <labels>P1,P2,P3,PS</labels>
             </ent2>
         </entity-components>
     </configuration>

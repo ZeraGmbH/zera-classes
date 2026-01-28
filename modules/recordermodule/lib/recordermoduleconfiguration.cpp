@@ -8,8 +8,9 @@ enum moduleconfigstate
 
     setEntityId1 = 16, // we leave some place for additional cmds
 
-    setComponentName1 = setEntityId1 + 20,
-    setnext = setComponentName1 + 20
+    setComponentName1 = setEntityId1 + 10,
+    setComponentLabel1 = setComponentName1 + 10,
+    setnext = setComponentLabel1 + 10
 };
 
 
@@ -65,8 +66,9 @@ void RecorderModuleConfiguration::configXMLInfo(QString key)
             for (int i = 0; i < m_pRecorderModuleConfigData->m_entityCount; i++) {
                 m_ConfigXMLMap[QString("recordermoduleconfpar:configuration:entity-components:ent%1:entity-id").arg(i+1)] = setEntityId1+i;
                 m_ConfigXMLMap[QString("recordermoduleconfpar:configuration:entity-components:ent%1:components").arg(i+1)] = setComponentName1+i;
-                m_pRecorderModuleConfigData->m_entityConfigList.append(entityconfiguration());
+                m_ConfigXMLMap[QString("recordermoduleconfpar:configuration:entity-components:ent%1:labels").arg(i+1)] = setComponentLabel1+i;
             }
+            m_pRecorderModuleConfigData->m_entityConfigList = QVector<EntityConfiguration>(m_pRecorderModuleConfigData->m_entityCount);
             break;
         default:
             // here we decode the dyn. generated cmd's
@@ -75,10 +77,18 @@ void RecorderModuleConfiguration::configXMLInfo(QString key)
                 int entityId = m_pXMLReader->getValue(key).toInt(&ok);
                 m_pRecorderModuleConfigData->m_entityConfigList[cmd].m_entityId = entityId;
             }
-            else if (cmd >= setComponentName1 && cmd < setnext) {
+            else if (cmd >= setComponentName1 && cmd < setComponentLabel1) {
                 cmd -= setComponentName1;
                 const QStringList componentNames = m_pXMLReader->getValue(key).split(",");
-                m_pRecorderModuleConfigData->m_entityConfigList[cmd].m_componentNames = componentNames;
+                m_pRecorderModuleConfigData->m_entityConfigList[cmd].m_components = QVector<ComponentConfiguration>(componentNames.count());
+                for (int i=0; i<componentNames.count(); ++i)
+                    m_pRecorderModuleConfigData->m_entityConfigList[cmd].m_components[i].m_componentName = componentNames[i];
+            }
+            else if (cmd >= setComponentLabel1 && cmd < setnext) {
+                cmd -= setComponentLabel1;
+                const QStringList label = m_pXMLReader->getValue(key).split(",");
+                for (int i=0; i<label.count(); ++i)
+                    m_pRecorderModuleConfigData->m_entityConfigList[cmd].m_components[i].m_label = label[i];
             }
         }
         m_bConfigError |= !ok;

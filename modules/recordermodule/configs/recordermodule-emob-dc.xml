@@ -6,10 +6,12 @@
             <ent1><!-- FFT -->
                 <entity-id>1060</entity-id>
                 <components>ACT_DC7,ACT_DC8</components>
+                <labels>UAUX,IAUX</labels>
             </ent1>
             <ent2><!-- Power DC -->
                 <entity-id>1073</entity-id>
                 <components>ACT_PQS1</components>
+                <labels>PAUX</labels>
             </ent2>
         </entity-components>
     </configuration>

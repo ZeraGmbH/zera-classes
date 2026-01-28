@@ -12,6 +12,7 @@
         <xs:sequence>
             <xs:element name="entity-id" type="xs:integer"/>
             <xs:element name="components" type="xs:string"/>
+            <xs:element name="labels" type="xs:string"/>
         </xs:sequence>
     </xs:complexType>
 
