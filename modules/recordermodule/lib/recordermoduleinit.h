@@ -9,7 +9,7 @@
 class RecorderModuleInit : public cModuleActivist
 {
 public:
-    RecorderModuleInit(RecorderModule *module);
+    RecorderModuleInit(RecorderModule *module, std::shared_ptr<BaseModuleConfiguration> pConfiguration);
 public slots:
     void activate() override;
     void deactivate() override;
@@ -22,12 +22,13 @@ private:
     void startStopLogging(QVariant startStopRecording);
     void setNumberOfPointsInCurve(int num);
 
-    TimerTemplateQtPtr m_stopLoggingTimer;
     RecorderModule *m_module;
+    std::shared_ptr<VeinDataCollector> m_dataCollector;
+
+    TimerTemplateQtPtr m_stopLoggingTimer;
     VfModuleComponent* m_numberOfPointsInCurve;
     VfModuleParameter* m_startStopRecording;
     VfModuleRpcPtr m_pReadRecordedValuesRpc;
-    std::shared_ptr<VeinDataCollector> m_dataCollector;
 };
 
 #endif // RECORDERMODULEINIT_H

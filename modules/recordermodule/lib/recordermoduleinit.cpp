@@ -10,7 +10,7 @@ static int constexpr powerAcEntityId = 1070;
 static int constexpr powerDcEntityId = 1073;
 static int constexpr timer = 1200000; // 20 mins
 
-RecorderModuleInit::RecorderModuleInit(RecorderModule *module) :
+RecorderModuleInit::RecorderModuleInit(RecorderModule *module, std::shared_ptr<BaseModuleConfiguration> pConfiguration) :
     cModuleActivist(module->getVeinModuleName()),
     m_module(module)
 {
@@ -37,7 +37,6 @@ void RecorderModuleInit::deactivate()
 void RecorderModuleInit::generateVeinInterface()
 {
     // SCPI cmd ?
-    QString key;
     VfRpcEventSystemSimplified *rpcEventSystem = m_module->getRpcEventSystem();
 
     std::shared_ptr<RPCReadRecordedValues> rpcReadRecordedValues = std::make_shared<RPCReadRecordedValues>(rpcEventSystem, m_dataCollector,m_module->getEntityId());
@@ -52,6 +51,7 @@ void RecorderModuleInit::generateVeinInterface()
 
     m_module->veinModuleActvalueList.append(m_numberOfPointsInCurve); // we add the component for the modules interface
 
+    QString key;
     m_startStopRecording = new VfModuleParameter(m_module->getEntityId(),
                                                  m_module->getValidatorEventSystem(),
                                                  key = QString("PAR_StartStopRecording"),

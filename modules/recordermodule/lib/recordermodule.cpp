@@ -38,10 +38,10 @@ void RecorderModule::setupModule()
     emit addEventSystem(getRpcEventSystem());
     emit addEventSystem(m_pModuleEventSystem);
 
-    RecorderModuleInit* moduleActivist = new RecorderModuleInit(this);
-    m_ModuleActivistList.append(moduleActivist);
-
     BaseModule::setupModule();
+
+    RecorderModuleInit* moduleActivist = new RecorderModuleInit(this, m_pConfiguration);
+    m_ModuleActivistList.append(moduleActivist);
 
     for (int i = 0; i < m_ModuleActivistList.count(); i++)
         m_ModuleActivistList.at(i)->generateVeinInterface();
