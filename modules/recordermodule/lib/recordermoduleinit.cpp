@@ -1,4 +1,5 @@
 #include "recordermoduleinit.h"
+#include "recordermoduleconfiguration.h"
 #include "rpcreadrecordedvalues.h"
 #include <boolvalidator.h>
 #include <timerfactoryqt.h>
@@ -10,18 +11,20 @@ static int constexpr powerAcEntityId = 1070;
 static int constexpr powerDcEntityId = 1073;
 static int constexpr timer = 1200000; // 20 mins
 
-RecorderModuleInit::RecorderModuleInit(RecorderModule *module, std::shared_ptr<BaseModuleConfiguration> pConfiguration) :
+RecorderModuleInit::RecorderModuleInit(RecorderModule *module,
+                                       std::shared_ptr<BaseModuleConfiguration> pConfiguration) :
     cModuleActivist(module->getVeinModuleName()),
-    m_module(module)
+    m_module(module),
+    m_confData(qobject_cast<RecorderModuleConfiguration*>(pConfiguration.get())->getConfigurationData()),
+    m_dataCollector(std::make_shared<VeinDataCollector>(m_module->getStorageDb())),
+    m_stopLoggingTimer(TimerFactoryQt::createSingleShot(timer))
 {
-    m_stopLoggingTimer = TimerFactoryQt::createSingleShot(timer);
     connect(m_stopLoggingTimer.get(), &TimerTemplateQt::sigExpired, this, [this]() {
         m_startStopRecording->setValue(false); // Does not emit sigValueChanged
         startStopLogging(false);
     });
-
-    m_dataCollector = std::make_shared<VeinDataCollector>(m_module->getStorageDb());
-    connect(m_dataCollector.get(), &VeinDataCollector::newValueStored, this, &RecorderModuleInit::setNumberOfPointsInCurve);
+    connect(m_dataCollector.get(), &VeinDataCollector::newValueStored,
+            this, &RecorderModuleInit::setNumberOfPointsInCurve);
 }
 
 void RecorderModuleInit::activate()

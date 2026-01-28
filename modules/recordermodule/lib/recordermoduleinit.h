@@ -3,6 +3,7 @@
 
 #include "moduleactivist.h"
 #include "recordermodule.h"
+#include "recordermoduleconfigdata.h"
 #include "veindatacollector.h"
 #include <timersingleshotqt.h>
 
@@ -23,6 +24,7 @@ private:
     void setNumberOfPointsInCurve(int num);
 
     RecorderModule *m_module;
+    RecorderModuleConfigData* m_confData;
     std::shared_ptr<VeinDataCollector> m_dataCollector;
 
     TimerTemplateQtPtr m_stopLoggingTimer;
