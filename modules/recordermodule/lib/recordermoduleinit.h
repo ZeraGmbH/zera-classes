@@ -4,8 +4,8 @@
 #include "moduleactivist.h"
 #include "recordermodule.h"
 #include "recordermoduleconfigdata.h"
-#include "veindatacollector.h"
 #include <timersingleshotqt.h>
+#include <vs_storagerecorder.h>
 
 class RecorderModuleInit : public cModuleActivist
 {
@@ -17,15 +17,13 @@ public slots:
     void generateVeinInterface() override;
 private slots:
     void onActivateDone(bool ok);
-    void catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant answer);
-private:
-    QHash<int, QStringList> setEntitiesAndComponentsToRecord();
     void startStopLogging(QVariant startStopRecording);
-    void setNumberOfPointsInCurve(int num);
+private:
+    void createRecorder();
 
     RecorderModule *m_module;
     RecorderModuleConfigData* m_confData;
-    std::shared_ptr<VeinDataCollector> m_dataCollector;
+    std::unique_ptr<VeinStorage::StorageRecorder> m_recorder;
 
     TimerTemplateQtPtr m_stopLoggingTimer;
     VfModuleComponent* m_numberOfPointsInCurve;

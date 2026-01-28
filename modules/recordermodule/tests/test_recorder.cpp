@@ -1,6 +1,5 @@
 #include "test_recorder.h"
-#include "veindatacollector.h"
-//#include "recordermoduleinit.h"
+#include "rpcreadrecordedvalues.h"
 #include <timemachineobject.h>
 #include <timemachinefortest.h>
 #include <timerfactoryqtfortest.h>
@@ -69,9 +68,9 @@ void test_recorder::startLoggingMultipleRecordingsAndCheckTimestamps()
     QVariantMap rpcMap = callRecorderRpc(0, actualValueCount);
     QJsonObject resultJson = rpcMap[VeinComponent::RemoteProcedureData::s_returnString].toJsonObject();
     QCOMPARE(resultJson.count(), actualValueCount);
-    QVERIFY(resultJson.contains(VeinDataCollector::intToStringWithLeadingDigits(0 * measPeriodMs)));
-    QVERIFY(resultJson.contains(VeinDataCollector::intToStringWithLeadingDigits(1 * measPeriodMs)));
-    QVERIFY(resultJson.contains(VeinDataCollector::intToStringWithLeadingDigits(2 * measPeriodMs)));
+    QVERIFY(resultJson.contains(RPCReadRecordedValues::intToStringWithLeadingDigits(0 * measPeriodMs)));
+    QVERIFY(resultJson.contains(RPCReadRecordedValues::intToStringWithLeadingDigits(1 * measPeriodMs)));
+    QVERIFY(resultJson.contains(RPCReadRecordedValues::intToStringWithLeadingDigits(2 * measPeriodMs)));
 }
 
 void test_recorder::startStopRecordingTimerExpiredCheckResults()
@@ -264,7 +263,7 @@ void test_recorder::createModule(int entityId, QMap<QString, QVariant> component
     VfCpp::VfCppEntity * entity =new VfCpp::VfCppEntity(entityId);
     m_testRunner->getModManFacade()->addSubsystem(entity);
     entity->initModule();
-    for(auto compoName : components.keys())
+    for(const auto &compoName : components.keys())
         entity->createComponent(compoName, components[compoName]);
     TimeMachineObject::feedEventLoop();
 }
@@ -277,6 +276,8 @@ void test_recorder::fireActualValues()
     m_testRunner->setVfComponent(powerEntityId, "ACT_PQS1", 1);
     m_testRunner->setVfComponent(powerEntityId, "ACT_PQS2", 2);
 }
+
+static constexpr int sigMeasuringEntityId = 1050; //DftModule
 
 void test_recorder::triggerDftModuleSigMeasuring()
 {

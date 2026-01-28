@@ -1,21 +1,22 @@
 #ifndef RPCREADRECORDEDVALUES_H
 #define RPCREADRECORDEDVALUES_H
 
-#include "veindatacollector.h"
 #include <vf-cpp-rpc-simplified.h>
+#include <vs_storagerecorder.h>
 #include <QUuid>
 
 class RPCReadRecordedValues : public VfCpp::VfCppRpcSimplified
 {
     Q_OBJECT
 public:
-    RPCReadRecordedValues(VeinEvent::EventSystem *eventSystem, std::shared_ptr<VeinDataCollector> collector,
+    RPCReadRecordedValues(VeinEvent::EventSystem *eventSystem, VeinStorage::StorageRecordDataPtr recordedStorage,
                           int entityId);
+    static QString intToStringWithLeadingDigits(int number); // should go
 private slots:
     void callRPCFunction(const QUuid &callId, const QVariantMap &parameters) override;
-    void onRpcFinish(QUuid callId, bool success, QString errorMsg, QJsonObject values);
 private:
-    std::shared_ptr<VeinDataCollector> m_collector;
+    static QString createRpcSignature();
+    VeinStorage::StorageRecordDataPtr m_recordedStorage;
 };
 
 #endif // RPCREADRECORDEDVALUES_H
