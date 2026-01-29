@@ -1,7 +1,10 @@
 #include "measmodeinfo.h"
 #include "measmodecatalog.h"
 
-cMeasModeInfo::cMeasModeInfo(QString name, QString actvalname, QString unitname, measmodes code) :
+cMeasModeInfo::cMeasModeInfo(const QString &name,
+                             const QString &actvalname,
+                             const QString &unitname,
+                             measmodes code) :
     m_sName(name),
     m_sActvalName(actvalname),
     m_sUnitName(unitname),

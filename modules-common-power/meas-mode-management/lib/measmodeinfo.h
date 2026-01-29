@@ -41,7 +41,10 @@ class cMeasModeInfo
 {
 public:
     cMeasModeInfo(){}
-    cMeasModeInfo(QString name, QString actvalname, QString unitname, measmodes code);
+    cMeasModeInfo(const QString &name,
+                  const QString &actvalname,
+                  const QString &unitname,
+                  measmodes code);
     bool isValid() const;
     QString getName() const;
     QString getActvalName() const;
