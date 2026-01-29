@@ -5,9 +5,9 @@
 #include "modulemanagerconfigtest.h"
 #include "jsonsessionloadertest.h"
 #include "moduleactivist.h"
+#include "abstractmetascpicomponent.h"
 #include <interface_p.h>
 #include <vfmodulemetadata.h>
-#include <vfmodulecomponent.h>
 #include <testfactoryi2cctrl.h>
 #include <timemachineobject.h>
 #include <timerfactoryqtfortest.h>
@@ -140,7 +140,7 @@ void TestModuleManager::onAllModulesDestroyed()
 {
     m_instantCountsOnModulesDestroyed.append( {
         VfModuleMetaData::getInstanceCount(),
-        VfModuleComponent::getInstanceCount(),
+        AbstractMetaScpiComponent::getInstanceCount(),
         VeinEvent::EventSystem::getInstanceCount(),
         cModuleActivist::getInstanceCount(),
         Zera::cInterfacePrivate::getInstanceCount(),

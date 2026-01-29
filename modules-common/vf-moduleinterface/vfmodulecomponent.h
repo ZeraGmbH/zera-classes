@@ -1,16 +1,16 @@
 #ifndef VEINMODULECOMPONENT_H
 #define VEINMODULECOMPONENT_H
 
+#include "abstractmetascpicomponent.h"
 #include "vfmodulemetainfocontainer.h"
 #include <ve_eventsystem.h>
 #include <vcmp_componentdata.h>
 
-class VfModuleComponent: public QObject
+class VfModuleComponent: public AbstractMetaScpiComponent
 {
     Q_OBJECT
 public:
     VfModuleComponent(int entityId, VeinEvent::EventSystem *eventsystem, QString name, QString description, QVariant initval = QVariant());
-    ~VfModuleComponent();
 
     void setChannelName(QString name); // channel name for json export can be empty
     QString getChannelName();
@@ -18,14 +18,13 @@ public:
     QVariant getValue();
     QString getUnit();
     QString getName();
-    void exportMetaData(QJsonObject &jsObj);
+    void exportMetaData(QJsonObject &jsObj) override;
 
     void setScpiInfo(const QString &model, const QString &cmd,
                      int cmdTypeMask, // e.g SCPI::isQuery|SCPI::isCmdwP
                      const QString &veinComponentName,
                      SCPI::eSCPIEntryType entryType = SCPI::isComponent);
-    void exportSCPIInfo(QJsonArray &jsArr);
-    static int getInstanceCount();
+    void exportSCPIInfo(QJsonArray &jsArr) override;
     void sendDummyNotificationForRangeChange();
 
 signals:
@@ -48,8 +47,6 @@ private:
     int m_nEntityId;
     VeinEvent::EventSystem *m_pEventSystem;
     std::unique_ptr<VfModuleMetaInfoContainer> m_scpiInfo;
-
-    static int m_instanceCount;
 };
 
 #endif // VEINMODULECOMPONENT_H

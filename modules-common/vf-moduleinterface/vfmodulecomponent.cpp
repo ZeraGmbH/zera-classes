@@ -6,23 +6,14 @@
 #include <ve_eventsystem.h>
 #include "vfmodulecomponent.h"
 
-int VfModuleComponent::m_instanceCount = 0;
-
 VfModuleComponent::VfModuleComponent(int entityId, VeinEvent::EventSystem *eventsystem, QString name, QString description, QVariant initval) :
-    m_pEventSystem(eventsystem),
     m_sName(name),
     m_sDescription(description),
     m_vValue(initval),
-    m_nEntityId(entityId)
+    m_nEntityId(entityId),
+    m_pEventSystem(eventsystem)
 {
-    m_instanceCount++;
     sendNotification(VeinComponent::ComponentData::Command::CCMD_ADD);
-}
-
-VfModuleComponent::~VfModuleComponent()
-{
-    m_instanceCount--;
-    // Entities are removed as a whole -> no component remove
 }
 
 void VfModuleComponent::exportMetaData(QJsonObject &jsObj)
@@ -44,10 +35,7 @@ void VfModuleComponent::exportSCPIInfo(QJsonArray &jsArr)
         m_scpiInfo->appendSCPIInfo(jsArr);
 }
 
-int VfModuleComponent::getInstanceCount()
-{
-    return m_instanceCount;
-}
+
 
 void VfModuleComponent::sendDummyNotificationForRangeChange()
 {

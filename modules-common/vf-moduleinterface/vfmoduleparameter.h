@@ -19,7 +19,7 @@ public:
 
     bool isValidParameter(QVariant& value);
 
-    virtual void exportMetaData(QJsonObject &jsObj);
+    virtual void exportMetaData(QJsonObject &jsObj) override;
     void setValidator(ValidatorInterface* validator);
     virtual void veinTransaction(QUuid clientId,
                                  QVariant newValue,
