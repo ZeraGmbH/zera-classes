@@ -88,7 +88,7 @@ QString VfModuleComponent::getComponentName()
     return m_componentName;
 }
 
-void VfModuleComponent::setValue(QVariant value)
+void VfModuleComponent::setValue(const QVariant &value)
 {
     m_vValue = value;
     sendNotification(VeinComponent::ComponentData::Command::CCMD_SET);

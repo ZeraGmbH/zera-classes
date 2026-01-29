@@ -31,9 +31,9 @@ public:
     void sendDummyNotificationForRangeChange();
 
 signals:
-    void sigValueChanged(QVariant); // we connect here if we want to do something on changed values
+    void sigValueChanged(const QVariant &value); // we connect here if we want to do something on changed values
 public slots:
-    void setValue(QVariant value); // here we have to emit event for notification
+    void setValue(const QVariant &value); // here we have to emit event for notification
     void setError(); // here we have to emit event for error notification
 
 protected:
