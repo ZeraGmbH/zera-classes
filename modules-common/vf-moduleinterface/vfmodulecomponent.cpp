@@ -6,8 +6,8 @@
 #include <ve_eventsystem.h>
 #include "vfmodulecomponent.h"
 
-VfModuleComponent::VfModuleComponent(int entityId, VeinEvent::EventSystem *eventsystem, QString name, QString description, QVariant initval) :
-    m_sName(name),
+VfModuleComponent::VfModuleComponent(int entityId, VeinEvent::EventSystem *eventsystem, QString componentName, QString description, QVariant initval) :
+    m_sName(componentName),
     m_sDescription(description),
     m_vValue(initval),
     m_nEntityId(entityId),
@@ -45,13 +45,12 @@ void VfModuleComponent::sendDummyNotificationForRangeChange()
 void VfModuleComponent::setScpiInfo(const QString &model,
                                     const QString &cmd,
                                     int cmdTypeMask,
-                                    const QString &veinComponentName,
                                     SCPI::eSCPIEntryType entryType)
 {
     m_scpiInfo = std::make_unique<VfModuleMetaInfoContainer>(model,
                                                          cmd,
                                                          cmdTypeMask,
-                                                         veinComponentName,
+                                                         m_sName,
                                                          entryType);
 }
 

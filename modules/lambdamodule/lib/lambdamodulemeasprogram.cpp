@@ -48,7 +48,7 @@ void cLambdaModuleMeasProgram::generateVeinInterface()
                                             QString("Actual lambda value"));
         pActvalue->setChannelName(QString("Lambda%1").arg(i+1));
         pActvalue->setUnit("");
-        pActvalue->setScpiInfo("MEASURE", pActvalue->getChannelName(), SCPI::isCmdwP, pActvalue->getName());
+        pActvalue->setScpiInfo("MEASURE", pActvalue->getChannelName(), SCPI::isCmdwP);
         m_veinLambdaActValues.append(pActvalue); // we add the component for our measurement
         m_pModule->m_veinComponentsWithMetaAndScpi.append(pActvalue); // and for the modules interface
 

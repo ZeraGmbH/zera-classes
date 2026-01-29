@@ -550,7 +550,7 @@ void cRangeObsermatic::readGainScaleDone()
         m_ChannelRangeValidatorHash[channelMNames.at(i)] = sValidator; // systemchannelname, stringvalidator
         // we also set the channels name alias and its unit
         m_RangeParameterList.at(i)->setChannelName(channelAlias);
-        m_RangeParameterList.at(i)->setScpiInfo("SENSE", QString("%1:RANGE").arg(channelAlias), SCPI::isQuery|SCPI::isCmdwP, m_RangeParameterList.at(i)->getName());
+        m_RangeParameterList.at(i)->setScpiInfo("SENSE", QString("%1:RANGE").arg(channelAlias), SCPI::isQuery|SCPI::isCmdwP);
         // we want to support querying the channels ranges
         VfModuleMetaInfoContainer* scpiInfo = new VfModuleMetaInfoContainer("SENSE", QString("%1:RANGE:CATALOG").arg(channelAlias),
                                                                     SCPI::isQuery,
@@ -564,13 +564,13 @@ void cRangeObsermatic::readGainScaleDone()
     }
 
     m_pParRangeAutomaticOnOff->setValidator(new cBoolValidator());
-    m_pParRangeAutomaticOnOff->setScpiInfo("CONFIGURATION", "RNGAUTO", SCPI::isQuery|SCPI::isCmdwP, m_pParRangeAutomaticOnOff->getName());
+    m_pParRangeAutomaticOnOff->setScpiInfo("CONFIGURATION", "RNGAUTO", SCPI::isQuery|SCPI::isCmdwP);
 
     m_pParGroupingOnOff->setValidator(new cBoolValidator());
-    m_pParGroupingOnOff->setScpiInfo("CONFIGURATION", "GROUPING", SCPI::isQuery|SCPI::isCmdwP, m_pParGroupingOnOff->getName());
+    m_pParGroupingOnOff->setScpiInfo("CONFIGURATION", "GROUPING", SCPI::isQuery|SCPI::isCmdwP);
 
     m_pParOverloadOnOff->setValidator(new cBoolValidator());
-    m_pParOverloadOnOff->setScpiInfo("SENSE", "OVERLOAD", SCPI::isQuery|SCPI::isCmdwP, m_pParOverloadOnOff->getName());
+    m_pParOverloadOnOff->setScpiInfo("SENSE", "OVERLOAD", SCPI::isQuery|SCPI::isCmdwP);
 
     m_pParRangeAutomaticOnOff->setValue(m_ConfPar.m_nRangeAutoAct.m_nActive);
     m_pParGroupingOnOff->setValue(m_ConfPar.m_nGroupAct.m_nActive);

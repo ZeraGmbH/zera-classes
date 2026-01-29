@@ -53,7 +53,7 @@ void cDosageModuleMeasProgram::generateVeinInterface()
                                                   QString("Energy monitoring (if > configured limit: true)"),
                                                   QVariant(false));
     m_pPowerDetected->setValidator(new cBoolValidator());
-    m_pPowerDetected->setScpiInfo("STATUS", "POWER", SCPI::isQuery, m_pPowerDetected->getName());
+    m_pPowerDetected->setScpiInfo("STATUS", "POWER", SCPI::isQuery);
     m_pModule->m_veinModuleParameterMap[key] = m_pPowerDetected; // and for the modules interface
 }
 

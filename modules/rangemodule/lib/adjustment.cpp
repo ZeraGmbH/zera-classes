@@ -133,7 +133,7 @@ void cAdjustManagement::generateVeinInterface()
 
     m_ParIgnoreRmsValuesOnOff->setValidator(new cBoolValidator());
     m_pModule->m_veinModuleParameterMap["PAR_IgnoreRmsValuesOnOff"] = m_ParIgnoreRmsValuesOnOff;
-    m_ParIgnoreRmsValuesOnOff->setScpiInfo("CONFIGURATION","ENABLEIGNORERMSVAL", SCPI::isQuery|SCPI::isCmdwP, m_ParIgnoreRmsValuesOnOff->getName());
+    m_ParIgnoreRmsValuesOnOff->setScpiInfo("CONFIGURATION","ENABLEIGNORERMSVAL", SCPI::isQuery|SCPI::isCmdwP);
     connect(m_ParIgnoreRmsValuesOnOff, &VfModuleParameter::sigValueChanged, this, &cAdjustManagement::parIgnoreRmsValuesOnOffChanged);
 
     m_ParIgnoreRmsValues = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
@@ -144,7 +144,7 @@ void cAdjustManagement::generateVeinInterface()
     m_ParIgnoreRmsValues->setValidator(new cDoubleValidator(0, 2, 1e-1));
     m_pModule->m_veinModuleParameterMap["PAR_IgnoreRmsValues"] = m_ParIgnoreRmsValues;
     m_ParIgnoreRmsValues->setUnit("%");
-    m_ParIgnoreRmsValues->setScpiInfo("CONFIGURATION","IGNORERMSVAL", SCPI::isQuery|SCPI::isCmdwP, m_ParIgnoreRmsValues->getName());
+    m_ParIgnoreRmsValues->setScpiInfo("CONFIGURATION","IGNORERMSVAL", SCPI::isQuery|SCPI::isCmdwP);
     connect(m_ParIgnoreRmsValues, &VfModuleParameter::sigValueChanged, this, &cAdjustManagement::parIgnoreRmsValuesChanged);
 
     VfModuleParameter *pParameter;
@@ -228,7 +228,7 @@ void cAdjustManagement::activationDone()
     m_fGainKeeperForFakingRmsValues.resize(32); //prepared for 32 dsp channels
     for(int i = 0; i < m_ChannelList.count(); i++) {
         m_fGainKeeperForFakingRmsValues[m_ChannelList.at(i)->getDSPChannelNr()] = 1;
-        m_invertedPhasesParList.at(i)->setScpiInfo("CONFIGURATION",QString("%1:INVERTPHASE").arg(m_ChannelList.at(i)->getAlias()), SCPI::isQuery|SCPI::isCmdwP, m_invertedPhasesParList.at(i)->getName());
+        m_invertedPhasesParList.at(i)->setScpiInfo("CONFIGURATION",QString("%1:INVERTPHASE").arg(m_ChannelList.at(i)->getAlias()), SCPI::isQuery|SCPI::isCmdwP);
     }
     m_bActive = true;
     emit activated();

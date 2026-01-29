@@ -222,7 +222,7 @@ void cPower1ModuleMeasProgram::generateVeinInterface()
                                                           QString("Frequency output constant"),
                                                           QVariant(0.0));
         if(getConfData()->m_enableScpiCommands)
-            pFoutParameter->setScpiInfo("CONFIGURATION",QString("M%1CONSTANT").arg(i), SCPI::isQuery, pFoutParameter->getName());
+            pFoutParameter->setScpiInfo("CONFIGURATION",QString("M%1CONSTANT").arg(i), SCPI::isQuery);
 
         m_FoutConstParameterList.append(pFoutParameter);
         m_pModule->m_veinModuleParameterMap[key] = pFoutParameter; // for modules use
@@ -235,7 +235,7 @@ void cPower1ModuleMeasProgram::generateVeinInterface()
                                                           QString("Frequency output name"),
                                                           QVariant(foutName));
         if(getConfData()->m_enableScpiCommands)
-            pFoutParameter->setScpiInfo("CONFIGURATION",QString("M%1OUT").arg(i), SCPI::isQuery, pFoutParameter->getName());
+            pFoutParameter->setScpiInfo("CONFIGURATION",QString("M%1OUT").arg(i), SCPI::isQuery);
 
         m_pModule->m_veinModuleParameterMap[key] = pFoutParameter; // for modules use
 
@@ -276,7 +276,7 @@ void cPower1ModuleMeasProgram::generateVeinInterface()
                                                          QString("Measuring mode"),
                                                          QVariant(getConfData()->m_sMeasuringMode.m_sValue));
     if(getConfData()->m_enableScpiCommands)
-        m_pMeasuringmodeParameter->setScpiInfo("CONFIGURATION","MMODE", SCPI::isQuery|SCPI::isCmdwP, "PAR_MeasuringMode");
+        m_pMeasuringmodeParameter->setScpiInfo("CONFIGURATION","MMODE", SCPI::isQuery|SCPI::isCmdwP);
 
     cStringValidator *sValidator = new cStringValidator(getConfData()->m_sMeasmodeList);
     m_pMeasuringmodeParameter->setValidator(sValidator);
@@ -293,7 +293,7 @@ void cPower1ModuleMeasProgram::generateVeinInterface()
                                                          QString("Active phases selection mask"),
                                                          getInitialPhaseOnOffVeinVal());
     if(getConfData()->m_enableScpiCommands)
-        m_pMModePhaseSelectParameter->setScpiInfo("CONFIGURATION","MEASMODEPHASESELECT", SCPI::isQuery|SCPI::isCmdwP, "PAR_MeasModePhaseSelect");
+        m_pMModePhaseSelectParameter->setScpiInfo("CONFIGURATION","MEASMODEPHASESELECT", SCPI::isQuery|SCPI::isCmdwP);
     m_MModePhaseSelectValidator = new cStringValidator("");
     m_pMModePhaseSelectParameter->setValidator(m_MModePhaseSelectValidator);
     m_pModule->m_veinModuleParameterMap[key] = m_pMModePhaseSelectParameter; // for modules use
@@ -346,12 +346,12 @@ void cPower1ModuleMeasProgram::generateVeinInterface()
     m_pIntegrationParameter->setUnit(unit);
     if (btime) {
         if(getConfData()->m_enableScpiCommands)
-            m_pIntegrationParameter->setScpiInfo("CONFIGURATION","TINTEGRATION", SCPI::isQuery|SCPI::isCmdwP, "PAR_Interval");
+            m_pIntegrationParameter->setScpiInfo("CONFIGURATION","TINTEGRATION", SCPI::isQuery|SCPI::isCmdwP);
         m_pIntegrationParameter->setValidator(new cDoubleValidator(1.0, 100.0, 0.5));
     }
     else {
         if(getConfData()->m_enableScpiCommands)
-            m_pIntegrationParameter->setScpiInfo("CONFIGURATION","TPERIOD", SCPI::isQuery|SCPI::isCmdwP, "PAR_Interval");
+            m_pIntegrationParameter->setScpiInfo("CONFIGURATION","TPERIOD", SCPI::isQuery|SCPI::isCmdwP);
         m_pIntegrationParameter->setValidator(new cIntValidator(5, 5000, 1));
     }
     m_pModule->m_veinModuleParameterMap[key] = m_pIntegrationParameter; // for modules use
@@ -656,7 +656,7 @@ void cPower1ModuleMeasProgram::setSCPIMeasInfo()
 {
     if(getConfData()->m_enableScpiCommands) {
         for (int i = 0; i < MeasPhaseCount+SumValueCount; i++)
-            m_veinActValueList.at(i)->setScpiInfo("MEASURE", m_veinActValueList.at(i)->getChannelName(), SCPI::isCmdwP, m_veinActValueList.at(i)->getName());
+            m_veinActValueList.at(i)->setScpiInfo("MEASURE", m_veinActValueList.at(i)->getChannelName(), SCPI::isCmdwP);
     }
 }
 
@@ -1095,7 +1095,7 @@ void cPower1ModuleMeasProgram::generateVeinInterfaceForQrefFreq()
         const QString unit = "kHz";
         m_QREFFrequencyParameter->setUnit(unit);
         if(getConfData()->m_enableScpiCommands)
-            m_QREFFrequencyParameter->setScpiInfo("CONFIGURATION",QString("FIXFREQ"), SCPI::isQuery|SCPI::isCmdwP, m_QREFFrequencyParameter->getName());
+            m_QREFFrequencyParameter->setScpiInfo("CONFIGURATION",QString("FIXFREQ"), SCPI::isQuery|SCPI::isCmdwP);
         cDoubleValidator *validator = new cDoubleValidator(0.001, 200.0, 0.001);
         m_QREFFrequencyParameter->setValidator(validator);
         m_pModule->m_veinModuleParameterMap[paramLabel] = m_QREFFrequencyParameter; // for modules use
@@ -1114,7 +1114,7 @@ void POWER1MODULE::cPower1ModuleMeasProgram::generateVeinInterfaceNominalFreq()
     m_pModule->m_veinModuleParameterMap[key] = m_pNominalFrequency; // for modules use
     connect(m_pNominalFrequency, &VfModuleParameter::sigValueChanged, this, &cPower1ModuleMeasProgram::foutParamsToDsp);
     if(getConfData()->m_enableScpiCommands)
-        m_pNominalFrequency->setScpiInfo("CONFIGURATION",QString("NOMINAL_FREQ"), SCPI::isQuery|SCPI::isCmdwP, "PAR_FOUT_NOMINAL_FREQ");
+        m_pNominalFrequency->setScpiInfo("CONFIGURATION",QString("NOMINAL_FREQ"), SCPI::isQuery|SCPI::isCmdwP);
 }
 
 void cPower1ModuleMeasProgram::foutParamsToDsp()

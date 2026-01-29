@@ -51,7 +51,7 @@ void cBurden1ModuleMeasProgram::generateVeinInterface()
                                             QString("Burden actual value Sb"));
         pActvalue->setChannelName(QString("BRD%1").arg(i+1));
         pActvalue->setUnit("VA");
-        pActvalue->setScpiInfo("MEASURE", pActvalue->getChannelName(), SCPI::isCmdwP, pActvalue->getName());
+        pActvalue->setScpiInfo("MEASURE", pActvalue->getChannelName(), SCPI::isCmdwP);
         m_veinActValueList.append(pActvalue); // we add the component for our measurement
         m_pModule->m_veinComponentsWithMetaAndScpi.append(pActvalue); // and for the modules interface
 
@@ -60,7 +60,7 @@ void cBurden1ModuleMeasProgram::generateVeinInterface()
                                             QString("Burden powerfactor cos(β)"));
         pActvalue->setChannelName(QString("POF%1").arg(i+1));
         pActvalue->setUnit("");
-        pActvalue->setScpiInfo("MEASURE", pActvalue->getChannelName(), SCPI::isCmdwP, pActvalue->getName());
+        pActvalue->setScpiInfo("MEASURE", pActvalue->getChannelName(), SCPI::isCmdwP);
         m_veinActValueList.append(pActvalue); // we add the component for our measurement
         m_pModule->m_veinComponentsWithMetaAndScpi.append(pActvalue); // and for the modules interface
 
@@ -69,7 +69,7 @@ void cBurden1ModuleMeasProgram::generateVeinInterface()
                                             QString("Burden ratio value Sn"));
         pActvalue->setChannelName(QString("RAT%1").arg(i+1));
         pActvalue->setUnit("%");
-        pActvalue->setScpiInfo("MEASURE", pActvalue->getChannelName(), SCPI::isCmdwP, pActvalue->getName());
+        pActvalue->setScpiInfo("MEASURE", pActvalue->getChannelName(), SCPI::isCmdwP);
         m_veinActValueList.append(pActvalue); // we add the component for our measurement
         m_pModule->m_veinComponentsWithMetaAndScpi.append(pActvalue); // and for the modules interface
     }
@@ -80,7 +80,7 @@ void cBurden1ModuleMeasProgram::generateVeinInterface()
                                                      QString("Nominal range"),
                                                      QVariant(getConfData()->nominalRange.m_fValue));
     m_pNominalRangeParameter->setUnit(getConfData()->m_Unit);
-    m_pNominalRangeParameter->setScpiInfo("CONFIGURATION","RANGE", SCPI::isQuery|SCPI::isCmdwP, "PAR_NominalRange");
+    m_pNominalRangeParameter->setScpiInfo("CONFIGURATION","RANGE", SCPI::isQuery|SCPI::isCmdwP);
     m_pNominalRangeParameter->setValidator(new cDoubleValidator(0.001, 10000.0, 0.001));
     m_pModule->m_veinModuleParameterMap[key] = m_pNominalRangeParameter; // for modules use
 
@@ -88,7 +88,7 @@ void cBurden1ModuleMeasProgram::generateVeinInterface()
                                                            key = QString("PAR_NominalRangeFactor"),
                                                            QString("Nominal range factor"),
                                                            QVariant(getConfData()->nominalRangeFactor.m_sPar));
-    m_pNominalRangeFactorParameter->setScpiInfo("CONFIGURATION","RFACTOR", SCPI::isQuery|SCPI::isCmdwP, "PAR_NominalRangeFactor");
+    m_pNominalRangeFactorParameter->setScpiInfo("CONFIGURATION","RFACTOR", SCPI::isQuery|SCPI::isCmdwP);
     m_pNominalRangeFactorParameter->setValidator(new cStringValidator(QString("1;sqrt(3);1/sqrt(3);1/3")));
     m_pModule->m_veinModuleParameterMap[key] = m_pNominalRangeFactorParameter; // for modules use
 
@@ -97,7 +97,7 @@ void cBurden1ModuleMeasProgram::generateVeinInterface()
                                                          QString("Nominal burden"),
                                                          QVariant(getConfData()->nominalBurden.m_fValue));
     m_pNominalBurdenParameter->setUnit("VA");
-    m_pNominalBurdenParameter->setScpiInfo("CONFIGURATION","BURDEN", SCPI::isQuery|SCPI::isCmdwP, "PAR_NominalBurden");
+    m_pNominalBurdenParameter->setScpiInfo("CONFIGURATION","BURDEN", SCPI::isQuery|SCPI::isCmdwP);
     m_pNominalBurdenParameter->setValidator(new cDoubleValidator(0.001, 10000.0, 0.001));
     m_pModule->m_veinModuleParameterMap[key] = m_pNominalBurdenParameter; // for modules use
 
@@ -106,7 +106,7 @@ void cBurden1ModuleMeasProgram::generateVeinInterface()
                                                    QString("Wire length value"),
                                                    QVariant(getConfData()->wireLength.m_fValue));
     m_pWireLengthParameter->setUnit("m");
-    m_pWireLengthParameter->setScpiInfo("CONFIGURATION","WLENGTH", SCPI::isQuery|SCPI::isCmdwP, "PAR_WireLength");
+    m_pWireLengthParameter->setScpiInfo("CONFIGURATION","WLENGTH", SCPI::isQuery|SCPI::isCmdwP);
     m_pWireLengthParameter->setValidator(new cDoubleValidator(0.0, 100.0, 0.1));
     m_pModule->m_veinModuleParameterMap[key] = m_pWireLengthParameter; // for modules use
 
@@ -115,7 +115,7 @@ void cBurden1ModuleMeasProgram::generateVeinInterface()
                                                             QString("Wire crosssection value"),
                                                             QVariant(getConfData()->wireCrosssection.m_fValue));
     m_pWireCrosssectionParameter->setUnit("mm²");
-    m_pWireCrosssectionParameter->setScpiInfo("CONFIGURATION","WCSection", SCPI::isQuery|SCPI::isCmdwP, "PAR_WCrosssection");
+    m_pWireCrosssectionParameter->setScpiInfo("CONFIGURATION","WCSection", SCPI::isQuery|SCPI::isCmdwP);
     m_pWireCrosssectionParameter->setValidator(new cDoubleValidator(0.1, 100.0, 0.1));
     m_pModule->m_veinModuleParameterMap[key] = m_pWireCrosssectionParameter; // for modules use
 

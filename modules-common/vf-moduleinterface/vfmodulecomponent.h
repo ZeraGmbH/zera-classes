@@ -10,7 +10,7 @@ class VfModuleComponent: public AbstractMetaScpiComponent
 {
     Q_OBJECT
 public:
-    VfModuleComponent(int entityId, VeinEvent::EventSystem *eventsystem, QString name, QString description, QVariant initval = QVariant());
+    VfModuleComponent(int entityId, VeinEvent::EventSystem *eventsystem, QString componentName, QString description, QVariant initval = QVariant());
 
     void setChannelName(QString name); // channel name for json export can be empty
     QString getChannelName();
@@ -22,7 +22,6 @@ public:
 
     void setScpiInfo(const QString &model, const QString &cmd,
                      int cmdTypeMask, // e.g SCPI::isQuery|SCPI::isCmdwP
-                     const QString &veinComponentName,
                      SCPI::eSCPIEntryType entryType = SCPI::isComponent);
     void exportSCPIInfo(QJsonArray &jsArr) override;
     void sendDummyNotificationForRangeChange();
