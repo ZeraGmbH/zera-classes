@@ -9,7 +9,6 @@ VfModuleRpc::VfModuleRpc(VfCpp::VfCppRpcSimplifiedPtr rpc, const QString &descri
     m_pValidator(nullptr),
     m_optParam(false)
 {
-    int totalExpectedParams = VfCppRpcHelper::getRpcParamNamesList(rpc->getSignature()).size();
 }
 
 VfCpp::VfCppRpcSimplifiedPtr VfModuleRpc::getRpcSimplifed()
