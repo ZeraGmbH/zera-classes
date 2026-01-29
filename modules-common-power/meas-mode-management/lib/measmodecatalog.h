@@ -9,8 +9,8 @@
 class MeasModeCatalog
 {
 public:
-    static cMeasModeInfo getInfo(QString name);
-    static cMeasModeInfo getInfo(measmodes modeId);
+    static cMeasModeInfo getInfo(const QString &name);
+    static cMeasModeInfo getInfo(const measmodes &modeId);
     static QSet<measmodes> getThreeWireModes();
 protected:
     static std::function<void(QString mode)> m_warningHandler;

@@ -36,7 +36,7 @@ void MeasModeCatalog::addInfoToHashes(cMeasModeInfo info)
     m_modeInfoHashById[info.getCode()] = info;
 }
 
-cMeasModeInfo MeasModeCatalog::getInfo(QString name)
+cMeasModeInfo MeasModeCatalog::getInfo(const QString &name)
 {
     if(m_modeInfoHashByString.isEmpty())
         setupHashes();
@@ -47,7 +47,7 @@ cMeasModeInfo MeasModeCatalog::getInfo(QString name)
     return m_modeInfoHashByString[name];
 }
 
-cMeasModeInfo MeasModeCatalog::getInfo(measmodes modeId)
+cMeasModeInfo MeasModeCatalog::getInfo(const measmodes &modeId)
 {
     if(m_modeInfoHashById.isEmpty())
         setupHashes();
