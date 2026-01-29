@@ -111,8 +111,8 @@ void VfModuleComponent::setError()
 
     VeinEvent::CommandEvent *cEvent = new VeinEvent::CommandEvent(VeinEvent::CommandEvent::EventSubtype::NOTIFICATION, errData);
     QUuid id; // null id
-    if (!mClientIdList.isEmpty()) {
-        id = mClientIdList.takeFirst();
+    if (!m_clientIdList.isEmpty()) {
+        id = m_clientIdList.takeFirst();
     }
     cEvent->setPeerId(id);
     emit m_pEventSystem->sigSendEvent(cEvent);
@@ -130,8 +130,8 @@ void VfModuleComponent::sendNotification(VeinComponent::ComponentData::Command v
 
     VeinEvent::CommandEvent *event = new VeinEvent::CommandEvent(VeinEvent::CommandEvent::EventSubtype::NOTIFICATION, cData);
     QUuid id; // null id
-    if (!mClientIdList.isEmpty()) {
-        id = mClientIdList.takeFirst();
+    if (!m_clientIdList.isEmpty()) {
+        id = m_clientIdList.takeFirst();
     }
     event->setPeerId(id);
     emit m_pEventSystem->sigSendEvent(event);

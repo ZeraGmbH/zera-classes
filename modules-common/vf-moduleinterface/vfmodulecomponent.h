@@ -42,7 +42,7 @@ protected:
     QVariant m_vValue;
     QString m_sChannelName;
     QString m_sChannelUnit;
-    QList<QUuid> mClientIdList;
+    QList<QUuid> m_clientIdList;
 
 private:
     void sendNotification(VeinComponent::ComponentData::Command vcmd);

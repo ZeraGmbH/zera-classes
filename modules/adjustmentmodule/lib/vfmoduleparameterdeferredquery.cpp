@@ -21,7 +21,7 @@ void VfModuleParameterDeferredQuery::veinTransaction(QUuid clientId,
                                                      VeinComponent::ComponentData::Command vccmd)
 {
     Q_UNUSED(oldValue)
-    mClientIdList.append(clientId);
+    m_clientIdList.append(clientId);
     if (vccmd == VeinComponent::ComponentData::Command::CCMD_FETCH)
         emit sigValueQuery(newValue); // deferred
     else
