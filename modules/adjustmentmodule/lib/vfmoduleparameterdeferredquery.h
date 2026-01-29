@@ -13,10 +13,10 @@ public:
                                    const QString &description,
                                    const QVariant &initval,
                                    bool deferredNotification = false);
-    virtual void veinTransaction(QUuid clientId,
-                                 QVariant newValue,
-                                 QVariant oldValue,
-                                 VeinComponent::ComponentData::Command vccmd) override;
+    void veinTransaction(const QUuid &clientId,
+                         const QVariant &newValue,
+                         const QVariant &oldValue,
+                         VeinComponent::ComponentData::Command vccmd) override;
 signals:
     void sigValueQuery(QVariant newValue); // we connect here if we want to read a value before returning data from storage ...perhaps with parameter
 };

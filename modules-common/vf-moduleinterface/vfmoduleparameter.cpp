@@ -59,7 +59,10 @@ void VfModuleParameter::handleNoFetchVeinTransaction(QVariant newValue)
         setError();
 }
 
-void VfModuleParameter::veinTransaction(QUuid clientId, QVariant newValue, QVariant oldValue, VeinComponent::ComponentData::Command vccmd)
+void VfModuleParameter::veinTransaction(const QUuid &clientId,
+                                        const QVariant &newValue,
+                                        const QVariant &oldValue,
+                                        VeinComponent::ComponentData::Command vccmd)
 {
     m_clientIdList.append(clientId);
     if (vccmd == VeinComponent::ComponentData::Command::CCMD_FETCH)

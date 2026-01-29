@@ -21,9 +21,9 @@ public:
 
     virtual void exportMetaData(QJsonObject &jsObj) override;
     void setValidator(ValidatorInterface* validator);
-    virtual void veinTransaction(QUuid clientId,
-                                 QVariant newValue,
-                                 QVariant oldValue,
+    virtual void veinTransaction(const QUuid &clientId,
+                                 const QVariant &newValue,
+                                 const QVariant &oldValue,
                                  VeinComponent::ComponentData::Command vccmd);
 
 protected:

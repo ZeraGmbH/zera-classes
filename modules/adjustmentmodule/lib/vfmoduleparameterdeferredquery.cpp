@@ -15,9 +15,9 @@ VfModuleParameterDeferredQuery::VfModuleParameterDeferredQuery(int entityId,
 {
 }
 
-void VfModuleParameterDeferredQuery::veinTransaction(QUuid clientId,
-                                                     QVariant newValue,
-                                                     QVariant oldValue,
+void VfModuleParameterDeferredQuery::veinTransaction(const QUuid &clientId,
+                                                     const QVariant &newValue,
+                                                     const QVariant &oldValue,
                                                      VeinComponent::ComponentData::Command vccmd)
 {
     Q_UNUSED(oldValue)
