@@ -1,7 +1,7 @@
 #include "measmodephasepersistency.h"
 #include "measmodemaskstringconverter.h"
 
-bool MeasModePhasePersistency::setMeasModePhaseFromConfig(MeasModePtr mode, QStringList modePhaseListFromConfig)
+bool MeasModePhasePersistency::setMeasModePhaseFromConfig(MeasModePtr mode, const QStringList &modePhaseListFromConfig)
 {
     for(auto& entry : modePhaseListFromConfig) {
         QStringList modePhaseList = entry.split(',');

@@ -6,7 +6,7 @@
 class MeasModePhasePersistency
 {
 public:
-    static bool setMeasModePhaseFromConfig(MeasModePtr mode, QStringList modePhaseListFromConfig);
+    static bool setMeasModePhaseFromConfig(MeasModePtr mode, const QStringList &modePhaseListFromConfig);
 };
 
 #endif // MEASMODEPHASEPERSISTENCY_H
