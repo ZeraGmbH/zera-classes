@@ -22,8 +22,7 @@ bool VfModuleParameter::isValidParameter(QVariant& value)
 {
     if (m_pValidator != 0)
         return m_pValidator->isValidParam(value);
-    else
-        return false;
+    return false;
 }
 
 void VfModuleParameter::exportMetaData(QJsonObject &jsObj)
