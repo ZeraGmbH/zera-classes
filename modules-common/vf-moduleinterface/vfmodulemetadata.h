@@ -8,15 +8,15 @@ class VfModuleMetaData: public QObject
 {
     Q_OBJECT
 public:
-    VfModuleMetaData(QString name, QVariant value);
+    VfModuleMetaData(const QString &moduleMetaEntryName, const QVariant &value);
     ~VfModuleMetaData();
     virtual void exportMetaData(QJsonObject &jsObj);
     static int getInstanceCount();
 public slots:
     void setValue(QVariant value);
 private:
-    QString m_sName;
-    QVariant m_vValue;
+    QString m_moduleMetaEntryName;
+    QVariant m_value;
     static int m_instanceCount;
 };
 

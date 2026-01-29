@@ -3,9 +3,9 @@
 
 int VfModuleMetaData::m_instanceCount = 0;
 
-VfModuleMetaData::VfModuleMetaData(QString name, QVariant value) :
-    m_sName(name),
-    m_vValue(value)
+VfModuleMetaData::VfModuleMetaData(const QString &moduleMetaEntryName, const QVariant &value) :
+    m_moduleMetaEntryName(moduleMetaEntryName),
+    m_value(value)
 {
     m_instanceCount++;
 }
@@ -17,7 +17,7 @@ VfModuleMetaData::~VfModuleMetaData()
 
 void VfModuleMetaData::exportMetaData(QJsonObject &jsObj)
 {
-    jsObj.insert(m_sName, m_vValue.toString());
+    jsObj.insert(m_moduleMetaEntryName, m_value.toString());
 }
 
 int VfModuleMetaData::getInstanceCount()
@@ -27,5 +27,5 @@ int VfModuleMetaData::getInstanceCount()
 
 void VfModuleMetaData::setValue(QVariant value)
 {
-    m_vValue = value;
+    m_value = value;
 }
