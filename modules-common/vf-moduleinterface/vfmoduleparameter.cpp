@@ -3,11 +3,11 @@
 
 VfModuleParameter::VfModuleParameter(int entityId,
                                      VeinEvent::EventSystem *eventsystem,
-                                     QString name,
-                                     QString description,
-                                     QVariant initval,
+                                     const QString &componentname,
+                                     const QString &description,
+                                     const QVariant &initval,
                                      bool deferredNotification) :
-    VfModuleComponent(entityId, eventsystem, name, description, initval),
+    VfModuleComponent(entityId, eventsystem, componentname, description, initval),
     m_bDeferredNotification(deferredNotification),
     m_pValidator(nullptr)
 {

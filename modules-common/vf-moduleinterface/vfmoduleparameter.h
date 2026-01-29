@@ -11,9 +11,9 @@ class VfModuleParameter: public VfModuleComponent
 public:
     VfModuleParameter(int entityId,
                       VeinEvent::EventSystem *eventsystem,
-                      QString name,
-                      QString description,
-                      QVariant initval,
+                      const QString &componentname,
+                      const QString &description,
+                      const QVariant &initval,
                       bool deferredNotification = false);
     virtual ~VfModuleParameter();
 
