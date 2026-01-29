@@ -110,7 +110,7 @@ void cRangeModuleMeasProgram::generateVeinInterface()
                                             QString("ACT_Channel%1Peak").arg(i+1),
                                             QString("Actual peak value"));
         m_veinActValueList.append(pActvalue); // we add the component for our measurement
-        m_pModule->veinModuleActvalueList.append(pActvalue); // and for the modules interface
+        m_pModule->m_veinComponentsWithMetaAndScpi.append(pActvalue); // and for the modules interface
     }
 
     pActvalue = new VfModuleComponent(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
@@ -121,14 +121,14 @@ void cRangeModuleMeasProgram::generateVeinInterface()
     pActvalue->setScpiInfo("MEASURE","F", SCPI::isCmdwP, "ACT_Frequency");
 
     m_veinActValueList.append(pActvalue); // we add the component for our measurement
-    m_pModule->veinModuleActvalueList.append(pActvalue); // and for the modules interface
+    m_pModule->m_veinComponentsWithMetaAndScpi.append(pActvalue); // and for the modules interface
 
     for (int i = 0; i < channelMNames.count(); i++) {
         pActvalue = new VfModuleComponent(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
                                             QString("ACT_Channel%1Rms").arg(i+1),
                                             QString("Actual RMS value (unscaled)"));
         m_veinRmsValueList.append(pActvalue); // we add the component for our measurement
-        m_pModule->veinModuleActvalueList.append(pActvalue); // and for the modules interface
+        m_pModule->m_veinComponentsWithMetaAndScpi.append(pActvalue); // and for the modules interface
     }
 
 

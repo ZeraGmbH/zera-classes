@@ -104,7 +104,7 @@ void cOsciModuleMeasProgram::generateVeinInterface()
                                             QString("ACT_OSCI%1").arg(i+1),
                                             QString("Measures samples"));
         m_veinActValueList.append(pActvalue); // we add the component for our measurement
-        m_pModule->veinModuleActvalueList.append(pActvalue); // and for the modules interface
+        m_pModule->m_veinComponentsWithMetaAndScpi.append(pActvalue); // and for the modules interface
     }
 
     m_pOsciCountInfo = new VfModuleMetaData(QString("OSCICount"), QVariant(n));

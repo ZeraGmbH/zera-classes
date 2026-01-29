@@ -84,7 +84,7 @@ void cTransformer1ModuleMeasProgram::generateVeinInterface()
         pActvalue->setScpiInfo("MEASURE", pActvalue->getChannelName(), SCPI::isCmdwP, pActvalue->getName());
 
         m_veinActValueList.append(pActvalue); // we add the component for our measurement
-        m_pModule->veinModuleActvalueList.append(pActvalue); // and for the modules interface
+        m_pModule->m_veinComponentsWithMetaAndScpi.append(pActvalue); // and for the modules interface
 
         pActvalue = new VfModuleComponent(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
                                             QString("ACT_Angle%1").arg(i+1),
@@ -94,7 +94,7 @@ void cTransformer1ModuleMeasProgram::generateVeinInterface()
         pActvalue->setScpiInfo("MEASURE", pActvalue->getChannelName(), SCPI::isCmdwP, pActvalue->getName());
 
         m_veinActValueList.append(pActvalue); // we add the component for our measurement
-        m_pModule->veinModuleActvalueList.append(pActvalue); // and for the modules interface
+        m_pModule->m_veinComponentsWithMetaAndScpi.append(pActvalue); // and for the modules interface
 
         pActvalue = new VfModuleComponent(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
                                             QString("ACT_Ratio%1").arg(i+1),
@@ -104,7 +104,7 @@ void cTransformer1ModuleMeasProgram::generateVeinInterface()
         pActvalue->setScpiInfo("MEASURE", pActvalue->getChannelName(), SCPI::isCmdwP, pActvalue->getName());
 
         m_veinActValueList.append(pActvalue); // we add the component for our measurement
-        m_pModule->veinModuleActvalueList.append(pActvalue); // and for the modules interface
+        m_pModule->m_veinComponentsWithMetaAndScpi.append(pActvalue); // and for the modules interface
 
         pActvalue = new VfModuleComponent(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
                                             QString("ACT_INSecondary%1").arg(i+1),
@@ -114,7 +114,7 @@ void cTransformer1ModuleMeasProgram::generateVeinInterface()
         pActvalue->setScpiInfo("MEASURE", pActvalue->getChannelName(), SCPI::isCmdwP, pActvalue->getName());
 
         m_veinActValueList.append(pActvalue); // we add the component for our measurement
-        m_pModule->veinModuleActvalueList.append(pActvalue); // and for the modules interface
+        m_pModule->m_veinComponentsWithMetaAndScpi.append(pActvalue); // and for the modules interface
 
         pActvalue = new VfModuleComponent(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
                                             QString("ACT_IXSecondary%1").arg(i+1),
@@ -124,7 +124,7 @@ void cTransformer1ModuleMeasProgram::generateVeinInterface()
         pActvalue->setScpiInfo("MEASURE", pActvalue->getChannelName(), SCPI::isCmdwP, pActvalue->getName());
 
         m_veinActValueList.append(pActvalue); // we add the component for our measurement
-        m_pModule->veinModuleActvalueList.append(pActvalue); // and for the modules interface
+        m_pModule->m_veinComponentsWithMetaAndScpi.append(pActvalue); // and for the modules interface
 
         pActvalue = new VfModuleComponent(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
                                             QString("ACT_IXPrimary%1").arg(i+1),
@@ -134,7 +134,7 @@ void cTransformer1ModuleMeasProgram::generateVeinInterface()
         pActvalue->setScpiInfo("MEASURE", pActvalue->getChannelName(), SCPI::isCmdwP, pActvalue->getName());
 
         m_veinActValueList.append(pActvalue); // we add the component for our measurement
-        m_pModule->veinModuleActvalueList.append(pActvalue); // and for the modules interface
+        m_pModule->m_veinComponentsWithMetaAndScpi.append(pActvalue); // and for the modules interface
     }
 
     m_pPrimClampPrimParameter = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),

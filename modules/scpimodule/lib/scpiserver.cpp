@@ -85,13 +85,13 @@ void cSCPIServer::generateVeinInterface()
                                                     QString("ACT_SerialScpiDeviceFile"),
                                                     QString("Device file name for serial SCPI"),
                                                     QVariant(m_ConfigData.m_SerialDevice.m_sDevice) );
-    m_pModule->veinModuleActvalueList.append(m_pVeinSerialScpiDevFileName); // auto delete / meta-data / scpi
+    m_pModule->m_veinComponentsWithMetaAndScpi.append(m_pVeinSerialScpiDevFileName); // auto delete / meta-data / scpi
 
     m_veinDevIface = new VfModuleComponent(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
                                                      QString("ACT_DEV_IFACE"),
                                                      QString("SCPI interface description for current session"),
                                                      QVariant("") );
-    m_pModule->veinModuleActvalueList.append(m_veinDevIface); // auto delete / meta-data / scpi
+    m_pModule->m_veinComponentsWithMetaAndScpi.append(m_veinDevIface); // auto delete / meta-data / scpi
 
     m_optionalScpiQueue = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
                                                          key = QString("PAR_OptionalScpiQueue"),

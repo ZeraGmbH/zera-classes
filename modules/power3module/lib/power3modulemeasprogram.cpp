@@ -51,7 +51,7 @@ void cPower3ModuleMeasProgram::generateVeinInterface()
         pActvalue->setUnit("W");
         pActvalue->setScpiInfo("MEASURE", pActvalue->getChannelName(), SCPI::isCmdwP, pActvalue->getName());
         m_veinActValueList.append(pActvalue); // we add the component for our measurement
-        m_pModule->veinModuleActvalueList.append(pActvalue); // and for the modules interface
+        m_pModule->m_veinComponentsWithMetaAndScpi.append(pActvalue); // and for the modules interface
 
         pActvalue = new VfModuleComponent(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
                                             QString("ACT_HPQ%1").arg(i+1),
@@ -60,7 +60,7 @@ void cPower3ModuleMeasProgram::generateVeinInterface()
         pActvalue->setUnit("Var");
         pActvalue->setScpiInfo("MEASURE", pActvalue->getChannelName(), SCPI::isCmdwP, pActvalue->getName());
         m_veinActValueList.append(pActvalue); // we add the component for our measurement
-        m_pModule->veinModuleActvalueList.append(pActvalue); // and for the modules interface
+        m_pModule->m_veinComponentsWithMetaAndScpi.append(pActvalue); // and for the modules interface
 
         pActvalue = new VfModuleComponent(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
                                             QString("ACT_HPS%1").arg(i+1),
@@ -69,7 +69,7 @@ void cPower3ModuleMeasProgram::generateVeinInterface()
         pActvalue->setUnit("VA");
         pActvalue->setScpiInfo("MEASURE", pActvalue->getChannelName(), SCPI::isCmdwP, pActvalue->getName());
         m_veinActValueList.append(pActvalue); // we add the component for our measurement
-        m_pModule->veinModuleActvalueList.append(pActvalue); // and for the modules interface
+        m_pModule->m_veinComponentsWithMetaAndScpi.append(pActvalue); // and for the modules interface
     }
     m_pHPWCountInfo = new VfModuleMetaData(QString("HPWCount"), QVariant(getConfData()->m_nPowerSystemCount));
     m_pModule->veinModuleMetaDataList.append(m_pHPWCountInfo);

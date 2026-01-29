@@ -43,13 +43,13 @@ void SourceModuleProgram::generateVeinInterface()
                                                     QString("ACT_MaxSources"),
                                                     QString("Max source devices"),
                                                     QVariant(maxSources) );
-    m_pModule->veinModuleActvalueList.append(m_pVeinMaxCountAct); // auto delete / meta-data / scpi
+    m_pModule->m_veinComponentsWithMetaAndScpi.append(m_pVeinMaxCountAct); // auto delete / meta-data / scpi
 
     m_pVeinCountAct = new VfModuleComponent(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
                                                     QString("ACT_CountSources"),
                                                     QString("Active source count"),
                                                     QVariant(0) );
-    m_pModule->veinModuleActvalueList.append(m_pVeinCountAct); // auto delete / meta-data / scpi
+    m_pModule->m_veinComponentsWithMetaAndScpi.append(m_pVeinCountAct); // auto delete / meta-data / scpi
 
     // RPCs
     m_sharedPtrRpcScanInterface = VfCpp::cVeinModuleRpc::Ptr(new VfCpp::cVeinModuleRpc(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
@@ -76,14 +76,14 @@ void SourceModuleProgram::generateVeinInterface()
                                             QString("Source info/capabiliities in JSON"),
                                             QJsonObject());
         sourceVeinInterface->setVeinDeviceInfoComponent(pVeinAct);
-        m_pModule->veinModuleActvalueList.append(pVeinAct); // auto delete / meta-data / scpi
+        m_pModule->m_veinComponentsWithMetaAndScpi.append(pVeinAct); // auto delete / meta-data / scpi
 
         pVeinAct = new VfModuleComponent(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
                                             QString("ACT_DeviceState%1").arg(souceCount),
                                             QString("Source status in JSON"),
                                             QJsonObject());
         sourceVeinInterface->setVeinDeviceStateComponent(pVeinAct);
-        m_pModule->veinModuleActvalueList.append(pVeinAct); // auto delete / meta-data / scpi
+        m_pModule->m_veinComponentsWithMetaAndScpi.append(pVeinAct); // auto delete / meta-data / scpi
 
         // device param
         VfModuleParameter* pVeinParam = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),

@@ -117,7 +117,7 @@ void cRmsModuleMeasProgram::generateVeinInterface()
                                              QString("ACT_RMSPN%1").arg(n+1),
                                              channelDescription);
             m_veinActValueList.append(pActvalue); // we add the component for our measurement
-            m_pModule->veinModuleActvalueList.append(pActvalue); // and for the modules interface
+            m_pModule->m_veinComponentsWithMetaAndScpi.append(pActvalue); // and for the modules interface
             n++;
         }
         else {
@@ -125,7 +125,7 @@ void cRmsModuleMeasProgram::generateVeinInterface()
                                                 QString("ACT_RMSPP%1").arg(p+1),
                                                 QString("Actual rms value phase/phase"));
             m_veinActValueList.append(pActvalue); // we add the component for our measurement
-            m_pModule->veinModuleActvalueList.append(pActvalue); // and for the modules interface
+            m_pModule->m_veinComponentsWithMetaAndScpi.append(pActvalue); // and for the modules interface
             p++;
         }
     }

@@ -52,7 +52,7 @@ void RecorderModuleInit::generateVeinInterface()
                                                     QString("Number of points in a curve"),
                                                     QVariant(0));
 
-    m_module->veinModuleActvalueList.append(m_numberOfPointsInCurve); // we add the component for the modules interface
+    m_module->m_veinComponentsWithMetaAndScpi.append(m_numberOfPointsInCurve); // we add the component for the modules interface
 
     QString key;
     m_startStopRecording = new VfModuleParameter(m_module->getEntityId(),

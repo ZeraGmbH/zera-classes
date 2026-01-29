@@ -34,7 +34,7 @@ public:
 
     QList<VfModuleMetaData*> veinModuleMetaDataList; // only meta information
     QList<VfModuleComponent*> m_veinComponentsWithMetaNoScpi; // for components that need no scpi interface
-    QList<VfModuleComponent*> veinModuleActvalueList; // actvalues are components that need an interface
+    QList<VfModuleComponent*> m_veinComponentsWithMetaAndScpi; // actvalues are components that need an interface
     QMap<QString, VfModuleParameter*> m_veinModuleParameterMap; // parameters are components that need an interface and validation
     QMap<QString, VfModuleRpcPtr> m_veinModuleRPCMap;
     QList<VfModuleMetaInfoContainer*> scpiCommandList; // a list of commands that work without existing component, it uses a component's validation data for additional queries
