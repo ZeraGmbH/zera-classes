@@ -56,7 +56,7 @@ void cLambdaModuleMeasProgram::generateVeinInterface()
                                          QString("ACT_Load%1").arg(i+1),
                                          QString("load type"));
         m_veinLoadTypeList.append(pActvalue);
-        m_pModule->m_veinComponentsWithMetaNoScpi.append(pActvalue);
+        m_pModule->m_veinComponentsWithMetaAndScpi.append(pActvalue);
     }
 
     m_pLAMBDACountInfo = new VfModuleMetaData(QString("LambdaCount"), QVariant(getConfData()->m_nLambdaSystemCount));
@@ -66,7 +66,7 @@ void cLambdaModuleMeasProgram::generateVeinInterface()
                                                 QString("SIG_Measuring"),
                                                 QString("Signal indicating measurement activity"),
                                                 QVariant(0));
-    m_pModule->m_veinComponentsWithMetaNoScpi.append(m_pMeasureSignal);
+    m_pModule->m_veinComponentsWithMetaAndScpi.append(m_pMeasureSignal);
 }
 
 void cLambdaModuleMeasProgram::searchActualValues()

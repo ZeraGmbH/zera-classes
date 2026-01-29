@@ -114,14 +114,14 @@ void BaseModule::setupModule()
                                                    QString("Module's name"),
                                                    QVariant(m_sModuleName));
 
-    m_veinComponentsWithMetaNoScpi.append(m_pModuleEntityName);
+    m_veinComponentsWithMetaAndScpi.append(m_pModuleEntityName);
 
     m_pModuleInterfaceComponent = new VfModuleComponent(getEntityId(), m_pModuleEventSystem,
                                                            QString("INF_ModuleInterface"),
                                                            QString("Module's interface details"),
                                                            QByteArray());
 
-    m_veinComponentsWithMetaNoScpi.append(m_pModuleInterfaceComponent);
+    m_veinComponentsWithMetaAndScpi.append(m_pModuleInterfaceComponent);
 
     m_pModuleName = new VfModuleMetaData(QString("Name"), QVariant(m_sModuleName));
     veinModuleMetaDataList.append(m_pModuleName);
@@ -135,10 +135,6 @@ void BaseModule::unsetModule()
     for (auto veinModuleMetaData : qAsConst(veinModuleMetaDataList))
         delete veinModuleMetaData;
     veinModuleMetaDataList.clear();
-
-    for (auto veinComponentsWithMetaNoScpi : qAsConst(m_veinComponentsWithMetaNoScpi))
-        delete veinComponentsWithMetaNoScpi;
-    m_veinComponentsWithMetaNoScpi.clear();
 
     for (auto veinComponentsWithMetaAndScpi : qAsConst(m_veinComponentsWithMetaAndScpi))
         delete veinComponentsWithMetaAndScpi;
@@ -225,8 +221,6 @@ void BaseModule::exportMetaData()
     jsonObj.insert("ModuleInfo", jsonObjModuleInfo);
 
     QJsonObject jsonObjComponentInfo;
-    for (int i = 0; i < m_veinComponentsWithMetaNoScpi.count(); i++)
-        m_veinComponentsWithMetaNoScpi.at(i)->exportMetaData(jsonObjComponentInfo);
     for (int i = 0; i < m_veinComponentsWithMetaAndScpi.count(); i++)
         m_veinComponentsWithMetaAndScpi.at(i)->exportMetaData(jsonObjComponentInfo);
 

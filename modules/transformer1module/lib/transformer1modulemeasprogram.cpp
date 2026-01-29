@@ -198,7 +198,7 @@ void cTransformer1ModuleMeasProgram::generateVeinInterface()
                                                 QString("SIG_Measuring"),
                                                 QString("Signal indicating measurement activity"),
                                                 QVariant(0));
-    m_pModule->m_veinComponentsWithMetaNoScpi.append(m_pMeasureSignal);
+    m_pModule->m_veinComponentsWithMetaAndScpi.append(m_pMeasureSignal);
 }
 
 

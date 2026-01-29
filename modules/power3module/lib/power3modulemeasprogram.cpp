@@ -79,7 +79,7 @@ void cPower3ModuleMeasProgram::generateVeinInterface()
                                                 QString("Signal indicating measurement activity"),
                                                 QVariant(0));
 
-    m_pModule->m_veinComponentsWithMetaNoScpi.append(m_pMeasureSignal);
+    m_pModule->m_veinComponentsWithMetaAndScpi.append(m_pMeasureSignal);
 }
 
 void cPower3ModuleMeasProgram::searchActualValues()

@@ -44,7 +44,7 @@ void cSampleModuleMeasProgram::generateVeinInterface()
                                         QString("ACT_PllFixed"),
                                         QString("PLL fixed channel / mode"),
                                         QVariant(m_obsermaticConfig.m_bpllFixed));
-    m_module->m_veinComponentsWithMetaNoScpi.append(m_pPllFixed);
+    m_module->m_veinComponentsWithMetaAndScpi.append(m_pPllFixed);
 }
 
 void cSampleModuleMeasProgram::activate()
