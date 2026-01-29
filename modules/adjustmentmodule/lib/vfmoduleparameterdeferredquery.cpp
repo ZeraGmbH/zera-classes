@@ -2,13 +2,13 @@
 
 VfModuleParameterDeferredQuery::VfModuleParameterDeferredQuery(int entityId,
                                                                VeinEvent::EventSystem *eventsystem,
-                                                               QString name,
-                                                               QString description,
-                                                               QVariant initval,
+                                                               const QString &componentName,
+                                                               const QString &description,
+                                                               const QVariant &initval,
                                                                bool deferredNotification) :
     VfModuleParameter(entityId,
                       eventsystem,
-                      name,
+                      componentName,
                       description,
                       initval,
                       deferredNotification)
