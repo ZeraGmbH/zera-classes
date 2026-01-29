@@ -3,9 +3,11 @@
 int ModuleSharedData::m_instanceCount = 0;
 
 ModuleSharedData::ModuleSharedData(ModuleNetworkParamsPtr networkParams,
-                                   AbstractFactoryServiceInterfacesPtr serviceInterfaceFactory, VeinStorage::AbstractEventSystem *storagesystem,
+                                   AbstractFactoryServiceInterfacesPtr serviceInterfaceFactory,
+                                   VeinStorage::AbstractEventSystem *storagesystem,
                                    ChannelRangeObserver::SystemObserverPtr channelRangeObserver,
-                                   bool demo, QString persistencyBasePath) :
+                                   bool demo,
+                                   const QString &persistencyBasePath) :
     m_networkParams(networkParams),
     m_serviceInterfaceFactory(serviceInterfaceFactory),
     m_storagesystem(storagesystem),

@@ -4,7 +4,7 @@
 namespace SCPIMODULE
 {
 
-ZeraModules::VirtualModule *SCPIModuleFactory::createModule(ModuleFactoryParam moduleParam)
+ZeraModules::VirtualModule *SCPIModuleFactory::createModule(const ModuleFactoryParam &moduleParam)
 {
     return new cSCPIModule(moduleParam.getAdjustedParam(m_moduleGroupNumerator.get()));
 }

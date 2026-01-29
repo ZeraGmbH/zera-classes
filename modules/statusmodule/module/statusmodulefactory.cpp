@@ -4,7 +4,7 @@
 namespace STATUSMODULE
 {
 
-ZeraModules::VirtualModule* StatusModuleFactory::createModule(ModuleFactoryParam moduleParam)
+ZeraModules::VirtualModule* StatusModuleFactory::createModule(const ModuleFactoryParam &moduleParam)
 {
     return new cStatusModule(moduleParam.getAdjustedParam(m_moduleGroupNumerator.get()));
 }

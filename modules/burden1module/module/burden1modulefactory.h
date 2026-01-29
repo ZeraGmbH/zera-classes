@@ -15,7 +15,7 @@ class Burden1ModuleFactory : public AbstractModuleFactory
   
 public:
     Burden1ModuleFactory(){}
-    ZeraModules::VirtualModule *createModule(ModuleFactoryParam moduleParam) override;
+    ZeraModules::VirtualModule *createModule(const ModuleFactoryParam &moduleParam) override;
     void destroyModule(ZeraModules::VirtualModule *module) override;
     QString getFactoryName() const override;
 };

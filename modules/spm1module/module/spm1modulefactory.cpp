@@ -4,7 +4,7 @@
 namespace SPM1MODULE
 {
 
-ZeraModules::VirtualModule* Spm1ModuleFactory::createModule(ModuleFactoryParam moduleParam)
+ZeraModules::VirtualModule* Spm1ModuleFactory::createModule(const ModuleFactoryParam &moduleParam)
 {
     return new cSpm1Module(moduleParam.getAdjustedParam(m_moduleGroupNumerator.get()));
 }

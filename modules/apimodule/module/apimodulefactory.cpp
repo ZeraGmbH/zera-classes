@@ -4,7 +4,7 @@
 namespace APIMODULE
 {
 
-ZeraModules::VirtualModule *ApiModuleFactory::createModule(ModuleFactoryParam moduleParam)
+ZeraModules::VirtualModule *ApiModuleFactory::createModule(const ModuleFactoryParam &moduleParam)
 {
     return new cApiModule(moduleParam.getAdjustedParam(m_moduleGroupNumerator.get()));
 }

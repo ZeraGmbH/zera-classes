@@ -1,7 +1,7 @@
 #include "recordermodulefactory.h"
 #include "recordermodule.h"
 
-ZeraModules::VirtualModule *RecorderModuleFactory::createModule(ModuleFactoryParam moduleParam)
+ZeraModules::VirtualModule *RecorderModuleFactory::createModule(const ModuleFactoryParam &moduleParam)
 {
     return new RecorderModule(moduleParam.getAdjustedParam(m_moduleGroupNumerator.get()));
 }

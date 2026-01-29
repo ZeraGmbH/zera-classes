@@ -4,7 +4,7 @@
 namespace SFCMODULE
 {
 
-ZeraModules::VirtualModule *SfcModuleFactory::createModule(ModuleFactoryParam moduleParam)
+ZeraModules::VirtualModule *SfcModuleFactory::createModule(const ModuleFactoryParam &moduleParam)
 {
     return new cSfcModule(moduleParam.getAdjustedParam(m_moduleGroupNumerator.get()));
 }

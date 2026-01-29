@@ -10,7 +10,7 @@ TaskTemplatePtr OsciModuleFactory::getModulePrepareTask(std::shared_ptr<ModuleSh
     return ChannelRangeObserver::SystemObserverFetchTask::create(moduleSharedData->m_channelRangeObserver);
 }
 
-ZeraModules::VirtualModule* OsciModuleFactory::createModule(ModuleFactoryParam moduleParam)
+ZeraModules::VirtualModule* OsciModuleFactory::createModule(const ModuleFactoryParam &moduleParam)
 {
     return new cOsciModule(moduleParam.getAdjustedParam(m_moduleGroupNumerator.get()));
 }

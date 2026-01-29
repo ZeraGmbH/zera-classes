@@ -4,7 +4,7 @@
 namespace DOSAGEMODULE
 {
 
-ZeraModules::VirtualModule *DosageModuleFactory::createModule(ModuleFactoryParam moduleParam)
+ZeraModules::VirtualModule *DosageModuleFactory::createModule(const ModuleFactoryParam &moduleParam)
 {
     return new cDosageModule(moduleParam.getAdjustedParam(m_moduleGroupNumerator.get()));
 }

@@ -11,7 +11,7 @@ class AdjustmentModuleFactory : public AbstractModuleFactory
     Q_INTERFACES(AbstractModuleFactory)
 public:
     TaskTemplatePtr getModulePrepareTask(std::shared_ptr<ModuleSharedData> moduleSharedData) override;
-    ZeraModules::VirtualModule *createModule(ModuleFactoryParam moduleParam) override;
+    ZeraModules::VirtualModule *createModule(const ModuleFactoryParam &moduleParam) override;
     void destroyModule(ZeraModules::VirtualModule *module) override;
     QString getFactoryName() const override;
 };

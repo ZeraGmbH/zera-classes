@@ -4,7 +4,7 @@
 namespace BLEMODULE
 {
 
-ZeraModules::VirtualModule* BleModuleFactory::createModule(ModuleFactoryParam moduleParam)
+ZeraModules::VirtualModule* BleModuleFactory::createModule(const ModuleFactoryParam &moduleParam)
 {
     return new cBleModule(moduleParam.getAdjustedParam(m_moduleGroupNumerator.get()));
 }

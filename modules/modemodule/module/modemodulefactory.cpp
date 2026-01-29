@@ -4,7 +4,7 @@
 namespace MODEMODULE
 {
 
-ZeraModules::VirtualModule* ModeModuleFactory::createModule(ModuleFactoryParam moduleParam)
+ZeraModules::VirtualModule* ModeModuleFactory::createModule(const ModuleFactoryParam &moduleParam)
 {
     return new cModeModule(moduleParam.getAdjustedParam(m_moduleGroupNumerator.get()));
 }

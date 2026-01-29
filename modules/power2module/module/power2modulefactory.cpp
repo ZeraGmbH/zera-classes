@@ -10,7 +10,7 @@ TaskTemplatePtr Power2ModuleFactory::getModulePrepareTask(std::shared_ptr<Module
     return ChannelRangeObserver::SystemObserverFetchTask::create(moduleSharedData->m_channelRangeObserver);
 }
 
-ZeraModules::VirtualModule* Power2ModuleFactory::createModule(ModuleFactoryParam moduleParam)
+ZeraModules::VirtualModule* Power2ModuleFactory::createModule(const ModuleFactoryParam &moduleParam)
 {
     return new cPower2Module(moduleParam.getAdjustedParam(m_moduleGroupNumerator.get()));
 }

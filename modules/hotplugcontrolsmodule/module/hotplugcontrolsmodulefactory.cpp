@@ -4,7 +4,7 @@
 namespace HOTPLUGCONTROLSMODULE
 {
 
-ZeraModules::VirtualModule* HotplugControlsModuleFactory::createModule(ModuleFactoryParam moduleParam)
+ZeraModules::VirtualModule* HotplugControlsModuleFactory::createModule(const ModuleFactoryParam &moduleParam)
 {
     return new cHotplugControlsModule(moduleParam.getAdjustedParam(m_moduleGroupNumerator.get()));
 }

@@ -10,7 +10,7 @@ TaskTemplatePtr SampleModuleFactory::getModulePrepareTask(std::shared_ptr<Module
     return ChannelRangeObserver::SystemObserverFetchTask::create(moduleSharedData->m_channelRangeObserver);
 }
 
-ZeraModules::VirtualModule* SampleModuleFactory::createModule(ModuleFactoryParam moduleParam)
+ZeraModules::VirtualModule* SampleModuleFactory::createModule(const ModuleFactoryParam &moduleParam)
 {
     return new cSampleModule(moduleParam.getAdjustedParam(m_moduleGroupNumerator.get()));
 }

@@ -4,7 +4,7 @@
 namespace BURDEN1MODULE
 {
 
-ZeraModules::VirtualModule* Burden1ModuleFactory::createModule(ModuleFactoryParam moduleParam)
+ZeraModules::VirtualModule* Burden1ModuleFactory::createModule(const ModuleFactoryParam &moduleParam)
 {
     return new cBurden1Module(moduleParam.getAdjustedParam(m_moduleGroupNumerator.get()));
 }

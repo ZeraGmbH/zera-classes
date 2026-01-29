@@ -18,7 +18,7 @@ public:
                      VeinStorage::AbstractEventSystem* storagesystem,
                      ChannelRangeObserver::SystemObserverPtr channelRangeObserver,
                      bool demo,
-                     QString persistencyBasePath);
+                     const QString &persistencyBasePath);
     virtual ~ModuleSharedData();
 
     const ModuleNetworkParamsPtr m_networkParams;

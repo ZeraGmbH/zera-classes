@@ -4,7 +4,7 @@
 namespace TRANSFORMER1MODULE
 {
 
-ZeraModules::VirtualModule* Transformer1ModuleFactory::createModule(ModuleFactoryParam moduleParam)
+ZeraModules::VirtualModule* Transformer1ModuleFactory::createModule(const ModuleFactoryParam &moduleParam)
 {
     return new cTransformer1Module(moduleParam.getAdjustedParam(m_moduleGroupNumerator.get()));
 }

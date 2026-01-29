@@ -9,9 +9,9 @@ struct ModuleFactoryParam
 {
     ModuleFactoryParam(int entityId,
                        int moduleNum,
-                       QByteArray configXmlData,
+                       const QByteArray &configXmlData,
                        ModuleSharedDataPtr moduleSharedData);
-    ModuleFactoryParam getAdjustedParam(ModuleGroupNumerator* groupNumerator);
+    ModuleFactoryParam getAdjustedParam(ModuleGroupNumerator* groupNumerator) const;
     const int m_entityId;
     const int m_moduleNum;
     const QByteArray m_configXmlData;

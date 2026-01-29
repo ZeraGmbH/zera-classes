@@ -17,7 +17,7 @@ public:
         Q_UNUSED(moduleSharedData)
         return TaskLambdaRunner::create([]() { return true; });
     }
-    virtual ZeraModules::VirtualModule *createModule(ModuleFactoryParam moduleParam) = 0;
+    virtual ZeraModules::VirtualModule *createModule(const ModuleFactoryParam &moduleParam) = 0;
     virtual void destroyModule(ZeraModules::VirtualModule *module) = 0;
     virtual QString getFactoryName() const = 0;
 protected:

@@ -4,7 +4,7 @@
 namespace SEC1MODULE
 {
 
-ZeraModules::VirtualModule* Sec1ModuleFactory::createModule(ModuleFactoryParam moduleParam)
+ZeraModules::VirtualModule* Sec1ModuleFactory::createModule(const ModuleFactoryParam &moduleParam)
 {
     return new cSec1Module(moduleParam.getAdjustedParam(m_moduleGroupNumerator.get()));
 }

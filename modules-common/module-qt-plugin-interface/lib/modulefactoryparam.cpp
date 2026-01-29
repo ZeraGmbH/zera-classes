@@ -2,7 +2,7 @@
 
 ModuleFactoryParam::ModuleFactoryParam(int entityId,
                                        int moduleNum,
-                                       QByteArray configXmlData,
+                                       const QByteArray &configXmlData,
                                        ModuleSharedDataPtr moduleSharedData) :
     m_entityId(entityId),
     m_moduleNum(moduleNum),
@@ -11,7 +11,7 @@ ModuleFactoryParam::ModuleFactoryParam(int entityId,
 {
 }
 
-ModuleFactoryParam ModuleFactoryParam::getAdjustedParam(ModuleGroupNumerator *groupNumerator)
+ModuleFactoryParam ModuleFactoryParam::getAdjustedParam(ModuleGroupNumerator *groupNumerator) const
 {
     return ModuleFactoryParam(m_entityId,
                               groupNumerator->requestModuleNum(m_moduleNum),
