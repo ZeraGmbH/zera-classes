@@ -43,14 +43,14 @@ cApiModuleAuthorize::cApiModuleAuthorize(cApiModule *module, QString persistency
                                                      QString("boolean if GUI dialog finished"),
                                                      false);
         m_pGuiDialogFinished->setValidator(new cBoolValidator());
-        m_module->m_veinModuleParameterMap[m_pGuiDialogFinished->getName()] = m_pGuiDialogFinished;
+        m_module->m_veinModuleParameterMap[m_pGuiDialogFinished->getComponentName()] = m_pGuiDialogFinished;
 
         m_pReloadTrustList = new VfModuleParameter(m_module->getEntityId(), m_module->getValidatorEventSystem(),
                                                      QString("PAR_ReloadTrustList"),
                                                      QString("set boolean to true to reload trust list"),
                                                      false);
         m_pReloadTrustList->setValidator(new cBoolValidator());
-        m_module->m_veinModuleParameterMap[m_pReloadTrustList->getName()] = m_pReloadTrustList;
+        m_module->m_veinModuleParameterMap[m_pReloadTrustList->getComponentName()] = m_pReloadTrustList;
 
         m_spRpcAuthenticateInterface = VfCpp::cVeinModuleRpc::Ptr(
             new VfCpp::cVeinModuleRpc(

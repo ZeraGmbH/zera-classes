@@ -115,7 +115,7 @@ private slots:
     void newStartStop(QVariant startstop);
     void newDutConstant(QVariant dutconst);
     void newDutConstantAuto(QVariant dutConstAuto);
-    void newDutConstantScale(QVariant uINumDenomValue, const QString componentName);
+    void newDutConstantScale(QVariant uINumDenomValue);
     void newDutConstantUnit(QVariant dutconstunit);
     void newRefConstant(QVariant refconst);
     void newDutInput(QVariant dutinput);

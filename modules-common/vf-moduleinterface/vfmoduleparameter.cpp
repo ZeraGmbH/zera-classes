@@ -39,7 +39,7 @@ void VfModuleParameter::exportMetaData(QJsonObject &jsObj)
         m_pValidator->exportMetaData(jsonObj2);
         jsonObj.insert("Validation", jsonObj2);
     }
-    jsObj.insert(m_sName, jsonObj);
+    jsObj.insert(m_componentName, jsonObj);
 }
 
 void VfModuleParameter::setValidator(ValidatorInterface *validator)

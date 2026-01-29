@@ -285,7 +285,7 @@ void cPower1ModuleMeasProgram::generateVeinInterface()
     if(getConfData()->m_enableScpiCommands)
         m_pModule->scpiCommandList.append(new VfModuleMetaInfoContainer("CONFIGURATION", QString("MMODE:CATALOG"),
                                                                     SCPI::isQuery,
-                                                                    m_pMeasuringmodeParameter->getName(),
+                                                                    m_pMeasuringmodeParameter->getComponentName(),
                                                                     SCPI::isCatalog));
 
     m_pMModePhaseSelectParameter = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),

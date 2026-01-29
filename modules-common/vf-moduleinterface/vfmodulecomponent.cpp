@@ -7,7 +7,7 @@
 #include "vfmodulecomponent.h"
 
 VfModuleComponent::VfModuleComponent(int entityId, VeinEvent::EventSystem *eventsystem, QString componentName, QString description, QVariant initval) :
-    m_sName(componentName),
+    m_componentName(componentName),
     m_sDescription(description),
     m_vValue(initval),
     m_nEntityId(entityId),
@@ -26,7 +26,7 @@ void VfModuleComponent::exportMetaData(QJsonObject &jsObj)
     if (!m_sChannelUnit.isEmpty()) {
         jsonObj.insert("Unit", m_sChannelUnit);
     }
-    jsObj.insert(m_sName, jsonObj);
+    jsObj.insert(m_componentName, jsonObj);
 }
 
 void VfModuleComponent::exportSCPIInfo(QJsonArray &jsArr)
@@ -50,7 +50,7 @@ void VfModuleComponent::setScpiInfo(const QString &model,
     m_scpiInfo = std::make_unique<VfModuleMetaInfoContainer>(model,
                                                          cmd,
                                                          cmdTypeMask,
-                                                         m_sName,
+                                                         m_componentName,
                                                          entryType);
 }
 
@@ -79,9 +79,9 @@ QString VfModuleComponent::getUnit()
     return m_sChannelUnit;
 }
 
-QString VfModuleComponent::getName()
+QString VfModuleComponent::getComponentName()
 {
-    return m_sName;
+    return m_componentName;
 }
 
 void VfModuleComponent::setValue(QVariant value)
@@ -97,7 +97,7 @@ void VfModuleComponent::setError()
     cData->setEventOrigin(VeinEvent::EventData::EventOrigin::EO_LOCAL);
     cData->setEventTarget(VeinEvent::EventData::EventTarget::ET_ALL);
     cData->setCommand(VeinComponent::ComponentData::Command::CCMD_SET);
-    cData->setComponentName(m_sName);
+    cData->setComponentName(m_componentName);
     cData->setNewValue(m_vValue);
 
     VeinComponent::ErrorData *errData = new VeinComponent::ErrorData();
@@ -121,7 +121,7 @@ void VfModuleComponent::sendNotification(VeinComponent::ComponentData::Command v
     cData->setEventOrigin(VeinEvent::EventData::EventOrigin::EO_LOCAL);
     cData->setEventTarget(VeinEvent::EventData::EventTarget::ET_ALL);
     cData->setCommand(vcmd);
-    cData->setComponentName(m_sName);
+    cData->setComponentName(m_componentName);
     cData->setNewValue(m_vValue);
 
     VeinEvent::CommandEvent *event = new VeinEvent::CommandEvent(VeinEvent::CommandEvent::EventSubtype::NOTIFICATION, cData);

@@ -17,7 +17,7 @@ public:
     void setUnit(QString unit);
     QVariant getValue();
     QString getUnit();
-    QString getName();
+    QString getComponentName();
     void exportMetaData(QJsonObject &jsObj) override;
 
     void setScpiInfo(const QString &model, const QString &cmd,
@@ -33,7 +33,7 @@ public slots:
     void setError(); // here we have to emit event for error notification
 
 protected:
-    QString m_sName;
+    QString m_componentName;
     QString m_sDescription;
     QVariant m_vValue;
     QString m_sChannelName;

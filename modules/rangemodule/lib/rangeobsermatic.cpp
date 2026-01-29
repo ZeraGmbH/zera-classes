@@ -554,7 +554,7 @@ void cRangeObsermatic::readGainScaleDone()
         // we want to support querying the channels ranges
         VfModuleMetaInfoContainer* scpiInfo = new VfModuleMetaInfoContainer("SENSE", QString("%1:RANGE:CATALOG").arg(channelAlias),
                                                                     SCPI::isQuery,
-                                                                    m_RangeParameterList.at(i)->getName(),
+                                                                    m_RangeParameterList.at(i)->getComponentName(),
                                                                     SCPI::isCatalog);
         m_pModule->scpiCommandList.append(scpiInfo);
 

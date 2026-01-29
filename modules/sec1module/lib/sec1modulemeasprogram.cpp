@@ -1243,22 +1243,19 @@ void cSec1ModuleMeasProgram::activationDone()
     connect(m_pDutConstantPar, &VfModuleParameter::sigValueChanged, this, &cSec1ModuleMeasProgram::newDutConstant);
     connect(m_pDutConstantAuto, &VfModuleParameter::sigValueChanged, this, &cSec1ModuleMeasProgram::newDutConstantAuto);
     connect(m_pDutConstantUScaleNum, &VfModuleParameter::sigValueChanged,[this](QVariant val){
-        this->newDutConstantScale(val,m_pDutConstantUScaleDenom->getName());
+        this->newDutConstantScale(val);
     });
     connect(m_pDutConstantUScaleDenom, &VfModuleParameter::sigValueChanged,[this](QVariant val){
-
-        this->newDutConstantScale(val,m_pDutConstantUScaleDenom->getName());
+        this->newDutConstantScale(val);
     });
     connect(m_pDutConstantIScaleNum, &VfModuleParameter::sigValueChanged,[this](QVariant val){
-        this->newDutConstantScale(val,m_pDutConstantIScaleNum->getName());
+        this->newDutConstantScale(val);
     });
     connect(m_pDutConstantIScaleDenom, &VfModuleParameter::sigValueChanged,[this](QVariant val){
-
-        this->newDutConstantScale(val,m_pDutConstantIScaleDenom->getName());
+        this->newDutConstantScale(val);
     });
     connect(m_pDutTypeMeasurePoint, &VfModuleParameter::sigValueChanged,[this](QVariant val){
-
-        this->newDutConstantScale(val,m_pDutTypeMeasurePoint->getName());
+        this->newDutConstantScale(val);
     });
     connect(m_pDutConstantUnitPar, &VfModuleParameter::sigValueChanged, this, &cSec1ModuleMeasProgram::newDutConstantUnit);
     connect(m_pRefConstantPar, &VfModuleParameter::sigValueChanged, this, &cSec1ModuleMeasProgram::newRefConstant);
@@ -1600,13 +1597,11 @@ void cSec1ModuleMeasProgram::newDutConstantAuto(QVariant dutConstAuto)
     }
 }
 
-void cSec1ModuleMeasProgram::newDutConstantScale(QVariant value,const QString componentName)
+void cSec1ModuleMeasProgram::newDutConstantScale(QVariant value)
 {
     //parameters are not used because of combined calculation
     //the values are avaialable for logging/Debugging or future applications.
     Q_UNUSED(value)
-    Q_UNUSED(componentName)
-
 
     QString conf=m_pDutTypeMeasurePoint->getValue().toString();
 
