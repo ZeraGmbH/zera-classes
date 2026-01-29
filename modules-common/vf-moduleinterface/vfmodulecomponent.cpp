@@ -6,7 +6,11 @@
 #include <ve_eventsystem.h>
 #include "vfmodulecomponent.h"
 
-VfModuleComponent::VfModuleComponent(int entityId, VeinEvent::EventSystem *eventsystem, QString componentName, QString description, QVariant initval) :
+VfModuleComponent::VfModuleComponent(int entityId,
+                                     VeinEvent::EventSystem *eventsystem,
+                                     const QString &componentName,
+                                     const QString &description,
+                                     const QVariant &initval) :
     m_componentName(componentName),
     m_sDescription(description),
     m_vValue(initval),
