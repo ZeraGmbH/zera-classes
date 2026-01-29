@@ -323,7 +323,7 @@ void cPower1ModuleMeasProgram::generateVeinInterface()
                                           QString("INF_ModeTypes"),
                                           QString("Display names (P/Q/S) of available modes"),
                                           QVariant(QStringList()));
-    m_pModule->veinModuleComponentList.append(m_MModesTypes);
+    m_pModule->m_veinComponentsWithMetaNoScpi.append(m_MModesTypes);
 
     QVariant val;
     QString s, unit;
@@ -361,7 +361,7 @@ void cPower1ModuleMeasProgram::generateVeinInterface()
                                                 QString("Signal indicating measurement activity"),
                                                 QVariant(0));
 
-    m_pModule->veinModuleComponentList.append(m_pMeasureSignal);
+    m_pModule->m_veinComponentsWithMetaNoScpi.append(m_pMeasureSignal);
 }
 
 

@@ -281,7 +281,7 @@ void cPower2ModuleMeasProgram::generateVeinInterface()
                                                 QString("Signal indicating measurement activity"),
                                                 QVariant(0));
 
-    m_pModule->veinModuleComponentList.append(m_pMeasureSignal);
+    m_pModule->m_veinComponentsWithMetaNoScpi.append(m_pMeasureSignal);
 }
 
 

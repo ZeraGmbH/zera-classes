@@ -114,14 +114,14 @@ void BaseModule::setupModule()
                                                    QString("Module's name"),
                                                    QVariant(m_sModuleName));
 
-    veinModuleComponentList.append(m_pModuleEntityName);
+    m_veinComponentsWithMetaNoScpi.append(m_pModuleEntityName);
 
     m_pModuleInterfaceComponent = new VfModuleComponent(getEntityId(), m_pModuleEventSystem,
                                                            QString("INF_ModuleInterface"),
                                                            QString("Module's interface details"),
                                                            QByteArray());
 
-    veinModuleComponentList.append(m_pModuleInterfaceComponent);
+    m_veinComponentsWithMetaNoScpi.append(m_pModuleInterfaceComponent);
 
     m_pModuleName = new VfModuleMetaData(QString("Name"), QVariant(m_sModuleName));
     veinModuleMetaDataList.append(m_pModuleName);
@@ -136,9 +136,9 @@ void BaseModule::unsetModule()
         delete veinModuleMetaData;
     veinModuleMetaDataList.clear();
 
-    for (auto veinModuleComponent : qAsConst(veinModuleComponentList))
-        delete veinModuleComponent;
-    veinModuleComponentList.clear();
+    for (auto veinComponentsWithMetaNoScpi : qAsConst(m_veinComponentsWithMetaNoScpi))
+        delete veinComponentsWithMetaNoScpi;
+    m_veinComponentsWithMetaNoScpi.clear();
 
     for (auto veinModuleActvalue : qAsConst(veinModuleActvalueList))
         delete veinModuleActvalue;
@@ -225,8 +225,8 @@ void BaseModule::exportMetaData()
     jsonObj.insert("ModuleInfo", jsonObjModuleInfo);
 
     QJsonObject jsonObjComponentInfo;
-    for (int i = 0; i < veinModuleComponentList.count(); i++)
-        veinModuleComponentList.at(i)->exportMetaData(jsonObjComponentInfo);
+    for (int i = 0; i < m_veinComponentsWithMetaNoScpi.count(); i++)
+        m_veinComponentsWithMetaNoScpi.at(i)->exportMetaData(jsonObjComponentInfo);
     for (int i = 0; i < veinModuleActvalueList.count(); i++)
         veinModuleActvalueList.at(i)->exportMetaData(jsonObjComponentInfo);
 

@@ -124,7 +124,7 @@ void cAdjustManagement::generateVeinInterface()
                                                  QString("Adjustment information"),
                                                  QVariant(0));
 
-    m_pModule->veinModuleComponentList.append(m_pAdjustmentInfo);
+    m_pModule->m_veinComponentsWithMetaNoScpi.append(m_pAdjustmentInfo);
 
     m_ParIgnoreRmsValuesOnOff = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
                                                       QString("PAR_IgnoreRmsValuesOnOff"),

@@ -100,7 +100,7 @@ void cRangeObsermatic::generateVeinInterface()
                                               QVariant(int(0)) );
 
         m_RangeOVLComponentList.append(pComponent);
-        m_pModule->veinModuleComponentList.append(pComponent);
+        m_pModule->m_veinComponentsWithMetaNoScpi.append(pComponent);
 
         pComponent = new VfModuleComponent(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
                                               QString("INF_Channel%1OVLREJ").arg(i+1),
@@ -108,7 +108,7 @@ void cRangeObsermatic::generateVeinInterface()
                                               QVariant(double(0.0)) );
 
         m_RangeOVLRejectionComponentList.append(pComponent);
-        m_pModule->veinModuleComponentList.append(pComponent);
+        m_pModule->m_veinComponentsWithMetaNoScpi.append(pComponent);
 
         pComponent = new VfModuleComponent(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
                                               QString("INF_Channel%1ActREJ").arg(i+1),
@@ -116,7 +116,7 @@ void cRangeObsermatic::generateVeinInterface()
                                               QVariant(double(0.0)) );
 
         m_RangeActRejectionComponentList.append(pComponent);
-        m_pModule->veinModuleComponentList.append(pComponent);
+        m_pModule->m_veinComponentsWithMetaNoScpi.append(pComponent);
 
         pComponent = new VfModuleComponent(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
                                               QString("INF_Channel%1ActOVLREJ").arg(i+1),
@@ -124,7 +124,7 @@ void cRangeObsermatic::generateVeinInterface()
                                               QVariant(double(0.0)) );
 
         m_RangeActOVLRejectionComponentList.append(pComponent);
-        m_pModule->veinModuleComponentList.append(pComponent);
+        m_pModule->m_veinComponentsWithMetaNoScpi.append(pComponent);
 
         m_softOvlList.append(false);
         m_hardOvlList.append(false);
@@ -168,7 +168,7 @@ void cRangeObsermatic::generateVeinInterface()
 
 
         m_RangeGroupPreScalingInfo.append(pComponent);
-        m_pModule->veinModuleComponentList.append(pComponent);
+        m_pModule->m_veinComponentsWithMetaNoScpi.append(pComponent);
 
     }
 
@@ -206,14 +206,14 @@ void cRangeObsermatic::generateVeinInterface()
                                                        QString("Maximum range overload condition"),
                                                        QVariant(0));
 
-    m_pModule->veinModuleComponentList.append(m_pComponentOverloadMax);
+    m_pModule->m_veinComponentsWithMetaNoScpi.append(m_pComponentOverloadMax);
 
     m_pRangingSignal = new VfModuleComponent(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
                                                 QString("SIG_Ranging"),
                                                 QString("Signal on changing ranges"),
                                                 QVariant(0));
 
-    m_pModule->veinModuleComponentList.append(m_pRangingSignal);
+    m_pModule->m_veinComponentsWithMetaNoScpi.append(m_pRangingSignal);
 }
 
 

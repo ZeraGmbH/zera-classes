@@ -33,7 +33,7 @@ public:
     const ChannelRangeObserver::SystemObserverPtr getSharedChannelRangeObserver() const;
 
     QList<VfModuleMetaData*> veinModuleMetaDataList; // only meta information
-    QList<VfModuleComponent*> veinModuleComponentList; // for components that need no scpi interface
+    QList<VfModuleComponent*> m_veinComponentsWithMetaNoScpi; // for components that need no scpi interface
     QList<VfModuleComponent*> veinModuleActvalueList; // actvalues are components that need an interface
     QMap<QString, VfModuleParameter*> m_veinModuleParameterMap; // parameters are components that need an interface and validation
     QMap<QString, VfModuleRpcPtr> m_veinModuleRPCMap;
