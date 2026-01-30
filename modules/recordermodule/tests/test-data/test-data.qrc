@@ -1,5 +1,6 @@
 <RCC>
     <qresource prefix="/">
         <file>mt310s2-emob-session-ac.json</file>
+        <file>mt310s2-emob-session-ac-scpi.json</file>
     </qresource>
 </RCC>

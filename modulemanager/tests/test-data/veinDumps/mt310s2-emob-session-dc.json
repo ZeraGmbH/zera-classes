@@ -5087,6 +5087,9 @@
         "EntityName": "RecorderModule1",
         "INF_ModuleInterface": {
             "ComponentInfo": {
+                "ACT_JSON_EXPORT": {
+                    "Description": "<skipped>"
+                },
                 "ACT_Points": {
                     "Description": "<skipped>"
                 },
@@ -5118,11 +5121,32 @@
             },
             "SCPIInfo": {
                 "Cmd": [
+                    [
+                        "RECORDER",
+                        "EXPORT:JSON",
+                        "2",
+                        "ACT_JSON_EXPORT",
+                        "0"
+                    ],
+                    [
+                        "RECORDER",
+                        "COUNT",
+                        "2",
+                        "ACT_Points",
+                        "0"
+                    ],
+                    [
+                        "RECORDER",
+                        "RUN",
+                        "10",
+                        "PAR_StartStopRecording",
+                        "0"
+                    ]
                 ],
                 "Name": "REC1"
             }
         },
-        "PAR_StartStopRecording": false
+        "PAR_StartStopRecording": 0
     },
     "2": {
         "DatabaseFile": "/tmp/test.db",

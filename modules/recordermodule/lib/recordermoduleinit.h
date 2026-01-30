@@ -4,6 +4,7 @@
 #include "moduleactivist.h"
 #include "recordermodule.h"
 #include "recordermoduleconfigdata.h"
+#include "vfmodulecomponentstoragefetchonly.h"
 #include <timersingleshotqt.h>
 #include <vs_storagerecorder.h>
 
@@ -23,12 +24,14 @@ private:
 
     RecorderModule *m_module;
     RecorderModuleConfigData* m_confData;
-    std::unique_ptr<VeinStorage::StorageRecorder> m_recorder;
 
-    TimerTemplateQtPtr m_stopLoggingTimer;
-    VfModuleComponent* m_numberOfPointsInCurve;
-    VfModuleParameter* m_startStopRecording;
-    VfModuleRpcPtr m_pReadRecordedValuesRpc;
+    TimerTemplateQtPtr m_stopLoggingTimer; // Hack: avoid out of memory by stopping after a while
+
+    std::unique_ptr<VeinStorage::StorageRecorder> m_recorder;
+    VfModuleComponentStorageFetchOnly* m_jsonExportComponent = nullptr;
+    VfModuleParameter* m_numberOfPointsInCurve = nullptr;
+    VfModuleParameter* m_startStopRecording = nullptr;
+    VfModuleRpcPtr m_pReadRecordedValuesRpc = nullptr;
 };
 
 #endif // RECORDERMODULEINIT_H

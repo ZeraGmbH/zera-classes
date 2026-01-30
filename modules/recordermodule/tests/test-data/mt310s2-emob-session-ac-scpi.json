@@ -1,0 +1,14 @@
+{
+    "modules" : [
+        {
+          "name" : "recordermodule",
+          "configFile" : "recordermodule-emob-ac.xml",
+          "id": 1800
+        },
+        {
+          "name" : "scpimodule",
+          "configFile" : "mt310s2-scpimodule.xml",
+          "id": 9999
+        }
+    ]
+}

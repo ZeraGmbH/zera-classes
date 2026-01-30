@@ -1,7 +1,9 @@
 #include "recordermoduleinit.h"
 #include "recordermoduleconfiguration.h"
 #include "rpcreadrecordedvalues.h"
+#include "recorderjsonexportveingethandler.h"
 #include <boolvalidator.h>
+#include <scpi.h>
 #include <timerfactoryqt.h>
 
 static int constexpr timer = 1200000; // 20 mins
@@ -37,34 +39,35 @@ void RecorderModuleInit::deactivate()
 
 void RecorderModuleInit::generateVeinInterface()
 {
-    // SCPI cmd ?
-    VfRpcEventSystemSimplified *rpcEventSystem = m_module->getRpcEventSystem();
+    m_startStopRecording = new VfModuleParameter(m_module->getEntityId(), m_module->getValidatorEventSystem(),
+                                                 "PAR_StartStopRecording",
+                                                 "Parameter to start/stop recording",
+                                                 0);
+    m_startStopRecording->setValidator(new cBoolValidator());
+    m_startStopRecording->setScpiInfo("RECORDER", "RUN", SCPI::isQuery | SCPI::isCmdwP);
+    m_module->m_veinModuleParameterMap[m_startStopRecording->getComponentName()] = m_startStopRecording;
+    connect(m_startStopRecording, &VfModuleParameter::sigValueChanged, this, &RecorderModuleInit::startStopLogging);
 
-    std::shared_ptr<RPCReadRecordedValues> rpcReadRecordedValues = std::make_shared<RPCReadRecordedValues>(rpcEventSystem,
+    m_numberOfPointsInCurve = new VfModuleParameter(m_module->getEntityId(), m_module->getValidatorEventSystem(),
+                                                    "ACT_Points",
+                                                    "Number of points in a curve",
+                                                    0);
+    m_numberOfPointsInCurve->setScpiInfo("RECORDER", "COUNT", SCPI::isQuery);
+    m_module->m_veinModuleParameterMap[m_numberOfPointsInCurve->getComponentName()] = m_numberOfPointsInCurve;
+
+    std::shared_ptr<RPCReadRecordedValues> rpcReadRecordedValues = std::make_shared<RPCReadRecordedValues>(m_module->getRpcEventSystem(),
                                                                                                            m_recorder->getRecordedData(),
                                                                                                            m_module->getEntityId());
-    m_pReadRecordedValuesRpc = std::make_shared<VfModuleRpc>(rpcReadRecordedValues,
-                                                         "Read Recorded Values");
-    m_module->m_veinModuleRPCMap[rpcReadRecordedValues->getSignature()] = m_pReadRecordedValuesRpc; // for modules use
+    m_pReadRecordedValuesRpc = std::make_shared<VfModuleRpc>(rpcReadRecordedValues, "Read Recorded Values");
+    m_module->m_veinModuleRPCMap[rpcReadRecordedValues->getSignature()] = m_pReadRecordedValuesRpc;
 
-    m_numberOfPointsInCurve = new VfModuleComponent(m_module->getEntityId(), m_module->getValidatorEventSystem(),
-                                                    QString("ACT_Points"),
-                                                    QString("Number of points in a curve"),
-                                                    QVariant(0));
-
-    m_module->m_veinComponentsWithMetaAndScpi.append(m_numberOfPointsInCurve); // we add the component for the modules interface
-
-    QString key;
-    m_startStopRecording = new VfModuleParameter(m_module->getEntityId(),
-                                                 m_module->getValidatorEventSystem(),
-                                                 key = QString("PAR_StartStopRecording"),
-                                                 QString("Parameter to start/stop recording"),
-                                                 QVariant(false));
-    m_startStopRecording->setValidator(new cBoolValidator());
-    //SCPI ?
-    m_module->m_veinModuleParameterMap[key] = m_startStopRecording; // for modules use
-
-    connect(m_startStopRecording, &VfModuleParameter::sigValueChanged, this, &RecorderModuleInit::startStopLogging);
+    m_jsonExportComponent = new VfModuleComponentStorageFetchOnly(m_module->getEntityId(),
+                                                         "ACT_JSON_EXPORT",
+                                                         "JSON export of recorded values",
+                                                         m_module->getStorageDb());
+    m_jsonExportComponent->setStorageGetCustomizer(std::make_shared<RecorderJsonExportVeinGetHandler>(m_recorder->getRecordedData()));
+    m_jsonExportComponent->setScpiInfo("RECORDER", "EXPORT:JSON");
+    m_module->m_veinComponentsWithMetaAndScpi.append(m_jsonExportComponent);
 }
 
 void RecorderModuleInit::startStopLogging(QVariant startStopRecording)

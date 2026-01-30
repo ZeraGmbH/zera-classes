@@ -3,10 +3,11 @@
 
 VfModuleComponentStorageFetchOnly::VfModuleComponentStorageFetchOnly(int entityId,
                                                                      const QString &componentName,
-                                                                     const QString &description) :
-    m_entityId(entityId),
+                                                                     const QString &description,
+                                                                     VeinStorage::AbstractDatabase *storageDb) :
     m_componentName(componentName),
-    m_description(description)
+    m_description(description),
+    m_storageComponent(storageDb->getFutureComponent(entityId, componentName))
 {
 }
 
@@ -17,6 +18,16 @@ void VfModuleComponentStorageFetchOnly::setScpiInfo(const QString &model, const 
                                                              SCPI::isQuery,
                                                              m_componentName,
                                                              SCPI::isComponent);
+}
+
+void VfModuleComponentStorageFetchOnly::setStorageGetCustomizer(AbstractComponentGetCustomizerPtr getCustomizer)
+{
+    m_storageComponent->setGetValueCustomizer(getCustomizer);
+}
+
+const VeinStorage::AbstractComponentPtr VfModuleComponentStorageFetchOnly::getStorageComponent()
+{
+    return m_storageComponent;
 }
 
 void VfModuleComponentStorageFetchOnly::exportMetaData(QJsonObject &jsObj)
