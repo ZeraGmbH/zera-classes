@@ -16,6 +16,7 @@ constexpr int recorderEntityId = 1800;
 
 void test_recorder::initTestCase()
 {
+    qputenv("QT_FATAL_CRITICALS", "1");
     TimerFactoryQtForTest::enableTest();
 }
 
@@ -272,7 +273,6 @@ void test_recorder::fireActualValues()
 {
     m_testRunner->setVfComponent(rmsEntityId, "ACT_RMSPN1", 1);
     m_testRunner->setVfComponent(rmsEntityId, "ACT_RMSPN2", 2);
-    m_testRunner->setVfComponent(rmsEntityId, "PAR_Interval", 5);
     m_testRunner->setVfComponent(powerEntityId, "ACT_PQS1", 1);
     m_testRunner->setVfComponent(powerEntityId, "ACT_PQS2", 2);
 }
