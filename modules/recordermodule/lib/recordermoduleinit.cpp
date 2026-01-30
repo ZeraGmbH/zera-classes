@@ -27,12 +27,12 @@ RecorderModuleInit::RecorderModuleInit(RecorderModule *module,
 
 void RecorderModuleInit::activate()
 {
-    emit m_module->activationContinue();
+    emit activated();
 }
 
 void RecorderModuleInit::deactivate()
 {
-    emit m_module->deactivationContinue();
+    emit deactivated();
 }
 
 void RecorderModuleInit::generateVeinInterface()

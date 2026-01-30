@@ -1,11 +1,10 @@
 #ifndef RECORDERMODULE_H
 #define RECORDERMODULE_H
 
-#include <basemodule.h>
+#include <basemeasmodule.h>
 #include <vfrpceventsystemsimplified.h>
-#include "vfeventsytemmoduleparam.h"
 
-class RecorderModule : public BaseModule
+class RecorderModule : public cBaseMeasModule
 {
     Q_OBJECT
 public:
@@ -14,7 +13,6 @@ public:
 
     RecorderModule(ModuleFactoryParam moduleParam);
     VfRpcEventSystemSimplified *getRpcEventSystem();
-    VfEventSytemModuleParam* getValidatorEventSystem();
 
 private slots:
     void activationFinished() override;
@@ -24,9 +22,7 @@ private:
     void startMeas() override; // we make the measuring program start here
     void stopMeas() override;
 
-    std::shared_ptr<VfEventSytemModuleParam> m_spModuleValidator;
-    std::shared_ptr<VfRpcEventSystemSimplified> m_spRpcEventSystem;
-
+    std::unique_ptr<VfRpcEventSystemSimplified> m_spRpcEventSystem;
 };
 
 #endif // RECORDERMODULE_H
