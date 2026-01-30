@@ -22,10 +22,11 @@ void VfEventSytemModuleParam::processCommandEvent(VeinEvent::CommandEvent *comma
                 const VeinStorage::AbstractDatabase *storageDb = m_storageSystem->getDb();
                 QVariant storedValue = storageDb->getStoredValue(m_entityId, componentName);
                 double newValue = storedValue.toDouble();
-                if (cData->oldValue() == storedValue ||
-                        (qIsNaN(oldValue) && qIsNaN(newValue))) {
+                if (cData->oldValue() == storedValue || (qIsNaN(oldValue) && qIsNaN(newValue))) {
                     VfModuleParameter *param = hashIter.value();
-                    param->veinTransaction(commandEvent->peerId(), cData->newValue(), cData->oldValue(), cData->eventCommand());
+                    param->veinTransaction(commandEvent->peerId(),
+                                           cData->newValue(), cData->oldValue(),
+                                           cData->eventCommand());
                     commandEvent->accept(); // it is an event for us ... the parameter will do the rest
                 }
                 // WTF is the idea ignoring those with improper old values???
