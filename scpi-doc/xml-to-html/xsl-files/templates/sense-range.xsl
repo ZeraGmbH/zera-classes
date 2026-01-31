@@ -15,7 +15,6 @@
                     <th><xsl:value-of select="$ScpiPath"/></th>
                     <th><xsl:value-of select="$ValidPar"/></th>
                     <th><xsl:value-of select="$DataType"/></th>
-                    <th><xsl:value-of select="$Unit"/></th>
                     </tr>
                     <!-- table data -->
                     <xsl:for-each select="*/*">
@@ -25,7 +24,6 @@
                                 <td><xsl:value-of select="@ScpiPath"/></td>
                                 <td><xsl:value-of select="@ValidPar"/></td>
                                 <td><xsl:value-of select="@DataType"/></td>
-                                <td><xsl:value-of select="@Unit"/></td>
                             </tr>
                         </xsl:if>
                     </xsl:for-each>
