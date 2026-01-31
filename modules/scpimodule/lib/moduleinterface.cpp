@@ -218,6 +218,7 @@ void cModuleInterface::setXmlComponentValidatorInfo(ScpiBaseDelegatePtr delegate
                 delegate->setXmlAttribute("ValidPar", validStrings.join(","));
         }
         else if(validatorType == "BOOL") {
+            delegate->setXmlAttribute("DataType", validatorType);
             delegate->setXmlAttribute("Min", QString("0"));
             delegate->setXmlAttribute("Max", QString("1"));
         }
