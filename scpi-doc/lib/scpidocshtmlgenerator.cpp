@@ -52,7 +52,12 @@ void ScpiDocsHtmlGenerator::convertXmlToHtml(QString zenuxRelease, QFileInfo ses
                 << htmlPath;
     sh.start("/bin/sh", paramList);
     sh.waitForFinished();
-    qInfo("%s", qPrintable(sh.readAll()));
+    QByteArray info = sh.readAllStandardOutput();
+    if (!info.isEmpty())
+        qInfo("%s", qPrintable(info));
+    QByteArray error = sh.readAllStandardError();
+    if (!error.isEmpty())
+        qWarning("%s", qPrintable(error));
 }
 
 void ScpiDocsHtmlGenerator::createChangeInfo(QString htmlPath)
