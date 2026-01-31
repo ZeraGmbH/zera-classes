@@ -17,6 +17,8 @@ public:
 signals:
     void clientinfoSignal(QString, SCPIMODULE::SCPIClientInfoPtr);
 private:
+    bool handleFutureComponent(cSCPIClient *client, bool bQuery);
+
     cSCPIModule* m_pModule;
     cSCPICmdInfoPtr m_pSCPICmdInfo;
 };

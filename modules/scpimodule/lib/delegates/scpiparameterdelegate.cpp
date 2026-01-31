@@ -16,7 +16,9 @@ cSCPIParameterDelegate::cSCPIParameterDelegate(const QString &cmdParent,
                                                quint8 type,
                                                cSCPIModule *scpimodule,
                                                cSCPICmdInfoPtr scpicmdinfo) :
-    ScpiBaseDelegate(cmdParent, cmd, type), m_pModule(scpimodule), m_pSCPICmdInfo(scpicmdinfo)
+    ScpiBaseDelegate(cmdParent, cmd, type),
+    m_pModule(scpimodule),
+    m_pSCPICmdInfo(scpicmdinfo)
 {
 }
 
@@ -29,8 +31,10 @@ void cSCPIParameterDelegate::executeSCPI(cSCPIClient *client, const QString &scp
          (cmd.isCommand(1) && ((scpiCmdType & SCPI::isCmdwP) > 0)) ||  // test if we got an allowed cmd + 1 parameter
          ((scpiCmdType & SCPI::isXMLCmd) > 0) ) // test if we expext an xml command
     {
-        VeinComponent::ComponentData *cData;
-        cData = new VeinComponent::ComponentData();
+        if (handleFutureComponent(client, bQuery))
+            return;
+
+        VeinComponent::ComponentData *cData = new VeinComponent::ComponentData();
         cData->setEntityId(m_pSCPICmdInfo->entityId);
         cData->setEventOrigin(VeinEvent::EventData::EventOrigin::EO_LOCAL);
         cData->setEventTarget(VeinEvent::EventData::EventTarget::ET_ALL);
@@ -66,6 +70,21 @@ void cSCPIParameterDelegate::executeSCPI(cSCPIClient *client, const QString &scp
     }
     else
         client->receiveStatus(ZSCPI::nak);
+}
+
+bool cSCPIParameterDelegate::handleFutureComponent(cSCPIClient *client, bool bQuery)
+{
+    VeinStorage::AbstractDatabase *storrageDb = m_pModule->getStorageDb();
+    const VeinStorage::AbstractComponentPtr futureComponent = storrageDb->findFutureComponent(m_pSCPICmdInfo->entityId,
+                                                                                              m_pSCPICmdInfo->componentOrRpcName);
+    if (futureComponent) {
+        if (bQuery)
+            client->receiveAnswer(futureComponent->getValue().toString());
+        else
+            client->receiveStatus(ZSCPI::nak);
+        return true;
+    }
+    return false;
 }
 
 }
