@@ -214,11 +214,27 @@
     </xsl:call-template>
   </xsl:variable>
 
+  <xsl:variable name="RECORDERChapterNo">
+    <xsl:call-template name="calcMeasSystChapterNumber">
+      <xsl:with-param name="LastChapterNumber" select="9"/> <!--Start auto numbers -->
+      <xsl:with-param name="MeasSystAvailable" select="$RECORDERFound"/>
+    </xsl:call-template>
+  </xsl:variable>
+  <xsl:variable name="RECORDERHeading" select="concat($RECORDERChapterNo, '. ', $MeasurementRecorder)"/>
+
   <xsl:variable name="EMOBFound">
     <xsl:call-template name="NodeSearch">
       <xsl:with-param name="Node" select="'EMOB'"/>
     </xsl:call-template>
   </xsl:variable>
+
+  <xsl:variable name="EMOBChapterNo">
+    <xsl:call-template name="calcMeasSystChapterNumber">
+      <xsl:with-param name="LastChapterNumber" select="$RECORDERChapterNo"/>
+      <xsl:with-param name="MeasSystAvailable" select="$EMOBFound"/>
+    </xsl:call-template>
+  </xsl:variable>
+  <xsl:variable name="EMOBHeading" select="concat($EMOBChapterNo, '. ', $EMOB)"/>
 
   <div class="content">
     <p>This document was created with operating system version: <b><xsl:value-of select="$zenuxVersion"/></b>.</p>
@@ -250,8 +266,8 @@
               </ul>
             <li><a href="#Ranges"><xsl:value-of select="$Ranges"/></a></li>
             <li><a href="#ErrorCalculators"><xsl:value-of select="$ErrorCalculators"/></a></li>
-            <xsl:if test="$RECORDERFound != ''"><li><a href="#MeasurementRecorder"><xsl:value-of select="$MeasurementRecorder"/></a></li></xsl:if>
-            <xsl:if test="$EMOBFound != ''"><li><a href="#EMOB"><xsl:value-of select="$EMOB"/></a></li></xsl:if>
+            <xsl:if test="$RECORDERFound != ''"><li><a href="#MeasurementRecorder"><xsl:value-of select="$RECORDERHeading"/></a></li></xsl:if>
+            <xsl:if test="$EMOBFound != ''"><li><a href="#EMOB"><xsl:value-of select="$EMOBHeading"/></a></li></xsl:if>
           </xsl:if>
           <xsl:if test="$createAdjustmentHtml = 'true'">
             <li><a href="#Adjustment"><xsl:value-of select="$Adjustment"/></a></li>
@@ -413,14 +429,14 @@
       </xsl:call-template>
 
       <xsl:if test="$RECORDERFound != ''">
-        <h1 id="MeasurementRecorder"><xsl:value-of select="$MeasurementRecorder"/></h1>
+        <h1 id="MeasurementRecorder"><xsl:value-of select="$RECORDERHeading"/></h1>
         <xsl:call-template name="Recorder">
           <xsl:with-param name="Prosa" select="document(concat($ProsaFolder, 'recorder.html'))"/>
         </xsl:call-template>
       </xsl:if>
 
       <xsl:if test="$EMOBFound != ''">
-        <h1 id="EMOB"><xsl:value-of select="$EMOB"/></h1>
+        <h1 id="EMOB"><xsl:value-of select="$EMOBHeading"/></h1>
         <xsl:call-template name="Emob">
           <xsl:with-param name="Prosa" select="document(concat($ProsaFolder, 'emob.html'))"/>
         </xsl:call-template>
