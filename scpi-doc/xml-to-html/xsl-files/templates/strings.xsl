@@ -29,9 +29,10 @@
 <xsl:variable name="MeasSystems" select="concat($MeasSystemsChapterNo, '. ', 'Measurement systems')"/>
 <xsl:variable name="Ranges" select="'8. Ranges'"/>
 <xsl:variable name="ErrorCalculators" select="'9. Comparison Measurements'"/>
-<xsl:variable name="MeasurementRecorder" select="'10. Measurement Value Recorder'"/>
-<xsl:variable name="EMOB" select="'11. EMOB'"/>
 <xsl:variable name="Adjustment" select="'7. Adjustment Commands'"/>
+<!-- Auto numbered -->
+<xsl:variable name="MeasurementRecorder" select="'Measurement Value Recorder'"/>
+<xsl:variable name="EMOB" select="'EMOB'"/>
 
 <!-- Measurement sub-chapter headings -->
 <xsl:variable name="PhaseValues" select="'Phase amplitudes and angles'"/>
