@@ -20,6 +20,7 @@
 <xsl:include href="templates/meas-system-chapter-number.xsl"/>
 <xsl:include href="templates/node-search.xsl"/>
 <xsl:include href="templates/emob.xsl"/>
+<xsl:include href="templates/recorder.xsl"/>
 <xsl:include href="templates/adjustment.xsl"/>
 
 <xsl:param name="zenuxVersion"/>
@@ -207,6 +208,12 @@
   <xsl:variable name="SamplingConfigsHeading" select="concat($MeasSystemsChapterNo, '.', $SAMChapterNo, ' ', $SamplingConfigs)"/>
 
   <!--In this section, we find out if a certain node is available in session-xml. Some nodes like EMOB are device and/or session specific. -->
+  <xsl:variable name="RECORDERFound">
+    <xsl:call-template name="NodeSearch">
+      <xsl:with-param name="Node" select="'RECORDER'"/>
+    </xsl:call-template>
+  </xsl:variable>
+
   <xsl:variable name="EMOBFound">
     <xsl:call-template name="NodeSearch">
       <xsl:with-param name="Node" select="'EMOB'"/>
@@ -243,6 +250,7 @@
               </ul>
             <li><a href="#Ranges"><xsl:value-of select="$Ranges"/></a></li>
             <li><a href="#ErrorCalculators"><xsl:value-of select="$ErrorCalculators"/></a></li>
+            <xsl:if test="$RECORDERFound != ''"><li><a href="#MeasurementRecorder"><xsl:value-of select="$MeasurementRecorder"/></a></li></xsl:if>
             <xsl:if test="$EMOBFound != ''"><li><a href="#EMOB"><xsl:value-of select="$EMOB"/></a></li></xsl:if>
           </xsl:if>
           <xsl:if test="$createAdjustmentHtml = 'true'">
@@ -403,6 +411,13 @@
           <xsl:with-param name="ProsaSec2" select="document(concat($ProsaFolder, 'error-calculators-sec2.html'))"/>
           <xsl:with-param name="ProsaConfig" select="document(concat($ProsaFolder, 'error-calculators-config.html'))"/>
       </xsl:call-template>
+
+      <xsl:if test="$RECORDERFound != ''">
+        <h1 id="MeasurementRecorder"><xsl:value-of select="$MeasurementRecorder"/></h1>
+        <xsl:call-template name="Recorder">
+          <xsl:with-param name="Prosa" select="document(concat($ProsaFolder, 'recorder.html'))"/>
+        </xsl:call-template>
+      </xsl:if>
 
       <xsl:if test="$EMOBFound != ''">
         <h1 id="EMOB"><xsl:value-of select="$EMOB"/></h1>
