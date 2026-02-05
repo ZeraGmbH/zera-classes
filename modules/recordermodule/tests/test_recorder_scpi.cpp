@@ -3,6 +3,7 @@
 #include <timerfactoryqtfortest.h>
 #include <timemachineobject.h>
 #include <vf-cpp-entity.h>
+#include <testloghelpers.h>
 #include <QTest>
 
 QTEST_MAIN(test_recorder_scpi)
@@ -56,6 +57,44 @@ void test_recorder_scpi::scpiQueryJsonExportEmpty()
     QCOMPARE(client.sendReceive("*OPC?"), "+1");
 }
 
+void test_recorder_scpi::scpiQueryJsonFireValuesOnce()
+{
+    createModulesManually();
+    ScpiModuleClientBlocked client;
+    client.sendReceive("RECORDER:REC1:RUN 1;");
+
+    fireActualValues();
+    triggerDftModuleSigMeasuring();
+    QString receive = client.sendReceive("RECORDER:REC1:EXPORT:JSON?", false);
+
+    QFile file(":/fireValuesOnce.json");
+    QVERIFY(file.open(QIODevice::ReadOnly));
+    QString jsonExpected = file.readAll();
+    QString jsonDumped = skipLocalTimestamp(receive.toUtf8());
+
+    QVERIFY(TestLogHelpers::compareAndLogOnDiffJson(jsonExpected, jsonDumped));
+}
+
+void test_recorder_scpi::scpiQueryJsonFireValuesTwice()
+{
+    createModulesManually();
+
+    ScpiModuleClientBlocked client;
+    client.sendReceive("RECORDER:REC1:RUN 1;");
+
+    fireActualValues();
+    triggerDftModuleSigMeasuring();
+    triggerDftModuleSigMeasuring();
+    QString receive = client.sendReceive("RECORDER:REC1:EXPORT:JSON?", false);
+
+    QFile file(":/fireValuesTwice.json");
+    QVERIFY(file.open(QIODevice::ReadOnly));
+    QString jsonExpected = file.readAll();
+    QString jsonDumped = skipLocalTimestamp(receive.toUtf8());
+
+    QVERIFY(TestLogHelpers::compareAndLogOnDiffJson(jsonExpected, jsonDumped));
+}
+
 void test_recorder_scpi::scpiQueryAll()
 {
     ScpiModuleClientBlocked client;
@@ -95,4 +134,12 @@ void test_recorder_scpi::createModulesManually()
     createModule(sigMeasuringEntityId, components);
     components = {{"ACT_PQS1", QVariant()}, {"ACT_PQS2", QVariant()}};
     createModule(powerEntityId, components);
+}
+
+QString test_recorder_scpi::skipLocalTimestamp(const QString &scpiResult)
+{
+    QJsonDocument doc = QJsonDocument::fromJson(scpiResult.toUtf8());
+    QJsonObject object = doc.object();
+    object["timestamp_first_local"] = "<skipped>";
+    return TestLogHelpers::dump(object);
 }

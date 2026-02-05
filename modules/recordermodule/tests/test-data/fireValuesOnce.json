@@ -1,0 +1,33 @@
+{
+    "timestamp_first_local": "<skipped>",
+    "timestamp_first_utc": "Thu Jan 1 00:00:00 1970 GMT",
+    "value_sequence": [
+        "UL1",
+        "UL2",
+        "UL3",
+        "IL1",
+        "IL2",
+        "IL3",
+        "P1",
+        "P2",
+        "P3",
+        "PS"
+    ],
+    "values": [
+        {
+            "data": [
+                1,
+                2,
+                0,
+                0,
+                0,
+                0,
+                1,
+                2,
+                0,
+                0
+            ],
+            "ts": 0
+        }
+    ]
+}
