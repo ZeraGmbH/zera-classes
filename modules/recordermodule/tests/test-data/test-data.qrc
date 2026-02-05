@@ -2,5 +2,7 @@
     <qresource prefix="/">
         <file>mt310s2-emob-session-ac.json</file>
         <file>mt310s2-emob-session-ac-scpi.json</file>
+        <file>fireValuesTwice.json</file>
+        <file>fireValuesOnce.json</file>
     </qresource>
 </RCC>

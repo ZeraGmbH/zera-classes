@@ -15,6 +15,8 @@ private slots:
     void scpiQueryCountEmpty();
     void scpiWriteCountIgnored();
     void scpiQueryJsonExportEmpty();
+    void scpiQueryJsonFireValuesOnce();
+    void scpiQueryJsonFireValuesTwice();
     void scpiQueryAll();
 
 private:
@@ -22,6 +24,7 @@ private:
     void fireActualValues();
     void triggerDftModuleSigMeasuring();
     void createModulesManually();
+    QString skipLocalTimestamp(const QString &scpiResult);
 
     std::unique_ptr<ModuleManagerTestRunner> m_testRunner;
 };
