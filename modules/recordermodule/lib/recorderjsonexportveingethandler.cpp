@@ -14,8 +14,8 @@ const QVariant &RecorderJsonExportVeinGetHandler::getCustomizedValue(const QVari
 
     if(!m_storedData->m_recordedData.isEmpty()) {
         QDateTime localDateTime = m_storedData->m_timeOfFirstRecord;
-        json.insert("timestamp_first_utc", localDateTime.toUTC().toString(Qt::TextDate));
-        json.insert("timestamp_first_local", localDateTime.toString(Qt::TextDate));
+        json.insert("timestamp_first_utc", localDateTime.toUTC().toString("yyyy-MM-dd HH:mm:ss:zzz"));
+        json.insert("timestamp_first_local", localDateTime.toString("yyyy-MM-dd HH:mm:ss:zzz"));
 
         QJsonArray sequenceArray = getLabelsArray();
         json.insert("value_sequence", sequenceArray);

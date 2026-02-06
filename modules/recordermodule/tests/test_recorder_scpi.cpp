@@ -2,6 +2,7 @@
 #include "scpimoduleclientblocked.h"
 #include <timerfactoryqtfortest.h>
 #include <timemachineobject.h>
+#include <timemachinefortest.h>
 #include <vf-cpp-entity.h>
 #include <testloghelpers.h>
 #include <QTest>
@@ -60,6 +61,8 @@ void test_recorder_scpi::scpiQueryJsonExportEmpty()
 void test_recorder_scpi::scpiQueryJsonFireValuesOnce()
 {
     createModulesManually();
+    TimeMachineForTest::getInstance()->processTimers(3665105); // 1h 1min 5s 105ms
+
     ScpiModuleClientBlocked client;
     client.sendReceive("RECORDER:REC1:RUN 1;");
 
@@ -78,12 +81,14 @@ void test_recorder_scpi::scpiQueryJsonFireValuesOnce()
 void test_recorder_scpi::scpiQueryJsonFireValuesTwice()
 {
     createModulesManually();
+    TimeMachineForTest::getInstance()->processTimers(7340408); // 2h 1min 5s 105ms
 
     ScpiModuleClientBlocked client;
     client.sendReceive("RECORDER:REC1:RUN 1;");
 
     fireActualValues();
     triggerDftModuleSigMeasuring();
+    TimeMachineForTest::getInstance()->processTimers(499);
     triggerDftModuleSigMeasuring();
     QString receive = client.sendReceive("RECORDER:REC1:EXPORT:JSON?", false);
 
