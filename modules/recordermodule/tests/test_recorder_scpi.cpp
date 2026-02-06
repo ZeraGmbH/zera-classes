@@ -119,10 +119,16 @@ void test_recorder_scpi::createModule(int entityId, QMap<QString, QVariant> comp
 
 void test_recorder_scpi::fireActualValues()
 {
-    m_testRunner->setVfComponent(rmsEntityId, "ACT_RMSPN1", 1);
-    m_testRunner->setVfComponent(rmsEntityId, "ACT_RMSPN2", 2);
-    m_testRunner->setVfComponent(powerEntityId, "ACT_PQS1", 1);
-    m_testRunner->setVfComponent(powerEntityId, "ACT_PQS2", 2);
+    m_testRunner->setVfComponent(rmsEntityId, "ACT_RMSPN1", 1.1e-3);
+    m_testRunner->setVfComponent(rmsEntityId, "ACT_RMSPN2", 2.2e-4);
+    m_testRunner->setVfComponent(rmsEntityId, "ACT_RMSPN3", 3.7e-5);
+    m_testRunner->setVfComponent(rmsEntityId, "ACT_RMSPN4", 4.1e-6);
+    m_testRunner->setVfComponent(rmsEntityId, "ACT_RMSPN5", 5.2e-7);
+    m_testRunner->setVfComponent(rmsEntityId, "ACT_RMSPN6", 6.08e-8);
+    m_testRunner->setVfComponent(powerEntityId, "ACT_PQS1", 1.7e10);
+    m_testRunner->setVfComponent(powerEntityId, "ACT_PQS2", 2.1e11);
+    m_testRunner->setVfComponent(powerEntityId, "ACT_PQS3", 3.2e12);
+    m_testRunner->setVfComponent(powerEntityId, "ACT_PQS4", 4.2e20);
 }
 
 void test_recorder_scpi::triggerDftModuleSigMeasuring()
@@ -133,11 +139,23 @@ void test_recorder_scpi::triggerDftModuleSigMeasuring()
 
 void test_recorder_scpi::createModulesManually()
 {
-    QVariantMap components = {{"ACT_RMSPN1", QVariant()}, {"ACT_RMSPN2", QVariant()}};
+    QVariantMap components = {
+        {"ACT_RMSPN1", QVariant()},
+        {"ACT_RMSPN2", QVariant()},
+        {"ACT_RMSPN3", QVariant()},
+        {"ACT_RMSPN4", QVariant()},
+        {"ACT_RMSPN5", QVariant()},
+        {"ACT_RMSPN6", QVariant()}
+    };
     createModule(rmsEntityId, components);
     components = {{"SIG_Measuring", QVariant(1)}};
     createModule(sigMeasuringEntityId, components);
-    components = {{"ACT_PQS1", QVariant()}, {"ACT_PQS2", QVariant()}};
+    components = {
+        {"ACT_PQS1", QVariant()},
+        {"ACT_PQS2", QVariant()},
+        {"ACT_PQS3", QVariant()},
+        {"ACT_PQS4", QVariant()}
+    };
     createModule(powerEntityId, components);
 }
 
