@@ -24,5 +24,5 @@ target_include_directories(recordermodule-static
 target_link_libraries(recordermodule-static
     zera-basemodule
     vf-cpp-module-wrappers
+    Zera::zera-jsonobject-to-string
 )
-

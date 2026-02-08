@@ -1,6 +1,6 @@
 #include "recorderjsonexportveingethandler.h"
+#include <jsonprecisionexport.h>
 #include <QJsonObject>
-#include <QJsonDocument>
 
 RecorderJsonExportVeinGetHandler::RecorderJsonExportVeinGetHandler(VeinStorage::StorageRecordDataPtr storedData) :
     m_storedData(storedData)
@@ -35,8 +35,7 @@ const QVariant &RecorderJsonExportVeinGetHandler::getCustomizedValue(const QVari
         json.insert("values", jsonArray);
     }
 
-    QJsonDocument doc(json);
-    m_jsonExport = doc.toJson(QJsonDocument::Indented);
+    m_jsonExport = JsonPrecisionExport::objectToString(json, 2, 7);
     return m_jsonExport;
 }
 

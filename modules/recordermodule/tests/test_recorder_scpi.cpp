@@ -119,10 +119,16 @@ void test_recorder_scpi::createModule(int entityId, QMap<QString, QVariant> comp
 
 void test_recorder_scpi::fireActualValues()
 {
-    m_testRunner->setVfComponent(rmsEntityId, "ACT_RMSPN1", 1);
-    m_testRunner->setVfComponent(rmsEntityId, "ACT_RMSPN2", 2);
-    m_testRunner->setVfComponent(powerEntityId, "ACT_PQS1", 1);
-    m_testRunner->setVfComponent(powerEntityId, "ACT_PQS2", 2);
+    m_testRunner->setVfComponent(rmsEntityId, "ACT_RMSPN1", 1.1);
+    m_testRunner->setVfComponent(rmsEntityId, "ACT_RMSPN2", 1.0+(1.0/1e6));
+    m_testRunner->setVfComponent(rmsEntityId, "ACT_RMSPN3", 3.333333e5);
+    m_testRunner->setVfComponent(rmsEntityId, "ACT_RMSPN4", 4.45959595e5);
+    m_testRunner->setVfComponent(rmsEntityId, "ACT_RMSPN5", 5.55555555595e-7);
+    m_testRunner->setVfComponent(rmsEntityId, "ACT_RMSPN6", 6.67895678e-3);
+    m_testRunner->setVfComponent(powerEntityId, "ACT_PQS1", 1200.676767676);
+    m_testRunner->setVfComponent(powerEntityId, "ACT_PQS2", 13333337779.777888999);
+    m_testRunner->setVfComponent(powerEntityId, "ACT_PQS3", 0.0000000123456789);
+    m_testRunner->setVfComponent(powerEntityId, "ACT_PQS4", 0.100000565656);
 }
 
 void test_recorder_scpi::triggerDftModuleSigMeasuring()
@@ -133,11 +139,23 @@ void test_recorder_scpi::triggerDftModuleSigMeasuring()
 
 void test_recorder_scpi::createModulesManually()
 {
-    QVariantMap components = {{"ACT_RMSPN1", QVariant()}, {"ACT_RMSPN2", QVariant()}};
+    QVariantMap components = {
+        {"ACT_RMSPN1", QVariant()},
+        {"ACT_RMSPN2", QVariant()},
+        {"ACT_RMSPN3", QVariant()},
+        {"ACT_RMSPN4", QVariant()},
+        {"ACT_RMSPN5", QVariant()},
+        {"ACT_RMSPN6", QVariant()}
+    };
     createModule(rmsEntityId, components);
     components = {{"SIG_Measuring", QVariant(1)}};
     createModule(sigMeasuringEntityId, components);
-    components = {{"ACT_PQS1", QVariant()}, {"ACT_PQS2", QVariant()}};
+    components = {
+        {"ACT_PQS1", QVariant()},
+        {"ACT_PQS2", QVariant()},
+        {"ACT_PQS3", QVariant()},
+        {"ACT_PQS4", QVariant()}
+    };
     createModule(powerEntityId, components);
 }
 
