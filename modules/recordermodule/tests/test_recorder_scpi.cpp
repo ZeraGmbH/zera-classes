@@ -61,19 +61,17 @@ void test_recorder_scpi::scpiQueryJsonExportEmpty()
 void test_recorder_scpi::scpiQueryJsonFireValuesOnce()
 {
     createModulesManually();
-    TimeMachineForTest::getInstance()->processTimers(3665105); // 1h 1min 5s 105ms
+    TimeMachineForTest::getInstance()->setCurrentTime(QDate(2026, 2, 8),
+                                                      QTime(17, 21, 37, 1),
+                                                      QTimeZone(3*3600));
 
     ScpiModuleClientBlocked client;
     client.sendReceive("RECORDER:REC1:RUN 1;");
 
     fireActualValues();
     triggerDftModuleSigMeasuring();
-    QString receive = client.sendReceive("RECORDER:REC1:EXPORT:JSON?", false);
-
-    QFile file(":/fireValuesOnce.json");
-    QVERIFY(file.open(QIODevice::ReadOnly));
-    QString jsonExpected = file.readAll();
-    QString jsonDumped = skipLocalTimestamp(receive.toUtf8());
+    QString jsonDumped = client.sendReceive("RECORDER:REC1:EXPORT:JSON?", false);
+    QString jsonExpected = TestLogHelpers::loadFile(":/fireValuesOnce.json");
 
     QVERIFY(TestLogHelpers::compareAndLogOnDiffJson(jsonExpected, jsonDumped));
 }
@@ -81,7 +79,9 @@ void test_recorder_scpi::scpiQueryJsonFireValuesOnce()
 void test_recorder_scpi::scpiQueryJsonFireValuesTwice()
 {
     createModulesManually();
-    TimeMachineForTest::getInstance()->processTimers(7340408); // 2h 1min 5s 105ms
+    TimeMachineForTest::getInstance()->setCurrentTime(QDate(2026, 2, 8),
+                                                      QTime(8, 2, 59, 999),
+                                                      QTimeZone(1*3600));
 
     ScpiModuleClientBlocked client;
     client.sendReceive("RECORDER:REC1:RUN 1;");
@@ -90,12 +90,8 @@ void test_recorder_scpi::scpiQueryJsonFireValuesTwice()
     triggerDftModuleSigMeasuring();
     TimeMachineForTest::getInstance()->processTimers(499);
     triggerDftModuleSigMeasuring();
-    QString receive = client.sendReceive("RECORDER:REC1:EXPORT:JSON?", false);
-
-    QFile file(":/fireValuesTwice.json");
-    QVERIFY(file.open(QIODevice::ReadOnly));
-    QString jsonExpected = file.readAll();
-    QString jsonDumped = skipLocalTimestamp(receive.toUtf8());
+    QString jsonDumped = client.sendReceive("RECORDER:REC1:EXPORT:JSON?", false);
+    QString jsonExpected = TestLogHelpers::loadFile(":/fireValuesTwice.json");
 
     QVERIFY(TestLogHelpers::compareAndLogOnDiffJson(jsonExpected, jsonDumped));
 }
@@ -157,12 +153,4 @@ void test_recorder_scpi::createModulesManually()
         {"ACT_PQS4", QVariant()}
     };
     createModule(powerEntityId, components);
-}
-
-QString test_recorder_scpi::skipLocalTimestamp(const QString &scpiResult)
-{
-    QJsonDocument doc = QJsonDocument::fromJson(scpiResult.toUtf8());
-    QJsonObject object = doc.object();
-    object["timestamp_first_local"] = "<skipped>";
-    return TestLogHelpers::dump(object);
 }

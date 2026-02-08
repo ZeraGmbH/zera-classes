@@ -24,7 +24,6 @@ private:
     void fireActualValues();
     void triggerDftModuleSigMeasuring();
     void createModulesManually();
-    QString skipLocalTimestamp(const QString &scpiResult);
 
     std::unique_ptr<ModuleManagerTestRunner> m_testRunner;
 };
