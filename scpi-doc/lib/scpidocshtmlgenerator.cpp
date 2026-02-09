@@ -33,8 +33,6 @@ void ScpiDocsHtmlGenerator::createScpiDocHtmls(QString modmanConfigFile, QString
     htmlPath = htmlDirPath + comDefaultSessionXml.fileName().replace("meas-session.xml", "adjustment.html");
     convertXmlToHtml(zenuxRelease, comDefaultSessionXml, "", "true", htmlPath);
 
-    xmlDir.removeRecursively();
-
     htmlPath = htmlDirPath + "change-info.html";
     createChangeInfo(htmlPath);
 }
