@@ -1,6 +1,6 @@
 Commands to record measurement values.
 
-**Schema query 'RECORDER:REC1:EXPORT:JSON?':**
+**Pseudo schema of json returned for query 'RECORDER:REC1:EXPORT:JSON?':**
 ```
 {
   "timestamp_first_local": <Local time first record as: yyyy-MM-dd HH:mm:ss:zzz>,
