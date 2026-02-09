@@ -8,6 +8,7 @@
     --color-header-footer: #f0f2f3;
     --color-table-tr: #e9ebec;
     --color-table-tr-btm: #f3f3f3;
+    --color-code-background: #d0d2d4;
     --color-table-border: var(--color-bg);
     --color-table-border-btm: var(--color-green);
 }
@@ -17,6 +18,7 @@
     --color-header-footer: #36363A;
     --color-table-tr: #24242C;
     --color-table-tr-btm: #666565;
+    --color-code-background: #56585a;
     --color-table-border: var(--color-bg);
     --color-table-border-btm: var(--color-green);
 }
@@ -47,6 +49,13 @@ h3 {
     color: #25915b;
     font-weight: bold;
     margin-top: 30px;
+}
+
+pre {
+    padding: 16px;
+    overflow: auto;
+    background-color: var(--color-code-background);
+    border-radius: 5px;
 }
 
 /*Table of contents*/

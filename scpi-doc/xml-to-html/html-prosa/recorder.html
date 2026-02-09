@@ -1,6 +1,39 @@
 <!DOCTYPE html>
 <html>
 <body>
-    <p>Commands to record measurement values.</p>
+
+<p>Commands to record measurement values.</p>
+<p><strong>Schema query 'RECORDER:REC1:EXPORT:JSON?':</strong></p>
+<pre><code>{
+  &quot;timestamp_first_local&quot;: &lt;Local time first record as: yyyy-MM-dd HH:mm:ss:zzz&gt;,
+  &quot;timestamp_first_utc&quot;: &lt;UTC time first record as: yyyy-MM-dd HH:mm:ss:zzz&gt;,
+  &quot;value_sequence&quot;: [
+    &lt;Name of 1st value in &quot;data&quot; arrays&gt;,
+    &lt;Name of 2nd value in &quot;data&quot; arrays&gt;,
+    ...
+  ],
+  &quot;values&quot;: [
+    {
+      &quot;data&quot;: [
+        &lt;1st value&gt;,
+        &lt;2nd value&gt;,
+        ...
+      ],
+      &quot;ts&quot;: &lt;ms since first value&gt;
+    },
+    {
+      &quot;data&quot;: [
+        &lt;1st value&gt;,
+        &lt;2nd value&gt;,
+        ...
+      ],
+      &quot;ts&quot;: &lt;ms since first value&gt;
+    },
+    ...
+  ]
+}
+</code></pre>
+
 </body>
 </html>
+
