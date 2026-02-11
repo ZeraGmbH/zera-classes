@@ -10,18 +10,18 @@ public:
     explicit JsonSessionLoader(QObject *parent = nullptr);
     const QString &getSessionFilePath() const;
 signals:
-    void sigModuleInfoParsed(QString uniqueModuleName,
-                       QString xmlPath,
-                       int moduleEntityId,
-                       int moduleNum,
-                       bool licensable);
+    void sigModuleInfoParsed(const QString &uniqueModuleName,
+                             const QString &xmlPath,
+                             int moduleEntityId,
+                             int moduleNum,
+                             bool licensable);
 public slots:
-    void loadSession(QString filePath);
+    void loadSession(const QString &filePath);
 protected:
     static QString m_configDirName;
 
 private:
-    void parseModule(QJsonObject moduleObject);
+    void parseModule(const QJsonObject &moduleObject);
     QString m_currentSessionFile;
 };
 

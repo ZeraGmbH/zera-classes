@@ -17,7 +17,7 @@ const QString &JsonSessionLoader::getSessionFilePath() const
     return m_currentSessionFile;
 }
 
-void JsonSessionLoader::loadSession(QString filePath)
+void JsonSessionLoader::loadSession(const QString &filePath)
 {
     QJsonParseError jsonError;
     qInfo() << "Loading session file:" << filePath;
@@ -43,7 +43,7 @@ void JsonSessionLoader::loadSession(QString filePath)
         qCritical() << "Error opening session file:" << filePath;
 }
 
-void JsonSessionLoader::parseModule(QJsonObject moduleObject)
+void JsonSessionLoader::parseModule(const QJsonObject &moduleObject)
 {
     QString configFile = moduleObject.value("configFile").toString();
     QString configFileNameFull;
