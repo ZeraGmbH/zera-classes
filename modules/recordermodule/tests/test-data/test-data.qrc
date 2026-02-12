@@ -4,5 +4,8 @@
         <file>mt310s2-emob-session-ac-scpi.json</file>
         <file>fireValuesTwice.json</file>
         <file>fireValuesOnce.json</file>
+        <file>ReducedJsonFactorSimilarAsValuesRecorded.json</file>
+        <file>ReducedJsonFactorHigherThanValuesRecorded.json</file>
+        <file>ReducedJsonFactorDoubleValuesRecorded.json</file>
     </qresource>
 </RCC>

@@ -2,6 +2,7 @@
 #define RECORDERMODULE_H
 
 #include <basemeasmodule.h>
+#include <vf_cmd_event_handler_system.h>
 #include <vfrpceventsystemsimplified.h>
 
 class RecorderModule : public cBaseMeasModule
@@ -12,6 +13,7 @@ public:
     static constexpr const char* BaseSCPIModuleName = "REC";
 
     RecorderModule(ModuleFactoryParam moduleParam);
+
     VfRpcEventSystemSimplified *getRpcEventSystem();
 
 private slots:

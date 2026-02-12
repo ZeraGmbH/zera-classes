@@ -1,5 +1,6 @@
 #include "recordermoduleinit.h"
 #include "recordermoduleconfiguration.h"
+#include "rpcgetrecordeddatasampler.h"
 #include "rpcreadrecordedvalues.h"
 #include "recorderjsonexportveingethandler.h"
 #include <boolvalidator.h>
@@ -61,6 +62,12 @@ void RecorderModuleInit::generateVeinInterface()
     m_pReadRecordedValuesRpc = std::make_shared<VfModuleRpc>(rpcReadRecordedValues, "Read Recorded Values");
     m_module->m_veinModuleRPCMap[rpcReadRecordedValues->getSignature()] = m_pReadRecordedValuesRpc;
 
+    std::shared_ptr<RPCGetRecordedDataSampler> rpcRecordedSample = std::make_shared<RPCGetRecordedDataSampler>(m_module->getRpcEventSystem(),
+                                                                                                               m_recorderInterpolation->getRecordedData(),
+                                                                                                               m_module->getEntityId());
+    m_pGetRecordedSampleValuesRpc = std::make_shared<VfModuleRpc>(rpcRecordedSample, "Get Recorded Values sample");
+    m_module->m_veinModuleRPCMap[rpcRecordedSample->getSignature()] = m_pGetRecordedSampleValuesRpc;
+
     m_jsonExportComponent = new VfModuleComponentStorageFetchOnly(m_module->getEntityId(),
                                                          "ACT_JSON_EXPORT",
                                                          "JSON export of recorded values",
@@ -93,7 +100,8 @@ void RecorderModuleInit::createRecorder()
         entityComponents[entityId] = components;
     }
     static constexpr int entityIdDftModule = 1050;
-    m_recorder = std::make_unique<StorageRecorder>(entityComponents,
+    m_recorder = std::make_shared<StorageRecorder>(entityComponents,
                                                    m_module->getStorageDb(),
                                                    entityIdDftModule, "SIG_Measuring");
+    m_recorderInterpolation = std::make_unique<StorageRecorderInterpolation>(entityComponents, m_recorder);
 }

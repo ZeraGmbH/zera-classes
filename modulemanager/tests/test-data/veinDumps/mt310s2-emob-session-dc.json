@@ -5213,6 +5213,9 @@
                 "Name": "RecorderModule1"
             },
             "RpcInfo": {
+                "RPC_GetRecordedDataSampler()": {
+                    "Description": "Get Recorded Values sample"
+                },
                 "RPC_ReadRecordedValues(int p_endingPoint,int p_startingPoint)": {
                     "Description": "Read Recorded Values"
                 }
