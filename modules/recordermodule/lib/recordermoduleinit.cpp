@@ -1,5 +1,6 @@
 #include "recordermoduleinit.h"
 #include "recordermoduleconfiguration.h"
+#include "rpcgetrecordeddatasampler.h"
 #include "rpcreadrecordedvalues.h"
 #include "recorderjsonexportveingethandler.h"
 #include <boolvalidator.h>
@@ -60,6 +61,12 @@ void RecorderModuleInit::generateVeinInterface()
                                                                                                            m_module->getEntityId());
     m_pReadRecordedValuesRpc = std::make_shared<VfModuleRpc>(rpcReadRecordedValues, "Read Recorded Values");
     m_module->m_veinModuleRPCMap[rpcReadRecordedValues->getSignature()] = m_pReadRecordedValuesRpc;
+
+    std::shared_ptr<RPCGetRecordedDataSampler> rpcRecordedSample = std::make_shared<RPCGetRecordedDataSampler>(m_module->getRpcEventSystem(),
+                                                                                                                m_module->getEntityId(),
+                                                                                                                m_module->getStorageDb());
+    m_pGetRecordedSampleValuesRpc = std::make_shared<VfModuleRpc>(rpcRecordedSample, "Get Recorded Values sample");
+    m_module->m_veinModuleRPCMap[rpcRecordedSample->getSignature()] = m_pGetRecordedSampleValuesRpc;
 
     m_jsonExportComponent = new VfModuleComponentStorageFetchOnly(m_module->getEntityId(),
                                                          "ACT_JSON_EXPORT",

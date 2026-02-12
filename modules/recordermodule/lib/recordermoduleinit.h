@@ -32,6 +32,7 @@ private:
     VfModuleParameter* m_numberOfPointsInCurve = nullptr;
     VfModuleParameter* m_startStopRecording = nullptr;
     VfModuleRpcPtr m_pReadRecordedValuesRpc = nullptr;
+    VfModuleRpcPtr m_pGetRecordedSampleValuesRpc = nullptr;
 };
 
 #endif // RECORDERMODULEINIT_H
