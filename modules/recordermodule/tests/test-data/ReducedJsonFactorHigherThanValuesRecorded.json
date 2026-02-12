@@ -1,0 +1,18 @@
+{
+    "0000000750": {
+        "1040": {
+            "ACT_RMSPN1": 1,
+            "ACT_RMSPN2": 2,
+            "ACT_RMSPN3": 0,
+            "ACT_RMSPN4": 0,
+            "ACT_RMSPN5": 0,
+            "ACT_RMSPN6": 0
+        },
+        "1070": {
+            "ACT_PQS1": 1,
+            "ACT_PQS2": 2,
+            "ACT_PQS3": 0,
+            "ACT_PQS4": 0
+        }
+    }
+}

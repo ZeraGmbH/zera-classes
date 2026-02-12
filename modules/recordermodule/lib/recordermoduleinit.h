@@ -7,6 +7,7 @@
 #include "vfmodulecomponentstoragefetchonly.h"
 #include <timersingleshotqt.h>
 #include <vs_storagerecorder.h>
+#include <storagerecorderinterpolation.h>
 
 class RecorderModuleInit : public cModuleActivist
 {
@@ -27,11 +28,13 @@ private:
 
     TimerTemplateQtPtr m_stopLoggingTimer; // Hack: avoid out of memory by stopping after a while
 
-    std::unique_ptr<VeinStorage::StorageRecorder> m_recorder;
+    std::shared_ptr<VeinStorage::StorageRecorder> m_recorder;
+    std::unique_ptr<StorageRecorderInterpolation> m_recorderInterpolation;
     VfModuleComponentStorageFetchOnly* m_jsonExportComponent = nullptr;
     VfModuleParameter* m_numberOfPointsInCurve = nullptr;
     VfModuleParameter* m_startStopRecording = nullptr;
     VfModuleRpcPtr m_pReadRecordedValuesRpc = nullptr;
+    VfModuleRpcPtr m_pGetRecordedSampleValuesRpc = nullptr;
 };
 
 #endif // RECORDERMODULEINIT_H
