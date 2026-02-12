@@ -95,6 +95,11 @@ void ModuleManagerTestRunner::setRangeGetSetDelay(int rangeGetSetDelay)
     m_modMan->setRangeGetSetDelay(rangeGetSetDelay);
 }
 
+ZDspServer *ModuleManagerTestRunner::getDspServer()
+{
+    return m_modMan->getDspServer();
+}
+
 void ModuleManagerTestRunner::fireHotplugInterrupt(const AbstractMockAllServices::ChannelAliasHotplugDeviceNameMap &infoMap)
 {
     m_modMan->fireHotplugInterrupt(infoMap);

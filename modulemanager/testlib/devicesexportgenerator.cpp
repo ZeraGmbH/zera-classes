@@ -21,6 +21,7 @@ void DevicesExportGenerator::exportAll(QString xmlDir, QString snapshotDir)
             sessionExportGenerator.changeSession(session);
             sessionExportGenerator.generateDevIfaceXml(xmlDir);
             m_veinDumps[session] = sessionExportGenerator.getVeinDump();
+            m_dspMemDumps[session] = sessionExportGenerator.getDspMemDump();
             sessionExportGenerator.generateSnapshotJsons(snapshotDir);
         }
         m_instanceCounts.append(sessionExportGenerator.getInstanceCountsOnModulesDestroyed());
@@ -28,9 +29,14 @@ void DevicesExportGenerator::exportAll(QString xmlDir, QString snapshotDir)
     }
 }
 
-VeinDumps DevicesExportGenerator::getVeinDumps()
+JsonByteArrayDumps DevicesExportGenerator::getVeinDumps()
 {
     return m_veinDumps;
+}
+
+JsonByteArrayDumps DevicesExportGenerator::getDspMemDumps()
+{
+    return m_dspMemDumps;
 }
 
 QList<TestModuleManager::TModuleInstances> DevicesExportGenerator::getInstanceCountsOnModulesDestroyed()

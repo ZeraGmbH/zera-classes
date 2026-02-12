@@ -22,6 +22,14 @@
         <file>sessions/session-problematic-range-1.json</file>
         <file>sessions/session-problematic-sample-0.json</file>
         <file>sessions/session-problematic-sample-1.json</file>
+        <file>dspMemDumps/com5003-ced-session.json</file>
+        <file>dspMemDumps/com5003-meas-session.json</file>
+        <file>dspMemDumps/com5003-perphase-session.json</file>
+        <file>dspMemDumps/com5003-ref-session.json</file>
+        <file>dspMemDumps/mt310s2-dc-session.json</file>
+        <file>dspMemDumps/mt310s2-emob-session-ac.json</file>
+        <file>dspMemDumps/mt310s2-emob-session-dc.json</file>
+        <file>dspMemDumps/mt310s2-meas-session.json</file>
         <file>veinDumps/com5003-ced-session.json</file>
         <file>veinDumps/com5003-meas-session.json</file>
         <file>veinDumps/com5003-perphase-session.json</file>

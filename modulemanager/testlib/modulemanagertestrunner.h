@@ -38,6 +38,7 @@ public:
     ZeraModules::VirtualModule *getModule(QString uniqueName, int entityId);
     void setRangeGetSetDelay(int rangeGetSetDelay);
 
+    ZDspServer *getDspServer();
     TestDspInterfacePtr getDspInterface(int entityId, DspInterfaceCreatedBy createdBy = MODULEPROG);
     TestDspInterfacePtr getDspInterface(DspInterfaceInjectableTypes injectType);
 

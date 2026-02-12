@@ -6,20 +6,22 @@
 #include <QString>
 #include <QHash>
 
-typedef QHash<QString/*sessionName*/, QByteArray/*veinDump*/> VeinDumps;
+typedef QHash<QString/*sessionName*/, QByteArray/*veinDump*/> JsonByteArrayDumps;
 
 class DevicesExportGenerator
 {
 public:
     DevicesExportGenerator(LxdmSessionChangeParam lxdmParam);
     void exportAll(QString xmlDir, QString snapshotDir);
-    VeinDumps getVeinDumps();
+    JsonByteArrayDumps getVeinDumps();
+    JsonByteArrayDumps getDspMemDumps();
     QList<TestModuleManager::TModuleInstances> getInstanceCountsOnModulesDestroyed();
     int getModuleConfigWriteCounts() const;
 private:
     void prepareDirectory(QString path);
     LxdmSessionChangeParam m_lxdmParam;
-    VeinDumps m_veinDumps;
+    JsonByteArrayDumps m_veinDumps;
+    JsonByteArrayDumps m_dspMemDumps;
     QList<TestModuleManager::TModuleInstances> m_instanceCounts;
     int m_moduleConfigFilesWritten = 0;
 };

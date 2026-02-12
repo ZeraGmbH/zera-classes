@@ -5,8 +5,10 @@
 #include <vf_client_rpc_invoker.h>
 #include <vf_rpc_invoker.h>
 #include <vs_dumpjson.h>
+#include <testloghelpers.h>
 #include <QFile>
 #include <QDir>
+#include <QJsonObject>
 #include <memory>
 
 constexpr int system_entity = 0;
@@ -91,6 +93,19 @@ QByteArray SessionExportGenerator::getVeinDump()
         QList<int>(),
         QList<int>() << scpi_module_entity,
         true);
+}
+
+QByteArray SessionExportGenerator::getDspMemDump()
+{
+    ZDspServer *dspServer = m_modmanTestRunner->getDspServer();
+    QJsonObject json;
+    json.insert("ProgMemCyclicAvailable", dspServer->getProgMemCyclicAvailable());
+    json.insert("ProgMemCyclicFree", dspServer->getProgMemCyclicAvailable()-dspServer->getProgMemCyclicOccupied());
+    json.insert("ProgMemInterruptAvailable", dspServer->getProgMemInterruptAvailable());
+    json.insert("ProgMemInterruptFree", dspServer->getProgMemInterruptAvailable() - dspServer->getProgMemInterruptOccupied());
+    json.insert("UserMemAvailable", dspServer->getUserMemAvailable());
+    json.insert("UserMemFree", dspServer->getUserMemAvailable() - dspServer->getUserMemOccupied());
+    return TestLogHelpers::dump(json);
 }
 
 int SessionExportGenerator::getModuleConfigWriteCounts() const

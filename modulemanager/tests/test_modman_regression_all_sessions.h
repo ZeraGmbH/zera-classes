@@ -14,6 +14,8 @@ private slots:
 
     void allSessionsVeinDumps_data();
     void allSessionsVeinDumps();
+    void allSessionsDspMemDumps_data();
+    void allSessionsDspMemDumps();
     void uniqueEntityNameEntityIdPairsCom5003();
     void uniqueEntityNameEntityIdPairsMt310s2();
     void uniqueEntityNameEntityIdPairsMt581s2();
@@ -25,8 +27,10 @@ private slots:
     void checkFilesProperlyClosed();
 private:
     bool checkUniqueEntityIdNames(const QString& device);
+
     AbstractFactoryServiceInterfacesPtr m_serviceInterfaceFactory;
-    VeinDumps m_veinDumps;
+    JsonByteArrayDumps m_veinDumps;
+    JsonByteArrayDumps m_dspMemDumps;
     QList<TestModuleManager::TModuleInstances> m_instanceCountsOnModulesDestroyed;
     QString m_devIfaceXmlsPath;
     QString m_snapshotJsonsPath;
