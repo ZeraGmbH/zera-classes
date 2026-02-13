@@ -19,7 +19,6 @@ namespace FFTMODULE
 
 enum fftmoduleCmds
 {
-    sendrmident,
     varlist2dsp,
     cmdlist2dsp,
     activatedsp,
@@ -56,15 +55,11 @@ private:
     VfModuleParameter* m_pIntegrationTimeParameter;
     quint16 m_nfftLen;
 
-    QHash<QString, cMeasChannelInfo> m_measChannelInfoHash;
-
     cDspMeasData* m_pTmpDataDsp;
     cDspMeasData* m_pParameterDSP;
     cDspMeasData* m_pActualValuesDSP;
 
     // statemachine for activating gets the following states
-    QState m_resourceManagerConnectState;
-    QState m_IdentifyState;
     QState m_dspserverConnectState;
     QState m_var2DSPState;
     QState m_cmd2DSPState;
@@ -87,9 +82,6 @@ private:
 
 private slots:
     void setInterfaceActualValues(QVector<float> *actualValues);
-
-    void resourceManagerConnect();
-    void sendRMIdent();
 
     void dspserverConnect();
     void varList2DSP();

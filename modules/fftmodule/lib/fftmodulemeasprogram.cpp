@@ -22,23 +22,18 @@ cFftModuleMeasProgram::cFftModuleMeasProgram(cFftModule* module, std::shared_ptr
         getConfData()->m_valueChannelList,
         getConfData()->m_nFftOrder);
 
-    m_IdentifyState.addTransition(this, &cFftModuleMeasProgram::activationContinue, &m_dspserverConnectState);
     m_var2DSPState.addTransition(this, &cFftModuleMeasProgram::activationContinue, &m_cmd2DSPState);
     m_cmd2DSPState.addTransition(this, &cFftModuleMeasProgram::activationContinue, &m_activateDSPState);
     m_activateDSPState.addTransition(this, &cFftModuleMeasProgram::activationContinue, &m_loadDSPDoneState);
 
-    m_activationMachine.addState(&m_resourceManagerConnectState);
-    m_activationMachine.addState(&m_IdentifyState);
     m_activationMachine.addState(&m_dspserverConnectState);
     m_activationMachine.addState(&m_var2DSPState);
     m_activationMachine.addState(&m_cmd2DSPState);
     m_activationMachine.addState(&m_activateDSPState);
     m_activationMachine.addState(&m_loadDSPDoneState);
 
-    m_activationMachine.setInitialState(&m_resourceManagerConnectState);
+    m_activationMachine.setInitialState(&m_dspserverConnectState);
 
-    connect(&m_resourceManagerConnectState, &QState::entered, this, &cFftModuleMeasProgram::resourceManagerConnect);
-    connect(&m_IdentifyState, &QState::entered, this, &cFftModuleMeasProgram::sendRMIdent);
     connect(&m_dspserverConnectState, &QState::entered, this, &cFftModuleMeasProgram::dspserverConnect);
     connect(&m_var2DSPState, &QState::entered, this, &cFftModuleMeasProgram::varList2DSP);
     connect(&m_cmd2DSPState, &QState::entered, this, &cFftModuleMeasProgram::cmdList2DSP);
@@ -255,12 +250,6 @@ void cFftModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QV
             int cmd = m_MsgNrCmdList.take(msgnr);
             switch (cmd)
             {
-            case sendrmident:
-                if (reply == ack)
-                    emit activationContinue();
-                else
-                    notifyError(rmidentErrMSG);
-                break;
             case varlist2dsp:
                 if (reply == ack)
                     emit activationContinue();
@@ -353,39 +342,6 @@ void cFftModuleMeasProgram::setInterfaceActualValues(QVector<float> *actualValue
             m_DCValueList.at(channel)->setValue(fftList[0]);
         }
     }
-}
-
-void cFftModuleMeasProgram::resourceManagerConnect()
-{
-    // as this is our entry point when activating the module, we do some initialization first
-    m_measChannelInfoHash.clear(); // we build up a new channel info hash
-    cMeasChannelInfo mi;
-    for (int i = 0; i < m_veinActValueList.count(); i++)
-    {
-        QStringList sl = getConfData()->m_valueChannelList.at(i).split('-');
-        for (int j = 0; j < sl.count(); j++)
-        {
-            QString s = sl.at(j);
-            if (!m_measChannelInfoHash.contains(s))
-                m_measChannelInfoHash[s] = mi;
-        }
-    }
-
-    // we have to instantiate a working resource manager interface
-    // so first we try to get a connection to resource manager over proxy
-    m_rmClient = Zera::Proxy::getInstance()->getConnectionSmart(m_pModule->getNetworkConfig()->m_rmServiceConnectionInfo,
-                                                                m_pModule->getNetworkConfig()->m_tcpNetworkFactory);
-    m_resourceManagerConnectState.addTransition(m_rmClient.get(), &Zera::ProxyClient::connected, &m_IdentifyState);
-    // todo insert timer for timeout and/or connect error conditions.....
-    // and then we set resource manager interface's connection
-    m_rmInterface.setClientSmart(m_rmClient); //
-    connect(&m_rmInterface, &AbstractServerInterface::serverAnswer, this, &cFftModuleMeasProgram::catchInterfaceAnswer);
-    Zera::Proxy::getInstance()->startConnectionSmart(m_rmClient);
-}
-
-void cFftModuleMeasProgram::sendRMIdent()
-{
-    m_MsgNrCmdList[m_rmInterface.rmIdent(QString("FftModule%1").arg(m_pModule->getModuleNr()))] = sendrmident;
 }
 
 void cFftModuleMeasProgram::dspserverConnect()
