@@ -20,23 +20,18 @@ cReferenceModuleMeasProgram::cReferenceModuleMeasProgram(cReferenceModule* modul
         m_pModule->getEntityId(),
         m_ChannelList);
 
-    m_IdentifyState.addTransition(this, &cReferenceModuleMeasProgram::activationContinue, &m_dspserverConnectState);
     m_var2DSPState.addTransition(this, &cReferenceModuleMeasProgram::activationContinue, &m_cmd2DSPState);
     m_cmd2DSPState.addTransition(this, &cReferenceModuleMeasProgram::activationContinue, &m_activateDSPState);
     m_activateDSPState.addTransition(this, &cReferenceModuleMeasProgram::activationContinue, &m_loadDSPDoneState);
 
-    m_activationMachine.addState(&m_resourceManagerConnectState);
-    m_activationMachine.addState(&m_IdentifyState);
     m_activationMachine.addState(&m_dspserverConnectState);
     m_activationMachine.addState(&m_var2DSPState);
     m_activationMachine.addState(&m_cmd2DSPState);
     m_activationMachine.addState(&m_activateDSPState);
     m_activationMachine.addState(&m_loadDSPDoneState);
 
-    m_activationMachine.setInitialState(&m_resourceManagerConnectState);
+    m_activationMachine.setInitialState(&m_dspserverConnectState);
 
-    connect(&m_resourceManagerConnectState, &QState::entered, this, &cReferenceModuleMeasProgram::resourceManagerConnect);
-    connect(&m_IdentifyState, &QState::entered, this, &cReferenceModuleMeasProgram::sendRMIdent);
     connect(&m_dspserverConnectState, &QState::entered, this, &cReferenceModuleMeasProgram::dspserverConnect);
     connect(&m_var2DSPState, &QState::entered, this, &cReferenceModuleMeasProgram::varList2DSP);
     connect(&m_cmd2DSPState, &QState::entered, this, &cReferenceModuleMeasProgram::cmdList2DSP);
@@ -161,13 +156,6 @@ void cReferenceModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 rep
             int cmd = m_MsgNrCmdList.take(msgnr);
             switch (cmd)
             {
-            case sendrmident:
-                if (reply == ack)
-                    emit activationContinue();
-                else
-                    notifyError(rmidentErrMSG);
-                break;
-
             case varlist2dsp:
                 if (reply == ack)
                     emit activationContinue();
@@ -212,24 +200,6 @@ cReferenceModuleConfigData *cReferenceModuleMeasProgram::getConfData()
     return qobject_cast<cReferenceModuleConfiguration*>(m_pConfiguration.get())->getConfigurationData();
 }
 
-void cReferenceModuleMeasProgram::resourceManagerConnect()
-{
-    // first we try to get a connection to resource manager over proxy
-    m_rmClient = Zera::Proxy::getInstance()->getConnectionSmart(m_pModule->getNetworkConfig()->m_rmServiceConnectionInfo,
-                                                                m_pModule->getNetworkConfig()->m_tcpNetworkFactory);
-    // and then we set connection resource manager interface's connection
-    m_rmInterface.setClientSmart(m_rmClient); //
-    m_resourceManagerConnectState.addTransition(m_rmClient.get(), &Zera::ProxyClient::connected, &m_IdentifyState);
-    connect(&m_rmInterface, &AbstractServerInterface::serverAnswer, this, &cReferenceModuleMeasProgram::catchInterfaceAnswer);
-    // todo insert timer for timeout and/or connect error conditions
-    Zera::Proxy::getInstance()->startConnectionSmart(m_rmClient);
-}
-
-void cReferenceModuleMeasProgram::sendRMIdent()
-{
-    m_MsgNrCmdList[m_rmInterface.rmIdent(QString("ReferenceModule%1").arg(m_pModule->getModuleNr()))] = sendrmident;
-}
-
 void cReferenceModuleMeasProgram::dspserverConnect()
 {
     m_dspClient = Zera::Proxy::getInstance()->getConnectionSmart(m_pModule->getNetworkConfig()->m_dspServiceConnectionInfo,
@@ -267,7 +237,6 @@ void cReferenceModuleMeasProgram::deactivateDSPdone()
 {
     m_bActive = false;
     m_dataAcquisitionMachine.stop();
-    disconnect(&m_rmInterface, 0, this, 0);
     disconnect(m_dspInterface.get(), 0, this, 0);
     emit deactivated();
 }
