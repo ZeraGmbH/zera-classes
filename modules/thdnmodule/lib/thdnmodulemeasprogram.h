@@ -31,16 +31,12 @@ namespace THDNMODULE
 enum thdnmoduleCmds
 {
     sendrmident,
-    claimpgrmem,
-    claimusermem,
     varlist2dsp,
     cmdlist2dsp,
     activatedsp,
     deactivatedsp,
     dataaquistion,
     writeparameter,
-    freepgrmem,
-    freeusermem
 };
 
 #define irqNr 4
@@ -80,16 +76,12 @@ private:
     QState m_resourceManagerConnectState;
     QState m_IdentifyState;
     QState m_dspserverConnectState;
-    QState m_claimPGRMemState;
-    QState m_claimUSERMemState;
     QState m_var2DSPState;
     QState m_cmd2DSPState;
     QState m_activateDSPState;
     QFinalState m_loadDSPDoneState;
 
     // statemachine for deactivating
-    QState m_freePGRMemState;
-    QState m_freeUSERMemState;
     QFinalState m_unloadDSPDoneState;
 
     // statemachine for reading actual values
@@ -108,15 +100,11 @@ private slots:
     void resourceManagerConnect();
     void sendRMIdent();
     void dspserverConnect();
-    void claimPGRMem();
-    void claimUSERMem();
     void varList2DSP();
     void cmdList2DSP();
     void activateDSP();
     void activateDSPdone();
 
-    void freePGRMem();
-    void freeUSERMem();
     void deactivateDSPdone();
 
     void dataAcquisitionDSP();
