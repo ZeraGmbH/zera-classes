@@ -51,10 +51,13 @@ cThdnModuleMeasProgram::cThdnModuleMeasProgram(cThdnModule *module, std::shared_
     connect(&m_activateDSPState, &QAbstractState::entered, this, &cThdnModuleMeasProgram::activateDSP);
     connect(&m_loadDSPDoneState, &QAbstractState::entered, this, &cThdnModuleMeasProgram::activateDSPdone);
 
+    m_deactivationMachine.addState(&m_unloadStart);
     m_deactivationMachine.addState(&m_unloadDSPDoneState);
 
-    m_deactivationMachine.setInitialState(&m_unloadDSPDoneState);
+    m_unloadStart.addTransition(this, &cThdnModuleMeasProgram::deactivationContinue, &m_unloadDSPDoneState);
+    m_deactivationMachine.setInitialState(&m_unloadStart);
 
+    connect(&m_unloadStart, &QState::entered, this, &cThdnModuleMeasProgram::deactivateDSPStart);
     connect(&m_unloadDSPDoneState, &QAbstractState::entered, this, &cThdnModuleMeasProgram::deactivateDSPdone);
 
     // setting up statemachine for data acquisition
@@ -331,6 +334,14 @@ void cThdnModuleMeasProgram::activateDSPdone()
     connect(m_pIntegrationTimeParameter, &VfModuleComponent::sigValueChanged, this, &cThdnModuleMeasProgram::newIntegrationtime);
 
     emit activated();
+}
+
+void cThdnModuleMeasProgram::deactivateDSPStart()
+{
+    m_bActive = false;
+    m_dataAcquisitionMachine.stop();
+    disconnect(m_dspInterface.get(), 0, this, 0);
+    emit deactivationContinue();
 }
 
 void cThdnModuleMeasProgram::deactivateDSPdone()
