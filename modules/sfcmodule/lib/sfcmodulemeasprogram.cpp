@@ -19,8 +19,7 @@ cSfcModuleMeasProgram::cSfcModuleMeasProgram(cSfcModule *module, std::shared_ptr
     m_pcbInterface(std::make_shared<Zera::cPCBInterface>())
 {
     m_IdentifyState.addTransition(this, &cSfcModuleMeasProgram::activationContinue, &m_testSEC1ResourceState);
-    m_testSEC1ResourceState.addTransition(this, &cSfcModuleMeasProgram::activationContinue, &m_setECResourceState); // test presence of sec1 resource
-    m_setECResourceState.addTransition(this, &cSfcModuleMeasProgram::activationContinue, &m_readResourcesState); // claim 2 ecalculator units
+    m_testSEC1ResourceState.addTransition(this, &cSfcModuleMeasProgram::activationContinue, &m_readResourcesState); // test presence of sec1 resource
     m_readResourcesState.addTransition(this, &cSfcModuleMeasProgram::activationContinue, &m_readResourceState); // init read resources
     m_readResourceState.addTransition(this, &cSfcModuleMeasProgram::activationLoop, &m_readResourceState); // read their resources into list
     m_readResourceState.addTransition(this, &cSfcModuleMeasProgram::activationContinue, &m_testSecInputsState); // go on if done
@@ -43,7 +42,6 @@ cSfcModuleMeasProgram::cSfcModuleMeasProgram(cSfcModule *module, std::shared_ptr
     m_activationMachine.addState(&resourceManagerConnectState);
     m_activationMachine.addState(&m_IdentifyState);
     m_activationMachine.addState(&m_testSEC1ResourceState);
-    m_activationMachine.addState(&m_setECResourceState);
     m_activationMachine.addState(&m_readResourcesState);
     m_activationMachine.addState(&m_readResourceState);
     m_activationMachine.addState(&m_testSecInputsState);
@@ -63,7 +61,6 @@ cSfcModuleMeasProgram::cSfcModuleMeasProgram(cSfcModule *module, std::shared_ptr
     connect(&resourceManagerConnectState, &QState::entered, this, &cSfcModuleMeasProgram::resourceManagerConnect);
     connect(&m_IdentifyState, &QState::entered, this, &cSfcModuleMeasProgram::sendRMIdent);
     connect(&m_testSEC1ResourceState, &QState::entered, this, &cSfcModuleMeasProgram::testSEC1Resource);
-    connect(&m_setECResourceState, &QState::entered, this, &cSfcModuleMeasProgram::setECResource);
     connect(&m_readResourcesState, &QState::entered, this, &cSfcModuleMeasProgram::readResources);
     connect(&m_readResourceState, &QState::entered, this, &cSfcModuleMeasProgram::readResource);
     connect(&m_testSecInputsState, &QState::entered, this, &cSfcModuleMeasProgram::testSecInputs);
@@ -112,19 +109,16 @@ cSfcModuleMeasProgram::cSfcModuleMeasProgram(cSfcModule *module, std::shared_ptr
 
     // setting up statemachine to free the occupied resources
     m_stopECalculatorState.addTransition(this, &cSfcModuleMeasProgram::deactivationContinue, &m_freeECalculatorState);
-    m_freeECalculatorState.addTransition(this, &cSfcModuleMeasProgram::deactivationContinue, &m_freeECResource);
-    m_freeECResource.addTransition(this, &cSfcModuleMeasProgram::deactivationContinue, &m_deactivationDoneState);
+    m_freeECalculatorState.addTransition(this, &cSfcModuleMeasProgram::deactivationContinue, &m_deactivationDoneState);
 
     m_deactivationMachine.addState(&m_stopECalculatorState);
     m_deactivationMachine.addState(&m_freeECalculatorState);
-    m_deactivationMachine.addState(&m_freeECResource);
     m_deactivationMachine.addState(&m_deactivationDoneState);
 
     m_deactivationMachine.setInitialState(&m_stopECalculatorState);
 
     connect(&m_stopECalculatorState, &QState::entered, this, &cSfcModuleMeasProgram::stopECCalculator);
     connect(&m_freeECalculatorState, &QState::entered, this, &cSfcModuleMeasProgram::freeECalculator);
-    connect(&m_freeECResource, &QState::entered, this, &cSfcModuleMeasProgram::freeECResource);
     connect(&m_deactivationDoneState, &QState::entered, this, &cSfcModuleMeasProgram::deactivationDone);
 
     m_resourceTypeList.addTypesFromConfig(getConfData()->m_dutInpList);
@@ -183,11 +177,6 @@ void cSfcModuleMeasProgram::sendRMIdent()
 void cSfcModuleMeasProgram::testSEC1Resource()
 {
     m_MsgNrCmdList[m_rmInterface.getResourceTypes()] = testsec1resource;
-}
-
-void cSfcModuleMeasProgram::setECResource()
-{
-    m_MsgNrCmdList[m_rmInterface.setResource("SEC1", "ECALCULATOR", 1)] = setecresource;
 }
 
 void cSfcModuleMeasProgram::readResources()
@@ -330,13 +319,6 @@ void cSfcModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QV
                     notifyError(resourcetypeErrMsg);
                 break;
 
-            case setecresource:
-                if (reply == ack)
-                    emit activationContinue();
-                else
-                    notifyError(setresourceErrMsg);
-                break;
-
             case readresource:
             {
                 if (reply == ack) {
@@ -409,12 +391,6 @@ void cSfcModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QV
                     notifyError(freesececalcunitErrMsg);
                 break;
 
-            case freeecresource:
-                if (reply == ack)
-                    emit deactivationContinue();
-                else
-                    notifyError(freeresourceErrMsg);
-                break;
             case enableinterrupt:
                 if (reply == ack)
                     emit setupContinue();
@@ -547,11 +523,6 @@ void cSfcModuleMeasProgram::freeECalculator()
     m_ContinousTimer->stop();
     m_bActive = false;
     m_MsgNrCmdList[m_secInterface->freeECalcUnits()] = freeecalcunits;
-}
-
-void cSfcModuleMeasProgram::freeECResource()
-{
-    m_MsgNrCmdList[m_rmInterface.freeResource("SEC1", "ECALCULATOR")] = freeecresource;
 }
 
 void cSfcModuleMeasProgram::deactivationDone()
