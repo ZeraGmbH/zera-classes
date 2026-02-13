@@ -961,6 +961,7 @@ void cPower2ModuleMeasProgram::activateDSPdone()
 void cPower2ModuleMeasProgram::freeFreqOutputs()
 {
     m_bActive = false;
+    m_dataAcquisitionMachine.stop();
     Zera::Proxy::getInstance()->releaseConnectionSmart(m_dspClient);
     if (getConfData()->m_nFreqOutputCount > 0) // we only have to read information if really configured
     {

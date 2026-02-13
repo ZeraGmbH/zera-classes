@@ -368,6 +368,7 @@ void cThdnModuleMeasProgram::activateDSPdone()
 void cThdnModuleMeasProgram::deactivateDSPdone()
 {
     m_bActive = false;
+    m_dataAcquisitionMachine.stop();
     disconnect(&m_rmInterface, 0, this, 0);
     disconnect(m_dspInterface.get(), 0, this, 0);
     emit deactivated();

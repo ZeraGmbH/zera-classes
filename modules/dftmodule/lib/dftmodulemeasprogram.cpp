@@ -508,6 +508,7 @@ void cDftModuleMeasProgram::activateDSPdone()
 void cDftModuleMeasProgram::deactivateDSPdone()
 {
     m_bActive = false;
+    m_dataAcquisitionMachine.stop();
     disconnect(&m_rmInterface, 0, this, 0); // but we must disconnect this 2 manually
     disconnect(m_dspInterface.get(), 0, this, 0);
     emit deactivated();
