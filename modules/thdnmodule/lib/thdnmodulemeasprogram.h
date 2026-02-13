@@ -30,7 +30,6 @@ namespace THDNMODULE
 
 enum thdnmoduleCmds
 {
-    sendrmident,
     varlist2dsp,
     cmdlist2dsp,
     activatedsp,
@@ -72,8 +71,6 @@ private:
     cDspMeasData* m_pActualValuesDSP;
 
     // statemachine for activating gets the following states
-    QState m_resourceManagerConnectState;
-    QState m_IdentifyState;
     QState m_dspserverConnectState;
     QState m_var2DSPState;
     QState m_cmd2DSPState;
@@ -96,8 +93,6 @@ private:
 private slots:
     void setInterfaceActualValues(QVector<float> *actualValues);
 
-    void resourceManagerConnect();
-    void sendRMIdent();
     void dspserverConnect();
     void varList2DSP();
     void cmdList2DSP();
@@ -110,7 +105,6 @@ private slots:
     void dataReadDSP();
 
     void newIntegrationtime(QVariant ti);
-
 };
 
 }
