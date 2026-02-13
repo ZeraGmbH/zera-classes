@@ -460,13 +460,6 @@ void cPower2ModuleMeasProgram::setDspCmdList()
     }
 }
 
-
-void cPower2ModuleMeasProgram::deleteDspCmdList()
-{
-    m_dspInterface->clearCmdList();
-}
-
-
 void cPower2ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant answer)
 {
     bool ok;

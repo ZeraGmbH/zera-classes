@@ -42,7 +42,6 @@ private:
     cDftModuleConfigData* getConfData();
     void setDspVarList();
     void setDspCmdList();
-    void deleteDspCmdList();
     void turnVectorsToRefChannel();
 
     cDftModule* m_pModule;

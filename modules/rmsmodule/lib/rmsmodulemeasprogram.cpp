@@ -258,13 +258,6 @@ void cRmsModuleMeasProgram::setDspCmdList()
     }
 }
 
-
-void cRmsModuleMeasProgram::deleteDspCmdList()
-{
-    m_dspInterface->clearCmdList();
-}
-
-
 void cRmsModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant answer)
 {
     if (msgnr == 0) { // 0 was reserved for async. messages

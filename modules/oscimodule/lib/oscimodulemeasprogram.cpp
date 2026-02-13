@@ -200,13 +200,6 @@ void cOsciModuleMeasProgram::setDspCmdList()
     m_dspInterface->addCycListItem("STOPCHAIN(1,0x0102)"); // end processnr., mainchain 1 subchain 2
 }
 
-
-void cOsciModuleMeasProgram::deleteDspCmdList()
-{
-    m_dspInterface->clearCmdList();
-}
-
-
 void cOsciModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant answer)
 {
     bool ok;

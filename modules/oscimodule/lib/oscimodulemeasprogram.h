@@ -41,7 +41,6 @@ private:
     cOsciModuleConfigData* getConfData();
     void setDspVarList();
     void setDspCmdList();
-    void deleteDspCmdList();
 
     cOsciModule* m_pModule;
     ActualValueStartStopHandler m_startStopHandler;

@@ -37,7 +37,6 @@ private:
     cReferenceModuleConfigData* getConfData();
     void setDspVarList();
     void setDspCmdList();
-    void deleteDspCmdList();
 
     cReferenceModule* m_pModule; // the module we live in
     QStringList m_ChannelList; // the list of actual values we work on

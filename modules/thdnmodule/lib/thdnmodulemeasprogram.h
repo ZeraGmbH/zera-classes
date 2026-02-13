@@ -59,7 +59,6 @@ private:
     cThdnModuleConfigData* getConfData();
     void setDspVarList();
     void setDspCmdList();
-    void deleteDspCmdList();
 
     cThdnModule* m_pModule;
     ActualValueStartStopHandler m_startStopHandler;

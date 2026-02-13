@@ -43,7 +43,6 @@ private:
     cFftModuleConfigData* getConfData();
     void setDspVarList();
     void setDspCmdList();
-    void deleteDspCmdList();
     quint16 calcFftResultLenHalf(quint8 fftOrder);
 
     cFftModule* m_pModule;

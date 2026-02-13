@@ -129,7 +129,6 @@ void cThdnModuleMeasProgram::generateVeinInterface()
     m_pModule->m_veinComponentsWithMetaAndScpi.append(m_pMeasureSignal);
 }
 
-
 void cThdnModuleMeasProgram::setDspVarList()
 {
     int samples = m_pModule->getSharedChannelRangeObserver()->getSamplesPerPeriod();
@@ -193,13 +192,6 @@ void cThdnModuleMeasProgram::setDspCmdList()
         m_dspInterface->addCycListItem("DEACTIVATECHAIN(1,0x0102)");
     m_dspInterface->addCycListItem("STOPCHAIN(1,0x0102)"); // end processnr., mainchain 1 subchain 2
 }
-
-
-void cThdnModuleMeasProgram::deleteDspCmdList()
-{
-    m_dspInterface->clearCmdList();
-}
-
 
 void cThdnModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant answer)
 {

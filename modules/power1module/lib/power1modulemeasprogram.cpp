@@ -418,11 +418,6 @@ void cPower1ModuleMeasProgram::setDspCmdList()
     m_dspInterface->addCycListItems(dspFreqCmds);
 }
 
-void cPower1ModuleMeasProgram::deleteDspCmdList()
-{
-    m_dspInterface->clearCmdList();
-}
-
 void cPower1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant answer)
 {
     if (msgnr == 0) { // 0 was reserved for async. messages

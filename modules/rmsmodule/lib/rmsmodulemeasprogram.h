@@ -40,7 +40,6 @@ private:
     cRmsModuleConfigData* getConfData();
     void setDspVarList();
     void setDspCmdList();
-    void deleteDspCmdList();
 
     cRmsModule* m_pModule;
     ActualValueStartStopHandler m_startStopHandler;

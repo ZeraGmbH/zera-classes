@@ -57,7 +57,6 @@ private:
     cPower2ModuleConfigData* getConfData();
     void setDspVarList();
     void setDspCmdList();
-    void deleteDspCmdList();
 
     QStringList dspCmdInitVars(int dspInitialSelectCode);
     void dspSetParamsTiMModePhase(int tiTimeOrPeriods);
