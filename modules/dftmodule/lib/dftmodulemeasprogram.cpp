@@ -28,24 +28,18 @@ cDftModuleMeasProgram::cDftModuleMeasProgram(cDftModule* module, std::shared_ptr
         getConfData()->m_valueChannelList,
         getConfData()->m_nDftOrder);
 
-    m_IdentifyState.addTransition(this, &cDftModuleMeasProgram::activationContinue, &m_dspserverConnectState);
-
     m_var2DSPState.addTransition(this, &cDftModuleMeasProgram::activationContinue, &m_cmd2DSPState);
     m_cmd2DSPState.addTransition(this, &cDftModuleMeasProgram::activationContinue, &m_activateDSPState);
     m_activateDSPState.addTransition(this, &cDftModuleMeasProgram::activationContinue, &m_loadDSPDoneState);
 
-    m_activationMachine.addState(&m_resourceManagerConnectState);
-    m_activationMachine.addState(&m_IdentifyState);
     m_activationMachine.addState(&m_dspserverConnectState);
     m_activationMachine.addState(&m_var2DSPState);
     m_activationMachine.addState(&m_cmd2DSPState);
     m_activationMachine.addState(&m_activateDSPState);
     m_activationMachine.addState(&m_loadDSPDoneState);
 
-    m_activationMachine.setInitialState(&m_resourceManagerConnectState);
+    m_activationMachine.setInitialState(&m_dspserverConnectState);
 
-    connect(&m_resourceManagerConnectState, &QState::entered, this, &cDftModuleMeasProgram::resourceManagerConnect);
-    connect(&m_IdentifyState, &QState::entered, this, &cDftModuleMeasProgram::sendRMIdent);
     connect(&m_dspserverConnectState, &QState::entered, this, &cDftModuleMeasProgram::dspserverConnect);
     connect(&m_var2DSPState, &QState::entered, this, &cDftModuleMeasProgram::varList2DSP);
     connect(&m_cmd2DSPState, &QState::entered, this, &cDftModuleMeasProgram::cmdList2DSP);
@@ -271,12 +265,6 @@ void cDftModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QV
             int cmd = m_MsgNrCmdList.take(msgnr);
             switch (cmd)
             {
-            case sendrmident:
-                if (reply == ack)
-                    emit activationContinue();
-                else
-                    notifyError(rmidentErrMSG);
-                break;
             case varlist2dsp:
                 if (reply == ack)
                     emit activationContinue();
@@ -427,40 +415,6 @@ void cDftModuleMeasProgram::setInterfaceActualValues(QVector<float> *actualValue
     }
 }
 
-void cDftModuleMeasProgram::resourceManagerConnect()
-{
-    // as this is our entry point when activating the module, we do some initialization first
-    m_measChannelInfoHash.clear(); // we build up a new channel info hash
-    cMeasChannelInfo mi;
-    for (int i = 0; i < getConfData()->m_valueChannelList.count(); i++)
-    {
-        QStringList sl = getConfData()->m_valueChannelList.at(i).split('-');
-        for (int j = 0; j < sl.count(); j++)
-        {
-            QString s = sl.at(j);
-            if (!m_measChannelInfoHash.contains(s))
-                m_measChannelInfoHash[s] = mi;
-        }
-    }
-
-    // we have to instantiate a working resource manager interface
-    // so first we try to get a connection to resource manager over proxy
-    m_rmClient = Zera::Proxy::getInstance()->getConnectionSmart(m_pModule->getNetworkConfig()->m_rmServiceConnectionInfo,
-                                                                m_pModule->getNetworkConfig()->m_tcpNetworkFactory);
-    m_resourceManagerConnectState.addTransition(m_rmClient.get(), &Zera::ProxyClient::connected, &m_IdentifyState);
-    // todo insert timer for timeout and/or connect error conditions.....
-    // and then we set resource manager interface's connection
-    m_rmInterface.setClientSmart(m_rmClient); //
-    connect(&m_rmInterface, &AbstractServerInterface::serverAnswer, this, &cDftModuleMeasProgram::catchInterfaceAnswer);
-    Zera::Proxy::getInstance()->startConnectionSmart(m_rmClient);
-}
-
-
-void cDftModuleMeasProgram::sendRMIdent()
-{
-    m_MsgNrCmdList[m_rmInterface.rmIdent(QString("DftModule%1").arg(m_pModule->getModuleNr()))] = sendrmident;
-}
-
 void cDftModuleMeasProgram::dspserverConnect()
 {
     m_dspClient = Zera::Proxy::getInstance()->getConnectionSmart(m_pModule->getNetworkConfig()->m_dspServiceConnectionInfo,
@@ -509,7 +463,6 @@ void cDftModuleMeasProgram::deactivateDSPdone()
 {
     m_bActive = false;
     m_dataAcquisitionMachine.stop();
-    disconnect(&m_rmInterface, 0, this, 0); // but we must disconnect this 2 manually
     disconnect(m_dspInterface.get(), 0, this, 0);
     emit deactivated();
 }
