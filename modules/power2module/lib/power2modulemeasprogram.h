@@ -24,16 +24,12 @@ enum power2moduleCmds
     readsourcechanneldspchannel,
     readsourceformfactor,
 
-    claimpgrmem,
-    claimusermem,
     varlist2dsp,
     cmdlist2dsp,
     activatedsp,
     deactivatedsp,
     dataaquistion,
     writeparameter,
-    freepgrmem,
-    freeusermem,
     freeresourcesource,
     unregisterrangenotifiers,
     readurvalue,
@@ -131,17 +127,12 @@ private:
     QState m_setSenseChannelRangeNotifierDoneState;
 
     QState m_dspserverConnectState;
-    QState m_claimPGRMemState;
-    QState m_claimUSERMemState;
     QState m_var2DSPState;
     QState m_cmd2DSPState;
     QState m_activateDSPState;
     QFinalState m_loadDSPDoneState;
 
     // statemachine for deactivating
-    QState m_freePGRMemState;
-    QState m_freeUSERMemState;
-
     QState m_freeFreqOutputsState;
     QState m_freeFreqOutputState;
     QState m_freeFreqOutputDoneState;
@@ -192,15 +183,11 @@ private slots:
     void setSenseChannelRangeNotifierDone();
 
     void dspserverConnect();
-    void claimPGRMem();
-    void claimUSERMem();
     void varList2DSP();
     void cmdList2DSP();
     void activateDSP();
     void activateDSPdone();
 
-    void freePGRMem();
-    void freeUSERMem();
     void freeFreqOutputs();
     void freeFreqOutput();
     void freeFreqOutputDone();
