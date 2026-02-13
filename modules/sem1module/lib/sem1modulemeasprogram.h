@@ -19,14 +19,12 @@ enum sem1moduleCmds
 {
     sendrmident,
     testsec1resource,
-    setecresource,
     readresource,
     fetchecalcunits,
     readrefInputalias,
     setsecintnotifier,
 
     freeecalcunits,
-    freeecresource,
 
     actualizestatus,
     actualizeenergy,
@@ -72,7 +70,6 @@ private slots:
     void resourceManagerConnect();
     void sendRMIdent();
     void testSEC1Resource();
-    void setECResource();
     void readResources();
     void readResource();
     void testSemInputs();
@@ -88,7 +85,6 @@ private slots:
 
     void stopECCalculator();
     void freeECalculator();
-    void freeECResource();
     void deactivationDone();
 
     void setSync();
@@ -164,7 +160,6 @@ private:
     QState resourceManagerConnectState; // connect to resource manager
     QState m_IdentifyState; // identify to resource manager
     QState m_testSEC1ResourceState; // test for our configured error calculator units
-    QState m_setECResourceState; // here we try to set 3 ecalcunits at rm
     QState m_readResourcesState; // init to read all resource information for each type
     QState m_readResourceState; // read for 1 type
 
@@ -185,7 +180,6 @@ private:
     // statemachine for deactivating
     QState m_stopECalculatorState; // we stop running measurement
     QState m_freeECalculatorState; // we give back our ecalcunits to sec server
-    QState m_freeECResource; // and also give them back to the resource manager
     QFinalState m_deactivationDoneState;
 
     // statemachine for starting error measurement
