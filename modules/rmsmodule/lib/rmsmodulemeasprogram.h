@@ -14,7 +14,6 @@ namespace RMSMODULE
 
 enum rmsmoduleCmds
 {
-    sendrmident,
     varlist2dsp,
     cmdlist2dsp,
     activatedsp,
@@ -44,7 +43,6 @@ private:
     cRmsModule* m_pModule;
     ActualValueStartStopHandler m_startStopHandler;
     QList<VfModuleComponent*> m_veinActValueList; // the list of actual values we work on
-    QHash<QString, cMeasChannelInfo> m_measChannelInfoHash;
 
     VfModuleComponent *m_pMeasureSignal;
     VfModuleParameter* m_pIntegrationParameter;
@@ -56,8 +54,6 @@ private:
     cDspMeasData* m_pActualValuesDSP;
 
     // statemachine for activating gets the following states
-    QState m_resourceManagerConnectState;
-    QState m_IdentifyState;
     QState m_dspserverConnectState;
     QState m_var2DSPState;
     QState m_cmd2DSPState;
@@ -80,8 +76,6 @@ private:
 private slots:
     void setInterfaceActualValues(QVector<float> *actualValues);
 
-    void resourceManagerConnect();
-    void sendRMIdent();
     void dspserverConnect();
     void varList2DSP();
     void cmdList2DSP();
@@ -95,7 +89,6 @@ private slots:
 
     void newIntegrationtime(QVariant ti);
     void newIntegrationPeriod(QVariant period);
-
 };
 
 }
