@@ -65,6 +65,7 @@ private:
     QFinalState m_loadDSPDoneState;
 
     // statemachine for deactivating
+    QState m_unloadStart;
     QFinalState m_unloadDSPDoneState;
 
     // statemachine for reading actual values
@@ -88,6 +89,7 @@ private slots:
     void activateDSP();
     void activateDSPdone();
 
+    void deactivateDSPStart();
     void deactivateDSPdone();
 
     void dataAcquisitionDSP();
