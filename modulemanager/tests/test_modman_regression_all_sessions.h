@@ -14,8 +14,13 @@ private slots:
 
     void allSessionsVeinDumps_data();
     void allSessionsVeinDumps();
+
     void allSessionsDspMemDumps_data();
     void allSessionsDspMemDumps();
+
+    void allSessionsSecUnitDumps_data();
+    void allSessionsSecUnitDumps();
+
     void uniqueEntityNameEntityIdPairsCom5003();
     void uniqueEntityNameEntityIdPairsMt310s2();
     void uniqueEntityNameEntityIdPairsMt581s2();
@@ -31,6 +36,7 @@ private:
     AbstractFactoryServiceInterfacesPtr m_serviceInterfaceFactory;
     JsonByteArrayDumps m_veinDumps;
     JsonByteArrayDumps m_dspMemDumps;
+    JsonByteArrayDumps m_secUnitDumps;
     QList<TestModuleManager::TModuleInstances> m_instanceCountsOnModulesDestroyed;
     QString m_devIfaceXmlsPath;
     QString m_snapshotJsonsPath;

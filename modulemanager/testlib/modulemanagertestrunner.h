@@ -39,6 +39,7 @@ public:
     void setRangeGetSetDelay(int rangeGetSetDelay);
 
     ZDspServer *getDspServer();
+    cSEC1000dServer *getSecServer();
     TestDspInterfacePtr getDspInterface(int entityId, DspInterfaceCreatedBy createdBy = MODULEPROG);
     TestDspInterfacePtr getDspInterface(DspInterfaceInjectableTypes injectType);
 

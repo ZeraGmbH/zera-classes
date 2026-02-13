@@ -36,6 +36,7 @@ public:
     QList<TModuleInstances> getInstanceCountsOnModulesDestroyed();
 
     ZDspServer *getDspServer();
+    cSEC1000dServer *getSecServer();
     void setRangeGetSetDelay(int rangeGetSetDelay);
 
     // hotplug full functional methods

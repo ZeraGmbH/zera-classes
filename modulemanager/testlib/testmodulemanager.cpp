@@ -101,6 +101,11 @@ ZDspServer *TestModuleManager::getDspServer()
     return m_testAllServices->getZdsp1dServer();
 }
 
+cSEC1000dServer *TestModuleManager::getSecServer()
+{
+    return m_testAllServices->getSecServer();
+}
+
 void TestModuleManager::setRangeGetSetDelay(int rangeGetSetDelay)
 {
     m_testAllServices->setRangeGetSetDelay(rangeGetSetDelay);

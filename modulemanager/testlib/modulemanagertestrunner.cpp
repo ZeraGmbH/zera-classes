@@ -100,6 +100,11 @@ ZDspServer *ModuleManagerTestRunner::getDspServer()
     return m_modMan->getDspServer();
 }
 
+cSEC1000dServer *ModuleManagerTestRunner::getSecServer()
+{
+    return m_modMan->getSecServer();
+}
+
 void ModuleManagerTestRunner::fireHotplugInterrupt(const AbstractMockAllServices::ChannelAliasHotplugDeviceNameMap &infoMap)
 {
     m_modMan->fireHotplugInterrupt(infoMap);

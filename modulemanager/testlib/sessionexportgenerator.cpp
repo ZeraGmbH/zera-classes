@@ -108,6 +108,15 @@ QByteArray SessionExportGenerator::getDspMemDump()
     return TestLogHelpers::dump(json);
 }
 
+QByteArray SessionExportGenerator::getSecUnitDump()
+{
+    cSEC1000dServer *secServer = m_modmanTestRunner->getSecServer();
+    QJsonObject json;
+    json.insert("EcUnitsAvailable", secServer->getEcUnitsAvailable());
+    json.insert("EcUnitsFree", secServer->getEcUnitsAvailable()-secServer->getEcUnitsOccupied());
+    return TestLogHelpers::dump(json);
+}
+
 int SessionExportGenerator::getModuleConfigWriteCounts() const
 {
     return m_modmanTestRunner->getModuleConfigWriteCounts();
