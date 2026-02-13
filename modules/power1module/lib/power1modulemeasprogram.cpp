@@ -48,8 +48,6 @@ cPower1ModuleMeasProgram::cPower1ModuleMeasProgram(cPower1Module* module, std::s
     m_setSenseChannelRangeNotifierDoneState.addTransition(this, &cModuleActivist::activationContinue, &m_dspserverConnectState);
     m_setSenseChannelRangeNotifierDoneState.addTransition(this, &cModuleActivist::activationLoop, &m_setSenseChannelRangeNotifierState);
 
-    m_claimPGRMemState.addTransition(this, &cModuleActivist::activationContinue, &m_claimUSERMemState);
-    m_claimUSERMemState.addTransition(this, &cModuleActivist::activationContinue, &m_var2DSPState);
     m_var2DSPState.addTransition(this, &cModuleActivist::activationContinue, &m_cmd2DSPState);
     m_cmd2DSPState.addTransition(this, &cModuleActivist::activationContinue, &m_activateDSPState);
     m_activateDSPState.addTransition(this, &cModuleActivist::activationContinue, &m_loadDSPDoneState);
@@ -74,8 +72,6 @@ cPower1ModuleMeasProgram::cPower1ModuleMeasProgram(cPower1Module* module, std::s
     m_activationMachine.addState(&m_setSenseChannelRangeNotifierDoneState);
 
     m_activationMachine.addState(&m_dspserverConnectState);
-    m_activationMachine.addState(&m_claimPGRMemState);
-    m_activationMachine.addState(&m_claimUSERMemState);
     m_activationMachine.addState(&m_var2DSPState);
     m_activationMachine.addState(&m_cmd2DSPState);
     m_activationMachine.addState(&m_activateDSPState);
@@ -104,17 +100,12 @@ cPower1ModuleMeasProgram::cPower1ModuleMeasProgram(cPower1Module* module, std::s
     connect(&m_setSenseChannelRangeNotifierState, &QAbstractState::entered, this, &cPower1ModuleMeasProgram::setSenseChannelRangeNotifier);
     connect(&m_setSenseChannelRangeNotifierDoneState, &QAbstractState::entered, this, &cPower1ModuleMeasProgram::setSenseChannelRangeNotifierDone);
 
-    connect(&m_claimPGRMemState, &QAbstractState::entered, this, &cPower1ModuleMeasProgram::claimPGRMem);
-    connect(&m_claimUSERMemState, &QAbstractState::entered, this, &cPower1ModuleMeasProgram::claimUSERMem);
     connect(&m_var2DSPState, &QAbstractState::entered, this, &cPower1ModuleMeasProgram::varList2DSP);
     connect(&m_cmd2DSPState, &QAbstractState::entered, this, &cPower1ModuleMeasProgram::cmdList2DSP);
     connect(&m_activateDSPState, &QAbstractState::entered, this, &cPower1ModuleMeasProgram::activateDSP);
     connect(&m_loadDSPDoneState, &QAbstractState::entered, this, &cPower1ModuleMeasProgram::activateDSPdone);
 
     // setting up statemachine for unloading dsp and setting resources free
-    m_freePGRMemState.addTransition(this, &cModuleActivist::deactivationContinue, &m_freeUSERMemState);
-    m_freeUSERMemState.addTransition(this, &cModuleActivist::deactivationContinue, &m_freeFreqOutputsState);
-
     m_freeFreqOutputsState.addTransition(this, &cModuleActivist::deactivationContinue, &m_freeFreqOutputState);
     m_freeFreqOutputsState.addTransition(this, &cPower1ModuleMeasProgram::deactivationSkip, &m_resetNotifiersState);
     m_freeFreqOutputState.addTransition(this, &cModuleActivist::deactivationContinue, &m_freeFreqOutputDoneState);
@@ -124,9 +115,6 @@ cPower1ModuleMeasProgram::cPower1ModuleMeasProgram(cPower1Module* module, std::s
     m_resetNotifierState.addTransition(this, &cModuleActivist::deactivationContinue, &m_resetNotifierDoneState);
     m_resetNotifierDoneState.addTransition(this, &cModuleActivist::deactivationContinue, &m_unloadDSPDoneState);
     m_resetNotifierDoneState.addTransition(this, &cModuleActivist::deactivationLoop, &m_resetNotifierState);
-
-    m_deactivationMachine.addState(&m_freePGRMemState);
-    m_deactivationMachine.addState(&m_freeUSERMemState);
 
     m_deactivationMachine.addState(&m_freeFreqOutputsState);
     m_deactivationMachine.addState(&m_freeFreqOutputState);
@@ -138,10 +126,7 @@ cPower1ModuleMeasProgram::cPower1ModuleMeasProgram(cPower1Module* module, std::s
 
     m_deactivationMachine.addState(&m_unloadDSPDoneState);
 
-    m_deactivationMachine.setInitialState(&m_freePGRMemState);
-
-    connect(&m_freePGRMemState, &QAbstractState::entered, this, &cPower1ModuleMeasProgram::freePGRMem);
-    connect(&m_freeUSERMemState, &QAbstractState::entered, this, &cPower1ModuleMeasProgram::freeUSERMem);
+    m_deactivationMachine.setInitialState(&m_freeFreqOutputsState);
 
     connect(&m_freeFreqOutputsState, &QAbstractState::entered, this, &cPower1ModuleMeasProgram::freeFreqOutputs);
     connect(&m_freeFreqOutputState, &QAbstractState::entered, this, &cPower1ModuleMeasProgram::freeFreqOutput);
@@ -510,20 +495,6 @@ void cPower1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply,
                     notifyError(writedspmemoryErrMsg);
                 break;
 
-            case claimpgrmem:
-                if (reply == ack)
-                    emit activationContinue();
-                else
-                    notifyError(claimresourceErrMsg);
-                break;
-
-            case claimusermem:
-                if (reply == ack)
-                    emit activationContinue();
-                else
-                    notifyError(claimresourceErrMsg);
-                break;
-
             case varlist2dsp:
                 if (reply == ack)
                     emit activationContinue();
@@ -601,14 +572,6 @@ void cPower1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply,
                 else
                     notifyError(dspdeactiveErrMsg);
                 break;
-            case freepgrmem:
-                if (reply == ack)
-                    emit deactivationContinue();
-                else
-                    notifyError(freeresourceErrMsg);
-                break;
-
-            case freeusermem:
             case freeresourcesource:
                 if (reply == ack)
                     emit deactivationContinue();
@@ -859,37 +822,22 @@ void cPower1ModuleMeasProgram::dspserverConnect()
     m_dspClient = Zera::Proxy::getInstance()->getConnectionSmart(m_pModule->getNetworkConfig()->m_dspServiceConnectionInfo,
                                                                  m_pModule->getNetworkConfig()->m_tcpNetworkFactory);
     m_dspInterface->setClientSmart(m_dspClient);
-    m_dspserverConnectState.addTransition(m_dspClient.get(), &Zera::ProxyClient::connected, &m_claimPGRMemState);
+    m_dspserverConnectState.addTransition(m_dspClient.get(), &Zera::ProxyClient::connected, &m_var2DSPState);
     connect(m_dspInterface.get(), &AbstractServerInterface::serverAnswer, this, &cPower1ModuleMeasProgram::catchInterfaceAnswer);
     Zera::Proxy::getInstance()->startConnectionSmart(m_dspClient);
 }
 
-
-void cPower1ModuleMeasProgram::claimPGRMem()
-{
-    setDspVarList(); // !!! sample rate must be fetched before (currently in state m_readSampleRateState)
-    setDspCmdList();
-    m_MsgNrCmdList[m_rmInterface.setResource("DSP1", "PGRMEMC", m_dspInterface->cmdListCount())] = claimpgrmem;
-}
-
-
-void cPower1ModuleMeasProgram::claimUSERMem()
-{
-   m_MsgNrCmdList[m_rmInterface.setResource("DSP1", "USERMEM", m_nDspMemUsed)] = claimusermem;
-}
-
-
 void cPower1ModuleMeasProgram::varList2DSP()
 {
+    setDspVarList(); // first we set the var list for our dsp
+    setDspCmdList(); // and the cmd list he has to work on
     m_MsgNrCmdList[m_dspInterface->varList2Dsp()] = varlist2dsp;
 }
-
 
 void cPower1ModuleMeasProgram::cmdList2DSP()
 {
     m_MsgNrCmdList[m_dspInterface->cmdList2Dsp()] = cmdlist2dsp;
 }
-
 
 void cPower1ModuleMeasProgram::activateDSP()
 {
@@ -943,23 +891,6 @@ void cPower1ModuleMeasProgram::activateDSPdone()
     emit activated();
 }
 
-void cPower1ModuleMeasProgram::freePGRMem()
-{
-    m_dataAcquisitionMachine.stop();
-    m_bActive = false;
-    Zera::Proxy::getInstance()->releaseConnectionSmart(m_dspClient);
-    deleteDspCmdList();
-
-    m_MsgNrCmdList[m_rmInterface.freeResource("DSP1", "PGRMEMC")] = freepgrmem;
-}
-
-
-void cPower1ModuleMeasProgram::freeUSERMem()
-{
-    m_MsgNrCmdList[m_rmInterface.freeResource("DSP1", "USERMEM")] = freeusermem;
-}
-
-
 void cPower1ModuleMeasProgram::freeFreqOutputs()
 {
     if (getConfData()->m_nFreqOutputCount > 0) // we only have to read information if really configured
@@ -971,13 +902,11 @@ void cPower1ModuleMeasProgram::freeFreqOutputs()
         emit deactivationSkip();
 }
 
-
 void cPower1ModuleMeasProgram::freeFreqOutput()
 {
     infoRead = infoReadList.takeFirst();
     m_MsgNrCmdList[m_rmInterface.freeResource("SOURCE", infoRead)] = freeresourcesource;
 }
-
 
 void cPower1ModuleMeasProgram::freeFreqOutputDone()
 {
@@ -987,20 +916,17 @@ void cPower1ModuleMeasProgram::freeFreqOutputDone()
         emit deactivationLoop();
 }
 
-
 void cPower1ModuleMeasProgram::resetNotifiers()
 {
     infoReadList = m_measChannelInfoHash.keys();
     emit deactivationContinue();
 }
 
-
 void cPower1ModuleMeasProgram::resetNotifier()
 {
     infoRead = infoReadList.takeFirst();
     m_MsgNrCmdList[m_measChannelInfoHash[infoRead].pcbIFace->unregisterNotifiers()] = unregisterrangenotifiers;
 }
-
 
 void cPower1ModuleMeasProgram::resetNotifierDone()
 {
@@ -1010,7 +936,6 @@ void cPower1ModuleMeasProgram::resetNotifierDone()
         emit deactivationLoop();
 }
 
-
 void cPower1ModuleMeasProgram::deactivateDSPdone()
 {
     disconnect(&m_rmInterface, 0, this, 0);
@@ -1019,14 +944,12 @@ void cPower1ModuleMeasProgram::deactivateDSPdone()
     emit deactivated();
 }
 
-
 void cPower1ModuleMeasProgram::dataAcquisitionDSP()
 {
     m_pMeasureSignal->setValue(QVariant(0));
     if(m_bActive)
         m_MsgNrCmdList[m_dspInterface->dataAcquisition(m_dspVars.getActualValues())] = dataaquistion; // we start our data aquisition now
 }
-
 
 void cPower1ModuleMeasProgram::dataReadDSP()
 {
@@ -1037,13 +960,11 @@ void cPower1ModuleMeasProgram::dataReadDSP()
     }
 }
 
-
 void cPower1ModuleMeasProgram::readUrvalue()
 {
     readUrvalueInfo = readUrvalueList.takeFirst(); // we have the channel information now
     m_MsgNrCmdList[m_measChannelInfoHash[readUrvalueInfo].pcbIFace->getUrvalue(readUrvalueInfo)] = readurvalue;
 }
-
 
 void cPower1ModuleMeasProgram::readUrvalueDone()
 {
