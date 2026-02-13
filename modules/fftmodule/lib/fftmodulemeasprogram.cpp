@@ -23,8 +23,6 @@ cFftModuleMeasProgram::cFftModuleMeasProgram(cFftModule* module, std::shared_ptr
         getConfData()->m_nFftOrder);
 
     m_IdentifyState.addTransition(this, &cFftModuleMeasProgram::activationContinue, &m_dspserverConnectState);
-    m_claimPGRMemState.addTransition(this, &cFftModuleMeasProgram::activationContinue, &m_claimUSERMemState);
-    m_claimUSERMemState.addTransition(this, &cFftModuleMeasProgram::activationContinue, &m_var2DSPState);
     m_var2DSPState.addTransition(this, &cFftModuleMeasProgram::activationContinue, &m_cmd2DSPState);
     m_cmd2DSPState.addTransition(this, &cFftModuleMeasProgram::activationContinue, &m_activateDSPState);
     m_activateDSPState.addTransition(this, &cFftModuleMeasProgram::activationContinue, &m_loadDSPDoneState);
@@ -32,8 +30,6 @@ cFftModuleMeasProgram::cFftModuleMeasProgram(cFftModule* module, std::shared_ptr
     m_activationMachine.addState(&m_resourceManagerConnectState);
     m_activationMachine.addState(&m_IdentifyState);
     m_activationMachine.addState(&m_dspserverConnectState);
-    m_activationMachine.addState(&m_claimPGRMemState);
-    m_activationMachine.addState(&m_claimUSERMemState);
     m_activationMachine.addState(&m_var2DSPState);
     m_activationMachine.addState(&m_cmd2DSPState);
     m_activationMachine.addState(&m_activateDSPState);
@@ -44,24 +40,15 @@ cFftModuleMeasProgram::cFftModuleMeasProgram(cFftModule* module, std::shared_ptr
     connect(&m_resourceManagerConnectState, &QState::entered, this, &cFftModuleMeasProgram::resourceManagerConnect);
     connect(&m_IdentifyState, &QState::entered, this, &cFftModuleMeasProgram::sendRMIdent);
     connect(&m_dspserverConnectState, &QState::entered, this, &cFftModuleMeasProgram::dspserverConnect);
-    connect(&m_claimPGRMemState, &QState::entered, this, &cFftModuleMeasProgram::claimPGRMem);
-    connect(&m_claimUSERMemState, &QState::entered, this, &cFftModuleMeasProgram::claimUSERMem);
     connect(&m_var2DSPState, &QState::entered, this, &cFftModuleMeasProgram::varList2DSP);
     connect(&m_cmd2DSPState, &QState::entered, this, &cFftModuleMeasProgram::cmdList2DSP);
     connect(&m_activateDSPState, &QState::entered, this, &cFftModuleMeasProgram::activateDSP);
     connect(&m_loadDSPDoneState, &QState::entered, this, &cFftModuleMeasProgram::activateDSPdone);
 
-    // setting up statemachine for unloading dsp and setting resources free
-    m_freePGRMemState.addTransition(this, &cFftModuleMeasProgram::deactivationContinue, &m_freeUSERMemState);
-    m_freeUSERMemState.addTransition(this, &cFftModuleMeasProgram::deactivationContinue, &m_unloadDSPDoneState);
-    m_deactivationMachine.addState(&m_freePGRMemState);
-    m_deactivationMachine.addState(&m_freeUSERMemState);
     m_deactivationMachine.addState(&m_unloadDSPDoneState);
 
-    m_deactivationMachine.setInitialState(&m_freePGRMemState);
+    m_deactivationMachine.setInitialState(&m_unloadDSPDoneState);
 
-    connect(&m_freePGRMemState, &QState::entered, this, &cFftModuleMeasProgram::freePGRMem);
-    connect(&m_freeUSERMemState, &QState::entered, this, &cFftModuleMeasProgram::freeUSERMem);
     connect(&m_unloadDSPDoneState, &QState::entered, this, &cFftModuleMeasProgram::deactivateDSPdone);
 
     // setting up statemachine for data acquisition
@@ -281,18 +268,6 @@ void cFftModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QV
                 else
                     notifyError(rmidentErrMSG);
                 break;
-            case claimpgrmem:
-                if (reply == ack)
-                    emit activationContinue();
-                else
-                    notifyError(claimresourceErrMsg);
-                break;
-            case claimusermem:
-                if (reply == ack)
-                    emit activationContinue();
-                else
-                    notifyError(claimresourceErrMsg);
-                break;
             case varlist2dsp:
                 if (reply == ack)
                     emit activationContinue();
@@ -324,18 +299,6 @@ void cFftModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QV
                     emit deactivationContinue();
                 else
                     notifyError(dspdeactiveErrMsg);
-                break;
-            case freepgrmem:
-                if (reply == ack)
-                    emit deactivationContinue();
-                else
-                    notifyError(freeresourceErrMsg);
-                break;
-            case freeusermem:
-                if (reply == ack)
-                    emit deactivationContinue();
-                else
-                    notifyError(freeresourceErrMsg);
                 break;
 
             case dataaquistion:
@@ -437,26 +400,15 @@ void cFftModuleMeasProgram::dspserverConnect()
     m_dspClient = Zera::Proxy::getInstance()->getConnectionSmart(m_pModule->getNetworkConfig()->m_dspServiceConnectionInfo,
                                                                  m_pModule->getNetworkConfig()->m_tcpNetworkFactory);
     m_dspInterface->setClientSmart(m_dspClient);
-    m_dspserverConnectState.addTransition(m_dspClient.get(), &Zera::ProxyClient::connected, &m_claimPGRMemState);
+    m_dspserverConnectState.addTransition(m_dspClient.get(), &Zera::ProxyClient::connected, &m_var2DSPState);
     connect(m_dspInterface.get(), &AbstractServerInterface::serverAnswer, this, &cFftModuleMeasProgram::catchInterfaceAnswer);
     Zera::Proxy::getInstance()->startConnectionSmart(m_dspClient);
 }
 
-void cFftModuleMeasProgram::claimPGRMem()
-{
-    // if we've got dsp server connection we set up our measure program and claim the resources
-    setDspVarList(); // first we set the var list for our dsp
-    setDspCmdList(); // and the cmd list he has to work on
-    m_MsgNrCmdList[m_rmInterface.setResource("DSP1", "PGRMEMC", m_dspInterface->cmdListCount())] = claimpgrmem;
-}
-
-void cFftModuleMeasProgram::claimUSERMem()
-{
-   m_MsgNrCmdList[m_rmInterface.setResource("DSP1", "USERMEM", m_nDspMemUsed)] = claimusermem;
-}
-
 void cFftModuleMeasProgram::varList2DSP()
 {
+    setDspVarList(); // first we set the var list for our dsp
+    setDspCmdList(); // and the cmd list he has to work on
     m_MsgNrCmdList[m_dspInterface->varList2Dsp()] = varlist2dsp;
 }
 
@@ -481,21 +433,6 @@ void cFftModuleMeasProgram::activateDSPdone()
     connect(m_pIntegrationTimeParameter, &VfModuleParameter::sigValueChanged, this, &cFftModuleMeasProgram::newIntegrationtime);
     connect(m_pRefChannelParameter, &VfModuleParameter::sigValueChanged, this, &cFftModuleMeasProgram::newRefChannel);
     emit activated();
-}
-
-void cFftModuleMeasProgram::freePGRMem()
-{
-    m_dataAcquisitionMachine.stop();
-    m_bActive = false;
-    Zera::Proxy::getInstance()->releaseConnectionSmart(m_dspClient);
-    deleteDspCmdList();
-
-    m_MsgNrCmdList[m_rmInterface.freeResource("DSP1", "PGRMEMC")] = freepgrmem;
-}
-
-void cFftModuleMeasProgram::freeUSERMem()
-{
-    m_MsgNrCmdList[m_rmInterface.freeResource("DSP1", "USERMEM")] = freeusermem;
 }
 
 void cFftModuleMeasProgram::deactivateDSPdone()
