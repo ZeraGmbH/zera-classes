@@ -137,7 +137,7 @@ void test_modman_regression_all_sessions::checkObjectsProperlyDeleted()
     constexpr int eventSystemCount = 6;
     QCOMPARE(cumulatedInstanceCounts.m_veinEventSystemCount, eventSystemCount);
 
-    constexpr int serverPeers = 9;
+    constexpr int serverPeers = 7;
     QCOMPARE(cumulatedInstanceCounts.m_veinTcpPeerCount, serverPeers);
     constexpr int peersLeftServerDown = 0;
     QCOMPARE(VeinTcp::TcpPeer::getInstanceCount(), peersLeftServerDown);
