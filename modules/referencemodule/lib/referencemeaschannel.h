@@ -80,7 +80,6 @@ private:
     qint32 m_RangeQueryIt;
     cRangeInfoBase m_rangeInfo;
 
-    Zera::ProxyClientPtr m_rmClient;
     Zera::ProxyClientPtr m_pcbClient;
 
 private slots:
