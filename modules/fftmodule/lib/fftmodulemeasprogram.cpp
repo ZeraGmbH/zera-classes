@@ -430,6 +430,7 @@ void cFftModuleMeasProgram::activateDSPdone()
 
 void cFftModuleMeasProgram::deactivateDSPdone()
 {
+    m_bActive = false;
     disconnect(&m_rmInterface, 0, this, 0);
     disconnect(m_dspInterface.get(), 0, this, 0);
     emit deactivated();
