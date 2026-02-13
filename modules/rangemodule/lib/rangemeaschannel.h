@@ -79,9 +79,6 @@ signals:
     void cmdDone(quint32 cmdnr); // to signal we are ready
     void newRangeList(); // if the channel has read new range list after async. notification
 
-protected slots:
-    void catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant answer) override;
-
 private:
     RangeChannelData m_channelData;
     QStringList m_RangeNameList; // a list of all ranges
@@ -129,6 +126,7 @@ private:
     QString findOptimalRange(double actualValue, const QString &actRngAlias, qint32 actRngType, double extraRejectionFactor);
 
 private slots:
+    void catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant answer);
     void pcbConnection();
     void readRangeAndProperties();
     void resetStatusSlot();

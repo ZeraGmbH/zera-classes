@@ -4,7 +4,6 @@
 #include "rangemoduleconfigdata.h"
 #include <basemeasmodule.h>
 #include <basedspmeasprogram.h>
-#include <proxyclient.h>
 #include <QList>
 #include <QStateMachine>
 #include <QFinalState>
@@ -16,16 +15,11 @@ namespace RANGEMODULE
 
 enum rangemoduleCmds
 {
-    sendrmident,
-    claimpgrmem,
-    claimusermem,
     varlist2dsp,
     cmdlist2dsp,
     activatedsp,
     deactivatedsp,
     dataaquistion,
-    freepgrmem,
-    freeusermem
 };
 
 class cRangeModule;
@@ -37,20 +31,15 @@ public:
     cRangeModuleMeasProgram(cRangeModule* module, std::shared_ptr<BaseModuleConfiguration> pConfiguration);
     void generateVeinInterface() override;
 public slots:
-    void start() override;
-    void stop() override;
-    virtual void syncRanging(QVariant sync); //
-protected slots:
-    virtual void catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant answer);
+    void start() override {};
+    void stop() override {};
+    void syncRanging(QVariant sync);
 private:
     cRangeModuleConfigData* getConfData();
     void setDspVarList();
     void setDspCmdList();
-    void deleteDspCmdList();
 
     cRangeModule* m_pModule; // the module we live in
-    Zera::cRMInterface m_rmInterface;
-    Zera::ProxyClientPtr m_rmClient;
     bool m_bRanging;
     bool m_bIgnore;
 
@@ -64,19 +53,13 @@ private:
     cDspMeasData* m_pActualValuesDSP;
 
     // statemachine for activating gets the following states
-    QState m_resourceManagerConnectState;
-    QState m_IdentifyState;
     QState m_dspserverConnectState;
-    QState m_claimPGRMemState;
-    QState m_claimUSERMemState;
     QState m_var2DSPState;
     QState m_cmd2DSPState;
     QState m_activateDSPState;
     QFinalState m_loadDSPDoneState;
 
     // statemachine for deactivating
-    QState m_freePGRMemState;
-    QState m_freeUSERMemState;
     QFinalState m_unloadDSPDoneState;
 
     // statemachine for reading actual values
@@ -91,20 +74,15 @@ private:
     void restartDspWachdog();
 
 private slots:
+    void catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant answer);
     void setInterfaceActualValues(QVector<float> *actualValues);
 
-    void resourceManagerConnect();
-    void sendRMIdent();
     void dspserverConnect();
-    void claimPGRMem();
-    void claimUSERMem();
     void varList2DSP();
     void cmdList2DSP();
     void activateDSP();
     void activateDSPdone();
 
-    void freePGRMem();
-    void freeUSERMem();
     void deactivateDSPdone();
 
     void dataAcquisitionDSP();

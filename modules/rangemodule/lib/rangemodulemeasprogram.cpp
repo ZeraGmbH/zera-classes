@@ -27,46 +27,28 @@ cRangeModuleMeasProgram::cRangeModuleMeasProgram(cRangeModule* module, std::shar
     m_bRanging = false;
     m_bIgnore = false;
 
-    m_IdentifyState.addTransition(this, &cRangeModuleMeasProgram::activationContinue, &m_dspserverConnectState);
-    m_claimPGRMemState.addTransition(this, &cRangeModuleMeasProgram::activationContinue, &m_claimUSERMemState);
-    m_claimUSERMemState.addTransition(this, &cRangeModuleMeasProgram::activationContinue, &m_var2DSPState);
     m_var2DSPState.addTransition(this, &cRangeModuleMeasProgram::activationContinue, &m_cmd2DSPState);
     m_cmd2DSPState.addTransition(this, &cRangeModuleMeasProgram::activationContinue, &m_activateDSPState);
     m_activateDSPState.addTransition(this, &cRangeModuleMeasProgram::activationContinue, &m_loadDSPDoneState);
 
-    m_activationMachine.addState(&m_resourceManagerConnectState);
-    m_activationMachine.addState(&m_IdentifyState);
     m_activationMachine.addState(&m_dspserverConnectState);
-    m_activationMachine.addState(&m_claimPGRMemState);
-    m_activationMachine.addState(&m_claimUSERMemState);
     m_activationMachine.addState(&m_var2DSPState);
     m_activationMachine.addState(&m_cmd2DSPState);
     m_activationMachine.addState(&m_activateDSPState);
     m_activationMachine.addState(&m_loadDSPDoneState);
 
-    connect(&m_resourceManagerConnectState, &QState::entered, this, &cRangeModuleMeasProgram::resourceManagerConnect);
-    connect(&m_IdentifyState, &QState::entered, this, &cRangeModuleMeasProgram::sendRMIdent);
     connect(&m_dspserverConnectState, &QState::entered, this, &cRangeModuleMeasProgram::dspserverConnect);
-    connect(&m_claimPGRMemState, &QState::entered, this, &cRangeModuleMeasProgram::claimPGRMem);
-    connect(&m_claimUSERMemState, &QState::entered, this, &cRangeModuleMeasProgram::claimUSERMem);
     connect(&m_var2DSPState, &QState::entered, this, &cRangeModuleMeasProgram::varList2DSP);
     connect(&m_cmd2DSPState, &QState::entered, this, &cRangeModuleMeasProgram::cmdList2DSP);
     connect(&m_activateDSPState, &QState::entered, this, &cRangeModuleMeasProgram::activateDSP);
     connect(&m_loadDSPDoneState, &QState::entered, this, &cRangeModuleMeasProgram::activateDSPdone);
 
-    // setting up statemachine for unloading dsp and setting resources free
-    m_freePGRMemState.addTransition(this, &cRangeModuleMeasProgram::deactivationContinue, &m_freeUSERMemState);
-    m_freeUSERMemState.addTransition(this, &cRangeModuleMeasProgram::deactivationContinue, &m_unloadDSPDoneState);
-    m_deactivationMachine.addState(&m_freePGRMemState);
-    m_deactivationMachine.addState(&m_freeUSERMemState);
     m_deactivationMachine.addState(&m_unloadDSPDoneState);
 
-    connect(&m_freePGRMemState, &QState::entered, this, &cRangeModuleMeasProgram::freePGRMem);
-    connect(&m_freeUSERMemState, &QState::entered, this, &cRangeModuleMeasProgram::freeUSERMem);
     connect(&m_unloadDSPDoneState, &QState::entered, this, &cRangeModuleMeasProgram::deactivateDSPdone);
 
-    m_activationMachine.setInitialState(&m_resourceManagerConnectState);
-    m_deactivationMachine.setInitialState(&m_freePGRMemState);
+    m_activationMachine.setInitialState(&m_dspserverConnectState);
+    m_deactivationMachine.setInitialState(&m_unloadDSPDoneState);
 
     // setting up statemachine for data acquisition
     m_dataAcquisitionState.addTransition(this, &cRangeModuleMeasProgram::dataAquisitionContinue, &m_dataAcquisitionDoneState);
@@ -84,15 +66,6 @@ cRangeModuleMeasProgram::cRangeModuleMeasProgram(cRangeModule* module, std::shar
         qInfo("Measured frequency (Hz) min: %.3f, max: %.3f, mean: %.3f",
               min, max, avg);
     });
-
-}
-
-void cRangeModuleMeasProgram::start()
-{
-}
-
-void cRangeModuleMeasProgram::stop()
-{
 }
 
 void cRangeModuleMeasProgram::syncRanging(QVariant sync)
@@ -138,7 +111,6 @@ void cRangeModuleMeasProgram::generateVeinInterface()
                                                 QVariant(0) );
     m_pModule->m_veinComponentsWithMetaAndScpi.append(m_pMeasureSignal); // and for the modules interface
 }
-
 
 void cRangeModuleMeasProgram::setDspVarList()
 {
@@ -225,13 +197,6 @@ void cRangeModuleMeasProgram::setDspCmdList()
     m_dspInterface->addCycListItem("STOPCHAIN(1,0x0102)"); // end processnr., mainchain 1 subchain 2
 }
 
-
-void cRangeModuleMeasProgram::deleteDspCmdList()
-{
-    m_dspInterface->clearCmdList();
-}
-
-
 void cRangeModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant answer)
 {
     Q_UNUSED(answer)
@@ -256,24 +221,6 @@ void cRangeModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, 
             int cmd = m_MsgNrCmdList.take(msgnr);
             switch (cmd)
             {
-            case sendrmident:
-                if (reply == ack)
-                    emit activationContinue();
-                else
-                    notifyError(rmidentErrMSG);
-                break;
-            case claimpgrmem:
-                if (reply == ack)
-                    emit activationContinue();
-                else
-                    notifyError(claimresourceErrMsg);
-                break;
-            case claimusermem:
-                if (reply == ack)
-                    emit activationContinue();
-                else
-                    notifyError(claimresourceErrMsg);
-                break;
             case varlist2dsp:
                 if (reply == ack)
                     emit activationContinue();
@@ -298,18 +245,6 @@ void cRangeModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, 
                     emit deactivationContinue();
                 else
                     notifyError(dspdeactiveErrMsg);
-                break;
-            case freepgrmem:
-                if (reply == ack)
-                    emit deactivationContinue();
-                else
-                    notifyError(freeresourceErrMsg);
-                break;
-            case freeusermem:
-                if (reply == ack)
-                    emit deactivationContinue();
-                else
-                    notifyError(freeresourceErrMsg);
                 break;
 
             case dataaquistion:
@@ -382,62 +317,27 @@ void cRangeModuleMeasProgram::setInterfaceActualValues(QVector<float> *actualVal
     }
 }
 
-void cRangeModuleMeasProgram::resourceManagerConnect()
-{
-    // first we try to get a connection to resource manager over proxy
-    m_rmClient = Zera::Proxy::getInstance()->getConnectionSmart(m_pModule->getNetworkConfig()->m_rmServiceConnectionInfo,
-                                                                m_pModule->getNetworkConfig()->m_tcpNetworkFactory);
-    // and then we set connection resource manager interface's connection
-    m_rmInterface.setClientSmart(m_rmClient); //
-    m_resourceManagerConnectState.addTransition(m_rmClient.get(), &Zera::ProxyClient::connected, &m_IdentifyState);
-    connect(&m_rmInterface, &AbstractServerInterface::serverAnswer, this, &cRangeModuleMeasProgram::catchInterfaceAnswer);
-    // todo insert timer for timeout and/or connect error conditions
-    Zera::Proxy::getInstance()->startConnectionSmart(m_rmClient);
-}
-
-
-void cRangeModuleMeasProgram::sendRMIdent()
-{
-    m_MsgNrCmdList[m_rmInterface.rmIdent(QString("RangeModule%1").arg(m_pModule->getModuleNr()))] = sendrmident;
-}
-
-
 void cRangeModuleMeasProgram::dspserverConnect()
 {
     m_dspClient = Zera::Proxy::getInstance()->getConnectionSmart(m_pModule->getNetworkConfig()->m_dspServiceConnectionInfo,
                                                                  m_pModule->getNetworkConfig()->m_tcpNetworkFactory);
     m_dspInterface->setClientSmart(m_dspClient);
-    m_dspserverConnectState.addTransition(m_dspClient.get(), &Zera::ProxyClient::connected, &m_claimPGRMemState);
+    m_dspserverConnectState.addTransition(m_dspClient.get(), &Zera::ProxyClient::connected, &m_var2DSPState);
     connect(m_dspInterface.get(), &AbstractServerInterface::serverAnswer, this, &cRangeModuleMeasProgram::catchInterfaceAnswer);
     Zera::Proxy::getInstance()->startConnectionSmart(m_dspClient);
 }
 
-void cRangeModuleMeasProgram::claimPGRMem()
+void cRangeModuleMeasProgram::varList2DSP()
 {
     setDspVarList(); // first we set the var list for our dsp
     setDspCmdList(); // and the cmd list he has to work on
-
-    m_MsgNrCmdList[m_rmInterface.setResource("DSP1", "PGRMEMC", m_dspInterface->cmdListCount())] = claimpgrmem;
-}
-
-
-void cRangeModuleMeasProgram::claimUSERMem()
-{
-   m_MsgNrCmdList[m_rmInterface.setResource("DSP1", "USERMEM", m_nDspMemUsed)] = claimusermem;
-}
-
-
-void cRangeModuleMeasProgram::varList2DSP()
-{
     m_MsgNrCmdList[m_dspInterface->varList2Dsp()] = varlist2dsp;
 }
-
 
 void cRangeModuleMeasProgram::cmdList2DSP()
 {
     m_MsgNrCmdList[m_dspInterface->cmdList2Dsp()] = cmdlist2dsp;
 }
-
 
 void cRangeModuleMeasProgram::activateDSP()
 {
@@ -454,28 +354,13 @@ void cRangeModuleMeasProgram::activateDSPdone()
     emit activated();
 }
 
-void cRangeModuleMeasProgram::freePGRMem()
-{
-    m_dataAcquisitionMachine.stop();
-    m_bActive = false;
-    Zera::Proxy::getInstance()->releaseConnectionSmart(m_dspClient);
-    deleteDspCmdList();
-
-    m_MsgNrCmdList[m_rmInterface.freeResource("DSP1", "PGRMEMC")] = freepgrmem;
-}
-
-void cRangeModuleMeasProgram::freeUSERMem()
-{
-    m_MsgNrCmdList[m_rmInterface.freeResource("DSP1", "USERMEM")] = freeusermem;
-}
-
 void cRangeModuleMeasProgram::deactivateDSPdone()
 {
-    disconnect(&m_rmInterface, 0, this, 0);
+    m_bActive = false;
+    Zera::Proxy::getInstance()->releaseConnectionSmart(m_dspClient);
     disconnect(m_dspInterface.get(), 0, this, 0);
     emit deactivated();
 }
-
 
 void cRangeModuleMeasProgram::dataAcquisitionDSP()
 {
@@ -483,7 +368,6 @@ void cRangeModuleMeasProgram::dataAcquisitionDSP()
     if (m_bActive)
         m_MsgNrCmdList[m_dspInterface->dataAcquisition(m_pActualValuesDSP)] = dataaquistion; // we start our data aquisition now
 }
-
 
 void cRangeModuleMeasProgram::dataReadDSP()
 {
