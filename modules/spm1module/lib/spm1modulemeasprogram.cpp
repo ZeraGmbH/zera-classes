@@ -22,8 +22,7 @@ cSpm1ModuleMeasProgram::cSpm1ModuleMeasProgram(cSpm1Module* module, std::shared_
     m_pcbInterface(std::make_shared<Zera::cPCBInterface>())
 {
     m_IdentifyState.addTransition(this, &cSpm1ModuleMeasProgram::activationContinue, &m_testSEC1ResourceState);
-    m_testSEC1ResourceState.addTransition(this, &cSpm1ModuleMeasProgram::activationContinue, &m_setECResourceState); // test presence of sec1 resource
-    m_setECResourceState.addTransition(this, &cSpm1ModuleMeasProgram::activationContinue, &m_readResourcesState); // claim 3 ecalculator units
+    m_testSEC1ResourceState.addTransition(this, &cSpm1ModuleMeasProgram::activationContinue, &m_readResourcesState); // test presence of sec1 resource
     m_readResourcesState.addTransition(this, &cSpm1ModuleMeasProgram::activationContinue, &m_readResourceState); // init read resources
     m_readResourceState.addTransition(this, &cSpm1ModuleMeasProgram::activationLoop, &m_readResourceState); // read their resources into list
     m_readResourceState.addTransition(this, &cSpm1ModuleMeasProgram::activationContinue, &m_testSpmInputsState); // go on if done
@@ -46,7 +45,6 @@ cSpm1ModuleMeasProgram::cSpm1ModuleMeasProgram(cSpm1Module* module, std::shared_
     m_activationMachine.addState(&resourceManagerConnectState);
     m_activationMachine.addState(&m_IdentifyState);
     m_activationMachine.addState(&m_testSEC1ResourceState);
-    m_activationMachine.addState(&m_setECResourceState);
     m_activationMachine.addState(&m_readResourcesState);
     m_activationMachine.addState(&m_readResourceState);
     m_activationMachine.addState(&m_testSpmInputsState);
@@ -65,7 +63,6 @@ cSpm1ModuleMeasProgram::cSpm1ModuleMeasProgram(cSpm1Module* module, std::shared_
     connect(&resourceManagerConnectState, &QState::entered, this, &cSpm1ModuleMeasProgram::resourceManagerConnect);
     connect(&m_IdentifyState, &QState::entered, this, &cSpm1ModuleMeasProgram::sendRMIdent);
     connect(&m_testSEC1ResourceState, &QState::entered, this, &cSpm1ModuleMeasProgram::testSEC1Resource);
-    connect(&m_setECResourceState, &QState::entered, this, &cSpm1ModuleMeasProgram::setECResource);
     connect(&m_readResourcesState, &QState::entered, this, &cSpm1ModuleMeasProgram::readResources);
     connect(&m_readResourceState, &QState::entered, this, &cSpm1ModuleMeasProgram::readResource);
     connect(&m_testSpmInputsState, &QState::entered, this, &cSpm1ModuleMeasProgram::testSpmInputs);
@@ -81,19 +78,16 @@ cSpm1ModuleMeasProgram::cSpm1ModuleMeasProgram(cSpm1Module* module, std::shared_
 
     // setting up statemachine to free the occupied resources
     m_stopECalculatorState.addTransition(this, &cSpm1ModuleMeasProgram::deactivationContinue, &m_freeECalculatorState);
-    m_freeECalculatorState.addTransition(this, &cSpm1ModuleMeasProgram::deactivationContinue, &m_freeECResource);
-    m_freeECResource.addTransition(this, &cSpm1ModuleMeasProgram::deactivationContinue, &m_deactivationDoneState);
+    m_freeECalculatorState.addTransition(this, &cSpm1ModuleMeasProgram::deactivationContinue, &m_deactivationDoneState);
 
     m_deactivationMachine.addState(&m_stopECalculatorState);
     m_deactivationMachine.addState(&m_freeECalculatorState);
-    m_deactivationMachine.addState(&m_freeECResource);
     m_deactivationMachine.addState(&m_deactivationDoneState);
 
     m_deactivationMachine.setInitialState(&m_stopECalculatorState);
 
     connect(&m_stopECalculatorState, &QState::entered, this, &cSpm1ModuleMeasProgram::stopECCalculator);
     connect(&m_freeECalculatorState, &QState::entered, this, &cSpm1ModuleMeasProgram::freeECalculator);
-    connect(&m_freeECResource, &QState::entered, this, &cSpm1ModuleMeasProgram::freeECResource);
     connect(&m_deactivationDoneState, &QState::entered, this, &cSpm1ModuleMeasProgram::deactivationDone);
 
     // setting up statemachine used when starting a measurement
@@ -400,13 +394,6 @@ void cSpm1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, Q
                     notifyError(resourcetypeErrMsg);
                 break;
 
-            case setecresource:
-                if (reply == ack)
-                    emit activationContinue();
-                else
-                    notifyError(setresourceErrMsg);
-                break;
-
             case readresource:
                 if (reply == ack) {
                     QStringList resourceTypeList = m_resourceTypeList.getResourceTypeList();
@@ -454,13 +441,6 @@ void cSpm1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, Q
                     emit deactivationContinue();
                 else
                     notifyError(freesececalcunitErrMsg);
-                break;
-
-            case freeecresource:
-                if (reply == ack)
-                    emit deactivationContinue();
-                else
-                    notifyError(freeresourceErrMsg);
                 break;
 
             case actualizeenergy:
@@ -781,11 +761,6 @@ void cSpm1ModuleMeasProgram::testSEC1Resource()
 }
 
 
-void cSpm1ModuleMeasProgram::setECResource()
-{
-    m_MsgNrCmdList[m_rmInterface.setResource("SEC1", "ECALCULATOR", 3)] = setecresource;
-}
-
 void cSpm1ModuleMeasProgram::readResources()
 {
     m_nIt = 0; // we want to read all resources from resourcetypelist
@@ -937,12 +912,6 @@ void cSpm1ModuleMeasProgram::freeECalculator()
 {
     m_bActive = false;
     m_MsgNrCmdList[m_secInterface->freeECalcUnits()] = freeecalcunits;
-}
-
-
-void cSpm1ModuleMeasProgram::freeECResource()
-{
-    m_MsgNrCmdList[m_rmInterface.freeResource("SEC1", "ECALCULATOR")] = freeecresource;
 }
 
 
