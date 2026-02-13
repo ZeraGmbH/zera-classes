@@ -78,6 +78,8 @@ private:
     quint8 cmpActualValIndex(freqoutconfiguration frconf);
 
     cPower2Module* m_pModule;
+    Zera::cRMInterface m_rmInterface;
+    Zera::ProxyClientPtr m_rmClient;
     MeasModeSelector m_measModeSelector;
     QHash<QString, cMeasChannelInfo> m_measChannelInfoHash;
     QMap<QString, cFoutInfo> m_FoutInfoMap; // a list with frequency output information for each channel

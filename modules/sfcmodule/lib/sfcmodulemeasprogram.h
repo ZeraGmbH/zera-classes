@@ -68,6 +68,8 @@ private:
     cSfcModuleConfigData *getConfData();
 
     cSfcModule *m_pModule;
+    Zera::cRMInterface m_rmInterface;
+    Zera::ProxyClientPtr m_rmClient;
     Zera::cSECInterfacePtr m_secInterface;
     Zera::PcbInterfacePtr m_pcbInterface;
     Zera::ProxyClientPtr m_pcbClient;

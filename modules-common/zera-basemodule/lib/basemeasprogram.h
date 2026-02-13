@@ -20,8 +20,6 @@ public slots:
 
 protected:
     std::shared_ptr<BaseModuleConfiguration> m_pConfiguration;
-    Zera::cRMInterface m_rmInterface;
-    Zera::ProxyClientPtr m_rmClient;
 
     quint8 m_nConnectionCount;
 

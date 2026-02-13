@@ -49,6 +49,8 @@ private:
     void deleteDspCmdList();
 
     cRangeModule* m_pModule; // the module we live in
+    Zera::cRMInterface m_rmInterface;
+    Zera::ProxyClientPtr m_rmClient;
     bool m_bRanging;
     bool m_bIgnore;
 
