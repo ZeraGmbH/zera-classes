@@ -37,18 +37,22 @@ cRangeModuleMeasProgram::cRangeModuleMeasProgram(cRangeModule* module, std::shar
     m_activationMachine.addState(&m_activateDSPState);
     m_activationMachine.addState(&m_loadDSPDoneState);
 
+    m_activationMachine.setInitialState(&m_dspserverConnectState);
+
     connect(&m_dspserverConnectState, &QState::entered, this, &cRangeModuleMeasProgram::dspserverConnect);
     connect(&m_var2DSPState, &QState::entered, this, &cRangeModuleMeasProgram::varList2DSP);
     connect(&m_cmd2DSPState, &QState::entered, this, &cRangeModuleMeasProgram::cmdList2DSP);
     connect(&m_activateDSPState, &QState::entered, this, &cRangeModuleMeasProgram::activateDSP);
     connect(&m_loadDSPDoneState, &QState::entered, this, &cRangeModuleMeasProgram::activateDSPdone);
 
+    m_deactivationMachine.addState(&m_unloadStart);
     m_deactivationMachine.addState(&m_unloadDSPDoneState);
 
+    connect(&m_unloadStart, &QState::entered, this, &cRangeModuleMeasProgram::deactivateDSPStart);
     connect(&m_unloadDSPDoneState, &QState::entered, this, &cRangeModuleMeasProgram::deactivateDSPdone);
 
-    m_activationMachine.setInitialState(&m_dspserverConnectState);
-    m_deactivationMachine.setInitialState(&m_unloadDSPDoneState);
+    m_unloadStart.addTransition(this, &cRangeModuleMeasProgram::deactivationContinue, &m_unloadDSPDoneState);
+    m_deactivationMachine.setInitialState(&m_unloadStart);
 
     // setting up statemachine for data acquisition
     m_dataAcquisitionState.addTransition(this, &cRangeModuleMeasProgram::dataAquisitionContinue, &m_dataAcquisitionDoneState);
@@ -354,11 +358,16 @@ void cRangeModuleMeasProgram::activateDSPdone()
     emit activated();
 }
 
-void cRangeModuleMeasProgram::deactivateDSPdone()
+void cRangeModuleMeasProgram::deactivateDSPStart()
 {
     m_bActive = false;
-    Zera::Proxy::getInstance()->releaseConnectionSmart(m_dspClient);
+    m_dataAcquisitionMachine.stop();
     disconnect(m_dspInterface.get(), 0, this, 0);
+    emit deactivationContinue();
+}
+
+void cRangeModuleMeasProgram::deactivateDSPdone()
+{
     emit deactivated();
 }
 
