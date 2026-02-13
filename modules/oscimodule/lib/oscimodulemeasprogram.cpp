@@ -41,10 +41,13 @@ cOsciModuleMeasProgram::cOsciModuleMeasProgram(cOsciModule* module, std::shared_
     connect(&m_activateDSPState, &QState::entered, this, &cOsciModuleMeasProgram::activateDSP);
     connect(&m_loadDSPDoneState, &QState::entered, this, &cOsciModuleMeasProgram::activateDSPdone);
 
+    m_deactivationMachine.addState(&m_unloadStart);
     m_deactivationMachine.addState(&m_unloadDSPDoneState);
 
-    m_deactivationMachine.setInitialState(&m_unloadDSPDoneState);
+    m_unloadStart.addTransition(this, &cOsciModuleMeasProgram::deactivationContinue, &m_unloadDSPDoneState);
+    m_deactivationMachine.setInitialState(&m_unloadStart);
 
+    connect(&m_unloadStart, &QState::entered, this, &cOsciModuleMeasProgram::deactivateDSPStart);
     connect(&m_unloadDSPDoneState, &QState::entered, this, &cOsciModuleMeasProgram::deactivateDSPdone);
 
     // setting up statemachine for data acquisition
@@ -347,11 +350,16 @@ void cOsciModuleMeasProgram::activateDSPdone()
     emit activated();
 }
 
-void cOsciModuleMeasProgram::deactivateDSPdone()
+void cOsciModuleMeasProgram::deactivateDSPStart()
 {
     m_bActive = false;
     m_dataAcquisitionMachine.stop();
     disconnect(m_dspInterface.get(), 0, this, 0);
+    emit deactivationContinue();
+}
+
+void cOsciModuleMeasProgram::deactivateDSPdone()
+{
     emit deactivated();
 }
 
