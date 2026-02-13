@@ -25,8 +25,7 @@ cSec1ModuleMeasProgram::cSec1ModuleMeasProgram(cSec1Module* module, std::shared_
     m_secInterface(std::make_unique<Zera::cSECInterface>()),
     m_pcbInterface(std::make_shared<Zera::cPCBInterface>())
 {
-    m_IdentifyState.addTransition(this, &cSec1ModuleMeasProgram::activationContinue, &m_testSEC1ResourceState);
-    m_testSEC1ResourceState.addTransition(this, &cSec1ModuleMeasProgram::activationContinue, &m_readResourcesState); // test presence of sec1 resource
+    m_IdentifyState.addTransition(this, &cSec1ModuleMeasProgram::activationContinue, &m_readResourcesState);
     m_readResourcesState.addTransition(this, &cSec1ModuleMeasProgram::activationContinue, &m_readResourceState); // init read resources
     m_readResourceState.addTransition(this, &cSec1ModuleMeasProgram::activationLoop, &m_readResourceState); // read their resources into list
     m_readResourceState.addTransition(this, &cSec1ModuleMeasProgram::activationContinue, &m_testSecInputsState); // go on if done
@@ -55,7 +54,6 @@ cSec1ModuleMeasProgram::cSec1ModuleMeasProgram(cSec1Module* module, std::shared_
 
     m_activationMachine.addState(&resourceManagerConnectState);
     m_activationMachine.addState(&m_IdentifyState);
-    m_activationMachine.addState(&m_testSEC1ResourceState);
     m_activationMachine.addState(&m_readResourcesState);
     m_activationMachine.addState(&m_readResourceState);
     m_activationMachine.addState(&m_testSecInputsState);
@@ -76,7 +74,6 @@ cSec1ModuleMeasProgram::cSec1ModuleMeasProgram(cSec1Module* module, std::shared_
 
     connect(&resourceManagerConnectState, &QState::entered, this, &cSec1ModuleMeasProgram::resourceManagerConnect);
     connect(&m_IdentifyState, &QState::entered, this, &cSec1ModuleMeasProgram::sendRMIdent);
-    connect(&m_testSEC1ResourceState, &QState::entered, this, &cSec1ModuleMeasProgram::testSEC1Resource);
     connect(&m_readResourcesState, &QState::entered, this, &cSec1ModuleMeasProgram::readResources);
     connect(&m_readResourceState, &QState::entered, this, &cSec1ModuleMeasProgram::readResource);
     connect(&m_testSecInputsState, &QState::entered, this, &cSec1ModuleMeasProgram::testSecInputs);
@@ -551,13 +548,6 @@ void cSec1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, Q
                     notifyError(rmidentErrMSG);
                 break;
 
-            case testsec1resource:
-                if ((reply == ack) && (answer.toString().contains("SEC1")))
-                    emit activationContinue();
-                else
-                    notifyError(resourcetypeErrMsg);
-                break;
-
             case readresource:
             {
                 if (reply == ack) {
@@ -1029,18 +1019,10 @@ void cSec1ModuleMeasProgram::resourceManagerConnect()
     Zera::Proxy::getInstance()->startConnectionSmart(m_rmClient);
 }
 
-
 void cSec1ModuleMeasProgram::sendRMIdent()
 {
     m_MsgNrCmdList[m_rmInterface.rmIdent(QString("Sec1Module%1").arg(m_pModule->getModuleNr()))] = sendrmident;
 }
-
-
-void cSec1ModuleMeasProgram::testSEC1Resource()
-{
-    m_MsgNrCmdList[m_rmInterface.getResourceTypes()] = testsec1resource;
-}
-
 
 void cSec1ModuleMeasProgram::readResources()
 {
@@ -1053,7 +1035,6 @@ void cSec1ModuleMeasProgram::readResource()
     QString resourcetype = m_resourceTypeList.getResourceTypeList().at(m_nIt);
     m_MsgNrCmdList[m_rmInterface.getResources(resourcetype)] = readresource;
 }
-
 
 void cSec1ModuleMeasProgram::testSecInputs()
 {

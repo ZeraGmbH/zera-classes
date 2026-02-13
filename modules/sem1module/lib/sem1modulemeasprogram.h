@@ -18,7 +18,6 @@ namespace SEM1MODULE
 enum sem1moduleCmds
 {
     sendrmident,
-    testsec1resource,
     readresource,
     fetchecalcunits,
     readrefInputalias,
@@ -69,7 +68,6 @@ private slots:
     void onRefConstantChanged(QString refPowerName);
     void resourceManagerConnect();
     void sendRMIdent();
-    void testSEC1Resource();
     void readResources();
     void readResource();
     void testSemInputs();
@@ -159,7 +157,6 @@ private:
     // statemachine for activating gets the following states
     QState resourceManagerConnectState; // connect to resource manager
     QState m_IdentifyState; // identify to resource manager
-    QState m_testSEC1ResourceState; // test for our configured error calculator units
     QState m_readResourcesState; // init to read all resource information for each type
     QState m_readResourceState; // read for 1 type
 

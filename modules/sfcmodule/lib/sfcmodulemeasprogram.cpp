@@ -18,8 +18,7 @@ cSfcModuleMeasProgram::cSfcModuleMeasProgram(cSfcModule *module, std::shared_ptr
     m_secInterface(std::make_unique<Zera::cSECInterface>()),
     m_pcbInterface(std::make_shared<Zera::cPCBInterface>())
 {
-    m_IdentifyState.addTransition(this, &cSfcModuleMeasProgram::activationContinue, &m_testSEC1ResourceState);
-    m_testSEC1ResourceState.addTransition(this, &cSfcModuleMeasProgram::activationContinue, &m_readResourcesState); // test presence of sec1 resource
+    m_IdentifyState.addTransition(this, &cSfcModuleMeasProgram::activationContinue, &m_readResourcesState);
     m_readResourcesState.addTransition(this, &cSfcModuleMeasProgram::activationContinue, &m_readResourceState); // init read resources
     m_readResourceState.addTransition(this, &cSfcModuleMeasProgram::activationLoop, &m_readResourceState); // read their resources into list
     m_readResourceState.addTransition(this, &cSfcModuleMeasProgram::activationContinue, &m_testSecInputsState); // go on if done
@@ -41,7 +40,6 @@ cSfcModuleMeasProgram::cSfcModuleMeasProgram(cSfcModule *module, std::shared_ptr
 
     m_activationMachine.addState(&resourceManagerConnectState);
     m_activationMachine.addState(&m_IdentifyState);
-    m_activationMachine.addState(&m_testSEC1ResourceState);
     m_activationMachine.addState(&m_readResourcesState);
     m_activationMachine.addState(&m_readResourceState);
     m_activationMachine.addState(&m_testSecInputsState);
@@ -60,7 +58,6 @@ cSfcModuleMeasProgram::cSfcModuleMeasProgram(cSfcModule *module, std::shared_ptr
 
     connect(&resourceManagerConnectState, &QState::entered, this, &cSfcModuleMeasProgram::resourceManagerConnect);
     connect(&m_IdentifyState, &QState::entered, this, &cSfcModuleMeasProgram::sendRMIdent);
-    connect(&m_testSEC1ResourceState, &QState::entered, this, &cSfcModuleMeasProgram::testSEC1Resource);
     connect(&m_readResourcesState, &QState::entered, this, &cSfcModuleMeasProgram::readResources);
     connect(&m_readResourceState, &QState::entered, this, &cSfcModuleMeasProgram::readResource);
     connect(&m_testSecInputsState, &QState::entered, this, &cSfcModuleMeasProgram::testSecInputs);
@@ -172,11 +169,6 @@ void cSfcModuleMeasProgram::resourceManagerConnect()
 void cSfcModuleMeasProgram::sendRMIdent()
 {
     m_MsgNrCmdList[m_rmInterface.rmIdent(QString("SfcModule%1").arg(m_pModule->getModuleNr()))] = sendrmident;
-}
-
-void cSfcModuleMeasProgram::testSEC1Resource()
-{
-    m_MsgNrCmdList[m_rmInterface.getResourceTypes()] = testsec1resource;
 }
 
 void cSfcModuleMeasProgram::readResources()
@@ -310,13 +302,6 @@ void cSfcModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QV
                     emit activationContinue();
                 else
                     notifyError(rmidentErrMSG);
-                break;
-
-            case testsec1resource:
-                if ((reply == ack) && (answer.toString().contains("SEC1")))
-                    emit activationContinue();
-                else
-                    notifyError(resourcetypeErrMsg);
                 break;
 
             case readresource:
