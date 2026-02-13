@@ -30,8 +30,6 @@ public:
 public slots:
     void start() override;
     void stop() override;
-protected slots:
-    virtual void catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant answer);
 private:
     cReferenceModuleConfigData* getConfData();
     void setDspVarList();
@@ -61,6 +59,7 @@ private:
     TimerTemplateQtPtr m_demoPeriodicTimer;
 
 private slots:
+    void catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant answer);
     void dspserverConnect();
     void varList2DSP();
     void cmdList2DSP();

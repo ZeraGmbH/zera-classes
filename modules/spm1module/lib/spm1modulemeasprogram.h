@@ -64,7 +64,7 @@ public slots:
     void stop() override;
 
 private slots:
-    virtual void catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant answer);
+    void catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant answer);
     void onRefConstantChanged(QString refPowerName);
     void resourceManagerConnect();
     void sendRMIdent();

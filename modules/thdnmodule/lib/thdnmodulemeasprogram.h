@@ -15,14 +15,11 @@
 
 class cDspMeasData;
 class QStateMachine;
-class QState;
-class QFinalState;
 
 class VfModuleComponent;
 class VfModuleParameter;
 class VfModuleMetaData;
 class VfModuleComponent;
-class cMovingwindowFilter;
 
 
 namespace THDNMODULE
@@ -52,8 +49,6 @@ public:
 public slots:
     void start() override;
     void stop() override;
-protected slots:
-    virtual void catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant answer);
 private:
     cThdnModuleConfigData* getConfData();
     void setDspVarList();
@@ -91,6 +86,7 @@ private:
     cMovingwindowFilter m_movingwindowFilter;
 
 private slots:
+    void catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant answer);
     void setInterfaceActualValues(QVector<float> *actualValues);
 
     void dspserverConnect();

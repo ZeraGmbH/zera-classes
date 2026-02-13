@@ -34,8 +34,6 @@ public:
 public slots:
     void start() override;
     void stop() override;
-protected slots:
-    virtual void catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant answer);
 private:
     cOsciModuleConfigData* getConfData();
     void setDspVarList();
@@ -70,6 +68,7 @@ private:
     void setActualValuesNames();
 
 private slots:
+    void catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant answer);
     void setInterfaceActualValues(QVector<float> *actualValues);
 
     void dspserverConnect();

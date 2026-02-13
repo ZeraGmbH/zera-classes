@@ -31,9 +31,6 @@ protected:
     Zera::PcbInterfacePtr m_pcbInterface;
 
     QHash<quint32, int> m_MsgNrCmdList;
-
-protected slots:
-    virtual void catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant answer) = 0;
 };
 
 #endif // BASEMEASCHANNEL_H

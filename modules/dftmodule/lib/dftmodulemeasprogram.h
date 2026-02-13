@@ -35,8 +35,6 @@ public:
 public slots:
     virtual void start() override; // difference between start and stop is that actual values
     virtual void stop() override; // in interface are not updated when stop
-protected slots:
-    virtual void catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant answer);
 private:
     cDftModuleConfigData* getConfData();
     void setDspVarList();
@@ -86,6 +84,7 @@ private:
     cMovingwindowFilter m_movingwindowFilter;
 
 private slots:
+    void catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant answer);
     void setInterfaceActualValues(QVector<float> *actualValues);
 
     void dspserverConnect();

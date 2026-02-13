@@ -58,8 +58,6 @@ public slots:
 signals:
     void activationSkip();
     void deactivationSkip();
-protected slots:
-    virtual void catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant answer);
 private:
     cPower1ModuleConfigData* getConfData();
     void setDspVarList();
@@ -184,6 +182,7 @@ private:
     cMovingwindowFilter m_movingwindowFilter;
 
 private slots:
+    void catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant answer);
     void setInterfaceActualValues(QVector<float> *actualValues);
 
     void resourceManagerConnect();

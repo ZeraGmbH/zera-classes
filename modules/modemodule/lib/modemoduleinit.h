@@ -43,9 +43,6 @@ public:
     cModeModuleInit(cModeModule* module, cModeModuleConfigData& configData);
     void generateVeinInterface() override;
 
-protected slots:
-    virtual void catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant answer);
-
 private:
     cModeModule* m_pModule; // the module we live in
     cModeModuleConfigData& m_ConfigData;
@@ -74,6 +71,7 @@ private:
     QFinalState m_deactivationDoneState;
 
 private slots:
+    void catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant answer);
     void pcbserverConnect();
     void setMode();
     void dspserverConnect();

@@ -64,8 +64,6 @@ public:
     void generateVeinInterface() override;
 signals:
     void activationError();
-protected slots:
-    virtual void catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant answer);
 private:
     void notifyActivationError(QVariant value);
 
@@ -147,6 +145,7 @@ private:
     QVariant wantedSerialNr;
 
 private slots:
+    void catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant answer);
     void setInterfaceComponents();
     void pcbserverConnect();
     void pcbserverReadVersion();

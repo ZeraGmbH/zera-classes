@@ -36,8 +36,6 @@ public:
 public slots:
     virtual void start() override;
     virtual void stop() override;
-protected slots:
-    virtual void catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant answer);
 private:
     cFftModuleConfigData* getConfData();
     void setDspVarList();
@@ -81,6 +79,7 @@ private:
     QVector<float> m_FFTModuleActualValues;
 
 private slots:
+    void catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant answer);
     void setInterfaceActualValues(QVector<float> *actualValues);
 
     void dspserverConnect();

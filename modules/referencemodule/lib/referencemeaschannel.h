@@ -45,9 +45,6 @@ public:
 signals:
     void cmdDone(quint32 cmdnr); // to signal we are ready
 
-protected slots:
-    void catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant answer) override;
-
 private:
     QStringList m_RangeNameList; // a list of all ranges
     QHash<QString, cRangeInfoBase> m_RangeInfoHash; // a list of available and selectable ranges, alias will be the key
@@ -83,6 +80,7 @@ private:
     Zera::ProxyClientPtr m_pcbClient;
 
 private slots:
+    void catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant answer);
     void pcbConnection();
     void readRangelist();
     void readRangeProperties1();
