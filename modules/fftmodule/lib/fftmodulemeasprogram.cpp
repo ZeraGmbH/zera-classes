@@ -452,16 +452,13 @@ void cFftModuleMeasProgram::dataReadDSP()
 
 void cFftModuleMeasProgram::newIntegrationtime(QVariant ti)
 {
-    bool ok;
-    getConfData()->m_fMeasInterval.m_fValue = ti.toDouble(&ok);
-
+    getConfData()->m_fMeasInterval.m_fValue = ti.toDouble();
     if (getConfData()->m_bmovingWindow)
         m_movingwindowFilter.setIntegrationtime(getConfData()->m_fMeasInterval.m_fValue);
     else {
         m_pParameterDSP->setVarData(QString("TIPAR:%1;TISTART:0;").arg(getConfData()->m_fMeasInterval.m_fValue*1000));
         m_MsgNrCmdList[m_dspInterface->dspMemoryWrite(m_pParameterDSP)] = writeparameter;
     }
-
     emit m_pModule->parameterChanged();
 }
 
