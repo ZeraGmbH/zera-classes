@@ -24,12 +24,12 @@ class cSfcModuleConfiguration : public BaseModuleConfiguration
 public:
     cSfcModuleConfiguration();
     ~cSfcModuleConfiguration();
-    virtual void setConfiguration(QByteArray xmlString) override;
+    virtual void setConfiguration(const QByteArray& xmlString) override;
     virtual QByteArray exportConfiguration() override; // exports conf. and parameters to xml
     cSfcModuleConfigData *getConfigurationData();
 
 protected slots:
-    virtual void configXMLInfo(QString key) override;
+    virtual void configXMLInfo(const QString &key) override;
     virtual void completeConfiguration(bool ok);
 
 private:

@@ -18,7 +18,7 @@ cSpm1ModuleConfiguration::~cSpm1ModuleConfiguration()
 }
 
 
-void cSpm1ModuleConfiguration::setConfiguration(QByteArray xmlString)
+void cSpm1ModuleConfiguration::setConfiguration(const QByteArray& xmlString)
 {
     m_bConfigured = m_bConfigError = false;
 
@@ -76,7 +76,7 @@ cSpm1ModuleConfigData *cSpm1ModuleConfiguration::getConfigurationData()
 }
 
 
-void cSpm1ModuleConfiguration::configXMLInfo(QString key)
+void cSpm1ModuleConfiguration::configXMLInfo(const QString &key)
 {
     bool ok;
 

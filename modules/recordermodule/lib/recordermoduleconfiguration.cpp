@@ -26,7 +26,7 @@ RecorderModuleConfiguration::~RecorderModuleConfiguration()
         delete m_pRecorderModuleConfigData;
 }
 
-void RecorderModuleConfiguration::setConfiguration(QByteArray xmlString)
+void RecorderModuleConfiguration::setConfiguration(const QByteArray& xmlString)
 {
     m_bConfigured = m_bConfigError = false;
     if (m_pRecorderModuleConfigData)
@@ -52,7 +52,7 @@ RecorderModuleConfigData *RecorderModuleConfiguration::getConfigurationData()
     return m_pRecorderModuleConfigData;
 }
 
-void RecorderModuleConfiguration::configXMLInfo(QString key)
+void RecorderModuleConfiguration::configXMLInfo(const QString &key)
 {
     bool ok;
     if (m_ConfigXMLMap.contains(key)) {

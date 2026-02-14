@@ -17,7 +17,7 @@ cFftModuleConfiguration::~cFftModuleConfiguration()
 }
 
 
-void cFftModuleConfiguration::setConfiguration(QByteArray xmlString)
+void cFftModuleConfiguration::setConfiguration(const QByteArray& xmlString)
 {
     m_bConfigured = m_bConfigError = false;
 
@@ -56,7 +56,7 @@ cFftModuleConfigData *cFftModuleConfiguration::getConfigurationData()
 }
 
 
-void cFftModuleConfiguration::configXMLInfo(QString key)
+void cFftModuleConfiguration::configXMLInfo(const QString &key)
 {
     bool ok;
 

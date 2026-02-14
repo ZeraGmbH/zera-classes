@@ -18,7 +18,7 @@ cOsciModuleConfiguration::~cOsciModuleConfiguration()
 }
 
 
-void cOsciModuleConfiguration::setConfiguration(QByteArray xmlString)
+void cOsciModuleConfiguration::setConfiguration(const QByteArray& xmlString)
 {
     m_bConfigured = m_bConfigError = false;
 
@@ -56,7 +56,7 @@ cOsciModuleConfigData *cOsciModuleConfiguration::getConfigurationData()
 }
 
 
-void cOsciModuleConfiguration::configXMLInfo(QString key)
+void cOsciModuleConfiguration::configXMLInfo(const QString &key)
 {
     bool ok;
 

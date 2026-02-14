@@ -17,7 +17,7 @@ cReferenceModuleConfiguration::~cReferenceModuleConfiguration()
 }
 
 
-void cReferenceModuleConfiguration::setConfiguration(QByteArray xmlString)
+void cReferenceModuleConfiguration::setConfiguration(const QByteArray& xmlString)
 {
     m_bConfigured = m_bConfigError = false;
 
@@ -50,7 +50,7 @@ cReferenceModuleConfigData *cReferenceModuleConfiguration::getConfigurationData(
 }
 
 
-void cReferenceModuleConfiguration::configXMLInfo(QString key)
+void cReferenceModuleConfiguration::configXMLInfo(const QString &key)
 {
     bool ok;
 

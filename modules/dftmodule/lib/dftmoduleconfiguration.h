@@ -39,12 +39,12 @@ class cDftModuleConfiguration: public BaseModuleConfiguration
 public:
     cDftModuleConfiguration();
     ~cDftModuleConfiguration();
-    virtual void setConfiguration(QByteArray xmlString) override;
+    virtual void setConfiguration(const QByteArray& xmlString) override;
     virtual QByteArray exportConfiguration() override; // exports conf. and parameters to xml
     cDftModuleConfigData* getConfigurationData();
 
 protected slots:
-    virtual void configXMLInfo(QString key) override;
+    virtual void configXMLInfo(const QString &key) override;
 private slots:
     virtual void completeConfiguration(bool ok);
 

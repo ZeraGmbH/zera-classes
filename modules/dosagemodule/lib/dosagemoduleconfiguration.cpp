@@ -29,7 +29,7 @@ cDosageModuleConfiguration::~cDosageModuleConfiguration()
         delete m_pDosageModulConfigData;
 }
 
-void cDosageModuleConfiguration::setConfiguration(QByteArray xmlString)
+void cDosageModuleConfiguration::setConfiguration(const QByteArray& xmlString)
 {
     m_bConfigured = m_bConfigError = false;
     if (m_pDosageModulConfigData)
@@ -57,7 +57,7 @@ cDosageModuleConfigData *cDosageModuleConfiguration::getConfigurationData()
 }
 
 
-void cDosageModuleConfiguration::configXMLInfo(QString key)
+void cDosageModuleConfiguration::configXMLInfo(const QString &key)
 {
     bool ok;
 

@@ -18,7 +18,7 @@ cTransformer1ModuleConfiguration::~cTransformer1ModuleConfiguration()
 }
 
 
-void cTransformer1ModuleConfiguration::setConfiguration(QByteArray xmlString)
+void cTransformer1ModuleConfiguration::setConfiguration(const QByteArray& xmlString)
 {
     m_bConfigured = m_bConfigError = false;
 
@@ -76,7 +76,7 @@ cTransformer1ModuleConfigData *cTransformer1ModuleConfiguration::getConfiguratio
 }
 
 
-void cTransformer1ModuleConfiguration::configXMLInfo(QString key)
+void cTransformer1ModuleConfiguration::configXMLInfo(const QString &key)
 {
     bool ok;
 

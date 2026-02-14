@@ -18,7 +18,7 @@ cRmsModuleConfiguration::~cRmsModuleConfiguration()
 }
 
 
-void cRmsModuleConfiguration::setConfiguration(QByteArray xmlString)
+void cRmsModuleConfiguration::setConfiguration(const QByteArray& xmlString)
 {
     m_bConfigured = m_bConfigError = false;
 
@@ -60,7 +60,7 @@ cRmsModuleConfigData *cRmsModuleConfiguration::getConfigurationData()
 }
 
 
-void cRmsModuleConfiguration::configXMLInfo(QString key)
+void cRmsModuleConfiguration::configXMLInfo(const QString &key)
 {
     bool ok;
 

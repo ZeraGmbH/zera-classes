@@ -15,7 +15,7 @@ cBleModuleConfiguration::~cBleModuleConfiguration()
     delete m_pBleModulConfigData;
 }
 
-void cBleModuleConfiguration::setConfiguration(QByteArray xmlString)
+void cBleModuleConfiguration::setConfiguration(const QByteArray& xmlString)
 {
     m_bConfigured = m_bConfigError = false;
     if (m_pBleModulConfigData)
@@ -47,7 +47,7 @@ cBleModuleConfigData *cBleModuleConfiguration::getConfigurationData()
     return m_pBleModulConfigData;
 }
 
-void cBleModuleConfiguration::configXMLInfo(QString key)
+void cBleModuleConfiguration::configXMLInfo(const QString &key)
 {
     if (m_ConfigXMLMap.contains(key)) {
         bool ok = true;

@@ -18,7 +18,7 @@ cPower3ModuleConfiguration::~cPower3ModuleConfiguration()
 }
 
 
-void cPower3ModuleConfiguration::setConfiguration(QByteArray xmlString)
+void cPower3ModuleConfiguration::setConfiguration(const QByteArray& xmlString)
 {
     m_bConfigured = m_bConfigError = false;
 
@@ -49,7 +49,7 @@ cPower3ModuleConfigData *cPower3ModuleConfiguration::getConfigurationData()
 }
 
 
-void cPower3ModuleConfiguration::configXMLInfo(QString key)
+void cPower3ModuleConfiguration::configXMLInfo(const QString &key)
 {
     bool ok;
 

@@ -17,7 +17,7 @@ cThdnModuleConfiguration::~cThdnModuleConfiguration()
 }
 
 
-void cThdnModuleConfiguration::setConfiguration(QByteArray xmlString)
+void cThdnModuleConfiguration::setConfiguration(const QByteArray& xmlString)
 {
     m_bConfigured = m_bConfigError = false;
 
@@ -54,7 +54,7 @@ cThdnModuleConfigData *cThdnModuleConfiguration::getConfigurationData()
 }
 
 
-void cThdnModuleConfiguration::configXMLInfo(QString key)
+void cThdnModuleConfiguration::configXMLInfo(const QString &key)
 {
     bool ok;
 

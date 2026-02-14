@@ -17,7 +17,7 @@ cStatusModuleConfiguration::~cStatusModuleConfiguration()
     if (m_pStatusModulConfigData) delete m_pStatusModulConfigData;
 }
 
-void cStatusModuleConfiguration::setConfiguration(QByteArray xmlString)
+void cStatusModuleConfiguration::setConfiguration(const QByteArray& xmlString)
 {
     m_bConfigured = m_bConfigError = false;
 
@@ -44,7 +44,7 @@ cStatusModuleConfigData *cStatusModuleConfiguration::getConfigurationData()
     return m_pStatusModulConfigData;
 }
 
-void cStatusModuleConfiguration::configXMLInfo(QString key)
+void cStatusModuleConfiguration::configXMLInfo(const QString &key)
 {
     bool ok;
 

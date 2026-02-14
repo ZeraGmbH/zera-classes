@@ -16,7 +16,7 @@ cSCPIModuleConfiguration::~cSCPIModuleConfiguration()
     if (m_pSCPIModulConfigData) delete m_pSCPIModulConfigData;
 }
 
-void cSCPIModuleConfiguration::setConfiguration(QByteArray xmlString)
+void cSCPIModuleConfiguration::setConfiguration(const QByteArray& xmlString)
 {
     m_bConfigured = m_bConfigError = false;
 
@@ -65,7 +65,7 @@ cSCPIModuleConfigData *cSCPIModuleConfiguration::getConfigurationData()
     return m_pSCPIModulConfigData;
 }
 
-void cSCPIModuleConfiguration::configXMLInfo(QString key)
+void cSCPIModuleConfiguration::configXMLInfo(const QString &key)
 {
     bool ok;
     cStatusBitDescriptor sBDescriptor;

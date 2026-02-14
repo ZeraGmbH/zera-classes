@@ -21,7 +21,7 @@ cRangeModuleConfiguration::~cRangeModuleConfiguration()
 }
 
 
-void cRangeModuleConfiguration::setConfiguration(QByteArray xmlString)
+void cRangeModuleConfiguration::setConfiguration(const QByteArray& xmlString)
 {
     m_bConfigured = m_bConfigError = false;
 
@@ -84,7 +84,7 @@ cRangeModuleConfigData *cRangeModuleConfiguration::getConfigurationData()
 }
 
 
-void cRangeModuleConfiguration::configXMLInfo(QString key)
+void cRangeModuleConfiguration::configXMLInfo(const QString &key)
 {
     bool ok;
 

@@ -31,12 +31,12 @@ class cBurden1ModuleConfiguration: public BaseModuleConfiguration
 public:
     cBurden1ModuleConfiguration();
     ~cBurden1ModuleConfiguration();
-    virtual void setConfiguration(QByteArray xmlString) override;
+    virtual void setConfiguration(const QByteArray& xmlString) override;
     virtual QByteArray exportConfiguration() override; // exports conf. and parameters to xml
     cBurden1ModuleConfigData* getConfigurationData();
 
 protected slots:
-    virtual void configXMLInfo(QString key) override;
+    virtual void configXMLInfo(const QString &key) override;
 private slots:
     void completeConfiguration(bool ok);
 private:

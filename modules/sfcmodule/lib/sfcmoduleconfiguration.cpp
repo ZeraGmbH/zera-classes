@@ -19,7 +19,7 @@ cSfcModuleConfiguration::~cSfcModuleConfiguration()
         delete m_pSfcModulConfigData;
 }
 
-void cSfcModuleConfiguration::setConfiguration(QByteArray xmlString)
+void cSfcModuleConfiguration::setConfiguration(const QByteArray& xmlString)
 {
     m_bConfigured = m_bConfigError = false;
     if (m_pSfcModulConfigData)
@@ -47,7 +47,7 @@ cSfcModuleConfigData *cSfcModuleConfiguration::getConfigurationData()
     return m_pSfcModulConfigData;
 }
 
-void cSfcModuleConfiguration::configXMLInfo(QString key)
+void cSfcModuleConfiguration::configXMLInfo(const QString &key)
 {
     if (m_ConfigXMLMap.contains(key))
     {

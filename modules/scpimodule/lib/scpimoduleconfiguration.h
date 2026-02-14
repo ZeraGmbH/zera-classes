@@ -49,11 +49,11 @@ class cSCPIModuleConfiguration: public BaseModuleConfiguration
 public:
     cSCPIModuleConfiguration();
     ~cSCPIModuleConfiguration();
-    virtual void setConfiguration(QByteArray xmlString);
+    virtual void setConfiguration(const QByteArray& xmlString);
     virtual QByteArray exportConfiguration(); // exports conf. and parameters to xml
     cSCPIModuleConfigData* getConfigurationData();
 protected slots:
-    virtual void configXMLInfo(QString key);
+    virtual void configXMLInfo(const QString &key);
     virtual void completeConfiguration(bool ok);
 private:
     cSCPIModuleConfigData *m_pSCPIModulConfigData = nullptr;  // configuration

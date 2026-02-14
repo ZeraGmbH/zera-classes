@@ -30,12 +30,12 @@ class cLambdaModuleConfiguration: public BaseModuleConfiguration
 public:
     cLambdaModuleConfiguration();
     ~cLambdaModuleConfiguration();
-    void setConfiguration(QByteArray xmlString) override;
+    void setConfiguration(const QByteArray& xmlString) override;
     QByteArray exportConfiguration() override; // exports conf. and parameters to xml
     cLambdaModuleConfigData* getConfigurationData();
 
 protected slots:
-    void configXMLInfo(QString key) override;
+    void configXMLInfo(const QString &key) override;
     void completeConfiguration(bool ok);
 private:
     cLambdaModuleConfigData *m_pLambdaModulConfigData = nullptr;  // configuration

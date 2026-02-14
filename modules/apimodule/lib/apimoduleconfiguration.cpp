@@ -19,7 +19,7 @@ namespace APIMODULE
             delete m_pApiModulConfigData;
     }
 
-    void cApiModuleConfiguration::setConfiguration(QByteArray xmlString)
+    void cApiModuleConfiguration::setConfiguration(const QByteArray& xmlString)
     {
         m_bConfigured = m_bConfigError = false;
         if (m_pApiModulConfigData)
@@ -44,7 +44,7 @@ namespace APIMODULE
         return m_pApiModulConfigData;
     }
 
-    void cApiModuleConfiguration::configXMLInfo(QString key)
+    void cApiModuleConfiguration::configXMLInfo(const QString &key)
     {
         if (m_ConfigXMLMap.contains(key))
         {

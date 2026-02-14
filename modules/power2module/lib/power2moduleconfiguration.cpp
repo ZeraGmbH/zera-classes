@@ -16,7 +16,7 @@ cPower2ModuleConfiguration::~cPower2ModuleConfiguration()
     if (m_pPower2ModulConfigData) delete m_pPower2ModulConfigData;
 }
 
-void cPower2ModuleConfiguration::setConfiguration(QByteArray xmlString)
+void cPower2ModuleConfiguration::setConfiguration(const QByteArray& xmlString)
 {
     m_bConfigured = m_bConfigError = false;
 
@@ -74,7 +74,7 @@ void cPower2ModuleConfiguration::addMeasSys(QString val)
         m_pPower2ModulConfigData->m_sMeasSystemList.append(val);
 }
 
-void cPower2ModuleConfiguration::configXMLInfo(QString key)
+void cPower2ModuleConfiguration::configXMLInfo(const QString &key)
 {
     if (m_ConfigXMLMap.contains(key)) {
         bool ok = true;

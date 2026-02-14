@@ -17,7 +17,7 @@ cSampleModuleConfiguration::~cSampleModuleConfiguration()
 }
 
 
-void cSampleModuleConfiguration::setConfiguration(QByteArray xmlString)
+void cSampleModuleConfiguration::setConfiguration(const QByteArray& xmlString)
 {
     m_bConfigured = m_bConfigError = false;
 
@@ -61,7 +61,7 @@ cSampleModuleConfigData *cSampleModuleConfiguration::getConfigurationData()
 }
 
 
-void cSampleModuleConfiguration::configXMLInfo(QString key)
+void cSampleModuleConfiguration::configXMLInfo(const QString &key)
 {
     if (m_ConfigXMLMap.contains(key)) {
         bool ok = true;

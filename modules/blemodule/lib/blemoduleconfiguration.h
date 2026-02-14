@@ -21,12 +21,12 @@ class cBleModuleConfiguration: public BaseModuleConfiguration
 public:
     cBleModuleConfiguration();
     ~cBleModuleConfiguration();
-    void setConfiguration(QByteArray xmlString) override;
+    void setConfiguration(const QByteArray& xmlString) override;
     QByteArray exportConfiguration() override;
     cBleModuleConfigData* getConfigurationData();
 
 private slots:
-    void configXMLInfo(QString key) override;
+    void configXMLInfo(const QString &key) override;
     void completeConfiguration(bool ok);
 
 private:

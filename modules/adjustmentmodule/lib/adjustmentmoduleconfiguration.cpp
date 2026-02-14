@@ -15,7 +15,7 @@ cAdjustmentModuleConfiguration::~cAdjustmentModuleConfiguration()
 }
 
 
-void cAdjustmentModuleConfiguration::setConfiguration(QByteArray xmlString)
+void cAdjustmentModuleConfiguration::setConfiguration(const QByteArray& xmlString)
 {
     m_bConfigured = m_bConfigError = false;
 
@@ -51,7 +51,7 @@ cAdjustmentModuleConfigData *cAdjustmentModuleConfiguration::getConfigurationDat
 }
 
 
-void cAdjustmentModuleConfiguration::configXMLInfo(QString key)
+void cAdjustmentModuleConfiguration::configXMLInfo(const QString &key)
 {
     bool ok;
 

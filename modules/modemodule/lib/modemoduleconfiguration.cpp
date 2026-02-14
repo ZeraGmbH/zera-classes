@@ -18,7 +18,7 @@ cModeModuleConfiguration::~cModeModuleConfiguration()
 }
 
 
-void cModeModuleConfiguration::setConfiguration(QByteArray xmlString)
+void cModeModuleConfiguration::setConfiguration(const QByteArray& xmlString)
 {
     m_bConfigured = m_bConfigError = false;
 
@@ -52,7 +52,7 @@ cModeModuleConfigData *cModeModuleConfiguration::getConfigurationData()
 }
 
 
-void cModeModuleConfiguration::configXMLInfo(QString key)
+void cModeModuleConfiguration::configXMLInfo(const QString &key)
 {
     bool ok;
 

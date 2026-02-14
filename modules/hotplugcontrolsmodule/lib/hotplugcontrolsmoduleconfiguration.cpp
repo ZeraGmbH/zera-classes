@@ -18,7 +18,7 @@ cHotplugControlsModuleConfiguration::~cHotplugControlsModuleConfiguration()
         delete m_pHotplugControlsModuleConfigData;
 }
 
-void cHotplugControlsModuleConfiguration::setConfiguration(QByteArray xmlString)
+void cHotplugControlsModuleConfiguration::setConfiguration(const QByteArray& xmlString)
 {
     m_bConfigured = m_bConfigError = false;
     if (m_pHotplugControlsModuleConfigData)
@@ -43,7 +43,7 @@ cHotplugControlsModuleConfigData *cHotplugControlsModuleConfiguration::getConfig
     return m_pHotplugControlsModuleConfigData;
 }
 
-void cHotplugControlsModuleConfiguration::configXMLInfo(QString key)
+void cHotplugControlsModuleConfiguration::configXMLInfo(const QString &key)
 {
     bool ok;
     if (m_ConfigXMLMap.contains(key))

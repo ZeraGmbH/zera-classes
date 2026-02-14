@@ -11,7 +11,7 @@ class BaseModuleConfiguration: public XMLSettings
 public:
     BaseModuleConfiguration();
     virtual ~BaseModuleConfiguration();
-    virtual void setConfiguration(QByteArray xmlString) = 0;
+    virtual void setConfiguration(const QByteArray& xmlString) = 0;
     virtual QByteArray exportConfiguration() = 0; // exports conf. and parameters to xml
     bool isConfigured();
 protected:

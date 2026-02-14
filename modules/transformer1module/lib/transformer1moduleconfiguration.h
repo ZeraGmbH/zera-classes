@@ -41,12 +41,12 @@ class cTransformer1ModuleConfiguration: public BaseModuleConfiguration
 public:
     cTransformer1ModuleConfiguration();
     ~cTransformer1ModuleConfiguration();
-    virtual void setConfiguration(QByteArray xmlString);
+    virtual void setConfiguration(const QByteArray& xmlString);
     virtual QByteArray exportConfiguration(); // exports conf. and parameters to xml
     cTransformer1ModuleConfigData* getConfigurationData();
 
 protected slots:
-    virtual void configXMLInfo(QString key);
+    virtual void configXMLInfo(const QString &key);
     virtual void completeConfiguration(bool ok);
 
 private:

@@ -16,7 +16,7 @@ cBurden1ModuleConfiguration::~cBurden1ModuleConfiguration()
     if (m_pBurden1ModulConfigData) delete m_pBurden1ModulConfigData;
 }
 
-void cBurden1ModuleConfiguration::setConfiguration(QByteArray xmlString)
+void cBurden1ModuleConfiguration::setConfiguration(const QByteArray& xmlString)
 {
     m_bConfigured = m_bConfigError = false;
 
@@ -63,7 +63,7 @@ cBurden1ModuleConfigData *cBurden1ModuleConfiguration::getConfigurationData()
 }
 
 
-void cBurden1ModuleConfiguration::configXMLInfo(QString key)
+void cBurden1ModuleConfiguration::configXMLInfo(const QString &key)
 {
     bool ok;
 

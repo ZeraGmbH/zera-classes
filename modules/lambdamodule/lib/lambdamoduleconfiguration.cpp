@@ -17,7 +17,7 @@ cLambdaModuleConfiguration::~cLambdaModuleConfiguration()
 }
 
 
-void cLambdaModuleConfiguration::setConfiguration(QByteArray xmlString)
+void cLambdaModuleConfiguration::setConfiguration(const QByteArray& xmlString)
 {
     m_bConfigured = m_bConfigError = false;
 
@@ -51,7 +51,7 @@ cLambdaModuleConfigData *cLambdaModuleConfiguration::getConfigurationData()
 }
 
 
-void cLambdaModuleConfiguration::configXMLInfo(QString key)
+void cLambdaModuleConfiguration::configXMLInfo(const QString &key)
 {
     bool ok;
 
