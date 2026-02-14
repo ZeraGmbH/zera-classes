@@ -76,17 +76,11 @@ void cOsciModuleMeasProgram::stop()
 
 void cOsciModuleMeasProgram::generateVeinInterface()
 {
-    QString key;
-
-    VfModuleComponent *pActvalue;
-    int n;
-    n = getConfData()->m_valueChannelList.count();
-
-    for (int i = 0; i < n; i++)
-    {
-        pActvalue = new VfModuleComponent(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
-                                            QString("ACT_OSCI%1").arg(i+1),
-                                            QString("Measures samples"));
+    int n = getConfData()->m_valueChannelList.count();
+    for (int i = 0; i < n; i++) {
+        VfModuleComponent *pActvalue = new VfModuleComponent(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
+                                                             QString("ACT_OSCI%1").arg(i+1),
+                                                             QString("Measures samples"));
         m_veinActValueList.append(pActvalue); // we add the component for our measurement
         m_pModule->m_veinComponentsWithMetaAndScpi.append(pActvalue); // and for the modules interface
     }
@@ -96,6 +90,7 @@ void cOsciModuleMeasProgram::generateVeinInterface()
 
     QString refChannelMNameConfigured = getConfData()->m_RefChannel.m_sPar;
     const QString channelMarkdown = m_pModule->getSharedChannelRangeObserver()->getChannelNamesForMardownDoc();
+    QString key;
     m_pRefChannelParameter = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
                                                    key = QString("PAR_RefChannel"),
                                                    QString("Reference channel\n"
@@ -215,8 +210,7 @@ void cOsciModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, Q
     else
     {
         // maybe other objexts share the same dsp interface
-        if (m_MsgNrCmdList.contains(msgnr))
-        {
+        if (m_MsgNrCmdList.contains(msgnr)) {
             int cmd = m_MsgNrCmdList.take(msgnr);
             switch (cmd)
             {
@@ -289,19 +283,15 @@ void cOsciModuleMeasProgram::setActualValuesNames()
 
 void cOsciModuleMeasProgram::setInterfaceActualValues(QVector<float> *actualValues)
 {
-    if (m_bActive) // maybe we are deactivating !!!!
-    {
-
-        for (int i = 0; i < m_veinActValueList.count(); i++)
-        {
-            QList<double> osciList;
+    if (m_bActive) { // maybe we are deactivating !!!!
+        for (int i = 0; i < m_veinActValueList.count(); i++) {
             int offs = i * getConfData()->m_nInterpolation;
 
+            QList<double> osciList;
             for (int j = 0; j < getConfData()->m_nInterpolation; j++)
                 osciList.append(actualValues->at(offs + j));
 
-            QVariant list;
-            list = QVariant::fromValue<QList<double> >(osciList);
+            QVariant list = QVariant::fromValue<QList<double> >(osciList);
             m_veinActValueList.at(i)->setValue(list); // and set entities
         }
     }
