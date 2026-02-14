@@ -1,9 +1,6 @@
-#include <QPoint>
-#include <QString>
-#include <xmlconfigreader.h>
-
 #include "blemoduleconfiguration.h"
-#include "blemoduleconfigdata.h"
+#include <xmlconfigreader.h>
+#include <QString>
 
 namespace BLEMODULE
 {
@@ -13,12 +10,10 @@ cBleModuleConfiguration::cBleModuleConfiguration()
     connect(m_pXMLReader, &Zera::XMLConfig::cReader::finishedParsingXML, this, &cBleModuleConfiguration::completeConfiguration);
 }
 
-
 cBleModuleConfiguration::~cBleModuleConfiguration()
 {
-    if (m_pBleModulConfigData) delete m_pBleModulConfigData;
+    delete m_pBleModulConfigData;
 }
-
 
 void cBleModuleConfiguration::setConfiguration(QByteArray xmlString)
 {
@@ -37,7 +32,6 @@ void cBleModuleConfiguration::setConfiguration(QByteArray xmlString)
     m_pXMLReader->loadXMLFromString(QString::fromUtf8(xmlString.data(), xmlString.size()));
 }
 
-
 QByteArray cBleModuleConfiguration::exportConfiguration()
 {
     boolParameter *bPar = &m_pBleModulConfigData->m_bluetoothOn;
@@ -48,12 +42,10 @@ QByteArray cBleModuleConfiguration::exportConfiguration()
     return m_pXMLReader->getXMLConfig().toUtf8();
 }
 
-
 cBleModuleConfigData *cBleModuleConfiguration::getConfigurationData()
 {
     return m_pBleModulConfigData;
 }
-
 
 void cBleModuleConfiguration::configXMLInfo(QString key)
 {
@@ -77,11 +69,9 @@ void cBleModuleConfiguration::configXMLInfo(QString key)
         m_bConfigError = true;
 }
 
-
 void cBleModuleConfiguration::completeConfiguration(bool ok)
 {
     m_bConfigured = (ok && !m_bConfigError);
 }
 
 }
-

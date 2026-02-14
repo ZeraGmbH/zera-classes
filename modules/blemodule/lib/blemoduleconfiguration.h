@@ -21,16 +21,16 @@ class cBleModuleConfiguration: public BaseModuleConfiguration
 public:
     cBleModuleConfiguration();
     ~cBleModuleConfiguration();
-    virtual void setConfiguration(QByteArray xmlString);
-    virtual QByteArray exportConfiguration(); // exports conf. and parameters to xml
+    void setConfiguration(QByteArray xmlString) override;
+    QByteArray exportConfiguration() override;
     cBleModuleConfigData* getConfigurationData();
 
-protected slots:
-    virtual void configXMLInfo(QString key);
-    virtual void completeConfiguration(bool ok);
+private slots:
+    void configXMLInfo(QString key) override;
+    void completeConfiguration(bool ok);
 
 private:
-    cBleModuleConfigData *m_pBleModulConfigData = nullptr;  // configuration
+    cBleModuleConfigData *m_pBleModulConfigData = nullptr;
 };
 
 }
