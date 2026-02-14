@@ -9,7 +9,6 @@
 #include <proxy.h>
 #include <proxyclient.h>
 #include <scpi.h>
-#include <vfmodulemetadata.h>
 #include <vfmodulecomponent.h>
 #include <vfmoduleparameter.h>
 #include <doublevalidator.h>
@@ -17,10 +16,6 @@
 #include <dspinterface.h>
 #include <math.h>
 #include <QString>
-#include <QStateMachine>
-#include <QJsonObject>
-#include <QJsonArray>
-#include <timerfactoryqt.h>
 
 namespace THDNMODULE
 {
@@ -87,12 +82,10 @@ void cThdnModuleMeasProgram::start()
     m_startStopHandler.start();
 }
 
-
 void cThdnModuleMeasProgram::stop()
 {
     m_startStopHandler.stop();
 }
-
 
 void cThdnModuleMeasProgram::generateVeinInterface()
 {
@@ -206,11 +199,9 @@ void cThdnModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, Q
             break;
         }
     }
-    else
-    {
+    else {
         // maybe other objexts share the same dsp interface
-        if (m_MsgNrCmdList.contains(msgnr))
-        {
+        if (m_MsgNrCmdList.contains(msgnr)) {
             int cmd = m_MsgNrCmdList.take(msgnr);
             switch (cmd)
             {
@@ -286,8 +277,7 @@ void cThdnModuleMeasProgram::setSCPIMeasInfo()
 
 void cThdnModuleMeasProgram::setInterfaceActualValues(QVector<float> *actualValues)
 {
-    if (m_bActive) // maybe we are deactivating !!!!
-    {
+    if (m_bActive) { // maybe we are deactivating !!!!
         for (int i = 0; i < m_veinActValueList.count(); i++)
             m_veinActValueList.at(i)->setValue(QVariant((double)actualValues->at(i))); // and set entities
     }
@@ -353,10 +343,9 @@ void cThdnModuleMeasProgram::dataReadDSP()
     if (m_bActive) {
         m_ModuleActualValues = m_pActualValuesDSP->getData();
         if (getConfData()->m_sTHDType == "R") {
-            double thdn, thdr;
             for (int i = 0; i < m_ModuleActualValues.length(); i++) {
-                thdn = m_ModuleActualValues.at(i) / 100.0;
-                thdr = 100.0 * thdn / sqrt(1 + (thdn * thdn));
+                double thdn = m_ModuleActualValues.at(i) / 100.0;
+                double thdr = 100.0 * thdn / sqrt(1 + (thdn * thdn));
                 m_ModuleActualValues.replace(i, thdr);
             }
         }
