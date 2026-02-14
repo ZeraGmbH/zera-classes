@@ -58,7 +58,7 @@ cThdnModuleMeasProgram::cThdnModuleMeasProgram(cThdnModule *module, std::shared_
     m_deactivationMachine.setInitialState(&m_unloadStart);
 
     connect(&m_unloadStart, &QState::entered, this, &cThdnModuleMeasProgram::deactivateDSPStart);
-    connect(&m_unloadDSPDoneState, &QAbstractState::entered, this, &cThdnModuleMeasProgram::deactivateDSPdone);
+    connect(&m_unloadDSPDoneState, &QState::entered, this, &cModuleActivist::deactivated);
 
     // setting up statemachine for data acquisition
     m_dataAcquisitionState.addTransition(this, &cThdnModuleMeasProgram::dataAquisitionContinue, &m_dataAcquisitionDoneState);
@@ -339,11 +339,6 @@ void cThdnModuleMeasProgram::deactivateDSPStart()
     m_dataAcquisitionMachine.stop();
     disconnect(m_dspInterface.get(), 0, this, 0);
     emit deactivationContinue();
-}
-
-void cThdnModuleMeasProgram::deactivateDSPdone()
-{
-    emit deactivated();
 }
 
 void cThdnModuleMeasProgram::dataAcquisitionDSP()
