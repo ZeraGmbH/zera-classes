@@ -135,13 +135,9 @@ void cReferenceModuleMeasProgram::setDspCmdList()
 
 void cReferenceModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant answer)
 {
-    bool ok;
-
-    if (msgnr == 0) // 0 was reserved for async. messages
-    {
-        QString sintnr;
-        sintnr = answer.toString().section(':', 1, 1);
-        int service = sintnr.toInt(&ok);
+    if (msgnr == 0) { // 0 was reserved for async. messages
+        QString sintnr = answer.toString().section(':', 1, 1);
+        int service = sintnr.toInt();
         switch (service)
         {
         case irqNr:
