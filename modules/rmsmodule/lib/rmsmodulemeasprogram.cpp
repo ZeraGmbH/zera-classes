@@ -425,8 +425,7 @@ void cRmsModuleMeasProgram::dataReadDSP()
 
 void cRmsModuleMeasProgram::newIntegrationtime(QVariant ti)
 {
-    bool ok;
-    getConfData()->m_fMeasIntervalTime.m_fValue = ti.toDouble(&ok);
+    getConfData()->m_fMeasIntervalTime.m_fValue = ti.toDouble();
     if (getConfData()->m_sIntegrationMode == "time") {
         if (getConfData()->m_bmovingWindow)
             m_movingwindowFilter.setIntegrationtime(getConfData()->m_fMeasIntervalTime.m_fValue);
@@ -440,8 +439,7 @@ void cRmsModuleMeasProgram::newIntegrationtime(QVariant ti)
 
 void cRmsModuleMeasProgram::newIntegrationPeriod(QVariant period)
 {
-    bool ok;
-    getConfData()->m_nMeasIntervalPeriod.m_nValue = period.toInt(&ok);
+    getConfData()->m_nMeasIntervalPeriod.m_nValue = period.toInt();
     if (getConfData()->m_sIntegrationMode == "period") {
         m_pParameterDSP->setVarData(QString("TIPAR:%1;TISTART:0;").arg(getConfData()->m_nMeasIntervalPeriod.m_nValue));
         m_MsgNrCmdList[m_dspInterface->dspMemoryWrite(m_pParameterDSP)] = writeparameter;
