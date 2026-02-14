@@ -62,21 +62,6 @@ cReferenceModuleMeasProgram::cReferenceModuleMeasProgram(cReferenceModule* modul
     }
 }
 
-void cReferenceModuleMeasProgram::start()
-{
-}
-
-void cReferenceModuleMeasProgram::stop()
-{
-}
-
-
-void cReferenceModuleMeasProgram::generateVeinInterface()
-{
-    // we have no interface
-}
-
-
 void cReferenceModuleMeasProgram::setDspVarList()
 {
     int samples = m_pModule->getSharedChannelRangeObserver()->getSamplesPerPeriod();
@@ -148,10 +133,8 @@ void cReferenceModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 rep
             break;
         }
     }
-    else
-    {
-        if (m_MsgNrCmdList.contains(msgnr))
-        {
+    else {
+        if (m_MsgNrCmdList.contains(msgnr)) {
             int cmd = m_MsgNrCmdList.take(msgnr);
             switch (cmd)
             {
@@ -257,13 +240,11 @@ void cReferenceModuleMeasProgram::dataReadDSP()
 void cReferenceModuleMeasProgram::handleDemoActualValues()
 {
     QVector<float> demoValues;
-
     for (int i = 0; i < m_ChannelList.count(); i++) {
-        float val = (float)rand() / RAND_MAX ;
+        float val = (float)rand() / float(RAND_MAX);
         demoValues.append(val);
     }
     m_ModuleActualValues = demoValues;
-    //Q_ASSERT(demoValues.size() == m_ModuleActualValues.size());
     emit actualValues(&m_ModuleActualValues);
 
 }
