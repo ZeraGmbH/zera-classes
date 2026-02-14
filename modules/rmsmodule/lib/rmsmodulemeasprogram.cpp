@@ -47,7 +47,7 @@ cRmsModuleMeasProgram::cRmsModuleMeasProgram(cRmsModule* module,
     m_deactivationMachine.setInitialState(&m_unloadStart);
 
     connect(&m_unloadStart, &QAbstractState::entered, this, &cRmsModuleMeasProgram::deactivateDSPStart);
-    connect(&m_unloadDSPDoneState, &QAbstractState::entered, this, &cRmsModuleMeasProgram::deactivateDSPdone);
+    connect(&m_unloadDSPDoneState, &QState::entered, this, &cModuleActivist::deactivated);
 
     // setting up statemachine for data acquisition
     m_dataAcquisitionState.addTransition(this,&cRmsModuleMeasProgram::dataAquisitionContinue, &m_dataAcquisitionDoneState);
@@ -400,11 +400,6 @@ void cRmsModuleMeasProgram::deactivateDSPStart()
     m_dataAcquisitionMachine.stop();
     disconnect(m_dspInterface.get(), 0, this, 0);
     emit deactivationContinue();
-}
-
-void cRmsModuleMeasProgram::deactivateDSPdone()
-{
-    emit deactivated();
 }
 
 void cRmsModuleMeasProgram::dataAcquisitionDSP()

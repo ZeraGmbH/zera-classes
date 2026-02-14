@@ -82,7 +82,6 @@ private slots:
     void activateDSPdone();
 
     void deactivateDSPStart();
-    void deactivateDSPdone();
 
     void dataAcquisitionDSP();
     void dataReadDSP();
