@@ -166,7 +166,6 @@ void cRangeModuleMeasProgram::setDspCmdList()
             m_pModule->getSharedChannelRangeObserver()->getChannel(channelMNames.at(i));
         m_dspInterface->addCycListItem(QString("COPYDATA(CH%1,0,MEASSIGNAL)").arg(channel->getDspChannel())); // for each channel we work on
         m_dspInterface->addCycListItem(QString("SETPEAK(MEASSIGNAL,CHXPEAK+%1)").arg(i)); // here we have signal with dc regardless subdc is configured
-        //m_dspInterface->addCycListItem(QString("COPYDATA(CH%1,0,MEASSIGNAL)").arg(chnnr)); // for each channel we work on
         m_dspInterface->addCycListItem(QString("MULCCV(MEASSIGNAL,MEASSIGNAL,CHXRMS+%1)").arg(i));
     }
     m_dspInterface->addCycListItem("COPYDU(1,FREQENCY,FREQ)");
@@ -217,11 +216,9 @@ void cRangeModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, 
                 m_bIgnore = false;
         }
     }
-    else
-    {
+    else {
         // because rangemodulemeasprogram, justifynorm share the same dsp interface
-        if (m_MsgNrCmdList.contains(msgnr))
-        {
+        if (m_MsgNrCmdList.contains(msgnr)) {
             int cmd = m_MsgNrCmdList.take(msgnr);
             switch (cmd)
             {
