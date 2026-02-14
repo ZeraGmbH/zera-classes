@@ -192,13 +192,10 @@ void cThdnModuleMeasProgram::setDspCmdList()
 
 void cThdnModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant answer)
 {
-    bool ok;
-
-    if (msgnr == 0) // 0 was reserved for async. messages
-    {
+    if (msgnr == 0) { // 0 was reserved for async. messages
         QString sintnr;
         sintnr = answer.toString().section(':', 1, 1);
-        int service = sintnr.toInt(&ok);
+        int service = sintnr.toInt();
         switch (service)
         {
         case irqNr:
@@ -375,8 +372,7 @@ void cThdnModuleMeasProgram::dataReadDSP()
 
 void cThdnModuleMeasProgram::newIntegrationtime(QVariant ti)
 {
-    bool ok;
-    getConfData()->m_fMeasInterval.m_fValue = ti.toDouble(&ok);
+    getConfData()->m_fMeasInterval.m_fValue = ti.toDouble();
     if (getConfData()->m_bmovingWindow)
         m_movingwindowFilter.setIntegrationtime(getConfData()->m_fMeasInterval.m_fValue);
     else {
