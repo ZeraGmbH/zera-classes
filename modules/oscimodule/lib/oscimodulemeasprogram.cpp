@@ -324,13 +324,13 @@ void cOsciModuleMeasProgram::dspserverConnect()
 
 void cOsciModuleMeasProgram::varList2DSP()
 {
-    setDspVarList(); // first we set the var list for our dsp
-    setDspCmdList(); // and the cmd list he has to work on
+    setDspVarList();
     m_MsgNrCmdList[m_dspInterface->varList2Dsp()] = varlist2dsp;
 }
 
 void cOsciModuleMeasProgram::cmdList2DSP()
 {
+    setDspCmdList();
     m_MsgNrCmdList[m_dspInterface->cmdList2Dsp()] = cmdlist2dsp;
 }
 
