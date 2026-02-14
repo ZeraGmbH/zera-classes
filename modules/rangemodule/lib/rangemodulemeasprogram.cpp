@@ -49,7 +49,7 @@ cRangeModuleMeasProgram::cRangeModuleMeasProgram(cRangeModule* module, std::shar
     m_deactivationMachine.addState(&m_unloadDSPDoneState);
 
     connect(&m_unloadStart, &QState::entered, this, &cRangeModuleMeasProgram::deactivateDSPStart);
-    connect(&m_unloadDSPDoneState, &QState::entered, this, &cRangeModuleMeasProgram::deactivateDSPdone);
+    connect(&m_unloadDSPDoneState, &QState::entered, this, &cModuleActivist::deactivated);
 
     m_unloadStart.addTransition(this, &cRangeModuleMeasProgram::deactivationContinue, &m_unloadDSPDoneState);
     m_deactivationMachine.setInitialState(&m_unloadStart);
@@ -364,11 +364,6 @@ void cRangeModuleMeasProgram::deactivateDSPStart()
     m_dataAcquisitionMachine.stop();
     disconnect(m_dspInterface.get(), 0, this, 0);
     emit deactivationContinue();
-}
-
-void cRangeModuleMeasProgram::deactivateDSPdone()
-{
-    emit deactivated();
 }
 
 void cRangeModuleMeasProgram::dataAcquisitionDSP()
