@@ -53,7 +53,7 @@ cDftModuleMeasProgram::cDftModuleMeasProgram(cDftModule* module, std::shared_ptr
     m_deactivationMachine.setInitialState(&m_unloadStart);
 
     connect(&m_unloadStart, &QState::entered, this, &cDftModuleMeasProgram::deactivateDSPStart);
-    connect(&m_unloadDSPDoneState, &QState::entered, this, &cDftModuleMeasProgram::deactivateDSPdone);
+    connect(&m_unloadDSPDoneState, &QState::entered, this, &cModuleActivist::deactivated);
 
     // setting up statemachine for data acquisition
     m_dataAcquisitionState.addTransition(this, &cDftModuleMeasProgram::dataAquisitionContinue, &m_dataAcquisitionDoneState);
@@ -467,11 +467,6 @@ void cDftModuleMeasProgram::deactivateDSPStart()
     m_dataAcquisitionMachine.stop();
     disconnect(m_dspInterface.get(), 0, this, 0);
     emit deactivationContinue();
-}
-
-void cDftModuleMeasProgram::deactivateDSPdone()
-{
-    emit deactivated();
 }
 
 void cDftModuleMeasProgram::dataAcquisitionDSP()
