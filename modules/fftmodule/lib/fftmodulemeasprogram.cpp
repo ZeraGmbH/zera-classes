@@ -83,11 +83,9 @@ void cFftModuleMeasProgram::stop()
 
 void cFftModuleMeasProgram::generateVeinInterface()
 {
-    QString key;
-    VfModuleComponent *pActvalue;
     int n = getConfData()->m_valueChannelList.count();
     for (int i = 0; i < n; i++) {
-        pActvalue = new VfModuleComponent(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
+        VfModuleComponent *pActvalue = new VfModuleComponent(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
                                             QString("ACT_FFT%1").arg(i+1),
                                             QString("FFT actual values"));
         m_veinActValueList.append(pActvalue); // we add the component for our measurement
@@ -105,6 +103,7 @@ void cFftModuleMeasProgram::generateVeinInterface()
     m_pFFTOrderInfo = new VfModuleMetaData(QString("FFTOrder"), QVariant(getConfData()->m_nFftOrder));
     m_pModule->veinModuleMetaDataList.append(m_pFFTOrderInfo);
 
+    QString key;
     m_pIntegrationTimeParameter = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
                                                            key = QString("PAR_Interval"),
                                                            QString("Integration time"),
@@ -241,6 +240,7 @@ void cFftModuleMeasProgram::setDspCmdList()
 
 void cFftModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant answer)
 {
+    Q_UNUSED(answer)
     if (msgnr == 0) { // 0 was reserved for async. messages
         // we got an interrupt from our cmd chain and have to fetch our actual values
         // but we synchronize on ranging process
@@ -303,7 +303,6 @@ cFftModuleConfigData *cFftModuleMeasProgram::getConfData()
 {
     return qobject_cast<cFftModuleConfiguration*>(m_pConfiguration.get())->getConfigurationData();
 }
-
 
 void cFftModuleMeasProgram::setSCPIMeasInfo()
 {
@@ -428,12 +427,10 @@ void cFftModuleMeasProgram::dataReadDSP()
 
             for (int harmonicNo = 1; harmonicNo < nHarmonic; harmonicNo++)
             {
-                double re, im;
                 // as our Fft produces math positive values, we correct them to technical positive values (*-1.0)
                 // also we change real and imag. parts because we are interested in sine rather than cosine
-
-                re = -scale * (m_ModuleActualValues.at(sourceOffset + middle + harmonicNo) - m_ModuleActualValues.at(sourceOffset + middle * 2 - harmonicNo) );
-                im = -scale * (m_ModuleActualValues.at(sourceOffset + middle - harmonicNo) + m_ModuleActualValues.at(sourceOffset + harmonicNo));
+                double re = -scale * (m_ModuleActualValues.at(sourceOffset + middle + harmonicNo) - m_ModuleActualValues.at(sourceOffset + middle * 2 - harmonicNo) );
+                double im = -scale * (m_ModuleActualValues.at(sourceOffset + middle - harmonicNo) + m_ModuleActualValues.at(sourceOffset + harmonicNo));
 
                 m_FFTModuleActualValues.replace(channelNo * resultOffs + (harmonicNo*2), re);
                 m_FFTModuleActualValues.replace(channelNo * resultOffs + (harmonicNo*2) + 1, im);
@@ -468,4 +465,5 @@ void cFftModuleMeasProgram::newRefChannel(QVariant chn)
     m_MsgNrCmdList[m_dspInterface->dspMemoryWrite(m_pParameterDSP)] = writeparameter;
     emit m_pModule->parameterChanged();
 }
+
 }
