@@ -200,15 +200,10 @@ void cOsciModuleMeasProgram::setDspCmdList()
 
 void cOsciModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant answer)
 {
-    bool ok;
-
-    if (msgnr == 0) // 0 was reserved for async. messages
-    {
-        QString sintnr;
-        sintnr = answer.toString().section(':', 1, 1);
-        int service = sintnr.toInt(&ok);
-        switch (service)
-        {
+    if (msgnr == 0) { // 0 was reserved for async. messages
+        QString sintnr = answer.toString().section(':', 1, 1);
+        int service = sintnr.toInt();
+        switch (service) {
         case irqNr:
             // we got an interrupt from our cmd chain and have to fetch our actual values
             // but we synchronize on ranging process
