@@ -154,6 +154,10 @@ void test_modman_regression_all_sessions::checkObjectsProperlyDeleted()
     constexpr int eventSystemCount = 6;
     QCOMPARE(cumulatedInstanceCounts.m_veinEventSystemCount, eventSystemCount);
 
+    // At least to me it is not quite clear what the instances of server peers are.
+    // In case of change the rule of thumb was up to now:
+    // * Number decreases: Maybe a good thing. We saw this when removing resman from zdspd/secd
+    // * Number increases: Hmm - are there explanations?
     constexpr int serverPeers = 6;
     QCOMPARE(cumulatedInstanceCounts.m_veinTcpPeerCount, serverPeers);
     constexpr int peersLeftServerDown = 0;
