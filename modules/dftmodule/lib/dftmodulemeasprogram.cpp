@@ -180,7 +180,6 @@ void cDftModuleMeasProgram::generateVeinInterface()
     m_pModule->m_veinComponentsWithMetaAndScpi.append(m_pMeasureSignal);
 }
 
-
 void cDftModuleMeasProgram::setDspVarList()
 {
     int samples = m_pModule->getSharedChannelRangeObserver()->getSamplesPerPeriod();
@@ -256,6 +255,7 @@ void cDftModuleMeasProgram::setDspCmdList()
 
 void cDftModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant answer)
 {
+    Q_UNUSED(answer)
     if (msgnr == 0) { // 0 was reserved for async. messages
         // we got an interrupt from our cmd chain and have to fetch our actual values
         // but we synchronize on ranging process
@@ -369,9 +369,8 @@ void cDftModuleMeasProgram::setRefChannelValidator()
 
 void cDftModuleMeasProgram::initRFieldMeasurement()
 {
-    QString s;
     for (int i = 0; i < getConfData()->m_rfieldChannelList.length(); i++)
-        rfieldActvalueIndexList.append(getConfData()->m_valueChannelList.indexOf(s = getConfData()->m_rfieldChannelList.at(i)));
+        rfieldActvalueIndexList.append(getConfData()->m_valueChannelList.indexOf(getConfData()->m_rfieldChannelList.at(i)));
 }
 
 bool cDftModuleMeasProgram::isConfiguredForDcRef()
