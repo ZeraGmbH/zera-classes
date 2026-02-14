@@ -194,9 +194,7 @@ void cRmsModuleMeasProgram::setDspCmdList()
             m_dspInterface->addCycListItem("GETSTIME(TISTART)"); // einmal ti start setzen
         }
         else
-        {
             m_dspInterface->addCycListItem(QString("SETVAL(TIPAR,%1)").arg(getConfData()->m_nMeasIntervalPeriod.m_nValue)); // initial ti time
-        }
         m_dspInterface->addCycListItem("DEACTIVATECHAIN(1,0x0101)"); // ende prozessnr., hauptkette 1 subkette 1
     m_dspInterface->addCycListItem("STOPCHAIN(1,0x0101)"); // ende prozessnr., hauptkette 1 subkette 1
 
@@ -220,8 +218,7 @@ void cRmsModuleMeasProgram::setDspCmdList()
     // and filter them
     m_dspInterface->addCycListItem(QString("AVERAGE1(%1,VALXRMS,FILTER)").arg(m_veinActValueList.count())); // we add results to filter
 
-    if (getConfData()->m_sIntegrationMode == "time")
-    {
+    if (getConfData()->m_sIntegrationMode == "time") {
         // in case intergration mode is time
         m_dspInterface->addCycListItem("TESTTIMESKIPNEX(TISTART,TIPAR)");
         m_dspInterface->addCycListItem("ACTIVATECHAIN(1,0x0102)");
@@ -238,8 +235,7 @@ void cRmsModuleMeasProgram::setDspCmdList()
             m_dspInterface->addCycListItem("DEACTIVATECHAIN(1,0x0102)");
         m_dspInterface->addCycListItem("STOPCHAIN(1,0x0102)"); // end processnr., mainchain 1 subchain 2
     }
-    else
-    {
+    else {
         // otherwise it is period
         m_dspInterface->addCycListItem("TESTVVSKIPLT(N,TIPAR)");
         m_dspInterface->addCycListItem("ACTIVATECHAIN(1,0x0103)");
@@ -258,14 +254,14 @@ void cRmsModuleMeasProgram::setDspCmdList()
 
 void cRmsModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant answer)
 {
+    Q_UNUSED(answer)
     if (msgnr == 0) { // 0 was reserved for async. messages
         // we got an interrupt from our cmd chain and have to fetch our actual values
         // but we synchronize on ranging process
         if (m_bActive && !m_dataAcquisitionMachine.isRunning()) // in case of deactivation in progress, no dataaquisition
             m_dataAcquisitionMachine.start();
     }
-    else
-    {
+    else {
         // maybe other objexts share the same dsp interface
         if (m_MsgNrCmdList.contains(msgnr))
         {
@@ -344,8 +340,7 @@ void cRmsModuleMeasProgram::setSCPIMeasInfo()
 
 void cRmsModuleMeasProgram::setInterfaceActualValues(QVector<float> *actualValues)
 {
-    if (m_bActive) // maybe we are deactivating !!!!
-    {
+    if (m_bActive) { // maybe we are deactivating !!!!
         for (int i = 0; i < m_veinActValueList.count(); i++)
             m_veinActValueList.at(i)->setValue(QVariant((*actualValues)[i])); // and set entities
     }
