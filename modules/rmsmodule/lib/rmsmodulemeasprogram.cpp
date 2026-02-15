@@ -392,7 +392,7 @@ void cRmsModuleMeasProgram::deactivateDSPStart()
 {
     m_bActive = false;
     m_dataAcquisitionMachine.stop();
-    deactivateDsp();
+    disconnect(m_dspInterface.get(), 0, this, 0);
     emit deactivationContinue();
 }
 
