@@ -22,7 +22,6 @@ void Power1DspVarGenerator::setupVarList(Zera::cDSPInterface *pDSPInterFace, con
     m_pTmpDataDsp->addDspVar("CONST_1_5", 1, DSPDATA::vDspTemp);
     m_pTmpDataDsp->addDspVar("FILTER", 2*(MeasPhaseCount+SumValueCount), DSPDATA::vDspTemp);
     m_pTmpDataDsp->addDspVar("N",1,DSPDATA::vDspTemp);
-    quint32 tmpDataSize = m_pTmpDataDsp->getSize();
 
     // a handle for parameter
     m_pParameterDSP =  pDSPInterFace->getMemHandle("Parameter");
@@ -37,29 +36,18 @@ void Power1DspVarGenerator::setupVarList(Zera::cDSPInterface *pDSPInterFace, con
         QString varName = QString("XMMODEPHASE%1").arg(phase);
         m_pParameterDSP->addDspVar(varName, 1, DSPDATA::vDspParam, DSPDATA::dInt);
     }
-    quint32 paramDataSize = m_pParameterDSP->getSize();
 
     // a handle for filtered actual values
     m_pActualValuesDSP = pDSPInterFace->getMemHandle("ActualValues");
     m_pActualValuesDSP->addDspVar("VALPQSF", MeasPhaseCount+SumValueCount, DSPDATA::vDspResult);
-    quint32 actualDataSize = m_pActualValuesDSP->getSize();
 
     // and one for the frequency output scale values, we need 1 value for each configured output
     m_pfreqScaleDSP = pDSPInterFace->getMemHandle("FrequencyScale");
     m_pfreqScaleDSP->addDspVar("FREQSCALE", confData->m_nFreqOutputCount, DSPDATA::vDspParam);
-    quint32 freqScaleSize = m_pfreqScaleDSP->getSize();
 
     // and one for nominal power in case that measuring mode is qref
     m_pNomPower = pDSPInterFace->getMemHandle("QRefScale");
     m_pNomPower->addDspVar("NOMPOWER", 1, DSPDATA::vDspParam);
-    quint32 nomPowerSize = m_pfreqScaleDSP->getSize();
-
-    m_nDspMemUsed =
-            tmpDataSize +
-            paramDataSize +
-            actualDataSize +
-            freqScaleSize +
-            nomPowerSize;
 }
 
 cDspMeasData *Power1DspVarGenerator::getActualValues()
@@ -80,9 +68,4 @@ cDspMeasData *Power1DspVarGenerator::getNominalPower()
 cDspMeasData *Power1DspVarGenerator::getParameters()
 {
     return m_pParameterDSP;
-}
-
-quint32 Power1DspVarGenerator::getMemUsed()
-{
-    return m_nDspMemUsed;
 }

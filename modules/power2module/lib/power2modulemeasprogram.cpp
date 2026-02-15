@@ -303,7 +303,6 @@ void cPower2ModuleMeasProgram::setDspVarList()
     m_pNomPower->addDspVar("NOMPOWER", 1, DSPDATA::vDspParam);
 
     m_ModuleActualValues.resize(m_pActualValuesDSP->getSize()); // we provide a vector for generated actual values
-    m_nDspMemUsed = m_pTmpDataDsp->getSize() + m_pParameterDSP->getSize() + m_pActualValuesDSP->getSize();
 }
 
 QStringList cPower2ModuleMeasProgram::dspCmdInitVars(int dspInitialSelectCode)

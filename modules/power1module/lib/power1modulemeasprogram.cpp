@@ -355,7 +355,6 @@ void cPower1ModuleMeasProgram::setDspVarList()
     int samples = m_pModule->getSharedChannelRangeObserver()->getSamplesPerPeriod();
     m_dspVars.setupVarList(m_dspInterface.get(), getConfData(), samples);
     m_ModuleActualValues.resize(m_dspVars.getActualValues()->getSize()); // we provide a vector for generated actual values
-    m_nDspMemUsed = m_dspVars.getMemUsed();
 }
 
 

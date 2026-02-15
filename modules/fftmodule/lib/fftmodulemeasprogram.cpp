@@ -178,7 +178,6 @@ void cFftModuleMeasProgram::setDspVarList()
 
     m_ModuleActualValues.resize(m_pActualValuesDSP->getSize()); // we provide a vector for generated actual values
     m_FFTModuleActualValues.resize(m_veinActValueList.count() * getConfData()->m_nFftOrder * 2);
-    m_nDspMemUsed = m_pTmpDataDsp->getUserMemSize() + m_pParameterDSP->getSize() + m_pActualValuesDSP->getSize();
 }
 
 void cFftModuleMeasProgram::setDspCmdList()

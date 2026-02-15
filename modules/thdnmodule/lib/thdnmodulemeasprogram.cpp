@@ -140,7 +140,6 @@ void cThdnModuleMeasProgram::setDspVarList()
     m_pActualValuesDSP->addDspVar("VALXTHDNF",m_veinActValueList.count(), DSPDATA::vDspResult);
 
     m_ModuleActualValues.resize(m_pActualValuesDSP->getSize()); // we provide a vector for generated actual values
-    m_nDspMemUsed = m_pTmpDataDsp->getSize() + m_pParameterDSP->getSize() + m_pActualValuesDSP->getSize();
 }
 
 void cThdnModuleMeasProgram::setDspCmdList()

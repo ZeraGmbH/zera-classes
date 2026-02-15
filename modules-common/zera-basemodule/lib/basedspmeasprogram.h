@@ -19,8 +19,6 @@ protected:
     // new client. but we want to access the same environment's value from all over the module.
     Zera::DspInterfacePtr m_dspInterface; // our interface to dsp
     Zera::ProxyClientPtr m_dspClient;
-    quint32 m_nDspMemUsed;
-
 };
 
 #endif // BASEDSPMEASPROGRAM_H

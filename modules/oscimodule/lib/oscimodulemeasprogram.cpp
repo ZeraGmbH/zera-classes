@@ -135,7 +135,6 @@ void cOsciModuleMeasProgram::setDspVarList()
     m_pActualValuesDSP->addDspVar("VALXOSCI",m_veinActValueList.count() * getConfData()->m_nInterpolation, DSPDATA::vDspResult);
 
     m_ModuleActualValues.resize(m_pActualValuesDSP->getSize()); // we provide a vector for generated actual values
-    m_nDspMemUsed = m_pTmpDataDsp->getSize() + m_pParameterDSP->getSize() + m_pActualValuesDSP->getSize();
 }
 
 void cOsciModuleMeasProgram::setDspCmdList()

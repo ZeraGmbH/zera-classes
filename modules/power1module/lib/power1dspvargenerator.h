@@ -14,14 +14,12 @@ public:
     cDspMeasData* getFreqScale();
     cDspMeasData* getNominalPower();
     cDspMeasData* getParameters();
-    quint32 getMemUsed();
 private:
     cDspMeasData* m_pTmpDataDsp = nullptr;
     cDspMeasData* m_pParameterDSP = nullptr;
     cDspMeasData* m_pActualValuesDSP = nullptr;
     cDspMeasData* m_pfreqScaleDSP = nullptr;
     cDspMeasData* m_pNomPower = nullptr;
-    quint32 m_nDspMemUsed = 0;
 };
 
 #endif // POWER1DSPVARGENERATOR_H
