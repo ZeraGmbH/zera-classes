@@ -176,13 +176,11 @@ void cPower2ModuleMeasProgram::start()
         connect(this, &cPower2ModuleMeasProgram::actualValues, this, &cPower2ModuleMeasProgram::setInterfaceActualValues);
 }
 
-
 void cPower2ModuleMeasProgram::stop()
 {
     disconnect(this, &cPower2ModuleMeasProgram::actualValues, 0, 0);
     disconnect(&m_movingwindowFilter, &cMovingwindowFilter::actualValues, this, 0);
 }
-
 
 void cPower2ModuleMeasProgram::generateVeinInterface()
 {
@@ -268,7 +266,6 @@ void cPower2ModuleMeasProgram::generateVeinInterface()
 
     m_pModule->m_veinComponentsWithMetaAndScpi.append(m_pMeasureSignal);
 }
-
 
 void cPower2ModuleMeasProgram::setDspVarList()
 {
@@ -696,7 +693,6 @@ quint8 cPower2ModuleMeasProgram::cmpActualValIndex(freqoutconfiguration frconf)
     return actvalueIndex;
 }
 
-
 void cPower2ModuleMeasProgram::setSCPIMeasInfo()
 {
     for (int i = 0; i < 12; i++)
@@ -799,7 +795,6 @@ void cPower2ModuleMeasProgram::pcbserverConnect4measChannels()
     }
 }
 
-
 void cPower2ModuleMeasProgram::pcbserverConnect4freqChannels()
 {
     infoReadList = m_FoutInfoMap.keys(); // and then  we look for our different pcb sockets for source
@@ -850,25 +845,21 @@ void cPower2ModuleMeasProgram::readSourceChannelInformation()
         emit activationSkip();
 }
 
-
 void cPower2ModuleMeasProgram::readSourceChannelAlias()
 {
     infoRead = infoReadList.takeFirst();
     m_MsgNrCmdList[m_FoutInfoMap[infoRead].pcbIFace->getAliasSource(infoRead)] = readsourcechannelalias;
 }
 
-
 void cPower2ModuleMeasProgram::readSourceDspChannel()
 {
     m_MsgNrCmdList[m_FoutInfoMap[infoRead].pcbIFace->getDSPChannelSource(infoRead)] = readsourcechanneldspchannel;
 }
 
-
 void cPower2ModuleMeasProgram::readSourceFormFactor()
 {
     m_MsgNrCmdList[m_FoutInfoMap[infoRead].pcbIFace->getFormFactorSource(infoRead)] = readsourceformfactor;
 }
-
 
 void cPower2ModuleMeasProgram::readSourceChannelInformationDone()
 {
@@ -878,14 +869,12 @@ void cPower2ModuleMeasProgram::readSourceChannelInformationDone()
         emit activationLoop();
 }
 
-
 void cPower2ModuleMeasProgram::setSenseChannelRangeNotifiers()
 {
     m_notifierNr = irqNr;
     infoReadList = m_measChannelInfoHash.keys(); // we have to set notifier for each channel we are working on
     emit activationContinue();
 }
-
 
 void cPower2ModuleMeasProgram::setSenseChannelRangeNotifier()
 {
@@ -896,7 +885,6 @@ void cPower2ModuleMeasProgram::setSenseChannelRangeNotifier()
 
 }
 
-
 void cPower2ModuleMeasProgram::setSenseChannelRangeNotifierDone()
 {
     if (infoReadList.isEmpty())
@@ -904,7 +892,6 @@ void cPower2ModuleMeasProgram::setSenseChannelRangeNotifierDone()
     else
         emit activationLoop();
 }
-
 
 void cPower2ModuleMeasProgram::dspserverConnect()
 {
@@ -918,22 +905,20 @@ void cPower2ModuleMeasProgram::dspserverConnect()
 
 void cPower2ModuleMeasProgram::varList2DSP()
 {
-    setDspVarList(); // first we set the var list for our dsp
-    setDspCmdList(); // and the cmd list he has to work on
+    setDspVarList();
     m_MsgNrCmdList[m_dspInterface->varList2Dsp()] = varlist2dsp;
 }
 
 void cPower2ModuleMeasProgram::cmdList2DSP()
 {
+    setDspCmdList();
     m_MsgNrCmdList[m_dspInterface->cmdList2Dsp()] = cmdlist2dsp;
 }
-
 
 void cPower2ModuleMeasProgram::activateDSP()
 {
     m_MsgNrCmdList[m_dspInterface->activateInterface()] = activatedsp; // aktiviert die var- und cmd-listen im dsp
 }
-
 
 void cPower2ModuleMeasProgram::activateDSPdone()
 {

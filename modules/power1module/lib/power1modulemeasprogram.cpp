@@ -762,18 +762,15 @@ void cPower1ModuleMeasProgram::readSourceChannelAlias()
     m_MsgNrCmdList[m_FoutInfoMap[infoRead].pcbIFace->getAliasSource(infoRead)] = readsourcechannelalias;
 }
 
-
 void cPower1ModuleMeasProgram::readSourceDspChannel()
 {
     m_MsgNrCmdList[m_FoutInfoMap[infoRead].pcbIFace->getDSPChannelSource(infoRead)] = readsourcechanneldspchannel;
 }
 
-
 void cPower1ModuleMeasProgram::readSourceFormFactor()
 {
     m_MsgNrCmdList[m_FoutInfoMap[infoRead].pcbIFace->getFormFactorSource(infoRead)] = readsourceformfactor;
 }
-
 
 void cPower1ModuleMeasProgram::readSourceChannelInformationDone()
 {
@@ -783,14 +780,12 @@ void cPower1ModuleMeasProgram::readSourceChannelInformationDone()
         emit activationLoop();
 }
 
-
 void cPower1ModuleMeasProgram::setSenseChannelRangeNotifiers()
 {
     m_notifierNr = irqNr;
     infoReadList = m_measChannelInfoHash.keys(); // we have to set notifier for each channel we are working on
     emit activationContinue();
 }
-
 
 void cPower1ModuleMeasProgram::setSenseChannelRangeNotifier()
 {
@@ -801,7 +796,6 @@ void cPower1ModuleMeasProgram::setSenseChannelRangeNotifier()
 
 }
 
-
 void cPower1ModuleMeasProgram::setSenseChannelRangeNotifierDone()
 {
     if (infoReadList.isEmpty())
@@ -809,7 +803,6 @@ void cPower1ModuleMeasProgram::setSenseChannelRangeNotifierDone()
     else
         emit activationLoop();
 }
-
 
 void cPower1ModuleMeasProgram::dspserverConnect()
 {
@@ -823,13 +816,13 @@ void cPower1ModuleMeasProgram::dspserverConnect()
 
 void cPower1ModuleMeasProgram::varList2DSP()
 {
-    setDspVarList(); // first we set the var list for our dsp
-    setDspCmdList(); // and the cmd list he has to work on
+    setDspVarList();
     m_MsgNrCmdList[m_dspInterface->varList2Dsp()] = varlist2dsp;
 }
 
 void cPower1ModuleMeasProgram::cmdList2DSP()
 {
+    setDspCmdList();
     m_MsgNrCmdList[m_dspInterface->cmdList2Dsp()] = cmdlist2dsp;
 }
 
@@ -1191,7 +1184,6 @@ void cPower1ModuleMeasProgram::newNominalFrequency(QVariant frequency)
     getConfData()->m_nNominalFrequency.m_nValue = frequency.toInt();
     emit m_pModule->parameterChanged();
 }
-
 
 void cPower1ModuleMeasProgram::updatePreScaling()
 {
