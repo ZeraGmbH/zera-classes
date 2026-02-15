@@ -132,6 +132,7 @@ void cLambdaModuleMeasProgram::deactivateMeas()
 {
     m_bActive = false;
     delete m_lambdaCalcDelegate;
+    m_lambdaCalcDelegate = nullptr;
     emit deactivationContinue();
 }
 
