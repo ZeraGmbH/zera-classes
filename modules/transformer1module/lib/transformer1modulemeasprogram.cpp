@@ -237,7 +237,6 @@ void cTransformer1ModuleMeasProgram::searchActualValues()
         emit activationContinue();
 }
 
-
 void cTransformer1ModuleMeasProgram::activateDone()
 {
     setParameters();
@@ -253,90 +252,66 @@ void cTransformer1ModuleMeasProgram::activateDone()
     emit activated();
 }
 
-
-
 void cTransformer1ModuleMeasProgram::deactivateMeas()
 {
     m_bActive = false;
-
     for (int i = 0; i < m_Transformer1MeasDelegateList.count(); i++)
         delete m_Transformer1MeasDelegateList.at(i);
     m_Transformer1MeasDelegateList.clear();
     emit deactivationContinue();
 }
 
-
 void cTransformer1ModuleMeasProgram::deactivateMeasDone()
 {
     emit deactivated();
 }
-
 
 void cTransformer1ModuleMeasProgram::setMeasureSignal(int signal)
 {
     m_pMeasureSignal->setValue(signal);
 }
 
-
 void cTransformer1ModuleMeasProgram::newPrimClampPrim(QVariant pcp)
 {
-    bool ok;
-    getConfData()->primClampPrim.m_fValue = pcp.toFloat(&ok);
+    getConfData()->primClampPrim.m_fValue = pcp.toFloat();
     setParameters();
-
     emit m_pModule->parameterChanged();
 }
-
 
 void cTransformer1ModuleMeasProgram::newPrimClampSec(QVariant pcs)
 {
-    bool ok;
-    getConfData()->primClampSec.m_fValue = pcs.toFloat(&ok);
+    getConfData()->primClampSec.m_fValue = pcs.toFloat();
     setParameters();
-
     emit m_pModule->parameterChanged();
 }
-
 
 void cTransformer1ModuleMeasProgram::newSecClampPrim(QVariant scp)
 {
-    bool ok;
-    getConfData()->secClampPrim.m_fValue = scp.toFloat(&ok);
+    getConfData()->secClampPrim.m_fValue = scp.toFloat();
     setParameters();
-
     emit m_pModule->parameterChanged();
 }
-
 
 void cTransformer1ModuleMeasProgram::newSecClampSec(QVariant scs)
 {
-    bool ok;
-    getConfData()->secClampSec.m_fValue = scs.toFloat(&ok);
+    getConfData()->secClampSec.m_fValue = scs.toFloat();
     setParameters();
-
     emit m_pModule->parameterChanged();
 }
-
 
 void cTransformer1ModuleMeasProgram::newPrimDut(QVariant pd)
 {
-    bool ok;
-    getConfData()->dutPrim.m_fValue = pd.toFloat(&ok);
+    getConfData()->dutPrim.m_fValue = pd.toFloat();
     setParameters();
-
     emit m_pModule->parameterChanged();
 }
-
 
 void cTransformer1ModuleMeasProgram::newSecDut(QVariant sd)
 {
-    bool ok;
-    getConfData()->dutSec.m_fValue = sd.toFloat(&ok);
+    getConfData()->dutSec.m_fValue = sd.toFloat();
     setParameters();
-
     emit m_pModule->parameterChanged();
 }
-
 
 void cTransformer1ModuleMeasProgram::setParameters()
 {
