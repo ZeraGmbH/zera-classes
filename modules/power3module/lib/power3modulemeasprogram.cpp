@@ -139,6 +139,7 @@ void cPower3ModuleMeasProgram::deactivateMeas()
     m_bActive = false;
     for (int i = 0; i < m_Power3MeasDelegateList.count(); i++)
         delete m_Power3MeasDelegateList.at(i);
+    m_Power3MeasDelegateList.clear();
     emit deactivationContinue();
 }
 
