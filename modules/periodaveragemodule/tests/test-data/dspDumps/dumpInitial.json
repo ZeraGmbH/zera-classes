@@ -1,0 +1,156 @@
+{
+    "1-MemGroups": {
+        "ActualValues": {
+            "Size": 208,
+            "UserMemSize": 208,
+            "Variables": [
+                {
+                    "Name": "VALS_PERIOD",
+                    "Segment": "DSPDATA::localSegment",
+                    "Size": 200,
+                    "TypeData": "DSPDATA::dFloat"
+                },
+                {
+                    "Name": "VALUES_AVG",
+                    "Segment": "DSPDATA::localSegment",
+                    "Size": 8,
+                    "TypeData": "DSPDATA::dFloat"
+                }
+            ]
+        },
+        "Parameter": {
+            "Size": 1,
+            "UserMemSize": 1,
+            "Variables": [
+                {
+                    "Name": "PERIODCOUNT",
+                    "Segment": "DSPDATA::localSegment",
+                    "Size": 1,
+                    "TypeData": "DSPDATA::dInt"
+                }
+            ]
+        },
+        "TmpData": {
+            "Size": 530,
+            "UserMemSize": 530,
+            "Variables": [
+                {
+                    "Name": "MEASSIGNAL",
+                    "Segment": "DSPDATA::localSegment",
+                    "Size": 504,
+                    "TypeData": "DSPDATA::dFloat"
+                },
+                {
+                    "Name": "INTEGRAL_RESULT",
+                    "Segment": "DSPDATA::localSegment",
+                    "Size": 8,
+                    "TypeData": "DSPDATA::dFloat"
+                },
+                {
+                    "Name": "PERIODCURR",
+                    "Segment": "DSPDATA::localSegment",
+                    "Size": 1,
+                    "TypeData": "DSPDATA::dInt"
+                },
+                {
+                    "Name": "FILTER",
+                    "Segment": "DSPDATA::localSegment",
+                    "Size": 16,
+                    "TypeData": "DSPDATA::dFloat"
+                },
+                {
+                    "Name": "N",
+                    "Segment": "DSPDATA::localSegment",
+                    "Size": 1,
+                    "TypeData": "DSPDATA::dFloat"
+                }
+            ]
+        }
+    },
+    "2-CmdList": [
+        "STARTCHAIN(1,1,0x0101)",
+        "CLEARN(504,MEASSIGNAL)",
+        "CLEARN(17,FILTER)",
+        "SETVAL(PERIODCURR,0)",
+        "SETVAL(PERIODCOUNT,13)",
+        "DEACTIVATECHAIN(1,0x0101)",
+        "STOPCHAIN(1,0x0101)",
+        "COPYDATA(CH0,0,MEASSIGNAL)",
+        "INTEGRAL(504,MEASSIGNAL,INTEGRAL_RESULT+0)",
+        "COPYDATA(CH2,0,MEASSIGNAL)",
+        "INTEGRAL(504,MEASSIGNAL,INTEGRAL_RESULT+1)",
+        "COPYDATA(CH4,0,MEASSIGNAL)",
+        "INTEGRAL(504,MEASSIGNAL,INTEGRAL_RESULT+2)",
+        "COPYDATA(CH1,0,MEASSIGNAL)",
+        "INTEGRAL(504,MEASSIGNAL,INTEGRAL_RESULT+3)",
+        "COPYDATA(CH3,0,MEASSIGNAL)",
+        "INTEGRAL(504,MEASSIGNAL,INTEGRAL_RESULT+4)",
+        "COPYDATA(CH5,0,MEASSIGNAL)",
+        "INTEGRAL(504,MEASSIGNAL,INTEGRAL_RESULT+5)",
+        "COPYDATA(CH6,0,MEASSIGNAL)",
+        "INTEGRAL(504,MEASSIGNAL,INTEGRAL_RESULT+6)",
+        "COPYDATA(CH7,0,MEASSIGNAL)",
+        "INTEGRAL(504,MEASSIGNAL,INTEGRAL_RESULT+7)",
+        "TESTVCSKIPGT(PERIODCURR,0)",
+        "COPYMEM(8,INTEGRAL_RESULT,VALS_PERIOD+0)",
+        "TESTVCSKIPGT(PERIODCURR,1)",
+        "COPYMEM(8,INTEGRAL_RESULT,VALS_PERIOD+8)",
+        "TESTVCSKIPGT(PERIODCURR,2)",
+        "COPYMEM(8,INTEGRAL_RESULT,VALS_PERIOD+16)",
+        "TESTVCSKIPGT(PERIODCURR,3)",
+        "COPYMEM(8,INTEGRAL_RESULT,VALS_PERIOD+24)",
+        "TESTVCSKIPGT(PERIODCURR,4)",
+        "COPYMEM(8,INTEGRAL_RESULT,VALS_PERIOD+32)",
+        "TESTVCSKIPGT(PERIODCURR,5)",
+        "COPYMEM(8,INTEGRAL_RESULT,VALS_PERIOD+40)",
+        "TESTVCSKIPGT(PERIODCURR,6)",
+        "COPYMEM(8,INTEGRAL_RESULT,VALS_PERIOD+48)",
+        "TESTVCSKIPGT(PERIODCURR,7)",
+        "COPYMEM(8,INTEGRAL_RESULT,VALS_PERIOD+56)",
+        "TESTVCSKIPGT(PERIODCURR,8)",
+        "COPYMEM(8,INTEGRAL_RESULT,VALS_PERIOD+64)",
+        "TESTVCSKIPGT(PERIODCURR,9)",
+        "COPYMEM(8,INTEGRAL_RESULT,VALS_PERIOD+72)",
+        "TESTVCSKIPGT(PERIODCURR,10)",
+        "COPYMEM(8,INTEGRAL_RESULT,VALS_PERIOD+80)",
+        "TESTVCSKIPGT(PERIODCURR,11)",
+        "COPYMEM(8,INTEGRAL_RESULT,VALS_PERIOD+88)",
+        "TESTVCSKIPGT(PERIODCURR,12)",
+        "COPYMEM(8,INTEGRAL_RESULT,VALS_PERIOD+96)",
+        "TESTVCSKIPGT(PERIODCURR,13)",
+        "COPYMEM(8,INTEGRAL_RESULT,VALS_PERIOD+104)",
+        "TESTVCSKIPGT(PERIODCURR,14)",
+        "COPYMEM(8,INTEGRAL_RESULT,VALS_PERIOD+112)",
+        "TESTVCSKIPGT(PERIODCURR,15)",
+        "COPYMEM(8,INTEGRAL_RESULT,VALS_PERIOD+120)",
+        "TESTVCSKIPGT(PERIODCURR,16)",
+        "COPYMEM(8,INTEGRAL_RESULT,VALS_PERIOD+128)",
+        "TESTVCSKIPGT(PERIODCURR,17)",
+        "COPYMEM(8,INTEGRAL_RESULT,VALS_PERIOD+136)",
+        "TESTVCSKIPGT(PERIODCURR,18)",
+        "COPYMEM(8,INTEGRAL_RESULT,VALS_PERIOD+144)",
+        "TESTVCSKIPGT(PERIODCURR,19)",
+        "COPYMEM(8,INTEGRAL_RESULT,VALS_PERIOD+152)",
+        "TESTVCSKIPGT(PERIODCURR,20)",
+        "COPYMEM(8,INTEGRAL_RESULT,VALS_PERIOD+160)",
+        "TESTVCSKIPGT(PERIODCURR,21)",
+        "COPYMEM(8,INTEGRAL_RESULT,VALS_PERIOD+168)",
+        "TESTVCSKIPGT(PERIODCURR,22)",
+        "COPYMEM(8,INTEGRAL_RESULT,VALS_PERIOD+176)",
+        "TESTVCSKIPGT(PERIODCURR,23)",
+        "COPYMEM(8,INTEGRAL_RESULT,VALS_PERIOD+184)",
+        "TESTVCSKIPGT(PERIODCURR,24)",
+        "COPYMEM(8,INTEGRAL_RESULT,VALS_PERIOD+192)",
+        "AVERAGE1(16,INTEGRAL_RESULT,FILTER)",
+        "TESTVVSKIPEQ(PERIODCURR,PERIODCOUNT)",
+        "ACTIVATECHAIN(1,0x0102)",
+        "STARTCHAIN(0,1,0x0102)",
+        "SETVAL(PERIODCURR,0)",
+        "CMPAVERAGE1(16,FILTER,VALUES_AVG)",
+        "CLEARN(17,FILTER)",
+        "DSPINTTRIGGER(0x0,0x0)",
+        "DEACTIVATECHAIN(1,0x0102)",
+        "STOPCHAIN(1,0x0102)",
+        "INC(PERIODCURR)"
+    ]
+}

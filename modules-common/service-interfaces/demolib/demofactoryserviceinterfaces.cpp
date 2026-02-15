@@ -1,4 +1,5 @@
 #include "demofactoryserviceinterfaces.h"
+#include "demodspinterfaceperiodaverage.h"
 #include "demodspinterfacerange.h"
 #include "demodspinterfacedft.h"
 #include "demodspinterfacefft.h"
@@ -115,6 +116,12 @@ Zera::DspInterfacePtr DemoFactoryServiceInterfaces::createDspInterfaceOsci(int e
                                                                            int interpolation)
 {
     return std::make_shared<DemoDspInterfaceOsci>(entityId, valueChannelList, interpolation, m_valueGenerator);
+}
+
+Zera::DspInterfacePtr DemoFactoryServiceInterfaces::createDspInterfacePeriodAverage(int entityId,
+                                                                                    QStringList valueChannelList)
+{
+    return std::make_shared<DemoDspInterfacePeriodAverage>(entityId, valueChannelList, m_valueGenerator);
 }
 
 Zera::DspInterfacePtr DemoFactoryServiceInterfaces::createDspInterfaceMode(int entityId)

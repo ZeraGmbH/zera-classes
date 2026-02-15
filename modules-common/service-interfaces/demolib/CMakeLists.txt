@@ -28,6 +28,7 @@ target_link_libraries(module-service-interfaces-demolib
     power2module-demolib
     thdnmodule-demolib
     oscimodule-demolib
+    periodaveragemodule-demolib
     Zera::zera-timers
 )
 

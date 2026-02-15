@@ -1,0 +1,9 @@
+{
+    "modules" : [
+        {
+          "name" : "periodaveragemodule",
+          "configFile" : "mt310s2-periodaveragemodule.xml",
+          "id": 1055
+        }
+    ]
+}
