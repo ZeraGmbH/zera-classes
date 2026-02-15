@@ -390,8 +390,9 @@ void cRmsModuleMeasProgram::activateDSPdone()
 
 void cRmsModuleMeasProgram::deactivateDSPStart()
 {
-    m_bActive = false;
     m_dataAcquisitionMachine.stop();
+    m_bActive = false;
+    Zera::Proxy::getInstance()->releaseConnectionSmart(m_dspClient);
     disconnect(m_dspInterface.get(), 0, this, 0);
     emit deactivationContinue();
 }

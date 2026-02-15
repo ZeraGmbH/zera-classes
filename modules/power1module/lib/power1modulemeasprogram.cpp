@@ -880,8 +880,9 @@ void cPower1ModuleMeasProgram::activateDSPdone()
 
 void cPower1ModuleMeasProgram::freeFreqOutputs()
 {
-    m_bActive = false;
     m_dataAcquisitionMachine.stop();
+    m_bActive = false;
+    Zera::Proxy::getInstance()->releaseConnectionSmart(m_dspClient);
     if (getConfData()->m_nFreqOutputCount > 0) // we only have to read information if really configured
     {
         infoReadList = m_FoutInfoMap.keys(); // we have to read information for all channels in this list

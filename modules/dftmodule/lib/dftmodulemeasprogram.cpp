@@ -461,8 +461,9 @@ void cDftModuleMeasProgram::activateDSPdone()
 
 void cDftModuleMeasProgram::deactivateDSPStart()
 {
-    m_bActive = false;
     m_dataAcquisitionMachine.stop();
+    m_bActive = false;
+    Zera::Proxy::getInstance()->releaseConnectionSmart(m_dspClient); // no async. messages anymore
     disconnect(m_dspInterface.get(), 0, this, 0);
     emit deactivationContinue();
 }
