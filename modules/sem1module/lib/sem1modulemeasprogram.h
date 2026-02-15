@@ -8,6 +8,7 @@
 #include "secmeasinputdictionary.h"
 #include "vfmodulerpc.h"
 #include <basemeasprogram.h>
+#include <rminterface.h>
 #include <clientactivecomponent.h>
 #include <memory>
 #include <timerperiodicqt.h>

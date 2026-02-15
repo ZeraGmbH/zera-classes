@@ -4,7 +4,6 @@
 #include "basemoduleconfiguration.h"
 #include "moduleactivist.h"
 #include "basemodule.h"
-#include <rminterface.h>
 
 class cBaseMeasProgram: public cModuleActivist
 {

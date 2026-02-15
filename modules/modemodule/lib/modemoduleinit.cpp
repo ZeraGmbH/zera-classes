@@ -5,7 +5,6 @@
 #include <proxyclient.h>
 #include <reply.h>
 #include <errormessages.h>
-#include <rminterface.h>
 #include <pcbinterface.h>
 #include <dspinterface.h>
 

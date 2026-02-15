@@ -7,6 +7,7 @@
 #include <basemeasprogram.h>
 #include <clientactivecomponent.h>
 #include "secmeasinputdictionary.h"
+#include <rminterface.h>
 #include <secinterface.h>
 #include <timerperiodicqt.h>
 

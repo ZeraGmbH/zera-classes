@@ -7,6 +7,7 @@
 #include <QStateMachine>
 #include <QState>
 #include <QFinalState>
+#include <rminterface.h>
 #include <secinterface.h>
 #include <basemeasprogram.h>
 #include <timertemplateqt.h>

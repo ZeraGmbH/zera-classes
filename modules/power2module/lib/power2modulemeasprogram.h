@@ -5,6 +5,7 @@
 #include "power2moduleconfigdata.h"
 #include "measchannelinfo.h"
 #include "foutinfo.h"
+#include <rminterface.h>
 #include <measmodeselector.h>
 #include <basedspmeasprogram.h>
 #include <movingwindowfilter.h>

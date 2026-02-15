@@ -3,7 +3,6 @@
 
 #include "moduleactivist.h"
 #include <dspinterface.h>
-#include <rminterface.h>
 #include <dspinterface.h>
 #include <pcbinterface.h>
 #include <QList>

@@ -8,6 +8,7 @@
 #include "secmeasinputdictionary.h"
 #include "secresourcetypelist.h"
 #include "refpowerconstantobserver.h"
+#include <rminterface.h>
 #include <doublevalidator.h>
 #include <stringvalidator.h>
 #include <basemeasprogram.h>
