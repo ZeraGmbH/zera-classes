@@ -359,7 +359,7 @@ void cRangeModuleMeasProgram::deactivateDSPStart()
 {
     m_bActive = false;
     m_dataAcquisitionMachine.stop();
-    disconnect(m_dspInterface.get(), 0, this, 0);
+    deactivateDsp();
     emit deactivationContinue();
 }
 

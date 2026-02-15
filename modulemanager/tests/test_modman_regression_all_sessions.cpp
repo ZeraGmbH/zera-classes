@@ -158,7 +158,7 @@ void test_modman_regression_all_sessions::checkObjectsProperlyDeleted()
     // In case of change the rule of thumb was up to now:
     // * Number decreases: Maybe a good thing. We saw this when removing resman from zdspd/secd
     // * Number increases: Hmm - are there explanations?
-    constexpr int serverPeers = 6;
+    constexpr int serverPeers = 5;
     QCOMPARE(cumulatedInstanceCounts.m_veinTcpPeerCount, serverPeers);
     constexpr int peersLeftServerDown = 0;
     QCOMPARE(VeinTcp::TcpPeer::getInstanceCount(), peersLeftServerDown);
