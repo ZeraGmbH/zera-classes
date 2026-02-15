@@ -184,6 +184,7 @@ void cBurden1ModuleMeasProgram::deactivateMeas()
     m_bActive = false;
     for (int i = 0; i < m_Burden1MeasDelegateList.count(); i++)
         delete m_Burden1MeasDelegateList.at(i);
+    m_Burden1MeasDelegateList.clear();
     emit deactivationContinue();
 }
 
