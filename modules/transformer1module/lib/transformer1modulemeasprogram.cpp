@@ -261,7 +261,7 @@ void cTransformer1ModuleMeasProgram::deactivateMeas()
 
     for (int i = 0; i < m_Transformer1MeasDelegateList.count(); i++)
         delete m_Transformer1MeasDelegateList.at(i);
-
+    m_Transformer1MeasDelegateList.clear();
     emit deactivationContinue();
 }
 
