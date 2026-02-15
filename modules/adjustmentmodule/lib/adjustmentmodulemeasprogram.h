@@ -14,20 +14,6 @@
 #include <QState>
 #include <QFinalState>
 
-namespace Zera {
-namespace  Server {
-    class cRMInterface;
-    class cPCBInterface;
-}
-}
-
-class BaseModule;
-class VfModuleComponent;
-class VfModuleMetaData;
-class VfModuleComponent;
-class VfModuleParameter;
-
-
 enum adjustmentmoduleCmds
 {
     adjustcomputation,
@@ -46,10 +32,7 @@ enum adjustmentmoduleCmds
     sendtransparentcmd,
 };
 
-
-class cAdjustmentModuleConfigData;
 class cAdjustmentModule;
-
 
 class cAdjustIterators
 {
