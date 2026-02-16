@@ -215,13 +215,6 @@ void PeriodAverageModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 
                     notifyError(writedspmemoryErrMsg);
                 break;
 
-            case deactivatedsp:
-                if (reply == ack)
-                    emit deactivationContinue();
-                else
-                    notifyError(dspdeactiveErrMsg);
-                break;
-
             case dataaquistion:
                 if (reply == ack)
                     emit dataAquisitionContinue();

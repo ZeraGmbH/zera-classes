@@ -32,7 +32,6 @@ enum power1moduleCmds
     varlist2dsp,
     cmdlist2dsp,
     activatedsp,
-    deactivatedsp,
     dataaquistion,
     writeparameter,
     freeresourcesource,

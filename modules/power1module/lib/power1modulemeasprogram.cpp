@@ -560,12 +560,6 @@ void cPower1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply,
                     notifyError(writedspmemoryErrMsg);
                 break;
 
-            case deactivatedsp:
-                if (reply == ack)
-                    emit deactivationContinue();
-                else
-                    notifyError(dspdeactiveErrMsg);
-                break;
             case freeresourcesource:
                 if (reply == ack)
                     emit deactivationContinue();

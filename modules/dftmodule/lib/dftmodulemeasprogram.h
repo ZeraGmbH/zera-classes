@@ -20,7 +20,6 @@ enum dftmoduleCmds
     varlist2dsp,
     cmdlist2dsp,
     activatedsp,
-    deactivatedsp,
     dataaquistion,
     writeparameter,
 };

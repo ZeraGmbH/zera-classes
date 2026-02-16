@@ -18,7 +18,6 @@ enum rangemoduleCmds
     varlist2dsp,
     cmdlist2dsp,
     activatedsp,
-    deactivatedsp,
     dataaquistion,
 };
 

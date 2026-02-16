@@ -230,13 +230,6 @@ void cThdnModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, Q
                     notifyError(writedspmemoryErrMsg);
                 break;
 
-            case deactivatedsp:
-                if (reply == ack)
-                    emit deactivationContinue();
-                else
-                    notifyError(dspdeactiveErrMsg);
-                break;
-
             case dataaquistion:
                 if (reply == ack)
                     emit dataAquisitionContinue();

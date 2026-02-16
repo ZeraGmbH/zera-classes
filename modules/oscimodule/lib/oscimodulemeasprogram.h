@@ -16,7 +16,6 @@ enum oscimoduleCmds
     varlist2dsp,
     cmdlist2dsp,
     activatedsp,
-    deactivatedsp,
     dataaquistion,
     writeparameter,
 };

@@ -156,13 +156,6 @@ void cReferenceModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 rep
                     notifyError(dspactiveErrMsg);
                 break;
 
-            case deactivatedsp:
-                if (reply == ack)
-                    emit deactivationContinue();
-                else
-                    notifyError(dspdeactiveErrMsg);
-                break;
-
             case dataaquistion:
                 if (reply == ack)
                     emit dataAquisitionContinue();
