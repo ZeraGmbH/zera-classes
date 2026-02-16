@@ -22,8 +22,6 @@ enum periodaveragemoduleCmds
     deactivatedsp,
     dataaquistion,
     writeparameter,
-    freepgrmem,
-    freeusermem
 };
 
 class PeriodAverageModuleMeasProgram: public cBaseDspMeasProgram
