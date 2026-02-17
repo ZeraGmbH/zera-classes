@@ -2,7 +2,7 @@
     "modules" : [
         {
           "name" : "periodaveragemodule",
-          "configFile" : "mt310s2-periodaveragemodule.xml",
+          "configFile" : "mt310s2-periodaveragemodule-lem-dc.xml",
           "id": 1055
         }
     ]

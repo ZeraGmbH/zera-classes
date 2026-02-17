@@ -157,7 +157,7 @@
                     "Description": "Measurement periods collected per measurement",
                     "Validation": {
                         "Data": [
-                            10,
+                            5,
                             5,
                             0
                         ],

@@ -30,7 +30,7 @@
 
     <xs:simpleType name="periodcounttype">
         <xs:restriction base="xs:integer">
-            <xs:minInclusive value="5"/>
+            <xs:minInclusive value="5"/><!-- sync to validator!!! -->
             <xs:maxInclusive value="25"/>
         </xs:restriction>
     </xs:simpleType>

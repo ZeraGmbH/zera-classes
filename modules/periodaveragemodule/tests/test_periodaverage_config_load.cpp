@@ -7,7 +7,7 @@ QTEST_MAIN(test_periodaverage_config_load)
 
 void test_periodaverage_config_load::fileFound()
 {
-    QFile tmpXmlConfigFile(QStringLiteral(CONFIG_SOURCES_PERIODAVERAGEMODULE) + "/" + "mt310s2-periodaveragemodule.xml");
+    QFile tmpXmlConfigFile(QStringLiteral(CONFIG_SOURCES_PERIODAVERAGEMODULE) + "/" + "mt310s2-periodaveragemodule-emob-dc.xml");
     QVERIFY(tmpXmlConfigFile.exists());
 }
 

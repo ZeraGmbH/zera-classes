@@ -5,17 +5,11 @@
         "ACT_PERIOD_VALUES3": null,
         "ACT_PERIOD_VALUES4": null,
         "ACT_PERIOD_VALUES5": null,
-        "ACT_PERIOD_VALUES6": null,
-        "ACT_PERIOD_VALUES7": null,
-        "ACT_PERIOD_VALUES8": null,
         "ACT_VALUE1": null,
         "ACT_VALUE2": null,
         "ACT_VALUE3": null,
         "ACT_VALUE4": null,
         "ACT_VALUE5": null,
-        "ACT_VALUE6": null,
-        "ACT_VALUE7": null,
-        "ACT_VALUE8": null,
         "EntityName": "PeriodAverageModule1",
         "INF_ModuleInterface": {
             "ComponentInfo": {
@@ -35,26 +29,11 @@
                     "Unit": "V"
                 },
                 "ACT_PERIOD_VALUES4": {
-                    "ChannelName": "IL1",
-                    "Description": "Array of per period measurement values",
-                    "Unit": "A"
-                },
-                "ACT_PERIOD_VALUES5": {
-                    "ChannelName": "IL2",
-                    "Description": "Array of per period measurement values",
-                    "Unit": "A"
-                },
-                "ACT_PERIOD_VALUES6": {
-                    "ChannelName": "IL3",
-                    "Description": "Array of per period measurement values",
-                    "Unit": "A"
-                },
-                "ACT_PERIOD_VALUES7": {
                     "ChannelName": "UAUX",
                     "Description": "Array of per period measurement values",
                     "Unit": "V"
                 },
-                "ACT_PERIOD_VALUES8": {
+                "ACT_PERIOD_VALUES5": {
                     "ChannelName": "IAUX",
                     "Description": "Array of per period measurement values",
                     "Unit": "A"
@@ -75,26 +54,11 @@
                     "Unit": "V"
                 },
                 "ACT_VALUE4": {
-                    "ChannelName": "IL1",
-                    "Description": "Measurement value (period average)",
-                    "Unit": "A"
-                },
-                "ACT_VALUE5": {
-                    "ChannelName": "IL2",
-                    "Description": "Measurement value (period average)",
-                    "Unit": "A"
-                },
-                "ACT_VALUE6": {
-                    "ChannelName": "IL3",
-                    "Description": "Measurement value (period average)",
-                    "Unit": "A"
-                },
-                "ACT_VALUE7": {
                     "ChannelName": "UAUX",
                     "Description": "Measurement value (period average)",
                     "Unit": "V"
                 },
-                "ACT_VALUE8": {
+                "ACT_VALUE5": {
                     "ChannelName": "IAUX",
                     "Description": "Measurement value (period average)",
                     "Unit": "A"
@@ -109,7 +73,7 @@
                     "Description": "Measurement periods collected per measurement",
                     "Validation": {
                         "Data": [
-                            10,
+                            5,
                             13,
                             0
                         ],
@@ -170,72 +134,30 @@
                     ],
                     [
                         "MEASURE",
-                        "I1",
+                        "UAUX",
                         "8",
                         "ACT_VALUE4",
                         "0"
                     ],
                     [
                         "MEASURE",
-                        "PI1",
+                        "PUAUX",
                         "8",
                         "ACT_PERIOD_VALUES4",
                         "0"
                     ],
                     [
                         "MEASURE",
-                        "I2",
+                        "IAUX",
                         "8",
                         "ACT_VALUE5",
                         "0"
                     ],
                     [
                         "MEASURE",
-                        "PI2",
-                        "8",
-                        "ACT_PERIOD_VALUES5",
-                        "0"
-                    ],
-                    [
-                        "MEASURE",
-                        "I3",
-                        "8",
-                        "ACT_VALUE6",
-                        "0"
-                    ],
-                    [
-                        "MEASURE",
-                        "PI3",
-                        "8",
-                        "ACT_PERIOD_VALUES6",
-                        "0"
-                    ],
-                    [
-                        "MEASURE",
-                        "UAUX",
-                        "8",
-                        "ACT_VALUE7",
-                        "0"
-                    ],
-                    [
-                        "MEASURE",
-                        "PUAUX",
-                        "8",
-                        "ACT_PERIOD_VALUES7",
-                        "0"
-                    ],
-                    [
-                        "MEASURE",
-                        "IAUX",
-                        "8",
-                        "ACT_VALUE8",
-                        "0"
-                    ],
-                    [
-                        "MEASURE",
                         "PIAUX",
                         "8",
-                        "ACT_PERIOD_VALUES8",
+                        "ACT_PERIOD_VALUES5",
                         "0"
                     ],
                     [
