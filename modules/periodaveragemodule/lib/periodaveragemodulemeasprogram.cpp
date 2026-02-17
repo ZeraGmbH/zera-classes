@@ -251,31 +251,31 @@ PeriodAverageModuleConfigData *PeriodAverageModuleMeasProgram::getConfData()
 
 void PeriodAverageModuleMeasProgram::setInterfaceActualValues(QVector<float> *actualValues)
 {
-    if (m_bActive) { // maybe we are deactivating !!!!
-        const int channelCount = getConfData()->m_channelCount;
-        const int perChannelValuesFullMax = actualValues->count() / channelCount;
-        constexpr int perChannelAverageCount = 1;
-        const int periodMaxCount = perChannelValuesFullMax - perChannelAverageCount;
-        if (getConfData()->m_maxPeriods != periodMaxCount) {
-            qCritical("PeriodAverageModule: Count DSP values %i is unexpected expected: %i!",
-                      int(actualValues->count()), channelCount * (getConfData()->m_maxPeriods + perChannelAverageCount));
-            return;
-        }
-        const int periodsConfigured = getConfData()->m_periodCount.m_nValue;
-        QVector<QList<double>> periodValues(channelCount);
-        for (int periodNo=0; periodNo<periodsConfigured; ++periodNo) {
-            for (int channelNo=0; channelNo<channelCount; channelNo++) {
-                const float &periodValue =(*actualValues)[periodNo*channelCount + channelNo];
-                periodValues[channelNo].append(periodValue);
-            }
-        }
-        for (int channelNo=0; channelNo<channelCount; channelNo++) {
-            QVariant periodList = QVariant::fromValue<QList<double> >(periodValues[channelNo]);
-            m_periodValues[channelNo]->setValue(periodList);
-            const float &averageChannelValue = (*actualValues)[periodMaxCount*channelCount + channelNo];
-            m_averageValues[channelNo]->setValue(averageChannelValue);
-        }
+    if (!m_bActive) // maybe we are deactivating !!!!
+        return;
 
+    const int channelCount = getConfData()->m_channelCount;
+    const int perChannelValuesFullMax = actualValues->count() / channelCount;
+    constexpr int perChannelAverageCount = 1;
+    const int periodMaxCount = perChannelValuesFullMax - perChannelAverageCount;
+    if (getConfData()->m_maxPeriods != periodMaxCount) {
+        qCritical("PeriodAverageModule: Count DSP values %i is unexpected expected: %i!",
+                  int(actualValues->count()), channelCount * (getConfData()->m_maxPeriods + perChannelAverageCount));
+        return;
+    }
+    const int periodsConfigured = getConfData()->m_periodCount.m_nValue;
+    QVector<QList<double>> periodValues(channelCount);
+    for (int periodNo=0; periodNo<periodsConfigured; ++periodNo) {
+        for (int channelNo=0; channelNo<channelCount; channelNo++) {
+            const float &periodValue =(*actualValues)[periodNo*channelCount + channelNo];
+            periodValues[channelNo].append(periodValue);
+        }
+    }
+    for (int channelNo=0; channelNo<channelCount; channelNo++) {
+        QVariant periodList = QVariant::fromValue<QList<double> >(periodValues[channelNo]);
+        m_periodValues[channelNo]->setValue(periodList);
+        const float &averageChannelValue = (*actualValues)[periodMaxCount*channelCount + channelNo];
+        m_averageValues[channelNo]->setValue(averageChannelValue);
     }
 }
 
