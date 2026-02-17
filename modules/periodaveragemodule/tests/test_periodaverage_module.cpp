@@ -162,3 +162,51 @@ void test_periodaverage_module::injectValuesAuxChannels13PeriodsMax()
 
     QVERIFY(TestLogHelpers::compareAndLogOnDiffJson(jsonExpected, jsonDumped));
 }
+
+void test_periodaverage_module::injectValuesAuxChannels13PeriodsMax5PeriodsCurrent()
+{
+    ModuleManagerTestRunner testRunner(":/sessions/aux-channels-maxperiod-13-current-period-5.json");
+
+    constexpr int maxPeriods = 13;
+    constexpr int measPeriods = 5;
+    const QStringList mtChannelsAux = QStringList() << "m6" << "m7";
+    DemoValuesDspPeriodAverage values(mtChannelsAux, maxPeriods, measPeriods);
+    values.setValue("m6", 0, 31.4);
+    values.setValue("m6", 1, 31.5);
+    values.setValue("m6", 2, 31.6);
+    values.setValue("m6", 3, 31.7);
+    values.setValue("m6", 4, 31.8);
+    values.setValue("m6", 5, 31.9);
+    values.setValue("m6", 6, 32);
+    values.setValue("m6", 7, 32.1);
+    values.setValue("m6", 8, 32.2);
+    values.setValue("m6", 9, 32.3);
+    values.setValue("m6", 10, 32.4);
+    values.setValue("m6", 11, 32.5);
+    values.setValue("m6", 12, 32.6);
+
+    values.setValue("m7", 0, 45.8);
+    values.setValue("m7", 1, 46.0);
+    values.setValue("m7", 2, 46.2);
+    values.setValue("m7", 3, 46.4);
+    values.setValue("m7", 4, 46.6);
+    values.setValue("m7", 5, 46.8);
+    values.setValue("m7", 6, 47);
+    values.setValue("m7", 7, 47.2);
+    values.setValue("m7", 8, 47.4);
+    values.setValue("m7", 9, 47.6);
+    values.setValue("m7", 10, 47.8);
+    values.setValue("m7", 11, 48.0);
+    values.setValue("m7", 12, 48.2);
+    QVector<float> dspValues = values.getDspValues();
+
+    TestDspInterfacePtr dspInterface = testRunner.getDspInterface(periodAverageEntityId);
+    dspInterface->fireActValInterrupt(dspValues, /*dummy*/ 0);
+    TimeMachineObject::feedEventLoop();
+
+    QByteArray jsonExpected = TestLogHelpers::loadFile(":/veinDumps/dump-aux-channels-maxperiod-13-current-period-5-values-injected.json");
+    VeinStorage::AbstractDatabase *veinStorageDb = testRunner.getVeinStorageDb();
+    QByteArray jsonDumped = VeinStorage::DumpJson::dumpToByteArray(veinStorageDb, QList<int>() << periodAverageEntityId);
+
+    QVERIFY(TestLogHelpers::compareAndLogOnDiffJson(jsonExpected, jsonDumped));
+}

@@ -3,17 +3,20 @@
         <file>configs/all-channels-maxperiod-5.xml</file>
         <file>configs/all-channels-maxperiod-5-periods-out-of-limit.xml</file>
         <file>configs/aux-channels-maxperiod-13.xml</file>
+        <file>configs/aux-channels-maxperiod-13-current-period-5.xml</file>
 
         <file>dspDumps/dump-all-channels-maxperiod-5.json</file>
         <file>dspDumps/dump-aux-channels-maxperiod-13.json</file>
 
         <file>sessions/all-channels-maxperiod-5.json</file>
         <file>sessions/aux-channels-maxperiod-13.json</file>
+        <file>sessions/aux-channels-maxperiod-13-current-period-5.json</file>
         <file>sessions/minimal.json</file>
 
         <file>veinDumps/dump-all-channels-maxperiod-5.json</file>
         <file>veinDumps/dump-all-channels-maxperiod-5-values-injected.json</file>
         <file>veinDumps/dump-aux-channels-maxperiod-13.json</file>
+        <file>veinDumps/dump-aux-channels-maxperiod-13-current-period-5-values-injected.json</file>
         <file>veinDumps/dump-aux-channels-maxperiod-13-values-injected.json</file>
         <file>veinDumps/dumpInitial.json</file>
     </qresource>

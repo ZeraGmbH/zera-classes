@@ -20,6 +20,7 @@ private slots:
 
     void injectValuesAllChannels5PeriodsMax();
     void injectValuesAuxChannels13PeriodsMax();
+    void injectValuesAuxChannels13PeriodsMax5PeriodsCurrent();
 };
 
 #endif // TEST_PERIODAVERAGE_MODULE_H

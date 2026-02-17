@@ -1,0 +1,111 @@
+{
+    "1055": {
+        "ACT_PERIOD_VALUES1": [
+            31.4,
+            31.5,
+            31.6,
+            31.7,
+            31.8
+        ],
+        "ACT_PERIOD_VALUES2": [
+            45.8,
+            46,
+            46.2,
+            46.4,
+            46.6
+        ],
+        "ACT_VALUE1": 31.600000381469727,
+        "ACT_VALUE2": 46.20000076293945,
+        "EntityName": "PeriodAverageModule1",
+        "INF_ModuleInterface": {
+            "ComponentInfo": {
+                "ACT_PERIOD_VALUES1": {
+                    "ChannelName": "UAUX",
+                    "Description": "Array of per period measurement values",
+                    "Unit": "V"
+                },
+                "ACT_PERIOD_VALUES2": {
+                    "ChannelName": "IAUX",
+                    "Description": "Array of per period measurement values",
+                    "Unit": "A"
+                },
+                "ACT_VALUE1": {
+                    "ChannelName": "UAUX",
+                    "Description": "Measurement value (period average)",
+                    "Unit": "V"
+                },
+                "ACT_VALUE2": {
+                    "ChannelName": "IAUX",
+                    "Description": "Measurement value (period average)",
+                    "Unit": "A"
+                },
+                "EntityName": {
+                    "Description": "Module's name"
+                },
+                "INF_ModuleInterface": {
+                    "Description": "Module's interface details"
+                },
+                "PAR_PeriodCount": {
+                    "Description": "Measurement periods collected per measurement",
+                    "Validation": {
+                        "Data": [
+                            10,
+                            13,
+                            0
+                        ],
+                        "Type": "INTEGER"
+                    }
+                },
+                "SIG_Measuring": {
+                    "Description": "Signal indicating measurement activity"
+                }
+            },
+            "ModuleInfo": {
+                "Description": "This module measures per period average (DC) values)",
+                "Name": "PeriodAverageModule1"
+            },
+            "SCPIInfo": {
+                "Cmd": [
+                    [
+                        "MEASURE",
+                        "UAUX",
+                        "8",
+                        "ACT_VALUE1",
+                        "0"
+                    ],
+                    [
+                        "MEASURE",
+                        "PUAUX",
+                        "8",
+                        "ACT_PERIOD_VALUES1",
+                        "0"
+                    ],
+                    [
+                        "MEASURE",
+                        "IAUX",
+                        "8",
+                        "ACT_VALUE2",
+                        "0"
+                    ],
+                    [
+                        "MEASURE",
+                        "PIAUX",
+                        "8",
+                        "ACT_PERIOD_VALUES2",
+                        "0"
+                    ],
+                    [
+                        "CONFIGURATION",
+                        "PCOUNT",
+                        "10",
+                        "PAR_PeriodCount",
+                        "0"
+                    ]
+                ],
+                "Name": "PAV1"
+            }
+        },
+        "PAR_PeriodCount": 5,
+        "SIG_Measuring": 1
+    }
+}
