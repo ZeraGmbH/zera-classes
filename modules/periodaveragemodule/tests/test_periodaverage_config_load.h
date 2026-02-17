@@ -10,6 +10,7 @@ private slots:
     void fileFound();
     void allFilesLoaded();
     void writtenXmlIsStillValid();
+    void measPeriodHigherThanMaxPeriod();
 };
 
 #endif // TEST_PERIODAVERAGE_CONFIG_LOAD_H

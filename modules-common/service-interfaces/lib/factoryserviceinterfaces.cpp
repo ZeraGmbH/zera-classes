@@ -93,10 +93,13 @@ Zera::DspInterfacePtr FactoryServiceInterfaces::createDspInterfaceOsci(int entit
 }
 
 Zera::DspInterfacePtr FactoryServiceInterfaces::createDspInterfacePeriodAverage(int entityId,
-                                                                                QStringList valueChannelList)
+                                                                                QStringList valueChannelList,
+                                                                                int maxPeriodCount, int initialPeriodCount)
 {
     Q_UNUSED(entityId)
     Q_UNUSED(valueChannelList)
+    Q_UNUSED(maxPeriodCount)
+    Q_UNUSED(initialPeriodCount)
     return std::make_shared<Zera::cDSPInterface>();
 }
 

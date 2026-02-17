@@ -47,3 +47,12 @@ void test_periodaverage_config_load::writtenXmlIsStillValid()
     }
     QVERIFY(allOk);
 }
+
+void test_periodaverage_config_load::measPeriodHigherThanMaxPeriod()
+{
+    QFile configFile(":/configs/all-channels-maxperiod-5-periods-out-of-limit.xml");
+    QVERIFY(configFile.open(QIODevice::Unbuffered | QIODevice::ReadOnly));
+    PERIODAVERAGEMODULE::PeriodAverageModuleConfiguration conf;
+    conf.setConfiguration(configFile.readAll());
+    QVERIFY(!conf.isConfigured());
+}

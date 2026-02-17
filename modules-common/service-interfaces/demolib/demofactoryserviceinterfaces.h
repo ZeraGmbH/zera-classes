@@ -24,7 +24,7 @@ public:
     Zera::DspInterfacePtr createDspInterfacePower2(int entityId, MeasModeSelector* measMode) override;
     Zera::DspInterfacePtr createDspInterfaceThdn(int entityId, QStringList valueChannelList) override;
     Zera::DspInterfacePtr createDspInterfaceOsci(int entityId, QStringList valueChannelList, int interpolation) override;
-    Zera::DspInterfacePtr createDspInterfacePeriodAverage(int entityId, QStringList valueChannelList) override;
+    Zera::DspInterfacePtr createDspInterfacePeriodAverage(int entityId, QStringList valueChannelList, int maxPeriodCount, int initialPeriodCount) override;
     Zera::DspInterfacePtr createDspInterfaceMode(int entityId) override;
     Zera::DspInterfacePtr createDspInterfaceRefProg(int entityId, QStringList valueChannelList) override;
     Zera::DspInterfacePtr createDspInterfaceRefAdj(int entityId) override;

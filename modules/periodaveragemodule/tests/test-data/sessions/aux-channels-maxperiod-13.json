@@ -1,0 +1,9 @@
+{
+    "modules" : [
+        {
+          "name" : "periodaveragemodule",
+          "configFile" : ":/configs/aux-channels-maxperiod-13.xml",
+          "id": 1055
+        }
+    ]
+}

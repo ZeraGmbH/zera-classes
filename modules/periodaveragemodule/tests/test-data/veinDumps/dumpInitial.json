@@ -62,7 +62,7 @@
                     "Validation": {
                         "Data": [
                             10,
-                            25,
+                            13,
                             0
                         ],
                         "Type": "INTEGER"

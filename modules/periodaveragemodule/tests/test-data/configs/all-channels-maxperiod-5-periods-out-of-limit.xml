@@ -3,7 +3,7 @@
 <periodicaveragemodconfpar xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 
     <configuration>
-        <maxperiods>13</maxperiods>
+        <maxperiods>5</maxperiods>
         <measure>
             <channels>
                 <n>8</n>
@@ -20,7 +20,7 @@
     </configuration>
 
     <parameter>
-        <measperiods>13</measperiods>
+        <measperiods>6</measperiods>
     </parameter>
 
 </periodicaveragemodconfpar>

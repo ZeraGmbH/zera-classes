@@ -8,8 +8,6 @@
 namespace PERIODAVERAGEMODULE
 {
 
-static constexpr int MaxPeriods = 25; // Sync with XSD!!!! TODO test
-
 // rangemoduleconfiguration holds configuration data as well as parameter
 
 class PeriodAverageModuleConfiguration: public BaseModuleConfiguration

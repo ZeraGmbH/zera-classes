@@ -1,0 +1,9 @@
+{
+    "modules" : [
+        {
+          "name" : "periodaveragemodule",
+          "configFile" : ":/configs/all-channels-maxperiod-5.xml",
+          "id": 1055
+        }
+    ]
+}

@@ -1,0 +1,116 @@
+{
+    "1-MemGroups": {
+        "ActualValues": {
+            "Size": 48,
+            "UserMemSize": 48,
+            "Variables": [
+                {
+                    "Name": "VALS_PERIOD",
+                    "Segment": "DSPDATA::localSegment",
+                    "Size": 40,
+                    "TypeData": "DSPDATA::dFloat"
+                },
+                {
+                    "Name": "VALUES_AVG",
+                    "Segment": "DSPDATA::localSegment",
+                    "Size": 8,
+                    "TypeData": "DSPDATA::dFloat"
+                }
+            ]
+        },
+        "Parameter": {
+            "Size": 1,
+            "UserMemSize": 1,
+            "Variables": [
+                {
+                    "Name": "PERIODCOUNT",
+                    "Segment": "DSPDATA::localSegment",
+                    "Size": 1,
+                    "TypeData": "DSPDATA::dInt"
+                }
+            ]
+        },
+        "TmpData": {
+            "Size": 530,
+            "UserMemSize": 530,
+            "Variables": [
+                {
+                    "Name": "MEASSIGNAL",
+                    "Segment": "DSPDATA::localSegment",
+                    "Size": 504,
+                    "TypeData": "DSPDATA::dFloat"
+                },
+                {
+                    "Name": "INTEGRAL_RESULT",
+                    "Segment": "DSPDATA::localSegment",
+                    "Size": 8,
+                    "TypeData": "DSPDATA::dFloat"
+                },
+                {
+                    "Name": "PERIODCURR",
+                    "Segment": "DSPDATA::localSegment",
+                    "Size": 1,
+                    "TypeData": "DSPDATA::dInt"
+                },
+                {
+                    "Name": "FILTER",
+                    "Segment": "DSPDATA::localSegment",
+                    "Size": 16,
+                    "TypeData": "DSPDATA::dFloat"
+                },
+                {
+                    "Name": "N",
+                    "Segment": "DSPDATA::localSegment",
+                    "Size": 1,
+                    "TypeData": "DSPDATA::dFloat"
+                }
+            ]
+        }
+    },
+    "2-CmdList": [
+        "STARTCHAIN(1,1,0x0101)",
+        "CLEARN(504,MEASSIGNAL)",
+        "CLEARN(17,FILTER)",
+        "SETVAL(PERIODCURR,0)",
+        "SETVAL(PERIODCOUNT,5)",
+        "DEACTIVATECHAIN(1,0x0101)",
+        "STOPCHAIN(1,0x0101)",
+        "COPYDATA(CH0,0,MEASSIGNAL)",
+        "INTEGRAL(504,MEASSIGNAL,INTEGRAL_RESULT+0)",
+        "COPYDATA(CH2,0,MEASSIGNAL)",
+        "INTEGRAL(504,MEASSIGNAL,INTEGRAL_RESULT+1)",
+        "COPYDATA(CH4,0,MEASSIGNAL)",
+        "INTEGRAL(504,MEASSIGNAL,INTEGRAL_RESULT+2)",
+        "COPYDATA(CH1,0,MEASSIGNAL)",
+        "INTEGRAL(504,MEASSIGNAL,INTEGRAL_RESULT+3)",
+        "COPYDATA(CH3,0,MEASSIGNAL)",
+        "INTEGRAL(504,MEASSIGNAL,INTEGRAL_RESULT+4)",
+        "COPYDATA(CH5,0,MEASSIGNAL)",
+        "INTEGRAL(504,MEASSIGNAL,INTEGRAL_RESULT+5)",
+        "COPYDATA(CH6,0,MEASSIGNAL)",
+        "INTEGRAL(504,MEASSIGNAL,INTEGRAL_RESULT+6)",
+        "COPYDATA(CH7,0,MEASSIGNAL)",
+        "INTEGRAL(504,MEASSIGNAL,INTEGRAL_RESULT+7)",
+        "TESTVCSKIPGT(PERIODCURR,0)",
+        "COPYMEM(8,INTEGRAL_RESULT,VALS_PERIOD+0)",
+        "TESTVCSKIPGT(PERIODCURR,1)",
+        "COPYMEM(8,INTEGRAL_RESULT,VALS_PERIOD+8)",
+        "TESTVCSKIPGT(PERIODCURR,2)",
+        "COPYMEM(8,INTEGRAL_RESULT,VALS_PERIOD+16)",
+        "TESTVCSKIPGT(PERIODCURR,3)",
+        "COPYMEM(8,INTEGRAL_RESULT,VALS_PERIOD+24)",
+        "TESTVCSKIPGT(PERIODCURR,4)",
+        "COPYMEM(8,INTEGRAL_RESULT,VALS_PERIOD+32)",
+        "AVERAGE1(16,INTEGRAL_RESULT,FILTER)",
+        "TESTVVSKIPEQ(PERIODCURR,PERIODCOUNT)",
+        "ACTIVATECHAIN(1,0x0102)",
+        "STARTCHAIN(0,1,0x0102)",
+        "SETVAL(PERIODCURR,0)",
+        "CMPAVERAGE1(16,FILTER,VALUES_AVG)",
+        "CLEARN(17,FILTER)",
+        "DSPINTTRIGGER(0x0,0x0)",
+        "DEACTIVATECHAIN(1,0x0102)",
+        "STOPCHAIN(1,0x0102)",
+        "INC(PERIODCURR)"
+    ]
+}

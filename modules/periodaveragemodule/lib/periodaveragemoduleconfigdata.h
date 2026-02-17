@@ -16,6 +16,7 @@ struct intParameter
 class PeriodAverageModuleConfigData
 {
 public:
+    quint8 m_maxPeriods;
     quint8 m_channelCount;
     QStringList m_valueChannelList;
     intParameter m_periodCount;

@@ -8,11 +8,13 @@
 class DemoValuesDspPeriodAverage
 {
 public:
-    DemoValuesDspPeriodAverage(QStringList channelMNameList);
+    DemoValuesDspPeriodAverage(QStringList channelMNameList, int maxPeriodCount, int periodCount);
     void setValue(QString channelMName, int period, double value);
     QVector<float> getDspValues();
 private:
     QStringList m_channelMNameList;
+    int m_maxPeriodCount;
+    int m_periodCount;
     QHash<QString, QVector<double>> m_values;
 };
 

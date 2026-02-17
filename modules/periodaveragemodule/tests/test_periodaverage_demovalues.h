@@ -10,7 +10,7 @@ private slots:
     void addVoltage();
 private:
     float getDspPeriodValue(const QString &channelMName, int period, const QVector<float> &dspValues);
-    float getDspAvgValue(const QString &channelMName, const QVector<float> &dspValues);
+    float getDspAvgValue(const QString &channelMName, int maxPeriods, const QVector<float> &dspValues);
 
     static const QStringList mtChannelLayout;
 };

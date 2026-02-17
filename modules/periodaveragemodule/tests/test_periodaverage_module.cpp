@@ -1,4 +1,4 @@
-#include "test_periodaverage_module_regression.h"
+#include "test_periodaverage_module.h"
 #include "demovaluesdspperiodaverage.h"
 #include "modulemanagertestrunner.h"
 #include <timemachineobject.h>
@@ -9,11 +9,11 @@
 #include <testloghelpers.h>
 #include <QTest>
 
-QTEST_MAIN(test_periodaverage_module_regression)
+QTEST_MAIN(test_periodaverage_module)
 
 static int constexpr periodAverageEntityId = 1055;
 
-void test_periodaverage_module_regression::minimalSession()
+void test_periodaverage_module::minimalSession()
 {
     ModuleManagerTestRunner testRunner(":/sessions/minimal.json");
     VeinStorage::AbstractDatabase *veinStorageDb = testRunner.getVeinStorageDb();
@@ -23,7 +23,7 @@ void test_periodaverage_module_regression::minimalSession()
     QVERIFY(veinStorageDb->hasEntity(periodAverageEntityId));
 }
 
-void test_periodaverage_module_regression::veinDumpInitial()
+void test_periodaverage_module::veinDumpInitial()
 {
     ModuleManagerTestRunner testRunner(":/sessions/minimal.json");
 
@@ -34,13 +34,24 @@ void test_periodaverage_module_regression::veinDumpInitial()
     QVERIFY(TestLogHelpers::compareAndLogOnDiffJson(jsonExpected, jsonDumped));
 }
 
-void test_periodaverage_module_regression::dumpDspSetup()
+void test_periodaverage_module::dumpDspSetupAllChannels5PeriodsMax()
 {
-    ModuleManagerTestRunner testRunner(":/sessions/minimal.json");
+    ModuleManagerTestRunner testRunner(":/sessions/all-channels-maxperiod-5.json");
 
     TestDspInterfacePtr dftDspInterface = testRunner.getDspInterface(periodAverageEntityId);
     QString measProgramDumped = TestLogHelpers::dump(dftDspInterface->dumpAll());
-    QString measProgramExpected = TestLogHelpers::loadFile(":/dspDumps/dumpInitial.json");
+    QString measProgramExpected = TestLogHelpers::loadFile(":/dspDumps/dump-all-channels-maxperiod-5.json");
+
+    QVERIFY(TestLogHelpers::compareAndLogOnDiffJson(measProgramExpected, measProgramDumped));
+}
+
+void test_periodaverage_module::dumpDspSetupAuxChannels13PeriodsMax()
+{
+    ModuleManagerTestRunner testRunner(":/sessions/aux-channels-maxperiod-13.json");
+
+    TestDspInterfacePtr dftDspInterface = testRunner.getDspInterface(periodAverageEntityId);
+    QString measProgramDumped = TestLogHelpers::dump(dftDspInterface->dumpAll());
+    QString measProgramExpected = TestLogHelpers::loadFile(":/dspDumps/dump-aux-channels-maxperiod-13.json");
 
     QVERIFY(TestLogHelpers::compareAndLogOnDiffJson(measProgramExpected, measProgramDumped));
 }

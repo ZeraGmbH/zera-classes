@@ -1,11 +1,13 @@
 #include "demovaluesdspperiodaverage.h"
-#include "periodaveragemoduleconfiguration.h"
 
-DemoValuesDspPeriodAverage::DemoValuesDspPeriodAverage(QStringList channelMNameList) :
-    m_channelMNameList(channelMNameList)
+DemoValuesDspPeriodAverage::DemoValuesDspPeriodAverage(QStringList channelMNameList,
+                                                       int maxPeriodCount, int periodCount) :
+    m_channelMNameList(channelMNameList),
+    m_maxPeriodCount(maxPeriodCount),
+    m_periodCount(periodCount)
 {
     for(const auto &valueName : channelMNameList)
-        m_values.insert(valueName, QVector<double>(PERIODAVERAGEMODULE::MaxPeriods));
+        m_values.insert(valueName, QVector<double>(m_maxPeriodCount));
 }
 
 void DemoValuesDspPeriodAverage::setValue(QString channelMName, int period, double value)
@@ -19,16 +21,17 @@ QVector<float> DemoValuesDspPeriodAverage::getDspValues()
     int channelCount = m_channelMNameList.count();
     QVector<float> valueList;
     QVector<double> avgList(channelCount);
-    for (int periodNo=0; periodNo<PERIODAVERAGEMODULE::MaxPeriods; ++periodNo) {
+    for (int periodNo=0; periodNo<m_maxPeriodCount; ++periodNo) {
         for (int channelNo=0; channelNo<channelCount; ++channelNo) {
             const QString &channelMName = m_channelMNameList[channelNo];
             double value = m_values[channelMName][periodNo];
             valueList.append(value);
-            avgList[channelNo] += value;
+            if (periodNo < m_periodCount)
+                avgList[channelNo] += value;
         }
     }
     for (int channelNo=0; channelNo<channelCount; ++channelNo) {
-        double avg = avgList[channelNo] / double(PERIODAVERAGEMODULE::MaxPeriods);
+        double avg = avgList[channelNo] / double(m_periodCount);
         valueList.append(avg);
     }
     return valueList;

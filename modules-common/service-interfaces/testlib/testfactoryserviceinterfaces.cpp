@@ -111,8 +111,11 @@ Zera::DspInterfacePtr TestFactoryServiceInterfaces::createDspInterfaceOsci(int e
 }
 
 Zera::DspInterfacePtr TestFactoryServiceInterfaces::createDspInterfacePeriodAverage(int entityId,
-                                                                                    QStringList valueChannelList)
+                                                                                    QStringList valueChannelList,
+                                                                                    int maxPeriodCount, int initialPeriodCount)
 {
+    Q_UNUSED(maxPeriodCount)
+    Q_UNUSED(initialPeriodCount)
     return createDspInterfaceCommon(entityId,
                                     INJECT_NOT_SUPPORTED,
                                     MODULEPROG,

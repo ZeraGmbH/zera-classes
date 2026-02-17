@@ -28,9 +28,9 @@
         </xs:sequence>
     </xs:complexType>
 
-    <xs:simpleType name="measureintervaltype">
+    <xs:simpleType name="periodcounttype">
         <xs:restriction base="xs:integer">
-            <xs:minInclusive value="10"/>
+            <xs:minInclusive value="5"/>
             <xs:maxInclusive value="25"/>
         </xs:restriction>
     </xs:simpleType>
@@ -41,14 +41,15 @@
                 <xs:element name="configuration">
                     <xs:complexType>
                         <xs:sequence>
-                             <xs:element name="measure" type="measuretype"/>
+                            <xs:element name="maxperiods" type="periodcounttype"/>
+                            <xs:element name="measure" type="measuretype"/>
                         </xs:sequence>
                     </xs:complexType>
                 </xs:element>
                 <xs:element name="parameter">
                     <xs:complexType>
                         <xs:sequence>
-                            <xs:element name="measperiods" type="measureintervaltype"/>
+                            <xs:element name="measperiods" type="periodcounttype"/>
                         </xs:sequence>
                     </xs:complexType>
                 </xs:element>

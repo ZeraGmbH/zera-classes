@@ -7,6 +7,7 @@ namespace PERIODAVERAGEMODULE
 
 enum moduleconfigstate
 {
+    setMaxPeriods,
     setChannelCount,
     setPeriodCount,
 
@@ -34,6 +35,7 @@ void PeriodAverageModuleConfiguration::setConfiguration(const QByteArray &xmlStr
 
     m_ConfigXMLMap.clear(); // in case of new configuration we completely set up
 
+    m_ConfigXMLMap["periodicaveragemodconfpar:configuration:maxperiods"] = setMaxPeriods;
     m_ConfigXMLMap["periodicaveragemodconfpar:configuration:measure:channels:n"] = setChannelCount;
     m_ConfigXMLMap["periodicaveragemodconfpar:parameter:measperiods"] = setPeriodCount;
 
@@ -59,15 +61,26 @@ void PeriodAverageModuleConfiguration::configXMLInfo(const QString &key)
         bool ok = true;
         int cmd = m_ConfigXMLMap[key];
         switch (cmd) {
+        case setMaxPeriods:
+            m_periodAverageModulConfigData->m_maxPeriods = m_pXMLReader->getValue(key).toInt(&ok);
+            break;
         case setChannelCount:
             m_periodAverageModulConfigData->m_channelCount = m_pXMLReader->getValue(key).toInt(&ok);
             for (int i = 0; i < m_periodAverageModulConfigData->m_channelCount; i++)
                 m_ConfigXMLMap[QString("periodicaveragemodconfpar:configuration:measure:channels:ch%1").arg(i+1)] = setValue1+i;
             break;
-        case setPeriodCount:
+        case setPeriodCount: {
             m_periodAverageModulConfigData->m_periodCount.m_sKey = key;
-            m_periodAverageModulConfigData->m_periodCount.m_nValue = m_pXMLReader->getValue(key).toInt(&ok);
+            int periodCount = m_pXMLReader->getValue(key).toInt(&ok);
+            m_periodAverageModulConfigData->m_periodCount.m_nValue = periodCount;
+            int maxPeriodCount = m_periodAverageModulConfigData->m_maxPeriods;
+            if (periodCount > maxPeriodCount) {
+                qWarning("Period count %i is larger than max period count %i!",
+                         periodCount, maxPeriodCount);
+                ok = false;
+            }
             break;
+        }
         default:
             if ((cmd >= setValue1) && (cmd < setValue1 + 20)) {
                 //cmd -= setValue1;
