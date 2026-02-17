@@ -44,6 +44,8 @@ private:
     ChannelRangeObserver::SystemObserverPtr m_observer;
     ActualValueStartStopHandler m_startStopHandler;
 
+    QList<VfModuleComponent*> m_periodValues;
+    QList<VfModuleComponent*> m_averageValues;
     VfModuleComponent* m_pMeasureSignal;
     VfModuleParameter* m_periodCountParameter;
 

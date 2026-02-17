@@ -1,21 +1,69 @@
 {
     "1055": {
-        "ACT_PERIOD_VALUES1": null,
-        "ACT_PERIOD_VALUES2": null,
-        "ACT_PERIOD_VALUES3": null,
-        "ACT_PERIOD_VALUES4": null,
-        "ACT_PERIOD_VALUES5": null,
-        "ACT_PERIOD_VALUES6": null,
-        "ACT_PERIOD_VALUES7": null,
-        "ACT_PERIOD_VALUES8": null,
-        "ACT_VALUE1": null,
-        "ACT_VALUE2": null,
-        "ACT_VALUE3": null,
-        "ACT_VALUE4": null,
-        "ACT_VALUE5": null,
-        "ACT_VALUE6": null,
-        "ACT_VALUE7": null,
-        "ACT_VALUE8": null,
+        "ACT_PERIOD_VALUES1": [
+            41.8,
+            41.9,
+            42,
+            42.1,
+            42.2
+        ],
+        "ACT_PERIOD_VALUES2": [
+            36.6,
+            36.8,
+            37,
+            37.2,
+            37.4
+        ],
+        "ACT_PERIOD_VALUES3": [
+            0,
+            0,
+            0,
+            0,
+            0
+        ],
+        "ACT_PERIOD_VALUES4": [
+            0,
+            0,
+            0,
+            0,
+            0
+        ],
+        "ACT_PERIOD_VALUES5": [
+            0,
+            0,
+            0,
+            0,
+            0
+        ],
+        "ACT_PERIOD_VALUES6": [
+            0,
+            0,
+            0,
+            0,
+            0
+        ],
+        "ACT_PERIOD_VALUES7": [
+            0,
+            0,
+            0,
+            0,
+            0
+        ],
+        "ACT_PERIOD_VALUES8": [
+            0,
+            0,
+            0,
+            0,
+            0
+        ],
+        "ACT_VALUE1": 42,
+        "ACT_VALUE2": 37,
+        "ACT_VALUE3": 0,
+        "ACT_VALUE4": 0,
+        "ACT_VALUE5": 0,
+        "ACT_VALUE6": 0,
+        "ACT_VALUE7": 0,
+        "ACT_VALUE8": 0,
         "EntityName": "PeriodAverageModule1",
         "INF_ModuleInterface": {
             "ComponentInfo": {
@@ -110,7 +158,7 @@
                     "Validation": {
                         "Data": [
                             10,
-                            13,
+                            5,
                             0
                         ],
                         "Type": "INTEGER"
@@ -249,7 +297,7 @@
                 "Name": "PAV1"
             }
         },
-        "PAR_PeriodCount": 13,
+        "PAR_PeriodCount": 5,
         "SIG_Measuring": 1
     }
 }

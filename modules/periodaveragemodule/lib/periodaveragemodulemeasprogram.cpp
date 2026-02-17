@@ -79,13 +79,28 @@ void PeriodAverageModuleMeasProgram::generateVeinInterface()
         const QString channeMName = getConfData()->m_valueChannelList.at(i);
         ServiceChannelNameHelper::TChannelAliasUnit aliasUnit = ServiceChannelNameHelper::getChannelAndUnit(channeMName, m_observer);
 
-        VfModuleComponent *pActvalue = new VfModuleComponent(m_pModule->getEntityId(),
-                                                             m_pModule->getValidatorEventSystem(),
-                                                             QString("ACT_PERIOD_VALUES%1").arg(i+1),
-                                                             QString("Array of per period measurement values"));
+        QString scpiBaseName = aliasUnit.m_channelAlias;
+        scpiBaseName.replace("L", "");
+        VfModuleComponent *pActvalue;
+
+        pActvalue = new VfModuleComponent(m_pModule->getEntityId(),
+                                          m_pModule->getValidatorEventSystem(),
+                                          QString("ACT_VALUE%1").arg(i+1),
+                                          QString("Measurement value (period average)"));
         pActvalue->setChannelName(aliasUnit.m_channelAlias);
         pActvalue->setUnit(aliasUnit.m_channelUnit);
-        pActvalue->setScpiInfo("MEASURE", aliasUnit.m_channelAlias, SCPI::isCmdwP);
+        pActvalue->setScpiInfo("MEASURE", scpiBaseName, SCPI::isCmdwP);
+        m_averageValues.append(pActvalue);
+        m_pModule->m_veinComponentsWithMetaAndScpi.append(pActvalue); // and for the modules interface
+
+        pActvalue = new VfModuleComponent(m_pModule->getEntityId(),
+                                          m_pModule->getValidatorEventSystem(),
+                                          QString("ACT_PERIOD_VALUES%1").arg(i+1),
+                                          QString("Array of per period measurement values"));
+        pActvalue->setChannelName(aliasUnit.m_channelAlias);
+        pActvalue->setUnit(aliasUnit.m_channelUnit);
+        pActvalue->setScpiInfo("MEASURE", "P" + scpiBaseName, SCPI::isCmdwP);
+        m_periodValues.append(pActvalue);
         m_pModule->m_veinComponentsWithMetaAndScpi.append(pActvalue); // and for the modules interface
     }
 
@@ -237,7 +252,29 @@ PeriodAverageModuleConfigData *PeriodAverageModuleMeasProgram::getConfData()
 void PeriodAverageModuleMeasProgram::setInterfaceActualValues(QVector<float> *actualValues)
 {
     if (m_bActive) { // maybe we are deactivating !!!!
-
+        const int channelCount = getConfData()->m_channelCount;
+        const int perChannelValuesFullMax = actualValues->count() / channelCount;
+        constexpr int perChannelAverageCount = 1;
+        const int periodMaxCount = perChannelValuesFullMax - perChannelAverageCount;
+        if (getConfData()->m_maxPeriods != periodMaxCount) {
+            qCritical("PeriodAverageModule: Count DSP values %i is unexpected expected: %i!",
+                      int(actualValues->count()), channelCount * (getConfData()->m_maxPeriods + perChannelAverageCount));
+            return;
+        }
+        const int periodsConfigured = getConfData()->m_periodCount.m_nValue;
+        QVector<QList<double>> periodValues(channelCount);
+        for (int periodNo=0; periodNo<periodsConfigured; ++periodNo) {
+            for (int channelNo=0; channelNo<channelCount; channelNo++) {
+                const float &periodValue =(*actualValues)[periodNo*channelCount + channelNo];
+                periodValues[channelNo].append(periodValue);
+            }
+        }
+        for (int channelNo=0; channelNo<channelCount; channelNo++) {
+            QVariant periodList = QVariant::fromValue<QList<double> >(periodValues[channelNo]);
+            m_periodValues[channelNo]->setValue(periodList);
+            const float &averageChannelValue = (*actualValues)[periodMaxCount*channelCount + channelNo];
+            m_averageValues[channelNo]->setValue(averageChannelValue);
+        }
 
     }
 }

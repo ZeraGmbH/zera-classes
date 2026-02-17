@@ -1,9 +1,37 @@
 {
     "1055": {
-        "ACT_PERIOD_VALUES1": null,
-        "ACT_PERIOD_VALUES2": null,
-        "ACT_VALUE1": null,
-        "ACT_VALUE2": null,
+        "ACT_PERIOD_VALUES1": [
+            31.4,
+            31.5,
+            31.6,
+            31.7,
+            31.8,
+            31.9,
+            32,
+            32.1,
+            32.2,
+            32.3,
+            32.4,
+            32.5,
+            32.6
+        ],
+        "ACT_PERIOD_VALUES2": [
+            45.8,
+            46,
+            46.2,
+            46.4,
+            46.6,
+            46.8,
+            47,
+            47.2,
+            47.4,
+            47.6,
+            47.8,
+            48,
+            48.2
+        ],
+        "ACT_VALUE1": 32,
+        "ACT_VALUE2": 47,
         "EntityName": "PeriodAverageModule1",
         "INF_ModuleInterface": {
             "ComponentInfo": {
