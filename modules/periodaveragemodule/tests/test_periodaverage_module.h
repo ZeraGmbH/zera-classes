@@ -9,8 +9,13 @@ class test_periodaverage_module : public QObject
 private slots:
     void minimalSession();
     void veinDumpInitial();
+
+    void veinDumpInitialAllChannels5PeriodsMax();
+    void veinDumpInitialAuxChannels13PeriodsMax();
+
     void dumpDspSetupAllChannels5PeriodsMax();
     void dumpDspSetupAuxChannels13PeriodsMax();
+
 };
 
 #endif // TEST_PERIODAVERAGE_MODULE_H

@@ -34,6 +34,28 @@ void test_periodaverage_module::veinDumpInitial()
     QVERIFY(TestLogHelpers::compareAndLogOnDiffJson(jsonExpected, jsonDumped));
 }
 
+void test_periodaverage_module::veinDumpInitialAllChannels5PeriodsMax()
+{
+    ModuleManagerTestRunner testRunner(":/sessions/all-channels-maxperiod-5.json");
+
+    QByteArray jsonExpected = TestLogHelpers::loadFile(":/veinDumps/dump-all-channels-maxperiod-5.json");
+    VeinStorage::AbstractDatabase *veinStorageDb = testRunner.getVeinStorageDb();
+    QByteArray jsonDumped = VeinStorage::DumpJson::dumpToByteArray(veinStorageDb, QList<int>() << periodAverageEntityId);
+
+    QVERIFY(TestLogHelpers::compareAndLogOnDiffJson(jsonExpected, jsonDumped));
+}
+
+void test_periodaverage_module::veinDumpInitialAuxChannels13PeriodsMax()
+{
+    ModuleManagerTestRunner testRunner(":/sessions/aux-channels-maxperiod-13.json");
+
+    QByteArray jsonExpected = TestLogHelpers::loadFile(":/veinDumps/dump-aux-channels-maxperiod-13.json");
+    VeinStorage::AbstractDatabase *veinStorageDb = testRunner.getVeinStorageDb();
+    QByteArray jsonDumped = VeinStorage::DumpJson::dumpToByteArray(veinStorageDb, QList<int>() << periodAverageEntityId);
+
+    QVERIFY(TestLogHelpers::compareAndLogOnDiffJson(jsonExpected, jsonDumped));
+}
+
 void test_periodaverage_module::dumpDspSetupAllChannels5PeriodsMax()
 {
     ModuleManagerTestRunner testRunner(":/sessions/all-channels-maxperiod-5.json");

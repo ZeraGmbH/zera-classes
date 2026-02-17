@@ -1,0 +1,73 @@
+{
+    "1055": {
+        "ACT_PERIOD_VALUES1": null,
+        "ACT_PERIOD_VALUES2": null,
+        "EntityName": "PeriodAverageModule1",
+        "INF_ModuleInterface": {
+            "ComponentInfo": {
+                "ACT_PERIOD_VALUES1": {
+                    "ChannelName": "UAUX",
+                    "Description": "Array of per period measurement values",
+                    "Unit": "V"
+                },
+                "ACT_PERIOD_VALUES2": {
+                    "ChannelName": "IAUX",
+                    "Description": "Array of per period measurement values",
+                    "Unit": "A"
+                },
+                "EntityName": {
+                    "Description": "Module's name"
+                },
+                "INF_ModuleInterface": {
+                    "Description": "Module's interface details"
+                },
+                "PAR_PeriodCount": {
+                    "Description": "Measurement periods collected per measurement",
+                    "Validation": {
+                        "Data": [
+                            10,
+                            13,
+                            0
+                        ],
+                        "Type": "INTEGER"
+                    }
+                },
+                "SIG_Measuring": {
+                    "Description": "Signal indicating measurement activity"
+                }
+            },
+            "ModuleInfo": {
+                "Description": "This module measures per period average (DC) values)",
+                "Name": "PeriodAverageModule1"
+            },
+            "SCPIInfo": {
+                "Cmd": [
+                    [
+                        "MEASURE",
+                        "UAUX",
+                        "8",
+                        "ACT_PERIOD_VALUES1",
+                        "0"
+                    ],
+                    [
+                        "MEASURE",
+                        "IAUX",
+                        "8",
+                        "ACT_PERIOD_VALUES2",
+                        "0"
+                    ],
+                    [
+                        "CONFIGURATION",
+                        "PCOUNT",
+                        "10",
+                        "PAR_PeriodCount",
+                        "0"
+                    ]
+                ],
+                "Name": "PAV1"
+            }
+        },
+        "PAR_PeriodCount": 13,
+        "SIG_Measuring": 1
+    }
+}

@@ -11,6 +11,8 @@
         <file>sessions/aux-channels-maxperiod-13.json</file>
         <file>sessions/minimal.json</file>
 
+        <file>veinDumps/dump-all-channels-maxperiod-5.json</file>
+        <file>veinDumps/dump-aux-channels-maxperiod-13.json</file>
         <file>veinDumps/dumpInitial.json</file>
     </qresource>
 </RCC>
