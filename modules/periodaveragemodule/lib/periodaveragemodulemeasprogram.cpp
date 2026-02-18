@@ -159,8 +159,8 @@ void PeriodAverageModuleMeasProgram::setDspCmdList()
         m_dspInterface->addCycListItem(QString("CLEARN(%1,MEASSIGNAL)").arg(samplesPerPeriod) ); // clear meassignal
         m_dspInterface->addCycListItem(QString("CLEARN(%1,FILTER)").arg(filterLenWithTrailingCount) ); // clear the whole filter incl. count
 
-        m_dspInterface->addCycListItem(QString("SETVAL(PERIODCURR,0)"));
-        m_dspInterface->addCycListItem(QString("SETVAL(PERIODCOUNT,%1)").arg(getConfData()->m_periodCount.m_nValue-1));
+        m_dspInterface->addCycListItem(QString("SETVAL(PERIODCURR,1)"));
+        m_dspInterface->addCycListItem(QString("SETVAL(PERIODCOUNT,%1)").arg(getConfData()->m_periodCount.m_nValue));
 
         m_dspInterface->addCycListItem("DEACTIVATECHAIN(1,0x0101)"); // ende prozessnr., hauptkette 1 subkette 1
     m_dspInterface->addCycListItem("STOPCHAIN(1,0x0101)"); // ende prozessnr., hauptkette 1 subkette 1
@@ -185,7 +185,7 @@ void PeriodAverageModuleMeasProgram::setDspCmdList()
     m_dspInterface->addCycListItem("DEACTIVATECHAIN(1,0x0102)");
 
     m_dspInterface->addCycListItem("STARTCHAIN(0,1,0x0102)");
-        m_dspInterface->addCycListItem(QString("SETVAL(PERIODCURR,0)"));
+        m_dspInterface->addCycListItem(QString("SETVAL(PERIODCURR,1)"));
         m_dspInterface->addCycListItem(QString("CMPAVERAGE1(%1,FILTER,VALUES_AVG)").arg(channelCount));
         m_dspInterface->addCycListItem(QString("CLEARN(%1,FILTER)").arg(filterLenWithTrailingCount) );
         m_dspInterface->addCycListItem(QString("COPYMEM(%1,VALS_PERIOD_WORK,VALS_PERIOD)").arg(getConfData()->m_maxPeriods*channelCount));
@@ -349,7 +349,7 @@ void PeriodAverageModuleMeasProgram::newPeriodCount(const QVariant &periodCount)
 {
     int newPeriodCount = periodCount.toInt();
     getConfData()->m_periodCount.m_nValue = newPeriodCount;
-    QString strVarData = QString("PERIODCOUNT:%1;PERIODCURR:0;").arg(newPeriodCount-1);
+    QString strVarData = QString("PERIODCOUNT:%1;PERIODCURR:0;").arg(newPeriodCount);
     m_pParameterDSP->setVarData(strVarData);
     m_MsgNrCmdList[m_dspInterface->dspMemoryWrite(m_pParameterDSP)] = writeparameter;
     emit m_pModule->parameterChanged();
