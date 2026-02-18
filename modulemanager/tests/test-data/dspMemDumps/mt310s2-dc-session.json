@@ -1,8 +1,8 @@
 {
     "ProgMemCyclicAvailable": 3584,
-    "ProgMemCyclicFree": 2947,
+    "ProgMemCyclicFree": 2946,
     "ProgMemInterruptAvailable": 512,
     "ProgMemInterruptFree": 512,
     "UserMemAvailable": 32383,
-    "UserMemFree": 8973
+    "UserMemFree": 8908
 }
