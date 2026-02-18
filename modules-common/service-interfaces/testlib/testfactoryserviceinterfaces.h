@@ -43,6 +43,7 @@ public:
 
     TestDspInterfacePtr getInterface(int entityId, DspInterfaceCreatedBy createdBy);
     TestDspInterfacePtr getInjectableInterface(DspInterfaceInjectableTypes injectType);
+    QMap<int, QList<TestDspInterfacePtr>> getAllInterfaces();
 
 private:
     Zera::DspInterfacePtr createDspInterfaceCommon(int entityId,

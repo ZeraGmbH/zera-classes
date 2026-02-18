@@ -15,6 +15,7 @@ public:
     void exportAll(QString xmlDir, QString snapshotDir);
     JsonByteArrayDumps getVeinDumps();
     JsonByteArrayDumps getDspMemDumps();
+    JsonByteArrayDumps getDspVarDumps();
     JsonByteArrayDumps getSecUnitDumps();
     QList<TestModuleManager::TModuleInstances> getInstanceCountsOnModulesDestroyed();
     int getModuleConfigWriteCounts() const;
@@ -23,6 +24,7 @@ private:
     LxdmSessionChangeParam m_lxdmParam;
     JsonByteArrayDumps m_veinDumps;
     JsonByteArrayDumps m_dspMemDumps;
+    JsonByteArrayDumps m_dspVarDumps;
     JsonByteArrayDumps m_secUnitsDumps;
     QList<TestModuleManager::TModuleInstances> m_instanceCounts;
     int m_moduleConfigFilesWritten = 0;

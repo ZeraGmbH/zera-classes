@@ -157,6 +157,11 @@ TestDspInterfacePtr ModuleManagerTestRunner::getDspInterface(DspInterfaceInjecta
     return m_serviceInterfaceFactory->getInjectableInterface(injectType);
 }
 
+QMap<int, QList<TestDspInterfacePtr> > ModuleManagerTestRunner::getAllDspInterfaces()
+{
+    return m_serviceInterfaceFactory->getAllInterfaces();
+}
+
 VfCmdEventHandlerSystemPtr ModuleManagerTestRunner::getVfCmdEventHandlerSystemPtr()
 {
     return m_vfCmdEventHandlerSystem;

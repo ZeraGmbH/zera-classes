@@ -22,6 +22,7 @@ void DevicesExportGenerator::exportAll(QString xmlDir, QString snapshotDir)
             sessionExportGenerator.generateDevIfaceXml(xmlDir);
             m_veinDumps[session] = sessionExportGenerator.getVeinDump();
             m_dspMemDumps[session] = sessionExportGenerator.getDspMemDump();
+            m_dspVarDumps[session] = sessionExportGenerator.getDspVarDump();
             m_secUnitsDumps[session] = sessionExportGenerator.getSecUnitDump();
             sessionExportGenerator.generateSnapshotJsons(snapshotDir);
         }
@@ -38,6 +39,11 @@ JsonByteArrayDumps DevicesExportGenerator::getVeinDumps()
 JsonByteArrayDumps DevicesExportGenerator::getDspMemDumps()
 {
     return m_dspMemDumps;
+}
+
+JsonByteArrayDumps DevicesExportGenerator::getDspVarDumps()
+{
+    return m_dspVarDumps;
 }
 
 JsonByteArrayDumps DevicesExportGenerator::getSecUnitDumps()

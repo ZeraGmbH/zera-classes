@@ -108,6 +108,22 @@ QByteArray SessionExportGenerator::getDspMemDump()
     return TestLogHelpers::dump(json);
 }
 
+QByteArray SessionExportGenerator::getDspVarDump()
+{
+    QMap<int, QList<TestDspInterfacePtr>> dspInterfaces = m_modmanTestRunner->getAllDspInterfaces();
+    QJsonObject json;
+    for(auto entityIter=dspInterfaces.cbegin(); entityIter!=dspInterfaces.cend(); entityIter++) {
+        int entityId = entityIter.key();
+        QString entityIdStr = QString("%1").arg(entityId);
+        const QList<TestDspInterfacePtr> &entityInterfaces = entityIter.value();
+        for (const TestDspInterfacePtr &interface : entityInterfaces) {
+            QJsonObject dump = interface->dumpAll();
+            json.insert(entityIdStr, dump);
+        }
+    }
+    return TestLogHelpers::dump(json);
+}
+
 QByteArray SessionExportGenerator::getSecUnitDump()
 {
     cSEC1000dServer *secServer = m_modmanTestRunner->getSecServer();

@@ -42,6 +42,7 @@ public:
     cSEC1000dServer *getSecServer();
     TestDspInterfacePtr getDspInterface(int entityId, DspInterfaceCreatedBy createdBy = MODULEPROG);
     TestDspInterfacePtr getDspInterface(DspInterfaceInjectableTypes injectType);
+    QMap<int, QList<TestDspInterfacePtr>> getAllDspInterfaces();
 
     // hotplug full functional methods
     void fireHotplugInterrupt(const AbstractMockAllServices::ChannelAliasHotplugDeviceNameMap &deviceMap);

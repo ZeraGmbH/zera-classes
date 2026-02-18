@@ -25,6 +25,7 @@ void test_modman_regression_all_sessions::initTestCase()
     devicesExportGenerator.exportAll(m_devIfaceXmlsPath, m_snapshotJsonsPath);
     m_veinDumps = devicesExportGenerator.getVeinDumps();
     m_dspMemDumps = devicesExportGenerator.getDspMemDumps();
+    m_dspVarDumps = devicesExportGenerator.getDspVarDumps();
     m_secUnitDumps = devicesExportGenerator.getSecUnitDumps();
     m_instanceCountsOnModulesDestroyed = devicesExportGenerator.getInstanceCountsOnModulesDestroyed();
 }
@@ -58,6 +59,22 @@ void test_modman_regression_all_sessions::allSessionsDspMemDumps()
     QFETCH(QString, sessionFileName);
     QByteArray jsonExpected = TestLogHelpers::loadFile(QString(":/dspMemDumps/%1").arg(sessionFileName));
     QByteArray jsonDumped = m_dspMemDumps.value(sessionFileName);
+    QVERIFY(TestLogHelpers::compareAndLogOnDiffJson(jsonExpected, jsonDumped));
+}
+
+void test_modman_regression_all_sessions::allSessionsDspVarDumps_data()
+{
+    QTest::addColumn<QString>("sessionFileName");
+    const QStringList sessionFileNames = m_veinDumps.keys();
+    for (const QString &sessionFileName : sessionFileNames)
+        QTest::newRow(sessionFileName.toLatin1()) << sessionFileName;
+}
+
+void test_modman_regression_all_sessions::allSessionsDspVarDumps()
+{
+    QFETCH(QString, sessionFileName);
+    QByteArray jsonExpected = TestLogHelpers::loadFile(QString(":/dspVarDumps/%1").arg(sessionFileName));
+    QByteArray jsonDumped = m_dspVarDumps.value(sessionFileName);
     QVERIFY(TestLogHelpers::compareAndLogOnDiffJson(jsonExpected, jsonDumped));
 }
 

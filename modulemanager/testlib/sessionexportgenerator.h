@@ -23,6 +23,7 @@ public:
     void generateSnapshotJsons(QString snapshotDir);
     QByteArray getVeinDump();
     QByteArray getDspMemDump();
+    QByteArray getDspVarDump();
     QByteArray getSecUnitDump();
     int getModuleConfigWriteCounts() const;
     QList<TestModuleManager::TModuleInstances> getInstanceCountsOnModulesDestroyed();

@@ -163,6 +163,18 @@ TestDspInterfacePtr TestFactoryServiceInterfaces::getInjectableInterface(DspInte
     return nullptr;
 }
 
+QMap<int, QList<TestDspInterfacePtr>> TestFactoryServiceInterfaces::getAllInterfaces()
+{
+    QMap<int, QList<TestDspInterfacePtr>> interfaces;
+    for(auto entityIter=m_dspInterfacesByCreatedBy.cbegin(); entityIter!=m_dspInterfacesByCreatedBy.cend(); entityIter++) {
+        int entityId = entityIter.key();
+        QMap<DspInterfaceCreatedBy, TestDspInterfacePtr> entityInterfaces = entityIter.value();
+        for(auto createdByIter=entityInterfaces.cbegin(); createdByIter!=entityInterfaces.cend(); createdByIter++)
+            interfaces[entityId].append(createdByIter.value());
+    }
+    return interfaces;
+}
+
 Zera::DspInterfacePtr TestFactoryServiceInterfaces::createDspInterfaceCommon(int entityId,
                                                                              DspInterfaceInjectableTypes injectType,
                                                                              DspInterfaceCreatedBy createdBy,

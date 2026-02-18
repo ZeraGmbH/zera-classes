@@ -34,6 +34,15 @@
         <file>dspMemDumps/mt310s2-emob-session-dc.json</file>
         <file>dspMemDumps/mt310s2-meas-session.json</file>
 
+        <file>dspVarDumps/com5003-ced-session.json</file>
+        <file>dspVarDumps/com5003-meas-session.json</file>
+        <file>dspVarDumps/com5003-perphase-session.json</file>
+        <file>dspVarDumps/com5003-ref-session.json</file>
+        <file>dspVarDumps/mt310s2-dc-session.json</file>
+        <file>dspVarDumps/mt310s2-emob-session-ac.json</file>
+        <file>dspVarDumps/mt310s2-emob-session-dc.json</file>
+        <file>dspVarDumps/mt310s2-meas-session.json</file>
+
         <file>secUnitDumps/com5003-ced-session.json</file>
         <file>secUnitDumps/com5003-meas-session.json</file>
         <file>secUnitDumps/com5003-perphase-session.json</file>
