@@ -1,7 +1,7 @@
 {
     "0": {
         "DevMode": 0,
-        "Entities": "0;2;1000;1020;1030;1040;1050;1060;1070;1071;1072;1073;1110;1111;1120;1130;1150;1190;1200;1300;1400;1500;1700;9999",
+        "Entities": "0;2;1000;1020;1030;1040;1050;1055;1060;1070;1071;1072;1073;1110;1111;1120;1130;1150;1190;1200;1300;1400;1500;1700;9999",
         "ModulesPaused": 0,
         "Session": "mt310s2-dc-session.json",
         "SessionsAvailable": "mt310s2-meas-session.json;mt310s2-emob-session-ac.json;mt310s2-emob-session-dc.json;mt310s2-dc-session.json",
@@ -135,6 +135,20 @@
         "ACT_RFIELD": 132,
         "PAR_Interval": 1,
         "PAR_RefChannel": "UL1",
+        "SIG_Measuring": 1
+    },
+    "1055": {
+        "ACT_PERIOD_VALUES1": "",
+        "ACT_PERIOD_VALUES2": "",
+        "ACT_PERIOD_VALUES3": "",
+        "ACT_PERIOD_VALUES4": "",
+        "ACT_PERIOD_VALUES5": "",
+        "ACT_VALUE1": "",
+        "ACT_VALUE2": "",
+        "ACT_VALUE3": "",
+        "ACT_VALUE4": "",
+        "ACT_VALUE5": "",
+        "PAR_PeriodCount": 13,
         "SIG_Measuring": 1
     },
     "1060": {

@@ -9,6 +9,7 @@
             1030,
             1040,
             1050,
+            1055,
             1060,
             1073,
             1110,
@@ -1612,6 +1613,103 @@
         },
         "PAR_Interval": 1,
         "PAR_RefChannel": "UL1",
+        "SIG_Measuring": 1
+    },
+    "1055": {
+        "ACT_PERIOD_VALUES1": null,
+        "ACT_PERIOD_VALUES2": null,
+        "ACT_VALUE1": null,
+        "ACT_VALUE2": null,
+        "EntityName": "PeriodAverageModule1",
+        "INF_ModuleInterface": {
+            "ComponentInfo": {
+                "ACT_PERIOD_VALUES1": {
+                    "ChannelName": "UAUX",
+                    "Description": "<skipped>",
+                    "Unit": "V"
+                },
+                "ACT_PERIOD_VALUES2": {
+                    "ChannelName": "IAUX",
+                    "Description": "<skipped>",
+                    "Unit": "A"
+                },
+                "ACT_VALUE1": {
+                    "ChannelName": "UAUX",
+                    "Description": "<skipped>",
+                    "Unit": "V"
+                },
+                "ACT_VALUE2": {
+                    "ChannelName": "IAUX",
+                    "Description": "<skipped>",
+                    "Unit": "A"
+                },
+                "EntityName": {
+                    "Description": "<skipped>"
+                },
+                "INF_ModuleInterface": {
+                    "Description": "<skipped>"
+                },
+                "PAR_PeriodCount": {
+                    "Description": "<skipped>",
+                    "Validation": {
+                        "Data": [
+                            5,
+                            13,
+                            0
+                        ],
+                        "Type": "INTEGER"
+                    }
+                },
+                "SIG_Measuring": {
+                    "Description": "<skipped>"
+                }
+            },
+            "ModuleInfo": {
+                "Description": "This module measures per period average (DC) values)",
+                "Name": "PeriodAverageModule1"
+            },
+            "SCPIInfo": {
+                "Cmd": [
+                    [
+                        "MEASURE",
+                        "UAUX",
+                        "8",
+                        "ACT_VALUE1",
+                        "0"
+                    ],
+                    [
+                        "MEASURE",
+                        "PUAUX",
+                        "8",
+                        "ACT_PERIOD_VALUES1",
+                        "0"
+                    ],
+                    [
+                        "MEASURE",
+                        "IAUX",
+                        "8",
+                        "ACT_VALUE2",
+                        "0"
+                    ],
+                    [
+                        "MEASURE",
+                        "PIAUX",
+                        "8",
+                        "ACT_PERIOD_VALUES2",
+                        "0"
+                    ],
+                    [
+                        "CONFIGURATION",
+                        "PCOUNT",
+                        "10",
+                        "PAR_PeriodCount",
+                        "0"
+                    ]
+                ],
+                "Name": "PAV1"
+            }
+        },
+        "PAR_PeriodCount": 13,
         "SIG_Measuring": 1
     },
     "1060": {

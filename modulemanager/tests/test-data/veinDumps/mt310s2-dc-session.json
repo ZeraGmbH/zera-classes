@@ -9,6 +9,7 @@
             1030,
             1040,
             1050,
+            1055,
             1060,
             1070,
             1071,
@@ -1612,6 +1613,181 @@
         },
         "PAR_Interval": 1,
         "PAR_RefChannel": "UL1",
+        "SIG_Measuring": 1
+    },
+    "1055": {
+        "ACT_PERIOD_VALUES1": null,
+        "ACT_PERIOD_VALUES2": null,
+        "ACT_PERIOD_VALUES3": null,
+        "ACT_PERIOD_VALUES4": null,
+        "ACT_PERIOD_VALUES5": null,
+        "ACT_VALUE1": null,
+        "ACT_VALUE2": null,
+        "ACT_VALUE3": null,
+        "ACT_VALUE4": null,
+        "ACT_VALUE5": null,
+        "EntityName": "PeriodAverageModule1",
+        "INF_ModuleInterface": {
+            "ComponentInfo": {
+                "ACT_PERIOD_VALUES1": {
+                    "ChannelName": "UL1",
+                    "Description": "<skipped>",
+                    "Unit": "V"
+                },
+                "ACT_PERIOD_VALUES2": {
+                    "ChannelName": "UL2",
+                    "Description": "<skipped>",
+                    "Unit": "V"
+                },
+                "ACT_PERIOD_VALUES3": {
+                    "ChannelName": "UL3",
+                    "Description": "<skipped>",
+                    "Unit": "V"
+                },
+                "ACT_PERIOD_VALUES4": {
+                    "ChannelName": "UAUX",
+                    "Description": "<skipped>",
+                    "Unit": "V"
+                },
+                "ACT_PERIOD_VALUES5": {
+                    "ChannelName": "IAUX",
+                    "Description": "<skipped>",
+                    "Unit": "A"
+                },
+                "ACT_VALUE1": {
+                    "ChannelName": "UL1",
+                    "Description": "<skipped>",
+                    "Unit": "V"
+                },
+                "ACT_VALUE2": {
+                    "ChannelName": "UL2",
+                    "Description": "<skipped>",
+                    "Unit": "V"
+                },
+                "ACT_VALUE3": {
+                    "ChannelName": "UL3",
+                    "Description": "<skipped>",
+                    "Unit": "V"
+                },
+                "ACT_VALUE4": {
+                    "ChannelName": "UAUX",
+                    "Description": "<skipped>",
+                    "Unit": "V"
+                },
+                "ACT_VALUE5": {
+                    "ChannelName": "IAUX",
+                    "Description": "<skipped>",
+                    "Unit": "A"
+                },
+                "EntityName": {
+                    "Description": "<skipped>"
+                },
+                "INF_ModuleInterface": {
+                    "Description": "<skipped>"
+                },
+                "PAR_PeriodCount": {
+                    "Description": "<skipped>",
+                    "Validation": {
+                        "Data": [
+                            5,
+                            13,
+                            0
+                        ],
+                        "Type": "INTEGER"
+                    }
+                },
+                "SIG_Measuring": {
+                    "Description": "<skipped>"
+                }
+            },
+            "ModuleInfo": {
+                "Description": "This module measures per period average (DC) values)",
+                "Name": "PeriodAverageModule1"
+            },
+            "SCPIInfo": {
+                "Cmd": [
+                    [
+                        "MEASURE",
+                        "U1",
+                        "8",
+                        "ACT_VALUE1",
+                        "0"
+                    ],
+                    [
+                        "MEASURE",
+                        "PU1",
+                        "8",
+                        "ACT_PERIOD_VALUES1",
+                        "0"
+                    ],
+                    [
+                        "MEASURE",
+                        "U2",
+                        "8",
+                        "ACT_VALUE2",
+                        "0"
+                    ],
+                    [
+                        "MEASURE",
+                        "PU2",
+                        "8",
+                        "ACT_PERIOD_VALUES2",
+                        "0"
+                    ],
+                    [
+                        "MEASURE",
+                        "U3",
+                        "8",
+                        "ACT_VALUE3",
+                        "0"
+                    ],
+                    [
+                        "MEASURE",
+                        "PU3",
+                        "8",
+                        "ACT_PERIOD_VALUES3",
+                        "0"
+                    ],
+                    [
+                        "MEASURE",
+                        "UAUX",
+                        "8",
+                        "ACT_VALUE4",
+                        "0"
+                    ],
+                    [
+                        "MEASURE",
+                        "PUAUX",
+                        "8",
+                        "ACT_PERIOD_VALUES4",
+                        "0"
+                    ],
+                    [
+                        "MEASURE",
+                        "IAUX",
+                        "8",
+                        "ACT_VALUE5",
+                        "0"
+                    ],
+                    [
+                        "MEASURE",
+                        "PIAUX",
+                        "8",
+                        "ACT_PERIOD_VALUES5",
+                        "0"
+                    ],
+                    [
+                        "CONFIGURATION",
+                        "PCOUNT",
+                        "10",
+                        "PAR_PeriodCount",
+                        "0"
+                    ]
+                ],
+                "Name": "PAV1"
+            }
+        },
+        "PAR_PeriodCount": 13,
         "SIG_Measuring": 1
     },
     "1060": {
