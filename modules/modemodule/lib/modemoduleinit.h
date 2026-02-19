@@ -53,8 +53,6 @@ private:
     Zera::DspInterfacePtr m_dspInterface; // our interface to dsp
     Zera::ProxyClientPtr m_dspClient;
 
-    cDspMeasData* m_pCorrectionDSP;
-
     // statemachine for activating gets the following states
     QState m_pcbserverConnectionState; // we try to get a connection to our pcb server
     QState m_setModeState;
