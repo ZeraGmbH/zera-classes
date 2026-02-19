@@ -3,7 +3,202 @@
         "1-MemGroups": {
         },
         "2-CmdList": [
-        ]
+        ],
+        "3-VarsWritten": {
+            "WriteNo: 0000 / Handle:Variable: GainCorrection:GAINCORRECTION": 1,
+            "WriteNo: 0000 / Handle:Variable: GainCorrection:GAINCORRECTION+0001": 1,
+            "WriteNo: 0000 / Handle:Variable: GainCorrection:GAINCORRECTION+0002": 1,
+            "WriteNo: 0000 / Handle:Variable: GainCorrection:GAINCORRECTION+0003": 1,
+            "WriteNo: 0000 / Handle:Variable: GainCorrection:GAINCORRECTION+0004": 1,
+            "WriteNo: 0000 / Handle:Variable: GainCorrection:GAINCORRECTION+0005": 1,
+            "WriteNo: 0000 / Handle:Variable: GainCorrection:GAINCORRECTION+0006": 1,
+            "WriteNo: 0000 / Handle:Variable: GainCorrection:GAINCORRECTION+0007": 1,
+            "WriteNo: 0000 / Handle:Variable: GainCorrection:GAINCORRECTION+0008": 1,
+            "WriteNo: 0000 / Handle:Variable: GainCorrection:GAINCORRECTION+0009": 1,
+            "WriteNo: 0000 / Handle:Variable: GainCorrection:GAINCORRECTION+0010": 1,
+            "WriteNo: 0000 / Handle:Variable: GainCorrection:GAINCORRECTION+0011": 1,
+            "WriteNo: 0000 / Handle:Variable: GainCorrection:GAINCORRECTION+0012": 1,
+            "WriteNo: 0000 / Handle:Variable: GainCorrection:GAINCORRECTION+0013": 1,
+            "WriteNo: 0000 / Handle:Variable: GainCorrection:GAINCORRECTION+0014": 1,
+            "WriteNo: 0000 / Handle:Variable: GainCorrection:GAINCORRECTION+0015": 1,
+            "WriteNo: 0000 / Handle:Variable: GainCorrection:GAINCORRECTION+0016": 1,
+            "WriteNo: 0000 / Handle:Variable: GainCorrection:GAINCORRECTION+0017": 1,
+            "WriteNo: 0000 / Handle:Variable: GainCorrection:GAINCORRECTION+0018": 1,
+            "WriteNo: 0000 / Handle:Variable: GainCorrection:GAINCORRECTION+0019": 1,
+            "WriteNo: 0000 / Handle:Variable: GainCorrection:GAINCORRECTION+0020": 1,
+            "WriteNo: 0000 / Handle:Variable: GainCorrection:GAINCORRECTION+0021": 1,
+            "WriteNo: 0000 / Handle:Variable: GainCorrection:GAINCORRECTION+0022": 1,
+            "WriteNo: 0000 / Handle:Variable: GainCorrection:GAINCORRECTION+0023": 1,
+            "WriteNo: 0000 / Handle:Variable: GainCorrection:GAINCORRECTION+0024": 1,
+            "WriteNo: 0000 / Handle:Variable: GainCorrection:GAINCORRECTION+0025": 1,
+            "WriteNo: 0000 / Handle:Variable: GainCorrection:GAINCORRECTION+0026": 1,
+            "WriteNo: 0000 / Handle:Variable: GainCorrection:GAINCORRECTION+0027": 1,
+            "WriteNo: 0000 / Handle:Variable: GainCorrection:GAINCORRECTION+0028": 1,
+            "WriteNo: 0000 / Handle:Variable: GainCorrection:GAINCORRECTION+0029": 1,
+            "WriteNo: 0000 / Handle:Variable: GainCorrection:GAINCORRECTION+0030": 1,
+            "WriteNo: 0000 / Handle:Variable: GainCorrection:GAINCORRECTION+0031": 1,
+            "WriteNo: 0001 / Handle:Variable: GainCorrection:GAINCORRECTION2": 1,
+            "WriteNo: 0001 / Handle:Variable: GainCorrection:GAINCORRECTION2+0001": 1,
+            "WriteNo: 0001 / Handle:Variable: GainCorrection:GAINCORRECTION2+0002": 1,
+            "WriteNo: 0001 / Handle:Variable: GainCorrection:GAINCORRECTION2+0003": 1,
+            "WriteNo: 0001 / Handle:Variable: GainCorrection:GAINCORRECTION2+0004": 1,
+            "WriteNo: 0001 / Handle:Variable: GainCorrection:GAINCORRECTION2+0005": 1,
+            "WriteNo: 0001 / Handle:Variable: GainCorrection:GAINCORRECTION2+0006": 1,
+            "WriteNo: 0001 / Handle:Variable: GainCorrection:GAINCORRECTION2+0007": 1,
+            "WriteNo: 0001 / Handle:Variable: GainCorrection:GAINCORRECTION2+0008": 1,
+            "WriteNo: 0001 / Handle:Variable: GainCorrection:GAINCORRECTION2+0009": 1,
+            "WriteNo: 0001 / Handle:Variable: GainCorrection:GAINCORRECTION2+0010": 1,
+            "WriteNo: 0001 / Handle:Variable: GainCorrection:GAINCORRECTION2+0011": 1,
+            "WriteNo: 0001 / Handle:Variable: GainCorrection:GAINCORRECTION2+0012": 1,
+            "WriteNo: 0001 / Handle:Variable: GainCorrection:GAINCORRECTION2+0013": 1,
+            "WriteNo: 0001 / Handle:Variable: GainCorrection:GAINCORRECTION2+0014": 1,
+            "WriteNo: 0001 / Handle:Variable: GainCorrection:GAINCORRECTION2+0015": 1,
+            "WriteNo: 0001 / Handle:Variable: GainCorrection:GAINCORRECTION2+0016": 1,
+            "WriteNo: 0001 / Handle:Variable: GainCorrection:GAINCORRECTION2+0017": 1,
+            "WriteNo: 0001 / Handle:Variable: GainCorrection:GAINCORRECTION2+0018": 1,
+            "WriteNo: 0001 / Handle:Variable: GainCorrection:GAINCORRECTION2+0019": 1,
+            "WriteNo: 0001 / Handle:Variable: GainCorrection:GAINCORRECTION2+0020": 1,
+            "WriteNo: 0001 / Handle:Variable: GainCorrection:GAINCORRECTION2+0021": 1,
+            "WriteNo: 0001 / Handle:Variable: GainCorrection:GAINCORRECTION2+0022": 1,
+            "WriteNo: 0001 / Handle:Variable: GainCorrection:GAINCORRECTION2+0023": 1,
+            "WriteNo: 0001 / Handle:Variable: GainCorrection:GAINCORRECTION2+0024": 1,
+            "WriteNo: 0001 / Handle:Variable: GainCorrection:GAINCORRECTION2+0025": 1,
+            "WriteNo: 0001 / Handle:Variable: GainCorrection:GAINCORRECTION2+0026": 1,
+            "WriteNo: 0001 / Handle:Variable: GainCorrection:GAINCORRECTION2+0027": 1,
+            "WriteNo: 0001 / Handle:Variable: GainCorrection:GAINCORRECTION2+0028": 1,
+            "WriteNo: 0001 / Handle:Variable: GainCorrection:GAINCORRECTION2+0029": 1,
+            "WriteNo: 0001 / Handle:Variable: GainCorrection:GAINCORRECTION2+0030": 1,
+            "WriteNo: 0001 / Handle:Variable: GainCorrection:GAINCORRECTION2+0031": 1,
+            "WriteNo: 0002 / Handle:Variable: PhaseCorrection:PHASECORRECTION": 0,
+            "WriteNo: 0002 / Handle:Variable: PhaseCorrection:PHASECORRECTION+0001": 0,
+            "WriteNo: 0002 / Handle:Variable: PhaseCorrection:PHASECORRECTION+0002": 0,
+            "WriteNo: 0002 / Handle:Variable: PhaseCorrection:PHASECORRECTION+0003": 0,
+            "WriteNo: 0002 / Handle:Variable: PhaseCorrection:PHASECORRECTION+0004": 0,
+            "WriteNo: 0002 / Handle:Variable: PhaseCorrection:PHASECORRECTION+0005": 0,
+            "WriteNo: 0002 / Handle:Variable: PhaseCorrection:PHASECORRECTION+0006": 0,
+            "WriteNo: 0002 / Handle:Variable: PhaseCorrection:PHASECORRECTION+0007": 0,
+            "WriteNo: 0002 / Handle:Variable: PhaseCorrection:PHASECORRECTION+0008": 0,
+            "WriteNo: 0002 / Handle:Variable: PhaseCorrection:PHASECORRECTION+0009": 0,
+            "WriteNo: 0002 / Handle:Variable: PhaseCorrection:PHASECORRECTION+0010": 0,
+            "WriteNo: 0002 / Handle:Variable: PhaseCorrection:PHASECORRECTION+0011": 0,
+            "WriteNo: 0002 / Handle:Variable: PhaseCorrection:PHASECORRECTION+0012": 0,
+            "WriteNo: 0002 / Handle:Variable: PhaseCorrection:PHASECORRECTION+0013": 0,
+            "WriteNo: 0002 / Handle:Variable: PhaseCorrection:PHASECORRECTION+0014": 0,
+            "WriteNo: 0002 / Handle:Variable: PhaseCorrection:PHASECORRECTION+0015": 0,
+            "WriteNo: 0002 / Handle:Variable: PhaseCorrection:PHASECORRECTION+0016": 0,
+            "WriteNo: 0002 / Handle:Variable: PhaseCorrection:PHASECORRECTION+0017": 0,
+            "WriteNo: 0002 / Handle:Variable: PhaseCorrection:PHASECORRECTION+0018": 0,
+            "WriteNo: 0002 / Handle:Variable: PhaseCorrection:PHASECORRECTION+0019": 0,
+            "WriteNo: 0002 / Handle:Variable: PhaseCorrection:PHASECORRECTION+0020": 0,
+            "WriteNo: 0002 / Handle:Variable: PhaseCorrection:PHASECORRECTION+0021": 0,
+            "WriteNo: 0002 / Handle:Variable: PhaseCorrection:PHASECORRECTION+0022": 0,
+            "WriteNo: 0002 / Handle:Variable: PhaseCorrection:PHASECORRECTION+0023": 0,
+            "WriteNo: 0002 / Handle:Variable: PhaseCorrection:PHASECORRECTION+0024": 0,
+            "WriteNo: 0002 / Handle:Variable: PhaseCorrection:PHASECORRECTION+0025": 0,
+            "WriteNo: 0002 / Handle:Variable: PhaseCorrection:PHASECORRECTION+0026": 0,
+            "WriteNo: 0002 / Handle:Variable: PhaseCorrection:PHASECORRECTION+0027": 0,
+            "WriteNo: 0002 / Handle:Variable: PhaseCorrection:PHASECORRECTION+0028": 0,
+            "WriteNo: 0002 / Handle:Variable: PhaseCorrection:PHASECORRECTION+0029": 0,
+            "WriteNo: 0002 / Handle:Variable: PhaseCorrection:PHASECORRECTION+0030": 0,
+            "WriteNo: 0002 / Handle:Variable: PhaseCorrection:PHASECORRECTION+0031": 0,
+            "WriteNo: 0003 / Handle:Variable: PhaseCorrection:PHASECORRECTION2": 0,
+            "WriteNo: 0003 / Handle:Variable: PhaseCorrection:PHASECORRECTION2+0001": 0,
+            "WriteNo: 0003 / Handle:Variable: PhaseCorrection:PHASECORRECTION2+0002": 0,
+            "WriteNo: 0003 / Handle:Variable: PhaseCorrection:PHASECORRECTION2+0003": 0,
+            "WriteNo: 0003 / Handle:Variable: PhaseCorrection:PHASECORRECTION2+0004": 0,
+            "WriteNo: 0003 / Handle:Variable: PhaseCorrection:PHASECORRECTION2+0005": 0,
+            "WriteNo: 0003 / Handle:Variable: PhaseCorrection:PHASECORRECTION2+0006": 0,
+            "WriteNo: 0003 / Handle:Variable: PhaseCorrection:PHASECORRECTION2+0007": 0,
+            "WriteNo: 0003 / Handle:Variable: PhaseCorrection:PHASECORRECTION2+0008": 0,
+            "WriteNo: 0003 / Handle:Variable: PhaseCorrection:PHASECORRECTION2+0009": 0,
+            "WriteNo: 0003 / Handle:Variable: PhaseCorrection:PHASECORRECTION2+0010": 0,
+            "WriteNo: 0003 / Handle:Variable: PhaseCorrection:PHASECORRECTION2+0011": 0,
+            "WriteNo: 0003 / Handle:Variable: PhaseCorrection:PHASECORRECTION2+0012": 0,
+            "WriteNo: 0003 / Handle:Variable: PhaseCorrection:PHASECORRECTION2+0013": 0,
+            "WriteNo: 0003 / Handle:Variable: PhaseCorrection:PHASECORRECTION2+0014": 0,
+            "WriteNo: 0003 / Handle:Variable: PhaseCorrection:PHASECORRECTION2+0015": 0,
+            "WriteNo: 0003 / Handle:Variable: PhaseCorrection:PHASECORRECTION2+0016": 0,
+            "WriteNo: 0003 / Handle:Variable: PhaseCorrection:PHASECORRECTION2+0017": 0,
+            "WriteNo: 0003 / Handle:Variable: PhaseCorrection:PHASECORRECTION2+0018": 0,
+            "WriteNo: 0003 / Handle:Variable: PhaseCorrection:PHASECORRECTION2+0019": 0,
+            "WriteNo: 0003 / Handle:Variable: PhaseCorrection:PHASECORRECTION2+0020": 0,
+            "WriteNo: 0003 / Handle:Variable: PhaseCorrection:PHASECORRECTION2+0021": 0,
+            "WriteNo: 0003 / Handle:Variable: PhaseCorrection:PHASECORRECTION2+0022": 0,
+            "WriteNo: 0003 / Handle:Variable: PhaseCorrection:PHASECORRECTION2+0023": 0,
+            "WriteNo: 0003 / Handle:Variable: PhaseCorrection:PHASECORRECTION2+0024": 0,
+            "WriteNo: 0003 / Handle:Variable: PhaseCorrection:PHASECORRECTION2+0025": 0,
+            "WriteNo: 0003 / Handle:Variable: PhaseCorrection:PHASECORRECTION2+0026": 0,
+            "WriteNo: 0003 / Handle:Variable: PhaseCorrection:PHASECORRECTION2+0027": 0,
+            "WriteNo: 0003 / Handle:Variable: PhaseCorrection:PHASECORRECTION2+0028": 0,
+            "WriteNo: 0003 / Handle:Variable: PhaseCorrection:PHASECORRECTION2+0029": 0,
+            "WriteNo: 0003 / Handle:Variable: PhaseCorrection:PHASECORRECTION2+0030": 0,
+            "WriteNo: 0003 / Handle:Variable: PhaseCorrection:PHASECORRECTION2+0031": 0,
+            "WriteNo: 0004 / Handle:Variable: OffsetCorrection:OFFSETCORRECTION": 0,
+            "WriteNo: 0004 / Handle:Variable: OffsetCorrection:OFFSETCORRECTION+0001": 0,
+            "WriteNo: 0004 / Handle:Variable: OffsetCorrection:OFFSETCORRECTION+0002": 0,
+            "WriteNo: 0004 / Handle:Variable: OffsetCorrection:OFFSETCORRECTION+0003": 0,
+            "WriteNo: 0004 / Handle:Variable: OffsetCorrection:OFFSETCORRECTION+0004": 0,
+            "WriteNo: 0004 / Handle:Variable: OffsetCorrection:OFFSETCORRECTION+0005": 0,
+            "WriteNo: 0004 / Handle:Variable: OffsetCorrection:OFFSETCORRECTION+0006": 0,
+            "WriteNo: 0004 / Handle:Variable: OffsetCorrection:OFFSETCORRECTION+0007": 0,
+            "WriteNo: 0004 / Handle:Variable: OffsetCorrection:OFFSETCORRECTION+0008": 0,
+            "WriteNo: 0004 / Handle:Variable: OffsetCorrection:OFFSETCORRECTION+0009": 0,
+            "WriteNo: 0004 / Handle:Variable: OffsetCorrection:OFFSETCORRECTION+0010": 0,
+            "WriteNo: 0004 / Handle:Variable: OffsetCorrection:OFFSETCORRECTION+0011": 0,
+            "WriteNo: 0004 / Handle:Variable: OffsetCorrection:OFFSETCORRECTION+0012": 0,
+            "WriteNo: 0004 / Handle:Variable: OffsetCorrection:OFFSETCORRECTION+0013": 0,
+            "WriteNo: 0004 / Handle:Variable: OffsetCorrection:OFFSETCORRECTION+0014": 0,
+            "WriteNo: 0004 / Handle:Variable: OffsetCorrection:OFFSETCORRECTION+0015": 0,
+            "WriteNo: 0004 / Handle:Variable: OffsetCorrection:OFFSETCORRECTION+0016": 0,
+            "WriteNo: 0004 / Handle:Variable: OffsetCorrection:OFFSETCORRECTION+0017": 0,
+            "WriteNo: 0004 / Handle:Variable: OffsetCorrection:OFFSETCORRECTION+0018": 0,
+            "WriteNo: 0004 / Handle:Variable: OffsetCorrection:OFFSETCORRECTION+0019": 0,
+            "WriteNo: 0004 / Handle:Variable: OffsetCorrection:OFFSETCORRECTION+0020": 0,
+            "WriteNo: 0004 / Handle:Variable: OffsetCorrection:OFFSETCORRECTION+0021": 0,
+            "WriteNo: 0004 / Handle:Variable: OffsetCorrection:OFFSETCORRECTION+0022": 0,
+            "WriteNo: 0004 / Handle:Variable: OffsetCorrection:OFFSETCORRECTION+0023": 0,
+            "WriteNo: 0004 / Handle:Variable: OffsetCorrection:OFFSETCORRECTION+0024": 0,
+            "WriteNo: 0004 / Handle:Variable: OffsetCorrection:OFFSETCORRECTION+0025": 0,
+            "WriteNo: 0004 / Handle:Variable: OffsetCorrection:OFFSETCORRECTION+0026": 0,
+            "WriteNo: 0004 / Handle:Variable: OffsetCorrection:OFFSETCORRECTION+0027": 0,
+            "WriteNo: 0004 / Handle:Variable: OffsetCorrection:OFFSETCORRECTION+0028": 0,
+            "WriteNo: 0004 / Handle:Variable: OffsetCorrection:OFFSETCORRECTION+0029": 0,
+            "WriteNo: 0004 / Handle:Variable: OffsetCorrection:OFFSETCORRECTION+0030": 0,
+            "WriteNo: 0004 / Handle:Variable: OffsetCorrection:OFFSETCORRECTION+0031": 0,
+            "WriteNo: 0005 / Handle:Variable: OffsetCorrection:OFFSETCORRECTION2": 0,
+            "WriteNo: 0005 / Handle:Variable: OffsetCorrection:OFFSETCORRECTION2+0001": 0,
+            "WriteNo: 0005 / Handle:Variable: OffsetCorrection:OFFSETCORRECTION2+0002": 0,
+            "WriteNo: 0005 / Handle:Variable: OffsetCorrection:OFFSETCORRECTION2+0003": 0,
+            "WriteNo: 0005 / Handle:Variable: OffsetCorrection:OFFSETCORRECTION2+0004": 0,
+            "WriteNo: 0005 / Handle:Variable: OffsetCorrection:OFFSETCORRECTION2+0005": 0,
+            "WriteNo: 0005 / Handle:Variable: OffsetCorrection:OFFSETCORRECTION2+0006": 0,
+            "WriteNo: 0005 / Handle:Variable: OffsetCorrection:OFFSETCORRECTION2+0007": 0,
+            "WriteNo: 0005 / Handle:Variable: OffsetCorrection:OFFSETCORRECTION2+0008": 0,
+            "WriteNo: 0005 / Handle:Variable: OffsetCorrection:OFFSETCORRECTION2+0009": 0,
+            "WriteNo: 0005 / Handle:Variable: OffsetCorrection:OFFSETCORRECTION2+0010": 0,
+            "WriteNo: 0005 / Handle:Variable: OffsetCorrection:OFFSETCORRECTION2+0011": 0,
+            "WriteNo: 0005 / Handle:Variable: OffsetCorrection:OFFSETCORRECTION2+0012": 0,
+            "WriteNo: 0005 / Handle:Variable: OffsetCorrection:OFFSETCORRECTION2+0013": 0,
+            "WriteNo: 0005 / Handle:Variable: OffsetCorrection:OFFSETCORRECTION2+0014": 0,
+            "WriteNo: 0005 / Handle:Variable: OffsetCorrection:OFFSETCORRECTION2+0015": 0,
+            "WriteNo: 0005 / Handle:Variable: OffsetCorrection:OFFSETCORRECTION2+0016": 0,
+            "WriteNo: 0005 / Handle:Variable: OffsetCorrection:OFFSETCORRECTION2+0017": 0,
+            "WriteNo: 0005 / Handle:Variable: OffsetCorrection:OFFSETCORRECTION2+0018": 0,
+            "WriteNo: 0005 / Handle:Variable: OffsetCorrection:OFFSETCORRECTION2+0019": 0,
+            "WriteNo: 0005 / Handle:Variable: OffsetCorrection:OFFSETCORRECTION2+0020": 0,
+            "WriteNo: 0005 / Handle:Variable: OffsetCorrection:OFFSETCORRECTION2+0021": 0,
+            "WriteNo: 0005 / Handle:Variable: OffsetCorrection:OFFSETCORRECTION2+0022": 0,
+            "WriteNo: 0005 / Handle:Variable: OffsetCorrection:OFFSETCORRECTION2+0023": 0,
+            "WriteNo: 0005 / Handle:Variable: OffsetCorrection:OFFSETCORRECTION2+0024": 0,
+            "WriteNo: 0005 / Handle:Variable: OffsetCorrection:OFFSETCORRECTION2+0025": 0,
+            "WriteNo: 0005 / Handle:Variable: OffsetCorrection:OFFSETCORRECTION2+0026": 0,
+            "WriteNo: 0005 / Handle:Variable: OffsetCorrection:OFFSETCORRECTION2+0027": 0,
+            "WriteNo: 0005 / Handle:Variable: OffsetCorrection:OFFSETCORRECTION2+0028": 0,
+            "WriteNo: 0005 / Handle:Variable: OffsetCorrection:OFFSETCORRECTION2+0029": 0,
+            "WriteNo: 0005 / Handle:Variable: OffsetCorrection:OFFSETCORRECTION2+0030": 0,
+            "WriteNo: 0005 / Handle:Variable: OffsetCorrection:OFFSETCORRECTION2+0031": 0,
+            "WriteNo: 0006 / Handle:Variable: SubDC:SUBDC": 0
+        }
     },
     "1020": {
         "1-MemGroups": {
@@ -25,7 +220,10 @@
             }
         },
         "2-CmdList": [
-        ]
+        ],
+        "3-VarsWritten": {
+            "WriteNo: 0000 / Handle:Variable: SubDC:SUBDC": 255
+        }
     },
     "1040": {
         "1-MemGroups": {
@@ -141,7 +339,9 @@
             "DSPINTTRIGGER(0x0,0x0)",
             "DEACTIVATECHAIN(1,0x0102)",
             "STOPCHAIN(1,0x0102)"
-        ]
+        ],
+        "3-VarsWritten": {
+        }
     },
     "1050": {
         "1-MemGroups": {
@@ -246,7 +446,9 @@
             "DSPINTTRIGGER(0x0,0x0)",
             "DEACTIVATECHAIN(1,0x0102)",
             "STOPCHAIN(1,0x0102)"
-        ]
+        ],
+        "3-VarsWritten": {
+        }
     },
     "1060": {
         "1-MemGroups": {
@@ -410,7 +612,9 @@
             "DSPINTTRIGGER(0x0,0x0)",
             "DEACTIVATECHAIN(1,0x0102)",
             "STOPCHAIN(1,0x0102)"
-        ]
+        ],
+        "3-VarsWritten": {
+        }
     },
     "1070": {
         "1-MemGroups": {
@@ -673,7 +877,11 @@
             "DSPINTTRIGGER(0x0,0x0)",
             "DEACTIVATECHAIN(1,0x0108)",
             "STOPCHAIN(1,0x0108)"
-        ]
+        ],
+        "3-VarsWritten": {
+            "WriteNo: 0000 / Handle:Variable: FrequencyScale:FREQSCALE": 150120000,
+            "WriteNo: 0001 / Handle:Variable: QRefScale:NOMPOWER": 2500
+        }
     },
     "1071": {
         "1-MemGroups": {
@@ -961,7 +1169,11 @@
             "DSPINTTRIGGER(0x0,0x0)",
             "DEACTIVATECHAIN(1,0x0108)",
             "STOPCHAIN(1,0x0108)"
-        ]
+        ],
+        "3-VarsWritten": {
+            "WriteNo: 0000 / Handle:Variable: FrequencyScale:FREQSCALE": 150120000,
+            "WriteNo: 0001 / Handle:Variable: QRefScale:NOMPOWER": 2500
+        }
     },
     "1072": {
         "1-MemGroups": {
@@ -1257,7 +1469,11 @@
             "DSPINTTRIGGER(0x0,0x0)",
             "DEACTIVATECHAIN(1,0x010A)",
             "STOPCHAIN(1,0x010A)"
-        ]
+        ],
+        "3-VarsWritten": {
+            "WriteNo: 0000 / Handle:Variable: FrequencyScale:FREQSCALE": 150120000,
+            "WriteNo: 0001 / Handle:Variable: QRefScale:NOMPOWER": 2500
+        }
     },
     "1073": {
         "1-MemGroups": {
@@ -1670,7 +1886,11 @@
             "DSPINTTRIGGER(0x0,0x0)",
             "DEACTIVATECHAIN(1,0x0113)",
             "STOPCHAIN(1,0x0113)"
-        ]
+        ],
+        "3-VarsWritten": {
+            "WriteNo: 0000 / Handle:Variable: FrequencyScale:FREQSCALE": 150120000,
+            "WriteNo: 0001 / Handle:Variable: QRefScale:NOMPOWER": 2500
+        }
     },
     "1078": {
         "1-MemGroups": {
@@ -1935,7 +2155,10 @@
             "DSPINTTRIGGER(0x0,0x0)",
             "DEACTIVATECHAIN(1,0x0107)",
             "STOPCHAIN(1,0x0107)"
-        ]
+        ],
+        "3-VarsWritten": {
+            "WriteNo: 0000 / Handle:Variable: QRefScale:NOMPOWER": 2500
+        }
     },
     "1079": {
         "1-MemGroups": {
@@ -2191,7 +2414,10 @@
             "DSPINTTRIGGER(0x0,0x0)",
             "DEACTIVATECHAIN(1,0x0107)",
             "STOPCHAIN(1,0x0107)"
-        ]
+        ],
+        "3-VarsWritten": {
+            "WriteNo: 0000 / Handle:Variable: QRefScale:NOMPOWER": 2500
+        }
     },
     "1110": {
         "1-MemGroups": {
@@ -2290,7 +2516,9 @@
             "DSPINTTRIGGER(0x0,0x4)",
             "DEACTIVATECHAIN(1,0x0102)",
             "STOPCHAIN(1,0x0102)"
-        ]
+        ],
+        "3-VarsWritten": {
+        }
     },
     "1111": {
         "1-MemGroups": {
@@ -2389,7 +2617,9 @@
             "DSPINTTRIGGER(0x0,0x4)",
             "DEACTIVATECHAIN(1,0x0102)",
             "STOPCHAIN(1,0x0102)"
-        ]
+        ],
+        "3-VarsWritten": {
+        }
     },
     "1120": {
         "1-MemGroups": {
@@ -2519,6 +2749,8 @@
             "DSPINTTRIGGER(0x0,0x6)",
             "DEACTIVATECHAIN(1,0x0102)",
             "STOPCHAIN(1,0x0102)"
-        ]
+        ],
+        "3-VarsWritten": {
+        }
     }
 }

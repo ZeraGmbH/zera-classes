@@ -117,7 +117,7 @@ QByteArray SessionExportGenerator::getDspVarDump()
         QString entityIdStr = QString("%1").arg(entityId);
         const QList<TestDspInterfacePtr> &entityInterfaces = entityIter.value();
         for (const TestDspInterfacePtr &interface : entityInterfaces) {
-            QJsonObject dump = interface->dumpAll();
+            QJsonObject dump = interface->dumpAll(true);
             json.insert(entityIdStr, dump);
         }
     }
