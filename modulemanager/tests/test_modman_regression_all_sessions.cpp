@@ -167,6 +167,7 @@ void test_modman_regression_all_sessions::checkObjectsProperlyDeleted()
     QCOMPARE(cumulatedInstanceCounts.m_activistCount, 0);
     QCOMPARE(cumulatedInstanceCounts.m_serviceInterfaceCount, 0);
     QCOMPARE(cumulatedInstanceCounts.m_dspVarCount, 0);
+    QCOMPARE(cumulatedInstanceCounts.m_dspMeasDataCount, 0);
     // 1. license, 2. Storage, 3.SystemModule, 4.Introspection, 5.VfLogger, 6. VfCmdEventHandlerSystemPtr(for VfClientRPCInvoker)
     constexpr int eventSystemCount = 6;
     QCOMPARE(cumulatedInstanceCounts.m_veinEventSystemCount, eventSystemCount);

@@ -24,8 +24,11 @@ public:
         int m_veinMetaDataCount = 0;
         int m_veinComponentCount = 0;
         int m_veinEventSystemCount = 0;
+
         int m_activistCount = 0;
         int m_serviceInterfaceCount = 0;
+
+        int m_dspMeasDataCount = 0;
         int m_dspVarCount = 0;
 
         int m_scpiNodes = 0;
