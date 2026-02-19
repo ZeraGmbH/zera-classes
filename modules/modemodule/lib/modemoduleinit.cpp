@@ -260,10 +260,10 @@ void cModeModuleInit::setSubDC()
 
     quint32 subdc = 0;
     // here we can set if sub dc or not
-    cDspMeasData* pSubDCMaskDSP = m_dspInterface->getMemHandle("SubDC");
-    pSubDCMaskDSP->addDspVar("SUBDC",1, DSPDATA::vDspIntVar, DSPDATA::dInt);
-    pSubDCMaskDSP->setVarData(QString("SUBDC:%1;").arg(subdc));
-    m_MsgNrCmdList[m_dspInterface->dspMemoryWrite(pSubDCMaskDSP)] = MODEMODINIT::subdcdsp;
+    m_pCorrectionDSP = m_dspInterface->getMemHandle("SubDC");
+    m_pCorrectionDSP->addDspVar("SUBDC",1, DSPDATA::vDspIntVar, DSPDATA::dInt);
+    m_pCorrectionDSP->setVarData(QString("SUBDC:%1;").arg(subdc));
+    m_MsgNrCmdList[m_dspInterface->dspMemoryWrite(m_pCorrectionDSP)] = MODEMODINIT::subdcdsp;
 }
 
 
