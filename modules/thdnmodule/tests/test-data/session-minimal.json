@@ -1,9 +1,0 @@
-{
-    "modules" : [
-        {
-            "name" : "thdnmodule",
-            "configFile" : "common-thdnmodule.xml",
-            "id": 1110
-        }
-    ]
-}
