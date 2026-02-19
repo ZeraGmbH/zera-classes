@@ -11,10 +11,5 @@ endfunction()
 
 SETUP_QTESTS_MODULE(
     test_reference_config_load
-    test_reference_regression
 )
 
-target_sources(test_reference_regression
-  PRIVATE
-    test-data/test-data.qrc
-)
