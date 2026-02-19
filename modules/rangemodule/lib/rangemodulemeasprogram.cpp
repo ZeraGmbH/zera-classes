@@ -125,11 +125,10 @@ void cRangeModuleMeasProgram::setDspVarList()
     m_pTmpDataDsp->addDspVar("MEASSIGNAL", samples, DSPDATA::vDspTemp);
     m_pTmpDataDsp->addDspVar("MAXRESET", 32, DSPDATA::vDspTemp);
     m_pTmpDataDsp->addDspVar("TISTART",1, DSPDATA::vDspTemp, DSPDATA::dInt);
-    m_pTmpDataDsp->addDspVar("CHXPEAK",channelMNames.count(), DSPDATA::vDspTemp);
-    m_pTmpDataDsp->addDspVar("CHXRMS",channelMNames.count(), DSPDATA::vDspTemp);
+    m_pTmpDataDsp->addDspVar("CHXPEAK", channelMNames.count(), DSPDATA::vDspTemp);
+    m_pTmpDataDsp->addDspVar("CHXRMS", channelMNames.count(), DSPDATA::vDspTemp);
     m_pTmpDataDsp->addDspVar("FREQ", 1, DSPDATA::vDspTemp);
-    m_pTmpDataDsp->addDspVar("FILTER",2*(2*channelMNames.count()+1),DSPDATA::vDspTemp); // filter workspace for scaled peak, rms and freq
-    m_pTmpDataDsp->addDspVar("N",1,DSPDATA::vDspTemp);
+    m_pTmpDataDsp->addDspVar("FILTER",DspBuffLen::avgFilterLen(2*channelMNames.count()+1), DSPDATA::vDspTemp); // filter workspace for scaled peak, rms and freq
 
     // a handle for parameter
     m_pParameterDSP =  m_dspInterface->getMemHandle("Parameter");
@@ -151,7 +150,7 @@ void cRangeModuleMeasProgram::setDspCmdList()
     int samples = m_pModule->getSharedChannelRangeObserver()->getSamplesPerPeriod();
     m_dspInterface->addCycListItem("STARTCHAIN(1,1,0x0101)"); // aktiv, prozessnr. (dummy),hauptkette 1 subkette 1 start
         m_dspInterface->addCycListItem(QString("CLEARN(%1,MEASSIGNAL)").arg(samples) ); // clear meassignal
-        m_dspInterface->addCycListItem(QString("CLEARN(%1,FILTER)").arg(2*(2*channelMNames.count()+1)+1) ); // clear the whole filter incl. count
+        m_dspInterface->addCycListItem(QString("CLEARN(%1,FILTER)").arg(DspBuffLen::avgFilterLen(2*channelMNames.count()+1)));
         m_dspInterface->addCycListItem(QString("SETVAL(TIPAR,%1)").arg(getConfData()->m_fMeasInterval*1000.0)); // initial ti time  /* todo variabel */
         m_dspInterface->addCycListItem("GETSTIME(TISTART)"); // einmal ti start setzen
         m_dspInterface->addCycListItem("CLKMODE(1)"); // clk mode auf 48bit einstellen
@@ -182,7 +181,7 @@ void cRangeModuleMeasProgram::setDspCmdList()
         for (int i = 0; i < channelMNames.count(); i++)
             m_dspInterface->addCycListItem(QString("SQRT(CHXRMSF+%1,CHXRMSF+%2)").arg(i).arg(i));
 
-        m_dspInterface->addCycListItem(QString("CLEARN(%1,FILTER)").arg(2*(2*channelMNames.count()+1)+1) );
+        m_dspInterface->addCycListItem(QString("CLEARN(%1,FILTER)").arg(DspBuffLen::avgFilterLen(2*channelMNames.count()+1)));
 
         m_dspInterface->addCycListItem("COPYDU(32,MAXIMUMSAMPLE,MAXRESET)"); // all raw adc maximum samples to userspace
 

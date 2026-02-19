@@ -292,13 +292,7 @@
                     {
                         "Name": "FILTER",
                         "Segment": "DSPDATA::localSegment",
-                        "Size": 24,
-                        "TypeData": "DSPDATA::dFloat"
-                    },
-                    {
-                        "Name": "N",
-                        "Segment": "DSPDATA::localSegment",
-                        "Size": 1,
+                        "Size": 25,
                         "TypeData": "DSPDATA::dFloat"
                     }
                 ]
@@ -491,13 +485,7 @@
                     {
                         "Name": "FILTER",
                         "Segment": "DSPDATA::localSegment",
-                        "Size": 8,
-                        "TypeData": "DSPDATA::dFloat"
-                    },
-                    {
-                        "Name": "N",
-                        "Segment": "DSPDATA::localSegment",
-                        "Size": 1,
+                        "Size": 9,
                         "TypeData": "DSPDATA::dFloat"
                     }
                 ]

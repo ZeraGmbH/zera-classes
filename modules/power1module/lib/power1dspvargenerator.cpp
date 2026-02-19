@@ -20,8 +20,7 @@ void Power1DspVarGenerator::setupVarList(Zera::cDSPInterface *pDSPInterFace, con
     m_pTmpDataDsp->addDspVar("CONST_HALF", 1, DSPDATA::vDspTemp);
     m_pTmpDataDsp->addDspVar("CONST_1_DIV_SQRT3", 1, DSPDATA::vDspTemp);
     m_pTmpDataDsp->addDspVar("CONST_1_5", 1, DSPDATA::vDspTemp);
-    m_pTmpDataDsp->addDspVar("FILTER", 2*(MeasPhaseCount+SumValueCount), DSPDATA::vDspTemp);
-    m_pTmpDataDsp->addDspVar("N",1,DSPDATA::vDspTemp);
+    m_pTmpDataDsp->addDspVar("FILTER", DspBuffLen::avgFilterLen(MeasPhaseCount+SumValueCount), DSPDATA::vDspTemp);
 
     // a handle for parameter
     m_pParameterDSP =  pDSPInterFace->getMemHandle("Parameter");

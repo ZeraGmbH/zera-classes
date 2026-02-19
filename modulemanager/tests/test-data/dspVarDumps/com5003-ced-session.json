@@ -276,13 +276,7 @@
                     {
                         "Name": "FILTER",
                         "Segment": "DSPDATA::localSegment",
-                        "Size": 18,
-                        "TypeData": "DSPDATA::dFloat"
-                    },
-                    {
-                        "Name": "N",
-                        "Segment": "DSPDATA::localSegment",
-                        "Size": 1,
+                        "Size": 19,
                         "TypeData": "DSPDATA::dFloat"
                     }
                 ]
@@ -314,7 +308,7 @@
             "COPYDATA(CH5,0,MEASSIGNAL)",
             "MULCCV(MEASSIGNAL,MEASSIGNAL,VALXRMS+8)",
             "AVERAGE1(9,VALXRMS,FILTER)",
-            "TESTVVSKIPLT(N,TIPAR)",
+            "TESTVVSKIPLT(FILTER+18,TIPAR)",
             "ACTIVATECHAIN(1,0x0103)",
             "STARTCHAIN(0,1,0x0103)",
             "CMPAVERAGE1(9,FILTER,VALXRMSF)",
@@ -386,13 +380,7 @@
                     {
                         "Name": "FILTER",
                         "Segment": "DSPDATA::localSegment",
-                        "Size": 36,
-                        "TypeData": "DSPDATA::dFloat"
-                    },
-                    {
-                        "Name": "N",
-                        "Segment": "DSPDATA::localSegment",
-                        "Size": 1,
+                        "Size": 37,
                         "TypeData": "DSPDATA::dFloat"
                     }
                 ]
@@ -507,13 +495,7 @@
                     {
                         "Name": "FILTER",
                         "Segment": "DSPDATA::localSegment",
-                        "Size": 3072,
-                        "TypeData": "DSPDATA::dFloat"
-                    },
-                    {
-                        "Name": "N",
-                        "Segment": "DSPDATA::localSegment",
-                        "Size": 1,
+                        "Size": 3073,
                         "TypeData": "DSPDATA::dFloat"
                     },
                     {
@@ -747,13 +729,7 @@
                     {
                         "Name": "FILTER",
                         "Segment": "DSPDATA::localSegment",
-                        "Size": 8,
-                        "TypeData": "DSPDATA::dFloat"
-                    },
-                    {
-                        "Name": "N",
-                        "Segment": "DSPDATA::localSegment",
-                        "Size": 1,
+                        "Size": 9,
                         "TypeData": "DSPDATA::dFloat"
                     }
                 ]
@@ -844,7 +820,7 @@
             "ADDVVG(TEMP1,TEMP2,VALPQS+3)",
             "STOPCHAIN(1,0x0106)",
             "AVERAGE1(4,VALPQS,FILTER)",
-            "TESTVVSKIPLT(N,TIPAR)",
+            "TESTVVSKIPLT(FILTER+8,TIPAR)",
             "ACTIVATECHAIN(1,0x0108)",
             "STARTCHAIN(0,1,0x0108)",
             "CMPAVERAGE1(4,FILTER,VALPQSF)",
@@ -1010,13 +986,7 @@
                     {
                         "Name": "FILTER",
                         "Segment": "DSPDATA::localSegment",
-                        "Size": 8,
-                        "TypeData": "DSPDATA::dFloat"
-                    },
-                    {
-                        "Name": "N",
-                        "Segment": "DSPDATA::localSegment",
-                        "Size": 1,
+                        "Size": 9,
                         "TypeData": "DSPDATA::dFloat"
                     }
                 ]
@@ -1164,7 +1134,7 @@
             "ADDVVG(TEMP1,TEMP2,VALPQS+3)",
             "STOPCHAIN(1,0x0107)",
             "AVERAGE1(4,VALPQS,FILTER)",
-            "TESTVVSKIPLT(N,TIPAR)",
+            "TESTVVSKIPLT(FILTER+8,TIPAR)",
             "ACTIVATECHAIN(1,0x0109)",
             "STARTCHAIN(0,1,0x0109)",
             "CMPAVERAGE1(4,FILTER,VALPQSF)",
@@ -1330,13 +1300,7 @@
                     {
                         "Name": "FILTER",
                         "Segment": "DSPDATA::localSegment",
-                        "Size": 8,
-                        "TypeData": "DSPDATA::dFloat"
-                    },
-                    {
-                        "Name": "N",
-                        "Segment": "DSPDATA::localSegment",
-                        "Size": 1,
+                        "Size": 9,
                         "TypeData": "DSPDATA::dFloat"
                     }
                 ]
@@ -1460,7 +1424,7 @@
             "ADDVVG(TEMP1,TEMP2,VALPQS+3)",
             "STOPCHAIN(1,0x0108)",
             "AVERAGE1(4,VALPQS,FILTER)",
-            "TESTVVSKIPLT(N,TIPAR)",
+            "TESTVVSKIPLT(FILTER+8,TIPAR)",
             "ACTIVATECHAIN(1,0x010A)",
             "STARTCHAIN(0,1,0x010A)",
             "CMPAVERAGE1(4,FILTER,VALPQSF)",
@@ -1626,13 +1590,7 @@
                     {
                         "Name": "FILTER",
                         "Segment": "DSPDATA::localSegment",
-                        "Size": 8,
-                        "TypeData": "DSPDATA::dFloat"
-                    },
-                    {
-                        "Name": "N",
-                        "Segment": "DSPDATA::localSegment",
-                        "Size": 1,
+                        "Size": 9,
                         "TypeData": "DSPDATA::dFloat"
                     }
                 ]
@@ -1894,13 +1852,7 @@
                     {
                         "Name": "FILTER",
                         "Segment": "DSPDATA::localSegment",
-                        "Size": 8,
-                        "TypeData": "DSPDATA::dFloat"
-                    },
-                    {
-                        "Name": "N",
-                        "Segment": "DSPDATA::localSegment",
-                        "Size": 1,
+                        "Size": 9,
                         "TypeData": "DSPDATA::dFloat"
                     }
                 ]
@@ -1985,7 +1937,7 @@
             "ADDVVG(TEMP1,TEMP2,VALPQS+3)",
             "STOPCHAIN(1,0x0105)",
             "AVERAGE1(4,VALPQS,FILTER)",
-            "TESTVVSKIPLT(N,TIPAR)",
+            "TESTVVSKIPLT(FILTER+8,TIPAR)",
             "ACTIVATECHAIN(1,0x0107)",
             "STARTCHAIN(0,1,0x0107)",
             "CMPAVERAGE1(4,FILTER,VALPQSF)",
@@ -2097,13 +2049,7 @@
                     {
                         "Name": "FILTER",
                         "Segment": "DSPDATA::localSegment",
-                        "Size": 24,
-                        "TypeData": "DSPDATA::dFloat"
-                    },
-                    {
-                        "Name": "N",
-                        "Segment": "DSPDATA::localSegment",
-                        "Size": 1,
+                        "Size": 25,
                         "TypeData": "DSPDATA::dFloat"
                     }
                 ]
@@ -2150,7 +2096,7 @@
             "CMPCLK(1,VALPOWER+9,FREQSCALE+0)",
             "CMPCLK(258,VALPOWER+10,FREQSCALE+1)",
             "CMPCLK(512,VALPOWER+11,FREQSCALE+2)",
-            "TESTVVSKIPLT(N,TIPAR)",
+            "TESTVVSKIPLT(FILTER+24,TIPAR)",
             "ACTIVATECHAIN(1,0x0103)",
             "STARTCHAIN(0,1,0x0103)",
             "CMPAVERAGE1(12,FILTER,VALPOWERF)",
@@ -2217,13 +2163,7 @@
                     {
                         "Name": "FILTER",
                         "Segment": "DSPDATA::localSegment",
-                        "Size": 12,
-                        "TypeData": "DSPDATA::dFloat"
-                    },
-                    {
-                        "Name": "N",
-                        "Segment": "DSPDATA::localSegment",
-                        "Size": 1,
+                        "Size": 13,
                         "TypeData": "DSPDATA::dFloat"
                     }
                 ]
@@ -2314,13 +2254,7 @@
                     {
                         "Name": "FILTER",
                         "Segment": "DSPDATA::localSegment",
-                        "Size": 12,
-                        "TypeData": "DSPDATA::dFloat"
-                    },
-                    {
-                        "Name": "N",
-                        "Segment": "DSPDATA::localSegment",
-                        "Size": 1,
+                        "Size": 13,
                         "TypeData": "DSPDATA::dFloat"
                     }
                 ]

@@ -1,4 +1,5 @@
 #include "power2dspcmdgenerator.h"
+#include "measmodeinfo.h"
 
 QStringList Power2DspCmdGenerator::getCmdsMMode4LW(int dspSelectCode, MeasSystemChannels measChannelPairList, quint32 sampleCountPerSignalPeriod)
 {
@@ -46,6 +47,6 @@ QStringList Power2DspCmdGenerator::getCmdsSumAndAverage()
     dspCmdList.append("ADDVVV(VALPOWER+7,VALPOWER+10,VALPOWER+10)"); // PS- = (P1-) +(P2-) + (P3-)
     dspCmdList.append("ADDVVV(VALPOWER+9,VALPOWER+10,VALPOWER+11)"); // PS = (PS+) + (PS-)
     // and filter all our values
-    dspCmdList.append(QString("AVERAGE1(12,VALPOWER,FILTER)")); // we add results to filter
+    dspCmdList.append(QString("AVERAGE1(%1,VALPOWER,FILTER)").arg(3*(MeasPhaseCount+SumValueCount)));
     return dspCmdList;
 }

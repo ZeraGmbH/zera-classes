@@ -132,8 +132,7 @@ void PeriodAverageModuleMeasProgram::setDspVarList()
     m_pTmpDataDsp->addDspVar("MEASSIGNAL", samplesPerPeriod, DSPDATA::vDspTemp);
     m_pTmpDataDsp->addDspVar("INTEGRAL_RESULT", channelCount, DSPDATA::vDspTemp);
     m_pTmpDataDsp->addDspVar("PERIODCURR", 1, DSPDATA::vDspTemp, DSPDATA::dInt);
-    m_pTmpDataDsp->addDspVar("FILTER", 2*channelCount, DSPDATA::vDspTemp);
-    m_pTmpDataDsp->addDspVar("N", 1, DSPDATA::vDspTemp);
+    m_pTmpDataDsp->addDspVar("FILTER", DspBuffLen::avgFilterLen(channelCount), DSPDATA::vDspTemp);
     m_pTmpDataDsp->addDspVar("VALS_PERIOD_WORK", getConfData()->m_maxPeriods*channelCount, DSPDATA::vDspResult);
 
     // parameter
@@ -153,12 +152,10 @@ void PeriodAverageModuleMeasProgram::setDspCmdList()
     int samplesPerPeriod = m_observer->getSamplesPerPeriod();
     const QStringList channelMNameListConfigured = getConfData()->m_valueChannelList;
     int channelCount = channelMNameListConfigured.count();
-    int filterLenWithTrailingCount = 2*channelCount+1;
 
     m_dspInterface->addCycListItem("STARTCHAIN(1,1,0x0101)"); // run once
         m_dspInterface->addCycListItem(QString("CLEARN(%1,MEASSIGNAL)").arg(samplesPerPeriod) ); // clear meassignal
-        m_dspInterface->addCycListItem(QString("CLEARN(%1,FILTER)").arg(filterLenWithTrailingCount) ); // clear the whole filter incl. count
-
+        m_dspInterface->addCycListItem(QString("CLEARN(%1,FILTER)").arg(DspBuffLen::avgFilterLen(channelCount)));
         m_dspInterface->addCycListItem(QString("SETVAL(PERIODCURR,1)"));
         m_dspInterface->addCycListItem(QString("SETVAL(PERIODCOUNT,%1)").arg(getConfData()->m_periodCount.m_nValue));
 
@@ -187,7 +184,7 @@ void PeriodAverageModuleMeasProgram::setDspCmdList()
     m_dspInterface->addCycListItem("STARTCHAIN(0,1,0x0102)");
         m_dspInterface->addCycListItem(QString("SETVAL(PERIODCURR,1)"));
         m_dspInterface->addCycListItem(QString("CMPAVERAGE1(%1,FILTER,VALUES_AVG)").arg(channelCount));
-        m_dspInterface->addCycListItem(QString("CLEARN(%1,FILTER)").arg(filterLenWithTrailingCount) );
+        m_dspInterface->addCycListItem(QString("CLEARN(%1,FILTER)").arg(DspBuffLen::avgFilterLen(channelCount)));
         m_dspInterface->addCycListItem(QString("COPYMEM(%1,VALS_PERIOD_WORK,VALS_PERIOD)").arg(getConfData()->m_maxPeriods*channelCount));
         m_dspInterface->addCycListItem(QString("DSPINTTRIGGER(0x0,0x%1)").arg(0));
         m_dspInterface->addCycListItem("DEACTIVATECHAIN(1,0x0102)");

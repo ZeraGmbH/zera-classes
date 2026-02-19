@@ -276,13 +276,7 @@
                     {
                         "Name": "FILTER",
                         "Segment": "DSPDATA::localSegment",
-                        "Size": 18,
-                        "TypeData": "DSPDATA::dFloat"
-                    },
-                    {
-                        "Name": "N",
-                        "Segment": "DSPDATA::localSegment",
-                        "Size": 1,
+                        "Size": 19,
                         "TypeData": "DSPDATA::dFloat"
                     }
                 ]
@@ -388,13 +382,7 @@
                     {
                         "Name": "FILTER",
                         "Segment": "DSPDATA::localSegment",
-                        "Size": 36,
-                        "TypeData": "DSPDATA::dFloat"
-                    },
-                    {
-                        "Name": "N",
-                        "Segment": "DSPDATA::localSegment",
-                        "Size": 1,
+                        "Size": 37,
                         "TypeData": "DSPDATA::dFloat"
                     }
                 ]
@@ -509,13 +497,7 @@
                     {
                         "Name": "FILTER",
                         "Segment": "DSPDATA::localSegment",
-                        "Size": 3072,
-                        "TypeData": "DSPDATA::dFloat"
-                    },
-                    {
-                        "Name": "N",
-                        "Segment": "DSPDATA::localSegment",
-                        "Size": 1,
+                        "Size": 3073,
                         "TypeData": "DSPDATA::dFloat"
                     },
                     {
@@ -749,13 +731,7 @@
                     {
                         "Name": "FILTER",
                         "Segment": "DSPDATA::localSegment",
-                        "Size": 8,
-                        "TypeData": "DSPDATA::dFloat"
-                    },
-                    {
-                        "Name": "N",
-                        "Segment": "DSPDATA::localSegment",
-                        "Size": 1,
+                        "Size": 9,
                         "TypeData": "DSPDATA::dFloat"
                     }
                 ]
@@ -1016,13 +992,7 @@
                     {
                         "Name": "FILTER",
                         "Segment": "DSPDATA::localSegment",
-                        "Size": 8,
-                        "TypeData": "DSPDATA::dFloat"
-                    },
-                    {
-                        "Name": "N",
-                        "Segment": "DSPDATA::localSegment",
-                        "Size": 1,
+                        "Size": 9,
                         "TypeData": "DSPDATA::dFloat"
                     }
                 ]
@@ -1340,13 +1310,7 @@
                     {
                         "Name": "FILTER",
                         "Segment": "DSPDATA::localSegment",
-                        "Size": 8,
-                        "TypeData": "DSPDATA::dFloat"
-                    },
-                    {
-                        "Name": "N",
-                        "Segment": "DSPDATA::localSegment",
-                        "Size": 1,
+                        "Size": 9,
                         "TypeData": "DSPDATA::dFloat"
                     }
                 ]
@@ -1678,13 +1642,7 @@
                     {
                         "Name": "FILTER",
                         "Segment": "DSPDATA::localSegment",
-                        "Size": 8,
-                        "TypeData": "DSPDATA::dFloat"
-                    },
-                    {
-                        "Name": "N",
-                        "Segment": "DSPDATA::localSegment",
-                        "Size": 1,
+                        "Size": 9,
                         "TypeData": "DSPDATA::dFloat"
                     }
                 ]
@@ -2165,13 +2123,7 @@
                     {
                         "Name": "FILTER",
                         "Segment": "DSPDATA::localSegment",
-                        "Size": 8,
-                        "TypeData": "DSPDATA::dFloat"
-                    },
-                    {
-                        "Name": "N",
-                        "Segment": "DSPDATA::localSegment",
-                        "Size": 1,
+                        "Size": 9,
                         "TypeData": "DSPDATA::dFloat"
                     }
                 ]
@@ -2433,13 +2385,7 @@
                     {
                         "Name": "FILTER",
                         "Segment": "DSPDATA::localSegment",
-                        "Size": 8,
-                        "TypeData": "DSPDATA::dFloat"
-                    },
-                    {
-                        "Name": "N",
-                        "Segment": "DSPDATA::localSegment",
-                        "Size": 1,
+                        "Size": 9,
                         "TypeData": "DSPDATA::dFloat"
                     }
                 ]
@@ -2590,13 +2536,7 @@
                     {
                         "Name": "FILTER",
                         "Segment": "DSPDATA::localSegment",
-                        "Size": 12,
-                        "TypeData": "DSPDATA::dFloat"
-                    },
-                    {
-                        "Name": "N",
-                        "Segment": "DSPDATA::localSegment",
-                        "Size": 1,
+                        "Size": 13,
                         "TypeData": "DSPDATA::dFloat"
                     }
                 ]
@@ -2687,13 +2627,7 @@
                     {
                         "Name": "FILTER",
                         "Segment": "DSPDATA::localSegment",
-                        "Size": 12,
-                        "TypeData": "DSPDATA::dFloat"
-                    },
-                    {
-                        "Name": "N",
-                        "Segment": "DSPDATA::localSegment",
-                        "Size": 1,
+                        "Size": 13,
                         "TypeData": "DSPDATA::dFloat"
                     }
                 ]

@@ -49,13 +49,7 @@
                 {
                     "Name": "FILTER",
                     "Segment": "DSPDATA::localSegment",
-                    "Size": 44,
-                    "TypeData": "DSPDATA::dFloat"
-                },
-                {
-                    "Name": "N",
-                    "Segment": "DSPDATA::localSegment",
-                    "Size": 1,
+                    "Size": 45,
                     "TypeData": "DSPDATA::dFloat"
                 }
             ]

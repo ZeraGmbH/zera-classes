@@ -277,8 +277,7 @@ void cPower2ModuleMeasProgram::setDspVarList()
     m_pTmpDataDsp->addDspVar("VALPOWER", 3*(MeasPhaseCount+SumValueCount), DSPDATA::vDspTemp); // p1+,p1-,p1, p2+,p2-,p2, p3+,p3-,p3, ps+,ps-,ps
     m_pTmpDataDsp->addDspVar("TEMP1", 2, DSPDATA::vDspTemp); // we need 2 temp. vars also for complex
     m_pTmpDataDsp->addDspVar("TEMP2", 2, DSPDATA::vDspTemp);
-    m_pTmpDataDsp->addDspVar("FILTER", 2*3*(MeasPhaseCount+SumValueCount),DSPDATA::vDspTemp);
-    m_pTmpDataDsp->addDspVar("N",1,DSPDATA::vDspTemp);
+    m_pTmpDataDsp->addDspVar("FILTER", DspBuffLen::avgFilterLen(3*(MeasPhaseCount+SumValueCount)), DSPDATA::vDspTemp);
 
     // a handle for parameter
     m_pParameterDSP =  m_dspInterface->getMemHandle("Parameter");
@@ -309,7 +308,7 @@ QStringList cPower2ModuleMeasProgram::dspCmdInitVars(int dspInitialSelectCode)
     dspCmdList.append("STARTCHAIN(1,1,0x0101)"); // aktiv, prozessnr. (dummy),hauptkette 1 subkette 1 start
     dspCmdList.append(QString("CLEARN(%1,MEASSIGNAL1)").arg(samples) ); // clear meassignal
     dspCmdList.append(QString("CLEARN(%1,MEASSIGNAL2)").arg(samples) ); // clear meassignal
-    dspCmdList.append(QString("CLEARN(%1,FILTER)").arg(2*3*(MeasPhaseCount+SumValueCount)+1) ); // clear the whole filter incl. count
+    dspCmdList.append(QString("CLEARN(%1,FILTER)").arg(DspBuffLen::avgFilterLen(3*(MeasPhaseCount+SumValueCount))));
     dspCmdList.append(QString("SETVAL(MMODE,%1)").arg(dspInitialSelectCode));
     double integrationTime = calcTiTime();
     bool intergrationModeTime = getConfData()->m_sIntegrationMode == "time";
@@ -394,8 +393,8 @@ void cPower2ModuleMeasProgram::setDspCmdList()
 
         m_dspInterface->addCycListItem("STARTCHAIN(0,1,0x0102)");
             m_dspInterface->addCycListItem("GETSTIME(TISTART)"); // set new system time
-            m_dspInterface->addCycListItem(QString("CMPAVERAGE1(12,FILTER,VALPOWERF)"));
-            m_dspInterface->addCycListItem(QString("CLEARN(%1,FILTER)").arg(2*12+1) );
+            m_dspInterface->addCycListItem(QString("CMPAVERAGE1(%1,FILTER,VALPOWERF)").arg(3*(MeasPhaseCount+SumValueCount)));
+            m_dspInterface->addCycListItem(QString("CLEARN(%1,FILTER)").arg(DspBuffLen::avgFilterLen(3*(MeasPhaseCount+SumValueCount))));
             m_dspInterface->addCycListItem(QString("DSPINTTRIGGER(0x0,0x%1)").arg(irqNr)); // send interrupt to module
 
             if (confdata->m_sFreqActualizationMode == "integrationtime") {
@@ -423,11 +422,11 @@ void cPower2ModuleMeasProgram::setDspCmdList()
     }
 
     else { // otherwise it is period
-        m_dspInterface->addCycListItem("TESTVVSKIPLT(N,TIPAR)");
+        m_dspInterface->addCycListItem(QString("TESTVVSKIPLT(FILTER+%1,TIPAR)").arg(DspBuffLen::avgFilterCountPos(3*(MeasPhaseCount+SumValueCount))));
         m_dspInterface->addCycListItem("ACTIVATECHAIN(1,0x0103)");
         m_dspInterface->addCycListItem("STARTCHAIN(0,1,0x0103)");
-            m_dspInterface->addCycListItem("CMPAVERAGE1(12,FILTER,VALPOWERF)");
-            m_dspInterface->addCycListItem(QString("CLEARN(%1,FILTER)").arg(2*12+1) );
+            m_dspInterface->addCycListItem(QString("CMPAVERAGE1(%1,FILTER,VALPOWERF)").arg(3*(MeasPhaseCount+SumValueCount)));
+            m_dspInterface->addCycListItem(QString("CLEARN(%1,FILTER)").arg(DspBuffLen::avgFilterLen(3*(MeasPhaseCount+SumValueCount))));
             m_dspInterface->addCycListItem(QString("DSPINTTRIGGER(0x0,0x%1)").arg(irqNr)); // send interrupt to module
 
             if (confdata->m_sFreqActualizationMode == "integrationtime")

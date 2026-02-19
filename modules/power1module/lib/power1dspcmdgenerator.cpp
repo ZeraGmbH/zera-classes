@@ -2,6 +2,7 @@
 #include "dspatomiccommandgen.h"
 #include "measmode.h"
 #include "measmodeinfo.h"
+#include <dspinterface.h>
 
 QStringList Power1DspCmdGenerator::getCmdsInitVars(std::shared_ptr<MeasMode> initialMMode, int samplesPerPeroid, double integrationTime, bool startTiTime, DspChainIdGen &idGen)
 {
@@ -10,7 +11,7 @@ QStringList Power1DspCmdGenerator::getCmdsInitVars(std::shared_ptr<MeasMode> ini
     cmdList.append(DspAtomicCommandGen::getStartChainActive(chainId));
     cmdList.append(QString("CLEARN(%1,MEASSIGNAL1)").arg(samplesPerPeroid) ); // clear meassignal
     cmdList.append(QString("CLEARN(%1,MEASSIGNAL2)").arg(samplesPerPeroid) ); // clear meassignal
-    cmdList.append(QString("CLEARN(%1,FILTER)").arg(2*(MeasPhaseCount+SumValueCount)+1) ); // clear the whole filter incl. count
+    cmdList.append(QString("CLEARN(%1,FILTER)").arg(DspBuffLen::avgFilterLen(MeasPhaseCount+SumValueCount)));
     cmdList.append(QString("SETVAL(MMODE,%1)").arg(initialMMode->getDspSelectCode()));
     cmdList.append(QString("SETVAL(MMODE_SUM,%1)").arg(initialMMode->getDspSumSelectCode()));
 
@@ -405,8 +406,8 @@ QStringList Power1DspCmdGenerator::getCmdsSumAndAverage(DspChainIdGen &idGen)
     cmdList.append("ADDVVG(TEMP1,TEMP2,VALPQS+3)");
     cmdList.append(DspAtomicCommandGen::getStopChain(chainIdPhasePQGeom));
 
-    // and filter all our values (MeasPhaseCount ???)
-    cmdList.append("AVERAGE1(4,VALPQS,FILTER)"); // we add results to filter
+    // and filter all our values
+    cmdList.append(QString("AVERAGE1(%1,VALPQS,FILTER)").arg(MeasPhaseCount+SumValueCount)); // we add results to filter
 
     return cmdList;
 }
@@ -439,8 +440,8 @@ QStringList Power1DspCmdGenerator::getCmdsFreqOutput(const POWER1MODULE::cPower1
 
         cmdList.append(QString("STARTCHAIN(0,1,%1)").arg(dspChainId));
         cmdList.append("GETSTIME(TISTART)"); // set new system time
-        cmdList.append("CMPAVERAGE1(4,FILTER,VALPQSF)");
-        cmdList.append(QString("CLEARN(%1,FILTER)").arg(2*4+1) );
+        cmdList.append(QString("CMPAVERAGE1(%1,FILTER,VALPQSF)").arg(MeasPhaseCount+SumValueCount));
+        cmdList.append(QString("CLEARN(%1,FILTER)").arg(DspBuffLen::avgFilterLen(MeasPhaseCount+SumValueCount)));
         cmdList.append(QString("DSPINTTRIGGER(0x0,0x%1)").arg(/* dummy */ 0)); // send interrupt to module
 
         if (configData->m_sFreqActualizationMode == "integrationtime") {
@@ -463,14 +464,14 @@ QStringList Power1DspCmdGenerator::getCmdsFreqOutput(const POWER1MODULE::cPower1
 
     else { // otherwise it is period
         QString dspChainId = idGen.getNextChainIdStr();
-        cmdList.append("TESTVVSKIPLT(N,TIPAR)");
+        cmdList.append(QString("TESTVVSKIPLT(FILTER+%1,TIPAR)").arg(DspBuffLen::avgFilterCountPos(MeasPhaseCount+SumValueCount)));
         cmdList.append(QString("ACTIVATECHAIN(1,%1)").arg(dspChainId));
         cmdList.append(QString("STARTCHAIN(0,1,%1)").arg(dspChainId));
-        cmdList.append(QString("CMPAVERAGE1(4,FILTER,VALPQSF)"));
-        cmdList.append(QString("CLEARN(%1,FILTER)").arg(2*4+1) );
+        cmdList.append(QString("CMPAVERAGE1(%1,FILTER,VALPQSF)").arg(MeasPhaseCount+SumValueCount));
+        cmdList.append(QString("CLEARN(%1,FILTER)").arg(DspBuffLen::avgFilterLen(MeasPhaseCount+SumValueCount)));
         cmdList.append(QString("DSPINTTRIGGER(0x0,0x%1)").arg(irqNo)); // send interrupt to module
 
-        if (configData->m_sFreqActualizationMode == "integrationtime")        {
+        if (configData->m_sFreqActualizationMode == "integrationtime") {
             for (int i = 0; i < configData->m_nFreqOutputCount; i++) {
                 // which actualvalue do we take as source (offset)
                 quint8 actvalueIndex = configData->m_FreqOutputConfList.at(i).m_nSource;

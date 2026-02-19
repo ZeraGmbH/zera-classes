@@ -126,8 +126,7 @@ void cThdnModuleMeasProgram::setDspVarList()
     m_pTmpDataDsp = m_dspInterface->getMemHandle("TmpData");
     m_pTmpDataDsp->addDspVar("MEASSIGNAL", samples, DSPDATA::vDspTemp);
     m_pTmpDataDsp->addDspVar("VALXTHDN",m_veinActValueList.count(), DSPDATA::vDspTemp);
-    m_pTmpDataDsp->addDspVar("FILTER",2*m_veinActValueList.count(), DSPDATA::vDspTemp);
-    m_pTmpDataDsp->addDspVar("N",1,DSPDATA::vDspTemp);
+    m_pTmpDataDsp->addDspVar("FILTER", DspBuffLen::avgFilterLen(m_veinActValueList.count()), DSPDATA::vDspTemp);
 
     // a handle for parameter
     m_pParameterDSP =  m_dspInterface->getMemHandle("Parameter");
@@ -148,7 +147,7 @@ void cThdnModuleMeasProgram::setDspCmdList()
     int samples = observer->getSamplesPerPeriod();
     m_dspInterface->addCycListItem("STARTCHAIN(1,1,0x0101)"); // aktiv, prozessnr. (dummy),hauptkette 1 subkette 1 start
         m_dspInterface->addCycListItem(QString("CLEARN(%1,MEASSIGNAL)").arg(samples) ); // clear meassignal
-        m_dspInterface->addCycListItem(QString("CLEARN(%1,FILTER)").arg(2*m_veinActValueList.count()+1) ); // clear the whole filter incl. count
+        m_dspInterface->addCycListItem(QString("CLEARN(%1,FILTER)").arg(DspBuffLen::avgFilterLen(m_veinActValueList.count())));
 
         if (getConfData()->m_bmovingWindow)
             m_dspInterface->addCycListItem(QString("SETVAL(TIPAR,%1)").arg(getConfData()->m_fmovingwindowInterval*1000.0)); // initial ti time
@@ -176,7 +175,7 @@ void cThdnModuleMeasProgram::setDspCmdList()
     m_dspInterface->addCycListItem("STARTCHAIN(0,1,0x0102)");
         m_dspInterface->addCycListItem("GETSTIME(TISTART)"); // set new system time
         m_dspInterface->addCycListItem(QString("CMPAVERAGE1(%1,FILTER,VALXTHDNF)").arg(m_veinActValueList.count()));
-        m_dspInterface->addCycListItem(QString("CLEARN(%1,FILTER)").arg(2*m_veinActValueList.count()+1) );
+        m_dspInterface->addCycListItem(QString("CLEARN(%1,FILTER)").arg(DspBuffLen::avgFilterLen(m_veinActValueList.count())));
         m_dspInterface->addCycListItem(QString("DSPINTTRIGGER(0x0,0x%1)").arg(irqNr)); // send interrupt to module
         m_dspInterface->addCycListItem("DEACTIVATECHAIN(1,0x0102)");
     m_dspInterface->addCycListItem("STOPCHAIN(1,0x0102)"); // end processnr., mainchain 1 subchain 2
