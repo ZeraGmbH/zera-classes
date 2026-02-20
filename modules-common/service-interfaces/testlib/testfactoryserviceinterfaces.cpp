@@ -182,7 +182,7 @@ Zera::DspInterfacePtr TestFactoryServiceInterfaces::createDspInterfaceCommon(int
                                                                              QStringList valueChannelList)
 {
     Q_UNUSED(interruptNoHandled)
-    TestDspInterfacePtr dspInterface = std::make_shared<TestDspInterface>(valueChannelList);
+    TestDspInterfacePtr dspInterface = std::make_shared<TestDspInterface>(valueChannelList, entityId);
     Q_ASSERT(!(m_dspInterfacesByCreatedBy.contains(entityId) && m_dspInterfacesByCreatedBy[entityId].contains(createdBy)));
     m_dspInterfacesByCreatedBy[entityId][createdBy] = dspInterface;
 

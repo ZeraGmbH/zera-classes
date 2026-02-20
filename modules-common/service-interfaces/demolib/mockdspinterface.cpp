@@ -2,6 +2,11 @@
 #include "notzeronumgen.h"
 #include "reply.h"
 
+MockDspInterface::MockDspInterface(int entityId) :
+    Zera::cDSPInterface(entityId)
+{
+}
+
 void MockDspInterface::fireActValInterrupt(QVector<float> actualValues, int irqNo)
 {
     m_actualValues = actualValues;

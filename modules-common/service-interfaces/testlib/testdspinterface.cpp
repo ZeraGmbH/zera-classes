@@ -1,7 +1,8 @@
 #include "testdspinterface.h"
 #include <dspinterface_p.h>
 
-TestDspInterface::TestDspInterface(QStringList valueNamesList) :
+TestDspInterface::TestDspInterface(QStringList valueNamesList, int entityId) :
+    MockDspInterface(entityId),
     m_valueNamesList(valueNamesList)
 {
 }
@@ -84,7 +85,7 @@ QJsonObject TestDspInterface::dumpMemoryGroups()
 
 QJsonObject TestDspInterface::dumpVarList(QJsonObject inData)
 {
-    const QStringList varList = d_ptr->varList2String().split(";", Qt::SkipEmptyParts);
+    const QStringList varList = d_ptr->varList2String(Zera::cDSPInterfacePrivate::PREPEND_NOTHING).split(";", Qt::SkipEmptyParts);
     QMap<QString, QJsonArray> memGroupVariables;
     for(const QString &var : varList) {
         // see: cDspMeasData::VarListLong

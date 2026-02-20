@@ -7,6 +7,7 @@ class MockDspInterface : public Zera::cDSPInterface
 {
     Q_OBJECT
 public:
+    MockDspInterface(int entityId = -1);
     void fireActValInterrupt(QVector<float> actualValues, int irqNo);
     quint32 dataAcquisition(cDspMeasData* memgroup) override;
     quint32 activateInterface() override;
