@@ -3,7 +3,7 @@
 #include "vf_client_component_setter.h"
 #include <mocktcpnetworkfactory.h>
 #include <testfactoryi2cctrl.h>
-#include <testfactorydevicenodedsp.h>
+#include "testfactoryzdspsupport.h"
 #include <tcpnetworkfactory.h>
 #include <clamp.h>
 #include <timemachinefortest.h>
@@ -572,7 +572,7 @@ void test_range_automatic::setupServices()
     m_resmanServer = std::make_unique<ResmanRunFacade>(m_tcpFactory);
     TimeMachineObject::feedEventLoop();
     m_testPcbServer = std::make_unique<TestServerForSenseInterfaceMt310s2>(std::make_shared<TestFactoryI2cCtrl>(true), m_tcpFactory);
-    m_dspServer = std::make_unique<MockZdsp1d>(std::make_shared<TestFactoryDeviceNodeDsp>(), m_tcpFactory);
+    m_dspServer = std::make_unique<MockZdsp1d>(std::make_shared<TestFactoryZdspSupport>(), m_tcpFactory);
     TimeMachineObject::feedEventLoop();
 }
 
