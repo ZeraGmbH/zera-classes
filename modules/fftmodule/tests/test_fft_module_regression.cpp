@@ -13,6 +13,11 @@ QTEST_MAIN(test_fft_module_regression)
 
 static int constexpr fftEntityId = 1060;
 
+void test_fft_module_regression::initTestCase()
+{
+    qputenv("QT_FATAL_CRITICALS", "1");
+}
+
 void test_fft_module_regression::minimalSession()
 {
     ModuleManagerTestRunner testRunner(":/sessions/minimal.json"); // moving window is off at the time of writing

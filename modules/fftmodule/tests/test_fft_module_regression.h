@@ -7,6 +7,7 @@ class test_fft_module_regression : public QObject
 {
     Q_OBJECT
 private slots:
+    void initTestCase();
     void minimalSession();
     void veinDumpInitial();
     void checkActualValueCount();
