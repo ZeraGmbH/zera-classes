@@ -7,6 +7,8 @@
     "UserMemFree": 29629,
     "ZdspMemDump": {
         "1001": {
+            "DspCmdsCompiledCrcCyclic": "0x545069C0",
+            "DspCmdsCompiledCrcInterrupt": "0x00000000",
             "DspCmdsRawCyclic": [
                 "STARTCHAIN(0x000001,0x000001,0x000101)",
                 "CLEARN(0x0001F8,0x000000)",
@@ -52,6 +54,8 @@
             }
         },
         "1020": {
+            "DspCmdsCompiledCrcCyclic": "0x24F87F45",
+            "DspCmdsCompiledCrcInterrupt": "0x00000000",
             "DspCmdsRawCyclic": [
                 "STARTCHAIN(0x000001,0x000001,0x000101)",
                 "CLEARN(0x0001F8,0x000000)",
@@ -131,6 +135,8 @@
             }
         },
         "1050": {
+            "DspCmdsCompiledCrcCyclic": "0xFDEBCE0E",
+            "DspCmdsCompiledCrcInterrupt": "0x00000000",
             "DspCmdsRawCyclic": [
                 "STARTCHAIN(0x000001,0x000001,0x000101)",
                 "CLEARN(0x0001F8,0x000000)",
@@ -176,6 +182,8 @@
             }
         },
         "1070": {
+            "DspCmdsCompiledCrcCyclic": "0xD0FFDC4A",
+            "DspCmdsCompiledCrcInterrupt": "0x00000000",
             "DspCmdsRawCyclic": [
                 "STARTCHAIN(0x000001,0x000001,0x000104)",
                 "CLEARN(0x0001F8,0x000000)",
@@ -266,6 +274,8 @@
                 "0x000415 / 0x098C40": "FREQSCALE",
                 "0x000416 / 0x098C41": "NOMPOWER"
             }
-        }
+        },
+        "TotalDspCmdsCompiledCrcCyclic": "0xA2FDDE0C",
+        "TotalDspCmdsCompiledCrcInterrupt": "0xEB154D38"
     }
 }

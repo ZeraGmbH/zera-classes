@@ -7,6 +7,8 @@
     "UserMemFree": 10843,
     "ZdspMemDump": {
         "1020": {
+            "DspCmdsCompiledCrcCyclic": "0xC5C30EF8",
+            "DspCmdsCompiledCrcInterrupt": "0x00000000",
             "DspCmdsRawCyclic": [
                 "STARTCHAIN(0x000001,0x000001,0x000101)",
                 "CLEARN(0x0001F8,0x000000)",
@@ -86,6 +88,8 @@
             }
         },
         "1040": {
+            "DspCmdsCompiledCrcCyclic": "0xAA11247E",
+            "DspCmdsCompiledCrcInterrupt": "0x00000000",
             "DspCmdsRawCyclic": [
                 "STARTCHAIN(0x000001,0x000001,0x000101)",
                 "CLEARN(0x0001F8,0x000000)",
@@ -146,6 +150,8 @@
             }
         },
         "1050": {
+            "DspCmdsCompiledCrcCyclic": "0x0F2B633D",
+            "DspCmdsCompiledCrcInterrupt": "0x00000000",
             "DspCmdsRawCyclic": [
                 "STARTCHAIN(0x000001,0x000001,0x000101)",
                 "CLEARN(0x0001F8,0x000000)",
@@ -197,6 +203,8 @@
             }
         },
         "1060": {
+            "DspCmdsCompiledCrcCyclic": "0xBCCD063F",
+            "DspCmdsCompiledCrcInterrupt": "0x00000000",
             "DspCmdsRawCyclic": [
                 "STARTCHAIN(0x000001,0x000001,0x000101)",
                 "CLEARN(0x0003F0,0x000000)",
@@ -271,6 +279,8 @@
             }
         },
         "1070": {
+            "DspCmdsCompiledCrcCyclic": "0x7C444A60",
+            "DspCmdsCompiledCrcInterrupt": "0x00000000",
             "DspCmdsRawCyclic": [
                 "STARTCHAIN(0x000001,0x000001,0x000107)",
                 "CLEARN(0x0001F8,0x000000)",
@@ -397,6 +407,8 @@
             }
         },
         "1071": {
+            "DspCmdsCompiledCrcCyclic": "0xA9877020",
+            "DspCmdsCompiledCrcInterrupt": "0x00000000",
             "DspCmdsRawCyclic": [
                 "STARTCHAIN(0x000001,0x000001,0x000108)",
                 "CLEARN(0x0001F8,0x000000)",
@@ -580,6 +592,8 @@
             }
         },
         "1072": {
+            "DspCmdsCompiledCrcCyclic": "0x8C44D241",
+            "DspCmdsCompiledCrcInterrupt": "0x00000000",
             "DspCmdsRawCyclic": [
                 "STARTCHAIN(0x000001,0x000001,0x00010B)",
                 "CLEARN(0x0001F8,0x000000)",
@@ -777,6 +791,8 @@
             }
         },
         "1073": {
+            "DspCmdsCompiledCrcCyclic": "0x40FF25C4",
+            "DspCmdsCompiledCrcInterrupt": "0x00000000",
             "DspCmdsRawCyclic": [
                 "STARTCHAIN(0x000001,0x000001,0x000115)",
                 "CLEARN(0x0001F8,0x000000)",
@@ -1123,6 +1139,8 @@
             }
         },
         "1078": {
+            "DspCmdsCompiledCrcCyclic": "0xE08445E5",
+            "DspCmdsCompiledCrcInterrupt": "0x00000000",
             "DspCmdsRawCyclic": [
                 "STARTCHAIN(0x000001,0x000001,0x000106)",
                 "CLEARN(0x0001F8,0x000000)",
@@ -1250,6 +1268,8 @@
             }
         },
         "1079": {
+            "DspCmdsCompiledCrcCyclic": "0xBED9B6A3",
+            "DspCmdsCompiledCrcInterrupt": "0x00000000",
             "DspCmdsRawCyclic": [
                 "STARTCHAIN(0x000001,0x000001,0x000106)",
                 "CLEARN(0x0001F8,0x000000)",
@@ -1368,6 +1388,8 @@
             }
         },
         "1110": {
+            "DspCmdsCompiledCrcCyclic": "0x52AAF596",
+            "DspCmdsCompiledCrcInterrupt": "0x00000000",
             "DspCmdsRawCyclic": [
                 "STARTCHAIN(0x000001,0x000001,0x000101)",
                 "CLEARN(0x0001F8,0x000000)",
@@ -1413,6 +1435,8 @@
             }
         },
         "1111": {
+            "DspCmdsCompiledCrcCyclic": "0xF4612CDE",
+            "DspCmdsCompiledCrcInterrupt": "0x00000000",
             "DspCmdsRawCyclic": [
                 "STARTCHAIN(0x000001,0x000001,0x000101)",
                 "CLEARN(0x0001F8,0x000000)",
@@ -1458,6 +1482,8 @@
             }
         },
         "1120": {
+            "DspCmdsCompiledCrcCyclic": "0x5D743DEF",
+            "DspCmdsCompiledCrcInterrupt": "0x00000000",
             "DspCmdsRawCyclic": [
                 "STARTCHAIN(0x000001,0x000001,0x000101)",
                 "CLEARN(0x000BD0,0x000000)",
@@ -1519,6 +1545,8 @@
                 "0x000FC6 / 0x09D0A3": "REFCHN",
                 "0x000FC7 / 0x09D0A4": "VALXOSCI"
             }
-        }
+        },
+        "TotalDspCmdsCompiledCrcCyclic": "0xD43FA76F",
+        "TotalDspCmdsCompiledCrcInterrupt": "0x6B8C6B1F"
     }
 }

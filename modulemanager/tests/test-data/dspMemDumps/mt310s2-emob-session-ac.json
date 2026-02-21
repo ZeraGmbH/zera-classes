@@ -7,6 +7,8 @@
     "UserMemFree": 8520,
     "ZdspMemDump": {
         "1020": {
+            "DspCmdsCompiledCrcCyclic": "0x4B2A9160",
+            "DspCmdsCompiledCrcInterrupt": "0x00000000",
             "DspCmdsRawCyclic": [
                 "STARTCHAIN(0x000001,0x000001,0x000101)",
                 "CLEARN(0x0001F8,0x000000)",
@@ -98,6 +100,8 @@
             }
         },
         "1040": {
+            "DspCmdsCompiledCrcCyclic": "0xE4616AE8",
+            "DspCmdsCompiledCrcInterrupt": "0x00000000",
             "DspCmdsRawCyclic": [
                 "STARTCHAIN(0x000001,0x000001,0x000101)",
                 "CLEARN(0x0001F8,0x000000)",
@@ -164,6 +168,8 @@
             }
         },
         "1050": {
+            "DspCmdsCompiledCrcCyclic": "0x05740229",
+            "DspCmdsCompiledCrcInterrupt": "0x00000000",
             "DspCmdsRawCyclic": [
                 "STARTCHAIN(0x000001,0x000001,0x000101)",
                 "CLEARN(0x0001F8,0x000000)",
@@ -219,6 +225,8 @@
             }
         },
         "1060": {
+            "DspCmdsCompiledCrcCyclic": "0x5BE4ACFA",
+            "DspCmdsCompiledCrcInterrupt": "0x00000000",
             "DspCmdsRawCyclic": [
                 "STARTCHAIN(0x000001,0x000001,0x000101)",
                 "CLEARN(0x0003F0,0x000000)",
@@ -303,6 +311,8 @@
             }
         },
         "1070": {
+            "DspCmdsCompiledCrcCyclic": "0x0EADBDEC",
+            "DspCmdsCompiledCrcInterrupt": "0x00000000",
             "DspCmdsRawCyclic": [
                 "STARTCHAIN(0x000001,0x000001,0x000106)",
                 "CLEARN(0x0001F8,0x000000)",
@@ -417,6 +427,8 @@
             }
         },
         "1071": {
+            "DspCmdsCompiledCrcCyclic": "0x0395F3F4",
+            "DspCmdsCompiledCrcInterrupt": "0x00000000",
             "DspCmdsRawCyclic": [
                 "STARTCHAIN(0x000001,0x000001,0x000106)",
                 "CLEARN(0x0001F8,0x000000)",
@@ -546,6 +558,8 @@
             }
         },
         "1072": {
+            "DspCmdsCompiledCrcCyclic": "0x7180C066",
+            "DspCmdsCompiledCrcInterrupt": "0x00000000",
             "DspCmdsRawCyclic": [
                 "STARTCHAIN(0x000001,0x000001,0x000106)",
                 "CLEARN(0x0001F8,0x000000)",
@@ -666,6 +680,8 @@
             }
         },
         "1078": {
+            "DspCmdsCompiledCrcCyclic": "0x88037301",
+            "DspCmdsCompiledCrcInterrupt": "0x00000000",
             "DspCmdsRawCyclic": [
                 "STARTCHAIN(0x000001,0x000001,0x000106)",
                 "CLEARN(0x0001F8,0x000000)",
@@ -793,6 +809,8 @@
             }
         },
         "1079": {
+            "DspCmdsCompiledCrcCyclic": "0xBB896555",
+            "DspCmdsCompiledCrcInterrupt": "0x00000000",
             "DspCmdsRawCyclic": [
                 "STARTCHAIN(0x000001,0x000001,0x000106)",
                 "CLEARN(0x0001F8,0x000000)",
@@ -911,6 +929,8 @@
             }
         },
         "1110": {
+            "DspCmdsCompiledCrcCyclic": "0xF8700EE1",
+            "DspCmdsCompiledCrcInterrupt": "0x00000000",
             "DspCmdsRawCyclic": [
                 "STARTCHAIN(0x000001,0x000001,0x000101)",
                 "CLEARN(0x0001F8,0x000000)",
@@ -960,6 +980,8 @@
             }
         },
         "1111": {
+            "DspCmdsCompiledCrcCyclic": "0x393E6648",
+            "DspCmdsCompiledCrcInterrupt": "0x00000000",
             "DspCmdsRawCyclic": [
                 "STARTCHAIN(0x000001,0x000001,0x000101)",
                 "CLEARN(0x0001F8,0x000000)",
@@ -1009,6 +1031,8 @@
             }
         },
         "1120": {
+            "DspCmdsCompiledCrcCyclic": "0xB3FF5E94",
+            "DspCmdsCompiledCrcInterrupt": "0x00000000",
             "DspCmdsRawCyclic": [
                 "STARTCHAIN(0x000001,0x000001,0x000101)",
                 "CLEARN(0x000FC0,0x000000)",
@@ -1078,6 +1102,8 @@
                 "0x0013B6 / 0x09D8B6": "REFCHN",
                 "0x0013B7 / 0x09D8B7": "VALXOSCI"
             }
-        }
+        },
+        "TotalDspCmdsCompiledCrcCyclic": "0xB138EEC1",
+        "TotalDspCmdsCompiledCrcInterrupt": "0x1ED2669B"
     }
 }
