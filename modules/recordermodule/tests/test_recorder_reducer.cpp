@@ -40,7 +40,7 @@ void test_recorder_reducer::invokeRpcFactorSimilarAsValuesRecorded()
 {
     createModulesManually();
     m_testRunner->setVfComponent(recorderEntityId, "PAR_StartStopRecording", true);
-    constexpr int actualValueCount = 4;
+    constexpr int actualValueCount = 16;
     constexpr int measPeriodMs = 500;
     for (int valueNo=0; valueNo<actualValueCount; valueNo++) {
         fireActualValues();
@@ -62,7 +62,7 @@ void test_recorder_reducer::invokeRpcFactorHigherThanValuesRecorded()
 {
     createModulesManually();
     m_testRunner->setVfComponent(recorderEntityId, "PAR_StartStopRecording", true);
-    constexpr int actualValueCount = 6;
+    constexpr int actualValueCount = 20;
     constexpr int measPeriodMs = 500;
     for (int valueNo=0; valueNo<actualValueCount; valueNo++) {
         fireActualValues();
@@ -101,7 +101,7 @@ void test_recorder_reducer::invokeRpcFactorDoubleValuesRecorded()
 {
     createModulesManually();
     m_testRunner->setVfComponent(recorderEntityId, "PAR_StartStopRecording", true);
-    constexpr int actualValueCount = 8;
+    constexpr int actualValueCount = 32;
     constexpr int measPeriodMs = 500;
     for (int valueNo=0; valueNo<actualValueCount; valueNo++) {
         fireActualValues();
