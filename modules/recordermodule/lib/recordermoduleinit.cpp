@@ -103,5 +103,7 @@ void RecorderModuleInit::createRecorder()
     m_recorder = std::make_shared<StorageRecorder>(entityComponents,
                                                    m_module->getStorageDb(),
                                                    entityIdDftModule, "SIG_Measuring");
-    m_recorderInterpolation = std::make_unique<StorageRecorderInterpolation>(entityComponents, m_recorder);
+
+    auto baseRecorder = std::make_shared<StorageRecorderInterpolation>(entityComponents, m_recorder, 4);
+    m_recorderInterpolation = std::make_unique<StorageRecorderInterpolation>(entityComponents, baseRecorder, 4);
 }
