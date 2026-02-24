@@ -132,6 +132,7 @@ void PeriodAverageModuleMeasProgram::setDspVarList()
     m_pTmpDataDsp->addDspVar("MEASSIGNAL", samplesPerPeriod, DSPDATA::vDspTemp);
     m_pTmpDataDsp->addDspVar("INTEGRAL_RESULT", channelCount, DSPDATA::vDspTemp);
     m_pTmpDataDsp->addDspVar("PERIODCURR", 1, DSPDATA::vDspTemp, DSPDATA::dInt);
+    m_pTmpDataDsp->addDspVar("RESULT_BUFF_IDX", 1, DSPDATA::vDspTemp, DSPDATA::dInt);
     m_pTmpDataDsp->addDspVar("FILTER", DspBuffLen::avgFilterLen(channelCount), DSPDATA::vDspTemp);
     m_pTmpDataDsp->addDspVar("VALS_PERIOD_WORK", getConfData()->m_maxPeriods*channelCount, DSPDATA::vDspResult);
 
@@ -157,6 +158,7 @@ void PeriodAverageModuleMeasProgram::setDspCmdList()
         m_dspInterface->addCycListItem(QString("CLEARN(%1,MEASSIGNAL)").arg(samplesPerPeriod) ); // clear meassignal
         m_dspInterface->addCycListItem(QString("CLEARN(%1,FILTER)").arg(DspBuffLen::avgFilterLen(channelCount)));
         m_dspInterface->addCycListItem(QString("SETVAL(PERIODCURR,1)"));
+        m_dspInterface->addCycListItem(QString("SETVAL(RESULT_BUFF_IDX,VALS_PERIOD_WORK)"));
         m_dspInterface->addCycListItem(QString("SETVAL(PERIODCOUNT,%1)").arg(getConfData()->m_periodCount.m_nValue));
 
         m_dspInterface->addCycListItem("DEACTIVATECHAIN(1,0x0101)"); // ende prozessnr., hauptkette 1 subkette 1
@@ -169,11 +171,7 @@ void PeriodAverageModuleMeasProgram::setDspCmdList()
         m_dspInterface->addCycListItem(QString("COPYDATA(CH%1,0,MEASSIGNAL)").arg(dspChannelNo));
         m_dspInterface->addCycListItem(QString("INTEGRAL(%1,MEASSIGNAL,INTEGRAL_RESULT+%2)").arg(samplesPerPeriod).arg(channelNo));
     }
-    for (int periodNo=0; periodNo<getConfData()->m_maxPeriods; ++periodNo) { // INTEGRAL_RESULT -> per period slot in VALS_PERIOD_WORK
-        int offset = periodNo*channelCount;
-        m_dspInterface->addCycListItem(QString("TESTVCSKIPGT(PERIODCURR,%1)").arg(periodNo));
-        m_dspInterface->addCycListItem(QString("COPYMEM(%1,INTEGRAL_RESULT,VALS_PERIOD_WORK+%2)").arg(channelCount).arg(offset));
-    }
+    m_dspInterface->addCycListItem(QString("XCOPYMEM(%1,INTEGRAL_RESULT,RESULT_BUFF_IDX)").arg(channelCount));
     m_dspInterface->addCycListItem(QString("AVERAGE1(%1,INTEGRAL_RESULT,FILTER)").arg(channelCount)); // add results to filter
 
     m_dspInterface->addCycListItem("INC(PERIODCURR)");
@@ -183,6 +181,7 @@ void PeriodAverageModuleMeasProgram::setDspCmdList()
 
     m_dspInterface->addCycListItem("STARTCHAIN(0,1,0x0102)");
         m_dspInterface->addCycListItem(QString("SETVAL(PERIODCURR,1)"));
+        m_dspInterface->addCycListItem(QString("SETVAL(RESULT_BUFF_IDX,VALS_PERIOD_WORK)"));
         m_dspInterface->addCycListItem(QString("CMPAVERAGE1(%1,FILTER,VALUES_AVG)").arg(channelCount));
         m_dspInterface->addCycListItem(QString("CLEARN(%1,FILTER)").arg(DspBuffLen::avgFilterLen(channelCount)));
         m_dspInterface->addCycListItem(QString("COPYMEM(%1,VALS_PERIOD_WORK,VALS_PERIOD)").arg(getConfData()->m_maxPeriods*channelCount));
