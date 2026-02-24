@@ -156,7 +156,7 @@ void cFftModuleMeasProgram::setDspVarList()
     m_pTmpDataDsp = m_dspInterface->getMemHandle("TmpData");
     m_pTmpDataDsp->addDspVar("FFTINPUT", 2 * m_nfftLen, DSPDATA::vDspTempGlobal);
     m_pTmpDataDsp->addDspVar("FFTOUTPUT", 2 * m_nfftLen, DSPDATA::vDspTempGlobal);
-    // meassignal will also still fit in global mem ... so we save memory
+
     m_pTmpDataDsp->addDspVar("MEASSIGNAL", 2 * samples, DSPDATA::vDspTemp);
     m_pTmpDataDsp->addDspVar("FFTXOUTPUT", 2 * m_nfftLen * m_veinActValueList.count(), DSPDATA::vDspTemp);
     m_pTmpDataDsp->addDspVar("FILTER", DspBuffLen::avgFilterLen(2 * m_nfftLen * m_veinActValueList.count()), DSPDATA::vDspTemp);
