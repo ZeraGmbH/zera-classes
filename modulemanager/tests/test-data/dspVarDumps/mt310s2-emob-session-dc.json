@@ -203,20 +203,20 @@
     "1020": {
         "1-MemGroups": {
             "GainCorrection": {
-                "Size": 32,
-                "UserMemSize": 32
+                "UserMemSize": 32,
+                "UserMemSizeGlobal": 0
             },
             "OffsetCorrection": {
-                "Size": 32,
-                "UserMemSize": 32
+                "UserMemSize": 32,
+                "UserMemSizeGlobal": 0
             },
             "PhaseCorrection": {
-                "Size": 32,
-                "UserMemSize": 32
+                "UserMemSize": 32,
+                "UserMemSizeGlobal": 0
             },
             "SubDC": {
-                "Size": 1,
-                "UserMemSize": 1
+                "UserMemSize": 1,
+                "UserMemSizeGlobal": 0
             }
         },
         "2-CmdList": [
@@ -228,8 +228,8 @@
     "1040": {
         "1-MemGroups": {
             "ActualValues": {
-                "Size": 11,
                 "UserMemSize": 11,
+                "UserMemSizeGlobal": 0,
                 "Variables": [
                     {
                         "Name": "VALXRMSF",
@@ -240,8 +240,8 @@
                 ]
             },
             "Parameter": {
-                "Size": 2,
                 "UserMemSize": 2,
+                "UserMemSizeGlobal": 0,
                 "Variables": [
                     {
                         "Name": "TIPAR",
@@ -258,8 +258,8 @@
                 ]
             },
             "TmpData": {
-                "Size": 538,
                 "UserMemSize": 538,
+                "UserMemSizeGlobal": 0,
                 "Variables": [
                     {
                         "Name": "MEASSIGNAL",
@@ -340,8 +340,8 @@
     "1050": {
         "1-MemGroups": {
             "ActualValues": {
-                "Size": 22,
                 "UserMemSize": 22,
+                "UserMemSizeGlobal": 0,
                 "Variables": [
                     {
                         "Name": "VALXDFTF",
@@ -352,8 +352,8 @@
                 ]
             },
             "Parameter": {
-                "Size": 2,
                 "UserMemSize": 2,
+                "UserMemSizeGlobal": 0,
                 "Variables": [
                     {
                         "Name": "TIPAR",
@@ -370,8 +370,8 @@
                 ]
             },
             "TmpData": {
-                "Size": 571,
                 "UserMemSize": 571,
+                "UserMemSizeGlobal": 0,
                 "Variables": [
                     {
                         "Name": "MEASSIGNAL",
@@ -441,8 +441,8 @@
     "1055": {
         "1-MemGroups": {
             "ActualValues": {
-                "Size": 28,
                 "UserMemSize": 28,
+                "UserMemSizeGlobal": 0,
                 "Variables": [
                     {
                         "Name": "VALS_PERIOD",
@@ -459,8 +459,8 @@
                 ]
             },
             "Parameter": {
-                "Size": 1,
                 "UserMemSize": 1,
+                "UserMemSizeGlobal": 0,
                 "Variables": [
                     {
                         "Name": "PERIODCOUNT",
@@ -471,8 +471,8 @@
                 ]
             },
             "TmpData": {
-                "Size": 539,
                 "UserMemSize": 539,
+                "UserMemSizeGlobal": 0,
                 "Variables": [
                     {
                         "Name": "MEASSIGNAL",
@@ -548,8 +548,8 @@
     "1060": {
         "1-MemGroups": {
             "ActualValues": {
-                "Size": 2048,
                 "UserMemSize": 2048,
+                "UserMemSizeGlobal": 0,
                 "Variables": [
                     {
                         "Name": "VALXFFTF",
@@ -560,8 +560,8 @@
                 ]
             },
             "Parameter": {
-                "Size": 3,
                 "UserMemSize": 3,
+                "UserMemSizeGlobal": 0,
                 "Variables": [
                     {
                         "Name": "TIPAR",
@@ -584,8 +584,8 @@
                 ]
             },
             "TmpData": {
-                "Size": 7669,
                 "UserMemSize": 7157,
+                "UserMemSizeGlobal": 512,
                 "Variables": [
                     {
                         "Name": "FFTINPUT",
@@ -708,8 +708,8 @@
     "1073": {
         "1-MemGroups": {
             "ActualValues": {
-                "Size": 4,
                 "UserMemSize": 4,
+                "UserMemSizeGlobal": 0,
                 "Variables": [
                     {
                         "Name": "VALPQSF",
@@ -720,8 +720,8 @@
                 ]
             },
             "FrequencyScale": {
-                "Size": 1,
                 "UserMemSize": 1,
+                "UserMemSizeGlobal": 0,
                 "Variables": [
                     {
                         "Name": "FREQSCALE",
@@ -732,8 +732,8 @@
                 ]
             },
             "Parameter": {
-                "Size": 7,
                 "UserMemSize": 7,
+                "UserMemSizeGlobal": 0,
                 "Variables": [
                     {
                         "Name": "TIPAR",
@@ -780,8 +780,8 @@
                 ]
             },
             "QRefScale": {
-                "Size": 1,
                 "UserMemSize": 1,
+                "UserMemSizeGlobal": 0,
                 "Variables": [
                     {
                         "Name": "NOMPOWER",
@@ -792,8 +792,8 @@
                 ]
             },
             "TmpData": {
-                "Size": 1034,
                 "UserMemSize": 1034,
+                "UserMemSizeGlobal": 0,
                 "Variables": [
                     {
                         "Name": "MEASSIGNAL1",
@@ -935,8 +935,8 @@
     "1110": {
         "1-MemGroups": {
             "ActualValues": {
-                "Size": 8,
                 "UserMemSize": 8,
+                "UserMemSizeGlobal": 0,
                 "Variables": [
                     {
                         "Name": "VALXTHDNF",
@@ -947,8 +947,8 @@
                 ]
             },
             "Parameter": {
-                "Size": 2,
                 "UserMemSize": 2,
+                "UserMemSizeGlobal": 0,
                 "Variables": [
                     {
                         "Name": "TIPAR",
@@ -965,8 +965,8 @@
                 ]
             },
             "TmpData": {
-                "Size": 529,
                 "UserMemSize": 529,
+                "UserMemSizeGlobal": 0,
                 "Variables": [
                     {
                         "Name": "MEASSIGNAL",
@@ -1030,8 +1030,8 @@
     "1111": {
         "1-MemGroups": {
             "ActualValues": {
-                "Size": 8,
                 "UserMemSize": 8,
+                "UserMemSizeGlobal": 0,
                 "Variables": [
                     {
                         "Name": "VALXTHDNF",
@@ -1042,8 +1042,8 @@
                 ]
             },
             "Parameter": {
-                "Size": 2,
                 "UserMemSize": 2,
+                "UserMemSizeGlobal": 0,
                 "Variables": [
                     {
                         "Name": "TIPAR",
@@ -1060,8 +1060,8 @@
                 ]
             },
             "TmpData": {
-                "Size": 529,
                 "UserMemSize": 529,
+                "UserMemSizeGlobal": 0,
                 "Variables": [
                     {
                         "Name": "MEASSIGNAL",
@@ -1125,8 +1125,8 @@
     "1120": {
         "1-MemGroups": {
             "ActualValues": {
-                "Size": 1024,
                 "UserMemSize": 1024,
+                "UserMemSizeGlobal": 0,
                 "Variables": [
                     {
                         "Name": "VALXOSCI",
@@ -1137,8 +1137,8 @@
                 ]
             },
             "Parameter": {
-                "Size": 1,
                 "UserMemSize": 1,
+                "UserMemSizeGlobal": 0,
                 "Variables": [
                     {
                         "Name": "REFCHN",
@@ -1149,8 +1149,8 @@
                 ]
             },
             "TmpData": {
-                "Size": 5046,
                 "UserMemSize": 5046,
+                "UserMemSizeGlobal": 0,
                 "Variables": [
                     {
                         "Name": "MEASSIGNAL",

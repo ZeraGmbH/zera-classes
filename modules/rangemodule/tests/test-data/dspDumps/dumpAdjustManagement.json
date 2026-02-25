@@ -1,20 +1,20 @@
 {
     "1-MemGroups": {
         "GainCorrection": {
-            "Size": 32,
-            "UserMemSize": 32
+            "UserMemSize": 32,
+            "UserMemSizeGlobal": 0
         },
         "OffsetCorrection": {
-            "Size": 32,
-            "UserMemSize": 32
+            "UserMemSize": 32,
+            "UserMemSizeGlobal": 0
         },
         "PhaseCorrection": {
-            "Size": 32,
-            "UserMemSize": 32
+            "UserMemSize": 32,
+            "UserMemSizeGlobal": 0
         },
         "SubDC": {
-            "Size": 1,
-            "UserMemSize": 1
+            "UserMemSize": 1,
+            "UserMemSizeGlobal": 0
         }
     },
     "2-CmdList": [

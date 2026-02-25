@@ -1,8 +1,8 @@
 {
     "1-MemGroups": {
         "SCALEMEM": {
-            "Size": 32,
-            "UserMemSize": 32
+            "UserMemSize": 32,
+            "UserMemSizeGlobal": 0
         }
     },
     "2-CmdList": [

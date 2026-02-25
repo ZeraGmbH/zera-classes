@@ -1,8 +1,8 @@
 {
     "1-MemGroups": {
         "ActualValues": {
-            "Size": 1024,
             "UserMemSize": 1024,
+            "UserMemSizeGlobal": 0,
             "Variables": [
                 {
                     "Name": "VALXOSCI",
@@ -13,8 +13,8 @@
             ]
         },
         "Parameter": {
-            "Size": 1,
             "UserMemSize": 1,
+            "UserMemSizeGlobal": 0,
             "Variables": [
                 {
                     "Name": "REFCHN",
@@ -25,8 +25,8 @@
             ]
         },
         "TmpData": {
-            "Size": 5046,
             "UserMemSize": 5046,
+            "UserMemSizeGlobal": 0,
             "Variables": [
                 {
                     "Name": "MEASSIGNAL",

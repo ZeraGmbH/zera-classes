@@ -145,7 +145,7 @@ void PeriodAverageModuleMeasProgram::setDspVarList()
     m_pActualValuesDSP->addDspVar("VALS_PERIOD", getConfData()->m_maxPeriods*channelCount, DSPDATA::vDspResult);
     m_pActualValuesDSP->addDspVar("VALUES_AVG", channelCount, DSPDATA::vDspResult);
 
-    m_ModuleActualValues.resize(m_pActualValuesDSP->getSize()); // we provide a vector for generated actual values
+    m_ModuleActualValues.resize(m_pActualValuesDSP->getUserMemSize()); // we provide a vector for generated actual values
 }
 
 void PeriodAverageModuleMeasProgram::setDspCmdList()

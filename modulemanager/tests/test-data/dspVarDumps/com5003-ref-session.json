@@ -203,12 +203,12 @@
     "1001": {
         "1-MemGroups": {
             "GainCorrection": {
-                "Size": 32,
-                "UserMemSize": 32
+                "UserMemSize": 32,
+                "UserMemSizeGlobal": 0
             },
             "OffsetCorrection": {
-                "Size": 32,
-                "UserMemSize": 32
+                "UserMemSize": 32,
+                "UserMemSizeGlobal": 0
             }
         },
         "2-CmdList": [
@@ -219,20 +219,20 @@
     "1020": {
         "1-MemGroups": {
             "GainCorrection": {
-                "Size": 32,
-                "UserMemSize": 32
+                "UserMemSize": 32,
+                "UserMemSizeGlobal": 0
             },
             "OffsetCorrection": {
-                "Size": 32,
-                "UserMemSize": 32
+                "UserMemSize": 32,
+                "UserMemSizeGlobal": 0
             },
             "PhaseCorrection": {
-                "Size": 32,
-                "UserMemSize": 32
+                "UserMemSize": 32,
+                "UserMemSizeGlobal": 0
             },
             "SubDC": {
-                "Size": 1,
-                "UserMemSize": 1
+                "UserMemSize": 1,
+                "UserMemSizeGlobal": 0
             }
         },
         "2-CmdList": [
@@ -244,8 +244,8 @@
     "1050": {
         "1-MemGroups": {
             "ActualValues": {
-                "Size": 12,
                 "UserMemSize": 12,
+                "UserMemSizeGlobal": 0,
                 "Variables": [
                     {
                         "Name": "VALXDFTF",
@@ -256,8 +256,8 @@
                 ]
             },
             "Parameter": {
-                "Size": 2,
                 "UserMemSize": 2,
+                "UserMemSizeGlobal": 0,
                 "Variables": [
                     {
                         "Name": "TIPAR",
@@ -274,8 +274,8 @@
                 ]
             },
             "TmpData": {
-                "Size": 541,
                 "UserMemSize": 541,
+                "UserMemSizeGlobal": 0,
                 "Variables": [
                     {
                         "Name": "MEASSIGNAL",
@@ -335,8 +335,8 @@
     "1070": {
         "1-MemGroups": {
             "ActualValues": {
-                "Size": 4,
                 "UserMemSize": 4,
+                "UserMemSizeGlobal": 0,
                 "Variables": [
                     {
                         "Name": "VALPQSF",
@@ -347,8 +347,8 @@
                 ]
             },
             "FrequencyScale": {
-                "Size": 1,
                 "UserMemSize": 1,
+                "UserMemSizeGlobal": 0,
                 "Variables": [
                     {
                         "Name": "FREQSCALE",
@@ -359,8 +359,8 @@
                 ]
             },
             "Parameter": {
-                "Size": 7,
                 "UserMemSize": 7,
+                "UserMemSizeGlobal": 0,
                 "Variables": [
                     {
                         "Name": "TIPAR",
@@ -407,8 +407,8 @@
                 ]
             },
             "QRefScale": {
-                "Size": 1,
                 "UserMemSize": 1,
+                "UserMemSizeGlobal": 0,
                 "Variables": [
                     {
                         "Name": "NOMPOWER",
@@ -419,8 +419,8 @@
                 ]
             },
             "TmpData": {
-                "Size": 1034,
                 "UserMemSize": 1034,
+                "UserMemSizeGlobal": 0,
                 "Variables": [
                     {
                         "Name": "MEASSIGNAL1",

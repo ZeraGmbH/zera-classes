@@ -1,8 +1,8 @@
 {
     "1-MemGroups": {
         "ActualValues": {
-            "Size": 4,
             "UserMemSize": 4,
+            "UserMemSizeGlobal": 0,
             "Variables": [
                 {
                     "Name": "VALPQSF",
@@ -13,8 +13,8 @@
             ]
         },
         "FrequencyScale": {
-            "Size": 1,
             "UserMemSize": 1,
+            "UserMemSizeGlobal": 0,
             "Variables": [
                 {
                     "Name": "FREQSCALE",
@@ -25,8 +25,8 @@
             ]
         },
         "Parameter": {
-            "Size": 7,
             "UserMemSize": 7,
+            "UserMemSizeGlobal": 0,
             "Variables": [
                 {
                     "Name": "TIPAR",
@@ -73,8 +73,8 @@
             ]
         },
         "QRefScale": {
-            "Size": 1,
             "UserMemSize": 1,
+            "UserMemSizeGlobal": 0,
             "Variables": [
                 {
                     "Name": "NOMPOWER",
@@ -85,8 +85,8 @@
             ]
         },
         "TmpData": {
-            "Size": 1034,
             "UserMemSize": 1034,
+            "UserMemSizeGlobal": 0,
             "Variables": [
                 {
                     "Name": "MEASSIGNAL1",

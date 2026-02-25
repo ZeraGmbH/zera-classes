@@ -1,8 +1,8 @@
 {
     "1-MemGroups": {
         "ActualValues": {
-            "Size": 2048,
             "UserMemSize": 2048,
+            "UserMemSizeGlobal": 0,
             "Variables": [
                 {
                     "Name": "VALXFFTF",
@@ -13,8 +13,8 @@
             ]
         },
         "Parameter": {
-            "Size": 3,
             "UserMemSize": 3,
+            "UserMemSizeGlobal": 0,
             "Variables": [
                 {
                     "Name": "TIPAR",
@@ -37,8 +37,8 @@
             ]
         },
         "TmpData": {
-            "Size": 7669,
             "UserMemSize": 7157,
+            "UserMemSizeGlobal": 512,
             "Variables": [
                 {
                     "Name": "FFTINPUT",

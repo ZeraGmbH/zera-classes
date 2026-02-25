@@ -76,8 +76,8 @@ QJsonObject TestDspInterface::dumpMemoryGroups()
     QJsonObject dumpMemGroup;
     for(cDspMeasData* memData : dspMemoryDataList) {
         QJsonObject entry;
-        entry.insert("Size", int(memData->getSize()));
         entry.insert("UserMemSize", int(memData->getUserMemSize()));
+        entry.insert("UserMemSizeGlobal", int(memData->getUserMemSizeGlobal()));
         dumpMemGroup.insert(memData->getName(), entry);
     }
     return dumpMemGroup;

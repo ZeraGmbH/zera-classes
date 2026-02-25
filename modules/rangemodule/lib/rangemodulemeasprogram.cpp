@@ -141,7 +141,7 @@ void cRangeModuleMeasProgram::setDspVarList()
     m_pActualValuesDSP->addDspVar("FREQF", 1, DSPDATA::vDspResult);
     m_pActualValuesDSP->addDspVar("CHXRAWPEAK",channelMNames.count(), DSPDATA::vDspResult);
 
-    m_ModuleActualValues.resize(m_pActualValuesDSP->getSize()); // we provide a vector for generated actual values
+    m_ModuleActualValues.resize(m_pActualValuesDSP->getUserMemSize()); // we provide a vector for generated actual values
 }
 
 void cRangeModuleMeasProgram::setDspCmdList()

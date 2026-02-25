@@ -175,7 +175,7 @@ void cFftModuleMeasProgram::setDspVarList()
     m_pActualValuesDSP = m_dspInterface->getMemHandle("ActualValues");
     m_pActualValuesDSP->addDspVar("VALXFFTF", 2 * m_nfftLen * m_veinActValueList.count(), DSPDATA::vDspResult);
 
-    m_ModuleActualValues.resize(m_pActualValuesDSP->getSize()); // we provide a vector for generated actual values
+    m_ModuleActualValues.resize(m_pActualValuesDSP->getUserMemSize()); // we provide a vector for generated actual values
     m_FFTModuleActualValues.resize(m_veinActValueList.count() * getConfData()->m_nFftOrder * 2);
 }
 

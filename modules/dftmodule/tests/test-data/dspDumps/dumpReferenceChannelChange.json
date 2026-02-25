@@ -1,8 +1,8 @@
 {
     "1-MemGroups": {
         "ActualValues": {
-            "Size": 22,
             "UserMemSize": 22,
+            "UserMemSizeGlobal": 0,
             "Variables": [
                 {
                     "Name": "VALXDFTF",
@@ -13,8 +13,8 @@
             ]
         },
         "Parameter": {
-            "Size": 2,
             "UserMemSize": 2,
+            "UserMemSizeGlobal": 0,
             "Variables": [
                 {
                     "Name": "TIPAR",
@@ -31,8 +31,8 @@
             ]
         },
         "TmpData": {
-            "Size": 571,
             "UserMemSize": 571,
+            "UserMemSizeGlobal": 0,
             "Variables": [
                 {
                     "Name": "MEASSIGNAL",
