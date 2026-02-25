@@ -40,7 +40,7 @@ void test_read_clear_emob_error::readClearErrorNoParamOneEmobScpi()
     TimeMachineObject::feedEventLoop();
 
     QString status = m_scpiClient->sendReceive("EMOB:HOTP1:ERROR?");
-    QCOMPARE(status, QString::number(errorInstrumentStatus::Instrument_Status_Cable_Error));
+    QCOMPARE(status, QString::number(1<<errorInstrumentStatus::Instrument_Status_Cable_Error));
 
     status = m_scpiClient->sendReceive("EMOB:HOTP1:CLEARERROR;|*stb?");
     QCOMPARE(status, "+0");
@@ -54,7 +54,7 @@ void test_read_clear_emob_error::readClearErrorNoParamOneMt650eScpi()
     TimeMachineObject::feedEventLoop();
 
     QString status = m_scpiClient->sendReceive("EMOB:HOTP1:ERROR?");
-    QCOMPARE(status, QString::number(errorInstrumentStatus::Instrument_Status_Cable_Error));
+    QCOMPARE(status, QString::number(1<<errorInstrumentStatus::Instrument_Status_Cable_Error));
 
     status = m_scpiClient->sendReceive("EMOB:HOTP1:CLEARERROR;|*stb?");
     QCOMPARE(status, "+0");
@@ -100,12 +100,12 @@ void test_read_clear_emob_error::readClearErrorValidParamOneEmobOneMt650eScpi()
     TimeMachineObject::feedEventLoop();
 
     QString status = m_scpiClient->sendReceive("EMOB:HOTP1:ERROR? IL1;");
-    QCOMPARE(status, QString::number(errorInstrumentStatus::Instrument_Status_Cable_Error));
+    QCOMPARE(status, QString::number(1<<errorInstrumentStatus::Instrument_Status_Cable_Error));
     status = m_scpiClient->sendReceive("EMOB:HOTP1:CLEARERROR  IL1;|*stb?");
     QCOMPARE(status, "+0");
 
     status = m_scpiClient->sendReceive("EMOB:HOTP1:ERROR? IL2;");
-    QCOMPARE(status, QString::number(errorInstrumentStatus::Instrument_Status_Cable_Error));
+    QCOMPARE(status, QString::number(1<<errorInstrumentStatus::Instrument_Status_Cable_Error));
     status = m_scpiClient->sendReceive("EMOB:HOTP1:CLEARERROR IL2;|*stb?");
     QCOMPARE(status, "+0");
 }
