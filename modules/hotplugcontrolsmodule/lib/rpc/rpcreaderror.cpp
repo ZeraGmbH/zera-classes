@@ -37,5 +37,5 @@ void RPCReadError::onRpcTaskFinish(bool ok, QUuid rpcCallId)
     if(ok)
         sendRpcResult(rpcCallId, *m_emobErrorStatus);
     else
-        sendRpcError(rpcCallId, QString::number(1<<16));
+        sendRpcError(rpcCallId, QString::number(ErrorValueReturnedOnNak));
 }

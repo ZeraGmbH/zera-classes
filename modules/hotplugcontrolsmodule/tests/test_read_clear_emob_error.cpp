@@ -1,5 +1,6 @@
 #include "test_read_clear_emob_error.h"
 #include "controllerpersitentdata.h"
+#include "rpcreaderror.h"
 #include <vn_networksystem.h>
 #include <timemachineobject.h>
 #include <QTest>
@@ -26,7 +27,7 @@ void test_read_clear_emob_error::cleanup()
 void test_read_clear_emob_error::readClearErrorNoHotplugScpi()
 {
     QString status = m_scpiClient->sendReceive("EMOB:HOTP1:ERROR?");
-    QCOMPARE(status, QString::number(1<<16)); //no emob
+    QCOMPARE(status, QString::number(RPCReadError::ErrorValueReturnedOnNak));
 
     status = m_scpiClient->sendReceive("EMOB:HOTP1:CLEARERROR;|*stb?");
     QCOMPARE(status, "+4");

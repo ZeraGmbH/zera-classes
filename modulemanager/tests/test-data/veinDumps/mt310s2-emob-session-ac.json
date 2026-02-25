@@ -5713,7 +5713,7 @@
                     }
                 },
                 "RPC_readError(QString p_channelName)": {
-                    "Description": "EMOB Errors bits:\nBit0: Supply lost\nBit1: Device error\nBit2: Sensor error\nBit3: Cable error\nBit4: Overcurrent\nBit5: Overtemperature\nBit6: locking error\nBit7: Problem at neighbour EMOB",
+                    "Description": "EMOB Errors bits:\nBit0: Supply lost\nBit1: Device error\nBit2: Sensor error\nBit3: Cable error\nBit4: Overcurrent\nBit5: Overtemperature\nBit6: locking error\nBit7: Problem at neighbour EMOB\nBit16: EMOB device not found",
                     "Optional parameter": "",
                     "Validation": {
                         "Data": [

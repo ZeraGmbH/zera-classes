@@ -10,6 +10,9 @@
 class RPCReadError : public VfCpp::VfCppRpcSimplified
 {
 public:
+    // We sail ontop of René's flags 0-15
+    static const int ErrorValueReturnedOnNak = (1<<16);
+
     RPCReadError(Zera::PcbInterfacePtr pcbInterface,
                   ChannelRangeObserver::SystemObserverPtr observer,
                   VeinEvent::EventSystem *eventSystem, int entityId);

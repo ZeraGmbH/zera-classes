@@ -88,7 +88,8 @@ void HotplugControlsModuleController::generateVeinInterface()
                                                         "Bit4: Overcurrent\n"
                                                         "Bit5: Overtemperature\n"
                                                         "Bit6: locking error\n"
-                                                        "Bit7: Problem at neighbour EMOB");
+                                                        "Bit7: Problem at neighbour EMOB\n"
+                                                        "Bit16: EMOB device not found"); // see RPCReadError::ErrorValueReturnedOnNak
 
     m_pEmobReadErrorRpc->setRPCScpiInfo("EMOB",
                                          QString("ERROR"),
