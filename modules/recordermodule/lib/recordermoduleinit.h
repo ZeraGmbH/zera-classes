@@ -31,6 +31,7 @@ private:
     std::shared_ptr<VeinStorage::StorageRecorder> m_recorder;
     std::unique_ptr<StorageRecorderInterpolation> m_recorderInterpolation;
     VfModuleComponentStorageFetchOnly* m_jsonExportComponent = nullptr;
+    VfModuleComponentStorageFetchOnly* m_csvExportComponent = nullptr;
     VfModuleParameter* m_numberOfPointsInCurve = nullptr;
     VfModuleParameter* m_startStopRecording = nullptr;
     VfModuleRpcPtr m_pReadRecordedValuesRpc = nullptr;

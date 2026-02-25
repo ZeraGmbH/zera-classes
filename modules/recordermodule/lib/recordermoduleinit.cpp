@@ -1,4 +1,5 @@
 #include "recordermoduleinit.h"
+#include "recordercsvexportveingethandler.h"
 #include "recordermoduleconfiguration.h"
 #include "rpcgetrecordeddatasampler.h"
 #include "rpcreadrecordedvalues.h"
@@ -75,6 +76,14 @@ void RecorderModuleInit::generateVeinInterface()
     m_jsonExportComponent->setStorageGetCustomizer(std::make_shared<RecorderJsonExportVeinGetHandler>(m_recorder->getRecordedData()));
     m_jsonExportComponent->setScpiInfo("RECORDER", "EXPORT:JSON");
     m_module->m_veinComponentsWithMetaAndScpi.append(m_jsonExportComponent);
+
+    m_csvExportComponent = new VfModuleComponentStorageFetchOnly(m_module->getEntityId(),
+                                                                 "ACT_CSV_EXPORT",
+                                                                 "CSV export of recorded values",
+                                                                 m_module->getStorageDb());
+    m_csvExportComponent->setStorageGetCustomizer(std::make_shared<RecorderCsvExportVeinGetHandler>(m_recorder->getRecordedData()));
+    m_csvExportComponent->setScpiInfo("RECORDER", "EXPORT:CSV");
+    m_module->m_veinComponentsWithMetaAndScpi.append(m_csvExportComponent);
 }
 
 void RecorderModuleInit::startStopLogging(QVariant startStopRecording)

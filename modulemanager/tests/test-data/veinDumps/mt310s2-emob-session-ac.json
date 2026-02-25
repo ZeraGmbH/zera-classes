@@ -5781,6 +5781,9 @@
         "EntityName": "RecorderModule1",
         "INF_ModuleInterface": {
             "ComponentInfo": {
+                "ACT_CSV_EXPORT": {
+                    "Description": "<skipped>"
+                },
                 "ACT_JSON_EXPORT": {
                     "Description": "<skipped>"
                 },
@@ -5823,6 +5826,13 @@
                         "EXPORT:JSON",
                         "2",
                         "ACT_JSON_EXPORT",
+                        "0"
+                    ],
+                    [
+                        "RECORDER",
+                        "EXPORT:CSV",
+                        "2",
+                        "ACT_CSV_EXPORT",
                         "0"
                     ],
                     [

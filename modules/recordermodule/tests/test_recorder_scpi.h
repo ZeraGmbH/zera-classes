@@ -14,10 +14,16 @@ private slots:
     void scpiQueryRunInitial();
     void scpiQueryCountEmpty();
     void scpiWriteCountIgnored();
+    void scpiQueryAll();
+
     void scpiQueryJsonExportEmpty();
     void scpiQueryJsonFireValuesOnce();
     void scpiQueryJsonFireValuesTwice();
-    void scpiQueryAll();
+
+    void scpiQueryCsvExportEmpty();
+    void scpiQueryCsvFireValuesOnce();
+    void scpiQueryCsvFireValuesTwice();
+
 
 private:
     void createModule(int entityId, QMap<QString, QVariant> components);

@@ -48,6 +48,13 @@ void test_recorder_scpi::scpiWriteCountIgnored()
     QCOMPARE(client.sendReceive("*cls|RECORDER:REC1:COUNT?"), "0");
 }
 
+void test_recorder_scpi::scpiQueryAll()
+{
+    ScpiModuleClientBlocked client;
+    QCOMPARE(client.sendReceive("*cls|RECORDER|*stb?"), "+4");
+    QCOMPARE(client.sendReceive("*cls|RECORDER:REC1|*stb?"), "+4");
+}
+
 void test_recorder_scpi::scpiQueryJsonExportEmpty()
 {
     ScpiModuleClientBlocked client;
@@ -96,11 +103,52 @@ void test_recorder_scpi::scpiQueryJsonFireValuesTwice()
     QVERIFY(TestLogHelpers::compareAndLogOnDiffJson(jsonExpected, jsonDumped));
 }
 
-void test_recorder_scpi::scpiQueryAll()
+void test_recorder_scpi::scpiQueryCsvExportEmpty()
 {
+    createModulesManually();
     ScpiModuleClientBlocked client;
-    QCOMPARE(client.sendReceive("*cls|RECORDER|*stb?"), "+4");
-    QCOMPARE(client.sendReceive("*cls|RECORDER:REC1|*stb?"), "+4");
+    QString csvDumped = client.sendReceive("RECORDER:REC1:EXPORT:CSV?", false);
+    QString csvExpected = TestLogHelpers::loadFile(":/fireValuesNone.csv");
+
+    QVERIFY(TestLogHelpers::compareAndLogOnDiff(csvExpected, csvDumped));
+}
+
+void test_recorder_scpi::scpiQueryCsvFireValuesOnce()
+{
+    createModulesManually();
+    TimeMachineForTest::getInstance()->setCurrentTime(QDate(2026, 2, 25),
+                                                      QTime(19, 21, 37, 1),
+                                                      QTimeZone(3*3600));
+
+    ScpiModuleClientBlocked client;
+    client.sendReceive("RECORDER:REC1:RUN 1;");
+
+    fireActualValues();
+    triggerDftModuleSigMeasuring();
+    QString csvDumped = client.sendReceive("RECORDER:REC1:EXPORT:CSV?", false);
+    QString csvExpected = TestLogHelpers::loadFile(":/fireValuesOnce.csv");
+
+    QVERIFY(TestLogHelpers::compareAndLogOnDiff(csvExpected, csvDumped));
+}
+
+void test_recorder_scpi::scpiQueryCsvFireValuesTwice()
+{
+    createModulesManually();
+    TimeMachineForTest::getInstance()->setCurrentTime(QDate(2026, 2, 25),
+                                                      QTime(23, 25, 38, 2),
+                                                      QTimeZone(3*3600));
+
+    ScpiModuleClientBlocked client;
+    client.sendReceive("RECORDER:REC1:RUN 1;");
+
+    fireActualValues();
+    triggerDftModuleSigMeasuring();
+    TimeMachineForTest::getInstance()->processTimers(499);
+    triggerDftModuleSigMeasuring();
+    QString csvDumped = client.sendReceive("RECORDER:REC1:EXPORT:CSV?", false);
+    QString csvExpected = TestLogHelpers::loadFile(":/fireValuesTwice.csv");
+
+    QVERIFY(TestLogHelpers::compareAndLogOnDiff(csvExpected, csvDumped));
 }
 
 void test_recorder_scpi::createModule(int entityId, QMap<QString, QVariant> components)
