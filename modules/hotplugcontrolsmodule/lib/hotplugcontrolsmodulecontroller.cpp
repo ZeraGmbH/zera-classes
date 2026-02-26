@@ -79,6 +79,7 @@ void HotplugControlsModuleController::generateVeinInterface()
                                                                                         m_observer,
                                                                                         rpcEventSystem,
                                                                                         m_module->getEntityId());
+    // Bit16: see RPCReadError::ErrorValueReturnedOnNak
     m_pEmobReadErrorRpc = std::make_shared<VfModuleRpc>(rpcEmobReadError,
                                                         "EMOB Errors bits:\n"
                                                         "Bit0: Supply lost\n"
@@ -89,7 +90,11 @@ void HotplugControlsModuleController::generateVeinInterface()
                                                         "Bit5: Overtemperature\n"
                                                         "Bit6: locking error\n"
                                                         "Bit7: Problem at neighbour EMOB\n"
-                                                        "Bit16: EMOB device not found"); // see RPCReadError::ErrorValueReturnedOnNak
+                                                        "Bit16: Communication to EMOB device failed.\n"
+                                                        "  **Suggestion:** On device check: 🛈 / *Device information* - **Are there EMOB/MT650 entries?**\n"
+                                                        "  **Yes**: Was the correct channel selected (mandatory on multiple devices as EMOB/MT650)?\n"
+                                                        "  **No**: Insert USB-memory stick / 🛈 / *Service Support / Save logfile to USB* -> service@zera.de"
+                                                        );
 
     m_pEmobReadErrorRpc->setRPCScpiInfo("EMOB",
                                          QString("ERROR"),
