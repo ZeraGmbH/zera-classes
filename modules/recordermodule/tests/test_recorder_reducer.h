@@ -13,10 +13,9 @@ private slots:
     void cleanup();
 
     void invokeRpcNoValuesRecorded();
-    void invokeRpcFactorSimilarAsValuesRecorded();
-    void invokeRpcFactorHigherThanValuesRecorded();
-    void invokeRpcFactorLowerThanValuesRecorded();
-    void invokeRpcFactorDoubleValuesRecorded();
+    void invokeRpcOneValueRecorded();
+    void invokeRpcFirstStack();
+    void invokeRpcFirstStackSecondStack();
 
 private:
     void createModule(int entityId, QMap<QString, QVariant> components);

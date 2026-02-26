@@ -14,5 +14,10 @@
                 <labels>PAUX</labels>
             </ent2>
         </entity-components>
+        <interpolation-stack>
+            <n>2</n>
+            <valuelen1>4</valuelen1>
+            <valuelen2>4</valuelen2>
+        </interpolation-stack>
     </configuration>
 </recordermoduleconfpar>

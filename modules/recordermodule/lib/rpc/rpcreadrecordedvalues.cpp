@@ -5,8 +5,8 @@
 
 using namespace VeinStorage;
 
-RPCReadRecordedValues::RPCReadRecordedValues(VeinEvent::EventSystem *eventSystem, VeinStorage::StorageRecordDataPtr recordedStorage, int entityId) :
-    VfCpp::VfCppRpcSimplified(eventSystem, entityId, createRpcSignature()),
+RPCReadRecordedValues::RPCReadRecordedValues(VeinEvent::EventSystem *eventSystem, VeinStorage::StorageRecordDataPtr recordedStorage, QString rpcName, int entityId) :
+    VfCpp::VfCppRpcSimplified(eventSystem, entityId, createRpcSignature(rpcName)),
     m_recordedStorage(recordedStorage)
 {
 }
@@ -58,10 +58,10 @@ void RPCReadRecordedValues::callRPCFunction(const QUuid &callId, const QVariantM
     sendRpcResult(callId, result);
 }
 
-QString RPCReadRecordedValues::createRpcSignature()
+QString RPCReadRecordedValues::createRpcSignature(QString rpcName)
 {
     return VfCpp::VfCppRpcSignature::createRpcSignature(
-        "RPC_ReadRecordedValues",
+        rpcName,
         VfCpp::VfCppRpcSignature::RPCParams({{"p_startingPoint", "int"}, {"p_endingPoint", "int"}}));
 }
 

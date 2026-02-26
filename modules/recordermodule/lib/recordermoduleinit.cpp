@@ -1,7 +1,6 @@
 #include "recordermoduleinit.h"
 #include "recordercsvexportveingethandler.h"
 #include "recordermoduleconfiguration.h"
-#include "rpcgetrecordeddatasampler.h"
 #include "rpcreadrecordedvalues.h"
 #include "recorderjsonexportveingethandler.h"
 #include <boolvalidator.h>
@@ -23,6 +22,11 @@ RecorderModuleInit::RecorderModuleInit(RecorderModule *module,
     connect(m_recorder.get(), &StorageRecorder::sigRecordCountChanged, this, [=](int count) {
         m_numberOfPointsInCurve->setValue(count);
     });
+    for(int i=0; i<m_confData->m_stackCount; i++) {
+        connect(m_recorderInterpolationList.at(i).get(), &StorageRecorder::sigRecordCountChanged, this, [=](int count) {
+            m_pointsList.at(i)->setValue(count);
+        });
+    }
     connect(m_stopLoggingTimer.get(), &TimerTemplateQt::sigExpired, this, [this]() {
         m_startStopRecording->setValue(false); // Does not emit sigValueChanged
         startStopLogging(false);
@@ -57,17 +61,30 @@ void RecorderModuleInit::generateVeinInterface()
     m_numberOfPointsInCurve->setScpiInfo("RECORDER", "COUNT", SCPI::isQuery);
     m_module->m_veinModuleParameterMap[m_numberOfPointsInCurve->getComponentName()] = m_numberOfPointsInCurve;
 
+    for(int i=0; i<m_confData->m_stackCount; i++) {
+        VfModuleParameter* parameter = new VfModuleParameter(m_module->getEntityId(), m_module->getValidatorEventSystem(),
+                                                             QString("ACT_Points%1").arg(i+1),
+                                                             "Number of points in a curve",
+                                                             0);
+        m_pointsList.append(parameter);
+        m_module->m_veinModuleParameterMap[parameter->getComponentName()] = parameter;
+    }
+
     std::shared_ptr<RPCReadRecordedValues> rpcReadRecordedValues = std::make_shared<RPCReadRecordedValues>(m_module->getRpcEventSystem(),
                                                                                                            m_recorder->getRecordedData(),
+                                                                                                           "RPC_ReadRecordedValues",
                                                                                                            m_module->getEntityId());
     m_pReadRecordedValuesRpc = std::make_shared<VfModuleRpc>(rpcReadRecordedValues, "Read Recorded Values");
     m_module->m_veinModuleRPCMap[rpcReadRecordedValues->getSignature()] = m_pReadRecordedValuesRpc;
 
-    std::shared_ptr<RPCGetRecordedDataSampler> rpcRecordedSample = std::make_shared<RPCGetRecordedDataSampler>(m_module->getRpcEventSystem(),
-                                                                                                               m_recorderInterpolation->getRecordedData(),
-                                                                                                               m_module->getEntityId());
-    m_pGetRecordedSampleValuesRpc = std::make_shared<VfModuleRpc>(rpcRecordedSample, "Get Recorded Values sample");
-    m_module->m_veinModuleRPCMap[rpcRecordedSample->getSignature()] = m_pGetRecordedSampleValuesRpc;
+    for(int i=0; i<m_confData->m_stackCount; i++) {
+        std::shared_ptr<RPCReadRecordedValues> rpcRecordedSample = std::make_shared<RPCReadRecordedValues>(m_module->getRpcEventSystem(),
+                                                                                                                   m_recorderInterpolationList.at(i)->getRecordedData(),
+                                                                                                                   QString("RPC_GetRecordedValuesReduced%1").arg(i+1),
+                                                                                                                   m_module->getEntityId());
+        m_pGetRecordedSampleValuesRpc = std::make_shared<VfModuleRpc>(rpcRecordedSample, "Get Recorded Values sample");
+        m_module->m_veinModuleRPCMap[rpcRecordedSample->getSignature()] = m_pGetRecordedSampleValuesRpc;
+    }
 
     m_jsonExportComponent = new VfModuleComponentStorageFetchOnly(m_module->getEntityId(),
                                                          "ACT_JSON_EXPORT",
@@ -113,6 +130,13 @@ void RecorderModuleInit::createRecorder()
                                                    m_module->getStorageDb(),
                                                    entityIdDftModule, "SIG_Measuring");
 
-    auto baseRecorder = std::make_shared<StorageRecorderInterpolation>(entityComponents, m_recorder, 4);
-    m_recorderInterpolation = std::make_unique<StorageRecorderInterpolation>(entityComponents, baseRecorder, 4);
+    for(int i=0; i<m_confData->m_stackCount; i++) {
+        int factor = m_confData->m_valueLengthVector[i];
+        std::shared_ptr<StorageRecorderInterpolation> recorderInterpolation;
+        if(m_recorderInterpolationList.isEmpty())
+            recorderInterpolation = std::make_shared<StorageRecorderInterpolation>(entityComponents, m_recorder, factor);
+        else
+            recorderInterpolation = std::make_shared<StorageRecorderInterpolation>(entityComponents, m_recorderInterpolationList[i-1], factor);
+        m_recorderInterpolationList.append(recorderInterpolation);
+    }
 }
