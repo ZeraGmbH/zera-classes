@@ -415,6 +415,8 @@
     },
     "1800": {
         "ACT_Points": 0,
+        "ACT_Points1": 0,
+        "ACT_Points2": 0,
         "PAR_StartStopRecording": 0
     },
     "Contentsets": [

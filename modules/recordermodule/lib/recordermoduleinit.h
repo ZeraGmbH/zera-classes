@@ -29,9 +29,10 @@ private:
     TimerTemplateQtPtr m_stopLoggingTimer; // Hack: avoid out of memory by stopping after a while
 
     std::shared_ptr<VeinStorage::StorageRecorder> m_recorder;
-    std::unique_ptr<StorageRecorderInterpolation> m_recorderInterpolation;
+    QList<std::shared_ptr<StorageRecorderInterpolation>> m_recorderInterpolationList;
     VfModuleComponentStorageFetchOnly* m_jsonExportComponent = nullptr;
     VfModuleComponentStorageFetchOnly* m_csvExportComponent = nullptr;
+    QList<VfModuleParameter*> m_pointsList;
     VfModuleParameter* m_numberOfPointsInCurve = nullptr;
     VfModuleParameter* m_startStopRecording = nullptr;
     VfModuleRpcPtr m_pReadRecordedValuesRpc = nullptr;

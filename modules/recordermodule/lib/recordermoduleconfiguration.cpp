@@ -5,7 +5,9 @@
 enum moduleconfigstate
 {
     setEntityCount,
+    setInterpolationStack,
 
+    setValueLen,
     setEntityId1 = 16, // we leave some place for additional cmds
 
     setComponentName1 = setEntityId1 + 10,
@@ -38,6 +40,7 @@ void RecorderModuleConfiguration::setConfiguration(const QByteArray& xmlString)
     // so now we can set up
     // initializing hash table for xml configuration
     m_ConfigXMLMap["recordermoduleconfpar:configuration:entity-components:n"] = setEntityCount;
+    m_ConfigXMLMap["recordermoduleconfpar:configuration:interpolation-stack:n"] = setInterpolationStack;
 
     m_pXMLReader->loadXMLFromString(QString::fromUtf8(xmlString.data(), xmlString.size()));
 }
@@ -70,9 +73,21 @@ void RecorderModuleConfiguration::configXMLInfo(const QString &key)
             }
             m_pRecorderModuleConfigData->m_entityConfigList = QVector<EntityConfiguration>(m_pRecorderModuleConfigData->m_entityCount);
             break;
+        case setInterpolationStack:
+            m_pRecorderModuleConfigData->m_stackCount = m_pXMLReader->getValue(key).toInt(&ok);
+            for (int i = 0; i < m_pRecorderModuleConfigData->m_stackCount; i++) {
+                m_ConfigXMLMap[QString("recordermoduleconfpar:configuration:interpolation-stack:valuelen%1").arg(i+1)] = setValueLen+i;
+            }
+            m_pRecorderModuleConfigData->m_valueLengthVector = QVector<quint8>(m_pRecorderModuleConfigData->m_stackCount);
+            break;
         default:
             // here we decode the dyn. generated cmd's
-            if (cmd >= setEntityId1 && cmd < setComponentName1) {
+            if(cmd >=setValueLen && cmd <setEntityId1) {
+                int index = cmd - setValueLen;
+                m_pRecorderModuleConfigData->m_valueLengthVector[index] = m_pXMLReader->getValue(key).toInt(&ok);
+            }
+
+            else if (cmd >= setEntityId1 && cmd < setComponentName1) {
                 cmd -= setEntityId1;
                 int entityId = m_pXMLReader->getValue(key).toInt(&ok);
                 m_pRecorderModuleConfigData->m_entityConfigList[cmd].m_entityId = entityId;

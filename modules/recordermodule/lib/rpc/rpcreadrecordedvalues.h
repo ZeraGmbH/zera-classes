@@ -10,12 +10,12 @@ class RPCReadRecordedValues : public VfCpp::VfCppRpcSimplified
     Q_OBJECT
 public:
     RPCReadRecordedValues(VeinEvent::EventSystem *eventSystem, VeinStorage::StorageRecordDataPtr recordedStorage,
-                          int entityId);
+                          QString rpcName, int entityId);
     static QString intToStringWithLeadingDigits(int number); // should go
 private slots:
     void callRPCFunction(const QUuid &callId, const QVariantMap &parameters) override;
 private:
-    static QString createRpcSignature();
+    static QString createRpcSignature(QString rpcName);
     VeinStorage::StorageRecordDataPtr m_recordedStorage;
 };
 

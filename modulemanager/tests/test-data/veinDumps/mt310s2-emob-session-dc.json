@@ -5182,6 +5182,8 @@
     },
     "1800": {
         "ACT_Points": 0,
+        "ACT_Points1": 0,
+        "ACT_Points2": 0,
         "EntityName": "RecorderModule1",
         "INF_ModuleInterface": {
             "ComponentInfo": {
@@ -5192,6 +5194,12 @@
                     "Description": "<skipped>"
                 },
                 "ACT_Points": {
+                    "Description": "<skipped>"
+                },
+                "ACT_Points1": {
+                    "Description": "<skipped>"
+                },
+                "ACT_Points2": {
                     "Description": "<skipped>"
                 },
                 "EntityName": {
@@ -5216,7 +5224,10 @@
                 "Name": "RecorderModule1"
             },
             "RpcInfo": {
-                "RPC_GetRecordedDataSampler()": {
+                "RPC_GetRecordedValuesReduced1(int p_endingPoint,int p_startingPoint)": {
+                    "Description": "<skipped>"
+                },
+                "RPC_GetRecordedValuesReduced2(int p_endingPoint,int p_startingPoint)": {
                     "Description": "<skipped>"
                 },
                 "RPC_ReadRecordedValues(int p_endingPoint,int p_startingPoint)": {

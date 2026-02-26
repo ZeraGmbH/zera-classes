@@ -21,6 +21,8 @@ class RecorderModuleConfigData
 public:
     quint8 m_entityCount;
     QVector<EntityConfiguration> m_entityConfigList;
+    quint8 m_stackCount;
+    QVector<quint8> m_valueLengthVector;
 };
 
 #endif // RECORDERMODULECONFIGDATA_H
