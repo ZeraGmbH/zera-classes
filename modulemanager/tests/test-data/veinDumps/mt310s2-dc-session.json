@@ -5671,7 +5671,7 @@
             },
             "RpcInfo": {
                 "RPC_activatePushButton(QString p_channelName)": {
-                    "Description": "Press EMOB-pushbutton",
+                    "Description": "<skipped>",
                     "Optional parameter": "",
                     "Validation": {
                         "Data": [
@@ -5684,7 +5684,7 @@
                     }
                 },
                 "RPC_clearError(QString p_channelName)": {
-                    "Description": "Clear EMOB Errors",
+                    "Description": "<skipped>",
                     "Optional parameter": "",
                     "Validation": {
                         "Data": [
@@ -5697,7 +5697,7 @@
                     }
                 },
                 "RPC_readError(QString p_channelName)": {
-                    "Description": "EMOB Errors bits:\nBit0: Supply lost\nBit1: Device error\nBit2: Sensor error\nBit3: Cable error\nBit4: Overcurrent\nBit5: Overtemperature\nBit6: locking error\nBit7: Problem at neighbour EMOB\nBit16: EMOB device not found",
+                    "Description": "<skipped>",
                     "Optional parameter": "",
                     "Validation": {
                         "Data": [
@@ -5710,7 +5710,7 @@
                     }
                 },
                 "RPC_readLockState(QString p_channelName)": {
-                    "Description": "EMOB plug lock state:\n0:unknown\n1:open\n2:locking\n3:locked\n4:error",
+                    "Description": "<skipped>",
                     "Optional parameter": "",
                     "Validation": {
                         "Data": [
