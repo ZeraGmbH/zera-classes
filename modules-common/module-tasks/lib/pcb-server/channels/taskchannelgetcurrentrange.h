@@ -16,7 +16,7 @@ public:
                                QString& valueReceived);
 private:
     quint32 sendToServer() override;
-    bool handleCheckedServerAnswer(QVariant answer) override;
+    bool handleCheckedServerAnswer(const QVariant &answer) override;
 
     Zera::PcbInterfacePtr m_pcbInterface;
     QString m_channelName;

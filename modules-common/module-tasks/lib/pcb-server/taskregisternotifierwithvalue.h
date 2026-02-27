@@ -15,7 +15,7 @@ public:
     TaskRegisterNotifierWithValue(Zera::PcbInterfacePtr pcbInterface, QString scpiQuery, int notificationId);
 private:
     quint32 sendToServer() override;
-    bool handleCheckedServerAnswer(QVariant answer) override;
+    bool handleCheckedServerAnswer(const QVariant &answer) override;
     Zera::PcbInterfacePtr m_pcbInterface;
     QString m_scpiQuery;
     int m_notificationId;

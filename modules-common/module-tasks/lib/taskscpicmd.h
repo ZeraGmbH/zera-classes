@@ -15,7 +15,7 @@ public:
 
 private:
     quint32 sendToServer() override;
-    bool handleCheckedServerAnswer(QVariant answer) override;
+    bool handleCheckedServerAnswer(const QVariant &answer) override;
     const QString m_scpiCmd;
 };
 

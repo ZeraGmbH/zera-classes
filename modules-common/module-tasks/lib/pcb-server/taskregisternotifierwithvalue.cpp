@@ -29,7 +29,7 @@ quint32 TaskRegisterNotifierWithValue::sendToServer()
     return m_pcbInterface->registerNotifier(m_scpiQuery, m_notificationId, true);
 }
 
-bool TaskRegisterNotifierWithValue::handleCheckedServerAnswer(QVariant answer)
+bool TaskRegisterNotifierWithValue::handleCheckedServerAnswer(const QVariant &answer)
 {
     Q_UNUSED(answer)
     return true;

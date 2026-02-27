@@ -29,7 +29,7 @@ quint32 TaskScpiGetString::sendToServer()
     return m_interface->scpiCommand(m_scpiCmd);
 }
 
-bool TaskScpiGetString::handleCheckedServerAnswer(QVariant answer)
+bool TaskScpiGetString::handleCheckedServerAnswer(const QVariant &answer)
 {
     *m_result = answer.toString();
     return true;

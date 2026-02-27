@@ -17,7 +17,7 @@ public:
                              QString channelMName);
 private:
     quint32 sendToServer() override;
-    bool handleCheckedServerAnswer(QVariant answer) override;
+    bool handleCheckedServerAnswer(const QVariant &answer) override;
     std::shared_ptr<QByteArray> m_exchangeDataReceived;
     QString m_channelMName;
 };

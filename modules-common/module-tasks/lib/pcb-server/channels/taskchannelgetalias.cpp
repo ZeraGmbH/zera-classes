@@ -29,7 +29,7 @@ quint32 TaskChannelGetAlias::sendToServer()
     return m_pcbInterface->getAlias(m_channelName);
 }
 
-bool TaskChannelGetAlias::handleCheckedServerAnswer(QVariant answer)
+bool TaskChannelGetAlias::handleCheckedServerAnswer(const QVariant &answer)
 {
     m_valueReceived = answer.toString();
     return true;

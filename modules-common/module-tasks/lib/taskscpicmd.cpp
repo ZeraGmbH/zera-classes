@@ -23,7 +23,7 @@ quint32 TaskScpiCmd::sendToServer()
     return m_interface->scpiCommand(m_scpiCmd);
 }
 
-bool TaskScpiCmd::handleCheckedServerAnswer(QVariant answer)
+bool TaskScpiCmd::handleCheckedServerAnswer(const QVariant &answer)
 {
     Q_UNUSED(answer)
     return true;

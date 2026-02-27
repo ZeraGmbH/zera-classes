@@ -28,7 +28,7 @@ quint32 TaskScpiGetBool::sendToServer()
     return m_interface->scpiCommand(m_scpiCmd);
 }
 
-bool TaskScpiGetBool::handleCheckedServerAnswer(QVariant answer)
+bool TaskScpiGetBool::handleCheckedServerAnswer(const QVariant &answer)
 {
     *m_result = answer.toBool();
     return true;

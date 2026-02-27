@@ -17,7 +17,7 @@ public:
                               std::shared_ptr<QByteArray> exchangeDataWrite);
 private:
     quint32 sendToServer() override;
-    bool handleCheckedServerAnswer(QVariant answer) override;
+    bool handleCheckedServerAnswer(const QVariant &answer) override;
     QString m_channelMName;
     int m_emobIdFrom0To3;
     std::shared_ptr<QByteArray> m_exchangeDataWrite;

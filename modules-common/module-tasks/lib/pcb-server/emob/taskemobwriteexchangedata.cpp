@@ -42,7 +42,7 @@ quint32 TaskEmobWriteExchangeData::sendToServer()
     return m_interface->scpiCommand(scpiCmd);
 }
 
-bool TaskEmobWriteExchangeData::handleCheckedServerAnswer(QVariant answer)
+bool TaskEmobWriteExchangeData::handleCheckedServerAnswer(const QVariant &answer)
 {
     qInfo("EMOB exchange data to channel %s written", qPrintable(m_channelMName));
     Q_UNUSED(answer)

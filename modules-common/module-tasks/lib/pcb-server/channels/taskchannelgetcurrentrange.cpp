@@ -28,7 +28,7 @@ quint32 TaskChannelGetCurrentRange::sendToServer()
     return m_pcbInterface->getRange(m_channelName);
 }
 
-bool TaskChannelGetCurrentRange::handleCheckedServerAnswer(QVariant answer)
+bool TaskChannelGetCurrentRange::handleCheckedServerAnswer(const QVariant &answer)
 {
     m_valueReceived = answer.toString();
     return true;

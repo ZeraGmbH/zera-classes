@@ -15,7 +15,7 @@ void TaskServerTransactionTemplate::start()
     m_msgnr = sendToServer();
 }
 
-void TaskServerTransactionTemplate::onServerAnswer(quint32 msgnr, quint8 reply, QVariant answer)
+void TaskServerTransactionTemplate::onServerAnswer(quint32 msgnr, quint8 reply, const QVariant &answer)
 {
     if(m_msgnr == msgnr) {
         bool ok = (reply == ack);

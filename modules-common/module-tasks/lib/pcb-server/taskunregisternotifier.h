@@ -13,7 +13,7 @@ public:
     TaskUnregisterNotifier(Zera::PcbInterfacePtr pcbInterface);
 private:
     quint32 sendToServer() override;
-    bool handleCheckedServerAnswer(QVariant answer) override;
+    bool handleCheckedServerAnswer(const QVariant &answer) override;
     Zera::PcbInterfacePtr m_pcbInterface;
 };
 

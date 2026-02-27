@@ -25,7 +25,7 @@ quint32 TaskScpiGetDouble::sendToServer()
     return m_interface->scpiCommand(m_scpiCmd);
 }
 
-bool TaskScpiGetDouble::handleCheckedServerAnswer(QVariant answer)
+bool TaskScpiGetDouble::handleCheckedServerAnswer(const QVariant &answer)
 {
     bool ok;
     *m_result = answer.toDouble(&ok);

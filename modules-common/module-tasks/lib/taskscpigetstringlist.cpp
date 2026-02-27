@@ -28,7 +28,7 @@ quint32 TaskScpiGetStringList::sendToServer()
     return m_interface->scpiCommand(m_scpiCmd);
 }
 
-bool TaskScpiGetStringList::handleCheckedServerAnswer(QVariant answer)
+bool TaskScpiGetStringList::handleCheckedServerAnswer(const QVariant &answer)
 {
     *m_result = answer.toString().split(";");
     return true;

@@ -21,7 +21,8 @@ quint32 TaskUnregisterNotifier::sendToServer()
     return m_pcbInterface->unregisterNotifiers();
 }
 
-bool TaskUnregisterNotifier::handleCheckedServerAnswer(QVariant answer)
+bool TaskUnregisterNotifier::handleCheckedServerAnswer(const QVariant &answer)
 {
+    Q_UNUSED(answer)
     return true;
 }
