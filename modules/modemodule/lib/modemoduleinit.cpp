@@ -180,19 +180,17 @@ void cModeModuleInit::writeGainCorr()
         data[i] = 1.0;
     }
     m_MsgNrCmdList[m_dspInterface->dspMemoryWrite(dspTmpMemHandle)] = MODEMODINIT::writegaincorr;
-    m_dspInterface->deleteMemHandle(dspTmpMemHandle);
 }
 
 void cModeModuleInit::writeGainCorr2()
 {
-    cDspMeasData* dspTmpMemHandle = m_dspInterface->getMemHandle("GainCorrection");
+    cDspMeasData* dspTmpMemHandle = m_dspInterface->getMemHandle("GainCorrection2");
     dspTmpMemHandle->addDspVar("GAINCORRECTION2", 32, DSPDATA::vDspParam, dspDataTypeFloat, dspInternalSegment);
     float* data = dspTmpMemHandle->data("GAINCORRECTION2");
     for (int i = 0; i < 32; i++) {
         data[i] = 1.0;
     }
     m_MsgNrCmdList[m_dspInterface->dspMemoryWrite(dspTmpMemHandle)] = MODEMODINIT::writegaincorr2;
-    m_dspInterface->deleteMemHandle(dspTmpMemHandle);
 }
 
 void cModeModuleInit::writePhaseCorr()
@@ -204,18 +202,16 @@ void cModeModuleInit::writePhaseCorr()
         data[i] = 0.0;
     }
     m_MsgNrCmdList[m_dspInterface->dspMemoryWrite(dspTmpMemHandle)] = MODEMODINIT::writephasecorr;
-    m_dspInterface->deleteMemHandle(dspTmpMemHandle);
 }
 
 void cModeModuleInit::writePhaseCorr2()
 {
-    cDspMeasData* dspTmpMemHandle = m_dspInterface->getMemHandle("PhaseCorrection");
+    cDspMeasData* dspTmpMemHandle = m_dspInterface->getMemHandle("PhaseCorrection2");
     dspTmpMemHandle->addDspVar("PHASECORRECTION2", 32, DSPDATA::vDspParam, dspDataTypeFloat, dspInternalSegment);
     float* data = dspTmpMemHandle->data("PHASECORRECTION2");
     for (int i = 0; i < 32; i++)
         data[i] = 0.0;
     m_MsgNrCmdList[m_dspInterface->dspMemoryWrite(dspTmpMemHandle)] = MODEMODINIT::writephasecorr2;
-    m_dspInterface->deleteMemHandle(dspTmpMemHandle);
 }
 
 void cModeModuleInit::writeOffsetCorr()
@@ -226,19 +222,17 @@ void cModeModuleInit::writeOffsetCorr()
     for (int i = 0; i < 32; i++)
         data[i] = 0.0;
     m_MsgNrCmdList[m_dspInterface->dspMemoryWrite(dspTmpMemHandle)] = MODEMODINIT::writeoffsetcorr;
-    m_dspInterface->deleteMemHandle(dspTmpMemHandle);
 }
 
 void cModeModuleInit::writeOffsetCorr2()
 {
-    cDspMeasData* dspTmpMemHandle = m_dspInterface->getMemHandle("OffsetCorrection");
+    cDspMeasData* dspTmpMemHandle = m_dspInterface->getMemHandle("OffsetCorrection2");
     dspTmpMemHandle->addDspVar("OFFSETCORRECTION2", 32, DSPDATA::vDspParam, dspDataTypeFloat, dspInternalSegment);
     float* data = dspTmpMemHandle->data("OFFSETCORRECTION2");
     for (int i = 0; i < 32; i++) {
         data[i] = 0.0;
     }
     m_MsgNrCmdList[m_dspInterface->dspMemoryWrite(dspTmpMemHandle)] = MODEMODINIT::writeoffsetcorr;
-    m_dspInterface->deleteMemHandle(dspTmpMemHandle);
 }
 
 void cModeModuleInit::setSubDC()
@@ -249,7 +243,6 @@ void cModeModuleInit::setSubDC()
     dspTmpMemHandle->addDspVar("SUBDC", 1, DSPDATA::vDspParam, dspDataTypeInt, dspInternalSegment);
     dspTmpMemHandle->setVarData(QString("SUBDC:%1;").arg(subdc));
     m_MsgNrCmdList[m_dspInterface->dspMemoryWrite(dspTmpMemHandle)] = MODEMODINIT::subdcdsp;
-    m_dspInterface->deleteMemHandle(dspTmpMemHandle);
 }
 
 void cModeModuleInit::setSamplingsytem()
