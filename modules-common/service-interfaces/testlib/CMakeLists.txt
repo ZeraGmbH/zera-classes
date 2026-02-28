@@ -20,6 +20,7 @@ target_include_directories(module-service-interfaces-testlib
 target_link_libraries(module-service-interfaces-testlib
     PUBLIC
     module-service-interfaces-demolib
+    Zera::zdsp1d-lib
 )
 
 set_target_properties(module-service-interfaces-testlib PROPERTIES VERSION ${PROJECT_VERSION})

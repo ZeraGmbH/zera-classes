@@ -21,6 +21,8 @@ public:
 private:
     QString dspVarDataTypeToJson(int type);
     QString dspVarSegmentToJson(int segment);
+    bool checkDspVar(cDspVar* dspVar);
+
     QStringList m_valueNamesList;
     struct TVarsWritten {
         int transcationCount;

@@ -1,5 +1,6 @@
 #include "testdspinterface.h"
 #include <dspinterface_p.h>
+#include <dspvarresolver.h>
 
 TestDspInterface::TestDspInterface(QStringList valueNamesList, int entityId) :
     MockDspInterface(entityId),
@@ -17,8 +18,12 @@ quint32 TestDspInterface::dspMemoryWrite(cDspMeasData *memgroup)
         for(int var=0; var<currentVars.size(); ++var) {
             nonEmptyMemgroupFound = true;
             cDspVar* currentVar = currentVars[var];
+            if (!checkDspVar(currentVar))
+                continue;
+
             const QString varName = currentVar->Name();
-            DspDataType dataType = static_cast<DspDataType>(currentVar->datatype());
+            DspDataType dataType = currentVar->datatype();
+
             for(int varEntry=0; varEntry<currentVar->size(); ++varEntry) {
                 const float* valuePointer = currentVar->data() + varEntry;
                 QString label;
@@ -155,4 +160,26 @@ QString TestDspInterface::dspVarSegmentToJson(int segment)
     default:
         qFatal("Unknown DSP var segment");
     }
+}
+
+bool TestDspInterface::checkDspVar(cDspVar *dspVar)
+{
+    if (dspVar->getSegmentType() == dspInternalSegment) {
+        DspVarResolver resolver;
+        QString varName = dspVar->Name();
+        const TDspVar *dspServerVarFound = resolver.getDspVar(varName);
+        if (dspServerVarFound == nullptr) {
+            qCritical("%s not found in internal DSP variables", qPrintable(varName));
+            return false;
+        }
+        if (dspVar->datatype() != dspServerVarFound->type) {
+            qCritical("%s has wrong type", qPrintable(varName));
+            return false;
+        }
+        if (dspVar->size() != dspServerVarFound->size) {
+            qCritical("%s has wrong size", qPrintable(varName));
+            return false;
+        }
+    }
+    return true;
 }
