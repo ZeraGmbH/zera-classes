@@ -69,13 +69,13 @@ void cReferenceModuleMeasProgram::setDspVarList()
     // work variables without I/O
     cDspMeasData* tmpDataDsp = m_dspInterface->getMemHandle("TmpData");
     tmpDataDsp->addDspVar("MEASSIGNAL", samples, DSPDATA::vDspTemp);
-    tmpDataDsp->addDspVar("TISTART",1, DSPDATA::vDspTemp, DSPDATA::dInt);
+    tmpDataDsp->addDspVar("TISTART",1, DSPDATA::vDspTemp, dspDataTypeInt);
     tmpDataDsp->addDspVar("VALXDFT",m_ChannelList.count()*2, DSPDATA::vDspTemp);
     tmpDataDsp->addDspVar("FILTER", DspBuffLen::avgFilterLen(2*m_ChannelList.count()), DSPDATA::vDspTemp);
 
     // a handle for parameter
     m_pParameterDSP =  m_dspInterface->getMemHandle("Parameter");
-    m_pParameterDSP->addDspVar("TIPAR",1, DSPDATA::vDspParam, DSPDATA::dInt); // integrationtime res = 1ms
+    m_pParameterDSP->addDspVar("TIPAR",1, DSPDATA::vDspParam, dspDataTypeInt); // integrationtime res = 1ms
 
     // and one for filtered actual values
     m_pActualValuesDSP = m_dspInterface->getMemHandle("ActualValues");

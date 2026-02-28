@@ -121,15 +121,15 @@ void cOsciModuleMeasProgram::setDspVarList()
     cDspMeasData* tmpDataDsp = m_dspInterface->getMemHandle("TmpData");
     tmpDataDsp->addDspVar("MEASSIGNAL", m_veinActValueList.count() * samples, DSPDATA::vDspTemp);
     tmpDataDsp->addDspVar("WORKSPACE", 2 * samples, DSPDATA::vDspTemp);
-    tmpDataDsp->addDspVar("GAPCOUNT", 1, DSPDATA::vDspTemp, DSPDATA::dInt);
-    tmpDataDsp->addDspVar("GAPPAR",1, DSPDATA::vDspTemp, DSPDATA::dInt);
-    tmpDataDsp->addDspVar("IPOLADR", 1, DSPDATA::vDspTemp, DSPDATA::dInt);
-    tmpDataDsp->addDspVar("DEBUGCOUNT",1,DSPDATA::vDspTemp, DSPDATA::dInt);
+    tmpDataDsp->addDspVar("GAPCOUNT", 1, DSPDATA::vDspTemp, dspDataTypeInt);
+    tmpDataDsp->addDspVar("GAPPAR",1, DSPDATA::vDspTemp, dspDataTypeInt);
+    tmpDataDsp->addDspVar("IPOLADR", 1, DSPDATA::vDspTemp, dspDataTypeInt);
+    tmpDataDsp->addDspVar("DEBUGCOUNT",1,DSPDATA::vDspTemp, dspDataTypeInt);
     tmpDataDsp->addDspVar("DFTREF", 2, DSPDATA::vDspTemp);
 
     // a handle for parameter
     m_pParameterDSP =  m_dspInterface->getMemHandle("Parameter");
-    m_pParameterDSP->addDspVar("REFCHN",1, DSPDATA::vDspParam, DSPDATA::dInt);
+    m_pParameterDSP->addDspVar("REFCHN",1, DSPDATA::vDspParam, dspDataTypeInt);
 
     // and one for actual values
     m_pActualValuesDSP = m_dspInterface->getMemHandle("ActualValues");

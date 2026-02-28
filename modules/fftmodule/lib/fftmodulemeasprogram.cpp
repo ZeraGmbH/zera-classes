@@ -161,16 +161,16 @@ void cFftModuleMeasProgram::setDspVarList()
     tmpDataDsp->addDspVar("MEASSIGNAL", 2 * samples, DSPDATA::vDspTemp);
     tmpDataDsp->addDspVar("FFTXOUTPUT", 2 * m_nfftLen * m_veinActValueList.count(), DSPDATA::vDspTemp);
     tmpDataDsp->addDspVar("FILTER", DspBuffLen::avgFilterLen(2 * m_nfftLen * m_veinActValueList.count()), DSPDATA::vDspTemp);
-    tmpDataDsp->addDspVar("IPOLADR", 1, DSPDATA::vDspTemp, DSPDATA::dInt);
+    tmpDataDsp->addDspVar("IPOLADR", 1, DSPDATA::vDspTemp, dspDataTypeInt);
     tmpDataDsp->addDspVar("DFTREF", 2, DSPDATA::vDspTemp);
-    tmpDataDsp->addDspVar("DEBUGCOUNT",1,DSPDATA::vDspTemp, DSPDATA::dInt);
+    tmpDataDsp->addDspVar("DEBUGCOUNT",1,DSPDATA::vDspTemp, dspDataTypeInt);
 
     // a handle for parameter
     m_pParameterDSP =  m_dspInterface->getMemHandle("Parameter");
-    m_pParameterDSP->addDspVar("TIPAR",1, DSPDATA::vDspParam, DSPDATA::dInt); // integrationtime res = 1ms
+    m_pParameterDSP->addDspVar("TIPAR",1, DSPDATA::vDspParam, dspDataTypeInt); // integrationtime res = 1ms
     // we use tistart as parameter, so we can finish actual measuring interval bei setting 0
-    m_pParameterDSP->addDspVar("TISTART",1, DSPDATA::vDspParam, DSPDATA::dInt);
-    m_pParameterDSP->addDspVar("REFCHN",1, DSPDATA::vDspParam, DSPDATA::dInt);
+    m_pParameterDSP->addDspVar("TISTART",1, DSPDATA::vDspParam, dspDataTypeInt);
+    m_pParameterDSP->addDspVar("REFCHN",1, DSPDATA::vDspParam, dspDataTypeInt);
 
     // and one for filtered actual values
     m_pActualValuesDSP = m_dspInterface->getMemHandle("ActualValues");

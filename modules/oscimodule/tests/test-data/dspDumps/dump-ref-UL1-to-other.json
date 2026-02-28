@@ -6,9 +6,9 @@
             "Variables": [
                 {
                     "Name": "VALXOSCI",
-                    "Segment": "DSPDATA::localSegment",
+                    "Segment": "localSegment",
                     "Size": 1024,
-                    "TypeData": "DSPDATA::dFloat"
+                    "TypeData": "dspDataTypeFloat"
                 }
             ]
         },
@@ -18,9 +18,9 @@
             "Variables": [
                 {
                     "Name": "REFCHN",
-                    "Segment": "DSPDATA::localSegment",
+                    "Segment": "localSegment",
                     "Size": 1,
-                    "TypeData": "DSPDATA::dInt"
+                    "TypeData": "dspDataTypeInt"
                 }
             ]
         },
@@ -30,45 +30,45 @@
             "Variables": [
                 {
                     "Name": "MEASSIGNAL",
-                    "Segment": "DSPDATA::localSegment",
+                    "Segment": "localSegment",
                     "Size": 4032,
-                    "TypeData": "DSPDATA::dFloat"
+                    "TypeData": "dspDataTypeFloat"
                 },
                 {
                     "Name": "WORKSPACE",
-                    "Segment": "DSPDATA::localSegment",
+                    "Segment": "localSegment",
                     "Size": 1008,
-                    "TypeData": "DSPDATA::dFloat"
+                    "TypeData": "dspDataTypeFloat"
                 },
                 {
                     "Name": "GAPCOUNT",
-                    "Segment": "DSPDATA::localSegment",
+                    "Segment": "localSegment",
                     "Size": 1,
-                    "TypeData": "DSPDATA::dInt"
+                    "TypeData": "dspDataTypeInt"
                 },
                 {
                     "Name": "GAPPAR",
-                    "Segment": "DSPDATA::localSegment",
+                    "Segment": "localSegment",
                     "Size": 1,
-                    "TypeData": "DSPDATA::dInt"
+                    "TypeData": "dspDataTypeInt"
                 },
                 {
                     "Name": "IPOLADR",
-                    "Segment": "DSPDATA::localSegment",
+                    "Segment": "localSegment",
                     "Size": 1,
-                    "TypeData": "DSPDATA::dInt"
+                    "TypeData": "dspDataTypeInt"
                 },
                 {
                     "Name": "DEBUGCOUNT",
-                    "Segment": "DSPDATA::localSegment",
+                    "Segment": "localSegment",
                     "Size": 1,
-                    "TypeData": "DSPDATA::dInt"
+                    "TypeData": "dspDataTypeInt"
                 },
                 {
                     "Name": "DFTREF",
-                    "Segment": "DSPDATA::localSegment",
+                    "Segment": "localSegment",
                     "Size": 2,
-                    "TypeData": "DSPDATA::dFloat"
+                    "TypeData": "dspDataTypeFloat"
                 }
             ]
         }

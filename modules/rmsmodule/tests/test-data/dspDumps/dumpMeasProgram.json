@@ -6,9 +6,9 @@
             "Variables": [
                 {
                     "Name": "VALXRMSF",
-                    "Segment": "DSPDATA::localSegment",
+                    "Segment": "localSegment",
                     "Size": 11,
-                    "TypeData": "DSPDATA::dFloat"
+                    "TypeData": "dspDataTypeFloat"
                 }
             ]
         },
@@ -18,15 +18,15 @@
             "Variables": [
                 {
                     "Name": "TIPAR",
-                    "Segment": "DSPDATA::localSegment",
+                    "Segment": "localSegment",
                     "Size": 1,
-                    "TypeData": "DSPDATA::dInt"
+                    "TypeData": "dspDataTypeInt"
                 },
                 {
                     "Name": "TISTART",
-                    "Segment": "DSPDATA::localSegment",
+                    "Segment": "localSegment",
                     "Size": 1,
-                    "TypeData": "DSPDATA::dInt"
+                    "TypeData": "dspDataTypeInt"
                 }
             ]
         },
@@ -36,21 +36,21 @@
             "Variables": [
                 {
                     "Name": "MEASSIGNAL",
-                    "Segment": "DSPDATA::localSegment",
+                    "Segment": "localSegment",
                     "Size": 504,
-                    "TypeData": "DSPDATA::dFloat"
+                    "TypeData": "dspDataTypeFloat"
                 },
                 {
                     "Name": "VALXRMS",
-                    "Segment": "DSPDATA::localSegment",
+                    "Segment": "localSegment",
                     "Size": 11,
-                    "TypeData": "DSPDATA::dFloat"
+                    "TypeData": "dspDataTypeFloat"
                 },
                 {
                     "Name": "FILTER",
-                    "Segment": "DSPDATA::localSegment",
+                    "Segment": "localSegment",
                     "Size": 23,
-                    "TypeData": "DSPDATA::dFloat"
+                    "TypeData": "dspDataTypeFloat"
                 }
             ]
         }

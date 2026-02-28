@@ -6,9 +6,9 @@
             "Variables": [
                 {
                     "Name": "VALXFFTF",
-                    "Segment": "DSPDATA::localSegment",
+                    "Segment": "localSegment",
                     "Size": 2048,
-                    "TypeData": "DSPDATA::dFloat"
+                    "TypeData": "dspDataTypeFloat"
                 }
             ]
         },
@@ -18,21 +18,21 @@
             "Variables": [
                 {
                     "Name": "TIPAR",
-                    "Segment": "DSPDATA::localSegment",
+                    "Segment": "localSegment",
                     "Size": 1,
-                    "TypeData": "DSPDATA::dInt"
+                    "TypeData": "dspDataTypeInt"
                 },
                 {
                     "Name": "TISTART",
-                    "Segment": "DSPDATA::localSegment",
+                    "Segment": "localSegment",
                     "Size": 1,
-                    "TypeData": "DSPDATA::dInt"
+                    "TypeData": "dspDataTypeInt"
                 },
                 {
                     "Name": "REFCHN",
-                    "Segment": "DSPDATA::localSegment",
+                    "Segment": "localSegment",
                     "Size": 1,
-                    "TypeData": "DSPDATA::dInt"
+                    "TypeData": "dspDataTypeInt"
                 }
             ]
         },
@@ -42,51 +42,51 @@
             "Variables": [
                 {
                     "Name": "FFTINPUT",
-                    "Segment": "DSPDATA::globalSegment",
+                    "Segment": "globalSegment",
                     "Size": 256,
-                    "TypeData": "DSPDATA::dFloat"
+                    "TypeData": "dspDataTypeFloat"
                 },
                 {
                     "Name": "FFTOUTPUT",
-                    "Segment": "DSPDATA::globalSegment",
+                    "Segment": "globalSegment",
                     "Size": 256,
-                    "TypeData": "DSPDATA::dFloat"
+                    "TypeData": "dspDataTypeFloat"
                 },
                 {
                     "Name": "MEASSIGNAL",
-                    "Segment": "DSPDATA::localSegment",
+                    "Segment": "localSegment",
                     "Size": 1008,
-                    "TypeData": "DSPDATA::dFloat"
+                    "TypeData": "dspDataTypeFloat"
                 },
                 {
                     "Name": "FFTXOUTPUT",
-                    "Segment": "DSPDATA::localSegment",
+                    "Segment": "localSegment",
                     "Size": 2048,
-                    "TypeData": "DSPDATA::dFloat"
+                    "TypeData": "dspDataTypeFloat"
                 },
                 {
                     "Name": "FILTER",
-                    "Segment": "DSPDATA::localSegment",
+                    "Segment": "localSegment",
                     "Size": 4097,
-                    "TypeData": "DSPDATA::dFloat"
+                    "TypeData": "dspDataTypeFloat"
                 },
                 {
                     "Name": "IPOLADR",
-                    "Segment": "DSPDATA::localSegment",
+                    "Segment": "localSegment",
                     "Size": 1,
-                    "TypeData": "DSPDATA::dInt"
+                    "TypeData": "dspDataTypeInt"
                 },
                 {
                     "Name": "DFTREF",
-                    "Segment": "DSPDATA::localSegment",
+                    "Segment": "localSegment",
                     "Size": 2,
-                    "TypeData": "DSPDATA::dFloat"
+                    "TypeData": "dspDataTypeFloat"
                 },
                 {
                     "Name": "DEBUGCOUNT",
-                    "Segment": "DSPDATA::localSegment",
+                    "Segment": "localSegment",
                     "Size": 1,
-                    "TypeData": "DSPDATA::dInt"
+                    "TypeData": "dspDataTypeInt"
                 }
             ]
         }

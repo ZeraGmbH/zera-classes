@@ -214,7 +214,7 @@ void cAdjustManagement::setSubDC()
         subdc |= (1 << m_subDCChannelList.at(i)->getDSPChannelNr());
     }
     cDspMeasData* pSubDCMaskDSP = m_dspInterface->getMemHandle("SubDC"); // here we can set if sub dc or not
-    pSubDCMaskDSP->addDspVar("SUBDC",1, DSPDATA::vDspIntVar, DSPDATA::dInt);
+    pSubDCMaskDSP->addDspVar("SUBDC",1, DSPDATA::vDspIntVar, dspDataTypeInt);
     pSubDCMaskDSP->setVarData(QString("SUBDC:%1;").arg(subdc));
     m_MsgNrCmdList[m_dspInterface->dspMemoryWrite(pSubDCMaskDSP)] = subdcdsp;
 }

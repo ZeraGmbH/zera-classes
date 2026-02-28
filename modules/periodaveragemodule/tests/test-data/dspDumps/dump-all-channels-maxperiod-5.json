@@ -6,15 +6,15 @@
             "Variables": [
                 {
                     "Name": "VALS_PERIOD",
-                    "Segment": "DSPDATA::localSegment",
+                    "Segment": "localSegment",
                     "Size": 40,
-                    "TypeData": "DSPDATA::dFloat"
+                    "TypeData": "dspDataTypeFloat"
                 },
                 {
                     "Name": "VALUES_AVG",
-                    "Segment": "DSPDATA::localSegment",
+                    "Segment": "localSegment",
                     "Size": 8,
-                    "TypeData": "DSPDATA::dFloat"
+                    "TypeData": "dspDataTypeFloat"
                 }
             ]
         },
@@ -24,9 +24,9 @@
             "Variables": [
                 {
                     "Name": "PERIODCOUNT",
-                    "Segment": "DSPDATA::localSegment",
+                    "Segment": "localSegment",
                     "Size": 1,
-                    "TypeData": "DSPDATA::dInt"
+                    "TypeData": "dspDataTypeInt"
                 }
             ]
         },
@@ -36,39 +36,39 @@
             "Variables": [
                 {
                     "Name": "MEASSIGNAL",
-                    "Segment": "DSPDATA::localSegment",
+                    "Segment": "localSegment",
                     "Size": 504,
-                    "TypeData": "DSPDATA::dFloat"
+                    "TypeData": "dspDataTypeFloat"
                 },
                 {
                     "Name": "INTEGRAL_RESULT",
-                    "Segment": "DSPDATA::localSegment",
+                    "Segment": "localSegment",
                     "Size": 8,
-                    "TypeData": "DSPDATA::dFloat"
+                    "TypeData": "dspDataTypeFloat"
                 },
                 {
                     "Name": "PERIODCURR",
-                    "Segment": "DSPDATA::localSegment",
+                    "Segment": "localSegment",
                     "Size": 1,
-                    "TypeData": "DSPDATA::dInt"
+                    "TypeData": "dspDataTypeInt"
                 },
                 {
                     "Name": "RESULT_BUFF_IDX",
-                    "Segment": "DSPDATA::localSegment",
+                    "Segment": "localSegment",
                     "Size": 1,
-                    "TypeData": "DSPDATA::dInt"
+                    "TypeData": "dspDataTypeInt"
                 },
                 {
                     "Name": "FILTER",
-                    "Segment": "DSPDATA::localSegment",
+                    "Segment": "localSegment",
                     "Size": 17,
-                    "TypeData": "DSPDATA::dFloat"
+                    "TypeData": "dspDataTypeFloat"
                 },
                 {
                     "Name": "VALS_PERIOD_WORK",
-                    "Segment": "DSPDATA::localSegment",
+                    "Segment": "localSegment",
                     "Size": 40,
-                    "TypeData": "DSPDATA::dFloat"
+                    "TypeData": "dspDataTypeFloat"
                 }
             ]
         }

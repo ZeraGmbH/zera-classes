@@ -131,14 +131,14 @@ void PeriodAverageModuleMeasProgram::setDspVarList()
     cDspMeasData* tmpDataDsp = m_dspInterface->getMemHandle("TmpData");
     tmpDataDsp->addDspVar("MEASSIGNAL", samplesPerPeriod, DSPDATA::vDspTemp);
     tmpDataDsp->addDspVar("INTEGRAL_RESULT", channelCount, DSPDATA::vDspTemp);
-    tmpDataDsp->addDspVar("PERIODCURR", 1, DSPDATA::vDspTemp, DSPDATA::dInt);
-    tmpDataDsp->addDspVar("RESULT_BUFF_IDX", 1, DSPDATA::vDspTemp, DSPDATA::dInt);
+    tmpDataDsp->addDspVar("PERIODCURR", 1, DSPDATA::vDspTemp, dspDataTypeInt);
+    tmpDataDsp->addDspVar("RESULT_BUFF_IDX", 1, DSPDATA::vDspTemp, dspDataTypeInt);
     tmpDataDsp->addDspVar("FILTER", DspBuffLen::avgFilterLen(channelCount), DSPDATA::vDspTemp);
     tmpDataDsp->addDspVar("VALS_PERIOD_WORK", getConfData()->m_maxPeriods*channelCount, DSPDATA::vDspResult);
 
     // parameter
     m_pParameterDSP =  m_dspInterface->getMemHandle("Parameter");
-    m_pParameterDSP->addDspVar("PERIODCOUNT", 1, DSPDATA::vDspParam, DSPDATA::dInt);
+    m_pParameterDSP->addDspVar("PERIODCOUNT", 1, DSPDATA::vDspParam, dspDataTypeInt);
 
     // results
     m_pActualValuesDSP = m_dspInterface->getMemHandle("ActualValues");

@@ -19,16 +19,16 @@ void Power1DspVarGenerator::setupVarList(Zera::cDSPInterface *pDSPInterFace, con
 
     // a handle for parameter
     m_pParameterDSP =  pDSPInterFace->getMemHandle("Parameter");
-    m_pParameterDSP->addDspVar("TIPAR",1, DSPDATA::vDspParam, DSPDATA::dInt); // integrationtime res = 1ms or period
+    m_pParameterDSP->addDspVar("TIPAR",1, DSPDATA::vDspParam, dspDataTypeInt); // integrationtime res = 1ms or period
     // we use tistart as parameter, so we can finish actual measuring interval bei setting 0
-    m_pParameterDSP->addDspVar("TISTART",1, DSPDATA::vDspParam, DSPDATA::dInt);
-    m_pParameterDSP->addDspVar("MMODE",1, DSPDATA::vDspParam, DSPDATA::dInt);
-    m_pParameterDSP->addDspVar("MMODE_SUM",1, DSPDATA::vDspParam, DSPDATA::dInt);
+    m_pParameterDSP->addDspVar("TISTART",1, DSPDATA::vDspParam, dspDataTypeInt);
+    m_pParameterDSP->addDspVar("MMODE",1, DSPDATA::vDspParam, dspDataTypeInt);
+    m_pParameterDSP->addDspVar("MMODE_SUM",1, DSPDATA::vDspParam, dspDataTypeInt);
 
     // for meas modes with phase wise enable disable
     for(int phase=0; phase<MeasPhaseCount; phase++) {
         QString varName = QString("XMMODEPHASE%1").arg(phase);
-        m_pParameterDSP->addDspVar(varName, 1, DSPDATA::vDspParam, DSPDATA::dInt);
+        m_pParameterDSP->addDspVar(varName, 1, DSPDATA::vDspParam, dspDataTypeInt);
     }
 
     // a handle for filtered actual values

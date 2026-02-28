@@ -125,7 +125,7 @@ void cRangeModuleMeasProgram::setDspVarList()
     cDspMeasData* tmpDataDsp = m_dspInterface->getMemHandle("TmpData");
     tmpDataDsp->addDspVar("MEASSIGNAL", samples, DSPDATA::vDspTemp);
     tmpDataDsp->addDspVar("MAXRESET", 32, DSPDATA::vDspTemp);
-    tmpDataDsp->addDspVar("TISTART",1, DSPDATA::vDspTemp, DSPDATA::dInt);
+    tmpDataDsp->addDspVar("TISTART",1, DSPDATA::vDspTemp, dspDataTypeInt);
     tmpDataDsp->addDspVar("CHXPEAK", channelMNames.count(), DSPDATA::vDspTemp);
     tmpDataDsp->addDspVar("CHXRMS", channelMNames.count(), DSPDATA::vDspTemp);
     tmpDataDsp->addDspVar("FREQ", 1, DSPDATA::vDspTemp);
@@ -133,7 +133,7 @@ void cRangeModuleMeasProgram::setDspVarList()
 
     // a handle for parameter
     m_pParameterDSP =  m_dspInterface->getMemHandle("Parameter");
-    m_pParameterDSP->addDspVar("TIPAR",1, DSPDATA::vDspParam, DSPDATA::dInt); // integrationtime res = 1ms
+    m_pParameterDSP->addDspVar("TIPAR",1, DSPDATA::vDspParam, dspDataTypeInt); // integrationtime res = 1ms
 
     // and one for filtered actual values
     m_pActualValuesDSP = m_dspInterface->getMemHandle("ActualValues");

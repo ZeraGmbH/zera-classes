@@ -18,7 +18,7 @@ quint32 TestDspInterface::dspMemoryWrite(cDspMeasData *memgroup)
             nonEmptyMemgroupFound = true;
             cDspVar* currentVar = currentVars[var];
             const QString varName = currentVar->Name();
-            DSPDATA::dType dataType = static_cast<DSPDATA::dType>(currentVar->datatype());
+            dspDataType dataType = static_cast<dspDataType>(currentVar->datatype());
             for(int varEntry=0; varEntry<currentVar->size(); ++varEntry) {
                 const float* valuePointer = currentVar->data() + varEntry;
                 QString label;
@@ -31,7 +31,7 @@ quint32 TestDspInterface::dspMemoryWrite(cDspMeasData *memgroup)
                 // There is this nasty float/uint cast
                 // see cDspMeasData::setVarData & cDspMeasData::writeCommand()
                 double value = 0.0;
-                if(dataType == DSPDATA::dInt) {
+                if(dataType == dspDataTypeInt) {
                     uint* uintPointer = (uint*) valuePointer;
                     value = *uintPointer;
                 }
@@ -134,10 +134,10 @@ QJsonObject TestDspInterface::dumpVariablesWritten()
 QString TestDspInterface::dspVarDataTypeToJson(int type)
 {
     switch(type) {
-    case DSPDATA::dFloat:
-        return "DSPDATA::dFloat";
-    case DSPDATA::dInt:
-        return "DSPDATA::dInt";
+    case dspDataTypeFloat:
+        return "dspDataTypeFloat";
+    case dspDataTypeInt:
+        return "dspDataTypeInt";
     default:
         qFatal("Unknown DSP var type");
     }
@@ -146,10 +146,10 @@ QString TestDspInterface::dspVarDataTypeToJson(int type)
 QString TestDspInterface::dspVarSegmentToJson(int segment)
 {
     switch(segment) {
-    case DSPDATA::localSegment:
-        return "DSPDATA::localSegment";
-    case DSPDATA::globalSegment:
-        return "DSPDATA::globalSegment";
+    case localSegment:
+        return "localSegment";
+    case globalSegment:
+        return "globalSegment";
     default:
         qFatal("Unknown DSP var segment");
     }
