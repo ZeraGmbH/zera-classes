@@ -45,7 +45,6 @@ private:
     VfModuleComponent* m_pMeasureSignal;
     VfModuleParameter* m_pRefChannelParameter;
 
-    cDspMeasData* m_pTmpDataDsp;
     cDspMeasData* m_pParameterDSP;
     cDspMeasData* m_pActualValuesDSP;
 

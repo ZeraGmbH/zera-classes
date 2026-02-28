@@ -270,14 +270,15 @@ void cPower2ModuleMeasProgram::generateVeinInterface()
 void cPower2ModuleMeasProgram::setDspVarList()
 {
     int samples = m_pModule->getSharedChannelRangeObserver()->getSamplesPerPeriod();
-    // we fetch a handle for sampled data and other temporary values
-    m_pTmpDataDsp = m_dspInterface->getMemHandle("TmpData");
-    m_pTmpDataDsp->addDspVar("MEASSIGNAL1", samples, DSPDATA::vDspTemp); // we need 2 signals for our computations
-    m_pTmpDataDsp->addDspVar("MEASSIGNAL2", samples, DSPDATA::vDspTemp); // we need 2 signals for our computations
-    m_pTmpDataDsp->addDspVar("VALPOWER", 3*(MeasPhaseCount+SumValueCount), DSPDATA::vDspTemp); // p1+,p1-,p1, p2+,p2-,p2, p3+,p3-,p3, ps+,ps-,ps
-    m_pTmpDataDsp->addDspVar("TEMP1", 2, DSPDATA::vDspTemp); // we need 2 temp. vars also for complex
-    m_pTmpDataDsp->addDspVar("TEMP2", 2, DSPDATA::vDspTemp);
-    m_pTmpDataDsp->addDspVar("FILTER", DspBuffLen::avgFilterLen(3*(MeasPhaseCount+SumValueCount)), DSPDATA::vDspTemp);
+
+    // work variables without I/O
+    cDspMeasData* tmpDataDsp = m_dspInterface->getMemHandle("TmpData");
+    tmpDataDsp->addDspVar("MEASSIGNAL1", samples, DSPDATA::vDspTemp); // we need 2 signals for our computations
+    tmpDataDsp->addDspVar("MEASSIGNAL2", samples, DSPDATA::vDspTemp); // we need 2 signals for our computations
+    tmpDataDsp->addDspVar("VALPOWER", 3*(MeasPhaseCount+SumValueCount), DSPDATA::vDspTemp); // p1+,p1-,p1, p2+,p2-,p2, p3+,p3-,p3, ps+,ps-,ps
+    tmpDataDsp->addDspVar("TEMP1", 2, DSPDATA::vDspTemp); // we need 2 temp. vars also for complex
+    tmpDataDsp->addDspVar("TEMP2", 2, DSPDATA::vDspTemp);
+    tmpDataDsp->addDspVar("FILTER", DspBuffLen::avgFilterLen(3*(MeasPhaseCount+SumValueCount)), DSPDATA::vDspTemp);
 
     // a handle for parameter
     m_pParameterDSP =  m_dspInterface->getMemHandle("Parameter");

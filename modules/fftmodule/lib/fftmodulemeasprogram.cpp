@@ -150,19 +150,20 @@ void cFftModuleMeasProgram::setDspVarList()
 {
     int samples = m_pModule->getSharedChannelRangeObserver()->getSamplesPerPeriod();
     m_nfftLen = calcFftResultLenHalf(getConfData()->m_nFftOrder);
-    // we fetch a handle for sampled data and other temporary values
+
+    // work variables without I/O
     // global data segment is 1k words and lies on 1k boundary, so we put fftinput and fftouptut
     // at the beginning of that page because bitreversal adressing of fft only works properly if so
-    m_pTmpDataDsp = m_dspInterface->getMemHandle("TmpData");
-    m_pTmpDataDsp->addDspVar("FFTINPUT", 2 * m_nfftLen, DSPDATA::vDspTempGlobal);
-    m_pTmpDataDsp->addDspVar("FFTOUTPUT", 2 * m_nfftLen, DSPDATA::vDspTempGlobal);
+    cDspMeasData* tmpDataDsp = m_dspInterface->getMemHandle("TmpData");
+    tmpDataDsp->addDspVar("FFTINPUT", 2 * m_nfftLen, DSPDATA::vDspTempGlobal);
+    tmpDataDsp->addDspVar("FFTOUTPUT", 2 * m_nfftLen, DSPDATA::vDspTempGlobal);
 
-    m_pTmpDataDsp->addDspVar("MEASSIGNAL", 2 * samples, DSPDATA::vDspTemp);
-    m_pTmpDataDsp->addDspVar("FFTXOUTPUT", 2 * m_nfftLen * m_veinActValueList.count(), DSPDATA::vDspTemp);
-    m_pTmpDataDsp->addDspVar("FILTER", DspBuffLen::avgFilterLen(2 * m_nfftLen * m_veinActValueList.count()), DSPDATA::vDspTemp);
-    m_pTmpDataDsp->addDspVar("IPOLADR", 1, DSPDATA::vDspTemp, DSPDATA::dInt);
-    m_pTmpDataDsp->addDspVar("DFTREF", 2, DSPDATA::vDspTemp);
-    m_pTmpDataDsp->addDspVar("DEBUGCOUNT",1,DSPDATA::vDspTemp, DSPDATA::dInt);
+    tmpDataDsp->addDspVar("MEASSIGNAL", 2 * samples, DSPDATA::vDspTemp);
+    tmpDataDsp->addDspVar("FFTXOUTPUT", 2 * m_nfftLen * m_veinActValueList.count(), DSPDATA::vDspTemp);
+    tmpDataDsp->addDspVar("FILTER", DspBuffLen::avgFilterLen(2 * m_nfftLen * m_veinActValueList.count()), DSPDATA::vDspTemp);
+    tmpDataDsp->addDspVar("IPOLADR", 1, DSPDATA::vDspTemp, DSPDATA::dInt);
+    tmpDataDsp->addDspVar("DFTREF", 2, DSPDATA::vDspTemp);
+    tmpDataDsp->addDspVar("DEBUGCOUNT",1,DSPDATA::vDspTemp, DSPDATA::dInt);
 
     // a handle for parameter
     m_pParameterDSP =  m_dspInterface->getMemHandle("Parameter");

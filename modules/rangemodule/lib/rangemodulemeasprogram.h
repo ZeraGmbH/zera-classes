@@ -47,7 +47,6 @@ private:
     QList<VfModuleComponent*> m_veinRmsValueList;
     TimerTemplateQtPtr m_dspWatchdogTimer;
 
-    cDspMeasData* m_pTmpDataDsp;
     cDspMeasData* m_pParameterDSP;
     cDspMeasData* m_pActualValuesDSP;
 

@@ -127,14 +127,14 @@ void PeriodAverageModuleMeasProgram::setDspVarList()
     const int samplesPerPeriod = m_observer->getSamplesPerPeriod();
     const int channelCount = getConfData()->m_channelCount;
 
-    // temporary values
-    m_pTmpDataDsp = m_dspInterface->getMemHandle("TmpData");
-    m_pTmpDataDsp->addDspVar("MEASSIGNAL", samplesPerPeriod, DSPDATA::vDspTemp);
-    m_pTmpDataDsp->addDspVar("INTEGRAL_RESULT", channelCount, DSPDATA::vDspTemp);
-    m_pTmpDataDsp->addDspVar("PERIODCURR", 1, DSPDATA::vDspTemp, DSPDATA::dInt);
-    m_pTmpDataDsp->addDspVar("RESULT_BUFF_IDX", 1, DSPDATA::vDspTemp, DSPDATA::dInt);
-    m_pTmpDataDsp->addDspVar("FILTER", DspBuffLen::avgFilterLen(channelCount), DSPDATA::vDspTemp);
-    m_pTmpDataDsp->addDspVar("VALS_PERIOD_WORK", getConfData()->m_maxPeriods*channelCount, DSPDATA::vDspResult);
+    // work variables without I/O
+    cDspMeasData* tmpDataDsp = m_dspInterface->getMemHandle("TmpData");
+    tmpDataDsp->addDspVar("MEASSIGNAL", samplesPerPeriod, DSPDATA::vDspTemp);
+    tmpDataDsp->addDspVar("INTEGRAL_RESULT", channelCount, DSPDATA::vDspTemp);
+    tmpDataDsp->addDspVar("PERIODCURR", 1, DSPDATA::vDspTemp, DSPDATA::dInt);
+    tmpDataDsp->addDspVar("RESULT_BUFF_IDX", 1, DSPDATA::vDspTemp, DSPDATA::dInt);
+    tmpDataDsp->addDspVar("FILTER", DspBuffLen::avgFilterLen(channelCount), DSPDATA::vDspTemp);
+    tmpDataDsp->addDspVar("VALS_PERIOD_WORK", getConfData()->m_maxPeriods*channelCount, DSPDATA::vDspResult);
 
     // parameter
     m_pParameterDSP =  m_dspInterface->getMemHandle("Parameter");

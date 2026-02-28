@@ -98,7 +98,6 @@ private:
 
     quint8 m_notifierNr;
 
-    cDspMeasData* m_pTmpDataDsp;
     cDspMeasData* m_pParameterDSP;
     cDspMeasData* m_pActualValuesDSP;
     cDspMeasData* m_pfreqScaleDSP;

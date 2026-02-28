@@ -115,16 +115,17 @@ void cOsciModuleMeasProgram::generateVeinInterface()
 
 void cOsciModuleMeasProgram::setDspVarList()
 {
-    // we fetch a handle for sampled data and other temporary values
     int samples = m_pModule->getSharedChannelRangeObserver()->getSamplesPerPeriod();
-    m_pTmpDataDsp = m_dspInterface->getMemHandle("TmpData");
-    m_pTmpDataDsp->addDspVar("MEASSIGNAL", m_veinActValueList.count() * samples, DSPDATA::vDspTemp);
-    m_pTmpDataDsp->addDspVar("WORKSPACE", 2 * samples, DSPDATA::vDspTemp);
-    m_pTmpDataDsp->addDspVar("GAPCOUNT", 1, DSPDATA::vDspTemp, DSPDATA::dInt);
-    m_pTmpDataDsp->addDspVar("GAPPAR",1, DSPDATA::vDspTemp, DSPDATA::dInt);
-    m_pTmpDataDsp->addDspVar("IPOLADR", 1, DSPDATA::vDspTemp, DSPDATA::dInt);
-    m_pTmpDataDsp->addDspVar("DEBUGCOUNT",1,DSPDATA::vDspTemp, DSPDATA::dInt);
-    m_pTmpDataDsp->addDspVar("DFTREF", 2, DSPDATA::vDspTemp);
+
+    // work variables without I/O
+    cDspMeasData* tmpDataDsp = m_dspInterface->getMemHandle("TmpData");
+    tmpDataDsp->addDspVar("MEASSIGNAL", m_veinActValueList.count() * samples, DSPDATA::vDspTemp);
+    tmpDataDsp->addDspVar("WORKSPACE", 2 * samples, DSPDATA::vDspTemp);
+    tmpDataDsp->addDspVar("GAPCOUNT", 1, DSPDATA::vDspTemp, DSPDATA::dInt);
+    tmpDataDsp->addDspVar("GAPPAR",1, DSPDATA::vDspTemp, DSPDATA::dInt);
+    tmpDataDsp->addDspVar("IPOLADR", 1, DSPDATA::vDspTemp, DSPDATA::dInt);
+    tmpDataDsp->addDspVar("DEBUGCOUNT",1,DSPDATA::vDspTemp, DSPDATA::dInt);
+    tmpDataDsp->addDspVar("DFTREF", 2, DSPDATA::vDspTemp);
 
     // a handle for parameter
     m_pParameterDSP =  m_dspInterface->getMemHandle("Parameter");

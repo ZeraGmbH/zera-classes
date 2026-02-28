@@ -55,7 +55,6 @@ private:
     VfModuleMetaData* m_pDFTPPCountInfo;
     VfModuleMetaData* m_pDFTOrderInfo;
 
-    cDspMeasData* m_pTmpDataDsp;
     cDspMeasData* m_pParameterDSP;
     cDspMeasData* m_pActualValuesDSP;
 

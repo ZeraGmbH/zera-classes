@@ -122,11 +122,12 @@ void cThdnModuleMeasProgram::generateVeinInterface()
 void cThdnModuleMeasProgram::setDspVarList()
 {
     int samples = m_pModule->getSharedChannelRangeObserver()->getSamplesPerPeriod();
-    // we fetch a handle for sampled data and other temporary values
-    m_pTmpDataDsp = m_dspInterface->getMemHandle("TmpData");
-    m_pTmpDataDsp->addDspVar("MEASSIGNAL", samples, DSPDATA::vDspTemp);
-    m_pTmpDataDsp->addDspVar("VALXTHDN",m_veinActValueList.count(), DSPDATA::vDspTemp);
-    m_pTmpDataDsp->addDspVar("FILTER", DspBuffLen::avgFilterLen(m_veinActValueList.count()), DSPDATA::vDspTemp);
+
+    // work variables without I/O
+    cDspMeasData* tmpDataDsp = m_dspInterface->getMemHandle("TmpData");
+    tmpDataDsp->addDspVar("MEASSIGNAL", samples, DSPDATA::vDspTemp);
+    tmpDataDsp->addDspVar("VALXTHDN",m_veinActValueList.count(), DSPDATA::vDspTemp);
+    tmpDataDsp->addDspVar("FILTER", DspBuffLen::avgFilterLen(m_veinActValueList.count()), DSPDATA::vDspTemp);
 
     // a handle for parameter
     m_pParameterDSP =  m_dspInterface->getMemHandle("Parameter");

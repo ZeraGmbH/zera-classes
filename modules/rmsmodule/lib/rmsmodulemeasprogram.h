@@ -48,7 +48,6 @@ private:
     VfModuleMetaData* m_pRMSPNCountInfo;
     VfModuleMetaData* m_pRMSPPCountInfo;
 
-    cDspMeasData* m_pTmpDataDsp;
     cDspMeasData* m_pParameterDSP;
     cDspMeasData* m_pActualValuesDSP;
 

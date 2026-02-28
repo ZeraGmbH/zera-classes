@@ -36,7 +36,7 @@ private:
 
     cReferenceModule* m_pModule; // the module we live in
     QStringList m_ChannelList; // the list of actual values we work on
-    cDspMeasData* m_pTmpDataDsp;
+
     cDspMeasData* m_pParameterDSP;
     cDspMeasData* m_pActualValuesDSP;
 

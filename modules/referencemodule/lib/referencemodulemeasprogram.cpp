@@ -65,12 +65,13 @@ cReferenceModuleMeasProgram::cReferenceModuleMeasProgram(cReferenceModule* modul
 void cReferenceModuleMeasProgram::setDspVarList()
 {
     int samples = m_pModule->getSharedChannelRangeObserver()->getSamplesPerPeriod();
-    // we fetch a handle for sampled data and other temporary values
-    m_pTmpDataDsp = m_dspInterface->getMemHandle("TmpData");
-    m_pTmpDataDsp->addDspVar("MEASSIGNAL", samples, DSPDATA::vDspTemp);
-    m_pTmpDataDsp->addDspVar("TISTART",1, DSPDATA::vDspTemp, DSPDATA::dInt);
-    m_pTmpDataDsp->addDspVar("VALXDFT",m_ChannelList.count()*2, DSPDATA::vDspTemp);
-    m_pTmpDataDsp->addDspVar("FILTER", DspBuffLen::avgFilterLen(2*m_ChannelList.count()), DSPDATA::vDspTemp);
+
+    // work variables without I/O
+    cDspMeasData* tmpDataDsp = m_dspInterface->getMemHandle("TmpData");
+    tmpDataDsp->addDspVar("MEASSIGNAL", samples, DSPDATA::vDspTemp);
+    tmpDataDsp->addDspVar("TISTART",1, DSPDATA::vDspTemp, DSPDATA::dInt);
+    tmpDataDsp->addDspVar("VALXDFT",m_ChannelList.count()*2, DSPDATA::vDspTemp);
+    tmpDataDsp->addDspVar("FILTER", DspBuffLen::avgFilterLen(2*m_ChannelList.count()), DSPDATA::vDspTemp);
 
     // a handle for parameter
     m_pParameterDSP =  m_dspInterface->getMemHandle("Parameter");

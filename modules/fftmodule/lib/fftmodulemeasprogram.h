@@ -52,7 +52,6 @@ private:
     VfModuleParameter* m_pIntegrationTimeParameter;
     quint16 m_nfftLen;
 
-    cDspMeasData* m_pTmpDataDsp;
     cDspMeasData* m_pParameterDSP;
     cDspMeasData* m_pActualValuesDSP;
 
