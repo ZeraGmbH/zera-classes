@@ -6,7 +6,7 @@
             "Variables": [
                 {
                     "Name": "VALXOSCI",
-                    "Segment": "localSegment",
+                    "Segment": "moduleLocalSegment",
                     "Size": 1024,
                     "TypeData": "dspDataTypeFloat"
                 }
@@ -18,7 +18,7 @@
             "Variables": [
                 {
                     "Name": "REFCHN",
-                    "Segment": "localSegment",
+                    "Segment": "moduleLocalSegment",
                     "Size": 1,
                     "TypeData": "dspDataTypeInt"
                 }
@@ -30,43 +30,43 @@
             "Variables": [
                 {
                     "Name": "MEASSIGNAL",
-                    "Segment": "localSegment",
+                    "Segment": "moduleLocalSegment",
                     "Size": 4032,
                     "TypeData": "dspDataTypeFloat"
                 },
                 {
                     "Name": "WORKSPACE",
-                    "Segment": "localSegment",
+                    "Segment": "moduleLocalSegment",
                     "Size": 1008,
                     "TypeData": "dspDataTypeFloat"
                 },
                 {
                     "Name": "GAPCOUNT",
-                    "Segment": "localSegment",
+                    "Segment": "moduleLocalSegment",
                     "Size": 1,
                     "TypeData": "dspDataTypeInt"
                 },
                 {
                     "Name": "GAPPAR",
-                    "Segment": "localSegment",
+                    "Segment": "moduleLocalSegment",
                     "Size": 1,
                     "TypeData": "dspDataTypeInt"
                 },
                 {
                     "Name": "IPOLADR",
-                    "Segment": "localSegment",
+                    "Segment": "moduleLocalSegment",
                     "Size": 1,
                     "TypeData": "dspDataTypeInt"
                 },
                 {
                     "Name": "DEBUGCOUNT",
-                    "Segment": "localSegment",
+                    "Segment": "moduleLocalSegment",
                     "Size": 1,
                     "TypeData": "dspDataTypeInt"
                 },
                 {
                     "Name": "DFTREF",
-                    "Segment": "localSegment",
+                    "Segment": "moduleLocalSegment",
                     "Size": 2,
                     "TypeData": "dspDataTypeFloat"
                 }

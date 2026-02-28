@@ -1,8 +1,16 @@
 {
     "1-MemGroups": {
         "SCALEMEM": {
-            "UserMemSize": 32,
-            "UserMemSizeGlobal": 0
+            "UserMemSize": 0,
+            "UserMemSizeGlobal": 0,
+            "Variables": [
+                {
+                    "Name": "GAINCORRECTION2",
+                    "Segment": "dspInternalSegment",
+                    "Size": 32,
+                    "TypeData": "dspDataTypeFloat"
+                }
+            ]
         }
     },
     "2-CmdList": [

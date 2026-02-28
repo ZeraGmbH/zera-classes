@@ -1,20 +1,52 @@
 {
     "1-MemGroups": {
         "GainCorrection": {
-            "UserMemSize": 32,
-            "UserMemSizeGlobal": 0
+            "UserMemSize": 0,
+            "UserMemSizeGlobal": 0,
+            "Variables": [
+                {
+                    "Name": "GAINCORRECTION",
+                    "Segment": "dspInternalSegment",
+                    "Size": 32,
+                    "TypeData": "dspDataTypeFloat"
+                }
+            ]
         },
         "OffsetCorrection": {
-            "UserMemSize": 32,
-            "UserMemSizeGlobal": 0
+            "UserMemSize": 0,
+            "UserMemSizeGlobal": 0,
+            "Variables": [
+                {
+                    "Name": "OFFSETCORRECTION",
+                    "Segment": "dspInternalSegment",
+                    "Size": 32,
+                    "TypeData": "dspDataTypeFloat"
+                }
+            ]
         },
         "PhaseCorrection": {
-            "UserMemSize": 32,
-            "UserMemSizeGlobal": 0
+            "UserMemSize": 0,
+            "UserMemSizeGlobal": 0,
+            "Variables": [
+                {
+                    "Name": "PHASECORRECTION",
+                    "Segment": "dspInternalSegment",
+                    "Size": 32,
+                    "TypeData": "dspDataTypeFloat"
+                }
+            ]
         },
         "SubDC": {
-            "UserMemSize": 1,
-            "UserMemSizeGlobal": 0
+            "UserMemSize": 0,
+            "UserMemSizeGlobal": 0,
+            "Variables": [
+                {
+                    "Name": "SUBDC",
+                    "Segment": "dspInternalSegment",
+                    "Size": 1,
+                    "TypeData": "dspDataTypeInt"
+                }
+            ]
         }
     },
     "2-CmdList": [

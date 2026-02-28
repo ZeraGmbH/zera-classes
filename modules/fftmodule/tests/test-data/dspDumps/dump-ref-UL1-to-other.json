@@ -6,7 +6,7 @@
             "Variables": [
                 {
                     "Name": "VALXFFTF",
-                    "Segment": "localSegment",
+                    "Segment": "moduleLocalSegment",
                     "Size": 2048,
                     "TypeData": "dspDataTypeFloat"
                 }
@@ -18,19 +18,19 @@
             "Variables": [
                 {
                     "Name": "TIPAR",
-                    "Segment": "localSegment",
+                    "Segment": "moduleLocalSegment",
                     "Size": 1,
                     "TypeData": "dspDataTypeInt"
                 },
                 {
                     "Name": "TISTART",
-                    "Segment": "localSegment",
+                    "Segment": "moduleLocalSegment",
                     "Size": 1,
                     "TypeData": "dspDataTypeInt"
                 },
                 {
                     "Name": "REFCHN",
-                    "Segment": "localSegment",
+                    "Segment": "moduleLocalSegment",
                     "Size": 1,
                     "TypeData": "dspDataTypeInt"
                 }
@@ -42,49 +42,49 @@
             "Variables": [
                 {
                     "Name": "FFTINPUT",
-                    "Segment": "globalSegment",
+                    "Segment": "moduleGlobalSegment",
                     "Size": 256,
                     "TypeData": "dspDataTypeFloat"
                 },
                 {
                     "Name": "FFTOUTPUT",
-                    "Segment": "globalSegment",
+                    "Segment": "moduleGlobalSegment",
                     "Size": 256,
                     "TypeData": "dspDataTypeFloat"
                 },
                 {
                     "Name": "MEASSIGNAL",
-                    "Segment": "localSegment",
+                    "Segment": "moduleLocalSegment",
                     "Size": 1008,
                     "TypeData": "dspDataTypeFloat"
                 },
                 {
                     "Name": "FFTXOUTPUT",
-                    "Segment": "localSegment",
+                    "Segment": "moduleLocalSegment",
                     "Size": 2048,
                     "TypeData": "dspDataTypeFloat"
                 },
                 {
                     "Name": "FILTER",
-                    "Segment": "localSegment",
+                    "Segment": "moduleLocalSegment",
                     "Size": 4097,
                     "TypeData": "dspDataTypeFloat"
                 },
                 {
                     "Name": "IPOLADR",
-                    "Segment": "localSegment",
+                    "Segment": "moduleLocalSegment",
                     "Size": 1,
                     "TypeData": "dspDataTypeInt"
                 },
                 {
                     "Name": "DFTREF",
-                    "Segment": "localSegment",
+                    "Segment": "moduleLocalSegment",
                     "Size": 2,
                     "TypeData": "dspDataTypeFloat"
                 },
                 {
                     "Name": "DEBUGCOUNT",
-                    "Segment": "localSegment",
+                    "Segment": "moduleLocalSegment",
                     "Size": 1,
                     "TypeData": "dspDataTypeInt"
                 }

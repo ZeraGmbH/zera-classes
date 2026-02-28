@@ -203,20 +203,52 @@
     "1020": {
         "1-MemGroups": {
             "GainCorrection": {
-                "UserMemSize": 32,
-                "UserMemSizeGlobal": 0
+                "UserMemSize": 0,
+                "UserMemSizeGlobal": 0,
+                "Variables": [
+                    {
+                        "Name": "GAINCORRECTION",
+                        "Segment": "dspInternalSegment",
+                        "Size": 32,
+                        "TypeData": "dspDataTypeFloat"
+                    }
+                ]
             },
             "OffsetCorrection": {
-                "UserMemSize": 32,
-                "UserMemSizeGlobal": 0
+                "UserMemSize": 0,
+                "UserMemSizeGlobal": 0,
+                "Variables": [
+                    {
+                        "Name": "OFFSETCORRECTION",
+                        "Segment": "dspInternalSegment",
+                        "Size": 32,
+                        "TypeData": "dspDataTypeFloat"
+                    }
+                ]
             },
             "PhaseCorrection": {
-                "UserMemSize": 32,
-                "UserMemSizeGlobal": 0
+                "UserMemSize": 0,
+                "UserMemSizeGlobal": 0,
+                "Variables": [
+                    {
+                        "Name": "PHASECORRECTION",
+                        "Segment": "dspInternalSegment",
+                        "Size": 32,
+                        "TypeData": "dspDataTypeFloat"
+                    }
+                ]
             },
             "SubDC": {
-                "UserMemSize": 1,
-                "UserMemSizeGlobal": 0
+                "UserMemSize": 0,
+                "UserMemSizeGlobal": 0,
+                "Variables": [
+                    {
+                        "Name": "SUBDC",
+                        "Segment": "dspInternalSegment",
+                        "Size": 1,
+                        "TypeData": "dspDataTypeInt"
+                    }
+                ]
             }
         },
         "2-CmdList": [
@@ -233,7 +265,7 @@
                 "Variables": [
                     {
                         "Name": "VALXRMSF",
-                        "Segment": "localSegment",
+                        "Segment": "moduleLocalSegment",
                         "Size": 9,
                         "TypeData": "dspDataTypeFloat"
                     }
@@ -245,13 +277,13 @@
                 "Variables": [
                     {
                         "Name": "TIPAR",
-                        "Segment": "localSegment",
+                        "Segment": "moduleLocalSegment",
                         "Size": 1,
                         "TypeData": "dspDataTypeInt"
                     },
                     {
                         "Name": "TISTART",
-                        "Segment": "localSegment",
+                        "Segment": "moduleLocalSegment",
                         "Size": 1,
                         "TypeData": "dspDataTypeInt"
                     }
@@ -263,19 +295,19 @@
                 "Variables": [
                     {
                         "Name": "MEASSIGNAL",
-                        "Segment": "localSegment",
+                        "Segment": "moduleLocalSegment",
                         "Size": 504,
                         "TypeData": "dspDataTypeFloat"
                     },
                     {
                         "Name": "VALXRMS",
-                        "Segment": "localSegment",
+                        "Segment": "moduleLocalSegment",
                         "Size": 9,
                         "TypeData": "dspDataTypeFloat"
                     },
                     {
                         "Name": "FILTER",
-                        "Segment": "localSegment",
+                        "Segment": "moduleLocalSegment",
                         "Size": 19,
                         "TypeData": "dspDataTypeFloat"
                     }
@@ -337,7 +369,7 @@
                 "Variables": [
                     {
                         "Name": "VALXDFTF",
-                        "Segment": "localSegment",
+                        "Segment": "moduleLocalSegment",
                         "Size": 18,
                         "TypeData": "dspDataTypeFloat"
                     }
@@ -349,13 +381,13 @@
                 "Variables": [
                     {
                         "Name": "TIPAR",
-                        "Segment": "localSegment",
+                        "Segment": "moduleLocalSegment",
                         "Size": 1,
                         "TypeData": "dspDataTypeInt"
                     },
                     {
                         "Name": "TISTART",
-                        "Segment": "localSegment",
+                        "Segment": "moduleLocalSegment",
                         "Size": 1,
                         "TypeData": "dspDataTypeInt"
                     }
@@ -367,19 +399,19 @@
                 "Variables": [
                     {
                         "Name": "MEASSIGNAL",
-                        "Segment": "localSegment",
+                        "Segment": "moduleLocalSegment",
                         "Size": 504,
                         "TypeData": "dspDataTypeFloat"
                     },
                     {
                         "Name": "VALXDFT",
-                        "Segment": "localSegment",
+                        "Segment": "moduleLocalSegment",
                         "Size": 18,
                         "TypeData": "dspDataTypeFloat"
                     },
                     {
                         "Name": "FILTER",
-                        "Segment": "localSegment",
+                        "Segment": "moduleLocalSegment",
                         "Size": 37,
                         "TypeData": "dspDataTypeFloat"
                     }
@@ -434,7 +466,7 @@
                 "Variables": [
                     {
                         "Name": "VALXFFTF",
-                        "Segment": "localSegment",
+                        "Segment": "moduleLocalSegment",
                         "Size": 1536,
                         "TypeData": "dspDataTypeFloat"
                     }
@@ -446,19 +478,19 @@
                 "Variables": [
                     {
                         "Name": "TIPAR",
-                        "Segment": "localSegment",
+                        "Segment": "moduleLocalSegment",
                         "Size": 1,
                         "TypeData": "dspDataTypeInt"
                     },
                     {
                         "Name": "TISTART",
-                        "Segment": "localSegment",
+                        "Segment": "moduleLocalSegment",
                         "Size": 1,
                         "TypeData": "dspDataTypeInt"
                     },
                     {
                         "Name": "REFCHN",
-                        "Segment": "localSegment",
+                        "Segment": "moduleLocalSegment",
                         "Size": 1,
                         "TypeData": "dspDataTypeInt"
                     }
@@ -470,49 +502,49 @@
                 "Variables": [
                     {
                         "Name": "FFTINPUT",
-                        "Segment": "globalSegment",
+                        "Segment": "moduleGlobalSegment",
                         "Size": 256,
                         "TypeData": "dspDataTypeFloat"
                     },
                     {
                         "Name": "FFTOUTPUT",
-                        "Segment": "globalSegment",
+                        "Segment": "moduleGlobalSegment",
                         "Size": 256,
                         "TypeData": "dspDataTypeFloat"
                     },
                     {
                         "Name": "MEASSIGNAL",
-                        "Segment": "localSegment",
+                        "Segment": "moduleLocalSegment",
                         "Size": 1008,
                         "TypeData": "dspDataTypeFloat"
                     },
                     {
                         "Name": "FFTXOUTPUT",
-                        "Segment": "localSegment",
+                        "Segment": "moduleLocalSegment",
                         "Size": 1536,
                         "TypeData": "dspDataTypeFloat"
                     },
                     {
                         "Name": "FILTER",
-                        "Segment": "localSegment",
+                        "Segment": "moduleLocalSegment",
                         "Size": 3073,
                         "TypeData": "dspDataTypeFloat"
                     },
                     {
                         "Name": "IPOLADR",
-                        "Segment": "localSegment",
+                        "Segment": "moduleLocalSegment",
                         "Size": 1,
                         "TypeData": "dspDataTypeInt"
                     },
                     {
                         "Name": "DFTREF",
-                        "Segment": "localSegment",
+                        "Segment": "moduleLocalSegment",
                         "Size": 2,
                         "TypeData": "dspDataTypeFloat"
                     },
                     {
                         "Name": "DEBUGCOUNT",
-                        "Segment": "localSegment",
+                        "Segment": "moduleLocalSegment",
                         "Size": 1,
                         "TypeData": "dspDataTypeInt"
                     }
@@ -584,7 +616,7 @@
                 "Variables": [
                     {
                         "Name": "VALPQSF",
-                        "Segment": "localSegment",
+                        "Segment": "moduleLocalSegment",
                         "Size": 4,
                         "TypeData": "dspDataTypeFloat"
                     }
@@ -596,7 +628,7 @@
                 "Variables": [
                     {
                         "Name": "FREQSCALE",
-                        "Segment": "localSegment",
+                        "Segment": "moduleLocalSegment",
                         "Size": 0,
                         "TypeData": "dspDataTypeFloat"
                     }
@@ -608,43 +640,43 @@
                 "Variables": [
                     {
                         "Name": "TIPAR",
-                        "Segment": "localSegment",
+                        "Segment": "moduleLocalSegment",
                         "Size": 1,
                         "TypeData": "dspDataTypeInt"
                     },
                     {
                         "Name": "TISTART",
-                        "Segment": "localSegment",
+                        "Segment": "moduleLocalSegment",
                         "Size": 1,
                         "TypeData": "dspDataTypeInt"
                     },
                     {
                         "Name": "MMODE",
-                        "Segment": "localSegment",
+                        "Segment": "moduleLocalSegment",
                         "Size": 1,
                         "TypeData": "dspDataTypeInt"
                     },
                     {
                         "Name": "MMODE_SUM",
-                        "Segment": "localSegment",
+                        "Segment": "moduleLocalSegment",
                         "Size": 1,
                         "TypeData": "dspDataTypeInt"
                     },
                     {
                         "Name": "XMMODEPHASE0",
-                        "Segment": "localSegment",
+                        "Segment": "moduleLocalSegment",
                         "Size": 1,
                         "TypeData": "dspDataTypeInt"
                     },
                     {
                         "Name": "XMMODEPHASE1",
-                        "Segment": "localSegment",
+                        "Segment": "moduleLocalSegment",
                         "Size": 1,
                         "TypeData": "dspDataTypeInt"
                     },
                     {
                         "Name": "XMMODEPHASE2",
-                        "Segment": "localSegment",
+                        "Segment": "moduleLocalSegment",
                         "Size": 1,
                         "TypeData": "dspDataTypeInt"
                     }
@@ -656,7 +688,7 @@
                 "Variables": [
                     {
                         "Name": "NOMPOWER",
-                        "Segment": "localSegment",
+                        "Segment": "moduleLocalSegment",
                         "Size": 1,
                         "TypeData": "dspDataTypeFloat"
                     }
@@ -668,67 +700,67 @@
                 "Variables": [
                     {
                         "Name": "MEASSIGNAL1",
-                        "Segment": "localSegment",
+                        "Segment": "moduleLocalSegment",
                         "Size": 504,
                         "TypeData": "dspDataTypeFloat"
                     },
                     {
                         "Name": "MEASSIGNAL2",
-                        "Segment": "localSegment",
+                        "Segment": "moduleLocalSegment",
                         "Size": 504,
                         "TypeData": "dspDataTypeFloat"
                     },
                     {
                         "Name": "VALPQS",
-                        "Segment": "localSegment",
+                        "Segment": "moduleLocalSegment",
                         "Size": 4,
                         "TypeData": "dspDataTypeFloat"
                     },
                     {
                         "Name": "VAL_APPARENT_P",
-                        "Segment": "localSegment",
+                        "Segment": "moduleLocalSegment",
                         "Size": 3,
                         "TypeData": "dspDataTypeFloat"
                     },
                     {
                         "Name": "VAL_APPARENT_Q",
-                        "Segment": "localSegment",
+                        "Segment": "moduleLocalSegment",
                         "Size": 3,
                         "TypeData": "dspDataTypeFloat"
                     },
                     {
                         "Name": "TEMP1",
-                        "Segment": "localSegment",
+                        "Segment": "moduleLocalSegment",
                         "Size": 2,
                         "TypeData": "dspDataTypeFloat"
                     },
                     {
                         "Name": "TEMP2",
-                        "Segment": "localSegment",
+                        "Segment": "moduleLocalSegment",
                         "Size": 2,
                         "TypeData": "dspDataTypeFloat"
                     },
                     {
                         "Name": "CONST_HALF",
-                        "Segment": "localSegment",
+                        "Segment": "moduleLocalSegment",
                         "Size": 1,
                         "TypeData": "dspDataTypeFloat"
                     },
                     {
                         "Name": "CONST_1_DIV_SQRT3",
-                        "Segment": "localSegment",
+                        "Segment": "moduleLocalSegment",
                         "Size": 1,
                         "TypeData": "dspDataTypeFloat"
                     },
                     {
                         "Name": "CONST_1_5",
-                        "Segment": "localSegment",
+                        "Segment": "moduleLocalSegment",
                         "Size": 1,
                         "TypeData": "dspDataTypeFloat"
                     },
                     {
                         "Name": "FILTER",
-                        "Segment": "localSegment",
+                        "Segment": "moduleLocalSegment",
                         "Size": 9,
                         "TypeData": "dspDataTypeFloat"
                     }
@@ -841,7 +873,7 @@
                 "Variables": [
                     {
                         "Name": "VALPQSF",
-                        "Segment": "localSegment",
+                        "Segment": "moduleLocalSegment",
                         "Size": 4,
                         "TypeData": "dspDataTypeFloat"
                     }
@@ -853,7 +885,7 @@
                 "Variables": [
                     {
                         "Name": "FREQSCALE",
-                        "Segment": "localSegment",
+                        "Segment": "moduleLocalSegment",
                         "Size": 0,
                         "TypeData": "dspDataTypeFloat"
                     }
@@ -865,43 +897,43 @@
                 "Variables": [
                     {
                         "Name": "TIPAR",
-                        "Segment": "localSegment",
+                        "Segment": "moduleLocalSegment",
                         "Size": 1,
                         "TypeData": "dspDataTypeInt"
                     },
                     {
                         "Name": "TISTART",
-                        "Segment": "localSegment",
+                        "Segment": "moduleLocalSegment",
                         "Size": 1,
                         "TypeData": "dspDataTypeInt"
                     },
                     {
                         "Name": "MMODE",
-                        "Segment": "localSegment",
+                        "Segment": "moduleLocalSegment",
                         "Size": 1,
                         "TypeData": "dspDataTypeInt"
                     },
                     {
                         "Name": "MMODE_SUM",
-                        "Segment": "localSegment",
+                        "Segment": "moduleLocalSegment",
                         "Size": 1,
                         "TypeData": "dspDataTypeInt"
                     },
                     {
                         "Name": "XMMODEPHASE0",
-                        "Segment": "localSegment",
+                        "Segment": "moduleLocalSegment",
                         "Size": 1,
                         "TypeData": "dspDataTypeInt"
                     },
                     {
                         "Name": "XMMODEPHASE1",
-                        "Segment": "localSegment",
+                        "Segment": "moduleLocalSegment",
                         "Size": 1,
                         "TypeData": "dspDataTypeInt"
                     },
                     {
                         "Name": "XMMODEPHASE2",
-                        "Segment": "localSegment",
+                        "Segment": "moduleLocalSegment",
                         "Size": 1,
                         "TypeData": "dspDataTypeInt"
                     }
@@ -913,7 +945,7 @@
                 "Variables": [
                     {
                         "Name": "NOMPOWER",
-                        "Segment": "localSegment",
+                        "Segment": "moduleLocalSegment",
                         "Size": 1,
                         "TypeData": "dspDataTypeFloat"
                     }
@@ -925,67 +957,67 @@
                 "Variables": [
                     {
                         "Name": "MEASSIGNAL1",
-                        "Segment": "localSegment",
+                        "Segment": "moduleLocalSegment",
                         "Size": 504,
                         "TypeData": "dspDataTypeFloat"
                     },
                     {
                         "Name": "MEASSIGNAL2",
-                        "Segment": "localSegment",
+                        "Segment": "moduleLocalSegment",
                         "Size": 504,
                         "TypeData": "dspDataTypeFloat"
                     },
                     {
                         "Name": "VALPQS",
-                        "Segment": "localSegment",
+                        "Segment": "moduleLocalSegment",
                         "Size": 4,
                         "TypeData": "dspDataTypeFloat"
                     },
                     {
                         "Name": "VAL_APPARENT_P",
-                        "Segment": "localSegment",
+                        "Segment": "moduleLocalSegment",
                         "Size": 3,
                         "TypeData": "dspDataTypeFloat"
                     },
                     {
                         "Name": "VAL_APPARENT_Q",
-                        "Segment": "localSegment",
+                        "Segment": "moduleLocalSegment",
                         "Size": 3,
                         "TypeData": "dspDataTypeFloat"
                     },
                     {
                         "Name": "TEMP1",
-                        "Segment": "localSegment",
+                        "Segment": "moduleLocalSegment",
                         "Size": 2,
                         "TypeData": "dspDataTypeFloat"
                     },
                     {
                         "Name": "TEMP2",
-                        "Segment": "localSegment",
+                        "Segment": "moduleLocalSegment",
                         "Size": 2,
                         "TypeData": "dspDataTypeFloat"
                     },
                     {
                         "Name": "CONST_HALF",
-                        "Segment": "localSegment",
+                        "Segment": "moduleLocalSegment",
                         "Size": 1,
                         "TypeData": "dspDataTypeFloat"
                     },
                     {
                         "Name": "CONST_1_DIV_SQRT3",
-                        "Segment": "localSegment",
+                        "Segment": "moduleLocalSegment",
                         "Size": 1,
                         "TypeData": "dspDataTypeFloat"
                     },
                     {
                         "Name": "CONST_1_5",
-                        "Segment": "localSegment",
+                        "Segment": "moduleLocalSegment",
                         "Size": 1,
                         "TypeData": "dspDataTypeFloat"
                     },
                     {
                         "Name": "FILTER",
-                        "Segment": "localSegment",
+                        "Segment": "moduleLocalSegment",
                         "Size": 9,
                         "TypeData": "dspDataTypeFloat"
                     }
@@ -1155,7 +1187,7 @@
                 "Variables": [
                     {
                         "Name": "VALPQSF",
-                        "Segment": "localSegment",
+                        "Segment": "moduleLocalSegment",
                         "Size": 4,
                         "TypeData": "dspDataTypeFloat"
                     }
@@ -1167,7 +1199,7 @@
                 "Variables": [
                     {
                         "Name": "FREQSCALE",
-                        "Segment": "localSegment",
+                        "Segment": "moduleLocalSegment",
                         "Size": 0,
                         "TypeData": "dspDataTypeFloat"
                     }
@@ -1179,43 +1211,43 @@
                 "Variables": [
                     {
                         "Name": "TIPAR",
-                        "Segment": "localSegment",
+                        "Segment": "moduleLocalSegment",
                         "Size": 1,
                         "TypeData": "dspDataTypeInt"
                     },
                     {
                         "Name": "TISTART",
-                        "Segment": "localSegment",
+                        "Segment": "moduleLocalSegment",
                         "Size": 1,
                         "TypeData": "dspDataTypeInt"
                     },
                     {
                         "Name": "MMODE",
-                        "Segment": "localSegment",
+                        "Segment": "moduleLocalSegment",
                         "Size": 1,
                         "TypeData": "dspDataTypeInt"
                     },
                     {
                         "Name": "MMODE_SUM",
-                        "Segment": "localSegment",
+                        "Segment": "moduleLocalSegment",
                         "Size": 1,
                         "TypeData": "dspDataTypeInt"
                     },
                     {
                         "Name": "XMMODEPHASE0",
-                        "Segment": "localSegment",
+                        "Segment": "moduleLocalSegment",
                         "Size": 1,
                         "TypeData": "dspDataTypeInt"
                     },
                     {
                         "Name": "XMMODEPHASE1",
-                        "Segment": "localSegment",
+                        "Segment": "moduleLocalSegment",
                         "Size": 1,
                         "TypeData": "dspDataTypeInt"
                     },
                     {
                         "Name": "XMMODEPHASE2",
-                        "Segment": "localSegment",
+                        "Segment": "moduleLocalSegment",
                         "Size": 1,
                         "TypeData": "dspDataTypeInt"
                     }
@@ -1227,7 +1259,7 @@
                 "Variables": [
                     {
                         "Name": "NOMPOWER",
-                        "Segment": "localSegment",
+                        "Segment": "moduleLocalSegment",
                         "Size": 1,
                         "TypeData": "dspDataTypeFloat"
                     }
@@ -1239,67 +1271,67 @@
                 "Variables": [
                     {
                         "Name": "MEASSIGNAL1",
-                        "Segment": "localSegment",
+                        "Segment": "moduleLocalSegment",
                         "Size": 504,
                         "TypeData": "dspDataTypeFloat"
                     },
                     {
                         "Name": "MEASSIGNAL2",
-                        "Segment": "localSegment",
+                        "Segment": "moduleLocalSegment",
                         "Size": 504,
                         "TypeData": "dspDataTypeFloat"
                     },
                     {
                         "Name": "VALPQS",
-                        "Segment": "localSegment",
+                        "Segment": "moduleLocalSegment",
                         "Size": 4,
                         "TypeData": "dspDataTypeFloat"
                     },
                     {
                         "Name": "VAL_APPARENT_P",
-                        "Segment": "localSegment",
+                        "Segment": "moduleLocalSegment",
                         "Size": 3,
                         "TypeData": "dspDataTypeFloat"
                     },
                     {
                         "Name": "VAL_APPARENT_Q",
-                        "Segment": "localSegment",
+                        "Segment": "moduleLocalSegment",
                         "Size": 3,
                         "TypeData": "dspDataTypeFloat"
                     },
                     {
                         "Name": "TEMP1",
-                        "Segment": "localSegment",
+                        "Segment": "moduleLocalSegment",
                         "Size": 2,
                         "TypeData": "dspDataTypeFloat"
                     },
                     {
                         "Name": "TEMP2",
-                        "Segment": "localSegment",
+                        "Segment": "moduleLocalSegment",
                         "Size": 2,
                         "TypeData": "dspDataTypeFloat"
                     },
                     {
                         "Name": "CONST_HALF",
-                        "Segment": "localSegment",
+                        "Segment": "moduleLocalSegment",
                         "Size": 1,
                         "TypeData": "dspDataTypeFloat"
                     },
                     {
                         "Name": "CONST_1_DIV_SQRT3",
-                        "Segment": "localSegment",
+                        "Segment": "moduleLocalSegment",
                         "Size": 1,
                         "TypeData": "dspDataTypeFloat"
                     },
                     {
                         "Name": "CONST_1_5",
-                        "Segment": "localSegment",
+                        "Segment": "moduleLocalSegment",
                         "Size": 1,
                         "TypeData": "dspDataTypeFloat"
                     },
                     {
                         "Name": "FILTER",
-                        "Segment": "localSegment",
+                        "Segment": "moduleLocalSegment",
                         "Size": 9,
                         "TypeData": "dspDataTypeFloat"
                     }
@@ -1445,7 +1477,7 @@
                 "Variables": [
                     {
                         "Name": "VALPQSF",
-                        "Segment": "localSegment",
+                        "Segment": "moduleLocalSegment",
                         "Size": 4,
                         "TypeData": "dspDataTypeFloat"
                     }
@@ -1457,7 +1489,7 @@
                 "Variables": [
                     {
                         "Name": "FREQSCALE",
-                        "Segment": "localSegment",
+                        "Segment": "moduleLocalSegment",
                         "Size": 0,
                         "TypeData": "dspDataTypeFloat"
                     }
@@ -1469,43 +1501,43 @@
                 "Variables": [
                     {
                         "Name": "TIPAR",
-                        "Segment": "localSegment",
+                        "Segment": "moduleLocalSegment",
                         "Size": 1,
                         "TypeData": "dspDataTypeInt"
                     },
                     {
                         "Name": "TISTART",
-                        "Segment": "localSegment",
+                        "Segment": "moduleLocalSegment",
                         "Size": 1,
                         "TypeData": "dspDataTypeInt"
                     },
                     {
                         "Name": "MMODE",
-                        "Segment": "localSegment",
+                        "Segment": "moduleLocalSegment",
                         "Size": 1,
                         "TypeData": "dspDataTypeInt"
                     },
                     {
                         "Name": "MMODE_SUM",
-                        "Segment": "localSegment",
+                        "Segment": "moduleLocalSegment",
                         "Size": 1,
                         "TypeData": "dspDataTypeInt"
                     },
                     {
                         "Name": "XMMODEPHASE0",
-                        "Segment": "localSegment",
+                        "Segment": "moduleLocalSegment",
                         "Size": 1,
                         "TypeData": "dspDataTypeInt"
                     },
                     {
                         "Name": "XMMODEPHASE1",
-                        "Segment": "localSegment",
+                        "Segment": "moduleLocalSegment",
                         "Size": 1,
                         "TypeData": "dspDataTypeInt"
                     },
                     {
                         "Name": "XMMODEPHASE2",
-                        "Segment": "localSegment",
+                        "Segment": "moduleLocalSegment",
                         "Size": 1,
                         "TypeData": "dspDataTypeInt"
                     }
@@ -1517,7 +1549,7 @@
                 "Variables": [
                     {
                         "Name": "NOMPOWER",
-                        "Segment": "localSegment",
+                        "Segment": "moduleLocalSegment",
                         "Size": 1,
                         "TypeData": "dspDataTypeFloat"
                     }
@@ -1529,67 +1561,67 @@
                 "Variables": [
                     {
                         "Name": "MEASSIGNAL1",
-                        "Segment": "localSegment",
+                        "Segment": "moduleLocalSegment",
                         "Size": 504,
                         "TypeData": "dspDataTypeFloat"
                     },
                     {
                         "Name": "MEASSIGNAL2",
-                        "Segment": "localSegment",
+                        "Segment": "moduleLocalSegment",
                         "Size": 504,
                         "TypeData": "dspDataTypeFloat"
                     },
                     {
                         "Name": "VALPQS",
-                        "Segment": "localSegment",
+                        "Segment": "moduleLocalSegment",
                         "Size": 4,
                         "TypeData": "dspDataTypeFloat"
                     },
                     {
                         "Name": "VAL_APPARENT_P",
-                        "Segment": "localSegment",
+                        "Segment": "moduleLocalSegment",
                         "Size": 3,
                         "TypeData": "dspDataTypeFloat"
                     },
                     {
                         "Name": "VAL_APPARENT_Q",
-                        "Segment": "localSegment",
+                        "Segment": "moduleLocalSegment",
                         "Size": 3,
                         "TypeData": "dspDataTypeFloat"
                     },
                     {
                         "Name": "TEMP1",
-                        "Segment": "localSegment",
+                        "Segment": "moduleLocalSegment",
                         "Size": 2,
                         "TypeData": "dspDataTypeFloat"
                     },
                     {
                         "Name": "TEMP2",
-                        "Segment": "localSegment",
+                        "Segment": "moduleLocalSegment",
                         "Size": 2,
                         "TypeData": "dspDataTypeFloat"
                     },
                     {
                         "Name": "CONST_HALF",
-                        "Segment": "localSegment",
+                        "Segment": "moduleLocalSegment",
                         "Size": 1,
                         "TypeData": "dspDataTypeFloat"
                     },
                     {
                         "Name": "CONST_1_DIV_SQRT3",
-                        "Segment": "localSegment",
+                        "Segment": "moduleLocalSegment",
                         "Size": 1,
                         "TypeData": "dspDataTypeFloat"
                     },
                     {
                         "Name": "CONST_1_5",
-                        "Segment": "localSegment",
+                        "Segment": "moduleLocalSegment",
                         "Size": 1,
                         "TypeData": "dspDataTypeFloat"
                     },
                     {
                         "Name": "FILTER",
-                        "Segment": "localSegment",
+                        "Segment": "moduleLocalSegment",
                         "Size": 9,
                         "TypeData": "dspDataTypeFloat"
                     }
@@ -1707,7 +1739,7 @@
                 "Variables": [
                     {
                         "Name": "VALPQSF",
-                        "Segment": "localSegment",
+                        "Segment": "moduleLocalSegment",
                         "Size": 4,
                         "TypeData": "dspDataTypeFloat"
                     }
@@ -1719,7 +1751,7 @@
                 "Variables": [
                     {
                         "Name": "FREQSCALE",
-                        "Segment": "localSegment",
+                        "Segment": "moduleLocalSegment",
                         "Size": 0,
                         "TypeData": "dspDataTypeFloat"
                     }
@@ -1731,43 +1763,43 @@
                 "Variables": [
                     {
                         "Name": "TIPAR",
-                        "Segment": "localSegment",
+                        "Segment": "moduleLocalSegment",
                         "Size": 1,
                         "TypeData": "dspDataTypeInt"
                     },
                     {
                         "Name": "TISTART",
-                        "Segment": "localSegment",
+                        "Segment": "moduleLocalSegment",
                         "Size": 1,
                         "TypeData": "dspDataTypeInt"
                     },
                     {
                         "Name": "MMODE",
-                        "Segment": "localSegment",
+                        "Segment": "moduleLocalSegment",
                         "Size": 1,
                         "TypeData": "dspDataTypeInt"
                     },
                     {
                         "Name": "MMODE_SUM",
-                        "Segment": "localSegment",
+                        "Segment": "moduleLocalSegment",
                         "Size": 1,
                         "TypeData": "dspDataTypeInt"
                     },
                     {
                         "Name": "XMMODEPHASE0",
-                        "Segment": "localSegment",
+                        "Segment": "moduleLocalSegment",
                         "Size": 1,
                         "TypeData": "dspDataTypeInt"
                     },
                     {
                         "Name": "XMMODEPHASE1",
-                        "Segment": "localSegment",
+                        "Segment": "moduleLocalSegment",
                         "Size": 1,
                         "TypeData": "dspDataTypeInt"
                     },
                     {
                         "Name": "XMMODEPHASE2",
-                        "Segment": "localSegment",
+                        "Segment": "moduleLocalSegment",
                         "Size": 1,
                         "TypeData": "dspDataTypeInt"
                     }
@@ -1779,7 +1811,7 @@
                 "Variables": [
                     {
                         "Name": "NOMPOWER",
-                        "Segment": "localSegment",
+                        "Segment": "moduleLocalSegment",
                         "Size": 1,
                         "TypeData": "dspDataTypeFloat"
                     }
@@ -1791,67 +1823,67 @@
                 "Variables": [
                     {
                         "Name": "MEASSIGNAL1",
-                        "Segment": "localSegment",
+                        "Segment": "moduleLocalSegment",
                         "Size": 504,
                         "TypeData": "dspDataTypeFloat"
                     },
                     {
                         "Name": "MEASSIGNAL2",
-                        "Segment": "localSegment",
+                        "Segment": "moduleLocalSegment",
                         "Size": 504,
                         "TypeData": "dspDataTypeFloat"
                     },
                     {
                         "Name": "VALPQS",
-                        "Segment": "localSegment",
+                        "Segment": "moduleLocalSegment",
                         "Size": 4,
                         "TypeData": "dspDataTypeFloat"
                     },
                     {
                         "Name": "VAL_APPARENT_P",
-                        "Segment": "localSegment",
+                        "Segment": "moduleLocalSegment",
                         "Size": 3,
                         "TypeData": "dspDataTypeFloat"
                     },
                     {
                         "Name": "VAL_APPARENT_Q",
-                        "Segment": "localSegment",
+                        "Segment": "moduleLocalSegment",
                         "Size": 3,
                         "TypeData": "dspDataTypeFloat"
                     },
                     {
                         "Name": "TEMP1",
-                        "Segment": "localSegment",
+                        "Segment": "moduleLocalSegment",
                         "Size": 2,
                         "TypeData": "dspDataTypeFloat"
                     },
                     {
                         "Name": "TEMP2",
-                        "Segment": "localSegment",
+                        "Segment": "moduleLocalSegment",
                         "Size": 2,
                         "TypeData": "dspDataTypeFloat"
                     },
                     {
                         "Name": "CONST_HALF",
-                        "Segment": "localSegment",
+                        "Segment": "moduleLocalSegment",
                         "Size": 1,
                         "TypeData": "dspDataTypeFloat"
                     },
                     {
                         "Name": "CONST_1_DIV_SQRT3",
-                        "Segment": "localSegment",
+                        "Segment": "moduleLocalSegment",
                         "Size": 1,
                         "TypeData": "dspDataTypeFloat"
                     },
                     {
                         "Name": "CONST_1_5",
-                        "Segment": "localSegment",
+                        "Segment": "moduleLocalSegment",
                         "Size": 1,
                         "TypeData": "dspDataTypeFloat"
                     },
                     {
                         "Name": "FILTER",
-                        "Segment": "localSegment",
+                        "Segment": "moduleLocalSegment",
                         "Size": 9,
                         "TypeData": "dspDataTypeFloat"
                     }
@@ -1958,7 +1990,7 @@
                 "Variables": [
                     {
                         "Name": "VALPOWERF",
-                        "Segment": "localSegment",
+                        "Segment": "moduleLocalSegment",
                         "Size": 12,
                         "TypeData": "dspDataTypeFloat"
                     }
@@ -1970,7 +2002,7 @@
                 "Variables": [
                     {
                         "Name": "FREQSCALE",
-                        "Segment": "localSegment",
+                        "Segment": "moduleLocalSegment",
                         "Size": 3,
                         "TypeData": "dspDataTypeFloat"
                     }
@@ -1982,19 +2014,19 @@
                 "Variables": [
                     {
                         "Name": "TIPAR",
-                        "Segment": "localSegment",
+                        "Segment": "moduleLocalSegment",
                         "Size": 1,
                         "TypeData": "dspDataTypeInt"
                     },
                     {
                         "Name": "TISTART",
-                        "Segment": "localSegment",
+                        "Segment": "moduleLocalSegment",
                         "Size": 1,
                         "TypeData": "dspDataTypeInt"
                     },
                     {
                         "Name": "MMODE",
-                        "Segment": "localSegment",
+                        "Segment": "moduleLocalSegment",
                         "Size": 1,
                         "TypeData": "dspDataTypeInt"
                     }
@@ -2006,7 +2038,7 @@
                 "Variables": [
                     {
                         "Name": "NOMPOWER",
-                        "Segment": "localSegment",
+                        "Segment": "moduleLocalSegment",
                         "Size": 1,
                         "TypeData": "dspDataTypeFloat"
                     }
@@ -2018,37 +2050,37 @@
                 "Variables": [
                     {
                         "Name": "MEASSIGNAL1",
-                        "Segment": "localSegment",
+                        "Segment": "moduleLocalSegment",
                         "Size": 504,
                         "TypeData": "dspDataTypeFloat"
                     },
                     {
                         "Name": "MEASSIGNAL2",
-                        "Segment": "localSegment",
+                        "Segment": "moduleLocalSegment",
                         "Size": 504,
                         "TypeData": "dspDataTypeFloat"
                     },
                     {
                         "Name": "VALPOWER",
-                        "Segment": "localSegment",
+                        "Segment": "moduleLocalSegment",
                         "Size": 12,
                         "TypeData": "dspDataTypeFloat"
                     },
                     {
                         "Name": "TEMP1",
-                        "Segment": "localSegment",
+                        "Segment": "moduleLocalSegment",
                         "Size": 2,
                         "TypeData": "dspDataTypeFloat"
                     },
                     {
                         "Name": "TEMP2",
-                        "Segment": "localSegment",
+                        "Segment": "moduleLocalSegment",
                         "Size": 2,
                         "TypeData": "dspDataTypeFloat"
                     },
                     {
                         "Name": "FILTER",
-                        "Segment": "localSegment",
+                        "Segment": "moduleLocalSegment",
                         "Size": 25,
                         "TypeData": "dspDataTypeFloat"
                     }
@@ -2120,7 +2152,7 @@
                 "Variables": [
                     {
                         "Name": "VALXTHDNF",
-                        "Segment": "localSegment",
+                        "Segment": "moduleLocalSegment",
                         "Size": 6,
                         "TypeData": "dspDataTypeFloat"
                     }
@@ -2132,13 +2164,13 @@
                 "Variables": [
                     {
                         "Name": "TIPAR",
-                        "Segment": "localSegment",
+                        "Segment": "moduleLocalSegment",
                         "Size": 1,
                         "TypeData": "dspDataTypeInt"
                     },
                     {
                         "Name": "TISTART",
-                        "Segment": "localSegment",
+                        "Segment": "moduleLocalSegment",
                         "Size": 1,
                         "TypeData": "dspDataTypeInt"
                     }
@@ -2150,19 +2182,19 @@
                 "Variables": [
                     {
                         "Name": "MEASSIGNAL",
-                        "Segment": "localSegment",
+                        "Segment": "moduleLocalSegment",
                         "Size": 504,
                         "TypeData": "dspDataTypeFloat"
                     },
                     {
                         "Name": "VALXTHDN",
-                        "Segment": "localSegment",
+                        "Segment": "moduleLocalSegment",
                         "Size": 6,
                         "TypeData": "dspDataTypeFloat"
                     },
                     {
                         "Name": "FILTER",
-                        "Segment": "localSegment",
+                        "Segment": "moduleLocalSegment",
                         "Size": 13,
                         "TypeData": "dspDataTypeFloat"
                     }
@@ -2211,7 +2243,7 @@
                 "Variables": [
                     {
                         "Name": "VALXTHDNF",
-                        "Segment": "localSegment",
+                        "Segment": "moduleLocalSegment",
                         "Size": 6,
                         "TypeData": "dspDataTypeFloat"
                     }
@@ -2223,13 +2255,13 @@
                 "Variables": [
                     {
                         "Name": "TIPAR",
-                        "Segment": "localSegment",
+                        "Segment": "moduleLocalSegment",
                         "Size": 1,
                         "TypeData": "dspDataTypeInt"
                     },
                     {
                         "Name": "TISTART",
-                        "Segment": "localSegment",
+                        "Segment": "moduleLocalSegment",
                         "Size": 1,
                         "TypeData": "dspDataTypeInt"
                     }
@@ -2241,19 +2273,19 @@
                 "Variables": [
                     {
                         "Name": "MEASSIGNAL",
-                        "Segment": "localSegment",
+                        "Segment": "moduleLocalSegment",
                         "Size": 504,
                         "TypeData": "dspDataTypeFloat"
                     },
                     {
                         "Name": "VALXTHDN",
-                        "Segment": "localSegment",
+                        "Segment": "moduleLocalSegment",
                         "Size": 6,
                         "TypeData": "dspDataTypeFloat"
                     },
                     {
                         "Name": "FILTER",
-                        "Segment": "localSegment",
+                        "Segment": "moduleLocalSegment",
                         "Size": 13,
                         "TypeData": "dspDataTypeFloat"
                     }
@@ -2302,7 +2334,7 @@
                 "Variables": [
                     {
                         "Name": "VALXOSCI",
-                        "Segment": "localSegment",
+                        "Segment": "moduleLocalSegment",
                         "Size": 768,
                         "TypeData": "dspDataTypeFloat"
                     }
@@ -2314,7 +2346,7 @@
                 "Variables": [
                     {
                         "Name": "REFCHN",
-                        "Segment": "localSegment",
+                        "Segment": "moduleLocalSegment",
                         "Size": 1,
                         "TypeData": "dspDataTypeInt"
                     }
@@ -2326,43 +2358,43 @@
                 "Variables": [
                     {
                         "Name": "MEASSIGNAL",
-                        "Segment": "localSegment",
+                        "Segment": "moduleLocalSegment",
                         "Size": 3024,
                         "TypeData": "dspDataTypeFloat"
                     },
                     {
                         "Name": "WORKSPACE",
-                        "Segment": "localSegment",
+                        "Segment": "moduleLocalSegment",
                         "Size": 1008,
                         "TypeData": "dspDataTypeFloat"
                     },
                     {
                         "Name": "GAPCOUNT",
-                        "Segment": "localSegment",
+                        "Segment": "moduleLocalSegment",
                         "Size": 1,
                         "TypeData": "dspDataTypeInt"
                     },
                     {
                         "Name": "GAPPAR",
-                        "Segment": "localSegment",
+                        "Segment": "moduleLocalSegment",
                         "Size": 1,
                         "TypeData": "dspDataTypeInt"
                     },
                     {
                         "Name": "IPOLADR",
-                        "Segment": "localSegment",
+                        "Segment": "moduleLocalSegment",
                         "Size": 1,
                         "TypeData": "dspDataTypeInt"
                     },
                     {
                         "Name": "DEBUGCOUNT",
-                        "Segment": "localSegment",
+                        "Segment": "moduleLocalSegment",
                         "Size": 1,
                         "TypeData": "dspDataTypeInt"
                     },
                     {
                         "Name": "DFTREF",
-                        "Segment": "localSegment",
+                        "Segment": "moduleLocalSegment",
                         "Size": 2,
                         "TypeData": "dspDataTypeFloat"
                     }

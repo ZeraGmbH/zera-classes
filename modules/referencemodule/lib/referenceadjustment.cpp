@@ -128,11 +128,11 @@ void cReferenceAdjustment::activationDone()
     // we fetch a handle for gain correction and offset2 correction for
     // all possible channels because we do not know which channels become active
     m_pGainCorrectionDSP = m_dspInterface->getMemHandle("GainCorrection");
-    m_pGainCorrectionDSP->addDspVar("GAINCORRECTION",32, DSPDATA::vDspIntVar);
+    m_pGainCorrectionDSP->addDspVar("GAINCORRECTION", 32, DSPDATA::vDspParam, dspDataTypeFloat, dspInternalSegment);
     m_fGainCorr = m_pGainCorrectionDSP->data("GAINCORRECTION");
 
     m_pOffset2CorrectionDSP = m_dspInterface->getMemHandle("OffsetCorrection");
-    m_pOffset2CorrectionDSP->addDspVar("OFFSETCORRECTION2",32, DSPDATA::vDspIntVar);
+    m_pOffset2CorrectionDSP->addDspVar("OFFSETCORRECTION2", 32, DSPDATA::vDspParam, dspDataTypeFloat, dspInternalSegment);
     m_fOffset2Corr = m_pOffset2CorrectionDSP->data("OFFSETCORRECTION2");
 
     m_nIgnoreCount = m_pConfigData->m_nIgnore;
@@ -161,20 +161,15 @@ void cReferenceAdjustment::readOffset2Corr()
 
 void cReferenceAdjustment::writeOffsetAdjustment()
 {
-    cReferenceMeasChannel* rchn;
-    quint8 dspchn;
-    float cval;
-
     // first we have to compute the offset correction data for dsp
-    for (int i = 0; i < m_ChannelList.count(); i++)
-    {
-        rchn = m_ChannelList.at(i);
-        dspchn = rchn->getDSPChannelNr();
+    for (int i = 0; i < m_ChannelList.count(); i++) {
+        cReferenceMeasChannel* rchn = m_ChannelList.at(i);
+        quint8 dspchn = rchn->getDSPChannelNr();
         //double rej = rchn->getRejection();
         //double gaink = m_fGainCorr[dspchn];
         //double urv = rchn->getUrValue();
         double dc = m_ActualValues.at(i*2) / 2.0; // we only use the real part of dft but must devide by 2
-        cval = -dc /* * rej / (gaink * urv)*/;
+        float cval = -dc /* * rej / (gaink * urv)*/;
         m_fOffset2Corr[dspchn] = cval;
     }
 

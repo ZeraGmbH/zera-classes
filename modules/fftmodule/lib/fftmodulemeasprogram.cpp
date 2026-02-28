@@ -155,8 +155,8 @@ void cFftModuleMeasProgram::setDspVarList()
     // global data segment is 1k words and lies on 1k boundary, so we put fftinput and fftouptut
     // at the beginning of that page because bitreversal adressing of fft only works properly if so
     cDspMeasData* tmpDataDsp = m_dspInterface->getMemHandle("TmpData");
-    tmpDataDsp->addDspVar("FFTINPUT", 2 * m_nfftLen, DSPDATA::vDspTempGlobal);
-    tmpDataDsp->addDspVar("FFTOUTPUT", 2 * m_nfftLen, DSPDATA::vDspTempGlobal);
+    tmpDataDsp->addDspVar("FFTINPUT", 2 * m_nfftLen, DSPDATA::vDspTemp, dspDataTypeFloat, moduleGlobalSegment);
+    tmpDataDsp->addDspVar("FFTOUTPUT", 2 * m_nfftLen, DSPDATA::vDspTemp, dspDataTypeFloat, moduleGlobalSegment);
 
     tmpDataDsp->addDspVar("MEASSIGNAL", 2 * samples, DSPDATA::vDspTemp);
     tmpDataDsp->addDspVar("FFTXOUTPUT", 2 * m_nfftLen * m_veinActValueList.count(), DSPDATA::vDspTemp);

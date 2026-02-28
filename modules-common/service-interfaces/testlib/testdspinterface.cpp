@@ -18,7 +18,7 @@ quint32 TestDspInterface::dspMemoryWrite(cDspMeasData *memgroup)
             nonEmptyMemgroupFound = true;
             cDspVar* currentVar = currentVars[var];
             const QString varName = currentVar->Name();
-            dspDataType dataType = static_cast<dspDataType>(currentVar->datatype());
+            DspDataType dataType = static_cast<DspDataType>(currentVar->datatype());
             for(int varEntry=0; varEntry<currentVar->size(); ++varEntry) {
                 const float* valuePointer = currentVar->data() + varEntry;
                 QString label;
@@ -146,10 +146,12 @@ QString TestDspInterface::dspVarDataTypeToJson(int type)
 QString TestDspInterface::dspVarSegmentToJson(int segment)
 {
     switch(segment) {
-    case localSegment:
-        return "localSegment";
-    case globalSegment:
-        return "globalSegment";
+    case dspInternalSegment:
+        return "dspInternalSegment";
+    case moduleLocalSegment:
+        return "moduleLocalSegment";
+    case moduleGlobalSegment:
+        return "moduleGlobalSegment";
     default:
         qFatal("Unknown DSP var segment");
     }

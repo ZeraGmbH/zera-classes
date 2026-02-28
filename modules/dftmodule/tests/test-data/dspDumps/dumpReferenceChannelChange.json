@@ -6,7 +6,7 @@
             "Variables": [
                 {
                     "Name": "VALXDFTF",
-                    "Segment": "localSegment",
+                    "Segment": "moduleLocalSegment",
                     "Size": 22,
                     "TypeData": "dspDataTypeFloat"
                 }
@@ -18,13 +18,13 @@
             "Variables": [
                 {
                     "Name": "TIPAR",
-                    "Segment": "localSegment",
+                    "Segment": "moduleLocalSegment",
                     "Size": 1,
                     "TypeData": "dspDataTypeInt"
                 },
                 {
                     "Name": "TISTART",
-                    "Segment": "localSegment",
+                    "Segment": "moduleLocalSegment",
                     "Size": 1,
                     "TypeData": "dspDataTypeInt"
                 }
@@ -36,19 +36,19 @@
             "Variables": [
                 {
                     "Name": "MEASSIGNAL",
-                    "Segment": "localSegment",
+                    "Segment": "moduleLocalSegment",
                     "Size": 504,
                     "TypeData": "dspDataTypeFloat"
                 },
                 {
                     "Name": "VALXDFT",
-                    "Segment": "localSegment",
+                    "Segment": "moduleLocalSegment",
                     "Size": 22,
                     "TypeData": "dspDataTypeFloat"
                 },
                 {
                     "Name": "FILTER",
-                    "Segment": "localSegment",
+                    "Segment": "moduleLocalSegment",
                     "Size": 45,
                     "TypeData": "dspDataTypeFloat"
                 }

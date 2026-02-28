@@ -6,13 +6,13 @@
             "Variables": [
                 {
                     "Name": "VALS_PERIOD",
-                    "Segment": "localSegment",
+                    "Segment": "moduleLocalSegment",
                     "Size": 40,
                     "TypeData": "dspDataTypeFloat"
                 },
                 {
                     "Name": "VALUES_AVG",
-                    "Segment": "localSegment",
+                    "Segment": "moduleLocalSegment",
                     "Size": 8,
                     "TypeData": "dspDataTypeFloat"
                 }
@@ -24,7 +24,7 @@
             "Variables": [
                 {
                     "Name": "PERIODCOUNT",
-                    "Segment": "localSegment",
+                    "Segment": "moduleLocalSegment",
                     "Size": 1,
                     "TypeData": "dspDataTypeInt"
                 }
@@ -36,37 +36,37 @@
             "Variables": [
                 {
                     "Name": "MEASSIGNAL",
-                    "Segment": "localSegment",
+                    "Segment": "moduleLocalSegment",
                     "Size": 504,
                     "TypeData": "dspDataTypeFloat"
                 },
                 {
                     "Name": "INTEGRAL_RESULT",
-                    "Segment": "localSegment",
+                    "Segment": "moduleLocalSegment",
                     "Size": 8,
                     "TypeData": "dspDataTypeFloat"
                 },
                 {
                     "Name": "PERIODCURR",
-                    "Segment": "localSegment",
+                    "Segment": "moduleLocalSegment",
                     "Size": 1,
                     "TypeData": "dspDataTypeInt"
                 },
                 {
                     "Name": "RESULT_BUFF_IDX",
-                    "Segment": "localSegment",
+                    "Segment": "moduleLocalSegment",
                     "Size": 1,
                     "TypeData": "dspDataTypeInt"
                 },
                 {
                     "Name": "FILTER",
-                    "Segment": "localSegment",
+                    "Segment": "moduleLocalSegment",
                     "Size": 17,
                     "TypeData": "dspDataTypeFloat"
                 },
                 {
                     "Name": "VALS_PERIOD_WORK",
-                    "Segment": "localSegment",
+                    "Segment": "moduleLocalSegment",
                     "Size": 40,
                     "TypeData": "dspDataTypeFloat"
                 }
