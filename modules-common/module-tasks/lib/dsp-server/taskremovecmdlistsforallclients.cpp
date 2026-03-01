@@ -6,7 +6,7 @@ TaskTemplatePtr TaskRemoveCmdListsForAllClients::create(Zera::DspInterfacePtr ds
                                                         std::function<void ()> additionalErrorHandler)
 {
     return TaskScpiCmd::create(dspInterface,
-                               "MEASURE:LIST:CLALL",
+                               "MEMORY:CLALL",
                                timeout,
                                additionalErrorHandler);
 }

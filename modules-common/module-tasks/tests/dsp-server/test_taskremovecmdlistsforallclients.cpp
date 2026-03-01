@@ -17,7 +17,7 @@ void test_taskremovecmdlistsforallclients::checkScpiSend()
     TimeMachineObject::feedEventLoop();
     QStringList scpiSent = dsp.getProxyClient()->getReceivedCommands();
     QCOMPARE(scpiSent.count(), 1);
-    ScpiFullCmdCheckerForTest scpiChecker("MEASURE:LIST:CLALL", SCPI::isCmd);
+    ScpiFullCmdCheckerForTest scpiChecker("MEMORY:CLALL", SCPI::isCmd);
     QVERIFY(scpiChecker.matches(scpiSent[0]));
 }
 
