@@ -159,19 +159,19 @@ void cRmsModuleMeasProgram::setDspVarList()
     int samples = m_pModule->getSharedChannelRangeObserver()->getSamplesPerPeriod();
 
     // work variables without I/O
-    cDspMeasData* tmpDataDsp = m_dspInterface->getMemHandle("TmpData");
-    tmpDataDsp->addDspVar("MEASSIGNAL", samples, DSPDATA::vDspTemp);
-    tmpDataDsp->addDspVar("VALXRMS",m_veinActValueList.count(), DSPDATA::vDspTemp);
-    tmpDataDsp->addDspVar("FILTER", DspBuffLen::avgFilterLen(m_veinActValueList.count()), DSPDATA::vDspTemp);
+    DspVarGroupClientInterface* tmpDspVarGroup = m_dspInterface->createVariableGroup("TmpData");
+    tmpDspVarGroup->addDspVar("MEASSIGNAL", samples, DSPDATA::vDspTemp);
+    tmpDspVarGroup->addDspVar("VALXRMS",m_veinActValueList.count(), DSPDATA::vDspTemp);
+    tmpDspVarGroup->addDspVar("FILTER", DspBuffLen::avgFilterLen(m_veinActValueList.count()), DSPDATA::vDspTemp);
 
     // a handle for parameter
-    m_pParameterDSP =  m_dspInterface->getMemHandle("Parameter");
+    m_pParameterDSP =  m_dspInterface->createVariableGroup("Parameter");
     m_pParameterDSP->addDspVar("TIPAR",1, DSPDATA::vDspParam, dspDataTypeInt); // integrationtime res = 1ms
     // we use tistart as parameter, so we can finish actual measuring interval bei setting 0
     m_pParameterDSP->addDspVar("TISTART",1, DSPDATA::vDspParam, dspDataTypeInt);
 
     // and one for filtered actual values
-    m_pActualValuesDSP = m_dspInterface->getMemHandle("ActualValues");
+    m_pActualValuesDSP = m_dspInterface->createVariableGroup("ActualValues");
     m_pActualValuesDSP->addDspVar("VALXRMSF",m_veinActValueList.count(), DSPDATA::vDspResult);
 
     m_ModuleActualValues.resize(m_pActualValuesDSP->getUserMemSize()); // we provide a vector for generated actual values

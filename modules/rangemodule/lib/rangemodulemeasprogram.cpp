@@ -122,21 +122,21 @@ void cRangeModuleMeasProgram::setDspVarList()
     int samples = m_pModule->getSharedChannelRangeObserver()->getSamplesPerPeriod();
 
     // work variables without I/O
-    cDspMeasData* tmpDataDsp = m_dspInterface->getMemHandle("TmpData");
-    tmpDataDsp->addDspVar("MEASSIGNAL", samples, DSPDATA::vDspTemp);
-    tmpDataDsp->addDspVar("MAXRESET", 32, DSPDATA::vDspTemp);
-    tmpDataDsp->addDspVar("TISTART",1, DSPDATA::vDspTemp, dspDataTypeInt);
-    tmpDataDsp->addDspVar("CHXPEAK", channelMNames.count(), DSPDATA::vDspTemp);
-    tmpDataDsp->addDspVar("CHXRMS", channelMNames.count(), DSPDATA::vDspTemp);
-    tmpDataDsp->addDspVar("FREQ", 1, DSPDATA::vDspTemp);
-    tmpDataDsp->addDspVar("FILTER",DspBuffLen::avgFilterLen(2*channelMNames.count()+1), DSPDATA::vDspTemp); // filter workspace for scaled peak, rms and freq
+    DspVarGroupClientInterface* tmpDspVarGroup = m_dspInterface->createVariableGroup("TmpData");
+    tmpDspVarGroup->addDspVar("MEASSIGNAL", samples, DSPDATA::vDspTemp);
+    tmpDspVarGroup->addDspVar("MAXRESET", 32, DSPDATA::vDspTemp);
+    tmpDspVarGroup->addDspVar("TISTART",1, DSPDATA::vDspTemp, dspDataTypeInt);
+    tmpDspVarGroup->addDspVar("CHXPEAK", channelMNames.count(), DSPDATA::vDspTemp);
+    tmpDspVarGroup->addDspVar("CHXRMS", channelMNames.count(), DSPDATA::vDspTemp);
+    tmpDspVarGroup->addDspVar("FREQ", 1, DSPDATA::vDspTemp);
+    tmpDspVarGroup->addDspVar("FILTER",DspBuffLen::avgFilterLen(2*channelMNames.count()+1), DSPDATA::vDspTemp); // filter workspace for scaled peak, rms and freq
 
     // a handle for parameter
-    m_pParameterDSP =  m_dspInterface->getMemHandle("Parameter");
+    m_pParameterDSP =  m_dspInterface->createVariableGroup("Parameter");
     m_pParameterDSP->addDspVar("TIPAR",1, DSPDATA::vDspParam, dspDataTypeInt); // integrationtime res = 1ms
 
     // and one for filtered actual values
-    m_pActualValuesDSP = m_dspInterface->getMemHandle("ActualValues");
+    m_pActualValuesDSP = m_dspInterface->createVariableGroup("ActualValues");
     m_pActualValuesDSP->addDspVar("CHXPEAKF",channelMNames.count(), DSPDATA::vDspResult); // only copied values from channels maximum from dsp workspace
     m_pActualValuesDSP->addDspVar("CHXRMSF",channelMNames.count(), DSPDATA::vDspResult);
     m_pActualValuesDSP->addDspVar("FREQF", 1, DSPDATA::vDspResult);

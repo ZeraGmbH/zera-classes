@@ -48,8 +48,8 @@ private:
     VfModuleMetaData* m_pRMSPNCountInfo;
     VfModuleMetaData* m_pRMSPPCountInfo;
 
-    cDspMeasData* m_pParameterDSP;
-    cDspMeasData* m_pActualValuesDSP;
+    DspVarGroupClientInterface* m_pParameterDSP;
+    DspVarGroupClientInterface* m_pActualValuesDSP;
 
     // statemachine for activating gets the following states
     QState m_dspserverConnectState;

@@ -49,8 +49,8 @@ private:
     VfModuleComponent* m_pMeasureSignal;
     VfModuleParameter* m_periodCountParameter;
 
-    cDspMeasData* m_pParameterDSP;
-    cDspMeasData* m_pActualValuesDSP;
+    DspVarGroupClientInterface* m_pParameterDSP;
+    DspVarGroupClientInterface* m_pActualValuesDSP;
 
     // statemachine for activating
     QState m_dspserverConnectState;

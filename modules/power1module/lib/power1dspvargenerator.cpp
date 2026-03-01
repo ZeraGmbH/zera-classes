@@ -4,21 +4,21 @@
 void Power1DspVarGenerator::setupVarList(Zera::cDSPInterface *pDSPInterFace, const POWER1MODULE::cPower1ModuleConfigData *confData, quint32 sampleRate)
 {
     // work variables without I/O
-    cDspMeasData* tmpDataDsp = pDSPInterFace->getMemHandle("TmpData");
-    tmpDataDsp->addDspVar("MEASSIGNAL1", sampleRate, DSPDATA::vDspTemp); // we need 2 signals for our computations
-    tmpDataDsp->addDspVar("MEASSIGNAL2", sampleRate, DSPDATA::vDspTemp);
-    tmpDataDsp->addDspVar("VALPQS", MeasPhaseCount+SumValueCount, DSPDATA::vDspTemp); // here x1, x2, x3 , xs will land
-    tmpDataDsp->addDspVar("VAL_APPARENT_P", MeasPhaseCount, DSPDATA::vDspTemp);
-    tmpDataDsp->addDspVar("VAL_APPARENT_Q", MeasPhaseCount, DSPDATA::vDspTemp);
-    tmpDataDsp->addDspVar("TEMP1", 2, DSPDATA::vDspTemp); // we need 2 temp. vars also for complex
-    tmpDataDsp->addDspVar("TEMP2", 2, DSPDATA::vDspTemp);
-    tmpDataDsp->addDspVar("CONST_HALF", 1, DSPDATA::vDspTemp);
-    tmpDataDsp->addDspVar("CONST_1_DIV_SQRT3", 1, DSPDATA::vDspTemp);
-    tmpDataDsp->addDspVar("CONST_1_5", 1, DSPDATA::vDspTemp);
-    tmpDataDsp->addDspVar("FILTER", DspBuffLen::avgFilterLen(MeasPhaseCount+SumValueCount), DSPDATA::vDspTemp);
+    DspVarGroupClientInterface* tmpDspVarGroup = pDSPInterFace->createVariableGroup("TmpData");
+    tmpDspVarGroup->addDspVar("MEASSIGNAL1", sampleRate, DSPDATA::vDspTemp); // we need 2 signals for our computations
+    tmpDspVarGroup->addDspVar("MEASSIGNAL2", sampleRate, DSPDATA::vDspTemp);
+    tmpDspVarGroup->addDspVar("VALPQS", MeasPhaseCount+SumValueCount, DSPDATA::vDspTemp); // here x1, x2, x3 , xs will land
+    tmpDspVarGroup->addDspVar("VAL_APPARENT_P", MeasPhaseCount, DSPDATA::vDspTemp);
+    tmpDspVarGroup->addDspVar("VAL_APPARENT_Q", MeasPhaseCount, DSPDATA::vDspTemp);
+    tmpDspVarGroup->addDspVar("TEMP1", 2, DSPDATA::vDspTemp); // we need 2 temp. vars also for complex
+    tmpDspVarGroup->addDspVar("TEMP2", 2, DSPDATA::vDspTemp);
+    tmpDspVarGroup->addDspVar("CONST_HALF", 1, DSPDATA::vDspTemp);
+    tmpDspVarGroup->addDspVar("CONST_1_DIV_SQRT3", 1, DSPDATA::vDspTemp);
+    tmpDspVarGroup->addDspVar("CONST_1_5", 1, DSPDATA::vDspTemp);
+    tmpDspVarGroup->addDspVar("FILTER", DspBuffLen::avgFilterLen(MeasPhaseCount+SumValueCount), DSPDATA::vDspTemp);
 
     // a handle for parameter
-    m_pParameterDSP =  pDSPInterFace->getMemHandle("Parameter");
+    m_pParameterDSP =  pDSPInterFace->createVariableGroup("Parameter");
     m_pParameterDSP->addDspVar("TIPAR",1, DSPDATA::vDspParam, dspDataTypeInt); // integrationtime res = 1ms or period
     // we use tistart as parameter, so we can finish actual measuring interval bei setting 0
     m_pParameterDSP->addDspVar("TISTART",1, DSPDATA::vDspParam, dspDataTypeInt);
@@ -32,34 +32,34 @@ void Power1DspVarGenerator::setupVarList(Zera::cDSPInterface *pDSPInterFace, con
     }
 
     // a handle for filtered actual values
-    m_pActualValuesDSP = pDSPInterFace->getMemHandle("ActualValues");
+    m_pActualValuesDSP = pDSPInterFace->createVariableGroup("ActualValues");
     m_pActualValuesDSP->addDspVar("VALPQSF", MeasPhaseCount+SumValueCount, DSPDATA::vDspResult);
 
     // and one for the frequency output scale values, we need 1 value for each configured output
-    m_pfreqScaleDSP = pDSPInterFace->getMemHandle("FrequencyScale");
+    m_pfreqScaleDSP = pDSPInterFace->createVariableGroup("FrequencyScale");
     m_pfreqScaleDSP->addDspVar("FREQSCALE", confData->m_nFreqOutputCount, DSPDATA::vDspParam);
 
     // and one for nominal power in case that measuring mode is qref
-    m_pNomPower = pDSPInterFace->getMemHandle("QRefScale");
+    m_pNomPower = pDSPInterFace->createVariableGroup("QRefScale");
     m_pNomPower->addDspVar("NOMPOWER", 1, DSPDATA::vDspParam);
 }
 
-cDspMeasData *Power1DspVarGenerator::getActualValues()
+DspVarGroupClientInterface *Power1DspVarGenerator::getActualValues()
 {
     return m_pActualValuesDSP;
 }
 
-cDspMeasData *Power1DspVarGenerator::getFreqScale()
+DspVarGroupClientInterface *Power1DspVarGenerator::getFreqScale()
 {
     return m_pfreqScaleDSP;
 }
 
-cDspMeasData *Power1DspVarGenerator::getNominalPower()
+DspVarGroupClientInterface *Power1DspVarGenerator::getNominalPower()
 {
     return m_pNomPower;
 }
 
-cDspMeasData *Power1DspVarGenerator::getParameters()
+DspVarGroupClientInterface *Power1DspVarGenerator::getParameters()
 {
     return m_pParameterDSP;
 }

@@ -98,10 +98,10 @@ private:
 
     quint8 m_notifierNr;
 
-    cDspMeasData* m_pParameterDSP;
-    cDspMeasData* m_pActualValuesDSP;
-    cDspMeasData* m_pfreqScaleDSP;
-    cDspMeasData* m_pNomPower;
+    DspVarGroupClientInterface* m_pParameterDSP;
+    DspVarGroupClientInterface* m_pActualValuesDSP;
+    DspVarGroupClientInterface* m_pfreqScaleDSP;
+    DspVarGroupClientInterface* m_pNomPower;
 
     // statemachine for activating gets the following states
     QState m_resourceManagerConnectState;

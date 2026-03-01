@@ -149,8 +149,8 @@ void TestModuleManager::onAllModulesDestroyed()
         VeinEvent::EventSystem::getInstanceCount(),
         cModuleActivist::getInstanceCount(),
         Zera::cInterfacePrivate::getInstanceCount(),
-        cDspMeasData::getInstanceCount(),
-        cDspVar::getInstanceCount(),
+        DspVarGroupClientInterface::getInstanceCount(),
+        DspVarClientInterface::getInstanceCount(),
         ScpiNode::getInstanceCount(),
         ScpiObject::getInstanceCount(),
         VeinTcp::TcpPeer::getInstanceCount()

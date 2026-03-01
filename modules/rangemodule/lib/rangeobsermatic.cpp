@@ -507,9 +507,9 @@ void cRangeObsermatic::dspserverConnect()
 
 void cRangeObsermatic::readGainScale()
 {
-    m_gainScaleDSPMemHandle = m_dspInterface->getMemHandle("SCALEMEM");
-    m_gainScaleDspVar = m_gainScaleDSPMemHandle->addDspVar("GAINCORRECTION2", 32, DSPDATA::vDspParam, dspDataTypeFloat, dspInternalSegment);
-    m_MsgNrCmdList[m_dspInterface->dspMemoryRead(m_gainScaleDSPMemHandle)] = readgainscale;
+    m_gainScaleDSPVarGroup = m_dspInterface->createVariableGroup("SCALEMEM");
+    m_gainScaleDspVar = m_gainScaleDSPVarGroup->addDspVar("GAINCORRECTION2", 32, DSPDATA::vDspParam, dspDataTypeFloat, dspInternalSegment);
+    m_MsgNrCmdList[m_dspInterface->dspMemoryRead(m_gainScaleDSPVarGroup)] = readgainscale;
 }
 
 
@@ -598,7 +598,7 @@ void cRangeObsermatic::deactivationDone()
 void cRangeObsermatic::writeGainScale()
 {
     if (m_bActive)
-        m_MsgNrCmdList[m_dspInterface->dspMemoryWrite(m_gainScaleDSPMemHandle)] = writegainScale;
+        m_MsgNrCmdList[m_dspInterface->dspMemoryWrite(m_gainScaleDSPVarGroup)] = writegainScale;
 }
 
 

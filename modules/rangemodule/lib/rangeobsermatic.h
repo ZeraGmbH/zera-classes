@@ -82,8 +82,8 @@ private:
     VfModuleParameter* m_pParOverloadOnOff;
     VfModuleComponent* m_pComponentOverloadMax;
 
-    cDspMeasData* m_gainScaleDSPMemHandle = nullptr; // copy of dsp internal correction data
-    cDspVar *m_gainScaleDspVar = nullptr;
+    DspVarGroupClientInterface* m_gainScaleDSPVarGroup = nullptr; // copy of dsp internal correction data
+    DspVarClientInterface *m_gainScaleDspVar = nullptr;
     QHash<quint32, int> m_MsgNrCmdList;
 
     // statemachine for activation (reading dsp correction data used for scaling)

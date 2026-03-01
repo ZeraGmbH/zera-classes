@@ -68,8 +68,8 @@ private:
     QState m_set10VRangeState;
     QFinalState m_referenceAdjustDoneState;
 
-    cDspMeasData* m_pGainCorrectionDSP; // copy of dsp internal correction data
-    cDspMeasData* m_pOffset2CorrectionDSP; // copy of dsp internal correction data (set 2)
+    DspVarGroupClientInterface* m_pGainCorrectionDSP; // copy of dsp internal correction data
+    DspVarGroupClientInterface* m_pOffset2CorrectionDSP; // copy of dsp internal correction data (set 2)
     float* m_fGainCorr;
     float* m_fOffset2Corr;
 public slots:

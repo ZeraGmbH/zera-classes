@@ -118,21 +118,21 @@ void cOsciModuleMeasProgram::setDspVarList()
     int samples = m_pModule->getSharedChannelRangeObserver()->getSamplesPerPeriod();
 
     // work variables without I/O
-    cDspMeasData* tmpDataDsp = m_dspInterface->getMemHandle("TmpData");
-    tmpDataDsp->addDspVar("MEASSIGNAL", m_veinActValueList.count() * samples, DSPDATA::vDspTemp);
-    tmpDataDsp->addDspVar("WORKSPACE", 2 * samples, DSPDATA::vDspTemp);
-    tmpDataDsp->addDspVar("GAPCOUNT", 1, DSPDATA::vDspTemp, dspDataTypeInt);
-    tmpDataDsp->addDspVar("GAPPAR",1, DSPDATA::vDspTemp, dspDataTypeInt);
-    tmpDataDsp->addDspVar("IPOLADR", 1, DSPDATA::vDspTemp, dspDataTypeInt);
-    tmpDataDsp->addDspVar("DEBUGCOUNT",1,DSPDATA::vDspTemp, dspDataTypeInt);
-    tmpDataDsp->addDspVar("DFTREF", 2, DSPDATA::vDspTemp);
+    DspVarGroupClientInterface* tmpDspVarGroup = m_dspInterface->createVariableGroup("TmpData");
+    tmpDspVarGroup->addDspVar("MEASSIGNAL", m_veinActValueList.count() * samples, DSPDATA::vDspTemp);
+    tmpDspVarGroup->addDspVar("WORKSPACE", 2 * samples, DSPDATA::vDspTemp);
+    tmpDspVarGroup->addDspVar("GAPCOUNT", 1, DSPDATA::vDspTemp, dspDataTypeInt);
+    tmpDspVarGroup->addDspVar("GAPPAR",1, DSPDATA::vDspTemp, dspDataTypeInt);
+    tmpDspVarGroup->addDspVar("IPOLADR", 1, DSPDATA::vDspTemp, dspDataTypeInt);
+    tmpDspVarGroup->addDspVar("DEBUGCOUNT",1,DSPDATA::vDspTemp, dspDataTypeInt);
+    tmpDspVarGroup->addDspVar("DFTREF", 2, DSPDATA::vDspTemp);
 
     // a handle for parameter
-    m_pParameterDSP =  m_dspInterface->getMemHandle("Parameter");
+    m_pParameterDSP =  m_dspInterface->createVariableGroup("Parameter");
     m_pParameterDSP->addDspVar("REFCHN",1, DSPDATA::vDspParam, dspDataTypeInt);
 
     // and one for actual values
-    m_pActualValuesDSP = m_dspInterface->getMemHandle("ActualValues");
+    m_pActualValuesDSP = m_dspInterface->createVariableGroup("ActualValues");
     m_pActualValuesDSP->addDspVar("VALXOSCI",m_veinActValueList.count() * getConfData()->m_nInterpolation, DSPDATA::vDspResult);
 
     m_ModuleActualValues.resize(m_pActualValuesDSP->getUserMemSize()); // we provide a vector for generated actual values

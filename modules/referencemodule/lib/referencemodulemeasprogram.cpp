@@ -67,18 +67,18 @@ void cReferenceModuleMeasProgram::setDspVarList()
     int samples = m_pModule->getSharedChannelRangeObserver()->getSamplesPerPeriod();
 
     // work variables without I/O
-    cDspMeasData* tmpDataDsp = m_dspInterface->getMemHandle("TmpData");
-    tmpDataDsp->addDspVar("MEASSIGNAL", samples, DSPDATA::vDspTemp);
-    tmpDataDsp->addDspVar("TISTART",1, DSPDATA::vDspTemp, dspDataTypeInt);
-    tmpDataDsp->addDspVar("VALXDFT",m_ChannelList.count()*2, DSPDATA::vDspTemp);
-    tmpDataDsp->addDspVar("FILTER", DspBuffLen::avgFilterLen(2*m_ChannelList.count()), DSPDATA::vDspTemp);
+    DspVarGroupClientInterface* tmpDspVarGroup = m_dspInterface->createVariableGroup("TmpData");
+    tmpDspVarGroup->addDspVar("MEASSIGNAL", samples, DSPDATA::vDspTemp);
+    tmpDspVarGroup->addDspVar("TISTART",1, DSPDATA::vDspTemp, dspDataTypeInt);
+    tmpDspVarGroup->addDspVar("VALXDFT",m_ChannelList.count()*2, DSPDATA::vDspTemp);
+    tmpDspVarGroup->addDspVar("FILTER", DspBuffLen::avgFilterLen(2*m_ChannelList.count()), DSPDATA::vDspTemp);
 
     // a handle for parameter
-    m_pParameterDSP =  m_dspInterface->getMemHandle("Parameter");
+    m_pParameterDSP =  m_dspInterface->createVariableGroup("Parameter");
     m_pParameterDSP->addDspVar("TIPAR",1, DSPDATA::vDspParam, dspDataTypeInt); // integrationtime res = 1ms
 
     // and one for filtered actual values
-    m_pActualValuesDSP = m_dspInterface->getMemHandle("ActualValues");
+    m_pActualValuesDSP = m_dspInterface->createVariableGroup("ActualValues");
     m_pActualValuesDSP->addDspVar("VALXDFTF",2*m_ChannelList.count(), DSPDATA::vDspResult);
 
     m_ModuleActualValues.resize(m_pActualValuesDSP->getUserMemSize()); // we provide a vector for generated actual values

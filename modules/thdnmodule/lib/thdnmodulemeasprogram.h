@@ -13,7 +13,7 @@
 #include <timerperiodicqt.h>
 
 
-class cDspMeasData;
+class DspVarGroupClientInterface;
 class QStateMachine;
 
 class VfModuleComponent;
@@ -60,8 +60,8 @@ private:
     VfModuleComponent* m_pMeasureSignal;
     VfModuleParameter* m_pIntegrationTimeParameter;
 
-    cDspMeasData* m_pParameterDSP;
-    cDspMeasData* m_pActualValuesDSP;
+    DspVarGroupClientInterface* m_pParameterDSP;
+    DspVarGroupClientInterface* m_pActualValuesDSP;
 
     // statemachine for activating gets the following states
     QState m_dspserverConnectState;

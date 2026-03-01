@@ -179,15 +179,15 @@ void cAdjustManagement::readGainCorr()
     // we fetch a handle for each gain-, phase, offset correction for
     // all possible channels because we do not know which channels become active
 
-    m_pGainCorrectionDSP = m_dspInterface->getMemHandle("GainCorrection");
+    m_pGainCorrectionDSP = m_dspInterface->createVariableGroup("GainCorrection");
     m_pGainCorrectionDSP->addDspVar("GAINCORRECTION",32, DSPDATA::vDspParam, dspDataTypeFloat, dspInternalSegment);
     m_dspGainCorrValues = m_pGainCorrectionDSP->data("GAINCORRECTION");
 
-    m_pPhaseCorrectionDSP = m_dspInterface->getMemHandle("PhaseCorrection");
+    m_pPhaseCorrectionDSP = m_dspInterface->createVariableGroup("PhaseCorrection");
     m_pPhaseCorrectionDSP->addDspVar("PHASECORRECTION",32, DSPDATA::vDspParam, dspDataTypeFloat, dspInternalSegment);
     m_dspPhaseCorrValues = m_pPhaseCorrectionDSP->data("PHASECORRECTION");
 
-    m_pOffsetCorrectionDSP = m_dspInterface->getMemHandle("OffsetCorrection");
+    m_pOffsetCorrectionDSP = m_dspInterface->createVariableGroup("OffsetCorrection");
     m_pOffsetCorrectionDSP->addDspVar("OFFSETCORRECTION",32, DSPDATA::vDspParam, dspDataTypeFloat, dspInternalSegment);
     m_dspOffsetCorrValues = m_pOffsetCorrectionDSP->data("OFFSETCORRECTION");
 
@@ -213,7 +213,7 @@ void cAdjustManagement::setSubDC()
     for (int i = 0; i < m_subDCChannelList.count(); i++) {
         subdc |= (1 << m_subDCChannelList.at(i)->getDSPChannelNr());
     }
-    cDspMeasData* pSubDCMaskDSP = m_dspInterface->getMemHandle("SubDC"); // here we can set if sub dc or not
+    DspVarGroupClientInterface* pSubDCMaskDSP = m_dspInterface->createVariableGroup("SubDC"); // here we can set if sub dc or not
     pSubDCMaskDSP->addDspVar("SUBDC", 1, DSPDATA::vDspParam, dspDataTypeInt, dspInternalSegment);
     pSubDCMaskDSP->setVarData(QString("SUBDC:%1;").arg(subdc));
     m_MsgNrCmdList[m_dspInterface->dspMemoryWrite(pSubDCMaskDSP)] = subdcdsp;

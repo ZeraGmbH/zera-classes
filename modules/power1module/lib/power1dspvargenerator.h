@@ -3,21 +3,21 @@
 
 #include "power1moduleconfigdata.h"
 #include "dspinterface.h"
-#include "dspmeasdata.h"
+#include "dspvargroupclientinterface.h"
 
 class Power1DspVarGenerator
 {
 public:
     void setupVarList(Zera::cDSPInterface* pDSPInterFace, const POWER1MODULE::cPower1ModuleConfigData* confData, quint32 sampleRate);
-    cDspMeasData* getActualValues();
-    cDspMeasData* getFreqScale();
-    cDspMeasData* getNominalPower();
-    cDspMeasData* getParameters();
+    DspVarGroupClientInterface* getActualValues();
+    DspVarGroupClientInterface* getFreqScale();
+    DspVarGroupClientInterface* getNominalPower();
+    DspVarGroupClientInterface* getParameters();
 private:
-    cDspMeasData* m_pParameterDSP = nullptr;
-    cDspMeasData* m_pActualValuesDSP = nullptr;
-    cDspMeasData* m_pfreqScaleDSP = nullptr;
-    cDspMeasData* m_pNomPower = nullptr;
+    DspVarGroupClientInterface* m_pParameterDSP = nullptr;
+    DspVarGroupClientInterface* m_pActualValuesDSP = nullptr;
+    DspVarGroupClientInterface* m_pfreqScaleDSP = nullptr;
+    DspVarGroupClientInterface* m_pNomPower = nullptr;
 };
 
 #endif // POWER1DSPVARGENERATOR_H

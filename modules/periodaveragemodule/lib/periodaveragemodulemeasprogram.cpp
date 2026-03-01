@@ -128,20 +128,20 @@ void PeriodAverageModuleMeasProgram::setDspVarList()
     const int channelCount = getConfData()->m_channelCount;
 
     // work variables without I/O
-    cDspMeasData* tmpDataDsp = m_dspInterface->getMemHandle("TmpData");
-    tmpDataDsp->addDspVar("MEASSIGNAL", samplesPerPeriod, DSPDATA::vDspTemp);
-    tmpDataDsp->addDspVar("INTEGRAL_RESULT", channelCount, DSPDATA::vDspTemp);
-    tmpDataDsp->addDspVar("PERIODCURR", 1, DSPDATA::vDspTemp, dspDataTypeInt);
-    tmpDataDsp->addDspVar("RESULT_BUFF_IDX", 1, DSPDATA::vDspTemp, dspDataTypeInt);
-    tmpDataDsp->addDspVar("FILTER", DspBuffLen::avgFilterLen(channelCount), DSPDATA::vDspTemp);
-    tmpDataDsp->addDspVar("VALS_PERIOD_WORK", getConfData()->m_maxPeriods*channelCount, DSPDATA::vDspResult);
+    DspVarGroupClientInterface* tmpDspVarGroup = m_dspInterface->createVariableGroup("TmpData");
+    tmpDspVarGroup->addDspVar("MEASSIGNAL", samplesPerPeriod, DSPDATA::vDspTemp);
+    tmpDspVarGroup->addDspVar("INTEGRAL_RESULT", channelCount, DSPDATA::vDspTemp);
+    tmpDspVarGroup->addDspVar("PERIODCURR", 1, DSPDATA::vDspTemp, dspDataTypeInt);
+    tmpDspVarGroup->addDspVar("RESULT_BUFF_IDX", 1, DSPDATA::vDspTemp, dspDataTypeInt);
+    tmpDspVarGroup->addDspVar("FILTER", DspBuffLen::avgFilterLen(channelCount), DSPDATA::vDspTemp);
+    tmpDspVarGroup->addDspVar("VALS_PERIOD_WORK", getConfData()->m_maxPeriods*channelCount, DSPDATA::vDspResult);
 
     // parameter
-    m_pParameterDSP =  m_dspInterface->getMemHandle("Parameter");
+    m_pParameterDSP =  m_dspInterface->createVariableGroup("Parameter");
     m_pParameterDSP->addDspVar("PERIODCOUNT", 1, DSPDATA::vDspParam, dspDataTypeInt);
 
     // results
-    m_pActualValuesDSP = m_dspInterface->getMemHandle("ActualValues");
+    m_pActualValuesDSP = m_dspInterface->createVariableGroup("ActualValues");
     m_pActualValuesDSP->addDspVar("VALS_PERIOD", getConfData()->m_maxPeriods*channelCount, DSPDATA::vDspResult);
     m_pActualValuesDSP->addDspVar("VALUES_AVG", channelCount, DSPDATA::vDspResult);
 

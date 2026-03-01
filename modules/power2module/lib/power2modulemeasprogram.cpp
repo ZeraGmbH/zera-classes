@@ -272,31 +272,31 @@ void cPower2ModuleMeasProgram::setDspVarList()
     int samples = m_pModule->getSharedChannelRangeObserver()->getSamplesPerPeriod();
 
     // work variables without I/O
-    cDspMeasData* tmpDataDsp = m_dspInterface->getMemHandle("TmpData");
-    tmpDataDsp->addDspVar("MEASSIGNAL1", samples, DSPDATA::vDspTemp); // we need 2 signals for our computations
-    tmpDataDsp->addDspVar("MEASSIGNAL2", samples, DSPDATA::vDspTemp); // we need 2 signals for our computations
-    tmpDataDsp->addDspVar("VALPOWER", 3*(MeasPhaseCount+SumValueCount), DSPDATA::vDspTemp); // p1+,p1-,p1, p2+,p2-,p2, p3+,p3-,p3, ps+,ps-,ps
-    tmpDataDsp->addDspVar("TEMP1", 2, DSPDATA::vDspTemp); // we need 2 temp. vars also for complex
-    tmpDataDsp->addDspVar("TEMP2", 2, DSPDATA::vDspTemp);
-    tmpDataDsp->addDspVar("FILTER", DspBuffLen::avgFilterLen(3*(MeasPhaseCount+SumValueCount)), DSPDATA::vDspTemp);
+    DspVarGroupClientInterface* tmpDspVarGroup = m_dspInterface->createVariableGroup("TmpData");
+    tmpDspVarGroup->addDspVar("MEASSIGNAL1", samples, DSPDATA::vDspTemp); // we need 2 signals for our computations
+    tmpDspVarGroup->addDspVar("MEASSIGNAL2", samples, DSPDATA::vDspTemp); // we need 2 signals for our computations
+    tmpDspVarGroup->addDspVar("VALPOWER", 3*(MeasPhaseCount+SumValueCount), DSPDATA::vDspTemp); // p1+,p1-,p1, p2+,p2-,p2, p3+,p3-,p3, ps+,ps-,ps
+    tmpDspVarGroup->addDspVar("TEMP1", 2, DSPDATA::vDspTemp); // we need 2 temp. vars also for complex
+    tmpDspVarGroup->addDspVar("TEMP2", 2, DSPDATA::vDspTemp);
+    tmpDspVarGroup->addDspVar("FILTER", DspBuffLen::avgFilterLen(3*(MeasPhaseCount+SumValueCount)), DSPDATA::vDspTemp);
 
     // a handle for parameter
-    m_pParameterDSP =  m_dspInterface->getMemHandle("Parameter");
+    m_pParameterDSP =  m_dspInterface->createVariableGroup("Parameter");
     m_pParameterDSP->addDspVar("TIPAR",1, DSPDATA::vDspParam, dspDataTypeInt); // integrationtime res = 1ms or period
     // we use tistart as parameter, so we can finish actual measuring interval bei setting 0
     m_pParameterDSP->addDspVar("TISTART",1, DSPDATA::vDspParam, dspDataTypeInt);
     m_pParameterDSP->addDspVar("MMODE",1, DSPDATA::vDspParam, dspDataTypeInt);
 
     // a handle for filtered actual values
-    m_pActualValuesDSP = m_dspInterface->getMemHandle("ActualValues");
+    m_pActualValuesDSP = m_dspInterface->createVariableGroup("ActualValues");
     m_pActualValuesDSP->addDspVar("VALPOWERF", 3*(MeasPhaseCount+SumValueCount), DSPDATA::vDspResult);
 
     // and one for the frequency output scale values, we need 1 value for each configured output
-    m_pfreqScaleDSP = m_dspInterface->getMemHandle("FrequencyScale");
+    m_pfreqScaleDSP = m_dspInterface->createVariableGroup("FrequencyScale");
     m_pfreqScaleDSP->addDspVar("FREQSCALE", getConfData()->m_nFreqOutputCount, DSPDATA::vDspParam);
 
     // and one for nominal power in case that measuring mode is qref
-    m_pNomPower = m_dspInterface->getMemHandle("QRefScale");
+    m_pNomPower = m_dspInterface->createVariableGroup("QRefScale");
     m_pNomPower->addDspVar("NOMPOWER", 1, DSPDATA::vDspParam);
 
     m_ModuleActualValues.resize(m_pActualValuesDSP->getUserMemSize()); // we provide a vector for generated actual values

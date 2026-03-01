@@ -8,16 +8,16 @@ TestDspInterface::TestDspInterface(QStringList valueNamesList, int entityId) :
 {
 }
 
-quint32 TestDspInterface::dspMemoryWrite(cDspMeasData *memgroup)
+quint32 TestDspInterface::dspMemoryWrite(DspVarGroupClientInterface *varGroup)
 {
-    QString memGroupName = memgroup->getName();
-    cDspMeasData *currentMemGroup = d_ptr->findMemHandle(memgroup->getName());
+    QString memGroupName = varGroup->getName();
+    DspVarGroupClientInterface *currentVarGroup = d_ptr->findVariableGroup(varGroup->getName());
     bool nonEmptyMemgroupFound = false;
-    if(currentMemGroup) {
-        const QList<cDspVar*> currentVars = currentMemGroup->getVars();
+    if(currentVarGroup) {
+        const QList<DspVarClientInterface*> currentVars = currentVarGroup->getVars();
         for(int var=0; var<currentVars.size(); ++var) {
             nonEmptyMemgroupFound = true;
-            cDspVar* currentVar = currentVars[var];
+            DspVarClientInterface* currentVar = currentVars[var];
             if (!checkDspVar(currentVar))
                 continue;
 
@@ -34,7 +34,7 @@ quint32 TestDspInterface::dspMemoryWrite(cDspMeasData *memgroup)
                     label = QString("%1:%2+%3").arg(memGroupName, varName, entryNum);
                 }
                 // There is this nasty float/uint cast
-                // see cDspMeasData::setVarData & cDspMeasData::writeCommand()
+                // see DspVarGroupClientInterface::setVarData & DspVarGroupClientInterface::writeCommand()
                 double value = 0.0;
                 if(dataType == dspDataTypeInt) {
                     uint* uintPointer = (uint*) valuePointer;
@@ -48,13 +48,13 @@ quint32 TestDspInterface::dspMemoryWrite(cDspMeasData *memgroup)
         }
     }
     if(!nonEmptyMemgroupFound) {
-        const QVector<float> &values = memgroup->getData();
-        struct TVarsWritten write = { m_transactionCount, QString("No variables found for memgroup %1").arg(memGroupName), float(qQNaN()) };
+        const QVector<float> &values = varGroup->getData();
+        struct TVarsWritten write = { m_transactionCount, QString("No variables found for varGroup %1").arg(memGroupName), float(qQNaN()) };
         m_valuesWritten.append(write);
     }
     m_transactionCount++;
 
-    emit sigDspMemoryWrite(memgroup->getName(), memgroup->getData());
+    emit sigDspMemoryWrite(varGroup->getName(), varGroup->getData());
     return sendCmdResponse("");
 }
 
@@ -77,9 +77,9 @@ QJsonObject TestDspInterface::dumpAll(bool dumpVarWrite)
 
 QJsonObject TestDspInterface::dumpMemoryGroups()
 {
-    const QList<cDspMeasData*> dspMemoryDataList = d_ptr->getMemoryDataList();
+    const QList<DspVarGroupClientInterface*> dspMemoryDataList = d_ptr->getMemoryDataList();
     QJsonObject dumpMemGroup;
-    for(cDspMeasData* memData : dspMemoryDataList) {
+    for(DspVarGroupClientInterface* memData : dspMemoryDataList) {
         QJsonObject entry;
         entry.insert("UserMemSize", int(memData->getUserMemSize()));
         entry.insert("UserMemSizeGlobal", int(memData->getUserMemSizeGlobal()));
@@ -93,8 +93,8 @@ QJsonObject TestDspInterface::dumpVarList(QJsonObject inData)
     const QStringList varList = d_ptr->varList2String(Zera::cDSPInterfacePrivate::PREPEND_NOTHING).split(";", Qt::SkipEmptyParts);
     QMap<QString, QJsonArray> memGroupVariables;
     for(const QString &var : varList) {
-        // see: cDspMeasData::VarListLong
-        // ts << QString("%1,%2,%3,%4,%5;").arg(m_handleName, pDspVar->Name()).arg(pDspVar->size()).arg(pDspVar->datatype()).arg(seg);
+        // see: DspVarGroupClientInterface::VarListLong
+        // ts << QString("%1,%2,%3,%4,%5;").arg(m_groupName, pDspVar->Name()).arg(pDspVar->size()).arg(pDspVar->datatype()).arg(seg);
         const QStringList entry = var.split(",", Qt::SkipEmptyParts);
         QString memGroup = entry[0];
         QString varName = entry[1];
@@ -162,12 +162,12 @@ QString TestDspInterface::dspVarSegmentToJson(int segment)
     }
 }
 
-bool TestDspInterface::checkDspVar(cDspVar *dspVar)
+bool TestDspInterface::checkDspVar(DspVarClientInterface *dspVar)
 {
     if (dspVar->getSegmentType() == dspInternalSegment) {
         DspVarResolver resolver;
         QString varName = dspVar->Name();
-        const TDspVar *dspServerVarFound = resolver.getDspVar(varName);
+        const DspVarServer *dspServerVarFound = resolver.getDspVar(varName);
         if (dspServerVarFound == nullptr) {
             qCritical("%s not found in internal DSP variables", qPrintable(varName));
             return false;

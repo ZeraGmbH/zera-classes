@@ -154,26 +154,26 @@ void cFftModuleMeasProgram::setDspVarList()
     // work variables without I/O
     // global data segment is 1k words and lies on 1k boundary, so we put fftinput and fftouptut
     // at the beginning of that page because bitreversal adressing of fft only works properly if so
-    cDspMeasData* tmpDataDsp = m_dspInterface->getMemHandle("TmpData");
-    tmpDataDsp->addDspVar("FFTINPUT", 2 * m_nfftLen, DSPDATA::vDspTemp, dspDataTypeFloat, moduleGlobalSegment);
-    tmpDataDsp->addDspVar("FFTOUTPUT", 2 * m_nfftLen, DSPDATA::vDspTemp, dspDataTypeFloat, moduleGlobalSegment);
+    DspVarGroupClientInterface* tmpDspVarGroup = m_dspInterface->createVariableGroup("TmpData");
+    tmpDspVarGroup->addDspVar("FFTINPUT", 2 * m_nfftLen, DSPDATA::vDspTemp, dspDataTypeFloat, moduleGlobalSegment);
+    tmpDspVarGroup->addDspVar("FFTOUTPUT", 2 * m_nfftLen, DSPDATA::vDspTemp, dspDataTypeFloat, moduleGlobalSegment);
 
-    tmpDataDsp->addDspVar("MEASSIGNAL", 2 * samples, DSPDATA::vDspTemp);
-    tmpDataDsp->addDspVar("FFTXOUTPUT", 2 * m_nfftLen * m_veinActValueList.count(), DSPDATA::vDspTemp);
-    tmpDataDsp->addDspVar("FILTER", DspBuffLen::avgFilterLen(2 * m_nfftLen * m_veinActValueList.count()), DSPDATA::vDspTemp);
-    tmpDataDsp->addDspVar("IPOLADR", 1, DSPDATA::vDspTemp, dspDataTypeInt);
-    tmpDataDsp->addDspVar("DFTREF", 2, DSPDATA::vDspTemp);
-    tmpDataDsp->addDspVar("DEBUGCOUNT",1,DSPDATA::vDspTemp, dspDataTypeInt);
+    tmpDspVarGroup->addDspVar("MEASSIGNAL", 2 * samples, DSPDATA::vDspTemp);
+    tmpDspVarGroup->addDspVar("FFTXOUTPUT", 2 * m_nfftLen * m_veinActValueList.count(), DSPDATA::vDspTemp);
+    tmpDspVarGroup->addDspVar("FILTER", DspBuffLen::avgFilterLen(2 * m_nfftLen * m_veinActValueList.count()), DSPDATA::vDspTemp);
+    tmpDspVarGroup->addDspVar("IPOLADR", 1, DSPDATA::vDspTemp, dspDataTypeInt);
+    tmpDspVarGroup->addDspVar("DFTREF", 2, DSPDATA::vDspTemp);
+    tmpDspVarGroup->addDspVar("DEBUGCOUNT",1,DSPDATA::vDspTemp, dspDataTypeInt);
 
     // a handle for parameter
-    m_pParameterDSP =  m_dspInterface->getMemHandle("Parameter");
+    m_pParameterDSP =  m_dspInterface->createVariableGroup("Parameter");
     m_pParameterDSP->addDspVar("TIPAR",1, DSPDATA::vDspParam, dspDataTypeInt); // integrationtime res = 1ms
     // we use tistart as parameter, so we can finish actual measuring interval bei setting 0
     m_pParameterDSP->addDspVar("TISTART",1, DSPDATA::vDspParam, dspDataTypeInt);
     m_pParameterDSP->addDspVar("REFCHN",1, DSPDATA::vDspParam, dspDataTypeInt);
 
     // and one for filtered actual values
-    m_pActualValuesDSP = m_dspInterface->getMemHandle("ActualValues");
+    m_pActualValuesDSP = m_dspInterface->createVariableGroup("ActualValues");
     m_pActualValuesDSP->addDspVar("VALXFFTF", 2 * m_nfftLen * m_veinActValueList.count(), DSPDATA::vDspResult);
 
     m_ModuleActualValues.resize(m_pActualValuesDSP->getUserMemSize()); // we provide a vector for generated actual values
