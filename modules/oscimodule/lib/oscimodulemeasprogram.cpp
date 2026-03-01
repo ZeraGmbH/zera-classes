@@ -119,22 +119,21 @@ void cOsciModuleMeasProgram::setDspVarList()
 
     // work variables without I/O
     DspVarGroupClientInterface* tmpDspVarGroup = m_dspInterface->createVariableGroup("TmpData");
-    tmpDspVarGroup->addDspVar("MEASSIGNAL", m_veinActValueList.count() * samples, DSPDATA::vDspTemp);
-    tmpDspVarGroup->addDspVar("WORKSPACE", 2 * samples, DSPDATA::vDspTemp);
-    tmpDspVarGroup->addDspVar("GAPCOUNT", 1, DSPDATA::vDspTemp, dspDataTypeInt);
-    tmpDspVarGroup->addDspVar("GAPPAR",1, DSPDATA::vDspTemp, dspDataTypeInt);
-    tmpDspVarGroup->addDspVar("IPOLADR", 1, DSPDATA::vDspTemp, dspDataTypeInt);
-    tmpDspVarGroup->addDspVar("DEBUGCOUNT",1,DSPDATA::vDspTemp, dspDataTypeInt);
-    tmpDspVarGroup->addDspVar("DFTREF", 2, DSPDATA::vDspTemp);
+    tmpDspVarGroup->addDspVar("MEASSIGNAL", m_veinActValueList.count() * samples);
+    tmpDspVarGroup->addDspVar("WORKSPACE", 2 * samples);
+    tmpDspVarGroup->addDspVar("GAPCOUNT", 1, dspDataTypeInt);
+    tmpDspVarGroup->addDspVar("GAPPAR",1, dspDataTypeInt);
+    tmpDspVarGroup->addDspVar("IPOLADR", 1, dspDataTypeInt);
+    tmpDspVarGroup->addDspVar("DEBUGCOUNT", 1, dspDataTypeInt);
+    tmpDspVarGroup->addDspVar("DFTREF", 2);
 
     // a handle for parameter
     m_pParameterDSP =  m_dspInterface->createVariableGroup("Parameter");
-    m_pParameterDSP->addDspVar("REFCHN",1, DSPDATA::vDspParam, dspDataTypeInt);
+    m_pParameterDSP->addDspVar("REFCHN", 1, dspDataTypeInt);
 
     // and one for actual values
     m_pActualValuesDSP = m_dspInterface->createVariableGroup("ActualValues");
-    m_pActualValuesDSP->addDspVar("VALXOSCI",m_veinActValueList.count() * getConfData()->m_nInterpolation, DSPDATA::vDspResult);
-
+    m_pActualValuesDSP->addDspVar("VALXOSCI",m_veinActValueList.count() * getConfData()->m_nInterpolation);
     m_ModuleActualValues.resize(m_pActualValuesDSP->getUserMemSize()); // we provide a vector for generated actual values
 }
 

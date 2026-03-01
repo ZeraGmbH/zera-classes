@@ -174,7 +174,7 @@ void cModeModuleInit::dspserverConnect()
 void cModeModuleInit::writeGainCorr()
 {
     DspVarGroupClientInterface* dspTmpVarGroup = m_dspInterface->createVariableGroup("GainCorrection");
-    dspTmpVarGroup->addDspVar("GAINCORRECTION", 32, DSPDATA::vDspParam, dspDataTypeFloat, dspInternalSegment);
+    dspTmpVarGroup->addDspVar("GAINCORRECTION", 32, dspDataTypeFloat, dspInternalSegment);
     float* data = dspTmpVarGroup->data("GAINCORRECTION");
     for (int i = 0; i < 32; i++) {
         data[i] = 1.0;
@@ -185,7 +185,7 @@ void cModeModuleInit::writeGainCorr()
 void cModeModuleInit::writeGainCorr2()
 {
     DspVarGroupClientInterface* dspTmpVarGroup = m_dspInterface->createVariableGroup("GainCorrection2");
-    dspTmpVarGroup->addDspVar("GAINCORRECTION2", 32, DSPDATA::vDspParam, dspDataTypeFloat, dspInternalSegment);
+    dspTmpVarGroup->addDspVar("GAINCORRECTION2", 32, dspDataTypeFloat, dspInternalSegment);
     float* data = dspTmpVarGroup->data("GAINCORRECTION2");
     for (int i = 0; i < 32; i++) {
         data[i] = 1.0;
@@ -196,7 +196,7 @@ void cModeModuleInit::writeGainCorr2()
 void cModeModuleInit::writePhaseCorr()
 {
     DspVarGroupClientInterface* dspTmpVarGroup = m_dspInterface->createVariableGroup("PhaseCorrection");
-    dspTmpVarGroup->addDspVar("PHASECORRECTION", 32, DSPDATA::vDspParam, dspDataTypeFloat, dspInternalSegment);
+    dspTmpVarGroup->addDspVar("PHASECORRECTION", 32, dspDataTypeFloat, dspInternalSegment);
     float* data = dspTmpVarGroup->data("PHASECORRECTION");
     for (int i = 0; i < 32; i++) {
         data[i] = 0.0;
@@ -207,7 +207,7 @@ void cModeModuleInit::writePhaseCorr()
 void cModeModuleInit::writePhaseCorr2()
 {
     DspVarGroupClientInterface* dspTmpVarGroup = m_dspInterface->createVariableGroup("PhaseCorrection2");
-    dspTmpVarGroup->addDspVar("PHASECORRECTION2", 32, DSPDATA::vDspParam, dspDataTypeFloat, dspInternalSegment);
+    dspTmpVarGroup->addDspVar("PHASECORRECTION2", 32, dspDataTypeFloat, dspInternalSegment);
     float* data = dspTmpVarGroup->data("PHASECORRECTION2");
     for (int i = 0; i < 32; i++)
         data[i] = 0.0;
@@ -217,7 +217,7 @@ void cModeModuleInit::writePhaseCorr2()
 void cModeModuleInit::writeOffsetCorr()
 {
     DspVarGroupClientInterface* dspTmpVarGroup = m_dspInterface->createVariableGroup("OffsetCorrection");
-    dspTmpVarGroup->addDspVar("OFFSETCORRECTION", 32, DSPDATA::vDspParam, dspDataTypeFloat, dspInternalSegment);
+    dspTmpVarGroup->addDspVar("OFFSETCORRECTION", 32, dspDataTypeFloat, dspInternalSegment);
     float* data = dspTmpVarGroup->data("OFFSETCORRECTION");
     for (int i = 0; i < 32; i++)
         data[i] = 0.0;
@@ -227,7 +227,7 @@ void cModeModuleInit::writeOffsetCorr()
 void cModeModuleInit::writeOffsetCorr2()
 {
     DspVarGroupClientInterface* dspTmpVarGroup = m_dspInterface->createVariableGroup("OffsetCorrection2");
-    dspTmpVarGroup->addDspVar("OFFSETCORRECTION2", 32, DSPDATA::vDspParam, dspDataTypeFloat, dspInternalSegment);
+    dspTmpVarGroup->addDspVar("OFFSETCORRECTION2", 32, dspDataTypeFloat, dspInternalSegment);
     float* data = dspTmpVarGroup->data("OFFSETCORRECTION2");
     for (int i = 0; i < 32; i++) {
         data[i] = 0.0;
@@ -240,7 +240,7 @@ void cModeModuleInit::setSubDC()
     DspVarGroupClientInterface* dspTmpVarGroup = m_dspInterface->createVariableGroup("SubDC");
     quint32 subdc = 0;
     // here we can set if sub dc or not
-    dspTmpVarGroup->addDspVar("SUBDC", 1, DSPDATA::vDspParam, dspDataTypeInt, dspInternalSegment);
+    dspTmpVarGroup->addDspVar("SUBDC", 1, dspDataTypeInt, dspInternalSegment);
     dspTmpVarGroup->setVarData(QString("SUBDC:%1;").arg(subdc));
     m_MsgNrCmdList[m_dspInterface->dspMemoryWrite(dspTmpVarGroup)] = MODEMODINIT::subdcdsp;
 }

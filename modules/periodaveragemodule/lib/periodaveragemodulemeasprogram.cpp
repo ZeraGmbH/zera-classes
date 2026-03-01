@@ -129,22 +129,21 @@ void PeriodAverageModuleMeasProgram::setDspVarList()
 
     // work variables without I/O
     DspVarGroupClientInterface* tmpDspVarGroup = m_dspInterface->createVariableGroup("TmpData");
-    tmpDspVarGroup->addDspVar("MEASSIGNAL", samplesPerPeriod, DSPDATA::vDspTemp);
-    tmpDspVarGroup->addDspVar("INTEGRAL_RESULT", channelCount, DSPDATA::vDspTemp);
-    tmpDspVarGroup->addDspVar("PERIODCURR", 1, DSPDATA::vDspTemp, dspDataTypeInt);
-    tmpDspVarGroup->addDspVar("RESULT_BUFF_IDX", 1, DSPDATA::vDspTemp, dspDataTypeInt);
-    tmpDspVarGroup->addDspVar("FILTER", DspBuffLen::avgFilterLen(channelCount), DSPDATA::vDspTemp);
-    tmpDspVarGroup->addDspVar("VALS_PERIOD_WORK", getConfData()->m_maxPeriods*channelCount, DSPDATA::vDspResult);
+    tmpDspVarGroup->addDspVar("MEASSIGNAL", samplesPerPeriod);
+    tmpDspVarGroup->addDspVar("INTEGRAL_RESULT", channelCount);
+    tmpDspVarGroup->addDspVar("PERIODCURR", 1, dspDataTypeInt);
+    tmpDspVarGroup->addDspVar("RESULT_BUFF_IDX", 1, dspDataTypeInt);
+    tmpDspVarGroup->addDspVar("FILTER", DspBuffLen::avgFilterLen(channelCount));
+    tmpDspVarGroup->addDspVar("VALS_PERIOD_WORK", getConfData()->m_maxPeriods*channelCount);
 
     // parameter
     m_pParameterDSP =  m_dspInterface->createVariableGroup("Parameter");
-    m_pParameterDSP->addDspVar("PERIODCOUNT", 1, DSPDATA::vDspParam, dspDataTypeInt);
+    m_pParameterDSP->addDspVar("PERIODCOUNT", 1, dspDataTypeInt);
 
     // results
     m_pActualValuesDSP = m_dspInterface->createVariableGroup("ActualValues");
-    m_pActualValuesDSP->addDspVar("VALS_PERIOD", getConfData()->m_maxPeriods*channelCount, DSPDATA::vDspResult);
-    m_pActualValuesDSP->addDspVar("VALUES_AVG", channelCount, DSPDATA::vDspResult);
-
+    m_pActualValuesDSP->addDspVar("VALS_PERIOD", getConfData()->m_maxPeriods*channelCount);
+    m_pActualValuesDSP->addDspVar("VALUES_AVG", channelCount);
     m_ModuleActualValues.resize(m_pActualValuesDSP->getUserMemSize()); // we provide a vector for generated actual values
 }
 
