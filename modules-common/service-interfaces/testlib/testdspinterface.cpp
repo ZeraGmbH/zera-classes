@@ -167,7 +167,7 @@ bool TestDspInterface::checkDspVar(DspVarClientInterface *dspVar)
     if (dspVar->getSegmentType() == dspInternalSegment) {
         DspVarResolver resolver;
         QString varName = dspVar->Name();
-        const DspVarServer *dspServerVarFound = resolver.getDspVar(varName);
+        const DspVarServerPtr dspServerVarFound = resolver.getDspVar(varName);
         if (dspServerVarFound == nullptr) {
             qCritical("%s not found in internal DSP variables", qPrintable(varName));
             return false;
