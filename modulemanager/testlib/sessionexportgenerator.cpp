@@ -5,6 +5,7 @@
 #include <vf_client_rpc_invoker.h>
 #include <vf_rpc_invoker.h>
 #include <vs_dumpjson.h>
+#include <zdspdumpfunctions.h>
 #include <testloghelpers.h>
 #include <QFile>
 #include <QDir>
@@ -105,7 +106,7 @@ QByteArray SessionExportGenerator::getDspMemDump()
     json.insert("ProgMemInterruptFree", dspServer->getProgMemInterruptAvailable() - dspServer->getProgMemInterruptOccupied());
     json.insert("UserMemAvailable", dspServer->getUserMemAvailable());
     json.insert("UserMemFree", dspServer->getUserMemAvailable() - dspServer->getUserMemOccupied());
-    json.insert("ZdspMemDump", dspServer->getMemoryDump());
+    json.insert("ZdspMemDump", ZDspDumpFunctions::getMemoryDump(dspServer));
     return TestLogHelpers::dump(json);
 }
 
