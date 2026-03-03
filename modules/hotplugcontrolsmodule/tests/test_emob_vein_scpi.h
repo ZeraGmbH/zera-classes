@@ -37,6 +37,11 @@ private slots:
     void readLockStateTwiceVein();
     void readLockStateTwiceVeinFullQueue();
 
+    void flipSwitchOnOffNoEmobNoParamScpi();
+    void flipSwitchOnOffNoParamOneEmob();
+    void flipSwitchOnOffWithParamScpiOneEmob();
+    void flipSwitchOnOffWithParamScpiMultipleHotplug();
+
     void dumpDevIface();
     void dumpVeinInfModuleInterface();
 private:

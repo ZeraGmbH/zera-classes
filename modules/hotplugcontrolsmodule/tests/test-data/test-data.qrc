@@ -16,5 +16,7 @@
         <file>vein-event-dumps/dumpActivateEmobPushButtonVein.json</file>
         <file>vein-event-dumps/dumpActivateEmobPushButtonWithParamScpi.json</file>
         <file>vein-event-dumps/dumpActivateEmobPushButtonNoParamScpi.json</file>
+        <file>vein-event-dumps/dumpSetEmobSwitchToOnWithParamScpi.json</file>
+        <file>vein-event-dumps/dumpSetEmobSwitchToOffWithParamScpi.json</file>
     </qresource>
 </RCC>

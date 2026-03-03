@@ -5116,6 +5116,32 @@
                         "Type": "STRING"
                     }
                 },
+                "RPC_flipSwitchOff(QString p_channelName)": {
+                    "Description": "<skipped>",
+                    "Optional parameter": "",
+                    "Validation": {
+                        "Data": [
+                            "IL1",
+                            "IL2",
+                            "IL3",
+                            "IAUX"
+                        ],
+                        "Type": "STRING"
+                    }
+                },
+                "RPC_flipSwitchOn(QString p_channelName)": {
+                    "Description": "<skipped>",
+                    "Optional parameter": "",
+                    "Validation": {
+                        "Data": [
+                            "IL1",
+                            "IL2",
+                            "IL3",
+                            "IAUX"
+                        ],
+                        "Type": "STRING"
+                    }
+                },
                 "RPC_readError(QString p_channelName)": {
                     "Description": "<skipped>",
                     "Optional parameter": "",
@@ -5160,6 +5186,20 @@
                         "CLEARERROR",
                         "8",
                         "RPC_clearError(QString p_channelName)",
+                        "0"
+                    ],
+                    [
+                        "EMOB",
+                        "OFFSWITCH",
+                        "8",
+                        "RPC_flipSwitchOff(QString p_channelName)",
+                        "0"
+                    ],
+                    [
+                        "EMOB",
+                        "ONSWITCH",
+                        "8",
+                        "RPC_flipSwitchOn(QString p_channelName)",
                         "0"
                     ],
                     [
