@@ -1,6 +1,8 @@
 #include "hotplugcontrolsmodulecontroller.h"
 #include "rpcactivatepushbutton.h"
 #include "rpcclearerror.h"
+#include "rpcflipswitchoff.h"
+#include "rpcflipswitchon.h"
 #include "rpcreaderror.h"
 #include "rpcreadlockstate.h"
 #include "servicechannelnamehelper.h"
@@ -117,6 +119,35 @@ void HotplugControlsModuleController::generateVeinInterface()
     m_pEmobClearErrorRpc->setValidator(new cStringValidator(QString("IL1;IL2;IL3;IAUX")));
     m_pEmobClearErrorRpc->canAcceptOptionalParam();
     m_module->m_veinModuleRPCMap[rpcEmobClearError->getSignature()] = m_pEmobClearErrorRpc; // for modules use
+
+    std::shared_ptr<RpcFlipSwitchOn> rpcEmobFlipSwitchOn = std::make_shared<RpcFlipSwitchOn>(m_pcbConnection.getInterface(),
+                                                                                            m_observer,
+                                                                                            rpcEventSystem,
+                                                                                            m_module->getEntityId());
+    m_pEmobFlipSwitchRpcOn = std::make_shared<VfModuleRpc>(rpcEmobFlipSwitchOn,
+                                                        "Set Emob switch to the ON position");
+    m_pEmobFlipSwitchRpcOn->setRPCScpiInfo("EMOB",
+                                         QString("ONSWITCH"),
+                                         SCPI::isCmdwP,
+                                         rpcEmobFlipSwitchOn->getSignature());
+    m_pEmobFlipSwitchRpcOn->setValidator(new cStringValidator(QString("IL1;IL2;IL3;IAUX")));
+    m_pEmobFlipSwitchRpcOn->canAcceptOptionalParam();
+    m_module->m_veinModuleRPCMap[rpcEmobFlipSwitchOn->getSignature()] = m_pEmobFlipSwitchRpcOn; // for modules use
+
+
+    std::shared_ptr<RpcFlipSwitchOff> rpcEmobFlipSwitchOff = std::make_shared<RpcFlipSwitchOff>(m_pcbConnection.getInterface(),
+                                                                                            m_observer,
+                                                                                            rpcEventSystem,
+                                                                                            m_module->getEntityId());
+    m_pEmobFlipSwitchRpcOff = std::make_shared<VfModuleRpc>(rpcEmobFlipSwitchOff,
+                                                           "Set Emob switch to the OFF position");
+    m_pEmobFlipSwitchRpcOff->setRPCScpiInfo("EMOB",
+                                           QString("OFFSWITCH"),
+                                           SCPI::isCmdwP,
+                                           rpcEmobFlipSwitchOff->getSignature());
+    m_pEmobFlipSwitchRpcOff->setValidator(new cStringValidator(QString("IL1;IL2;IL3;IAUX")));
+    m_pEmobFlipSwitchRpcOff->canAcceptOptionalParam();
+    m_module->m_veinModuleRPCMap[rpcEmobFlipSwitchOff->getSignature()] = m_pEmobFlipSwitchRpcOff; // for modules use
 
     m_pControllersFound = new VfModuleParameter(m_module->getEntityId(), m_module->getValidatorEventSystem(),
                                                 key = QString("ACT_ControllersFound"),

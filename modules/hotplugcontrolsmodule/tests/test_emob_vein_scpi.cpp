@@ -190,6 +190,57 @@ void test_emob_vein_scpi::readLockStateTwiceVeinFullQueue()
     QCOMPARE(spyRpcFinish.count(), 2);
 }
 
+void test_emob_vein_scpi::flipSwitchOnOffNoEmobNoParamScpi()
+{
+    QString status = m_scpiClient->sendReceive("EMOB:HOTP1:ONSWITCH;|*stb?");
+    QCOMPARE(status, "+4");
+
+    status = m_scpiClient->sendReceive("EMOB:HOTP1:OFFSWITCH;|*stb?");
+    QCOMPARE(status, "+4");
+}
+
+void test_emob_vein_scpi::flipSwitchOnOffNoParamOneEmob()
+{
+    m_testRunner->addStandardEmobControllers(QStringList() << "IAUX");
+    QString status = m_scpiClient->sendReceive("EMOB:HOTP1:ONSWITCH;|*stb?");
+    QCOMPARE(status, "+0");
+
+    QFile file(":/vein-event-dumps/dumpSetEmobSwitchToOnWithParamScpi.json");
+    QVERIFY(file.open(QFile::ReadOnly));
+    QByteArray jsonExpected = file.readAll();
+    QByteArray jsonDumped = TestLogHelpers::dump(m_veinEventDump);
+    QVERIFY(TestLogHelpers::compareAndLogOnDiffJson(jsonExpected, jsonDumped));
+
+    status = m_scpiClient->sendReceive("EMOB:HOTP1:OFFSWITCH;|*stb?");
+    QCOMPARE(status, "+0");
+
+    file.setFileName(":/vein-event-dumps/dumpSetEmobSwitchToOffWithParamScpi.json");
+    QVERIFY(file.open(QFile::ReadOnly));
+    jsonExpected = file.readAll();
+    jsonDumped = TestLogHelpers::dump(m_veinEventDump);
+    QVERIFY(TestLogHelpers::compareAndLogOnDiffJson(jsonExpected, jsonDumped));
+}
+
+void test_emob_vein_scpi::flipSwitchOnOffWithParamScpiOneEmob()
+{
+    m_testRunner->addStandardEmobControllers(QStringList() << "IAUX");
+    QString status = m_scpiClient->sendReceive("EMOB:HOTP1:ONSWITCH IAUX;|*stb?");
+    QCOMPARE(status, "+0");
+
+    status = m_scpiClient->sendReceive("EMOB:HOTP1:OFFSWITCH IAUX;|*stb?");
+    QCOMPARE(status, "+0");
+}
+
+void test_emob_vein_scpi::flipSwitchOnOffWithParamScpiMultipleHotplug()
+{
+    m_testRunner->addStandardEmobControllers(QStringList() << "IAUX" << "IL3");
+    QString status = m_scpiClient->sendReceive("EMOB:HOTP1:ONSWITCH IL3;|*stb?");
+    QCOMPARE(status, "+0");
+
+    status = m_scpiClient->sendReceive("EMOB:HOTP1:OFFSWITCH IL3;|*stb?");
+    QCOMPARE(status, "+0");
+}
+
 void test_emob_vein_scpi::dumpDevIface()
 {
     QString dumped = m_scpiClient->sendReceive("dev:iface?", false);
