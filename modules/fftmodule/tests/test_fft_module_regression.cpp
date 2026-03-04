@@ -31,14 +31,13 @@ void test_fft_module_regression::veinDumpInitial()
 {
     ModuleManagerTestRunner testRunner(":/sessions/from-resource.json");
 
-    QByteArray jsonExpected = TestLogHelpers::loadFile(":/dumpInitial.json");
     VeinStorage::AbstractDatabase *veinStorageDb = testRunner.getVeinStorageDb();
     QByteArray jsonDumped = VeinStorage::DumpJson::dumpToByteArray(veinStorageDb,
                                                                    QList<int>() << fftEntityId,
                                                                    QList<int>(),
                                                                    true);
 
-    QVERIFY(TestLogHelpers::compareAndLogOnDiffJson(jsonExpected, jsonDumped));
+    QVERIFY(TestLogHelpers::compareAndLogOnDiffJsonFile(":/dumpInitial.json", jsonDumped));
 }
 
 static constexpr int voltagePhaseNeutralCount = 4;
@@ -87,14 +86,13 @@ void test_fft_module_regression::injectValues()
     fftDspInterface->fireActValInterrupt(dspValues.getDspValues(), /* dummy */ 0);
     TimeMachineObject::feedEventLoop();
 
-    QByteArray jsonExpected = TestLogHelpers::loadFile(":/dumpActual.json");
     VeinStorage::AbstractDatabase *veinStorageDb = testRunner.getVeinStorageDb();
     QByteArray jsonDumped = VeinStorage::DumpJson::dumpToByteArray(veinStorageDb,
                                                                    QList<int>() << fftEntityId,
                                                                    QList<int>(),
                                                                    true);
 
-    QVERIFY(TestLogHelpers::compareAndLogOnDiffJson(jsonExpected, jsonDumped));
+    QVERIFY(TestLogHelpers::compareAndLogOnDiffJsonFile(":/dumpActual.json", jsonDumped));
 }
 
 void test_fft_module_regression::dumpDspSetup()
@@ -103,8 +101,7 @@ void test_fft_module_regression::dumpDspSetup()
     TestDspInterfacePtr fftDspInterface = testRunner.getDspInterface(fftEntityId);
 
     QString measProgramDumped = TestLogHelpers::dump(fftDspInterface->dumpAll());
-    QString measProgramExpected = TestLogHelpers::loadFile(":/dspDumps/dumpMeasProgram.json");
-    QVERIFY(TestLogHelpers::compareAndLogOnDiffJson(measProgramExpected, measProgramDumped));
+    QVERIFY(TestLogHelpers::compareAndLogOnDiffJsonFile(":/dspDumps/dumpMeasProgram.json", measProgramDumped));
 }
 
 void test_fft_module_regression::dumpDspIL1ReferenceSetup()
@@ -113,8 +110,7 @@ void test_fft_module_regression::dumpDspIL1ReferenceSetup()
     TestDspInterfacePtr fftDspInterface = testRunner.getDspInterface(fftEntityId);
 
     QString measProgramDumped = TestLogHelpers::dump(fftDspInterface->dumpAll());
-    QString measProgramExpected = TestLogHelpers::loadFile(":/dspDumps/dump-ref-IL1.json");
-    QVERIFY(TestLogHelpers::compareAndLogOnDiffJson(measProgramExpected, measProgramDumped));
+    QVERIFY(TestLogHelpers::compareAndLogOnDiffJsonFile(":/dspDumps/dump-ref-IL1.json", measProgramDumped));
 }
 
 void test_fft_module_regression::dumpDspSetReference()
@@ -129,8 +125,7 @@ void test_fft_module_regression::dumpDspSetReference()
 
     TestDspInterfacePtr fftDspInterface = testRunner.getDspInterface(fftEntityId);
     QString measProgramDumped = TestLogHelpers::dump(fftDspInterface->dumpAll(true));
-    QString measProgramExpected = TestLogHelpers::loadFile(":/dspDumps/dump-ref-UL1-to-other.json");
-    QVERIFY(TestLogHelpers::compareAndLogOnDiffJson(measProgramExpected, measProgramDumped));
+    QVERIFY(TestLogHelpers::compareAndLogOnDiffJsonFile(":/dspDumps/dump-ref-UL1-to-other.json", measProgramDumped));
 }
 
 void test_fft_module_regression::setReferenceChannel(VfCmdEventHandlerSystemPtr vfCmdEventHandlerSystem,

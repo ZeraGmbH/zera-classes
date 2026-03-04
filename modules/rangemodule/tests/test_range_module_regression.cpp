@@ -30,11 +30,10 @@ void test_range_module_regression::veinDumpInitial()
 {
     ModuleManagerTestRunner testRunner(":/session-range-test.json");
 
-    QByteArray jsonExpected = TestLogHelpers::loadFile(":/veinDumps/dumpInitial.json");
     VeinStorage::AbstractDatabase *veinStorageDb = testRunner.getVeinStorageDb();
     QByteArray jsonDumped = VeinStorage::DumpJson::dumpToByteArray(veinStorageDb, QList<int>() << rangeEntityId);
 
-    QVERIFY(TestLogHelpers::compareAndLogOnDiffJson(jsonExpected, jsonDumped));
+    QVERIFY(TestLogHelpers::compareAndLogOnDiffJsonFile(":/veinDumps/dumpInitial.json", jsonDumped));
 }
 
 static constexpr int rangeChannelCount = 8;
@@ -60,16 +59,13 @@ void test_range_module_regression::checkActualValueCount()
 
     // dumping SCALEMEM:GAINCORRECTION2 does not seem reproducable yet
     QString obsermaticDumped = TestLogHelpers::dump(sampleDspInterfaceObser->dumpAll());
-    QString obsermaticExpected = TestLogHelpers::loadFile(":/dspDumps/dumpObsermatic.json");
-    QVERIFY(TestLogHelpers::compareAndLogOnDiffJson(obsermaticExpected, obsermaticDumped));
+    QVERIFY(TestLogHelpers::compareAndLogOnDiffJsonFile(":/dspDumps/dumpObsermatic.json", obsermaticDumped));
 
     QString adjustListDumped = TestLogHelpers::dump(sampleDspInterfaceAdj->dumpAll(true));
-    QString adjustListExpected = TestLogHelpers::loadFile(":/dspDumps/dumpAdjustManagement.json");
-    QVERIFY(TestLogHelpers::compareAndLogOnDiffJson(adjustListExpected, adjustListDumped));
+    QVERIFY(TestLogHelpers::compareAndLogOnDiffJsonFile(":/dspDumps/dumpAdjustManagement.json", adjustListDumped));
 
     QString measProgramDumped = TestLogHelpers::dump(sampleDspInterfaceProg->dumpAll(true));
-    QString measProgramExpected = TestLogHelpers::loadFile(":/dspDumps/dumpMeasProgram.json");
-    QVERIFY(TestLogHelpers::compareAndLogOnDiffJson(measProgramExpected, measProgramDumped));
+    QVERIFY(TestLogHelpers::compareAndLogOnDiffJsonFile(":/dspDumps/dumpMeasProgram.json", measProgramDumped));
 
 
     // injectActualValues:
@@ -81,11 +77,10 @@ void test_range_module_regression::checkActualValueCount()
     sampleDspInterfaceProg->fireActValInterrupt(rangeValues.getDspValues(), /* dummy */ 0);
     TimeMachineObject::feedEventLoop();
 
-    QByteArray jsonExpected = TestLogHelpers::loadFile(":/veinDumps/dumpActual.json");
     VeinStorage::AbstractDatabase *veinStorageDb = testRunner.getVeinStorageDb();
     QByteArray jsonDumped = VeinStorage::DumpJson::dumpToByteArray(veinStorageDb, QList<int>() << rangeEntityId);
 
-    QVERIFY(TestLogHelpers::compareAndLogOnDiffJson(jsonExpected, jsonDumped));
+    QVERIFY(TestLogHelpers::compareAndLogOnDiffJsonFile(":/veinDumps/dumpActual.json", jsonDumped));
 
 
     // injectActualValuesWithPreScaling
@@ -102,10 +97,9 @@ void test_range_module_regression::checkActualValueCount()
     QCOMPARE(spyDspWrite.at(1).at(0), "PhaseCorrection");
     QCOMPARE(spyDspWrite.at(2).at(0), "OffsetCorrection");
 
-    jsonExpected = TestLogHelpers::loadFile(":/veinDumps/dumpActual-preScaled2.json");
     jsonDumped = VeinStorage::DumpJson::dumpToByteArray(veinStorageDb, QList<int>() << rangeEntityId);
 
-    QVERIFY(TestLogHelpers::compareAndLogOnDiffJson(jsonExpected, jsonDumped));
+    QVERIFY(TestLogHelpers::compareAndLogOnDiffJsonFile(":/veinDumps/dumpActual-preScaled2.json", jsonDumped));
 }
 
 void test_range_module_regression::injectActualValuesWithCheating()

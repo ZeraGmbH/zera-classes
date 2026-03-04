@@ -25,11 +25,10 @@ void test_rms_module_regression::veinDumpInitial()
 {
     ModuleManagerTestRunner testRunner(":/session-rms-moduleconfig-from-resource.json");
 
-    QByteArray jsonExpected = TestLogHelpers::loadFile(":/dumpInitial.json");
     VeinStorage::AbstractDatabase *veinStorageDb = testRunner.getVeinStorageDb();
     QByteArray jsonDumped = VeinStorage::DumpJson::dumpToByteArray(veinStorageDb, QList<int>() << rmsEntityId);
 
-    QVERIFY(TestLogHelpers::compareAndLogOnDiffJson(jsonExpected, jsonDumped));
+    QVERIFY(TestLogHelpers::compareAndLogOnDiffJsonFile(":/dumpInitial.json", jsonDumped));
 }
 
 static constexpr int voltagePhaseNeutralCount = 4;
@@ -58,11 +57,10 @@ void test_rms_module_regression::injectActualValues()
     rmsDspInterface->fireActValInterrupt(actValues, 0 /* dummy */);
     TimeMachineObject::feedEventLoop();
 
-    QByteArray jsonExpected= TestLogHelpers::loadFile(":/dumpActual.json");
     VeinStorage::AbstractDatabase *veinStorageDb = testRunner.getVeinStorageDb();
     QByteArray jsonDumped = VeinStorage::DumpJson::dumpToByteArray(veinStorageDb, QList<int>() << rmsEntityId);
 
-    QVERIFY(TestLogHelpers::compareAndLogOnDiffJson(jsonExpected, jsonDumped));
+    QVERIFY(TestLogHelpers::compareAndLogOnDiffJsonFile(":/dumpActual.json", jsonDumped));
 }
 
 void test_rms_module_regression::injectActualTwice()
@@ -98,11 +96,10 @@ void test_rms_module_regression::injectSymmetricValues()
     rmsDspInterface->fireActValInterrupt(demoDspValue.getDspValues(), 0 /* dummy */);
     TimeMachineObject::feedEventLoop();
 
-    QByteArray jsonExpected = TestLogHelpers::loadFile(":/dumpSymmetric.json");
     VeinStorage::AbstractDatabase *veinStorageDb = testRunner.getVeinStorageDb();
     QByteArray jsonDumped = VeinStorage::DumpJson::dumpToByteArray(veinStorageDb, QList<int>() << rmsEntityId);
 
-    QVERIFY(TestLogHelpers::compareAndLogOnDiffJson(jsonExpected, jsonDumped));
+    QVERIFY(TestLogHelpers::compareAndLogOnDiffJsonFile(":/dumpSymmetric.json", jsonDumped));
 }
 
 void test_rms_module_regression::dumpDspSetup()
@@ -111,6 +108,5 @@ void test_rms_module_regression::dumpDspSetup()
     TestDspInterfacePtr rmsDspInterface = testRunner.getDspInterface(rmsEntityId);
 
     QString measProgramDumped = TestLogHelpers::dump(rmsDspInterface->dumpAll());
-    QString measProgramExpected = TestLogHelpers::loadFile(":/dspDumps/dumpMeasProgram.json");
-    QVERIFY(TestLogHelpers::compareAndLogOnDiffJson(measProgramExpected, measProgramDumped));
+    QVERIFY(TestLogHelpers::compareAndLogOnDiffJsonFile(":/dspDumps/dumpMeasProgram.json", measProgramDumped));
 }

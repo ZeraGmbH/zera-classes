@@ -26,11 +26,10 @@ void test_dft_module_regression::veinDumpInitial()
 {
     ModuleManagerTestRunner testRunner(":/sessions/dft-no-movingwindow-no-ref.json");
 
-    QByteArray jsonExpected = TestLogHelpers::loadFile(":/veinDumps/dumpInitial.json");
     VeinStorage::AbstractDatabase *veinStorageDb = testRunner.getVeinStorageDb();
     QByteArray jsonDumped = VeinStorage::DumpJson::dumpToByteArray(veinStorageDb, QList<int>() << dftEntityId);
 
-    QVERIFY(TestLogHelpers::compareAndLogOnDiffJson(jsonExpected, jsonDumped));
+    QVERIFY(TestLogHelpers::compareAndLogOnDiffJsonFile(":/veinDumps/dumpInitial.json", jsonDumped));
 }
 
 static constexpr int voltagePhaseNeutralCount = 4;
@@ -60,11 +59,10 @@ void test_dft_module_regression::injectActualValuesNoReferenceChannel()
     dftDspInterface->fireActValInterrupt(actValues, /*dummy*/ 0);
     TimeMachineObject::feedEventLoop();
 
-    QByteArray jsonExpected = TestLogHelpers::loadFile(":/veinDumps/dumpActual-no-ref.json");
     VeinStorage::AbstractDatabase *veinStorageDb = testRunner.getVeinStorageDb();
     QByteArray jsonDumped = VeinStorage::DumpJson::dumpToByteArray(veinStorageDb, QList<int>() << dftEntityId);
 
-    QVERIFY(TestLogHelpers::compareAndLogOnDiffJson(jsonExpected, jsonDumped));
+    QVERIFY(TestLogHelpers::compareAndLogOnDiffJsonFile(":/veinDumps/dumpActual-no-ref.json", jsonDumped));
 }
 
 void test_dft_module_regression::injectActualValuesReferenceChannelUL1()
@@ -79,11 +77,10 @@ void test_dft_module_regression::injectActualValuesReferenceChannelUL1()
     dftDspInterface->fireActValInterrupt(actValues, /*dummy*/ 0);
     TimeMachineObject::feedEventLoop();
 
-    QByteArray jsonExpected = TestLogHelpers::loadFile(":/veinDumps/dumpActual-refUL1.json");
     VeinStorage::AbstractDatabase *veinStorageDb = testRunner.getVeinStorageDb();
     QByteArray jsonDumped = VeinStorage::DumpJson::dumpToByteArray(veinStorageDb, QList<int>() << dftEntityId);
 
-    QVERIFY(TestLogHelpers::compareAndLogOnDiffJson(jsonExpected, jsonDumped));
+    QVERIFY(TestLogHelpers::compareAndLogOnDiffJsonFile(":/veinDumps/dumpActual-refUL1.json", jsonDumped));
 }
 
 void test_dft_module_regression::injectActualValuesReferenceChannelUL2()
@@ -100,16 +97,14 @@ void test_dft_module_regression::injectActualValuesReferenceChannelUL2()
     dftDspInterface->fireActValInterrupt(actValues, /*dummy*/ 0);
     TimeMachineObject::feedEventLoop();
 
-    QByteArray jsonExpected = TestLogHelpers::loadFile(":/veinDumps/dumpActual-refUL2.json");
     VeinStorage::AbstractDatabase *veinStorageDb = testRunner.getVeinStorageDb();
     QByteArray jsonDumped = VeinStorage::DumpJson::dumpToByteArray(veinStorageDb, QList<int>() << dftEntityId);
 
-    QVERIFY(TestLogHelpers::compareAndLogOnDiffJson(jsonExpected, jsonDumped));
+    QVERIFY(TestLogHelpers::compareAndLogOnDiffJsonFile(":/veinDumps/dumpActual-refUL2.json", jsonDumped));
 
     // reference is caclulated by dftmodule -> same layout as default
     QString measProgramDumped = TestLogHelpers::dump(dftDspInterface->dumpAll(true));
-    QString measProgramExpected = TestLogHelpers::loadFile(":/dspDumps/dumpReferenceChannelChange.json");
-    QVERIFY(TestLogHelpers::compareAndLogOnDiffJson(measProgramExpected, measProgramDumped));
+    QVERIFY(TestLogHelpers::compareAndLogOnDiffJsonFile(":/dspDumps/dumpReferenceChannelChange.json", measProgramDumped));
 }
 
 constexpr int comDcRefChannelCount = 6;
@@ -129,11 +124,10 @@ void test_dft_module_regression::injectActualValuesOrder0()
     dftDspInterface->fireActValInterrupt(actValues, /*dummy*/ 0);
     TimeMachineObject::feedEventLoop();
 
-    QByteArray jsonExpected = TestLogHelpers::loadFile(":/veinDumps/dumpActual-no-ref-order-0.json");
     VeinStorage::AbstractDatabase *veinStorageDb = testRunner.getVeinStorageDb();
     QByteArray jsonDumped = VeinStorage::DumpJson::dumpToByteArray(veinStorageDb, QList<int>() << dftEntityId);
 
-    QVERIFY(TestLogHelpers::compareAndLogOnDiffJson(jsonExpected, jsonDumped));
+    QVERIFY(TestLogHelpers::compareAndLogOnDiffJsonFile(":/veinDumps/dumpActual-no-ref-order-0.json", jsonDumped));
 }
 
 void test_dft_module_regression::injectSymmetricalOrder0()
@@ -147,11 +141,10 @@ void test_dft_module_regression::injectSymmetricalOrder0()
     dftDspInterface->fireActValInterrupt(dspValues.getDspValues(), /*dummy*/ 0);
     TimeMachineObject::feedEventLoop();
 
-    QByteArray jsonExpected = TestLogHelpers::loadFile(":/veinDumps/dumpSymmetricOrder0.json");
     VeinStorage::AbstractDatabase *veinStorageDb = testRunner.getVeinStorageDb();
     QByteArray jsonDumped = VeinStorage::DumpJson::dumpToByteArray(veinStorageDb, QList<int>() << dftEntityId);
 
-    QVERIFY(TestLogHelpers::compareAndLogOnDiffJson(jsonExpected, jsonDumped));
+    QVERIFY(TestLogHelpers::compareAndLogOnDiffJsonFile(":/veinDumps/dumpSymmetricOrder0.json", jsonDumped));
 }
 
 void test_dft_module_regression::injectSymmetricalOrder1()
@@ -165,11 +158,10 @@ void test_dft_module_regression::injectSymmetricalOrder1()
     dftDspInterface->fireActValInterrupt(dspValues.getDspValues(), /*dummy*/ 0);
     TimeMachineObject::feedEventLoop();
 
-    QByteArray jsonExpected = TestLogHelpers::loadFile(":/veinDumps/dumpSymmetricOrder1.json");
     VeinStorage::AbstractDatabase *veinStorageDb = testRunner.getVeinStorageDb();
     QByteArray jsonDumped = VeinStorage::DumpJson::dumpToByteArray(veinStorageDb, QList<int>() << dftEntityId);
 
-    QVERIFY(TestLogHelpers::compareAndLogOnDiffJson(jsonExpected, jsonDumped));
+    QVERIFY(TestLogHelpers::compareAndLogOnDiffJsonFile(":/veinDumps/dumpSymmetricOrder1.json", jsonDumped));
 }
 
 void test_dft_module_regression::dumpDspSetup()
@@ -178,8 +170,7 @@ void test_dft_module_regression::dumpDspSetup()
 
     TestDspInterfacePtr dftDspInterface = testRunner.getDspInterface(dftEntityId);
     QString measProgramDumped = TestLogHelpers::dump(dftDspInterface->dumpAll());
-    QString measProgramExpected = TestLogHelpers::loadFile(":/dspDumps/dumpMeasProgram.json");
-    QVERIFY(TestLogHelpers::compareAndLogOnDiffJson(measProgramExpected, measProgramDumped));
+    QVERIFY(TestLogHelpers::compareAndLogOnDiffJsonFile(":/dspDumps/dumpMeasProgram.json", measProgramDumped));
 }
 
 void test_dft_module_regression::setReferenceChannel(VfCmdEventHandlerSystemPtr vfCmdEventHandlerSystem,
