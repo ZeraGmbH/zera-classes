@@ -43,12 +43,11 @@ void test_adj_module_regression::minimalSession()
 
 void test_adj_module_regression::veinDumpInitial()
 {
-    QByteArray jsonExpected = TestLogHelpers::loadFile(":/dumpInitial.json");;
     VeinStorage::AbstractDatabase *veinStorageDb = m_testRunner->getVeinStorageDb();
     // just dump adjustment module to reduce FF on changing other modules
     QByteArray jsonDumped = VeinStorage::DumpJson::dumpToByteArray(veinStorageDb, QList<int>() << adjEntityId);
 
-    QVERIFY(TestLogHelpers::compareAndLogOnDiffJson(jsonExpected, jsonDumped));
+    QVERIFY(TestLogHelpers::compareAndLogOnDiffJsonFile(":/dumpInitial.json", jsonDumped));
 }
 
 void test_adj_module_regression::adjInitWithPermission()

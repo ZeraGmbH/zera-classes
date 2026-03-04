@@ -53,21 +53,19 @@ void test_source_full::entity_avail_mt581s2()
 void test_source_full::vein_dump_mt310s2()
 {
     setupServerAndClient(":/sessions/minimal.json", "mt310s2");
-    QByteArray jsonExpected = TestLogHelpers::loadFile(":/veinDumps/dumpInitialMt310s2.json");
     VeinStorage::AbstractDatabase *veinStorageDb = m_testRunner->getVeinStorageDb();
 
     QByteArray jsonDumped = VeinStorage::DumpJson::dumpToByteArray(veinStorageDb, QList<int>() << sourceEntityId);
-    QVERIFY(TestLogHelpers::compareAndLogOnDiffJson(jsonExpected, jsonDumped));
+    QVERIFY(TestLogHelpers::compareAndLogOnDiffJsonFile(":/veinDumps/dumpInitialMt310s2.json", jsonDumped));
 }
 
 void test_source_full::vein_dump_mt581s2()
 {
     setupServerAndClient(":/sessions/minimal.json", "mt581s2");
-    QByteArray jsonExpected = TestLogHelpers::loadFile(":/veinDumps/dumpInitialMt581s2.json");
     VeinStorage::AbstractDatabase *veinStorageDb = m_testRunner->getVeinStorageDb();
 
     QByteArray jsonDumped = VeinStorage::DumpJson::dumpToByteArray(veinStorageDb, QList<int>() << sourceEntityId);
-    QVERIFY(TestLogHelpers::compareAndLogOnDiffJson(jsonExpected, jsonDumped));
+    QVERIFY(TestLogHelpers::compareAndLogOnDiffJsonFile(":/veinDumps/dumpInitialMt581s2.json", jsonDumped));
 }
 
 void test_source_full::switch_on_mt310s2()
@@ -90,11 +88,8 @@ void test_source_full::switch_on_mt310s2()
     m_entityItem->sendEvent(event);
     TimeMachineForTest::getInstance()->processTimers(5000);
 
-    QFile file(":/veinEventDumps/dumpSwitchOnMt310s2.json");
-    QVERIFY(file.open(QFile::ReadOnly));
-    QByteArray jsonExpected = file.readAll();
     QByteArray jsonDumped = TestLogHelpers::dump(jsonEventDump);
-    QVERIFY(TestLogHelpers::compareAndLogOnDiffJson(jsonExpected, jsonDumped));
+    QVERIFY(TestLogHelpers::compareAndLogOnDiffJsonFile(":/veinEventDumps/dumpSwitchOnMt310s2.json", jsonDumped));
 }
 
 void test_source_full::setupServerAndClient(const QString &session, const QString &dut)

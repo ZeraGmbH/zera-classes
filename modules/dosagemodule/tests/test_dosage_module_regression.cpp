@@ -26,6 +26,5 @@ void test_dosage_module_regression::veinDumpInitial()
     ModuleManagerTestRunner testRunner(":/def-session-maximal.json");
     VeinStorage::AbstractDatabase *veinStorageDb = testRunner.getVeinStorageDb();
     QByteArray jsonDumped = VeinStorage::DumpJson::dumpToByteArray(veinStorageDb, QList<int>() << dosageEntityId);
-    QByteArray jsonExpected = TestLogHelpers::loadFile(":/dumpInitial.json");
-    QVERIFY(TestLogHelpers::compareAndLogOnDiffJson(jsonExpected, jsonDumped));
+    QVERIFY(TestLogHelpers::compareAndLogOnDiffJsonFile(":/dumpInitial.json", jsonDumped));
 }

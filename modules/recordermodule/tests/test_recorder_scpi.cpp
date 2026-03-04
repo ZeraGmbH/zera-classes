@@ -78,9 +78,8 @@ void test_recorder_scpi::scpiQueryJsonFireValuesOnce()
     fireActualValues();
     triggerDftModuleSigMeasuring();
     QString jsonDumped = client.sendReceive("RECORDER:REC1:EXPORT:JSON?", false);
-    QString jsonExpected = TestLogHelpers::loadFile(":/fireValuesOnce.json");
 
-    QVERIFY(TestLogHelpers::compareAndLogOnDiffJson(jsonExpected, jsonDumped));
+    QVERIFY(TestLogHelpers::compareAndLogOnDiffJsonFile(":/fireValuesOnce.json", jsonDumped));
 }
 
 void test_recorder_scpi::scpiQueryJsonFireValuesTwice()
@@ -98,9 +97,8 @@ void test_recorder_scpi::scpiQueryJsonFireValuesTwice()
     TimeMachineForTest::getInstance()->processTimers(499);
     triggerDftModuleSigMeasuring();
     QString jsonDumped = client.sendReceive("RECORDER:REC1:EXPORT:JSON?", false);
-    QString jsonExpected = TestLogHelpers::loadFile(":/fireValuesTwice.json");
 
-    QVERIFY(TestLogHelpers::compareAndLogOnDiffJson(jsonExpected, jsonDumped));
+    QVERIFY(TestLogHelpers::compareAndLogOnDiffJsonFile(":/fireValuesTwice.json", jsonDumped));
 }
 
 void test_recorder_scpi::scpiQueryCsvExportEmpty()

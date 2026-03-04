@@ -80,12 +80,11 @@ void test_sample_config_load::startChannelUL1AutomaticOff()
     QCOMPARE(*pllChannelMName, "m0");
 
     VeinStorage::AbstractDatabase *veinStorageDb = testRunner.getVeinStorageDb();
-    QByteArray jsonExpected = TestLogHelpers::loadFile(":/veinDumps/automaticOffUL1.json");
     QByteArray jsonDumped = VeinStorage::DumpJson::dumpToByteArray(veinStorageDb,
                                                                    QList<int>() << sampleEntityd,
                                                                    QList<int>(),
                                                                    true);
-    QVERIFY(TestLogHelpers::compareAndLogOnDiffJson(jsonExpected, jsonDumped));
+    QVERIFY(TestLogHelpers::compareAndLogOnDiffJsonFile(":/veinDumps/automaticOffUL1.json", jsonDumped));
 }
 
 void test_sample_config_load::startChannelUL2AutomaticOff()
@@ -105,12 +104,11 @@ void test_sample_config_load::startChannelUL2AutomaticOff()
     QCOMPARE(*pllChannelMName, "m1");
 
     VeinStorage::AbstractDatabase *veinStorageDb = testRunner.getVeinStorageDb();
-    QByteArray jsonExpected = TestLogHelpers::loadFile(":/veinDumps/automaticOffUL2.json");
     QByteArray jsonDumped = VeinStorage::DumpJson::dumpToByteArray(veinStorageDb,
                                                                    QList<int>() << sampleEntityd,
                                                                    QList<int>(),
                                                                    true);
-    QVERIFY(TestLogHelpers::compareAndLogOnDiffJson(jsonExpected, jsonDumped));
+    QVERIFY(TestLogHelpers::compareAndLogOnDiffJsonFile(":/veinDumps/automaticOffUL2.json", jsonDumped));
 }
 
 void test_sample_config_load::startChannelFixedFreqAutomaticOff()
@@ -130,12 +128,11 @@ void test_sample_config_load::startChannelFixedFreqAutomaticOff()
     QCOMPARE(*pllChannelMName, "13Hz_DPLL");
 
     VeinStorage::AbstractDatabase *veinStorageDb = testRunner.getVeinStorageDb();
-    QByteArray jsonExpected = TestLogHelpers::loadFile(":/veinDumps/automaticOffFixedFreq.json");
     QByteArray jsonDumped = VeinStorage::DumpJson::dumpToByteArray(veinStorageDb,
                                                                    QList<int>() << sampleEntityd,
                                                                    QList<int>(),
                                                                    true);
-    QVERIFY(TestLogHelpers::compareAndLogOnDiffJson(jsonExpected, jsonDumped));
+    QVERIFY(TestLogHelpers::compareAndLogOnDiffJsonFile(":/veinDumps/automaticOffFixedFreq.json", jsonDumped));
 }
 
 void test_sample_config_load::startChannelIL1AutomaticOn()
@@ -155,10 +152,9 @@ void test_sample_config_load::startChannelIL1AutomaticOn()
     QCOMPARE(*pllChannelMName, "m3");
 
     VeinStorage::AbstractDatabase *veinStorageDb = testRunner.getVeinStorageDb();
-    QByteArray jsonExpected = TestLogHelpers::loadFile(":/veinDumps/automaticOnIL1.json");
     QByteArray jsonDumped = VeinStorage::DumpJson::dumpToByteArray(veinStorageDb,
                                                                    QList<int>() << sampleEntityd,
                                                                    QList<int>(),
                                                                    true);
-    QVERIFY(TestLogHelpers::compareAndLogOnDiffJson(jsonExpected, jsonDumped));
+    QVERIFY(TestLogHelpers::compareAndLogOnDiffJsonFile(":/veinDumps/automaticOnIL1.json", jsonDumped));
 }
