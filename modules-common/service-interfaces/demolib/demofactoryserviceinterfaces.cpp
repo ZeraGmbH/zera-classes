@@ -146,3 +146,9 @@ Zera::DspInterfacePtr DemoFactoryServiceInterfaces::createDspInterfaceRefAdj(int
     Q_UNUSED(entityId)
     return std::make_shared<Zera::cDSPInterface>();
 }
+
+Zera::DspInterfacePtr DemoFactoryServiceInterfaces::createDspInterfaceStatus(int entityId)
+{
+    Q_UNUSED(entityId)
+    return std::make_shared<Zera::cDSPInterface>();
+}

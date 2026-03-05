@@ -690,5 +690,13 @@
             "WriteNo: 0000 / Handle:Variable: FrequencyScale:FREQSCALE": 18765000000,
             "WriteNo: 0001 / Handle:Variable: QRefScale:NOMPOWER": 100
         }
+    },
+    "1150": {
+        "1-MemGroups": {
+        },
+        "2-CmdList": [
+        ],
+        "3-VarsWritten": {
+        }
     }
 }

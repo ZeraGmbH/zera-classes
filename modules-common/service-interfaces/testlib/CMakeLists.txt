@@ -20,6 +20,7 @@ target_include_directories(module-service-interfaces-testlib
 target_link_libraries(module-service-interfaces-testlib
     PUBLIC
     module-service-interfaces-demolib
+    Zera::service-interfaces-testlib
     Zera::zdsp1d-lib
 )
 

@@ -17,11 +17,10 @@ namespace STATUSMODULE
 cStatusModuleInit::cStatusModuleInit(cStatusModule* module, cStatusModuleConfigData& configData) :
     cModuleActivist(module->getVeinModuleName()),
     m_pModule(module),
-    m_ConfigData(configData)
+    m_ConfigData(configData),
+    m_pPCBInterface(std::make_shared<Zera::cPCBInterface>()),
+    m_dspInterface(m_pModule->getServiceInterfaceFactory()->createDspInterfaceStatus(m_pModule->getEntityId()))
 {
-    m_pPCBInterface = std::make_shared<Zera::cPCBInterface>();
-    m_dspInterface = std::make_shared<Zera::cDSPInterface>();
-
     // m_pcbserverConnectionState.addTransition is done in pcbserverConnection
     m_pcbserverReadVersionState.addTransition(this, &cStatusModuleInit::activationContinue, &m_pcbserverReadChannelsConnectedChange);
     m_pcbserverReadChannelsConnectedChange.addTransition(this, &cStatusModuleInit::activationContinue, &m_pcbReadVersionState);

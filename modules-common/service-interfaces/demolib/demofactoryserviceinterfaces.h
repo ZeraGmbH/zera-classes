@@ -28,6 +28,7 @@ public:
     Zera::DspInterfacePtr createDspInterfaceMode(int entityId) override;
     Zera::DspInterfacePtr createDspInterfaceRefProg(int entityId, QStringList valueChannelList) override;
     Zera::DspInterfacePtr createDspInterfaceRefAdj(int entityId) override;
+    Zera::DspInterfacePtr createDspInterfaceStatus(int entityId) override;
 private:
     ValueTypes m_valueType = RandomValues;
     std::function<double(int)> m_valueGenerator;
