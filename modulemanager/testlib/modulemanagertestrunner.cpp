@@ -1,5 +1,6 @@
 #include "modulemanagertestrunner.h"
 #include "vf_client_component_setter.h"
+#include <mocklxdmconfigfilegenerator.h>
 #include <contentsetsotherfromcontentsetsconfig.h>
 #include <contentsetszeraallfrommodmansessions.h>
 #include <loggercontentsetconfig.h>
@@ -7,7 +8,8 @@
 #include <timemachineobject.h>
 #include <QDir>
 
-ModuleManagerTestRunner::ModuleManagerTestRunner(QString sessionFileName, bool initialAdjPermission, QString deviceName, LxdmSessionChangeParam lxdmParam, bool addVfLogger)
+ModuleManagerTestRunner::ModuleManagerTestRunner(QString sessionFileName, bool initialAdjPermission, QString deviceName, LxdmSessionChangeParam lxdmParam, bool addVfLogger, bool cleanupLxdmFiles) :
+    m_cleanupLxdmFiles(cleanupLxdmFiles)
 {
     m_licenseSystem = std::make_unique<TestLicenseSystem>();
     m_modmanFacade = std::make_unique<ModuleManagerSetupFacade>(m_licenseSystem.get(),
@@ -35,6 +37,8 @@ ModuleManagerTestRunner::~ModuleManagerTestRunner()
     m_serviceInterfaceFactory = nullptr;
     m_modmanFacade = nullptr;
     m_licenseSystem = nullptr;
+    if(m_cleanupLxdmFiles)
+        MockLxdmConfigFileGenerator::cleanup();
 }
 
 void ModuleManagerTestRunner::setupVfLogger()

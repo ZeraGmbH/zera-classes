@@ -11,6 +11,7 @@ class test_modman_regression_all_sessions : public QObject
     Q_OBJECT
 private slots:
     void initTestCase();
+    void cleanup();
 
     void allSessionsVeinDumps_data();
     void allSessionsVeinDumps();

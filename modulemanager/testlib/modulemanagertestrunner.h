@@ -21,7 +21,8 @@ public:
                             bool initialAdjPermission = false,
                             QString deviceName = "mt310s2",
                             LxdmSessionChangeParam lxdmParam = MockLxdmSessionChangeParamGenerator::generateTestSessionChanger(),
-                            bool addVfLogger = false);
+                            bool addVfLogger = false,
+                            bool cleanupLxdmFiles = true);
     ~ModuleManagerTestRunner();
 
     void start(QString sessionFileName);
@@ -66,6 +67,7 @@ private:
     std::unique_ptr<TestDbAddSignaller> m_testSignaller;
     std::unique_ptr<VeinLogger::DatabaseLogger> m_dataLoggerSystem;
     bool m_dataLoggerSystemInitialized = false;
+    bool m_cleanupLxdmFiles;
 };
 
 #endif // MODULEMANAGERTESTRUNNER_H
