@@ -1,8 +1,8 @@
 {
     "ProgMemCyclicAvailable": 3584,
-    "ProgMemCyclicFree": 2772,
+    "ProgMemCyclicFree": 2776,
     "ProgMemInterruptAvailable": 512,
-    "ProgMemInterruptFree": 495,
+    "ProgMemInterruptFree": 511,
     "UserMemAvailable": 32383,
     "UserMemFree": 8520,
     "ZdspMemDump": {
@@ -1131,14 +1131,6 @@
         "TotalCmdListCyclic": [
             "-- Start entity ID 0 / Global init --",
             "DSPMEMOFFSET(0x0E0800)",
-            "-- Start entity ID 1150 / Cyclic mem offset --",
-            "USERMEMOFFSET(0x098180)",
-            "-- Start entity ID 1000 / Cyclic mem offset --",
-            "USERMEMOFFSET(0x098180)",
-            "-- Start entity ID 1020 / Cyclic mem offset --",
-            "USERMEMOFFSET(0x098180)",
-            "-- Start entity ID 1020 / Cyclic mem offset --",
-            "USERMEMOFFSET(0x098180)",
             "-- Start entity ID 1020 / Cyclic mem offset --",
             "USERMEMOFFSET(0x098180)",
             "-- Start entity ID 1020 / Cyclic sequence --",
@@ -1971,40 +1963,8 @@
             "DSPINTPOST()"
         ],
         "TotalCmdListInterrupt": [
-            "-- Start entity ID 1150 / Interrupt mem offset --",
-            "USERMEMOFFSET(0x098180)",
-            "-- Start entity ID 1000 / Interrupt mem offset --",
-            "USERMEMOFFSET(0x098180)",
-            "-- Start entity ID 1020 / Interrupt mem offset --",
-            "USERMEMOFFSET(0x098180)",
-            "-- Start entity ID 1020 / Interrupt mem offset --",
-            "USERMEMOFFSET(0x098180)",
-            "-- Start entity ID 1020 / Interrupt mem offset --",
-            "USERMEMOFFSET(0x098180)",
-            "-- Start entity ID 1040 / Interrupt mem offset --",
-            "USERMEMOFFSET(0x0983E7)",
-            "-- Start entity ID 1050 / Interrupt mem offset --",
-            "USERMEMOFFSET(0x09860E)",
-            "-- Start entity ID 1060 / Interrupt mem offset --",
-            "USERMEMOFFSET(0x098861)",
-            "-- Start entity ID 1070 / Interrupt mem offset --",
-            "USERMEMOFFSET(0x09AC59)",
-            "-- Start entity ID 1071 / Interrupt mem offset --",
-            "USERMEMOFFSET(0x09B070)",
-            "-- Start entity ID 1072 / Interrupt mem offset --",
-            "USERMEMOFFSET(0x09B487)",
-            "-- Start entity ID 1078 / Interrupt mem offset --",
-            "USERMEMOFFSET(0x09B89E)",
-            "-- Start entity ID 1079 / Interrupt mem offset --",
-            "USERMEMOFFSET(0x09BCB4)",
-            "-- Start entity ID 1110 / Interrupt mem offset --",
-            "USERMEMOFFSET(0x09C0CA)",
-            "-- Start entity ID 1111 / Interrupt mem offset --",
-            "USERMEMOFFSET(0x09C2E5)",
-            "-- Start entity ID 1120 / Interrupt mem offset --",
-            "USERMEMOFFSET(0x09C500)"
         ],
-        "TotalDspCmdsCompiledCrcCyclic": "0xB138EEC1",
-        "TotalDspCmdsCompiledCrcInterrupt": "0x1ED2669B"
+        "TotalDspCmdsCompiledCrcCyclic": "0x37CB2B80",
+        "TotalDspCmdsCompiledCrcInterrupt": "0x6522DF69"
     }
 }
