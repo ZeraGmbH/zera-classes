@@ -7,6 +7,7 @@
 #include "sessionexportgenerator.h"
 #include <testloghelpers.h>
 #include <mocklxdmsessionchangeparamgenerator.h>
+#include <mocklxdmconfigfilegenerator.h>
 #include <proxyclient_p.h>
 #include <QTest>
 
@@ -28,6 +29,12 @@ void test_modman_regression_all_sessions::initTestCase()
     m_dspVarDumps = devicesExportGenerator.getDspVarDumps();
     m_secUnitDumps = devicesExportGenerator.getSecUnitDumps();
     m_instanceCountsOnModulesDestroyed = devicesExportGenerator.getInstanceCountsOnModulesDestroyed();
+}
+
+void test_modman_regression_all_sessions::cleanup()
+{
+    // call cleanup explicitly when finished swapping devices
+    MockLxdmConfigFileGenerator::cleanup();
 }
 
 void test_modman_regression_all_sessions::allSessionsVeinDumps_data()
