@@ -33,11 +33,11 @@ public:
     const RangePtr getRange(const QString &rangeName) const;
     ChannelCommonStorage *getModuleCommonStorage();
 signals:
-    void sigRangeChangeReported(QString channelMName, int interruptCounter);
-    void sigFetchDoneChannel(QString channelMName, bool ok);
+    void sigRangeChangeReported(const QString &channelMName, int interruptCounter);
+    void sigFetchDoneChannel(const QString &channelMName, bool ok);
 
 private slots:
-    void onInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant answer);
+    void onInterfaceAnswer(quint32 msgnr, quint8 reply, const QVariant &answer);
 private:
     void clearRanges();
     void preparePcbInterface();

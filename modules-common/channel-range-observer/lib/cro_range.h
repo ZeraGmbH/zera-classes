@@ -25,12 +25,12 @@ public:
           VeinTcp::AbstractTcpNetworkFactoryPtr tcpFactory);
     void startFetch();
 signals:
-    void sigFetchDoneRange(QString channelMName, QString rangeName, bool ok);
+    void sigFetchDoneRange(const QString &channelMName, const QString &rangeName, bool ok);
 
 private:
     void preparePcbInterface();
     TaskTemplatePtr getPcbConnectionTask();
-    void notifyError(QString errMsg);
+    void notifyError(const QString &errMsg);
 
     const QString m_channelMName;
     const QString m_rangeName;

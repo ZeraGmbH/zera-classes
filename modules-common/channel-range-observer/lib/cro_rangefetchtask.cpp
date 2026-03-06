@@ -19,7 +19,7 @@ void RangeFetchTask::start()
     m_range->startFetch();
 }
 
-void RangeFetchTask::onRangeFetched(QString channelMName, QString rangeName, bool ok)
+void RangeFetchTask::onRangeFetched(const QString &channelMName, const QString &rangeName, bool ok)
 {
     Q_UNUSED(channelMName)
     Q_UNUSED(rangeName)

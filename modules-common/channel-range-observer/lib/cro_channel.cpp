@@ -153,7 +153,7 @@ TaskTemplatePtr Channel::getRangesRegisterChangeNotificationTask()
         TRANSACTION_TIMEOUT, [&]{ notifyError(QString("Could not register notification for channel %1").arg(m_channelMName)); });
 }
 
-void Channel::onInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant answer)
+void Channel::onInterfaceAnswer(quint32 msgnr, quint8 reply, const QVariant &answer)
 {
     Q_UNUSED(reply)
     if (msgnr == 0 && answer == notificationStr) {

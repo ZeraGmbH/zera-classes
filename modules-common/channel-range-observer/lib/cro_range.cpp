@@ -76,7 +76,7 @@ TaskTemplatePtr Range::getPcbConnectionTask()
     return TaskServerConnectionStart::create(m_pcbClient, CONNECTION_TIMEOUT);
 }
 
-void Range::notifyError(QString errMsg)
+void Range::notifyError(const QString &errMsg)
 {
     qWarning("Range error: %s", qPrintable(errMsg));
 }

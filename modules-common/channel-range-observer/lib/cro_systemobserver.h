@@ -18,12 +18,12 @@ public:
     const QStringList getChannelMNames() const;
     const QStringList getChannelAliases() const;
     const QString getChannelNamesForMardownDoc() const;
-    const ChannelPtr getChannel(QString channelMName) const;
-    const QString getChannelMName(QString alias) const;
-    const int getSamplesPerPeriod() const;
+    const ChannelPtr getChannel(const QString &channelMName) const;
+    const QString getChannelMName(const QString &alias) const;
+    int getSamplesPerPeriod() const;
 signals:
     void sigFullScanFinished(bool ok);
-    void sigFetchDone(QString channelMName, bool ok);
+    void sigFetchDone(const QString &channelMName, bool ok);
     friend class SystemObserverResetter;
 
 protected:
@@ -34,7 +34,7 @@ private:
     void preparePcbInterface();
     void doStartFullScan();
     TaskTemplatePtr getPcbConnectionTask();
-    static void notifyError(QString errMsg);
+    static void notifyError(const QString &errMsg);
 
     const NetworkConnectionInfo m_netInfo;
     const VeinTcp::AbstractTcpNetworkFactoryPtr m_tcpFactory;

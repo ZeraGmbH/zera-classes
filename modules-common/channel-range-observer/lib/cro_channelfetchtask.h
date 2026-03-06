@@ -17,7 +17,7 @@ public:
     ChannelFetchTask(ChannelPtr channel);
     void start() override;
 private slots:
-    void onChannelFetched(QString channelMName, bool ok);
+    void onChannelFetched(const QString &channelMName, bool ok);
 private:
     ChannelPtr m_channel;
 };

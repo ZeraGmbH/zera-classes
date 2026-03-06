@@ -17,7 +17,7 @@ public:
     RangeFetchTask(RangePtr range);
     void start() override;
 private slots:
-    void onRangeFetched(QString channelMName, QString rangeName, bool ok);
+    void onRangeFetched(const QString &channelMName, const QString &rangeName, bool ok);
 private:
     RangePtr m_range;
 };

@@ -19,15 +19,15 @@ public:
     void startObserve();
     const QString getCurrentRange() const;
 signals:
-    void sigFetchDoneCurrentRange(QString channelMName, QString rangeName, bool ok);
+    void sigFetchDoneCurrentRange(const QString &channelMName, const QString &rangeName, bool ok);
 
 private slots:
-    void onInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant answer);
+    void onInterfaceAnswer(quint32 msgnr, quint8 reply, const QVariant &answer);
 private:
     void preparePcbInterface();
     void startTasks();
     TaskTemplatePtr getPcbConnectionTask();
-    static void notifyError(QString errMsg);
+    static void notifyError(const QString &errMsg);
 
     const QString m_channelMName;
     QString m_currentRangeName;

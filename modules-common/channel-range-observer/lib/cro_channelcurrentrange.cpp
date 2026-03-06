@@ -56,7 +56,7 @@ void ChannelRangeObserver::ChannelCurrentRange::startTasks()
     m_currentTasks->start();
 }
 
-void ChannelCurrentRange::onInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant answer)
+void ChannelCurrentRange::onInterfaceAnswer(quint32 msgnr, quint8 reply, const QVariant &answer)
 {
     Q_UNUSED(reply)
     if(msgnr == 0) {
@@ -75,7 +75,7 @@ TaskTemplatePtr ChannelCurrentRange::getPcbConnectionTask()
     return TaskServerConnectionStart::create(m_pcbClient, CONNECTION_TIMEOUT);
 }
 
-void ChannelCurrentRange::notifyError(QString errMsg)
+void ChannelCurrentRange::notifyError(const QString &errMsg)
 {
     qWarning("Channel current range observer error: %s", qPrintable(errMsg));
 }

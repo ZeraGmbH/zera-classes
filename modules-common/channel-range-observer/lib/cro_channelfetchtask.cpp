@@ -19,7 +19,7 @@ void ChannelFetchTask::start()
     m_channel->startFetch();
 }
 
-void ChannelFetchTask::onChannelFetched(QString channelMName, bool ok)
+void ChannelFetchTask::onChannelFetched(const QString &channelMName, bool ok)
 {
     Q_UNUSED(channelMName)
     finishTask(ok);

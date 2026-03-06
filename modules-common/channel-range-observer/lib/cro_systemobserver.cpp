@@ -50,7 +50,7 @@ const QString SystemObserver::getChannelNamesForMardownDoc() const
     return markDownChannels.join("\n");
 }
 
-const ChannelPtr SystemObserver::getChannel(QString channelMName) const
+const ChannelPtr SystemObserver::getChannel(const QString &channelMName) const
 {
     auto iter = m_channelMNameToChannel.constFind(channelMName);
     if(iter != m_channelMNameToChannel.constEnd())
@@ -59,7 +59,7 @@ const ChannelPtr SystemObserver::getChannel(QString channelMName) const
     return std::make_shared<Channel>("", NetworkConnectionInfo(), m_tcpFactory);
 }
 
-const QString SystemObserver::getChannelMName(QString alias) const
+const QString SystemObserver::getChannelMName(const QString &alias) const
 {
     for(auto iter=m_channelMNameToChannel.constBegin(); iter!=m_channelMNameToChannel.constEnd(); iter++) {
         if(iter.value()->getAlias() == alias)
@@ -68,7 +68,7 @@ const QString SystemObserver::getChannelMName(QString alias) const
     return QString();
 }
 
-const int SystemObserver::getSamplesPerPeriod() const
+int SystemObserver::getSamplesPerPeriod() const
 {
     return *m_samplesPerPeriod;
 }
@@ -118,7 +118,7 @@ TaskTemplatePtr SystemObserver::getPcbConnectionTask()
     return TaskServerConnectionStart::create(m_pcbClient, CONNECTION_TIMEOUT);
 }
 
-void SystemObserver::notifyError(QString errMsg)
+void SystemObserver::notifyError(const QString &errMsg)
 {
     qWarning("SystemObserver error: %s", qPrintable(errMsg));
 }
