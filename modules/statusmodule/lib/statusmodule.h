@@ -14,7 +14,7 @@ public:
     static constexpr const char* BaseModuleName = "StatusModule";
     static constexpr const char* BaseSCPIModuleName = "DEV";
 
-    explicit cStatusModule(ModuleFactoryParam moduleParam);
+    explicit cStatusModule(const ModuleFactoryParam &moduleParam);
 
 private:
     void setupModule() override; // after xml configuration we can setup and export our module

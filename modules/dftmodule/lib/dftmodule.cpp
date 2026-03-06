@@ -5,7 +5,7 @@
 namespace DFTMODULE
 {
 
-cDftModule::cDftModule(ModuleFactoryParam moduleParam) :
+cDftModule::cDftModule(const ModuleFactoryParam &moduleParam) :
     cBaseMeasModule(moduleParam, std::make_shared<cDftModuleConfiguration>())
 {
     m_sModuleName = QString("%1%2").arg(BaseModuleName).arg(moduleParam.m_moduleNum);

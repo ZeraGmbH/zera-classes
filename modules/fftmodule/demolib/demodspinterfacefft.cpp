@@ -4,7 +4,7 @@
 #include <math.h>
 
 DemoDspInterfaceFft::DemoDspInterfaceFft(int entityId,
-                                         QStringList valueChannelList,
+                                         const QStringList &valueChannelList,
                                          int fftOrder,
                                          std::function<double (int)> valueGenerator) :
     m_entityId(entityId),

@@ -14,7 +14,7 @@ public:
     static constexpr const char* BaseModuleName = "DFTModule";
     static constexpr const char* BaseSCPIModuleName = "DFT";
 
-    cDftModule(ModuleFactoryParam moduleParam);
+    cDftModule(const ModuleFactoryParam &moduleParam);
 
 private:
     void setupModule() override; // after xml configuration we can setup and export our module

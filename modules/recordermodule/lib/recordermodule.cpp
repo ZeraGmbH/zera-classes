@@ -2,7 +2,7 @@
 #include "recordermoduleconfiguration.h"
 #include "recordermoduleinit.h"
 
-RecorderModule::RecorderModule(ModuleFactoryParam moduleParam) :
+RecorderModule::RecorderModule(const ModuleFactoryParam &moduleParam) :
     cBaseMeasModule(moduleParam, std::make_shared<RecorderModuleConfiguration>()),
     m_spRpcEventSystem(std::make_unique<VfRpcEventSystemSimplified>(moduleParam.m_entityId))
 {

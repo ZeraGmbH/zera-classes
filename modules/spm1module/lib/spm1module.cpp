@@ -4,7 +4,7 @@
 namespace SPM1MODULE
 {
 
-cSpm1Module::cSpm1Module(ModuleFactoryParam moduleParam) :
+cSpm1Module::cSpm1Module(const ModuleFactoryParam &moduleParam) :
     cBaseMeasModule(moduleParam, std::make_shared<cSpm1ModuleConfiguration>())
 {
     m_sModuleName = QString("%1%2").arg(BaseModuleName).arg(moduleParam.m_moduleNum);

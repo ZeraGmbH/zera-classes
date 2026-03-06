@@ -13,7 +13,7 @@ public:
     static constexpr const char* BaseModuleName = "OSCIModule";
     static constexpr const char* BaseSCPIModuleName = "OSC";
 
-    cOsciModule(ModuleFactoryParam moduleParam);
+    cOsciModule(const ModuleFactoryParam &moduleParam);
 
 private:
     void setupModule() override; // after xml configuration we can setup and export our module

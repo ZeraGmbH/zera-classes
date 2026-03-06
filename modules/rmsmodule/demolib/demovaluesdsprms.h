@@ -8,7 +8,7 @@
 class DemoValuesDspRms
 {
 public:
-    DemoValuesDspRms(QStringList valueChannelList);
+    DemoValuesDspRms(const QStringList &valueChannelList);
     void setValue(QString valueChannelName, float rmsValue);
     void setAllValuesSymmetric(float voltage, float current);
     QVector<float> getDspValues();

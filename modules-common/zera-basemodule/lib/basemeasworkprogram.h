@@ -9,7 +9,7 @@ class cBaseMeasWorkProgram: public cModuleActivist
 {
     Q_OBJECT
 public:
-    cBaseMeasWorkProgram(std::shared_ptr<BaseModuleConfiguration> pConfiguration, QString moduleName);
+    cBaseMeasWorkProgram(std::shared_ptr<BaseModuleConfiguration> pConfiguration, const QString &moduleName);
 signals:
     void actualValues(QVector<float>*);
 public slots:

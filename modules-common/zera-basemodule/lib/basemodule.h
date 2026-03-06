@@ -17,7 +17,7 @@ class BaseModule : public ZeraModules::VirtualModule
 Q_OBJECT
 
 public:
-    BaseModule(ModuleFactoryParam moduleParam, std::shared_ptr<BaseModuleConfiguration> modcfg);
+    BaseModule(const ModuleFactoryParam &moduleParam, std::shared_ptr<BaseModuleConfiguration> modcfg);
     virtual ~BaseModule();
     virtual void startModule() override;
     virtual void stopModule() override;

@@ -13,7 +13,7 @@ public:
     static constexpr const char* BaseModuleName = "Power3Module";
     static constexpr const char* BaseSCPIModuleName = "PW3";
 
-    cPower3Module(ModuleFactoryParam moduleParam);
+    cPower3Module(const ModuleFactoryParam &moduleParam);
 
 private:
     cPower3ModuleMeasProgram *m_pMeasProgram = nullptr;

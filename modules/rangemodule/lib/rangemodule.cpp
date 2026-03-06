@@ -6,7 +6,7 @@
 namespace RANGEMODULE
 {
 
-cRangeModule::cRangeModule(ModuleFactoryParam moduleParam) :
+cRangeModule::cRangeModule(const ModuleFactoryParam &moduleParam) :
     cBaseMeasModule(moduleParam, std::make_shared<cRangeModuleConfiguration>())
 {
     m_sModuleName = QString("%1%2").arg(BaseModuleName).arg(moduleParam.m_moduleNum);

@@ -2,7 +2,7 @@
 #include "servicechannelnamehelper.h"
 #include <math.h>
 
-DemoValuesDspRms::DemoValuesDspRms(QStringList valueChannelList) :
+DemoValuesDspRms::DemoValuesDspRms(const QStringList &valueChannelList) :
     m_valueChannelList(valueChannelList)
 {
     for(const auto &valueName : valueChannelList)

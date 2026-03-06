@@ -10,7 +10,7 @@ class DemoDspInterfacePeriodAverage : public MockDspInterface
     Q_OBJECT
 public:
     DemoDspInterfacePeriodAverage(int entityId,
-                                  QStringList valueChannelList,
+                                  const QStringList &valueChannelList,
                                   int maxPeriodCount, int periodCount,
                                   std::function<double(int)> valueGenerator);
 private slots:

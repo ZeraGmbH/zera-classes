@@ -1,7 +1,7 @@
 #include "demovaluesdspdft.h"
 #include "servicechannelnamehelper.h"
 
-DemoValuesDspDft::DemoValuesDspDft(QStringList valueChannelList, int dftOrder) :
+DemoValuesDspDft::DemoValuesDspDft(const QStringList &valueChannelList, int dftOrder) :
     m_valueChannelList(valueChannelList),
     m_dftOrder(dftOrder)
 {

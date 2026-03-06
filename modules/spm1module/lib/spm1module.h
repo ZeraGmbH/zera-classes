@@ -16,7 +16,7 @@ public:
     // and each energy measurement  will have an additional scpi parent with its number 0001 .. 9999
     static constexpr const char* BaseSCPIModuleName = "PM01";
 
-    explicit cSpm1Module(ModuleFactoryParam moduleParam);
+    explicit cSpm1Module(const ModuleFactoryParam &moduleParam);
 
 private:
     void setupModule() override; // after xml configuration we can setup and export our module

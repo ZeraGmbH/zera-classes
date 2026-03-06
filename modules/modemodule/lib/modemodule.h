@@ -13,7 +13,7 @@ public:
     static constexpr const char* BaseModuleName = "ModeModule";
     static constexpr const char* BaseSCPIModuleName = "MOD";
 
-    cModeModule(ModuleFactoryParam moduleParam);
+    cModeModule(const ModuleFactoryParam &moduleParam);
 
 private slots:
     void activationFinished() override;

@@ -1,7 +1,7 @@
 #include "factoryserviceinterfaces.h"
 
 Zera::DspInterfacePtr FactoryServiceInterfaces::createDspInterfaceRangeProg(int entityId,
-                                                                            QStringList valueChannelList,
+                                                                            const QStringList &valueChannelList,
                                                                             bool isReference)
 {
     Q_UNUSED(entityId)
@@ -11,7 +11,7 @@ Zera::DspInterfacePtr FactoryServiceInterfaces::createDspInterfaceRangeProg(int 
 }
 
 Zera::DspInterfacePtr FactoryServiceInterfaces::createDspInterfaceRangeObser(int entityId,
-                                                                             QStringList valueChannelList,
+                                                                             const QStringList &valueChannelList,
                                                                              bool isReference)
 {
     Q_UNUSED(entityId)
@@ -21,7 +21,7 @@ Zera::DspInterfacePtr FactoryServiceInterfaces::createDspInterfaceRangeObser(int
 }
 
 Zera::DspInterfacePtr FactoryServiceInterfaces::createDspInterfaceRangeAdj(int entityId,
-                                                                           QStringList valueChannelList,
+                                                                           const QStringList &valueChannelList,
                                                                            bool isReference)
 {
     Q_UNUSED(entityId)
@@ -31,7 +31,7 @@ Zera::DspInterfacePtr FactoryServiceInterfaces::createDspInterfaceRangeAdj(int e
 }
 
 Zera::DspInterfacePtr FactoryServiceInterfaces::createDspInterfaceDft(int entityId,
-                                                                      QStringList valueChannelList,
+                                                                      const QStringList &valueChannelList,
                                                                       int dftOrder)
 {
     Q_UNUSED(entityId)
@@ -41,7 +41,7 @@ Zera::DspInterfacePtr FactoryServiceInterfaces::createDspInterfaceDft(int entity
 }
 
 Zera::DspInterfacePtr FactoryServiceInterfaces::createDspInterfaceFft(int entityId,
-                                                                      QStringList valueChannelList,
+                                                                      const QStringList &valueChannelList,
                                                                       int fftOrder)
 {
     Q_UNUSED(entityId)
@@ -51,7 +51,7 @@ Zera::DspInterfacePtr FactoryServiceInterfaces::createDspInterfaceFft(int entity
 }
 
 Zera::DspInterfacePtr FactoryServiceInterfaces::createDspInterfaceRms(int entityId,
-                                                                      QStringList valueChannelList)
+                                                                      const QStringList &valueChannelList)
 {
     Q_UNUSED(entityId)
     Q_UNUSED(valueChannelList)
@@ -75,7 +75,7 @@ Zera::DspInterfacePtr FactoryServiceInterfaces::createDspInterfacePower2(int ent
 }
 
 Zera::DspInterfacePtr FactoryServiceInterfaces::createDspInterfaceThdn(int entityId,
-                                                                       QStringList valueChannelList)
+                                                                       const QStringList &valueChannelList)
 {
     Q_UNUSED(entityId)
     Q_UNUSED(valueChannelList)
@@ -83,7 +83,7 @@ Zera::DspInterfacePtr FactoryServiceInterfaces::createDspInterfaceThdn(int entit
 }
 
 Zera::DspInterfacePtr FactoryServiceInterfaces::createDspInterfaceOsci(int entityId,
-                                                                       QStringList valueChannelList,
+                                                                       const QStringList &valueChannelList,
                                                                        int interpolation)
 {
     Q_UNUSED(entityId)
@@ -93,7 +93,7 @@ Zera::DspInterfacePtr FactoryServiceInterfaces::createDspInterfaceOsci(int entit
 }
 
 Zera::DspInterfacePtr FactoryServiceInterfaces::createDspInterfacePeriodAverage(int entityId,
-                                                                                QStringList valueChannelList,
+                                                                                const QStringList &valueChannelList,
                                                                                 int maxPeriodCount, int initialPeriodCount)
 {
     Q_UNUSED(entityId)
@@ -110,7 +110,7 @@ Zera::DspInterfacePtr FactoryServiceInterfaces::createDspInterfaceMode(int entit
 }
 
 Zera::DspInterfacePtr FactoryServiceInterfaces::createDspInterfaceRefProg(int entityId,
-                                                                          QStringList valueChannelList)
+                                                                          const QStringList &valueChannelList)
 {
     Q_UNUSED(entityId)
     Q_UNUSED(valueChannelList)

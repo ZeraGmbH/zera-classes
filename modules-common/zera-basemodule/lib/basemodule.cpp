@@ -8,7 +8,7 @@
 #include <QJsonArray>
 #include <QJsonDocument>
 
-BaseModule::BaseModule(ModuleFactoryParam moduleParam, std::shared_ptr<BaseModuleConfiguration> modcfg) :
+BaseModule::BaseModule(const ModuleFactoryParam &moduleParam, std::shared_ptr<BaseModuleConfiguration> modcfg) :
     ZeraModules::VirtualModule(moduleParam.m_moduleNum, moduleParam.m_entityId),
     m_pConfiguration(modcfg),
     m_moduleParam(moduleParam)

@@ -12,7 +12,7 @@ public:
         RotatingValues,
         FixedValues
     };
-    DemoDspInterfaceDft(QStringList valueChannelList,
+    DemoDspInterfaceDft(const QStringList &valueChannelList,
                         int dftOrder,
                         ValueTypes valueType);
 private slots:

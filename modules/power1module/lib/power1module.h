@@ -13,7 +13,7 @@ public:
     static constexpr const char* BaseModuleName = "POWER1Module";
     static constexpr const char* BaseSCPIModuleName = "POW";
 
-    cPower1Module(ModuleFactoryParam moduleParam);
+    cPower1Module(const ModuleFactoryParam &moduleParam);
 
 private:
     void setupModule() override; // after xml configuration we can setup and export our module

@@ -162,10 +162,10 @@ VirtualModule *ModuleManager::createModule(const QString &xmlConfigPath,
             return nullptr;
         }
     }
-    ModuleFactoryParam moduleParam(moduleEntityId,
-                                   moduleNum,
-                                   xmlConfigData,
-                                   m_moduleSharedObjects);
+    const ModuleFactoryParam moduleParam(moduleEntityId,
+                                         moduleNum,
+                                         xmlConfigData,
+                                         m_moduleSharedObjects);
     VirtualModule *tmpModule = tmpFactory->createModule(moduleParam);
     if(tmpModule) {
         connect(tmpModule, &VirtualModule::addEventSystem, this, &ModuleManager::onModuleEventSystemAdded);

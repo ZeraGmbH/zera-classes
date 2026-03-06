@@ -13,7 +13,7 @@ public:
     static constexpr const char* BaseModuleName = "LambdaModule";
     static constexpr const char* BaseSCPIModuleName = "LAM";
 
-    cLambdaModule(ModuleFactoryParam moduleParam);
+    cLambdaModule(const ModuleFactoryParam &moduleParam);
 
 private:
     cLambdaModuleMeasProgram *m_pMeasProgram = nullptr;

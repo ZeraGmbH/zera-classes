@@ -15,7 +15,7 @@ public:
     static constexpr const char* BaseModuleName = "HotplugControlsModule";
     static constexpr const char* BaseSCPIModuleName = "HOTP";
 
-    explicit cHotplugControlsModule(ModuleFactoryParam moduleParam);
+    explicit cHotplugControlsModule(const ModuleFactoryParam &moduleParam);
     VfRpcEventSystemSimplified *getRpcEventSystem();
     VfEventSytemModuleParam* getValidatorEventSystem();
 

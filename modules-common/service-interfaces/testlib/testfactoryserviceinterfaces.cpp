@@ -7,7 +7,7 @@ void TestFactoryServiceInterfaces::resetInterfaces()
 }
 
 Zera::DspInterfacePtr TestFactoryServiceInterfaces::createDspInterfaceRangeProg(int entityId,
-                                                                                QStringList valueChannelList,
+                                                                                const QStringList &valueChannelList,
                                                                                 bool isReference)
 {
     Q_UNUSED(isReference)
@@ -18,7 +18,7 @@ Zera::DspInterfacePtr TestFactoryServiceInterfaces::createDspInterfaceRangeProg(
 }
 
 Zera::DspInterfacePtr TestFactoryServiceInterfaces::createDspInterfaceRangeObser(int entityId,
-                                                                                 QStringList valueChannelList,
+                                                                                 const QStringList &valueChannelList,
                                                                                  bool isReference)
 {
     Q_UNUSED(isReference)
@@ -29,7 +29,7 @@ Zera::DspInterfacePtr TestFactoryServiceInterfaces::createDspInterfaceRangeObser
 }
 
 Zera::DspInterfacePtr TestFactoryServiceInterfaces::createDspInterfaceRangeAdj(int entityId,
-                                                                               QStringList valueChannelList,
+                                                                               const QStringList &valueChannelList,
                                                                                bool isReference)
 {
     Q_UNUSED(isReference)
@@ -40,7 +40,7 @@ Zera::DspInterfacePtr TestFactoryServiceInterfaces::createDspInterfaceRangeAdj(i
 }
 
 Zera::DspInterfacePtr TestFactoryServiceInterfaces::createDspInterfaceDft(int entityId,
-                                                                         QStringList valueChannelList,
+                                                                         const QStringList &valueChannelList,
                                                                          int dftOrder)
 {
     Q_UNUSED(dftOrder)
@@ -51,7 +51,7 @@ Zera::DspInterfacePtr TestFactoryServiceInterfaces::createDspInterfaceDft(int en
 }
 
 Zera::DspInterfacePtr TestFactoryServiceInterfaces::createDspInterfaceFft(int entityId,
-                                                                          QStringList valueChannelList,
+                                                                          const QStringList &valueChannelList,
                                                                           int fftOrder)
 {
     Q_UNUSED(fftOrder)
@@ -62,7 +62,7 @@ Zera::DspInterfacePtr TestFactoryServiceInterfaces::createDspInterfaceFft(int en
 }
 
 Zera::DspInterfacePtr TestFactoryServiceInterfaces::createDspInterfaceRms(int entityId,
-                                                                          QStringList valueChannelList)
+                                                                          const QStringList &valueChannelList)
 {
     return createDspInterfaceCommon(entityId,
                                     INJECT_RMS,
@@ -91,7 +91,7 @@ Zera::DspInterfacePtr TestFactoryServiceInterfaces::createDspInterfacePower2(int
 }
 
 Zera::DspInterfacePtr TestFactoryServiceInterfaces::createDspInterfaceThdn(int entityId,
-                                                                           QStringList valueChannelList)
+                                                                           const QStringList &valueChannelList)
 {
     return createDspInterfaceCommon(entityId,
                                     INJECT_NOT_SUPPORTED,
@@ -100,7 +100,7 @@ Zera::DspInterfacePtr TestFactoryServiceInterfaces::createDspInterfaceThdn(int e
 }
 
 Zera::DspInterfacePtr TestFactoryServiceInterfaces::createDspInterfaceOsci(int entityId,
-                                                                           QStringList valueChannelList,
+                                                                           const QStringList &valueChannelList,
                                                                            int interpolation)
 {
     Q_UNUSED(interpolation)
@@ -111,7 +111,7 @@ Zera::DspInterfacePtr TestFactoryServiceInterfaces::createDspInterfaceOsci(int e
 }
 
 Zera::DspInterfacePtr TestFactoryServiceInterfaces::createDspInterfacePeriodAverage(int entityId,
-                                                                                    QStringList valueChannelList,
+                                                                                    const QStringList &valueChannelList,
                                                                                     int maxPeriodCount, int initialPeriodCount)
 {
     Q_UNUSED(maxPeriodCount)
@@ -132,7 +132,7 @@ Zera::DspInterfacePtr TestFactoryServiceInterfaces::createDspInterfaceMode(int e
 }
 
 Zera::DspInterfacePtr TestFactoryServiceInterfaces::createDspInterfaceRefProg(int entityId,
-                                                                              QStringList valueChannelList)
+                                                                              const QStringList &valueChannelList)
 {
     return createDspInterfaceCommon(entityId,
                                     INJECT_NOT_SUPPORTED,
@@ -187,7 +187,7 @@ Zera::DspInterfacePtr TestFactoryServiceInterfaces::createDspInterfaceCommon(int
                                                                              DspInterfaceInjectableTypes injectType,
                                                                              DspInterfaceCreatedBy createdBy,
                                                                              int interruptNoHandled,
-                                                                             QStringList valueChannelList)
+                                                                             const QStringList &valueChannelList)
 {
     Q_UNUSED(interruptNoHandled)
     TestDspInterfacePtr dspInterface = std::make_shared<TestDspInterface>(valueChannelList, entityId);

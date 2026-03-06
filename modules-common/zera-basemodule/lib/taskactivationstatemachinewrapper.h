@@ -12,7 +12,7 @@ class TaskActivationStateMachineWrapper : public TaskTemplate
     Q_OBJECT
 public:
     static TaskActivationStateMachineWrapperPtr create(QStateMachine *wrappedStateMachine); // add timout decorator??
-    TaskActivationStateMachineWrapper(QStateMachine *wrappedStateMachine);
+    explicit TaskActivationStateMachineWrapper(QStateMachine *wrappedStateMachine);
     void start() override;
 public slots:
     void onActivationFinished();

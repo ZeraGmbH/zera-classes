@@ -2,7 +2,7 @@
 #include "demovaluesdspdft.h"
 #include <timerfactoryqt.h>
 
-DemoDspInterfaceDft::DemoDspInterfaceDft(QStringList valueChannelList,
+DemoDspInterfaceDft::DemoDspInterfaceDft(const QStringList &valueChannelList,
                                          int dftOrder,
                                          ValueTypes valueType) :
     m_valueChannelList(valueChannelList),

@@ -1,7 +1,7 @@
 #include "testdspvalues.h"
 #include "servicechannelnamehelper.h"
 
-TestDspValues::TestDspValues(QStringList valueChannelList)
+TestDspValues::TestDspValues(const QStringList &valueChannelList)
 {
     for(const QString& valueChannel : valueChannelList) {
         if(valueChannel.split("-").count() == 1)

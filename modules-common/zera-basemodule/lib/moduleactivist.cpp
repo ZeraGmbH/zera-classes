@@ -2,7 +2,7 @@
 
 int cModuleActivist::m_instanceCount = 0;
 
-cModuleActivist::cModuleActivist(QString notifyHeaderString) :
+cModuleActivist::cModuleActivist(const QString &notifyHeaderString) :
     m_notifyHeaderString(notifyHeaderString)
 {
     m_instanceCount++;
@@ -28,7 +28,7 @@ void cModuleActivist::deactivate()
     m_deactivationMachine.start();
 }
 
-void cModuleActivist::notifyError(QVariant value)
+void cModuleActivist::notifyError(const QVariant &value)
 {
     qWarning("%s reported error: %s", qPrintable(m_notifyHeaderString), qPrintable(value.toString()));
 }

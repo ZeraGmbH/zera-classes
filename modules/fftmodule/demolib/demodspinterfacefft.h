@@ -9,7 +9,7 @@ class DemoDspInterfaceFft : public MockDspInterface
     Q_OBJECT
 public:
     DemoDspInterfaceFft(int entityId,
-                        QStringList valueChannelList,
+                        const QStringList &valueChannelList,
                         int fftOrder,
                         std::function<double(int)> valueGenerator);
 private slots:

@@ -13,7 +13,7 @@ public:
     static constexpr const char* BaseModuleName = "SampleModule";
     static constexpr const char* BaseSCPIModuleName = "SAM";
 
-    explicit cSampleModule(ModuleFactoryParam moduleParam);
+    explicit cSampleModule(const ModuleFactoryParam &moduleParam);
 
 private slots:
     void activationFinished() override;

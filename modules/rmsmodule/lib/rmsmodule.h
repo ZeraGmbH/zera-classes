@@ -13,7 +13,7 @@ public:
     static constexpr const char* BaseModuleName = "RMSModule";
     static constexpr const char* BaseSCPIModuleName = "RMS";
 
-    cRmsModule(ModuleFactoryParam moduleParam);
+    cRmsModule(const ModuleFactoryParam &moduleParam);
 
 private:
     void setupModule() override; // after xml configuration we can setup and export our module

@@ -13,7 +13,7 @@ public:
     static constexpr const char* BaseModuleName = "THDNModule";
     static constexpr const char* BaseSCPIModuleName = "THD";
 
-    explicit cThdnModule(ModuleFactoryParam moduleParam);
+    explicit cThdnModule(const ModuleFactoryParam &moduleParam);
 
 private:
     void setupModule() override; // after xml configuration we can setup and export our module

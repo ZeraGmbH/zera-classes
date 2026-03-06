@@ -8,7 +8,7 @@ class cBaseDspMeasProgram: public cBaseMeasProgram
 {
     Q_OBJECT
 public:
-    cBaseDspMeasProgram(std::shared_ptr<BaseModuleConfiguration> pConfiguration, QString moduleName);
+    cBaseDspMeasProgram(std::shared_ptr<BaseModuleConfiguration> pConfiguration, const QString &moduleName);
     virtual ~cBaseDspMeasProgram() { }
 signals:
     void dataAquisitionContinue();

@@ -5,7 +5,7 @@
 namespace FFTMODULE
 {
 
-cFftModule::cFftModule(ModuleFactoryParam moduleParam) :
+cFftModule::cFftModule(const ModuleFactoryParam &moduleParam) :
     cBaseMeasModule(moduleParam, std::make_unique<cFftModuleConfiguration>())
 {
     m_sModuleName = QString("%1%2").arg(BaseModuleName).arg(moduleParam.m_moduleNum);

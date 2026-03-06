@@ -5,7 +5,7 @@
 namespace SEM1MODULE
 {
 
-cSem1Module::cSem1Module(ModuleFactoryParam moduleParam) :
+cSem1Module::cSem1Module(const ModuleFactoryParam &moduleParam) :
     cBaseMeasModule(moduleParam, std::make_shared<cSem1ModuleConfiguration>())
 {
     m_sModuleName = QString("%1%2").arg(BaseModuleName).arg(moduleParam.m_moduleNum);

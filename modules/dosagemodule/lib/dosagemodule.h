@@ -13,7 +13,7 @@ public:
     static constexpr const char *BaseModuleName = "DosageModule";
     static constexpr const char *BaseSCPIModuleName = "DOS";
 
-    cDosageModule(ModuleFactoryParam moduleParam);
+    cDosageModule(const ModuleFactoryParam &moduleParam);
 
 protected:
     cDosageModuleMeasProgram *m_pMeasProgram;               // our measuring program, lets say the working horse

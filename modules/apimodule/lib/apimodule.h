@@ -19,7 +19,7 @@ public:
 
     void setTrustListPath(const QString &path);
 
-    cApiModule(ModuleFactoryParam moduleParam);
+    cApiModule(const ModuleFactoryParam &moduleParam);
 
 private slots:
     void activationFinished() override;

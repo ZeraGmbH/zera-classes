@@ -10,7 +10,7 @@ class cBaseMeasModule : public BaseModule
 {
     Q_OBJECT
 public:
-    cBaseMeasModule(ModuleFactoryParam moduleParam, std::shared_ptr<BaseModuleConfiguration> modcfg);
+    cBaseMeasModule(const ModuleFactoryParam &moduleParam, std::shared_ptr<BaseModuleConfiguration> modcfg);
     VfEventSytemModuleParam *getValidatorEventSystem();
 protected slots:
     void activationFinished() override;

@@ -5,7 +5,7 @@
 namespace BURDEN1MODULE
 {
 
-cBurden1Module::cBurden1Module(ModuleFactoryParam moduleParam) :
+cBurden1Module::cBurden1Module(const ModuleFactoryParam &moduleParam) :
     cBaseMeasModule(moduleParam, std::make_shared<cBurden1ModuleConfiguration>())
 {
     m_sModuleName = QString("%1%2").arg(BaseModuleName).arg(moduleParam.m_moduleNum);

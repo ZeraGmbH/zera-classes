@@ -4,7 +4,7 @@
 namespace TRANSFORMER1MODULE
 {
 
-cTransformer1Module::cTransformer1Module(ModuleFactoryParam moduleParam) :
+cTransformer1Module::cTransformer1Module(const ModuleFactoryParam &moduleParam) :
     cBaseMeasModule(moduleParam, std::make_shared<cTransformer1ModuleConfiguration>())
 {
     m_sModuleName = QString("%1%2").arg(BaseModuleName).arg(moduleParam.m_moduleNum);

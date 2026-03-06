@@ -17,7 +17,7 @@ public:
     static constexpr const char* BaseModuleName = "RangeModule";
     static constexpr const char* BaseSCPIModuleName = "RNG";
 
-    explicit cRangeModule(ModuleFactoryParam moduleParam);
+    explicit cRangeModule(const ModuleFactoryParam &moduleParam);
     cRangeMeasChannel* getMeasChannel(const QString &name); // also used for callback
 
 private slots:

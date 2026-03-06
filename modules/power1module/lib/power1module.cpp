@@ -4,7 +4,7 @@
 namespace POWER1MODULE
 {
 
-cPower1Module::cPower1Module(ModuleFactoryParam moduleParam) :
+cPower1Module::cPower1Module(const ModuleFactoryParam &moduleParam) :
     cBaseMeasModule(moduleParam, std::make_shared<cPower1ModuleConfiguration>())
 {
     m_sModuleName = QString("%1%2").arg(BaseModuleName).arg(moduleParam.m_moduleNum);

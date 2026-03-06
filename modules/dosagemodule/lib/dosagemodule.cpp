@@ -6,7 +6,7 @@
 namespace DOSAGEMODULE
 {
 
-cDosageModule::cDosageModule(ModuleFactoryParam moduleParam) : cBaseMeasModule(moduleParam, std::make_shared<cDosageModuleConfiguration>())
+cDosageModule::cDosageModule(const ModuleFactoryParam &moduleParam) : cBaseMeasModule(moduleParam, std::make_shared<cDosageModuleConfiguration>())
 {
     m_sModuleName = QString("%1%2").arg(BaseModuleName).arg(moduleParam.m_moduleNum);
     m_sModuleDescription = QString("This module provides electrical values to control a dosage");

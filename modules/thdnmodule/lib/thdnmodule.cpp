@@ -4,7 +4,7 @@
 namespace THDNMODULE
 {
 
-cThdnModule::cThdnModule(ModuleFactoryParam moduleParam) :
+cThdnModule::cThdnModule(const ModuleFactoryParam &moduleParam) :
     cBaseMeasModule(moduleParam, std::make_shared<cThdnModuleConfiguration>())
 {
     m_sModuleName = QString("%1%2").arg(BaseModuleName).arg(moduleParam.m_moduleNum);

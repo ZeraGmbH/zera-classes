@@ -9,7 +9,7 @@ class DemoDspInterfaceRms : public MockDspInterface
     Q_OBJECT
 public:
     DemoDspInterfaceRms(int entityId,
-                        QStringList valueChannelList,
+                        const QStringList &valueChannelList,
                         std::function<double(int)> valueGenerator);
 private slots:
     void onTimer();

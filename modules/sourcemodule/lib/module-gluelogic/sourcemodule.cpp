@@ -1,7 +1,7 @@
 #include "sourcemodule.h"
 #include "moduleconfigurationnull.h"
 
-SourceModule::SourceModule(ModuleFactoryParam moduleParam) :
+SourceModule::SourceModule(const ModuleFactoryParam &moduleParam) :
     cBaseMeasModule(moduleParam, std::make_shared<ModuleConfigurationNull>()),
     m_rpcEventSystem(new VfRpcEventSystem(moduleParam.m_entityId))
 {

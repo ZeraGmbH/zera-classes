@@ -13,7 +13,7 @@ public:
     static constexpr const char* BaseModuleName = "BleModule";
     static constexpr const char* BaseSCPIModuleName = "BLE";
 
-    cBleModule(ModuleFactoryParam moduleParam);
+    cBleModule(const ModuleFactoryParam &moduleParam);
 
 private:
     cBleModuleMeasProgram *m_pMeasProgram = nullptr;

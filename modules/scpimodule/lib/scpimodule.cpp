@@ -7,7 +7,7 @@
 namespace SCPIMODULE
 {
 
-cSCPIModule::cSCPIModule(ModuleFactoryParam moduleParam) :
+cSCPIModule::cSCPIModule(const ModuleFactoryParam &moduleParam) :
     BaseModule(moduleParam, std::make_shared<cSCPIModuleConfiguration>()),
     m_scpiMeasureHash(std::make_shared<QMultiHash<QString, cSCPIMeasure*>>()),
     m_pSCPIEventSystem(new SCPIEventSystem(this)),

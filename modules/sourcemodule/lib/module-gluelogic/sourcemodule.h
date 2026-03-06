@@ -12,7 +12,7 @@ public:
     static constexpr const char* BaseModuleName = "SourceModule";
     static constexpr const char* BaseSCPIModuleName = "SRC";
 
-    explicit SourceModule(ModuleFactoryParam moduleParam);
+    explicit SourceModule(const ModuleFactoryParam &moduleParam);
     ~SourceModule();
     VfRpcEventSystem *getRpcEventSystem() const;
 

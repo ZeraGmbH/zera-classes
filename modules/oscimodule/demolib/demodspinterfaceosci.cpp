@@ -4,7 +4,7 @@
 #include <math.h>
 
 DemoDspInterfaceOsci::DemoDspInterfaceOsci(int entityId,
-                                           QStringList valueChannelList,
+                                           const QStringList &valueChannelList,
                                            int interpolation,
                                            std::function<double (int)> valueGenerator) :
     m_entityId(entityId),

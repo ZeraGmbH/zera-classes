@@ -1,6 +1,6 @@
 #include "basemeasprogram.h"
 
-cBaseMeasProgram::cBaseMeasProgram(std::shared_ptr<BaseModuleConfiguration> pConfiguration, QString moduleName) :
+cBaseMeasProgram::cBaseMeasProgram(std::shared_ptr<BaseModuleConfiguration> pConfiguration, const QString &moduleName) :
     cModuleActivist(moduleName),
     m_pConfiguration(pConfiguration)
 {

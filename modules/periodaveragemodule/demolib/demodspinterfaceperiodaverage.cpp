@@ -3,7 +3,7 @@
 #include <timerfactoryqt.h>
 
 DemoDspInterfacePeriodAverage::DemoDspInterfacePeriodAverage(int entityId,
-                                                             QStringList valueChannelList,
+                                                             const QStringList &valueChannelList,
                                                              int maxPeriodCount, int periodCount,
                                                              std::function<double (int)> valueGenerator) :
     m_entityId(entityId),

@@ -3,7 +3,7 @@
 #include <timerfactoryqt.h>
 
 DemoDspInterfaceRange::DemoDspInterfaceRange(int entityId,
-                                             QStringList valueChannelList,
+                                             const QStringList &valueChannelList,
                                              bool isReference,
                                              std::function<double (int)> valueGenerator) :
     m_entityId(entityId),

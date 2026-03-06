@@ -14,7 +14,7 @@ public:
     static constexpr const char* BaseModuleName = "FFTModule";
     static constexpr const char* BaseSCPIModuleName = "FFT";
 
-    cFftModule(ModuleFactoryParam moduleParam);
+    cFftModule(const ModuleFactoryParam &moduleParam);
 
 private:
     void setupModule() override; // after xml configuration we can setup and export our module

@@ -10,7 +10,7 @@ class cModuleActivist: public QObject
 {
     Q_OBJECT
 public:
-    cModuleActivist(QString notifyHeaderString);
+    cModuleActivist(const QString &notifyHeaderString);
     ~cModuleActivist();
     static int getInstanceCount();
 signals:
@@ -25,7 +25,7 @@ public slots:
     virtual void deactivate(); // what do you think ? yes you're right
     virtual void generateVeinInterface() = 0;
 protected:
-    void notifyError(QVariant value);
+    void notifyError(const QVariant &value);
 
     bool m_bActive = false;
     QString m_notifyHeaderString;

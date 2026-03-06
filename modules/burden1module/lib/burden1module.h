@@ -13,7 +13,7 @@ public:
     static constexpr const char* BaseModuleName = "Burden1Module";
     static constexpr const char* BaseSCPIModuleName = "BD1";
 
-    cBurden1Module(ModuleFactoryParam moduleParam);
+    cBurden1Module(const ModuleFactoryParam &moduleParam);
 
 private:
     cBurden1ModuleMeasProgram *m_pMeasProgram = nullptr;

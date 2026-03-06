@@ -9,8 +9,8 @@ class ServiceChannelNameHelper
 public:
     static QStringList getVoltageChannelNamesUsed(bool phaseSeqenceSwapped = false);
     static QStringList getCurrentChannelNamesUsed(bool phaseSeqenceSwapped = false);
-    static bool isPhaseNeutralVoltage(QString valueChannelName);
-    static bool isCurrent(QString valueChannelName);
+    static bool isPhaseNeutralVoltage(const QString &valueChannelName);
+    static bool isCurrent(const QString &valueChannelName);
 
     struct TChannelAliasUnit
     {

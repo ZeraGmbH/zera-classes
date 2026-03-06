@@ -10,7 +10,7 @@ class cAdjustmentModule : public cBaseMeasModule
 public:
     static constexpr const char* BaseModuleName = "AdjustmentModule";
     static constexpr const char* BaseSCPIModuleName = "ADJ";
-    cAdjustmentModule(ModuleFactoryParam moduleParam);
+    cAdjustmentModule(const ModuleFactoryParam &moduleParam);
 
 private:
     void setupModule() override; // after xml configuration we can setup and export our module

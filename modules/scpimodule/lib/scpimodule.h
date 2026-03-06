@@ -21,7 +21,7 @@ public:
     static constexpr const char* BaseModuleName = "SCPIModule";
     static constexpr const char* BaseSCPIModuleName = "SCP";
 
-    cSCPIModule(ModuleFactoryParam moduleParam);
+    cSCPIModule(const ModuleFactoryParam &moduleParam);
     ~cSCPIModule();
     cSCPIServer* getSCPIServer();
     cSCPIModuleConfigData *getConfData() const;

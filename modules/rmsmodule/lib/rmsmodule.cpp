@@ -4,7 +4,7 @@
 namespace RMSMODULE
 {
 
-cRmsModule::cRmsModule(ModuleFactoryParam moduleParam) :
+cRmsModule::cRmsModule(const ModuleFactoryParam &moduleParam) :
     cBaseMeasModule(moduleParam, std::make_shared<cRmsModuleConfiguration>())
 {
     m_sModuleName = QString("%1%2").arg(BaseModuleName).arg(moduleParam.m_moduleNum);

@@ -2,7 +2,7 @@
 #include "adjustmentmoduleconfiguration.h"
 #include "adjustmentmodulemeasprogram.h"
 
-cAdjustmentModule::cAdjustmentModule(ModuleFactoryParam moduleParam) :
+cAdjustmentModule::cAdjustmentModule(const ModuleFactoryParam &moduleParam) :
     cBaseMeasModule(moduleParam, std::make_shared<cAdjustmentModuleConfiguration>())
 {
     m_sModuleName = QString("%1%2").arg(BaseModuleName).arg(moduleParam.m_moduleNum);

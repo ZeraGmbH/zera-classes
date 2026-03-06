@@ -5,7 +5,7 @@
 namespace HOTPLUGCONTROLSMODULE
 {
 
-cHotplugControlsModule::cHotplugControlsModule(ModuleFactoryParam moduleParam) :
+cHotplugControlsModule::cHotplugControlsModule(const ModuleFactoryParam &moduleParam) :
     BaseModule(moduleParam, std::make_shared<cHotplugControlsModuleConfiguration>()),
     m_spModuleValidator(std::make_shared<VfEventSytemModuleParam>(moduleParam.m_entityId, moduleParam.m_moduleSharedData->m_storagesystem)),
     m_spRpcEventSystem(std::make_shared<VfRpcEventSystemSimplified>(moduleParam.m_entityId))

@@ -4,7 +4,7 @@
 namespace MODEMODULE
 {
 
-cModeModule::cModeModule(ModuleFactoryParam moduleParam) :
+cModeModule::cModeModule(const ModuleFactoryParam &moduleParam) :
     cBaseMeasModule(moduleParam, std::make_shared<cModeModuleConfiguration>())
 {
     m_sModuleName = QString("%1%2").arg(BaseModuleName).arg(moduleParam.m_moduleNum);

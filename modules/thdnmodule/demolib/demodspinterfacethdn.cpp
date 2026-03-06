@@ -2,7 +2,7 @@
 #include <timerfactoryqt.h>
 #include <math.h>
 
-DemoDspInterfaceThdn::DemoDspInterfaceThdn(int entityId, QStringList valueChannelList,
+DemoDspInterfaceThdn::DemoDspInterfaceThdn(int entityId, const QStringList &valueChannelList,
                                            std::function<double (int)> valueGenerator) :
     m_entityId(entityId),
     m_valueChannelList(valueChannelList),

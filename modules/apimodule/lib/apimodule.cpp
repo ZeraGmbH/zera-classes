@@ -16,7 +16,7 @@ namespace APIMODULE
         return m_spRpcEventSystem.get();
     }
 
-    cApiModule::cApiModule(ModuleFactoryParam moduleParam)
+    cApiModule::cApiModule(const ModuleFactoryParam &moduleParam)
         : BaseModule(moduleParam, std::make_shared<cApiModuleConfiguration>()),
         m_spRpcEventSystem(std::make_shared<VfRpcEventSystem>(moduleParam.m_entityId)),
         m_spModuleValidator(std::make_shared<VfEventSytemModuleParam>(moduleParam.m_entityId, moduleParam.m_moduleSharedData->m_storagesystem)),

@@ -4,7 +4,7 @@
 namespace SAMPLEMODULE
 {
 
-cSampleModule::cSampleModule(ModuleFactoryParam moduleParam) :
+cSampleModule::cSampleModule(const ModuleFactoryParam &moduleParam) :
     cBaseMeasModule(moduleParam, std::make_shared<cSampleModuleConfiguration>())
 {
     m_sModuleName = QString("%1%2").arg(BaseModuleName).arg(moduleParam.m_moduleNum);

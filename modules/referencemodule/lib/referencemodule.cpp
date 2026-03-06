@@ -4,7 +4,7 @@
 namespace REFERENCEMODULE
 {
 
-cReferenceModule::cReferenceModule(ModuleFactoryParam moduleParam) :
+cReferenceModule::cReferenceModule(const ModuleFactoryParam &moduleParam) :
     cBaseMeasModule(moduleParam, std::make_shared<cReferenceModuleConfiguration>())
 {
     m_sModuleName = QString("%1%2").arg(BaseModuleName).arg(moduleParam.m_moduleNum);

@@ -9,7 +9,7 @@ class DemoDspInterfaceOsci : public MockDspInterface
     Q_OBJECT
 public:
     DemoDspInterfaceOsci(int entityId,
-                         QStringList valueChannelList,
+                         const QStringList &valueChannelList,
                          int interpolation,
                          std::function<double(int)> valueGenerator);
 private slots:

@@ -9,7 +9,7 @@ class DemoDspInterfaceRange : public MockDspInterface
     Q_OBJECT
 public:
     DemoDspInterfaceRange(int entityId,
-                          QStringList valueChannelList,
+                          const QStringList &valueChannelList,
                           bool isReference,
                           std::function<double(int)> valueGenerator);
 private slots:

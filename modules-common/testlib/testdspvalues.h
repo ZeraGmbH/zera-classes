@@ -11,7 +11,7 @@
 class TestDspValues
 {
 public:
-    TestDspValues(QStringList valueChannelList);
+    TestDspValues(const QStringList &valueChannelList);
     void setAllValuesSymmetric(float voltage, float current, float angleUi, float frequency, bool invertedSequence = false);
     void setAllValuesSymmetricAc(float voltage, float current, float angleUi, float frequency, bool invertedSequence = false);
     void setAllValuesSymmetricDc(float voltage, float current);

@@ -14,7 +14,7 @@ public:
     static constexpr const char* BaseModuleName = "PeriodAverageModule";
     static constexpr const char* BaseSCPIModuleName = "PAV";
 
-    PeriodAverageModule(ModuleFactoryParam moduleParam);
+    PeriodAverageModule(const ModuleFactoryParam &moduleParam);
 
 private:
     void setupModule() override; // after xml configuration we can setup and export our module

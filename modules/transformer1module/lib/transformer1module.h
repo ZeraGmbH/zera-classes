@@ -13,7 +13,7 @@ public:
     static constexpr const char* BaseModuleName = "Transformer1Module";
     static constexpr const char* BaseSCPIModuleName = "TR1";
 
-    explicit cTransformer1Module(ModuleFactoryParam moduleParam);
+    explicit cTransformer1Module(const ModuleFactoryParam &moduleParam);
 
 private:
     void setupModule() override; // after xml configuration we can setup and export our module

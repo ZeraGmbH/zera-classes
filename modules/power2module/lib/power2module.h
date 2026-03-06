@@ -15,7 +15,7 @@ public:
     static constexpr const char* BaseModuleName = "POWER2Module";
     static constexpr const char* BaseSCPIModuleName = "PW2";
 
-    cPower2Module(ModuleFactoryParam moduleParam);
+    cPower2Module(const ModuleFactoryParam &moduleParam);
 
 private:
     void setupModule() override; // after xml configuration we can setup and export our module

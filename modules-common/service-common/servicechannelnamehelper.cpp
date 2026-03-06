@@ -15,12 +15,12 @@ QStringList ServiceChannelNameHelper::getCurrentChannelNamesUsed(bool phaseSeqen
     return QStringList() << "m3" << "m4" << "m5" << "m7";
 }
 
-bool ServiceChannelNameHelper::isPhaseNeutralVoltage(QString valueChannelName)
+bool ServiceChannelNameHelper::isPhaseNeutralVoltage(const QString &valueChannelName)
 {
     return getVoltageChannelNamesUsed().contains(valueChannelName);
 }
 
-bool ServiceChannelNameHelper::isCurrent(QString valueChannelName)
+bool ServiceChannelNameHelper::isCurrent(const QString &valueChannelName)
 {
     return getCurrentChannelNamesUsed().contains(valueChannelName);
 }

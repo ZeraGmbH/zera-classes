@@ -8,7 +8,7 @@
 class DemoValuesDspDft
 {
 public:
-    DemoValuesDspDft(QStringList valueChannelList, int dftOrder);
+    DemoValuesDspDft(const QStringList &valueChannelList, int dftOrder);
     void setValue(QString valueChannelName, std::complex<double> value);
     void setAllValuesSymmetric(double voltage, double current, double angleUi, bool invertedSequence = false);
     QVector<float> getDspValues();

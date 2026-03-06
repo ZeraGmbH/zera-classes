@@ -3,7 +3,7 @@
 #include <timerfactoryqt.h>
 
 DemoDspInterfaceRms::DemoDspInterfaceRms(int entityId,
-                                         QStringList valueChannelList,
+                                         const QStringList &valueChannelList,
                                          std::function<double (int)> valueGenerator) :
     m_entityId(entityId),
     m_valueChannelList(valueChannelList),
