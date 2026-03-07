@@ -9,17 +9,16 @@ class FileDisappearWatcher : public QObject
     Q_OBJECT
 public:
     explicit FileDisappearWatcher(QObject *parent = nullptr);
-    void watchFile(const QString fileName);
+    void watchFile(const QString &fileName);
     void resetFiles();
 signals:
-    void sigFileRemoved(const QString fileName);
+    void sigFileRemoved(const QString &fileName);
 
 private slots:
     void onFileChanged(const QString &fileName);
 private:
+    void emitSigFileRemoved(const QString &fileName);
     QFileSystemWatcher m_fileWatcher;
-signals:
-    void sigFileRemovedToQueue(const QString fileName);
 };
 
 #endif // cFileDisappearWatcher_H
