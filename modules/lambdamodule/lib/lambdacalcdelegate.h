@@ -12,8 +12,8 @@ class LambdaCalcDelegate : public QObject
     Q_OBJECT
 public:
     LambdaCalcDelegate(bool activePowerMeasModeAvail,
-                       QList<VfModuleComponent*> veinLambdaActValues,
-                       QList<VfModuleComponent*> veinLoadTypeValues);
+                       const QList<VfModuleComponent*> &veinLambdaActValues,
+                       const QList<VfModuleComponent*> &veinLoadTypeValues);
     PhaseSumValues getLambdaValues();
     void handleActivePowerChange(int phaseOrSum, QVariant power);
     void handleReactivePowerChange(int phaseOrSum, QVariant power);
