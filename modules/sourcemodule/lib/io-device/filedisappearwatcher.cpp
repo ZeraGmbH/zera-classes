@@ -8,21 +8,20 @@ FileDisappearWatcher::FileDisappearWatcher(QObject *parent) : QObject(parent)
 
 void FileDisappearWatcher::watchFile(const QString &fileName)
 {
-    bool fileOK = false;
     if(QFile::exists(fileName)) {
+        if(m_fileWatcher.files().contains(fileName))
+            return;
         if(m_fileWatcher.addPath(fileName))
-            fileOK = true;
+            return;
     }
-    if(!fileOK)
-        emit emitSigFileRemoved(fileName);
+    emit emitSigFileRemoved(fileName);
 }
 
 void FileDisappearWatcher::resetFiles()
 {
     const QStringList watchedFiles = m_fileWatcher.files();
-    for(const QString &file : watchedFiles) {
+    for(const QString &file : watchedFiles)
         m_fileWatcher.removePath(file);
-    }
 }
 
 void FileDisappearWatcher::onFileChanged(const QString &fileName)

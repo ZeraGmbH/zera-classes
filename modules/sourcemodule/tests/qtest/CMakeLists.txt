@@ -25,6 +25,7 @@ SETUP_QTESTS_MODULE(
    test_sourceswitchjson
    test_sourcedevicefacade
    test_source_full
+   test_file_dissapepear_watcher
 )
 
 target_sources(test_source_full
