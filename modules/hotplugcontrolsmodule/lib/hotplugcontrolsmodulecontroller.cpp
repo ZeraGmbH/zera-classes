@@ -174,6 +174,7 @@ void HotplugControlsModuleController::onActivateDone(bool ok)
 
 void HotplugControlsModuleController::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant answer)
 {
+    Q_UNUSED(answer)
     if (msgnr == 0) {
         // 0 was reserved for async. messages
     }
@@ -202,12 +203,12 @@ void HotplugControlsModuleController::controllersFound(QVariant value)
     if(!instrumentsObj.isEmpty()) {
         for(auto it = instrumentsObj.begin(); it != instrumentsObj.end(); ++it) {
             QString key = it.key();
-            QString value = instrumentsObj[key].toString();
-            if(value.contains("Emob", Qt::CaseInsensitive)) {
+            QString instrument = instrumentsObj[key].toString();
+            if(instrument.contains("Emob", Qt::CaseInsensitive)) {
                 emobChannelAlias = key;
                 emobFound = true;
             }
-            if(value.contains("Mt650e", Qt::CaseInsensitive)) {
+            if(instrument.contains("Mt650e", Qt::CaseInsensitive)) {
                 mt650eChannelAlias = key;
                 mt650eFound = true;
             }
@@ -220,7 +221,7 @@ void HotplugControlsModuleController::controllersFound(QVariant value)
     readWriteData(emobChannelAlias, mt650eChannelAlias);
 }
 
-void HotplugControlsModuleController::readWriteData(QString emobChannelAlias, QString mt650eChannelAlias)
+void HotplugControlsModuleController::readWriteData(const QString &emobChannelAlias, const QString &mt650eChannelAlias)
 {
     int timeout = 10000;
     int emobId = getEmobId(emobChannelAlias);
@@ -251,7 +252,7 @@ void HotplugControlsModuleController::readWriteData(QString emobChannelAlias, QS
     }
 }
 
-int HotplugControlsModuleController::getEmobId(QString emobChannelAlias)
+int HotplugControlsModuleController::getEmobId(const QString &emobChannelAlias)
 {
     if(emobChannelAlias == "IL1")
         return 0;

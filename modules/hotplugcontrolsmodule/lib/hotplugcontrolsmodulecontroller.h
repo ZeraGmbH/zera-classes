@@ -26,8 +26,8 @@ private slots:
     void catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant answer);
     void controllersFound(QVariant value);
 private:
-    void readWriteData(QString emobChannelAlias, QString mt650eChannelAlias);
-    int getEmobId(QString emobChannelAlias);
+    void readWriteData(const QString &emobChannelAlias, const QString &mt650eChannelAlias);
+    int getEmobId(const QString &emobChannelAlias);
 
     cHotplugControlsModule *m_module;
     PcbServiceConnection m_pcbConnection;
