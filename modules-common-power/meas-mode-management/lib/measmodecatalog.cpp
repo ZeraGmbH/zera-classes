@@ -4,7 +4,7 @@ QHash<QString,cMeasModeInfo> MeasModeCatalog::m_modeInfoHashByString;
 QHash<measmodes,cMeasModeInfo> MeasModeCatalog::m_modeInfoHashById;
 QSet<measmodes> MeasModeCatalog::m_threeWireSet;
 
-std::function<void(QString mode)> MeasModeCatalog::m_warningHandler = [](QString name) {
+std::function<void(const QString &mode)> MeasModeCatalog::m_warningHandler = [](const QString &name) {
     qWarning("Unknown measurement mode %s", qPrintable(name));
 };
 
@@ -30,7 +30,7 @@ void MeasModeCatalog::setupHashes()
     addInfoToHashes(cMeasModeInfo("QREF", "", "", mqref));
 }
 
-void MeasModeCatalog::addInfoToHashes(cMeasModeInfo info)
+void MeasModeCatalog::addInfoToHashes(const cMeasModeInfo &info)
 {
     m_modeInfoHashByString[info.getName()] = info;
     m_modeInfoHashById[info.getCode()] = info;

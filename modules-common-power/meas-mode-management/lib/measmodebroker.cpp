@@ -1,12 +1,12 @@
 #include "measmodebroker.h"
 
-MeasModeBroker::MeasModeBroker(const ModeNameFunctionHash functionHash, DspChainIdGen &dspChainGen) :
+MeasModeBroker::MeasModeBroker(const ModeNameFunctionHash &functionHash, DspChainIdGen &dspChainGen) :
     m_functionHash(functionHash),
     m_dspChainGen(dspChainGen)
 {
 }
 
-MeasModeBroker::BrokerReturn MeasModeBroker::getMeasMode(QString measModeName, MeasSystemChannels measChannelPairList)
+MeasModeBroker::BrokerReturn MeasModeBroker::getMeasMode(const QString &measModeName, const MeasSystemChannels &measChannelPairList)
 {
     BrokerReturn ret;
     if(m_functionHash.contains(measModeName)) {

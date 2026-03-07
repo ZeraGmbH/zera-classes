@@ -1,6 +1,6 @@
 #include "secresourcetypelist.h"
 
-void SecResourceTypeList::addTypesFromConfig(QList<TRefInput> refInputList)
+void SecResourceTypeList::addTypesFromConfig(const QList<TRefInput> &refInputList)
 {
     QStringList inputNames;
     for(const auto &input : refInputList)
@@ -8,7 +8,7 @@ void SecResourceTypeList::addTypesFromConfig(QList<TRefInput> refInputList)
     addTypesFromConfig(inputNames);
 }
 
-void SecResourceTypeList::addTypesFromConfig(QStringList inputList)
+void SecResourceTypeList::addTypesFromConfig(const QStringList &inputList)
 {
     QStringList resourceTypeListToAdd;
     // REF
@@ -24,12 +24,12 @@ void SecResourceTypeList::addTypesFromConfig(QStringList inputList)
     addToListNoDoubles(resourceTypeListToAdd);
 }
 
-QStringList SecResourceTypeList::getResourceTypeList()
+const QStringList &SecResourceTypeList::getResourceTypeList() const
 {
     return m_resourceTypeList;
 }
 
-void SecResourceTypeList::addToListNoDoubles(QStringList resourceTypeListToAdd)
+void SecResourceTypeList::addToListNoDoubles(const QStringList &resourceTypeListToAdd)
 {
     for(const auto &resource : resourceTypeListToAdd) {
         if(!m_resourceTypeList.contains(resource))
@@ -37,7 +37,7 @@ void SecResourceTypeList::addToListNoDoubles(QStringList resourceTypeListToAdd)
     }
 }
 
-bool SecResourceTypeList::found(QList<QString> &list, QString searched)
+bool SecResourceTypeList::found(const QList<QString> &list, QString searched)
 {
     for (int i = 0; i < list.count(); i++)
         if (list.at(i).contains(searched))

@@ -4,7 +4,7 @@
 
 TaskTemplatePtr TaskEmobReadExchangeData::create(Zera::PcbInterfacePtr pcbInterface,
                                                  std::shared_ptr<QByteArray> exchangeDataReceived,
-                                                 QString channelMName,
+                                                 const QString &channelMName,
                                                  int timeout,
                                                  std::function<void ()> additionalErrorHandler)
 {
@@ -15,7 +15,7 @@ TaskTemplatePtr TaskEmobReadExchangeData::create(Zera::PcbInterfacePtr pcbInterf
 
 TaskEmobReadExchangeData::TaskEmobReadExchangeData(Zera::PcbInterfacePtr pcbInterface,
                                                    std::shared_ptr<QByteArray> exchangeDataReceived,
-                                                   QString channelMName) :
+                                                   const QString &channelMName) :
     TaskServerTransactionTemplate(pcbInterface),
     m_exchangeDataReceived(exchangeDataReceived),
     m_channelMName(channelMName)

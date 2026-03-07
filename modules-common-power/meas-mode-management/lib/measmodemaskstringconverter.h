@@ -7,7 +7,7 @@
 class MeasModeMaskStringConverter
 {
 public:
-    static bool calcBinMask(QString strMask, int measSysCount, MModePhaseMask &binMask);
+    static bool calcBinMask(const QString &strMask, int measSysCount, MModePhaseMask &binMask);
     static QString calcStringMask(MModePhaseMask binMask, int measSysCount);
 };
 

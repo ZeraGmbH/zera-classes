@@ -12,7 +12,7 @@ bool MeasModeSelector::addMode(std::shared_ptr<MeasMode> mode)
     return false;
 }
 
-void MeasModeSelector::tryChangeMode(QString modeName)
+void MeasModeSelector::tryChangeMode(const QString &modeName)
 {
     if(m_modes.contains(modeName)) {
         m_currentMode = m_modes[modeName];
@@ -30,12 +30,12 @@ std::shared_ptr<MeasMode> MeasModeSelector::getCurrMode() const
         return std::make_shared<MeasMode>();
 }
 
-bool MeasModeSelector::canChangeMask(QString mask) const
+bool MeasModeSelector::canChangeMask(const QString &mask) const
 {
     return getCurrMode()->canChangeMask(mask);
 }
 
-void MeasModeSelector::tryChangeMask(QString mask)
+void MeasModeSelector::tryChangeMask(const QString &mask)
 {
     if(getCurrMode()->tryChangeMask(mask))
         emit sigTransactionOk();

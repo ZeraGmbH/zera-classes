@@ -1,6 +1,6 @@
 #include "measmodemaskstringconverter.h"
 
-bool MeasModeMaskStringConverter::calcBinMask(QString mask, int measSysCount, MModePhaseMask &binMask)
+bool MeasModeMaskStringConverter::calcBinMask(const QString &mask, int measSysCount, MModePhaseMask &binMask)
 {
     bool ok = mask.size() == measSysCount;
     if(ok) {

@@ -13,12 +13,12 @@ public:
     static cMeasModeInfo getInfo(const measmodes &modeId);
     static QSet<measmodes> getThreeWireModes();
 protected:
-    static std::function<void(QString mode)> m_warningHandler;
+    static std::function<void(const QString &mode)> m_warningHandler;
 private:
     static QHash<QString,cMeasModeInfo> m_modeInfoHashByString;
     static QHash<measmodes,cMeasModeInfo> m_modeInfoHashById;
     static void setupHashes();
-    static void addInfoToHashes(cMeasModeInfo info);
+    static void addInfoToHashes(const cMeasModeInfo &info);
     static QSet<measmodes> m_threeWireSet;
 };
 

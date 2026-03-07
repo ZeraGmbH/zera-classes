@@ -9,7 +9,7 @@ class MeasModePhaseSetStrategy2WireFixedPhase : public MeasModePhaseSetStrategyP
 public:
     MeasModePhaseSetStrategy2WireFixedPhase(int phase, int measSystemCount);
 private:
-    MModePhaseMask maskFromPhase(int phase, int measSystemCount);
+    static MModePhaseMask maskFromPhase(int phase, int measSystemCount);
     int m_measSystemCount;
 };
 

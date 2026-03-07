@@ -9,12 +9,12 @@ class TaskEmobReadExchangeData : public TaskServerTransactionTemplate
 public:
     static TaskTemplatePtr create(Zera::PcbInterfacePtr pcbInterface,
                                   std::shared_ptr<QByteArray> exchangeDataReceived,
-                                  QString channelMName,
+                                  const QString &channelMName,
                                   int timeout,
                                   std::function<void()> additionalErrorHandler = []{});
     TaskEmobReadExchangeData(Zera::PcbInterfacePtr pcbInterface,
                              std::shared_ptr<QByteArray> exchangeDataReceived,
-                             QString channelMName);
+                             const QString &channelMName);
 private:
     quint32 sendToServer() override;
     bool handleCheckedServerAnswer(const QVariant &answer) override;

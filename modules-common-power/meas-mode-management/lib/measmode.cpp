@@ -2,7 +2,7 @@
 #include "measmodecatalog.h"
 #include "measmodemaskstringconverter.h"
 
-MeasMode::MeasMode(QString modeName, int dspSelectCode, int measSysCount, MeasModePhaseSetStrategyPtr measModePhaseSetter) :
+MeasMode::MeasMode(const QString &modeName, int dspSelectCode, int measSysCount, MeasModePhaseSetStrategyPtr measModePhaseSetter) :
     m_measModeInfo(MeasModeCatalog::getInfo(modeName)),
     m_dspSelectCode(dspSelectCode),
     m_measModePhaseSetter(std::move(measModePhaseSetter)),
@@ -32,7 +32,7 @@ bool MeasMode::hasVarMask() const
     return false;
 }
 
-bool MeasMode::calcBinMask(QString mask, MModePhaseMask &binMask) const
+bool MeasMode::calcBinMask(const QString &mask, MModePhaseMask &binMask) const
 {
     MModePhaseMask tmpMask;
     bool ok = isValid() && MeasModeMaskStringConverter::calcBinMask(mask, m_measSysCount, tmpMask);
@@ -41,14 +41,14 @@ bool MeasMode::calcBinMask(QString mask, MModePhaseMask &binMask) const
     return ok;
 }
 
-bool MeasMode::canChangeMask(QString mask) const
+bool MeasMode::canChangeMask(const QString &mask) const
 {
     MModePhaseMask binMask;
     bool ok = calcBinMask(mask, binMask);
     return ok && m_measModePhaseSetter->canChangeMask(binMask);
 }
 
-bool MeasMode::tryChangeMask(QString mask)
+bool MeasMode::tryChangeMask(const QString &mask)
 {
     MModePhaseMask binMask;
     bool ok = calcBinMask(mask, binMask);

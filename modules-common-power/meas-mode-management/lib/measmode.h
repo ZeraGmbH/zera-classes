@@ -7,13 +7,13 @@ class MeasMode
 {
 public:
     MeasMode() = default;
-    MeasMode(QString modeName, int dspSelectCode, int measSysCount, MeasModePhaseSetStrategyPtr measModePhaseSetter);
+    MeasMode(const QString &modeName, int dspSelectCode, int measSysCount, MeasModePhaseSetStrategyPtr measModePhaseSetter);
     QString getName() const;
     int getDspSelectCode() const;
     int getDspSumSelectCode() const;
     bool hasVarMask() const;
-    bool canChangeMask(QString mask) const;
-    bool tryChangeMask(QString mask);
+    bool canChangeMask(const QString &mask) const;
+    bool tryChangeMask(const QString &mask);
     QString getCurrentMask() const;
     bool isPhaseActive(int phase) const;
     int getMeasSysCount() const;            // from config
@@ -22,11 +22,11 @@ public:
     bool isValid() const;
 
 private:
-    bool calcBinMask(QString mask, MModePhaseMask &binMask) const;
+    bool calcBinMask(const QString &mask, MModePhaseMask &binMask) const;
     cMeasModeInfo m_measModeInfo;
     int m_dspSelectCode = 0;
     MeasModePhaseSetStrategyPtr m_measModePhaseSetter;
-    int m_measSysCount;
+    int m_measSysCount = 0;
 };
 
 typedef std::shared_ptr<MeasMode> MeasModePtr;

@@ -23,7 +23,7 @@ typedef QHash<QString /*modeName*/, DspMModeCreateStruct> ModeNameFunctionHash;
 class MeasModeBroker
 {
 public:
-    MeasModeBroker(const ModeNameFunctionHash functionHash, DspChainIdGen& dspChainGen);
+    MeasModeBroker(const ModeNameFunctionHash &functionHash, DspChainIdGen& dspChainGen);
     struct BrokerReturn
     {
         bool isValid() { return dspSelectCode != 0; } // remember: dspCmdList can be empty on modes using x-modes
@@ -31,7 +31,7 @@ public:
         int dspSelectCode = 0;
         MeasModePhaseSetStrategyPtr phaseStrategy;
     };
-    BrokerReturn getMeasMode(QString measModeName, MeasSystemChannels measChannelPairList);
+    BrokerReturn getMeasMode(const QString &measModeName, const MeasSystemChannels &measChannelPairList);
 private:
     int getNextSelectionCode();
     const ModeNameFunctionHash m_functionHash;
