@@ -13,7 +13,7 @@ public:
     void setAllValuesSymmetric(double voltage, double current, double angleUi, bool invertedSequence = false);
     QVector<float> getDspValues();
 private:
-    int nextSymmetricAngle(int angle);
+    static int nextSymmetricAngle(int angle);
     QStringList m_valueChannelList;
     int m_dftOrder;
     QHash<QString, std::complex<float>> m_values;

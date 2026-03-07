@@ -111,7 +111,7 @@ void cDftModuleConfiguration::configXMLInfo(const QString &key)
         default:
             if ((cmd >= setValue1) && (cmd < setValue1 + 32))
             {
-                cmd -= setValue1;
+                //cmd -= setValue1;
                 // it is command for setting value channel name
                 QString valueChannel = m_pXMLReader->getValue(key);
                 m_pDftModulConfigData->m_valueChannelList.append(valueChannel); // for configuration of our engine
