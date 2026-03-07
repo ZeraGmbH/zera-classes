@@ -1,6 +1,7 @@
 <?xml version="1.0"?>
 <recordermoduleconfpar>
     <configuration>
+        <maxrecording-seconds>1200</maxrecording-seconds>
         <entity-components>
             <n>2</n>
             <ent1><!-- RMS -->

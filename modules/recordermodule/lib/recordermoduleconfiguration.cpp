@@ -4,6 +4,7 @@
 
 enum moduleconfigstate
 {
+    setMaxRecodingSeconds,
     setEntityCount,
     setInterpolationStack,
 
@@ -39,6 +40,7 @@ void RecorderModuleConfiguration::setConfiguration(const QByteArray& xmlString)
 
     // so now we can set up
     // initializing hash table for xml configuration
+    m_ConfigXMLMap["recordermoduleconfpar:configuration:maxrecording-seconds"] = setMaxRecodingSeconds;
     m_ConfigXMLMap["recordermoduleconfpar:configuration:entity-components:n"] = setEntityCount;
     m_ConfigXMLMap["recordermoduleconfpar:configuration:interpolation-stack:n"] = setInterpolationStack;
 
@@ -63,6 +65,9 @@ void RecorderModuleConfiguration::configXMLInfo(const QString &key)
         int cmd = m_ConfigXMLMap[key];
         switch (cmd)
         {
+        case setMaxRecodingSeconds:
+            m_pRecorderModuleConfigData->m_maxRecordingSeconds = m_pXMLReader->getValue(key).toInt(&ok);
+            break;
         case setEntityCount:
             m_pRecorderModuleConfigData->m_entityCount = m_pXMLReader->getValue(key).toInt(&ok);
             // here we generate dynamic hash entries for value channel configuration

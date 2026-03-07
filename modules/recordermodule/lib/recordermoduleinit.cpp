@@ -7,8 +7,6 @@
 #include <scpi.h>
 #include <timerfactoryqt.h>
 
-static int constexpr timer = 1200000; // 20 mins
-
 using namespace VeinStorage;
 
 RecorderModuleInit::RecorderModuleInit(RecorderModule *module,
@@ -16,7 +14,7 @@ RecorderModuleInit::RecorderModuleInit(RecorderModule *module,
     cModuleActivist(module->getVeinModuleName()),
     m_module(module),
     m_confData(qobject_cast<RecorderModuleConfiguration*>(pConfiguration.get())->getConfigurationData()),
-    m_stopLoggingTimer(TimerFactoryQt::createSingleShot(timer))
+    m_stopLoggingTimer(TimerFactoryQt::createSingleShot(m_confData->m_maxRecordingSeconds*1000))
 {
     createRecorder();
     connect(m_recorder.get(), &StorageRecorder::sigRecordCountChanged, this, [=](int count) {

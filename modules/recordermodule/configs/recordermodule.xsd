@@ -22,6 +22,7 @@
                 <xs:element name="configuration">
                     <xs:complexType>
                         <xs:sequence>
+                            <xs:element name="maxrecording-seconds" type="xs:integer"/>
                             <xs:element name="entity-components">
                                 <xs:complexType>
                                     <xs:sequence>

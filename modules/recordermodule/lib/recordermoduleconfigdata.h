@@ -19,6 +19,7 @@ struct EntityConfiguration
 class RecorderModuleConfigData
 {
 public:
+    int m_maxRecordingSeconds;
     quint8 m_entityCount;
     QVector<EntityConfiguration> m_entityConfigList;
     quint8 m_stackCount;
