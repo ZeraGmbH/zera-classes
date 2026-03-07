@@ -74,12 +74,14 @@ void test_recorder::startLoggingMultipleRecordingsAndCheckTimestamps()
     QVERIFY(resultJson.contains(RPCReadRecordedValues::intToStringWithLeadingDigits(2 * measPeriodMs)));
 }
 
+constexpr int testExpireTime = 10000; // 10s - see test config
+
 void test_recorder::startStopRecordingTimerExpiredCheckResults()
 {
     createModulesManually();
 
-    static int constexpr timer = 1200000; // 20 mins tolen from recordermoduleinit.cpp
-    static int constexpr timeBetweenMeasurements = 100000; // 100s
+    static int constexpr timer = testExpireTime;
+    static int constexpr timeBetweenMeasurements = 1000; // 1s
     static int constexpr measCountLimitedByStop = timer/timeBetweenMeasurements;
     static int constexpr measCountTried = measCountLimitedByStop+5;
 
@@ -110,7 +112,7 @@ void test_recorder::startStopRecordingTimerExpired()
     fireActualValues();
     triggerDftModuleSigMeasuring();
 
-    TimeMachineForTest::getInstance()->processTimers(1199999);
+    TimeMachineForTest::getInstance()->processTimers(testExpireTime-1);
     QVariant startStopLogging = m_testRunner->getVeinStorageDb()->getStoredValue(recorderEntityId, "PAR_StartStopRecording");
     QCOMPARE(startStopLogging, true);
     TimeMachineForTest::getInstance()->processTimers(1);
@@ -125,7 +127,7 @@ void test_recorder::startStopTwoRecordingsNoTimerExpired()
     m_testRunner->setVfComponent(recorderEntityId, "PAR_StartStopRecording", true);
     fireActualValues();
     triggerDftModuleSigMeasuring();
-    TimeMachineForTest::getInstance()->processTimers(1199999); //19min59s
+    TimeMachineForTest::getInstance()->processTimers(testExpireTime-1);
     QVariant startStopLogging = m_testRunner->getVeinStorageDb()->getStoredValue(recorderEntityId, "PAR_StartStopRecording");
     QCOMPARE(startStopLogging, true);
 
@@ -133,7 +135,7 @@ void test_recorder::startStopTwoRecordingsNoTimerExpired()
     m_testRunner->setVfComponent(recorderEntityId, "PAR_StartStopRecording", true);
     fireActualValues();
     triggerDftModuleSigMeasuring();
-    TimeMachineForTest::getInstance()->processTimers(1199999); //19min59s
+    TimeMachineForTest::getInstance()->processTimers(testExpireTime-1);
     startStopLogging = m_testRunner->getVeinStorageDb()->getStoredValue(recorderEntityId, "PAR_StartStopRecording");
     QCOMPARE(startStopLogging, true);
 }
@@ -145,14 +147,14 @@ void test_recorder::startStopTwoRecordingsFirstRecordingTimerExpired()
     m_testRunner->setVfComponent(recorderEntityId, "PAR_StartStopRecording", true);
     fireActualValues();
     triggerDftModuleSigMeasuring();
-    TimeMachineForTest::getInstance()->processTimers(1200000); //20mins
+    TimeMachineForTest::getInstance()->processTimers(testExpireTime);
     QVariant startStopLogging = m_testRunner->getVeinStorageDb()->getStoredValue(recorderEntityId, "PAR_StartStopRecording");
     QCOMPARE(startStopLogging, false);
 
     m_testRunner->setVfComponent(recorderEntityId, "PAR_StartStopRecording", true);
     fireActualValues();
     triggerDftModuleSigMeasuring();
-    TimeMachineForTest::getInstance()->processTimers(1199999); //19min59s
+    TimeMachineForTest::getInstance()->processTimers(testExpireTime-1);
     startStopLogging = m_testRunner->getVeinStorageDb()->getStoredValue(recorderEntityId, "PAR_StartStopRecording");
     QCOMPARE(startStopLogging, true);
 }
@@ -164,7 +166,7 @@ void test_recorder::startStopTwoRecordingsSecondRecordingTimerExpired()
     m_testRunner->setVfComponent(recorderEntityId, "PAR_StartStopRecording", true);
     fireActualValues();
     triggerDftModuleSigMeasuring();
-    TimeMachineForTest::getInstance()->processTimers(1199999); //19min59s
+    TimeMachineForTest::getInstance()->processTimers(testExpireTime-1);
     QVariant startStopLogging = m_testRunner->getVeinStorageDb()->getStoredValue(recorderEntityId, "PAR_StartStopRecording");
     QCOMPARE(startStopLogging, true);
 
@@ -172,7 +174,7 @@ void test_recorder::startStopTwoRecordingsSecondRecordingTimerExpired()
     m_testRunner->setVfComponent(recorderEntityId, "PAR_StartStopRecording", true);
     fireActualValues();
     triggerDftModuleSigMeasuring();
-    TimeMachineForTest::getInstance()->processTimers(1200000); //20mins
+    TimeMachineForTest::getInstance()->processTimers(testExpireTime);
     startStopLogging = m_testRunner->getVeinStorageDb()->getStoredValue(recorderEntityId, "PAR_StartStopRecording");
     QCOMPARE(startStopLogging, false);
 }
@@ -184,14 +186,14 @@ void test_recorder::startStopTwoRecordingsBothRecordingTimersExpired()
     m_testRunner->setVfComponent(recorderEntityId, "PAR_StartStopRecording", true);
     fireActualValues();
     triggerDftModuleSigMeasuring();
-    TimeMachineForTest::getInstance()->processTimers(1200000); //20min
+    TimeMachineForTest::getInstance()->processTimers(testExpireTime);
     QVariant startStopLogging = m_testRunner->getVeinStorageDb()->getStoredValue(recorderEntityId, "PAR_StartStopRecording");
     QCOMPARE(startStopLogging, false);
 
     m_testRunner->setVfComponent(recorderEntityId, "PAR_StartStopRecording", true);
     fireActualValues();
     triggerDftModuleSigMeasuring();
-    TimeMachineForTest::getInstance()->processTimers(1200000); //20min
+    TimeMachineForTest::getInstance()->processTimers(testExpireTime);
     startStopLogging = m_testRunner->getVeinStorageDb()->getStoredValue(recorderEntityId, "PAR_StartStopRecording");
     QCOMPARE(startStopLogging, false);
 }
