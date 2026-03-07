@@ -13,17 +13,14 @@ constexpr int sumIndex = MeasPhaseCount;
 QString LambdaCalculator::IndText = "ind";
 QString LambdaCalculator::CapText = "cap";
 
-
 PhaseSumValues LambdaCalculator::calculateLambdaValues(const QVector<double> &activePower,
                                                        const QVector<double> &reactivePower,
                                                        const QVector<double> &apparentPower,
-                                                       QString measModeActivePower,
-                                                       QString phaseMaskActivePower)
+                                                       const QString &measModeActivePower,
+                                                       const QString &phaseMaskActivePower)
 {
     PhaseSumValues lambdas;
     cMeasModeInfo info = MeasModeCatalog::getInfo(measModeActivePower);
-    double apparentPowerSum = 0.0;
-    double reactivePowerSum = 0.0;
 
     if (info.isThreeWire()) {
         lambdas = lambdaFor3LW(activePower[sumIndex], apparentPower[sumIndex]);
@@ -31,6 +28,8 @@ PhaseSumValues LambdaCalculator::calculateLambdaValues(const QVector<double> &ac
             lambdas.sumLoadType = reactivePower[sumIndex] > 0 ? IndText : CapText;
     }
     else {
+        double apparentPowerSum = 0.0;
+        double reactivePowerSum = 0.0;
         for(int i = 0; i < MeasPhaseCount; i++) {
             if (phaseMaskActivePower.size() > i && phaseMaskActivePower.at(i) == "1") {
                 if (abs(apparentPower[i]) < 1e-15)

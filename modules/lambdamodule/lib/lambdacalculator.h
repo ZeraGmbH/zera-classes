@@ -18,8 +18,8 @@ public:
     static PhaseSumValues calculateLambdaValues(const QVector<double> &activePower,
                                                 const QVector<double> &reactivePower,
                                                 const QVector<double> &apparentPower,
-                                                QString measModeActivePower,
-                                                QString phaseMaskActivePower);
+                                                const QString &measModeActivePower,
+                                                const QString &phaseMaskActivePower);
     static QString IndText;
     static QString CapText;
     static constexpr double MaxPowerFactorForTypeText = 0.996; // ~5°
