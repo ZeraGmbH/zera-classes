@@ -20,23 +20,15 @@ namespace SCPIMODULE
 cSCPIClient::cSCPIClient(cSCPIModule* module, cSCPIModuleConfigData &configdata, cSCPIInterface* iface) :
     m_pSCPIInterface(iface),
     m_pModule(module),
-    m_ConfigData(configdata)
+    m_ConfigData(configdata),
+    m_clientId(QUuid::createUuid()) // we need an unique id in case we want to send deferred error notifications events
 {
-    m_clientId = QUuid::createUuid(); // we need an unique id in case we want to send deferred error notifications events
-
-    m_bAuthorisation = false;
-    m_sInputFifo = "";
-
     // we instantiate 3 scpi status systems per client
-    cSCPIStatus* scpiQuestStatus;
-    cSCPIStatus* scpiOperStatus;
-    cSCPIStatus* scpiOperMeasStatus;
-
-    scpiQuestStatus = new cSCPIStatus(STBques);
+    cSCPIStatus* scpiQuestStatus = new cSCPIStatus(STBques);
     m_SCPIStatusList.append(scpiQuestStatus);
-    scpiOperStatus = new cSCPIStatus(STBoper);
+    cSCPIStatus* scpiOperStatus = new cSCPIStatus(STBoper);
     m_SCPIStatusList.append(scpiOperStatus);
-    scpiOperMeasStatus = new cSCPIStatus(OperationMeasureSummary);
+    cSCPIStatus* scpiOperMeasStatus = new cSCPIStatus(OperationMeasureSummary);
     m_SCPIStatusList.append(scpiOperMeasStatus);
 
     m_pIEEE4882 = new cIEEE4882(this, m_ConfigData.m_sDeviceName, 50, module->getStorageDb());
@@ -108,7 +100,7 @@ void cSCPIClient::addSCPIClientInfo(QString key, SCPIClientInfoPtr info)
     m_scpiClientInfoHash.insert(key, info);
 }
 
-void cSCPIClient::removeSCPIClientInfo(QString key)
+void cSCPIClient::removeSCPIClientInfo(const QString &key)
 {
     m_scpiClientInfoHash.remove(key);
     execCmd();
@@ -213,7 +205,7 @@ void cSCPIClient::receiveStatus(quint8 stat)
     emit commandAnswered(this);
 }
 
-void cSCPIClient::setSignalConnections(cSCPIStatus* scpiStatus, QList<cStatusBitDescriptor> &dList)
+void cSCPIClient::setSignalConnections(cSCPIStatus* scpiStatus, const QList<cStatusBitDescriptor> &dList)
 {
     int n;
     if ((n = dList.count()) > 0) {
@@ -222,10 +214,10 @@ void cSCPIClient::setSignalConnections(cSCPIStatus* scpiStatus, QList<cStatusBit
         int entityIdCount = entityIdList.count();
         // we iterate over all statusbitdescriptors
         for (int i = 0; i < n; i++) {
-            bool moduleFound = false;
             cStatusBitDescriptor des = dList.at(i); // the searched status bit descriptor
             if (entityIdCount  > 0) {
                 int entityID;
+                bool moduleFound = false;
                 // we parse over all moduleinterface components
                 for (int j = 0; j < entityIdCount; j++) {
                     entityID = entityIdList.at(j);
@@ -247,9 +239,7 @@ void cSCPIClient::setSignalConnections(cSCPIStatus* scpiStatus, QList<cStatusBit
                         // if we found the searched component, we generate a signal connection delegate
                         // we need an eventsystem to look for notifications with these components
                         // that lets the signal connection delegate  do his job
-
-                        cSignalConnectionDelegate* sConnectDelegate;
-                        sConnectDelegate = new cSignalConnectionDelegate(scpiStatus, des.m_nBitNr, entityID, des.m_sComponentName);
+                        cSignalConnectionDelegate* sConnectDelegate = new cSignalConnectionDelegate(scpiStatus, des.m_nBitNr, entityID, des.m_sComponentName);
                         // as we only want a single eventsystem the module itself holds the list of delegates
                         m_pModule->sConnectDelegateList.append(sConnectDelegate);
                         m_connectDelegateList.append(sConnectDelegate); // our own list so we can clean up if client dies

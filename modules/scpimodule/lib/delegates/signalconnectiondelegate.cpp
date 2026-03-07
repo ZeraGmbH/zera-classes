@@ -2,11 +2,11 @@
 
 namespace SCPIMODULE {
 
-cSignalConnectionDelegate::cSignalConnectionDelegate(cSCPIStatus *scpiStatus, quint8 bitnr, int entityid, QString cname) :
+cSignalConnectionDelegate::cSignalConnectionDelegate(cSCPIStatus *scpiStatus, quint8 bitnr, int entityid, const QString &componentName) :
     m_pSCPIStatus(scpiStatus),
     m_nBitNr(bitnr),
     m_nEntityId(entityid),
-    m_sComponentName(cname)
+    m_sComponentName(componentName)
 {
 }
 
@@ -20,7 +20,7 @@ QString cSignalConnectionDelegate::ComponentName()
     return m_sComponentName;
 }
 
-void cSignalConnectionDelegate::setStatus(QVariant signal)
+void cSignalConnectionDelegate::setStatus(const QVariant &signal)
 {
     if (signal != 0)
         m_pSCPIStatus->SetConditionBit(m_nBitNr, 1);

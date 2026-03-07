@@ -100,7 +100,7 @@ void cSCPIMeasureDelegate::addscpimeasureObject(cSCPIMeasure *measureobject)
 
 void cSCPIMeasureDelegate::receiveDone()
 {
-    cSCPIMeasure* measure = qobject_cast<cSCPIMeasure*>(QObject::sender());
+    const cSCPIMeasure* measure = qobject_cast<cSCPIMeasure*>(QObject::sender());
     disconnect(measure,0,this,0);
     m_nPending--;
     if (m_nPending == 0)
@@ -109,7 +109,7 @@ void cSCPIMeasureDelegate::receiveDone()
 
 void cSCPIMeasureDelegate::receiveAnswer(QString s)
 {
-    cSCPIMeasure* measure = qobject_cast<cSCPIMeasure*>(QObject::sender());
+    const cSCPIMeasure* measure = qobject_cast<cSCPIMeasure*>(QObject::sender());
     disconnect(measure,0,this,0);
     m_sAnswer += QString("%1;").arg(s);
     m_nPending--;

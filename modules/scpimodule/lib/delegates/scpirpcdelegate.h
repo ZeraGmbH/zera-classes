@@ -17,7 +17,7 @@ signals:
     void sigClientInfoSignal(QString);
 private:
     void executeScpiRpc(cSCPIClient *client, const QString& scpi, bool inputIsQuery);
-    QVariant convertParamStrToType(const QString &parameter, QString type);
+    QVariant convertParamStrToType(const QString &parameter, const QString &type);
 
     cSCPIModule* m_pModule;
     cSCPICmdInfoPtr m_scpicmdinfo;

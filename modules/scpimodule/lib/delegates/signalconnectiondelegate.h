@@ -10,11 +10,11 @@ class cSignalConnectionDelegate: public QObject
 {
     Q_OBJECT
 public:
-    cSignalConnectionDelegate(cSCPIStatus* scpiStatus, quint8 bitnr, int entityid, QString cname);
+    cSignalConnectionDelegate(cSCPIStatus* scpiStatus, quint8 bitnr, int entityid, const QString &componentName);
     int EntityId();
     QString ComponentName();
 public slots:
-    void setStatus(QVariant signal);
+    void setStatus(const QVariant &signal);
 private:
     cSCPIStatus* m_pSCPIStatus;
     quint8 m_nBitNr;

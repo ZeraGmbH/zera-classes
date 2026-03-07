@@ -39,7 +39,7 @@ signals:
 public slots:
     void receiveStatus(quint8 stat);
     virtual void receiveAnswer(QString answ, bool ok = true) = 0;
-    void removeSCPIClientInfo(QString key);
+    void removeSCPIClientInfo(const QString &key);
 
 protected:
     cSCPIInterface* m_pSCPIInterface;
@@ -65,8 +65,8 @@ private:
     QHash<cSCPIMeasure*, cSCPIMeasure*> m_SCPIMeasureTranslationHash;
     QUuid m_clientId;
 
-    bool m_bAuthorisation;
-    void setSignalConnections(cSCPIStatus* scpiStatus, QList<cStatusBitDescriptor> &dList);
+    bool m_bAuthorisation = false;
+    void setSignalConnections(cSCPIStatus* scpiStatus, const QList<cStatusBitDescriptor> &dList);
     QList<cSignalConnectionDelegate*> m_connectDelegateList;
     void generateSCPIMeasureSystem();
 

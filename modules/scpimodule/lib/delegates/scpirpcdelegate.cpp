@@ -74,7 +74,6 @@ void SCPIMODULE::cSCPIRpcDelegate::executeScpiRpc(cSCPIClient *client, const QSt
 
     cSCPICommand cmd = scpi;
     QStringList scpiCmdParams = cmd.getParamList();
-    int totalActualParams = scpiCmdParams.size();
 
     if((totalExpectedParams > scpiCmdParams.size()) && (m_scpicmdinfo->veinComponentInfo.contains("Optional parameter")))
         scpiCmdParams.append("");
@@ -92,7 +91,7 @@ void SCPIMODULE::cSCPIRpcDelegate::executeScpiRpc(cSCPIClient *client, const QSt
     }
 }
 
-QVariant SCPIMODULE::cSCPIRpcDelegate::convertParamStrToType(const QString &parameter, QString type)
+QVariant SCPIMODULE::cSCPIRpcDelegate::convertParamStrToType(const QString &parameter, const QString &type)
 {
     if (type == "int")
         return parameter.toInt();
