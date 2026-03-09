@@ -106,6 +106,8 @@ QByteArray SessionExportGenerator::getDspMemDump()
     json.insert("ProgMemInterruptFree", dspServer->getProgMemInterruptAvailable() - dspServer->getProgMemInterruptOccupied());
     json.insert("UserMemAvailable", dspServer->getUserMemAvailable());
     json.insert("UserMemFree", dspServer->getUserMemAvailable() - dspServer->getUserMemOccupied());
+    json.insert("UserMemAlignedAvailable", dspServer->getUserMemAlignedAvailable());
+    json.insert("UserMemAlignedFree", dspServer->getUserMemAlignedAvailable() - dspServer->getUserMemAlignedOccupied());
     json.insert("ZdspMemDump", ZDspDumpFunctions::getMemoryDump(dspServer));
     return TestLogHelpers::dump(json);
 }

@@ -3,8 +3,10 @@
     "ProgMemCyclicFree": 3401,
     "ProgMemInterruptAvailable": 512,
     "ProgMemInterruptFree": 511,
-    "UserMemAvailable": 32383,
-    "UserMemFree": 29629,
+    "UserMemAlignedAvailable": 4095,
+    "UserMemAlignedFree": 4095,
+    "UserMemAvailable": 28288,
+    "UserMemFree": 25534,
     "ZdspMemDump": {
         "1000": {
             "DspCmdsCompiledCrcCyclic": "0x00000000",
