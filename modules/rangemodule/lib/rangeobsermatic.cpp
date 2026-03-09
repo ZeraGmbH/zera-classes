@@ -535,7 +535,7 @@ void cRangeObsermatic::readGainScaleDone()
     connect(m_pParOverloadOnOff, &VfModuleParameter::sigValueChanged, this, &cRangeObsermatic::onVeinChangeOverload);
 
     for (int i = 0; i < m_RangeMeasChannelList.count(); i++) {
-        cRangeMeasChannel *rangeMeasChannel = m_RangeMeasChannelList.at(i);
+        const cRangeMeasChannel *rangeMeasChannel = m_RangeMeasChannelList.at(i);
         double maxUrMaxRange = RangeMeasChannelConvenience::getUrValueMaxRangeMax(rangeMeasChannel);
         m_RangeOVLRejectionComponentList.at(i)->setValue(maxUrMaxRange);
     }

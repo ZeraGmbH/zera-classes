@@ -36,7 +36,7 @@ void VfRpcEventSystemSimplified::processCommandEvent(VeinEvent::CommandEvent *co
     }
 }
 
-void VfRpcEventSystemSimplified::setRPCMap(QMap<QString, VfModuleRpcPtr> veinModuleRPCMap)
+void VfRpcEventSystemSimplified::setRPCMap(const QMap<QString, VfModuleRpcPtr> &veinModuleRPCMap)
 {
     m_veinModuleRPCMap = veinModuleRPCMap;
 }

@@ -11,7 +11,7 @@ class VfRpcEventSystemSimplified : public VfEventSystemCommandFilter
 public:
     VfRpcEventSystemSimplified(int entityId);
     virtual void processCommandEvent(VeinEvent::CommandEvent *commandEvent);
-    void setRPCMap(QMap<QString, VfModuleRpcPtr> veinModuleRPCMap);
+    void setRPCMap(const QMap<QString, VfModuleRpcPtr> &veinModuleRPCMap);
 private:
     void sendErrorEvent(QString errorMsg, VeinEvent::CommandEvent *commandEvent);
     int m_entityId;

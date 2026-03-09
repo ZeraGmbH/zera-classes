@@ -7,7 +7,7 @@
 static constexpr int firstNotifcationId = 42;
 
 void RefPowerConstantObserver::registerNofifications(Zera::PcbInterfacePtr pcbInterface,
-                                                     QStringList refPowerNameList,
+                                                     const QStringList &refPowerNameList,
                                                      std::function<void ()> additionalErrorHandler)
 {
     Q_ASSERT(!m_pcbInterface);

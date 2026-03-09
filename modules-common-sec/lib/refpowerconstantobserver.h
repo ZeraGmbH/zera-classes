@@ -10,7 +10,7 @@ class RefPowerConstantObserver : public QObject
     Q_OBJECT
 public:
     void registerNofifications(Zera::PcbInterfacePtr pcbInterface,
-                               QStringList refPowerNameList,
+                               const QStringList &refPowerNameList,
                                std::function<void ()> additionalErrorHandler = []{});
     // unregister is done once per module. So it is not upon us.
     double getConstant(QString refChannnel);

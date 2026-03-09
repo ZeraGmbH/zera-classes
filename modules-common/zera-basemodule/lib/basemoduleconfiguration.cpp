@@ -4,7 +4,6 @@
 BaseModuleConfiguration::BaseModuleConfiguration()
 {
     m_pXMLReader = new Zera::XMLConfig::cReader();
-    m_bConfigured = false;
 }
 
 BaseModuleConfiguration::~BaseModuleConfiguration()

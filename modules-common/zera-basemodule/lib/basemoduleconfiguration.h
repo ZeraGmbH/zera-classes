@@ -15,8 +15,8 @@ public:
     virtual QByteArray exportConfiguration() = 0; // exports conf. and parameters to xml
     bool isConfigured();
 protected:
-    bool m_bConfigured;
-    bool m_bConfigError;
+    bool m_bConfigured = false;
+    bool m_bConfigError = false;
 };
 
 #endif // BASEMODULECONFIGURATION_H
