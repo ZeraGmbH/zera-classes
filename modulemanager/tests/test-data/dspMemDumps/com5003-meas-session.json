@@ -13,7 +13,7 @@
             ],
             "DspCmdsRawInterrupt": [
             ],
-            "DspVarsGlobal": {
+            "DspVarsAligned": {
             },
             "DspVarsLocal": {
             }
@@ -82,7 +82,7 @@
             ],
             "DspCmdsRawInterrupt": [
             ],
-            "DspVarsGlobal": {
+            "DspVarsAligned": {
             },
             "DspVarsLocal": {
                 "0x000000 / 0x098180": "MEASSIGNAL",
@@ -150,7 +150,7 @@
             ],
             "DspCmdsRawInterrupt": [
             ],
-            "DspVarsGlobal": {
+            "DspVarsAligned": {
             },
             "DspVarsLocal": {
                 "0x000000 / 0x0983D5": "MEASSIGNAL",
@@ -203,7 +203,7 @@
             ],
             "DspCmdsRawInterrupt": [
             ],
-            "DspVarsGlobal": {
+            "DspVarsAligned": {
             },
             "DspVarsLocal": {
                 "0x000000 / 0x0985F4": "MEASSIGNAL",
@@ -273,7 +273,7 @@
             ],
             "DspCmdsRawInterrupt": [
             ],
-            "DspVarsGlobal": {
+            "DspVarsAligned": {
                 "0x000000 / 0x09F000": "FFTINPUT",
                 "0x000100 / 0x09F100": "FFTOUTPUT"
             },
@@ -392,7 +392,7 @@
             ],
             "DspCmdsRawInterrupt": [
             ],
-            "DspVarsGlobal": {
+            "DspVarsAligned": {
             },
             "DspVarsLocal": {
                 "0x000000 / 0x09A42F": "MEASSIGNAL1",
@@ -577,7 +577,7 @@
             ],
             "DspCmdsRawInterrupt": [
             ],
-            "DspVarsGlobal": {
+            "DspVarsAligned": {
             },
             "DspVarsLocal": {
                 "0x000000 / 0x09A846": "MEASSIGNAL1",
@@ -776,7 +776,7 @@
             ],
             "DspCmdsRawInterrupt": [
             ],
-            "DspVarsGlobal": {
+            "DspVarsAligned": {
             },
             "DspVarsLocal": {
                 "0x000000 / 0x09AC5D": "MEASSIGNAL1",
@@ -1124,7 +1124,7 @@
             ],
             "DspCmdsRawInterrupt": [
             ],
-            "DspVarsGlobal": {
+            "DspVarsAligned": {
             },
             "DspVarsLocal": {
                 "0x000000 / 0x09B074": "MEASSIGNAL1",
@@ -1254,7 +1254,7 @@
             ],
             "DspCmdsRawInterrupt": [
             ],
-            "DspVarsGlobal": {
+            "DspVarsAligned": {
             },
             "DspVarsLocal": {
                 "0x000000 / 0x09B48B": "MEASSIGNAL1",
@@ -1374,7 +1374,7 @@
             ],
             "DspCmdsRawInterrupt": [
             ],
-            "DspVarsGlobal": {
+            "DspVarsAligned": {
             },
             "DspVarsLocal": {
                 "0x000000 / 0x09B8A1": "MEASSIGNAL1",
@@ -1435,7 +1435,7 @@
             ],
             "DspCmdsRawInterrupt": [
             ],
-            "DspVarsGlobal": {
+            "DspVarsAligned": {
             },
             "DspVarsLocal": {
                 "0x000000 / 0x09BCB7": "MEASSIGNAL",
@@ -1482,7 +1482,7 @@
             ],
             "DspCmdsRawInterrupt": [
             ],
-            "DspVarsGlobal": {
+            "DspVarsAligned": {
             },
             "DspVarsLocal": {
                 "0x000000 / 0x09BECA": "MEASSIGNAL",
@@ -1545,7 +1545,7 @@
             ],
             "DspCmdsRawInterrupt": [
             ],
-            "DspVarsGlobal": {
+            "DspVarsAligned": {
             },
             "DspVarsLocal": {
                 "0x000000 / 0x09C0DD": "MEASSIGNAL",
@@ -1566,7 +1566,7 @@
             ],
             "DspCmdsRawInterrupt": [
             ],
-            "DspVarsGlobal": {
+            "DspVarsAligned": {
             },
             "DspVarsLocal": {
             }

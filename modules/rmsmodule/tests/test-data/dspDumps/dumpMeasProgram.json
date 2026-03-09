@@ -2,7 +2,7 @@
     "1-MemGroups": {
         "ActualValues": {
             "UserMemSize": 11,
-            "UserMemSizeGlobal": 0,
+            "UserMemSizeAligned": 0,
             "Variables": [
                 {
                     "Name": "VALXRMSF",
@@ -14,7 +14,7 @@
         },
         "Parameter": {
             "UserMemSize": 2,
-            "UserMemSizeGlobal": 0,
+            "UserMemSizeAligned": 0,
             "Variables": [
                 {
                     "Name": "TIPAR",
@@ -32,7 +32,7 @@
         },
         "TmpData": {
             "UserMemSize": 538,
-            "UserMemSizeGlobal": 0,
+            "UserMemSizeAligned": 0,
             "Variables": [
                 {
                     "Name": "MEASSIGNAL",

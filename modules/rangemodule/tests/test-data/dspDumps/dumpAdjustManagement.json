@@ -2,7 +2,7 @@
     "1-MemGroups": {
         "GainCorrection": {
             "UserMemSize": 0,
-            "UserMemSizeGlobal": 0,
+            "UserMemSizeAligned": 0,
             "Variables": [
                 {
                     "Name": "GAINCORRECTION",
@@ -14,7 +14,7 @@
         },
         "OffsetCorrection": {
             "UserMemSize": 0,
-            "UserMemSizeGlobal": 0,
+            "UserMemSizeAligned": 0,
             "Variables": [
                 {
                     "Name": "OFFSETCORRECTION",
@@ -26,7 +26,7 @@
         },
         "PhaseCorrection": {
             "UserMemSize": 0,
-            "UserMemSizeGlobal": 0,
+            "UserMemSizeAligned": 0,
             "Variables": [
                 {
                     "Name": "PHASECORRECTION",
@@ -38,7 +38,7 @@
         },
         "SubDC": {
             "UserMemSize": 0,
-            "UserMemSizeGlobal": 0,
+            "UserMemSizeAligned": 0,
             "Variables": [
                 {
                     "Name": "SUBDC",

@@ -2,7 +2,7 @@
     "1-MemGroups": {
         "ActualValues": {
             "UserMemSize": 28,
-            "UserMemSizeGlobal": 0,
+            "UserMemSizeAligned": 0,
             "Variables": [
                 {
                     "Name": "VALS_PERIOD",
@@ -20,7 +20,7 @@
         },
         "Parameter": {
             "UserMemSize": 1,
-            "UserMemSizeGlobal": 0,
+            "UserMemSizeAligned": 0,
             "Variables": [
                 {
                     "Name": "PERIODCOUNT",
@@ -32,7 +32,7 @@
         },
         "TmpData": {
             "UserMemSize": 539,
-            "UserMemSizeGlobal": 0,
+            "UserMemSizeAligned": 0,
             "Variables": [
                 {
                     "Name": "MEASSIGNAL",

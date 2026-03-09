@@ -2,7 +2,7 @@
     "1-MemGroups": {
         "ActualValues": {
             "UserMemSize": 2048,
-            "UserMemSizeGlobal": 0,
+            "UserMemSizeAligned": 0,
             "Variables": [
                 {
                     "Name": "VALXFFTF",
@@ -14,7 +14,7 @@
         },
         "Parameter": {
             "UserMemSize": 3,
-            "UserMemSizeGlobal": 0,
+            "UserMemSizeAligned": 0,
             "Variables": [
                 {
                     "Name": "TIPAR",
@@ -38,17 +38,17 @@
         },
         "TmpData": {
             "UserMemSize": 7157,
-            "UserMemSizeGlobal": 512,
+            "UserMemSizeAligned": 512,
             "Variables": [
                 {
                     "Name": "FFTINPUT",
-                    "Segment": "moduleGlobalSegment",
+                    "Segment": "moduleAlignedMemorySegment",
                     "Size": 256,
                     "TypeData": "dspDataTypeFloat"
                 },
                 {
                     "Name": "FFTOUTPUT",
-                    "Segment": "moduleGlobalSegment",
+                    "Segment": "moduleAlignedMemorySegment",
                     "Size": 256,
                     "TypeData": "dspDataTypeFloat"
                 },

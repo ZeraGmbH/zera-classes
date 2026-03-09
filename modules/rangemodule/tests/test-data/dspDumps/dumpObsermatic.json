@@ -2,7 +2,7 @@
     "1-MemGroups": {
         "SCALEMEM": {
             "UserMemSize": 0,
-            "UserMemSizeGlobal": 0,
+            "UserMemSizeAligned": 0,
             "Variables": [
                 {
                     "Name": "GAINCORRECTION2",

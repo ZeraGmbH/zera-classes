@@ -2,7 +2,7 @@
     "1-MemGroups": {
         "ActualValues": {
             "UserMemSize": 25,
-            "UserMemSizeGlobal": 0,
+            "UserMemSizeAligned": 0,
             "Variables": [
                 {
                     "Name": "CHXPEAKF",
@@ -32,7 +32,7 @@
         },
         "Parameter": {
             "UserMemSize": 1,
-            "UserMemSizeGlobal": 0,
+            "UserMemSizeAligned": 0,
             "Variables": [
                 {
                     "Name": "TIPAR",
@@ -44,7 +44,7 @@
         },
         "TmpData": {
             "UserMemSize": 589,
-            "UserMemSizeGlobal": 0,
+            "UserMemSizeAligned": 0,
             "Variables": [
                 {
                     "Name": "MEASSIGNAL",
