@@ -18,6 +18,8 @@
             "DspVarsAligned": {
             },
             "DspVarsClientBaseAddress": "0x098180",
+            "DspVarsGlobal": {
+            },
             "DspVarsLocal": {
             }
         },
@@ -100,6 +102,8 @@
             "DspVarsAligned": {
             },
             "DspVarsClientBaseAddress": "0x098180",
+            "DspVarsGlobal": {
+            },
             "DspVarsLocal": {
                 "0x000000 / 0x098180": "MEASSIGNAL",
                 "0x0001F8 / 0x098378": "MAXRESET",
@@ -175,6 +179,8 @@
             "DspVarsAligned": {
             },
             "DspVarsClientBaseAddress": "0x0983E7",
+            "DspVarsGlobal": {
+            },
             "DspVarsLocal": {
                 "0x000000 / 0x0983E7": "MEASSIGNAL",
                 "0x0001F8 / 0x0985DF": "VALXRMS",
@@ -233,6 +239,8 @@
             "DspVarsAligned": {
             },
             "DspVarsClientBaseAddress": "0x09860E",
+            "DspVarsGlobal": {
+            },
             "DspVarsLocal": {
                 "0x000000 / 0x09860E": "MEASSIGNAL",
                 "0x0001F8 / 0x098806": "VALXDFT",
@@ -285,6 +293,8 @@
             "DspVarsAligned": {
             },
             "DspVarsClientBaseAddress": "0x098861",
+            "DspVarsGlobal": {
+            },
             "DspVarsLocal": {
                 "0x000000 / 0x098861": "MEASSIGNAL",
                 "0x0001F8 / 0x098A59": "INTEGRAL_RESULT",
@@ -371,6 +381,8 @@
                 "0x00660D / 0x09F100": "FFTOUTPUT"
             },
             "DspVarsClientBaseAddress": "0x098AF3",
+            "DspVarsGlobal": {
+            },
             "DspVarsLocal": {
                 "0x000000 / 0x098AF3": "MEASSIGNAL",
                 "0x0003F0 / 0x098EE3": "FFTXOUTPUT",
@@ -455,6 +467,8 @@
             "DspVarsAligned": {
             },
             "DspVarsClientBaseAddress": "0x09AEEB",
+            "DspVarsGlobal": {
+            },
             "DspVarsLocal": {
                 "0x000000 / 0x09AEEB": "MEASSIGNAL1",
                 "0x0001F8 / 0x09B0E3": "MEASSIGNAL2",
@@ -550,6 +564,8 @@
             "DspVarsAligned": {
             },
             "DspVarsClientBaseAddress": "0x09B302",
+            "DspVarsGlobal": {
+            },
             "DspVarsLocal": {
                 "0x000000 / 0x09B302": "MEASSIGNAL1",
                 "0x0001F8 / 0x09B4FA": "MEASSIGNAL2",
@@ -645,6 +661,8 @@
             "DspVarsAligned": {
             },
             "DspVarsClientBaseAddress": "0x09B719",
+            "DspVarsGlobal": {
+            },
             "DspVarsLocal": {
                 "0x000000 / 0x09B719": "MEASSIGNAL1",
                 "0x0001F8 / 0x09B911": "MEASSIGNAL2",
@@ -740,6 +758,8 @@
             "DspVarsAligned": {
             },
             "DspVarsClientBaseAddress": "0x09BB30",
+            "DspVarsGlobal": {
+            },
             "DspVarsLocal": {
                 "0x000000 / 0x09BB30": "MEASSIGNAL1",
                 "0x0001F8 / 0x09BD28": "MEASSIGNAL2",
@@ -807,6 +827,8 @@
             "DspVarsAligned": {
             },
             "DspVarsClientBaseAddress": "0x09BF47",
+            "DspVarsGlobal": {
+            },
             "DspVarsLocal": {
                 "0x000000 / 0x09BF47": "MEASSIGNAL",
                 "0x0001F8 / 0x09C13F": "VALXTHDN",
@@ -859,6 +881,8 @@
             "DspVarsAligned": {
             },
             "DspVarsClientBaseAddress": "0x09C162",
+            "DspVarsGlobal": {
+            },
             "DspVarsLocal": {
                 "0x000000 / 0x09C162": "MEASSIGNAL",
                 "0x0001F8 / 0x09C35A": "VALXTHDN",
@@ -931,6 +955,8 @@
             "DspVarsAligned": {
             },
             "DspVarsClientBaseAddress": "0x09C37D",
+            "DspVarsGlobal": {
+            },
             "DspVarsLocal": {
                 "0x000000 / 0x09C37D": "MEASSIGNAL",
                 "0x000FC0 / 0x09D33D": "WORKSPACE",
@@ -953,6 +979,8 @@
             "DspVarsAligned": {
             },
             "DspVarsClientBaseAddress": "0x098180",
+            "DspVarsGlobal": {
+            },
             "DspVarsLocal": {
             }
         },

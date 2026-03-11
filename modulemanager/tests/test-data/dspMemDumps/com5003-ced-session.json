@@ -18,6 +18,8 @@
             "DspVarsAligned": {
             },
             "DspVarsClientBaseAddress": "0x098180",
+            "DspVarsGlobal": {
+            },
             "DspVarsLocal": {
             }
         },
@@ -88,6 +90,8 @@
             "DspVarsAligned": {
             },
             "DspVarsClientBaseAddress": "0x098180",
+            "DspVarsGlobal": {
+            },
             "DspVarsLocal": {
                 "0x000000 / 0x098180": "MEASSIGNAL",
                 "0x0001F8 / 0x098378": "MAXRESET",
@@ -155,6 +159,8 @@
             "DspVarsAligned": {
             },
             "DspVarsClientBaseAddress": "0x0983D5",
+            "DspVarsGlobal": {
+            },
             "DspVarsLocal": {
                 "0x000000 / 0x0983D5": "MEASSIGNAL",
                 "0x0001F8 / 0x0985CD": "VALXRMS",
@@ -209,6 +215,8 @@
             "DspVarsAligned": {
             },
             "DspVarsClientBaseAddress": "0x0985F4",
+            "DspVarsGlobal": {
+            },
             "DspVarsLocal": {
                 "0x000000 / 0x0985F4": "MEASSIGNAL",
                 "0x0001F8 / 0x0987EC": "VALXDFT",
@@ -282,6 +290,8 @@
                 "0x0068C9 / 0x09F100": "FFTOUTPUT"
             },
             "DspVarsClientBaseAddress": "0x098837",
+            "DspVarsGlobal": {
+            },
             "DspVarsLocal": {
                 "0x000000 / 0x098837": "MEASSIGNAL",
                 "0x0003F0 / 0x098C27": "FFTXOUTPUT",
@@ -397,6 +407,8 @@
             "DspVarsAligned": {
             },
             "DspVarsClientBaseAddress": "0x09A42F",
+            "DspVarsGlobal": {
+            },
             "DspVarsLocal": {
                 "0x000000 / 0x09A42F": "MEASSIGNAL1",
                 "0x0001F8 / 0x09A627": "MEASSIGNAL2",
@@ -579,6 +591,8 @@
             "DspVarsAligned": {
             },
             "DspVarsClientBaseAddress": "0x09A845",
+            "DspVarsGlobal": {
+            },
             "DspVarsLocal": {
                 "0x000000 / 0x09A845": "MEASSIGNAL1",
                 "0x0001F8 / 0x09AA3D": "MEASSIGNAL2",
@@ -737,6 +751,8 @@
             "DspVarsAligned": {
             },
             "DspVarsClientBaseAddress": "0x09AC5B",
+            "DspVarsGlobal": {
+            },
             "DspVarsLocal": {
                 "0x000000 / 0x09AC5B": "MEASSIGNAL1",
                 "0x0001F8 / 0x09AE53": "MEASSIGNAL2",
@@ -867,6 +883,8 @@
             "DspVarsAligned": {
             },
             "DspVarsClientBaseAddress": "0x09B071",
+            "DspVarsGlobal": {
+            },
             "DspVarsLocal": {
                 "0x000000 / 0x09B071": "MEASSIGNAL1",
                 "0x0001F8 / 0x09B269": "MEASSIGNAL2",
@@ -986,6 +1004,8 @@
             "DspVarsAligned": {
             },
             "DspVarsClientBaseAddress": "0x09B487",
+            "DspVarsGlobal": {
+            },
             "DspVarsLocal": {
                 "0x000000 / 0x09B487": "MEASSIGNAL1",
                 "0x0001F8 / 0x09B67F": "MEASSIGNAL2",
@@ -1067,6 +1087,8 @@
             "DspVarsAligned": {
             },
             "DspVarsClientBaseAddress": "0x09B89D",
+            "DspVarsGlobal": {
+            },
             "DspVarsLocal": {
                 "0x000000 / 0x09B89D": "MEASSIGNAL1",
                 "0x0001F8 / 0x09BA95": "MEASSIGNAL2",
@@ -1121,6 +1143,8 @@
             "DspVarsAligned": {
             },
             "DspVarsClientBaseAddress": "0x09BCC9",
+            "DspVarsGlobal": {
+            },
             "DspVarsLocal": {
                 "0x000000 / 0x09BCC9": "MEASSIGNAL",
                 "0x0001F8 / 0x09BEC1": "VALXTHDN",
@@ -1169,6 +1193,8 @@
             "DspVarsAligned": {
             },
             "DspVarsClientBaseAddress": "0x09BEDC",
+            "DspVarsGlobal": {
+            },
             "DspVarsLocal": {
                 "0x000000 / 0x09BEDC": "MEASSIGNAL",
                 "0x0001F8 / 0x09C0D4": "VALXTHDN",
@@ -1233,6 +1259,8 @@
             "DspVarsAligned": {
             },
             "DspVarsClientBaseAddress": "0x09C0EF",
+            "DspVarsGlobal": {
+            },
             "DspVarsLocal": {
                 "0x000000 / 0x09C0EF": "MEASSIGNAL",
                 "0x000BD0 / 0x09CCBF": "WORKSPACE",
@@ -1255,6 +1283,8 @@
             "DspVarsAligned": {
             },
             "DspVarsClientBaseAddress": "0x098180",
+            "DspVarsGlobal": {
+            },
             "DspVarsLocal": {
             }
         },
