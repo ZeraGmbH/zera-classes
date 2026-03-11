@@ -17,6 +17,7 @@
             ],
             "DspVarsAligned": {
             },
+            "DspVarsClientBaseAddress": "0x098180",
             "DspVarsLocal": {
             }
         },
@@ -58,6 +59,7 @@
             ],
             "DspVarsAligned": {
             },
+            "DspVarsClientBaseAddress": "0x098180",
             "DspVarsLocal": {
                 "0x000000 / 0x098180": "MEASSIGNAL",
                 "0x0001F8 / 0x098378": "TISTART",
@@ -133,6 +135,7 @@
             ],
             "DspVarsAligned": {
             },
+            "DspVarsClientBaseAddress": "0x0983AB",
             "DspVarsLocal": {
                 "0x000000 / 0x0983AB": "MEASSIGNAL",
                 "0x0001F8 / 0x0985A3": "MAXRESET",
@@ -186,6 +189,7 @@
             ],
             "DspVarsAligned": {
             },
+            "DspVarsClientBaseAddress": "0x098600",
             "DspVarsLocal": {
                 "0x000000 / 0x098600": "MEASSIGNAL",
                 "0x0001F8 / 0x0987F8": "VALXDFT",
@@ -266,6 +270,7 @@
             ],
             "DspVarsAligned": {
             },
+            "DspVarsClientBaseAddress": "0x09882B",
             "DspVarsLocal": {
                 "0x000000 / 0x09882B": "MEASSIGNAL1",
                 "0x0001F8 / 0x098A23": "MEASSIGNAL2",
@@ -299,6 +304,7 @@
             ],
             "DspVarsAligned": {
             },
+            "DspVarsClientBaseAddress": "0x098180",
             "DspVarsLocal": {
             }
         },
