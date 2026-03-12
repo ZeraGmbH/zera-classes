@@ -1,6 +1,7 @@
 #include "modemodule.h"
 #include "modemoduleinit.h"
 #include "modemoduleconfigdata.h"
+#include "modemoduleconfiguration.h"
 #include <proxy.h>
 #include <proxyclient.h>
 #include <reply.h>
@@ -10,13 +11,24 @@
 
 namespace MODEMODULE
 {
-
-cModeModuleInit::cModeModuleInit(cModeModule* module, cModeModuleConfigData& configData) :
-    cModuleActivist(module->getVeinModuleName()),
-    m_pModule(module),
-    m_ConfigData(configData)
+enum modemoduleinitCmds
 {
-    m_pcbInterface = std::make_shared<Zera::cPCBInterface>();
+    setmode,
+    writegaincorr,
+    writegaincorr2,
+    writephasecorr,
+    writephasecorr2,
+    writeoffsetcorr,
+    writeoffsetcorr2,
+    subdcdsp,
+    setsamplingsystem,
+};
+
+cModeModuleInit::cModeModuleInit(cModeModule* module, std::shared_ptr<BaseModuleConfiguration> pConfiguration) :
+    cBaseDspMeasProgram(pConfiguration, module->getVeinModuleName()),
+    m_pModule(module),
+    m_pcbInterface(std::make_shared<Zera::cPCBInterface>())
+{
     m_dspInterface = m_pModule->getServiceInterfaceFactory()->createDspInterfaceMode(m_pModule->getEntityId());
 
     // m_pcbserverConnectionState.addTransition is done in pcbserverConnection
@@ -67,15 +79,19 @@ cModeModuleInit::cModeModuleInit(cModeModule* module, cModeModuleConfigData& con
 
 }
 
-
 void cModeModuleInit::generateVeinInterface()
 {
     // at the moment we have no interface
 }
 
+cModeModuleConfigData *cModeModuleInit::getConfData()
+{
+    return qobject_cast<cModeModuleConfiguration*>(m_pConfiguration.get())->getConfigurationData();
+}
 
 void cModeModuleInit::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant answer)
 {
+    Q_UNUSED(answer)
     if (msgnr == 0) {// 0 was reserved for async. messages
         // that we will ignore
     }
@@ -83,15 +99,15 @@ void cModeModuleInit::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant
         if (m_MsgNrCmdList.contains(msgnr)) {
             int cmd = m_MsgNrCmdList.take(msgnr);
             switch (cmd) {
-            case MODEMODINIT::setmode:
+            case setmode:
                 if (reply == ack)
                     emit activationContinue();
                 else
                     notifyError(setMeasModeErrMsg);
                 break;
 
-            case MODEMODINIT::writegaincorr:
-            case MODEMODINIT::writegaincorr2:
+            case writegaincorr:
+            case writegaincorr2:
                 if (reply == ack) {
                     emit activationContinue();
                 }
@@ -101,30 +117,30 @@ void cModeModuleInit::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant
                 }
                 break;
 
-            case MODEMODINIT::writephasecorr:
-            case MODEMODINIT::writephasecorr2:
+            case writephasecorr:
+            case writephasecorr2:
                 if (reply == ack)
                     emit activationContinue();
                 else
                     notifyError(writedspphasecorrErrMsg);
                 break;
 
-            case MODEMODINIT::writeoffsetcorr:
-            case MODEMODINIT::writeoffsetcorr2:
+            case writeoffsetcorr:
+            case writeoffsetcorr2:
                 if (reply == ack)
                     emit activationContinue();
                 else
                     notifyError(writedspoffsetcorrErrMsg);
                 break;
 
-            case MODEMODINIT::subdcdsp:
+            case subdcdsp:
                 if (reply == ack)
                     emit activationContinue();
                 else
                     notifyError(writesubdcErrMsg);
                 break;
 
-            case MODEMODINIT::setsamplingsystem:
+            case setsamplingsystem:
                 if (reply == ack)
                     emit activationContinue();
                 else
@@ -151,7 +167,7 @@ void cModeModuleInit::pcbserverConnect()
 
 void cModeModuleInit::setMode()
 {
-    m_MsgNrCmdList[m_pcbInterface->setMMode(m_ConfigData.m_sMode)] = MODEMODINIT::setmode;
+    m_MsgNrCmdList[m_pcbInterface->setMMode(getConfData()->m_sMode)] = setmode;
 }
 
 
@@ -173,7 +189,7 @@ void cModeModuleInit::writeGainCorr()
     for (int i = 0; i < 32; i++) {
         data[i] = 1.0;
     }
-    m_MsgNrCmdList[m_dspInterface->dspMemoryWrite(dspTmpVarGroup)] = MODEMODINIT::writegaincorr;
+    m_MsgNrCmdList[m_dspInterface->dspMemoryWrite(dspTmpVarGroup)] = writegaincorr;
 }
 
 void cModeModuleInit::writeGainCorr2()
@@ -184,7 +200,7 @@ void cModeModuleInit::writeGainCorr2()
     for (int i = 0; i < 32; i++) {
         data[i] = 1.0;
     }
-    m_MsgNrCmdList[m_dspInterface->dspMemoryWrite(dspTmpVarGroup)] = MODEMODINIT::writegaincorr2;
+    m_MsgNrCmdList[m_dspInterface->dspMemoryWrite(dspTmpVarGroup)] = writegaincorr2;
 }
 
 void cModeModuleInit::writePhaseCorr()
@@ -195,7 +211,7 @@ void cModeModuleInit::writePhaseCorr()
     for (int i = 0; i < 32; i++) {
         data[i] = 0.0;
     }
-    m_MsgNrCmdList[m_dspInterface->dspMemoryWrite(dspTmpVarGroup)] = MODEMODINIT::writephasecorr;
+    m_MsgNrCmdList[m_dspInterface->dspMemoryWrite(dspTmpVarGroup)] = writephasecorr;
 }
 
 void cModeModuleInit::writePhaseCorr2()
@@ -205,7 +221,7 @@ void cModeModuleInit::writePhaseCorr2()
     float* data = dspTmpVarGroup->data("PHASECORRECTION2");
     for (int i = 0; i < 32; i++)
         data[i] = 0.0;
-    m_MsgNrCmdList[m_dspInterface->dspMemoryWrite(dspTmpVarGroup)] = MODEMODINIT::writephasecorr2;
+    m_MsgNrCmdList[m_dspInterface->dspMemoryWrite(dspTmpVarGroup)] = writephasecorr2;
 }
 
 void cModeModuleInit::writeOffsetCorr()
@@ -215,7 +231,7 @@ void cModeModuleInit::writeOffsetCorr()
     float* data = dspTmpVarGroup->data("OFFSETCORRECTION");
     for (int i = 0; i < 32; i++)
         data[i] = 0.0;
-    m_MsgNrCmdList[m_dspInterface->dspMemoryWrite(dspTmpVarGroup)] = MODEMODINIT::writeoffsetcorr;
+    m_MsgNrCmdList[m_dspInterface->dspMemoryWrite(dspTmpVarGroup)] = writeoffsetcorr;
 }
 
 void cModeModuleInit::writeOffsetCorr2()
@@ -226,7 +242,7 @@ void cModeModuleInit::writeOffsetCorr2()
     for (int i = 0; i < 32; i++) {
         data[i] = 0.0;
     }
-    m_MsgNrCmdList[m_dspInterface->dspMemoryWrite(dspTmpVarGroup)] = MODEMODINIT::writeoffsetcorr;
+    m_MsgNrCmdList[m_dspInterface->dspMemoryWrite(dspTmpVarGroup)] = writeoffsetcorr;
 }
 
 void cModeModuleInit::setSubDC()
@@ -236,12 +252,15 @@ void cModeModuleInit::setSubDC()
     // here we can set if sub dc or not
     dspTmpVarGroup->addDspVar("SUBDC", 1, dspDataTypeInt, dspInternalSegment);
     dspTmpVarGroup->setVarData(QString("SUBDC:%1;").arg(subdc));
-    m_MsgNrCmdList[m_dspInterface->dspMemoryWrite(dspTmpVarGroup)] = MODEMODINIT::subdcdsp;
+    m_MsgNrCmdList[m_dspInterface->dspMemoryWrite(dspTmpVarGroup)] = subdcdsp;
 }
 
 void cModeModuleInit::setSamplingsytem()
 {
-    m_MsgNrCmdList[m_dspInterface->setSamplingSystem(m_ConfigData.m_nChannelnr, m_ConfigData.m_nSignalPeriod, m_ConfigData.m_nMeasurePeriod)] = MODEMODINIT::setsamplingsystem;
+    cModeModuleConfigData* confData = getConfData();
+    m_MsgNrCmdList[m_dspInterface->setSamplingSystem(confData->m_nChannelnr,
+                                                     confData->m_nSignalPeriod,
+                                                     confData->m_nMeasurePeriod)] = setsamplingsystem;
 }
 
 void cModeModuleInit::activationDone()

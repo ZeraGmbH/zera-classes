@@ -17,11 +17,8 @@ void cModeModule::setupModule()
     emit addEventSystem(getValidatorEventSystem());
     cBaseMeasModule::setupModule();
 
-    cModeModuleConfigData *pConfData;
-    pConfData = qobject_cast<cModeModuleConfiguration*>(m_pConfiguration.get())->getConfigurationData();
-
     // we only have to initialize the pcb's measuring mode
-    m_pModeModuleInit = new cModeModuleInit(this, *pConfData);
+    m_pModeModuleInit = new cModeModuleInit(this, m_pConfiguration);
     m_ModuleActivistList.append(m_pModeModuleInit);
     connect(m_pModeModuleInit, &cModeModuleInit::activated, this, &cModeModule::activationContinue);
     connect(m_pModeModuleInit, &cModeModuleInit::deactivated, this, &cModeModule::deactivationContinue);

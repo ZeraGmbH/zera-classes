@@ -1,9 +1,8 @@
 #ifndef MODEMODULEINIT_H
 #define MODEMODULEINIT_H
 
-#include "moduleactivist.h"
-#include <dspinterface.h>
-#include <dspinterface.h>
+#include "basedspmeasprogram.h"
+#include "modemoduleconfigdata.h"
 #include <pcbinterface.h>
 #include <QList>
 #include <QStateMachine>
@@ -12,45 +11,26 @@
 
 namespace MODEMODULE {
 
-namespace MODEMODINIT {
-
-enum modemoduleinitCmds
-{
-    setmode,
-    writegaincorr,
-    writegaincorr2,
-    writephasecorr,
-    writephasecorr2,
-    writeoffsetcorr,
-    writeoffsetcorr2,
-    subdcdsp,
-    setsamplingsystem,
-};
-
-}
-
 class cModeModule;
-class cModeModuleConfigData;
 
-
-class cModeModuleInit: public cModuleActivist
+class cModeModuleInit: public cBaseDspMeasProgram
 {
     Q_OBJECT
-
 public:
-    cModeModuleInit(cModeModule* module, cModeModuleConfigData& configData);
+    cModeModuleInit(cModeModule* module, std::shared_ptr<BaseModuleConfiguration> pConfiguration);
     void generateVeinInterface() override;
+public slots:
+    void start() override {};
+    void stop() override {};
 
 private:
-    cModeModule* m_pModule; // the module we live in
-    cModeModuleConfigData& m_ConfigData;
+    cModeModuleConfigData* getConfData();
+    cModeModule* m_pModule;
 
     QHash<quint32, int> m_MsgNrCmdList;
 
     Zera::PcbInterfacePtr m_pcbInterface;
     Zera::ProxyClientPtr m_pPCBClient;
-    Zera::DspInterfacePtr m_dspInterface; // our interface to dsp
-    Zera::ProxyClientPtr m_dspClient;
 
     // statemachine for activating gets the following states
     QState m_pcbserverConnectionState; // we try to get a connection to our pcb server
