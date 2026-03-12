@@ -25,7 +25,6 @@ enum modemoduleinitCmds
     writeoffsetcorr2,
     subdcdsp,
     setsamplingsystem,
-    freeresource
 };
 
 }
