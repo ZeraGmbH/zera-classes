@@ -513,8 +513,10 @@
             "STOPCHAIN(0x000001,0x000105)",
             "DSPINTPOST()"
         ],
+        "TotalCmdListCyclicMaxInterruptCount": 4,
         "TotalCmdListInterrupt": [
         ],
+        "TotalCmdListInterruptMaxInterruptCount": 0,
         "TotalDspCmdsCompiledCrcCyclic": "0xD1FE584B",
         "TotalDspCmdsCompiledCrcInterrupt": "0x6522DF69"
     }
