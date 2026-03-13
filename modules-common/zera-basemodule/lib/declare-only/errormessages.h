@@ -68,6 +68,7 @@
 #define writedspoffsetcorrErrMsg "DSP write offset corredction failed"
 #define dspvarlistwriteErrMsg "DSP write varlist failed"
 #define dspcmdlistwriteErrMsg "DSP write cmdlist failed"
+#define dspSuperCmdErrMsg "DSP super client command failed"
 #define dspactiveErrMsg "DSP measure activation failed"
 #define dspdeactiveErrMsg "DSP measure deactivation failed"
 #define dataaquisitionErrMsg "DSP data acquisition failed"

@@ -158,6 +158,14 @@ Zera::DspInterfacePtr TestFactoryServiceInterfaces::createDspInterfaceStatus(int
                                     0 /* dummy */, {});
 }
 
+Zera::DspInterfacePtr TestFactoryServiceInterfaces::createDspInterfaceDspSuper(int entityId, int maxPeriodCount)
+{
+    return createDspInterfaceCommon(entityId,
+                                    INJECT_SUPER,
+                                    MODULEPROG,
+                                    0 /* dummy */, {});
+}
+
 TestDspInterfacePtr TestFactoryServiceInterfaces::getInterface(int entityId, DspInterfaceCreatedBy createdBy)
 {
     if (m_dspInterfacesByCreatedBy.contains(entityId) &&

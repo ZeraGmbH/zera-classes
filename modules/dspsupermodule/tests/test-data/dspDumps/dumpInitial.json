@@ -1,0 +1,82 @@
+{
+    "1-MemGroups": {
+        "ActualValues": {
+            "UserMemSize": 50,
+            "UserMemSizeAligned": 0,
+            "Variables": [
+                {
+                    "Name": "TIMESTAMPS_PERIOD",
+                    "Segment": "moduleLocalSegment",
+                    "Size": 50,
+                    "TypeData": "dspDataTypeFloat"
+                }
+            ]
+        },
+        "TmpData": {
+            "UserMemSize": 54,
+            "UserMemSizeAligned": 0,
+            "Variables": [
+                {
+                    "Name": "GLOBALPERIODCOUNT",
+                    "Segment": "moduleGlobalSegment",
+                    "Size": 1,
+                    "TypeData": "dspDataTypeInt"
+                },
+                {
+                    "Name": "SYSTIME",
+                    "Segment": "moduleLocalSegment",
+                    "Size": 1,
+                    "TypeData": "dspDataTypeInt"
+                },
+                {
+                    "Name": "PERIODCURR",
+                    "Segment": "moduleLocalSegment",
+                    "Size": 1,
+                    "TypeData": "dspDataTypeInt"
+                },
+                {
+                    "Name": "PERIODMAX",
+                    "Segment": "moduleLocalSegment",
+                    "Size": 1,
+                    "TypeData": "dspDataTypeInt"
+                },
+                {
+                    "Name": "RESULT_BUFF_IDX",
+                    "Segment": "moduleLocalSegment",
+                    "Size": 1,
+                    "TypeData": "dspDataTypeInt"
+                },
+                {
+                    "Name": "TIMESTAMPS_PERIOD_WORK",
+                    "Segment": "moduleLocalSegment",
+                    "Size": 50,
+                    "TypeData": "dspDataTypeFloat"
+                }
+            ]
+        }
+    },
+    "2-CmdList": [
+        "STARTCHAIN(1,1,0x0101)",
+        "SETVAL(GLOBALPERIODCOUNT,1)",
+        "SETVAL(PERIODCURR,1)",
+        "SETVAL(PERIODMAX,25)",
+        "SETVAL(RESULT_BUFF_IDX,TIMESTAMPS_PERIOD_WORK)",
+        "DEACTIVATECHAIN(1,0x0101)",
+        "STOPCHAIN(1,0x0101)",
+        "XCOPYMEM(1,GLOBALPERIODCOUNT,RESULT_BUFF_IDX)",
+        "GETSTIME(SYSTIME)",
+        "XCOPYMEM(1,SYSTIME,RESULT_BUFF_IDX)",
+        "INC(PERIODCURR)",
+        "INC(GLOBALPERIODCOUNT)",
+        "TESTVVSKIPGT(PERIODCURR,PERIODMAX)",
+        "TESTSKIPNOIRQPENDING()",
+        "ACTIVATECHAIN(1,0x0102)",
+        "STARTCHAIN(0,1,0x0102)",
+        "SETVAL(PERIODCURR,1)",
+        "SETVAL(RESULT_BUFF_IDX,TIMESTAMPS_PERIOD_WORK)",
+        "COPYMEM(50,TIMESTAMPS_PERIOD_WORK,TIMESTAMPS_PERIOD)",
+        "DSPINTTRIGGER(0x0,0x0)",
+        "DEACTIVATECHAIN(1,0x0102)",
+        "STOPCHAIN(1,0x0102)"
+    ]
+}

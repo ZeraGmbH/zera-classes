@@ -1,5 +1,4 @@
 #include "demofactoryserviceinterfaces.h"
-#include "demodspinterfaceperiodaverage.h"
 #include "demodspinterfacerange.h"
 #include "demodspinterfacedft.h"
 #include "demodspinterfacefft.h"
@@ -8,6 +7,8 @@
 #include "demodspinterfacepower2.h"
 #include "demodspinterfacethdn.h"
 #include "demodspinterfaceosci.h"
+#include "demodspinterfaceperiodaverage.h"
+#include "demodspinterfacedspsuper.h"
 
 static double generatorFixed(int entityId) {
     Q_UNUSED(entityId)
@@ -151,4 +152,9 @@ Zera::DspInterfacePtr DemoFactoryServiceInterfaces::createDspInterfaceStatus(int
 {
     Q_UNUSED(entityId)
     return std::make_shared<Zera::cDSPInterface>();
+}
+
+Zera::DspInterfacePtr DemoFactoryServiceInterfaces::createDspInterfaceDspSuper(int entityId, int maxPeriodCount)
+{
+    return std::make_shared<DemoDspInterfaceDspSuper>(entityId, maxPeriodCount, m_valueGenerator);
 }

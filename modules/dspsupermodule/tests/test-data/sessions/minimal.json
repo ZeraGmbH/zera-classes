@@ -1,0 +1,9 @@
+{
+    "modules" : [
+        {
+          "name" : "dspsupermodule",
+          "configFile" : "dspsupermodule-common.xml",
+          "id": 9000
+        }
+    ]
+}

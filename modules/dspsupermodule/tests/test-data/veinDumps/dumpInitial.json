@@ -1,0 +1,177 @@
+{
+    "9000": {
+        "ACT_PERIOD_VALUES1": null,
+        "ACT_PERIOD_VALUES2": null,
+        "ACT_PERIOD_VALUES3": null,
+        "ACT_PERIOD_VALUES4": null,
+        "ACT_PERIOD_VALUES5": null,
+        "ACT_VALUE1": null,
+        "ACT_VALUE2": null,
+        "ACT_VALUE3": null,
+        "ACT_VALUE4": null,
+        "ACT_VALUE5": null,
+        "EntityName": "DspSuperModule1",
+        "INF_ModuleInterface": {
+            "ComponentInfo": {
+                "ACT_PERIOD_VALUES1": {
+                    "ChannelName": "UL1",
+                    "Description": "Array of per period measurement values",
+                    "Unit": "V"
+                },
+                "ACT_PERIOD_VALUES2": {
+                    "ChannelName": "UL2",
+                    "Description": "Array of per period measurement values",
+                    "Unit": "V"
+                },
+                "ACT_PERIOD_VALUES3": {
+                    "ChannelName": "UL3",
+                    "Description": "Array of per period measurement values",
+                    "Unit": "V"
+                },
+                "ACT_PERIOD_VALUES4": {
+                    "ChannelName": "UAUX",
+                    "Description": "Array of per period measurement values",
+                    "Unit": "V"
+                },
+                "ACT_PERIOD_VALUES5": {
+                    "ChannelName": "IAUX",
+                    "Description": "Array of per period measurement values",
+                    "Unit": "A"
+                },
+                "ACT_VALUE1": {
+                    "ChannelName": "UL1",
+                    "Description": "Measurement value (period average)",
+                    "Unit": "V"
+                },
+                "ACT_VALUE2": {
+                    "ChannelName": "UL2",
+                    "Description": "Measurement value (period average)",
+                    "Unit": "V"
+                },
+                "ACT_VALUE3": {
+                    "ChannelName": "UL3",
+                    "Description": "Measurement value (period average)",
+                    "Unit": "V"
+                },
+                "ACT_VALUE4": {
+                    "ChannelName": "UAUX",
+                    "Description": "Measurement value (period average)",
+                    "Unit": "V"
+                },
+                "ACT_VALUE5": {
+                    "ChannelName": "IAUX",
+                    "Description": "Measurement value (period average)",
+                    "Unit": "A"
+                },
+                "EntityName": {
+                    "Description": "Module's name"
+                },
+                "INF_ModuleInterface": {
+                    "Description": "Module's interface details"
+                },
+                "PAR_PeriodCount": {
+                    "Description": "Measurement periods collected per measurement",
+                    "Validation": {
+                        "Data": [
+                            5,
+                            13,
+                            0
+                        ],
+                        "Type": "INTEGER"
+                    }
+                },
+                "SIG_Measuring": {
+                    "Description": "Signal indicating measurement activity"
+                }
+            },
+            "ModuleInfo": {
+                "Description": "This module measures per period average (DC) values)",
+                "Name": "DspSuperModule1"
+            },
+            "SCPIInfo": {
+                "Cmd": [
+                    [
+                        "MEASURE",
+                        "U1",
+                        "8",
+                        "ACT_VALUE1",
+                        "0"
+                    ],
+                    [
+                        "MEASURE",
+                        "PU1",
+                        "8",
+                        "ACT_PERIOD_VALUES1",
+                        "0"
+                    ],
+                    [
+                        "MEASURE",
+                        "U2",
+                        "8",
+                        "ACT_VALUE2",
+                        "0"
+                    ],
+                    [
+                        "MEASURE",
+                        "PU2",
+                        "8",
+                        "ACT_PERIOD_VALUES2",
+                        "0"
+                    ],
+                    [
+                        "MEASURE",
+                        "U3",
+                        "8",
+                        "ACT_VALUE3",
+                        "0"
+                    ],
+                    [
+                        "MEASURE",
+                        "PU3",
+                        "8",
+                        "ACT_PERIOD_VALUES3",
+                        "0"
+                    ],
+                    [
+                        "MEASURE",
+                        "UAUX",
+                        "8",
+                        "ACT_VALUE4",
+                        "0"
+                    ],
+                    [
+                        "MEASURE",
+                        "PUAUX",
+                        "8",
+                        "ACT_PERIOD_VALUES4",
+                        "0"
+                    ],
+                    [
+                        "MEASURE",
+                        "IAUX",
+                        "8",
+                        "ACT_VALUE5",
+                        "0"
+                    ],
+                    [
+                        "MEASURE",
+                        "PIAUX",
+                        "8",
+                        "ACT_PERIOD_VALUES5",
+                        "0"
+                    ],
+                    [
+                        "CONFIGURATION",
+                        "PCOUNT",
+                        "10",
+                        "PAR_PeriodCount",
+                        "0"
+                    ]
+                ],
+                "Name": "PAV1"
+            }
+        },
+        "PAR_PeriodCount": 13,
+        "SIG_Measuring": 1
+    }
+}
