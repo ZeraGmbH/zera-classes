@@ -1,0 +1,24 @@
+{
+    "9000": {
+        "EntityName": "DspSuperModule1",
+        "INF_ModuleInterface": {
+            "ComponentInfo": {
+                "EntityName": {
+                    "Description": "Module's name"
+                },
+                "INF_ModuleInterface": {
+                    "Description": "Module's interface details"
+                }
+            },
+            "ModuleInfo": {
+                "Description": "DSP support on timestamps for other modules",
+                "Name": "DspSuperModule1"
+            },
+            "SCPIInfo": {
+                "Cmd": [
+                ],
+                "Name": "DSP1"
+            }
+        }
+    }
+}

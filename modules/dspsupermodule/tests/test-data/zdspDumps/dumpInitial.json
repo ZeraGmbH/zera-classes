@@ -1,0 +1,98 @@
+{
+    "ProgMemCyclicAvailable": 3584,
+    "ProgMemCyclicFree": 3556,
+    "ProgMemInterruptAvailable": 512,
+    "ProgMemInterruptFree": 511,
+    "UserMemAlignedAvailable": 4095,
+    "UserMemAlignedFree": 4095,
+    "UserMemAvailable": 28287,
+    "UserMemFree": 28132,
+    "ZdspMemDump": {
+        "9000": {
+            "DspCmdsCompiledCrcCyclic": "0xAB1FB8FB",
+            "DspCmdsCompiledCrcInterrupt": "0x00000000",
+            "DspCmdsRawCyclic": [
+                "STARTCHAIN(0x000001,0x000001,0x000101)",
+                "SETVAL(0x006E7F,0x000001)",
+                "SETVAL(0x000002,0x000001)",
+                "SETVAL(0x000003,0x000019)",
+                "SETVAL(0x000004,0x000005)",
+                "DEACTIVATECHAIN(0x000001,0x000101)",
+                "STOPCHAIN(0x000001,0x000101)",
+                "COPYDU(0x000001,0x001085,0x000000)",
+                "GETSTIME(0x000001)",
+                "XCOPYMEM(0x000001,0x000000,0x000004)",
+                "XCOPYMEM(0x000001,0x006E7F,0x000004)",
+                "XCOPYMEM(0x000001,0x000001,0x000004)",
+                "INC(0x000002)",
+                "INC(0x006E7F)",
+                "TESTVVSKIPGT(0x000002,0x000003)",
+                "TESTSKIPNOIRQPENDING()",
+                "ACTIVATECHAIN(0x000001,0x000102)",
+                "STARTCHAIN(0x000000,0x000001,0x000102)",
+                "SETVAL(0x000002,0x000001)",
+                "SETVAL(0x000004,0x000005)",
+                "COPYMEM(0x00004B,0x000005,0x000050)",
+                "DSPINTTRIGGER(0x000000,0x000000)",
+                "DEACTIVATECHAIN(0x000001,0x000102)",
+                "STOPCHAIN(0x000001,0x000102)",
+                "DSPINTPOST()"
+            ],
+            "DspCmdsRawInterrupt": [
+            ],
+            "DspVarsAligned": {
+            },
+            "DspVarsClientBaseAddress": "0x098180",
+            "DspVarsGlobal": {
+                "0x006E7F / 0x09EFFF": "GLOBALPERIODCOUNT"
+            },
+            "DspVarsLocal": {
+                "0x000000 / 0x098180": "LOCAL_BUSY",
+                "0x000001 / 0x098181": "LOCAL_SYSTIME",
+                "0x000002 / 0x098182": "PERIODCURR",
+                "0x000003 / 0x098183": "PERIODMAX",
+                "0x000004 / 0x098184": "RESULT_BUFF_IDX",
+                "0x000005 / 0x098185": "RESULT_ARRAY_WORK",
+                "0x000050 / 0x0981D0": "RESULT_ARRAY"
+            }
+        },
+        "TotalCmdListCyclic": [
+            "-- Start entity ID 0 / Global init --",
+            "DSPMEMOFFSET(0x0E0800)",
+            "-- Start entity ID 9000 / Cyclic mem offset --",
+            "USERMEMOFFSET(0x098180)",
+            "-- Start entity ID 9000 / Cyclic sequence --",
+            "STARTCHAIN(0x000001,0x000001,0x000101)",
+            "SETVAL(0x006E7F,0x000001)",
+            "SETVAL(0x000002,0x000001)",
+            "SETVAL(0x000003,0x000019)",
+            "SETVAL(0x000004,0x000005)",
+            "DEACTIVATECHAIN(0x000001,0x000101)",
+            "STOPCHAIN(0x000001,0x000101)",
+            "COPYDU(0x000001,0x001085,0x000000)",
+            "GETSTIME(0x000001)",
+            "XCOPYMEM(0x000001,0x000000,0x000004)",
+            "XCOPYMEM(0x000001,0x006E7F,0x000004)",
+            "XCOPYMEM(0x000001,0x000001,0x000004)",
+            "INC(0x000002)",
+            "INC(0x006E7F)",
+            "TESTVVSKIPGT(0x000002,0x000003)",
+            "TESTSKIPNOIRQPENDING()",
+            "ACTIVATECHAIN(0x000001,0x000102)",
+            "STARTCHAIN(0x000000,0x000001,0x000102)",
+            "SETVAL(0x000002,0x000001)",
+            "SETVAL(0x000004,0x000005)",
+            "COPYMEM(0x00004B,0x000005,0x000050)",
+            "DSPINTTRIGGER(0x000000,0x000000)",
+            "DEACTIVATECHAIN(0x000001,0x000102)",
+            "STOPCHAIN(0x000001,0x000102)",
+            "DSPINTPOST()"
+        ],
+        "TotalCmdListCyclicMaxInterruptCount": 1,
+        "TotalCmdListInterrupt": [
+        ],
+        "TotalCmdListInterruptMaxInterruptCount": 0,
+        "TotalDspCmdsCompiledCrcCyclic": "0x7996693D",
+        "TotalDspCmdsCompiledCrcInterrupt": "0x6522DF69"
+    }
+}

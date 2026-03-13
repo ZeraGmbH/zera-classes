@@ -1,0 +1,27 @@
+function(SETUP_QTESTS_MODULE)
+    SETUP_QTESTS(${ARGN})
+    foreach(_testname ${ARGN})
+        target_link_libraries(${_testname}
+            PRIVATE
+            zera-modulemanager-testlib
+            dspsupermodule-static
+            Zera::VfConvenientCode
+        )
+    endforeach()
+endfunction()
+
+SETUP_QTESTS_MODULE(
+    test_dspsuper_config_load
+    test_dspsuper_demovalues
+    test_dspsuper_module
+)
+
+target_sources(test_dspsuper_config_load
+  PRIVATE
+    test-data/test-data.qrc
+)
+
+target_sources(test_dspsuper_module
+  PRIVATE
+    test-data/test-data.qrc
+)

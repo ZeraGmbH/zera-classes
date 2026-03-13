@@ -1,0 +1,39 @@
+file(GLOB SOURCES
+    ${CMAKE_CURRENT_SOURCE_DIR}/*.cpp
+    )
+
+file(GLOB HEADER
+    ${CMAKE_CURRENT_SOURCE_DIR}/*.h
+    )
+
+add_library(dspsupermodule-demolib STATIC
+    ${SOURCES}
+    ${HEADER}
+)
+
+target_include_directories(dspsupermodule-demolib
+    PUBLIC
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
+    $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/dspsupermodule-demolib>
+    )
+
+target_link_libraries(dspsupermodule-demolib
+    PUBLIC
+    dspsupermodule-static
+    module-service-interfaces-demolib
+    Zera::zera-timers
+)
+
+set_target_properties(dspsupermodule-demolib PROPERTIES VERSION ${PROJECT_VERSION})
+set_target_properties(dspsupermodule-demolib PROPERTIES SOVERSION ${PROJECT_VERSION_MAJOR})
+
+export(TARGETS dspsupermodule-demolib NAMESPACE Zera:: FILE ZeraClassesTargets.cmake)
+install(TARGETS dspsupermodule-demolib
+    EXPORT ZeraClassesExport
+    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+    )
+
+install(
+    FILES ${HEADER}
+    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/dspsupermodule-demolib
+    )

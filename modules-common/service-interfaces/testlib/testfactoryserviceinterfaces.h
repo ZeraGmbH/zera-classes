@@ -19,7 +19,8 @@ enum DspInterfaceInjectableTypes {
     INJECT_RANGE_PROGRAM,
     INJECT_RMS,
     INJECT_DFT,
-    INJECT_FFT
+    INJECT_FFT,
+    INJECT_SUPER
 };
 
 class TestFactoryServiceInterfaces : public AbstractFactoryServiceInterfaces
@@ -41,6 +42,7 @@ public:
     Zera::DspInterfacePtr createDspInterfaceRefProg(int entityId, const QStringList &valueChannelList) override;
     Zera::DspInterfacePtr createDspInterfaceRefAdj(int entityId) override;
     Zera::DspInterfacePtr createDspInterfaceStatus(int entityId) override;
+    Zera::DspInterfacePtr createDspInterfaceDspSuper(int entityId, int maxPeriodCount) override;
 
     TestDspInterfacePtr getInterface(int entityId, DspInterfaceCreatedBy createdBy);
     TestDspInterfacePtr getInjectableInterface(DspInterfaceInjectableTypes injectType);

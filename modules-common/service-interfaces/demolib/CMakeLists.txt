@@ -29,6 +29,7 @@ target_link_libraries(module-service-interfaces-demolib
     thdnmodule-demolib
     oscimodule-demolib
     periodaveragemodule-demolib
+    dspsupermodule-demolib
     Zera::service-interfaces-demolib
     Zera::zera-timers
 )
