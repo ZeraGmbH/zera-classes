@@ -31,8 +31,6 @@ enum moduleconfigstate
 
 class cDftModuleConfigData;
 
-// rangemoduleconfiguration holds configuration data as well as parameter
-
 class cDftModuleConfiguration: public BaseModuleConfiguration
 {
     Q_OBJECT

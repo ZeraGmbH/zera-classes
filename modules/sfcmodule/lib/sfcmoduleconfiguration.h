@@ -16,8 +16,6 @@ enum moduleconfigstate
     setDutInput1Name = 32,
 };
 
-// moduleconfiguration holds configuration data as well as parameter
-
 class cSfcModuleConfiguration : public BaseModuleConfiguration
 {
     Q_OBJECT

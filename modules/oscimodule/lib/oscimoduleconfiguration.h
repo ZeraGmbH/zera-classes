@@ -25,8 +25,6 @@ enum moduleconfigstate
 
 class cOsciModuleConfigData;
 
-// rangemoduleconfiguration holds configuration data as well as parameter
-
 class cOsciModuleConfiguration: public BaseModuleConfiguration
 {
     Q_OBJECT

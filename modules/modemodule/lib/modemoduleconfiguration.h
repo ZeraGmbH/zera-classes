@@ -23,8 +23,6 @@ enum moduleconfigstate
 
 class cModeModuleConfigData;
 
-// modemoduleconfiguration holds configuration data as well as parameter
-
 class cModeModuleConfiguration: public BaseModuleConfiguration
 {
     Q_OBJECT

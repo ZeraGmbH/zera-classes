@@ -27,8 +27,6 @@ enum moduleconfigstate
 
 class cRmsModuleConfigData;
 
-// rangemoduleconfiguration holds configuration data as well as parameter
-
 class cRmsModuleConfiguration: public BaseModuleConfiguration
 {
     Q_OBJECT

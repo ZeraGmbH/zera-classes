@@ -38,8 +38,6 @@ enum moduleconfigstate
 
 class cRangeModuleConfigData;
 
-// rangemoduleconfiguration holds configuration data as well as parameter
-
 class cRangeModuleConfiguration: public BaseModuleConfiguration
 {
     Q_OBJECT

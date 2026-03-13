@@ -35,8 +35,6 @@ enum moduleconfigstate
 
 class cSem1ModuleConfigData;
 
-// sem1moduleconfiguration holds configuration data as well as parameter
-
 class cSem1ModuleConfiguration: public BaseModuleConfiguration
 {
     Q_OBJECT

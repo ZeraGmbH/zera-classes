@@ -39,8 +39,6 @@ enum moduleconfigstate
 
 class cSec1ModuleConfigData;
 
-// sec1moduleconfiguration holds configuration data as well as parameter
-
 class cSec1ModuleConfiguration: public BaseModuleConfiguration
 {
     Q_OBJECT

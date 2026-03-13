@@ -11,8 +11,6 @@ namespace APIMODULE
     {
     };
 
-    // moduleconfiguration holds configuration data as well as parameter
-
     class cApiModuleConfiguration : public BaseModuleConfiguration
     {
         Q_OBJECT

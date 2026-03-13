@@ -25,8 +25,6 @@ enum moduleconfigstate
 
 class cReferenceModuleConfigData;
 
-// referencemoduleconfiguration holds configuration data as well as parameter
-
 class cReferenceModuleConfiguration: public BaseModuleConfiguration
 {
     Q_OBJECT

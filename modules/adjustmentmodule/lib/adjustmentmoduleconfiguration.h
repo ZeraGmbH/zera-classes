@@ -39,7 +39,6 @@ enum moduleconfigstate
 
 class cAdjustmentModuleConfigData;
 
-// moduleconfiguration holds configuration data as well as parameter
 class cAdjustmentModuleConfiguration: public BaseModuleConfiguration
 {
     Q_OBJECT

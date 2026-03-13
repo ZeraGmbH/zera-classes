@@ -50,7 +50,6 @@ enum moduleconfigstate
 
 class cPower2ModuleConfigData;
 
-// moduleconfiguration holds configuration data as well as parameter
 class cPower2ModuleConfiguration: public BaseModuleConfiguration
 {
     Q_OBJECT

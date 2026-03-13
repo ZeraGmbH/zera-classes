@@ -13,8 +13,6 @@ enum moduleconfigstate
     setMacAddress
 };
 
-// moduleconfiguration holds configuration data as well as parameter
-
 class cBleModuleConfiguration: public BaseModuleConfiguration
 {
     Q_OBJECT

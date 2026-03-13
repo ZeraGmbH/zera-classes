@@ -33,8 +33,6 @@ enum moduleconfigstate
 
 class cTransformer1ModuleConfigData;
 
-// moduleconfiguration holds configuration data as well as parameter
-
 class cTransformer1ModuleConfiguration: public BaseModuleConfiguration
 {
     Q_OBJECT

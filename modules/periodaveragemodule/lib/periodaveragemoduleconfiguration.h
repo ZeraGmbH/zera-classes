@@ -8,8 +8,6 @@
 namespace PERIODAVERAGEMODULE
 {
 
-// rangemoduleconfiguration holds configuration data as well as parameter
-
 class PeriodAverageModuleConfiguration: public BaseModuleConfiguration
 {
     Q_OBJECT

@@ -14,8 +14,6 @@ enum moduleconfigstate
     setMeasSystem1 = 10 // we leave some place for additional cmds
 };
 
-// moduleconfiguration holds configuration data as well as parameter
-
 class cDosageModuleConfiguration : public BaseModuleConfiguration
 {
     Q_OBJECT

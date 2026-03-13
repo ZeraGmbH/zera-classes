@@ -25,8 +25,6 @@ enum moduleconfigstate
 
 class cSampleModuleConfigData;
 
-// samplemoduleconfiguration holds configuration data as well as parameter
-
 class cSampleModuleConfiguration: public BaseModuleConfiguration
 {
     Q_OBJECT
