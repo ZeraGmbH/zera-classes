@@ -17,15 +17,6 @@
 namespace FFTMODULE
 {
 
-enum fftmoduleCmds
-{
-    varlist2dsp,
-    cmdlist2dsp,
-    activatedsp,
-    dataaquistion,
-    writeparameter,
-};
-
 class cFftModuleMeasProgram: public cBaseDspMeasProgram
 {
     Q_OBJECT
