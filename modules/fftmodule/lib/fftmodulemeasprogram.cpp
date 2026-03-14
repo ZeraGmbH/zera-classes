@@ -8,7 +8,6 @@
 #include <scpi.h>
 #include <stringvalidator.h>
 #include <math.h>
-#include <timerfactoryqt.h>
 
 namespace FFTMODULE
 {

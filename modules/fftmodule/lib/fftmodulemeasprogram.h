@@ -5,14 +5,12 @@
 #include "fftmoduleconfigdata.h"
 #include "actualvaluestartstophandler.h"
 #include <basedspmeasprogram.h>
-#include <measchannelinfo.h>
 #include <movingwindowfilter.h>
 #include <QList>
 #include <QHash>
 #include <QStateMachine>
 #include <QState>
 #include <QFinalState>
-#include <timerperiodicqt.h>
 
 namespace FFTMODULE
 {
