@@ -14,15 +14,6 @@
 namespace DFTMODULE
 {
 
-enum dftmoduleCmds
-{
-    varlist2dsp,
-    cmdlist2dsp,
-    activatedsp,
-    dataaquistion,
-    writeparameter,
-};
-
 class cDftModuleMeasProgram: public cBaseDspMeasProgram
 {
     Q_OBJECT

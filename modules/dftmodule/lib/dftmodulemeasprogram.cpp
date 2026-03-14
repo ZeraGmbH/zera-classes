@@ -241,6 +241,15 @@ void cDftModuleMeasProgram::setDspCmdList()
     m_dspInterface->addCycListItem("STOPCHAIN(1,0x0102)"); // end processnr., mainchain 1 subchain 2
 }
 
+enum dftmoduleCmds
+{
+    varlist2dsp,
+    cmdlist2dsp,
+    activatedsp,
+    dataaquistion,
+    writeparameter,
+};
+
 void cDftModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant answer)
 {
     Q_UNUSED(answer)
