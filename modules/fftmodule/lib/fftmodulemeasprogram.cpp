@@ -242,8 +242,6 @@ void cFftModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QV
 {
     Q_UNUSED(answer)
     if (msgnr == 0) { // 0 was reserved for async. messages
-        // we got an interrupt from our cmd chain and have to fetch our actual values
-        // but we synchronize on ranging process
         if (m_bActive) // in case of deactivation in progress, no dataaquisition
             dataAcquisitionDSP();
     }

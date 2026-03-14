@@ -423,8 +423,6 @@ void cPower1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply,
         QString sintnr = answer.toString().section(':', 1, 1);
         QString device = answer.toString().section(':', 0, 0);
         if(device == "DSPINT") {
-            // we got an interrupt from our cmd chain and have to fetch our actual values
-            // but we synchronize on ranging process
             if (m_bActive && !m_dataAcquisitionMachine.isRunning()) // in case of deactivation in progress, no dataaquisition
                 m_dataAcquisitionMachine.start();
         }

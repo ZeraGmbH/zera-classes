@@ -124,7 +124,6 @@ void cReferenceModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 rep
         switch (service)
         {
         case irqNr:
-            // we got an interrupt from our cmd chain and have to fetch our actual values
             if (m_bActive && !m_dataAcquisitionMachine.isRunning()) // in case of deactivation in progress, no dataaquisition
                 m_dataAcquisitionMachine.start();
 
