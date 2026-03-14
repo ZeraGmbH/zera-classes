@@ -347,7 +347,7 @@ void cDftModuleMeasProgram::setRefChannelValidator()
 void cDftModuleMeasProgram::initRFieldMeasurement()
 {
     for (int i = 0; i < getConfData()->m_rfieldChannelList.length(); i++)
-        rfieldActvalueIndexList.append(getConfData()->m_valueChannelList.indexOf(getConfData()->m_rfieldChannelList.at(i)));
+        m_rfieldActvalueIndexList.append(getConfData()->m_valueChannelList.indexOf(getConfData()->m_rfieldChannelList.at(i)));
 }
 
 bool cDftModuleMeasProgram::isConfiguredForDcRef()
@@ -385,7 +385,7 @@ void cDftModuleMeasProgram::setInterfaceActualValues(QVector<float> *actualValue
         // rfield computation
         double angle[3];
         for (int j = 0; j < 3; j++)
-            angle[j] = userAtan(actualValues->at(2*rfieldActvalueIndexList.at(j)+1), actualValues->at(2*rfieldActvalueIndexList.at(j)));
+            angle[j] = userAtan(actualValues->at(2*m_rfieldActvalueIndexList.at(j)+1), actualValues->at(2*m_rfieldActvalueIndexList.at(j)));
         if ((angle[0] < angle[1]) && (angle[1] < angle[2]))
             m_pRFieldActualValue->setValue("123");
         else
