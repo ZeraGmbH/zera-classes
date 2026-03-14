@@ -54,6 +54,8 @@ cDftModuleMeasProgram::cDftModuleMeasProgram(cDftModule* module, std::shared_ptr
     connect(&m_unloadStart, &QState::entered, this, &cDftModuleMeasProgram::deactivateDSPStart);
     connect(&m_unloadDSPDoneState, &QState::entered, this, &cModuleActivist::deactivated);
 
+    connect(this, &cDftModuleMeasProgram::actualValues,
+            &m_startStopHandler, &ActualValueStartStopHandler::onNewActualValues);
     if (getConfData()->m_bmovingWindow) {
         m_movingwindowFilter.setIntegrationtime(getConfData()->m_fMeasInterval.m_fValue);
         connect(&m_startStopHandler, &ActualValueStartStopHandler::sigNewActualValues,
@@ -477,7 +479,7 @@ void cDftModuleMeasProgram::dataReadDSP()
             if (getConfData()->m_bRefChannelOn)
                 turnVectorsToRefChannel();
         }
-        m_startStopHandler.onNewActualValues(&m_ModuleActualValues);
+        emit actualValues(&m_ModuleActualValues); // and send them
         m_pMeasureSignal->setValue(QVariant(1)); // signal measuring
     }
 }
