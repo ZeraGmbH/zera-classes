@@ -7,7 +7,6 @@
 #include <basedspmeasprogram.h>
 #include <measchannelinfo.h>
 #include <movingwindowfilter.h>
-#include <timerperiodicqt.h>
 #include <QStateMachine>
 #include <QState>
 #include <QFinalState>
@@ -30,10 +29,24 @@ class cDftModuleMeasProgram: public cBaseDspMeasProgram
 public:
     cDftModuleMeasProgram(cDftModule* module, std::shared_ptr<BaseModuleConfiguration> pConfiguration);
     void generateVeinInterface() override;
-
 public slots:
     virtual void start() override; // difference between start and stop is that actual values
     virtual void stop() override; // in interface are not updated when stop
+
+private slots:
+    void catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant answer);
+    void setInterfaceActualValues(QVector<float> *actualValues);
+
+    void dspserverConnect();
+    void varList2DSP();
+    void cmdList2DSP();
+    void activateDSP();
+    void activateDSPdone();
+
+    void deactivateDSPStart();
+
+    void newIntegrationtime(QVariant ti);
+    void newRefChannel(QVariant refchn);
 private:
     cDftModuleConfigData* getConfData();
     void setDspVarList();
@@ -41,6 +54,11 @@ private:
     void turnVectorsToRefChannel();
     void dataAcquisitionDSP();
     void dataReadDSP();
+    void setActualValuesNames();
+    void setSCPIMeasInfo();
+    void setRefChannelValidator();
+    void initRFieldMeasurement();
+    bool isConfiguredForDcRef();
 
     cDftModule* m_pModule;
     ActualValueStartStopHandler m_startStopHandler;
@@ -71,28 +89,7 @@ private:
     QState m_unloadStart;
     QFinalState m_unloadDSPDoneState;
 
-    void setActualValuesNames();
-    void setSCPIMeasInfo();
-    void setRefChannelValidator();
-    void initRFieldMeasurement();
-    bool isConfiguredForDcRef();
-
     cMovingwindowFilter m_movingwindowFilter;
-
-private slots:
-    void catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant answer);
-    void setInterfaceActualValues(QVector<float> *actualValues);
-
-    void dspserverConnect();
-    void varList2DSP();
-    void cmdList2DSP();
-    void activateDSP();
-    void activateDSPdone();
-
-    void deactivateDSPStart();
-
-    void newIntegrationtime(QVariant ti);
-    void newRefChannel(QVariant refchn);
 };
 
 }
