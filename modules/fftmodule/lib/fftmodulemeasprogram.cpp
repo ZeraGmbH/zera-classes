@@ -1,6 +1,7 @@
 #include "fftmodulemeasprogram.h"
 #include "fftmoduleconfiguration.h"
 #include "servicechannelnamehelper.h"
+#include "taskdspdataacquisition.h"
 #include <errormessages.h>
 #include <reply.h>
 #include <proxy.h>
@@ -233,17 +234,14 @@ enum fftmoduleCmds
     varlist2dsp,
     cmdlist2dsp,
     activatedsp,
-    dataaquistion,
     writeparameter,
 };
 
 void cFftModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant answer)
 {
     Q_UNUSED(answer)
-    if (msgnr == 0) { // 0 was reserved for async. messages
-        if (m_bActive) // in case of deactivation in progress, no dataaquisition
-            dataAcquisitionDSP();
-    }
+    if (msgnr == 0) // 0 was reserved for async. messages
+        dataAcquisitionDSP();
     else {
         // maybe other objexts share the same dsp interface
         if (m_MsgNrCmdList.contains(msgnr)) {
@@ -268,19 +266,11 @@ void cFftModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QV
                 else
                     notifyError(dspactiveErrMsg);
                 break;
-
             case writeparameter:
                 if (reply == ack) // we ignore ack
                     ;
                 else
                     notifyError(writedspmemoryErrMsg);
-                break;
-
-            case dataaquistion:
-                if (reply == ack)
-                    dataReadDSP();
-                else
-                    notifyError(dataaquisitionErrMsg);
                 break;
             }
         }
@@ -384,9 +374,18 @@ void cFftModuleMeasProgram::deactivateDSPStart()
 
 void cFftModuleMeasProgram::dataAcquisitionDSP()
 {
-    m_pMeasureSignal->setValue(QVariant(0));
-    if(m_bActive)
-        m_MsgNrCmdList[m_dspInterface->dataAcquisition(m_pActualValuesDSP)] = dataaquistion; // we start our data aquisition now
+    if(m_bActive && m_taskDataAcquisition == nullptr) {
+        m_pMeasureSignal->setValue(QVariant(0));
+        m_taskDataAcquisition = TaskDspDataAcquisition::create(m_dspInterface, m_pActualValuesDSP);
+        connect(m_taskDataAcquisition.get(), &TaskTemplate::sigFinish, [&](bool ok) {
+            m_taskDataAcquisition.reset();
+            if (ok)
+                dataReadDSP();
+            else
+                notifyError(dataaquisitionErrMsg);
+        });
+        m_taskDataAcquisition->start();
+    }
 }
 
 void cFftModuleMeasProgram::dataReadDSP()

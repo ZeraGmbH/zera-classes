@@ -37,15 +37,14 @@ private slots:
 
     void deactivateDSPStart();
 
-    void dataAcquisitionDSP();
-    void dataReadDSP();
-
     void newIntegrationtime(QVariant ti);
     void newRefChannel(QVariant chn);
 private:
     cFftModuleConfigData* getConfData();
     void setDspVarList();
     void setDspCmdList();
+    void dataAcquisitionDSP();
+    void dataReadDSP();
     quint16 calcFftResultLenHalf(quint8 fftOrder);
     void setSCPIMeasInfo();
     void setActualValuesNames();
@@ -74,6 +73,8 @@ private:
     // statemachine for deactivating
     QState m_unloadStart;
     QFinalState m_unloadDSPDoneState;
+
+    TaskTemplatePtr m_taskDataAcquisition;
 
     cMovingwindowFilter m_movingwindowFilter;
     QVector<float> m_FFTModuleActualValues;
