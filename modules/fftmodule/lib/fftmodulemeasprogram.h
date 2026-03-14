@@ -35,11 +35,31 @@ public:
 public slots:
     virtual void start() override;
     virtual void stop() override;
+
+private slots:
+    void catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant answer);
+    void setInterfaceActualValues(QVector<float> *actualValues);
+
+    void dspserverConnect();
+    void varList2DSP();
+    void cmdList2DSP();
+    void activateDSP();
+    void activateDSPdone();
+
+    void deactivateDSPStart();
+
+    void dataAcquisitionDSP();
+    void dataReadDSP();
+
+    void newIntegrationtime(QVariant ti);
+    void newRefChannel(QVariant chn);
 private:
     cFftModuleConfigData* getConfData();
     void setDspVarList();
     void setDspCmdList();
     quint16 calcFftResultLenHalf(quint8 fftOrder);
+    void setSCPIMeasInfo();
+    void setActualValuesNames();
 
     cFftModule* m_pModule;
     ActualValueStartStopHandler m_startStopHandler;
@@ -66,34 +86,8 @@ private:
     QState m_unloadStart;
     QFinalState m_unloadDSPDoneState;
 
-    // statemachine for reading actual values
-    QStateMachine m_dataAcquisitionMachine;
-    QState m_dataAcquisitionState;
-    QFinalState m_dataAcquisitionDoneState;
-
-    void setSCPIMeasInfo();
-    void setActualValuesNames();
-
     cMovingwindowFilter m_movingwindowFilter;
     QVector<float> m_FFTModuleActualValues;
-
-private slots:
-    void catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant answer);
-    void setInterfaceActualValues(QVector<float> *actualValues);
-
-    void dspserverConnect();
-    void varList2DSP();
-    void cmdList2DSP();
-    void activateDSP();
-    void activateDSPdone();
-
-    void deactivateDSPStart();
-
-    void dataAcquisitionDSP();
-    void dataReadDSP();
-
-    void newIntegrationtime(QVariant ti);
-    void newRefChannel(QVariant chn);
 };
 
 }
