@@ -5,7 +5,6 @@
 #include "dftmoduleconfiguration.h"
 #include "actualvaluestartstophandler.h"
 #include <basedspmeasprogram.h>
-#include <measchannelinfo.h>
 #include <movingwindowfilter.h>
 #include <QStateMachine>
 #include <QState>

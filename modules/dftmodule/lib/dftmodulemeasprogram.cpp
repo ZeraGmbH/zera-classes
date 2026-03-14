@@ -7,7 +7,6 @@
 #include <errormessages.h>
 #include <movingwindowfilter.h>
 #include <scpi.h>
-#include <timerfactoryqt.h>
 #include <reply.h>
 #include <proxy.h>
 #include <stringvalidator.h>
