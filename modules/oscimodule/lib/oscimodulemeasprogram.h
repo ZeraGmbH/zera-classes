@@ -4,21 +4,10 @@
 #include "actualvaluestartstophandler.h"
 #include "oscimoduleconfigdata.h"
 #include <basedspmeasprogram.h>
-#include <measchannelinfo.h>
 #include <QFinalState>
-#include <timerperiodicqt.h>
 
 namespace OSCIMODULE
 {
-
-enum oscimoduleCmds
-{
-    varlist2dsp,
-    cmdlist2dsp,
-    activatedsp,
-    dataaquistion,
-    writeparameter,
-};
 
 #define irqNr 6
 
@@ -33,10 +22,27 @@ public:
 public slots:
     void start() override;
     void stop() override;
+
+private slots:
+    void catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant answer);
+    void setInterfaceActualValues(QVector<float> *actualValues);
+
+    void dspserverConnect();
+    void varList2DSP();
+    void cmdList2DSP();
+    void activateDSP();
+    void activateDSPdone();
+
+    void deactivateDSPStart();
+
+    void newRefChannel(QVariant chn);
 private:
     cOsciModuleConfigData* getConfData();
     void setDspVarList();
     void setDspCmdList();
+    void setActualValuesNames();
+    void dataAcquisitionDSP();
+    void dataReadDSP();
 
     cOsciModule* m_pModule;
     ActualValueStartStopHandler m_startStopHandler;
@@ -59,30 +65,7 @@ private:
     QState m_unloadStart;
     QFinalState m_unloadDSPDoneState;
 
-    // statemachine for reading actual values
-    QStateMachine m_dataAcquisitionMachine;
-    QState m_dataAcquisitionState;
-    QFinalState m_dataAcquisitionDoneState;
-
-    void setActualValuesNames();
-
-private slots:
-    void catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant answer);
-    void setInterfaceActualValues(QVector<float> *actualValues);
-
-    void dspserverConnect();
-    void varList2DSP();
-    void cmdList2DSP();
-    void activateDSP();
-    void activateDSPdone();
-
-    void deactivateDSPStart();
-
-    void dataAcquisitionDSP();
-    void dataReadDSP();
-
-    void newRefChannel(QVariant chn);
-
+    TaskTemplatePtr m_taskDataAcquisition;
 };
 
 }
