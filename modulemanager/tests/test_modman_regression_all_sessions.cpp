@@ -187,7 +187,9 @@ void test_modman_regression_all_sessions::checkObjectsProperlyDeleted()
     QCOMPARE(SCPIMODULE::cSCPIMeasure::getInstanceCount(), 0);
     QCOMPARE(SCPIMODULE::ScpiBaseDelegate::getInstanceCount(), 0);
 
-    QCOMPARE(ProtonetCommand::getInstanceCount(), 0); // for zenux-services
+    // for zenux-services
+    QCOMPARE(ProtonetCommand::getInstanceCount(), 0);
+    QCOMPARE(ZdspClient::getInstanceCount(), 0);
     QCOMPARE(Zera::ProxyClientPrivate::getInstanceCount(), 0);
 }
 
