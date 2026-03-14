@@ -1205,7 +1205,7 @@
             }
         },
         "1120": {
-            "DspCmdsCompiledCrcCyclic": "0x3E8A67DA",
+            "DspCmdsCompiledCrcCyclic": "0xBAA9FA0F",
             "DspCmdsCompiledCrcInterrupt": "0x00000000",
             "DspCmdsRawCyclic": [
                 "STARTCHAIN(0x000001,0x000001,0x000101)",
@@ -1249,7 +1249,7 @@
                 "COPYDATA(0x000005,0x000000,0x000DC8)",
                 "INTERPOLATIONIND(0x000080,0x000FC2,0x001247)",
                 "COPYMEM(0x0001F8,0x000DC8,0x0009D8)",
-                "DSPINTTRIGGER(0x000000,0x000006)",
+                "DSPINTTRIGGER(0x000000,0x000000)",
                 "DEACTIVATECHAIN(0x000001,0x000102)",
                 "STOPCHAIN(0x000001,0x000102)",
                 "DSPINTPOST()"
@@ -2212,7 +2212,7 @@
             "COPYDATA(0x000005,0x000000,0x000DC8)",
             "INTERPOLATIONIND(0x000080,0x000FC2,0x001247)",
             "COPYMEM(0x0001F8,0x000DC8,0x0009D8)",
-            "DSPINTTRIGGER(0x000000,0x000006)",
+            "DSPINTTRIGGER(0x000000,0x000000)",
             "DEACTIVATECHAIN(0x000001,0x000102)",
             "STOPCHAIN(0x000001,0x000102)",
             "DSPINTPOST()"
@@ -2221,7 +2221,7 @@
         "TotalCmdListInterrupt": [
         ],
         "TotalCmdListInterruptMaxInterruptCount": 0,
-        "TotalDspCmdsCompiledCrcCyclic": "0xFECE7409",
+        "TotalDspCmdsCompiledCrcCyclic": "0x370E83F5",
         "TotalDspCmdsCompiledCrcInterrupt": "0x6522DF69"
     }
 }

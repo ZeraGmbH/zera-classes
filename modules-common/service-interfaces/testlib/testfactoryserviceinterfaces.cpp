@@ -107,7 +107,8 @@ Zera::DspInterfacePtr TestFactoryServiceInterfaces::createDspInterfaceOsci(int e
     return createDspInterfaceCommon(entityId,
                                     INJECT_NOT_SUPPORTED,
                                     MODULEPROG,
-                                    6 /* that is what module expects currently */, valueChannelList);
+                                    0 /* dummy */,
+                                    valueChannelList);
 }
 
 Zera::DspInterfacePtr TestFactoryServiceInterfaces::createDspInterfacePeriodAverage(int entityId,

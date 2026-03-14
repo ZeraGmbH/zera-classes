@@ -1,6 +1,7 @@
 #ifndef OSCIMODULEMEASPROGRAM_H
 #define OSCIMODULEMEASPROGRAM_H
 
+#include "oscimodule.h"
 #include "actualvaluestartstophandler.h"
 #include "oscimoduleconfigdata.h"
 #include <basedspmeasprogram.h>
@@ -8,10 +9,6 @@
 
 namespace OSCIMODULE
 {
-
-#define irqNr 6
-
-class cOsciModule;
 
 class cOsciModuleMeasProgram: public cBaseDspMeasProgram
 {

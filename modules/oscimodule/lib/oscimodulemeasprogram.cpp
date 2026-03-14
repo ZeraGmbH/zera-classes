@@ -178,7 +178,7 @@ void cOsciModuleMeasProgram::setDspCmdList()
             m_dspInterface->addCycListItem(QString("COPYMEM(%1,WORKSPACE+%2,MEASSIGNAL+%3)").arg(samples).arg(samples).arg(i*samples));
         }
 
-        m_dspInterface->addCycListItem(QString("DSPINTTRIGGER(0x0,0x%1)").arg(irqNr)); // send interrupt to module
+        m_dspInterface->addCycListItem(QString("DSPINTTRIGGER(0x0,0x%1)").arg(0)); // send interrupt to module
         m_dspInterface->addCycListItem("DEACTIVATECHAIN(1,0x0102)");
 
     m_dspInterface->addCycListItem("STOPCHAIN(1,0x0102)"); // end processnr., mainchain 1 subchain 2
@@ -194,15 +194,9 @@ enum oscimoduleCmds
 
 void cOsciModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant answer)
 {
-    if (msgnr == 0) { // 0 was reserved for async. messages
-        QString sintnr = answer.toString().section(':', 1, 1);
-        int service = sintnr.toInt();
-        switch (service) {
-        case irqNr:
-            dataAcquisitionDSP();
-            break;
-        }
-    }
+    Q_UNUSED(answer)
+    if (msgnr == 0) // 0 was reserved for async. messages
+        dataAcquisitionDSP();
     else {
         // maybe other objexts share the same dsp interface
         if (m_MsgNrCmdList.contains(msgnr)) {

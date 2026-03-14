@@ -1,10 +1,11 @@
 #ifndef OSCIMODULE_H
 #define OSCIMODULE_H
 
-#include "oscimodulemeasprogram.h"
 #include "basemeasmodule.h"
 
 namespace OSCIMODULE {
+
+class cOsciModuleMeasProgram;
 
 class cOsciModule : public cBaseMeasModule
 {
