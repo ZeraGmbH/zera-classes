@@ -3,7 +3,7 @@
 #include "dftmoduleconfiguration.h"
 #include "dftmoduleconfigdata.h"
 #include "servicechannelnamehelper.h"
-#include "vfmodulecomponent.h"
+#include "taskdspdataacquisition.h"
 #include <errormessages.h>
 #include <movingwindowfilter.h>
 #include <scpi.h>
@@ -245,17 +245,14 @@ enum dftmoduleCmds
     varlist2dsp,
     cmdlist2dsp,
     activatedsp,
-    dataaquistion,
     writeparameter,
 };
 
 void cDftModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant answer)
 {
     Q_UNUSED(answer)
-    if (msgnr == 0) { // 0 was reserved for async. messages
-        if (m_bActive) // in case of deactivation in progress, no dataaquisition
-            dataAcquisitionDSP();
-    }
+    if (msgnr == 0) // 0 was reserved for async. messages
+        dataAcquisitionDSP();
     else {
         // maybe other objexts share the same dsp interface
         if (m_MsgNrCmdList.contains(msgnr)) {
@@ -280,19 +277,11 @@ void cDftModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QV
                 else
                     notifyError(dspactiveErrMsg);
                 break;
-
             case writeparameter:
                 if (reply == ack) // we ignore ack
                     ;
                 else
                     notifyError(writedspmemoryErrMsg);
-                break;
-
-            case dataaquistion:
-                if (reply == ack)
-                    dataReadDSP();
-                else
-                    notifyError(dataaquisitionErrMsg);
                 break;
             }
         }
@@ -452,9 +441,45 @@ void cDftModuleMeasProgram::deactivateDSPStart()
 
 void cDftModuleMeasProgram::dataAcquisitionDSP()
 {
-    m_pMeasureSignal->setValue(QVariant(0));
-    if(m_bActive)
-        m_MsgNrCmdList[m_dspInterface->dataAcquisition(m_pActualValuesDSP)] = dataaquistion; // we start our data aquisition now
+    if(m_bActive && m_taskDataAcquisition == nullptr) {
+        m_pMeasureSignal->setValue(QVariant(0));
+        m_taskDataAcquisition = TaskDspDataAcquisition::create(m_dspInterface, m_pActualValuesDSP);
+        connect(m_taskDataAcquisition.get(), &TaskTemplate::sigFinish, [&](bool ok) {
+            m_taskDataAcquisition.reset();
+            if (ok)
+                dataReadDSP();
+            else
+                notifyError(dataaquisitionErrMsg);
+        });
+        m_taskDataAcquisition->start();
+    }
+}
+
+void cDftModuleMeasProgram::dataReadDSP()
+{
+    if (m_bActive) {
+        m_ModuleActualValues = m_pActualValuesDSP->getData();
+        // dft(0) is a speciality. sin and cos in dsp are set so that we get amplitude rather than energy.
+        // so dc is multiplied  by sqrt(2) * sqrt(2) = 2
+        // used in COM5003 ref session
+        if (isConfiguredForDcRef()) {
+            for (int i = 0; i < m_veinActValueList.count(); i++) {
+                double re = m_ModuleActualValues[i*2] * 0.5;
+                m_ModuleActualValues.replace(i*2, re);
+            }
+        }
+        else {
+            // as our dft produces math positive values, we correct them to technical positive values (im * -1)
+            for (int i = 0; i < m_veinActValueList.count(); i++) {
+                double im = m_ModuleActualValues[i*2+1] * -1.0;
+                m_ModuleActualValues.replace(i*2+1, im);
+            }
+            if (getConfData()->m_bRefChannelOn)
+                turnVectorsToRefChannel();
+        }
+        m_startStopHandler.onNewActualValues(&m_ModuleActualValues);
+        m_pMeasureSignal->setValue(QVariant(1)); // signal measuring
+    }
 }
 
 void cDftModuleMeasProgram::turnVectorsToRefChannel()
@@ -500,33 +525,6 @@ void cDftModuleMeasProgram::turnVectorsToRefChannel()
             dftActComplexValuesChannelHash[key] = dftActComplexValuesChannelHash[sl.at(0)] - dftActComplexValuesChannelHash[sl.at(1)];
         m_ModuleActualValues.replace(i*2, dftActComplexValuesChannelHash[key].real());
         m_ModuleActualValues.replace(i*2+1, dftActComplexValuesChannelHash[key].imag());
-    }
-}
-
-void cDftModuleMeasProgram::dataReadDSP()
-{
-    if (m_bActive) {
-        m_ModuleActualValues = m_pActualValuesDSP->getData();
-        // dft(0) is a speciality. sin and cos in dsp are set so that we get amplitude rather than energy.
-        // so dc is multiplied  by sqrt(2) * sqrt(2) = 2
-        // used in COM5003 ref session
-        if (isConfiguredForDcRef()) {
-            for (int i = 0; i < m_veinActValueList.count(); i++) {
-                double re = m_ModuleActualValues[i*2] * 0.5;
-                m_ModuleActualValues.replace(i*2, re);
-            }
-        }
-        else {
-            // as our dft produces math positive values, we correct them to technical positive values (im * -1)
-            for (int i = 0; i < m_veinActValueList.count(); i++) {
-                double im = m_ModuleActualValues[i*2+1] * -1.0;
-                m_ModuleActualValues.replace(i*2+1, im);
-            }
-            if (getConfData()->m_bRefChannelOn)
-                turnVectorsToRefChannel();
-        }
-        m_startStopHandler.onNewActualValues(&m_ModuleActualValues);
-        m_pMeasureSignal->setValue(QVariant(1)); // signal measuring
     }
 }
 

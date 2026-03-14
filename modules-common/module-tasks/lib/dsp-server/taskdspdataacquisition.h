@@ -1,0 +1,24 @@
+#ifndef TASKDSPDATAACQUISITION_H
+#define TASKDSPDATAACQUISITION_H
+
+#include <taskservertransactiontemplate.h>
+#include <dspinterface.h>
+
+class TaskDspDataAcquisition : public TaskServerTransactionTemplate
+{
+    Q_OBJECT
+public:
+    static TaskTemplatePtr create(Zera::DspInterfacePtr dspInterface,
+                                  DspVarGroupClientInterface* actualValuesDsp, // member of dspInterface
+                                  int timeout = TRANSACTION_TIMEOUT, std::function<void()> additionalErrorHandler = []{});
+    TaskDspDataAcquisition(Zera::DspInterfacePtr dspInterface,
+                           DspVarGroupClientInterface* actualValuesDsp);
+
+private:
+    quint32 sendToServer() override;
+    bool handleCheckedServerAnswer(const QVariant &answer) override;
+    Zera::DspInterfacePtr m_dspInterface;
+    DspVarGroupClientInterface *m_actualValuesDsp;
+};
+
+#endif // TASKDSPDATAACQUISITION_H

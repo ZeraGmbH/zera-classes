@@ -79,6 +79,8 @@ private:
     QState m_unloadStart;
     QFinalState m_unloadDSPDoneState;
 
+    TaskTemplatePtr m_taskDataAcquisition;
+
     cMovingwindowFilter m_movingwindowFilter;
 };
 
