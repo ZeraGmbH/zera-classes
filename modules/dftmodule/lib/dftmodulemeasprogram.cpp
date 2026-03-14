@@ -55,16 +55,6 @@ cDftModuleMeasProgram::cDftModuleMeasProgram(cDftModule* module, std::shared_ptr
     connect(&m_unloadStart, &QState::entered, this, &cDftModuleMeasProgram::deactivateDSPStart);
     connect(&m_unloadDSPDoneState, &QState::entered, this, &cModuleActivist::deactivated);
 
-    // setting up statemachine for data acquisition
-    m_dataAcquisitionState.addTransition(this, &cDftModuleMeasProgram::dataAquisitionContinue, &m_dataAcquisitionDoneState);
-    m_dataAcquisitionMachine.addState(&m_dataAcquisitionState);
-    m_dataAcquisitionMachine.addState(&m_dataAcquisitionDoneState);
-    m_dataAcquisitionMachine.setInitialState(&m_dataAcquisitionState);
-    connect(&m_dataAcquisitionState, &QState::entered, this, &cDftModuleMeasProgram::dataAcquisitionDSP);
-    connect(&m_dataAcquisitionDoneState, &QState::entered, this, &cDftModuleMeasProgram::dataReadDSP);
-
-    connect(this, &cDftModuleMeasProgram::actualValues,
-            &m_startStopHandler, &ActualValueStartStopHandler::onNewActualValues);
     if (getConfData()->m_bmovingWindow) {
         m_movingwindowFilter.setIntegrationtime(getConfData()->m_fMeasInterval.m_fValue);
         connect(&m_startStopHandler, &ActualValueStartStopHandler::sigNewActualValues,
@@ -257,8 +247,8 @@ void cDftModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QV
     if (msgnr == 0) { // 0 was reserved for async. messages
         // we got an interrupt from our cmd chain and have to fetch our actual values
         // but we synchronize on ranging process
-        if (m_bActive && !m_dataAcquisitionMachine.isRunning()) // in case of deactivation in progress, no dataaquisition
-            m_dataAcquisitionMachine.start();
+        if (m_bActive) // in case of deactivation in progress, no dataaquisition
+            dataAcquisitionDSP();
     }
     else {
         // maybe other objexts share the same dsp interface
@@ -294,11 +284,9 @@ void cDftModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QV
 
             case dataaquistion:
                 if (reply == ack)
-                    emit dataAquisitionContinue();
-                else {
-                    m_dataAcquisitionMachine.stop();
+                    dataReadDSP();
+                else
                     notifyError(dataaquisitionErrMsg);
-                }
                 break;
             }
         }
@@ -340,7 +328,6 @@ void cDftModuleMeasProgram::setSCPIMeasInfo()
     m_pRFieldActualValue->setScpiInfo("MEASURE", "RFIELD", SCPI::isCmdwP);
 }
 
-
 void cDftModuleMeasProgram::setRefChannelValidator()
 {
     ChannelRangeObserver::SystemObserverPtr observer =  m_pModule->getSharedChannelRangeObserver();
@@ -357,7 +344,6 @@ void cDftModuleMeasProgram::setRefChannelValidator()
     m_pRefChannelParameter->setValidator(new cStringValidator(channelAliases));
 }
 
-
 void cDftModuleMeasProgram::initRFieldMeasurement()
 {
     for (int i = 0; i < getConfData()->m_rfieldChannelList.length(); i++)
@@ -368,7 +354,6 @@ bool cDftModuleMeasProgram::isConfiguredForDcRef()
 {
     return getConfData()->m_nDftOrder == 0;
 }
-
 
 void cDftModuleMeasProgram::setInterfaceActualValues(QVector<float> *actualValues)
 {
@@ -453,7 +438,6 @@ void cDftModuleMeasProgram::activateDSPdone()
 
 void cDftModuleMeasProgram::deactivateDSPStart()
 {
-    m_dataAcquisitionMachine.stop();
     m_bActive = false;
     Zera::Proxy::getInstance()->releaseConnectionSmart(m_dspClient); // no async. messages anymore
     disconnect(m_dspInterface.get(), 0, this, 0);
@@ -535,7 +519,7 @@ void cDftModuleMeasProgram::dataReadDSP()
             if (getConfData()->m_bRefChannelOn)
                 turnVectorsToRefChannel();
         }
-        emit actualValues(&m_ModuleActualValues); // and send them
+        m_startStopHandler.onNewActualValues(&m_ModuleActualValues);
         m_pMeasureSignal->setValue(QVariant(1)); // signal measuring
     }
 }

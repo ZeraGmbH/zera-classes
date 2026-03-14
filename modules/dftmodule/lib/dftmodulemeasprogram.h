@@ -39,6 +39,8 @@ private:
     void setDspVarList();
     void setDspCmdList();
     void turnVectorsToRefChannel();
+    void dataAcquisitionDSP();
+    void dataReadDSP();
 
     cDftModule* m_pModule;
     ActualValueStartStopHandler m_startStopHandler;
@@ -69,11 +71,6 @@ private:
     QState m_unloadStart;
     QFinalState m_unloadDSPDoneState;
 
-    // statemachine for reading actual values
-    QStateMachine m_dataAcquisitionMachine;
-    QState m_dataAcquisitionState;
-    QFinalState m_dataAcquisitionDoneState;
-
     void setActualValuesNames();
     void setSCPIMeasInfo();
     void setRefChannelValidator();
@@ -93,9 +90,6 @@ private slots:
     void activateDSPdone();
 
     void deactivateDSPStart();
-
-    void dataAcquisitionDSP();
-    void dataReadDSP();
 
     void newIntegrationtime(QVariant ti);
     void newRefChannel(QVariant refchn);
