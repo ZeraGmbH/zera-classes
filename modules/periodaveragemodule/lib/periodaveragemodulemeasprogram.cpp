@@ -3,6 +3,7 @@
 #include "periodaveragemoduleconfiguration.h"
 #include "servicechannelnamehelper.h"
 #include "vfmodulecomponent.h"
+#include "taskdspdataacquisition.h"
 #include <errormessages.h>
 #include <intvalidator.h>
 #include <scpi.h>
@@ -48,14 +49,6 @@ PeriodAverageModuleMeasProgram::PeriodAverageModuleMeasProgram(PeriodAverageModu
 
     connect(&m_unloadStart, &QState::entered, this, &PeriodAverageModuleMeasProgram::deactivateDSPStart);
     connect(&m_unloadDSPDoneState, &QState::entered, this, &cModuleActivist::deactivated);
-
-    // setting up statemachine for data acquisition
-    m_dataAcquisitionState.addTransition(this, &PeriodAverageModuleMeasProgram::dataAquisitionContinue, &m_dataAcquisitionDoneState);
-    m_dataAcquisitionMachine.addState(&m_dataAcquisitionState);
-    m_dataAcquisitionMachine.addState(&m_dataAcquisitionDoneState);
-    m_dataAcquisitionMachine.setInitialState(&m_dataAcquisitionState);
-    connect(&m_dataAcquisitionState, &QState::entered, this, &PeriodAverageModuleMeasProgram::dataAcquisitionDSP);
-    connect(&m_dataAcquisitionDoneState, &QState::entered, this, &PeriodAverageModuleMeasProgram::dataReadDSP);
 
     connect(this, &PeriodAverageModuleMeasProgram::actualValues,
             &m_startStopHandler, &ActualValueStartStopHandler::onNewActualValues);
@@ -189,13 +182,19 @@ void PeriodAverageModuleMeasProgram::setDspCmdList()
     m_dspInterface->addCycListItem("STOPCHAIN(1,0x0102)"); // end processnr., mainchain 1 subchain 2
 }
 
+enum periodaveragemoduleCmds
+{
+    varlist2dsp,
+    cmdlist2dsp,
+    activatedsp,
+    writeparameter,
+};
+
 void PeriodAverageModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant answer)
 {
     Q_UNUSED(answer)
-    if (msgnr == 0) { // 0 was reserved for async. messages
-        if (m_bActive && !m_dataAcquisitionMachine.isRunning()) // in case of deactivation in progress, no dataaquisition
-            m_dataAcquisitionMachine.start();
-    }
+    if (msgnr == 0) // 0 was reserved for async. messages
+        dataAcquisitionDSP();
     else {
         // maybe other objexts share the same dsp interface
         if (m_MsgNrCmdList.contains(msgnr)) {
@@ -220,21 +219,11 @@ void PeriodAverageModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 
                 else
                     notifyError(dspactiveErrMsg);
                 break;
-
             case writeparameter:
                 if (reply == ack) // we ignore ack
                     ;
                 else
                     notifyError(writedspmemoryErrMsg);
-                break;
-
-            case dataaquistion:
-                if (reply == ack)
-                    emit dataAquisitionContinue();
-                else {
-                    m_dataAcquisitionMachine.stop();
-                    notifyError(dataaquisitionErrMsg);
-                }
                 break;
             }
         }
@@ -315,7 +304,6 @@ void PeriodAverageModuleMeasProgram::activateDSPdone()
 
 void PeriodAverageModuleMeasProgram::deactivateDSPStart()
 {
-    m_dataAcquisitionMachine.stop();
     m_bActive = false;
     Zera::Proxy::getInstance()->releaseConnectionSmart(m_dspClient); // no async. messages anymore
     disconnect(m_dspInterface.get(), 0, this, 0);
@@ -324,9 +312,18 @@ void PeriodAverageModuleMeasProgram::deactivateDSPStart()
 
 void PeriodAverageModuleMeasProgram::dataAcquisitionDSP()
 {
-    m_pMeasureSignal->setValue(QVariant(0));
-    if(m_bActive)
-        m_MsgNrCmdList[m_dspInterface->dataAcquisition(m_pActualValuesDSP)] = dataaquistion;
+    if (m_bActive && m_taskDataAcquisition == nullptr) {
+        m_pMeasureSignal->setValue(QVariant(0));
+        m_taskDataAcquisition = TaskDspDataAcquisition::create(m_dspInterface, m_pActualValuesDSP);
+        connect(m_taskDataAcquisition.get(), &TaskTemplate::sigFinish, [&](bool ok) {
+            m_taskDataAcquisition.reset();
+            if (ok)
+                dataReadDSP();
+            else
+                notifyError(dataaquisitionErrMsg);
+        });
+        m_taskDataAcquisition->start();
+    }
 }
 
 void PeriodAverageModuleMeasProgram::dataReadDSP()

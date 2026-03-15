@@ -2,7 +2,7 @@
 #define PERIODAVERAGEMODULEMEASPROGRAM_H
 
 #include "periodaveragemodule.h"
-#include "periodaveragemoduleconfiguration.h"
+#include "periodaveragemoduleconfigdata.h"
 #include "actualvaluestartstophandler.h"
 #include <basedspmeasprogram.h>
 #include <measchannelinfo.h>
@@ -13,15 +13,6 @@
 
 namespace PERIODAVERAGEMODULE
 {
-
-enum periodaveragemoduleCmds
-{
-    varlist2dsp,
-    cmdlist2dsp,
-    activatedsp,
-    dataaquistion,
-    writeparameter,
-};
 
 class PeriodAverageModuleMeasProgram: public cBaseDspMeasProgram
 {
@@ -35,10 +26,25 @@ public slots:
     virtual void stop() override;
 protected slots:
     virtual void catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant answer);
+
+private slots:
+    void setInterfaceActualValues(QVector<float> *actualValues);
+
+    void dspserverConnect();
+    void varList2DSP();
+    void cmdList2DSP();
+    void activateDSP();
+    void activateDSPdone();
+
+    void deactivateDSPStart();
+
+    void newPeriodCount(const QVariant &periodCount);
 private:
     PeriodAverageModuleConfigData* getConfData();
     void setDspVarList();
     void setDspCmdList();
+    void dataAcquisitionDSP();
+    void dataReadDSP();
 
     PeriodAverageModule* m_pModule;
     ChannelRangeObserver::SystemObserverPtr m_observer;
@@ -63,26 +69,7 @@ private:
     QState m_unloadStart;
     QFinalState m_unloadDSPDoneState;
 
-    // statemachine for reading actual values
-    QStateMachine m_dataAcquisitionMachine;
-    QState m_dataAcquisitionState;
-    QFinalState m_dataAcquisitionDoneState;
-
-private slots:
-    void setInterfaceActualValues(QVector<float> *actualValues);
-
-    void dspserverConnect();
-    void varList2DSP();
-    void cmdList2DSP();
-    void activateDSP();
-    void activateDSPdone();
-
-    void deactivateDSPStart();
-
-    void dataAcquisitionDSP();
-    void dataReadDSP();
-
-    void newPeriodCount(const QVariant &periodCount);
+    TaskTemplatePtr m_taskDataAcquisition;
 };
 
 }
