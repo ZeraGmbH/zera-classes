@@ -374,7 +374,7 @@ void cFftModuleMeasProgram::deactivateDSPStart()
 
 void cFftModuleMeasProgram::dataAcquisitionDSP()
 {
-    if(m_bActive && m_taskDataAcquisition == nullptr) {
+    if (m_bActive && m_taskDataAcquisition == nullptr) {
         m_pMeasureSignal->setValue(QVariant(0));
         m_taskDataAcquisition = TaskDspDataAcquisition::create(m_dspInterface, m_pActualValuesDSP);
         connect(m_taskDataAcquisition.get(), &TaskTemplate::sigFinish, [&](bool ok) {
