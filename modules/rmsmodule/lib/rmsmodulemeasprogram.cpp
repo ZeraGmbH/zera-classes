@@ -2,13 +2,13 @@
 #include "rmsmodule.h"
 #include "rmsmoduleconfiguration.h"
 #include "servicechannelnamehelper.h"
+#include "taskdspdataacquisition.h"
 #include <errormessages.h>
 #include <reply.h>
 #include <proxy.h>
 #include <doublevalidator.h>
 #include <intvalidator.h>
 #include <scpi.h>
-#include <timerfactoryqt.h>
 
 namespace RMSMODULE
 {
@@ -48,14 +48,6 @@ cRmsModuleMeasProgram::cRmsModuleMeasProgram(cRmsModule* module,
 
     connect(&m_unloadStart, &QAbstractState::entered, this, &cRmsModuleMeasProgram::deactivateDSPStart);
     connect(&m_unloadDSPDoneState, &QState::entered, this, &cModuleActivist::deactivated);
-
-    // setting up statemachine for data acquisition
-    m_dataAcquisitionState.addTransition(this,&cRmsModuleMeasProgram::dataAquisitionContinue, &m_dataAcquisitionDoneState);
-    m_dataAcquisitionMachine.addState(&m_dataAcquisitionState);
-    m_dataAcquisitionMachine.addState(&m_dataAcquisitionDoneState);
-    m_dataAcquisitionMachine.setInitialState(&m_dataAcquisitionState);
-    connect(&m_dataAcquisitionState, &QAbstractState::entered, this, &cRmsModuleMeasProgram::dataAcquisitionDSP);
-    connect(&m_dataAcquisitionDoneState, &QAbstractState::entered, this, &cRmsModuleMeasProgram::dataReadDSP);
 
     connect(this, &cRmsModuleMeasProgram::actualValues,
             &m_startStopHandler, &ActualValueStartStopHandler::onNewActualValues);
@@ -250,13 +242,19 @@ void cRmsModuleMeasProgram::setDspCmdList()
     }
 }
 
+enum rmsmoduleCmds
+{
+    varlist2dsp,
+    cmdlist2dsp,
+    activatedsp,
+    writeparameter,
+};
+
 void cRmsModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant answer)
 {
     Q_UNUSED(answer)
-    if (msgnr == 0) { // 0 was reserved for async. messages
-        if (m_bActive && !m_dataAcquisitionMachine.isRunning()) // in case of deactivation in progress, no dataaquisition
-            m_dataAcquisitionMachine.start();
-    }
+    if (msgnr == 0) // 0 was reserved for async. messages
+        dataAcquisitionDSP();
     else {
         // maybe other objexts share the same dsp interface
         if (m_MsgNrCmdList.contains(msgnr))
@@ -282,21 +280,11 @@ void cRmsModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QV
                 else
                     notifyError(dspactiveErrMsg);
                 break;
-
             case writeparameter:
                 if (reply == ack) // we ignore ack
                     ;
                 else
                     notifyError(writedspmemoryErrMsg);
-                break;
-
-            case dataaquistion:
-                if (reply == ack)
-                    emit dataAquisitionContinue();
-                else {
-                    m_dataAcquisitionMachine.stop();
-                    notifyError(dataaquisitionErrMsg);
-                }
                 break;
             }
         }
@@ -380,7 +368,6 @@ void cRmsModuleMeasProgram::activateDSPdone()
 
 void cRmsModuleMeasProgram::deactivateDSPStart()
 {
-    m_dataAcquisitionMachine.stop();
     m_bActive = false;
     Zera::Proxy::getInstance()->releaseConnectionSmart(m_dspClient);
     disconnect(m_dspInterface.get(), 0, this, 0);
@@ -389,9 +376,18 @@ void cRmsModuleMeasProgram::deactivateDSPStart()
 
 void cRmsModuleMeasProgram::dataAcquisitionDSP()
 {
-    m_pMeasureSignal->setValue(QVariant(0));
-    if (m_bActive)
-        m_MsgNrCmdList[m_dspInterface->dataAcquisition(m_pActualValuesDSP)] = dataaquistion; // we start our data aquisition now
+    if (m_bActive && m_taskDataAcquisition == nullptr) {
+        m_pMeasureSignal->setValue(QVariant(0));
+        m_taskDataAcquisition = TaskDspDataAcquisition::create(m_dspInterface, m_pActualValuesDSP);
+        connect(m_taskDataAcquisition.get(), &TaskTemplate::sigFinish, [&](bool ok) {
+            m_taskDataAcquisition.reset();
+            if (ok)
+                dataReadDSP();
+            else
+                notifyError(dataaquisitionErrMsg);
+        });
+        m_taskDataAcquisition->start();
+    }
 }
 
 void cRmsModuleMeasProgram::dataReadDSP()

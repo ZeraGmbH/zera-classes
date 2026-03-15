@@ -1,27 +1,16 @@
 #ifndef RMSMODULEMEASPROGRAM_H
 #define RMSMODULEMEASPROGRAM_H
 
+#include "rmsmodule.h"
 #include "rmsmoduleconfigdata.h"
 #include <basedspmeasprogram.h>
 #include <measchannelinfo.h>
 #include <movingwindowfilterwithoutsumfifo.h>
-#include <timerperiodicqt.h>
 #include "actualvaluestartstophandler.h"
 #include <QFinalState>
 
 namespace RMSMODULE
 {
-
-enum rmsmoduleCmds
-{
-    varlist2dsp,
-    cmdlist2dsp,
-    activatedsp,
-    dataaquistion,
-    writeparameter,
-};
-
-class cRmsModule;
 
 class cRmsModuleMeasProgram: public cBaseDspMeasProgram
 {
@@ -32,10 +21,27 @@ public:
 public slots:
     void start() override;
     void stop() override;
+
+private slots:
+    void catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant answer);
+    void setInterfaceActualValues(QVector<float> *actualValues);
+
+    void dspserverConnect();
+    void varList2DSP();
+    void cmdList2DSP();
+    void activateDSP();
+    void activateDSPdone();
+
+    void deactivateDSPStart();
+
+    void newIntegrationtime(QVariant ti);
+    void newIntegrationPeriod(QVariant period);
 private:
     cRmsModuleConfigData* getConfData();
     void setDspVarList();
     void setDspCmdList();
+    void dataAcquisitionDSP();
+    void dataReadDSP();
     void setActualValuesNames();
     void setSCPIMeasInfo();
 
@@ -62,30 +68,9 @@ private:
     QState m_unloadStart;
     QFinalState m_unloadDSPDoneState;
 
-    // statemachine for reading actual values
-    QStateMachine m_dataAcquisitionMachine;
-    QState m_dataAcquisitionState;
-    QFinalState m_dataAcquisitionDoneState;
+    TaskTemplatePtr m_taskDataAcquisition;
 
     MovingWindowFilterWithoutSumFifo m_movingwindowFilter;
-
-private slots:
-    void catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant answer);
-    void setInterfaceActualValues(QVector<float> *actualValues);
-
-    void dspserverConnect();
-    void varList2DSP();
-    void cmdList2DSP();
-    void activateDSP();
-    void activateDSPdone();
-
-    void deactivateDSPStart();
-
-    void dataAcquisitionDSP();
-    void dataReadDSP();
-
-    void newIntegrationtime(QVariant ti);
-    void newIntegrationPeriod(QVariant period);
 };
 
 }

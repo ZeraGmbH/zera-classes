@@ -1,5 +1,6 @@
 #include "rmsmodule.h"
 #include "rmsmoduleconfiguration.h"
+#include "rmsmodulemeasprogram.h"
 
 namespace RMSMODULE
 {

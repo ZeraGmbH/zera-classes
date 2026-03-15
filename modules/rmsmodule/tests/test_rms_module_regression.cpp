@@ -2,6 +2,7 @@
 #include "demovaluesdsprms.h"
 #include "rmsmodule.h"
 #include "rmsmoduleconfiguration.h"
+#include "rmsmoduleconfigdata.h"
 #include "modulemanagertestrunner.h"
 #include <vs_dumpjson.h>
 #include <timemachineobject.h>
