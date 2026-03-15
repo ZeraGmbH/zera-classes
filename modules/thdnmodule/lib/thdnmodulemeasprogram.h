@@ -1,43 +1,17 @@
 #ifndef THDNMODULEMEASPROGRAM_H
 #define THDNMODULEMEASPROGRAM_H
 
-#include "basedspmeasprogram.h"
-#include "measchannelinfo.h"
-#include "movingwindowfilter.h"
+#include "thdnmodule.h"
+#include "thdnmoduleconfiguration.h"
 #include "actualvaluestartstophandler.h"
-#include <QList>
-#include <QHash>
+#include <basedspmeasprogram.h>
+#include <movingwindowfilter.h>
 #include <QStateMachine>
 #include <QState>
 #include <QFinalState>
-#include <timerperiodicqt.h>
-
-
-class DspVarGroupClientInterface;
-class QStateMachine;
-
-class VfModuleComponent;
-class VfModuleParameter;
-class VfModuleMetaData;
-class VfModuleComponent;
-
 
 namespace THDNMODULE
 {
-
-enum thdnmoduleCmds
-{
-    varlist2dsp,
-    cmdlist2dsp,
-    activatedsp,
-    dataaquistion,
-    writeparameter,
-};
-
-#define irqNr 4
-
-class cThdnModuleConfigData;
-class cThdnModule;
 
 class cThdnModuleMeasProgram: public cBaseDspMeasProgram
 {
@@ -48,10 +22,28 @@ public:
 public slots:
     void start() override;
     void stop() override;
+
+private slots:
+    void catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant answer);
+    void setInterfaceActualValues(QVector<float> *actualValues);
+
+    void dspserverConnect();
+    void varList2DSP();
+    void cmdList2DSP();
+    void activateDSP();
+    void activateDSPdone();
+
+    void deactivateDSPStart();
+
+    void newIntegrationtime(QVariant ti);
 private:
     cThdnModuleConfigData* getConfData();
     void setDspVarList();
     void setDspCmdList();
+    void dataAcquisitionDSP();
+    void dataReadDSP();
+    void setActualValuesNames();
+    void setSCPIMeasInfo();
 
     cThdnModule* m_pModule;
     ActualValueStartStopHandler m_startStopHandler;
@@ -74,32 +66,10 @@ private:
     QState m_unloadStart;
     QFinalState m_unloadDSPDoneState;
 
-    // statemachine for reading actual values
-    QStateMachine m_dataAcquisitionMachine;
-    QState m_dataAcquisitionState;
-    QFinalState m_dataAcquisitionDoneState;
-
-    void setActualValuesNames();
-    void setSCPIMeasInfo();
+    TaskTemplatePtr m_taskDataAcquisition;
 
     cMovingwindowFilter m_movingwindowFilter;
 
-private slots:
-    void catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant answer);
-    void setInterfaceActualValues(QVector<float> *actualValues);
-
-    void dspserverConnect();
-    void varList2DSP();
-    void cmdList2DSP();
-    void activateDSP();
-    void activateDSPdone();
-
-    void deactivateDSPStart();
-
-    void dataAcquisitionDSP();
-    void dataReadDSP();
-
-    void newIntegrationtime(QVariant ti);
 };
 
 }

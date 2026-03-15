@@ -1823,7 +1823,7 @@
             "GETSTIME(TISTART)",
             "CMPAVERAGE1(8,FILTER,VALXTHDNF)",
             "CLEARN(17,FILTER)",
-            "DSPINTTRIGGER(0x0,0x4)",
+            "DSPINTTRIGGER(0x0,0x0)",
             "DEACTIVATECHAIN(1,0x0102)",
             "STOPCHAIN(1,0x0102)"
         ],
@@ -1918,7 +1918,7 @@
             "GETSTIME(TISTART)",
             "CMPAVERAGE1(8,FILTER,VALXTHDNF)",
             "CLEARN(17,FILTER)",
-            "DSPINTTRIGGER(0x0,0x4)",
+            "DSPINTTRIGGER(0x0,0x0)",
             "DEACTIVATECHAIN(1,0x0102)",
             "STOPCHAIN(1,0x0102)"
         ],

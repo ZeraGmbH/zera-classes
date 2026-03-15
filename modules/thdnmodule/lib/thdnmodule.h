@@ -1,10 +1,11 @@
 #ifndef THDNMODULE_H
 #define THDNMODULE_H
 
-#include "thdnmodulemeasprogram.h"
 #include "basemeasmodule.h"
 
 namespace THDNMODULE {
+
+class cThdnModuleMeasProgram;
 
 class cThdnModule : public cBaseMeasModule
 {

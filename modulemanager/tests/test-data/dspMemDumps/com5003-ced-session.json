@@ -1105,7 +1105,7 @@
             }
         },
         "1110": {
-            "DspCmdsCompiledCrcCyclic": "0x5E598B0D",
+            "DspCmdsCompiledCrcCyclic": "0x10B46054",
             "DspCmdsCompiledCrcInterrupt": "0x00000000",
             "DspCmdsRawCyclic": [
                 "STARTCHAIN(0x000001,0x000001,0x000101)",
@@ -1134,7 +1134,7 @@
                 "GETSTIME(0x00020C)",
                 "CMPAVERAGE1(0x000006,0x0001FE,0x00020D)",
                 "CLEARN(0x00000D,0x0001FE)",
-                "DSPINTTRIGGER(0x000000,0x000004)",
+                "DSPINTTRIGGER(0x000000,0x000000)",
                 "DEACTIVATECHAIN(0x000001,0x000102)",
                 "STOPCHAIN(0x000001,0x000102)"
             ],
@@ -1155,7 +1155,7 @@
             }
         },
         "1111": {
-            "DspCmdsCompiledCrcCyclic": "0xE4B08C98",
+            "DspCmdsCompiledCrcCyclic": "0xAA5D67C1",
             "DspCmdsCompiledCrcInterrupt": "0x00000000",
             "DspCmdsRawCyclic": [
                 "STARTCHAIN(0x000001,0x000001,0x000101)",
@@ -1184,7 +1184,7 @@
                 "GETSTIME(0x00020C)",
                 "CMPAVERAGE1(0x000006,0x0001FE,0x00020D)",
                 "CLEARN(0x00000D,0x0001FE)",
-                "DSPINTTRIGGER(0x000000,0x000004)",
+                "DSPINTTRIGGER(0x000000,0x000000)",
                 "DEACTIVATECHAIN(0x000001,0x000102)",
                 "STOPCHAIN(0x000001,0x000102)"
             ],
@@ -2133,7 +2133,7 @@
             "GETSTIME(0x00020C)",
             "CMPAVERAGE1(0x000006,0x0001FE,0x00020D)",
             "CLEARN(0x00000D,0x0001FE)",
-            "DSPINTTRIGGER(0x000000,0x000004)",
+            "DSPINTTRIGGER(0x000000,0x000000)",
             "DEACTIVATECHAIN(0x000001,0x000102)",
             "STOPCHAIN(0x000001,0x000102)",
             "-- Start entity ID 1111 / Cyclic mem offset --",
@@ -2165,7 +2165,7 @@
             "GETSTIME(0x00020C)",
             "CMPAVERAGE1(0x000006,0x0001FE,0x00020D)",
             "CLEARN(0x00000D,0x0001FE)",
-            "DSPINTTRIGGER(0x000000,0x000004)",
+            "DSPINTTRIGGER(0x000000,0x000000)",
             "DEACTIVATECHAIN(0x000001,0x000102)",
             "STOPCHAIN(0x000001,0x000102)",
             "-- Start entity ID 1120 / Cyclic mem offset --",
@@ -2221,7 +2221,7 @@
         "TotalCmdListInterrupt": [
         ],
         "TotalCmdListInterruptMaxInterruptCount": 0,
-        "TotalDspCmdsCompiledCrcCyclic": "0x370E83F5",
+        "TotalDspCmdsCompiledCrcCyclic": "0x729C6DA0",
         "TotalDspCmdsCompiledCrcInterrupt": "0x6522DF69"
     }
 }

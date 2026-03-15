@@ -1,5 +1,6 @@
 #include "thdnmodule.h"
 #include "thdnmoduleconfiguration.h"
+#include "thdnmodulemeasprogram.h"
 
 namespace THDNMODULE
 {

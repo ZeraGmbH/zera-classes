@@ -4,10 +4,10 @@
 #include "servicechannelnamehelper.h"
 #include "thdnmoduleconfigdata.h"
 #include "errormessages.h"
+#include "taskdspdataacquisition.h"
 #include <reply.h>
 #include <movingwindowfilter.h>
 #include <proxy.h>
-#include <proxyclient.h>
 #include <scpi.h>
 #include <vfmodulecomponent.h>
 #include <vfmoduleparameter.h>
@@ -54,14 +54,6 @@ cThdnModuleMeasProgram::cThdnModuleMeasProgram(cThdnModule *module, std::shared_
 
     connect(&m_unloadStart, &QState::entered, this, &cThdnModuleMeasProgram::deactivateDSPStart);
     connect(&m_unloadDSPDoneState, &QState::entered, this, &cModuleActivist::deactivated);
-
-    // setting up statemachine for data acquisition
-    m_dataAcquisitionState.addTransition(this, &cThdnModuleMeasProgram::dataAquisitionContinue, &m_dataAcquisitionDoneState);
-    m_dataAcquisitionMachine.addState(&m_dataAcquisitionState);
-    m_dataAcquisitionMachine.addState(&m_dataAcquisitionDoneState);
-    m_dataAcquisitionMachine.setInitialState(&m_dataAcquisitionState);
-    connect(&m_dataAcquisitionState, &QAbstractState::entered, this, &cThdnModuleMeasProgram::dataAcquisitionDSP);
-    connect(&m_dataAcquisitionDoneState, &QAbstractState::entered, this, &cThdnModuleMeasProgram::dataReadDSP);
 
     connect(this, &cThdnModuleMeasProgram::actualValues,
             &m_startStopHandler, &ActualValueStartStopHandler::onNewActualValues);
@@ -176,25 +168,24 @@ void cThdnModuleMeasProgram::setDspCmdList()
         m_dspInterface->addCycListItem("GETSTIME(TISTART)"); // set new system time
         m_dspInterface->addCycListItem(QString("CMPAVERAGE1(%1,FILTER,VALXTHDNF)").arg(m_veinActValueList.count()));
         m_dspInterface->addCycListItem(QString("CLEARN(%1,FILTER)").arg(DspBuffLen::avgFilterLen(m_veinActValueList.count())));
-        m_dspInterface->addCycListItem(QString("DSPINTTRIGGER(0x0,0x%1)").arg(irqNr)); // send interrupt to module
+        m_dspInterface->addCycListItem(QString("DSPINTTRIGGER(0x0,0x%1)").arg(0)); // send interrupt to module
         m_dspInterface->addCycListItem("DEACTIVATECHAIN(1,0x0102)");
     m_dspInterface->addCycListItem("STOPCHAIN(1,0x0102)"); // end processnr., mainchain 1 subchain 2
 }
 
+enum thdnmoduleCmds
+{
+    varlist2dsp,
+    cmdlist2dsp,
+    activatedsp,
+    writeparameter,
+};
+
 void cThdnModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant answer)
 {
-    if (msgnr == 0) { // 0 was reserved for async. messages
-        QString sintnr;
-        sintnr = answer.toString().section(':', 1, 1);
-        int service = sintnr.toInt();
-        switch (service)
-        {
-        case irqNr:
-            if (m_bActive && !m_dataAcquisitionMachine.isRunning()) // in case of deactivation in progress, no dataaquisition
-                m_dataAcquisitionMachine.start();
-            break;
-        }
-    }
+    Q_UNUSED(answer)
+    if (msgnr == 0) // 0 was reserved for async. messages
+        dataAcquisitionDSP();
     else {
         // maybe other objexts share the same dsp interface
         if (m_MsgNrCmdList.contains(msgnr)) {
@@ -219,21 +210,11 @@ void cThdnModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, Q
                 else
                     notifyError(dspactiveErrMsg);
                 break;
-
             case writeparameter:
                 if (reply == ack) // we ignore ack
                     ;
                 else
                     notifyError(writedspmemoryErrMsg);
-                break;
-
-            case dataaquistion:
-                if (reply == ack)
-                    emit dataAquisitionContinue();
-                else {
-                    m_dataAcquisitionMachine.stop();
-                    notifyError(dataaquisitionErrMsg);
-                }
                 break;
             }
         }
@@ -314,7 +295,6 @@ void cThdnModuleMeasProgram::activateDSPdone()
 
 void cThdnModuleMeasProgram::deactivateDSPStart()
 {
-    m_dataAcquisitionMachine.stop();
     m_bActive = false;
     Zera::Proxy::getInstance()->releaseConnectionSmart(m_dspClient); // no async. messages anymore
     disconnect(m_dspInterface.get(), 0, this, 0);
@@ -323,9 +303,18 @@ void cThdnModuleMeasProgram::deactivateDSPStart()
 
 void cThdnModuleMeasProgram::dataAcquisitionDSP()
 {
-    m_pMeasureSignal->setValue(QVariant(0));
-    if(m_bActive)
-        m_MsgNrCmdList[m_dspInterface->dataAcquisition(m_pActualValuesDSP)] = dataaquistion; // we start our data aquisition now
+    if (m_bActive && m_taskDataAcquisition == nullptr) {
+        m_pMeasureSignal->setValue(QVariant(0));
+        m_taskDataAcquisition = TaskDspDataAcquisition::create(m_dspInterface, m_pActualValuesDSP);
+        connect(m_taskDataAcquisition.get(), &TaskTemplate::sigFinish, [&](bool ok) {
+            m_taskDataAcquisition.reset();
+            if (ok)
+                dataReadDSP();
+            else
+                notifyError(dataaquisitionErrMsg);
+        });
+        m_taskDataAcquisition->start();
+    }
 }
 
 void cThdnModuleMeasProgram::dataReadDSP()
