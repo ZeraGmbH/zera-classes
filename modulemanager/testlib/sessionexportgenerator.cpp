@@ -99,17 +99,7 @@ QByteArray SessionExportGenerator::getVeinDump()
 QByteArray SessionExportGenerator::getDspMemDump()
 {
     ZDspServer *dspServer = m_modmanTestRunner->getDspServer();
-    QJsonObject json;
-    json.insert("ProgMemCyclicAvailable", dspServer->getProgMemCyclicAvailable());
-    json.insert("ProgMemCyclicFree", dspServer->getProgMemCyclicAvailable()-dspServer->getProgMemCyclicOccupied());
-    json.insert("ProgMemInterruptAvailable", dspServer->getProgMemInterruptAvailable());
-    json.insert("ProgMemInterruptFree", dspServer->getProgMemInterruptAvailable() - dspServer->getProgMemInterruptOccupied());
-    json.insert("UserMemAvailable", dspServer->getVarMemLocalAvailable());
-    json.insert("UserMemFree", dspServer->getVarMemLocalAvailable() - dspServer->getVarMemOccupied(moduleLocalSegment));
-    json.insert("UserMemAlignedAvailable", dspServer->getVarMemAlignedAvailable());
-    json.insert("UserMemAlignedFree", dspServer->getVarMemAlignedAvailable() - dspServer->getVarMemOccupied(moduleAlignedMemorySegment));
-    json.insert("ZdspMemDump", ZDspDumpFunctions::getMemoryDump(dspServer));
-    return TestLogHelpers::dump(json);
+    return TestLogHelpers::dump(ZDspDumpFunctions::getFullDump(dspServer));
 }
 
 QByteArray SessionExportGenerator::getDspVarDump()
