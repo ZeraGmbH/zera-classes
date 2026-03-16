@@ -1,5 +1,5 @@
 #include "demodspinterfacedspsuper.h"
-#include "demovaluesdspdspsuper.h"
+#include "dspcommonsupervisor.h"
 #include <timerfactoryqt.h>
 
 DemoDspInterfaceDspSuper::DemoDspInterfaceDspSuper(int entityId,
@@ -8,21 +8,40 @@ DemoDspInterfaceDspSuper::DemoDspInterfaceDspSuper(int entityId,
     m_entityId(entityId),
     m_maxPeriodCount(maxPeriodCount),
     m_valueGenerator(valueGenerator),
-    m_periodicTimer(TimerFactoryQt::createPeriodic(500))
+    m_periodicTimer(TimerFactoryQt::createPeriodic(20))
 {
     connect(m_periodicTimer.get(), &TimerTemplateQt::sigExpired,
             this, &DemoDspInterfaceDspSuper::onTimer);
     connect(this, &DemoDspInterfaceDspSuper::sigDspStarted, [&](){
         m_periodicTimer->start();
     });
+    for (int i=0; i<m_maxPeriodCount; ++i)
+        m_demoValues.append(genValues(0.0));
 }
 
 void DemoDspInterfaceDspSuper::onTimer()
 {
-    /*DemoValuesDspDspSuper values(m_valueChannelList, m_maxPeriodCount, m_periodCount);
-    QVector<float> demoValues;
-    for (int channelNo=0; channelNo<m_valueChannelList.count(); channelNo++)
-        values.setValue(m_valueChannelList[channelNo], channelNo, m_valueGenerator(channelNo));
-    demoValues = values.getDspValues();
-    fireActValInterrupt(demoValues,  0);*/
+    float busyValFlt = m_valueGenerator(m_entityId) * 15;
+    m_demoValues.append(genValues(busyValFlt));
+
+    while(m_demoValues.size() > m_maxPeriodCount*COUNT_SUPER_ENTRIES)
+        m_demoValues.removeFirst();
+
+    m_currPeriodCount++;
+    fireActValInterrupt(m_demoValues, /* dummy */ 0);
+}
+
+QVector<float> DemoDspInterfaceDspSuper::genValues(float busyVal)
+{
+    QVector<float> values;
+    values.append(busyVal);
+
+    float periodCountFlt = *reinterpret_cast<float*>(&m_currPeriodCount);
+    values.append(periodCountFlt);
+
+    uint msTime = 20*m_currPeriodCount;
+    float msTimeFlt = *reinterpret_cast<float*>(&msTime);
+    values.append(msTimeFlt);
+
+    return values;
 }

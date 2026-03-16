@@ -12,7 +12,6 @@ endfunction()
 
 SETUP_QTESTS_MODULE(
     test_dspsuper_config_load
-    test_dspsuper_demovalues
     test_dspsuper_module
 )
 

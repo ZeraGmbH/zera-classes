@@ -299,5 +299,5 @@ const ChannelRangeObserver::SystemObserverPtr BaseModule::getSharedChannelRangeO
 
 DspCommonSupervisorPtr BaseModule::getDspCommonSupervisor() const
 {
-
+    return m_moduleParam.m_moduleSharedData->m_dspCommonSupervisor;
 }

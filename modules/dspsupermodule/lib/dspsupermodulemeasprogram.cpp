@@ -51,7 +51,19 @@ DspSuperModuleMeasProgram::DspSuperModuleMeasProgram(DspSuperModule* module, std
 
 void DspSuperModuleMeasProgram::generateVeinInterface()
 {
-    // no vein interface (yet)
+    // maybe just for temp debug
+    m_veinDspBusyList = new VfModuleComponent(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
+                                              QString("ACT_DSP_BUSY_LIST"),
+                                              QString("List of DSP Busy percent values"));
+    m_pModule->m_veinComponentsWithMetaAndScpi.append(m_veinDspBusyList);
+    m_veinDspPeriodCount = new VfModuleComponent(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
+                                                 QString("ACT_DSP_PERIOD_COUNT"),
+                                                 QString("List of DSP period counts"));
+    m_pModule->m_veinComponentsWithMetaAndScpi.append(m_veinDspPeriodCount);
+    m_veinDspMsTimer = new VfModuleComponent(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
+                                             QString("ACT_DSP_MS_TIMER"),
+                                             QString("List of DSP ms timer"));
+    m_pModule->m_veinComponentsWithMetaAndScpi.append(m_veinDspMsTimer);
 }
 
 void DspSuperModuleMeasProgram::setDspVarList()
@@ -248,7 +260,8 @@ void DspSuperModuleMeasProgram::decodeDspDataAcquired()
             // (here just one)
             // => Undo cast in 2.
             case PERIOD_COUNT_FIELD:
-                currEntry.m_periodCount = *reinterpret_cast<uint*>(&currValue);
+                m_currPeriodCount = *reinterpret_cast<uint*>(&currValue); // last is highest and wins
+                currEntry.m_periodCount = m_currPeriodCount;
                 break;
             case MS_TIMER_FIELD:
                 currEntry.m_msTimer  = *reinterpret_cast<uint*>(&currValue);
@@ -262,14 +275,38 @@ void DspSuperModuleMeasProgram::decodeDspDataAcquired()
     dspCommonSupervisor->setSuperList(superList);
 }
 
+void DspSuperModuleMeasProgram::dataToVein()
+{
+    // Avoid high frequency fire / no perfect accuracy von vein required (maybe lists will go)
+    if (m_currPeriodCount - m_periodCountToVeinLast < getConfData()->m_maxPeriods)
+        return;
+    m_periodCountToVeinLast = m_currPeriodCount;
+
+    QList<double> dspBusyList;
+    QList<int> periodCountList;
+    QList<int> msTimerList;
+    DspCommonSupervisorPtr dspCommonSupervisor = m_pModule->getDspCommonSupervisor();
+    const QList<DspCommonSupervisorEntry> &superList = dspCommonSupervisor->getSuperList();
+    for (const DspCommonSupervisorEntry &entry : superList) {
+        dspBusyList.append(entry.m_percentBusy);
+        periodCountList.append(entry.m_periodCount);
+        msTimerList.append(entry.m_msTimer);
+    }
+    m_veinDspBusyList->setValue(QVariant::fromValue<QList<double>>(dspBusyList));
+    m_veinDspPeriodCount->setValue(QVariant::fromValue<QList<int>>(periodCountList));
+    m_veinDspMsTimer->setValue(QVariant::fromValue<QList<int>>(msTimerList));
+}
+
 void DspSuperModuleMeasProgram::startDataAcquisitionDSP()
 {
     if (m_bActive && m_taskDataAcquisition == nullptr) {
         m_taskDataAcquisition = TaskDspDataAcquisition::create(m_dspInterface, m_pActualValuesDSP);
         connect(m_taskDataAcquisition.get(), &TaskTemplate::sigFinish, [&](bool ok) {
             m_taskDataAcquisition.reset();
-            if (ok && m_bActive)
+            if (ok && m_bActive) {
                 decodeDspDataAcquired();
+                dataToVein();
+            }
             else
                 notifyError(dataaquisitionErrMsg);
         });

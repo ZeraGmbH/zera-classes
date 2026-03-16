@@ -15,8 +15,11 @@ public:
 private slots:
     void onTimer();
 private:
+    QVector<float> genValues(float busyVal);
     int m_entityId = 0;
     int m_maxPeriodCount = 0;
+    int m_currPeriodCount = 0;
+    QVector<float> m_demoValues;
     std::function<double(int)> m_valueGenerator;
     TimerTemplateQtPtr m_periodicTimer;
 };

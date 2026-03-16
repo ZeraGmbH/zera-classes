@@ -36,6 +36,7 @@ private slots:
 private:
     DspSuperModuleConfigData* getConfData();
     void decodeDspDataAcquired();
+    void dataToVein(); // for now just to see something
     void setDspVarList();
     void setDspCmdList();
     void startDataAcquisitionDSP();
@@ -43,6 +44,12 @@ private:
     DspSuperModule* m_pModule = nullptr;
 
     DspVarGroupClientInterface* m_pActualValuesDSP = nullptr;
+
+    uint m_currPeriodCount = 0;
+    uint m_periodCountToVeinLast = 0;
+    VfModuleComponent* m_veinDspBusyList;
+    VfModuleComponent* m_veinDspPeriodCount;
+    VfModuleComponent* m_veinDspMsTimer;
 
     // statemachine for activating
     QState m_dspserverConnectState;
