@@ -180,6 +180,7 @@ DspSuperModuleConfigData *DspSuperModuleMeasProgram::getConfData()
 
 void DspSuperModuleMeasProgram::setInterfaceActualValues(const QVector<float> &actualValues)
 {
+    DspCommonSupervisorPtr dspCommonSupervisor = m_pModule->getDspCommonSupervisor();
 }
 
 void DspSuperModuleMeasProgram::dspserverConnect()

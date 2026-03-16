@@ -4,6 +4,7 @@
 #include "modulenetworkparams.h"
 #include "abstractfactoryserviceinterfaces.h"
 #include "cro_systemobserver.h"
+#include "dspcommonsupervisor.h"
 
 namespace VeinStorage
 {
@@ -17,6 +18,7 @@ public:
                      AbstractFactoryServiceInterfacesPtr serviceInterfaceFactory,
                      VeinStorage::AbstractEventSystem* storagesystem,
                      ChannelRangeObserver::SystemObserverPtr channelRangeObserver,
+                     DspCommonSupervisorPtr dspCommonSupervisor,
                      bool demo,
                      const QString &persistencyBasePath);
     virtual ~ModuleSharedData();
@@ -25,6 +27,7 @@ public:
     const AbstractFactoryServiceInterfacesPtr m_serviceInterfaceFactory;
     const VeinStorage::AbstractEventSystem* m_storagesystem;
     const ChannelRangeObserver::SystemObserverPtr m_channelRangeObserver;
+    const DspCommonSupervisorPtr m_dspCommonSupervisor;
     const bool m_demo;
     const QString m_persistencyBasePath;
 private:

@@ -18,6 +18,7 @@ target_link_libraries(module-qt-plugin-interface
     ${QTX}::Core
     module-service-interfaces
     channel-range-observer
+    dsp-supervisor
     Zera::VfTcp
     # ask linker to help us finding unresolved symbols
     "-Wl,--no-undefined"

@@ -135,10 +135,12 @@ void ModuleManager::createCommonModuleParam()
         ModulemanagerConfig *mmConfig = ModulemanagerConfig::getInstance();
         ChannelRangeObserver::SystemObserverPtr channelRangeObserver =
             std::make_shared<ChannelRangeObserver::SystemObserver>(mmConfig->getPcbConnectionInfo(), m_tcpNetworkFactory);
+        DspCommonSupervisorPtr dspCommonSupervisor = std::make_shared<DspCommonSupervisor>();
         m_moduleSharedObjects = std::make_shared<ModuleSharedData>(getNetworkParams(),
                                                                    m_serviceInterfaceFactory,
                                                                    m_setupFacade->getStorageSystem(),
                                                                    channelRangeObserver,
+                                                                   dspCommonSupervisor,
                                                                    m_moduleDemoMode,
                                                                    m_setupFacade->getPersistencyBasePath());
     }

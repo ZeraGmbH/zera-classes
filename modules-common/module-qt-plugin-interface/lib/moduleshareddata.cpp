@@ -6,12 +6,14 @@ ModuleSharedData::ModuleSharedData(ModuleNetworkParamsPtr networkParams,
                                    AbstractFactoryServiceInterfacesPtr serviceInterfaceFactory,
                                    VeinStorage::AbstractEventSystem *storagesystem,
                                    ChannelRangeObserver::SystemObserverPtr channelRangeObserver,
+                                   DspCommonSupervisorPtr dspCommonSupervisor,
                                    bool demo,
                                    const QString &persistencyBasePath) :
     m_networkParams(networkParams),
     m_serviceInterfaceFactory(serviceInterfaceFactory),
     m_storagesystem(storagesystem),
     m_channelRangeObserver(channelRangeObserver),
+    m_dspCommonSupervisor(dspCommonSupervisor),
     m_demo(demo),
     m_persistencyBasePath(persistencyBasePath)
 {
