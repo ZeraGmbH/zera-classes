@@ -99,7 +99,7 @@ void DspSuperModuleMeasProgram::setDspCmdList()
         m_dspInterface->addCycListItem("DEACTIVATECHAIN(1,0x0101)");
     m_dspInterface->addCycListItem("STOPCHAIN(1,0x0101)");
 
-    // Store pairs of global period / ms timer value
+    // Store tupel of BUSY / global period / ms timer value
     m_dspInterface->addCycListItem("COPYDU(1,BUSY,LOCAL_BUSY)");
     m_dspInterface->addCycListItem("GETSTIME(LOCAL_SYSTIME)");
     m_dspInterface->addCycListItem("XCOPYMEM(1,LOCAL_BUSY,RESULT_BUFF_IDX)");
