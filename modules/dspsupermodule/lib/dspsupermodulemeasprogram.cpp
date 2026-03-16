@@ -132,7 +132,6 @@ enum dspsupermoduleCmds
     cmdlist2dsp,
     sendSuperDspCmd,
     activatedsp,
-    writeparameter,
 };
 
 void DspSuperModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant answer)
@@ -169,12 +168,6 @@ void DspSuperModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply
                     emit activationContinue();
                 else
                     notifyError(dspactiveErrMsg);
-                break;
-            case writeparameter:
-                if (reply == ack) // we ignore ack
-                    ;
-                else
-                    notifyError(writedspmemoryErrMsg);
                 break;
             }
         }
