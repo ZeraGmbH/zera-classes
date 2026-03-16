@@ -15,7 +15,7 @@ target_include_directories(adjmodule-testlib
 target_link_libraries(adjmodule-testlib
     PUBLIC
     adjustmentmodule-static
-    module-testlib
+    dsp-support-testlib
     zera-modulemanager-testlib
     module-service-interfaces-testlib
     )

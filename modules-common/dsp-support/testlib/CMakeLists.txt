@@ -6,18 +6,18 @@ file(GLOB HEADER
     ${CMAKE_CURRENT_SOURCE_DIR}/*.h
     )
 
-add_library(module-testlib STATIC
+add_library(dsp-support-testlib STATIC
     ${SOURCES}
     ${HEADER}
 )
 
-target_include_directories(module-testlib
+target_include_directories(dsp-support-testlib
     PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
-    $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/module-testlib>
+    $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/dsp-support-testlib>
     )
 
-target_link_libraries(module-testlib
+target_link_libraries(dsp-support-testlib
     PUBLIC
     dftmodule-demolib
     fftmodule-demolib
@@ -25,16 +25,16 @@ target_link_libraries(module-testlib
     rmsmodule-demolib
 )
 
-set_target_properties(module-testlib PROPERTIES VERSION ${PROJECT_VERSION})
-set_target_properties(module-testlib PROPERTIES SOVERSION ${PROJECT_VERSION_MAJOR})
+set_target_properties(dsp-support-testlib PROPERTIES VERSION ${PROJECT_VERSION})
+set_target_properties(dsp-support-testlib PROPERTIES SOVERSION ${PROJECT_VERSION_MAJOR})
 
-export(TARGETS module-testlib NAMESPACE Zera:: FILE ZeraClassesTargets.cmake)
-install(TARGETS module-testlib
+export(TARGETS dsp-support-testlib NAMESPACE Zera:: FILE ZeraClassesTargets.cmake)
+install(TARGETS dsp-support-testlib
     EXPORT ZeraClassesExport
     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
     )
 
 install(
     FILES ${HEADER}
-    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/module-testlib
+    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/dsp-support-testlib
     )

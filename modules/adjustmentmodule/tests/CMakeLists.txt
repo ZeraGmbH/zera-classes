@@ -11,7 +11,7 @@ function(SETUP_QTESTS_MODULE)
             fftmodule-static
             rmsmodule-static
             zera-modulemanager-testlib
-            module-testlib
+            dsp-support-testlib
             scpimodule-testlib
             Zera::zenuxservicecommon-demolib
             Zera::mt310s2d-testlib

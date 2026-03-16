@@ -30,7 +30,7 @@ target_link_libraries(zera-modulemanager-testlib
     scpimodule-testlib
     module-service-interfaces-demolib
     module-service-interfaces-testlib
-    module-testlib
+    dsp-support-testlib
     Zera::VfConvenientCode
     Zera::veinserver-testlib
     Zera::xsession-change-demolib
