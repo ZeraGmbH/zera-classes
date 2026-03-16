@@ -42,7 +42,6 @@ private:
     void dataReadDSP();
 
     DspSuperModule* m_pModule = nullptr;
-    ChannelRangeObserver::SystemObserverPtr m_observer;
 
     DspVarGroupClientInterface* m_pActualValuesDSP = nullptr;
 

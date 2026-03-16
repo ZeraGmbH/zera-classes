@@ -13,8 +13,7 @@ namespace DSPSUPERMODULE
 
 DspSuperModuleMeasProgram::DspSuperModuleMeasProgram(DspSuperModule* module, std::shared_ptr<BaseModuleConfiguration> pConfiguration) :
     cBaseDspMeasProgram(pConfiguration, module->getVeinModuleName()),
-    m_pModule(module),
-    m_observer(m_pModule->getSharedChannelRangeObserver())
+    m_pModule(module)
 {
     m_dspInterface = m_pModule->getServiceInterfaceFactory()->createDspInterfaceDspSuper(
         m_pModule->getEntityId(), getConfData()->m_maxPeriods);
