@@ -1,5 +1,5 @@
 add_subdirectory(channel-range-observer)
-add_subdirectory(dsp-chain-gen-helpers)
+add_subdirectory(dsp-support)
 add_subdirectory(module-qt-plugin-interface)
 add_subdirectory(module-tasks)
 add_subdirectory(service-common)
