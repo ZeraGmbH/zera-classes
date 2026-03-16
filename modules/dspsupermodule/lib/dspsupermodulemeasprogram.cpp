@@ -79,7 +79,9 @@ void DspSuperModuleMeasProgram::setDspVarList()
 
 void DspSuperModuleMeasProgram::setDspCmdList()
 {
-    // DspSuperModule supports other modules on adding reproducible timestamps to measurements
+    // DspSuperModule
+    // * supports other modules on adding reproducible timestamps to measurements
+    // * stores DSP busy load indicator on each period
     // It is super special
     // * It is designed to be LAST module in chain because of:
     //   * To reduce number of interrupts thrown it tries to piggy back on other modules interrupts.
