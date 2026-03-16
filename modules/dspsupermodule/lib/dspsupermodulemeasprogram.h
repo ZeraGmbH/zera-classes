@@ -35,11 +35,10 @@ private slots:
     void deactivateDSPStart();
 private:
     DspSuperModuleConfigData* getConfData();
-    void setInterfaceActualValues(const QVector<float> &actualValues);
+    void decodeDspDataAcquired();
     void setDspVarList();
     void setDspCmdList();
-    void dataAcquisitionDSP();
-    void dataReadDSP();
+    void startDataAcquisitionDSP();
 
     DspSuperModule* m_pModule = nullptr;
 
