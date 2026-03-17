@@ -58,7 +58,7 @@ void VfModuleComponent::setScpiInfo(const QString &model,
                                                          entryType);
 }
 
-void VfModuleComponent::setChannelName(QString name)
+void VfModuleComponent::setChannelName(const QString &name)
 {
     m_sChannelName = name;
 }
@@ -68,7 +68,7 @@ QString VfModuleComponent::getChannelName()
     return m_sChannelName;
 }
 
-void VfModuleComponent::setUnit(QString unit)
+void VfModuleComponent::setUnit(const QString &unit)
 {
     m_sChannelUnit = unit;
 }

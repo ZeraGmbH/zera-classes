@@ -16,9 +16,9 @@ public:
                       const QString &description,
                       const QVariant &initval = QVariant());
 
-    void setChannelName(QString name); // channel name for json export can be empty
+    void setChannelName(const QString &name); // channel name for json export can be empty
     QString getChannelName();
-    void setUnit(QString unit);
+    void setUnit(const QString &unit);
     QVariant getValue();
     QString getUnit();
     QString getComponentName();

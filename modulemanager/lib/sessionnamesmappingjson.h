@@ -7,12 +7,12 @@
 class SessionNamesMappingJson
 {
 public:
-    SessionNamesMappingJson(QString modmanConfigFile);
-    bool storeMappedJsonFile(QString destFile);
-    int getSessionCount(QString device);
-    QString getSessionNameForExternalUsers(QString internalSessionName);
+    explicit SessionNamesMappingJson(const QString &modmanConfigFile);
+    bool storeMappedJsonFile(const QString &destFile);
+    int getSessionCount(const QString &device);
+    QString getSessionNameForExternalUsers(const QString &internalSessionName);
 private:
-    QJsonObject createSessionNamesMappingJson(QString device);
+    QJsonObject createSessionNamesMappingJson(const QString &device);
     QString m_modmanConfigFile;
     QJsonObject m_mappedJson;
 };

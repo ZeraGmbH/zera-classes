@@ -4,7 +4,7 @@
 #include <QJsonArray>
 #include <QStringList>
 
-SessionNamesMappingJson::SessionNamesMappingJson(QString modmanConfigFile) :
+SessionNamesMappingJson::SessionNamesMappingJson(const QString &modmanConfigFile) :
     m_modmanConfigFile(modmanConfigFile)
 {
     QJsonObject deviceJson = createSessionNamesMappingJson("mt310s2");
@@ -13,17 +13,17 @@ SessionNamesMappingJson::SessionNamesMappingJson(QString modmanConfigFile) :
     cJSONMerge::mergeJson(m_mappedJson, deviceJson);
 }
 
-bool SessionNamesMappingJson::storeMappedJsonFile(QString destFile)
+bool SessionNamesMappingJson::storeMappedJsonFile(const QString &destFile)
 {
     return cJsonFileLoader::storeJsonFile(destFile, m_mappedJson);
 }
 
-int SessionNamesMappingJson::getSessionCount(QString device)
+int SessionNamesMappingJson::getSessionCount(const QString &device)
 {
     return m_mappedJson[device].toObject().count();
 }
 
-QString SessionNamesMappingJson::getSessionNameForExternalUsers(QString internalSessionName)
+QString SessionNamesMappingJson::getSessionNameForExternalUsers(const QString &internalSessionName)
 {
     QString externalName;
     foreach(const QString& device, m_mappedJson.keys()) {
@@ -36,7 +36,7 @@ QString SessionNamesMappingJson::getSessionNameForExternalUsers(QString internal
     return externalName;
 }
 
-QJsonObject SessionNamesMappingJson::createSessionNamesMappingJson(QString device)
+QJsonObject SessionNamesMappingJson::createSessionNamesMappingJson(const QString &device)
 {
     QJsonObject jsonConfig = cJsonFileLoader::loadJsonFile(m_modmanConfigFile).value(device).toObject();
     QJsonArray availableSessions = jsonConfig["availableSessions"].toArray();

@@ -25,7 +25,7 @@ int VfModuleMetaData::getInstanceCount()
     return m_instanceCount;
 }
 
-void VfModuleMetaData::setValue(QVariant value)
+void VfModuleMetaData::setValue(const QVariant &value)
 {
     m_value = value;
 }

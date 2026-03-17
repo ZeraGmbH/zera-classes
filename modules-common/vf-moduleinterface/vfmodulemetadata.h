@@ -13,7 +13,7 @@ public:
     virtual void exportMetaData(QJsonObject &jsObj);
     static int getInstanceCount();
 public slots:
-    void setValue(QVariant value);
+    void setValue(const QVariant &value);
 private:
     QString m_moduleMetaEntryName;
     QVariant m_value;
