@@ -3100,7 +3100,7 @@
                         "Name": "RESULT_ARRAY",
                         "Segment": "moduleLocalSegment",
                         "Size": 75,
-                        "TypeData": "dspDataTypeFloat"
+                        "TypeData": "dspDataTypeInt"
                     }
                 ]
             },
@@ -3148,7 +3148,7 @@
                         "Name": "RESULT_ARRAY_WORK",
                         "Segment": "moduleLocalSegment",
                         "Size": 75,
-                        "TypeData": "dspDataTypeFloat"
+                        "TypeData": "dspDataTypeInt"
                     }
                 ]
             }

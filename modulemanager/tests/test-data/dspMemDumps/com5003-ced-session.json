@@ -8,9 +8,10 @@
     "UserMemAlignedAvailable": 4095,
     "UserMemAlignedFree": 3583,
     "UserMemAlignedUsed": 512,
-    "UserMemAvailable": 28287,
+    "UserMemAvailable": 28288,
     "UserMemFree": 7086,
     "UserMemUsed": 21201,
+    "UserMemUsedGlobal": 1,
     "ZdspMemDump": {
         "1000": {
             "DspCmdsCompiledCrcCyclic": "0x00000000",
@@ -1292,11 +1293,11 @@
             }
         },
         "9000": {
-            "DspCmdsCompiledCrcCyclic": "0xC3358E85",
+            "DspCmdsCompiledCrcCyclic": "0xA435C3DD",
             "DspCmdsCompiledCrcInterrupt": "0x00000000",
             "DspCmdsRawCyclic": [
                 "STARTCHAIN(0x000001,0x000001,0x000101) -> 0x001D0001 0x00120101",
-                "SETVAL(0x001E49,0x000001) -> 0x000A1E49 0x00000001",
+                "SETVAL(0x001C49,0x000001) -> 0x000A1C49 0x00000001",
                 "SETVAL(0x000002,0x000001) -> 0x000A0002 0x00000001",
                 "SETVAL(0x000003,0x000019) -> 0x000A0003 0x00000019",
                 "SETVAL(0x000004,0x000005) -> 0x000A0004 0x00000005",
@@ -1305,10 +1306,10 @@
                 "COPYDU(0x000001,0x001085,0x000000) -> 0x00130001 0x10850000",
                 "GETSTIME(0x000001) -> 0x00400000 0x00000001",
                 "XCOPYMEM(0x000001,0x000000,0x000004) -> 0x004E0001 0x00000004",
-                "XCOPYMEM(0x000001,0x001E49,0x000004) -> 0x004E0001 0x1E490004",
+                "XCOPYMEM(0x000001,0x001C49,0x000004) -> 0x004E0001 0x1C490004",
                 "XCOPYMEM(0x000001,0x000001,0x000004) -> 0x004E0001 0x00010004",
                 "INC(0x000002) -> 0x00360000 0x00000002",
-                "INC(0x001E49) -> 0x00360000 0x00001E49",
+                "INC(0x001C49) -> 0x00360000 0x00001C49",
                 "TESTVVSKIPGT(0x000002,0x000003) -> 0x00250000 0x00020003",
                 "TESTSKIPNOIRQPENDING() -> 0x004F0000 0x00000000",
                 "ACTIVATECHAIN(0x000001,0x000102) -> 0x001F0000 0x00120102",
@@ -1326,7 +1327,7 @@
             },
             "DspVarsClientBaseAddress": "0x09D3B6",
             "DspVarsGlobal": {
-                "0x001E49 / 0x09F1FF": "GLOBALPERIODCOUNT"
+                "0x001C49 / 0x09EFFF": "GLOBALPERIODCOUNT"
             },
             "DspVarsLocal": {
                 "0x000000 / 0x09D3B6": "LOCAL_BUSY",
@@ -2269,7 +2270,7 @@
             "USERMEMOFFSET(0x09D3B6)",
             "-- Start entity ID 9000 / Cyclic sequence --",
             "STARTCHAIN(0x000001,0x000001,0x000101)",
-            "SETVAL(0x001E49,0x000001)",
+            "SETVAL(0x001C49,0x000001)",
             "SETVAL(0x000002,0x000001)",
             "SETVAL(0x000003,0x000019)",
             "SETVAL(0x000004,0x000005)",
@@ -2278,10 +2279,10 @@
             "COPYDU(0x000001,0x001085,0x000000)",
             "GETSTIME(0x000001)",
             "XCOPYMEM(0x000001,0x000000,0x000004)",
-            "XCOPYMEM(0x000001,0x001E49,0x000004)",
+            "XCOPYMEM(0x000001,0x001C49,0x000004)",
             "XCOPYMEM(0x000001,0x000001,0x000004)",
             "INC(0x000002)",
-            "INC(0x001E49)",
+            "INC(0x001C49)",
             "TESTVVSKIPGT(0x000002,0x000003)",
             "TESTSKIPNOIRQPENDING()",
             "ACTIVATECHAIN(0x000001,0x000102)",
@@ -2297,7 +2298,7 @@
         "TotalCmdListInterrupt": [
         ],
         "TotalCmdListInterruptMaxInterruptCount": 0,
-        "TotalDspCmdsCompiledCrcCyclic": "0xAE3A5F55",
+        "TotalDspCmdsCompiledCrcCyclic": "0x5005DD09",
         "TotalDspCmdsCompiledCrcInterrupt": "0x6522DF69"
     }
 }

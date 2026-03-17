@@ -8,9 +8,10 @@
     "UserMemAlignedAvailable": 4095,
     "UserMemAlignedFree": 4095,
     "UserMemAlignedUsed": 0,
-    "UserMemAvailable": 28287,
+    "UserMemAvailable": 28288,
     "UserMemFree": 25378,
     "UserMemUsed": 2909,
+    "UserMemUsedGlobal": 1,
     "ZdspMemDump": {
         "1000": {
             "DspCmdsCompiledCrcCyclic": "0x00000000",
