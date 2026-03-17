@@ -76,11 +76,11 @@ void DspSuperModuleMeasProgram::setDspVarList()
     tmpDspVarGroup->addDspVar("PERIODCURR", 1, dspDataTypeInt);
     tmpDspVarGroup->addDspVar("PERIODMAX", 1, dspDataTypeInt);
     tmpDspVarGroup->addDspVar("RESULT_BUFF_IDX", 1, dspDataTypeInt);
-    tmpDspVarGroup->addDspVar("RESULT_ARRAY_WORK", getConfData()->m_maxPeriods * COUNT_SUPER_ENTRIES); // double buffer -> RESULT_ARRAY
+    tmpDspVarGroup->addDspVar("RESULT_ARRAY_WORK", getConfData()->m_maxPeriods * COUNT_SUPER_ENTRIES, dspDataTypeInt); // double buffer -> RESULT_ARRAY
 
-    // result array
+    // result array (we choose int for transparent transfer)
     m_pActualValuesDSP = m_dspInterface->createVariableGroup("ActualValues");
-    m_pActualValuesDSP->addDspVar("RESULT_ARRAY", getConfData()->m_maxPeriods  * COUNT_SUPER_ENTRIES);
+    m_pActualValuesDSP->addDspVar("RESULT_ARRAY", getConfData()->m_maxPeriods  * COUNT_SUPER_ENTRIES, dspDataTypeInt);
 }
 
 void DspSuperModuleMeasProgram::setDspCmdList()
