@@ -162,6 +162,11 @@
         "id": 1700
       },
       {
+        "name" : "dspsupermodule",
+        "configFile" : "dspsupermodule-common.xml",
+        "id": 9000
+      },
+      {
         "name" : "scpimodule",
         "configFile" : "mt310s2-scpimodule.xml",
         "id": 9999

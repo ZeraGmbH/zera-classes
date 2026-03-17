@@ -1,7 +1,7 @@
 {
     "0": {
         "DevMode": 0,
-        "Entities": "0;2;1000;1001;1020;1050;1070;1130;1150;1400;1500;9999",
+        "Entities": "0;2;1000;1001;1020;1050;1070;1130;1150;1400;1500;9000;9999",
         "ModulesPaused": 0,
         "Session": "com5003-ref-session.json",
         "SessionsAvailable": "com5003-meas-session.json;com5003-ced-session.json;com5003-ref-session.json;com5003-perphase-session.json",
@@ -177,6 +177,11 @@
         "ACT_WarningFlags": 0,
         "PAR_BluetoothOn": 0,
         "PAR_MacAddress": "00:00:00:00:00:00"
+    },
+    "9000": {
+        "ACT_DSP_BUSY_LIST": "",
+        "ACT_DSP_MS_TIMER": "",
+        "ACT_DSP_PERIOD_COUNT": ""
     },
     "Contentsets": [
         "ZeraDCReference",

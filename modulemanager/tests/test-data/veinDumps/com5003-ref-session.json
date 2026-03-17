@@ -13,6 +13,7 @@
             1150,
             1400,
             1500,
+            9000,
             9999
         ],
         "EntityName": "_System",
@@ -2161,5 +2162,39 @@
         "guiContext": "",
         "sessionName": "com5003TestSession",
         "transactionName": ""
+    },
+    "9000": {
+        "ACT_DSP_BUSY_LIST": null,
+        "ACT_DSP_MS_TIMER": null,
+        "ACT_DSP_PERIOD_COUNT": null,
+        "EntityName": "DspSuperModule1",
+        "INF_ModuleInterface": {
+            "ComponentInfo": {
+                "ACT_DSP_BUSY_LIST": {
+                    "Description": "<skipped>"
+                },
+                "ACT_DSP_MS_TIMER": {
+                    "Description": "<skipped>"
+                },
+                "ACT_DSP_PERIOD_COUNT": {
+                    "Description": "<skipped>"
+                },
+                "EntityName": {
+                    "Description": "<skipped>"
+                },
+                "INF_ModuleInterface": {
+                    "Description": "<skipped>"
+                }
+            },
+            "ModuleInfo": {
+                "Description": "DSP support on timestamps for other modules",
+                "Name": "DspSuperModule1"
+            },
+            "SCPIInfo": {
+                "Cmd": [
+                ],
+                "Name": "DSP1"
+            }
+        }
     }
 }

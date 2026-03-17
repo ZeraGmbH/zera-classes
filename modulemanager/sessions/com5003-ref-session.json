@@ -47,6 +47,11 @@
         "id": 1500
       },
       {
+        "name" : "dspsupermodule",
+        "configFile" : "dspsupermodule-common.xml",
+        "id": 9000
+      },
+      {
         "name" : "scpimodule",
         "configFile" : "com5003-scpimodule.xml",
         "id": 9999
