@@ -1278,8 +1278,7 @@ QString cPower1ModuleMeasProgram::getPhasePowerDescription(int measSystemNo)
 void cPower1ModuleMeasProgram::onModeTransactionOk()
 {
     std::shared_ptr<MeasMode> mode = m_measModeSelector.getCurrMode();
-    QString newMeasMode = mode->getName();
-    getConfData()->m_sMeasuringMode.m_sValue = newMeasMode;
+    getConfData()->m_sMeasuringMode.m_sValue = mode->getName();
     handleMModeParamChange();
     updatesForMModeChange();
     updatePhaseMaskVeinComponents(mode);
