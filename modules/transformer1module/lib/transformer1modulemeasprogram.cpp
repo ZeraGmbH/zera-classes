@@ -71,11 +71,8 @@ cTransformer1ModuleConfigData *cTransformer1ModuleMeasProgram::getConfData()
 
 void cTransformer1ModuleMeasProgram::generateVeinInterface()
 {
-    VfModuleComponent *pActvalue;
-    QString key;
-
-    for (int i = 0; i < getConfData()->m_nTransformerSystemCount; i++)
-    {
+    for (int i = 0; i < getConfData()->m_nTransformerSystemCount; i++) {
+        VfModuleComponent *pActvalue;
         pActvalue = new VfModuleComponent(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
                                             QString("ACT_Error%1").arg(i+1),
                                             QString("Transformer transmission error value"));
@@ -137,6 +134,7 @@ void cTransformer1ModuleMeasProgram::generateVeinInterface()
         m_pModule->m_veinComponentsWithMetaAndScpi.append(pActvalue); // and for the modules interface
     }
 
+    QString key;
     m_pPrimClampPrimParameter = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
                                                          key = QString("PAR_PrimClampPrim"),
                                                          QString("Clamp primary value"),
