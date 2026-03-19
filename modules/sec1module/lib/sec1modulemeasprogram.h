@@ -64,8 +64,8 @@ public slots:
     void start() override;
     void stop() override;
 private slots:
-    void catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant answer);
-    void onRefConstantChanged(QString refPowerName);
+    void catchInterfaceAnswer(quint32 msgnr, quint8 reply, const QVariant &answer);
+    void onRefConstantChanged(const QString &refPowerName);
     void resourceManagerConnect();
     void sendRMIdent();
     void readResources();
@@ -107,19 +107,19 @@ private slots:
     void checkForRestart();
 
     // vein change handlers
-    void newStartStop(QVariant startstop);
-    void newDutConstant(QVariant dutconst);
-    void newDutConstantAuto(QVariant dutConstAuto);
-    void newDutConstantScale(QVariant uINumDenomValue);
-    void newDutConstantUnit(QVariant dutconstunit);
-    void newRefConstant(QVariant refconst);
-    void newDutInput(QVariant dutinput);
-    void newRefInput(QVariant refinput);
-    void newMRate(QVariant mrate);
-    void newTarget(QVariant target);
-    void newEnergy(QVariant energy);
-    void newUpperLimit(QVariant limit);
-    void newLowerLimit(QVariant limit);
+    void newStartStop(const QVariant &startstop);
+    void newDutConstant(const QVariant &dutconst);
+    void newDutConstantAuto(const QVariant &dutConstAuto);
+    void newDutConstantScale(const QVariant &uINumDenomValue);
+    void newDutConstantUnit(const QVariant &dutconstunit);
+    void newRefConstant(const QVariant &refconst);
+    void newDutInput(const QVariant &dutinput);
+    void newRefInput(const QVariant &refinput);
+    void newMRate(const QVariant &mrate);
+    void newTarget(const QVariant &target);
+    void newEnergy(const QVariant &energy);
+    void newUpperLimit(const QVariant &limit);
+    void newLowerLimit(const QVariant &limit);
 
     void Actualize();
     void startNext();
@@ -134,7 +134,7 @@ private:
 
     QStringList getDutConstUnitValidator();
     QString getEnergyUnit();
-    void initDutConstantUnit(QStringList sl);
+    void initDutConstantUnit(const QStringList &sl);
     void initDutConstantUnit();
 
     void handleSECInterrupt();
@@ -144,7 +144,7 @@ private:
     const QString multiResultToJson();
     void multiResultToVein();
     double getUnitFactor();
-    QString getRefInputDisplayString(QString inputName);
+    QString getRefInputDisplayString(const QString &inputName);
     void actualizeRefConstant();
     quint32 getStatus();
     void setStatus(quint32 status);

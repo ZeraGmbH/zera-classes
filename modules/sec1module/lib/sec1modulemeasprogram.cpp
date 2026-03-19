@@ -531,7 +531,7 @@ void cSec1ModuleMeasProgram::updateProgress(quint32 dUTPulseCounterActual)
     }
 }
 
-void cSec1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant answer)
+void cSec1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, const QVariant &answer)
 {
     if (msgnr == 0) // 0 was reserved for async. messages
         // we must fetch the measured impuls count, compute the error and set corresponding entity
@@ -819,7 +819,7 @@ void cSec1ModuleMeasProgram::updateDemoMeasurementResults()
     updateProgress(dUTPulseCounterActual);
 }
 
-void cSec1ModuleMeasProgram::onRefConstantChanged(QString refPowerName)
+void cSec1ModuleMeasProgram::onRefConstantChanged(const QString &refPowerName)
 {
     if(getConfData()->m_sRefInput.m_sPar == refPowerName) {
         stopMeasurement(true);
@@ -891,7 +891,7 @@ QString cSec1ModuleMeasProgram::getEnergyUnit()
 }
 
 
-void cSec1ModuleMeasProgram::initDutConstantUnit(QStringList sl)
+void cSec1ModuleMeasProgram::initDutConstantUnit(const QStringList &sl)
 {
     if(sl.isEmpty())
         m_sDutConstantUnit.clear();
@@ -993,7 +993,7 @@ double cSec1ModuleMeasProgram::getUnitFactor()
     return factor;
 }
 
-QString cSec1ModuleMeasProgram::getRefInputDisplayString(QString inputName)
+QString cSec1ModuleMeasProgram::getRefInputDisplayString(const QString &inputName)
 {
     QString displayString = m_refInputDictionary.getAlias(inputName);
     QList<TRefInput> refInputList = getConfData()->m_refInpList;
@@ -1498,7 +1498,7 @@ void cSec1ModuleMeasProgram::setRating()
 }
 
 
-void cSec1ModuleMeasProgram::newStartStop(QVariant startstop)
+void cSec1ModuleMeasProgram::newStartStop(const QVariant &startstop)
 {
     bool ok;
     int ss = startstop.toInt(&ok);
@@ -1525,7 +1525,7 @@ void cSec1ModuleMeasProgram::newStartStop(QVariant startstop)
 }
 
 
-void cSec1ModuleMeasProgram::newDutConstant(QVariant dutconst)
+void cSec1ModuleMeasProgram::newDutConstant(const QVariant &dutconst)
 {
     bool ok;
     getConfData()->m_fDutConstant.m_fPar = dutconst.toDouble(&ok);
@@ -1537,7 +1537,7 @@ void cSec1ModuleMeasProgram::newDutConstant(QVariant dutconst)
     emit m_pModule->parameterChanged();
 }
 
-void cSec1ModuleMeasProgram::newDutConstantAuto(QVariant dutConstAuto)
+void cSec1ModuleMeasProgram::newDutConstantAuto(const QVariant &dutConstAuto)
 {
     if (dutConstAuto.toInt()) {
         if (!m_bMeasurementRunning && m_nEnergyCounterFinal != 0) {
@@ -1547,7 +1547,7 @@ void cSec1ModuleMeasProgram::newDutConstantAuto(QVariant dutConstAuto)
     }
 }
 
-void cSec1ModuleMeasProgram::newDutConstantScale(QVariant value)
+void cSec1ModuleMeasProgram::newDutConstantScale(const QVariant &value)
 {
     //parameters are not used because of combined calculation
     //the values are avaialable for logging/Debugging or future applications.
@@ -1590,7 +1590,7 @@ void cSec1ModuleMeasProgram::newDutConstantScale(QVariant value)
 }
 
 
-void cSec1ModuleMeasProgram::newDutConstantUnit(QVariant dutconstunit)
+void cSec1ModuleMeasProgram::newDutConstantUnit(const QVariant &dutconstunit)
 {
     m_sDutConstantUnit = dutconstunit.toString();
     getConfData()->m_sDutConstantUnit.m_sPar = m_sDutConstantUnit;
@@ -1606,7 +1606,7 @@ void cSec1ModuleMeasProgram::newDutConstantUnit(QVariant dutconstunit)
 }
 
 
-void cSec1ModuleMeasProgram::newRefConstant(QVariant refconst)
+void cSec1ModuleMeasProgram::newRefConstant(const QVariant &refconst)
 {
     bool ok;
     getConfData()->m_fRefConstant.m_fPar = refconst.toDouble(&ok);
@@ -1616,7 +1616,7 @@ void cSec1ModuleMeasProgram::newRefConstant(QVariant refconst)
 }
 
 
-void cSec1ModuleMeasProgram::newDutInput(QVariant dutinput)
+void cSec1ModuleMeasProgram::newDutInput(const QVariant &dutinput)
 {
     QString dutInputName = m_dutInputDictionary.getInputNameFromDisplayedName(dutinput.toString());
     getConfData()->m_sDutInput.m_sPar = dutInputName;
@@ -1626,7 +1626,7 @@ void cSec1ModuleMeasProgram::newDutInput(QVariant dutinput)
 }
 
 
-void cSec1ModuleMeasProgram::newRefInput(QVariant refinput)
+void cSec1ModuleMeasProgram::newRefInput(const QVariant &refinput)
 {
     QString refPowerName = m_refInputDictionary.getInputNameFromDisplayedName(refinput.toString());
     getConfData()->m_sRefInput.m_sPar = refPowerName;
@@ -1652,7 +1652,7 @@ void cSec1ModuleMeasProgram::newRefInput(QVariant refinput)
 }
 
 
-void cSec1ModuleMeasProgram::newMRate(QVariant mrate)
+void cSec1ModuleMeasProgram::newMRate(const QVariant &mrate)
 {
     bool ok;
     getConfData()->m_nMRate.m_nPar = mrate.toInt(&ok);
@@ -1662,7 +1662,7 @@ void cSec1ModuleMeasProgram::newMRate(QVariant mrate)
 }
 
 
-void cSec1ModuleMeasProgram::newTarget(QVariant target)
+void cSec1ModuleMeasProgram::newTarget(const QVariant &target)
 {
     bool ok;
     getConfData()->m_nTarget.m_nPar = target.toInt(&ok);
@@ -1672,7 +1672,7 @@ void cSec1ModuleMeasProgram::newTarget(QVariant target)
 }
 
 
-void cSec1ModuleMeasProgram::newEnergy(QVariant energy)
+void cSec1ModuleMeasProgram::newEnergy(const QVariant &energy)
 {
     bool ok;
     getConfData()->m_fEnergy.m_fPar = energy.toDouble(&ok);
@@ -1682,7 +1682,7 @@ void cSec1ModuleMeasProgram::newEnergy(QVariant energy)
 }
 
 
-void cSec1ModuleMeasProgram::newUpperLimit(QVariant limit)
+void cSec1ModuleMeasProgram::newUpperLimit(const QVariant &limit)
 {
     bool ok;
     getConfData()->m_fUpperLimit.m_fPar = limit.toDouble(&ok);
@@ -1693,7 +1693,7 @@ void cSec1ModuleMeasProgram::newUpperLimit(QVariant limit)
 }
 
 
-void cSec1ModuleMeasProgram::newLowerLimit(QVariant limit)
+void cSec1ModuleMeasProgram::newLowerLimit(const QVariant &limit)
 {
     bool ok;
     getConfData()->m_fLowerLimit.m_fPar = limit.toDouble(&ok);
