@@ -73,7 +73,7 @@ void cSampleModuleMeasProgram::deactivate()
     emit deactivated();
 }
 
-void cSampleModuleMeasProgram::onVeinPllChannelChanged(QVariant channelAlias)
+void cSampleModuleMeasProgram::onVeinPllChannelChanged(const QVariant &channelAlias)
 {
     if (m_obsermaticConfig.m_npllAutoAct.m_nActive != 0) {
         qWarning("Cannot set PLL channel when automatic mode is on!");
@@ -89,7 +89,7 @@ void cSampleModuleMeasProgram::onVeinPllChannelChanged(QVariant channelAlias)
     trySendPllChannel(channelMName);
 }
 
-void cSampleModuleMeasProgram::onVeinPllAutoChanged(QVariant pllauto)
+void cSampleModuleMeasProgram::onVeinPllAutoChanged(const QVariant &pllauto)
 {
     bool pllAutoOn = pllauto.toBool();
     if (pllAutoOn && m_obsermaticConfig.m_bpllFixed) {
@@ -103,7 +103,7 @@ void cSampleModuleMeasProgram::onVeinPllAutoChanged(QVariant pllauto)
     emit m_module->parameterChanged();
 }
 
-void cSampleModuleMeasProgram::onPllChannelChanged(QString channelMName)
+void cSampleModuleMeasProgram::onPllChannelChanged(const QString &channelMName)
 {
     trySendPllChannel(channelMName);
 }

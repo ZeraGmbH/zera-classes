@@ -25,9 +25,9 @@ public:
     void deactivate() override;
 
 private slots:
-    void onVeinPllChannelChanged(QVariant channelAlias);
-    void onVeinPllAutoChanged(QVariant pllauto);
-    void onPllChannelChanged(QString channelMName);
+    void onVeinPllChannelChanged(const QVariant &channelAlias);
+    void onVeinPllAutoChanged(const QVariant &pllauto);
+    void onPllChannelChanged(const QString &channelMName);
 private:
     cSampleModuleConfigData* getConfData();
     QString getAlias(const QString &channelMName);
