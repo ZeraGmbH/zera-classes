@@ -21,7 +21,7 @@ public slots:
     void stop() override;
 
 private slots:
-    void catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant answer);
+    void catchInterfaceAnswer(quint32 msgnr, quint8 reply, const QVariant &answer);
     void setInterfaceActualValues(QVector<float> *actualValues);
 
     void dspserverConnect();
@@ -32,7 +32,7 @@ private slots:
 
     void deactivateDSPStart();
 
-    void newRefChannel(QVariant chn);
+    void newRefChannel(const QVariant &chn);
 private:
     cOsciModuleConfigData* getConfData();
     void setDspVarList();

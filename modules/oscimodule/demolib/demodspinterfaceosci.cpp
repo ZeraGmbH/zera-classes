@@ -32,9 +32,9 @@ QVector<float> DemoDspInterfaceOsci::generateSineCurve(int sampleCount, int ampl
 void DemoDspInterfaceOsci::onTimer()
 {
     QVector<float> demoValues;
-    float phase = 0.0;
     for(const QString &channelName : qAsConst(m_valueChannelList)) {
         double randomVal = m_valueGenerator(m_entityId);
+        float phase = 0.0;
         if(channelName == "m1" || channelName == "m4") //UL2,IL2
             phase = randomVal * M_PI/2;
         else if(channelName == "m2" || channelName == "m5") //UL3,IL3

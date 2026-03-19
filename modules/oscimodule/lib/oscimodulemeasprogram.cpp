@@ -192,7 +192,7 @@ enum oscimoduleCmds
     writeparameter,
 };
 
-void cOsciModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant answer)
+void cOsciModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, const QVariant &answer)
 {
     Q_UNUSED(answer)
     if (msgnr == 0) // 0 was reserved for async. messages
@@ -340,7 +340,7 @@ void cOsciModuleMeasProgram::dataReadDSP()
     }
 }
 
-void cOsciModuleMeasProgram::newRefChannel(QVariant chn)
+void cOsciModuleMeasProgram::newRefChannel(const QVariant &chn)
 {
     QString channelMName = chn.toString();
     getConfData()->m_RefChannel.m_sPar = channelMName;
