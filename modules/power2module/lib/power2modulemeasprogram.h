@@ -73,7 +73,7 @@ private:
         double maxI = 0.0;
     };
     RangeMaxVals calcMaxRangeValues(std::shared_ptr<MeasMode> mode);
-    quint8 cmpActualValIndex(freqoutconfiguration frconf);
+    quint8 cmpActualValIndex(const freqoutconfiguration &frconf);
 
     cPower2Module* m_pModule;
     Zera::cRMInterface m_rmInterface;

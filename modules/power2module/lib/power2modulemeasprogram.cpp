@@ -184,9 +184,8 @@ void cPower2ModuleMeasProgram::stop()
 
 void cPower2ModuleMeasProgram::generateVeinInterface()
 {
-    QString key;
-    VfModuleComponent *pActvalue;
     for (int i = 0; i < MeasPhaseCount+SumValueCount; i++) {
+        VfModuleComponent *pActvalue;
         pActvalue = new VfModuleComponent(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
                                             QString("ACT_PP%1").arg(i+1),
                                             QString("Actual value positive power"));
@@ -219,6 +218,7 @@ void cPower2ModuleMeasProgram::generateVeinInterface()
     m_pFoutCount = new VfModuleMetaData(QString("FOUTCount"), QVariant(getConfData()->m_nFreqOutputCount));
     m_pModule->veinModuleMetaDataList.append(m_pFoutCount);
 
+    QString key;
     // our parameters we deal with
     m_pMeasuringmodeParameter = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
                                                          key = QString("PAR_MeasuringMode"),
@@ -666,7 +666,7 @@ void cPower2ModuleMeasProgram::setActualValuesNames()
     m_pModule->exportMetaData();
 }
 
-quint8 cPower2ModuleMeasProgram::cmpActualValIndex(freqoutconfiguration frconf)
+quint8 cPower2ModuleMeasProgram::cmpActualValIndex(const freqoutconfiguration &frconf)
 {
     quint8 actvalueIndex = frconf.m_nSource * 3;
 
@@ -704,7 +704,7 @@ void cPower2ModuleMeasProgram::resourceManagerConnect()
     // as this is our entry point when activating the module, we do some initialization first
     m_measChannelInfoHash.clear(); // we build up a new channel info hash
     cMeasChannelInfo mi;
-    for(auto &measSystem : getConfData()->m_sMeasSystemList) {
+    for (const auto &measSystem : getConfData()->m_sMeasSystemList) {
         QStringList sl = measSystem.split(',');
         for (int j = 0; j < sl.count(); j++) {
             QString s = sl.at(j);
@@ -1190,8 +1190,6 @@ void cPower2ModuleMeasProgram::setPhaseMaskValidator(std::shared_ptr<MeasMode> m
 
 void cPower2ModuleMeasProgram::updatePhaseMaskVeinComponents(std::shared_ptr<MeasMode> mode)
 {
-    QString newPhaseMask = mode->getCurrentMask();
-    //m_pMModePhaseSelectParameter->setValue(newPhaseMask);
     setPhaseMaskValidator(mode);
 }
 
