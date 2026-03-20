@@ -24,7 +24,7 @@ public:
     virtual Zera::DspInterfacePtr createDspInterfaceRefProg(int entityId, const QStringList &valueChannelList) = 0;
     virtual Zera::DspInterfacePtr createDspInterfaceRefAdj(int entityId) = 0;
     virtual Zera::DspInterfacePtr createDspInterfaceStatus(int entityId) = 0;
-    virtual Zera::DspInterfacePtr createDspInterfaceDspSuper(int entityId, int maxPeriodCount) = 0;
+    virtual Zera::DspInterfacePtr createDspInterfaceDspSuper(int entityId) = 0;
 };
 
 typedef std::shared_ptr<AbstractFactoryServiceInterfaces> AbstractFactoryServiceInterfacesPtr;

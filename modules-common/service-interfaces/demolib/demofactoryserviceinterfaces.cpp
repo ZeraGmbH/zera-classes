@@ -154,7 +154,7 @@ Zera::DspInterfacePtr DemoFactoryServiceInterfaces::createDspInterfaceStatus(int
     return std::make_shared<Zera::cDSPInterface>();
 }
 
-Zera::DspInterfacePtr DemoFactoryServiceInterfaces::createDspInterfaceDspSuper(int entityId, int maxPeriodCount)
+Zera::DspInterfacePtr DemoFactoryServiceInterfaces::createDspInterfaceDspSuper(int entityId)
 {
-    return std::make_shared<DemoDspInterfaceDspSuper>(entityId, maxPeriodCount, m_valueGenerator);
+    return std::make_shared<DemoDspInterfaceDspSuper>(entityId, m_valueGenerator);
 }

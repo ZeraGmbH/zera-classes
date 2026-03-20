@@ -1,47 +1,54 @@
 #include "demodspinterfacedspsuper.h"
-#include "dspcommonsupervisor.h"
 #include <timerfactoryqt.h>
 
 DemoDspInterfaceDspSuper::DemoDspInterfaceDspSuper(int entityId,
-                                                   int maxPeriodCount,
                                                    std::function<double (int)> valueGenerator) :
     m_entityId(entityId),
-    m_maxPeriodCount(maxPeriodCount),
     m_valueGenerator(valueGenerator),
-    m_periodicTimer(TimerFactoryQt::createPeriodic(20))
+    m_periodicTimer(TimerFactoryQt::createPeriodic(100)) // Mimics 10Hz period frequency
 {
     connect(m_periodicTimer.get(), &TimerTemplateQt::sigExpired,
             this, &DemoDspInterfaceDspSuper::onTimer);
     connect(this, &DemoDspInterfaceDspSuper::sigDspStarted, [&](){
         m_periodicTimer->start();
     });
-    for (int i=0; i<m_maxPeriodCount; ++i)
-        m_demoValues.append(genValues(0.0));
+    sendInterrupt();
 }
 
 void DemoDspInterfaceDspSuper::onTimer()
 {
-    float busyValFlt = m_valueGenerator(m_entityId) * 15;
-    m_demoValues.append(genValues(busyValFlt));
-
-    while(m_demoValues.size() > m_maxPeriodCount*COUNT_SUPER_ENTRIES)
-        m_demoValues.removeFirst();
-
+    if (m_currPeriodCount >= m_nextInterruptPeriod)
+        sendInterrupt();
     m_currPeriodCount++;
-    fireActValInterrupt(m_demoValues, /* dummy */ 0);
 }
 
-QVector<float> DemoDspInterfaceDspSuper::genValues(float busyVal)
+int DemoDspInterfaceDspSuper::genNextInterruptWithinPeriods() const
 {
-    QVector<float> values;
-    values.append(busyVal);
+    int nextInterruptWithinPeriods = (m_valueGenerator(m_entityId)*3.5);
+    if (nextInterruptWithinPeriods == 0)
+        nextInterruptWithinPeriods = 1;
+    return nextInterruptWithinPeriods;
+}
 
-    float periodCountFlt = *reinterpret_cast<float*>(&m_currPeriodCount);
-    values.append(periodCountFlt);
+void DemoDspInterfaceDspSuper::sendInterrupt()
+{
+    int periodsToGenerateValuesFor = m_currPeriodCount - m_lastInterruptPeriod;
+    if (periodsToGenerateValuesFor > 0) {
+        QVector<float> demoValues;
+        for (int i=0; i<periodsToGenerateValuesFor; ++i) {
+            int periodToStore = m_lastInterruptPeriod + i + 1;
+            float busyValFlt = m_valueGenerator(m_entityId) * 15;
+            demoValues.append(busyValFlt);
 
-    uint msTime = 20*m_currPeriodCount;
-    float msTimeFlt = *reinterpret_cast<float*>(&msTime);
-    values.append(msTimeFlt);
+            float periodCountFlt = *reinterpret_cast<float*>(&periodToStore);
+            demoValues.append(periodCountFlt);
 
-    return values;
+            uint msTime = 20*periodToStore;
+            float msTimeFlt = *reinterpret_cast<float*>(&msTime);
+            demoValues.append(msTimeFlt);
+        }
+        fireActValInterrupt(demoValues, periodsToGenerateValuesFor);
+    }
+    m_lastInterruptPeriod = m_currPeriodCount;
+    m_nextInterruptPeriod = m_currPeriodCount + genNextInterruptWithinPeriods();
 }

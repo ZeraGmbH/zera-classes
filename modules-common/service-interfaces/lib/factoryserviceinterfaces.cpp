@@ -129,9 +129,8 @@ Zera::DspInterfacePtr FactoryServiceInterfaces::createDspInterfaceStatus(int ent
     return std::make_shared<Zera::cDSPInterface>();
 }
 
-Zera::DspInterfacePtr FactoryServiceInterfaces::createDspInterfaceDspSuper(int entityId, int maxPeriodCount)
+Zera::DspInterfacePtr FactoryServiceInterfaces::createDspInterfaceDspSuper(int entityId)
 {
     Q_UNUSED(entityId)
-    Q_UNUSED(maxPeriodCount)
     return std::make_shared<Zera::cDSPInterface>();
 }

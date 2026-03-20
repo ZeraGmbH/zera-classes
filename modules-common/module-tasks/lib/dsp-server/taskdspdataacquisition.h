@@ -10,15 +10,18 @@ class TaskDspDataAcquisition : public TaskServerTransactionTemplate
 public:
     static TaskTemplatePtr create(Zera::DspInterfacePtr dspInterface,
                                   DspVarGroupClientInterface* actualValuesDsp, // member of dspInterface
+                                  int limitValueCount = 0,
                                   int timeout = TRANSACTION_TIMEOUT, std::function<void()> additionalErrorHandler = []{});
     TaskDspDataAcquisition(Zera::DspInterfacePtr dspInterface,
-                           DspVarGroupClientInterface* actualValuesDsp);
+                           DspVarGroupClientInterface* actualValuesDsp,
+                           int limitValueCount = 0);
 
 private:
     quint32 sendToServer() override;
     bool handleCheckedServerAnswer(const QVariant &answer) override;
     Zera::DspInterfacePtr m_dspInterface;
     DspVarGroupClientInterface *m_actualValuesDsp;
+    int m_limitValueCount;
 };
 
 #endif // TASKDSPDATAACQUISITION_H

@@ -15,8 +15,7 @@ DspSuperModuleMeasProgram::DspSuperModuleMeasProgram(DspSuperModule* module, std
     cBaseDspMeasProgram(pConfiguration, module->getVeinModuleName()),
     m_pModule(module)
 {
-    m_dspInterface = m_pModule->getServiceInterfaceFactory()->createDspInterfaceDspSuper(
-        m_pModule->getEntityId(), getConfData()->m_maxPeriods);
+    m_dspInterface = m_pModule->getServiceInterfaceFactory()->createDspInterfaceDspSuper(m_pModule->getEntityId());
 
     m_var2DSPState.addTransition(this, &DspSuperModuleMeasProgram::activationContinue, &m_cmd2DSPState);
     m_cmd2DSPState.addTransition(this, &DspSuperModuleMeasProgram::activationContinue, &m_cmdMakeDspSuperModule);

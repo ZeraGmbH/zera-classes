@@ -21,7 +21,7 @@ public:
     Zera::DspInterfacePtr createDspInterfaceRefProg(int entityId, const QStringList &valueChannelList) override;
     Zera::DspInterfacePtr createDspInterfaceRefAdj(int entityId) override;
     Zera::DspInterfacePtr createDspInterfaceStatus(int entityId) override;
-    Zera::DspInterfacePtr createDspInterfaceDspSuper(int entityId, int maxPeriodCount) override;
+    Zera::DspInterfacePtr createDspInterfaceDspSuper(int entityId) override;
 };
 
 #endif // FACTORYSERVICEINTERFACES_H

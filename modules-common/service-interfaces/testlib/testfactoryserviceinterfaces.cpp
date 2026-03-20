@@ -158,7 +158,7 @@ Zera::DspInterfacePtr TestFactoryServiceInterfaces::createDspInterfaceStatus(int
                                     0 /* dummy */, {});
 }
 
-Zera::DspInterfacePtr TestFactoryServiceInterfaces::createDspInterfaceDspSuper(int entityId, int maxPeriodCount)
+Zera::DspInterfacePtr TestFactoryServiceInterfaces::createDspInterfaceDspSuper(int entityId)
 {
     return createDspInterfaceCommon(entityId,
                                     INJECT_SUPER,
