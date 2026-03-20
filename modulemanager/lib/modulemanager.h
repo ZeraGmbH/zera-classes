@@ -68,7 +68,6 @@ protected:
     std::unique_ptr<QList<ModuleData *>> m_moduleDataList;
     bool m_moduleStartLock;
     VeinTcp::AbstractTcpNetworkFactoryPtr m_tcpNetworkFactory;
-    std::shared_ptr<ModuleSharedData> m_moduleSharedObjects;
 
 private:
     virtual void saveDefaultSession();
@@ -104,6 +103,7 @@ private:
     QList<QString> m_sessionsAvailable;
 
     QElapsedTimer m_timerAllModulesLoaded;
+    std::shared_ptr<ModuleSharedData> m_tmpPointerOnModuleSharedObjectsDontUseOutside;
 };
 }
 

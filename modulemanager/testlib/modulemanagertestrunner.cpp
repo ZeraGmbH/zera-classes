@@ -166,11 +166,6 @@ QMap<int, QList<TestDspInterfacePtr> > ModuleManagerTestRunner::getAllDspInterfa
     return m_serviceInterfaceFactory->getAllInterfaces();
 }
 
-DspCommonSupervisorPtr ModuleManagerTestRunner::getDspSharedSuperData() const
-{
-    return m_modMan->getModuleSharedObjects()->m_dspCommonSupervisor;
-}
-
 VfCmdEventHandlerSystemPtr ModuleManagerTestRunner::getVfCmdEventHandlerSystemPtr()
 {
     return m_vfCmdEventHandlerSystem;

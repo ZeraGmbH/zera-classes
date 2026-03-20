@@ -79,7 +79,7 @@ std::unique_ptr<QList<ModuleData *> > ModuleManager::createEmptyModuleDataList()
 void ZeraModules::ModuleManager::handleFinalModuleLoaded()
 {
     saveDefaultSession();
-    m_moduleSharedObjects = nullptr; // all modules are supplied
+    m_tmpPointerOnModuleSharedObjectsDontUseOutside = nullptr; // all modules are supplied
     qInfo("All modules started within %llims", m_timerAllModulesLoaded.elapsed());
     emit sigModulesLoaded(m_sessionFile, m_sessionsAvailable);
 }
@@ -131,12 +131,12 @@ void ModuleManager::loadDefaultSession()
 
 void ModuleManager::createCommonModuleParam()
 {
-    if(!m_moduleSharedObjects) {
+    if(!m_tmpPointerOnModuleSharedObjectsDontUseOutside) {
         ModulemanagerConfig *mmConfig = ModulemanagerConfig::getInstance();
         ChannelRangeObserver::SystemObserverPtr channelRangeObserver =
             std::make_shared<ChannelRangeObserver::SystemObserver>(mmConfig->getPcbConnectionInfo(), m_tcpNetworkFactory);
         DspCommonSupervisorPtr dspCommonSupervisor = std::make_shared<DspCommonSupervisor>();
-        m_moduleSharedObjects = std::make_shared<ModuleSharedData>(getNetworkParams(),
+        m_tmpPointerOnModuleSharedObjectsDontUseOutside = std::make_shared<ModuleSharedData>(getNetworkParams(),
                                                                    m_serviceInterfaceFactory,
                                                                    m_setupFacade->getStorageSystem(),
                                                                    channelRangeObserver,
@@ -167,7 +167,7 @@ VirtualModule *ModuleManager::createModule(const QString &xmlConfigPath,
     const ModuleFactoryParam moduleParam(moduleEntityId,
                                          moduleNum,
                                          xmlConfigData,
-                                         m_moduleSharedObjects);
+                                         m_tmpPointerOnModuleSharedObjectsDontUseOutside);
     VirtualModule *tmpModule = tmpFactory->createModule(moduleParam);
     if(tmpModule) {
         connect(tmpModule, &VirtualModule::addEventSystem, this, &ModuleManager::onModuleEventSystemAdded);
@@ -218,7 +218,7 @@ void ModuleManager::startModule(const QString &uniqueName,
                   qPrintable(confFileInfo.fileName()));
             createCommonModuleParam();
             Q_ASSERT(!m_currModulePrepareTask);
-            m_currModulePrepareTask = tmpFactory->getModulePrepareTask(m_moduleSharedObjects);
+            m_currModulePrepareTask = tmpFactory->getModulePrepareTask(m_tmpPointerOnModuleSharedObjectsDontUseOutside);
             connect(m_currModulePrepareTask.get(), &TaskTemplate::sigFinish, this, [=](bool ok) {
                 VirtualModule *tmpModule = nullptr;
                 if(ok)

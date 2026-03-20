@@ -44,7 +44,6 @@ public:
     TestDspInterfacePtr getDspInterface(int entityId, DspInterfaceCreatedBy createdBy = MODULEPROG);
     TestDspInterfacePtr getDspInterface(DspInterfaceInjectableTypes injectType);
     QMap<int, QList<TestDspInterfacePtr>> getAllDspInterfaces();
-    DspCommonSupervisorPtr getDspSharedSuperData() const;
 
     // hotplug full functional methods
     void fireHotplugInterrupt(const AbstractMockAllServices::ChannelAliasHotplugDeviceNameMap &deviceMap);

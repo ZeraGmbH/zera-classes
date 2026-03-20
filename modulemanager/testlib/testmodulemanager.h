@@ -19,7 +19,6 @@ public:
     void waitUntilModulesAreReady();
     ZeraModules::VirtualModule *getModule(QString uniqueName, int entityId);
     int getModuleConfigWriteCounts() const;
-    std::shared_ptr<ModuleSharedData> getModuleSharedObjects() const;
 
     struct TModuleInstances {
         int m_veinMetaDataCount = 0;
