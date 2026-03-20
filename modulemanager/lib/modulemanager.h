@@ -68,6 +68,7 @@ protected:
     std::unique_ptr<QList<ModuleData *>> m_moduleDataList;
     bool m_moduleStartLock;
     VeinTcp::AbstractTcpNetworkFactoryPtr m_tcpNetworkFactory;
+    std::shared_ptr<ModuleSharedData> m_moduleSharedObjects;
 
 private:
     virtual void saveDefaultSession();
@@ -89,7 +90,6 @@ private:
                        bool licensable);
     void disconnectModulesFromVein();
 
-    std::shared_ptr<ModuleSharedData> m_moduleSharedObjects;
     ModuleManagerSetupFacade *m_setupFacade;
     AbstractFactoryServiceInterfacesPtr m_serviceInterfaceFactory;
     JsonSessionLoader m_sessionLoader;

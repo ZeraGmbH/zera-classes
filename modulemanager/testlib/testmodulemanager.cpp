@@ -96,6 +96,11 @@ int TestModuleManager::getModuleConfigWriteCounts() const
     return m_moduleConfigCountWrites;
 }
 
+std::shared_ptr<ModuleSharedData> TestModuleManager::getModuleSharedObjects() const
+{
+    return m_moduleSharedObjects;
+}
+
 ZDspServer *TestModuleManager::getDspServer()
 {
     return m_testAllServices->getZdsp1dServer();
