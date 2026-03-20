@@ -9,6 +9,7 @@ struct DspCommonSupervisorEntry {
     float m_percentBusy = 0.0;
     int m_periodCount = 0;
     int m_msTimer = 0;
+    // TODO: module interrupt count??
 };
 
 enum DspCommonSupervisorEntryFields {
@@ -19,6 +20,12 @@ enum DspCommonSupervisorEntryFields {
     COUNT_SUPER_ENTRIES
 };
 
+// This is about
+// * DSP period count / time
+// * DSP processing load
+//
+// Maybe the name is not the best but we were looking for something
+// starting with 'super' :)
 class DspCommonSupervisor
 {
 public:
