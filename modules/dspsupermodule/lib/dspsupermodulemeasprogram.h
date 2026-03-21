@@ -7,6 +7,7 @@
 #include <QStateMachine>
 #include <QState>
 #include <QFinalState>
+#include <timertemplateqt.h>
 
 namespace DSPSUPERMODULE
 {
@@ -33,21 +34,19 @@ private slots:
     void activateDSPdone();
 
     void deactivateDSPStart();
+    void onVeinUpdate();
 private:
     DspSuperModuleConfigData* getConfData();
-    void decodeDspDataAcquired();
-    void dataToVein(); // for now just to see something
+    void decodeDspDataAcquired(int countPeriodsFetched);
     void setDspVarList();
     void setDspCmdList();
-    void startDataAcquisitionDSP();
+    void startDataAcquisitionDSP(int countPeriodsToFetch);
 
     DspSuperModule* m_pModule = nullptr;
 
     DspVarGroupClientInterface* m_pActualValuesDSP = nullptr;
 
-    uint m_currPeriodCount = 0;
-    uint m_periodCountToVeinLast = 0;
-    VfModuleComponent* m_veinDspBusyList;
+    VfModuleComponent* m_veinDspBusy;
     VfModuleComponent* m_veinDspPeriodCount;
     VfModuleComponent* m_veinDspMsTimer;
 
@@ -64,7 +63,9 @@ private:
     QFinalState m_unloadDSPDoneState;
 
     TaskTemplatePtr m_taskDataAcquisition;
-
+    TimerTemplateQtPtr m_veinUpdateTimer;
+    quint32 m_lastVeinPeriod = 0;
+    quint32 m_lastVeinTimeMs = 0;
 };
 
 }

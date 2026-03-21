@@ -1,10 +1,22 @@
 <?xml version="1.0" encoding="ISO-8859-1" ?>
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
 
-    <xs:simpleType name="periodcounttype">
+    <xs:simpleType name="periodcounttypedsp">
         <xs:restriction base="xs:integer">
-            <xs:minInclusive value="5"/><!-- sync to validator!!! -->
-            <xs:maxInclusive value="50"/>
+            <xs:minInclusive value="5"/>
+            <xs:maxInclusive value="20"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="periodcounttypetotal">
+        <xs:restriction base="xs:integer">
+            <xs:minInclusive value="5"/>
+            <xs:maxInclusive value="100"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="veinupdatemstype">
+        <xs:restriction base="xs:integer">
+            <xs:minInclusive value="250"/>
+            <xs:maxInclusive value="2000"/>
         </xs:restriction>
     </xs:simpleType>
 
@@ -14,7 +26,9 @@
                 <xs:element name="configuration">
                     <xs:complexType>
                         <xs:sequence>
-                            <xs:element name="maxperiods" type="periodcounttype"/>
+                        <xs:element name="maxperiodsdsp" type="periodcounttypedsp"/>
+                        <xs:element name="periodstotal" type="periodcounttypetotal"/>
+                        <xs:element name="veinupdatems" type="veinupdatemstype"/>
                         </xs:sequence>
                     </xs:complexType>
                 </xs:element>

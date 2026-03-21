@@ -13,6 +13,7 @@ add_library(dsp-supervisor SHARED
 
 target_link_libraries(dsp-supervisor
     PUBLIC
+    Zera::zera-timers
     ${QTX}::Core
     # ask linker to help us finding unresolved symbols
     "-Wl,--no-undefined"

@@ -2814,19 +2814,19 @@
     "9000": {
         "1-MemGroups": {
             "ActualValues": {
-                "UserMemSize": 75,
+                "UserMemSize": 30,
                 "UserMemSizeAligned": 0,
                 "Variables": [
                     {
                         "Name": "RESULT_ARRAY",
                         "Segment": "moduleLocalSegment",
-                        "Size": 75,
+                        "Size": 30,
                         "TypeData": "dspDataTypeInt"
                     }
                 ]
             },
             "TmpData": {
-                "UserMemSize": 80,
+                "UserMemSize": 35,
                 "UserMemSizeAligned": 0,
                 "Variables": [
                     {
@@ -2868,7 +2868,7 @@
                     {
                         "Name": "RESULT_ARRAY_WORK",
                         "Segment": "moduleLocalSegment",
-                        "Size": 75,
+                        "Size": 30,
                         "TypeData": "dspDataTypeInt"
                     }
                 ]
@@ -2877,8 +2877,8 @@
         "2-CmdList": [
             "STARTCHAIN(1,1,0x0101)",
             "SETVAL(GLOBALPERIODCOUNT,1)",
-            "SETVAL(PERIODCURR,1)",
-            "SETVAL(PERIODMAX,25)",
+            "SETVAL(PERIODCURR,0)",
+            "SETVAL(PERIODMAX,10)",
             "SETVAL(RESULT_BUFF_IDX,RESULT_ARRAY_WORK)",
             "DEACTIVATECHAIN(1,0x0101)",
             "STOPCHAIN(1,0x0101)",
@@ -2889,14 +2889,14 @@
             "XCOPYMEM(1,LOCAL_SYSTIME,RESULT_BUFF_IDX)",
             "INC(PERIODCURR)",
             "INC(GLOBALPERIODCOUNT)",
-            "TESTVVSKIPGT(PERIODCURR,PERIODMAX)",
+            "TESTVVSKIPEQ(PERIODCURR, PERIODMAX)",
             "TESTSKIPNOIRQPENDING()",
             "ACTIVATECHAIN(1,0x0102)",
             "STARTCHAIN(0,1,0x0102)",
-            "SETVAL(PERIODCURR,1)",
             "SETVAL(RESULT_BUFF_IDX,RESULT_ARRAY_WORK)",
-            "COPYMEM(75,RESULT_ARRAY_WORK,RESULT_ARRAY)",
-            "DSPINTTRIGGER(0x0,0x0)",
+            "COPYMEM(30,RESULT_ARRAY_WORK,RESULT_ARRAY)",
+            "XDSPINTTRIGGER(0x0,PERIODCURR)",
+            "SETVAL(PERIODCURR,0)",
             "DEACTIVATECHAIN(1,0x0102)",
             "STOPCHAIN(1,0x0102)"
         ],

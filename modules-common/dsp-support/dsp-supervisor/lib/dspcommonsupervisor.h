@@ -3,16 +3,24 @@
 
 #include <QtGlobal>
 #include <QList>
+#include <QMap>
+#include <QDateTime>
 #include <memory>
 
-struct DspCommonSupervisorEntry {
+// This is about
+// * DSP processing load
+// * DSP period timestamps
+//
+// Maybe the term 'supervisor' is not the best but we were looking for something
+// starting with 'super' :)
+
+struct DspSupervisorInput {
     float m_percentBusy = 0.0;
-    int m_periodCount = 0;
-    int m_msTimer = 0;
-    // TODO: module interrupt count??
+    quint32 m_periodCount = 0;
+    quint32 m_msTimer = 0;
 };
 
-enum DspCommonSupervisorEntryFields {
+enum DspSupervisorInputFields {
     PERCENT_BUSY_FIELD = 0,
     PERIOD_COUNT_FIELD,
     MS_TIMER_FIELD,
@@ -20,19 +28,25 @@ enum DspCommonSupervisorEntryFields {
     COUNT_SUPER_ENTRIES
 };
 
-// This is about
-// * DSP period count / time
-// * DSP processing load
-//
-// Maybe the name is not the best but we were looking for something
-// starting with 'super' :)
+struct DspSupervisorOutput {
+    DspSupervisorInput m_rawIn;
+    QDateTime m_timeStamp;
+};
+
+typedef QMap<quint32, DspSupervisorOutput> DspSupervisorOutputMap;
+
 class DspCommonSupervisor
 {
 public:
-    void setSuperList(const QList<DspCommonSupervisorEntry> &superList);
-    const QList<DspCommonSupervisorEntry> &getSuperList() const;
+    void addSupervisorEntries(const QList<DspSupervisorInput>& entriesChronological, int maxEntries);
+    const DspSupervisorOutputMap &getSupervisorMap() const;
+    quint32 getCurrentPeriod() const;
+    quint32 getCurrentMsTime() const;
 private:
-    QList<DspCommonSupervisorEntry> m_superList;
+    DspSupervisorOutputMap m_supervisorMap;
+    QList<quint32> m_entryStore;
+    quint32 m_currentPeriod = 0;
+    quint32 m_currentMsTime = 0;
 };
 
 typedef std::shared_ptr<DspCommonSupervisor> DspCommonSupervisorPtr;

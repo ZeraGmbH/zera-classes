@@ -9,8 +9,8 @@
     "UserMemAlignedFree": 3583,
     "UserMemAlignedUsed": 512,
     "UserMemAvailable": 28288,
-    "UserMemFree": 6058,
-    "UserMemUsed": 22229,
+    "UserMemFree": 6148,
+    "UserMemUsed": 22139,
     "UserMemUsedGlobal": 1,
     "ZdspMemDump": {
         "1000": {
@@ -1668,13 +1668,13 @@
             }
         },
         "9000": {
-            "DspCmdsCompiledCrcCyclic": "0x1B0802EE",
+            "DspCmdsCompiledCrcCyclic": "0x168BE6B5",
             "DspCmdsCompiledCrcInterrupt": "0x00000000",
             "DspCmdsRawCyclic": [
                 "STARTCHAIN(0x000001,0x000001,0x000101) -> 0x001D0001 0x00130101",
                 "SETVAL(0x001845,0x000001) -> 0x000A1845 0x00000001",
-                "SETVAL(0x000002,0x000001) -> 0x000A0002 0x00000001",
-                "SETVAL(0x000003,0x000019) -> 0x000A0003 0x00000019",
+                "SETVAL(0x000002,0x000000) -> 0x000A0002 0x00000000",
+                "SETVAL(0x000003,0x00000A) -> 0x000A0003 0x0000000A",
                 "SETVAL(0x000004,0x000005) -> 0x000A0004 0x00000005",
                 "DEACTIVATECHAIN(0x000001,0x000101) -> 0x00200000 0x00130101",
                 "STOPCHAIN(0x000001,0x000101) -> 0x001E0000 0x00130101",
@@ -1685,14 +1685,14 @@
                 "XCOPYMEM(0x000001,0x000001,0x000004) -> 0x004E0001 0x00010004",
                 "INC(0x000002) -> 0x00360000 0x00000002",
                 "INC(0x001845) -> 0x00360000 0x00001845",
-                "TESTVVSKIPGT(0x000002,0x000003) -> 0x00250000 0x00020003",
+                "TESTVVSKIPEQ(0x000002,0x000003) -> 0x00240000 0x00020003",
                 "TESTSKIPNOIRQPENDING() -> 0x004F0000 0x00000000",
                 "ACTIVATECHAIN(0x000001,0x000102) -> 0x001F0000 0x00130102",
                 "STARTCHAIN(0x000000,0x000001,0x000102) -> 0x001D0000 0x00130102",
-                "SETVAL(0x000002,0x000001) -> 0x000A0002 0x00000001",
                 "SETVAL(0x000004,0x000005) -> 0x000A0004 0x00000005",
-                "COPYMEM(0x00004B,0x000005,0x000050) -> 0x0048004B 0x00050050",
-                "DSPINTTRIGGER(0x000000,0x000000) -> 0x00290000 0x00130000",
+                "COPYMEM(0x00001E,0x000005,0x000023) -> 0x0048001E 0x00050023",
+                "XDSPINTTRIGGER(0x000000,0x000002) -> 0x00500000 0x00130002",
+                "SETVAL(0x000002,0x000000) -> 0x000A0002 0x00000000",
                 "DEACTIVATECHAIN(0x000001,0x000102) -> 0x00200000 0x00130102",
                 "STOPCHAIN(0x000001,0x000102) -> 0x001E0000 0x00130102"
             ],
@@ -1711,7 +1711,7 @@
                 "0x000003 / 0x09D7BD": "PERIODMAX",
                 "0x000004 / 0x09D7BE": "RESULT_BUFF_IDX",
                 "0x000005 / 0x09D7BF": "RESULT_ARRAY_WORK",
-                "0x000050 / 0x09D80A": "RESULT_ARRAY"
+                "0x000023 / 0x09D7DD": "RESULT_ARRAY"
             }
         },
         "TotalCmdListCyclic": [
@@ -2977,8 +2977,8 @@
             "-- Start entity ID 9000 / Cyclic sequence --",
             "STARTCHAIN(0x000001,0x000001,0x000101)",
             "SETVAL(0x001845,0x000001)",
-            "SETVAL(0x000002,0x000001)",
-            "SETVAL(0x000003,0x000019)",
+            "SETVAL(0x000002,0x000000)",
+            "SETVAL(0x000003,0x00000A)",
             "SETVAL(0x000004,0x000005)",
             "DEACTIVATECHAIN(0x000001,0x000101)",
             "STOPCHAIN(0x000001,0x000101)",
@@ -2989,14 +2989,14 @@
             "XCOPYMEM(0x000001,0x000001,0x000004)",
             "INC(0x000002)",
             "INC(0x001845)",
-            "TESTVVSKIPGT(0x000002,0x000003)",
+            "TESTVVSKIPEQ(0x000002,0x000003)",
             "TESTSKIPNOIRQPENDING()",
             "ACTIVATECHAIN(0x000001,0x000102)",
             "STARTCHAIN(0x000000,0x000001,0x000102)",
-            "SETVAL(0x000002,0x000001)",
             "SETVAL(0x000004,0x000005)",
-            "COPYMEM(0x00004B,0x000005,0x000050)",
-            "DSPINTTRIGGER(0x000000,0x000000)",
+            "COPYMEM(0x00001E,0x000005,0x000023)",
+            "XDSPINTTRIGGER(0x000000,0x000002)",
+            "SETVAL(0x000002,0x000000)",
             "DEACTIVATECHAIN(0x000001,0x000102)",
             "STOPCHAIN(0x000001,0x000102)"
         ],
@@ -3004,7 +3004,7 @@
         "TotalCmdListInterrupt": [
         ],
         "TotalCmdListInterruptMaxInterruptCount": 0,
-        "TotalDspCmdsCompiledCrcCyclic": "0x2FDBDD65",
+        "TotalDspCmdsCompiledCrcCyclic": "0x83A244C0",
         "TotalDspCmdsCompiledCrcInterrupt": "0x6522DF69"
     }
 }

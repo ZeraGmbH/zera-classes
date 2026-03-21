@@ -357,7 +357,7 @@
         "PAR_StartStopRecording": 0
     },
     "9000": {
-        "ACT_DSP_BUSY_LIST": "",
+        "ACT_DSP_BUSY": "",
         "ACT_DSP_MS_TIMER": "",
         "ACT_DSP_PERIOD_COUNT": ""
     },

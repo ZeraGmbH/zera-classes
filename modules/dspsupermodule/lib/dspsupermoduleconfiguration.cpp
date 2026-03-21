@@ -7,7 +7,9 @@ namespace DSPSUPERMODULE
 
 enum moduleconfigstate
 {
-    setMaxPeriods,
+    setMaxPeriodsDsp,
+    setPeriodsTotal,
+    setVeinUpdateMs,
 
     setValue1 = 20
 };
@@ -33,7 +35,9 @@ void DspSuperModuleConfiguration::setConfiguration(const QByteArray &xmlString)
 
     m_ConfigXMLMap.clear(); // in case of new configuration we completely set up
 
-    m_ConfigXMLMap["dspsupermodconfpar:configuration:maxperiods"] = setMaxPeriods;
+    m_ConfigXMLMap["dspsupermodconfpar:configuration:maxperiodsdsp"] = setMaxPeriodsDsp;
+    m_ConfigXMLMap["dspsupermodconfpar:configuration:periodstotal"] = setPeriodsTotal;
+    m_ConfigXMLMap["dspsupermodconfpar:configuration:veinupdatems"] = setVeinUpdateMs;
 
     m_pXMLReader->loadXMLFromString(QString::fromUtf8(xmlString.data(), xmlString.size()));
 }
@@ -54,8 +58,14 @@ void DspSuperModuleConfiguration::configXMLInfo(const QString &key)
         bool ok = true;
         int cmd = m_ConfigXMLMap[key];
         switch (cmd) {
-        case setMaxPeriods:
-            m_dspSuperModulConfigData->m_maxPeriods = m_pXMLReader->getValue(key).toInt(&ok);
+        case setMaxPeriodsDsp:
+            m_dspSuperModulConfigData->m_maxPeriodsDsp = m_pXMLReader->getValue(key).toInt(&ok);
+            break;
+        case setPeriodsTotal:
+            m_dspSuperModulConfigData->m_periodsTotal = m_pXMLReader->getValue(key).toInt(&ok);
+            break;
+        case setVeinUpdateMs:
+            m_dspSuperModulConfigData->m_veinUpdateMs = m_pXMLReader->getValue(key).toInt(&ok);
             break;
         default:
             break;

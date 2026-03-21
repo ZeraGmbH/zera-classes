@@ -9,7 +9,9 @@ namespace DSPSUPERMODULE
 class DspSuperModuleConfigData
 {
 public:
-    quint8 m_maxPeriods;
+    quint32 m_maxPeriodsDsp;
+    quint32 m_periodsTotal;
+    quint32 m_veinUpdateMs;
 };
 
 }
