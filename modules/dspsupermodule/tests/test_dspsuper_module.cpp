@@ -2,6 +2,7 @@
 #include "dspsupermodule.h"
 #include "modulemanagertestrunner.h"
 #include <zdspdumpfunctions.h>
+#include "dspsupertestsupport.h"
 #include <timemachineobject.h>
 #include <vf_core_stack_client.h>
 #include <vf_entity_component_event_item.h>
@@ -80,7 +81,7 @@ void test_dspsuper_module::oneInterrupt()
 
     QCOMPARE(dspSuperModule->getDspCommonSupervisor()->getCurrentPeriod(), 0);
     QCOMPARE(dspSuperModule->getDspCommonSupervisor()->getCurrentMsTime(), 0);
-    fireInterrupt({12.5, 1, 20}, dspInterface);
+    DspSuperTestSupport::fireInterrupt({12.5, 1, 20}, dspInterface);
     QCOMPARE(dspSuperModule->getDspCommonSupervisor()->getCurrentPeriod(), 1);
     QCOMPARE(dspSuperModule->getDspCommonSupervisor()->getCurrentMsTime(), 20);
 
@@ -100,7 +101,7 @@ void test_dspsuper_module::oneInterruptTwoEntries()
 
     QCOMPARE(dspSuperModule->getDspCommonSupervisor()->getCurrentPeriod(), 0);
     QCOMPARE(dspSuperModule->getDspCommonSupervisor()->getCurrentMsTime(), 0);
-    fireInterrupts({{12.5, 1, 20}, {11.5, 2, 40}}, dspInterface);
+    DspSuperTestSupport::fireInterrupts({{12.5, 1, 20}, {11.5, 2, 40}}, dspInterface);
     QCOMPARE(dspSuperModule->getDspCommonSupervisor()->getCurrentPeriod(), 2);
     QCOMPARE(dspSuperModule->getDspCommonSupervisor()->getCurrentMsTime(), 40);
 
@@ -131,12 +132,12 @@ void test_dspsuper_module::twoInterrupts()
 
     QCOMPARE(dspSuperModule->getDspCommonSupervisor()->getCurrentPeriod(), 0);
     QCOMPARE(dspSuperModule->getDspCommonSupervisor()->getCurrentMsTime(), 0);
-    fireInterrupt({12.5, 1, 20}, dspInterface);
+    DspSuperTestSupport::fireInterrupt({12.5, 1, 20}, dspInterface);
     QCOMPARE(dspSuperModule->getDspCommonSupervisor()->getCurrentPeriod(), 1);
     QCOMPARE(dspSuperModule->getDspCommonSupervisor()->getCurrentMsTime(), 20);
 
     TimeMachineForTest::getInstance()->processTimers(20);
-    fireInterrupt({11.5, 2, 40}, dspInterface);
+    DspSuperTestSupport::fireInterrupt({11.5, 2, 40}, dspInterface);
     QCOMPARE(dspSuperModule->getDspCommonSupervisor()->getCurrentPeriod(), 2);
     QCOMPARE(dspSuperModule->getDspCommonSupervisor()->getCurrentMsTime(), 40);
 
@@ -164,11 +165,11 @@ void test_dspsuper_module::threeInterruptsTimerb32BitTurnaround()
     quint32 timer = std::numeric_limits<quint32>::max();
     quint32 period = 1;
     QDateTime now = TimerFactoryQt::getCurrentTime();
-    fireInterrupt({12.5, period++, timer++}, dspInterface);
+    DspSuperTestSupport::fireInterrupt({12.5, period++, timer++}, dspInterface);
     TimeMachineForTest::getInstance()->processTimers(1);
-    fireInterrupt({11.5, period++, timer++}, dspInterface);
+    DspSuperTestSupport::fireInterrupt({11.5, period++, timer++}, dspInterface);
     TimeMachineForTest::getInstance()->processTimers(1);
-    fireInterrupt({13.5, period++, timer++}, dspInterface);
+    DspSuperTestSupport::fireInterrupt({13.5, period++, timer++}, dspInterface);
 
     DSPSUPERMODULE::DspSuperModule *dspSuperModule = qobject_cast<DSPSUPERMODULE::DspSuperModule*>(testRunner.getModule("dspsupermodule", 9000));
     DspSupervisorOutputMap map = dspSuperModule->getDspCommonSupervisor()->getSupervisorMap();
@@ -201,7 +202,7 @@ void test_dspsuper_module::max10Entries()
 
     constexpr quint32 periodMaxInjected = 20;
     for (quint32 period=1; period<=periodMaxInjected; period++)
-        fireInterrupt({37.2, period, 20*period}, dspInterface);
+        DspSuperTestSupport::fireInterrupt({37.2, period, 20*period}, dspInterface);
 
     DSPSUPERMODULE::DspSuperModule *dspSuperModule = qobject_cast<DSPSUPERMODULE::DspSuperModule*>(testRunner.getModule("dspsupermodule", 9000));
     DspSupervisorOutputMap map = dspSuperModule->getDspCommonSupervisor()->getSupervisorMap();
@@ -215,11 +216,11 @@ void test_dspsuper_module::veinComponents()
     ModuleManagerTestRunner testRunner(":/sessions/minimal.json");
     TestDspInterfacePtr dspInterface = testRunner.getDspInterface(dspSuperEntityId);
 
-    fireInterrupt({12.5, 1, 20}, dspInterface);
+    DspSuperTestSupport::fireInterrupt({12.5, 1, 20}, dspInterface);
     TimeMachineForTest::getInstance()->processTimers(20);
-    fireInterrupt({11.5, 2, 40}, dspInterface);
+    DspSuperTestSupport::fireInterrupt({11.5, 2, 40}, dspInterface);
     TimeMachineForTest::getInstance()->processTimers(20);
-    fireInterrupt({11.5, 2, 40}, dspInterface);
+    DspSuperTestSupport::fireInterrupt({11.5, 2, 40}, dspInterface);
 
     constexpr double expectedBusy = (12.5+11.5)/2;
 
@@ -239,24 +240,4 @@ void test_dspsuper_module::veinComponents()
     QCOMPARE(period, 2);
     timeMs = testRunner.getVfComponent(dspSuperEntityId, "ACT_DSP_MS_TIMER").toUInt();
     QCOMPARE(timeMs, 40);
-}
-
-void test_dspsuper_module::fireInterrupt(const DspSupervisorInput &superEntry, TestDspInterfacePtr dspInterface)
-{
-    QList<DspSupervisorInput> entries = QList<DspSupervisorInput>() << superEntry;
-    fireInterrupts(entries, dspInterface);
-}
-
-void test_dspsuper_module::fireInterrupts(const QList<DspSupervisorInput> &superEntries, TestDspInterfacePtr dspInterface)
-{
-    QVector<float> rawData;
-    for (const DspSupervisorInput &entry : superEntries) {
-        rawData.append(entry.m_percentBusy);
-        quint32 periodCount32 = entry.m_periodCount;
-        rawData.append(*reinterpret_cast<float*>(&periodCount32));
-        quint32 msTimer32 = entry.m_msTimer;
-        rawData.append(*reinterpret_cast<float*>(&msTimer32));
-    }
-    dspInterface->fireActValInterrupt(rawData, superEntries.count());
-    TimeMachineObject::feedEventLoop();
 }

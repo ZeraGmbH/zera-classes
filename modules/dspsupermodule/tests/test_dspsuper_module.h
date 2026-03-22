@@ -1,9 +1,7 @@
 #ifndef TEST_DSPSUPER_MODULE_H
 #define TEST_DSPSUPER_MODULE_H
 
-#include "dspcommonsupervisor.h"
 #include <QObject>
-#include <testdspinterface.h>
 
 class test_dspsuper_module : public QObject
 {
@@ -26,10 +24,6 @@ private slots:
 
     void max10Entries();
     void veinComponents();
-
-private:
-    void fireInterrupt(const DspSupervisorInput &superEntry, TestDspInterfacePtr dspInterface);
-    void fireInterrupts(const QList<DspSupervisorInput> &superEntries, TestDspInterfacePtr dspInterface);
 };
 
 #endif // TEST_DSPSUPER_MODULE_H

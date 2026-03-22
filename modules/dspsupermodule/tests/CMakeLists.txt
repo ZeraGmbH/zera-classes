@@ -5,6 +5,7 @@ function(SETUP_QTESTS_MODULE)
             PRIVATE
             zera-modulemanager-testlib
             dspsupermodule-static
+            dspsupermodule-testlib
             Zera::VfConvenientCode
         )
     endforeach()
