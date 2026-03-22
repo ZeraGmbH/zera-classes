@@ -1,20 +1,8 @@
 {
     "9000": {
-        "ACT_DSP_BUSY": null,
-        "ACT_DSP_MS_TIMER": null,
-        "ACT_DSP_PERIOD_COUNT": null,
         "EntityName": "DspSuperModule1",
         "INF_ModuleInterface": {
             "ComponentInfo": {
-                "ACT_DSP_BUSY": {
-                    "Description": "DSP Busy value [%]"
-                },
-                "ACT_DSP_MS_TIMER": {
-                    "Description": "List of DSP ms timer"
-                },
-                "ACT_DSP_PERIOD_COUNT": {
-                    "Description": "List of DSP period counts"
-                },
                 "EntityName": {
                     "Description": "Module's name"
                 },
@@ -28,27 +16,6 @@
             },
             "SCPIInfo": {
                 "Cmd": [
-                    [
-                        "STATUS",
-                        "BUSYPERCENT",
-                        "10",
-                        "ACT_DSP_BUSY",
-                        "0"
-                    ],
-                    [
-                        "STATUS",
-                        "PERIODCOUNT",
-                        "10",
-                        "ACT_DSP_PERIOD_COUNT",
-                        "0"
-                    ],
-                    [
-                        "STATUS",
-                        "TIMEMS",
-                        "10",
-                        "ACT_DSP_MS_TIMER",
-                        "0"
-                    ]
                 ],
                 "Name": "DSP1"
             }

@@ -13,12 +13,6 @@
             <xs:maxInclusive value="100"/>
         </xs:restriction>
     </xs:simpleType>
-    <xs:simpleType name="veinupdatemstype">
-        <xs:restriction base="xs:integer">
-            <xs:minInclusive value="250"/>
-            <xs:maxInclusive value="2000"/>
-        </xs:restriction>
-    </xs:simpleType>
 
     <xs:element name="dspsupermodconfpar">
         <xs:complexType>
@@ -28,7 +22,6 @@
                         <xs:sequence>
                         <xs:element name="maxperiodsdsp" type="periodcounttypedsp"/>
                         <xs:element name="periodstotal" type="periodcounttypetotal"/>
-                        <xs:element name="veinupdatems" type="veinupdatemstype"/>
                         </xs:sequence>
                     </xs:complexType>
                 </xs:element>

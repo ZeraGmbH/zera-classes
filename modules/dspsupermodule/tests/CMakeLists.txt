@@ -4,7 +4,6 @@ function(SETUP_QTESTS_MODULE)
         target_link_libraries(${_testname}
             PRIVATE
             zera-modulemanager-testlib
-            dspsupermodule-static
             dspsupermodule-testlib
             Zera::VfConvenientCode
         )

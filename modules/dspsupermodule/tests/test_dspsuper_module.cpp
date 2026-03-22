@@ -210,34 +210,3 @@ void test_dspsuper_module::max10Entries()
     QVERIFY(map.contains(11));
     QVERIFY(map.contains(20));
 }
-
-void test_dspsuper_module::veinComponents()
-{
-    ModuleManagerTestRunner testRunner(":/sessions/minimal.json");
-    TestDspInterfacePtr dspInterface = testRunner.getDspInterface(dspSuperEntityId);
-
-    DspSuperTestSupport::fireInterrupt({12.5, 1, 20}, dspInterface);
-    TimeMachineForTest::getInstance()->processTimers(20);
-    DspSuperTestSupport::fireInterrupt({11.5, 2, 40}, dspInterface);
-    TimeMachineForTest::getInstance()->processTimers(20);
-    DspSuperTestSupport::fireInterrupt({11.5, 2, 40}, dspInterface);
-
-    constexpr double expectedBusy = (12.5+11.5)/2;
-
-    TimeMachineForTest::getInstance()->processTimers(2000);
-    double busy = testRunner.getVfComponent(dspSuperEntityId, "ACT_DSP_BUSY").toDouble();
-    QCOMPARE(busy, expectedBusy);
-    quint32 period = testRunner.getVfComponent(dspSuperEntityId, "ACT_DSP_PERIOD_COUNT").toUInt();
-    QCOMPARE(period, 2);
-    quint32 timeMs = testRunner.getVfComponent(dspSuperEntityId, "ACT_DSP_MS_TIMER").toUInt();
-    QCOMPARE(timeMs, 40);
-
-    // Do vein values remain on no DSP inteerupts?
-    TimeMachineForTest::getInstance()->processTimers(1000);
-    busy = testRunner.getVfComponent(dspSuperEntityId, "ACT_DSP_BUSY").toDouble();
-    QCOMPARE(busy, expectedBusy);
-    period = testRunner.getVfComponent(dspSuperEntityId, "ACT_DSP_PERIOD_COUNT").toUInt();
-    QCOMPARE(period, 2);
-    timeMs = testRunner.getVfComponent(dspSuperEntityId, "ACT_DSP_MS_TIMER").toUInt();
-    QCOMPARE(timeMs, 40);
-}

@@ -5,6 +5,14 @@
 
 namespace STATUSMODULE
 {
+
+enum moduleconfigstate
+{
+    setMeasStatus,
+    setAccumulator,
+    setVeinUpdateMs
+};
+
 cStatusModuleConfiguration::cStatusModuleConfiguration()
 {
     connect(m_pXMLReader, &Zera::XMLConfig::cReader::valueChanged, this, &cStatusModuleConfiguration::configXMLInfo);
@@ -29,6 +37,7 @@ void cStatusModuleConfiguration::setConfiguration(const QByteArray& xmlString)
     // so now we can set up
     // initializing hash table for xml configuration
     m_ConfigXMLMap["statusmodconfpar:configuration:accumulator"] = setAccumulator;
+    m_ConfigXMLMap["statusmodconfpar:configuration:veinupdatems"] = setVeinUpdateMs;
 
     m_pXMLReader->loadXMLFromString(QString::fromUtf8(xmlString.data(), xmlString.size()));
 }
@@ -56,6 +65,9 @@ void cStatusModuleConfiguration::configXMLInfo(const QString &key)
         {
         case setAccumulator:
             m_pStatusModulConfigData->m_accumulator = m_pXMLReader->getValue(key).toInt(&ok);
+            break;
+        case setVeinUpdateMs:
+            m_pStatusModulConfigData->m_veinUpdateMs = m_pXMLReader->getValue(key).toInt(&ok);
             break;
         }
 

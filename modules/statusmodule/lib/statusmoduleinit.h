@@ -13,47 +13,6 @@
 namespace STATUSMODULE
 {
 
-namespace STATUSMODINIT
-{
-
-enum statusmoduleinitCmds
-{
-    readPCBServerVersion,
-    readPCBInfo,
-    readPCBServerCtrlVersion,
-    readPCBServerFPGAVersion,
-    readPCBServerSerialNumber,
-    readPCBServerAdjStatus,
-    readPCBServerAdjChksum,
-    registerClampCatalogNotifier,
-    unregisterNotifiers,
-    readDSPServerVersion,
-    readDSPServerDSPProgramVersion,
-    writePCBServerSerialNumber,
-    registerSchnubbelStatusNotifier,
-    readPCBServerSchnubbelStatus,
-    registerAccumulatorStatusNotifier,
-    readPCBServerAccumulatorStatus,
-    registerAccumulatorSocNotifier,
-    readPCBServerAccumulatorSoc,
-    registerCtrlVersionChange,
-    registerPCBVersionChange,
-    registerPCBChannelsChange,
-    readPCBChannelsChange,
-};
-
-enum NOTIFIER_IDS
-{
-    clampNotifierID = 1,
-    schnubbelNotifierID,
-    accumulatorStatusNotifierID,
-    accumulatorSocNotifierID,
-    ctrlVersionChangeID,
-    pcbVersionChangeID,
-};
-
-}
-
 class cStatusModule;
 
 class cStatusModuleInit: public cModuleActivist
@@ -64,6 +23,40 @@ public:
     void generateVeinInterface() override;
 signals:
     void activationError();
+
+private slots:
+    void catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant answer);
+    void setInterfaceComponents();
+    void pcbserverConnect();
+    void pcbserverReadVersion();
+    void pcbReadVersion();
+    void pcbReadChannelsConnected();
+    void pcbserverReadCtrlVersion();
+    void pcbserverReadFPGAVersion();
+    void pcbserverReadSerialNr();
+    void pcbserverReadAdjStatus();
+    void pcbserverReadAdjChksum();
+    void registerClampCatalogNotifier();
+    void unregisterNotifiers();
+    void dspserverConnect();
+    void dspserverReadVersion();
+    void dspserverReadDSPProgramVersion();
+    void registerSchnubbelStatusNotifier();
+    void registerAccumulatorStatusNotifier();
+    void registerAccumulatorSocNotifier();
+    void registerCtrlVersionsChangedNotifier();
+    void registerPCBVersionNotifier();
+    void getSchnubbelStatus();
+    void getAccumulatorStatus();
+    void getAccuStateOfCharge();
+    void readInstrumentConnected(QVariant value);
+
+    void activationDone();
+    void deactivationDone();
+
+    void newSerialNumber(QVariant serialNr);
+
+    void onVeinUpdate();
 private:
     void notifyActivationError(QVariant value);
 
@@ -144,37 +137,12 @@ private:
 
     QVariant wantedSerialNr;
 
-private slots:
-    void catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant answer);
-    void setInterfaceComponents();
-    void pcbserverConnect();
-    void pcbserverReadVersion();
-    void pcbReadVersion();
-    void pcbReadChannelsConnected();
-    void pcbserverReadCtrlVersion();
-    void pcbserverReadFPGAVersion();
-    void pcbserverReadSerialNr();
-    void pcbserverReadAdjStatus();
-    void pcbserverReadAdjChksum();
-    void registerClampCatalogNotifier();
-    void unregisterNotifiers();
-    void dspserverConnect();
-    void dspserverReadVersion();
-    void dspserverReadDSPProgramVersion();
-    void registerSchnubbelStatusNotifier();
-    void registerAccumulatorStatusNotifier();
-    void registerAccumulatorSocNotifier();
-    void registerCtrlVersionsChangedNotifier();
-    void registerPCBVersionNotifier();
-    void getSchnubbelStatus();
-    void getAccumulatorStatus();
-    void getAccuStateOfCharge();
-    void readInstrumentConnected(QVariant value);
-
-    void activationDone();
-    void deactivationDone();
-
-    void newSerialNumber(QVariant serialNr);
+    VfModuleParameter* m_veinDspBusy = nullptr;
+    VfModuleParameter* m_veinDspPeriodCount = nullptr;
+    VfModuleParameter* m_veinDspMsTimer = nullptr;
+    TimerTemplateQtPtr m_veinUpdateTimer;
+    quint32 m_lastVeinPeriod = 0;
+    quint32 m_lastVeinTimeMs = 0;
 };
 
 }

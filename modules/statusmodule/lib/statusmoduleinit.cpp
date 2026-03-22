@@ -19,7 +19,8 @@ cStatusModuleInit::cStatusModuleInit(cStatusModule* module, cStatusModuleConfigD
     m_pModule(module),
     m_ConfigData(configData),
     m_pPCBInterface(std::make_shared<Zera::cPCBInterface>()),
-    m_dspInterface(m_pModule->getServiceInterfaceFactory()->createDspInterfaceStatus(m_pModule->getEntityId()))
+    m_dspInterface(m_pModule->getServiceInterfaceFactory()->createDspInterfaceStatus(m_pModule->getEntityId())),
+    m_veinUpdateTimer(TimerFactoryQt::createPeriodic(m_ConfigData.m_veinUpdateMs))
 {
     // m_pcbserverConnectionState.addTransition is done in pcbserverConnection
     m_pcbserverReadVersionState.addTransition(this, &cStatusModuleInit::activationContinue, &m_pcbserverReadChannelsConnectedChange);
@@ -114,6 +115,9 @@ cStatusModuleInit::cStatusModuleInit(cStatusModule* module, cStatusModuleConfigD
     connect(&m_pcbserverReReadAdjStatusState, &QState::entered, this, &cStatusModuleInit::pcbserverReadAdjStatus);
     connect(&m_pcbserverReReadAdjChksumState, &QState::entered, this, &cStatusModuleInit::pcbserverReadAdjChksum);
     connect(&m_pcbserverReReadDoneState, &QState::entered, this, &cStatusModuleInit::setInterfaceComponents);
+
+    connect(m_veinUpdateTimer.get(), &TimerTemplateQt::sigExpired,
+            this, &cStatusModuleInit::onVeinUpdate);
 }
 
 void cStatusModuleInit::generateVeinInterface()
@@ -239,8 +243,68 @@ void cStatusModuleInit::generateVeinInterface()
                                                 QString("List of hotplug channels"),
                                                 QVariant(""));
     m_pModule->m_veinModuleParameterMap[key] = m_pChannels;
+
+
+    m_veinDspBusy = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
+                                          key = QString("INF_DSP_BUSY"),
+                                          QString("DSP Busy value [%]"),
+                                          QVariant());
+    m_veinDspBusy->setUnit("%");
+    m_veinDspBusy->setScpiInfo("STATUS", "DSP:BUSYPERCENT", SCPI::isQuery);
+    m_pModule->m_veinModuleParameterMap[key] = m_veinDspBusy;
+
+    m_veinDspPeriodCount = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
+                                                 key = QString("INF_DSP_PERIOD_COUNT"),
+                                                 QString("DSP period count"),
+                                                 QVariant());
+    m_veinDspPeriodCount->setScpiInfo("STATUS", "DSP:PERIODCOUNT", SCPI::isQuery);
+    m_pModule->m_veinModuleParameterMap[key] = m_veinDspPeriodCount;
+
+    m_veinDspMsTimer = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
+                                             key = QString("INF_DSP_MS_TIMER"),
+                                             QString("DSP ms timer"),
+                                             QVariant());
+    m_veinDspMsTimer->setScpiInfo("STATUS", "DSP:TIMEMS", SCPI::isQuery);
+    m_pModule->m_veinModuleParameterMap[key] =  m_veinDspMsTimer;
+
+    m_veinUpdateTimer->start();
 }
 
+enum NOTIFIER_IDS
+{
+    clampNotifierID = 1,
+    schnubbelNotifierID,
+    accumulatorStatusNotifierID,
+    accumulatorSocNotifierID,
+    ctrlVersionChangeID,
+    pcbVersionChangeID,
+};
+
+enum statusmoduleinitCmds
+{
+    readPCBServerVersion,
+    readPCBInfo,
+    readPCBServerCtrlVersion,
+    readPCBServerFPGAVersion,
+    readPCBServerSerialNumber,
+    readPCBServerAdjStatus,
+    readPCBServerAdjChksum,
+    regClampCatalogNotifier,
+    unregNotifiers,
+    readDSPServerVersion,
+    readDSPServerDSPProgramVersion,
+    writePCBServerSerialNumber,
+    regSchnubbelStatusNotifier,
+    readPCBServerSchnubbelStatus,
+    regAccumulatorStatusNotifier,
+    readPCBServerAccumulatorStatus,
+    regAccumulatorSocNotifier,
+    readPCBServerAccumulatorSoc,
+    regCtrlVersionChange,
+    regPCBVersionChange,
+    registerPCBChannelsChange,
+    readPCBChannelsChange,
+};
 
 void cStatusModuleInit::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant answer)
 {
@@ -248,25 +312,25 @@ void cStatusModuleInit::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVaria
     {
         int notifierID = answer.toString().split(':').last().toInt();
         switch (notifierID) {
-            case STATUSMODINIT::clampNotifierID:
+            case clampNotifierID:
                 // clamp catalog changed: start adjustment state re-read
                 if(m_bActive && !m_stateMachineAdjustmentReRead.isRunning()) {
                     m_stateMachineAdjustmentReRead.start();
                 }
                 break;
-            case STATUSMODINIT::schnubbelNotifierID:
+            case schnubbelNotifierID:
                 getSchnubbelStatus();
                 break;
-            case STATUSMODINIT::accumulatorStatusNotifierID:
+            case accumulatorStatusNotifierID:
                 getAccumulatorStatus();
                 break;
-            case STATUSMODINIT::accumulatorSocNotifierID:
+            case accumulatorSocNotifierID:
                 getAccuStateOfCharge();
                 break;
-            case STATUSMODINIT::ctrlVersionChangeID:
+            case ctrlVersionChangeID:
                 pcbserverReadCtrlVersion();
                 break;
-            case STATUSMODINIT::pcbVersionChangeID:
+            case pcbVersionChangeID:
                 pcbReadVersion();
                 break;
             }
@@ -278,7 +342,7 @@ void cStatusModuleInit::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVaria
             int cmd = m_MsgNrCmdList.take(msgnr);
             switch (cmd)
             {
-            case STATUSMODINIT::registerClampCatalogNotifier:
+            case regClampCatalogNotifier:
                 // we continue in any case - e.g COM5003 does not support clamps
                 // just spit out a warning to journal
                 if (reply != ack) {
@@ -286,44 +350,44 @@ void cStatusModuleInit::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVaria
                 }
                 emit activationContinue();
                 break;
-            case STATUSMODINIT::registerSchnubbelStatusNotifier:
+            case regSchnubbelStatusNotifier:
                 if (reply != ack) {
                     qWarning("Register notification for Schnubbel status failed");
                 }
                 emit activationContinue();
                 break;
-            case STATUSMODINIT::registerAccumulatorStatusNotifier:
+            case regAccumulatorStatusNotifier:
                 if (reply != ack) {
                     qWarning("Register notification for accumulator status failed - is accumulator supported?");
                 }
                 emit activationContinue();
                 break;
-            case STATUSMODINIT::registerAccumulatorSocNotifier:
+            case regAccumulatorSocNotifier:
                 if (reply != ack) {
                     qWarning("Register notification for accumulator soc failed - is accumulator supported?");
                 }
                 emit activationContinue();
                 break;
-            case STATUSMODINIT::registerCtrlVersionChange:
+            case regCtrlVersionChange:
                 if (reply != ack) {
                     qWarning("Register notification for hotpluggable ctrl versions failed!");
                 }
                 emit activationContinue();
                 break;
-            case STATUSMODINIT::registerPCBVersionChange:
+            case regPCBVersionChange:
                 if (reply != ack) {
                     qWarning("Register notification for hotpluggable PCB versions failed!");
                 }
                 emit activationContinue();
                 break;
-            case STATUSMODINIT::unregisterNotifiers:
+            case unregNotifiers:
                 if (reply != ack) {
                     qWarning("Unregister notification failed");
                 }
                 emit deactivationContinue();
                 break;
 
-            case STATUSMODINIT::readPCBServerVersion:
+            case readPCBServerVersion:
                 if (reply == ack) {
                     m_sPCBServerVersion = answer.toString();
                     emit activationContinue();
@@ -332,7 +396,7 @@ void cStatusModuleInit::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVaria
                     notifyActivationError(readPCBServerVersionErrMsg);
                 break;
 
-            case STATUSMODINIT::readPCBInfo:
+            case readPCBInfo:
                 if (reply == ack) {
                     m_sPCBVersion = answer.toString();
                     m_pPCBVersion->setValue(m_sPCBVersion);
@@ -343,7 +407,7 @@ void cStatusModuleInit::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVaria
                     notifyActivationError(readPCBInfoErrMsg);
                 break;
 
-            case STATUSMODINIT::readPCBServerCtrlVersion:
+            case readPCBServerCtrlVersion:
                 if (reply == ack) {
                     m_sCtrlVersion = answer.toString();
                     m_pCtrlVersion->setValue(m_sCtrlVersion);
@@ -353,7 +417,7 @@ void cStatusModuleInit::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVaria
                     notifyActivationError(readPCBCtrlVersionErrMSG);
                 break;
 
-            case STATUSMODINIT::readPCBServerFPGAVersion:
+            case readPCBServerFPGAVersion:
                 if (reply == ack) {
                     m_sFPGAVersion = answer.toString();
                     emit activationContinue();
@@ -363,7 +427,7 @@ void cStatusModuleInit::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVaria
                 break;
 
 
-            case STATUSMODINIT::readPCBServerSerialNumber:
+            case readPCBServerSerialNumber:
                 if (reply == ack) {
                     m_sSerialNumber = answer.toString();
                     emit activationContinue();
@@ -372,7 +436,7 @@ void cStatusModuleInit::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVaria
                     notifyActivationError(readPCBSerialNrErrMSG);
                 break;
 
-            case STATUSMODINIT::writePCBServerSerialNumber:
+            case writePCBServerSerialNumber:
                 if (reply == ack) {
                     m_sSerialNumber = wantedSerialNr.toString();
                     m_pSerialNumber->setValue(wantedSerialNr); // m_pSerialNumber has deferred notification so this will send the event
@@ -384,7 +448,7 @@ void cStatusModuleInit::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVaria
                 }
                 break;
 
-            case STATUSMODINIT::readPCBServerAdjStatus:
+            case readPCBServerAdjStatus:
                 if (reply == ack) {
                     m_sAdjStatus = answer.toString();
                     emit activationContinue();
@@ -393,7 +457,7 @@ void cStatusModuleInit::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVaria
                     notifyActivationError(readadjstatusErrMsg);
                 break;
 
-            case STATUSMODINIT::readPCBServerAdjChksum:
+            case readPCBServerAdjChksum:
                 if (reply == ack) {
                     m_sAdjChksum = answer.toString();
                     emit activationContinue();
@@ -402,7 +466,7 @@ void cStatusModuleInit::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVaria
                     notifyActivationError(readadjchksumErrMsg);
                 break;
 
-            case STATUSMODINIT::readDSPServerVersion:
+            case readDSPServerVersion:
                 if (reply == ack) {
                     m_sDSPServerVersion = answer.toString();
                     emit activationContinue();
@@ -411,7 +475,7 @@ void cStatusModuleInit::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVaria
                     notifyActivationError(readDSPServerVersionErrMsg);
                 break;
 
-            case STATUSMODINIT::readDSPServerDSPProgramVersion:
+            case readDSPServerDSPProgramVersion:
                 if (reply == ack) {
                     m_sDSPProgramVersion = answer.toString();
                     emit activationContinue();
@@ -420,7 +484,7 @@ void cStatusModuleInit::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVaria
                     notifyActivationError(readDSPProgramVersionErrMsg);
                 break;
 
-            case STATUSMODINIT::readPCBServerSchnubbelStatus:
+            case readPCBServerSchnubbelStatus:
                 if (reply == ack) {
                     m_pSchnubbelStatus->setValue(QVariant(answer.toInt()));
                     emit activationContinue();
@@ -429,7 +493,7 @@ void cStatusModuleInit::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVaria
                     notifyActivationError(readschnubbelstatusErrMsg);
                 break;
 
-            case STATUSMODINIT::readPCBServerAccumulatorStatus:
+            case readPCBServerAccumulatorStatus:
                 if (!m_ConfigData.m_accumulator) {
                    m_pAccumulatorStatus->setValue(QVariant(0));
                    emit activationContinue();
@@ -444,7 +508,7 @@ void cStatusModuleInit::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVaria
                 }
                 break;
 
-            case STATUSMODINIT::readPCBServerAccumulatorSoc:
+            case readPCBServerAccumulatorSoc:
                 if (!m_ConfigData.m_accumulator) {
                    emit activationContinue();
                 }
@@ -457,7 +521,7 @@ void cStatusModuleInit::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVaria
                        notifyActivationError(readaccumulatorsocErrMsg);
                 }
                 break;
-            case STATUSMODINIT::readPCBChannelsChange:
+            case readPCBChannelsChange:
                 if(reply == ack) {
                     m_pChannels->setValue(answer.toString());
                     emit activationContinue();
@@ -479,17 +543,17 @@ void cStatusModuleInit::notifyActivationError(QVariant value)
 
 void cStatusModuleInit::getSchnubbelStatus()
 {
-    m_MsgNrCmdList[m_pPCBInterface->getAuthorizationStatus()] = STATUSMODINIT::readPCBServerSchnubbelStatus;
+    m_MsgNrCmdList[m_pPCBInterface->getAuthorizationStatus()] = readPCBServerSchnubbelStatus;
 }
 
 void cStatusModuleInit::getAccumulatorStatus()
 {
-    m_MsgNrCmdList[m_pPCBInterface->getAccumulatorStatus()] = STATUSMODINIT::readPCBServerAccumulatorStatus;
+    m_MsgNrCmdList[m_pPCBInterface->getAccumulatorStatus()] = readPCBServerAccumulatorStatus;
 }
 
 void cStatusModuleInit::getAccuStateOfCharge()
 {
-    m_MsgNrCmdList[m_pPCBInterface->getAccuStateOfCharge()] = STATUSMODINIT::readPCBServerAccumulatorSoc;
+    m_MsgNrCmdList[m_pPCBInterface->getAccuStateOfCharge()] = readPCBServerAccumulatorSoc;
 }
 
 void cStatusModuleInit::readInstrumentConnected(QVariant value)
@@ -549,57 +613,57 @@ void cStatusModuleInit::pcbserverConnect()
 
 void cStatusModuleInit::pcbserverReadVersion()
 {
-    m_MsgNrCmdList[m_pPCBInterface->readServerVersion()] = STATUSMODINIT::readPCBServerVersion;
+    m_MsgNrCmdList[m_pPCBInterface->readServerVersion()] = readPCBServerVersion;
 }
 
 void cStatusModuleInit::pcbReadVersion()
 {
-    m_MsgNrCmdList[m_pPCBInterface->readPCBInfo()] = STATUSMODINIT::readPCBInfo;
+    m_MsgNrCmdList[m_pPCBInterface->readPCBInfo()] = readPCBInfo;
 }
 
 void cStatusModuleInit::pcbReadChannelsConnected()
 {
-    m_MsgNrCmdList[m_pPCBInterface->readChannelsConnected()] = STATUSMODINIT::readPCBChannelsChange;
+    m_MsgNrCmdList[m_pPCBInterface->readChannelsConnected()] = readPCBChannelsChange;
 }
 
 void cStatusModuleInit::pcbserverReadCtrlVersion()
 {
-    m_MsgNrCmdList[m_pPCBInterface->readCTRLVersion()] = STATUSMODINIT::readPCBServerCtrlVersion;
+    m_MsgNrCmdList[m_pPCBInterface->readCTRLVersion()] = readPCBServerCtrlVersion;
 }
 
 void cStatusModuleInit::pcbserverReadFPGAVersion()
 {
-    m_MsgNrCmdList[m_pPCBInterface->readFPGAVersion()] = STATUSMODINIT::readPCBServerFPGAVersion;
+    m_MsgNrCmdList[m_pPCBInterface->readFPGAVersion()] = readPCBServerFPGAVersion;
 }
 
 
 void cStatusModuleInit::pcbserverReadSerialNr()
 {
-    m_MsgNrCmdList[m_pPCBInterface->readSerialNr()] = STATUSMODINIT::readPCBServerSerialNumber;
+    m_MsgNrCmdList[m_pPCBInterface->readSerialNr()] = readPCBServerSerialNumber;
 }
 
 
 void cStatusModuleInit::pcbserverReadAdjStatus()
 {
-    m_MsgNrCmdList[m_pPCBInterface->getAdjustmentStatus()] = STATUSMODINIT::readPCBServerAdjStatus;
+    m_MsgNrCmdList[m_pPCBInterface->getAdjustmentStatus()] = readPCBServerAdjStatus;
 }
 
 
 void cStatusModuleInit::pcbserverReadAdjChksum()
 {
-    m_MsgNrCmdList[m_pPCBInterface->getAdjustmentChksum()] = STATUSMODINIT::readPCBServerAdjChksum;
+    m_MsgNrCmdList[m_pPCBInterface->getAdjustmentChksum()] = readPCBServerAdjChksum;
 }
 
 void cStatusModuleInit::registerClampCatalogNotifier()
 {
-    m_MsgNrCmdList[m_pPCBInterface->registerNotifier(QString("SYSTEM:CLAMP:CHANNEL:CATALOG?"), STATUSMODINIT::clampNotifierID)] = STATUSMODINIT::registerClampCatalogNotifier;
+    m_MsgNrCmdList[m_pPCBInterface->registerNotifier(QString("SYSTEM:CLAMP:CHANNEL:CATALOG?"), clampNotifierID)] = regClampCatalogNotifier;
 }
 
 void cStatusModuleInit::unregisterNotifiers()
 {
     // we are handler of first state:
     m_bActive = false;
-    m_MsgNrCmdList[m_pPCBInterface->unregisterNotifiers()] = STATUSMODINIT::unregisterNotifiers;
+    m_MsgNrCmdList[m_pPCBInterface->unregisterNotifiers()] = unregNotifiers;
 }
 
 void cStatusModuleInit::dspserverConnect()
@@ -616,38 +680,38 @@ void cStatusModuleInit::dspserverConnect()
 
 void cStatusModuleInit::dspserverReadVersion()
 {
-    m_MsgNrCmdList[m_dspInterface->readServerVersion()] = STATUSMODINIT::readDSPServerVersion;
+    m_MsgNrCmdList[m_dspInterface->readServerVersion()] = readDSPServerVersion;
 }
 
 
 void cStatusModuleInit::dspserverReadDSPProgramVersion()
 {
-    m_MsgNrCmdList[m_dspInterface->readDeviceVersion()] = STATUSMODINIT::readDSPServerDSPProgramVersion;
+    m_MsgNrCmdList[m_dspInterface->readDeviceVersion()] = readDSPServerDSPProgramVersion;
 }
 
 void cStatusModuleInit::registerSchnubbelStatusNotifier()
 {
-    m_MsgNrCmdList[m_pPCBInterface->registerNotifier(QString("STATUS:AUTHORIZATION?"), STATUSMODINIT::schnubbelNotifierID)] = STATUSMODINIT::registerSchnubbelStatusNotifier;
+    m_MsgNrCmdList[m_pPCBInterface->registerNotifier(QString("STATUS:AUTHORIZATION?"), schnubbelNotifierID)] = regSchnubbelStatusNotifier;
 }
 
 void cStatusModuleInit::registerAccumulatorStatusNotifier()
 {
-    m_MsgNrCmdList[m_pPCBInterface->registerNotifier(QString("SYSTEM:ACCUMULATOR:STATUS?"), STATUSMODINIT::accumulatorStatusNotifierID)] = STATUSMODINIT::registerAccumulatorStatusNotifier;
+    m_MsgNrCmdList[m_pPCBInterface->registerNotifier(QString("SYSTEM:ACCUMULATOR:STATUS?"), accumulatorStatusNotifierID)] = regAccumulatorStatusNotifier;
 }
 
 void cStatusModuleInit::registerAccumulatorSocNotifier()
 {
-    m_MsgNrCmdList[m_pPCBInterface->registerNotifier(QString("SYSTEM:ACCUMULATOR:SOC?"), STATUSMODINIT::accumulatorSocNotifierID)] = STATUSMODINIT::registerAccumulatorSocNotifier;
+    m_MsgNrCmdList[m_pPCBInterface->registerNotifier(QString("SYSTEM:ACCUMULATOR:SOC?"), accumulatorSocNotifierID)] = regAccumulatorSocNotifier;
 }
 
 void cStatusModuleInit::registerCtrlVersionsChangedNotifier()
 {
-    m_MsgNrCmdList[m_pPCBInterface->registerNotifier(QString("SYSTEM:VERSION:CTRL?"), STATUSMODINIT::ctrlVersionChangeID)] = STATUSMODINIT::registerCtrlVersionChange;
+    m_MsgNrCmdList[m_pPCBInterface->registerNotifier(QString("SYSTEM:VERSION:CTRL?"), ctrlVersionChangeID)] = regCtrlVersionChange;
 }
 
 void cStatusModuleInit::registerPCBVersionNotifier()
 {
-    m_MsgNrCmdList[m_pPCBInterface->registerNotifier(QString("SYSTEM:VERSION:PCB?"), STATUSMODINIT::pcbVersionChangeID)] = STATUSMODINIT::registerPCBVersionChange;
+    m_MsgNrCmdList[m_pPCBInterface->registerNotifier(QString("SYSTEM:VERSION:PCB?"), pcbVersionChangeID)] = regPCBVersionChange;
 }
 
 void cStatusModuleInit::activationDone()
@@ -677,6 +741,33 @@ void cStatusModuleInit::deactivationDone()
 void cStatusModuleInit::newSerialNumber(QVariant serialNr)
 {
     wantedSerialNr = serialNr;
-    m_MsgNrCmdList[m_pPCBInterface->writeSerialNr(serialNr.toString())] = STATUSMODINIT::writePCBServerSerialNumber;
+    m_MsgNrCmdList[m_pPCBInterface->writeSerialNr(serialNr.toString())] = writePCBServerSerialNumber;
 }
+
+void cStatusModuleInit::onVeinUpdate()
+{
+    DspCommonSupervisorPtr dspCommonSupervisor = m_pModule->getDspCommonSupervisor();
+    const DspSupervisorOutputMap &superMap = dspCommonSupervisor->getSupervisorMap();
+    const quint32 currentPeriod = dspCommonSupervisor->getCurrentPeriod();
+    const quint32 currentTimeMs = dspCommonSupervisor->getCurrentMsTime();
+
+    m_veinDspPeriodCount->setValue(currentPeriod);
+    m_veinDspMsTimer->setValue(currentTimeMs);
+
+    QList<DspSupervisorOutput> currentSuperEntries;
+    for (quint32 period = currentPeriod; period > m_lastVeinPeriod; period--)
+        if (superMap.contains(period))
+            currentSuperEntries.append(superMap[period]);
+
+    if (!currentSuperEntries.isEmpty()) {
+        double sumBusy = 0.0;
+        for (const DspSupervisorOutput& entry : currentSuperEntries)
+            sumBusy += entry.m_rawIn.m_percentBusy;
+        double avgBusy = sumBusy / currentSuperEntries.size();
+        m_veinDspBusy->setValue(avgBusy);
+    }
+    m_lastVeinPeriod = currentPeriod;
+    m_lastVeinTimeMs = currentTimeMs;
+}
+
 }

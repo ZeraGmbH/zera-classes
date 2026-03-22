@@ -11,11 +11,6 @@
 namespace STATUSMODULE
 {
 
-enum moduleconfigstate
-{
-    setMeasStatus,
-    setAccumulator
-};
 
 class cStatusModuleConfigData;
 

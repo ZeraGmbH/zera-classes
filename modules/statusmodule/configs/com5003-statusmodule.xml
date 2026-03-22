@@ -2,5 +2,6 @@
 <statusmodconfpar>
     <configuration>
         <accumulator>0</accumulator>
+        <veinupdatems>1000</veinupdatems>
     </configuration>
 </statusmodconfpar>

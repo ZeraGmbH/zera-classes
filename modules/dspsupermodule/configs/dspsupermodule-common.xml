@@ -5,7 +5,6 @@
     <configuration>
         <maxperiodsdsp>10</maxperiodsdsp>
         <periodstotal>50</periodstotal>
-        <veinupdatems>1000</veinupdatems>
     </configuration>
 
 </dspsupermodconfpar>

@@ -34,7 +34,6 @@ private slots:
     void activateDSPdone();
 
     void deactivateDSPStart();
-    void onVeinUpdate();
 private:
     DspSuperModuleConfigData* getConfData();
     void decodeDspDataAcquired(int countPeriodsFetched);
@@ -45,10 +44,6 @@ private:
     DspSuperModule* m_pModule = nullptr;
 
     DspVarGroupClientInterface* m_pActualValuesDSP = nullptr;
-
-    VfModuleComponent* m_veinDspBusy;
-    VfModuleComponent* m_veinDspPeriodCount;
-    VfModuleComponent* m_veinDspMsTimer;
 
     // statemachine for activating
     QState m_dspserverConnectState;
@@ -63,9 +58,6 @@ private:
     QFinalState m_unloadDSPDoneState;
 
     TaskTemplatePtr m_taskDataAcquisition;
-    TimerTemplateQtPtr m_veinUpdateTimer;
-    quint32 m_lastVeinPeriod = 0;
-    quint32 m_lastVeinTimeMs = 0;
 };
 
 }

@@ -14,8 +14,7 @@ namespace DSPSUPERMODULE
 
 DspSuperModuleMeasProgram::DspSuperModuleMeasProgram(DspSuperModule* module, std::shared_ptr<BaseModuleConfiguration> pConfiguration) :
     cBaseDspMeasProgram(pConfiguration, module->getVeinModuleName()),
-    m_pModule(module),
-    m_veinUpdateTimer(TimerFactoryQt::createPeriodic(getConfData()->m_veinUpdateMs))
+    m_pModule(module)
 {
     m_dspInterface = m_pModule->getServiceInterfaceFactory()->createDspInterfaceDspSuper(m_pModule->getEntityId());
 
@@ -56,32 +55,10 @@ DspSuperModuleMeasProgram::DspSuperModuleMeasProgram(DspSuperModule* module, std
             this, &DspSuperModuleMeasProgram::deactivateDSPStart);
     connect(&m_unloadDSPDoneState, &QState::entered,
             this, &cModuleActivist::deactivated);
-
-    connect(m_veinUpdateTimer.get(), &TimerTemplateQt::sigExpired,
-            this, &DspSuperModuleMeasProgram::onVeinUpdate);
 }
 
 void DspSuperModuleMeasProgram::generateVeinInterface()
 {
-    m_veinDspBusy = new VfModuleComponent(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
-                                          QString("ACT_DSP_BUSY"),
-                                          QString("DSP Busy value [%]"));
-    m_veinDspBusy->setScpiInfo("STATUS", "BUSYPERCENT", SCPI::isQuery|SCPI::isCmdwP);
-    m_pModule->m_veinComponentsWithMetaAndScpi.append(m_veinDspBusy);
-
-    m_veinDspPeriodCount = new VfModuleComponent(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
-                                                 QString("ACT_DSP_PERIOD_COUNT"),
-                                                 QString("List of DSP period counts"));
-    m_veinDspPeriodCount->setScpiInfo("STATUS", "PERIODCOUNT", SCPI::isQuery|SCPI::isCmdwP);
-    m_pModule->m_veinComponentsWithMetaAndScpi.append(m_veinDspPeriodCount);
-
-    m_veinDspMsTimer = new VfModuleComponent(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
-                                             QString("ACT_DSP_MS_TIMER"),
-                                             QString("List of DSP ms timer"));
-    m_veinDspMsTimer->setScpiInfo("STATUS", "TIMEMS", SCPI::isQuery|SCPI::isCmdwP);
-    m_pModule->m_veinComponentsWithMetaAndScpi.append(m_veinDspMsTimer);
-
-    m_veinUpdateTimer->start();
 }
 
 void DspSuperModuleMeasProgram::setDspVarList()
@@ -259,32 +236,6 @@ void DspSuperModuleMeasProgram::deactivateDSPStart()
     Zera::Proxy::getInstance()->releaseConnectionSmart(m_dspClient);
     disconnect(m_dspInterface.get(), 0, this, 0);
     emit deactivationContinue();
-}
-
-void DspSuperModuleMeasProgram::onVeinUpdate()
-{
-    DspCommonSupervisorPtr dspCommonSupervisor = m_pModule->getDspCommonSupervisor();
-    const DspSupervisorOutputMap &superMap = dspCommonSupervisor->getSupervisorMap();
-    const quint32 currentPeriod = dspCommonSupervisor->getCurrentPeriod();
-    const quint32 currentTimeMs = dspCommonSupervisor->getCurrentMsTime();
-
-    m_veinDspPeriodCount->setValue(currentPeriod);
-    m_veinDspMsTimer->setValue(currentTimeMs);
-
-    QList<DspSupervisorOutput> currentSuperEntries;
-    for (quint32 period = currentPeriod; period > m_lastVeinPeriod; period--)
-        if (superMap.contains(period))
-            currentSuperEntries.append(superMap[period]);
-
-    if (!currentSuperEntries.isEmpty()) {
-        double sumBusy = 0.0;
-        for (const DspSupervisorOutput& entry : currentSuperEntries)
-            sumBusy += entry.m_rawIn.m_percentBusy;
-        double avgBusy = sumBusy / currentSuperEntries.size();
-        m_veinDspBusy->setValue(avgBusy);
-    }
-    m_lastVeinPeriod = currentPeriod;
-    m_lastVeinTimeMs = currentTimeMs;
 }
 
 void DspSuperModuleMeasProgram::decodeDspDataAcquired(int countPeriodsFetched)

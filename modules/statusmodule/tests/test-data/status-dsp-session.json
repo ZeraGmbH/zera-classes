@@ -1,0 +1,15 @@
+{
+    "modules" : [
+      {
+        "name" : "statusmodule",
+        "configFile" : "mt310s2-statusmodule.xml",
+        "id": 1150
+      },
+      {
+        "name" : "dspsupermodule",
+        "configFile" : "dspsupermodule-common.xml",
+        "id": 9000
+      }
+    ]
+}
+

@@ -1,6 +1,7 @@
 <RCC>
     <qresource prefix="/">
         <file>status-min-session.json</file>
+        <file>status-dsp-session.json</file>
         <file>com5003-min-session.json</file>
     </qresource>
 </RCC>

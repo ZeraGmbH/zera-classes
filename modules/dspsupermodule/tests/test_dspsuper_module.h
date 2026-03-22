@@ -23,7 +23,6 @@ private slots:
     void threeInterruptsTimerb32BitTurnaround();
 
     void max10Entries();
-    void veinComponents();
 };
 
 #endif // TEST_DSPSUPER_MODULE_H

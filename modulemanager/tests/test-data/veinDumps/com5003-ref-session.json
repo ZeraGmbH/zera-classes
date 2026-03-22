@@ -1815,6 +1815,9 @@
         "INF_CpuInfo": "",
         "INF_DSPServerVersion": "zdsp1d V1.11",
         "INF_DSPVersion": "DSPLCA: V0.0;DSP V0.00",
+        "INF_DSP_BUSY": null,
+        "INF_DSP_MS_TIMER": null,
+        "INF_DSP_PERIOD_COUNT": null,
         "INF_DeviceType": "unknown",
         "INF_FPGAVersion": "Unknown",
         "INF_HotplugChannels": "",
@@ -1846,6 +1849,16 @@
                     "Description": "<skipped>"
                 },
                 "INF_DSPVersion": {
+                    "Description": "<skipped>"
+                },
+                "INF_DSP_BUSY": {
+                    "Description": "<skipped>",
+                    "Unit": "%"
+                },
+                "INF_DSP_MS_TIMER": {
+                    "Description": "<skipped>"
+                },
+                "INF_DSP_PERIOD_COUNT": {
                     "Description": "<skipped>"
                 },
                 "INF_DeviceType": {
@@ -1929,6 +1942,27 @@
                         "VERSION:DSP",
                         "2",
                         "INF_DSPVersion",
+                        "0"
+                    ],
+                    [
+                        "STATUS",
+                        "DSP:BUSYPERCENT",
+                        "2",
+                        "INF_DSP_BUSY",
+                        "0"
+                    ],
+                    [
+                        "STATUS",
+                        "DSP:TIMEMS",
+                        "2",
+                        "INF_DSP_MS_TIMER",
+                        "0"
+                    ],
+                    [
+                        "STATUS",
+                        "DSP:PERIODCOUNT",
+                        "2",
+                        "INF_DSP_PERIOD_COUNT",
                         "0"
                     ],
                     [
@@ -2164,21 +2198,9 @@
         "transactionName": ""
     },
     "9000": {
-        "ACT_DSP_BUSY": null,
-        "ACT_DSP_MS_TIMER": null,
-        "ACT_DSP_PERIOD_COUNT": null,
         "EntityName": "DspSuperModule1",
         "INF_ModuleInterface": {
             "ComponentInfo": {
-                "ACT_DSP_BUSY": {
-                    "Description": "<skipped>"
-                },
-                "ACT_DSP_MS_TIMER": {
-                    "Description": "<skipped>"
-                },
-                "ACT_DSP_PERIOD_COUNT": {
-                    "Description": "<skipped>"
-                },
                 "EntityName": {
                     "Description": "<skipped>"
                 },
@@ -2192,27 +2214,6 @@
             },
             "SCPIInfo": {
                 "Cmd": [
-                    [
-                        "STATUS",
-                        "BUSYPERCENT",
-                        "10",
-                        "ACT_DSP_BUSY",
-                        "0"
-                    ],
-                    [
-                        "STATUS",
-                        "PERIODCOUNT",
-                        "10",
-                        "ACT_DSP_PERIOD_COUNT",
-                        "0"
-                    ],
-                    [
-                        "STATUS",
-                        "TIMEMS",
-                        "10",
-                        "ACT_DSP_MS_TIMER",
-                        "0"
-                    ]
                 ],
                 "Name": "DSP1"
             }
