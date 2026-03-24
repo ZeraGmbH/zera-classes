@@ -28,6 +28,7 @@ public:
     QString getAlias() const;
     QString getUnit() const;
     int getDspChannel() const;
+    bool isSourceModeOn() const;
     const QStringList getAllRangeNames() const;
     const QStringList getAvailRangeNames() const;
     const RangePtr getRange(const QString &rangeName) const;
@@ -35,6 +36,7 @@ public:
 signals:
     void sigRangeChangeReported(const QString &channelMName, int interruptCounter);
     void sigFetchDoneChannel(const QString &channelMName, bool ok);
+    void sigSourceModeOnChanged(bool on);
 
 private slots:
     void onInterfaceAnswer(quint32 msgnr, quint8 reply, const QVariant &answer);
@@ -55,6 +57,7 @@ private:
     QString m_alias;
     std::shared_ptr<QString> m_unit = std::make_shared<QString>();
     std::shared_ptr<int> m_dspChannel = std::make_shared<int>(0);
+    bool m_sourceModeOn = false;
     ChannelCommonStorage m_channelAdjStorage;
 
     std::shared_ptr<QStringList> m_allRangeNamesOrderedByServer = std::make_shared<QStringList>();

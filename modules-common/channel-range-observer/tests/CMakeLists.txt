@@ -4,6 +4,8 @@ function(SETUP_QTESTS_CHANNEL_RANGE_OBSERVER)
         target_link_libraries(${_testname}
             PUBLIC
             channel-range-observer
+            zera-modulemanager-testlib
+            rangemodule-static
             Zera::zenuxservicecommon-testlib
             Zera::vf-tcp-mock-networklib
             Zera::mt310s2d-testlib
@@ -16,4 +18,10 @@ SETUP_QTESTS_CHANNEL_RANGE_OBSERVER(
     test_cro_channel
     test_cro_range
     test_cro_channelcurrentrange
+    test_cro_channel_notify_source_on_change
+)
+
+target_sources(test_cro_channel_notify_source_on_change
+    PRIVATE
+    test-data/test-data.qrc
 )
