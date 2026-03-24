@@ -21,6 +21,7 @@ public:
     const ChannelPtr getChannel(const QString &channelMName) const;
     const QString getChannelMName(const QString &alias) const;
     int getSamplesPerPeriod() const;
+    bool hasInternalSourceGenerator() const;
 signals:
     void sigFullScanFinished(bool ok);
     void sigFetchDone(const QString &channelMName, bool ok);
@@ -44,6 +45,7 @@ private:
     std::shared_ptr<int> m_samplesPerPeriod = std::make_shared<int>(0);
     TaskContainerInterfacePtr m_currentTasks;
     std::shared_ptr<QStringList> m_tempChannelMNames;
+    std::shared_ptr<bool> m_hasInternalSourceGenerator;
 };
 
 typedef std::shared_ptr<SystemObserver> SystemObserverPtr;

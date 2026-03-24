@@ -2,6 +2,7 @@
 #include "cro_channelfetchtask.h"
 #include "taskchannelgetavail.h"
 #include "taskgetsamplerate.h"
+#include "taskhasinternalsourcegenerator.h"
 #include "taskserverconnectionstart.h"
 #include <taskcontainersequence.h>
 #include <tasklambdarunner.h>
@@ -13,7 +14,8 @@ namespace ChannelRangeObserver {
 SystemObserver::SystemObserver(const NetworkConnectionInfo &netInfo, VeinTcp::AbstractTcpNetworkFactoryPtr tcpFactory) :
     m_netInfo(netInfo),
     m_tcpFactory(tcpFactory),
-    m_pcbClient(Zera::Proxy::getInstance()->getConnectionSmart(netInfo, tcpFactory))
+    m_pcbClient(Zera::Proxy::getInstance()->getConnectionSmart(netInfo, tcpFactory)),
+    m_hasInternalSourceGenerator(std::make_shared<bool>())
 {
 }
 
@@ -56,7 +58,7 @@ const ChannelPtr SystemObserver::getChannel(const QString &channelMName) const
     if(iter != m_channelMNameToChannel.constEnd())
         return iter.value();
     qCritical("SystemObserver: Channel data not found for %s!", qPrintable(channelMName));
-    return std::make_shared<Channel>("", NetworkConnectionInfo(), m_tcpFactory);
+    return std::make_shared<Channel>("", NetworkConnectionInfo(), m_tcpFactory, false);
 }
 
 const QString SystemObserver::getChannelMName(const QString &alias) const
@@ -71,6 +73,11 @@ const QString SystemObserver::getChannelMName(const QString &alias) const
 int SystemObserver::getSamplesPerPeriod() const
 {
     return *m_samplesPerPeriod;
+}
+
+bool SystemObserver::hasInternalSourceGenerator() const
+{
+    return *m_hasInternalSourceGenerator;
 }
 
 void SystemObserver::clear()
@@ -90,14 +97,18 @@ void SystemObserver::doStartFullScan()
     m_currentTasks = TaskContainerSequence::create();
     m_currentTasks->addSub(getPcbConnectionTask());
     m_tempChannelMNames = std::make_shared<QStringList>();
-    m_currentTasks->addSub(TaskChannelGetAvail::create(m_pcbInterface, m_tempChannelMNames,
+    m_currentTasks->addSub(TaskChannelGetAvail::create(m_pcbInterface,
+                                                       m_tempChannelMNames,
                                                        TRANSACTION_TIMEOUT, [=] { notifyError("Get available channels failed");}));
+    m_currentTasks->addSub(TaskHasInternalSourceGenerator::create(m_pcbInterface, m_hasInternalSourceGenerator));
     m_currentTasks->addSub(TaskLambdaRunner::create([&]() {
         TaskContainerInterfacePtr allChannelsDetailsTasks = TaskContainerParallel::create();
-        allChannelsDetailsTasks->addSub(TaskGetSampleRate::create(m_pcbInterface, m_samplesPerPeriod,
+        allChannelsDetailsTasks->addSub(TaskGetSampleRate::create(m_pcbInterface,
+                                                                  m_samplesPerPeriod,
                                                                   TRANSACTION_TIMEOUT, [=] { notifyError("Get sample rate failed");}));
-        for(const QString &channelMName : *m_tempChannelMNames) {
-            ChannelPtr channelObserver = std::make_shared<Channel>(channelMName, m_netInfo, m_tcpFactory);
+        const QStringList &channelMNames = *m_tempChannelMNames;
+        for(const QString &channelMName : channelMNames) {
+            ChannelPtr channelObserver = std::make_shared<Channel>(channelMName, m_netInfo, m_tcpFactory, hasInternalSourceGenerator());
             m_channelMNameToChannel[channelMName] = channelObserver;
 
             allChannelsDetailsTasks->addSub(ChannelFetchTask::create(channelObserver));
@@ -120,7 +131,7 @@ TaskTemplatePtr SystemObserver::getPcbConnectionTask()
 
 void SystemObserver::notifyError(const QString &errMsg)
 {
-    qWarning("SystemObserver error: %s", qPrintable(errMsg));
+    qCritical("SystemObserver error: %s", qPrintable(errMsg));
 }
 
 }

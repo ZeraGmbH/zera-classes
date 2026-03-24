@@ -42,13 +42,13 @@ void test_cro_channel::cleanup()
 
 void test_cro_channel::emptyOnStartup()
 {
-    Channel channel("m0", netInfo, m_tcpFactory);
+    Channel channel("m0", netInfo, m_tcpFactory, false);
     QVERIFY(channel.getAllRangeNames().isEmpty());
 }
 
 void test_cro_channel::fetchDirect()
 {
-    Channel channel("m0", netInfo, m_tcpFactory);
+    Channel channel("m0", netInfo, m_tcpFactory, false);
     QSignalSpy spy(&channel, &Channel::sigFetchDoneChannel);
 
     channel.startFetch();
@@ -61,7 +61,7 @@ void test_cro_channel::fetchDirect()
 
 void test_cro_channel::fetchDirectTwice()
 {
-    Channel channel("m0", netInfo, m_tcpFactory);
+    Channel channel("m0", netInfo, m_tcpFactory, false);
     QSignalSpy spy(&channel, &Channel::sigFetchDoneChannel);
 
     channel.startFetch();
@@ -74,7 +74,7 @@ void test_cro_channel::fetchDirectTwice()
 
 void test_cro_channel::fetchInvalidChannel()
 {
-    Channel channel("foo", netInfo, m_tcpFactory);
+    Channel channel("foo", netInfo, m_tcpFactory, false);
     QSignalSpy spy(&channel, &Channel::sigFetchDoneChannel);
 
     channel.startFetch();
@@ -88,7 +88,7 @@ void test_cro_channel::fetchInvalidChannel()
 
 void test_cro_channel::fetchByTaskValid()
 {
-    ChannelPtr channel = std::make_shared<Channel>("m0", netInfo, m_tcpFactory);
+    ChannelPtr channel = std::make_shared<Channel>("m0", netInfo, m_tcpFactory, false);
     ChannelFetchTaskPtr task = ChannelFetchTask::create(channel);
 
     QSignalSpy spy(task.get(), &TaskTemplate::sigFinish);
@@ -101,7 +101,7 @@ void test_cro_channel::fetchByTaskValid()
 
 void test_cro_channel::fetchByTaskInvalid()
 {
-    ChannelPtr channel = std::make_shared<Channel>("foo", netInfo, m_tcpFactory);
+    ChannelPtr channel = std::make_shared<Channel>("foo", netInfo, m_tcpFactory, false);
     ChannelFetchTaskPtr task = ChannelFetchTask::create(channel);
 
     QSignalSpy spy(task.get(), &TaskTemplate::sigFinish);
@@ -114,7 +114,7 @@ void test_cro_channel::fetchByTaskInvalid()
 
 void test_cro_channel::fetchCheckChannelDataM0()
 {
-    Channel channel("m0", netInfo, m_tcpFactory);
+    Channel channel("m0", netInfo, m_tcpFactory, false);
     channel.startFetch();
     TimeMachineObject::feedEventLoop();
 
@@ -125,7 +125,7 @@ void test_cro_channel::fetchCheckChannelDataM0()
 
 void test_cro_channel::fetchCheckChannelDataM3()
 {
-    Channel channel("m3", netInfo, m_tcpFactory);
+    Channel channel("m3", netInfo, m_tcpFactory, false);
     channel.startFetch();
     TimeMachineObject::feedEventLoop();
 
@@ -136,7 +136,7 @@ void test_cro_channel::fetchCheckChannelDataM3()
 
 void test_cro_channel::refetchAlthoughNotSuggestedWorks()
 {
-    Channel channel("m0", netInfo, m_tcpFactory);
+    Channel channel("m0", netInfo, m_tcpFactory, false);
     QSignalSpy spy(&channel, &Channel::sigFetchDoneChannel);
 
     channel.startFetch();
@@ -158,7 +158,7 @@ void test_cro_channel::refetchAlthoughNotSuggestedWorks()
 
 void test_cro_channel::getRangesCheckBasicData()
 {
-    Channel channel("m0", netInfo, m_tcpFactory);
+    Channel channel("m0", netInfo, m_tcpFactory, false);
     channel.startFetch();
     TimeMachineObject::feedEventLoop();
 
@@ -172,7 +172,7 @@ void test_cro_channel::getRangesCheckBasicData()
 
 void test_cro_channel::checkUrValue()
 {
-    Channel channel("m0", netInfo, m_tcpFactory);
+    Channel channel("m0", netInfo, m_tcpFactory, false);
     channel.startFetch();
     TimeMachineObject::feedEventLoop();
 
@@ -183,7 +183,7 @@ void test_cro_channel::checkUrValue()
 
 void test_cro_channel::checkOrderingVoltageRanges()
 {
-    Channel channel("m0", netInfo, m_tcpFactory);
+    Channel channel("m0", netInfo, m_tcpFactory, false);
     channel.startFetch();
     TimeMachineObject::feedEventLoop();
 
@@ -194,7 +194,7 @@ void test_cro_channel::checkOrderingVoltageRanges()
 
 void test_cro_channel::checkOrderingAllCurrentRanges()
 {
-    Channel channel("m3", netInfo, m_tcpFactory);
+    Channel channel("m3", netInfo, m_tcpFactory, false);
     channel.startFetch();
     TimeMachineObject::feedEventLoop();
 
@@ -209,7 +209,7 @@ void test_cro_channel::checkOrderingAllCurrentRanges()
 
 void test_cro_channel::checkRangeAvailable()
 {
-    Channel channel("m3", netInfo, m_tcpFactory);
+    Channel channel("m3", netInfo, m_tcpFactory, false);
     channel.startFetch();
     TimeMachineObject::feedEventLoop();
 
@@ -221,7 +221,7 @@ void test_cro_channel::checkRangeAvailable()
 
 void test_cro_channel::checkAvailableRangesMtDefaultAc()
 {
-    Channel channel("m3", netInfo, m_tcpFactory);
+    Channel channel("m3", netInfo, m_tcpFactory, false);
     channel.startFetch();
     TimeMachineObject::feedEventLoop();
 
@@ -234,7 +234,7 @@ void test_cro_channel::checkAvailableRangesMtDefaultAc()
 
 void test_cro_channel::checkAvailableRangesMtAdj()
 {
-    Channel channel("m3", netInfo, m_tcpFactory);
+    Channel channel("m3", netInfo, m_tcpFactory, false);
     channel.startFetch();
     TimeMachineObject::feedEventLoop();
 
@@ -254,7 +254,7 @@ void test_cro_channel::checkAvailableRangesMtAdj()
 
 void test_cro_channel::checkAvailableRangesMtSequence()
 {
-    Channel channel("m3", netInfo, m_tcpFactory);
+    Channel channel("m3", netInfo, m_tcpFactory, false);
     channel.startFetch();
     TimeMachineObject::feedEventLoop();
 
@@ -290,7 +290,7 @@ void test_cro_channel::checkAvailableRangesMtSequence()
 
 void test_cro_channel::checkScanTwiceAvailableRangesMtAdj()
 {
-    Channel channel("m3", netInfo, m_tcpFactory);
+    Channel channel("m3", netInfo, m_tcpFactory, false);
     channel.startFetch();
     TimeMachineObject::feedEventLoop();
     channel.startFetch();
@@ -304,7 +304,7 @@ void test_cro_channel::checkScanTwiceAvailableRangesMtAdj()
 
 void test_cro_channel::notifyRangeChangeByClampComeAndGo()
 {
-    Channel channel("m3", netInfo, m_tcpFactory);
+    Channel channel("m3", netInfo, m_tcpFactory, false);
     channel.startFetch();
     TimeMachineObject::feedEventLoop();
     QSignalSpy spy(&channel, &Channel::sigRangeChangeReported);
