@@ -1,5 +1,0 @@
-<RCC>
-    <qresource prefix="/">
-        <file>def-session-minimal.json</file>
-    </qresource>
-</RCC>

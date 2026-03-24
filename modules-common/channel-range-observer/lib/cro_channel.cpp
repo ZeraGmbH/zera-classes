@@ -5,7 +5,6 @@
 #include "taskchannelgetdspchannel.h"
 #include "taskchannelgetunit.h"
 #include "taskregisternotifier.h"
-#include "taskregisternotifierwithvalue.h"
 #include "taskchannelgetrangelist.h"
 #include <taskcontainersequence.h>
 #include <taskcontainerparallel.h>
@@ -80,11 +79,6 @@ int Channel::getDspChannel() const
     return *m_dspChannel;
 }
 
-bool Channel::isSourceModeOn() const
-{
-    return m_sourceModeOn;
-}
-
 void Channel::clearRanges()
 {
     m_allRangeNamesOrderedByServer->clear();
@@ -149,42 +143,22 @@ TaskTemplatePtr Channel::getChannelReadDetailsTask()
     return task;
 }
 
-static constexpr int notifyIdRangeChange = 1;
-static const char* notificationStrRangeChange = "Notify:1";
-static constexpr int notifyIdSourceModeChange = 2;
-static const char* notificationStrSourceModeChange = "Notify:2:";
+static constexpr int notifyId = 1;
+static const char* notificationStr = "Notify:1";
 
 TaskTemplatePtr Channel::getRangesRegisterChangeNotificationTask()
 {
-    TaskContainerInterfacePtr task = TaskContainerSequence::create();
-    task->addSub(TaskRegisterNotifier::create(
-        m_pcbInterface, QString("SENS:%1:RANG:CAT?").arg(m_channelMName), notifyIdRangeChange,
-        TRANSACTION_TIMEOUT, [&]{ notifyError(QString("Could not register range change notification for channel %1").arg(m_channelMName)); }));
-    task->addSub(TaskRegisterNotifierWithValue::create(
-        m_pcbInterface, QString("GENERATOR:MODEON?"), notifyIdSourceModeChange,
-        TRANSACTION_TIMEOUT, [&]{ notifyError(QString("Could not register source mode notification for channel %1").arg(m_channelMName)); }));
-    return task;
+    return TaskRegisterNotifier::create(
+        m_pcbInterface, QString("SENS:%1:RANG:CAT?").arg(m_channelMName), notifyId,
+        TRANSACTION_TIMEOUT, [&]{ notifyError(QString("Could not register notification for channel %1").arg(m_channelMName)); });
 }
 
 void Channel::onInterfaceAnswer(quint32 msgnr, quint8 reply, const QVariant &answer)
 {
     Q_UNUSED(reply)
-    if (msgnr == 0) {
-        const QString strAnswer = answer.toString();
-        if (strAnswer == notificationStrRangeChange) {
-            notifyRangeChangeReported();
-            startFetch();
-        }
-        else if (strAnswer.startsWith(notificationStrSourceModeChange)) {
-            QString channelMNames = strAnswer;
-            channelMNames.remove(notificationStrSourceModeChange);
-            const QStringList channelMNameList = channelMNames.split(",");
-            bool sourceModeOn = channelMNameList.contains(getMName());
-            if (m_sourceModeOn != sourceModeOn) {
-                m_sourceModeOn = sourceModeOn;
-                emit sigSourceModeOnChanged(m_sourceModeOn);
-            }
-        }
+    if (msgnr == 0 && answer == notificationStr) {
+        notifyRangeChangeReported();
+        startFetch();
     }
 }
 
