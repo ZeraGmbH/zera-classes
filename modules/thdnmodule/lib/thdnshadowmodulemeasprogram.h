@@ -15,7 +15,7 @@ public:
     cThdnShadowModuleMeasProgram(cThdnModule* module, std::shared_ptr<BaseModuleConfiguration> pConfiguration);
     void generateVeinInterface() override;
 
-public slots:
+private slots:
     void start() override;
     void stop() override;
     void newIntegrationtime(const QVariant &ti);

@@ -19,11 +19,10 @@ class cThdnModuleMeasProgram: public cBaseDspMeasProgram
 public:
     cThdnModuleMeasProgram(cThdnModule* module, std::shared_ptr<BaseModuleConfiguration> pConfiguration);
     void generateVeinInterface() override;
-public slots:
-    void start() override;
-    void stop() override;
 
 private slots:
+    void start() override;
+    void stop() override;
     void catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant answer);
     void setInterfaceActualValues(QVector<float> *actualValues);
 
@@ -43,14 +42,14 @@ private:
     void dataAcquisitionDSP();
     void dataReadDSP();
 
-    cThdnModule* m_pModule;
+    cThdnModule* m_pModule = nullptr;
     ActualValueStartStopHandler m_startStopHandler;
     QList<VfModuleComponent*> m_veinActValueList; // the list of actual values we work on
-    VfModuleComponent* m_pMeasureSignal;
-    VfModuleParameter* m_pIntegrationTimeParameter;
+    VfModuleComponent* m_pMeasureSignal = nullptr;
+    VfModuleParameter* m_pIntegrationTimeParameter = nullptr;
 
-    DspVarGroupClientInterface* m_pParameterDSP;
-    DspVarGroupClientInterface* m_pActualValuesDSP;
+    DspVarGroupClientInterface* m_pParameterDSP = nullptr;
+    DspVarGroupClientInterface* m_pActualValuesDSP = nullptr;
 
     // statemachine for activating gets the following states
     QState m_dspserverConnectState;
@@ -66,7 +65,6 @@ private:
     TaskTemplatePtr m_taskDataAcquisition;
 
     cMovingwindowFilter m_movingwindowFilter;
-
 };
 
 }
