@@ -11,6 +11,16 @@
 namespace THDNMODULE
 {
 
+enum moduleconfigstate
+{
+    setMeasureInterval,
+    setMovingwindowBool,
+    setMovingwindowTime,
+    setTHDType,
+};
+
+
+
 class cThdnModuleConfigData;
 
 class cThdnModuleConfiguration: public BaseModuleConfiguration

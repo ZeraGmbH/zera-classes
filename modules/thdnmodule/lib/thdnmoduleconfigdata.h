@@ -18,6 +18,7 @@ class cThdnModuleConfigData
 {
 public:
     cThdnModuleConfigData(){}
+    QString m_sTHDType; // N or R
     doubleParameter m_fMeasInterval; // measuring interval 0.1 .. 100.0 sec.
     double m_fmovingwindowInterval;
     bool m_bmovingWindow;

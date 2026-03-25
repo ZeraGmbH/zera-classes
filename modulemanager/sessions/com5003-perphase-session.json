@@ -84,6 +84,11 @@
         "id": 1110
       },
       {
+        "name" : "thdnmodule",
+        "configFile" : "common-thdnmodule2.xml",
+        "id": 1111
+      },
+      {
         "name" : "oscimodule",
         "configFile" : "com5003-oscimodule.xml",
         "id": 1120

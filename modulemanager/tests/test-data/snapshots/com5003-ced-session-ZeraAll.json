@@ -1,7 +1,7 @@
 {
     "0": {
         "DevMode": 0,
-        "Entities": "0;2;1000;1020;1030;1040;1050;1060;1070;1071;1072;1078;1079;1090;1110;1120;1130;1131;1140;1150;1300;1400;1500;9000;9999",
+        "Entities": "0;2;1000;1020;1030;1040;1050;1060;1070;1071;1072;1078;1079;1090;1110;1111;1120;1130;1131;1140;1150;1300;1400;1500;9000;9999",
         "ModulesPaused": 0,
         "Session": "com5003-ced-session.json",
         "SessionsAvailable": "com5003-meas-session.json;com5003-ced-session.json;com5003-ref-session.json;com5003-perphase-session.json",
@@ -229,6 +229,10 @@
         "ACT_THDN4": "",
         "ACT_THDN5": "",
         "ACT_THDN6": "",
+        "PAR_Interval": 1,
+        "SIG_Measuring": 1
+    },
+    "1111": {
         "ACT_THDR1": "",
         "ACT_THDR2": "",
         "ACT_THDR3": "",

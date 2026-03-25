@@ -2692,6 +2692,97 @@
         "3-VarsWritten": {
         }
     },
+    "1111": {
+        "1-MemGroups": {
+            "ActualValues": {
+                "UserMemSize": 6,
+                "UserMemSizeAligned": 0,
+                "Variables": [
+                    {
+                        "Name": "VALXTHDNF",
+                        "Segment": "moduleLocalSegment",
+                        "Size": 6,
+                        "TypeData": "dspDataTypeFloat"
+                    }
+                ]
+            },
+            "Parameter": {
+                "UserMemSize": 2,
+                "UserMemSizeAligned": 0,
+                "Variables": [
+                    {
+                        "Name": "TIPAR",
+                        "Segment": "moduleLocalSegment",
+                        "Size": 1,
+                        "TypeData": "dspDataTypeInt"
+                    },
+                    {
+                        "Name": "TISTART",
+                        "Segment": "moduleLocalSegment",
+                        "Size": 1,
+                        "TypeData": "dspDataTypeInt"
+                    }
+                ]
+            },
+            "TmpData": {
+                "UserMemSize": 523,
+                "UserMemSizeAligned": 0,
+                "Variables": [
+                    {
+                        "Name": "MEASSIGNAL",
+                        "Segment": "moduleLocalSegment",
+                        "Size": 504,
+                        "TypeData": "dspDataTypeFloat"
+                    },
+                    {
+                        "Name": "VALXTHDN",
+                        "Segment": "moduleLocalSegment",
+                        "Size": 6,
+                        "TypeData": "dspDataTypeFloat"
+                    },
+                    {
+                        "Name": "FILTER",
+                        "Segment": "moduleLocalSegment",
+                        "Size": 13,
+                        "TypeData": "dspDataTypeFloat"
+                    }
+                ]
+            }
+        },
+        "2-CmdList": [
+            "STARTCHAIN(1,1,0x0101)",
+            "CLEARN(504,MEASSIGNAL)",
+            "CLEARN(13,FILTER)",
+            "SETVAL(TIPAR,500)",
+            "GETSTIME(TISTART)",
+            "DEACTIVATECHAIN(1,0x0101)",
+            "STOPCHAIN(1,0x0101)",
+            "COPYDATA(CH0,0,MEASSIGNAL)",
+            "THDN(MEASSIGNAL,VALXTHDN+0)",
+            "COPYDATA(CH2,0,MEASSIGNAL)",
+            "THDN(MEASSIGNAL,VALXTHDN+1)",
+            "COPYDATA(CH4,0,MEASSIGNAL)",
+            "THDN(MEASSIGNAL,VALXTHDN+2)",
+            "COPYDATA(CH1,0,MEASSIGNAL)",
+            "THDN(MEASSIGNAL,VALXTHDN+3)",
+            "COPYDATA(CH3,0,MEASSIGNAL)",
+            "THDN(MEASSIGNAL,VALXTHDN+4)",
+            "COPYDATA(CH5,0,MEASSIGNAL)",
+            "THDN(MEASSIGNAL,VALXTHDN+5)",
+            "AVERAGE1(6,VALXTHDN,FILTER)",
+            "TESTTIMESKIPNEX(TISTART,TIPAR)",
+            "ACTIVATECHAIN(1,0x0102)",
+            "STARTCHAIN(0,1,0x0102)",
+            "GETSTIME(TISTART)",
+            "CMPAVERAGE1(6,FILTER,VALXTHDNF)",
+            "CLEARN(13,FILTER)",
+            "DSPINTTRIGGER(0x0,0x0)",
+            "DEACTIVATECHAIN(1,0x0102)",
+            "STOPCHAIN(1,0x0102)"
+        ],
+        "3-VarsWritten": {
+        }
+    },
     "1120": {
         "1-MemGroups": {
             "ActualValues": {

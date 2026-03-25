@@ -42,10 +42,13 @@ private:
     void setDspCmdList();
     void dataAcquisitionDSP();
     void dataReadDSP();
+    void setActualValuesNames();
+    void setSCPIMeasInfo();
 
     cThdnModule* m_pModule;
     ActualValueStartStopHandler m_startStopHandler;
     QList<VfModuleComponent*> m_veinActValueList; // the list of actual values we work on
+    VfModuleMetaData* m_pThdnCountInfo;
     VfModuleComponent* m_pMeasureSignal;
     VfModuleParameter* m_pIntegrationTimeParameter;
 

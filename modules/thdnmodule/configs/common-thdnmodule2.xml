@@ -6,7 +6,7 @@
                 <on>1</on>
                 <time>0.5</time>
             </movingwindow>
-            <thd>N</thd>
+            <thd>R</thd>
         </measure>
     </configuration>
     <parameter>
