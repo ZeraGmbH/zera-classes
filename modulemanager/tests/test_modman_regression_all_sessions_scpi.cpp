@@ -101,8 +101,7 @@ void test_modman_regression_all_sessions_scpi::testScpi()
     QFETCH(QString, sessionFile);
     const QString expectedFilePath = genFilePath(sessionFile, scpiCmd);
     qInfo("File with expected: %s", qPrintable(expectedFilePath));
-    QByteArray expected = TestLogHelpers::loadFile(expectedFilePath);
-    QVERIFY(TestLogHelpers::compareAndLogOnDiff(expected, dumped));
+    QVERIFY(TestLogHelpers::compareAndLogOnDiffFile(expectedFilePath, dumped));
 }
 
 QStringList test_modman_regression_all_sessions_scpi::getAvailableSessions()
