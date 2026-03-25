@@ -4,6 +4,15 @@
 
 namespace THDNMODULE
 {
+
+enum moduleconfigstate
+{
+    setMeasureInterval,
+    setMovingwindowBool,
+    setMovingwindowTime,
+    setThdnSourceEntity
+};
+
 cThdnModuleConfiguration::cThdnModuleConfiguration()
 {
     connect(m_pXMLReader, &Zera::XMLConfig::cReader::valueChanged, this, &cThdnModuleConfiguration::configXMLInfo);
@@ -13,7 +22,7 @@ cThdnModuleConfiguration::cThdnModuleConfiguration()
 
 cThdnModuleConfiguration::~cThdnModuleConfiguration()
 {
-    if (m_pThdnModulConfigData) delete m_pThdnModulConfigData;
+    delete m_pThdnModulConfigData;
 }
 
 
@@ -31,7 +40,7 @@ void cThdnModuleConfiguration::setConfiguration(const QByteArray& xmlString)
 
     m_ConfigXMLMap["thdnmodconfpar:configuration:measure:movingwindow:on"] = setMovingwindowBool;
     m_ConfigXMLMap["thdnmodconfpar:configuration:measure:movingwindow:time"] = setMovingwindowTime;
-    m_ConfigXMLMap["thdnmodconfpar:configuration:measure:thd"] = setTHDType;
+    m_ConfigXMLMap["thdnmodconfpar:configuration:thdr_shadow_of"] = setThdnSourceEntity;
 
     m_ConfigXMLMap["thdnmodconfpar:parameter:interval"] = setMeasureInterval;
 
@@ -56,11 +65,8 @@ cThdnModuleConfigData *cThdnModuleConfiguration::getConfigurationData()
 
 void cThdnModuleConfiguration::configXMLInfo(const QString &key)
 {
-    bool ok;
-
-    if (m_ConfigXMLMap.contains(key))
-    {
-        ok = true;
+    if (m_ConfigXMLMap.contains(key)) {
+        bool ok = true;
         int cmd = m_ConfigXMLMap[key];
         switch (cmd)
         {
@@ -70,8 +76,8 @@ void cThdnModuleConfiguration::configXMLInfo(const QString &key)
         case setMovingwindowTime:
             m_pThdnModulConfigData->m_fmovingwindowInterval = m_pXMLReader->getValue(key).toDouble(&ok);
             break;
-        case setTHDType:
-            m_pThdnModulConfigData->m_sTHDType = m_pXMLReader->getValue(key);
+        case setThdnSourceEntity:
+            m_pThdnModulConfigData->m_thdrSourceEntity = m_pXMLReader->getValue(key).toInt(&ok);
             break;
         case setMeasureInterval:
             m_pThdnModulConfigData->m_fMeasInterval.m_sKey = key;

@@ -1,4 +1,5 @@
 #include "thdnmodule.h"
+#include "thdnshadowmodulemeasprogram.h"
 #include "thdnmoduleconfiguration.h"
 #include "thdnmodulemeasprogram.h"
 
@@ -18,9 +19,13 @@ void cThdnModule::setupModule()
     emit addEventSystem(getValidatorEventSystem());
     cBaseMeasModule::setupModule();
 
-    // we need some program that does the measuring on dsp
-    m_pMeasProgram = new cThdnModuleMeasProgram(this, m_pConfiguration);
+    const cThdnModuleConfigData *confData = qobject_cast<cThdnModuleConfiguration*>(m_pConfiguration.get())->getConfigurationData();
+    if (confData->m_thdrSourceEntity == 0)
+        m_pMeasProgram = new cThdnModuleMeasProgram(this, m_pConfiguration);
+    else
+        m_pMeasProgram = new cThdnShadowModuleMeasProgram(this, m_pConfiguration);
     m_ModuleActivistList.append(m_pMeasProgram);
+
     connect(m_pMeasProgram, &cModuleActivist::activated, this, &BaseModule::activationContinue);
     connect(m_pMeasProgram, &cModuleActivist::deactivated, this, &BaseModule::deactivationContinue);
 

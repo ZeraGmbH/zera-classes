@@ -1,12 +1,12 @@
 <?xml version="1.0"?>
 <thdnmodconfpar>
     <configuration>
+        <thdr_shadow_of>1110</thdr_shadow_of>
         <measure>
             <movingwindow>
                 <on>1</on>
                 <time>0.5</time>
             </movingwindow>
-            <thd>R</thd>
         </measure>
     </configuration>
     <parameter>

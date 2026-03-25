@@ -1,27 +1,13 @@
 #ifndef THDNMODULECONFIGURATION_H
 #define THDNMODULECONFIGURATION_H
 
-
-#include <QStringList>
+#include "basemoduleconfiguration.h"
+#include "thdnmoduleconfigdata.h"
 #include <QByteArray>
 #include <QHash>
 
-#include "basemoduleconfiguration.h"
-
 namespace THDNMODULE
 {
-
-enum moduleconfigstate
-{
-    setMeasureInterval,
-    setMovingwindowBool,
-    setMovingwindowTime,
-    setTHDType,
-};
-
-
-
-class cThdnModuleConfigData;
 
 class cThdnModuleConfiguration: public BaseModuleConfiguration
 {

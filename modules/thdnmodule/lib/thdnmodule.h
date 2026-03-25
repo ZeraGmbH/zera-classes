@@ -2,10 +2,9 @@
 #define THDNMODULE_H
 
 #include "basemeasmodule.h"
+#include "basemeasprogram.h"
 
 namespace THDNMODULE {
-
-class cThdnModuleMeasProgram;
 
 class cThdnModule : public cBaseMeasModule
 {
@@ -21,7 +20,7 @@ private:
     void startMeas() override; // we make the measuring program start here
     void stopMeas() override;
 
-    cThdnModuleMeasProgram *m_pMeasProgram = nullptr;
+    cBaseMeasProgram *m_pMeasProgram = nullptr;
 };
 
 }

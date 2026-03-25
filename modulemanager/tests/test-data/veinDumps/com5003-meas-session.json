@@ -2899,6 +2899,12 @@
         "ACT_THDN4": null,
         "ACT_THDN5": null,
         "ACT_THDN6": null,
+        "ACT_THDR1": null,
+        "ACT_THDR2": null,
+        "ACT_THDR3": null,
+        "ACT_THDR4": null,
+        "ACT_THDR5": null,
+        "ACT_THDR6": null,
         "EntityName": "THDNModule1",
         "INF_ModuleInterface": {
             "ComponentInfo": {
@@ -2932,6 +2938,36 @@
                     "Description": "<skipped>",
                     "Unit": "%"
                 },
+                "ACT_THDR1": {
+                    "ChannelName": "UL1",
+                    "Description": "<skipped>",
+                    "Unit": "%"
+                },
+                "ACT_THDR2": {
+                    "ChannelName": "UL2",
+                    "Description": "<skipped>",
+                    "Unit": "%"
+                },
+                "ACT_THDR3": {
+                    "ChannelName": "UL3",
+                    "Description": "<skipped>",
+                    "Unit": "%"
+                },
+                "ACT_THDR4": {
+                    "ChannelName": "IL1",
+                    "Description": "<skipped>",
+                    "Unit": "%"
+                },
+                "ACT_THDR5": {
+                    "ChannelName": "IL2",
+                    "Description": "<skipped>",
+                    "Unit": "%"
+                },
+                "ACT_THDR6": {
+                    "ChannelName": "IL3",
+                    "Description": "<skipped>",
+                    "Unit": "%"
+                },
                 "EntityName": {
                     "Description": "<skipped>"
                 },
@@ -2956,8 +2992,7 @@
             },
             "ModuleInfo": {
                 "Description": "This module measures thdn values for configured channels",
-                "Name": "THDNModule1",
-                "THDNCount": "6"
+                "Name": "THDNModule1"
             },
             "SCPIInfo": {
                 "Cmd": [
@@ -3081,8 +3116,7 @@
             },
             "ModuleInfo": {
                 "Description": "This module measures thdn values for configured channels",
-                "Name": "THDNModule2",
-                "THDRCount": "6"
+                "Name": "THDNModule2"
             },
             "SCPIInfo": {
                 "Cmd": [
