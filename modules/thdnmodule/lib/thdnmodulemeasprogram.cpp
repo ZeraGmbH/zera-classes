@@ -81,18 +81,36 @@ void cThdnModuleMeasProgram::stop()
 
 void cThdnModuleMeasProgram::generateVeinInterface()
 {
-    int n = m_pModule->getSharedChannelRangeObserver()->getChannelMNames().count();
-    for (int i = 0; i < n; i++) {
-        VfModuleComponent *pActvalue = new VfModuleComponent(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
-                                            QString("ACT_THD%1%2").arg(getConfData()->m_sTHDType).arg(i+1),
-                                            QString("THD%1 actual value").arg(getConfData()->m_sTHDType.toLower()));
-        m_veinActValueList.append(pActvalue); // we add the component for our measurement
+    ChannelRangeObserver::SystemObserverPtr observer = m_pModule->getSharedChannelRangeObserver();
+    const QStringList channelMNames = observer->getChannelMNames();
+    for (int i = 0; i < channelMNames.size(); i++) {
+        const QString channelMName = channelMNames[i];
+        ServiceChannelNameHelper::TChannelAliasUnit aliasUnit =
+            ServiceChannelNameHelper::getChannelAndUnit(channelMName, observer);
+        const QString &channelAlias = aliasUnit.m_channelAlias;
+
+        VfModuleComponent *pActvalue;
+        pActvalue = new VfModuleComponent(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
+                                          QString("ACT_THDN%1").arg(i+1),
+                                          QString("THDn actual value"));
+        pActvalue->setChannelName(channelAlias);
+        pActvalue->setUnit("%");
+        pActvalue->setScpiInfo("MEASURE", channelAlias, SCPI::isCmdwP);
+        m_veinActValueList.append(pActvalue);
+        m_pModule->m_veinComponentsWithMetaAndScpi.append(pActvalue); // and for the modules interface
+
+        pActvalue = new VfModuleComponent(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
+                                          QString("ACT_THDR%1").arg(i+1),
+                                          QString("THDr actual value"));
+        pActvalue->setChannelName(channelAlias);
+        pActvalue->setUnit("%");
+        // Try hard to find unique names with four letters...
+        QString relChannelName = channelAlias;
+        relChannelName = "R" + relChannelName.remove("L").replace("AUX", "4");
+        pActvalue->setScpiInfo("MEASURE", relChannelName, SCPI::isCmdwP);
+        m_veinActValueList.append(pActvalue);
         m_pModule->m_veinComponentsWithMetaAndScpi.append(pActvalue); // and for the modules interface
     }
-
-    m_pThdnCountInfo = new VfModuleMetaData(QString("THD%1Count").arg(getConfData()->m_sTHDType), QVariant(n));
-    m_pModule->veinModuleMetaDataList.append(m_pThdnCountInfo);
-
     QString key;
     m_pIntegrationTimeParameter = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
                                                            key = QString("PAR_Interval"),
@@ -114,12 +132,15 @@ void cThdnModuleMeasProgram::generateVeinInterface()
 void cThdnModuleMeasProgram::setDspVarList()
 {
     int samples = m_pModule->getSharedChannelRangeObserver()->getSamplesPerPeriod();
+    ChannelRangeObserver::SystemObserverPtr observer = m_pModule->getSharedChannelRangeObserver();
+    const QStringList channelMNames = observer->getChannelMNames();
 
     // work variables without I/O
+    const int thdnCountDsp = channelMNames.size();
     DspVarGroupClientInterface* tmpDspVarGroup = m_dspInterface->createVariableGroup("TmpData");
     tmpDspVarGroup->addDspVar("MEASSIGNAL", samples);
-    tmpDspVarGroup->addDspVar("VALXTHDN",m_veinActValueList.count());
-    tmpDspVarGroup->addDspVar("FILTER", DspBuffLen::avgFilterLen(m_veinActValueList.count()));
+    tmpDspVarGroup->addDspVar("VALXTHDN", thdnCountDsp);
+    tmpDspVarGroup->addDspVar("FILTER", DspBuffLen::avgFilterLen(thdnCountDsp));
 
     // a handle for parameter
     m_pParameterDSP =  m_dspInterface->createVariableGroup("Parameter");
@@ -129,7 +150,7 @@ void cThdnModuleMeasProgram::setDspVarList()
 
     // and one for filtered actual values
     m_pActualValuesDSP = m_dspInterface->createVariableGroup("ActualValues");
-    m_pActualValuesDSP->addDspVar("VALXTHDNF",m_veinActValueList.count());
+    m_pActualValuesDSP->addDspVar("VALXTHDNF",thdnCountDsp);
     m_ModuleActualValues.resize(m_pActualValuesDSP->getUserMemSize()); // we provide a vector for generated actual values
 }
 
@@ -137,9 +158,11 @@ void cThdnModuleMeasProgram::setDspCmdList()
 {
     ChannelRangeObserver::SystemObserverPtr observer = m_pModule->getSharedChannelRangeObserver();
     int samples = observer->getSamplesPerPeriod();
+    const QStringList channelMNames = observer->getChannelMNames();
+    const int thdnCountDsp = channelMNames.size();
     m_dspInterface->addCycListItem("STARTCHAIN(1,1,0x0101)"); // aktiv, prozessnr. (dummy),hauptkette 1 subkette 1 start
         m_dspInterface->addCycListItem(QString("CLEARN(%1,MEASSIGNAL)").arg(samples) ); // clear meassignal
-        m_dspInterface->addCycListItem(QString("CLEARN(%1,FILTER)").arg(DspBuffLen::avgFilterLen(m_veinActValueList.count())));
+        m_dspInterface->addCycListItem(QString("CLEARN(%1,FILTER)").arg(DspBuffLen::avgFilterLen(thdnCountDsp)));
 
         if (getConfData()->m_bmovingWindow)
             m_dspInterface->addCycListItem(QString("SETVAL(TIPAR,%1)").arg(getConfData()->m_fmovingwindowInterval*1000.0)); // initial ti time
@@ -151,23 +174,23 @@ void cThdnModuleMeasProgram::setDspCmdList()
     m_dspInterface->addCycListItem("STOPCHAIN(1,0x0101)"); // ende prozessnr., hauptkette 1 subkette 1
 
     // we compute or copy our wanted actual values
-    for (int i = 0; i < m_veinActValueList.count(); i++) {
-        QString channelMName = m_pModule->getSharedChannelRangeObserver()->getChannelMNames()[i];
+    for (int i = 0; i < thdnCountDsp; i++) {
+        QString channelMName = channelMNames[i];
         int dspChannel = observer->getChannel(channelMName)->getDspChannel();
         m_dspInterface->addCycListItem(QString("COPYDATA(CH%1,0,MEASSIGNAL)").arg(dspChannel));
         m_dspInterface->addCycListItem(QString("THDN(MEASSIGNAL,VALXTHDN+%1)").arg(i));
     }
 
     // and filter them
-    m_dspInterface->addCycListItem(QString("AVERAGE1(%1,VALXTHDN,FILTER)").arg(m_veinActValueList.count())); // we add results to filter
+    m_dspInterface->addCycListItem(QString("AVERAGE1(%1,VALXTHDN,FILTER)").arg(thdnCountDsp)); // we add results to filter
 
     m_dspInterface->addCycListItem("TESTTIMESKIPNEX(TISTART,TIPAR)");
     m_dspInterface->addCycListItem("ACTIVATECHAIN(1,0x0102)");
 
     m_dspInterface->addCycListItem("STARTCHAIN(0,1,0x0102)");
         m_dspInterface->addCycListItem("GETSTIME(TISTART)"); // set new system time
-        m_dspInterface->addCycListItem(QString("CMPAVERAGE1(%1,FILTER,VALXTHDNF)").arg(m_veinActValueList.count()));
-        m_dspInterface->addCycListItem(QString("CLEARN(%1,FILTER)").arg(DspBuffLen::avgFilterLen(m_veinActValueList.count())));
+        m_dspInterface->addCycListItem(QString("CMPAVERAGE1(%1,FILTER,VALXTHDNF)").arg(thdnCountDsp));
+        m_dspInterface->addCycListItem(QString("CLEARN(%1,FILTER)").arg(DspBuffLen::avgFilterLen(thdnCountDsp)));
         m_dspInterface->addCycListItem(QString("DSPINTTRIGGER(0x0,0x%1)").arg(0)); // send interrupt to module
         m_dspInterface->addCycListItem("DEACTIVATECHAIN(1,0x0102)");
     m_dspInterface->addCycListItem("STOPCHAIN(1,0x0102)"); // end processnr., mainchain 1 subchain 2
@@ -226,30 +249,17 @@ cThdnModuleConfigData *cThdnModuleMeasProgram::getConfData()
     return qobject_cast<cThdnModuleConfiguration*>(m_pConfiguration.get())->getConfigurationData();
 }
 
-void cThdnModuleMeasProgram::setActualValuesNames()
-{
-    ChannelRangeObserver::SystemObserverPtr observer = m_pModule->getSharedChannelRangeObserver();
-    const QStringList channelMNames = m_pModule->getSharedChannelRangeObserver()->getChannelMNames();
-    for (int i=0; i<channelMNames.count(); i++) {
-        const QString channelMName = channelMNames[i];
-        ServiceChannelNameHelper::TChannelAliasUnit aliasUnit =
-            ServiceChannelNameHelper::getChannelAndUnit(channelMName, observer);
-        m_veinActValueList.at(i)->setChannelName(aliasUnit.m_channelAlias);
-        m_veinActValueList.at(i)->setUnit("%"); // !!!
-    }
-}
-
-void cThdnModuleMeasProgram::setSCPIMeasInfo()
-{
-    for (int i = 0; i < m_veinActValueList.count(); i++)
-        m_veinActValueList.at(i)->setScpiInfo("MEASURE", m_veinActValueList.at(i)->getChannelName(), SCPI::isCmdwP);
-}
-
 void cThdnModuleMeasProgram::setInterfaceActualValues(QVector<float> *actualValues)
 {
     if (m_bActive) { // maybe we are deactivating !!!!
-        for (int i = 0; i < m_veinActValueList.count(); i++)
-            m_veinActValueList.at(i)->setValue(QVariant((double)actualValues->at(i))); // and set entities
+        for (int i = 0; i < actualValues->count(); i++) {
+            double dspThdnValue = actualValues->at(i);
+            m_veinActValueList.at(2*i)->setValue(dspThdnValue);
+
+            double thdn = actualValues->at(i) / 100.0;
+            double thdr = 100.0 * thdn / sqrt(1 + (thdn * thdn));
+            m_veinActValueList.at(2*i+1)->setValue(thdr);
+        }
     }
 }
 
@@ -283,9 +293,6 @@ void cThdnModuleMeasProgram::activateDSP()
 void cThdnModuleMeasProgram::activateDSPdone()
 {
     m_bActive = true;
-
-    setActualValuesNames();
-    setSCPIMeasInfo();
 
     m_pMeasureSignal->setValue(QVariant(1));
     connect(m_pIntegrationTimeParameter, &VfModuleComponent::sigValueChanged, this, &cThdnModuleMeasProgram::newIntegrationtime);
@@ -321,13 +328,6 @@ void cThdnModuleMeasProgram::dataReadDSP()
 {
     if (m_bActive) {
         m_ModuleActualValues = m_pActualValuesDSP->getData();
-        if (getConfData()->m_sTHDType == "R") {
-            for (int i = 0; i < m_ModuleActualValues.length(); i++) {
-                double thdn = m_ModuleActualValues.at(i) / 100.0;
-                double thdr = 100.0 * thdn / sqrt(1 + (thdn * thdn));
-                m_ModuleActualValues.replace(i, thdr);
-            }
-        }
         emit actualValues(&m_ModuleActualValues); // and send them
         m_pMeasureSignal->setValue(QVariant(1)); // signal measuring
     }

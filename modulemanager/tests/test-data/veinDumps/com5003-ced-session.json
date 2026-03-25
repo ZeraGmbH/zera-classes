@@ -17,7 +17,6 @@
             1079,
             1090,
             1110,
-            1111,
             1120,
             1130,
             1131,
@@ -2597,6 +2596,12 @@
         "ACT_THDN4": null,
         "ACT_THDN5": null,
         "ACT_THDN6": null,
+        "ACT_THDR1": null,
+        "ACT_THDR2": null,
+        "ACT_THDR3": null,
+        "ACT_THDR4": null,
+        "ACT_THDR5": null,
+        "ACT_THDR6": null,
         "EntityName": "THDNModule1",
         "INF_ModuleInterface": {
             "ComponentInfo": {
@@ -2630,101 +2635,6 @@
                     "Description": "<skipped>",
                     "Unit": "%"
                 },
-                "EntityName": {
-                    "Description": "<skipped>"
-                },
-                "INF_ModuleInterface": {
-                    "Description": "<skipped>"
-                },
-                "PAR_Interval": {
-                    "Description": "<skipped>",
-                    "Unit": "s",
-                    "Validation": {
-                        "Data": [
-                            1,
-                            100,
-                            0.5
-                        ],
-                        "Type": "DOUBLE"
-                    }
-                },
-                "SIG_Measuring": {
-                    "Description": "<skipped>"
-                }
-            },
-            "ModuleInfo": {
-                "Description": "This module measures thdn values for configured channels",
-                "Name": "THDNModule1",
-                "THDNCount": "6"
-            },
-            "SCPIInfo": {
-                "Cmd": [
-                    [
-                        "MEASURE",
-                        "UL1",
-                        "8",
-                        "ACT_THDN1",
-                        "0"
-                    ],
-                    [
-                        "MEASURE",
-                        "UL2",
-                        "8",
-                        "ACT_THDN2",
-                        "0"
-                    ],
-                    [
-                        "MEASURE",
-                        "UL3",
-                        "8",
-                        "ACT_THDN3",
-                        "0"
-                    ],
-                    [
-                        "MEASURE",
-                        "IL1",
-                        "8",
-                        "ACT_THDN4",
-                        "0"
-                    ],
-                    [
-                        "MEASURE",
-                        "IL2",
-                        "8",
-                        "ACT_THDN5",
-                        "0"
-                    ],
-                    [
-                        "MEASURE",
-                        "IL3",
-                        "8",
-                        "ACT_THDN6",
-                        "0"
-                    ],
-                    [
-                        "CONFIGURATION",
-                        "TINTEGRATION",
-                        "10",
-                        "PAR_Interval",
-                        "0"
-                    ]
-                ],
-                "Name": "THD1"
-            }
-        },
-        "PAR_Interval": 1,
-        "SIG_Measuring": 1
-    },
-    "1111": {
-        "ACT_THDR1": null,
-        "ACT_THDR2": null,
-        "ACT_THDR3": null,
-        "ACT_THDR4": null,
-        "ACT_THDR5": null,
-        "ACT_THDR6": null,
-        "EntityName": "THDNModule2",
-        "INF_ModuleInterface": {
-            "ComponentInfo": {
                 "ACT_THDR1": {
                     "ChannelName": "UL1",
                     "Description": "<skipped>",
@@ -2779,14 +2689,20 @@
             },
             "ModuleInfo": {
                 "Description": "This module measures thdn values for configured channels",
-                "Name": "THDNModule2",
-                "THDRCount": "6"
+                "Name": "THDNModule1"
             },
             "SCPIInfo": {
                 "Cmd": [
                     [
                         "MEASURE",
                         "UL1",
+                        "8",
+                        "ACT_THDN1",
+                        "0"
+                    ],
+                    [
+                        "MEASURE",
+                        "RU1",
                         "8",
                         "ACT_THDR1",
                         "0"
@@ -2795,12 +2711,26 @@
                         "MEASURE",
                         "UL2",
                         "8",
+                        "ACT_THDN2",
+                        "0"
+                    ],
+                    [
+                        "MEASURE",
+                        "RU2",
+                        "8",
                         "ACT_THDR2",
                         "0"
                     ],
                     [
                         "MEASURE",
                         "UL3",
+                        "8",
+                        "ACT_THDN3",
+                        "0"
+                    ],
+                    [
+                        "MEASURE",
+                        "RU3",
                         "8",
                         "ACT_THDR3",
                         "0"
@@ -2809,6 +2739,13 @@
                         "MEASURE",
                         "IL1",
                         "8",
+                        "ACT_THDN4",
+                        "0"
+                    ],
+                    [
+                        "MEASURE",
+                        "RI1",
+                        "8",
                         "ACT_THDR4",
                         "0"
                     ],
@@ -2816,12 +2753,26 @@
                         "MEASURE",
                         "IL2",
                         "8",
+                        "ACT_THDN5",
+                        "0"
+                    ],
+                    [
+                        "MEASURE",
+                        "RI2",
+                        "8",
                         "ACT_THDR5",
                         "0"
                     ],
                     [
                         "MEASURE",
                         "IL3",
+                        "8",
+                        "ACT_THDN6",
+                        "0"
+                    ],
+                    [
+                        "MEASURE",
+                        "RI3",
                         "8",
                         "ACT_THDR6",
                         "0"
@@ -2834,7 +2785,7 @@
                         "0"
                     ]
                 ],
-                "Name": "THD2"
+                "Name": "THD1"
             }
         },
         "PAR_Interval": 1,

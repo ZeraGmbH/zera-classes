@@ -4,6 +4,14 @@
 
 namespace THDNMODULE
 {
+
+enum moduleconfigstate
+{
+    setMeasureInterval,
+    setMovingwindowBool,
+    setMovingwindowTime,
+};
+
 cThdnModuleConfiguration::cThdnModuleConfiguration()
 {
     connect(m_pXMLReader, &Zera::XMLConfig::cReader::valueChanged, this, &cThdnModuleConfiguration::configXMLInfo);
@@ -31,7 +39,6 @@ void cThdnModuleConfiguration::setConfiguration(const QByteArray& xmlString)
 
     m_ConfigXMLMap["thdnmodconfpar:configuration:measure:movingwindow:on"] = setMovingwindowBool;
     m_ConfigXMLMap["thdnmodconfpar:configuration:measure:movingwindow:time"] = setMovingwindowTime;
-    m_ConfigXMLMap["thdnmodconfpar:configuration:measure:thd"] = setTHDType;
 
     m_ConfigXMLMap["thdnmodconfpar:parameter:interval"] = setMeasureInterval;
 
@@ -69,9 +76,6 @@ void cThdnModuleConfiguration::configXMLInfo(const QString &key)
             break;
         case setMovingwindowTime:
             m_pThdnModulConfigData->m_fmovingwindowInterval = m_pXMLReader->getValue(key).toDouble(&ok);
-            break;
-        case setTHDType:
-            m_pThdnModulConfigData->m_sTHDType = m_pXMLReader->getValue(key);
             break;
         case setMeasureInterval:
             m_pThdnModulConfigData->m_fMeasInterval.m_sKey = key;
