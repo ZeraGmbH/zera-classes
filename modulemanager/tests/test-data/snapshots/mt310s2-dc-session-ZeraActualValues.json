@@ -1,7 +1,7 @@
 {
     "0": {
         "DevMode": 0,
-        "Entities": "0;2;1000;1020;1030;1040;1050;1055;1060;1070;1071;1072;1073;1110;1111;1120;1130;1150;1190;1200;1300;1400;1500;1700;9000;9999",
+        "Entities": "0;2;1000;1020;1030;1040;1050;1055;1060;1070;1071;1072;1073;1120;1130;1150;1190;1200;1300;1400;1500;1700;9000;9999",
         "ModulesPaused": 0,
         "Session": "mt310s2-dc-session.json",
         "SessionsAvailable": "mt310s2-meas-session.json;mt310s2-emob-session-ac.json;mt310s2-emob-session-dc.json;mt310s2-dc-session.json",
@@ -219,30 +219,6 @@
         "PAR_Interval": 1,
         "PAR_MeasModePhaseSelect": 1,
         "PAR_MeasuringMode": "2LW",
-        "SIG_Measuring": 1
-    },
-    "1110": {
-        "ACT_THDN1": "",
-        "ACT_THDN2": "",
-        "ACT_THDN3": "",
-        "ACT_THDN4": "",
-        "ACT_THDN5": "",
-        "ACT_THDN6": "",
-        "ACT_THDN7": "",
-        "ACT_THDN8": "",
-        "PAR_Interval": 1,
-        "SIG_Measuring": 1
-    },
-    "1111": {
-        "ACT_THDR1": "",
-        "ACT_THDR2": "",
-        "ACT_THDR3": "",
-        "ACT_THDR4": "",
-        "ACT_THDR5": "",
-        "ACT_THDR6": "",
-        "ACT_THDR7": "",
-        "ACT_THDR8": "",
-        "PAR_Interval": 1,
         "SIG_Measuring": 1
     },
     "1150": {
