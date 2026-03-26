@@ -36,5 +36,5 @@ void RPCReadLockState::onRpcTaskFinish(bool ok, QUuid rpcCallId)
     if(ok)
         sendRpcResult(rpcCallId, *m_lockStateReceived);
     else
-        sendRpcError(rpcCallId, QString::number(reademoblockstate::emobstate_error));
+        sendRpcError(rpcCallId, QString::number(t_EMOB_Status_Verriegelung::EMOB_Status_Verriegelung_Fehler));
 }

@@ -98,7 +98,7 @@ void test_emob_vein_scpi::activateEmobPushButtonVein()
 void test_emob_vein_scpi::readLockStateCorrectRpcNameScpi()
 {
     QString status = m_scpiClient->sendReceive("EMOB:HOTP1:EMLOCKSTATE?");
-    QCOMPARE(status, QString::number(reademoblockstate::emobstate_error));
+    QCOMPARE(status, QString::number(t_EMOB_Status_Verriegelung::EMOB_Status_Verriegelung_Fehler));
 
     QByteArray jsonDumped = TestLogHelpers::dump(m_veinEventDump);
     QVERIFY(TestLogHelpers::compareAndLogOnDiffJsonFile(":/vein-event-dumps/dumpReadLockStateCorrectRpcNameScpi.json", jsonDumped));
@@ -108,7 +108,7 @@ void test_emob_vein_scpi::readLockStateScpiNoParamOneEmob()
 {
     m_testRunner->addStandardEmobControllers(QStringList() << "IAUX");
     QString status = m_scpiClient->sendReceive("EMOB:HOTP1:EMLOCKSTATE?");
-    QCOMPARE(status, QString::number(reademoblockstate::emobstate_open));
+    QCOMPARE(status, QString::number(t_EMOB_Status_Verriegelung::EMOB_Status_Verriegelung_offen));
 
     QByteArray jsonDumped = TestLogHelpers::dump(m_veinEventDump);
     QVERIFY(TestLogHelpers::compareAndLogOnDiffJsonFile(":/vein-event-dumps/dumpReadLockStateNoParamOneEmobScpi.json", jsonDumped));
@@ -118,7 +118,7 @@ void test_emob_vein_scpi::readLockStateScpiNoParamMutipleHotplug()
 {
     m_testRunner->addStandardEmobControllers(QStringList() << "IL3" << "IAUX");
     QString status1 = m_scpiClient->sendReceive("EMOB:HOTP1:EMLOCKSTATE?");
-    QCOMPARE(status1, QString::number(reademoblockstate::emobstate_error));
+    QCOMPARE(status1, QString::number(t_EMOB_Status_Verriegelung::EMOB_Status_Verriegelung_Fehler));
 
     QByteArray jsonDumped = TestLogHelpers::dump(m_veinEventDump);
     QVERIFY(TestLogHelpers::compareAndLogOnDiffJsonFile(":/vein-event-dumps/dumpReadLockStateNoParamMutipleHotplugScpi.json", jsonDumped));
@@ -140,14 +140,14 @@ void test_emob_vein_scpi::readLockStateScpiIncorrectParam()
 {
     m_testRunner->addStandardEmobControllers(QStringList() << "IL3" << "IAUX");
     QString status = m_scpiClient->sendReceive("EMOB:HOTP1:EMLOCKSTATE? IL1;");
-    QCOMPARE(status, QString::number(reademoblockstate::emobstate_error));
+    QCOMPARE(status, QString::number(t_EMOB_Status_Verriegelung::EMOB_Status_Verriegelung_Fehler));
 }
 
 void test_emob_vein_scpi::readLockStateScpiValidParamMutipleHotplug()
 {
     m_testRunner->addStandardEmobControllers(QStringList()  << "IL3" << "IAUX");
     QString status = m_scpiClient->sendReceive("EMOB:HOTP1:EMLOCKSTATE? IAUX;");
-    QCOMPARE(status, QString::number(reademoblockstate::emobstate_open));
+    QCOMPARE(status, QString::number(t_EMOB_Status_Verriegelung::EMOB_Status_Verriegelung_offen));
 
     QByteArray jsonDumped = TestLogHelpers::dump(m_veinEventDump);
     QVERIFY(TestLogHelpers::compareAndLogOnDiffJsonFile(":/vein-event-dumps/dumpReadLockStateValidParamMutipleHotplugScpi.json", jsonDumped));
@@ -158,7 +158,7 @@ void test_emob_vein_scpi::readLockStateTwiceScpi()
     m_testRunner->addStandardEmobControllers(QStringList() << "IAUX");
     QString status1 = m_scpiClient->sendReceive("EMOB:HOTP1:EMLOCKSTATE?");
     QString status2 = m_scpiClient->sendReceive("EMOB:HOTP1:EMLOCKSTATE?");
-    QCOMPARE(status1, QString::number(reademoblockstate::emobstate_open));
+    QCOMPARE(status1, QString::number(t_EMOB_Status_Verriegelung::EMOB_Status_Verriegelung_offen));
     QCOMPARE(status1, status2);
 
     QByteArray jsonDumped = TestLogHelpers::dump(m_veinEventDump);
