@@ -42,6 +42,11 @@ private slots:
     void flipSwitchOnOffWithParamScpiOneEmob();
     void flipSwitchOnOffWithParamScpiMultipleHotplug();
 
+    void readPruefGroessenStateVein();
+    void readPruefGroessenStateVeinNoDevice();
+    void readPruefGroessenStateScpi();
+    void readPruefGroessenStateScpiNoDevice();
+
     void dumpDevIface();
     void dumpVeinInfModuleInterface();
 private:

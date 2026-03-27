@@ -5,6 +5,7 @@
 #include "rpcflipswitchon.h"
 #include "rpcreaderror.h"
 #include "rpcreadlockstate.h"
+#include "rpcreadpruefgroessenstatus.h"
 #include "servicechannelnamehelper.h"
 #include <taskemobreadexchangedata.h>
 #include <taskemobwriteexchangedata.h>
@@ -37,6 +38,13 @@ void HotplugControlsModuleController::deactivate()
 {
     emit m_module->deactivationContinue();
 }
+
+const QString HotplugControlsModuleController::m_bit16ErrorHint =
+    "Bit16: Communication to EMOB device failed.\n"
+    "  **Suggestion:** On device check: 🛈 / *Device information* - **Are there EMOB/MT650 entries?**\n"
+    "  **Yes**: Was the correct channel selected (mandatory on multiple devices as EMOB/MT650)?\n"
+    "  **No**: Insert USB-memory stick / 🛈 / *Service Support / Save logfile to USB* -> service@zera.de";
+
 
 void HotplugControlsModuleController::generateVeinInterface()
 {
@@ -81,8 +89,7 @@ void HotplugControlsModuleController::generateVeinInterface()
                                                                                         m_observer,
                                                                                         rpcEventSystem,
                                                                                         m_module->getEntityId());
-    // Bit16: see RPCReadError::ErrorValueReturnedOnNak
-    m_pEmobReadErrorRpc = std::make_shared<VfModuleRpc>(rpcEmobReadError,
+    m_pEmobReadErrorRpc = std::make_shared<VfModuleRpc>(rpcEmobReadError, QString(
                                                         "EMOB Errors bits:\n"
                                                         "Bit0: Supply lost\n"
                                                         "Bit1: Device error\n"
@@ -91,11 +98,8 @@ void HotplugControlsModuleController::generateVeinInterface()
                                                         "Bit4: Overcurrent\n"
                                                         "Bit5: Overtemperature\n"
                                                         "Bit6: locking error\n"
-                                                        "Bit7: Problem at neighbour EMOB\n"
-                                                        "Bit16: Communication to EMOB device failed.\n"
-                                                        "  **Suggestion:** On device check: 🛈 / *Device information* - **Are there EMOB/MT650 entries?**\n"
-                                                        "  **Yes**: Was the correct channel selected (mandatory on multiple devices as EMOB/MT650)?\n"
-                                                        "  **No**: Insert USB-memory stick / 🛈 / *Service Support / Save logfile to USB* -> service@zera.de"
+                                                        "Bit7: Problem at neighbour EMOB\n") +
+                                                        m_bit16ErrorHint
                                                         );
 
     m_pEmobReadErrorRpc->setRPCScpiInfo("EMOB",
@@ -142,12 +146,32 @@ void HotplugControlsModuleController::generateVeinInterface()
     m_pEmobFlipSwitchRpcOff = std::make_shared<VfModuleRpc>(rpcEmobFlipSwitchOff,
                                                            "Set Emob switch to the OFF position");
     m_pEmobFlipSwitchRpcOff->setRPCScpiInfo("EMOB",
-                                           QString("OFFSWITCH"),
-                                           SCPI::isCmdwP,
-                                           rpcEmobFlipSwitchOff->getSignature());
+                                            QString("OFFSWITCH"),
+                                            SCPI::isCmdwP,
+                                            rpcEmobFlipSwitchOff->getSignature());
     m_pEmobFlipSwitchRpcOff->setValidator(new cStringValidator(QString("IL1;IL2;IL3;IAUX")));
     m_pEmobFlipSwitchRpcOff->canAcceptOptionalParam();
     m_module->m_veinModuleRPCMap[rpcEmobFlipSwitchOff->getSignature()] = m_pEmobFlipSwitchRpcOff; // for modules use
+
+    std::shared_ptr<RPCReadPruefgroessenStatus> rpcEmobPruefgroessenStatus =
+        std::make_shared<RPCReadPruefgroessenStatus>(m_pcbConnection.getInterface(),
+                                                     m_observer,
+                                                     rpcEventSystem,
+                                                     m_module->getEntityId());
+    m_pEmobReadPruefgroessenStatusRpc = std::make_shared<VfModuleRpc>(rpcEmobPruefgroessenStatus, QString(
+                                                                      "EMOB test value state bits:\n"
+                                                                      "Bit0: AC high voltage detected\n"
+                                                                      "Bit1: DC high voltage detected\n") +
+                                                                      m_bit16ErrorHint
+                                                                      );
+
+    m_pEmobReadPruefgroessenStatusRpc->setRPCScpiInfo("EMOB",
+                                                      QString("TSTVALUESTATE"),
+                                                      SCPI::isQuery,
+                                                      rpcEmobPruefgroessenStatus->getSignature());
+    m_pEmobReadPruefgroessenStatusRpc->setValidator(new cStringValidator(QString("IL1;IL2;IL3;IAUX")));
+    m_pEmobReadPruefgroessenStatusRpc->canAcceptOptionalParam();
+    m_module->m_veinModuleRPCMap[rpcEmobPruefgroessenStatus->getSignature()] = m_pEmobReadPruefgroessenStatusRpc; // for modules use
 
     m_pControllersFound = new VfModuleParameter(m_module->getEntityId(), m_module->getValidatorEventSystem(),
                                                 key = QString("ACT_ControllersFound"),

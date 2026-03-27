@@ -41,8 +41,11 @@ private:
     VfModuleRpcPtr m_pEmobClearErrorRpc;
     VfModuleRpcPtr m_pEmobFlipSwitchRpcOn;
     VfModuleRpcPtr m_pEmobFlipSwitchRpcOff;
+    VfModuleRpcPtr m_pEmobReadPruefgroessenStatusRpc;
     VfModuleParameter *m_pControllersFound;
     TaskContainerInterfacePtr m_readWriteTasks;
+
+    static const QString m_bit16ErrorHint;
 };
 
 }

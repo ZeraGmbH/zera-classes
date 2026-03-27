@@ -7259,6 +7259,19 @@
                         ],
                         "Type": "STRING"
                     }
+                },
+                "RPC_readPruefgroessenStatus(QString p_channelName)": {
+                    "Description": "<skipped>",
+                    "Optional parameter": "",
+                    "Validation": {
+                        "Data": [
+                            "IL1",
+                            "IL2",
+                            "IL3",
+                            "IAUX"
+                        ],
+                        "Type": "STRING"
+                    }
                 }
             },
             "SCPIInfo": {
@@ -7306,6 +7319,13 @@
                         "EMLOCKSTATE",
                         "2",
                         "RPC_readLockState(QString p_channelName)",
+                        "0"
+                    ],
+                    [
+                        "EMOB",
+                        "TSTVALUESTATE",
+                        "2",
+                        "RPC_readPruefgroessenStatus(QString p_channelName)",
                         "0"
                     ]
                 ]

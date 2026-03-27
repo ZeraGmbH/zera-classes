@@ -5,6 +5,7 @@
 #include <xmldocumentcompare.h>
 #include <vs_dumpjson.h>
 #include "controllerpersitentdata.h"
+#include "rpcreadpruefgroessenstatus.h"
 #include <emobdefinitions.h>
 #include <QSignalSpy>
 #include <QTest>
@@ -239,6 +240,54 @@ void test_emob_vein_scpi::flipSwitchOnOffWithParamScpiMultipleHotplug()
 
     status = m_scpiClient->sendReceive("EMOB:HOTP1:OFFSWITCH IL3;|*stb?");
     QCOMPARE(status, "+0");
+}
+
+void test_emob_vein_scpi::readPruefGroessenStateVein()
+{
+    m_testRunner->addStandardEmobControllers(QStringList() << "IL3");
+    QSignalSpy spyRpcFinish(m_rpcInvoker.get(), &VfRPCInvoker::sigRPCFinished);
+    invokeRpc("RPC_readPruefgroessenStatus", "p_channelName", "");
+    invokeRpc("RPC_readPruefgroessenStatus", "p_channelName", "IL3");
+    TimeMachineObject::feedEventLoop();
+
+    QByteArray jsonDumped = TestLogHelpers::dump(m_veinEventDump);
+    QVERIFY(TestLogHelpers::compareAndLogOnDiffJsonFile(":/vein-event-dumps/dumpReadPruefGroessenStateVein.json", jsonDumped));
+    QCOMPARE(spyRpcFinish.count(), 2);
+}
+
+void test_emob_vein_scpi::readPruefGroessenStateVeinNoDevice()
+{
+    QSignalSpy spyRpcFinish(m_rpcInvoker.get(), &VfRPCInvoker::sigRPCFinished);
+    invokeRpc("RPC_readPruefgroessenStatus", "p_channelName", "");
+    invokeRpc("RPC_readPruefgroessenStatus", "p_channelName", "IL3");
+    TimeMachineObject::feedEventLoop();
+
+    QByteArray jsonDumped = TestLogHelpers::dump(m_veinEventDump);
+    QVERIFY(TestLogHelpers::compareAndLogOnDiffJsonFile(":/vein-event-dumps/dumpReadPruefGroessenStateVeinNoDevice.json", jsonDumped));
+    QCOMPARE(spyRpcFinish.count(), 2);
+}
+
+void test_emob_vein_scpi::readPruefGroessenStateScpi()
+{
+    m_testRunner->addStandardEmobControllers(QStringList() << "IAUX");
+    QString status1 = m_scpiClient->sendReceive("EMOB:HOTP1:TSTVALUESTATE?");
+    QCOMPARE(status1, QString::number(1<<en_Instrument_Pruefgroessenstatus::bp_Meas_Status_AC_High_Voltage_detected));
+    QString status2 = m_scpiClient->sendReceive("EMOB:HOTP1:TSTVALUESTATE? IAUX;");
+    QCOMPARE(status2, QString::number(1<<en_Instrument_Pruefgroessenstatus::bp_Meas_Status_AC_High_Voltage_detected));
+
+    QByteArray jsonDumped = TestLogHelpers::dump(m_veinEventDump);
+    QVERIFY(TestLogHelpers::compareAndLogOnDiffJsonFile(":/vein-event-dumps/dumpReadPruefGroessenStateScpi.json", jsonDumped));
+}
+
+void test_emob_vein_scpi::readPruefGroessenStateScpiNoDevice()
+{
+    QString status1 = m_scpiClient->sendReceive("EMOB:HOTP1:TSTVALUESTATE?");
+    QCOMPARE(status1, QString::number(RPCReadPruefgroessenStatus::ErrorValueReturnedOnNak));
+    QString status2 = m_scpiClient->sendReceive("EMOB:HOTP1:TSTVALUESTATE? IAUX;");
+    QCOMPARE(status2, QString::number(RPCReadPruefgroessenStatus::ErrorValueReturnedOnNak));
+
+    QByteArray jsonDumped = TestLogHelpers::dump(m_veinEventDump);
+    QVERIFY(TestLogHelpers::compareAndLogOnDiffJsonFile(":/vein-event-dumps/dumpReadPruefGroessenStateScpiNoDevice.json", jsonDumped));
 }
 
 void test_emob_vein_scpi::dumpDevIface()

@@ -16,6 +16,10 @@
         <file>vein-event-dumps/dumpActivateEmobPushButtonVein.json</file>
         <file>vein-event-dumps/dumpActivateEmobPushButtonWithParamScpi.json</file>
         <file>vein-event-dumps/dumpActivateEmobPushButtonNoParamScpi.json</file>
+        <file>vein-event-dumps/dumpReadPruefGroessenStateScpi.json</file>
+        <file>vein-event-dumps/dumpReadPruefGroessenStateScpiNoDevice.json</file>
+        <file>vein-event-dumps/dumpReadPruefGroessenStateVein.json</file>
+        <file>vein-event-dumps/dumpReadPruefGroessenStateVeinNoDevice.json</file>
         <file>vein-event-dumps/dumpSetEmobSwitchToOnWithParamScpi.json</file>
         <file>vein-event-dumps/dumpSetEmobSwitchToOffWithParamScpi.json</file>
     </qresource>

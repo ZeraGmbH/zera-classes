@@ -92,6 +92,19 @@
                 ],
                 "Type": "STRING"
             }
+        },
+        "RPC_readPruefgroessenStatus(QString p_channelName)": {
+            "Description": "EMOB test value state bits:\nBit0: AC high voltage detected\nBit1: DC high voltage detected\nBit16: Communication to EMOB device failed.\n  **Suggestion:** On device check: 🛈 / *Device information* - **Are there EMOB/MT650 entries?**\n  **Yes**: Was the correct channel selected (mandatory on multiple devices as EMOB/MT650)?\n  **No**: Insert USB-memory stick / 🛈 / *Service Support / Save logfile to USB* -> service@zera.de",
+            "Optional parameter": "",
+            "Validation": {
+                "Data": [
+                    "IL1",
+                    "IL2",
+                    "IL3",
+                    "IAUX"
+                ],
+                "Type": "STRING"
+            }
         }
     },
     "SCPIInfo": {
@@ -139,6 +152,13 @@
                 "EMLOCKSTATE",
                 "2",
                 "RPC_readLockState(QString p_channelName)",
+                "0"
+            ],
+            [
+                "EMOB",
+                "TSTVALUESTATE",
+                "2",
+                "RPC_readPruefgroessenStatus(QString p_channelName)",
                 "0"
             ]
         ]
