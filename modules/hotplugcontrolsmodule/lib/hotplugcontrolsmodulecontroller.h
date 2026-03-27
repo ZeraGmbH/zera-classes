@@ -39,8 +39,8 @@ private:
     VfModuleRpcPtr m_pEmobLockStateRpc;
     VfModuleRpcPtr m_pEmobReadErrorRpc;
     VfModuleRpcPtr m_pEmobClearErrorRpc;
-    VfModuleRpcPtr m_pEmobFlipSwitchRpcOn;
-    VfModuleRpcPtr m_pEmobFlipSwitchRpcOff;
+    VfModuleRpcPtr m_pEmobdischargeRpcOn;
+    VfModuleRpcPtr m_pEmobdischargeRpcOff;
     VfModuleRpcPtr m_pEmobReadPruefgroessenStatusRpc;
     VfModuleParameter *m_pControllersFound;
     TaskContainerInterfacePtr m_readWriteTasks;

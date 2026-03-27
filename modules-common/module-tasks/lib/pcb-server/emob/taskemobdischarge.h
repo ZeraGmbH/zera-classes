@@ -1,10 +1,10 @@
-#ifndef TASKEMOBFLIPSWITCH_H
-#define TASKEMOBFLIPSWITCH_H
+#ifndef TASKEMOBDISCHARGE_H
+#define TASKEMOBDISCHARGE_H
 
 #include <pcbinterface.h>
 #include <taskservertransactiontemplate.h>
 
-class TaskEmobFlipSwitch : public TaskServerTransactionTemplate
+class TaskEmobDischarge : public TaskServerTransactionTemplate
 {
 public:
     static TaskTemplatePtr create(Zera::PcbInterfacePtr pcbInterface,
@@ -13,4 +13,4 @@ public:
                                   std::function<void()> additionalErrorHandler = []{});
 };
 
-#endif // TASKEMOBFLIPSWITCH_H
+#endif // TASKEMOBDISCHARGE_H

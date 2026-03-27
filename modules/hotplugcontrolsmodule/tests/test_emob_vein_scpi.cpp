@@ -191,19 +191,19 @@ void test_emob_vein_scpi::readLockStateTwiceVeinFullQueue()
     QCOMPARE(spyRpcFinish.count(), 2);
 }
 
-void test_emob_vein_scpi::flipSwitchOnOffNoEmobNoParamScpi()
+void test_emob_vein_scpi::dischargeOnOffNoEmobNoParamScpi()
 {
-    QString status = m_scpiClient->sendReceive("EMOB:HOTP1:ONSWITCH;|*stb?");
+    QString status = m_scpiClient->sendReceive("EMOB:HOTP1:ONDISCHARGE;|*stb?");
     QCOMPARE(status, "+4");
 
-    status = m_scpiClient->sendReceive("EMOB:HOTP1:OFFSWITCH;|*stb?");
+    status = m_scpiClient->sendReceive("EMOB:HOTP1:OFFDISCHARGE;|*stb?");
     QCOMPARE(status, "+4");
 }
 
-void test_emob_vein_scpi::flipSwitchOnOffNoParamOneEmob()
+void test_emob_vein_scpi::dischargeOnOffNoParamOneEmob()
 {
     m_testRunner->addStandardEmobControllers(QStringList() << "IAUX");
-    QString status = m_scpiClient->sendReceive("EMOB:HOTP1:ONSWITCH;|*stb?");
+    QString status = m_scpiClient->sendReceive("EMOB:HOTP1:ONDISCHARGE;|*stb?");
     QCOMPARE(status, "+0");
 
     QFile file(":/vein-event-dumps/dumpSetEmobSwitchToOnWithParamScpi.json");
@@ -212,7 +212,7 @@ void test_emob_vein_scpi::flipSwitchOnOffNoParamOneEmob()
     QByteArray jsonDumped = TestLogHelpers::dump(m_veinEventDump);
     QVERIFY(TestLogHelpers::compareAndLogOnDiffJson(jsonExpected, jsonDumped));
 
-    status = m_scpiClient->sendReceive("EMOB:HOTP1:OFFSWITCH;|*stb?");
+    status = m_scpiClient->sendReceive("EMOB:HOTP1:OFFDISCHARGE;|*stb?");
     QCOMPARE(status, "+0");
 
     file.setFileName(":/vein-event-dumps/dumpSetEmobSwitchToOffWithParamScpi.json");
@@ -222,23 +222,23 @@ void test_emob_vein_scpi::flipSwitchOnOffNoParamOneEmob()
     QVERIFY(TestLogHelpers::compareAndLogOnDiffJson(jsonExpected, jsonDumped));
 }
 
-void test_emob_vein_scpi::flipSwitchOnOffWithParamScpiOneEmob()
+void test_emob_vein_scpi::dischargeOnOffWithParamScpiOneEmob()
 {
     m_testRunner->addStandardEmobControllers(QStringList() << "IAUX");
-    QString status = m_scpiClient->sendReceive("EMOB:HOTP1:ONSWITCH IAUX;|*stb?");
+    QString status = m_scpiClient->sendReceive("EMOB:HOTP1:ONDISCHARGE IAUX;|*stb?");
     QCOMPARE(status, "+0");
 
-    status = m_scpiClient->sendReceive("EMOB:HOTP1:OFFSWITCH IAUX;|*stb?");
+    status = m_scpiClient->sendReceive("EMOB:HOTP1:OFFDISCHARGE IAUX;|*stb?");
     QCOMPARE(status, "+0");
 }
 
-void test_emob_vein_scpi::flipSwitchOnOffWithParamScpiMultipleHotplug()
+void test_emob_vein_scpi::dischargeOnOffWithParamScpiMultipleHotplug()
 {
     m_testRunner->addStandardEmobControllers(QStringList() << "IAUX" << "IL3");
-    QString status = m_scpiClient->sendReceive("EMOB:HOTP1:ONSWITCH IL3;|*stb?");
+    QString status = m_scpiClient->sendReceive("EMOB:HOTP1:ONDISCHARGE IL3;|*stb?");
     QCOMPARE(status, "+0");
 
-    status = m_scpiClient->sendReceive("EMOB:HOTP1:OFFSWITCH IL3;|*stb?");
+    status = m_scpiClient->sendReceive("EMOB:HOTP1:OFFDISCHARGE IL3;|*stb?");
     QCOMPARE(status, "+0");
 }
 

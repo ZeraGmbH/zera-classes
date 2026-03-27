@@ -7208,7 +7208,7 @@
                         "Type": "STRING"
                     }
                 },
-                "RPC_flipSwitchOff(QString p_channelName)": {
+                "RPC_dischargeOff(QString p_channelName)": {
                     "Description": "<skipped>",
                     "Optional parameter": "",
                     "Validation": {
@@ -7221,7 +7221,7 @@
                         "Type": "STRING"
                     }
                 },
-                "RPC_flipSwitchOn(QString p_channelName)": {
+                "RPC_dischargeOn(QString p_channelName)": {
                     "Description": "<skipped>",
                     "Optional parameter": "",
                     "Validation": {
@@ -7295,16 +7295,16 @@
                     ],
                     [
                         "EMOB",
-                        "OFFSWITCH",
+                        "OFFDISCHARGE",
                         "8",
-                        "RPC_flipSwitchOff(QString p_channelName)",
+                        "RPC_dischargeOff(QString p_channelName)",
                         "0"
                     ],
                     [
                         "EMOB",
-                        "ONSWITCH",
+                        "ONDISCHARGE",
                         "8",
-                        "RPC_flipSwitchOn(QString p_channelName)",
+                        "RPC_dischargeOn(QString p_channelName)",
                         "0"
                     ],
                     [

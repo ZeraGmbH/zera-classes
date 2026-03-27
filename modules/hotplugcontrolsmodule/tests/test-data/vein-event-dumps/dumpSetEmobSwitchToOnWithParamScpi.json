@@ -13,7 +13,7 @@
                     "p_channelName": ""
                 }
             },
-            "ProcedureName": "RPC_flipSwitchOn(QString p_channelName)",
+            "ProcedureName": "RPC_dischargeOn(QString p_channelName)",
             "Valid": true,
             "ValidPeer": false
         },
@@ -31,7 +31,7 @@
                     "p_channelName": ""
                 }
             },
-            "ProcedureName": "RPC_flipSwitchOn(QString p_channelName)",
+            "ProcedureName": "RPC_dischargeOn(QString p_channelName)",
             "Valid": true,
             "ValidPeer": false
         },
@@ -46,7 +46,7 @@
             "InvokationData": {
                 "RemoteProcedureData::resultCode": 0
             },
-            "ProcedureName": "RPC_flipSwitchOn(QString p_channelName)",
+            "ProcedureName": "RPC_dischargeOn(QString p_channelName)",
             "Valid": true,
             "ValidPeer": false
         },
@@ -61,7 +61,7 @@
             "InvokationData": {
                 "RemoteProcedureData::resultCode": 0
             },
-            "ProcedureName": "RPC_flipSwitchOn(QString p_channelName)",
+            "ProcedureName": "RPC_dischargeOn(QString p_channelName)",
             "Valid": true,
             "ValidPeer": false
         }

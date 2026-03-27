@@ -1,8 +1,8 @@
 #include "hotplugcontrolsmodulecontroller.h"
 #include "rpcactivatepushbutton.h"
 #include "rpcclearerror.h"
-#include "rpcflipswitchoff.h"
-#include "rpcflipswitchon.h"
+#include "rpcdischargeoff.h"
+#include "rpcdischargeon.h"
 #include "rpcreaderror.h"
 #include "rpcreadlockstate.h"
 #include "rpcreadpruefgroessenstatus.h"
@@ -124,34 +124,34 @@ void HotplugControlsModuleController::generateVeinInterface()
     m_pEmobClearErrorRpc->canAcceptOptionalParam();
     m_module->m_veinModuleRPCMap[rpcEmobClearError->getSignature()] = m_pEmobClearErrorRpc; // for modules use
 
-    std::shared_ptr<RpcFlipSwitchOn> rpcEmobFlipSwitchOn = std::make_shared<RpcFlipSwitchOn>(m_pcbConnection.getInterface(),
+    std::shared_ptr<RpcDischargeOn> rpcEmobDischargeOn = std::make_shared<RpcDischargeOn>(m_pcbConnection.getInterface(),
                                                                                             m_observer,
                                                                                             rpcEventSystem,
                                                                                             m_module->getEntityId());
-    m_pEmobFlipSwitchRpcOn = std::make_shared<VfModuleRpc>(rpcEmobFlipSwitchOn,
-                                                        "Switch Emob discharge on");
-    m_pEmobFlipSwitchRpcOn->setRPCScpiInfo("EMOB",
-                                         QString("ONSWITCH"),
+    m_pEmobdischargeRpcOn = std::make_shared<VfModuleRpc>(rpcEmobDischargeOn,
+                                                           "Switch source discharge on");
+    m_pEmobdischargeRpcOn->setRPCScpiInfo("EMOB",
+                                         QString("ONDISCHARGE"),
                                          SCPI::isCmdwP,
-                                         rpcEmobFlipSwitchOn->getSignature());
-    m_pEmobFlipSwitchRpcOn->setValidator(new cStringValidator(QString("IL1;IL2;IL3;IAUX")));
-    m_pEmobFlipSwitchRpcOn->canAcceptOptionalParam();
-    m_module->m_veinModuleRPCMap[rpcEmobFlipSwitchOn->getSignature()] = m_pEmobFlipSwitchRpcOn; // for modules use
+                                         rpcEmobDischargeOn->getSignature());
+    m_pEmobdischargeRpcOn->setValidator(new cStringValidator(QString("IL1;IL2;IL3;IAUX")));
+    m_pEmobdischargeRpcOn->canAcceptOptionalParam();
+    m_module->m_veinModuleRPCMap[rpcEmobDischargeOn->getSignature()] = m_pEmobdischargeRpcOn; // for modules use
 
 
-    std::shared_ptr<RpcFlipSwitchOff> rpcEmobFlipSwitchOff = std::make_shared<RpcFlipSwitchOff>(m_pcbConnection.getInterface(),
+    std::shared_ptr<RpcDischargeOff> rpcEmobDischargeOff = std::make_shared<RpcDischargeOff>(m_pcbConnection.getInterface(),
                                                                                             m_observer,
                                                                                             rpcEventSystem,
                                                                                             m_module->getEntityId());
-    m_pEmobFlipSwitchRpcOff = std::make_shared<VfModuleRpc>(rpcEmobFlipSwitchOff,
-                                                           "Switch Emob discharge off");
-    m_pEmobFlipSwitchRpcOff->setRPCScpiInfo("EMOB",
-                                            QString("OFFSWITCH"),
+    m_pEmobdischargeRpcOff = std::make_shared<VfModuleRpc>(rpcEmobDischargeOff,
+                                                           "Switch source discharge off");
+    m_pEmobdischargeRpcOff->setRPCScpiInfo("EMOB",
+                                            QString("OFFDISCHARGE"),
                                             SCPI::isCmdwP,
-                                            rpcEmobFlipSwitchOff->getSignature());
-    m_pEmobFlipSwitchRpcOff->setValidator(new cStringValidator(QString("IL1;IL2;IL3;IAUX")));
-    m_pEmobFlipSwitchRpcOff->canAcceptOptionalParam();
-    m_module->m_veinModuleRPCMap[rpcEmobFlipSwitchOff->getSignature()] = m_pEmobFlipSwitchRpcOff; // for modules use
+                                            rpcEmobDischargeOff->getSignature());
+    m_pEmobdischargeRpcOff->setValidator(new cStringValidator(QString("IL1;IL2;IL3;IAUX")));
+    m_pEmobdischargeRpcOff->canAcceptOptionalParam();
+    m_module->m_veinModuleRPCMap[rpcEmobDischargeOff->getSignature()] = m_pEmobdischargeRpcOff; // for modules use
 
     std::shared_ptr<RPCReadPruefgroessenStatus> rpcEmobPruefgroessenStatus =
         std::make_shared<RPCReadPruefgroessenStatus>(m_pcbConnection.getInterface(),
