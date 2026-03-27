@@ -42,7 +42,7 @@
             }
         },
         "RPC_flipSwitchOff(QString p_channelName)": {
-            "Description": "Set Emob switch to the OFF position",
+            "Description": "Switch Emob discharge off",
             "Optional parameter": "",
             "Validation": {
                 "Data": [
@@ -55,7 +55,7 @@
             }
         },
         "RPC_flipSwitchOn(QString p_channelName)": {
-            "Description": "Set Emob switch to the ON position",
+            "Description": "Switch Emob discharge on",
             "Optional parameter": "",
             "Validation": {
                 "Data": [

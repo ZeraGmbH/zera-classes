@@ -129,7 +129,7 @@ void HotplugControlsModuleController::generateVeinInterface()
                                                                                             rpcEventSystem,
                                                                                             m_module->getEntityId());
     m_pEmobFlipSwitchRpcOn = std::make_shared<VfModuleRpc>(rpcEmobFlipSwitchOn,
-                                                        "Set Emob switch to the ON position");
+                                                        "Switch Emob discharge on");
     m_pEmobFlipSwitchRpcOn->setRPCScpiInfo("EMOB",
                                          QString("ONSWITCH"),
                                          SCPI::isCmdwP,
@@ -144,7 +144,7 @@ void HotplugControlsModuleController::generateVeinInterface()
                                                                                             rpcEventSystem,
                                                                                             m_module->getEntityId());
     m_pEmobFlipSwitchRpcOff = std::make_shared<VfModuleRpc>(rpcEmobFlipSwitchOff,
-                                                           "Set Emob switch to the OFF position");
+                                                           "Switch Emob discharge off");
     m_pEmobFlipSwitchRpcOff->setRPCScpiInfo("EMOB",
                                             QString("OFFSWITCH"),
                                             SCPI::isCmdwP,
