@@ -16,6 +16,42 @@ static int constexpr hotplugControlsEntityId = 1700;
 static int constexpr serverPort = 4711;
 static constexpr int systemEntityId = 0;
 
+void test_emob_vein_scpi::init()
+{
+    m_testRunner = std::make_unique<ModuleManagerTestRunner>(":/hotpluscontrols-min-session.json");
+    m_netSystem = std::make_unique<VeinNet::NetworkSystem>();
+    m_netSystem->setOperationMode(VeinNet::NetworkSystem::VNOM_SUBSCRIPTION);
+    m_tcpSystem = std::make_unique<VeinNet::TcpSystem>(VeinTcp::MockTcpNetworkFactory::create());
+    ModuleManagerSetupFacade* modManFacade = m_testRunner->getModManFacade();
+    modManFacade->addSubsystem(m_netSystem.get());
+    modManFacade->addSubsystem(m_tcpSystem.get());
+    m_tcpSystem->startServer(serverPort);
+
+    m_veinClientStack = std::make_unique<VfCoreStackClient>(VeinTcp::MockTcpNetworkFactory::create());
+    m_veinClientStack->connectToServer("127.0.0.1", serverPort);
+    m_veinClientStack->subscribeEntity(systemEntityId);
+    m_veinClientStack->subscribeEntity(hotplugControlsEntityId);
+    m_rpcInvoker = std::make_shared<VfRPCInvoker>(hotplugControlsEntityId, std::make_unique<VfClientRPCInvoker>());
+    m_veinClientStack->addItem(m_rpcInvoker);
+    TimeMachineObject::feedEventLoop();
+
+    setupSpy();
+
+    m_scpiClient = std::make_unique<ScpiModuleClientBlocked>();
+}
+
+void test_emob_vein_scpi::cleanup()
+{
+    m_testRunner.reset();
+    m_scpiClient.reset();
+    m_veinClientStack.reset();
+    m_netSystem.reset();
+    m_tcpSystem.reset();
+
+    m_veinEventDump = QJsonObject();
+    ControllerPersitentData::cleanupPersitentData();
+}
+
 void test_emob_vein_scpi::invokeInvalidRpcNameScpi()
 {
     QString status = m_scpiClient->sendReceive("EMOB:HOTP1:FOO?");
@@ -308,42 +344,6 @@ void test_emob_vein_scpi::dumpVeinInfModuleInterface()
     QByteArray jsonDumped = storageDb->getStoredValue(hotplugControlsEntityId, "INF_ModuleInterface").toByteArray();
 
     QVERIFY(TestLogHelpers::compareAndLogOnDiffJsonFile("://vein-inf-moduleinterface-dump.json", jsonDumped));
-}
-
-void test_emob_vein_scpi::init()
-{
-    m_testRunner = std::make_unique<ModuleManagerTestRunner>(":/hotpluscontrols-min-session.json");
-    m_netSystem = std::make_unique<VeinNet::NetworkSystem>();
-    m_netSystem->setOperationMode(VeinNet::NetworkSystem::VNOM_SUBSCRIPTION);
-    m_tcpSystem = std::make_unique<VeinNet::TcpSystem>(VeinTcp::MockTcpNetworkFactory::create());
-    ModuleManagerSetupFacade* modManFacade = m_testRunner->getModManFacade();
-    modManFacade->addSubsystem(m_netSystem.get());
-    modManFacade->addSubsystem(m_tcpSystem.get());
-    m_tcpSystem->startServer(serverPort);
-
-    m_veinClientStack = std::make_unique<VfCoreStackClient>(VeinTcp::MockTcpNetworkFactory::create());
-    m_veinClientStack->connectToServer("127.0.0.1", serverPort);
-    m_veinClientStack->subscribeEntity(systemEntityId);
-    m_veinClientStack->subscribeEntity(hotplugControlsEntityId);
-    m_rpcInvoker = std::make_shared<VfRPCInvoker>(hotplugControlsEntityId, std::make_unique<VfClientRPCInvoker>());
-    m_veinClientStack->addItem(m_rpcInvoker);
-    TimeMachineObject::feedEventLoop();
-
-    setupSpy();
-
-    m_scpiClient = std::make_unique<ScpiModuleClientBlocked>();
-}
-
-void test_emob_vein_scpi::cleanup()
-{
-    m_testRunner.reset();
-    m_scpiClient.reset();
-    m_veinClientStack.reset();
-    m_netSystem.reset();
-    m_tcpSystem.reset();
-
-    m_veinEventDump = QJsonObject();
-    ControllerPersitentData::cleanupPersitentData();
 }
 
 void test_emob_vein_scpi::invokeRpc(QString rpcName, QString paramName, QVariant paramValue)
