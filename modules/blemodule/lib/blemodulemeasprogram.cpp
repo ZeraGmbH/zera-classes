@@ -47,14 +47,14 @@ void cBleModuleMeasProgram::generateVeinInterface()
     QString key;
     m_deviceSerialNo = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
                                                key = QString("ACT_DevSerNo"),
-                                               QString("Envirronment sensor: Serial number"),
+                                               QString("Environment sensor: Serial number"),
                                                QVariant());
     m_deviceSerialNo->setScpiInfo("STATUS", "SERNO", SCPI::isQuery);
     m_pModule->m_veinModuleParameterMap[key] = m_deviceSerialNo; // and for the modules interface
 
     m_pTemperatureCAct = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
                                                key = QString("ACT_TemperatureC"),
-                                               QString("Current temperature in degree Celsius"),
+                                               QString("Environment sensor: Temperature in degree Celsius"),
                                                QVariant(qQNaN()));
     m_pTemperatureCAct->setUnit("°C");
     m_pTemperatureCAct->setScpiInfo("STATUS", "TEMP:CELSIUS", SCPI::isQuery);
@@ -62,7 +62,7 @@ void cBleModuleMeasProgram::generateVeinInterface()
 
     m_pTemperatureFAct = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
                                                key = QString("ACT_TemperatureF"),
-                                               QString("Current temperature in degree Fahrenheit"),
+                                               QString("Environment sensor: Temperature in degree Fahrenheit"),
                                                QVariant(qQNaN()));
     m_pTemperatureFAct->setUnit("°F");
     m_pTemperatureFAct->setScpiInfo("STATUS", "TEMP:FAHRENHEIT", SCPI::isQuery);
@@ -70,7 +70,7 @@ void cBleModuleMeasProgram::generateVeinInterface()
 
     m_pHumidityAct = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
                                            key = QString("ACT_Humidity"),
-                                           QString("Current relative humidity in percent"),
+                                           QString("Environment sensor: Relative humidity in percent"),
                                            QVariant(qQNaN()));
     m_pHumidityAct->setUnit("%");
     m_pHumidityAct->setScpiInfo("STATUS", "HUMID", SCPI::isQuery);
@@ -78,7 +78,7 @@ void cBleModuleMeasProgram::generateVeinInterface()
 
     m_pAirPressureAct = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
                                               key = QString("ACT_AirPressure"),
-                                              QString("Current atmospheric pressure in hPa"),
+                                              QString("Environment sensor: Atmospheric pressure in hPa"),
                                               QVariant(qQNaN()));
     m_pAirPressureAct->setUnit("hPa");
     m_pAirPressureAct->setScpiInfo("STATUS", "AIRPR", SCPI::isQuery);
@@ -86,13 +86,13 @@ void cBleModuleMeasProgram::generateVeinInterface()
 
     m_pWarningFlagsAct = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
                                                key = QString("ACT_WarningFlags"),
-                                               QString("Current warning flags"),
+                                               QString("Environment sensor: Current warning flags"),
                                                QVariant((quint32)0));
     m_pModule->m_veinModuleParameterMap[key] = m_pWarningFlagsAct;
 
     m_pErrorFlagsAct = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
                                              key = QString("ACT_ErrorFlags"),
-                                             QString("Current error flags"),
+                                             QString("Environment sensor: Current error flags"),
                                              QVariant(quint32(0)));
     m_pModule->m_veinModuleParameterMap[key] = m_pErrorFlagsAct;
 
