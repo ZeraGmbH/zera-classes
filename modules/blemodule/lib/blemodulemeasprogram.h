@@ -30,7 +30,6 @@ private slots:
     void activateDone();
     void deactivateMeasDone();
     void onNewValues();
-    void onNewInfo();
     void onBluetoothStatusChanged(bool on);
     void onVeinBluetoothOnChanged(QVariant on);
     void onVeinMacAddressChanged(QVariant macAddress);

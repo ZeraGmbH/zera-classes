@@ -137,6 +137,7 @@ void cBleModuleMeasProgram::onNewValues()
     BluetoothDeviceInfoDecoderPtr decoder = m_bluetooth->findBleDecoder(m_bleDispatcherId);
     if(decoder) {
         EfentoEnvironmentSensor* sensor = static_cast<EfentoEnvironmentSensor*>(decoder.get());
+        m_deviceSerialNo->setValue(sensor->getSerialNo());
         m_pTemperatureCAct->setValue(sensor->getTemperaturInC());
         m_pTemperatureFAct->setValue(sensor->getTemperaturInF());
         m_pHumidityAct->setValue(sensor->getHumidity());
@@ -146,17 +147,6 @@ void cBleModuleMeasProgram::onNewValues()
     }
     else
         makeValuesInvalid();
-}
-
-void cBleModuleMeasProgram::onNewInfo()
-{
-    BluetoothDeviceInfoDecoderPtr decoder = m_bluetooth->findBleDecoder(m_bleDispatcherId);
-    if(decoder) {
-        EfentoEnvironmentSensor* sensor = static_cast<EfentoEnvironmentSensor*>(decoder.get());
-        m_deviceSerialNo->setValue(sensor->getSerialNo());
-    }
-    else
-        m_deviceSerialNo->setValue("");
 }
 
 void cBleModuleMeasProgram::makeValuesInvalid()
@@ -222,8 +212,6 @@ void cBleModuleMeasProgram::onVeinMacAddressChanged(QVariant macAddress)
         sensor->setBluetoothAddress(QBluetoothAddress(newMac));
         connect(sensor.get(), &EfentoEnvironmentSensor::sigNewValues,
                 this, &cBleModuleMeasProgram::onNewValues);
-        connect(sensor.get(), &EfentoEnvironmentSensor::sigNewDeviceInfo,
-                this, &cBleModuleMeasProgram::onNewInfo);
         m_bleDispatcherId = m_bluetooth->addBleDecoder(sensor);
         const QString oldMac = getConfData()->m_macAddress.m_sPar;
         if(oldMac != newMac) {
