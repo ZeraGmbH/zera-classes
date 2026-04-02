@@ -386,6 +386,7 @@
     },
     "1400": {
         "ACT_AirPressure": "",
+        "ACT_DevSerNo": "",
         "ACT_ErrorFlags": 0,
         "ACT_Humidity": "",
         "ACT_TemperatureC": "",

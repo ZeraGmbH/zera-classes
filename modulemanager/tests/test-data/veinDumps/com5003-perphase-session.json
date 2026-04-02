@@ -6203,6 +6203,7 @@
     },
     "1400": {
         "ACT_AirPressure": null,
+        "ACT_DevSerNo": "",
         "ACT_ErrorFlags": 0,
         "ACT_Humidity": null,
         "ACT_TemperatureC": null,
@@ -6214,6 +6215,9 @@
                 "ACT_AirPressure": {
                     "Description": "<skipped>",
                     "Unit": "hPa"
+                },
+                "ACT_DevSerNo": {
+                    "Description": "<skipped>"
                 },
                 "ACT_ErrorFlags": {
                     "Description": "<skipped>"
@@ -6268,6 +6272,13 @@
                         "AIRPR",
                         "2",
                         "ACT_AirPressure",
+                        "0"
+                    ],
+                    [
+                        "STATUS",
+                        "SERNO",
+                        "2",
+                        "ACT_DevSerNo",
                         "0"
                     ],
                     [

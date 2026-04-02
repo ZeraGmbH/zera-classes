@@ -29,10 +29,8 @@ public slots:
 private slots:
     void activateDone();
     void deactivateMeasDone();
-    void onChangeConnectState();
     void onNewValues();
-    void onNewWarnings();
-    void onNewErrors();
+    void onNewInfo();
     void onBluetoothStatusChanged(bool on);
     void onVeinBluetoothOnChanged(QVariant on);
     void onVeinMacAddressChanged(QVariant macAddress);
@@ -53,14 +51,15 @@ private:
     BluetoothConvenienceFacade *m_bluetooth;
     BleDispatcherId m_bleDispatcherId;
 
-    VfModuleParameter* m_pTemperatureCAct;
-    VfModuleParameter* m_pTemperatureFAct;
-    VfModuleParameter* m_pHumidityAct;
-    VfModuleParameter* m_pAirPressureAct;
-    VfModuleParameter* m_pErrorFlagsAct;
-    VfModuleParameter* m_pWarningFlagsAct;
-    VfModuleParameter* m_pBluetoothOnOff;
-    VfModuleParameter* m_pMacAddress;
+    VfModuleParameter* m_deviceSerialNo = nullptr;
+    VfModuleParameter* m_pTemperatureCAct = nullptr;
+    VfModuleParameter* m_pTemperatureFAct = nullptr;
+    VfModuleParameter* m_pHumidityAct = nullptr;
+    VfModuleParameter* m_pAirPressureAct = nullptr;
+    VfModuleParameter* m_pErrorFlagsAct = nullptr;
+    VfModuleParameter* m_pWarningFlagsAct = nullptr;
+    VfModuleParameter* m_pBluetoothOnOff = nullptr;
+    VfModuleParameter* m_pMacAddress = nullptr;
 
     QStringList m_macAddressForDemo = {"11:22:33:44:55:66", "AA:BB:CC:DD:EE:FF", "00:00:00:00:00:01", "00:00:00:00:00:00"};
 };
