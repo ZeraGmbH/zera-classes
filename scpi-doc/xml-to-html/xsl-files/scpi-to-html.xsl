@@ -22,6 +22,7 @@
 <xsl:include href="templates/emob.xsl"/>
 <xsl:include href="templates/recorder.xsl"/>
 <xsl:include href="templates/adjustment.xsl"/>
+<xsl:include href="templates/dspsuper.xsl"/>
 
 <xsl:param name="zenuxVersion"/>
 <xsl:param name="sessionXml"/>
@@ -66,6 +67,16 @@
 
   <!--In this section, we find out which 'Measurement Systems' are present in input xml file and assign them a number.
     'Measurement Systems' are device and session specific. -->
+  <!-- DSPSuper is available in all sessions -->
+  <xsl:variable name="DSPSuperFound" select="true()"/>
+  <xsl:variable name="DSPSuperChapterNo">
+    <xsl:call-template name="calcMeasSystChapterNumber">
+      <xsl:with-param name="LastChapterNumber" select="0"/>
+      <xsl:with-param name="MeasSystAvailable" select="$DSPSuperFound"/>
+    </xsl:call-template>
+  </xsl:variable>
+  <xsl:variable name="DSPSuperHeading" select="concat($MeasSystemsChapterNo, '.', $DSPSuperChapterNo, ' ', $GlobalMeasSettings)"/>
+
   <xsl:variable name="DFTFound">
     <xsl:call-template name="MeasurementNodeSearch">
       <xsl:with-param name="MeasSystem" select="'DFT'"/>
@@ -73,7 +84,7 @@
   </xsl:variable>
   <xsl:variable name="DFTChapterNo">
     <xsl:call-template name="calcMeasSystChapterNumber">
-      <xsl:with-param name="LastChapterNumber" select="0"/>
+      <xsl:with-param name="LastChapterNumber" select="$DSPSuperChapterNo"/>
       <xsl:with-param name="MeasSystAvailable" select="$DFTFound"/>
     </xsl:call-template>
   </xsl:variable>
@@ -252,6 +263,7 @@
           <xsl:if test="$createAdjustmentHtml != 'true'">
             <li><a href="#MeasSystems"><xsl:value-of select="$MeasSystems"/></a></li>
               <ul>
+                <xsl:if test="$DSPSuperFound != ''"><li><a href="#GlobalMeasSettings"><xsl:value-of select="$DSPSuperHeading"/></a></li></xsl:if>
                 <xsl:if test="$DFTFound != ''"><li><a href="#PhaseValues"><xsl:value-of select="$PhaseValuesHeading"/></a></li></xsl:if>
                 <xsl:if test="$POWFound != ''"><li><a href="#PowerMeasurement"><xsl:value-of select="$PowerMeasurementHeading"/></a></li></xsl:if>
                 <xsl:if test="$FFTFound != ''"><li><a href="#FFTValues"><xsl:value-of select="$FFTValuesHeading"/></a></li></xsl:if>
@@ -301,6 +313,14 @@
     
       <h1 id="MeasSystems"><xsl:value-of select="$MeasSystems"/></h1>
       <p><xsl:copy-of select="document(concat($ProsaFolder, 'measurement-system.html'))"/></p>
+
+      <!-- DSPSuper global settings  -->
+      <xsl:if test="$DSPSuperFound != ''">
+        <h2 id="GlobalMeasSettings"><xsl:value-of select="$DSPSuperHeading"/></h2>
+        <xsl:call-template name="DSPSuper">
+          <xsl:with-param name="Prosa" select="document(concat($ProsaFolder, 'measurement-DSPSuper.html'))"/>
+        </xsl:call-template>
+      </xsl:if>
 
       <!-- DFT phase values -->
       <xsl:if test="$DFTFound != ''">

@@ -35,6 +35,7 @@
 <xsl:variable name="EMOB" select="'EMOB'"/>
 
 <!-- Measurement sub-chapter headings -->
+<xsl:variable name="GlobalMeasSettings" select="'Global measurement settings'"/>
 <xsl:variable name="PhaseValues" select="'Phase amplitudes and angles'"/>
 <xsl:variable name="PowerMeasurement" select="'Power measurement'"/>
 <xsl:variable name="FFTValues" select="'FFT/DC values'"/>
