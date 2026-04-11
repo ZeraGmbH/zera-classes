@@ -336,6 +336,10 @@
         "ACT_Points2": 0,
         "PAR_StartStopRecording": 0
     },
+    "9000": {
+        "PAR_GlobalIntegrationPeriod": "",
+        "PAR_GlobalIntegrationTime": ""
+    },
     "Contentsets": [
         "ZeraActualValues",
         "ZeraComparison",

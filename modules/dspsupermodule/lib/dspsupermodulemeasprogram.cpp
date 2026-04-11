@@ -2,6 +2,7 @@
 #include "dspsupermodule.h"
 #include "dspsupermoduleconfiguration.h"
 #include "taskdspdataacquisition.h"
+#include <doublevalidator.h>
 #include <errormessages.h>
 #include <intvalidator.h>
 #include <scpi.h>
@@ -59,6 +60,24 @@ DspSuperModuleMeasProgram::DspSuperModuleMeasProgram(DspSuperModule* module, std
 
 void DspSuperModuleMeasProgram::generateVeinInterface()
 {
+    QString key;
+    m_veinGlobalIntegrationTimeParameter = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
+                                                                 key = QString("PAR_GlobalIntegrationTime"),
+                                                                 "Global integration time",
+                                                                 QVariant());
+    m_veinGlobalIntegrationTimeParameter->setScpiInfo("CONFIGURATION", "TINTEGRATION", SCPI::isQuery|SCPI::isCmdwP);
+    m_veinGlobalIntegrationTimeParameter->setUnit("s");
+    m_veinGlobalIntegrationTimeParameter->setValidator(new cDoubleValidator(1.0, 100.0, 0.5));
+    m_pModule->m_veinModuleParameterMap[key] = m_veinGlobalIntegrationTimeParameter;
+
+    m_veinGlobalIntegrationPeriodParameter = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
+                                                                   key = QString("PAR_GlobalIntegrationPeriod"),
+                                                                   "Global integration period",
+                                                                   QVariant());
+    m_veinGlobalIntegrationPeriodParameter->setUnit("period");
+    m_veinGlobalIntegrationPeriodParameter->setValidator(new cIntValidator(5, 5000, 1));
+    m_veinGlobalIntegrationPeriodParameter->setScpiInfo("CONFIGURATION", "TPERIOD", SCPI::isQuery|SCPI::isCmdwP);
+    m_pModule->m_veinModuleParameterMap[key] = m_veinGlobalIntegrationPeriodParameter;
 }
 
 void DspSuperModuleMeasProgram::setDspVarList()

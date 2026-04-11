@@ -526,6 +526,10 @@
     "1600": {
         "ACT_PowerAboveLimit": 0
     },
+    "9000": {
+        "PAR_GlobalIntegrationPeriod": "",
+        "PAR_GlobalIntegrationTime": ""
+    },
     "Contentsets": [
         "ZeraActualValues",
         "ZeraBurden",

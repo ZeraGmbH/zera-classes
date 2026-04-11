@@ -6054,6 +6054,30 @@
                 },
                 "INF_ModuleInterface": {
                     "Description": "<skipped>"
+                },
+                "PAR_GlobalIntegrationPeriod": {
+                    "Description": "<skipped>",
+                    "Unit": "period",
+                    "Validation": {
+                        "Data": [
+                            5,
+                            5000,
+                            1
+                        ],
+                        "Type": "INTEGER"
+                    }
+                },
+                "PAR_GlobalIntegrationTime": {
+                    "Description": "<skipped>",
+                    "Unit": "s",
+                    "Validation": {
+                        "Data": [
+                            1,
+                            100,
+                            0.5
+                        ],
+                        "Type": "DOUBLE"
+                    }
                 }
             },
             "ModuleInfo": {
@@ -6062,9 +6086,25 @@
             },
             "SCPIInfo": {
                 "Cmd": [
+                    [
+                        "CONFIGURATION",
+                        "TPERIOD",
+                        "10",
+                        "PAR_GlobalIntegrationPeriod",
+                        "0"
+                    ],
+                    [
+                        "CONFIGURATION",
+                        "TINTEGRATION",
+                        "10",
+                        "PAR_GlobalIntegrationTime",
+                        "0"
+                    ]
                 ],
                 "Name": "DSP1"
             }
-        }
+        },
+        "PAR_GlobalIntegrationPeriod": null,
+        "PAR_GlobalIntegrationTime": null
     }
 }

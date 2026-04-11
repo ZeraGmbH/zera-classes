@@ -45,6 +45,9 @@ private:
 
     DspVarGroupClientInterface* m_pActualValuesDSP = nullptr;
 
+    VfModuleParameter* m_veinGlobalIntegrationTimeParameter = nullptr;
+    VfModuleParameter* m_veinGlobalIntegrationPeriodParameter = nullptr;
+
     // statemachine for activating
     QState m_dspserverConnectState;
     QState m_var2DSPState;
