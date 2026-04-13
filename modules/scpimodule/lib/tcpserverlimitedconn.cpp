@@ -13,13 +13,10 @@ void TcpServerLimitedConn::incomingConnection(qintptr socketDescriptor)
     QTcpSocket *socket = new QTcpSocket(this);
     socket->setSocketDescriptor(socketDescriptor);
 
-    if(m_SCPIClientList.count() < m_configData.m_nClients) {
-        qInfo("Add pending connection, %i.", m_SCPIClientList.count());
+    if(m_SCPIClientList.count() < m_configData.m_nClients)
         addPendingConnection(socket);
-    }
-    else
-    {
-        qInfo("Close incoming connection. List of active connections is full (%i elements).", m_SCPIClientList.count());
+    else {
+        qWarning("Close incoming connection. List of active connections is full (%i elements).", m_SCPIClientList.count());
         socket->close();
     }
 }
