@@ -7,17 +7,13 @@ cSCPIEthClient::cSCPIEthClient(QTcpSocket *socket, cSCPIModule *module, cSCPIMod
     cSCPIClient(module, configdata, iface),
     m_pSocket(socket)
 {
-    m_peerAddress = getPeerAddress();
-    qInfo("Incoming SCPI socket from %s", qPrintable(m_peerAddress));
     connect(m_pSocket, &QTcpSocket::readyRead, this, &cSCPIEthClient::cmdInput);
-    connect(m_pSocket, &QTcpSocket::disconnected, this, &cSCPIEthClient::onDisconnect);
 }
 
 cSCPIEthClient::~cSCPIEthClient()
 {
     m_pSocket->abort();
     m_pSocket->deleteLater();
-    qInfo("SCPI socket %s deleted", qPrintable(m_peerAddress));
 }
 
 void cSCPIEthClient::receiveAnswer(QString answ, bool ok)
@@ -45,11 +41,6 @@ void cSCPIEthClient::cmdInput()
     }
     qInfo("Network SCPI command input: %s", qPrintable(makeBareScpiInPrintable(totalInput)));
     execPendingCmds();
-}
-
-void cSCPIEthClient::onDisconnect()
-{
-    qInfo("SCPI socket %s disconnected", qPrintable(m_peerAddress));
 }
 
 }
