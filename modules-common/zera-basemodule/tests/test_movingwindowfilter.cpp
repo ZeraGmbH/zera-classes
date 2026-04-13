@@ -28,7 +28,7 @@ void test_movingwindowfilter::threeSetOfActualValuesWithoutIntegrationTimeElapse
     QVector<float> samples3{1.2, 2.2, 3.2};
     QVector<float> averageSamples(samples1.count());
 
-    connect(&filter, &MovingWindowFilterWithoutSumFifo::actualValues, this, &test_movingwindowfilter::receiveFilteredValues);
+    connect(&filter, &MovingWindowFilterWithoutSumFifo::sigActualValues, this, &test_movingwindowfilter::receiveFilteredValues);
 
     filter.receiveActualValues(&samples1);
     TimeMachineObject::feedEventLoop();
@@ -58,7 +58,7 @@ void test_movingwindowfilter::threeSetOfActualValuesWithIntegrationTimeElapsed()
     QVector<float> samples3{7.0, 8.0, 9.0};
     QVector<float> averageSamples(samples1.count());
 
-    connect(&filter, &MovingWindowFilterWithoutSumFifo::actualValues, this, &test_movingwindowfilter::receiveFilteredValues);
+    connect(&filter, &MovingWindowFilterWithoutSumFifo::sigActualValues, this, &test_movingwindowfilter::receiveFilteredValues);
 
     filter.receiveActualValues(&samples1);
     TimeMachineObject::feedEventLoop();

@@ -1,29 +1,29 @@
 #ifndef MOVINGWINDOWFILTER_H
 #define MOVINGWINDOWFILTER_H
 
-#include "timersingleshotqt.h"
 #include <QList>
 #include <QVector>
 #include <QStateMachine>
 #include <QState>
 #include <QFinalState>
+#include <timertemplateqt.h>
 
-class cMovingwindowFilter: public QObject
+class MovingwindowFilter: public QObject
 {
     Q_OBJECT
 public:
-    cMovingwindowFilter(float time = 1.0);
+    MovingwindowFilter(float time = 1.0);
+    void setIntegrationTime(float time);
 
 signals:
-    void actualValues(QVector<float>*);
-    void newActualValues();
-    void finishFilter();
-    void timerInitialized();
-    void integrationTimeExpired();
+    void sigActualValues(QVector<float>*);
+    void sigNewActualValues();
+    void sigFinishFilter();
+    void sigTimerInitialized();
+    void sigIntegrationTimeExpired();
 
 public slots:
     void receiveActualValues(QVector<float>* actualValues);
-    void setIntegrationtime(float time);
 
 protected:
     virtual void addnewValues();

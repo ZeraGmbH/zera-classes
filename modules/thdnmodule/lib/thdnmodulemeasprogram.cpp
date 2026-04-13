@@ -57,10 +57,10 @@ cThdnModuleMeasProgram::cThdnModuleMeasProgram(cThdnModule *module, std::shared_
     connect(this, &cThdnModuleMeasProgram::actualValues,
             &m_startStopHandler, &ActualValueStartStopHandler::onNewActualValues);
     if (getConfData()->m_bmovingWindow) {
-        m_movingwindowFilter.setIntegrationtime(getConfData()->m_fMeasInterval.m_fValue);
+        m_movingwindowFilter.setIntegrationTime(getConfData()->m_fMeasInterval.m_fValue);
         connect(&m_startStopHandler, &ActualValueStartStopHandler::sigNewActualValues,
-                &m_movingwindowFilter, &cMovingwindowFilter::receiveActualValues);
-        connect(&m_movingwindowFilter, &cMovingwindowFilter::actualValues,
+                &m_movingwindowFilter, &MovingwindowFilter::receiveActualValues);
+        connect(&m_movingwindowFilter, &MovingwindowFilter::sigActualValues,
                 this, &cThdnModuleMeasProgram::setInterfaceActualValues);
     }
     else
@@ -333,7 +333,7 @@ void cThdnModuleMeasProgram::newIntegrationtime(const QVariant &ti)
 {
     getConfData()->m_fMeasInterval.m_fValue = ti.toDouble();
     if (getConfData()->m_bmovingWindow)
-        m_movingwindowFilter.setIntegrationtime(getConfData()->m_fMeasInterval.m_fValue);
+        m_movingwindowFilter.setIntegrationTime(getConfData()->m_fMeasInterval.m_fValue);
     else {
         m_pParameterDSP->setVarData(QString("TIPAR:%1;TISTART:0;").arg(getConfData()->m_fMeasInterval.m_fValue*1000));
         m_MsgNrCmdList[m_dspInterface->dspMemoryWrite(m_pParameterDSP)] = writeparameter;

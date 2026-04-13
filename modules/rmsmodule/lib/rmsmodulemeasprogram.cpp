@@ -52,10 +52,10 @@ cRmsModuleMeasProgram::cRmsModuleMeasProgram(cRmsModule* module,
     connect(this, &cRmsModuleMeasProgram::actualValues,
             &m_startStopHandler, &ActualValueStartStopHandler::onNewActualValues);
     if (getConfData()->m_bmovingWindow) {
-        m_movingwindowFilter.setIntegrationtime(getConfData()->m_fMeasIntervalTime.m_fValue);
+        m_movingwindowFilter.setIntegrationTime(getConfData()->m_fMeasIntervalTime.m_fValue);
         connect(&m_startStopHandler, &ActualValueStartStopHandler::sigNewActualValues,
-                &m_movingwindowFilter, &cMovingwindowFilter::receiveActualValues);
-        connect(&m_movingwindowFilter, &cMovingwindowFilter::actualValues,
+                &m_movingwindowFilter, &MovingwindowFilter::receiveActualValues);
+        connect(&m_movingwindowFilter, &MovingwindowFilter::sigActualValues,
                 this, &cRmsModuleMeasProgram::setInterfaceActualValues);
     }
     else
@@ -404,7 +404,7 @@ void cRmsModuleMeasProgram::newIntegrationtime(QVariant ti)
     getConfData()->m_fMeasIntervalTime.m_fValue = ti.toDouble();
     if (getConfData()->m_sIntegrationMode == "time") {
         if (getConfData()->m_bmovingWindow)
-            m_movingwindowFilter.setIntegrationtime(getConfData()->m_fMeasIntervalTime.m_fValue);
+            m_movingwindowFilter.setIntegrationTime(getConfData()->m_fMeasIntervalTime.m_fValue);
         else {
             m_pParameterDSP->setVarData(QString("TIPAR:%1;TISTART:0;").arg(getConfData()->m_fMeasIntervalTime.m_fValue*1000));
             m_MsgNrCmdList[m_dspInterface->dspMemoryWrite(m_pParameterDSP)] = writeparameter;

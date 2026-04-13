@@ -152,7 +152,7 @@ private:
     QState m_foutParamsToDsp;
     QFinalState m_setFoutConstantState;
 
-    cMovingwindowFilter m_movingwindowFilter;
+    MovingwindowFilter m_movingwindowFilter;
 
 private slots:
     void catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant answer);

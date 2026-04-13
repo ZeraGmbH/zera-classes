@@ -165,9 +165,11 @@ cPower1ModuleMeasProgram::cPower1ModuleMeasProgram(cPower1Module* module, std::s
 void cPower1ModuleMeasProgram::start()
 {
     if (getConfData()->m_bmovingWindow) {
-        m_movingwindowFilter.setIntegrationtime(getConfData()->m_fMeasIntervalTime.m_fValue);
-        connect(this, &cPower1ModuleMeasProgram::actualValues, &m_movingwindowFilter, &cMovingwindowFilter::receiveActualValues);
-        connect(&m_movingwindowFilter, &cMovingwindowFilter::actualValues, this, &cPower1ModuleMeasProgram::setInterfaceActualValues);
+        m_movingwindowFilter.setIntegrationTime(getConfData()->m_fMeasIntervalTime.m_fValue);
+        connect(this, &cPower1ModuleMeasProgram::actualValues,
+                &m_movingwindowFilter, &MovingwindowFilter::receiveActualValues);
+        connect(&m_movingwindowFilter, &MovingwindowFilter::sigActualValues,
+                this, &cPower1ModuleMeasProgram::setInterfaceActualValues);
     }
     else
         connect(this, &cPower1ModuleMeasProgram::actualValues, this, &cPower1ModuleMeasProgram::setInterfaceActualValues);
@@ -177,7 +179,7 @@ void cPower1ModuleMeasProgram::start()
 void cPower1ModuleMeasProgram::stop()
 {
     disconnect(this, &cPower1ModuleMeasProgram::actualValues, 0, 0);
-    disconnect(&m_movingwindowFilter, &cMovingwindowFilter::actualValues, this, 0);
+    disconnect(&m_movingwindowFilter, &MovingwindowFilter::sigActualValues, this, 0);
 }
 
 void cPower1ModuleMeasProgram::generateVeinInterface()
@@ -1149,7 +1151,7 @@ void cPower1ModuleMeasProgram::handleMModeParamChange()
 
 void cPower1ModuleMeasProgram::handleMovingWindowIntTimeChange()
 {
-    m_movingwindowFilter.setIntegrationtime(getConfData()->m_fMeasIntervalTime.m_fValue);
+    m_movingwindowFilter.setIntegrationTime(getConfData()->m_fMeasIntervalTime.m_fValue);
     emit m_pModule->parameterChanged();
 }
 

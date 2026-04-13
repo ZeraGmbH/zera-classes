@@ -168,9 +168,11 @@ cPower2ModuleMeasProgram::cPower2ModuleMeasProgram(cPower2Module* module, std::s
 void cPower2ModuleMeasProgram::start()
 {
     if (getConfData()->m_bmovingWindow) {
-        m_movingwindowFilter.setIntegrationtime(getConfData()->m_fMeasIntervalTime.m_fValue);
-        connect(this, &cPower2ModuleMeasProgram::actualValues, &m_movingwindowFilter, &cMovingwindowFilter::receiveActualValues);
-        connect(&m_movingwindowFilter, &cMovingwindowFilter::actualValues, this, &cPower2ModuleMeasProgram::setInterfaceActualValues);
+        m_movingwindowFilter.setIntegrationTime(getConfData()->m_fMeasIntervalTime.m_fValue);
+        connect(this, &cPower2ModuleMeasProgram::actualValues,
+                &m_movingwindowFilter, &MovingwindowFilter::receiveActualValues);
+        connect(&m_movingwindowFilter, &MovingwindowFilter::sigActualValues,
+                this, &cPower2ModuleMeasProgram::setInterfaceActualValues);
     }
     else
         connect(this, &cPower2ModuleMeasProgram::actualValues, this, &cPower2ModuleMeasProgram::setInterfaceActualValues);
@@ -179,7 +181,7 @@ void cPower2ModuleMeasProgram::start()
 void cPower2ModuleMeasProgram::stop()
 {
     disconnect(this, &cPower2ModuleMeasProgram::actualValues, 0, 0);
-    disconnect(&m_movingwindowFilter, &cMovingwindowFilter::actualValues, this, 0);
+    disconnect(&m_movingwindowFilter, &MovingwindowFilter::sigActualValues, this, 0);
 }
 
 void cPower2ModuleMeasProgram::generateVeinInterface()
@@ -1138,7 +1140,7 @@ void cPower2ModuleMeasProgram::updatesForMModeChange()
 
 void cPower2ModuleMeasProgram::handleMovingWindowIntTimeChange()
 {
-    m_movingwindowFilter.setIntegrationtime(getConfData()->m_fMeasIntervalTime.m_fValue);
+    m_movingwindowFilter.setIntegrationTime(getConfData()->m_fMeasIntervalTime.m_fValue);
     emit m_pModule->parameterChanged();
 }
 

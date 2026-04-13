@@ -3,7 +3,7 @@
 
 #include "movingwindowfilter.h"
 
-class MovingWindowFilterWithoutSumFifo : public cMovingwindowFilter
+class MovingWindowFilterWithoutSumFifo : public MovingwindowFilter
 {
     Q_OBJECT
 public:

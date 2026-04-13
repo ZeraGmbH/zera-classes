@@ -1,7 +1,7 @@
 #include "movingwindowfilterwithoutsumfifo.h"
 
 MovingWindowFilterWithoutSumFifo::MovingWindowFilterWithoutSumFifo(float time) :
-    cMovingwindowFilter(time)
+    MovingwindowFilter(time)
 {
 }
 
@@ -22,5 +22,5 @@ void MovingWindowFilterWithoutSumFifo::addnewValues()
     for (int i = 0; i < m_pActualValues->count(); i++)
         m_ActualValues[i] = sum[i]/m_ActValueFifoList.count();
 
-    emit actualValues(&m_ActualValues);
+    emit sigActualValues(&m_ActualValues);
 }

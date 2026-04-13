@@ -81,7 +81,7 @@ private:
 
     TaskTemplatePtr m_taskDataAcquisition;
 
-    cMovingwindowFilter m_movingwindowFilter;
+    MovingwindowFilter m_movingwindowFilter;
 };
 
 }

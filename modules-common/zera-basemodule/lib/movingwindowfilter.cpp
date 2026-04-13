@@ -1,7 +1,7 @@
 #include "movingwindowfilter.h"
 #include <timerfactoryqt.h>
 
-cMovingwindowFilter::cMovingwindowFilter(float time)
+MovingwindowFilter::MovingwindowFilter(float time)
     :m_fintegrationTime(time)
 {
     //setting up a statemachine for filtering
@@ -13,42 +13,42 @@ cMovingwindowFilter::cMovingwindowFilter(float time)
     m_pdoFilterState = new QState(m_pactiveState);
     m_pFinishState = new QFinalState();
 
-    m_pactiveState->addTransition(this, &cMovingwindowFilter::finishFilter, m_pFinishState);
-    m_pinitFilterState->addTransition(this, &cMovingwindowFilter::newActualValues, m_psetupFilterState);
-    m_psetupFilterState->addTransition(this, &cMovingwindowFilter::timerInitialized, m_pbuildupFilterState);
-    m_pbuildupFilterState->addTransition(this, &cMovingwindowFilter::newActualValues, m_pbuildupFilterState);
-    m_pbuildupFilterState->addTransition(this, &cMovingwindowFilter::integrationTimeExpired, m_preadyFilterState);
-    m_preadyFilterState->addTransition(this, &cMovingwindowFilter::newActualValues, m_pdoFilterState);
-    m_pdoFilterState->addTransition(this, &cMovingwindowFilter::newActualValues, m_pdoFilterState);
-    connect(&m_FilterStatemachine, &QStateMachine::stopped, this, &cMovingwindowFilter::restartFilter);
+    m_pactiveState->addTransition(this, &MovingwindowFilter::sigFinishFilter, m_pFinishState);
+    m_pinitFilterState->addTransition(this, &MovingwindowFilter::sigNewActualValues, m_psetupFilterState);
+    m_psetupFilterState->addTransition(this, &MovingwindowFilter::sigTimerInitialized, m_pbuildupFilterState);
+    m_pbuildupFilterState->addTransition(this, &MovingwindowFilter::sigNewActualValues, m_pbuildupFilterState);
+    m_pbuildupFilterState->addTransition(this, &MovingwindowFilter::sigIntegrationTimeExpired, m_preadyFilterState);
+    m_preadyFilterState->addTransition(this, &MovingwindowFilter::sigNewActualValues, m_pdoFilterState);
+    m_pdoFilterState->addTransition(this, &MovingwindowFilter::sigNewActualValues, m_pdoFilterState);
+    connect(&m_FilterStatemachine, &QStateMachine::stopped, this, &MovingwindowFilter::restartFilter);
 
     m_FilterStatemachine.addState(m_pactiveState);
     m_FilterStatemachine.addState(m_pFinishState);
     m_FilterStatemachine.setInitialState(m_pactiveState);
     m_pactiveState->setInitialState(m_pinitFilterState);
 
-    connect(m_pinitFilterState, &QState::entered, this, &cMovingwindowFilter::initFilter);
-    connect(m_psetupFilterState, &QState::entered, this, &cMovingwindowFilter::setupFilter);
-    connect(m_pbuildupFilterState, &QState::entered, this, &cMovingwindowFilter::buildupFilter);
-    connect(m_pdoFilterState, &QState::entered, this, &cMovingwindowFilter::doFilter);
-    connect(m_pFinishState, &QState::entered, this, &cMovingwindowFilter::stopFilter);
+    connect(m_pinitFilterState, &QState::entered, this, &MovingwindowFilter::initFilter);
+    connect(m_psetupFilterState, &QState::entered, this, &MovingwindowFilter::setupFilter);
+    connect(m_pbuildupFilterState, &QState::entered, this, &MovingwindowFilter::buildupFilter);
+    connect(m_pdoFilterState, &QState::entered, this, &MovingwindowFilter::doFilter);
+    connect(m_pFinishState, &QState::entered, this, &MovingwindowFilter::stopFilter);
 
     m_FilterStatemachine.start();
 }
 
-void cMovingwindowFilter::receiveActualValues(QVector<float> *actualValues)
+void MovingwindowFilter::receiveActualValues(QVector<float> *actualValues)
 {
     m_pActualValues = actualValues;
-    emit newActualValues();
+    emit sigNewActualValues();
 }
 
-void cMovingwindowFilter::setIntegrationtime(float time)
+void MovingwindowFilter::setIntegrationTime(float time)
 {
     m_fintegrationTime = time;
-    emit finishFilter();
+    emit sigFinishFilter();
 }
 
-void cMovingwindowFilter::addnewValues()
+void MovingwindowFilter::addnewValues()
 {
     int n;
     QVector<double> newValues;
@@ -63,30 +63,30 @@ void cMovingwindowFilter::addnewValues()
         m_FifoSum.replace(i, m_FifoSum.at(i) + newValues.at(i));
         m_ActualValues.replace(i, m_FifoSum.at(i) / m); // our filtered actual values
     }
-    emit actualValues(&m_ActualValues);
+    emit sigActualValues(&m_ActualValues);
 }
 
-void cMovingwindowFilter::initFilter()
+void MovingwindowFilter::initFilter()
 {
     m_ActValueFifoList.clear();
     m_integrationTimer = TimerFactoryQt::createSingleShot((int)(m_fintegrationTime * 1000.0));
-    connect(m_integrationTimer.get(), &TimerTemplateQt::sigExpired, this, &cMovingwindowFilter::integrationTimeExpired);
+    connect(m_integrationTimer.get(), &TimerTemplateQt::sigExpired, this, &MovingwindowFilter::sigIntegrationTimeExpired);
 }
 
-void cMovingwindowFilter::setupFilter()
+void MovingwindowFilter::setupFilter()
 {
     m_integrationTimer->start(); // while timer is running we'll fill the fifo
     m_FifoSum.fill(0.0, m_pActualValues->size());
     m_ActualValues.resize(m_pActualValues->size());
-    emit timerInitialized();
+    emit sigTimerInitialized();
 }
 
-void cMovingwindowFilter::buildupFilter()
+void MovingwindowFilter::buildupFilter()
 {
     addnewValues(); // we must add the new values while building up our filter
 }
 
-void cMovingwindowFilter::doFilter()
+void MovingwindowFilter::doFilter()
 {
     QVector<double> removeValues = m_ActValueFifoList.at(0);
     int n = removeValues.count();
@@ -97,12 +97,12 @@ void cMovingwindowFilter::doFilter()
     addnewValues(); // and then add the new ones
 }
 
-void cMovingwindowFilter::stopFilter()
+void MovingwindowFilter::stopFilter()
 {
     m_FilterStatemachine.stop(); // we restart at once
 }
 
-void cMovingwindowFilter::restartFilter()
+void MovingwindowFilter::restartFilter()
 {
     m_FilterStatemachine.start();
 }
