@@ -183,7 +183,7 @@ void cStatusModuleInit::generateVeinInterface()
 
     m_pDeviceType = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
                                                 key = QString("INF_DeviceType"),
-                                                QString("Device type"),
+                                                QString("Device type e.g 'mt310s2' or 'com5003'"),
                                                 QVariant(QString()));
     m_pDeviceType->setScpiInfo("STATUS", "DEVTYPE", SCPI::isQuery);
     m_pModule->m_veinModuleParameterMap[key] = m_pDeviceType;
