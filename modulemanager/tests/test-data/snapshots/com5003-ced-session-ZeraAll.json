@@ -396,8 +396,8 @@
         "PAR_MacAddress": "00:00:00:00:00:00"
     },
     "9000": {
-        "PAR_GlobalIntegrationPeriod": 200,
-        "PAR_GlobalIntegrationTime": 1
+        "PAR_IntervalGlobalPeriod": 200,
+        "PAR_IntervalGlobalTime": 1
     },
     "Contentsets": [
         "ZeraActualValues",

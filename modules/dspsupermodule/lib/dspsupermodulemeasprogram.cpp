@@ -66,7 +66,7 @@ void DspSuperModuleMeasProgram::generateVeinInterface()
     QString key;
     if (m_componentIntegrationTimeToFollow  != nullptr) {
         m_veinGlobalIntegrationTimeParameter = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
-                                                                     key = QString("PAR_GlobalIntegrationTime"),
+                                                                     key = QString("PAR_IntervalGlobalTime"),
                                                                      "Global integration time",
                                                                      m_componentIntegrationTimeToFollow->getValue());
         m_veinGlobalIntegrationTimeParameter->setScpiInfo("CONFIGURATION", "TINTEGRATION", SCPI::isQuery|SCPI::isCmdwP);
@@ -85,7 +85,7 @@ void DspSuperModuleMeasProgram::generateVeinInterface()
 
     if (m_componentIntegrationPeriodToFollow  != nullptr) {
         m_veinGlobalIntegrationPeriodParameter = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
-                                                                       key = QString("PAR_GlobalIntegrationPeriod"),
+                                                                       key = QString("PAR_IntervalGlobalPeriod"),
                                                                        "Global integration period",
                                                                        m_componentIntegrationPeriodToFollow->getValue());
         m_veinGlobalIntegrationPeriodParameter->setUnit("period");

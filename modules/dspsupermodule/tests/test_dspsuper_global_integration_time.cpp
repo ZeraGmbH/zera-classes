@@ -71,18 +71,18 @@ void test_dspsuper_global_integration_time::globalIntegrationTimeComponentFollow
     QCOMPARE(testRunner.getVfComponent(entityIdTime2nd, "PAR_Interval"), 1);
     QCOMPARE(testRunner.getVfComponent(entityIdPeriod1st, "PAR_Interval"), 200);
     QCOMPARE(testRunner.getVfComponent(entityIdPeriod2nd, "PAR_Interval"), 200);
-    QCOMPARE(testRunner.getVfComponent(entityIdDspSuper, "PAR_GlobalIntegrationTime"), 1);
-    QCOMPARE(testRunner.getVfComponent(entityIdDspSuper, "PAR_GlobalIntegrationPeriod"), 200);
+    QCOMPARE(testRunner.getVfComponent(entityIdDspSuper, "PAR_IntervalGlobalTime"), 1);
+    QCOMPARE(testRunner.getVfComponent(entityIdDspSuper, "PAR_IntervalGlobalPeriod"), 200);
 
     testRunner.setVfComponent(entityIdTime1st, "PAR_Interval", 10);
     QCOMPARE(testRunner.getVfComponent(entityIdTime1st, "PAR_Interval"), 10);
-    QCOMPARE(testRunner.getVfComponent(entityIdDspSuper, "PAR_GlobalIntegrationTime"), 10);
+    QCOMPARE(testRunner.getVfComponent(entityIdDspSuper, "PAR_IntervalGlobalTime"), 10);
 
     // check no loop/cross change
     QCOMPARE(testRunner.getVfComponent(entityIdTime2nd, "PAR_Interval"), 1);
     QCOMPARE(testRunner.getVfComponent(entityIdPeriod1st, "PAR_Interval"), 200);
     QCOMPARE(testRunner.getVfComponent(entityIdPeriod2nd, "PAR_Interval"), 200);
-    QCOMPARE(testRunner.getVfComponent(entityIdDspSuper, "PAR_GlobalIntegrationPeriod"), 200);
+    QCOMPARE(testRunner.getVfComponent(entityIdDspSuper, "PAR_IntervalGlobalPeriod"), 200);
 }
 
 void test_dspsuper_global_integration_time::globalIntegrationTimeComponentNotFollowsSecond()
@@ -92,12 +92,12 @@ void test_dspsuper_global_integration_time::globalIntegrationTimeComponentNotFol
     QCOMPARE(testRunner.getVfComponent(entityIdTime2nd, "PAR_Interval"), 1);
     QCOMPARE(testRunner.getVfComponent(entityIdPeriod1st, "PAR_Interval"), 200);
     QCOMPARE(testRunner.getVfComponent(entityIdPeriod2nd, "PAR_Interval"), 200);
-    QCOMPARE(testRunner.getVfComponent(entityIdDspSuper, "PAR_GlobalIntegrationTime"), 1);
+    QCOMPARE(testRunner.getVfComponent(entityIdDspSuper, "PAR_IntervalGlobalTime"), 1);
 
     testRunner.setVfComponent(entityIdTime2nd, "PAR_Interval", 20);
     QCOMPARE(testRunner.getVfComponent(entityIdTime2nd, "PAR_Interval"), 20);
 
-    QCOMPARE(testRunner.getVfComponent(entityIdDspSuper, "PAR_GlobalIntegrationTime"), 1);
+    QCOMPARE(testRunner.getVfComponent(entityIdDspSuper, "PAR_IntervalGlobalTime"), 1);
     QCOMPARE(testRunner.getVfComponent(entityIdTime1st, "PAR_Interval"), 1);
     QCOMPARE(testRunner.getVfComponent(entityIdPeriod1st, "PAR_Interval"), 200);
     QCOMPARE(testRunner.getVfComponent(entityIdPeriod2nd, "PAR_Interval"), 200);
@@ -110,18 +110,18 @@ void test_dspsuper_global_integration_time::globalIntegrationPeriodComponentFoll
     QCOMPARE(testRunner.getVfComponent(entityIdTime2nd, "PAR_Interval"), 1);
     QCOMPARE(testRunner.getVfComponent(entityIdPeriod1st, "PAR_Interval"), 200);
     QCOMPARE(testRunner.getVfComponent(entityIdPeriod2nd, "PAR_Interval"), 200);
-    QCOMPARE(testRunner.getVfComponent(entityIdDspSuper, "PAR_GlobalIntegrationTime"), 1);
-    QCOMPARE(testRunner.getVfComponent(entityIdDspSuper, "PAR_GlobalIntegrationPeriod"), 200);
+    QCOMPARE(testRunner.getVfComponent(entityIdDspSuper, "PAR_IntervalGlobalTime"), 1);
+    QCOMPARE(testRunner.getVfComponent(entityIdDspSuper, "PAR_IntervalGlobalPeriod"), 200);
 
     testRunner.setVfComponent(entityIdPeriod1st, "PAR_Interval", 101);
     QCOMPARE(testRunner.getVfComponent(entityIdPeriod1st, "PAR_Interval"), 101);
-    QCOMPARE(testRunner.getVfComponent(entityIdDspSuper, "PAR_GlobalIntegrationPeriod"), 101);
+    QCOMPARE(testRunner.getVfComponent(entityIdDspSuper, "PAR_IntervalGlobalPeriod"), 101);
 
     // check no loop/cross change
     QCOMPARE(testRunner.getVfComponent(entityIdPeriod2nd, "PAR_Interval"), 200);
     QCOMPARE(testRunner.getVfComponent(entityIdTime1st, "PAR_Interval"), 1);
     QCOMPARE(testRunner.getVfComponent(entityIdTime2nd, "PAR_Interval"), 1);
-    QCOMPARE(testRunner.getVfComponent(entityIdDspSuper, "PAR_GlobalIntegrationTime"), 1);
+    QCOMPARE(testRunner.getVfComponent(entityIdDspSuper, "PAR_IntervalGlobalTime"), 1);
 }
 
 void test_dspsuper_global_integration_time::globalIntegrationPeriodComponentNotFollowsSecond()
@@ -131,12 +131,12 @@ void test_dspsuper_global_integration_time::globalIntegrationPeriodComponentNotF
     QCOMPARE(testRunner.getVfComponent(entityIdTime2nd, "PAR_Interval"), 1);
     QCOMPARE(testRunner.getVfComponent(entityIdPeriod1st, "PAR_Interval"), 200);
     QCOMPARE(testRunner.getVfComponent(entityIdPeriod2nd, "PAR_Interval"), 200);
-    QCOMPARE(testRunner.getVfComponent(entityIdDspSuper, "PAR_GlobalIntegrationPeriod"), 200);
+    QCOMPARE(testRunner.getVfComponent(entityIdDspSuper, "PAR_IntervalGlobalPeriod"), 200);
 
     testRunner.setVfComponent(entityIdPeriod2nd, "PAR_Interval", 20);
     QCOMPARE(testRunner.getVfComponent(entityIdPeriod2nd, "PAR_Interval"), 20);
 
-    QCOMPARE(testRunner.getVfComponent(entityIdDspSuper, "PAR_GlobalIntegrationPeriod"), 200);
+    QCOMPARE(testRunner.getVfComponent(entityIdDspSuper, "PAR_IntervalGlobalPeriod"), 200);
     QCOMPARE(testRunner.getVfComponent(entityIdPeriod1st, "PAR_Interval"), 200);
     QCOMPARE(testRunner.getVfComponent(entityIdTime1st, "PAR_Interval"), 1);
     QCOMPARE(testRunner.getVfComponent(entityIdTime2nd, "PAR_Interval"), 1);
@@ -149,10 +149,10 @@ void test_dspsuper_global_integration_time::componentsTimeIntegrationFollowGloba
     QCOMPARE(testRunner.getVfComponent(entityIdTime2nd, "PAR_Interval"), 1);
     QCOMPARE(testRunner.getVfComponent(entityIdPeriod1st, "PAR_Interval"), 200);
     QCOMPARE(testRunner.getVfComponent(entityIdPeriod2nd, "PAR_Interval"), 200);
-    QCOMPARE(testRunner.getVfComponent(entityIdDspSuper, "PAR_GlobalIntegrationTime"), 1);
+    QCOMPARE(testRunner.getVfComponent(entityIdDspSuper, "PAR_IntervalGlobalTime"), 1);
 
-    testRunner.setVfComponent(entityIdDspSuper, "PAR_GlobalIntegrationTime", 10);
-    QCOMPARE(testRunner.getVfComponent(entityIdDspSuper, "PAR_GlobalIntegrationTime"), 10);
+    testRunner.setVfComponent(entityIdDspSuper, "PAR_IntervalGlobalTime", 10);
+    QCOMPARE(testRunner.getVfComponent(entityIdDspSuper, "PAR_IntervalGlobalTime"), 10);
     QCOMPARE(testRunner.getVfComponent(entityIdTime1st, "PAR_Interval"), 10);
     QCOMPARE(testRunner.getVfComponent(entityIdTime2nd, "PAR_Interval"), 10);
 
@@ -167,10 +167,10 @@ void test_dspsuper_global_integration_time::componentsPeriodIntegrationFollowGlo
     QCOMPARE(testRunner.getVfComponent(entityIdTime2nd, "PAR_Interval"), 1);
     QCOMPARE(testRunner.getVfComponent(entityIdPeriod1st, "PAR_Interval"), 200);
     QCOMPARE(testRunner.getVfComponent(entityIdPeriod2nd, "PAR_Interval"), 200);
-    QCOMPARE(testRunner.getVfComponent(entityIdDspSuper, "PAR_GlobalIntegrationPeriod"), 200);
+    QCOMPARE(testRunner.getVfComponent(entityIdDspSuper, "PAR_IntervalGlobalPeriod"), 200);
 
-    testRunner.setVfComponent(entityIdDspSuper, "PAR_GlobalIntegrationPeriod", 201);
-    QCOMPARE(testRunner.getVfComponent(entityIdDspSuper, "PAR_GlobalIntegrationPeriod"), 201);
+    testRunner.setVfComponent(entityIdDspSuper, "PAR_IntervalGlobalPeriod", 201);
+    QCOMPARE(testRunner.getVfComponent(entityIdDspSuper, "PAR_IntervalGlobalPeriod"), 201);
     QCOMPARE(testRunner.getVfComponent(entityIdPeriod1st, "PAR_Interval"), 201);
     QCOMPARE(testRunner.getVfComponent(entityIdPeriod2nd, "PAR_Interval"), 201);
 

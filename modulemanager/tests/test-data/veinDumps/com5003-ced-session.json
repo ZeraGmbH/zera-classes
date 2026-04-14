@@ -5468,7 +5468,7 @@
                 "INF_ModuleInterface": {
                     "Description": "<skipped>"
                 },
-                "PAR_GlobalIntegrationPeriod": {
+                "PAR_IntervalGlobalPeriod": {
                     "Description": "<skipped>",
                     "Unit": "period",
                     "Validation": {
@@ -5480,7 +5480,7 @@
                         "Type": "INTEGER"
                     }
                 },
-                "PAR_GlobalIntegrationTime": {
+                "PAR_IntervalGlobalTime": {
                     "Description": "<skipped>",
                     "Unit": "s",
                     "Validation": {
@@ -5503,21 +5503,21 @@
                         "CONFIGURATION",
                         "TPERIOD",
                         "10",
-                        "PAR_GlobalIntegrationPeriod",
+                        "PAR_IntervalGlobalPeriod",
                         "0"
                     ],
                     [
                         "CONFIGURATION",
                         "TINTEGRATION",
                         "10",
-                        "PAR_GlobalIntegrationTime",
+                        "PAR_IntervalGlobalTime",
                         "0"
                     ]
                 ],
                 "Name": "DSP1"
             }
         },
-        "PAR_GlobalIntegrationPeriod": 200,
-        "PAR_GlobalIntegrationTime": 1
+        "PAR_IntervalGlobalPeriod": 200,
+        "PAR_IntervalGlobalTime": 1
     }
 }

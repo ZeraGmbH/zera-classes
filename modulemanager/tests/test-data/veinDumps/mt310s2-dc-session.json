@@ -5597,7 +5597,7 @@
                 "INF_ModuleInterface": {
                     "Description": "<skipped>"
                 },
-                "PAR_GlobalIntegrationTime": {
+                "PAR_IntervalGlobalTime": {
                     "Description": "<skipped>",
                     "Unit": "s",
                     "Validation": {
@@ -5620,13 +5620,13 @@
                         "CONFIGURATION",
                         "TINTEGRATION",
                         "10",
-                        "PAR_GlobalIntegrationTime",
+                        "PAR_IntervalGlobalTime",
                         "0"
                     ]
                 ],
                 "Name": "DSP1"
             }
         },
-        "PAR_GlobalIntegrationTime": 1
+        "PAR_IntervalGlobalTime": 1
     }
 }
