@@ -3,6 +3,7 @@
 
 #include "dspsupermodule.h"
 #include "dspsupermoduleconfigdata.h"
+#include "dspsupermoduleintegrationcomponentfinder.h"
 #include <basedspmeasprogram.h>
 #include <QStateMachine>
 #include <QState>
@@ -41,9 +42,10 @@ private:
     void setDspCmdList();
     void startDataAcquisitionDSP(int countPeriodsToFetch);
     void setIntegrationComponentsToFollow();
+    void updateIntegrationComponents(const QList<DspSuperModuleIntegrationComponentFinder::Component> &components,
+                                     const QVariant &integrationValue);
 
     DspSuperModule* m_pModule = nullptr;
-
     DspVarGroupClientInterface* m_pActualValuesDSP = nullptr;
 
     VfModuleParameter* m_veinGlobalIntegrationTimeParameter = nullptr;

@@ -1,7 +1,6 @@
 #include "dspsupermodulemeasprogram.h"
 #include "dspsupermodule.h"
 #include "dspsupermoduleconfiguration.h"
-#include "dspsupermoduleintegrationcomponentfinder.h"
 #include "taskdspdataacquisition.h"
 #include <doublevalidator.h>
 #include <errormessages.h>
@@ -10,6 +9,7 @@
 #include <reply.h>
 #include <proxy.h>
 #include <timerfactoryqt.h>
+#include <vf_client_component_setter.h>
 
 namespace DSPSUPERMODULE
 {
@@ -73,6 +73,14 @@ void DspSuperModuleMeasProgram::generateVeinInterface()
         m_veinGlobalIntegrationTimeParameter->setUnit("s");
         m_veinGlobalIntegrationTimeParameter->setValidator(new cDoubleValidator(1.0, 100.0, 0.5));
         m_pModule->m_veinModuleParameterMap[key] = m_veinGlobalIntegrationTimeParameter;
+        connect(m_veinGlobalIntegrationTimeParameter, &VfModuleParameter::sigValueChanged, this, [&](const QVariant &newValue) {
+            QList<DspSuperModuleIntegrationComponentFinder::Component> entityComponentsToChange =
+                DspSuperModuleIntegrationComponentFinder::findIntegrationTimeComponents(m_pModule->getStorageDb());
+            updateIntegrationComponents(entityComponentsToChange, newValue);
+        });
+        connect(m_componentIntegrationTimeToFollow.get(), &VeinStorage::AbstractComponent::sigValueChange, this, [&](const QVariant &newValue) {
+            m_veinGlobalIntegrationTimeParameter->setValue(newValue);
+        });
     }
 
     if (m_componentIntegrationPeriodToFollow  != nullptr) {
@@ -84,6 +92,14 @@ void DspSuperModuleMeasProgram::generateVeinInterface()
         m_veinGlobalIntegrationPeriodParameter->setValidator(new cIntValidator(5, 5000, 1));
         m_veinGlobalIntegrationPeriodParameter->setScpiInfo("CONFIGURATION", "TPERIOD", SCPI::isQuery|SCPI::isCmdwP);
         m_pModule->m_veinModuleParameterMap[key] = m_veinGlobalIntegrationPeriodParameter;
+        connect(m_veinGlobalIntegrationPeriodParameter, &VfModuleParameter::sigValueChanged, this, [&](const QVariant &newValue) {
+            QList<DspSuperModuleIntegrationComponentFinder::Component> entityComponentsToChange =
+                DspSuperModuleIntegrationComponentFinder::findIntegrationPeriodComponents(m_pModule->getStorageDb());
+            updateIntegrationComponents(entityComponentsToChange, newValue);
+        });
+        connect(m_componentIntegrationPeriodToFollow.get(), &VeinStorage::AbstractComponent::sigValueChange, this, [&](const QVariant &newValue) {
+            m_veinGlobalIntegrationPeriodParameter->setValue(newValue);
+        });
     }
 }
 
@@ -178,7 +194,6 @@ void DspSuperModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply
         }
     }
     else {
-        // maybe other objexts share the same dsp interface
         if (m_MsgNrCmdList.contains(msgnr)) {
             int cmd = m_MsgNrCmdList.take(msgnr);
             switch (cmd)
@@ -321,7 +336,7 @@ void DspSuperModuleMeasProgram::startDataAcquisitionDSP(int countPeriodsToFetch)
 
 void DspSuperModuleMeasProgram::setIntegrationComponentsToFollow()
 {
-    VeinStorage::AbstractDatabase *storageDb = m_pModule->getStorageDb();
+    const VeinStorage::AbstractDatabase *storageDb = m_pModule->getStorageDb();
 
     QList<DspSuperModuleIntegrationComponentFinder::Component> timeComponents =
         DspSuperModuleIntegrationComponentFinder::findIntegrationTimeComponents(storageDb);
@@ -333,6 +348,20 @@ void DspSuperModuleMeasProgram::setIntegrationComponentsToFollow()
     if (periodComponents.count() > 0)
         m_componentIntegrationPeriodToFollow = DspSuperModuleIntegrationComponentFinder::componentToVein(storageDb, periodComponents[0]);
 
+}
+
+void DspSuperModuleMeasProgram::updateIntegrationComponents(const QList<DspSuperModuleIntegrationComponentFinder::Component> &components,
+                                                            const QVariant &integrationValue)
+{
+    const VeinStorage::AbstractDatabase *storageDb = m_pModule->getStorageDb();
+    for (const DspSuperModuleIntegrationComponentFinder::Component &component : components) {
+        const QVariant oldValue = storageDb->getStoredValue(component.entityId, component.componentName);
+        QEvent *event = VfClientComponentSetter::generateEvent(component.entityId,
+                                                               component.componentName,
+                                                               oldValue,
+                                                               integrationValue);
+        emit m_pModule->getValidatorEventSystem()->sigSendEvent(event);
+    }
 }
 
 }

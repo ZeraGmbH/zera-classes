@@ -13,6 +13,14 @@ private slots:
     void integrationComponentsFindTwoTime();
     void integrationComponentsFindTwoPeriod();
     void integrationComponentsFindTwoTimeTwoPeriod();
+
+    void globalIntegrationTimeComponentFollowsFirst();
+    void globalIntegrationTimeComponentNotFollowsSecond();
+    void globalIntegrationPeriodComponentFollowsFirst();
+    void globalIntegrationPeriodComponentNotFollowsSecond();
+
+    void componentsTimeIntegrationFollowGlobal();
+    void componentsPeriodIntegrationFollowGlobal();
 };
 
 #endif // TEST_DSPSUPER_GLOBAL_INTEGRATION_TIME_H
