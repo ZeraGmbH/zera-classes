@@ -44,14 +44,14 @@ void test_dspsuper_global_integration_time::integrationComponentsFindTwoTimeTwoP
     ModuleManagerTestRunner testRunner(":/sessions/two-time-two-period-integration.json");
     VeinStorage::AbstractDatabase *veinStorageDb = testRunner.getVeinStorageDb();
 
-    QList<DspSuperModuleIntegrationComponentFinder::Components> timeEntityComponents =
+    QList<DspSuperModuleIntegrationComponentFinder::Component> timeEntityComponents =
         DspSuperModuleIntegrationComponentFinder::findIntegrationTimeComponents(veinStorageDb);
     QCOMPARE(timeEntityComponents.count(), 2);
     QCOMPARE(timeEntityComponents[0].entityId, 1040);
     QCOMPARE(timeEntityComponents[0].componentName, "PAR_Interval");
     QCOMPARE(timeEntityComponents[1].entityId, 1050);
     QCOMPARE(timeEntityComponents[1].componentName, "PAR_Interval");
-    QList<DspSuperModuleIntegrationComponentFinder::Components> periodEntityComponents =
+    QList<DspSuperModuleIntegrationComponentFinder::Component> periodEntityComponents =
         DspSuperModuleIntegrationComponentFinder::findIntegrationPeriodComponents(veinStorageDb);
     QCOMPARE(periodEntityComponents.count(), 2);
     QCOMPARE(periodEntityComponents[0].entityId, 1070);

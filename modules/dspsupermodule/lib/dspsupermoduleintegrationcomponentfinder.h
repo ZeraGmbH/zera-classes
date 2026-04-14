@@ -8,15 +8,16 @@
 class DspSuperModuleIntegrationComponentFinder
 {
 public:
-    struct Components {
+    struct Component {
         int entityId;
         QString componentName;
     };
-    static QList<Components> findIntegrationTimeComponents(const VeinStorage::AbstractDatabase *storageDb);
-    static QList<Components> findIntegrationPeriodComponents(const VeinStorage::AbstractDatabase *storageDb);
+    static QList<Component> findIntegrationTimeComponents(const VeinStorage::AbstractDatabase *storageDb);
+    static QList<Component> findIntegrationPeriodComponents(const VeinStorage::AbstractDatabase *storageDb);
+    static VeinStorage::AbstractComponentPtr componentToVein(const VeinStorage::AbstractDatabase *storageDb, const Component &component);
 
 private:
-    static QList<Components> findIntegrationComponents(const VeinStorage::AbstractDatabase *storageDb, const QString &integrationUnit);
+    static QList<Component> findIntegrationComponents(const VeinStorage::AbstractDatabase *storageDb, const QString &integrationUnit);
     static QJsonObject getModuleInterface(const VeinStorage::AbstractDatabase *storageDb, int entityId);
     static QJsonObject getParInterval(const VeinStorage::AbstractDatabase *storageDb, int entityId);
 };

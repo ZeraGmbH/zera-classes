@@ -3,22 +3,22 @@
 
 static const char* integrationTimeComponentName = "PAR_Interval";
 
-QList<DspSuperModuleIntegrationComponentFinder::Components> DspSuperModuleIntegrationComponentFinder::findIntegrationTimeComponents(
+QList<DspSuperModuleIntegrationComponentFinder::Component> DspSuperModuleIntegrationComponentFinder::findIntegrationTimeComponents(
     const VeinStorage::AbstractDatabase *storageDb)
 {
     return findIntegrationComponents(storageDb, "s");
 }
 
-QList<DspSuperModuleIntegrationComponentFinder::Components> DspSuperModuleIntegrationComponentFinder::findIntegrationPeriodComponents(
+QList<DspSuperModuleIntegrationComponentFinder::Component> DspSuperModuleIntegrationComponentFinder::findIntegrationPeriodComponents(
     const VeinStorage::AbstractDatabase *storageDb)
 {
     return findIntegrationComponents(storageDb, "period");
 }
 
-QList<DspSuperModuleIntegrationComponentFinder::Components> DspSuperModuleIntegrationComponentFinder::findIntegrationComponents(
+QList<DspSuperModuleIntegrationComponentFinder::Component> DspSuperModuleIntegrationComponentFinder::findIntegrationComponents(
     const VeinStorage::AbstractDatabase *storageDb, const QString &integrationUnit)
 {
-    QList<Components> ret;
+    QList<Component> ret;
     const QList<int> entityList = storageDb->getEntityList();
     for (int entityId : entityList) {
         QJsonObject parInterval = getParInterval(storageDb, entityId);
@@ -26,6 +26,12 @@ QList<DspSuperModuleIntegrationComponentFinder::Components> DspSuperModuleIntegr
             ret.append({entityId, integrationTimeComponentName});
     }
     return ret;
+}
+
+VeinStorage::AbstractComponentPtr DspSuperModuleIntegrationComponentFinder::componentToVein(
+    const VeinStorage::AbstractDatabase *storageDb, const Component &component)
+{
+    return storageDb->findComponent(component.entityId, component.componentName);
 }
 
 QJsonObject DspSuperModuleIntegrationComponentFinder::getModuleInterface(const VeinStorage::AbstractDatabase *storageDb, int entityId)
