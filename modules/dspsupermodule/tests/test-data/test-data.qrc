@@ -10,5 +10,8 @@
 
         <file>sessions/minimal.json</file>
         <file>sessions/minimal-10-total.json</file>
+        <file>sessions/two-time-integration.json</file>
+        <file>sessions/two-time-two-period-integration.json</file>
+        <file>sessions/two-period-integration.json</file>
     </qresource>
 </RCC>

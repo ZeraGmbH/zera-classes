@@ -1,0 +1,19 @@
+{
+    "modules" : [
+        {
+            "name" : "power1module",
+            "configFile" : "mt310s2-power1moduleCED.xml",
+            "id": 1070
+        },
+        {
+            "name" : "power1module",
+            "configFile" : "mt310s2-power1module2CED.xml",
+            "id": 1071
+        },
+        {
+            "name" : "dspsupermodule",
+            "configFile" : "dspsupermodule-common.xml",
+            "id": 9000
+        }
+    ]
+}
