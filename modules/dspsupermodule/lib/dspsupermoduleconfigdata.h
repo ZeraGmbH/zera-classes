@@ -9,7 +9,13 @@ namespace DSPSUPERMODULE
 class DspSuperModuleConfigData
 {
 public:
-    quint32 m_maxPeriodsDsp;
+    // DspSuperModule tries to piggy back on other modules interrupts (see
+    // DspSuperModuleMeasProgram::setDspCmdList)
+    // In case NO module causes an interrupt in a period the period tupel is
+    // kept inside DSP array. In case the DSP array is full, DspSuperModule
+    // causes an 'extra' interrupt.
+    quint32 m_dspArrayEntrySize;
+    // Module extents DSP array size
     quint32 m_periodsTotal;
 };
 

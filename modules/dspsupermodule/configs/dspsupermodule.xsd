@@ -20,7 +20,7 @@
                 <xs:element name="configuration">
                     <xs:complexType>
                         <xs:sequence>
-                        <xs:element name="maxperiodsdsp" type="periodcounttypedsp"/>
+                        <xs:element name="dspperiodarraysize" type="periodcounttypedsp"/>
                         <xs:element name="periodstotal" type="periodcounttypetotal"/>
                         </xs:sequence>
                     </xs:complexType>

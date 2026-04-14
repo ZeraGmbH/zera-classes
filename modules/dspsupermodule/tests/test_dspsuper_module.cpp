@@ -65,7 +65,7 @@ void test_dspsuper_module::veinDumpInitial()
     QVERIFY(TestLogHelpers::compareAndLogOnDiffJsonFile(":/veinDumps/dumpInitial.json", dumped));
 }
 
-void test_dspsuper_module::initialSupervisorMap()
+void test_dspsuper_module::supervisorMapInitial()
 {
     ModuleManagerTestRunner testRunner(":/sessions/minimal.json");
     DSPSUPERMODULE::DspSuperModule *dspSuperModule = qobject_cast<DSPSUPERMODULE::DspSuperModule*>(testRunner.getModule("dspsupermodule", 9000));
@@ -73,7 +73,7 @@ void test_dspsuper_module::initialSupervisorMap()
     QCOMPARE(map.size(), 0);
 }
 
-void test_dspsuper_module::oneInterrupt()
+void test_dspsuper_module::supervisorMapOneInterrupt()
 {
     ModuleManagerTestRunner testRunner(":/sessions/minimal.json");
     TestDspInterfacePtr dspInterface = testRunner.getDspInterface(dspSuperEntityId);
@@ -93,7 +93,7 @@ void test_dspsuper_module::oneInterrupt()
     QCOMPARE(map[1].m_timeStamp, TimerFactoryQt::getCurrentTime());
 }
 
-void test_dspsuper_module::oneInterruptTwoEntries()
+void test_dspsuper_module::supervisorMapOneInterruptTwoEntries()
 {
     ModuleManagerTestRunner testRunner(":/sessions/minimal.json");
     TestDspInterfacePtr dspInterface = testRunner.getDspInterface(dspSuperEntityId);
@@ -123,7 +123,7 @@ void test_dspsuper_module::oneInterruptTwoEntries()
     QCOMPARE(map[2].m_timeStamp, now);
 }
 
-void test_dspsuper_module::twoInterrupts()
+void test_dspsuper_module::supervisorMapTwoInterrupts()
 {
     ModuleManagerTestRunner testRunner(":/sessions/minimal.json");
     TestDspInterfacePtr dspInterface = testRunner.getDspInterface(dspSuperEntityId);
@@ -157,7 +157,7 @@ void test_dspsuper_module::twoInterrupts()
     QCOMPARE(map[2].m_timeStamp, now.addMSecs(20));
 }
 
-void test_dspsuper_module::threeInterruptsTimerb32BitTurnaround()
+void test_dspsuper_module::supervisorMapThreeInterruptsTimerb32BitTurnaround()
 {
     ModuleManagerTestRunner testRunner(":/sessions/minimal.json");
     TestDspInterfacePtr dspInterface = testRunner.getDspInterface(dspSuperEntityId);
@@ -195,7 +195,7 @@ void test_dspsuper_module::threeInterruptsTimerb32BitTurnaround()
     QCOMPARE(map[3].m_timeStamp, now.addMSecs(2));
 }
 
-void test_dspsuper_module::max10Entries()
+void test_dspsuper_module::supervisorMap10EntriesTotal()
 {
     ModuleManagerTestRunner testRunner(":/sessions/minimal-10-total.json");
     TestDspInterfacePtr dspInterface = testRunner.getDspInterface(dspSuperEntityId);

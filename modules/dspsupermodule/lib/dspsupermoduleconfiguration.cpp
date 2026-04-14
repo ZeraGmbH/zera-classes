@@ -7,7 +7,7 @@ namespace DSPSUPERMODULE
 
 enum moduleconfigstate
 {
-    setMaxPeriodsDsp,
+    setDspPeriodsArraySize,
     setPeriodsTotal,
 
     setValue1 = 20
@@ -34,7 +34,7 @@ void DspSuperModuleConfiguration::setConfiguration(const QByteArray &xmlString)
 
     m_ConfigXMLMap.clear(); // in case of new configuration we completely set up
 
-    m_ConfigXMLMap["dspsupermodconfpar:configuration:maxperiodsdsp"] = setMaxPeriodsDsp;
+    m_ConfigXMLMap["dspsupermodconfpar:configuration:dspperiodarraysize"] = setDspPeriodsArraySize;
     m_ConfigXMLMap["dspsupermodconfpar:configuration:periodstotal"] = setPeriodsTotal;
 
     m_pXMLReader->loadXMLFromString(QString::fromUtf8(xmlString.data(), xmlString.size()));
@@ -56,8 +56,8 @@ void DspSuperModuleConfiguration::configXMLInfo(const QString &key)
         bool ok = true;
         int cmd = m_ConfigXMLMap[key];
         switch (cmd) {
-        case setMaxPeriodsDsp:
-            m_dspSuperModulConfigData->m_maxPeriodsDsp = m_pXMLReader->getValue(key).toInt(&ok);
+        case setDspPeriodsArraySize:
+            m_dspSuperModulConfigData->m_dspArrayEntrySize = m_pXMLReader->getValue(key).toInt(&ok);
             break;
         case setPeriodsTotal:
             m_dspSuperModulConfigData->m_periodsTotal = m_pXMLReader->getValue(key).toInt(&ok);

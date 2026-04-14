@@ -15,14 +15,12 @@ private slots:
     void zdspDumpInitial();
     void veinDumpInitial();
 
-    void initialSupervisorMap();
-
-    void oneInterrupt();
-    void oneInterruptTwoEntries();
-    void twoInterrupts();
-    void threeInterruptsTimerb32BitTurnaround();
-
-    void max10Entries();
+    void supervisorMapInitial();
+    void supervisorMapOneInterrupt();
+    void supervisorMapOneInterruptTwoEntries();
+    void supervisorMapTwoInterrupts();
+    void supervisorMapThreeInterruptsTimerb32BitTurnaround();
+    void supervisorMap10EntriesTotal();
 };
 
 #endif // TEST_DSPSUPER_MODULE_H
