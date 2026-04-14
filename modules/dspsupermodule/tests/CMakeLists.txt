@@ -21,6 +21,11 @@ target_sources(test_dspsuper_config_load
     test-data/test-data.qrc
 )
 
+target_sources(test_dspsuper_module
+  PRIVATE
+    test-data/test-data.qrc
+)
+
 target_sources(test_dspsuper_global_integration_time
   PRIVATE
     test-data/test-data.qrc
