@@ -1,6 +1,7 @@
 #include "dspsupermodulemeasprogram.h"
 #include "dspsupermodule.h"
 #include "dspsupermoduleconfiguration.h"
+#include "dspsupermoduleintegrationcomponentfinder.h"
 #include "taskdspdataacquisition.h"
 #include <doublevalidator.h>
 #include <errormessages.h>
@@ -60,24 +61,30 @@ DspSuperModuleMeasProgram::DspSuperModuleMeasProgram(DspSuperModule* module, std
 
 void DspSuperModuleMeasProgram::generateVeinInterface()
 {
-    QString key;
-    m_veinGlobalIntegrationTimeParameter = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
-                                                                 key = QString("PAR_GlobalIntegrationTime"),
-                                                                 "Global integration time",
-                                                                 QVariant());
-    m_veinGlobalIntegrationTimeParameter->setScpiInfo("CONFIGURATION", "TINTEGRATION", SCPI::isQuery|SCPI::isCmdwP);
-    m_veinGlobalIntegrationTimeParameter->setUnit("s");
-    m_veinGlobalIntegrationTimeParameter->setValidator(new cDoubleValidator(1.0, 100.0, 0.5));
-    m_pModule->m_veinModuleParameterMap[key] = m_veinGlobalIntegrationTimeParameter;
+    setIntegrationComponentsToFollow();
 
-    m_veinGlobalIntegrationPeriodParameter = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
-                                                                   key = QString("PAR_GlobalIntegrationPeriod"),
-                                                                   "Global integration period",
-                                                                   QVariant());
-    m_veinGlobalIntegrationPeriodParameter->setUnit("period");
-    m_veinGlobalIntegrationPeriodParameter->setValidator(new cIntValidator(5, 5000, 1));
-    m_veinGlobalIntegrationPeriodParameter->setScpiInfo("CONFIGURATION", "TPERIOD", SCPI::isQuery|SCPI::isCmdwP);
-    m_pModule->m_veinModuleParameterMap[key] = m_veinGlobalIntegrationPeriodParameter;
+    QString key;
+    if (m_componentIntegrationTimeToFollow  != nullptr) {
+        m_veinGlobalIntegrationTimeParameter = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
+                                                                     key = QString("PAR_GlobalIntegrationTime"),
+                                                                     "Global integration time",
+                                                                     m_componentIntegrationTimeToFollow->getValue());
+        m_veinGlobalIntegrationTimeParameter->setScpiInfo("CONFIGURATION", "TINTEGRATION", SCPI::isQuery|SCPI::isCmdwP);
+        m_veinGlobalIntegrationTimeParameter->setUnit("s");
+        m_veinGlobalIntegrationTimeParameter->setValidator(new cDoubleValidator(1.0, 100.0, 0.5));
+        m_pModule->m_veinModuleParameterMap[key] = m_veinGlobalIntegrationTimeParameter;
+    }
+
+    if (m_componentIntegrationPeriodToFollow  != nullptr) {
+        m_veinGlobalIntegrationPeriodParameter = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
+                                                                       key = QString("PAR_GlobalIntegrationPeriod"),
+                                                                       "Global integration period",
+                                                                       m_componentIntegrationPeriodToFollow->getValue());
+        m_veinGlobalIntegrationPeriodParameter->setUnit("period");
+        m_veinGlobalIntegrationPeriodParameter->setValidator(new cIntValidator(5, 5000, 1));
+        m_veinGlobalIntegrationPeriodParameter->setScpiInfo("CONFIGURATION", "TPERIOD", SCPI::isQuery|SCPI::isCmdwP);
+        m_pModule->m_veinModuleParameterMap[key] = m_veinGlobalIntegrationPeriodParameter;
+    }
 }
 
 void DspSuperModuleMeasProgram::setDspVarList()
@@ -310,6 +317,22 @@ void DspSuperModuleMeasProgram::startDataAcquisitionDSP(int countPeriodsToFetch)
         });
         m_taskDataAcquisition->start();
     }
+}
+
+void DspSuperModuleMeasProgram::setIntegrationComponentsToFollow()
+{
+    VeinStorage::AbstractDatabase *storageDb = m_pModule->getStorageDb();
+
+    QList<DspSuperModuleIntegrationComponentFinder::Component> timeComponents =
+        DspSuperModuleIntegrationComponentFinder::findIntegrationTimeComponents(storageDb);
+    if (timeComponents.count() > 0)
+        m_componentIntegrationTimeToFollow = DspSuperModuleIntegrationComponentFinder::componentToVein(storageDb, timeComponents[0]);
+
+    QList<DspSuperModuleIntegrationComponentFinder::Component> periodComponents =
+        DspSuperModuleIntegrationComponentFinder::findIntegrationPeriodComponents(storageDb);
+    if (periodComponents.count() > 0)
+        m_componentIntegrationPeriodToFollow = DspSuperModuleIntegrationComponentFinder::componentToVein(storageDb, periodComponents[0]);
+
 }
 
 }

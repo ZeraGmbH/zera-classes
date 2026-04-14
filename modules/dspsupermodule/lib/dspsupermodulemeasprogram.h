@@ -40,6 +40,7 @@ private:
     void setDspVarList();
     void setDspCmdList();
     void startDataAcquisitionDSP(int countPeriodsToFetch);
+    void setIntegrationComponentsToFollow();
 
     DspSuperModule* m_pModule = nullptr;
 
@@ -47,6 +48,8 @@ private:
 
     VfModuleParameter* m_veinGlobalIntegrationTimeParameter = nullptr;
     VfModuleParameter* m_veinGlobalIntegrationPeriodParameter = nullptr;
+    VeinStorage::AbstractComponentPtr m_componentIntegrationTimeToFollow;
+    VeinStorage::AbstractComponentPtr m_componentIntegrationPeriodToFollow;
 
     // statemachine for activating
     QState m_dspserverConnectState;

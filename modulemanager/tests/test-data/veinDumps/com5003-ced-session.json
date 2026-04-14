@@ -5517,7 +5517,7 @@
                 "Name": "DSP1"
             }
         },
-        "PAR_GlobalIntegrationPeriod": null,
-        "PAR_GlobalIntegrationTime": null
+        "PAR_GlobalIntegrationPeriod": 200,
+        "PAR_GlobalIntegrationTime": 1
     }
 }

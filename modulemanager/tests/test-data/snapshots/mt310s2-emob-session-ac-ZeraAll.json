@@ -432,8 +432,7 @@
         "PAR_StartStopRecording": 0
     },
     "9000": {
-        "PAR_GlobalIntegrationPeriod": "",
-        "PAR_GlobalIntegrationTime": ""
+        "PAR_GlobalIntegrationTime": 1
     },
     "Contentsets": [
         "ZeraActualValues",
