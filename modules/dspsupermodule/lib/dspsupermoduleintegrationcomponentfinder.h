@@ -16,6 +16,7 @@ public:
     static QList<Components> findIntegrationPeriodComponents(const VeinStorage::AbstractDatabase *storageDb);
 
 private:
+    static QList<Components> findIntegrationComponents(const VeinStorage::AbstractDatabase *storageDb, const QString &integrationUnit);
     static QJsonObject getModuleInterface(const VeinStorage::AbstractDatabase *storageDb, int entityId);
     static QJsonObject getParInterval(const VeinStorage::AbstractDatabase *storageDb, int entityId);
 };

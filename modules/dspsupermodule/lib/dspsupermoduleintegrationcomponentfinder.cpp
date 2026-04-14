@@ -6,24 +6,23 @@ static const char* integrationTimeComponentName = "PAR_Interval";
 QList<DspSuperModuleIntegrationComponentFinder::Components> DspSuperModuleIntegrationComponentFinder::findIntegrationTimeComponents(
     const VeinStorage::AbstractDatabase *storageDb)
 {
-    QList<Components> ret;
-    const QList<int> entityList = storageDb->getEntityList();
-    for (int entityId : entityList) {
-        QJsonObject parInterval = getParInterval(storageDb, entityId);
-        if (!parInterval.isEmpty() && parInterval["Unit"] == "s")
-            ret.append({entityId, integrationTimeComponentName});
-    }
-    return ret;
+    return findIntegrationComponents(storageDb, "s");
 }
 
 QList<DspSuperModuleIntegrationComponentFinder::Components> DspSuperModuleIntegrationComponentFinder::findIntegrationPeriodComponents(
     const VeinStorage::AbstractDatabase *storageDb)
 {
+    return findIntegrationComponents(storageDb, "period");
+}
+
+QList<DspSuperModuleIntegrationComponentFinder::Components> DspSuperModuleIntegrationComponentFinder::findIntegrationComponents(
+    const VeinStorage::AbstractDatabase *storageDb, const QString &integrationUnit)
+{
     QList<Components> ret;
     const QList<int> entityList = storageDb->getEntityList();
     for (int entityId : entityList) {
         QJsonObject parInterval = getParInterval(storageDb, entityId);
-        if (!parInterval.isEmpty() && parInterval["Unit"] == "period")
+        if (!parInterval.isEmpty() && parInterval["Unit"] == integrationUnit)
             ret.append({entityId, integrationTimeComponentName});
     }
     return ret;
