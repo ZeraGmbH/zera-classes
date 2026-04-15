@@ -19,7 +19,7 @@ void test_taskgetinternalsourcecapabilities::checkScpiSend()
     TimeMachineObject::feedEventLoop();
     QStringList scpiSent = pcb.getProxyClient()->getReceivedCommands();
     QCOMPARE(scpiSent.count(), 1);
-    QString scpiExpectedPath = QString("UISRC:CAPABILITIES");
+    QString scpiExpectedPath = QString("GENERATOR:CAPABILITIES");
     ScpiFullCmdCheckerForTest scpiChecker(scpiExpectedPath, SCPI::isQuery);
     QVERIFY(scpiChecker.matches(scpiSent[0]));
 }
