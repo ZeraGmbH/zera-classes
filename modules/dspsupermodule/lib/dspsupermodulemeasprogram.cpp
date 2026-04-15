@@ -67,7 +67,9 @@ void DspSuperModuleMeasProgram::generateVeinInterface()
     if (m_componentIntegrationTimeToFollow  != nullptr) {
         m_veinGlobalIntegrationTimeParameter = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
                                                                      key = QString("PAR_IntervalGlobalTime"),
-                                                                     "Global integration time",
+                                                                     "Global integration time\n"
+                                                                     "* Issuing command sets integration time for all modules with unit [s]\n"
+                                                                     "* Query follows integration time of RMS measurement",
                                                                      m_componentIntegrationTimeToFollow->getValue());
         m_veinGlobalIntegrationTimeParameter->setScpiInfo("CONFIGURATION", "TINTEGRATION", SCPI::isQuery|SCPI::isCmdwP);
         m_veinGlobalIntegrationTimeParameter->setUnit("s");
@@ -86,7 +88,9 @@ void DspSuperModuleMeasProgram::generateVeinInterface()
     if (m_componentIntegrationPeriodToFollow  != nullptr) {
         m_veinGlobalIntegrationPeriodParameter = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
                                                                        key = QString("PAR_IntervalGlobalPeriod"),
-                                                                       "Global integration period",
+                                                                       "Global integration period\n"
+                                                                       "* Issuing command sets integration time for all modules with unit [period]\n"
+                                                                       "* Query follows integration time of RMS measurement",
                                                                        m_componentIntegrationPeriodToFollow->getValue());
         m_veinGlobalIntegrationPeriodParameter->setUnit("period");
         m_veinGlobalIntegrationPeriodParameter->setValidator(new cIntValidator(5, 5000, 1));
