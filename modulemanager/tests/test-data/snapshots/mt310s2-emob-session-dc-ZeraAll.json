@@ -331,6 +331,8 @@
         "ACT_PowerAboveLimit": 0
     },
     "1800": {
+        "ACT_CSV_EXPORT": "Timestamp;UAUX;IAUX;PAUX\n",
+        "ACT_JSON_EXPORT": "{\n}\n",
         "ACT_Points": 0,
         "ACT_Points1": 0,
         "ACT_Points2": 0,
