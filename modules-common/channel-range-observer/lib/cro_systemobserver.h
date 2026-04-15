@@ -6,6 +6,7 @@
 #include <proxyclient.h>
 #include <taskcontainerinterface.h>
 #include <QMap>
+#include <QJsonObject>
 
 namespace ChannelRangeObserver {
 
@@ -45,7 +46,7 @@ private:
     std::shared_ptr<int> m_samplesPerPeriod = std::make_shared<int>(0);
     TaskContainerInterfacePtr m_currentTasks;
     std::shared_ptr<QStringList> m_tempChannelMNames;
-    std::shared_ptr<bool> m_hasInternalSourceGenerator;
+    std::shared_ptr<QJsonObject> m_internalSourceCapabilities;
 };
 
 typedef std::shared_ptr<SystemObserver> SystemObserverPtr;

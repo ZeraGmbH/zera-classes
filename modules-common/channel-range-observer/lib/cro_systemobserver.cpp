@@ -2,7 +2,7 @@
 #include "cro_channelfetchtask.h"
 #include "taskchannelgetavail.h"
 #include "taskgetsamplerate.h"
-#include "taskhasinternalsourcegenerator.h"
+#include "taskgetinternalsourcecapabilities.h"
 #include "taskserverconnectionstart.h"
 #include <taskcontainersequence.h>
 #include <tasklambdarunner.h>
@@ -15,7 +15,7 @@ SystemObserver::SystemObserver(const NetworkConnectionInfo &netInfo, VeinTcp::Ab
     m_netInfo(netInfo),
     m_tcpFactory(tcpFactory),
     m_pcbClient(Zera::Proxy::getInstance()->getConnectionSmart(netInfo, tcpFactory)),
-    m_hasInternalSourceGenerator(std::make_shared<bool>())
+    m_internalSourceCapabilities(std::make_shared<QJsonObject>())
 {
 }
 
@@ -77,7 +77,7 @@ int SystemObserver::getSamplesPerPeriod() const
 
 bool SystemObserver::hasInternalSourceGenerator() const
 {
-    return *m_hasInternalSourceGenerator;
+    return !m_internalSourceCapabilities->isEmpty();
 }
 
 void SystemObserver::clear()
@@ -100,7 +100,9 @@ void SystemObserver::doStartFullScan()
     m_currentTasks->addSub(TaskChannelGetAvail::create(m_pcbInterface,
                                                        m_tempChannelMNames,
                                                        TRANSACTION_TIMEOUT, [=] { notifyError("Get available channels failed");}));
-    m_currentTasks->addSub(TaskHasInternalSourceGenerator::create(m_pcbInterface, m_hasInternalSourceGenerator));
+    m_currentTasks->addSub(TaskGetInternalSourceCapabilities::create(m_pcbInterface,
+                                                                     m_internalSourceCapabilities,
+                                                                     TRANSACTION_TIMEOUT, [=] { notifyError("Get source capabilities failed");}));
     m_currentTasks->addSub(TaskLambdaRunner::create([&]() {
         TaskContainerInterfacePtr allChannelsDetailsTasks = TaskContainerParallel::create();
         allChannelsDetailsTasks->addSub(TaskGetSampleRate::create(m_pcbInterface,
