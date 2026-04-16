@@ -21,6 +21,14 @@ public:
                          QByteArray bytesExpectedTrail = "\r",
                          int responseTimeoutMs = 0);
     void setDataReceived(QByteArray dataReceived);
+    enum EvalResponse {
+        EVAL_NOT_EXECUTED = 0,
+        EVAL_NO_ANSWER,
+        EVAL_WRONG_ANSWER,
+        EVAL_QUERY_CONTENT_FAIL,
+        EVAL_PASS
+    };
+    void overrideEvaluation(EvalResponse eval);
     void setCustomQueryContentEvaluator(IIoQueryContentEvaluator::Ptr evaluator);
     QByteArray getBytesReceived() const;
     QByteArray getBytesQueryContent() const;
@@ -48,13 +56,6 @@ private:
     QList<QByteArray> m_bytesExpectedLeadList;
     QByteArray m_bytesExpectedTrail = "\r";
     QByteArray m_bytesSend;
-    enum EvalResponse {
-        EVAL_NOT_EXECUTED = 0,
-        EVAL_NO_ANSWER,
-        EVAL_WRONG_ANSWER,
-        EVAL_QUERY_CONTENT_FAIL,
-        EVAL_PASS
-    };
     EvalResponse m_IoEval = EVAL_NOT_EXECUTED;
     IIoQueryContentEvaluator::Ptr m_queryContentEvaluator;
     bool m_hasCustomQueryEvaluator = false;

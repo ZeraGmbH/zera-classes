@@ -35,6 +35,11 @@ void IoTransferDataSingle::setDataReceived(QByteArray dataReceived)
     evaluateResponse();
 }
 
+void IoTransferDataSingle::overrideEvaluation(EvalResponse eval)
+{
+    m_IoEval = eval;
+}
+
 void IoTransferDataSingle::setCustomQueryContentEvaluator(IIoQueryContentEvaluator::Ptr evaluator)
 {
     m_queryContentEvaluator = evaluator;
