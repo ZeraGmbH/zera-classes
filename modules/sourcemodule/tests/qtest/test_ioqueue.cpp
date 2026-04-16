@@ -2,7 +2,7 @@
 #include "test_globals.h"
 #include "iodevicefactory.h"
 #include "iodevicedemo.h"
-#include "iogroupgenerator.h"
+#include "extserialiogroupgenerator.h"
 #include "timerfactoryqt.h"
 #include "timemachinefortest.h"
 #include "timerfactoryqtfortest.h"
@@ -457,14 +457,14 @@ void test_ioqueue::twoFirstInvalidSecondOkSingleIo()
 
 IoQueueGroup::Ptr test_ioqueue::generateStatusPollCommands()
 {
-    IoGroupGenerator ioGroupGenerator = IoGroupGenerator(QJsonObject());
+    ExtSerialIoGroupGenerator ioGroupGenerator = ExtSerialIoGroupGenerator(QJsonObject());
     JsonParamApi params;
     return ioGroupGenerator.generateStatusPollGroup();
 }
 
 IoQueueGroup::Ptr test_ioqueue::generateSwitchCommands(bool on)
 {
-    IoGroupGenerator ioGroupGenerator = IoGroupGenerator(QJsonObject());
+    ExtSerialIoGroupGenerator ioGroupGenerator = ExtSerialIoGroupGenerator(QJsonObject());
     JsonParamApi params;
     params.setOn(on);
     return ioGroupGenerator.generateOnOffGroup(params);

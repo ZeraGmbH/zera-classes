@@ -1,5 +1,5 @@
-#ifndef IOGROUPGENERATOR_H
-#define IOGROUPGENERATOR_H
+#ifndef EXTSERIALIOGROUPGENERATOR_H
+#define EXTSERIALIOGROUPGENERATOR_H
 
 #include <QByteArray>
 #include <QJsonObject>
@@ -7,11 +7,11 @@
 #include "jsonstructapi.h"
 #include "ioqueuegroup.h"
 
-class IoGroupGenerator
+class ExtSerialIoGroupGenerator
 {
 public:
-    IoGroupGenerator(JsonStructApi jsonStructApi);
-    ~IoGroupGenerator();
+    ExtSerialIoGroupGenerator(JsonStructApi jsonStructApi);
+    ~ExtSerialIoGroupGenerator();
 
     // single
     tIoTransferList generateListForAction(SourceActionTypes::ActionTypes actionType);
@@ -42,4 +42,4 @@ public:
 };
 
 
-#endif // IOGROUPGENERATOR_H
+#endif // EXTSERIALIOGROUPGENERATOR_H

@@ -2,7 +2,7 @@
 #define SOURCESTATEPERIDICPOLLER_H
 
 #include "sourcetransactionstartnotifier.h"
-#include "iogroupgenerator.h"
+#include "extserialiogroupgenerator.h"
 #include "idkeeper.h"
 #include <timertemplateqt.h>
 #include <QObject>
@@ -29,7 +29,7 @@ protected:
 private:
     SourceTransactionStartNotifier::Ptr m_sourceNotificationStateQuery;
     AbstractSourceIoPtr m_sourceIo;
-    IoGroupGenerator m_ioGroupGenerator;
+    ExtSerialIoGroupGenerator m_ioGroupGenerator;
     IdKeeperMulti m_PendingStateQueryIds;
 };
 

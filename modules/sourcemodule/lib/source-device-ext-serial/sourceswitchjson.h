@@ -3,7 +3,7 @@
 
 #include "abstractsourceswitchjson.h"
 #include "idkeeper.h"
-#include "iogroupgenerator.h"
+#include "extserialiogroupgenerator.h"
 #include "sourcetransactionstartnotifier.h"
 #include "persistentjsonstate.h"
 
@@ -23,7 +23,7 @@ private slots:
 private:
     void handleSwitchResponse(const IoQueueGroup::Ptr transferGroup);
     AbstractSourceIoPtr m_sourceIo;
-    IoGroupGenerator m_ioGroupGenerator;
+    ExtSerialIoGroupGenerator m_ioGroupGenerator;
     SourceTransactionStartNotifier::Ptr m_sourceNotificationSwitch;
     IdKeeperMulti m_pendingSwitchIds;
     PersistentJsonState m_persistentParamState;
