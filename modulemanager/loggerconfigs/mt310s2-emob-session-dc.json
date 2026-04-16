@@ -61,6 +61,10 @@
         {
             "EntityId": 1200,
             "Comment": "SEMModule"
+        },
+        {
+            "EntityId": 1800,
+            "Comment": "RecorderModule"
         }
     ]
 }
