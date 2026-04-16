@@ -36,7 +36,7 @@ QStringList RecorderCsvExportVeinGetHandler::getDataLines() const
     QStringList lines;
     QDateTime timestamp = m_storedData->m_timeOfFirstRecord;
     for (const VeinStorage::RecordEntryStored &entry : m_storedData->m_recordedData) {
-        timestamp = timestamp.addMSecs(entry.m_timeDiffToFirstInMs);
+        timestamp = m_storedData->m_timeOfFirstRecord.addMSecs(entry.m_timeDiffToFirstInMs);
 
         QString line = timestamp.toString("yyyy-MM-dd HH:mm:ss.zzz");
         for (float value : entry.m_values) {
