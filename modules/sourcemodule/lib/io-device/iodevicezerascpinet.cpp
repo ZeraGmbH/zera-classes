@@ -8,7 +8,7 @@ IoDeviceZeraSCPINet::IoDeviceZeraSCPINet(Zera::PcbInterfacePtr pcbInterface) :
 
 bool IoDeviceZeraSCPINet::open(QString strDeviceInfo)
 {
-    Q_UNUSED(strDeviceInfo)
+    m_strDeviceInfo = strDeviceInfo;
     return true;
 }
 
@@ -23,5 +23,7 @@ bool IoDeviceZeraSCPINet::isOpen()
 
 int IoDeviceZeraSCPINet::sendAndReceive(IoTransferDataSingle::Ptr ioTransferData)
 {
+    prepareSendAndReceive(ioTransferData);
 
+    return m_currIoId.getPending();
 }
