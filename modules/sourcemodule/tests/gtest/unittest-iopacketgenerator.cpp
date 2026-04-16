@@ -1,5 +1,5 @@
 #include <gtest/gtest.h>
-#include "extserialiogroupgenerator.h"
+#include "iogroupgeneratorextserial.h"
 
 // double -> send string conversion
 TEST(TEST_PACKET_GENERATIOR, VALUE_CONVERSION) {
@@ -22,7 +22,7 @@ TEST(TEST_PACKET_GENERATIOR, VALUE_CONVERSION) {
 
 TEST(TEST_PACKET_GENERATIOR, SEND_NOT_EMPTY) {
     for(int type=SourceActionTypes::totalMinWithInvalid; type<=SourceActionTypes::totalMaxWithInvalid; ++type) {
-        ExtSerialIoGroupGenerator ioGroupGenerator = ExtSerialIoGroupGenerator(QJsonObject());
+        IoGroupGeneratorExtSerial ioGroupGenerator = IoGroupGeneratorExtSerial(QJsonObject());
         tIoTransferList outInList = ioGroupGenerator.generateListForAction(SourceActionTypes::ActionTypes(type));
         for(auto outIn : outInList) {
             EXPECT_FALSE(outIn->getBytesSend().isEmpty());
@@ -31,7 +31,7 @@ TEST(TEST_PACKET_GENERATIOR, SEND_NOT_EMPTY) {
 }
 
 TEST(TEST_PACKET_GENERATIOR, TIMEOUT_SET) {
-    ExtSerialIoGroupGenerator ioGroupGenerator = ExtSerialIoGroupGenerator(QJsonObject());
+    IoGroupGeneratorExtSerial ioGroupGenerator = IoGroupGeneratorExtSerial(QJsonObject());
     JsonParamApi params;
     params.setOn(true);
     tSourceActionTypeList actionList = SourceActionGenerator::generateSwitchActions(params);
@@ -43,7 +43,7 @@ TEST(TEST_PACKET_GENERATIOR, TIMEOUT_SET) {
 
 TEST(TEST_PACKET_GENERATIOR, EXPECT_RESPONSE_SET) {
     for(int type=SourceActionTypes::totalMinWithInvalid; type<=SourceActionTypes::totalMaxWithInvalid; ++type) {
-        ExtSerialIoGroupGenerator ioGroupGenerator = ExtSerialIoGroupGenerator(QJsonObject());
+        IoGroupGeneratorExtSerial ioGroupGenerator = IoGroupGeneratorExtSerial(QJsonObject());
         tIoTransferList outInList = ioGroupGenerator.generateListForAction(SourceActionTypes::ActionTypes(type));
         for(auto outIn : outInList) {
             QByteArray demoResponse = outIn->getDemoResponder()->getDemoResponse();
@@ -54,7 +54,7 @@ TEST(TEST_PACKET_GENERATIOR, EXPECT_RESPONSE_SET) {
 }
 
 TEST(TEST_PACKET_GENERATIOR, SWITCH_OFF_PACKET_SPECIFICS) {
-    ExtSerialIoGroupGenerator ioGroupGenerator = ExtSerialIoGroupGenerator(QJsonObject());
+    IoGroupGeneratorExtSerial ioGroupGenerator = IoGroupGeneratorExtSerial(QJsonObject());
     JsonParamApi params;
     params.setOn(false);
     IoQueueGroup::Ptr transferGroup = ioGroupGenerator.generateOnOffGroup(params);
@@ -62,7 +62,7 @@ TEST(TEST_PACKET_GENERATIOR, SWITCH_OFF_PACKET_SPECIFICS) {
 }
 
 TEST(TEST_PACKET_GENERATIOR, SWITCH_ON_PACKET_SPECIFICS) {
-    ExtSerialIoGroupGenerator ioGroupGenerator = ExtSerialIoGroupGenerator(QJsonObject());
+    IoGroupGeneratorExtSerial ioGroupGenerator = IoGroupGeneratorExtSerial(QJsonObject());
     JsonParamApi params;
     params.setOn(true);
     IoQueueGroup::Ptr transferGroup = ioGroupGenerator.generateOnOffGroup(params);
@@ -70,7 +70,7 @@ TEST(TEST_PACKET_GENERATIOR, SWITCH_ON_PACKET_SPECIFICS) {
 }
 
 TEST(TEST_PACKET_GENERATIOR, POLL_PACKET_SPECIFICS) {
-    ExtSerialIoGroupGenerator ioGroupGenerator = ExtSerialIoGroupGenerator(QJsonObject());
+    IoGroupGeneratorExtSerial ioGroupGenerator = IoGroupGeneratorExtSerial(QJsonObject());
     IoQueueGroup::Ptr transferGroup = ioGroupGenerator.generateStatusPollGroup();
     EXPECT_EQ(transferGroup->getErrorBehavior(), IoQueueErrorBehaviors::CONTINUE_ON_ERROR);
 }

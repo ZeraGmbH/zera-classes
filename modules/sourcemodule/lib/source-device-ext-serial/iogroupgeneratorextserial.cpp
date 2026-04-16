@@ -1,18 +1,18 @@
-#include "extserialiogroupgenerator.h"
+#include "iogroupgeneratorextserial.h"
 #include "sourceactions.h"
 #include "sourcezerastatequeryevaluator.h"
 
-ExtSerialIoGroupGenerator::ExtSerialIoGroupGenerator(JsonStructApi jsonStructApi) :
+IoGroupGeneratorExtSerial::IoGroupGeneratorExtSerial(JsonStructApi jsonStructApi) :
     m_jsonStructApi(jsonStructApi),
     m_ioPrefix(m_jsonStructApi.getIoPrefix())
 {
 }
 
-ExtSerialIoGroupGenerator::~ExtSerialIoGroupGenerator()
+IoGroupGeneratorExtSerial::~IoGroupGeneratorExtSerial()
 {
 }
 
-IoQueueGroup::Ptr ExtSerialIoGroupGenerator::generateOnOffGroup(JsonParamApi requestedParams)
+IoQueueGroup::Ptr IoGroupGeneratorExtSerial::generateOnOffGroup(JsonParamApi requestedParams)
 {
     m_paramsRequested = requestedParams;
     tSourceActionTypeList actionsTypeList = SourceActionGenerator::generateSwitchActions(requestedParams);
@@ -23,7 +23,7 @@ IoQueueGroup::Ptr ExtSerialIoGroupGenerator::generateOnOffGroup(JsonParamApi req
     return transferGroup;
 }
 
-IoQueueGroup::Ptr ExtSerialIoGroupGenerator::generateStatusPollGroup()
+IoQueueGroup::Ptr IoGroupGeneratorExtSerial::generateStatusPollGroup()
 {
     IoQueueGroup::Ptr transferGroup = IoQueueGroup::Ptr::create(IoQueueErrorBehaviors::CONTINUE_ON_ERROR);
     tSourceActionTypeList actionsTypeList = SourceActionGenerator::generatePeriodicActions();
@@ -33,7 +33,7 @@ IoQueueGroup::Ptr ExtSerialIoGroupGenerator::generateStatusPollGroup()
     return transferGroup;
 }
 
-tIoTransferList ExtSerialIoGroupGenerator::generateListForAction(SourceActionTypes::ActionTypes actionType)
+tIoTransferList IoGroupGeneratorExtSerial::generateListForAction(SourceActionTypes::ActionTypes actionType)
 {
     tIoTransferList outInList;
     switch(actionType) {
@@ -71,7 +71,7 @@ tIoTransferList ExtSerialIoGroupGenerator::generateListForAction(SourceActionTyp
     return outInList;
 }
 
-tIoTransferList ExtSerialIoGroupGenerator::generateRMSAndAngleUList()
+tIoTransferList IoGroupGeneratorExtSerial::generateRMSAndAngleUList()
 {
     tIoTransferList outInList;
     QByteArray bytesSend;
@@ -104,7 +104,7 @@ tIoTransferList ExtSerialIoGroupGenerator::generateRMSAndAngleUList()
     return outInList;
 }
 
-tIoTransferList ExtSerialIoGroupGenerator::generateRMSAndAngleIList()
+tIoTransferList IoGroupGeneratorExtSerial::generateRMSAndAngleIList()
 {
     tIoTransferList outInList;
     QByteArray bytesSend;
@@ -138,7 +138,7 @@ tIoTransferList ExtSerialIoGroupGenerator::generateRMSAndAngleIList()
     return outInList;
 }
 
-tIoTransferList ExtSerialIoGroupGenerator::generateSwitchPhasesList()
+tIoTransferList IoGroupGeneratorExtSerial::generateSwitchPhasesList()
 {
     QByteArray bytesSend;
     bytesSend = m_ioPrefix + "UI";
@@ -189,7 +189,7 @@ tIoTransferList ExtSerialIoGroupGenerator::generateSwitchPhasesList()
                                     timeout);
 }
 
-tIoTransferList ExtSerialIoGroupGenerator::generateFrequencyList()
+tIoTransferList IoGroupGeneratorExtSerial::generateFrequencyList()
 {
     QByteArray bytesSend;
     bytesSend = m_ioPrefix + "FR";
@@ -211,7 +211,7 @@ tIoTransferList ExtSerialIoGroupGenerator::generateFrequencyList()
     return outInList;
 }
 
-tIoTransferList ExtSerialIoGroupGenerator::generateRegulationList()
+tIoTransferList IoGroupGeneratorExtSerial::generateRegulationList()
 {
     QByteArray bytesSend;
     bytesSend = m_ioPrefix + "RE";
@@ -228,7 +228,7 @@ tIoTransferList ExtSerialIoGroupGenerator::generateRegulationList()
     return outInList;
 }
 
-tIoTransferList ExtSerialIoGroupGenerator::generateQueryStatusList()
+tIoTransferList IoGroupGeneratorExtSerial::generateQueryStatusList()
 {
     QByteArray bytesSend;
     bytesSend = m_ioPrefix + "SM\r";
@@ -244,7 +244,7 @@ tIoTransferList ExtSerialIoGroupGenerator::generateQueryStatusList()
     return outInList;
 }
 
-tIoTransferList ExtSerialIoGroupGenerator::generateQueryActualList()
+tIoTransferList IoGroupGeneratorExtSerial::generateQueryActualList()
 {
     QByteArray bytesSend;
     bytesSend = "AME0;3\r";// This is single phase!!
