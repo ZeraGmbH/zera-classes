@@ -1,7 +1,7 @@
 #include "sourcedeviceextserial.h"
 #include <vfmoduleparameter.h>
 #include <jsonparamvalidator.h>
-#include "sourceswitchjson.h"
+#include "sourceswitchjsonextserial.h"
 #include "jsonstructureloader.h"
 #include <QVariant>
 
@@ -13,10 +13,10 @@ SourceDeviceExtSerial::SourceDeviceExtSerial(IoDeviceBase::Ptr ioDevice, SourceP
     m_statePoller(SourceStatePeriodicPoller::Ptr::create(m_transactionNotifierStatus)),
     m_stateController(m_transactionNotifierSwitch, m_transactionNotifierStatus, m_statePoller)
 {
-    m_switcher = std::make_unique<SourceSwitchJson>(m_sourceIo, m_transactionNotifierSwitch);
+    m_switcher = std::make_unique<SourceSwitchJsonExtSerial>(m_sourceIo, m_transactionNotifierSwitch);
     connect(&m_stateController, &SourceStateController::sigStateChanged,
             this, &SourceDeviceExtSerial::onSourceStateChanged);
-    connect(m_switcher.get(), &SourceSwitchJson::sigSwitchFinished,
+    connect(m_switcher.get(), &SourceSwitchJsonExtSerial::sigSwitchFinished,
             this, &SourceDeviceExtSerial::onSourceSwitchFinished);
     connect(ioDevice.get(), &IoDeviceBase::sigDisconnected, this,
             &SourceDeviceExtSerial::onIoDeviceClosed);

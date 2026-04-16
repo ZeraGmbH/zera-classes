@@ -1,7 +1,7 @@
 #include "test_sourceswitchjson.h"
 #include "test_globals.h"
 #include "sourceioextserial.h"
-#include "sourceswitchjson.h"
+#include "sourceswitchjsonextserial.h"
 #include "sourcedeviceerrorinjection-forunittest.h"
 #include "timerfactoryqtfortest.h"
 #include "timemachinefortest.h"
@@ -21,11 +21,11 @@ void test_sourceswitchjson::signalSwitch()
     DefaultTestSourceProperties sourceProperties;
     AbstractSourceIoPtr sourceIo = std::make_shared<SourceIoExtSerial>(ioDevice, sourceProperties);
     SourceTransactionStartNotifier::Ptr notifyWrapperSwitch = SourceTransactionStartNotifier::Ptr::create(sourceIo);
-    SourceSwitchJson switcher(sourceIo, notifyWrapperSwitch);
+    SourceSwitchJsonExtSerial switcher(sourceIo, notifyWrapperSwitch);
 
     JsonParamApi paramState = switcher.getCurrLoadState();
     int paramChangeCount = 0;
-    connect(&switcher, &SourceSwitchJson::sigSwitchFinished, [&] {
+    connect(&switcher, &SourceSwitchJsonExtSerial::sigSwitchFinished, [&] {
         paramChangeCount++;
     });
 
@@ -43,11 +43,11 @@ void test_sourceswitchjson::signalSwitchAfterError()
     AbstractSourceIoPtr sourceIoWithError = AbstractSourceIoPtr(pSourceIoWithError);
     pSourceIoWithError->setDemoResonseErrorIdx(0);
     SourceTransactionStartNotifier::Ptr notifyWrapperSwitch = SourceTransactionStartNotifier::Ptr::create(sourceIoWithError);
-    SourceSwitchJson switcher(sourceIoWithError, notifyWrapperSwitch);
+    SourceSwitchJsonExtSerial switcher(sourceIoWithError, notifyWrapperSwitch);
 
     JsonParamApi paramState = switcher.getCurrLoadState();
     int paramChangeCount = 0;
-    connect(&switcher, &SourceSwitchJson::sigSwitchFinished, [&] {
+    connect(&switcher, &SourceSwitchJsonExtSerial::sigSwitchFinished, [&] {
         paramChangeCount++;
     });
 
@@ -62,11 +62,11 @@ void test_sourceswitchjson::twoSignalsSwitchSameTwice()
     setDemoIoFixedTimeout(ioDevice, 0);
     AbstractSourceIoPtr sourceIo = std::make_shared<SourceIoExtSerial>(ioDevice, DefaultTestSourceProperties());
     SourceTransactionStartNotifier::Ptr notifyWrapperSwitch = SourceTransactionStartNotifier::Ptr::create(sourceIo);
-    SourceSwitchJson switcher(sourceIo, notifyWrapperSwitch);
+    SourceSwitchJsonExtSerial switcher(sourceIo, notifyWrapperSwitch);
 
     JsonParamApi paramState = switcher.getCurrLoadState();
     int paramChangeCount = 0;
-    connect(&switcher, &SourceSwitchJson::sigSwitchFinished, [&] {
+    connect(&switcher, &SourceSwitchJsonExtSerial::sigSwitchFinished, [&] {
         paramChangeCount++;
     });
 
@@ -85,14 +85,14 @@ void test_sourceswitchjson::currentAndRequestedParamOnError()
     AbstractSourceIoPtr sourceIoWithError = AbstractSourceIoPtr(pSourceIoWithError);
     pSourceIoWithError->setDemoResonseErrorIdx(0);
     SourceTransactionStartNotifier::Ptr notifyWrapperSwitch = SourceTransactionStartNotifier::Ptr::create(sourceIoWithError);
-    SourceSwitchJson switcher(sourceIoWithError, notifyWrapperSwitch);
+    SourceSwitchJsonExtSerial switcher(sourceIoWithError, notifyWrapperSwitch);
 
     JsonParamApi paramState = switcher.getCurrLoadState();
     JsonParamApi paramStateForError = paramState;
     paramStateForError.setOn(!paramState.getOn());
 
     int paramChangeCount = 0;
-    connect(&switcher, &SourceSwitchJson::sigSwitchFinished, [&] {
+    connect(&switcher, &SourceSwitchJsonExtSerial::sigSwitchFinished, [&] {
         paramChangeCount++;
     });
     switcher.switchState(paramStateForError);
@@ -109,14 +109,14 @@ void test_sourceswitchjson::changeParamOnSuccess()
     setDemoIoFixedTimeout(ioDevice, 0);
     AbstractSourceIoPtr sourceIo = std::make_shared<SourceIoExtSerial>(ioDevice, DefaultTestSourceProperties());
     SourceTransactionStartNotifier::Ptr notifyWrapperSwitch = SourceTransactionStartNotifier::Ptr::create(sourceIo);
-    SourceSwitchJson switcher(sourceIo, notifyWrapperSwitch);
+    SourceSwitchJsonExtSerial switcher(sourceIo, notifyWrapperSwitch);
 
     JsonParamApi paramState = switcher.getCurrLoadState();
     JsonParamApi paramStateForError = paramState;
     paramStateForError.setOn(!paramState.getOn());
 
     int paramChangeCount = 0;
-    connect(&switcher, &SourceSwitchJson::sigSwitchFinished, [&] {
+    connect(&switcher, &SourceSwitchJsonExtSerial::sigSwitchFinished, [&] {
         paramChangeCount++;
     });
     switcher.switchState(paramStateForError);

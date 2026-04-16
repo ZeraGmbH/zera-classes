@@ -1,7 +1,7 @@
-#include "sourceswitchjson.h"
+#include "sourceswitchjsonextserial.h"
 #include "sourceioextserial.h"
 
-SourceSwitchJson::SourceSwitchJson(AbstractSourceIoPtr sourceIo, SourceTransactionStartNotifier::Ptr sourceNotificationSwitch) :
+SourceSwitchJsonExtSerial::SourceSwitchJsonExtSerial(AbstractSourceIoPtr sourceIo, SourceTransactionStartNotifier::Ptr sourceNotificationSwitch) :
     m_sourceIo(sourceIo),
     m_ioGroupGenerator(sourceIo->getCapabilities()),
     m_sourceNotificationSwitch(sourceNotificationSwitch),
@@ -10,48 +10,48 @@ SourceSwitchJson::SourceSwitchJson(AbstractSourceIoPtr sourceIo, SourceTransacti
     m_paramsRequested(m_paramsCurrent)
 {
     connect(m_sourceNotificationSwitch.get(), &SourceTransactionStartNotifier::sigTransationStarted,
-            this, &SourceSwitchJson::onSwitchTransactionStarted);
+            this, &SourceSwitchJsonExtSerial::onSwitchTransactionStarted);
     connect(m_sourceIo.get(), &SourceIoExtSerial::sigResponseReceived,
-            this, &SourceSwitchJson::onResponseReceived);
+            this, &SourceSwitchJsonExtSerial::onResponseReceived);
 }
 
-void SourceSwitchJson::switchState(JsonParamApi paramState)
+void SourceSwitchJsonExtSerial::switchState(JsonParamApi paramState)
 {
     m_paramsRequested = paramState;
     IoQueueGroup::Ptr transferGroup = m_ioGroupGenerator.generateOnOffGroup(m_paramsRequested);
     m_sourceNotificationSwitch->startTransactionWithNotify(transferGroup);
 }
 
-void SourceSwitchJson::switchOff()
+void SourceSwitchJsonExtSerial::switchOff()
 {
     JsonParamApi paramOff = m_paramsCurrent;
     paramOff.setOn(false);
     switchState(paramOff);
 }
 
-JsonParamApi SourceSwitchJson::getCurrLoadState()
+JsonParamApi SourceSwitchJsonExtSerial::getCurrLoadState()
 {
     return m_paramsCurrent;
 }
 
-JsonParamApi SourceSwitchJson::getRequestedLoadState()
+JsonParamApi SourceSwitchJsonExtSerial::getRequestedLoadState()
 {
     return m_paramsRequested;
 }
 
-void SourceSwitchJson::onSwitchTransactionStarted(int dataGroupId)
+void SourceSwitchJsonExtSerial::onSwitchTransactionStarted(int dataGroupId)
 {
     m_pendingSwitchIds.setPending(dataGroupId);
 }
 
-void SourceSwitchJson::onResponseReceived(const IoQueueGroup::Ptr transferGroup)
+void SourceSwitchJsonExtSerial::onResponseReceived(const IoQueueGroup::Ptr transferGroup)
 {
     int groupId = transferGroup->getGroupId();
     if(m_pendingSwitchIds.isPendingAndRemoveIf(groupId))
         handleSwitchResponse(transferGroup);
 }
 
-void SourceSwitchJson::handleSwitchResponse(const IoQueueGroup::Ptr transferGroup)
+void SourceSwitchJsonExtSerial::handleSwitchResponse(const IoQueueGroup::Ptr transferGroup)
 {
     if(transferGroup->passedAll()) {
         m_paramsCurrent = m_paramsRequested;

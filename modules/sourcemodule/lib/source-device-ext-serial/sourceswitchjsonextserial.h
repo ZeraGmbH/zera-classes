@@ -7,11 +7,11 @@
 #include "sourcetransactionstartnotifier.h"
 #include "persistentjsonstate.h"
 
-class SourceSwitchJson : public AbstractSourceSwitchJson
+class SourceSwitchJsonExtSerial : public AbstractSourceSwitchJson
 {
     Q_OBJECT
 public:
-    SourceSwitchJson(AbstractSourceIoPtr sourceIo, SourceTransactionStartNotifier::Ptr sourceNotificationSwitch);
+    SourceSwitchJsonExtSerial(AbstractSourceIoPtr sourceIo, SourceTransactionStartNotifier::Ptr sourceNotificationSwitch);
     void switchState(JsonParamApi paramState) override;
     void switchOff() override;
     JsonParamApi getCurrLoadState() override;
