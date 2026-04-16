@@ -3,6 +3,7 @@
 
 #include "iodevicebase.h"
 #include <pcbinterface.h>
+#include <timertemplateqt.h>
 
 class IoDeviceZeraSCPINet : public IoDeviceBase
 {
@@ -14,8 +15,16 @@ public:
     bool isOpen() override;
     int sendAndReceive(IoTransferDataSingle::Ptr ioTransferData) override;
 
+private slots:
+    void catchInterfaceAnswer(quint32 msgnr, quint8 reply, const QVariant &answer);
+    void onTimeout();
 private:
+    void setReadTimeoutNextIo(int timeoutMs) override;
+
     Zera::PcbInterfacePtr m_pcbInterface;
+    bool m_isOpen = false;
+    int m_timeoutMs = TRANSACTION_TIMEOUT;
+    TimerTemplateQtPtr m_timeoutTimer;
 };
 
 #endif // IODEVICEZERASCPINET_H

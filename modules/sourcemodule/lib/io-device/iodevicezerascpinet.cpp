@@ -1,4 +1,6 @@
 #include "iodevicezerascpinet.h"
+#include <reply.h>
+#include <timerfactoryqt.h>
 
 IoDeviceZeraSCPINet::IoDeviceZeraSCPINet(Zera::PcbInterfacePtr pcbInterface) :
     IoDeviceBase(IoDeviceTypes::SCPI_NET),
@@ -9,21 +11,71 @@ IoDeviceZeraSCPINet::IoDeviceZeraSCPINet(Zera::PcbInterfacePtr pcbInterface) :
 bool IoDeviceZeraSCPINet::open(QString strDeviceInfo)
 {
     m_strDeviceInfo = strDeviceInfo;
-    return true;
+    connect(m_pcbInterface.get(), &AbstractServerInterface::serverAnswer,
+            this, &IoDeviceZeraSCPINet::catchInterfaceAnswer);
+    m_isOpen = true;
+    return m_isOpen;
 }
 
 void IoDeviceZeraSCPINet::close()
 {
+    disconnect(m_pcbInterface.get(), &AbstractServerInterface::serverAnswer,
+               this, &IoDeviceZeraSCPINet::catchInterfaceAnswer);
+    m_isOpen = false;
 }
 
 bool IoDeviceZeraSCPINet::isOpen()
 {
-    return true;
+    return m_isOpen;
 }
 
 int IoDeviceZeraSCPINet::sendAndReceive(IoTransferDataSingle::Ptr ioTransferData)
 {
+    if (!m_isOpen) {
+        qCritical("Device not open");
+        return 0;
+    }
     prepareSendAndReceive(ioTransferData);
 
+    m_timeoutTimer = TimerFactoryQt::createSingleShot(m_timeoutMs);
+    connect(m_timeoutTimer.get(), &TimerTemplateQt::sigExpired,
+            this, &IoDeviceZeraSCPINet::onTimeout);
+    m_timeoutTimer->start();
+
+    int id = m_pcbInterface->scpiCommand(ioTransferData->getBytesSend());
+    m_currIoId.setPending(id);
+
     return m_currIoId.getPending();
+}
+
+void IoDeviceZeraSCPINet::catchInterfaceAnswer(quint32 msgnr, quint8 reply, const QVariant &answer)
+{
+    if (!m_ioTransferData->wasNotRunYet())
+        return;
+    if (m_currIoId.getPending() != int(msgnr))
+        return;
+
+    if (reply == ack) {
+        m_ioTransferData->setDataReceived(answer.toByteArray());
+        emitSigIoFinished(m_currIoId.getPending(), false);
+    }
+    else {
+        m_ioTransferData->setDataReceived(answer.toByteArray());
+        m_ioTransferData->overrideEvaluation(IoTransferDataSingle::EVAL_WRONG_ANSWER);
+        emitSigIoFinished(m_currIoId.getPending(), true);
+    }
+}
+
+void IoDeviceZeraSCPINet::onTimeout()
+{
+    if (!m_ioTransferData->wasNotRunYet())
+        return;
+    m_ioTransferData->setDataReceived("");
+    m_ioTransferData->overrideEvaluation(IoTransferDataSingle::EVAL_NO_ANSWER);
+    emitSigIoFinished(m_currIoId.getPending(), true);
+}
+
+void IoDeviceZeraSCPINet::setReadTimeoutNextIo(int timeoutMs)
+{
+    m_timeoutMs = timeoutMs != 0 ? timeoutMs : TRANSACTION_TIMEOUT;
 }
