@@ -20,6 +20,7 @@ private slots:
     void onTimeout();
 private:
     void setReadTimeoutNextIo(int timeoutMs) override;
+    void errorOut(IoTransferDataSingle::EvalResponse eval, const QByteArray &response);
 
     Zera::PcbInterfacePtr m_pcbInterface;
     bool m_isOpen = false;

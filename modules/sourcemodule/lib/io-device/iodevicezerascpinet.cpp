@@ -59,23 +59,25 @@ void IoDeviceZeraSCPINet::catchInterfaceAnswer(quint32 msgnr, quint8 reply, cons
         m_ioTransferData->setDataReceived(answer.toByteArray());
         emitSigIoFinished(m_currIoId.getPending(), false);
     }
-    else {
-        m_ioTransferData->setDataReceived(answer.toByteArray());
-        m_ioTransferData->overrideEvaluation(IoTransferDataSingle::EVAL_WRONG_ANSWER);
-        emitSigIoFinished(m_currIoId.getPending(), true);
-    }
+    else
+        errorOut(IoTransferDataSingle::EVAL_WRONG_ANSWER, answer.toByteArray());
 }
 
 void IoDeviceZeraSCPINet::onTimeout()
 {
     if (!m_ioTransferData->wasNotRunYet())
         return;
-    m_ioTransferData->setDataReceived("");
-    m_ioTransferData->overrideEvaluation(IoTransferDataSingle::EVAL_NO_ANSWER);
-    emitSigIoFinished(m_currIoId.getPending(), true);
+    errorOut(IoTransferDataSingle::EVAL_NO_ANSWER, "");
 }
 
 void IoDeviceZeraSCPINet::setReadTimeoutNextIo(int timeoutMs)
 {
     m_timeoutMs = timeoutMs != 0 ? timeoutMs : TRANSACTION_TIMEOUT;
+}
+
+void IoDeviceZeraSCPINet::errorOut(IoTransferDataSingle::EvalResponse eval, const QByteArray &response)
+{
+    m_ioTransferData->setDataReceived(response);
+    m_ioTransferData->overrideEvaluation(eval);
+    emitSigIoFinished(m_currIoId.getPending(), true);
 }
