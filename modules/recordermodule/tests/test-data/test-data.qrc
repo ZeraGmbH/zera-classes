@@ -2,8 +2,9 @@
     <qresource prefix="/">
         <file>fireValuesNone.csv</file>
         <file>fireValuesOnce.csv</file>
-        <file>fireValuesOnce.json</file>
         <file>fireValuesTwice.csv</file>
+        <file>fireMaxValues.csv</file>
+        <file>fireValuesOnce.json</file>
         <file>fireValuesTwice.json</file>
 
         <file>mt310s2-emob-session-ac.json</file>
