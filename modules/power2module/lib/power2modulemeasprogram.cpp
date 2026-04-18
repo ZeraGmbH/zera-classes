@@ -307,17 +307,15 @@ QStringList cPower2ModuleMeasProgram::dspCmdInitVars(int dspInitialSelectCode)
 {
     int samples = m_pModule->getSharedChannelRangeObserver()->getSamplesPerPeriod();
     QStringList dspCmdList;
-    dspCmdList.append("STARTCHAIN(1,1,0x0101)"); // aktiv, prozessnr. (dummy),hauptkette 1 subkette 1 start
-    dspCmdList.append(QString("CLEARN(%1,TMP_SAMPLES_SINGLE_1)").arg(samples) ); // clear meassignal
-    dspCmdList.append(QString("CLEARN(%1,TMP_SAMPLES_SINGLE_2)").arg(samples) ); // clear meassignal
-    dspCmdList.append(QString("CLEARN(%1,FILTER)").arg(DspBuffLen::avgFilterLen(3*(MeasPhaseCount+SumValueCount))));
-    dspCmdList.append(QString("SETVAL(MMODE,%1)").arg(dspInitialSelectCode));
-    double integrationTime = calcTiTime();
-    bool intergrationModeTime = getConfData()->m_sIntegrationMode == "time";
-    dspCmdList.append(QString("SETVAL(TIPAR,%1)").arg(integrationTime)); // initial ti time
-    if(intergrationModeTime)
-        dspCmdList.append("GETSTIME(TISTART)"); // einmal ti start setzen
-    dspCmdList.append("DEACTIVATECHAIN(1,0x0101)"); // ende prozessnr., hauptkette 1 subkette 1
+    dspCmdList.append("STARTCHAIN(1,1,0x0101)"); // run once
+        dspCmdList.append(QString("CLEARN(%1,FILTER)").arg(DspBuffLen::avgFilterLen(3*(MeasPhaseCount+SumValueCount))));
+        dspCmdList.append(QString("SETVAL(MMODE,%1)").arg(dspInitialSelectCode));
+        double integrationTime = calcTiTime();
+        bool intergrationModeTime = getConfData()->m_sIntegrationMode == "time";
+        dspCmdList.append(QString("SETVAL(TIPAR,%1)").arg(integrationTime)); // initial ti time
+        if(intergrationModeTime)
+            dspCmdList.append("GETSTIME(TISTART)"); // einmal ti start setzen
+        dspCmdList.append("DEACTIVATECHAIN(1,0x0101)"); // ende prozessnr., hauptkette 1 subkette 1
     dspCmdList.append("STOPCHAIN(1,0x0101)"); // ende prozessnr., hauptkette 1 subkette 1
     return dspCmdList;
 }

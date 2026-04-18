@@ -147,7 +147,6 @@ void PeriodAverageModuleMeasProgram::setDspCmdList()
     int channelCount = channelMNameListConfigured.count();
 
     m_dspInterface->addCycListItem("STARTCHAIN(1,1,0x0101)"); // run once
-        m_dspInterface->addCycListItem(QString("CLEARN(%1,TMP_SAMPLES_SINGLE_1)").arg(samplesPerPeriod) ); // clear TMP_SAMPLES_SINGLE_1
         m_dspInterface->addCycListItem(QString("CLEARN(%1,FILTER)").arg(DspBuffLen::avgFilterLen(channelCount)));
         m_dspInterface->addCycListItem(QString("SETVAL(PERIODCURR,1)"));
         m_dspInterface->addCycListItem(QString("SETVAL(RESULT_BUFF_IDX,VALS_PERIOD_WORK)"));

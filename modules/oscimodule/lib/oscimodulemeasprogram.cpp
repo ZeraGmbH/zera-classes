@@ -135,7 +135,7 @@ void cOsciModuleMeasProgram::setDspCmdList()
     int samples = observer->getSamplesPerPeriod();
     QString referenceChannel = getConfData()->m_RefChannel.m_sPar;
     int referenceDspChannel = observer->getChannel(referenceChannel)->getDspChannel();
-    m_dspInterface->addCycListItem("STARTCHAIN(1,1,0x0101)"); // aktiv, prozessnr. (dummy),hauptkette 1 subkette 1 start
+    m_dspInterface->addCycListItem("STARTCHAIN(1,1,0x0101)"); // run once
         m_dspInterface->addCycListItem(QString("CLEARN(%1,MEASSIGNAL)").arg(m_veinActValueList.count() * samples) ); // clear meassignal
         m_dspInterface->addCycListItem(QString("SETVAL(GAPCOUNT,%1)").arg(getConfData()->m_nGap)); // we start with the first period
         m_dspInterface->addCycListItem(QString("SETVAL(GAPPAR,%1)").arg(getConfData()->m_nGap+1)); // our value to reload gap
@@ -145,7 +145,6 @@ void cOsciModuleMeasProgram::setDspCmdList()
     m_dspInterface->addCycListItem("STOPCHAIN(1,0x0101)"); // ende prozessnr., hauptkette 1 subkette 1
 
     // now lets do our sampling job if necessary
-
 
     // next 3 commands for debug purpose , will be removed later
     // m_dspInterface->addCycListItem("INC(DEBUGCOUNT)");

@@ -9,8 +9,6 @@ QStringList Power1DspCmdGenerator::getCmdsInitVars(std::shared_ptr<MeasMode> ini
     QStringList cmdList;
     quint16 chainId = idGen.getNextChainId();
     cmdList.append(DspAtomicCommandGen::getStartChainActive(chainId));
-    cmdList.append(QString("CLEARN(%1,TMP_SAMPLES_SINGLE_1)").arg(samplesPerPeroid) ); // clear TMP_SAMPLES_SINGLE_
-    cmdList.append(QString("CLEARN(%1,TMP_SAMPLES_SINGLE_2)").arg(samplesPerPeroid) ); // clear TMP_SAMPLES_SINGLE_
     cmdList.append(QString("CLEARN(%1,FILTER)").arg(DspBuffLen::avgFilterLen(MeasPhaseCount+SumValueCount)));
     cmdList.append(QString("SETVAL(MMODE,%1)").arg(initialMMode->getDspSelectCode()));
     cmdList.append(QString("SETVAL(MMODE_SUM,%1)").arg(initialMMode->getDspSumSelectCode()));

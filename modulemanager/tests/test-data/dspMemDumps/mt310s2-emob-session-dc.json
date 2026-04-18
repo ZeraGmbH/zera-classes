@@ -1,7 +1,7 @@
 {
     "ProgMemCyclicAvailable": 3584,
-    "ProgMemCyclicFree": 3189,
-    "ProgMemCyclicUsed": 395,
+    "ProgMemCyclicFree": 3195,
+    "ProgMemCyclicUsed": 389,
     "ProgMemInterruptAvailable": 512,
     "ProgMemInterruptFree": 511,
     "ProgMemInterruptUsed": 1,
@@ -29,11 +29,10 @@
             }
         },
         "1020": {
-            "DspCmdsCompiledCrcCyclic": "0xC249E1AA",
+            "DspCmdsCompiledCrcCyclic": "0x5B875DC4",
             "DspCmdsCompiledCrcInterrupt": "0x00000000",
             "DspCmdsRawCyclic": [
                 "STARTCHAIN(0x000001,0x000001,0x000101) -> 0x001D0001 0x00050101",
-                "CLEARN(0x0001F8,0x006E7F) -> 0x00150000 0x01F86E7F",
                 "CLEARN(0x000023,0x000032) -> 0x00150000 0x00230032",
                 "SETVAL(0x000055,0x0000C8) -> 0x000A0055 0x000000C8",
                 "GETSTIME(0x000020) -> 0x00400000 0x00000020",
@@ -125,11 +124,10 @@
             }
         },
         "1040": {
-            "DspCmdsCompiledCrcCyclic": "0xBC6A3A96",
+            "DspCmdsCompiledCrcCyclic": "0x56B649D7",
             "DspCmdsCompiledCrcInterrupt": "0x00000000",
             "DspCmdsRawCyclic": [
                 "STARTCHAIN(0x000001,0x000001,0x000101) -> 0x001D0001 0x00060101",
-                "CLEARN(0x0001F8,0x006E10) -> 0x00150000 0x01F86E10",
                 "CLEARN(0x000017,0x00000B) -> 0x00150000 0x0017000B",
                 "SETVAL(0x000022,0x0001F4) -> 0x000A0022 0x000001F4",
                 "GETSTIME(0x000023) -> 0x00400000 0x00000023",
@@ -196,11 +194,10 @@
             }
         },
         "1050": {
-            "DspCmdsCompiledCrcCyclic": "0xC4BB6517",
+            "DspCmdsCompiledCrcCyclic": "0x173A388A",
             "DspCmdsCompiledCrcInterrupt": "0x00000000",
             "DspCmdsRawCyclic": [
                 "STARTCHAIN(0x000001,0x000001,0x000101) -> 0x001D0001 0x00070101",
-                "CLEARN(0x0001F8,0x006DE1) -> 0x00150000 0x01F86DE1",
                 "CLEARN(0x00002D,0x000016) -> 0x00150000 0x002D0016",
                 "SETVAL(0x000043,0x0001F4) -> 0x000A0043 0x000001F4",
                 "GETSTIME(0x000044) -> 0x00400000 0x00000044",
@@ -256,11 +253,10 @@
             }
         },
         "1055": {
-            "DspCmdsCompiledCrcCyclic": "0x4D6A350A",
+            "DspCmdsCompiledCrcCyclic": "0xF8F4EE1B",
             "DspCmdsCompiledCrcInterrupt": "0x00000000",
             "DspCmdsRawCyclic": [
                 "STARTCHAIN(0x000001,0x000001,0x000101) -> 0x001D0001 0x00080101",
-                "CLEARN(0x0001F8,0x006D86) -> 0x00150000 0x01F86D86",
                 "CLEARN(0x000005,0x000004) -> 0x00150000 0x00050004",
                 "SETVAL(0x000002,0x000001) -> 0x000A0002 0x00000001",
                 "SETVAL(0x000003,0x000009) -> 0x000A0003 0x00000009",
@@ -396,12 +392,10 @@
             }
         },
         "1073": {
-            "DspCmdsCompiledCrcCyclic": "0x34F941FA",
+            "DspCmdsCompiledCrcCyclic": "0xBEC0A854",
             "DspCmdsCompiledCrcInterrupt": "0x00000000",
             "DspCmdsRawCyclic": [
                 "STARTCHAIN(0x000001,0x000001,0x000104) -> 0x001D0001 0x000A0104",
-                "CLEARN(0x0001F8,0x00494E) -> 0x00150000 0x01F8494E",
-                "CLEARN(0x0001F8,0x004756) -> 0x00150000 0x01F84756",
                 "CLEARN(0x000009,0x000011) -> 0x00150000 0x00090011",
                 "SETVAL(0x00001C,0x000020) -> 0x000A001C 0x00000020",
                 "SETVAL(0x00001D,0x000000) -> 0x000A001D 0x00000000",
@@ -637,7 +631,6 @@
             "USERMEMOFFSET(0x098180)",
             "-- Start entity ID 1020 / Cyclic sequence --",
             "STARTCHAIN(0x000001,0x000001,0x000101)",
-            "CLEARN(0x0001F8,0x006E7F)",
             "CLEARN(0x000023,0x000032)",
             "SETVAL(0x000055,0x0000C8)",
             "GETSTIME(0x000020)",
@@ -709,7 +702,6 @@
             "USERMEMOFFSET(0x0981EF)",
             "-- Start entity ID 1040 / Cyclic sequence --",
             "STARTCHAIN(0x000001,0x000001,0x000101)",
-            "CLEARN(0x0001F8,0x006E10)",
             "CLEARN(0x000017,0x00000B)",
             "SETVAL(0x000022,0x0001F4)",
             "GETSTIME(0x000023)",
@@ -762,7 +754,6 @@
             "USERMEMOFFSET(0x09821E)",
             "-- Start entity ID 1050 / Cyclic sequence --",
             "STARTCHAIN(0x000001,0x000001,0x000101)",
-            "CLEARN(0x0001F8,0x006DE1)",
             "CLEARN(0x00002D,0x000016)",
             "SETVAL(0x000043,0x0001F4)",
             "GETSTIME(0x000044)",
@@ -804,7 +795,6 @@
             "USERMEMOFFSET(0x098279)",
             "-- Start entity ID 1055 / Cyclic sequence --",
             "STARTCHAIN(0x000001,0x000001,0x000101)",
-            "CLEARN(0x0001F8,0x006D86)",
             "CLEARN(0x000005,0x000004)",
             "SETVAL(0x000002,0x000001)",
             "SETVAL(0x000003,0x000009)",
@@ -899,8 +889,6 @@
             "USERMEMOFFSET(0x09A6B1)",
             "-- Start entity ID 1073 / Cyclic sequence --",
             "STARTCHAIN(0x000001,0x000001,0x000104)",
-            "CLEARN(0x0001F8,0x00494E)",
-            "CLEARN(0x0001F8,0x004756)",
             "CLEARN(0x000009,0x000011)",
             "SETVAL(0x00001C,0x000020)",
             "SETVAL(0x00001D,0x000000)",
@@ -1046,7 +1034,7 @@
         "TotalCmdListInterrupt": [
         ],
         "TotalCmdListInterruptMaxInterruptCount": 0,
-        "TotalDspCmdsCompiledCrcCyclic": "0xFA111E0C",
+        "TotalDspCmdsCompiledCrcCyclic": "0xBD79BF76",
         "TotalDspCmdsCompiledCrcInterrupt": "0x6522DF69"
     }
 }

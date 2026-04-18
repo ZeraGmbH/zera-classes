@@ -171,9 +171,7 @@ void cRmsModuleMeasProgram::setDspVarList()
 void cRmsModuleMeasProgram::setDspCmdList()
 {
     ChannelRangeObserver::SystemObserverPtr observer = m_pModule->getSharedChannelRangeObserver();
-    int samples = observer->getSamplesPerPeriod();
-    m_dspInterface->addCycListItem("STARTCHAIN(1,1,0x0101)"); // aktiv, prozessnr. (dummy),hauptkette 1 subkette 1 start
-        m_dspInterface->addCycListItem(QString("CLEARN(%1,TMP_SAMPLES_SINGLE_1)").arg(samples) ); // clear TMP_SAMPLES_SINGLE_1
+    m_dspInterface->addCycListItem("STARTCHAIN(1,1,0x0101)"); // run once
         m_dspInterface->addCycListItem(QString("CLEARN(%1,FILTER)").arg(DspBuffLen::avgFilterLen(m_veinActValueList.count())));
         if (getConfData()->m_sIntegrationMode == "time") {
             if (getConfData()->m_bmovingWindow)

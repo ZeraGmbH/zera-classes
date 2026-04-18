@@ -75,7 +75,6 @@
     },
     "2-CmdList": [
         "STARTCHAIN(1,1,0x0101)",
-        "CLEARN(504,TMP_SAMPLES_SINGLE_1)",
         "CLEARN(17,FILTER)",
         "SETVAL(PERIODCURR,1)",
         "SETVAL(RESULT_BUFF_IDX,VALS_PERIOD_WORK)",

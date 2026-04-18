@@ -57,7 +57,6 @@
     },
     "2-CmdList": [
         "STARTCHAIN(1,1,0x0101)",
-        "CLEARN(504,TMP_SAMPLES_SINGLE_1)",
         "CLEARN(23,FILTER)",
         "SETVAL(TIPAR,1000)",
         "GETSTIME(TISTART)",

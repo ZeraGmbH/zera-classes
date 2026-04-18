@@ -400,7 +400,6 @@
         },
         "2-CmdList": [
             "STARTCHAIN(1,1,0x0101)",
-            "CLEARN(504,TMP_SAMPLES_SINGLE_1)",
             "CLEARN(23,FILTER)",
             "SETVAL(TIPAR,500)",
             "GETSTIME(TISTART)",
@@ -512,7 +511,6 @@
         },
         "2-CmdList": [
             "STARTCHAIN(1,1,0x0101)",
-            "CLEARN(504,TMP_SAMPLES_SINGLE_1)",
             "CLEARN(45,FILTER)",
             "SETVAL(TIPAR,500)",
             "GETSTIME(TISTART)",
@@ -631,7 +629,6 @@
         },
         "2-CmdList": [
             "STARTCHAIN(1,1,0x0101)",
-            "CLEARN(504,TMP_SAMPLES_SINGLE_1)",
             "CLEARN(5,FILTER)",
             "SETVAL(PERIODCURR,1)",
             "SETVAL(RESULT_BUFF_IDX,VALS_PERIOD_WORK)",
@@ -982,8 +979,6 @@
         },
         "2-CmdList": [
             "STARTCHAIN(1,1,0x0104)",
-            "CLEARN(504,TMP_SAMPLES_SINGLE_1)",
-            "CLEARN(504,TMP_SAMPLES_SINGLE_2)",
             "CLEARN(9,FILTER)",
             "SETVAL(MMODE,32)",
             "SETVAL(MMODE_SUM,0)",

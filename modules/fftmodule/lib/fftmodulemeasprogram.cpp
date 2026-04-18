@@ -178,7 +178,7 @@ void cFftModuleMeasProgram::setDspCmdList()
     int samples = observer->getSamplesPerPeriod();
     QString referenceChannel = getConfData()->m_RefChannel.m_sPar;
     int referenceDspChannel = observer->getChannel(referenceChannel)->getDspChannel();
-    m_dspInterface->addCycListItem("STARTCHAIN(1,1,0x0101)"); // aktiv, prozessnr. (dummy),hauptkette 1 subkette 1 start
+    m_dspInterface->addCycListItem("STARTCHAIN(1,1,0x0101)"); // run once
         m_dspInterface->addCycListItem(QString("CLEARN(%1,MEASSIGNAL)").arg(2*samples) ); // clear meassignal
         m_dspInterface->addCycListItem(QString("CLEARN(%1,FILTER)").arg(DspBuffLen::avgFilterLen(2 * m_nfftLen * m_veinActValueList.count())));
         if (getConfData()->m_bmovingWindow)

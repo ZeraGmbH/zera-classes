@@ -147,9 +147,7 @@ void cRangeModuleMeasProgram::setDspVarList()
 void cRangeModuleMeasProgram::setDspCmdList()
 {
     const QStringList channelMNames = m_pModule->getSharedChannelRangeObserver()->getChannelMNames();
-    int samples = m_pModule->getSharedChannelRangeObserver()->getSamplesPerPeriod();
-    m_dspInterface->addCycListItem("STARTCHAIN(1,1,0x0101)"); // aktiv, prozessnr. (dummy),hauptkette 1 subkette 1 start
-        m_dspInterface->addCycListItem(QString("CLEARN(%1,TMP_SAMPLES_SINGLE_1)").arg(samples) ); // clear TMP_SAMPLES_SINGLE_1
+    m_dspInterface->addCycListItem("STARTCHAIN(1,1,0x0101)"); // run once
         m_dspInterface->addCycListItem(QString("CLEARN(%1,FILTER)").arg(DspBuffLen::avgFilterLen(2*channelMNames.count()+1)));
         m_dspInterface->addCycListItem(QString("SETVAL(TIPAR,%1)").arg(getConfData()->m_fMeasInterval*1000.0)); // initial ti time  /* todo variabel */
         m_dspInterface->addCycListItem("GETSTIME(TISTART)"); // einmal ti start setzen

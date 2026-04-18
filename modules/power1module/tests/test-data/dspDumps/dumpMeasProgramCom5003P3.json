@@ -159,8 +159,6 @@
     },
     "2-CmdList": [
         "STARTCHAIN(1,1,0x010B)",
-        "CLEARN(504,TMP_SAMPLES_SINGLE_1)",
-        "CLEARN(504,TMP_SAMPLES_SINGLE_2)",
         "CLEARN(9,FILTER)",
         "SETVAL(MMODE,32)",
         "SETVAL(MMODE_SUM,0)",
