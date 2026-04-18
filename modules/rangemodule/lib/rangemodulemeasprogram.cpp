@@ -123,7 +123,7 @@ void cRangeModuleMeasProgram::setDspVarList()
 
     // work variables without I/O
     DspVarGroupClientInterface* tmpDspVarGroup = m_dspInterface->createVariableGroup("TmpData");
-    tmpDspVarGroup->addDspVar("MEASSIGNAL", samples);
+    tmpDspVarGroup->addDspVar("TMP_SAMPLES_SINGLE_1", samples, dspDataTypeFloat, moduleGlobalSegment);
     tmpDspVarGroup->addDspVar("MAXRESET", 32);
     tmpDspVarGroup->addDspVar("TISTART", 1, dspDataTypeInt);
     tmpDspVarGroup->addDspVar("CHXPEAK", channelMNames.count());
@@ -149,7 +149,7 @@ void cRangeModuleMeasProgram::setDspCmdList()
     const QStringList channelMNames = m_pModule->getSharedChannelRangeObserver()->getChannelMNames();
     int samples = m_pModule->getSharedChannelRangeObserver()->getSamplesPerPeriod();
     m_dspInterface->addCycListItem("STARTCHAIN(1,1,0x0101)"); // aktiv, prozessnr. (dummy),hauptkette 1 subkette 1 start
-        m_dspInterface->addCycListItem(QString("CLEARN(%1,MEASSIGNAL)").arg(samples) ); // clear meassignal
+        m_dspInterface->addCycListItem(QString("CLEARN(%1,TMP_SAMPLES_SINGLE_1)").arg(samples) ); // clear TMP_SAMPLES_SINGLE_1
         m_dspInterface->addCycListItem(QString("CLEARN(%1,FILTER)").arg(DspBuffLen::avgFilterLen(2*channelMNames.count()+1)));
         m_dspInterface->addCycListItem(QString("SETVAL(TIPAR,%1)").arg(getConfData()->m_fMeasInterval*1000.0)); // initial ti time  /* todo variabel */
         m_dspInterface->addCycListItem("GETSTIME(TISTART)"); // einmal ti start setzen
@@ -162,9 +162,9 @@ void cRangeModuleMeasProgram::setDspCmdList()
     {
         const ChannelRangeObserver::ChannelPtr channel =
             m_pModule->getSharedChannelRangeObserver()->getChannel(channelMNames.at(i));
-        m_dspInterface->addCycListItem(QString("COPYDATA(CH%1,0,MEASSIGNAL)").arg(channel->getDspChannel())); // for each channel we work on
-        m_dspInterface->addCycListItem(QString("SETPEAK(MEASSIGNAL,CHXPEAK+%1)").arg(i)); // here we have signal with dc regardless subdc is configured
-        m_dspInterface->addCycListItem(QString("MULCCV(MEASSIGNAL,MEASSIGNAL,CHXRMS+%1)").arg(i));
+        m_dspInterface->addCycListItem(QString("COPYDATA(CH%1,0,TMP_SAMPLES_SINGLE_1)").arg(channel->getDspChannel())); // for each channel we work on
+        m_dspInterface->addCycListItem(QString("SETPEAK(TMP_SAMPLES_SINGLE_1,CHXPEAK+%1)").arg(i)); // here we have signal with dc regardless subdc is configured
+        m_dspInterface->addCycListItem(QString("MULCCV(TMP_SAMPLES_SINGLE_1,TMP_SAMPLES_SINGLE_1,CHXRMS+%1)").arg(i));
     }
     m_dspInterface->addCycListItem("COPYDU(1,FREQENCY,FREQ)");
 

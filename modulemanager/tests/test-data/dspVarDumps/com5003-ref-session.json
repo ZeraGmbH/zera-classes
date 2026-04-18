@@ -406,12 +406,12 @@
                 ]
             },
             "TmpData": {
-                "UserMemSize": 541,
+                "UserMemSize": 37,
                 "UserMemSizeAligned": 0,
                 "Variables": [
                     {
-                        "Name": "MEASSIGNAL",
-                        "Segment": "moduleLocalSegment",
+                        "Name": "TMP_SAMPLES_SINGLE_1",
+                        "Segment": "moduleGlobalSegment",
                         "Size": 504,
                         "TypeData": "dspDataTypeFloat"
                     },
@@ -432,24 +432,24 @@
         },
         "2-CmdList": [
             "STARTCHAIN(1,1,0x0101)",
-            "CLEARN(504,MEASSIGNAL)",
+            "CLEARN(504,TMP_SAMPLES_SINGLE_1)",
             "CLEARN(25,FILTER)",
             "SETVAL(TIPAR,1000)",
             "GETSTIME(TISTART)",
             "DEACTIVATECHAIN(1,0x0101)",
             "STOPCHAIN(1,0x0101)",
-            "COPYDATA(CH0,0,MEASSIGNAL)",
-            "DFT(0,MEASSIGNAL,VALXDFT+0)",
-            "COPYDATA(CH2,0,MEASSIGNAL)",
-            "DFT(0,MEASSIGNAL,VALXDFT+2)",
-            "COPYDATA(CH4,0,MEASSIGNAL)",
-            "DFT(0,MEASSIGNAL,VALXDFT+4)",
-            "COPYDATA(CH1,0,MEASSIGNAL)",
-            "DFT(0,MEASSIGNAL,VALXDFT+6)",
-            "COPYDATA(CH3,0,MEASSIGNAL)",
-            "DFT(0,MEASSIGNAL,VALXDFT+8)",
-            "COPYDATA(CH5,0,MEASSIGNAL)",
-            "DFT(0,MEASSIGNAL,VALXDFT+10)",
+            "COPYDATA(CH0,0,TMP_SAMPLES_SINGLE_1)",
+            "DFT(0,TMP_SAMPLES_SINGLE_1,VALXDFT+0)",
+            "COPYDATA(CH2,0,TMP_SAMPLES_SINGLE_1)",
+            "DFT(0,TMP_SAMPLES_SINGLE_1,VALXDFT+2)",
+            "COPYDATA(CH4,0,TMP_SAMPLES_SINGLE_1)",
+            "DFT(0,TMP_SAMPLES_SINGLE_1,VALXDFT+4)",
+            "COPYDATA(CH1,0,TMP_SAMPLES_SINGLE_1)",
+            "DFT(0,TMP_SAMPLES_SINGLE_1,VALXDFT+6)",
+            "COPYDATA(CH3,0,TMP_SAMPLES_SINGLE_1)",
+            "DFT(0,TMP_SAMPLES_SINGLE_1,VALXDFT+8)",
+            "COPYDATA(CH5,0,TMP_SAMPLES_SINGLE_1)",
+            "DFT(0,TMP_SAMPLES_SINGLE_1,VALXDFT+10)",
             "AVERAGE1(12,VALXDFT,FILTER)",
             "TESTTIMESKIPNEX(TISTART,TIPAR)",
             "ACTIVATECHAIN(1,0x0102)",
@@ -551,18 +551,18 @@
                 ]
             },
             "TmpData": {
-                "UserMemSize": 1034,
+                "UserMemSize": 26,
                 "UserMemSizeAligned": 0,
                 "Variables": [
                     {
-                        "Name": "MEASSIGNAL1",
-                        "Segment": "moduleLocalSegment",
+                        "Name": "TMP_SAMPLES_SINGLE_1",
+                        "Segment": "moduleGlobalSegment",
                         "Size": 504,
                         "TypeData": "dspDataTypeFloat"
                     },
                     {
-                        "Name": "MEASSIGNAL2",
-                        "Segment": "moduleLocalSegment",
+                        "Name": "TMP_SAMPLES_SINGLE_2",
+                        "Segment": "moduleGlobalSegment",
                         "Size": 504,
                         "TypeData": "dspDataTypeFloat"
                     },
@@ -625,8 +625,8 @@
         },
         "2-CmdList": [
             "STARTCHAIN(1,1,0x0104)",
-            "CLEARN(504,MEASSIGNAL1)",
-            "CLEARN(504,MEASSIGNAL2)",
+            "CLEARN(504,TMP_SAMPLES_SINGLE_1)",
+            "CLEARN(504,TMP_SAMPLES_SINGLE_2)",
             "CLEARN(9,FILTER)",
             "SETVAL(MMODE,32)",
             "SETVAL(MMODE_SUM,0)",

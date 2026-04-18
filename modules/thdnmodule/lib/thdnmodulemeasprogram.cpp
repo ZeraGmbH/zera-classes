@@ -134,7 +134,7 @@ void cThdnModuleMeasProgram::setDspVarList()
     // work variables without I/O
     const int thdnCountDsp = channelMNames.size();
     DspVarGroupClientInterface* tmpDspVarGroup = m_dspInterface->createVariableGroup("TmpData");
-    tmpDspVarGroup->addDspVar("MEASSIGNAL", samples);
+    tmpDspVarGroup->addDspVar("TMP_SAMPLES_SINGLE_1", samples, dspDataTypeFloat, moduleGlobalSegment);
     tmpDspVarGroup->addDspVar("VALXTHDN", thdnCountDsp);
     tmpDspVarGroup->addDspVar("FILTER", DspBuffLen::avgFilterLen(thdnCountDsp));
 
@@ -157,7 +157,7 @@ void cThdnModuleMeasProgram::setDspCmdList()
     const QStringList channelMNames = observer->getChannelMNames();
     const int thdnCountDsp = channelMNames.size();
     m_dspInterface->addCycListItem("STARTCHAIN(1,1,0x0101)"); // aktiv, prozessnr. (dummy),hauptkette 1 subkette 1 start
-        m_dspInterface->addCycListItem(QString("CLEARN(%1,MEASSIGNAL)").arg(samples) ); // clear meassignal
+        m_dspInterface->addCycListItem(QString("CLEARN(%1,TMP_SAMPLES_SINGLE_1)").arg(samples) ); // clear TMP_SAMPLES_SINGLE_1
         m_dspInterface->addCycListItem(QString("CLEARN(%1,FILTER)").arg(DspBuffLen::avgFilterLen(thdnCountDsp)));
 
         if (getConfData()->m_bmovingWindow)
@@ -173,8 +173,8 @@ void cThdnModuleMeasProgram::setDspCmdList()
     for (int i = 0; i < thdnCountDsp; i++) {
         QString channelMName = channelMNames[i];
         int dspChannel = observer->getChannel(channelMName)->getDspChannel();
-        m_dspInterface->addCycListItem(QString("COPYDATA(CH%1,0,MEASSIGNAL)").arg(dspChannel));
-        m_dspInterface->addCycListItem(QString("THDN(MEASSIGNAL,VALXTHDN+%1)").arg(i));
+        m_dspInterface->addCycListItem(QString("COPYDATA(CH%1,0,TMP_SAMPLES_SINGLE_1)").arg(dspChannel));
+        m_dspInterface->addCycListItem(QString("THDN(TMP_SAMPLES_SINGLE_1,VALXTHDN+%1)").arg(i));
     }
 
     // and filter them

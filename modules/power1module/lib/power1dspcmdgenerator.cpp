@@ -9,8 +9,8 @@ QStringList Power1DspCmdGenerator::getCmdsInitVars(std::shared_ptr<MeasMode> ini
     QStringList cmdList;
     quint16 chainId = idGen.getNextChainId();
     cmdList.append(DspAtomicCommandGen::getStartChainActive(chainId));
-    cmdList.append(QString("CLEARN(%1,MEASSIGNAL1)").arg(samplesPerPeroid) ); // clear meassignal
-    cmdList.append(QString("CLEARN(%1,MEASSIGNAL2)").arg(samplesPerPeroid) ); // clear meassignal
+    cmdList.append(QString("CLEARN(%1,TMP_SAMPLES_SINGLE_1)").arg(samplesPerPeroid) ); // clear TMP_SAMPLES_SINGLE_
+    cmdList.append(QString("CLEARN(%1,TMP_SAMPLES_SINGLE_2)").arg(samplesPerPeroid) ); // clear TMP_SAMPLES_SINGLE_
     cmdList.append(QString("CLEARN(%1,FILTER)").arg(DspBuffLen::avgFilterLen(MeasPhaseCount+SumValueCount)));
     cmdList.append(QString("SETVAL(MMODE,%1)").arg(initialMMode->getDspSelectCode()));
     cmdList.append(QString("SETVAL(MMODE_SUM,%1)").arg(initialMMode->getDspSumSelectCode()));
@@ -68,51 +68,51 @@ QStringList Power1DspCmdGenerator::getCmdsMMode4LBK(int dspSelectCode, MeasSyste
     cmdList.append(DspAtomicCommandGen::getStartChainInactive(chainId));
 
     // our first measuring system
-    cmdList.append(QString("COPYDIFF(CH%1,CH%2,MEASSIGNAL1)")
+    cmdList.append(QString("COPYDIFF(CH%1,CH%2,TMP_SAMPLES_SINGLE_1)")
                           .arg(measChannelPairList[1].voltageChannel)
                           .arg(measChannelPairList[2].voltageChannel));
-    cmdList.append("MULCV(MEASSIGNAL1,0.57735027)"); // we correct 1/√3
-    cmdList.append(QString("COPYDATA(CH%1,0,MEASSIGNAL2)").arg(measChannelPairList[0].currentChannel));
+    cmdList.append("MULCV(TMP_SAMPLES_SINGLE_1,0.57735027)"); // we correct 1/√3
+    cmdList.append(QString("COPYDATA(CH%1,0,TMP_SAMPLES_SINGLE_2)").arg(measChannelPairList[0].currentChannel));
 
-    cmdList.append("DFT(1,MEASSIGNAL1,TEMP1)");
-    cmdList.append("DFT(1,MEASSIGNAL2,TEMP2)");
+    cmdList.append("DFT(1,TMP_SAMPLES_SINGLE_1,TEMP1)");
+    cmdList.append("DFT(1,TMP_SAMPLES_SINGLE_2,TEMP2)");
     cmdList.append("MULVVV(TEMP1,TEMP2,VALPQS)");
     cmdList.append("MULVVV(TEMP2+1,TEMP1+1,TEMP1)");
     cmdList.append("ADDVVV(TEMP1,VALPQS,VALPQS)");
     cmdList.append("MULVVV(CONST_HALF,VALPQS,VALPQS)");
 
-    //cmdList.append("MULCCV(MEASSIGNAL1,MEASSIGNAL2,VALPQS)");
+    //cmdList.append("MULCCV(TMP_SAMPLES_SINGLE_1,TMP_SAMPLES_SINGLE_2,VALPQS)");
 
     // our second measuring system
-    cmdList.append(QString("COPYDIFF(CH%1,CH%2,MEASSIGNAL1)")
+    cmdList.append(QString("COPYDIFF(CH%1,CH%2,TMP_SAMPLES_SINGLE_1)")
                           .arg(measChannelPairList[2].voltageChannel)
                           .arg(measChannelPairList[0].voltageChannel));
-    cmdList.append("MULCV(MEASSIGNAL1,0.57735027)"); // we correct 1/√3
-    cmdList.append(QString("COPYDATA(CH%1,0,MEASSIGNAL2)").arg(measChannelPairList[1].currentChannel));
-    cmdList.append("DFT(1,MEASSIGNAL1,TEMP1)");
-    cmdList.append("DFT(1,MEASSIGNAL2,TEMP2)");
+    cmdList.append("MULCV(TMP_SAMPLES_SINGLE_1,0.57735027)"); // we correct 1/√3
+    cmdList.append(QString("COPYDATA(CH%1,0,TMP_SAMPLES_SINGLE_2)").arg(measChannelPairList[1].currentChannel));
+    cmdList.append("DFT(1,TMP_SAMPLES_SINGLE_1,TEMP1)");
+    cmdList.append("DFT(1,TMP_SAMPLES_SINGLE_2,TEMP2)");
     cmdList.append("MULVVV(TEMP1,TEMP2,VALPQS+1)");
     cmdList.append("MULVVV(TEMP2+1,TEMP1+1,TEMP1)");
     cmdList.append("ADDVVV(TEMP1,VALPQS+1,VALPQS+1)");
     cmdList.append("MULVVV(CONST_HALF,VALPQS+1,VALPQS+1)");
 
-    //cmdList.append("MULCCV(MEASSIGNAL1,MEASSIGNAL2,VALPQS+1)");
+    //cmdList.append("MULCCV(TMP_SAMPLES_SINGLE_1,TMP_SAMPLES_SINGLE_2,VALPQS+1)");
 
     // our third measuring system
-    cmdList.append(QString("COPYDIFF(CH%1,CH%2,MEASSIGNAL1)")
+    cmdList.append(QString("COPYDIFF(CH%1,CH%2,TMP_SAMPLES_SINGLE_1)")
                           .arg(measChannelPairList[0].voltageChannel)
                           .arg(measChannelPairList[1].voltageChannel));
-    cmdList.append("MULCV(MEASSIGNAL1,0.57735027)"); // we correct 1/√3
-    cmdList.append(QString("COPYDATA(CH%1,0,MEASSIGNAL2)").arg(measChannelPairList[2].currentChannel));
+    cmdList.append("MULCV(TMP_SAMPLES_SINGLE_1,0.57735027)"); // we correct 1/√3
+    cmdList.append(QString("COPYDATA(CH%1,0,TMP_SAMPLES_SINGLE_2)").arg(measChannelPairList[2].currentChannel));
 
-    cmdList.append("DFT(1,MEASSIGNAL1,TEMP1)");
-    cmdList.append("DFT(1,MEASSIGNAL2,TEMP2)");
+    cmdList.append("DFT(1,TMP_SAMPLES_SINGLE_1,TEMP1)");
+    cmdList.append("DFT(1,TMP_SAMPLES_SINGLE_2,TEMP2)");
     cmdList.append("MULVVV(TEMP1,TEMP2,VALPQS+2)");
     cmdList.append("MULVVV(TEMP2+1,TEMP1+1,TEMP1)");
     cmdList.append("ADDVVV(TEMP1,VALPQS+2,VALPQS+2)");
     cmdList.append("MULVVV(CONST_HALF,VALPQS+2,VALPQS+2)");
 
-    //cmdList.append("MULCCV(MEASSIGNAL1,MEASSIGNAL2,VALPQS+2)");
+    //cmdList.append("MULCCV(TMP_SAMPLES_SINGLE_1,TMP_SAMPLES_SINGLE_2,VALPQS+2)");
 
     cmdList.append(DspAtomicCommandGen::getStopChain(chainId));
     return cmdList;
@@ -128,21 +128,21 @@ QStringList Power1DspCmdGenerator::getCmdsMMode3LW(int dspSelectCode, MeasSystem
     cmdList.append(DspAtomicCommandGen::getStartChainInactive(chainId));
 
     // our first measuring system
-    cmdList.append(QString("COPYDIFF(CH%1,CH%2,MEASSIGNAL1)")
+    cmdList.append(QString("COPYDIFF(CH%1,CH%2,TMP_SAMPLES_SINGLE_1)")
                           .arg(measChannelPairList[0].voltageChannel)
                           .arg(measChannelPairList[1].voltageChannel));
-    cmdList.append(QString("COPYDATA(CH%1,0,MEASSIGNAL2)").arg(measChannelPairList[0].currentChannel));
-    cmdList.append("MULCCV(MEASSIGNAL1,MEASSIGNAL2,VALPQS)");
+    cmdList.append(QString("COPYDATA(CH%1,0,TMP_SAMPLES_SINGLE_2)").arg(measChannelPairList[0].currentChannel));
+    cmdList.append("MULCCV(TMP_SAMPLES_SINGLE_1,TMP_SAMPLES_SINGLE_2,VALPQS)");
 
     // our second measuring system
     cmdList.append("SETVAL(VALPQS+1,0.0)"); // is 0 output
 
     // our third measuring system
-    cmdList.append(QString("COPYDIFF(CH%1,CH%2,MEASSIGNAL1)")
+    cmdList.append(QString("COPYDIFF(CH%1,CH%2,TMP_SAMPLES_SINGLE_1)")
                           .arg(measChannelPairList[2].voltageChannel)
                           .arg(measChannelPairList[1].voltageChannel));
-    cmdList.append(QString("COPYDATA(CH%1,0,MEASSIGNAL2)").arg(measChannelPairList[2].currentChannel));
-    cmdList.append("MULCCV(MEASSIGNAL1,MEASSIGNAL2,VALPQS+2)");
+    cmdList.append(QString("COPYDATA(CH%1,0,TMP_SAMPLES_SINGLE_2)").arg(measChannelPairList[2].currentChannel));
+    cmdList.append("MULCCV(TMP_SAMPLES_SINGLE_1,TMP_SAMPLES_SINGLE_2,VALPQS+2)");
 
     cmdList.append(DspAtomicCommandGen::getStopChain(chainId));
     return cmdList;
@@ -157,37 +157,37 @@ QStringList Power1DspCmdGenerator::getCmdsMMode3LB(int dspSelectCode, MeasSystem
     cmdList.append(DspAtomicCommandGen::getStartChainInactive(chainId));
 
     // our first measuring system
-    cmdList.append(QString("COPYDIFF(CH%1,CH%2,MEASSIGNAL1)")
+    cmdList.append(QString("COPYDIFF(CH%1,CH%2,TMP_SAMPLES_SINGLE_1)")
                           .arg(measChannelPairList[0].voltageChannel)
                           .arg(measChannelPairList[1].voltageChannel));
-    cmdList.append(QString("COPYDATA(CH%1,0,MEASSIGNAL2)").arg(measChannelPairList[0].currentChannel));
-    cmdList.append("DFT(1,MEASSIGNAL1,TEMP1)");
-    cmdList.append("DFT(1,MEASSIGNAL2,TEMP2)");
+    cmdList.append(QString("COPYDATA(CH%1,0,TMP_SAMPLES_SINGLE_2)").arg(measChannelPairList[0].currentChannel));
+    cmdList.append("DFT(1,TMP_SAMPLES_SINGLE_1,TEMP1)");
+    cmdList.append("DFT(1,TMP_SAMPLES_SINGLE_2,TEMP2)");
     cmdList.append("MULVVV(TEMP1,TEMP2+1,VALPQS)");
     cmdList.append("MULVVV(TEMP2,TEMP1+1,TEMP1)");
     cmdList.append("SUBVVV(TEMP1,VALPQS,VALPQS)");
     cmdList.append("MULVVV(CONST_HALF,VALPQS,VALPQS)");
 
-    //cmdList.append("ROTATE(MEASSIGNAL2,270.0)");
-    //cmdList.append("MULCCV(MEASSIGNAL1,MEASSIGNAL2,VALPQS)");
+    //cmdList.append("ROTATE(TMP_SAMPLES_SINGLE_2,270.0)");
+    //cmdList.append("MULCCV(TMP_SAMPLES_SINGLE_1,TMP_SAMPLES_SINGLE_2,VALPQS)");
 
     // our second measuring system
     cmdList.append("SETVAL(VALPQS+1,0.0)"); // is 0 output
 
     // our third measuring system
-    cmdList.append(QString("COPYDIFF(CH%1,CH%2,MEASSIGNAL1)")
+    cmdList.append(QString("COPYDIFF(CH%1,CH%2,TMP_SAMPLES_SINGLE_1)")
                           .arg(measChannelPairList[2].voltageChannel)
                           .arg(measChannelPairList[1].voltageChannel));
-    cmdList.append(QString("COPYDATA(CH%1,0,MEASSIGNAL2)").arg(measChannelPairList[2].currentChannel));
-    cmdList.append("DFT(1,MEASSIGNAL1,TEMP1)");
-    cmdList.append("DFT(1,MEASSIGNAL2,TEMP2)");
+    cmdList.append(QString("COPYDATA(CH%1,0,TMP_SAMPLES_SINGLE_2)").arg(measChannelPairList[2].currentChannel));
+    cmdList.append("DFT(1,TMP_SAMPLES_SINGLE_1,TEMP1)");
+    cmdList.append("DFT(1,TMP_SAMPLES_SINGLE_2,TEMP2)");
     cmdList.append("MULVVV(TEMP1,TEMP2+1,VALPQS+2)");
     cmdList.append("MULVVV(TEMP2,TEMP1+1,TEMP1)");
     cmdList.append("SUBVVV(TEMP1,VALPQS+2,VALPQS+2)");
     cmdList.append("MULVVV(CONST_HALF,VALPQS+2,VALPQS+2)");
 
-    //cmdList.append("ROTATE(MEASSIGNAL2,270.0)");
-    //cmdList.append("MULCCV(MEASSIGNAL1,MEASSIGNAL2,VALPQS+2)");
+    //cmdList.append("ROTATE(TMP_SAMPLES_SINGLE_2,270.0)");
+    //cmdList.append("MULCCV(TMP_SAMPLES_SINGLE_1,TMP_SAMPLES_SINGLE_2,VALPQS+2)");
 
     cmdList.append(DspAtomicCommandGen::getStopChain(chainId));
     return cmdList;
@@ -202,16 +202,16 @@ QStringList Power1DspCmdGenerator::getCmdsMMode3LS(int dspSelectCode, MeasSystem
     cmdList.append(DspAtomicCommandGen::getStartChainInactive(chainId));
 
     // S1
-    // MEASSIGNAL1 = UL1-UL2
-    cmdList.append(QString("COPYDIFF(CH%1,CH%2,MEASSIGNAL1)")
+    // TMP_SAMPLES_SINGLE_1 = UL1-UL2
+    cmdList.append(QString("COPYDIFF(CH%1,CH%2,TMP_SAMPLES_SINGLE_1)")
                        .arg(measChannelPairList[0].voltageChannel)
                        .arg(measChannelPairList[1].voltageChannel));
     // TEMP1 = RMS(UL1-UL2)
-    cmdList.append("RMS(MEASSIGNAL1,TEMP1)");
-    // MEASSIGNAL2 = IL1
-    cmdList.append(QString("COPYDATA(CH%1,0,MEASSIGNAL2)").arg(measChannelPairList[0].currentChannel));
+    cmdList.append("RMS(TMP_SAMPLES_SINGLE_1,TEMP1)");
+    // TMP_SAMPLES_SINGLE_2 = IL1
+    cmdList.append(QString("COPYDATA(CH%1,0,TMP_SAMPLES_SINGLE_2)").arg(measChannelPairList[0].currentChannel));
     // TEMP2 = RMS(IL1)
-    cmdList.append("RMS(MEASSIGNAL2,TEMP2)");
+    cmdList.append("RMS(TMP_SAMPLES_SINGLE_2,TEMP2)");
     // S1 = RMS(UL1-UL2) * RMS(IL1)
     cmdList.append(QString("MULVVV(TEMP1,TEMP2,VALPQS+0)"));
     // S1 = RMS(UL1-UL2) * RMS(IL1) / √3
@@ -223,16 +223,16 @@ QStringList Power1DspCmdGenerator::getCmdsMMode3LS(int dspSelectCode, MeasSystem
     cmdList.append("SETVAL(VALPQS+1,0.0)");
 
     // S3
-    // MEASSIGNAL1 = UL3-UL1
-    cmdList.append(QString("COPYDIFF(CH%1,CH%2,MEASSIGNAL1)")
+    // TMP_SAMPLES_SINGLE_1 = UL3-UL1
+    cmdList.append(QString("COPYDIFF(CH%1,CH%2,TMP_SAMPLES_SINGLE_1)")
                        .arg(measChannelPairList[2].voltageChannel)
                        .arg(measChannelPairList[1].voltageChannel));
     // TEMP1 = RMS(UL3-UL1)
-    cmdList.append("RMS(MEASSIGNAL1,TEMP1)");
-    // MEASSIGNAL2 = IL3
-    cmdList.append(QString("COPYDATA(CH%1,0,MEASSIGNAL2)").arg(measChannelPairList[2].currentChannel));
+    cmdList.append("RMS(TMP_SAMPLES_SINGLE_1,TEMP1)");
+    // TMP_SAMPLES_SINGLE_2 = IL3
+    cmdList.append(QString("COPYDATA(CH%1,0,TMP_SAMPLES_SINGLE_2)").arg(measChannelPairList[2].currentChannel));
     // TEMP2 = RMS(IL3)
-    cmdList.append("RMS(MEASSIGNAL2,TEMP2)");
+    cmdList.append("RMS(TMP_SAMPLES_SINGLE_2,TEMP2)");
     // S3 = RMS(UL3-UL1) * RMS(IL3)
     cmdList.append(QString("MULVVV(TEMP1,TEMP2,VALPQS+2)"));
     // S3 = RMS(UL3-UL1) * RMS(IL3) / √3
@@ -253,32 +253,32 @@ QStringList Power1DspCmdGenerator::getCmdsMMode3LSg(int dspSelectCode, MeasSyste
     cmdList.append(DspAtomicCommandGen::getStartChainInactive(chainId));
 
     // S1
-    // MEASSIGNAL1 = UL1-UL2
-    cmdList.append(QString("COPYDIFF(CH%1,CH%2,MEASSIGNAL1)")
+    // TMP_SAMPLES_SINGLE_1 = UL1-UL2
+    cmdList.append(QString("COPYDIFF(CH%1,CH%2,TMP_SAMPLES_SINGLE_1)")
                        .arg(measChannelPairList[0].voltageChannel)
                        .arg(measChannelPairList[1].voltageChannel));
-    // MEASSIGNAL2 = IL1
-    cmdList.append(QString("COPYDATA(CH%1,0,MEASSIGNAL2)").arg(measChannelPairList[0].currentChannel));
+    // TMP_SAMPLES_SINGLE_2 = IL1
+    cmdList.append(QString("COPYDATA(CH%1,0,TMP_SAMPLES_SINGLE_2)").arg(measChannelPairList[0].currentChannel));
 
-    cmdList.append("MULCCV(MEASSIGNAL1,MEASSIGNAL2,VAL_APPARENT_P+0)");     // P
-    cmdList.append("ROTATE(MEASSIGNAL2,270.0)");
-    cmdList.append("MULCCV(MEASSIGNAL1,MEASSIGNAL2,VAL_APPARENT_Q+0)");     // Q
+    cmdList.append("MULCCV(TMP_SAMPLES_SINGLE_1,TMP_SAMPLES_SINGLE_2,VAL_APPARENT_P+0)");     // P
+    cmdList.append("ROTATE(TMP_SAMPLES_SINGLE_2,270.0)");
+    cmdList.append("MULCCV(TMP_SAMPLES_SINGLE_1,TMP_SAMPLES_SINGLE_2,VAL_APPARENT_Q+0)");     // Q
     cmdList.append("ADDVVG(VAL_APPARENT_P+0,VAL_APPARENT_Q+0,VALPQS+0)");   // √(P² + Q²)
 
     // S2 = 0
     cmdList.append("SETVAL(VALPQS+1,0.0)");
 
     // S3
-    // MEASSIGNAL1 = UL3-UL1
-    cmdList.append(QString("COPYDIFF(CH%1,CH%2,MEASSIGNAL1)")
+    // TMP_SAMPLES_SINGLE_1 = UL3-UL1
+    cmdList.append(QString("COPYDIFF(CH%1,CH%2,TMP_SAMPLES_SINGLE_1)")
                        .arg(measChannelPairList[2].voltageChannel)
                        .arg(measChannelPairList[1].voltageChannel));
-    // MEASSIGNAL2 = IL3
-    cmdList.append(QString("COPYDATA(CH%1,0,MEASSIGNAL2)").arg(measChannelPairList[2].currentChannel));
+    // TMP_SAMPLES_SINGLE_2 = IL3
+    cmdList.append(QString("COPYDATA(CH%1,0,TMP_SAMPLES_SINGLE_2)").arg(measChannelPairList[2].currentChannel));
 
-    cmdList.append("MULCCV(MEASSIGNAL1,MEASSIGNAL2,VAL_APPARENT_P+2)");     // P
-    cmdList.append("ROTATE(MEASSIGNAL2,270.0)");
-    cmdList.append("MULCCV(MEASSIGNAL1,MEASSIGNAL2,VAL_APPARENT_Q+2)");     // Q
+    cmdList.append("MULCCV(TMP_SAMPLES_SINGLE_1,TMP_SAMPLES_SINGLE_2,VAL_APPARENT_P+2)");     // P
+    cmdList.append("ROTATE(TMP_SAMPLES_SINGLE_2,270.0)");
+    cmdList.append("MULCCV(TMP_SAMPLES_SINGLE_1,TMP_SAMPLES_SINGLE_2,VAL_APPARENT_Q+2)");     // Q
     cmdList.append("ADDVVG(VAL_APPARENT_P+2,VAL_APPARENT_Q+2,VALPQS+2)");   // √(P² + Q²)
 
     cmdList.append(DspAtomicCommandGen::getStopChain(chainId));
@@ -295,10 +295,10 @@ QStringList Power1DspCmdGenerator::getCmdsMModeXLW(int dspSelectCode, MeasSystem
         cmdList.append(getCmdsSkipOnPhaseNotSelected(phase, chainId));
         cmdList.append(DspAtomicCommandGen::getStartChainInactive(chainId));
 
-        cmdList.append(QString("COPYDATA(CH%1,0,MEASSIGNAL1)").arg(measChannelPairList[phase].voltageChannel));
-        cmdList.append(QString("COPYDATA(CH%1,0,MEASSIGNAL2)").arg(measChannelPairList[phase].currentChannel));
+        cmdList.append(QString("COPYDATA(CH%1,0,TMP_SAMPLES_SINGLE_1)").arg(measChannelPairList[phase].voltageChannel));
+        cmdList.append(QString("COPYDATA(CH%1,0,TMP_SAMPLES_SINGLE_2)").arg(measChannelPairList[phase].currentChannel));
 
-        cmdList.append(QString("MULCCV(MEASSIGNAL1,MEASSIGNAL2,VALPQS+%1)").arg(phase));
+        cmdList.append(QString("MULCCV(TMP_SAMPLES_SINGLE_1,TMP_SAMPLES_SINGLE_2,VALPQS+%1)").arg(phase));
 
         cmdList.append(DspAtomicCommandGen::getStopChain(chainId));
     }
@@ -315,17 +315,17 @@ QStringList Power1DspCmdGenerator::getCmdsMModeXLB(int dspSelectCode, MeasSystem
         cmdList.append(getCmdsSkipOnPhaseNotSelected(phase, chainId));
         cmdList.append(DspAtomicCommandGen::getStartChainInactive(chainId));
 
-        cmdList.append(QString("COPYDATA(CH%1,0,MEASSIGNAL1)").arg(measChannelPairList[phase].voltageChannel));
-        cmdList.append(QString("COPYDATA(CH%1,0,MEASSIGNAL2)").arg(measChannelPairList[phase].currentChannel));
+        cmdList.append(QString("COPYDATA(CH%1,0,TMP_SAMPLES_SINGLE_1)").arg(measChannelPairList[phase].voltageChannel));
+        cmdList.append(QString("COPYDATA(CH%1,0,TMP_SAMPLES_SINGLE_2)").arg(measChannelPairList[phase].currentChannel));
 
-        cmdList.append("DFT(1,MEASSIGNAL1,TEMP1)");
-        cmdList.append("DFT(1,MEASSIGNAL2,TEMP2)");
+        cmdList.append("DFT(1,TMP_SAMPLES_SINGLE_1,TEMP1)");
+        cmdList.append("DFT(1,TMP_SAMPLES_SINGLE_2,TEMP2)");
         cmdList.append(QString("MULVVV(TEMP1,TEMP2+1,VALPQS+%1)").arg(phase));          // VALPQS = Ure*Iim
         cmdList.append(QString("MULVVV(TEMP2,TEMP1+1,TEMP1)"));                         // TEMP1  = Ire*Uim
         cmdList.append(QString("SUBVVV(TEMP1,VALPQS+%1,VALPQS+%1)").arg(phase));        // VALPQS = Ire*Uim - Ure*Iim
         cmdList.append(QString("MULVVV(CONST_HALF,VALPQS+%1,VALPQS+%1)").arg(phase));   // VALPQS = 0.5 * (Ire*Uim - Ure*Iim)
-        //cmdList.append("ROTATE(MEASSIGNAL2,270.0)");
-        //cmdList.append(QString("MULCCV(MEASSIGNAL1,MEASSIGNAL2,VALPQS+%1)").arg(phase));
+        //cmdList.append("ROTATE(TMP_SAMPLES_SINGLE_2,270.0)");
+        //cmdList.append(QString("MULCCV(TMP_SAMPLES_SINGLE_1,TMP_SAMPLES_SINGLE_2,VALPQS+%1)").arg(phase));
 
         cmdList.append(DspAtomicCommandGen::getStopChain(chainId));
     }
@@ -342,11 +342,11 @@ QStringList Power1DspCmdGenerator::getCmdsMModeXLS(int dspSelectCode, MeasSystem
         cmdList.append(getCmdsSkipOnPhaseNotSelected(phase, chainId));
         cmdList.append(DspAtomicCommandGen::getStartChainInactive(chainId));
 
-        cmdList.append(QString("COPYDATA(CH%1,0,MEASSIGNAL1)").arg(measChannelPairList[phase].voltageChannel));
-        cmdList.append(QString("COPYDATA(CH%1,0,MEASSIGNAL2)").arg(measChannelPairList[phase].currentChannel));
+        cmdList.append(QString("COPYDATA(CH%1,0,TMP_SAMPLES_SINGLE_1)").arg(measChannelPairList[phase].voltageChannel));
+        cmdList.append(QString("COPYDATA(CH%1,0,TMP_SAMPLES_SINGLE_2)").arg(measChannelPairList[phase].currentChannel));
 
-        cmdList.append("RMS(MEASSIGNAL1,TEMP1)");
-        cmdList.append("RMS(MEASSIGNAL2,TEMP2)");
+        cmdList.append("RMS(TMP_SAMPLES_SINGLE_1,TEMP1)");
+        cmdList.append("RMS(TMP_SAMPLES_SINGLE_2,TEMP2)");
         cmdList.append(QString("MULVVV(TEMP1,TEMP2,VALPQS+%1)").arg(phase));
 
         cmdList.append(DspAtomicCommandGen::getStopChain(chainId));
@@ -364,12 +364,12 @@ QStringList Power1DspCmdGenerator::getCmdsMModeXLSg(int dspSelectCode, MeasSyste
         cmdList.append(getCmdsSkipOnPhaseNotSelected(phase, chainId));
         cmdList.append(DspAtomicCommandGen::getStartChainInactive(chainId));
 
-        cmdList.append(QString("COPYDATA(CH%1,0,MEASSIGNAL1)").arg(measChannelPairList[phase].voltageChannel));
-        cmdList.append(QString("COPYDATA(CH%1,0,MEASSIGNAL2)").arg(measChannelPairList[phase].currentChannel));
+        cmdList.append(QString("COPYDATA(CH%1,0,TMP_SAMPLES_SINGLE_1)").arg(measChannelPairList[phase].voltageChannel));
+        cmdList.append(QString("COPYDATA(CH%1,0,TMP_SAMPLES_SINGLE_2)").arg(measChannelPairList[phase].currentChannel));
 
-        cmdList.append(QString("MULCCV(MEASSIGNAL1,MEASSIGNAL2,VAL_APPARENT_P+%1)").arg(phase)); // P
-        cmdList.append("ROTATE(MEASSIGNAL2,270.0)");
-        cmdList.append(QString("MULCCV(MEASSIGNAL1,MEASSIGNAL2,VAL_APPARENT_Q+%1)").arg(phase)); // Q
+        cmdList.append(QString("MULCCV(TMP_SAMPLES_SINGLE_1,TMP_SAMPLES_SINGLE_2,VAL_APPARENT_P+%1)").arg(phase)); // P
+        cmdList.append("ROTATE(TMP_SAMPLES_SINGLE_2,270.0)");
+        cmdList.append(QString("MULCCV(TMP_SAMPLES_SINGLE_1,TMP_SAMPLES_SINGLE_2,VAL_APPARENT_Q+%1)").arg(phase)); // Q
         cmdList.append(QString("ADDVVG(VAL_APPARENT_P+%1,VAL_APPARENT_Q+%1,VALPQS+%1)").arg(phase));
 
         cmdList.append(DspAtomicCommandGen::getStopChain(chainId));

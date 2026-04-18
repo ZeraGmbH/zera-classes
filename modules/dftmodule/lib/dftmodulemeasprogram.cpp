@@ -177,7 +177,7 @@ void cDftModuleMeasProgram::setDspVarList()
 
     // work variables without I/O
     DspVarGroupClientInterface* tmpDspVarGroup = m_dspInterface->createVariableGroup("TmpData");
-    tmpDspVarGroup->addDspVar("MEASSIGNAL", samples);
+    tmpDspVarGroup->addDspVar("TMP_SAMPLES_SINGLE_1", samples, dspDataTypeFloat, moduleGlobalSegment);
     tmpDspVarGroup->addDspVar("VALXDFT", 2*m_veinActValueList.count());
     tmpDspVarGroup->addDspVar("FILTER", DspBuffLen::avgFilterLen(2*m_veinActValueList.count()));
 
@@ -198,7 +198,7 @@ void cDftModuleMeasProgram::setDspCmdList()
     ChannelRangeObserver::SystemObserverPtr observer = m_pModule->getSharedChannelRangeObserver();
     int samples = observer->getSamplesPerPeriod();
     m_dspInterface->addCycListItem("STARTCHAIN(1,1,0x0101)"); // aktiv, prozessnr. (dummy),hauptkette 1 subkette 1 start
-        m_dspInterface->addCycListItem(QString("CLEARN(%1,MEASSIGNAL)").arg(samples) ); // clear meassignal
+        m_dspInterface->addCycListItem(QString("CLEARN(%1,TMP_SAMPLES_SINGLE_1)").arg(samples) ); // clear TMP_SAMPLES_SINGLE_1
         m_dspInterface->addCycListItem(QString("CLEARN(%1,FILTER)").arg(DspBuffLen::avgFilterLen(2*m_veinActValueList.count())));
 
         if (getConfData()->m_bmovingWindow)
@@ -217,14 +217,14 @@ void cDftModuleMeasProgram::setDspCmdList()
         // we have 1 or 2 entries for each value
         if (channelMNameList.count() == 1) {
             int dspChannel = observer->getChannel(channelMNameList[0])->getDspChannel();
-            m_dspInterface->addCycListItem(QString("COPYDATA(CH%1,0,MEASSIGNAL)").arg(dspChannel));
+            m_dspInterface->addCycListItem(QString("COPYDATA(CH%1,0,TMP_SAMPLES_SINGLE_1)").arg(dspChannel));
         }
         else {
             int dspChannel0 = observer->getChannel(channelMNameList[0])->getDspChannel();
             int dspChannel1 = observer->getChannel(channelMNameList[1])->getDspChannel();
-            m_dspInterface->addCycListItem(QString("COPYDIFF(CH%1,CH%2,MEASSIGNAL)").arg(dspChannel0).arg(dspChannel1));
+            m_dspInterface->addCycListItem(QString("COPYDIFF(CH%1,CH%2,TMP_SAMPLES_SINGLE_1)").arg(dspChannel0).arg(dspChannel1));
         }
-        m_dspInterface->addCycListItem(QString("DFT(%1,MEASSIGNAL,VALXDFT+%2)").arg(getConfData()->m_nDftOrder).arg(2*i));
+        m_dspInterface->addCycListItem(QString("DFT(%1,TMP_SAMPLES_SINGLE_1,VALXDFT+%2)").arg(getConfData()->m_nDftOrder).arg(2*i));
     }
 
     // and filter them

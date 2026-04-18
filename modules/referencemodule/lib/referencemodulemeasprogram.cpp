@@ -68,7 +68,7 @@ void cReferenceModuleMeasProgram::setDspVarList()
 
     // work variables without I/O
     DspVarGroupClientInterface* tmpDspVarGroup = m_dspInterface->createVariableGroup("TmpData");
-    tmpDspVarGroup->addDspVar("MEASSIGNAL", samples);
+    tmpDspVarGroup->addDspVar("TMP_SAMPLES_SINGLE_1", samples, dspDataTypeFloat, moduleGlobalSegment);
     tmpDspVarGroup->addDspVar("TISTART", 1);
     tmpDspVarGroup->addDspVar("VALXDFT", m_ChannelList.count()*2);
     tmpDspVarGroup->addDspVar("FILTER", DspBuffLen::avgFilterLen(2*m_ChannelList.count()));
@@ -87,7 +87,7 @@ void cReferenceModuleMeasProgram::setDspCmdList()
 {
     int samples = m_pModule->getSharedChannelRangeObserver()->getSamplesPerPeriod();
     m_dspInterface->addCycListItem("STARTCHAIN(1,1,0x0101)"); // aktiv, prozessnr. (dummy),hauptkette 1 subkette 1 start
-        m_dspInterface->addCycListItem(QString("CLEARN(%1,MEASSIGNAL)").arg(samples) ); // clear meassignal
+        m_dspInterface->addCycListItem(QString("CLEARN(%1,TMP_SAMPLES_SINGLE_1)").arg(samples) ); // clear TMP_SAMPLES_SINGLE_1
         m_dspInterface->addCycListItem(QString("CLEARN(%1,FILTER)").arg(DspBuffLen::avgFilterLen(2*m_ChannelList.count())));
         m_dspInterface->addCycListItem(QString("SETVAL(TIPAR,%1)").arg(getConfData()->m_fMeasInterval*1000.0)); // initial ti time  /* todo variabel */
         m_dspInterface->addCycListItem("GETSTIME(TISTART)"); // einmal ti start setzen
@@ -97,8 +97,8 @@ void cReferenceModuleMeasProgram::setDspCmdList()
     // we compute or copy our wanted actual values
     for (int i = 0; i < m_ChannelList.count(); i++) {
         cReferenceMeasChannel* mchn = m_pModule->getMeasChannel(m_ChannelList.at(i));
-        m_dspInterface->addCycListItem(QString("COPYDATA(CH%1,0,MEASSIGNAL)").arg(mchn->getDSPChannelNr())); // for each channel we work on
-        m_dspInterface->addCycListItem(QString("DFT(0,MEASSIGNAL,VALXDFT+%1)").arg(2*i));
+        m_dspInterface->addCycListItem(QString("COPYDATA(CH%1,0,TMP_SAMPLES_SINGLE_1)").arg(mchn->getDSPChannelNr())); // for each channel we work on
+        m_dspInterface->addCycListItem(QString("DFT(0,TMP_SAMPLES_SINGLE_1,VALXDFT+%1)").arg(2*i));
     }
 
     // and filter them

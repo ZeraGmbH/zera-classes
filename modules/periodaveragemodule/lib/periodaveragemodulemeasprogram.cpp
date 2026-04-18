@@ -122,7 +122,7 @@ void PeriodAverageModuleMeasProgram::setDspVarList()
 
     // work variables without I/O
     DspVarGroupClientInterface* tmpDspVarGroup = m_dspInterface->createVariableGroup("TmpData");
-    tmpDspVarGroup->addDspVar("MEASSIGNAL", samplesPerPeriod);
+    tmpDspVarGroup->addDspVar("TMP_SAMPLES_SINGLE_1", samplesPerPeriod, dspDataTypeFloat, moduleGlobalSegment);
     tmpDspVarGroup->addDspVar("INTEGRAL_RESULT", channelCount);
     tmpDspVarGroup->addDspVar("PERIODCURR", 1, dspDataTypeInt);
     tmpDspVarGroup->addDspVar("RESULT_BUFF_IDX", 1, dspDataTypeInt);
@@ -147,7 +147,7 @@ void PeriodAverageModuleMeasProgram::setDspCmdList()
     int channelCount = channelMNameListConfigured.count();
 
     m_dspInterface->addCycListItem("STARTCHAIN(1,1,0x0101)"); // run once
-        m_dspInterface->addCycListItem(QString("CLEARN(%1,MEASSIGNAL)").arg(samplesPerPeriod) ); // clear meassignal
+        m_dspInterface->addCycListItem(QString("CLEARN(%1,TMP_SAMPLES_SINGLE_1)").arg(samplesPerPeriod) ); // clear TMP_SAMPLES_SINGLE_1
         m_dspInterface->addCycListItem(QString("CLEARN(%1,FILTER)").arg(DspBuffLen::avgFilterLen(channelCount)));
         m_dspInterface->addCycListItem(QString("SETVAL(PERIODCURR,1)"));
         m_dspInterface->addCycListItem(QString("SETVAL(RESULT_BUFF_IDX,VALS_PERIOD_WORK)"));
@@ -160,8 +160,8 @@ void PeriodAverageModuleMeasProgram::setDspCmdList()
         const QString &channelMName = channelMNameListConfigured[channelNo];
         ChannelRangeObserver::ChannelPtr channel = m_observer->getChannel(channelMName);
         int dspChannelNo = channel->getDspChannel();
-        m_dspInterface->addCycListItem(QString("COPYDATA(CH%1,0,MEASSIGNAL)").arg(dspChannelNo));
-        m_dspInterface->addCycListItem(QString("INTEGRAL(%1,MEASSIGNAL,INTEGRAL_RESULT+%2)").arg(samplesPerPeriod).arg(channelNo));
+        m_dspInterface->addCycListItem(QString("COPYDATA(CH%1,0,TMP_SAMPLES_SINGLE_1)").arg(dspChannelNo));
+        m_dspInterface->addCycListItem(QString("INTEGRAL(%1,TMP_SAMPLES_SINGLE_1,INTEGRAL_RESULT+%2)").arg(samplesPerPeriod).arg(channelNo));
     }
     m_dspInterface->addCycListItem(QString("XCOPYMEM(%1,INTEGRAL_RESULT,RESULT_BUFF_IDX)").arg(channelCount));
     m_dspInterface->addCycListItem(QString("AVERAGE1(%1,INTEGRAL_RESULT,FILTER)").arg(channelCount)); // add results to filter

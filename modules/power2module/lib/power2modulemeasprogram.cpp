@@ -275,8 +275,8 @@ void cPower2ModuleMeasProgram::setDspVarList()
 
     // work variables without I/O
     DspVarGroupClientInterface* tmpDspVarGroup = m_dspInterface->createVariableGroup("TmpData");
-    tmpDspVarGroup->addDspVar("MEASSIGNAL1", samples); // we need 2 signals for our computations
-    tmpDspVarGroup->addDspVar("MEASSIGNAL2", samples); // we need 2 signals for our computations
+    tmpDspVarGroup->addDspVar("TMP_SAMPLES_SINGLE_1", samples, dspDataTypeFloat, moduleGlobalSegment); // we need 2 signals for our computations
+    tmpDspVarGroup->addDspVar("TMP_SAMPLES_SINGLE_2", samples, dspDataTypeFloat, moduleGlobalSegment);
     tmpDspVarGroup->addDspVar("VALPOWER", 3*(MeasPhaseCount+SumValueCount)); // p1+,p1-,p1, p2+,p2-,p2, p3+,p3-,p3, ps+,ps-,ps
     tmpDspVarGroup->addDspVar("TEMP1", 2); // we need 2 temp. vars also for complex
     tmpDspVarGroup->addDspVar("TEMP2", 2);
@@ -308,8 +308,8 @@ QStringList cPower2ModuleMeasProgram::dspCmdInitVars(int dspInitialSelectCode)
     int samples = m_pModule->getSharedChannelRangeObserver()->getSamplesPerPeriod();
     QStringList dspCmdList;
     dspCmdList.append("STARTCHAIN(1,1,0x0101)"); // aktiv, prozessnr. (dummy),hauptkette 1 subkette 1 start
-    dspCmdList.append(QString("CLEARN(%1,MEASSIGNAL1)").arg(samples) ); // clear meassignal
-    dspCmdList.append(QString("CLEARN(%1,MEASSIGNAL2)").arg(samples) ); // clear meassignal
+    dspCmdList.append(QString("CLEARN(%1,TMP_SAMPLES_SINGLE_1)").arg(samples) ); // clear meassignal
+    dspCmdList.append(QString("CLEARN(%1,TMP_SAMPLES_SINGLE_2)").arg(samples) ); // clear meassignal
     dspCmdList.append(QString("CLEARN(%1,FILTER)").arg(DspBuffLen::avgFilterLen(3*(MeasPhaseCount+SumValueCount))));
     dspCmdList.append(QString("SETVAL(MMODE,%1)").arg(dspInitialSelectCode));
     double integrationTime = calcTiTime();

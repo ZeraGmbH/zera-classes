@@ -5,8 +5,8 @@ void Power1DspVarGenerator::setupVarList(Zera::cDSPInterface *pDSPInterFace, con
 {
     // work variables without I/O
     DspVarGroupClientInterface* tmpDspVarGroup = pDSPInterFace->createVariableGroup("TmpData");
-    tmpDspVarGroup->addDspVar("MEASSIGNAL1", sampleRate); // we need 2 signals for our computations
-    tmpDspVarGroup->addDspVar("MEASSIGNAL2", sampleRate);
+    tmpDspVarGroup->addDspVar("TMP_SAMPLES_SINGLE_1", sampleRate, dspDataTypeFloat, moduleGlobalSegment); // we need 2 signals for our computations
+    tmpDspVarGroup->addDspVar("TMP_SAMPLES_SINGLE_2", sampleRate, dspDataTypeFloat, moduleGlobalSegment);
     tmpDspVarGroup->addDspVar("VALPQS", MeasPhaseCount+SumValueCount); // here x1, x2, x3 , xs will land
     tmpDspVarGroup->addDspVar("VAL_APPARENT_P", MeasPhaseCount);
     tmpDspVarGroup->addDspVar("VAL_APPARENT_Q", MeasPhaseCount);
