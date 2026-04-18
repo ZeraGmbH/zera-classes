@@ -98,43 +98,57 @@ const int powerEntityIdP4 = 1073;
 void test_power1_module_regression::dumpDspSetupMt310s2Pow1To4()
 {
     ModuleManagerTestRunner testRunner(":/sessions/session-mt310s2-p1-p4.json", "mt310s2");
+    bool allOk = true;
 
     TestDspInterfacePtr power1DspInterfaceP1 = testRunner.getDspInterface(powerEntityIdP1);
     QString measProgramDumpedP1 = TestLogHelpers::dump(power1DspInterfaceP1->dumpAll());
-    QVERIFY(TestLogHelpers::compareAndLogOnDiffJsonFile(":/dspDumps/dumpMeasProgramMt310s2P1.json", measProgramDumpedP1));
+    if(!TestLogHelpers::compareAndLogOnDiffJsonFile(":/dspDumps/dumpMeasProgramMt310s2P1.json", measProgramDumpedP1))
+        allOk = false;
 
     TestDspInterfacePtr power1DspInterfaceP2 = testRunner.getDspInterface(powerEntityIdP2);
     QString measProgramDumpedP2 = TestLogHelpers::dump(power1DspInterfaceP2->dumpAll());
-    QVERIFY(TestLogHelpers::compareAndLogOnDiffJsonFile(":/dspDumps/dumpMeasProgramMt310s2P2.json", measProgramDumpedP2));
+    if(!TestLogHelpers::compareAndLogOnDiffJsonFile(":/dspDumps/dumpMeasProgramMt310s2P2.json", measProgramDumpedP2))
+        allOk = false;
 
     TestDspInterfacePtr power1DspInterfaceP3 = testRunner.getDspInterface(powerEntityIdP3);
     QString measProgramDumpedP3 = TestLogHelpers::dump(power1DspInterfaceP3->dumpAll());
-    QVERIFY(TestLogHelpers::compareAndLogOnDiffJsonFile(":/dspDumps/dumpMeasProgramMt310s2P3.json", measProgramDumpedP3));
+    if(!TestLogHelpers::compareAndLogOnDiffJsonFile(":/dspDumps/dumpMeasProgramMt310s2P3.json", measProgramDumpedP3))
+        allOk = false;
 
     TestDspInterfacePtr power1DspInterfaceP4 = testRunner.getDspInterface(powerEntityIdP4);
     QString measProgramDumpedP4 = TestLogHelpers::dump(power1DspInterfaceP4->dumpAll());
-    QVERIFY(TestLogHelpers::compareAndLogOnDiffJsonFile(":/dspDumps/dumpMeasProgramMt310s2P4.json", measProgramDumpedP4));
+    if(!TestLogHelpers::compareAndLogOnDiffJsonFile(":/dspDumps/dumpMeasProgramMt310s2P4.json", measProgramDumpedP4))
+        allOk = false;
+
+    QVERIFY(allOk);
 }
 
 void test_power1_module_regression::dumpDspSetupCom5003Pow1To4()
 {
     ModuleManagerTestRunner testRunner(":/sessions/session-com5003-p1-p4.json", "com5003");
+    bool allOk = true;
 
     TestDspInterfacePtr power1DspInterfaceP1 = testRunner.getDspInterface(powerEntityIdP1);
     QString measProgramDumpedP1 = TestLogHelpers::dump(power1DspInterfaceP1->dumpAll());
-    QVERIFY(TestLogHelpers::compareAndLogOnDiffJsonFile(":/dspDumps/dumpMeasProgramCom5003P1.json", measProgramDumpedP1));
+    if(!TestLogHelpers::compareAndLogOnDiffJsonFile(":/dspDumps/dumpMeasProgramCom5003P1.json", measProgramDumpedP1))
+        allOk = false;
 
     TestDspInterfacePtr power1DspInterfaceP2 = testRunner.getDspInterface(powerEntityIdP2);
     QString measProgramDumpedP2 = TestLogHelpers::dump(power1DspInterfaceP2->dumpAll());
-    QVERIFY(TestLogHelpers::compareAndLogOnDiffJsonFile(":/dspDumps/dumpMeasProgramCom5003P2.json", measProgramDumpedP2));
+    if(!TestLogHelpers::compareAndLogOnDiffJsonFile(":/dspDumps/dumpMeasProgramCom5003P2.json", measProgramDumpedP2))
+        allOk = false;
 
     TestDspInterfacePtr power1DspInterfaceP3 = testRunner.getDspInterface(powerEntityIdP3);
     QString measProgramDumpedP3 = TestLogHelpers::dump(power1DspInterfaceP3->dumpAll());
-    QVERIFY(TestLogHelpers::compareAndLogOnDiffJsonFile(":/dspDumps/dumpMeasProgramCom5003P3.json", measProgramDumpedP3));
+    if(!TestLogHelpers::compareAndLogOnDiffJsonFile(":/dspDumps/dumpMeasProgramCom5003P3.json", measProgramDumpedP3))
+        allOk = false;
 
     TestDspInterfacePtr power1DspInterfaceP4 = testRunner.getDspInterface(powerEntityIdP4);
     QString measProgramDumpedP4 = TestLogHelpers::dump(power1DspInterfaceP4->dumpAll());
-    QVERIFY(TestLogHelpers::compareAndLogOnDiffJsonFile(":/dspDumps/dumpMeasProgramCom5003P4.json", measProgramDumpedP4));
+    if(!TestLogHelpers::compareAndLogOnDiffJsonFile(":/dspDumps/dumpMeasProgramCom5003P4.json", measProgramDumpedP4))
+        allOk = false;
+
+    QVERIFY(allOk);
 }
 
 void test_power1_module_regression::dumpDspOnMeasModeChange()
