@@ -46,7 +46,7 @@ private:
     cSCPI* m_pSCPICmdInterface;
     QQueue<cmdInfos> m_scpiCmdInExec;
     TimerTemplateQtPtr m_expCmd;
-    bool m_enableScpiQueue;
+    bool m_enableScpiQueue = false;
 };
 }
 
