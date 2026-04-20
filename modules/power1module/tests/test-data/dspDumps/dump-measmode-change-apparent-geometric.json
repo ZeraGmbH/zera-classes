@@ -158,6 +158,7 @@
         }
     },
     "2-CmdList": [
+        "COMMENT(--- Entity 1073 / Cyclic list start ---)",
         "COMMENT(--- getCmdsInitVars start ---)",
         "STARTCHAIN(1,1,0x0115)",
         "CLEARN(9,FILTER)",

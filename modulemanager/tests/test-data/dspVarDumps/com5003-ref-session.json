@@ -431,6 +431,7 @@
             }
         },
         "2-CmdList": [
+            "COMMENT(--- Entity 1050 / Cyclic list start ---)",
             "STARTCHAIN(1,1,0x0101)",
             "CLEARN(25,FILTER)",
             "SETVAL(TIPAR,1000)",
@@ -623,6 +624,7 @@
             }
         },
         "2-CmdList": [
+            "COMMENT(--- Entity 1070 / Cyclic list start ---)",
             "COMMENT(--- getCmdsInitVars start ---)",
             "STARTCHAIN(1,1,0x0104)",
             "CLEARN(9,FILTER)",
@@ -774,6 +776,7 @@
             }
         },
         "2-CmdList": [
+            "COMMENT(--- Entity 9000 / Cyclic list start ---)",
             "STARTCHAIN(1,1,0x0101)",
             "SETVAL(GLOBALPERIODCOUNT,1)",
             "SETVAL(PERIODCURR,0)",

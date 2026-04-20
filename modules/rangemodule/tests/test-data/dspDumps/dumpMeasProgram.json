@@ -92,6 +92,7 @@
         }
     },
     "2-CmdList": [
+        "COMMENT(--- Entity 1020 / Cyclic list start ---)",
         "STARTCHAIN(1,1,0x0101)",
         "CLEARN(35,FILTER)",
         "SETVAL(TIPAR,200)",

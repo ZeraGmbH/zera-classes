@@ -62,6 +62,7 @@
         }
     },
     "2-CmdList": [
+        "COMMENT(--- Entity 9000 / Cyclic list start ---)",
         "STARTCHAIN(1,1,0x0101)",
         "SETVAL(GLOBALPERIODCOUNT,1)",
         "SETVAL(PERIODCURR,0)",

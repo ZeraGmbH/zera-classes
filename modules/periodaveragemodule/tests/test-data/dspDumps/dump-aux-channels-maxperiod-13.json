@@ -74,6 +74,7 @@
         }
     },
     "2-CmdList": [
+        "COMMENT(--- Entity 1055 / Cyclic list start ---)",
         "STARTCHAIN(1,1,0x0101)",
         "CLEARN(5,FILTER)",
         "SETVAL(PERIODCURR,1)",

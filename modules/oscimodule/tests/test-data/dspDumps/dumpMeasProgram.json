@@ -74,6 +74,7 @@
         }
     },
     "2-CmdList": [
+        "COMMENT(--- Entity 1120 / Cyclic list start ---)",
         "STARTCHAIN(1,1,0x0101)",
         "CLEARN(4032,MEASSIGNAL)",
         "SETVAL(GAPCOUNT,25)",

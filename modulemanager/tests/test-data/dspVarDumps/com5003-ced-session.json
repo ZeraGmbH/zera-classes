@@ -399,6 +399,7 @@
             }
         },
         "2-CmdList": [
+            "COMMENT(--- Entity 1040 / Cyclic list start ---)",
             "STARTCHAIN(1,1,0x0101)",
             "CLEARN(19,FILTER)",
             "SETVAL(TIPAR,200)",
@@ -502,6 +503,7 @@
             }
         },
         "2-CmdList": [
+            "COMMENT(--- Entity 1050 / Cyclic list start ---)",
             "STARTCHAIN(1,1,0x0101)",
             "CLEARN(37,FILTER)",
             "SETVAL(TIPAR,500)",
@@ -634,6 +636,7 @@
             }
         },
         "2-CmdList": [
+            "COMMENT(--- Entity 1060 / Cyclic list start ---)",
             "STARTCHAIN(1,1,0x0101)",
             "CLEARN(1008,MEASSIGNAL)",
             "CLEARN(3073,FILTER)",
@@ -850,6 +853,7 @@
             }
         },
         "2-CmdList": [
+            "COMMENT(--- Entity 1070 / Cyclic list start ---)",
             "COMMENT(--- getCmdsInitVars start ---)",
             "STARTCHAIN(1,1,0x0107)",
             "CLEARN(9,FILTER)",
@@ -1119,6 +1123,7 @@
             }
         },
         "2-CmdList": [
+            "COMMENT(--- Entity 1071 / Cyclic list start ---)",
             "COMMENT(--- getCmdsInitVars start ---)",
             "STARTCHAIN(1,1,0x0108)",
             "CLEARN(9,FILTER)",
@@ -1447,6 +1452,7 @@
             }
         },
         "2-CmdList": [
+            "COMMENT(--- Entity 1072 / Cyclic list start ---)",
             "COMMENT(--- getCmdsInitVars start ---)",
             "STARTCHAIN(1,1,0x0109)",
             "CLEARN(9,FILTER)",
@@ -1750,6 +1756,7 @@
             }
         },
         "2-CmdList": [
+            "COMMENT(--- Entity 1078 / Cyclic list start ---)",
             "COMMENT(--- getCmdsInitVars start ---)",
             "STARTCHAIN(1,1,0x0106)",
             "CLEARN(9,FILTER)",
@@ -2022,6 +2029,7 @@
             }
         },
         "2-CmdList": [
+            "COMMENT(--- Entity 1079 / Cyclic list start ---)",
             "COMMENT(--- getCmdsInitVars start ---)",
             "STARTCHAIN(1,1,0x0106)",
             "CLEARN(9,FILTER)",
@@ -2229,6 +2237,7 @@
             }
         },
         "2-CmdList": [
+            "COMMENT(--- Entity 1090 / Cyclic list start ---)",
             "STARTCHAIN(1,1,0x0101)",
             "CLEARN(25,FILTER)",
             "SETVAL(MMODE,0)",
@@ -2341,6 +2350,7 @@
             }
         },
         "2-CmdList": [
+            "COMMENT(--- Entity 1110 / Cyclic list start ---)",
             "STARTCHAIN(1,1,0x0101)",
             "CLEARN(13,FILTER)",
             "SETVAL(TIPAR,500)",
@@ -2449,6 +2459,7 @@
             }
         },
         "2-CmdList": [
+            "COMMENT(--- Entity 1120 / Cyclic list start ---)",
             "STARTCHAIN(1,1,0x0101)",
             "CLEARN(3024,MEASSIGNAL)",
             "SETVAL(GAPCOUNT,25)",
@@ -2569,6 +2580,7 @@
             }
         },
         "2-CmdList": [
+            "COMMENT(--- Entity 9000 / Cyclic list start ---)",
             "STARTCHAIN(1,1,0x0101)",
             "SETVAL(GLOBALPERIODCOUNT,1)",
             "SETVAL(PERIODCURR,0)",
