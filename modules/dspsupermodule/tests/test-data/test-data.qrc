@@ -2,7 +2,7 @@
     <qresource prefix="/">
         <file>configs/dspsupermodule-10-total.xml</file>
 
-        <file>dspDumps/dumpInitial.json</file>
+        <file>dspSourceDumps/dumpInitial.json</file>
 
         <file>zdspDumps/dumpInitial.json</file>
 

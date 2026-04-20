@@ -10,9 +10,9 @@
         <file>configDumps/dumpGroupingSet.xml</file>
         <file>configDumps/dumpIAUXSet.xml</file>
         <file>configDumps/dumpIAUXUnset.xml</file>
-        <file>dspDumps/dumpAdjustManagement.json</file>
-        <file>dspDumps/dumpMeasProgram.json</file>
-        <file>dspDumps/dumpObsermatic.json</file>
+        <file>dspSourceDumps/dumpAdjustManagement.json</file>
+        <file>dspSourceDumps/dumpMeasProgram.json</file>
+        <file>dspSourceDumps/dumpObsermatic.json</file>
         <file>veinDumps/dumpActual.json</file>
         <file>veinDumps/dumpActual-preScaled2.json</file>
         <file>veinDumps/dumpInitial.json</file>

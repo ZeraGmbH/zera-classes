@@ -5,8 +5,8 @@
         <file>configs/aux-channels-maxperiod-13.xml</file>
         <file>configs/aux-channels-maxperiod-13-current-period-5.xml</file>
 
-        <file>dspDumps/dump-all-channels-maxperiod-5.json</file>
-        <file>dspDumps/dump-aux-channels-maxperiod-13.json</file>
+        <file>dspSourceDumps/dump-all-channels-maxperiod-5.json</file>
+        <file>dspSourceDumps/dump-aux-channels-maxperiod-13.json</file>
 
         <file>sessions/all-channels-maxperiod-5.json</file>
         <file>sessions/aux-channels-maxperiod-13.json</file>

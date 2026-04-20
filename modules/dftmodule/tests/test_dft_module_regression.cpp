@@ -104,7 +104,7 @@ void test_dft_module_regression::injectActualValuesReferenceChannelUL2()
 
     // reference is caclulated by dftmodule -> same layout as default
     QString measProgramDumped = TestLogHelpers::dump(dftDspInterface->dumpAll(true));
-    QVERIFY(TestLogHelpers::compareAndLogOnDiffJsonFile(":/dspDumps/dumpReferenceChannelChange.json", measProgramDumped));
+    QVERIFY(TestLogHelpers::compareAndLogOnDiffJsonFile(":/dspSourceDumps/dumpReferenceChannelChange.json", measProgramDumped));
 }
 
 constexpr int comDcRefChannelCount = 6;
@@ -170,7 +170,7 @@ void test_dft_module_regression::dumpDspSetup()
 
     TestDspInterfacePtr dftDspInterface = testRunner.getDspInterface(dftEntityId);
     QString measProgramDumped = TestLogHelpers::dump(dftDspInterface->dumpAll());
-    QVERIFY(TestLogHelpers::compareAndLogOnDiffJsonFile(":/dspDumps/dumpMeasProgram.json", measProgramDumped));
+    QVERIFY(TestLogHelpers::compareAndLogOnDiffJsonFile(":/dspSourceDumps/dumpMeasProgram.json", measProgramDumped));
 }
 
 void test_dft_module_regression::setReferenceChannel(VfCmdEventHandlerSystemPtr vfCmdEventHandlerSystem,

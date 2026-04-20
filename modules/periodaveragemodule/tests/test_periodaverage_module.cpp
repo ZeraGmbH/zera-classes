@@ -65,7 +65,7 @@ void test_periodaverage_module::dumpDspSetupAllChannels5PeriodsMax()
     TestDspInterfacePtr dspInterface = testRunner.getDspInterface(periodAverageEntityId);
     QString measProgramDumped = TestLogHelpers::dump(dspInterface->dumpAll());
 
-    QVERIFY(TestLogHelpers::compareAndLogOnDiffJsonFile(":/dspDumps/dump-all-channels-maxperiod-5.json", measProgramDumped));
+    QVERIFY(TestLogHelpers::compareAndLogOnDiffJsonFile(":/dspSourceDumps/dump-all-channels-maxperiod-5.json", measProgramDumped));
 }
 
 void test_periodaverage_module::dumpDspSetupAuxChannels13PeriodsMax()
@@ -75,7 +75,7 @@ void test_periodaverage_module::dumpDspSetupAuxChannels13PeriodsMax()
     TestDspInterfacePtr dspInterface = testRunner.getDspInterface(periodAverageEntityId);
     QString measProgramDumped = TestLogHelpers::dump(dspInterface->dumpAll());
 
-    QVERIFY(TestLogHelpers::compareAndLogOnDiffJsonFile(":/dspDumps/dump-aux-channels-maxperiod-13.json", measProgramDumped));
+    QVERIFY(TestLogHelpers::compareAndLogOnDiffJsonFile(":/dspSourceDumps/dump-aux-channels-maxperiod-13.json", measProgramDumped));
 }
 
 

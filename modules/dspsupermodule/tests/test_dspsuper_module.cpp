@@ -46,7 +46,7 @@ void test_dspsuper_module::dspDumpInitial()
     ModuleManagerTestRunner testRunner(":/sessions/minimal.json");
     TestDspInterfacePtr dspInterface = testRunner.getDspInterface(dspSuperEntityId);
     QString measProgramDumped = TestLogHelpers::dump(dspInterface->dumpAll());
-    QVERIFY(TestLogHelpers::compareAndLogOnDiffJsonFile(":/dspDumps/dumpInitial.json", measProgramDumped));
+    QVERIFY(TestLogHelpers::compareAndLogOnDiffJsonFile(":/dspSourceDumps/dumpInitial.json", measProgramDumped));
 }
 
 void test_dspsuper_module::zdspDumpInitial()

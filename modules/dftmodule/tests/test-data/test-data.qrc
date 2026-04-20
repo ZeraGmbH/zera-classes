@@ -1,7 +1,7 @@
 <RCC>
     <qresource prefix="/">
-        <file>dspDumps/dumpMeasProgram.json</file>
-        <file>dspDumps/dumpReferenceChannelChange.json</file>
+        <file>dspSourceDumps/dumpMeasProgram.json</file>
+        <file>dspSourceDumps/dumpReferenceChannelChange.json</file>
         <file>sessions/minimal.json</file>
         <file>sessions/dft-no-movingwindow-no-ref.json</file>
         <file>sessions/dft-no-movingwindow-noref-order-0.json</file>

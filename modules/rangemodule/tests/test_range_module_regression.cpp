@@ -59,13 +59,13 @@ void test_range_module_regression::checkActualValueCount()
 
     // dumping SCALEMEM:GAINCORRECTION2 does not seem reproducable yet
     QString obsermaticDumped = TestLogHelpers::dump(sampleDspInterfaceObser->dumpAll());
-    QVERIFY(TestLogHelpers::compareAndLogOnDiffJsonFile(":/dspDumps/dumpObsermatic.json", obsermaticDumped));
+    QVERIFY(TestLogHelpers::compareAndLogOnDiffJsonFile(":/dspSourceDumps/dumpObsermatic.json", obsermaticDumped));
 
     QString adjustListDumped = TestLogHelpers::dump(sampleDspInterfaceAdj->dumpAll(true));
-    QVERIFY(TestLogHelpers::compareAndLogOnDiffJsonFile(":/dspDumps/dumpAdjustManagement.json", adjustListDumped));
+    QVERIFY(TestLogHelpers::compareAndLogOnDiffJsonFile(":/dspSourceDumps/dumpAdjustManagement.json", adjustListDumped));
 
     QString measProgramDumped = TestLogHelpers::dump(sampleDspInterfaceProg->dumpAll(true));
-    QVERIFY(TestLogHelpers::compareAndLogOnDiffJsonFile(":/dspDumps/dumpMeasProgram.json", measProgramDumped));
+    QVERIFY(TestLogHelpers::compareAndLogOnDiffJsonFile(":/dspSourceDumps/dumpMeasProgram.json", measProgramDumped));
 
 
     // injectActualValues:

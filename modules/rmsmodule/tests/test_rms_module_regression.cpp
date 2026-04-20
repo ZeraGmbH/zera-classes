@@ -109,5 +109,5 @@ void test_rms_module_regression::dumpDspSetup()
     TestDspInterfacePtr rmsDspInterface = testRunner.getDspInterface(rmsEntityId);
 
     QString measProgramDumped = TestLogHelpers::dump(rmsDspInterface->dumpAll());
-    QVERIFY(TestLogHelpers::compareAndLogOnDiffJsonFile(":/dspDumps/dumpMeasProgram.json", measProgramDumped));
+    QVERIFY(TestLogHelpers::compareAndLogOnDiffJsonFile(":/dspSourceDumps/dumpMeasProgram.json", measProgramDumped));
 }

@@ -101,7 +101,7 @@ void test_fft_module_regression::dumpDspSetup()
     TestDspInterfacePtr fftDspInterface = testRunner.getDspInterface(fftEntityId);
 
     QString measProgramDumped = TestLogHelpers::dump(fftDspInterface->dumpAll());
-    QVERIFY(TestLogHelpers::compareAndLogOnDiffJsonFile(":/dspDumps/dumpMeasProgram.json", measProgramDumped));
+    QVERIFY(TestLogHelpers::compareAndLogOnDiffJsonFile(":/dspSourceDumps/dumpMeasProgram.json", measProgramDumped));
 }
 
 void test_fft_module_regression::dumpDspIL1ReferenceSetup()
@@ -110,7 +110,7 @@ void test_fft_module_regression::dumpDspIL1ReferenceSetup()
     TestDspInterfacePtr fftDspInterface = testRunner.getDspInterface(fftEntityId);
 
     QString measProgramDumped = TestLogHelpers::dump(fftDspInterface->dumpAll());
-    QVERIFY(TestLogHelpers::compareAndLogOnDiffJsonFile(":/dspDumps/dump-ref-IL1.json", measProgramDumped));
+    QVERIFY(TestLogHelpers::compareAndLogOnDiffJsonFile(":/dspSourceDumps/dump-ref-IL1.json", measProgramDumped));
 }
 
 void test_fft_module_regression::dumpDspSetReference()
@@ -125,7 +125,7 @@ void test_fft_module_regression::dumpDspSetReference()
 
     TestDspInterfacePtr fftDspInterface = testRunner.getDspInterface(fftEntityId);
     QString measProgramDumped = TestLogHelpers::dump(fftDspInterface->dumpAll(true));
-    QVERIFY(TestLogHelpers::compareAndLogOnDiffJsonFile(":/dspDumps/dump-ref-UL1-to-other.json", measProgramDumped));
+    QVERIFY(TestLogHelpers::compareAndLogOnDiffJsonFile(":/dspSourceDumps/dump-ref-UL1-to-other.json", measProgramDumped));
 }
 
 void test_fft_module_regression::setReferenceChannel(VfCmdEventHandlerSystemPtr vfCmdEventHandlerSystem,

@@ -1,6 +1,6 @@
 <RCC>
     <qresource prefix="/">
-        <file>dspDumps/dumpMeasProgram.json</file>
+        <file>dspSourceDumps/dumpMeasProgram.json</file>
         <file>dumpActual.json</file>
         <file>dumpSymmetric.json</file>
         <file>dumpInitial.json</file>

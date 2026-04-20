@@ -79,7 +79,7 @@ void test_modman_regression_all_sessions::allSessionsDspVarDumps()
 {
     QFETCH(QString, sessionFileName);
     QByteArray jsonDumped = m_dspVarDumps.value(sessionFileName);
-    QVERIFY(TestLogHelpers::compareAndLogOnDiffJsonFile(QString(":/dspVarDumps/%1").arg(sessionFileName), jsonDumped));
+    QVERIFY(TestLogHelpers::compareAndLogOnDiffJsonFile(QString(":/dspSourceDumps/%1").arg(sessionFileName), jsonDumped));
 }
 
 void test_modman_regression_all_sessions::allSessionsSecUnitDumps_data()
