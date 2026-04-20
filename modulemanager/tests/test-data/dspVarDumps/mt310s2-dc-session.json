@@ -984,6 +984,7 @@
             }
         },
         "2-CmdList": [
+            "COMMENT(--- getCmdsInitVars start ---)",
             "STARTCHAIN(1,1,0x0104)",
             "CLEARN(9,FILTER)",
             "SETVAL(MMODE,32)",
@@ -996,6 +997,8 @@
             "GETSTIME(TISTART)",
             "DEACTIVATECHAIN(1,0x0104)",
             "STOPCHAIN(1,0x0104)",
+            "COMMENT(--- getCmdsInitVars end ---)",
+            "COMMENT(--- getCmdsInitOutputVars start ---)",
             "SETVAL(VALPQS+0,0.0)",
             "SETVAL(VAL_APPARENT_P+0,0.0)",
             "SETVAL(VAL_APPARENT_Q+0,0.0)",
@@ -1005,6 +1008,8 @@
             "SETVAL(VALPQS+2,0.0)",
             "SETVAL(VAL_APPARENT_P+2,0.0)",
             "SETVAL(VAL_APPARENT_Q+2,0.0)",
+            "COMMENT(--- getCmdsInitOutputVars end ---)",
+            "COMMENT(--- getCmdsMModeXLW phase 0 ---)",
             "ACTIVATECHAIN(1,0x0101)",
             "TESTVCSKIPEQ(MMODE,32)",
             "DEACTIVATECHAIN(1,0x0101)",
@@ -1015,6 +1020,7 @@
             "COPYDATA(CH7,0,TMP_SAMPLES_SINGLE_2)",
             "MULCCV(TMP_SAMPLES_SINGLE_1,TMP_SAMPLES_SINGLE_2,VALPQS+0)",
             "STOPCHAIN(1,0x0101)",
+            "COMMENT(--- getCmdsSumAndAverage: If MMODE_SUM == sum_phasevals ---)",
             "ACTIVATECHAIN(1,0x0102)",
             "TESTVCSKIPEQ(MMODE_SUM,0)",
             "DEACTIVATECHAIN(1,0x0102)",
@@ -1022,6 +1028,7 @@
             "ADDVVV(VALPQS+0,VALPQS+1,VALPQS+3)",
             "ADDVVV(VALPQS+2,VALPQS+3,VALPQS+3)",
             "STOPCHAIN(1,0x0102)",
+            "COMMENT(--- getCmdsSumAndAverage: If MMODE_SUM == sum_phase_pq_geom ---)",
             "ACTIVATECHAIN(1,0x0103)",
             "TESTVCSKIPEQ(MMODE_SUM,1)",
             "DEACTIVATECHAIN(1,0x0103)",
@@ -1033,6 +1040,8 @@
             "ADDVVG(TEMP1,TEMP2,VALPQS+3)",
             "STOPCHAIN(1,0x0103)",
             "AVERAGE1(4,VALPQS,FILTER)",
+            "COMMENT(--- getCmdsSumAndAverage end ---)",
+            "COMMENT(--- getCmdsFreqOutput start ---)",
             "CMPCLK(0,VALPQS+0,FREQSCALE+0)",
             "TESTTIMESKIPNEX(TISTART,TIPAR)",
             "ACTIVATECHAIN(1,0x0105)",
@@ -1042,7 +1051,8 @@
             "CLEARN(9,FILTER)",
             "DSPINTTRIGGER(0x0,0x0)",
             "DEACTIVATECHAIN(1,0x0105)",
-            "STOPCHAIN(1,0x0105)"
+            "STOPCHAIN(1,0x0105)",
+            "COMMENT(--- getCmdsFreqOutput end ---)"
         ],
         "3-VarsWritten": {
             "WriteNo: 0000 / Handle:Variable: FrequencyScale:FREQSCALE": 4.5036e+21,
@@ -1209,6 +1219,7 @@
             }
         },
         "2-CmdList": [
+            "COMMENT(--- getCmdsInitVars start ---)",
             "STARTCHAIN(1,1,0x0104)",
             "CLEARN(9,FILTER)",
             "SETVAL(MMODE,32)",
@@ -1221,6 +1232,8 @@
             "GETSTIME(TISTART)",
             "DEACTIVATECHAIN(1,0x0104)",
             "STOPCHAIN(1,0x0104)",
+            "COMMENT(--- getCmdsInitVars end ---)",
+            "COMMENT(--- getCmdsInitOutputVars start ---)",
             "SETVAL(VALPQS+0,0.0)",
             "SETVAL(VAL_APPARENT_P+0,0.0)",
             "SETVAL(VAL_APPARENT_Q+0,0.0)",
@@ -1230,6 +1243,8 @@
             "SETVAL(VALPQS+2,0.0)",
             "SETVAL(VAL_APPARENT_P+2,0.0)",
             "SETVAL(VAL_APPARENT_Q+2,0.0)",
+            "COMMENT(--- getCmdsInitOutputVars end ---)",
+            "COMMENT(--- getCmdsMModeXLW phase 0 ---)",
             "ACTIVATECHAIN(1,0x0101)",
             "TESTVCSKIPEQ(MMODE,32)",
             "DEACTIVATECHAIN(1,0x0101)",
@@ -1240,6 +1255,7 @@
             "COPYDATA(CH7,0,TMP_SAMPLES_SINGLE_2)",
             "MULCCV(TMP_SAMPLES_SINGLE_1,TMP_SAMPLES_SINGLE_2,VALPQS+0)",
             "STOPCHAIN(1,0x0101)",
+            "COMMENT(--- getCmdsSumAndAverage: If MMODE_SUM == sum_phasevals ---)",
             "ACTIVATECHAIN(1,0x0102)",
             "TESTVCSKIPEQ(MMODE_SUM,0)",
             "DEACTIVATECHAIN(1,0x0102)",
@@ -1247,6 +1263,7 @@
             "ADDVVV(VALPQS+0,VALPQS+1,VALPQS+3)",
             "ADDVVV(VALPQS+2,VALPQS+3,VALPQS+3)",
             "STOPCHAIN(1,0x0102)",
+            "COMMENT(--- getCmdsSumAndAverage: If MMODE_SUM == sum_phase_pq_geom ---)",
             "ACTIVATECHAIN(1,0x0103)",
             "TESTVCSKIPEQ(MMODE_SUM,1)",
             "DEACTIVATECHAIN(1,0x0103)",
@@ -1258,6 +1275,8 @@
             "ADDVVG(TEMP1,TEMP2,VALPQS+3)",
             "STOPCHAIN(1,0x0103)",
             "AVERAGE1(4,VALPQS,FILTER)",
+            "COMMENT(--- getCmdsSumAndAverage end ---)",
+            "COMMENT(--- getCmdsFreqOutput start ---)",
             "CMPCLK(256,VALPQS+0,FREQSCALE+0)",
             "TESTTIMESKIPNEX(TISTART,TIPAR)",
             "ACTIVATECHAIN(1,0x0105)",
@@ -1267,7 +1286,8 @@
             "CLEARN(9,FILTER)",
             "DSPINTTRIGGER(0x0,0x0)",
             "DEACTIVATECHAIN(1,0x0105)",
-            "STOPCHAIN(1,0x0105)"
+            "STOPCHAIN(1,0x0105)",
+            "COMMENT(--- getCmdsFreqOutput end ---)"
         ],
         "3-VarsWritten": {
             "WriteNo: 0000 / Handle:Variable: FrequencyScale:FREQSCALE": 4.5036e+21,
@@ -1434,6 +1454,7 @@
             }
         },
         "2-CmdList": [
+            "COMMENT(--- getCmdsInitVars start ---)",
             "STARTCHAIN(1,1,0x0104)",
             "CLEARN(9,FILTER)",
             "SETVAL(MMODE,32)",
@@ -1446,6 +1467,8 @@
             "GETSTIME(TISTART)",
             "DEACTIVATECHAIN(1,0x0104)",
             "STOPCHAIN(1,0x0104)",
+            "COMMENT(--- getCmdsInitVars end ---)",
+            "COMMENT(--- getCmdsInitOutputVars start ---)",
             "SETVAL(VALPQS+0,0.0)",
             "SETVAL(VAL_APPARENT_P+0,0.0)",
             "SETVAL(VAL_APPARENT_Q+0,0.0)",
@@ -1455,6 +1478,8 @@
             "SETVAL(VALPQS+2,0.0)",
             "SETVAL(VAL_APPARENT_P+2,0.0)",
             "SETVAL(VAL_APPARENT_Q+2,0.0)",
+            "COMMENT(--- getCmdsInitOutputVars end ---)",
+            "COMMENT(--- getCmdsMModeXLW phase 0 ---)",
             "ACTIVATECHAIN(1,0x0101)",
             "TESTVCSKIPEQ(MMODE,32)",
             "DEACTIVATECHAIN(1,0x0101)",
@@ -1465,6 +1490,7 @@
             "COPYDATA(CH7,0,TMP_SAMPLES_SINGLE_2)",
             "MULCCV(TMP_SAMPLES_SINGLE_1,TMP_SAMPLES_SINGLE_2,VALPQS+0)",
             "STOPCHAIN(1,0x0101)",
+            "COMMENT(--- getCmdsSumAndAverage: If MMODE_SUM == sum_phasevals ---)",
             "ACTIVATECHAIN(1,0x0102)",
             "TESTVCSKIPEQ(MMODE_SUM,0)",
             "DEACTIVATECHAIN(1,0x0102)",
@@ -1472,6 +1498,7 @@
             "ADDVVV(VALPQS+0,VALPQS+1,VALPQS+3)",
             "ADDVVV(VALPQS+2,VALPQS+3,VALPQS+3)",
             "STOPCHAIN(1,0x0102)",
+            "COMMENT(--- getCmdsSumAndAverage: If MMODE_SUM == sum_phase_pq_geom ---)",
             "ACTIVATECHAIN(1,0x0103)",
             "TESTVCSKIPEQ(MMODE_SUM,1)",
             "DEACTIVATECHAIN(1,0x0103)",
@@ -1483,6 +1510,8 @@
             "ADDVVG(TEMP1,TEMP2,VALPQS+3)",
             "STOPCHAIN(1,0x0103)",
             "AVERAGE1(4,VALPQS,FILTER)",
+            "COMMENT(--- getCmdsSumAndAverage end ---)",
+            "COMMENT(--- getCmdsFreqOutput start ---)",
             "CMPCLK(512,VALPQS+0,FREQSCALE+0)",
             "TESTTIMESKIPNEX(TISTART,TIPAR)",
             "ACTIVATECHAIN(1,0x0105)",
@@ -1492,7 +1521,8 @@
             "CLEARN(9,FILTER)",
             "DSPINTTRIGGER(0x0,0x0)",
             "DEACTIVATECHAIN(1,0x0105)",
-            "STOPCHAIN(1,0x0105)"
+            "STOPCHAIN(1,0x0105)",
+            "COMMENT(--- getCmdsFreqOutput end ---)"
         ],
         "3-VarsWritten": {
             "WriteNo: 0000 / Handle:Variable: FrequencyScale:FREQSCALE": 4.5036e+21,
@@ -1659,6 +1689,7 @@
             }
         },
         "2-CmdList": [
+            "COMMENT(--- getCmdsInitVars start ---)",
             "STARTCHAIN(1,1,0x0104)",
             "CLEARN(9,FILTER)",
             "SETVAL(MMODE,32)",
@@ -1671,6 +1702,8 @@
             "GETSTIME(TISTART)",
             "DEACTIVATECHAIN(1,0x0104)",
             "STOPCHAIN(1,0x0104)",
+            "COMMENT(--- getCmdsInitVars end ---)",
+            "COMMENT(--- getCmdsInitOutputVars start ---)",
             "SETVAL(VALPQS+0,0.0)",
             "SETVAL(VAL_APPARENT_P+0,0.0)",
             "SETVAL(VAL_APPARENT_Q+0,0.0)",
@@ -1680,6 +1713,8 @@
             "SETVAL(VALPQS+2,0.0)",
             "SETVAL(VAL_APPARENT_P+2,0.0)",
             "SETVAL(VAL_APPARENT_Q+2,0.0)",
+            "COMMENT(--- getCmdsInitOutputVars end ---)",
+            "COMMENT(--- getCmdsMModeXLW phase 0 ---)",
             "ACTIVATECHAIN(1,0x0101)",
             "TESTVCSKIPEQ(MMODE,32)",
             "DEACTIVATECHAIN(1,0x0101)",
@@ -1690,6 +1725,7 @@
             "COPYDATA(CH7,0,TMP_SAMPLES_SINGLE_2)",
             "MULCCV(TMP_SAMPLES_SINGLE_1,TMP_SAMPLES_SINGLE_2,VALPQS+0)",
             "STOPCHAIN(1,0x0101)",
+            "COMMENT(--- getCmdsSumAndAverage: If MMODE_SUM == sum_phasevals ---)",
             "ACTIVATECHAIN(1,0x0102)",
             "TESTVCSKIPEQ(MMODE_SUM,0)",
             "DEACTIVATECHAIN(1,0x0102)",
@@ -1697,6 +1733,7 @@
             "ADDVVV(VALPQS+0,VALPQS+1,VALPQS+3)",
             "ADDVVV(VALPQS+2,VALPQS+3,VALPQS+3)",
             "STOPCHAIN(1,0x0102)",
+            "COMMENT(--- getCmdsSumAndAverage: If MMODE_SUM == sum_phase_pq_geom ---)",
             "ACTIVATECHAIN(1,0x0103)",
             "TESTVCSKIPEQ(MMODE_SUM,1)",
             "DEACTIVATECHAIN(1,0x0103)",
@@ -1708,6 +1745,8 @@
             "ADDVVG(TEMP1,TEMP2,VALPQS+3)",
             "STOPCHAIN(1,0x0103)",
             "AVERAGE1(4,VALPQS,FILTER)",
+            "COMMENT(--- getCmdsSumAndAverage end ---)",
+            "COMMENT(--- getCmdsFreqOutput start ---)",
             "CMPCLK(768,VALPQS+0,FREQSCALE+0)",
             "TESTTIMESKIPNEX(TISTART,TIPAR)",
             "ACTIVATECHAIN(1,0x0105)",
@@ -1717,7 +1756,8 @@
             "CLEARN(9,FILTER)",
             "DSPINTTRIGGER(0x0,0x0)",
             "DEACTIVATECHAIN(1,0x0105)",
-            "STOPCHAIN(1,0x0105)"
+            "STOPCHAIN(1,0x0105)",
+            "COMMENT(--- getCmdsFreqOutput end ---)"
         ],
         "3-VarsWritten": {
             "WriteNo: 0000 / Handle:Variable: FrequencyScale:FREQSCALE": 4.5036e+21,
