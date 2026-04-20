@@ -87,12 +87,6 @@ void cSCPIServer::generateVeinInterface()
                                                     QVariant(m_ConfigData.m_SerialDevice.m_sDevice) );
     m_pModule->m_veinComponentsWithMetaAndScpi.append(m_pVeinSerialScpiDevFileName); // auto delete / meta-data / scpi
 
-    m_veinDevIface = new VfModuleComponent(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
-                                                     QString("ACT_DEV_IFACE"),
-                                                     QString("SCPI interface description for current session"),
-                                                     QVariant("") );
-    m_pModule->m_veinComponentsWithMetaAndScpi.append(m_veinDevIface); // auto delete / meta-data / scpi
-
     m_optionalScpiQueue = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
                                                          key = QString("PAR_OptionalScpiQueue"),
                                                          QString("Enable/disable order for SCPI commands"),
@@ -226,10 +220,6 @@ void cSCPIServer::activationDone()
 {
     m_scpiInterface.checkAmbiguousShortNames();
 
-    QMap<QString, QString> modelListBaseEntry({{"RELEASE", ZenuxDeviceInfo::getZenuxRelease()}});
-    QString xml;
-    m_scpiInterface.exportSCPIModelXML(xml, modelListBaseEntry);
-    m_veinDevIface->setValue(xml);
     m_optionalScpiQueue->setValue(m_ConfigData.m_enableScpiQueue.m_nActive);
     m_bActive = true;
     connect(m_optionalScpiQueue, &VfModuleParameter::sigValueChanged, this, &cSCPIServer::controlScpiQueue);

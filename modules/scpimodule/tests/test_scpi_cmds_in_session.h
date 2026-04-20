@@ -12,9 +12,7 @@ private slots:
     void minScpiDevIface();
     void initialScpiCommandsOnOtherModules();
     void multiReadDoubleDeleteCrasher();
-    void devIfaceVeinComponent();
     void devIfaceVeinComponentMultipleEntities();
-    void devIfaceVeinComponentMultipleEntitiesForLongXml();
     void closeSocketOnPendingWriteStbQueryNoCrasher();
     void multilineCommandsLastOpc();
     void catalogFormat();

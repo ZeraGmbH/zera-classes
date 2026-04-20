@@ -77,7 +77,6 @@ private:
     bool m_bSerialScpiActive;
     VfModuleParameter* m_pVeinParamSerialOn = nullptr;
     VfModuleComponent* m_pVeinSerialScpiDevFileName = nullptr;
-    VfModuleComponent* m_veinDevIface = nullptr;
     VfModuleParameter* m_optionalScpiQueue = nullptr;
 
 };
