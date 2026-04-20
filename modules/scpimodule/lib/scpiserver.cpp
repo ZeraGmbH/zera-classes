@@ -40,9 +40,9 @@ cSCPIServer::cSCPIServer(cSCPIModule *module, cSCPIModuleConfigData &configData)
     m_moduleInterface(m_pModule, &m_scpiInterface),
     m_interfaceInterface(m_pModule, &m_scpiInterface),
     m_statusInterface(m_pModule, &m_scpiInterface),
-    m_ieee488Interface(m_pModule, &m_scpiInterface)
+    m_ieee488Interface(m_pModule, &m_scpiInterface),
+    m_bSerialScpiActive(false)
 {
-    m_bSerialScpiActive = false;
     m_bActive = false;
 
     m_pTcpServer = new TcpServerLimitedConn(m_ConfigData, m_SCPIClientList);
