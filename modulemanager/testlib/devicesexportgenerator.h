@@ -11,8 +11,8 @@ typedef QHash<QString/*sessionName*/, QByteArray/*veinDump*/> JsonByteArrayDumps
 class DevicesExportGenerator
 {
 public:
-    DevicesExportGenerator(LxdmSessionChangeParam lxdmParam);
-    void exportAll(QString xmlDir, QString snapshotDir);
+    explicit DevicesExportGenerator(const LxdmSessionChangeParam &lxdmParam);
+    void exportAll(const QString &xmlDir, const QString &snapshotDir);
     JsonByteArrayDumps getVeinDumps();
     JsonByteArrayDumps getDspMemDumps();
     JsonByteArrayDumps getDspVarDumps();
@@ -20,7 +20,7 @@ public:
     QList<TestModuleManager::TModuleInstances> getInstanceCountsOnModulesDestroyed();
     int getModuleConfigWriteCounts() const;
 private:
-    void prepareDirectory(QString path);
+    static void prepareDirectory(const QString &path);
     LxdmSessionChangeParam m_lxdmParam;
     JsonByteArrayDumps m_veinDumps;
     JsonByteArrayDumps m_dspMemDumps;

@@ -3,12 +3,12 @@
 #include <QProcess>
 #include <QDir>
 
-DevicesExportGenerator::DevicesExportGenerator(LxdmSessionChangeParam lxdmParam) :
+DevicesExportGenerator::DevicesExportGenerator(const LxdmSessionChangeParam &lxdmParam) :
     m_lxdmParam(lxdmParam)
 {
 }
 
-void DevicesExportGenerator::exportAll(QString xmlDir, QString snapshotDir)
+void DevicesExportGenerator::exportAll(const QString &xmlDir, const QString &snapshotDir)
 {
     prepareDirectory(xmlDir);
     prepareDirectory(snapshotDir);
@@ -17,7 +17,8 @@ void DevicesExportGenerator::exportAll(QString xmlDir, QString snapshotDir)
     QStringList devices = {"mt310s2", "com5003"};
     for(const QString &device: devices) {
         sessionExportGenerator.setDevice(device);
-        for(const QString &session: sessionExportGenerator.getAvailableSessions()) {
+        const QStringList availableSessions = sessionExportGenerator.getAvailableSessions();
+        for(const QString &session : availableSessions) {
             sessionExportGenerator.changeSession(session);
             sessionExportGenerator.generateDevIfaceXml(xmlDir);
             m_veinDumps[session] = sessionExportGenerator.getVeinDump();
@@ -61,7 +62,7 @@ int DevicesExportGenerator::getModuleConfigWriteCounts() const
     return m_moduleConfigFilesWritten;
 }
 
-void DevicesExportGenerator::prepareDirectory(QString path)
+void DevicesExportGenerator::prepareDirectory(const QString &path)
 {
     QDir dir(path);
     if(dir.exists())

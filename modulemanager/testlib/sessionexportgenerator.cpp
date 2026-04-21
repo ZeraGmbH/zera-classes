@@ -40,7 +40,7 @@ void SessionExportGenerator::createModman(QString device)
     m_modmanTestRunner->setVfComponent(vf_logger_entity, "sessionName", device + "TestSession");
 }
 
-void SessionExportGenerator::setDevice(QString device)
+void SessionExportGenerator::setDevice(const QString &device)
 {
     if(m_device != device) {
         m_modmanTestRunner.reset();
@@ -49,18 +49,18 @@ void SessionExportGenerator::setDevice(QString device)
     }
 }
 
-QStringList SessionExportGenerator::getAvailableSessions()
+QStringList SessionExportGenerator::getAvailableSessions() const
 {
     return m_modmanConfig->getAvailableSessions();
 }
 
-void SessionExportGenerator::changeSession(QString session)
+void SessionExportGenerator::changeSession(const QString &session)
 {
     m_modmanTestRunner->start(session);
     fireActualValues(session);
 }
 
-void SessionExportGenerator::generateDevIfaceXml(QString xmlDir)
+void SessionExportGenerator::generateDevIfaceXml(const QString &xmlDir)
 {
     ScpiModuleClientBlocked client;
     QString scpiIface = client.sendReceive("dev:iface?");
@@ -70,7 +70,7 @@ void SessionExportGenerator::generateDevIfaceXml(QString xmlDir)
     createAndWriteFile(xmlFileName, scpiIface);
 }
 
-void SessionExportGenerator::generateSnapshotJsons(QString snapshotDir)
+void SessionExportGenerator::generateSnapshotJsons(const QString &snapshotDir)
 {
     QString currentSession = m_modmanTestRunner->getVfComponent(system_entity, "Session").toString();
     const QStringList availableContentSets = m_modmanTestRunner->getVfComponent(vf_logger_entity, "availableContentSets").toStringList();

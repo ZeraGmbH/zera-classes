@@ -13,14 +13,14 @@ class SessionExportGenerator: public QObject
 {
     Q_OBJECT
 public:
-    SessionExportGenerator(const LxdmSessionChangeParam &lxdmParam);
+    explicit SessionExportGenerator(const LxdmSessionChangeParam &lxdmParam);
     ~SessionExportGenerator();
 
-    void setDevice(QString device);
-    QStringList getAvailableSessions();
-    void changeSession(QString session);
-    void generateDevIfaceXml(QString xmlDir);
-    void generateSnapshotJsons(QString snapshotDir);
+    void setDevice(const QString &device);
+    QStringList getAvailableSessions() const;
+    void changeSession(const QString &session);
+    void generateDevIfaceXml(const QString &xmlDir);
+    void generateSnapshotJsons(const QString &snapshotDir);
     QByteArray getVeinDump();
     QByteArray getDspMemDump();
     QByteArray getDspVarDump();

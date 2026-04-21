@@ -11,7 +11,7 @@ public:
     static ModulemanagerConfig *getInstance();
     static void setDemoDevice(QString demoDevice);
     static QString getConfigFileNameFull();
-    bool isValid();
+    bool isValid() const;
     const QString getDeviceName();
     bool getCustomerDataEnabled();
     const QStringList getAvailableSessions();
@@ -29,7 +29,7 @@ protected:
     static QString m_configFileName;
 private:
     ModulemanagerConfig();
-    QJsonObject getDeviceJson();
+    QJsonObject getDeviceJson() const;
     void setDeviceJson(QJsonObject devJson);
     void save();
     static ModulemanagerConfig *m_instance;

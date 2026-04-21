@@ -30,7 +30,7 @@ QString ModulemanagerConfig::getConfigFileNameFull()
     return QDir::cleanPath(m_configFileDir + "/" + m_configFileName);
 }
 
-bool ModulemanagerConfig::isValid()
+bool ModulemanagerConfig::isValid() const
 {
     return !m_jsonConfig.isEmpty();
 }
@@ -127,7 +127,7 @@ bool ModulemanagerConfig::isDevMode()
     return m_jsonConfig["devMode"].toBool();
 }
 
-QJsonObject ModulemanagerConfig::getDeviceJson()
+QJsonObject ModulemanagerConfig::getDeviceJson() const
 {
     return isValid() ? m_jsonConfig[m_deviceName].toObject() : QJsonObject();
 }
