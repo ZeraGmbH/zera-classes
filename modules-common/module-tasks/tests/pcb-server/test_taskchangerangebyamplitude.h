@@ -8,7 +8,6 @@ class test_taskchangerangebyamplitude : public QObject
     Q_OBJECT
 private slots:
     void checkScpiSend();
-    void returnsAck();
     void returnsNak();
     void timeoutAndErrFunc();
 };

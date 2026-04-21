@@ -20,5 +20,6 @@ SETUP_QTESTS_MODULE_TASKS(
     test_taskemobreadexchangedata
     test_taskemobwriteexchangedata
     test_taskchangerangebyamplitude
+    test_taskchangerangebyenum
 )
 
