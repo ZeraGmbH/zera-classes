@@ -1,19 +1,21 @@
-#include "scpiclient.h"
 #include "interfaceinterface.h"
-#include "scpiinterface.h"
 #include "scpimodule.h"
 #include "scpiinterfacedelegate.h"
-#include <scpi.h>
 #include <zscpi_response_definitions.h>
 #include <zenuxdeviceinfo.h>
 
 namespace SCPIMODULE
 {
 
-cInterfaceInterface::cInterfaceInterface(cSCPIModule *module, cSCPIInterface *iface)
-    :cBaseInterface(module, iface)
+cInterfaceInterface::cInterfaceInterface(cSCPIModule *module, cSCPIInterface *iface) :
+    cBaseInterface(module, iface)
 {
 }
+
+enum scpiinterfacecommands
+{
+    deviceinterfacecmd
+};
 
 bool cInterfaceInterface::setupInterface()
 {
@@ -30,13 +32,10 @@ bool cInterfaceInterface::setupInterface()
 void cInterfaceInterface::executeCmd(cSCPIClient *client, int cmdCode, const QString &sInput)
 {
     cSCPICommand cmd = sInput;
-
     switch (cmdCode)
     {
-    case deviceinterfacecmd:
-    {
-        if (cmd.isQuery())
-        {
+    case deviceinterfacecmd: {
+        if (cmd.isQuery()) {
             QString xml;
             QMap<QString, QString> modelListBaseEntry({{"RELEASE", ZenuxDeviceInfo::getZenuxRelease()}});
             m_pSCPIInterface->exportSCPIModelXML(xml, modelListBaseEntry);
