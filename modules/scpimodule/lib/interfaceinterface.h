@@ -18,6 +18,9 @@ public:
 
 private slots:
     void executeCmd(SCPIMODULE::cSCPIClient* client, int cmdCode, const QString& sInput);
+private:
+    QString getDevIface();
+    QString m_devIfaceCache;
 };
 
 }

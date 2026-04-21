@@ -35,19 +35,23 @@ void cInterfaceInterface::executeCmd(cSCPIClient *client, int cmdCode, const QSt
     switch (cmdCode)
     {
     case deviceinterfacecmd: {
-        if (cmd.isQuery()) {
-            QString xml;
-            QMap<QString, QString> modelListBaseEntry({{"RELEASE", ZenuxDeviceInfo::getZenuxRelease()}});
-            m_pSCPIInterface->exportSCPIModelXML(xml, modelListBaseEntry);
-            client->receiveAnswer(xml);
-        }
+        if (cmd.isQuery())
+            client->receiveAnswer(getDevIface());
         else
             client->receiveStatus(ZSCPI::nak);
         break;
     }
 
     }
+}
 
+QString cInterfaceInterface::getDevIface()
+{
+    if (m_devIfaceCache.isEmpty()) {
+        QMap<QString, QString> modelListBaseEntry({{"RELEASE", ZenuxDeviceInfo::getZenuxRelease()}});
+        m_pSCPIInterface->exportSCPIModelXML(m_devIfaceCache, modelListBaseEntry);
+    }
+    return m_devIfaceCache;
 }
 
 }
