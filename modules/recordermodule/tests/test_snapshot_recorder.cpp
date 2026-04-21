@@ -186,8 +186,8 @@ void test_snapshot_recorder::createModule(int entityId, QMap<QString, QVariant> 
     VfCpp::VfCppEntity * entity =new VfCpp::VfCppEntity(entityId);
     m_testRunner->getModManFacade()->addSubsystem(entity);
     entity->initModule();
-    for(const auto &compoName : components.keys())
-        entity->createComponent(compoName, components[compoName]);
+    for (auto it = components.constBegin(); it != components.constEnd(); ++it)
+        entity->createComponent(it.key(), it.value());
     TimeMachineObject::feedEventLoop();
 }
 
