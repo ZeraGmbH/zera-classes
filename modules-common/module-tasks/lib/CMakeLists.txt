@@ -4,6 +4,7 @@ file(GLOB HEADER
     ${CMAKE_CURRENT_SOURCE_DIR}/pcb-server/*.h
     ${CMAKE_CURRENT_SOURCE_DIR}/pcb-server/channels/*.h
     ${CMAKE_CURRENT_SOURCE_DIR}/pcb-server/emob/*.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/pcb-server/generator/*.h
     ${CMAKE_CURRENT_SOURCE_DIR}/pcb-server/ranges/*.h
     ${CMAKE_CURRENT_SOURCE_DIR}/pcb-server/sec/*.h
     )
@@ -13,6 +14,7 @@ file(GLOB SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/pcb-server/*.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/pcb-server/channels/*.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/pcb-server/emob/*.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/pcb-server/generator/*.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/pcb-server/ranges/*.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/pcb-server/sec/*.cpp
     )
@@ -36,6 +38,7 @@ target_include_directories(module-tasks
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/pcb-server>
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/pcb-server/channels>
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/pcb-server/emob>
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/pcb-server/generator>
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/pcb-server/ranges>
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/pcb-server/sec>
     $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/zera-classes/module-tasks>
