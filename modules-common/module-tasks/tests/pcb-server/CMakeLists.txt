@@ -22,5 +22,6 @@ SETUP_QTESTS_MODULE_TASKS(
     test_taskchangerangebyamplitude
     test_taskchangerangebyenum
     test_tasksetdspamplitude
+    test_tasksetdspfrequency
 )
 
