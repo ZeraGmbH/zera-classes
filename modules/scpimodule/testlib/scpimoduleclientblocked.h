@@ -12,7 +12,7 @@ public:
     explicit ScpiModuleClientBlocked(QString ipAddress = "127.0.0.1", int port = 6320);
     void setLogFile(const QString &logFileName);
 
-    QByteArray sendReceive(const QByteArray &send, bool removeLineFeedOnReceive = true);
+    QByteArray sendReceive(const QByteArray &send, bool removeLineFeedOnReceive = true, bool skipLog = false);
     void sendMulti(const QByteArrayList &send);
     QByteArrayList receiveMulti();
 

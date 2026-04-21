@@ -36,7 +36,7 @@ void cInterfaceInterface::executeCmd(cSCPIClient *client, int cmdCode, const QSt
     {
     case deviceinterfacecmd: {
         if (cmd.isQuery())
-            client->receiveAnswer(getDevIface());
+            client->receiveAnswer(getDevIface(), true, true);
         else
             client->receiveStatus(ZSCPI::nak);
         break;

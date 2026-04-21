@@ -25,7 +25,7 @@ cSCPISerialClient::~cSCPISerialClient()
 }
 
 
-void cSCPISerialClient::receiveAnswer(QString answ, bool ok)
+void cSCPISerialClient::receiveAnswer(QString answ, bool ok, bool skipLog)
 {
     QString answer;
     QByteArray ba;
@@ -34,7 +34,7 @@ void cSCPISerialClient::receiveAnswer(QString answ, bool ok)
 
     ba = answer.toLatin1();
     m_pSerialPort->write(ba.data(), ba.size());
-    qInfo("Serial SCPI command response : %s", qPrintable(answ));
+    qInfo("Serial SCPI command response : %s", skipLog ? "<skipped>" : qPrintable(answ));
     if(ok)
         emit commandAnswered(this);
 }

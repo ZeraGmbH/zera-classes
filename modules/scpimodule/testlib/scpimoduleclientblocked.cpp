@@ -16,7 +16,7 @@ void ScpiModuleClientBlocked::setLogFile(const QString &logFileName)
     TestLogHelpers::writeFile(m_logFileName, ""); // more a write with parent dirs
 }
 
-QByteArray ScpiModuleClientBlocked::sendReceive(const QByteArray &send, bool removeLineFeedOnReceive)
+QByteArray ScpiModuleClientBlocked::sendReceive(const QByteArray &send, bool removeLineFeedOnReceive, bool skipLog)
 {
     QElapsedTimer timer;
     timer.start();
@@ -30,7 +30,7 @@ QByteArray ScpiModuleClientBlocked::sendReceive(const QByteArray &send, bool rem
         addLog(LOG_RECEIVE, ret);
         if(removeLineFeedOnReceive)
             ret.replace("\n", "");
-        qInfo("Network I/O received: %s / took %llims", qPrintable(ret), timer.elapsed());
+        qInfo("Network I/O received: %s / took %llims", qPrintable(skipLog ? "<skipped>" : ret), timer.elapsed());
     }
     else
         qInfo("No respone received");

@@ -63,7 +63,7 @@ void SessionExportGenerator::changeSession(const QString &session)
 void SessionExportGenerator::generateDevIfaceXml(const QString &xmlDir)
 {
     ScpiModuleClientBlocked client;
-    QString scpiIface = client.sendReceive("dev:iface?");
+    QString scpiIface = client.sendReceive("dev:iface?", true, true);
     QString currentSession = m_modmanTestRunner->getVfComponent(system_entity, "Session").toString();
     QString xmlFileName(xmlDir + currentSession);
     xmlFileName.replace("json", "xml");

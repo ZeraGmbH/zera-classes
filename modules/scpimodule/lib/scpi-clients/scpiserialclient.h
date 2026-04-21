@@ -25,7 +25,7 @@ public:
     virtual ~cSCPISerialClient();
 
 public slots:
-    virtual void receiveAnswer(QString answ, bool ok = true);
+    virtual void receiveAnswer(QString answ, bool ok = true, bool skipLog = false);
 
 private:
     QSerialPort* m_pSerialPort;
