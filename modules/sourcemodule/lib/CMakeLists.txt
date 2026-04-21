@@ -1,27 +1,27 @@
 file(GLOB SOURCES 
-    ${CMAKE_CURRENT_SOURCE_DIR}/io-device/*.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/io-queue/*.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/message-texts/*.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/module-gluelogic/*.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/source-device-ext-serial/*.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/source-device-internal/*.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/source-device-common/*.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/source-protocols/*.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/source-scanner/*.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/transaction-ids/*.cpp
+    io-device/*.cpp
+    io-queue/*.cpp
+    message-texts/*.cpp
+    module-gluelogic/*.cpp
+    source-device-ext-serial/*.cpp
+    source-device-internal/*.cpp
+    source-device-common/*.cpp
+    source-protocols/*.cpp
+    source-scanner/*.cpp
+    transaction-ids/*.cpp
     )
 
 file(GLOB HEADER
-    ${CMAKE_CURRENT_SOURCE_DIR}/io-device/*.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/io-queue/*.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/message-texts/*.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/module-gluelogic/*.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/source-device-ext-serial/*.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/source-device-internal/*.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/source-device-common/*.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/source-protocols/*.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/source-scanner/*.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/transaction-ids/*.h
+    io-device/*.h
+    io-queue/*.h
+    message-texts/*.h
+    module-gluelogic/*.h
+    source-device-ext-serial/*.h
+    source-device-internal/*.h
+    source-device-common/*.h
+    source-protocols/*.h
+    source-scanner/*.h
+    transaction-ids/*.h
     )
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC" )
@@ -60,7 +60,7 @@ target_include_directories(sourcemodule-static
 add_definitions(-DZC_DEV_STATE_PATH="${CMAKE_INSTALL_SYSCONFDIR}/zera/states")
 
 file(GLOB SOURCE_DEVINFO
-    ${CMAKE_CURRENT_SOURCE_DIR}/source-device-ext-serial/deviceinfo/*.json
+    source-device-ext-serial/deviceinfo/*.json
 )
 
 # Note 1: In OE we do not (yet) have jsonlint-php so it must be optional
