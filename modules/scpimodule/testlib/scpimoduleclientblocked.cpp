@@ -30,7 +30,6 @@ QByteArray ScpiModuleClientBlocked::sendReceive(const QByteArray &send, bool rem
         addLog(LOG_RECEIVE, ret);
         if(removeLineFeedOnReceive)
             ret.replace("\n", "");
-        qInfo("Network I/O received: %s / took %llims", qPrintable(skipLog ? "<skipped>" : ret), timer.elapsed());
     }
     else
         qInfo("No respone received");
