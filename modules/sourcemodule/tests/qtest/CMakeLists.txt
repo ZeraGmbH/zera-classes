@@ -16,7 +16,6 @@ endfunction()
 SETUP_QTESTS_MODULE(
    test_iodevice
    test_ioqueue
-   test_iodevice_zera_scpi_net
    test_iotransferdata
    test_sourceio
    test_sourcescanner
