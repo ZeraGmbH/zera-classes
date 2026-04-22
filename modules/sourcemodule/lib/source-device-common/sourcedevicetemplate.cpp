@@ -7,18 +7,19 @@
 
 IoIdGenerator SourceDeviceTemplate::m_idGenerator;
 
-SourceDeviceTemplate::SourceDeviceTemplate(IoDeviceBase::Ptr ioDevice, const QJsonObject &sourceJsonStruct) :
-    m_sourceJsonStruct(sourceJsonStruct),
-    m_ioDevice(ioDevice),
+SourceDeviceTemplate::SourceDeviceTemplate(QString deviceInfo, IoDeviceTypes deviceType, const QJsonObject &sourceCapabilities) :
+    m_sourceCapabilities(sourceCapabilities),
+    m_deviceType(deviceType),
+    m_deviceInfo(deviceInfo),
     m_ID(m_idGenerator.nextID())
 {
-    m_deviceStatusJsonApi.setDeviceInfo(m_ioDevice->getDeviceInfo());
+    m_deviceStatusJsonApi.setDeviceInfo(deviceInfo);
 }
 
 void SourceDeviceTemplate::setVeinInterface(SourceVeinInterface *veinInterface)
 {
     m_veinInterface = veinInterface;
-    setVeinParamStructure(m_sourceJsonStruct);
+    setVeinParamStructure(m_sourceCapabilities);
     setVeinParamState(m_switcher->getCurrLoadState().getParams());
     setVeinDeviceState(m_deviceStatusJsonApi.getJsonStatus());
     connect(m_veinInterface, &SourceVeinInterface::sigNewLoadParams,
@@ -32,12 +33,12 @@ int SourceDeviceTemplate::getId()
 
 QString SourceDeviceTemplate::getIoDeviceInfo() const
 {
-    return m_ioDevice->getDeviceInfo();
+    return m_deviceInfo;
 }
 
 bool SourceDeviceTemplate::hasDemoIo() const
 {
-    return m_ioDevice->getType() == IoDeviceTypes::DEMO;
+    return m_deviceType == IoDeviceTypes::DEMO;
 }
 
 QStringList SourceDeviceTemplate::getLastErrors() const
@@ -45,11 +46,11 @@ QStringList SourceDeviceTemplate::getLastErrors() const
     return m_deviceStatusJsonApi.getErrors();
 }
 
-void SourceDeviceTemplate::setVeinParamStructure(QJsonObject paramStruct)
+void SourceDeviceTemplate::setVeinParamStructure(QJsonObject sourceCapabilities)
 {
     if(m_veinInterface) {
-        m_veinInterface->getVeinDeviceInfoComponent()->setValue(paramStruct);
-        m_veinInterface->getVeinDeviceParameterValidator()->setJSonParameterStructure(paramStruct);
+        m_veinInterface->getVeinDeviceInfoComponent()->setValue(sourceCapabilities);
+        m_veinInterface->getVeinDeviceParameterValidator()->setJSonParameterStructure(sourceCapabilities);
     }
 }
 

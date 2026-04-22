@@ -179,7 +179,7 @@
         },
         "ACT_DeviceState0": {
             "busy": false,
-            "deviceinfo": "",
+            "deviceinfo": "MT581s2",
             "errors": [
             ],
             "warnings": [

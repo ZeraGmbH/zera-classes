@@ -1,7 +1,6 @@
 #include "sourcedevicemanager.h"
 #include "iodevicefactory.h"
 #include "iodevicedemo.h"
-#include "iodevicezerascpinet.h"
 #include "sourcedeviceinternal.h"
 #include "sourcescanneriodemo.h"
 #include "sourcescanneriozeraserial.h"
@@ -15,25 +14,23 @@ static bool randomBool() {
     return gen();
 }
 
-SourceDeviceManager::SourceDeviceManager(int countSlots, QObject *parent) :
-    QObject(parent),
+SourceDeviceManager::SourceDeviceManager(int countSlots) :
     m_sourceControllers(QVector<SourceDeviceTemplate::Ptr>(countSlots, nullptr)),
     m_activeSlots(QVector<bool>(countSlots, false))
 {
 }
 
-void SourceDeviceManager::addInternalSource(const QJsonObject &sourceJsonStruct, Zera::PcbInterfacePtr pcbInterface)
+void SourceDeviceManager::addInternalSource(const QJsonObject &sourceCapabilities, AbstractServerInterfacePtr serverInterface)
 {
     int freeSlot = findFreeSlot();
     if(freeSlot >= 0) {
-        IoDeviceBase::Ptr ioDevice = IoDeviceBase::Ptr(new IoDeviceZeraSCPINet(pcbInterface));
-        SourceDeviceTemplate::Ptr sourceDevice = std::make_shared<SourceDeviceInternal>(ioDevice, sourceJsonStruct);
+        SourceDeviceTemplate::Ptr sourceDevice = std::make_shared<SourceDeviceInternal>(serverInterface, sourceCapabilities);
         addSource(freeSlot, sourceDevice);
         emit sigSourceScanFinished(freeSlot, QUuid::createUuid(), "");
     }
 }
 
-void SourceDeviceManager::startSourceScan(const IoDeviceTypes ioDeviceType, const QString deviceInfo, const QUuid uuid)
+void SourceDeviceManager::startSourceScan(const IoDeviceTypes ioDeviceType, const QString &deviceInfo, const QUuid &uuid)
 {
     if(getActiveSlotCount() >= m_sourceControllers.count()) {
         emit sigSourceScanFinished(-1, uuid, QStringLiteral("No free slots"));

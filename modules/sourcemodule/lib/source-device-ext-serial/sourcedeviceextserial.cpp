@@ -6,7 +6,8 @@
 #include <QVariant>
 
 SourceDeviceExtSerial::SourceDeviceExtSerial(IoDeviceBase::Ptr ioDevice, SourceProperties properties) :
-    SourceDeviceTemplate(ioDevice, JsonStructureLoader::loadJsonStructure(properties)),
+    SourceDeviceTemplate(ioDevice->getDeviceInfo(), ioDevice->getType(), JsonStructureLoader::loadJsonStructure(properties)),
+    m_ioDevice(ioDevice),
     m_sourceIo(std::make_shared<SourceIoExtSerial>(ioDevice, properties)),
     m_transactionNotifierStatus(SourceTransactionStartNotifier::Ptr::create(m_sourceIo)),
     m_transactionNotifierSwitch(SourceTransactionStartNotifier::Ptr::create(m_sourceIo)),

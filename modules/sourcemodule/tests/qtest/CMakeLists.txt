@@ -27,6 +27,12 @@ SETUP_QTESTS_MODULE(
    test_sourcedevicefacade
    test_source_full
    test_file_dissapepear_watcher
+   test_sourceswitchjsoninternal
+)
+
+target_sources(test_sourceswitchjsoninternal
+   PRIVATE
+     test-data/test-data.qrc
 )
 
 target_sources(test_source_full

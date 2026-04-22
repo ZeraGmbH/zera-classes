@@ -3,16 +3,16 @@
 
 #include "sourcedevicetemplate.h"
 #include "sourcescanner.h"
-#include <pcbinterface.h>
+#include <abstractserverInterface.h>
 #include <QUuid>
 
 class SourceDeviceManager : public QObject
 {
     Q_OBJECT
 public:
-    SourceDeviceManager(int countSlots, QObject *parent = 0);
-    void addInternalSource(const QJsonObject &sourceJsonStruct, Zera::PcbInterfacePtr pcbInterface);
-    void startSourceScan(const IoDeviceTypes ioDeviceType, const QString deviceInfo, const QUuid uuid);
+    explicit SourceDeviceManager(int countSlots);
+    void addInternalSource(const QJsonObject &sourceCapabilities, AbstractServerInterfacePtr serverInterface);
+    void startSourceScan(const IoDeviceTypes ioDeviceType, const QString &deviceInfo, const QUuid &uuid);
     void closeSource(int slotNo, const QUuid uuid);
     void closeSource(QString ioDeviceInfo, const QUuid uuid);
     void closeAll();
@@ -38,6 +38,7 @@ private:
     bool tryStartDemoDeviceRemove(int slotNo);
     void checkHandleAllClosed();
     void emitSigSlotRemoved(int slotNo, QUuid uuid, QString errorMsg);
+
     QVector<SourceDeviceTemplate::Ptr> m_sourceControllers;
     QVector<bool> m_activeSlots;
 };

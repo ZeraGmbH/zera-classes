@@ -1,7 +1,6 @@
 #ifndef SOURCEDEVICETEMPLATE_H
 #define SOURCEDEVICETEMPLATE_H
 
-#include "iodevicebase.h"
 #include "idgenerator.h"
 #include "sourceveininterface.h"
 #include "sourcestatecontroller.h"
@@ -15,7 +14,7 @@ class SourceDeviceTemplate : public QObject
     Q_OBJECT
 public:
     typedef std::shared_ptr<SourceDeviceTemplate> Ptr;
-    SourceDeviceTemplate(IoDeviceBase::Ptr ioDevice, const QJsonObject &sourceJsonStruct);
+    SourceDeviceTemplate(QString deviceInfo, IoDeviceTypes deviceType, const QJsonObject &sourceCapabilities);
 
     void setVeinInterface(SourceVeinInterface* veinInterface);
 
@@ -35,13 +34,14 @@ protected slots:
     void onSourceStateChanged(SourceStateController::States state);
 protected:
     void handleErrorState(SourceStateController::States state);
-    void setVeinParamStructure(QJsonObject paramStruct);
+    void setVeinParamStructure(QJsonObject sourceCapabilities);
     void setVeinDeviceState(QJsonObject deviceState);
     void setVeinParamState(QJsonObject paramState);
     void resetVeinComponents();
 
-    const QJsonObject m_sourceJsonStruct;
-    IoDeviceBase::Ptr m_ioDevice;
+    const QJsonObject m_sourceCapabilities;
+    IoDeviceTypes m_deviceType;
+    QString m_deviceInfo;
     SourceVeinInterface* m_veinInterface = nullptr;
     JsonDeviceStatusApi m_deviceStatusJsonApi;
     std::unique_ptr<AbstractSourceSwitchJson> m_switcher;

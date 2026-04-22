@@ -3,22 +3,34 @@
 
 #include "persistentjsonstate.h"
 #include <abstractsourceswitchjson.h>
+#include <jsonstructapi.h>
+#include <abstractserverInterface.h>
+#include <taskcontainerinterface.h>
 
 class SourceSwitchJsonInternal : public AbstractSourceSwitchJson
 {
     Q_OBJECT
 public:
-    SourceSwitchJsonInternal(const QJsonObject &sourceJsonStruct);
+    SourceSwitchJsonInternal(AbstractServerInterfacePtr serverInterface,
+                             const QJsonObject &sourceCapabilities);
     void switchState(JsonParamApi paramState) override;
     void switchOff() override;
     JsonParamApi getCurrLoadState() override;
     JsonParamApi getRequestedLoadState() override;
 
+private slots:
+    void onSwitchTasksFinish(bool ok);
 private:
-    const QJsonObject m_sourceJsonStruct;
+    static QString getChannelMName(phaseType type, int phaseNoBase0);
+    static QString getAlias(phaseType type, int phaseNoBase0);
+    TaskContainerInterfacePtr createAmplitudeTasks(JsonParamApi paramState);
+
+    AbstractServerInterfacePtr m_serverInterface;
+    JsonStructApi m_sourceCapabilitiesApi;
     PersistentJsonState m_persistentParamState;
     JsonParamApi m_paramsCurrent;
     JsonParamApi m_paramsRequested;
+    TaskContainerInterfacePtr m_currentTasks;
 };
 
 #endif // SOURCESWITCHJSONINTERNAL_H
