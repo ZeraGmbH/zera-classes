@@ -16,6 +16,7 @@ private slots:
     void checkInitialLoadState();
     void switchOnOk();
     void switchOffOk();
+    void switchOnOffOk();
 
 private:
     VeinTcp::AbstractTcpNetworkFactoryPtr m_tcpNetworkFactory;

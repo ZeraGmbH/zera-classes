@@ -37,6 +37,7 @@ void SourceSwitchJsonInternal::switchOff()
 {
     JsonParamApi paramOff = m_paramsCurrent;
     paramOff.setOn(false);
+    m_paramsRequested = paramOff;
 
     m_currentTasks = TaskContainerSequence::create(TaskContainerSequence::StopOnFirstTaskFail);
 

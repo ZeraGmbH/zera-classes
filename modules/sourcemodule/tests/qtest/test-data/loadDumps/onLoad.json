@@ -1,0 +1,37 @@
+{
+    "Frequency": {
+        "type": "var",
+        "val": 50
+    },
+    "I1": {
+        "angle": 0,
+        "on": true,
+        "rms": 5
+    },
+    "I2": {
+        "angle": 120,
+        "on": true,
+        "rms": 5
+    },
+    "I3": {
+        "angle": 240,
+        "on": true,
+        "rms": 5
+    },
+    "U1": {
+        "angle": 0,
+        "on": true,
+        "rms": 230
+    },
+    "U2": {
+        "angle": 120,
+        "on": true,
+        "rms": 230
+    },
+    "U3": {
+        "angle": 240,
+        "on": true,
+        "rms": 230
+    },
+    "on": true
+}
