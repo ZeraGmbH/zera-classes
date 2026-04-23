@@ -1,5 +1,5 @@
-#include "test_tasksetdspamplitude.h"
-#include "tasksetdspamplitude.h"
+#include "test_taskgeneratordspamplitudeset.h"
+#include "taskgeneratordspamplitudeset.h"
 #include <pcbinitfortest.h>
 #include <testfactoryi2cctrl.h>
 #include <timemachinefortest.h>
@@ -11,9 +11,9 @@
 #include <QSignalSpy>
 #include <QTest>
 
-QTEST_MAIN(test_tasksetdspamplitude)
+QTEST_MAIN(test_taskgeneratordspamplitudeset)
 
-void test_tasksetdspamplitude::checkScpiSend()
+void test_taskgeneratordspamplitudeset::checkScpiSend()
 {
     VeinTcp::AbstractTcpNetworkFactoryPtr tcpNetworkFactory = VeinTcp::MockTcpNetworkFactory::create();
     std::unique_ptr<ResmanRunFacade> resman = std::make_unique<ResmanRunFacade>(tcpNetworkFactory);
@@ -26,9 +26,9 @@ void test_tasksetdspamplitude::checkScpiSend()
     Zera::Proxy::getInstance()->startConnectionSmart(proxyClient);
     TimeMachineObject::feedEventLoop();
 
-    TaskTemplatePtr task = TaskSetDspAmplitude::create(pcbIFace,
-                                                       "m0", 100.0,
-                                                       []{}, EXPIRE_INFINITE);
+    TaskTemplatePtr task = TaskGeneratorDspAmplitudeSet::create(pcbIFace,
+                                                                "m0", 100.0,
+                                                                []{}, EXPIRE_INFINITE);
     TaskTestHelper helper(task.get());
     task->start();
     TimeMachineObject::feedEventLoop();
@@ -36,13 +36,13 @@ void test_tasksetdspamplitude::checkScpiSend()
     QCOMPARE(helper.errCount(), 0);
 }
 
-void test_tasksetdspamplitude::returnsNak()
+void test_taskgeneratordspamplitudeset::returnsNak()
 {
     PcbInitForTest pcb;
     pcb.getProxyClient()->setAnswers(ServerTestAnswerList() << ServerTestAnswer(nack, ""));
-    TaskTemplatePtr task = TaskSetDspAmplitude::create(pcb.getPcbInterface(),
-                                                       "m0", 100.0,
-                                                       []{}, EXPIRE_INFINITE);
+    TaskTemplatePtr task = TaskGeneratorDspAmplitudeSet::create(pcb.getPcbInterface(),
+                                                                "m0", 100.0,
+                                                                []{}, EXPIRE_INFINITE);
     QSignalSpy spy(task.get(), &TaskTemplate::sigFinish);
     task->start();
     TimeMachineObject::feedEventLoop();
@@ -51,13 +51,13 @@ void test_tasksetdspamplitude::returnsNak()
     QCOMPARE(spy[0][0], false);
 }
 
-void test_tasksetdspamplitude::timeoutAndErrFunc()
+void test_taskgeneratordspamplitudeset::timeoutAndErrFunc()
 {
     PcbInitForTest pcb;
     int localErrorCount = 0;
-    TaskTemplatePtr task = TaskSetDspAmplitude::create(pcb.getPcbInterface(),
-                                                       "m0", 100.0,
-                                                       [&]{ localErrorCount++; }, DEFAULT_EXPIRE);
+    TaskTemplatePtr task = TaskGeneratorDspAmplitudeSet::create(pcb.getPcbInterface(),
+                                                                "m0", 100.0,
+                                                                [&]{ localErrorCount++; }, DEFAULT_EXPIRE);
     TaskTestHelper helper(task.get());
     task->start();
     TimeMachineForTest::getInstance()->processTimers(DEFAULT_EXPIRE_WAIT);

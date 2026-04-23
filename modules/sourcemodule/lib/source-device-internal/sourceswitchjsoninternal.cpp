@@ -2,7 +2,7 @@
 #include "taskgeneratorrangebyamplitudeset.h"
 #include "taskgeneratormultiplephasessourcemodeon.h"
 #include "taskgeneratormultiplephasesswitchon.h"
-#include "tasksetdspamplitude.h"
+#include "taskgeneratordspamplitudeset.h"
 #include "tasksetdspangle.h"
 #include "tasksetdspfrequency.h"
 #include <math.h>
@@ -77,7 +77,7 @@ TaskContainerInterfacePtr SourceSwitchJsonInternal::createLoadpointTasks(const J
                 getChannelMName(type, phaseNo),
                 peakValue,
                 [=]() { qWarning("TaskChangeRangeByAmplitude failed for %s", qPrintable(getAlias(type, phaseNo))); }));
-            phaseTasks->addSub(TaskSetDspAmplitude::create(
+            phaseTasks->addSub(TaskGeneratorDspAmplitudeSet::create(
                 m_serverInterface,
                 getChannelMName(type, phaseNo),
                 peakValue,
