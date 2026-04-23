@@ -1,7 +1,7 @@
 #include "sourceswitchjsoninternal.h"
 #include "taskchangerangebyamplitude.h"
 #include "tasksetdspamplitude.h"
-#include <cmath>
+#include <math.h>
 #include <taskcontainerinterface.h>
 #include <taskcontainersequence.h>
 #include <taskcontainerparallel.h>
