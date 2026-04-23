@@ -21,7 +21,7 @@ public:
 private slots:
     void onSwitchTasksFinish(bool ok);
 private:
-    TaskContainerInterfacePtr createAmplitudeTasks(const JsonParamApi &paramState);
+    TaskContainerInterfacePtr createLoadpointTasks(const JsonParamApi &paramState);
     TaskTemplatePtr createSourceModeOnTask(const JsonParamApi &paramState);
     TaskTemplatePtr createSourceOnOffTask(const JsonParamApi &paramState);
     static QStringList getChannelMNamesSwitchedOnCommaSeparated(const JsonStructApi &sourceCapabilities,

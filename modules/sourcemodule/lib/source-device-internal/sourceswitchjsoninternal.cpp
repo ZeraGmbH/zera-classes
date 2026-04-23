@@ -3,6 +3,7 @@
 #include "taskgeneratormultiplephasessourcemodeon.h"
 #include "taskgeneratormultiplephasesswitchon.h"
 #include "tasksetdspamplitude.h"
+#include "tasksetdspfrequency.h"
 #include <math.h>
 #include <taskcontainerinterface.h>
 #include <taskcontainersequence.h>
@@ -24,7 +25,7 @@ void SourceSwitchJsonInternal::switchState(const JsonParamApi &paramState)
     m_currentTasks = TaskContainerSequence::create(TaskContainerSequence::StopOnFirstTaskFail);
 
     m_currentTasks->addSub(createSourceModeOnTask(paramState));
-    m_currentTasks->addSub(createAmplitudeTasks(paramState));
+    m_currentTasks->addSub(createLoadpointTasks(paramState));
     m_currentTasks->addSub(createSourceOnOffTask(paramState));
 
     connect(m_currentTasks.get(), &TaskTemplate::sigFinish,
@@ -46,16 +47,31 @@ void SourceSwitchJsonInternal::switchOff()
     m_currentTasks->start();
 }
 
-TaskContainerInterfacePtr SourceSwitchJsonInternal::createAmplitudeTasks(const JsonParamApi &paramState)
+TaskContainerInterfacePtr SourceSwitchJsonInternal::createLoadpointTasks(const JsonParamApi &paramState)
 {
-    TaskContainerInterfacePtr ampTasks = TaskContainerParallel::create();
+    TaskContainerInterfacePtr parallelPhaseTasks = TaskContainerParallel::create();
     for (phaseType type : {phaseType::U, phaseType::I}) {
         const int phaseCount = type==phaseType::U ?
                                    m_sourceCapabilities.getCountUPhases() :
                                    m_sourceCapabilities.getCountIPhases();
         for (int phaseNo=0; phaseNo < phaseCount; ++phaseNo) {
-            double peakValue = paramState.getRms(type, phaseNo) * M_SQRT2;
             TaskContainerInterfacePtr rmsTasks = TaskContainerSequence::create(TaskContainerSequence::StopOnFirstTaskFail);
+            // notes on frequency:
+            // * mains sync is not implemented yet therefore default to 50Hz for now
+            // * is frequency per phase a wanted and supported feature?
+            double frequency = paramState.getFreqVal();
+            if (frequency == 0.0)
+                frequency = 50.0;
+            rmsTasks->addSub(TaskSetDspFrequency::create(
+                m_serverInterface,
+                getChannelMName(type, phaseNo),
+                frequency,
+                TRANSACTION_TIMEOUT,
+                [=]() {
+                    qWarning("TaskSetDspFrequency failed for %s", qPrintable(getAlias(type, phaseNo)));
+                }));
+
+            const double peakValue = paramState.getRms(type, phaseNo) * M_SQRT2;
             rmsTasks->addSub(TaskChangeRangeByAmplitude::create(
                 m_serverInterface,
                 getChannelMName(type, phaseNo),
@@ -72,10 +88,12 @@ TaskContainerInterfacePtr SourceSwitchJsonInternal::createAmplitudeTasks(const J
                 [=]() {
                     qWarning("TaskSetDspAmplitude failed for %s", qPrintable(getAlias(type, phaseNo)));
                 }));
-            ampTasks->addSub(std::move(rmsTasks));
+
+
+            parallelPhaseTasks->addSub(std::move(rmsTasks));
         }
     }
-    return ampTasks;
+    return parallelPhaseTasks;
 }
 
 TaskTemplatePtr SourceSwitchJsonInternal::createSourceModeOnTask(const JsonParamApi &paramState)
