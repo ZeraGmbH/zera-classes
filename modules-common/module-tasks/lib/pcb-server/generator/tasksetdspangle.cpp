@@ -1,4 +1,5 @@
 #include "tasksetdspangle.h"
+#include "taskscpicmd.h"
 
 TaskTemplatePtr TaskSetDspAngle::create(AbstractServerInterfacePtr interface,
                                         const QString &channelMName, float angle,

@@ -1,11 +1,11 @@
 #ifndef TASKCHANGERANGEBYENUM_H
 #define TASKCHANGERANGEBYENUM_H
 
-#include "taskscpicmd.h"
+#include <abstractserverInterface.h>
+#include <tasktemplate.h>
 
-class TaskChangeRangeByEnum : public TaskScpiCmd
+class TaskChangeRangeByEnum
 {
-    Q_OBJECT
 public:
     static TaskTemplatePtr create(AbstractServerInterfacePtr interface,
                                   const QString &channelMName, int range,

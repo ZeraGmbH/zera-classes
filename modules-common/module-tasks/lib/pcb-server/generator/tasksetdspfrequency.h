@@ -1,11 +1,11 @@
 #ifndef TASKSETDSPFREQUENCY_H
 #define TASKSETDSPFREQUENCY_H
 
-#include "taskscpicmd.h"
+#include <abstractserverInterface.h>
+#include <tasktemplate.h>
 
-class TaskSetDspFrequency : public TaskScpiCmd
+class TaskSetDspFrequency
 {
-    Q_OBJECT
 public:
     static TaskTemplatePtr create(AbstractServerInterfacePtr interface,
                                   const QString &channelMName, float frequency,

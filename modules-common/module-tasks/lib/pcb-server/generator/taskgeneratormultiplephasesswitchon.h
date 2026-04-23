@@ -1,11 +1,11 @@
 #ifndef TASKGENERATORMULTIPLEPHASESSWITCHON_H
 #define TASKGENERATORMULTIPLEPHASESSWITCHON_H
 
-#include "taskscpicmd.h"
+#include <abstractserverInterface.h>
+#include <tasktemplate.h>
 
-class TaskGeneratorMultiplePhasesSwitchOn : public TaskScpiCmd
+class TaskGeneratorMultiplePhasesSwitchOn
 {
-    Q_OBJECT
 public:
     static TaskTemplatePtr create(AbstractServerInterfacePtr interface,
                                   const QStringList &channelMNameListOn, // those no mentioned are switched off

@@ -1,4 +1,5 @@
 #include "taskgeneratormultiplephasessourcemodeon.h"
+#include "taskscpicmd.h"
 
 TaskTemplatePtr TaskGeneratorMultiplePhasesSourceModeOn::create(AbstractServerInterfacePtr interface,
                                                                 const QStringList &channelMNameListOn,

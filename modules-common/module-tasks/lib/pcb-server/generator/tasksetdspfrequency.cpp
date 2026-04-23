@@ -1,4 +1,5 @@
 #include "tasksetdspfrequency.h"
+#include "taskscpicmd.h"
 
 TaskTemplatePtr TaskSetDspFrequency::create(AbstractServerInterfacePtr interface,
                                             const QString &channelMName, float frequency,

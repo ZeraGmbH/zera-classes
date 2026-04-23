@@ -1,4 +1,5 @@
 #include "taskchangerangebyamplitude.h"
+#include <taskscpicmd.h>
 
 TaskTemplatePtr TaskChangeRangeByAmplitude::create(AbstractServerInterfacePtr interface,
                                                    const QString &channelMName,

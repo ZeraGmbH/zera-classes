@@ -90,7 +90,6 @@ TaskContainerInterfacePtr SourceSwitchJsonInternal::createLoadpointTasks(const J
                 paramState.getAngle(type, phaseNo),
                 [=]() { qWarning("TaskSetDspAmplitude failed for %s", qPrintable(getAlias(type, phaseNo))); }));
 
-
             parallelPhaseTasks->addSub(std::move(phaseTasks));
         }
     }

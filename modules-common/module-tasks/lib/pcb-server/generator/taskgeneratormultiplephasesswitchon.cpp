@@ -1,4 +1,5 @@
 #include "taskgeneratormultiplephasesswitchon.h"
+#include "taskscpicmd.h"
 
 TaskTemplatePtr TaskGeneratorMultiplePhasesSwitchOn::create(AbstractServerInterfacePtr interface,
                                                             const QStringList &channelMNameListOn,

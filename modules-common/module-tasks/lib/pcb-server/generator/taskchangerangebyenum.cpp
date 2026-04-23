@@ -1,4 +1,5 @@
 #include "taskchangerangebyenum.h"
+#include "taskscpicmd.h"
 
 TaskTemplatePtr TaskChangeRangeByEnum::create(AbstractServerInterfacePtr interface,
                                               const QString &channelMName, int range,

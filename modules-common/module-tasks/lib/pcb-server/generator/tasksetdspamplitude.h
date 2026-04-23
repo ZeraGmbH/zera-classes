@@ -1,11 +1,11 @@
 #ifndef TASKSETDSPAMPLITUDE_H
 #define TASKSETDSPAMPLITUDE_H
 
-#include "taskscpicmd.h"
+#include <abstractserverInterface.h>
+#include <tasktemplate.h>
 
-class TaskSetDspAmplitude : public TaskScpiCmd
+class TaskSetDspAmplitude
 {
-    Q_OBJECT
 public:
     static TaskTemplatePtr create(AbstractServerInterfacePtr interface,
                                   const QString &channelMName, float amplitude,

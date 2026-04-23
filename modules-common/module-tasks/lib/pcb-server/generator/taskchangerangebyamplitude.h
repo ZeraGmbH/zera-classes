@@ -1,11 +1,11 @@
 #ifndef TASKCHANGERANGEBYAMPLITUDE_H
 #define TASKCHANGERANGEBYAMPLITUDE_H
 
-#include "taskscpicmd.h"
+#include <abstractserverInterface.h>
+#include <tasktemplate.h>
 
-class TaskChangeRangeByAmplitude : public TaskScpiCmd
+class TaskChangeRangeByAmplitude
 {
-    Q_OBJECT
 public:
     static TaskTemplatePtr create(AbstractServerInterfacePtr interface,
                                   const QString &channelMName, float amplitude,

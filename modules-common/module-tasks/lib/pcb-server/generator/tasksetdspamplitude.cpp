@@ -1,4 +1,5 @@
 #include "tasksetdspamplitude.h"
+#include "taskscpicmd.h"
 
 TaskTemplatePtr TaskSetDspAmplitude::create(AbstractServerInterfacePtr interface,
                                             const QString &channelMName, float amplitude,

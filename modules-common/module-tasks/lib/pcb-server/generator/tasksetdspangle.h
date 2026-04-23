@@ -1,11 +1,11 @@
 #ifndef TASKSETDSPANGLE_H
 #define TASKSETDSPANGLE_H
 
-#include "taskscpicmd.h"
+#include <abstractserverInterface.h>
+#include <tasktemplate.h>
 
-class TaskSetDspAngle : public TaskScpiCmd
+class TaskSetDspAngle
 {
-    Q_OBJECT
 public:
     static TaskTemplatePtr create(AbstractServerInterfacePtr interface,
                                   const QString &channelMName, float angle,
