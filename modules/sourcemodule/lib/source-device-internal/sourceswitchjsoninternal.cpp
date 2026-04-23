@@ -3,6 +3,7 @@
 #include "taskgeneratormultiplephasessourcemodeon.h"
 #include "taskgeneratormultiplephasesswitchon.h"
 #include "tasksetdspamplitude.h"
+#include "tasksetdspangle.h"
 #include "tasksetdspfrequency.h"
 #include <math.h>
 #include <taskcontainerinterface.h>
@@ -71,6 +72,7 @@ TaskContainerInterfacePtr SourceSwitchJsonInternal::createLoadpointTasks(const J
                     qWarning("TaskSetDspFrequency failed for %s", qPrintable(getAlias(type, phaseNo)));
                 }));
 
+            // Amplitudes
             const double peakValue = paramState.getRms(type, phaseNo) * M_SQRT2;
             phaseTasks->addSub(TaskChangeRangeByAmplitude::create(
                 m_serverInterface,
@@ -86,6 +88,16 @@ TaskContainerInterfacePtr SourceSwitchJsonInternal::createLoadpointTasks(const J
                 [=]() {
                     qWarning("TaskSetDspAmplitude failed for %s", qPrintable(getAlias(type, phaseNo)));
                 }));
+
+            // Angles
+            phaseTasks->addSub(TaskSetDspAngle::create(
+                m_serverInterface,
+                getChannelMName(type, phaseNo),
+                paramState.getAngle(type, phaseNo),
+                [=]() {
+                    qWarning("TaskSetDspAmplitude failed for %s", qPrintable(getAlias(type, phaseNo)));
+                }));
+
 
             parallelPhaseTasks->addSub(std::move(phaseTasks));
         }
