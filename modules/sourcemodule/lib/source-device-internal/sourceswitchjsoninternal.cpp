@@ -68,9 +68,7 @@ TaskContainerInterfacePtr SourceSwitchJsonInternal::createLoadpointTasks(const J
                 m_serverInterface,
                 getChannelMName(type, phaseNo),
                 frequency,
-                [=]() {
-                    qWarning("TaskSetDspFrequency failed for %s", qPrintable(getAlias(type, phaseNo)));
-                }));
+                [=]() { qWarning("TaskSetDspFrequency failed for %s", qPrintable(getAlias(type, phaseNo))); }));
 
             // Amplitudes
             const double peakValue = paramState.getRms(type, phaseNo) * M_SQRT2;
@@ -78,25 +76,19 @@ TaskContainerInterfacePtr SourceSwitchJsonInternal::createLoadpointTasks(const J
                 m_serverInterface,
                 getChannelMName(type, phaseNo),
                 peakValue,
-                [=]() {
-                    qWarning("TaskChangeRangeByAmplitude failed for %s", qPrintable(getAlias(type, phaseNo)));
-                }));
+                [=]() { qWarning("TaskChangeRangeByAmplitude failed for %s", qPrintable(getAlias(type, phaseNo))); }));
             phaseTasks->addSub(TaskSetDspAmplitude::create(
                 m_serverInterface,
                 getChannelMName(type, phaseNo),
                 peakValue,
-                [=]() {
-                    qWarning("TaskSetDspAmplitude failed for %s", qPrintable(getAlias(type, phaseNo)));
-                }));
+                [=]() { qWarning("TaskSetDspAmplitude failed for %s", qPrintable(getAlias(type, phaseNo))); }));
 
             // Angles
             phaseTasks->addSub(TaskSetDspAngle::create(
                 m_serverInterface,
                 getChannelMName(type, phaseNo),
                 paramState.getAngle(type, phaseNo),
-                [=]() {
-                    qWarning("TaskSetDspAmplitude failed for %s", qPrintable(getAlias(type, phaseNo)));
-                }));
+                [=]() { qWarning("TaskSetDspAmplitude failed for %s", qPrintable(getAlias(type, phaseNo))); }));
 
 
             parallelPhaseTasks->addSub(std::move(phaseTasks));
