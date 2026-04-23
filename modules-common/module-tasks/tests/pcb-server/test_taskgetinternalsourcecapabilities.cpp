@@ -14,7 +14,7 @@ void test_taskgetinternalsourcecapabilities::checkScpiSend()
     std::shared_ptr<QJsonObject> jsonCapabilites = std::make_shared<QJsonObject>();
     TaskTemplatePtr task = TaskGetInternalSourceCapabilities::create(pcb.getPcbInterface(),
                                                                      jsonCapabilites,
-                                                                     EXPIRE_INFINITE);
+                                                                     []{}, EXPIRE_INFINITE);
     task->start();
     TimeMachineObject::feedEventLoop();
     QStringList scpiSent = pcb.getProxyClient()->getReceivedCommands();
@@ -31,7 +31,7 @@ void test_taskgetinternalsourcecapabilities::returnsCapabilitiesProperly()
     std::shared_ptr<QJsonObject> jsonCapabilites = std::make_shared<QJsonObject>();
     TaskTemplatePtr task = TaskGetInternalSourceCapabilities::create(pcb.getPcbInterface(),
                                                                      jsonCapabilites,
-                                                                     EXPIRE_INFINITE);
+                                                                     []{}, EXPIRE_INFINITE);
     task->start();
     TimeMachineObject::feedEventLoop();
     QVERIFY(!jsonCapabilites->isEmpty());
@@ -44,10 +44,7 @@ void test_taskgetinternalsourcecapabilities::timeoutAndErrFunc()
     std::shared_ptr<QJsonObject> jsonCapabilites = std::make_shared<QJsonObject>();
     TaskTemplatePtr task = TaskGetInternalSourceCapabilities::create(pcb.getPcbInterface(),
                                                                      jsonCapabilites,
-                                                                     DEFAULT_EXPIRE,
-                                                                     [&]{
-                                                                         localErrorCount++;
-                                                                     });
+                                                                     [&]{ localErrorCount++; }, DEFAULT_EXPIRE);
     TaskTestHelper helper(task.get());
     task->start();
     TimeMachineForTest::getInstance()->processTimers(DEFAULT_EXPIRE_WAIT);

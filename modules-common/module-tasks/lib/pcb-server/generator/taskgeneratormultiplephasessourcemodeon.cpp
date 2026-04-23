@@ -2,7 +2,7 @@
 
 TaskTemplatePtr TaskGeneratorMultiplePhasesSourceModeOn::create(AbstractServerInterfacePtr interface,
                                                                 const QStringList &channelMNameListOn,
-                                                                int timeout, std::function<void ()> additionalErrorHandler)
+                                                                std::function<void ()> additionalErrorHandler, int timeout)
 {
     QString cmd = QString("GENERATOR:MODEON %1;").arg(channelMNameListOn.join(","));
     return TaskScpiCmd::create(interface,

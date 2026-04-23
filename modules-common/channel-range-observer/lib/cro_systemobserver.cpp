@@ -102,7 +102,7 @@ void SystemObserver::doStartFullScan()
                                                        TRANSACTION_TIMEOUT, [=] { notifyError("Get available channels failed");}));
     m_currentTasks->addSub(TaskGetInternalSourceCapabilities::create(m_pcbInterface,
                                                                      m_internalSourceCapabilities,
-                                                                     TRANSACTION_TIMEOUT, [=] { notifyError("Get source capabilities failed");}));
+                                                                     [=] { notifyError("Get source capabilities failed");}));
     m_currentTasks->addSub(TaskLambdaRunner::create([&]() {
         TaskContainerInterfacePtr allChannelsDetailsTasks = TaskContainerParallel::create();
         allChannelsDetailsTasks->addSub(TaskGetSampleRate::create(m_pcbInterface,

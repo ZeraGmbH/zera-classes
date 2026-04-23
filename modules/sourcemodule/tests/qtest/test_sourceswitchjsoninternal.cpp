@@ -36,7 +36,7 @@ void test_sourceswitchjsoninternal::init()
     TaskTemplatePtr capabilitiesTask = TaskGetInternalSourceCapabilities::create(
         m_pcbIFace,
         m_capabilities,
-        TRANSACTION_TIMEOUT);
+        []{}, TRANSACTION_TIMEOUT);
     capabilitiesTask->start();
     TimeMachineObject::feedEventLoop();
 }

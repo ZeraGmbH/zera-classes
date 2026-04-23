@@ -9,7 +9,7 @@ class TaskChangeRangeByEnum : public TaskScpiCmd
 public:
     static TaskTemplatePtr create(AbstractServerInterfacePtr interface,
                                   const QString &channelMName, int range,
-                                  int timeout, std::function<void()> additionalErrorHandler = []{});
+                                  std::function<void()> additionalErrorHandler = []{}, int timeout = TRANSACTION_TIMEOUT);
 };
 
 #endif // TASKCHANGERANGEBYENUM_H

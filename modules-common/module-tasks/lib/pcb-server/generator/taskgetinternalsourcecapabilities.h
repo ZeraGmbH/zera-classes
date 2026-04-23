@@ -11,7 +11,7 @@ class TaskGetInternalSourceCapabilities : public TaskTemplate
 public:
     static TaskTemplatePtr create(Zera::PcbInterfacePtr pcbInterface,
                                   std::shared_ptr<QJsonObject> jsonCapabilities,
-                                  int timeout = TRANSACTION_TIMEOUT, std::function<void()> additionalErrorHandler = []{});
+                                  std::function<void()> additionalErrorHandler = []{}, int timeout = TRANSACTION_TIMEOUT);
     TaskGetInternalSourceCapabilities(Zera::PcbInterfacePtr pcbInterface,
                                       std::shared_ptr<QJsonObject> jsonCapabilities);
     void start() override;

@@ -28,7 +28,7 @@ void test_taskchangerangebyamplitude::checkScpiSend()
 
     TaskTemplatePtr task = TaskChangeRangeByAmplitude::create(pcbIFace,
                                                               "m0", 100.0,
-                                                              EXPIRE_INFINITE);
+                                                              []{}, EXPIRE_INFINITE);
     TaskTestHelper helper(task.get());
     task->start();
     TimeMachineObject::feedEventLoop();
@@ -42,7 +42,7 @@ void test_taskchangerangebyamplitude::returnsNak()
     pcb.getProxyClient()->setAnswers(ServerTestAnswerList() << ServerTestAnswer(nack, ""));
     TaskTemplatePtr task = TaskChangeRangeByAmplitude::create(pcb.getPcbInterface(),
                                                               "m0", 100.0,
-                                                              EXPIRE_INFINITE);
+                                                              []{}, EXPIRE_INFINITE);
     QSignalSpy spy(task.get(), &TaskTemplate::sigFinish);
     task->start();
     TimeMachineObject::feedEventLoop();
@@ -57,10 +57,7 @@ void test_taskchangerangebyamplitude::timeoutAndErrFunc()
     int localErrorCount = 0;
     TaskTemplatePtr task = TaskChangeRangeByAmplitude::create(pcb.getPcbInterface(),
                                                               "m0", 100.0,
-                                                              DEFAULT_EXPIRE,
-                                                              [&]{
-                                                                  localErrorCount++;
-                                                              });
+                                                              [&]{ localErrorCount++; }, DEFAULT_EXPIRE);
     TaskTestHelper helper(task.get());
     task->start();
     TimeMachineForTest::getInstance()->processTimers(DEFAULT_EXPIRE_WAIT);

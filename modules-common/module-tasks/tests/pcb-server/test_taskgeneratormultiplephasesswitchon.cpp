@@ -28,7 +28,7 @@ void test_taskgeneratormultiplephasesswitchon::checkScpiSend()
 
     TaskTemplatePtr task = TaskGeneratorMultiplePhasesSwitchOn::create(pcbIFace,
                                                                 QStringList() << "m0" << "m1",
-                                                                EXPIRE_INFINITE);
+                                                                []{}, EXPIRE_INFINITE);
     TaskTestHelper helper(task.get());
     task->start();
     TimeMachineObject::feedEventLoop();
@@ -42,7 +42,7 @@ void test_taskgeneratormultiplephasesswitchon::returnsNak()
     pcb.getProxyClient()->setAnswers(ServerTestAnswerList() << ServerTestAnswer(nack, ""));
     TaskTemplatePtr task = TaskGeneratorMultiplePhasesSwitchOn::create(pcb.getPcbInterface(),
                                                                        QStringList() << "foo" << "bar",
-                                                                       EXPIRE_INFINITE);
+                                                                       []{}, EXPIRE_INFINITE);
     QSignalSpy spy(task.get(), &TaskTemplate::sigFinish);
     task->start();
     TimeMachineObject::feedEventLoop();
@@ -57,10 +57,7 @@ void test_taskgeneratormultiplephasesswitchon::timeoutAndErrFunc()
     int localErrorCount = 0;
     TaskTemplatePtr task = TaskGeneratorMultiplePhasesSwitchOn::create(pcb.getPcbInterface(),
                                                                        QStringList() << "foo" << "bar",
-                                                                       DEFAULT_EXPIRE,
-                                                                       [&]{
-                                                                           localErrorCount++;
-                                                                       });
+                                                                       [&]{ localErrorCount++; }, DEFAULT_EXPIRE);
     TaskTestHelper helper(task.get());
     task->start();
     TimeMachineForTest::getInstance()->processTimers(DEFAULT_EXPIRE_WAIT);

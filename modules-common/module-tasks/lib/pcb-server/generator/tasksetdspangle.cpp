@@ -2,7 +2,7 @@
 
 TaskTemplatePtr TaskSetDspAngle::create(AbstractServerInterfacePtr interface,
                                         const QString &channelMName, float angle,
-                                        int timeout, std::function<void ()> additionalErrorHandler)
+                                        std::function<void ()> additionalErrorHandler, int timeout)
 {
     QString cmd = QString("GENERATOR:%1:DSANGLE %2;").arg(channelMName).arg(angle);
     return TaskScpiCmd::create(interface,

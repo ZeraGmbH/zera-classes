@@ -5,8 +5,7 @@
 
 TaskTemplatePtr TaskGetInternalSourceCapabilities::create(Zera::PcbInterfacePtr pcbInterface,
                                                           std::shared_ptr<QJsonObject> jsonCapabilities,
-                                                          int timeout,
-                                                          std::function<void ()> additionalErrorHandler)
+                                                          std::function<void ()> additionalErrorHandler, int timeout)
 {
     return TaskDecoratorTimeout::wrapTimeout(timeout,
                                              std::make_unique<TaskGetInternalSourceCapabilities>(pcbInterface, jsonCapabilities),

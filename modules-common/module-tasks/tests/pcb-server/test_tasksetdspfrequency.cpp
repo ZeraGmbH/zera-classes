@@ -28,7 +28,7 @@ void test_tasksetdspfrequency::checkScpiSend()
 
     TaskTemplatePtr task = TaskSetDspFrequency::create(pcbIFace,
                                                        "m0", 50.0,
-                                                       EXPIRE_INFINITE);
+                                                       []{}, EXPIRE_INFINITE);
     TaskTestHelper helper(task.get());
     task->start();
     TimeMachineObject::feedEventLoop();
@@ -42,7 +42,7 @@ void test_tasksetdspfrequency::returnsNak()
     pcb.getProxyClient()->setAnswers(ServerTestAnswerList() << ServerTestAnswer(nack, ""));
     TaskTemplatePtr task = TaskSetDspFrequency::create(pcb.getPcbInterface(),
                                                        "m0", 50.0,
-                                                       EXPIRE_INFINITE);
+                                                       []{}, EXPIRE_INFINITE);
     QSignalSpy spy(task.get(), &TaskTemplate::sigFinish);
     task->start();
     TimeMachineObject::feedEventLoop();
@@ -57,10 +57,7 @@ void test_tasksetdspfrequency::timeoutAndErrFunc()
     int localErrorCount = 0;
     TaskTemplatePtr task = TaskSetDspFrequency::create(pcb.getPcbInterface(),
                                                        "m0", 50.0,
-                                                       DEFAULT_EXPIRE,
-                                                       [&]{
-                                                           localErrorCount++;
-                                                       });
+                                                       [&]{ localErrorCount++; }, DEFAULT_EXPIRE);
     TaskTestHelper helper(task.get());
     task->start();
     TimeMachineForTest::getInstance()->processTimers(DEFAULT_EXPIRE_WAIT);

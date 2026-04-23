@@ -9,7 +9,7 @@ class TaskSetDspFrequency : public TaskScpiCmd
 public:
     static TaskTemplatePtr create(AbstractServerInterfacePtr interface,
                                   const QString &channelMName, float frequency,
-                                  int timeout = TRANSACTION_TIMEOUT, std::function<void()> additionalErrorHandler = []{});
+                                  std::function<void()> additionalErrorHandler = []{}, int timeout = TRANSACTION_TIMEOUT);
 };
 
 #endif // TASKSETDSPFREQUENCY_H

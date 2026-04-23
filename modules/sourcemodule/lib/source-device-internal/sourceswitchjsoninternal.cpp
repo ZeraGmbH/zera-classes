@@ -66,7 +66,6 @@ TaskContainerInterfacePtr SourceSwitchJsonInternal::createLoadpointTasks(const J
                 m_serverInterface,
                 getChannelMName(type, phaseNo),
                 frequency,
-                TRANSACTION_TIMEOUT,
                 [=]() {
                     qWarning("TaskSetDspFrequency failed for %s", qPrintable(getAlias(type, phaseNo)));
                 }));
@@ -76,7 +75,6 @@ TaskContainerInterfacePtr SourceSwitchJsonInternal::createLoadpointTasks(const J
                 m_serverInterface,
                 getChannelMName(type, phaseNo),
                 peakValue,
-                TRANSACTION_TIMEOUT,
                 [=]() {
                     qWarning("TaskChangeRangeByAmplitude failed for %s", qPrintable(getAlias(type, phaseNo)));
                 }));
@@ -84,7 +82,6 @@ TaskContainerInterfacePtr SourceSwitchJsonInternal::createLoadpointTasks(const J
                 m_serverInterface,
                 getChannelMName(type, phaseNo),
                 peakValue,
-                TRANSACTION_TIMEOUT,
                 [=]() {
                     qWarning("TaskSetDspAmplitude failed for %s", qPrintable(getAlias(type, phaseNo)));
                 }));
@@ -101,10 +98,8 @@ TaskTemplatePtr SourceSwitchJsonInternal::createSourceModeOnTask(const JsonParam
     return TaskGeneratorMultiplePhasesSourceModeOn::create(
         m_serverInterface,
         channelMNamesOn,
-        TRANSACTION_TIMEOUT,
-        [=]() {
-            qWarning("TaskChangeRangeByAmplitude failed for %s", qPrintable(channelMNamesOn.join(",")));
-        });
+        [=]() { qWarning("TaskChangeRangeByAmplitude failed for %s", qPrintable(channelMNamesOn.join(","))); }
+        );
 }
 
 TaskTemplatePtr SourceSwitchJsonInternal::createSourceOnOffTask(const JsonParamApi &paramState)
@@ -113,10 +108,8 @@ TaskTemplatePtr SourceSwitchJsonInternal::createSourceOnOffTask(const JsonParamA
     return TaskGeneratorMultiplePhasesSwitchOn::create(
         m_serverInterface,
         channelMNamesOn,
-        TRANSACTION_TIMEOUT,
-        [=]() {
-            qWarning("TaskChangeRangeByAmplitude failed for %s", qPrintable(channelMNamesOn.join(",")));
-        });
+        [=]() { qWarning("TaskChangeRangeByAmplitude failed for %s", qPrintable(channelMNamesOn.join(","))); }
+        );
 }
 
 QStringList SourceSwitchJsonInternal::getChannelMNamesSwitchedOnCommaSeparated(const JsonStructApi &sourceCapabilities,
