@@ -102,6 +102,22 @@ TaskTemplatePtr SourceSwitchJsonInternal::createSourceOnOffTask(const JsonParamA
         });
 }
 
+QStringList SourceSwitchJsonInternal::getChannelMNamesSwitchedOnCommaSeparated(const JsonStructApi &sourceCapabilities,
+                                                                               const JsonParamApi &wantedLoadpoint)
+{
+    QStringList activeModeOnChannelMNames;
+    for (phaseType type : {phaseType::U, phaseType::I}) {
+        const int phaseCount = type==phaseType::U ?
+                                   sourceCapabilities.getCountUPhases() :
+                                   sourceCapabilities.getCountIPhases();
+        for (int phaseNo=0; phaseNo < phaseCount; ++phaseNo) {
+            if(wantedLoadpoint.getOn() && wantedLoadpoint.getOn(type, phaseNo))
+                activeModeOnChannelMNames.append(getChannelMName(type, phaseNo));
+        }
+    }
+    return activeModeOnChannelMNames;
+}
+
 JsonParamApi SourceSwitchJsonInternal::getCurrLoadState()
 {
     return m_paramsCurrent;
@@ -144,21 +160,5 @@ QString SourceSwitchJsonInternal::getAlias(phaseType type, int phaseNoBase0)
     }
     qCritical("getChannelMName: invalid parameters!");
     return "m0";
-}
-
-QStringList SourceSwitchJsonInternal::getChannelMNamesSwitchedOnCommaSeparated(const JsonStructApi &sourceCapabilities,
-                                                                           const JsonParamApi &wantedLoadpoint)
-{
-    QStringList activeModeOnChannelMNames;
-    for (phaseType type : {phaseType::U, phaseType::I}) {
-        const int phaseCount = type==phaseType::U ?
-                                   sourceCapabilities.getCountUPhases() :
-                                   sourceCapabilities.getCountIPhases();
-        for (int phaseNo=0; phaseNo < phaseCount; ++phaseNo) {
-            if(wantedLoadpoint.getOn() && wantedLoadpoint.getOn(type, phaseNo))
-                activeModeOnChannelMNames.append(getChannelMName(type, phaseNo));
-        }
-    }
-    return activeModeOnChannelMNames;
 }
 
