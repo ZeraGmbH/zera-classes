@@ -46,7 +46,7 @@ void SourceSwitchJsonInternal::switchOff()
     m_currentTasks->start();
 }
 
-TaskContainerInterfacePtr SourceSwitchJsonInternal::createAmplitudeTasks(JsonParamApi paramState)
+TaskContainerInterfacePtr SourceSwitchJsonInternal::createAmplitudeTasks(const JsonParamApi &paramState)
 {
     TaskContainerInterfacePtr ampTasks = TaskContainerParallel::create();
     for (phaseType type : {phaseType::U, phaseType::I}) {
