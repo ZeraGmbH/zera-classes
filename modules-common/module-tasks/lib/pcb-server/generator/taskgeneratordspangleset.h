@@ -1,10 +1,10 @@
-#ifndef TASKSETDSPANGLE_H
-#define TASKSETDSPANGLE_H
+#ifndef TASKGENERATORDSPANGLESET_H
+#define TASKGENERATORDSPANGLESET_H
 
 #include <abstractserverInterface.h>
 #include <tasktemplate.h>
 
-class TaskSetDspAngle
+class TaskGeneratorDspAngleSet
 {
 public:
     static TaskTemplatePtr create(AbstractServerInterfacePtr interface,
@@ -12,4 +12,4 @@ public:
                                   std::function<void()> additionalErrorHandler = []{}, int timeout = TRANSACTION_TIMEOUT);
 };
 
-#endif // TASKSETDSPANGLE_H
+#endif // TASKGENERATORDSPANGLESET_H

@@ -3,7 +3,7 @@
 #include "taskgeneratormultiplephasessourcemodeon.h"
 #include "taskgeneratormultiplephasesswitchon.h"
 #include "taskgeneratordspamplitudeset.h"
-#include "tasksetdspangle.h"
+#include "taskgeneratordspangleset.h"
 #include "tasksetdspfrequency.h"
 #include <math.h>
 #include <taskcontainerinterface.h>
@@ -84,7 +84,7 @@ TaskContainerInterfacePtr SourceSwitchJsonInternal::createLoadpointTasks(const J
                 [=]() { qWarning("TaskSetDspAmplitude failed for %s", qPrintable(getAlias(type, phaseNo))); }));
 
             // Angles
-            phaseTasks->addSub(TaskSetDspAngle::create(
+            phaseTasks->addSub(TaskGeneratorDspAngleSet::create(
                 m_serverInterface,
                 getChannelMName(type, phaseNo),
                 paramState.getAngle(type, phaseNo),

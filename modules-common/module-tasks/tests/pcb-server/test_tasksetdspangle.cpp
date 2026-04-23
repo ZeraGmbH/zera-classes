@@ -1,5 +1,5 @@
 #include "test_tasksetdspangle.h"
-#include "tasksetdspangle.h"
+#include "taskgeneratordspangleset.h"
 #include <pcbinitfortest.h>
 #include <testfactoryi2cctrl.h>
 #include <timemachinefortest.h>
@@ -26,9 +26,9 @@ void test_tasksetdspangle::checkScpiSend()
     Zera::Proxy::getInstance()->startConnectionSmart(proxyClient);
     TimeMachineObject::feedEventLoop();
 
-    TaskTemplatePtr task = TaskSetDspAngle::create(pcbIFace,
-                                                   "m0", 180.0,
-                                                   []{}, EXPIRE_INFINITE);
+    TaskTemplatePtr task = TaskGeneratorDspAngleSet::create(pcbIFace,
+                                                            "m0", 180.0,
+                                                            []{}, EXPIRE_INFINITE);
     TaskTestHelper helper(task.get());
     task->start();
     TimeMachineObject::feedEventLoop();
@@ -40,9 +40,9 @@ void test_tasksetdspangle::returnsNak()
 {
     PcbInitForTest pcb;
     pcb.getProxyClient()->setAnswers(ServerTestAnswerList() << ServerTestAnswer(nack, ""));
-    TaskTemplatePtr task = TaskSetDspAngle::create(pcb.getPcbInterface(),
-                                                   "m0", 180.0,
-                                                   []{}, EXPIRE_INFINITE);
+    TaskTemplatePtr task = TaskGeneratorDspAngleSet::create(pcb.getPcbInterface(),
+                                                            "m0", 180.0,
+                                                            []{}, EXPIRE_INFINITE);
     QSignalSpy spy(task.get(), &TaskTemplate::sigFinish);
     task->start();
     TimeMachineObject::feedEventLoop();
@@ -55,9 +55,9 @@ void test_tasksetdspangle::timeoutAndErrFunc()
 {
     PcbInitForTest pcb;
     int localErrorCount = 0;
-    TaskTemplatePtr task = TaskSetDspAngle::create(pcb.getPcbInterface(),
-                                                   "m0", 180.0,
-                                                   [&]{ localErrorCount++; }, DEFAULT_EXPIRE);
+    TaskTemplatePtr task = TaskGeneratorDspAngleSet::create(pcb.getPcbInterface(),
+                                                            "m0", 180.0,
+                                                            [&]{ localErrorCount++; }, DEFAULT_EXPIRE);
     TaskTestHelper helper(task.get());
     task->start();
     TimeMachineForTest::getInstance()->processTimers(DEFAULT_EXPIRE_WAIT);
