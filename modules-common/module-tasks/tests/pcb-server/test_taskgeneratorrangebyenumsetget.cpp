@@ -1,5 +1,6 @@
-#include "test_taskchangerangebyenum.h"
-#include "taskchangerangebyenum.h"
+#include "test_taskgeneratorrangebyenumsetget.h"
+#include "taskgeneratorrangebyenumset.h"
+#include "taskgeneratorrangebyenumget.h"
 #include <pcbinitfortest.h>
 #include <testfactoryi2cctrl.h>
 #include <timemachinefortest.h>
@@ -11,9 +12,9 @@
 #include <QSignalSpy>
 #include <QTest>
 
-QTEST_MAIN(test_taskchangerangebyenum)
+QTEST_MAIN(test_taskgeneratorrangebyenumsetget)
 
-void test_taskchangerangebyenum::checkScpiSend()
+void test_taskgeneratorrangebyenumsetget::checkScpiSendReceive()
 {
     VeinTcp::AbstractTcpNetworkFactoryPtr tcpNetworkFactory = VeinTcp::MockTcpNetworkFactory::create();
     std::unique_ptr<ResmanRunFacade> resman = std::make_unique<ResmanRunFacade>(tcpNetworkFactory);
@@ -26,21 +27,29 @@ void test_taskchangerangebyenum::checkScpiSend()
     Zera::Proxy::getInstance()->startConnectionSmart(proxyClient);
     TimeMachineObject::feedEventLoop();
 
-    TaskTemplatePtr task = TaskChangeRangeByEnum::create(pcbIFace,
-                                                         "m0", 2,
+    TaskTemplatePtr task = TaskGeneratorRangeByEnumSet::create(pcbIFace,
+                                                         "m0", 42,
                                                          []{}, EXPIRE_INFINITE);
     TaskTestHelper helper(task.get());
     task->start();
     TimeMachineObject::feedEventLoop();
     QCOMPARE(helper.okCount(), 1);
     QCOMPARE(helper.errCount(), 0);
+
+    std::shared_ptr<int> rangeReceived = std::make_shared<int>();
+    task = TaskGeneratorRangeByEnumGet::create(pcbIFace,
+                                               "m0", rangeReceived,
+                                               []{}, EXPIRE_INFINITE);
+    task->start();
+    TimeMachineObject::feedEventLoop();
+    QCOMPARE(*rangeReceived, 42);
 }
 
-void test_taskchangerangebyenum::returnsNak()
+void test_taskgeneratorrangebyenumsetget::returnsNak()
 {
     PcbInitForTest pcb;
     pcb.getProxyClient()->setAnswers(ServerTestAnswerList() << ServerTestAnswer(nack, ""));
-    TaskTemplatePtr task = TaskChangeRangeByEnum::create(pcb.getPcbInterface(),
+    TaskTemplatePtr task = TaskGeneratorRangeByEnumSet::create(pcb.getPcbInterface(),
                                                          "m0", 2,
                                                          []{}, EXPIRE_INFINITE);
     QSignalSpy spy(task.get(), &TaskTemplate::sigFinish);
@@ -51,11 +60,11 @@ void test_taskchangerangebyenum::returnsNak()
     QCOMPARE(spy[0][0], false);
 }
 
-void test_taskchangerangebyenum::timeoutAndErrFunc()
+void test_taskgeneratorrangebyenumsetget::timeoutAndErrFunc()
 {
     PcbInitForTest pcb;
     int localErrorCount = 0;
-    TaskTemplatePtr task = TaskChangeRangeByEnum::create(pcb.getPcbInterface(),
+    TaskTemplatePtr task = TaskGeneratorRangeByEnumSet::create(pcb.getPcbInterface(),
                                                          "m0", 2,
                                                          [&]{ localErrorCount++; }, DEFAULT_EXPIRE);
     TaskTestHelper helper(task.get());

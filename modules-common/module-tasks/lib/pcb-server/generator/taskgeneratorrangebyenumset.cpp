@@ -1,7 +1,7 @@
-#include "taskchangerangebyenum.h"
+#include "taskgeneratorrangebyenumset.h"
 #include "taskscpicmd.h"
 
-TaskTemplatePtr TaskChangeRangeByEnum::create(AbstractServerInterfacePtr interface,
+TaskTemplatePtr TaskGeneratorRangeByEnumSet::create(AbstractServerInterfacePtr interface,
                                               const QString &channelMName, int range,
                                               std::function<void ()> additionalErrorHandler, int timeout)
 {

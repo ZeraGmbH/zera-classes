@@ -1,10 +1,10 @@
-#ifndef TASKCHANGERANGEBYENUM_H
-#define TASKCHANGERANGEBYENUM_H
+#ifndef TASKGENERATORRANGEBYENUMSET_H
+#define TASKGENERATORRANGEBYENUMSET_H
 
 #include <abstractserverInterface.h>
 #include <tasktemplate.h>
 
-class TaskChangeRangeByEnum
+class TaskGeneratorRangeByEnumSet
 {
 public:
     static TaskTemplatePtr create(AbstractServerInterfacePtr interface,
@@ -12,4 +12,4 @@ public:
                                   std::function<void()> additionalErrorHandler = []{}, int timeout = TRANSACTION_TIMEOUT);
 };
 
-#endif // TASKCHANGERANGEBYENUM_H
+#endif // TASKGENERATORRANGEBYENUMSET_H
