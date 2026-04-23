@@ -1,7 +1,7 @@
 #include "test_sourceswitchjsoninternal.h"
 #include "sourceswitchjsoninternal.h"
 #include "jsonfilenames.h"
-#include "taskgetinternalsourcecapabilities.h"
+#include "taskgeneratorinternalcapabilitiesget.h"
 #include <mocktcpnetworkfactory.h>
 #include <proxyclient.h>
 #include <timemachinefortest.h>
@@ -33,7 +33,7 @@ void test_sourceswitchjsoninternal::init()
     TimeMachineObject::feedEventLoop();
 
     m_capabilities = std::make_shared<QJsonObject>();
-    TaskTemplatePtr capabilitiesTask = TaskGetInternalSourceCapabilities::create(
+    TaskTemplatePtr capabilitiesTask = TaskGeneratorInternalCapabilitiesGet::create(
         m_pcbIFace,
         m_capabilities,
         []{}, TRANSACTION_TIMEOUT);

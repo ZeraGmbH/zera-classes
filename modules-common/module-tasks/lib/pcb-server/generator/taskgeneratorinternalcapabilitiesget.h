@@ -1,19 +1,19 @@
-#ifndef TASKGETINTERNALSOURCECAPABILITIES_H
-#define TASKGETINTERNALSOURCECAPABILITIES_H
+#ifndef TASKGENERATORINTERNALCAPABILITIESGET_H
+#define TASKGENERATORINTERNALCAPABILITIESGET_H
 
 #include <pcbinterface.h>
 #include <tasktemplate.h>
 #include <QJsonObject>
 
-class TaskGetInternalSourceCapabilities : public TaskTemplate
+class TaskGeneratorInternalCapabilitiesGet : public TaskTemplate
 {
     Q_OBJECT
 public:
     static TaskTemplatePtr create(Zera::PcbInterfacePtr pcbInterface,
                                   std::shared_ptr<QJsonObject> jsonCapabilities,
                                   std::function<void()> additionalErrorHandler = []{}, int timeout = TRANSACTION_TIMEOUT);
-    TaskGetInternalSourceCapabilities(Zera::PcbInterfacePtr pcbInterface,
-                                      std::shared_ptr<QJsonObject> jsonCapabilities);
+    TaskGeneratorInternalCapabilitiesGet(Zera::PcbInterfacePtr pcbInterface,
+                                         std::shared_ptr<QJsonObject> jsonCapabilities);
     void start() override;
 
 private slots:
@@ -26,4 +26,4 @@ private:
     quint32 m_msgnr = 0;
 };
 
-#endif // TASKGETINTERNALSOURCECAPABILITIES_H
+#endif // TASKGENERATORINTERNALCAPABILITIESGET_H

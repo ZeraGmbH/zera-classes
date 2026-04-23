@@ -1,20 +1,20 @@
-#include "test_taskgetinternalsourcecapabilities.h"
-#include "taskgetinternalsourcecapabilities.h"
+#include "test_taskgeneratorinternalcapabilitiesget.h"
+#include "taskgeneratorinternalcapabilitiesget.h"
 #include <pcbinitfortest.h>
 #include "scpifullcmdcheckerfortest.h"
 #include <timemachinefortest.h>
 #include <tasktesthelper.h>
 #include <QTest>
 
-QTEST_MAIN(test_taskgetinternalsourcecapabilities)
+QTEST_MAIN(test_taskgeneratorinternalcapabilitiesget)
 
-void test_taskgetinternalsourcecapabilities::checkScpiSend()
+void test_taskgeneratorinternalcapabilitiesget::checkScpiSend()
 {
     PcbInitForTest pcb;
     std::shared_ptr<QJsonObject> jsonCapabilites = std::make_shared<QJsonObject>();
-    TaskTemplatePtr task = TaskGetInternalSourceCapabilities::create(pcb.getPcbInterface(),
-                                                                     jsonCapabilites,
-                                                                     []{}, EXPIRE_INFINITE);
+    TaskTemplatePtr task = TaskGeneratorInternalCapabilitiesGet::create(pcb.getPcbInterface(),
+                                                                        jsonCapabilites,
+                                                                        []{}, EXPIRE_INFINITE);
     task->start();
     TimeMachineObject::feedEventLoop();
     QStringList scpiSent = pcb.getProxyClient()->getReceivedCommands();
@@ -24,27 +24,27 @@ void test_taskgetinternalsourcecapabilities::checkScpiSend()
     QVERIFY(scpiChecker.matches(scpiSent[0]));
 }
 
-void test_taskgetinternalsourcecapabilities::returnsCapabilitiesProperly()
+void test_taskgeneratorinternalcapabilitiesget::returnsCapabilitiesProperly()
 {
     PcbInitForTest pcb;
     pcb.getProxyClient()->setAnswers(ServerTestAnswerList() << ServerTestAnswer(ack, "{\"foo\": 1}"));
     std::shared_ptr<QJsonObject> jsonCapabilites = std::make_shared<QJsonObject>();
-    TaskTemplatePtr task = TaskGetInternalSourceCapabilities::create(pcb.getPcbInterface(),
-                                                                     jsonCapabilites,
-                                                                     []{}, EXPIRE_INFINITE);
+    TaskTemplatePtr task = TaskGeneratorInternalCapabilitiesGet::create(pcb.getPcbInterface(),
+                                                                        jsonCapabilites,
+                                                                        []{}, EXPIRE_INFINITE);
     task->start();
     TimeMachineObject::feedEventLoop();
     QVERIFY(!jsonCapabilites->isEmpty());
 }
 
-void test_taskgetinternalsourcecapabilities::timeoutAndErrFunc()
+void test_taskgeneratorinternalcapabilitiesget::timeoutAndErrFunc()
 {
     PcbInitForTest pcb;
     int localErrorCount = 0;
     std::shared_ptr<QJsonObject> jsonCapabilites = std::make_shared<QJsonObject>();
-    TaskTemplatePtr task = TaskGetInternalSourceCapabilities::create(pcb.getPcbInterface(),
-                                                                     jsonCapabilites,
-                                                                     [&]{ localErrorCount++; }, DEFAULT_EXPIRE);
+    TaskTemplatePtr task = TaskGeneratorInternalCapabilitiesGet::create(pcb.getPcbInterface(),
+                                                                        jsonCapabilites,
+                                                                        [&]{ localErrorCount++; }, DEFAULT_EXPIRE);
     TaskTestHelper helper(task.get());
     task->start();
     TimeMachineForTest::getInstance()->processTimers(DEFAULT_EXPIRE_WAIT);

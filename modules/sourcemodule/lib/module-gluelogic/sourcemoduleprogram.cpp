@@ -1,7 +1,7 @@
 #include "sourcemoduleprogram.h"
 #include "sourcemodule.h"
 #include "sourcedevicemanager.h"
-#include "taskgetinternalsourcecapabilities.h"
+#include "taskgeneratorinternalcapabilitiesget.h"
 #include <vfmoduleparameter.h>
 #include <intvalidator.h>
 #include <jsonparamvalidator.h>
@@ -122,8 +122,8 @@ void SourceModuleProgram::activate()
 
     m_internalSourceCapabilityQueryTask = TaskContainerSequence::create();
     m_internalSourceCapabilityQueryTask->addSub(TaskServerConnectionStart::create(m_pcbClient, CONNECTION_TIMEOUT));
-    m_internalSourceCapabilityQueryTask->addSub(TaskGetInternalSourceCapabilities::create(m_pcbInterface,
-                                                                                          m_capabilitiesInternalSource));
+    m_internalSourceCapabilityQueryTask->addSub(TaskGeneratorInternalCapabilitiesGet::create(m_pcbInterface,
+                                                                                             m_capabilitiesInternalSource));
     m_internalSourceCapabilityQueryTask->addSub(TaskLambdaRunner::create([&]() {
         if (!m_capabilitiesInternalSource->isEmpty())
             m_pSourceDeviceManager->addInternalSource(*m_capabilitiesInternalSource, m_pcbInterface);

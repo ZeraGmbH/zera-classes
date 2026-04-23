@@ -3,7 +3,7 @@
 
 #include <QObject>
 
-class test_taskgetinternalsourcecapabilities : public QObject
+class test_taskgeneratorinternalcapabilitiesget : public QObject
 {
     Q_OBJECT
 private slots:

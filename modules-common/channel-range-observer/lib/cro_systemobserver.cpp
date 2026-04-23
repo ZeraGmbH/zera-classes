@@ -2,7 +2,7 @@
 #include "cro_channelfetchtask.h"
 #include "taskchannelgetavail.h"
 #include "taskgetsamplerate.h"
-#include "taskgetinternalsourcecapabilities.h"
+#include "taskgeneratorinternalcapabilitiesget.h"
 #include "taskserverconnectionstart.h"
 #include <taskcontainersequence.h>
 #include <tasklambdarunner.h>
@@ -100,9 +100,9 @@ void SystemObserver::doStartFullScan()
     m_currentTasks->addSub(TaskChannelGetAvail::create(m_pcbInterface,
                                                        m_tempChannelMNames,
                                                        TRANSACTION_TIMEOUT, [=] { notifyError("Get available channels failed");}));
-    m_currentTasks->addSub(TaskGetInternalSourceCapabilities::create(m_pcbInterface,
-                                                                     m_internalSourceCapabilities,
-                                                                     [=] { notifyError("Get source capabilities failed");}));
+    m_currentTasks->addSub(TaskGeneratorInternalCapabilitiesGet::create(m_pcbInterface,
+                                                                        m_internalSourceCapabilities,
+                                                                        [=] { notifyError("Get source capabilities failed");}));
     m_currentTasks->addSub(TaskLambdaRunner::create([&]() {
         TaskContainerInterfacePtr allChannelsDetailsTasks = TaskContainerParallel::create();
         allChannelsDetailsTasks->addSub(TaskGetSampleRate::create(m_pcbInterface,

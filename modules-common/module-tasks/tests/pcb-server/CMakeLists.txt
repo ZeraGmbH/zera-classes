@@ -15,7 +15,7 @@ SETUP_QTESTS_MODULE_TASKS(
     test_taskchannelgetcurrentrange
     test_taskgetsamplerate
     test_taskrefpowerfetchconstant
-    test_taskgetinternalsourcecapabilities
+    test_taskgeneratorinternalcapabilitiesget
     test_taskemobreadconnectionstate
     test_taskemobreadexchangedata
     test_taskemobwriteexchangedata
