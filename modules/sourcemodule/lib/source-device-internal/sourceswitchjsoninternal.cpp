@@ -55,14 +55,14 @@ TaskContainerInterfacePtr SourceSwitchJsonInternal::createLoadpointTasks(const J
                                    m_sourceCapabilities.getCountUPhases() :
                                    m_sourceCapabilities.getCountIPhases();
         for (int phaseNo=0; phaseNo < phaseCount; ++phaseNo) {
-            TaskContainerInterfacePtr rmsTasks = TaskContainerSequence::create(TaskContainerSequence::StopOnFirstTaskFail);
+            TaskContainerInterfacePtr phaseTasks = TaskContainerSequence::create(TaskContainerSequence::StopOnFirstTaskFail);
             // notes on frequency:
             // * mains sync is not implemented yet therefore default to 50Hz for now
             // * is frequency per phase a wanted and supported feature?
             double frequency = paramState.getFreqVal();
             if (frequency == 0.0)
                 frequency = 50.0;
-            rmsTasks->addSub(TaskSetDspFrequency::create(
+            phaseTasks->addSub(TaskSetDspFrequency::create(
                 m_serverInterface,
                 getChannelMName(type, phaseNo),
                 frequency,
@@ -72,7 +72,7 @@ TaskContainerInterfacePtr SourceSwitchJsonInternal::createLoadpointTasks(const J
                 }));
 
             const double peakValue = paramState.getRms(type, phaseNo) * M_SQRT2;
-            rmsTasks->addSub(TaskChangeRangeByAmplitude::create(
+            phaseTasks->addSub(TaskChangeRangeByAmplitude::create(
                 m_serverInterface,
                 getChannelMName(type, phaseNo),
                 peakValue,
@@ -80,7 +80,7 @@ TaskContainerInterfacePtr SourceSwitchJsonInternal::createLoadpointTasks(const J
                 [=]() {
                     qWarning("TaskChangeRangeByAmplitude failed for %s", qPrintable(getAlias(type, phaseNo)));
                 }));
-            rmsTasks->addSub(TaskSetDspAmplitude::create(
+            phaseTasks->addSub(TaskSetDspAmplitude::create(
                 m_serverInterface,
                 getChannelMName(type, phaseNo),
                 peakValue,
@@ -89,8 +89,7 @@ TaskContainerInterfacePtr SourceSwitchJsonInternal::createLoadpointTasks(const J
                     qWarning("TaskSetDspAmplitude failed for %s", qPrintable(getAlias(type, phaseNo)));
                 }));
 
-
-            parallelPhaseTasks->addSub(std::move(rmsTasks));
+            parallelPhaseTasks->addSub(std::move(phaseTasks));
         }
     }
     return parallelPhaseTasks;
