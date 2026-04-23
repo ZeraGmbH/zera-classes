@@ -1,16 +1,16 @@
-#ifndef TASKGENERATORDSPFREQUENCYSET_H
-#define TASKGENERATORDSPFREQUENCYSET_H
+#ifndef TASKGENERATORDSPFREQUENCYGET_H
+#define TASKGENERATORDSPFREQUENCYGET_H
 
 #include <abstractserverInterface.h>
 #include <tasktemplate.h>
 
-class TaskGeneratorDspFrequencySet
+class TaskGeneratorDspFrequencyGet
 {
 public:
     static TaskTemplatePtr create(AbstractServerInterfacePtr interface,
                                   const QString &channelMName,
-                                  float frequency,
+                                  std::shared_ptr<double> frequencyReceived,
                                   std::function<void()> additionalErrorHandler = []{}, int timeout = TRANSACTION_TIMEOUT);
 };
 
-#endif // TASKGENERATORDSPFREQUENCYSET_H
+#endif // TASKGENERATORDSPFREQUENCYGET_H
