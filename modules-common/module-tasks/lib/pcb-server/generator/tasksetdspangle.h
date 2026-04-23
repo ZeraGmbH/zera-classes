@@ -9,7 +9,7 @@ class TaskSetDspAngle : public TaskScpiCmd
 public:
     static TaskTemplatePtr create(AbstractServerInterfacePtr interface,
                                   const QString &channelMName, float angle,
-                                  int timeout, std::function<void()> additionalErrorHandler = []{});
+                                  int timeout = TRANSACTION_TIMEOUT, std::function<void()> additionalErrorHandler = []{});
 };
 
 #endif // TASKSETDSPANGLE_H

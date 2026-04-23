@@ -9,7 +9,7 @@ class TaskGeneratorMultiplePhasesSwitchOn : public TaskScpiCmd
 public:
     static TaskTemplatePtr create(AbstractServerInterfacePtr interface,
                                   const QStringList &channelMNameListOn, // those no mentioned are switched off
-                                  int timeout, std::function<void()> additionalErrorHandler = []{});
+                                  int timeout = TRANSACTION_TIMEOUT, std::function<void()> additionalErrorHandler = []{});
 };
 
 #endif // TASKGENERATORMULTIPLEPHASESSWITCHON_H
