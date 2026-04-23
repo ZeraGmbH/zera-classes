@@ -1,5 +1,5 @@
 #include "sourceswitchjsoninternal.h"
-#include "taskchangerangebyamplitude.h"
+#include "taskgeneratorrangebyamplitudeset.h"
 #include "taskgeneratormultiplephasessourcemodeon.h"
 #include "taskgeneratormultiplephasesswitchon.h"
 #include "tasksetdspamplitude.h"
@@ -72,7 +72,7 @@ TaskContainerInterfacePtr SourceSwitchJsonInternal::createLoadpointTasks(const J
 
             // Amplitudes
             const double peakValue = paramState.getRms(type, phaseNo) * M_SQRT2;
-            phaseTasks->addSub(TaskChangeRangeByAmplitude::create(
+            phaseTasks->addSub(TaskGeneratorRangeByAmplitudeSet::create(
                 m_serverInterface,
                 getChannelMName(type, phaseNo),
                 peakValue,

@@ -1,10 +1,10 @@
-#ifndef TASKCHANGERANGEBYAMPLITUDE_H
-#define TASKCHANGERANGEBYAMPLITUDE_H
+#ifndef TASKGENERATORRANGEBYAMPLITUDESET_H
+#define TASKGENERATORRANGEBYAMPLITUDESET_H
 
 #include <abstractserverInterface.h>
 #include <tasktemplate.h>
 
-class TaskChangeRangeByAmplitude
+class TaskGeneratorRangeByAmplitudeSet
 {
 public:
     static TaskTemplatePtr create(AbstractServerInterfacePtr interface,
@@ -12,4 +12,4 @@ public:
                                   std::function<void()> additionalErrorHandler = []{}, int timeout = TRANSACTION_TIMEOUT);
 };
 
-#endif // TASKCHANGERANGEBYAMPLITUDE_H
+#endif // TASKGENERATORRANGEBYAMPLITUDESET_H

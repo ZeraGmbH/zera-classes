@@ -19,7 +19,7 @@ SETUP_QTESTS_MODULE_TASKS(
     test_taskemobreadconnectionstate
     test_taskemobreadexchangedata
     test_taskemobwriteexchangedata
-    test_taskchangerangebyamplitude
+    test_taskgeneratorrangebyamplitudeset
     test_taskgeneratorrangebyenumsetget
     test_tasksetdspamplitude
     test_tasksetdspfrequency

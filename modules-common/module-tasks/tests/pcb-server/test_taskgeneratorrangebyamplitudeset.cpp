@@ -1,5 +1,5 @@
-#include "test_taskchangerangebyamplitude.h"
-#include "taskchangerangebyamplitude.h"
+#include "test_taskgeneratorrangebyamplitudeset.h"
+#include "taskgeneratorrangebyamplitudeset.h"
 #include <pcbinitfortest.h>
 #include <testfactoryi2cctrl.h>
 #include <timemachinefortest.h>
@@ -11,9 +11,9 @@
 #include <QSignalSpy>
 #include <QTest>
 
-QTEST_MAIN(test_taskchangerangebyamplitude)
+QTEST_MAIN(test_taskgeneratorrangebyamplitudeset)
 
-void test_taskchangerangebyamplitude::checkScpiSend()
+void test_taskgeneratorrangebyamplitudeset::checkScpiSend()
 {
     VeinTcp::AbstractTcpNetworkFactoryPtr tcpNetworkFactory = VeinTcp::MockTcpNetworkFactory::create();
     std::unique_ptr<ResmanRunFacade> resman = std::make_unique<ResmanRunFacade>(tcpNetworkFactory);
@@ -26,7 +26,7 @@ void test_taskchangerangebyamplitude::checkScpiSend()
     Zera::Proxy::getInstance()->startConnectionSmart(proxyClient);
     TimeMachineObject::feedEventLoop();
 
-    TaskTemplatePtr task = TaskChangeRangeByAmplitude::create(pcbIFace,
+    TaskTemplatePtr task = TaskGeneratorRangeByAmplitudeSet::create(pcbIFace,
                                                               "m0", 100.0,
                                                               []{}, EXPIRE_INFINITE);
     TaskTestHelper helper(task.get());
@@ -36,11 +36,11 @@ void test_taskchangerangebyamplitude::checkScpiSend()
     QCOMPARE(helper.errCount(), 0);
 }
 
-void test_taskchangerangebyamplitude::returnsNak()
+void test_taskgeneratorrangebyamplitudeset::returnsNak()
 {
     PcbInitForTest pcb;
     pcb.getProxyClient()->setAnswers(ServerTestAnswerList() << ServerTestAnswer(nack, ""));
-    TaskTemplatePtr task = TaskChangeRangeByAmplitude::create(pcb.getPcbInterface(),
+    TaskTemplatePtr task = TaskGeneratorRangeByAmplitudeSet::create(pcb.getPcbInterface(),
                                                               "m0", 100.0,
                                                               []{}, EXPIRE_INFINITE);
     QSignalSpy spy(task.get(), &TaskTemplate::sigFinish);
@@ -51,11 +51,11 @@ void test_taskchangerangebyamplitude::returnsNak()
     QCOMPARE(spy[0][0], false);
 }
 
-void test_taskchangerangebyamplitude::timeoutAndErrFunc()
+void test_taskgeneratorrangebyamplitudeset::timeoutAndErrFunc()
 {
     PcbInitForTest pcb;
     int localErrorCount = 0;
-    TaskTemplatePtr task = TaskChangeRangeByAmplitude::create(pcb.getPcbInterface(),
+    TaskTemplatePtr task = TaskGeneratorRangeByAmplitudeSet::create(pcb.getPcbInterface(),
                                                               "m0", 100.0,
                                                               [&]{ localErrorCount++; }, DEFAULT_EXPIRE);
     TaskTestHelper helper(task.get());

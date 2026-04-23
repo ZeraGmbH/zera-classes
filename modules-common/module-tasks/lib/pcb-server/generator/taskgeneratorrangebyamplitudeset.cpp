@@ -1,7 +1,7 @@
-#include "taskchangerangebyamplitude.h"
+#include "taskgeneratorrangebyamplitudeset.h"
 #include <taskscpicmd.h>
 
-TaskTemplatePtr TaskChangeRangeByAmplitude::create(AbstractServerInterfacePtr interface,
+TaskTemplatePtr TaskGeneratorRangeByAmplitudeSet::create(AbstractServerInterfacePtr interface,
                                                    const QString &channelMName,
                                                    float amplitude,
                                                    std::function<void ()> additionalErrorHandler, int timeout)
