@@ -1,10 +1,10 @@
-#ifndef TASKSETDSPFREQUENCY_H
-#define TASKSETDSPFREQUENCY_H
+#ifndef TASKGENERATORDSPFREQUENCYSET_H
+#define TASKGENERATORDSPFREQUENCYSET_H
 
 #include <abstractserverInterface.h>
 #include <tasktemplate.h>
 
-class TaskSetDspFrequency
+class TaskGeneratorDspFrequencySet
 {
 public:
     static TaskTemplatePtr create(AbstractServerInterfacePtr interface,
@@ -12,4 +12,4 @@ public:
                                   std::function<void()> additionalErrorHandler = []{}, int timeout = TRANSACTION_TIMEOUT);
 };
 
-#endif // TASKSETDSPFREQUENCY_H
+#endif // TASKGENERATORDSPFREQUENCYSET_H

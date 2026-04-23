@@ -4,7 +4,7 @@
 #include "taskgeneratormultiplephasesswitchon.h"
 #include "taskgeneratordspamplitudeset.h"
 #include "taskgeneratordspangleset.h"
-#include "tasksetdspfrequency.h"
+#include "taskgeneratordspfrequencyset.h"
 #include <math.h>
 #include <taskcontainerinterface.h>
 #include <taskcontainersequence.h>
@@ -64,7 +64,7 @@ TaskContainerInterfacePtr SourceSwitchJsonInternal::createLoadpointTasks(const J
             double frequency = paramState.getFreqVal();
             if (frequency == 0.0)
                 frequency = 50.0;
-            phaseTasks->addSub(TaskSetDspFrequency::create(
+            phaseTasks->addSub(TaskGeneratorDspFrequencySet::create(
                 m_serverInterface,
                 getChannelMName(type, phaseNo),
                 frequency,

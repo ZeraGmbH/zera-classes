@@ -1,5 +1,5 @@
 #include "test_tasksetdspfrequency.h"
-#include "tasksetdspfrequency.h"
+#include "taskgeneratordspfrequencyset.h"
 #include <pcbinitfortest.h>
 #include <testfactoryi2cctrl.h>
 #include <timemachinefortest.h>
@@ -26,9 +26,9 @@ void test_tasksetdspfrequency::checkScpiSend()
     Zera::Proxy::getInstance()->startConnectionSmart(proxyClient);
     TimeMachineObject::feedEventLoop();
 
-    TaskTemplatePtr task = TaskSetDspFrequency::create(pcbIFace,
-                                                       "m0", 50.0,
-                                                       []{}, EXPIRE_INFINITE);
+    TaskTemplatePtr task = TaskGeneratorDspFrequencySet::create(pcbIFace,
+                                                                "m0", 50.0,
+                                                                []{}, EXPIRE_INFINITE);
     TaskTestHelper helper(task.get());
     task->start();
     TimeMachineObject::feedEventLoop();
@@ -40,9 +40,9 @@ void test_tasksetdspfrequency::returnsNak()
 {
     PcbInitForTest pcb;
     pcb.getProxyClient()->setAnswers(ServerTestAnswerList() << ServerTestAnswer(nack, ""));
-    TaskTemplatePtr task = TaskSetDspFrequency::create(pcb.getPcbInterface(),
-                                                       "m0", 50.0,
-                                                       []{}, EXPIRE_INFINITE);
+    TaskTemplatePtr task = TaskGeneratorDspFrequencySet::create(pcb.getPcbInterface(),
+                                                                "m0", 50.0,
+                                                                []{}, EXPIRE_INFINITE);
     QSignalSpy spy(task.get(), &TaskTemplate::sigFinish);
     task->start();
     TimeMachineObject::feedEventLoop();
@@ -55,9 +55,9 @@ void test_tasksetdspfrequency::timeoutAndErrFunc()
 {
     PcbInitForTest pcb;
     int localErrorCount = 0;
-    TaskTemplatePtr task = TaskSetDspFrequency::create(pcb.getPcbInterface(),
-                                                       "m0", 50.0,
-                                                       [&]{ localErrorCount++; }, DEFAULT_EXPIRE);
+    TaskTemplatePtr task = TaskGeneratorDspFrequencySet::create(pcb.getPcbInterface(),
+                                                                "m0", 50.0,
+                                                                [&]{ localErrorCount++; }, DEFAULT_EXPIRE);
     TaskTestHelper helper(task.get());
     task->start();
     TimeMachineForTest::getInstance()->processTimers(DEFAULT_EXPIRE_WAIT);
