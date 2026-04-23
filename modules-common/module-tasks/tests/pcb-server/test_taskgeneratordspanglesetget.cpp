@@ -1,5 +1,6 @@
-#include "test_tasksetdspangle.h"
+#include "test_taskgeneratordspanglesetget.h"
 #include "taskgeneratordspangleset.h"
+#include "taskgeneratordspangleget.h"
 #include <pcbinitfortest.h>
 #include <testfactoryi2cctrl.h>
 #include <timemachinefortest.h>
@@ -11,9 +12,9 @@
 #include <QSignalSpy>
 #include <QTest>
 
-QTEST_MAIN(test_tasksetdspangle)
+QTEST_MAIN(test_taskgeneratordspanglesetget)
 
-void test_tasksetdspangle::checkScpiSend()
+void test_taskgeneratordspanglesetget::checkScpiSendReceive()
 {
     VeinTcp::AbstractTcpNetworkFactoryPtr tcpNetworkFactory = VeinTcp::MockTcpNetworkFactory::create();
     std::unique_ptr<ResmanRunFacade> resman = std::make_unique<ResmanRunFacade>(tcpNetworkFactory);
@@ -34,9 +35,17 @@ void test_tasksetdspangle::checkScpiSend()
     TimeMachineObject::feedEventLoop();
     QCOMPARE(helper.okCount(), 1);
     QCOMPARE(helper.errCount(), 0);
+
+    std::shared_ptr<double> angleReceived = std::make_shared<double>();
+    task = TaskGeneratorDspAngleGet::create(pcbIFace,
+                                            "m0", angleReceived,
+                                            []{}, EXPIRE_INFINITE);
+    task->start();
+    TimeMachineObject::feedEventLoop();
+    QCOMPARE(*angleReceived, 180.0);
 }
 
-void test_tasksetdspangle::returnsNak()
+void test_taskgeneratordspanglesetget::returnsNak()
 {
     PcbInitForTest pcb;
     pcb.getProxyClient()->setAnswers(ServerTestAnswerList() << ServerTestAnswer(nack, ""));
@@ -51,7 +60,7 @@ void test_tasksetdspangle::returnsNak()
     QCOMPARE(spy[0][0], false);
 }
 
-void test_tasksetdspangle::timeoutAndErrFunc()
+void test_taskgeneratordspanglesetget::timeoutAndErrFunc()
 {
     PcbInitForTest pcb;
     int localErrorCount = 0;

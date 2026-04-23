@@ -23,7 +23,7 @@ SETUP_QTESTS_MODULE_TASKS(
     test_taskgeneratorrangebyenumsetget
     test_taskgeneratordspamplitudesetget
     test_tasksetdspfrequency
-    test_tasksetdspangle
+    test_taskgeneratordspanglesetget
     test_taskgeneratormultiplephasessourcemodeon
     test_taskgeneratormultiplephasesswitchon
 )

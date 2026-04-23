@@ -12,5 +12,4 @@ TaskTemplatePtr TaskGeneratorDspAmplitudeGet::create(AbstractServerInterfacePtr 
                                   amplitudeReceived,
                                   timeout,
                                   additionalErrorHandler);
-
 }

@@ -3,11 +3,11 @@
 
 #include <QObject>
 
-class test_tasksetdspangle : public QObject
+class test_taskgeneratordspanglesetget : public QObject
 {
     Q_OBJECT
 private slots:
-    void checkScpiSend();
+    void checkScpiSendReceive();
     void returnsNak();
     void timeoutAndErrFunc();
 };
