@@ -15,7 +15,7 @@ SourceSwitchJsonExtSerial::SourceSwitchJsonExtSerial(AbstractSourceIoPtr sourceI
             this, &SourceSwitchJsonExtSerial::onResponseReceived);
 }
 
-void SourceSwitchJsonExtSerial::switchState(JsonParamApi paramState)
+void SourceSwitchJsonExtSerial::switchState(const JsonParamApi &paramState)
 {
     m_paramsRequested = paramState;
     IoQueueGroup::Ptr transferGroup = m_ioGroupGenerator.generateOnOffGroup(m_paramsRequested);

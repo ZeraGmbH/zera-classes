@@ -13,7 +13,7 @@ class SourceSwitchJsonInternal : public AbstractSourceSwitchJson
 public:
     SourceSwitchJsonInternal(AbstractServerInterfacePtr serverInterface,
                              const QJsonObject &sourceCapabilities);
-    void switchState(JsonParamApi paramState) override;
+    void switchState(const JsonParamApi &paramState) override;
     void switchOff() override;
     JsonParamApi getCurrLoadState() override;
     JsonParamApi getRequestedLoadState() override;
@@ -21,12 +21,16 @@ public:
 private slots:
     void onSwitchTasksFinish(bool ok);
 private:
+    TaskContainerInterfacePtr createAmplitudeTasks(JsonParamApi paramState);
+    TaskTemplatePtr createSourceModeOnTask(const JsonParamApi &paramState);
+    TaskTemplatePtr createSourceOnOffTask(const JsonParamApi &paramState);
     static QString getChannelMName(phaseType type, int phaseNoBase0);
     static QString getAlias(phaseType type, int phaseNoBase0);
-    TaskContainerInterfacePtr createAmplitudeTasks(JsonParamApi paramState);
+    static QStringList getChannelMNamesSwitchedOnCommaSeparated(const JsonStructApi &sourceCapabilities,
+                                                                const JsonParamApi &wantedLoadpoint);
 
     AbstractServerInterfacePtr m_serverInterface;
-    JsonStructApi m_sourceCapabilitiesApi;
+    JsonStructApi m_sourceCapabilities;
     PersistentJsonState m_persistentParamState;
     JsonParamApi m_paramsCurrent;
     JsonParamApi m_paramsRequested;
