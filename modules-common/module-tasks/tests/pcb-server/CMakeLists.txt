@@ -21,7 +21,7 @@ SETUP_QTESTS_MODULE_TASKS(
     test_taskemobwriteexchangedata
     test_taskgeneratorrangebyamplitudeset
     test_taskgeneratorrangebyenumsetget
-    test_taskgeneratordspamplitudeset
+    test_taskgeneratordspamplitudesetget
     test_tasksetdspfrequency
     test_tasksetdspangle
     test_taskgeneratormultiplephasessourcemodeon

@@ -1,5 +1,6 @@
-#include "test_taskgeneratordspamplitudeset.h"
+#include "test_taskgeneratordspamplitudesetget.h"
 #include "taskgeneratordspamplitudeset.h"
+#include "taskgeneratordspamplitudeget.h"
 #include <pcbinitfortest.h>
 #include <testfactoryi2cctrl.h>
 #include <timemachinefortest.h>
@@ -11,9 +12,9 @@
 #include <QSignalSpy>
 #include <QTest>
 
-QTEST_MAIN(test_taskgeneratordspamplitudeset)
+QTEST_MAIN(test_taskgeneratordspamplitudesetget)
 
-void test_taskgeneratordspamplitudeset::checkScpiSend()
+void test_taskgeneratordspamplitudesetget::checkScpiSendReceive()
 {
     VeinTcp::AbstractTcpNetworkFactoryPtr tcpNetworkFactory = VeinTcp::MockTcpNetworkFactory::create();
     std::unique_ptr<ResmanRunFacade> resman = std::make_unique<ResmanRunFacade>(tcpNetworkFactory);
@@ -34,9 +35,17 @@ void test_taskgeneratordspamplitudeset::checkScpiSend()
     TimeMachineObject::feedEventLoop();
     QCOMPARE(helper.okCount(), 1);
     QCOMPARE(helper.errCount(), 0);
+
+    std::shared_ptr<double> amplitudeReceived = std::make_shared<double>();
+    task = TaskGeneratorDspAmplitudeGet::create(pcbIFace,
+                                                "m0", amplitudeReceived,
+                                                []{}, EXPIRE_INFINITE);
+    task->start();
+    TimeMachineObject::feedEventLoop();
+    QCOMPARE(*amplitudeReceived, 100.0);
 }
 
-void test_taskgeneratordspamplitudeset::returnsNak()
+void test_taskgeneratordspamplitudesetget::returnsNak()
 {
     PcbInitForTest pcb;
     pcb.getProxyClient()->setAnswers(ServerTestAnswerList() << ServerTestAnswer(nack, ""));
@@ -51,7 +60,7 @@ void test_taskgeneratordspamplitudeset::returnsNak()
     QCOMPARE(spy[0][0], false);
 }
 
-void test_taskgeneratordspamplitudeset::timeoutAndErrFunc()
+void test_taskgeneratordspamplitudesetget::timeoutAndErrFunc()
 {
     PcbInitForTest pcb;
     int localErrorCount = 0;
