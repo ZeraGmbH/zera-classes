@@ -20,7 +20,10 @@ TaskContainerInterfacePtr SourceSwitchJsonInternal::createAmplitudeTasks(JsonPar
 {
     TaskContainerInterfacePtr ampTasks = TaskContainerParallel::create();
     for (phaseType type : {phaseType::U, phaseType::I}) {
-        for (int phaseNo=0; phaseNo<m_sourceCapabilitiesApi.getCountUPhases(); ++phaseNo) {
+        const int phaseCount = type==phaseType::U ?
+                                   m_sourceCapabilitiesApi.getCountUPhases() :
+                                   m_sourceCapabilitiesApi.getCountIPhases();
+        for (int phaseNo=0; phaseNo < phaseCount; ++phaseNo) {
             double peakValue = paramState.getRms(type, phaseNo) * M_SQRT2;
             TaskContainerInterfacePtr rmsTasks = TaskContainerSequence::create(TaskContainerSequence::StopOnFirstTaskFail);
             rmsTasks->addSub(TaskChangeRangeByAmplitude::create(
