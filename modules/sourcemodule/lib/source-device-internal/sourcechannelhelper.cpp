@@ -5,9 +5,7 @@ QStringList SourceChannelHelper::getChannelMNamesSwitchedOn(const JsonStructApi 
 {
     QStringList activeModeOnChannelMNames;
     for (phaseType type : {phaseType::U, phaseType::I}) {
-        const int phaseCount = type==phaseType::U ?
-                                   sourceCapabilities.getCountUPhases() :
-                                   sourceCapabilities.getCountIPhases();
+        const int phaseCount = type==phaseType::U ? sourceCapabilities.getCountUPhases() : sourceCapabilities.getCountIPhases();
         for (int phaseNo=0; phaseNo < phaseCount; ++phaseNo) {
             if(wantedLoadpoint.getOn() && wantedLoadpoint.getOn(type, phaseNo))
                 activeModeOnChannelMNames.append(getChannelMName(type, phaseNo));

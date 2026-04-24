@@ -1,5 +1,6 @@
 #include "test_taskgeneratorrangebyamplitudeset.h"
 #include "taskgeneratorrangebyamplitudeset.h"
+#include "taskgeneratormultiplephasessourcemodeonset.h"
 #include <pcbinitfortest.h>
 #include <testfactoryi2cctrl.h>
 #include <timemachinefortest.h>
@@ -26,9 +27,16 @@ void test_taskgeneratorrangebyamplitudeset::checkScpiSend()
     Zera::Proxy::getInstance()->startConnectionSmart(proxyClient);
     TimeMachineObject::feedEventLoop();
 
-    TaskTemplatePtr task = TaskGeneratorRangeByAmplitudeSet::create(pcbIFace,
-                                                              "m0", 100.0,
-                                                              []{}, EXPIRE_INFINITE);
+    // necessary to change ranges
+    TaskTemplatePtr task = TaskGeneratorMultiplePhasesSourceModeOnSet::create(pcbIFace,
+                                                                              QStringList() << "m0" << "m1",
+                                                                              []{}, EXPIRE_INFINITE);
+    task->start();
+    TimeMachineObject::feedEventLoop();
+
+    task = TaskGeneratorRangeByAmplitudeSet::create(pcbIFace,
+                                                    "m0", 100.0,
+                                                    []{}, EXPIRE_INFINITE);
     TaskTestHelper helper(task.get());
     task->start();
     TimeMachineObject::feedEventLoop();

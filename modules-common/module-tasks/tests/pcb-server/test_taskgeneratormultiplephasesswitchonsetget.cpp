@@ -1,6 +1,7 @@
 #include "test_taskgeneratormultiplephasesswitchonsetget.h"
 #include "taskgeneratormultiplephasesswitchonset.h"
 #include "taskgeneratormultiplephasesswitchonget.h"
+#include "taskgeneratormultiplephasessourcemodeonset.h"
 #include <pcbinitfortest.h>
 #include <testfactoryi2cctrl.h>
 #include <timemachinefortest.h>
@@ -14,7 +15,7 @@
 
 QTEST_MAIN(test_taskgeneratormultiplephasesswitchonsetget)
 
-void test_taskgeneratormultiplephasesswitchonsetget::checkScpiSend()
+void test_taskgeneratormultiplephasesswitchonsetget::checkScpiSendReceive()
 {
     VeinTcp::AbstractTcpNetworkFactoryPtr tcpNetworkFactory = VeinTcp::MockTcpNetworkFactory::create();
     std::unique_ptr<ResmanRunFacade> resman = std::make_unique<ResmanRunFacade>(tcpNetworkFactory);
@@ -27,9 +28,16 @@ void test_taskgeneratormultiplephasesswitchonsetget::checkScpiSend()
     Zera::Proxy::getInstance()->startConnectionSmart(proxyClient);
     TimeMachineObject::feedEventLoop();
 
-    TaskTemplatePtr task = TaskGeneratorMultiplePhasesSwitchOnSet::create(pcbIFace,
-                                                                QStringList() << "m0" << "m1",
-                                                                []{}, EXPIRE_INFINITE);
+    // necessary to switch phases
+    TaskTemplatePtr task = TaskGeneratorMultiplePhasesSourceModeOnSet::create(pcbIFace,
+                                                                              QStringList() << "m0" << "m1",
+                                                                              []{}, EXPIRE_INFINITE);
+    task->start();
+    TimeMachineObject::feedEventLoop();
+
+    task = TaskGeneratorMultiplePhasesSwitchOnSet::create(pcbIFace,
+                                                          QStringList() << "m0" << "m1",
+                                                          []{}, EXPIRE_INFINITE);
     TaskTestHelper helper(task.get());
     task->start();
     TimeMachineObject::feedEventLoop();

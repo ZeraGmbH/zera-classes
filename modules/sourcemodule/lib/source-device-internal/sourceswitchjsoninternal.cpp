@@ -54,10 +54,10 @@ TaskContainerInterfacePtr SourceSwitchJsonInternal::createLoadpointTasks(const J
 {
     TaskContainerInterfacePtr parallelPhaseTasks = TaskContainerParallel::create();
     for (phaseType type : {phaseType::U, phaseType::I}) {
-        const int phaseCount = type==phaseType::U ?
-                                   m_sourceCapabilities.getCountUPhases() :
-                                   m_sourceCapabilities.getCountIPhases();
+        const int phaseCount = type==phaseType::U ? m_sourceCapabilities.getCountUPhases() : m_sourceCapabilities.getCountIPhases();
         for (int phaseNo=0; phaseNo < phaseCount; ++phaseNo) {
+            if (!paramState.getOn(type, phaseNo))
+                continue;
             TaskContainerInterfacePtr phaseTasks = TaskContainerSequence::create(TaskContainerSequence::StopOnFirstTaskFail);
             const QString phaseAlias = SourceChannelHelper::getAlias(type, phaseNo);
             // notes on frequency:

@@ -7,7 +7,7 @@ class test_taskgeneratormultiplephasesswitchonsetget : public QObject
 {
     Q_OBJECT
 private slots:
-    void checkScpiSend();
+    void checkScpiSendReceive();
     void returnsNak();
     void timeoutAndErrFunc();
 };

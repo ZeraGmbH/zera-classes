@@ -1,6 +1,7 @@
 #include "test_taskgeneratorrangebyenumsetget.h"
 #include "taskgeneratorrangebyenumset.h"
 #include "taskgeneratorrangebyenumget.h"
+#include "taskgeneratormultiplephasessourcemodeonset.h"
 #include <pcbinitfortest.h>
 #include <testfactoryi2cctrl.h>
 #include <timemachinefortest.h>
@@ -27,7 +28,14 @@ void test_taskgeneratorrangebyenumsetget::checkScpiSendReceive()
     Zera::Proxy::getInstance()->startConnectionSmart(proxyClient);
     TimeMachineObject::feedEventLoop();
 
-    TaskTemplatePtr task = TaskGeneratorRangeByEnumSet::create(pcbIFace,
+    // necessary to change ranges
+    TaskTemplatePtr task = TaskGeneratorMultiplePhasesSourceModeOnSet::create(pcbIFace,
+                                                                              QStringList() << "m0" << "m1",
+                                                                              []{}, EXPIRE_INFINITE);
+    task->start();
+    TimeMachineObject::feedEventLoop();
+
+    task = TaskGeneratorRangeByEnumSet::create(pcbIFace,
                                                          "m0", 42,
                                                          []{}, EXPIRE_INFINITE);
     TaskTestHelper helper(task.get());

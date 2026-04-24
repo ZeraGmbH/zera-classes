@@ -14,9 +14,15 @@ private slots:
     void cleanup();
 
     void checkInitialLoadState();
+    void checkMockInitialLoadInMock();
     void switchOnOk();
     void switchOffOk();
     void switchOnOffOk();
+
+    void switchUL2OffCheckOnFlags();
+    void switchUL2OffCheckDspAmplitude();
+    void switchUL2OffCheckDspAngle();
+    void switchUL2OffCheckDspFrequency();
 
 private:
     VeinTcp::AbstractTcpNetworkFactoryPtr m_tcpNetworkFactory;
