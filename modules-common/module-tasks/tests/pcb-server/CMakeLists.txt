@@ -25,5 +25,5 @@ SETUP_QTESTS_MODULE_TASKS(
     test_taskgeneratordspfrequencysetget
     test_taskgeneratordspanglesetget
     test_taskgeneratormultiplephasessourcemodeonsetget
-    test_taskgeneratormultiplephasesswitchon
+    test_taskgeneratormultiplephasesswitchonsetget
 )

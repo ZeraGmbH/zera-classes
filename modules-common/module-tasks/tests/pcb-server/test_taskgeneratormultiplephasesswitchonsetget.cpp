@@ -1,5 +1,6 @@
-#include "test_taskgeneratormultiplephasesswitchon.h"
+#include "test_taskgeneratormultiplephasesswitchonsetget.h"
 #include "taskgeneratormultiplephasesswitchonset.h"
+#include "taskgeneratormultiplephasesswitchonget.h"
 #include <pcbinitfortest.h>
 #include <testfactoryi2cctrl.h>
 #include <timemachinefortest.h>
@@ -11,9 +12,9 @@
 #include <QSignalSpy>
 #include <QTest>
 
-QTEST_MAIN(test_taskgeneratormultiplephasesswitchon)
+QTEST_MAIN(test_taskgeneratormultiplephasesswitchonsetget)
 
-void test_taskgeneratormultiplephasesswitchon::checkScpiSend()
+void test_taskgeneratormultiplephasesswitchonsetget::checkScpiSend()
 {
     VeinTcp::AbstractTcpNetworkFactoryPtr tcpNetworkFactory = VeinTcp::MockTcpNetworkFactory::create();
     std::unique_ptr<ResmanRunFacade> resman = std::make_unique<ResmanRunFacade>(tcpNetworkFactory);
@@ -34,9 +35,19 @@ void test_taskgeneratormultiplephasesswitchon::checkScpiSend()
     TimeMachineObject::feedEventLoop();
     QCOMPARE(helper.okCount(), 1);
     QCOMPARE(helper.errCount(), 0);
+
+    std::shared_ptr<QStringList> channelsReceived = std::make_shared<QStringList>();
+    task = TaskGeneratorMultiplePhasesSwitchOnGet::create(pcbIFace,
+                                                          channelsReceived,
+                                                          []{}, EXPIRE_INFINITE);
+    task->start();
+    TimeMachineObject::feedEventLoop();
+    QCOMPARE(channelsReceived->count(), 2);
+    QCOMPARE(channelsReceived->contains("m0"), true);
+    QCOMPARE(channelsReceived->contains("m1"), true);
 }
 
-void test_taskgeneratormultiplephasesswitchon::returnsNak()
+void test_taskgeneratormultiplephasesswitchonsetget::returnsNak()
 {
     PcbInitForTest pcb;
     pcb.getProxyClient()->setAnswers(ServerTestAnswerList() << ServerTestAnswer(nack, ""));
@@ -51,7 +62,7 @@ void test_taskgeneratormultiplephasesswitchon::returnsNak()
     QCOMPARE(spy[0][0], false);
 }
 
-void test_taskgeneratormultiplephasesswitchon::timeoutAndErrFunc()
+void test_taskgeneratormultiplephasesswitchonsetget::timeoutAndErrFunc()
 {
     PcbInitForTest pcb;
     int localErrorCount = 0;
