@@ -8,7 +8,7 @@ TaskTemplatePtr TaskChannelGetAvail::create(Zera::PcbInterfacePtr pcbInterface,
 {
     return TaskScpiGetStringList::create(pcbInterface,
                                          "SENSE:CHANNEL:CAT?",
-                                         channelsReceived,
+                                         channelsReceived, ";",
                                          timeout,
                                          additionalErrorHandler);
 }

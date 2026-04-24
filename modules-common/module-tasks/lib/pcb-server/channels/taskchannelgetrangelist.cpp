@@ -8,7 +8,7 @@ TaskTemplatePtr TaskChannelGetRangeList::create(Zera::PcbInterfacePtr pcbInterfa
 {
     return TaskScpiGetStringList::create(pcbInterface,
                                          QString("SENS:%1:RANG:CAT?").arg(channelName),
-                                         rangeList,
+                                         rangeList, ";",
                                          timeout,
                                          additionalErrorHandler);
 }
