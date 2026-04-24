@@ -1,4 +1,4 @@
-#include "test_taskgeneratormultiplephasessourcemodeonset.h"
+#include "test_taskgeneratormultiplephasessourcemodeonsetget.h"
 #include "taskgeneratormultiplephasessourcemodeonset.h"
 #include "taskgeneratormultiplephasessourcemodeonget.h"
 #include <pcbinitfortest.h>
@@ -12,9 +12,9 @@
 #include <QSignalSpy>
 #include <QTest>
 
-QTEST_MAIN(test_taskgeneratormultiplephasessourcemodeonset)
+QTEST_MAIN(test_taskgeneratormultiplephasessourcemodeonsetget)
 
-void test_taskgeneratormultiplephasessourcemodeonset::checkScpiSend()
+void test_taskgeneratormultiplephasessourcemodeonsetget::checkScpiSend()
 {
     VeinTcp::AbstractTcpNetworkFactoryPtr tcpNetworkFactory = VeinTcp::MockTcpNetworkFactory::create();
     std::unique_ptr<ResmanRunFacade> resman = std::make_unique<ResmanRunFacade>(tcpNetworkFactory);
@@ -47,7 +47,7 @@ void test_taskgeneratormultiplephasessourcemodeonset::checkScpiSend()
     QCOMPARE(channelsReceived->contains("m1"), true);
 }
 
-void test_taskgeneratormultiplephasessourcemodeonset::returnsNak()
+void test_taskgeneratormultiplephasessourcemodeonsetget::returnsNak()
 {
     PcbInitForTest pcb;
     pcb.getProxyClient()->setAnswers(ServerTestAnswerList() << ServerTestAnswer(nack, ""));
@@ -62,7 +62,7 @@ void test_taskgeneratormultiplephasessourcemodeonset::returnsNak()
     QCOMPARE(spy[0][0], false);
 }
 
-void test_taskgeneratormultiplephasessourcemodeonset::timeoutAndErrFunc()
+void test_taskgeneratormultiplephasessourcemodeonsetget::timeoutAndErrFunc()
 {
     PcbInitForTest pcb;
     int localErrorCount = 0;
