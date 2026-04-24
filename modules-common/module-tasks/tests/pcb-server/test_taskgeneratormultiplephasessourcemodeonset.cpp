@@ -1,5 +1,6 @@
-#include "test_taskgeneratormultiplephasessourcemodeon.h"
+#include "test_taskgeneratormultiplephasessourcemodeonset.h"
 #include "taskgeneratormultiplephasessourcemodeonset.h"
+#include "taskgeneratormultiplephasessourcemodeonget.h"
 #include <pcbinitfortest.h>
 #include <testfactoryi2cctrl.h>
 #include <timemachinefortest.h>
@@ -11,9 +12,9 @@
 #include <QSignalSpy>
 #include <QTest>
 
-QTEST_MAIN(test_taskgeneratormultiplephasessourcemodeon)
+QTEST_MAIN(test_taskgeneratormultiplephasessourcemodeonset)
 
-void test_taskgeneratormultiplephasessourcemodeon::checkScpiSend()
+void test_taskgeneratormultiplephasessourcemodeonset::checkScpiSend()
 {
     VeinTcp::AbstractTcpNetworkFactoryPtr tcpNetworkFactory = VeinTcp::MockTcpNetworkFactory::create();
     std::unique_ptr<ResmanRunFacade> resman = std::make_unique<ResmanRunFacade>(tcpNetworkFactory);
@@ -34,9 +35,19 @@ void test_taskgeneratormultiplephasessourcemodeon::checkScpiSend()
     TimeMachineObject::feedEventLoop();
     QCOMPARE(helper.okCount(), 1);
     QCOMPARE(helper.errCount(), 0);
+
+    std::shared_ptr<QStringList> channelsReceived = std::make_shared<QStringList>();
+    task = TaskGeneratorMultiplePhasesSourceModeOnGet::create(pcbIFace,
+                                                              channelsReceived,
+                                                              []{}, EXPIRE_INFINITE);
+    task->start();
+    TimeMachineObject::feedEventLoop();
+    QCOMPARE(channelsReceived->count(), 2);
+    QCOMPARE(channelsReceived->contains("m0"), true);
+    QCOMPARE(channelsReceived->contains("m1"), true);
 }
 
-void test_taskgeneratormultiplephasessourcemodeon::returnsNak()
+void test_taskgeneratormultiplephasessourcemodeonset::returnsNak()
 {
     PcbInitForTest pcb;
     pcb.getProxyClient()->setAnswers(ServerTestAnswerList() << ServerTestAnswer(nack, ""));
@@ -51,7 +62,7 @@ void test_taskgeneratormultiplephasessourcemodeon::returnsNak()
     QCOMPARE(spy[0][0], false);
 }
 
-void test_taskgeneratormultiplephasessourcemodeon::timeoutAndErrFunc()
+void test_taskgeneratormultiplephasessourcemodeonset::timeoutAndErrFunc()
 {
     PcbInitForTest pcb;
     int localErrorCount = 0;

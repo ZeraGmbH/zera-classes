@@ -1,9 +1,9 @@
-#ifndef TEST_TASKGENERATORMULTIPLEPHASESSOURCEMODEON_H
-#define TEST_TASKGENERATORMULTIPLEPHASESSOURCEMODEON_H
+#ifndef TEST_TASKGENERATORMULTIPLEPHASESSOURCEMODEONSET_H
+#define TEST_TASKGENERATORMULTIPLEPHASESSOURCEMODEONSET_H
 
 #include <QObject>
 
-class test_taskgeneratormultiplephasessourcemodeon : public QObject
+class test_taskgeneratormultiplephasessourcemodeonset : public QObject
 {
     Q_OBJECT
 private slots:
@@ -12,4 +12,4 @@ private slots:
     void timeoutAndErrFunc();
 };
 
-#endif // TEST_TASKGENERATORMULTIPLEPHASESSOURCEMODEON_H
+#endif // TEST_TASKGENERATORMULTIPLEPHASESSOURCEMODEONSET_H
