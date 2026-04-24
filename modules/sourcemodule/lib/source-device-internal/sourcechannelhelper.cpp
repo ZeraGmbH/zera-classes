@@ -1,7 +1,7 @@
 #include "sourcechannelhelper.h"
 
-QStringList SourceChannelHelper::getChannelMNamesSwitchedOnCommaSeparated(const JsonStructApi &sourceCapabilities,
-                                                                               const JsonParamApi &wantedLoadpoint)
+QStringList SourceChannelHelper::getChannelMNamesSwitchedOn(const JsonStructApi &sourceCapabilities,
+                                                            const JsonParamApi &wantedLoadpoint)
 {
     QStringList activeModeOnChannelMNames;
     for (phaseType type : {phaseType::U, phaseType::I}) {

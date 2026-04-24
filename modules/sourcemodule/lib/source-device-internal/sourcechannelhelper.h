@@ -8,8 +8,8 @@
 class SourceChannelHelper
 {
 public:
-    static QStringList getChannelMNamesSwitchedOnCommaSeparated(const JsonStructApi &sourceCapabilities,
-                                                                const JsonParamApi &wantedLoadpoint);
+    static QStringList getChannelMNamesSwitchedOn(const JsonStructApi &sourceCapabilities,
+                                                  const JsonParamApi &wantedLoadpoint);
     static QString getChannelMName(phaseType type, int phaseNoBase0);
     static QString getAlias(phaseType type, int phaseNoBase0);
 };

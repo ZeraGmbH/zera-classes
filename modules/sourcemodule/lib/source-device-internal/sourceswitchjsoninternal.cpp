@@ -100,7 +100,7 @@ TaskContainerInterfacePtr SourceSwitchJsonInternal::createLoadpointTasks(const J
 
 TaskTemplatePtr SourceSwitchJsonInternal::createSourceModeOnTask(const JsonParamApi &paramState)
 {
-    QStringList channelMNamesOn = SourceChannelHelper::getChannelMNamesSwitchedOnCommaSeparated(m_sourceCapabilities, paramState);
+    QStringList channelMNamesOn = SourceChannelHelper::getChannelMNamesSwitchedOn(m_sourceCapabilities, paramState);
     return TaskGeneratorMultiplePhasesSourceModeOnSet::create(
         m_serverInterface,
         channelMNamesOn,
@@ -110,7 +110,7 @@ TaskTemplatePtr SourceSwitchJsonInternal::createSourceModeOnTask(const JsonParam
 
 TaskTemplatePtr SourceSwitchJsonInternal::createSourceOnOffTask(const JsonParamApi &paramState)
 {
-    QStringList channelMNamesOn = SourceChannelHelper::getChannelMNamesSwitchedOnCommaSeparated(m_sourceCapabilities, paramState);
+    QStringList channelMNamesOn = SourceChannelHelper::getChannelMNamesSwitchedOn(m_sourceCapabilities, paramState);
     return TaskGeneratorMultiplePhasesSwitchOnSet::create(
         m_serverInterface,
         channelMNamesOn,
