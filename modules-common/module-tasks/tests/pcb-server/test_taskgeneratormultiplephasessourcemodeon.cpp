@@ -1,5 +1,5 @@
 #include "test_taskgeneratormultiplephasessourcemodeon.h"
-#include "taskgeneratormultiplephasessourcemodeon.h"
+#include "taskgeneratormultiplephasessourcemodeonset.h"
 #include <pcbinitfortest.h>
 #include <testfactoryi2cctrl.h>
 #include <timemachinefortest.h>
@@ -26,9 +26,9 @@ void test_taskgeneratormultiplephasessourcemodeon::checkScpiSend()
     Zera::Proxy::getInstance()->startConnectionSmart(proxyClient);
     TimeMachineObject::feedEventLoop();
 
-    TaskTemplatePtr task = TaskGeneratorMultiplePhasesSourceModeOn::create(pcbIFace,
-                                                                           QStringList() << "m0" << "m1",
-                                                                           []{}, EXPIRE_INFINITE);
+    TaskTemplatePtr task = TaskGeneratorMultiplePhasesSourceModeOnSet::create(pcbIFace,
+                                                                              QStringList() << "m0" << "m1",
+                                                                              []{}, EXPIRE_INFINITE);
     TaskTestHelper helper(task.get());
     task->start();
     TimeMachineObject::feedEventLoop();
@@ -40,9 +40,9 @@ void test_taskgeneratormultiplephasessourcemodeon::returnsNak()
 {
     PcbInitForTest pcb;
     pcb.getProxyClient()->setAnswers(ServerTestAnswerList() << ServerTestAnswer(nack, ""));
-    TaskTemplatePtr task = TaskGeneratorMultiplePhasesSourceModeOn::create(pcb.getPcbInterface(),
-                                                                           QStringList() << "foo" << "bar",
-                                                                           []{}, EXPIRE_INFINITE);
+    TaskTemplatePtr task = TaskGeneratorMultiplePhasesSourceModeOnSet::create(pcb.getPcbInterface(),
+                                                                              QStringList() << "foo" << "bar",
+                                                                              []{}, EXPIRE_INFINITE);
     QSignalSpy spy(task.get(), &TaskTemplate::sigFinish);
     task->start();
     TimeMachineObject::feedEventLoop();
@@ -55,9 +55,9 @@ void test_taskgeneratormultiplephasessourcemodeon::timeoutAndErrFunc()
 {
     PcbInitForTest pcb;
     int localErrorCount = 0;
-    TaskTemplatePtr task = TaskGeneratorMultiplePhasesSourceModeOn::create(pcb.getPcbInterface(),
-                                                                           QStringList() << "foo" << "bar",
-                                                                           [&]{ localErrorCount++; }, DEFAULT_EXPIRE);
+    TaskTemplatePtr task = TaskGeneratorMultiplePhasesSourceModeOnSet::create(pcb.getPcbInterface(),
+                                                                              QStringList() << "foo" << "bar",
+                                                                              [&]{ localErrorCount++; }, DEFAULT_EXPIRE);
     TaskTestHelper helper(task.get());
     task->start();
     TimeMachineForTest::getInstance()->processTimers(DEFAULT_EXPIRE_WAIT);

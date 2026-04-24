@@ -1,7 +1,7 @@
 #include "sourceswitchjsoninternal.h"
 #include "sourcechannelhelper.h"
 #include "taskgeneratorrangebyamplitudeset.h"
-#include "taskgeneratormultiplephasessourcemodeon.h"
+#include "taskgeneratormultiplephasessourcemodeonset.h"
 #include "taskgeneratormultiplephasesswitchon.h"
 #include "taskgeneratordspamplitudeset.h"
 #include "taskgeneratordspangleset.h"
@@ -101,7 +101,7 @@ TaskContainerInterfacePtr SourceSwitchJsonInternal::createLoadpointTasks(const J
 TaskTemplatePtr SourceSwitchJsonInternal::createSourceModeOnTask(const JsonParamApi &paramState)
 {
     QStringList channelMNamesOn = SourceChannelHelper::getChannelMNamesSwitchedOnCommaSeparated(m_sourceCapabilities, paramState);
-    return TaskGeneratorMultiplePhasesSourceModeOn::create(
+    return TaskGeneratorMultiplePhasesSourceModeOnSet::create(
         m_serverInterface,
         channelMNamesOn,
         [=]() { qWarning("TaskChangeRangeByAmplitude failed for %s", qPrintable(channelMNamesOn.join(","))); }

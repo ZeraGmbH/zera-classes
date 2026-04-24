@@ -1,10 +1,10 @@
-#ifndef TASKGENERATORMULTIPLEPHASESSOURCEMODEON_H
-#define TASKGENERATORMULTIPLEPHASESSOURCEMODEON_H
+#ifndef TASKGENERATORMULTIPLEPHASESSOURCEMODEONSET_H
+#define TASKGENERATORMULTIPLEPHASESSOURCEMODEONSET_H
 
 #include <abstractserverInterface.h>
 #include <tasktemplate.h>
 
-class TaskGeneratorMultiplePhasesSourceModeOn
+class TaskGeneratorMultiplePhasesSourceModeOnSet
 {
 public:
     static TaskTemplatePtr create(AbstractServerInterfacePtr interface,
@@ -12,4 +12,4 @@ public:
                                   std::function<void()> additionalErrorHandler = []{}, int timeout = TRANSACTION_TIMEOUT);
 };
 
-#endif // TASKGENERATORMULTIPLEPHASESSOURCEMODEON_H
+#endif // TASKGENERATORMULTIPLEPHASESSOURCEMODEONSET_H
