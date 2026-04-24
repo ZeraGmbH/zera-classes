@@ -1,10 +1,10 @@
-#ifndef TASKGENERATORMULTIPLEPHASESSWITCHON_H
-#define TASKGENERATORMULTIPLEPHASESSWITCHON_H
+#ifndef TASKGENERATORMULTIPLEPHASESSWITCHONSET_H
+#define TASKGENERATORMULTIPLEPHASESSWITCHONSET_H
 
 #include <abstractserverInterface.h>
 #include <tasktemplate.h>
 
-class TaskGeneratorMultiplePhasesSwitchOn
+class TaskGeneratorMultiplePhasesSwitchOnSet
 {
 public:
     static TaskTemplatePtr create(AbstractServerInterfacePtr interface,
@@ -12,4 +12,4 @@ public:
                                   std::function<void()> additionalErrorHandler = []{}, int timeout = TRANSACTION_TIMEOUT);
 };
 
-#endif // TASKGENERATORMULTIPLEPHASESSWITCHON_H
+#endif // TASKGENERATORMULTIPLEPHASESSWITCHONSET_H

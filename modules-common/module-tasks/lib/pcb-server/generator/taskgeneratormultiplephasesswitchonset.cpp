@@ -1,7 +1,7 @@
-#include "taskgeneratormultiplephasesswitchon.h"
+#include "taskgeneratormultiplephasesswitchonset.h"
 #include "taskscpicmd.h"
 
-TaskTemplatePtr TaskGeneratorMultiplePhasesSwitchOn::create(AbstractServerInterfacePtr interface,
+TaskTemplatePtr TaskGeneratorMultiplePhasesSwitchOnSet::create(AbstractServerInterfacePtr interface,
                                                             const QStringList &channelMNameListOn,
                                                             std::function<void ()> additionalErrorHandler, int timeout)
 {

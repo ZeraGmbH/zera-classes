@@ -1,5 +1,5 @@
 #include "test_taskgeneratormultiplephasesswitchon.h"
-#include "taskgeneratormultiplephasesswitchon.h"
+#include "taskgeneratormultiplephasesswitchonset.h"
 #include <pcbinitfortest.h>
 #include <testfactoryi2cctrl.h>
 #include <timemachinefortest.h>
@@ -26,7 +26,7 @@ void test_taskgeneratormultiplephasesswitchon::checkScpiSend()
     Zera::Proxy::getInstance()->startConnectionSmart(proxyClient);
     TimeMachineObject::feedEventLoop();
 
-    TaskTemplatePtr task = TaskGeneratorMultiplePhasesSwitchOn::create(pcbIFace,
+    TaskTemplatePtr task = TaskGeneratorMultiplePhasesSwitchOnSet::create(pcbIFace,
                                                                 QStringList() << "m0" << "m1",
                                                                 []{}, EXPIRE_INFINITE);
     TaskTestHelper helper(task.get());
@@ -40,7 +40,7 @@ void test_taskgeneratormultiplephasesswitchon::returnsNak()
 {
     PcbInitForTest pcb;
     pcb.getProxyClient()->setAnswers(ServerTestAnswerList() << ServerTestAnswer(nack, ""));
-    TaskTemplatePtr task = TaskGeneratorMultiplePhasesSwitchOn::create(pcb.getPcbInterface(),
+    TaskTemplatePtr task = TaskGeneratorMultiplePhasesSwitchOnSet::create(pcb.getPcbInterface(),
                                                                        QStringList() << "foo" << "bar",
                                                                        []{}, EXPIRE_INFINITE);
     QSignalSpy spy(task.get(), &TaskTemplate::sigFinish);
@@ -55,7 +55,7 @@ void test_taskgeneratormultiplephasesswitchon::timeoutAndErrFunc()
 {
     PcbInitForTest pcb;
     int localErrorCount = 0;
-    TaskTemplatePtr task = TaskGeneratorMultiplePhasesSwitchOn::create(pcb.getPcbInterface(),
+    TaskTemplatePtr task = TaskGeneratorMultiplePhasesSwitchOnSet::create(pcb.getPcbInterface(),
                                                                        QStringList() << "foo" << "bar",
                                                                        [&]{ localErrorCount++; }, DEFAULT_EXPIRE);
     TaskTestHelper helper(task.get());
