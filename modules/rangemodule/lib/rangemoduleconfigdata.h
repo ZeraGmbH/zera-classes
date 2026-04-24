@@ -39,6 +39,7 @@ struct cObsermaticConfPar
     }
     boolParameter m_nGroupAct; // grouping active or not 1,0
     boolParameter m_nRangeAutoAct; // range automatic active or not 1,0
+    int m_time;
 private:
     friend class cRangeModuleConfiguration;
     QList<stringParameter> m_senseChannelRangeParameter;

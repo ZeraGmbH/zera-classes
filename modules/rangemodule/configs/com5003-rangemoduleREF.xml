@@ -84,6 +84,7 @@
             <grouping>1</grouping>
             <rangeauto>0</rangeauto>
         </sense>
+        <time>3000</time>
     </parameter>
 
 </rangemodconfpar> 

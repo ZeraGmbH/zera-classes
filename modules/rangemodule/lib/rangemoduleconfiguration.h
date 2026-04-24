@@ -19,6 +19,7 @@ enum moduleconfigstate
     setGroupCount,
     setGrouping,
     setRangeAutomatic,
+    setTime,
     setMeasureInterval,
     setAdjustInterval,
     setAdjustIgnoreRmsValuesEnable,

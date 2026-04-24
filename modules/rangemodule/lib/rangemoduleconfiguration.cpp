@@ -46,6 +46,7 @@ void cRangeModuleConfiguration::setConfiguration(const QByteArray& xmlString)
 
     m_ConfigXMLMap["rangemodconfpar:parameter:sense:grouping"] = setGrouping;
     m_ConfigXMLMap["rangemodconfpar:parameter:sense:rangeauto"] = setRangeAutomatic;
+    m_ConfigXMLMap["rangemodconfpar:parameter:time"] = setTime;
 
     m_pXMLReader->loadXMLFromString(QString::fromUtf8(xmlString.data(), xmlString.size()));
 }
@@ -141,6 +142,9 @@ void cRangeModuleConfiguration::configXMLInfo(const QString &key)
         case setRangeAutomatic:
             m_pRangeModulConfigData->m_ObsermaticConfPar.m_nRangeAutoAct.m_sKey = key;
             m_pRangeModulConfigData->m_ObsermaticConfPar.m_nRangeAutoAct.m_nActive = m_pXMLReader->getValue(key).toInt(&ok);
+            break;
+        case setTime:
+            m_pRangeModulConfigData->m_ObsermaticConfPar.m_time = m_pXMLReader->getValue(key).toInt(&ok);
             break;
         case setMeasureInterval:
             m_pRangeModulConfigData->m_fMeasInterval = m_pXMLReader->getValue(key).toDouble(&ok);
