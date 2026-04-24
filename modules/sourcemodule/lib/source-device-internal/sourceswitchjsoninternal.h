@@ -24,10 +24,6 @@ private:
     TaskContainerInterfacePtr createLoadpointTasks(const JsonParamApi &paramState);
     TaskTemplatePtr createSourceModeOnTask(const JsonParamApi &paramState);
     TaskTemplatePtr createSourceOnOffTask(const JsonParamApi &paramState);
-    static QStringList getChannelMNamesSwitchedOnCommaSeparated(const JsonStructApi &sourceCapabilities,
-                                                                const JsonParamApi &wantedLoadpoint);
-    static QString getChannelMName(phaseType type, int phaseNoBase0);
-    static QString getAlias(phaseType type, int phaseNoBase0);
 
     AbstractServerInterfacePtr m_serverInterface;
     JsonStructApi m_sourceCapabilities;

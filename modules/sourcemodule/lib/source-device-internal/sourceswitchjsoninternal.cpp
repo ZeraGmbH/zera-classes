@@ -1,4 +1,5 @@
 #include "sourceswitchjsoninternal.h"
+#include "sourcechannelhelper.h"
 #include "taskgeneratorrangebyamplitudeset.h"
 #include "taskgeneratormultiplephasessourcemodeon.h"
 #include "taskgeneratormultiplephasesswitchon.h"
@@ -58,6 +59,7 @@ TaskContainerInterfacePtr SourceSwitchJsonInternal::createLoadpointTasks(const J
                                    m_sourceCapabilities.getCountIPhases();
         for (int phaseNo=0; phaseNo < phaseCount; ++phaseNo) {
             TaskContainerInterfacePtr phaseTasks = TaskContainerSequence::create(TaskContainerSequence::StopOnFirstTaskFail);
+            const QString phaseAlias = SourceChannelHelper::getAlias(type, phaseNo);
             // notes on frequency:
             // * mains sync is not implemented yet therefore default to 50Hz for now
             // * is frequency per phase a wanted and supported feature?
@@ -66,29 +68,29 @@ TaskContainerInterfacePtr SourceSwitchJsonInternal::createLoadpointTasks(const J
                 frequency = 50.0;
             phaseTasks->addSub(TaskGeneratorDspFrequencySet::create(
                 m_serverInterface,
-                getChannelMName(type, phaseNo),
+                SourceChannelHelper::getChannelMName(type, phaseNo),
                 frequency,
-                [=]() { qWarning("TaskSetDspFrequency failed for %s", qPrintable(getAlias(type, phaseNo))); }));
+                [=]() { qWarning("TaskSetDspFrequency failed for %s", qPrintable(phaseAlias)); }));
 
             // Amplitudes
             const double peakValue = paramState.getRms(type, phaseNo) * M_SQRT2;
             phaseTasks->addSub(TaskGeneratorRangeByAmplitudeSet::create(
                 m_serverInterface,
-                getChannelMName(type, phaseNo),
+                SourceChannelHelper::getChannelMName(type, phaseNo),
                 peakValue,
-                [=]() { qWarning("TaskChangeRangeByAmplitude failed for %s", qPrintable(getAlias(type, phaseNo))); }));
+                [=]() { qWarning("TaskChangeRangeByAmplitude failed for %s", qPrintable(phaseAlias)); }));
             phaseTasks->addSub(TaskGeneratorDspAmplitudeSet::create(
                 m_serverInterface,
-                getChannelMName(type, phaseNo),
+                SourceChannelHelper::getChannelMName(type, phaseNo),
                 peakValue,
-                [=]() { qWarning("TaskSetDspAmplitude failed for %s", qPrintable(getAlias(type, phaseNo))); }));
+                [=]() { qWarning("TaskSetDspAmplitude failed for %s", qPrintable(phaseAlias)); }));
 
             // Angles
             phaseTasks->addSub(TaskGeneratorDspAngleSet::create(
                 m_serverInterface,
-                getChannelMName(type, phaseNo),
+                SourceChannelHelper::getChannelMName(type, phaseNo),
                 paramState.getAngle(type, phaseNo),
-                [=]() { qWarning("TaskSetDspAmplitude failed for %s", qPrintable(getAlias(type, phaseNo))); }));
+                [=]() { qWarning("TaskSetDspAmplitude failed for %s", qPrintable(phaseAlias)); }));
 
             parallelPhaseTasks->addSub(std::move(phaseTasks));
         }
@@ -98,7 +100,7 @@ TaskContainerInterfacePtr SourceSwitchJsonInternal::createLoadpointTasks(const J
 
 TaskTemplatePtr SourceSwitchJsonInternal::createSourceModeOnTask(const JsonParamApi &paramState)
 {
-    QStringList channelMNamesOn = getChannelMNamesSwitchedOnCommaSeparated(m_sourceCapabilities, paramState);
+    QStringList channelMNamesOn = SourceChannelHelper::getChannelMNamesSwitchedOnCommaSeparated(m_sourceCapabilities, paramState);
     return TaskGeneratorMultiplePhasesSourceModeOn::create(
         m_serverInterface,
         channelMNamesOn,
@@ -108,28 +110,12 @@ TaskTemplatePtr SourceSwitchJsonInternal::createSourceModeOnTask(const JsonParam
 
 TaskTemplatePtr SourceSwitchJsonInternal::createSourceOnOffTask(const JsonParamApi &paramState)
 {
-    QStringList channelMNamesOn = getChannelMNamesSwitchedOnCommaSeparated(m_sourceCapabilities, paramState);
+    QStringList channelMNamesOn = SourceChannelHelper::getChannelMNamesSwitchedOnCommaSeparated(m_sourceCapabilities, paramState);
     return TaskGeneratorMultiplePhasesSwitchOn::create(
         m_serverInterface,
         channelMNamesOn,
         [=]() { qWarning("TaskChangeRangeByAmplitude failed for %s", qPrintable(channelMNamesOn.join(","))); }
         );
-}
-
-QStringList SourceSwitchJsonInternal::getChannelMNamesSwitchedOnCommaSeparated(const JsonStructApi &sourceCapabilities,
-                                                                               const JsonParamApi &wantedLoadpoint)
-{
-    QStringList activeModeOnChannelMNames;
-    for (phaseType type : {phaseType::U, phaseType::I}) {
-        const int phaseCount = type==phaseType::U ?
-                                   sourceCapabilities.getCountUPhases() :
-                                   sourceCapabilities.getCountIPhases();
-        for (int phaseNo=0; phaseNo < phaseCount; ++phaseNo) {
-            if(wantedLoadpoint.getOn() && wantedLoadpoint.getOn(type, phaseNo))
-                activeModeOnChannelMNames.append(getChannelMName(type, phaseNo));
-        }
-    }
-    return activeModeOnChannelMNames;
 }
 
 JsonParamApi SourceSwitchJsonInternal::getCurrLoadState()
@@ -146,33 +132,5 @@ void SourceSwitchJsonInternal::onSwitchTasksFinish(bool ok)
 {
     m_paramsCurrent = m_paramsRequested;
     emit sigSwitchFinished();
-}
-
-QString SourceSwitchJsonInternal::getChannelMName(phaseType type, int phaseNoBase0)
-{
-    switch (phaseNoBase0) {
-    case 0:
-        return type == phaseType::U ? "m0" : "m3";
-    case 1:
-        return type == phaseType::U ? "m1" : "m4";
-    case 2:
-        return type == phaseType::U ? "m2" : "m5";
-    }
-    qCritical("getChannelMName: invalid parameters!");
-    return "m0";
-}
-
-QString SourceSwitchJsonInternal::getAlias(phaseType type, int phaseNoBase0)
-{
-    switch (phaseNoBase0) {
-    case 0:
-        return type == phaseType::U ? "UL1" : "IL1";
-    case 1:
-        return type == phaseType::U ? "UL2" : "IL2";
-    case 2:
-        return type == phaseType::U ? "UL3" : "IL3";
-    }
-    qCritical("getChannelMName: invalid parameters!");
-    return "m0";
 }
 
