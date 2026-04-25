@@ -19,11 +19,10 @@ public:
 
     void setVeinInterface(SourceVeinInterface* veinInterface);
 
-    virtual void setStatusPollTime(int ms) = 0;
     void switchLoad(QJsonObject params);
 
     int getId();
-    QString getIoDeviceInfo() const;
+    const QString &getIoDeviceInfo() const;
     bool hasDemoIo() const;
     QStringList getLastErrors() const;
 

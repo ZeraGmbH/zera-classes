@@ -5,11 +5,8 @@ SourceDeviceInternal::SourceDeviceInternal(AbstractServerInterfacePtr serverInte
     SourceDeviceTemplate(JsonStructApi(sourceCapabilities).getDeviceName(), IoDeviceTypes::SCPI_NET, sourceCapabilities)
 {
     m_switcher = std::make_unique<SourceSwitchJsonInternal>(serverInterface, sourceCapabilities);
-}
-
-void SourceDeviceInternal::setStatusPollTime(int ms)
-{
-    Q_UNUSED(ms);
+    connect(&m_stateController, &SourceStateControllerInternal::sigStateChanged,
+            this, &SourceDeviceInternal::handleNewState);
 }
 
 bool SourceDeviceInternal::close(QUuid uuid)

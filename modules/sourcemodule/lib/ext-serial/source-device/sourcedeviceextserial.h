@@ -16,7 +16,7 @@ class SourceDeviceExtSerial : public SourceDeviceTemplate
 public:
     SourceDeviceExtSerial(IoDeviceBase::Ptr ioDevice, SourceProperties properties);
 
-    void setStatusPollTime(int ms) override;
+    void setStatusPollTime(int ms);
 
     bool close(QUuid uuid) override;
 

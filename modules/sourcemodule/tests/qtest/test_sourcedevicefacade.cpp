@@ -25,22 +25,22 @@ void test_sourcedevicefacade::initTestCase()
 void test_sourcedevicefacade::checkDeviceInfo()
 {
     IoDeviceBase::Ptr ioDevice = createOpenDemoIoDevice();
-    SourceDeviceExtSerial sourceFacade(ioDevice, DefaultTestSourceProperties());
-    QCOMPARE(ioDevice->getDeviceInfo(), sourceFacade.getIoDeviceInfo());
+    SourceDeviceExtSerial sourceDevice(ioDevice, DefaultTestSourceProperties());
+    QCOMPARE(ioDevice->getDeviceInfo(), sourceDevice.getIoDeviceInfo());
 }
 
 void test_sourcedevicefacade::checkDemoOn()
 {
     IoDeviceBase::Ptr ioDevice = createOpenDemoIoDevice();
-    SourceDeviceExtSerial sourceFacade(ioDevice, DefaultTestSourceProperties());
-    QCOMPARE(sourceFacade.hasDemoIo(), true);
+    SourceDeviceExtSerial sourceDevice(ioDevice, DefaultTestSourceProperties());
+    QCOMPARE(sourceDevice.hasDemoIo(), true);
 }
 
 void test_sourcedevicefacade::checkDemoOff()
 {
     IoDeviceBase::Ptr ioDevice = IoDeviceFactory::createIoDevice(IoDeviceTypes::BROKEN);
-    SourceDeviceExtSerial sourceFacade(ioDevice, DefaultTestSourceProperties());
-    QCOMPARE(sourceFacade.hasDemoIo(), false);
+    SourceDeviceExtSerial sourceDevice(ioDevice, DefaultTestSourceProperties());
+    QCOMPARE(sourceDevice.hasDemoIo(), false);
 }
 
 static const QString componentNameActState = QStringLiteral("act_state");
@@ -91,8 +91,8 @@ void test_sourcedevicefacade::checkVeinInitialStatus()
         statesReceived.append(jsonState);
     });
 
-    SourceDeviceExtSerial sourceFacade(ioDevice, DefaultTestSourceProperties());
-    sourceFacade.setVeinInterface(&vein.veinInterface);
+    SourceDeviceExtSerial sourceDevice(ioDevice, DefaultTestSourceProperties());
+    sourceDevice.setVeinInterface(&vein.veinInterface);
 
     TimeMachineObject::feedEventLoop();
     QJsonObject jsonStatusVein = vein.veinActDeviceState.getValue().toJsonObject();
@@ -120,8 +120,8 @@ void test_sourcedevicefacade::checkVeinInitialInfo()
         infosReceived.append(jsonInfo);
     });
 
-    SourceDeviceExtSerial sourceFacade(ioDevice, DefaultTestSourceProperties());
-    sourceFacade.setVeinInterface(&vein.veinInterface);
+    SourceDeviceExtSerial sourceDevice(ioDevice, DefaultTestSourceProperties());
+    sourceDevice.setVeinInterface(&vein.veinInterface);
 
     TimeMachineObject::feedEventLoop();
     QJsonObject jsonStructInfo = vein.veinActDeviceInfo.getValue().toJsonObject();
@@ -146,8 +146,8 @@ void test_sourcedevicefacade::checkVeinInitialLoad()
         loadsReceived.append(jsonInfo);
     });
 
-    SourceDeviceExtSerial sourceFacade(ioDevice, DefaultTestSourceProperties());
-    sourceFacade.setVeinInterface(&vein.veinInterface);
+    SourceDeviceExtSerial sourceDevice(ioDevice, DefaultTestSourceProperties());
+    sourceDevice.setVeinInterface(&vein.veinInterface);
 
     TimeMachineObject::feedEventLoop();
     QJsonObject jsonLoadParams = vein.veinDeviceParameter.getValue().toJsonObject();
@@ -175,15 +175,15 @@ void test_sourcedevicefacade::checkVeinSwitchTwoStateChanges()
         statesReceived.append(jsonState);
     });
 
-    SourceDeviceExtSerial sourceFacade(ioDevice, DefaultTestSourceProperties());
-    sourceFacade.setStatusPollTime(0);
-    sourceFacade.setVeinInterface(&vein.veinInterface);
+    SourceDeviceExtSerial sourceDevice(ioDevice, DefaultTestSourceProperties());
+    sourceDevice.setStatusPollTime(0);
+    sourceDevice.setVeinInterface(&vein.veinInterface);
 
     TimeMachineObject::feedEventLoop(); // initial vein processing
     JsonParamApi paramApi;
     paramApi.setParams(vein.veinDeviceParameter.getValue().toJsonObject());
     paramApi.setOn(true);
-    sourceFacade.switchLoad(paramApi.getParams());
+    sourceDevice.switchLoad(paramApi.getParams());
 
     TimeMachineForTest::getInstance()->processTimers(30);
     QCOMPARE(statesReceived.count(), 3);
@@ -208,15 +208,15 @@ void test_sourcedevicefacade::checkVeinSwitchChangesLoad()
         loadsReceived.append(jsonInfo);
     });
 
-    SourceDeviceExtSerial sourceFacade(ioDevice, DefaultTestSourceProperties());
-    sourceFacade.setVeinInterface(&vein.veinInterface);
+    SourceDeviceExtSerial sourceDevice(ioDevice, DefaultTestSourceProperties());
+    sourceDevice.setVeinInterface(&vein.veinInterface);
 
     TimeMachineObject::feedEventLoop(); // initial vein processing
     JsonParamApi paramApi;
     paramApi.setParams(vein.veinDeviceParameter.getValue().toJsonObject());
     paramApi.setOn(true);
     QJsonObject jsonLoadParamsOn = paramApi.getParams();
-    sourceFacade.switchLoad(jsonLoadParamsOn);
+    sourceDevice.switchLoad(jsonLoadParamsOn);
 
     TimeMachineForTest::getInstance()->processTimers(shortQtEventTimeout);
     PersistentJsonState persistentState(JsonStructureLoader::loadJsonStructure(DefaultTestSourceProperties()));
@@ -253,16 +253,16 @@ void test_sourcedevicefacade::checkVeinSwitchError()
         }
     });
 
-    SourceDeviceExtSerial sourceFacade(ioDevice, DefaultTestSourceProperties());
-    sourceFacade.setVeinInterface(&vein.veinInterface);
-    sourceFacade.setStatusPollTime(10000); // never
+    SourceDeviceExtSerial sourceDevice(ioDevice, DefaultTestSourceProperties());
+    sourceDevice.setVeinInterface(&vein.veinInterface);
+    sourceDevice.setStatusPollTime(10000); // never
 
     TimeMachineObject::feedEventLoop(); // initial processing
     JsonParamApi paramApi;
     paramApi.setParams(vein.veinDeviceParameter.getValue().toJsonObject());
     paramApi.setOn(true);
     QJsonObject jsonLoadParamsOn = paramApi.getParams();
-    sourceFacade.switchLoad(jsonLoadParamsOn);
+    sourceDevice.switchLoad(jsonLoadParamsOn);
 
     TimeMachineForTest::getInstance()->processTimers(50);
     PersistentJsonState persistentState(JsonStructureLoader::loadJsonStructure(DefaultTestSourceProperties()));
@@ -307,9 +307,9 @@ void test_sourcedevicefacade::checkVeinStateError()
         }
     });
 
-    SourceDeviceExtSerial sourceFacade(ioDevice, DefaultTestSourceProperties());
-    sourceFacade.setVeinInterface(&vein.veinInterface);
-    sourceFacade.setStatusPollTime(0);
+    SourceDeviceExtSerial sourceDevice(ioDevice, DefaultTestSourceProperties());
+    sourceDevice.setVeinInterface(&vein.veinInterface);
+    sourceDevice.setStatusPollTime(0);
 
     TimeMachineForTest::getInstance()->processTimers(50);
     PersistentJsonState persistentState(JsonStructureLoader::loadJsonStructure(DefaultTestSourceProperties()));

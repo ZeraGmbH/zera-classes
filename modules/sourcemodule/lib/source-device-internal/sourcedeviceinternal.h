@@ -2,6 +2,7 @@
 #define SOURCEDEVICEINTERNAL_H
 
 #include "sourcedevicetemplate.h"
+#include "sourcestatecontrollerinternal.h"
 #include <pcbinterface.h>
 
 class SourceDeviceInternal : public SourceDeviceTemplate
@@ -11,8 +12,9 @@ public:
     explicit SourceDeviceInternal(AbstractServerInterfacePtr serverInterface,
                                   const QJsonObject &sourceCapabilities);
 
-    void setStatusPollTime(int ms) override;
     bool close(QUuid uuid) override;
+private:
+    SourceStateControllerInternal m_stateController;
 };
 
 #endif // SOURCEDEVICEINTERNAL_H
