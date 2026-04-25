@@ -31,7 +31,7 @@ signals:
     void sigClosed(int facadeId, QUuid uuid);
 
 protected slots:
-    void onSourceStateChanged(SourceStateController::States state);
+    void handleNewState(SourceStateController::States state);
 protected:
     void handleErrorState(SourceStateController::States state);
     void setVeinParamStructure(QJsonObject sourceCapabilities);

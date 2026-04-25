@@ -86,7 +86,7 @@ void SourceDeviceTemplate::switchLoad(QJsonObject params)
     m_switcher->switchState(paramApi);
 }
 
-void SourceDeviceTemplate::onSourceStateChanged(SourceStateController::States state)
+void SourceDeviceTemplate::handleNewState(SourceStateController::States state)
 {
     if(state == SourceStateController::States::SWITCH_BUSY) {
         m_deviceStatusJsonApi.clearWarningsErrors();
