@@ -17,7 +17,7 @@ SourceDeviceExtSerial::SourceDeviceExtSerial(IoDeviceBase::Ptr ioDevice, SourceP
 {
     m_switcher = std::make_unique<SourceSwitchJsonExtSerial>(m_sourceIo, m_transactionNotifierSwitch);
     connect(&m_stateController, &SourceStateController::sigStateChanged,
-            this, &SourceDeviceExtSerial::handleNewState);
+            this, &SourceDeviceTemplate::handleNewState);
     connect(m_switcher.get(), &SourceSwitchJsonExtSerial::sigSwitchFinished,
             this, &SourceDeviceExtSerial::onSourceSwitchFinished);
     connect(ioDevice.get(), &IoDeviceBase::sigDisconnected, this,

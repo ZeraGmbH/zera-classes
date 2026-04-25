@@ -27,11 +27,11 @@ public:
     QStringList getLastErrors() const;
 
     virtual bool close(QUuid uuid) = 0;
+public slots:
+    void handleNewState(SourceStates state);
 signals:
     void sigClosed(int facadeId, QUuid uuid);
 
-protected slots:
-    void handleNewState(SourceStates state);
 protected:
     void handleErrorState(SourceStates state);
     void setVeinParamStructure(QJsonObject sourceCapabilities);
