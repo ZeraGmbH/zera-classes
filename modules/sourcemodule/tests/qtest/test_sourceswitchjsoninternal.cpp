@@ -3,13 +3,12 @@
 #include "taskgeneratorinternalcapabilitiesget.h"
 #include "testsourceinternalloadstategetter.h"
 #include <mocktcpnetworkfactory.h>
-#include <proxyclient.h>
 #include <controllerpersitentdata.h>
 #include <timemachinefortest.h>
 #include <tasktesthelper.h>
-#include <testfloatingpointhelper.h>
 #include <proxy.h>
 #include <math.h>
+#include <testfloatingpointhelper.h>
 #include <testfactoryi2cctrl.h>
 #include <testloghelpers.h>
 #include <QJsonDocument>
@@ -27,8 +26,6 @@ void test_sourceswitchjsoninternal::initTestCase()
 
 void test_sourceswitchjsoninternal::init()
 {
-    ControllerPersitentData::cleanupPersitentData();
-
     m_mt310s2d = std::make_unique<MockMt310s2d>(std::make_shared<TestFactoryI2cCtrl>(true), m_tcpNetworkFactory, "mt581s2d");
     TimeMachineObject::feedEventLoop();
 
@@ -53,6 +50,7 @@ void test_sourceswitchjsoninternal::cleanup()
     m_proxyClient.reset();
     m_mt310s2d.reset();
     TimeMachineObject::feedEventLoop();
+    ControllerPersitentData::cleanupPersitentData();
 }
 
 void test_sourceswitchjsoninternal::checkInitialLoadState()
