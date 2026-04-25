@@ -3,6 +3,7 @@
 #include "demovaluesdsprange.h"
 #include <timemachineobject.h>
 #include <timemachinefortest.h>
+#include <timerfactoryqtfortest.h>
 #include <testloghelpers.h>
 #include <vs_dumpjson.h>
 #include <QSignalSpy>
@@ -15,6 +16,7 @@ static int constexpr rangeEntityId = 1020;
 void test_range_module_regression::initTestCase()
 {
     qputenv("QT_FATAL_CRITICALS", "1");
+    TimerFactoryQtForTest::enableTest();
 }
 
 void test_range_module_regression::minimalSession()

@@ -8,6 +8,7 @@
 #include <testlicensesystem.h>
 #include <zera-jsonfileloader.h>
 #include <timemachineobject.h>
+#include <timerfactoryqtfortest.h>
 #include <memoryalloctracker.h>
 #include <backtracetreegenerator.h>
 #include <QJsonArray>
@@ -20,8 +21,9 @@ static int constexpr systemEntityId = 0;
 
 void test_change_session::initTestCase()
 {
-    m_serviceInterfaceFactory = std::make_shared<TestFactoryServiceInterfaces>();
     qputenv("QT_FATAL_CRITICALS", "1");
+    TimerFactoryQtForTest::enableTest();
+    m_serviceInterfaceFactory = std::make_shared<TestFactoryServiceInterfaces>();
 }
 
 void test_change_session::changeToUnavailableSession()

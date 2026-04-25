@@ -1,6 +1,7 @@
 #include "test_cro_channel_notify_source_on_change.h"
 #include "rangemodule.h"
 #include <timemachineobject.h>
+#include <timerfactoryqtfortest.h>
 #include <modulemanagertestrunner.h>
 #include <proxy.h>
 #include <controllerpersitentdata.h>
@@ -12,6 +13,7 @@ QTEST_MAIN(test_cro_channel_notify_source_on_change)
 void test_cro_channel_notify_source_on_change::initTestCase()
 {
     qputenv("QT_FATAL_CRITICALS", "1");
+    TimerFactoryQtForTest::enableTest();
 }
 
 void test_cro_channel_notify_source_on_change::cleanup()

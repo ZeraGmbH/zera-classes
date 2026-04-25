@@ -1,6 +1,7 @@
 #include "test_dspsuper_global_integration_time.h"
 #include "dspsupermoduleintegrationcomponentfinder.h"
 #include "modulemanagertestrunner.h"
+#include <timerfactoryqtfortest.h>
 #include <QTest>
 
 QTEST_MAIN(test_dspsuper_global_integration_time)
@@ -8,6 +9,7 @@ QTEST_MAIN(test_dspsuper_global_integration_time)
 void test_dspsuper_global_integration_time::initTestCase()
 {
     qputenv("QT_FATAL_CRITICALS", "1");
+    TimerFactoryQtForTest::enableTest();
 }
 
 void test_dspsuper_global_integration_time::integrationComponentsFindNoneOnMinimal()

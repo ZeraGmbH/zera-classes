@@ -2,6 +2,7 @@
 #include "demovaluesdspperiodaverage.h"
 #include "modulemanagertestrunner.h"
 #include <timemachineobject.h>
+#include <timerfactoryqtfortest.h>
 #include <vf_core_stack_client.h>
 #include <vf_entity_component_event_item.h>
 #include <vf_client_component_setter.h>
@@ -16,6 +17,7 @@ static int constexpr periodAverageEntityId = 1055;
 void test_periodaverage_module::initTestCase()
 {
     qputenv("QT_FATAL_CRITICALS", "1");
+    TimerFactoryQtForTest::enableTest();
 }
 
 void test_periodaverage_module::minimalSession()

@@ -9,6 +9,7 @@
 #include <vf_entity_component_event_item.h>
 #include <vf_client_component_setter.h>
 #include <timemachineobject.h>
+#include <timerfactoryqtfortest.h>
 #include <xmldocumentcompare.h>
 #include <testloghelpers.h>
 #include <QJsonArray>
@@ -21,6 +22,7 @@ const int powerEntityId = 1070;
 void test_power1_module_regression::initTestCase()
 {
     qputenv("QT_FATAL_CRITICALS", "1");
+    TimerFactoryQtForTest::enableTest();
 }
 
 void test_power1_module_regression::minimalSession()

@@ -5,6 +5,7 @@
 #include <mocktcpnetworkfactory.h>
 #include <testloghelpers.h>
 #include <timemachinefortest.h>
+#include <timerfactoryqtfortest.h>
 #include <QTest>
 
 QTEST_MAIN(test_source_full)
@@ -14,6 +15,7 @@ static int constexpr sourceEntityId = 1300;
 void test_source_full::initTestCase()
 {
     qputenv("QT_FATAL_CRITICALS", "1");
+    TimerFactoryQtForTest::enableTest();
 }
 
 void test_source_full::cleanup()

@@ -1,6 +1,7 @@
 #include "test_adj_module_lem_offset_sequences.h"
 #include "adjmoduletesthelper.h"
 #include <timemachineobject.h>
+#include <timerfactoryqtfortest.h>
 #include <controllerpersitentdata.h>
 #include <mockserverparamgenerator.h>
 #include <QTest>
@@ -10,6 +11,7 @@ QTEST_MAIN(test_adj_module_lem_offset_sequences)
 void test_adj_module_lem_offset_sequences::initTestCase()
 {
     qputenv("QT_FATAL_CRITICALS", "1");
+    TimerFactoryQtForTest::enableTest();
     setupServers();
     QCOMPARE(setRangeGroupingOff(), "+0");
     QCOMPARE(setAutoRangeOff(), "+0");

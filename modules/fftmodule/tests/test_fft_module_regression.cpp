@@ -5,8 +5,9 @@
 #include <vf_entity_component_event_item.h>
 #include <vf_client_component_setter.h>
 #include <timemachineobject.h>
+#include <timerfactoryqtfortest.h>
 #include <testloghelpers.h>
-#include <cmath>
+#include <math.h>
 #include <QTest>
 
 QTEST_MAIN(test_fft_module_regression)
@@ -16,6 +17,7 @@ static int constexpr fftEntityId = 1060;
 void test_fft_module_regression::initTestCase()
 {
     qputenv("QT_FATAL_CRITICALS", "1");
+    TimerFactoryQtForTest::enableTest();
 }
 
 void test_fft_module_regression::minimalSession()
