@@ -18,6 +18,7 @@ private slots:
     void switchOnOk();
     void switchOffOk();
     void switchOnOffOk();
+    void switchOnServerDied();
 
     void switchUL2OffCheckOnFlags();
     void switchUL2OffCheckDspAmplitude();
@@ -25,6 +26,8 @@ private slots:
     void switchUL2OffCheckDspFrequency();
 
 private:
+    void killServer();
+
     VeinTcp::AbstractTcpNetworkFactoryPtr m_tcpNetworkFactory;
     std::unique_ptr<ResmanRunFacade> m_resman;
     std::unique_ptr<MockMt310s2d> m_mt310s2d;

@@ -4,6 +4,7 @@
 #include "testsourceinternalloadstategetter.h"
 #include <mocktcpnetworkfactory.h>
 #include <controllerpersitentdata.h>
+#include <timerfactoryqtfortest.h>
 #include <timemachinefortest.h>
 #include <tasktesthelper.h>
 #include <proxy.h>
@@ -19,6 +20,7 @@ QTEST_MAIN(test_sourceswitchjsoninternal)
 
 void test_sourceswitchjsoninternal::initTestCase()
 {
+    TimerFactoryQtForTest::enableTest();
     qputenv("QT_FATAL_CRITICALS", "1");
     m_tcpNetworkFactory = VeinTcp::MockTcpNetworkFactory::create();
     m_resman = std::make_unique<ResmanRunFacade>(m_tcpNetworkFactory);
@@ -26,6 +28,7 @@ void test_sourceswitchjsoninternal::initTestCase()
 
 void test_sourceswitchjsoninternal::init()
 {
+    TimeMachineForTest::reset();
     m_mt310s2d = std::make_unique<MockMt310s2d>(std::make_shared<TestFactoryI2cCtrl>(true), m_tcpNetworkFactory, "mt581s2d");
     TimeMachineObject::feedEventLoop();
 
@@ -48,8 +51,7 @@ void test_sourceswitchjsoninternal::cleanup()
 {
     m_pcbIFace.reset();
     m_proxyClient.reset();
-    m_mt310s2d.reset();
-    TimeMachineObject::feedEventLoop();
+    killServer();
     ControllerPersitentData::cleanupPersitentData();
 }
 
@@ -230,6 +232,26 @@ void test_sourceswitchjsoninternal::switchOnOffOk()
     QCOMPARE(getter.getOn(phaseType::I, 2), false);
 }
 
+void test_sourceswitchjsoninternal::switchOnServerDied()
+{
+    SourceSwitchJsonInternal switcher(m_pcbIFace, *m_capabilities);
+    QSignalSpy spy(&switcher, &AbstractSourceSwitchJson::sigSwitchFinished);
+
+    JsonParamApi load = switcher.getCurrLoadState();
+    QJsonObject stateBeforeSwitch = load.getParams();
+    load.setOn(true);
+
+    killServer();
+    switcher.switchState(load);
+    TimeMachineForTest::getInstance()->processTimers(TRANSACTION_TIMEOUT);
+
+    QCOMPARE(spy.count(), 1);
+
+    QByteArray dumpedCurrent = TestLogHelpers::dump(switcher.getCurrLoadState().getParams());
+    QByteArray expectedCurrent = TestLogHelpers::dump(stateBeforeSwitch);
+    QVERIFY(TestLogHelpers::compareAndLogOnDiffJson(expectedCurrent, dumpedCurrent));
+}
+
 void test_sourceswitchjsoninternal::switchUL2OffCheckOnFlags()
 {
     SourceSwitchJsonInternal switcher(m_pcbIFace, *m_capabilities);
@@ -310,4 +332,10 @@ void test_sourceswitchjsoninternal::switchUL2OffCheckDspFrequency()
     QVERIFY(TestFloatingPointHelper::compareFuzzyLimit(getter.getDspFreqVal(phaseType::U, 0), 51.0));
     // we don't care for Values on UL2
     QVERIFY(TestFloatingPointHelper::compareFuzzyLimit(getter.getDspFreqVal(phaseType::U, 2), 51.0));
+}
+
+void test_sourceswitchjsoninternal::killServer()
+{
+    m_mt310s2d.reset();
+    TimeMachineObject::feedEventLoop();
 }

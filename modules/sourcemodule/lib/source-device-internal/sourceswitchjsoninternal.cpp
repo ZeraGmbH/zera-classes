@@ -130,7 +130,8 @@ JsonParamApi SourceSwitchJsonInternal::getRequestedLoadState()
 
 void SourceSwitchJsonInternal::onSwitchTasksFinish(bool ok)
 {
-    m_paramsCurrent = m_paramsRequested;
+    if (ok)
+        m_paramsCurrent = m_paramsRequested;
     emit sigSwitchFinished();
 }
 
