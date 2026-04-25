@@ -26,7 +26,7 @@ void test_sourcedevicefacade::checkDeviceInfo()
 {
     IoDeviceBase::Ptr ioDevice = createOpenDemoIoDevice();
     SourceDeviceExtSerial sourceDevice(ioDevice, DefaultTestSourceProperties());
-    QCOMPARE(ioDevice->getDeviceInfo(), sourceDevice.getIoDeviceInfo());
+    QCOMPARE(ioDevice->getDeviceInfo(), sourceDevice.getDeviceInfo());
 }
 
 void test_sourcedevicefacade::checkDemoOn()

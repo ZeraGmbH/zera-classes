@@ -106,7 +106,7 @@ void SourceDeviceManager::closeSource(QString ioDeviceInfo, const QUuid uuid)
 {
     for(int slot = 0; slot<getSlotCount(); ++slot) {
         SourceDeviceTemplate::Ptr sourceController = getSourceController(slot);
-        if(sourceController && sourceController->getIoDeviceInfo() == ioDeviceInfo) {
+        if(sourceController && sourceController->getDeviceInfo() == ioDeviceInfo) {
             closeSource(slot, uuid);
             return;
         }

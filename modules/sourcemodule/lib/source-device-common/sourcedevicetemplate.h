@@ -22,7 +22,7 @@ public:
     void switchLoad(QJsonObject params);
 
     int getId();
-    const QString &getIoDeviceInfo() const;
+    const QString &getDeviceInfo() const;
     bool hasDemoIo() const;
     QStringList getLastErrors() const;
 

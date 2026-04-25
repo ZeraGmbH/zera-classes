@@ -31,7 +31,7 @@ int SourceDeviceTemplate::getId()
     return m_ID;
 }
 
-const QString &SourceDeviceTemplate::getIoDeviceInfo() const
+const QString &SourceDeviceTemplate::getDeviceInfo() const
 {
     return m_deviceInfo;
 }
