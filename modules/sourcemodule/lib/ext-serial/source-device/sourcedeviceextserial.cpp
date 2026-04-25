@@ -1,4 +1,5 @@
 #include "sourcedeviceextserial.h"
+#include "sourceioextserial.h"
 #include <vfmoduleparameter.h>
 #include <jsonparamvalidator.h>
 #include "sourceswitchjsonextserial.h"

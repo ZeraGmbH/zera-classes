@@ -5,6 +5,7 @@
 #include "sourceproperties.h"
 #include "sourcetransactionstartnotifier.h"
 #include "sourcestatecontroller.h"
+#include "iodevicebase.h"
 #include <QObject>
 #include <QUuid>
 #include <QJsonObject>

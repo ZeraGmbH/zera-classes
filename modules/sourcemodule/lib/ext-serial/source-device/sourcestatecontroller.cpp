@@ -1,4 +1,5 @@
 #include "sourcestatecontroller.h"
+#include "sourceioextserial.h"
 
 SourceStateController::SourceStateController(SourceTransactionStartNotifier::Ptr sourceNotificationSwitch,
                                              SourceTransactionStartNotifier::Ptr sourceNotificationStateQuery,
@@ -23,14 +24,14 @@ void SourceStateController::setPollCountAfterSwitchOnOk(int count)
 
 bool SourceStateController::isErrorState() const
 {
-    return m_currState == States::ERROR_SWITCH ||
-           m_currState == States::ERROR_POLL;
+    return m_currState == SourceStates::ERROR_SWITCH ||
+           m_currState == SourceStates::ERROR_POLL;
 }
 
 void SourceStateController::onSwitchTransactionStarted(int dataGroupId)
 {
     m_pendingSwitchIds.setPending(dataGroupId);
-    setState(States::SWITCH_BUSY);
+    setState(SourceStates::SWITCH_BUSY);
 }
 
 void SourceStateController::onStateQueryTransationStarted(int dataGroupId)
@@ -49,7 +50,7 @@ void SourceStateController::onResponseReceived(const IoQueueGroup::Ptr transferG
     }
 }
 
-void SourceStateController::setState(States state)
+void SourceStateController::setState(SourceStates state)
 {
     if(m_currState != state) {
         m_currState = state;
@@ -71,15 +72,15 @@ void SourceStateController::setPollingOnStateChange()
 void SourceStateController::handleSwitchResponse(const IoQueueGroup::Ptr transferGroup)
 {
     if(isNewError(transferGroup)) {
-        setState(States::ERROR_SWITCH);
+        setState(SourceStates::ERROR_SWITCH);
     }
-    else if(m_currState == States::SWITCH_BUSY) {
+    else if(m_currState == SourceStates::SWITCH_BUSY) {
         if(m_pollCountAfterSwitchOnOk > 0) {
             m_pollCountBeforeIdleOrError = m_pollCountAfterSwitchOnOk;
             m_sourceStatePoller->startPeriodicPoll();
         }
         else {
-            setState(States::IDLE);
+            setState(SourceStates::IDLE);
         }
     }
 }
@@ -89,18 +90,18 @@ void SourceStateController::handleStateResponse(const IoQueueGroup::Ptr transfer
     if(m_pollCountBeforeIdleOrError > 0) {
         m_pollCountBeforeIdleOrError--;
         if(isNewError(transferGroup)) {
-            setState(States::ERROR_SWITCH);
+            setState(SourceStates::ERROR_SWITCH);
             m_pollCountBeforeIdleOrError = 0;
         }
         else if(m_pollCountBeforeIdleOrError == 0) {
-            setState(States::IDLE);
+            setState(SourceStates::IDLE);
         }
     }
     else if(isNewError(transferGroup)) {
-        setState(States::ERROR_POLL);
+        setState(SourceStates::ERROR_POLL);
     }
-    else if(m_currState == States::UNDEFINED) {
-        setState(States::IDLE);
+    else if(m_currState == SourceStates::UNDEFINED) {
+        setState(SourceStates::IDLE);
     }
 }
 

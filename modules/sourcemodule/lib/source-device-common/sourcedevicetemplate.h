@@ -2,8 +2,9 @@
 #define SOURCEDEVICETEMPLATE_H
 
 #include "idgenerator.h"
+#include "iodevicetypes.h"
+#include "sourcestates.h"
 #include "sourceveininterface.h"
-#include "sourcestatecontroller.h"
 #include "jsondevicestatusapi.h"
 #include "abstractsourceswitchjson.h"
 #include <QUuid>
@@ -31,9 +32,9 @@ signals:
     void sigClosed(int facadeId, QUuid uuid);
 
 protected slots:
-    void handleNewState(SourceStateController::States state);
+    void handleNewState(SourceStates state);
 protected:
-    void handleErrorState(SourceStateController::States state);
+    void handleErrorState(SourceStates state);
     void setVeinParamStructure(QJsonObject sourceCapabilities);
     void setVeinDeviceState(QJsonObject deviceState);
     void setVeinParamState(QJsonObject paramState);

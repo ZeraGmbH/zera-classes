@@ -86,13 +86,13 @@ void SourceDeviceTemplate::switchLoad(QJsonObject params)
     m_switcher->switchState(paramApi);
 }
 
-void SourceDeviceTemplate::handleNewState(SourceStateController::States state)
+void SourceDeviceTemplate::handleNewState(SourceStates state)
 {
-    if(state == SourceStateController::States::SWITCH_BUSY) {
+    if(state == SourceStates::SWITCH_BUSY) {
         m_deviceStatusJsonApi.clearWarningsErrors();
         m_deviceStatusJsonApi.setBusy(true);
     }
-    else if(state == SourceStateController::States::IDLE) {
+    else if(state == SourceStates::IDLE) {
         m_deviceStatusJsonApi.setBusy(false);
     }
     else {
@@ -101,16 +101,16 @@ void SourceDeviceTemplate::handleNewState(SourceStateController::States state)
     setVeinDeviceState(m_deviceStatusJsonApi.getJsonStatus());
 }
 
-void SourceDeviceTemplate::handleErrorState(SourceStateController::States state)
+void SourceDeviceTemplate::handleErrorState(SourceStates state)
 {
     // All errors need love: translation / helpful status messages
-    if(state == SourceStateController::States::ERROR_SWITCH) {
+    if(state == SourceStates::ERROR_SWITCH) {
         MessageTexts::Texts msgTxtId = m_switcher->getRequestedLoadState().getOn() ?
                                            MessageTexts::ERR_SWITCH_ON :
                                            MessageTexts::ERR_SWITCH_OFF;
         m_deviceStatusJsonApi.addError(MessageTexts::getText(msgTxtId));
     }
-    else if(state == SourceStateController::States::ERROR_POLL) {
+    else if(state == SourceStates::ERROR_POLL) {
         m_deviceStatusJsonApi.addError(MessageTexts::getText(MessageTexts::ERR_STATUS_POLL));
     }
 
