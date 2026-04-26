@@ -14,13 +14,13 @@ public:
     SourceSwitchJsonInternal(AbstractServerInterfacePtr serverInterface,
                              const QJsonObject &sourceCapabilities);
     void switchState(const JsonParamApi &paramState) override;
-    void switchOff() override;
     JsonParamApi getCurrLoadState() override;
     JsonParamApi getRequestedLoadState() override;
 
 private slots:
     void onSwitchTasksFinish(bool ok);
 private:
+    void switchOff();
     TaskContainerInterfacePtr createLoadpointTasks(const JsonParamApi &paramState);
     TaskTemplatePtr createSourceModeOnTask(const JsonParamApi &paramState);
     TaskTemplatePtr createSourceOnOffTask(const JsonParamApi &paramState);

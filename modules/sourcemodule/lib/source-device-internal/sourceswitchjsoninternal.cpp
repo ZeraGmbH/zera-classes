@@ -23,6 +23,9 @@ SourceSwitchJsonInternal::SourceSwitchJsonInternal(AbstractServerInterfacePtr se
 
 void SourceSwitchJsonInternal::switchState(const JsonParamApi &paramState)
 {
+    if (!paramState.getOn())
+        return switchOff();
+
     m_paramsRequested = paramState;
     m_currentTasks = TaskContainerSequence::create(TaskContainerSequence::StopOnFirstTaskFail);
 

@@ -149,7 +149,8 @@ void test_sourcestatecontroller::switchOnOffCausesBusyTwoOnOffState()
     QCOMPARE(statesReceived[0], SourceStates::SWITCH_BUSY);
     QCOMPARE(statesReceived[1], SourceStates::IDLE);
 
-    switcher.switchOff();
+    jsonParam.setOn(false);
+    switcher.switchState(jsonParam);
     TimeMachineForTest::getInstance()->processTimers(shortQtEventTimeout);
     QCOMPARE(statesReceived.count(), 4);
     QCOMPARE(statesReceived[2], SourceStates::SWITCH_BUSY);

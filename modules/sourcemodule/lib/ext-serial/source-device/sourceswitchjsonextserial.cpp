@@ -22,13 +22,6 @@ void SourceSwitchJsonExtSerial::switchState(const JsonParamApi &paramState)
     m_sourceNotificationSwitch->startTransactionWithNotify(transferGroup);
 }
 
-void SourceSwitchJsonExtSerial::switchOff()
-{
-    JsonParamApi paramOff = m_paramsCurrent;
-    paramOff.setOn(false);
-    switchState(paramOff);
-}
-
 JsonParamApi SourceSwitchJsonExtSerial::getCurrLoadState()
 {
     return m_paramsCurrent;

@@ -129,7 +129,9 @@ void test_sourceswitchjsoninternal::switchOffOk()
     SourceSwitchJsonInternal switcher(m_pcbIFace, *m_capabilities);
     QSignalSpy spy(&switcher, &AbstractSourceSwitchJson::sigSwitchFinished);
 
-    switcher.switchOff();
+    JsonParamApi load = switcher.getCurrLoadState();
+    load.setOn(false);
+    switcher.switchState(load);
     TimeMachineObject::feedEventLoop();
 
     QCOMPARE(spy.count(), 1);
@@ -203,7 +205,8 @@ void test_sourceswitchjsoninternal::switchOnOffOk()
 
 
     // Off
-    switcher.switchOff();
+    load.setOn(false);
+    switcher.switchState(load);
     QByteArray dumpedOffRequested = TestLogHelpers::dump(switcher.getRequestedLoadState().getParams());
     QVERIFY(TestLogHelpers::compareAndLogOnDiffJson(offState, dumpedOffRequested));
     QByteArray dumpedOffCurrent = TestLogHelpers::dump(switcher.getCurrLoadState().getParams());

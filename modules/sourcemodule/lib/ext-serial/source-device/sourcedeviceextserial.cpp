@@ -31,8 +31,11 @@ bool SourceDeviceExtSerial::close(QUuid uuid)
         closeRequested = true;
         enableCloseRequested(uuid);
         m_statePoller->stopPeriodicPoll();
-        if(m_switcher->getCurrLoadState().getOn())
-            m_switcher->switchOff();
+        JsonParamApi currLoad = m_switcher->getCurrLoadState();
+        if(currLoad.getOn()) {
+            currLoad.setOn(false);
+            m_switcher->switchState(currLoad);
+        }
         else
             doFinalCloseActivities();
     }
