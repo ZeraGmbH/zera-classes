@@ -1,20 +1,14 @@
 #ifndef CSOURCEVEININTERFACE_H
 #define CSOURCEVEININTERFACE_H
 
-#include <QObject>
-#include <QJsonObject>
-#include <QVariant>
-
-class VfModuleComponent;
-class VfModuleParameter;
-class cJsonParamValidator;
+#include "vfmodulecomponent.h"
+#include "vfmoduleparameter.h"
+#include <jsonparamvalidator.h>
 
 class SourceVeinInterface : public QObject
 {
     Q_OBJECT
 public:
-    explicit SourceVeinInterface();
-
     VfModuleComponent *getVeinDeviceInfoComponent();
     VfModuleComponent *getVeinDeviceStateComponent();
     VfModuleParameter *getVeinDeviceParameterComponent();

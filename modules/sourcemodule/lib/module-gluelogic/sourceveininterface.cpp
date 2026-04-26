@@ -1,10 +1,6 @@
 #include "sourceveininterface.h"
 #include <vfmoduleparameter.h>
 
-SourceVeinInterface::SourceVeinInterface()
-{
-}
-
 VfModuleComponent *SourceVeinInterface::getVeinDeviceInfoComponent()
 {
     return m_veinDeviceInfo;
