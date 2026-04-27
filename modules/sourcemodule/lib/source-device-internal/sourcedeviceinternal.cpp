@@ -6,10 +6,8 @@ SourceDeviceInternal::SourceDeviceInternal(AbstractServerInterfacePtr serverInte
 {
     // sigSwitchTransactionStarted is not part of abstract interface
     std::unique_ptr<SourceSwitchJsonInternal> switcher = std::make_unique<SourceSwitchJsonInternal>(serverInterface, sourceCapabilities);
-    connect(&m_stateController, &SourceStateControllerInternal::sigStateChanged,
-            this, &SourceDeviceTemplate::handleNewState);
     connect(switcher.get(), &SourceSwitchJsonInternal::sigSwitchTransactionStarted,
-            &m_stateController, &SourceStateControllerInternal::onSwitchTransactionStarted);
+            this, &SourceDeviceInternal::onSwitchTransactionStarted);
     m_switcher = std::move(switcher);
     connect(m_switcher.get(), &AbstractSourceSwitchJson::sigSwitchFinished,
             this, &SourceDeviceInternal::onSourceSwitchFinished);
@@ -20,6 +18,11 @@ bool SourceDeviceInternal::close(QUuid uuid)
     resetVeinComponents();
     emit sigClosed(getId(), uuid);
     return true;
+}
+
+void SourceDeviceInternal::onSwitchTransactionStarted()
+{
+    handleNewState(SourceStates::SWITCH_BUSY);
 }
 
 void SourceDeviceInternal::onSourceSwitchFinished(bool ok)

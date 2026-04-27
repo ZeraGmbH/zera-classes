@@ -5,6 +5,8 @@
         <file>sessions/minimal.json</file>
         <file>veinDumps/dumpInitialMt310s2.json</file>
         <file>veinDumps/dumpInitialMt581s2.json</file>
+        <file>veinEventDumps/dumpSwitchOffAfterOnMt581s2.json</file>
+        <file>veinEventDumps/dumpSwitchOffMt581s2.json</file>
         <file>veinEventDumps/dumpSwitchOnMt310s2.json</file>
         <file>veinEventDumps/dumpSwitchOnMt581s2.json</file>
     </qresource>

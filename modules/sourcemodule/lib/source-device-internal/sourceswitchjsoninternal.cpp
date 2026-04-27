@@ -21,17 +21,17 @@ SourceSwitchJsonInternal::SourceSwitchJsonInternal(AbstractServerInterfacePtr se
 {
 }
 
-void SourceSwitchJsonInternal::switchState(const JsonParamApi &paramState)
+void SourceSwitchJsonInternal::switchState(const JsonParamApi &desiredLoad)
 {
-    if (!paramState.getOn())
+    if (!desiredLoad.getOn())
         return switchOff();
 
-    m_paramsRequested = paramState;
-    m_currentTasks = TaskContainerSequence::create(TaskContainerSequence::StopOnFirstTaskFail);
+    m_paramsRequested = desiredLoad;
 
-    m_currentTasks->addSub(createSourceModeOnTask(paramState));
-    m_currentTasks->addSub(createLoadpointTasks(paramState));
-    m_currentTasks->addSub(createSourceOnOffTask(paramState));
+    m_currentTasks = TaskContainerSequence::create(TaskContainerSequence::StopOnFirstTaskFail);
+    m_currentTasks->addSub(createSourceModeOnTask(desiredLoad));
+    m_currentTasks->addSub(createLoadpointTasks(desiredLoad));
+    m_currentTasks->addSub(createSourceOnOffTask(desiredLoad));
 
     connect(m_currentTasks.get(), &TaskTemplate::sigFinish,
             this, &SourceSwitchJsonInternal::onSwitchTasksFinish);
@@ -46,12 +46,12 @@ void SourceSwitchJsonInternal::switchOff()
     m_paramsRequested = paramOff;
 
     m_currentTasks = TaskContainerSequence::create(TaskContainerSequence::StopOnFirstTaskFail);
-
     m_currentTasks->addSub(createSourceOnOffTask(paramOff));
     m_currentTasks->addSub(createSourceModeOnTask(paramOff));
     connect(m_currentTasks.get(), &TaskTemplate::sigFinish,
             this, &SourceSwitchJsonInternal::onSwitchTasksFinish);
     m_currentTasks->start();
+
     emit sigSwitchTransactionStarted();
 }
 
