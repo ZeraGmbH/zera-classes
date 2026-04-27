@@ -223,6 +223,27 @@
             "ValueOld": null
         },
         {
+            "Am command event in": "server-enter",
+            "Attached data": "ComponentData",
+            "ComponentCommand": "CCMD_SET",
+            "ComponentName": "ACT_DeviceState0",
+            "Entity": 1300,
+            "EventOrigin": "EO_LOCAL",
+            "EventSubtype": "NOTIFICATION",
+            "EventTarget": "ET_ALL",
+            "Valid": true,
+            "ValidPeer": false,
+            "ValueNew": {
+                "busy": true,
+                "deviceinfo": "MT581s2",
+                "errors": [
+                ],
+                "warnings": [
+                ]
+            },
+            "ValueOld": null
+        },
+        {
             "Am command event in": "client-enter",
             "Attached data": "ComponentData",
             "ComponentCommand": "CCMD_SET",
@@ -335,6 +356,27 @@
             "ValidPeer": false,
             "ValueNew": {
                 "busy": false,
+                "deviceinfo": "MT581s2",
+                "errors": [
+                ],
+                "warnings": [
+                ]
+            },
+            "ValueOld": null
+        },
+        {
+            "Am command event in": "client-enter",
+            "Attached data": "ComponentData",
+            "ComponentCommand": "CCMD_SET",
+            "ComponentName": "ACT_DeviceState0",
+            "Entity": 1300,
+            "EventOrigin": "EO_FOREIGN",
+            "EventSubtype": "NOTIFICATION",
+            "EventTarget": "ET_IRRELEVANT",
+            "Valid": true,
+            "ValidPeer": true,
+            "ValueNew": {
+                "busy": true,
                 "deviceinfo": "MT581s2",
                 "errors": [
                 ],
