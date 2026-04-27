@@ -12,7 +12,7 @@ public:
     virtual JsonParamApi getCurrLoadState() = 0;
     virtual JsonParamApi getRequestedLoadState() = 0;
 signals:
-    void sigSwitchFinished();
+    void sigSwitchFinished(bool ok);
 };
 
 #endif // ABSTRACTSOURCESWITCHJSON_H

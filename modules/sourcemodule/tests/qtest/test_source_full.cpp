@@ -94,6 +94,28 @@ void test_source_full::switch_on_mt310s2()
     QVERIFY(TestLogHelpers::compareAndLogOnDiffJsonFile(":/veinEventDumps/dumpSwitchOnMt310s2.json", jsonDumped));
 }
 
+void test_source_full::switch_on_mt581s2()
+{
+    setupServerAndClient(":/sessions/minimal.json", "mt581s2");
+    QJsonObject jsonEventDump;
+    setupServerAndClientSpies(jsonEventDump);
+
+    VeinStorage::AbstractDatabase *veinStorageDb = m_testRunner->getVeinStorageDb();
+    VeinStorage::AbstractComponentPtr storedState = veinStorageDb->findComponent(sourceEntityId, "PAR_SourceState0");
+    JsonParamApi paramApi;
+    QJsonObject oldValue = storedState->getValue().toJsonObject();
+    paramApi.setParams(oldValue);
+    paramApi.setOn(true);
+
+    QEvent* event = VfClientComponentSetter::generateEvent(sourceEntityId, "PAR_SourceState0",
+                                                           oldValue, paramApi.getParams());
+    m_entityItem->sendEvent(event);
+    TimeMachineForTest::getInstance()->processTimers(5000);
+
+    QByteArray jsonDumped = TestLogHelpers::dump(jsonEventDump);
+    QVERIFY(TestLogHelpers::compareAndLogOnDiffJsonFile(":/veinEventDumps/dumpSwitchOnMt581s2.json", jsonDumped));
+}
+
 void test_source_full::setupServerAndClient(const QString &session, const QString &dut)
 {
     constexpr int veinServerPort = 12000;

@@ -50,5 +50,5 @@ void SourceSwitchJsonExtSerial::handleSwitchResponse(const IoQueueGroup::Ptr tra
         m_paramsCurrent = m_paramsRequested;
         m_persistentParamState.saveJsonState(m_paramsCurrent);
     }
-    emit sigSwitchFinished();
+    emit sigSwitchFinished(transferGroup->passedAll());
 }

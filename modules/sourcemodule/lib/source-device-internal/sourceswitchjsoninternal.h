@@ -16,6 +16,8 @@ public:
     void switchState(const JsonParamApi &paramState) override;
     JsonParamApi getCurrLoadState() override;
     JsonParamApi getRequestedLoadState() override;
+signals:
+    void sigSwitchTransactionStarted();
 
 private slots:
     void onSwitchTasksFinish(bool ok);

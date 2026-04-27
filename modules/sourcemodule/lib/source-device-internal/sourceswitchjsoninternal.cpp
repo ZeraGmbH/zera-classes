@@ -36,6 +36,7 @@ void SourceSwitchJsonInternal::switchState(const JsonParamApi &paramState)
     connect(m_currentTasks.get(), &TaskTemplate::sigFinish,
             this, &SourceSwitchJsonInternal::onSwitchTasksFinish);
     m_currentTasks->start();
+    emit sigSwitchTransactionStarted();
 }
 
 void SourceSwitchJsonInternal::switchOff()
@@ -51,6 +52,7 @@ void SourceSwitchJsonInternal::switchOff()
     connect(m_currentTasks.get(), &TaskTemplate::sigFinish,
             this, &SourceSwitchJsonInternal::onSwitchTasksFinish);
     m_currentTasks->start();
+    emit sigSwitchTransactionStarted();
 }
 
 TaskContainerInterfacePtr SourceSwitchJsonInternal::createLoadpointTasks(const JsonParamApi &paramState)
@@ -135,6 +137,6 @@ void SourceSwitchJsonInternal::onSwitchTasksFinish(bool ok)
 {
     if (ok)
         m_paramsCurrent = m_paramsRequested;
-    emit sigSwitchFinished();
+    emit sigSwitchFinished(ok);
 }
 

@@ -13,6 +13,8 @@ public:
                                   const QJsonObject &sourceCapabilities);
 
     bool close(QUuid uuid) override;
+private slots:
+    void onSourceSwitchFinished(bool ok);
 private:
     SourceStateControllerInternal m_stateController;
 };

@@ -4,9 +4,15 @@
 SourceDeviceInternal::SourceDeviceInternal(AbstractServerInterfacePtr serverInterface, const QJsonObject &sourceCapabilities) :
     SourceDeviceTemplate(JsonStructApi(sourceCapabilities).getDeviceName(), IoDeviceTypes::SCPI_NET, sourceCapabilities)
 {
-    m_switcher = std::make_unique<SourceSwitchJsonInternal>(serverInterface, sourceCapabilities);
+    // sigSwitchTransactionStarted is not part of abstract interface
+    std::unique_ptr<SourceSwitchJsonInternal> switcher = std::make_unique<SourceSwitchJsonInternal>(serverInterface, sourceCapabilities);
     connect(&m_stateController, &SourceStateControllerInternal::sigStateChanged,
-            this, &SourceDeviceInternal::handleNewState);
+            this, &SourceDeviceTemplate::handleNewState);
+    connect(switcher.get(), &SourceSwitchJsonInternal::sigSwitchTransactionStarted,
+            &m_stateController, &SourceStateControllerInternal::onSwitchTransactionStarted);
+    m_switcher = std::move(switcher);
+    connect(m_switcher.get(), &AbstractSourceSwitchJson::sigSwitchFinished,
+            this, &SourceDeviceInternal::onSourceSwitchFinished);
 }
 
 bool SourceDeviceInternal::close(QUuid uuid)
@@ -14,4 +20,10 @@ bool SourceDeviceInternal::close(QUuid uuid)
     resetVeinComponents();
     emit sigClosed(getId(), uuid);
     return true;
+}
+
+void SourceDeviceInternal::onSourceSwitchFinished(bool ok)
+{
+    setVeinParamState(m_switcher->getCurrLoadState().getParams());
+    handleNewState(ok ? SourceStates::IDLE : SourceStates::ERROR_SWITCH);
 }
