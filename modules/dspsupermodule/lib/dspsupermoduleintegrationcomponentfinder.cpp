@@ -36,10 +36,12 @@ VeinStorage::AbstractComponentPtr DspSuperModuleIntegrationComponentFinder::comp
 
 QJsonObject DspSuperModuleIntegrationComponentFinder::getModuleInterface(const VeinStorage::AbstractDatabase *storageDb, int entityId)
 {
-    QString moduleInfo = storageDb->getStoredValue(entityId, "INF_ModuleInterface").toString();
-    QJsonDocument jsonDoc = QJsonDocument::fromJson(moduleInfo.toUtf8());
-    if ( !jsonDoc.isNull() && jsonDoc.isObject() )
-         return jsonDoc.object();
+    if (storageDb->hasStoredValue(entityId, "INF_ModuleInterface")) {
+        QString moduleInfo = storageDb->getStoredValue(entityId, "INF_ModuleInterface").toString();
+        QJsonDocument jsonDoc = QJsonDocument::fromJson(moduleInfo.toUtf8());
+        if ( !jsonDoc.isNull() && jsonDoc.isObject() )
+             return jsonDoc.object();
+    }
     return QJsonObject();
 }
 
