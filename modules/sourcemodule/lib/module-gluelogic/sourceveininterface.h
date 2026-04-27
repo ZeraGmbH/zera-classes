@@ -11,7 +11,7 @@ class SourceVeinInterface : public QObject
 public:
     VfModuleComponent *getVeinDeviceInfoComponent();
     VfModuleComponent *getVeinDeviceStateComponent();
-    VfModuleParameter *getVeinDeviceParameterComponent();
+    VfModuleParameter *getVeinDeviceLoadpointComponent();
     cJsonParamValidator *getVeinDeviceParameterValidator();
 
     void setVeinDeviceInfoComponent(VfModuleComponent *veinDeviceInfo);

@@ -29,7 +29,7 @@ signals:
 
 private slots:
     void onScanFinished(SourceScanner::Ptr scanner);
-    void onSourceClosed(int facadeId, QUuid uuid);
+    void onSourceClosed(int sourceDeviceId, QUuid uuid);
 private:
     bool isValidSlotNo(int slotNo);
     int findFreeSlot();

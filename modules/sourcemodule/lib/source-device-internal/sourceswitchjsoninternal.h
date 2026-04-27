@@ -14,7 +14,7 @@ public:
     SourceSwitchJsonInternal(AbstractServerInterfacePtr serverInterface,
                              const QJsonObject &sourceCapabilities);
     void switchState(const JsonParamApi &desiredLoad) override;
-    JsonParamApi getCurrLoadState() override;
+    JsonParamApi getCurrLoadpoint() override;
     JsonParamApi getRequestedLoadState() override;
 signals:
     void sigSwitchTransactionStarted();

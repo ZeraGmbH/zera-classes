@@ -184,12 +184,12 @@ void SourceDeviceManager::onScanFinished(SourceScanner::Ptr scanner)
     emit sigSourceScanFinished(freeSlot, scanner->getUuid(), erorDesc);
 }
 
-void SourceDeviceManager::onSourceClosed(int facadeId, QUuid uuid)
+void SourceDeviceManager::onSourceClosed(int sourceDeviceId, QUuid uuid)
 {
     for(int slotNo=0; slotNo<m_sourceControllers.count(); slotNo++) {
         if(m_activeSlots[slotNo]) {
             auto &sourceController = m_sourceControllers[slotNo];
-            if(sourceController->getId() == facadeId) {
+            if(sourceController->getId() == sourceDeviceId) {
                 QString lastError = sourceController->getLastErrors().join(" / ");
                 m_activeSlots[slotNo] = false;
                 disconnect(sourceController.get(), &SourceDeviceTemplate::sigClosed,

@@ -114,7 +114,7 @@ void test_sourcestatecontroller::switchOnCausesBusyOnOffState()
         statesReceived.append(state);
     });
 
-    JsonParamApi jsonParam = switcher.getCurrLoadState();
+    JsonParamApi jsonParam = switcher.getCurrLoadpoint();
     jsonParam.setOn(true);
     switcher.switchState(jsonParam);
 
@@ -141,7 +141,7 @@ void test_sourcestatecontroller::switchOnOffCausesBusyTwoOnOffState()
         statesReceived.append(state);
     });
 
-    JsonParamApi jsonParam = switcher.getCurrLoadState();
+    JsonParamApi jsonParam = switcher.getCurrLoadpoint();
     jsonParam.setOn(true);
     switcher.switchState(jsonParam);
     TimeMachineForTest::getInstance()->processTimers(50);
@@ -174,7 +174,7 @@ void test_sourcestatecontroller::sequencePollSwitchErrorOnSwitch()
         statesReceived.append(state);
     });
 
-    JsonParamApi jsonParam = switcher.getCurrLoadState();
+    JsonParamApi jsonParam = switcher.getCurrLoadpoint();
     jsonParam.setOn(true);
 
     QVERIFY(poller->tryStartPollNow());
@@ -202,7 +202,7 @@ void test_sourcestatecontroller::sequencePollSwitchErrorOnPoll()
         statesReceived.append(state);
     });
 
-    JsonParamApi jsonParam = switcher.getCurrLoadState();
+    JsonParamApi jsonParam = switcher.getCurrLoadpoint();
     jsonParam.setOn(true);
 
     setDemoResonseErrorIdx(0);
@@ -231,7 +231,7 @@ void test_sourcestatecontroller::sequenceSwitchPollErrorOnSwitch()
         statesReceived.append(state);
     });
 
-    JsonParamApi jsonParam = switcher.getCurrLoadState();
+    JsonParamApi jsonParam = switcher.getCurrLoadpoint();
     jsonParam.setOn(true);
 
     setDemoResonseErrorIdx(0);
@@ -261,7 +261,7 @@ void test_sourcestatecontroller::sequenceSwitchPollErrorOnPoll()
         statesReceived.append(state);
     });
 
-    JsonParamApi jsonParam = switcher.getCurrLoadState();
+    JsonParamApi jsonParam = switcher.getCurrLoadpoint();
     jsonParam.setOn(true);
 
     setDemoResonseErrorIdx(-1);
@@ -292,7 +292,7 @@ void test_sourcestatecontroller::sequenceSwitchPollErrorOnPostPoll()
         statesReceived.append(state);
     });
 
-    JsonParamApi jsonParam = switcher.getCurrLoadState();
+    JsonParamApi jsonParam = switcher.getCurrLoadpoint();
     jsonParam.setOn(true);
 
     setDemoResonseErrorIdx(-1);
@@ -321,7 +321,7 @@ void test_sourcestatecontroller::sequencePollSwitchErrorOnBoth()
         statesReceived.append(state);
     });
 
-    JsonParamApi jsonParam = switcher.getCurrLoadState();
+    JsonParamApi jsonParam = switcher.getCurrLoadpoint();
     jsonParam.setOn(true);
 
     setDemoResonseErrorIdx(0);
@@ -349,7 +349,7 @@ void test_sourcestatecontroller::sequenceSwitchPollErrorOnBoth()
         statesReceived.append(state);
     });
 
-    JsonParamApi jsonParam = switcher.getCurrLoadState();
+    JsonParamApi jsonParam = switcher.getCurrLoadpoint();
     jsonParam.setOn(true);
 
     setDemoResonseErrorIdx(0);
@@ -377,7 +377,7 @@ void test_sourcestatecontroller::pollStopsAfterSwitchError()
         statesReceived.append(state);
     });
 
-    JsonParamApi jsonParam = switcher.getCurrLoadState();
+    JsonParamApi jsonParam = switcher.getCurrLoadpoint();
     jsonParam.setOn(true);
 
     setDemoResonseErrorIdx(0);
@@ -441,7 +441,7 @@ void test_sourcestatecontroller::pollStopsAfterErrorAndRestartsAfterSuccessfulSw
     QVERIFY(!poller->isPeriodicPollActive());
 
     setDemoResonseErrorIdx(-1);
-    JsonParamApi jsonParam = switcher.getCurrLoadState();
+    JsonParamApi jsonParam = switcher.getCurrLoadpoint();
     jsonParam.setOn(true);
     switcher.switchState(jsonParam);
 

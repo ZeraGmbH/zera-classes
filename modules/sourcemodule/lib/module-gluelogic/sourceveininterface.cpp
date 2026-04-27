@@ -11,7 +11,7 @@ VfModuleComponent *SourceVeinInterface::getVeinDeviceStateComponent()
     return m_veinDeviceState;
 }
 
-VfModuleParameter *SourceVeinInterface::getVeinDeviceParameterComponent()
+VfModuleParameter *SourceVeinInterface::getVeinDeviceLoadpointComponent()
 {
     return m_veinDeviceParameter;
 }

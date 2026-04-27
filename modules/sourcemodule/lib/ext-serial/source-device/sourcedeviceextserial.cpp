@@ -31,7 +31,7 @@ bool SourceDeviceExtSerial::close(QUuid uuid)
         closeRequested = true;
         enableCloseRequested(uuid);
         m_statePoller->stopPeriodicPoll();
-        JsonParamApi currLoad = m_switcher->getCurrLoadState();
+        JsonParamApi currLoad = m_switcher->getCurrLoadpoint();
         if(currLoad.getOn()) {
             currLoad.setOn(false);
             m_switcher->switchState(currLoad);
@@ -44,7 +44,7 @@ bool SourceDeviceExtSerial::close(QUuid uuid)
 
 void SourceDeviceExtSerial::onSourceSwitchFinished()
 {
-    setVeinParamState(m_switcher->getCurrLoadState().getParams());
+    setVeinLoadpointParam(m_switcher->getCurrLoadpoint().getParams());
     if(m_closeRequested) {
         doFinalCloseActivities();
     }

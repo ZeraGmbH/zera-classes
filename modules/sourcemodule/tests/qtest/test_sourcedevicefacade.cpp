@@ -77,8 +77,8 @@ struct TVeinObjects
 
 void test_sourcedevicefacade::checkVeinInitialStatus()
 {
-    QString deviceInfo = "__foo__";
-    IoDeviceBase::Ptr ioDevice = createOpenDemoIoDevice(deviceInfo);
+    QString deviceName = "__foo__";
+    IoDeviceBase::Ptr ioDevice = createOpenDemoIoDevice(deviceName);
     QJsonObject jsonStructure = JsonStructureLoader::loadJsonStructure(DefaultTestSourceProperties());
 
     VeinComponentSetNotifier veinEventSystem(defaultEntityId);
@@ -97,7 +97,7 @@ void test_sourcedevicefacade::checkVeinInitialStatus()
     TimeMachineObject::feedEventLoop();
     QJsonObject jsonStatusVein = vein.veinActDeviceState.getValue().toJsonObject();
     JsonDeviceStatusApi statusApi;
-    statusApi.setDeviceInfo(deviceInfo);
+    statusApi.setDeviceInfo(deviceName);
     QJsonObject jsonStatusDefault = statusApi.getJsonStatus();
     QCOMPARE(jsonStatusVein, jsonStatusDefault);
     QCOMPARE(statesReceived.count(), 1);
@@ -106,8 +106,8 @@ void test_sourcedevicefacade::checkVeinInitialStatus()
 
 void test_sourcedevicefacade::checkVeinInitialInfo()
 {
-    QString deviceInfo = "__foo__";
-    IoDeviceBase::Ptr ioDevice = createOpenDemoIoDevice(deviceInfo);
+    QString deviceName = "__foo__";
+    IoDeviceBase::Ptr ioDevice = createOpenDemoIoDevice(deviceName);
     QJsonObject jsonStructure = JsonStructureLoader::loadJsonStructure(DefaultTestSourceProperties());
 
     VeinComponentSetNotifier veinEventSystem(defaultEntityId);
@@ -132,8 +132,8 @@ void test_sourcedevicefacade::checkVeinInitialInfo()
 
 void test_sourcedevicefacade::checkVeinInitialLoad()
 {
-    QString deviceInfo = "__foo__";
-    IoDeviceBase::Ptr ioDevice = createOpenDemoIoDevice(deviceInfo);
+    QString deviceName = "__foo__";
+    IoDeviceBase::Ptr ioDevice = createOpenDemoIoDevice(deviceName);
     QJsonObject jsonStructure = JsonStructureLoader::loadJsonStructure(DefaultTestSourceProperties());
 
     VeinComponentSetNotifier veinEventSystem(defaultEntityId);
@@ -161,8 +161,8 @@ void test_sourcedevicefacade::checkVeinInitialLoad()
 
 void test_sourcedevicefacade::checkVeinSwitchTwoStateChanges()
 {
-    QString deviceInfo = "__foo__";
-    IoDeviceBase::Ptr ioDevice = createOpenDemoIoDevice(deviceInfo);
+    QString deviceName = "__foo__";
+    IoDeviceBase::Ptr ioDevice = createOpenDemoIoDevice(deviceName);
     QJsonObject jsonStructure = JsonStructureLoader::loadJsonStructure(DefaultTestSourceProperties());
 
     VeinComponentSetNotifier veinEventSystem(defaultEntityId);
@@ -194,8 +194,8 @@ void test_sourcedevicefacade::checkVeinSwitchTwoStateChanges()
 
 void test_sourcedevicefacade::checkVeinSwitchChangesLoad()
 {
-    QString deviceInfo = "__foo__";
-    IoDeviceBase::Ptr ioDevice = createOpenDemoIoDevice(deviceInfo);
+    QString deviceName = "__foo__";
+    IoDeviceBase::Ptr ioDevice = createOpenDemoIoDevice(deviceName);
     QJsonObject jsonStructure = JsonStructureLoader::loadJsonStructure(DefaultTestSourceProperties());
 
     VeinComponentSetNotifier veinEventSystem(defaultEntityId);
@@ -230,8 +230,8 @@ void test_sourcedevicefacade::checkVeinSwitchChangesLoad()
 
 void test_sourcedevicefacade::checkVeinSwitchError()
 {
-    QString deviceInfo = "__foo__";
-    IoDeviceBase::Ptr ioDevice = createOpenDemoIoDevice(deviceInfo);
+    QString deviceName = "__foo__";
+    IoDeviceBase::Ptr ioDevice = createOpenDemoIoDevice(deviceName);
     IoDeviceDemo* demoIO = static_cast<IoDeviceDemo*>(ioDevice.get());
     demoIO->setAllTransfersError(true);
     demoIO->setResponseDelay(false, 1); // at least our vein stub gets confused on high fire
@@ -284,8 +284,8 @@ void test_sourcedevicefacade::checkVeinSwitchError()
 
 void test_sourcedevicefacade::checkVeinStateError()
 {
-    QString deviceInfo = "__foo__";
-    IoDeviceBase::Ptr ioDevice = createOpenDemoIoDevice(deviceInfo);
+    QString deviceName = "__foo__";
+    IoDeviceBase::Ptr ioDevice = createOpenDemoIoDevice(deviceName);
     IoDeviceDemo* demoIO = static_cast<IoDeviceDemo*>(ioDevice.get());
     demoIO->setAllTransfersError(true);
     demoIO->setResponseDelay(false, 1); // at least our vein stub gets confused on high fire
@@ -326,4 +326,3 @@ void test_sourcedevicefacade::checkVeinStateError()
     QCOMPARE(statesReceived[0]["errors"].toArray().count(), 0);
     QCOMPARE(statesReceived[1]["errors"].toArray().count(), 1);
 }
-

@@ -7,20 +7,22 @@
 
 IoIdGenerator SourceDeviceTemplate::m_idGenerator;
 
-SourceDeviceTemplate::SourceDeviceTemplate(QString deviceInfo, IoDeviceTypes deviceType, const QJsonObject &sourceCapabilities) :
+SourceDeviceTemplate::SourceDeviceTemplate(const QString &deviceName,
+                                           IoDeviceTypes deviceType,
+                                           const QJsonObject &sourceCapabilities) :
     m_sourceCapabilities(sourceCapabilities),
     m_deviceType(deviceType),
-    m_deviceInfo(deviceInfo),
+    m_deviceName(deviceName),
     m_ID(m_idGenerator.nextID())
 {
-    m_deviceStatusJsonApi.setDeviceInfo(deviceInfo);
+    m_deviceStatusJsonApi.setDeviceInfo(deviceName);
 }
 
 void SourceDeviceTemplate::setVeinInterface(SourceVeinInterface *veinInterface)
 {
     m_veinInterface = veinInterface;
     setVeinParamStructure(m_sourceCapabilities);
-    setVeinParamState(m_switcher->getCurrLoadState().getParams());
+    setVeinLoadpointParam(m_switcher->getCurrLoadpoint().getParams());
     setVeinDeviceState(m_deviceStatusJsonApi.getJsonStatus());
     connect(m_veinInterface, &SourceVeinInterface::sigNewLoadParams,
             this, &SourceDeviceTemplate::switchLoad);
@@ -33,7 +35,7 @@ int SourceDeviceTemplate::getId()
 
 const QString &SourceDeviceTemplate::getDeviceInfo() const
 {
-    return m_deviceInfo;
+    return m_deviceName;
 }
 
 bool SourceDeviceTemplate::hasDemoIo() const
@@ -60,18 +62,17 @@ void SourceDeviceTemplate::setVeinDeviceState(QJsonObject deviceState)
         m_veinInterface->getVeinDeviceStateComponent()->setValue(deviceState);
 }
 
-void SourceDeviceTemplate::setVeinParamState(QJsonObject paramState)
+void SourceDeviceTemplate::setVeinLoadpointParam(QJsonObject loadpointParam)
 {
-    if(m_veinInterface) {
-        m_veinInterface->getVeinDeviceParameterComponent()->setValue(paramState);
-    }
+    if(m_veinInterface)
+        m_veinInterface->getVeinDeviceLoadpointComponent()->setValue(loadpointParam);
 }
 
 void SourceDeviceTemplate::resetVeinComponents()
 {
     if(m_veinInterface) {
         setVeinParamStructure(QJsonObject());
-        setVeinParamState(QJsonObject());
+        setVeinLoadpointParam(QJsonObject());
         setVeinDeviceState(QJsonObject());
         disconnect(m_veinInterface, &SourceVeinInterface::sigNewLoadParams,
                    this, &SourceDeviceTemplate::switchLoad);
@@ -79,7 +80,7 @@ void SourceDeviceTemplate::resetVeinComponents()
     }
 }
 
-void SourceDeviceTemplate::switchLoad(QJsonObject params)
+void SourceDeviceTemplate::switchLoad(const QJsonObject &params)
 {
     JsonParamApi paramApi;
     paramApi.setParams(params);
@@ -92,12 +93,10 @@ void SourceDeviceTemplate::handleNewState(SourceStates state)
         m_deviceStatusJsonApi.clearWarningsErrors();
         m_deviceStatusJsonApi.setBusy(true);
     }
-    else if(state == SourceStates::IDLE) {
+    else if(state == SourceStates::IDLE)
         m_deviceStatusJsonApi.setBusy(false);
-    }
-    else {
+    else
         handleErrorState(state);
-    }
     setVeinDeviceState(m_deviceStatusJsonApi.getJsonStatus());
 }
 
@@ -110,13 +109,11 @@ void SourceDeviceTemplate::handleErrorState(SourceStates state)
                                            MessageTexts::ERR_SWITCH_OFF;
         m_deviceStatusJsonApi.addError(MessageTexts::getText(msgTxtId));
     }
-    else if(state == SourceStates::ERROR_POLL) {
+    else if(state == SourceStates::ERROR_POLL)
         m_deviceStatusJsonApi.addError(MessageTexts::getText(MessageTexts::ERR_STATUS_POLL));
-    }
-
-    else {
+    else
         qCritical("Unhandled source state!");
-    }
+
     m_deviceStatusJsonApi.setBusy(false);
 }
 

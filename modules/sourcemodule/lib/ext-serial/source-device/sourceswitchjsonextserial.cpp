@@ -22,7 +22,7 @@ void SourceSwitchJsonExtSerial::switchState(const JsonParamApi &paramState)
     m_sourceNotificationSwitch->startTransactionWithNotify(transferGroup);
 }
 
-JsonParamApi SourceSwitchJsonExtSerial::getCurrLoadState()
+JsonParamApi SourceSwitchJsonExtSerial::getCurrLoadpoint()
 {
     return m_paramsCurrent;
 }

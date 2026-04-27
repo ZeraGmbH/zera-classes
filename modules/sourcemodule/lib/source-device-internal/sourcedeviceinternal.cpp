@@ -27,6 +27,6 @@ void SourceDeviceInternal::onSwitchTransactionStarted()
 
 void SourceDeviceInternal::onSourceSwitchFinished(bool ok)
 {
-    setVeinParamState(m_switcher->getCurrLoadState().getParams());
+    setVeinLoadpointParam(m_switcher->getCurrLoadpoint().getParams());
     handleNewState(ok ? SourceStates::IDLE : SourceStates::ERROR_SWITCH);
 }

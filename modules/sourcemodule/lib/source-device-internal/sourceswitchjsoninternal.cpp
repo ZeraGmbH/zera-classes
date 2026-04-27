@@ -123,7 +123,7 @@ TaskTemplatePtr SourceSwitchJsonInternal::createSourceOnOffTask(const JsonParamA
         );
 }
 
-JsonParamApi SourceSwitchJsonInternal::getCurrLoadState()
+JsonParamApi SourceSwitchJsonInternal::getCurrLoadpoint()
 {
     return m_paramsCurrent;
 }

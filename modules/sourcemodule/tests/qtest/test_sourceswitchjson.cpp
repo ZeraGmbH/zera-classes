@@ -23,7 +23,7 @@ void test_sourceswitchjson::signalSwitch()
     SourceTransactionStartNotifier::Ptr notifyWrapperSwitch = SourceTransactionStartNotifier::Ptr::create(sourceIo);
     SourceSwitchJsonExtSerial switcher(sourceIo, notifyWrapperSwitch);
 
-    JsonParamApi paramState = switcher.getCurrLoadState();
+    JsonParamApi paramState = switcher.getCurrLoadpoint();
     int paramChangeCount = 0;
     connect(&switcher, &SourceSwitchJsonExtSerial::sigSwitchFinished, [&] {
         paramChangeCount++;
@@ -45,7 +45,7 @@ void test_sourceswitchjson::signalSwitchAfterError()
     SourceTransactionStartNotifier::Ptr notifyWrapperSwitch = SourceTransactionStartNotifier::Ptr::create(sourceIoWithError);
     SourceSwitchJsonExtSerial switcher(sourceIoWithError, notifyWrapperSwitch);
 
-    JsonParamApi paramState = switcher.getCurrLoadState();
+    JsonParamApi paramState = switcher.getCurrLoadpoint();
     int paramChangeCount = 0;
     connect(&switcher, &SourceSwitchJsonExtSerial::sigSwitchFinished, [&] {
         paramChangeCount++;
@@ -64,7 +64,7 @@ void test_sourceswitchjson::twoSignalsSwitchSameTwice()
     SourceTransactionStartNotifier::Ptr notifyWrapperSwitch = SourceTransactionStartNotifier::Ptr::create(sourceIo);
     SourceSwitchJsonExtSerial switcher(sourceIo, notifyWrapperSwitch);
 
-    JsonParamApi paramState = switcher.getCurrLoadState();
+    JsonParamApi paramState = switcher.getCurrLoadpoint();
     int paramChangeCount = 0;
     connect(&switcher, &SourceSwitchJsonExtSerial::sigSwitchFinished, [&] {
         paramChangeCount++;
@@ -87,7 +87,7 @@ void test_sourceswitchjson::currentAndRequestedParamOnError()
     SourceTransactionStartNotifier::Ptr notifyWrapperSwitch = SourceTransactionStartNotifier::Ptr::create(sourceIoWithError);
     SourceSwitchJsonExtSerial switcher(sourceIoWithError, notifyWrapperSwitch);
 
-    JsonParamApi paramState = switcher.getCurrLoadState();
+    JsonParamApi paramState = switcher.getCurrLoadpoint();
     JsonParamApi paramStateForError = paramState;
     paramStateForError.setOn(!paramState.getOn());
 
@@ -100,7 +100,7 @@ void test_sourceswitchjson::currentAndRequestedParamOnError()
     TimeMachineForTest::getInstance()->processTimers(shortQtEventTimeout);
     QCOMPARE(paramChangeCount, 1);
     QVERIFY(paramStateForError.getParams() == switcher.getRequestedLoadState().getParams());
-    QVERIFY(paramState.getParams() == switcher.getCurrLoadState().getParams());
+    QVERIFY(paramState.getParams() == switcher.getCurrLoadpoint().getParams());
 }
 
 void test_sourceswitchjson::changeParamOnSuccess()
@@ -111,7 +111,7 @@ void test_sourceswitchjson::changeParamOnSuccess()
     SourceTransactionStartNotifier::Ptr notifyWrapperSwitch = SourceTransactionStartNotifier::Ptr::create(sourceIo);
     SourceSwitchJsonExtSerial switcher(sourceIo, notifyWrapperSwitch);
 
-    JsonParamApi paramState = switcher.getCurrLoadState();
+    JsonParamApi paramState = switcher.getCurrLoadpoint();
     JsonParamApi paramStateForError = paramState;
     paramStateForError.setOn(!paramState.getOn());
 
@@ -123,5 +123,5 @@ void test_sourceswitchjson::changeParamOnSuccess()
 
     TimeMachineForTest::getInstance()->processTimers(shortQtEventTimeout);
     QCOMPARE(paramChangeCount, 1);
-    QVERIFY(paramState.getParams() != switcher.getCurrLoadState().getParams());
+    QVERIFY(paramState.getParams() != switcher.getCurrLoadpoint().getParams());
 }

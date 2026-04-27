@@ -13,7 +13,7 @@ class SourceSwitchJsonExtSerial : public AbstractSourceSwitchJson
 public:
     SourceSwitchJsonExtSerial(AbstractSourceIoPtr sourceIo, SourceTransactionStartNotifier::Ptr sourceNotificationSwitch);
     void switchState(const JsonParamApi &paramState) override;
-    JsonParamApi getCurrLoadState() override;
+    JsonParamApi getCurrLoadpoint() override;
     JsonParamApi getRequestedLoadState() override;
 
 private slots:

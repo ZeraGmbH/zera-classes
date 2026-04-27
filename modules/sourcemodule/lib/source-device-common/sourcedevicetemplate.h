@@ -15,11 +15,11 @@ class SourceDeviceTemplate : public QObject
     Q_OBJECT
 public:
     typedef std::shared_ptr<SourceDeviceTemplate> Ptr;
-    SourceDeviceTemplate(QString deviceInfo, IoDeviceTypes deviceType, const QJsonObject &sourceCapabilities);
+    SourceDeviceTemplate(const QString &deviceName, IoDeviceTypes deviceType, const QJsonObject &sourceCapabilities);
 
     void setVeinInterface(SourceVeinInterface* veinInterface);
 
-    void switchLoad(QJsonObject params);
+    void switchLoad(const QJsonObject &params);
 
     int getId();
     const QString &getDeviceInfo() const;
@@ -33,20 +33,22 @@ signals:
     void sigClosed(int facadeId, QUuid uuid);
 
 protected:
-    void handleErrorState(SourceStates state);
-    void setVeinParamStructure(QJsonObject sourceCapabilities);
-    void setVeinDeviceState(QJsonObject deviceState);
-    void setVeinParamState(QJsonObject paramState);
+    void setVeinLoadpointParam(QJsonObject loadpointParam);
     void resetVeinComponents();
 
     const QJsonObject m_sourceCapabilities;
-    IoDeviceTypes m_deviceType;
-    QString m_deviceInfo;
-    SourceVeinInterface* m_veinInterface = nullptr;
-    JsonDeviceStatusApi m_deviceStatusJsonApi;
     std::unique_ptr<AbstractSourceSwitchJson> m_switcher;
 private:
-    static IoIdGenerator m_idGenerator;
+    void handleErrorState(SourceStates state);
+    void setVeinParamStructure(QJsonObject sourceCapabilities);
+    void setVeinDeviceState(QJsonObject deviceState);
+
+    IoDeviceTypes m_deviceType;
+    QString m_deviceName;
+    SourceVeinInterface* m_veinInterface = nullptr;
+    JsonDeviceStatusApi m_deviceStatusJsonApi;
+
+    static IoIdGenerator m_idGenerator; // ID for device manager
     int m_ID;
 };
 
