@@ -18,7 +18,7 @@ SourceSwitchJsonExtSerial::SourceSwitchJsonExtSerial(AbstractSourceIoPtr sourceI
 int SourceSwitchJsonExtSerial::switchState(const JsonParamApi &paramState)
 {
     m_loadpointRequestedLast = paramState;
-    IoQueueGroup::Ptr transferGroup = m_ioGroupGenerator.generateOnOffGroup(m_loadpointRequestedLast);
+    IoQueueGroup::Ptr transferGroup = m_ioGroupGenerator.generateOnOffGroup(paramState);
     m_sourceNotificationSwitch->startTransactionWithNotify(transferGroup);
     return transferGroup->getGroupId();
 }
@@ -26,11 +26,6 @@ int SourceSwitchJsonExtSerial::switchState(const JsonParamApi &paramState)
 JsonParamApi SourceSwitchJsonExtSerial::getCurrLoadpoint()
 {
     return m_loadpointCurrent;
-}
-
-JsonParamApi SourceSwitchJsonExtSerial::getLoadpointRequestedLast()
-{
-    return m_loadpointRequestedLast;
 }
 
 void SourceSwitchJsonExtSerial::onSwitchTransactionStarted(int dataGroupId)

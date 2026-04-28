@@ -16,7 +16,6 @@ public:
                              const QJsonObject &sourceCapabilities);
     int switchState(const JsonParamApi &desiredLoad) override;
     JsonParamApi getCurrLoadpoint() override;
-    JsonParamApi getLoadpointRequestedLast() override;
 signals:
     void sigSwitchTransactionStarted();
 

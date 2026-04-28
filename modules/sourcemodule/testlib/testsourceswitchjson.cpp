@@ -12,11 +12,6 @@ JsonParamApi TestSourceSwitchJson::getCurrLoadpoint()
     return m_loadpointCurrent;
 }
 
-JsonParamApi TestSourceSwitchJson::getLoadpointRequestedLast()
-{
-    return m_loadpointRequestedLast;
-}
-
 void TestSourceSwitchJson::fireFinish(bool ok)
 {
     QueueEntry entry = m_pendingLoadpoints.dequeue();

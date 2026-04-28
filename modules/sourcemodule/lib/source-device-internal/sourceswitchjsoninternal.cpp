@@ -125,11 +125,6 @@ JsonParamApi SourceSwitchJsonInternal::getCurrLoadpoint()
     return m_loadpointCurrent;
 }
 
-JsonParamApi SourceSwitchJsonInternal::getLoadpointRequestedLast()
-{
-    return m_loadpointRequestedLast;
-}
-
 void SourceSwitchJsonInternal::onSwitchTasksFinish(bool ok, int taskId)
 {
     m_pendingTask.reset();

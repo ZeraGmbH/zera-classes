@@ -9,13 +9,11 @@ class TestSourceSwitchJson : public AbstractSourceSwitchJson
     Q_OBJECT
 public:
     int switchState(const JsonParamApi &paramState) override;
-    JsonParamApi getLoadpointRequestedLast() override;
     JsonParamApi getCurrLoadpoint() override;
 
     void fireFinish(bool ok);
 private:
     JsonParamApi m_loadpointCurrent;
-    JsonParamApi m_loadpointRequestedLast;
 
     int m_currentId = 0;
     struct QueueEntry {

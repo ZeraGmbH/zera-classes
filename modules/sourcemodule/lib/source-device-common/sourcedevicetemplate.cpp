@@ -84,6 +84,7 @@ void SourceDeviceTemplate::switchLoad(const QJsonObject &params)
 {
     JsonParamApi paramApi;
     paramApi.setParams(params);
+    m_lastOnState = paramApi.getOn();
     m_switcher->switchState(paramApi);
 }
 
@@ -104,7 +105,7 @@ void SourceDeviceTemplate::handleErrorState(SourceStates state)
 {
     // All errors need love: translation / helpful status messages
     if(state == SourceStates::ERROR_SWITCH) {
-        MessageTexts::Texts msgTxtId = m_switcher->getLoadpointRequestedLast().getOn() ?
+        MessageTexts::Texts msgTxtId = m_lastOnState ?
                                            MessageTexts::ERR_SWITCH_ON :
                                            MessageTexts::ERR_SWITCH_OFF;
         m_deviceStatusJsonApi.addError(MessageTexts::getText(msgTxtId));

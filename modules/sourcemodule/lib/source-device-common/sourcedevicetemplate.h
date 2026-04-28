@@ -48,6 +48,7 @@ private:
     SourceVeinInterface* m_veinInterface = nullptr;
     JsonDeviceStatusApi m_deviceStatusJsonApi;
 
+    bool m_lastOnState = false;
     static IoIdGenerator m_idGenerator; // ID for device manager
     int m_ID;
 };
