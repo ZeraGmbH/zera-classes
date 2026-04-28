@@ -27,6 +27,7 @@ SETUP_QTESTS_MODULE(
    test_source_full
    test_file_dissapepear_watcher
    test_sourceswitchjsoninternal
+   test_sourceswitchjsonangleadjustmentdecorator
 )
 
 target_sources(test_sourceswitchjsoninternal
@@ -37,4 +38,9 @@ target_sources(test_sourceswitchjsoninternal
 target_sources(test_source_full
   PRIVATE
     test-data/test-data.qrc
+)
+
+target_sources(test_sourceswitchjsonangleadjustmentdecorator
+   PRIVATE
+     test-data/test-data.qrc
 )

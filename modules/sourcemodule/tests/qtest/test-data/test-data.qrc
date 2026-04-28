@@ -1,5 +1,6 @@
 <RCC>
     <qresource prefix="/">
+        <file>capabilities/mt581s2_valid.json</file>
         <file>loadDumps/initialLoad.json</file>
         <file>loadDumps/onLoad.json</file>
         <file>sessions/minimal.json</file>

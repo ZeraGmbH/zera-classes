@@ -14,4 +14,6 @@ signals:
     void sigSwitchFinished(bool ok, int switchId);
 };
 
+typedef std::unique_ptr<AbstractSourceSwitchJson> AbstractSourceSwitchJsonPtr;
+
 #endif // ABSTRACTSOURCESWITCHJSON_H

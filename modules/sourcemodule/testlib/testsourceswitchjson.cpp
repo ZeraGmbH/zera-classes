@@ -1,4 +1,16 @@
 #include "testsourceswitchjson.h"
+#include <jsonstructapi.h>
+
+AbstractSourceSwitchJsonPtr TestSourceSwitchJson::create(const QJsonObject &sourceCapabilities)
+{
+    return std::make_unique<TestSourceSwitchJson>(sourceCapabilities);
+}
+
+TestSourceSwitchJson::TestSourceSwitchJson(const QJsonObject &sourceCapabilities)
+{
+    JsonStructApi capApi(sourceCapabilities);
+    m_loadpointCurrent.setParams(capApi.getParamStructure());
+}
 
 int TestSourceSwitchJson::switchState(const JsonParamApi &paramState)
 {
