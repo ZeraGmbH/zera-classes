@@ -29,7 +29,7 @@ private:
     tIoTransferList generateQueryActualList();
 
     JsonStructApi m_jsonStructApi;
-    JsonParamApi m_paramsRequested;
+    JsonParamApi m_loadpointRequestedLast;
 
     QByteArray m_ioPrefix;
 };

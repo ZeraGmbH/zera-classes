@@ -100,7 +100,7 @@ void test_sourceswitchjson::currentAndRequestedParamOnError()
 
     TimeMachineForTest::getInstance()->processTimers(shortQtEventTimeout);
     QCOMPARE(paramChangeCount, 1);
-    QVERIFY(paramStateForError.getParams() == switcher.getRequestedLoadState().getParams());
+    QVERIFY(paramStateForError.getParams() == switcher.getLoadpointRequestedLast().getParams());
     QVERIFY(paramState.getParams() == switcher.getCurrLoadpoint().getParams());
 }
 

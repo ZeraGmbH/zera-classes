@@ -14,7 +14,7 @@ public:
     SourceSwitchJsonExtSerial(AbstractSourceIoPtr sourceIo, SourceTransactionStartNotifier::Ptr sourceNotificationSwitch);
     int switchState(const JsonParamApi &paramState) override;
     JsonParamApi getCurrLoadpoint() override;
-    JsonParamApi getRequestedLoadState() override;
+    JsonParamApi getLoadpointRequestedLast() override;
 
 private slots:
     void onSwitchTransactionStarted(int dataGroupId);
@@ -26,8 +26,8 @@ private:
     SourceTransactionStartNotifier::Ptr m_sourceNotificationSwitch;
     IdKeeperMulti m_pendingSwitchIds;
     PersistentJsonState m_persistentParamState;
-    JsonParamApi m_paramsCurrent;
-    JsonParamApi m_paramsRequested;
+    JsonParamApi m_loadpointCurrent;
+    JsonParamApi m_loadpointRequestedLast;
 };
 
 #endif // SOURCEINTERACTORSWITCH_H

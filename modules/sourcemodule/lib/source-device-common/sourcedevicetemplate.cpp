@@ -104,7 +104,7 @@ void SourceDeviceTemplate::handleErrorState(SourceStates state)
 {
     // All errors need love: translation / helpful status messages
     if(state == SourceStates::ERROR_SWITCH) {
-        MessageTexts::Texts msgTxtId = m_switcher->getRequestedLoadState().getOn() ?
+        MessageTexts::Texts msgTxtId = m_switcher->getLoadpointRequestedLast().getOn() ?
                                            MessageTexts::ERR_SWITCH_ON :
                                            MessageTexts::ERR_SWITCH_OFF;
         m_deviceStatusJsonApi.addError(MessageTexts::getText(msgTxtId));

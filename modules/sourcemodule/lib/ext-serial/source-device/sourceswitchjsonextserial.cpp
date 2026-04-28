@@ -6,8 +6,8 @@ SourceSwitchJsonExtSerial::SourceSwitchJsonExtSerial(AbstractSourceIoPtr sourceI
     m_ioGroupGenerator(sourceIo->getCapabilities()),
     m_sourceNotificationSwitch(sourceNotificationSwitch),
     m_persistentParamState(PersistentJsonState(sourceIo->getCapabilities())),
-    m_paramsCurrent(m_persistentParamState.loadJsonState()),
-    m_paramsRequested(m_paramsCurrent)
+    m_loadpointCurrent(m_persistentParamState.loadJsonState()),
+    m_loadpointRequestedLast(m_loadpointCurrent)
 {
     connect(m_sourceNotificationSwitch.get(), &SourceTransactionStartNotifier::sigTransationStarted,
             this, &SourceSwitchJsonExtSerial::onSwitchTransactionStarted);
@@ -17,20 +17,20 @@ SourceSwitchJsonExtSerial::SourceSwitchJsonExtSerial(AbstractSourceIoPtr sourceI
 
 int SourceSwitchJsonExtSerial::switchState(const JsonParamApi &paramState)
 {
-    m_paramsRequested = paramState;
-    IoQueueGroup::Ptr transferGroup = m_ioGroupGenerator.generateOnOffGroup(m_paramsRequested);
+    m_loadpointRequestedLast = paramState;
+    IoQueueGroup::Ptr transferGroup = m_ioGroupGenerator.generateOnOffGroup(m_loadpointRequestedLast);
     m_sourceNotificationSwitch->startTransactionWithNotify(transferGroup);
     return transferGroup->getGroupId();
 }
 
 JsonParamApi SourceSwitchJsonExtSerial::getCurrLoadpoint()
 {
-    return m_paramsCurrent;
+    return m_loadpointCurrent;
 }
 
-JsonParamApi SourceSwitchJsonExtSerial::getRequestedLoadState()
+JsonParamApi SourceSwitchJsonExtSerial::getLoadpointRequestedLast()
 {
-    return m_paramsRequested;
+    return m_loadpointRequestedLast;
 }
 
 void SourceSwitchJsonExtSerial::onSwitchTransactionStarted(int dataGroupId)
@@ -48,8 +48,9 @@ void SourceSwitchJsonExtSerial::onResponseReceived(const IoQueueGroup::Ptr trans
 void SourceSwitchJsonExtSerial::handleSwitchResponse(const IoQueueGroup::Ptr transferGroup)
 {
     if(transferGroup->passedAll()) {
-        m_paramsCurrent = m_paramsRequested;
-        m_persistentParamState.saveJsonState(m_paramsCurrent);
+        // This will not work properly for multiple transactions running
+        m_loadpointCurrent = m_loadpointRequestedLast;
+        m_persistentParamState.saveJsonState(m_loadpointCurrent);
     }
     emit sigSwitchFinished(transferGroup->passedAll(), transferGroup->getGroupId());
 }

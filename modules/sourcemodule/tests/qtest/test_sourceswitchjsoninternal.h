@@ -20,6 +20,7 @@ private slots:
     void switchOnOffOk();
     void switchOnServerDied();
     void twoSignalsSwitchSameTwice();
+    void twoSwitchDifferent();
 
     void switchUL2OffCheckOnFlags();
     void switchUL2OffCheckDspAmplitude();

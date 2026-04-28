@@ -16,8 +16,8 @@ SourceSwitchJsonInternal::SourceSwitchJsonInternal(AbstractServerInterfacePtr se
     m_serverInterface(serverInterface),
     m_sourceCapabilities(sourceCapabilities),
     m_persistentParamState(PersistentJsonState(sourceCapabilities)),
-    m_paramsCurrent(m_persistentParamState.loadJsonState()),
-    m_paramsRequested(m_paramsCurrent)
+    m_loadpointCurrent(m_persistentParamState.loadJsonState()),
+    m_loadpointRequestedLast(m_loadpointCurrent)
 {
 }
 
@@ -111,7 +111,7 @@ int SourceSwitchJsonInternal::doStartTask(TaskTemplatePtr task, const JsonParamA
 {
     int taskId = task->getTaskId();
     m_pendingTask = std::move(task);
-    m_paramsRequested = desiredLoad;
+    m_loadpointRequestedLast = desiredLoad;
 
     connect(m_pendingTask.get(), &TaskTemplate::sigFinish,
             this, &SourceSwitchJsonInternal::onSwitchTasksFinish);
@@ -122,19 +122,19 @@ int SourceSwitchJsonInternal::doStartTask(TaskTemplatePtr task, const JsonParamA
 
 JsonParamApi SourceSwitchJsonInternal::getCurrLoadpoint()
 {
-    return m_paramsCurrent;
+    return m_loadpointCurrent;
 }
 
-JsonParamApi SourceSwitchJsonInternal::getRequestedLoadState()
+JsonParamApi SourceSwitchJsonInternal::getLoadpointRequestedLast()
 {
-    return m_paramsRequested;
+    return m_loadpointRequestedLast;
 }
 
 void SourceSwitchJsonInternal::onSwitchTasksFinish(bool ok, int taskId)
 {
     m_pendingTask.reset();
     if (ok)
-        m_paramsCurrent = m_paramsRequested;
+        m_loadpointCurrent = m_loadpointRequestedLast;
     emit sigSwitchFinished(ok, taskId);
 
     if (m_pendingSwitchRequests.size() != 0) {
@@ -158,9 +158,7 @@ TaskTemplatePtr SourceSwitchJsonInternal::getSwitchOffTask(const JsonParamApi &d
     paramOff.setOn(false);
 
     TaskContainerInterfacePtr nextTask = TaskContainerSequence::create(TaskContainerSequence::StopOnFirstTaskFail);
-    nextTask = TaskContainerSequence::create(TaskContainerSequence::StopOnFirstTaskFail);
     nextTask->addSub(createSourceOnOffTask(paramOff));
     nextTask->addSub(createSourceModeOnTask(paramOff));
     return nextTask;
 }
-

@@ -14,7 +14,7 @@ IoGroupGeneratorExtSerial::~IoGroupGeneratorExtSerial()
 
 IoQueueGroup::Ptr IoGroupGeneratorExtSerial::generateOnOffGroup(JsonParamApi requestedParams)
 {
-    m_paramsRequested = requestedParams;
+    m_loadpointRequestedLast = requestedParams;
     tSourceActionTypeList actionsTypeList = SourceActionGenerator::generateSwitchActions(requestedParams);
     IoQueueGroup::Ptr transferGroup = IoQueueGroup::Ptr::create(IoQueueErrorBehaviors::STOP_ON_ERROR);
     for(auto &actionType : actionsTypeList) {
@@ -80,8 +80,8 @@ tIoTransferList IoGroupGeneratorExtSerial::generateRMSAndAngleUList()
     double angleU[3] = {0.0, 0.0, 0.0};
     for(int phase=0; phase<3; phase++) {
         if(phase < m_jsonStructApi.getCountUPhases()) {
-            rmsU[phase] = m_paramsRequested.getRms(phaseType::U, phase);
-            angleU[phase] = m_paramsRequested.getAngle(phaseType::U, phase);
+            rmsU[phase] = m_loadpointRequestedLast.getRms(phaseType::U, phase);
+            angleU[phase] = m_loadpointRequestedLast.getAngle(phaseType::U, phase);
         }
     }
 
@@ -113,8 +113,8 @@ tIoTransferList IoGroupGeneratorExtSerial::generateRMSAndAngleIList()
     double angleI[3] = {0.0, 0.0, 0.0};
     for(int phase=0; phase<3; phase++) {
         if(phase < m_jsonStructApi.getCountIPhases()) {
-            rmsI[phase] = m_paramsRequested.getRms(phaseType::I, phase);
-            angleI[phase] = m_paramsRequested.getAngle(phaseType::I, phase);
+            rmsI[phase] = m_loadpointRequestedLast.getRms(phaseType::I, phase);
+            angleI[phase] = m_loadpointRequestedLast.getAngle(phaseType::I, phase);
         }
     }
 
@@ -142,7 +142,7 @@ tIoTransferList IoGroupGeneratorExtSerial::generateSwitchPhasesList()
 {
     QByteArray bytesSend;
     bytesSend = m_ioPrefix + "UI";
-    bool globalOn = m_paramsRequested.getOn();
+    bool globalOn = m_loadpointRequestedLast.getOn();
     bool bPhaseOn = false;
     int phaseCountU = m_jsonStructApi.getCountUPhases();
     int phaseCountI = m_jsonStructApi.getCountIPhases();
@@ -151,7 +151,7 @@ tIoTransferList IoGroupGeneratorExtSerial::generateSwitchPhasesList()
         bool phaseAvail = phase < phaseCountU;
         bPhaseOn = false;
         if(globalOn && phaseAvail) {
-            bPhaseOn = m_paramsRequested.getOn(phaseType::U, phase);
+            bPhaseOn = m_loadpointRequestedLast.getOn(phaseType::U, phase);
         }
         bytesSend.append(bPhaseOn ? "E" : "A");
     }
@@ -160,20 +160,20 @@ tIoTransferList IoGroupGeneratorExtSerial::generateSwitchPhasesList()
         bool phaseAvail = phase < phaseCountI;
         bPhaseOn = false;
         if(globalOn && phaseAvail) {
-            bPhaseOn = m_paramsRequested.getOn(phaseType::I, phase);
+            bPhaseOn = m_loadpointRequestedLast.getOn(phaseType::I, phase);
         }
         bytesSend.append(bPhaseOn ? "P" : "A");
     }
     // aux u
     bPhaseOn = false;
     if(globalOn && phaseCountU>3) {
-        bPhaseOn = m_paramsRequested.getOn(phaseType::U, 3);
+        bPhaseOn = m_loadpointRequestedLast.getOn(phaseType::U, 3);
     }
     bytesSend.append(bPhaseOn ? "E" : "A");
     // aux i
     bPhaseOn = false;
     if(globalOn && phaseCountI>3) {
-        bPhaseOn = m_paramsRequested.getOn(phaseType::I, 3);
+        bPhaseOn = m_loadpointRequestedLast.getOn(phaseType::I, 3);
     }
     bytesSend.append(bPhaseOn ? "E" : "A");
     // relative comparison - off for now
@@ -193,9 +193,9 @@ tIoTransferList IoGroupGeneratorExtSerial::generateFrequencyList()
 {
     QByteArray bytesSend;
     bytesSend = m_ioPrefix + "FR";
-    bool quartzVar = m_paramsRequested.getFreqVarOn();
+    bool quartzVar = m_loadpointRequestedLast.getFreqVarOn();
     if(quartzVar) {
-        bytesSend += IoCmdFormatHelper::formatDouble(m_paramsRequested.getFreqVal(), 2, '.', 2);
+        bytesSend += IoCmdFormatHelper::formatDouble(m_loadpointRequestedLast.getFreqVal(), 2, '.', 2);
     }
     else {
         // for now we support 50Hz sync only

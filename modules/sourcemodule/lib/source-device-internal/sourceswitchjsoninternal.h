@@ -16,7 +16,7 @@ public:
                              const QJsonObject &sourceCapabilities);
     int switchState(const JsonParamApi &desiredLoad) override;
     JsonParamApi getCurrLoadpoint() override;
-    JsonParamApi getRequestedLoadState() override;
+    JsonParamApi getLoadpointRequestedLast() override;
 signals:
     void sigSwitchTransactionStarted();
 
@@ -33,8 +33,9 @@ private:
     AbstractServerInterfacePtr m_serverInterface;
     JsonStructApi m_sourceCapabilities;
     PersistentJsonState m_persistentParamState;
-    JsonParamApi m_paramsCurrent;
-    JsonParamApi m_paramsRequested;
+    JsonParamApi m_loadpointCurrent;
+    JsonParamApi m_loadpointRequestedLast;
+
     TaskTemplatePtr m_pendingTask;
     struct PendingSwitchEntries
     {
