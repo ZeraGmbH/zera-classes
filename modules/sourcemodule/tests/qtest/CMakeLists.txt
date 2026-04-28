@@ -23,7 +23,7 @@ SETUP_QTESTS_MODULE(
    test_sourcestatecontroller
    test_sourceperiodicpollerstate
    test_sourceswitchjson
-   test_sourcedevicefacade
+   test_sourcedeviceextserial
    test_source_full
    test_file_dissapepear_watcher
    test_sourceswitchjsoninternal

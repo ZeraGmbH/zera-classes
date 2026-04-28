@@ -1,4 +1,4 @@
-#include "test_sourcedevicefacade.h"
+#include "test_sourcedeviceextserial.h"
 #include "iodevicedemo.h"
 #include "test_globals.h"
 #include "veincomponentsetnotifier-forunittest.h"
@@ -14,29 +14,29 @@
 
 #include <QString>
 
-QTEST_MAIN(test_sourcedevicefacade)
+QTEST_MAIN(test_sourcedeviceextserial)
 
-void test_sourcedevicefacade::initTestCase()
+void test_sourcedeviceextserial::initTestCase()
 {
     qputenv("QT_FATAL_CRITICALS", "1");
     TimerFactoryQtForTest::enableTest();
 }
 
-void test_sourcedevicefacade::checkDeviceInfo()
+void test_sourcedeviceextserial::checkDeviceInfo()
 {
     IoDeviceBase::Ptr ioDevice = createOpenDemoIoDevice();
     SourceDeviceExtSerial sourceDevice(ioDevice, DefaultTestSourceProperties());
     QCOMPARE(ioDevice->getDeviceInfo(), sourceDevice.getDeviceInfo());
 }
 
-void test_sourcedevicefacade::checkDemoOn()
+void test_sourcedeviceextserial::checkDemoOn()
 {
     IoDeviceBase::Ptr ioDevice = createOpenDemoIoDevice();
     SourceDeviceExtSerial sourceDevice(ioDevice, DefaultTestSourceProperties());
     QCOMPARE(sourceDevice.hasDemoIo(), true);
 }
 
-void test_sourcedevicefacade::checkDemoOff()
+void test_sourcedeviceextserial::checkDemoOff()
 {
     IoDeviceBase::Ptr ioDevice = IoDeviceFactory::createIoDevice(IoDeviceTypes::BROKEN);
     SourceDeviceExtSerial sourceDevice(ioDevice, DefaultTestSourceProperties());
@@ -75,7 +75,7 @@ struct TVeinObjects
     }
 };
 
-void test_sourcedevicefacade::checkVeinInitialStatus()
+void test_sourcedeviceextserial::checkVeinInitialStatus()
 {
     QString deviceName = "__foo__";
     IoDeviceBase::Ptr ioDevice = createOpenDemoIoDevice(deviceName);
@@ -104,7 +104,7 @@ void test_sourcedevicefacade::checkVeinInitialStatus()
     QCOMPARE(statesReceived[0], jsonStatusDefault);
 }
 
-void test_sourcedevicefacade::checkVeinInitialInfo()
+void test_sourcedeviceextserial::checkVeinInitialInfo()
 {
     QString deviceName = "__foo__";
     IoDeviceBase::Ptr ioDevice = createOpenDemoIoDevice(deviceName);
@@ -130,7 +130,7 @@ void test_sourcedevicefacade::checkVeinInitialInfo()
     QCOMPARE(infosReceived[0], jsonStructure);
 }
 
-void test_sourcedevicefacade::checkVeinInitialLoad()
+void test_sourcedeviceextserial::checkVeinInitialLoad()
 {
     QString deviceName = "__foo__";
     IoDeviceBase::Ptr ioDevice = createOpenDemoIoDevice(deviceName);
@@ -159,7 +159,7 @@ void test_sourcedevicefacade::checkVeinInitialLoad()
     QCOMPARE(loadsReceived[0], jsonLoadParamsDefault);
 }
 
-void test_sourcedevicefacade::checkVeinSwitchTwoStateChanges()
+void test_sourcedeviceextserial::checkVeinSwitchTwoStateChanges()
 {
     QString deviceName = "__foo__";
     IoDeviceBase::Ptr ioDevice = createOpenDemoIoDevice(deviceName);
@@ -192,7 +192,7 @@ void test_sourcedevicefacade::checkVeinSwitchTwoStateChanges()
     QCOMPARE(statesReceived[2]["busy"], false);
 }
 
-void test_sourcedevicefacade::checkVeinSwitchChangesLoad()
+void test_sourcedeviceextserial::checkVeinSwitchChangesLoad()
 {
     QString deviceName = "__foo__";
     IoDeviceBase::Ptr ioDevice = createOpenDemoIoDevice(deviceName);
@@ -228,7 +228,7 @@ void test_sourcedevicefacade::checkVeinSwitchChangesLoad()
     QCOMPARE(loadsReceived[1], jsonLoadParamsOn);
 }
 
-void test_sourcedevicefacade::checkVeinSwitchError()
+void test_sourcedeviceextserial::checkVeinSwitchError()
 {
     QString deviceName = "__foo__";
     IoDeviceBase::Ptr ioDevice = createOpenDemoIoDevice(deviceName);
@@ -282,7 +282,7 @@ void test_sourcedevicefacade::checkVeinSwitchError()
     QCOMPARE(statesReceived[2]["errors"].toArray().count(), 1);
 }
 
-void test_sourcedevicefacade::checkVeinStateError()
+void test_sourcedeviceextserial::checkVeinStateError()
 {
     QString deviceName = "__foo__";
     IoDeviceBase::Ptr ioDevice = createOpenDemoIoDevice(deviceName);

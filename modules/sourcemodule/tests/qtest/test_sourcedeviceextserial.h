@@ -1,9 +1,9 @@
-#ifndef SOURCEDEVICEFACADETEST_H
-#define SOURCEDEVICEFACADETEST_H
+#ifndef TEST_SOURCEDEVICEEXTSERIAL_H
+#define TEST_SOURCEDEVICEEXTSERIAL_H
 
 #include <QObject>
 
-class test_sourcedevicefacade : public QObject
+class test_sourcedeviceextserial : public QObject
 {
     Q_OBJECT
 private slots:
@@ -24,4 +24,4 @@ private slots:
     void checkVeinStateError();
 };
 
-#endif // SOURCEDEVICEFACADETEST_H
+#endif // TEST_SOURCEDEVICEEXTSERIAL_H
