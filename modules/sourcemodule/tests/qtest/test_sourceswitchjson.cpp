@@ -5,6 +5,7 @@
 #include "sourcedeviceerrorinjection-forunittest.h"
 #include "timerfactoryqtfortest.h"
 #include "timemachinefortest.h"
+#include <QSignalSpy>
 
 QTEST_MAIN(test_sourceswitchjson)
 
@@ -64,16 +65,16 @@ void test_sourceswitchjson::twoSignalsSwitchSameTwice()
     SourceTransactionStartNotifier::Ptr notifyWrapperSwitch = SourceTransactionStartNotifier::Ptr::create(sourceIo);
     SourceSwitchJsonExtSerial switcher(sourceIo, notifyWrapperSwitch);
 
+    QSignalSpy spy(&switcher, &SourceSwitchJsonExtSerial::sigSwitchFinished);
     JsonParamApi paramState = switcher.getCurrLoadpoint();
-    int paramChangeCount = 0;
-    connect(&switcher, &SourceSwitchJsonExtSerial::sigSwitchFinished, [&] {
-        paramChangeCount++;
-    });
-
-    switcher.switchState(paramState);
-    switcher.switchState(paramState);
+    int switchId1 = switcher.switchState(paramState);
+    int switchId2 = switcher.switchState(paramState);
     TimeMachineForTest::getInstance()->processTimers(shortQtEventTimeout);
-    QCOMPARE(paramChangeCount, 2);
+    QCOMPARE(spy.count(), 2);
+    QCOMPARE(spy[0][0], true);
+    QCOMPARE(spy[0][1], switchId1);
+    QCOMPARE(spy[1][0], true);
+    QCOMPARE(spy[1][1], switchId2);
 }
 
 void test_sourceswitchjson::currentAndRequestedParamOnError()

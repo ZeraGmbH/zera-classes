@@ -152,7 +152,7 @@ void test_sourceswitchjsoninternal::switchOnOffOk()
     // On
     JsonParamApi load = switcher.getCurrLoadpoint();
     load.setOn(true);
-    switcher.switchState(load);
+    int onSwitchId = switcher.switchState(load);
     QVERIFY(TestLogHelpers::compareAndLogOnDiffJson(onState, TestLogHelpers::dump(load.getParams())));
 
     QByteArray dumpedOnRequested = TestLogHelpers::dump(switcher.getRequestedLoadState().getParams());
@@ -163,6 +163,8 @@ void test_sourceswitchjsoninternal::switchOnOffOk()
     TimeMachineObject::feedEventLoop();
 
     QCOMPARE(spy.count(), 1);
+    QCOMPARE(spy[0][0], true);
+    QCOMPARE(spy[0][1], onSwitchId);
     dumpedOnRequested = TestLogHelpers::dump(switcher.getRequestedLoadState().getParams());
     QVERIFY(TestLogHelpers::compareAndLogOnDiffJson(onState, dumpedOnRequested));
     dumpedOnCurrent = TestLogHelpers::dump(switcher.getCurrLoadpoint().getParams());
@@ -206,7 +208,7 @@ void test_sourceswitchjsoninternal::switchOnOffOk()
 
     // Off
     load.setOn(false);
-    switcher.switchState(load);
+    int offSwitchId = switcher.switchState(load);
     QByteArray dumpedOffRequested = TestLogHelpers::dump(switcher.getRequestedLoadState().getParams());
     QVERIFY(TestLogHelpers::compareAndLogOnDiffJson(offState, dumpedOffRequested));
     QByteArray dumpedOffCurrent = TestLogHelpers::dump(switcher.getCurrLoadpoint().getParams());
@@ -215,6 +217,8 @@ void test_sourceswitchjsoninternal::switchOnOffOk()
     TimeMachineObject::feedEventLoop();
 
     QCOMPARE(spy.count(), 2);
+    QCOMPARE(spy[1][0], true);
+    QCOMPARE(spy[1][1], offSwitchId);
     dumpedOffRequested = TestLogHelpers::dump(switcher.getRequestedLoadState().getParams());
     QVERIFY(TestLogHelpers::compareAndLogOnDiffJson(offState, dumpedOffRequested));
     dumpedOffCurrent = TestLogHelpers::dump(switcher.getCurrLoadpoint().getParams());

@@ -12,7 +12,7 @@ class SourceSwitchJsonExtSerial : public AbstractSourceSwitchJson
     Q_OBJECT
 public:
     SourceSwitchJsonExtSerial(AbstractSourceIoPtr sourceIo, SourceTransactionStartNotifier::Ptr sourceNotificationSwitch);
-    void switchState(const JsonParamApi &paramState) override;
+    int switchState(const JsonParamApi &paramState) override;
     JsonParamApi getCurrLoadpoint() override;
     JsonParamApi getRequestedLoadState() override;
 

@@ -8,11 +8,11 @@ class AbstractSourceSwitchJson : public QObject
 {
     Q_OBJECT
 public:
-    virtual void switchState(const JsonParamApi &paramState) = 0;
+    virtual int switchState(const JsonParamApi &paramState) = 0;
     virtual JsonParamApi getCurrLoadpoint() = 0;
     virtual JsonParamApi getRequestedLoadState() = 0;
 signals:
-    void sigSwitchFinished(bool ok);
+    void sigSwitchFinished(bool ok, int switchId);
 };
 
 #endif // ABSTRACTSOURCESWITCHJSON_H

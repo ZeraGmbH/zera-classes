@@ -15,11 +15,12 @@ SourceSwitchJsonExtSerial::SourceSwitchJsonExtSerial(AbstractSourceIoPtr sourceI
             this, &SourceSwitchJsonExtSerial::onResponseReceived);
 }
 
-void SourceSwitchJsonExtSerial::switchState(const JsonParamApi &paramState)
+int SourceSwitchJsonExtSerial::switchState(const JsonParamApi &paramState)
 {
     m_paramsRequested = paramState;
     IoQueueGroup::Ptr transferGroup = m_ioGroupGenerator.generateOnOffGroup(m_paramsRequested);
     m_sourceNotificationSwitch->startTransactionWithNotify(transferGroup);
+    return transferGroup->getGroupId();
 }
 
 JsonParamApi SourceSwitchJsonExtSerial::getCurrLoadpoint()
@@ -50,5 +51,5 @@ void SourceSwitchJsonExtSerial::handleSwitchResponse(const IoQueueGroup::Ptr tra
         m_paramsCurrent = m_paramsRequested;
         m_persistentParamState.saveJsonState(m_paramsCurrent);
     }
-    emit sigSwitchFinished(transferGroup->passedAll());
+    emit sigSwitchFinished(transferGroup->passedAll(), transferGroup->getGroupId());
 }

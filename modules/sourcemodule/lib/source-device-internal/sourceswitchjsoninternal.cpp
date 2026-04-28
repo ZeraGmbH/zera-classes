@@ -21,7 +21,7 @@ SourceSwitchJsonInternal::SourceSwitchJsonInternal(AbstractServerInterfacePtr se
 {
 }
 
-void SourceSwitchJsonInternal::switchState(const JsonParamApi &desiredLoad)
+int SourceSwitchJsonInternal::switchState(const JsonParamApi &desiredLoad)
 {
     if (!desiredLoad.getOn())
         return switchOff();
@@ -37,9 +37,10 @@ void SourceSwitchJsonInternal::switchState(const JsonParamApi &desiredLoad)
             this, &SourceSwitchJsonInternal::onSwitchTasksFinish);
     m_currentTasks->start();
     emit sigSwitchTransactionStarted();
+    return m_currentTasks->getTaskId();
 }
 
-void SourceSwitchJsonInternal::switchOff()
+int SourceSwitchJsonInternal::switchOff()
 {
     JsonParamApi paramOff = m_paramsCurrent;
     paramOff.setOn(false);
@@ -53,6 +54,7 @@ void SourceSwitchJsonInternal::switchOff()
     m_currentTasks->start();
 
     emit sigSwitchTransactionStarted();
+    return m_currentTasks->getTaskId();
 }
 
 TaskContainerInterfacePtr SourceSwitchJsonInternal::createLoadpointTasks(const JsonParamApi &paramState)
@@ -133,10 +135,10 @@ JsonParamApi SourceSwitchJsonInternal::getRequestedLoadState()
     return m_paramsRequested;
 }
 
-void SourceSwitchJsonInternal::onSwitchTasksFinish(bool ok)
+void SourceSwitchJsonInternal::onSwitchTasksFinish(bool ok, int taskId)
 {
     if (ok)
         m_paramsCurrent = m_paramsRequested;
-    emit sigSwitchFinished(ok);
+    emit sigSwitchFinished(ok, taskId);
 }
 
