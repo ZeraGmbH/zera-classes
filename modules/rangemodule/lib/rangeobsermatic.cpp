@@ -57,7 +57,7 @@ cRangeObsermatic::cRangeObsermatic(cRangeModule *module,
     m_writeDspGainScaleStateMachine.setInitialState(&m_writeGainScaleState);
     connect(&m_writeGainScaleState, &QState::entered, this, &cRangeObsermatic::writeGainScale);
 
-    m_timerForRangeDecrease = TimerFactoryQt::createSingleShot((int)(m_ConfPar.m_time));
+    m_timerForRangeDecrease = TimerFactoryQt::createSingleShot(m_ConfPar.m_time.m_nValue);
     connect(this, &cRangeObsermatic::setRangesConfigFinished, this, [this]{
         groupHandling();
         setRanges();
@@ -208,6 +208,21 @@ void cRangeObsermatic::generateVeinInterface()
                                                    QVariant(0));
 
     m_pModule->m_veinModuleParameterMap["PAR_Overload"] = m_pParOverloadOnOff; // for modules use
+
+    m_pParRangeTimer = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
+                                                      QString("PAR_RangeTimer"),
+                                                      QString("Range timer for range decrease"),
+                                                      QVariant(0));
+
+    m_pModule->m_veinModuleParameterMap["PAR_RangeTimer"] = m_pParRangeTimer; // for modules use
+    m_pParRangeTimer->setValue(m_ConfPar.m_time.m_nValue);
+    m_pParRangeTimer->setValidator(new cIntValidator(0, 600000)); // set to 10mins max
+    m_pParRangeTimer->setScpiInfo("CONFIGURATION", "RNGTIMER", SCPI::isQuery|SCPI::isCmdwP);
+    connect(m_pParRangeTimer, &VfModuleParameter::sigValueChanged, this, [this](const QVariant& value){
+        m_ConfPar.m_time.m_nValue = value.toInt();
+        m_timerForRangeDecrease = TimerFactoryQt::createSingleShot(m_ConfPar.m_time.m_nValue);
+        emit m_pModule->parameterChanged();
+    });
 
     m_pComponentOverloadMax = new VfModuleComponent(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
                                                        QString("INF_OverloadMax"),

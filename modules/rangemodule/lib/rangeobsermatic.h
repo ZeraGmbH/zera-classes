@@ -84,6 +84,7 @@ private:
     VfModuleParameter* m_pParRangeAutomaticOnOff;
     VfModuleParameter* m_pParGroupingOnOff;
     VfModuleParameter* m_pParOverloadOnOff;
+    VfModuleParameter* m_pParRangeTimer;
     VfModuleComponent* m_pComponentOverloadMax;
 
     DspVarGroupClientInterface* m_gainScaleDSPVarGroup = nullptr; // copy of dsp internal correction data

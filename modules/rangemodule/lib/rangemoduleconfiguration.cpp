@@ -75,6 +75,9 @@ QByteArray cRangeModuleConfiguration::exportConfiguration()
     doubleParameter* dPar = &m_pRangeModulConfigData->m_adjustConfPar.m_ignoreRmsValuesThreshold;
     m_pXMLReader->setValue(dPar->m_sKey, QString("%1").arg(dPar->m_fValue));
 
+    intParameter *iPar = &m_pRangeModulConfigData->m_ObsermaticConfPar.m_time;
+    m_pXMLReader->setValue(iPar->m_sKey, QString("%1").arg(iPar->m_nValue));
+
     return m_pXMLReader->getXMLConfig().toUtf8();
 }
 
@@ -144,7 +147,8 @@ void cRangeModuleConfiguration::configXMLInfo(const QString &key)
             m_pRangeModulConfigData->m_ObsermaticConfPar.m_nRangeAutoAct.m_nActive = m_pXMLReader->getValue(key).toInt(&ok);
             break;
         case setTime:
-            m_pRangeModulConfigData->m_ObsermaticConfPar.m_time = m_pXMLReader->getValue(key).toInt(&ok);
+            m_pRangeModulConfigData->m_ObsermaticConfPar.m_time.m_sKey = key;
+            m_pRangeModulConfigData->m_ObsermaticConfPar.m_time.m_nValue = m_pXMLReader->getValue(key).toInt(&ok);
             break;
         case setMeasureInterval:
             m_pRangeModulConfigData->m_fMeasInterval = m_pXMLReader->getValue(key).toDouble(&ok);

@@ -29,6 +29,12 @@ struct doubleParameter
     double m_fValue;
 };
 
+struct intParameter
+{
+    QString m_sKey;
+    quint32 m_nValue;
+};
+
 struct cObsermaticConfPar
 {
     void setCurrentRange(int channelIdx, const QString &rangeAlias) {
@@ -39,7 +45,7 @@ struct cObsermaticConfPar
     }
     boolParameter m_nGroupAct; // grouping active or not 1,0
     boolParameter m_nRangeAutoAct; // range automatic active or not 1,0
-    int m_time;
+    intParameter m_time;
 private:
     friend class cRangeModuleConfiguration;
     QList<stringParameter> m_senseChannelRangeParameter;
