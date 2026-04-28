@@ -6,6 +6,7 @@
 #include <jsonstructapi.h>
 #include <abstractserverInterface.h>
 #include <taskcontainerinterface.h>
+#include <QQueue>
 
 class SourceSwitchJsonInternal : public AbstractSourceSwitchJson
 {
@@ -22,17 +23,25 @@ signals:
 private slots:
     void onSwitchTasksFinish(bool ok, int taskId);
 private:
-    int switchOff();
+    TaskTemplatePtr getSwitchOnTask(const JsonParamApi &desiredLoad);
+    TaskTemplatePtr getSwitchOffTask(const JsonParamApi &desiredLoad);
     TaskContainerInterfacePtr createLoadpointTasks(const JsonParamApi &paramState);
     TaskTemplatePtr createSourceModeOnTask(const JsonParamApi &paramState);
     TaskTemplatePtr createSourceOnOffTask(const JsonParamApi &paramState);
+    int doStartTask(TaskTemplatePtr task, const JsonParamApi &desiredLoad);
 
     AbstractServerInterfacePtr m_serverInterface;
     JsonStructApi m_sourceCapabilities;
     PersistentJsonState m_persistentParamState;
     JsonParamApi m_paramsCurrent;
     JsonParamApi m_paramsRequested;
-    TaskContainerInterfacePtr m_currentTasks;
+    TaskTemplatePtr m_pendingTask;
+    struct PendingSwitchEntries
+    {
+        JsonParamApi desiredLoad;
+        TaskTemplatePtr task;
+    };
+    QQueue<std::shared_ptr<PendingSwitchEntries>> m_pendingSwitchRequests;
 };
 
 #endif // SOURCESWITCHJSONINTERNAL_H

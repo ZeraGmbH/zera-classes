@@ -23,38 +23,20 @@ SourceSwitchJsonInternal::SourceSwitchJsonInternal(AbstractServerInterfacePtr se
 
 int SourceSwitchJsonInternal::switchState(const JsonParamApi &desiredLoad)
 {
-    if (!desiredLoad.getOn())
-        return switchOff();
+    TaskTemplatePtr nextTask = desiredLoad.getOn() ?
+                                             getSwitchOnTask(desiredLoad) :
+                                             getSwitchOffTask(desiredLoad);
 
-    m_paramsRequested = desiredLoad;
-
-    m_currentTasks = TaskContainerSequence::create(TaskContainerSequence::StopOnFirstTaskFail);
-    m_currentTasks->addSub(createSourceModeOnTask(desiredLoad));
-    m_currentTasks->addSub(createLoadpointTasks(desiredLoad));
-    m_currentTasks->addSub(createSourceOnOffTask(desiredLoad));
-
-    connect(m_currentTasks.get(), &TaskTemplate::sigFinish,
-            this, &SourceSwitchJsonInternal::onSwitchTasksFinish);
-    m_currentTasks->start();
-    emit sigSwitchTransactionStarted();
-    return m_currentTasks->getTaskId();
-}
-
-int SourceSwitchJsonInternal::switchOff()
-{
-    JsonParamApi paramOff = m_paramsCurrent;
-    paramOff.setOn(false);
-    m_paramsRequested = paramOff;
-
-    m_currentTasks = TaskContainerSequence::create(TaskContainerSequence::StopOnFirstTaskFail);
-    m_currentTasks->addSub(createSourceOnOffTask(paramOff));
-    m_currentTasks->addSub(createSourceModeOnTask(paramOff));
-    connect(m_currentTasks.get(), &TaskTemplate::sigFinish,
-            this, &SourceSwitchJsonInternal::onSwitchTasksFinish);
-    m_currentTasks->start();
-
-    emit sigSwitchTransactionStarted();
-    return m_currentTasks->getTaskId();
+    int taskId = nextTask->getTaskId();
+    if (m_pendingTask == nullptr)
+        doStartTask(std::move(nextTask), desiredLoad);
+    else {
+        std::shared_ptr<PendingSwitchEntries> queueEntry = std::make_shared<PendingSwitchEntries>();
+        queueEntry->desiredLoad = desiredLoad;
+        queueEntry->task = std::move(nextTask);
+        m_pendingSwitchRequests.enqueue(queueEntry);
+    }
+    return taskId;
 }
 
 TaskContainerInterfacePtr SourceSwitchJsonInternal::createLoadpointTasks(const JsonParamApi &paramState)
@@ -125,6 +107,19 @@ TaskTemplatePtr SourceSwitchJsonInternal::createSourceOnOffTask(const JsonParamA
         );
 }
 
+int SourceSwitchJsonInternal::doStartTask(TaskTemplatePtr task, const JsonParamApi &desiredLoad)
+{
+    int taskId = task->getTaskId();
+    m_pendingTask = std::move(task);
+    m_paramsRequested = desiredLoad;
+
+    connect(m_pendingTask.get(), &TaskTemplate::sigFinish,
+            this, &SourceSwitchJsonInternal::onSwitchTasksFinish);
+    m_pendingTask->start();
+    emit sigSwitchTransactionStarted();
+    return taskId;
+}
+
 JsonParamApi SourceSwitchJsonInternal::getCurrLoadpoint()
 {
     return m_paramsCurrent;
@@ -137,8 +132,35 @@ JsonParamApi SourceSwitchJsonInternal::getRequestedLoadState()
 
 void SourceSwitchJsonInternal::onSwitchTasksFinish(bool ok, int taskId)
 {
+    m_pendingTask.reset();
     if (ok)
         m_paramsCurrent = m_paramsRequested;
     emit sigSwitchFinished(ok, taskId);
+
+    if (m_pendingSwitchRequests.size() != 0) {
+        std::shared_ptr<PendingSwitchEntries> nextEntry = m_pendingSwitchRequests.dequeue();
+        doStartTask(std::move(nextEntry->task), nextEntry->desiredLoad);
+    }
+}
+
+TaskTemplatePtr SourceSwitchJsonInternal::getSwitchOnTask(const JsonParamApi &desiredLoad)
+{
+    TaskContainerInterfacePtr nextTask = TaskContainerSequence::create(TaskContainerSequence::StopOnFirstTaskFail);
+    nextTask->addSub(createSourceModeOnTask(desiredLoad));
+    nextTask->addSub(createLoadpointTasks(desiredLoad));
+    nextTask->addSub(createSourceOnOffTask(desiredLoad));
+    return nextTask;
+}
+
+TaskTemplatePtr SourceSwitchJsonInternal::getSwitchOffTask(const JsonParamApi &desiredLoad)
+{
+    JsonParamApi paramOff(desiredLoad);
+    paramOff.setOn(false);
+
+    TaskContainerInterfacePtr nextTask = TaskContainerSequence::create(TaskContainerSequence::StopOnFirstTaskFail);
+    nextTask = TaskContainerSequence::create(TaskContainerSequence::StopOnFirstTaskFail);
+    nextTask->addSub(createSourceOnOffTask(paramOff));
+    nextTask->addSub(createSourceModeOnTask(paramOff));
+    return nextTask;
 }
 

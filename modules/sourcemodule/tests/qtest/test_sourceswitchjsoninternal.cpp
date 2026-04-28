@@ -259,6 +259,23 @@ void test_sourceswitchjsoninternal::switchOnServerDied()
     QVERIFY(TestLogHelpers::compareAndLogOnDiffJson(expectedCurrent, dumpedCurrent));
 }
 
+void test_sourceswitchjsoninternal::twoSignalsSwitchSameTwice()
+{
+    SourceSwitchJsonInternal switcher(m_pcbIFace, *m_capabilities);
+    QSignalSpy spy(&switcher, &AbstractSourceSwitchJson::sigSwitchFinished);
+
+    JsonParamApi paramState = switcher.getCurrLoadpoint();
+    int switchId1 = switcher.switchState(paramState);
+    int switchId2 = switcher.switchState(paramState);
+    TimeMachineObject::feedEventLoop();
+
+    QCOMPARE(spy.count(), 2);
+    QCOMPARE(spy[0][0], true);
+    QCOMPARE(spy[0][1], switchId1);
+    QCOMPARE(spy[1][0], true);
+    QCOMPARE(spy[1][1], switchId2);
+}
+
 void test_sourceswitchjsoninternal::switchUL2OffCheckOnFlags()
 {
     SourceSwitchJsonInternal switcher(m_pcbIFace, *m_capabilities);
