@@ -9,6 +9,7 @@
 #include <networkconnectioninfo.h>
 #include <stringvalidator.h>
 #include <dspinterface.h>
+#include <timertemplateqt.h>
 
 // cRangeObsermatic is responsible for setting, observing, automatic setting
 // and grouping measurement channel ranges. it works on a flexible list of
@@ -46,11 +47,14 @@ public:
     VfModuleComponent *m_pRangingSignal;
 signals:
     void activationRepeat();
+    void setRangesConfigFinished();
 public slots:
     virtual void ActionHandler(QVector<float>* actualValues); // entry after received actual values
     void catchChannelReply(quint32 msgnr);
     void catchChannelNewRangeList();
 private:
+    double parseStrRangeToDouble(QString range);
+
     cRangeModule *m_pModule;
     QList<QStringList> m_GroupList;
     cObsermaticConfPar& m_ConfPar;
@@ -80,6 +84,7 @@ private:
     VfModuleParameter* m_pParRangeAutomaticOnOff;
     VfModuleParameter* m_pParGroupingOnOff;
     VfModuleParameter* m_pParOverloadOnOff;
+    VfModuleParameter* m_pParRangeTimer;
     VfModuleComponent* m_pComponentOverloadMax;
 
     DspVarGroupClientInterface* m_gainScaleDSPVarGroup = nullptr; // copy of dsp internal correction data
@@ -102,6 +107,9 @@ private:
     QFinalState m_writeGainScaleDoneState;
 
     bool m_rangeSetManual = false; // we set this here after we selected a new range and enable resetting stored overloadcondition
+    TimerTemplateQtPtr m_timerForRangeDecrease;
+    QMap<int, QMetaObject::Connection> m_rangeConnections;
+    QMap<int, QString> m_pendingTargetRanges;
 
     void rangeObservation();
     void rangeAutomatic();

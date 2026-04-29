@@ -40,9 +40,17 @@ private slots:
     void abnormalSinePeakOverloadRangeAutomatic();
     void rmsOverloadRangeAutomaticDC();
     void peakOverloadRangeAutomaticDC();
+
+    void rangeAutomaticOnRangeDecrease();
+    void rangeAutomaticOnRangeDecreasePartially();
+    void rangeAutomaticOnGroupingOff();
+    void rangeAutomaticOnGroupingOn();
+    void timerForRangeDecreaseNull();
+
 private:
     void setupServices();
     void fireNewActualValues(float rmsValue, bool includeIAux);
+    void fireDifferentVoltageValues(QList<float> rmsValues, bool includeIAux);
     void fireNewActualValues(float rmsValue, float peakValue, bool includeIAux);
     void setVfComponent(int entityId, QString componentName, QVariant newValue);
     QVariant getVfComponent(int entityId, QString componentName);
