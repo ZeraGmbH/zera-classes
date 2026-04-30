@@ -58,10 +58,6 @@ cRangeObsermatic::cRangeObsermatic(cRangeModule *module,
     connect(&m_writeGainScaleState, &QState::entered, this, &cRangeObsermatic::writeGainScale);
 
     m_timerForRangeDecrease = TimerFactoryQt::createSingleShot(m_ConfPar.m_time.m_nValue);
-    connect(this, &cRangeObsermatic::setRangesConfigFinished, this, [this]{
-        groupHandling();
-        setRanges();
-    });
 }
 
 void cRangeObsermatic::ActionHandler(QVector<float> *actualValues)
@@ -297,14 +293,19 @@ void RANGEMODULE::cRangeObsermatic::replaceOrAddPendingDecreaseRange(int channel
         QObject::disconnect(m_pendingDecreaseTargetRanges[channelIdx].m_connection);
         m_pendingDecreaseTargetRanges.remove(channelIdx);
     }
+
     RangePendingDecreaseEntry newEntry;
     newEntry.m_targetRangeName = optRange;
     newEntry.m_connection = connect(m_timerForRangeDecrease.get(), &TimerTemplateQt::sigExpired, this, [channelIdx, optRange, this]{
         m_ConfPar.setCurrentRange(channelIdx, optRange);
         QObject::disconnect(m_pendingDecreaseTargetRanges[channelIdx].m_connection);
         m_pendingDecreaseTargetRanges.remove(channelIdx);
-        if (m_pendingDecreaseTargetRanges.isEmpty())
-            emit setRangesConfigFinished();
+        if (m_pendingDecreaseTargetRanges.isEmpty()) {
+            groupHandling();
+            setRanges();
+            emit m_pModule->parameterChanged();
+        }
+
     });
     m_pendingDecreaseTargetRanges[channelIdx] = newEntry;
     m_timerForRangeDecrease->start();
@@ -717,10 +718,6 @@ void cRangeObsermatic::newRangeAuto(QVariant rauto)
 {
     bool ok;
     m_ConfPar.m_nRangeAutoAct.m_nActive = rauto.toInt(&ok);
-
-    //In case of timer running, make sure to set configuration
-    connect(this, &cRangeObsermatic::setRangesConfigFinished,
-            m_pModule, &cRangeModule::parameterChanged, Qt::UniqueConnection);
 
     if (m_ConfPar.m_nRangeAutoAct.m_nActive == 1) {
         rangeAutomatic(); // call once if switched to automatic

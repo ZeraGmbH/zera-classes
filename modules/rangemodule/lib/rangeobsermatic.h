@@ -47,7 +47,6 @@ public:
     VfModuleComponent *m_pRangingSignal;
 signals:
     void activationRepeat();
-    void setRangesConfigFinished();
 public slots:
     virtual void ActionHandler(QVector<float>* actualValues); // entry after received actual values
     void catchChannelReply(quint32 msgnr);
