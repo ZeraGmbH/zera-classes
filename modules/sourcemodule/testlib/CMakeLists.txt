@@ -11,6 +11,11 @@ add_library(sourcemodule-testlib STATIC
     ${HEADER}
     )
 
+target_include_directories(sourcemodule-testlib
+    PUBLIC
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
+    )
+
 target_link_libraries(sourcemodule-testlib
     PUBLIC
     ${QTX}::Test
@@ -19,7 +24,5 @@ target_link_libraries(sourcemodule-testlib
     Zera::zera-timers-testlib
     )
 
-target_include_directories(sourcemodule-testlib
-    PUBLIC
-    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
-    )
+set_target_properties(sourcemodule-testlib PROPERTIES VERSION ${PROJECT_VERSION})
+set_target_properties(sourcemodule-testlib PROPERTIES SOVERSION ${PROJECT_VERSION_MAJOR})

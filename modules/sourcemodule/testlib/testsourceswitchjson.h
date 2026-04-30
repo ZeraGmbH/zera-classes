@@ -8,6 +8,9 @@ class TestSourceSwitchJson : public AbstractSourceSwitchJson
 {
     Q_OBJECT
 public:
+    static std::shared_ptr<TestSourceSwitchJson> create(const QJsonObject &jsonStruct);
+    explicit TestSourceSwitchJson(const QJsonObject &jsonStruct);
+
     int switchState(const JsonParamApi &paramState) override;
     JsonParamApi getCurrLoadpoint() override;
 
@@ -17,7 +20,7 @@ private:
 
     int m_currentId = 0;
     struct QueueEntry {
-        int switchId;
+        int switchId = 0;
         JsonParamApi loadpoint;
     };
     QQueue<QueueEntry> m_pendingLoadpoints;
