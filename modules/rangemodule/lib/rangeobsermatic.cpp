@@ -291,6 +291,25 @@ void cRangeObsermatic::rangeObservation()
 }
 
 
+void RANGEMODULE::cRangeObsermatic::replaceOrAddPendingDecreaseRange(int channelIdx, const QString optRange)
+{
+    if (m_pendingDecreaseTargetRanges.contains(channelIdx)) {
+        QObject::disconnect(m_pendingDecreaseTargetRanges[channelIdx].m_connection);
+        m_pendingDecreaseTargetRanges.remove(channelIdx);
+    }
+    RangePendingDecreaseEntry newEntry;
+    newEntry.m_targetRangeName = optRange;
+    newEntry.m_connection = connect(m_timerForRangeDecrease.get(), &TimerTemplateQt::sigExpired, this, [channelIdx, optRange, this]{
+        m_ConfPar.setCurrentRange(channelIdx, optRange);
+        QObject::disconnect(m_pendingDecreaseTargetRanges[channelIdx].m_connection);
+        m_pendingDecreaseTargetRanges.remove(channelIdx);
+        if (m_pendingDecreaseTargetRanges.isEmpty())
+            emit setRangesConfigFinished();
+    });
+    m_pendingDecreaseTargetRanges[channelIdx] = newEntry;
+    m_timerForRangeDecrease->start();
+}
+
 void cRangeObsermatic::rangeAutomatic()
 {
     if (m_ConfPar.m_nRangeAutoAct.m_nActive == 1) {
@@ -311,21 +330,7 @@ void cRangeObsermatic::rangeAutomatic()
 
                         if (parseStrRangeToDouble(optRange) < parseStrRangeToDouble(range)) {
                             if (!m_pendingDecreaseTargetRanges.contains(channelIdx) || m_pendingDecreaseTargetRanges[channelIdx].m_targetRangeName != optRange) {
-                                if (m_pendingDecreaseTargetRanges.contains(channelIdx)) {
-                                    QObject::disconnect(m_pendingDecreaseTargetRanges[channelIdx].m_connection);
-                                    m_pendingDecreaseTargetRanges.remove(channelIdx);
-                                }
-                                RangePendingDecreaseEntry newEntry;
-                                newEntry.m_targetRangeName = optRange;
-                                newEntry.m_connection = connect(m_timerForRangeDecrease.get(), &TimerTemplateQt::sigExpired, this, [channelIdx, optRange, this]{
-                                    m_ConfPar.setCurrentRange(channelIdx, optRange);
-                                    QObject::disconnect(m_pendingDecreaseTargetRanges[channelIdx].m_connection);
-                                    m_pendingDecreaseTargetRanges.remove(channelIdx);
-                                    if (m_pendingDecreaseTargetRanges.isEmpty())
-                                        emit setRangesConfigFinished();
-                                });
-                                m_pendingDecreaseTargetRanges[channelIdx] = newEntry;
-                                m_timerForRangeDecrease->start();
+                                replaceOrAddPendingDecreaseRange(channelIdx, optRange);
                             }
                         }
                         else

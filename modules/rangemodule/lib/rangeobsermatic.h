@@ -124,6 +124,7 @@ private:
     double getPreScale(int channelIdx);
     void handleOverload(const int channelIdx, bool rmsOverload, bool hardOverLoad, bool adcOverLoad);
     void setOverloadVeinComponent(bool overloadOn);
+    void replaceOrAddPendingDecreaseRange(int channelIdx, const QString optRange);
 
 private slots:
     void dspserverConnect();
