@@ -3,6 +3,7 @@
 
 #include <jsonparamapi.h>
 #include <QObject>
+#include <memory>
 
 class AbstractSourceSwitchJson : public QObject
 {
