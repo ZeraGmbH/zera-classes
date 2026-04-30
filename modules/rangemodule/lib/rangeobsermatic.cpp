@@ -310,6 +310,12 @@ void RANGEMODULE::cRangeObsermatic::replaceOrAddPendingDecreaseRange(int channel
     m_timerForRangeDecrease->start();
 }
 
+bool cRangeObsermatic::pendingDecreaseHashContainsRange(int channelIdx, const QString &range) const
+{
+    return m_pendingDecreaseTargetRanges.contains(channelIdx) &&
+           m_pendingDecreaseTargetRanges[channelIdx].m_targetRangeName == range;
+}
+
 void cRangeObsermatic::rangeAutomatic()
 {
     if (m_ConfPar.m_nRangeAutoAct.m_nActive == 1) {
@@ -324,17 +330,16 @@ void cRangeObsermatic::rangeAutomatic()
                         const QString range = m_ConfPar.getCurrentRange(channelIdx);
                         const RangeChannelData *channelData = rangeMeasChannel->getChannelData();
                         const double scaleFactor = getPreScale(channelIdx);
-                        const QString optRange = rangeMeasChannel->getOptimalRange(channelData->getRmsValue() * scaleFactor,
+                        const QString optimalRange = rangeMeasChannel->getOptimalRange(channelData->getRmsValue() * scaleFactor,
                                                                                    channelData->getPeakValue() * scaleFactor,
                                                                                    range);
 
-                        if (parseStrRangeToDouble(optRange) < parseStrRangeToDouble(range)) {
-                            if (!m_pendingDecreaseTargetRanges.contains(channelIdx) || m_pendingDecreaseTargetRanges[channelIdx].m_targetRangeName != optRange) {
-                                replaceOrAddPendingDecreaseRange(channelIdx, optRange);
-                            }
+                        if (parseStrRangeToDouble(optimalRange) < parseStrRangeToDouble(range)) {
+                            if (!pendingDecreaseHashContainsRange(channelIdx, optimalRange))
+                                replaceOrAddPendingDecreaseRange(channelIdx, optimalRange);
                         }
                         else
-                            m_ConfPar.setCurrentRange(channelIdx, optRange);
+                            m_ConfPar.setCurrentRange(channelIdx, optimalRange);
                     }
                 }
                 else {

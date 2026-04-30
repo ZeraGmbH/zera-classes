@@ -125,6 +125,7 @@ private:
     void handleOverload(const int channelIdx, bool rmsOverload, bool hardOverLoad, bool adcOverLoad);
     void setOverloadVeinComponent(bool overloadOn);
     void replaceOrAddPendingDecreaseRange(int channelIdx, const QString optRange);
+    bool pendingDecreaseHashContainsRange(int channelIdx, const QString &range) const;
 
 private slots:
     void dspserverConnect();
