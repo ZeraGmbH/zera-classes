@@ -593,6 +593,7 @@ void test_range_automatic::peakOverloadRangeAutomaticDC()
 
 void test_range_automatic::rangeAutomaticOnRangeDecrease()
 {
+    QCOMPARE(getVfComponent(rangeEntityId, IL1RangeComponent), "10A");
     fireNewActualValues(0, withoutIaux);
     setVfComponent(rangeEntityId, RangeAutomaticComponent, 1);
     TimeMachineForTest::getInstance()->processTimers(waitingTimeForRangeDecrease);
