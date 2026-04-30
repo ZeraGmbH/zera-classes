@@ -70,7 +70,7 @@ public:
     bool isRMSOverload(double ampl); // test if ampl is overload condition
     bool isPeakOverload(double ampl); // test if ampl is adc overload condition
 
-    QString getOptRange(double rms, double peak, const QString &rngAlias); // returns opt. range alias
+    QString getOptimalRange(double rms, double peak, const QString &rngAlias); // returns opt. range alias
     QString getMaxRange() const; // returns alias of the range with max ur value
     QString getMaxRange(const QString &rngAlias); // returns alias of the range with max ur value
     QString getRangeListAlias();

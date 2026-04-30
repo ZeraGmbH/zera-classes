@@ -201,7 +201,7 @@ bool cRangeMeasChannel::isPeakOverload(double peak)
 }
 
 
-QString cRangeMeasChannel::getOptRange(double rms, double peak, const QString &rngAlias)
+QString cRangeMeasChannel::getOptimalRange(double rms, double peak, const QString &rngAlias)
 {
     qint32 actRngType = -1;
     if (m_RangeInfoHash.contains(rngAlias)) {
