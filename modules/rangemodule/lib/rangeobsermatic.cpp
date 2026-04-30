@@ -296,37 +296,40 @@ void cRangeObsermatic::rangeAutomatic()
     if (m_ConfPar.m_nRangeAutoAct.m_nActive == 1) {
         bool unmarkOverload = true;
 
-        for (int i = 0; i < m_RangeMeasChannelList.count(); i++) { // we test all channels
-            if (!m_maxOvlList.at(i)) { // no range automatic if there was overload in max range
-                cRangeMeasChannel *rangeMeasChannel = m_RangeMeasChannelList.at(i);
+        for (int channelIdx = 0; channelIdx < m_RangeMeasChannelList.count(); channelIdx++) { // we test all channels
+            if (!m_maxOvlList.at(channelIdx)) { // no range automatic if there was overload in max range
+                cRangeMeasChannel *rangeMeasChannel = m_RangeMeasChannelList.at(channelIdx);
 
-                if (!m_hardOvlList.at(i)) {
-                    if (!m_softOvlList.at(i)) {
-                        const QString range = m_ConfPar.getCurrentRange(i);
+                if (!m_hardOvlList.at(channelIdx)) {
+                    if (!m_softOvlList.at(channelIdx)) {
+                        const QString range = m_ConfPar.getCurrentRange(channelIdx);
                         const RangeChannelData *channelData = rangeMeasChannel->getChannelData();
-                        const QString optRange = rangeMeasChannel->getOptimalRange(channelData->getRmsValue()*getPreScale(i), channelData->getPeakValue()*getPreScale(i), range);
+                        const double scaleFactor = getPreScale(channelIdx);
+                        const QString optRange = rangeMeasChannel->getOptimalRange(channelData->getRmsValue() * scaleFactor,
+                                                                                   channelData->getPeakValue() * scaleFactor,
+                                                                                   range);
 
                         if (parseStrRangeToDouble(optRange) < parseStrRangeToDouble(range)) {
-                            if (!m_pendingDecreaseTargetRanges.contains(i) || m_pendingDecreaseTargetRanges[i].m_targetRangeName != optRange) {
-                                if (m_pendingDecreaseTargetRanges.contains(i)) {
-                                    QObject::disconnect(m_pendingDecreaseTargetRanges[i].m_connection);
-                                    m_pendingDecreaseTargetRanges.remove(i);
+                            if (!m_pendingDecreaseTargetRanges.contains(channelIdx) || m_pendingDecreaseTargetRanges[channelIdx].m_targetRangeName != optRange) {
+                                if (m_pendingDecreaseTargetRanges.contains(channelIdx)) {
+                                    QObject::disconnect(m_pendingDecreaseTargetRanges[channelIdx].m_connection);
+                                    m_pendingDecreaseTargetRanges.remove(channelIdx);
                                 }
                                 RangePendingDecreaseEntry newEntry;
                                 newEntry.m_targetRangeName = optRange;
-                                newEntry.m_connection = connect(m_timerForRangeDecrease.get(), &TimerTemplateQt::sigExpired, this, [i, optRange, this]{
-                                    m_ConfPar.setCurrentRange(i, optRange);
-                                    QObject::disconnect(m_pendingDecreaseTargetRanges[i].m_connection);
-                                    m_pendingDecreaseTargetRanges.remove(i);
+                                newEntry.m_connection = connect(m_timerForRangeDecrease.get(), &TimerTemplateQt::sigExpired, this, [channelIdx, optRange, this]{
+                                    m_ConfPar.setCurrentRange(channelIdx, optRange);
+                                    QObject::disconnect(m_pendingDecreaseTargetRanges[channelIdx].m_connection);
+                                    m_pendingDecreaseTargetRanges.remove(channelIdx);
                                     if (m_pendingDecreaseTargetRanges.isEmpty())
                                         emit setRangesConfigFinished();
                                 });
-                                m_pendingDecreaseTargetRanges[i] = newEntry;
+                                m_pendingDecreaseTargetRanges[channelIdx] = newEntry;
                                 m_timerForRangeDecrease->start();
                             }
                         }
                         else
-                            m_ConfPar.setCurrentRange(i, optRange);
+                            m_ConfPar.setCurrentRange(channelIdx, optRange);
                     }
                 }
                 else {
