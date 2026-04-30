@@ -307,20 +307,21 @@ void cRangeObsermatic::rangeAutomatic()
                         const QString optRange = rangeMeasChannel->getOptRange(channelData->getRmsValue()*getPreScale(i), channelData->getPeakValue()*getPreScale(i), range);
 
                         if (parseStrRangeToDouble(optRange) < parseStrRangeToDouble(range)) {
-                            if (!m_rangeConnections.contains(i) || m_pendingTargetRanges[i] != optRange) {
-                                if (m_rangeConnections.contains(i)) {
-                                    QObject::disconnect(m_rangeConnections[i]);
-                                    m_rangeConnections.remove(i);
+                            if (!m_pendingDecreaseTargetRanges.contains(i) || m_pendingDecreaseTargetRanges[i].m_targetRangeName != optRange) {
+                                if (m_pendingDecreaseTargetRanges.contains(i)) {
+                                    QObject::disconnect(m_pendingDecreaseTargetRanges[i].m_connection);
+                                    m_pendingDecreaseTargetRanges.remove(i);
                                 }
-                                m_pendingTargetRanges[i] = optRange;
-                                m_rangeConnections[i] = connect(m_timerForRangeDecrease.get(), &TimerTemplateQt::sigExpired, this, [i, optRange, this]{
+                                RangePendingDecreaseEntry newEntry;
+                                newEntry.m_targetRangeName = optRange;
+                                newEntry.m_connection = connect(m_timerForRangeDecrease.get(), &TimerTemplateQt::sigExpired, this, [i, optRange, this]{
                                     m_ConfPar.setCurrentRange(i, optRange);
-                                    QObject::disconnect(m_rangeConnections[i]);
-                                    m_rangeConnections.remove(i);
-                                    m_pendingTargetRanges.remove(i);
-                                    if (m_rangeConnections.isEmpty())
+                                    QObject::disconnect(m_pendingDecreaseTargetRanges[i].m_connection);
+                                    m_pendingDecreaseTargetRanges.remove(i);
+                                    if (m_pendingDecreaseTargetRanges.isEmpty())
                                         emit setRangesConfigFinished();
                                 });
+                                m_pendingDecreaseTargetRanges[i] = newEntry;
                                 m_timerForRangeDecrease->start();
                             }
                         }

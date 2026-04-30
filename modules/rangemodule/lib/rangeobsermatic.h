@@ -108,8 +108,11 @@ private:
 
     bool m_rangeSetManual = false; // we set this here after we selected a new range and enable resetting stored overloadcondition
     TimerTemplateQtPtr m_timerForRangeDecrease;
-    QMap<int, QMetaObject::Connection> m_rangeConnections;
-    QMap<int, QString> m_pendingTargetRanges;
+    struct RangePendingDecreaseEntry {
+        QMetaObject::Connection m_connection;
+        QString m_targetRangeName;
+    };
+    QMap<int /*channelIdx*/, RangePendingDecreaseEntry> m_pendingDecreaseTargetRanges;
 
     void rangeObservation();
     void rangeAutomatic();
