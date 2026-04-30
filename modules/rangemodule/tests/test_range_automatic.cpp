@@ -596,7 +596,11 @@ void test_range_automatic::rangeAutomaticOnRangeDecrease()
     QCOMPARE(getVfComponent(rangeEntityId, IL1RangeComponent), "10A");
     fireNewActualValues(0, withoutIaux);
     setVfComponent(rangeEntityId, RangeAutomaticComponent, 1);
-    TimeMachineForTest::getInstance()->processTimers(waitingTimeForRangeDecrease);
+
+    TimeMachineForTest::getInstance()->processTimers(waitingTimeForRangeDecrease-1);
+    QCOMPARE(getVfComponent(rangeEntityId, IL1RangeComponent), "10A");
+
+    TimeMachineForTest::getInstance()->processTimers(1);
     QCOMPARE(getVfComponent(rangeEntityId, IL1RangeComponent), "25mA");
 
     float rms = 0.025 * ovrRejectionFactor * outsideRangeLimit;
@@ -605,14 +609,6 @@ void test_range_automatic::rangeAutomaticOnRangeDecrease()
     //So, fire an extra interrupt.
     fireNewActualValues(rms, withoutIaux);
     QCOMPARE(getVfComponent(rangeEntityId, IL1RangeComponent), "50mA");
-
-    fireNewActualValues(0, withoutIaux);
-    fireNewActualValues(0, withoutIaux);
-    QCOMPARE(getVfComponent(rangeEntityId, IL1RangeComponent), "50mA");
-    TimeMachineForTest::getInstance()->processTimers(waitingTimeForRangeDecrease /2);
-    QCOMPARE(getVfComponent(rangeEntityId, IL1RangeComponent), "50mA");
-    TimeMachineForTest::getInstance()->processTimers(waitingTimeForRangeDecrease /2);
-    QCOMPARE(getVfComponent(rangeEntityId, IL1RangeComponent), "25mA");
 }
 
 void test_range_automatic::rangeAutomaticOnRangeDecreasePartially()
