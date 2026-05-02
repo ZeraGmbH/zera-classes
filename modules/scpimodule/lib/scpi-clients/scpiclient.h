@@ -8,6 +8,7 @@
 #include "ieee488-2.h"
 #include "scpimoduleconfigdata.h"
 #include "signalconnectiondelegate.h"
+#include <QJsonObject>
 #include <QUuid>
 #include <QHash>
 
@@ -53,7 +54,11 @@ protected:
 private slots:
     virtual void cmdInput() = 0;
 private:
-    void setSignalConnections(cSCPIStatus* scpiStatus, const QList<cStatusBitDescriptor> &statusBitDescriptorList);
+    typedef QHash<QString /*entityName*/, int /*entityId*/> EntityHash;
+    void setSignalConnections(cSCPIStatus* scpiStatus,
+                              const QList<cStatusBitDescriptor> &statusBitDescriptorList,
+                              const EntityHash &entitiesWithScpi);
+    EntityHash getEntitiesWithScpi() const;
     void generateSCPIMeasureSystem();
 
     cSCPIModule* m_pModule;

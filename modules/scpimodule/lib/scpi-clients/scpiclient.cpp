@@ -49,9 +49,10 @@ cSCPIClient::cSCPIClient(cSCPIModule* module, cSCPIModuleConfigData &configdata,
     connect(scpiOperStatus, &cSCPIStatus::sigEventError, m_pIEEE4882, &cIEEE4882::addEventError);
     connect(scpiOperMeasStatus, &cSCPIStatus::sigEventError, m_pIEEE4882, &cIEEE4882::addEventError);
 
-    setSignalConnections(scpiQuestStatus, m_ConfigData.m_QuestionableStatDescriptorList);
-    setSignalConnections(scpiOperStatus, m_ConfigData.m_OperationStatDescriptorList);
-    setSignalConnections(scpiOperMeasStatus, m_ConfigData.m_OperationMeasureStatDescriptorList);
+    const EntityHash entitiesWithScpi = getEntitiesWithScpi();
+    setSignalConnections(scpiQuestStatus, m_ConfigData.m_QuestionableStatDescriptorList, entitiesWithScpi);
+    setSignalConnections(scpiOperStatus, m_ConfigData.m_OperationStatDescriptorList, entitiesWithScpi);
+    setSignalConnections(scpiOperMeasStatus, m_ConfigData.m_OperationMeasureStatDescriptorList, entitiesWithScpi);
 
     generateSCPIMeasureSystem();
 }
@@ -205,46 +206,55 @@ void cSCPIClient::receiveStatus(quint8 stat)
     emit commandAnswered(this);
 }
 
-void cSCPIClient::setSignalConnections(cSCPIStatus* scpiStatus, const QList<cStatusBitDescriptor> &statusBitDescriptorList)
+cSCPIClient::EntityHash cSCPIClient::getEntitiesWithScpi() const
 {
+    const VeinStorage::AbstractDatabase* storageDb = m_pModule->getStorageDb();
+    QList<int> entityIdList = storageDb->getEntityList();
+    int entityIdCount = entityIdList.count();
+
+    EntityHash entitiesWithScpi;
+    for (int entityIdx = 0; entityIdx < entityIdCount; entityIdx++) {
+        int entityId = entityIdList.at(entityIdx);
+        if (storageDb->hasStoredValue(entityId, QString("INF_ModuleInterface"))) {
+            QJsonDocument jsonDoc = QJsonDocument::fromJson(storageDb->getStoredValue(entityId, QString("INF_ModuleInterface")).toByteArray());
+            if ( !jsonDoc.isNull() && jsonDoc.isObject() ) {
+                const QJsonObject jsonInfModuleInterface = jsonDoc.object();
+                const QJsonObject jsonScpiInfo = jsonInfModuleInterface["SCPIInfo"].toObject();
+                QString scpiModuleName = jsonScpiInfo["Name"].toString();
+                entitiesWithScpi[scpiModuleName] = entityId;
+            }
+        }
+    }
+    return entitiesWithScpi;
+}
+
+void cSCPIClient::setSignalConnections(cSCPIStatus* scpiStatus,
+                                       const QList<cStatusBitDescriptor> &statusBitDescriptorList,
+                                       const EntityHash &entitiesWithScpi)
+{
+    if (entitiesWithScpi.isEmpty())
+        return;
+
     int descriptorCount = statusBitDescriptorList.count();
-    if (descriptorCount > 0) {
-        const VeinStorage::AbstractDatabase* storageDb = m_pModule->getStorageDb();
-        QList<int> entityIdList = storageDb->getEntityList();
-        int entityIdCount = entityIdList.count();
-        // we iterate over all statusbitdescriptors
-        for (int i = 0; i < descriptorCount; i++) {
-            cStatusBitDescriptor des = statusBitDescriptorList.at(i); // the searched status bit descriptor
-            if (entityIdCount  > 0) {
-                int entityID;
-                bool moduleFound = false;
-                // we parse over all moduleinterface components
-                for (int j = 0; j < entityIdCount; j++) {
-                    entityID = entityIdList.at(j);
-                    if (storageDb->hasStoredValue(entityID, QString("INF_ModuleInterface"))) {
-                        QJsonDocument jsonDoc = QJsonDocument::fromJson(storageDb->getStoredValue(entityID, QString("INF_ModuleInterface")).toByteArray());
-                        if ( !jsonDoc.isNull() && jsonDoc.isObject() ) {
-                            QJsonObject jsonObj = jsonDoc.object();
-                            jsonObj = jsonObj["SCPIInfo"].toObject();
-                            QString scpiModuleName = jsonObj["Name"].toString();
-                            if (scpiModuleName == des.m_sSCPIModuleName) {
-                                moduleFound = true;
-                                break;
-                            }
-                        }
-                    }
-                }
-                if (moduleFound) {
-                    if (storageDb->hasStoredValue(entityID, des.m_sComponentName)) {
-                        // if we found the searched component, we generate a signal connection delegate
-                        // we need an eventsystem to look for notifications with these components
-                        // that lets the signal connection delegate  do his job
-                        cSignalConnectionDelegate* sConnectDelegate = new cSignalConnectionDelegate(scpiStatus, des.m_nBitNr, entityID, des.m_sComponentName);
-                        // as we only want a single eventsystem the module itself holds the list of delegates
-                        m_pModule->sConnectDelegateList.append(sConnectDelegate);
-                        m_connectDelegateList.append(sConnectDelegate); // our own list so we can clean up if client dies
-                    }
-                }
+    if (descriptorCount <= 0)
+        return;
+
+    const VeinStorage::AbstractDatabase* storageDb = m_pModule->getStorageDb();
+    for (int descriptorIdx = 0; descriptorIdx < descriptorCount; descriptorIdx++) {
+        cStatusBitDescriptor statusBitDescriptor = statusBitDescriptorList.at(descriptorIdx);
+        const QString &moduleName = statusBitDescriptor.m_sSCPIModuleName;
+        if (entitiesWithScpi.contains(moduleName)) {
+            const int entityId = entitiesWithScpi[moduleName];
+            if (storageDb->hasStoredValue(entityId, statusBitDescriptor.m_sComponentName)) {
+                // if we found the searched component, we generate a signal connection delegate
+                // we need an eventsystem to look for notifications with these components
+                // that lets the signal connection delegate  do his job
+                cSignalConnectionDelegate* sConnectDelegate = new cSignalConnectionDelegate(scpiStatus,
+                                                                                            statusBitDescriptor.m_nBitNr,
+                                                                                            entityId, statusBitDescriptor.m_sComponentName);
+                // as we only want a single eventsystem the module itself holds the list of delegates
+                m_pModule->sConnectDelegateList.append(sConnectDelegate);
+                m_connectDelegateList.append(sConnectDelegate); // our own list so we can clean up if client dies
             }
         }
     }
