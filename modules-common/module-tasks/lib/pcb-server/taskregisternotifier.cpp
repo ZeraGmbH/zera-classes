@@ -1,8 +1,8 @@
 #include "taskregisternotifier.h"
 #include "taskdecoratortimeout.h"
 
-TaskTemplatePtr TaskRegisterNotifier::create(Zera::PcbInterfacePtr pcbInterface,
-                                             QString scpiQuery,
+TaskTemplatePtr TaskRegisterNotifier::create(const Zera::PcbInterfacePtr &pcbInterface,
+                                             const QString &scpiQuery,
                                              int notificationId,
                                              int timeout, std::function<void ()> additionalErrorHandler)
 {
@@ -15,7 +15,9 @@ TaskTemplatePtr TaskRegisterNotifier::create(Zera::PcbInterfacePtr pcbInterface,
 
 }
 
-TaskRegisterNotifier::TaskRegisterNotifier(Zera::PcbInterfacePtr pcbInterface, QString scpiQuery, int notificationId) :
+TaskRegisterNotifier::TaskRegisterNotifier(const Zera::PcbInterfacePtr &pcbInterface,
+                                           const QString &scpiQuery,
+                                           int notificationId) :
     TaskServerTransactionTemplate(pcbInterface),
     m_pcbInterface(pcbInterface),
     m_scpiQuery(scpiQuery),

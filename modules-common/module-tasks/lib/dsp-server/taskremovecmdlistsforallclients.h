@@ -7,7 +7,7 @@
 class TaskRemoveCmdListsForAllClients
 {
 public:
-    static TaskTemplatePtr create(Zera::DspInterfacePtr dspInterface,
+    static TaskTemplatePtr create(const Zera::DspInterfacePtr &dspInterface,
                                   int timeout, std::function<void()> additionalErrorHandler = []{});
 };
 

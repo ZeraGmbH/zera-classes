@@ -1,8 +1,8 @@
 #include "taskchannelgetdspchannel.h"
 #include "taskscpigetint.h"
 
-TaskTemplatePtr TaskChannelGetDspChannel::create(Zera::PcbInterfacePtr pcbInterface,
-                                                 QString channelName,
+TaskTemplatePtr TaskChannelGetDspChannel::create(const Zera::PcbInterfacePtr &pcbInterface,
+                                                 const QString &channelName,
                                                  std::shared_ptr<int> valueReceived,
                                                  int timeout, std::function<void()> additionalErrorHandler)
 {

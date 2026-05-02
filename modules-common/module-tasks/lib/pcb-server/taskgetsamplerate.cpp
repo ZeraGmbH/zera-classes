@@ -1,7 +1,7 @@
 #include "taskgetsamplerate.h"
 #include "taskscpigetint.h"
 
-TaskTemplatePtr TaskGetSampleRate::create(Zera::PcbInterfacePtr pcbInterface,
+TaskTemplatePtr TaskGetSampleRate::create(const Zera::PcbInterfacePtr &pcbInterface,
                                           std::shared_ptr<int> valueReceived,
                                           int timeout, std::function<void ()> additionalErrorHandler)
 {

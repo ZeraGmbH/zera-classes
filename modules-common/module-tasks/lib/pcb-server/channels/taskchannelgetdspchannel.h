@@ -7,7 +7,7 @@
 class TaskChannelGetDspChannel
 {
 public:
-    static TaskTemplatePtr create(Zera::PcbInterfacePtr pcbInterface, QString channelName,
+    static TaskTemplatePtr create(const Zera::PcbInterfacePtr &pcbInterface, const QString &channelName,
                                   std::shared_ptr<int> valueReceived,
                                   int timeout, std::function<void()> additionalErrorHandler = []{});
 };

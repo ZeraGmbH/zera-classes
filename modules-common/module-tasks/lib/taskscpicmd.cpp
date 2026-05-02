@@ -1,7 +1,7 @@
 #include "taskscpicmd.h"
 #include <taskdecoratortimeout.h>
 
-TaskTemplatePtr TaskScpiCmd::create(AbstractServerInterfacePtr interface,
+TaskTemplatePtr TaskScpiCmd::create(const AbstractServerInterfacePtr &interface,
                                     const QString &scpiCmd,
                                     int timeout, std::function<void ()> additionalErrorHandler)
 {
@@ -12,7 +12,7 @@ TaskTemplatePtr TaskScpiCmd::create(AbstractServerInterfacePtr interface,
                                              additionalErrorHandler);
 }
 
-TaskScpiCmd::TaskScpiCmd(AbstractServerInterfacePtr interface, const QString &scpiCmd) :
+TaskScpiCmd::TaskScpiCmd(const AbstractServerInterfacePtr &interface, const QString &scpiCmd) :
     TaskServerTransactionTemplate(interface),
     m_scpiCmd(scpiCmd)
 {

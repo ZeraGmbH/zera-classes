@@ -7,8 +7,8 @@
 class TaskRangeGetIsAvailable
 {
 public:
-    static TaskTemplatePtr create(Zera::PcbInterfacePtr pcbInterface,
-                                  QString channelMName, QString rangeName,
+    static TaskTemplatePtr create(const Zera::PcbInterfacePtr &pcbInterface,
+                                  const QString &channelMName, const QString &rangeName,
                                   std::shared_ptr<bool> valueReceived,
                                   int timeout, std::function<void ()> additionalErrorHandler = []{});
 };

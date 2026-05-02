@@ -1,8 +1,8 @@
 #include "taskchannelgetalias.h"
 #include "taskdecoratortimeout.h"
 
-TaskTemplatePtr TaskChannelGetAlias::create(Zera::PcbInterfacePtr pcbInterface,
-                                            QString channelName,
+TaskTemplatePtr TaskChannelGetAlias::create(const Zera::PcbInterfacePtr &pcbInterface,
+                                            const QString &channelName,
                                             QString &valueReceived,
                                             int timeout, std::function<void ()> additionalErrorHandler)
 {
@@ -14,8 +14,8 @@ TaskTemplatePtr TaskChannelGetAlias::create(Zera::PcbInterfacePtr pcbInterface,
                                              additionalErrorHandler);
 }
 
-TaskChannelGetAlias::TaskChannelGetAlias(Zera::PcbInterfacePtr pcbInterface,
-                                         QString channelName,
+TaskChannelGetAlias::TaskChannelGetAlias(const Zera::PcbInterfacePtr &pcbInterface,
+                                         const QString &channelName,
                                          QString &valueReceived) :
     TaskServerTransactionTemplate(pcbInterface),
     m_pcbInterface(pcbInterface),

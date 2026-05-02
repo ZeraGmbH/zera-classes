@@ -8,7 +8,7 @@ class TaskPllChannelGet : public TaskServerTransactionTemplate
 {
     Q_OBJECT
 public:
-    static TaskTemplatePtr create(AbstractServerInterfacePtr pcbInterface,
+    static TaskTemplatePtr create(const AbstractServerInterfacePtr &pcbInterface,
                                   std::shared_ptr<QString> &pllChannelMNameReceived,
                                   int timeout, std::function<void()> additionalErrorHandler = []{});
 };

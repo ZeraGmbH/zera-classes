@@ -2,8 +2,8 @@
 #include "taskregisternotifier.h"
 
 std::unique_ptr<TaskRefPowerRegisterConstChangeNotifications> TaskRefPowerRegisterConstChangeNotifications::create(
-    Zera::PcbInterfacePtr pcbInterface,
-    QStringList inputNames,
+    const Zera::PcbInterfacePtr &pcbInterface,
+    const QStringList &inputNames,
     int firstNotificationId,
     std::function<void ()> additionalErrorHandler)
 {

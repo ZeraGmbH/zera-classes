@@ -1,8 +1,8 @@
 #include "taskrangegettype.h"
 #include "taskscpigetint.h"
 
-TaskTemplatePtr TaskRangeGetType::create(Zera::PcbInterfacePtr pcbInterface,
-                                         QString channelMName, QString rangeName,
+TaskTemplatePtr TaskRangeGetType::create(const Zera::PcbInterfacePtr &pcbInterface,
+                                         const QString &channelMName, const QString &rangeName,
                                          std::shared_ptr<int> valueReceived,
                                          int timeout, std::function<void ()> additionalErrorHandler)
 {

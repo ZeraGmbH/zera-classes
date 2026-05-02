@@ -7,7 +7,7 @@
 class TaskChannelGetAvail
 {
 public:
-    static TaskTemplatePtr create(Zera::PcbInterfacePtr pcbInterface,
+    static TaskTemplatePtr create(const Zera::PcbInterfacePtr &pcbInterface,
                                   std::shared_ptr<QStringList> channelsReceived,
                                   int timeout, std::function<void()> additionalErrorHandler = []{});
 };

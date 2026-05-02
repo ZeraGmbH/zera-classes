@@ -1,8 +1,8 @@
 #include "taskservertransactiontemplate.h"
 #include <reply.h>
 
-TaskServerTransactionTemplate::TaskServerTransactionTemplate(AbstractServerInterfacePtr server) :
-    m_interface(server)
+TaskServerTransactionTemplate::TaskServerTransactionTemplate(const AbstractServerInterfacePtr &serverInterface) :
+    m_interface(serverInterface)
 {
 }
 

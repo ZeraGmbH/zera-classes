@@ -8,9 +8,9 @@ class TaskUnregisterNotifier : public TaskServerTransactionTemplate
 {
     Q_OBJECT
 public:
-    static TaskTemplatePtr create(Zera::PcbInterfacePtr pcbInterface,
+    static TaskTemplatePtr create(const Zera::PcbInterfacePtr &pcbInterface,
                                   int timeout, std::function<void()> additionalErrorHandler = []{});
-    TaskUnregisterNotifier(Zera::PcbInterfacePtr pcbInterface);
+    TaskUnregisterNotifier(const Zera::PcbInterfacePtr &pcbInterface);
 private:
     quint32 sendToServer() override;
     bool handleCheckedServerAnswer(const QVariant &answer) override;

@@ -7,8 +7,8 @@
 class TaskRefPowerFetchConstant
 {
 public:
-    static TaskTemplatePtr create(Zera::PcbInterfacePtr pcbInterface,
-                                  QString refPowerName, // fo0;fo1...
+    static TaskTemplatePtr create(const Zera::PcbInterfacePtr &pcbInterface,
+                                  const QString &refPowerName, // fo0;fo1...
                                   std::shared_ptr<double> refPowerConstantReceived,
                                   int timeout, std::function<void()> additionalErrorHandler = []{});
 };

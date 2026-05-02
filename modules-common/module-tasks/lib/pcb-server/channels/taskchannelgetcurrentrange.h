@@ -8,11 +8,11 @@ class TaskChannelGetCurrentRange : public TaskServerTransactionTemplate
 {
     Q_OBJECT
 public:
-    static TaskTemplatePtr create(Zera::PcbInterfacePtr pcbInterface, QString channelName,
+    static TaskTemplatePtr create(const Zera::PcbInterfacePtr &pcbInterface, const QString &channelName,
                                   QString& valueReceived,
                                   int timeout, std::function<void()> additionalErrorHandler = []{});
-    TaskChannelGetCurrentRange(Zera::PcbInterfacePtr pcbInterface,
-                               QString channelName,
+    TaskChannelGetCurrentRange(const Zera::PcbInterfacePtr &pcbInterface,
+                               const QString &channelName,
                                QString& valueReceived);
 private:
     quint32 sendToServer() override;

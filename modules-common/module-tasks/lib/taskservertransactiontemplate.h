@@ -9,7 +9,7 @@ class TaskServerTransactionTemplate : public TaskTemplate
 {
     Q_OBJECT
 public:
-    TaskServerTransactionTemplate(AbstractServerInterfacePtr server);
+    TaskServerTransactionTemplate(const AbstractServerInterfacePtr &serverInterface);
     void start() override;
 protected:
     AbstractServerInterfacePtr m_interface;

@@ -1,7 +1,7 @@
 #include "taskpllchannelget.h"
 #include "taskscpigetstring.h"
 
-TaskTemplatePtr TaskPllChannelGet::create(AbstractServerInterfacePtr pcbInterface,
+TaskTemplatePtr TaskPllChannelGet::create(const AbstractServerInterfacePtr &pcbInterface,
                                           std::shared_ptr<QString> &pllChannelMNameReceived,
                                           int timeout,
                                           std::function<void ()> additionalErrorHandler)

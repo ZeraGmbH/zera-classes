@@ -8,8 +8,8 @@ class TaskRefPowerRegisterConstChangeNotifications : public TaskContainerParalle
 {
     Q_OBJECT
 public:
-    static std::unique_ptr<TaskRefPowerRegisterConstChangeNotifications> create(Zera::PcbInterfacePtr pcbInterface,
-                                                                                QStringList inputNames,
+    static std::unique_ptr<TaskRefPowerRegisterConstChangeNotifications> create(const Zera::PcbInterfacePtr &pcbInterface,
+                                                                                const QStringList &inputNames,
                                                                                 int firstNotificationId,
                                                                                 std::function<void()> additionalErrorHandler = []{});
     QMap<int /* notifyId */, QString /* refInputName */> getNotificationIds() const;

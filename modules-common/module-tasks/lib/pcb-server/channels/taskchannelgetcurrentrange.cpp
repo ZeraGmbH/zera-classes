@@ -1,7 +1,7 @@
 #include "taskchannelgetcurrentrange.h"
 #include <taskdecoratortimeout.h>
 
-TaskTemplatePtr TaskChannelGetCurrentRange::create(Zera::PcbInterfacePtr pcbInterface, QString channelName,
+TaskTemplatePtr TaskChannelGetCurrentRange::create(const Zera::PcbInterfacePtr &pcbInterface, const QString &channelName,
                                                    QString &valueReceived,
                                                    int timeout, std::function<void ()> additionalErrorHandler)
 {
@@ -13,8 +13,8 @@ TaskTemplatePtr TaskChannelGetCurrentRange::create(Zera::PcbInterfacePtr pcbInte
                                              additionalErrorHandler);
 }
 
-TaskChannelGetCurrentRange::TaskChannelGetCurrentRange(Zera::PcbInterfacePtr pcbInterface,
-                                                       QString channelName,
+TaskChannelGetCurrentRange::TaskChannelGetCurrentRange(const Zera::PcbInterfacePtr &pcbInterface,
+                                                       const QString &channelName,
                                                        QString &valueReceived) :
     TaskServerTransactionTemplate(pcbInterface),
     m_pcbInterface(pcbInterface),

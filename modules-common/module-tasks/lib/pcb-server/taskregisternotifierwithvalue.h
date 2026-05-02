@@ -8,11 +8,13 @@ class TaskRegisterNotifierWithValue : public TaskServerTransactionTemplate
 {
     Q_OBJECT
 public:
-    static TaskTemplatePtr create(Zera::PcbInterfacePtr pcbInterface,
-                                  QString scpiQuery,
+    static TaskTemplatePtr create(const Zera::PcbInterfacePtr &pcbInterface,
+                                  const QString &scpiQuery,
                                   int notificationId,
                                   int timeout, std::function<void()> additionalErrorHandler = []{});
-    TaskRegisterNotifierWithValue(Zera::PcbInterfacePtr pcbInterface, QString scpiQuery, int notificationId);
+    TaskRegisterNotifierWithValue(const Zera::PcbInterfacePtr &pcbInterface,
+                                  const QString &scpiQuery,
+                                  int notificationId);
 private:
     quint32 sendToServer() override;
     bool handleCheckedServerAnswer(const QVariant &answer) override;

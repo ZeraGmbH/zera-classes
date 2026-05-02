@@ -7,11 +7,11 @@ class TaskScpiGetDouble : public TaskServerTransactionTemplate
 {
     Q_OBJECT
 public:
-    static TaskTemplatePtr create(AbstractServerInterfacePtr interface,
+    static TaskTemplatePtr create(const AbstractServerInterfacePtr &interface,
                                   const QString &scpiCmd,
                                   std::shared_ptr<double> result,
                                   int timeout, std::function<void()> additionalErrorHandler = []{});
-    TaskScpiGetDouble(AbstractServerInterfacePtr interface,
+    TaskScpiGetDouble(const AbstractServerInterfacePtr &interface,
                       const QString &scpiCmd,
                       std::shared_ptr<double> result);
 

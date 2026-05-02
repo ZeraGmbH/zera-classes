@@ -8,7 +8,7 @@ class TaskGetSampleRate : public TaskServerTransactionTemplate
 {
     Q_OBJECT
 public:
-    static TaskTemplatePtr create(Zera::PcbInterfacePtr pcbInterface,
+    static TaskTemplatePtr create(const Zera::PcbInterfacePtr &pcbInterface,
                                   std::shared_ptr<int> valueReceived,
                                   int timeout, std::function<void()> additionalErrorHandler = []{});
 };

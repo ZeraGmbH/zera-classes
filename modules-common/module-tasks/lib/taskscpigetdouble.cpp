@@ -1,7 +1,10 @@
 #include "taskscpigetdouble.h"
 #include <taskdecoratortimeout.h>
 
-TaskTemplatePtr TaskScpiGetDouble::create(AbstractServerInterfacePtr interface, const QString &scpiCmd, std::shared_ptr<double> result, int timeout, std::function<void ()> additionalErrorHandler)
+TaskTemplatePtr TaskScpiGetDouble::create(const AbstractServerInterfacePtr &interface,
+                                          const QString &scpiCmd,
+                                          std::shared_ptr<double> result,
+                                          int timeout, std::function<void ()> additionalErrorHandler)
 {
     return TaskDecoratorTimeout::wrapTimeout(timeout,
                                              std::make_unique<TaskScpiGetDouble>(
@@ -11,7 +14,7 @@ TaskTemplatePtr TaskScpiGetDouble::create(AbstractServerInterfacePtr interface, 
                                              additionalErrorHandler);
 }
 
-TaskScpiGetDouble::TaskScpiGetDouble(AbstractServerInterfacePtr interface,
+TaskScpiGetDouble::TaskScpiGetDouble(const AbstractServerInterfacePtr &interface,
                                      const QString &scpiCmd,
                                      std::shared_ptr<double> result) :
     TaskServerTransactionTemplate(interface),

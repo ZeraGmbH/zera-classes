@@ -1,8 +1,8 @@
 #include "taskrefpowerfetchconstant.h"
 #include "taskscpigetdouble.h"
 
-TaskTemplatePtr TaskRefPowerFetchConstant::create(Zera::PcbInterfacePtr pcbInterface,
-                                                  QString refPowerName,
+TaskTemplatePtr TaskRefPowerFetchConstant::create(const Zera::PcbInterfacePtr &pcbInterface,
+                                                  const QString &refPowerName,
                                                   std::shared_ptr<double> refPowerConstantReceived,
                                                   int timeout,
                                                   std::function<void ()> additionalErrorHandler)

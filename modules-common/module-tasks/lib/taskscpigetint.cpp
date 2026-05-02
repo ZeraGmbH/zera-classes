@@ -1,7 +1,7 @@
 #include "taskscpigetint.h"
 #include <taskdecoratortimeout.h>
 
-TaskTemplatePtr TaskScpiGetInt::create(AbstractServerInterfacePtr interface,
+TaskTemplatePtr TaskScpiGetInt::create(const AbstractServerInterfacePtr &interface,
                                        const QString &scpiCmd,
                                        std::shared_ptr<int> result,
                                        int timeout, std::function<void ()> additionalErrorHandler)
@@ -14,7 +14,7 @@ TaskTemplatePtr TaskScpiGetInt::create(AbstractServerInterfacePtr interface,
                                              additionalErrorHandler);
 }
 
-TaskScpiGetInt::TaskScpiGetInt(AbstractServerInterfacePtr interface,
+TaskScpiGetInt::TaskScpiGetInt(const AbstractServerInterfacePtr &interface,
                                const QString &scpiCmd,
                                std::shared_ptr<int> result) :
     TaskServerTransactionTemplate(interface),

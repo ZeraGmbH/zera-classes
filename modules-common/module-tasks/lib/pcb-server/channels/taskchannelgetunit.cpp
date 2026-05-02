@@ -1,8 +1,8 @@
 #include "taskchannelgetunit.h"
 #include "taskscpigetstring.h"
 
-TaskTemplatePtr TaskChannelGetUnit::create(Zera::PcbInterfacePtr pcbInterface,
-                                           QString channelName,
+TaskTemplatePtr TaskChannelGetUnit::create(const Zera::PcbInterfacePtr &pcbInterface,
+                                           const QString &channelName,
                                            std::shared_ptr<QString> valueReceived,
                                            int timeout, std::function<void ()> additionalErrorHandler)
 {

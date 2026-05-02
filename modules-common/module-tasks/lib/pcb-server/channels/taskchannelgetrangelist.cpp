@@ -1,8 +1,8 @@
 #include "taskchannelgetrangelist.h"
 #include "taskscpigetstringlist.h"
 
-TaskTemplatePtr TaskChannelGetRangeList::create(Zera::PcbInterfacePtr pcbInterface,
-                                                QString channelName,
+TaskTemplatePtr TaskChannelGetRangeList::create(const Zera::PcbInterfacePtr &pcbInterface,
+                                                const QString &channelName,
                                                 std::shared_ptr<QStringList> rangeList,
                                                 int timeout, std::function<void ()> additionalErrorHandler)
 {

@@ -7,11 +7,11 @@ class TaskScpiGetBool : public TaskServerTransactionTemplate
 {
     Q_OBJECT
 public:
-    static TaskTemplatePtr create(AbstractServerInterfacePtr interface,
+    static TaskTemplatePtr create(const AbstractServerInterfacePtr &interface,
                                   const QString &scpiCmd,
                                   std::shared_ptr<bool> result,
                                   int timeout, std::function<void()> additionalErrorHandler = []{});
-    TaskScpiGetBool(AbstractServerInterfacePtr interface,
+    TaskScpiGetBool(const AbstractServerInterfacePtr &interface,
                     const QString &scpiCmd,
                     std::shared_ptr<bool> result);
 

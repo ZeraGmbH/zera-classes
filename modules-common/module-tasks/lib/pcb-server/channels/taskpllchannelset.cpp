@@ -1,7 +1,7 @@
 #include "taskpllchannelset.h"
 #include "taskscpicmd.h"
 
-TaskTemplatePtr TaskPllChannelSet::create(AbstractServerInterfacePtr pcbInterface,
+TaskTemplatePtr TaskPllChannelSet::create(const AbstractServerInterfacePtr &pcbInterface,
                                           const QString &pllChannelMName,
                                           int timeout,
                                           std::function<void ()> additionalErrorHandler)

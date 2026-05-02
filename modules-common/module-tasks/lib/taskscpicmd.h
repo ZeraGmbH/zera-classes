@@ -7,10 +7,10 @@ class TaskScpiCmd : public TaskServerTransactionTemplate
 {
     Q_OBJECT
 public:
-    static TaskTemplatePtr create(AbstractServerInterfacePtr interface,
+    static TaskTemplatePtr create(const AbstractServerInterfacePtr &interface,
                                   const QString &scpiCmd,
                                   int timeout, std::function<void()> additionalErrorHandler = []{});
-    TaskScpiCmd(AbstractServerInterfacePtr interface,
+    TaskScpiCmd(const AbstractServerInterfacePtr &interface,
                 const QString &scpiCmd);
 
 private:

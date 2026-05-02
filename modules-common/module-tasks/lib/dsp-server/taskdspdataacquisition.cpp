@@ -1,7 +1,7 @@
 #include "taskdspdataacquisition.h"
 #include "taskdecoratortimeout.h"
 
-TaskTemplatePtr TaskDspDataAcquisition::create(Zera::DspInterfacePtr dspInterface,
+TaskTemplatePtr TaskDspDataAcquisition::create(const Zera::DspInterfacePtr &dspInterface,
                                                DspVarGroupClientInterface *actualValuesDsp,
                                                int limitValueCount,
                                                int timeout, std::function<void ()> additionalErrorHandler)
@@ -14,7 +14,7 @@ TaskTemplatePtr TaskDspDataAcquisition::create(Zera::DspInterfacePtr dspInterfac
                                              additionalErrorHandler);
 }
 
-TaskDspDataAcquisition::TaskDspDataAcquisition(Zera::DspInterfacePtr dspInterface,
+TaskDspDataAcquisition::TaskDspDataAcquisition(const Zera::DspInterfacePtr &dspInterface,
                                                DspVarGroupClientInterface *actualValuesDsp,
                                                int limitValueCount) :
     TaskServerTransactionTemplate(dspInterface),

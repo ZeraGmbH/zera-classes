@@ -1,7 +1,7 @@
 #include "taskremovecmdlistsforallclients.h"
 #include "taskscpicmd.h"
 
-TaskTemplatePtr TaskRemoveCmdListsForAllClients::create(Zera::DspInterfacePtr dspInterface,
+TaskTemplatePtr TaskRemoveCmdListsForAllClients::create(const Zera::DspInterfacePtr &dspInterface,
                                                         int timeout,
                                                         std::function<void ()> additionalErrorHandler)
 {

@@ -2,12 +2,12 @@
 #include "proxy.h"
 #include "taskdecoratortimeout.h"
 
-TaskTemplatePtr TaskServerConnectionStart::create(Zera::ProxyClientPtr client, int timeout)
+TaskTemplatePtr TaskServerConnectionStart::create(const Zera::ProxyClientPtr &client, int timeout)
 {
     return TaskDecoratorTimeout::wrapTimeout(timeout, std::make_unique<TaskServerConnectionStart>(client));
 }
 
-TaskServerConnectionStart::TaskServerConnectionStart(Zera::ProxyClientPtr client) :
+TaskServerConnectionStart::TaskServerConnectionStart(const Zera::ProxyClientPtr &client) :
     m_client(client)
 {
 }

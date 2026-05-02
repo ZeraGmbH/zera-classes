@@ -1,8 +1,8 @@
 #include "taskrangegetisavailable.h"
 #include "taskscpigetbool.h"
 
-TaskTemplatePtr TaskRangeGetIsAvailable::create(Zera::PcbInterfacePtr pcbInterface,
-                                                QString channelMName, QString rangeName,
+TaskTemplatePtr TaskRangeGetIsAvailable::create(const Zera::PcbInterfacePtr &pcbInterface,
+                                                const QString &channelMName, const QString &rangeName,
                                                 std::shared_ptr<bool> valueReceived,
                                                 int timeout, std::function<void ()> additionalErrorHandler)
 {

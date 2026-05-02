@@ -1,7 +1,7 @@
 #include "taskchannelgetavail.h"
 #include "taskscpigetstringlist.h"
 
-TaskTemplatePtr TaskChannelGetAvail::create(Zera::PcbInterfacePtr pcbInterface,
+TaskTemplatePtr TaskChannelGetAvail::create(const Zera::PcbInterfacePtr &pcbInterface,
                                             std::shared_ptr<QStringList> channelsReceived,
                                             int timeout,
                                             std::function<void ()> additionalErrorHandler)

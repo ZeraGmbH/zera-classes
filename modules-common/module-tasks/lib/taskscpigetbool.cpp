@@ -1,7 +1,7 @@
 #include "taskscpigetbool.h"
 #include <taskdecoratortimeout.h>
 
-TaskTemplatePtr TaskScpiGetBool::create(AbstractServerInterfacePtr interface,
+TaskTemplatePtr TaskScpiGetBool::create(const AbstractServerInterfacePtr &interface,
                                         const QString &scpiCmd,
                                         std::shared_ptr<bool> result,
                                         int timeout, std::function<void ()> additionalErrorHandler)
@@ -14,7 +14,7 @@ TaskTemplatePtr TaskScpiGetBool::create(AbstractServerInterfacePtr interface,
                                              additionalErrorHandler);
 }
 
-TaskScpiGetBool::TaskScpiGetBool(AbstractServerInterfacePtr interface,
+TaskScpiGetBool::TaskScpiGetBool(const AbstractServerInterfacePtr &interface,
                                  const QString &scpiCmd,
                                  std::shared_ptr<bool> result) :
     TaskServerTransactionTemplate(interface),

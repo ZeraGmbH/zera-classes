@@ -7,11 +7,11 @@ class TaskScpiGetString : public TaskServerTransactionTemplate
 {
     Q_OBJECT
 public:
-    static TaskTemplatePtr create(AbstractServerInterfacePtr interface,
+    static TaskTemplatePtr create(const AbstractServerInterfacePtr &interface,
                                   const QString &scpiCmd,
                                   std::shared_ptr<QString> result,
                                   int timeout, std::function<void()> additionalErrorHandler = []{});
-    TaskScpiGetString(AbstractServerInterfacePtr interface,
+    TaskScpiGetString(const AbstractServerInterfacePtr &interface,
                       const QString &scpiCmd,
                       std::shared_ptr<QString> result);
 

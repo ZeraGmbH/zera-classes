@@ -8,11 +8,11 @@ class TaskDspDataAcquisition : public TaskServerTransactionTemplate
 {
     Q_OBJECT
 public:
-    static TaskTemplatePtr create(Zera::DspInterfacePtr dspInterface,
+    static TaskTemplatePtr create(const Zera::DspInterfacePtr &dspInterface,
                                   DspVarGroupClientInterface* actualValuesDsp, // member of dspInterface
                                   int limitValueCount = 0,
                                   int timeout = TRANSACTION_TIMEOUT, std::function<void()> additionalErrorHandler = []{});
-    TaskDspDataAcquisition(Zera::DspInterfacePtr dspInterface,
+    TaskDspDataAcquisition(const Zera::DspInterfacePtr &dspInterface,
                            DspVarGroupClientInterface* actualValuesDsp,
                            int limitValueCount = 0);
 
