@@ -19,7 +19,6 @@ class cSCPIModule;
 class cSCPIClient: public QObject
 {
     Q_OBJECT
-
 public:
     cSCPIClient(cSCPIModule* module, cSCPIModuleConfigData& configdata, cSCPIInterface* iface);
     virtual ~cSCPIClient();
@@ -32,10 +31,8 @@ public:
     void addSCPIClientInfo(QString key, SCPIMODULE::SCPIClientInfoPtr info);
 
     QHash<cSCPIMeasureDelegate*, cSCPIMeasureDelegatePtr> m_SCPIMeasureDelegateHash;
-
 signals:
     void commandAnswered(SCPIMODULE::cSCPIClient* client);
-
 public slots:
     void receiveStatus(quint8 stat);
     virtual void receiveAnswer(QString answ, bool ok = true, bool skipLog = false) = 0;
@@ -43,11 +40,8 @@ public slots:
 
 protected:
     cSCPIInterface* m_pSCPIInterface;
-    cIEEE4882* m_pIEEE4882;
-    QHash<QString, SCPIClientInfoPtr> m_scpiClientInfoHash;
 
     QString m_sInputFifo;
-    QString m_activeCmd;
     QChar m_endChar;
 
     void execPendingCmds();
@@ -56,9 +50,16 @@ protected:
     void execCmd();
     QString makeBareScpiInPrintable(const QString &input);
 
+private slots:
+    virtual void cmdInput() = 0;
 private:
+    void setSignalConnections(cSCPIStatus* scpiStatus, const QList<cStatusBitDescriptor> &dList);
+    void generateSCPIMeasureSystem();
+
     cSCPIModule* m_pModule;
     cSCPIModuleConfigData& m_ConfigData;
+    QHash<QString, SCPIClientInfoPtr> m_scpiClientInfoHash;
+    cIEEE4882* m_pIEEE4882 = nullptr;
 
     QList<cSCPIStatus*> m_SCPIStatusList;
 
@@ -66,13 +67,9 @@ private:
     QUuid m_clientId;
 
     bool m_bAuthorisation = false;
-    void setSignalConnections(cSCPIStatus* scpiStatus, const QList<cStatusBitDescriptor> &dList);
     QList<cSignalConnectionDelegate*> m_connectDelegateList;
-    void generateSCPIMeasureSystem();
 
-private slots:
-    virtual void cmdInput() = 0;
-
+    QString m_activeCmd;
 };
 
 }
