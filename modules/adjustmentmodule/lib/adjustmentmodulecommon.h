@@ -11,7 +11,7 @@ class AdjustChannelInfo
 public:
     AdjustChannelInfo() = default;
 
-    QString m_sAlias;
+    std::shared_ptr<QString> m_sAlias = std::make_unique<QString>();
     std::shared_ptr<QStringList> m_sRangelist = std::make_unique<QStringList>();
 };
 

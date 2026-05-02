@@ -69,7 +69,7 @@ bool Channel::isValid() const
 
 QString Channel::getAlias() const
 {
-    return m_alias;
+    return *m_alias;
 }
 
 QString Channel::getUnit() const

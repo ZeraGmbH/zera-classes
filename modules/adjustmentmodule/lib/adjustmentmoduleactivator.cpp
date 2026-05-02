@@ -127,6 +127,6 @@ void AdjustmentModuleActivator::initChannelInfoHash()
 void AdjustmentModuleActivator::fillChannelAliasHash()
 {
     for(const auto& entry : m_commonObjects->m_adjustChannelInfoHash)
-       m_commonObjects->m_channelAliasHash[entry.second->m_sAlias] = entry.first;
+       m_commonObjects->m_channelAliasHash[*entry.second->m_sAlias] = entry.first;
 }
 

@@ -55,7 +55,7 @@ private:
 
     const QString m_channelMName;
     bool m_valid = false;
-    QString m_alias;
+    std::shared_ptr<QString> m_alias = std::make_shared<QString>();
     std::shared_ptr<QString> m_unit = std::make_shared<QString>();
     std::shared_ptr<int> m_dspChannel = std::make_shared<int>(0);
     bool m_hasInternalSourceGenerator;
