@@ -14,7 +14,7 @@ static const char* defaultResponse = "250V";
 void test_taskchannelgetcurrentrange::checkScpiSend()
 {
     PcbInitForTest pcb;
-    QString currentRange;
+    std::shared_ptr<QString> currentRange = std::make_shared<QString>();
     TaskTemplatePtr task = TaskChannelGetCurrentRange::create(pcb.getPcbInterface(),
                                                               channelName,
                                                               currentRange,
@@ -32,21 +32,21 @@ void test_taskchannelgetcurrentrange::returnsCurrentRangeProperly()
 {
     PcbInitForTest pcb;
     pcb.getProxyClient()->setAnswers(ServerTestAnswerList() << ServerTestAnswer(ack, QString(defaultResponse)));
-    QString currentRange;
+    std::shared_ptr<QString> currentRange = std::make_shared<QString>();
     TaskTemplatePtr task = TaskChannelGetCurrentRange::create(pcb.getPcbInterface(),
                                                        channelName,
                                                        currentRange,
                                                        EXPIRE_INFINITE);
     task->start();
     TimeMachineObject::feedEventLoop();
-    QCOMPARE(currentRange, defaultResponse);
+    QCOMPARE(*currentRange, defaultResponse);
 }
 
 void test_taskchannelgetcurrentrange::timeoutAndErrFunc()
 {
     PcbInitForTest pcb;
     int localErrorCount = 0;
-    QString currentRange;
+    std::shared_ptr<QString> currentRange = std::make_shared<QString>();
     TaskTemplatePtr task = TaskChannelGetCurrentRange::create(pcb.getPcbInterface(),
                                                               channelName,
                                                               currentRange,

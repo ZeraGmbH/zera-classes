@@ -30,7 +30,7 @@ private:
     static void notifyError(const QString &errMsg);
 
     const QString m_channelMName;
-    QString m_currentRangeName;
+    std::shared_ptr<QString> m_currentRangeName = std::make_shared<QString>();
 
     const NetworkConnectionInfo m_netInfo;
     const VeinTcp::AbstractTcpNetworkFactoryPtr m_tcpFactory;
