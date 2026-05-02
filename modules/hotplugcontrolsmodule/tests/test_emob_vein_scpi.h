@@ -13,8 +13,11 @@ class test_emob_vein_scpi : public QObject
 {
     Q_OBJECT
 private slots:
-    void cleanup();
+    void initTestCase();
+    void cleanupTestCase();
     void init();
+    void cleanup();
+
     void invokeInvalidRpcNameScpi();
 
     void activateEmobPushButtonNoEmobNoParamScpi();

@@ -16,7 +16,7 @@ static int constexpr hotplugControlsEntityId = 1700;
 static int constexpr serverPort = 4711;
 static constexpr int systemEntityId = 0;
 
-void test_emob_vein_scpi::init()
+void test_emob_vein_scpi::initTestCase()
 {
     m_testRunner = std::make_unique<ModuleManagerTestRunner>(":/hotpluscontrols-min-session.json");
     m_netSystem = std::make_unique<VeinNet::NetworkSystem>();
@@ -36,20 +36,27 @@ void test_emob_vein_scpi::init()
     TimeMachineObject::feedEventLoop();
 
     setupSpy();
+}
 
+void test_emob_vein_scpi::cleanupTestCase()
+{
+    m_testRunner.reset();
+    m_veinClientStack.reset();
+    m_netSystem.reset();
+    m_tcpSystem.reset();
+}
+
+void test_emob_vein_scpi::init()
+{
     m_scpiClient = std::make_unique<ScpiModuleClientBlocked>();
 }
 
 void test_emob_vein_scpi::cleanup()
 {
-    m_testRunner.reset();
-    m_scpiClient.reset();
-    m_veinClientStack.reset();
-    m_netSystem.reset();
-    m_tcpSystem.reset();
-
+    m_scpiClient.reset(); // cleanup offended SCPI
+    m_testRunner->removeAllHotplugDevices();
+    TimeMachineObject::feedEventLoop();
     m_veinEventDump = QJsonObject();
-    ControllerPersitentData::cleanupPersitentData();
 }
 
 void test_emob_vein_scpi::invokeInvalidRpcNameScpi()
