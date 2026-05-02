@@ -53,7 +53,7 @@ protected:
 private slots:
     virtual void cmdInput() = 0;
 private:
-    void setSignalConnections(cSCPIStatus* scpiStatus, const QList<cStatusBitDescriptor> &dList);
+    void setSignalConnections(cSCPIStatus* scpiStatus, const QList<cStatusBitDescriptor> &statusBitDescriptorList);
     void generateSCPIMeasureSystem();
 
     cSCPIModule* m_pModule;
