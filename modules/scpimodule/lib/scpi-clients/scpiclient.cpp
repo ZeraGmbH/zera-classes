@@ -45,9 +45,9 @@ cSCPIClient::cSCPIClient(cSCPIModule* module, cSCPIModuleConfigData &configdata,
     connect(m_pIEEE4882, &cIEEE4882::setOperationMeasureCondition, scpiOperMeasStatus, &cSCPIStatus::setCondition);
 
     // and we must connect event error signals of scpi status systems to common status
-    connect(scpiQuestStatus, &cSCPIStatus::sigEventError, m_pIEEE4882, &cIEEE4882::AddEventError);
-    connect(scpiOperStatus, &cSCPIStatus::sigEventError, m_pIEEE4882, &cIEEE4882::AddEventError);
-    connect(scpiOperMeasStatus, &cSCPIStatus::sigEventError, m_pIEEE4882, &cIEEE4882::AddEventError);
+    connect(scpiQuestStatus, &cSCPIStatus::sigEventError, m_pIEEE4882, &cIEEE4882::addEventError);
+    connect(scpiOperStatus, &cSCPIStatus::sigEventError, m_pIEEE4882, &cIEEE4882::addEventError);
+    connect(scpiOperMeasStatus, &cSCPIStatus::sigEventError, m_pIEEE4882, &cIEEE4882::addEventError);
 
     setSignalConnections(scpiQuestStatus, m_ConfigData.m_QuestionableStatDescriptorList);
     setSignalConnections(scpiOperStatus, m_ConfigData.m_OperationStatDescriptorList);
@@ -162,7 +162,7 @@ void cSCPIClient::execCmd()
         // This message is checked as is in autobuilder-dut-testsuite!
         qInfo("Executing SCPI command : %s", qPrintable(cmd));
         if (!m_pSCPIInterface->executeCmd(this, cmd))
-            emit m_pIEEE4882->AddEventError(CommandError);
+            m_pIEEE4882->addEventError(CommandError);
         // we leave here if there is any parameter settings pending
         if (m_scpiClientInfoHash.count() > 0)
             break;
@@ -190,16 +190,16 @@ void cSCPIClient::receiveStatus(quint8 stat)
     case ZSCPI::ack:
         break;
     case ZSCPI::nak:
-        m_pIEEE4882->AddEventError(CommandError);
+        m_pIEEE4882->addEventError(CommandError);
         break;
     case ZSCPI::errval:
-        m_pIEEE4882->AddEventError(NumericDataError);
+        m_pIEEE4882->addEventError(NumericDataError);
         break;
     case ZSCPI::erraut:
-        m_pIEEE4882->AddEventError(CommandProtected);
+        m_pIEEE4882->addEventError(CommandProtected);
         break;
     default:
-        m_pIEEE4882->AddEventError(CommandError);
+        m_pIEEE4882->addEventError(CommandError);
         break;
     }
     emit commandAnswered(this);

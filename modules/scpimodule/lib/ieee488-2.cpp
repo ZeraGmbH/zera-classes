@@ -40,7 +40,7 @@ cIEEE4882::cIEEE4882(cSCPIClient *client, QString deviceFamilyFromConfig, quint1
 
 void cIEEE4882::AddEventErrorWithResponse(int error)
 {
-    AddEventError(error);
+    addEventError(error);
     emit m_pClient->commandAnswered(m_pClient);
 }
 
@@ -180,7 +180,7 @@ void cIEEE4882::executeCmd(cSCPIClient *client, int cmdCode, const QString &sInp
 }
 
 
-void cIEEE4882::AddEventError(int error)
+void cIEEE4882::addEventError(int error)
 {
     SetSTB(m_nSTB | (1 << STBeeQueueNotEmpty)); // we have something in our output queue -> so we set status byte
     if ( m_ErrEventQueue.count() == m_nQueueLen ) {
