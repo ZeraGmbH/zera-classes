@@ -36,6 +36,7 @@ void test_range_automatic::initTestCase()
 {
     m_tcpFactory = VeinTcp::MockTcpNetworkFactory::create();
     TimerFactoryQtForTest::enableTest();
+    setupServices();
 }
 
 void test_range_automatic::init()
@@ -51,7 +52,6 @@ void test_range_automatic::init()
 
     m_modMan->loadAllAvailableModulePlugins();
     m_modMan->setupConnections();
-    setupServices();
     m_modMan->loadSession(":/session-minimal-on-tmp.json");
     m_modMan->waitUntilModulesAreReady();
 }
@@ -67,7 +67,12 @@ void test_range_automatic::cleanup()
     m_modmanSetupFacade = nullptr;
     m_serviceInterfaceFactory = nullptr;
     m_licenseSystem = nullptr;
+    m_testPcbServer->removeAllClamps();
+    TimeMachineObject::feedEventLoop();
+}
 
+void test_range_automatic::cleanupTestCase()
+{
     m_dspServer = nullptr;
     m_testPcbServer = nullptr;
     TimeMachineObject::feedEventLoop();
