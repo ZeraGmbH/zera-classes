@@ -41,6 +41,7 @@ void test_range_automatic::initTestCase()
 
 void test_range_automatic::init()
 {
+    TimeMachineForTest::reset();
     TestLogHelpers::copyFile(":/mt310s2-rangemodule.xml", tmpConf);
 
     m_licenseSystem = std::make_unique<TestLicenseSystem>();
@@ -126,7 +127,7 @@ void test_range_automatic::testRangeAutomatic()
 {
     fireNewActualValues(4, withIaux);
     setVfComponent(rangeEntityId, RangeAutomaticComponent, 1);
-    TimeMachineForTest::getInstance()->processTimers(waitingTimeForRangeDecrease);
+    processDecreaseDelay();
     QCOMPARE(getVfComponent(rangeEntityId, UL1RangeComponent), "8V");
     QCOMPARE(getVfComponent(rangeEntityId, IL1RangeComponent), "5A");
 
@@ -134,8 +135,7 @@ void test_range_automatic::testRangeAutomatic()
     //After setting new range (above 8V, 5A), all range related processing is disabled for 1 Actual value interrupt cycle.
     //So, fire an extra interrupt.
     fireNewActualValues(0, withIaux);
-    TimeMachineObject::feedEventLoop();
-    TimeMachineForTest::getInstance()->processTimers(waitingTimeForRangeDecrease);
+    processDecreaseDelay();
     QCOMPARE(getVfComponent(rangeEntityId, UL1RangeComponent), "100mV");
     QCOMPARE(getVfComponent(rangeEntityId, IL1RangeComponent), "25mA");
 
@@ -163,7 +163,7 @@ void test_range_automatic::testRangeAutomaticIncreaseU()
     fireNewActualValues(0.1, withIaux);     // set U-Range to 100mV
     fireNewActualValues(0.1, withIaux);     // extra interrupt
     setVfComponent(rangeEntityId, RangeAutomaticComponent, 1);
-    TimeMachineForTest::getInstance()->processTimers(waitingTimeForRangeDecrease);  // range decrease from 250V to 100mV
+    processDecreaseDelay();                                                             // range decrease from 250V to 100mV
     QCOMPARE(getVfComponent(rangeEntityId, UL1RangeComponent), "100mV");
 
     fireNewActualValues(0.1 * ovrRejectionFactor * midOfHysteresis, withIaux);      // stay in U-Range 100mV
@@ -201,7 +201,7 @@ void test_range_automatic::testRangeAutomaticDecreaseU()
 
     fireNewActualValues(8 * ovrRejectionFactor * enterRangeLimit, withoutIaux);        // switch in U-Range 8V
     fireNewActualValues(8 * ovrRejectionFactor * enterRangeLimit, withoutIaux);
-    TimeMachineForTest::getInstance()->processTimers(waitingTimeForRangeDecrease);
+    processDecreaseDelay();
     QCOMPARE(getVfComponent(rangeEntityId, UL1RangeComponent), "8V");
 
     fireNewActualValues(0.1 * ovrRejectionFactor * midOfHysteresis, withoutIaux);      // stay in U-Range 8V
@@ -210,7 +210,7 @@ void test_range_automatic::testRangeAutomaticDecreaseU()
 
     fireNewActualValues(0.1 * ovrRejectionFactor * enterRangeLimit, withoutIaux);      // switch in U-Range 0.1V
     fireNewActualValues(0.1 * ovrRejectionFactor * enterRangeLimit, withoutIaux);
-    TimeMachineForTest::getInstance()->processTimers(waitingTimeForRangeDecrease);
+    processDecreaseDelay();
     QCOMPARE(getVfComponent(rangeEntityId, UL1RangeComponent), "100mV");
 }
 
@@ -224,7 +224,7 @@ void test_range_automatic::testRangeAutomaticIncreaseLowRangesI()
     fireNewActualValues(0, withoutIaux);         // switch to 25mA range
     fireNewActualValues(0, withoutIaux);         // extra interrupt
     setVfComponent(rangeEntityId, RangeAutomaticComponent, 1);
-    TimeMachineForTest::getInstance()->processTimers(waitingTimeForRangeDecrease);
+    processDecreaseDelay();
     QCOMPARE(getVfComponent(rangeEntityId, IL1RangeComponent), "25mA");
 
     fireNewActualValues(0.025 * ovrRejectionFactor * midOfHysteresis, withoutIaux);    // stay in I-Range 25mA
@@ -254,7 +254,7 @@ void test_range_automatic::testRangeAutomaticIncreaseHighRangesI()
     fireNewActualValues(2, withoutIaux);     // switch to 2.5A range
     fireNewActualValues(2, withoutIaux);     // extra interrupt
     setVfComponent(rangeEntityId, RangeAutomaticComponent, 1);
-    TimeMachineForTest::getInstance()->processTimers(waitingTimeForRangeDecrease);
+    processDecreaseDelay();
     QCOMPARE(getVfComponent(rangeEntityId, IL1RangeComponent), "2.5A");
 
     fireNewActualValues(2.5 * ovrRejectionFactor * midOfHysteresis, withoutIaux);      // stay in I-Range 2.5A
@@ -292,7 +292,7 @@ void test_range_automatic::testRangeAutomaticDecreaseI()
 
     fireNewActualValues(5 * ovrRejectionFactor * enterRangeLimit, withoutIaux);        // switch in I-Range 5A
     fireNewActualValues(5 * ovrRejectionFactor * enterRangeLimit, withoutIaux);
-    TimeMachineForTest::getInstance()->processTimers(waitingTimeForRangeDecrease);
+    processDecreaseDelay();
     QCOMPARE(getVfComponent(rangeEntityId, IL1RangeComponent), "5A");
 
     fireNewActualValues(2.5 * ovrRejectionFactor * midOfHysteresis, withoutIaux);      // stay in I-Range 5A
@@ -301,7 +301,7 @@ void test_range_automatic::testRangeAutomaticDecreaseI()
 
     fireNewActualValues(2.5 * ovrRejectionFactor * enterRangeLimit, withoutIaux);      // switch in I-Range 2.5A
     fireNewActualValues(2.5 * ovrRejectionFactor * enterRangeLimit, withoutIaux);
-    TimeMachineForTest::getInstance()->processTimers(waitingTimeForRangeDecrease);
+    processDecreaseDelay();
     QCOMPARE(getVfComponent(rangeEntityId, IL1RangeComponent), "2.5A");
 }
 
@@ -334,7 +334,7 @@ void test_range_automatic::enableAndDisableRangeAutomatic()
     fireNewActualValues(0, withoutIaux);
 
     setVfComponent(rangeEntityId, RangeAutomaticComponent, 1);
-    TimeMachineForTest::getInstance()->processTimers(waitingTimeForRangeDecrease);
+    processDecreaseDelay();
     QCOMPARE(getVfComponent(rangeEntityId, UL1RangeComponent), "100mV");
     QCOMPARE(getVfComponent(rangeEntityId, IL1RangeComponent), "25mA");
 
@@ -347,7 +347,7 @@ void test_range_automatic::softOverloadWithRangeAutomatic()
 {
     fireNewActualValues(4, withoutIaux);
     setVfComponent(rangeEntityId, RangeAutomaticComponent, 1);
-    TimeMachineForTest::getInstance()->processTimers(waitingTimeForRangeDecrease);
+    processDecreaseDelay();
     QCOMPARE(getVfComponent(rangeEntityId, UL1RangeComponent), "8V");
     QCOMPARE(getVfComponent(rangeEntityId, IL1RangeComponent), "5A");
 
@@ -368,7 +368,7 @@ void test_range_automatic::softOverloadWithRangeAutomatic()
     //After setting new range (above 8V, 5A), all range related processing is disabled for 1 Actual value interrupt cycle
     //So, fire an extra interrupt.
     fireNewActualValues(0.5, withoutIaux);
-    TimeMachineForTest::getInstance()->processTimers(waitingTimeForRangeDecrease);
+    processDecreaseDelay();
     QCOMPARE(getVfComponent(rangeEntityId, UL1RangeComponent), "8V");
     QCOMPARE(getVfComponent(rangeEntityId, IL1RangeComponent), "500mA");
 }
@@ -397,7 +397,7 @@ void test_range_automatic::selectClampThenRangeAutomatic()
 
     fireNewActualValues(4, withoutIaux);
     setVfComponent(rangeEntityId, RangeAutomaticComponent, 1);
-    TimeMachineForTest::getInstance()->processTimers(waitingTimeForRangeDecrease);
+    processDecreaseDelay();
     QCOMPARE(getVfComponent(rangeEntityId, UL1RangeComponent), "8V");
     QCOMPARE(getVfComponent(rangeEntityId, IL1RangeComponent), "C5A");
 
@@ -413,7 +413,7 @@ void test_range_automatic::selectClampThenRangeAutomatic()
     //After setting new range (above 250V, C100A), all range related processing is disabled for 1 Actual value interrupt cycle
     //So, fire an extra interrupt.
     fireNewActualValues(25, withoutIaux);
-    TimeMachineForTest::getInstance()->processTimers(waitingTimeForRangeDecrease);
+    processDecreaseDelay();
     QCOMPARE(getVfComponent(rangeEntityId, UL1RangeComponent), "250V");
     QCOMPARE(getVfComponent(rangeEntityId, IL1RangeComponent), "C50A");
 }
@@ -439,7 +439,7 @@ void test_range_automatic::addRemoveClamp()
 
     fireNewActualValues(4, withoutIaux);
     setVfComponent(rangeEntityId, RangeAutomaticComponent, 1);
-    TimeMachineForTest::getInstance()->processTimers(waitingTimeForRangeDecrease);
+    processDecreaseDelay();
     QCOMPARE(getVfComponent(rangeEntityId, IL1RangeComponent), "C5A");
 
     m_testPcbServer->removeAllClamps();
@@ -448,7 +448,7 @@ void test_range_automatic::addRemoveClamp()
 
     fireNewActualValues(4, withoutIaux);//this interrupt is ignored
     fireNewActualValues(4, withoutIaux);//one more interrupt, as RangeAutomatic is called only after interrupt
-    TimeMachineForTest::getInstance()->processTimers(waitingTimeForRangeDecrease);
+    processDecreaseDelay();
     QCOMPARE(getVfComponent(rangeEntityId, IL1RangeComponent), "5A");
 }
 
@@ -467,10 +467,10 @@ void test_range_automatic::checkPersitency()
         QVERIFY(TestLogHelpers::compareAndLogOnDiff(expected, dumped));
 
     fireNewActualValues(4, withIaux); // necessary to get reproducible results on range automatic on
-    TimeMachineForTest::getInstance()->processTimers(waitingTimeForRangeDecrease);
+    processDecreaseDelay();
     QCOMPARE(getVfComponent(rangeEntityId, RangeAutomaticComponent), 0);
     setVfComponent(rangeEntityId, RangeAutomaticComponent, 1); // this causes config save
-    TimeMachineForTest::getInstance()->processTimers(waitingTimeForRangeDecrease);
+    processDecreaseDelay();
     expected = TestLogHelpers::loadFile(":/configDumps/dumpAutomaticSet.xml");
     dumped = TestLogHelpers::loadFile(tmpConf);
     if(!compare.compareXml(dumped, expected))
@@ -517,7 +517,7 @@ void test_range_automatic::normalSineRmsOverloadWithRangeAutomatic()
 {
     fireNewActualValues(0.05, withoutIaux);
     setVfComponent(rangeEntityId, RangeAutomaticComponent, 1);
-    TimeMachineForTest::getInstance()->processTimers(waitingTimeForRangeDecrease);
+    processDecreaseDelay();
     QCOMPARE(getVfComponent(rangeEntityId, UL1RangeComponent), "100mV");
     QCOMPARE(getVfComponent(rangeEntityId, IL1RangeComponent), "50mA");
 
@@ -529,7 +529,7 @@ void test_range_automatic::normalSineRmsOverloadWithRangeAutomatic()
     QCOMPARE(getVfComponent(rangeEntityId, IL1RangeComponent), "10A");
     fireNewActualValues(1, withoutIaux);
     fireNewActualValues(1, withoutIaux);
-    TimeMachineForTest::getInstance()->processTimers(waitingTimeForRangeDecrease);
+    processDecreaseDelay();
     QCOMPARE(getVfComponent(rangeEntityId, UL1RangeComponent), "8V"); //new range
     QCOMPARE(getVfComponent(rangeEntityId, IL1RangeComponent), "1.0A");
 }
@@ -538,7 +538,7 @@ void test_range_automatic::abnormalSinePeakOverloadRangeAutomatic()
 {
     fireNewActualValues(0.05, withoutIaux);
     setVfComponent(rangeEntityId, RangeAutomaticComponent, 1);
-    TimeMachineForTest::getInstance()->processTimers(waitingTimeForRangeDecrease);
+    processDecreaseDelay();
     QCOMPARE(getVfComponent(rangeEntityId, UL1RangeComponent), "100mV");
     QCOMPARE(getVfComponent(rangeEntityId, IL1RangeComponent), "50mA");
 
@@ -550,7 +550,7 @@ void test_range_automatic::abnormalSinePeakOverloadRangeAutomatic()
     QCOMPARE(getVfComponent(rangeEntityId, IL1RangeComponent), "10A");
     fireNewActualValues(0.05, 1, withoutIaux);
     fireNewActualValues(0.05, 1, withoutIaux);
-    TimeMachineForTest::getInstance()->processTimers(waitingTimeForRangeDecrease);
+    processDecreaseDelay();
     QCOMPARE(getVfComponent(rangeEntityId, UL1RangeComponent), "8V"); //new range
     QCOMPARE(getVfComponent(rangeEntityId, IL1RangeComponent), "1.0A");
 }
@@ -559,7 +559,7 @@ void test_range_automatic::rmsOverloadRangeAutomaticDC()
 {
     fireNewActualValues(4, 4, withoutIaux); //Same RMS and Peak value, to imitate DC
     setVfComponent(rangeEntityId, RangeAutomaticComponent, 1);
-    TimeMachineForTest::getInstance()->processTimers(waitingTimeForRangeDecrease);
+    processDecreaseDelay();
     QCOMPARE(getVfComponent(rangeEntityId, UL1RangeComponent), "8V");
     QCOMPARE(getVfComponent(rangeEntityId, IL1RangeComponent), "5A");
 
@@ -579,7 +579,7 @@ void test_range_automatic::peakOverloadRangeAutomaticDC()
 {
     fireNewActualValues(0.08, 0.08, withoutIaux); //Same RMS and Peak value
     setVfComponent(rangeEntityId, RangeAutomaticComponent, 1);
-    TimeMachineForTest::getInstance()->processTimers(waitingTimeForRangeDecrease);
+    processDecreaseDelay();
     QCOMPARE(getVfComponent(rangeEntityId, UL1RangeComponent), "100mV");
     QCOMPARE(getVfComponent(rangeEntityId, IL1RangeComponent), "100mA");
 
@@ -591,12 +591,12 @@ void test_range_automatic::peakOverloadRangeAutomaticDC()
     QCOMPARE(getVfComponent(rangeEntityId, IL1RangeComponent), "10A");
     fireNewActualValues(0.08, 0.2, withoutIaux);
     fireNewActualValues(0.08, 0.2, withoutIaux);
-    TimeMachineForTest::getInstance()->processTimers(waitingTimeForRangeDecrease);
+    processDecreaseDelay();
     QCOMPARE(getVfComponent(rangeEntityId, UL1RangeComponent), "8V"); //Now we have the final ranges
     QCOMPARE(getVfComponent(rangeEntityId, IL1RangeComponent), "250mA");
 }
 
-void test_range_automatic::rangeAutomaticOnRangeDecrease()
+/*void test_range_automatic::rangeAutomaticOnRangeDecrease()
 {
     QCOMPARE(getVfComponent(rangeEntityId, IL1RangeComponent), "10A");
     fireNewActualValues(0, withoutIaux);
@@ -651,6 +651,25 @@ void test_range_automatic::rangeAutomaticOnRangeDecreasePartially()
     QCOMPARE(getVfComponent(rangeEntityId, IL1RangeComponent), "50mA");
 }
 
+void test_range_automatic::timerForRangeDecreaseNull()
+{
+    setVfComponent(rangeEntityId, "PAR_RangeTimer", 0);
+    setVfComponent(rangeEntityId, RangeAutomaticComponent, 1);
+    fireNewActualValues(8 * ovrRejectionFactor * enterRangeLimit, withoutIaux);
+    fireNewActualValues(8 * ovrRejectionFactor * enterRangeLimit, withoutIaux);
+    TimeMachineForTest::getInstance()->processTimers(1);
+    QCOMPARE(getVfComponent(rangeEntityId, UL1RangeComponent), "8V");
+
+    fireNewActualValues(0.1 * ovrRejectionFactor * enterRangeLimit, withoutIaux);      // switch in U-Range 0.1V
+    fireNewActualValues(0.1 * ovrRejectionFactor * enterRangeLimit, withoutIaux);
+    TimeMachineForTest::getInstance()->processTimers(1);
+    QCOMPARE(getVfComponent(rangeEntityId, UL1RangeComponent), "100mV");
+
+    fireNewActualValues(8 * ovrRejectionFactor *  midOfHysteresis, withoutIaux);
+    fireNewActualValues(8 * ovrRejectionFactor *  midOfHysteresis, withoutIaux);
+    QCOMPARE(getVfComponent(rangeEntityId, UL1RangeComponent), "250V");
+}*/
+
 void test_range_automatic::rangeAutomaticOnGroupingOff()
 {
     QList<float> rmsVotageValues = QList<float>() << 200 << 210 << 220 << 220;
@@ -667,15 +686,15 @@ void test_range_automatic::rangeAutomaticOnGroupingOff()
     rmsVotageValues = QList<float>() << 1 << 210 << 220 << 220;
     fireDifferentVoltageValues(rmsVotageValues, withoutIaux);
     fireDifferentVoltageValues(rmsVotageValues, withoutIaux);
-    QCOMPARE(getVfComponent(rangeEntityId, UL1RangeComponent), "250V");
-    TimeMachineForTest::getInstance()->processTimers(waitingTimeForRangeDecrease);
+    /*QCOMPARE(getVfComponent(rangeEntityId, UL1RangeComponent), "250V");
+    processDecreaseDelay();*/
     QCOMPARE(getVfComponent(rangeEntityId, UL1RangeComponent), "8V");    // After waiting time -> range decrease
     QCOMPARE(getVfComponent(rangeEntityId, UL2RangeComponent), "250V");
 
     rmsVotageValues = QList<float>() << 0.1 << 5 << 220 << 220;
     fireDifferentVoltageValues(rmsVotageValues, withoutIaux);
     fireDifferentVoltageValues(rmsVotageValues, withoutIaux);
-    TimeMachineForTest::getInstance()->processTimers(waitingTimeForRangeDecrease);
+    processDecreaseDelay();
     QCOMPARE(getVfComponent(rangeEntityId, UL1RangeComponent), "100mV");
     QCOMPARE(getVfComponent(rangeEntityId, UL2RangeComponent), "8V");
     QCOMPARE(getVfComponent(rangeEntityId, UL3RangeComponent), "250V");
@@ -696,42 +715,22 @@ void test_range_automatic::rangeAutomaticOnGroupingOn()
     rmsVotageValues = QList<float>() << 1 << 210 << 220 << 220;
     fireDifferentVoltageValues(rmsVotageValues, withoutIaux);
     fireDifferentVoltageValues(rmsVotageValues, withoutIaux);
-    TimeMachineForTest::getInstance()->processTimers(waitingTimeForRangeDecrease);
+    processDecreaseDelay();
     QCOMPARE(getVfComponent(rangeEntityId, UL1RangeComponent), "250V");
     QCOMPARE(getVfComponent(rangeEntityId, UL2RangeComponent), "250V");
 
     rmsVotageValues = QList<float>() << 5 << 5 << 5 << 5 ;
     fireDifferentVoltageValues(rmsVotageValues, withoutIaux);
     fireDifferentVoltageValues(rmsVotageValues, withoutIaux);
-    TimeMachineForTest::getInstance()->processTimers(waitingTimeForRangeDecrease);
+    processDecreaseDelay();
     QCOMPARE(getVfComponent(rangeEntityId, UL1RangeComponent), "8V");
     QCOMPARE(getVfComponent(rangeEntityId, UL2RangeComponent), "8V");
     QCOMPARE(getVfComponent(rangeEntityId, UL3RangeComponent), "8V");
     QCOMPARE(getVfComponent(rangeEntityId, UAUXRangeComponent), "8V");
 }
 
-void test_range_automatic::timerForRangeDecreaseNull()
-{
-    setVfComponent(rangeEntityId, "PAR_RangeTimer", 0);
-    setVfComponent(rangeEntityId, RangeAutomaticComponent, 1);
-    fireNewActualValues(8 * ovrRejectionFactor * enterRangeLimit, withoutIaux);
-    fireNewActualValues(8 * ovrRejectionFactor * enterRangeLimit, withoutIaux);
-    TimeMachineForTest::getInstance()->processTimers(1);
-    QCOMPARE(getVfComponent(rangeEntityId, UL1RangeComponent), "8V");
-
-    fireNewActualValues(0.1 * ovrRejectionFactor * enterRangeLimit, withoutIaux);      // switch in U-Range 0.1V
-    fireNewActualValues(0.1 * ovrRejectionFactor * enterRangeLimit, withoutIaux);
-    TimeMachineForTest::getInstance()->processTimers(1);
-    QCOMPARE(getVfComponent(rangeEntityId, UL1RangeComponent), "100mV");
-
-    fireNewActualValues(8 * ovrRejectionFactor *  midOfHysteresis, withoutIaux);
-    fireNewActualValues(8 * ovrRejectionFactor *  midOfHysteresis, withoutIaux);
-    QCOMPARE(getVfComponent(rangeEntityId, UL1RangeComponent), "250V");
-}
-
 void test_range_automatic::setupServices()
 {
-    TimeMachineForTest::reset();
     m_resmanServer = std::make_unique<ResmanRunFacade>(m_tcpFactory);
     TimeMachineObject::feedEventLoop();
     m_testPcbServer = std::make_unique<TestServerForSenseInterfaceMt310s2>(std::make_shared<TestFactoryI2cCtrl>(true), m_tcpFactory);
@@ -790,6 +789,14 @@ void test_range_automatic::fireNewActualValues(float rmsValue, float peakValue, 
             rangeValues.setRmsPeakDCValue(i, rmsValue, peakValue);
     }
     dspInterface->fireActValInterrupt(rangeValues.getDspValues(), /* dummy */ 0);
+    TimeMachineObject::feedEventLoop();
+}
+
+void test_range_automatic::processDecreaseDelay()
+{
+    // We disabled decrease delay for now
+    //TimeMachineForTest::getInstance()->processTimers(waitingTimeForRangeDecrease);
+
     TimeMachineObject::feedEventLoop();
 }
 

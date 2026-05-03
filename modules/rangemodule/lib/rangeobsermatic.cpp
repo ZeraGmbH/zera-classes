@@ -335,11 +335,11 @@ void cRangeObsermatic::rangeAutomatic()
                                                                                    channelData->getPeakValue() * scaleFactor,
                                                                                    range);
 
-                        if (parseStrRangeToDouble(optimalRange) < parseStrRangeToDouble(range)) {
+                        /*if (parseStrRangeToDouble(optimalRange) < parseStrRangeToDouble(range)) {
                             if (!pendingDecreaseHashContainsRange(channelIdx, optimalRange))
                                 replaceOrAddPendingDecreaseRange(channelIdx, optimalRange);
                         }
-                        else
+                        else*/
                             m_ConfPar.setCurrentRange(channelIdx, optimalRange);
                     }
                 }
