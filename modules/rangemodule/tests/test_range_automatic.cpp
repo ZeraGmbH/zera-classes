@@ -18,16 +18,16 @@ QTEST_MAIN(test_range_automatic)
 
 static int constexpr waitingTimeForRangeDecrease = 3000;
 static int constexpr rangeEntityId = 1020;
-static QString UL1RangeComponent("PAR_Channel1Range");
-static QString UL2RangeComponent("PAR_Channel2Range");
-static QString UL3RangeComponent("PAR_Channel3Range");
-static QString IL1RangeComponent("PAR_Channel4Range");
-static QString IL2RangeComponent("PAR_Channel5Range");
-static QString IL3RangeComponent("PAR_Channel6Range");
-static QString UAUXRangeComponent("PAR_Channel7Range");
-static QString IAUXRangeComponent("PAR_Channel8Range");
-static QString RangeAutomaticComponent("PAR_RangeAutomatic");
-static QString RangeGroupingComponent("PAR_ChannelGrouping");
+static const char* UL1RangeComponent("PAR_Channel1Range");
+static const char* UL2RangeComponent("PAR_Channel2Range");
+static const char* UL3RangeComponent("PAR_Channel3Range");
+static const char* IL1RangeComponent("PAR_Channel4Range");
+static const char* IL2RangeComponent("PAR_Channel5Range");
+static const char* IL3RangeComponent("PAR_Channel6Range");
+static const char* UAUXRangeComponent("PAR_Channel7Range");
+static const char* IAUXRangeComponent("PAR_Channel8Range");
+static const char* RangeAutomaticComponent("PAR_RangeAutomatic");
+static const char* RangeGroupingComponent("PAR_ChannelGrouping");
 
 static const char* tmpPath = "/tmp/rangemodule";
 static const char* tmpConf = "/tmp/rangemodule/module.xml";
