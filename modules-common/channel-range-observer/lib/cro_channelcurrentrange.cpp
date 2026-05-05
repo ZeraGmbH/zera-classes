@@ -9,7 +9,7 @@ namespace ChannelRangeObserver {
 
 ChannelCurrentRange::ChannelCurrentRange(const QString &channelMName,
                                          const NetworkConnectionInfo &netInfo,
-                                         VeinTcp::AbstractTcpNetworkFactoryPtr tcpFactory) :
+                                         const VeinTcp::AbstractTcpNetworkFactoryPtr &tcpFactory) :
     m_channelMName(channelMName),
     m_netInfo(netInfo),
     m_tcpFactory(tcpFactory),

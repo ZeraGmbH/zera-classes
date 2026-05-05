@@ -1,6 +1,6 @@
 #include "basedspmeasprogram.h"
 
-cBaseDspMeasProgram::cBaseDspMeasProgram(std::shared_ptr<BaseModuleConfiguration> pConfiguration, const QString &moduleName) :
-    cBaseMeasProgram(pConfiguration, moduleName)
+cBaseDspMeasProgram::cBaseDspMeasProgram(const std::shared_ptr<BaseModuleConfiguration> &configuration, const QString &moduleName) :
+    cBaseMeasProgram(configuration, moduleName)
 {
 }

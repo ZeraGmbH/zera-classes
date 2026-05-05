@@ -20,7 +20,7 @@ class Channel : public QObject
 public:
     Channel(const QString &channelMName,
             const NetworkConnectionInfo &netInfo,
-            VeinTcp::AbstractTcpNetworkFactoryPtr tcpFactory,
+            const VeinTcp::AbstractTcpNetworkFactoryPtr &tcpFactory,
             bool hasInternalSourceGenerator);
     // TODO: What if we are asked while fetching?
     void startFetch();

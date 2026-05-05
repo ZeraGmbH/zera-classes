@@ -13,8 +13,8 @@ class ChannelFetchTask : public TaskTemplate
 {
     Q_OBJECT
 public:
-    static ChannelFetchTaskPtr create(ChannelPtr channel);
-    ChannelFetchTask(ChannelPtr channel);
+    static ChannelFetchTaskPtr create(const ChannelPtr &channel);
+    ChannelFetchTask(const ChannelPtr &channel);
     void start() override;
 private slots:
     void onChannelFetched(const QString &channelMName, bool ok);

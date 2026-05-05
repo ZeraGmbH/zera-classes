@@ -4,12 +4,12 @@
 #include <zera-jsonfileloader.h>
 #include <zera-json-params-structure.h>
 
-QJsonObject JsonStructureLoader::loadJsonDefaultStructure(SupportedSourceTypes type)
+QJsonObject JsonStructureLoader::loadJsonDefaultStructure(const SupportedSourceTypes &type)
 {
     return loadJsonStructureFromFile(JsonFilenames::getJsonStructurePath(type));
 }
 
-QJsonObject JsonStructureLoader::loadJsonStructure(SupportedSourceTypes type, QString deviceName, QString deviceVersion)
+QJsonObject JsonStructureLoader::loadJsonStructure(const SupportedSourceTypes &type, const QString &deviceName, const QString &deviceVersion)
 {
     JsonStructApi structureApi = JsonStructApi(loadJsonDefaultStructure(type));
     if(!deviceName.isEmpty()) {
@@ -21,7 +21,7 @@ QJsonObject JsonStructureLoader::loadJsonStructure(SupportedSourceTypes type, QS
     return structureApi.getParamStructure();
 }
 
-QJsonObject JsonStructureLoader::loadJsonStructure(SourceProperties properties)
+QJsonObject JsonStructureLoader::loadJsonStructure(const SourceProperties &properties)
 {
     return loadJsonStructure(properties.getType(), properties.getName(), properties.getVersion());
 }

@@ -2,12 +2,12 @@
 
 namespace ChannelRangeObserver {
 
-ChannelFetchTaskPtr ChannelFetchTask::create(ChannelPtr channel)
+ChannelFetchTaskPtr ChannelFetchTask::create(const ChannelPtr &channel)
 {
     return std::make_unique<ChannelFetchTask>(channel);
 }
 
-ChannelFetchTask::ChannelFetchTask(ChannelPtr channel) :
+ChannelFetchTask::ChannelFetchTask(const ChannelPtr &channel) :
     m_channel(channel)
 {
     connect(m_channel.get(), &Channel::sigFetchDoneChannel,

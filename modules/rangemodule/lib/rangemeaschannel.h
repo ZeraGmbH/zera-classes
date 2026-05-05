@@ -41,10 +41,10 @@ public:
     const double keepRangeLimit = 0.99;
     const double enterRangeLimit = 0.95;
 
-    cRangeMeasChannel(ChannelRangeObserver::ChannelPtr channelObserver,
-                      NetworkConnectionInfo pcbsocket,
-                      VeinTcp::AbstractTcpNetworkFactoryPtr tcpNetworkFactory,
-                      QString moduleName);
+    cRangeMeasChannel(const ChannelRangeObserver::ChannelPtr &channelObserver,
+                      const NetworkConnectionInfo &pcbsocket,
+                      const VeinTcp::AbstractTcpNetworkFactoryPtr &tcpNetworkFactory,
+                      const QString &moduleName);
     void generateVeinInterface() override;
 
     RangeChannelData* getChannelData();

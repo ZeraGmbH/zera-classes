@@ -15,7 +15,7 @@ class ChannelCurrentRange : public QObject
 public:
     ChannelCurrentRange(const QString &channelMName,
                         const NetworkConnectionInfo &netInfo,
-                        VeinTcp::AbstractTcpNetworkFactoryPtr tcpFactory);
+                        const VeinTcp::AbstractTcpNetworkFactoryPtr &tcpFactory);
     void startObserve();
     const QString getCurrentRange() const;
 signals:

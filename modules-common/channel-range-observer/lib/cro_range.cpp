@@ -15,7 +15,7 @@ namespace ChannelRangeObserver {
 
 Range::Range(const QString &channelMName, const QString &rangeName,
              const NetworkConnectionInfo &netInfo,
-             VeinTcp::AbstractTcpNetworkFactoryPtr tcpFactory) :
+             const VeinTcp::AbstractTcpNetworkFactoryPtr &tcpFactory) :
     m_channelMName(channelMName),
     m_rangeName(rangeName),
     m_netInfo(netInfo),

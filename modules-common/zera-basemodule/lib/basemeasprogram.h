@@ -9,7 +9,7 @@ class cBaseMeasProgram: public cModuleActivist
 {
     Q_OBJECT
 public:
-    cBaseMeasProgram(std::shared_ptr<BaseModuleConfiguration> pConfiguration, const QString &moduleName);
+    cBaseMeasProgram(const std::shared_ptr<BaseModuleConfiguration> &configuration, const QString &moduleName);
 signals:
     void actualValues(QVector<float>*);
 public slots:
@@ -20,7 +20,7 @@ public slots:
 protected:
     std::shared_ptr<BaseModuleConfiguration> m_pConfiguration;
 
-    quint8 m_nConnectionCount;
+    quint8 m_nConnectionCount = 0;
 
     QVector<float> m_ModuleActualValues; // a modules actual values
     QHash<quint32, int> m_MsgNrCmdList;

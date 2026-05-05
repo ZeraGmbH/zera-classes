@@ -16,7 +16,7 @@ namespace ChannelRangeObserver {
 
 Channel::Channel(const QString &channelMName,
                  const NetworkConnectionInfo &netInfo,
-                 VeinTcp::AbstractTcpNetworkFactoryPtr tcpFactory,
+                 const VeinTcp::AbstractTcpNetworkFactoryPtr &tcpFactory,
                  bool hasInternalSourceGenerator) :
     m_channelMName(channelMName),
     m_hasInternalSourceGenerator(hasInternalSourceGenerator),

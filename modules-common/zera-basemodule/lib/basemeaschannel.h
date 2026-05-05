@@ -13,8 +13,8 @@ class cBaseMeasChannel: public cModuleActivist
 
 public:
     cBaseMeasChannel(const NetworkConnectionInfo &pcbsocket,
-                     VeinTcp::AbstractTcpNetworkFactoryPtr tcpNetworkFactory,
-                     ChannelRangeObserver::ChannelPtr channelObserver,
+                     const VeinTcp::AbstractTcpNetworkFactoryPtr &tcpNetworkFactory,
+                     const ChannelRangeObserver::ChannelPtr &channelObserver,
                      const QString &moduleChannelInfo);
 
     quint8 getDSPChannelNr() const;

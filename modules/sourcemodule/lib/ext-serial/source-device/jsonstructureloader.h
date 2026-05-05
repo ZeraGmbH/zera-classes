@@ -9,9 +9,9 @@
 class JsonStructureLoader
 {
 public:
-    static QJsonObject loadJsonDefaultStructure(SupportedSourceTypes type);
-    static QJsonObject loadJsonStructure(SupportedSourceTypes type, QString deviceName, QString deviceVersion);
-    static QJsonObject loadJsonStructure(SourceProperties properties);
+    static QJsonObject loadJsonDefaultStructure(const SupportedSourceTypes &type);
+    static QJsonObject loadJsonStructure(const SupportedSourceTypes &type, const QString &deviceName, const QString &deviceVersion);
+    static QJsonObject loadJsonStructure(const SourceProperties &properties);
 private:
     static QJsonObject loadJsonStructureFromFile(QString fileName);
 };

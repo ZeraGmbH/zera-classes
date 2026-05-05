@@ -22,7 +22,7 @@ public:
 
     Range(const QString &channelMName, const QString &rangeName,
           const NetworkConnectionInfo &netInfo,
-          VeinTcp::AbstractTcpNetworkFactoryPtr tcpFactory);
+          const VeinTcp::AbstractTcpNetworkFactoryPtr &tcpFactory);
     void startFetch();
 signals:
     void sigFetchDoneRange(const QString &channelMName, const QString &rangeName, bool ok);

@@ -13,10 +13,10 @@ public:
     static constexpr const char *BaseModuleName = "SfcModule";
     static constexpr const char *BaseSCPIModuleName = "SFC";
 
-    cSfcModule(const ModuleFactoryParam &moduleParam);
+    explicit cSfcModule(const ModuleFactoryParam &moduleParam);
 
 protected:
-    cSfcModuleMeasProgram *m_pMeasProgram;
+    cSfcModuleMeasProgram *m_pMeasProgram = nullptr;
     virtual void setupModule() override;
     virtual void startMeas() override;
     virtual void stopMeas() override;
