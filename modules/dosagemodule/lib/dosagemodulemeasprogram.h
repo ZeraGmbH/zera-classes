@@ -24,7 +24,8 @@ class cDosageModuleMeasProgram : public cBaseMeasWorkProgram
 {
     Q_OBJECT
 public:
-    cDosageModuleMeasProgram(cDosageModule *module, std::shared_ptr<BaseModuleConfiguration> pConfiguration);
+    cDosageModuleMeasProgram(cDosageModule *module,
+                             const std::shared_ptr<BaseModuleConfiguration> &configuration);
     virtual ~cDosageModuleMeasProgram();
     void generateVeinInterface() override; // here we export our interface (entities)
     void setupMeasureProgram();

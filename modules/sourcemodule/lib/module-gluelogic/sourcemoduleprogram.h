@@ -16,7 +16,8 @@ class SourceModuleProgram: public cBaseMeasWorkProgram
 {
     Q_OBJECT
 public:
-    SourceModuleProgram(SourceModule* module, std::shared_ptr<BaseModuleConfiguration> pConfiguration);
+    SourceModuleProgram(SourceModule* module,
+                        const std::shared_ptr<BaseModuleConfiguration> &configuration);
     virtual ~SourceModuleProgram();
     void generateVeinInterface() override;
     void startDestroy();

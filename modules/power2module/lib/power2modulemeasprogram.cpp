@@ -18,8 +18,9 @@
 namespace POWER2MODULE
 {
 
-cPower2ModuleMeasProgram::cPower2ModuleMeasProgram(cPower2Module* module, std::shared_ptr<BaseModuleConfiguration> pConfiguration) :
-    cBaseDspMeasProgram(pConfiguration, module->getVeinModuleName()),
+cPower2ModuleMeasProgram::cPower2ModuleMeasProgram(cPower2Module* module,
+                                                   const std::shared_ptr<BaseModuleConfiguration> &configuration) :
+    cBaseDspMeasProgram(configuration, module->getVeinModuleName()),
     m_pModule(module)
 {
     m_dspInterface = m_pModule->getServiceInterfaceFactory()->createDspInterfacePower2(

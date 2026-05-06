@@ -9,8 +9,8 @@ namespace THDNMODULE
 {
 
 cThdnShadowModuleMeasProgram::cThdnShadowModuleMeasProgram(cThdnModule *module,
-                                                           std::shared_ptr<BaseModuleConfiguration> pConfiguration) :
-    cBaseMeasProgram(pConfiguration, module->getVeinModuleName()),
+                                                           const std::shared_ptr<BaseModuleConfiguration> &configuration) :
+    cBaseMeasProgram(configuration, module->getVeinModuleName()),
     m_pModule(module)
 {
     m_activationMachine.addState(&m_activationDoneState);

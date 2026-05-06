@@ -11,8 +11,9 @@
 #include <errormessages.h>
 #include <math.h>
 
-cAdjustmentModuleMeasProgram::cAdjustmentModuleMeasProgram(cAdjustmentModule* module, std::shared_ptr<BaseModuleConfiguration> pConfiguration) :
-    cBaseMeasWorkProgram(pConfiguration, module->getVeinModuleName()),
+cAdjustmentModuleMeasProgram::cAdjustmentModuleMeasProgram(cAdjustmentModule* module,
+                                                           const std::shared_ptr<BaseModuleConfiguration> &configuration) :
+    cBaseMeasWorkProgram(configuration, module->getVeinModuleName()),
     m_pModule(module),
     m_commonObjects(std::make_shared<AdjustmentModuleCommon>(m_pModule->getNetworkConfig())),
     m_activator(getConfData()->m_AdjChannelList, m_commonObjects, module->getVeinModuleName())

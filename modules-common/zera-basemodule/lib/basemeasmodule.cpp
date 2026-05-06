@@ -1,6 +1,7 @@
 #include "basemeasmodule.h"
 
-cBaseMeasModule::cBaseMeasModule(const ModuleFactoryParam &moduleParam, std::shared_ptr<BaseModuleConfiguration> modcfg) :
+cBaseMeasModule::cBaseMeasModule(const ModuleFactoryParam &moduleParam,
+                                 const std::shared_ptr<BaseModuleConfiguration> &modcfg) :
     BaseModule(moduleParam, modcfg)
 {
     m_pModuleEventSystem = new VfEventSytemModuleParam(moduleParam.m_entityId,

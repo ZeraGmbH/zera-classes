@@ -19,8 +19,9 @@
 namespace THDNMODULE
 {
 
-cThdnModuleMeasProgram::cThdnModuleMeasProgram(cThdnModule *module, std::shared_ptr<BaseModuleConfiguration> pConfiguration) :
-    cBaseDspMeasProgram(pConfiguration, module->getVeinModuleName()),
+cThdnModuleMeasProgram::cThdnModuleMeasProgram(cThdnModule *module,
+                                               const std::shared_ptr<BaseModuleConfiguration> &configuration) :
+    cBaseDspMeasProgram(configuration, module->getVeinModuleName()),
     m_pModule(module)
 {
     m_dspInterface = m_pModule->getServiceInterfaceFactory()->createDspInterfaceThdn(

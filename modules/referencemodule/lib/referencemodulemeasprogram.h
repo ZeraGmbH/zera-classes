@@ -24,7 +24,8 @@ class cReferenceModuleMeasProgram: public cBaseDspMeasProgram
 {
     Q_OBJECT
 public:
-    cReferenceModuleMeasProgram(cReferenceModule* module, std::shared_ptr<BaseModuleConfiguration> pConfiguration);
+    cReferenceModuleMeasProgram(cReferenceModule* module,
+                                const std::shared_ptr<BaseModuleConfiguration> &configuration);
     void generateVeinInterface() override {};
 public slots:
     void start() override {};

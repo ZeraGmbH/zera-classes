@@ -11,8 +11,10 @@
 namespace DOSAGEMODULE
 {
 
-cDosageModuleMeasProgram::cDosageModuleMeasProgram(cDosageModule *module, std::shared_ptr<BaseModuleConfiguration> pConfiguration)
-    : cBaseMeasWorkProgram(pConfiguration, module->getVeinModuleName()), m_pModule(module)
+cDosageModuleMeasProgram::cDosageModuleMeasProgram(cDosageModule *module,
+                                                   const std::shared_ptr<BaseModuleConfiguration> &configuration) :
+    cBaseMeasWorkProgram(configuration, module->getVeinModuleName()),
+    m_pModule(module)
 {
     m_activationMachine.addState(&m_activationDoneState);
     m_activationMachine.setInitialState(&m_activationDoneState);

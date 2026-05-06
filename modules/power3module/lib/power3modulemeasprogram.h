@@ -18,7 +18,8 @@ class cPower3ModuleMeasProgram: public cBaseMeasWorkProgram
     Q_OBJECT
 
 public:
-    cPower3ModuleMeasProgram(cPower3Module* module, std::shared_ptr<BaseModuleConfiguration> pConfiguration);
+    cPower3ModuleMeasProgram(cPower3Module* module,
+                             const std::shared_ptr<BaseModuleConfiguration> &configuration);
     void generateVeinInterface() override;
 
 public slots:

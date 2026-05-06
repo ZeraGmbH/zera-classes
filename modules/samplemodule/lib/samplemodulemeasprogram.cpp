@@ -9,10 +9,11 @@
 namespace SAMPLEMODULE
 {
 
-cSampleModuleMeasProgram::cSampleModuleMeasProgram(cSampleModule* module, std::shared_ptr<BaseModuleConfiguration> pConfiguration) :
+cSampleModuleMeasProgram::cSampleModuleMeasProgram(cSampleModule* module,
+                                                   const std::shared_ptr<BaseModuleConfiguration> &configuration) :
     cModuleActivist(module->getVeinModuleName()),
     m_module(module),
-    m_pConfiguration(pConfiguration),
+    m_pConfiguration(configuration),
     m_obsermaticConfig(getConfData()->m_ObsermaticConfPar),
     m_pcbConnection(m_module->getNetworkConfig()),
     m_pllAutomatic(m_module->getStorageDb(), m_obsermaticConfig.m_pllChannelList)

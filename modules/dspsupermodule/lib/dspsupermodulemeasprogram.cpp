@@ -14,8 +14,9 @@
 namespace DSPSUPERMODULE
 {
 
-DspSuperModuleMeasProgram::DspSuperModuleMeasProgram(DspSuperModule* module, std::shared_ptr<BaseModuleConfiguration> pConfiguration) :
-    cBaseDspMeasProgram(pConfiguration, module->getVeinModuleName()),
+DspSuperModuleMeasProgram::DspSuperModuleMeasProgram(DspSuperModule* module,
+                                                     const std::shared_ptr<BaseModuleConfiguration> &configuration) :
+    cBaseDspMeasProgram(configuration, module->getVeinModuleName()),
     m_pModule(module)
 {
     m_dspInterface = m_pModule->getServiceInterfaceFactory()->createDspInterfaceDspSuper(m_pModule->getEntityId());

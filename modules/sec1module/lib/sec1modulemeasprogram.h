@@ -55,7 +55,8 @@ class cSec1ModuleMeasProgram: public cBaseMeasProgram
 {
     Q_OBJECT
 public:
-    cSec1ModuleMeasProgram(cSec1Module* module, std::shared_ptr<BaseModuleConfiguration> pConfiguration);
+    cSec1ModuleMeasProgram(cSec1Module* module,
+                           const std::shared_ptr<BaseModuleConfiguration> &configuration);
     void generateVeinInterface() override;
 signals:
     void setupContinue();

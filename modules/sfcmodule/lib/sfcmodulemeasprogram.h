@@ -52,7 +52,8 @@ class cSfcModuleMeasProgram : public cBaseMeasProgram
 {
     Q_OBJECT
 public:
-    cSfcModuleMeasProgram(cSfcModule *module, std::shared_ptr<BaseModuleConfiguration> pConfiguration);
+    cSfcModuleMeasProgram(cSfcModule *module,
+                          const std::shared_ptr<BaseModuleConfiguration> &configuration);
     void generateVeinInterface() override; // here we export our interface (entities)
 
 signals:

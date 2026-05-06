@@ -19,7 +19,8 @@ class cFftModuleMeasProgram: public cBaseDspMeasProgram
 {
     Q_OBJECT
 public:
-    cFftModuleMeasProgram(cFftModule* module, std::shared_ptr<BaseModuleConfiguration> pConfiguration);
+    cFftModuleMeasProgram(cFftModule* module,
+                          const std::shared_ptr<BaseModuleConfiguration> &configuration);
     void generateVeinInterface() override;
 public slots:
     virtual void start() override;

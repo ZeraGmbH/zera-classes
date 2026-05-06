@@ -13,8 +13,9 @@
 namespace RANGEMODULE
 {
 
-cRangeModuleMeasProgram::cRangeModuleMeasProgram(cRangeModule* module, std::shared_ptr<BaseModuleConfiguration> pConfiguration) :
-    cBaseDspMeasProgram(pConfiguration, module->getVeinModuleName()),
+cRangeModuleMeasProgram::cRangeModuleMeasProgram(cRangeModule* module,
+                                                 const std::shared_ptr<BaseModuleConfiguration> &configuration) :
+    cBaseDspMeasProgram(configuration, module->getVeinModuleName()),
     m_pModule(module),
     m_dspWatchdogTimer(TimerFactoryQt::createSingleShot(3000)),
     m_frequencyLogStatistics(10000)

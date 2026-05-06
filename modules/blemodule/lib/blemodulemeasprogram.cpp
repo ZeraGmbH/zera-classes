@@ -10,8 +10,9 @@
 namespace BLEMODULE
 {
 
-cBleModuleMeasProgram::cBleModuleMeasProgram(cBleModule* module, std::shared_ptr<BaseModuleConfiguration> pConfiguration) :
-    cBaseMeasWorkProgram(pConfiguration, module->getVeinModuleName()),
+cBleModuleMeasProgram::cBleModuleMeasProgram(cBleModule* module,
+                                             const std::shared_ptr<BaseModuleConfiguration> configuration) :
+    cBaseMeasWorkProgram(configuration, module->getVeinModuleName()),
     m_pModule(module)
 {
     m_bluetooth = BluetoothConvenienceFacade::getInstance();

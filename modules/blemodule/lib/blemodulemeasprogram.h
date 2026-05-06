@@ -19,7 +19,8 @@ class cBleModuleMeasProgram: public cBaseMeasWorkProgram
 {
     Q_OBJECT
 public:
-    cBleModuleMeasProgram(cBleModule* module, std::shared_ptr<BaseModuleConfiguration> pConfiguration);
+    cBleModuleMeasProgram(cBleModule* module,
+                          const std::shared_ptr<BaseModuleConfiguration> configuration);
     virtual ~cBleModuleMeasProgram();
     void generateVeinInterface() override;
 public slots:

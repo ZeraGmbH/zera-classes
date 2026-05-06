@@ -13,8 +13,9 @@
 namespace FFTMODULE
 {
 
-cFftModuleMeasProgram::cFftModuleMeasProgram(cFftModule* module, std::shared_ptr<BaseModuleConfiguration> pConfiguration) :
-    cBaseDspMeasProgram(pConfiguration, module->getVeinModuleName()),
+cFftModuleMeasProgram::cFftModuleMeasProgram(cFftModule* module,
+                                             const std::shared_ptr<BaseModuleConfiguration> &configuration) :
+    cBaseDspMeasProgram(configuration, module->getVeinModuleName()),
     m_pModule(module)
 {
     m_dspInterface = m_pModule->getServiceInterfaceFactory()->createDspInterfaceFft(

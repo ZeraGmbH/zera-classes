@@ -12,7 +12,8 @@
 class RecorderModuleInit : public cModuleActivist
 {
 public:
-    RecorderModuleInit(RecorderModule *module, std::shared_ptr<BaseModuleConfiguration> pConfiguration);
+    RecorderModuleInit(RecorderModule *module,
+                       const std::shared_ptr<BaseModuleConfiguration> &configuration);
 public slots:
     void activate() override;
     void deactivate() override;

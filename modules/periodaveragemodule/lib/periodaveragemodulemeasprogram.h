@@ -18,7 +18,8 @@ class PeriodAverageModuleMeasProgram: public cBaseDspMeasProgram
 {
     Q_OBJECT
 public:
-    PeriodAverageModuleMeasProgram(PeriodAverageModule* module, std::shared_ptr<BaseModuleConfiguration> pConfiguration);
+    PeriodAverageModuleMeasProgram(PeriodAverageModule* module,
+                                   const std::shared_ptr<BaseModuleConfiguration> &configuration);
     void generateVeinInterface() override;
 
 public slots:

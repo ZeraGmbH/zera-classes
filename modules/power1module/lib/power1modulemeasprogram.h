@@ -49,7 +49,8 @@ class cPower1ModuleMeasProgram: public cBaseDspMeasProgram
 {
     Q_OBJECT
 public:
-    cPower1ModuleMeasProgram(cPower1Module* module, std::shared_ptr<BaseModuleConfiguration> pConfiguration);
+    cPower1ModuleMeasProgram(cPower1Module* module,
+                             const std::shared_ptr<BaseModuleConfiguration> &configuration);
     void generateVeinInterface() override;
 public slots:
     void start() override; // difference between start and stop is that actual values

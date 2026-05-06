@@ -17,7 +17,8 @@ class DspSuperModuleMeasProgram: public cBaseDspMeasProgram
 {
     Q_OBJECT
 public:
-    DspSuperModuleMeasProgram(DspSuperModule* module, std::shared_ptr<BaseModuleConfiguration> pConfiguration);
+    DspSuperModuleMeasProgram(DspSuperModule* module,
+                              const std::shared_ptr<BaseModuleConfiguration> &configuration);
     void generateVeinInterface() override;
 
 public slots:

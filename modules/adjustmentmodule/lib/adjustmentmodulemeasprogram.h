@@ -51,7 +51,8 @@ class cAdjustmentModuleMeasProgram: public cBaseMeasWorkProgram
     Q_OBJECT
 
 public:
-    cAdjustmentModuleMeasProgram(cAdjustmentModule* module, std::shared_ptr<BaseModuleConfiguration> pConfiguration);
+    cAdjustmentModuleMeasProgram(cAdjustmentModule* module,
+                                 const std::shared_ptr<BaseModuleConfiguration> &configuration);
     void generateVeinInterface() override;
     static double symAngle(double ang);
 

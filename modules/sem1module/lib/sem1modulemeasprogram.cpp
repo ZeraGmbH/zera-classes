@@ -17,8 +17,9 @@
 namespace SEM1MODULE
 {
 
-cSem1ModuleMeasProgram::cSem1ModuleMeasProgram(cSem1Module* module, std::shared_ptr<BaseModuleConfiguration> pConfiguration) :
-    cBaseMeasProgram(pConfiguration, module->getVeinModuleName()),
+cSem1ModuleMeasProgram::cSem1ModuleMeasProgram(cSem1Module* module,
+                                               const std::shared_ptr<BaseModuleConfiguration> &configuration) :
+    cBaseMeasProgram(configuration, module->getVeinModuleName()),
     m_pModule(module),
     m_secInterface(std::make_unique<Zera::cSECInterface>()),
     m_pcbInterface(std::make_shared<Zera::cPCBInterface>())

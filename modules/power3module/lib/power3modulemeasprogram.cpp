@@ -9,8 +9,9 @@
 namespace POWER3MODULE
 {
 
-cPower3ModuleMeasProgram::cPower3ModuleMeasProgram(cPower3Module* module, std::shared_ptr<BaseModuleConfiguration> pConfiguration) :
-    cBaseMeasWorkProgram(pConfiguration, module->getVeinModuleName()),
+cPower3ModuleMeasProgram::cPower3ModuleMeasProgram(cPower3Module* module,
+                                                   const std::shared_ptr<BaseModuleConfiguration> &configuration) :
+    cBaseMeasWorkProgram(configuration, module->getVeinModuleName()),
     m_pModule(module)
 {
     m_searchActualValuesState.addTransition(this, &cPower3ModuleMeasProgram::activationContinue, &m_activationDoneState);

@@ -16,7 +16,8 @@ class cRmsModuleMeasProgram: public cBaseDspMeasProgram
 {
     Q_OBJECT
 public:
-    cRmsModuleMeasProgram(cRmsModule* module, std::shared_ptr<BaseModuleConfiguration> pConfiguration);
+    cRmsModuleMeasProgram(cRmsModule* module,
+                          const std::shared_ptr<BaseModuleConfiguration> &configuration);
     void generateVeinInterface() override;
 public slots:
     void start() override;

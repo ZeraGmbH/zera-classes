@@ -20,7 +20,8 @@ class cLambdaModuleMeasProgram: public cBaseMeasWorkProgram
 {
     Q_OBJECT
 public:
-    cLambdaModuleMeasProgram(cLambdaModule* module, std::shared_ptr<BaseModuleConfiguration> pConfiguration);
+    cLambdaModuleMeasProgram(cLambdaModule* module,
+                             const std::shared_ptr<BaseModuleConfiguration> &configuration);
     void generateVeinInterface() override;
 public slots:
     void start() override {}

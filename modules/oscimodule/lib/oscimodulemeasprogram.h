@@ -14,7 +14,8 @@ class cOsciModuleMeasProgram: public cBaseDspMeasProgram
 {
     Q_OBJECT
 public:
-    cOsciModuleMeasProgram(cOsciModule* module, std::shared_ptr<BaseModuleConfiguration> pConfiguration);
+    cOsciModuleMeasProgram(cOsciModule* module,
+                           const std::shared_ptr<BaseModuleConfiguration> &configuration);
     void generateVeinInterface() override;
 public slots:
     void start() override;

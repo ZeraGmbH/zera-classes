@@ -52,7 +52,8 @@ class cSpm1ModuleMeasProgram: public cBaseMeasProgram
 {
     Q_OBJECT
 public:
-    cSpm1ModuleMeasProgram(cSpm1Module* module, std::shared_ptr<BaseModuleConfiguration> pConfiguration);
+    cSpm1ModuleMeasProgram(cSpm1Module* module,
+                           const std::shared_ptr<BaseModuleConfiguration> &configuration);
     void generateVeinInterface() override;
 signals:
     void setupContinue();

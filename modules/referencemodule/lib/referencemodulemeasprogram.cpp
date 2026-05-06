@@ -11,8 +11,9 @@
 namespace REFERENCEMODULE
 {
 
-cReferenceModuleMeasProgram::cReferenceModuleMeasProgram(cReferenceModule* module, std::shared_ptr<BaseModuleConfiguration> pConfiguration) :
-    cBaseDspMeasProgram(pConfiguration, module->getVeinModuleName()),
+cReferenceModuleMeasProgram::cReferenceModuleMeasProgram(cReferenceModule* module,
+                                                         const std::shared_ptr<BaseModuleConfiguration> &configuration) :
+    cBaseDspMeasProgram(configuration, module->getVeinModuleName()),
     m_pModule(module)
 {
     m_ChannelList = getConfData()->m_referenceChannelList;

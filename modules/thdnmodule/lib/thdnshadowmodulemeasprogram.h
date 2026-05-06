@@ -12,7 +12,8 @@ class cThdnShadowModuleMeasProgram : public cBaseMeasProgram
 {
     Q_OBJECT
 public:
-    cThdnShadowModuleMeasProgram(cThdnModule* module, std::shared_ptr<BaseModuleConfiguration> pConfiguration);
+    cThdnShadowModuleMeasProgram(cThdnModule* module,
+                                 const std::shared_ptr<BaseModuleConfiguration> &configuration);
     void generateVeinInterface() override;
 
 private slots:

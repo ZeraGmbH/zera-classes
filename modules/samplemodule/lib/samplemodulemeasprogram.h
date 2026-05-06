@@ -18,7 +18,8 @@ class cSampleModuleMeasProgram : public cModuleActivist
 {
     Q_OBJECT
 public:
-    cSampleModuleMeasProgram(cSampleModule* module, std::shared_ptr<BaseModuleConfiguration> pConfiguration);
+    cSampleModuleMeasProgram(cSampleModule* module,
+                             const std::shared_ptr<BaseModuleConfiguration> &configuration);
 
     void generateVeinInterface() override;
     void activate() override;

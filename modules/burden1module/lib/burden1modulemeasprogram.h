@@ -19,7 +19,8 @@ class cBurden1ModuleMeasProgram: public cBaseMeasWorkProgram
     Q_OBJECT
 
 public:
-    cBurden1ModuleMeasProgram(cBurden1Module* module, std::shared_ptr<BaseModuleConfiguration> pConfiguration);
+    cBurden1ModuleMeasProgram(cBurden1Module* module,
+                              const std::shared_ptr<BaseModuleConfiguration> &configuration);
     void generateVeinInterface() override;
 public slots:
     virtual void start() override {}; // follow DFT

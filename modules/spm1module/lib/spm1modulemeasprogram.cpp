@@ -15,8 +15,9 @@
 namespace SPM1MODULE
 {
 
-cSpm1ModuleMeasProgram::cSpm1ModuleMeasProgram(cSpm1Module* module, std::shared_ptr<BaseModuleConfiguration> pConfiguration) :
-    cBaseMeasProgram(pConfiguration, module->getVeinModuleName()),
+cSpm1ModuleMeasProgram::cSpm1ModuleMeasProgram(cSpm1Module* module,
+                                               const std::shared_ptr<BaseModuleConfiguration> &configuration) :
+    cBaseMeasProgram(configuration, module->getVeinModuleName()),
     m_pModule(module),
     m_secInterface(std::make_unique<Zera::cSECInterface>()),
     m_pcbInterface(std::make_shared<Zera::cPCBInterface>())

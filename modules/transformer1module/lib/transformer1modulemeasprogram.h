@@ -23,7 +23,8 @@ class cTransformer1ModuleMeasProgram: public cBaseMeasWorkProgram
     Q_OBJECT
 
 public:
-    cTransformer1ModuleMeasProgram(cTransformer1Module* module, std::shared_ptr<BaseModuleConfiguration> pConfiguration);
+    cTransformer1ModuleMeasProgram(cTransformer1Module* module,
+                                   const std::shared_ptr<BaseModuleConfiguration> &configuration);
     virtual ~cTransformer1ModuleMeasProgram();
     void generateVeinInterface() override;
 

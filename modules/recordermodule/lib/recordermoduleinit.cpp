@@ -10,10 +10,10 @@
 using namespace VeinStorage;
 
 RecorderModuleInit::RecorderModuleInit(RecorderModule *module,
-                                       std::shared_ptr<BaseModuleConfiguration> pConfiguration) :
+                                       const std::shared_ptr<BaseModuleConfiguration> &configuration) :
     cModuleActivist(module->getVeinModuleName()),
     m_module(module),
-    m_confData(qobject_cast<RecorderModuleConfiguration*>(pConfiguration.get())->getConfigurationData()),
+    m_confData(qobject_cast<RecorderModuleConfiguration*>(configuration.get())->getConfigurationData()),
     m_stopLoggingTimer(TimerFactoryQt::createSingleShot(m_confData->m_maxRecordingSeconds*1000))
 {
     createRecorder();
