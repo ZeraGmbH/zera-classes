@@ -20,7 +20,7 @@ public:
     void setVeinInterface(SourceVeinInterface* veinInterface);
 
     virtual void switchLoad(const QJsonObject &params) = 0;
-    virtual bool close(QUuid uuid) = 0;
+    virtual void close(QUuid uuid) = 0;
 
     int getId();
     const QString &getDeviceInfo() const;

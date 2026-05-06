@@ -95,10 +95,9 @@ void SourceDeviceManager::setDemoCount(int count)
 
 void SourceDeviceManager::closeSource(int slotNo, const QUuid uuid)
 {
-    bool closeRequested = false;
     if(isValidSlotNo(slotNo) && m_activeSlots[slotNo])
-        closeRequested = m_sourceControllers[slotNo]->close(uuid);
-    if(!closeRequested)
+        m_sourceControllers[slotNo]->close(uuid);
+    else
         emitSigSlotRemoved(-1, uuid, QStringLiteral("No source found at slot %1").arg(slotNo));
 }
 

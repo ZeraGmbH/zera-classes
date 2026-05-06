@@ -24,7 +24,7 @@ SourceDeviceExtSerial::SourceDeviceExtSerial(IoDeviceBase::Ptr ioDevice, SourceP
             &SourceDeviceExtSerial::onIoDeviceClosed);
 }
 
-bool SourceDeviceExtSerial::close(QUuid uuid)
+void SourceDeviceExtSerial::close(QUuid uuid)
 {
     bool closeRequested = tryDemoCloseByUsbDisconnect(uuid);
     if(!m_closeRequested && !closeRequested) {
@@ -39,7 +39,6 @@ bool SourceDeviceExtSerial::close(QUuid uuid)
         else
             doFinalCloseActivities();
     }
-    return closeRequested;
 }
 
 void SourceDeviceExtSerial::switchLoad(const QJsonObject &params)

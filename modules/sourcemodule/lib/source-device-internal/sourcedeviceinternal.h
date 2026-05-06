@@ -13,7 +13,7 @@ public:
                                   const QJsonObject &sourceCapabilities);
 
     void switchLoad(const QJsonObject &params) override;
-    bool close(QUuid uuid) override;
+    void close(QUuid uuid) override;
 private slots:
     void onSourceSwitchFinished(bool ok);
 private:

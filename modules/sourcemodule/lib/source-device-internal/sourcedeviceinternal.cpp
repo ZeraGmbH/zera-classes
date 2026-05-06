@@ -18,11 +18,10 @@ void SourceDeviceInternal::switchLoad(const QJsonObject &params)
     handleNewState(SourceStates::SWITCH_BUSY);
 }
 
-bool SourceDeviceInternal::close(QUuid uuid)
+void SourceDeviceInternal::close(QUuid uuid)
 {
     resetVeinComponents();
     emit sigClosed(getId(), uuid);
-    return true;
 }
 
 void SourceDeviceInternal::onSourceSwitchFinished(bool ok)
