@@ -12,8 +12,8 @@ class cBurden1MeasDelegate : public QObject
 {
     Q_OBJECT
 public:
-    cBurden1MeasDelegate(VeinStorage::AbstractComponentPtr inputVectorU,
-                         VeinStorage::AbstractComponentPtr inputVectorI,
+    cBurden1MeasDelegate(const VeinStorage::AbstractComponentPtr &inputVectorU,
+                         const VeinStorage::AbstractComponentPtr &inputVectorI,
                          VfModuleComponent *actburden,
                          VfModuleComponent *actpowerfactor,
                          VfModuleComponent *actrelburden,
@@ -31,21 +31,21 @@ private:
     VeinStorage::AbstractComponentPtr m_inputVectorU;
     VeinStorage::AbstractComponentPtr m_inputVectorI;
 
-    VfModuleComponent *m_pActBurden; // output is actual burden corrected to nominal burden
-    VfModuleComponent *m_pActPowerFactor; // and angle cosß
-    VfModuleComponent *m_pActRelativeBurden; // % value of nominal burden
+    VfModuleComponent *m_pActBurden = nullptr;          // output is actual burden corrected to nominal burden
+    VfModuleComponent *m_pActPowerFactor = nullptr;     // and angle cosß
+    VfModuleComponent *m_pActRelativeBurden = nullptr;  // % value of nominal burden
     QString m_sMode;
 
-    double m_fNominalBurden;
-    double m_fNominalRange;
+    double m_fNominalBurden = 0.0;
+    double m_fNominalRange = 0.0;
     QString m_sNominalRangeFactor;
-    double m_fNominalRangeFactor;
-    double m_fWireLength;
-    double m_fWireCrosssection;
+    double m_fNominalRangeFactor = 0.0;
+    double m_fWireLength = 0.0;
+    double m_fWireCrosssection = 0.0;
 
-    double m_fActBurden;
-    double m_fActPowerFactor;
-    double m_fActRelativeBurden;
+    double m_fActBurden = 0.0;
+    double m_fActPowerFactor = 0.0;
+    double m_fActRelativeBurden = 0.0;
 };
 
 }

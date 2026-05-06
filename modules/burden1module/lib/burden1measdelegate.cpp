@@ -6,8 +6,8 @@
 namespace  BURDEN1MODULE
 {
 
-cBurden1MeasDelegate::cBurden1MeasDelegate(VeinStorage::AbstractComponentPtr inputVectorU,
-                                           VeinStorage::AbstractComponentPtr inputVectorI,
+cBurden1MeasDelegate::cBurden1MeasDelegate(const VeinStorage::AbstractComponentPtr &inputVectorU,
+                                           const VeinStorage::AbstractComponentPtr &inputVectorI,
                                            VfModuleComponent *actburden,
                                            VfModuleComponent *actpowerfactor,
                                            VfModuleComponent *actrelburden,
