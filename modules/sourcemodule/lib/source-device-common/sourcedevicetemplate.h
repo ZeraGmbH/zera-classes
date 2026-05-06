@@ -19,14 +19,14 @@ public:
 
     void setVeinInterface(SourceVeinInterface* veinInterface);
 
-    void switchLoad(const QJsonObject &params);
+    virtual void switchLoad(const QJsonObject &params) = 0;
+    virtual bool close(QUuid uuid) = 0;
 
     int getId();
     const QString &getDeviceInfo() const;
     bool hasDemoIo() const;
     QStringList getLastErrors() const;
 
-    virtual bool close(QUuid uuid) = 0;
 public slots:
     void handleNewState(SourceStates state);
 signals:
@@ -38,6 +38,7 @@ protected:
 
     const QJsonObject m_sourceCapabilities;
     std::unique_ptr<AbstractSourceSwitchJson> m_switcher;
+    bool m_lastOnState = false;
 private:
     void handleErrorState(SourceStates state);
     void setVeinParamStructure(QJsonObject sourceCapabilities);
@@ -48,7 +49,6 @@ private:
     SourceVeinInterface* m_veinInterface = nullptr;
     JsonDeviceStatusApi m_deviceStatusJsonApi;
 
-    bool m_lastOnState = false;
     static IoIdGenerator m_idGenerator; // ID for device manager
     int m_ID;
 };

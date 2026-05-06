@@ -42,6 +42,14 @@ bool SourceDeviceExtSerial::close(QUuid uuid)
     return closeRequested;
 }
 
+void SourceDeviceExtSerial::switchLoad(const QJsonObject &params)
+{
+    JsonParamApi paramApi;
+    paramApi.setParams(params);
+    m_lastOnState = paramApi.getOn();
+    m_switcher->switchState(paramApi);
+}
+
 void SourceDeviceExtSerial::onSourceSwitchFinished()
 {
     setVeinLoadpointParam(m_switcher->getCurrLoadpoint().getParams());

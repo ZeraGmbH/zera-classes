@@ -80,14 +80,6 @@ void SourceDeviceTemplate::resetVeinComponents()
     }
 }
 
-void SourceDeviceTemplate::switchLoad(const QJsonObject &params)
-{
-    JsonParamApi paramApi;
-    paramApi.setParams(params);
-    m_lastOnState = paramApi.getOn();
-    m_switcher->switchState(paramApi);
-}
-
 void SourceDeviceTemplate::handleNewState(SourceStates state)
 {
     if(state == SourceStates::SWITCH_BUSY) {

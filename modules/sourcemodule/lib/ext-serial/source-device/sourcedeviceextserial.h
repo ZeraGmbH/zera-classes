@@ -18,6 +18,7 @@ public:
 
     void setStatusPollTime(int ms);
 
+    void switchLoad(const QJsonObject &params) override;
     bool close(QUuid uuid) override;
 
 private slots:

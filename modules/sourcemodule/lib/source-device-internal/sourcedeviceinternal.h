@@ -12,9 +12,9 @@ public:
     explicit SourceDeviceInternal(AbstractServerInterfacePtr serverInterface,
                                   const QJsonObject &sourceCapabilities);
 
+    void switchLoad(const QJsonObject &params) override;
     bool close(QUuid uuid) override;
 private slots:
-    void onSwitchTransactionStarted();
     void onSourceSwitchFinished(bool ok);
 private:
     SourceStates m_currState = SourceStates::UNDEFINED;

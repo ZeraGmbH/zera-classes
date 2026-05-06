@@ -16,8 +16,6 @@ public:
                              const QJsonObject &sourceCapabilities);
     int switchState(const JsonParamApi &desiredLoad) override;
     JsonParamApi getCurrLoadpoint() override;
-signals:
-    void sigSwitchTransactionStarted();
 
 private slots:
     void onSwitchTasksFinish(bool ok, int taskId);
@@ -27,7 +25,7 @@ private:
     TaskContainerInterfacePtr createLoadpointTasks(const JsonParamApi &paramState);
     TaskTemplatePtr createSourceModeOnTask(const JsonParamApi &paramState);
     TaskTemplatePtr createSourceOnOffTask(const JsonParamApi &paramState);
-    int doStartTask(TaskTemplatePtr task, const JsonParamApi &desiredLoad);
+    void doStartTask(TaskTemplatePtr task, const JsonParamApi &desiredLoad);
 
     AbstractServerInterfacePtr m_serverInterface;
     JsonStructApi m_sourceCapabilities;

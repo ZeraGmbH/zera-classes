@@ -107,17 +107,14 @@ TaskTemplatePtr SourceSwitchJsonInternal::createSourceOnOffTask(const JsonParamA
         );
 }
 
-int SourceSwitchJsonInternal::doStartTask(TaskTemplatePtr task, const JsonParamApi &desiredLoad)
+void SourceSwitchJsonInternal::doStartTask(TaskTemplatePtr task, const JsonParamApi &desiredLoad)
 {
-    int taskId = task->getTaskId();
     m_pendingTask = std::move(task);
     m_loadpointRequestedLast = desiredLoad;
 
     connect(m_pendingTask.get(), &TaskTemplate::sigFinish,
             this, &SourceSwitchJsonInternal::onSwitchTasksFinish);
     m_pendingTask->start();
-    emit sigSwitchTransactionStarted();
-    return taskId;
 }
 
 JsonParamApi SourceSwitchJsonInternal::getCurrLoadpoint()
