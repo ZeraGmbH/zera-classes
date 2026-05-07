@@ -59,7 +59,6 @@ private:
     TimerTemplateQtPtr m_AdjustTimer;
     bool m_bAdjustTrigger;
 
-    VfModuleComponent *m_pAdjustmentInfo;
     VfModuleParameter *m_ParIgnoreRmsValues;
     VfModuleParameter *m_ParIgnoreRmsValuesOnOff;
     QList<VfModuleParameter*> m_invertedPhasesParList;

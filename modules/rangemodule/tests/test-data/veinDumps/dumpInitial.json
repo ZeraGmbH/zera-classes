@@ -18,7 +18,6 @@
         "ACT_Channel8Rms": null,
         "ACT_Frequency": null,
         "EntityName": "RangeModule1",
-        "INF_Adjusted": 0,
         "INF_Channel1ActOVLREJ": 312.4999858438974,
         "INF_Channel1ActREJ": 250,
         "INF_Channel1OVLREJ": 312.4999858438974,
@@ -115,9 +114,6 @@
                 },
                 "EntityName": {
                     "Description": "Module's name"
-                },
-                "INF_Adjusted": {
-                    "Description": "Adjustment information"
                 },
                 "INF_Channel1ActOVLREJ": {
                     "ChannelName": "UL1",

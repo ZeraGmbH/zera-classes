@@ -155,7 +155,6 @@
         "ACT_Channel6Rms": null,
         "ACT_Frequency": null,
         "EntityName": "RangeModule1",
-        "INF_Adjusted": 0,
         "INF_Channel1ActOVLREJ": 12.499988280242833,
         "INF_Channel1ActREJ": 10,
         "INF_Channel1OVLREJ": 12.499988280242833,
@@ -229,9 +228,6 @@
                     "Unit": "Hz"
                 },
                 "EntityName": {
-                    "Description": "<skipped>"
-                },
-                "INF_Adjusted": {
                     "Description": "<skipped>"
                 },
                 "INF_Channel1ActOVLREJ": {

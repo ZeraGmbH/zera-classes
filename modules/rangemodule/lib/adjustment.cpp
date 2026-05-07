@@ -119,13 +119,6 @@ void cAdjustManagement::ActionHandler(QVector<float> *actualValues)
 
 void cAdjustManagement::generateVeinInterface()
 {
-    m_pAdjustmentInfo = new VfModuleComponent(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
-                                                 QString("INF_Adjusted"),
-                                                 QString("Adjustment information"),
-                                                 QVariant(0));
-
-    m_pModule->m_veinComponentsWithMetaAndScpi.append(m_pAdjustmentInfo);
-
     m_ParIgnoreRmsValuesOnOff = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
                                                       QString("PAR_IgnoreRmsValuesOnOff"),
                                                       QString("Enable or disable channel ignore limit option"),
