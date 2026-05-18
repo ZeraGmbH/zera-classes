@@ -1,5 +1,6 @@
 #include "statusmoduleinit.h"
 #include "statusmodule.h"
+#include "rpc/rpccreateversionfile.h"
 #include <reply.h>
 #include <proxy.h>
 #include <errormessages.h>
@@ -266,6 +267,13 @@ void cStatusModuleInit::generateVeinInterface()
                                              QVariant());
     m_veinDspMsTimer->setScpiInfo("STATUS", "DSP:TIMEMS", SCPI::isQuery);
     m_pModule->m_veinModuleParameterMap[key] =  m_veinDspMsTimer;
+
+    m_versionsJson = std::make_shared<QJsonObject>();
+    std::shared_ptr<RPCCreateVersionFile> rpcReadLogs = std::make_shared<RPCCreateVersionFile>(m_pModule->getRpcEventSystem(),
+                                                                             m_pModule->getEntityId(),
+                                                                             m_versionsJson);
+    m_createVersionFileRpc = std::make_shared<VfModuleRpc>(rpcReadLogs, "Create version file");
+    m_pModule->m_veinModuleRPCMap[rpcReadLogs->getSignature()] = m_createVersionFileRpc;
 
     m_veinUpdateTimer->start();
 }
@@ -541,6 +549,46 @@ void cStatusModuleInit::notifyActivationError(QVariant value)
     emit activationError();
 }
 
+void cStatusModuleInit::createVersionsJson()
+{
+    QJsonObject obj = QStringToQJsonObject(m_pCPUInfo->getValue().toString());
+    m_versionsJson->insert("CPU-board assembly", obj.value("Assembly"));
+    m_versionsJson->insert("CPU-board date", obj.value("Date"));
+    m_versionsJson->insert("CPU-board number", obj.value("PartNumber"));
+
+    obj = QStringToQJsonObject(m_pPCBVersion->getValue().toString());
+    m_versionsJson->insert("Relay PCB version", obj.value("Relay PCB version"));
+    m_versionsJson->insert("System PCB version", obj.value("System PCB version"));
+
+    obj = QStringToQJsonObject(m_pCtrlVersion->getValue().toString());
+    m_versionsJson->insert("Relay controller version", obj.value("Relay controller version"));
+    m_versionsJson->insert("System controller version", obj.value("System controller version"));
+
+    m_versionsJson->insert("DSP firmware version", m_pDSPProgramVersion->getValue().toString());
+    m_versionsJson->insert("FPGA firmware version", m_pFPGAVersion->getValue().toString());
+    m_versionsJson->insert("Operating system version", m_pReleaseNumber->getValue().toString());
+    m_versionsJson->insert("Serial number", m_pSerialNumber->getValue().toString());
+
+    QStringList status;
+    if(m_pAdjustmentStatus->getValue().toInt() & 1<<0)
+        status.append("Not adjusted");
+    if(m_pAdjustmentStatus->getValue().toInt() & 1<<1)
+        status.append("Wrong version");
+    if(m_pAdjustmentStatus->getValue().toInt() & 1<<2)
+        status.append("Wrong serial number");
+    else if(m_pAdjustmentStatus->getValue().toInt() == 0)
+        status.append("OK");
+    m_versionsJson->insert("Adjustment status", status.join(","));
+}
+
+QJsonObject cStatusModuleInit::QStringToQJsonObject(QString strJson)
+{
+    QJsonDocument doc = QJsonDocument::fromJson(strJson.toUtf8());
+    if (!doc.isNull() && doc.isObject())
+        return doc.object();
+    return QJsonObject();
+}
+
 void cStatusModuleInit::getSchnubbelStatus()
 {
     m_MsgNrCmdList[m_pPCBInterface->getAuthorizationStatus()] = readPCBServerSchnubbelStatus;
@@ -722,6 +770,7 @@ void cStatusModuleInit::activationDone()
         m_sDeviceType = QStringLiteral("unknown");
     m_sCPUInfo = ZenuxDeviceInfo::getCpuInfo();
     setInterfaceComponents();
+    createVersionsJson();
     connect(m_pSerialNumber, &VfModuleParameter::sigValueChanged, this, &cStatusModuleInit::newSerialNumber);
     m_bActive = true;
     emit activated();

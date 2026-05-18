@@ -1,9 +1,11 @@
 file(GLOB SOURCES
     *.cpp
+    rpc/*.cpp
     )
 
 file(GLOB HEADER
     *.h
+    rpc/*.h
     )
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC" )
@@ -20,6 +22,7 @@ target_include_directories(statusmodule-static
 
 target_link_libraries(statusmodule-static
     zera-basemodule
+    vf-cpp-module-wrappers
     Zera::zera-timers
     Zera::zenuxservicecommon
     Zera::service-interfaces

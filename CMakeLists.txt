@@ -35,6 +35,7 @@ find_package(serialportasyncblock REQUIRED)
 find_package(ZenuxLegacyComponents REQUIRED)
 find_package(ZenuxServices REQUIRED)
 find_package(BlePlayground REQUIRED)
+find_package(simplecmdiobase REQUIRED)
 
 # better suggestions?
 get_filename_component(SYSTEMD_UNIT_INSTALL_PATH "${CMAKE_INSTALL_PREFIX}/../lib/systemd/system" ABSOLUTE)
