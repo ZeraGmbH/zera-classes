@@ -5,16 +5,33 @@ namespace STATUSMODULE
 {
 
 cStatusModule::cStatusModule(const ModuleFactoryParam &moduleParam) :
-    cBaseMeasModule(moduleParam, std::make_shared<cStatusModuleConfiguration>())
+    cBaseMeasModule(moduleParam, std::make_shared<cStatusModuleConfiguration>()),
+    m_spRpcEventSystem(std::make_unique<VfRpcEventSystemSimplified>(moduleParam.m_entityId))
 {
     m_sModuleName = QString("%1%2").arg(BaseModuleName).arg(moduleParam.m_moduleNum);
     m_sModuleDescription = QString("This module is responsible for reading and providing system Status information");
     m_sSCPIModuleName = QString("%1%2").arg(BaseSCPIModuleName).arg(moduleParam.m_moduleNum);
 }
 
+VfRpcEventSystemSimplified *cStatusModule::getRpcEventSystem()
+{
+    return m_spRpcEventSystem.get();
+}
+
+void cStatusModule::activationFinished()
+{
+    getValidatorEventSystem()->setParameterMap(m_veinModuleParameterMap);
+    getRpcEventSystem()->setRPCMap(m_veinModuleRPCMap);
+
+    exportMetaData();
+    emit activationReady();
+}
+
 void cStatusModule::setupModule()
 {
     emit addEventSystem(getValidatorEventSystem());
+    emit addEventSystem(getRpcEventSystem());
+
     cBaseMeasModule::setupModule();
 
     cStatusModuleConfigData *pConfData;

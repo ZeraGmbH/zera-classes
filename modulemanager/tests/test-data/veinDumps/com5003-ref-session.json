@@ -1944,6 +1944,11 @@
                 "Description": "This module is responsible for reading and providing system Status information",
                 "Name": "StatusModule1"
             },
+            "RpcInfo": {
+                "RPC_CreateVersionFile(QString p_destinationPath)": {
+                    "Description": "<skipped>"
+                }
+            },
             "SCPIInfo": {
                 "Cmd": [
                     [

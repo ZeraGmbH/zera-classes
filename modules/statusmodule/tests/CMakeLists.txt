@@ -16,6 +16,7 @@ SETUP_QTESTS_MODULE(
     test_status_config_load
     test_readinstrumenttype
     test_statusmodule_with_dspsuper
+    test_rpc_create_version_file
 )
 
 target_sources(test_statusmodule_with_dspsuper
@@ -24,6 +25,11 @@ target_sources(test_statusmodule_with_dspsuper
 )
 
 target_sources(test_readinstrumenttype
+  PRIVATE
+  test-data/test-data.qrc
+)
+
+target_sources(test_rpc_create_version_file
   PRIVATE
   test-data/test-data.qrc
 )
