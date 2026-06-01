@@ -82,8 +82,8 @@ void cDftModuleMeasProgram::stop()
 void cDftModuleMeasProgram::generateVeinInterface()
 {
     VfModuleComponent *pActvalue;
-    int n,p;
-    n = p = 0;
+    int phaseNeutralValueCount = 0;
+    int phasePhaseValueCount = 0;
     for (int i = 0; i < getConfData()->m_valueChannelList.count(); i++) {
         QStringList sl = getConfData()->m_valueChannelList.at(i).split('-');
         // we have 1 or 2 entries for each value
@@ -99,33 +99,33 @@ void cDftModuleMeasProgram::generateVeinInterface()
                 channelDescriptionPolar = QString("Actual value / polar format: abs,rad[0,2π],deg[0,360]");
             }
             pActvalue = new VfModuleComponent(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
-                                                QString("ACT_DFTPN%1").arg(n+1),
+                                                QString("ACT_DFTPN%1").arg(phaseNeutralValueCount+1),
                                                 channelDescriptionCartesian);
             m_veinActValueList.append(pActvalue); // we add the component for our measurement
             m_pModule->m_veinComponentsWithMetaAndScpi.append(pActvalue); // and for the modules interface
 
             pActvalue = new VfModuleComponent(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
-                                             QString("ACT_POL_DFTPN%1").arg(n+1),
+                                             QString("ACT_POL_DFTPN%1").arg(phaseNeutralValueCount+1),
                                              channelDescriptionPolar);
             m_veinPolarValue.append(pActvalue); // we add the component for our measurement
             m_pModule->m_veinComponentsWithMetaAndScpi.append(pActvalue); // and for the modules interface
 
-            n++;
+            phaseNeutralValueCount++;
         }
         else {
             pActvalue = new VfModuleComponent(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
-                                                QString("ACT_DFTPP%1").arg(p+1),
+                                                QString("ACT_DFTPP%1").arg(phasePhaseValueCount+1),
                                                 QString("Actual value phase/phase / cartesian format: re,im"));
             m_veinActValueList.append(pActvalue); // we add the component for our measurement
             m_pModule->m_veinComponentsWithMetaAndScpi.append(pActvalue); // and for the modules interface
 
             pActvalue = new VfModuleComponent(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
-                                             QString("ACT_POL_DFTPP%1").arg(p+1),
+                                             QString("ACT_POL_DFTPP%1").arg(phasePhaseValueCount+1),
                                              QString("Actual value phase/phase / polar format: abs,rad[0,2π],deg[0,360]"));
             m_veinPolarValue.append(pActvalue); // we add the component for our measurement
             m_pModule->m_veinComponentsWithMetaAndScpi.append(pActvalue); // and for the modules interface
 
-            p++;
+            phasePhaseValueCount++;
         }
     }
 
@@ -135,9 +135,9 @@ void cDftModuleMeasProgram::generateVeinInterface()
 
     m_pModule->m_veinComponentsWithMetaAndScpi.append(m_pRFieldActualValue); // we add the component for the modules interface
 
-    m_pDFTPNCountInfo = new VfModuleMetaData(QString("DFTPNCount"), QVariant(n));
+    m_pDFTPNCountInfo = new VfModuleMetaData(QString("DFTPNCount"), QVariant(phaseNeutralValueCount));
     m_pModule->veinModuleMetaDataList.append(m_pDFTPNCountInfo);
-    m_pDFTPPCountInfo = new VfModuleMetaData(QString("DFTPPCount"), QVariant(p));
+    m_pDFTPPCountInfo = new VfModuleMetaData(QString("DFTPPCount"), QVariant(phasePhaseValueCount));
     m_pModule->veinModuleMetaDataList.append(m_pDFTPPCountInfo);
     m_pDFTOrderInfo = new VfModuleMetaData(QString("DFTOrder"), QVariant(getConfData()->m_nDftOrder));
     m_pModule->veinModuleMetaDataList.append(m_pDFTOrderInfo);
