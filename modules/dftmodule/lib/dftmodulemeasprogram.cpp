@@ -81,10 +81,10 @@ void cDftModuleMeasProgram::stop()
 
 void cDftModuleMeasProgram::generateVeinInterface()
 {
-    VfModuleComponent *pActvalue;
     int phaseNeutralValueCount = 0;
     int phasePhaseValueCount = 0;
     for (int i = 0; i < getConfData()->m_valueChannelList.count(); i++) {
+        VfModuleComponent *pActvalue;
         const QStringList measChannels = getConfData()->m_valueChannelList.at(i).split('-');
         // we have 1 or 2 entries for each value
         if (measChannels.count() == 1) { // in this case we have phase,neutral value
