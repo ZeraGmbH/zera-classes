@@ -138,13 +138,6 @@ void cDftModuleMeasProgram::generateVeinInterface()
         m_pRFieldActualValue->setScpiInfo("MEASURE", "RFIELD", SCPI::isCmdwP);
     }
 
-    m_pDFTPNCountInfo = new VfModuleMetaData(QString("DFTPNCount"), QVariant(phaseNeutralValueCount));
-    m_pModule->veinModuleMetaDataList.append(m_pDFTPNCountInfo);
-    m_pDFTPPCountInfo = new VfModuleMetaData(QString("DFTPPCount"), QVariant(phasePhaseValueCount));
-    m_pModule->veinModuleMetaDataList.append(m_pDFTPPCountInfo);
-    m_pDFTOrderInfo = new VfModuleMetaData(QString("DFTOrder"), QVariant(getConfData()->m_nDftOrder));
-    m_pModule->veinModuleMetaDataList.append(m_pDFTOrderInfo);
-
     QString key;
     m_pIntegrationTimeParameter = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
                                                            key = QString("PAR_Interval"),

@@ -60,9 +60,6 @@ private:
     VfModuleComponent* m_pMeasureSignal = nullptr;
     VfModuleParameter* m_pIntegrationTimeParameter = nullptr;
     VfModuleParameter* m_pRefChannelParameter = nullptr;
-    VfModuleMetaData* m_pDFTPNCountInfo = nullptr;
-    VfModuleMetaData* m_pDFTPPCountInfo = nullptr;
-    VfModuleMetaData* m_pDFTOrderInfo = nullptr;
 
     DspVarGroupClientInterface* m_pParameterDSP = nullptr;
     DspVarGroupClientInterface* m_pActualValuesDSP = nullptr;
