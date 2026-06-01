@@ -85,12 +85,12 @@ void cDftModuleMeasProgram::generateVeinInterface()
     int phaseNeutralValueCount = 0;
     int phasePhaseValueCount = 0;
     for (int i = 0; i < getConfData()->m_valueChannelList.count(); i++) {
-        QStringList sl = getConfData()->m_valueChannelList.at(i).split('-');
+        const QStringList measChannels = getConfData()->m_valueChannelList.at(i).split('-');
         // we have 1 or 2 entries for each value
-        if (sl.count() == 1) { // in this case we have phase,neutral value
+        if (measChannels.count() == 1) { // in this case we have phase,neutral value
             QString channelDescriptionCartesian;
             QString channelDescriptionPolar;
-            if(sl.contains("m0") || sl.contains("m1") || sl.contains("m2") || sl.contains("m6")) { //voltage channels
+            if(measChannels.contains("m0") || measChannels.contains("m1") || measChannels.contains("m2") || measChannels.contains("m6")) { //voltage channels
                 channelDescriptionCartesian = QString("Actual value phase/neutral / cartesian format: re,im");
                 channelDescriptionPolar = QString("Actual value phase/neutral / polar format: abs,rad[0,2π],deg[0,360]");
             }
