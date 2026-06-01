@@ -864,7 +864,6 @@
         "ACT_POL_DFTPN4": null,
         "ACT_POL_DFTPN5": null,
         "ACT_POL_DFTPN6": null,
-        "ACT_RFIELD": null,
         "EntityName": "DFTModule1",
         "INF_ModuleInterface": {
             "ComponentInfo": {
@@ -927,9 +926,6 @@
                     "ChannelName": "REF6",
                     "Description": "<skipped>",
                     "Unit": "V"
-                },
-                "ACT_RFIELD": {
-                    "Description": "<skipped>"
                 },
                 "EntityName": {
                     "Description": "<skipped>"
@@ -1016,13 +1012,6 @@
                         "REF6",
                         "8",
                         "ACT_DFTPN6",
-                        "0"
-                    ],
-                    [
-                        "MEASURE",
-                        "RFIELD",
-                        "8",
-                        "ACT_RFIELD",
                         "0"
                     ],
                     [

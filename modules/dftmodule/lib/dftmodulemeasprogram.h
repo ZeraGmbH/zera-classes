@@ -48,7 +48,6 @@ private:
     void setActualValuesNames();
     void setSCPIMeasInfo();
     void setRefChannelValidator();
-    void initRFieldMeasurement();
     bool isConfiguredForDc();
 
     cDftModule* m_pModule = nullptr;
@@ -57,7 +56,6 @@ private:
     QList<VfModuleComponent*> m_veinPolarValue;
     VfModuleComponent* m_pRFieldActualValue = nullptr;
     QHash<QString, QString> m_ChannelSystemNameHash; // a hash for fast access to the system name with key = alias
-    QList<int> m_rfieldActvalueIndexList; // an index list for access to configured actual values
 
     VfModuleComponent* m_pMeasureSignal = nullptr;
     VfModuleParameter* m_pIntegrationTimeParameter = nullptr;

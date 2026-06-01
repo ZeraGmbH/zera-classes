@@ -129,11 +129,14 @@ void cDftModuleMeasProgram::generateVeinInterface()
         }
     }
 
-    m_pRFieldActualValue = new VfModuleComponent(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
-                                                   QString("ACT_RFIELD"),
-                                                   QString("Phase sequence"));
+    if (!isConfiguredForDc()) {
+        m_pRFieldActualValue = new VfModuleComponent(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
+                                                       QString("ACT_RFIELD"),
+                                                       QString("Phase sequence"));
 
-    m_pModule->m_veinComponentsWithMetaAndScpi.append(m_pRFieldActualValue); // we add the component for the modules interface
+        m_pModule->m_veinComponentsWithMetaAndScpi.append(m_pRFieldActualValue); // we add the component for the modules interface
+        m_pRFieldActualValue->setScpiInfo("MEASURE", "RFIELD", SCPI::isCmdwP);
+    }
 
     m_pDFTPNCountInfo = new VfModuleMetaData(QString("DFTPNCount"), QVariant(phaseNeutralValueCount));
     m_pModule->veinModuleMetaDataList.append(m_pDFTPNCountInfo);
@@ -321,7 +324,6 @@ void cDftModuleMeasProgram::setSCPIMeasInfo()
             m_veinPolarValue.at(i)->setScpiInfo("MEASURE", polarChannelName, SCPI::isCmdwP);
         }
     }
-    m_pRFieldActualValue->setScpiInfo("MEASURE", "RFIELD", SCPI::isCmdwP);
 }
 
 void cDftModuleMeasProgram::setRefChannelValidator()
@@ -338,12 +340,6 @@ void cDftModuleMeasProgram::setRefChannelValidator()
         }
     }
     m_pRefChannelParameter->setValidator(new cStringValidator(channelAliases));
-}
-
-void cDftModuleMeasProgram::initRFieldMeasurement()
-{
-    for (int i = 0; i < getConfData()->m_rfieldChannelList.length(); i++)
-        m_rfieldActvalueIndexList.append(getConfData()->m_valueChannelList.indexOf(getConfData()->m_rfieldChannelList.at(i)));
 }
 
 bool cDftModuleMeasProgram::isConfiguredForDc()
@@ -378,14 +374,24 @@ void cDftModuleMeasProgram::setInterfaceActualValues(QVector<float> *actualValue
             m_veinPolarValue.at(i)->setValue(listPolar);
         }
 
-        // rfield computation
-        double angle[3];
-        for (int j = 0; j < 3; j++)
-            angle[j] = userAtan(actualValues->at(2*m_rfieldActvalueIndexList.at(j)+1), actualValues->at(2*m_rfieldActvalueIndexList.at(j)));
-        if ((angle[0] < angle[1]) && (angle[1] < angle[2]))
-            m_pRFieldActualValue->setValue("123");
-        else
-            m_pRFieldActualValue->setValue("132");
+        if (!isConfiguredForDc()) {
+            // rfield computation
+            int rfieldChannelCount = getConfData()->m_rfieldChannelList.length();
+            if (rfieldChannelCount == 3) {
+                QList<double> angles;
+                for (int rfieldChannel = 0; rfieldChannel < rfieldChannelCount; rfieldChannel++) {
+                    int rfieldChannelIdx = getConfData()->m_valueChannelList.indexOf(getConfData()->m_rfieldChannelList.at(rfieldChannel));
+                    double angle = userAtan(actualValues->at(2*rfieldChannelIdx+1), actualValues->at(2*rfieldChannelIdx));
+                    angles.append(angle);
+                }
+                if ((angles[0] < angles[1]) && (angles[1] < angles[2]))
+                    m_pRFieldActualValue->setValue("123");
+                else
+                    m_pRFieldActualValue->setValue("132");
+            }
+            else
+                qCritical("DftModule requires 3 rfield channels!");
+        }
     }
 }
 
@@ -423,7 +429,6 @@ void cDftModuleMeasProgram::activateDSPdone()
     setActualValuesNames();
     setSCPIMeasInfo();
     setRefChannelValidator();
-    initRFieldMeasurement();
 
     m_pMeasureSignal->setValue(QVariant(1));
     connect(m_pIntegrationTimeParameter, &VfModuleParameter::sigValueChanged, this, &cDftModuleMeasProgram::newIntegrationtime);

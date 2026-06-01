@@ -54,7 +54,6 @@
             1.14103,
             65.3764
         ],
-        "ACT_RFIELD": "132",
         "EntityName": "DFTModule1",
         "INF_ModuleInterface": {
             "ComponentInfo": {
@@ -117,9 +116,6 @@
                     "ChannelName": "IL3",
                     "Description": "Actual value / polar format: abs,rad[0,2π],deg[0,360]",
                     "Unit": "A"
-                },
-                "ACT_RFIELD": {
-                    "Description": "Phase sequence"
                 },
                 "EntityName": {
                     "Description": "Module's name"
@@ -206,13 +202,6 @@
                         "IL3",
                         "8",
                         "ACT_DFTPN6",
-                        "0"
-                    ],
-                    [
-                        "MEASURE",
-                        "RFIELD",
-                        "8",
-                        "ACT_RFIELD",
                         "0"
                     ],
                     [
