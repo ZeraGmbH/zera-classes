@@ -49,7 +49,7 @@ private:
     void setSCPIMeasInfo();
     void setRefChannelValidator();
     void initRFieldMeasurement();
-    bool isConfiguredForDcRef();
+    bool isConfiguredForDc();
 
     cDftModule* m_pModule;
     ActualValueStartStopHandler m_startStopHandler;
