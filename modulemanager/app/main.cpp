@@ -154,7 +154,7 @@ int main(int argc, char *argv[])
 
     ModulemanagerConfig* mmConfig = ModulemanagerConfig::getInstance();
     QString configFileName = mmConfig->getConfigFileNameFull();
-    qInfo() << "Moduleamanger configuration file:" << configFileName;
+    qInfo() << "Modulemanager configuration file:" << configFileName;
     if(!mmConfig->isValid()) {
         fprintf(stderr, "Error loading config file from path: %s", qPrintable(configFileName));
         return -ENOENT;
