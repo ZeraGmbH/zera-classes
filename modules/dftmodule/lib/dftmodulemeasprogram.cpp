@@ -340,6 +340,27 @@ bool cDftModuleMeasProgram::isConfiguredForDc()
     return getConfData()->m_nDftOrder == 0;
 }
 
+void cDftModuleMeasProgram::calcPhaseSequence(const QVector<float> *actualValues)
+{
+    if (!isConfiguredForDc()) {
+        int rfieldChannelCount = getConfData()->m_rfieldChannelList.length();
+        if (rfieldChannelCount == 3) {
+            QList<double> angles;
+            for (int rfieldChannel = 0; rfieldChannel < rfieldChannelCount; rfieldChannel++) {
+                int rfieldChannelIdx = getConfData()->m_valueChannelList.indexOf(getConfData()->m_rfieldChannelList.at(rfieldChannel));
+                double angle = userAtan(actualValues->at(2*rfieldChannelIdx+1), actualValues->at(2*rfieldChannelIdx));
+                angles.append(angle);
+            }
+            if ((angles[0] < angles[1]) && (angles[1] < angles[2]))
+                m_pRFieldActualValue->setValue("123");
+            else
+                m_pRFieldActualValue->setValue("132");
+        }
+        else
+            qCritical("DftModule requires 3 rfield channels!");
+    }
+}
+
 void cDftModuleMeasProgram::setInterfaceActualValues(QVector<float> *actualValues)
 {
     if (m_bActive) { // maybe we are deactivating !!!!
@@ -367,24 +388,7 @@ void cDftModuleMeasProgram::setInterfaceActualValues(QVector<float> *actualValue
             m_veinPolarValue.at(i)->setValue(listPolar);
         }
 
-        if (!isConfiguredForDc()) {
-            // rfield computation
-            int rfieldChannelCount = getConfData()->m_rfieldChannelList.length();
-            if (rfieldChannelCount == 3) {
-                QList<double> angles;
-                for (int rfieldChannel = 0; rfieldChannel < rfieldChannelCount; rfieldChannel++) {
-                    int rfieldChannelIdx = getConfData()->m_valueChannelList.indexOf(getConfData()->m_rfieldChannelList.at(rfieldChannel));
-                    double angle = userAtan(actualValues->at(2*rfieldChannelIdx+1), actualValues->at(2*rfieldChannelIdx));
-                    angles.append(angle);
-                }
-                if ((angles[0] < angles[1]) && (angles[1] < angles[2]))
-                    m_pRFieldActualValue->setValue("123");
-                else
-                    m_pRFieldActualValue->setValue("132");
-            }
-            else
-                qCritical("DftModule requires 3 rfield channels!");
-        }
+        calcPhaseSequence(actualValues);
     }
 }
 

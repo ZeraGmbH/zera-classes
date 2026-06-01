@@ -49,6 +49,7 @@ private:
     void setSCPIMeasInfo();
     void setRefChannelValidator();
     bool isConfiguredForDc();
+    void calcPhaseSequence(const QVector<float> *actualValues);
 
     cDftModule* m_pModule = nullptr;
     ActualValueStartStopHandler m_startStopHandler;
