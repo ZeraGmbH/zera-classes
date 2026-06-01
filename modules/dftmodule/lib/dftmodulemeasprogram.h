@@ -51,23 +51,23 @@ private:
     void initRFieldMeasurement();
     bool isConfiguredForDc();
 
-    cDftModule* m_pModule;
+    cDftModule* m_pModule = nullptr;
     ActualValueStartStopHandler m_startStopHandler;
     QList<VfModuleComponent*> m_veinActValueList; // the list of actual values we work on
     QList<VfModuleComponent*> m_veinPolarValue;
-    VfModuleComponent* m_pRFieldActualValue;
+    VfModuleComponent* m_pRFieldActualValue = nullptr;
     QHash<QString, QString> m_ChannelSystemNameHash; // a hash for fast access to the system name with key = alias
     QList<int> m_rfieldActvalueIndexList; // an index list for access to configured actual values
 
-    VfModuleComponent* m_pMeasureSignal;
-    VfModuleParameter* m_pIntegrationTimeParameter;
-    VfModuleParameter* m_pRefChannelParameter;
-    VfModuleMetaData* m_pDFTPNCountInfo;
-    VfModuleMetaData* m_pDFTPPCountInfo;
-    VfModuleMetaData* m_pDFTOrderInfo;
+    VfModuleComponent* m_pMeasureSignal = nullptr;
+    VfModuleParameter* m_pIntegrationTimeParameter = nullptr;
+    VfModuleParameter* m_pRefChannelParameter = nullptr;
+    VfModuleMetaData* m_pDFTPNCountInfo = nullptr;
+    VfModuleMetaData* m_pDFTPPCountInfo = nullptr;
+    VfModuleMetaData* m_pDFTOrderInfo = nullptr;
 
-    DspVarGroupClientInterface* m_pParameterDSP;
-    DspVarGroupClientInterface* m_pActualValuesDSP;
+    DspVarGroupClientInterface* m_pParameterDSP = nullptr;
+    DspVarGroupClientInterface* m_pActualValuesDSP = nullptr;
 
     // statemachine for activating gets the following states
     QState m_dspserverConnectState;
