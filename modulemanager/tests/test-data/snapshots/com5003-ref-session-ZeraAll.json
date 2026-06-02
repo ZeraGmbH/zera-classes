@@ -1,7 +1,7 @@
 {
     "0": {
         "DevMode": 0,
-        "Entities": "0;2;1000;1001;1020;1050;1070;1130;1150;1400;1500;9000;9999",
+        "Entities": "0;2;1000;1001;1020;1050;1070;1130;1150;1190;1400;1500;9000;9999",
         "ModulesPaused": 0,
         "Session": "com5003-ref-session.json",
         "SessionsAvailable": "com5003-meas-session.json;com5003-ced-session.json;com5003-ref-session.json;com5003-perphase-session.json",
@@ -169,6 +169,21 @@
         "INF_ReleaseNr": "",
         "INF_Schnubbel": 0,
         "PAR_SerialNr": "Unknown"
+    },
+    "1190": {
+        "PAR_AdjustAmplitude": "",
+        "PAR_AdjustAmplitudeDc": "",
+        "PAR_AdjustCLAMPData": "",
+        "PAR_AdjustGainStatus": 0,
+        "PAR_AdjustInit": "",
+        "PAR_AdjustOffsetStatus": 0,
+        "PAR_AdjustPCBData": "",
+        "PAR_AdjustPhase": "",
+        "PAR_AdjustPhaseStatus": 0,
+        "PAR_AdjustSend": "",
+        "PAR_Adjustoffset": "",
+        "PAR_Computation": 0,
+        "PAR_Storage": 0
     },
     "1400": {
         "ACT_AirPressure": "",

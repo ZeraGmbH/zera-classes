@@ -98,7 +98,7 @@ void cAdjustmentModuleMeasProgram::deactivate()
     emit deactivated();
 }
 
-cAdjustmentModuleConfigData *cAdjustmentModuleMeasProgram::getConfData()
+cAdjustmentModuleConfigData *cAdjustmentModuleMeasProgram::getConfData() const
 {
     return qobject_cast<cAdjustmentModuleConfiguration*>(m_pConfiguration.get())->getConfigurationData();
 }
@@ -195,6 +195,18 @@ void cAdjustmentModuleMeasProgram::onNewRanges()
     setInterfaceValidation();
 }
 
+QStringList cAdjustmentModuleMeasProgram::getChannelRanges(const QString &channelMName, ChannelRangesAllowed rangesAllowed) const
+{
+    ChannelRangeObserver::ChannelPtr channel = m_observer->getChannel(channelMName);
+    QStringList ranges = channel->getAvailRangeNames();
+    if (rangesAllowed == ADJUSTABLE_RANGES_ONLY) {
+        const QStringList &rangesDenied = getConfData()->m_AdjChannelInfoHash[channelMName]->rangeAdjInfo.m_rangesNotAdjustable;
+        for (const QString &rangeDenied : rangesDenied)
+            ranges.removeAll(rangeDenied);
+    }
+    return ranges;
+}
+
 void cAdjustmentModuleMeasProgram::setInterfaceValidation()
 {
     // we must set the validators for the adjustment commands now
@@ -206,19 +218,19 @@ void cAdjustmentModuleMeasProgram::setInterfaceValidation()
     for (int i = 0; i < getConfData()->m_nAdjustmentChannelCount; i++) {
         QString channelMName = getConfData()->m_AdjChannelList.at(i);
         if (getConfData()->m_AdjChannelInfoHash[channelMName]->rmsAdjInfo.m_bAvail) {
-            ChannelRangeObserver::ChannelPtr channel = m_observer->getChannel(channelMName);
-            adjValidator->addValidator(channel->getAlias(), channel->getAvailRangeNames(), cDoubleValidator(0, 2000, 1e-7));
+            const QString &channelAlias = m_observer->getChannel(channelMName)->getAlias();
+            adjValidator->addValidator(channelAlias, getChannelRanges(channelMName, ADJUSTABLE_RANGES_ONLY), cDoubleValidator(0, 2000, 1e-7));
         }
     }
     m_pPARAdjustAmplitude->setValidator(adjValidator);
 
-    // validator for dc-gain adjustment
+    // validator for dc-gain adjustment (with +/-)
     adjValidator = new cAdjustValidator3d(this);
     for (int i = 0; i < getConfData()->m_nAdjustmentChannelCount; i++) {
         QString channelMName = getConfData()->m_AdjChannelList.at(i);
         if (getConfData()->m_AdjChannelInfoHash[channelMName]->dcAdjInfo.m_bAvail) {
-            ChannelRangeObserver::ChannelPtr channel = m_observer->getChannel(channelMName);
-            adjValidator->addValidator(channel->getAlias(), channel->getAvailRangeNames(), cDoubleValidator(-2000, 2000, 1e-7));
+            const QString &channelAlias = m_observer->getChannel(channelMName)->getAlias();
+            adjValidator->addValidator(channelAlias, getChannelRanges(channelMName, ADJUSTABLE_RANGES_ONLY), cDoubleValidator(-2000, 2000, 1e-7));
         }
     }
     m_pPARAdjustAmplitudeDc->setValidator(adjValidator);
@@ -228,8 +240,8 @@ void cAdjustmentModuleMeasProgram::setInterfaceValidation()
     for (int i = 0; i < getConfData()->m_nAdjustmentChannelCount; i++) {
         QString channelMName = getConfData()->m_AdjChannelList.at(i);
         if (getConfData()->m_AdjChannelInfoHash[channelMName]->dcAdjInfo.m_bAvail) {
-            ChannelRangeObserver::ChannelPtr channel = m_observer->getChannel(channelMName);
-            adjValidator->addValidator(channel->getAlias(), channel->getAvailRangeNames(), cDoubleValidator(-2000, 2000, 1e-7));
+            const QString &channelAlias = m_observer->getChannel(channelMName)->getAlias();
+            adjValidator->addValidator(channelAlias, getChannelRanges(channelMName, ADJUSTABLE_RANGES_ONLY), cDoubleValidator(-2000, 2000, 1e-7));
         }
     }
     m_pPARAdjustOffset->setValidator(adjValidator);
@@ -239,40 +251,36 @@ void cAdjustmentModuleMeasProgram::setInterfaceValidation()
     for (int i = 0; i < getConfData()->m_nAdjustmentChannelCount; i++) {
         QString channelMName = getConfData()->m_AdjChannelList.at(i);
         if (getConfData()->m_AdjChannelInfoHash[channelMName]->phaseAdjInfo.m_bAvail) {
-            ChannelRangeObserver::ChannelPtr channel = m_observer->getChannel(channelMName);
-            adjValidator->addValidator(channel->getAlias(), channel->getAvailRangeNames(), cDoubleValidator(-360.0, 360.0, 1e-7));
+            const QString &channelAlias = m_observer->getChannel(channelMName)->getAlias();
+            adjValidator->addValidator(channelAlias, getChannelRanges(channelMName, ADJUSTABLE_RANGES_ONLY), cDoubleValidator(-360.0, 360.0, 1e-7));
         }
     }
     m_pPARAdjustPhase->setValidator(adjValidator);
 
-    // validator for adjustment status setting
-    cAdjustValidator3i* adjValidatori = new cAdjustValidator3i(this);
+    // validators for adjustment status setting (gain/offset/phase)
+    cAdjustValidator3i adjStatusCommonValidator(this);
     for (int i = 0; i < getConfData()->m_nAdjustmentChannelCount; i++) {
-        QString channelMName = getConfData()->m_AdjChannelList.at(i);
-        ChannelRangeObserver::ChannelPtr channel = m_observer->getChannel(channelMName);
-        adjValidatori->addValidator(channel->getAlias(), channel->getAvailRangeNames(), cIntValidator(0, 255));
+        const QString &channelMName = getConfData()->m_AdjChannelList.at(i);
+        const QString &channelAlias = m_observer->getChannel(channelMName)->getAlias();
+        adjStatusCommonValidator.addValidator(channelAlias, getChannelRanges(channelMName, ALL_RANGES), cIntValidator(0, 255));
     }
-    m_pPARAdjustGainStatus->setValidator(adjValidatori);
-    adjValidatori = new cAdjustValidator3i(*adjValidatori);
-    m_pPARAdjustPhaseStatus->setValidator(adjValidatori);
-    adjValidatori = new cAdjustValidator3i(*adjValidatori);
-    m_pPARAdjustOffsetStatus->setValidator(adjValidatori);
+    m_pPARAdjustGainStatus->setValidator(new cAdjustValidator3i(adjStatusCommonValidator));
+    m_pPARAdjustPhaseStatus->setValidator(new cAdjustValidator3i(adjStatusCommonValidator));
+    m_pPARAdjustOffsetStatus->setValidator(new cAdjustValidator3i(adjStatusCommonValidator));
 
+    // validator for adjustment init
     cAdjustValidator2* adjInitValidator = new cAdjustValidator2(this);
     for (int i = 0; i < getConfData()->m_nAdjustmentChannelCount; i++) {
-        QString channelMName = getConfData()->m_AdjChannelList.at(i);
-        ChannelRangeObserver::ChannelPtr channel = m_observer->getChannel(channelMName);
-        adjInitValidator->addValidator(channel->getAlias(), channel->getAvailRangeNames());
+        const QString &channelMName = getConfData()->m_AdjChannelList.at(i);
+        const QString &channelAlias = m_observer->getChannel(channelMName)->getAlias();
+        adjInitValidator->addValidator(channelAlias, getChannelRanges(channelMName, ALL_RANGES));
     }
     m_pPARAdjustInit->setValidator(adjInitValidator);
 
-    // we accept every thing here and test command when we work on it
-    cAdjustValidatorFine* adjValidatorFine = new cAdjustValidatorFine();
-    m_pPARAdjustSend->setValidator(adjValidatorFine);
-    adjValidatorFine = new cAdjustValidatorFine();
-    m_pPARAdjustPCBData->setValidator(adjValidatorFine);
-    adjValidatorFine = new cAdjustValidatorFine();
-    m_pPARAdjustClampData->setValidator(adjValidatorFine);
+    // we accept all here and test during command execution
+    m_pPARAdjustSend->setValidator(new cAdjustValidatorFine());
+    m_pPARAdjustPCBData->setValidator(new cAdjustValidatorFine());
+    m_pPARAdjustClampData->setValidator(new cAdjustValidatorFine());
 }
 
 void cAdjustmentModuleMeasProgram::generateVeinInterface()

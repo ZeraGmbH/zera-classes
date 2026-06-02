@@ -106,8 +106,13 @@ private slots:
 
     void catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant answer);
 private:
-    cAdjustmentModuleConfigData* getConfData();
+    cAdjustmentModuleConfigData* getConfData() const;
     bool checkExternalVeinComponents();
+    enum ChannelRangesAllowed {
+        ALL_RANGES,
+        ADJUSTABLE_RANGES_ONLY
+    };
+    QStringList getChannelRanges(const QString &channelMName, ChannelRangesAllowed rangesAllowed) const;
     void setInterfaceValidation();
     bool setAdjustEnvironment(VfModuleParameter* veinParam, QVariant paramValue,const QString &errorInfo);
     double cmpPhase(QVariant var);

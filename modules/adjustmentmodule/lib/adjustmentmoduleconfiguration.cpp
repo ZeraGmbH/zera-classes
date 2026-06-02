@@ -38,7 +38,7 @@ enum moduleconfigstate
 
     setChn1RangeInfoEntity = setChn1OffsInfoComponent + 32,
     setChn1RangeInfoComponent = setChn1RangeInfoEntity + 32,
-    setChn1RangeInfoRangesDenied = setChn1RangeInfoComponent + 32,
+    setChn1RangeInfoRangesNotAdjustable = setChn1RangeInfoComponent + 32,
 };
 
 void cAdjustmentModuleConfiguration::setConfiguration(const QByteArray& xmlString)
@@ -122,7 +122,7 @@ void cAdjustmentModuleConfiguration::configXMLInfo(const QString &key)
 
                 m_ConfigXMLMap[QString("adjmodconfpar:configuration:adjustment:channel:chn%1:rangeinfo:entity").arg(i+1)] = setChn1RangeInfoEntity + i;
                 m_ConfigXMLMap[QString("adjmodconfpar:configuration:adjustment:channel:chn%1:rangeinfo:component").arg(i+1)] = setChn1RangeInfoComponent + i;
-                m_ConfigXMLMap[QString("adjmodconfpar:configuration:adjustment:channel:chn%1:rangeinfo:rangesdenied").arg(i+1)] = setChn1RangeInfoRangesDenied + i;
+                m_ConfigXMLMap[QString("adjmodconfpar:configuration:adjustment:channel:chn%1:rangeinfo:ranges_not_adjustable").arg(i+1)] = setChn1RangeInfoRangesNotAdjustable + i;
 
             }
 
@@ -206,11 +206,11 @@ void cAdjustmentModuleConfiguration::configXMLInfo(const QString &key)
                 cAdjChannelInfo* adjChannelInfo = m_pAdjustmentModulConfigData->m_AdjChannelInfoHash[chn];
                 adjChannelInfo->rangeAdjInfo.m_sComponent = m_pXMLReader->getValue(key);
             }
-            else if ((cmd >= setChn1RangeInfoRangesDenied) && (cmd < setChn1RangeInfoRangesDenied + 32)) {
-                cmd -= setChn1RangeInfoRangesDenied;
+            else if ((cmd >= setChn1RangeInfoRangesNotAdjustable) && (cmd < setChn1RangeInfoRangesNotAdjustable + 32)) {
+                cmd -= setChn1RangeInfoRangesNotAdjustable;
                 QString chn = m_pAdjustmentModulConfigData->m_AdjChannelList.at(cmd);
                 cAdjChannelInfo* adjChannelInfo = m_pAdjustmentModulConfigData->m_AdjChannelInfoHash[chn];
-                adjChannelInfo->rangeAdjInfo.m_rangesDenied = m_pXMLReader->getValue(key).split(",", Qt::SkipEmptyParts);
+                adjChannelInfo->rangeAdjInfo.m_rangesNotAdjustable = m_pXMLReader->getValue(key).split(",", Qt::SkipEmptyParts);
             }
         }
         m_bConfigError |= !ok;

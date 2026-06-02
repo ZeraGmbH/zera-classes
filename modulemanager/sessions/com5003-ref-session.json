@@ -36,6 +36,11 @@
         "id": 1130
       },
       {
+        "name" : "adjustmentmodule",
+        "configFile" : "com5003-adjustmentmoduleREF.xml",
+        "id": 1190
+      },
+      {
         "name" : "blemodule",
         "configFile" : "blemodule.xml",
         "id": 1400,
