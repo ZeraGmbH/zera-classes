@@ -29,6 +29,7 @@ void test_adj_module_lem_offset_sequences::cleanupTestCase()
 void test_adj_module_lem_offset_sequences::init()
 {
     setLogFileName(QTest::currentTestFunction(), QTest::currentDataTag());
+    QCOMPARE(clearScpiStatus(), "+0");
 }
 
 void test_adj_module_lem_offset_sequences::cleanup()
