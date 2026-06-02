@@ -47,8 +47,6 @@ private:
     void dataAcquisitionDSP();
     void dataReadDSP();
     quint16 calcFftResultLenHalf(quint8 fftOrder);
-    void setSCPIMeasInfo();
-    void setActualValuesNames();
 
     cFftModule* m_pModule = nullptr;
     ActualValueStartStopHandler m_startStopHandler;

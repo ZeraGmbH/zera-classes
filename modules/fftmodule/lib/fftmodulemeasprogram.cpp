@@ -2,6 +2,7 @@
 #include "fftmoduleconfiguration.h"
 #include "servicechannelnamehelper.h"
 #include "taskdspdataacquisition.h"
+#include "vfmodulecomponentcreator.h"
 #include <errormessages.h>
 #include <reply.h>
 #include <proxy.h>
@@ -76,23 +77,33 @@ void cFftModuleMeasProgram::stop()
 
 void cFftModuleMeasProgram::generateVeinInterface()
 {
-    int n = getConfData()->m_valueChannelList.count();
-    for (int i = 0; i < n; i++) {
-        VfModuleComponent *pActvalue;
-        pActvalue = new VfModuleComponent(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
-                                          QString("ACT_FFT%1").arg(i+1),
-                                          QString("FFT actual values"));
-        m_veinActValueList.append(pActvalue); // we add the component for our measurement
-        m_pModule->m_veinComponentsWithMetaAndScpi.append(pActvalue); // and for the modules interface
+    ChannelRangeObserver::SystemObserverPtr observer = m_pModule->getSharedChannelRangeObserver();
+    int channelCount = getConfData()->m_valueChannelList.count();
+    VfModuleComponentCreator componentCreator(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem());
+    for (int i = 0; i < channelCount; i++) {
+        const QString &channelMNamesEntry = getConfData()->m_valueChannelList.at(i);
+        ServiceChannelNameHelper::TChannelAliasUnit aliasUnit =
+            ServiceChannelNameHelper::getChannelAndUnit(channelMNamesEntry, observer);
+        const QString &channelName = aliasUnit.m_channelAlias;
+        const QString &channelUnit = aliasUnit.m_channelUnit;
 
-        pActvalue = new VfModuleComponent(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
-                                          QString("ACT_DC%1").arg(i+1),
-                                          QString("DC actual value"));
+        VfModuleComponent *pActvalue;
+        pActvalue = componentCreator.createComponent(QString("ACT_FFT%1").arg(i+1),
+                                                     "FFT actual values",
+                                                     channelName, channelUnit,
+                                                     "MEASURE", channelName, SCPI::isCmdwP);
+        m_veinActValueList.append(pActvalue);
+        m_pModule->m_veinComponentsWithMetaAndScpi.append(pActvalue);
+
+        pActvalue = componentCreator.createComponent(QString("ACT_DC%1").arg(i+1),
+                                                     "DC actual value",
+                                                     channelName, channelUnit,
+                                                     "MEASURE", channelName + "_DC", SCPI::isCmdwP);
         m_DCValueList.append(pActvalue);
         m_pModule->m_veinComponentsWithMetaAndScpi.append(pActvalue);
     }
 
-    m_pFFTCountInfo = new VfModuleMetaData(QString("FFTCount"), QVariant(n));
+    m_pFFTCountInfo = new VfModuleMetaData(QString("FFTCount"), QVariant(channelCount));
     m_pModule->veinModuleMetaDataList.append(m_pFFTCountInfo);
     m_pFFTOrderInfo = new VfModuleMetaData(QString("FFTOrder"), QVariant(getConfData()->m_nFftOrder));
     m_pModule->veinModuleMetaDataList.append(m_pFFTOrderInfo);
@@ -107,7 +118,6 @@ void cFftModuleMeasProgram::generateVeinInterface()
     m_pIntegrationTimeParameter->setValidator(new cDoubleValidator(1.0, 100.0, 0.5));
     m_pModule->m_veinModuleParameterMap[key] = m_pIntegrationTimeParameter; // for modules use
 
-
     QString refChannelMNameConfigured = getConfData()->m_RefChannel.m_sPar;
     const QString channelMarkdown = m_pModule->getSharedChannelRangeObserver()->getChannelNamesForMardownDoc();
     m_pRefChannelParameter = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
@@ -115,11 +125,7 @@ void cFftModuleMeasProgram::generateVeinInterface()
                                                    QString("Reference channel\n"
                                                            "%1").arg(channelMarkdown),
                                                    refChannelMNameConfigured);
-
-    cStringValidator *sValidator;
-    sValidator = new cStringValidator(getConfData()->m_valueChannelList);
-    m_pRefChannelParameter->setValidator(sValidator);
-
+    m_pRefChannelParameter->setValidator(new cStringValidator(getConfData()->m_valueChannelList));
     m_pRefChannelParameter->setScpiInfo("CONFIGURATION","REFCHANNEL", SCPI::isQuery|SCPI::isCmdwP);
     m_pModule->m_veinModuleParameterMap[key] = m_pRefChannelParameter; // for modules use
 
@@ -127,7 +133,6 @@ void cFftModuleMeasProgram::generateVeinInterface()
                                                 QString("SIG_Measuring"),
                                                 QString("Signal indicating measurement activity"),
                                                 QVariant(0));
-
     m_pModule->m_veinComponentsWithMetaAndScpi.append(m_pMeasureSignal);
 }
 
@@ -284,29 +289,6 @@ cFftModuleConfigData *cFftModuleMeasProgram::getConfData()
     return qobject_cast<cFftModuleConfiguration*>(m_pConfiguration.get())->getConfigurationData();
 }
 
-void cFftModuleMeasProgram::setSCPIMeasInfo()
-{
-    for (int i = 0; i < getConfData()->m_valueChannelList.count(); i++) {
-        m_veinActValueList.at(i)->setScpiInfo("MEASURE", m_veinActValueList.at(i)->getChannelName(), SCPI::isCmdwP);
-        m_DCValueList.at(i)->setScpiInfo("MEASURE", m_DCValueList.at(i)->getChannelName() + "_DC", SCPI::isCmdwP);
-    }
-}
-
-void cFftModuleMeasProgram::setActualValuesNames()
-{
-    ChannelRangeObserver::SystemObserverPtr observer = m_pModule->getSharedChannelRangeObserver();
-    const QStringList &channelList = getConfData()->m_valueChannelList;
-    for(int i = 0; i < channelList.count(); i++) {
-        const QString &channelMNamesEntry = getConfData()->m_valueChannelList.at(i);
-        ServiceChannelNameHelper::TChannelAliasUnit aliasUnit =
-            ServiceChannelNameHelper::getChannelAndUnit(channelMNamesEntry, observer);
-        m_veinActValueList.at(i)->setChannelName(aliasUnit.m_channelAlias);
-        m_veinActValueList.at(i)->setUnit(aliasUnit.m_channelUnit);
-        m_DCValueList.at(i)->setChannelName(aliasUnit.m_channelAlias);
-        m_DCValueList.at(i)->setUnit(aliasUnit.m_channelUnit);
-    }
-}
-
 void cFftModuleMeasProgram::setInterfaceActualValues(QVector<float> *actualValues)
 {
     if (m_bActive) { // maybe we are deactivating !!!!
@@ -356,10 +338,6 @@ void cFftModuleMeasProgram::activateDSP()
 void cFftModuleMeasProgram::activateDSPdone()
 {
     m_bActive = true;
-
-    setActualValuesNames();
-    setSCPIMeasInfo();
-
     m_pMeasureSignal->setValue(QVariant(1));
     connect(m_pIntegrationTimeParameter, &VfModuleParameter::sigValueChanged, this, &cFftModuleMeasProgram::newIntegrationtime);
     connect(m_pRefChannelParameter, &VfModuleParameter::sigValueChanged, this, &cFftModuleMeasProgram::newRefChannel);
