@@ -43,8 +43,6 @@ private:
     void setDspCmdList();
     void dataAcquisitionDSP();
     void dataReadDSP();
-    void setActualValuesNames();
-    void setSCPIMeasInfo();
 
     cRmsModule* m_pModule = nullptr;
     ActualValueStartStopHandler m_startStopHandler;

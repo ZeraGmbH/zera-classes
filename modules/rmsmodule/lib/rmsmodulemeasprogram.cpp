@@ -3,6 +3,7 @@
 #include "rmsmoduleconfiguration.h"
 #include "servicechannelnamehelper.h"
 #include "taskdspdataacquisition.h"
+#include "vfmodulecomponentcreator.h"
 #include <errormessages.h>
 #include <reply.h>
 #include <proxy.h>
@@ -76,42 +77,50 @@ void cRmsModuleMeasProgram::stop()
 void cRmsModuleMeasProgram::generateVeinInterface()
 {
     VfModuleComponent *pActvalue;
-    int n,p;
-    n = p = 0; //
-    QString channelDescription;
+    int phaseNeutralValueCount = 0;
+    int phasePhaseValueCount = 0;
+    ChannelRangeObserver::SystemObserverPtr observer = m_pModule->getSharedChannelRangeObserver();
+    VfModuleComponentCreator componentCreator(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem());
     for (int i = 0; i < getConfData()->m_valueChannelList.count(); i++) {
-        QStringList sl = getConfData()->m_valueChannelList.at(i).split('-');
+        const QString &channelMNamesEntry = getConfData()->m_valueChannelList.at(i);
+        const QStringList measChannels = channelMNamesEntry.split('-');
+        ServiceChannelNameHelper::TChannelAliasUnit aliasUnit =
+            ServiceChannelNameHelper::getChannelAndUnit(channelMNamesEntry, observer);
+        const QString &channelName = aliasUnit.m_channelAlias;
+        const QString &channelUnit = aliasUnit.m_channelUnit;
         // we have 1 or 2 entries for each value
-        if (sl.count() == 1) { // in this case we have phase,neutral value
-            if(sl.contains("m0") || sl.contains("m1") || sl.contains("m2") || sl.contains("m6")) //voltage channels
+        if (measChannels.count() == 1) { // in this case we have phase,neutral value
+            QString channelDescription;
+            if(measChannels.contains("m0") || measChannels.contains("m1") || measChannels.contains("m2") || measChannels.contains("m6")) //voltage channels
                 channelDescription = QString("Actual rms value phase/neutral");
             else //current channels
                 channelDescription = QString("Actual rms value");
-            pActvalue = new VfModuleComponent(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
-                                             QString("ACT_RMSPN%1").arg(n+1),
-                                             channelDescription);
-            m_veinActValueList.append(pActvalue); // we add the component for our measurement
-            m_pModule->m_veinComponentsWithMetaAndScpi.append(pActvalue); // and for the modules interface
-            n++;
+            pActvalue = componentCreator.createComponent(QString("ACT_RMSPN%1").arg(phaseNeutralValueCount+1),
+                                                         channelDescription,
+                                                         channelName, channelUnit,
+                                                         "MEASURE", channelName, SCPI::isCmdwP);
+            m_veinActValueList.append(pActvalue);
+            m_pModule->m_veinComponentsWithMetaAndScpi.append(pActvalue);
+            phaseNeutralValueCount++;
         }
         else {
-            pActvalue = new VfModuleComponent(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
-                                                QString("ACT_RMSPP%1").arg(p+1),
-                                                QString("Actual rms value phase/phase"));
+            pActvalue = componentCreator.createComponent(QString("ACT_RMSPP%1").arg(phasePhaseValueCount+1),
+                                                         "Actual rms value phase/phase",
+                                                         channelName, channelUnit,
+                                                         "MEASURE", channelName, SCPI::isCmdwP);
             m_veinActValueList.append(pActvalue); // we add the component for our measurement
             m_pModule->m_veinComponentsWithMetaAndScpi.append(pActvalue); // and for the modules interface
-            p++;
+            phasePhaseValueCount++;
         }
     }
 
-    m_pRMSPNCountInfo = new VfModuleMetaData(QString("RMSPNCount"), QVariant(n));
+    m_pRMSPNCountInfo = new VfModuleMetaData(QString("RMSPNCount"), QVariant(phaseNeutralValueCount));
     m_pModule->veinModuleMetaDataList.append(m_pRMSPNCountInfo);
-    m_pRMSPPCountInfo = new VfModuleMetaData(QString("RMSPPCount"), QVariant(p));
+    m_pRMSPPCountInfo = new VfModuleMetaData(QString("RMSPPCount"), QVariant(phasePhaseValueCount));
     m_pModule->veinModuleMetaDataList.append(m_pRMSPPCountInfo);
 
     QVariant val;
     QString intervalDescription, unit;
-
     bool timeIntegration = (getConfData()->m_sIntegrationMode == "time");
     if (timeIntegration) {
         val = QVariant(getConfData()->m_fMeasIntervalTime.m_fValue);
@@ -294,25 +303,6 @@ cRmsModuleConfigData *cRmsModuleMeasProgram::getConfData()
     return qobject_cast<cRmsModuleConfiguration*>(m_pConfiguration.get())->getConfigurationData();
 }
 
-void cRmsModuleMeasProgram::setActualValuesNames()
-{
-    ChannelRangeObserver::SystemObserverPtr observer = m_pModule->getSharedChannelRangeObserver();
-    const QStringList &channelList = getConfData()->m_valueChannelList;
-    for(int i = 0; i < channelList.count(); i++) {
-        const QString &channelMNamesEntry = getConfData()->m_valueChannelList.at(i);
-        ServiceChannelNameHelper::TChannelAliasUnit aliasUnit =
-            ServiceChannelNameHelper::getChannelAndUnit(channelMNamesEntry, observer);
-        m_veinActValueList.at(i)->setChannelName(aliasUnit.m_channelAlias);
-        m_veinActValueList.at(i)->setUnit(aliasUnit.m_channelUnit);
-    }
-}
-
-void cRmsModuleMeasProgram::setSCPIMeasInfo()
-{
-    for (int i = 0; i < getConfData()->m_valueChannelList.count(); i++)
-        m_veinActValueList.at(i)->setScpiInfo("MEASURE", m_veinActValueList.at(i)->getChannelName(), SCPI::isCmdwP);
-}
-
 void cRmsModuleMeasProgram::setInterfaceActualValues(QVector<float> *actualValues)
 {
     if (m_bActive) { // maybe we are deactivating !!!!
@@ -351,16 +341,11 @@ void cRmsModuleMeasProgram::activateDSP()
 void cRmsModuleMeasProgram::activateDSPdone()
 {
     m_bActive = true;
-
-    setActualValuesNames();
-    setSCPIMeasInfo();
-
     m_pMeasureSignal->setValue(QVariant(1));
     if (getConfData()->m_sIntegrationMode == "time")
         connect(m_pIntegrationParameter, &VfModuleComponent::sigValueChanged, this, &cRmsModuleMeasProgram::newIntegrationtime);
     else
         connect(m_pIntegrationParameter, &VfModuleComponent::sigValueChanged, this, &cRmsModuleMeasProgram::newIntegrationPeriod);
-
     emit activated();
 }
 
