@@ -2,9 +2,9 @@
 #define ADJUSTMENTMODULEMEASPROGRAM_H
 
 #include "adjustmentmoduleconfigdata.h"
-#include "adjustmentmodulecommon.h"
-#include "adjustmentmoduleactivator.h"
 #include "basemeasworkprogram.h"
+#include "cro_systemobserver.h"
+#include "pcbserviceconnection.h"
 #include "taskcontainerparallel.h"
 #include "vfmoduleparameterdeferredquery.h"
 #include <QObject>
@@ -72,7 +72,6 @@ public slots:
 
 private slots:
     void onActivationReady();
-    void onDeactivationReady();
     void onNewRanges();
 
     void computationStartCommand(QVariant var);
@@ -117,7 +116,8 @@ private:
     double calcAdjAbsoluteErrorNeg();
     bool checkRangeIsWanted(QString adjType);
 
-    cAdjustmentModule* m_pModule;
+    cAdjustmentModule* m_pModule = nullptr;
+    PcbServiceConnection m_pcbConnection;
     // we use the following 7 parameters globally defined for easier
     // use within statemachines ... we have to keep in mind that adjustment
     // commands can only be used in sequence not in parallel
@@ -133,10 +133,10 @@ private:
         double m_AdjustCorrection = 0.0;
     } m_currEnv;
 
-    AdjustmentModuleCommonPtr m_commonObjects;
-    AdjustmentModuleActivator m_activator;
+    ChannelRangeObserver::SystemObserverPtr m_observer;
     QHash<quint32, int> m_MsgNrCmdList;
     QHash<QString, cAdjustIterators*> m_adjustIteratorHash;
+    TaskTemplatePtr m_currentTask;
 
     VfModuleParameter* m_pPARComputation = nullptr;
     VfModuleParameter* m_pPARStorage = nullptr;
