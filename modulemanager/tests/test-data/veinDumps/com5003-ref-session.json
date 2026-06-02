@@ -852,21 +852,51 @@
         "SIG_Ranging": 0
     },
     "1050": {
+        "ACT_DC1": null,
+        "ACT_DC2": null,
+        "ACT_DC3": null,
+        "ACT_DC4": null,
+        "ACT_DC5": null,
+        "ACT_DC6": null,
         "ACT_DFTPN1": null,
         "ACT_DFTPN2": null,
         "ACT_DFTPN3": null,
         "ACT_DFTPN4": null,
         "ACT_DFTPN5": null,
         "ACT_DFTPN6": null,
-        "ACT_POL_DFTPN1": null,
-        "ACT_POL_DFTPN2": null,
-        "ACT_POL_DFTPN3": null,
-        "ACT_POL_DFTPN4": null,
-        "ACT_POL_DFTPN5": null,
-        "ACT_POL_DFTPN6": null,
         "EntityName": "DFTModule1",
         "INF_ModuleInterface": {
             "ComponentInfo": {
+                "ACT_DC1": {
+                    "ChannelName": "REF1",
+                    "Description": "<skipped>",
+                    "Unit": "V"
+                },
+                "ACT_DC2": {
+                    "ChannelName": "REF2",
+                    "Description": "<skipped>",
+                    "Unit": "V"
+                },
+                "ACT_DC3": {
+                    "ChannelName": "REF3",
+                    "Description": "<skipped>",
+                    "Unit": "V"
+                },
+                "ACT_DC4": {
+                    "ChannelName": "REF4",
+                    "Description": "<skipped>",
+                    "Unit": "V"
+                },
+                "ACT_DC5": {
+                    "ChannelName": "REF5",
+                    "Description": "<skipped>",
+                    "Unit": "V"
+                },
+                "ACT_DC6": {
+                    "ChannelName": "REF6",
+                    "Description": "<skipped>",
+                    "Unit": "V"
+                },
                 "ACT_DFTPN1": {
                     "ChannelName": "REF1",
                     "Description": "<skipped>",
@@ -893,36 +923,6 @@
                     "Unit": "V"
                 },
                 "ACT_DFTPN6": {
-                    "ChannelName": "REF6",
-                    "Description": "<skipped>",
-                    "Unit": "V"
-                },
-                "ACT_POL_DFTPN1": {
-                    "ChannelName": "REF1",
-                    "Description": "<skipped>",
-                    "Unit": "V"
-                },
-                "ACT_POL_DFTPN2": {
-                    "ChannelName": "REF2",
-                    "Description": "<skipped>",
-                    "Unit": "V"
-                },
-                "ACT_POL_DFTPN3": {
-                    "ChannelName": "REF3",
-                    "Description": "<skipped>",
-                    "Unit": "V"
-                },
-                "ACT_POL_DFTPN4": {
-                    "ChannelName": "REF4",
-                    "Description": "<skipped>",
-                    "Unit": "V"
-                },
-                "ACT_POL_DFTPN5": {
-                    "ChannelName": "REF5",
-                    "Description": "<skipped>",
-                    "Unit": "V"
-                },
-                "ACT_POL_DFTPN6": {
                     "ChannelName": "REF6",
                     "Description": "<skipped>",
                     "Unit": "V"
@@ -978,9 +978,23 @@
                     ],
                     [
                         "MEASURE",
+                        "R1DC",
+                        "8",
+                        "ACT_DC1",
+                        "0"
+                    ],
+                    [
+                        "MEASURE",
                         "REF2",
                         "8",
                         "ACT_DFTPN2",
+                        "0"
+                    ],
+                    [
+                        "MEASURE",
+                        "R2DC",
+                        "8",
+                        "ACT_DC2",
                         "0"
                     ],
                     [
@@ -992,9 +1006,23 @@
                     ],
                     [
                         "MEASURE",
+                        "R3DC",
+                        "8",
+                        "ACT_DC3",
+                        "0"
+                    ],
+                    [
+                        "MEASURE",
                         "REF4",
                         "8",
                         "ACT_DFTPN4",
+                        "0"
+                    ],
+                    [
+                        "MEASURE",
+                        "R4DC",
+                        "8",
+                        "ACT_DC4",
                         "0"
                     ],
                     [
@@ -1006,9 +1034,23 @@
                     ],
                     [
                         "MEASURE",
+                        "R5DC",
+                        "8",
+                        "ACT_DC5",
+                        "0"
+                    ],
+                    [
+                        "MEASURE",
                         "REF6",
                         "8",
                         "ACT_DFTPN6",
+                        "0"
+                    ],
+                    [
+                        "MEASURE",
+                        "R6DC",
+                        "8",
+                        "ACT_DC6",
                         "0"
                     ],
                     [

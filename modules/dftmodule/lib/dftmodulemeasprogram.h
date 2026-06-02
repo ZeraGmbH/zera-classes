@@ -9,6 +9,7 @@
 #include <QStateMachine>
 #include <QState>
 #include <QFinalState>
+#include <QMap>
 
 namespace DFTMODULE
 {
@@ -45,8 +46,6 @@ private:
     void turnVectorsToRefChannel();
     void dataAcquisitionDSP();
     void dataReadDSP();
-    void setActualValuesNames();
-    void setSCPIMeasInfo();
     void setRefChannelValidator();
     bool isConfiguredForDc();
     void calcPhaseSequence(const QVector<float> *actualValues);
@@ -55,6 +54,7 @@ private:
     ActualValueStartStopHandler m_startStopHandler;
     QList<VfModuleComponent*> m_veinActValueList; // the list of actual values we work on
     QList<VfModuleComponent*> m_veinPolarValue;
+    QMap<int /* actualValueIdx*/, VfModuleComponent*> m_DCValueMap;
     VfModuleComponent* m_pRFieldActualValue = nullptr;
     QHash<QString, QString> m_ChannelSystemNameHash; // a hash for fast access to the system name with key = alias
 

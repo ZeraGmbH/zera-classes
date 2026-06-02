@@ -1,5 +1,11 @@
 {
     "1050": {
+        "ACT_DC1": 20,
+        "ACT_DC2": 20,
+        "ACT_DC3": 20,
+        "ACT_DC4": 10,
+        "ACT_DC5": 10,
+        "ACT_DC6": 10,
         "ACT_DFTPN1": [
             20,
             0
@@ -24,39 +30,39 @@
             10,
             0
         ],
-        "ACT_POL_DFTPN1": [
-            20,
-            0,
-            0
-        ],
-        "ACT_POL_DFTPN2": [
-            20,
-            0,
-            0
-        ],
-        "ACT_POL_DFTPN3": [
-            20,
-            0,
-            0
-        ],
-        "ACT_POL_DFTPN4": [
-            10,
-            0,
-            0
-        ],
-        "ACT_POL_DFTPN5": [
-            10,
-            0,
-            0
-        ],
-        "ACT_POL_DFTPN6": [
-            10,
-            0,
-            0
-        ],
         "EntityName": "DFTModule1",
         "INF_ModuleInterface": {
             "ComponentInfo": {
+                "ACT_DC1": {
+                    "ChannelName": "UL1",
+                    "Description": "DC actual value",
+                    "Unit": "V"
+                },
+                "ACT_DC2": {
+                    "ChannelName": "UL2",
+                    "Description": "DC actual value",
+                    "Unit": "V"
+                },
+                "ACT_DC3": {
+                    "ChannelName": "UL3",
+                    "Description": "DC actual value",
+                    "Unit": "V"
+                },
+                "ACT_DC4": {
+                    "ChannelName": "IL1",
+                    "Description": "DC actual value",
+                    "Unit": "A"
+                },
+                "ACT_DC5": {
+                    "ChannelName": "IL2",
+                    "Description": "DC actual value",
+                    "Unit": "A"
+                },
+                "ACT_DC6": {
+                    "ChannelName": "IL3",
+                    "Description": "DC actual value",
+                    "Unit": "A"
+                },
                 "ACT_DFTPN1": {
                     "ChannelName": "UL1",
                     "Description": "Actual value phase/neutral / cartesian format: re,im",
@@ -85,36 +91,6 @@
                 "ACT_DFTPN6": {
                     "ChannelName": "IL3",
                     "Description": "Actual value / cartesian format: re,im",
-                    "Unit": "A"
-                },
-                "ACT_POL_DFTPN1": {
-                    "ChannelName": "UL1",
-                    "Description": "Actual value phase/neutral / polar format: abs,rad[0,2π],deg[0,360]",
-                    "Unit": "V"
-                },
-                "ACT_POL_DFTPN2": {
-                    "ChannelName": "UL2",
-                    "Description": "Actual value phase/neutral / polar format: abs,rad[0,2π],deg[0,360]",
-                    "Unit": "V"
-                },
-                "ACT_POL_DFTPN3": {
-                    "ChannelName": "UL3",
-                    "Description": "Actual value phase/neutral / polar format: abs,rad[0,2π],deg[0,360]",
-                    "Unit": "V"
-                },
-                "ACT_POL_DFTPN4": {
-                    "ChannelName": "IL1",
-                    "Description": "Actual value / polar format: abs,rad[0,2π],deg[0,360]",
-                    "Unit": "A"
-                },
-                "ACT_POL_DFTPN5": {
-                    "ChannelName": "IL2",
-                    "Description": "Actual value / polar format: abs,rad[0,2π],deg[0,360]",
-                    "Unit": "A"
-                },
-                "ACT_POL_DFTPN6": {
-                    "ChannelName": "IL3",
-                    "Description": "Actual value / polar format: abs,rad[0,2π],deg[0,360]",
                     "Unit": "A"
                 },
                 "EntityName": {
@@ -168,9 +144,23 @@
                     ],
                     [
                         "MEASURE",
+                        "U1DC",
+                        "8",
+                        "ACT_DC1",
+                        "0"
+                    ],
+                    [
+                        "MEASURE",
                         "UL2",
                         "8",
                         "ACT_DFTPN2",
+                        "0"
+                    ],
+                    [
+                        "MEASURE",
+                        "U2DC",
+                        "8",
+                        "ACT_DC2",
                         "0"
                     ],
                     [
@@ -182,9 +172,23 @@
                     ],
                     [
                         "MEASURE",
+                        "U3DC",
+                        "8",
+                        "ACT_DC3",
+                        "0"
+                    ],
+                    [
+                        "MEASURE",
                         "IL1",
                         "8",
                         "ACT_DFTPN4",
+                        "0"
+                    ],
+                    [
+                        "MEASURE",
+                        "I1DC",
+                        "8",
+                        "ACT_DC4",
                         "0"
                     ],
                     [
@@ -196,9 +200,23 @@
                     ],
                     [
                         "MEASURE",
+                        "I2DC",
+                        "8",
+                        "ACT_DC5",
+                        "0"
+                    ],
+                    [
+                        "MEASURE",
                         "IL3",
                         "8",
                         "ACT_DFTPN6",
+                        "0"
+                    ],
+                    [
+                        "MEASURE",
+                        "I3DC",
+                        "8",
+                        "ACT_DC6",
                         "0"
                     ],
                     [

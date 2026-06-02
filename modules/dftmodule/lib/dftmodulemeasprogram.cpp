@@ -83,9 +83,17 @@ void cDftModuleMeasProgram::generateVeinInterface()
 {
     int phaseNeutralValueCount = 0;
     int phasePhaseValueCount = 0;
+    ChannelRangeObserver::SystemObserverPtr observer = m_pModule->getSharedChannelRangeObserver();
     for (int i = 0; i < getConfData()->m_valueChannelList.count(); i++) {
         VfModuleComponent *pActvalue;
-        const QStringList measChannels = getConfData()->m_valueChannelList.at(i).split('-');
+        const QString &channelMNamesEntry = getConfData()->m_valueChannelList.at(i);
+        const QStringList measChannels = channelMNamesEntry.split('-');
+        ServiceChannelNameHelper::TChannelAliasUnit aliasUnit =
+            ServiceChannelNameHelper::getChannelAndUnit(channelMNamesEntry, observer);
+        const QString &channelName = aliasUnit.m_channelAlias;
+        // Try hard to find unique names with four letters...
+        QString scpiChannelName = QString(channelName).replace("L", "").replace("-", "").replace("AUX", "4");
+
         // we have 1 or 2 entries for each value
         if (measChannels.count() == 1) { // in this case we have phase,neutral value
             QString channelDescriptionCartesian;
@@ -101,13 +109,29 @@ void cDftModuleMeasProgram::generateVeinInterface()
             pActvalue = new VfModuleComponent(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
                                               QString("ACT_DFTPN%1").arg(phaseNeutralValueCount+1),
                                               channelDescriptionCartesian);
+            pActvalue->setChannelName(channelName);
+            pActvalue->setUnit(aliasUnit.m_channelUnit);
+            pActvalue->setScpiInfo("MEASURE", channelName, SCPI::isCmdwP);
             m_veinActValueList.append(pActvalue); // we add the component for our measurement
             m_pModule->m_veinComponentsWithMetaAndScpi.append(pActvalue); // and for the modules interface
 
-            pActvalue = new VfModuleComponent(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
-                                              QString("ACT_POL_DFTPN%1").arg(phaseNeutralValueCount+1),
-                                              channelDescriptionPolar);
-            m_veinPolarValue.append(pActvalue); // we add the component for our measurement
+            if(!isConfiguredForDc()) {
+                pActvalue = new VfModuleComponent(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
+                                                  QString("ACT_POL_DFTPN%1").arg(phaseNeutralValueCount+1),
+                                                  channelDescriptionPolar);
+                pActvalue->setScpiInfo("MEASURE", scpiChannelName, SCPI::isCmdwP);
+                m_veinPolarValue.append(pActvalue); // we add the component for our measurement
+            }
+            else {
+                pActvalue = new VfModuleComponent(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
+                                                  QString("ACT_DC%1").arg(phaseNeutralValueCount+1),
+                                                  QString("DC actual value"));
+                const QString scpiChannelNameDc = scpiChannelName.replace("REF", "R") + "DC"; // SCPI short names suck!!!
+                pActvalue->setScpiInfo("MEASURE", scpiChannelNameDc, SCPI::isCmdwP);
+                m_DCValueMap.insert(i, pActvalue);
+            }
+            pActvalue->setChannelName(channelName);
+            pActvalue->setUnit(aliasUnit.m_channelUnit);
             m_pModule->m_veinComponentsWithMetaAndScpi.append(pActvalue); // and for the modules interface
 
             phaseNeutralValueCount++;
@@ -116,14 +140,22 @@ void cDftModuleMeasProgram::generateVeinInterface()
             pActvalue = new VfModuleComponent(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
                                                 QString("ACT_DFTPP%1").arg(phasePhaseValueCount+1),
                                                 QString("Actual value phase/phase / cartesian format: re,im"));
+            pActvalue->setChannelName(channelName);
+            pActvalue->setUnit(aliasUnit.m_channelUnit);
+            pActvalue->setScpiInfo("MEASURE", channelName, SCPI::isCmdwP);
             m_veinActValueList.append(pActvalue); // we add the component for our measurement
             m_pModule->m_veinComponentsWithMetaAndScpi.append(pActvalue); // and for the modules interface
 
-            pActvalue = new VfModuleComponent(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
-                                             QString("ACT_POL_DFTPP%1").arg(phasePhaseValueCount+1),
-                                             QString("Actual value phase/phase / polar format: abs,rad[0,2π],deg[0,360]"));
-            m_veinPolarValue.append(pActvalue); // we add the component for our measurement
-            m_pModule->m_veinComponentsWithMetaAndScpi.append(pActvalue); // and for the modules interface
+            if(!isConfiguredForDc()) {
+                pActvalue = new VfModuleComponent(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
+                                                 QString("ACT_POL_DFTPP%1").arg(phasePhaseValueCount+1),
+                                                 QString("Actual value phase/phase / polar format: abs,rad[0,2π],deg[0,360]"));
+                pActvalue->setChannelName(aliasUnit.m_channelAlias);
+                pActvalue->setUnit(aliasUnit.m_channelUnit);
+                pActvalue->setScpiInfo("MEASURE", scpiChannelName, SCPI::isCmdwP);
+                m_veinPolarValue.append(pActvalue); // we add the component for our measurement
+                m_pModule->m_veinComponentsWithMetaAndScpi.append(pActvalue); // and for the modules interface
+            }
 
             phasePhaseValueCount++;
         }
@@ -290,35 +322,6 @@ cDftModuleConfigData *cDftModuleMeasProgram::getConfData()
     return qobject_cast<cDftModuleConfiguration*>(m_pConfiguration.get())->getConfigurationData();
 }
 
-void cDftModuleMeasProgram::setActualValuesNames()
-{
-    ChannelRangeObserver::SystemObserverPtr observer = m_pModule->getSharedChannelRangeObserver();
-    const QStringList &channelList = getConfData()->m_valueChannelList;
-    for(int i = 0; i < channelList.count(); i++) {
-        const QString &channelMNamesEntry = getConfData()->m_valueChannelList.at(i);
-        ServiceChannelNameHelper::TChannelAliasUnit aliasUnit =
-            ServiceChannelNameHelper::getChannelAndUnit(channelMNamesEntry, observer);
-        m_veinActValueList.at(i)->setChannelName(aliasUnit.m_channelAlias);
-        m_veinActValueList.at(i)->setUnit(aliasUnit.m_channelUnit);
-        m_veinPolarValue.at(i)->setChannelName(aliasUnit.m_channelAlias);
-        m_veinPolarValue.at(i)->setUnit(aliasUnit.m_channelUnit);
-    }
-}
-
-void cDftModuleMeasProgram::setSCPIMeasInfo()
-{
-    for (int i = 0; i < getConfData()->m_valueChannelList.count(); i++) {
-        QString channelName = m_veinPolarValue.at(i)->getChannelName();
-        m_veinActValueList.at(i)->setScpiInfo("MEASURE", channelName, SCPI::isCmdwP);
-
-        if (!isConfiguredForDc()) {
-            // Try hard to find unique names with four letters...
-            QString polarChannelName = channelName.replace("L", "").replace("-", "").replace("AUX", "4");
-            m_veinPolarValue.at(i)->setScpiInfo("MEASURE", polarChannelName, SCPI::isCmdwP);
-        }
-    }
-}
-
 void cDftModuleMeasProgram::setRefChannelValidator()
 {
     ChannelRangeObserver::SystemObserverPtr observer =  m_pModule->getSharedChannelRangeObserver();
@@ -373,21 +376,24 @@ void cDftModuleMeasProgram::setInterfaceActualValues(QVector<float> *actualValue
             dftResult.append(im);
             QVariant list = QVariant::fromValue<QList<double>>(dftResult);
             m_veinActValueList.at(i)->setValue(list); // and set entities
+            if (m_DCValueMap.contains(i))
+                m_DCValueMap[i]->setValue(re);
 
-            QList<double> dftResultPolar;
-            double abs = sqrt(re*re + im*im);
-            dftResultPolar.append(abs);
-            double rad = atan2(im, re); // y=im / x=re
-            if(rad < 0)
-                rad += 2*M_PI;
-            dftResultPolar.append(rad);
-            double deg = rad / M_PI * 180;
-            dftResultPolar.append(deg);
+            if (!isConfiguredForDc()) {
+                QList<double> dftResultPolar;
+                double abs = sqrt(re*re + im*im);
+                dftResultPolar.append(abs);
+                double rad = atan2(im, re); // y=im / x=re
+                if(rad < 0)
+                    rad += 2*M_PI;
+                dftResultPolar.append(rad);
+                double deg = rad / M_PI * 180;
+                dftResultPolar.append(deg);
 
-            QVariant listPolar = QVariant::fromValue<QList<double>>(dftResultPolar);
-            m_veinPolarValue.at(i)->setValue(listPolar);
+                QVariant listPolar = QVariant::fromValue<QList<double>>(dftResultPolar);
+                m_veinPolarValue.at(i)->setValue(listPolar);
+            }
         }
-
         calcPhaseSequence(actualValues);
     }
 }
@@ -423,8 +429,6 @@ void cDftModuleMeasProgram::activateDSPdone()
 {
     m_bActive = true;
 
-    setActualValuesNames();
-    setSCPIMeasInfo();
     setRefChannelValidator();
 
     m_pMeasureSignal->setValue(QVariant(1));
