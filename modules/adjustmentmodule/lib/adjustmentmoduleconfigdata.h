@@ -7,8 +7,14 @@
 
 struct adjInfoType
 {
-    bool m_bAvail;
-    int m_nEntity;
+    bool m_bAvail = false;
+    int m_nEntity = 0;
+    QString m_sComponent;
+};
+
+struct rangeInfoType
+{
+    int m_nEntity = 0;
     QString m_sComponent;
 };
 
@@ -16,21 +22,17 @@ struct adjInfoType
 class cAdjChannelInfo
 {
 public:
-    cAdjChannelInfo(){}
-
     adjInfoType rmsAdjInfo;
     adjInfoType phaseAdjInfo;
     adjInfoType dcAdjInfo;
-    adjInfoType rangeAdjInfo;
+    rangeInfoType rangeAdjInfo;
 };
 
 
 class cAdjustmentModuleConfigData
 {
 public:
-    cAdjustmentModuleConfigData(){}
-
-    quint8 m_nAdjustmentChannelCount;
+    quint8 m_nAdjustmentChannelCount = 0;
     QList<QString> m_AdjChannelList;
     adjInfoType m_ReferenceAngle;
     adjInfoType m_ReferenceFrequency;

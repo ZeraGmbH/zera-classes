@@ -94,7 +94,6 @@ void cAdjustmentModuleConfiguration::configXMLInfo(const QString &key)
                 m_ConfigXMLMap[QString("adjmodconfpar:configuration:adjustment:channel:chn%1:offsetinfo:entity").arg(i+1)] = setChn1OffsInfoEntity + i;
                 m_ConfigXMLMap[QString("adjmodconfpar:configuration:adjustment:channel:chn%1:offsetinfo:component").arg(i+1)] = setChn1OffsInfoComponent + i;
 
-                m_ConfigXMLMap[QString("adjmodconfpar:configuration:adjustment:channel:chn%1:rangeinfo:avail").arg(i+1)] = setChn1RangeInfoAvail + i;
                 m_ConfigXMLMap[QString("adjmodconfpar:configuration:adjustment:channel:chn%1:rangeinfo:entity").arg(i+1)] = setChn1RangeInfoEntity + i;
                 m_ConfigXMLMap[QString("adjmodconfpar:configuration:adjustment:channel:chn%1:rangeinfo:component").arg(i+1)] = setChn1RangeInfoComponent + i;
             }
@@ -196,15 +195,6 @@ void cAdjustmentModuleConfiguration::configXMLInfo(const QString &key)
                 adjChannelInfo->dcAdjInfo.m_sComponent = m_pXMLReader->getValue(key);
             }
 
-            else if ((cmd >= setChn1RangeInfoAvail) && (cmd < setChn1RangeInfoAvail + 32)) {
-                QString chn;
-                cAdjChannelInfo* adjChannelInfo;
-
-                cmd -= setChn1RangeInfoAvail;
-                chn = m_pAdjustmentModulConfigData->m_AdjChannelList.at(cmd);
-                adjChannelInfo = m_pAdjustmentModulConfigData->m_AdjChannelInfoHash[chn];
-                adjChannelInfo->rangeAdjInfo.m_bAvail = (m_pXMLReader->getValue(key).toInt(&ok) == 1);
-            }
             else if ((cmd >= setChn1RangeInfoEntity) && (cmd < setChn1RangeInfoEntity + 32)) {
                 QString chn;
                 cAdjChannelInfo* adjChannelInfo;

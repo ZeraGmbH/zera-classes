@@ -34,6 +34,12 @@
         </xs:restriction>
     </xs:simpleType>
 
+    <xs:complexType name="rangeinfotype">
+        <xs:sequence>
+            <xs:element name="entity" type="xs:integer" minOccurs="1" maxOccurs="1"/>
+            <xs:element name="component" type="xs:string" minOccurs="1" maxOccurs="1"/>
+        </xs:sequence>
+    </xs:complexType>
 
     <xs:complexType name="justinfotype">
         <xs:sequence>
@@ -56,7 +62,7 @@
             <xs:element name="amplitudeinfo" type="justinfotype" minOccurs="1" maxOccurs="1"/>
             <xs:element name="phaseinfo" type="justinfotype" minOccurs="1" maxOccurs="1"/>
             <xs:element name="offsetinfo" type="justinfotype" minOccurs="1" maxOccurs="1"/>
-            <xs:element name="rangeinfo" type="justinfotype" minOccurs="1" maxOccurs="1"/>
+            <xs:element name="rangeinfo" type="rangeinfotype" minOccurs="1" maxOccurs="1"/>
         </xs:sequence>
     </xs:complexType>
 

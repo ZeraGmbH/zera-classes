@@ -117,6 +117,7 @@ bool cAdjustmentModuleMeasProgram::checkExternalVeinComponents()
     for (int i = 0; ok && i<getConfData()->m_nAdjustmentChannelCount; i++) {
         // we test if all configured actual value data exist
         QString chn = getConfData()->m_AdjChannelList.at(i);
+
         adjInfo = getConfData()->m_AdjChannelInfoHash[chn]->rmsAdjInfo;
         const QString errMagTemplate = "Entity %1 / component %2 not found";
         if (adjInfo.m_bAvail && !storageDb->hasStoredValue(adjInfo.m_nEntity, adjInfo.m_sComponent)) {
@@ -133,9 +134,10 @@ bool cAdjustmentModuleMeasProgram::checkExternalVeinComponents()
             notifyError(errMagTemplate.arg(adjInfo.m_nEntity).arg(adjInfo.m_sComponent));
             ok = false;
         }
-        adjInfo = getConfData()->m_AdjChannelInfoHash[chn]->rangeAdjInfo;
-        if (adjInfo.m_bAvail && !storageDb->hasStoredValue(adjInfo.m_nEntity, adjInfo.m_sComponent)) {
-            notifyError(errMagTemplate.arg(adjInfo.m_nEntity).arg(adjInfo.m_sComponent));
+
+        rangeInfoType rangeInfo = getConfData()->m_AdjChannelInfoHash[chn]->rangeAdjInfo;
+        if (!storageDb->hasStoredValue(rangeInfo.m_nEntity, rangeInfo.m_sComponent)) {
+            notifyError(errMagTemplate.arg(rangeInfo.m_nEntity).arg(rangeInfo.m_sComponent));
             ok = false;
         }
     }
