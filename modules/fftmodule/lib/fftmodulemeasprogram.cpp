@@ -78,15 +78,16 @@ void cFftModuleMeasProgram::generateVeinInterface()
 {
     int n = getConfData()->m_valueChannelList.count();
     for (int i = 0; i < n; i++) {
-        VfModuleComponent *pActvalue = new VfModuleComponent(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
-                                            QString("ACT_FFT%1").arg(i+1),
-                                            QString("FFT actual values"));
+        VfModuleComponent *pActvalue;
+        pActvalue = new VfModuleComponent(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
+                                          QString("ACT_FFT%1").arg(i+1),
+                                          QString("FFT actual values"));
         m_veinActValueList.append(pActvalue); // we add the component for our measurement
         m_pModule->m_veinComponentsWithMetaAndScpi.append(pActvalue); // and for the modules interface
 
         pActvalue = new VfModuleComponent(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
-                                            QString("ACT_DC%1").arg(i+1),
-                                            QString("DC actual value"));
+                                          QString("ACT_DC%1").arg(i+1),
+                                          QString("DC actual value"));
         m_DCValueList.append(pActvalue);
         m_pModule->m_veinComponentsWithMetaAndScpi.append(pActvalue);
     }
