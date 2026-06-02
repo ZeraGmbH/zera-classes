@@ -50,19 +50,19 @@ private:
     void setSCPIMeasInfo();
     void setActualValuesNames();
 
-    cFftModule* m_pModule;
+    cFftModule* m_pModule = nullptr;
     ActualValueStartStopHandler m_startStopHandler;
     QList<VfModuleComponent*> m_veinActValueList; // the list of actual values we work on
     QList<VfModuleComponent*> m_DCValueList;
-    VfModuleMetaData* m_pFFTCountInfo;
-    VfModuleMetaData* m_pFFTOrderInfo;
-    VfModuleComponent* m_pMeasureSignal;
-    VfModuleParameter* m_pRefChannelParameter;
-    VfModuleParameter* m_pIntegrationTimeParameter;
-    quint16 m_nfftLen;
+    VfModuleMetaData* m_pFFTCountInfo = nullptr;
+    VfModuleMetaData* m_pFFTOrderInfo = nullptr;
+    VfModuleComponent* m_pMeasureSignal = nullptr;
+    VfModuleParameter* m_pRefChannelParameter = nullptr;
+    VfModuleParameter* m_pIntegrationTimeParameter = nullptr;
+    quint16 m_nfftLen = 0;
 
-    DspVarGroupClientInterface* m_pParameterDSP;
-    DspVarGroupClientInterface* m_pActualValuesDSP;
+    DspVarGroupClientInterface* m_pParameterDSP = nullptr;
+    DspVarGroupClientInterface* m_pActualValuesDSP = nullptr;
 
     // statemachine for activating gets the following states
     QState m_dspserverConnectState;
