@@ -33,17 +33,17 @@ void Channel::startFetch()
     startAllRangesTasks();
 }
 
-const QString Channel::getMName() const
+const QString &Channel::getMName() const
 {
     return m_channelMName;
 }
 
-const QStringList Channel::getAllRangeNames() const
+const QStringList &Channel::getAllRangeNames() const
 {
     return *m_allRangeNamesOrderedByServer;
 }
 
-const QStringList Channel::getAvailRangeNames() const
+const QStringList &Channel::getAvailRangeNames() const
 {
     return m_availableRangeNames;
 }
@@ -67,12 +67,12 @@ bool Channel::isValid() const
     return m_valid;
 }
 
-QString Channel::getAlias() const
+const QString &Channel::getAlias() const
 {
     return *m_alias;
 }
 
-QString Channel::getUnit() const
+const QString &Channel::getUnit() const
 {
     return *m_unit;
 }

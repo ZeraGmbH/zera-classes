@@ -24,14 +24,14 @@ public:
             bool hasInternalSourceGenerator);
     // TODO: What if we are asked while fetching?
     void startFetch();
-    const QString getMName() const;
+    const QString &getMName() const;
     bool isValid() const;
-    QString getAlias() const;
-    QString getUnit() const;
+    const QString &getAlias() const;
+    const QString &getUnit() const;
     int getDspChannel() const;
     bool isSourceModeOn() const;
-    const QStringList getAllRangeNames() const;
-    const QStringList getAvailRangeNames() const;
+    const QStringList &getAllRangeNames() const;
+    const QStringList &getAvailRangeNames() const;
     const RangePtr getRange(const QString &rangeName) const;
     ChannelCommonStorage *getModuleCommonStorage();
 signals:
@@ -58,7 +58,7 @@ private:
     std::shared_ptr<QString> m_alias = std::make_shared<QString>();
     std::shared_ptr<QString> m_unit = std::make_shared<QString>();
     std::shared_ptr<int> m_dspChannel = std::make_shared<int>(0);
-    bool m_hasInternalSourceGenerator;
+    bool m_hasInternalSourceGenerator = false;
     bool m_sourceModeOn = false;
     ChannelCommonStorage m_channelAdjStorage;
 
