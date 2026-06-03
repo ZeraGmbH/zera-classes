@@ -41,6 +41,26 @@ void DemoValuesDspDft::setAllValuesSymmetric(double voltage, double current, dou
     // Note: Phase-phase values are (re-)calulated in cDftModuleMeasProgram::turnVectorsToRefChannel
 }
 
+void DemoValuesDspDft::setAllValuesSymmetricDc(double voltage, double current)
+{
+    // If not configured for DC (DFT order != 0) DC values cause values ~0.0
+    double multiplier = 1e-9;
+    if(m_dftOrder == 0)
+        // see comment in cDftModuleMeasProgram::dataReadDSP()
+        multiplier = 2;
+
+    QStringList voltageChannelNames = ServiceChannelNameHelper::getVoltageChannelNamesUsed(false);
+    for(const auto &channel : qAsConst(voltageChannelNames)) {
+        if(m_values.contains(channel))
+            m_values[channel] = std::complex(voltage * multiplier, double(0));
+    }
+    QStringList currentChannelNames = ServiceChannelNameHelper::getCurrentChannelNamesUsed(false);
+    for(const auto &channel : qAsConst(currentChannelNames)) {
+        if(m_values.contains(channel))
+            m_values[channel] = std::polar(current * multiplier, double(0));
+    }
+}
+
 QVector<float> DemoValuesDspDft::getDspValues()
 {
     QVector<float> valueList;

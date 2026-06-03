@@ -39,7 +39,7 @@ void TestDspValues::setAllValuesSymmetricAc(float voltage, float current, float 
 
 void TestDspValues::setAllValuesSymmetricDc(float voltage, float current)
 {
-    m_dftValues->setAllValuesSymmetric(0, 0, 0, false);
+    m_dftValues->setAllValuesSymmetricDc(voltage, current);
     for(int channel=0; channel<m_channelList.count(); channel++) {
         float value = ServiceChannelNameHelper::isCurrent(m_channelList[channel]) ? current : voltage;
         m_fftValues->setValue(channel, 0, value, 0); // DC
