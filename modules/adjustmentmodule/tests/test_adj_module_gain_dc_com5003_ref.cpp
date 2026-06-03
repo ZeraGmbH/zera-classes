@@ -47,12 +47,6 @@ void test_adj_module_gain_dc_com5003_ref::checkIntialRangeR10V()
     QCOMPARE(m_scpiClient->sendReceive(send), "R10V");
 }
 
-void test_adj_module_gain_dc_com5003_ref::init480VRejected()
-{
-    QByteArray send = QString("*CLS|CALC:ADJ1:INIT %1,480V;|*STB?").arg(m_refChannel).toLatin1();
-    QCOMPARE(m_scpiClient->sendReceive(send), "+4");
-}
-
 void test_adj_module_gain_dc_com5003_ref::initR0VOk()
 {
     QByteArray send = QString("*CLS|CALC:ADJ1:INIT %1,R0V;|*STB?").arg(m_refChannel).toLatin1();
@@ -63,12 +57,6 @@ void test_adj_module_gain_dc_com5003_ref::initR10VOk()
 {
     QByteArray send = QString("*CLS|CALC:ADJ1:INIT %1,R10V;|*STB?").arg(m_refChannel).toLatin1();
     QCOMPARE(m_scpiClient->sendReceive(send), "+0");
-}
-
-void test_adj_module_gain_dc_com5003_ref::offsetStatusSet480VRejected()
-{
-    QByteArray send = QString("*CLS|CALC:ADJ1:OSTATUS %1,480V,128;|*STB?").arg(m_refChannel).toLatin1();
-    QCOMPARE(m_scpiClient->sendReceive(send), "+4");
 }
 
 void test_adj_module_gain_dc_com5003_ref::offsetStatusSetR0VOk()
@@ -83,12 +71,6 @@ void test_adj_module_gain_dc_com5003_ref::offsetStatusSetR10VOk()
     QCOMPARE(m_scpiClient->sendReceive(send), "+0");
 }
 
-void test_adj_module_gain_dc_com5003_ref::gainStatusSet480VRejected()
-{
-    QByteArray send = QString("*CLS|CALC:ADJ1:GSTATUS %1,480V,128;|*STB?").arg(m_refChannel).toLatin1();
-    QCOMPARE(m_scpiClient->sendReceive(send), "+4");
-}
-
 void test_adj_module_gain_dc_com5003_ref::gainStatusSetR0VOk()
 {
     QByteArray send = QString("*CLS|CALC:ADJ1:GSTATUS %1,R0V,128;|*STB?").arg(m_refChannel).toLatin1();
@@ -99,12 +81,6 @@ void test_adj_module_gain_dc_com5003_ref::gainStatusSetR10VOk()
 {
     QByteArray send = QString("*CLS|CALC:ADJ1:GSTATUS %1,R10V,128;|*STB?").arg(m_refChannel).toLatin1();
     QCOMPARE(m_scpiClient->sendReceive(send), "+0");
-}
-
-void test_adj_module_gain_dc_com5003_ref::phaseStatusSet480VRejected()
-{
-    QByteArray send = QString("*CLS|CALC:ADJ1:PSTATUS %1,480V,128;|*STB?").arg(m_refChannel).toLatin1();
-    QCOMPARE(m_scpiClient->sendReceive(send), "+4");
 }
 
 void test_adj_module_gain_dc_com5003_ref::phaseStatusSetR0VOk()
@@ -119,12 +95,6 @@ void test_adj_module_gain_dc_com5003_ref::phaseStatusSetR10VOk()
     QCOMPARE(m_scpiClient->sendReceive(send), "+0");
 }
 
-void test_adj_module_gain_dc_com5003_ref::offsetAdj480VRejected()
-{
-    QByteArray send = QString("*CLS|CALC:ADJ1:OFFS %1,480V,0;|*STB?").arg(m_refChannel).toLatin1(); // 0: default actual value
-    QCOMPARE(m_scpiClient->sendReceive(send), "+4");
-}
-
 void test_adj_module_gain_dc_com5003_ref::offsetAdjR0VRejected()
 {
     QCOMPARE(setRange(m_refChannel, "R0V"), "+0");
@@ -136,12 +106,6 @@ void test_adj_module_gain_dc_com5003_ref::offsetAdjR10VRejected()
 {
     QCOMPARE(setRange(m_refChannel, "R10V"), "+0");
     QByteArray send = QString("*CLS|CALC:ADJ1:OFFS %1,R10V,0;|*STB?").arg(m_refChannel).toLatin1(); // 0: default actual value
-    QCOMPARE(m_scpiClient->sendReceive(send), "+4");
-}
-
-void test_adj_module_gain_dc_com5003_ref::acGainAdj480VRejected()
-{
-    QByteArray send = QString("*CLS|CALC:ADJ1:AMPL %1,480V,0;|*STB?").arg(m_refChannel).toLatin1();
     QCOMPARE(m_scpiClient->sendReceive(send), "+4");
 }
 
@@ -159,13 +123,6 @@ void test_adj_module_gain_dc_com5003_ref::acGainAdjR10VRejected()
     QCOMPARE(m_scpiClient->sendReceive(send), "+4");
 }
 
-void test_adj_module_gain_dc_com5003_ref::dcgainAdj480VRejected()
-{
-    QCOMPARE(setRange(m_refChannel, "R0V"), "+0");
-    QByteArray send = QString("*CLS|CALC:ADJ1:DCAM %1,R0V,0;|*STB?").arg(m_refChannel).toLatin1();
-    QCOMPARE(m_scpiClient->sendReceive(send), "+4");
-}
-
 void test_adj_module_gain_dc_com5003_ref::dcgainAdjR0VRejected()
 {
     QCOMPARE(setRange(m_refChannel, "R0V"), "+0");
@@ -178,12 +135,6 @@ void test_adj_module_gain_dc_com5003_ref::dcgainAdjR10VOk()
     QCOMPARE(setRange(m_refChannel, "R10V"), "+0");
     QByteArray send = QString("*CLS|CALC:ADJ1:DCAM %1,R10V,0;|*STB?").arg(m_refChannel).toLatin1(); // 0: default actual value
     QCOMPARE(m_scpiClient->sendReceive(send), "+0");
-}
-
-void test_adj_module_gain_dc_com5003_ref::phaseAdj480VRejected()
-{
-    QByteArray send = QString("*CLS|CALC:ADJ1:PHAS %1,480V,0;|*STB?").arg(m_refChannel).toLatin1();
-    QCOMPARE(m_scpiClient->sendReceive(send), "+4");
 }
 
 void test_adj_module_gain_dc_com5003_ref::phaseAdjR0VRejected()

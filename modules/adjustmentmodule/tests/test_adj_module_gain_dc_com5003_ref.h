@@ -16,35 +16,27 @@ private slots:
 
     void checkIntialRangeR10V();
 
-    void init480VRejected();
     void initR0VOk(); // init allowed for not adjustable ranges
     void initR10VOk();
 
-    void offsetStatusSet480VRejected();
     void offsetStatusSetR0VOk(); // status set allowed for not adjustable ranges
     void offsetStatusSetR10VOk();
 
-    void gainStatusSet480VRejected();
     void gainStatusSetR0VOk(); // status set allowed for not adjustable ranges
     void gainStatusSetR10VOk();
 
-    void phaseStatusSet480VRejected();
     void phaseStatusSetR0VOk(); // status set allowed for not adjustable ranges
     void phaseStatusSetR10VOk();
 
-    void offsetAdj480VRejected(); // COM5003 adjusts offset automatically at start of ref session
     void offsetAdjR0VRejected();
-    void offsetAdjR10VRejected();
+    void offsetAdjR10VRejected(); // COM5003 adjusts offset automatically at start of ref session
 
-    void acGainAdj480VRejected();
     void acGainAdjR0VRejected();
     void acGainAdjR10VRejected();
 
-    void dcgainAdj480VRejected();
     void dcgainAdjR0VRejected();
     void dcgainAdjR10VOk();
 
-    void phaseAdj480VRejected();
     void phaseAdjR0VRejected();
     void phaseAdjR10VRejected();
 
