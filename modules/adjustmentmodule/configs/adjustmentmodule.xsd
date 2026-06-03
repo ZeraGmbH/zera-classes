@@ -38,6 +38,7 @@
         <xs:sequence>
             <xs:element name="entity" type="xs:integer" minOccurs="1" maxOccurs="1"/>
             <xs:element name="component" type="xs:string" minOccurs="1" maxOccurs="1"/>
+            <xs:element name="rangesdenied" type="xs:string" minOccurs="0" maxOccurs="1"/>
         </xs:sequence>
     </xs:complexType>
 

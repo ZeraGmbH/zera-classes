@@ -16,6 +16,7 @@ struct rangeInfoType
 {
     int m_nEntity = 0;
     QString m_sComponent;
+    QStringList m_rangesDenied;
 };
 
 

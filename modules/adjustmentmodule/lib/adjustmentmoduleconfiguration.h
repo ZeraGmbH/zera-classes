@@ -8,34 +8,6 @@
 
 #include "basemoduleconfiguration.h"
 
-enum moduleconfigstate
-{
-    setAngleReferenceEntity,
-    setAngleReferenceComponent,
-    setFrequencyReferenceEntity,
-    setFrequencyReferenceComponent,
-    setChannelCount,
-
-    setChn1Chn = 16, // we leave some place for additional base cmds and commands for up 32 channels
-
-    setChn1AmplInfoAvail = setChn1Chn +32,
-    setChn1AmplInfoEntity = setChn1AmplInfoAvail +32,
-    setChn1AmplInfoComponent = setChn1AmplInfoEntity + 32,
-
-    setChn1PhaseInfoAvail = setChn1AmplInfoComponent + 32,
-    setChn1PhaseInfoEntity = setChn1PhaseInfoAvail + 32,
-    setChn1PhaseInfoComponent = setChn1PhaseInfoEntity + 32,
-
-    setChn1OffsInfoAvail = setChn1PhaseInfoComponent + 32,
-    setChn1OffsInfoEntity = setChn1OffsInfoAvail + 32,
-    setChn1OffsInfoComponent = setChn1OffsInfoEntity + 32,
-
-    setChn1RangeInfoEntity = setChn1OffsInfoComponent + 32,
-    setChn1RangeInfoComponent = setChn1RangeInfoEntity + 32,
-
-    setnext = setChn1RangeInfoComponent + 32
-};
-
 class cAdjustmentModuleConfigData;
 
 class cAdjustmentModuleConfiguration: public BaseModuleConfiguration
