@@ -51,22 +51,26 @@ void TestDspValues::setAllValuesSymmetricDc(float voltage, float current)
 
 void TestDspValues::fireDftActualValues(MockDspInterfacePtr dspDft)
 {
-    dspDft->fireActValInterrupt(m_dftValues->getDspValues(), 0 /* dummy */);
+    if (dspDft)
+        dspDft->fireActValInterrupt(m_dftValues->getDspValues(), 0 /* dummy */);
 }
 
 void TestDspValues::fireFftActualValues(MockDspInterfacePtr dspFft)
 {
-    dspFft->fireActValInterrupt(m_fftValues->getDspValues(), 0 /* dummy */);
+    if (dspFft)
+        dspFft->fireActValInterrupt(m_fftValues->getDspValues(), 0 /* dummy */);
 }
 
 void TestDspValues::fireRangeActualValues(MockDspInterfacePtr dspRange)
 {
-    dspRange->fireActValInterrupt(m_rangeValues->getDspValues(), 0 /* dummy */);
+    if (dspRange)
+        dspRange->fireActValInterrupt(m_rangeValues->getDspValues(), 0 /* dummy */);
 }
 
 void TestDspValues::fireRmsActualValues(MockDspInterfacePtr dspRms)
 {
-    dspRms->fireActValInterrupt(m_rmsValues->getDspValues(), 0 /* dummy */);
+    if (dspRms)
+        dspRms->fireActValInterrupt(m_rmsValues->getDspValues(), 0 /* dummy */);
 }
 
 void TestDspValues::fireAllActualValues(MockDspInterfacePtr dspDft,
