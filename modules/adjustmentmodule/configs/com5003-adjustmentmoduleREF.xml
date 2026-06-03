@@ -18,13 +18,9 @@
                     <chn>m0</chn>
                     <ac_rms_value>
                         <avail>0</avail>
-                        <entity>0</entity>
-                        <component></component>
                     </ac_rms_value>
                     <ac_phase_value>
                         <avail>0</avail>
-                        <entity>0</entity>
-                        <component></component>
                     </ac_phase_value>
                     <dc_values>
                         <avail>1</avail>
@@ -42,13 +38,9 @@
                     <chn>m1</chn>
                     <ac_rms_value>
                         <avail>0</avail>
-                        <entity>0</entity>
-                        <component></component>
                     </ac_rms_value>
                     <ac_phase_value>
                         <avail>0</avail>
-                        <entity>0</entity>
-                        <component></component>
                     </ac_phase_value>
                     <dc_values>
                         <avail>1</avail>
@@ -66,13 +58,9 @@
                     <chn>m2</chn>
                     <ac_rms_value>
                         <avail>0</avail>
-                        <entity>0</entity>
-                        <component></component>
                     </ac_rms_value>
                     <ac_phase_value>
                         <avail>0</avail>
-                        <entity>0</entity>
-                        <component></component>
                     </ac_phase_value>
                     <dc_values>
                         <avail>1</avail>
@@ -90,13 +78,9 @@
                     <chn>m3</chn>
                     <ac_rms_value>
                         <avail>0</avail>
-                        <entity>0</entity>
-                        <component></component>
                     </ac_rms_value>
                     <ac_phase_value>
                         <avail>0</avail>
-                        <entity>0</entity>
-                        <component></component>
                     </ac_phase_value>
                     <dc_values>
                         <avail>1</avail>
@@ -114,13 +98,9 @@
                     <chn>m4</chn>
                     <ac_rms_value>
                         <avail>0</avail>
-                        <entity>0</entity>
-                        <component></component>
                     </ac_rms_value>
                     <ac_phase_value>
                         <avail>0</avail>
-                        <entity>0</entity>
-                        <component></component>
                     </ac_phase_value>
                     <dc_values>
                         <avail>1</avail>
@@ -138,13 +118,9 @@
                     <chn>m5</chn>
                     <ac_rms_value>
                         <avail>0</avail>
-                        <entity>0</entity>
-                        <component></component>
                     </ac_rms_value>
                     <ac_phase_value>
                         <avail>0</avail>
-                        <entity>0</entity>
-                        <component></component>
                     </ac_phase_value>
                     <dc_values>
                         <avail>1</avail>

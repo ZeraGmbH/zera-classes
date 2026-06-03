@@ -92,8 +92,6 @@
                     </ac_phase_value>
                     <dc_values>
                         <avail>0</avail>
-                        <entity>1060</entity>
-                        <component>ACT_DC4</component>
                     </dc_values>
                     <rangeinfo>
                         <entity>1020</entity>
@@ -114,8 +112,6 @@
                     </ac_phase_value>
                     <dc_values>
                         <avail>0</avail>
-                        <entity>1060</entity>
-                        <component>ACT_DC5</component>
                     </dc_values>
                     <rangeinfo>
                         <entity>1020</entity>
@@ -136,8 +132,6 @@
                     </ac_phase_value>
                     <dc_values>
                         <avail>0</avail>
-                        <entity>1060</entity>
-                        <component>ACT_DC6</component>
                     </dc_values>
                     <rangeinfo>
                         <entity>1020</entity>
