@@ -52,12 +52,12 @@ void DemoValuesDspDft::setAllValuesSymmetricDc(double voltage, double current)
     QStringList voltageChannelNames = ServiceChannelNameHelper::getVoltageChannelNamesUsed(false);
     for(const auto &channel : qAsConst(voltageChannelNames)) {
         if(m_values.contains(channel))
-            m_values[channel] = std::complex(voltage * multiplier, double(0));
+            m_values[channel] = std::complex<float>(voltage * multiplier, 0);
     }
     QStringList currentChannelNames = ServiceChannelNameHelper::getCurrentChannelNamesUsed(false);
     for(const auto &channel : qAsConst(currentChannelNames)) {
         if(m_values.contains(channel))
-            m_values[channel] = std::polar(current * multiplier, double(0));
+            m_values[channel] = std::complex<float>(current * multiplier, 0);
     }
 }
 
