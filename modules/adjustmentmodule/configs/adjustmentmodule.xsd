@@ -60,9 +60,9 @@
     <xs:complexType name="justchannelinfotype">
         <xs:sequence>
             <xs:element name="chn" type="chntype" minOccurs="1" maxOccurs="1"/>
-            <xs:element name="amplitudeinfo" type="justinfotype" minOccurs="1" maxOccurs="1"/>
-            <xs:element name="phaseinfo" type="justinfotype" minOccurs="1" maxOccurs="1"/>
-            <xs:element name="offsetinfo" type="justinfotype" minOccurs="1" maxOccurs="1"/>
+            <xs:element name="ac_rms_value" type="justinfotype" minOccurs="1" maxOccurs="1"/>
+            <xs:element name="ac_phase_value" type="justinfotype" minOccurs="1" maxOccurs="1"/>
+            <xs:element name="dc_values" type="justinfotype" minOccurs="1" maxOccurs="1"/>
             <xs:element name="rangeinfo" type="rangeinfotype" minOccurs="1" maxOccurs="1"/>
         </xs:sequence>
     </xs:complexType>

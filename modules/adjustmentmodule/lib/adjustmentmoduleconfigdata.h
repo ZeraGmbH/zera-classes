@@ -23,10 +23,10 @@ struct rangeInfoType
 class cAdjChannelInfo
 {
 public:
-    adjInfoType rmsAdjInfo;
-    adjInfoType phaseAdjInfo;
-    adjInfoType dcAdjInfo;
-    rangeInfoType rangeAdjInfo;
+    adjInfoType acRmsValueInfo;
+    adjInfoType acPhaseValueInfo;
+    adjInfoType dcValueInfo;
+    rangeInfoType rangeInfo;
 };
 
 

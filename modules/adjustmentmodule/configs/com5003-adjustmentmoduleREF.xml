@@ -14,21 +14,21 @@
                 <n>6</n>
                 <chn1>
                     <chn>m0</chn>
-                    <amplitudeinfo>
+                    <ac_rms_value>
                         <avail>1</avail>
                         <entity>1050</entity>
                         <component>ACT_DC1</component>
-                    </amplitudeinfo>
-                    <phaseinfo>
+                    </ac_rms_value>
+                    <ac_phase_value>
                         <avail>0</avail>
                         <entity>0</entity>
                         <component></component>
-                    </phaseinfo>
-                    <offsetinfo>
+                    </ac_phase_value>
+                    <dc_values>
                         <avail>0</avail>
                         <entity>1050</entity>
                         <component>ACT_DC1</component>
-                    </offsetinfo>
+                    </dc_values>
                     <rangeinfo>
                         <entity>1020</entity>
                         <component>PAR_Channel1Range</component>
@@ -37,21 +37,21 @@
                 </chn1>
                 <chn2>
                     <chn>m1</chn>
-                    <amplitudeinfo>
+                    <ac_rms_value>
                         <avail>1</avail>
                         <entity>1050</entity>
                         <component>ACT_DC2</component>
-                    </amplitudeinfo>
-                    <phaseinfo>
+                    </ac_rms_value>
+                    <ac_phase_value>
                         <avail>0</avail>
                         <entity>0</entity>
                         <component></component>
-                    </phaseinfo>
-                    <offsetinfo>
+                    </ac_phase_value>
+                    <dc_values>
                         <avail>0</avail>
                         <entity>1050</entity>
                         <component>ACT_DC2</component>
-                    </offsetinfo>
+                    </dc_values>
                     <rangeinfo>
                         <entity>1020</entity>
                         <component>PAR_Channel2Range</component>
@@ -60,21 +60,21 @@
                 </chn2>
                 <chn3>
                     <chn>m2</chn>
-                    <amplitudeinfo>
+                    <ac_rms_value>
                         <avail>1</avail>
                         <entity>1050</entity>
                         <component>ACT_DC3</component>
-                    </amplitudeinfo>
-                    <phaseinfo>
+                    </ac_rms_value>
+                    <ac_phase_value>
                         <avail>0</avail>
                         <entity>0</entity>
                         <component></component>
-                    </phaseinfo>
-                    <offsetinfo>
+                    </ac_phase_value>
+                    <dc_values>
                         <avail>0</avail>
                         <entity>1050</entity>
                         <component>ACT_DC3</component>
-                    </offsetinfo>
+                    </dc_values>
                     <rangeinfo>
                         <entity>1020</entity>
                         <component>PAR_Channel3Range</component>
@@ -83,21 +83,21 @@
                 </chn3>
                 <chn4>
                     <chn>m3</chn>
-                    <amplitudeinfo>
+                    <ac_rms_value>
                         <avail>1</avail>
                         <entity>1050</entity>
                         <component>ACT_DC4</component>
-                    </amplitudeinfo>
-                    <phaseinfo>
+                    </ac_rms_value>
+                    <ac_phase_value>
                         <avail>0</avail>
                         <entity>0</entity>
                         <component></component>
-                    </phaseinfo>
-                    <offsetinfo>
+                    </ac_phase_value>
+                    <dc_values>
                         <avail>0</avail>
                         <entity>1050</entity>
                         <component>ACT_DC4</component>
-                    </offsetinfo>
+                    </dc_values>
                     <rangeinfo>
                         <entity>1020</entity>
                         <component>PAR_Channel4Range</component>
@@ -106,21 +106,21 @@
                 </chn4>
                 <chn5>
                     <chn>m4</chn>
-                    <amplitudeinfo>
+                    <ac_rms_value>
                         <avail>1</avail>
                         <entity>1050</entity>
                         <component>ACT_DC5</component>
-                    </amplitudeinfo>
-                    <phaseinfo>
+                    </ac_rms_value>
+                    <ac_phase_value>
                         <avail>0</avail>
                         <entity>0</entity>
                         <component></component>
-                    </phaseinfo>
-                    <offsetinfo>
+                    </ac_phase_value>
+                    <dc_values>
                         <avail>0</avail>
                         <entity>1050</entity>
                         <component>ACT_DC5</component>
-                    </offsetinfo>
+                    </dc_values>
                     <rangeinfo>
                         <entity>1020</entity>
                         <component>PAR_Channel5Range</component>
@@ -129,21 +129,21 @@
                 </chn5>
                 <chn6>
                     <chn>m5</chn>
-                    <amplitudeinfo>
+                    <ac_rms_value>
                         <avail>1</avail>
                         <entity>1050</entity>
                         <component>ACT_DC6</component>
-                    </amplitudeinfo>
-                    <phaseinfo>
+                    </ac_rms_value>
+                    <ac_phase_value>
                         <avail>0</avail>
                         <entity>0</entity>
                         <component></component>
-                    </phaseinfo>
-                    <offsetinfo>
+                    </ac_phase_value>
+                    <dc_values>
                         <avail>0</avail>
                         <entity>1050</entity>
                         <component>ACT_DC6</component>
-                    </offsetinfo>
+                    </dc_values>
                     <rangeinfo>
                         <entity>1020</entity>
                         <component>PAR_Channel6Range</component>

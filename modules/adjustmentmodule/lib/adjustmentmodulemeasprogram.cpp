@@ -118,24 +118,24 @@ bool cAdjustmentModuleMeasProgram::checkExternalVeinComponents()
         // we test if all configured actual value data exist
         QString chn = getConfData()->m_AdjChannelList.at(i);
 
-        adjInfo = getConfData()->m_AdjChannelInfoHash[chn]->rmsAdjInfo;
+        adjInfo = getConfData()->m_AdjChannelInfoHash[chn]->acRmsValueInfo;
         const QString errMagTemplate = "Entity %1 / component %2 not found";
         if (adjInfo.m_bAvail && !storageDb->hasStoredValue(adjInfo.m_nEntity, adjInfo.m_sComponent)) {
             notifyError(errMagTemplate.arg(adjInfo.m_nEntity).arg(adjInfo.m_sComponent));
             ok = false;
         }
-        adjInfo = getConfData()->m_AdjChannelInfoHash[chn]->phaseAdjInfo;
+        adjInfo = getConfData()->m_AdjChannelInfoHash[chn]->acPhaseValueInfo;
         if (adjInfo.m_bAvail && !storageDb->hasStoredValue(adjInfo.m_nEntity, adjInfo.m_sComponent)) {
             notifyError(errMagTemplate.arg(adjInfo.m_nEntity).arg(adjInfo.m_sComponent));
             ok = false;
         }
-        adjInfo = getConfData()->m_AdjChannelInfoHash[chn]->dcAdjInfo;
+        adjInfo = getConfData()->m_AdjChannelInfoHash[chn]->dcValueInfo;
         if (adjInfo.m_bAvail && !storageDb->hasStoredValue(adjInfo.m_nEntity, adjInfo.m_sComponent)) {
             notifyError(errMagTemplate.arg(adjInfo.m_nEntity).arg(adjInfo.m_sComponent));
             ok = false;
         }
 
-        rangeInfoType rangeInfo = getConfData()->m_AdjChannelInfoHash[chn]->rangeAdjInfo;
+        rangeInfoType rangeInfo = getConfData()->m_AdjChannelInfoHash[chn]->rangeInfo;
         if (!storageDb->hasStoredValue(rangeInfo.m_nEntity, rangeInfo.m_sComponent)) {
             notifyError(errMagTemplate.arg(rangeInfo.m_nEntity).arg(rangeInfo.m_sComponent));
             ok = false;
@@ -200,7 +200,7 @@ QStringList cAdjustmentModuleMeasProgram::getChannelRanges(const QString &channe
     ChannelRangeObserver::ChannelPtr channel = m_observer->getChannel(channelMName);
     QStringList ranges = channel->getAvailRangeNames();
     if (rangesAllowed == ADJUSTABLE_RANGES_ONLY) {
-        const QStringList &rangesDenied = getConfData()->m_AdjChannelInfoHash[channelMName]->rangeAdjInfo.m_rangesNotAdjustable;
+        const QStringList &rangesDenied = getConfData()->m_AdjChannelInfoHash[channelMName]->rangeInfo.m_rangesNotAdjustable;
         for (const QString &rangeDenied : rangesDenied)
             ranges.removeAll(rangeDenied);
     }
@@ -217,7 +217,7 @@ void cAdjustmentModuleMeasProgram::setInterfaceValidation()
     cAdjustValidator3d* adjValidator = new cAdjustValidator3d(this);
     for (int i = 0; i < getConfData()->m_nAdjustmentChannelCount; i++) {
         QString channelMName = getConfData()->m_AdjChannelList.at(i);
-        if (getConfData()->m_AdjChannelInfoHash[channelMName]->rmsAdjInfo.m_bAvail) {
+        if (getConfData()->m_AdjChannelInfoHash[channelMName]->acRmsValueInfo.m_bAvail) {
             const QString &channelAlias = m_observer->getChannel(channelMName)->getAlias();
             adjValidator->addValidator(channelAlias, getChannelRanges(channelMName, ADJUSTABLE_RANGES_ONLY), cDoubleValidator(0, 2000, 1e-7));
         }
@@ -228,7 +228,7 @@ void cAdjustmentModuleMeasProgram::setInterfaceValidation()
     adjValidator = new cAdjustValidator3d(this);
     for (int i = 0; i < getConfData()->m_nAdjustmentChannelCount; i++) {
         QString channelMName = getConfData()->m_AdjChannelList.at(i);
-        if (getConfData()->m_AdjChannelInfoHash[channelMName]->dcAdjInfo.m_bAvail) {
+        if (getConfData()->m_AdjChannelInfoHash[channelMName]->dcValueInfo.m_bAvail) {
             const QString &channelAlias = m_observer->getChannel(channelMName)->getAlias();
             adjValidator->addValidator(channelAlias, getChannelRanges(channelMName, ADJUSTABLE_RANGES_ONLY), cDoubleValidator(-2000, 2000, 1e-7));
         }
@@ -239,7 +239,7 @@ void cAdjustmentModuleMeasProgram::setInterfaceValidation()
     adjValidator = new cAdjustValidator3d(this);
     for (int i = 0; i < getConfData()->m_nAdjustmentChannelCount; i++) {
         QString channelMName = getConfData()->m_AdjChannelList.at(i);
-        if (getConfData()->m_AdjChannelInfoHash[channelMName]->dcAdjInfo.m_bAvail) {
+        if (getConfData()->m_AdjChannelInfoHash[channelMName]->dcValueInfo.m_bAvail) {
             const QString &channelAlias = m_observer->getChannel(channelMName)->getAlias();
             adjValidator->addValidator(channelAlias, getChannelRanges(channelMName, ADJUSTABLE_RANGES_ONLY), cDoubleValidator(-2000, 2000, 1e-7));
         }
@@ -250,7 +250,7 @@ void cAdjustmentModuleMeasProgram::setInterfaceValidation()
     adjValidator = new cAdjustValidator3d(this);
     for (int i = 0; i < getConfData()->m_nAdjustmentChannelCount; i++) {
         QString channelMName = getConfData()->m_AdjChannelList.at(i);
-        if (getConfData()->m_AdjChannelInfoHash[channelMName]->phaseAdjInfo.m_bAvail) {
+        if (getConfData()->m_AdjChannelInfoHash[channelMName]->acPhaseValueInfo.m_bAvail) {
             const QString &channelAlias = m_observer->getChannel(channelMName)->getAlias();
             adjValidator->addValidator(channelAlias, getChannelRanges(channelMName, ADJUSTABLE_RANGES_ONLY), cDoubleValidator(-360.0, 360.0, 1e-7));
         }
@@ -515,8 +515,8 @@ double cAdjustmentModuleMeasProgram::calcAdjAbsoluteErrorNeg()
 bool cAdjustmentModuleMeasProgram::checkRangeIsWanted(QString adjType)
 {
     const VeinStorage::AbstractDatabase *storageDb = m_pModule->getStorageDb();
-    int rangeEntity = getConfData()->m_AdjChannelInfoHash[m_currEnv.m_channelMName]->rangeAdjInfo.m_nEntity;
-    QString rangeComponent = getConfData()->m_AdjChannelInfoHash[m_currEnv.m_channelMName]->rangeAdjInfo.m_sComponent;
+    int rangeEntity = getConfData()->m_AdjChannelInfoHash[m_currEnv.m_channelMName]->rangeInfo.m_nEntity;
+    QString rangeComponent = getConfData()->m_AdjChannelInfoHash[m_currEnv.m_channelMName]->rangeInfo.m_sComponent;
     QString currentRange = storageDb->getStoredValue(rangeEntity, rangeComponent).toString();
     if(currentRange != m_currEnv.m_rangeName) {
         notifyError(QString("Wrong range on %1 adjustment! Wanted: %2 / Current: %3").arg(
@@ -531,8 +531,8 @@ void cAdjustmentModuleMeasProgram::setAdjustAmplitudeStartCommandDc(QVariant par
     if(!setAdjustEnvironment(m_pPARAdjustAmplitudeDc, paramValue, "gain"))
         return;
 
-    int adjustEntity = getConfData()->m_AdjChannelInfoHash[m_currEnv.m_channelMName]->dcAdjInfo.m_nEntity;
-    QString adjustComponent = getConfData()->m_AdjChannelInfoHash[m_currEnv.m_channelMName]->dcAdjInfo.m_sComponent;
+    int adjustEntity = getConfData()->m_AdjChannelInfoHash[m_currEnv.m_channelMName]->dcValueInfo.m_nEntity;
+    QString adjustComponent = getConfData()->m_AdjChannelInfoHash[m_currEnv.m_channelMName]->dcValueInfo.m_sComponent;
 
     const VeinStorage::AbstractDatabase *storageDb = m_pModule->getStorageDb();
     m_currEnv.m_actualValue = storageDb->getStoredValue(adjustEntity, adjustComponent).toDouble();
@@ -554,8 +554,8 @@ void cAdjustmentModuleMeasProgram::setAdjustAmplitudeStartCommand(QVariant param
     if(!setAdjustEnvironment(m_pPARAdjustAmplitude, paramValue, "gain"))
         return;
 
-    int adjustEntity = getConfData()->m_AdjChannelInfoHash[m_currEnv.m_channelMName]->rmsAdjInfo.m_nEntity;
-    QString adjustComponent = getConfData()->m_AdjChannelInfoHash[m_currEnv.m_channelMName]->rmsAdjInfo.m_sComponent;
+    int adjustEntity = getConfData()->m_AdjChannelInfoHash[m_currEnv.m_channelMName]->acRmsValueInfo.m_nEntity;
+    QString adjustComponent = getConfData()->m_AdjChannelInfoHash[m_currEnv.m_channelMName]->acRmsValueInfo.m_sComponent;
 
     const VeinStorage::AbstractDatabase *storageDb = m_pModule->getStorageDb();
     m_currEnv.m_actualValue = storageDb->getStoredValue(adjustEntity, adjustComponent).toDouble();
@@ -602,8 +602,8 @@ void cAdjustmentModuleMeasProgram::setAdjustPhaseStartCommand(QVariant paramValu
     if(!setAdjustEnvironment(m_pPARAdjustPhase, paramValue, "phase"))
         return;
 
-    int adjustEntity = getConfData()->m_AdjChannelInfoHash[m_currEnv.m_channelMName]->phaseAdjInfo.m_nEntity;
-    QString adjustComponent = getConfData()->m_AdjChannelInfoHash[m_currEnv.m_channelMName]->phaseAdjInfo.m_sComponent;
+    int adjustEntity = getConfData()->m_AdjChannelInfoHash[m_currEnv.m_channelMName]->acPhaseValueInfo.m_nEntity;
+    QString adjustComponent = getConfData()->m_AdjChannelInfoHash[m_currEnv.m_channelMName]->acPhaseValueInfo.m_sComponent;
     m_currEnv.m_actualValue = cmpPhase(m_pModule->getStorageDb()->getStoredValue(adjustEntity, adjustComponent));
     if(qIsNaN(m_currEnv.m_actualValue)) {
         notifyError("Phase to adjust has no actual value!");
@@ -650,8 +650,8 @@ void cAdjustmentModuleMeasProgram::setAdjustOffsetStartCommand(QVariant paramVal
     if(!setAdjustEnvironment(m_pPARAdjustOffset, paramValue, "offset"))
         return;
 
-    int adjustEntity = getConfData()->m_AdjChannelInfoHash[m_currEnv.m_channelMName]->dcAdjInfo.m_nEntity;
-    QString adjustComponent = getConfData()->m_AdjChannelInfoHash[m_currEnv.m_channelMName]->dcAdjInfo.m_sComponent;
+    int adjustEntity = getConfData()->m_AdjChannelInfoHash[m_currEnv.m_channelMName]->dcValueInfo.m_nEntity;
+    QString adjustComponent = getConfData()->m_AdjChannelInfoHash[m_currEnv.m_channelMName]->dcValueInfo.m_sComponent;
     double adjustActualValue = m_pModule->getStorageDb()->getStoredValue(adjustEntity, adjustComponent).toDouble();
     ChannelRangeObserver::ChannelPtr croChannel = m_pModule->getSharedChannelRangeObserver()->getChannel(m_currEnv.m_channelMName);
     const ChannelCommonStorage channelCommon = *croChannel->getModuleCommonStorage();
