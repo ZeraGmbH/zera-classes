@@ -3,6 +3,8 @@
     <configuration>
         <adjustment>
             <channel>
+                <!-- DC offset is denied on all channels because COM5003's -->
+                <!-- reference-module performs an auto-adjustment on session startup -->
                 <anglereference>
                     <entity>1050</entity>
                     <component>ACT_DFTPN1</component>
@@ -15,9 +17,9 @@
                 <chn1>
                     <chn>m0</chn>
                     <ac_rms_value>
-                        <avail>1</avail>
-                        <entity>1050</entity>
-                        <component>ACT_DC1</component>
+                        <avail>0</avail>
+                        <entity>0</entity>
+                        <component></component>
                     </ac_rms_value>
                     <ac_phase_value>
                         <avail>0</avail>
@@ -25,7 +27,8 @@
                         <component></component>
                     </ac_phase_value>
                     <dc_values>
-                        <avail>0</avail>
+                        <avail>1</avail>
+                        <deny_offset_adj>1</deny_offset_adj>
                         <entity>1050</entity>
                         <component>ACT_DC1</component>
                     </dc_values>
@@ -38,9 +41,9 @@
                 <chn2>
                     <chn>m1</chn>
                     <ac_rms_value>
-                        <avail>1</avail>
-                        <entity>1050</entity>
-                        <component>ACT_DC2</component>
+                        <avail>0</avail>
+                        <entity>0</entity>
+                        <component></component>
                     </ac_rms_value>
                     <ac_phase_value>
                         <avail>0</avail>
@@ -48,7 +51,8 @@
                         <component></component>
                     </ac_phase_value>
                     <dc_values>
-                        <avail>0</avail>
+                        <avail>1</avail>
+                        <deny_offset_adj>1</deny_offset_adj>
                         <entity>1050</entity>
                         <component>ACT_DC2</component>
                     </dc_values>
@@ -61,9 +65,9 @@
                 <chn3>
                     <chn>m2</chn>
                     <ac_rms_value>
-                        <avail>1</avail>
-                        <entity>1050</entity>
-                        <component>ACT_DC3</component>
+                        <avail>0</avail>
+                        <entity>0</entity>
+                        <component></component>
                     </ac_rms_value>
                     <ac_phase_value>
                         <avail>0</avail>
@@ -71,7 +75,8 @@
                         <component></component>
                     </ac_phase_value>
                     <dc_values>
-                        <avail>0</avail>
+                        <avail>1</avail>
+                        <deny_offset_adj>1</deny_offset_adj>
                         <entity>1050</entity>
                         <component>ACT_DC3</component>
                     </dc_values>
@@ -84,9 +89,9 @@
                 <chn4>
                     <chn>m3</chn>
                     <ac_rms_value>
-                        <avail>1</avail>
-                        <entity>1050</entity>
-                        <component>ACT_DC4</component>
+                        <avail>0</avail>
+                        <entity>0</entity>
+                        <component></component>
                     </ac_rms_value>
                     <ac_phase_value>
                         <avail>0</avail>
@@ -94,7 +99,8 @@
                         <component></component>
                     </ac_phase_value>
                     <dc_values>
-                        <avail>0</avail>
+                        <avail>1</avail>
+                        <deny_offset_adj>1</deny_offset_adj>
                         <entity>1050</entity>
                         <component>ACT_DC4</component>
                     </dc_values>
@@ -107,9 +113,9 @@
                 <chn5>
                     <chn>m4</chn>
                     <ac_rms_value>
-                        <avail>1</avail>
-                        <entity>1050</entity>
-                        <component>ACT_DC5</component>
+                        <avail>0</avail>
+                        <entity>0</entity>
+                        <component></component>
                     </ac_rms_value>
                     <ac_phase_value>
                         <avail>0</avail>
@@ -117,7 +123,8 @@
                         <component></component>
                     </ac_phase_value>
                     <dc_values>
-                        <avail>0</avail>
+                        <avail>1</avail>
+                        <deny_offset_adj>1</deny_offset_adj>
                         <entity>1050</entity>
                         <component>ACT_DC5</component>
                     </dc_values>
@@ -130,9 +137,9 @@
                 <chn6>
                     <chn>m5</chn>
                     <ac_rms_value>
-                        <avail>1</avail>
-                        <entity>1050</entity>
-                        <component>ACT_DC6</component>
+                        <avail>0</avail>
+                        <entity>0</entity>
+                        <component></component>
                     </ac_rms_value>
                     <ac_phase_value>
                         <avail>0</avail>
@@ -140,7 +147,8 @@
                         <component></component>
                     </ac_phase_value>
                     <dc_values>
-                        <avail>0</avail>
+                        <avail>1</avail>
+                        <deny_offset_adj>1</deny_offset_adj>
                         <entity>1050</entity>
                         <component>ACT_DC6</component>
                     </dc_values>

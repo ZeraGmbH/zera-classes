@@ -50,6 +50,15 @@
         </xs:sequence>
     </xs:complexType>
 
+    <xs:complexType name="justinfotypeDC">
+        <xs:sequence>
+            <xs:element name="avail" type="yesnotype" minOccurs="1" maxOccurs="1"/>
+            <xs:element name="deny_offset_adj" type="yesnotype" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="entity" type="xs:integer" minOccurs="1" maxOccurs="1"/>
+            <xs:element name="component" type="xs:string" minOccurs="1" maxOccurs="1"/>
+        </xs:sequence>
+    </xs:complexType>
+
     <xs:complexType name="referencetype">
         <xs:sequence>
             <xs:element name="entity" type="xs:integer" minOccurs="1" maxOccurs="1"/>
@@ -62,7 +71,7 @@
             <xs:element name="chn" type="chntype" minOccurs="1" maxOccurs="1"/>
             <xs:element name="ac_rms_value" type="justinfotype" minOccurs="1" maxOccurs="1"/>
             <xs:element name="ac_phase_value" type="justinfotype" minOccurs="1" maxOccurs="1"/>
-            <xs:element name="dc_values" type="justinfotype" minOccurs="1" maxOccurs="1"/>
+            <xs:element name="dc_values" type="justinfotypeDC" minOccurs="1" maxOccurs="1"/>
             <xs:element name="rangeinfo" type="rangeinfotype" minOccurs="1" maxOccurs="1"/>
         </xs:sequence>
     </xs:complexType>

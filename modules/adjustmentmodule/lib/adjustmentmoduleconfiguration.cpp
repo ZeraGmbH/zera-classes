@@ -33,7 +33,8 @@ enum moduleconfigstate
     setChn1AcPhaseValueComponent = setChn1AcPhaseValueEntity + 32,
 
     setChn1DcValueAvail = setChn1AcPhaseValueComponent + 32,
-    setChn1DcValueEntity = setChn1DcValueAvail + 32,
+    setChn1DcDenyOffsetAdj = setChn1DcValueAvail + 32,
+    setChn1DcValueEntity = setChn1DcDenyOffsetAdj + 32,
     setChn1DcValueComponent = setChn1DcValueEntity + 32,
 
     setChn1RangeInfoEntity = setChn1DcValueComponent + 32,
@@ -117,6 +118,7 @@ void cAdjustmentModuleConfiguration::configXMLInfo(const QString &key)
                 m_ConfigXMLMap[QString("adjmodconfpar:configuration:adjustment:channel:chn%1:ac_phase_value:component").arg(i+1)] = setChn1AcPhaseValueComponent + i;
 
                 m_ConfigXMLMap[QString("adjmodconfpar:configuration:adjustment:channel:chn%1:dc_values:avail").arg(i+1)] = setChn1DcValueAvail + i;
+                m_ConfigXMLMap[QString("adjmodconfpar:configuration:adjustment:channel:chn%1:dc_values:deny_offset_adj").arg(i+1)] = setChn1DcDenyOffsetAdj + i;
                 m_ConfigXMLMap[QString("adjmodconfpar:configuration:adjustment:channel:chn%1:dc_values:entity").arg(i+1)] = setChn1DcValueEntity + i;
                 m_ConfigXMLMap[QString("adjmodconfpar:configuration:adjustment:channel:chn%1:dc_values:component").arg(i+1)] = setChn1DcValueComponent + i;
 
@@ -175,12 +177,17 @@ void cAdjustmentModuleConfiguration::configXMLInfo(const QString &key)
                 cAdjChannelInfo* adjChannelInfo = m_pAdjustmentModulConfigData->m_AdjChannelInfoHash[chn];
                 adjChannelInfo->acPhaseValueInfo.m_sComponent = m_pXMLReader->getValue(key);
             }
-
             else if ((cmd >= setChn1DcValueAvail) && (cmd < setChn1DcValueAvail + 32)) {
                 cmd -= setChn1DcValueAvail;
                 QString chn = m_pAdjustmentModulConfigData->m_AdjChannelList.at(cmd);
                 cAdjChannelInfo* adjChannelInfo = m_pAdjustmentModulConfigData->m_AdjChannelInfoHash[chn];
                 adjChannelInfo->dcValueInfo.m_bAvail = (m_pXMLReader->getValue(key).toInt(&ok) == 1);
+            }
+            else if ((cmd >= setChn1DcDenyOffsetAdj) && (cmd < setChn1DcDenyOffsetAdj + 32)) {
+                cmd -= setChn1DcDenyOffsetAdj;
+                QString chn = m_pAdjustmentModulConfigData->m_AdjChannelList.at(cmd);
+                cAdjChannelInfo* adjChannelInfo = m_pAdjustmentModulConfigData->m_AdjChannelInfoHash[chn];
+                adjChannelInfo->dcValueInfo.m_denyOffsetAdjustment = (m_pXMLReader->getValue(key).toInt(&ok) == 1);
             }
             else if ((cmd >= setChn1DcValueEntity) && (cmd < setChn1DcValueEntity + 32)) {
                 cmd -= setChn1DcValueEntity;

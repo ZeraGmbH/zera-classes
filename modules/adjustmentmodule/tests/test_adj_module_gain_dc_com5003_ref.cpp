@@ -1,4 +1,5 @@
 #include "test_adj_module_gain_dc_com5003_ref.h"
+#include "adjmoduletesthelper.h"
 #include <timerfactoryqtfortest.h>
 #include <QTest>
 
@@ -138,23 +139,44 @@ void test_adj_module_gain_dc_com5003_ref::offsetAdjR10VRejected()
     QCOMPARE(m_scpiClient->sendReceive(send), "+4");
 }
 
-void test_adj_module_gain_dc_com5003_ref::gainAdj480VRejected()
+void test_adj_module_gain_dc_com5003_ref::acGainAdj480VRejected()
 {
     QByteArray send = QString("*CLS|CALC:ADJ1:AMPL %1,480V,0;|*STB?").arg(m_refChannel).toLatin1();
     QCOMPARE(m_scpiClient->sendReceive(send), "+4");
 }
 
-void test_adj_module_gain_dc_com5003_ref::gainAdjR0VRejected()
+void test_adj_module_gain_dc_com5003_ref::acGainAdjR0VRejected()
 {
     QCOMPARE(setRange(m_refChannel, "R0V"), "+0");
     QByteArray send = QString("*CLS|CALC:ADJ1:AMPL %1,R0V,0;|*STB?").arg(m_refChannel).toLatin1();
     QCOMPARE(m_scpiClient->sendReceive(send), "+4");
 }
 
-void test_adj_module_gain_dc_com5003_ref::gainAdjR10VOk()
+void test_adj_module_gain_dc_com5003_ref::acGainAdjR10VRejected()
 {
     QCOMPARE(setRange(m_refChannel, "R10V"), "+0");
     QByteArray send = QString("*CLS|CALC:ADJ1:AMPL %1,R10V,0;|*STB?").arg(m_refChannel).toLatin1(); // 0: default actual value
+    QCOMPARE(m_scpiClient->sendReceive(send), "+4");
+}
+
+void test_adj_module_gain_dc_com5003_ref::dcgainAdj480VRejected()
+{
+    QCOMPARE(setRange(m_refChannel, "R0V"), "+0");
+    QByteArray send = QString("*CLS|CALC:ADJ1:DCAM %1,R0V,0;|*STB?").arg(m_refChannel).toLatin1();
+    QCOMPARE(m_scpiClient->sendReceive(send), "+4");
+}
+
+void test_adj_module_gain_dc_com5003_ref::dcgainAdjR0VRejected()
+{
+    QCOMPARE(setRange(m_refChannel, "R0V"), "+0");
+    QByteArray send = QString("*CLS|CALC:ADJ1:DCAM %1,R0V,0;|*STB?").arg(m_refChannel).toLatin1();
+    QCOMPARE(m_scpiClient->sendReceive(send), "+4");
+}
+
+void test_adj_module_gain_dc_com5003_ref::dcgainAdjR10VOk()
+{
+    QCOMPARE(setRange(m_refChannel, "R10V"), "+0");
+    QByteArray send = QString("*CLS|CALC:ADJ1:DCAM %1,R10V,0;|*STB?").arg(m_refChannel).toLatin1(); // 0: default actual value
     QCOMPARE(m_scpiClient->sendReceive(send), "+0");
 }
 

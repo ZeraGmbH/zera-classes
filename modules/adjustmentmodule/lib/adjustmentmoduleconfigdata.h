@@ -12,6 +12,14 @@ struct adjInfoType
     QString m_sComponent;
 };
 
+struct adjInfoTypeDc
+{
+    bool m_bAvail = false;
+    bool m_denyOffsetAdjustment;
+    int m_nEntity = 0;
+    QString m_sComponent;
+};
+
 struct rangeInfoType
 {
     int m_nEntity = 0;
@@ -25,7 +33,7 @@ class cAdjChannelInfo
 public:
     adjInfoType acRmsValueInfo;
     adjInfoType acPhaseValueInfo;
-    adjInfoType dcValueInfo;
+    adjInfoTypeDc dcValueInfo;
     rangeInfoType rangeInfo;
 };
 

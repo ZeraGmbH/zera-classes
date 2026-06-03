@@ -32,13 +32,17 @@ private slots:
     void phaseStatusSetR0VOk(); // status set allowed for not adjustable ranges
     void phaseStatusSetR10VOk();
 
-    void offsetAdj480VRejected();
+    void offsetAdj480VRejected(); // COM5003 adjusts offset automatically at start of ref session
     void offsetAdjR0VRejected();
     void offsetAdjR10VRejected();
 
-    void gainAdj480VRejected();
-    void gainAdjR0VRejected();
-    void gainAdjR10VOk();
+    void acGainAdj480VRejected();
+    void acGainAdjR0VRejected();
+    void acGainAdjR10VRejected();
+
+    void dcgainAdj480VRejected();
+    void dcgainAdjR0VRejected();
+    void dcgainAdjR10VOk();
 
     void phaseAdj480VRejected();
     void phaseAdjR0VRejected();

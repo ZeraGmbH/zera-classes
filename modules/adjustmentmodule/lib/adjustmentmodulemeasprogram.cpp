@@ -106,38 +106,38 @@ cAdjustmentModuleConfigData *cAdjustmentModuleMeasProgram::getConfData() const
 bool cAdjustmentModuleMeasProgram::checkExternalVeinComponents()
 {
     bool ok = true;
-    adjInfoType adjInfo = getConfData()->m_ReferenceAngle;
+    const adjInfoType &adjInfoRefAngle = getConfData()->m_ReferenceAngle;
     const VeinStorage::AbstractDatabase* storageDb = m_pModule->getStorageDb();
-    if (!storageDb->hasStoredValue(adjInfo.m_nEntity, adjInfo.m_sComponent))
+    if (!storageDb->hasStoredValue(adjInfoRefAngle.m_nEntity, adjInfoRefAngle.m_sComponent))
         ok = false;
-    adjInfo = getConfData()->m_ReferenceFrequency;
-    if (!storageDb->hasStoredValue(adjInfo.m_nEntity, adjInfo.m_sComponent))
+    const adjInfoType &adjInfoRefFreq = getConfData()->m_ReferenceFrequency;
+    if (!storageDb->hasStoredValue(adjInfoRefFreq.m_nEntity, adjInfoRefFreq.m_sComponent))
         ok = false;
 
     for (int i = 0; ok && i<getConfData()->m_nAdjustmentChannelCount; i++) {
         // we test if all configured actual value data exist
         QString chn = getConfData()->m_AdjChannelList.at(i);
 
-        adjInfo = getConfData()->m_AdjChannelInfoHash[chn]->acRmsValueInfo;
-        const QString errMagTemplate = "Entity %1 / component %2 not found";
-        if (adjInfo.m_bAvail && !storageDb->hasStoredValue(adjInfo.m_nEntity, adjInfo.m_sComponent)) {
-            notifyError(errMagTemplate.arg(adjInfo.m_nEntity).arg(adjInfo.m_sComponent));
+        const adjInfoType &adjInfoRms = getConfData()->m_AdjChannelInfoHash[chn]->acRmsValueInfo;
+        const QString errMsgTemplate = "Entity %1 / component %2 not found";
+        if (adjInfoRms.m_bAvail && !storageDb->hasStoredValue(adjInfoRms.m_nEntity, adjInfoRms.m_sComponent)) {
+            notifyError(errMsgTemplate.arg(adjInfoRms.m_nEntity).arg(adjInfoRms.m_sComponent));
             ok = false;
         }
-        adjInfo = getConfData()->m_AdjChannelInfoHash[chn]->acPhaseValueInfo;
-        if (adjInfo.m_bAvail && !storageDb->hasStoredValue(adjInfo.m_nEntity, adjInfo.m_sComponent)) {
-            notifyError(errMagTemplate.arg(adjInfo.m_nEntity).arg(adjInfo.m_sComponent));
+        const adjInfoType &adjInfoPhase = getConfData()->m_AdjChannelInfoHash[chn]->acPhaseValueInfo;
+        if (adjInfoPhase.m_bAvail && !storageDb->hasStoredValue(adjInfoPhase.m_nEntity, adjInfoPhase.m_sComponent)) {
+            notifyError(errMsgTemplate.arg(adjInfoPhase.m_nEntity).arg(adjInfoPhase.m_sComponent));
             ok = false;
         }
-        adjInfo = getConfData()->m_AdjChannelInfoHash[chn]->dcValueInfo;
-        if (adjInfo.m_bAvail && !storageDb->hasStoredValue(adjInfo.m_nEntity, adjInfo.m_sComponent)) {
-            notifyError(errMagTemplate.arg(adjInfo.m_nEntity).arg(adjInfo.m_sComponent));
+        const adjInfoTypeDc &adjInfoDc = getConfData()->m_AdjChannelInfoHash[chn]->dcValueInfo;
+        if (adjInfoDc.m_bAvail && !storageDb->hasStoredValue(adjInfoDc.m_nEntity, adjInfoDc.m_sComponent)) {
+            notifyError(errMsgTemplate.arg(adjInfoDc.m_nEntity).arg(adjInfoDc.m_sComponent));
             ok = false;
         }
 
-        rangeInfoType rangeInfo = getConfData()->m_AdjChannelInfoHash[chn]->rangeInfo;
+        const rangeInfoType &rangeInfo = getConfData()->m_AdjChannelInfoHash[chn]->rangeInfo;
         if (!storageDb->hasStoredValue(rangeInfo.m_nEntity, rangeInfo.m_sComponent)) {
-            notifyError(errMagTemplate.arg(rangeInfo.m_nEntity).arg(rangeInfo.m_sComponent));
+            notifyError(errMsgTemplate.arg(rangeInfo.m_nEntity).arg(rangeInfo.m_sComponent));
             ok = false;
         }
     }
@@ -239,7 +239,8 @@ void cAdjustmentModuleMeasProgram::setInterfaceValidation()
     adjValidator = new cAdjustValidator3d(this);
     for (int i = 0; i < getConfData()->m_nAdjustmentChannelCount; i++) {
         QString channelMName = getConfData()->m_AdjChannelList.at(i);
-        if (getConfData()->m_AdjChannelInfoHash[channelMName]->dcValueInfo.m_bAvail) {
+        const adjInfoTypeDc &dcValueInfo = getConfData()->m_AdjChannelInfoHash[channelMName]->dcValueInfo;
+        if (dcValueInfo.m_bAvail && !dcValueInfo.m_denyOffsetAdjustment) {
             const QString &channelAlias = m_observer->getChannel(channelMName)->getAlias();
             adjValidator->addValidator(channelAlias, getChannelRanges(channelMName, ADJUSTABLE_RANGES_ONLY), cDoubleValidator(-2000, 2000, 1e-7));
         }
