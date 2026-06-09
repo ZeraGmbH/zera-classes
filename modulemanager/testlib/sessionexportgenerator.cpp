@@ -197,7 +197,9 @@ void SessionExportGenerator::fireActualValues(QString session)
     constexpr double testangle = 0;
     constexpr double testfrequency = 50;
 
-    TestDspValues dspValues(m_modmanTestRunner->getDspInterface(INJECT_DFT)->getValueList());
+    bool hasDcDft = session.contains("ref-session");  // ATOW it is just com5003-ref-session
+    int dftOrder = hasDcDft ? 0 : 1;
+    TestDspValues dspValues(m_modmanTestRunner->getDspInterface(INJECT_DFT)->getValueList(), dftOrder);
     if(session.contains("meas") || session.contains("perphase") || session.contains("ced")) {
         dspValues.setAllValuesSymmetric(testvoltage, testcurrent, testangle, testfrequency);
         dspValues.fireAllActualValues(

@@ -4,7 +4,7 @@
 void AdjModuleTestHelper::setActualTestValues(ModuleManagerTestRunner &testRunner,
                                               float testvoltage, float testcurrent, float testangle, float testfrequency)
 {
-    TestDspValues dspValues(testRunner.getDspInterface(INJECT_DFT)->getValueList());
+    TestDspValues dspValues(testRunner.getDspInterface(INJECT_DFT)->getValueList(), 1);
     dspValues.setAllValuesSymmetric(testvoltage, testcurrent, testangle, testfrequency);
     dspValues.fireAllActualValues(
         testRunner.getDspInterface(INJECT_DFT),
@@ -15,7 +15,7 @@ void AdjModuleTestHelper::setActualTestValues(ModuleManagerTestRunner &testRunne
 
 void AdjModuleTestHelper::setAllValuesSymmetricAc(ModuleManagerTestRunner &testRunner, float testvoltage, float testcurrent, float testangle, float testfrequency)
 {
-    TestDspValues dspValues(testRunner.getDspInterface(INJECT_DFT)->getValueList());
+    TestDspValues dspValues(testRunner.getDspInterface(INJECT_DFT)->getValueList(), 1);
     dspValues.setAllValuesSymmetricAc(testvoltage, testcurrent, testangle, testfrequency);
     dspValues.fireAllActualValues(
         testRunner.getDspInterface(INJECT_DFT),
@@ -26,7 +26,7 @@ void AdjModuleTestHelper::setAllValuesSymmetricAc(ModuleManagerTestRunner &testR
 
 void AdjModuleTestHelper::setAllValuesSymmetricDc(ModuleManagerTestRunner &testRunner, float voltage, float current)
 {
-    TestDspValues dspValues(testRunner.getDspInterface(INJECT_DFT)->getValueList());
+    TestDspValues dspValues(testRunner.getDspInterface(INJECT_DFT)->getValueList(), 0);
     dspValues.setAllValuesSymmetricDc(voltage, current);
     dspValues.fireAllActualValues(
         testRunner.getDspInterface(INJECT_DFT),

@@ -1,13 +1,13 @@
 #include "testdspvalues.h"
 #include "servicechannelnamehelper.h"
 
-TestDspValues::TestDspValues(const QStringList &valueChannelList)
+TestDspValues::TestDspValues(const QStringList &valueChannelList, int dftOrder)
 {
     for(const QString& valueChannel : valueChannelList) {
         if(valueChannel.split("-").count() == 1)
             m_channelList.append(valueChannel);
     }
-    m_dftValues = std::make_unique<DemoValuesDspDft>(valueChannelList, 1);
+    m_dftValues = std::make_unique<DemoValuesDspDft>(valueChannelList, dftOrder);
     m_fftValues = std::make_unique<DemoValuesDspFft>(m_channelList.count());
     m_rangeValues = std::make_unique<DemoValuesDspRange>(m_channelList.count());
     m_rmsValues = std::make_unique<DemoValuesDspRms>(valueChannelList);
