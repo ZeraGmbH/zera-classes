@@ -14,6 +14,7 @@
         <file>adj-dump/dump-calc-adj-values-REF5.xml</file>
         <file>adj-dump/dump-calc-adj-values-REF6.xml</file>
 
+        <file>com5003-ref-session-minimal.json</file>
         <file>mt310s2-dftmodule-no-movingwindow-ref.xml</file>
         <file>mt310s2-rmsmodule-no-movingwindow.xml</file>
         <file>dumpInitial.json</file>
