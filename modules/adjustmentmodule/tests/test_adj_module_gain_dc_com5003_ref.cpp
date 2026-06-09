@@ -1,6 +1,10 @@
 #include "test_adj_module_gain_dc_com5003_ref.h"
 #include "adjmoduletesthelper.h"
 #include <timerfactoryqtfortest.h>
+#include <testloghelpers.h>
+#include <xmldocumentcompare.h>
+#include <xmlhelperfortest.h>
+#include <timemachineobject.h>
 #include <QTest>
 
 QTEST_MAIN(test_adj_module_gain_dc_com5003_ref)
@@ -151,6 +155,70 @@ void test_adj_module_gain_dc_com5003_ref::phaseAdjR10VRejected()
     QCOMPARE(m_scpiClient->sendReceive(send), "+4");
 }
 
+void test_adj_module_gain_dc_com5003_ref::checkCalculatedAdjValuesPerChannel()
+{
+    initClientServer();
+    QCOMPARE(setRange(m_refChannel, "R10V"), "+0");
+
+    constexpr double measValue = 10.0;
+    constexpr double refValue = measValue * 1.001;
+    AdjModuleTestHelper::setAllValuesSymmetricDc(*m_testRunner, measValue, measValue);
+
+    QByteArray send;
+    send = QString("*CLS|CALC:ADJ1:INIT %1,R10V;|*STB?").arg(m_refChannel).toLatin1();
+    QCOMPARE(m_scpiClient->sendReceive(send), "+0");
+
+    send = QString("*CLS|CALC:ADJ1:DCAMPLITUDE %1,R10V,%2;|*STB?").arg(m_refChannel).arg(refValue).toLatin1();
+    QCOMPARE(m_scpiClient->sendReceive(send), "+0");
+
+    QCOMPARE(m_scpiClient->sendReceive("CALC:ADJ1:COMPUTATION 1;|*STB?"), "+0");
+
+    send = QString("*CLS|CALC:ADJ1:GSTATUS %1,R10V,128;|*STB?").arg(m_refChannel).toLatin1();
+    QCOMPARE(m_scpiClient->sendReceive(send), "+0");
+
+    QString dumped = XmlHelperForTest::removeTimeDependentEntriesFromXml(m_scpiClient->sendReceive("CALC:ADJ1:PCB?"));
+    QString fileNameExpected = QString(":/adj-dump/dump-calc-adj-values-%1.xml").arg(m_refChannel);
+    QString expected = TestLogHelpers::loadFile(fileNameExpected);
+    XmlDocumentCompare compare;
+    bool ok = compare.compareXml(dumped, expected);
+    if(!ok)
+        TestLogHelpers::compareAndLogOnDiffFile(fileNameExpected, XmlHelperForTest::prettify(dumped));
+    QVERIFY(ok);
+}
+
+void test_adj_module_gain_dc_com5003_ref::checkCalculatedAdjValuesAccumulatedSequence()
+{
+    if (m_refChannel == "REF1") {
+        initClientServer();
+        QCOMPARE(setRange(m_refChannel, "R10V"), "+0");
+    }
+
+    constexpr double measValue = 10.0;
+    constexpr double refValue = measValue * 1.001;
+    AdjModuleTestHelper::setAllValuesSymmetricDc(*m_testRunner, measValue, measValue);
+
+    QByteArray send;
+    send = QString("*CLS|CALC:ADJ1:INIT %1,R10V;|*STB?").arg(m_refChannel).toLatin1();
+    QCOMPARE(m_scpiClient->sendReceive(send), "+0");
+
+    send = QString("*CLS|CALC:ADJ1:DCAMPLITUDE %1,R10V,%2;|*STB?").arg(m_refChannel).arg(refValue).toLatin1();
+    QCOMPARE(m_scpiClient->sendReceive(send), "+0");
+
+    QCOMPARE(m_scpiClient->sendReceive("CALC:ADJ1:COMPUTATION 1;|*STB?"), "+0");
+
+    send = QString("*CLS|CALC:ADJ1:GSTATUS %1,R10V,128;|*STB?").arg(m_refChannel).toLatin1();
+    QCOMPARE(m_scpiClient->sendReceive(send), "+0");
+
+    QString dumped = XmlHelperForTest::removeTimeDependentEntriesFromXml(m_scpiClient->sendReceive("CALC:ADJ1:PCB?"));
+    QString fileNameExpected = QString(":/adj-dump/dump-calc-adj-values-accumulated-%1.xml").arg(m_refChannel);
+    QString expected = TestLogHelpers::loadFile(fileNameExpected);
+    XmlDocumentCompare compare;
+    bool ok = compare.compareXml(dumped, expected);
+    if(!ok)
+        TestLogHelpers::compareAndLogOnDiffFile(fileNameExpected, XmlHelperForTest::prettify(dumped));
+    QVERIFY(ok);
+}
+
 
 QString test_adj_module_gain_dc_com5003_ref::setAutoRangeOff()
 {
@@ -168,4 +236,13 @@ QString test_adj_module_gain_dc_com5003_ref::setRange(const QString &channelAlia
 {
     const QByteArray send = QString("SENSE:RNG1:%1:RANGE %2;|*stb?").arg(channelAlias, rangeName).toLatin1();
     return m_scpiClient->sendReceive(send);
+}
+
+void test_adj_module_gain_dc_com5003_ref::initClientServer()
+{
+    m_scpiClient.reset();
+    TimeMachineObject::feedEventLoop();
+    m_testRunner.reset();
+    TimeMachineObject::feedEventLoop();
+    init();
 }

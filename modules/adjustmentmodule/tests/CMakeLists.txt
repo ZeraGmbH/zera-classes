@@ -14,7 +14,9 @@ function(SETUP_QTESTS_MODULE)
             dsp-support-testlib
             scpimodule-testlib
             Zera::zenuxservicecommon-demolib
+            Zera::zenuxservicecommon-testlib
             Zera::mt310s2d-testlib
+            Zera::xml-compare-testlib
         )
     endforeach()
 endfunction()

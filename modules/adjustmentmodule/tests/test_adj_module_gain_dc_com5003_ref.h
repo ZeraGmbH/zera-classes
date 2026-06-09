@@ -40,13 +40,19 @@ private slots:
     void phaseAdjR0VRejected();
     void phaseAdjR10VRejected();
 
+    // from here fresh client / server
+    void checkCalculatedAdjValuesPerChannel();
+    void checkCalculatedAdjValuesAccumulatedSequence();
+
 private:
     QString setAutoRangeOff();
     QString setRangeGroupingOff();
     QString setRange(const QString &channelAlias, const QString &rangeName);
+    void initClientServer();
 
     std::unique_ptr<ModuleManagerTestRunner> m_testRunner;
     std::unique_ptr<ScpiModuleClientBlocked> m_scpiClient;
+
     QString m_refChannel;
 };
 
