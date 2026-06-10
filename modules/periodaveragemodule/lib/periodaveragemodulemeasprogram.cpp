@@ -4,6 +4,7 @@
 #include "servicechannelnamehelper.h"
 #include "vfmodulecomponent.h"
 #include "taskdspdataacquisition.h"
+#include "vfmodulecomponentcreator.h"
 #include <errormessages.h>
 #include <intvalidator.h>
 #include <scpi.h>
@@ -69,6 +70,7 @@ void PeriodAverageModuleMeasProgram::stop()
 
 void PeriodAverageModuleMeasProgram::generateVeinInterface()
 {
+    VfModuleComponentCreator componentCreator(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem());
     for (int i = 0; i < getConfData()->m_valueChannelList.count(); i++) {
         const QString channeMName = getConfData()->m_valueChannelList.at(i);
         ServiceChannelNameHelper::TChannelAliasUnit aliasUnit = ServiceChannelNameHelper::getChannelAndUnit(channeMName, m_observer);
@@ -77,23 +79,17 @@ void PeriodAverageModuleMeasProgram::generateVeinInterface()
         scpiBaseName.replace("L", "");
         VfModuleComponent *pActvalue;
 
-        pActvalue = new VfModuleComponent(m_pModule->getEntityId(),
-                                          m_pModule->getValidatorEventSystem(),
-                                          QString("ACT_VALUE%1").arg(i+1),
-                                          QString("Measurement value (period average)"));
-        pActvalue->setChannelName(aliasUnit.m_channelAlias);
-        pActvalue->setUnit(aliasUnit.m_channelUnit);
-        pActvalue->setScpiInfo("MEASURE", scpiBaseName, SCPI::isCmdwP);
+        pActvalue = componentCreator.createComponent(QString("ACT_VALUE%1").arg(i+1),
+                                                     "Measurement value (period average)",
+                                                     aliasUnit.m_channelAlias, aliasUnit.m_channelUnit,
+                                                     "MEASURE", scpiBaseName, SCPI::isCmdwP);
         m_averageValues.append(pActvalue);
         m_pModule->m_veinComponentsWithMetaAndScpi.append(pActvalue); // and for the modules interface
 
-        pActvalue = new VfModuleComponent(m_pModule->getEntityId(),
-                                          m_pModule->getValidatorEventSystem(),
-                                          QString("ACT_PERIOD_VALUES%1").arg(i+1),
-                                          QString("Array of per period measurement values"));
-        pActvalue->setChannelName(aliasUnit.m_channelAlias);
-        pActvalue->setUnit(aliasUnit.m_channelUnit);
-        pActvalue->setScpiInfo("MEASURE", "P" + scpiBaseName, SCPI::isCmdwP);
+        pActvalue = componentCreator.createComponent(QString("ACT_PERIOD_VALUES%1").arg(i+1),
+                                                     "Array of per period measurement values",
+                                                     aliasUnit.m_channelAlias, aliasUnit.m_channelUnit,
+                                                     "MEASURE", "P" + scpiBaseName, SCPI::isCmdwP);
         m_periodValues.append(pActvalue);
         m_pModule->m_veinComponentsWithMetaAndScpi.append(pActvalue); // and for the modules interface
     }
