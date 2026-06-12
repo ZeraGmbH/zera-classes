@@ -3,6 +3,7 @@
 
 #include "statusmoduleinit.h"
 #include <basemeasmodule.h>
+#include <vfrpceventsystemsimplified.h>
 
 namespace STATUSMODULE
 {
@@ -16,12 +17,18 @@ public:
 
     explicit cStatusModule(const ModuleFactoryParam &moduleParam);
 
+    VfRpcEventSystemSimplified *getRpcEventSystem();
+
+private slots:
+    void activationFinished() override;
+
 private:
     void setupModule() override; // after xml configuration we can setup and export our module
     void startMeas() override; // we make the measuring program start here
     void stopMeas() override;
 
     cStatusModuleInit *m_pStatusModuleInit = nullptr;
+    std::unique_ptr<VfRpcEventSystemSimplified> m_spRpcEventSystem;
 };
 
 }

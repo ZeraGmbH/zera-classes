@@ -2,6 +2,7 @@
 #define STATUSMODULEINIT_H
 
 #include "statusmoduleconfigdata.h"
+#include "vfmodulerpc.h"
 #include <moduleactivist.h>
 #include <vfmoduleparameter.h>
 #include <dspinterface.h>
@@ -59,6 +60,9 @@ private slots:
     void onVeinUpdate();
 private:
     void notifyActivationError(QVariant value);
+    void createVersionsJson();
+    QJsonObject QStringToQJsonObject(QString strJson);
+    std::shared_ptr<QJsonObject> m_versionsJson;
 
     cStatusModule* m_pModule; // the module we live in
     cStatusModuleConfigData& m_ConfigData;
@@ -134,6 +138,7 @@ private:
     VfModuleParameter *m_pAccumulatorSoc;
     VfModuleParameter *m_pInstrument;
     VfModuleParameter *m_pChannels;
+    VfModuleRpcPtr m_createVersionFileRpc = nullptr;
 
     QVariant wantedSerialNr;
 
