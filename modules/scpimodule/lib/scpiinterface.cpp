@@ -34,33 +34,12 @@ void cSCPIInterface::addSCPICommand(ScpiBaseDelegatePtr delegate)
     delegate->setCommand(m_pSCPICmdInterface, delegate);
 }
 
-void cSCPIInterface::waitForBlockingCmd(cSCPIClient *client)
-{
-    m_expCmd = TimerFactoryQt::createSingleShot(5000);
-    connect(m_expCmd.get(), &TimerTemplateQt::sigExpired, this, [this, client]{cSCPIInterface::removeCommand(client);});
-    m_expCmd->start();
-}
-
 bool cSCPIInterface::executeCmd(cSCPIClient *client, QString cmd)
 {
     ScpiObjectPtr scpiObject;
-    cmdInfos cmdInfo;
-    cmdInfo.cmd = cmd;
-    cmdInfo.client = client;
-    if ( (scpiObject = m_pSCPICmdInterface->getSCPIObject(cmd)) != 0)
-    {
+    if ( (scpiObject = m_pSCPICmdInterface->getSCPIObject(cmd)) != 0) {
         ScpiBaseDelegate* scpiDelegate = static_cast<ScpiBaseDelegate*>(scpiObject.get());
-        if(m_enableScpiQueue) {
-            m_scpiCmdInExec.enqueue(cmdInfo);
-            if(m_scpiCmdInExec.count() == 1) { // The list was empty before, so we need to trigger the execution machinery
-                connect(client, &cSCPIClient::commandAnswered, this, &cSCPIInterface::removeCommand);
-                waitForBlockingCmd(client);
-                scpiDelegate->executeSCPI(client, cmd);
-            }
-        }
-        else
-            scpiDelegate->executeSCPI(client, cmd);
-
+        scpiDelegate->executeSCPI(client, cmd);
         return true;
     }
     return false;
@@ -109,47 +88,4 @@ ScpiAmbiguityMap cSCPIInterface::ignoreAmbiguous(ScpiAmbiguityMap inMap)
     return outMap;
 }
 
-
-void cSCPIInterface::setEnableQueue(bool enable)
-{
-    m_enableScpiQueue = enable;
-}
-
-void cSCPIInterface::removeCommand(cSCPIClient *client)
-{
-    client->disconnect(this);
-    m_expCmd->disconnect(this);
-    m_scpiCmdInExec.dequeue();
-    checkAllCmds();
-}
-
-void cSCPIInterface::checkAllCmds()
-{
-    if(!m_scpiCmdInExec.isEmpty()) {
-         ScpiObjectPtr scpiObject;
-         cmdInfos cmdInfo = m_scpiCmdInExec.head();
-         cSCPIClient *client = cmdInfo.client;
-         QString cmd = cmdInfo.cmd;
-         if ( (scpiObject = m_pSCPICmdInterface->getSCPIObject(cmd)) != 0) {
-             ScpiBaseDelegate* scpiDelegate = static_cast<ScpiBaseDelegate*>(scpiObject.get());
-             if(m_enableScpiQueue) {
-                 connect(client, &cSCPIClient::commandAnswered, this, &cSCPIInterface::removeCommand);
-                 waitForBlockingCmd(client);
-                 scpiDelegate->executeSCPI(client, cmd);
-             }
-             else {
-                 scpiDelegate->executeSCPI(client, cmd);
-                 while(!m_scpiCmdInExec.isEmpty()) {
-                     cmdInfos cmdInfo = m_scpiCmdInExec.dequeue();
-                     cSCPIClient *client = cmdInfo.client;
-                     QString cmd = cmdInfo.cmd;
-                     if ( (scpiObject = m_pSCPICmdInterface->getSCPIObject(cmd)) != 0) {
-                         ScpiBaseDelegate* scpiDelegate = static_cast<ScpiBaseDelegate*>(scpiObject.get());
-                         scpiDelegate->executeSCPI(client, cmd);
-                     }
-                 }
-             }
-         }
-     }
-}
 }

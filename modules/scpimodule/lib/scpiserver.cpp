@@ -86,13 +86,6 @@ void cSCPIServer::generateVeinInterface()
                                                     QString("Device file name for serial SCPI"),
                                                     QVariant(m_ConfigData.m_SerialDevice.m_sDevice) );
     m_pModule->m_veinComponentsWithMetaAndScpi.append(m_pVeinSerialScpiDevFileName); // auto delete / meta-data / scpi
-
-    m_optionalScpiQueue = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
-                                                         key = QString("PAR_OptionalScpiQueue"),
-                                                         QString("Enable/disable order for SCPI commands"),
-                                                         QVariant(m_ConfigData.m_enableScpiQueue.m_nActive));
-    m_optionalScpiQueue->setValidator(new cBoolValidator());
-    m_pModule->m_veinModuleParameterMap[key] = m_optionalScpiQueue;
 }
 
 cModuleInterface *cSCPIServer::getModuleInterface()
@@ -220,10 +213,7 @@ void cSCPIServer::activationDone()
 {
     m_scpiInterface.checkAmbiguousShortNames();
 
-    m_optionalScpiQueue->setValue(m_ConfigData.m_enableScpiQueue.m_nActive);
     m_bActive = true;
-    connect(m_optionalScpiQueue, &VfModuleParameter::sigValueChanged, this, &cSCPIServer::controlScpiQueue);
-    controlScpiQueue(QVariant(m_ConfigData.m_enableScpiQueue.m_nActive));
     emit activated();
 }
 
@@ -273,13 +263,4 @@ void cSCPIServer::newSerialOn(QVariant serialOn)
     emit m_pModule->parameterChanged();
 }
 
-void cSCPIServer::controlScpiQueue(QVariant scpiQueue)
-{
-    bool queueActiveNew = scpiQueue.toInt();
-    bool queueActiveOld = m_ConfigData.m_enableScpiQueue.m_nActive;
-    m_ConfigData.m_enableScpiQueue.m_nActive = queueActiveNew;
-    m_scpiInterface.setEnableQueue(queueActiveNew);
-    if(queueActiveNew != queueActiveOld)
-        emit m_pModule->parameterChanged();
-}
 }

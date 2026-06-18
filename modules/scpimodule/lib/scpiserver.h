@@ -45,7 +45,6 @@ private slots:
 
     // vein change handlers
     void newSerialOn(QVariant serialOn);
-    void controlScpiQueue(QVariant scpiQueue);
 private:
     void createSerialScpi();
     void destroySerialScpi();
@@ -77,8 +76,6 @@ private:
     bool m_bSerialScpiActive;
     VfModuleParameter* m_pVeinParamSerialOn = nullptr;
     VfModuleComponent* m_pVeinSerialScpiDevFileName = nullptr;
-    VfModuleParameter* m_optionalScpiQueue = nullptr;
-
 };
 
 }

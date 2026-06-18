@@ -41,7 +41,6 @@ void cSCPIModuleConfiguration::setConfiguration(const QByteArray& xmlString)
     m_ConfigXMLMap["scpimodconfpar:configuration:connectivity:status:questionable:n"] = setQuestionableStatusBitCount;
     m_ConfigXMLMap["scpimodconfpar:configuration:connectivity:status:operation:n"] = setOperationStatusBitCount;
     m_ConfigXMLMap["scpimodconfpar:configuration:connectivity:status:operationmeasure:n"] = setOperationMeasureStatusBitCount;
-    m_ConfigXMLMap["scpimodconfpar:configuration:scpiqueue"] = setScpiQueue;
 
     m_pXMLReader->loadXMLFromString(QString::fromUtf8(xmlString.data(), xmlString.size()));
 }
@@ -49,10 +48,6 @@ void cSCPIModuleConfiguration::setConfiguration(const QByteArray& xmlString)
 
 QByteArray cSCPIModuleConfiguration::exportConfiguration()
 {
-    boolParameter* bPar;
-    bPar = &m_pSCPIModulConfigData->m_enableScpiQueue;
-    m_pXMLReader->setValue(bPar->m_sKey, QString("%1").arg(bPar->m_nActive));
-
     m_pXMLReader->setValue("scpimodconfpar:configuration:connectivity:serialdevice:on",
                            QString("%1").arg(m_pSCPIModulConfigData->m_SerialDevice.m_nOn));
 
@@ -100,10 +95,6 @@ void cSCPIModuleConfiguration::configXMLInfo(const QString &key)
             break;
         case setDeviceName:
             m_pSCPIModulConfigData->m_sDeviceName = m_pXMLReader->getValue(key);
-            break;
-        case setScpiQueue:
-            m_pSCPIModulConfigData->m_enableScpiQueue.m_sKey = key;
-            m_pSCPIModulConfigData->m_enableScpiQueue.m_nActive = m_pXMLReader->getValue(key).toInt(&ok);
             break;
         case setQuestionableStatusBitCount:
             m_pSCPIModulConfigData->m_nQuestonionableStatusBitCount = m_pXMLReader->getValue(key).toInt(&ok);
