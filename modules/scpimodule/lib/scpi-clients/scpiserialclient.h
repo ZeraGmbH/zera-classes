@@ -1,37 +1,24 @@
 #ifndef SCPISERIALCLIENT
 #define SCPISERIALCLIENT
 
-
-#include <QObject>
-
 #include "scpiclient.h"
-
-class QSerialPort;
+#include <QSerialPort>
 
 namespace SCPIMODULE
 {
 
-class cSCPIInterface;
-class cSCPIModuleConfigData;
-class cSCPIModule;
-
-
 class cSCPISerialClient: public cSCPIClient
 {
     Q_OBJECT
-
 public:
     cSCPISerialClient(QSerialPort* serial, cSCPIModule *module, cSCPIModuleConfigData& configdata, cSCPIInterface* iface);
-    virtual ~cSCPISerialClient();
-
-public slots:
-    virtual void receiveAnswer(QString answ, bool ok = true, bool skipLog = false);
-
-private:
-    QSerialPort* m_pSerialPort;
+    ~cSCPISerialClient() override;
 
 private slots:
-    virtual void cmdInput();
+    void cmdInput() override;
+    void receiveAnswer(QString answ, bool ok = true, bool skipLog = false) override;
+private:
+    QSerialPort* m_pSerialPort = nullptr;
 };
 
 }

@@ -2,8 +2,6 @@
 #define SCPIETHCLIENT
 
 #include "scpiclient.h"
-#include "scpiinterface.h"
-#include "scpimoduleconfigdata.h"
 #include <QTcpSocket>
 
 namespace SCPIMODULE {
@@ -15,6 +13,7 @@ public:
     cSCPIEthClient(QTcpSocket* socket,  cSCPIModule *module, cSCPIModuleConfigData& configdata, cSCPIInterface* iface);
     ~cSCPIEthClient() override;
     QString getPeerAddress();
+
 private slots:
     void receiveAnswer(QString answ, bool ok = true, bool skipLog = false) override;
     void cmdInput() override;
