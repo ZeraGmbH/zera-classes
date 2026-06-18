@@ -8,6 +8,7 @@ class ScpiTransactionId
 public:
     ScpiTransactionId();
     static ScpiTransactionId createUniqueId();
+    quint64 getChrono() const;
 private:
     ScpiTransactionId(quint64 id);
 
