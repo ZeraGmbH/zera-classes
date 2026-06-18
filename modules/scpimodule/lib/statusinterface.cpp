@@ -85,14 +85,14 @@ bool cStatusInterface::setupInterface()
 }
 
 
-void cStatusInterface::executeCmd(cSCPIClient *client, int cmdCode, int statIndex, const QString &sInput)
+void cStatusInterface::executeCmd(cSCPIClient *client, int cmdCode, int statIndex, const QString &sInput, const ScpiTransactionId &scpiTransactionId)
 {
     QString answer;
     cSCPIStatus* status;
 
     answer="";
     status = client->getSCPIStatus(statIndex);
-    status->executeCmd(client, cmdCode, sInput);
+    status->executeCmd(client, cmdCode, sInput, scpiTransactionId);
 }
 
 

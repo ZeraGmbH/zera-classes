@@ -68,10 +68,10 @@ bool cIEEE4882Interface::setupInterface()
 }
 
 
-void cIEEE4882Interface::executeCmd(cSCPIClient *client, int cmdCode, const QString &sInput)
+void cIEEE4882Interface::executeCmd(cSCPIClient *client, int cmdCode, const QString &sInput, const ScpiTransactionId &scpiTransactionId)
 {
     cIEEE4882* pIEEE4882 = client->getIEEE4882();
-    pIEEE4882->executeCmd(client, cmdCode, sInput);
+    pIEEE4882->executeCmd(client, cmdCode, sInput, scpiTransactionId);
 }
 
 

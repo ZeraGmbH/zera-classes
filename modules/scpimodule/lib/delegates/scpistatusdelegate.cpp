@@ -8,9 +8,9 @@ cSCPIStatusDelegate::cSCPIStatusDelegate(const QString &cmdParent, const QString
 {
 }
 
-void cSCPIStatusDelegate::executeSCPI(cSCPIClient *client, const QString &scpi)
+void cSCPIStatusDelegate::executeSCPI(cSCPIClient *client, const QString &scpi, const ScpiTransactionId &scpiTransactionId)
 {
-    emit signalExecuteSCPI(client, m_nCmdCode, m_nStatusIndex, scpi);
+    emit signalExecuteSCPI(client, m_nCmdCode, m_nStatusIndex, scpi, scpiTransactionId);
 }
 
 }

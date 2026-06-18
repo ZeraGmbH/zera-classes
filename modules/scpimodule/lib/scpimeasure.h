@@ -2,6 +2,7 @@
 #define SCPIMEASURE_H
 
 #include "scpicmdinfo.h"
+#include "scpitransactionid.h"
 #include <QObject>
 #include <QStateMachine>
 #include <QState>
@@ -24,7 +25,7 @@ public:
     virtual ~cSCPIMeasure();
 
     void receiveMeasureValue(QVariant qvar);
-    void execute(quint8 cmd); //
+    void execute(quint8 cmd, const ScpiTransactionId &scpiTransactionId);
     int entityID();
 
     static int getInstanceCount();
@@ -36,11 +37,11 @@ signals:
     void initContinue();
     void fetchContinue();
 
-    void sigMeasDone(QString);
+    void sigMeasDone(const QString& answer, const ScpiTransactionId &scpiTransactionId);
     void sigConfDone();
-    void sigReadDone(QString);
+    void sigReadDone(const QString& answer, const ScpiTransactionId &scpiTransactionId);
     void sigInitDone();
-    void sigFetchDone(QString);
+    void sigFetchDone(const QString& answer, const ScpiTransactionId &scpiTransactionId);
 
 private:
     static QString convertVariantToString(const QVariant &value);
@@ -54,6 +55,13 @@ private:
     QStateMachine m_ReadStateMachine;
     QStateMachine m_InitStateMachine;
     QStateMachine m_FetchStateMachine;
+
+    // State machines cannot perform more than one transaction at a time
+    // => keep scpi transaction id per state machine / transaction type for those with answers (measure/read/fetch)
+    ScpiTransactionId m_measureScpiTransactionId;
+    ScpiTransactionId m_readScpiTransactionId;
+    ScpiTransactionId m_fetchScpiTransactionId;
+
 
     QState m_measureState;
     QState m_measureConfigureState;

@@ -20,7 +20,7 @@ public:
 
     void exportSCPIModelXML(QString &xml, QMap<QString, QString> modelListBaseEntry);
     void addSCPICommand(ScpiBaseDelegatePtr delegate);
-    bool executeCmd(cSCPIClient* client, QString cmd);
+    bool executeCmd(cSCPIClient* client, const QString &cmd, const ScpiTransactionId &scpiTransactionId);
     void checkAmbiguousShortNames();
 
 private:

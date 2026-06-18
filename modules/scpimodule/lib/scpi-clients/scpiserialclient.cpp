@@ -25,7 +25,7 @@ cSCPISerialClient::~cSCPISerialClient()
 }
 
 
-void cSCPISerialClient::receiveAnswer(QString answ, bool ok, bool skipLog)
+void cSCPISerialClient::receiveAnswer(QString answ, const ScpiTransactionId &scpiTransactionId, bool ok, bool skipLog)
 {
     QString answer;
     QByteArray ba;

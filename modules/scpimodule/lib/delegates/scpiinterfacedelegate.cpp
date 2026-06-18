@@ -10,9 +10,9 @@ cSCPIInterfaceDelegate::cSCPIInterfaceDelegate(const QString &cmdParent, const Q
         setXmlAttribute("Description", cmdDescription);
 }
 
-void cSCPIInterfaceDelegate::executeSCPI(cSCPIClient *client, const QString &scpi)
+void cSCPIInterfaceDelegate::executeSCPI(cSCPIClient *client, const QString &scpi, const ScpiTransactionId &scpiTransactionId)
 {
-    emit signalExecuteSCPI(client, m_nCmdCode, scpi);
+    emit signalExecuteSCPI(client, m_nCmdCode, scpi, scpiTransactionId);
 }
 
 }

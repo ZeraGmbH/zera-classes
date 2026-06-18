@@ -29,14 +29,14 @@ bool cInterfaceInterface::setupInterface()
     return true;
 }
 
-void cInterfaceInterface::executeCmd(cSCPIClient *client, int cmdCode, const QString &sInput)
+void cInterfaceInterface::executeCmd(cSCPIClient *client, int cmdCode, const QString &sInput, const ScpiTransactionId &scpiTransactionId)
 {
     cSCPICommand cmd = sInput;
     switch (cmdCode)
     {
     case deviceinterfacecmd: {
         if (cmd.isQuery())
-            client->receiveAnswer(getDevIface(), true, true);
+            client->receiveAnswer(getDevIface(), scpiTransactionId, true, true);
         else
             client->receiveStatus(ZSCPI::nak);
         break;

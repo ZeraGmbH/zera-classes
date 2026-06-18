@@ -16,7 +16,7 @@ cSCPIEthClient::~cSCPIEthClient()
     m_pSocket->deleteLater();
 }
 
-void cSCPIEthClient::receiveAnswer(QString answ, bool ok, bool skipLog)
+void cSCPIEthClient::receiveAnswer(QString answ, const ScpiTransactionId &scpiTransactionId, bool ok, bool skipLog)
 {
     QByteArray ba = answ.toUtf8() + "\n";
     m_pSocket->write(ba);

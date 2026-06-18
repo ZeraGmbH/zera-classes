@@ -4,10 +4,11 @@
 namespace SCPIMODULE
 {
 
-cSCPIClientInfo::cSCPIClientInfo(cSCPIClient *client, int entityid, int parcmdtype) :
+cSCPIClientInfo::cSCPIClientInfo(cSCPIClient *client, int entityid, int parcmdtype, const ScpiTransactionId &scpiTransactionId) :
     m_pClient(client),
     m_nEntityId(entityid),
-    m_nParCmdType(parcmdtype)
+    m_nParCmdType(parcmdtype),
+    m_scpiTransactionId(scpiTransactionId)
 {
 }
 
@@ -24,6 +25,11 @@ int cSCPIClientInfo::parCmdType()
 cSCPIClient *cSCPIClientInfo::getClient()
 {
     return m_pClient;
+}
+
+ScpiTransactionId cSCPIClientInfo::getScpiTransactionId()
+{
+    return m_scpiTransactionId;
 }
 
 }

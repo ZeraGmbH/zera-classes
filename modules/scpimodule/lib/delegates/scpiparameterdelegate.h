@@ -13,11 +13,11 @@ class cSCPIParameterDelegate: public ScpiBaseDelegate
     Q_OBJECT
 public:
     cSCPIParameterDelegate(const QString &cmdParent, const QString &cmd, quint8 type, cSCPIModule* scpimodule, cSCPICmdInfoPtr scpicmdinfo);
-    void executeSCPI(cSCPIClient *client, const QString& scpi) override;
+    void executeSCPI(cSCPIClient *client, const QString& scpi, const ScpiTransactionId &scpiTransactionId) override;
 signals:
     void clientinfoSignal(QString, SCPIMODULE::SCPIClientInfoPtr);
 private:
-    bool handleFutureComponent(cSCPIClient *client, bool bQuery);
+    bool handleFutureComponent(cSCPIClient *client, bool bQuery, const ScpiTransactionId &scpiTransactionId);
 
     cSCPIModule* m_pModule;
     cSCPICmdInfoPtr m_pSCPICmdInfo;

@@ -34,12 +34,12 @@ void cSCPIInterface::addSCPICommand(ScpiBaseDelegatePtr delegate)
     delegate->setCommand(m_pSCPICmdInterface, delegate);
 }
 
-bool cSCPIInterface::executeCmd(cSCPIClient *client, QString cmd)
+bool cSCPIInterface::executeCmd(cSCPIClient *client, const QString &cmd, const ScpiTransactionId &scpiTransactionId)
 {
-    ScpiObjectPtr scpiObject;
-    if ( (scpiObject = m_pSCPICmdInterface->getSCPIObject(cmd)) != 0) {
+    ScpiObjectPtr scpiObject = m_pSCPICmdInterface->getSCPIObject(cmd);
+    if (scpiObject != nullptr) {
         ScpiBaseDelegate* scpiDelegate = static_cast<ScpiBaseDelegate*>(scpiObject.get());
-        scpiDelegate->executeSCPI(client, cmd);
+        scpiDelegate->executeSCPI(client, cmd, scpiTransactionId);
         return true;
     }
     return false;

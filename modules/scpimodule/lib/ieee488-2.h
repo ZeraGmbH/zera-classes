@@ -1,6 +1,7 @@
 #ifndef IEEE4882_H
 #define IEEE4882_H
 
+#include "scpitransactionid.h"
 #include <vs_abstractdatabase.h>
 #include <QObject>
 #include <QString>
@@ -99,7 +100,7 @@ class cIEEE4882: public QObject
 
 public:
     cIEEE4882(cSCPIClient* client, QString deviceFamilyFromConfig, quint16 errorqueuelen, VeinStorage::AbstractDatabase *storageDb);
-    void executeCmd(cSCPIClient* client, int cmdCode, const QString &sInput);
+    void executeCmd(cSCPIClient* client, int cmdCode, const QString &sInput, const ScpiTransactionId &scpiTransactionId);
 
 signals:
     void setQuestionableCondition(quint16);

@@ -11,7 +11,7 @@ SCPIMODULE::cSCPIRpcDelegate::cSCPIRpcDelegate(const QString &cmdParent, const Q
 {
 }
 
-void SCPIMODULE::cSCPIRpcDelegate::executeSCPI(cSCPIClient *client, const QString &scpi)
+void SCPIMODULE::cSCPIRpcDelegate::executeSCPI(cSCPIClient *client, const QString &scpi, const ScpiTransactionId &scpiTransactionId)
 {
     quint8 scpiCmdType = getType();
     cSCPICommand cmd = scpi;
@@ -23,18 +23,18 @@ void SCPIMODULE::cSCPIRpcDelegate::executeSCPI(cSCPIClient *client, const QStrin
     if ((bQuery && ((scpiCmdType & SCPI::isQuery) > 0)) ||
         (bCmd && ((scpiCmdType & SCPI::isCmd) >  0)) ||
         (bCmdwP && ((scpiCmdType & SCPI::isCmdwP) >  0)))
-        executeScpiRpc(client, scpi, bQuery);
+        executeScpiRpc(client, scpi, bQuery, scpiTransactionId);
     else
         client->receiveStatus(ZSCPI::nak);
 }
 
-void SCPIMODULE::cSCPIRpcDelegate::executeScpiRpc(cSCPIClient *client, const QString &scpi, bool inputIsQuery)
+void SCPIMODULE::cSCPIRpcDelegate::executeScpiRpc(cSCPIClient *client, const QString &scpi, bool inputIsQuery, const ScpiTransactionId &scpiTransactionId)
 {
     SCPIClientInfoPtr clientinfo;
     if (inputIsQuery)
-        clientinfo = std::make_shared<cSCPIClientInfo>(client, m_scpicmdinfo->entityId, SCPIMODULE::parQuery);
+        clientinfo = std::make_shared<cSCPIClientInfo>(client, m_scpicmdinfo->entityId, SCPIMODULE::parQuery, scpiTransactionId);
     else
-        clientinfo = std::make_shared<cSCPIClientInfo>(client, m_scpicmdinfo->entityId, SCPIMODULE::parcmd);
+        clientinfo = std::make_shared<cSCPIClientInfo>(client, m_scpicmdinfo->entityId, SCPIMODULE::parcmd, scpiTransactionId);
 
     VfRPCInvokerPtr rpcInvoker = VfRPCInvoker::create(m_scpicmdinfo->entityId, std::make_unique<VfClientRPCInvoker>());
     connect(rpcInvoker.get(), &VfRPCInvoker::sigRPCFinished, this, [=](bool ok, const QVariantMap &resultData) {
@@ -55,7 +55,7 @@ void SCPIMODULE::cSCPIRpcDelegate::executeScpiRpc(cSCPIClient *client, const QSt
                 returnData = resultData[VeinComponent::RemoteProcedureData::s_returnString];
             else
                 returnData = resultData[VeinComponent::RemoteProcedureData::s_errorMessageString];
-            client->receiveAnswer(returnData.toString(), true);
+            client->receiveAnswer(returnData.toString(), scpiTransactionId, true);
         }
         else {//in case of command
             if(rpcSuccessful)

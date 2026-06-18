@@ -14,13 +14,13 @@ public:
     cSCPIMeasureDelegate(const QString &cmdParent, const QString &cmd, quint8 type, quint8 measCode, cSCPIMeasure* scpimeasureobject);
     cSCPIMeasureDelegate(const cSCPIMeasureDelegate& delegate,
                          QHash<cSCPIMeasure*, cSCPIMeasure*> &scpiMeasureTranslationHash);
-    virtual void executeSCPI(cSCPIClient *client, const QString& scpi) override;
-    void executeClient(cSCPIClient *client);
+    void executeSCPI(cSCPIClient *client, const QString& scpi, const ScpiTransactionId &scpiTransactionId) override;
+    void executeClient(cSCPIClient *client, const ScpiTransactionId &scpiTransactionId);
     void addscpimeasureObject(cSCPIMeasure* measureobject);
 
 private slots:
     void receiveDone();
-    void receiveAnswer(QString s);
+    void receiveAnswer(QString s, const ScpiTransactionId &scpiTransactionId);
 
 private:
     quint8 m_nMeasCode;

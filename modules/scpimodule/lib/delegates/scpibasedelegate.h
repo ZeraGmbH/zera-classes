@@ -2,8 +2,8 @@
 #define SCPIBASEDELEGATE_H
 
 #include "scpiobject.h"
+#include "scpitransactionid.h"
 #include <scpi.h>
-#include <QObject>
 #include <QString>
 #include <memory>
 
@@ -23,7 +23,7 @@ public:
     virtual ~ScpiBaseDelegate();
     void setCommand(cSCPI *scpiCmdInterface, ScpiBaseDelegatePtr delegate);
     bool executeSCPI(const QString&, QString&) override { return true; } // ScpiObject requires
-    virtual void executeSCPI(cSCPIClient *client, const QString &scpi) = 0;
+    virtual void executeSCPI(cSCPIClient *client, const QString &scpi, const ScpiTransactionId &scpiTransactionId) = 0;
 
     static int getInstanceCount();
 

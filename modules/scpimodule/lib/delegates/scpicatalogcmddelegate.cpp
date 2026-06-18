@@ -19,12 +19,12 @@ cSCPICatalogCmdDelegate::cSCPICatalogCmdDelegate(const QString &cmdParent,
     setOutput(m_pSCPICmdInfo);
 }
 
-void cSCPICatalogCmdDelegate::executeSCPI(cSCPIClient *client, const QString &scpi)
+void cSCPICatalogCmdDelegate::executeSCPI(cSCPIClient *client, const QString &scpi, const ScpiTransactionId &scpiTransactionId)
 {
     quint8 scpiCmdType = getType();
     cSCPICommand cmd = scpi;
     if (cmd.isQuery() && ((scpiCmdType & SCPI::isQuery) > 0))// test if we got an allowed query
-        client->receiveAnswer(m_sAnswer);
+        client->receiveAnswer(m_sAnswer, scpiTransactionId);
     else
         client->receiveStatus(ZSCPI::nak);
 }

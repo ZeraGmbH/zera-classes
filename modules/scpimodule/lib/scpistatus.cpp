@@ -16,7 +16,7 @@ cSCPIStatus::cSCPIStatus(quint8 tothrow)
 }
 
 
-void cSCPIStatus::readwriteStatusReg(cSCPIClient *client, quint16 &status, QString input)
+void cSCPIStatus::readwriteStatusReg(cSCPIClient *client, quint16 &status, QString input, const ScpiTransactionId &scpiTransactionId)
 {
     cSCPICommand cmd;
     QString par;
@@ -25,7 +25,7 @@ void cSCPIStatus::readwriteStatusReg(cSCPIClient *client, quint16 &status, QStri
 
     cmd = input;
     if (cmd.isQuery())
-        client->receiveAnswer(QString("%1").arg(status));
+        client->receiveAnswer(QString("%1").arg(status), scpiTransactionId);
     else {
         if (cmd.isCommand(1))
         {
@@ -43,14 +43,14 @@ void cSCPIStatus::readwriteStatusReg(cSCPIClient *client, quint16 &status, QStri
 }
 
 
-void cSCPIStatus::readStatusReg(cSCPIClient *client, quint16 &status, QString input)
+void cSCPIStatus::readStatusReg(cSCPIClient *client, quint16 &status, QString input, const ScpiTransactionId &scpiTransactionId)
 {
     Q_UNUSED(client)
     cSCPICommand cmd;
 
     cmd = input;
     if (cmd.isQuery())
-        client->receiveAnswer(QString("%1").arg(status));
+        client->receiveAnswer(QString("%1").arg(status), scpiTransactionId);
     else {
         emit sigEventError(CommandError);
         emit client->commandAnswered(client);
@@ -58,28 +58,28 @@ void cSCPIStatus::readStatusReg(cSCPIClient *client, quint16 &status, QString in
 }
 
 
-void cSCPIStatus::executeCmd(cSCPIClient* client, int cmdCode, const QString &sInput)
+void cSCPIStatus::executeCmd(cSCPIClient* client, int cmdCode, const QString &sInput, const ScpiTransactionId &scpiTransactionId)
 {
     switch (cmdCode)
     {
     case SCPIStatusCmd::condition:
-        readStatusReg(client, m_nCondition, sInput);
+        readStatusReg(client, m_nCondition, sInput, scpiTransactionId);
         break;
 
     case SCPIStatusCmd::ptransition:
-        readwriteStatusReg(client, m_nPTransition, sInput);
+        readwriteStatusReg(client, m_nPTransition, sInput, scpiTransactionId);
         break;
 
     case SCPIStatusCmd::ntransition:
-        readwriteStatusReg(client, m_nNTransition, sInput);
+        readwriteStatusReg(client, m_nNTransition, sInput, scpiTransactionId);
         break;
 
     case SCPIStatusCmd::event:
-        readStatusReg(client, m_nEvent, sInput);
+        readStatusReg(client, m_nEvent, sInput, scpiTransactionId);
         break;
 
     case SCPIStatusCmd::enable:
-        readwriteStatusReg(client, m_nEnable, sInput);
+        readwriteStatusReg(client, m_nEnable, sInput, scpiTransactionId);
         break;
     }
 }

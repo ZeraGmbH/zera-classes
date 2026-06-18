@@ -37,20 +37,20 @@ cSCPIMeasureDelegate::cSCPIMeasureDelegate(const cSCPIMeasureDelegate & delegate
     }
 }
 
-void cSCPIMeasureDelegate::executeSCPI(cSCPIClient *client, const QString &scpi)
+void cSCPIMeasureDelegate::executeSCPI(cSCPIClient *client, const QString &scpi, const ScpiTransactionId &scpiTransactionId)
 {
     cSCPICommand cmd = scpi;
     quint8 scpiCmdType = getType();
     if ( (cmd.isQuery() && ((scpiCmdType & SCPI::isQuery) > 0)) ||
          (cmd.isCommand(0) && ((scpiCmdType & SCPI::isCmd) > 0)) ) {
         // allowed query or command
-        client->m_SCPIMeasureDelegateHash[this]->executeClient(client);
+        client->m_SCPIMeasureDelegateHash[this]->executeClient(client, scpiTransactionId);
     }
     else
         client->receiveStatus(ZSCPI::nak);
 }
 
-void cSCPIMeasureDelegate::executeClient(cSCPIClient *client)
+void cSCPIMeasureDelegate::executeClient(cSCPIClient *client, const ScpiTransactionId &scpiTransactionId)
 {
     bool reentryPossible;
     switch (m_nMeasCode)
@@ -86,7 +86,7 @@ void cSCPIMeasureDelegate::executeClient(cSCPIClient *client)
                 connect(measure, &cSCPIMeasure::sigFetchDone, this, &cSCPIMeasureDelegate::receiveAnswer);
                 break;
             }
-            measure->execute(m_nMeasCode);
+            measure->execute(m_nMeasCode, scpiTransactionId);
         }
     }
     else
@@ -107,14 +107,14 @@ void cSCPIMeasureDelegate::receiveDone()
         m_pClient->receiveStatus(ZSCPI::ack);
 }
 
-void cSCPIMeasureDelegate::receiveAnswer(QString s)
+void cSCPIMeasureDelegate::receiveAnswer(QString s, const ScpiTransactionId &scpiTransactionId)
 {
     const cSCPIMeasure* measure = qobject_cast<cSCPIMeasure*>(QObject::sender());
     disconnect(measure,0,this,0);
     m_sAnswer += QString("%1;").arg(s);
     m_nPending--;
     if (m_nPending == 0)
-        m_pClient->receiveAnswer(m_sAnswer);
+        m_pClient->receiveAnswer(m_sAnswer, scpiTransactionId);
 }
 
 }

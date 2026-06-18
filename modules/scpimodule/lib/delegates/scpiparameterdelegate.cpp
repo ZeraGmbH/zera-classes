@@ -22,7 +22,7 @@ cSCPIParameterDelegate::cSCPIParameterDelegate(const QString &cmdParent,
 {
 }
 
-void cSCPIParameterDelegate::executeSCPI(cSCPIClient *client, const QString &scpi)
+void cSCPIParameterDelegate::executeSCPI(cSCPIClient *client, const QString &scpi, const ScpiTransactionId &scpiTransactionId)
 {
     quint8 scpiCmdType = getType();
     cSCPICommand cmd = scpi;
@@ -31,7 +31,7 @@ void cSCPIParameterDelegate::executeSCPI(cSCPIClient *client, const QString &scp
          (cmd.isCommand(1) && ((scpiCmdType & SCPI::isCmdwP) > 0)) ||  // test if we got an allowed cmd + 1 parameter
          ((scpiCmdType & SCPI::isXMLCmd) > 0) ) // test if we expext an xml command
     {
-        if (handleFutureComponent(client, bQuery))
+        if (handleFutureComponent(client, bQuery, scpiTransactionId))
             return;
 
         VeinComponent::ComponentData *cData = new VeinComponent::ComponentData();
@@ -59,27 +59,27 @@ void cSCPIParameterDelegate::executeSCPI(cSCPIClient *client, const QString &scp
         // we memorize : for component (componentname) the client to set something
         SCPIClientInfoPtr clientinfo;
         if (bQuery)
-            clientinfo = std::make_shared<cSCPIClientInfo>(client, m_pSCPICmdInfo->entityId, SCPIMODULE::parQuery);
+            clientinfo = std::make_shared<cSCPIClientInfo>(client, m_pSCPICmdInfo->entityId, SCPIMODULE::parQuery, scpiTransactionId);
         else
-            clientinfo = std::make_shared<cSCPIClientInfo>(client, m_pSCPICmdInfo->entityId, SCPIMODULE::parcmd);
+            clientinfo = std::make_shared<cSCPIClientInfo>(client, m_pSCPICmdInfo->entityId, SCPIMODULE::parcmd, scpiTransactionId);
 
         m_pModule->scpiParameterCmdInfoHash.insert(m_pSCPICmdInfo->componentOrRpcName, clientinfo);
         client->addSCPIClientInfo(m_pSCPICmdInfo->componentOrRpcName, clientinfo);
 
-        m_pModule->m_pSCPIEventSystem->sigSendEvent(event);
+       emit m_pModule->m_pSCPIEventSystem->sigSendEvent(event);
     }
     else
         client->receiveStatus(ZSCPI::nak);
 }
 
-bool cSCPIParameterDelegate::handleFutureComponent(cSCPIClient *client, bool bQuery)
+bool cSCPIParameterDelegate::handleFutureComponent(cSCPIClient *client, bool bQuery, const ScpiTransactionId &scpiTransactionId)
 {
     VeinStorage::AbstractDatabase *storrageDb = m_pModule->getStorageDb();
     const VeinStorage::AbstractComponentPtr futureComponent = storrageDb->findFutureComponent(m_pSCPICmdInfo->entityId,
                                                                                               m_pSCPICmdInfo->componentOrRpcName);
     if (futureComponent) {
         if (bQuery)
-            client->receiveAnswer(futureComponent->getValue().toString());
+            client->receiveAnswer(futureComponent->getValue().toString(), scpiTransactionId);
         else
             client->receiveStatus(ZSCPI::nak);
         return true;

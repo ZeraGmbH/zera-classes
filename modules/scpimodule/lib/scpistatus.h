@@ -1,6 +1,7 @@
 #ifndef SCPISTATUS_H
 #define SCPISTATUS_H
 
+#include "scpitransactionid.h"
 #include <QObject>
 #include <QString>
 
@@ -27,7 +28,7 @@ class cSCPIStatus: public QObject
 public:
     cSCPIStatus(quint8 tothrow );
 
-    void executeCmd(cSCPIClient* client, int cmdCode, const QString &sInput);
+    void executeCmd(cSCPIClient* client, int cmdCode, const QString &sInput, const ScpiTransactionId &scpiTransactionId);
 
     quint16 m_nCondition; // condition reg.
     quint16 m_nPTransition; // pos. transition reg.
@@ -46,8 +47,8 @@ public slots:
 private:
     quint8 m_n2Throw; // the bit position
 
-    void readwriteStatusReg(cSCPIClient* client, quint16 &status, QString input);
-    void readStatusReg(cSCPIClient* client, quint16 &status, QString input);
+    void readwriteStatusReg(cSCPIClient* client, quint16 &status, QString input, const ScpiTransactionId &scpiTransactionId);
+    void readStatusReg(cSCPIClient* client, quint16 &status, QString input, const ScpiTransactionId &scpiTransactionId);
 
 };
 

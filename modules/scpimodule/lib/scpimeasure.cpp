@@ -65,13 +65,15 @@ void cSCPIMeasure::receiveMeasureValue(QVariant qvar)
 }
 
 
-void cSCPIMeasure::execute(quint8 cmd)
+void cSCPIMeasure::execute(quint8 cmd, const ScpiTransactionId &scpiTransactionId)
 {
     switch (cmd)
     {
     case SCPIModelType::measure:
-        if (!m_MeasureStateMachine.isRunning())
+        if (!m_MeasureStateMachine.isRunning()) {
+            m_measureScpiTransactionId = scpiTransactionId;
             m_MeasureStateMachine.start();
+        }
         break;
 
     case SCPIModelType::configure:
@@ -80,8 +82,10 @@ void cSCPIMeasure::execute(quint8 cmd)
         break;
 
     case SCPIModelType::read:
-        if (!m_ReadStateMachine.isRunning())
+        if (!m_ReadStateMachine.isRunning()) {
+            m_readScpiTransactionId = scpiTransactionId;
             m_ReadStateMachine.start();
+        }
         break;
 
     case SCPIModelType::init:
@@ -90,8 +94,10 @@ void cSCPIMeasure::execute(quint8 cmd)
         break;
 
     case SCPIModelType::fetch:
-        if (!m_FetchStateMachine.isRunning())
+        if (!m_FetchStateMachine.isRunning()) {
+            m_fetchScpiTransactionId = scpiTransactionId;
             m_FetchStateMachine.start();
+        }
         break;
     }
 }
@@ -165,7 +171,8 @@ void cSCPIMeasure::measureInit()
 
 void cSCPIMeasure::measureFetch()
 {
-    emit sigMeasDone(m_sAnswer);
+    emit sigMeasDone(m_sAnswer, m_measureScpiTransactionId);
+    m_measureScpiTransactionId = ScpiTransactionId();
     emit measContinue();
 }
 
@@ -211,7 +218,8 @@ void cSCPIMeasure::readInit()
 
 void cSCPIMeasure::readFetch()
 {
-    emit sigReadDone(m_sAnswer);
+    emit sigReadDone(m_sAnswer, m_readScpiTransactionId);
+    m_readScpiTransactionId = ScpiTransactionId();
     emit readContinue();
 }
 
@@ -260,7 +268,8 @@ void cSCPIMeasure::fetchSync()
 
 void cSCPIMeasure::fetchFetch()
 {
-    emit sigFetchDone(m_sAnswer);
+    emit sigFetchDone(m_sAnswer, m_fetchScpiTransactionId);
+    m_fetchScpiTransactionId = ScpiTransactionId();
     emit fetchContinue();
 }
 

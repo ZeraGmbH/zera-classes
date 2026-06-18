@@ -2,6 +2,7 @@
 #define IEEE4882INTERFACE_H
 
 #include "baseinterface.h"
+#include "scpitransactionid.h"
 
 namespace SCPIMODULE
 {
@@ -19,7 +20,7 @@ public:
     virtual bool setupInterface();
 
 private slots:
-    void executeCmd(cSCPIClient* client, int cmdCode, const QString& sInput);
+    void executeCmd(cSCPIClient* client, int cmdCode, const QString& sInput, const ScpiTransactionId &scpiTransactionId);
 };
 
 }

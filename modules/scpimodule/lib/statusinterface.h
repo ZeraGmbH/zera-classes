@@ -2,6 +2,7 @@
 #define STATUSINTERFACE_H
 
 #include "baseinterface.h"
+#include "scpitransactionid.h"
 
 namespace SCPIMODULE
 {
@@ -14,10 +15,10 @@ class cStatusInterface: public cBaseInterface
     Q_OBJECT
 public:
     cStatusInterface(cSCPIModule* module, cSCPIInterface* iface);
-    virtual bool setupInterface();
+    bool setupInterface() override;
 
 private slots:
-    void executeCmd(cSCPIClient *client, int cmdCode, int statIndex, const QString &sInput);
+    void executeCmd(SCPIMODULE::cSCPIClient *client, int cmdCode, int statIndex, const QString &sInput, const ScpiTransactionId &scpiTransactionId);
 
 };
 

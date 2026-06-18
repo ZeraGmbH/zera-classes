@@ -17,7 +17,7 @@ public:
     virtual bool setupInterface() override;
 
 private slots:
-    void executeCmd(SCPIMODULE::cSCPIClient* client, int cmdCode, const QString& sInput);
+    void executeCmd(SCPIMODULE::cSCPIClient* client, int cmdCode, const QString& sInput, const ScpiTransactionId &scpiTransactionId);
 private:
     QString getDevIface();
     QString m_devIfaceCache;

@@ -36,7 +36,7 @@ signals:
     void commandAnswered(SCPIMODULE::cSCPIClient* client);
 public slots:
     void receiveStatus(quint8 stat);
-    virtual void receiveAnswer(QString answ, bool ok = true, bool skipLog = false) = 0;
+    virtual void receiveAnswer(QString answ, const ScpiTransactionId &scpiTransactionId, bool ok = true, bool skipLog = false) = 0;
     void removeSCPIClientInfo(const QString &key);
 
 protected:

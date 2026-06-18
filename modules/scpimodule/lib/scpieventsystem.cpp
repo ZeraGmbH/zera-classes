@@ -59,7 +59,7 @@ void SCPIEventSystem::handleComponentData(VeinEvent::CommandEvent *commandEvent)
                         }
                         else {
                             QString answer = static_cast<VeinComponent::ComponentData*>(commandEvent->eventData())->newValue().toString();
-                            clientinfo->getClient()->receiveAnswer(answer);
+                            clientinfo->getClient()->receiveAnswer(answer, clientinfo->getScpiTransactionId());
                         }
                         break;
                     }

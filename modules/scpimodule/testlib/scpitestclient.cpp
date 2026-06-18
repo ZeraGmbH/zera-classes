@@ -24,8 +24,9 @@ cSCPIInterface* ScpiTestClient::getScpiInterface()
     return m_pSCPIInterface;
 }
 
-void ScpiTestClient::receiveAnswer(QString answ, bool ok, bool skipLog)
+void ScpiTestClient::receiveAnswer(QString answ, const ScpiTransactionId &scpiTransactionId, bool ok, bool skipLog)
 {
+    Q_UNUSED(scpiTransactionId)
     Q_UNUSED(skipLog)
     emit sigScpiAnswer(answ);
     if(ok)
