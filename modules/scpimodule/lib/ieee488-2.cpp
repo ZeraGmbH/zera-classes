@@ -162,15 +162,14 @@ void cIEEE4882::executeCmd(cSCPIClient *client, int cmdCode, const QString &sInp
 
     case readallerrors:
         if (cmd.isQuery()) {
-            int anzError = m_ErrEventQueue.count();
-            if (anzError == 0)
+            int errCount = m_ErrEventQueue.count();
+            if (errCount == 0)
                 client->receiveAnswer(popScpiErrorAndMakeString(), scpiTransactionId);
             else {
-                QString sError = popScpiErrorAndMakeString();
-                if (anzError > 1)
-                    for (int i = 1; i < anzError; i++)
-                        sError = sError + ";" + popScpiErrorAndMakeString();
-                client->receiveAnswer(sError, scpiTransactionId);
+                QString errStr = popScpiErrorAndMakeString();
+                for (int i = 1; i < errCount; i++)
+                    errStr = errStr + ";" + popScpiErrorAndMakeString();
+                client->receiveAnswer(errStr, scpiTransactionId);
             }
         }
         else
